@@ -84,3 +84,7 @@ HUNTIQ-V6-import.zip
 # Environment files
 *.env
 *.env.*
+-e 
+# Environment files
+*.env
+*.env.*
