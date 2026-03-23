@@ -319,41 +319,52 @@ class WeatherService:
             )
         
         # Vérifier le cache
-        cache_key = f"{latitude:.4f},{longitude:.4f}"
+        cache_key = f"{latitude:.4f},{longitude:.4f},fc={include_forecast}"
         cached_data = self._get_cached(cache_key)
         if cached_data:
             return cached_data
         
         try:
-            # Appel API OpenWeatherMap One Call 3.0
+            # Appel API OpenWeatherMap 2.5 (compatible cle gratuite)
             async with httpx.AsyncClient(timeout=15) as client:
-                response = await client.get(
-                    OWM_ONECALL_URL,
+                # Meteo actuelle via /data/2.5/weather
+                resp_current = await client.get(
+                    f"{OWM_BASE_URL}/weather",
                     params={
-                        "lat": latitude,
-                        "lon": longitude,
-                        "appid": self._api_key,
-                        "units": "metric",
-                        "exclude": "" if include_forecast else "minutely,hourly,daily"
+                        "lat": latitude, "lon": longitude,
+                        "appid": self._api_key, "units": "metric", "lang": "fr"
                     }
                 )
-                
-                if response.status_code == 401:
+                if resp_current.status_code == 401:
                     return WeatherResponse(
                         status=ServiceStatus.ERROR,
-                        error_message="Clé API OpenWeatherMap invalide"
+                        error_message="Cle API OpenWeatherMap invalide"
                     )
-                
-                if response.status_code == 429:
+                if resp_current.status_code == 429:
                     return WeatherResponse(
                         status=ServiceStatus.RATE_LIMITED,
-                        error_message="Limite d'appels API atteinte"
+                        error_message="Limite d appels API atteinte"
                     )
-                
-                response.raise_for_status()
-                data = response.json()
-            
-            # Parser les données
+                resp_current.raise_for_status()
+                current_raw = resp_current.json()
+
+                # Previsions via /data/2.5/forecast
+                forecast_raw = {"list": []}
+                if include_forecast:
+                    resp_fc = await client.get(
+                        f"{OWM_BASE_URL}/forecast",
+                        params={
+                            "lat": latitude, "lon": longitude,
+                            "appid": self._api_key, "units": "metric", "lang": "fr"
+                        }
+                    )
+                    if resp_fc.status_code == 200:
+                        forecast_raw = resp_fc.json()
+
+            # Convertir au format OneCall pour le parser existant
+            data = self._build_onecall_compat(current_raw, forecast_raw)
+
+            # Parser les donnees
             weather_response = self._parse_onecall_response(data, include_behavior)
             
             # Mettre en cache
@@ -448,6 +459,48 @@ class WeatherService:
             "factors": factors.to_dict() if factors else None
         }
     
+
+    @staticmethod
+    def _build_onecall_compat(current_raw: Dict, forecast_raw: Dict) -> Dict:
+        """Convertit les reponses API 2.5 en format compatible OneCall."""
+        sys_data = current_raw.get("sys", {})
+        wind = current_raw.get("wind", {})
+        rain = current_raw.get("rain", {})
+        snow = current_raw.get("snow", {})
+        current = {
+            "dt": current_raw.get("dt", 0),
+            "temp": current_raw.get("main", {}).get("temp", 0),
+            "feels_like": current_raw.get("main", {}).get("feels_like", 0),
+            "humidity": current_raw.get("main", {}).get("humidity", 0),
+            "pressure": current_raw.get("main", {}).get("pressure", 1013),
+            "wind_speed": wind.get("speed", 0),
+            "wind_deg": wind.get("deg", 0),
+            "wind_gust": wind.get("gust"),
+            "rain": {"1h": rain.get("1h", 0)} if rain else {},
+            "snow": {"1h": snow.get("1h", 0)} if snow else {},
+            "clouds": current_raw.get("clouds", {}).get("all", 0),
+            "visibility": current_raw.get("visibility", 10000),
+            "weather": current_raw.get("weather", [{}]),
+            "sunrise": sys_data.get("sunrise", 0),
+            "sunset": sys_data.get("sunset", 0),
+        }
+        hourly = []
+        for entry in forecast_raw.get("list", []):
+            hourly.append({
+                "dt": entry.get("dt", 0),
+                "temp": entry.get("main", {}).get("temp", 0),
+                "feels_like": entry.get("main", {}).get("feels_like", 0),
+                "humidity": entry.get("main", {}).get("humidity", 0),
+                "pressure": entry.get("main", {}).get("pressure", 1013),
+                "wind_speed": entry.get("wind", {}).get("speed", 0),
+                "wind_deg": entry.get("wind", {}).get("deg", 0),
+                "pop": entry.get("pop", 0),
+                "rain": entry.get("rain", {}),
+                "snow": entry.get("snow", {}),
+                "weather": entry.get("weather", [{}]),
+            })
+        return {"current": current, "hourly": hourly}
+
     def _parse_onecall_response(
         self,
         data: Dict[str, Any],

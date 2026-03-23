@@ -36,15 +36,19 @@ Reconstruction du depot HUNTIQ-V6 depuis HUNTIQ-V5 (branche bionic-v3-dev), mise
 ### Phase 5C-R — Restauration optimization_engine (2026-03-23)
 - Module optimization_engine cree (730 lignes, 13 endpoints)
 - Enregistre dans CORE_ROUTERS (85 modules total)
-- 3 livrables produits, commit Work1: 8b0cbfc1
 - VALIDE PAR STEEVE
 
 ### Montage Preview V6 (2026-03-23)
 - Backend/frontend V6 montes dans l'environnement de preview
 - URL: https://huntiq-restore.preview.emergentagent.com
-- Pages validees: Home, Dashboard, Shop, API Docs
-- Guide d'execution locale: documentation/run_local_guide.md
-- Commit Work1: 81f27162
+- Pages validees: Home, Dashboard, Shop, API Docs, Territoire
+
+### Fix Service Meteo (2026-03-23)
+- Basculement de l'API OneCall 3.0 vers API 2.5 (compatible cle gratuite OWM)
+- Ajout de _build_onecall_compat() pour convertir les reponses
+- Fix cache key pour differencier current/forecast
+- Current weather, forecast 24h, behavior analysis fonctionnels
+- Commit Work1: 60e5f624
 
 ## Preview URL
 https://huntiq-restore.preview.emergentagent.com
@@ -52,11 +56,11 @@ https://huntiq-restore.preview.emergentagent.com
 ## Backlog Priorise
 
 ### P0 — En attente
-- Validation visuelle Steeve du preview V6
+- Validation visuelle Steeve du preview V6 (territoire, intelligence, zones, waypoints)
 
 ### P1 — A venir
 - Phase BSAA-2: Implementation du module BIONIC Social Ads Automation
 
 ### P2 — Futur
-- Merge Work1 vers main (apres validation complete)
+- Merge Work1 vers main
 - Nettoyage /app/audit_historical/
