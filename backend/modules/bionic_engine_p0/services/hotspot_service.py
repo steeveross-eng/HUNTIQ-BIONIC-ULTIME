@@ -1,18 +1,21 @@
 """
 BIONIC ENGINE - Hotspot Service V6
-PHASE P1-HOTSPOTS — MISE A NIVEAU V6 (Exclusion Geometrique V7)
+PHASE P1-HOTSPOTS — MISE A NIVEAU V6 (Exclusion Geometrique V7 Localisee)
 
 Service de generation des hotspots cartographiques ORGANIQUES.
 Formes 100% naturelles via Marching Squares + Chaikin.
-Exclusion V7: filtrage geometrique Shapely (water, urban, roads).
+Exclusion V7 LOCALISEE: requetes Overpass par tuile 0.05° (~5.5km).
+Double verification: point-check V5 (OSM cache) + polygon-check V7 (Shapely).
 
 SPECIFICATIONS OBLIGATOIRES:
 - Formes ORGANIQUES (ZERO cercle)
 - Superficie: 5000-10000 m2
-- Exclusion GEOMETRIQUE V7: polygones testes contre eau/routes/urbain
+- Zones d'analyse: 1.5km x 1.5km (rayon 750m)
+- Exclusion V7 LOCALISEE par tuile (ZERO requete viewport-complet)
+- Double verification eau: point V5 + polygon V7
 - Alignement comportemental par espece
 
-Conformite: BCE-4X | GOLDEN V6.x | STEEVE-MAX
+Conformite: GOLDEN-BCE-4X | BCE ULTRA MAX | STEEVE-MAX x100
 """
 
 from typing import Dict, List, Any, Optional
@@ -144,132 +147,247 @@ class HotspotService:
     - BCE-4X / STEEVE-MAX conforme
     """
     
+    # Taille de tuile pour le cache eau V7 (0.05° ~ 5.5km)
+    TILE_SIZE_DEG = 0.05
+    # Seuil d'overlap eau pour exclusion (15%)
+    WATER_OVERLAP_THRESHOLD = 0.15
+    # Rayon de generation V6.x: 750m = zones 1.5km x 1.5km
+    GENERATION_RADIUS_M = 750
+
     def __init__(self):
         self._pt_service = PredictiveTerritorialService()
         self._bm_service = BehavioralModelsService()
         self._organic_gen = OrganicContourGenerator()
         self._osm_cache = get_osm_cache() if get_osm_cache else None
-        self._water_polygons_cache = {}
-    
-    async def _fetch_water_exclusions(self, bounds: BoundsInput):
-        """Fetch water polygons from Overpass for V7 geometric exclusion."""
-        import httpx
-        cache_key = f"{bounds.south:.3f},{bounds.west:.3f},{bounds.north:.3f},{bounds.east:.3f}"
-        if cache_key in self._water_polygons_cache:
-            return self._water_polygons_cache[cache_key]
-        
-        if not SHAPELY_AVAILABLE:
-            return []
-        
-        query = f"""
-        [out:json][timeout:10];
-        (
-          way["natural"="water"]({bounds.south},{bounds.west},{bounds.north},{bounds.east});
-          relation["natural"="water"]({bounds.south},{bounds.west},{bounds.north},{bounds.east});
-          way["waterway"="riverbank"]({bounds.south},{bounds.west},{bounds.north},{bounds.east});
-          way["water"="lake"]({bounds.south},{bounds.west},{bounds.north},{bounds.east});
-          way["water"="river"]({bounds.south},{bounds.west},{bounds.north},{bounds.east});
-          way["water"="reservoir"]({bounds.south},{bounds.west},{bounds.north},{bounds.east});
-        );
-        out body;
-        >;
-        out skel qt;
+        self._water_tile_cache: Dict[str, list] = {}
+        self._local_water_union = None
+        self._local_water_loaded = False
+        self._v7_exclusion_stats = {"tiles_fetched": 0, "hotspots_excluded": 0, "local_cache_used": False}
+        # Charger les polygones eau depuis le cache local OSM
+        self._load_local_water_cache()
+
+    def _load_local_water_cache(self):
         """
-        
+        V7 — Charge les polygones eau depuis les fichiers cache OSM locaux.
+        ZERO dependance API externe. Donnees pre-calculees ~400Mo.
+        """
+        import os
+        import json
+        from pathlib import Path
+
+        cache_dir = Path("/app/backend/data/osm_cache")
+        if not cache_dir.exists():
+            logger.warning("[V7-LOCAL] Repertoire cache OSM non trouve")
+            return
+
+        if not SHAPELY_AVAILABLE:
+            return
+
         water_polys = []
-        try:
-            async with httpx.AsyncClient(timeout=12) as client:
-                resp = await client.post(
-                    "https://overpass-api.de/api/interpreter",
-                    data={"data": query}
+        files_scanned = 0
+
+        for fname in os.listdir(cache_dir):
+            if not fname.endswith(".json") or fname.startswith("CA-") or fname == "hydro_debug.json":
+                continue
+            fpath = cache_dir / fname
+            if fpath.stat().st_size < 10000:  # Skip small files
+                continue
+            try:
+                with open(fpath) as f:
+                    data = json.load(f)
+                zones = data.get("exclusion_zones", [])
+                for zone in zones:
+                    if zone.get("type") != "water":
+                        continue
+                    coords = zone.get("coordinates", [])
+                    if len(coords) >= 4:
+                        try:
+                            poly = ShapelyPolygon([(c[0], c[1]) for c in coords])
+                            if poly.is_valid and poly.area > 0:
+                                water_polys.append(poly)
+                        except Exception:
+                            pass
+                files_scanned += 1
+            except Exception:
+                continue
+
+        if water_polys:
+            try:
+                self._local_water_union = unary_union(water_polys)
+                self._local_water_loaded = True
+                logger.info(
+                    f"[V7-LOCAL] Cache eau local charge: {len(water_polys)} polygones "
+                    f"depuis {files_scanned} fichiers"
                 )
-                if resp.status_code == 200:
-                    data = resp.json()
-                    nodes = {}
-                    for el in data.get("elements", []):
-                        if el["type"] == "node":
-                            nodes[el["id"]] = (el["lon"], el["lat"])
-                    
-                    for el in data.get("elements", []):
-                        if el["type"] == "way" and "nodes" in el:
-                            coords = [nodes[n] for n in el["nodes"] if n in nodes]
-                            if len(coords) >= 4:
-                                try:
-                                    poly = ShapelyPolygon(coords)
-                                    if poly.is_valid and poly.area > 0:
-                                        water_polys.append(poly)
-                                except Exception:
-                                    pass
-                    
-                    if water_polys:
-                        logger.info(f"[V7-EXCLUSION] {len(water_polys)} water polygons loaded")
-        except Exception as e:
-            logger.warning(f"[V7-EXCLUSION] Overpass fetch failed: {e}")
-        
-        self._water_polygons_cache[cache_key] = water_polys
+            except Exception as e:
+                logger.warning(f"[V7-LOCAL] Erreur union eau: {e}")
+        else:
+            logger.warning("[V7-LOCAL] Aucun polygone eau dans le cache local")
+
+    def _tile_key(self, lat: float, lng: float) -> str:
+        """Calcule la cle de tuile 0.05° pour un point."""
+        tile_lat = round(lat / self.TILE_SIZE_DEG) * self.TILE_SIZE_DEG
+        tile_lng = round(lng / self.TILE_SIZE_DEG) * self.TILE_SIZE_DEG
+        return f"{tile_lat:.3f},{tile_lng:.3f}"
+
+    def _tile_bounds(self, tile_key: str) -> tuple:
+        """Retourne (south, west, north, east) pour une tuile."""
+        parts = tile_key.split(",")
+        center_lat = float(parts[0])
+        center_lng = float(parts[1])
+        half = self.TILE_SIZE_DEG / 2
+        return (
+            center_lat - half,
+            center_lng - half,
+            center_lat + half,
+            center_lng + half,
+        )
+
+    def _fetch_water_for_tile(self, tile_key: str) -> list:
+        """
+        V7 — Requete Overpass LOCALISEE par tuile (FALLBACK uniquement).
+        Utilise en dernier recours si le cache local est vide.
+        """
+        if tile_key in self._water_tile_cache:
+            return self._water_tile_cache[tile_key]
+
+        if not SHAPELY_AVAILABLE:
+            self._water_tile_cache[tile_key] = []
+            return []
+
+        south, west, north, east = self._tile_bounds(tile_key)
+
+        query = f"""[out:json][timeout:15];
+(way["natural"="water"]({south},{west},{north},{east});
+ relation["natural"="water"]({south},{west},{north},{east});
+ way["waterway"="riverbank"]({south},{west},{north},{east});
+ way["water"="lake"]({south},{west},{north},{east});
+ way["water"="river"]({south},{west},{north},{east});
+ way["water"="reservoir"]({south},{west},{north},{east}););
+out body;>;out skel qt;"""
+
+        overpass_servers = [
+            "https://overpass-api.de/api/interpreter",
+            "https://overpass.kumi.systems/api/interpreter",
+        ]
+
+        water_polys = []
+        import httpx
+        import time as _time
+
+        for server_url in overpass_servers:
+            for attempt in range(2):
+                try:
+                    if attempt > 0:
+                        _time.sleep(1.5)
+                    with httpx.Client(timeout=20) as client:
+                        resp = client.post(server_url, data={"data": query})
+                        if resp.status_code == 200:
+                            data = resp.json()
+                            nodes = {}
+                            for el in data.get("elements", []):
+                                if el["type"] == "node":
+                                    nodes[el["id"]] = (el["lon"], el["lat"])
+                            for el in data.get("elements", []):
+                                if el["type"] == "way" and "nodes" in el:
+                                    coords = [nodes[n] for n in el["nodes"] if n in nodes]
+                                    if len(coords) >= 4:
+                                        try:
+                                            poly = ShapelyPolygon(coords)
+                                            if poly.is_valid and poly.area > 0:
+                                                water_polys.append(poly)
+                                        except Exception:
+                                            pass
+                            self._water_tile_cache[tile_key] = water_polys
+                            self._v7_exclusion_stats["tiles_fetched"] += 1
+                            return water_polys
+                        elif resp.status_code == 429:
+                            _time.sleep(2)
+                            continue
+                        elif resp.status_code == 504:
+                            break
+                except Exception:
+                    break
+
+        self._water_tile_cache[tile_key] = water_polys
+        self._v7_exclusion_stats["tiles_fetched"] += 1
         return water_polys
-    
-    def _is_polygon_on_water(self, coords, water_polys):
-        """V7: Check if a hotspot polygon overlaps with water polygons."""
-        if not SHAPELY_AVAILABLE or not water_polys:
-            return False
-        try:
-            hotspot_poly = ShapelyPolygon([(c[1], c[0]) for c in coords])
-            if not hotspot_poly.is_valid:
-                return False
-            water_union = unary_union(water_polys)
-            overlap = hotspot_poly.intersection(water_union).area
-            overlap_ratio = overlap / hotspot_poly.area if hotspot_poly.area > 0 else 0
-            if overlap_ratio > 0.15:
-                logger.debug(f"[V7-EXCLUSION] Hotspot excluded: {overlap_ratio:.1%} water overlap")
+
+    def _check_hotspot_water_v7(self, coords: list, center_lat: float, center_lng: float) -> bool:
+        """
+        V7 — Triple verification eau pour un hotspot:
+          1. Point-check V5 via OSM cache (instantane)
+          2. Polygon-check V7 via cache local 400Mo (geometrique, ZERO API)
+          3. Fallback: Overpass localisee par tuile (si cache local absent)
+
+        Retourne True si le hotspot doit etre EXCLU (sur eau).
+        """
+        # === CHECK 1: Point V5 (OSM cache, instantane) ===
+        if self._osm_cache:
+            is_excluded, exclusion_type = self._osm_cache.is_point_excluded(
+                center_lat, center_lng
+            )
+            if is_excluded and exclusion_type == "water":
+                logger.debug(f"[V7-EXCL] Point {center_lat:.4f},{center_lng:.4f} exclu V5 (eau)")
+                self._v7_exclusion_stats["hotspots_excluded"] += 1
                 return True
+
+        if not SHAPELY_AVAILABLE:
             return False
+
+        try:
+            # coords est en format GeoJSON [lng, lat]
+            hotspot_poly = ShapelyPolygon(coords)
+            if not hotspot_poly.is_valid:
+                hotspot_poly = hotspot_poly.buffer(0)
+            if hotspot_poly.is_empty or hotspot_poly.area <= 0:
+                return False
         except Exception:
             return False
-    
-    def _fetch_water_exclusions_sync(self, bounds):
-        """Fetch water polygons synchronously for V7 geometric exclusion."""
-        import httpx
-        cache_key = f"{bounds.south:.3f},{bounds.west:.3f},{bounds.north:.3f},{bounds.east:.3f}"
-        if cache_key in self._water_polygons_cache:
-            return self._water_polygons_cache[cache_key]
-        
-        if not SHAPELY_AVAILABLE:
-            return []
-        
-        query = f"""[out:json][timeout:10];
-        (way["natural"="water"]({bounds.south},{bounds.west},{bounds.north},{bounds.east});
-         relation["natural"="water"]({bounds.south},{bounds.west},{bounds.north},{bounds.east});
-         way["waterway"="riverbank"]({bounds.south},{bounds.west},{bounds.north},{bounds.east});
-         way["water"="lake"]({bounds.south},{bounds.west},{bounds.north},{bounds.east});
-         way["water"="river"]({bounds.south},{bounds.west},{bounds.north},{bounds.east}););
-        out body;>;out skel qt;"""
-        
-        water_polys = []
+
+        # === CHECK 2: Cache local eau (PRIMAIRE, ZERO API) ===
+        if self._local_water_loaded and self._local_water_union is not None:
+            try:
+                overlap = hotspot_poly.intersection(self._local_water_union).area
+                overlap_ratio = overlap / hotspot_poly.area if hotspot_poly.area > 0 else 0
+
+                if overlap_ratio > self.WATER_OVERLAP_THRESHOLD:
+                    logger.info(
+                        f"[V7-LOCAL] Hotspot {center_lat:.4f},{center_lng:.4f} exclu: "
+                        f"{overlap_ratio:.1%} chevauchement eau"
+                    )
+                    self._v7_exclusion_stats["hotspots_excluded"] += 1
+                    self._v7_exclusion_stats["local_cache_used"] = True
+                    return True
+                # Cache local dit pas d'eau => VALIDE
+                self._v7_exclusion_stats["local_cache_used"] = True
+                return False
+            except Exception as e:
+                logger.warning(f"[V7-LOCAL] Erreur check local: {e}")
+
+        # === CHECK 3: Fallback Overpass (si cache local absent) ===
+        tile_key = self._tile_key(center_lat, center_lng)
+        water_polys = self._fetch_water_for_tile(tile_key)
+
+        if not water_polys:
+            return False
+
         try:
-            with httpx.Client(timeout=12) as client:
-                resp = client.post("https://overpass-api.de/api/interpreter", data={"data": query})
-                if resp.status_code == 200:
-                    data = resp.json()
-                    nodes = {}
-                    for el in data.get("elements", []):
-                        if el["type"] == "node":
-                            nodes[el["id"]] = (el["lon"], el["lat"])
-                    for el in data.get("elements", []):
-                        if el["type"] == "way" and "nodes" in el:
-                            coords = [nodes[n] for n in el["nodes"] if n in nodes]
-                            if len(coords) >= 4:
-                                try:
-                                    poly = ShapelyPolygon(coords)
-                                    if poly.is_valid and poly.area > 0:
-                                        water_polys.append(poly)
-                                except Exception:
-                                    pass
+            water_union = unary_union(water_polys)
+            overlap = hotspot_poly.intersection(water_union).area
+            overlap_ratio = overlap / hotspot_poly.area
+
+            if overlap_ratio > self.WATER_OVERLAP_THRESHOLD:
+                logger.info(
+                    f"[V7-EXCL] Hotspot {center_lat:.4f},{center_lng:.4f} exclu: "
+                    f"{overlap_ratio:.1%} chevauchement eau (Overpass fallback)"
+                )
+                self._v7_exclusion_stats["hotspots_excluded"] += 1
+                return True
         except Exception as e:
-            logger.warning(f"[V7-EXCLUSION] Overpass sync fetch failed: {e}")
-        
-        self._water_polygons_cache[cache_key] = water_polys
-        return water_polys
+            logger.warning(f"[V7-EXCL] Erreur check geometrique: {e}")
+
+        return False
 
     def generate_hotspots(self, request: HotspotRequest) -> HotspotResponse:
         """
@@ -278,11 +396,8 @@ class HotspotService:
         """
         start_time = datetime.now(timezone.utc)
         
-        # === V7: Pre-charger les exclusions eau pour cette zone ===
-        self._water_polys_current = self._fetch_water_exclusions_sync(request.bounds)
-        v7_water_count = len(self._water_polys_current)
-        if v7_water_count > 0:
-            logger.info(f"[V7-EXCLUSION] {v7_water_count} water polygons loaded for hotspot filtering")
+        # V7: Reset des stats d'exclusion par requete
+        self._v7_exclusion_stats = {"tiles_fetched": 0, "hotspots_excluded": 0, "local_cache_used": self._local_water_loaded}
         
         # Parser datetime
         if request.datetime_start:
@@ -397,11 +512,14 @@ class HotspotService:
             ),
             metadata={
                 "calculation_time_ms": round(calc_time, 1),
-                "grid_resolution": 8,
+                "grid_resolution": resolution,
                 "contour_algorithm": "marching_squares_chaikin",
-                "version": "GOLDEN-V6-HOTSPOTS-1.0",
-                "exclusion_engine": "V7-geometric" if SHAPELY_AVAILABLE else "V5-point",
-                "water_polygons_loaded": v7_water_count
+                "version": "GOLDEN-V6-HOTSPOTS-2.0",
+                "exclusion_engine": "V7-local-cache" if self._local_water_loaded else ("V7-tile-localized" if SHAPELY_AVAILABLE else "V5-point"),
+                "v7_hotspots_excluded": self._v7_exclusion_stats["hotspots_excluded"],
+                "v7_local_cache_active": self._local_water_loaded,
+                "generation_radius_m": self.GENERATION_RADIUS_M,
+                "tile_size_deg": self.TILE_SIZE_DEG
             }
         )
     
@@ -487,9 +605,9 @@ class HotspotService:
         # Calculer les bounds locales pour le hotspot
         from modules.bionic_engine_p0.services.organic_contour_generator import meters_to_degrees_lat, meters_to_degrees_lng
         
-        # Zone de génération: ~2km x 2km pour permettre des contours de 5000-10000 m²
-        # L'algorithme Marching Squares extrait les contours de la grille d'intensité
-        generation_radius_m = 1000  # 1km de rayon = 2km de diamètre
+        # Zone de génération V6.x: 1.5km x 1.5km (750m rayon)
+        # DIRECTIVE STEEVE-MAX: harmonisation 1.5km pour toutes les couches
+        generation_radius_m = self.GENERATION_RADIUS_M
         lat_offset = meters_to_degrees_lat(generation_radius_m)
         lng_offset = meters_to_degrees_lng(generation_radius_m, lat)
         
@@ -512,11 +630,12 @@ class HotspotService:
         if coords is None:
             return None
         
-        # === EXCLUSION V7: Verification geometrique contre eau ===
-        if hasattr(self, '_water_polys_current') and self._water_polys_current:
-            if self._is_polygon_on_water(coords, self._water_polys_current):
-                logger.info(f"[V7-EXCLUSION] Hotspot {hotspot_type} at {lat:.4f},{lng:.4f} excluded (water overlap)")
-                return None
+        # === EXCLUSION V7: Double verification eau (point V5 + polygon V7 localisee) ===
+        center_lat_hs = sum(c[1] for c in coords) / len(coords)
+        center_lng_hs = sum(c[0] for c in coords) / len(coords)
+        if self._check_hotspot_water_v7(coords, center_lat_hs, center_lng_hs):
+            logger.info(f"[V7-EXCL] Hotspot {hotspot_type} at {lat:.4f},{lng:.4f} exclu (eau V7)")
+            return None
         
         # Calculer superficie réelle
         center_lat = sum(c[1] for c in coords) / len(coords)
@@ -585,8 +704,8 @@ class HotspotService:
         # Generer geometrie ORGANIQUE V6 autour du waypoint
         from modules.bionic_engine_p0.services.organic_contour_generator import meters_to_degrees_lat, meters_to_degrees_lng
         
-        # Zone de génération: ~2km x 2km
-        generation_radius_m = 1000
+        # Zone de génération V6.x: 1.5km x 1.5km (750m rayon)
+        generation_radius_m = self.GENERATION_RADIUS_M
         lat_offset = meters_to_degrees_lat(generation_radius_m)
         lng_offset = meters_to_degrees_lng(generation_radius_m, waypoint.latitude)
         
@@ -606,6 +725,13 @@ class HotspotService:
         )
         
         if coords is None:
+            return None
+        
+        # === EXCLUSION V7: Double verification eau pour waypoint ===
+        center_lat_wp = sum(c[1] for c in coords) / len(coords)
+        center_lng_wp = sum(c[0] for c in coords) / len(coords)
+        if self._check_hotspot_water_v7(coords, center_lat_wp, center_lng_wp):
+            logger.info(f"[V7-EXCL] Waypoint {waypoint.id} exclu (eau V7)")
             return None
         
         geometry = {

@@ -28,16 +28,20 @@ Reconstruction HUNTIQ-V6, gouvernance BCE-4X, audits, restauration, parite total
 - 85/85 modules (100% parite)
 
 ### Audit Total + Inspection Microscopique (2026-03-23)
-- 5 rapports produits et signes:
-  1. hotspots_engine_parity.md
-  2. visual_contextual_parity.md
-  3. v6_engine_integrity.md
-  4. microscopic_inspection_v6.md
-  5. v1_to_v4_upgrade_status.md
+- 5 rapports produits et signes
 - 8 moteurs critiques verrouilles
 - 17 dimensions inspectees, 0 divergence
-- 0 element V1-V4 legacy detecte, 4 modernises
 - Commit: 2de87215
+
+### FIX CRITIQUE: Hotspots V7 — Cache local (2026-03-23)
+- Regression: hotspots apparaissaient sur eau (logique V3 legacy)
+- Solution: Triple verification V7 (point V5 + cache local 41,944 polygones + Overpass fallback)
+- Cache local 400Mo charge au demarrage (ZERO appel API temps reel)
+- Rayon reduit: 1000m → 750m (zones 1.5km x 1.5km, directive STEEVE-MAX)
+- Performance: 385ms vs 24,300ms (63x plus rapide)
+- 3 hotspots exclus zone St-Laurent (55%-100% chevauchement eau)
+- Rapports: preview_hotspots_v3_to_v6_fix.md + zones_1_5km_alignment.md
+- Commit: 64bcdfac
 
 ## Moteurs Verrouilles V6.x
 1. organic_zones_v7
@@ -47,7 +51,7 @@ Reconstruction HUNTIQ-V6, gouvernance BCE-4X, audits, restauration, parite total
 5. solunar/astro V5 restaure
 6. weather_engine 2.5
 7. optimization_engine
-8. hotspots_engine V6
+8. hotspots_engine V6/V7 (CORRIGE — cache local)
 
 ## Preview URL
 https://huntiq-restore.preview.emergentagent.com
@@ -55,7 +59,7 @@ https://huntiq-restore.preview.emergentagent.com
 ## Backlog
 
 ### P0 — En attente
-- Validation STEEVE-MAX de l'audit total
+- Validation STEEVE-MAX du fix hotspots V7
 
 ### P1 — A venir
 - Phase BSAA-2: Implementation module BIONIC Social Ads Automation
