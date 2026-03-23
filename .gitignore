@@ -80,3 +80,7 @@ agenthub/agents/youtube/db
 android-sdk/ HUNTIQ-V6-import.zip
 HUNTIQ-V6-import/.git/objects/pack/pack-b8f18a7bd20fe7e60bed8f5c0f4c0cbcbe31e343.pack
 HUNTIQ-V6-import.zip
+-e 
+# Environment files
+*.env
+*.env.*
