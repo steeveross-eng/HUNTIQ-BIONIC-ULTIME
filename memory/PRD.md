@@ -6,7 +6,7 @@ Reconstruction du depot HUNTIQ-V6 depuis HUNTIQ-V5 (branche bionic-v3-dev), mise
 
 ## Architecture
 - Backend: FastAPI (85 modules dans /backend/modules/)
-- Frontend: React
+- Frontend: React (Craco, TailwindCSS)
 - Base de donnees: MongoDB
 - Branche de travail: Work1
 - Gouvernance: BCE-4X / BCE ULTRA MAX / STEEVE-MAX
@@ -20,37 +20,39 @@ Reconstruction du depot HUNTIQ-V6 depuis HUNTIQ-V5 (branche bionic-v3-dev), mise
 
 ### Gouvernance (2026-03-22)
 - README.md, GOVERNANCE.md, EMERGENT_PROTOCOL.md, SECURITY_POLICY.md
-- CHANGELOG.md avec tracabilite complete
 
 ### Phase 4 — Audit Engines (2026-03-22)
 - 84 modules verifies complets
 
 ### Phase 5B — Audit Coherence (2026-03-22)
-- Matrice de coherence inter-modules
-- Rapport de duplication
-- Graphe de flux de donnees
+- Matrice de coherence inter-modules, rapport de duplication
 
 ### Phase BSAA-0 & BSAA-1 (2026-03-22)
-- Etude de faisabilite BIONIC Social Ads Automation
-- Architecture complete (endpoints, targeting, connecteurs, visual engine)
+- Etude de faisabilite + architecture complete BIONIC Social Ads Automation
 
 ### Phase 5C — Audit Historique (2026-03-23)
-- Clone et analyse V1-V4
-- Identification du module manquant: auto_optimization.py (V2)
-- Plan de restauration approuve par Steeve
+- Clone et analyse V1-V4, identification du module manquant auto_optimization.py
 
 ### Phase 5C-R — Restauration optimization_engine (2026-03-23)
 - Module optimization_engine cree (730 lignes, 13 endpoints)
 - Enregistre dans CORE_ROUTERS (85 modules total)
-- Zero regression, zero duplication
-- Livrables: integration.md, validation.md, diff.md
-- Commit sur Work1: 8b0cbfc1
-- Archive ZIP mise a jour
+- 3 livrables produits, commit Work1: 8b0cbfc1
+- VALIDE PAR STEEVE
+
+### Montage Preview V6 (2026-03-23)
+- Backend/frontend V6 montes dans l'environnement de preview
+- URL: https://huntiq-restore.preview.emergentagent.com
+- Pages validees: Home, Dashboard, Shop, API Docs
+- Guide d'execution locale: documentation/run_local_guide.md
+- Commit Work1: 81f27162
+
+## Preview URL
+https://huntiq-restore.preview.emergentagent.com
 
 ## Backlog Priorise
 
 ### P0 — En attente
-- Validation Steeve de la restauration Phase 5C-R
+- Validation visuelle Steeve du preview V6
 
 ### P1 — A venir
 - Phase BSAA-2: Implementation du module BIONIC Social Ads Automation

@@ -88,3 +88,4 @@ HUNTIQ-V6-import.zip
 # Environment files
 *.env
 *.env.*
+frontend/node_modules/.cache/default-development/0.pack
