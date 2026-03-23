@@ -2,7 +2,7 @@
 # BCE-4X / BCE ULTRA MAX / STEEVE-MAX
 
 ## Probleme Original
-Reconstruction du depot HUNTIQ-V6 depuis HUNTIQ-V5, gouvernance stricte BCE-4X, audits complets, restauration de fonctionnalites perdues.
+Reconstruction du depot HUNTIQ-V6, gouvernance BCE-4X, audits, restauration.
 
 ## Architecture
 - Backend: FastAPI (85 modules) | Frontend: React | DB: MongoDB
@@ -10,36 +10,37 @@ Reconstruction du depot HUNTIQ-V6 depuis HUNTIQ-V5, gouvernance stricte BCE-4X, 
 
 ## Ce qui a ete accompli
 
-### Phase 1-3 — Import/Certification (2026-03-22)
-### Gouvernance (2026-03-22)
+### Phase 1-3 — Import/Certification
+### Gouvernance — README, GOVERNANCE, SECURITY_POLICY, EMERGENT_PROTOCOL
 ### Phase 4 — Audit Engines: 84 modules verifies
 ### Phase 5B — Audit Coherence inter-modules
 ### Phase BSAA-0/1 — Architecture BIONIC Social Ads Automation
-### Phase 5C — Audit Historique: identification auto_optimization.py manquant
+### Phase 5C — Audit Historique V1-V6
 ### Phase 5C-R — Restauration optimization_engine (VALIDE PAR STEEVE)
+### Montage Preview V6 — https://huntiq-restore.preview.emergentagent.com
+### Fix Service Meteo — API 2.5 (commit 60e5f624)
+### Fix Moteur Geospatial V7 — EXCLUSION_ENGINE_VERSION=v7 (commit c20d9a7d)
 
-### Montage Preview V6 (2026-03-23)
-- URL: https://huntiq-restore.preview.emergentagent.com
-
-### Fix Service Meteo (2026-03-23)
-- API 2.5 au lieu de OneCall 3.0, Commit: 60e5f624
-
-### Fix Moteur Geospatial V7 (2026-03-23)
-- EXCLUSION_ENGINE_VERSION=v7 active dans .env
-- Verification: 0 hotspot sur eau, 0 corridor traversant lac
-- Pipeline V7: exclusion Shapely, water union, cost grid, trail gen
-- Zone urbaine: 7/7 rejetees | Zone forestiere: 17 valides, 24 rejetees
-- Intelligence 5 moteurs actifs, score 53.9/100
-- Rapport: audit/geospatial_engine_validation.md
-- Commit: c20d9a7d
+### GOLDEN BUILD Audit V5.4 → V6.x (2026-03-23)
+- 85/85 modules transferes (100% parite)
+- Astro/Solunar ACTIF ET VISIBLE (SolunarChart, Guide Pro, 97 points courbe 24h)
+- 3 divergences corrigees (weather, exclusion, optimization)
+- 0 modules manquants
+- +1 module ajoute (optimization_engine)
+- Rapport: audit/v5_to_v6_feature_parity.md
+- Commit: d3a441da
 
 ## Preview URL
 https://huntiq-restore.preview.emergentagent.com
 
+## GOLDEN BUILDS
+- GOLDEN V5.4: branche bionic-v3-dev (reference)
+- GOLDEN V6.x: branche Work1 (100% parite + optimization_engine)
+
 ## Backlog Priorise
 
 ### P0 — En attente
-- Validation visuelle Steeve du moteur geospatial V7
+- Validation STEEVE-MAX du GOLDEN BUILD V6.x
 
 ### P1 — A venir
 - Phase BSAA-2: Implementation module BIONIC Social Ads Automation
