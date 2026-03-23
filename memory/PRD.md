@@ -2,53 +2,36 @@
 # BCE-4X / BCE ULTRA MAX / STEEVE-MAX
 
 ## Probleme Original
-Reconstruction du depot HUNTIQ-V6 depuis HUNTIQ-V5 (branche bionic-v3-dev), mise en place d'un cadre de gouvernance strict (BCE-4X, MAX ULTRA, STEEVE-MAX), audits complets, et restauration de fonctionnalites perdues.
+Reconstruction du depot HUNTIQ-V6 depuis HUNTIQ-V5, gouvernance stricte BCE-4X, audits complets, restauration de fonctionnalites perdues.
 
 ## Architecture
-- Backend: FastAPI (85 modules dans /backend/modules/)
-- Frontend: React (Craco, TailwindCSS)
-- Base de donnees: MongoDB
-- Branche de travail: Work1
-- Gouvernance: BCE-4X / BCE ULTRA MAX / STEEVE-MAX
+- Backend: FastAPI (85 modules) | Frontend: React | DB: MongoDB
+- Branche: Work1 | Gouvernance: BCE-4X / BCE ULTRA MAX / STEEVE-MAX
 
 ## Ce qui a ete accompli
 
-### Phase 1-3 — Import et Certification (2026-03-22)
-- Clone de bionic-v3-dev depuis HUNTIQ-V5
-- Inventaire certifie (2426 fichiers, 469 dossiers)
-- Archive ZIP certifiee
-
+### Phase 1-3 — Import/Certification (2026-03-22)
 ### Gouvernance (2026-03-22)
-- README.md, GOVERNANCE.md, EMERGENT_PROTOCOL.md, SECURITY_POLICY.md
-
-### Phase 4 — Audit Engines (2026-03-22)
-- 84 modules verifies complets
-
-### Phase 5B — Audit Coherence (2026-03-22)
-- Matrice de coherence inter-modules, rapport de duplication
-
-### Phase BSAA-0 & BSAA-1 (2026-03-22)
-- Etude de faisabilite + architecture complete BIONIC Social Ads Automation
-
-### Phase 5C — Audit Historique (2026-03-23)
-- Clone et analyse V1-V4, identification du module manquant auto_optimization.py
-
-### Phase 5C-R — Restauration optimization_engine (2026-03-23)
-- Module optimization_engine cree (730 lignes, 13 endpoints)
-- Enregistre dans CORE_ROUTERS (85 modules total)
-- VALIDE PAR STEEVE
+### Phase 4 — Audit Engines: 84 modules verifies
+### Phase 5B — Audit Coherence inter-modules
+### Phase BSAA-0/1 — Architecture BIONIC Social Ads Automation
+### Phase 5C — Audit Historique: identification auto_optimization.py manquant
+### Phase 5C-R — Restauration optimization_engine (VALIDE PAR STEEVE)
 
 ### Montage Preview V6 (2026-03-23)
-- Backend/frontend V6 montes dans l'environnement de preview
 - URL: https://huntiq-restore.preview.emergentagent.com
-- Pages validees: Home, Dashboard, Shop, API Docs, Territoire
 
 ### Fix Service Meteo (2026-03-23)
-- Basculement de l'API OneCall 3.0 vers API 2.5 (compatible cle gratuite OWM)
-- Ajout de _build_onecall_compat() pour convertir les reponses
-- Fix cache key pour differencier current/forecast
-- Current weather, forecast 24h, behavior analysis fonctionnels
-- Commit Work1: 60e5f624
+- API 2.5 au lieu de OneCall 3.0, Commit: 60e5f624
+
+### Fix Moteur Geospatial V7 (2026-03-23)
+- EXCLUSION_ENGINE_VERSION=v7 active dans .env
+- Verification: 0 hotspot sur eau, 0 corridor traversant lac
+- Pipeline V7: exclusion Shapely, water union, cost grid, trail gen
+- Zone urbaine: 7/7 rejetees | Zone forestiere: 17 valides, 24 rejetees
+- Intelligence 5 moteurs actifs, score 53.9/100
+- Rapport: audit/geospatial_engine_validation.md
+- Commit: c20d9a7d
 
 ## Preview URL
 https://huntiq-restore.preview.emergentagent.com
@@ -56,10 +39,10 @@ https://huntiq-restore.preview.emergentagent.com
 ## Backlog Priorise
 
 ### P0 — En attente
-- Validation visuelle Steeve du preview V6 (territoire, intelligence, zones, waypoints)
+- Validation visuelle Steeve du moteur geospatial V7
 
 ### P1 — A venir
-- Phase BSAA-2: Implementation du module BIONIC Social Ads Automation
+- Phase BSAA-2: Implementation module BIONIC Social Ads Automation
 
 ### P2 — Futur
 - Merge Work1 vers main
