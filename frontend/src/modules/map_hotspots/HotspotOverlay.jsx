@@ -1,13 +1,14 @@
 /**
  * HotspotOverlay - Overlay des hotspots BIONIC sur Leaflet
- * PHASE P1-HOTSPOTS V3 — REFONTE ON/OFF INDIVIDUELS
+ * GOLDEN V6.x — Mise a niveau BCE-4X (Exclusion V7 active)
  * 
- * Specifications visuelles BIONIC V5 (NON NEGOCIABLES):
+ * Specifications visuelles BIONIC V6 (NON NEGOCIABLES):
  * - Contours ultra-fins (1-2px)
  * - Centre 100% transparent (fill_opacity = 0)
  * - Formes naturelles (Chaikin smoothing)
  * - ZERO glow, shadow, halo
  * - Boutons ON/OFF individuels par hotspot
+ * - Exclusion V7: aucun hotspot sur eau/lac/riviere
  * 
  * Composant Leaflet: Affiche hotspots, zones et corridors comme GeoJSON
  */

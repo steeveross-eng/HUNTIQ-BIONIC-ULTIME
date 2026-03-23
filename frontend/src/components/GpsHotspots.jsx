@@ -82,7 +82,7 @@ const GpsHotspots = ({ onNavigateToMap }) => {
       if (filters.species) params.species = filters.species;
       if (filters.region) params.region = filters.region;
       
-      const response = await axios.get(`${API}/territory/hunting/hotspots`, { params });
+      const response = await axios.get(`${API}/api/territory/hunting/hotspots`, { params });
       
       setHotspots(response.data.hotspots || []);
       setStats(response.data.stats || {});

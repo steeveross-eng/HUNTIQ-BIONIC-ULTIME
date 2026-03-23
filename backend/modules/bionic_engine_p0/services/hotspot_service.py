@@ -1,17 +1,18 @@
 """
-BIONIC ENGINE - Hotspot Service V3
-PHASE P1-HOTSPOTS — REFONTE MAJEURE
+BIONIC ENGINE - Hotspot Service V6
+PHASE P1-HOTSPOTS — MISE A NIVEAU V6 (Exclusion Geometrique V7)
 
 Service de generation des hotspots cartographiques ORGANIQUES.
 Formes 100% naturelles via Marching Squares + Chaikin.
+Exclusion V7: filtrage geometrique Shapely (water, urban, roads).
 
-SPÉCIFICATIONS OBLIGATOIRES:
-- Formes ORGANIQUES (ZÉRO cercle)
-- Superficie: 5000-10000 m²
-- Évitement RÉEL: eau, routes, urbain (OSM Cache)
-- Alignement comportemental par espèce
+SPECIFICATIONS OBLIGATOIRES:
+- Formes ORGANIQUES (ZERO cercle)
+- Superficie: 5000-10000 m2
+- Exclusion GEOMETRIQUE V7: polygones testes contre eau/routes/urbain
+- Alignement comportemental par espece
 
-Conformite: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformite: BCE-4X | GOLDEN V6.x | STEEVE-MAX
 """
 
 from typing import Dict, List, Any, Optional
@@ -38,6 +39,14 @@ try:
     from modules.bionic_engine_p0.services.osm_cache_service import get_osm_cache
 except ImportError:
     get_osm_cache = None
+
+# Import Exclusion Engine V7 pour filtrage geometrique
+try:
+    from shapely.geometry import Polygon as ShapelyPolygon, MultiPolygon
+    from shapely.ops import unary_union
+    SHAPELY_AVAILABLE = True
+except ImportError:
+    SHAPELY_AVAILABLE = False
 
 logger = logging.getLogger("bionic_engine.hotspot_service")
 
@@ -121,17 +130,18 @@ class HotspotResponse(BaseModel):
 
 class HotspotService:
     """
-    Service de generation de hotspots ORGANIQUES V3.
+    Service de generation de hotspots ORGANIQUES V6.
     
-    REFONTE MAJEURE — Génération via Marching Squares + Chaikin.
+    MISE A NIVEAU V6 — Exclusion Geometrique V7 (Shapely).
     
-    SPÉCIFICATIONS BIONIC V5:
-    - Formes 100% ORGANIQUES (ZÉRO cercle)
-    - Superficie: 5000-10000 m²
-    - Évitement RÉEL: eau, routes, zones urbaines (OSM Cache)
-    - Alignement comportemental par espèce
+    SPECIFICATIONS GOLDEN V6.x:
+    - Formes 100% ORGANIQUES (ZERO cercle)
+    - Superficie: 5000-10000 m2
+    - Exclusion GEOMETRIQUE V7: polygones vs eau/routes/urbain
+    - Alignement comportemental par espece
     - Contours 1-2px, centre transparent
     - ZERO fill, ZERO effets
+    - BCE-4X / STEEVE-MAX conforme
     """
     
     def __init__(self):
@@ -139,18 +149,140 @@ class HotspotService:
         self._bm_service = BehavioralModelsService()
         self._organic_gen = OrganicContourGenerator()
         self._osm_cache = get_osm_cache() if get_osm_cache else None
+        self._water_polygons_cache = {}
     
+    async def _fetch_water_exclusions(self, bounds: BoundsInput):
+        """Fetch water polygons from Overpass for V7 geometric exclusion."""
+        import httpx
+        cache_key = f"{bounds.south:.3f},{bounds.west:.3f},{bounds.north:.3f},{bounds.east:.3f}"
+        if cache_key in self._water_polygons_cache:
+            return self._water_polygons_cache[cache_key]
+        
+        if not SHAPELY_AVAILABLE:
+            return []
+        
+        query = f"""
+        [out:json][timeout:10];
+        (
+          way["natural"="water"]({bounds.south},{bounds.west},{bounds.north},{bounds.east});
+          relation["natural"="water"]({bounds.south},{bounds.west},{bounds.north},{bounds.east});
+          way["waterway"="riverbank"]({bounds.south},{bounds.west},{bounds.north},{bounds.east});
+          way["water"="lake"]({bounds.south},{bounds.west},{bounds.north},{bounds.east});
+          way["water"="river"]({bounds.south},{bounds.west},{bounds.north},{bounds.east});
+          way["water"="reservoir"]({bounds.south},{bounds.west},{bounds.north},{bounds.east});
+        );
+        out body;
+        >;
+        out skel qt;
+        """
+        
+        water_polys = []
+        try:
+            async with httpx.AsyncClient(timeout=12) as client:
+                resp = await client.post(
+                    "https://overpass-api.de/api/interpreter",
+                    data={"data": query}
+                )
+                if resp.status_code == 200:
+                    data = resp.json()
+                    nodes = {}
+                    for el in data.get("elements", []):
+                        if el["type"] == "node":
+                            nodes[el["id"]] = (el["lon"], el["lat"])
+                    
+                    for el in data.get("elements", []):
+                        if el["type"] == "way" and "nodes" in el:
+                            coords = [nodes[n] for n in el["nodes"] if n in nodes]
+                            if len(coords) >= 4:
+                                try:
+                                    poly = ShapelyPolygon(coords)
+                                    if poly.is_valid and poly.area > 0:
+                                        water_polys.append(poly)
+                                except Exception:
+                                    pass
+                    
+                    if water_polys:
+                        logger.info(f"[V7-EXCLUSION] {len(water_polys)} water polygons loaded")
+        except Exception as e:
+            logger.warning(f"[V7-EXCLUSION] Overpass fetch failed: {e}")
+        
+        self._water_polygons_cache[cache_key] = water_polys
+        return water_polys
+    
+    def _is_polygon_on_water(self, coords, water_polys):
+        """V7: Check if a hotspot polygon overlaps with water polygons."""
+        if not SHAPELY_AVAILABLE or not water_polys:
+            return False
+        try:
+            hotspot_poly = ShapelyPolygon([(c[1], c[0]) for c in coords])
+            if not hotspot_poly.is_valid:
+                return False
+            water_union = unary_union(water_polys)
+            overlap = hotspot_poly.intersection(water_union).area
+            overlap_ratio = overlap / hotspot_poly.area if hotspot_poly.area > 0 else 0
+            if overlap_ratio > 0.15:
+                logger.debug(f"[V7-EXCLUSION] Hotspot excluded: {overlap_ratio:.1%} water overlap")
+                return True
+            return False
+        except Exception:
+            return False
+    
+    def _fetch_water_exclusions_sync(self, bounds):
+        """Fetch water polygons synchronously for V7 geometric exclusion."""
+        import httpx
+        cache_key = f"{bounds.south:.3f},{bounds.west:.3f},{bounds.north:.3f},{bounds.east:.3f}"
+        if cache_key in self._water_polygons_cache:
+            return self._water_polygons_cache[cache_key]
+        
+        if not SHAPELY_AVAILABLE:
+            return []
+        
+        query = f"""[out:json][timeout:10];
+        (way["natural"="water"]({bounds.south},{bounds.west},{bounds.north},{bounds.east});
+         relation["natural"="water"]({bounds.south},{bounds.west},{bounds.north},{bounds.east});
+         way["waterway"="riverbank"]({bounds.south},{bounds.west},{bounds.north},{bounds.east});
+         way["water"="lake"]({bounds.south},{bounds.west},{bounds.north},{bounds.east});
+         way["water"="river"]({bounds.south},{bounds.west},{bounds.north},{bounds.east}););
+        out body;>;out skel qt;"""
+        
+        water_polys = []
+        try:
+            with httpx.Client(timeout=12) as client:
+                resp = client.post("https://overpass-api.de/api/interpreter", data={"data": query})
+                if resp.status_code == 200:
+                    data = resp.json()
+                    nodes = {}
+                    for el in data.get("elements", []):
+                        if el["type"] == "node":
+                            nodes[el["id"]] = (el["lon"], el["lat"])
+                    for el in data.get("elements", []):
+                        if el["type"] == "way" and "nodes" in el:
+                            coords = [nodes[n] for n in el["nodes"] if n in nodes]
+                            if len(coords) >= 4:
+                                try:
+                                    poly = ShapelyPolygon(coords)
+                                    if poly.is_valid and poly.area > 0:
+                                        water_polys.append(poly)
+                                except Exception:
+                                    pass
+        except Exception as e:
+            logger.warning(f"[V7-EXCLUSION] Overpass sync fetch failed: {e}")
+        
+        self._water_polygons_cache[cache_key] = water_polys
+        return water_polys
+
     def generate_hotspots(self, request: HotspotRequest) -> HotspotResponse:
         """
         Genere les hotspots pour une zone et periode.
-        
-        Args:
-            request: Parametres de requete
-            
-        Returns:
-            HotspotResponse avec liste de hotspots
+        GOLDEN V6.x: Exclusion geometrique V7 appliquee.
         """
         start_time = datetime.now(timezone.utc)
+        
+        # === V7: Pre-charger les exclusions eau pour cette zone ===
+        self._water_polys_current = self._fetch_water_exclusions_sync(request.bounds)
+        v7_water_count = len(self._water_polys_current)
+        if v7_water_count > 0:
+            logger.info(f"[V7-EXCLUSION] {v7_water_count} water polygons loaded for hotspot filtering")
         
         # Parser datetime
         if request.datetime_start:
@@ -267,7 +399,9 @@ class HotspotService:
                 "calculation_time_ms": round(calc_time, 1),
                 "grid_resolution": 8,
                 "contour_algorithm": "marching_squares_chaikin",
-                "version": "P1-HOTSPOTS-1.0"
+                "version": "GOLDEN-V6-HOTSPOTS-1.0",
+                "exclusion_engine": "V7-geometric" if SHAPELY_AVAILABLE else "V5-point",
+                "water_polygons_loaded": v7_water_count
             }
         )
     
@@ -327,11 +461,11 @@ class HotspotService:
         if score < min_threshold:
             return None
         
-        # Vérifier évitement OSM AVANT génération
+        # Vérifier évitement OSM AVANT génération (point check V5 - maintenu)
         if self._osm_cache:
             is_excluded, exclusion_type = self._osm_cache.is_point_excluded(lat, lng)
             if is_excluded:
-                logger.debug(f"Point {lat},{lng} exclu: {exclusion_type}")
+                logger.debug(f"[V5] Point {lat},{lng} exclu: {exclusion_type}")
                 return None
         
         # Determiner heures optimales
@@ -376,8 +510,13 @@ class HotspotService:
         )
         
         if coords is None:
-            # Échec de génération - retourner None (liste vide acceptable)
             return None
+        
+        # === EXCLUSION V7: Verification geometrique contre eau ===
+        if hasattr(self, '_water_polys_current') and self._water_polys_current:
+            if self._is_polygon_on_water(coords, self._water_polys_current):
+                logger.info(f"[V7-EXCLUSION] Hotspot {hotspot_type} at {lat:.4f},{lng:.4f} excluded (water overlap)")
+                return None
         
         # Calculer superficie réelle
         center_lat = sum(c[1] for c in coords) / len(coords)
@@ -443,7 +582,7 @@ class HotspotService:
                 logger.debug(f"Waypoint {waypoint.id} exclu: {exclusion_type}")
                 return None
         
-        # Generer geometrie ORGANIQUE V3 autour du waypoint
+        # Generer geometrie ORGANIQUE V6 autour du waypoint
         from modules.bionic_engine_p0.services.organic_contour_generator import meters_to_degrees_lat, meters_to_degrees_lng
         
         # Zone de génération: ~2km x 2km
