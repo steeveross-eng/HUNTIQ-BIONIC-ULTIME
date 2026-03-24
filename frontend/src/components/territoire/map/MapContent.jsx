@@ -24,6 +24,7 @@ import { PLACE_TYPES } from '@/config/placeTypes';
 import BionicCorridorsV10Layer from '@/components/territoire/BionicCorridorsV10Layer';
 import AlimentationV2Layer from '@/components/territoire/AlimentationV2Layer';
 import ConsolidatedHeatmapLayer from '@/components/territoire/ConsolidatedHeatmapLayer';
+import StandsMapLayer from '@/components/territoire/StandsMapLayer';
 
 const MapContentInner = React.memo(({
   // Eco layers
@@ -87,6 +88,10 @@ const MapContentInner = React.memo(({
   showSalines,
   nSalinesMax,
   onAlimentationDataLoaded,
+  // STANDS x2280/x2320
+  showStands,
+  windDirection,
+  windSpeed,
   // HEATMAP V10 consolidée
   showHeatmapV10,
   onHeatmapDataLoaded,
@@ -196,6 +201,17 @@ const MapContentInner = React.memo(({
         showSalines={showSalines}
         maxSalines={nSalinesMax}
         onDataLoaded={onAlimentationDataLoaded}
+      />
+    )}
+
+    {/* STANDS x2280/x2320: Affûts professionnels + chemins d'approche */}
+    {selectedWaypointForZones && showStands && waypointCenter && (
+      <StandsMapLayer
+        center={waypointCenter}
+        species={selectedSpecies}
+        windDirection={windDirection || 'NE'}
+        windSpeed={windSpeed || 12}
+        enabled={showStands}
       />
     )}
 

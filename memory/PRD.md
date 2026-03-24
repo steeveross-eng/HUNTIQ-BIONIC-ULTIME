@@ -91,12 +91,20 @@ Reconstruction et evolution du projet HUNTIQ (V6 → V7), application modulaire 
 - Rapport: audit/bionic_mon_territoire_fix_x2310.md
 - Commit: 4af6d1e1 sur Work1
 
+### DIRECTIVE x2320-EXEC — Audit de Verite (Complete - 2026-03-25)
+- CAUSE RACINE: x2310 corrigeait BionicModulesPage (onglet Intelligence) au lieu de CARTE Leaflet
+- AlimentationV2Layer.jsx: tooltip saline enrichi (8 mineraux, barres, carences, recommandations, sol/pH)
+- StandsMapLayer.jsx: NOUVEAU — couche Leaflet affuts (marqueurs, scores, chemins pointes, popup 11 sections)
+- MapContent.jsx + MonTerritoireBionicPage.jsx: integration StandsMapLayer
+- WindFlowLayer.jsx: +10% supplementaire (total +25%)
+- Commit: a29969da sur Work1
+
 ---
 
 ## Prioritized Backlog
 
-### P0 — Attente validation x2310-EXEC
-- Validation STEEVE-MAX requise
+### P0 — Attente validation x2320-EXEC
+- Validation STEEVE-MAX requise pour l'audit de verite
 
 ### P0 — Phase 1 Roadmap (attente directive x2300-P1)
 - Normalisation API unifiee, endpoints observations + sync, adaptation mobile
@@ -127,9 +135,9 @@ Endpoints data-fabric: 6
 Hybrid Architecture: WEB (React) + Mobile Native (React Native/Expo)
 API Unifiee: 10 domaines, 46 endpoints specifies
 Roadmap: 4 phases, 20-28 semaines
-Architecture: V7-X2310-TERRITOIRE-FIXED
+Architecture: V7-X2320-CARTE-VERITE
 ```
 
-**Derniere mise a jour:** 2026-03-25 — x2310-EXEC Complete
+**Derniere mise a jour:** 2026-03-25 — x2320-EXEC Complete
 **Branche active:** Work1
 **PREVIEW URL:** https://huntiq-restore.preview.emergentagent.com

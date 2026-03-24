@@ -1118,6 +1118,9 @@ const MonTerritoireBionicPage = () => {
               nSalinesMax={nSalinesMax}
               onAlimentationDataLoaded={setAlimentationV2Data}
               waypointCenter={waypointCenter}
+              showStands={showAlimentationV2}
+              windDirection={windMode === 'arrows' ? 'NE' : 'NE'}
+              windSpeed={12}
               showHeatmapV10={showHeatmapV10}
               onHeatmapDataLoaded={setHeatmapV10Data}
               heatmapIncludeCorridors={heatmapIncludeCorridors}
