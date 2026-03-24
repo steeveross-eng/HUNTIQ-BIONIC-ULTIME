@@ -1,6 +1,7 @@
 /**
- * AdminHotspots V3 — Section ADMIN complete
+ * AdminHotspots V6 — Section ADMIN complete
  * Carte Leaflet + Tableau enrichi + Filtres + Export + Scheduler + Gestionnaire
+ * V6: Cercles 600m + Exclusion eau V7 + GOLDEN-BCE-4X
  */
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { MapPin, Download, RefreshCw, Filter, ChevronDown, Shield, BarChart3, Clock, MapIcon, List, Phone, Globe, Mail, ExternalLink, Mountain, Navigation, Map } from 'lucide-react';
@@ -57,9 +58,9 @@ const SatellitePreview = ({ lat, lng, visible, anchorRef }) => {
       maxZoom: 19,
     }).addTo(map);
 
-    // Cercle de highlight ~2km² (rayon ≈ 800m)
+    // Cercle V6 officiel 600m (directive STEEVE-MAX)
     L.circle([lat, lng], {
-      radius: 800,
+      radius: 600,
       color: '#f5a623',
       fillColor: '#f5a623',
       fillOpacity: 0.15,
@@ -158,7 +159,7 @@ const HotspotMap = ({ hotspots, selectedRegion }) => {
     if (!mapRef.current || mapInstanceRef.current) return;
     const map = L.map(mapRef.current, { zoomControl: true }).setView([47.5, -72.0], 6);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: 'BIONIC V3',
+      attribution: 'BIONIC V6 | GOLDEN-BCE-4X',
       maxZoom: 18,
     }).addTo(map);
     mapInstanceRef.current = map;
@@ -316,14 +317,29 @@ const AdminHotspots = () => {
   const runScheduler = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${HOTSPOT_API}/scheduler/run`, { method: 'POST' });
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 180000); // 3 min timeout
+      const res = await fetch(`${HOTSPOT_API}/scheduler/run`, { 
+        method: 'POST',
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
       const data = await res.json();
       setExtractionSummary(data);
       setSchedulerInfo({ last_run: data.extracted_at, next_run: data.next_scheduled, run: data.scheduler_run });
       setBceReport(data.bce4x_report);
       await fetchList();
       await fetchStats();
-    } catch (e) { console.error(e); }
+    } catch (e) {
+      // Si timeout proxy, re-fetch les donnees (extraction a probablement reussi cote serveur)
+      console.warn('Extraction timeout, fetching results...', e);
+      setTimeout(async () => {
+        await fetchList();
+        await fetchStats();
+        setLoading(false);
+      }, 5000);
+      return;
+    }
     finally { setLoading(false); }
   }, [fetchList, fetchStats]);
 
@@ -338,7 +354,7 @@ const AdminHotspots = () => {
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url;
-      a.download = `hotspots_bionic_v3_${new Date().toISOString().slice(0, 10)}.${type === 'geojson' ? 'geojson' : 'json'}`;
+      a.download = `hotspots_bionic_v6_${new Date().toISOString().slice(0, 10)}.${type === 'geojson' ? 'geojson' : 'json'}`;
       a.click(); URL.revokeObjectURL(url);
     } catch (e) { console.error(e); }
   }, []);
@@ -356,7 +372,7 @@ const AdminHotspots = () => {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <MapPin className="h-5 w-5 text-[#f5a623]" /> Hotspots BIONIC V3 / Terres a louer
+            <MapPin className="h-5 w-5 text-[#f5a623]" /> Hotspots BIONIC V6 / Terres a louer
           </h2>
           <p className="text-sm text-gray-400 mt-1">Extraction, scoring et donnees territoriales</p>
         </div>

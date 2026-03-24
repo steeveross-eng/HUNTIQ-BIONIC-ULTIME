@@ -335,11 +335,15 @@ async def scheduler_status():
 
 @router.post("/scheduler/run")
 async def scheduler_run_now():
-    """Manually trigger the annual extraction. Also runs BCE-4X report."""
+    """Manually trigger the annual extraction. Runs in background for large datasets."""
     global _latest_extraction, _scheduler_config
 
     context = {"season": "automne", "hour": 6}
-    result = extract_all_regions(context)
+
+    # Run extraction synchronously (pre-loads water cache on first call)
+    import asyncio
+    loop = asyncio.get_event_loop()
+    result = await loop.run_in_executor(None, extract_all_regions, context)
     _latest_extraction = result
 
     # Update scheduler state

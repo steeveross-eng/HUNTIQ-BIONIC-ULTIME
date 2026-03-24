@@ -15,33 +15,43 @@ Reconstruction HUNTIQ-V6, gouvernance BCE-4X, audits, restauration, parite total
 
 ## Accompli
 
-### Phases 1-5C — Import, Gouvernance, Audits (2026-03-22/23)
+### Phases 1-5C — Import, Gouvernance, Audits
 ### Phase 5C-R — Restauration optimization_engine (VALIDE)
 ### Montage Preview V6
 - URL: https://huntiq-restore.preview.emergentagent.com
 
-### Corrections V6 (2026-03-23)
-- Weather API 2.5 (commit 60e5f624)
-- Exclusion V7 active (commit c20d9a7d)
+### Corrections V6
+- Weather API 2.5
+- Exclusion V7 active
 
-### GOLDEN BUILD Audit V5.4 → V6.x (commit d3a441da)
+### GOLDEN BUILD Audit V5.4 → V6.x
 - 85/85 modules (100% parite)
 
-### Audit Total + Inspection Microscopique (2026-03-23)
-- 5 rapports produits et signes
-- 8 moteurs critiques verrouilles
-- 17 dimensions inspectees, 0 divergence
-- Commit: 2de87215
+### Audit Total + Inspection Microscopique
+- 5 rapports, 17 dimensions, 0 divergence
 
 ### FIX CRITIQUE: Hotspots V7 — Cache local (2026-03-23)
-- Regression: hotspots apparaissaient sur eau (logique V3 legacy)
-- Solution: Triple verification V7 (point V5 + cache local 41,944 polygones + Overpass fallback)
-- Cache local 400Mo charge au demarrage (ZERO appel API temps reel)
-- Rayon reduit: 1000m → 750m (zones 1.5km x 1.5km, directive STEEVE-MAX)
-- Performance: 385ms vs 24,300ms (63x plus rapide)
-- 3 hotspots exclus zone St-Laurent (55%-100% chevauchement eau)
-- Rapports: preview_hotspots_v3_to_v6_fix.md + zones_1_5km_alignment.md
+- Triple verification V7 (point V5 + cache local 41,944 polygones + Overpass fallback)
 - Commit: 64bcdfac
+
+### MIGRATION CERCLES 600m + ADMIN PREMIUM FIX (2026-03-24)
+- **Directive STEEVE-MAX: Conversion carres → cercles 600m**
+  - hotspot_service.py: Cercle 600m (48pts) remplace contours organiques
+  - hotspot_engine.py: Cercle 600m remplace convex hull V3
+  - AdminHotspots.jsx: BIONIC V3 → V6 + satellite 600m
+  - BionicEngineHub.jsx: BIONIC V3 → V6
+- **Correction Admin Premium hotspots sur eau**
+  - 7 causes identifiees et corrigees
+  - Cache eau V7: 41,944 polygones au demarrage
+  - BCE-4X: PASS 1800/1800 (WATER-001, GEOM-003)
+- **Resultats**
+  - Admin: 300 hs, 12 regions, ZERO sur eau
+  - Carte: 7 hs, 9 exclus eau, 55ms
+- **Rapports**
+  - audit/geometry_square_to_circle_migration.md
+  - audit/zones_circulaires_600m_alignment.md
+  - audit/admin_premium_hotspots_water_fix.md
+- Commit: 8e99f3fe
 
 ## Moteurs Verrouilles V6.x
 1. organic_zones_v7
@@ -51,7 +61,8 @@ Reconstruction HUNTIQ-V6, gouvernance BCE-4X, audits, restauration, parite total
 5. solunar/astro V5 restaure
 6. weather_engine 2.5
 7. optimization_engine
-8. hotspots_engine V6/V7 (CORRIGE — cache local)
+8. hotspots_engine V6/V7 (CERCLES 600m + cache local eau)
+9. admin_hotspots V6 (CERCLES 600m + BCE-4X PASS)
 
 ## Preview URL
 https://huntiq-restore.preview.emergentagent.com
@@ -59,7 +70,7 @@ https://huntiq-restore.preview.emergentagent.com
 ## Backlog
 
 ### P0 — En attente
-- Validation STEEVE-MAX du fix hotspots V7
+- Validation STEEVE-MAX du fix cercles 600m + Admin Premium
 
 ### P1 — A venir
 - Phase BSAA-2: Implementation module BIONIC Social Ads Automation

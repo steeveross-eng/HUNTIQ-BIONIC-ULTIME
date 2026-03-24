@@ -1,5 +1,5 @@
 /**
- * BionicEngineHub.jsx — Hub BIONIC V3 complet
+ * BionicEngineHub.jsx — Hub BIONIC V6 complet
  * STEVE-MAX++: 27 engines (12 V2 + 12 V3 + 3 IA) + 3 modeles fauniques
  */
 
@@ -130,7 +130,7 @@ const BionicEngineHub = ({ zones, corridors, weather, season, hour, bounds, spec
       >
         <div className="flex items-center gap-1.5">
           <Zap className="h-3.5 w-3.5 text-violet-400" />
-          <span className="text-[10px] font-semibold text-violet-300 uppercase tracking-wider">BIONIC V3</span>
+          <span className="text-[10px] font-semibold text-violet-300 uppercase tracking-wider">BIONIC V6</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1">

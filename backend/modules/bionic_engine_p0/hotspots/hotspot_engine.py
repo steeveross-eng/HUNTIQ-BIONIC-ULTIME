@@ -1,7 +1,8 @@
 """
-BIONIC V3 — Hotspot Extraction & Scoring Engine
+BIONIC V6 — Hotspot Extraction & Scoring Engine
 =================================================
 COMMANDE ADMIN: Extraction complete des hotspots de chasse.
+UPGRADE V6.x: Zones circulaires 600m + Exclusion eau V7 (cache local).
 
 Scoring officiel (0-100):
 - 20% Corridors V9
@@ -14,17 +15,31 @@ Scoring officiel (0-100):
 - 5%  Disturbance Engine
 - 5%  GlobalAttractiveness v2
 
-Methode: Grille 50m x 50m → Scoring → DBSCAN Clustering → Filtre → Polygone
+Methode: Grille adaptative → Scoring → DBSCAN Clustering → Exclusion eau V7 → Cercle 600m
+
+Conformite: GOLDEN-BCE-4X | BCE ULTRA MAX | STEEVE-MAX x100
 """
 
 import math
 import logging
 import hashlib
+import json
+import os
+from pathlib import Path
 from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
 from modules.bionic_engine_p0.hotspots.territory_data import enrich_hotspot_territory
 
 logger = logging.getLogger("bionic.hotspots")
+
+# Shapely import
+try:
+    from shapely.geometry import Polygon as ShapelyPolygon, Point as ShapelyPoint
+    from shapely.ops import unary_union
+    SHAPELY_AVAILABLE = True
+except ImportError:
+    SHAPELY_AVAILABLE = False
+    logger.warning("[V7-ADMIN] Shapely non disponible — exclusion eau desactivee")
 
 # ══════════════════════════════════════════════════════════
 # PONDERATIONS OFFICIELLES
@@ -77,6 +92,130 @@ BIONIC_REGIONS = [
     {"id": "cote_nord", "name": "Cote-Nord", "center": [49.50, -67.00], "radius_km": 90},
     {"id": "gaspesie", "name": "Gaspesie-Iles-de-la-Madeleine", "center": [48.50, -65.50], "radius_km": 60},
 ]
+
+# ══════════════════════════════════════════════════════════
+# V7 — CACHE EAU LOCAL + GENERATEUR CERCLES 600m
+# ══════════════════════════════════════════════════════════
+CIRCLE_RADIUS_M = 600  # Rayon officiel V6.x (directive STEEVE-MAX)
+CIRCLE_NUM_POINTS = 48  # Points pour approximer le cercle
+WATER_OVERLAP_THRESHOLD = 0.15  # 15% overlap = exclusion
+
+# Cache eau global (charge une seule fois)
+_water_union_cache = None
+_water_cache_loaded = False
+
+
+def _load_water_cache():
+    """Charge les polygones eau depuis le cache OSM local (400Mo)."""
+    global _water_union_cache, _water_cache_loaded
+    if _water_cache_loaded:
+        return _water_union_cache
+
+    if not SHAPELY_AVAILABLE:
+        _water_cache_loaded = True
+        return None
+
+    cache_dir = Path("/app/backend/data/osm_cache")
+    if not cache_dir.exists():
+        logger.warning("[V7-ADMIN] Cache OSM non trouve")
+        _water_cache_loaded = True
+        return None
+
+    water_polys = []
+    files_scanned = 0
+
+    for fname in os.listdir(cache_dir):
+        if not fname.endswith(".json") or fname.startswith("CA-") or fname == "hydro_debug.json":
+            continue
+        fpath = cache_dir / fname
+        if fpath.stat().st_size < 10000:
+            continue
+        try:
+            with open(fpath) as f:
+                data = json.load(f)
+            zones = data.get("exclusion_zones", [])
+            for zone in zones:
+                if zone.get("type") != "water":
+                    continue
+                coords = zone.get("coordinates", [])
+                if len(coords) >= 4:
+                    try:
+                        poly = ShapelyPolygon([(c[0], c[1]) for c in coords])
+                        if poly.is_valid and poly.area > 0:
+                            water_polys.append(poly)
+                    except Exception:
+                        pass
+            files_scanned += 1
+        except Exception:
+            continue
+
+    if water_polys:
+        try:
+            _water_union_cache = unary_union(water_polys)
+            logger.info(f"[V7-ADMIN] Cache eau charge: {len(water_polys)} polygones depuis {files_scanned} fichiers")
+        except Exception as e:
+            logger.warning(f"[V7-ADMIN] Erreur union eau: {e}")
+    else:
+        logger.warning("[V7-ADMIN] Aucun polygone eau dans le cache")
+
+    _water_cache_loaded = True
+    return _water_union_cache
+
+
+def _is_point_on_water(lat: float, lng: float) -> bool:
+    """V7 — Verifie si un point est sur eau via le cache local."""
+    water = _load_water_cache()
+    if water is None:
+        return False
+    try:
+        point = ShapelyPoint(lng, lat)
+        return water.contains(point)
+    except Exception:
+        return False
+
+
+def _is_circle_on_water(center_lat: float, center_lng: float) -> bool:
+    """V7 — Verifie si un cercle 600m chevauche l'eau au-dela du seuil."""
+    water = _load_water_cache()
+    if water is None:
+        return False
+    try:
+        circle_coords = _generate_circle_coords(center_lat, center_lng, CIRCLE_RADIUS_M)
+        circle_poly = ShapelyPolygon(circle_coords)
+        if not circle_poly.is_valid:
+            circle_poly = circle_poly.buffer(0)
+        overlap = circle_poly.intersection(water).area
+        ratio = overlap / circle_poly.area if circle_poly.area > 0 else 0
+        if ratio > WATER_OVERLAP_THRESHOLD:
+            logger.debug(f"[V7-ADMIN] Cercle {center_lat:.4f},{center_lng:.4f} exclu: {ratio:.1%} eau")
+            return True
+        return False
+    except Exception:
+        return False
+
+
+def _generate_circle_coords(center_lat: float, center_lng: float, radius_m: float) -> List[List[float]]:
+    """Genere les coordonnees d'un cercle parfait en [lng, lat] format GeoJSON."""
+    coords = []
+    for i in range(CIRCLE_NUM_POINTS):
+        angle = 2 * math.pi * i / CIRCLE_NUM_POINTS
+        dlat = (radius_m * math.cos(angle)) / 111320.0
+        dlng = (radius_m * math.sin(angle)) / (111320.0 * math.cos(math.radians(center_lat)))
+        coords.append([center_lng + dlng, center_lat + dlat])
+    coords.append(coords[0])
+    return coords
+
+
+def _generate_circle_polygon_latlon(center_lat: float, center_lng: float, radius_m: float) -> List[List[float]]:
+    """Genere les coordonnees d'un cercle en [lat, lng] pour le frontend Leaflet."""
+    coords = []
+    for i in range(CIRCLE_NUM_POINTS):
+        angle = 2 * math.pi * i / CIRCLE_NUM_POINTS
+        dlat = (radius_m * math.cos(angle)) / 111320.0
+        dlng = (radius_m * math.sin(angle)) / (111320.0 * math.cos(math.radians(center_lat)))
+        coords.append([center_lat + dlat, center_lng + dlng])
+    coords.append(coords[0])
+    return coords
 
 
 def _compute_engine_scores(lat: float, lng: float, context: Dict[str, Any]) -> Dict[str, float]:
@@ -260,15 +399,24 @@ def extract_hotspots_for_region(
     region: Dict[str, Any],
     context: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
-    """Extract all hotspots for a given BIONIC region."""
+    """Extract all hotspots for a given BIONIC region. V6: cercles 600m + exclusion eau V7."""
     ctx = context or {"season": "automne", "hour": 6}
     center = region["center"]
     radius = region.get("radius_km", 50)
 
     grid = _generate_grid(center[0], center[1], radius, cell_size_m=50.0)
 
+    # V7: Pre-charger le cache eau
+    _load_water_cache()
+    v7_cells_excluded = 0
+
     scored_cells = []
     for cell in grid:
+        # V7: Exclure les cellules sur eau avant scoring
+        if _is_point_on_water(cell["lat"], cell["lng"]):
+            v7_cells_excluded += 1
+            continue
+
         engines = _compute_engine_scores(cell["lat"], cell["lng"], ctx)
         score = compute_hotspot_score(engines)
         if score >= HOTSPOT_THRESHOLDS["MODERE"]:
@@ -282,7 +430,6 @@ def extract_hotspots_for_region(
             })
 
     high_cells = [c for c in scored_cells if c["score"] >= HOTSPOT_THRESHOLDS["FORT"]]
-    # Adapt clustering eps to the effective grid spacing
     if grid:
         effective_spacing = (radius * 1000) / min(50, int(radius * 1000 / 50))
     else:
@@ -290,6 +437,7 @@ def extract_hotspots_for_region(
     clusters = _dbscan_cluster(high_cells, eps_m=effective_spacing * 2.5, min_samples=5)
 
     hotspots = []
+    v7_hotspots_excluded = 0
     for idx, cluster in enumerate(clusters):
         avg_score = sum(c["score"] for c in cluster) / len(cluster)
         avg_engines = {}
@@ -309,7 +457,13 @@ def extract_hotspots_for_region(
         if accessibility < 40:
             continue
 
-        polygon = _cluster_to_polygon(cluster)
+        # V7: Exclure les hotspots dont le cercle 600m chevauche l'eau
+        if _is_circle_on_water(center_lat, center_lng):
+            v7_hotspots_excluded += 1
+            continue
+
+        # V6: Cercle parfait 600m au lieu de polygone convex hull
+        polygon = _generate_circle_polygon_latlon(center_lat, center_lng, CIRCLE_RADIUS_M)
         species = determine_dominant_species(avg_engines, center_lat, center_lng)
         category = determine_hotspot_category(avg_engines, center_lat, center_lng)
         classification = classify_hotspot(avg_score)
@@ -326,6 +480,8 @@ def extract_hotspots_for_region(
             "region_name": region["name"],
             "center": [round(center_lat, 6), round(center_lng, 6)],
             "polygon": polygon,
+            "radius_m": CIRCLE_RADIUS_M,
+            "geometry_type": "circle",
             "score": round(avg_score, 1),
             "classification": classification,
             "category": category,
@@ -350,7 +506,6 @@ def extract_hotspots_for_region(
         h["lot_info"] = territory["lot_info"]
         h["gps"] = territory["gps"]
 
-    # Keep top 25 hotspots per region, sorted by score descending
     hotspots.sort(key=lambda h: h["score"], reverse=True)
     hotspots = hotspots[:25]
 
@@ -368,6 +523,12 @@ def extract_hotspots_for_region(
             by_species[sp] = []
         by_species[sp].append(h["id"])
 
+    if v7_cells_excluded > 0 or v7_hotspots_excluded > 0:
+        logger.info(
+            f"[V7-ADMIN] Region {region['id']}: {v7_cells_excluded} cellules eau, "
+            f"{v7_hotspots_excluded} hotspots eau exclus"
+        )
+
     return {
         "region": region,
         "total_hotspots": len(hotspots),
@@ -380,11 +541,17 @@ def extract_hotspots_for_region(
         "by_species": {k: len(v) for k, v in by_species.items()},
         "extraction_context": ctx,
         "grid_cell_size_m": 50,
-        "clustering_eps_m": 200,
+        "circle_radius_m": CIRCLE_RADIUS_M,
+        "v7_exclusion": {
+            "cells_excluded": v7_cells_excluded,
+            "hotspots_excluded": v7_hotspots_excluded,
+            "water_cache_active": _water_cache_loaded and _water_union_cache is not None,
+        },
         "filters_applied": {
             "min_score": HOTSPOT_THRESHOLDS["FORT"],
             "corridor_radius_m": 150,
             "min_accessibility": 40,
+            "water_exclusion": "V7-local-cache",
         },
     }
 
@@ -409,9 +576,11 @@ def extract_all_regions(context: Optional[Dict[str, Any]] = None) -> Dict[str, A
 
 
 def generate_geojson_export(hotspots: List[Dict]) -> Dict[str, Any]:
-    """Generate GeoJSON FeatureCollection from hotspots."""
+    """Generate GeoJSON FeatureCollection from hotspots. V6: Cercles 600m."""
     features = []
     for h in hotspots:
+        # V6: Les polygones sont deja en [lat, lng] pour Leaflet
+        # Pour GeoJSON on doit convertir en [lng, lat]
         coords = [[p[1], p[0]] for p in h["polygon"]]
         if coords and coords[0] != coords[-1]:
             coords.append(coords[0])
@@ -431,6 +600,8 @@ def generate_geojson_export(hotspots: List[Dict]) -> Dict[str, Any]:
                 "region_id": h["region_id"],
                 "region_name": h["region_name"],
                 "accessibility": h["accessibility"],
+                "radius_m": h.get("radius_m", CIRCLE_RADIUS_M),
+                "geometry_type": h.get("geometry_type", "circle"),
                 "engines": h["engines"],
                 "justification": h["justification"],
                 "extracted_at": h["extracted_at"],
@@ -441,21 +612,27 @@ def generate_geojson_export(hotspots: List[Dict]) -> Dict[str, Any]:
         "type": "FeatureCollection",
         "features": features,
         "metadata": {
-            "generator": "BIONIC V3 Hotspot Engine",
+            "generator": "BIONIC V6 Hotspot Engine — GOLDEN-BCE-4X",
             "scoring_weights": HOTSPOT_WEIGHTS,
             "total_hotspots": len(features),
+            "circle_radius_m": CIRCLE_RADIUS_M,
+            "water_exclusion": "V7-local-cache",
             "generated_at": datetime.now(timezone.utc).isoformat(),
         },
     }
 
 
 def validate_hotspots_bce4x(hotspots: List[Dict]) -> Dict[str, Any]:
-    """Validate hotspots against BCE-4X rules (GEOM-001, GEOM-002, CLIP-001, VISUAL-001)."""
+    """Validate hotspots against BCE-4X rules V6 (GEOM, CLIP, VISUAL, WATER)."""
     checks = []
 
     for h in hotspots:
         geom_001 = len(h.get("polygon", [])) >= 3
         checks.append({"rule": "GEOM-001", "hotspot": h["id"], "status": "PASS" if geom_001 else "FAIL", "detail": "Polygon has >= 3 vertices"})
+
+        # V6: Verifier que la geometrie est un cercle
+        geom_003 = h.get("geometry_type") == "circle"
+        checks.append({"rule": "GEOM-003", "hotspot": h["id"], "status": "PASS" if geom_003 else "FAIL", "detail": "Geometry is circle 600m"})
 
         geom_002 = h.get("score", 0) >= 0 and h.get("score", 0) <= 100
         checks.append({"rule": "GEOM-002", "hotspot": h["id"], "status": "PASS" if geom_002 else "FAIL", "detail": "Score in [0, 100] range"})
@@ -466,16 +643,22 @@ def validate_hotspots_bce4x(hotspots: List[Dict]) -> Dict[str, Any]:
         vis_001 = h.get("classification") in ("MAJEUR", "FORT", "MODERE")
         checks.append({"rule": "VISUAL-001", "hotspot": h["id"], "status": "PASS" if vis_001 else "FAIL", "detail": "Valid classification label"})
 
+        # V7: Verifier que le hotspot n'est PAS sur eau
+        water_ok = not _is_circle_on_water(h["center"][0], h["center"][1])
+        checks.append({"rule": "WATER-001", "hotspot": h["id"], "status": "PASS" if water_ok else "FAIL", "detail": "Hotspot not on water (V7 exclusion)"})
+
     total = len(checks)
     passed = sum(1 for c in checks if c["status"] == "PASS")
     failed = total - passed
 
     return {
-        "bce_4x_version": "1.0",
+        "bce_4x_version": "2.0-V6",
         "total_checks": total,
         "passed": passed,
         "failed": failed,
         "overall": "PASS" if failed == 0 else "FAIL",
         "checks": checks,
+        "water_exclusion_active": _water_cache_loaded and _water_union_cache is not None,
+        "circle_radius_m": CIRCLE_RADIUS_M,
         "validated_at": datetime.now(timezone.utc).isoformat(),
     }

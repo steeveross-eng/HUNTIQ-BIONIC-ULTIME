@@ -1,18 +1,16 @@
 """
 BIONIC ENGINE - Hotspot Service V6
-PHASE P1-HOTSPOTS — MISE A NIVEAU V6 (Exclusion Geometrique V7 Localisee)
+PHASE P1-HOTSPOTS — MISE A NIVEAU V6 (Cercles 600m + Exclusion V7)
 
-Service de generation des hotspots cartographiques ORGANIQUES.
-Formes 100% naturelles via Marching Squares + Chaikin.
-Exclusion V7 LOCALISEE: requetes Overpass par tuile 0.05° (~5.5km).
-Double verification: point-check V5 (OSM cache) + polygon-check V7 (Shapely).
+Service de generation des hotspots cartographiques.
+Geometrie: Cercles parfaits 600m (directive STEEVE-MAX).
+Exclusion V7: Cache local 41,944 polygones eau (ZERO API temps reel).
+Triple verification: point-check V5 + cache local V7 + Overpass fallback.
 
 SPECIFICATIONS OBLIGATOIRES:
-- Formes ORGANIQUES (ZERO cercle)
-- Superficie: 5000-10000 m2
-- Zones d'analyse: 1.5km x 1.5km (rayon 750m)
-- Exclusion V7 LOCALISEE par tuile (ZERO requete viewport-complet)
-- Double verification eau: point V5 + polygon V7
+- Geometrie: CERCLES 600m (ZERO carre, ZERO polygone irregulier)
+- Exclusion V7 via cache local (ZERO requete viewport-complet)
+- Triple verification eau: point V5 + polygon V7 local + Overpass fallback
 - Alignement comportemental par espece
 
 Conformite: GOLDEN-BCE-4X | BCE ULTRA MAX | STEEVE-MAX x100
@@ -151,8 +149,9 @@ class HotspotService:
     TILE_SIZE_DEG = 0.05
     # Seuil d'overlap eau pour exclusion (15%)
     WATER_OVERLAP_THRESHOLD = 0.15
-    # Rayon de generation V6.x: 750m = zones 1.5km x 1.5km
-    GENERATION_RADIUS_M = 750
+    # Rayon de generation V6.x: 600m cercle parfait (directive STEEVE-MAX)
+    GENERATION_RADIUS_M = 600
+    CIRCLE_NUM_POINTS = 48
 
     def __init__(self):
         self._pt_service = PredictiveTerritorialService()
@@ -389,6 +388,18 @@ out body;>;out skel qt;"""
 
         return False
 
+    def _generate_circle_coords(self, center_lat: float, center_lng: float, radius_m: float) -> list:
+        """Genere les coordonnees d'un cercle parfait en [lng, lat] format GeoJSON."""
+        import math
+        coords = []
+        for i in range(self.CIRCLE_NUM_POINTS):
+            angle = 2 * math.pi * i / self.CIRCLE_NUM_POINTS
+            dlat = (radius_m * math.cos(angle)) / 111320.0
+            dlng = (radius_m * math.sin(angle)) / (111320.0 * math.cos(math.radians(center_lat)))
+            coords.append([center_lng + dlng, center_lat + dlat])
+        coords.append(coords[0])  # Fermer le cercle
+        return coords
+
     def generate_hotspots(self, request: HotspotRequest) -> HotspotResponse:
         """
         Genere les hotspots pour une zone et periode.
@@ -513,13 +524,13 @@ out body;>;out skel qt;"""
             metadata={
                 "calculation_time_ms": round(calc_time, 1),
                 "grid_resolution": resolution,
-                "contour_algorithm": "marching_squares_chaikin",
-                "version": "GOLDEN-V6-HOTSPOTS-2.0",
+                "geometry": "circle_600m",
+                "version": "GOLDEN-V6-HOTSPOTS-3.0",
                 "exclusion_engine": "V7-local-cache" if self._local_water_loaded else ("V7-tile-localized" if SHAPELY_AVAILABLE else "V5-point"),
                 "v7_hotspots_excluded": self._v7_exclusion_stats["hotspots_excluded"],
                 "v7_local_cache_active": self._local_water_loaded,
                 "generation_radius_m": self.GENERATION_RADIUS_M,
-                "tile_size_deg": self.TILE_SIZE_DEG
+                "circle_num_points": self.CIRCLE_NUM_POINTS
             }
         )
     
@@ -601,49 +612,15 @@ out body;>;out skel qt;"""
         elif advanced_factors.get("digestive", {}).get("phase") == "active_feeding":
             dominant_behavior = "feeding"
         
-        # Generer geometrie ORGANIQUE (5000-10000 m²)
-        # Calculer les bounds locales pour le hotspot
-        from modules.bionic_engine_p0.services.organic_contour_generator import meters_to_degrees_lat, meters_to_degrees_lng
+        # V6: Generer CERCLE PARFAIT 600m (directive STEEVE-MAX)
+        coords = self._generate_circle_coords(lat, lng, self.GENERATION_RADIUS_M)
         
-        # Zone de génération V6.x: 1.5km x 1.5km (750m rayon)
-        # DIRECTIVE STEEVE-MAX: harmonisation 1.5km pour toutes les couches
-        generation_radius_m = self.GENERATION_RADIUS_M
-        lat_offset = meters_to_degrees_lat(generation_radius_m)
-        lng_offset = meters_to_degrees_lng(generation_radius_m, lat)
-        
-        local_bounds = {
-            "north": lat + lat_offset,
-            "south": lat - lat_offset,
-            "east": lng + lng_offset,
-            "west": lng - lng_offset
-        }
-        
-        # Génération ORGANIQUE via Marching Squares + Chaikin
-        coords = self._organic_gen.generate_organic_hotspot(
-            bounds=local_bounds,
-            species=species,
-            hotspot_type=hotspot_type,
-            min_area=MIN_AREA_M2,
-            max_area=MAX_AREA_M2
-        )
-        
-        if coords is None:
+        if coords is None or len(coords) < 4:
             return None
         
-        # === EXCLUSION V7: Double verification eau (point V5 + polygon V7 localisee) ===
-        center_lat_hs = sum(c[1] for c in coords) / len(coords)
-        center_lng_hs = sum(c[0] for c in coords) / len(coords)
-        if self._check_hotspot_water_v7(coords, center_lat_hs, center_lng_hs):
+        # === EXCLUSION V7: Triple verification eau ===
+        if self._check_hotspot_water_v7(coords, lat, lng):
             logger.info(f"[V7-EXCL] Hotspot {hotspot_type} at {lat:.4f},{lng:.4f} exclu (eau V7)")
-            return None
-        
-        # Calculer superficie réelle
-        center_lat = sum(c[1] for c in coords) / len(coords)
-        area_m2 = calculate_polygon_area_m2(coords, center_lat)
-        
-        # Validation stricte de superficie (5000-10000 m²)
-        if area_m2 < MIN_AREA_M2 * 0.9 or area_m2 > MAX_AREA_M2 * 1.1:
-            logger.debug(f"Hotspot rejeté: superficie {area_m2:.0f} m² hors plage")
             return None
         
         geometry = {
@@ -701,36 +678,16 @@ out body;>;out skel qt;"""
                 logger.debug(f"Waypoint {waypoint.id} exclu: {exclusion_type}")
                 return None
         
-        # Generer geometrie ORGANIQUE V6 autour du waypoint
-        from modules.bionic_engine_p0.services.organic_contour_generator import meters_to_degrees_lat, meters_to_degrees_lng
-        
-        # Zone de génération V6.x: 1.5km x 1.5km (750m rayon)
-        generation_radius_m = self.GENERATION_RADIUS_M
-        lat_offset = meters_to_degrees_lat(generation_radius_m)
-        lng_offset = meters_to_degrees_lng(generation_radius_m, waypoint.latitude)
-        
-        local_bounds = {
-            "north": waypoint.latitude + lat_offset,
-            "south": waypoint.latitude - lat_offset,
-            "east": waypoint.longitude + lng_offset,
-            "west": waypoint.longitude - lng_offset
-        }
-        
-        coords = self._organic_gen.generate_organic_hotspot(
-            bounds=local_bounds,
-            species=species.value,
-            hotspot_type="composite_optimal",
-            min_area=MIN_AREA_M2,
-            max_area=MAX_AREA_M2
+        # V6: Generer CERCLE PARFAIT 600m autour du waypoint
+        coords = self._generate_circle_coords(
+            waypoint.latitude, waypoint.longitude, self.GENERATION_RADIUS_M
         )
         
-        if coords is None:
+        if coords is None or len(coords) < 4:
             return None
         
-        # === EXCLUSION V7: Double verification eau pour waypoint ===
-        center_lat_wp = sum(c[1] for c in coords) / len(coords)
-        center_lng_wp = sum(c[0] for c in coords) / len(coords)
-        if self._check_hotspot_water_v7(coords, center_lat_wp, center_lng_wp):
+        # === EXCLUSION V7: Triple verification eau pour waypoint ===
+        if self._check_hotspot_water_v7(coords, waypoint.latitude, waypoint.longitude):
             logger.info(f"[V7-EXCL] Waypoint {waypoint.id} exclu (eau V7)")
             return None
         
