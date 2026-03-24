@@ -267,6 +267,7 @@ from modules.optimization_engine.router import router as optimization_router
 # ==============================================
 from modules.bionic_ecological_engine.router import router as ecological_intelligence_router
 from modules.bionic_data_fabric.router import router as data_fabric_router
+from modules.bionic_stand_recommendation_engine.router import router as stand_recommendation_router
 
 
 # List of all available routers with their metadata
@@ -878,6 +879,16 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
         "version": "1.0.0",
         "phase": "X2000-FABRIC",
         "description": "Data Fabric — normalisation, interconnexion, historisation, coherence multi-modules"
+    }),
+
+    # ==========================================
+    # STEEVE-MAX x2280 — AFFUTS PROFESSIONNELS
+    # ==========================================
+    (stand_recommendation_router, {
+        "name": "bionic_stand_recommendation_engine",
+        "version": "1.0.0",
+        "phase": "X2280-STANDS",
+        "description": "Moteur d'affuts professionnels — recommandations, orientation, justification, chemin d'approche"
     }),
 ]
 

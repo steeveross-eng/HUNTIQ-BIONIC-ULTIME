@@ -6,7 +6,8 @@ import {
   Thermometer, Navigation, ChevronRight, Activity, Moon,
   Wind, Droplets, Mountain, Camera, Clock, TrendingUp,
   AlertTriangle, Crosshair, Compass, BarChart3, Layers,
-  Loader2, RefreshCw, Radio, Zap, TreePine, Waves
+  Loader2, RefreshCw, Radio, Zap, TreePine, Waves,
+  X, Bookmark, ArrowRight, Shield, ChevronDown, ChevronUp
 } from "lucide-react";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -25,6 +26,7 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
    08. Suivi GPS Intelligent
    09. Alertes Intelligentes
    10. Score Territoire
+   11. Affuts Professionnels (x2280)
    ============================================================ */
 
 const MODULES = [
@@ -32,6 +34,7 @@ const MODULES = [
   { id: "meteo", label: "Meteo Chasse", icon: Cloud, color: "#4ECDC4" },
   { id: "behavioral-map", label: "Carte Comportementale", icon: Layers, color: "#9B59B6" },
   { id: "territory", label: "Mon Territoire", icon: MapPin, color: "#27AE60" },
+  { id: "affuts", label: "Affuts Pro", icon: Crosshair, color: "#E74C3C" },
   { id: "cameras", label: "Vision Faune", icon: Camera, color: "#E74C3C" },
   { id: "planner", label: "Planificateur", icon: Calendar, color: "#F39C12" },
   { id: "feeding", label: "Alimentation", icon: Leaf, color: "#2ECC71" },
@@ -192,6 +195,64 @@ const MeteoModule = ({ data, loading }) => {
         <DataCard title="Direction Vent" value={w.wind_direction} unit="" icon={Compass} color="#2ECC71" />
         <DataCard title="Precipitations" value={w.precipitation_mm} unit="mm" icon={Waves} color="#3498DB" />
         <DataCard title="Couverture Nuage" value={w.cloud_cover_pct} unit="%" icon={Cloud} color="#95A5A6" />
+      </div>
+
+      {/* VENT RENFORCE +15% — STEEVE-MAX x2280 */}
+      <div className="saline-stat-card" style={{ marginTop: 16, position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, #3498DB, #9B59B6, #E74C3C)` }} />
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+          <Wind size={20} style={{ color: "#3498DB" }} />
+          <span style={{ fontSize: 14, fontWeight: 700, color: "#3498DB" }}>Analyse Vent Renforcee</span>
+          <span style={{ fontSize: 9, background: "rgba(52,152,219,0.2)", border: "1px solid rgba(52,152,219,0.4)", color: "#3498DB", padding: "1px 6px", borderRadius: 4 }}>+15%</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 24 }}>
+          {/* Wind compass rose */}
+          <div style={{ position: "relative", width: 120, height: 120 }}>
+            <svg width={120} height={120} viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="55" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+              <circle cx="60" cy="60" r="40" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+              <circle cx="60" cy="60" r="25" fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
+              {["N","NE","E","SE","S","SW","W","NW"].map((dir, i) => {
+                const angle = i * 45 - 90;
+                const rad = angle * Math.PI / 180;
+                const x = 60 + 50 * Math.cos(rad);
+                const y = 60 + 50 * Math.sin(rad);
+                const isActive = w.wind_direction?.toUpperCase() === dir;
+                return <text key={dir} x={x} y={y} textAnchor="middle" dominantBaseline="middle" fontSize={isActive ? 11 : 8} fontWeight={isActive ? 700 : 400} fill={isActive ? "#3498DB" : "rgba(255,255,255,0.3)"}>{dir}</text>;
+              })}
+              {/* Wind direction arrow */}
+              {(() => {
+                const dirMap = { N: -90, NE: -45, E: 0, SE: 45, S: 90, SW: 135, W: 180, NW: -135 };
+                const angle = dirMap[w.wind_direction?.toUpperCase()] || 0;
+                const rad = angle * Math.PI / 180;
+                const intensity = Math.min(w.wind_speed_kmh / 40, 1);
+                const len = 20 + intensity * 15;
+                const x2 = 60 + len * Math.cos(rad);
+                const y2 = 60 + len * Math.sin(rad);
+                return (
+                  <>
+                    <line x1="60" y1="60" x2={x2} y2={y2} stroke="#3498DB" strokeWidth={3 + intensity * 2} strokeLinecap="round" opacity={0.8 + intensity * 0.2} />
+                    <circle cx={x2} cy={y2} r={4 + intensity * 2} fill="#3498DB" opacity={0.9} />
+                    <circle cx="60" cy="60" r="4" fill="#3498DB" opacity="0.6" />
+                  </>
+                );
+              })()}
+            </svg>
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 28, fontWeight: 800, color: "#3498DB" }}>{w.wind_speed_kmh} <span style={{ fontSize: 14, opacity: 0.7 }}>km/h</span></div>
+            <div style={{ fontSize: 14, color: "rgba(255,255,255,0.7)", marginTop: 4 }}>Direction: <span style={{ color: "#3498DB", fontWeight: 600 }}>{w.wind_direction}</span></div>
+            <div style={{ marginTop: 8 }}>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", marginBottom: 4 }}>Intensite</div>
+              <div style={{ height: 8, background: "rgba(255,255,255,0.08)", borderRadius: 4, overflow: "hidden" }}>
+                <div style={{ height: "100%", width: `${Math.min((w.wind_speed_kmh / 50) * 115, 100)}%`, background: w.wind_speed_kmh > 30 ? "linear-gradient(90deg, #3498DB, #E74C3C)" : w.wind_speed_kmh > 15 ? "linear-gradient(90deg, #3498DB, #F39C12)" : "linear-gradient(90deg, #2ECC71, #3498DB)", borderRadius: 4, transition: "width 0.8s ease" }} />
+              </div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", marginTop: 4 }}>
+                {w.wind_speed_kmh < 10 ? "Leger — ideal pour la chasse" : w.wind_speed_kmh < 20 ? "Modere — bon pour masquer les bruits" : w.wind_speed_kmh < 30 ? "Fort — approche discretion requise" : "Tres fort — conditions difficiles"}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div className="saline-stat-card" style={{ marginTop: 16, textAlign: "center" }}>
         <ScoreGauge value={w.hunting_impact_score} label="Impact Chasse" color={w.hunting_impact_score > 70 ? "#2ECC71" : w.hunting_impact_score > 40 ? "#F39C12" : "#E74C3C"} size={140} />
@@ -655,6 +716,261 @@ const ScoreModule = ({ data, loading }) => {
 };
 
 // ═══════════════════════════════════════
+// JUSTIFICATION POP-UP PLEINE GRANDEUR — STEEVE-MAX x2290-V3
+// ═══════════════════════════════════════
+const JustificationPopup = ({ stand, onClose }) => {
+  if (!stand) return null;
+  const j = stand.justification || {};
+  const sections = [
+    { key: "analyse_vent", title: "Analyse du vent", icon: Wind, color: "#3498DB" },
+    { key: "lecture_corridor", title: "Lecture du corridor", icon: Navigation, color: "#9B59B6" },
+    { key: "lecture_zones_600m", title: "Lecture des zones 600m", icon: Target, color: "#FF6B35" },
+    { key: "lecture_topographie", title: "Lecture de la topographie", icon: Mountain, color: "#27AE60" },
+    { key: "lecture_hydrographie", title: "Lecture de l'hydrographie", icon: Droplets, color: "#3498DB" },
+    { key: "lecture_zones_fraicheur", title: "Zones de fraicheur", icon: Thermometer, color: "#1ABC9C" },
+    { key: "analyse_pression", title: "Analyse de la pression potentielle", icon: Activity, color: "#E67E22" },
+    { key: "justification_type_affut", title: "Justification du type d'affut", icon: Crosshair, color: "#E74C3C" },
+    { key: "justification_orientation", title: "Justification de l'orientation", icon: Compass, color: "#2ECC71" },
+    { key: "justification_score", title: "Justification du score", icon: BarChart3, color: "#F39C12" },
+    { key: "recommandations_pratiques", title: "Recommandations pratiques", icon: Shield, color: "#FF6B35" },
+  ];
+
+  return (
+    <div data-testid="justification-popup" style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)" }}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div style={{ width: "90%", maxWidth: 720, maxHeight: "90vh", overflow: "auto", background: "linear-gradient(180deg, #0d1117 0%, #161b22 100%)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, padding: 0 }}>
+        {/* Header */}
+        <div style={{ position: "sticky", top: 0, background: "#0d1117", borderBottom: "1px solid rgba(255,255,255,0.1)", padding: "16px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", zIndex: 10 }}>
+          <div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: "#fff" }}>Justification Professionnelle</div>
+            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginTop: 2 }}>{stand.type_name} — Rang #{stand.rank} — Score {stand.score}/100</div>
+          </div>
+          <button onClick={onClose} style={{ background: "rgba(255,255,255,0.1)", border: "none", borderRadius: 8, padding: 8, cursor: "pointer", color: "#fff" }} data-testid="close-justification">
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* Score header */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 24, padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+          <ScoreGauge value={stand.score} label="Score Global" color={stand.score > 75 ? "#2ECC71" : stand.score > 55 ? "#F39C12" : "#E74C3C"} size={110} />
+          <div>
+            <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)" }}>Orientation: <span style={{ color: "#2ECC71", fontWeight: 600 }}>{stand.orientation_label} ({stand.orientation_deg}°)</span></div>
+            <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", marginTop: 4 }}>Hauteur: <span style={{ color: "#4ECDC4", fontWeight: 600 }}>{stand.height_m}m</span></div>
+            <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", marginTop: 4 }}>Concealment: <span style={{ color: "#9B59B6", fontWeight: 600 }}>{stand.concealment}%</span></div>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 4 }}>{stand.lat?.toFixed(5)}, {stand.lng?.toFixed(5)}</div>
+          </div>
+        </div>
+
+        {/* Detailed sections */}
+        <div style={{ padding: "16px 24px 24px" }}>
+          {sections.map((sec) => {
+            const Icon = sec.icon;
+            const text = j[sec.key];
+            if (!text) return null;
+            return (
+              <div key={sec.key} style={{ marginBottom: 16, background: "rgba(255,255,255,0.03)", borderRadius: 10, padding: "12px 16px", borderLeft: `3px solid ${sec.color}` }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                  <Icon size={14} style={{ color: sec.color }} />
+                  <span style={{ fontSize: 13, fontWeight: 600, color: sec.color }}>{sec.title}</span>
+                </div>
+                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.7)", lineHeight: 1.6, whiteSpace: "pre-line" }}>{text}</div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Footer */}
+        <div style={{ position: "sticky", bottom: 0, background: "#0d1117", borderTop: "1px solid rgba(255,255,255,0.1)", padding: "12px 24px", display: "flex", gap: 12 }}>
+          <button onClick={onClose} data-testid="save-stand-btn"
+            style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "10px 0", background: "rgba(255,107,53,0.2)", border: "1px solid rgba(255,107,53,0.4)", borderRadius: 8, color: "#FF6B35", fontWeight: 600, fontSize: 13, cursor: "pointer" }}>
+            <Bookmark size={14} /> Enregistrer cet affut
+          </button>
+          <button onClick={onClose}
+            style={{ padding: "10px 20px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "rgba(255,255,255,0.6)", fontSize: 13, cursor: "pointer" }}>
+            Fermer
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════
+// CHEMIN D'APPROCHE — VISUALISATION SVG — STEEVE-MAX x2290-V3
+// ═══════════════════════════════════════
+const ApproachPathMap = ({ stand, centerLat, centerLng }) => {
+  if (!stand?.approach_path || stand.approach_path.length < 2) return null;
+  const path = stand.approach_path;
+  const allLats = path.map(p => p.lat);
+  const allLngs = path.map(p => p.lng);
+  const minLat = Math.min(...allLats, centerLat);
+  const maxLat = Math.max(...allLats, centerLat);
+  const minLng = Math.min(...allLngs, centerLng);
+  const maxLng = Math.max(...allLngs, centerLng);
+  const padLat = (maxLat - minLat) * 0.15 || 0.002;
+  const padLng = (maxLng - minLng) * 0.15 || 0.002;
+  const svgW = 320, svgH = 200;
+
+  const toSvg = (lat, lng) => ({
+    x: ((lng - (minLng - padLng)) / ((maxLng + padLng) - (minLng - padLng))) * svgW,
+    y: svgH - ((lat - (minLat - padLat)) / ((maxLat + padLat) - (minLat - padLat))) * svgH,
+  });
+
+  const pts = path.map(p => toSvg(p.lat, p.lng));
+  const pathD = pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+  const center = toSvg(centerLat, centerLng);
+  const standPt = toSvg(stand.lat, stand.lng);
+
+  return (
+    <div data-testid="approach-path-map" style={{ background: "rgba(0,0,0,0.3)", borderRadius: 10, padding: 12, marginTop: 12 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+        <ArrowRight size={12} style={{ color: "#4ECDC4" }} />
+        <span style={{ fontSize: 11, fontWeight: 600, color: "#4ECDC4" }}>Chemin d'approche optimal</span>
+      </div>
+      <svg width={svgW} height={svgH} viewBox={`0 0 ${svgW} ${svgH}`} style={{ width: "100%", height: "auto" }}>
+        <rect width={svgW} height={svgH} fill="rgba(13,17,23,0.8)" rx="8" />
+        {/* Grid */}
+        {[0.25, 0.5, 0.75].map(f => (
+          <line key={`h-${f}`} x1="0" y1={svgH * f} x2={svgW} y2={svgH * f} stroke="rgba(255,255,255,0.04)" strokeWidth="0.5" />
+        ))}
+        {[0.25, 0.5, 0.75].map(f => (
+          <line key={`v-${f}`} x1={svgW * f} y1="0" x2={svgW * f} y2={svgH} stroke="rgba(255,255,255,0.04)" strokeWidth="0.5" />
+        ))}
+        {/* Approach path — dotted line */}
+        <path d={pathD} fill="none" stroke="#4ECDC4" strokeWidth="2.5" strokeDasharray="6 4" strokeLinecap="round" opacity="0.8" />
+        {/* Path dots */}
+        {pts.map((p, i) => (
+          <circle key={i} cx={p.x} cy={p.y} r={i === 0 ? 4 : i === pts.length - 1 ? 5 : 1.5} fill={i === 0 ? "#2ECC71" : i === pts.length - 1 ? "#E74C3C" : "#4ECDC4"} opacity={i === 0 || i === pts.length - 1 ? 1 : 0.5} />
+        ))}
+        {/* Center waypoint */}
+        <circle cx={center.x} cy={center.y} r="6" fill="none" stroke="#FF6B35" strokeWidth="2" />
+        <circle cx={center.x} cy={center.y} r="2" fill="#FF6B35" />
+        {/* Stand position */}
+        <circle cx={standPt.x} cy={standPt.y} r="7" fill="none" stroke="#E74C3C" strokeWidth="2" />
+        <line x1={standPt.x - 4} y1={standPt.y} x2={standPt.x + 4} y2={standPt.y} stroke="#E74C3C" strokeWidth="1.5" />
+        <line x1={standPt.x} y1={standPt.y - 4} x2={standPt.x} y2={standPt.y + 4} stroke="#E74C3C" strokeWidth="1.5" />
+        {/* Labels */}
+        <text x={center.x + 8} y={center.y - 8} fontSize="8" fill="#FF6B35">Depart</text>
+        <text x={standPt.x + 10} y={standPt.y - 8} fontSize="8" fill="#E74C3C">Affut</text>
+      </svg>
+      <div style={{ display: "flex", gap: 16, marginTop: 8, fontSize: 10, color: "rgba(255,255,255,0.4)" }}>
+        <span><span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "#2ECC71", marginRight: 4 }} />Point d'entree</span>
+        <span style={{ borderBottom: "2px dashed #4ECDC4", paddingBottom: 1 }}>Chemin</span>
+        <span><span style={{ display: "inline-block", width: 8, height: 2, background: "#E74C3C", marginRight: 4, verticalAlign: "middle" }} />Affut</span>
+      </div>
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════
+// MODULE 11: AFFUTS PROFESSIONNELS — STEEVE-MAX x2280/x2290
+// ═══════════════════════════════════════
+const StandsModule = ({ lat, lng, species, windData, loading: parentLoading }) => {
+  const [stands, setStands] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [selectedStand, setSelectedStand] = useState(null);
+  const [showJustification, setShowJustification] = useState(false);
+  const [showPaths, setShowPaths] = useState({});
+  const [expandedStand, setExpandedStand] = useState(null);
+
+  const fetchStands = useCallback(async () => {
+    setLoading(true);
+    try {
+      const windDir = windData?.wind_direction || "NE";
+      const windSpd = windData?.wind_speed_kmh || 12;
+      const res = await axios.get(`${API}/v1/stand-recommendation/recommend?lat=${lat}&lng=${lng}&wind_direction=${windDir}&wind_speed_kmh=${windSpd}&species=${species}`);
+      if (res.data) setStands(res.data);
+    } catch (err) { console.error("Stands error:", err); }
+    setLoading(false);
+  }, [lat, lng, species, windData]);
+
+  useEffect(() => { fetchStands(); }, [fetchStands]);
+
+  if (loading || parentLoading) return <ModuleLoader />;
+  if (!stands?.stands?.length) return <div style={{ color: "rgba(255,255,255,0.4)", padding: 20 }}>Aucun affut recommande</div>;
+
+  const togglePath = (id) => setShowPaths(p => ({ ...p, [id]: !p[id] }));
+
+  return (
+    <div data-testid="module-affuts">
+      <h3 className="saline-section-title" style={{ color: "#E74C3C" }}>
+        <Crosshair size={18} /> Affuts Professionnels
+        <span style={{ fontSize: 10, marginLeft: 8, background: "rgba(231,76,60,0.2)", border: "1px solid rgba(231,76,60,0.3)", color: "#E74C3C", padding: "2px 8px", borderRadius: 4 }}>x2280</span>
+      </h3>
+
+      <div className="saline-grid-3" style={{ marginBottom: 16 }}>
+        <DataCard title="Affuts" value={stands.total_stands} unit="recommandes" icon={Crosshair} color="#E74C3C" />
+        <DataCard title="Vent" value={`${stands.wind?.direction} ${stands.wind?.speed_kmh}`} unit="km/h" icon={Wind} color="#3498DB" />
+        <DataCard title="Espece" value={stands.species?.replace(/_/g, " ")} unit="" icon={Target} color="#FF6B35" />
+      </div>
+
+      {stands.stands.map((s) => (
+        <div key={s.id} className="saline-stat-card" style={{ marginBottom: 12, borderLeft: `3px solid ${s.rank === 1 ? "#2ECC71" : s.rank === 2 ? "#4ECDC4" : s.rank <= 4 ? "#F39C12" : "#95A5A6"}` }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 22, height: 22, borderRadius: "50%", background: s.rank === 1 ? "rgba(46,204,113,0.2)" : "rgba(255,255,255,0.08)", border: `1px solid ${s.rank === 1 ? "rgba(46,204,113,0.4)" : "rgba(255,255,255,0.1)"}`, fontSize: 11, fontWeight: 700, color: s.rank === 1 ? "#2ECC71" : "rgba(255,255,255,0.6)" }}>
+                  {s.rank}
+                </span>
+                <span style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.9)" }}>{s.type_name}</span>
+              </div>
+              <div style={{ display: "flex", gap: 12, fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 4 }}>
+                <span><Compass size={10} style={{ marginRight: 3 }} />{s.orientation_label} ({s.orientation_deg}°)</span>
+                <span>Hauteur: {s.height_m}m</span>
+                <span>Concealment: {s.concealment}%</span>
+              </div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)" }}>{s.lat?.toFixed(5)}, {s.lng?.toFixed(5)}</div>
+            </div>
+            <div style={{ textAlign: "center" }}>
+              <ScoreGauge value={s.score} label="" color={s.score > 75 ? "#2ECC71" : s.score > 55 ? "#F39C12" : "#E74C3C"} size={70} />
+            </div>
+          </div>
+
+          {/* Factor bars */}
+          {expandedStand === s.id && (
+            <div style={{ marginTop: 12, padding: "12px 0", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+              <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.6)", marginBottom: 8 }}>Facteurs d'evaluation</div>
+              <ProgressBar label="Vent" value={s.factors?.wind?.score || 0} color="#3498DB" />
+              <ProgressBar label="Corridor" value={s.factors?.corridor?.score || 0} color="#9B59B6" />
+              <ProgressBar label="Topographie" value={s.factors?.topography?.score || 0} color="#27AE60" />
+              <ProgressBar label="Couvert" value={s.factors?.cover?.score || 0} color="#2ECC71" />
+              <ProgressBar label="Hydrographie" value={s.factors?.hydrology?.score || 0} color="#3498DB" />
+              <ProgressBar label="Pression" value={s.factors?.pressure?.score || 0} color="#E67E22" />
+              <ProgressBar label="Fraicheur" value={s.factors?.coolzone?.score || 0} color="#1ABC9C" />
+            </div>
+          )}
+
+          {/* Approach path */}
+          {showPaths[s.id] && <ApproachPathMap stand={s} centerLat={lat} centerLng={lng} />}
+
+          {/* Actions */}
+          <div style={{ display: "flex", gap: 6, marginTop: 10, flexWrap: "wrap" }}>
+            <button onClick={() => { setSelectedStand(s); setShowJustification(true); }} data-testid={`justification-btn-${s.rank}`}
+              style={{ display: "flex", alignItems: "center", gap: 4, padding: "5px 10px", background: "rgba(255,107,53,0.15)", border: "1px solid rgba(255,107,53,0.3)", borderRadius: 6, color: "#FF6B35", fontSize: 10, cursor: "pointer", fontWeight: 500 }}>
+              <Eye size={10} /> Justification complete
+            </button>
+            <button onClick={() => togglePath(s.id)} data-testid={`path-btn-${s.rank}`}
+              style={{ display: "flex", alignItems: "center", gap: 4, padding: "5px 10px", background: showPaths[s.id] ? "rgba(78,205,196,0.2)" : "rgba(78,205,196,0.08)", border: `1px solid ${showPaths[s.id] ? "rgba(78,205,196,0.4)" : "rgba(78,205,196,0.2)"}`, borderRadius: 6, color: "#4ECDC4", fontSize: 10, cursor: "pointer", fontWeight: 500 }}>
+              <ArrowRight size={10} /> {showPaths[s.id] ? "Masquer chemin" : "Chemin d'approche"}
+            </button>
+            <button onClick={() => setExpandedStand(expandedStand === s.id ? null : s.id)}
+              style={{ display: "flex", alignItems: "center", gap: 4, padding: "5px 10px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 6, color: "rgba(255,255,255,0.5)", fontSize: 10, cursor: "pointer" }}>
+              {expandedStand === s.id ? <ChevronUp size={10} /> : <ChevronDown size={10} />}
+              {expandedStand === s.id ? "Moins" : "Details"}
+            </button>
+          </div>
+        </div>
+      ))}
+
+      {/* Pop-up justification */}
+      {showJustification && selectedStand && (
+        <JustificationPopup stand={selectedStand} onClose={() => setShowJustification(false)} />
+      )}
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════
 // MODULE LOADER
 // ═══════════════════════════════════════
 const ModuleLoader = () => (
@@ -721,6 +1037,7 @@ export default function BionicModulesPage() {
       case "meteo": return <MeteoModule data={ecoData} loading={loading} />;
       case "behavioral-map": return <BehavioralMapModule data={behaviorData} loading={loading} />;
       case "territory": return <TerritoryModule data={ecoData} loading={loading} />;
+      case "affuts": return <StandsModule lat={lat} lng={lng} species={species} windData={ecoData?.weather} loading={loading} />;
       case "cameras": return <CamerasModule loading={loading} />;
       case "planner": return <PlannerModule data={predData} loading={loading} />;
       case "feeding": return <FeedingModule data={ecoData} loading={loading} />;
@@ -797,7 +1114,7 @@ export default function BionicModulesPage() {
       {/* MASTER SWITCH STATUS */}
       <div style={{ textAlign: "center", padding: "20px 0 40px", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
         <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", letterSpacing: 2, textTransform: "uppercase" }}>
-          Master Switch: LOCKED | STEEVE-MAX x2260 | Filtrage biogeographique actif | Branche Work1
+          Master Switch: LOCKED | STEEVE-MAX x2290 | Affuts Pro + Vent Renforce | Branche Work1
         </div>
       </div>
     </div>

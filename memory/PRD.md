@@ -47,19 +47,38 @@ Reconstruction et evolution du projet HUNTIQ (V6 → V7), application modulaire 
 - Deploiement immediat de toutes les directives (x1900→x2260) vers PREVIEW
 - Script auto-sync: scripts/sync_preview.sh
 - Pipeline: chaque directive commitee = PREVIEW mis a jour automatiquement
-- Verification: tous endpoints 200, frontend operationnel
 - Rapport: audit/bionic_preview_sync_x2275.md
 - Commit: 392ef93f sur Work1
+
+### DIRECTIVE x2290-V3 (Complete - 2026-03-25)
+**x2200-FINAL-V2 — Permis + Enregistrement gibier:**
+- HuntingLicensePage reecrit: 2 onglets (Permis | Enregistrement)
+- Selecteur pays/province, filtrage biogeographique, portails officiels
+
+**x2280-A — Vent Renforce +15%:**
+- Rose des vents SVG interactive + fleche dynamique
+- Barre intensite gradient + interpretation professionnelle
+
+**x2280-B — Moteur d'Affuts Professionnels:**
+- bionic_stand_recommendation_engine (backend): 5 types, 7 facteurs scoring
+- 11 sections justification par affut, chemin approche 13 points
+- Endpoints: /api/v1/stand-recommendation/health + /recommend
+
+**x2290 — Pop-up + Chemin:**
+- JustificationPopup: modale pleine grandeur, 11 sections detaillees
+- ApproachPathMap: trace pointe SVG, calcul anti-vent
+- StandsModule: onglet Affuts Pro dans BIONIC Intelligence
+- Rapport: audit/bionic_permis_wind_affuts_x2290.md
+- Commit: 020226fe sur Work1
 
 ---
 
 ## Prioritized Backlog
 
-### P0 — Prochain
-- Attendre directive STEEVE-MAX x2200-FINAL-V2 (Achat permis / Enregistrement gibier)
+### P0 — Attente validation x2290-V3
+- Validation STEEVE-MAX requise pour la directive x2290-V3
 
 ### P1 — En attente directive
-- Module Achat de permis / Enregistrement gibier (x2200 mentionne)
 - Activation publique via Master Switch (x3000)
 - Connexion modules cameras + alertes temps reel
 - Integration donnees terrain reelles
@@ -77,15 +96,17 @@ Reconstruction et evolution du projet HUNTIQ (V6 → V7), application modulaire 
 
 ## Architecture
 ```
-CORE_ROUTERS: 73 modules actifs
+CORE_ROUTERS: 75 modules actifs
 Master Switch: 22 switches (tous LOCKED)
 Species: 8 especes integrees systemiquement
 Biogeography: 8 especes / 26+ juridictions / filtrage systemique
-Endpoints ecological: 16 (9 base + 4 species + 4 biogeography — internes, LOCKED)
+Stand Engine: 5 types, 7 facteurs, 11 sections justification
+Endpoints ecological: 16 (9 base + 4 species + 4 biogeography)
+Endpoints stand-recommendation: 2 (health + recommend)
 Endpoints data-fabric: 6
-Architecture: V7-X2275-PREVIEW-SYNCED
+Architecture: V7-X2290-AFFUTS-PRO
 ```
 
-**Derniere mise a jour:** 2026-03-25 — x2275 Complete
+**Derniere mise a jour:** 2026-03-25 — x2290-V3 Complete
 **Branche active:** Work1
 **PREVIEW URL:** https://huntiq-restore.preview.emergentagent.com
