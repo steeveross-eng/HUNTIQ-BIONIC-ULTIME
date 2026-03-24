@@ -71,26 +71,35 @@ Reconstruction et evolution du projet HUNTIQ (V6 → V7), application modulaire 
 - Rapport: audit/bionic_permis_wind_affuts_x2290.md
 - Commit: 020226fe sur Work1
 
+### DIRECTIVE x2300-EXEC — Architecture Hybride BIONIC (Complete - 2026-03-25)
+- Architecture hybride WEB + Mobile Native definie comme standard institutionnel
+- bionic_hybrid_architecture_x2300.md: WEB (analyse, planification, gouvernance) + Mobile (terrain, GPS, affuts, hors-ligne)
+- bionic_api_spec_x2300.md: API unifiee 10 domaines, 46 endpoints, JWT, WebSocket, pagination
+- roadmap_x2300.md: 4 phases (P0→P3), 20-28 semaines, dependances identifiees
+- Mode hors-ligne specifie: MBTiles, SQLite (WatermelonDB), sync differee
+- Rapport: audit/bionic_architecture_hybride_x2300.md
+- Commit: 93c76f2c sur Work1
+
 ---
 
 ## Prioritized Backlog
 
-### P0 — Attente validation x2290-V3
-- Validation STEEVE-MAX requise pour la directive x2290-V3
+### P0 — Attente validation x2300-EXEC
+- Validation STEEVE-MAX requise pour l'architecture hybride
 
-### P1 — En attente directive
-- Activation publique via Master Switch (x3000)
-- Connexion modules cameras + alertes temps reel
-- Integration donnees terrain reelles
+### P0 — Phase 1 Roadmap (attente directive x2300-P1)
+- Normalisation API unifiee, endpoints observations + sync, adaptation mobile
 
-### P2 — Futur
+### P1 — Phase 2 Roadmap (attente directive x2300-P2)
+- Prototype app mobile (carte, GPS, zones 600m, affuts, hors-ligne minimal)
+
+### P2 — Phase 3 Roadmap
+- Observations terrain, alertes push, UX terrain
+
+### P3 — Phase 4 Roadmap + Autres
+- Durcissement, beta fermee, publication Stores
 - BSAA-2: Social Ads Automation
-- Completion modules partiels
-- Documentation modules complexes
-
-### P3 — Long terme
 - Merge Work1 → main
-- Nettoyage repos historiques
 
 ---
 
@@ -104,9 +113,12 @@ Stand Engine: 5 types, 7 facteurs, 11 sections justification
 Endpoints ecological: 16 (9 base + 4 species + 4 biogeography)
 Endpoints stand-recommendation: 2 (health + recommend)
 Endpoints data-fabric: 6
-Architecture: V7-X2290-AFFUTS-PRO
+Hybrid Architecture: WEB (React) + Mobile Native (React Native/Expo)
+API Unifiee: 10 domaines, 46 endpoints specifies
+Roadmap: 4 phases, 20-28 semaines
+Architecture: V7-X2300-HYBRID-BIONIC
 ```
 
-**Derniere mise a jour:** 2026-03-25 — x2290-V3 Complete
+**Derniere mise a jour:** 2026-03-25 — x2300-EXEC Complete
 **Branche active:** Work1
 **PREVIEW URL:** https://huntiq-restore.preview.emergentagent.com
