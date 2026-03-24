@@ -43,12 +43,20 @@ Reconstruction et evolution du projet HUNTIQ (V6 → V7), application modulaire 
 - Rapport: audit/bionic_species_biogeography_x2260.md
 - Commit: 8c20e902 sur Work1
 
+### SYNCHRONISATION PREVIEW x2275 (Complete - 2026-03-25)
+- Deploiement immediat de toutes les directives (x1900→x2260) vers PREVIEW
+- Script auto-sync: scripts/sync_preview.sh
+- Pipeline: chaque directive commitee = PREVIEW mis a jour automatiquement
+- Verification: tous endpoints 200, frontend operationnel
+- Rapport: audit/bionic_preview_sync_x2275.md
+- Commit: 392ef93f sur Work1
+
 ---
 
 ## Prioritized Backlog
 
-### P0 — En attente validation x2260-V2
-- Validation STEEVE-MAX de la directive x2260-V2 requise
+### P0 — Prochain
+- Attendre directive STEEVE-MAX x2200-FINAL-V2 (Achat permis / Enregistrement gibier)
 
 ### P1 — En attente directive
 - Module Achat de permis / Enregistrement gibier (x2200 mentionne)
@@ -75,8 +83,9 @@ Species: 8 especes integrees systemiquement
 Biogeography: 8 especes / 26+ juridictions / filtrage systemique
 Endpoints ecological: 16 (9 base + 4 species + 4 biogeography — internes, LOCKED)
 Endpoints data-fabric: 6
-Architecture: V7-X2260-BIOGEOGRAPHY
+Architecture: V7-X2275-PREVIEW-SYNCED
 ```
 
-**Derniere mise a jour:** 2026-03-25 — x2260-V2 Complete
+**Derniere mise a jour:** 2026-03-25 — x2275 Complete
 **Branche active:** Work1
+**PREVIEW URL:** https://huntiq-restore.preview.emergentagent.com

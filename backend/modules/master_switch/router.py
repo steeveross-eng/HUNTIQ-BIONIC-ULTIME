@@ -99,61 +99,165 @@ EXTERNAL_LOCKS = {
     }
 }
 
-# Default switch states
+# ═══════════════════════════════════════════════════════════════════════════════
+# 21 SWITCHES PUBLICS — STEEVE-MAX x1900 / P0-2
+# Tous en mode LOCKED (is_active=False) jusqu'a directive STEEVE-MAX x3000
+# ═══════════════════════════════════════════════════════════════════════════════
+
 DEFAULT_SWITCHES = {
     "global": {
         "name": "Master Switch Global",
-        "description": "Contrôle global de tous les modules X300%",
-        "is_active": True,
-        "icon": "🔌"
+        "description": "Controle global de TOUS les modules publics BIONIC",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["*"]
     },
-    "captation": {
-        "name": "Captation",
-        "description": "Tracking des visiteurs, publicités, interactions sociales",
-        "is_active": True,
-        "icon": "📡"
+    "payments": {
+        "name": "Paiements",
+        "description": "payment_engine, saline shop checkout",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["payment_engine", "saline_ecommerce"]
     },
-    "enrichment": {
-        "name": "Enrichissement",
-        "description": "Identity Graph et fusion des profils",
-        "is_active": True,
-        "icon": "🔗"
+    "ecommerce": {
+        "name": "E-Commerce",
+        "description": "products_engine, cart_engine, orders_engine, customers_engine",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["products_engine", "cart_engine", "orders_engine", "customers_engine"]
     },
-    "triggers": {
-        "name": "Triggers Marketing",
-        "description": "Déclencheurs automatiques et séquences",
-        "is_active": True,
-        "icon": "⚡"
+    "freemium": {
+        "name": "Freemium & Upsell",
+        "description": "freemium_engine, upsell_engine",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["freemium_engine", "upsell_engine"]
     },
-    "scoring": {
-        "name": "Lead Scoring",
-        "description": "Calcul automatique des scores de contact",
-        "is_active": True,
-        "icon": "📊"
+    "marketing": {
+        "name": "Marketing",
+        "description": "marketing_engine, marketing_calendar_engine",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["marketing_engine", "marketing_calendar_engine"]
     },
     "seo": {
         "name": "SEO Engine",
-        "description": "Optimisation et génération de contenu SEO",
-        "is_active": True,
-        "icon": "🔍"
+        "description": "seo_engine, seo_suppliers",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["seo_engine", "seo_suppliers"]
     },
-    "marketing_calendar": {
-        "name": "Marketing Calendar",
-        "description": "Calendrier et planification des campagnes",
-        "is_active": True,
-        "icon": "📅"
+    "messaging": {
+        "name": "Messaging",
+        "description": "messaging_engine, notification_unified_engine",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["messaging_engine", "notification_unified_engine"]
+    },
+    "affiliate": {
+        "name": "Affiliation",
+        "description": "affiliate_switch_engine, affiliate_ads_engine",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["affiliate_switch_engine", "affiliate_ads_engine"]
+    },
+    "ad_spaces": {
+        "name": "Espaces Publicitaires",
+        "description": "ad_spaces_engine",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["ad_spaces_engine"]
+    },
+    "contacts": {
+        "name": "Contacts & Captation",
+        "description": "contact_engine, tracking_engine (behavioral)",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["contact_engine", "tracking_engine"]
+    },
+    "networking": {
+        "name": "Reseautage",
+        "description": "networking_engine",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["networking_engine"]
+    },
+    "triggers": {
+        "name": "Triggers & Regles",
+        "description": "trigger_engine, rules_engine",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["trigger_engine", "rules_engine"]
+    },
+    "backups": {
+        "name": "Backups",
+        "description": "backup_cloud_engine",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["backup_cloud_engine"]
+    },
+    "saline_intelligence": {
+        "name": "Saline Intelligence",
+        "description": "saline_engine (7 moteurs scientifiques + e-commerce)",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["saline_engine"]
+    },
+    "territory": {
+        "name": "Territoire & BIONIC",
+        "description": "territory_engine, bionic_engine_p0",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["territory_engine", "bionic_engine_p0"]
+    },
+    "predictions": {
+        "name": "Predictions",
+        "description": "predictive_engine, wildlife_behavior_engine",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["predictive_engine", "wildlife_behavior_engine"]
+    },
+    "weather": {
+        "name": "Meteo",
+        "description": "weather_engine, weather_fauna_simulation_engine",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["weather_engine", "weather_fauna_simulation_engine"]
+    },
+    "cameras": {
+        "name": "Cameras",
+        "description": "camera_engine",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["camera_engine"]
+    },
+    "trips": {
+        "name": "Sorties de Chasse",
+        "description": "hunting_trip_logger",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["hunting_trip_logger"]
+    },
+    "alerts": {
+        "name": "Alertes",
+        "description": "alerts_engine",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["alerts_engine"]
+    },
+    "scoring": {
+        "name": "Scoring",
+        "description": "scoring_engine, waypoint_scoring_engine",
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["scoring_engine", "waypoint_scoring_engine"]
     },
     "consent_layer": {
         "name": "Consent Layer",
         "description": "Gestion du consentement utilisateur",
-        "is_active": True,
-        "icon": "🛡️"
-    },
-    "bionic_engine": {
-        "name": "BIONIC Engine",
-        "description": "Next Step Engine, Setup Builder, Chasseur Jumeau, Scores",
-        "is_active": True,
-        "icon": "🎯"
+        "is_active": False,
+        "icon": "LOCK",
+        "controlled_modules": ["consent_layer"]
     }
 }
 
@@ -370,16 +474,16 @@ async def get_system_mode():
     mode_doc = await db.master_switches.find_one({"_type": "system_mode"})
     
     if not mode_doc:
-        # Initialize with STAGING mode (validation COPILOT MAÎTRE)
+        # Initialize with LOCKED mode (STEEVE-MAX x1900 — LOCKED until x3000)
         mode_doc = {
             "_type": "system_mode",
-            "current_mode": "STAGING",
+            "current_mode": "LOCKED",
             "internal_only": True,
             "external_flows": False,
             "external_locks": EXTERNAL_LOCKS,
             "activated_at": datetime.now(timezone.utc).isoformat(),
-            "activated_by": "COPILOT_MAITRE_STEEVE",
-            "validation_signature": "2026-02-19_AUDIT_VALIDATED"
+            "activated_by": "STEEVE_MAX_x1900",
+            "validation_signature": "2026-03-25_P0_LOCKED"
         }
         await db.master_switches.insert_one(mode_doc)
     
@@ -509,7 +613,7 @@ async def get_full_system_status():
     }
 
 
-logger.info("Master Switch X300% initialized - LEGO V5 Module - MODE STAGING ACTIVÉ")
+logger.info("Master Switch X300% initialized - 22 switches - MODE LOCKED (STEEVE-MAX x1900)")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

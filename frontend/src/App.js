@@ -76,6 +76,8 @@ const ReportsPage = lazy(() => import("@/pages/ReportsPage"));
 const SpeciesComparisonPage = lazy(() => import("@/pages/SpeciesComparisonPage"));
 // SALINE INTELLIGENCE ULTRA — Page immersive (STEEVE-MAX x2000)
 const SalineIntelligencePage = lazy(() => import("@/pages/SalineIntelligencePage"));
+// BIONIC MODULES — 10 modules predictifs (STEEVE-MAX x2000)
+const BionicModulesPage = lazy(() => import("@/pages/BionicModulesPage"));
 const AdminHotspotsPage = lazy(() => import("@/ui/administration/admin_hotspots/AdminHotspots"));
 import { 
   ShoppingCart, FlaskConical, GitCompare, Star, DollarSign, ThumbsUp, Heart, Eye,
@@ -1048,6 +1050,10 @@ function App() {
                 {/* SALINE INTELLIGENCE ULTRA */}
                 <Route path="/saline" element={<SalineIntelligencePage />} />
                 <Route path="/saline-intelligence" element={<SalineIntelligencePage />} />
+                {/* BIONIC MODULES — 10 modules predictifs (STEEVE-MAX x2000) */}
+                <Route path="/bionic-modules" element={<BionicModulesPage />} />
+                <Route path="/intelligence" element={<BionicModulesPage />} />
+                <Route path="/ecological-intelligence" element={<BionicModulesPage />} />
               </Routes>
             </Suspense>
             <Footer />

@@ -3,12 +3,24 @@
 Central router integration for all BIONIC HUNT/Chasse modules.
 This file is the single point of import for server.py
 
-Version: 2.0.0 - Phase 6 Complete (Pure Orchestrator)
+Version: 3.0.0 - P0 Admin Refactor (STEEVE-MAX x1900)
 
 Architecture:
 - All routers centralized here
 - No manual router registration in server.py
 - Legacy monolith isolated
+
+P0 Cleanup (STEEVE-MAX x1900):
+- Removed: admin_unified_engine (fusionne dans admin_engine)
+- Removed: admin_advanced_engine (sous-ensemble de admin_engine)
+- Removed: collaborative_engine (doublon de networking_engine)
+- Removed: adaptive_strategy_engine (doublon de strategy_master_engine)
+- Removed: advanced_geospatial_engine (couvert par bionic_engine_p0)
+- Removed: geolocation_engine (couvert par geo_engine + bionic_engine_p0)
+- Removed: affiliate_engine (remplace par affiliate_switch_engine)
+- Removed: rental_engine (stub minimal non utilise)
+- Removed: global_master_switch (shim, logique dans master_switch)
+- Removed: strategy_engine (fusionne dans strategy_master_engine)
 """
 
 from fastapi import APIRouter
@@ -19,6 +31,7 @@ logger = logging.getLogger(__name__)
 
 # ==============================================
 # CORE ENGINE ROUTERS (Phase 2)
+# P0: strategy_engine removed (fusionne dans strategy_master_engine)
 # ==============================================
 from modules.nutrition_engine.v1 import router as nutrition_router
 from modules.scoring_engine.v1 import router as scoring_router
@@ -26,14 +39,12 @@ from modules.ai_engine.v1 import router as ai_router
 from modules.weather_engine.v1 import router as weather_router
 from modules.geospatial_engine.v1 import router as geospatial_router
 from modules.wms_engine.v1 import router as wms_router
-from modules.strategy_engine.v1 import router as strategy_router
 
 # ==============================================
 # BUSINESS ENGINE ROUTERS (Phase 3)
+# P0: admin_unified_engine removed (fusionne dans admin_engine)
 # ==============================================
 from modules.user_engine.v1 import router as user_router
-# V5-ULTIME: Modules unifiés remplacent les anciens
-from modules.admin_unified_engine import router as admin_router
 from modules.notification_unified_engine import router as notification_router
 from modules.referral_engine.v1 import router as referral_router
 from modules.territory_engine.v1 import router as territory_router
@@ -43,15 +54,15 @@ from modules.plugins_engine.v1 import router as plugins_router
 
 # ==============================================
 # MASTER PLAN ENGINE ROUTERS (Phase 4)
+# P0: collaborative_engine removed (doublon de networking_engine)
+# P0: adaptive_strategy_engine removed (doublon de strategy_master_engine)
+# P0: advanced_geospatial_engine removed (couvert par bionic_engine_p0)
 # ==============================================
 from modules.recommendation_engine.v1 import router as recommendation_router
-from modules.collaborative_engine.v1 import router as collaborative_router
 from modules.ecoforestry_engine.v1 import router as ecoforestry_router
 from modules.engine_3d.v1 import router as engine_3d_router
 from modules.wildlife_behavior_engine.v1 import router as wildlife_router
 from modules.weather_fauna_simulation_engine.v1 import router as simulation_router
-from modules.adaptive_strategy_engine.v1 import router as adaptive_router
-from modules.advanced_geospatial_engine.v1 import router as advanced_geo_router
 from modules.progression_engine.v1 import router as progression_router
 from modules.networking_engine.v1 import router as networking_router
 
@@ -71,13 +82,13 @@ from modules.live_heading_engine import router as live_heading_router
 
 # ==============================================
 # DECOUPLED MODULES (Phase 7 - Extracted from server.py)
+# P0: affiliate_engine removed (remplace par affiliate_switch_engine)
 # ==============================================
 from modules.products_engine import router as products_router
 from modules.orders_engine import router as orders_router
 from modules.suppliers_engine import router as suppliers_router
 from modules.customers_engine import router as customers_router
 from modules.cart_engine import router as cart_router
-from modules.affiliate_engine import router as affiliate_router
 from modules.alerts_engine import router as alerts_router
 
 # ==============================================
@@ -98,8 +109,8 @@ from modules.waypoint_scoring_engine import router as waypoint_scoring_router
 
 # ==============================================
 # PHASE P4 - GEOLOCATION ENGINE
+# P0: geolocation_engine removed (couvert par geo_engine + bionic_engine_p0)
 # ==============================================
-from modules.geolocation_engine.v1 import router as geolocation_router
 
 # ==============================================
 # PHASE P4 - AUTH ENGINE (Hybrid JWT + Google OAuth)
@@ -177,9 +188,9 @@ from modules.ad_spaces_engine.router import router as ad_spaces_router
 from modules.messaging_engine.router import router as messaging_router
 
 # ==============================================
-# GLOBAL MASTER SWITCH (Gros Bouton Rouge)
+# GLOBAL MASTER SWITCH
+# P0: global_master_switch shim removed — logique dans master_switch/router.py
 # ==============================================
-from modules.global_master_switch.router import router as global_master_switch_router
 
 # ==============================================
 # TRACKING ENGINE V1 - BEHAVIORAL (Events, Funnels, Heatmaps)
@@ -217,15 +228,13 @@ from modules.trigger_engine.router import router as trigger_engine_router
 from modules.master_switch.router import router as master_switch_router
 
 # ==============================================
-# V5-ULTIME-FUSION - MODULES IMPORTÉS (V2, V3, BASE)
+# V5-ULTIME-FUSION - MODULES IMPORTES (V2, V3, BASE)
+# P0: rental_engine removed (stub minimal non utilise)
+# P0: communication_engine et admin_advanced_engine deja retires en V5
 # ==============================================
 from modules.backup_cloud_engine.router import router as backup_cloud_router
 from modules.formations_engine.router import router as formations_router
 from modules.social_engine.router import router as social_router
-from modules.rental_engine.router import router as rental_router
-# V5-ULTIME: communication_engine et admin_advanced_engine fusionnés dans les modules unifiés
-# from modules.communication_engine.router import router as communication_router
-# from modules.admin_advanced_engine.router import router as admin_advanced_router
 from modules.partner_engine.router import router as partner_router
 
 # ==============================================
@@ -252,6 +261,12 @@ from modules.bionic_engine_p0.hotspots.hotspot_router import router as hotspot_a
 # OPTIMIZATION ENGINE (Phase 5C-R — Restauration V2)
 # ==============================================
 from modules.optimization_engine.router import router as optimization_router
+
+# ==============================================
+# STEEVE-MAX x2000 — ECOSYSTEME UNIFIE (Phase A, B, C)
+# ==============================================
+from modules.bionic_ecological_engine.router import router as ecological_intelligence_router
+from modules.bionic_data_fabric.router import router as data_fabric_router
 
 
 # List of all available routers with their metadata
@@ -305,12 +320,7 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
         "phase": 2,
         "description": "WMS layer management for hunting maps"
     }),
-    (strategy_router, {
-        "name": "strategy_engine",
-        "version": "1.0.0",
-        "phase": 2,
-        "description": "Hunting strategy generation"
-    }),
+    # Phase 2 removed: strategy_engine (fusionne dans strategy_master_engine)
     
     # ==========================================
     # Phase 3 - Business Engines (8 modules)
@@ -321,12 +331,7 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
         "phase": 3,
         "description": "User management and authentication"
     }),
-    (admin_router, {
-        "name": "admin_unified_engine",
-        "version": "1.0.0",
-        "phase": "V5-UNIFIED",
-        "description": "Administration unifiée (V4 admin_engine + BASE admin_advanced_engine)"
-    }),
+    # P0 removed: admin_unified_engine (fusionne dans admin_engine)
     (notification_router, {
         "name": "notification_unified_engine",
         "version": "1.0.0",
@@ -373,12 +378,7 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
         "phase": 4,
         "description": "Intelligent product and strategy recommendations"
     }),
-    (collaborative_router, {
-        "name": "collaborative_engine",
-        "version": "1.0.0",
-        "phase": 4,
-        "description": "Hunter collaboration and group management"
-    }),
+    # P0 removed: collaborative_engine (doublon de networking_engine)
     (ecoforestry_router, {
         "name": "ecoforestry_engine",
         "version": "1.0.0",
@@ -403,18 +403,8 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
         "phase": 4,
         "description": "Weather-wildlife correlation simulation"
     }),
-    (adaptive_router, {
-        "name": "adaptive_strategy_engine",
-        "version": "1.0.0",
-        "phase": 4,
-        "description": "Adaptive real-time hunting strategies"
-    }),
-    (advanced_geo_router, {
-        "name": "advanced_geospatial_engine",
-        "version": "1.0.0",
-        "phase": 4,
-        "description": "Advanced geospatial analysis and corridors"
-    }),
+    # P0 removed: adaptive_strategy_engine (doublon de strategy_master_engine)
+    # P0 removed: advanced_geospatial_engine (couvert par bionic_engine_p0)
     (progression_router, {
         "name": "progression_engine",
         "version": "1.0.0",
@@ -505,12 +495,7 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
         "phase": 7,
         "description": "Shopping cart management"
     }),
-    (affiliate_router, {
-        "name": "affiliate_engine",
-        "version": "1.0.0",
-        "phase": 7,
-        "description": "Affiliate click tracking and commissions"
-    }),
+    # P0 removed: affiliate_engine (remplace par affiliate_switch_engine)
     (alerts_router, {
         "name": "alerts_engine",
         "version": "1.0.0",
@@ -557,12 +542,7 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
     # ==========================================
     # Phase P4 - Geolocation Engine
     # ==========================================
-    (geolocation_router, {
-        "name": "geolocation_engine",
-        "version": "1.0.0",
-        "phase": "P4",
-        "description": "Background geolocation tracking and proximity alerts"
-    }),
+    # P0 removed: geolocation_engine (couvert par geo_engine + bionic_engine_p0)
     
     # ==========================================
     # Phase P4+ - Hunting Trip Logger (Real Data)
@@ -619,12 +599,7 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
         "phase": "V5-BASE",
         "description": "Networking, groupes de chasse, chat, parrainage"
     }),
-    (rental_router, {
-        "name": "rental_engine",
-        "version": "1.0.0",
-        "phase": "V5-BASE",
-        "description": "Location de terres de chasse"
-    }),
+    # P0 removed: rental_engine (stub minimal non utilise)
     # V5-ULTIME: communication_engine et admin_advanced_engine fusionnés
     # dans notification_unified_engine et admin_unified_engine respectivement
     (partner_router, {
@@ -837,12 +812,7 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
     # ==========================================
     # GLOBAL MASTER SWITCH (Gros Bouton Rouge)
     # ==========================================
-    (global_master_switch_router, {
-        "name": "global_master_switch",
-        "version": "1.0.0",
-        "phase": "GLOBAL-SWITCH",
-        "description": "🔴 Global Master Switch - Contrôle global du système publicitaire"
-    }),
+    # P0 removed: global_master_switch (shim — logique dans master_switch)
     
     # ==========================================
     # BIONIC NEXT STEP ENGINE (Phase NSE)
@@ -892,6 +862,22 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
         "version": "1.0.0",
         "phase": "5C-R",
         "description": "Auto-Optimisation BIONIC - Propositions, Versions, Approbation Admin (restaure depuis V2)"
+    }),
+
+    # ==========================================
+    # STEEVE-MAX x2000 — ECOSYSTEME UNIFIE
+    # ==========================================
+    (ecological_intelligence_router, {
+        "name": "bionic_ecological_engine",
+        "version": "1.0.0",
+        "phase": "X2000-ECO",
+        "description": "Moteur ecologique unifie — sol, hydro, vegetation, meteo, solunar, predictions, scoring, pipeline comportemental"
+    }),
+    (data_fabric_router, {
+        "name": "bionic_data_fabric",
+        "version": "1.0.0",
+        "phase": "X2000-FABRIC",
+        "description": "Data Fabric — normalisation, interconnexion, historisation, coherence multi-modules"
     }),
 ]
 
@@ -948,6 +934,6 @@ MODULE_STATUS = {
     "v5_base_modules": len([r for r, m in CORE_ROUTERS if m.get("phase") == "V5-BASE"]),
     "modules": [meta["name"] for _, meta in CORE_ROUTERS],
     "status": "operational",
-    "architecture_version": "V5-ULTIME-FUSION",
-    "fusion_sources": ["V4 (ossature)", "V3 (frontpage)", "V2 (backup/formations)", "BASE (social/admin)"]
+    "architecture_version": "V7-X2000-ECOSYSTEM",
+    "fusion_sources": ["V4 (ossature)", "V3 (frontpage)", "V2 (backup/formations)", "BASE (social/admin)", "X2000 (ecosysteme unifie)"]
 }

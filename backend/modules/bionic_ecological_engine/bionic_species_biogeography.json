@@ -1,0 +1,301 @@
+{
+  "_metadata": {
+    "version": "1.0.0",
+    "directive": "STEEVE-MAX x2260-V2",
+    "description": "Matrice biogeographique officielle — Presence reelle des especes par pays, province et Etat",
+    "sources": [
+      "Ministere des Forets, de la Faune et des Parcs du Quebec (MFFP)",
+      "Ministere des Richesses naturelles et des Forets de l'Ontario (MNRF)",
+      "Environnement et Changement climatique Canada (ECCC)",
+      "U.S. Fish and Wildlife Service (USFWS)",
+      "NatureServe",
+      "IUCN Red List"
+    ],
+    "last_updated": "2026-03-25",
+    "total_species": 8,
+    "total_jurisdictions": 26
+  },
+
+  "orignal": {
+    "name_fr": "Orignal",
+    "name_latin": "Alces alces",
+    "distribution": {
+      "CA": {
+        "QC": {"status": "present", "abundance": "high", "huntable": true, "zones": "zones 1-27", "notes": "Population estimee ~115 000"},
+        "ON": {"status": "present", "abundance": "high", "huntable": true, "zones": "WMUs northern/central", "notes": "Population estimee ~90 000"},
+        "NB": {"status": "present", "abundance": "moderate", "huntable": true, "zones": "zones 1-28", "notes": ""},
+        "NS": {"status": "present", "abundance": "low", "huntable": false, "zones": "", "notes": "Population Cape Breton, en retablissement"},
+        "MB": {"status": "present", "abundance": "high", "huntable": true, "zones": "GHAs", "notes": ""},
+        "SK": {"status": "present", "abundance": "high", "huntable": true, "zones": "WMZs", "notes": ""},
+        "AB": {"status": "present", "abundance": "high", "huntable": true, "zones": "WMUs", "notes": ""},
+        "BC": {"status": "present", "abundance": "high", "huntable": true, "zones": "regions 1-8", "notes": "Sous-espece Alces alces andersoni/gigas"},
+        "YT": {"status": "present", "abundance": "moderate", "huntable": true, "zones": "", "notes": ""},
+        "NT": {"status": "present", "abundance": "moderate", "huntable": true, "zones": "", "notes": ""},
+        "NL": {"status": "present", "abundance": "high", "huntable": true, "zones": "", "notes": "Population introduite, tres abondante a Terre-Neuve"},
+        "PE": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "NU": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""}
+      },
+      "US": {
+        "ME": {"status": "present", "abundance": "high", "huntable": true, "notes": "~75 000"},
+        "NH": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "VT": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "NY": {"status": "present", "abundance": "low", "huntable": false, "notes": "Adirondacks, population faible"},
+        "MN": {"status": "present", "abundance": "moderate", "huntable": true, "notes": "Nord-est de l'Etat"},
+        "MI": {"status": "present", "abundance": "low", "huntable": false, "notes": "Upper Peninsula"},
+        "WI": {"status": "occasional", "abundance": "very_low", "huntable": false, "notes": "Observations occasionnelles"},
+        "MT": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "WY": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "ID": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "CO": {"status": "present", "abundance": "moderate", "huntable": true, "notes": "Montagnes"},
+        "UT": {"status": "present", "abundance": "low", "huntable": true, "notes": ""},
+        "WA": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "AK": {"status": "present", "abundance": "very_high", "huntable": true, "notes": "~200 000, plus grande population"}
+      }
+    }
+  },
+
+  "cerf_virginie": {
+    "name_fr": "Cerf de Virginie",
+    "name_latin": "Odocoileus virginianus",
+    "distribution": {
+      "CA": {
+        "QC": {"status": "present", "abundance": "high", "huntable": true, "zones": "zones 1-27", "notes": "Expansion nordique continue"},
+        "ON": {"status": "present", "abundance": "very_high", "huntable": true, "zones": "WMUs", "notes": "Population tres abondante sud Ontario"},
+        "NB": {"status": "present", "abundance": "moderate", "huntable": true, "zones": "", "notes": ""},
+        "NS": {"status": "present", "abundance": "moderate", "huntable": true, "zones": "", "notes": ""},
+        "MB": {"status": "present", "abundance": "high", "huntable": true, "zones": "", "notes": ""},
+        "SK": {"status": "present", "abundance": "high", "huntable": true, "zones": "", "notes": ""},
+        "AB": {"status": "present", "abundance": "moderate", "huntable": true, "zones": "", "notes": "Sud et centre"},
+        "BC": {"status": "present", "abundance": "low", "huntable": true, "zones": "", "notes": "Sud-est seulement (Kootenays)"},
+        "PE": {"status": "present", "abundance": "moderate", "huntable": true, "zones": "", "notes": ""},
+        "NL": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "YT": {"status": "occasional", "abundance": "very_low", "huntable": false, "zones": "", "notes": "Observations rares, limite nord"},
+        "NT": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "NU": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""}
+      },
+      "US": {
+        "ALL_LOWER_48": {"status": "present", "abundance": "high", "huntable": true, "notes": "Present dans les 48 etats contigus. Population US totale ~30 millions"},
+        "AK": {"status": "absent", "abundance": "none", "huntable": false, "notes": ""}
+      }
+    }
+  },
+
+  "ours_noir": {
+    "name_fr": "Ours noir",
+    "name_latin": "Ursus americanus",
+    "distribution": {
+      "CA": {
+        "QC": {"status": "present", "abundance": "high", "huntable": true, "zones": "zones 1-27", "notes": "~70 000"},
+        "ON": {"status": "present", "abundance": "high", "huntable": true, "zones": "WMUs", "notes": "~85 000-105 000"},
+        "NB": {"status": "present", "abundance": "high", "huntable": true, "zones": "", "notes": ""},
+        "NS": {"status": "present", "abundance": "moderate", "huntable": true, "zones": "", "notes": ""},
+        "MB": {"status": "present", "abundance": "high", "huntable": true, "zones": "", "notes": ""},
+        "SK": {"status": "present", "abundance": "moderate", "huntable": true, "zones": "", "notes": ""},
+        "AB": {"status": "present", "abundance": "high", "huntable": true, "zones": "", "notes": ""},
+        "BC": {"status": "present", "abundance": "very_high", "huntable": true, "zones": "", "notes": "~120 000-160 000"},
+        "YT": {"status": "present", "abundance": "moderate", "huntable": true, "zones": "", "notes": ""},
+        "NT": {"status": "present", "abundance": "low", "huntable": true, "zones": "", "notes": ""},
+        "NL": {"status": "present", "abundance": "moderate", "huntable": true, "zones": "", "notes": "Labrador seulement, absent de Terre-Neuve"},
+        "PE": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "NU": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""}
+      },
+      "US": {
+        "ME": {"status": "present", "abundance": "high", "huntable": true, "notes": ""},
+        "NH": {"status": "present", "abundance": "high", "huntable": true, "notes": ""},
+        "VT": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "NY": {"status": "present", "abundance": "high", "huntable": true, "notes": "Adirondacks, Catskills"},
+        "PA": {"status": "present", "abundance": "high", "huntable": true, "notes": "~20 000"},
+        "VA": {"status": "present", "abundance": "high", "huntable": true, "notes": ""},
+        "NC": {"status": "present", "abundance": "high", "huntable": true, "notes": ""},
+        "TN": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "MN": {"status": "present", "abundance": "high", "huntable": true, "notes": ""},
+        "WI": {"status": "present", "abundance": "high", "huntable": true, "notes": ""},
+        "MI": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "MT": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "WY": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "CO": {"status": "present", "abundance": "high", "huntable": true, "notes": "~17 000-20 000"},
+        "ID": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "WA": {"status": "present", "abundance": "high", "huntable": true, "notes": ""},
+        "OR": {"status": "present", "abundance": "high", "huntable": true, "notes": ""},
+        "CA_US": {"status": "present", "abundance": "high", "huntable": false, "notes": "Chasse interdite depuis 2012"},
+        "AK": {"status": "present", "abundance": "very_high", "huntable": true, "notes": "~100 000"},
+        "FL": {"status": "present", "abundance": "moderate", "huntable": true, "notes": "Sous-espece floridanus"}
+      }
+    }
+  },
+
+  "dindon_sauvage": {
+    "name_fr": "Dindon sauvage",
+    "name_latin": "Meleagris gallopavo",
+    "distribution": {
+      "CA": {
+        "QC": {"status": "present", "abundance": "moderate", "huntable": true, "zones": "zones 4-10", "notes": "Expansion en cours, sud du Quebec"},
+        "ON": {"status": "present", "abundance": "high", "huntable": true, "zones": "WMUs sud", "notes": "Reintroduit avec succes"},
+        "NB": {"status": "introduced", "abundance": "low", "huntable": false, "zones": "", "notes": "Population en etablissement"},
+        "MB": {"status": "present", "abundance": "low", "huntable": true, "zones": "", "notes": "Sud-ouest"},
+        "NS": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "SK": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "AB": {"status": "introduced", "abundance": "very_low", "huntable": false, "zones": "", "notes": "Tentatives d'introduction, sud-est"},
+        "BC": {"status": "introduced", "abundance": "low", "huntable": true, "zones": "", "notes": "Okanagan, Kootenays"},
+        "PE": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "NL": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "YT": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "NT": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "NU": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""}
+      },
+      "US": {
+        "ALL_LOWER_48": {"status": "present", "abundance": "very_high", "huntable": true, "notes": "Present dans 49 etats (absent Hawaii). Population ~6.5 millions. Chassable dans 44 etats"},
+        "AK": {"status": "absent", "abundance": "none", "huntable": false, "notes": ""}
+      }
+    }
+  },
+
+  "caribou": {
+    "name_fr": "Caribou",
+    "name_latin": "Rangifer tarandus caribou",
+    "distribution": {
+      "CA": {
+        "QC": {"status": "present", "abundance": "low", "huntable": false, "zones": "", "notes": "Caribou forestier menace (espece vulnerable). Hardes du Nord chassables par Autochtones. Caribou migrateur (George/Leaf) en declin severe"},
+        "ON": {"status": "present", "abundance": "low", "huntable": false, "zones": "", "notes": "Caribou forestier menace, nord de l'Ontario"},
+        "NL": {"status": "present", "abundance": "moderate", "huntable": true, "zones": "", "notes": "Caribou migrateur George River (Labrador). Terre-Neuve: sous-espece insulaire chassable"},
+        "MB": {"status": "present", "abundance": "low", "huntable": false, "zones": "", "notes": "Nord du Manitoba, populations en declin"},
+        "SK": {"status": "present", "abundance": "low", "huntable": false, "zones": "", "notes": "Nord Saskatchewan, menace"},
+        "AB": {"status": "present", "abundance": "very_low", "huntable": false, "zones": "", "notes": "Caribou des montagnes, menace. Aucune chasse"},
+        "BC": {"status": "present", "abundance": "low", "huntable": false, "zones": "", "notes": "Caribou des montagnes du Sud, menace. Caribou du Nord chassable dans certaines zones"},
+        "YT": {"status": "present", "abundance": "moderate", "huntable": true, "zones": "", "notes": "Caribou de la toundra, Porcupine herd"},
+        "NT": {"status": "present", "abundance": "high", "huntable": true, "zones": "", "notes": "Hardes Bathurst, Beverly, Bluenose"},
+        "NU": {"status": "present", "abundance": "high", "huntable": true, "zones": "", "notes": "Principal territoire de caribou de la toundra"},
+        "NB": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": "Disparu depuis les annees 1920"},
+        "NS": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "PE": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""}
+      },
+      "US": {
+        "AK": {"status": "present", "abundance": "high", "huntable": true, "notes": "Caribou de la toundra, ~750 000"},
+        "ID": {"status": "present", "abundance": "very_low", "huntable": false, "notes": "Selkirk herd, <50 individus, menace"},
+        "WA": {"status": "present", "abundance": "very_low", "huntable": false, "notes": "Selkirk herd, <20 individus"},
+        "ME": {"status": "disappeared", "abundance": "none", "huntable": false, "notes": "Disparu au debut du 20e siecle"},
+        "MN": {"status": "disappeared", "abundance": "none", "huntable": false, "notes": "Disparu en 1940s"}
+      }
+    }
+  },
+
+  "wapiti": {
+    "name_fr": "Wapiti (Elk)",
+    "name_latin": "Cervus canadensis",
+    "distribution": {
+      "CA": {
+        "AB": {"status": "present", "abundance": "high", "huntable": true, "zones": "WMUs", "notes": "Population ~34 000, principale province pour wapiti"},
+        "BC": {"status": "present", "abundance": "high", "huntable": true, "zones": "regions 3-8", "notes": "Population ~40 000"},
+        "SK": {"status": "present", "abundance": "moderate", "huntable": true, "zones": "", "notes": ""},
+        "MB": {"status": "present", "abundance": "moderate", "huntable": true, "zones": "", "notes": ""},
+        "ON": {"status": "introduced", "abundance": "low", "huntable": true, "zones": "WMUs specifiques", "notes": "Reintroduit a Bancroft et Lake Huron"},
+        "QC": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": "Disparu historiquement. Projet de reintroduction potentiel"},
+        "NB": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "NS": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "PE": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "NL": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "YT": {"status": "present", "abundance": "low", "huntable": true, "zones": "", "notes": "Takhini/Braeburn herds"},
+        "NT": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "NU": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""}
+      },
+      "US": {
+        "MT": {"status": "present", "abundance": "very_high", "huntable": true, "notes": "~150 000"},
+        "CO": {"status": "present", "abundance": "very_high", "huntable": true, "notes": "~280 000, plus grande population US"},
+        "WY": {"status": "present", "abundance": "very_high", "huntable": true, "notes": "~110 000, Yellowstone/Jackson"},
+        "ID": {"status": "present", "abundance": "high", "huntable": true, "notes": ""},
+        "OR": {"status": "present", "abundance": "high", "huntable": true, "notes": "Roosevelt elk (cote) + Rocky Mountain elk"},
+        "WA": {"status": "present", "abundance": "high", "huntable": true, "notes": "Roosevelt elk"},
+        "UT": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "NM": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "AZ": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "SD": {"status": "present", "abundance": "moderate", "huntable": true, "notes": "Custer State Park"},
+        "NE": {"status": "present", "abundance": "low", "huntable": true, "notes": ""},
+        "PA": {"status": "present", "abundance": "moderate", "huntable": true, "notes": "Reintroduit, ~1 400"},
+        "KY": {"status": "present", "abundance": "moderate", "huntable": true, "notes": "Reintroduit, ~14 000"},
+        "VA": {"status": "introduced", "abundance": "low", "huntable": false, "notes": ""},
+        "AK": {"status": "introduced", "abundance": "moderate", "huntable": true, "notes": "Roosevelt elk introduit sur iles"}
+      }
+    }
+  },
+
+  "cerf_mulet": {
+    "name_fr": "Cerf mulet",
+    "name_latin": "Odocoileus hemionus",
+    "distribution": {
+      "CA": {
+        "BC": {"status": "present", "abundance": "high", "huntable": true, "zones": "", "notes": "Sous-espece hemionus (interior) + sitkensis (cote)"},
+        "AB": {"status": "present", "abundance": "high", "huntable": true, "zones": "WMUs", "notes": ""},
+        "SK": {"status": "present", "abundance": "high", "huntable": true, "zones": "", "notes": ""},
+        "MB": {"status": "present", "abundance": "moderate", "huntable": true, "zones": "", "notes": "Sud-ouest"},
+        "YT": {"status": "present", "abundance": "moderate", "huntable": true, "zones": "", "notes": ""},
+        "NT": {"status": "present", "abundance": "low", "huntable": true, "zones": "", "notes": "Populations limitees"},
+        "QC": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "ON": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "NB": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "NS": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "PE": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "NL": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "NU": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""}
+      },
+      "US": {
+        "MT": {"status": "present", "abundance": "very_high", "huntable": true, "notes": ""},
+        "WY": {"status": "present", "abundance": "very_high", "huntable": true, "notes": ""},
+        "CO": {"status": "present", "abundance": "very_high", "huntable": true, "notes": "~400 000"},
+        "ID": {"status": "present", "abundance": "high", "huntable": true, "notes": ""},
+        "UT": {"status": "present", "abundance": "high", "huntable": true, "notes": ""},
+        "NV": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "AZ": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "NM": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "OR": {"status": "present", "abundance": "high", "huntable": true, "notes": "Cerf a queue noire (cote)"},
+        "WA": {"status": "present", "abundance": "high", "huntable": true, "notes": "Cerf a queue noire (cote)"},
+        "CA_US": {"status": "present", "abundance": "high", "huntable": true, "notes": "Cerf a queue noire cote + cerf mulet interior"},
+        "SD": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "ND": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "NE": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "KS": {"status": "present", "abundance": "low", "huntable": true, "notes": "Ouest du Kansas"},
+        "TX": {"status": "present", "abundance": "moderate", "huntable": true, "notes": "Trans-Pecos region"},
+        "AK": {"status": "present", "abundance": "moderate", "huntable": true, "notes": "Cerf a queue noire, sud-est AK"}
+      }
+    }
+  },
+
+  "pronghorn": {
+    "name_fr": "Antilocapre (Pronghorn)",
+    "name_latin": "Antilocapra americana",
+    "distribution": {
+      "CA": {
+        "SK": {"status": "present", "abundance": "moderate", "huntable": true, "zones": "", "notes": "Prairies du sud, ~25 000"},
+        "AB": {"status": "present", "abundance": "moderate", "huntable": true, "zones": "", "notes": "Sud-est, prairies, ~30 000"},
+        "QC": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "ON": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "BC": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "MB": {"status": "occasional", "abundance": "very_low", "huntable": false, "zones": "", "notes": "Observations tres rares, sud-ouest"},
+        "NB": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "NS": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "PE": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "NL": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "YT": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "NT": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""},
+        "NU": {"status": "absent", "abundance": "none", "huntable": false, "zones": "", "notes": ""}
+      },
+      "US": {
+        "MT": {"status": "present", "abundance": "very_high", "huntable": true, "notes": ""},
+        "WY": {"status": "present", "abundance": "very_high", "huntable": true, "notes": "Plus grande population US ~500 000"},
+        "CO": {"status": "present", "abundance": "high", "huntable": true, "notes": ""},
+        "SD": {"status": "present", "abundance": "high", "huntable": true, "notes": ""},
+        "ND": {"status": "present", "abundance": "high", "huntable": true, "notes": ""},
+        "NE": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "KS": {"status": "present", "abundance": "moderate", "huntable": true, "notes": "Ouest"},
+        "NM": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "AZ": {"status": "present", "abundance": "moderate", "huntable": true, "notes": "Sous-espece mexicana/sonoriensis"},
+        "NV": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "UT": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "ID": {"status": "present", "abundance": "moderate", "huntable": true, "notes": ""},
+        "OR": {"status": "present", "abundance": "moderate", "huntable": true, "notes": "Est Oregon"},
+        "CA_US": {"status": "present", "abundance": "low", "huntable": true, "notes": "Nord-est Californie"},
+        "TX": {"status": "present", "abundance": "moderate", "huntable": true, "notes": "Trans-Pecos"},
+        "OK": {"status": "present", "abundance": "low", "huntable": true, "notes": "Panhandle"}
+      }
+    }
+  }
+}
