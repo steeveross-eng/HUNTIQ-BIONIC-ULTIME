@@ -451,6 +451,22 @@ except Exception as e:
 
 
 
+# ═══ SALINE INTELLIGENCE ULTRA — 7 moteurs scientifiques (STEEVE-MAX x1000) ═══
+try:
+    from modules.saline_engine.router import router as saline_ultra_router
+    app.include_router(saline_ultra_router)
+    logger.info("✓ SALINE INTELLIGENCE ULTRA registered (/api/v1/saline) — 7 engines")
+except Exception as e:
+    logger.warning(f"SALINE INTELLIGENCE ULTRA not loaded: {e}")
+
+# ═══ SALINE INTELLIGENCE ULTRA — E-Commerce (Stripe) ═══
+try:
+    from modules.saline_engine.ecommerce_router import router as saline_shop_router
+    app.include_router(saline_shop_router)
+    logger.info("✓ SALINE E-COMMERCE registered (/api/v1/saline/shop) — Stripe")
+except Exception as e:
+    logger.warning(f"SALINE E-COMMERCE not loaded: {e}")
+
 # ═══ ALIMENTATION-V1 — Moteur alimentaire scientifique multi-especes ═══
 try:
     from modules.alimentation_v1.router import router as alimentation_v1_router

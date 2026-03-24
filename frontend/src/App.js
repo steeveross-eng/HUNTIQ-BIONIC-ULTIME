@@ -74,6 +74,8 @@ const FieldObservationForm = lazy(() => import("@/pages/FieldObservationForm"));
 const CalibrationDashboard = lazy(() => import("@/pages/CalibrationDashboard"));
 const ReportsPage = lazy(() => import("@/pages/ReportsPage"));
 const SpeciesComparisonPage = lazy(() => import("@/pages/SpeciesComparisonPage"));
+// SALINE INTELLIGENCE ULTRA — Page immersive (STEEVE-MAX x2000)
+const SalineIntelligencePage = lazy(() => import("@/pages/SalineIntelligencePage"));
 const AdminHotspotsPage = lazy(() => import("@/ui/administration/admin_hotspots/AdminHotspots"));
 import { 
   ShoppingCart, FlaskConical, GitCompare, Star, DollarSign, ThumbsUp, Heart, Eye,
@@ -225,6 +227,16 @@ const Navigation = ({ cartCount, onCartOpen }) => {
               <Store className="h-4 w-4" />
               {t('nav_shop')}
             </Link>
+
+            {/* Saline Intelligence Ultra */}
+            <Link 
+              to="/saline" 
+              className={`flex items-center gap-2 px-3 py-2 text-sm font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 ${isActive('/saline') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              data-testid="nav-saline"
+            >
+              <FlaskConical className="h-4 w-4" />
+              Saline
+            </Link>
             
             {/* Business (Conditionnel) */}
             {isBusinessOrAdmin && (
@@ -340,6 +352,9 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             </Link>
             <Link to="/shop" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-gray-300 hover:text-white">
               <Store className="h-4 w-4" /> {t('nav_shop')}
+            </Link>
+            <Link to="/saline" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="nav-saline-mobile">
+              <FlaskConical className="h-4 w-4" /> Saline Intelligence
             </Link>
             {isBusinessOrAdmin && (
               <Link to="/business" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#10B981]">
@@ -1030,6 +1045,9 @@ function App() {
                 <Route path="/calibration" element={<CalibrationDashboard />} />
                 <Route path="/reports" element={<ReportsPage />} />
                 <Route path="/comparaison-especes" element={<SpeciesComparisonPage />} />
+                {/* SALINE INTELLIGENCE ULTRA */}
+                <Route path="/saline" element={<SalineIntelligencePage />} />
+                <Route path="/saline-intelligence" element={<SalineIntelligencePage />} />
               </Routes>
             </Suspense>
             <Footer />

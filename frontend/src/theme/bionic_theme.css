@@ -1,0 +1,499 @@
+/* ============================================
+   SALINE INTELLIGENCE ULTRA — Theme CSS Dédié
+   GOLDEN-BCE-4X | STEEVE-MAX x2000
+   
+   Fichier isolé: aucun conflit avec App.css
+   Dark #0A0A0A | Gold #F5A623 | Tactical Green #10B981
+   ============================================ */
+
+/* === VARIABLES SALINE === */
+:root {
+  --saline-bg: #0A0A0A;
+  --saline-bg-secondary: #0F0F0F;
+  --saline-bg-card: rgba(15, 15, 15, 0.85);
+  --saline-bg-card-hover: rgba(20, 20, 20, 0.95);
+  --saline-border: #1A1A1A;
+  --saline-border-gold: rgba(245, 166, 35, 0.3);
+  --saline-gold: #F5A623;
+  --saline-gold-dim: rgba(245, 166, 35, 0.15);
+  --saline-gold-glow: rgba(245, 166, 35, 0.4);
+  --saline-green: #10B981;
+  --saline-green-dim: rgba(16, 185, 129, 0.15);
+  --saline-red: #EF4444;
+  --saline-red-dim: rgba(239, 68, 68, 0.15);
+  --saline-blue: #3B82F6;
+  --saline-blue-dim: rgba(59, 130, 246, 0.15);
+  --saline-orange: #F59E0B;
+  --saline-orange-dim: rgba(245, 158, 11, 0.15);
+  --saline-text: #FAFAFA;
+  --saline-text-muted: #737373;
+  --saline-text-secondary: #A3A3A3;
+}
+
+/* === PAGE CONTAINER === */
+.saline-page {
+  min-height: 100vh;
+  background: var(--saline-bg);
+  color: var(--saline-text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* === HERO SECTION === */
+.saline-hero {
+  position: relative;
+  padding: 2.5rem 1.5rem 2rem;
+  background: linear-gradient(180deg, rgba(245, 166, 35, 0.08) 0%, transparent 100%);
+  border-bottom: 1px solid var(--saline-border);
+  overflow: hidden;
+}
+
+.saline-hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -25%;
+  width: 150%;
+  height: 200%;
+  background: radial-gradient(ellipse at 30% 20%, rgba(245, 166, 35, 0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.saline-hero-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, var(--saline-gold) 0%, #FFD700 50%, var(--saline-gold) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.25rem;
+}
+
+.saline-hero-subtitle {
+  font-size: 0.875rem;
+  color: var(--saline-text-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* === SCORE BADGE === */
+.saline-score-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  backdrop-filter: blur(12px);
+}
+
+.saline-score-badge.premium {
+  background: rgba(245, 166, 35, 0.2);
+  border: 1px solid var(--saline-gold);
+  color: var(--saline-gold);
+}
+
+.saline-score-badge.optimal {
+  background: var(--saline-green-dim);
+  border: 1px solid var(--saline-green);
+  color: var(--saline-green);
+}
+
+.saline-score-badge.adequat {
+  background: var(--saline-blue-dim);
+  border: 1px solid var(--saline-blue);
+  color: var(--saline-blue);
+}
+
+.saline-score-badge.insuffisant {
+  background: var(--saline-red-dim);
+  border: 1px solid var(--saline-red);
+  color: var(--saline-red);
+}
+
+/* === TAB NAVIGATION === */
+.saline-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--saline-border);
+  padding: 0 1.5rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.saline-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.saline-tab {
+  position: relative;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--saline-text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+  background: none;
+  border: none;
+  letter-spacing: 0.02em;
+}
+
+.saline-tab:hover {
+  color: var(--saline-text-secondary);
+}
+
+.saline-tab.active {
+  color: var(--saline-gold);
+}
+
+.saline-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--saline-gold);
+}
+
+/* === SECTION CARDS === */
+.saline-card {
+  background: var(--saline-bg-card);
+  border: 1px solid var(--saline-border);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  backdrop-filter: blur(8px);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.saline-card:hover {
+  border-color: rgba(245, 166, 35, 0.2);
+  background: var(--saline-bg-card-hover);
+}
+
+.saline-card-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--saline-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.75rem;
+}
+
+/* === GAUGE === */
+.saline-gauge-container {
+  position: relative;
+  width: 100%;
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+.saline-gauge-svg {
+  width: 100%;
+  transform: rotate(-90deg);
+}
+
+.saline-gauge-track {
+  fill: none;
+  stroke: var(--saline-border);
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+
+.saline-gauge-fill {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s ease, stroke 0.3s ease;
+}
+
+.saline-gauge-value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.saline-gauge-number {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.saline-gauge-label {
+  font-size: 0.6875rem;
+  color: var(--saline-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 0.25rem;
+}
+
+/* === BAR CHART === */
+.saline-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.375rem 0;
+}
+
+.saline-bar-label {
+  width: 3rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--saline-text-secondary);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.saline-bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--saline-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.saline-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.8s ease;
+}
+
+.saline-bar-value {
+  width: 2.5rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* === MINERAL STATUS GRID === */
+.saline-mineral-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.saline-mineral-item {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--saline-border);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  text-align: center;
+  transition: border-color 0.2s ease;
+}
+
+.saline-mineral-item.critical {
+  border-color: var(--saline-red);
+  background: var(--saline-red-dim);
+}
+
+.saline-mineral-item.deficient {
+  border-color: var(--saline-orange);
+  background: var(--saline-orange-dim);
+}
+
+.saline-mineral-item.sufficient {
+  border-color: var(--saline-green);
+  background: var(--saline-green-dim);
+}
+
+.saline-mineral-symbol {
+  font-size: 1.125rem;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+}
+
+.saline-mineral-status {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* === PRODUCT CARDS === */
+.saline-product-card {
+  background: var(--saline-bg-card);
+  border: 1px solid var(--saline-border);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: border-color 0.2s ease, transform 0.15s ease;
+}
+
+.saline-product-card:hover {
+  border-color: var(--saline-gold);
+  transform: translateY(-2px);
+}
+
+.saline-product-header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--saline-border);
+}
+
+.saline-product-body {
+  padding: 1rem;
+}
+
+.saline-product-price {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--saline-gold);
+}
+
+.saline-product-format {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: var(--saline-gold-dim);
+  color: var(--saline-gold);
+}
+
+/* === RECIPE COMPONENT === */
+.saline-recipe-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.8125rem;
+}
+
+.saline-recipe-item.critical {
+  background: var(--saline-red-dim);
+  border-left: 3px solid var(--saline-red);
+}
+
+.saline-recipe-item.high {
+  background: var(--saline-orange-dim);
+  border-left: 3px solid var(--saline-orange);
+}
+
+.saline-recipe-item.moderate {
+  background: var(--saline-blue-dim);
+  border-left: 3px solid var(--saline-blue);
+}
+
+/* === CART PANEL === */
+.saline-cart-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(400px, 100vw);
+  height: 100vh;
+  background: var(--saline-bg-secondary);
+  border-left: 1px solid var(--saline-border);
+  z-index: 50;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.saline-cart-panel.open {
+  transform: translateX(0);
+}
+
+.saline-cart-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 49;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.saline-cart-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* === BUTTONS === */
+.saline-btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  background: var(--saline-gold);
+  color: #000;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.saline-btn-gold:hover {
+  background: var(--saline-gold-glow);
+  background: #FFB84D;
+}
+
+.saline-btn-gold:active {
+  transform: scale(0.97);
+}
+
+.saline-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  background: transparent;
+  color: var(--saline-text-secondary);
+  border: 1px solid var(--saline-border);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.saline-btn-outline:hover {
+  border-color: var(--saline-gold);
+  color: var(--saline-gold);
+}
+
+/* === LOADING / SKELETON === */
+@keyframes saline-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.saline-skeleton {
+  background: linear-gradient(90deg, var(--saline-border) 25%, rgba(255,255,255,0.05) 50%, var(--saline-border) 75%);
+  background-size: 200% 100%;
+  animation: saline-shimmer 1.5s infinite;
+  border-radius: 0.375rem;
+}
+
+/* === RESPONSIVE === */
+@media (min-width: 768px) {
+  .saline-hero {
+    padding: 3rem 2.5rem 2.5rem;
+  }
+  .saline-hero-title {
+    font-size: 2.25rem;
+  }
+  .saline-tabs {
+    padding: 0 2.5rem;
+  }
+  .saline-mineral-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .saline-hero-title {
+    font-size: 2.5rem;
+  }
+}
