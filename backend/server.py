@@ -597,6 +597,7 @@ _AUDIT_FILES = [
     "pipeline_ecologique_v1.txt",
     "PLAN_DE_MATCH_STEEVE_MAX_v1.md",
     "PLAN_DE_MATCH_STEEVE_MAX_v1.pdf",
+    "bionic_v6_audit_total_x3050.md",
 ]
 
 @app.get("/api/audit/list")
