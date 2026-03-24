@@ -1,21 +1,20 @@
 """
 MODULE C — Zone Engine Core V2
-BIONIC V5/V6 — Pipeline Organique Unifié — ExclusionsSpatiales.v1/v6
+BIONIC V6.x — Pipeline Unifie — Cercles 600m + Exclusion Eau V7
 
 Orchestrateur du pipeline complet:
-  layer -> raster -> contour -> polygone organique -> exclusion -> GeoJSON
+  layer -> raster -> contour -> CERCLE 600m -> exclusion eau V7 -> GeoJSON
 
-Backend = seule source de vérité. Fetches ses propres exclusions.
-Aucun lien transversal. Appels orchestrés uniquement.
+Backend = seule source de verite. Fetch ses propres exclusions.
+Aucun lien transversal. Appels orchestres uniquement.
 
-100% indépendant. Source de vérité unique pour la génération des zones.
+SPECIFICATIONS V6.x (directive STEEVE-MAX):
+  - Geometrie: CERCLES 600m (ZERO carre, ZERO polygone irregulier)
+  - Exclusion eau: Cache local 41,944 polygones (ZERO API temps reel)
+  - Traitement parallele des couches (ThreadPoolExecutor)
+  - Cache TTL 5 min, cle arrondie
 
-OPTIMISATIONS:
-  - Traitement parallèle des couches (ThreadPoolExecutor)
-  - Cache TTL 5 min, clé arrondie
-  - Exclusion fetch avec retry 3x + timeout (ExclusionsSpatiales.v1)
-  - Résolution adaptative intégrée
-  - V6: Exclusion geometrique Shapely (feature flag EXCLUSION_ENGINE_VERSION)
+Conformite: GOLDEN-BCE-4X | BCE ULTRA MAX | STEEVE-MAX x100
 """
 
 import os
@@ -23,7 +22,9 @@ import logging
 import hashlib
 import math
 import time
+import json
 import asyncio
+from pathlib import Path
 from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor
 from typing import Dict, List, Any
@@ -41,6 +42,14 @@ from modules.bionic_engine_p0.services.zone_penalty_engine import (
     calculate_zone_penalty
 )
 
+# Shapely pour cercles et exclusion eau
+try:
+    from shapely.geometry import Polygon as ShapelyPolygon, Point as ShapelyPoint
+    from shapely.ops import unary_union
+    SHAPELY_AVAILABLE = True
+except ImportError:
+    SHAPELY_AVAILABLE = False
+
 # V6 Feature Flag
 EXCLUSION_ENGINE_VERSION = os.environ.get("EXCLUSION_ENGINE_VERSION", "v5")
 
@@ -51,6 +60,137 @@ _zone_cache: Dict[str, Any] = {}
 _CACHE_TTL = 900
 
 METERS_PER_DEG_LAT = 111320.0
+
+# ══════════════════════════════════════════════════════════
+# V6.x — CERCLES 600m + CACHE EAU LOCAL
+# ══════════════════════════════════════════════════════════
+CIRCLE_RADIUS_M = 600
+CIRCLE_NUM_POINTS = 48
+WATER_OVERLAP_THRESHOLD = 0.15
+
+_water_union_zone_cache = None
+_water_zone_cache_loaded = False
+
+
+def _load_water_cache_zones():
+    """Charge les polygones eau depuis le cache OSM local."""
+    global _water_union_zone_cache, _water_zone_cache_loaded
+    if _water_zone_cache_loaded:
+        return _water_union_zone_cache
+    if not SHAPELY_AVAILABLE:
+        _water_zone_cache_loaded = True
+        return None
+
+    cache_dir = Path("/app/backend/data/osm_cache")
+    if not cache_dir.exists():
+        _water_zone_cache_loaded = True
+        return None
+
+    water_polys = []
+    for fname in os.listdir(cache_dir):
+        if not fname.endswith(".json") or fname.startswith("CA-") or fname == "hydro_debug.json":
+            continue
+        fpath = cache_dir / fname
+        if fpath.stat().st_size < 10000:
+            continue
+        try:
+            with open(fpath) as f:
+                data = json.load(f)
+            for zone in data.get("exclusion_zones", []):
+                if zone.get("type") != "water":
+                    continue
+                coords = zone.get("coordinates", [])
+                if len(coords) >= 4:
+                    try:
+                        poly = ShapelyPolygon([(c[0], c[1]) for c in coords])
+                        if poly.is_valid and poly.area > 0:
+                            water_polys.append(poly)
+                    except Exception:
+                        pass
+        except Exception:
+            continue
+
+    if water_polys:
+        try:
+            _water_union_zone_cache = unary_union(water_polys)
+            logger.info(f"[V7-ZONES] Cache eau charge: {len(water_polys)} polygones")
+        except Exception:
+            pass
+
+    _water_zone_cache_loaded = True
+    return _water_union_zone_cache
+
+
+def _circle_on_water(center_lat: float, center_lng: float) -> bool:
+    """Verifie si un cercle 600m chevauche l'eau au-dela du seuil."""
+    water = _load_water_cache_zones()
+    if water is None or not SHAPELY_AVAILABLE:
+        return False
+    try:
+        coords = _make_circle_coords(center_lat, center_lng, CIRCLE_RADIUS_M)
+        poly = ShapelyPolygon(coords)
+        if not poly.is_valid:
+            poly = poly.buffer(0)
+        overlap = poly.intersection(water).area
+        ratio = overlap / poly.area if poly.area > 0 else 0
+        return ratio > WATER_OVERLAP_THRESHOLD
+    except Exception:
+        return False
+
+
+def _make_circle_coords(center_lat: float, center_lng: float, radius_m: float) -> list:
+    """Genere un cercle en [lng, lat] format GeoJSON."""
+    coords = []
+    for i in range(CIRCLE_NUM_POINTS):
+        angle = 2 * math.pi * i / CIRCLE_NUM_POINTS
+        dlat = (radius_m * math.cos(angle)) / 111320.0
+        dlng = (radius_m * math.sin(angle)) / (111320.0 * math.cos(math.radians(center_lat)))
+        coords.append([center_lng + dlng, center_lat + dlat])
+    coords.append(coords[0])
+    return coords
+
+
+def _convert_features_to_circles(geojson: dict) -> tuple:
+    """
+    V6.x — Convertit toutes les features GeoJSON polygone en CERCLES 600m.
+    Exclut les cercles sur eau via le cache V7.
+    Retourne (geojson modifie, nombre exclus eau).
+    """
+    water_excluded = 0
+    valid_features = []
+
+    for feature in geojson.get("features", []):
+        geom = feature.get("geometry", {})
+        coords = geom.get("coordinates", [])
+
+        # Calculer le centroide du polygone original
+        if geom.get("type") == "Polygon" and coords and coords[0]:
+            ring = coords[0]
+            if len(ring) >= 3:
+                center_lng = sum(c[0] for c in ring) / len(ring)
+                center_lat = sum(c[1] for c in ring) / len(ring)
+            else:
+                valid_features.append(feature)
+                continue
+        else:
+            valid_features.append(feature)
+            continue
+
+        # V7: Exclure si sur eau
+        if _circle_on_water(center_lat, center_lng):
+            water_excluded += 1
+            continue
+
+        # Remplacer le polygone par un cercle 600m
+        circle_coords = _make_circle_coords(center_lat, center_lng, CIRCLE_RADIUS_M)
+        feature["geometry"]["coordinates"] = [circle_coords]
+        feature["properties"]["geometry_type"] = "circle_600m"
+        feature["properties"]["radius_m"] = CIRCLE_RADIUS_M
+        feature["properties"]["center"] = [center_lat, center_lng]
+        valid_features.append(feature)
+
+    geojson["features"] = valid_features
+    return geojson, water_excluded
 
 # Thread pool for parallel layer processing (CPU-bound)
 _executor = ThreadPoolExecutor(max_workers=6)
@@ -1014,6 +1154,19 @@ async def generate_organic_zones(
 
     geojson = zones_to_geojson(zones_by_layer, species, scores_by_layer, penalties_by_layer)
 
+    # ════════════════════════════════════════════════
+    # V6.x: CONVERSION CERCLES 600m + EXCLUSION EAU V7
+    # Directive STEEVE-MAX: ZERO carre, ZERO polygone irregulier
+    # ════════════════════════════════════════════════
+    v7_zone_water_excluded = 0
+    try:
+        geojson, v7_zone_water_excluded = _convert_features_to_circles(geojson)
+        if v7_zone_water_excluded > 0:
+            logger.info(f"[V7-ZONES] {v7_zone_water_excluded} zones exclues (eau)")
+            stats["total_zones"] -= v7_zone_water_excluded
+    except Exception as e:
+        logger.warning(f"[V7-ZONES] Circle conversion failed: {e}")
+
     # T4 COHERENCE: Count features in GeoJSON = source of truth for frontend
     t4_feature_count = len(geojson.get("features", []))
     if t4_feature_count != stats["total_zones"]:
@@ -1109,6 +1262,15 @@ async def generate_organic_zones(
 
     elapsed = round((time.time() - start) * 1000, 1)
 
+    # V6.x metadata
+    v6_zone_metadata = {
+        "geometry": "circle_600m",
+        "circle_radius_m": CIRCLE_RADIUS_M,
+        "water_exclusion_engine": "V7-local-cache",
+        "zones_water_excluded": v7_zone_water_excluded,
+        "water_cache_active": _water_zone_cache_loaded and _water_union_zone_cache is not None,
+    }
+
     # BIONIC V7.3: Diagnostic — provide zero_zones_reason when all zones are filtered
     zero_reason = None
     if stats["total_zones"] == 0 and stats["rejected_exclusion"] > 0:
@@ -1140,6 +1302,9 @@ async def generate_organic_zones(
     if v7_metadata:
         result["v7_metadata"] = v7_metadata
 
+    # V6.x zone metadata
+    result["v6_zones"] = v6_zone_metadata
+
     # BIONIC V8.0: Include rejection diagnostics
     if rejection_diagnostics["total_rejected"] > 0:
         result["rejection_diagnostics"] = rejection_diagnostics
@@ -1158,3 +1323,4 @@ async def generate_organic_zones(
 def clear_cache():
     global _zone_cache
     _zone_cache = {}
+    logger.info("[V6-ZONES] Cache vide — prochaine requete regenerera les cercles 600m")

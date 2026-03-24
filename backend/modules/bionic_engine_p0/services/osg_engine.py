@@ -379,6 +379,28 @@ def generate_osg_zones(
     zones.sort(key=lambda z: z["sse_context"]["composite_quality"], reverse=True)
     zones = zones[:profile["max_zones"]]
 
+    # ════════════════════════════════════════════════
+    # V6.x: CONVERSION CERCLES 600m (directive STEEVE-MAX)
+    # ZERO carre, ZERO polygone irregulier
+    # ════════════════════════════════════════════════
+    CIRCLE_RADIUS_M = 600
+    CIRCLE_NUM_POINTS = 48
+    for zone in zones:
+        clng = zone["centroid"]["lng"]
+        clat = zone["centroid"]["lat"]
+        circle_coords = []
+        for i in range(CIRCLE_NUM_POINTS):
+            angle = 2 * math.pi * i / CIRCLE_NUM_POINTS
+            dlat = (CIRCLE_RADIUS_M * math.cos(angle)) / 111320.0
+            dlng = (CIRCLE_RADIUS_M * math.sin(angle)) / (111320.0 * math.cos(math.radians(clat)))
+            circle_coords.append([clng + dlng, clat + dlat])
+        circle_coords.append(circle_coords[0])
+        zone["coordinates"] = circle_coords
+        zone["geometry_type"] = "circle_600m"
+        zone["radius_m"] = CIRCLE_RADIUS_M
+        zone["vertices"] = len(circle_coords)
+        zone["area_m2"] = round(math.pi * CIRCLE_RADIUS_M ** 2, 1)
+
     return {
         "source_id": source_id,
         "species": species,

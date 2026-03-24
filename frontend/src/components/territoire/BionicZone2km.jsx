@@ -14,8 +14,9 @@
  * Objectif: repère spatial constant, précis, non intrusif.
  */
 
-import React, { useMemo } from 'react';
-import { Rectangle, Tooltip } from 'react-leaflet';
+import React from 'react';
+import { Rectangle, Circle, Tooltip } from 'react-leaflet';
+import BionicZone600m from './BionicZone600m';
 
 // Constantes BIONIC
 const ZONE_SIZE_M = 2000; // 2 km = 2000 mètres
@@ -116,14 +117,14 @@ const BionicZone2km = ({
 };
 
 /**
- * BionicZone2kmLayer — Wrapper pour afficher la zone 2km² pour TOUS les waypoints actifs
- * Alternative: afficher uniquement pour le waypoint sélectionné
+ * BionicZone600mLayer — V6.x: Cercles 600m pour TOUS les waypoints actifs
+ * DIRECTIVE STEEVE-MAX: ZERO carre
  */
 export const BionicZone2kmLayer = ({ 
   waypoints = [],
   selectedWaypoint = null,
   showForAll = false,
-  showTooltip = false,  // STEEVE-MAX: tooltip DÉSACTIVÉ mode usager (admin only)
+  showTooltip = false,
   opacity = 0.7,
 }) => {
   const waypointsToRender = showForAll 
@@ -133,8 +134,8 @@ export const BionicZone2kmLayer = ({
   return (
     <>
       {waypointsToRender.map((wp) => (
-        <BionicZone2km 
-          key={wp.id || `zone-2km-${wp.lat}-${wp.lng}`}
+        <BionicZone600m 
+          key={wp.id || `zone-600m-${wp.lat}-${wp.lng}`}
           waypoint={wp}
           opacity={opacity}
           showTooltip={showTooltip}
@@ -144,4 +145,4 @@ export const BionicZone2kmLayer = ({
   );
 };
 
-export default BionicZone2km;
+export default BionicZone600m;

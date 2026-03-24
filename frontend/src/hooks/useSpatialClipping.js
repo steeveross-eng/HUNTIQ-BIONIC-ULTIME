@@ -9,9 +9,9 @@
 
 import { useState, useCallback, useMemo, useRef } from 'react';
 
-// Taille du carré d'analyse en mètres — BIONIC V8: unifié à 2km² (2000m)
-// CRITIQUE: Cette valeur DOIT correspondre à BionicZone2km.jsx ZONE_SIZE_M
-const ANALYSIS_BOX_SIZE_M = 2000;
+// V6.x: Zone d'analyse circulaire 600m rayon = 1200m diametre (directive STEEVE-MAX)
+// CRITIQUE: Cette valeur DOIT correspondre au rayon 600m officiel
+const ANALYSIS_BOX_SIZE_M = 1200;
 
 /**
  * Calcule le bbox 1km × 1km en degrés décimaux
