@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"614b111715c647f4bcb852c248c58430","collectionName":"master_switches","type":"collection"}

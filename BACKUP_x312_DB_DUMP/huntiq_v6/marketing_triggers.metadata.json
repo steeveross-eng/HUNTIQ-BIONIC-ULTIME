@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"2a213e966c93434b808a96a294e62862","collectionName":"marketing_triggers","type":"collection"}

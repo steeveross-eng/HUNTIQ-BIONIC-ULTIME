@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"095a9f20c6d3460d9a18a260d22683d2","collectionName":"admin_hotspots","type":"collection"}
