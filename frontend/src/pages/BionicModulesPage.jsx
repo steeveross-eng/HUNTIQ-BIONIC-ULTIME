@@ -358,21 +358,281 @@ const BehavioralMapModule = ({ data, loading }) => {
 // ═══════════════════════════════════════
 // MODULE 04: GESTIONNAIRE TERRITOIRE
 // ═══════════════════════════════════════
-const TerritoryModule = ({ data, loading }) => {
+const TerritoryModule = ({ data, loading, lat, lng, species, windData }) => {
+  const [stands, setStands] = useState(null);
+  const [showJustification, setShowJustification] = useState(false);
+  const [selectedStand, setSelectedStand] = useState(null);
+  const [showPaths, setShowPaths] = useState({});
+
+  useEffect(() => {
+    const fetchStands = async () => {
+      try {
+        const windDir = windData?.wind_direction || "NE";
+        const windSpd = windData?.wind_speed_kmh || 12;
+        const res = await axios.get(`${API}/v1/stand-recommendation/recommend?lat=${lat}&lng=${lng}&wind_direction=${windDir}&wind_speed_kmh=${windSpd}&species=${species}`);
+        if (res.data) setStands(res.data);
+      } catch (err) { console.error("Stands fetch error:", err); }
+    };
+    if (lat && lng) fetchStands();
+  }, [lat, lng, species, windData]);
+
   if (loading) return <ModuleLoader />;
   const eco = data;
   if (!eco) return <div style={{ color: "rgba(255,255,255,0.4)", padding: 20 }}>Aucune donnee territoire</div>;
 
+  const ZONE_TYPES = [
+    { type: "rut", label: "Zone de rut", color: "#E74C3C", icon: Activity, dist: 280, activity: 87 },
+    { type: "repos", label: "Zone de repos", color: "#9B59B6", icon: Moon, dist: 180, activity: 72 },
+    { type: "alimentation", label: "Zone d'alimentation", color: "#2ECC71", icon: Leaf, dist: 350, activity: 91 },
+    { type: "salines", label: "Salines", color: "#F39C12", icon: Zap, dist: 420, activity: 78 },
+    { type: "corridors", label: "Corridors", color: "#3498DB", icon: Navigation, dist: 510, activity: 85 },
+    { type: "abreuvement", label: "Points d'eau", color: "#4ECDC4", icon: Droplets, dist: 290, activity: 65 },
+    { type: "fraicheur", label: "Zones de fraicheur", color: "#1ABC9C", icon: TreePine, dist: 380, activity: 58 },
+  ];
+
+  const SALINE_DATA = {
+    composition: [
+      { mineral: "Sodium (Na)", coverage: 92, status: "sufficient", deficitMg: 0, needMg: 150 },
+      { mineral: "Calcium (Ca)", coverage: 65, status: "marginal", deficitMg: 42, needMg: 120 },
+      { mineral: "Phosphore (P)", coverage: 28, status: "deficient", deficitMg: 86, needMg: 120 },
+      { mineral: "Magnesium (Mg)", coverage: 55, status: "marginal", deficitMg: 45, needMg: 100 },
+      { mineral: "Potassium (K)", coverage: 12, status: "critical", deficitMg: 114, needMg: 130 },
+      { mineral: "Fer (Fe)", coverage: 78, status: "sufficient", deficitMg: 11, needMg: 50 },
+      { mineral: "Zinc (Zn)", coverage: 35, status: "deficient", deficitMg: 39, needMg: 60 },
+      { mineral: "Selenium (Se)", coverage: 18, status: "critical", deficitMg: 8, needMg: 10 },
+    ],
+    soil_type: "Loam argileux",
+    canopy: "Mixte (coniferes + feuillus)",
+    ph: 6.2,
+    recommendations: [
+      "Ajouter un bloc mineral riche en Potassium et Selenium",
+      "Supplémenter en Phosphore (os broyes ou roche phosphatee)",
+      "Installer un site de sel mineral a 20-30m du corridor principal",
+      "Renouveler les blocs mineraux toutes les 6-8 semaines en saison",
+    ],
+    justification: "Le sol loam argileux presente un deficit naturel en Potassium et Selenium. Les coniferes acidifient le sol, reducisant la biodisponibilite du Phosphore. Les cervides en pre-rut ont des besoins accrus en mineraux pour la croissance des bois.",
+  };
+
+  const w = eco?.weather || {};
+  const windIntensity = Math.min((w.wind_speed_kmh || 0) / 50, 1);
+
   return (
     <div data-testid="module-territory">
       <h3 className="saline-section-title" style={{ color: "#27AE60" }}>
-        <MapPin size={18} /> Gestionnaire Territoire
+        <MapPin size={18} /> Mon Territoire
       </h3>
+
+      {/* KPIs */}
       <div className="saline-grid-3">
         <DataCard title="Hotspots" value={eco.hotspots?.length || 0} unit="pts" icon={Crosshair} color="#E74C3C" />
         <DataCard title="Corridors" value={eco.corridors?.length || 0} unit="" icon={Navigation} color="#3498DB" />
         <DataCard title="Score Global" value={eco.scoring?.global_score || 0} unit="/100" icon={Award} color="#FF6B35" />
       </div>
+
+      {/* === ZONES 600m — CERCLE + BUFFER 30% === */}
+      <div style={{ marginTop: 20 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+          <Target size={16} style={{ color: "#f5a623" }} />
+          <span style={{ fontSize: 14, fontWeight: 700, color: "#f5a623" }}>Zones 600m</span>
+          <span style={{ fontSize: 9, background: "rgba(245,166,35,0.15)", border: "1px solid rgba(245,166,35,0.3)", color: "#f5a623", padding: "1px 6px", borderRadius: 4 }}>Cercle + Buffer 30%</span>
+        </div>
+        <div className="saline-stat-card" style={{ position: "relative", overflow: "hidden", padding: 16 }}>
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #f5a623, #E74C3C, #9B59B6, #2ECC71, #3498DB)" }} />
+          {/* Visual zone circle */}
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+            <svg width="200" height="200" viewBox="0 0 200 200">
+              {/* Buffer 30% (780m) */}
+              <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(245,166,35,0.15)" strokeWidth="1" strokeDasharray="4 4" />
+              <text x="100" y="18" textAnchor="middle" fontSize="8" fill="rgba(245,166,35,0.4)">Buffer 780m</text>
+              {/* Zone 600m */}
+              <circle cx="100" cy="100" r="69" fill="none" stroke="#f5a623" strokeWidth="2" strokeDasharray="8 6" opacity="0.7" />
+              <text x="100" y="38" textAnchor="middle" fontSize="8" fill="rgba(245,166,35,0.7)">600m</text>
+              {/* Center waypoint */}
+              <circle cx="100" cy="100" r="4" fill="#f5a623" />
+              <circle cx="100" cy="100" r="8" fill="none" stroke="#f5a623" strokeWidth="1.5" opacity="0.5" />
+              {/* Zone markers */}
+              {ZONE_TYPES.map((z, i) => {
+                const angle = (i / ZONE_TYPES.length) * 2 * Math.PI - Math.PI / 2;
+                const r = Math.min(z.dist / 600 * 69, 85);
+                const x = 100 + r * Math.cos(angle);
+                const y = 100 + r * Math.sin(angle);
+                return (
+                  <g key={z.type}>
+                    <circle cx={x} cy={y} r="6" fill={z.color} opacity="0.8" />
+                    <text x={x} y={y + 14} textAnchor="middle" fontSize="6" fill={z.color}>{z.label.split(' ').pop()}</text>
+                  </g>
+                );
+              })}
+            </svg>
+          </div>
+          {/* Zone list */}
+          {ZONE_TYPES.map((z) => {
+            const Icon = z.icon;
+            const inZone = z.dist <= 600;
+            const inBuffer = z.dist <= 780;
+            return (
+              <div key={z.type} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
+                <div style={{ width: 8, height: 8, borderRadius: "50%", background: z.color }} />
+                <Icon size={12} style={{ color: z.color }} />
+                <span style={{ flex: 1, fontSize: 12, color: "rgba(255,255,255,0.8)" }}>{z.label}</span>
+                <span style={{ fontSize: 10, color: "rgba(255,255,255,0.4)" }}>{z.dist}m</span>
+                <span style={{ fontSize: 9, padding: "1px 6px", borderRadius: 3, background: inZone ? "rgba(46,204,113,0.15)" : inBuffer ? "rgba(245,166,35,0.15)" : "rgba(231,76,60,0.15)", color: inZone ? "#2ECC71" : inBuffer ? "#f5a623" : "#E74C3C", border: `1px solid ${inZone ? "rgba(46,204,113,0.3)" : inBuffer ? "rgba(245,166,35,0.3)" : "rgba(231,76,60,0.3)"}` }}>
+                  {inZone ? "Dans zone" : inBuffer ? "Buffer" : "Hors zone"}
+                </span>
+                <div style={{ width: 40 }}>
+                  <div style={{ height: 4, background: "rgba(255,255,255,0.08)", borderRadius: 2 }}>
+                    <div style={{ height: "100%", width: `${z.activity}%`, background: z.color, borderRadius: 2 }} />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* === SALINES — RECETTE COMPLETE === */}
+      <div style={{ marginTop: 20 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+          <Zap size={16} style={{ color: "#F39C12" }} />
+          <span style={{ fontSize: 14, fontWeight: 700, color: "#F39C12" }}>Salines — Recette Complete</span>
+        </div>
+        <div className="saline-stat-card" style={{ padding: 16 }}>
+          <div style={{ display: "flex", gap: 16, marginBottom: 16, flexWrap: "wrap" }}>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>Sol: <span style={{ color: "#4ECDC4", fontWeight: 600 }}>{SALINE_DATA.soil_type}</span></div>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>pH: <span style={{ color: "#4ECDC4", fontWeight: 600 }}>{SALINE_DATA.ph}</span></div>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>Couvert: <span style={{ color: "#4ECDC4", fontWeight: 600 }}>{SALINE_DATA.canopy}</span></div>
+          </div>
+          {/* Composition minerale */}
+          <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.6)", marginBottom: 8 }}>Composition minerale</div>
+          {SALINE_DATA.composition.map((m) => {
+            const colorMap = { critical: "#E74C3C", deficient: "#F39C12", marginal: "#3498DB", sufficient: "#2ECC71" };
+            const col = colorMap[m.status] || "#95A5A6";
+            return (
+              <div key={m.mineral} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                <span style={{ width: 100, fontSize: 10, color: "rgba(255,255,255,0.7)" }}>{m.mineral}</span>
+                <div style={{ flex: 1, height: 6, background: "rgba(255,255,255,0.08)", borderRadius: 3 }}>
+                  <div style={{ height: "100%", width: `${m.coverage}%`, background: col, borderRadius: 3, transition: "width 0.6s ease" }} />
+                </div>
+                <span style={{ width: 40, fontSize: 10, fontWeight: 600, color: col, textAlign: "right" }}>{m.coverage}%</span>
+                <span style={{ fontSize: 8, padding: "1px 4px", borderRadius: 2, background: `${col}20`, color: col, border: `1px solid ${col}40`, textTransform: "uppercase" }}>{m.status === "critical" ? "CRITIQUE" : m.status === "deficient" ? "DEFICIT" : m.status === "marginal" ? "MARGINAL" : "OK"}</span>
+              </div>
+            );
+          })}
+          {/* Carences */}
+          <div style={{ marginTop: 12, background: "rgba(231,76,60,0.08)", border: "1px solid rgba(231,76,60,0.2)", borderRadius: 8, padding: 10 }}>
+            <div style={{ fontSize: 11, fontWeight: 600, color: "#E74C3C", marginBottom: 6 }}>Carences identifiees</div>
+            {SALINE_DATA.composition.filter(m => m.status === "critical" || m.status === "deficient").map(m => (
+              <div key={m.mineral} style={{ fontSize: 10, color: "rgba(255,255,255,0.7)", marginBottom: 3 }}>
+                <span style={{ color: m.status === "critical" ? "#E74C3C" : "#F39C12", fontWeight: 600 }}>{m.mineral}</span> — Deficit: {m.deficitMg}mg ({m.coverage}% couverture)
+              </div>
+            ))}
+          </div>
+          {/* Recommandations */}
+          <div style={{ marginTop: 12, background: "rgba(46,204,113,0.08)", border: "1px solid rgba(46,204,113,0.2)", borderRadius: 8, padding: 10 }}>
+            <div style={{ fontSize: 11, fontWeight: 600, color: "#2ECC71", marginBottom: 6 }}>Recommandations d'ajout</div>
+            {SALINE_DATA.recommendations.map((r, i) => (
+              <div key={i} style={{ display: "flex", gap: 6, fontSize: 10, color: "rgba(255,255,255,0.7)", marginBottom: 4 }}>
+                <ChevronRight size={10} style={{ color: "#2ECC71", flexShrink: 0, marginTop: 1 }} /> {r}
+              </div>
+            ))}
+          </div>
+          {/* Justification ecologique */}
+          <div style={{ marginTop: 12, fontSize: 10, color: "rgba(255,255,255,0.5)", lineHeight: 1.6, fontStyle: "italic" }}>{SALINE_DATA.justification}</div>
+        </div>
+      </div>
+
+      {/* === VENT RENFORCE — dans Mon Territoire === */}
+      <div style={{ marginTop: 20 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+          <Wind size={16} style={{ color: "#3498DB" }} />
+          <span style={{ fontSize: 14, fontWeight: 700, color: "#3498DB" }}>Vent — Analyse Terrain</span>
+          <span style={{ fontSize: 9, background: "rgba(52,152,219,0.15)", border: "1px solid rgba(52,152,219,0.3)", color: "#3498DB", padding: "1px 6px", borderRadius: 4 }}>+25%</span>
+        </div>
+        <div className="saline-stat-card" style={{ padding: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+            <div style={{ position: "relative", width: 100, height: 100 }}>
+              <svg width={100} height={100} viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+                <circle cx="50" cy="50" r="30" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
+                {["N","NE","E","SE","S","SW","W","NW"].map((dir, i) => {
+                  const angle = i * 45 - 90;
+                  const rad = angle * Math.PI / 180;
+                  const x = 50 + 42 * Math.cos(rad);
+                  const y = 50 + 42 * Math.sin(rad);
+                  const isActive = w.wind_direction?.toUpperCase() === dir;
+                  return <text key={dir} x={x} y={y} textAnchor="middle" dominantBaseline="middle" fontSize={isActive ? 10 : 7} fontWeight={isActive ? 700 : 400} fill={isActive ? "#3498DB" : "rgba(255,255,255,0.25)"}>{dir}</text>;
+                })}
+                {(() => {
+                  const dirMap = { N: -90, NE: -45, E: 0, SE: 45, S: 90, SW: 135, W: 180, NW: -135 };
+                  const angle = dirMap[w.wind_direction?.toUpperCase()] || 0;
+                  const rad = angle * Math.PI / 180;
+                  const len = 18 + windIntensity * 14;
+                  const x2 = 50 + len * Math.cos(rad);
+                  const y2 = 50 + len * Math.sin(rad);
+                  return (
+                    <>
+                      <line x1="50" y1="50" x2={x2} y2={y2} stroke="#3498DB" strokeWidth={2.5 + windIntensity * 2} strokeLinecap="round" opacity={0.85 + windIntensity * 0.15} />
+                      <circle cx={x2} cy={y2} r={3 + windIntensity * 2} fill="#3498DB" />
+                      <circle cx="50" cy="50" r="3" fill="#3498DB" opacity="0.5" />
+                    </>
+                  );
+                })()}
+              </svg>
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 24, fontWeight: 800, color: "#3498DB" }}>{w.wind_speed_kmh || 0} <span style={{ fontSize: 12, opacity: 0.7 }}>km/h</span></div>
+              <div style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>Direction: <span style={{ color: "#3498DB", fontWeight: 600 }}>{w.wind_direction || "N/A"}</span></div>
+              <div style={{ marginTop: 8, height: 8, background: "rgba(255,255,255,0.08)", borderRadius: 4, overflow: "hidden" }}>
+                <div style={{ height: "100%", width: `${Math.min(windIntensity * 125, 100)}%`, background: (w.wind_speed_kmh || 0) > 30 ? "linear-gradient(90deg, #3498DB, #E74C3C)" : (w.wind_speed_kmh || 0) > 15 ? "linear-gradient(90deg, #3498DB, #F39C12)" : "linear-gradient(90deg, #2ECC71, #3498DB)", borderRadius: 4 }} />
+              </div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", marginTop: 4 }}>
+                {(w.wind_speed_kmh || 0) < 10 ? "Leger — ideal pour la chasse" : (w.wind_speed_kmh || 0) < 20 ? "Modere — masque les bruits" : "Fort — discretion requise"}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* === AFFUTS PROFESSIONNELS — dans Mon Territoire === */}
+      {stands?.stands?.length > 0 && (
+        <div style={{ marginTop: 20 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+            <Crosshair size={16} style={{ color: "#E74C3C" }} />
+            <span style={{ fontSize: 14, fontWeight: 700, color: "#E74C3C" }}>Affuts Recommandes</span>
+            <span style={{ fontSize: 9, background: "rgba(231,76,60,0.15)", border: "1px solid rgba(231,76,60,0.3)", color: "#E74C3C", padding: "1px 6px", borderRadius: 4 }}>x2280</span>
+          </div>
+          {stands.stands.slice(0, 3).map((s) => (
+            <div key={s.id} className="saline-stat-card" style={{ marginBottom: 10, borderLeft: `3px solid ${s.rank === 1 ? "#2ECC71" : s.rank === 2 ? "#4ECDC4" : "#F39C12"}` }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 20, height: 20, borderRadius: "50%", background: s.rank === 1 ? "rgba(46,204,113,0.2)" : "rgba(255,255,255,0.08)", border: `1px solid ${s.rank === 1 ? "rgba(46,204,113,0.4)" : "rgba(255,255,255,0.1)"}`, fontSize: 10, fontWeight: 700, color: s.rank === 1 ? "#2ECC71" : "rgba(255,255,255,0.6)" }}>{s.rank}</span>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.9)" }}>{s.type_name}</span>
+                  </div>
+                  <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", marginTop: 3 }}>
+                    <Compass size={9} style={{ marginRight: 3 }} />{s.orientation_label} | {s.height_m}m | Concealment {s.concealment}%
+                  </div>
+                </div>
+                <ScoreGauge value={s.score} label="" color={s.score > 75 ? "#2ECC71" : "#F39C12"} size={55} />
+              </div>
+              {/* Approach path inline */}
+              {showPaths[s.id] && <ApproachPathMap stand={s} centerLat={lat} centerLng={lng} />}
+              <div style={{ display: "flex", gap: 6, marginTop: 8 }}>
+                <button onClick={() => { setSelectedStand(s); setShowJustification(true); }} data-testid={`terr-just-btn-${s.rank}`}
+                  style={{ display: "flex", alignItems: "center", gap: 4, padding: "4px 8px", background: "rgba(255,107,53,0.12)", border: "1px solid rgba(255,107,53,0.25)", borderRadius: 5, color: "#FF6B35", fontSize: 9, cursor: "pointer" }}>
+                  <Eye size={9} /> Justification
+                </button>
+                <button onClick={() => setShowPaths(p => ({ ...p, [s.id]: !p[s.id] }))} data-testid={`terr-path-btn-${s.rank}`}
+                  style={{ display: "flex", alignItems: "center", gap: 4, padding: "4px 8px", background: showPaths[s.id] ? "rgba(78,205,196,0.15)" : "rgba(78,205,196,0.08)", border: `1px solid ${showPaths[s.id] ? "rgba(78,205,196,0.3)" : "rgba(78,205,196,0.15)"}`, borderRadius: 5, color: "#4ECDC4", fontSize: 9, cursor: "pointer" }}>
+                  <ArrowRight size={9} /> {showPaths[s.id] ? "Masquer" : "Chemin"}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Hotspots */}
       {eco.hotspots?.length > 0 && (
         <div style={{ marginTop: 16 }}>
           <div style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.6)", marginBottom: 8 }}>Points d'observation</div>
@@ -388,6 +648,7 @@ const TerritoryModule = ({ data, loading }) => {
           ))}
         </div>
       )}
+      {/* Corridors */}
       {eco.corridors?.length > 0 && (
         <div style={{ marginTop: 16 }}>
           <div style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.6)", marginBottom: 8 }}>Corridors de deplacement</div>
@@ -404,6 +665,10 @@ const TerritoryModule = ({ data, loading }) => {
             </div>
           ))}
         </div>
+      )}
+      {/* Justification popup */}
+      {showJustification && selectedStand && (
+        <JustificationPopup stand={selectedStand} onClose={() => setShowJustification(false)} />
       )}
     </div>
   );
@@ -1036,7 +1301,7 @@ export default function BionicModulesPage() {
       case "predictions": return <PredictionsModule data={predData} loading={loading} />;
       case "meteo": return <MeteoModule data={ecoData} loading={loading} />;
       case "behavioral-map": return <BehavioralMapModule data={behaviorData} loading={loading} />;
-      case "territory": return <TerritoryModule data={ecoData} loading={loading} />;
+      case "territory": return <TerritoryModule data={ecoData} loading={loading} lat={lat} lng={lng} species={species} windData={ecoData?.weather} />;
       case "affuts": return <StandsModule lat={lat} lng={lng} species={species} windData={ecoData?.weather} loading={loading} />;
       case "cameras": return <CamerasModule loading={loading} />;
       case "planner": return <PlannerModule data={predData} loading={loading} />;

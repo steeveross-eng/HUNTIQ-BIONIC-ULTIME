@@ -207,7 +207,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
               data-testid="nav-permis-chasse"
             >
               <Shield className="h-4 w-4" />
-              Permis
+              Permis & Enregistrement
             </Link>
             
             {/* Sorties */}
@@ -347,7 +347,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
               <Crosshair className="h-4 w-4" /> {t('nav_territory')}
             </Link>
             <Link to="/permis-chasse" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="mobile-nav-permis-chasse">
-              <Shield className="h-4 w-4" /> Permis de chasse
+              <Shield className="h-4 w-4" /> Permis & Enregistrement
             </Link>
             <Link to="/trips" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-gray-300 hover:text-white">
               <RouteIcon className="h-4 w-4" /> {t('common_trips')}

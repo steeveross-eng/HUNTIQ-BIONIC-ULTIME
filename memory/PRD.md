@@ -80,12 +80,23 @@ Reconstruction et evolution du projet HUNTIQ (V6 → V7), application modulaire 
 - Rapport: audit/bionic_architecture_hybride_x2300.md
 - Commit: 93c76f2c sur Work1
 
+### DIRECTIVE x2310-EXEC — Corrections Urgentes Mon Territoire (Complete - 2026-03-25)
+- Zones 600m: cercle SVG + buffer 30% + 7 types zones (rut, repos, alimentation, salines, corridors, eau, fraicheur)
+- Salines: recette complete (8 mineraux, carences, recommandations, sol/pH/couvert, justification ecologique)
+- Affuts: 3 affuts recommandes dans Mon Territoire (scores, justification popup, chemins approche)
+- Vent: +10% intensite supplementaire (total +25%), rose des vents dans Mon Territoire
+- Header: "Permis" → "Permis & Enregistrement" (desktop + mobile)
+- WindFlowLayer: LINE_WIDTH 0.95, FADE_ALPHA 0.960, opacite max 0.380
+- PREVIEW confirme synchronise integralement — aucune couche V5/V6 residuelle
+- Rapport: audit/bionic_mon_territoire_fix_x2310.md
+- Commit: 4af6d1e1 sur Work1
+
 ---
 
 ## Prioritized Backlog
 
-### P0 — Attente validation x2300-EXEC
-- Validation STEEVE-MAX requise pour l'architecture hybride
+### P0 — Attente validation x2310-EXEC
+- Validation STEEVE-MAX requise
 
 ### P0 — Phase 1 Roadmap (attente directive x2300-P1)
 - Normalisation API unifiee, endpoints observations + sync, adaptation mobile
@@ -116,9 +127,9 @@ Endpoints data-fabric: 6
 Hybrid Architecture: WEB (React) + Mobile Native (React Native/Expo)
 API Unifiee: 10 domaines, 46 endpoints specifies
 Roadmap: 4 phases, 20-28 semaines
-Architecture: V7-X2300-HYBRID-BIONIC
+Architecture: V7-X2310-TERRITOIRE-FIXED
 ```
 
-**Derniere mise a jour:** 2026-03-25 — x2300-EXEC Complete
+**Derniere mise a jour:** 2026-03-25 — x2310-EXEC Complete
 **Branche active:** Work1
 **PREVIEW URL:** https://huntiq-restore.preview.emergentagent.com

@@ -15,19 +15,19 @@ import L from 'leaflet';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
-// V8.2.1 OPTIMISÉ → V8.3.B +15% intensité visuelle (STEEVE-MAX UX)
+// V8.2.1 OPTIMISÉ → V8.4 +25% intensité visuelle (STEEVE-MAX x2310)
 const PARTICLE_COUNT = 1000;        // inchangé
 const PARTICLE_MAX_AGE = 100;       // vie longue, trajectoires douces (inchangé)
-const PARTICLE_LINE_WIDTH = 0.86;   // +15% (était 0.75)
+const PARTICLE_LINE_WIDTH = 0.95;   // +25% total (était 0.75 → 0.86 → 0.95)
 const SPEED_SCALE = 0.00024;        // INCHANGÉ — vitesse d'animation préservée
-const FADE_ALPHA = 0.955;           // traînées légèrement plus persistantes (+15%)
+const FADE_ALPHA = 0.960;           // traînées plus persistantes (+25% total)
 
-// Palette discrète bleu → vert pâle — V8.3.B +15% opacité (cap 0.345)
+// Palette discrète bleu → vert pâle — V8.4 +25% opacité (cap 0.38)
 function speedToColor(speed, maxSpeed) {
   const t = Math.min(speed / (maxSpeed || 1), 1);
-  if (t < 0.4) return `rgba(140, 190, 220, ${Math.min(0.196 + t * 0.253, 0.345)})`;
-  if (t < 0.7) return `rgba(150, 200, 180, ${Math.min(0.230 + t * 0.161, 0.345)})`;
-  return `rgba(170, 210, 190, ${Math.min(0.265 + t * 0.081, 0.345)})`;
+  if (t < 0.4) return `rgba(140, 190, 220, ${Math.min(0.216 + t * 0.275, 0.380)})`;
+  if (t < 0.7) return `rgba(150, 200, 180, ${Math.min(0.253 + t * 0.178, 0.380)})`;
+  return `rgba(170, 210, 190, ${Math.min(0.290 + t * 0.092, 0.380)})`;
 }
 
 function bilinearInterpolate(grid, row, col) {
