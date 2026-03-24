@@ -33,9 +33,22 @@ Reconstruction et evolution du projet HUNTIQ (V6 → V7), application modulaire 
 - SPECIES_MAP_CONFIG pour couches cartographiques par espece
 - Rapport: audit/bionic_species_full_integration_x2250.md
 
+### MATRICE BIOGEOGRAPHIQUE x2260-V2 (Complete - 2026-03-25)
+- Matrice biogeographique JSON: distribution reelle 8 especes / 26+ juridictions (CA + US)
+- Moteur filtrage biogeography.py: geocodage inverse, filtrage par juridiction (243 lignes)
+- 4 nouveaux endpoints: /biogeography/jurisdiction, /filter, /species/{id}
+- Integration intelligence_core.py: hotspots, corridors, predictions filtrés par especes locales
+- Integration frontend: selecteur especes filtre dynamiquement selon juridiction
+- Sources officielles: MFFP, MNRF, ECCC, USFWS, NatureServe, IUCN
+- Rapport: audit/bionic_species_biogeography_x2260.md
+- Commit: 8c20e902 sur Work1
+
 ---
 
 ## Prioritized Backlog
+
+### P0 — En attente validation x2260-V2
+- Validation STEEVE-MAX de la directive x2260-V2 requise
 
 ### P1 — En attente directive
 - Module Achat de permis / Enregistrement gibier (x2200 mentionne)
@@ -59,10 +72,11 @@ Reconstruction et evolution du projet HUNTIQ (V6 → V7), application modulaire 
 CORE_ROUTERS: 73 modules actifs
 Master Switch: 22 switches (tous LOCKED)
 Species: 8 especes integrees systemiquement
-Endpoints ecological: 13 (9 base + 4 species)
+Biogeography: 8 especes / 26+ juridictions / filtrage systemique
+Endpoints ecological: 16 (9 base + 4 species + 4 biogeography — internes, LOCKED)
 Endpoints data-fabric: 6
-Architecture: V7-X2250-SPECIES
+Architecture: V7-X2260-BIOGEOGRAPHY
 ```
 
-**Derniere mise a jour:** 2026-03-25 — x2250 Complete
+**Derniere mise a jour:** 2026-03-25 — x2260-V2 Complete
 **Branche active:** Work1
