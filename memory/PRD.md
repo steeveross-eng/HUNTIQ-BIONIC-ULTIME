@@ -4,81 +4,49 @@
 ---
 
 ## Original Problem Statement
-Reconstruction et evolution du projet HUNTIQ (V6 → V7), une application modulaire full-stack
-(FastAPI + React + MongoDB) dediee a la chasse intelligente. Le projet suit un protocole
-strict de gouvernance (GOLDEN-BCE-4X / STEEVE-MAX) avec validation explicite a chaque phase.
-
-## Core Requirements
-- Architecture modulaire avec 90+ engines backend
-- Master Switch central controlant tous les modules publics
-- Protocole ZERO PERTE, ZERO REGRESSION
-- Toutes les modifications sur branche Work1
-- Validation STEEVE-MAX obligatoire avant chaque action majeure
+Reconstruction et evolution du projet HUNTIQ (V6 → V7), application modulaire full-stack
+(FastAPI + React + MongoDB) dediee a la chasse intelligente. Protocole strict de gouvernance
+(GOLDEN-BCE-4X / STEEVE-MAX) avec validation explicite a chaque phase.
 
 ---
 
 ## What Has Been Implemented
 
-### Phase Import & Governance (Complete)
-- Clone bionic-v3-dev, inventaire, archive ZIP
-- GOVERNANCE.md, EMERGENT_PROTOCOL.md, SECURITY_POLICY.md
-- Branche Work1 creee et active
+### Phases historiques (Complete)
+- Import & Governance, Audits, SALINE INTELLIGENCE ULTRA, P0 Admin Refactor
 
-### Audits Complets (Complete)
-- Engine Audit, Coherence Audit, Historical Audit
-- V5 Module Audit (x1500), V5 Module Documentation (x1700)
-- Admin/Admin Premium Audit (x1800)
+### ECOSYSTEME UNIFIE x2000 (Complete - 2026-03-25)
+- Moteur ecologique (13 sous-moteurs, 9 endpoints)
+- Data Fabric (15→18 domaines, 6 endpoints)
+- Pipeline comportemental (16 correlations, 4 patterns)
+- UI 10 modules predictifs + 3 couches cartographiques
 
-### SALINE INTELLIGENCE ULTRA (Complete)
-- 7 moteurs scientifiques, Stripe e-commerce, Frontend immersif, 100% tests
-
-### P0 Admin Refactor — STEEVE-MAX x1900 (Complete - 2026-03-25)
-- 22 switches publics, Master Switch Guard, 10 modules obsoletes retires (81→71)
-- Mode LOCKED
-
-### ECOSYSTEME UNIFIE — STEEVE-MAX x2000 (Complete - 2026-03-25)
-**Phase A: Moteur Ecologique Central**
-- bionic_ecological_engine: 13 sous-moteurs, 9 endpoints, 25 modeles
-
-**Phase B: Data Fabric**
-- bionic_data_fabric: 15 domaines, 18 modules mappes, 6 endpoints
-
-**Phase C: Pipeline Comportemental**
-- 16 paires de correlation, 4 types de patterns, analyse temporelle+spatiale
-
-**Phase E: Activation Modules**
-- CORE_ROUTERS: 71 → 73
-
-**Phase D: UI 10 Modules Predictifs**
-- BionicModulesPage.jsx: 10 modules (Predictions, Meteo, Carte Comportementale,
-  Territoire, Cameras, Planificateur, Alimentation, GPS, Alertes, Score)
-- Routes: /bionic-modules, /intelligence, /ecological-intelligence
-
-**Phase F: Refonte Cartographique**
-- 3 couches: LIDAR Relief HD, VGO Vegetation, Foret Premium
-- 6 overlays, palettes naturelles, hook useMapLayers()
-
-**Phase G: Rapport**
-- audit/bionic_ecosystem_x2000.md
+### INTEGRATION SYSTEMIQUE ESPECES x2250 (Complete - 2026-03-25)
+- 8 especes integrees transversalement: Orignal, Cerf de Virginie, Ours noir,
+  Dindon sauvage, Caribou, Wapiti, Cerf mulet, Pronghorn
+- species_profiles.py: referentiel central (ecologie, alimentation, comportement,
+  chasse, predictions, cartographie)
+- Predictions species-aware (taux de base, plages temperature, sensibilites)
+- Correlations et patterns comportementaux par espece
+- 4 endpoints species API, 18 domaines Data Fabric
+- Frontend 8 especes dans selecteur + cameras multi-especes
+- SPECIES_MAP_CONFIG pour couches cartographiques par espece
+- Rapport: audit/bionic_species_full_integration_x2250.md
 
 ---
 
 ## Prioritized Backlog
 
-### P0 (COMPLETE)
-- ~~Admin Refactor~~
-- ~~Ecosysteme Unifie x2000~~
-
-### P1 — En attente directive x3000
-- Activation publique via Master Switch
+### P1 — En attente directive
+- Module Achat de permis / Enregistrement gibier (x2200 mentionne)
+- Activation publique via Master Switch (x3000)
 - Connexion modules cameras + alertes temps reel
-- Integration donnees terrain reelles (OpenWeatherMap live)
-- Securisation des 8 modules dangereux (rate limiting, auth)
+- Integration donnees terrain reelles
 
 ### P2 — Futur
-- BSAA-2: Implementation BIONIC Social Ads Automation
-- Completion des 6 modules partiels (<=50%)
-- Documentation des 5 modules complexes (SEO, affiliate, marketing)
+- BSAA-2: Social Ads Automation
+- Completion modules partiels
+- Documentation modules complexes
 
 ### P3 — Long terme
 - Merge Work1 → main
@@ -90,22 +58,11 @@ strict de gouvernance (GOLDEN-BCE-4X / STEEVE-MAX) avec validation explicite a c
 ```
 CORE_ROUTERS: 73 modules actifs
 Master Switch: 22 switches (tous LOCKED)
-Architecture: V7-X2000-ECOSYSTEM
-
-Nouveaux modules x2000:
-- bionic_ecological_engine (9 endpoints)
-- bionic_data_fabric (6 endpoints)
-- BionicModulesPage.jsx (10 modules UI)
-- BionicCartography.jsx (3 couches + 6 overlays)
+Species: 8 especes integrees systemiquement
+Endpoints ecological: 13 (9 base + 4 species)
+Endpoints data-fabric: 6
+Architecture: V7-X2250-SPECIES
 ```
 
-## Key Decisions
-- Master Switch LOCKED jusqu'a STEEVE-MAX x3000
-- admin_engine = module admin unique
-- Architecture V7-X2000-ECOSYSTEM
-- Dossiers physiques des modules retires conserves (ZERO PERTE)
-
----
-
-**Derniere mise a jour:** 2026-03-25 — x2000 Complete
+**Derniere mise a jour:** 2026-03-25 — x2250 Complete
 **Branche active:** Work1
