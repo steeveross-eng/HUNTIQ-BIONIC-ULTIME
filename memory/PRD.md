@@ -1,143 +1,46 @@
-# HUNTIQ-V6/V7 — Product Requirements Document
-## GOLDEN-BCE-4X | STEEVE-MAX Protocol
+# HUNTIQ-V6/V7 — PRD & Architecture
 
----
-
-## Original Problem Statement
-Reconstruction et evolution du projet HUNTIQ (V6 → V7), application modulaire full-stack
-(FastAPI + React + MongoDB) dediee a la chasse intelligente. Protocole strict de gouvernance
-(GOLDEN-BCE-4X / STEEVE-MAX) avec validation explicite a chaque phase.
-
----
-
-## What Has Been Implemented
-
-### Phases historiques (Complete)
-- Import & Governance, Audits, SALINE INTELLIGENCE ULTRA, P0 Admin Refactor
-
-### ECOSYSTEME UNIFIE x2000 (Complete - 2026-03-25)
-- Moteur ecologique (13 sous-moteurs, 9 endpoints)
-- Data Fabric (15→18 domaines, 6 endpoints)
-- Pipeline comportemental (16 correlations, 4 patterns)
-- UI 10 modules predictifs + 3 couches cartographiques
-
-### INTEGRATION SYSTEMIQUE ESPECES x2250 (Complete - 2026-03-25)
-- 8 especes integrees transversalement: Orignal, Cerf de Virginie, Ours noir,
-  Dindon sauvage, Caribou, Wapiti, Cerf mulet, Pronghorn
-- species_profiles.py: referentiel central (ecologie, alimentation, comportement,
-  chasse, predictions, cartographie)
-- Predictions species-aware (taux de base, plages temperature, sensibilites)
-- Correlations et patterns comportementaux par espece
-- 4 endpoints species API, 18 domaines Data Fabric
-- Frontend 8 especes dans selecteur + cameras multi-especes
-- SPECIES_MAP_CONFIG pour couches cartographiques par espece
-- Rapport: audit/bionic_species_full_integration_x2250.md
-
-### MATRICE BIOGEOGRAPHIQUE x2260-V2 (Complete - 2026-03-25)
-- Matrice biogeographique JSON: distribution reelle 8 especes / 26+ juridictions (CA + US)
-- Moteur filtrage biogeography.py: geocodage inverse, filtrage par juridiction (243 lignes)
-- 4 nouveaux endpoints: /biogeography/jurisdiction, /filter, /species/{id}
-- Integration intelligence_core.py: hotspots, corridors, predictions filtrés par especes locales
-- Integration frontend: selecteur especes filtre dynamiquement selon juridiction
-- Sources officielles: MFFP, MNRF, ECCC, USFWS, NatureServe, IUCN
-- Rapport: audit/bionic_species_biogeography_x2260.md
-- Commit: 8c20e902 sur Work1
-
-### SYNCHRONISATION PREVIEW x2275 (Complete - 2026-03-25)
-- Deploiement immediat de toutes les directives (x1900→x2260) vers PREVIEW
-- Script auto-sync: scripts/sync_preview.sh
-- Pipeline: chaque directive commitee = PREVIEW mis a jour automatiquement
-- Rapport: audit/bionic_preview_sync_x2275.md
-- Commit: 392ef93f sur Work1
-
-### DIRECTIVE x2290-V3 (Complete - 2026-03-25)
-**x2200-FINAL-V2 — Permis + Enregistrement gibier:**
-- HuntingLicensePage reecrit: 2 onglets (Permis | Enregistrement)
-- Selecteur pays/province, filtrage biogeographique, portails officiels
-
-**x2280-A — Vent Renforce +15%:**
-- Rose des vents SVG interactive + fleche dynamique
-- Barre intensite gradient + interpretation professionnelle
-
-**x2280-B — Moteur d'Affuts Professionnels:**
-- bionic_stand_recommendation_engine (backend): 5 types, 7 facteurs scoring
-- 11 sections justification par affut, chemin approche 13 points
-- Endpoints: /api/v1/stand-recommendation/health + /recommend
-
-**x2290 — Pop-up + Chemin:**
-- JustificationPopup: modale pleine grandeur, 11 sections detaillees
-- ApproachPathMap: trace pointe SVG, calcul anti-vent
-- StandsModule: onglet Affuts Pro dans BIONIC Intelligence
-- Rapport: audit/bionic_permis_wind_affuts_x2290.md
-- Commit: 020226fe sur Work1
-
-### DIRECTIVE x2300-EXEC — Architecture Hybride BIONIC (Complete - 2026-03-25)
-- Architecture hybride WEB + Mobile Native definie comme standard institutionnel
-- bionic_hybrid_architecture_x2300.md: WEB (analyse, planification, gouvernance) + Mobile (terrain, GPS, affuts, hors-ligne)
-- bionic_api_spec_x2300.md: API unifiee 10 domaines, 46 endpoints, JWT, WebSocket, pagination
-- roadmap_x2300.md: 4 phases (P0→P3), 20-28 semaines, dependances identifiees
-- Mode hors-ligne specifie: MBTiles, SQLite (WatermelonDB), sync differee
-- Rapport: audit/bionic_architecture_hybride_x2300.md
-- Commit: 93c76f2c sur Work1
-
-### DIRECTIVE x2310-EXEC — Corrections Urgentes Mon Territoire (Complete - 2026-03-25)
-- Zones 600m: cercle SVG + buffer 30% + 7 types zones (rut, repos, alimentation, salines, corridors, eau, fraicheur)
-- Salines: recette complete (8 mineraux, carences, recommandations, sol/pH/couvert, justification ecologique)
-- Affuts: 3 affuts recommandes dans Mon Territoire (scores, justification popup, chemins approche)
-- Vent: +10% intensite supplementaire (total +25%), rose des vents dans Mon Territoire
-- Header: "Permis" → "Permis & Enregistrement" (desktop + mobile)
-- WindFlowLayer: LINE_WIDTH 0.95, FADE_ALPHA 0.960, opacite max 0.380
-- PREVIEW confirme synchronise integralement — aucune couche V5/V6 residuelle
-- Rapport: audit/bionic_mon_territoire_fix_x2310.md
-- Commit: 4af6d1e1 sur Work1
-
-### DIRECTIVE x2320-EXEC — Audit de Verite (Complete - 2026-03-25)
-- CAUSE RACINE: x2310 corrigeait BionicModulesPage (onglet Intelligence) au lieu de CARTE Leaflet
-- AlimentationV2Layer.jsx: tooltip saline enrichi (8 mineraux, barres, carences, recommandations, sol/pH)
-- StandsMapLayer.jsx: NOUVEAU — couche Leaflet affuts (marqueurs, scores, chemins pointes, popup 11 sections)
-- MapContent.jsx + MonTerritoireBionicPage.jsx: integration StandsMapLayer
-- WindFlowLayer.jsx: +10% supplementaire (total +25%)
-- Commit: a29969da sur Work1
-
----
-
-## Prioritized Backlog
-
-### P0 — Attente validation x2320-EXEC
-- Validation STEEVE-MAX requise pour l'audit de verite
-
-### P0 — Phase 1 Roadmap (attente directive x2300-P1)
-- Normalisation API unifiee, endpoints observations + sync, adaptation mobile
-
-### P1 — Phase 2 Roadmap (attente directive x2300-P2)
-- Prototype app mobile (carte, GPS, zones 600m, affuts, hors-ligne minimal)
-
-### P2 — Phase 3 Roadmap
-- Observations terrain, alertes push, UX terrain
-
-### P3 — Phase 4 Roadmap + Autres
-- Durcissement, beta fermee, publication Stores
-- BSAA-2: Social Ads Automation
-- Merge Work1 → main
-
----
+## Projet
+- **Nom:** HUNTIQ-V6 (BIONIC HUNT/Chasse V5-ULTIME-FUSION)
+- **Type:** Application modulaire chasse intelligente (Full-Stack: FastAPI + React + MongoDB)
+- **Gouvernance:** GOLDEN-BCE-4X | BCE ULTRA MAX | STEEVE-MAX
+- **Branche active:** Work1
+- **MASTER SWITCH:** LOCKED (directive x3000 requise pour activation)
+- **Preview URL:** https://huntiq-restore.preview.emergentagent.com
 
 ## Architecture
-```
-CORE_ROUTERS: 75 modules actifs
-Master Switch: 22 switches (tous LOCKED)
-Species: 8 especes integrees systemiquement
-Biogeography: 8 especes / 26+ juridictions / filtrage systemique
-Stand Engine: 5 types, 7 facteurs, 11 sections justification
-Endpoints ecological: 16 (9 base + 4 species + 4 biogeography)
-Endpoints stand-recommendation: 2 (health + recommend)
-Endpoints data-fabric: 6
-Hybrid Architecture: WEB (React) + Mobile Native (React Native/Expo)
-API Unifiee: 10 domaines, 46 endpoints specifies
-Roadmap: 4 phases, 20-28 semaines
-Architecture: V7-X2320-CARTE-VERITE
-```
+- **Backend:** FastAPI, 90 repertoires engine, 75+ routers actifs, 1447 endpoints
+- **Frontend:** React 19, Leaflet, 29+ pages, 28+ modules, lazy loading
+- **Deploiement:** Two-directory system (HUNTIQ-V6-import -> backend/frontend via sync_preview.sh)
 
-**Derniere mise a jour:** 2026-03-25 — x2320-EXEC Complete
-**Branche active:** Work1
-**PREVIEW URL:** https://huntiq-restore.preview.emergentagent.com
+## Ce qui a ete accompli (chronologique)
+1. Import et certification du depot HUNTIQ-V5 bionic-v3-dev
+2. Cadre de gouvernance (BCE-4X, EMERGENT_PROTOCOL, SECURITY_POLICY)
+3. Branche Work1 creee et maintenue
+4. Architecture BSAA (Social Ads Automation) — Phase BSAA-0 et BSAA-1 completes
+5. Audits: engines, coherence (5B), historique V1-V6 (5C)
+6. Restauration auto_optimization.py dans optimization_engine
+7. Implementation multi-features: Permis/Enregistrement, Wind Flow, Stand Recommendation, Approche-Path
+8. Pipeline sync PREVIEW (sync_preview.sh)
+9. Architecture Hybride Web+Mobile (x2300)
+10. Correction Mon Territoire (x2320 — Audit de Verite)
+11. **x3050-EXEC: Audit Total BIONIC V6 — COMPLETE** (Feb 2026)
+
+## Backlog prioritise
+### P0 (Prochaines etapes)
+- Validation x3050 par Steeve
+- Phase 1 Architecture Hybride (Roadmap x2300) — API unifiee mobile
+
+### P1
+- Prototype Mobile (Maps, GPS, Zones/Affuts)
+- BSAA-2 Implementation (Social Ads Automation)
+
+### P2
+- Full Mobile Feature Set (observations, photos, alertes)
+- Purge des 17 modules fantomes identifies dans x3050
+- Nettoyage doublons frontend (8 paires)
+
+### P3
+- Mobile Hardening + Beta
+- Unlock Master Switch (x3000)
+- Merge Work1 -> main
