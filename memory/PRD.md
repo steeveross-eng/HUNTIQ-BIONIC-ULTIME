@@ -4,7 +4,7 @@
 ---
 
 ## Projet
-Application HUNTIQ-V6 — Plateforme de scoring ecologique multi-moteurs pour la gestion cynegretique.
+Application HUNTIQ-V6 — Plateforme de scoring ecologique multi-moteurs pour la gestion cynegetique.
 
 ## Architecture
 - **Backend:** FastAPI
@@ -24,21 +24,32 @@ Application HUNTIQ-V6 — Plateforme de scoring ecologique multi-moteurs pour la
 | x3205 | Normalisation scientifique (module common/) | COMPLETE |
 | x3300 | Migration score_consolide dans core/ | COMPLETE |
 | x3400 | Interconnexion totale frontend (18 fichiers) | COMPLETE |
-| **x4000-SUPRA** | **Creation 17 moteurs squelettes (Option A)** | **CERTIFIE** |
+| x4000-SUPRA | Creation 17 moteurs squelettes (Option A) | CERTIFIE |
+| **x4100** | **Integration scientifique 22 moteurs (Option C: CORE 60%/Nouveaux 40%)** | **CERTIFIE** |
 
 ## Etat actuel du scoring pipeline
 
-### 5 moteurs CORE (actifs dans score_consolide)
-- alimentation_v1, repos_v1, corridors_v10, alimentation_v2, pression_v1
-- Score consolide de reference: **56.2** (point 46.8, -71.2, CERF, mois 10)
+### Score de reference
+- **Point test:** (46.8, -71.2), CERF, mois 10
+- **Score x4100:** **57.6** (22 moteurs, Option C)
+- **Ancien score x4000:** 56.2 (5 moteurs CORE)
+- **Delta:** +1.4 (+2.5%)
 
-### 17 nouveaux moteurs (NON integres — Option A)
-- **CORE++ (7):** hydro_v1, thermal_v1, ndvi_vegetation_v1, weather_v1, temporal_v1, habitat_v1, ecosystem_v1
-- **CORE+++ (5):** behavior_v1, risk_v1, opportunity_v1, attractors_v1, scenario_v1
-- **BIONIC-OS (5):** simulation_v1, multi_species_v1, trajets_v1, visibility_v1, learning_v1
+### 22 moteurs actifs
+- **CORE (60%):** alimentation, repos, corridors_v10, alimentation_v2, pression
+- **CORE++ (17%):** hydro, thermal, ndvi_vegetation, weather, temporal, habitat, ecosystem
+- **CORE+++ (12%):** behavior, risk, opportunity, attractors, scenario
+- **BIONIC-OS (9%):** simulation, multi_species, trajets, visibility, learning
 
-## Prochaines directives (en attente de validation Steeve)
-- **x4100:** Integration scientifique des 17 moteurs dans score_consolide.py
-- **x4500-ULTRA:** Directive majeure suivante
-- **BSAA:** Implementation module Social Ads Automation (P3)
-- **Merge final:** STEEVE-MAX-x3200-V6-CORE vers main
+## Prochaines directives
+- **x4500-ULTRA:** Reconstruction visuelle complete (overlays, panneaux, contenus, BSAA)
+  - Reconstruction visuels (overlays, styles, icones, panneaux)
+  - Reconstruction panneaux affuts, salines, diagnostics
+  - Reconstruction contenus narratifs et pedagogiques
+  - Implementation BSAA (backend + generation de contenus)
+  - Aucune relique Work1
+  - Tout modernise et reinjecte dans V6-CORE
+
+## Taches futures
+- Merge final STEEVE-MAX-x3200-V6-CORE vers main
+- Deblocage MASTER_SWITCH pour release publique
