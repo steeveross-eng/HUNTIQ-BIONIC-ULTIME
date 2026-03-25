@@ -113,13 +113,23 @@ function simplifyPath(coords, tolerance = 0.00003) {
   return result;
 }
 
-// ═══ MODE ZONE D'ANALYSE: Vérification inclusion dans bbox 2km×2km ═══
-const D_LAT_KM = 0.009;  // ~1km en latitude à ~46°N
-const D_LNG_KM = 0.013;  // ~1km en longitude à ~46°N
+// ═══ MODE ZONE D'ANALYSE: Vérification inclusion rayon 600m circulaire ═══
+// DIRECTIVE STEEVE-MAX x4515-FIX-CRITICAL: Rayon 600m strict (pas de bbox rectangulaire)
+const ZONE_RADIUS_M = 600;
 
-function isInAnalysisBox(lat, lng, box) {
-  if (!box) return true;
-  return lat >= box.south && lat <= box.north && lng >= box.west && lng <= box.east;
+function haversineDistance(lat1, lng1, lat2, lng2) {
+  const R = 6371000; // rayon Terre en metres
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function isInAnalysisRadius(lat, lng, center) {
+  if (!center) return true;
+  return haversineDistance(lat, lng, center.lat, center.lng) <= ZONE_RADIUS_M;
 }
 
 function ringsCentroid(rings) {
@@ -167,18 +177,13 @@ const BionicCorridorsV10Layer = ({
     }
   }, [map]);
 
-  // ═══ MODE ZONE D'ANALYSE: BBox 2km×2km centré sur le waypoint ═══
-  // STABILITÉ: dépend de lat/lng primitives, pas de l'objet center (évite cascades)
+  // ═══ MODE ZONE D'ANALYSE: Centre pour rayon 600m circulaire ═══
+  // DIRECTIVE x4515-FIX-CRITICAL: Rayon 600m strict (ZERO debordement)
   const centerLat = center?.lat;
   const centerLng = center?.lng;
-  const analysisBox = useMemo(() => {
+  const analysisCenter = useMemo(() => {
     if (centerLat == null || centerLng == null) return null;
-    return {
-      south: centerLat - D_LAT_KM,
-      north: centerLat + D_LAT_KM,
-      west: centerLng - D_LNG_KM,
-      east: centerLng + D_LNG_KM,
-    };
+    return { lat: centerLat, lng: centerLng };
   }, [centerLat, centerLng]);
 
   // Pré-calculer les styles — Hiérarchie Visuelle STEEVE-MAX
@@ -258,7 +263,7 @@ const BionicCorridorsV10Layer = ({
 
     const zonePolygons = features.filter(f => f.geometry.type === 'Polygon');
     const zonePoints = features.filter(f => f.geometry.type === 'Point');
-    const box = analysisBox;
+    const box = analysisCenter;
 
     // ═══ COUCHE 1 (Z-BAS): Zones polygonales organiques — BCE-4X protégées ═══
     if (showZones) {
@@ -270,24 +275,26 @@ const BionicCorridorsV10Layer = ({
         const rings = feature.geometry.coordinates[0].map(c => [c[1], c[0]]);
         const zc = ZONE_COLORS[props.zone_type] || '#9E9E9E';
 
-        // MODE ZONE D'ANALYSE: vérifier si le centroïde est dans la bbox 2km×2km
+        // DIRECTIVE x4515-FIX-CRITICAL: Rayon 600m strict — masquage total hors-rayon
         const [cLat, cLng] = ringsCentroid(rings);
-        const inZone = isInAnalysisBox(cLat, cLng, box);
+        const inZone = isInAnalysisRadius(cLat, cLng, box);
+
+        // ZERO rendu hors 600m (pas d'attenuation, suppression totale)
+        if (!inZone) continue;
 
         const polygon = L.polygon(rings, {
           color: zc,
-          weight: inZone ? 3 : 1.5,
-          opacity: inZone ? 1.0 : 0.15,
+          weight: 3,
+          opacity: 1.0,
           fillColor: 'transparent',
           fillOpacity: 0,
           lineCap: 'round',
           lineJoin: 'round',
-          interactive: inZone,
+          interactive: true,
         });
 
-        // PERFORMANCE V3: Tooltips + hover uniquement pour éléments IN-ZONE
-        if (inZone) {
-          polygon.bindTooltip(
+        // Tooltips + hover (toujours in-zone apres filtre)
+        polygon.bindTooltip(
             `<div style="font-size:12px;font-weight:600;color:${zc}">
               ${props.zone_type.charAt(0).toUpperCase() + props.zone_type.slice(1)}
             </div>
@@ -296,7 +303,6 @@ const BionicCorridorsV10Layer = ({
           );
           polygon.on('mouseover', function() { this.setStyle({ weight: 4, opacity: 1.0 }); });
           polygon.on('mouseout', function() { this.setStyle({ weight: 3, opacity: 1.0 }); });
-        }
         group.addLayer(polygon);
       }
 
@@ -306,24 +312,23 @@ const BionicCorridorsV10Layer = ({
           const [lng, lat] = feature.geometry.coordinates;
           const props = feature.properties;
           const zc = ZONE_COLORS[props.zone_type] || '#9E9E9E';
-          const inZone = isInAnalysisBox(lat, lng, box);
+          const inZone = isInAnalysisRadius(lat, lng, box);
+          if (!inZone) continue;
           const c = L.circleMarker([lat, lng], {
-            radius: inZone ? 6 : 3,
+            radius: 6,
             fillColor: zc,
             color: darkenHex(zc, 0.82),
-            weight: inZone ? 1.5 : 0.5,
-            fillOpacity: inZone ? 0.8 : 0.15,
-            opacity: inZone ? 0.9 : 0.15,
-            interactive: inZone,
+            weight: 1.5,
+            fillOpacity: 0.8,
+            opacity: 0.9,
+            interactive: true,
           });
-          if (inZone) {
-            c.bindTooltip(
-              `<span style="font-size:11px;font-weight:600;color:${zc}">${
-                props.zone_type.charAt(0).toUpperCase() + props.zone_type.slice(1)
-              }</span>`,
-              { sticky: true }
-            );
-          }
+          c.bindTooltip(
+            `<span style="font-size:11px;font-weight:600;color:${zc}">${
+              props.zone_type.charAt(0).toUpperCase() + props.zone_type.slice(1)
+            }</span>`,
+            { sticky: true }
+          );
           group.addLayer(c);
         }
       }
@@ -345,9 +350,9 @@ const BionicCorridorsV10Layer = ({
         const isExtreme = props.niveau === 'CRITIQUE';
         const style = precomputedStyles[props.niveau] || precomputedStyles.FORT;
 
-        // MODE ZONE D'ANALYSE: EXTREME toujours visible, autres atténués hors-zone
+        // DIRECTIVE x4515-FIX-CRITICAL: Rayon 600m strict — EXTREME toujours visible
         const [mLat, mLng] = corridorMidpoint(coords);
-        const inZone = isExtreme || isInAnalysisBox(mLat, mLng, box);
+        const inZone = isExtreme || isInAnalysisRadius(mLat, mLng, box);
 
         if (inZone) {
           // Glow externe (CRITIQUE uniquement)
@@ -424,7 +429,7 @@ const BionicCorridorsV10Layer = ({
           // Mode POINTS CHAUDS: TOUS les 64 centres, apparence antérieure (fine reading)
           for (const ct of centers) {
             if (!ct.lat || !ct.lng) continue;
-            const inZone = isInAnalysisBox(ct.lat, ct.lng, box);
+            const inZone = isInAnalysisRadius(ct.lat, ct.lng, box);
             const marker = L.circleMarker([ct.lat, ct.lng], {
               radius: inZone ? 4 : 2,
               fillColor: zc,
@@ -456,7 +461,7 @@ const BionicCorridorsV10Layer = ({
           }
 
           if (representative && representative.lat && representative.lng) {
-            const inZone = isInAnalysisBox(representative.lat, representative.lng, box);
+            const inZone = isInAnalysisRadius(representative.lat, representative.lng, box);
             const marker = L.circleMarker([representative.lat, representative.lng], {
               radius: inZone ? 5 : 2.5,
               fillColor: zc,
@@ -495,7 +500,7 @@ const BionicCorridorsV10Layer = ({
         species: sp,
       });
     }
-  }, [map, clearLayers, precomputedStyles, minPercentage, onDataLoaded, showZones, showCorridorsLayer, showPoints, pointsChaudsMode, pointsChaudsFilter, analysisBox, isZoneTypeVisible, isCorridorLevelVisible, isPointTypeVisible]);
+  }, [map, clearLayers, precomputedStyles, minPercentage, onDataLoaded, showZones, showCorridorsLayer, showPoints, pointsChaudsMode, pointsChaudsFilter, analysisCenter, isZoneTypeVisible, isCorridorLevelVisible, isPointTypeVisible]);
 
   // REF STABLE: renderData accessible sans cascade de dépendances dans fetchAndRender
   const renderDataRef = useRef(renderData);

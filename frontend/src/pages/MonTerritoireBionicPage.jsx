@@ -38,6 +38,7 @@ import WaypointUnifiedPanel from '@/components/territoire/WaypointUnifiedPanel';
 import { useAuth } from '@/components/GlobalAuth';
 import DiagnosticExclusionsPanel from '@/components/territoire/DiagnosticExclusionsPanel';
 import BionicZoneDiagnosticPanel from '@/components/territoire/BionicZoneDiagnosticPanel';
+import AmenagementPanel from '@/components/territoire/AmenagementPanel';
 import PlacesSidePanel from '@/components/territoire/PlacesSidePanel';
 import IntelligenceDashboard from '@/components/territoire/IntelligenceDashboard';
 import useSpatialClipping from '@/hooks/useSpatialClipping';
@@ -497,6 +498,7 @@ const MonTerritoireBionicPage = () => {
   const [showAlimentationV2, setShowAlimentationV2] = useState(true);
   const [showSalines, setShowSalines] = useState(true);
   const [showNutritionPanel, setShowNutritionPanel] = useState(false);
+  const [showAmenagementPanel, setShowAmenagementPanel] = useState(false);
   const [alimentationV2Data, setAlimentationV2Data] = useState(null);
   const [nSalinesMax, setNSalinesMax] = useState(4);
   const [adminArchitecteMode, setAdminArchitecteMode] = useState(false);
@@ -918,7 +920,7 @@ const MonTerritoireBionicPage = () => {
   const rating = getScoreRating(displayScore);
 
   // Amenagement engine + hunting path (extrait -> useTerritoireEffects)
-  const { huntingPathData, showHuntingPath } = useAmenagementEngine(bionicZones, selectedWaypointForZones, bionicZonesData);
+  const { huntingPathData, amenagementReport, showHuntingPath } = useAmenagementEngine(bionicZones, selectedWaypointForZones, bionicZonesData);
 
   // Snapshot export (extrait -> useTerritoireEffects)
   const handleGenerateSnapshot = useSnapshotExport(selectedWaypointForZones, generateSnapshot, selectedSpecies, layersVisible, temporalHourMT, currentZoom);
@@ -973,6 +975,7 @@ const MonTerritoireBionicPage = () => {
         showSalines={showSalines} setShowSalines={setShowSalines}
         nSalinesMax={nSalinesMax} setNSalinesMax={setNSalinesMax}
         showNutritionPanel={showNutritionPanel} setShowNutritionPanel={setShowNutritionPanel}
+        showAmenagementPanel={showAmenagementPanel} setShowAmenagementPanel={setShowAmenagementPanel}
         alimentationV2Data={alimentationV2Data}
         pointsChaudsMode={pointsChaudsMode} setPointsChaudsMode={setPointsChaudsMode}
         pointsChaudsFilter={pointsChaudsFilter} setPointsChaudsFilter={setPointsChaudsFilter}
@@ -1308,6 +1311,15 @@ const MonTerritoireBionicPage = () => {
       {/* ═══ PANNEAU RECOMMANDATIONS NUTRITIONNELLES — ALIMENTATION-V2 (composant extrait) ═══ */}
       {showNutritionPanel && alimentationV2Data && (
         <NutritionPanel alimentationV2Data={alimentationV2Data} onClose={() => setShowNutritionPanel(false)} />
+      )}
+
+      {/* ═══ PANNEAU AMENAGEMENT (Salines/Affuts) — x4515-FIX-CRITICAL ═══ */}
+      {showAmenagementPanel && (
+        <AmenagementPanel
+          report={amenagementReport}
+          isLoading={!amenagementReport && !!selectedWaypointForZones}
+          onClose={() => setShowAmenagementPanel(false)}
+        />
       )}
       
       {/* ═══ DIALOGUES (composant extrait STEEVE-MAX) ═══ */}

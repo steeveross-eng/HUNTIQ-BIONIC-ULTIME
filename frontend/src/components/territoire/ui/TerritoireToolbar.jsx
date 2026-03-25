@@ -36,6 +36,7 @@ export function TerritoireToolbar({
   // Alimentation
   showAlimentationV2, setShowAlimentationV2, showSalines, setShowSalines,
   nSalinesMax, setNSalinesMax, showNutritionPanel, setShowNutritionPanel,
+  showAmenagementPanel, setShowAmenagementPanel,
   alimentationV2Data,
   // Points chauds
   pointsChaudsMode, setPointsChaudsMode, pointsChaudsFilter, setPointsChaudsFilter,
@@ -274,6 +275,10 @@ export function TerritoireToolbar({
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-amber-300 font-medium">Recommandations</span>
                   <Switch checked={showNutritionPanel} onCheckedChange={setShowNutritionPanel} className="scale-[0.6] data-[state=checked]:bg-amber-500" data-testid="toggle-nutrition-panel" />
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-orange-300 font-medium">Amenagement</span>
+                  <Switch checked={showAmenagementPanel} onCheckedChange={setShowAmenagementPanel} className="scale-[0.6] data-[state=checked]:bg-orange-500" data-testid="toggle-amenagement-panel" />
                 </div>
               </div>
               {alimentationV2Data && (
