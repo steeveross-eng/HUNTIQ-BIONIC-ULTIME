@@ -206,8 +206,12 @@ const StandsMapLayer = ({
 
   useEffect(() => {
     fetchData();
-    return () => { if (abortRef.current) abortRef.current.abort(); };
-  }, [fetchData]);
+    return () => {
+      if (abortRef.current) abortRef.current.abort();
+      // x4600-R4: UNMOUNT CLEANUP — supprimer les layers Leaflet au démontage
+      clearLayers();
+    };
+  }, [fetchData, clearLayers]);
 
   useEffect(() => {
     if (cacheRef.current) renderStands(cacheRef.current);

@@ -164,8 +164,10 @@ const NutritionPointsLayer = ({
     fetchData();
     return () => {
       if (abortRef.current) abortRef.current.abort();
+      // x4600-R4: UNMOUNT CLEANUP — supprimer les layers Leaflet au démontage
+      clearLayers();
     };
-  }, [fetchData]);
+  }, [fetchData, clearLayers]);
 
   useEffect(() => {
     if (cacheRef.current) renderNutritionPoints(cacheRef.current);

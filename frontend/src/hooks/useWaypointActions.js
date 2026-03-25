@@ -75,7 +75,7 @@ export function useWaypointActions({
     if (onClearAllMapDataRef.current) {
       onClearAllMapDataRef.current();
     }
-    toast.info('Waypoint supprimé — zones, corridors, salines et affûts nettoyés');
+    toast.info('Waypoint supprimé — zones, corridors, points nutritionnels et affûts nettoyés');
   }, [selectedWaypointForZones, deleteWaypoint]);
 
   // Ajouter un waypoint (API directe)

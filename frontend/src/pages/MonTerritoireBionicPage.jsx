@@ -286,12 +286,29 @@ const MonTerritoireBionicPage = () => {
     updatePlace,
     userPosition,
     onClearAllMapData: () => {
-      // x4520-H: Nettoyage TOTAL — fermer tous les panneaux, vider les données
+      // x4600-R4: NETTOYAGE TOTAL — fermer TOUS les panneaux, vider TOUTES les données
+      // Panneaux
       setSelectedStand(null);
       setSelectedNutritionPoint(null);
       setShowAmenagementPanel(false);
+      setShowNutritionPanel(false);
+      // Données de couches
       setHeatmapV10Data(null);
       setCorridorV10Data(null);
+      setAlimentationV2Data(null);
+      // x4600-R4: Nettoyage nucléaire Leaflet — supprimer TOUS les layers non-tile
+      if (mapRef.current) {
+        const map = mapRef.current;
+        const layersToRemove = [];
+        map.eachLayer((layer) => {
+          // Conserver les TileLayers (fond de carte)
+          if (layer._url || layer._tiles || layer.options?.attribution) return;
+          layersToRemove.push(layer);
+        });
+        layersToRemove.forEach((layer) => {
+          try { map.removeLayer(layer); } catch (e) { /* ignore */ }
+        });
+      }
     },
   });
 
