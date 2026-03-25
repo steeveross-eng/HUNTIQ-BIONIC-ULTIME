@@ -235,7 +235,14 @@ const PinnablePanel = ({
   ].filter(Boolean).join(' ');
 
   return (
-    <div ref={panelRef} data-testid={testId} className={rootClasses} style={panelStyle}>
+    <div
+      ref={panelRef}
+      data-testid={testId}
+      className={rootClasses}
+      style={panelStyle}
+      onClick={(e) => e.stopPropagation()}
+      onMouseDown={(e) => { if (e.target === panelRef.current || panelRef.current?.contains(e.target)) e.stopPropagation(); }}
+    >
       {/* Header */}
       <div
         className={`pinnable-header pinnable-drag-header ${pinned && !expanded ? 'draggable' : ''} flex items-center justify-between flex-shrink-0`}

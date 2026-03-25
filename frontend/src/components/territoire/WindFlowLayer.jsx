@@ -175,6 +175,8 @@ export default function WindFlowLayer({ mode = 'arrows' }) {
     const drawArrowsMode = () => {
       const wd = windDataRef.current;
       if (!wd || !wd.u10 || !wd.v10) return;
+      // x4520-H4: Guard — skip if canvas has zero dimensions
+      if (!canvas.width || !canvas.height) return;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -191,19 +193,30 @@ export default function WindFlowLayer({ mode = 'arrows' }) {
       const west = mapBounds.getWest();
       const east = mapBounds.getEast();
 
+      // x4520-H4: Guard — skip if bounds are degenerate (zero-area)
+      if (!north || !south || !east || !west) return;
+      if (Math.abs(north - south) < 1e-10 || Math.abs(east - west) < 1e-10) return;
+
       for (let px = stepX / 2; px < canvas.width; px += stepX) {
         for (let py = stepY / 2; py < canvas.height; py += stepY) {
-          const point = map.containerPointToLatLng(L.point(px, py));
+          // x4520-H4: Guard — wrap in try/catch to prevent NaN crash
+          let point;
+          try {
+            point = map.containerPointToLatLng(L.point(px, py));
+          } catch { continue; }
+          if (!point || isNaN(point.lat) || isNaN(point.lng)) continue;
+
           const rowF = ((north - point.lat) / (north - south)) * (rows - 1);
           const colF = ((point.lng - west) / (east - west)) * (cols - 1);
 
           if (rowF < 0 || rowF >= rows || colF < 0 || colF >= cols) continue;
+          if (isNaN(rowF) || isNaN(colF)) continue;
 
           const u = bilinearInterpolate(wd.u10, rowF, colF);
           const v = bilinearInterpolate(wd.v10, rowF, colF);
           const speed = Math.sqrt(u * u + v * v);
 
-          if (speed < 0.3) continue;
+          if (speed < 0.3 || isNaN(speed)) continue;
 
           const angle = Math.atan2(-v, u); // screen coords: y inverted
           const t = Math.min(speed / maxSpeed, 1);
@@ -221,14 +234,32 @@ export default function WindFlowLayer({ mode = 'arrows' }) {
         animRef.current = requestAnimationFrame(animateParticles);
         return;
       }
+      // x4520-H4: Guard — skip if canvas has zero dimensions
+      if (!canvas.width || !canvas.height) {
+        animRef.current = requestAnimationFrame(animateParticles);
+        return;
+      }
 
       const rows = wd.grid.rows;
       const cols = wd.grid.cols;
-      const mapBounds = map.getBounds();
-      const north = mapBounds.getNorth();
-      const south = mapBounds.getSouth();
-      const west = mapBounds.getWest();
-      const east = mapBounds.getEast();
+      let mapBounds, north, south, west, east;
+      try {
+        mapBounds = map.getBounds();
+        north = mapBounds.getNorth();
+        south = mapBounds.getSouth();
+        west = mapBounds.getWest();
+        east = mapBounds.getEast();
+      } catch {
+        animRef.current = requestAnimationFrame(animateParticles);
+        return;
+      }
+
+      // x4520-H4: Guard — skip if bounds are degenerate
+      if (Math.abs(north - south) < 1e-10 || Math.abs(east - west) < 1e-10) {
+        animRef.current = requestAnimationFrame(animateParticles);
+        return;
+      }
+
       const maxSpeed = wd.metadata?.max_speed_ms || 10;
 
       ctx.globalCompositeOperation = 'destination-in';
@@ -241,20 +272,30 @@ export default function WindFlowLayer({ mode = 'arrows' }) {
         const p = particles[i];
         if (p.age >= PARTICLE_MAX_AGE) { resetParticle(p); continue; }
 
-        const point = map.containerPointToLatLng(L.point(p.x, p.y));
+        // x4520-H4: Guard — wrap containerPointToLatLng in try/catch
+        let point;
+        try {
+          point = map.containerPointToLatLng(L.point(p.x, p.y));
+        } catch { resetParticle(p); continue; }
+        if (!point || isNaN(point.lat) || isNaN(point.lng)) { resetParticle(p); continue; }
+
         const rowF = ((north - point.lat) / (north - south)) * (rows - 1);
         const colF = ((point.lng - west) / (east - west)) * (cols - 1);
 
         if (rowF < 0 || rowF >= rows || colF < 0 || colF >= cols) { resetParticle(p); continue; }
+        if (isNaN(rowF) || isNaN(colF)) { resetParticle(p); continue; }
 
         const u = bilinearInterpolate(wd.u10, rowF, colF);
         const v = bilinearInterpolate(wd.v10, rowF, colF);
         const speed = Math.sqrt(u * u + v * v);
+        if (isNaN(speed)) { resetParticle(p); continue; }
 
         const dx = u * SPEED_SCALE * canvas.width;
         const dy = -v * SPEED_SCALE * canvas.height;
         const nx = p.x + dx;
         const ny = p.y + dy;
+
+        if (isNaN(nx) || isNaN(ny)) { resetParticle(p); continue; }
 
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);
