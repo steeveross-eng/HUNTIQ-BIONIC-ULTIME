@@ -116,9 +116,11 @@ function simplifyPath(coords, tolerance = 0.00003) {
   return result;
 }
 
-// ═══ MODE ZONE D'ANALYSE: Vérification inclusion rayon 600m circulaire ═══
-// DIRECTIVE STEEVE-MAX x4515-FIX-CRITICAL: Rayon 600m strict (pas de bbox rectangulaire)
-const ZONE_RADIUS_M = 600;
+// ═══ MODE ZONE D'ANALYSE: Vérification inclusion rayon circulaire ═══
+// DIRECTIVE STEEVE-MAX x4520-E: Buffer 30% (600m → 780m) pour rendu sans coupure
+// Le rayon scientifique reste 600m (backend), le rendu utilise 780m
+const ZONE_RADIUS_M = 780; // 600m + 30% buffer = 780m
+const ZONE_RADIUS_SCIENTIFIC_M = 600; // Rayon scientifique strict (affichage cercle)
 
 function haversineDistance(lat1, lng1, lat2, lng2) {
   const R = 6371000; // rayon Terre en metres
@@ -133,6 +135,35 @@ function haversineDistance(lat1, lng1, lat2, lng2) {
 function isInAnalysisRadius(lat, lng, center) {
   if (!center) return true;
   return haversineDistance(lat, lng, center.lat, center.lng) <= ZONE_RADIUS_M;
+}
+
+/**
+ * x4520-E: Clip polygon rings to circular radius (Haversine).
+ * For each vertex outside the radius, project it back onto the circle edge.
+ * Prevents visual overflow beyond the buffer zone.
+ */
+function clipRingsToCircle(rings, center, radiusM) {
+  if (!center || !center.lat || !center.lng) return rings;
+  return rings.map(([lat, lng]) => {
+    const dist = haversineDistance(lat, lng, center.lat, center.lng);
+    if (dist <= radiusM) return [lat, lng];
+    // Project vertex onto circle edge
+    const ratio = radiusM / dist;
+    const clippedLat = center.lat + (lat - center.lat) * ratio;
+    const clippedLng = center.lng + (lng - center.lng) * ratio;
+    return [clippedLat, clippedLng];
+  });
+}
+
+/**
+ * x4520-E: Clip corridor coords to circular radius.
+ * Truncate corridor segments that extend beyond the radius.
+ */
+function clipCoordsToCircle(coords, center, radiusM) {
+  if (!center || !center.lat || !center.lng) return coords;
+  return coords.filter(([lat, lng]) => {
+    return haversineDistance(lat, lng, center.lat, center.lng) <= radiusM;
+  });
 }
 
 function ringsCentroid(rings) {
@@ -274,15 +305,18 @@ const BionicCorridorsV10Layer = ({
         // SOUS-ÉLÉMENT: Filtrage par type de zone
         if (!isZoneTypeVisible(props.zone_type)) continue;
 
-        const rings = feature.geometry.coordinates[0].map(c => [c[1], c[0]]);
+        const rawRings = feature.geometry.coordinates[0].map(c => [c[1], c[0]]);
         const zc = ZONE_COLORS[props.zone_type] || '#9E9E9E';
 
-        // DIRECTIVE x4515-FIX-CRITICAL: Rayon 600m strict — masquage total hors-rayon
-        const [cLat, cLng] = ringsCentroid(rings);
+        // DIRECTIVE x4520-E: Buffer 30% — centroïde check + clip vertices to circle
+        const [cLat, cLng] = ringsCentroid(rawRings);
         const inZone = isInAnalysisRadius(cLat, cLng, box);
 
-        // ZERO rendu hors 600m (pas d'attenuation, suppression totale)
+        // ZERO rendu hors buffer (pas d'attenuation, suppression totale)
         if (!inZone) continue;
+
+        // x4520-E: Clip polygon vertices to 780m radius (buffer zone)
+        const rings = clipRingsToCircle(rawRings, box, ZONE_RADIUS_M);
 
         const polygon = L.polygon(rings, {
           color: zc,
@@ -352,18 +386,21 @@ const BionicCorridorsV10Layer = ({
         const isExtreme = props.niveau === 'CRITIQUE';
         const style = precomputedStyles[props.niveau] || precomputedStyles.FORT;
 
-        // DIRECTIVE x4515-FIX-CRITICAL: Rayon 600m strict — EXTREME toujours visible
+        // DIRECTIVE x4520-E: ALL corridors (including CRITIQUE) checked against buffer radius
         const [mLat, mLng] = corridorMidpoint(coords);
-        const inZone = isExtreme || isInAnalysisRadius(mLat, mLng, box);
+        const inZone = isInAnalysisRadius(mLat, mLng, box);
 
         if (inZone) {
+          // x4520-E: Clip corridor coords to buffer radius (780m)
+          const clippedCoords = clipCoordsToCircle(coords, box, ZONE_RADIUS_M);
+          if (clippedCoords.length < 2) continue;
           // Glow externe (CRITIQUE uniquement)
-          if (style.glowOuter) group.addLayer(L.polyline(coords, style.glowOuter));
-          if (style.glowMid) group.addLayer(L.polyline(coords, style.glowMid));
+          if (style.glowOuter) group.addLayer(L.polyline(clippedCoords, style.glowOuter));
+          if (style.glowMid) group.addLayer(L.polyline(clippedCoords, style.glowMid));
           // Contour
-          group.addLayer(L.polyline(coords, style.contour));
+          group.addLayer(L.polyline(clippedCoords, style.contour));
           // Ligne principale
-          const line = L.polyline(coords, style.main);
+          const line = L.polyline(clippedCoords, style.main);
           // Tooltip enrichi (CRITIQUE: badge + score gras + flèche)
           const pal = CORRIDOR_PALETTE[props.niveau] || CORRIDOR_PALETTE.FORT;
           const isCrit = props.niveau === 'CRITIQUE';
@@ -386,8 +423,8 @@ const BionicCorridorsV10Layer = ({
           line.on('mouseout', function() { this.setStyle(style.restore); });
           group.addLayer(line);
           // Glow interne blanc (CRITIQUE uniquement)
-          if (style.glowInner) group.addLayer(L.polyline(coords, style.glowInner));
-          if (style.hachure) group.addLayer(L.polyline(coords, style.hachure));
+          if (style.glowInner) group.addLayer(L.polyline(clippedCoords, style.glowInner));
+          if (style.hachure) group.addLayer(L.polyline(clippedCoords, style.hachure));
         } else {
           // PERFORMANCE V3: Style atténué, zéro interaction, zéro tooltip
           group.addLayer(L.polyline(coords, {

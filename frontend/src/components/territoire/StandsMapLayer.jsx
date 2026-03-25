@@ -25,6 +25,7 @@ const StandsMapLayer = ({
   windSpeed = 12,
   species = 'orignal',
   enabled = true,
+  onStandClick = null,
 }) => {
   const map = useMap();
   const layerRef = useRef(null);
@@ -98,63 +99,68 @@ const StandsMapLayer = ({
 
       const marker = L.marker([stand.lat, stand.lng], { icon: standIcon, pane: 'markerPane' });
 
-      // Justification popup
-      const j = stand.justification || {};
-      const sections = [
-        ['Analyse du vent', j.analyse_vent, '#3498DB'],
-        ['Lecture corridor', j.lecture_corridor, '#9B59B6'],
-        ['Zones 600m', j.lecture_zones_600m, '#FF6B35'],
-        ['Topographie', j.lecture_topographie, '#27AE60'],
-        ['Hydrographie', j.lecture_hydrographie, '#3498DB'],
-        ['Zones fraîcheur', j.lecture_zones_fraicheur, '#1ABC9C'],
-        ['Pression', j.analyse_pression, '#E67E22'],
-        ['Type d\'affût', j.justification_type_affut, '#E74C3C'],
-        ['Orientation', j.justification_orientation, '#2ECC71'],
-        ['Score', j.justification_score, '#F39C12'],
-        ['Recommandations', j.recommandations_pratiques, '#FF6B35'],
-      ];
+      // x4520-E: Emit stand click event to open PinnablePanel V2 instead of Leaflet popup
+      if (onStandClick) {
+        marker.on('click', () => onStandClick(stand));
+      } else {
+        // Fallback: Leaflet popup (legacy)
+        const j = stand.justification || {};
+        const sections = [
+          ['Analyse du vent', j.analyse_vent, '#3498DB'],
+          ['Lecture corridor', j.lecture_corridor, '#9B59B6'],
+          ['Zones 600m', j.lecture_zones_600m, '#FF6B35'],
+          ['Topographie', j.lecture_topographie, '#27AE60'],
+          ['Hydrographie', j.lecture_hydrographie, '#3498DB'],
+          ['Zones fraîcheur', j.lecture_zones_fraicheur, '#1ABC9C'],
+          ['Pression', j.analyse_pression, '#E67E22'],
+          ['Type d\'affût', j.justification_type_affut, '#E74C3C'],
+          ['Orientation', j.justification_orientation, '#2ECC71'],
+          ['Score', j.justification_score, '#F39C12'],
+          ['Recommandations', j.recommandations_pratiques, '#FF6B35'],
+        ];
 
-      const sectionsHtml = sections.filter(s => s[1]).map(([title, text, col]) =>
-        `<div style="margin-bottom:6px;padding:4px 6px;background:rgba(255,255,255,0.03);border-left:2px solid ${col};border-radius:0 4px 4px 0">
-          <div style="font-size:9px;font-weight:600;color:${col};margin-bottom:2px">${title}</div>
-          <div style="font-size:8px;color:#aaa;line-height:1.4;white-space:pre-line">${text}</div>
-        </div>`
-      ).join('');
+        const sectionsHtml = sections.filter(s => s[1]).map(([title, text, col]) =>
+          `<div style="margin-bottom:6px;padding:4px 6px;background:rgba(255,255,255,0.03);border-left:2px solid ${col};border-radius:0 4px 4px 0">
+            <div style="font-size:9px;font-weight:600;color:${col};margin-bottom:2px">${title}</div>
+            <div style="font-size:8px;color:#aaa;line-height:1.4;white-space:pre-line">${text}</div>
+          </div>`
+        ).join('');
 
-      const factorBars = ['wind', 'corridor', 'topography', 'cover', 'hydrology', 'pressure', 'coolzone'].map(k => {
-        const score = stand.factors?.[k]?.score ?? 0;
-        const labels = { wind: 'Vent', corridor: 'Corridor', topography: 'Topo', cover: 'Couvert', hydrology: 'Hydro', pressure: 'Pression', coolzone: 'Fraîcheur' };
-        const col = score > 70 ? '#2ECC71' : score > 50 ? '#F39C12' : '#E74C3C';
-        return `<div style="display:flex;align-items:center;gap:3px;margin:1px 0">
-          <span style="width:48px;font-size:8px;color:#999">${labels[k] || k}</span>
-          <div style="flex:1;height:3px;background:rgba(255,255,255,0.08);border-radius:2px">
-            <div style="width:${score}%;height:100%;background:${col};border-radius:2px"></div>
-          </div>
-          <span style="width:22px;font-size:7px;color:${col};text-align:right;font-weight:700">${Math.round(score)}</span>
-        </div>`;
-      }).join('');
-
-      const popupContent = `
-        <div style="min-width:280px;max-width:340px;max-height:400px;overflow-y:auto;padding:4px;font-family:system-ui">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,0.1)">
-            <div>
-              <div style="font-size:13px;font-weight:700;color:#fff">${stand.type_name}</div>
-              <div style="font-size:10px;color:#888">Rang #${stand.rank} | ${stand.orientation_label} (${stand.orientation_deg}°) | ${stand.height_m}m</div>
+        const factorBars = ['wind', 'corridor', 'topography', 'cover', 'hydrology', 'pressure', 'coolzone'].map(k => {
+          const score = stand.factors?.[k]?.score ?? 0;
+          const labels = { wind: 'Vent', corridor: 'Corridor', topography: 'Topo', cover: 'Couvert', hydrology: 'Hydro', pressure: 'Pression', coolzone: 'Fraîcheur' };
+          const col = score > 70 ? '#2ECC71' : score > 50 ? '#F39C12' : '#E74C3C';
+          return `<div style="display:flex;align-items:center;gap:3px;margin:1px 0">
+            <span style="width:48px;font-size:8px;color:#999">${labels[k] || k}</span>
+            <div style="flex:1;height:3px;background:rgba(255,255,255,0.08);border-radius:2px">
+              <div style="width:${score}%;height:100%;background:${col};border-radius:2px"></div>
             </div>
-            <div style="width:44px;height:44px;border-radius:50%;border:3px solid ${stand.score > 75 ? '#2ECC71' : stand.score > 55 ? '#F39C12' : '#E74C3C'};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:${stand.score > 75 ? '#2ECC71' : stand.score > 55 ? '#F39C12' : '#E74C3C'}">${stand.score}</div>
-          </div>
-          <div style="font-size:9px;font-weight:600;color:#f5a623;margin-bottom:4px">Facteurs (7)</div>
-          ${factorBars}
-          <div style="font-size:9px;font-weight:600;color:#f5a623;margin:8px 0 4px">Justification professionnelle</div>
-          ${sectionsHtml}
-        </div>`;
+            <span style="width:22px;font-size:7px;color:${col};text-align:right;font-weight:700">${Math.round(score)}</span>
+          </div>`;
+        }).join('');
 
-      marker.bindPopup(popupContent, {
-        maxWidth: 360,
-        maxHeight: 420,
-        className: 'bionic-stand-popup',
-        autoPanPadding: [20, 20],
-      });
+        const popupContent = `
+          <div style="min-width:280px;max-width:340px;max-height:400px;overflow-y:auto;padding:4px;font-family:system-ui">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,0.1)">
+              <div>
+                <div style="font-size:13px;font-weight:700;color:#fff">${stand.type_name}</div>
+                <div style="font-size:10px;color:#888">Rang #${stand.rank} | ${stand.orientation_label} (${stand.orientation_deg}°) | ${stand.height_m}m</div>
+              </div>
+              <div style="width:44px;height:44px;border-radius:50%;border:3px solid ${stand.score > 75 ? '#2ECC71' : stand.score > 55 ? '#F39C12' : '#E74C3C'};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:${stand.score > 75 ? '#2ECC71' : stand.score > 55 ? '#F39C12' : '#E74C3C'}">${stand.score}</div>
+            </div>
+            <div style="font-size:9px;font-weight:600;color:#f5a623;margin-bottom:4px">Facteurs (7)</div>
+            ${factorBars}
+            <div style="font-size:9px;font-weight:600;color:#f5a623;margin:8px 0 4px">Justification professionnelle</div>
+            ${sectionsHtml}
+          </div>`;
+
+        marker.bindPopup(popupContent, {
+          maxWidth: 360,
+          maxHeight: 420,
+          className: 'bionic-stand-popup',
+          autoPanPadding: [20, 20],
+        });
+      }
 
       group.addLayer(marker);
     }

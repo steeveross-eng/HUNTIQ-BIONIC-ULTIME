@@ -92,6 +92,7 @@ const MapContentInner = React.memo(({
   showStands,
   windDirection,
   windSpeed,
+  onStandClick,
   // HEATMAP V10 consolidée
   showHeatmapV10,
   onHeatmapDataLoaded,
@@ -212,6 +213,7 @@ const MapContentInner = React.memo(({
         windDirection={windDirection || 'NE'}
         windSpeed={windSpeed || 12}
         enabled={showStands}
+        onStandClick={onStandClick}
       />
     )}
 

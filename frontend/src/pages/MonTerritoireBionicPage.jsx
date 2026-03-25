@@ -39,6 +39,7 @@ import { useAuth } from '@/components/GlobalAuth';
 import DiagnosticExclusionsPanel from '@/components/territoire/DiagnosticExclusionsPanel';
 import BionicZoneDiagnosticPanel from '@/components/territoire/BionicZoneDiagnosticPanel';
 import AmenagementPanel from '@/components/territoire/AmenagementPanel';
+import StandDetailPanel from '@/components/territoire/StandDetailPanel';
 import PlacesSidePanel from '@/components/territoire/PlacesSidePanel';
 import IntelligenceDashboard from '@/components/territoire/IntelligenceDashboard';
 import useSpatialClipping from '@/hooks/useSpatialClipping';
@@ -499,6 +500,7 @@ const MonTerritoireBionicPage = () => {
   const [showSalines, setShowSalines] = useState(true);
   const [showNutritionPanel, setShowNutritionPanel] = useState(false);
   const [showAmenagementPanel, setShowAmenagementPanel] = useState(false);
+  const [selectedStand, setSelectedStand] = useState(null);
   const [alimentationV2Data, setAlimentationV2Data] = useState(null);
   const [nSalinesMax, setNSalinesMax] = useState(4);
   const [adminArchitecteMode, setAdminArchitecteMode] = useState(false);
@@ -1124,6 +1126,7 @@ const MonTerritoireBionicPage = () => {
               showStands={showAlimentationV2}
               windDirection={windMode === 'arrows' ? 'NE' : 'NE'}
               windSpeed={12}
+              onStandClick={setSelectedStand}
               showHeatmapV10={showHeatmapV10}
               onHeatmapDataLoaded={setHeatmapV10Data}
               heatmapIncludeCorridors={heatmapIncludeCorridors}
@@ -1313,12 +1316,21 @@ const MonTerritoireBionicPage = () => {
         <NutritionPanel alimentationV2Data={alimentationV2Data} onClose={() => setShowNutritionPanel(false)} />
       )}
 
-      {/* ═══ PANNEAU AMENAGEMENT (Salines/Affuts) — x4515-FIX-CRITICAL ═══ */}
+      {/* ═══ PANNEAU AMENAGEMENT (Salines/Affuts) — x4520-E PinnablePanel V2 ═══ */}
       {showAmenagementPanel && (
         <AmenagementPanel
           report={amenagementReport}
           isLoading={!amenagementReport && !!selectedWaypointForZones}
           onClose={() => setShowAmenagementPanel(false)}
+          waypointCenter={waypointCenter}
+        />
+      )}
+
+      {/* ═══ PANNEAU AFFUT DETAIL — x4520-E PinnablePanel V2 ═══ */}
+      {selectedStand && (
+        <StandDetailPanel
+          stand={selectedStand}
+          onClose={() => setSelectedStand(null)}
         />
       )}
       
