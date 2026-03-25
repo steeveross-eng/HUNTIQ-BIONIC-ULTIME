@@ -1,11 +1,12 @@
 /**
- * AlimentationV2Layer.jsx — Salines ALIMENTATION-V2
- * Affiche les salines optimales dans la zone d'analyse 2km×2km.
- * Points jaunes = sélectionnés, gris = candidats non retenus.
+ * NutritionPointsLayer.jsx — Points nutritionnels ALIMENTATION-V2
+ * Affiche les points nutritionnels optimaux dans la zone d'analyse 2km x 2km.
+ * Points jaunes = selectionnes, gris = candidats non retenus.
  * Conforme BCE-4X + STEEVE-MAX (diversification spatiale 300m).
+ * DIRECTIVE x4600-NUTRITION_RENAME: "Salines" -> "Points nutritionnels"
  *
- * STABILITÉ V2:
- *   - fetchData dépend UNIQUEMENT de primitives
+ * STABILITE V2:
+ *   - fetchData depend UNIQUEMENT de primitives
  *   - onDataLoaded via ref stable
  *   - AbortController pour annuler les fetch en vol
  */
@@ -13,20 +14,20 @@ import { useEffect, useRef, useCallback } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 
-const SALINE_SELECTED = '#FFD700';
-const SALINE_SELECTED_BORDER = '#B8860B';
-const SALINE_CANDIDATE = '#9CA3AF';
-const SALINE_CANDIDATE_BORDER = '#6B7280';
+const NUTRITION_POINT_SELECTED = '#FFD700';
+const NUTRITION_POINT_SELECTED_BORDER = '#B8860B';
+const NUTRITION_POINT_CANDIDATE = '#9CA3AF';
+const NUTRITION_POINT_CANDIDATE_BORDER = '#6B7280';
 
-const AlimentationV2Layer = ({
+const NutritionPointsLayer = ({
   center,
   species = 'CERF',
   month = 10,
   enabled = true,
-  showSalines = true,
-  maxSalines = 4,
+  showNutritionPoints = true,
+  maxNutritionPoints = 4,
   onDataLoaded = null,
-  onSalineClick = null,
+  onNutritionPointClick = null,
 }) => {
   const map = useMap();
   const layerRef = useRef(null);
@@ -40,8 +41,8 @@ const AlimentationV2Layer = ({
   const onDataLoadedRef = useRef(onDataLoaded);
   onDataLoadedRef.current = onDataLoaded;
 
-  const onSalineClickRef = useRef(onSalineClick);
-  onSalineClickRef.current = onSalineClick;
+  const onNutritionPointClickRef = useRef(onNutritionPointClick);
+  onNutritionPointClickRef.current = onNutritionPointClick;
 
   const clearLayers = useCallback(() => {
     if (layerRef.current) {
@@ -50,21 +51,21 @@ const AlimentationV2Layer = ({
     }
   }, [map]);
 
-  const renderSalines = useCallback((data) => {
+  const renderNutritionPoints = useCallback((data) => {
     clearLayers();
-    if (!showSalines || !data?.salines?.length) return;
+    if (!showNutritionPoints || !data?.salines?.length) return;
 
     const group = L.featureGroup();
 
-    for (const sal of data.salines) {
-      const isSelected = sal.selected;
-      const fillColor = isSelected ? SALINE_SELECTED : SALINE_CANDIDATE;
-      const borderColor = isSelected ? SALINE_SELECTED_BORDER : SALINE_CANDIDATE_BORDER;
+    for (const pt of data.salines) {
+      const isSelected = pt.selected;
+      const fillColor = isSelected ? NUTRITION_POINT_SELECTED : NUTRITION_POINT_CANDIDATE;
+      const borderColor = isSelected ? NUTRITION_POINT_SELECTED_BORDER : NUTRITION_POINT_CANDIDATE_BORDER;
       const radius = isSelected ? 9 : 5;
       const fillOpacity = isSelected ? 0.92 : 0.35;
       const weight = isSelected ? 2.5 : 1.5;
 
-      const marker = L.circleMarker([sal.lat, sal.lng], {
+      const marker = L.circleMarker([pt.lat, pt.lng], {
         radius,
         fillColor,
         color: borderColor,
@@ -74,27 +75,27 @@ const AlimentationV2Layer = ({
         pane: 'markerPane',
       });
 
-      const carences = sal.carences_zone?.join(', ') || 'Aucune';
-      const justif = sal.justifications?.join(', ') || '';
-      const rankLabel = isSelected ? `#${sal.rank}` : 'Candidat';
+      const carences = pt.carences_zone?.join(', ') || 'Aucune';
+      const justif = pt.justifications?.join(', ') || '';
+      const rankLabel = isSelected ? `#${pt.rank}` : 'Candidat';
       const statusLabel = isSelected ? 'SELECTIONNEE' : 'Non retenue';
 
       // x4520-H: PinnablePanel V2 — click callback au lieu de tooltip Leaflet
-      if (onSalineClickRef.current) {
-        marker.on('click', () => onSalineClickRef.current(sal));
+      if (onNutritionPointClickRef.current) {
+        marker.on('click', () => onNutritionPointClickRef.current(pt));
         // Tooltip minimal au hover (ID seulement)
         marker.bindTooltip(
-          `<span style="font-size:10px;font-weight:700;color:${fillColor}">${sal.id} — ${sal.score}/100</span>`,
-          { sticky: false, opacity: 0.9, className: 'bionic-saline-tooltip-mini' }
+          `<span style="font-size:10px;font-weight:700;color:${fillColor}">${pt.id} — ${pt.score}/100</span>`,
+          { sticky: false, opacity: 0.9, className: 'bionic-nutrition-tooltip-mini' }
         );
       } else {
         // Fallback legacy
         marker.bindTooltip(
           `<div style="min-width:200px;padding:2px">
-            <div style="font-size:12px;font-weight:700;color:${fillColor}">${sal.id} — ${rankLabel} ${sal.type}</div>
-            <div style="font-size:11px;color:#666">Score: ${sal.score}/100 | ${sal.distance_centre_m}m</div>
+            <div style="font-size:12px;font-weight:700;color:${fillColor}">${pt.id} — ${rankLabel} ${pt.type}</div>
+            <div style="font-size:11px;color:#666">Score: ${pt.score}/100 | ${pt.distance_centre_m}m</div>
           </div>`,
-          { sticky: true, opacity: 0.97, maxWidth: 340, className: 'bionic-saline-tooltip' }
+          { sticky: true, opacity: 0.97, maxWidth: 340, className: 'bionic-nutrition-tooltip' }
         );
       }
 
@@ -108,10 +109,10 @@ const AlimentationV2Layer = ({
 
     group.addTo(map);
     layerRef.current = group;
-  }, [map, clearLayers, showSalines]);
+  }, [map, clearLayers, showNutritionPoints]);
 
-  const renderRef = useRef(renderSalines);
-  renderRef.current = renderSalines;
+  const renderRef = useRef(renderNutritionPoints);
+  renderRef.current = renderNutritionPoints;
 
   const fetchData = useCallback(async () => {
     if (centerLat == null || centerLng == null || !enabled) {
@@ -119,7 +120,7 @@ const AlimentationV2Layer = ({
       return;
     }
 
-    const key = `${centerLat.toFixed(6)}:${centerLng.toFixed(6)}:${species}:${month}:${maxSalines}`;
+    const key = `${centerLat.toFixed(6)}:${centerLng.toFixed(6)}:${species}:${month}:${maxNutritionPoints}`;
 
     if (lastKeyRef.current === key && layerRef.current) return;
 
@@ -142,7 +143,7 @@ const AlimentationV2Layer = ({
           center_lng: centerLng,
           species,
           month,
-          max_salines: maxSalines,
+          max_salines: maxNutritionPoints,
         }),
         signal: abortRef.current.signal,
       });
@@ -155,9 +156,9 @@ const AlimentationV2Layer = ({
         if (onDataLoadedRef.current) onDataLoadedRef.current(data);
       }
     } catch (err) {
-      if (err.name !== 'AbortError') console.error('[ALIMENTATION-V2]', err);
+      if (err.name !== 'AbortError') console.error('[NUTRITION-POINTS]', err);
     }
-  }, [centerLat, centerLng, species, month, enabled, maxSalines, clearLayers]);
+  }, [centerLat, centerLng, species, month, enabled, maxNutritionPoints, clearLayers]);
 
   useEffect(() => {
     fetchData();
@@ -167,8 +168,8 @@ const AlimentationV2Layer = ({
   }, [fetchData]);
 
   useEffect(() => {
-    if (cacheRef.current) renderSalines(cacheRef.current);
-  }, [renderSalines]);
+    if (cacheRef.current) renderNutritionPoints(cacheRef.current);
+  }, [renderNutritionPoints]);
 
   useEffect(() => {
     if (!enabled) clearLayers();
@@ -177,4 +178,4 @@ const AlimentationV2Layer = ({
   return null;
 };
 
-export default AlimentationV2Layer;
+export default NutritionPointsLayer;

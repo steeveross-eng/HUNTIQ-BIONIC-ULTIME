@@ -53,7 +53,7 @@ export const LAYER_TYPES = [
   { id: 'pentes',         label: 'Pentes',                 color: '#FF7043', category: 'environmental', priority: 9 },
   { id: 'orientation',    label: 'Orientation',            color: '#2196F3', category: 'environmental', priority: 10 },
   { id: 'ensoleillement', label: 'Ensoleillement',         color: '#FCD34D', category: 'environmental', priority: 11 },
-  { id: 'salines',        label: 'Saline potentielle',     color: '#FFFF00', category: 'strategic',     priority: 12 },
+  { id: 'salines',        label: 'Point nutritionnel',     color: '#FFFF00', category: 'strategic',     priority: 12 },
   { id: 'affuts',         label: 'Affût potentiel',        color: '#F5A623', category: 'strategic',     priority: 13 },
   { id: 'trajets',        label: 'Trajets de chasse',      color: '#FF9800', category: 'strategic',     priority: 14 },
   { id: 'altitude',       label: 'Altitude relative',      color: '#78909C', category: 'environmental', priority: 15 },

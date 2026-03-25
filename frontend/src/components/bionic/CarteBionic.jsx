@@ -1032,11 +1032,11 @@ const CarteBionic = ({
             
             {/* ==================== ATTRACTION POINTS ==================== */}
             
-            {/* Salines */}
+            {/* Points nutritionnels */}
             <AttractionPointsRenderer
               points={layers?.attraction_points?.salines}
               isVisible={isSubLayerVisible('attraction_points', 'salines')}
-              type="Saline"
+              type="Point nutritionnel"
               color="#FFC107"
             />
             

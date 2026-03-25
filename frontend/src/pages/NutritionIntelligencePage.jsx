@@ -424,7 +424,7 @@ const LocationInput = ({ lat, lng, onLatChange, onLngChange, onAnalyze, loading,
 );
 
 // === MAIN PAGE ===
-export default function SalineIntelligencePage() {
+export default function NutritionIntelligencePage() {
   const [activeTab, setActiveTab] = useState("analyse");
   const [lat, setLat] = useState("47.30");
   const [lng, setLng] = useState("-71.20");
@@ -521,7 +521,7 @@ export default function SalineIntelligencePage() {
           <div className="flex items-center gap-3 mb-2">
             <FlaskConical size={28} style={{ color: "var(--saline-gold)" }} />
             <div>
-              <h1 className="saline-hero-title">Saline Intelligence Ultra</h1>
+              <h1 className="saline-hero-title">Nutrition Intelligence Ultra</h1>
               <p className="saline-hero-subtitle">Analyse scientifique multi-moteurs | 7 engines</p>
             </div>
           </div>

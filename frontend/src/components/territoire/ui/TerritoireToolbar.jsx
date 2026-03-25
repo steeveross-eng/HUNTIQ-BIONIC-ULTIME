@@ -34,8 +34,8 @@ export function TerritoireToolbar({
   showHeatmapV10, setShowHeatmapV10, heatmapV10Data,
   heatmapIncludeCorridors, setHeatmapIncludeCorridors,
   // Alimentation
-  showAlimentationV2, setShowAlimentationV2, showSalines, setShowSalines,
-  nSalinesMax, setNSalinesMax, showNutritionPanel, setShowNutritionPanel,
+  showAlimentationV2, setShowAlimentationV2, showNutritionPoints, setShowNutritionPoints,
+  nNutritionPointsMax, setNNutritionPointsMax, showNutritionPanel, setShowNutritionPanel,
   showAmenagementPanel, setShowAmenagementPanel,
   alimentationV2Data,
   // Points chauds
@@ -256,18 +256,18 @@ export function TerritoireToolbar({
               </div>
               <div className="space-y-1.5 pt-1 border-t border-gray-700/40">
                 <div className="flex items-center justify-between">
-                  <span className={`text-xs font-medium ${alimentationV2Data?.salines_disabled ? 'text-gray-600' : 'text-yellow-400'}`}>Salines</span>
-                  <Switch checked={showSalines && !alimentationV2Data?.salines_disabled} onCheckedChange={setShowSalines} disabled={!!alimentationV2Data?.salines_disabled} className="scale-[0.6] data-[state=checked]:bg-yellow-500 disabled:opacity-30" data-testid="toggle-salines" />
+                  <span className={`text-xs font-medium ${alimentationV2Data?.salines_disabled ? 'text-gray-600' : 'text-yellow-400'}`}>Points nutritionnels</span>
+                  <Switch checked={showNutritionPoints && !alimentationV2Data?.salines_disabled} onCheckedChange={setShowNutritionPoints} disabled={!!alimentationV2Data?.salines_disabled} className="scale-[0.6] data-[state=checked]:bg-yellow-500 disabled:opacity-30" data-testid="toggle-nutrition-points" />
                 </div>
                 {alimentationV2Data?.salines_disabled && alimentationV2Data?.salines_message && (
-                  <div className="px-2 py-1.5 bg-amber-900/20 border border-amber-700/30 rounded text-[10px] text-amber-300/80 leading-relaxed" data-testid="salines-disabled-message">{alimentationV2Data.salines_message}</div>
+                  <div className="px-2 py-1.5 bg-amber-900/20 border border-amber-700/30 rounded text-[10px] text-amber-300/80 leading-relaxed" data-testid="nutrition-points-disabled-message">{alimentationV2Data.salines_message}</div>
                 )}
                 {!alimentationV2Data?.salines_disabled && (
-                  <div className="space-y-1" data-testid="salines-count-selector">
-                    <div className="text-[9px] text-gray-500 uppercase font-bold">Nombre de salines</div>
+                  <div className="space-y-1" data-testid="nutrition-points-count-selector">
+                    <div className="text-[9px] text-gray-500 uppercase font-bold">Nombre de points nutritionnels</div>
                     <div className="flex gap-1">
                       {[1,2,3,4].map(n => (
-                        <button key={n} onClick={() => setNSalinesMax(n)} className={`flex-1 h-7 rounded text-xs font-bold transition-all ${nSalinesMax === n ? 'bg-yellow-500/30 text-yellow-300 border border-yellow-500/50' : 'bg-gray-800/60 text-gray-500 border border-gray-700/30 hover:text-gray-300'}`} data-testid={`salines-count-${n}`}>{n}</button>
+                        <button key={n} onClick={() => setNNutritionPointsMax(n)} className={`flex-1 h-7 rounded text-xs font-bold transition-all ${nNutritionPointsMax === n ? 'bg-yellow-500/30 text-yellow-300 border border-yellow-500/50' : 'bg-gray-800/60 text-gray-500 border border-gray-700/30 hover:text-gray-300'}`} data-testid={`nutrition-points-count-${n}`}>{n}</button>
                       ))}
                     </div>
                   </div>
@@ -285,7 +285,7 @@ export function TerritoireToolbar({
                 <div className="pt-2 border-t border-gray-700/50 space-y-1">
                   <div className="text-[9px] text-gray-500 uppercase font-bold">Resume zone</div>
                   <div className="text-xs text-white">Score: <span className="text-yellow-400 font-bold">{alimentationV2Data.score_global}/100</span></div>
-                  {!alimentationV2Data.salines_disabled && <div className="text-xs text-gray-400">Salines: <span className="text-yellow-300">{alimentationV2Data.n_salines}/{alimentationV2Data.n_candidates} candidats</span></div>}
+                  {!alimentationV2Data.salines_disabled && <div className="text-xs text-gray-400">Points nutritionnels: <span className="text-yellow-300">{alimentationV2Data.n_salines}/{alimentationV2Data.n_candidates} candidats</span></div>}
                   <div className="text-xs text-gray-400">Espece: <span className="text-yellow-300">{alimentationV2Data.species_nom}</span></div>
                 </div>
               )}

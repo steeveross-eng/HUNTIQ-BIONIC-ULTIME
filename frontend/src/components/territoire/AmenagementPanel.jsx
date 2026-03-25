@@ -3,11 +3,11 @@ import { Droplets, Eye, Wind, Navigation, Target, ListChecks, MapPin, Crosshair,
 import PinnablePanel from './PinnablePanel';
 
 /**
- * x4520-C STEEVE-MAX: Amenagement Panel — Salines + Affuts
+ * x4520-C / x4600 STEEVE-MAX: Amenagement Panel — Points nutritionnels + Affuts
  * - PinnablePanel V2: Fixer / Detacher / Pleine page / Scroll
- * - Double verification Haversine ≤ 600m pour toutes les salines
- * - Coherence ecologique affuts (corridors, zones rut, salines)
- * - ZERO saline > 600m affichee
+ * - Double verification Haversine <= 600m pour tous les points nutritionnels
+ * - Coherence ecologique affuts (corridors, zones rut, points nutritionnels)
+ * - ZERO point nutritionnel > 600m affiche
  */
 
 const ANALYSIS_RADIUS_M = 600;
@@ -23,24 +23,24 @@ function haversineM(lat1, lng1, lat2, lng2) {
 }
 
 const AmenagementPanel = ({ report, isLoading, onClose, waypointCenter }) => {
-  // x4520-C: Double verification Haversine — filtrer salines > 600m
+  // x4520-C: Double verification Haversine — filtrer points nutritionnels > 600m
   // Hooks MUST be called before any early return
   const centerLat = waypointCenter?.lat ?? waypointCenter?.latitude;
   const centerLng = waypointCenter?.lng ?? waypointCenter?.longitude;
   const sections = report?.sections;
 
-  const filteredSalines = useMemo(() => {
+  const filteredNutritionPoints = useMemo(() => {
     if (!sections?.['1_saline']?.candidates) return sections?.['1_saline']?.candidates || [];
     if (!centerLat || !centerLng) return sections['1_saline'].candidates;
-    return sections['1_saline'].candidates.filter((sal) => {
-      if (!sal.lat || !sal.lng) return true;
-      const d = haversineM(centerLat, centerLng, sal.lat, sal.lng);
+    return sections['1_saline'].candidates.filter((pt) => {
+      if (!pt.lat || !pt.lng) return true;
+      const d = haversineM(centerLat, centerLng, pt.lat, pt.lng);
       return d <= ANALYSIS_RADIUS_M;
     });
   }, [sections, centerLat, centerLng]);
 
-  const salineCount = filteredSalines?.length ?? 0;
-  const selectedSalines = useMemo(() => filteredSalines?.filter((c) => c.selected) || [], [filteredSalines]);
+  const nutritionPointCount = filteredNutritionPoints?.length ?? 0;
+  const selectedNutritionPoints = useMemo(() => filteredNutritionPoints?.filter((c) => c.selected) || [], [filteredNutritionPoints]);
 
   if (isLoading) {
     return (
@@ -67,7 +67,7 @@ const AmenagementPanel = ({ report, isLoading, onClose, waypointCenter }) => {
   return (
     <PinnablePanel
       title="Amenagement V6"
-      subtitle={`Salines (${salineCount}), Affuts, Vents, Plan — Rayon ${ANALYSIS_RADIUS_M}m`}
+      subtitle={`Pts nutritionnels (${nutritionPointCount}), Affuts, Vents, Plan — Rayon ${ANALYSIS_RADIUS_M}m`}
       icon={Target}
       accentColor="#f5a623"
       onClose={onClose}
@@ -76,30 +76,30 @@ const AmenagementPanel = ({ report, isLoading, onClose, waypointCenter }) => {
       testId="amenagement-panel"
     >
       <div className="p-4 space-y-4" data-testid="amenagement-content">
-        {/* Salines — x4520-C: Toutes ≤ 600m */}
+        {/* Points nutritionnels — x4520-C / x4600: Tous <= 600m */}
         {s['1_saline'] && (
-          <div className="space-y-3" data-testid="amenagement-saline-section">
+          <div className="space-y-3" data-testid="amenagement-nutrition-section">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Droplets className="h-5 w-5 text-cyan-400" />
-                <span className="text-sm font-bold text-cyan-400">Salines optimales</span>
+                <span className="text-sm font-bold text-cyan-400">Points nutritionnels optimaux</span>
               </div>
               <span className="text-xs bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-full">
-                {selectedSalines.length} / {salineCount} ≤ {ANALYSIS_RADIUS_M}m
+                {selectedNutritionPoints.length} / {nutritionPointCount} &le; {ANALYSIS_RADIUS_M}m
               </span>
             </div>
-            {selectedSalines.length > 0 ? (
-              selectedSalines.map((sal, i) => (
-                <SalineCard key={sal.id || i} saline={sal} index={i} />
+            {selectedNutritionPoints.length > 0 ? (
+              selectedNutritionPoints.map((pt, i) => (
+                <NutritionPointCard key={pt.id || i} nutritionPoint={pt} index={i} />
               ))
             ) : (
               <SectionCard
-                title={s['1_saline'].title || 'Saline'}
+                title={s['1_saline'].title || 'Point nutritionnel'}
                 detail={s['1_saline'].justification}
                 priority={s['1_saline'].priority}
                 icon={Droplets}
                 iconColor="#06b6d4"
-                testId="amenagement-saline-fallback"
+                testId="amenagement-nutrition-fallback"
               />
             )}
           </div>
@@ -188,39 +188,39 @@ const AmenagementPanel = ({ report, isLoading, onClose, waypointCenter }) => {
 
         {/* Footer V6 */}
         <div className="text-center text-[10px] text-gray-600 pt-2 border-t border-gray-800/50" data-testid="amenagement-footer">
-          x4520-C | Rayon {ANALYSIS_RADIUS_M}m strict | STEEVE-MAX V6
+          x4520-C / x4600 | Rayon {ANALYSIS_RADIUS_M}m strict | STEEVE-MAX V6
         </div>
       </div>
     </PinnablePanel>
   );
 };
 
-/** Carte individuelle pour une saline selectionnee */
-const SalineCard = ({ saline, index }) => (
-  <div className="bg-[#0d0d18] rounded-xl p-3 border border-cyan-500/20" data-testid={`saline-card-${index}`}>
+/** Carte individuelle pour un point nutritionnel selectionne */
+const NutritionPointCard = ({ nutritionPoint, index }) => (
+  <div className="bg-[#0d0d18] rounded-xl p-3 border border-cyan-500/20" data-testid={`nutrition-point-card-${index}`}>
     <div className="flex items-center justify-between mb-2">
       <div className="flex items-center gap-2">
         <MapPin className="h-4 w-4 text-cyan-400" />
-        <span className="text-sm font-bold text-white">{saline.id}</span>
-        <span className="text-xs text-gray-500">({saline.type})</span>
+        <span className="text-sm font-bold text-white">{nutritionPoint.id}</span>
+        <span className="text-xs text-gray-500">({nutritionPoint.type})</span>
       </div>
       <div className="flex items-center gap-2">
         <span className="text-xs text-cyan-300 bg-cyan-500/15 px-2 py-0.5 rounded-full">
-          {saline.distance_centre_m}m
+          {nutritionPoint.distance_centre_m}m
         </span>
         <span className="text-xs text-amber-300 bg-amber-500/15 px-2 py-0.5 rounded-full font-semibold">
-          {saline.score}/100
+          {nutritionPoint.score}/100
         </span>
       </div>
     </div>
-    {saline.justifications && saline.justifications.length > 0 && (
+    {nutritionPoint.justifications && nutritionPoint.justifications.length > 0 && (
       <p className="text-xs text-gray-400 leading-relaxed mb-1.5">
-        {saline.justifications.join(' | ')}
+        {nutritionPoint.justifications.join(' | ')}
       </p>
     )}
-    {saline.criteres && (
+    {nutritionPoint.criteres && (
       <div className="flex flex-wrap gap-1.5">
-        {Object.entries(saline.criteres).map(([key, val]) => (
+        {Object.entries(nutritionPoint.criteres).map(([key, val]) => (
           <span
             key={key}
             className="text-[10px] px-1.5 py-0.5 rounded bg-gray-800 text-gray-400"

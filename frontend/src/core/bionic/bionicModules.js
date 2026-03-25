@@ -76,9 +76,9 @@ export const BIONIC_MODULES = {
 
   // --- ZONES STRATÉGIQUES (3) ---
   salines: { 
-    color: '#FFFF00', label: 'Saline potentielle', iconName: 'sparkles',
+    color: '#FFFF00', label: 'Point nutritionnel', iconName: 'sparkles',
     category: 'strategic',
-    interpretation: { high: 'Saline active', medium: 'Zone minérale', low: 'Présence possible' }
+    interpretation: { high: 'Point nutritionnel actif', medium: 'Zone minerale', low: 'Presence possible' }
   },
   affuts: { 
     color: '#F5A623', label: 'Affût potentiel', iconName: 'target',

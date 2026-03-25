@@ -74,10 +74,10 @@ export function NutritionPanel({ alimentationV2Data, onClose }) {
             ))}
           </div>
 
-          {/* Saline composition */}
+          {/* Composition nutritionnelle */}
           {alimentationV2Data.nutrition?.saline_composition && !alimentationV2Data.salines_disabled && (
             <div className="space-y-2">
-              <div className="text-xs font-bold uppercase tracking-wider text-yellow-400">Composition saline recommandee</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-yellow-400">Composition nutritionnelle recommandee</div>
               <div className="grid grid-cols-2 gap-2">
                 {Object.entries(alimentationV2Data.nutrition.saline_composition).map(([k, v]) => (
                   <div key={k} className="text-sm bg-yellow-500/10 rounded-lg px-3 py-2">
@@ -89,9 +89,9 @@ export function NutritionPanel({ alimentationV2Data, onClose }) {
             </div>
           )}
 
-          {/* Salines disabled message */}
+          {/* Points nutritionnels desactives */}
           {alimentationV2Data.salines_disabled && alimentationV2Data.salines_message && (
-            <div className="px-4 py-3 bg-amber-900/20 border border-amber-700/30 rounded-lg" data-testid="nutrition-panel-salines-message">
+            <div className="px-4 py-3 bg-amber-900/20 border border-amber-700/30 rounded-lg" data-testid="nutrition-panel-points-message">
               <div className="text-sm text-amber-300/90 leading-relaxed">{alimentationV2Data.salines_message}</div>
             </div>
           )}

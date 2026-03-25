@@ -154,7 +154,7 @@ const PromptManager = () => {
         { name: "BIONIC™ Bloc Minéral Premium", category: "minerals", rating: 9.5 },
         { name: "BIONIC™ Mélange Protéiné Forêt", category: "protein", rating: 9.2 },
         { name: "BIONIC™ Attractif Pomme Sauvage", category: "attractant", rating: 8.8 },
-        { name: "BIONIC™ Saline Suprême", category: "salt", rating: 9.0 },
+        { name: "BIONIC Nutrition Supreme", category: "salt", rating: 9.0 },
         { name: "BIONIC™ Festin de Baies", category: "food", rating: 9.3 },
         { name: "BIONIC™ Boost Panache", category: "minerals", rating: 9.4 }
       ],

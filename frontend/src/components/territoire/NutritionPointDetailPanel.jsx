@@ -4,7 +4,7 @@ import PinnablePanel from './PinnablePanel';
 
 /**
  * NutritionPointDetailPanel.jsx — Detail d'un point nutritionnel
- * DIRECTIVE STEEVE-MAX x4600: "Salines" → "Points nutritionnels"
+ * DIRECTIVE STEEVE-MAX x4600: "Salines" -> "Points nutritionnels"
  * PinnablePanel V2 (pleine page, fixable, scrollable)
  */
 
@@ -19,7 +19,7 @@ const MINERALS = [
   { key: 'selenium', name: 'Selenium (Se)', color: '#E74C3C' },
 ];
 
-function getMineralData(saline) {
+function getMineralData(nutritionPoint) {
   const base = [
     { name: 'Sodium (Na)', pct: 92, status: 'OK' },
     { name: 'Calcium (Ca)', pct: 38, status: 'DEFICIT' },
@@ -30,9 +30,9 @@ function getMineralData(saline) {
     { name: 'Zinc (Zn)', pct: 35, status: 'DEFICIT' },
     { name: 'Selenium (Se)', pct: 18, status: 'DEFICIT' },
   ];
-  if (saline?.minerals) return saline.minerals;
-  // Deterministic variation based on saline ID
-  const seed = (saline?.id || 'SAL-01').charCodeAt(4) || 1;
+  if (nutritionPoint?.minerals) return nutritionPoint.minerals;
+  // Deterministic variation based on nutrition point ID
+  const seed = (nutritionPoint?.id || 'SAL-01').charCodeAt(4) || 1;
   return base.map((m, i) => ({
     ...m,
     pct: Math.max(5, Math.min(99, m.pct + ((seed * (i + 1) * 7) % 30) - 15)),
@@ -42,21 +42,21 @@ function getMineralData(saline) {
   }));
 }
 
-const NutritionPointDetailPanel = ({ saline, onClose }) => {
-  if (!saline) return null;
+const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
+  if (!nutritionPoint) return null;
 
-  const isSelected = saline.selected;
-  const scoreColor = saline.score > 65 ? '#2ECC71' : saline.score > 45 ? '#F39C12' : '#E74C3C';
-  const minerals = getMineralData(saline);
+  const isSelected = nutritionPoint.selected;
+  const scoreColor = nutritionPoint.score > 65 ? '#2ECC71' : nutritionPoint.score > 45 ? '#F39C12' : '#E74C3C';
+  const minerals = getMineralData(nutritionPoint);
   const deficits = minerals.filter(m => m.status === 'DEFICIT');
-  const soilType = saline.soil_type || 'Loam argileux';
-  const canopy = saline.canopy || 'Mixte (coniferes + feuillus)';
-  const ph = saline.ph || 6.2;
+  const soilType = nutritionPoint.soil_type || 'Loam argileux';
+  const canopy = nutritionPoint.canopy || 'Mixte (coniferes + feuillus)';
+  const ph = nutritionPoint.ph || 6.2;
 
   return (
     <PinnablePanel
-      title={`Point nutritionnel — ${saline.id}`}
-      subtitle={`Analyse minerale du site | Score: ${saline.score}/100 | ${saline.distance_centre_m}m`}
+      title={`Point nutritionnel — ${nutritionPoint.id}`}
+      subtitle={`Analyse minerale du site | Score: ${nutritionPoint.score}/100 | ${nutritionPoint.distance_centre_m}m`}
       icon={Droplets}
       accentColor={isSelected ? '#FFD700' : '#9CA3AF'}
       onClose={onClose}
@@ -72,11 +72,11 @@ const NutritionPointDetailPanel = ({ saline, onClose }) => {
               className="w-14 h-14 rounded-full flex items-center justify-center text-xl font-black"
               style={{ border: `3px solid ${scoreColor}`, color: scoreColor }}
             >
-              {saline.score}
+              {nutritionPoint.score}
             </div>
             <div>
               <div className="text-white text-sm font-bold">{isSelected ? 'SELECTIONNEE' : 'Candidate'}</div>
-              <div className="text-gray-500 text-xs">{saline.type || 'minerale'} | {saline.distance_centre_m}m</div>
+              <div className="text-gray-500 text-xs">{nutritionPoint.type || 'minerale'} | {nutritionPoint.distance_centre_m}m</div>
             </div>
           </div>
           {isSelected && (
@@ -148,10 +148,10 @@ const NutritionPointDetailPanel = ({ saline, onClose }) => {
         </div>
 
         {/* Justifications */}
-        {saline.justifications && saline.justifications.length > 0 && (
+        {nutritionPoint.justifications && nutritionPoint.justifications.length > 0 && (
           <div className="bg-[#0d0d18] rounded-xl p-3 border border-gray-700/50" data-testid="nutrition-point-justifications">
             <div className="text-xs font-semibold text-amber-400 mb-1.5">Justification ecologique</div>
-            <p className="text-xs text-gray-400 leading-relaxed">{saline.justifications.join(' | ')}</p>
+            <p className="text-xs text-gray-400 leading-relaxed">{nutritionPoint.justifications.join(' | ')}</p>
           </div>
         )}
 
@@ -162,7 +162,7 @@ const NutritionPointDetailPanel = ({ saline, onClose }) => {
 
         {/* Footer */}
         <div className="text-center text-[10px] text-gray-600 pt-2 border-t border-gray-800/50" data-testid="nutrition-point-footer">
-          x4600 | Point nutritionnel | Analyse minerale | STEEVE-MAX V6
+          x4600 | Point nutritionnel | Analyse minerale du site | STEEVE-MAX V6
         </div>
       </div>
     </PinnablePanel>

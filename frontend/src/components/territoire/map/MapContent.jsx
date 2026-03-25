@@ -22,7 +22,7 @@ import { MapInteractionLayer } from '@/modules/map_interaction';
 import { BIONIC_MODULES } from '@/core/bionic';
 import { PLACE_TYPES } from '@/config/placeTypes';
 import BionicCorridorsV6Layer from '@/components/territoire/BionicCorridorsV6Layer';
-import AlimentationV2Layer from '@/components/territoire/AlimentationV2Layer';
+import NutritionPointsLayer from '@/components/territoire/NutritionPointsLayer';
 import ConsolidatedHeatmapLayer from '@/components/territoire/ConsolidatedHeatmapLayer';
 import StandsMapLayer from '@/components/territoire/StandsMapLayer';
 
@@ -83,12 +83,12 @@ const MapContentInner = React.memo(({
   showHuntingPath,
   // CORRIDORS-V6
   onCorridorDataLoaded,
-  // ALIMENTATION-V2
+  // ALIMENTATION-V2 (Points nutritionnels)
   showAlimentationV2,
-  showSalines,
-  nSalinesMax,
+  showNutritionPoints,
+  nNutritionPointsMax,
   onAlimentationDataLoaded,
-  onSalineClick,
+  onNutritionPointClick,
   // STANDS x2280/x2320
   showStands,
   windDirection,
@@ -193,17 +193,17 @@ const MapContentInner = React.memo(({
       />
     )}
 
-    {/* ALIMENTATION-V2: Salines optimales dans la zone 2km×2km */}
+    {/* ALIMENTATION-V2: Points nutritionnels optimaux dans la zone 2km x 2km */}
     {selectedWaypointForZones && showAlimentationV2 && waypointCenter && (
-      <AlimentationV2Layer
+      <NutritionPointsLayer
         center={waypointCenter}
         species={selectedSpecies}
         month={new Date().getMonth() + 1}
         enabled={showAlimentationV2}
-        showSalines={showSalines}
-        maxSalines={nSalinesMax}
+        showNutritionPoints={showNutritionPoints}
+        maxNutritionPoints={nNutritionPointsMax}
         onDataLoaded={onAlimentationDataLoaded}
-        onSalineClick={onSalineClick}
+        onNutritionPointClick={onNutritionPointClick}
       />
     )}
 

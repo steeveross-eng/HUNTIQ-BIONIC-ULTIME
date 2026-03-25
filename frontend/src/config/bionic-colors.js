@@ -139,7 +139,7 @@ export const TERRITORY_COLORS = {
   private: BIONIC_COLORS.gold.primary,       // Territoire privé
   reserve: BIONIC_COLORS.purple.primary,     // Réserve faunique
   stand: BIONIC_COLORS.red.primary,          // Affût / Cache
-  salt_lick: BIONIC_COLORS.cyan.primary,     // Saline
+  salt_lick: BIONIC_COLORS.cyan.primary,     // Point nutritionnel
   observation: BIONIC_COLORS.blue.lighter,   // Point d'observation
   parking: BIONIC_COLORS.gray[500],          // Stationnement
   camp: BIONIC_COLORS.green.light,           // Camp de chasse

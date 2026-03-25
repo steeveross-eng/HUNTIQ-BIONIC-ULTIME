@@ -74,8 +74,8 @@ const FieldObservationForm = lazy(() => import("@/pages/FieldObservationForm"));
 const CalibrationDashboard = lazy(() => import("@/pages/CalibrationDashboard"));
 const ReportsPage = lazy(() => import("@/pages/ReportsPage"));
 const SpeciesComparisonPage = lazy(() => import("@/pages/SpeciesComparisonPage"));
-// SALINE INTELLIGENCE ULTRA — Page immersive (STEEVE-MAX x2000)
-const SalineIntelligencePage = lazy(() => import("@/pages/SalineIntelligencePage"));
+// NUTRITION INTELLIGENCE ULTRA — Page immersive (STEEVE-MAX x2000/x4600)
+const NutritionIntelligencePage = lazy(() => import("@/pages/NutritionIntelligencePage"));
 // BIONIC MODULES — 10 modules predictifs (STEEVE-MAX x2000)
 const BionicModulesPage = lazy(() => import("@/pages/BionicModulesPage"));
 // BSAA — BIONIC Social Ads Automation (x4500-ULTRA)
@@ -232,14 +232,14 @@ const Navigation = ({ cartCount, onCartOpen }) => {
               {t('nav_shop')}
             </Link>
 
-            {/* Saline Intelligence Ultra */}
+            {/* Nutrition Intelligence Ultra (x4600) */}
             <Link 
               to="/saline" 
               className={`flex items-center gap-2 px-3 py-2 text-sm font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 ${isActive('/saline') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
-              data-testid="nav-saline"
+              data-testid="nav-nutrition"
             >
               <FlaskConical className="h-4 w-4" />
-              Saline
+              Nutrition
             </Link>
             
             {/* Business (Conditionnel) */}
@@ -357,8 +357,8 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             <Link to="/shop" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-gray-300 hover:text-white">
               <Store className="h-4 w-4" /> {t('nav_shop')}
             </Link>
-            <Link to="/saline" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="nav-saline-mobile">
-              <FlaskConical className="h-4 w-4" /> Saline Intelligence
+            <Link to="/saline" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="nav-nutrition-mobile">
+              <FlaskConical className="h-4 w-4" /> Nutrition Intelligence
             </Link>
             {isBusinessOrAdmin && (
               <Link to="/business" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#10B981]">
@@ -1049,9 +1049,9 @@ function App() {
                 <Route path="/calibration" element={<CalibrationDashboard />} />
                 <Route path="/reports" element={<ReportsPage />} />
                 <Route path="/comparaison-especes" element={<SpeciesComparisonPage />} />
-                {/* SALINE INTELLIGENCE ULTRA */}
-                <Route path="/saline" element={<SalineIntelligencePage />} />
-                <Route path="/saline-intelligence" element={<SalineIntelligencePage />} />
+                {/* NUTRITION INTELLIGENCE ULTRA (x4600) */}
+                <Route path="/saline" element={<NutritionIntelligencePage />} />
+                <Route path="/saline-intelligence" element={<NutritionIntelligencePage />} />
                 {/* BIONIC MODULES — 10 modules predictifs (STEEVE-MAX x2000) */}
                 <Route path="/bionic-modules" element={<BionicModulesPage />} />
                 <Route path="/intelligence" element={<BionicModulesPage />} />

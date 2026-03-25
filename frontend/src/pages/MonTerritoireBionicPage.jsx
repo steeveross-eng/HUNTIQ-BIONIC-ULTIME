@@ -39,7 +39,7 @@ import { useAuth } from '@/components/GlobalAuth';
 import DiagnosticExclusionsPanel from '@/components/territoire/DiagnosticExclusionsPanel';
 import BionicZoneDiagnosticPanel from '@/components/territoire/BionicZoneDiagnosticPanel';
 import AmenagementPanel from '@/components/territoire/AmenagementPanel';
-import SalineDetailPanel from '@/components/territoire/SalineDetailPanel';
+import NutritionPointDetailPanel from '@/components/territoire/NutritionPointDetailPanel';
 import StandDetailPanel from '@/components/territoire/StandDetailPanel';
 import PlacesSidePanel from '@/components/territoire/PlacesSidePanel';
 import IntelligenceDashboard from '@/components/territoire/IntelligenceDashboard';
@@ -288,7 +288,7 @@ const MonTerritoireBionicPage = () => {
     onClearAllMapData: () => {
       // x4520-H: Nettoyage TOTAL — fermer tous les panneaux, vider les données
       setSelectedStand(null);
-      setSelectedSaline(null);
+      setSelectedNutritionPoint(null);
       setShowAmenagementPanel(false);
       setHeatmapV10Data(null);
       setCorridorV10Data(null);
@@ -504,15 +504,15 @@ const MonTerritoireBionicPage = () => {
   const [pointsChaudsMode, setPointsChaudsMode] = useState(false);
   const [pointsChaudsFilter, setPointsChaudsFilter] = useState('tous');
 
-  // ALIMENTATION-V2: Salines + Recommandations
+  // ALIMENTATION-V2: Points nutritionnels + Recommandations
   const [showAlimentationV2, setShowAlimentationV2] = useState(true);
-  const [showSalines, setShowSalines] = useState(true);
+  const [showNutritionPoints, setShowNutritionPoints] = useState(true);
   const [showNutritionPanel, setShowNutritionPanel] = useState(false);
   const [showAmenagementPanel, setShowAmenagementPanel] = useState(false);
   const [selectedStand, setSelectedStand] = useState(null);
-  const [selectedSaline, setSelectedSaline] = useState(null);
+  const [selectedNutritionPoint, setSelectedNutritionPoint] = useState(null);
   const [alimentationV2Data, setAlimentationV2Data] = useState(null);
-  const [nSalinesMax, setNSalinesMax] = useState(4);
+  const [nNutritionPointsMax, setNNutritionPointsMax] = useState(4);
   const [adminArchitecteMode, setAdminArchitecteMode] = useState(false);
   const [showHeatmapV10, setShowHeatmapV10] = useState(true);
   const [heatmapV10Data, setHeatmapV10Data] = useState(null);
@@ -828,8 +828,8 @@ const MonTerritoireBionicPage = () => {
     const hydroZones = zones.filter(z => z.layerId === 'hydro');
     const nonHydroZones = zones.filter(z => z.layerId !== 'hydro');
 
-    // BCE-4X: Exclure les affûts et salines dont le centroïde tombe dans une zone hydro
-    // Un affût ne peut PAS être sur une surface d'eau
+    // BCE-4X: Exclure les affuts et points nutritionnels dont le centroide tombe dans une zone hydro
+    // Un affut ne peut PAS etre sur une surface d'eau
     if (hydroZones.length === 0) return nonHydroZones;
 
     const STRICT_EXCL_LAYERS = new Set(['affuts', 'salines', 'trajets']);
@@ -984,8 +984,8 @@ const MonTerritoireBionicPage = () => {
         heatmapV10Data={heatmapV10Data} heatmapIncludeCorridors={heatmapIncludeCorridors}
         setHeatmapIncludeCorridors={setHeatmapIncludeCorridors}
         showAlimentationV2={showAlimentationV2} setShowAlimentationV2={setShowAlimentationV2}
-        showSalines={showSalines} setShowSalines={setShowSalines}
-        nSalinesMax={nSalinesMax} setNSalinesMax={setNSalinesMax}
+        showNutritionPoints={showNutritionPoints} setShowNutritionPoints={setShowNutritionPoints}
+        nNutritionPointsMax={nNutritionPointsMax} setNNutritionPointsMax={setNNutritionPointsMax}
         showNutritionPanel={showNutritionPanel} setShowNutritionPanel={setShowNutritionPanel}
         showAmenagementPanel={showAmenagementPanel} setShowAmenagementPanel={setShowAmenagementPanel}
         alimentationV2Data={alimentationV2Data}
@@ -1129,15 +1129,15 @@ const MonTerritoireBionicPage = () => {
               corridorSubFilters={corridorSubFilters}
               pointSubFilters={pointSubFilters}
               showAlimentationV2={showAlimentationV2}
-              showSalines={showSalines}
-              nSalinesMax={nSalinesMax}
+              showNutritionPoints={showNutritionPoints}
+              nNutritionPointsMax={nNutritionPointsMax}
               onAlimentationDataLoaded={setAlimentationV2Data}
               waypointCenter={waypointCenter}
               showStands={showAlimentationV2}
               windDirection={windMode === 'arrows' ? 'NE' : 'NE'}
               windSpeed={12}
               onStandClick={setSelectedStand}
-              onSalineClick={setSelectedSaline}
+              onNutritionPointClick={setSelectedNutritionPoint}
               showHeatmapV10={showHeatmapV10}
               onHeatmapDataLoaded={setHeatmapV10Data}
               heatmapIncludeCorridors={heatmapIncludeCorridors}
@@ -1327,7 +1327,7 @@ const MonTerritoireBionicPage = () => {
         <NutritionPanel alimentationV2Data={alimentationV2Data} onClose={() => setShowNutritionPanel(false)} />
       )}
 
-      {/* ═══ PANNEAU AMENAGEMENT (Salines/Affuts) — x4520-E PinnablePanel V2 ═══ */}
+      {/* PANNEAU AMENAGEMENT (Points nutritionnels/Affuts) — x4520-E PinnablePanel V2 */}
       {showAmenagementPanel && (
         <AmenagementPanel
           report={amenagementReport}
@@ -1345,11 +1345,11 @@ const MonTerritoireBionicPage = () => {
         />
       )}
 
-      {/* ═══ PANNEAU SALINE DETAIL — x4520-H PinnablePanel V2 ═══ */}
-      {selectedSaline && (
-        <SalineDetailPanel
-          saline={selectedSaline}
-          onClose={() => setSelectedSaline(null)}
+      {/* PANNEAU POINT NUTRITIONNEL DETAIL — x4600 PinnablePanel V2 */}
+      {selectedNutritionPoint && (
+        <NutritionPointDetailPanel
+          nutritionPoint={selectedNutritionPoint}
+          onClose={() => setSelectedNutritionPoint(null)}
         />
       )}
       

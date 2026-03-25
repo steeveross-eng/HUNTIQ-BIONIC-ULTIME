@@ -681,7 +681,7 @@ const CamerasModule = ({ loading }) => {
   if (loading) return <ModuleLoader />;
 
   const demoCameras = [
-    { id: "cam-001", name: "Saline Nord", model: "Reconyx HP2X", direction: "Sud", events: 47, last: "2026-03-24 06:32", status: "active", species_detected: ["Orignal", "Cerf de Virginie", "Ours noir"] },
+    { id: "cam-001", name: "Point nutritionnel Nord", model: "Reconyx HP2X", direction: "Sud", events: 47, last: "2026-03-24 06:32", status: "active", species_detected: ["Orignal", "Cerf de Virginie", "Ours noir"] },
     { id: "cam-002", name: "Corridor Est", model: "Browning Strike Force", direction: "Ouest", events: 23, last: "2026-03-23 18:15", status: "active", species_detected: ["Cerf de Virginie", "Dindon sauvage"] },
     { id: "cam-003", name: "Point d'eau", model: "Spypoint Link-Micro", direction: "Nord", events: 12, last: "2026-03-22 05:48", status: "offline", species_detected: ["Orignal", "Wapiti"] },
     { id: "cam-004", name: "Lisiere Sud", model: "Reconyx HP2X", direction: "Est", events: 31, last: "2026-03-24 17:45", status: "active", species_detected: ["Cerf de Virginie", "Caribou", "Cerf mulet"] },
@@ -741,7 +741,7 @@ const PlannerModule = ({ data, loading }) => {
   const demoTrips = [
     { id: 1, date: "2026-03-22", zone: "Zone Nord", duration: "4h30", observations: 3, species: "orignal", score: 78 },
     { id: 2, date: "2026-03-20", zone: "Corridor Est", duration: "3h15", observations: 1, species: "chevreuil", score: 62 },
-    { id: 3, date: "2026-03-18", zone: "Saline Sud", duration: "5h00", observations: 5, species: "orignal", score: 91 },
+    { id: 3, date: "2026-03-18", zone: "Point nutritionnel Sud", duration: "5h00", observations: 5, species: "orignal", score: 91 },
   ];
 
   return (
@@ -890,7 +890,7 @@ const AlertsModule = ({ loading }) => {
   if (loading) return <ModuleLoader />;
 
   const demoAlerts = [
-    { id: 1, type: "camera", title: "Detection Camera Saline Nord", message: "Orignal detecte a 06:32", time: "Il y a 2h", priority: "high", read: false },
+    { id: 1, type: "camera", title: "Detection Camera Pt Nutritionnel Nord", message: "Orignal detecte a 06:32", time: "Il y a 2h", priority: "high", read: false },
     { id: 2, type: "weather", title: "Conditions optimales demain", message: "Pression en hausse + temp. 8C — creneau ideal 06:00-08:00", time: "Il y a 5h", priority: "medium", read: false },
     { id: 3, type: "prediction", title: "Pic d'activite prevu", message: "Periode solunaire majeure 17:30-19:30", time: "Il y a 8h", priority: "medium", read: true },
     { id: 4, type: "territory", title: "Score territoire en hausse", message: "Zone Nord: score passe de 62 a 78", time: "Hier", priority: "low", read: true },

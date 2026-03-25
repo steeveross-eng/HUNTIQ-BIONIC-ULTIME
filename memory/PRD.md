@@ -23,15 +23,38 @@
 | x4520-G | RESET_PLAYWRIGHT + PROOF | COMMITE |
 | x4520-H | PANNEAUX_PLEINE_PAGE + WAYPOINT_DELETE_FIX | COMMITE |
 | x4520-H2 | REFRESH_OR_REBUILD_PREVIEW | COMMITE |
-| **x4520-H4** | **WIND_FLOW_CRASH_FIX** | **COMMITE — EN ATTENTE VALIDATION** |
+| x4520-H4 | WIND_FLOW_CRASH_FIX | COMMITE |
+| **x4600-R2** | **NUTRITION_RENAME — Renommage complet 100%** | **COMPLETE — EN ATTENTE VALIDATION** |
 
 ## Score: 57.6 (22 moteurs, Option C)
 
-## x4520-H4 — WIND_FLOW_CRASH_FIX (25 mars 2026)
-- Cause: animateParticles/drawArrowsMode → containerPointToLatLng → NaN pendant transition panneau
-- Fix: Guards NaN + try/catch + bounds degenerees + stopPropagation PinnablePanel
-- Playwright: 0 console errors, 0 NaN, carte stable
+## x4600-NUTRITION_RENAME-R2 (Fevrier 2026)
+
+### Objectif
+Remplacer toute la terminologie "Salines" par "Points nutritionnels" dans le frontend.
+
+### Fichiers modifies (18 fichiers)
+- NutritionPointsLayer.jsx (reecriture complete)
+- NutritionPointDetailPanel.jsx (reecriture complete)
+- AmenagementPanel.jsx (reecriture complete)
+- MapContent.jsx (imports + props)
+- MonTerritoireBionicPage.jsx (imports + state + callbacks)
+- TerritoireToolbar.jsx (props + textes UI)
+- NutritionPanel.jsx (textes UI)
+- App.js (navigation + import)
+- NutritionIntelligencePage.jsx (export + titre)
+- LanguageContext.jsx (FR + EN)
+- placeTypes.js, bionicModules.js, bionicDataAdapter.js
+- BionicZoneService.js, bionic-colors.js
+- CarteBionic.jsx, BionicModulesPage.jsx, PromptManager.jsx
+
+### Validation
+- Compilation: ZERO erreur
+- ZERO occurrence "Saline" visible dans l'UI
+- Rapport: audit/rapport_x4600-NUTRITION_RENAME-R2.md
+- Branche: Work1
 
 ## Prochaines etapes
-- Validation STEEVE-MAX sur x4520-H4
-- Attente directive suivante
+- Validation STEEVE-MAX sur x4600-R2
+- BSAA-2: Implementation module BIONIC Social Ads Automation (en attente directive)
+- Merge Work1 vers main (strictement sous controle STEEVE-MAX)

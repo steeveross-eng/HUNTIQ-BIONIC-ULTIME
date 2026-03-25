@@ -11,7 +11,7 @@ export const PLACE_TYPES = [
   { id: 'prive', nameKey: 'place_private', name: 'Territoire privé', Icon: Lock, color: BIONIC_COLORS?.gold?.primary || '#f5a623' },
   { id: 'sepaq', nameKey: 'place_sepaq', name: 'Réserve faunique (Sépaq)', Icon: CircleDot, color: BIONIC_COLORS?.purple?.primary || '#8b5cf6' },
   { id: 'affut', nameKey: 'place_affut', name: 'Affût / Cache', Icon: Target, color: BIONIC_COLORS?.red?.primary || '#ef4444' },
-  { id: 'saline', nameKey: 'place_saline', name: 'Saline', Icon: Droplet, color: BIONIC_COLORS?.cyan?.primary || '#06b6d4' },
+  { id: 'saline', nameKey: 'place_saline', name: 'Point nutritionnel', Icon: Droplet, color: BIONIC_COLORS?.cyan?.primary || '#06b6d4' },
   { id: 'observation', nameKey: 'place_observation', name: 'Point d\'observation', Icon: Eye, color: '#ec4899' },
   { id: 'stationnement', nameKey: 'place_parking', name: 'Stationnement', Icon: ParkingCircle, color: BIONIC_COLORS?.gray?.[500] || '#6b7280' },
   { id: 'camp', nameKey: 'place_camp', name: 'Camp de chasse', Icon: Tent, color: '#84cc16' },

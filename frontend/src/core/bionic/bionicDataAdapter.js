@@ -199,7 +199,7 @@ const adaptSalinesLayer = (data) => ({
   ...data,
   color: NORM_COLORS.salines,
   opacity: 0.5,
-  label: `Saline: ${data.score}%`
+  label: `Pt nutritionnel: ${data.score}%`
 });
 
 const adaptAffutsLayer = (data) => ({
