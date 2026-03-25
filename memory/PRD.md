@@ -12,32 +12,30 @@
 | x4500-ULTRA | Reconstruction PREVIEW + BSAA | CERTIFIE |
 | x4515-FIX | PinnablePanel V2 — 8 panneaux conformes | CERTIFIE |
 | x4515-FIX-CRITICAL | Rayon 600m Haversine + AmenagementPanel | COMMITE |
-| **x4520-UNIFICATION** | **Dashboard unifie V6-CORE — 22 moteurs** | **EN ATTENTE VALIDATION** |
+| x4520-UNIFICATION | Dashboard unifie V6-CORE — 22 moteurs | COMMITE |
+| **x4520-A** | **AUDIT_CORE_BIONIC — 10000% modulaire** | **EN ATTENTE VALIDATION** |
 
 ## Score: 57.6 (22 moteurs, Option C)
 
-## x4520-UNIFICATION_DASHBOARD (25 mars 2026)
+## x4520-A AUDIT_CORE_BIONIC (25 mars 2026)
 
-### Backend
-- 5 endpoints migres vers compute_consolidated_score() (22 moteurs)
+### Backend — Pipeline unique
+- 10/10 endpoints API Gateway migres vers compute_consolidated_score()
 - V6_ENGINE_META: 22 moteurs, 7 domaines, 4 tiers
-- ZERO reference V1/V2/V10 sur summary, forecast, plan, guide-pro, scientifique
+- ZERO reference V1/V2/V10 dans les reponses API
+- Aucun fallback legacy, aucune configuration parallele
 
-### Frontend
-- Dashboard unifie: INTELLIGENCE + GUIDE PRO + SCIENTIFIQUE + TERRAIN → cockpit unique
-- 8 sections: Score, Domaines(7), Alertes, Luna/SolCal, Guide Pro, Forecast, Plan, Donnees
-- Glass-morphism, palette terrain premium, badge "22 MOTEURS"
+### Frontend — ZERO relique visible
+- 12 corrections texte (NutritionPanel, CorridorsEcology, BionicLegend, Toolbar, MapPage)
+- Dashboard unifie (INTELLIGENCE+GUIDE_PRO+SCIENTIFIQUE+TERRAIN)
+- Badge "22 MOTEURS" dans header
 
-## Architecture
-- Branche: STEEVE-MAX-x3200-V6-CORE
-- Frontend: React (Craco/Webpack)
-- Backend: FastAPI + pipeline 22 moteurs (core/scoring_pipeline/score_consolide.py)
-- Dashboard: IntelligenceDashboard.jsx (unifie, ~250 lignes)
-- Zones: BionicCorridorsV10Layer.jsx (Haversine 600m strict)
-- API: V6_ENGINE_META mapping (api_gateway/router.py)
+### Confirmations
+- "Aucune relique V1/V2/V10 active dans BIONIC."
+- "BIONIC est 10000% modulaire, pipeline unique, aucun fallback."
 
 ## Prochaines etapes
-- Validation STEEVE-MAX sur x4520-UNIFICATION_DASHBOARD
+- Validation STEEVE-MAX sur x4520-A
 - Attente directive suivante
 - BSAA-2 (implementation) — apres validation
 - Merge vers main — gere par STEEVE-MAX uniquement

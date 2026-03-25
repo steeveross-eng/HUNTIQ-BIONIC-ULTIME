@@ -1157,7 +1157,7 @@ const MonTerritoireBionicPage = () => {
               <div className="flex items-center gap-1.5 px-2 py-1 bg-[#0c0c14]/85 border border-gray-700/40 rounded backdrop-blur-sm">
                 <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 via-yellow-500 to-red-500 flex-shrink-0" />
                 <span className="text-[8px] text-gray-400 font-medium">
-                  Score V10{!heatmapIncludeCorridors && ' (sans corridors)'}
+                  Score{!heatmapIncludeCorridors && ' (sans corridors)'}
                 </span>
                 <span className="text-[8px] text-gray-500">{heatmapV10Data.score_avg}/100</span>
               </div>

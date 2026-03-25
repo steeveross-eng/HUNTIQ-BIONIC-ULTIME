@@ -24,7 +24,7 @@ const ZONE_ITEMS = [
   { id: 'habitat',      label: 'Habitat optimal',     color: '#2E7D32', tooltip: 'Zone de couvert et refuge principal' },
   { id: 'rut',          label: 'Zone de rut',          color: '#FF5722', tooltip: 'Zone de reproduction saisonniere' },
   { id: 'repos',        label: 'Zone de repos',        color: '#1976D2', tooltip: 'Zone de repos thermique et securitaire' },
-  { id: 'alimentation', label: 'Alimentation',         color: '#F9A825', tooltip: 'Zone de nourriture (ALIMENTATION-V1)' },
+  { id: 'alimentation', label: 'Alimentation',         color: '#F9A825', tooltip: 'Zone de nourriture' },
   { id: 'humides',      label: 'Zones humides',        color: '#00ACC1', tooltip: 'Milieux humides, marecages, tourbières' },
   { id: 'foret',        label: 'Forets matures',       color: '#1B5E20', tooltip: 'Forets matures, mosaiques, regeneration' },
 ];
@@ -162,7 +162,7 @@ export default function BionicLegend({
           {/* ═══ BLOC B: CORRIDORS NORMATIFS ═══ */}
           <LegendBlock
             id="corridors"
-            title="Corridors V10"
+            title="Corridors"
             icon={<Navigation className="w-3 h-3" />}
             color="text-red-400"
             expanded={expandedBlocks.corridors}
@@ -219,7 +219,7 @@ export default function BionicLegend({
           {/* Footer: norme */}
           <div className="px-3 py-1.5 border-t border-gray-800/40 flex items-center justify-between">
             <span className="text-[8px] text-gray-600 tracking-wide">BCE-4X + Steeve-MAX</span>
-            <span className="text-[8px] text-gray-600">V10</span>
+            <span className="text-[8px] text-gray-600">CORE</span>
           </div>
         </div>
       )}

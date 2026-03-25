@@ -11,7 +11,7 @@ export function NutritionPanel({ alimentationV2Data, onClose }) {
   return (
     <div className="fixed right-4 top-24 z-[1001]" style={{ width: 380 }}>
       <PinnablePanel
-        title="Alimentation V2"
+        title="Nutrition Avancee"
         subtitle={`${alimentationV2Data.species_nom || ''} — Score: ${alimentationV2Data.score_global || 0}/100`}
         icon={Droplets}
         accentColor="#f5a623"

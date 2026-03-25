@@ -69,19 +69,46 @@ V6_DOMAIN_LABELS = {
 
 @router.get("/engines/registry")
 async def get_engine_registry():
-    """Manifest dynamique des moteurs — consommable par INTELLIGENCE."""
-    return _registry.manifest()
+    """Manifest V6-CORE — 22 moteurs, noms propres, ZERO relique V1/V2/V10."""
+    engines_list = []
+    for key, meta in V6_ENGINE_META.items():
+        engines_list.append({
+            "key": key,
+            "name": meta["label"],
+            "domain": meta["domain"],
+            "tier": meta["tier"],
+            "description": meta["description"],
+        })
+    return {
+        "version": "V6-CORE",
+        "engines_count": len(engines_list),
+        "option": "C — CORE 60% / Nouveaux 40%",
+        "engines": engines_list,
+        "domains": V6_DOMAIN_LABELS,
+    }
 
 
 @router.get("/engines/score-point")
 async def score_point(
     lat: float = Query(...), lng: float = Query(...),
     species: str = Query("CHEVREUIL"), month: int = Query(10, ge=1, le=12),
-    exclude: str = Query("", description="Moteurs à exclure (séparés par virgule)"),
 ):
-    """Score consolidé dynamique via le registry."""
-    excluded = [e.strip() for e in exclude.split(",") if e.strip()]
-    return _consolidator.score_point(lat, lng, species, month, exclude_engines=excluded)
+    """Score consolide V6-CORE — pipeline 22 moteurs direct."""
+    sp = resolve_species(species)
+    result = compute_consolidated_score(lat, lng, sp, month)
+    components_labeled = {}
+    for k, v in result["components"].items():
+        meta = V6_ENGINE_META.get(k, {"label": k})
+        components_labeled[meta["label"]] = round(v, 1)
+    return {
+        "score": result["score"],
+        "classe": result["classe"],
+        "label": result["label"],
+        "engines_count": 22,
+        "components": components_labeled,
+        "weights": result["weights"],
+        "option": "C — CORE 60% / Nouveaux 40%",
+    }
 
 
 @router.get("/engines/score-grid")
@@ -89,11 +116,28 @@ async def score_grid(
     lat: float = Query(...), lng: float = Query(...),
     species: str = Query("CHEVREUIL"), month: int = Query(10, ge=1, le=12),
     grid_size: int = Query(20, ge=5, le=40),
-    exclude: str = Query("", description="Moteurs à exclure"),
 ):
-    """Grille de scores consolidée dynamique via le registry."""
-    excluded = [e.strip() for e in exclude.split(",") if e.strip()]
-    return _consolidator.score_grid(lat, lng, species, month, grid_size, exclude_engines=excluded)
+    """Grille de scores V6-CORE — pipeline 22 moteurs."""
+    sp = resolve_species(species)
+    step = 0.002
+    half = grid_size // 2
+    grid = []
+    for dy in range(-half, half + 1, 2):
+        for dx in range(-half, half + 1, 2):
+            pt_lat = lat + dy * step
+            pt_lng = lng + dx * step
+            result = compute_consolidated_score(pt_lat, pt_lng, sp, month)
+            grid.append({
+                "lat": round(pt_lat, 6), "lng": round(pt_lng, 6),
+                "score": result["score"], "classe": result["classe"],
+            })
+    return {
+        "type": "score_grid",
+        "center": {"lat": lat, "lng": lng},
+        "grid_size": grid_size,
+        "points": grid,
+        "engines_count": 22,
+    }
 
 
 @router.get("/engines/{engine_name}/score")
@@ -102,17 +146,22 @@ async def engine_individual_score(
     lat: float = Query(...), lng: float = Query(...),
     species: str = Query("CHEVREUIL"), month: int = Query(10, ge=1, le=12),
 ):
-    """Score d'un moteur individuel par nom."""
-    engine = _registry.get(engine_name)
-    if not engine:
-        return {"error": f"Moteur '{engine_name}' introuvable", "available": _registry.list_engines()}
+    """Score moteur individuel V6-CORE — par cle pipeline."""
     sp = resolve_species(species)
-    result = engine.score_point(lat, lng, sp, month)
-    meta = engine.meta()
+    result = compute_consolidated_score(lat, lng, sp, month)
+    components = result["components"]
+    if engine_name not in components:
+        return {"error": f"Moteur '{engine_name}' introuvable", "available": list(V6_ENGINE_META.keys())}
+    meta = V6_ENGINE_META.get(engine_name, {"label": engine_name, "domain": "autre", "tier": "UNKNOWN"})
     return {
-        "engine": meta.name, "version": meta.version, "domain": meta.domain,
+        "engine": meta["label"],
+        "key": engine_name,
+        "domain": meta["domain"],
+        "tier": meta["tier"],
         "species": sp, "month": month, "lat": lat, "lng": lng,
-        **result.to_dict(),
+        "score": round(components[engine_name], 1),
+        "weight": result["weights"].get(engine_name, 0),
+        "consolidated_score": result["score"],
     }
 
 

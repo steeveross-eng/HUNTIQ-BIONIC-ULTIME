@@ -251,7 +251,7 @@ export function TerritoireToolbar({
           <PopoverContent align="end" sideOffset={8} className="w-72 bg-gray-950/95 backdrop-blur-md border-gray-700/60 p-3 shadow-xl shadow-black/40">
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Alimentation V2</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Alimentation</span>
                 <Switch checked={showAlimentationV2} onCheckedChange={setShowAlimentationV2} className="scale-[0.6] data-[state=checked]:bg-yellow-500" data-testid="toggle-alimentation-v2-master" />
               </div>
               <div className="space-y-1.5 pt-1 border-t border-gray-700/40">
