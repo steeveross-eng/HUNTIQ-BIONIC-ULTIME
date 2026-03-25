@@ -1,25 +1,9 @@
 """
 CORRIDORS-V10 — Validation BCE-4X et Steeve-MAX
 ===================================================
-Valide l'integralite des resultats produits par le moteur.
-
-BCE-4X:
-  GEOM-001: Aucun corridor hors grille
-  GEOM-002: Pas de self-intersection
-  GEOM-003: Clipping propre et continu
-  HYDRO-001: Eau = barriere (aucune traversee)
-  TOPO-001: Pente <= pente_max_deg respectee
-  CONT-001: Continuite spatiale obligatoire (zero dead-end)
-  COMP-001: Style deplacement respecte
-
-Steeve-MAX:
-  SM-001: Coherence espece -> habitat -> comportement
-  SM-002: Coherence saisonniere
-  SM-003: 12 parametres integralement utilises
-  SM-004: Tracabilite complete
-  SM-005: Documentation complete
+x3205: Constante INFINITY_COST importee depuis common/
 """
-from .cost_surface import INFINITY_COST
+from core.scoring_pipeline.common.constants import INFINITY_COST
 
 
 def validate_bce4x(

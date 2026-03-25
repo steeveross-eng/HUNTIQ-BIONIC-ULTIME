@@ -1,17 +1,11 @@
 """
 CORRIDORS-V10 — Algorithme A* sur grille de couts
 =====================================================
-Pathfinding a moindre cout entre deux cellules de la grille.
-Supporte 8 directions (diagonales incluses).
-Barriere = cout >= INFINITY_COST.
-Garantit un chemin optimal si existant.
-BCE-4X: Aucun corridor hors grille. Pas de self-intersection.
+x3205: Constantes importees depuis common/constants.py
 """
 import heapq
-import math
 
-INFINITY_COST = 999999.0
-SQRT2 = math.sqrt(2)
+from core.scoring_pipeline.common.constants import INFINITY_COST, SQRT2, STYLE_MULTIPLIERS
 
 # 8 directions: N, NE, E, SE, S, SW, W, NW
 DIRECTIONS = [
@@ -67,14 +61,8 @@ def astar(
         return {"path": [], "cost": 0, "found": False, "visited": 0, "reason": "ARRIVEE_BARRIERE"}
 
     # Multiplicateur style de deplacement
-    style_mults = {
-        "lineaire": {"diag": 1.2, "straight": 0.9},     # Prefere lignes droites
-        "sinueux": {"diag": 0.95, "straight": 1.0},      # Prefere diagonales/courbes
-        "opportuniste": {"diag": 1.0, "straight": 1.0},  # Neutre
-        "migratoire": {"diag": 1.1, "straight": 0.85},   # Forte preference droite
-        "territorial": {"diag": 1.0, "straight": 1.05},  # Legere preference courbe
-    }
-    sm = style_mults.get(style, style_mults["opportuniste"])
+    # x3205: Importe depuis common/constants.py
+    sm = STYLE_MULTIPLIERS.get(style, STYLE_MULTIPLIERS["opportuniste"])
 
     # Priority queue: (f_cost, counter, row, col)
     counter = 0

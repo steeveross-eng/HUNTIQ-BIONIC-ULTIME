@@ -1,17 +1,12 @@
 """
 CORRIDORS-V10 — Generation de la surface de couts
 =====================================================
-Produit une grille NxN ou chaque cellule a un cout de traversee [0, INF).
-Cout = f(pente, hydrographie, pression humaine, couvert forestier, structure).
-Eau = barriere (cout infini) sauf exceptions documentees.
-Pente > max = barriere.
-Normes BCE-4X: Validation topographique + hydrographique stricte.
+x3205: Constantes importees depuis common/constants.py
 """
 import math
 import hashlib
 
-INFINITY_COST = 999999.0
-METERS_PER_DEG_LAT = 111320.0
+from core.scoring_pipeline.common.constants import INFINITY_COST, METERS_PER_DEG_LAT, MIN_TRAVERSAL_COST
 
 
 def _deterministic_hash(lat: float, lng: float, seed: str = "") -> float:
@@ -241,7 +236,7 @@ def generate_cost_grid(
             cost = cost / max(mobilite, 0.1)
 
             # Cout minimum = 0.5 (jamais zero pour eviter A* gratuit)
-            cost = max(0.5, cost)
+            cost = max(MIN_TRAVERSAL_COST, cost)
 
             data["barrier"] = None
             cost_row.append(round(cost, 3))

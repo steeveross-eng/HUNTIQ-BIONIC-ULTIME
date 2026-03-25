@@ -82,3 +82,21 @@ class PressionV1Engine(BionicEngine):
             score_min=round(min(scores), 1) if scores else 0,
             score_max=round(max(scores), 1) if scores else 0,
         )
+
+
+# ═══════════════════════════════════════════════════════════════
+# x3300: Fonction de scoring consolidé depuis layers pre-calculees
+# Relocalisee depuis modules/score_consolide.py (ex inline)
+# BCE-4X: Code IDENTIQUE, ZERO changement fonctionnel
+# ═══════════════════════════════════════════════════════════════
+
+def score_from_layers(layers: dict) -> float:
+    """
+    Score pression depuis les couches pre-chargees (layers).
+    Utilise par score_consolide pour eviter un double appel a load_layers.
+    Logique identique a _compute_pression mais accepte layers en entree.
+    """
+    pert = layers.get("perturbations", {})
+    dist_route = pert.get("distance_route_m", 200)
+    dist_bat = pert.get("distance_batiment_m", 300)
+    return min(100.0, (dist_route / 8.0) + (dist_bat / 10.0))

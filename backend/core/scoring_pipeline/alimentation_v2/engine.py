@@ -129,3 +129,28 @@ def analyze_alimentation_v2(
     }
 
     return result
+
+
+# ═══════════════════════════════════════════════════════════════
+# x3300: Fonction de scoring consolidé par point
+# Logique relocalisée depuis modules/score_consolide.py (ex-PROXY)
+# BCE-4X: Code IDENTIQUE, ZERO changement fonctionnel
+# Hash: variante C (5 decimales) — preservee pour compatibilite
+# ═══════════════════════════════════════════════════════════════
+
+from core.scoring_pipeline.common.hash import deterministic_hash_c as _seed_c
+
+
+def score_point_consolidated(lat, lng, center_lat, center_lng, species, month):
+    """
+    Score alimentaire V2 pour un point unique (scoring consolide).
+    Logique d'origine: modules/score_consolide._alimentation_v2_score_for_point()
+    Relocalisee dans le moteur CORE conformement a x3300.
+    """
+    if species.upper() in ("OURS", "DINDON"):
+        return 30.0
+
+    eau = _seed_c(lat, lng, "alim_eau") * 0.6 + 0.3
+    couvert = _seed_c(lat, lng, "alim_couvert")
+    nutriments = _seed_c(lat, lng, f"alim_nut_{species}")
+    return max(0, min(100, eau * 30 + couvert * 35 + nutriments * 35))

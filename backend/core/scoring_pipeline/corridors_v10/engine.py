@@ -56,7 +56,7 @@ def _simplify_coords(coords, tolerance=0.00003):
 # ============================================================
 # Zone Polygon Generation — BCE-4X / Steeve-MAX
 # ============================================================
-METERS_PER_DEG_LAT = 111320.0
+METERS_PER_DEG_LAT = 111320.0  # x3205: Preserve local pour compatibilite engine.py
 
 
 def _meters_per_deg_lng(lat):
@@ -765,3 +765,49 @@ def analyze_multi_species(
         "statistics": stats,
         "palette_normative": CORRIDOR_LEVELS,
     }
+
+
+# ═══════════════════════════════════════════════════════════════
+# x3300: Fonction de scoring consolidé par point
+# Logique relocalisée depuis modules/score_consolide.py (ex-PROXY)
+# BCE-4X: Code IDENTIQUE, ZERO changement fonctionnel
+# Hash: variante C (5 decimales) — preservee pour compatibilite
+# ═══════════════════════════════════════════════════════════════
+
+from core.scoring_pipeline.common.hash import deterministic_hash_c as _seed_c
+
+
+def score_point_consolidated(lat, lng, center_lat, center_lng, species, month, side_m=2000.0):
+    """
+    Score corridor V10 pour un point unique (scoring consolide).
+    Logique d'origine: modules/score_consolide._corridor_score_for_point()
+    Relocalisee dans le moteur CORE conformement a x3300.
+    """
+    half = side_m / 2
+    dx = (lng - center_lng) * 111320 * math.cos(math.radians(center_lat))
+    dy = (lat - center_lat) * 111320
+    dist_center = math.sqrt(dx**2 + dy**2)
+
+    if abs(dx) > half or abs(dy) > half:
+        return 0.0
+
+    canopy = 0.3 + 0.5 * _seed_c(lat, lng, "canopy")
+    water_prox = _seed_c(lat, lng, "water") * 0.8
+    route_dist = 100 + 400 * _seed_c(lat, lng, "route")
+
+    angle = math.atan2(dy, dx) if dist_center > 0 else 0
+    diag_affinity = max(
+        math.cos(2 * (angle - math.radians(45))),
+        math.cos(2 * (angle - math.radians(135)))
+    )
+    corridor_strength = max(0, (diag_affinity + 1) / 2)
+
+    radial = min(1.0, dist_center / half) if half > 0 else 0
+    transit_factor = 0.3 + 0.7 * radial
+
+    connectivity = corridor_strength * 0.35 + transit_factor * 0.25
+    terrain_quality = canopy * 0.5 + water_prox * 0.3 + min(1.0, route_dist / 500) * 0.2
+    ecological = _seed_c(lat, lng, f"eco_{species}_{month}") * 0.3 + 0.7
+
+    score = (connectivity * 40 + terrain_quality * 35 + ecological * 25)
+    return max(0, min(100, score))

@@ -1379,7 +1379,7 @@ export default function BionicModulesPage() {
       {/* MASTER SWITCH STATUS */}
       <div style={{ textAlign: "center", padding: "20px 0 40px", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
         <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", letterSpacing: 2, textTransform: "uppercase" }}>
-          Master Switch: LOCKED | STEEVE-MAX x2290 | Affuts Pro + Vent Renforce | Branche Work1
+          Master Switch: LOCKED | STEEVE-MAX x4500-ULTRA | Branche V6-CORE
         </div>
       </div>
     </div>

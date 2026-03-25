@@ -1,0 +1,180 @@
+"""
+CORE Scoring Pipeline — Constantes partagees
+===============================================
+Directive x3205. Extraites des 5 moteurs CORE + score_consolide.
+Chaque constante est documentee: origine, justification, unite.
+BCE-4X: Aucune valeur modifiee. Extraction pure.
+
+ORIGINE DES CONSTANTES:
+  - alimentation_v1/layers.py
+  - alimentation_v2/terrain.py, salines.py
+  - repos_v1/grid_generator.py
+  - corridors_v10/cost_surface.py, engine.py, pathfinder.py
+  - pression_v1/engine.py
+  - modules/score_consolide.py
+"""
+import math
+
+# ══════════════════════════════════════════════════════════════════
+# GEODESIE
+# ══════════════════════════════════════════════════════════════════
+
+# Metres par degre de latitude (approximation spherique)
+# Origine: Standard geodesique. Utilise dans 4 fichiers.
+# Unite: m/deg
+METERS_PER_DEG_LAT = 111320.0
+
+
+def meters_per_deg_lng(lat: float) -> float:
+    """Metres par degre de longitude a une latitude donnee.
+    Origine: corridors_v10/cost_surface.py, repos_v1/grid_generator.py
+    Unite: m/deg"""
+    return 111320.0 * math.cos(math.radians(lat))
+
+
+# ══════════════════════════════════════════════════════════════════
+# BARRIERES (corridors_v10)
+# ══════════════════════════════════════════════════════════════════
+
+# Cout infini pour les barrieres absolues (eau, pente extreme)
+# Origine: corridors_v10/cost_surface.py, pathfinder.py
+# Unite: sans dimension
+INFINITY_COST = 999999.0
+
+# ══════════════════════════════════════════════════════════════════
+# GRILLE
+# ══════════════════════════════════════════════════════════════════
+
+# Taille par defaut du carre d'analyse
+# Origine: Tous les moteurs (parametre side_m)
+# Unite: metres
+DEFAULT_SIDE_M = 2000.0
+
+# Taille cellule par defaut pour alimentation_v1 et repos_v1
+# Origine: alimentation_v1/engine.py, repos_v1/engine.py
+# Unite: metres
+DEFAULT_CELL_M_FINE = 10.0
+
+# Taille cellule par defaut pour corridors_v10
+# Origine: corridors_v10/engine.py
+# Unite: metres
+DEFAULT_CELL_M_CORRIDOR = 25.0
+
+# Pas d'echantillonnage par defaut
+# Origine: alimentation_v1/engine.py, repos_v1/engine.py
+# Unite: sans dimension (1 cellule sur N)
+DEFAULT_SAMPLE_STEP = 5
+
+# ══════════════════════════════════════════════════════════════════
+# PONDERATIONS SCORE CONSOLIDE
+# ══════════════════════════════════════════════════════════════════
+
+# Poids de chaque moteur dans le score consolide
+# Origine: score_consolide.py
+# x4100: Option C — CORE 60%, Nouveaux 40% (directive STEEVE-MAX)
+# Somme = 1.0000
+ENGINE_WEIGHTS = {
+    # ── CORE (60%) ──
+    "alimentation": 0.1503,
+    "repos": 0.12,
+    "corridors_v10": 0.15,
+    "alimentation_v2": 0.06,
+    "pression": 0.12,
+    # ── CORE++ (17.14%) ──
+    "hydro": 0.0348,
+    "thermal": 0.0261,
+    "ndvi_vegetation": 0.0304,
+    "weather": 0.0217,
+    "temporal": 0.0217,
+    "habitat": 0.0348,
+    "ecosystem": 0.0217,
+    # ── CORE+++ (11.73%) ──
+    "behavior": 0.0217,
+    "risk": 0.0261,
+    "opportunity": 0.0261,
+    "attractors": 0.0304,
+    "scenario": 0.013,
+    # ── BIONIC-OS (9.12%) ──
+    "simulation": 0.013,
+    "multi_species": 0.0174,
+    "trajets": 0.0261,
+    "visibility": 0.0217,
+    "learning": 0.013,
+}
+
+# ══════════════════════════════════════════════════════════════════
+# SALINES (alimentation_v2)
+# ══════════════════════════════════════════════════════════════════
+
+# Nombre maximum de salines par analyse
+# Origine: alimentation_v2/engine.py
+# Unite: sans dimension
+MAX_SALINES = 4
+
+# Distance minimale entre salines (diversification spatiale)
+# Origine: alimentation_v2/engine.py (directive STEEVE-MAX)
+# Unite: metres
+MIN_SALINE_DISTANCE_M = 300.0
+
+# Nombre de candidats generes pour la selection de salines
+# Origine: alimentation_v2/salines.py
+# Unite: sans dimension
+SALINE_CANDIDATES_COUNT = 16
+
+# Especes sans salines (directive biologique STEEVE-MAX)
+# Origine: alimentation_v2/engine.py
+SPECIES_NO_SALINES = {"OURS", "DINDON"}
+
+# ══════════════════════════════════════════════════════════════════
+# SEUILS DE CARENCES (alimentation_v2)
+# ══════════════════════════════════════════════════════════════════
+
+# Seuils de detection des carences en nutriments du sol
+# Origine: alimentation_v2/engine.py
+# Unite: ppm (parties par million)
+CARENCE_THRESHOLDS = {
+    "selenium_ppm": (0.2, "Selenium"),
+    "cuivre_ppm": (3, "Cuivre"),
+    "calcium_ppm": (500, "Calcium"),
+    "phosphore_ppm": (10, "Phosphore"),
+    "zinc_ppm": (5, "Zinc"),
+}
+
+# ══════════════════════════════════════════════════════════════════
+# NDVI SAISONNIER
+# ══════════════════════════════════════════════════════════════════
+
+# Multiplicateur NDVI par mois (normalisation vegetale saisonniere)
+# Origine: alimentation_v1/layers.py, corridors_v10/cost_surface.py
+# Unite: sans dimension [0, 1]
+NDVI_SEASONAL_MULTIPLIERS = {
+    1: 0.10, 2: 0.12, 3: 0.35, 4: 0.55, 5: 0.75, 6: 0.90,
+    7: 1.00, 8: 0.95, 9: 0.80, 10: 0.60, 11: 0.30, 12: 0.15,
+}
+
+# ══════════════════════════════════════════════════════════════════
+# HEURISTIQUE A* (corridors_v10)
+# ══════════════════════════════════════════════════════════════════
+
+# Racine de 2 pour les deplacements diagonaux
+# Origine: corridors_v10/pathfinder.py
+SQRT2 = math.sqrt(2)
+
+# Multiplicateurs de style de deplacement
+# Origine: corridors_v10/pathfinder.py
+STYLE_MULTIPLIERS = {
+    "lineaire": {"diag": 1.2, "straight": 0.9},
+    "sinueux": {"diag": 0.95, "straight": 1.0},
+    "opportuniste": {"diag": 1.0, "straight": 1.0},
+    "migratoire": {"diag": 1.1, "straight": 0.85},
+    "territorial": {"diag": 1.0, "straight": 1.05},
+}
+
+# ══════════════════════════════════════════════════════════════════
+# COUT MINIMUM (corridors_v10)
+# ══════════════════════════════════════════════════════════════════
+
+# Cout minimum de traversee d'une cellule (jamais zero pour A*)
+# Origine: corridors_v10/cost_surface.py
+# Unite: sans dimension
+MIN_TRAVERSAL_COST = 0.5

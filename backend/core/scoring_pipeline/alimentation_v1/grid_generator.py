@@ -3,14 +3,9 @@ ALIMENTATION-V1 — Générateur de grille 10m×10m
 ================================================
 Génère une grille de cellules 10m×10m à l'intérieur du carré 2km² existant.
 NE RECRÉE PAS le périmètre — utilise lat/lng + rayon existant.
+x3205: Constantes importees depuis common/constants.py
 """
-import math
-
-METERS_PER_DEG_LAT = 111320.0
-
-
-def meters_per_deg_lng(lat: float) -> float:
-    return 111320.0 * math.cos(math.radians(lat))
+from core.scoring_pipeline.common.constants import METERS_PER_DEG_LAT, meters_per_deg_lng
 
 
 def generate_grid_10m(center_lat: float, center_lng: float, side_m: float = 2000.0, cell_m: float = 10.0):

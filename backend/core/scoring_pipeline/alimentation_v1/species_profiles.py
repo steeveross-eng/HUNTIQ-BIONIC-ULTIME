@@ -207,16 +207,9 @@ ALIM_PROFILES = {
 
 SPECIES_LIST = list(ALIM_PROFILES.keys())
 
-MONTH_TO_SEASON = {
-    1: "hiver", 2: "hiver", 3: "printemps", 4: "printemps",
-    5: "printemps", 6: "ete", 7: "ete", 8: "ete",
-    9: "automne", 10: "automne", 11: "automne", 12: "hiver",
-}
+# x3205: Importe depuis common/seasons.py (source unique)
+from core.scoring_pipeline.common.seasons import MONTH_TO_SEASON, get_season  # noqa: F401
 
 
 def get_profile(species: str) -> dict:
     return ALIM_PROFILES.get(species.upper(), ALIM_PROFILES["CERF"])
-
-
-def get_season(month: int) -> str:
-    return MONTH_TO_SEASON.get(month, "automne")

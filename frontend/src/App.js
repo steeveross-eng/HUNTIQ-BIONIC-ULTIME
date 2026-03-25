@@ -78,6 +78,8 @@ const SpeciesComparisonPage = lazy(() => import("@/pages/SpeciesComparisonPage")
 const SalineIntelligencePage = lazy(() => import("@/pages/SalineIntelligencePage"));
 // BIONIC MODULES — 10 modules predictifs (STEEVE-MAX x2000)
 const BionicModulesPage = lazy(() => import("@/pages/BionicModulesPage"));
+// BSAA — BIONIC Social Ads Automation (x4500-ULTRA)
+const BsaaDashboardPage = lazy(() => import("@/pages/BsaaDashboardPage"));
 const AdminHotspotsPage = lazy(() => import("@/ui/administration/admin_hotspots/AdminHotspots"));
 import { 
   ShoppingCart, FlaskConical, GitCompare, Star, DollarSign, ThumbsUp, Heart, Eye,
@@ -1054,6 +1056,9 @@ function App() {
                 <Route path="/bionic-modules" element={<BionicModulesPage />} />
                 <Route path="/intelligence" element={<BionicModulesPage />} />
                 <Route path="/ecological-intelligence" element={<BionicModulesPage />} />
+                {/* BSAA — BIONIC Social Ads Automation (x4500-ULTRA) */}
+                <Route path="/bsaa" element={<BsaaDashboardPage />} />
+                <Route path="/ads" element={<BsaaDashboardPage />} />
               </Routes>
             </Suspense>
             <Footer />

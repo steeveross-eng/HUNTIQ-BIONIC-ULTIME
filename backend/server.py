@@ -531,13 +531,19 @@ except Exception as e:
     logger.warning(f"API-GATEWAY-V3 not loaded: {e}")
 
 
+# ═══ BSAA — BIONIC Social Ads Automation (x4500-ULTRA) ═══
+try:
+    from modules.bsaa.router import router as bsaa_router
+    app.include_router(bsaa_router)
+    logger.info("✓ BSAA: BIONIC Social Ads Automation active (/api/bsaa/*)")
+except Exception as e:
+    logger.warning(f"BSAA not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")
-logger.info("✓ ALIMENTATION-V1: Moteur alimentaire multi-especes active")
-logger.info("✓ REPOS-V1: Moteur zones de repos multi-especes active")
-logger.info("✓ CORRIDORS-V10: Moteur corridors fauniques multi-especes active")
-logger.info("✓ SCORE-CONSOLIDE: Heatmap multi-moteurs active")
+logger.info("✓ x4100: Score consolide 22 moteurs (Option C)")
+logger.info("✓ x4500-ULTRA: BSAA active")
 logger.info("✓ BCE: BIONIC Compliance Engine active")
 logger.info("=" * 60)
 
