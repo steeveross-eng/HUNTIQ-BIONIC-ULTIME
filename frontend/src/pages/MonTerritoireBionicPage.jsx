@@ -1183,21 +1183,6 @@ const MonTerritoireBionicPage = () => {
             ══════════════════════════════════════════════════════════════ */}
         {['waypoints', 'lieux', 'groupe', 'exclusions'].includes(activeTab) && (
         <div className="w-80 flex-shrink-0 bg-[#0d0d14] border-l border-[#1a1a2e] overflow-y-auto" data-testid="side-panel">
-          {/* ── Zone diagnostic — panneau flottant sur clic zone (converti en overlay) ── */}
-          {selectedZone && (
-            <BionicZoneDiagnosticPanel
-              zone={selectedZone}
-              onClose={() => setSelectedZone(null)}
-              onAddWaypoint={(zone) => {
-                const name = prompt(`Nom pour ce waypoint (zone ${BIONIC_MODULES[zone.layerId]?.label || zone.layerId}) ?`, `Zone ${BIONIC_MODULES[zone.layerId]?.label}`);
-                if (name && zone.positions?.[0]) {
-                  const center = zone.positions.reduce((acc, p) => [acc[0] + p[0] / zone.positions.length, acc[1] + p[1] / zone.positions.length], [0, 0]);
-                  handleMapClickForWaypoint({ latlng: { lat: center[0], lng: center[1] } });
-                }
-                setSelectedZone(null);
-              }}
-            />
-          )}
 
           {/* ── Panneau Waypoints ── */}
           {activeTab === 'waypoints' && !selectedZone && (
@@ -1254,6 +1239,7 @@ const MonTerritoireBionicPage = () => {
               hoveredZone={hoveredZone}
               selectedZone={selectedZone}
               onClearZone={() => { setHoveredZone(null); setSelectedZone(null); }}
+              onClose={() => {}}
               activeWaypoints={activeWaypoints}
               visibleZonesCount={visibleZonesCount}
               isLoadingExclusions={isLoadingExclusions}
@@ -1345,6 +1331,26 @@ const MonTerritoireBionicPage = () => {
         showCompareWidget={showCompareWidget} compareSelection={compareSelection}
         handleCloseCompare={handleCloseCompare} PLACE_TYPES={PLACE_TYPES}
       />
+
+      {/* ══ ZONE DIAGNOSTIC — OVERLAY FLOTTANT (x4515-FIX) ══ */}
+      {selectedZone && (
+        <div className="fixed inset-0 z-[1500] pointer-events-none">
+          <div className="pointer-events-auto absolute top-4 right-4" style={{ width: 380, maxHeight: 'calc(100vh - 32px)' }}>
+            <BionicZoneDiagnosticPanel
+              zone={selectedZone}
+              onClose={() => setSelectedZone(null)}
+              onAddWaypoint={(zone) => {
+                const name = prompt(`Nom pour ce waypoint (zone ${BIONIC_MODULES[zone.layerId]?.label || zone.layerId}) ?`, `Zone ${BIONIC_MODULES[zone.layerId]?.label}`);
+                if (name && zone.positions?.[0]) {
+                  const center = zone.positions.reduce((acc, p) => [acc[0] + p[0] / zone.positions.length, acc[1] + p[1] / zone.positions.length], [0, 0]);
+                  handleMapClickForWaypoint({ latlng: { lat: center[0], lng: center[1] } });
+                }
+                setSelectedZone(null);
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
