@@ -1,106 +1,136 @@
 import React from 'react';
+import { Droplets, Eye, Wind, Navigation, Target, ListChecks } from 'lucide-react';
+import PinnablePanel from './PinnablePanel';
 
 /**
- * STEVE-MAX P5: Amenagement Report Panel
- * Shows the complete 2km square setup analysis:
- * saline, cache, feeding site, wind analysis, path, action plan
+ * STEVE-MAX P5: Amenagement Report Panel — x4515-FIX
+ * Saline, Cache (Affut), Vent, Trajet, Plan d'action
+ * PinnablePanel: Fixer / Detacher / Pleine page / Scroll
  */
-const AmenagementPanel = ({ report, isLoading }) => {
+const AmenagementPanel = ({ report, isLoading, onClose }) => {
   if (isLoading) {
     return (
-      <div className="bg-[#111118] rounded-lg p-3 border border-[#1a1a2e] animate-pulse" data-testid="amenagement-loading">
-        <div className="h-3 bg-gray-800 rounded w-3/4 mb-2" />
-        <div className="h-2 bg-gray-800 rounded w-1/2" />
-      </div>
+      <PinnablePanel title="Amenagement 2km" subtitle="Chargement..." icon={Target} accentColor="#f5a623" onClose={onClose} testId="amenagement-panel-loading">
+        <div className="p-4 animate-pulse">
+          <div className="h-4 bg-gray-800 rounded w-3/4 mb-3" />
+          <div className="h-3 bg-gray-800 rounded w-1/2 mb-2" />
+          <div className="h-3 bg-gray-800 rounded w-2/3" />
+        </div>
+      </PinnablePanel>
     );
   }
 
   if (!report || !report.sections) return null;
-
   const s = report.sections;
 
   return (
-    <div className="space-y-2" data-testid="amenagement-panel">
-      <div className="text-[10px] text-amber-400 uppercase tracking-wider font-bold">
-        Amenagement 2km
-      </div>
+    <PinnablePanel
+      title="Amenagement 2km"
+      subtitle="Salines, Affuts, Vents, Plan d'action"
+      icon={Target}
+      accentColor="#f5a623"
+      onClose={onClose}
+      defaultWidth={400}
+      maxHeight="80vh"
+      testId="amenagement-panel"
+    >
+      <div className="p-4 space-y-4">
+        {/* Saline */}
+        {s['1_saline'] && (
+          <SectionCard
+            title={s['1_saline'].title}
+            detail={s['1_saline'].justification}
+            priority={s['1_saline'].priority}
+            icon={Droplets}
+            iconColor="#06b6d4"
+            testId="amenagement-saline"
+          />
+        )}
 
-      {/* Saline */}
-      {s['1_saline'] && (
-        <ReportSection
-          title={s['1_saline'].title}
-          detail={s['1_saline'].justification}
-          priority={s['1_saline'].priority}
-          icon="droplet"
-          testId="amenagement-saline"
-        />
-      )}
+        {/* Cache / Affut */}
+        {s['3_cache'] && (
+          <SectionCard
+            title={s['3_cache'].title}
+            detail={s['3_cache'].justification}
+            priority={s['3_cache'].priority}
+            icon={Eye}
+            iconColor="#8b5cf6"
+            testId="amenagement-cache"
+          />
+        )}
 
-      {/* Cache */}
-      {s['3_cache'] && (
-        <ReportSection
-          title={s['3_cache'].title}
-          detail={s['3_cache'].justification}
-          priority={s['3_cache'].priority}
-          icon="eye"
-          testId="amenagement-cache"
-        />
-      )}
-
-      {/* ALIMENTATION-V2: "Alimentation secondaire" SUPPRIME — directive STEEVE-MAX */}
-
-      {/* Trajet */}
-      {s['4_trajet_optimal'] && (
-        <div className="bg-[#0d0d14] rounded p-2 border border-[#1a1a2e]" data-testid="amenagement-trajet">
-          <div className="text-[9px] text-orange-400 font-bold mb-1">Trajet optimal</div>
-          <div className="text-[9px] text-gray-400">
-            {s['4_trajet_optimal'].distance_km} km | {s['4_trajet_optimal'].zones_visited} zones
+        {/* Trajet optimal */}
+        {s['4_trajet_optimal'] && (
+          <div className="bg-[#0d0d18] rounded-xl p-4 border border-orange-500/20" data-testid="amenagement-trajet">
+            <div className="flex items-center gap-2 mb-2">
+              <Navigation className="h-5 w-5 text-orange-400" />
+              <span className="text-sm font-bold text-orange-400">Trajet optimal</span>
+            </div>
+            <div className="flex gap-4 text-sm text-gray-300 mb-2">
+              <span><strong>{s['4_trajet_optimal'].distance_km}</strong> km</span>
+              <span><strong>{s['4_trajet_optimal'].zones_visited}</strong> zones</span>
+            </div>
+            <p className="text-sm text-gray-400 leading-relaxed">{s['4_trajet_optimal'].strategy}</p>
           </div>
-          <div className="text-[8px] text-gray-500 mt-0.5">{s['4_trajet_optimal'].strategy}</div>
-        </div>
-      )}
+        )}
 
-      {/* Vents */}
-      {s['5_vents_dominants'] && (
-        <div className="bg-[#0d0d14] rounded p-2 border border-[#1a1a2e]" data-testid="amenagement-vents">
-          <div className="text-[9px] text-cyan-400 font-bold mb-1">Vents dominants</div>
-          <div className="flex items-center gap-2 text-[9px] text-gray-400">
-            <span>{s['5_vents_dominants'].direction_cardinal} ({s['5_vents_dominants'].direction_deg}°)</span>
-            <span>{s['5_vents_dominants'].vitesse_kmh} km/h</span>
-            <span className="text-green-400">{s['5_vents_dominants'].qualite}</span>
+        {/* Vents dominants */}
+        {s['5_vents_dominants'] && (
+          <div className="bg-[#0d0d18] rounded-xl p-4 border border-cyan-500/20" data-testid="amenagement-vents">
+            <div className="flex items-center gap-2 mb-2">
+              <Wind className="h-5 w-5 text-cyan-400" />
+              <span className="text-sm font-bold text-cyan-400">Vents dominants</span>
+            </div>
+            <div className="flex items-center gap-3 text-sm text-gray-300 mb-2">
+              <span>{s['5_vents_dominants'].direction_cardinal} ({s['5_vents_dominants'].direction_deg}deg)</span>
+              <span>{s['5_vents_dominants'].vitesse_kmh} km/h</span>
+              <span className="text-green-400 font-medium">{s['5_vents_dominants'].qualite}</span>
+            </div>
+            <p className="text-sm text-gray-400 leading-relaxed">{s['5_vents_dominants'].approche_recommandee}</p>
           </div>
-          <div className="text-[8px] text-gray-500 mt-0.5">{s['5_vents_dominants'].approche_recommandee}</div>
-        </div>
-      )}
+        )}
 
-      {/* Plan d'action */}
-      {s['8_plan_action'] && (
-        <div className="bg-[#0d0d14] rounded p-2 border border-[#1a1a2e]" data-testid="amenagement-plan">
-          <div className="text-[9px] text-red-400 font-bold mb-1">
-            Plan d'action (confiance: {s['8_plan_action'].score_confiance}%)
-          </div>
-          <div className="space-y-0.5">
-            {(s['8_plan_action'].etapes || []).map((step, i) => (
-              <div key={i} className="text-[8px] text-gray-500 flex gap-1">
-                <span className="text-amber-400 flex-shrink-0">{i + 1}.</span>
-                <span>{step}</span>
+        {/* Plan d'action */}
+        {s['8_plan_action'] && (
+          <div className="bg-[#0d0d18] rounded-xl p-4 border border-red-500/20" data-testid="amenagement-plan">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <ListChecks className="h-5 w-5 text-red-400" />
+                <span className="text-sm font-bold text-red-400">Plan d'action</span>
               </div>
-            ))}
+              <span className="text-xs bg-red-500/20 text-red-300 px-2 py-0.5 rounded-full">
+                Confiance: {s['8_plan_action'].score_confiance}%
+              </span>
+            </div>
+            <ol className="space-y-2">
+              {(s['8_plan_action'].etapes || []).map((step, i) => (
+                <li key={i} className="text-sm text-gray-300 flex gap-2 leading-relaxed">
+                  <span className="text-amber-400 font-bold flex-shrink-0">{i + 1}.</span>
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ol>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </PinnablePanel>
   );
 };
 
-const ReportSection = ({ title, detail, priority, testId }) => (
-  <div className="bg-[#0d0d14] rounded p-2 border border-[#1a1a2e]" data-testid={testId}>
-    <div className="flex items-center gap-1">
-      <span className={`text-[9px] font-bold ${priority === 'HIGH' ? 'text-red-400' : 'text-yellow-400'}`}>
-        {title}
-      </span>
+const SectionCard = ({ title, detail, priority, icon: Icon, iconColor, testId }) => (
+  <div className="bg-[#0d0d18] rounded-xl p-4 border border-gray-700/50" data-testid={testId}>
+    <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center gap-2">
+        <Icon className="h-5 w-5" style={{ color: iconColor }} />
+        <span className="text-sm font-bold text-white">{title}</span>
+      </div>
+      {priority && (
+        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${priority === 'HIGH' ? 'bg-red-500/20 text-red-300' : 'bg-yellow-500/20 text-yellow-300'}`}>
+          {priority}
+        </span>
+      )}
     </div>
-    <div className="text-[8px] text-gray-500 mt-0.5">{detail || 'N/A'}</div>
+    <p className="text-sm text-gray-400 leading-relaxed">{detail || 'N/A'}</p>
   </div>
 );
 

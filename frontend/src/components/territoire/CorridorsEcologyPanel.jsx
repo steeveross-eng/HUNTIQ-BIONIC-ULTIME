@@ -12,6 +12,7 @@ import {
   Route, Compass, Activity, ArrowRight, ChevronDown, ChevronUp,
   Zap, Sun, CloudRain, Shield, Mountain, Leaf, Brain, FlaskConical, Trees
 } from 'lucide-react';
+import PinnablePanel from './PinnablePanel';
 
 const CLASSIFICATION_COLORS = {
   rouge_raye: { bg: '#B71C1C', label: 'Critique', desc: 'Score 86-100' },
@@ -33,7 +34,7 @@ const ENGINE_META = {
   habitat_enhancement: { icon: Zap, label: 'Habitat', color: '#009688' },
 };
 
-const CorridorsEcologyPanel = ({ corridors = [], species = 'tous' }) => {
+const CorridorsEcologyPanel = ({ corridors = [], species = 'tous', onClose }) => {
   const [detailsExpanded, setDetailsExpanded] = useState(false);
   const [enginesExpanded, setEnginesExpanded] = useState(false);
 
@@ -107,30 +108,26 @@ const CorridorsEcologyPanel = ({ corridors = [], species = 'tous' }) => {
 
   if (!stats) {
     return (
-      <div className="bg-[#111118] rounded-lg p-3 border border-[#1a1a2e]" data-testid="corridors-ecology-panel">
-        <div className="flex items-center gap-2">
-          <Route className="h-3.5 w-3.5 text-gray-500" />
-          <span className="text-xs text-gray-500">Corridors & Ecologie V10</span>
+      <PinnablePanel title="Corridors & Ecologie V10" icon={Route} accentColor="#06b6d4" onClose={onClose || (() => {})} testId="corridors-ecology-panel">
+        <div className="p-4">
+          <p className="text-sm text-gray-500">En attente d'analyse...</p>
         </div>
-        <p className="text-[10px] text-gray-600 mt-1">En attente d'analyse...</p>
-      </div>
+      </PinnablePanel>
     );
   }
 
   return (
-    <div className="bg-[#111118] rounded-lg border border-cyan-900/30 overflow-hidden" data-testid="corridors-ecology-panel">
-      {/* Header */}
-      <div className="flex items-center justify-between px-3 py-2 bg-cyan-900/15 border-b border-cyan-900/20">
-        <div className="flex items-center gap-1.5">
-          <Route className="h-3.5 w-3.5 text-cyan-400" />
-          <span className="text-xs font-semibold text-cyan-300 uppercase tracking-wider">Corridors & Ecologie V10</span>
-        </div>
-        <span className="text-[10px] font-mono text-cyan-400/70">
-          {stats.total} | {stats.totalDistKm} km
-        </span>
-      </div>
-
-      <div className="p-3 space-y-2.5">
+    <PinnablePanel
+      title="Corridors & Ecologie V10"
+      subtitle={`${stats.total} corridors | ${stats.totalDistKm} km`}
+      icon={Route}
+      accentColor="#06b6d4"
+      onClose={onClose || (() => {})}
+      defaultWidth={380}
+      maxHeight="80vh"
+      testId="corridors-ecology-panel"
+    >
+    <div className="p-3 space-y-2.5">
         {/* Espece */}
         {species && species !== 'tous' && (
           <div className="text-[10px] text-amber-400 font-medium capitalize" data-testid="ce-species">{species}</div>
@@ -290,7 +287,7 @@ const CorridorsEcologyPanel = ({ corridors = [], species = 'tous' }) => {
           </div>
         )}
       </div>
-    </div>
+    </PinnablePanel>
   );
 };
 

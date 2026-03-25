@@ -23,6 +23,7 @@ import ZoneInfoPanel from '@/components/territoire/ZoneInfoPanel';
 import SeasonalConditionsWidget from '@/components/territoire/SeasonalConditionsWidget';
 import { AlertsPanel, FavoritesList } from '@/components/territoire/ZoneFavorites';
 import { SCORE_CATEGORIES } from '@/core/bionic';
+import PinnablePanel from './PinnablePanel';
 
 const API_BASE = process.env.REACT_APP_BACKEND_URL;
 
@@ -48,6 +49,7 @@ const DiagnosticExclusionsPanel = ({
   displayScore,
   categoryScores,
   bionicStats,
+  onClose,
 }) => {
   // Fetch des scores dynamiques
   const [dynamicScores, setDynamicScores] = useState(null);
@@ -81,20 +83,16 @@ const DiagnosticExclusionsPanel = ({
   }, [fetchDynamicScores]);
 
   return (
-    <div className="h-full overflow-y-auto bg-black" data-testid="diagnostic-exclusions-panel">
-      {/* Header */}
-      <div className="sticky top-0 z-10 bg-black/95 backdrop-blur-sm border-b border-gray-800 px-6 py-4">
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-lg bg-cyan-500/20 flex items-center justify-center">
-            <Shield className="h-4 w-4 text-cyan-400" />
-          </div>
-          <div>
-            <h2 className="text-sm font-bold text-white">Diagnostic Exclusions</h2>
-            <p className="text-[10px] text-gray-500">ExclusionsSpatiales.v1 — Backend source de vérité</p>
-          </div>
-        </div>
-      </div>
-
+    <PinnablePanel
+      title="Diagnostic Exclusions"
+      subtitle="ExclusionsSpatiales.v1 — Backend source de verite"
+      icon={Shield}
+      accentColor="#06b6d4"
+      onClose={onClose || (() => {})}
+      defaultWidth={720}
+      maxHeight="90vh"
+      testId="diagnostic-exclusions-panel"
+    >
       <div className="p-6 space-y-4">
         {/* Grille principale: 2 colonnes */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -362,7 +360,7 @@ const DiagnosticExclusionsPanel = ({
           </div>
         </div>
       </div>
-    </div>
+    </PinnablePanel>
   );
 };
 

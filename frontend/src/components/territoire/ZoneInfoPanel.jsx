@@ -16,6 +16,7 @@
 import React from 'react';
 import { Target, MapPin, Ruler, Activity, ChevronRight } from 'lucide-react';
 import { BIONIC_MODULES } from '@/core/bionic';
+import PinnablePanel from './PinnablePanel';
 
 const getInterpretation = (moduleId, score) => {
   const mod = BIONIC_MODULES[moduleId];
@@ -54,36 +55,17 @@ const ZoneInfoPanel = ({ zone, onClear }) => {
   const scoreLabel = getScoreLabel(zone.score);
 
   return (
-    <div
-      className="bg-gray-800/60 rounded-lg border overflow-hidden"
-      style={{ borderColor: `${zoneColor}40` }}
-      data-testid="zone-info-panel"
+    <PinnablePanel
+      title={mod?.label || 'Zone'}
+      subtitle={`Score: ${zone.score}%`}
+      icon={Target}
+      accentColor={zoneColor}
+      onClose={onClear || (() => {})}
+      defaultWidth={340}
+      maxHeight="60vh"
+      testId="zone-info-panel"
     >
-      {/* Header avec type de zone */}
-      <div
-        className="px-3 py-2 flex items-center justify-between"
-        style={{ backgroundColor: `${zoneColor}15` }}
-      >
-        <div className="flex items-center gap-2">
-          <div
-            className="w-3 h-3 rounded-full border-2 flex-shrink-0"
-            style={{ borderColor: zoneColor, backgroundColor: 'transparent' }}
-          />
-          <span className="text-xs font-bold text-white truncate">{mod?.label || 'Zone'}</span>
-        </div>
-        {onClear && (
-          <button
-            onClick={onClear}
-            className="text-gray-500 hover:text-gray-300 text-[10px]"
-            data-testid="zone-info-clear"
-          >
-            Effacer
-          </button>
-        )}
-      </div>
-
-      {/* Contenu — scroll interne */}
-      <div className="p-3 space-y-2 max-h-[200px] overflow-y-auto">
+      <div className="p-3 space-y-2">
         {/* Score principal */}
         <div className="flex items-center justify-between">
           <span className="text-[10px] text-gray-400 uppercase tracking-wider">Score</span>
@@ -154,7 +136,7 @@ const ZoneInfoPanel = ({ zone, onClear }) => {
           </div>
         </div>
       </div>
-    </div>
+    </PinnablePanel>
   );
 };
 
