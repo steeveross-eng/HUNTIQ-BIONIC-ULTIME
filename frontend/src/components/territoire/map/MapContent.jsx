@@ -88,6 +88,7 @@ const MapContentInner = React.memo(({
   showSalines,
   nSalinesMax,
   onAlimentationDataLoaded,
+  onSalineClick,
   // STANDS x2280/x2320
   showStands,
   windDirection,
@@ -202,6 +203,7 @@ const MapContentInner = React.memo(({
         showSalines={showSalines}
         maxSalines={nSalinesMax}
         onDataLoaded={onAlimentationDataLoaded}
+        onSalineClick={onSalineClick}
       />
     )}
 

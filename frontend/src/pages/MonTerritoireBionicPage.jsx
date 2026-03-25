@@ -39,6 +39,7 @@ import { useAuth } from '@/components/GlobalAuth';
 import DiagnosticExclusionsPanel from '@/components/territoire/DiagnosticExclusionsPanel';
 import BionicZoneDiagnosticPanel from '@/components/territoire/BionicZoneDiagnosticPanel';
 import AmenagementPanel from '@/components/territoire/AmenagementPanel';
+import SalineDetailPanel from '@/components/territoire/SalineDetailPanel';
 import StandDetailPanel from '@/components/territoire/StandDetailPanel';
 import PlacesSidePanel from '@/components/territoire/PlacesSidePanel';
 import IntelligenceDashboard from '@/components/territoire/IntelligenceDashboard';
@@ -284,6 +285,14 @@ const MonTerritoireBionicPage = () => {
     addPlace,
     updatePlace,
     userPosition,
+    onClearAllMapData: () => {
+      // x4520-H: Nettoyage TOTAL — fermer tous les panneaux, vider les données
+      setSelectedStand(null);
+      setSelectedSaline(null);
+      setShowAmenagementPanel(false);
+      setHeatmapV10Data(null);
+      setCorridorV10Data(null);
+    },
   });
 
   // BIONIC V5 300% INVARIANT: Spatial Clipping 1km × 1km (doit être après useWaypointActions)
@@ -501,6 +510,7 @@ const MonTerritoireBionicPage = () => {
   const [showNutritionPanel, setShowNutritionPanel] = useState(false);
   const [showAmenagementPanel, setShowAmenagementPanel] = useState(false);
   const [selectedStand, setSelectedStand] = useState(null);
+  const [selectedSaline, setSelectedSaline] = useState(null);
   const [alimentationV2Data, setAlimentationV2Data] = useState(null);
   const [nSalinesMax, setNSalinesMax] = useState(4);
   const [adminArchitecteMode, setAdminArchitecteMode] = useState(false);
@@ -1127,6 +1137,7 @@ const MonTerritoireBionicPage = () => {
               windDirection={windMode === 'arrows' ? 'NE' : 'NE'}
               windSpeed={12}
               onStandClick={setSelectedStand}
+              onSalineClick={setSelectedSaline}
               showHeatmapV10={showHeatmapV10}
               onHeatmapDataLoaded={setHeatmapV10Data}
               heatmapIncludeCorridors={heatmapIncludeCorridors}
@@ -1331,6 +1342,14 @@ const MonTerritoireBionicPage = () => {
         <StandDetailPanel
           stand={selectedStand}
           onClose={() => setSelectedStand(null)}
+        />
+      )}
+
+      {/* ═══ PANNEAU SALINE DETAIL — x4520-H PinnablePanel V2 ═══ */}
+      {selectedSaline && (
+        <SalineDetailPanel
+          saline={selectedSaline}
+          onClose={() => setSelectedSaline(null)}
         />
       )}
       

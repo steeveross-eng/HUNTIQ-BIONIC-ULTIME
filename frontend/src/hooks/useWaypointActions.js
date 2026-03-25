@@ -22,10 +22,14 @@ export function useWaypointActions({
   addPlace,
   updatePlace,
   userPosition,
+  onClearAllMapData,
 }) {
   // reloadZones est fourni après l'init de l'orchestrateur via bindReloadZones
   const reloadZonesRef = useRef(() => {});
   const bindReloadZones = useCallback((fn) => { reloadZonesRef.current = fn; }, []);
+  // x4520-H: Callback pour nettoyer tous les panels/data
+  const onClearAllMapDataRef = useRef(onClearAllMapData);
+  onClearAllMapDataRef.current = onClearAllMapData;
   // State waypoints
   const [selectedWaypointForZones, setSelectedWaypointForZones] = useState(null);
   const [mapClickMode, setMapClickMode] = useState(false);
@@ -58,15 +62,20 @@ export function useWaypointActions({
     toast.info('Cible désactivée — zones et corridors nettoyés');
   }, []);
 
-  // Supprimer un waypoint — C12 nettoyage total
+  // Supprimer un waypoint — x4520-H: Nettoyage TOTAL (ZERO résidu)
   const handleDeleteWaypoint = useCallback((id) => {
     if (selectedWaypointForZones?.id === id) {
       setSelectedWaypointForZones(null);
       localStorage.removeItem(LAST_WAYPOINT_KEY);
     }
     deleteWaypoint(id);
+    // x4520-H: Force reload pour nettoyer toutes les couches
     reloadZonesRef.current();
-    toast.info('Waypoint supprimé — zones et corridors nettoyés');
+    // x4520-H: Notify parent to clear all panels and map data
+    if (onClearAllMapDataRef.current) {
+      onClearAllMapDataRef.current();
+    }
+    toast.info('Waypoint supprimé — zones, corridors, salines et affûts nettoyés');
   }, [selectedWaypointForZones, deleteWaypoint]);
 
   // Ajouter un waypoint (API directe)
