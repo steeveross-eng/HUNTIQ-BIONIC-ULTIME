@@ -1,7 +1,7 @@
 /**
  * IntelligenceDashboard — Cockpit unifie V6-CORE
  * x4520-UNIFICATION_DASHBOARD
- * ZERO relique V1/V2/V10 — 22 moteurs, interface unique
+ * ZERO relique V1/V2/V10 — 22 moteurs, interface unique — V6-CORE
  * Fusionne: INTELLIGENCE + GUIDE PRO + SCIENTIFIQUE + TERRAIN
  * Integre: Luna/SolCal
  */

@@ -222,13 +222,13 @@ export function TerritoireToolbar({
                   <span className={`w-1.5 h-1.5 rounded-full ${showExclusionOverlay ? 'bg-red-400' : 'bg-gray-700'}`} />Exclusions
                 </button>
                 <button onClick={() => setShowHeatmapV10(!showHeatmapV10)} className={`w-full flex items-center gap-1.5 px-1.5 py-0.5 rounded text-[10px] transition-all ${showHeatmapV10 ? 'text-orange-400 bg-white/5' : 'text-gray-600 hover:text-gray-400'}`} data-testid="layer-toggle-heatmap-v10">
-                  <span className={`w-1.5 h-1.5 rounded-full ${showHeatmapV10 ? 'bg-orange-400' : 'bg-gray-700'}`} />Heatmap V10
+                  <span className={`w-1.5 h-1.5 rounded-full ${showHeatmapV10 ? 'bg-orange-400' : 'bg-gray-700'}`} />Heatmap V6
                   {heatmapV10Data && <span className="ml-auto text-[8px] text-gray-500">{heatmapV10Data.score_avg}/100</span>}
                 </button>
                 {showHeatmapV10 && (
                   <div className="ml-3 pl-2 border-l border-orange-800/30 space-y-1 pt-0.5">
                     <button onClick={() => setHeatmapIncludeCorridors(!heatmapIncludeCorridors)} className={`w-full flex items-center gap-1.5 px-1.5 py-0.5 rounded text-[9px] transition-all ${heatmapIncludeCorridors ? 'text-cyan-400 bg-white/5' : 'text-gray-600 hover:text-gray-400'}`} data-testid="heatmap-toggle-corridors">
-                      <span className={`w-1.5 h-1.5 rounded-full ${heatmapIncludeCorridors ? 'bg-cyan-400' : 'bg-gray-700'}`} />Corridors V10
+                      <span className={`w-1.5 h-1.5 rounded-full ${heatmapIncludeCorridors ? 'bg-cyan-400' : 'bg-gray-700'}`} />Corridors V6
                     </button>
                   </div>
                 )}

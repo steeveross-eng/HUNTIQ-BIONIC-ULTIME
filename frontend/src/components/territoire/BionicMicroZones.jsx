@@ -40,7 +40,7 @@ function darkenColor(hex, factor = 0.82) {
 }
 
 /**
- * Épaisseur dynamique BIONIC V10 — Norme BCE-4X:
+ * Épaisseur dynamique BIONIC V6-CORE — Norme BCE-4X:
  * Contour -25% plus mince que V7.3
  * score 30% → poids ~1.9, score 100% → poids ~4.5
  */
@@ -72,7 +72,7 @@ const getInterpretation = (moduleId, score) => {
 };
 
 // ============================================
-// COMPOSANT — Zone normalisée BIONIC V10
+// COMPOSANT — Zone normalisée BIONIC V6
 // BCE-4X: contour assombri, transparence calibrée 30-40%
 // ============================================
 const NormalizedZone = ({ zone, tier, zoneIndex, isHovered, onHover, onLeave, onToggleFavorite }) => {
@@ -207,10 +207,10 @@ const NormalizedZone = ({ zone, tier, zoneIndex, isHovered, onHover, onLeave, on
 };
 
 // V9 Corridors — PURGE DEFINITIVE BCE-4X-UI-003
-// Tous les corridors sont rendus par BionicCorridorsV10Layer
+// Tous les corridors sont rendus par BionicCorridorsV6Layer
 
 // ============================================
-// COMPOSANT PRINCIPAL — BionicMicroZones V10 Harmonisé
+// COMPOSANT PRINCIPAL — BionicMicroZones V6 Harmonisé
 // BCE-4X: Aucun glow, transparence calibrée, contour assombri
 // ============================================
 const BionicMicroZones = ({
@@ -262,7 +262,7 @@ const BionicMicroZones = ({
 
   return (
     <>
-      {/* STEVE-MAX: COUCHE ZONES — Pane dedie z-index 400 (SOUS les corridors V10) */}
+      {/* STEVE-MAX: COUCHE ZONES — Pane dedie z-index 400 (SOUS les corridors V6) */}
       <Pane name="bionic-zones-pane" style={{ zIndex: 400 }}>
         {/* behavior.cells — Score faible en arriere-plan */}
         {cellZones.map((zone, idx) => (

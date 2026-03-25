@@ -484,7 +484,7 @@ const MonTerritoireBionicPage = () => {
   
   // Mode d'affichage des zones BIONIC
   const [zoneDisplayMode, setZoneDisplayMode] = useState('micro'); // 'micro' ou 'classic'
-  const showCorridors = true; // STEEVE-MAX: V10 layer permanent, contrôlé uniquement via ZONES
+  const showCorridors = true; // STEEVE-MAX: V6 layer permanent, contrôlé uniquement via ZONES
   const [corridorV10Data, setCorridorV10Data] = useState(null); // CORRIDORS-V10 niveau distribution
   const [minPercentageFilter, setMinPercentageFilter] = useState(30);
   
@@ -1151,11 +1151,11 @@ const MonTerritoireBionicPage = () => {
             </div>
           )}
 
-          {/* ── Indicateur Heatmap V10 — Discret bas-gauche ── */}
+          {/* ── Indicateur Heatmap V6 — Discret bas-gauche ── */}
           {showHeatmapV10 && selectedWaypointForZones && heatmapV10Data && (
             <div
               className="absolute bottom-[60px] left-2 z-[999] select-none pointer-events-none"
-              data-testid="heatmap-v10-indicator"
+              data-testid="heatmap-v6-indicator"
             >
               <div className="flex items-center gap-1.5 px-2 py-1 bg-[#0c0c14]/85 border border-gray-700/40 rounded backdrop-blur-sm">
                 <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 via-yellow-500 to-red-500 flex-shrink-0" />

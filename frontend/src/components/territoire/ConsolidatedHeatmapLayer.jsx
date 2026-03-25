@@ -1,7 +1,7 @@
 /**
  * ConsolidatedHeatmapLayer.jsx — Score consolidé multi-moteurs (data-only)
  * STEEVE-MAX: 100% transparent — zero rendu graphique, fetch + callback score uniquement
- * Intègre: CORRIDORS-V10 + ALIMENTATION-V2 + repos + pression
+ * Intègre: CORRIDORS-V6 + ALIMENTATION-V2 + repos + pression
  */
 import { useEffect, useRef, useCallback } from 'react';
 

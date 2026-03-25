@@ -4,8 +4,8 @@
  *
  * 3 blocs normatifs:
  *   A. Zones ecologiques (V1)
- *   B. Corridors normatifs (CORRIDOR-V1/V10)
- *   C. Facteurs environnementaux (V9/V10)
+ *   B. Corridors normatifs (CORRIDOR-V6)
+ *   C. Facteurs environnementaux (V6-CORE)
  *
  * Hierarchie: Zones > Corridors > Facteurs
  * Chaque item cliquable (toggle) + tooltip

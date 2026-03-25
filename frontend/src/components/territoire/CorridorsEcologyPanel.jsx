@@ -1,6 +1,6 @@
 /**
- * CorridorsEcologyPanel.jsx — Panneau unifie Corridors & Ecologie V10
- * BIONIC V10 — 9 Moteurs BIONIC + Classification 5 niveaux
+ * CorridorsEcologyPanel.jsx — Panneau unifie Corridors & Ecologie V6
+ * BIONIC V6-CORE — 9 Moteurs BIONIC + Classification 5 niveaux
  *
  * Props:
  * - corridors: Array flat corridor objects from bionicZonesData.corridors
@@ -149,7 +149,7 @@ const CorridorsEcologyPanel = ({ corridors = [], species = 'tous', onClose }) =>
           </div>
         </div>
 
-        {/* Classification V10 — 5 niveaux */}
+        {/* Classification V6 — 5 niveaux */}
         <div className="space-y-1">
           <div className="text-[9px] text-gray-500 uppercase tracking-wider font-medium">Classification</div>
           {Object.entries(CLASSIFICATION_COLORS).map(([type, config]) => {

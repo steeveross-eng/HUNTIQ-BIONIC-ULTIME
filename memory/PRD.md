@@ -17,34 +17,34 @@
 | x4520-B | FIX_PIPELINE_ZONES — ZERO cache legacy | COMMITE |
 | x4520-B2 | REBUILD_PREVIEW_ZONES — Purge cache totale | COMMITE |
 | x4520-C | ALIGNEMENT_SALINES_600M_V6 — Pipeline scientifique | COMMITE |
-| **x4520-E** | **VALIDATION_PREVIEW + BUFFER_30 + PANNEAUX_V6** | **COMMITE — EN ATTENTE VALIDATION** |
+| x4520-E | VALIDATION_PREVIEW + BUFFER_30 + PANNEAUX_V6 | COMMITE |
+| **x4520-F** | **VALIDATION_PREVIEW_FINAL** | **COMMITE** |
+| **x4520-F2** | **TOTAL PURGE V10 + MIGRATION V6** | **COMMITE — EN ATTENTE VALIDATION** |
+| **x4520-G** | **RESET_PLAYWRIGHT + PROOF** | **COMMITE** |
 
 ## Score: 57.6 (22 moteurs, Option C)
 
-## x4520-E VALIDATION_PREVIEW_REBUILD + BUFFER_30 + PANNEAUX_V6 (25 mars 2026)
+## Architecture V6-CORE
 
-### Diagnostic (3 captures analysees)
-1. Polygones: centroide-only check rendait polygones hors 600m
-2. Corridors CRITIQUE: bypass illimite ignorait le rayon
-3. Affuts: popup Leaflet natif, pas PinnablePanel V2
-4. Zone de rut: absence SQ vs presence Chalet
+### Frontend
+- Couche corridors: `BionicCorridorsV6Layer.jsx` (Haversine 780m + clipping circulaire)
+- Panneaux: PinnablePanel V2 (AmenagementPanel, StandDetailPanel)
+- API: `/api/v6/corridors/analyze-full`
+- Cache: CACHE_VERSION `_v6_core`, DB_VERSION 2, SW_VERSION v7
+- ZERO reference V10 active
 
-### Correctifs
-- Buffer 30%: ZONE_RADIUS_M 600→780 (rendu uniquement)
-- clipRingsToCircle(): projection sommets polygon > 780m sur bord cercle
-- clipCoordsToCircle(): filtrage points corridor > 780m
-- ZERO bypass isExtreme pour corridors CRITIQUE
-- StandDetailPanel.jsx: PinnablePanel V2 complet
-- StandsMapLayer: callback onStandClick remplace L.popup
-- AmenagementPanel: waypointCenter + double verif Haversine
+### Backend
+- Route V6: `/api/v6/corridors/*` (alias de /api/v10/ pour compatibilite)
+- Salines: filtrage Haversine strict ≤ 600m
+- Affuts: positionnement ecologique (corridors critiques, crosswind)
 
-### Tests
-- Salines: 4 cand, max 464m (≤600m) — PASS
-- Affuts: 5 stands, max 401m (≤600m) — PASS
-- Frontend: compile 0 erreur — PASS
-- HTTP 200 PREVIEW — PASS
+## Tests
+- Salines: 4 cand, max 464m ≤ 600m — PASS
+- Affuts: 5 stands, max 401m ≤ 600m — PASS
+- V6 API corridors: PASS
+- Frontend compile: 0 erreur
+- Playwright: PASS (captures reussies)
 
 ## Prochaines etapes
-- Validation visuelle STEEVE-MAX sur x4520-E (captures Chalet vs SQ)
-- Attente directive suivante
-- BSAA-2 en standby
+- Validation STEEVE-MAX sur x4520-F+F2+G
+- BSAA-2 en standby (attente directive)

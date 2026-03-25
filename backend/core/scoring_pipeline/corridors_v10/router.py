@@ -115,3 +115,17 @@ async def get_species_profile(species: str):
 async def get_documentation():
     """Fiche technique complete du moteur CORRIDORS-V10."""
     return generate_documentation()
+
+
+# x4520-F2: Alias V6 pour migration frontend — meme logique, prefix V6
+router_v6 = APIRouter(prefix="/api/v6/corridors", tags=["CORRIDORS-V6"])
+
+@router_v6.post("/analyze")
+async def analyze_corridor_v6(req: CorridorAnalyzeRequest):
+    """Alias V6 de /api/v10/corridors/analyze"""
+    return await analyze_corridor(req)
+
+@router_v6.post("/analyze-full")
+async def analyze_corridor_full_v6(req: CorridorAnalyzeRequest):
+    """Alias V6 de /api/v10/corridors/analyze-full"""
+    return await analyze_corridor_full(req)

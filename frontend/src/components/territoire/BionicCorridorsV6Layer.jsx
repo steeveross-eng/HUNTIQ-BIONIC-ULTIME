@@ -1,6 +1,7 @@
 /**
- * BionicCorridorsV10Layer.jsx — Couche corridors fauniques BIONIC
- * Norme CORRIDOR-V1/V10 officielle — BCE-4X / Steeve-MAX V3
+ * BionicCorridorsV6Layer.jsx — Couche corridors fauniques BIONIC
+ * Norme CORRIDOR V6-CORE officielle — BCE-4X / Steeve-MAX
+ * DIRECTIVE x4520-F2: TOTAL PURGE V10 — Migration V6
  *
  * HIÉRARCHIE VISUELLE STEEVE-MAX (obligatoire):
  *   DOMINANT  → Zones (contours opaques, weight=3, fillOpacity=0)
@@ -178,7 +179,7 @@ function corridorMidpoint(coords) {
   return coords[mid];
 }
 
-const BionicCorridorsV10Layer = ({
+const BionicCorridorsV6Layer = ({
   center,
   species = 'cerf',
   month = 10,
@@ -584,7 +585,7 @@ const BionicCorridorsV10Layer = ({
     setLoading(true);
     try {
       const apiUrl = process.env.REACT_APP_BACKEND_URL;
-      const res = await fetch(`${apiUrl}/api/v10/corridors/analyze-full`, {
+      const res = await fetch(`${apiUrl}/api/v6/corridors/analyze-full`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -640,7 +641,7 @@ const BionicCorridorsV10Layer = ({
 
   return loading ? (
     <div
-      data-testid="corridors-v10-loading"
+      data-testid="corridors-v6-loading"
       style={{
         position: 'absolute', top: 12, right: 12, zIndex: 1000,
         background: 'rgba(0,0,0,0.7)', color: '#FF8C00',
@@ -652,5 +653,5 @@ const BionicCorridorsV10Layer = ({
   ) : null;
 };
 
-export default BionicCorridorsV10Layer;
+export default BionicCorridorsV6Layer;
 export { CORRIDOR_PALETTE };

@@ -12,7 +12,7 @@ import HydrographyOverlayLayer from '@/components/territoire/HydrographyOverlayL
 import ExclusionOverlayLayer from '@/components/territoire/ExclusionOverlayLayer';
 import WindFlowLayer from '@/components/territoire/WindFlowLayer';
 import StructureContrastLayer from '@/components/territoire/StructureContrastLayer';
-// BCE-4X-UI-003: BionicMicroZones (V9) SUPPRIME DEFINITIVEMENT — Zones rendues par BionicCorridorsV10Layer
+// BCE-4X-UI-003: BionicMicroZones (V9) SUPPRIME DEFINITIVEMENT — Zones rendues par BionicCorridorsV6Layer
 import { ShootingZones } from '@/modules/groupe';
 import CursorBionicLayer from '@/components/territoire/CursorBionicLayer';
 import BionicAntiDoublesGuard from '@/components/territoire/BionicAntiDoublesGuard';
@@ -21,7 +21,7 @@ import HuntingPathLayer from '@/components/territoire/HuntingPathLayer';
 import { MapInteractionLayer } from '@/modules/map_interaction';
 import { BIONIC_MODULES } from '@/core/bionic';
 import { PLACE_TYPES } from '@/config/placeTypes';
-import BionicCorridorsV10Layer from '@/components/territoire/BionicCorridorsV10Layer';
+import BionicCorridorsV6Layer from '@/components/territoire/BionicCorridorsV6Layer';
 import AlimentationV2Layer from '@/components/territoire/AlimentationV2Layer';
 import ConsolidatedHeatmapLayer from '@/components/territoire/ConsolidatedHeatmapLayer';
 import StandsMapLayer from '@/components/territoire/StandsMapLayer';
@@ -81,7 +81,7 @@ const MapContentInner = React.memo(({
   // STEVE-MAX: Hunting Path
   huntingPathData,
   showHuntingPath,
-  // CORRIDORS-V10
+  // CORRIDORS-V6
   onCorridorDataLoaded,
   // ALIMENTATION-V2
   showAlimentationV2,
@@ -93,7 +93,7 @@ const MapContentInner = React.memo(({
   windDirection,
   windSpeed,
   onStandClick,
-  // HEATMAP V10 consolidée
+  // HEATMAP V6 consolidée
   showHeatmapV10,
   onHeatmapDataLoaded,
   heatmapIncludeCorridors,
@@ -127,7 +127,7 @@ const MapContentInner = React.memo(({
     <ExclusionOverlayLayer enabled={showExclusionOverlay && classificationToggles.pression} />
     {showWindFlow && <WindFlowLayer mode={windMode || 'arrows'} />}
     <StructureContrastLayer enabled={classificationToggles.anthropique} />
-    {/* BCE-4X: Zones V9 (BionicMicroZones) SUPPRIMEES — Zones V10 rendues par BionicCorridorsV10Layer */}
+    {/* BCE-4X: Zones V9 (BionicMicroZones) SUPPRIMEES — Zones V6 rendues par BionicCorridorsV6Layer */}
     {/* STEVE-MAX: MovementCorridorsLayer PURGE DEFINITIVE — BCE-4X-UI-003 */}
 
     {/* STEVE-MAX P3: Hunting Path Layer — z-index 700 (above corridors) */}
@@ -159,7 +159,7 @@ const MapContentInner = React.memo(({
 
     <ShootingZones zones={[]} currentUserId={userId} dangerAlerts={[]} members={[]} onZoneClick={null} showOwnZone={true} showOtherZones={true} showDangerIndicators={true} />
 
-    {/* SCORE CONSOLIDÉ V10: Data-only (100% transparent, zero rendu graphique) */}
+    {/* SCORE CONSOLIDÉ V6: Data-only (100% transparent, zero rendu graphique) */}
     {selectedWaypointForZones && showHeatmapV10 && waypointCenter && (
       <ConsolidatedHeatmapLayer
         center={waypointCenter}
@@ -171,9 +171,9 @@ const MapContentInner = React.memo(({
       />
     )}
 
-    {/* CORRIDORS-V10: Couche corridors fauniques — palette normative (SEULE couche active) */}
+    {/* CORRIDORS-V6: Couche corridors fauniques — palette normative (SEULE couche active) */}
     {selectedWaypointForZones && showCorridors && waypointCenter && (
-      <BionicCorridorsV10Layer
+      <BionicCorridorsV6Layer
         center={waypointCenter}
         species={selectedSpecies}
         month={new Date().getMonth() + 1}
