@@ -234,7 +234,7 @@ from modules.master_switch.router import router as master_switch_router
 # ==============================================
 from modules.backup_cloud_engine.router import router as backup_cloud_router
 from modules.formations_engine.router import router as formations_router
-from modules.social_engine.router import router as social_router
+# x3104: social_engine purge vers /app/legacy/api_obsoletes_x3103/social_engine/
 from modules.partner_engine.router import router as partner_router
 
 # ==============================================
@@ -594,12 +594,7 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
     # ==========================================
     # V5-ULTIME-FUSION - Modules importés de BASE
     # ==========================================
-    (social_router, {
-        "name": "social_engine",
-        "version": "1.0.0",
-        "phase": "V5-BASE",
-        "description": "Networking, groupes de chasse, chat, parrainage"
-    }),
+    # x3104: social_engine purge (aucun consommateur frontend/backend)
     # P0 removed: rental_engine (stub minimal non utilise)
     # V5-ULTIME: communication_engine et admin_advanced_engine fusionnés
     # dans notification_unified_engine et admin_unified_engine respectivement
