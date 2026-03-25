@@ -27,6 +27,7 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { BIONIC_MODULES } from '@/core/bionic';
 import { X, Crosshair, TreePine, Droplets, Mountain, Shield, Layers, Wind, BarChart3, Compass, Download, GitCompare } from 'lucide-react';
+import PinnablePanel from './PinnablePanel';
 
 /* ══════════════════════════════════════════
    STYLES & ANIMATIONS (injection CSS isolée)
@@ -288,7 +289,16 @@ const BionicZoneDiagnosticPanel = React.memo(({ zone, onClose, onAddWaypoint }) 
   if (!zone) return null;
 
   return (
-    <div className="bionic-diag-panel overflow-y-auto overflow-x-hidden" data-testid="bionic-zone-diagnostic-panel" style={{maxHeight:'calc(100vh - 140px)'}}>
+    <PinnablePanel
+      title={mod.label}
+      subtitle="DIAGNOSTIC BIONIC V5"
+      accentColor={color}
+      onClose={onClose}
+      defaultWidth={340}
+      maxHeight="calc(100vh - 140px)"
+      testId="bionic-zone-diagnostic-panel"
+    >
+    <div className="bionic-diag-panel overflow-x-hidden">
       <div className="p-3 space-y-2.5">
 
         {/* ══ 1. EN-TÊTE DYNAMIQUE ══ */}
@@ -302,9 +312,6 @@ const BionicZoneDiagnosticPanel = React.memo(({ zone, onClose, onAddWaypoint }) 
               <h3 className="text-xs font-black text-white tracking-wide truncate uppercase">{mod.label}</h3>
               <span className="text-[8px] text-gray-500 font-mono tracking-widest">DIAGNOSTIC BIONIC V5</span>
             </div>
-            <button onClick={onClose} data-testid="diagnostic-panel-close" className="bionic-action-btn p-1.5 rounded-md bg-white/5 text-gray-500 hover:text-white hover:bg-white/10">
-              <X size={12}/>
-            </button>
           </div>
           <div className="px-3 py-2.5">
             <div className="flex items-end justify-between mb-2">
@@ -435,6 +442,7 @@ const BionicZoneDiagnosticPanel = React.memo(({ zone, onClose, onAddWaypoint }) 
 
       </div>
     </div>
+    </PinnablePanel>
   );
 });
 

@@ -1,16 +1,12 @@
 /**
  * GuidedRoutePanel.jsx — Guided Route Details Sidebar Panel
- * 
- * Displays route statistics, highest probability zone, waypoint list,
- * and footer actions (hide/clear). 
- * 
- * Phase 2 extraction from TerritoryMap.jsx
- * @module territory/GuidedRoutePanel
+ * x4515-PANEL_FIX_MODE: PinnablePanel wrapper added
  */
 
 import React from 'react';
-import { Navigation, ArrowRight, X, EyeOff, Trash2 } from 'lucide-react';
+import { Navigation, ArrowRight, EyeOff, Trash2 } from 'lucide-react';
 import { Button } from '../ui/button';
+import PinnablePanel from './PinnablePanel';
 
 const GuidedRoutePanel = ({
   route,
@@ -23,32 +19,16 @@ const GuidedRoutePanel = ({
   if (!route || !show) return null;
 
   return (
-    <div
-      className="absolute top-4 left-4 z-[700] bg-black/95 backdrop-blur-sm rounded-xl shadow-2xl border border-green-500/30 w-[340px] max-h-[70vh] overflow-hidden"
-      style={{ marginLeft: '0' }}
-      data-testid="guided-route-panel"
+    <PinnablePanel
+      title="Parcours Guide"
+      subtitle={selectedAnalysisSpecies?.toUpperCase() || ''}
+      icon={Navigation}
+      accentColor="#22c55e"
+      onClose={onClose}
+      defaultWidth={340}
+      maxHeight="70vh"
+      testId="guided-route-panel"
     >
-      {/* Header */}
-      <div className="p-3 bg-gradient-to-r from-green-600/20 to-emerald-600/20 border-b border-green-500/30">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 bg-green-500/20 rounded-lg">
-              <Navigation className="h-5 w-5 text-green-400" />
-            </div>
-            <div>
-              <h3 className="text-white font-bold text-sm">Parcours Guide</h3>
-              <p className="text-green-400 text-[10px] font-medium">{selectedAnalysisSpecies.toUpperCase()}</p>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-1.5 bg-gray-800 hover:bg-gray-700 rounded-lg text-gray-400 hover:text-white"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
-
       {/* Stats */}
       <div className="p-2 grid grid-cols-3 gap-2 border-b border-gray-800">
         <div className="text-center p-1.5 bg-gray-900 rounded-lg">
@@ -93,7 +73,7 @@ const GuidedRoutePanel = ({
       )}
 
       {/* Route Points List */}
-      <div className="p-2 max-h-[calc(70vh-240px)] overflow-y-auto">
+      <div className="p-2">
         <div className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">
           Itineraire ({route.waypoint_order.length} points)
         </div>
@@ -162,7 +142,7 @@ const GuidedRoutePanel = ({
           </Button>
         </div>
       </div>
-    </div>
+    </PinnablePanel>
   );
 };
 

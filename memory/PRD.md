@@ -23,36 +23,32 @@ Application HUNTIQ-V6 — Plateforme de scoring ecologique multi-moteurs pour la
 | x3400 | Interconnexion totale frontend (18 fichiers) | COMPLETE |
 | x4000-SUPRA | Creation 17 moteurs squelettes (Option A) | CERTIFIE |
 | x4100 | Integration scientifique 22 moteurs (Option C) | CERTIFIE |
-| **x4500-ULTRA** | **Reconstruction PREVIEW + BSAA + nettoyage** | **CERTIFIE** |
+| x4500-ULTRA | Reconstruction PREVIEW + BSAA + nettoyage | CERTIFIE |
+| **x4515** | **PANEL_FIX_MODE — PinnablePanel wrapper** | **CERTIFIE** |
 
-## Etat actuel
+## Score de reference
+- **57.6** (22 moteurs, Option C: CORE 60% / Nouveaux 40%)
+- Point test: (46.8, -71.2), CERF, mois 10
 
-### Score de reference
-- **Point test:** (46.8, -71.2), CERF, mois 10
-- **Score:** **57.6** (22 moteurs, Option C: CORE 60% / Nouveaux 40%)
+## Composant PinnablePanel (x4515)
+Wrapper reutilisable applique a:
+- TerritoryAnalysisPanel (analyse territoire)
+- BionicZoneDiagnosticPanel (diagnostics zones)
+- GuidedRoutePanel (parcours guide)
+- NutritionAnalysisModal (analyse alimentation/saline)
 
-### 22 moteurs actifs
-- **CORE (60%):** alimentation, repos, corridors_v10, alimentation_v2, pression
-- **CORE++ (17%):** hydro, thermal, ndvi_vegetation, weather, temporal, habitat, ecosystem
-- **CORE+++ (12%):** behavior, risk, opportunity, attractors, scenario
-- **BIONIC-OS (9%):** simulation, multi_species, trajets, visibility, learning
-
-### BSAA
-- 9 endpoints API sous `/api/bsaa/*`
-- 5 plateformes (Facebook, Instagram, TikTok, YouTube, Reddit)
-- 8 templates de contenu (FR/EN)
-- Page frontend `/bsaa` avec dashboard, generateur, analytics
-
-### PREVIEW
-- Frontend: 0 erreurs webpack
-- Backend: 22 moteurs + BSAA actifs
-- Pages fonctionnelles: HOME, DASHBOARD, MAP, SALINE, BSAA, TRIPS, etc.
+Fonctionnalites:
+- Pin/Unpin (fixation flottante)
+- Drag (deplacement par en-tete)
+- Resize (coin inferieur droit)
+- Expand (pleine page)
+- Scroll interne automatique
+- z-index 2000 en mode fixe
 
 ## Contraintes critiques
-- **Merge/MASTER_SWITCH: EXCLUSIVITE STEEVE-MAX** — Aucun merge ni activation sans autorisation explicite
-- **Score consolide 57.6: Reference officielle** — Aucune modification sans directive
+- Merge/MASTER_SWITCH: EXCLUSIVITE STEEVE-MAX
+- Score consolide 57.6: Reference officielle inchangeable sans directive
 
 ## Taches futures (en attente de directive Steeve)
 - Validation visuelle complete du PREVIEW
 - Prochaine directive numerotee
-- Merge final vers main (bloque sur validation Steeve)

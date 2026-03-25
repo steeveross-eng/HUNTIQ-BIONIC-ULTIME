@@ -1,16 +1,15 @@
 /**
  * TerritoryAnalysisPanel.jsx — Territory Analysis Results Panel
+ * x4515-PANEL_FIX_MODE: PinnablePanel wrapper added
  * 
  * Shows quality score, indices, success rates, recommendations,
  * warnings and regulatory summary for a selected territory.
- * 
- * Phase 2 extraction from TerritoryMap.jsx
- * @module territory/TerritoryAnalysisPanel
  */
 
 import React from 'react';
-import { Target, Car, TreePine, Star, CircleDot, Check, Info, X } from 'lucide-react';
+import { Target, Car, TreePine, Star, CircleDot, Check, Info } from 'lucide-react';
 import { BIONIC_COLORS } from '@/config/bionic-colors';
+import PinnablePanel from './PinnablePanel';
 
 const SPECIES_COLORS = {
   orignal: BIONIC_COLORS.gold.dark,
@@ -23,28 +22,16 @@ const TerritoryAnalysisPanel = ({ analysis, onClose, getScoreColor, t = (k) => k
   if (!analysis) return null;
 
   return (
-    <div
-      className="absolute top-4 right-[280px] z-[700] bg-black/95 backdrop-blur-sm rounded-xl shadow-2xl border border-green-500/30 w-[380px] max-h-[80vh] overflow-hidden"
-      data-testid="territory-analysis-panel"
+    <PinnablePanel
+      title={analysis.name || 'Analyse territoire'}
+      subtitle={`${analysis.typeName || ''} - ${analysis.region || ''}`}
+      icon={Target}
+      accentColor={analysis.typeColor || '#22c55e'}
+      onClose={onClose}
+      defaultWidth={380}
+      maxHeight="80vh"
+      testId="territory-analysis-panel"
     >
-      {/* Header */}
-      <div className="p-3 border-b border-green-500/30" style={{ backgroundColor: `${analysis.typeColor}20` }}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-lg" style={{ backgroundColor: `${analysis.typeColor}30` }}>
-              <Target className="h-5 w-5" style={{ color: analysis.typeColor }} />
-            </div>
-            <div>
-              <h3 className="text-white font-bold text-sm">{analysis.name}</h3>
-              <p className="text-xs" style={{ color: analysis.typeColor }}>{analysis.typeName} - {analysis.region}</p>
-            </div>
-          </div>
-          <button onClick={onClose} className="p-1 text-gray-400 hover:text-white rounded">
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
-
       {/* Score Global */}
       <div className="p-3 border-b border-green-500/20">
         <div className="flex items-center justify-between mb-2">
@@ -155,7 +142,7 @@ const TerritoryAnalysisPanel = ({ analysis, onClose, getScoreColor, t = (k) => k
           ))}
         </ul>
       </div>
-    </div>
+    </PinnablePanel>
   );
 };
 
