@@ -137,18 +137,20 @@ def compute_salines(
     side_m: float = 2000.0,
     max_salines: int = 4,
     min_distance_m: float = 300.0,
+    max_radius_m: float = 600.0,
 ) -> list:
     """
     Calcule les emplacements optimaux de salines avec diversification spatiale.
+    x4520-C: Filtrage strict Haversine ≤ max_radius_m (600m par defaut).
 
     1. Génère 16 candidats répartis sur le territoire
     2. Score chaque candidat (6 critères STEEVE-MAX)
-    3. Sélectionne max_salines avec distance minimale (gloutonne)
-    4. Retourne tous les candidats avec flag 'selected'
+    3. FILTRE STRICT: exclut tout candidat > max_radius_m du centre (Haversine)
+    4. Sélectionne max_salines avec distance minimale (gloutonne)
+    5. Retourne tous les candidats avec flag 'selected'
     """
     half = side_m / 2
     max_salines = max(1, min(4, max_salines))
-    n_candidates = 16
 
     # Générer 16 candidats bien répartis (grille 4×4 perturbée)
     candidates = []
@@ -169,16 +171,22 @@ def compute_salines(
             dx = base_x + jitter_x
             dy = base_y + jitter_y
 
-            # Distance au centre
-            dist = math.sqrt(dx ** 2 + dy ** 2)
+            # Distance euclidienne au centre (approximation rapide)
+            dist_euclid = math.sqrt(dx ** 2 + dy ** 2)
 
-            # Exclure les candidats trop proches du centre (<150m) ou hors zone
-            if dist < 150 or abs(dx) > half or abs(dy) > half:
+            # Exclure les candidats trop proches du centre (<150m) ou hors zone grid
+            if dist_euclid < 150 or abs(dx) > half or abs(dy) > half:
                 continue
 
             lat, lng = _offset(center_lat, center_lng, dx, dy)
+
+            # x4520-C DIRECTIVE STEEVE-MAX: Filtrage STRICT Haversine ≤ max_radius_m
+            dist_haversine = _haversine_m(center_lat, center_lng, lat, lng)
+            if dist_haversine > max_radius_m:
+                continue  # REJET TOTAL — aucune saline hors 600m
+
             score, criteres, justifications = _score_candidate(
-                terrain, lat, lng, center_lat, center_lng, dist, half, idx
+                terrain, lat, lng, center_lat, center_lng, dist_haversine, half, idx
             )
 
             # Type de saline selon espèce
@@ -207,7 +215,7 @@ def compute_salines(
                 "lng": round(lng, 6),
                 "score": score,
                 "type": type_saline,
-                "distance_centre_m": round(dist),
+                "distance_centre_m": round(dist_haversine),
                 "justifications": justifications,
                 "carences_zone": carences or ["Aucune carence majeure détectée"],
                 "criteres": criteres,

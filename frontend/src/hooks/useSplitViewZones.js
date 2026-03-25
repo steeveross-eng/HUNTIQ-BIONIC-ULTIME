@@ -28,7 +28,7 @@ export function useSplitViewZones({
     const wp = selectedWaypointForZones;
     if (wp) return `split_${wp.lat?.toFixed(6)}_${wp.lng?.toFixed(6)}_${selectedSpecies}_${biologicalSeason}`;
     if (activeWaypoints.length > 0) {
-      return `split_multi_${activeWaypoints.map(w => `${(w.lat||w.latitude)?.toFixed(4)}_${(w.lng||w.longitude)?.toFixed(4)}`).join('|')}_${selectedSpecies}_${biologicalSeason}`;
+      return `split_multi_${activeWaypoints.map(w => `${(w.lat||w.latitude)?.toFixed(6)}_${(w.lng||w.longitude)?.toFixed(6)}`).join('|')}_${selectedSpecies}_${biologicalSeason}`;
     }
     return null;
   }, [enabled, selectedWaypointForZones, activeWaypoints, selectedSpecies, biologicalSeason]);

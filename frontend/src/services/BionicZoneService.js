@@ -76,6 +76,7 @@ export const getSpeciesLayers = (speciesId) => {
 // ORGANIC ZONES — 100% BACKEND
 // ============================================
 
+// x4520-B2: Cache purgé à chaque chargement — ZERO donnée résiduelle
 let _zoneCache = { key: null, data: null };
 
 /**

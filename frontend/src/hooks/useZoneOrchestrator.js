@@ -60,8 +60,8 @@ export function useZoneOrchestrator({
   // Modules isolés
   const { getCached, setCached } = useZoneCache();
 
-  // Cle de cache deterministe — v10x: corridors inclus
-  const CACHE_VERSION = '_v10x';
+  // Cle de cache deterministe — x4520-B2: version bump pour invalider stale
+  const CACHE_VERSION = '_v10x_b2';
   const cacheKey = useMemo(() => {
     const seasonSuffix = biologicalSeason ? `_${biologicalSeason}` : '';
     if (selectedWaypointForZones) {

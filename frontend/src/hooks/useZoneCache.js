@@ -13,7 +13,8 @@
 import { useCallback, useRef } from 'react';
 
 const DB_NAME = 'bionic_zone_cache';
-const DB_VERSION = 1;
+// x4520-B2: Version bump pour invalider tout le cache IndexedDB stale
+const DB_VERSION = 2;
 const STORE_NAME = 'zones';
 const MAX_ENTRIES = 50;
 
@@ -22,9 +23,11 @@ function openDB() {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME, { keyPath: 'key' });
+      // x4520-B2: Purge complète — supprimer et recréer le store lors du version bump
+      if (db.objectStoreNames.contains(STORE_NAME)) {
+        db.deleteObjectStore(STORE_NAME);
       }
+      db.createObjectStore(STORE_NAME, { keyPath: 'key' });
     };
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);

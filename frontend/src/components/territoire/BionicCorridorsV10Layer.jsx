@@ -80,8 +80,10 @@ const SPECIES_MAP = {
 const LEVEL_ZINDEX = { FAIBLE: 0, MODERE: 1, FORT: 2, MAJEUR: 3, CRITIQUE: 4 };
 
 // ═══ PERFORMANCE V3: Cache global persistant (max 20 entrées) ═══
-// x4520-B: Precision .toFixed(6) pour distinguer waypoints proches (<11m)
+// x4520-B2: Cache purgé à chaque chargement de module (ZERO stale)
 const _cache = new Map();
+// x4520-B2: Purge au chargement — ZERO donnée résiduelle
+_cache.clear();
 function cacheKey(lat, lng, sp, m) { return `${lat.toFixed(6)}:${lng.toFixed(6)}:${sp}:${m}`; }
 
 // ═══ PERFORMANCE V3: Douglas-Peucker simplifié côté client ═══

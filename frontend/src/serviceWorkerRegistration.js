@@ -14,7 +14,8 @@ const isLocalhost = Boolean(
 );
 
 // Service Worker version — incremented to force cache invalidation
-const SW_VERSION = 'v6';
+// x4520-B2: v6 → v7 pour invalider tous les caches HTTP stale
+const SW_VERSION = 'v7';
 
 /**
  * Register Service Worker
