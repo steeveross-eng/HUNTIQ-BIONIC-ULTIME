@@ -1,22 +1,17 @@
 /**
- * IntelligenceDashboard — Cockpit central flottant INTELLIGENCE
- * ==============================================================
- * Charte BIONIC Article 2: Deux etats — ferme / ouvert (cockpit complet).
- * Section X: Lisibilite premium — texte eclairci +50%, polices agrandies,
- *   espacement optimise, hierarchie visuelle renforcee.
- * Palette: cream #F2E9D8, sand-gray #C8BBA6, forest #4A7A2E, earth #A8885E.
- * STEEVE-MAX: zero pollution, zero fatigue visuelle, cockpit premium.
+ * IntelligenceDashboard — Cockpit unifie V6-CORE
+ * x4520-UNIFICATION_DASHBOARD
+ * ZERO relique V1/V2/V10 — 22 moteurs, interface unique
+ * Fusionne: INTELLIGENCE + GUIDE PRO + SCIENTIFIQUE + TERRAIN
+ * Integre: Luna/SolCal
  */
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import {
-  X, FlaskConical, Compass, Crosshair,
-  TrendingUp, ClipboardList, Database, Activity,
-  ChevronRight, AlertTriangle, Brain,
+  X, Brain, TrendingUp, ClipboardList, AlertTriangle,
+  Activity, ChevronRight, Moon, Database, Layers,
 } from 'lucide-react';
 import useBionicStore from '@/stores/useBionicStore';
-import ModeScientifique from './intelligence/ModeScientifique';
-import ModeTerrain from './intelligence/ModeTerrain';
-import ModeGuidePro from './intelligence/ModeGuidePro';
+import SolunarChart from './intelligence/SolunarChart';
 
 const TP = {
   cream: '#F2E9D8', creamDim: '#C8BBA6',
@@ -26,12 +21,6 @@ const TP = {
   rock: '#9CA3AF', rockDim: '#6B7280',
   bionic: '#D97706', bionicGlow: '#F59E0B', bionicDim: '#92400E',
 };
-
-const MODES = [
-  { id: 'guide', label: 'GUIDE PRO', Icon: Crosshair, color: TP.forestLight, activeBg: 'rgba(45,80,22,0.15)', activeBorder: 'rgba(74,122,46,0.35)' },
-  { id: 'scientifique', label: 'SCIENTIFIQUE', Icon: FlaskConical, color: TP.sand, activeBg: 'rgba(194,169,126,0.12)', activeBorder: 'rgba(194,169,126,0.3)' },
-  { id: 'terrain', label: 'TERRAIN', Icon: Compass, color: TP.earthLight, activeBg: 'rgba(139,111,71,0.12)', activeBorder: 'rgba(139,111,71,0.3)' },
-];
 
 const CL = {
   OPTIMAL: { color: TP.bionicGlow, bg: 'rgba(217,119,6,0.12)', border: 'rgba(217,119,6,0.25)' },
@@ -47,6 +36,18 @@ const URG = {
   FAIBLE: { border: '1px solid rgba(156,163,175,0.2)', bg: 'rgba(156,163,175,0.06)', color: TP.rock },
 };
 
+const DOMAIN_ICONS = {
+  habitat: Layers, deplacement: Activity, pression: AlertTriangle,
+  environnement: TrendingUp, comportement: Brain, strategie: ClipboardList,
+  intelligence: Database,
+};
+
+const DOMAIN_COLORS = {
+  habitat: '#4A7A2E', deplacement: '#D97706', pression: '#EF4444',
+  environnement: '#3B82F6', comportement: '#A78BFA', strategie: '#F59E0B',
+  intelligence: '#06B6D4',
+};
+
 function getClasse(score) {
   if (score >= 80) return CL.OPTIMAL;
   if (score >= 60) return CL.BON;
@@ -55,18 +56,19 @@ function getClasse(score) {
 }
 function getUrg(u) { return URG[u] || URG.FAIBLE; }
 
-const TOPO_BG = `url("data:image/svg+xml,%3Csvg width='80' height='80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40 Q20 30 40 40 T80 40' fill='none' stroke='rgba(74,122,46,0.06)' stroke-width='0.5'/%3E%3Cpath d='M0 60 Q20 50 40 60 T80 60' fill='none' stroke='rgba(139,111,71,0.04)' stroke-width='0.4'/%3E%3Cpath d='M0 20 Q20 12 40 20 T80 20' fill='none' stroke='rgba(74,122,46,0.04)' stroke-width='0.3'/%3E%3C/svg%3E")`;
+const TOPO_BG = `url("data:image/svg+xml,%3Csvg width='80' height='80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40 Q20 30 40 40 T80 40' fill='none' stroke='rgba(74,122,46,0.06)' stroke-width='0.5'/%3E%3Cpath d='M0 60 Q20 50 40 60 T80 60' fill='none' stroke='rgba(139,111,71,0.04)' stroke-width='0.4'/%3E%3C/svg%3E")`;
 
 export default function IntelligenceDashboard({
   onClose, waypointCenter, selectedSpecies, currentMonth,
   onNavigateToPosition, onHighlightZoneType, onShowApproachMarkers,
 }) {
-  const [activeMode, setActiveMode] = useState('guide');
   const {
-    summary, forecast, plan, loading,
-    fetchSummary, fetchForecast, fetchPlan,
+    summary, forecast, plan, solunar, loading,
+    fetchSummary, fetchForecast, fetchPlan, fetchSolunar,
     setLocation, setSpecies, setMonth,
   } = useBionicStore();
+
+  const [guidePro, setGuidePro] = useState(null);
 
   useEffect(() => {
     if (waypointCenter) setLocation({ lat: waypointCenter.lat, lng: waypointCenter.lng });
@@ -82,8 +84,17 @@ export default function IntelligenceDashboard({
 
   useEffect(() => {
     if (!location) return;
-    fetchSummary(); fetchForecast(); fetchPlan();
-  }, [location, species, month, fetchSummary, fetchForecast, fetchPlan]);
+    fetchSummary(); fetchForecast(); fetchPlan(); fetchSolunar();
+  }, [location, species, month, fetchSummary, fetchForecast, fetchPlan, fetchSolunar]);
+
+  // Guide Pro data
+  const API = process.env.REACT_APP_BACKEND_URL;
+  useEffect(() => {
+    if (!location) return;
+    const params = new URLSearchParams({ lat: location.lat, lng: location.lng, species, month });
+    fetch(`${API}/api/v3/intelligence/guide-pro?${params}`)
+      .then(r => r.json()).then(setGuidePro).catch(() => {});
+  }, [location, species, month, API]);
 
   const handleNavigate = useCallback((lat, lng) => {
     if (onNavigateToPosition) onNavigateToPosition(lat, lng);
@@ -109,29 +120,13 @@ export default function IntelligenceDashboard({
         }}
         data-testid="intelligence-panel"
       >
-        {/* ══ HEADER COCKPIT — Section X: tailles augmentees ══ */}
+        {/* HEADER — V6-CORE Unifie */}
         <div className="flex-shrink-0 px-5 py-2.5 flex items-center gap-3"
           style={{ background: 'rgba(26, 22, 16, 0.6)', borderBottom: '1px solid rgba(139, 111, 71, 0.18)' }}
         >
           <Brain className="w-5 h-5" style={{ color: TP.forestLight }} />
-          <span className="text-base font-bold tracking-tight" style={{ color: TP.cream }}>INTELLIGENCE</span>
-
-          <div className="flex gap-1 ml-4 rounded-lg p-1" style={{ background: 'rgba(22, 18, 12, 0.5)', border: '1px solid rgba(139, 111, 71, 0.12)' }}>
-            {MODES.map(m => (
-              <button
-                key={m.id}
-                onClick={() => setActiveMode(m.id)}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all"
-                style={activeMode === m.id
-                  ? { color: m.color, background: m.activeBg, border: `1px solid ${m.activeBorder}` }
-                  : { color: TP.rockDim, border: '1px solid transparent' }
-                }
-                data-testid={`mode-${m.id}`}
-              >
-                <m.Icon className="w-4 h-4" />{m.label}
-              </button>
-            ))}
-          </div>
+          <span className="text-base font-bold tracking-tight" style={{ color: TP.cream }}>INTELLIGENCE V6-CORE</span>
+          <span className="text-xs px-2 py-0.5 rounded font-mono" style={{ background: 'rgba(74,122,46,0.15)', color: TP.forestLight, border: '1px solid rgba(74,122,46,0.25)' }}>22 MOTEURS</span>
 
           <div className="ml-auto flex items-center gap-3">
             {location && (
@@ -145,42 +140,49 @@ export default function IntelligenceDashboard({
           </div>
         </div>
 
-        {/* ══ CONTENT — Section X: espacement + lisibilite premium ══ */}
+        {/* CONTENT — Unifie scrollable */}
         <div className="flex-1 overflow-auto min-h-0">
           {!location ? (
             <div className="flex flex-col items-center justify-center py-16 gap-3">
-              <Crosshair className="w-8 h-8" style={{ color: TP.rockDim }} />
+              <Brain className="w-8 h-8" style={{ color: TP.rockDim }} />
               <div className="text-base font-medium" style={{ color: TP.creamDim }}>Selectionnez un waypoint pour activer INTELLIGENCE</div>
             </div>
           ) : (
             <div className="p-5 space-y-5">
-              {/* ══ BLOC 1: ANALYTICS — scores agrandis ══ */}
+              {/* SECTION 1: SCORE CONSOLIDE + 22 MOTEURS PAR DOMAINE */}
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-3" data-testid="block-analytics">
                 <div className="rounded-lg p-5 flex flex-col justify-center items-center"
                   style={{ background: classeStyle.bg, border: `1px solid ${classeStyle.border}` }}
                 >
-                  <div className="text-sm uppercase tracking-wider font-medium mb-1" style={{ color: TP.creamDim }}>Score consolide</div>
+                  <div className="text-sm uppercase tracking-wider font-medium mb-1" style={{ color: TP.creamDim }}>Score Consolide</div>
                   <div className="text-6xl font-black tracking-tighter" style={{ color: classeStyle.color }}>{summary?.consolidated?.score ?? '--'}</div>
                   <div className="text-xl font-bold mt-1" style={{ color: classeStyle.color }}>{summary?.consolidated?.label || '--'}</div>
                   <div className="text-sm mt-1" style={{ color: TP.creamDim }}>{summary?.engines_count || 0} moteurs actifs</div>
+                  {summary?.option && <div className="text-xs mt-1 font-mono" style={{ color: TP.rockDim }}>{summary.option}</div>}
                 </div>
                 <div className="lg:col-span-3 grid grid-cols-2 md:grid-cols-4 gap-2.5">
                   {summary?.domains ? Object.entries(summary.domains).map(([domain, engines]) => {
                     const avg = Math.round(engines.reduce((s, e) => s + e.score, 0) / engines.length);
                     const cl = getClasse(avg);
+                    const DIcon = DOMAIN_ICONS[domain] || Activity;
+                    const dColor = DOMAIN_COLORS[domain] || TP.creamDim;
+                    const domainLabel = summary.domain_labels?.[domain] || domain;
                     return (
-                      <div key={domain} className="rounded-lg p-4 cursor-pointer transition-all hover:brightness-110"
+                      <div key={domain} className="rounded-lg p-3 cursor-pointer transition-all hover:brightness-110"
                         style={{ background: 'rgba(45,80,22,0.07)', border: '1px solid rgba(139,111,71,0.12)' }}
                         onClick={() => handleDomainClick(domain)}
                         data-testid={`domain-${domain}`}
                       >
-                        <div className="text-xs uppercase tracking-wider font-medium mb-1" style={{ color: TP.creamDim }}>{domain}</div>
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <DIcon className="w-3.5 h-3.5" style={{ color: dColor }} />
+                          <div className="text-xs uppercase tracking-wider font-medium truncate" style={{ color: dColor }}>{domainLabel}</div>
+                        </div>
                         <div className="text-3xl font-bold" style={{ color: cl.color }}>{avg}</div>
-                        <div className="mt-2 space-y-1">
+                        <div className="mt-1.5 space-y-0.5">
                           {engines.map(e => (
-                            <div key={e.engine} className="flex justify-between text-sm">
-                              <span className="font-medium" style={{ color: TP.creamDim }}>{e.engine}</span>
-                              <span className="font-mono font-semibold" style={{ color: TP.cream }}>{e.score}</span>
+                            <div key={e.key || e.engine} className="flex justify-between text-xs">
+                              <span className="font-medium truncate mr-1" style={{ color: TP.creamDim }}>{e.engine}</span>
+                              <span className="font-mono font-semibold flex-shrink-0" style={{ color: TP.cream }}>{e.score}</span>
                             </div>
                           ))}
                         </div>
@@ -194,7 +196,7 @@ export default function IntelligenceDashboard({
                 </div>
               </div>
 
-              {/* ══ BLOC 2: CONDITIONS & ALERTES ══ */}
+              {/* SECTION 2: CONDITIONS & ALERTES */}
               {summary?.recommendations?.length > 0 && (
                 <div className="rounded-lg p-5" style={{ background: 'rgba(139,111,71,0.05)', border: '1px solid rgba(139,111,71,0.12)' }} data-testid="block-conditions">
                   <div className="flex items-center gap-2 mb-3">
@@ -203,7 +205,7 @@ export default function IntelligenceDashboard({
                   </div>
                   <div className="space-y-2">
                     {summary.recommendations.map((r, i) => {
-                      const u = r.priority === 'HAUTE' ? getUrg('HAUTE') : getUrg('MOYENNE');
+                      const u = getUrg(r.priority);
                       return (
                         <div key={i} className="flex items-center gap-3 px-4 py-3 rounded-lg"
                           style={{ border: u.border, background: u.bg, color: u.color }}
@@ -218,18 +220,60 @@ export default function IntelligenceDashboard({
                 </div>
               )}
 
-              {/* ══ BLOC 3: MODE ACTIF (2/3) + SIDEBAR (1/3) ══ */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4" data-testid="block-mode-content">
-                <div className="lg:col-span-2 rounded-lg p-5" style={{ background: 'rgba(45,80,22,0.05)', border: '1px solid rgba(139,111,71,0.12)' }}>
-                  <div className="flex items-center gap-2 mb-4">
-                    {(() => { const M = MODES.find(m => m.id === activeMode); return M ? <M.Icon className="w-5 h-5" style={{ color: M.color }} /> : null; })()}
-                    <span className="text-base uppercase tracking-wider font-bold" style={{ color: TP.cream }}>Mode {MODES.find(m => m.id === activeMode)?.label}</span>
+              {/* SECTION 3: LUNA/SOLCAL + GUIDE PRO (2/3) — FORECAST (1/3) */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4" data-testid="block-guide-forecast">
+                {/* Luna/SolCal + Guide Pro */}
+                <div className="lg:col-span-2 space-y-4">
+                  {/* SolunarChart */}
+                  <div className="rounded-lg p-4" style={{ background: 'rgba(45,80,22,0.05)', border: '1px solid rgba(139,111,71,0.12)' }} data-testid="block-solunar">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Moon className="w-5 h-5" style={{ color: TP.sand }} />
+                      <span className="text-sm uppercase tracking-wider font-bold" style={{ color: TP.cream }}>Luna / SolCal</span>
+                    </div>
+                    {solunar ? (
+                      <SolunarChart solunar={solunar} />
+                    ) : (
+                      <div className="text-sm py-6 text-center font-medium" style={{ color: TP.creamDim }}>{loading ? 'Chargement...' : '--'}</div>
+                    )}
                   </div>
-                  {activeMode === 'guide' && <ModeGuidePro location={location} species={species} month={month} onNavigate={handleNavigate} onShowMarkers={onShowApproachMarkers} />}
-                  {activeMode === 'scientifique' && <ModeScientifique location={location} species={species} month={month} />}
-                  {activeMode === 'terrain' && <ModeTerrain location={location} species={species} month={month} />}
+
+                  {/* Guide Pro Best Time */}
+                  {guidePro?.best_time && (
+                    <div className="rounded-lg p-4" style={{ background: 'rgba(139,111,71,0.06)', border: '1px solid rgba(139,111,71,0.12)' }} data-testid="block-guide-pro">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Activity className="w-5 h-5" style={{ color: TP.forestLight }} />
+                        <span className="text-sm uppercase tracking-wider font-bold" style={{ color: TP.cream }}>Guide Pro — Meilleur Temps</span>
+                      </div>
+                      <div className="grid grid-cols-3 gap-3">
+                        <div className="text-center rounded-lg p-3" style={{ background: 'rgba(217,119,6,0.1)', border: '1px solid rgba(217,119,6,0.2)' }}>
+                          <div className="text-3xl font-black" style={{ color: TP.bionicGlow }}>{guidePro.best_time.score}</div>
+                          <div className="text-xs uppercase mt-1 font-bold" style={{ color: TP.bionic }}>{guidePro.best_time.label}</div>
+                        </div>
+                        <div className="text-center rounded-lg p-3" style={{ background: 'rgba(45,80,22,0.08)' }}>
+                          <div className="text-2xl font-bold" style={{ color: TP.cream }}>{guidePro.best_time.solunar_contribution}</div>
+                          <div className="text-xs mt-1 font-medium" style={{ color: TP.creamDim }}>Solunaire</div>
+                        </div>
+                        <div className="text-center rounded-lg p-3" style={{ background: 'rgba(45,80,22,0.08)' }}>
+                          <div className="text-2xl font-bold" style={{ color: TP.cream }}>{guidePro.best_time.terrain_contribution}</div>
+                          <div className="text-xs mt-1 font-medium" style={{ color: TP.creamDim }}>Terrain</div>
+                        </div>
+                      </div>
+                      {/* Weather */}
+                      {guidePro.weather_official && (
+                        <div className="flex gap-3 mt-3">
+                          <div className="text-xs px-3 py-1.5 rounded-lg font-mono" style={{ background: 'rgba(139,111,71,0.1)', color: TP.creamDim }}>
+                            {guidePro.weather_official.temperature}C
+                          </div>
+                          <div className="text-xs px-3 py-1.5 rounded-lg font-mono" style={{ background: 'rgba(139,111,71,0.1)', color: TP.creamDim }}>
+                            Vent: {guidePro.weather_official.wind_speed_kmh} km/h ({guidePro.weather_official.wind_force})
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
+                {/* SIDEBAR: Forecast + Plan */}
                 <div className="space-y-3">
                   {/* FORECAST */}
                   <div className="rounded-lg p-4" style={{ background: 'rgba(139,111,71,0.06)', border: '1px solid rgba(139,111,71,0.12)' }} data-testid="block-forecast">
@@ -274,7 +318,7 @@ export default function IntelligenceDashboard({
                     </div>
                     {plan ? (
                       <div className="space-y-2">
-                        {plan.actions?.slice(0, 4).map(a => {
+                        {plan.actions?.slice(0, 5).map(a => {
                           const u = getUrg(a.urgency);
                           return (
                             <div key={a.rank} onClick={() => handleNavigate(location.lat, location.lng)}
@@ -299,12 +343,14 @@ export default function IntelligenceDashboard({
                   <div className="rounded-lg p-4" style={{ background: 'rgba(45,80,22,0.05)', border: '1px solid rgba(74,122,46,0.1)' }} data-testid="block-raw-data">
                     <div className="flex items-center gap-2 mb-2">
                       <Database className="w-4 h-4" style={{ color: TP.creamDim }} />
-                      <span className="text-sm uppercase tracking-wider font-bold" style={{ color: TP.cream }}>Donnees brutes</span>
+                      <span className="text-sm uppercase tracking-wider font-bold" style={{ color: TP.cream }}>Donnees V6-CORE</span>
                     </div>
                     <div className="text-sm font-mono space-y-1" style={{ color: TP.creamDim }}>
                       <div>Pos: {location?.lat.toFixed(5)}, {location?.lng.toFixed(5)}</div>
                       <div>Score: {summary?.consolidated?.score ?? '--'} | {summary?.consolidated?.classe ?? '--'}</div>
+                      <div>Moteurs: {summary?.engines_count || '--'} | Option: C</div>
                       <div>Fort: {summary?.analysis?.strongest_engine || '--'} ({summary?.analysis?.strongest_score || '--'})</div>
+                      <div>Faible: {summary?.analysis?.weakest_engine || '--'} ({summary?.analysis?.weakest_score || '--'})</div>
                       {forecast && <div>Best: M{forecast.best_month} | Avg: {forecast.annual_average}</div>}
                     </div>
                   </div>

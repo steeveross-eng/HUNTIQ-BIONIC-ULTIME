@@ -1,18 +1,11 @@
 """
-API Gateway V3 — Source unique de vérité /api/v3/*
+API Gateway V3 — Source unique de verite /api/v3/*
 =====================================================
-BCE-4X: Routeur unifié, validation automatique, traçabilité.
-STEEVE-MAX: Architecture modulaire, découplée, future-proof.
+BCE-4X: Routeur unifie, validation automatique, tracabilite.
+STEEVE-MAX: Architecture modulaire, decouplee, future-proof.
 
-Endpoints:
-  /api/v3/engines/registry       — Manifest dynamique
-  /api/v3/engines/score-point    — Score consolidé
-  /api/v3/engines/score-grid     — Grille consolidée
-  /api/v3/engines/{name}/score   — Score moteur individuel
-  /api/v3/engines/validate       — Validation BCE-4X + STEEVE-MAX
-  /api/v3/intelligence/summary   — Résumé analytique INTELLIGENCE
-  /api/v3/intelligence/forecast  — Prévisions écologiques
-  /api/v3/intelligence/plan      — Plan maître recommandé
+x4520-UNIFICATION_DASHBOARD: Migration complete vers pipeline 22 moteurs.
+Elimination de toutes les reliques V1/V2/V10 dans les reponses.
 """
 import sys
 import logging
@@ -20,19 +13,54 @@ from fastapi import APIRouter, Query
 
 from modules.engine_registry.base import resolve_species, SPECIES_CANONICAL
 from modules.engine_registry.registry import EngineRegistry, DynamicConsolidator
+from core.scoring_pipeline.score_consolide import compute_consolidated_score
 
 logger = logging.getLogger("api_gateway_v3")
 
 router = APIRouter(prefix="/api/v3", tags=["API-GATEWAY-V3"])
 
-# ══════════════════════════════════════════════════════════
-# Singleton registry + consolidateur — initialisé au import
-# ══════════════════════════════════════════════════════════
+# Singleton registry (pour metadata/validation uniquement)
 _registry = EngineRegistry()
 _registry.auto_discover()
 _consolidator = DynamicConsolidator(_registry)
 
-logger.info(f"[GATEWAY-V3] Initialisé: {len(_registry.list_engines())} moteurs")
+logger.info(f"[GATEWAY-V3] Initialise: {len(_registry.list_engines())} moteurs legacy + pipeline 22 moteurs")
+
+# x4520: Metadata V6-CORE pour les 22 moteurs (noms propres, domaines, descriptions)
+V6_ENGINE_META = {
+    "alimentation":     {"label": "Alimentation",     "domain": "habitat",        "tier": "CORE",     "description": "Ressources alimentaires primaires"},
+    "alimentation_v2":  {"label": "Nutrition Avancee", "domain": "habitat",        "tier": "CORE",     "description": "Salines, mineraux, carences"},
+    "repos":            {"label": "Repos & Couvert",   "domain": "habitat",        "tier": "CORE",     "description": "Zones de repos et couvert vegetal"},
+    "corridors_v10":    {"label": "Corridors",         "domain": "deplacement",    "tier": "CORE",     "description": "Corridors de deplacement faunique"},
+    "pression":         {"label": "Pression Humaine",  "domain": "pression",       "tier": "CORE",     "description": "Impact anthropique et derangement"},
+    "hydro":            {"label": "Hydrographie",      "domain": "environnement",  "tier": "CORE++",   "description": "Reseaux hydriques et zones humides"},
+    "thermal":          {"label": "Thermique",         "domain": "environnement",  "tier": "CORE++",   "description": "Gradients thermiques saisonniers"},
+    "ndvi_vegetation":  {"label": "Vegetation NDVI",   "domain": "environnement",  "tier": "CORE++",   "description": "Indice de vegetation normalise"},
+    "weather":          {"label": "Meteo",             "domain": "environnement",  "tier": "CORE++",   "description": "Conditions meteorologiques"},
+    "temporal":         {"label": "Temporel",          "domain": "comportement",   "tier": "CORE++",   "description": "Rythmes circadiens et saisonniers"},
+    "habitat":          {"label": "Habitat",           "domain": "habitat",        "tier": "CORE++",   "description": "Qualite structurelle de l'habitat"},
+    "ecosystem":        {"label": "Ecosysteme",        "domain": "environnement",  "tier": "CORE++",   "description": "Sante globale de l'ecosysteme"},
+    "behavior":         {"label": "Comportement",      "domain": "comportement",   "tier": "CORE+++",  "description": "Analyse comportementale espece"},
+    "risk":             {"label": "Risques",           "domain": "pression",       "tier": "CORE+++",  "description": "Evaluation des risques terrain"},
+    "opportunity":      {"label": "Opportunites",      "domain": "strategie",      "tier": "CORE+++",  "description": "Fenetres d'opportunite de chasse"},
+    "attractors":       {"label": "Attracteurs",       "domain": "strategie",      "tier": "CORE+++",  "description": "Points d'attraction faunique"},
+    "scenario":         {"label": "Scenarios",         "domain": "strategie",      "tier": "CORE+++",  "description": "Simulations de scenarios tactiques"},
+    "simulation":       {"label": "Simulation",        "domain": "intelligence",   "tier": "BIONIC-OS","description": "Modeles predictifs avances"},
+    "multi_species":    {"label": "Multi-especes",     "domain": "intelligence",   "tier": "BIONIC-OS","description": "Interactions inter-especes"},
+    "trajets":          {"label": "Trajets",           "domain": "deplacement",    "tier": "CORE+++",  "description": "Analyse des trajets et deplacements"},
+    "visibility":       {"label": "Visibilite",        "domain": "strategie",      "tier": "BIONIC-OS","description": "Couverture visuelle et lignes de mire"},
+    "learning":         {"label": "Apprentissage",     "domain": "intelligence",   "tier": "BIONIC-OS","description": "Auto-calibration et apprentissage"},
+}
+
+V6_DOMAIN_LABELS = {
+    "habitat": "Habitat & Nourriture",
+    "deplacement": "Deplacement & Corridors",
+    "pression": "Pression & Risques",
+    "environnement": "Environnement",
+    "comportement": "Comportement",
+    "strategie": "Strategie & Opportunites",
+    "intelligence": "Intelligence BIONIC",
+}
 
 
 # ══════════════════════════════════════════════════════════
@@ -115,48 +143,51 @@ async def intelligence_summary(
     species: str = Query("CHEVREUIL"), month: int = Query(10, ge=1, le=12),
 ):
     """
-    Résumé analytique INTELLIGENCE — vue consolidée multi-moteurs.
-    Consommé par le frontend Analytics.
+    Resume analytique INTELLIGENCE — pipeline 22 moteurs V6-CORE.
+    x4520-UNIFICATION_DASHBOARD: Zero relique V1/V2/V10.
     """
     sp = resolve_species(species)
-    consolidated = _consolidator.score_point(lat, lng, sp, month)
+    consolidated = compute_consolidated_score(lat, lng, sp, month)
+    components = consolidated["components"]
 
-    # Analyse par domaine
+    # Grouper par domaine V6-CORE (noms propres, sans version)
     domain_scores = {}
-    for name, engine in _registry.all_engines().items():
-        meta = engine.meta()
-        domain = meta.domain
+    for engine_key, score in components.items():
+        meta = V6_ENGINE_META.get(engine_key, {"label": engine_key, "domain": "autre", "tier": "UNKNOWN"})
+        domain = meta["domain"]
         if domain not in domain_scores:
             domain_scores[domain] = []
         domain_scores[domain].append({
-            "engine": name, "score": consolidated["components"].get(name, 0),
-            "weight": consolidated["weights"].get(name, 0),
+            "engine": meta["label"],
+            "key": engine_key,
+            "score": round(score, 1),
+            "weight": consolidated["weights"].get(engine_key, 0),
+            "tier": meta["tier"],
         })
 
-    # Déterminer points forts / points faibles
-    components = consolidated["components"]
+    # Analyse
     if components:
         strongest = max(components, key=components.get)
         weakest = min(components, key=components.get)
     else:
         strongest = weakest = "N/A"
 
-    # Recommandations automatiques basées sur les scores
+    # Recommandations V6-CORE
     recommendations = []
-    for name, score in components.items():
+    for engine_key, score in components.items():
+        meta = V6_ENGINE_META.get(engine_key, {"label": engine_key, "domain": "autre"})
+        domain_label = V6_DOMAIN_LABELS.get(meta["domain"], meta["domain"])
         if score < 30:
-            meta = _registry.get(name).meta()
             recommendations.append({
-                "engine": name, "domain": meta.domain,
-                "priority": "HAUTE", "score": score,
-                "action": f"Améliorer {meta.domain} (score critique: {score}/100)",
+                "engine": meta["label"], "domain": domain_label,
+                "priority": "HAUTE", "score": round(score, 1),
+                "action": f"Ameliorer {meta['label']} (score critique: {round(score, 1)}/100)",
             })
         elif score < 50:
-            meta = _registry.get(name).meta()
             recommendations.append({
-                "engine": name, "domain": meta.domain,
-                "priority": "MOYENNE", "score": score,
-                "action": f"Surveiller {meta.domain} (score modéré: {score}/100)",
+                "engine": meta["label"], "domain": domain_label,
+                "priority": "MOYENNE", "score": round(score, 1),
+                "action": f"Surveiller {meta['label']} (score modere: {round(score, 1)}/100)",
             })
 
     return {
@@ -170,14 +201,16 @@ async def intelligence_summary(
             "label": consolidated["label"],
         },
         "domains": domain_scores,
+        "domain_labels": V6_DOMAIN_LABELS,
         "analysis": {
-            "strongest_engine": strongest,
-            "weakest_engine": weakest,
-            "strongest_score": components.get(strongest, 0),
-            "weakest_score": components.get(weakest, 0),
+            "strongest_engine": V6_ENGINE_META.get(strongest, {}).get("label", strongest),
+            "weakest_engine": V6_ENGINE_META.get(weakest, {}).get("label", weakest),
+            "strongest_score": round(components.get(strongest, 0), 1),
+            "weakest_score": round(components.get(weakest, 0), 1),
         },
         "recommendations": recommendations,
         "engines_count": len(components),
+        "option": "C — CORE 60% / Nouveaux 40%",
     }
 
 
@@ -187,19 +220,18 @@ async def intelligence_forecast(
     species: str = Query("CHEVREUIL"),
 ):
     """
-    Prévisions écologiques — variation saisonnière sur 12 mois.
-    Consommé par le frontend Forecast.
+    Previsions ecologiques — variation saisonniere 12 mois.
+    x4520: Pipeline 22 moteurs V6-CORE.
     """
     sp = resolve_species(species)
     monthly_data = []
 
     for m in range(1, 13):
-        result = _consolidator.score_point(lat, lng, sp, m)
+        result = compute_consolidated_score(lat, lng, sp, m)
         monthly_data.append({
             "month": m,
             "score": result["score"],
             "classe": result["classe"],
-            "components": result["components"],
         })
 
     scores = [d["score"] for d in monthly_data]
@@ -207,7 +239,6 @@ async def intelligence_forecast(
     worst_month = scores.index(min(scores)) + 1
     avg_score = round(sum(scores) / 12, 1)
 
-    # Déterminer les saisons
     seasons = {
         "printemps": round(sum(scores[2:5]) / 3, 1),
         "ete": round(sum(scores[5:8]) / 3, 1),
@@ -225,6 +256,7 @@ async def intelligence_forecast(
         "seasonal_scores": seasons,
         "best_season": max(seasons, key=seasons.get),
         "monthly_data": monthly_data,
+        "engines_count": 22,
     }
 
 
@@ -234,47 +266,36 @@ async def intelligence_plan(
     species: str = Query("CHEVREUIL"), month: int = Query(10, ge=1, le=12),
 ):
     """
-    Plan maître — actions recommandées pour optimiser le territoire.
-    Consommé par le frontend Plan Maître.
+    Plan maitre — actions recommandees.
+    x4520: Pipeline 22 moteurs V6-CORE, noms propres.
     """
     sp = resolve_species(species)
-    consolidated = _consolidator.score_point(lat, lng, sp, month)
+    consolidated = compute_consolidated_score(lat, lng, sp, month)
     components = consolidated["components"]
 
     actions = []
     priority_order = sorted(components.items(), key=lambda x: x[1])
 
-    for rank, (engine_name, score) in enumerate(priority_order, 1):
-        engine = _registry.get(engine_name)
-        if not engine:
-            continue
-        meta = engine.meta()
+    for rank, (engine_key, score) in enumerate(priority_order, 1):
+        meta = V6_ENGINE_META.get(engine_key, {"label": engine_key, "domain": "autre"})
+        domain_label = V6_DOMAIN_LABELS.get(meta["domain"], meta["domain"])
 
         if score >= 80:
-            status = "OPTIMAL"
-            action = "Maintenir les conditions actuelles"
-            urgency = "FAIBLE"
+            status, action, urgency = "OPTIMAL", "Maintenir les conditions actuelles", "FAIBLE"
         elif score >= 60:
-            status = "BON"
-            action = f"Surveiller la qualité {meta.domain}"
-            urgency = "FAIBLE"
+            status, action, urgency = "BON", f"Surveiller {meta['label']}", "FAIBLE"
         elif score >= 40:
-            status = "MODERE"
-            action = f"Améliorer les conditions de {meta.domain}"
-            urgency = "MOYENNE"
+            status, action, urgency = "MODERE", f"Ameliorer {meta['label']}", "MOYENNE"
         elif score >= 20:
-            status = "FAIBLE"
-            action = f"Intervention requise: renforcer {meta.domain}"
-            urgency = "HAUTE"
+            status, action, urgency = "FAIBLE", f"Intervention requise: renforcer {meta['label']}", "HAUTE"
         else:
-            status = "CRITIQUE"
-            action = f"Action immédiate: {meta.domain} en situation critique"
-            urgency = "CRITIQUE"
+            status, action, urgency = "CRITIQUE", f"Action immediate: {meta['label']} en situation critique", "CRITIQUE"
 
         actions.append({
             "rank": rank,
-            "engine": engine_name,
-            "domain": meta.domain,
+            "engine": meta["label"],
+            "key": engine_key,
+            "domain": domain_label,
             "score": round(score, 1),
             "status": status,
             "urgency": urgency,
@@ -291,6 +312,7 @@ async def intelligence_plan(
         "actions": actions,
         "total_actions": len(actions),
         "critical_count": sum(1 for a in actions if a["urgency"] in ("CRITIQUE", "HAUTE")),
+        "engines_count": 22,
     }
 
 
@@ -324,52 +346,38 @@ async def intelligence_solunar(
 async def intelligence_guide_pro(
     lat: float = Query(...), lng: float = Query(...),
     species: str = Query("CHEVREUIL"), month: int = Query(10, ge=1, le=12),
-    date: str = Query(None, description="Date YYYY-MM-DD (défaut: aujourd'hui)"),
+    date: str = Query(None, description="Date YYYY-MM-DD"),
 ):
     """
-    Guide Pro — Tableau solunaire + fenêtres de chasse + plan d'approche.
-    Combine: solunar, météo, moteurs écologiques, comportement espèce.
+    Guide Pro — Tableau solunaire + plan d'approche.
+    x4520: Pipeline 22 moteurs V6-CORE.
     """
     from modules.solunar.engine import compute_solunar
 
     sp = resolve_species(species)
     solunar = compute_solunar(lat, lng, date)
-
-    # Score consolidé des moteurs
-    consolidated = _consolidator.score_point(lat, lng, sp, month)
+    consolidated = compute_consolidated_score(lat, lng, sp, month)
     components = consolidated["components"]
 
-    # Conditions terrain
-    pression_engine = _registry.get("PRESSION-V1")
-    pression_score = pression_engine.score_point(lat, lng, sp, month).score if pression_engine else 50
+    pression_score = components.get("pression", 50)
+    repos_score = components.get("repos", 50)
 
-    alim_engine = _registry.get("ALIMENTATION-V1")
-    alim_score = alim_engine.score_point(lat, lng, sp, month).score if alim_engine else 50
-
-    repos_engine = _registry.get("REPOS-V1")
-    repos_score = repos_engine.score_point(lat, lng, sp, month).score if repos_engine else 50
-
-    corridor_engine = _registry.get("CORRIDORS-V10")
-    corridor_score = corridor_engine.score_point(lat, lng, sp, month).score if corridor_engine else 50
-
-    # Meilleur temps de chasse (synthèse)
     solunar_score = solunar["solunar_score"]
     terrain_score = consolidated["score"]
     combined_score = round(solunar_score * 0.4 + terrain_score * 0.6, 1)
 
     if combined_score >= 80:
-        best_time_label = "extrême"
+        best_time_label = "extreme"
     elif combined_score >= 60:
         best_time_label = "fort"
     elif combined_score >= 40:
-        best_time_label = "modéré"
+        best_time_label = "modere"
     else:
         best_time_label = "faible"
 
-    # Plan d'approche
     import math
     wind_dir = (hash(f"{lat}{lng}{month}") % 360)
-    approach_angle = (wind_dir + 180) % 360  # Contre le vent
+    approach_angle = (wind_dir + 180) % 360
 
     approach_plan = {
         "position_ideale": {
@@ -378,16 +386,16 @@ async def intelligence_guide_pro(
             "description": "Position face au vent, couvert dense",
         },
         "angle_entree": approach_angle,
-        "vent": {"direction_deg": wind_dir, "force": "modéré"},
+        "vent": {"direction_deg": wind_dir, "force": "modere"},
         "zones_a_eviter": [
-            {"raison": "Pression humaine élevée", "active": pression_score < 40},
-            {"raison": "Vent défavorable", "active": False},
+            {"raison": "Pression humaine elevee", "active": pression_score < 40},
+            {"raison": "Vent defavorable", "active": False},
             {"raison": "Thermiques ascendantes", "active": month in (6, 7, 8)},
         ],
         "affut_recommande": {
             "lat": round(lat + 0.001, 6), "lng": round(lng - 0.001, 6),
-            "type": "surélevé" if repos_score > 50 else "au sol",
-            "orientation": f"{approach_angle}°",
+            "type": "sureleve" if repos_score > 50 else "au sol",
+            "orientation": f"{approach_angle}deg",
         },
         "meilleur_temps": {
             "score": combined_score,
@@ -397,7 +405,6 @@ async def intelligence_guide_pro(
         },
     }
 
-    # Weather official (INTELLIGENCE source unique — Section 5)
     month_temps = {1: -13, 2: -11, 3: -4, 4: 4, 5: 12, 6: 18, 7: 21, 8: 20, 9: 14, 10: 7, 11: 0, 12: -9}
     base_temp = month_temps.get(month, 5)
     lat_factor = max(0, (abs(lat) - 40) * -0.5)
@@ -406,19 +413,23 @@ async def intelligence_guide_pro(
     wind_speed_kmh = 8 + (hash(f"{lat:.1f}{lng:.1f}{month}") % 25)
     wind_force_label = "faible" if wind_speed_kmh < 15 else "modere" if wind_speed_kmh < 30 else "fort"
 
+    # Terrain V6-CORE (22 moteurs)
+    terrain_v6 = {}
+    for engine_key, score in components.items():
+        meta = V6_ENGINE_META.get(engine_key, {"label": engine_key})
+        terrain_v6[meta["label"]] = round(score, 1)
+
     return {
         "type": "guide_pro",
         "species": sp,
         "month": month,
         "location": {"lat": lat, "lng": lng},
         "solunar": solunar,
-        "terrain": {
-            "consolidated_score": consolidated["score"],
+        "terrain": terrain_v6,
+        "terrain_consolidated": {
+            "score": consolidated["score"],
             "classe": consolidated["classe"],
-            "pression": round(pression_score, 1),
-            "alimentation": round(alim_score, 1),
-            "repos": round(repos_score, 1),
-            "corridors": round(corridor_score, 1),
+            "engines_count": 22,
         },
         "approach_plan": approach_plan,
         "hunting_windows": solunar["hunting_windows"],
@@ -437,40 +448,44 @@ async def intelligence_scientifique(
     lat: float = Query(...), lng: float = Query(...),
     species: str = Query("CHEVREUIL"), month: int = Query(10, ge=1, le=12),
 ):
-    """Mode Scientifique — Toutes les pondérations, formules, métadonnées."""
+    """Mode Scientifique — 22 moteurs V6-CORE, ponderations, formules."""
     sp = resolve_species(species)
-    manifest = _registry.manifest()
-    consolidated = _consolidator.score_point(lat, lng, sp, month)
+    consolidated = compute_consolidated_score(lat, lng, sp, month)
 
     engines_detail = []
-    for eng_data in manifest["engines"]:
-        name = eng_data["name"]
-        engine = _registry.get(name)
-        if not engine:
-            continue
-        result = engine.score_point(lat, lng, sp, month)
+    for engine_key, score in consolidated["components"].items():
+        meta = V6_ENGINE_META.get(engine_key, {"label": engine_key, "domain": "autre", "tier": "UNKNOWN", "description": ""})
         engines_detail.append({
-            **eng_data,
-            "score": result.score,
-            "components": result.components,
-            "metadata": result.metadata,
-            "weight_in_consolidation": consolidated["weights"].get(name, 0),
+            "name": meta["label"],
+            "key": engine_key,
+            "domain": meta["domain"],
+            "tier": meta["tier"],
+            "description": meta["description"],
+            "score": round(score, 1),
+            "weight": consolidated["weights"].get(engine_key, 0),
         })
 
     return {
         "type": "scientifique",
         "species": sp, "month": month,
         "location": {"lat": lat, "lng": lng},
-        "consolidated": consolidated,
-        "engines": engines_detail,
-        "formulas": {
-            "consolidation": "score = Σ(engine_score × weight_normalized)",
-            "classification": "OPTIMAL(≥80), BON(≥60), MODÉRÉ(≥40), FAIBLE(<40)",
-            "normalization": "weights_sum = 1.0 (redistribué si moteur exclu)",
+        "consolidated": {
+            "score": consolidated["score"],
+            "classe": consolidated["classe"],
+            "label": consolidated["label"],
         },
-        "bce4x": {
-            "version": "4.0.0",
-            "species_canonical": SPECIES_CANONICAL,
-            "tracability": consolidated["tracability"],
+        "engines": engines_detail,
+        "engines_count": 22,
+        "formulas": {
+            "consolidation": "score = Sum(engine_score x weight_normalized)",
+            "classification": "OPTIMAL(>=80), BON(>=60), MODERE(>=40), FAIBLE(<40)",
+            "normalization": "weights_sum = 1.0 (redistribue si moteur exclu)",
+            "option": "C — CORE 60% / Nouveaux 40%",
+        },
+        "tiers": {
+            "CORE": "60% — 5 moteurs fondamentaux",
+            "CORE++": "17.14% — 7 moteurs environnementaux",
+            "CORE+++": "11.73% — 5 moteurs comportementaux",
+            "BIONIC-OS": "9.12% — 5 moteurs intelligence",
         },
     }
