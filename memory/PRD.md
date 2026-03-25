@@ -21,9 +21,9 @@
 1. TerritoryAnalysisPanel (territoire)
 2. BionicZoneDiagnosticPanel (diagnostics)
 3. GuidedRoutePanel (parcours guide)
-4. NutritionAnalysisModal (alimentation/nutrition)
+4. NutritionPanel (alimentation/nutrition) — PinnablePanel wrapper
 5. AmenagementPanel (salines/affuts)
-6. CorridorsEcologyPanel (corridors)
+6. CorridorsEcologyPanel (corridors V10)
 7. DiagnosticExclusionsPanel (exclusions spatiales)
 8. ZoneInfoPanel (info zone)
 
@@ -34,3 +34,22 @@ Fonctionnalites:
 - Scroll interne fluide, aucun debordement
 - Hierarchie visuelle renforcee en mode expand
 - Escape pour quitter pleine page
+
+## Validation visuelle (25 mars 2026)
+- PREVIEW rebuild complet + cache purge
+- DiagnosticExclusionsPanel: Mode Normal OK, Pin OK (flottant), Expand OK (1920x800)
+- Boutons Pin/Expand/Close visibles et fonctionnels
+- Texte #111/#222, fond #fafafa en mode Expand
+- Score backend 22 moteurs actif
+
+## Architecture
+- Branche: STEEVE-MAX-x3200-V6-CORE
+- Frontend: React (Craco/Webpack)
+- Backend: FastAPI
+- Composant cle: PinnablePanel.jsx (321 lignes)
+- Overlay flottant: BionicZoneDiagnosticPanel extrait du sidebar w-80
+
+## Prochaines etapes
+- Attente directive STEEVE-MAX
+- BSAA-2 (implementation) — apres validation
+- Merge vers main — gere exclusivement par STEEVE-MAX
