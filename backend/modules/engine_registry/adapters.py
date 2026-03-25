@@ -38,7 +38,7 @@ class AlimentationV1Adapter(BionicEngine):
         )
 
     def score_point(self, lat, lng, species, month) -> EngineScore:
-        from modules.alimentation_v1.engine import analyze_single_point
+        from core.scoring_pipeline.alimentation_v1.engine import analyze_single_point
         legacy_sp = _to_legacy(species)
         result = analyze_single_point(lat, lng, legacy_sp, month)
         return EngineScore(
@@ -48,7 +48,7 @@ class AlimentationV1Adapter(BionicEngine):
         )
 
     def score_grid(self, center_lat, center_lng, species, month, grid_size=20) -> GridResult:
-        from modules.alimentation_v1.engine import analyze_single_point
+        from core.scoring_pipeline.alimentation_v1.engine import analyze_single_point
         legacy_sp = _to_legacy(species)
         sp = resolve_species(species)
         side_m = 2000.0
@@ -96,7 +96,7 @@ class AlimentationV2Adapter(BionicEngine):
         )
 
     def score_point(self, lat, lng, species, month) -> EngineScore:
-        from modules.alimentation_v2.engine import analyze_alimentation_v2
+        from core.scoring_pipeline.alimentation_v2.engine import analyze_alimentation_v2
         legacy_sp = _to_legacy(species)
         result = analyze_alimentation_v2(lat, lng, legacy_sp, month, max_salines=1)
         terrain = result.get("terrain", {})
@@ -113,7 +113,7 @@ class AlimentationV2Adapter(BionicEngine):
     def score_grid(self, center_lat, center_lng, species, month, grid_size=20) -> GridResult:
         # V2 est un moteur composite, pas adapté au calcul point-par-point.
         # On retourne le score terrain global comme approximation uniforme.
-        from modules.alimentation_v2.engine import analyze_alimentation_v2
+        from core.scoring_pipeline.alimentation_v2.engine import analyze_alimentation_v2
         legacy_sp = _to_legacy(species)
         result = analyze_alimentation_v2(center_lat, center_lng, legacy_sp, month)
         terrain = result.get("terrain", {})
@@ -148,7 +148,7 @@ class ReposV1Adapter(BionicEngine):
         )
 
     def score_point(self, lat, lng, species, month) -> EngineScore:
-        from modules.repos_v1.engine import analyze_single_point
+        from core.scoring_pipeline.repos_v1.engine import analyze_single_point
         legacy_sp = _to_legacy(species)
         result = analyze_single_point(lat, lng, legacy_sp, month)
         return EngineScore(
@@ -158,7 +158,7 @@ class ReposV1Adapter(BionicEngine):
         )
 
     def score_grid(self, center_lat, center_lng, species, month, grid_size=20) -> GridResult:
-        from modules.repos_v1.engine import analyze_single_point
+        from core.scoring_pipeline.repos_v1.engine import analyze_single_point
         legacy_sp = _to_legacy(species)
         sp = resolve_species(species)
         side_m = 2000.0

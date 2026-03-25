@@ -294,7 +294,7 @@ async def suitability_analysis(
 def _get_terrain_data(lat: float, lng: float) -> Optional[dict]:
     """Recupere les donnees terrain via alimentation_v2."""
     try:
-        from modules.alimentation_v2.terrain import analyze_terrain
+        from core.scoring_pipeline.alimentation_v2.terrain import analyze_terrain
         return analyze_terrain(lat, lng)
     except ImportError:
         logger.warning("alimentation_v2/terrain not available, using defaults")

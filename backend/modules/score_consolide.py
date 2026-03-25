@@ -7,8 +7,8 @@ Pondération transparente, traçable, conforme BCE-4X + STEEVE-MAX.
 """
 import math
 import hashlib
-from modules.alimentation_v1.engine import analyze_single_point as alim_point
-from modules.repos_v1.engine import analyze_single_point as repos_point
+from core.scoring_pipeline.alimentation_v1.engine import analyze_single_point as alim_point
+from core.scoring_pipeline.repos_v1.engine import analyze_single_point as repos_point
 
 # ── Pondérations par moteur (STEEVE-MAX: documentées) ──
 ENGINE_WEIGHTS = {

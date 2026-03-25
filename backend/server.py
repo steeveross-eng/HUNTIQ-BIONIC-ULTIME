@@ -469,11 +469,11 @@ except Exception as e:
 
 # ═══ ALIMENTATION-V1 — Moteur alimentaire scientifique multi-especes ═══
 try:
-    from modules.alimentation_v1.router import router as alimentation_v1_router
+    from core.scoring_pipeline.alimentation_v1.router import router as alimentation_v1_router
     app.include_router(alimentation_v1_router)
     logger.info("✓ ALIMENTATION-V1 registered (/api/v1/alimentation)")
 
-    from modules.alimentation_v2.router import router as alimentation_v2_router
+    from core.scoring_pipeline.alimentation_v2.router import router as alimentation_v2_router
     app.include_router(alimentation_v2_router)
     logger.info("✓ ALIMENTATION-V2 registered (/api/v2/alimentation)")
 except Exception as e:
@@ -481,7 +481,7 @@ except Exception as e:
 
 # ═══ REPOS-V1 — Moteur zones de repos scientifique multi-especes ═══
 try:
-    from modules.repos_v1.router import router as repos_v1_router
+    from core.scoring_pipeline.repos_v1.router import router as repos_v1_router
     app.include_router(repos_v1_router)
     logger.info("✓ REPOS-V1 registered (/api/v1/repos)")
 except Exception as e:
@@ -489,7 +489,7 @@ except Exception as e:
 
 # ═══ CORRIDORS-V10 — Moteur corridors fauniques multi-especes ═══
 try:
-    from modules.corridors_v10.router import router as corridors_v10_router
+    from core.scoring_pipeline.corridors_v10.router import router as corridors_v10_router
     app.include_router(corridors_v10_router)
     logger.info("✓ CORRIDORS-V10 registered (/api/v10/corridors)")
 except Exception as e:

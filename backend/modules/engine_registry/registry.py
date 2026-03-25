@@ -72,7 +72,7 @@ class EngineRegistry:
             ("ALIMENTATION-V2", "modules.engine_registry.adapters", "AlimentationV2Adapter"),
             ("REPOS-V1", "modules.engine_registry.adapters", "ReposV1Adapter"),
             ("CORRIDORS-V10", "modules.engine_registry.adapters", "CorridorsV10Adapter"),
-            ("PRESSION-V1", "modules.pression_v1.engine", "PressionV1Engine"),
+            ("PRESSION-V1", "core.scoring_pipeline.pression_v1.engine", "PressionV1Engine"),
         ]
 
         for name, module_path, class_name in discoveries:
