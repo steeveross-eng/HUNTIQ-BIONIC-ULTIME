@@ -172,7 +172,7 @@ const StandsMapLayer = ({
       return;
     }
 
-    const key = `${centerLat.toFixed(4)}:${centerLng.toFixed(4)}:${species}:${windDirection}:${windSpeed}`;
+    const key = `${centerLat.toFixed(6)}:${centerLng.toFixed(6)}:${species}:${windDirection}:${windSpeed}`;
     if (lastKeyRef.current === key && layerRef.current) return;
     if (lastKeyRef.current === key && cacheRef.current) {
       renderRef.current(cacheRef.current);

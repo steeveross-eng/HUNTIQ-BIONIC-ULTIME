@@ -172,7 +172,7 @@ const AlimentationV2Layer = ({
       return;
     }
 
-    const key = `${centerLat.toFixed(4)}:${centerLng.toFixed(4)}:${species}:${month}:${maxSalines}`;
+    const key = `${centerLat.toFixed(6)}:${centerLng.toFixed(6)}:${species}:${month}:${maxSalines}`;
 
     if (lastKeyRef.current === key && layerRef.current) return;
 

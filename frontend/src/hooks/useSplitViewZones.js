@@ -26,7 +26,7 @@ export function useSplitViewZones({
   const splitCacheKey = useMemo(() => {
     if (!enabled || !biologicalSeason) return null;
     const wp = selectedWaypointForZones;
-    if (wp) return `split_${wp.lat?.toFixed(4)}_${wp.lng?.toFixed(4)}_${selectedSpecies}_${biologicalSeason}`;
+    if (wp) return `split_${wp.lat?.toFixed(6)}_${wp.lng?.toFixed(6)}_${selectedSpecies}_${biologicalSeason}`;
     if (activeWaypoints.length > 0) {
       return `split_multi_${activeWaypoints.map(w => `${(w.lat||w.latitude)?.toFixed(4)}_${(w.lng||w.longitude)?.toFixed(4)}`).join('|')}_${selectedSpecies}_${biologicalSeason}`;
     }

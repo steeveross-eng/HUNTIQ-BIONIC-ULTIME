@@ -25,7 +25,7 @@ const ConsolidatedHeatmapLayer = ({
   const fetchData = useCallback(async () => {
     if (centerLat == null || centerLng == null || !enabled) return;
 
-    const key = `${centerLat.toFixed(4)}:${centerLng.toFixed(4)}:${species}:${month}:${includeCorridors ? 1 : 0}`;
+    const key = `${centerLat.toFixed(6)}:${centerLng.toFixed(6)}:${species}:${month}:${includeCorridors ? 1 : 0}`;
 
     if (lastKeyRef.current === key && cacheRef.current) {
       if (onDataLoadedRef.current) onDataLoadedRef.current(cacheRef.current);

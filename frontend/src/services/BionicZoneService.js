@@ -99,7 +99,8 @@ export const generateBionicZonesV5 = async (bounds, zoom, layersVisible, species
 
   if (activeLayers.length === 0) return { zones: [], corridors: [], stats: { total: 0 } };
 
-  const cacheKey = `${bounds.south.toFixed(4)}_${bounds.west.toFixed(4)}_${bounds.north.toFixed(4)}_${bounds.east.toFixed(4)}_${speciesId}_${activeLayers.join(',')}_${biologicalSeason || 'auto'}`;
+  // x4520-B: Precision .toFixed(6) pour distinguer waypoints proches (<11m)
+  const cacheKey = `${bounds.south.toFixed(6)}_${bounds.west.toFixed(6)}_${bounds.north.toFixed(6)}_${bounds.east.toFixed(6)}_${speciesId}_${activeLayers.join(',')}_${biologicalSeason || 'auto'}`;
   if (_zoneCache.key === cacheKey && _zoneCache.data) return _zoneCache.data;
 
   const speciesMap = { orignal: 'moose', chevreuil: 'deer', ours: 'bear', dindon: 'wild_turkey', wapiti: 'elk' };

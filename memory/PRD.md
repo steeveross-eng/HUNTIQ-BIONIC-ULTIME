@@ -10,32 +10,27 @@
 | x4000-SUPRA | 17 moteurs squelettes | CERTIFIE |
 | x4100 | Integration scientifique 22 moteurs (Option C) | CERTIFIE |
 | x4500-ULTRA | Reconstruction PREVIEW + BSAA | CERTIFIE |
-| x4515-FIX | PinnablePanel V2 — 8 panneaux conformes | CERTIFIE |
-| x4515-FIX-CRITICAL | Rayon 600m Haversine + AmenagementPanel | COMMITE |
-| x4520-UNIFICATION | Dashboard unifie V6-CORE — 22 moteurs | COMMITE |
-| **x4520-A** | **AUDIT_CORE_BIONIC — 10000% modulaire** | **EN ATTENTE VALIDATION** |
+| x4515-FIX | PinnablePanel V2 — 8 panneaux | CERTIFIE |
+| x4515-FIX-CRITICAL | Rayon 600m + AmenagementPanel | COMMITE |
+| x4520 | Dashboard unifie V6-CORE | COMMITE |
+| x4520-A | AUDIT_CORE_BIONIC — 10000% modulaire | COMMITE |
+| **x4520-B** | **FIX_PIPELINE_ZONES — ZERO cache legacy** | **EN ATTENTE VALIDATION** |
 
 ## Score: 57.6 (22 moteurs, Option C)
 
-## x4520-A AUDIT_CORE_BIONIC (25 mars 2026)
+## x4520-B FIX_PIPELINE_ZONES (25 mars 2026)
 
-### Backend — Pipeline unique
-- 10/10 endpoints API Gateway migres vers compute_consolidated_score()
-- V6_ENGINE_META: 22 moteurs, 7 domaines, 4 tiers
-- ZERO reference V1/V2/V10 dans les reponses API
-- Aucun fallback legacy, aucune configuration parallele
+### Corrections (7 fichiers)
+- BionicCorridorsV10Layer: ZERO throttle, abort+refetch immediat, clearLayers
+- useZoneOrchestrator: ZERO stale-while-revalidate, effacement immediat
+- 7 fichiers: cache key .toFixed(4)→.toFixed(6) (precision 0.1m vs 11m)
+- ZERO isInAnalysisBox, ZERO throttleRef
 
-### Frontend — ZERO relique visible
-- 12 corrections texte (NutritionPanel, CorridorsEcology, BionicLegend, Toolbar, MapPage)
-- Dashboard unifie (INTELLIGENCE+GUIDE_PRO+SCIENTIFIQUE+TERRAIN)
-- Badge "22 MOTEURS" dans header
-
-### Confirmations
-- "Aucune relique V1/V2/V10 active dans BIONIC."
-- "BIONIC est 10000% modulaire, pipeline unique, aucun fallback."
+### Garanties
+- Recalcul a CHAQUE changement de waypoint, sans seuil
+- Masque Haversine 600m strict, APRES chargement
+- Pipeline zones 10000% modulaire et coherent
 
 ## Prochaines etapes
-- Validation STEEVE-MAX sur x4520-A
+- Validation STEEVE-MAX sur x4520-B
 - Attente directive suivante
-- BSAA-2 (implementation) — apres validation
-- Merge vers main — gere par STEEVE-MAX uniquement

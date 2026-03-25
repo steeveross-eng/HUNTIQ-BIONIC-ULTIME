@@ -80,8 +80,9 @@ const SPECIES_MAP = {
 const LEVEL_ZINDEX = { FAIBLE: 0, MODERE: 1, FORT: 2, MAJEUR: 3, CRITIQUE: 4 };
 
 // ═══ PERFORMANCE V3: Cache global persistant (max 20 entrées) ═══
+// x4520-B: Precision .toFixed(6) pour distinguer waypoints proches (<11m)
 const _cache = new Map();
-function cacheKey(lat, lng, sp, m) { return `${lat.toFixed(4)}:${lng.toFixed(4)}:${sp}:${m}`; }
+function cacheKey(lat, lng, sp, m) { return `${lat.toFixed(6)}:${lng.toFixed(6)}:${sp}:${m}`; }
 
 // ═══ PERFORMANCE V3: Douglas-Peucker simplifié côté client ═══
 function simplifyPath(coords, tolerance = 0.00003) {
@@ -164,7 +165,6 @@ const BionicCorridorsV10Layer = ({
   const map = useMap();
   const layerGroupRef = useRef(null);
   const abortRef = useRef(null);
-  const throttleRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const lastRenderKey = useRef('');
   const cachedDataRef = useRef(null);
@@ -515,62 +515,69 @@ const BionicCorridorsV10Layer = ({
     const sp = SPECIES_MAP[species] || 'CERF';
     const key = cacheKey(center.lat, center.lng, sp, month);
 
-    // Throttle: 200ms debounce
-    if (throttleRef.current) clearTimeout(throttleRef.current);
-    throttleRef.current = setTimeout(async () => {
-      // Skip re-fetch si mêmes données (renderData appelé par re-render effect séparé)
-      if (lastRenderKey.current === key && layerGroupRef.current) return;
-      lastRenderKey.current = key;
+    // x4520-B: ZERO throttle — re-fetch IMMEDIAT a chaque changement de waypoint
+    // Annuler toute requete precedente
+    if (abortRef.current) abortRef.current.abort();
 
-      // Check cache
-      if (_cache.has(key)) {
-        const cached = _cache.get(key);
-        cachedDataRef.current = cached;
-        cachedSpeciesRef.current = sp;
-        renderDataRef.current(cached, sp);
-        return;
+    // x4520-B: Si le centre a change, effacer IMMEDIATEMENT l'ancien rendu
+    // pour eviter l'affichage de zones stale avec un masque 600m decentre
+    if (lastRenderKey.current !== key) {
+      clearLayers();
+      cachedDataRef.current = null;
+      cachedSpeciesRef.current = '';
+    }
+
+    // Meme donnees deja rendues — skip
+    if (lastRenderKey.current === key && layerGroupRef.current) return;
+    lastRenderKey.current = key;
+
+    // Check cache in-memory
+    if (_cache.has(key)) {
+      const cached = _cache.get(key);
+      cachedDataRef.current = cached;
+      cachedSpeciesRef.current = sp;
+      renderDataRef.current(cached, sp);
+      return;
+    }
+
+    abortRef.current = new AbortController();
+
+    setLoading(true);
+    try {
+      const apiUrl = process.env.REACT_APP_BACKEND_URL;
+      const res = await fetch(`${apiUrl}/api/v10/corridors/analyze-full`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          center_lat: center.lat,
+          center_lng: center.lng,
+          species: sp,
+          month,
+        }),
+        signal: abortRef.current.signal,
+      });
+
+      if (!res.ok) return;
+      const data = await res.json();
+
+      // Cache persistant
+      _cache.set(key, data);
+      if (_cache.size > 20) {
+        const firstKey = _cache.keys().next().value;
+        _cache.delete(firstKey);
       }
 
-      if (abortRef.current) abortRef.current.abort();
-      abortRef.current = new AbortController();
+      cachedDataRef.current = data;
+      cachedSpeciesRef.current = sp;
 
-      setLoading(true);
-      try {
-        const apiUrl = process.env.REACT_APP_BACKEND_URL;
-        const res = await fetch(`${apiUrl}/api/v10/corridors/analyze-full`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            center_lat: center.lat,
-            center_lng: center.lng,
-            species: sp,
-            month,
-          }),
-          signal: abortRef.current.signal,
-        });
-
-        if (!res.ok) return;
-        const data = await res.json();
-
-        // PERFORMANCE V3: Cache persistant
-        _cache.set(key, data);
-        if (_cache.size > 20) {
-          const firstKey = _cache.keys().next().value;
-          _cache.delete(firstKey);
-        }
-
-        cachedDataRef.current = data;
-        cachedSpeciesRef.current = sp;
-
-        if (lastRenderKey.current === key) {
-          renderDataRef.current(data, sp);
-        }
-      } catch (err) {
-        if (err.name !== 'AbortError') console.error('[CORRIDORS-V10]', err);
-      } finally {
-        setLoading(false);
+      if (lastRenderKey.current === key) {
+        renderDataRef.current(data, sp);
       }
-    }, 200);
+    } catch (err) {
+      if (err.name !== 'AbortError') console.error('[CORRIDORS]', err);
+    } finally {
+      setLoading(false);
+    }
   }, [center, species, month, enabled, clearLayers]);
 
   // Re-render quand les contrôles visuels changent (séparé du fetch)
@@ -584,7 +591,6 @@ const BionicCorridorsV10Layer = ({
     fetchAndRender();
     return () => {
       if (abortRef.current) abortRef.current.abort();
-      if (throttleRef.current) clearTimeout(throttleRef.current);
       clearLayers();
     };
   }, [fetchAndRender]);
@@ -602,7 +608,7 @@ const BionicCorridorsV10Layer = ({
         padding: '4px 10px', borderRadius: 6, fontSize: 11, fontWeight: 600,
       }}
     >
-      Corridors V10...
+      Corridors...
     </div>
   ) : null;
 };

@@ -68,13 +68,13 @@ export function useZoneOrchestrator({
       const wpLat = selectedWaypointForZones.lat ?? selectedWaypointForZones.latitude;
       const wpLng = selectedWaypointForZones.lng ?? selectedWaypointForZones.longitude;
       if (wpLat && wpLng) {
-        return `${selectedSpecies}_wp_${wpLat.toFixed(4)}_${wpLng.toFixed(4)}${seasonSuffix}${CACHE_VERSION}`;
+        return `${selectedSpecies}_wp_${wpLat.toFixed(6)}_${wpLng.toFixed(6)}${seasonSuffix}${CACHE_VERSION}`;
       }
     }
     if (activeWaypoints.length > 0) {
       const validWps = activeWaypoints.filter(w => (w.lat ?? w.latitude) && (w.lng ?? w.longitude));
       if (validWps.length > 0) {
-        return `${selectedSpecies}_wps_${validWps.map(w => `${(w.lat??w.latitude).toFixed(4)}_${(w.lng??w.longitude).toFixed(4)}`).join('|')}${seasonSuffix}${CACHE_VERSION}`;
+        return `${selectedSpecies}_wps_${validWps.map(w => `${(w.lat??w.latitude).toFixed(6)}_${(w.lng??w.longitude).toFixed(6)}`).join('|')}${seasonSuffix}${CACHE_VERSION}`;
       }
     }
     return null;
@@ -119,14 +119,12 @@ export function useZoneOrchestrator({
       return;
     }
 
-    // P0 FIX STALE-WHILE-REVALIDATE: NE PAS vider les zones immédiatement
-    // quand la clé change. Garder les anciennes zones visibles pendant que
-    // les nouvelles chargent. Cela donne un affichage instantané (<300ms)
-    // au lieu d'un écran vide pendant 10s.
+    // x4520-B: ZERO stale-while-revalidate — effacer immediatement les anciennes zones
+    // quand la cle change pour eviter de montrer des zones d'un ancien waypoint
     if (lockRef.current.key && lockRef.current.key !== cacheKey) {
       lockRef.current = { locked: false, key: null };
-      // REMOVED: setZonesData empty — keep stale zones visible
-      setPipelineState('refreshing');
+      setZonesData({ zones: [], corridors: [], stats: { total: 0 } });
+      setPipelineState('loading');
     }
 
     let cancelled = false;
