@@ -37,6 +37,16 @@ MINERAL_NEEDS_BY_SPECIES = {
         "Se": {"base_need": 18, "unit": "ug/kg/j"},
         "Fe": {"base_need": 60, "unit": "mg/kg/j"},
     },
+    "ours_noir": {
+        "Na": {"base_need": 95, "unit": "mg/kg/j"},
+        "Ca": {"base_need": 80, "unit": "mg/kg/j"},
+        "P": {"base_need": 60, "unit": "mg/kg/j"},
+        "K": {"base_need": 65, "unit": "mg/kg/j"},
+        "Mg": {"base_need": 50, "unit": "mg/kg/j"},
+        "Zn": {"base_need": 20, "unit": "mg/kg/j"},
+        "Se": {"base_need": 12, "unit": "ug/kg/j"},
+        "Fe": {"base_need": 70, "unit": "mg/kg/j"},
+    },
 }
 
 SEASON_MULTIPLIERS = {

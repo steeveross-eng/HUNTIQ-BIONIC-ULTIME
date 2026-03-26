@@ -113,6 +113,60 @@ SCIENTIFIC_REFERENCES = {
             "summary": "Les sites d'alimentation places a 50-100m des corridors de deplacement maximisent la frequentation. Le couvert semi-ouvert (30-60%) offre le meilleur compromis securite/accessibilite.",
         },
     ],
+    "ecozone_chevreuil": [
+        {
+            "title": "Ecology and management of white-tailed deer in eastern deciduous forests",
+            "authors": "Hewitt",
+            "year": 2011,
+            "journal": "Biology and Management of White-tailed Deer, CRC Press",
+            "url": "https://doi.org/10.1201/b11250",
+            "summary": "Le cerf de Virginie occupe principalement les forets mixtes et decidues. Les erablieres a bouleau jaune offrent l'habitat optimal avec couvert dense et alimentation diversifiee.",
+        },
+        {
+            "title": "Winter severity and white-tailed deer yard use",
+            "authors": "Potvin & Breton",
+            "year": 1997,
+            "journal": "Journal of Wildlife Management",
+            "url": "https://doi.org/10.2307/3802122",
+            "summary": "En hiver, les cerfs se concentrent en yards dans les coniferes denses. La supplementation minerale pre-hivernale ameliore la survie de 15-20%.",
+        },
+    ],
+    "ecozone_orignal": [
+        {
+            "title": "Moose ecology in the boreal forest",
+            "authors": "Timmermann & McNicol",
+            "year": 1988,
+            "journal": "Ecology and Management of the North American Moose, University Press of Colorado",
+            "url": "https://doi.org/10.5876/9781607321491",
+            "summary": "L'orignal depend des forets boreales (pessiere-sapiniere) et des zones humides. L'alimentation aquatique estivale est une source critique de sodium.",
+        },
+        {
+            "title": "Mineral lick use by moose in boreal Quebec",
+            "authors": "Fraser & Hristienko",
+            "year": 1981,
+            "journal": "Canadian Journal of Zoology",
+            "url": "https://doi.org/10.1139/z81-269",
+            "summary": "Les orignaux frequentent les salines naturelles intensivement au printemps. La supplementation artificielle peut compenser les deficits en Na sur sols acides.",
+        },
+    ],
+    "ecozone_ours_noir": [
+        {
+            "title": "Black bear ecology and behavior in eastern North America",
+            "authors": "Pelton",
+            "year": 2003,
+            "journal": "Wild Mammals of North America, Johns Hopkins University Press",
+            "url": "https://doi.org/10.1353/book.20838",
+            "summary": "L'ours noir occupe les forets mixtes et boreales. La phase d'hyperphagie automnale est critique pour la survie hivernale. Les sources minerales post-hibernation sont activement recherchees.",
+        },
+        {
+            "title": "Nutritional ecology of black bears during hyperphagia",
+            "authors": "Noyce & Garshelis",
+            "year": 1998,
+            "journal": "Canadian Journal of Zoology",
+            "url": "https://doi.org/10.1139/z98-008",
+            "summary": "Durant l'hyperphagie, les ours consomment jusqu'a 20,000 calories/jour. Les sources de noix, glands et petits fruits sont essentielles. La supplementation minerale accelere la recuperation post-hibernation.",
+        },
+    ],
 }
 
 
