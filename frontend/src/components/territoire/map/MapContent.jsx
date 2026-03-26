@@ -25,6 +25,7 @@ import BionicCorridorsV6Layer from '@/components/territoire/BionicCorridorsV6Lay
 import NutritionPointsLayer from '@/components/territoire/NutritionPointsLayer';
 import ConsolidatedHeatmapLayer from '@/components/territoire/ConsolidatedHeatmapLayer';
 import StandsMapLayer from '@/components/territoire/StandsMapLayer';
+import { LeafletShield, useRenderGuard, createLoadTimer } from '@/components/territoire/map/BCE4X_UIShield';
 
 const MapContentInner = React.memo(({
   // Eco layers

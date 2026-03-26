@@ -1,13 +1,17 @@
 """
-x7000 — SUPPLIER_PRODUCT_ENGINE
+x7000 — SUPPLIER_PRODUCT_ENGINE (MongoDB)
 Pipeline de soumission et validation produits fournisseurs.
 Flux: Soumission -> Validation automatique -> Validation humaine -> Activation magasin.
 BCE-4X / STEEVE-MAX V6
 
-Ce module gere le cycle de vie complet des soumissions
-de produits par les fournisseurs avant leur integration
-dans le catalogue BIONIC.
+MIGRATION MongoDB: Persistance reelle via collection supplier_submissions.
 """
+
+from datetime import datetime, timezone
+from typing import Optional
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Statuts du pipeline
 PIPELINE_DRAFT = "brouillon"
@@ -35,20 +39,53 @@ AUTO_VALIDATION_CRITERIA = {
     ],
 }
 
-# Stockage en memoire des soumissions (POC — remplacer par MongoDB en production)
-_submissions_store = {}
-_submission_counter = 0
+
+def _get_collection():
+    """Obtient la collection MongoDB supplier_submissions."""
+    from database import Database
+    db = Database.get_sync_database()
+    return db["supplier_submissions"]
+
+
+def _get_counter_collection():
+    """Obtient la collection pour les compteurs auto-incrementes."""
+    from database import Database
+    db = Database.get_sync_database()
+    return db["supplier_counters"]
+
+
+def _next_submission_id() -> str:
+    """Genere un ID de soumission auto-incremente via MongoDB."""
+    counters = _get_counter_collection()
+    result = counters.find_one_and_update(
+        {"_id": "submission_counter"},
+        {"$inc": {"seq": 1}},
+        upsert=True,
+        return_document=True,
+    )
+    seq = result["seq"]
+    return f"SUB-{seq:05d}"
+
+
+async def ensure_indexes():
+    """Cree les index MongoDB pour supplier_submissions."""
+    from database import Database
+    db = Database.get_database()
+    coll = db["supplier_submissions"]
+    await coll.create_index("submission_id", unique=True)
+    await coll.create_index("status")
+    await coll.create_index("supplier")
+    await coll.create_index("created_at")
+    logger.info("[x7000] MongoDB indexes created for supplier_submissions")
 
 
 def submit_product(supplier_data: dict) -> dict:
     """Soumission initiale d'un produit par un fournisseur."""
-    global _submission_counter
-    _submission_counter += 1
-    submission_id = f"SUB-{_submission_counter:05d}"
+    submission_id = _next_submission_id()
+    now = datetime.now(timezone.utc).isoformat()
 
     # Validation automatique
     auto_result = _auto_validate(supplier_data)
-
     status = PIPELINE_AUTO_VALIDATED if auto_result["passed"] else PIPELINE_AUTO_REJECTED
 
     submission = {
@@ -69,12 +106,15 @@ def submit_product(supplier_data: dict) -> dict:
         "auto_validation": auto_result,
         "human_review": None,
         "pipeline_history": [
-            {"status": PIPELINE_SUBMITTED, "action": "Soumission fournisseur"},
-            {"status": status, "action": "Validation automatique"},
+            {"status": PIPELINE_SUBMITTED, "action": "Soumission fournisseur", "timestamp": now},
+            {"status": status, "action": "Validation automatique", "timestamp": now},
         ],
+        "created_at": now,
+        "updated_at": now,
     }
 
-    _submissions_store[submission_id] = submission
+    coll = _get_collection()
+    coll.insert_one(submission)
 
     return {
         "submission_id": submission_id,
@@ -141,45 +181,75 @@ def _auto_validate(data: dict) -> dict:
 
 def review_submission(submission_id: str, approved: bool, reviewer_notes: str = "") -> dict:
     """Revue humaine d'une soumission."""
-    submission = _submissions_store.get(submission_id)
+    coll = _get_collection()
+    submission = coll.find_one({"submission_id": submission_id}, {"_id": 0})
     if not submission:
         return {"error": f"Soumission introuvable: {submission_id}"}
 
+    now = datetime.now(timezone.utc).isoformat()
     new_status = PIPELINE_APPROVED if approved else PIPELINE_REJECTED
 
-    submission["status"] = new_status
-    submission["human_review"] = {
+    human_review = {
         "approved": approved,
         "notes": reviewer_notes,
         "reviewer": "STEEVE-MAX",
+        "timestamp": now,
     }
-    submission["pipeline_history"].append({
-        "status": new_status,
-        "action": f"Revue humaine: {'Approuve' if approved else 'Rejete'}",
-    })
+
+    coll.update_one(
+        {"submission_id": submission_id},
+        {
+            "$set": {
+                "status": new_status,
+                "human_review": human_review,
+                "updated_at": now,
+            },
+            "$push": {
+                "pipeline_history": {
+                    "status": new_status,
+                    "action": f"Revue humaine: {'Approuve' if approved else 'Rejete'}",
+                    "timestamp": now,
+                }
+            }
+        }
+    )
 
     return {
         "submission_id": submission_id,
         "status": new_status,
-        "human_review": submission["human_review"],
+        "human_review": human_review,
         "next_step": "activation_magasin" if approved else "archive",
     }
 
 
 def activate_product(submission_id: str) -> dict:
     """Activation d'un produit approuve dans le magasin."""
-    submission = _submissions_store.get(submission_id)
+    coll = _get_collection()
+    submission = coll.find_one({"submission_id": submission_id}, {"_id": 0})
     if not submission:
         return {"error": f"Soumission introuvable: {submission_id}"}
 
     if submission["status"] != PIPELINE_APPROVED:
         return {"error": f"Soumission non approuvee (status: {submission['status']})"}
 
-    submission["status"] = PIPELINE_ACTIVE
-    submission["pipeline_history"].append({
-        "status": PIPELINE_ACTIVE,
-        "action": "Produit active dans le magasin BIONIC",
-    })
+    now = datetime.now(timezone.utc).isoformat()
+
+    coll.update_one(
+        {"submission_id": submission_id},
+        {
+            "$set": {
+                "status": PIPELINE_ACTIVE,
+                "updated_at": now,
+            },
+            "$push": {
+                "pipeline_history": {
+                    "status": PIPELINE_ACTIVE,
+                    "action": "Produit active dans le magasin BIONIC",
+                    "timestamp": now,
+                }
+            }
+        }
+    )
 
     return {
         "submission_id": submission_id,
@@ -191,7 +261,8 @@ def activate_product(submission_id: str) -> dict:
 
 def get_submission(submission_id: str) -> dict:
     """Recupere une soumission par ID."""
-    submission = _submissions_store.get(submission_id)
+    coll = _get_collection()
+    submission = coll.find_one({"submission_id": submission_id}, {"_id": 0})
     if not submission:
         return {"error": f"Soumission introuvable: {submission_id}"}
     return submission
@@ -199,9 +270,11 @@ def get_submission(submission_id: str) -> dict:
 
 def get_all_submissions(status_filter: str = None) -> dict:
     """Liste toutes les soumissions avec filtre optionnel par statut."""
-    results = list(_submissions_store.values())
+    coll = _get_collection()
+    query = {}
     if status_filter:
-        results = [s for s in results if s["status"] == status_filter]
+        query["status"] = status_filter
+    results = list(coll.find(query, {"_id": 0}).sort("created_at", -1))
     return {
         "submissions": results,
         "total": len(results),
@@ -211,12 +284,16 @@ def get_all_submissions(status_filter: str = None) -> dict:
 
 def get_pipeline_stats() -> dict:
     """Statistiques du pipeline de soumission."""
-    all_subs = list(_submissions_store.values())
-    stats = {}
-    for s in all_subs:
-        stats[s["status"]] = stats.get(s["status"], 0) + 1
+    coll = _get_collection()
+    pipeline = [
+        {"$group": {"_id": "$status", "count": {"$sum": 1}}},
+    ]
+    agg_results = list(coll.aggregate(pipeline))
+    stats = {r["_id"]: r["count"] for r in agg_results}
+    total = sum(stats.values())
     return {
-        "total_submissions": len(all_subs),
+        "total_submissions": total,
         "by_status": stats,
         "auto_validation_criteria": AUTO_VALIDATION_CRITERIA,
+        "storage": "mongodb",
     }

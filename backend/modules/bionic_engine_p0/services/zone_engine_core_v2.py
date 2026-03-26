@@ -55,9 +55,9 @@ EXCLUSION_ENGINE_VERSION = os.environ.get("EXCLUSION_ENGINE_VERSION", "v5")
 
 logger = logging.getLogger("bionic_engine.zone_engine_core_v2")
 
-# Cache en memoire (TTL 15 min — R2 stabilisation)
+# Cache en memoire (TTL 30 min — BCE-4X Performance Optimization)
 _zone_cache: Dict[str, Any] = {}
-_CACHE_TTL = 900
+_CACHE_TTL = 1800
 
 METERS_PER_DEG_LAT = 111320.0
 
@@ -70,6 +70,15 @@ WATER_OVERLAP_THRESHOLD = 0.15
 
 _water_union_zone_cache = None
 _water_zone_cache_loaded = False
+
+
+def preload_water_cache():
+    """BCE-4X PERF: Pre-charge le cache eau au demarrage du serveur."""
+    global _water_union_zone_cache, _water_zone_cache_loaded
+    if _water_zone_cache_loaded:
+        return
+    _load_water_cache_zones()
+    logger.info(f"[BCE-4X-PERF] Water cache pre-loaded: active={_water_union_zone_cache is not None}")
 
 
 def _load_water_cache_zones():
@@ -667,6 +676,31 @@ def _is_zone_excluded(zone_coords: list, exclusions: list) -> bool:
     return False
 
 
+
+async def _refresh_overpass_cache_bg(uncached_tiles, exclude_types, detail_level, timeout):
+    """BCE-4X PERF: Rafraichit le cache Overpass en arriere-plan (fire-and-forget)."""
+    import httpx
+    from modules.bionic_engine_p0.routers.terrain_data_router import (
+        _build_overpass_query, _save_cache,
+        _parse_overpass, OVERPASS_API_URL
+    )
+    try:
+        for tile, bbox, ck in uncached_tiles:
+            query = _build_overpass_query(
+                tile["south"], tile["west"], tile["north"], tile["east"],
+                exclude_types, detail_level
+            )
+            async with httpx.AsyncClient(timeout=timeout) as client:
+                resp = await client.post(OVERPASS_API_URL, data={"data": query})
+                if resp.status_code == 200:
+                    data = resp.json()
+                    result = _parse_overpass(data, exclude_types)
+                    await _save_cache(ck, {"success": True, "exclusion_zones": result})
+                    logger.info(f"[BCE-4X-BG] Overpass cache refreshed for tile {bbox}")
+    except Exception as e:
+        logger.debug(f"[BCE-4X-BG] Background Overpass refresh failed: {e}")
+
+
 async def _fetch_exclusions_from_terrain(bounds: Dict[str, float]) -> List[Dict]:
     """
     ExclusionsSpatiales.v1 — Fetch exclusions depuis l'API Overpass.
@@ -681,8 +715,8 @@ async def _fetch_exclusions_from_terrain(bounds: Dict[str, float]) -> List[Dict]
     - Dégradation gracieuse: génère des zones avec exclusions=[] si tout échoue
     - Temps max total estimé: ~15s au lieu de ~42s
     """
-    OVERPASS_TIMEOUT = 12  # secondes — fast-fail
-    RETRY_DELAY = 1.0
+    OVERPASS_TIMEOUT = 5  # secondes — BCE-4X ultra fast-fail (reduit de 12s a 5s)
+    RETRY_DELAY = 0.5
 
     import httpx
     from modules.bionic_engine_p0.routers.terrain_data_router import (
@@ -733,7 +767,26 @@ async def _fetch_exclusions_from_terrain(bounds: Dict[str, float]) -> List[Dict]
         logger.info(f"ExclusionsSpatiales.v1: ALL from fresh cache — {len(fresh_exclusions)} exclusions")
         return fresh_exclusions
 
-    # === PHASE 2: Overpass API (1 seul essai, fast-fail) ===
+    # === BCE-4X PERF: PHASE 2 — Stale-While-Revalidate ===
+    # Verifier le cache expire AVANT d'appeler Overpass (economise 5s si Overpass down)
+    expired_exclusions = list(fresh_exclusions)
+    for tile, bbox, ck in uncached_tiles:
+        expired = await _load_cache_expired(ck)
+        if expired:
+            expired_exclusions.extend(expired.get("exclusion_zones", []))
+
+    if expired_exclusions:
+        # On a des donnees en cache expire — les utiliser IMMEDIATEMENT
+        # et tenter Overpass en arriere-plan pour rafraichir le cache
+        logger.info(
+            f"ExclusionsSpatiales.v1: STALE-WHILE-REVALIDATE — "
+            f"{len(expired_exclusions)} exclusions (serving stale, refreshing async)"
+        )
+        # Lance le rafraichissement Overpass en arriere-plan (fire-and-forget)
+        asyncio.create_task(_refresh_overpass_cache_bg(uncached_tiles, exclude_types, detail_level, OVERPASS_TIMEOUT))
+        return expired_exclusions
+
+    # === PHASE 3: Pas de cache — Overpass obligatoire (1 seul essai, fast-fail) ===
     overpass_ok = False
     try:
         for tile, bbox, ck in uncached_tiles:
@@ -759,43 +812,7 @@ async def _fetch_exclusions_from_terrain(bounds: Dict[str, float]) -> List[Dict]
         logger.info(f"ExclusionsSpatiales.v1: Overpass OK — {len(fresh_exclusions)} exclusions")
         return fresh_exclusions
 
-    # === PHASE 3: Fallback cache expiré (AVANT un 2e retry) ===
-    expired_exclusions = list(fresh_exclusions)  # keep any fresh ones
-    for tile, bbox, ck in uncached_tiles:
-        expired = await _load_cache_expired(ck)
-        if expired:
-            expired_exclusions.extend(expired.get("exclusion_zones", []))
-
-    if expired_exclusions:
-        logger.info(
-            f"ExclusionsSpatiales.v1: EXPIRED CACHE FALLBACK — "
-            f"{len(expired_exclusions)} exclusions (stale data)"
-        )
-        return expired_exclusions
-
-    # === PHASE 4: 2e essai Overpass (dernier recours avant dégradation) ===
-    try:
-        await asyncio.sleep(RETRY_DELAY)
-        for tile, bbox, ck in uncached_tiles:
-            query = _build_overpass_query(
-                tile["south"], tile["west"], tile["north"], tile["east"],
-                exclude_types, detail_level
-            )
-            async with httpx.AsyncClient(timeout=OVERPASS_TIMEOUT) as client:
-                resp = await client.post(OVERPASS_API_URL, data={"data": query})
-                if resp.status_code == 200:
-                    data = resp.json()
-                    result = _parse_overpass(data, exclude_types)
-                    await _save_cache(ck, {"success": True, "exclusion_zones": result})
-                    fresh_exclusions.extend(result)
-    except Exception as e:
-        logger.warning(f"ExclusionsSpatiales.v1: Retry 2 failed: {e}")
-
-    if fresh_exclusions:
-        logger.info(f"ExclusionsSpatiales.v1: Retry 2 OK — {len(fresh_exclusions)} exclusions")
-        return fresh_exclusions
-
-    # === PHASE 5: Dégradation gracieuse ===
+    # === PHASE 4: Degradation gracieuse ===
     logger.warning(
         "ExclusionsSpatiales.v1: ALL sources exhausted. "
         "BIONIC V8.2: Graceful degradation — generating zones WITHOUT exclusions."
@@ -1019,33 +1036,31 @@ async def generate_organic_zones(
     if cached and (time.time() - cached["ts"]) < _CACHE_TTL:
         return cached["data"]
 
-    # Fetch exclusions with short timeout (non-blocking if fails)
-    if exclusions is None or len(exclusions) == 0:
-        exclusions = await _fetch_exclusions_from_terrain(bounds)
-
-    # BIONIC V8.2 RESILIENCE: Dégradation gracieuse.
-    # - exclusions=None ne devrait plus arriver (le fetch retourne [] en dernier recours)
-    # - exclusions=[] signifie: Overpass indisponible, on génère les zones sans filtrage
-    exclusion_degraded = False
-    if exclusions is None:
-        exclusions = []
-        exclusion_degraded = True
-        logger.warning("[BIONIC V8.2] Exclusions=None, forcing graceful degradation")
-    elif len(exclusions) == 0:
-        exclusion_degraded = True
-        logger.warning("[BIONIC V8.2] Exclusions empty (Overpass unavailable), zones will be generated without exclusion filtering")
-
+    # BCE-4X PERFORMANCE: Fetch exclusions + DEM en PARALLELE (economise 2-3s)
     # R3: Pin month once for the entire pipeline (determinism)
     pinned_month = datetime.now(timezone.utc).month
 
-    # Fetch DEM SRTM data (async, cached in MongoDB)
+    exclusion_task = None
+    dem_task = None
+    if exclusions is None or len(exclusions) == 0:
+        exclusion_task = asyncio.create_task(_fetch_exclusions_from_terrain(bounds))
+
     dem_data = None
     if EXCLUSION_ENGINE_VERSION == "v7":
         try:
             from modules.bionic_engine_p0.services.srtm_provider_v7 import (
                 fetch_dem_for_pipeline,
             )
-            dem_data = await fetch_dem_for_pipeline(bounds, species)
+            dem_task = asyncio.create_task(fetch_dem_for_pipeline(bounds, species))
+        except Exception as e:
+            logger.warning(f"[DEM] SRTM import failed: {e}")
+
+    # Attendre les resultats en parallele
+    if exclusion_task:
+        exclusions = await exclusion_task
+    if dem_task:
+        try:
+            dem_data = await dem_task
             if dem_data:
                 logger.info(
                     f"[DEM] SRTM data available: "
@@ -1057,6 +1072,16 @@ async def generate_organic_zones(
                 logger.info("[DEM] SRTM data unavailable, using heuristic terrain signals")
         except Exception as e:
             logger.warning(f"[DEM] SRTM fetch failed, using heuristic: {e}")
+
+    # BIONIC V8.2 RESILIENCE: Degradation gracieuse.
+    exclusion_degraded = False
+    if exclusions is None:
+        exclusions = []
+        exclusion_degraded = True
+        logger.warning("[BIONIC V8.2] Exclusions=None, forcing graceful degradation")
+    elif len(exclusions) == 0:
+        exclusion_degraded = True
+        logger.warning("[BIONIC V8.2] Exclusions empty (Overpass unavailable), zones will be generated without exclusion filtering")
 
     # Process ALL layers in PARALLEL using ThreadPoolExecutor
     loop = asyncio.get_event_loop()

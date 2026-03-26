@@ -75,6 +75,22 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning(f"Territory sync startup failed: {e}")
     
+    # BCE-4X PERF: Pre-charge du cache eau au demarrage
+    try:
+        from modules.bionic_engine_p0.services.zone_engine_core_v2 import preload_water_cache
+        preload_water_cache()
+        logger.info("✓ Water cache pre-loaded (BCE-4X Performance)")
+    except Exception as e:
+        logger.warning(f"Water cache preload warning: {e}")
+    
+    # x7000: Create MongoDB indexes for supplier_submissions
+    try:
+        from engines.nutrition_intelligence.x7000_supplier_product_engine import ensure_indexes
+        await ensure_indexes()
+        logger.info("✓ x7000 supplier_submissions indexes created")
+    except Exception as e:
+        logger.warning(f"x7000 index creation warning: {e}")
+    
     logger.info("=" * 60)
     logger.info("✓ All modules loaded successfully")
     logger.info("=" * 60)
