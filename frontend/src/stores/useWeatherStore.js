@@ -22,7 +22,16 @@ const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
  * Backend OWM -> Open-Meteo (gratuit, sans cle)
  */
 const fetchWeatherWithFallback = async (lat, lng) => {
-  // Tentative Backend OWM
+  // Tentative Weather Engine v3 (backend)
+  try {
+    const resp = await fetch(`${API}/api/v3/weather/current?lat=${lat}&lng=${lng}`);
+    if (resp.ok) {
+      const data = await resp.json();
+      if (data && data.temperature_c != null) return { source: 'weather-v3', data };
+    }
+  } catch (e) { /* fallthrough to v1 */ }
+
+  // Fallback Weather v1 (backend OWM)
   try {
     const resp = await fetch(`${API}/api/v1/weather/now?lat=${lat}&lng=${lng}`);
     if (resp.ok) {

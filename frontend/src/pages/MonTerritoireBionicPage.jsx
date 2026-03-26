@@ -33,6 +33,7 @@ import { TerritoireDialogs } from '@/components/territoire/ui/TerritoireDialogs'
 import useBionicWeather from '@/hooks/useBionicWeather';
 import useSharedWeather from '@/hooks/useSharedWeather';
 import useBionicScoring from '@/hooks/useBionicScoring';
+import useBionicStore from '@/stores/useBionicStore';
 import { useUserData } from '@/hooks/useUserData';
 import { useNotifications, useHuntingGroups } from '@/hooks/useSharing';
 import WaypointUnifiedPanel from '@/components/territoire/WaypointUnifiedPanel';
@@ -949,14 +950,23 @@ const MonTerritoireBionicPage = () => {
   }, [globalScore, bionicZones, bionicZonesData?.corridors]);
   
   const getScoreRating = (score) => {
-    if (!score) return { label: 'En attente', color: 'bg-gray-700', textColor: 'text-gray-400' };
-    if (score >= 85) return { label: 'Exceptionnel', color: 'bg-green-500', textColor: 'text-green-400' };
-    if (score >= 70) return { label: 'Excellent', color: 'bg-lime-500', textColor: 'text-lime-400' };
-    if (score >= 55) return { label: 'Bon', color: 'bg-yellow-500', textColor: 'text-yellow-400' };
-    return { label: 'Modéré', color: 'bg-orange-500', textColor: 'text-orange-400' };
+    if (!score) return { label: 'En attente', color: 'bg-gray-700', textColor: 'text-gray-400', ringColor: '#6B7280' };
+    if (score >= 85) return { label: 'Exceptionnel', color: 'bg-green-500', textColor: 'text-green-400', ringColor: '#22C55E' };
+    if (score >= 70) return { label: 'Excellent', color: 'bg-lime-500', textColor: 'text-lime-400', ringColor: '#84CC16' };
+    if (score >= 55) return { label: 'Bon', color: 'bg-yellow-500', textColor: 'text-yellow-400', ringColor: '#EAB308' };
+    return { label: 'Modéré', color: 'bg-orange-500', textColor: 'text-orange-400', ringColor: '#F97316' };
   };
   
   const rating = getScoreRating(displayScore);
+
+  // BCE-4X: Propager le score dans useBionicStore pour le header
+  const setDisplayScoreStore = useBionicStore(s => s.setDisplayScore);
+  React.useEffect(() => {
+    if (displayScore != null) {
+      const r = getScoreRating(displayScore);
+      setDisplayScoreStore(displayScore, r);
+    }
+  }, [displayScore, setDisplayScoreStore]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Amenagement engine + hunting path (extrait -> useTerritoireEffects)
   const { huntingPathData, amenagementReport, showHuntingPath } = useAmenagementEngine(bionicZones, selectedWaypointForZones, bionicZonesData);
@@ -980,6 +990,8 @@ const MonTerritoireBionicPage = () => {
         setShowAddWaypointDialog={setShowAddWaypointDialog}
         onClearWaypoint={clearWaypointTarget}
         onDeleteWaypoint={handleDeleteWaypoint}
+        displayScore={displayScore}
+        scoreRating={rating}
         onCenterWaypoint={() => {
           if (selectedWaypointForZones && mapRef.current) {
             mapRef.current.setView([selectedWaypointForZones.lat, selectedWaypointForZones.lng], 14);
@@ -1220,6 +1232,7 @@ const MonTerritoireBionicPage = () => {
             wind={sharedWeather.wind}
             weather={sharedWeather.weather}
             loading={sharedWeather.loading}
+            huntingScore={sharedWeather.huntingScore}
           />
 
           {/* ── Bouton + Waypoint déplacé dans la toolbar (Passe 3 UX) ── */}

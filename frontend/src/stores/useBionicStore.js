@@ -27,10 +27,15 @@ const useBionicStore = create((set, get) => ({
   loading: false,
   intelligenceWeather: null,
 
+  // ── Score global TERRITOIRE ──
+  displayScore: null,
+  scoreRating: null,
+
   // ── Actions ──
   setSpecies: (species) => set({ species }),
   setMonth: (month) => set({ month }),
   setLocation: (location) => set({ location }),
+  setDisplayScore: (score, rating) => set({ displayScore: score, scoreRating: rating }),
 
   fetchRegistry: async () => {
     if (get().registry) return;

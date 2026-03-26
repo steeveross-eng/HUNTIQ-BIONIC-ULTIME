@@ -87,12 +87,19 @@ const useSharedWeather = (lat, lng, options = {}) => {
 
   // Conditions
   const temp = current?.temperature_c ?? null;
+  const apparentTemp = current?.apparent_temperature_c ?? null;
   const humidity = current?.humidity_pct ?? null;
   const pressure = current?.pressure_hpa ?? null;
   const weatherCode = current?.weather_code;
   const conditionLabel = getConditionLabel(weatherCode);
   const description = current?.description ?? conditionLabel;
   const icon = current?.icon;
+  const visibility = current?.visibility_m ?? null;
+  const uvIndex = current?.uv_index ?? null;
+  const dewPoint = current?.dew_point_c ?? null;
+  const sunrise = current?.sunrise ?? null;
+  const sunset = current?.sunset ?? null;
+  const huntingScore = current?.hunting_score ?? null;
 
   return {
     // Donnees brutes
@@ -109,12 +116,18 @@ const useSharedWeather = (lat, lng, options = {}) => {
     // Meteo generale
     weather: {
       temperature: temp,
+      apparentTemperature: apparentTemp,
       humidity,
       pressure,
       description,
       conditionLabel,
       icon,
       weatherCode,
+      visibility,
+      uvIndex,
+      dewPoint,
+      sunrise,
+      sunset,
     },
 
     // Vent (bloc unifie)
@@ -125,6 +138,9 @@ const useSharedWeather = (lat, lng, options = {}) => {
       gusts: windGusts,
       score: windScore,
     },
+
+    // Score meteo chasse (v3)
+    huntingScore,
 
     // Previsions
     hourly: forecast?.forecasts?.slice(0, 24) || [],

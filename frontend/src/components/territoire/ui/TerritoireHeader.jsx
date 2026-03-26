@@ -12,7 +12,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import useBionicStore from '@/stores/useBionicStore';
 import useWeatherStore from '@/stores/useWeatherStore';
 
-export const TerritoireHeader = React.memo(({
+export const TerritoireHeader = (({
   navigate,
   liveMode,
   setLiveMode,
@@ -23,7 +23,16 @@ export const TerritoireHeader = React.memo(({
   onClearWaypoint,
   onDeleteWaypoint,
   onCenterWaypoint,
+  displayScore,
+  scoreRating,
 }) => {
+  // BCE-4X: Score depuis le store (source unique)
+  const storeScore = useBionicStore(s => s.displayScore);
+  const storeRating = useBionicStore(s => s.scoreRating);
+  // Props ou store — prendre celui qui est non-null
+  const finalScore = (displayScore != null && displayScore > 0) ? displayScore : storeScore;
+  const finalRating = (scoreRating && scoreRating.ringColor) ? scoreRating : storeRating;
+
   // BCE-4X: Source de verite unique — useWeatherStore d'abord, fallback useBionicStore
   const weatherCurrent = useWeatherStore(s => s.current);
   const intelligenceWeather = useBionicStore(s => s.intelligenceWeather);
@@ -31,6 +40,8 @@ export const TerritoireHeader = React.memo(({
   const temp = weatherCurrent?.temperature_c ?? intelligenceWeather?.temperature;
   const windDir = weatherCurrent?.wind_direction_deg ?? intelligenceWeather?.wind_direction_deg;
   const windSpeed = weatherCurrent?.wind_speed_kmh ?? intelligenceWeather?.wind_speed_kmh;
+
+  const showScore = finalScore != null && finalScore > 0;
 
   return (
     <header className="flex-shrink-0 min-h-[60px] bg-[#0d0d14] border-b border-[#1a1a2e] px-4 pl-24 flex items-center justify-between relative z-50" data-testid="bionic-header">
@@ -42,6 +53,35 @@ export const TerritoireHeader = React.memo(({
         <h1 className="text-base font-semibold text-white tracking-tight">Mon Territoire BIONIC</h1>
       </div>
       <div className="flex items-center gap-3">
+        {/* BCE-4X: Score badge — a gauche de + WAYPOINT */}
+        <div
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all"
+          style={{
+            borderColor: showScore ? `${finalRating?.ringColor || '#3B82F6'}40` : '#37415140',
+            backgroundColor: showScore ? `${finalRating?.ringColor || '#3B82F6'}12` : '#37415112',
+            display: 'flex',
+          }}
+          data-testid="header-score-badge"
+          data-bce4x-locked="true"
+        >
+          <svg width="28" height="28" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="16" fill="none" stroke="#374151" strokeWidth="2" />
+            {showScore && (
+              <circle
+                cx="18" cy="18" r="16" fill="none"
+                stroke={finalRating?.ringColor || '#3B82F6'} strokeWidth="2.5" strokeLinecap="round"
+                strokeDasharray={`${(2 * Math.PI * 16) * (finalScore / 100)} ${(2 * Math.PI * 16) * (1 - finalScore / 100)}`}
+                transform="rotate(-90 18 18)"
+                style={{ transition: 'stroke-dasharray 0.6s ease-out' }}
+              />
+            )}
+            <text x="18" y="20.5" textAnchor="middle" fill={showScore ? (finalRating?.ringColor || '#3B82F6') : '#6B7280'} fontSize="9" fontWeight="800">{showScore ? Math.round(finalScore) : '--'}</text>
+          </svg>
+          <div className="flex flex-col">
+            <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: showScore ? (finalRating?.ringColor || '#3B82F6') : '#6B7280' }}>{showScore ? (finalRating?.label || 'Score') : 'Score'}</span>
+            <span className="text-[8px] text-gray-500 font-mono">{showScore ? `${finalScore}/100` : 'Chargement...'}</span>
+          </div>
+        </div>
         {/* + WAYPOINT — bouton principal */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -121,3 +161,4 @@ export const TerritoireHeader = React.memo(({
     </header>
   );
 });
+

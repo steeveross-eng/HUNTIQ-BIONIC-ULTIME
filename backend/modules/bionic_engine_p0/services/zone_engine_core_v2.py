@@ -202,7 +202,7 @@ def _convert_features_to_circles(geojson: dict) -> tuple:
     return geojson, water_excluded
 
 # Thread pool for parallel layer processing (CPU-bound)
-_executor = ThreadPoolExecutor(max_workers=6)
+_executor = ThreadPoolExecutor(max_workers=10)  # BCE-4X PERF: augmente de 6 a 10
 
 
 def _cache_key(bounds, species, layers, waypoint_center=None) -> str:

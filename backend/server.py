@@ -289,6 +289,24 @@ try:
 except Exception as e:
     logger.warning(f"WSE/WIV Engine not loaded: {e}")
 
+# BCE-4X: Weather Engine v3 (enrichi, nowcasting, scoring multi-criteres)
+try:
+    from engines.weather_v3.router import router as weather_v3_router
+    app.include_router(weather_v3_router)
+    logger.info("✓ Weather Engine v3 registered (/api/v3/weather)")
+except Exception as e:
+    logger.warning(f"Weather Engine v3 not loaded: {e}")
+
+
+# BCE-4X: SUPRA Advanced Engines (pertinence, risque, recommandation, correlation)
+try:
+    from engines.supra_advanced.router import router as supra_advanced_router
+    app.include_router(supra_advanced_router)
+    logger.info("✓ SUPRA Advanced Engines registered (/api/v6/supra/advanced)")
+except Exception as e:
+    logger.warning(f"SUPRA Advanced Engines not loaded: {e}")
+
+
 # 13. Register VFE Engine router (Phase Optimisation #5)
 try:
     from modules.bionic_engine_p0.routers.vfe_router import router as vfe_router

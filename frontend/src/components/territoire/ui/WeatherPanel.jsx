@@ -5,8 +5,8 @@
  * Position: au-dessus du Score badge, a droite de la carte.
  * Protection: BCE-4X-UI PositionLock, ZIndexGuard, RenderGuard.
  */
-import React, { memo, useMemo } from 'react';
-import { Wind, Thermometer, Droplets, Gauge, Cloud, ArrowUp } from 'lucide-react';
+import React, { memo } from 'react';
+import { Wind, Thermometer, Droplets, Gauge, Cloud, ArrowUp, Eye, Sun } from 'lucide-react';
 
 const WIND_DIRECTIONS = [
   'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE',
@@ -35,7 +35,7 @@ const getWindScoreLabel = (score) => {
   return 'Mauvais';
 };
 
-const WeatherPanel = memo(({ wind, weather, loading }) => {
+const WeatherPanel = memo(({ wind, weather, loading, huntingScore }) => {
   if (!wind && !weather) return null;
 
   const windSpeed = wind?.speed;
@@ -50,6 +50,9 @@ const WeatherPanel = memo(({ wind, weather, loading }) => {
   const humidity = weather?.humidity;
   const pressure = weather?.pressure;
   const conditionLabel = weather?.conditionLabel || weather?.description || '--';
+  const visibility = weather?.visibility;
+  const uvIndex = weather?.uvIndex;
+  const dewPoint = weather?.dewPoint;
 
   const hasWind = windSpeed != null;
   const hasWeather = temp != null;
@@ -163,9 +166,9 @@ const WeatherPanel = memo(({ wind, weather, loading }) => {
         </div>
       )}
 
-      {/* Humidite + Pression */}
+      {/* Humidite + Pression + V3 extras */}
       {hasWeather && (
-        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '8px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '6px' }}>
           {humidity != null && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
               <Droplets style={{ width: 10, height: 10, color: '#38bdf8' }} />
@@ -178,6 +181,35 @@ const WeatherPanel = memo(({ wind, weather, loading }) => {
               <span style={{ fontSize: '10px', fontFamily: 'monospace' }}>{pressure} hPa</span>
             </div>
           )}
+          {visibility != null && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+              <Eye style={{ width: 10, height: 10, color: '#94a3b8' }} />
+              <span style={{ fontSize: '10px', fontFamily: 'monospace' }}>{visibility >= 10000 ? '>10km' : `${(visibility / 1000).toFixed(1)}km`}</span>
+            </div>
+          )}
+          {uvIndex != null && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+              <Sun style={{ width: 10, height: 10, color: '#fbbf24' }} />
+              <span style={{ fontSize: '10px', fontFamily: 'monospace' }}>UV {uvIndex}</span>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Hunting Score v3 */}
+      {huntingScore && (
+        <div style={{
+          marginTop: '6px', paddingTop: '6px',
+          borderTop: '1px solid rgba(100, 160, 180, 0.15)',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        }}>
+          <span style={{ fontSize: '9px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Score chasse</span>
+          <span style={{
+            fontSize: '11px', fontWeight: 700,
+            color: huntingScore.overall >= 65 ? '#22c55e' : huntingScore.overall >= 50 ? '#eab308' : '#f97316',
+          }}>
+            {huntingScore.overall}/100 — {huntingScore.label}
+          </span>
         </div>
       )}
     </div>
