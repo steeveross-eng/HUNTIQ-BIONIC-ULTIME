@@ -221,3 +221,31 @@ export const enforceOverlayCompliance = () => {
     }
   });
 };
+
+
+// ============================================================
+// 9. POSITION LOCK GUARD (BCE-4X-UI)
+// Verrouille la position des elements UI critiques.
+// Empeche tout deplacement involontaire lors d'un resize,
+// zoom, changement de couche ou rafraichissement.
+// ============================================================
+const LOCKED_POSITIONS = {
+  'wind-legend': { bottom: '90px', right: '12px', zIndex: 1000 },
+  'heatmap-v6-indicator': { bottom: '60px', left: '8px', zIndex: 999 },
+  'alert-notification-center': { bottom: '16px', right: '16px' },
+};
+
+export const enforcePositionLock = () => {
+  Object.entries(LOCKED_POSITIONS).forEach(([testId, pos]) => {
+    const el = document.querySelector(`[data-testid="${testId}"]`);
+    if (el && el.getAttribute('data-bce4x-locked') === 'true') {
+      Object.entries(pos).forEach(([prop, value]) => {
+        if (typeof value === 'number') {
+          el.style.zIndex = value;
+        } else {
+          el.style[prop] = value;
+        }
+      });
+    }
+  });
+};

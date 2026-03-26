@@ -361,8 +361,9 @@ export default function WindFlowLayer({ mode = 'arrows' }) {
   return legendData ? (
     <div
       data-testid="wind-legend"
+      data-bce4x-locked="true"
       style={{
-        position: 'absolute', bottom: '24px', right: '12px', zIndex: 1000,
+        position: 'absolute', bottom: '90px', right: '12px', zIndex: 1000,
         background: 'rgba(10,15,25,0.85)', backdropFilter: 'blur(10px)',
         borderRadius: '8px', padding: '8px 12px', color: '#c0d0e0',
         fontSize: '10px', lineHeight: '1.5', pointerEvents: 'auto',
