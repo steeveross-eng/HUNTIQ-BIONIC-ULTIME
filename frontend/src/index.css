@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* BCE-4X-UI: Suppression watermark/badge non autorise dans les modules utilisateurs */
+#emergent-badge {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 /* PHASE C: WCAG 2.2 Accessibility - Contrast Enhancement */
 @layer utilities {
   /* Accessible secondary text color (WCAG AA compliant ~7:1 ratio on dark bg) */

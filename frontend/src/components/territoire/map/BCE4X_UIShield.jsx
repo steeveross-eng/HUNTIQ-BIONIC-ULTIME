@@ -196,3 +196,28 @@ export const isProtectedRoute = (pathname) => {
     pathname.toLowerCase().includes(route.toLowerCase())
   );
 };
+
+
+// ============================================================
+// 8. UNAUTHORIZED OVERLAY GUARD (BCE-4X-UI Compliance)
+// Detecte et masque tout overlay/watermark/footer non autorise
+// dans les modules utilisateurs.
+// ============================================================
+const UNAUTHORIZED_SELECTORS = [
+  '#emergent-badge',
+  '[data-emergent-watermark]',
+  '.emergent-preview-footer',
+  '.debug-banner',
+  '.preview-footer',
+];
+
+export const enforceOverlayCompliance = () => {
+  UNAUTHORIZED_SELECTORS.forEach(selector => {
+    const el = document.querySelector(selector);
+    if (el && el.style.display !== 'none') {
+      el.style.display = 'none';
+      el.style.visibility = 'hidden';
+      console.warn(`[BCE-4X-UI] Overlay non autorise masque: ${selector}`);
+    }
+  });
+};
