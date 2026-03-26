@@ -1,18 +1,19 @@
 /**
  * TerritoireHeader.jsx — Header BIONIC epure
  * =============================================
- * Section 4: Aucun score meteo ou opportunite dans le header.
- * Section 5: Temperature officielle du cockpit INTELLIGENCE uniquement.
- * Seul score global autorise: Score Consolide INTELLIGENCE (dans le cockpit).
+ * BCE-4X P0: Score TOUJOURS visible (chargement ou valeur).
+ * Typographie harmonisee avec bouton WAYPOINT.
+ * Position verrouillee via BCE4X_UIShield (PositionLock + ZIndexGuard).
  */
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { ArrowLeft, Thermometer, Wind, Zap, Plus, Edit2, Crosshair, X, LocateFixed, Trash2, ToggleLeft } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import useBionicStore from '@/stores/useBionicStore';
 import useWeatherStore from '@/stores/useWeatherStore';
+import { getProtectedZIndex } from '@/components/territoire/map/BCE4X_UIShield';
 
-export const TerritoireHeader = (({
+export const TerritoireHeader = ({
   navigate,
   liveMode,
   setLiveMode,
@@ -26,25 +27,40 @@ export const TerritoireHeader = (({
   displayScore,
   scoreRating,
 }) => {
-  // BCE-4X: Score depuis le store (source unique)
+  // BCE-4X: Score — double source (props + store), props prioritaire
   const storeScore = useBionicStore(s => s.displayScore);
   const storeRating = useBionicStore(s => s.scoreRating);
-  // Props ou store — prendre celui qui est non-null
-  const finalScore = (displayScore != null && displayScore > 0) ? displayScore : storeScore;
-  const finalRating = (scoreRating && scoreRating.ringColor) ? scoreRating : storeRating;
+  const finalScore = (displayScore != null && displayScore > 0) ? displayScore : (storeScore != null && storeScore > 0) ? storeScore : null;
+  const finalRating = (scoreRating && scoreRating.ringColor) ? scoreRating : (storeRating && storeRating.ringColor) ? storeRating : null;
 
-  // BCE-4X: Source de verite unique — useWeatherStore d'abord, fallback useBionicStore
+  // BCE-4X: Source de verite unique meteo
   const weatherCurrent = useWeatherStore(s => s.current);
   const intelligenceWeather = useBionicStore(s => s.intelligenceWeather);
-
   const temp = weatherCurrent?.temperature_c ?? intelligenceWeather?.temperature;
   const windDir = weatherCurrent?.wind_direction_deg ?? intelligenceWeather?.wind_direction_deg;
   const windSpeed = weatherCurrent?.wind_speed_kmh ?? intelligenceWeather?.wind_speed_kmh;
 
-  const showScore = finalScore != null && finalScore > 0;
+  const hasScore = finalScore != null && finalScore > 0;
+  const isLoading = !hasScore;
+  const ringColor = finalRating?.ringColor || '#FF9800';
+  const circumference = 2 * Math.PI * 16;
+
+  // BCE-4X PositionLock: Verrouillage z-index du header
+  const headerRef = useRef(null);
+  useEffect(() => {
+    if (headerRef.current) {
+      headerRef.current.style.zIndex = getProtectedZIndex('ui-toolbar');
+    }
+  }, []);
 
   return (
-    <header className="flex-shrink-0 min-h-[60px] bg-[#0d0d14] border-b border-[#1a1a2e] px-4 pl-24 flex items-center justify-between relative z-50" data-testid="bionic-header">
+    <header
+      ref={headerRef}
+      className="flex-shrink-0 min-h-[60px] bg-[#0d0d14] border-b border-[#1a1a2e] px-4 pl-24 flex items-center justify-between relative"
+      style={{ zIndex: getProtectedZIndex('ui-toolbar') }}
+      data-testid="bionic-header"
+      data-bce4x-locked="true"
+    >
       <div className="flex items-center gap-3">
         <button onClick={() => navigate('/')} className="text-gray-500 hover:text-white transition-colors" data-testid="header-back-btn">
           <ArrowLeft className="h-[22px] w-[22px]" />
@@ -53,36 +69,56 @@ export const TerritoireHeader = (({
         <h1 className="text-base font-semibold text-white tracking-tight">Mon Territoire BIONIC</h1>
       </div>
       <div className="flex items-center gap-3">
-        {/* BCE-4X: Score badge — a gauche de + WAYPOINT */}
+        {/* BCE-4X P0: Score badge — TOUJOURS affiche, a gauche de + WAYPOINT */}
         <div
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all"
+          className="flex items-center gap-2.5 h-9 px-3 rounded-lg border-2 transition-all"
           style={{
-            borderColor: showScore ? `${finalRating?.ringColor || '#3B82F6'}40` : '#37415140',
-            backgroundColor: showScore ? `${finalRating?.ringColor || '#3B82F6'}12` : '#37415112',
-            display: 'flex',
+            borderColor: hasScore ? `${ringColor}50` : '#FF980050',
+            backgroundColor: hasScore ? `${ringColor}12` : '#FF980008',
           }}
           data-testid="header-score-badge"
           data-bce4x-locked="true"
         >
-          <svg width="28" height="28" viewBox="0 0 36 36">
+          <svg width="28" height="28" viewBox="0 0 36 36" className="flex-shrink-0">
             <circle cx="18" cy="18" r="16" fill="none" stroke="#374151" strokeWidth="2" />
-            {showScore && (
+            {hasScore ? (
               <circle
                 cx="18" cy="18" r="16" fill="none"
-                stroke={finalRating?.ringColor || '#3B82F6'} strokeWidth="2.5" strokeLinecap="round"
-                strokeDasharray={`${(2 * Math.PI * 16) * (finalScore / 100)} ${(2 * Math.PI * 16) * (1 - finalScore / 100)}`}
+                stroke={ringColor} strokeWidth="2.5" strokeLinecap="round"
+                strokeDasharray={`${circumference * (finalScore / 100)} ${circumference * (1 - finalScore / 100)}`}
                 transform="rotate(-90 18 18)"
                 style={{ transition: 'stroke-dasharray 0.6s ease-out' }}
               />
+            ) : (
+              <circle
+                cx="18" cy="18" r="16" fill="none"
+                stroke="#FF9800" strokeWidth="1.5" strokeLinecap="round"
+                strokeDasharray="8 8"
+                className="animate-spin"
+                style={{ transformOrigin: '18px 18px', animationDuration: '3s' }}
+              />
             )}
-            <text x="18" y="20.5" textAnchor="middle" fill={showScore ? (finalRating?.ringColor || '#3B82F6') : '#6B7280'} fontSize="9" fontWeight="800">{showScore ? Math.round(finalScore) : '--'}</text>
+            <text
+              x="18" y="20.5" textAnchor="middle"
+              fill={hasScore ? ringColor : '#FF9800'}
+              fontSize="9" fontWeight="800"
+            >
+              {hasScore ? Math.round(finalScore) : '--'}
+            </text>
           </svg>
-          <div className="flex flex-col">
-            <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: showScore ? (finalRating?.ringColor || '#3B82F6') : '#6B7280' }}>{showScore ? (finalRating?.label || 'Score') : 'Score'}</span>
-            <span className="text-[8px] text-gray-500 font-mono">{showScore ? `${finalScore}/100` : 'Chargement...'}</span>
+          <div className="flex flex-col leading-none">
+            <span
+              className="text-sm font-bold uppercase tracking-wider"
+              style={{ color: hasScore ? ringColor : '#FF9800' }}
+            >
+              {hasScore ? (finalRating?.label || 'Score') : 'Score'}
+            </span>
+            <span className="text-[9px] text-gray-500 font-bold tracking-wide mt-0.5">
+              {hasScore ? `${Math.round(finalScore)}/100` : 'Calcul...'}
+            </span>
           </div>
         </div>
-        {/* + WAYPOINT — bouton principal */}
+        {/* + WAYPOINT — bouton principal (reference typographique) */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
@@ -160,5 +196,5 @@ export const TerritoireHeader = (({
       </div>
     </header>
   );
-});
+};
 

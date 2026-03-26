@@ -34,6 +34,7 @@ import useBionicWeather from '@/hooks/useBionicWeather';
 import useSharedWeather from '@/hooks/useSharedWeather';
 import useBionicScoring from '@/hooks/useBionicScoring';
 import useBionicStore from '@/stores/useBionicStore';
+import { enforceOverlayCompliance, enforcePositionLock, enforceRenderGuard } from '@/components/territoire/map/BCE4X_UIShield';
 import { useUserData } from '@/hooks/useUserData';
 import { useNotifications, useHuntingGroups } from '@/hooks/useSharing';
 import WaypointUnifiedPanel from '@/components/territoire/WaypointUnifiedPanel';
@@ -179,6 +180,18 @@ const MonTerritoireBionicPage = () => {
       updateBiologicalSeason(selectedBiologicalSeason);
     }
   }, [selectedBiologicalSeason, updateBiologicalSeason]);
+
+  // BCE-4X-UI: Guards periodiques — PositionLock + RenderGuard + OverlayCompliance
+  useEffect(() => {
+    const guardInterval = setInterval(() => {
+      enforceOverlayCompliance();
+      enforcePositionLock();
+      enforceRenderGuard();
+    }, 5000);
+    // Execution immediate au montage
+    enforceOverlayCompliance();
+    return () => clearInterval(guardInterval);
+  }, []);
   
   // V8.1 — Split View
   // V8.2 FIX: Capture du centre/zoom RÉEL de la carte au moment d'activer le SplitView
@@ -889,7 +902,7 @@ const MonTerritoireBionicPage = () => {
       return true;
     });
   }, [bionicZonesData?.zones]);
-  const bionicStats = bionicZonesData?.stats || {};
+  const bionicStats = useMemo(() => bionicZonesData?.stats || {}, [bionicZonesData?.stats]);
   
   // SPATIAL CLIPPING: Appliquer le clipping 1km × 1km si un waypoint est sélectionné
   const allZones = useMemo(() => {
@@ -920,11 +933,13 @@ const MonTerritoireBionicPage = () => {
     return bionicZones.filter(z => z.score >= minPercentageFilter).length;
   }, [bionicZones, minPercentageFilter]);
   
-  // Score global V9 — Integre zones (65%) + corridors V9 (35%)
+  // Score global V9 — BCE-4X P0: Score TOUJOURS disponible
+  // Sources: 1. globalScore (hook scoring) 2. bionicZones (orchestrateur) 3. heatmapV10Data (moteur heatmap) 4. bionicStats
   const displayScore = useMemo(() => {
     if (globalScore) return globalScore;
-    const corridors = bionicZonesData?.corridors || [];
     
+    // Source 1: Zones de l'orchestrateur
+    const corridors = bionicZonesData?.corridors || [];
     let zoneAvg = 0;
     if (bionicZones.length > 0) {
       const validScores = bionicZones.map(z => z.score || 0).filter(s => s > 0);
@@ -941,13 +956,24 @@ const MonTerritoireBionicPage = () => {
       }
     }
     
-    if (zoneAvg === 0 && corridorAvg === 0) return null;
-    if (corridorAvg === 0) return Math.round(zoneAvg);
-    if (zoneAvg === 0) return Math.round(corridorAvg);
+    if (zoneAvg > 0 || corridorAvg > 0) {
+      if (corridorAvg === 0) return Math.round(zoneAvg);
+      if (zoneAvg === 0) return Math.round(corridorAvg);
+      return Math.round(zoneAvg * 0.65 + corridorAvg * 0.35);
+    }
     
-    // V9: corridors weighted at 35% (up from 30%) due to 9-engine precision
-    return Math.round(zoneAvg * 0.65 + corridorAvg * 0.35);
-  }, [globalScore, bionicZones, bionicZonesData?.corridors]);
+    // Source 2: Heatmap V10 (fallback quand zones vides)
+    if (heatmapV10Data?.score_avg > 0) {
+      return Math.round(heatmapV10Data.score_avg);
+    }
+    
+    // Source 3: Stats brutes du pipeline
+    if (bionicStats?.score_global > 0) {
+      return Math.round(bionicStats.score_global);
+    }
+    
+    return null;
+  }, [globalScore, bionicZones, bionicZonesData?.corridors, heatmapV10Data, bionicStats]);
   
   const getScoreRating = (score) => {
     if (!score) return { label: 'En attente', color: 'bg-gray-700', textColor: 'text-gray-400', ringColor: '#6B7280' };

@@ -9,16 +9,21 @@ import PinnablePanel from './PinnablePanel';
 
 /**
  * NutritionPointDetailPanel.jsx — SUPRA PANEL complet
- * Directive PHASE 3D: Correctif Typographie BIONIC Premium
+ * BCE-4X P0: Uniformisation SUPRA — Couleur unique, format unique, typo WAYPOINT
+ * Tous les boutons CMD/Commandez/Commander tout -> couleur officielle SUPRA #FF9800
  * Titres 24px | Sous-titres 20px | Valeurs 22-26px | Desc 17-18px | Labels 14px+
  * Espacements 20-28px | WCAG AA | BCE-4X / STEEVE-MAX V6
  */
 
 const API = process.env.REACT_APP_BACKEND_URL;
 
+// BCE-4X P0: Couleur officielle SUPRA pour TOUS les boutons de commande
+const SUPRA_CMD_COLOR = '#FF9800';
+
 const BIONIC = {
   green: '#00C853', yellow: '#F9D423', orange: '#FF9800', red: '#D32F2F',
   blue: '#2196F3', purple: '#9C27B0', card: '#111122', cardBorder: 'rgba(255,255,255,0.06)',
+  supraCmd: SUPRA_CMD_COLOR,
 };
 
 function gradeColor(grade) {
@@ -108,24 +113,26 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
       fullHeight={true}
     >
       <div className="h-full flex flex-col overflow-hidden" data-testid="supra-panel-content">
-        {/* TABS — 16px, icones 20px, espacement 24px */}
-        <div className="flex items-center gap-3 px-5 pt-4 pb-3 border-b flex-shrink-0" style={{ borderColor: 'rgba(255,255,255,0.08)' }} data-testid="supra-tabs">
+        {/* TABS — BCE-4X P0: Typographie WAYPOINT, couleur SUPRA unifiee */}
+        <div className="flex items-center gap-2 px-5 pt-4 pb-3 border-b flex-shrink-0" style={{ borderColor: 'rgba(255,255,255,0.08)' }} data-testid="supra-tabs">
           {TABS.map(tab => {
             const active = activeTab === tab.id;
             const Icon = tab.icon;
+            const isOrder = tab.id === 'commandez';
+            const activeColor = isOrder ? SUPRA_CMD_COLOR : gc;
             return (
               <button
                 key={tab.id}
                 data-testid={`supra-tab-${tab.id}`}
                 onClick={() => setActiveTab(tab.id)}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-[16px] font-bold transition-all"
+                className="flex items-center gap-2 h-9 px-5 rounded-lg text-sm font-bold uppercase tracking-wider transition-all duration-150"
                 style={{
-                  backgroundColor: active ? `${gc}20` : 'transparent',
-                  color: active ? gc : '#9ca3af',
-                  border: active ? `1px solid ${gc}40` : '1px solid transparent',
+                  backgroundColor: active ? `${activeColor}18` : 'transparent',
+                  color: active ? activeColor : '#6b7280',
+                  border: active ? `2px solid ${activeColor}50` : '2px solid transparent',
                 }}
               >
-                <Icon className="h-5 w-5" />
+                <Icon className="h-4 w-4" />
                 {tab.label}
               </button>
             );
@@ -512,76 +519,102 @@ const ComparezTab = ({ products, compareIds, gc, toggleCompare }) => {
 };
 
 /* ============================================================ */
-/* TAB: COMMANDEZ — Typographie BIONIC Premium                  */
+/* TAB: COMMANDEZ — BCE-4X P0 SUPRA UNIFORMISATION             */
+/* Couleur unique: #FF9800 | Format unifie | Typo WAYPOINT     */
 /* ============================================================ */
+const SupraButton = ({ children, onClick, size = 'md', disabled = false, testId }) => {
+  const sizeClasses = {
+    sm: 'h-8 px-3 text-xs gap-1.5',
+    md: 'h-9 px-5 text-sm gap-2',
+    lg: 'h-10 px-6 text-sm gap-2',
+  };
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={`flex items-center justify-center rounded-lg font-bold uppercase tracking-wider transition-all duration-150 ${sizeClasses[size]} ${
+        disabled
+          ? 'opacity-40 cursor-not-allowed'
+          : 'hover:brightness-125 active:scale-[0.97]'
+      }`}
+      style={{
+        backgroundColor: disabled ? '#37415115' : `${SUPRA_CMD_COLOR}18`,
+        color: disabled ? '#6b7280' : SUPRA_CMD_COLOR,
+        border: `2px solid ${disabled ? '#37415130' : `${SUPRA_CMD_COLOR}50`}`,
+      }}
+      data-testid={testId}
+      data-bce4x-locked="true"
+    >
+      {children}
+    </button>
+  );
+};
+
 const CommandezTab = ({ order, products, recipe, gc }) => (
   <div className="space-y-5" data-testid="supra-commandez-tab">
     {/* Pack complet */}
     <Card testId="order-pack-card">
       <div className="flex items-center gap-3 mb-4">
-        <Package className="h-5 w-5" style={{ color: BIONIC.green }} />
-        <span className="text-[20px] font-bold text-white">Commander la recette complete</span>
-        <span className="text-[18px] font-bold ml-auto" style={{ color: BIONIC.green }}>{order.summary.cost_initial_cad}$</span>
+        <Package className="h-5 w-5" style={{ color: SUPRA_CMD_COLOR }} />
+        <span className="text-[20px] font-bold text-white">Recette complete</span>
+        <span className="text-[18px] font-bold ml-auto" style={{ color: SUPRA_CMD_COLOR }}>{order.summary.cost_initial_cad}$</span>
       </div>
-      <div className="space-y-2">
+      <div className="space-y-0">
         {order.items?.map((item, i) => (
-          <div key={i} className="flex items-center justify-between py-2 border-b" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
-            <div className="flex-1">
-              <div className="text-[17px] text-white">{item.name} — <span className="text-gray-400">{item.brand}</span></div>
-              <div className="text-[14px] text-gray-500 mt-0.5">{item.dosage} | Qte: {item.quantity}</div>
+          <div key={i} className="flex items-center gap-4 py-3 border-b" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
+            <div className="flex-1 min-w-0">
+              <div className="text-[15px] font-bold text-white truncate">{item.name}</div>
+              <div className="text-[13px] text-gray-500 mt-0.5">{item.brand} | {item.dosage} | Qte: {item.quantity}</div>
             </div>
-            <div className="text-right flex-shrink-0">
-              <div className="text-[17px] font-bold text-white">{item.total_price_cad}$</div>
-              <span className="text-[14px] font-bold px-2.5 py-1 rounded mt-0.5 inline-block" style={{ backgroundColor: `${priorityColor(item.priority)}15`, color: priorityColor(item.priority) }}>{item.priority}</span>
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <span className="text-[15px] font-bold text-white tabular-nums w-16 text-right">{item.total_price_cad}$</span>
+              <span className="text-[11px] font-bold px-2 py-0.5 rounded-md uppercase" style={{ backgroundColor: `${priorityColor(item.priority)}12`, color: priorityColor(item.priority) }}>{item.priority}</span>
             </div>
           </div>
         ))}
       </div>
       <div className="flex items-center justify-between mt-4 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
-        <div className="text-[14px] text-gray-400">
-          Reactivation: {order.summary.reactivation_frequency_weeks} sem | Annuel: {order.summary.cost_annual_cad}$ | Par visite: {order.summary.cost_per_visit_cad}$
+        <div className="text-[13px] text-gray-400">
+          {order.summary.reactivation_frequency_weeks} sem | {order.summary.cost_annual_cad}$/an | {order.summary.cost_per_visit_cad}$/visite
         </div>
-        <button
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-[16px] font-bold transition-all"
-          style={{ backgroundColor: `${BIONIC.green}20`, color: BIONIC.green, border: `1px solid ${BIONIC.green}40` }}
-          data-testid="order-complete-btn"
-        >
-          <ShoppingCart className="h-4 w-4" /> Commander tout
-        </button>
+        <SupraButton size="md" testId="order-complete-btn">
+          <ShoppingCart className="h-4 w-4" /> Commander
+        </SupraButton>
       </div>
     </Card>
 
-    {/* Produits individuels */}
-    <div className="text-[17px] text-gray-300 mb-2">Commander individuellement</div>
-    <div className="space-y-3">
-      {products?.products?.slice(0, 6).map(p => {
+    {/* Produits individuels — tableau modernise */}
+    <div className="text-[15px] font-bold text-gray-300 uppercase tracking-wider mb-3">Produits individuels</div>
+    <div className="space-y-2">
+      {products?.products?.slice(0, 8).map(p => {
         const sc = p.score_global >= 85 ? BIONIC.green : p.score_global >= 70 ? BIONIC.yellow : p.score_global >= 50 ? BIONIC.orange : BIONIC.red;
         return (
-          <Card key={p.product_id} testId={`shop-product-${p.product_id}`}>
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: `${sc}15`, border: `2px solid ${sc}` }}>
-                <span className="text-[16px] font-black" style={{ color: sc }}>{p.score_global}</span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-[16px] font-bold text-white truncate">{p.name}</div>
-                <div className="flex gap-1.5 mt-1 flex-wrap">
-                  {p.optimal_for?.map((tag, j) => (
-                    <span key={j} className="text-[12px] px-2 py-0.5 rounded" style={{ backgroundColor: `${BIONIC.green}12`, color: BIONIC.green }}>Optimal: {tag}</span>
-                  ))}
-                </div>
-              </div>
-              <div className="flex items-center gap-3 flex-shrink-0">
-                <span className="text-[16px] font-bold text-white">{p.price_cad}$</span>
-                <button
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[14px] font-bold transition-all"
-                  style={{ backgroundColor: `${BIONIC.blue}15`, color: BIONIC.blue, border: `1px solid ${BIONIC.blue}30` }}
-                  data-testid={`shop-order-${p.product_id}`}
-                >
-                  <ShoppingCart className="h-4 w-4" /> CMD
-                </button>
+          <div
+            key={p.product_id}
+            className="flex items-center gap-4 px-4 py-3 rounded-xl border transition-all hover:border-[#FF980030]"
+            style={{ backgroundColor: BIONIC.card, borderColor: BIONIC.cardBorder }}
+            data-testid={`shop-product-${p.product_id}`}
+          >
+            {/* Score badge */}
+            <div className="w-11 h-11 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: `${sc}12`, border: `2px solid ${sc}` }}>
+              <span className="text-[15px] font-black tabular-nums" style={{ color: sc }}>{p.score_global}</span>
+            </div>
+            {/* Product info */}
+            <div className="flex-1 min-w-0">
+              <div className="text-[15px] font-bold text-white truncate">{p.name}</div>
+              <div className="flex gap-1.5 mt-1 flex-wrap">
+                {p.optimal_for?.map((tag, j) => (
+                  <span key={j} className="text-[11px] px-2 py-0.5 rounded-md" style={{ backgroundColor: `${BIONIC.green}12`, color: BIONIC.green }}>Optimal: {tag}</span>
+                ))}
               </div>
             </div>
-          </Card>
+            {/* Price — aligned */}
+            <span className="text-[15px] font-bold text-white tabular-nums w-16 text-right flex-shrink-0">{p.price_cad}$</span>
+            {/* CMD button — unifie SUPRA */}
+            <SupraButton size="sm" testId={`shop-order-${p.product_id}`}>
+              <ShoppingCart className="h-3.5 w-3.5" /> CMD
+            </SupraButton>
+          </div>
         );
       })}
     </div>

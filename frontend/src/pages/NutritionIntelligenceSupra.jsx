@@ -14,10 +14,14 @@ import axios from 'axios';
 
 const API = process.env.REACT_APP_BACKEND_URL;
 
+// BCE-4X P0: Couleur officielle SUPRA pour TOUS les boutons
+const SUPRA_CMD_COLOR = '#FF9800';
+
 const BIONIC = {
   green: '#00C853', yellow: '#F9D423', orange: '#FF9800', red: '#D32F2F',
   blue: '#2196F3', light: '#ECEFF1', dark: '#37474F', card: '#1a1a2e',
   cardBorder: 'rgba(255,255,255,0.06)',
+  supraCmd: SUPRA_CMD_COLOR,
 };
 
 const SPECIES_OPTIONS = [
@@ -194,15 +198,15 @@ export default function NutritionIntelligenceSupra() {
                   <span className="text-sm font-bold w-10 text-right tabular-nums" style={{ color: zoneColor(m.zone) }}>{m.score}</span>
                   <span className="text-[10px] font-bold w-12 text-right uppercase" style={{ color: zoneColor(m.zone) }}>{m.zone}</span>
                   <button
-                    className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold transition-all"
+                    className="flex items-center gap-1.5 h-8 px-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-150 hover:brightness-125 active:scale-[0.97]"
                     style={{
-                      backgroundColor: m.zone === 'vert' ? 'rgba(255,255,255,0.04)' : `${zoneColor(m.zone)}18`,
-                      color: m.zone === 'vert' ? '#666' : zoneColor(m.zone),
-                      border: `1px solid ${m.zone === 'vert' ? 'rgba(255,255,255,0.06)' : zoneColor(m.zone)}30`,
+                      backgroundColor: `${SUPRA_CMD_COLOR}18`,
+                      color: SUPRA_CMD_COLOR,
+                      border: `2px solid ${SUPRA_CMD_COLOR}50`,
                     }}
                     data-testid={`order-btn-${key}`}
                   >
-                    <ShoppingCart className="h-3 w-3" />
+                    <ShoppingCart className="h-3.5 w-3.5" />
                     CMD
                   </button>
                 </div>

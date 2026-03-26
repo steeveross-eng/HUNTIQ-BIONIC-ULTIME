@@ -233,6 +233,7 @@ const LOCKED_POSITIONS = {
   'wind-legend': { bottom: '90px', right: '12px', zIndex: 1000 },
   'heatmap-v6-indicator': { bottom: '60px', left: '8px', zIndex: 999 },
   'alert-notification-center': { bottom: '16px', right: '16px' },
+  'header-score-badge': { zIndex: 1000 },
 };
 
 export const enforcePositionLock = () => {
@@ -247,5 +248,42 @@ export const enforcePositionLock = () => {
         }
       });
     }
+  });
+};
+
+// ============================================================
+// 10. RENDER GUARD (BCE-4X P0)
+// Verifie que les elements UI critiques sont presents
+// et conformes aux specifications SUPRA / TERRITOIRE.
+// Declenche un warning en cas de deviation.
+// ============================================================
+const RENDER_GUARDS = [
+  {
+    selector: '[data-testid="header-score-badge"]',
+    label: 'Score Badge Header',
+    checks: (el) => {
+      const text = el?.innerText || '';
+      return text.length > 0;
+    },
+  },
+  {
+    selector: '[data-testid^="order-btn-"], [data-testid^="shop-order-"], [data-testid="order-complete-btn"]',
+    label: 'SUPRA CMD Buttons',
+    checks: (el) => {
+      const style = window.getComputedStyle(el);
+      const isSupraOrange = style.color.includes('255, 152, 0');
+      return isSupraOrange;
+    },
+  },
+];
+
+export const enforceRenderGuard = () => {
+  RENDER_GUARDS.forEach(({ selector, label, checks }) => {
+    const elements = document.querySelectorAll(selector);
+    elements.forEach(el => {
+      if (!checks(el)) {
+        console.warn(`[BCE-4X RENDER GUARD] Non-conforme: ${label} — Element degrade`);
+      }
+    });
   });
 };
