@@ -17,12 +17,16 @@
  *   - Aucun debordement ou clipping
  */
 import React, { useState, useRef, useCallback, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { Pin, PinOff, Maximize2, Minimize2, X, GripVertical, Printer } from 'lucide-react';
 
 const PINNABLE_CSS_ID = 'pinnable-panel-css-v2';
 const PINNABLE_CSS = `
 .pinnable-panel-root {
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.pinnable-panel-root-fullheight {
+  transition: none;
 }
 .pinnable-panel-pinned {
   box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(245,166,35,0.15);
@@ -233,15 +237,134 @@ const PinnablePanel = ({
 
   const panelStyle = expanded ? {}
     : pinned ? { position: 'fixed', left: pos.x, top: pos.y, zIndex: 2000, width: size.w, height: size.h }
-    : fullHeight ? { position: 'fixed', top: 0, left: 0, zIndex: 2000, width: '100vw', height: '100vh', overflow: 'hidden' }
+    : fullHeight ? { position: 'fixed', top: 0, left: 0, zIndex: 9990, width: '100vw', height: '100vh', overflow: 'hidden' }
     : {};
+
+  const isFullHeightActive = fullHeight && !pinned && !expanded;
 
   const rootClasses = [
     'pinnable-panel-root flex flex-col overflow-hidden',
+    isFullHeightActive ? 'pinnable-panel-root-fullheight' : '',
     expanded ? 'pinnable-panel-expanded' : '',
     pinned && !expanded ? 'pinnable-panel-pinned rounded-xl border border-amber-500/20' : '',
     !pinned && !expanded ? `bg-black/95 backdrop-blur-md ${fullHeight ? 'rounded-none' : 'rounded-xl border'} border-gray-700/50 ${className}` : '',
   ].filter(Boolean).join(' ');
+
+  // === CONTENU DU PANNEAU ===
+  const panelHeader = (
+    <div
+      className={`pinnable-header pinnable-drag-header ${pinned && !expanded ? 'draggable' : ''} flex items-center justify-between flex-shrink-0`}
+      style={
+        isFullHeightActive
+          ? { padding: '12px 20px', borderBottom: `2px solid ${accentColor}40`, backgroundColor: '#0d0d1a', boxShadow: '0 2px 12px rgba(0,0,0,0.4)' }
+          : !expanded
+            ? { padding: '10px 14px', borderBottom: `1px solid ${accentColor}25`, backgroundColor: `${accentColor}08` }
+            : undefined
+      }
+      onMouseDown={onDragStart}
+    >
+      <div className="flex items-center gap-2.5 min-w-0 flex-1">
+        {pinned && !expanded && <GripVertical className="h-4 w-4 text-gray-500 flex-shrink-0" />}
+        {Icon && (
+          <div className="p-1.5 rounded-lg flex-shrink-0" style={{ backgroundColor: expanded ? '#f0f0f5' : `${accentColor}15` }}>
+            <Icon className="h-5 w-5" style={{ color: expanded ? '#111' : accentColor }} />
+          </div>
+        )}
+        <div className="min-w-0">
+          <h3 className="font-bold truncate" style={{ fontSize: isFullHeightActive ? '15px' : expanded ? '20px' : '13px', color: expanded ? '#111' : '#fff' }}>{title}</h3>
+          {subtitle && <p className="truncate" style={{ fontSize: expanded ? '14px' : '10px', color: expanded ? '#666' : `${accentColor}90` }}>{subtitle}</p>}
+        </div>
+      </div>
+      {!isFullHeightActive && (
+        <div className="flex items-center gap-1.5 flex-shrink-0 ml-3">
+          {headerExtra}
+          {showPrint && (
+            <button data-testid={`${testId}-print-btn`} onClick={handlePrint} title="Imprimer" className="p-2 rounded-lg transition-all" style={{ backgroundColor: expanded ? '#e8f5e9' : 'rgba(255,255,255,0.06)', color: expanded ? '#2e7d32' : '#9ca3af' }}>
+              <Printer className="h-4 w-4" />
+            </button>
+          )}
+          <button data-testid={`${testId}-pin-btn`} onClick={togglePin} title={pinned ? 'Detacher' : 'Fixer'} className="p-2 rounded-lg transition-all" style={{ backgroundColor: pinned ? `${accentColor}20` : expanded ? '#f0f0f5' : 'rgba(255,255,255,0.06)', color: pinned ? accentColor : expanded ? '#333' : '#9ca3af' }}>
+            {pinned ? <PinOff className="h-4 w-4" /> : <Pin className="h-4 w-4" />}
+          </button>
+          <button data-testid={`${testId}-expand-btn`} onClick={toggleExpand} title={expanded ? 'Reduire' : 'Pleine page'} className="p-2 rounded-lg transition-all" style={{ backgroundColor: expanded ? '#e8e8f0' : 'rgba(255,255,255,0.06)', color: expanded ? '#111' : '#9ca3af' }}>
+            {expanded ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+          </button>
+          <button data-testid={`${testId}-close-btn`} onClick={onClose} className="p-2 rounded-lg transition-all" style={{ backgroundColor: expanded ? '#fee2e2' : 'rgba(255,255,255,0.06)', color: expanded ? '#dc2626' : '#9ca3af' }}>
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+
+  const panelContent = (
+    <div
+      className="pinnable-scroll pinnable-content flex-1"
+      style={{
+        maxHeight: expanded ? 'calc(100vh - 70px)' : pinned ? `${size.h - 56}px` : fullHeight ? 'calc(100vh - 56px)' : maxHeight,
+        overflowY: fullHeight && !expanded && !pinned ? 'hidden' : expanded ? 'auto' : undefined,
+        overflowX: 'hidden',
+        backgroundColor: expanded ? '#fafafa' : 'transparent',
+      }}
+    >
+      {children}
+    </div>
+  );
+
+  const floatingControls = isFullHeightActive ? (
+    <>
+      <button
+        data-testid={`${testId}-float-close-btn`}
+        onClick={onClose}
+        title="Fermer (X)"
+        style={{
+          position: 'absolute', top: 16, right: 16, zIndex: 10,
+          width: 44, height: 44, borderRadius: 12,
+          backgroundColor: '#dc2626', color: '#fff',
+          border: '2px solid rgba(255,255,255,0.3)',
+          cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 4px 24px rgba(220,38,38,0.5), 0 0 0 1px rgba(0,0,0,0.2)',
+        }}
+      >
+        <X className="h-5 w-5" />
+      </button>
+      {showPrint && (
+        <button
+          data-testid={`${testId}-float-print-btn`}
+          onClick={handlePrint}
+          title="Imprimer"
+          style={{
+            position: 'absolute', top: 16, right: 68, zIndex: 10,
+            width: 44, height: 44, borderRadius: 12,
+            backgroundColor: '#1b5e20', color: '#fff',
+            border: '2px solid rgba(255,255,255,0.3)',
+            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 4px 24px rgba(27,94,32,0.5), 0 0 0 1px rgba(0,0,0,0.2)',
+          }}
+        >
+          <Printer className="h-5 w-5" />
+        </button>
+      )}
+    </>
+  ) : null;
+
+  // === RENDU PORTAL pour fullHeight — échappe au stacking context de MonTerritoireBionicPage ===
+  if (isFullHeightActive) {
+    return ReactDOM.createPortal(
+      <div
+        ref={panelRef}
+        data-testid={testId}
+        className="pinnable-panel-root pinnable-panel-root-fullheight flex flex-col overflow-hidden bg-[#0a0a0f]"
+        style={{ position: 'fixed', inset: 0, zIndex: 9999, width: '100vw', height: '100vh' }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {floatingControls}
+        {panelHeader}
+        {panelContent}
+      </div>,
+      document.body
+    );
+  }
 
   return (
     <div
@@ -252,90 +375,8 @@ const PinnablePanel = ({
       onClick={(e) => e.stopPropagation()}
       onMouseDown={(e) => { if (e.target === panelRef.current || panelRef.current?.contains(e.target)) e.stopPropagation(); }}
     >
-      {/* Header */}
-      <div
-        className={`pinnable-header pinnable-drag-header ${pinned && !expanded ? 'draggable' : ''} flex items-center justify-between flex-shrink-0`}
-        style={!expanded ? { padding: '10px 14px', borderBottom: `1px solid ${accentColor}25`, backgroundColor: expanded ? '#fff' : `${accentColor}08` } : undefined}
-        onMouseDown={onDragStart}
-      >
-        <div className="flex items-center gap-2.5 min-w-0 flex-1">
-          {pinned && !expanded && <GripVertical className="h-4 w-4 text-gray-500 flex-shrink-0" />}
-          {Icon && (
-            <div className="p-1.5 rounded-lg flex-shrink-0" style={{ backgroundColor: expanded ? '#f0f0f5' : `${accentColor}15` }}>
-              <Icon className="h-5 w-5" style={{ color: expanded ? '#111' : accentColor }} />
-            </div>
-          )}
-          <div className="min-w-0">
-            <h3 className="font-bold truncate" style={{ fontSize: expanded ? '20px' : '13px', color: expanded ? '#111' : '#fff' }}>{title}</h3>
-            {subtitle && <p className="truncate" style={{ fontSize: expanded ? '14px' : '10px', color: expanded ? '#666' : `${accentColor}90` }}>{subtitle}</p>}
-          </div>
-        </div>
-        <div className="flex items-center gap-1.5 flex-shrink-0 ml-3">
-          {headerExtra}
-          {showPrint && (
-            <button
-              data-testid={`${testId}-print-btn`}
-              onClick={handlePrint}
-              title="Imprimer"
-              className="p-2 rounded-lg transition-all"
-              style={{
-                backgroundColor: expanded ? '#e8f5e9' : 'rgba(255,255,255,0.06)',
-                color: expanded ? '#2e7d32' : '#9ca3af',
-              }}
-            >
-              <Printer className="h-4 w-4" />
-            </button>
-          )}
-          <button
-            data-testid={`${testId}-pin-btn`}
-            onClick={togglePin}
-            title={pinned ? 'Detacher' : 'Fixer'}
-            className="p-2 rounded-lg transition-all"
-            style={{
-              backgroundColor: pinned ? `${accentColor}20` : expanded ? '#f0f0f5' : 'rgba(255,255,255,0.06)',
-              color: pinned ? accentColor : expanded ? '#333' : '#9ca3af',
-            }}
-          >
-            {pinned ? <PinOff className="h-4 w-4" /> : <Pin className="h-4 w-4" />}
-          </button>
-          <button
-            data-testid={`${testId}-expand-btn`}
-            onClick={toggleExpand}
-            title={expanded ? 'Reduire' : 'Pleine page'}
-            className="p-2 rounded-lg transition-all"
-            style={{
-              backgroundColor: expanded ? '#e8e8f0' : 'rgba(255,255,255,0.06)',
-              color: expanded ? '#111' : '#9ca3af',
-            }}
-          >
-            {expanded ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
-          </button>
-          <button
-            data-testid={`${testId}-close-btn`}
-            onClick={onClose}
-            className="p-2 rounded-lg transition-all"
-            style={{
-              backgroundColor: expanded ? '#fee2e2' : 'rgba(255,255,255,0.06)',
-              color: expanded ? '#dc2626' : '#9ca3af',
-            }}
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* Content — fullHeight: overflow hidden (ZERO scroll) */}
-      <div
-        className="pinnable-scroll pinnable-content flex-1"
-        style={{
-          maxHeight: expanded ? 'calc(100vh - 70px)' : pinned ? `${size.h - 56}px` : fullHeight ? 'calc(100vh - 56px)' : maxHeight,
-          overflowY: fullHeight && !expanded && !pinned ? 'hidden' : expanded ? 'auto' : undefined,
-          overflowX: 'hidden',
-          backgroundColor: expanded ? '#fafafa' : 'transparent',
-        }}
-      >
-        {children}
-      </div>
+      {panelHeader}
+      {panelContent}
 
       {/* Resize handle */}
       {pinned && !expanded && (

@@ -16,7 +16,17 @@
 | x4600-R4 | WAYPOINT_DELETE_TOTAL_RESET | CERTIFIE |
 | x4700-FREEZE-PREP | GEL v4600-STABLE | CERTIFIE |
 | x4700-R2 | VISUAL_REDESIGN DASHBOARD_STYLE + Correctif UX fullHeight | COMPLETE |
+| **x4700-CORRECTIF** | **Portal React fullHeight + Boutons X/Imprimer fixes z-9999** | **COMPLETE — EN ATTENTE VALIDATION** |
 | **x5000** | **NUTRITION INTELLIGENCE SUPRA — 9 moteurs** | **COMPLETE — EN ATTENTE VALIDATION** |
+
+## x4700-CORRECTIF — Detail technique
+
+Correctif applique a `PinnablePanel.jsx`:
+- `ReactDOM.createPortal()` en mode fullHeight pour echapper au stacking context
+- Bouton Fermer (X): position absolute, top:16px, right:16px, z-index:10, rouge #dc2626
+- Bouton Imprimer: position absolute, top:16px, right:68px, z-index:10, vert #1b5e20
+- Header autonome #0d0d1a, bordure accent
+- Fond opaque #0a0a0f couvrant la navbar
 
 ## x5000 — 9 moteurs implementes
 
@@ -34,6 +44,7 @@
 | FULL | POST /api/v6/nutrition-intelligence/full-analysis | OK |
 
 ## Prochaines etapes
+- Validation STEEVE-MAX x4700-CORRECTIF en PREVIEW
 - Validation STEEVE-MAX x5000 en PREVIEW
 - Attente prochaine directive
 
