@@ -233,14 +233,14 @@ const PinnablePanel = ({
 
   const panelStyle = expanded ? {}
     : pinned ? { position: 'fixed', left: pos.x, top: pos.y, zIndex: 2000, width: size.w, height: size.h }
-    : fullHeight ? { position: 'fixed', right: 0, top: 0, zIndex: 2000, width: defaultWidth, height: '100vh' }
+    : fullHeight ? { position: 'fixed', top: 0, left: 0, zIndex: 2000, width: '100vw', height: '100vh', overflow: 'hidden' }
     : {};
 
   const rootClasses = [
     'pinnable-panel-root flex flex-col overflow-hidden',
     expanded ? 'pinnable-panel-expanded' : '',
     pinned && !expanded ? 'pinnable-panel-pinned rounded-xl border border-amber-500/20' : '',
-    !pinned && !expanded ? `bg-black/95 backdrop-blur-md ${fullHeight ? 'rounded-none border-l' : 'rounded-xl'} border border-gray-700/50 ${className}` : '',
+    !pinned && !expanded ? `bg-black/95 backdrop-blur-md ${fullHeight ? 'rounded-none' : 'rounded-xl border'} border-gray-700/50 ${className}` : '',
   ].filter(Boolean).join(' ');
 
   return (
@@ -324,12 +324,13 @@ const PinnablePanel = ({
         </div>
       </div>
 
-      {/* Scrollable Content */}
+      {/* Content — fullHeight: overflow hidden (ZERO scroll) */}
       <div
         className="pinnable-scroll pinnable-content flex-1"
         style={{
           maxHeight: expanded ? 'calc(100vh - 70px)' : pinned ? `${size.h - 56}px` : fullHeight ? 'calc(100vh - 56px)' : maxHeight,
-          overflowY: fullHeight && !expanded && !pinned ? 'auto' : undefined,
+          overflowY: fullHeight && !expanded && !pinned ? 'hidden' : expanded ? 'auto' : undefined,
+          overflowX: 'hidden',
           backgroundColor: expanded ? '#fafafa' : 'transparent',
         }}
       >
