@@ -10,6 +10,7 @@ import { ArrowLeft, Thermometer, Wind, Zap, Plus, Edit2, Crosshair, X, LocateFix
 import { Switch } from '@/components/ui/switch';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import useBionicStore from '@/stores/useBionicStore';
+import useWeatherStore from '@/stores/useWeatherStore';
 
 export const TerritoireHeader = React.memo(({
   navigate,
@@ -23,10 +24,13 @@ export const TerritoireHeader = React.memo(({
   onDeleteWaypoint,
   onCenterWaypoint,
 }) => {
+  // BCE-4X: Source de verite unique — useWeatherStore d'abord, fallback useBionicStore
+  const weatherCurrent = useWeatherStore(s => s.current);
   const intelligenceWeather = useBionicStore(s => s.intelligenceWeather);
-  const temp = intelligenceWeather?.temperature;
-  const windDir = intelligenceWeather?.wind_direction_deg;
-  const windSpeed = intelligenceWeather?.wind_speed_kmh;
+
+  const temp = weatherCurrent?.temperature_c ?? intelligenceWeather?.temperature;
+  const windDir = weatherCurrent?.wind_direction_deg ?? intelligenceWeather?.wind_direction_deg;
+  const windSpeed = weatherCurrent?.wind_speed_kmh ?? intelligenceWeather?.wind_speed_kmh;
 
   return (
     <header className="flex-shrink-0 min-h-[60px] bg-[#0d0d14] border-b border-[#1a1a2e] px-4 pl-24 flex items-center justify-between relative z-50" data-testid="bionic-header">

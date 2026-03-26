@@ -31,6 +31,7 @@ import { TerritoireToolbar } from '@/components/territoire/ui/TerritoireToolbar'
 import { NutritionPanel } from '@/components/territoire/ui/NutritionPanel';
 import { TerritoireDialogs } from '@/components/territoire/ui/TerritoireDialogs';
 import useBionicWeather from '@/hooks/useBionicWeather';
+import useSharedWeather from '@/hooks/useSharedWeather';
 import useBionicScoring from '@/hooks/useBionicScoring';
 import { useUserData } from '@/hooks/useUserData';
 import { useNotifications, useHuntingGroups } from '@/hooks/useSharing';
@@ -43,6 +44,7 @@ import NutritionPointDetailPanel from '@/components/territoire/NutritionPointDet
 import StandDetailPanel from '@/components/territoire/StandDetailPanel';
 import PlacesSidePanel from '@/components/territoire/PlacesSidePanel';
 import IntelligenceDashboard from '@/components/territoire/IntelligenceDashboard';
+import WeatherPanel from '@/components/territoire/ui/WeatherPanel';
 import useSpatialClipping from '@/hooks/useSpatialClipping';
 import { BIONIC_MODULES } from '@/core/bionic';
 import { SPECIES_LIST } from '@/core/bionic/speciesConfig';
@@ -741,6 +743,9 @@ const MonTerritoireBionicPage = () => {
     sunset,
     refresh: refreshWeather
   } = useBionicWeather(mapCenter[0], mapCenter[1], { autoFetch: true, pollInterval: liveMode ? 60000 : 600000 });
+
+  // BCE-4X: Hook meteo partage — source unique pour le bloc meteo intelligent
+  const sharedWeather = useSharedWeather(mapCenter[0], mapCenter[1], { autoFetch: true, liveMode });
   
   const { scores, calculateHybridScores, globalScore } = useBionicScoring();
   
@@ -1209,6 +1214,13 @@ const MonTerritoireBionicPage = () => {
               <LocateFixed className="h-4 w-4" />
             </button>
           </div>
+
+          {/* BCE-4X: Bloc Meteo Intelligent — droite, au-dessus du Score */}
+          <WeatherPanel
+            wind={sharedWeather.wind}
+            weather={sharedWeather.weather}
+            loading={sharedWeather.loading}
+          />
 
           {/* ── Bouton + Waypoint déplacé dans la toolbar (Passe 3 UX) ── */}
           </>

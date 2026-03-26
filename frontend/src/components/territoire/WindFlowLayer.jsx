@@ -358,46 +358,7 @@ export default function WindFlowLayer({ mode = 'arrows' }) {
     return dirs[Math.round(deg / 45) % 8];
   };
 
-  return legendData ? (
-    <div
-      data-testid="wind-legend"
-      data-bce4x-locked="true"
-      style={{
-        position: 'absolute', bottom: '90px', right: '12px', zIndex: 1000,
-        background: 'rgba(10,15,25,0.85)', backdropFilter: 'blur(10px)',
-        borderRadius: '8px', padding: '8px 12px', color: '#c0d0e0',
-        fontSize: '10px', lineHeight: '1.5', pointerEvents: 'auto',
-        border: '1px solid rgba(150,200,210,0.15)', minWidth: '120px',
-      }}
-    >
-      <div style={{ fontWeight: 600, fontSize: '10px', marginBottom: '4px', color: '#96c8d2', letterSpacing: '0.4px' }}>
-        VENT <span style={{ opacity: 0.4, fontSize: '8px' }}>v2.0 {mode === 'arrows' ? 'min' : 'flow'}</span>
-      </div>
-
-      {mode === 'particles' && (
-        <div style={{ display: 'flex', gap: '3px', marginBottom: '4px', height: '4px', borderRadius: '2px', overflow: 'hidden' }}>
-          <div style={{ flex: 1, background: 'rgba(140,190,220,0.5)' }} />
-          <div style={{ flex: 1, background: 'rgba(150,200,180,0.5)' }} />
-        </div>
-      )}
-
-      <div style={{ borderTop: mode === 'particles' ? '1px solid rgba(255,255,255,0.06)' : 'none', paddingTop: '3px' }}>
-        <div>{legendData.speed?.toFixed(1)} km/h — {dirLabel(legendData.dir)}</div>
-        {legendData.gust > 0 && (
-          <div style={{ opacity: 0.5 }}>Raf. {legendData.gust?.toFixed(0)} km/h</div>
-        )}
-      </div>
-      <div style={{ marginTop: '4px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-        <div style={{
-          width: '16px', height: '16px', border: '1px solid rgba(150,200,210,0.3)',
-          borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '10px', transform: `rotate(${(legendData.dir || 0) + 180}deg)`,
-          color: '#96c8d2',
-        }}>
-          &#8593;
-        </div>
-        <span style={{ opacity: 0.4, fontSize: '9px' }}>{legendData.dir?.toFixed(0)}°</span>
-      </div>
-    </div>
-  ) : null;
+  // BCE-4X: Legende VENT remplacee par le WeatherPanel unifie
+  // L'animation canvas reste active, seule la legende est supprimee
+  return null;
 }
