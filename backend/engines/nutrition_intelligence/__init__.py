@@ -1,4 +1,4 @@
-"""Nutrition Intelligence Engine Package — x5000 SUPRA + x6000"""
+"""Nutrition Intelligence Engine Package — x5000 SUPRA + x6000 + x6010-x6012"""
 from .x5100_mineral_score import compute_mineral_score
 from .x5200_mineral_recommendation import compute_recommendations
 from .x5300_order_engine import generate_order
@@ -8,3 +8,9 @@ from .x5700_cost_engine import compute_costs, compare_substrates
 from .x5800_recipe_engine import generate_recipe
 from .x5900_evidence_engine import get_evidence, get_evidence_for_recipe
 from .x6000_product_score import compute_product_score, score_all_products, compare_products, get_shop_products
+from .x6010_product_quality_analyzer import analyze_product_quality, analyze_all_quality
+from .x6011_market_availability_engine import get_product_availability, get_all_availability, get_provincial_restrictions
+from .x6012_regulatory_compliance_engine import compute_compliance_score, compute_all_compliance, get_compliance_by_organism
+from .x6020_terrain_solutions import get_solutions_for_deficits, get_all_terrain_solutions
+from .x6030_product_ecosystem import get_product_ecosystem, get_all_ecosystems, get_product_tracability
+from .x7000_supplier_product_engine import submit_product, review_submission, activate_product, get_submission, get_all_submissions, get_pipeline_stats
