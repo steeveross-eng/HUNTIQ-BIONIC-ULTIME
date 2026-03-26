@@ -16,17 +16,15 @@
 | x4520-A thru H4 | Purge V10, panneaux, crash fix | COMMITE |
 | x4600-R2 | NUTRITION_RENAME — Renommage 100% | CERTIFIE |
 | x4600-R4 | WAYPOINT_DELETE_TOTAL_RESET | CERTIFIE |
-| **x4700-FREEZE-PREP** | **GEL v4600-STABLE** | **ACTIF** |
+| x4700-FREEZE-PREP | GEL v4600-STABLE | CERTIFIE |
+| **x4700-R2** | **VISUAL_REDESIGN DASHBOARD_STYLE** | **COMPLETE — EN ATTENTE VALIDATION** |
 
-## Tag Git: v4600-STABLE (commit 49995be3)
-
-## Verrou BCE-4X actif
-- Branche Work1 gelee
-- Aucun commit, refactor, changement visuel ou Leaflet autorise
-- x4700-VISUAL_REDESIGN-R2 bloque jusqu'a confirmation du freeze
+## Fichiers modifies x4700-R2
+- PinnablePanel.jsx (bouton Imprimer)
+- StandDetailPanel.jsx (redesign complet)
+- NutritionPointDetailPanel.jsx (redesign complet)
 
 ## Prochaines etapes
-- Confirmation freeze par STEEVE-MAX
-- x4700-VISUAL_REDESIGN-R2 (en attente)
-- BSAA-2: Implementation (P1 — en attente directive)
+- Validation STEEVE-MAX en PREVIEW (clic panneaux)
+- BSAA-2 : Implementation module (P1 — en attente directive)
 - Merge Work1 vers main (P2 — strictement STEEVE-MAX)

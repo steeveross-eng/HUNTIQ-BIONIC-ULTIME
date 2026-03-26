@@ -17,7 +17,7 @@
  *   - Aucun debordement ou clipping
  */
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Pin, PinOff, Maximize2, Minimize2, X, GripVertical } from 'lucide-react';
+import { Pin, PinOff, Maximize2, Minimize2, X, GripVertical, Printer } from 'lucide-react';
 
 const PINNABLE_CSS_ID = 'pinnable-panel-css-v2';
 const PINNABLE_CSS = `
@@ -150,6 +150,7 @@ const PinnablePanel = ({
   className = '',
   testId = 'pinnable-panel',
   headerExtra = null,
+  showPrint = false,
 }) => {
   const [pinned, setPinned] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -223,6 +224,12 @@ const PinnablePanel = ({
 
   const toggleExpand = useCallback(() => setExpanded(p => !p), []);
 
+  const handlePrint = useCallback(() => {
+    const wasExpanded = expanded;
+    if (!wasExpanded) setExpanded(true);
+    setTimeout(() => { window.print(); if (!wasExpanded) setExpanded(false); }, 300);
+  }, [expanded]);
+
   const panelStyle = expanded ? {}
     : pinned ? { position: 'fixed', left: pos.x, top: pos.y, zIndex: 2000, width: size.w, height: size.h }
     : {};
@@ -263,6 +270,20 @@ const PinnablePanel = ({
         </div>
         <div className="flex items-center gap-1.5 flex-shrink-0 ml-3">
           {headerExtra}
+          {showPrint && (
+            <button
+              data-testid={`${testId}-print-btn`}
+              onClick={handlePrint}
+              title="Imprimer"
+              className="p-2 rounded-lg transition-all"
+              style={{
+                backgroundColor: expanded ? '#e8f5e9' : 'rgba(255,255,255,0.06)',
+                color: expanded ? '#2e7d32' : '#9ca3af',
+              }}
+            >
+              <Printer className="h-4 w-4" />
+            </button>
+          )}
           <button
             data-testid={`${testId}-pin-btn`}
             onClick={togglePin}
