@@ -1,0 +1,33 @@
+# BCE-4X Test Exclusion Rules — STEEVE-MAX V6
+# Ce fichier definit les regles de tests pour le pipeline HUNTIQ-V6.
+# AUCUNE modification sans validation explicite de STEEVE-MAX.
+
+[tool.pytest.ini_options]
+markers = [
+    "territoire: Tests TERRITOIRE (EXCLUS par BCE-4X)",
+    "leaflet: Tests Leaflet/Mapbox (EXCLUS par BCE-4X)",
+    "ui_non_critique: Tests UI non critiques (EXCLUS)",
+    "supra: Tests SUPRA Panel (ACTIF)",
+    "intelligence: Tests Intelligence Engine (ACTIF)",
+    "commander: Tests Commander Engine (ACTIF)",
+]
+
+# Modules STRICTEMENT exclus du pipeline
+# Activation uniquement par directive STEEVE-MAX BCE-4X-UI
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+
+# Exclusions globales
+addopts = """
+    --ignore=tests/test_territory_phase2.py
+    --ignore=tests/test_urban_exclusion_guard.py
+    --ignore=tests/test_permanent_water_exclusion.py
+    --ignore=tests/test_exclusions_v1.py
+    --ignore=tests/test_bionic_p0_exclusion_zones.py
+    --ignore=tests/test_water_exclusion_bionic_v5.py
+    --ignore=tests/test_urban_exclusion_v7.py
+    --ignore=tests/test_water_exclusion_p0.py
+    --ignore=tests/test_bce_4x_water_exclusion.py
+    --ignore=tests/test_water_exclusion_api.py
+    -v
+"""
