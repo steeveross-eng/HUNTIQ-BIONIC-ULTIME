@@ -151,6 +151,7 @@ const PinnablePanel = ({
   testId = 'pinnable-panel',
   headerExtra = null,
   showPrint = false,
+  fullHeight = false,
 }) => {
   const [pinned, setPinned] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -232,13 +233,14 @@ const PinnablePanel = ({
 
   const panelStyle = expanded ? {}
     : pinned ? { position: 'fixed', left: pos.x, top: pos.y, zIndex: 2000, width: size.w, height: size.h }
+    : fullHeight ? { position: 'fixed', right: 0, top: 0, zIndex: 2000, width: defaultWidth, height: '100vh' }
     : {};
 
   const rootClasses = [
     'pinnable-panel-root flex flex-col overflow-hidden',
     expanded ? 'pinnable-panel-expanded' : '',
     pinned && !expanded ? 'pinnable-panel-pinned rounded-xl border border-amber-500/20' : '',
-    !pinned && !expanded ? `bg-black/95 backdrop-blur-md rounded-xl border border-gray-700/50 ${className}` : '',
+    !pinned && !expanded ? `bg-black/95 backdrop-blur-md ${fullHeight ? 'rounded-none border-l' : 'rounded-xl'} border border-gray-700/50 ${className}` : '',
   ].filter(Boolean).join(' ');
 
   return (
@@ -326,7 +328,8 @@ const PinnablePanel = ({
       <div
         className="pinnable-scroll pinnable-content flex-1"
         style={{
-          maxHeight: expanded ? 'calc(100vh - 70px)' : pinned ? `${size.h - 56}px` : maxHeight,
+          maxHeight: expanded ? 'calc(100vh - 70px)' : pinned ? `${size.h - 56}px` : fullHeight ? 'calc(100vh - 56px)' : maxHeight,
+          overflowY: fullHeight && !expanded && !pinned ? 'auto' : undefined,
           backgroundColor: expanded ? '#fafafa' : 'transparent',
         }}
       >

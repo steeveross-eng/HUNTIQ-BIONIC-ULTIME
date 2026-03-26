@@ -84,11 +84,12 @@ const StandDetailPanel = ({ stand, onClose }) => {
       accentColor={grade.color}
       onClose={onClose}
       defaultWidth={580}
-      maxHeight="85vh"
+      maxHeight="100vh"
       testId="stand-detail-panel"
       showPrint={true}
+      fullHeight={true}
     >
-      <div className="p-5 space-y-4" style={{ maxWidth: 620 }} data-testid="stand-detail-content">
+      <div className="p-4 space-y-3 flex flex-col" style={{ maxWidth: 620 }} data-testid="stand-detail-content">
 
         {/* HEADER PREMIUM — Score + Grade + Distance */}
         <Card testId="stand-score-card">
@@ -130,7 +131,7 @@ const StandDetailPanel = ({ stand, onClose }) => {
             <span className="text-sm font-bold text-white">Facteurs d'analyse</span>
             <span className="text-xs text-gray-500 ml-auto">7 criteres</span>
           </div>
-          <div className="space-y-3" data-testid="stand-factor-bars">
+          <div className="space-y-2" data-testid="stand-factor-bars">
             {Object.entries(FACTOR_META).map(([key, meta]) => {
               const score = stand.factors?.[key]?.score ?? 0;
               const barColor = getBarColor(score);

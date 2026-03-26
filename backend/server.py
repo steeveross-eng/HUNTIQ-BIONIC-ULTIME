@@ -451,6 +451,14 @@ except Exception as e:
 
 
 
+# ═══ ×5000 NUTRITION INTELLIGENCE SUPRA — 9 moteurs (STEEVE-MAX x5000) ═══
+try:
+    from engines.nutrition_intelligence.router import router as nutrition_intel_router
+    app.include_router(nutrition_intel_router)
+    logger.info("✓ NUTRITION INTELLIGENCE SUPRA registered (/api/v6/nutrition-intelligence) — x5100-x5900")
+except Exception as e:
+    logger.warning(f"NUTRITION INTELLIGENCE SUPRA not loaded: {e}")
+
 # ═══ SALINE INTELLIGENCE ULTRA — 7 moteurs scientifiques (STEEVE-MAX x1000) ═══
 try:
     from modules.saline_engine.router import router as saline_ultra_router

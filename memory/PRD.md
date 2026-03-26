@@ -11,20 +11,32 @@
 | x4100 | Integration scientifique 22 moteurs (Option C) | CERTIFIE |
 | x4500-ULTRA | Reconstruction PREVIEW + BSAA | CERTIFIE |
 | x4515-FIX | PinnablePanel V2 — 8 panneaux | CERTIFIE |
-| x4515-FIX-CRITICAL | Rayon 600m + AmenagementPanel | COMMITE |
-| x4520 | Dashboard unifie V6-CORE | COMMITE |
 | x4520-A thru H4 | Purge V10, panneaux, crash fix | COMMITE |
 | x4600-R2 | NUTRITION_RENAME — Renommage 100% | CERTIFIE |
 | x4600-R4 | WAYPOINT_DELETE_TOTAL_RESET | CERTIFIE |
 | x4700-FREEZE-PREP | GEL v4600-STABLE | CERTIFIE |
-| **x4700-R2** | **VISUAL_REDESIGN DASHBOARD_STYLE** | **COMPLETE — EN ATTENTE VALIDATION** |
+| x4700-R2 | VISUAL_REDESIGN DASHBOARD_STYLE + Correctif UX fullHeight | COMPLETE |
+| **x5000** | **NUTRITION INTELLIGENCE SUPRA — 9 moteurs** | **COMPLETE — EN ATTENTE VALIDATION** |
 
-## Fichiers modifies x4700-R2
-- PinnablePanel.jsx (bouton Imprimer)
-- StandDetailPanel.jsx (redesign complet)
-- NutritionPointDetailPanel.jsx (redesign complet)
+## x5000 — 9 moteurs implementes
+
+| Moteur | Endpoint | Statut |
+|--------|----------|--------|
+| x5100 MINERAL_SCORE | POST /api/v6/nutrition-intelligence/score | OK |
+| x5200 RECOMMENDATION | POST /api/v6/nutrition-intelligence/recommendations | OK |
+| x5300 ORDER | POST /api/v6/nutrition-intelligence/order | OK |
+| x5400 UI | Route /nutrition-supra | OK |
+| x5500 ENERGY_PROTEIN | POST /api/v6/nutrition-intelligence/energy-protein | OK |
+| x5600 SITE_GUIDE | POST /api/v6/nutrition-intelligence/site-guide | OK |
+| x5700 COST | POST /api/v6/nutrition-intelligence/costs + /costs/compare | OK |
+| x5800 RECIPE | POST /api/v6/nutrition-intelligence/recipe | OK |
+| x5900 EVIDENCE | GET /api/v6/nutrition-intelligence/evidence | OK |
+| FULL | POST /api/v6/nutrition-intelligence/full-analysis | OK |
 
 ## Prochaines etapes
-- Validation STEEVE-MAX en PREVIEW (clic panneaux)
-- BSAA-2 : Implementation module (P1 — en attente directive)
+- Validation STEEVE-MAX x5000 en PREVIEW
+- Attente prochaine directive
+
+## Backlog
+- BSAA-2 (P1 — FORMELLEMENT en backlog, aucune action sans directive)
 - Merge Work1 vers main (P2 — strictement STEEVE-MAX)

@@ -84,11 +84,12 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
       accentColor={grade.color}
       onClose={onClose}
       defaultWidth={580}
-      maxHeight="85vh"
+      maxHeight="100vh"
       testId="nutrition-point-detail-panel"
       showPrint={true}
+      fullHeight={true}
     >
-      <div className="p-5 space-y-4" style={{ maxWidth: 620 }} data-testid="nutrition-point-detail-content">
+      <div className="p-4 space-y-3 flex flex-col" style={{ maxWidth: 620 }} data-testid="nutrition-point-detail-content">
 
         {/* HEADER PREMIUM — Score + Grade + Distance */}
         <Card testId="nutrition-score-card">
@@ -150,7 +151,7 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
             <span className="text-sm font-bold text-white">Composition minerale</span>
             <span className="text-xs text-gray-500 ml-auto">8 mineraux</span>
           </div>
-          <div className="space-y-3" data-testid="nutrition-mineral-bars">
+          <div className="space-y-2" data-testid="nutrition-mineral-bars">
             {minerals.map((m, i) => {
               const barColor = getMineralBarColor(m.status);
               const statusLabel = m.status === 'OK' ? 'OK' : m.status === 'MARGINAL' ? 'MARG.' : 'DEF.';
