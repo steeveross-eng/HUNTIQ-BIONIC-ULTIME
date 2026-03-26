@@ -317,8 +317,13 @@ const MonTerritoireBionicPage = () => {
 
   // BIONIC V5 300% — AUTO-SELECTION DU DERNIER WAYPOINT ACTIF
   // BCE-MAX x4.1: Priorite au waypointId de la session
+  // PATCH 3D-RESTORE: Auto-select se relance si selectedWaypointForZones est perdu
   const autoSelectDoneRef = useRef(false);
   useLayoutEffect(() => {
+    // Reset du ref si le waypoint est perdu — permet la re-selection
+    if (!selectedWaypointForZones && autoSelectDoneRef.current) {
+      autoSelectDoneRef.current = false;
+    }
     if (autoSelectDoneRef.current) return;
     if (!selectedWaypointForZones && activeWaypoints.length > 0) {
       const lastId = savedWaypointId || localStorage.getItem(LAST_WAYPOINT_KEY);

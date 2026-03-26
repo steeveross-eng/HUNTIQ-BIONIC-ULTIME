@@ -35,40 +35,38 @@ Reconstruction, modernisation et stabilisation de la plateforme HUNTIQ-V6 sous g
 - x6000_product_score.py, ours noir, connexion carte-panel
 
 ### Phase 3D Typographie BIONIC Premium (DONE - 2026-03-26)
-- NutritionPointDetailPanel.jsx: Titres 20px, Scores 22-26px, Labels 14px+, Descriptions 15-17px
-- WCAG AA, espacements 20-28px
+- NutritionPointDetailPanel.jsx: Titres 20px, Scores 22-26px, Labels 14px+
 
 ### Phase 2Bbis Extension Backend (DONE - 2026-03-26)
-- x6010_product_quality_analyzer.py — 12 criteres qualite + ratio cout/efficacite
-- x6011_market_availability_engine.py — Dispo Canada/USA + restrictions provinciales
-- x6012_regulatory_compliance_engine.py — MAPAQ/ACIA/FDA/USDA/EPA (20% score global)
+- x6010 (12 criteres qualite), x6011 (Canada/USA), x6012 (MAPAQ/ACIA/FDA)
 
 ### Phase 3A Besoins Nutritionnels (DONE - 2026-03-26)
-- Section energie/proteines dans SUPRA Panel avec indicateurs rouge/jaune/vert
-- Integration x5500 energy_protein dans AnalyseTab
+- Indicateurs energie/proteines rouge/jaune/vert dans SUPRA Panel
 
 ### Phase 3B Solutions Terrain (DONE - 2026-03-26)
-- x6020_terrain_solutions.py — Champs nourriciers, blocs, attractifs
-- Association automatique deficits -> solutions dans SUPRA Panel
+- x6020 terrain solutions, association deficits -> solutions
 
 ### Phase 3C Interconnexion Produits (DONE - 2026-03-26)
-- x6030_product_ecosystem.py — Liaison complete Magasin/Fournisseur/Certifications/Recettes/Couts
-- Tracabilite complete dans ecosysteme BIONIC
+- x6030 ecosystem connector, tracabilite complete
 
 ### Phase 3E Integration Admin Premium (DONE - 2026-03-26)
-- x7000_supplier_product_engine.py — Pipeline complet: Soumission -> Validation auto -> Revue humaine -> Activation magasin
-- 6 criteres de validation automatique
+- x7000 pipeline: Soumission -> Validation auto -> Revue humaine -> Activation
+
+### Bug Fix: Couches TERRITOIRE (DONE - 2026-03-26)
+- Diagnostic: autoSelectDoneRef ne se reinitialisait pas apres perte de waypoint
+- Correctif: reset autoSelectDoneRef quand selectedWaypointForZones est null
+- Ajout logging diagnostic dans BionicCorridorsV6Layer
+- PREVIEW: 359 SVG paths, 136 corridors, 6 markers — operationnel
 
 ## Tests
-- iteration_2.json: 100% backend/frontend
 - iteration_3.json: 67/67 tests passes (100%) — Phase 3D + 2Bbis + 3A-3E
 
 ## Backlog (P1-P3)
-- BSAA-2: Implementation module Social Ads Automation (P2 - BACKLOG, directive explicite requise)
+- BSAA-2: Implementation module Social Ads Automation (P2 - BACKLOG)
 - Merge Work1 -> main (P3 - Strictement STEEVE-MAX)
 - Migration x7000 vers MongoDB (P2)
-- Frontend admin x7000: interface de gestion pipeline fournisseur (P2)
-- Frontend x6030: page fiche produit avec liens ecosysteme (P2)
+- Frontend admin x7000 (P2)
+- Frontend x6030 fiche produit ecosysteme (P2)
 
 ## Contraintes
 - Branche Work1 uniquement

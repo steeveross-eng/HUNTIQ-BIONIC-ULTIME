@@ -597,7 +597,10 @@ const BionicCorridorsV6Layer = ({
         signal: abortRef.current.signal,
       });
 
-      if (!res.ok) return;
+      if (!res.ok) {
+        console.warn(`[CORRIDORS] API error: ${res.status} for ${key}`);
+        return;
+      }
       const data = await res.json();
 
       // Cache persistant
@@ -609,6 +612,7 @@ const BionicCorridorsV6Layer = ({
 
       cachedDataRef.current = data;
       cachedSpeciesRef.current = sp;
+      console.log(`[CORRIDORS] Loaded ${data?.geojson?.features?.length || 0} features for ${key}`);
 
       if (lastRenderKey.current === key) {
         renderDataRef.current(data, sp);
