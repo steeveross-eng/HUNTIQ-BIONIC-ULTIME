@@ -265,23 +265,39 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
       )}
 
       {/* Preuves */}
-      {evidence.length > 0 && (
+      {evidence.length > 0 ? (
         <Card testId="supra-evidence-card" className="flex-1">
           <div className="flex items-center gap-1.5 mb-1.5">
             <FileText className="h-3 w-3" style={{ color: BIONIC.purple }} />
-            <span className="text-[11px] font-bold text-white">Preuves</span>
+            <span className="text-[11px] font-bold text-white">Preuves scientifiques</span>
             <span className="text-[9px] text-gray-500 ml-auto">{evidence.length} refs</span>
           </div>
           <div className="space-y-1">
-            {evidence.slice(0, 3).map((ref, i) => (
-              <div key={i} className="rounded-lg p-1.5" style={{ backgroundColor: 'rgba(156,39,176,0.05)', borderLeft: `2px solid ${BIONIC.purple}` }}>
+            {evidence.slice(0, 4).map((ref, i) => (
+              <div key={i} className="rounded-lg p-1.5" style={{ backgroundColor: 'rgba(156,39,176,0.05)', borderLeft: `2px solid ${BIONIC.purple}` }} data-testid={`supra-evidence-${i}`}>
                 <div className="flex items-start justify-between gap-1">
-                  <span className="text-[9px] font-bold text-white leading-tight">{ref.title?.substring(0, 50)}...</span>
-                  <a href={ref.url} target="_blank" rel="noopener noreferrer" className="flex-shrink-0"><ExternalLink className="h-2.5 w-2.5 text-purple-400" /></a>
+                  <span className="text-[9px] font-bold text-white leading-tight">{ref.titre}</span>
+                  <a href={ref.doi_ou_url} target="_blank" rel="noopener noreferrer" className="flex-shrink-0"><ExternalLink className="h-2.5 w-2.5 text-purple-400" /></a>
                 </div>
-                <span className="text-[8px] text-gray-500">{ref.authors}, {ref.year}</span>
+                <span className="text-[8px] text-gray-500">{ref.auteurs}, {ref.annee}</span>
+                <div className="flex items-center gap-1 mt-0.5">
+                  <span className="text-[7px] px-1 py-0.5 rounded" style={{ backgroundColor: `${BIONIC.purple}12`, color: BIONIC.purple }}>{ref.type_source?.replace(/_/g, ' ')}</span>
+                  <span className="text-[7px] text-gray-600">{ref.organisme}</span>
+                  {ref.niveau_preuve && <span className="text-[7px] font-bold px-1 py-0.5 rounded" style={{ backgroundColor: ref.niveau_preuve === 'A' ? `${BIONIC.green}12` : `${BIONIC.orange}12`, color: ref.niveau_preuve === 'A' ? BIONIC.green : BIONIC.orange }}>Niv.{ref.niveau_preuve}</span>}
+                </div>
               </div>
             ))}
+          </div>
+        </Card>
+      ) : (
+        <Card testId="supra-evidence-card" className="flex-1">
+          <div className="flex items-center gap-1.5 mb-1.5">
+            <FileText className="h-3 w-3" style={{ color: BIONIC.purple }} />
+            <span className="text-[11px] font-bold text-white">Preuves scientifiques</span>
+          </div>
+          <div className="rounded-lg p-2 text-center" style={{ backgroundColor: 'rgba(255,255,255,0.02)' }}>
+            <AlertTriangle className="h-4 w-4 text-gray-600 mx-auto mb-1" />
+            <span className="text-[10px] text-gray-500">Aucune preuve scientifique formelle disponible pour ce cas.</span>
           </div>
         </Card>
       )}

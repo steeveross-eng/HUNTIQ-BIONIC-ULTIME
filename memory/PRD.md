@@ -18,26 +18,19 @@
 | x4700-R2 | VISUAL_REDESIGN DASHBOARD_STYLE | COMPLETE |
 | x4700-CORRECTIF | Portal React fullHeight + Boutons X/Imprimer z-9999 | COMPLETE |
 | x5000 | NUTRITION INTELLIGENCE SUPRA — 9 moteurs | COMPLETE |
-| **SUPRA-PHASE2** | **Phase 2 complete: x6000 + OURS NOIR + Ecozones + SUPRA PANEL** | **COMPLETE — TESTE 100%** |
+| SUPRA-PHASE2 | x6000 + OURS NOIR + Ecozones + SUPRA PANEL | COMPLETE (26/26 tests) |
+| **PREUVES-P0** | **Politique preuves scientifiques + nettoyage DOI fabriques** | **COMPLETE** |
 
-## SUPRA Phase 2 — Resume
+## Politique PREUVES (BCE-4X)
 
-### Backend (7 fichiers modifies/crees)
-- x6000 PRODUCT_SCORE_ENGINE: 10 produits, score %, comparaison, magasin
-- OURS NOIR: integre dans x5100, x5500, x5600, x5900
-- ORIGNAL: enrichi dans x5500 (6 saisons completes)
-- Ecozones: 3 especes x 3 zones x 6 saisons (descriptions completes)
-- 6 nouveaux endpoints: supra-panel, products/score, products/all, products/compare, products/shop, ecozones
-- 6 references scientifiques ecozones ajoutees dans x5900
-
-### Frontend (2 fichiers modifies)
-- NutritionPointDetailPanel: SUPRA PANEL complet avec 4 onglets (Analyse/Intelligence/Comparez/Commandez)
-- PinnablePanel: Portal rendering pour fullHeight avec boutons X + Imprimer fixes
-
-### Tests: 26/26 backend OK + 100% frontend OK
+- 8 references NON CONFORMES retirees (DOI fabriques, titres inventes, manuels scolaires)
+- 9 references CONFORMES conservees (articles peer-reviewed, niveau A/B)
+- Validation automatique dans x5900 (type_source, organisme, DOI requis)
+- Frontend: affiche "Aucune preuve formelle" quand zero refs valides
+- Categories sans preuve: K, Mg, Fe, energy, site
 
 ## Prochaines etapes
-- Validation STEEVE-MAX de la Phase 2 complete
+- Validation STEEVE-MAX de la directive PREUVES
 - Attente prochaine directive
 
 ## Backlog

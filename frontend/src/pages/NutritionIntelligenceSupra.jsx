@@ -293,21 +293,29 @@ export default function NutritionIntelligenceSupra() {
           {/* ROW 5: Preuves scientifiques */}
           <Section icon={FileText} title="Preuves scientifiques" color="#9C27B0" badge={`${evidence.length} references`} collapsible testId="evidence-section">
             <div className="space-y-2">
-              {evidence.map((ref, i) => (
+              {evidence.length > 0 ? evidence.map((ref, i) => (
                 <div key={i} className="rounded-xl p-3" style={{ backgroundColor: 'rgba(156,39,176,0.06)', borderLeft: '3px solid #9C27B0' }} data-testid={`evidence-ref-${i}`}>
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <div className="text-xs font-bold text-white">{ref.title}</div>
-                      <div className="text-[10px] text-gray-500">{ref.authors}, {ref.year} — {ref.journal}</div>
+                      <div className="text-xs font-bold text-white">{ref.titre || ref.title}</div>
+                      <div className="text-[10px] text-gray-500">{ref.auteurs || ref.authors}, {ref.annee || ref.year} — {ref.organisme || ref.journal}</div>
                     </div>
-                    <a href={ref.url} target="_blank" rel="noopener noreferrer" className="text-purple-400 flex-shrink-0 hover:text-purple-300">
+                    <a href={ref.doi_ou_url || ref.url} target="_blank" rel="noopener noreferrer" className="text-purple-400 flex-shrink-0 hover:text-purple-300">
                       <ExternalLink className="h-3.5 w-3.5" />
                     </a>
                   </div>
-                  <p className="text-[10px] text-gray-400 mt-1.5 leading-relaxed">{ref.summary}</p>
-                  <span className="text-[9px] text-purple-300/60 mt-1 inline-block">{ref.context}</span>
+                  <p className="text-[10px] text-gray-400 mt-1.5 leading-relaxed">{ref.resume_court || ref.summary}</p>
+                  <div className="flex items-center gap-1.5 mt-1">
+                    {ref.type_source && <span className="text-[8px] px-1.5 py-0.5 rounded" style={{ backgroundColor: 'rgba(156,39,176,0.12)', color: '#9C27B0' }}>{ref.type_source?.replace(/_/g, ' ')}</span>}
+                    {ref.niveau_preuve && <span className="text-[8px] font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: ref.niveau_preuve === 'A' ? 'rgba(0,200,83,0.12)' : 'rgba(255,152,0,0.12)', color: ref.niveau_preuve === 'A' ? '#00C853' : '#FF9800' }}>Niv.{ref.niveau_preuve}</span>}
+                    {ref.context && <span className="text-[9px] text-purple-300/60">{ref.context}</span>}
+                  </div>
                 </div>
-              ))}
+              )) : (
+                <div className="rounded-xl p-4 text-center" style={{ backgroundColor: 'rgba(255,255,255,0.02)' }}>
+                  <span className="text-sm text-gray-500">Aucune preuve scientifique formelle disponible pour ce cas.</span>
+                </div>
+              )}
             </div>
           </Section>
 
