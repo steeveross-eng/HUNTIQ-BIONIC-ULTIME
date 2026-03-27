@@ -24,50 +24,57 @@ Reconstruction, modernisation et stabilisation de la plateforme HUNTIQ-V6.
 ### Audits
 - Engine Audit (84+ modules confirmes)
 - Coherence Audit (Phase 5B)
-- Historical Audit V1-V6 (Phase 5C) -> Identification auto_optimization.py manquant
+- Historical Audit V1-V6 (Phase 5C)
 
 ### Architecture BSAA
-- Phase BSAA-0: Etude de faisabilite
-- Phase BSAA-1: Architecture complete (endpoints, modeles, connecteurs)
+- Phase BSAA-0/BSAA-1: Etude + Architecture complete
 
 ### Optimisation TERRITOIRE
 - Performance backend (stale-while-revalidate, ThreadPoolExecutor)
 - Weather Engine v3 (nowcasting, visibilite, score meteo)
-- Moteurs SUPRA avances hybrides (deterministes + LLM)
+- Moteurs SUPRA avances hybrides
 - Bloc Meteo Intelligent (Zustand store unifie useWeatherStore)
-- Suppression watermark Emergent + BCE4X_UIShield
-- Repositionnement VENT v2.0 flow
+- Suppression watermark + BCE4X_UIShield
 
 ### P0 Score Header (26 Mars 2026)
-- Score badge TOUJOURS visible dans le header (etat loading + valeur)
-- Pipeline score: globalScore > bionicZones > heatmapV10Data > bionicStats
-- Typographie harmonisee avec bouton WAYPOINT
-- Position verrouillee via BCE4X_UIShield
+- Score badge TOUJOURS visible, pipeline: globalScore > bionicZones > heatmapV10Data > bionicStats
+- Typographie harmonisee WAYPOINT, position verrouillee
 
 ### P0 SUPRA Uniformisation (26 Mars 2026)
-- Couleur unique #FF9800 pour TOUS les boutons CMD/Commander/Commandez
-- Composant SupraButton unifie (sm/md/lg, hover/pressed/disabled)
-- Tableau produits modernise
-- RenderGuard verifie conformite couleur
+- Couleur unique #FF9800, SupraButton unifie, RenderGuard actif
 
 ### P0 Weather Engine v3 Unification (27 Mars 2026)
-- Dashboard BIONIC relie a Weather Engine v3 via useWeatherStore (source unique)
-- WeatherWidget reecrit pour consommer useWeatherStore au lieu de WeatherService V1
-- CoreDashboard: huntingConditions calcule depuis donnees v3 reelles
-- Normalisation v3: description (weather_code), hunting_score (object->flat), visibility_km
-- Ancien pipeline V1 (WeatherService.getCurrentWeather) elimine du Dashboard
-- PREVIEW comparatif confirme: Dashboard et TERRITOIRE affichent les MEMES valeurs
+- Dashboard relie a Weather v3 via useWeatherStore (source unique)
+- WeatherWidget reecrit, ancien pipeline V1 elimine du Dashboard
+- CoreDashboard: huntingConditions calcule depuis v3 reel
 
 ### P0 Header Stability Rule (27 Mars 2026)
-- LayoutFreeze() implemente dans BCE4X_UIShield
-- CSS contain: layout style applique au header
-- data-bce4x-layout-frozen="true" sur le header
-- Guards periodiques: enforceOverlayCompliance + enforcePositionLock + enforceRenderGuard + enforceLayoutFreeze
-- Verification automatique: presence + visibilite + position des elements header
-- Elements proteges: score-badge, waypoint-btn, weather-official, live, back-btn
+- LayoutFreeze(), CSS contain:layout style, Guards periodiques actifs
+
+### P0 Navigation Restructuration (27 Mars 2026)
+- MAP dropdown -> 2 entrees nav primaires: ANALYSE TERRITOIRE + CARTE INTERACTIVE
+- TRIPS/SORTIES supprime de la navigation
+- "Mon Territoire" renomme "Analyse Territoire BIONIC"
+- Route /analyse-territoire ajoutee (alias -> MonTerritoireBionicPage)
+- FULL_VIEWPORT_ROUTES mis a jour
+- Nav mobile restructuree en miroir du desktop
+- Activation gold (#F5A623) sur la page active
+- BCE-4X-UI applique sur les deux entrees nav
 
 ### Migration MongoDB x7000
 - Pipeline soumission fournisseur operationnel
+
+---
+
+## Modules Primaires
+
+### ANALYSE TERRITOIRE (/mon-territoire-bionic)
+Carte strategique: zones, corridors, hotspots, vent, meteo v3, SUPRA, trails optimises.
+Position GPS usager (marker discret). Pas de GPS lourd.
+
+### CARTE INTERACTIVE (/map)
+Carte terrain GPS: navigation, GPS tracking, groupe, traces, waypoints, notes, sessions.
+GPS Engine v1, Trail Engine v1, Mode GPS, Mode Groupe, Mode Traces.
 
 ---
 
@@ -83,6 +90,7 @@ Reconstruction, modernisation et stabilisation de la plateforme HUNTIQ-V6.
 ---
 
 ## Fichiers Cles
+- /app/frontend/src/App.js (Navigation principale)
 - /app/frontend/src/components/territoire/ui/TerritoireHeader.jsx
 - /app/frontend/src/pages/MonTerritoireBionicPage.jsx
 - /app/frontend/src/components/territoire/NutritionPointDetailPanel.jsx

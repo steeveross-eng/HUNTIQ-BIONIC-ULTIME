@@ -67,7 +67,7 @@ export const TerritoireHeader = ({
           <ArrowLeft className="h-[22px] w-[22px]" />
         </button>
         <div className="h-6 w-px bg-[#1a1a2e]" />
-        <h1 className="text-base font-semibold text-white tracking-tight">Mon Territoire BIONIC</h1>
+        <h1 className="text-base font-semibold text-white tracking-tight">Analyse Territoire BIONIC</h1>
       </div>
       <div className="flex items-center gap-3">
         {/* BCE-4X P0: Score badge — TOUJOURS affiche, a gauche de + WAYPOINT */}

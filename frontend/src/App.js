@@ -176,33 +176,25 @@ const Navigation = ({ cartCount, onCartOpen }) => {
               {t('common_dashboard')}
             </Link>
             
-            {/* Carte & Territoire Dropdown */}
-            <div className="relative group">
-              <button 
-                className={`flex items-center gap-2 px-3 py-2 text-sm font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 ${['/map', '/territoire'].includes(location.pathname) ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
-                data-testid="nav-carte"
-              >
-                <Map className="h-4 w-4" />
-                {t('common_map')}
-                <ChevronRight className="h-3 w-3 rotate-90 group-hover:rotate-180 transition-transform" />
-              </button>
-              <div className="absolute top-full left-0 mt-1 min-w-[220px] bg-black/95 backdrop-blur-xl border border-white/10 rounded-md shadow-xl py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                <Link to="/map" className="flex items-start gap-3 px-4 py-2 hover:bg-white/5 group/item">
-                  <Globe className="h-4 w-4 mt-0.5 text-gray-300 group-hover/item:text-[#F5A623]" />
-                  <div>
-                    <div className="text-sm font-medium text-white group-hover/item:text-[#F5A623]">{t('common_interactive_map')}</div>
-                    <div className="text-xs text-gray-500">{t('common_gps_waypoints')}</div>
-                  </div>
-                </Link>
-                <Link to="/territoire" className="flex items-start gap-3 px-4 py-2 hover:bg-white/5 group/item">
-                  <Crosshair className="h-4 w-4 mt-0.5 text-gray-300 group-hover/item:text-[#F5A623]" />
-                  <div>
-                    <div className="text-sm font-medium text-white group-hover/item:text-[#F5A623]">{t('common_my_territory')}</div>
-                    <div className="text-xs text-gray-500">{t('common_bionic_analysis')}</div>
-                  </div>
-                </Link>
-              </div>
-            </div>
+            {/* ANALYSE TERRITOIRE — Module primaire (carte strategique) */}
+            <Link 
+              to="/mon-territoire-bionic" 
+              className={`flex items-center gap-2 px-3 py-2 text-sm font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 ${['/mon-territoire-bionic', '/mon-territoire', '/territoire'].includes(location.pathname) ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              data-testid="nav-analyse-territoire"
+            >
+              <Crosshair className="h-4 w-4" />
+              Analyse Territoire
+            </Link>
+            
+            {/* CARTE INTERACTIVE — Module primaire (carte terrain GPS) */}
+            <Link 
+              to="/map" 
+              className={`flex items-center gap-2 px-3 py-2 text-sm font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 ${isActive('/map') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              data-testid="nav-carte-interactive"
+            >
+              <Globe className="h-4 w-4" />
+              Carte Interactive
+            </Link>
             
             {/* Permis de chasse - Module Stratégique Indépendant */}
             <Link 
@@ -212,16 +204,6 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             >
               <Shield className="h-4 w-4" />
               Permis & Enregistrement
-            </Link>
-            
-            {/* Sorties */}
-            <Link 
-              to="/trips" 
-              className={`flex items-center gap-2 px-3 py-2 text-sm font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 ${isActive('/trips') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
-              data-testid="nav-trips"
-            >
-              <RouteIcon className="h-4 w-4" />
-              {t('common_trips')}
             </Link>
             
             {/* Magasin */}
@@ -353,17 +335,14 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             <Link to="/dashboard" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-gray-300 hover:text-white">
               <BarChart3 className="h-4 w-4" /> {t('common_dashboard')}
             </Link>
-            <Link to="/map" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-gray-300 hover:text-white">
-              <Globe className="h-4 w-4" /> {t('common_map')}
+            <Link to="/mon-territoire-bionic" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="mobile-nav-analyse-territoire">
+              <Crosshair className="h-4 w-4" /> Analyse Territoire
             </Link>
-            <Link to="/territoire" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-gray-300 hover:text-white">
-              <Crosshair className="h-4 w-4" /> {t('nav_territory')}
+            <Link to="/map" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-gray-300 hover:text-white" data-testid="mobile-nav-carte-interactive">
+              <Globe className="h-4 w-4" /> Carte Interactive
             </Link>
             <Link to="/permis-chasse" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="mobile-nav-permis-chasse">
               <Shield className="h-4 w-4" /> Permis & Enregistrement
-            </Link>
-            <Link to="/trips" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-gray-300 hover:text-white">
-              <RouteIcon className="h-4 w-4" /> {t('common_trips')}
             </Link>
             <Link to="/shop" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-gray-300 hover:text-white">
               <Store className="h-4 w-4" /> {t('nav_shop')}
@@ -403,7 +382,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
 };
 
 // Footer Component - Hidden on full-viewport pages
-const FULL_VIEWPORT_ROUTES = ['/map', '/territoire', '/forecast', '/admin-geo', '/admin-premium'];
+const FULL_VIEWPORT_ROUTES = ['/map', '/territoire', '/mon-territoire-bionic', '/mon-territoire', '/analyse-territoire', '/forecast', '/admin-geo', '/admin-premium'];
 
 const Footer = () => {
   const location = useLocation();
@@ -1023,8 +1002,9 @@ function App() {
                 <Route path="/shop" element={<ShopPage products={products} onAddToCart={handleAddToCart} />} />
                 <Route path="/territoire" element={<TerritoryPage />} />
                 <Route path="/mon-territoire-bionic" element={<MonTerritoireBionicPage />} />
-                {/* Redirection pour URL simplifiée */}
+                {/* Redirections pour URL simplifiee */}
                 <Route path="/mon-territoire" element={<MonTerritoireBionicPage />} />
+                <Route path="/analyse-territoire" element={<MonTerritoireBionicPage />} />
                 <Route path="/marketplace" element={<MarketplacePage />} />
                 <Route path="/formations" element={<FormationsPage />} />
                 {/* Module Permis de chasse */}
