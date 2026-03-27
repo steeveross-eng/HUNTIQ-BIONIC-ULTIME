@@ -287,3 +287,61 @@ export const enforceRenderGuard = () => {
     });
   });
 };
+
+// ============================================================
+// 11. LAYOUT FREEZE (BCE-4X HEADER STABILITY RULE)
+// Empeche tout deplacement, disparition, clignotement ou
+// recouvrement des elements du header.
+// Applique CSS contain:layout + position stable sur le header.
+// ============================================================
+const HEADER_STABILITY_CONFIG = {
+  selector: '[data-testid="bionic-header"]',
+  children: [
+    'header-score-badge',
+    'add-waypoint-main-btn',
+    'header-weather-official',
+    'header-live',
+    'header-back-btn',
+  ],
+  css: {
+    contain: 'layout style',
+    position: 'relative',
+    overflow: 'visible',
+  },
+};
+
+export const enforceLayoutFreeze = () => {
+  const header = document.querySelector(HEADER_STABILITY_CONFIG.selector);
+  if (!header) return;
+
+  // Apply CSS stability rules to header
+  Object.entries(HEADER_STABILITY_CONFIG.css).forEach(([prop, value]) => {
+    header.style[prop] = value;
+  });
+
+  // Verify all children are present and visible
+  let violations = 0;
+  HEADER_STABILITY_CONFIG.children.forEach(testId => {
+    const el = header.querySelector(`[data-testid="${testId}"]`);
+    if (!el) {
+      console.warn(`[BCE-4X LAYOUT FREEZE] Element manquant: ${testId}`);
+      violations++;
+      return;
+    }
+    const rect = el.getBoundingClientRect();
+    const style = window.getComputedStyle(el);
+    // Check visibility
+    if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
+      console.warn(`[BCE-4X LAYOUT FREEZE] Element invisible: ${testId}`);
+      violations++;
+    }
+    // Check not overlapped by checking if it's within header bounds
+    const headerRect = header.getBoundingClientRect();
+    if (rect.right < headerRect.left || rect.left > headerRect.right || rect.bottom < headerRect.top || rect.top > headerRect.bottom) {
+      console.warn(`[BCE-4X LAYOUT FREEZE] Element hors limites: ${testId}`);
+      violations++;
+    }
+  });
+
+  return violations;
+};

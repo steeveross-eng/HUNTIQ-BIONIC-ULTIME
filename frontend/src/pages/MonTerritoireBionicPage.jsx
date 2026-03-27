@@ -34,7 +34,7 @@ import useBionicWeather from '@/hooks/useBionicWeather';
 import useSharedWeather from '@/hooks/useSharedWeather';
 import useBionicScoring from '@/hooks/useBionicScoring';
 import useBionicStore from '@/stores/useBionicStore';
-import { enforceOverlayCompliance, enforcePositionLock, enforceRenderGuard } from '@/components/territoire/map/BCE4X_UIShield';
+import { enforceOverlayCompliance, enforcePositionLock, enforceRenderGuard, enforceLayoutFreeze } from '@/components/territoire/map/BCE4X_UIShield';
 import { useUserData } from '@/hooks/useUserData';
 import { useNotifications, useHuntingGroups } from '@/hooks/useSharing';
 import WaypointUnifiedPanel from '@/components/territoire/WaypointUnifiedPanel';
@@ -181,15 +181,17 @@ const MonTerritoireBionicPage = () => {
     }
   }, [selectedBiologicalSeason, updateBiologicalSeason]);
 
-  // BCE-4X-UI: Guards periodiques — PositionLock + RenderGuard + OverlayCompliance
+  // BCE-4X-UI: Guards periodiques — PositionLock + RenderGuard + OverlayCompliance + LayoutFreeze
   useEffect(() => {
     const guardInterval = setInterval(() => {
       enforceOverlayCompliance();
       enforcePositionLock();
       enforceRenderGuard();
+      enforceLayoutFreeze();
     }, 5000);
     // Execution immediate au montage
     enforceOverlayCompliance();
+    enforceLayoutFreeze();
     return () => clearInterval(guardInterval);
   }, []);
   

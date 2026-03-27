@@ -1,141 +1,158 @@
 /**
- * WeatherWidget - Compact weather display
- * BIONIC Design System compliant
- * Version: 2.0.0 - Full BIONIC compliance (colors + i18n) - Lot A Refactor
+ * WeatherWidget - BCE-4X Weather Engine v3 UNIFIED
+ * Source unique: useWeatherStore (Weather Engine v3 -> OWM -> Open-Meteo)
+ * Interdit d'utiliser WeatherService V1
  */
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent } from '../../../components/ui/card';
-import { WeatherService } from '../WeatherService';
 import { useLanguage } from '../../../contexts/LanguageContext';
-import { Sun, Cloud, CloudRain, Snowflake, CloudLightning, CloudFog, Wind, CloudSun } from 'lucide-react';
+import useWeatherStore from '../../../stores/useWeatherStore';
+import { Sun, Cloud, CloudRain, Snowflake, CloudLightning, CloudFog, Wind, CloudSun, Droplets, Gauge, Eye, Loader2 } from 'lucide-react';
 
-// Weather icons - BIONIC Design System (Lucide components + CSS variables)
 const WeatherIcon = ({ condition, className = "h-8 w-8" }) => {
-  const conditionLower = condition?.toLowerCase() || '';
-  
-  const iconMap = {
-    clear: { Icon: Sun, colorClass: 'text-[var(--bionic-gold-primary)]' },
-    sunny: { Icon: Sun, colorClass: 'text-[var(--bionic-gold-primary)]' },
-    cloudy: { Icon: Cloud, colorClass: 'text-[var(--bionic-gray-400)]' },
-    partly_cloudy: { Icon: CloudSun, colorClass: 'text-[var(--bionic-gold-light)]' },
-    rain: { Icon: CloudRain, colorClass: 'text-[var(--bionic-blue-light)]' },
-    snow: { Icon: Snowflake, colorClass: 'text-[var(--bionic-cyan-primary)]' },
-    storm: { Icon: CloudLightning, colorClass: 'text-[var(--bionic-purple-primary)]' },
-    fog: { Icon: CloudFog, colorClass: 'text-[var(--bionic-gray-500)]' },
-    wind: { Icon: Wind, colorClass: 'text-[var(--bionic-gray-400)]' }
+  const cl = (condition || '').toLowerCase();
+  const map = {
+    'ciel degage': { I: Sun, c: 'text-amber-400' },
+    'partiellement nuageux': { I: CloudSun, c: 'text-amber-300' },
+    'variable': { I: CloudSun, c: 'text-amber-300' },
+    'brouillard': { I: CloudFog, c: 'text-gray-400' },
+    'bruine': { I: CloudRain, c: 'text-blue-300' },
+    'pluie': { I: CloudRain, c: 'text-blue-400' },
+    'neige': { I: Snowflake, c: 'text-cyan-300' },
+    'averses': { I: CloudRain, c: 'text-blue-400' },
+    'orage': { I: CloudLightning, c: 'text-purple-400' },
   };
-  
-  const { Icon, colorClass } = iconMap[conditionLower] || { Icon: CloudSun, colorClass: 'text-[var(--bionic-gold-light)]' };
-  return <Icon className={`${className} ${colorClass}`} />;
+  const match = Object.entries(map).find(([k]) => cl.includes(k));
+  const { I: Icon, c: color } = match ? match[1] : { I: Cloud, c: 'text-gray-400' };
+  return <Icon className={`${className} ${color}`} />;
 };
 
-export const WeatherWidget = ({ 
-  lat, 
-  lng, 
-  compact = false,
-  onWeatherLoad
-}) => {
-  const [weather, setWeather] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+export const WeatherWidget = ({ lat, lng, compact = false, onWeatherLoad }) => {
   const { t } = useLanguage();
+  const current = useWeatherStore(s => s.current);
+  const loading = useWeatherStore(s => s.loading);
+  const source = useWeatherStore(s => s.source);
+  const fetchAll = useWeatherStore(s => s.fetchAll);
 
   useEffect(() => {
-    const fetchWeather = async () => {
-      if (!lat || !lng) {
-        setLoading(false);
-        return;
-      }
+    if (lat && lng) fetchAll(lat, lng);
+  }, [lat, lng, fetchAll]);
 
-      try {
-        const data = await WeatherService.getCurrentWeather(lat, lng);
-        setWeather(data);
-        onWeatherLoad?.(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  useEffect(() => {
+    if (current && onWeatherLoad) {
+      onWeatherLoad({
+        temperature: current.temperature_c,
+        humidity: current.humidity_pct,
+        wind_speed: current.wind_speed_kmh,
+        wind_direction: current.wind_direction_deg,
+        wind_gust: current.wind_gust_kmh,
+        pressure: current.pressure_hpa,
+        visibility_km: current.visibility_km,
+        uv_index: current.uv_index,
+        condition: current.description,
+        hunting_index: current.hunting_score,
+        source,
+      });
+    }
+  }, [current, source, onWeatherLoad]);
 
-    fetchWeather();
-  }, [lat, lng, onWeatherLoad]);
-
-  if (loading) {
+  if (loading && !current) {
     return (
-      <Card className="bg-[var(--bionic-bg-card)] border-[var(--bionic-border-primary)]" data-testid="weather-widget-loading">
+      <Card className="bg-[#111122] border-[rgba(255,255,255,0.06)]" data-testid="weather-widget-loading">
         <CardContent className="p-4">
-          <div className="animate-pulse flex items-center gap-3">
-            <div className="w-12 h-12 bg-[var(--bionic-gray-700)] rounded-full" />
-            <div className="flex-1 space-y-2">
-              <div className="h-4 bg-[var(--bionic-gray-700)] rounded w-24" />
-              <div className="h-3 bg-[var(--bionic-gray-700)] rounded w-16" />
-            </div>
+          <div className="flex items-center gap-3">
+            <Loader2 className="h-8 w-8 animate-spin text-[#FF9800]" />
+            <span className="text-gray-400 text-sm">Chargement Weather v3...</span>
           </div>
         </CardContent>
       </Card>
     );
   }
 
-  if (error || !weather) {
+  if (!current) {
     return (
-      <Card className="bg-[var(--bionic-bg-card)] border-[var(--bionic-border-primary)]" data-testid="weather-widget-error">
-        <CardContent className="p-4 text-center text-[var(--bionic-text-secondary)]">
-          <CloudSun className="h-8 w-8 text-[var(--bionic-gold-primary)] mx-auto" />
+      <Card className="bg-[#111122] border-[rgba(255,255,255,0.06)]" data-testid="weather-widget-error">
+        <CardContent className="p-4 text-center text-gray-500">
+          <CloudSun className="h-8 w-8 text-[#FF9800] mx-auto" />
           <p className="text-sm mt-2">{t('weather_unavailable')}</p>
         </CardContent>
       </Card>
     );
   }
 
+  const w = current;
+
   if (compact) {
     return (
-      <div className="flex items-center gap-2 bg-[var(--bionic-bg-card)]/80 rounded-lg px-3 py-2" data-testid="weather-widget-compact">
-        <WeatherIcon condition={weather.condition} className="h-6 w-6" />
-        <div>
-          <span className="text-[var(--bionic-text-primary)] font-bold">{weather.temperature || '--'}°C</span>
-          <span className="text-[var(--bionic-text-secondary)] text-xs ml-2">{weather.condition}</span>
-        </div>
+      <div className="flex items-center gap-2 bg-[#111122]/80 rounded-lg px-3 py-2" data-testid="weather-widget-compact">
+        <WeatherIcon condition={w.description} className="h-6 w-6" />
+        <span className="text-white font-bold">{w.temperature_c ?? '--'}°C</span>
+        <span className="text-gray-400 text-xs ml-1">{w.description}</span>
       </div>
     );
   }
 
   return (
-    <Card className="bg-[var(--bionic-bg-card)] border-[var(--bionic-border-primary)]" data-testid="weather-widget">
-      <CardContent className="p-4">
+    <Card className="bg-[#111122] border-[rgba(255,255,255,0.06)]" data-testid="weather-widget">
+      <CardContent className="p-4 space-y-3">
+        {/* Ligne 1 : Temperature + Condition */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <WeatherIcon condition={weather.condition} className="h-10 w-10" />
+            <WeatherIcon condition={w.description} className="h-10 w-10" />
             <div>
-              <div className="text-3xl font-bold text-[var(--bionic-text-primary)]">
-                {weather.temperature || '--'}°C
+              <div className="text-3xl font-bold text-white tabular-nums">
+                {w.temperature_c ?? '--'}°C
               </div>
-              <div className="text-[var(--bionic-text-secondary)] text-sm capitalize">
-                {weather.condition || 'N/A'}
+              <div className="text-gray-400 text-sm capitalize">
+                {w.description || 'N/A'}
               </div>
             </div>
           </div>
-          
           <div className="text-right space-y-1">
-            {weather.humidity !== undefined && (
-              <div className="text-sm">
-                <span className="text-[var(--bionic-text-secondary)]">{t('weather_humidity_label')}:</span>
-                <span className="text-[var(--bionic-blue-light)] ml-2">{weather.humidity}%</span>
-              </div>
-            )}
-            {weather.wind_speed !== undefined && (
-              <div className="text-sm">
-                <span className="text-[var(--bionic-text-secondary)]">{t('weather_wind_label')}:</span>
-                <span className="text-[var(--bionic-cyan-primary)] ml-2">{weather.wind_speed} km/h</span>
-              </div>
-            )}
-            {weather.pressure !== undefined && (
-              <div className="text-sm">
-                <span className="text-[var(--bionic-text-secondary)]">{t('weather_pressure_label')}:</span>
-                <span className="text-[var(--bionic-purple-primary)] ml-2">{weather.pressure} hPa</span>
-              </div>
-            )}
+            <div className="text-sm">
+              <span className="text-gray-500">{t('weather_humidity_label')}:</span>
+              <span className="text-blue-400 ml-2 tabular-nums">{w.humidity_pct ?? '--'}%</span>
+            </div>
+            <div className="text-sm">
+              <span className="text-gray-500">{t('weather_wind_label')}:</span>
+              <span className="text-cyan-400 ml-2 tabular-nums">{w.wind_speed_kmh ?? '--'} km/h</span>
+            </div>
+            <div className="text-sm">
+              <span className="text-gray-500">{t('weather_pressure_label')}:</span>
+              <span className="text-purple-400 ml-2 tabular-nums">{w.pressure_hpa ?? '--'} hPa</span>
+            </div>
           </div>
+        </div>
+
+        {/* Ligne 2 : Details supplementaires */}
+        <div className="flex items-center gap-4 pt-2 border-t border-white/5 text-xs text-gray-400">
+          {w.wind_gust_kmh != null && (
+            <span className="flex items-center gap-1">
+              <Wind className="h-3 w-3 text-cyan-500" />
+              Rafales: {w.wind_gust_kmh} km/h
+            </span>
+          )}
+          {w.wind_direction_deg != null && (
+            <span className="flex items-center gap-1">
+              <Wind className="h-3 w-3 text-gray-500" />
+              {w.wind_direction_deg}°
+            </span>
+          )}
+          {w.visibility_km != null && (
+            <span className="flex items-center gap-1">
+              <Eye className="h-3 w-3 text-gray-500" />
+              {w.visibility_km} km
+            </span>
+          )}
+          {w.uv_index != null && (
+            <span className="flex items-center gap-1">
+              <Sun className="h-3 w-3 text-amber-400" />
+              UV {w.uv_index}
+            </span>
+          )}
+          <span className="ml-auto text-[10px] text-gray-600 uppercase">
+            v3 ({source || '?'})
+          </span>
         </div>
       </CardContent>
     </Card>

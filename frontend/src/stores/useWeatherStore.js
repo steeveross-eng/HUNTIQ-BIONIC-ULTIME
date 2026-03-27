@@ -27,7 +27,20 @@ const fetchWeatherWithFallback = async (lat, lng) => {
     const resp = await fetch(`${API}/api/v3/weather/current?lat=${lat}&lng=${lng}`);
     if (resp.ok) {
       const data = await resp.json();
-      if (data && data.temperature_c != null) return { source: 'weather-v3', data };
+      if (data && data.temperature_c != null) {
+        // Normalisation v3: ajouter description, hunting_score plat, visibility_km
+        return {
+          source: 'weather-v3',
+          data: {
+            ...data,
+            description: data.description || getWeatherLabel(data.weather_code),
+            visibility_km: data.visibility_km ?? (data.visibility_m != null ? Math.round(data.visibility_m / 100) / 10 : null),
+            hunting_score_overall: typeof data.hunting_score === 'object' ? data.hunting_score.overall : data.hunting_score,
+            hunting_score_label: typeof data.hunting_score === 'object' ? data.hunting_score.label : null,
+            hunting_score_components: typeof data.hunting_score === 'object' ? data.hunting_score.components : null,
+          },
+        };
+      }
     }
   } catch (e) { /* fallthrough to v1 */ }
 

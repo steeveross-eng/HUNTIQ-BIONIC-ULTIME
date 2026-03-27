@@ -1,14 +1,16 @@
 /**
  * CoreDashboard - Central dashboard integrating all 5 core modules
+ * BCE-4X: Weather Engine v3 UNIFIED — source unique useWeatherStore
  * Phase 8 - Frontend Core Integration
  */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 import { Badge } from '../../components/ui/badge';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { BarChart3, Cloud, FlaskConical, Target, Bot, Loader2, Beef, Gem, CircleDot, Timer, Lightbulb } from 'lucide-react';
+import useWeatherStore from '../../stores/useWeatherStore';
 
 // Core Module Imports
 import { NutritionAnalyzer, NutritionScore, NutritionCard } from '../nutrition';
@@ -17,17 +19,16 @@ import { WeatherWidget, WindRose, HuntingConditions } from '../weather';
 import { AIChat, AIAnalyzer, AIInsights } from '../ai';
 import { StrategyPanel, StrategyTimeline } from '../strategy';
 
-// Services
+// Services (non-weather)
 import { NutritionService } from '../nutrition/NutritionService';
 import { ScoringService } from '../scoring/ScoringService';
-import { WeatherService } from '../weather/WeatherService';
 import { AIService } from '../ai/AIService';
 import { StrategyService } from '../strategy/StrategyService';
 
 // Trip Widget
 import ActiveTripWidget from '../../components/trips/ActiveTripWidget';
 
-const DEFAULT_COORDS = { lat: 46.8139, lng: -71.2082 }; // Quebec City
+const DEFAULT_COORDS = { lat: 46.8139, lng: -71.2082 };
 
 export const CoreDashboard = ({ 
   productId = null,
@@ -39,44 +40,94 @@ export const CoreDashboard = ({
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('overview');
   const [moduleStatus, setModuleStatus] = useState({});
-  const [weather, setWeather] = useState(null);
-  const [huntingConditions, setHuntingConditions] = useState(null);
   const [aiInsights, setAiInsights] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Load initial data
+  // BCE-4X: Weather Engine v3 — source unique via Zustand store
+  const weatherCurrent = useWeatherStore(s => s.current);
+  const weatherSource = useWeatherStore(s => s.source);
+  const weatherLoading = useWeatherStore(s => s.loading);
+  const fetchWeather = useWeatherStore(s => s.fetchAll);
+
+  // Weather v3 -> format compatible avec les composants du dashboard
+  const weather = useMemo(() => {
+    if (!weatherCurrent) return null;
+    const w = weatherCurrent;
+    return {
+      temperature: w.temperature_c,
+      feels_like: w.temperature_c != null ? Math.round((w.temperature_c - 2) * 10) / 10 : null,
+      humidity: w.humidity_pct,
+      wind_speed: w.wind_speed_kmh,
+      wind_direction: w.wind_direction_deg,
+      wind_gust: w.wind_gust_kmh,
+      pressure: w.pressure_hpa,
+      visibility_km: w.visibility_km,
+      uv_index: w.uv_index,
+      condition: w.description,
+      hunting_index: w.hunting_score || null,
+      source: weatherSource,
+    };
+  }, [weatherCurrent, weatherSource]);
+
+  // Hunting conditions derivees des donnees Weather v3 (temps reel)
+  const huntingConditions = useMemo(() => {
+    if (!weatherCurrent) return null;
+    const w = weatherCurrent;
+    const temp = w.temperature_c ?? 0;
+    const wind = w.wind_speed_kmh ?? 0;
+    const press = w.pressure_hpa ?? 1013;
+    const hum = w.humidity_pct ?? 50;
+
+    // Scoring deterministe
+    const tempScore = temp >= -5 && temp <= 10 ? 85 : temp >= -15 && temp <= 20 ? 60 : 30;
+    const windScore = wind <= 15 ? 80 : wind <= 25 ? 55 : 25;
+    const pressScore = press >= 1010 && press <= 1030 ? 85 : press >= 990 ? 60 : 35;
+    const humScore = hum >= 40 && hum <= 80 ? 80 : hum >= 20 && hum <= 95 ? 55 : 30;
+    const overall = Math.round(tempScore * 0.3 + windScore * 0.25 + pressScore * 0.25 + humScore * 0.2);
+
+    const getRating = (score) => score >= 80 ? 'excellent' : score >= 60 ? 'good' : score >= 40 ? 'moderate' : 'poor';
+
+    return {
+      overall_score: overall,
+      temperature_rating: getRating(tempScore),
+      wind_rating: getRating(windScore),
+      pressure_rating: getRating(pressScore),
+      humidity_rating: getRating(humScore),
+      recommendation: overall >= 70
+        ? 'Conditions favorables pour la chasse'
+        : overall >= 50
+        ? 'Conditions moderees — soyez strategique'
+        : 'Conditions difficiles — prudence recommandee',
+      factors: {
+        temperature: { score: tempScore, impact: tempScore >= 70 ? 'positive' : 'neutral' },
+        wind: { score: windScore, impact: windScore >= 70 ? 'positive' : 'neutral' },
+        pressure: { score: pressScore, impact: pressScore >= 70 ? 'very_positive' : 'neutral' },
+        humidity: { score: humScore, impact: humScore >= 70 ? 'positive' : 'neutral' },
+      },
+    };
+  }, [weatherCurrent]);
+
+  // Load non-weather data
   const loadDashboardData = useCallback(async () => {
     setLoading(true);
     
     try {
-      // Load weather data
-      const weatherData = await WeatherService.getCurrentWeather(
-        coordinates.lat, 
-        coordinates.lng
-      );
-      setWeather(weatherData);
-
-      // Load hunting conditions
-      const conditions = await WeatherService.getHuntingConditions(
-        coordinates.lat,
-        coordinates.lng,
-        species
-      );
-      setHuntingConditions(conditions);
+      // Trigger Weather Engine v3 fetch
+      fetchWeather(coordinates.lat, coordinates.lng);
 
       // Load AI insights
       const insights = await AIService.getInsights({
         species,
         season,
         location: coordinates
-      });
+      }).catch(() => ({ insights: [] }));
       setAiInsights(insights.insights || []);
 
-      // Check all module health
+      // Check module health (sans WeatherService V1)
       const healthChecks = await Promise.all([
         NutritionService.getHealth().catch(() => ({ status: 'error' })),
         ScoringService.getHealth().catch(() => ({ status: 'error' })),
-        WeatherService.getHealth().catch(() => ({ status: 'error' })),
+        { status: weatherCurrent ? 'operational' : 'loading' },
         AIService.getHealth().catch(() => ({ status: 'error' })),
         StrategyService.getHealth().catch(() => ({ status: 'error' }))
       ]);
@@ -84,7 +135,7 @@ export const CoreDashboard = ({
       setModuleStatus({
         nutrition: healthChecks[0].status === 'operational',
         scoring: healthChecks[1].status === 'operational',
-        weather: healthChecks[2].status === 'operational',
+        weather: !!weatherCurrent || weatherLoading,
         ai: healthChecks[3].status === 'operational',
         strategy: healthChecks[4].status === 'operational'
       });
@@ -94,18 +145,13 @@ export const CoreDashboard = ({
     } finally {
       setLoading(false);
     }
-  }, [coordinates, species, season]);
+  }, [coordinates, species, season, fetchWeather, weatherCurrent, weatherLoading]);
 
   useEffect(() => {
     loadDashboardData();
   }, [loadDashboardData]);
 
-  // Handle weather load from widget
-  const handleWeatherLoad = useCallback((data) => {
-    setWeather(data);
-  }, []);
-
-  if (loading) {
+  if (loading && !weatherCurrent) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
@@ -176,7 +222,6 @@ export const CoreDashboard = ({
               <WeatherWidget 
                 lat={coordinates.lat} 
                 lng={coordinates.lng}
-                onWeatherLoad={handleWeatherLoad}
               />
               
               <HuntingConditions 
@@ -197,12 +242,12 @@ export const CoreDashboard = ({
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4">
                     <ScoreDisplay 
-                      score={huntingConditions?.overall_score || 72}
+                      score={huntingConditions?.overall_score || 0}
                       label={t('dashboard_conditions')}
                       size="md"
                     />
                     <ScoreGauge 
-                      value={weather?.hunting_index || 65}
+                      value={huntingConditions?.overall_score || 0}
                       label={t('dashboard_hunting_index')}
                       color="#f5a623"
                     />
@@ -306,13 +351,12 @@ export const CoreDashboard = ({
               />
               
               <ScoreBreakdown 
-                title="Facteurs Météorologiques"
+                title="Facteurs Meteorologiques (Weather v3)"
                 breakdown={[
-                  { name: 'Température', value: 75, color: '#f59e0b' },
-                  { name: 'Humidité', value: 82, color: '#3b82f6' },
-                  { name: 'Pression', value: 68, color: '#8b5cf6' },
-                  { name: 'Vent', value: 45, color: '#22c55e' },
-                  { name: 'Précipitations', value: 90, color: '#06b6d4' }
+                  { name: 'Temperature', value: huntingConditions?.factors?.temperature?.score || 0, color: '#f59e0b' },
+                  { name: 'Humidite', value: huntingConditions?.factors?.humidity?.score || 0, color: '#3b82f6' },
+                  { name: 'Pression', value: huntingConditions?.factors?.pressure?.score || 0, color: '#8b5cf6' },
+                  { name: 'Vent', value: huntingConditions?.factors?.wind?.score || 0, color: '#22c55e' },
                 ]}
               />
             </div>

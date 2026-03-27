@@ -57,9 +57,10 @@ export const TerritoireHeader = ({
     <header
       ref={headerRef}
       className="flex-shrink-0 min-h-[60px] bg-[#0d0d14] border-b border-[#1a1a2e] px-4 pl-24 flex items-center justify-between relative"
-      style={{ zIndex: getProtectedZIndex('ui-toolbar') }}
+      style={{ zIndex: getProtectedZIndex('ui-toolbar'), contain: 'layout style' }}
       data-testid="bionic-header"
       data-bce4x-locked="true"
+      data-bce4x-layout-frozen="true"
     >
       <div className="flex items-center gap-3">
         <button onClick={() => navigate('/')} className="text-gray-500 hover:text-white transition-colors" data-testid="header-back-btn">
