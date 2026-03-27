@@ -395,37 +395,41 @@ try:
 except Exception as e:
     logger.warning(f"DEM Engine not loaded: {e}")
 
-# 23. Register DEM Shadow router (Shadow Pipeline — Real DEM injection)
-try:
-    from modules.bionic_engine_p0.routers.dem_shadow_router import router as dem_shadow_router
-    app.include_router(dem_shadow_router)
-    logger.info("✓ DEM Shadow registered (/api/v1/bionic/dem-shadow)")
-except Exception as e:
-    logger.warning(f"DEM Shadow not loaded: {e}")
+# 23. BCE-4X PURGE: DEM Shadow DESACTIVE (STEEVE-MAX directive)
+# try:
+#     from modules.bionic_engine_p0.routers.dem_shadow_router import router as dem_shadow_router
+#     app.include_router(dem_shadow_router)
+#     logger.info("✓ DEM Shadow registered (/api/v1/bionic/dem-shadow)")
+# except Exception as e:
+#     logger.warning(f"DEM Shadow not loaded: {e}")
+logger.info("✗ DEM Shadow DESACTIVE — BCE-4X PURGE")
 
-# 24. Register Weather Shadow router (Shadow — Open-Meteo)
-try:
-    from modules.bionic_engine_p0.routers.weather_shadow_router import router as weather_shadow_router
-    app.include_router(weather_shadow_router)
-    logger.info("✓ Weather Shadow registered (/api/v1/bionic/weather-shadow)")
-except Exception as e:
-    logger.warning(f"Weather Shadow not loaded: {e}")
+# 24. BCE-4X PURGE: Weather Shadow DESACTIVE (STEEVE-MAX directive)
+# try:
+#     from modules.bionic_engine_p0.routers.weather_shadow_router import router as weather_shadow_router
+#     app.include_router(weather_shadow_router)
+#     logger.info("✓ Weather Shadow registered (/api/v1/bionic/weather-shadow)")
+# except Exception as e:
+#     logger.warning(f"Weather Shadow not loaded: {e}")
+logger.info("✗ Weather Shadow DESACTIVE — BCE-4X PURGE")
 
-# 25. Register Full Shadow Comparison router (DEM + Meteo combines)
-try:
-    from modules.bionic_engine_p0.routers.full_comparison_router import router as full_comparison_router
-    app.include_router(full_comparison_router)
-    logger.info("✓ Full Shadow Comparison registered (/api/v1/bionic/shadow)")
-except Exception as e:
-    logger.warning(f"Full Shadow Comparison not loaded: {e}")
+# 25. BCE-4X PURGE: Full Shadow Comparison DESACTIVE (STEEVE-MAX directive)
+# try:
+#     from modules.bionic_engine_p0.routers.full_comparison_router import router as full_comparison_router
+#     app.include_router(full_comparison_router)
+#     logger.info("✓ Full Shadow Comparison registered (/api/v1/bionic/shadow)")
+# except Exception as e:
+#     logger.warning(f"Full Shadow Comparison not loaded: {e}")
+logger.info("✗ Full Shadow Comparison DESACTIVE — BCE-4X PURGE")
 
-# 26. Register NDVI Shadow router (Sentinel-2 NDVI Shadow Mode)
-try:
-    from modules.bionic_engine_p0.routers.ndvi_shadow_router import router as ndvi_shadow_router
-    app.include_router(ndvi_shadow_router)
-    logger.info("✓ NDVI Shadow registered (/api/v1/bionic/ndvi-shadow)")
-except Exception as e:
-    logger.warning(f"NDVI Shadow not loaded: {e}")
+# 26. BCE-4X PURGE: NDVI Shadow DESACTIVE (STEEVE-MAX directive)
+# try:
+#     from modules.bionic_engine_p0.routers.ndvi_shadow_router import router as ndvi_shadow_router
+#     app.include_router(ndvi_shadow_router)
+#     logger.info("✓ NDVI Shadow registered (/api/v1/bionic/ndvi-shadow)")
+# except Exception as e:
+#     logger.warning(f"NDVI Shadow not loaded: {e}")
+logger.info("✗ NDVI Shadow DESACTIVE — BCE-4X PURGE")
 
 # 27. Register Habitat Score router (Real-time cursor scoring)
 try:
@@ -467,13 +471,14 @@ try:
 except Exception as e:
     logger.warning(f"BCE not loaded: {e}")
 
-# 32. Register Weather V8.2 Router
-try:
-    from modules.bionic_engine_p0.routers.weather_router import router as weather_v82_router
-    app.include_router(weather_v82_router)
-    logger.info("✓ Weather V8.2 registered (/api/v1/weather/now, /forecast, /influence)")
-except Exception as e:
-    logger.warning(f"Weather V8.2 not loaded: {e}")
+# 32. BCE-4X PURGE: Weather V8.2 DESACTIVE — Source unique = /api/v3/weather/* (STEEVE-MAX directive)
+# try:
+#     from modules.bionic_engine_p0.routers.weather_router import router as weather_v82_router
+#     app.include_router(weather_v82_router)
+#     logger.info("✓ Weather V8.2 registered (/api/v1/weather/now, /forecast, /influence)")
+# except Exception as e:
+#     logger.warning(f"Weather V8.2 not loaded: {e}")
+logger.info("✗ Weather V8.2 DESACTIVE — BCE-4X PURGE — Source unique: /api/v3/weather/*")
 
 # 33. Register Compare V8.3 Router
 try:

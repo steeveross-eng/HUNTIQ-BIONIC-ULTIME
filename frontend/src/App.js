@@ -23,32 +23,22 @@ import { NotificationProvider } from "@/modules/notifications";
 // PHASE F: Centre de notifications push temps réel
 import AlertNotificationCenter from "@/components/AlertNotificationCenter";
 
-// BLOC 2 OPTIMIZATION: Lazy-loaded components (non-critical path)
-const AnalyzerModule = lazy(() => import("@/components/AnalyzerModule"));
-const TerritoryMap = lazy(() => import("@/components/TerritoryMap"));
-const HuntMarketplace = lazy(() => import("@/components/HuntMarketplace"));
-const ContentDepot = lazy(() => import("@/components/ContentDepot"));
-const SiteAccessControl = lazy(() => import("@/components/SiteAccessControl"));
-const MaintenancePage = lazy(() => import("@/components/MaintenancePage"));
+// BCE-4X PURGE: Imports fantomes SUPPRIMES (STEEVE-MAX directive)
+// 15 composants importes sans route ont ete supprimes:
+// AnalyzerModule, TerritoryMap, HuntMarketplace, ContentDepot, SiteAccessControl,
+// MaintenancePage, LandsPricingAdmin, NetworkingAdmin, NotificationCenter,
+// EmailAdmin, FeatureControlsAdmin, ProductDiscoveryAdmin,
+// ReferralAdminPanel, DynamicReferralWidget, AdminPage
 const LandsRental = lazy(() => import("@/components/LandsRental"));
-const LandsPricingAdmin = lazy(() => import("@/components/LandsPricingAdmin"));
 const NetworkingHub = lazy(() => import("@/components/NetworkingHub"));
-const NetworkingAdmin = lazy(() => import("@/components/NetworkingAdmin"));
-const NotificationCenter = lazy(() => import("@/components/NotificationCenter"));
-const EmailAdmin = lazy(() => import("@/components/EmailAdmin"));
-const FeatureControlsAdmin = lazy(() => import("@/components/FeatureControlsAdmin"));
 const ResetPasswordPage = lazy(() => import("@/components/ResetPasswordPage"));
 const BecomePartner = lazy(() => import("@/components/BecomePartner"));
 const PartnerDashboard = lazy(() => import("@/components/PartnerDashboard"));
-const MonTerritoireBionic = lazy(() => import("@/components/territoire/MonTerritoireBionic"));
-const ProductDiscoveryAdmin = lazy(() => import("@/components/ProductDiscoveryAdmin"));
 const ReferralModule = lazy(() => import("@/components/ReferralModule"));
-const ReferralAdminPanel = lazy(() => import("@/components/ReferralAdminPanel"));
-const DynamicReferralWidget = lazy(() => import("@/components/DynamicReferralWidget"));
 const GoogleOAuthCallback = lazy(() => import("@/components/GoogleOAuthCallback"));
 
 // BLOC 2 OPTIMIZATION: Lazy-loaded pages
-const AdminPage = lazy(() => import("@/pages/AdminPage"));
+// BCE-4X PURGE: AdminPage SUPPRIME — Admin v2 = AdminPremiumPage (source unique)
 const MonTerritoireBionicPage = lazy(() => import("@/pages/MonTerritoireBionicPage"));
 const TripsPage = lazy(() => import("@/pages/TripsPage"));
 const ShopPage = lazy(() => import("@/pages").then(m => ({ default: m.ShopPage })));
@@ -78,6 +68,7 @@ const SpeciesComparisonPage = lazy(() => import("@/pages/SpeciesComparisonPage")
 // NUTRITION INTELLIGENCE SUPRA — x5000 (STEEVE-MAX x5100-x5900)
 // SUPRA LOCAL unifie — ancien module global ABANDONNE (BCE-4X / STEEVE-MAX)
 const ProductPage = lazy(() => import("@/pages/ProductPage"));
+const SupraPage = lazy(() => import("@/pages/SupraPage"));
 // BIONIC MODULES — 10 modules predictifs (STEEVE-MAX x2000)
 const BionicModulesPage = lazy(() => import("@/pages/BionicModulesPage"));
 // BSAA — BIONIC Social Ads Automation (x4500-ULTRA)
@@ -179,7 +170,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             {/* ANALYSE TERRITOIRE — Module primaire (carte strategique) */}
             <Link 
               to="/mon-territoire-bionic" 
-              className={`flex items-center gap-2 px-3 py-2 text-sm font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 ${['/mon-territoire-bionic', '/mon-territoire', '/territoire'].includes(location.pathname) ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              className={`flex items-center gap-2 px-3 py-2 text-sm font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 ${['/mon-territoire-bionic', '/mon-territoire', '/analyse-territoire'].includes(location.pathname) ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
               data-testid="nav-analyse-territoire"
             >
               <Crosshair className="h-4 w-4" />
@@ -350,7 +341,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
 };
 
 // Footer Component - Hidden on full-viewport pages
-const FULL_VIEWPORT_ROUTES = ['/map', '/territoire', '/mon-territoire-bionic', '/mon-territoire', '/analyse-territoire', '/forecast', '/admin-geo', '/admin-premium'];
+const FULL_VIEWPORT_ROUTES = ['/map', '/mon-territoire-bionic', '/mon-territoire', '/analyse-territoire', '/forecast', '/admin-geo', '/admin-premium'];
 
 const Footer = () => {
   const location = useLocation();
@@ -566,19 +557,9 @@ const AnalyzePage = ({ products }) => (
   </main>
 );
 
-// TerritoryPage Component
-const TerritoryPage = () => (
-  <main className="pt-16 min-h-screen bg-background">
-    <MonTerritoireBionicPage />
-  </main>
-);
+// BCE-4X PURGE: TerritoryPage SUPPRIME (STEEVE-MAX directive)
 
-// MarketplacePage Component
-const MarketplacePage = () => (
-  <main className="pt-16 min-h-screen bg-background">
-    <HuntMarketplace />
-  </main>
-);
+// BCE-4X PURGE: MarketplacePage SUPPRIME (HuntMarketplace = fantome)
 
 // FormationsPage Component
 const FormationsPage = () => {
@@ -982,12 +963,14 @@ function App() {
                 <Route path="/analyze" element={<Navigate to="/analytics" replace />} />
                 <Route path="/compare" element={<ComparePage products={products} />} />
                 <Route path="/shop" element={<ShopPage />} />
-                <Route path="/territoire" element={<TerritoryPage />} />
+                {/* BCE-4X PURGE: /territoire redirige vers /mon-territoire-bionic */}
+                <Route path="/territoire" element={<Navigate to="/mon-territoire-bionic" replace />} />
                 <Route path="/mon-territoire-bionic" element={<MonTerritoireBionicPage />} />
                 {/* Redirections pour URL simplifiee */}
                 <Route path="/mon-territoire" element={<MonTerritoireBionicPage />} />
                 <Route path="/analyse-territoire" element={<MonTerritoireBionicPage />} />
-                <Route path="/marketplace" element={<MarketplacePage />} />
+                {/* BCE-4X PURGE: /marketplace redirige (MarketplacePage = fantome) */}
+                <Route path="/marketplace" element={<Navigate to="/shop" replace />} />
                 <Route path="/formations" element={<FormationsPage />} />
                 {/* Module Permis de chasse */}
                 <Route path="/permis-chasse" element={<HuntingLicensePage />} />
@@ -1033,6 +1016,7 @@ function App() {
                 {/* SUPRA: Redirection vers ANALYSE TERRITOIRE (moteur unique SUPRA LOCAL) */}
                 <Route path="/nutrition-supra" element={<Navigate to="/mon-territoire-bionic" replace />} />
                 <Route path="/product/:productId" element={<ProductPage />} />
+                <Route path="/supra/:id" element={<SupraPage />} />
                 {/* BIONIC MODULES — 10 modules predictifs (STEEVE-MAX x2000) */}
                 <Route path="/bionic-modules" element={<BionicModulesPage />} />
                 <Route path="/intelligence" element={<BionicModulesPage />} />

@@ -18,17 +18,15 @@ const API = process.env.REACT_APP_BACKEND_URL;
 const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
 
 /**
- * Fetch meteorologique avec fallback Open-Meteo.
- * Backend OWM -> Open-Meteo (gratuit, sans cle)
+ * Fetch meteorologique — SOURCE UNIQUE: /api/v3/weather/current
+ * BCE-4X PURGE: Fallback v1 et Open-Meteo direct SUPPRIMES (STEEVE-MAX directive)
  */
 const fetchWeatherWithFallback = async (lat, lng) => {
-  // Tentative Weather Engine v3 (backend)
   try {
     const resp = await fetch(`${API}/api/v3/weather/current?lat=${lat}&lng=${lng}`);
     if (resp.ok) {
       const data = await resp.json();
       if (data && data.temperature_c != null) {
-        // Normalisation v3: ajouter description, hunting_score plat, visibility_km
         return {
           source: 'weather-v3',
           data: {
@@ -42,45 +40,9 @@ const fetchWeatherWithFallback = async (lat, lng) => {
         };
       }
     }
-  } catch (e) { /* fallthrough to v1 */ }
-
-  // Fallback Weather v1 (backend OWM)
-  try {
-    const resp = await fetch(`${API}/api/v1/weather/now?lat=${lat}&lng=${lng}`);
-    if (resp.ok) {
-      const data = await resp.json();
-      if (data && data.temperature_c != null) return { source: 'owm', data };
-    }
-  } catch (e) { /* fallthrough */ }
-
-  // Fallback Open-Meteo (gratuit)
-  try {
-    const params = new URLSearchParams({
-      latitude: lat, longitude: lng,
-      current: 'temperature_2m,relative_humidity_2m,precipitation,weather_code,cloud_cover,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m',
-      timezone: 'America/Toronto',
-    });
-    const resp = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`);
-    if (resp.ok) {
-      const raw = await resp.json();
-      const c = raw.current;
-      return {
-        source: 'open-meteo',
-        data: {
-          temperature_c: c?.temperature_2m,
-          humidity_pct: c?.relative_humidity_2m,
-          pressure_hpa: c?.surface_pressure,
-          wind_speed_kmh: c?.wind_speed_10m,
-          wind_direction_deg: c?.wind_direction_10m,
-          wind_gust_kmh: c?.wind_gusts_10m,
-          precipitation_mm: c?.precipitation,
-          cloud_cover_pct: c?.cloud_cover,
-          weather_code: c?.weather_code,
-          description: getWeatherLabel(c?.weather_code),
-        },
-      };
-    }
-  } catch (e) { /* all sources failed */ }
+  } catch (e) {
+    console.error('[METEO] Weather v3 fetch failed:', e);
+  }
 
   return null;
 };
@@ -137,16 +99,8 @@ const useWeatherStore = create((set, get) => ({
       // Fetch meteo avec fallback
       const weatherResult = await fetchWeatherWithFallback(lat, lng);
 
-      // Fetch windfield en parallele (non-bloquant)
-      let windField = null;
-      try {
-        const windRes = await fetch(`${API}/api/v1/bionic/weather-shadow/windfield`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ center_lat: lat, center_lng: lng }),
-        });
-        if (windRes.ok) windField = await windRes.json();
-      } catch (e) { /* non-bloquant */ }
+      // BCE-4X PURGE: windfield shadow SUPPRIME — vent vient du store v3
+      const windField = null;
 
       set({
         current: weatherResult?.data || null,

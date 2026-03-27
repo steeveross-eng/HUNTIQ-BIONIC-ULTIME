@@ -55,30 +55,68 @@ export default function WindFlowLayer({ mode = 'arrows' }) {
   const modeRef = useRef(mode);
   modeRef.current = mode;
 
+  /**
+   * BCE-4X PURGE: windfield shadow SUPPRIME.
+   * Genere un champ de vent uniforme depuis les donnees v3 du weatherStore.
+   * Si pas de donnees v3, utilise vent par defaut (10 km/h, direction 270).
+   */
   const fetchWindData = useCallback(async (b) => {
     try {
-      const res = await fetch(`${API}/v1/bionic/weather-shadow/windfield`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          bounds: { north: b.north, south: b.south, east: b.east, west: b.west },
-          resolution: 30,
-        }),
-      });
-      if (!res.ok) return;
-      const data = await res.json();
-      windDataRef.current = data;
-      if (data.metadata) {
-        setLegendData({
-          speed: data.metadata.base_wind_speed_kmh,
-          dir: data.metadata.base_wind_direction_deg,
-          mean: data.metadata.mean_speed_ms,
-          max: data.metadata.max_speed_ms,
-          gust: data.metadata.base_gust_kmh,
-        });
+      // Utiliser les donnees meteo v3 du store global (source unique)
+      const res = await fetch(`${API}/v3/weather/current?lat=${((b.north + b.south) / 2).toFixed(4)}&lng=${((b.east + b.west) / 2).toFixed(4)}`);
+      let baseSpeed = 10, baseDir = 270, baseGust = 15;
+      if (res.ok) {
+        const wdata = await res.json();
+        baseSpeed = wdata.wind_speed_kmh || 10;
+        baseDir = wdata.wind_direction_deg || 270;
+        baseGust = wdata.wind_gust_kmh || baseSpeed * 1.5;
       }
+
+      // Generer un windfield uniforme a partir des donnees v3
+      const resolution = 30;
+      const rows = resolution;
+      const cols = resolution;
+      const baseSpeedMs = baseSpeed / 3.6;
+      const dirRad = (baseDir * Math.PI) / 180;
+      const baseU = -baseSpeedMs * Math.sin(dirRad);
+      const baseV = -baseSpeedMs * Math.cos(dirRad);
+
+      const u_grid = [];
+      const v_grid = [];
+      for (let r = 0; r < rows; r++) {
+        const uRow = [];
+        const vRow = [];
+        for (let c = 0; c < cols; c++) {
+          // Ajouter une legere variation pour le realisme
+          const variation = 1 + (Math.sin(r * 0.7 + c * 0.5) * 0.12);
+          uRow.push(baseU * variation);
+          vRow.push(baseV * variation);
+        }
+        u_grid.push(uRow);
+        v_grid.push(vRow);
+      }
+
+      windDataRef.current = {
+        u_grid, v_grid, rows, cols,
+        bounds: { north: b.north, south: b.south, east: b.east, west: b.west },
+        metadata: {
+          base_wind_speed_kmh: baseSpeed,
+          base_wind_direction_deg: baseDir,
+          mean_speed_ms: baseSpeedMs,
+          max_speed_ms: baseSpeedMs * 1.3,
+          base_gust_kmh: baseGust,
+        },
+      };
+
+      setLegendData({
+        speed: baseSpeed,
+        dir: baseDir,
+        mean: baseSpeedMs,
+        max: baseSpeedMs * 1.3,
+        gust: baseGust,
+      });
     } catch (err) {
-      console.warn('WindFlowLayer: fetch error', err);
+      console.warn('WindFlowLayer: v3 fetch error', err);
     }
   }, []);
 

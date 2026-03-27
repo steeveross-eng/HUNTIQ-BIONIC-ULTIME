@@ -4,49 +4,44 @@
 ---
 
 ## Enonce original
-Reconstruction et modernisation HUNTIQ-V6 sous gouvernance BCE-4X / MAX ULTRA / STEEVE-MAX. Application full-stack (FastAPI + React) — chasse intelligente, analyse de territoire, nutrition animale, e-commerce salines, administration centralisee.
+Reconstruction et modernisation HUNTIQ-V6 sous gouvernance BCE-4X / MAX ULTRA / STEEVE-MAX.
 
 ## Architecture
-- **Backend**: FastAPI, 84+ modules "engines"
-- **Frontend**: React, Zustand, React-Leaflet, Tailwind
-- **E-commerce**: Stripe via emergentintegrations
-- **Gouvernance UI**: BCE4X_UIShield
-- **Branche**: `Work1`
+- Backend: FastAPI, 84+ engines | Frontend: React, Zustand, Leaflet, Tailwind
+- E-commerce: Stripe via emergentintegrations | Gouvernance UI: BCE4X_UIShield
+- Branche: Work1
 
 ---
 
 ## Implemente
 
+### Purge Architecturale (27 Mars 2026)
+- 5 endpoints SHADOW desactives (weather-shadow, dem-shadow, ndvi-shadow, shadow-compare, weather-v82)
+- Meteo: source unique /api/v3/weather/* (Open-Meteo). Fallbacks v1 + Open-Meteo direct SUPPRIMES
+- WindFlowLayer migre de weather-shadow vers v3
+- 15 imports fantomes supprimes (AnalyzerModule, TerritoryMap, HuntMarketplace, etc.)
+- Route /territoire → redirect /mon-territoire-bionic
+- Route /marketplace → redirect /shop
+- Route /supra/:id CREEE (panneau SUPRA v2 standalone)
+
 ### P0.5 — Corrections UX (27 Mars 2026)
-- **Typographie Dashboard SUPRA**: Polices agrandies (+2px), padding augmente (+1-2), blocs harmonises, icones 18px, barres mineraux h-2, espacement sections gap-6
-- **Chemins & Trails**: Approach paths courbes (sinusoidales composees, 16 points), distance reelle calculee (Haversine), trail_type=sentier_forestier, lignes continues vertes (suppression pointilles cyan)
-- **Header UX**: MAGASIN blanc, PREMIUM blanc+contour orange #F5A623, CONNEXION unifie #F5A623
+- Typographie Dashboard SUPRA, Chemins & Trails, Header UX
 
 ### Phase P0 — Fusion Totale (27 Mars 2026)
-- SUPRA v2 — Moteur unifie (Gauge ULTRA + Info Cards + Narration PREMIUM + Panier Stripe)
-- MAGASIN v2 — Catalogue SALINE_PRODUCTS unifie, filtres, CMD → Stripe
-- ADMIN v2 — Interface unique (AdminPremiumPage absorbe AdminPage)
-- Nettoyage: routes, navigation, panier unifie
-
-### Phases precedentes
-- Score Header securise + BCE4X_UIShield
-- Weather Engine v3 unifie, Navigation restructuree
-- Audits techniques (SUPRA, MAGASIN, ADMIN), Architecture BSAA
+- SUPRA v2, MAGASIN v2, ADMIN v2, Nettoyage
 
 ---
+
+## Prochain: Verrouillage ULTRA-MAX++
+- Golden State au boot
+- Golden CSS Hash
+- SUPRA v2 Guard
+- Route Guard
+- API Lock
+- File Integrity Lock
 
 ## Backlog
+- P1: Nettoyage fichiers V5, enrichissement catalogue API x6030
+- P2: BSAA-2 (gele) | P3: Merge Work1 → main
 
-### P1
-- Nettoyage V5: Suppression NutritionIntelligencePage.jsx, AdminPage.jsx, anciens composants ULTRA
-- Enrichissement catalogue API x6030 (prix dynamiques, stock, variantes)
-
-### P2
-- BSAA-2: Social Ads Automation (GELE)
-
-### P3
-- Merge Work1 → main (INTERDIT sans validation)
-
----
-
-*Mis a jour le 27 Mars 2026 — BCE-4X / STEEVE-MAX V6*
+*Mis a jour le 27 Mars 2026*
