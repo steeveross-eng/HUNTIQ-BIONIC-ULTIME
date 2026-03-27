@@ -147,33 +147,33 @@ def _generate_approach_path(
     trail_graph=None
 ) -> List[Dict[str, float]]:
     """
-    BCE-4X Phase 2 — Routage REEL sur chemins forestiers.
+    BCE-4X Phase 2.5 — Routage REEL via TERRAIN NAV ENGINE (TNE).
     
     Strategie:
-    1. Si un graphe OSM est disponible: router via A* sur le reseau reel
-    2. Fallback UNIQUEMENT si aucun chemin OSM n'existe dans la zone
+    1. Si un graphe terrain est disponible: router via TNE (A* + Dijkstra)
+    2. Fallback UNIQUEMENT si aucun chemin trouve dans la zone
        → annote "estimation", log interne
     3. INTERDIT de generer des sinusoides ou waypoints artificiels
        si un graphe existe deja
     """
-    from .trail_graph import route_on_trails
+    from engines.terrain_nav import navigate_terrain
 
-    # Tentative de routage reel via graphe OSM
+    # Tentative de routage reel via TNE
     if trail_graph is not None and not trail_graph.is_empty:
-        result = route_on_trails(trail_graph, start_lat, start_lng, stand_lat, stand_lng)
+        result = navigate_terrain(trail_graph, start_lat, start_lng, stand_lat, stand_lng)
         if result is not None:
             path = result["coords"]
             if path:
                 path[0]["trail_distance_m"] = result["distance_m"]
                 path[0]["trail_type"] = result["type"]
-            logger.info(f"[APPROACH] Routage REEL: {result['distance_m']}m, {len(path)} points")
+                path[0]["routing_algo"] = result.get("routing_algo", "unknown")
+            logger.info(f"[APPROACH] TNE Routage REEL: {result['distance_m']}m, {len(path)} points, algo={result.get('routing_algo')}")
             return path
         else:
-            logger.warning("[APPROACH] A* echoue sur graphe existant — fallback estimation")
+            logger.warning("[APPROACH] TNE routing failed on existing graph — fallback estimation")
 
-    # FALLBACK: aucun graphe OSM ou aucun chemin trouve
-    # Generer un chemin direct annote comme ESTIMATION
-    logger.warning("[APPROACH] FALLBACK estimation — aucun sentier OSM disponible dans la zone")
+    # FALLBACK: aucun graphe terrain ou aucun chemin trouve
+    logger.warning("[APPROACH] FALLBACK estimation — aucun sentier terrain disponible dans la zone")
 
     wind_deg = _wind_angle(wind_dir)
     approach_from = (wind_deg + 180) % 360
@@ -212,15 +212,15 @@ def recommend_stands(
 ) -> Dict[str, Any]:
     """
     x4520-C STEEVE-MAX: Affûts scientifiquement positionnés.
-    BCE-4X Phase 2: Routage REEL via graphe OSM (Overpass UNE SEULE FOIS).
+    BCE-4X Phase 2.5: Routage REEL via TERRAIN NAV ENGINE (TNE).
     """
-    from .trail_graph import get_trail_graph
+    from engines.terrain_nav import get_terrain_nav
 
     engine_id = str(uuid.uuid4())[:8]
     logger.info(f"[{engine_id}] Generating stand recommendations at ({lat}, {lng}), wind={wind_direction} {wind_speed_kmh}km/h, radius={radius_m}m")
 
-    # BCE-4X Phase 2: Charger le graphe de sentiers UNE SEULE FOIS pour la zone
-    trail_graph = get_trail_graph(lat, lng)
+    # BCE-4X Phase 2.5: Charger le graphe terrain UNE SEULE FOIS pour la zone
+    trail_graph = get_terrain_nav(lat, lng)
 
     wind_deg = _wind_angle(wind_direction)
     stands = []
