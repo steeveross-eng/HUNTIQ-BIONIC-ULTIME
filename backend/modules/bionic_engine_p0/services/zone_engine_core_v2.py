@@ -62,12 +62,16 @@ _CACHE_TTL = 1800
 METERS_PER_DEG_LAT = 111320.0
 
 # ══════════════════════════════════════════════════════════
-# V6.x — CERCLES 600m + CACHE EAU LOCAL + CACHE URBAIN (Phase 2.9)
+# V6.x Phase 3.1-SUPRA — CERCLES 600m + EXCLUSION STRICTE
+# STEEVE-MAX: ZERO zone en ville, ZERO zone dans l'eau,
+#             ZERO zone sur les routes, ZERO zone sur infrastructure
 # ══════════════════════════════════════════════════════════
 CIRCLE_RADIUS_M = 600
 CIRCLE_NUM_POINTS = 48
-WATER_OVERLAP_THRESHOLD = 0.15
-URBAN_OVERLAP_THRESHOLD = 0.10  # Phase 2.9: seuil strict pour zones urbaines
+WATER_OVERLAP_THRESHOLD = 0.25   # Phase 3.1: 25% overlap eau = exclusion
+URBAN_OVERLAP_THRESHOLD = 0.10   # Phase 3.1: 10% overlap urbain = exclusion
+                                 # Suffisant car RAW OSM cree un mesh de densite
+URBAN_CENTER_BUFFER_DEG = 0.002  # ~222m buffer autour du centre
 
 _water_union_zone_cache = None
 _water_zone_cache_loaded = False
@@ -99,6 +103,9 @@ def _load_water_cache_zones():
         return None
 
     water_polys = []
+    MAX_WATER_POLY_AREA = 0.002  # Phase 3.1: Max 0.002 deg² (~25 km²) par polygone eau
+    MAX_WATER_BBOX_FILL = 0.50   # Si poly remplit >50% de sa bbox, c'est corrompu
+    rejected_large = 0
     for fname in os.listdir(cache_dir):
         if not fname.endswith(".json") or fname.startswith("CA-") or fname == "hydro_debug.json":
             continue
@@ -116,11 +123,24 @@ def _load_water_cache_zones():
                     try:
                         poly = ShapelyPolygon([(c[0], c[1]) for c in coords])
                         if poly.is_valid and poly.area > 0:
+                            # Phase 3.1: Rejeter les polygones eau corrompus/trop grands
+                            if poly.area > MAX_WATER_POLY_AREA:
+                                rejected_large += 1
+                                continue
+                            # Phase 3.1: Rejeter les polygones trop compacts (rectangles = erreurs)
+                            bx = poly.bounds
+                            bbox_area = (bx[2] - bx[0]) * (bx[3] - bx[1])
+                            if bbox_area > 0 and poly.area / bbox_area > MAX_WATER_BBOX_FILL and poly.area > 0.0005:
+                                rejected_large += 1
+                                continue
                             water_polys.append(poly)
                     except Exception:
                         pass
         except Exception:
             continue
+
+    if rejected_large > 0:
+        logger.warning(f"[V7-ZONES] {rejected_large} polygones eau CORROMPUS rejetes (area > {MAX_WATER_POLY_AREA})")
 
     if water_polys:
         try:
@@ -134,7 +154,11 @@ def _load_water_cache_zones():
 
 
 def _circle_on_water(center_lat: float, center_lng: float) -> bool:
-    """Verifie si un cercle 600m chevauche l'eau au-dela du seuil."""
+    """
+    Phase 3.1-SUPRA: Verifie si un cercle 600m chevauche l'eau.
+    Utilise overlap > 2% (pas de buffer centre pour eviter de bloquer les zones forestieres
+    pres de ruisseaux).
+    """
     water = _load_water_cache_zones()
     if water is None or not SHAPELY_AVAILABLE:
         return False
@@ -151,7 +175,20 @@ def _circle_on_water(center_lat: float, center_lng: float) -> bool:
 
 
 def _load_urban_cache_zones():
-    """Phase 2.9: Charge les polygones urbains depuis le cache OSM local."""
+    """
+    Phase 3.1-SUPRA FINAL: Charge les polygones anthropiques PERTINENTS.
+    
+    HARD EXCLUDE (toute proximite = rejet):
+    - Urban landuse: residential, commercial, industrial, retail, construction, military
+    - Routes MAJEURES: motorway, trunk, primary (avec buffer genereux)
+    - Infrastructure: railways (avec buffer)
+    
+    IGNORE (pas d'exclusion):
+    - Routes mineures: residential, tertiary, unclassified, track, cycleway, footway
+    - Urban: cemetery, recreation_ground, quarry (espaces ouverts)
+    
+    STEEVE-MAX: ZERO zone dans un quartier, ZERO zone sur autoroute.
+    """
     global _urban_union_zone_cache, _urban_zone_cache_loaded
     if _urban_zone_cache_loaded:
         return _urban_union_zone_cache
@@ -164,44 +201,75 @@ def _load_urban_cache_zones():
         _urban_zone_cache_loaded = True
         return None
 
+    # Urban landuse sub_types that represent ACTUAL built-up areas
+    URBAN_EXCLUDE_SUBTYPES = {
+        "residential", "commercial", "industrial", "retail", "yes",
+        "construction", "military", "education"
+    }
+    # Road sub_types that represent MAJOR infrastructure (with buffer)
+    ROAD_MAJOR = {
+        "motorway": 0.002,       # ~222m buffer
+        "motorway_link": 0.0015, # ~167m buffer
+        "trunk": 0.0015,         # ~167m buffer
+        "trunk_link": 0.001,     # ~111m buffer
+        "primary": 0.001,        # ~111m buffer
+        "primary_link": 0.0008,  # ~89m buffer
+        "secondary": 0.0005,     # ~56m buffer
+        "secondary_link": 0.0004,
+    }
+
     urban_polys = []
+    stats = {"urban": 0, "roads": 0, "infra": 0}
+
     for fname in os.listdir(cache_dir):
         if not fname.endswith(".json") or fname.startswith("CA-") or fname == "hydro_debug.json":
             continue
         fpath = cache_dir / fname
-        if fpath.stat().st_size < 5000:
+        if fpath.stat().st_size < 2000:
             continue
         try:
             with open(fpath) as f:
                 data = json.load(f)
             for zone in data.get("exclusion_zones", []):
                 ex_type = zone.get("type", "")
-                # Include urban, industrial, commercial, residential zones AND major roads
-                if ex_type not in ("urban", "roads"):
-                    continue
-                # For roads, only include major roads (motorway, trunk, primary)
-                if ex_type == "roads":
-                    sub = (zone.get("sub_type") or "").lower()
-                    if sub not in ("motorway", "trunk", "primary", "motorway_link", "trunk_link"):
-                        continue
+                sub_type = (zone.get("sub_type") or "unknown").lower()
                 coords = zone.get("coordinates", [])
                 geom = zone.get("geometry", "polygon")
+
+                buf = 0  # default no buffer
+
+                if ex_type == "urban":
+                    if sub_type not in URBAN_EXCLUDE_SUBTYPES:
+                        continue
+                    stats["urban"] += 1
+                elif ex_type == "roads":
+                    if sub_type not in ROAD_MAJOR:
+                        continue
+                    buf = ROAD_MAJOR[sub_type]
+                    stats["roads"] += 1
+                elif ex_type == "infrastructure":
+                    if sub_type not in ("unknown", "rail", "railway"):
+                        continue
+                    buf = 0.0005  # ~56m buffer for railways
+                    stats["infra"] += 1
+                else:
+                    continue
+
                 if geom == "polygon" and len(coords) >= 4:
                     try:
                         poly = ShapelyPolygon([(c[0], c[1]) for c in coords])
                         if poly.is_valid and poly.area > 0:
-                            # Apply buffer for roads (line-like features expanded)
-                            if ex_type == "roads":
-                                poly = poly.buffer(0.001)  # ~111m buffer
+                            if buf > 0:
+                                poly = poly.buffer(buf)
                             urban_polys.append(poly)
                     except Exception:
                         pass
                 elif geom == "line" and len(coords) >= 2:
-                    # Buffer lines into polygons (roads)
                     try:
                         from shapely.geometry import LineString
                         line = LineString([(c[0], c[1]) for c in coords])
-                        buffered = line.buffer(0.0012)  # ~133m buffer for major roads
+                        line_buf = max(buf, 0.0005)
+                        buffered = line.buffer(line_buf)
                         if buffered.is_valid and buffered.area > 0:
                             urban_polys.append(buffered)
                     except Exception:
@@ -212,7 +280,10 @@ def _load_urban_cache_zones():
     if urban_polys:
         try:
             _urban_union_zone_cache = unary_union(urban_polys)
-            logger.info(f"[Phase2.9-URBAN] Cache urbain charge: {len(urban_polys)} polygones")
+            logger.info(
+                f"[Phase3.1-SUPRA] Cache anthropique: {len(urban_polys)} polygones "
+                f"(urban={stats['urban']}, roads={stats['roads']}, infra={stats['infra']})"
+            )
         except Exception:
             pass
 
@@ -221,7 +292,12 @@ def _load_urban_cache_zones():
 
 
 def _circle_on_urban(center_lat: float, center_lng: float) -> bool:
-    """Phase 2.9: Verifie si un cercle 600m chevauche une zone urbaine/industrielle/route majeure."""
+    """
+    Phase 3.1-SUPRA: Verifie si un cercle 600m est en zone anthropique.
+    Utilise le ratio d'overlap UNIQUEMENT (pas de buffer centre) pour
+    eviter les faux positifs pres des limites municipales en zone forestiere.
+    Seuil: 5% overlap = exclusion (le cercle touche une zone urbanisee).
+    """
     urban = _load_urban_cache_zones()
     if urban is None or not SHAPELY_AVAILABLE:
         return False
@@ -251,19 +327,19 @@ def _make_circle_coords(center_lat: float, center_lng: float, radius_m: float) -
 
 def _convert_features_to_circles(geojson: dict) -> tuple:
     """
-    V6.x + Phase 2.9 — Convertit toutes les features GeoJSON polygone en CERCLES 600m.
-    Exclut les cercles sur eau (V7) ET zones urbaines/industrielles (Phase 2.9).
+    V6.x + Phase 3.1-SUPRA — Convertit features GeoJSON en CERCLES 600m.
+    Exclut: eau (V7), urbain/industriel (Phase 3.1).
     Retourne (geojson modifie, nombre exclus eau+urbain).
     """
     water_excluded = 0
     urban_excluded = 0
     valid_features = []
+    total_input = len(geojson.get("features", []))
 
     for feature in geojson.get("features", []):
         geom = feature.get("geometry", {})
         coords = geom.get("coordinates", [])
 
-        # Calculer le centroide du polygone original
         if geom.get("type") == "Polygon" and coords and coords[0]:
             ring = coords[0]
             if len(ring) >= 3:
@@ -281,12 +357,11 @@ def _convert_features_to_circles(geojson: dict) -> tuple:
             water_excluded += 1
             continue
 
-        # Phase 2.9: Exclure si en zone urbaine/industrielle/route majeure
+        # Phase 3.1: Exclure si en zone urbaine
         if _circle_on_urban(center_lat, center_lng):
             urban_excluded += 1
             continue
 
-        # Remplacer le polygone par un cercle 600m
         circle_coords = _make_circle_coords(center_lat, center_lng, CIRCLE_RADIUS_M)
         feature["geometry"]["coordinates"] = [circle_coords]
         feature["properties"]["geometry_type"] = "circle_600m"
@@ -296,8 +371,14 @@ def _convert_features_to_circles(geojson: dict) -> tuple:
 
     geojson["features"] = valid_features
     total_excluded = water_excluded + urban_excluded
-    if urban_excluded > 0:
-        logger.info(f"[Phase2.9-URBAN] {urban_excluded} zones exclues (urbain/industriel/routes)")
+
+    # Phase 3.1: Log DETAILLE de l'exclusion
+    logger.info(
+        f"[Phase3.1-CIRCLES] Input={total_input}, Water={water_excluded}, "
+        f"Urban={urban_excluded}, Kept={len(valid_features)} "
+        f"(thresholds: water={WATER_OVERLAP_THRESHOLD}, urban={URBAN_OVERLAP_THRESHOLD})"
+    )
+
     return geojson, total_excluded
 
 # Thread pool for parallel layer processing (CPU-bound)
@@ -800,6 +881,187 @@ async def _refresh_overpass_cache_bg(uncached_tiles, exclude_types, detail_level
         logger.debug(f"[BCE-4X-BG] Background Overpass refresh failed: {e}")
 
 
+async def _fetch_exclusions_from_raw_osm(bounds: Dict[str, float]) -> List[Dict]:
+    """
+    Phase 3.1-SUPRA: Fallback RAW OSM API quand Overpass est indisponible.
+    Utilise api.openstreetmap.org/api/0.6/map pour recuperer les donnees brutes.
+    Convertit en format exclusion_zones compatible avec le pipeline existant.
+    """
+    import httpx
+    import xml.etree.ElementTree as ET
+
+    RAW_OSM_URL = "https://api.openstreetmap.org/api/0.6/map"
+    URBAN_TAGS = {"residential", "commercial", "industrial", "retail", "construction"}
+    MAJOR_ROADS = {"motorway", "trunk", "primary", "secondary", "motorway_link", "trunk_link"}
+
+    south = bounds["south"]
+    west = bounds["west"]
+    north = bounds["north"]
+    east = bounds["east"]
+
+    # RAW OSM API limits bbox to ~0.25 degrees per side — tile if needed
+    tile_size = 0.04  # ~4.4km per tile
+    tiles = []
+    lat = south
+    while lat < north:
+        lng = west
+        while lng < east:
+            tiles.append({
+                "s": lat, "n": min(lat + tile_size, north),
+                "w": lng, "e": min(lng + tile_size, east),
+            })
+            lng += tile_size
+        lat += tile_size
+
+    exclusions = []
+    async with httpx.AsyncClient(timeout=20) as client:
+        for tile in tiles[:16]:  # Max 16 tiles
+            bbox = f"{tile['w']},{tile['s']},{tile['e']},{tile['n']}"
+            try:
+                resp = await client.get(
+                    RAW_OSM_URL, params={"bbox": bbox},
+                    headers={"User-Agent": "HUNTIQ-V6/1.0"}
+                )
+                if resp.status_code != 200:
+                    continue
+
+                root = ET.fromstring(resp.text)
+
+                # Build node lookup
+                nodes = {}
+                for node in root.findall("node"):
+                    nid = node.get("id")
+                    lat_n = float(node.get("lat", 0))
+                    lon_n = float(node.get("lon", 0))
+                    nodes[nid] = (lon_n, lat_n)
+
+                # Process ways
+                for way in root.findall("way"):
+                    tags = {}
+                    for tag in way.findall("tag"):
+                        tags[tag.get("k", "")] = tag.get("v", "")
+
+                    landuse = tags.get("landuse", "")
+                    highway = tags.get("highway", "")
+                    building = tags.get("building", "")
+
+                    ex_type = None
+                    sub_type = ""
+                    geom_type = "polygon"
+
+                    if landuse in URBAN_TAGS:
+                        ex_type = "urban"
+                        sub_type = landuse
+                    elif highway in MAJOR_ROADS:
+                        ex_type = "roads"
+                        sub_type = highway
+                        geom_type = "line"
+                    elif building:
+                        ex_type = "urban"
+                        sub_type = f"building:{building}"
+                    else:
+                        continue
+
+                    # Resolve node references to coordinates
+                    coords = []
+                    for nd in way.findall("nd"):
+                        ref = nd.get("ref")
+                        if ref in nodes:
+                            coords.append(list(nodes[ref]))
+
+                    if len(coords) < 3 and geom_type == "polygon":
+                        continue
+                    if len(coords) < 2:
+                        continue
+
+                    exclusions.append({
+                        "type": ex_type,
+                        "sub_type": sub_type,
+                        "geometry": geom_type,
+                        "coordinates": coords,
+                    })
+
+            except ET.ParseError:
+                continue
+            except Exception as e:
+                logger.debug(f"[RAW-OSM] Tile {bbox} error: {e}")
+                continue
+
+    if exclusions:
+        logger.info(f"[Phase3.1-SUPRA] RAW OSM API: {len(exclusions)} exclusions from {len(tiles)} tiles")
+
+        # ALSO inject into the urban cache for _circle_on_urban
+        _inject_raw_osm_into_urban_cache(exclusions)
+
+    return exclusions
+
+
+def _inject_raw_osm_into_urban_cache(exclusions: List[Dict]):
+    """
+    Phase 3.1-SUPRA: Enrichit le cache urbain avec les donnees RAW OSM.
+    APPROCHE DENSITE: Les batiments sont buffers generusement (50m) puis unifies.
+    Le resultat est une couche urbaine CONTINUE representant les zones densement baties.
+    Les routes majeures sont bufferees selon leur importance.
+    """
+    global _urban_union_zone_cache, _urban_zone_cache_loaded
+    if not SHAPELY_AVAILABLE:
+        return
+
+    ROAD_BUFFERS = {
+        "motorway": 0.002, "motorway_link": 0.0015,
+        "trunk": 0.0015, "trunk_link": 0.001,
+        "primary": 0.001, "primary_link": 0.0008,
+        "secondary": 0.0005, "secondary_link": 0.0004,
+    }
+    BUILDING_BUFFER = 0.0005   # ~55m buffer autour de chaque batiment
+    LANDUSE_BUFFER = 0.0001    # ~11m buffer autour des zones de landuse
+
+    new_polys = []
+    for z in exclusions:
+        coords = z.get("coordinates", [])
+        geom = z.get("geometry", "polygon")
+        ex_type = z.get("type", "")
+        sub_type = (z.get("sub_type") or "").lower()
+
+        if geom == "polygon" and len(coords) >= 3:
+            try:
+                poly = ShapelyPolygon([(c[0], c[1]) for c in coords])
+                if poly.is_valid and poly.area > 0:
+                    # Batiments: buffer genereusement pour creer une zone continue
+                    if sub_type.startswith("building:") or sub_type == "building":
+                        poly = poly.buffer(BUILDING_BUFFER)
+                    elif sub_type in ("residential", "commercial", "industrial", "retail"):
+                        poly = poly.buffer(LANDUSE_BUFFER)
+                    new_polys.append(poly)
+            except Exception:
+                pass
+        elif geom == "line" and len(coords) >= 2:
+            try:
+                from shapely.geometry import LineString
+                line = LineString([(c[0], c[1]) for c in coords])
+                buf = ROAD_BUFFERS.get(sub_type, 0.0005)
+                buffered = line.buffer(buf)
+                if buffered.is_valid and buffered.area > 0:
+                    new_polys.append(buffered)
+            except Exception:
+                pass
+
+    if new_polys:
+        try:
+            new_union = unary_union(new_polys)
+            if _urban_union_zone_cache is not None:
+                _urban_union_zone_cache = unary_union([_urban_union_zone_cache, new_union])
+            else:
+                _urban_union_zone_cache = new_union
+            _urban_zone_cache_loaded = True
+            logger.info(
+                f"[Phase3.1-SUPRA] Urban cache enriched: {len(new_polys)} RAW OSM polygons "
+                f"(area={_urban_union_zone_cache.area:.6f})"
+            )
+        except Exception as e:
+            logger.warning(f"[Phase3.1-SUPRA] Urban cache injection failed: {e}")
+
+
 async def _fetch_exclusions_from_terrain(bounds: Dict[str, float]) -> List[Dict]:
     """
     ExclusionsSpatiales.v1 — Fetch exclusions depuis l'API Overpass.
@@ -883,6 +1145,20 @@ async def _fetch_exclusions_from_terrain(bounds: Dict[str, float]) -> List[Dict]
         )
         # Lance le rafraichissement Overpass en arriere-plan (fire-and-forget)
         asyncio.create_task(_refresh_overpass_cache_bg(uncached_tiles, exclude_types, detail_level, OVERPASS_TIMEOUT))
+
+        # Phase 3.1-SUPRA: AUSSI enrichir le cache urbain via RAW OSM API
+        # (le cache expire peut etre incomplet pour la zone demandee)
+        try:
+            raw_exclusions = await _fetch_exclusions_from_raw_osm(bounds)
+            if raw_exclusions:
+                expired_exclusions.extend(raw_exclusions)
+                logger.info(
+                    f"ExclusionsSpatiales.v1: STALE+RAW_OSM combined — "
+                    f"{len(expired_exclusions)} total exclusions"
+                )
+        except Exception as e:
+            logger.warning(f"ExclusionsSpatiales.v1: RAW OSM enrichment failed: {e}")
+
         return expired_exclusions
 
     # === PHASE 3: Pas de cache — Overpass obligatoire (1 seul essai, fast-fail) ===
@@ -911,9 +1187,21 @@ async def _fetch_exclusions_from_terrain(bounds: Dict[str, float]) -> List[Dict]
         logger.info(f"ExclusionsSpatiales.v1: Overpass OK — {len(fresh_exclusions)} exclusions")
         return fresh_exclusions
 
-    # === PHASE 4: Degradation gracieuse ===
+    # === PHASE 4: RAW OSM API Fallback (Phase 3.1-SUPRA) ===
+    # Quand Overpass est totalement indisponible, utiliser l'API OSM brute
+    try:
+        raw_exclusions = await _fetch_exclusions_from_raw_osm(bounds)
+        if raw_exclusions:
+            logger.info(
+                f"ExclusionsSpatiales.v1: RAW OSM API fallback — {len(raw_exclusions)} exclusions"
+            )
+            return raw_exclusions
+    except Exception as e:
+        logger.warning(f"ExclusionsSpatiales.v1: RAW OSM fallback failed: {e}")
+
+    # === PHASE 5: Degradation gracieuse FINALE ===
     logger.warning(
-        "ExclusionsSpatiales.v1: ALL sources exhausted. "
+        "ExclusionsSpatiales.v1: ALL sources exhausted (Overpass + RAW OSM). "
         "BIONIC V8.2: Graceful degradation — generating zones WITHOUT exclusions."
     )
     return []
