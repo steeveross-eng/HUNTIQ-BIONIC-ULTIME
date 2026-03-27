@@ -60,8 +60,9 @@ export function useZoneOrchestrator({
   // Modules isolés
   const { getCached, setCached } = useZoneCache();
 
-  // Cle de cache deterministe — x4520-F2: PURGE V10 — version V6
-  const CACHE_VERSION = '_v6_core';
+  // Cle de cache deterministe — Phase 3.2-V BCE-4X: PURGE cache stale
+  // v6_phase32s = exclusions urbaines corrigees (suppression pollution cumulative)
+  const CACHE_VERSION = '_v6_phase32s';
   const cacheKey = useMemo(() => {
     const seasonSuffix = biologicalSeason ? `_${biologicalSeason}` : '';
     if (selectedWaypointForZones) {

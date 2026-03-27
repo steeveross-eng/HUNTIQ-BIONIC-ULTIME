@@ -77,8 +77,9 @@ METERS_PER_DEG_LAT = 111320.0
 CIRCLE_RADIUS_M = 600
 CIRCLE_NUM_POINTS = 48
 WATER_OVERLAP_THRESHOLD = 0.25   # Phase 3.1: 25% overlap eau = exclusion
-URBAN_OVERLAP_THRESHOLD = 0.15   # Phase 3.2-S: 15% overlap urbain = exclusion (ajuste de 10%)
+URBAN_OVERLAP_THRESHOLD = 0.03   # Phase 3.2-V: 3% overlap urbain = exclusion (ULTIME)
 URBAN_CENTER_BUFFER_DEG = 0.002  # ~222m buffer autour du centre
+URBAN_CACHE_BUFFER_DEG = 0.0005  # Phase 3.2-V: ~55m buffer global cache urbain (comble les trous)
 
 _water_union_zone_cache = None
 _water_zone_cache_loaded = False
@@ -175,14 +176,22 @@ def _load_water_cache_zones():
 
 def _circle_on_water(center_lat: float, center_lng: float) -> bool:
     """
-    Phase 3.1-SUPRA: Verifie si un cercle 600m chevauche l'eau.
-    Utilise overlap > 2% (pas de buffer centre pour eviter de bloquer les zones forestieres
-    pres de ruisseaux).
+    Phase 3.2-V ULTIME: Verifie si un cercle 600m est sur l'eau.
+    STRATEGIE EN 2 COUCHES:
+    1. CHECK CENTRE: Si le centre est DANS un polygone eau → exclusion directe
+    2. CHECK OVERLAP: Si le cercle a ≥ 25% overlap eau → exclusion
     """
     water = _load_water_cache_zones()
     if water is None or not SHAPELY_AVAILABLE:
         return False
     try:
+        from shapely.geometry import Point as ShapelyPoint
+        # COUCHE 1: Check centre direct
+        center_point = ShapelyPoint(center_lng, center_lat)
+        if water.contains(center_point):
+            return True
+        
+        # COUCHE 2: Check overlap ratio
         coords = _make_circle_coords(center_lat, center_lng, CIRCLE_RADIUS_M)
         poly = ShapelyPolygon(coords)
         if not poly.is_valid:
@@ -299,12 +308,18 @@ def _load_urban_cache_zones():
 
     if urban_polys:
         try:
-            _urban_union_zone_cache = unary_union(urban_polys)
+            raw_union = unary_union(urban_polys)
+            # Phase 3.2-V ULTIME: Buffer la union pour combler les micro-espaces
+            # entre batiments/routes. ~55m = distance entre 2 maisons voisines.
+            _urban_union_zone_cache = raw_union.buffer(URBAN_CACHE_BUFFER_DEG)
             _urban_cache_polygon_count = len(urban_polys)
+            cache_area = _urban_union_zone_cache.area
+            raw_area = raw_union.area
             logger.info(
-                f"[Phase3.2-S] Cache anthropique STATIQUE: {len(urban_polys)} polygones "
+                f"[Phase3.2-V] Cache anthropique ULTIME: {len(urban_polys)} polygones "
                 f"(urban={stats['urban']}, roads={stats['roads']}, infra={stats['infra']}) "
-                f"SAFE_MODE={BCE4X_URBAN_CACHE_SAFE_MODE}"
+                f"raw_area={raw_area:.6f}, buffered_area={cache_area:.6f}, "
+                f"buffer={URBAN_CACHE_BUFFER_DEG}deg, SAFE_MODE={BCE4X_URBAN_CACHE_SAFE_MODE}"
             )
         except Exception:
             pass
@@ -315,15 +330,26 @@ def _load_urban_cache_zones():
 
 def _circle_on_urban(center_lat: float, center_lng: float) -> bool:
     """
-    Phase 3.1-SUPRA: Verifie si un cercle 600m est en zone anthropique.
-    Utilise le ratio d'overlap UNIQUEMENT (pas de buffer centre) pour
-    eviter les faux positifs pres des limites municipales en zone forestiere.
-    Seuil: 5% overlap = exclusion (le cercle touche une zone urbanisee).
+    Phase 3.2-V ULTIME: Exclusion anthropique renforcee.
+    
+    STRATEGIE EN 2 COUCHES:
+    1. CHECK CENTRE: Si le centre du cercle est DANS la zone urbaine bufferisee → exclusion directe
+    2. CHECK OVERLAP: Si le cercle 600m a ≥ 3% overlap avec la zone urbaine → exclusion
+    
+    Le cache urbain est deja buffere de 55m (URBAN_CACHE_BUFFER_DEG) au chargement,
+    ce qui comble les micro-espaces entre batiments et routes.
     """
     urban = _load_urban_cache_zones()
     if urban is None or not SHAPELY_AVAILABLE:
         return False
     try:
+        from shapely.geometry import Point as ShapelyPoint
+        # COUCHE 1: Check centre direct (rapide)
+        center_point = ShapelyPoint(center_lng, center_lat)
+        if urban.contains(center_point):
+            return True
+        
+        # COUCHE 2: Check overlap ratio du cercle 600m
         coords = _make_circle_coords(center_lat, center_lng, CIRCLE_RADIUS_M)
         poly = ShapelyPolygon(coords)
         if not poly.is_valid:
@@ -394,12 +420,13 @@ def _convert_features_to_circles(geojson: dict) -> tuple:
     geojson["features"] = valid_features
     total_excluded = water_excluded + urban_excluded
 
-    # Phase 3.2-S: Log DETAILLE de l'exclusion + STABILITE cache
+    # Phase 3.2-V: Log DETAILLE de l'exclusion ULTIME + STABILITE cache
     logger.info(
-        f"[Phase3.2-S-CIRCLES] Input={total_input}, Water={water_excluded}, "
+        f"[Phase3.2-V-CIRCLES] Input={total_input}, Water={water_excluded}, "
         f"Urban={urban_excluded}, Kept={len(valid_features)} "
         f"(thresholds: water={WATER_OVERLAP_THRESHOLD}, urban={URBAN_OVERLAP_THRESHOLD}, "
-        f"urban_cache_polys={_urban_cache_polygon_count}, safe_mode={BCE4X_URBAN_CACHE_SAFE_MODE})"
+        f"urban_buffer={URBAN_CACHE_BUFFER_DEG}deg, urban_polys={_urban_cache_polygon_count}, "
+        f"safe_mode={BCE4X_URBAN_CACHE_SAFE_MODE})"
     )
 
     return geojson, total_excluded
@@ -1677,16 +1704,18 @@ async def generate_organic_zones(
 
     elapsed = round((time.time() - start) * 1000, 1)
 
-    # V6.x + Phase 3.2-S metadata
+    # V6.x + Phase 3.2-V ULTIME metadata
     v6_zone_metadata = {
         "geometry": "circle_600m",
         "circle_radius_m": CIRCLE_RADIUS_M,
-        "water_exclusion_engine": "V7-local-cache",
-        "urban_exclusion_engine": "Phase3.2-S-STATIC-ONLY",
+        "water_exclusion_engine": "Phase3.2-V-center+overlap",
+        "urban_exclusion_engine": "Phase3.2-V-ULTIME-buffered+center+overlap",
         "zones_excluded": v7_zone_water_excluded,
         "water_cache_active": _water_zone_cache_loaded and _water_union_zone_cache is not None,
         "urban_cache_active": _urban_zone_cache_loaded and _urban_union_zone_cache is not None,
         "urban_cache_polygon_count": _urban_cache_polygon_count,
+        "urban_buffer_deg": URBAN_CACHE_BUFFER_DEG,
+        "urban_threshold_pct": URBAN_OVERLAP_THRESHOLD,
         "bce4x_safe_mode": BCE4X_URBAN_CACHE_SAFE_MODE,
     }
 

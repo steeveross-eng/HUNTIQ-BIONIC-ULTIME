@@ -13,8 +13,9 @@
 import { useCallback, useRef } from 'react';
 
 const DB_NAME = 'bionic_zone_cache';
-// x4520-B2: Version bump pour invalider tout le cache IndexedDB stale
-const DB_VERSION = 2;
+// Phase 3.2-V BCE-4X: Version bump FORCE purge IndexedDB stale
+// v3 = exclusions urbaines corrigees (cache pollue invalide)
+const DB_VERSION = 3;
 const STORE_NAME = 'zones';
 const MAX_ENTRIES = 50;
 

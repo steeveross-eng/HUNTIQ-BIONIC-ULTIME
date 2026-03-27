@@ -651,6 +651,7 @@ def analyze_corridors_full(
 
     # GeoJSON zones ecologiques V10 — POLYGONES ORGANIQUES (BCE-4X / Steeve-MAX)
     # STEVE-MAX-MULTI: Fusion + Dimension dynamique + Multi-engine + Smoothing
+    # Phase 3.2-V ULTIME: Filtrage exclusions spatiales (urbain/eau)
     zone_colors = {
         "alimentation": "#4CAF50",
         "repos": "#2196F3",
@@ -661,6 +662,36 @@ def analyze_corridors_full(
         network["zones"], grid_result["cell_data"], grid_result["n"],
         center_lat, center_lng, side_m, cell_m, month=month,
     )
+    
+    # Phase 3.2-V BCE-4X: EXCLUSION ULTIME — filtrer zones en ville/eau
+    try:
+        from modules.bionic_engine_p0.services.zone_engine_core_v2 import (
+            _circle_on_urban, _circle_on_water, BCE4X_URBAN_CACHE_SAFE_MODE
+        )
+        filtered_zone_polygons = []
+        excluded_urban = 0
+        excluded_water = 0
+        for zp in zone_polygons:
+            pz = zp["primary_zone"]
+            zlat, zlng = pz["lat"], pz["lng"]
+            if _circle_on_urban(zlat, zlng):
+                excluded_urban += 1
+                continue
+            if _circle_on_water(zlat, zlng):
+                excluded_water += 1
+                continue
+            filtered_zone_polygons.append(zp)
+        import logging
+        _logger = logging.getLogger("corridors_v10.engine")
+        _logger.info(
+            f"[Phase3.2-V] Corridors zone filter: input={len(zone_polygons)}, "
+            f"urban={excluded_urban}, water={excluded_water}, "
+            f"kept={len(filtered_zone_polygons)}, safe_mode={BCE4X_URBAN_CACHE_SAFE_MODE}"
+        )
+        zone_polygons = filtered_zone_polygons
+    except ImportError:
+        pass  # Fallback: si le module n'est pas disponible, garder toutes les zones
+    
     for zp in zone_polygons:
         cluster = zp["cluster"]
         pz = zp["primary_zone"]

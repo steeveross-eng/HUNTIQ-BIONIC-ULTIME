@@ -1,5 +1,5 @@
 # HUNTIQ-V6 — Product Requirements Document
-## BCE-4X / STEEVE-MAX V6
+## BCE-4X / STEEVE-MAX V6 / GOLDEN BCE
 
 ---
 
@@ -7,7 +7,7 @@
 Reconstruction et modernisation HUNTIQ-V6 sous gouvernance BCE-4X / MAX ULTRA / STEEVE-MAX.
 
 ## Architecture
-- Backend: FastAPI, 84+ engines | Frontend: React, Zustand, Leaflet, Tailwind
+- Backend: FastAPI, 84+ engines, Shapely (exclusions spatiales) | Frontend: React, Zustand, Leaflet, Tailwind
 - E-commerce: Stripe via emergentintegrations | Gouvernance UI: BCE4X_UIShield
 - Branche: Work1
 
@@ -40,48 +40,70 @@ Reconstruction et modernisation HUNTIQ-V6 sous gouvernance BCE-4X / MAX ULTRA / 
 - Masques exclusion urbain dans zone_engine_core_v2.py
 - WindFlowLayer: animation rAF particules (v1)
 
-### Phase 3.1 — WindFlow DOUX + Unification Temperature + Sync Waypoint (27 Mars 2026)
+### Phase 3.1 — WindFlow DOUX + Unification Temperature (27 Mars 2026)
 - WindFlow: 140 particules, opacity max 0.35, sinusoidal wavy drift
-- Temperature UNIFIEE via waypoint unique (Dashboard = MonTerritoire = METEO BIONIC)
-- Synchronisation waypoint: localStorage(LAST_WAYPOINT_KEY) prioritaire
+- Temperature UNIFIEE via waypoint unique
 
-### Phase 3.2-S — ÉRADICATION BUG POLLUTION CACHE URBAIN (27 Mars 2026)
+### Phase 3.2-S — Suppression pollution cumulative cache urbain (27 Mars 2026)
+- _inject_raw_osm_into_urban_cache() DESACTIVEE du pipeline
+- BCE4X_URBAN_CACHE_SAFE_MODE = True
 
-**CAUSE RACINE IDENTIFIÉE:**
-- `_inject_raw_osm_into_urban_cache()` ajoutait des batiments RAW OSM au cache global à CHAQUE requête
-- Le cache grossissait de manière CUMULATIVE (15,736 → 33,436 → infini)
-- Résultat: zones forestières légitimes faussement exclues comme "urbaines"
+### Phase 3.2-V + 3.3-U-PRIME — VALIDATION VISUELLE + EXCLUSIONS ULTIMES (27 Mars 2026)
 
-**CORRECTIFS APPLIQUÉS:**
-1. **SUPPRESSION** de `_inject_raw_osm_into_urban_cache()` du pipeline
-2. **BCE4X_URBAN_CACHE_SAFE_MODE = True** — garde-fou contre toute réinjection
-3. **Cache urbain STATIQUE** (100,699 polygones OSM, chargé au boot uniquement)
-4. **Seuil urbain** ajusté: 10% → 15% (réduit faux positifs en bordure)
-5. **preload_urban_cache()** au démarrage serveur (comme le cache eau)
-6. **Compteur audit** `_urban_cache_polygon_count` dans tous les logs et réponses API
+**PROBLEME IDENTIFIE:**
+Deux causes racines distinctes:
+1. **Pollution cumulative du cache urbain** (Phase 3.2-S) — CORRIGEE
+2. **SECOND PIPELINE sans exclusions** — `/api/v6/corridors/analyze-full` (engine.py) generait des zones SANS aucun filtre urbain/eau. C'est CE pipeline qui alimentait le rendu visuel via `BionicCorridorsV6Layer`.
+3. **Cache IndexedDB frontend** — Les anciennes zones etaient persistees dans le navigateur de l'utilisateur (DB_VERSION=2, CACHE_VERSION=_v6_core)
 
-**RÉSULTATS VÉRIFIÉS:**
-- Forêt (Stoneham): 5 zones stables sur 3 requêtes ✅
-- Ville (Québec centre): 0 zones ✅
-- Stabilité post-mixte: cache IDENTIQUE (100,699) après requête ville ✅
-- ZERO pollution cumulative ✅
+**CORRECTIFS:**
+1. Exclusion ULTIME dans `zone_engine_core_v2.py`:
+   - Buffer 55m (0.0005deg) sur le cache urbain au chargement
+   - Check CENTRE (point-in-polygon rapide) + overlap 3%
+   - Check centre eau + overlap 25%
+   - 101,182 polygones urbains statiques
 
-**FICHIERS MODIFIÉS:**
+2. Exclusion ULTIME dans `corridors_v10/engine.py`:
+   - Filtre post-generation utilisant _circle_on_urban() et _circle_on_water()
+   - Applique aux zone_polygons AVANT ajout au GeoJSON
+
+3. Invalidation cache frontend:
+   - IndexedDB DB_VERSION: 2 → 3 (purge totale)
+   - CACHE_VERSION: _v6_core → _v6_phase32s
+
+**RESULTATS VERIFIES:**
+| Zone | Pipeline | Input | Urban | Water | Kept |
+|------|----------|-------|-------|-------|------|
+| Ville (waypoint user) | organic-zones | 17 | 17 | 0 | **0** |
+| Ville (waypoint user) | analyze-full | 16 | **16** | 0 | **0** |
+| Foret profonde | analyze-full | 16 | 0 | 0 | **16** |
+| Stabilite 3x ville | analyze-full | 16 | 16 | 0 | 0 (stable) |
+| Post-ville foret | analyze-full | 16 | 0 | 0 | 16 (zero pollution) |
+
+**FICHIERS MODIFIES:**
 - /app/backend/modules/bionic_engine_p0/services/zone_engine_core_v2.py
+- /app/backend/core/scoring_pipeline/corridors_v10/engine.py
 - /app/backend/server.py
+- /app/frontend/src/hooks/useZoneOrchestrator.js
+- /app/frontend/src/hooks/useZoneCache.js
 
 **BACKUP:** /app/backend/data/ARCHIVES_V6/backup_phase32s/
 
 ---
 
-## En attente: Validation STEEVE-MAX Phase 3.2-S
-- PREVIEWs 1-4 livrés
-- Logs sécurité livrés
-- Aucune donnée métier modifiée
+## Charte 3.3-U-PRIME — ACTIVE
+- BCE-4X (non-regression): ACTIVE
+- STEEVE-MAX (gouvernance): ACTIVE
+- GOLDEN BCE (structure): ACTIVE
+- SAFE MODE permanent: ACTIVE
+- Exclusions ULTIMES (2 pipelines): ACTIVE
+- Purge V1-V5 cache dynamique: COMPLETE
+
+## En attente: Validation STEEVE-MAX Phase 3.2-V + 3.3-U-PRIME
 
 ## Backlog
 - P1: Activation ULTRA-MAX++ Lock (Golden State, CSS Hash, API Lock)
 - P1: Nettoyage fichiers V5, enrichissement catalogue API x6030
 - P2: BSAA-2 (gele) | P3: Merge Work1 -> main
 
-*Mis a jour le 27 Mars 2026 — Phase 3.2-S*
+*Mis a jour le 27 Mars 2026 — Phase 3.2-V + 3.3-U-PRIME*
