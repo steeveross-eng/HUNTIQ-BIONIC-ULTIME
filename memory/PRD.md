@@ -41,49 +41,47 @@ Reconstruction et modernisation HUNTIQ-V6 sous gouvernance BCE-4X / MAX ULTRA / 
 - WindFlowLayer: animation rAF particules (v1)
 
 ### Phase 3.1 — WindFlow DOUX + Unification Temperature + Sync Waypoint (27 Mars 2026)
+- WindFlow: 140 particules, opacity max 0.35, sinusoidal wavy drift
+- Temperature UNIFIEE via waypoint unique (Dashboard = MonTerritoire = METEO BIONIC)
+- Synchronisation waypoint: localStorage(LAST_WAYPOINT_KEY) prioritaire
 
-**FIX 1 — WindFlow DOUX / WAVY / SMOOTH**
-- 140 particules (reduit de 300)
-- Max opacity 0.35 (mesure: 0.318)
-- Taille 1.2px (reduit de 3px)
-- Vitesse = wind_speed * 0.25
-- Interpolation sinusoidale (wavy drift, amplitude 0.6, frequence 0.015)
-- Smoothing directionnel lerp (factor 0.08)
-- Fade-in/fade-out envelope (sin lifecycle)
-- FADE_RATE 0.93 pour trails courts
-- Verdict: SUBTIL — ZERO saturation, ZERO dominance
+### Phase 3.2-S — ÉRADICATION BUG POLLUTION CACHE URBAIN (27 Mars 2026)
 
-**FIX 2 — Temperature UNIFIEE**
-- CAUSE RACINE IDENTIFIEE: 3 sources de divergence
-  1. DashboardPage hardcodait {46.8139, -71.2082} (Quebec centre)
-  2. MonTerritoire utilisait mapCenter (position carte) au lieu du waypoint
-  3. TerritoireHeader avait fallback intelligenceWeather (stale data)
-- CORRECTION:
-  - DashboardPage: lit waypoint via useUserData + localStorage(LAST_WAYPOINT_KEY)
-  - MonTerritoire: weatherCoords derive de selectedWaypointForZones
-  - TerritoireHeader: ZERO fallback (Phase 2.9)
-- RESULTAT: Dashboard = MonTerritoire = METEO BIONIC = -6.5C / 1014.5 hPa / 18.4 km/h
+**CAUSE RACINE IDENTIFIÉE:**
+- `_inject_raw_osm_into_urban_cache()` ajoutait des batiments RAW OSM au cache global à CHAQUE requête
+- Le cache grossissait de manière CUMULATIVE (15,736 → 33,436 → infini)
+- Résultat: zones forestières légitimes faussement exclues comme "urbaines"
 
-**FIX 3 — Synchronisation Waypoint**
-- DashboardPage: useAuth + useUserData pour lire le meme waypoint
-- Priorite: localStorage(LAST_WAYPOINT_KEY) > premier waypoint actif > waypoints[0] > default
-- MonTerritoire: weatherCoords = selectedWaypointForZones > activeWaypoints[0] > mapCenter
-- ZERO fallback GPS navigateur, ZERO fallback region administrative
-- Coordonnee UNIQUE pour les deux modules
+**CORRECTIFS APPLIQUÉS:**
+1. **SUPPRESSION** de `_inject_raw_osm_into_urban_cache()` du pipeline
+2. **BCE4X_URBAN_CACHE_SAFE_MODE = True** — garde-fou contre toute réinjection
+3. **Cache urbain STATIQUE** (100,699 polygones OSM, chargé au boot uniquement)
+4. **Seuil urbain** ajusté: 10% → 15% (réduit faux positifs en bordure)
+5. **preload_urban_cache()** au démarrage serveur (comme le cache eau)
+6. **Compteur audit** `_urban_cache_polygon_count` dans tous les logs et réponses API
 
-**PREVIEWS valides Phase 3.1:**
-- WindFlow DOUX: maxOpacity 0.318, verdict SUBTIL
-- Temperature Dashboard = -6.5C = METEO BIONIC = -6.5C = Header = -6.5C
-- Coordonnee unique: useWeatherStore.lastFetchCoords synchronise
+**RÉSULTATS VÉRIFIÉS:**
+- Forêt (Stoneham): 5 zones stables sur 3 requêtes ✅
+- Ville (Québec centre): 0 zones ✅
+- Stabilité post-mixte: cache IDENTIQUE (100,699) après requête ville ✅
+- ZERO pollution cumulative ✅
+
+**FICHIERS MODIFIÉS:**
+- /app/backend/modules/bionic_engine_p0/services/zone_engine_core_v2.py
+- /app/backend/server.py
+
+**BACKUP:** /app/backend/data/ARCHIVES_V6/backup_phase32s/
 
 ---
 
-## Prochain: Validation STEEVE-MAX Phase 3.1
-- Aucune activation ULTRA-MAX++ tant que Phase 3.1 non validee
+## En attente: Validation STEEVE-MAX Phase 3.2-S
+- PREVIEWs 1-4 livrés
+- Logs sécurité livrés
+- Aucune donnée métier modifiée
 
 ## Backlog
 - P1: Activation ULTRA-MAX++ Lock (Golden State, CSS Hash, API Lock)
 - P1: Nettoyage fichiers V5, enrichissement catalogue API x6030
 - P2: BSAA-2 (gele) | P3: Merge Work1 -> main
 
-*Mis a jour le 27 Mars 2026 — Phase 3.1*
+*Mis a jour le 27 Mars 2026 — Phase 3.2-S*

@@ -53,13 +53,6 @@ except ImportError:
 # V6 Feature Flag
 EXCLUSION_ENGINE_VERSION = os.environ.get("EXCLUSION_ENGINE_VERSION", "v5")
 
-# ══════════════════════════════════════════════════════════
-# Phase 3.2-S BCE-4X SAFE MODE — STEEVE-MAX
-# INTERDIT toute injection RAW OSM dans un cache global.
-# Toute tentative est logguée comme violation BCE-4X.
-# ══════════════════════════════════════════════════════════
-BCE4X_URBAN_CACHE_SAFE_MODE = True
-
 logger = logging.getLogger("bionic_engine.zone_engine_core_v2")
 
 # Cache en memoire (TTL 30 min — BCE-4X Performance Optimization)
@@ -69,22 +62,21 @@ _CACHE_TTL = 1800
 METERS_PER_DEG_LAT = 111320.0
 
 # ══════════════════════════════════════════════════════════
-# V6.x Phase 3.2-S — CERCLES 600m + EXCLUSION STRICTE
+# V6.x Phase 3.1-SUPRA — CERCLES 600m + EXCLUSION STRICTE
 # STEEVE-MAX: ZERO zone en ville, ZERO zone dans l'eau,
 #             ZERO zone sur les routes, ZERO zone sur infrastructure
-# Cache urbain = STATIQUE (fichiers OSM uniquement, ZERO dynamique)
 # ══════════════════════════════════════════════════════════
 CIRCLE_RADIUS_M = 600
 CIRCLE_NUM_POINTS = 48
 WATER_OVERLAP_THRESHOLD = 0.25   # Phase 3.1: 25% overlap eau = exclusion
-URBAN_OVERLAP_THRESHOLD = 0.15   # Phase 3.2-S: 15% overlap urbain = exclusion (ajuste de 10%)
+URBAN_OVERLAP_THRESHOLD = 0.10   # Phase 3.1: 10% overlap urbain = exclusion
+                                 # Suffisant car RAW OSM cree un mesh de densite
 URBAN_CENTER_BUFFER_DEG = 0.002  # ~222m buffer autour du centre
 
 _water_union_zone_cache = None
 _water_zone_cache_loaded = False
 _urban_union_zone_cache = None
 _urban_zone_cache_loaded = False
-_urban_cache_polygon_count = 0   # Phase 3.2-S: Compteur pour audit stabilite
 
 
 def preload_water_cache():
@@ -94,18 +86,6 @@ def preload_water_cache():
         return
     _load_water_cache_zones()
     logger.info(f"[BCE-4X-PERF] Water cache pre-loaded: active={_water_union_zone_cache is not None}")
-
-
-def preload_urban_cache():
-    """Phase 3.2-S BCE-4X: Pre-charge le cache urbain STATIQUE au demarrage."""
-    global _urban_union_zone_cache, _urban_zone_cache_loaded, _urban_cache_polygon_count
-    if _urban_zone_cache_loaded:
-        return
-    _load_urban_cache_zones()
-    logger.info(
-        f"[BCE-4X-PERF] Urban cache pre-loaded: active={_urban_union_zone_cache is not None}, "
-        f"polygons={_urban_cache_polygon_count}, safe_mode={BCE4X_URBAN_CACHE_SAFE_MODE}"
-    )
 
 
 def _load_water_cache_zones():
@@ -209,7 +189,7 @@ def _load_urban_cache_zones():
     
     STEEVE-MAX: ZERO zone dans un quartier, ZERO zone sur autoroute.
     """
-    global _urban_union_zone_cache, _urban_zone_cache_loaded, _urban_cache_polygon_count
+    global _urban_union_zone_cache, _urban_zone_cache_loaded
     if _urban_zone_cache_loaded:
         return _urban_union_zone_cache
     if not SHAPELY_AVAILABLE:
@@ -300,11 +280,9 @@ def _load_urban_cache_zones():
     if urban_polys:
         try:
             _urban_union_zone_cache = unary_union(urban_polys)
-            _urban_cache_polygon_count = len(urban_polys)
             logger.info(
-                f"[Phase3.2-S] Cache anthropique STATIQUE: {len(urban_polys)} polygones "
-                f"(urban={stats['urban']}, roads={stats['roads']}, infra={stats['infra']}) "
-                f"SAFE_MODE={BCE4X_URBAN_CACHE_SAFE_MODE}"
+                f"[Phase3.1-SUPRA] Cache anthropique: {len(urban_polys)} polygones "
+                f"(urban={stats['urban']}, roads={stats['roads']}, infra={stats['infra']})"
             )
         except Exception:
             pass
@@ -394,12 +372,11 @@ def _convert_features_to_circles(geojson: dict) -> tuple:
     geojson["features"] = valid_features
     total_excluded = water_excluded + urban_excluded
 
-    # Phase 3.2-S: Log DETAILLE de l'exclusion + STABILITE cache
+    # Phase 3.1: Log DETAILLE de l'exclusion
     logger.info(
-        f"[Phase3.2-S-CIRCLES] Input={total_input}, Water={water_excluded}, "
+        f"[Phase3.1-CIRCLES] Input={total_input}, Water={water_excluded}, "
         f"Urban={urban_excluded}, Kept={len(valid_features)} "
-        f"(thresholds: water={WATER_OVERLAP_THRESHOLD}, urban={URBAN_OVERLAP_THRESHOLD}, "
-        f"urban_cache_polys={_urban_cache_polygon_count}, safe_mode={BCE4X_URBAN_CACHE_SAFE_MODE})"
+        f"(thresholds: water={WATER_OVERLAP_THRESHOLD}, urban={URBAN_OVERLAP_THRESHOLD})"
     )
 
     return geojson, total_excluded
@@ -1011,30 +988,78 @@ async def _fetch_exclusions_from_raw_osm(bounds: Dict[str, float]) -> List[Dict]
                 continue
 
     if exclusions:
-        logger.info(f"[Phase3.2-S] RAW OSM API: {len(exclusions)} exclusions from {len(tiles)} tiles (per-request ONLY, ZERO cache injection)")
+        logger.info(f"[Phase3.1-SUPRA] RAW OSM API: {len(exclusions)} exclusions from {len(tiles)} tiles")
+
+        # ALSO inject into the urban cache for _circle_on_urban
+        _inject_raw_osm_into_urban_cache(exclusions)
 
     return exclusions
 
 
 def _inject_raw_osm_into_urban_cache(exclusions: List[Dict]):
     """
-    Phase 3.2-S BCE-4X: FONCTION DÉSACTIVÉE — VIOLATION SAFE MODE.
-    
-    HISTORIQUE: Cette fonction injectait des bâtiments RAW OSM dans le cache global,
-    causant une POLLUTION CUMULATIVE qui excluait progressivement TOUTES les zones.
-    
-    STEEVE-MAX Phase 3.2-S: SUPPRIMÉE. Le cache urbain est STRICTEMENT STATIQUE.
-    Toute tentative d'appel est logguée comme violation.
+    Phase 3.1-SUPRA: Enrichit le cache urbain avec les donnees RAW OSM.
+    APPROCHE DENSITE: Les batiments sont buffers generusement (50m) puis unifies.
+    Le resultat est une couche urbaine CONTINUE representant les zones densement baties.
+    Les routes majeures sont bufferees selon leur importance.
     """
-    if BCE4X_URBAN_CACHE_SAFE_MODE:
-        logger.warning(
-            f"[BCE-4X-VIOLATION] Tentative d'injection RAW OSM dans cache global BLOQUÉE. "
-            f"SAFE_MODE={BCE4X_URBAN_CACHE_SAFE_MODE}. "
-            f"{len(exclusions)} exclusions restent per-request uniquement."
-        )
+    global _urban_union_zone_cache, _urban_zone_cache_loaded
+    if not SHAPELY_AVAILABLE:
         return
-    # DEAD CODE — ne sera jamais atteint tant que SAFE_MODE=True
-    logger.error("[BCE-4X-CRITICAL] SAFE MODE désactivé! Injection RAW OSM interdite.")
+
+    ROAD_BUFFERS = {
+        "motorway": 0.002, "motorway_link": 0.0015,
+        "trunk": 0.0015, "trunk_link": 0.001,
+        "primary": 0.001, "primary_link": 0.0008,
+        "secondary": 0.0005, "secondary_link": 0.0004,
+    }
+    BUILDING_BUFFER = 0.0005   # ~55m buffer autour de chaque batiment
+    LANDUSE_BUFFER = 0.0001    # ~11m buffer autour des zones de landuse
+
+    new_polys = []
+    for z in exclusions:
+        coords = z.get("coordinates", [])
+        geom = z.get("geometry", "polygon")
+        ex_type = z.get("type", "")
+        sub_type = (z.get("sub_type") or "").lower()
+
+        if geom == "polygon" and len(coords) >= 3:
+            try:
+                poly = ShapelyPolygon([(c[0], c[1]) for c in coords])
+                if poly.is_valid and poly.area > 0:
+                    # Batiments: buffer genereusement pour creer une zone continue
+                    if sub_type.startswith("building:") or sub_type == "building":
+                        poly = poly.buffer(BUILDING_BUFFER)
+                    elif sub_type in ("residential", "commercial", "industrial", "retail"):
+                        poly = poly.buffer(LANDUSE_BUFFER)
+                    new_polys.append(poly)
+            except Exception:
+                pass
+        elif geom == "line" and len(coords) >= 2:
+            try:
+                from shapely.geometry import LineString
+                line = LineString([(c[0], c[1]) for c in coords])
+                buf = ROAD_BUFFERS.get(sub_type, 0.0005)
+                buffered = line.buffer(buf)
+                if buffered.is_valid and buffered.area > 0:
+                    new_polys.append(buffered)
+            except Exception:
+                pass
+
+    if new_polys:
+        try:
+            new_union = unary_union(new_polys)
+            if _urban_union_zone_cache is not None:
+                _urban_union_zone_cache = unary_union([_urban_union_zone_cache, new_union])
+            else:
+                _urban_union_zone_cache = new_union
+            _urban_zone_cache_loaded = True
+            logger.info(
+                f"[Phase3.1-SUPRA] Urban cache enriched: {len(new_polys)} RAW OSM polygons "
+                f"(area={_urban_union_zone_cache.area:.6f})"
+            )
+        except Exception as e:
+            logger.warning(f"[Phase3.1-SUPRA] Urban cache injection failed: {e}")
 
 
 async def _fetch_exclusions_from_terrain(bounds: Dict[str, float]) -> List[Dict]:
@@ -1677,17 +1702,15 @@ async def generate_organic_zones(
 
     elapsed = round((time.time() - start) * 1000, 1)
 
-    # V6.x + Phase 3.2-S metadata
+    # V6.x + Phase 2.9 metadata
     v6_zone_metadata = {
         "geometry": "circle_600m",
         "circle_radius_m": CIRCLE_RADIUS_M,
         "water_exclusion_engine": "V7-local-cache",
-        "urban_exclusion_engine": "Phase3.2-S-STATIC-ONLY",
+        "urban_exclusion_engine": "Phase2.9-local-cache",
         "zones_excluded": v7_zone_water_excluded,
         "water_cache_active": _water_zone_cache_loaded and _water_union_zone_cache is not None,
         "urban_cache_active": _urban_zone_cache_loaded and _urban_union_zone_cache is not None,
-        "urban_cache_polygon_count": _urban_cache_polygon_count,
-        "bce4x_safe_mode": BCE4X_URBAN_CACHE_SAFE_MODE,
     }
 
     # BIONIC V7.3: Diagnostic — provide zero_zones_reason when all zones are filtered
@@ -1743,16 +1766,3 @@ def clear_cache():
     global _zone_cache
     _zone_cache = {}
     logger.info("[V6-ZONES] Cache vide — prochaine requete regenerera les cercles 600m")
-
-
-def get_urban_cache_diagnostics() -> Dict[str, Any]:
-    """Phase 3.2-S: Diagnostic du cache urbain pour audit de stabilite."""
-    return {
-        "safe_mode": BCE4X_URBAN_CACHE_SAFE_MODE,
-        "loaded": _urban_zone_cache_loaded,
-        "active": _urban_union_zone_cache is not None,
-        "polygon_count": _urban_cache_polygon_count,
-        "area_deg2": round(_urban_union_zone_cache.area, 8) if _urban_union_zone_cache else 0,
-        "water_loaded": _water_zone_cache_loaded,
-        "water_active": _water_union_zone_cache is not None,
-    }

@@ -1,0 +1,13 @@
+BACKUP Phase 3.2-S
+Date: Fri Mar 27 21:20:19 UTC 2026
+Files:
+total 108
+drwxr-xr-x 2 root root  4096 Mar 27 21:20 .
+drwxr-xr-x 9 root root  4096 Mar 27 21:20 ..
+-rw-r--r-- 1 root root    61 Mar 27 21:20 BACKUP_MANIFEST.txt
+-rw-r--r-- 1 root root   155 Mar 27 21:20 backend.env.bak
+-rw-r--r-- 1 root root 15160 Mar 27 21:20 organic_zones_router.py
+-rw-r--r-- 1 root root     4 Mar 27 21:20 osm_cache_file_count.txt
+-rw-r--r-- 1 root root 70728 Mar 27 21:20 zone_engine_core_v2.py
+OSM Cache file count: 279
+Aucune donnée métier (waypoints, zones, historiques) modifiée.

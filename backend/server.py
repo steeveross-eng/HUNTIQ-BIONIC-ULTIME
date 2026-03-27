@@ -83,6 +83,14 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning(f"Water cache preload warning: {e}")
     
+    # Phase 3.2-S BCE-4X: Pre-charge du cache urbain STATIQUE au demarrage
+    try:
+        from modules.bionic_engine_p0.services.zone_engine_core_v2 import preload_urban_cache
+        preload_urban_cache()
+        logger.info("✓ Urban cache pre-loaded (Phase 3.2-S SAFE MODE)")
+    except Exception as e:
+        logger.warning(f"Urban cache preload warning: {e}")
+    
     # x7000: Create MongoDB indexes for supplier_submissions
     try:
         from engines.nutrition_intelligence.x7000_supplier_product_engine import ensure_indexes
