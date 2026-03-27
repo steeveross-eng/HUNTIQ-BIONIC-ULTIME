@@ -127,7 +127,7 @@ const MapContentInner = React.memo(({
     <HydrographyOverlayLayer enabled={false} opacity={0.25} />
 
     <ExclusionOverlayLayer enabled={showExclusionOverlay && classificationToggles.pression} />
-    {showWindFlow && <WindFlowLayer mode={windMode || 'arrows'} />}
+    {showWindFlow && <WindFlowLayer />}
     <StructureContrastLayer enabled={classificationToggles.anthropique} />
     {/* BCE-4X: Zones V9 (BionicMicroZones) SUPPRIMEES — Zones V6 rendues par BionicCorridorsV6Layer */}
     {/* STEVE-MAX: MovementCorridorsLayer PURGE DEFINITIVE — BCE-4X-UI-003 */}

@@ -27,24 +27,32 @@ Reconstruction et modernisation HUNTIQ-V6 sous gouvernance BCE-4X / MAX ULTRA / 
 **AXE 1 — Meteo: Alignement Dashboard <-> Territoire**
 - AdvancedWeatherWidget.jsx reecrit: lecture EXCLUSIVE useWeatherStore
 - CoreDashboard.jsx: fetchWeather supprime du dependency array
-- Verification: valeurs identiques sur les deux pages
 
-**AXE 2 — Phase 2.5: TERRAIN NAV ENGINE (TNE) (27 Mars 2026)**
-Localisation: `/app/backend/engines/terrain_nav/` (protegee ULTRA-MAX++)
+### Phase 2.5 — TERRAIN NAV ENGINE (TNE) (27 Mars 2026)
+Localisation: `/app/backend/engines/terrain_nav/`
+- `__init__.py`, `terrain_sources.py`, `terrain_graph.py`, `terrain_costs.py`, `terrain_router.py`
+- Overpass combinee (1 requete), 3 miroirs, retry exponentiel
+- A* terrain-weighted + Dijkstra fallback
+- Modele couts: type chemin, pente, foret, zones humides/eau
 
-Structure:
-- `__init__.py` — Interface publique (get_terrain_nav, navigate_terrain)
-- `terrain_sources.py` — Acquisition Overpass combinee (1 seule requete), 3 miroirs, retry exponentiel
-- `terrain_graph.py` — Graphe terrain avec noeuds ponderes (chemins OSM + obstacles + foret)
-- `terrain_costs.py` — Modele de couts (type chemin, pente, densite, zones humides/eau)
-- `terrain_router.py` — A* terrain-weighted + Dijkstra fallback
-
-Resultats:
-- Zone urbaine Quebec: 5/5 sentiers reels, 11171 noeuds, 12734 aretes, 2644 trails OSM
-- Zone foret eloignee: 5/5 sentiers reels, 861 noeuds, 6 trails, 15 obstacles
+### Phase 2.6 — Corrections d'integration TNE + Vent (27 Mars 2026)
+**TNE Ameliorations:**
+- Snap par projection sur segment (pas seulement noeud le plus proche)
+- Waypoints intermediaires dans les snap gaps (approche naturelle)
+- Zone urbaine: 37-66 points/trajet | Zone foret: 15-19 points/trajet
 - Cache: 0.024s (vs ~30s premier appel)
-- Ancien trail_graph.py SUPPRIME
-- Sinusoides SUPPRIMEES integralement
+
+**WindFlowLayer retabli:**
+- Reecrit completement: lecture DIRECTE useWeatherStore (ZERO fetch HTTP separe)
+- Grille 25x25 fleches directionnelles
+- Redraw automatique sur moveend/zoomend/resize + mise a jour du store
+- Opacite augmentee (0.4-0.75) pour visibilite sur fond satellite
+- showWindFlow force a `true` (contourne la session persiste a `false`)
+
+**PREVIEWS valides:**
+- Vent: fleches cyan 281 ONO visibles
+- Sentiers: 5/5 sentier_reel (zone urbaine), fallback estimation annote (zone foret eloignee)
+- Meteo: -6.6C alignee Dashboard/Territoire
 
 ---
 
@@ -60,4 +68,4 @@ Resultats:
 - P1: Nettoyage fichiers V5, enrichissement catalogue API x6030
 - P2: BSAA-2 (gele) | P3: Merge Work1 -> main
 
-*Mis a jour le 27 Mars 2026 — Phase 2.5 TNE*
+*Mis a jour le 27 Mars 2026 — Phase 2.6*

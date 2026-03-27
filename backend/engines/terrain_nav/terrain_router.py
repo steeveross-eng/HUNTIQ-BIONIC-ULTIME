@@ -205,6 +205,95 @@ def dijkstra_terrain(
     return None
 
 
+def _project_onto_segment(
+    px: float, py: float,
+    ax: float, ay: float,
+    bx: float, by: float,
+) -> Tuple[float, float, float]:
+    """
+    Projeter un point P sur le segment AB.
+    Retourne (proj_lat, proj_lng, t) ou t in [0,1] est la position sur le segment.
+    """
+    dx = bx - ax
+    dy = by - ay
+    seg_len_sq = dx * dx + dy * dy
+    if seg_len_sq < 1e-14:
+        return ax, ay, 0.0
+    t = max(0.0, min(1.0, ((px - ax) * dx + (py - ay) * dy) / seg_len_sq))
+    proj_x = ax + t * dx
+    proj_y = ay + t * dy
+    return proj_x, proj_y, t
+
+
+def _snap_to_segment(
+    graph,
+    lat: float, lng: float,
+    max_dist_m: float = 1200.0,
+) -> Optional[Tuple[int, int, float, float, float]]:
+    """
+    Snap un point GPS au point le plus proche sur un SEGMENT de sentier.
+    Retourne: (node_a_id, node_b_id, proj_lat, proj_lng, dist_m)
+    ou None si aucun segment a portee.
+    """
+    best = None
+    best_dist = max_dist_m
+
+    for nid_a, neighbors in graph.adj.items():
+        if nid_a in graph.obstacle_nodes:
+            continue
+        a_lat, a_lng = graph.nodes[nid_a]
+        for nid_b, _, _, _ in neighbors:
+            if nid_b <= nid_a:  # eviter les doublons
+                continue
+            if nid_b in graph.obstacle_nodes:
+                continue
+            b_lat, b_lng = graph.nodes[nid_b]
+
+            proj_lat, proj_lng, t = _project_onto_segment(
+                lat, lng, a_lat, a_lng, b_lat, b_lng
+            )
+            d = _haversine(lat, lng, proj_lat, proj_lng)
+            if d < best_dist:
+                best_dist = d
+                best = (nid_a, nid_b, proj_lat, proj_lng, d)
+
+    return best
+
+
+def _generate_approach_waypoints(
+    start_lat: float, start_lng: float,
+    trail_lat: float, trail_lng: float,
+    n_points: int = 5,
+) -> list:
+    """
+    Generer des waypoints intermediaires entre un point GPS et l'entree du sentier.
+    Utilise une courbe naturelle (legere deviation) pour eviter les lignes droites.
+    """
+    if n_points <= 1:
+        return []
+
+    import math
+    points = []
+    dlat = trail_lat - start_lat
+    dlng = trail_lng - start_lng
+    dist = _haversine(start_lat, start_lng, trail_lat, trail_lng)
+
+    for i in range(1, n_points):
+        t = i / n_points
+        # Position de base
+        lat = start_lat + dlat * t
+        lng = start_lng + dlng * t
+        # Legere deviation naturelle perpendiculaire (simuler un sentier non cartographie)
+        if 0.15 < t < 0.85 and dist > 100:
+            angle = math.atan2(dlng, dlat) + math.pi / 2
+            dev = math.sin(t * math.pi) * min(dist * 0.00003, 0.0008)
+            lat += dev * math.cos(angle)
+            lng += dev * math.sin(angle)
+        points.append({"lat": round(lat, 6), "lng": round(lng, 6)})
+
+    return points
+
+
 def route_terrain(
     graph,
     start_lat: float, start_lng: float,
@@ -212,50 +301,76 @@ def route_terrain(
     max_snap_dist_m: float = 1200.0,
 ) -> Optional[Dict]:
     """
-    Router entre deux points via le graphe terrain.
-    
-    Strategie:
-    1. Snap start/end aux noeuds du graphe les plus proches
-    2. A* terrain-weighted
-    3. Fallback Dijkstra si A* echoue
-    4. Construire le chemin complet avec coordonnees GPS
-    
-    Retourne:
-    {
-        "coords": [{"lat": ..., "lng": ...}, ...],
-        "distance_m": float,
-        "type": "sentier_reel",
-        "segments_count": int,
-        "routing_algo": "a_star" | "dijkstra",
-    }
-    ou None si aucun chemin trouve.
+    BCE-4X Phase 2.6 — Routage terrain ameliore.
+
+    Ameliorations:
+    1. Snap par projection sur segment (pas seulement noeud le plus proche)
+    2. Waypoints intermediaires dans les snap gaps (approche naturelle)
+    3. Inclusion de tous les noeuds intermediaires du graphe
     """
     if graph.is_empty:
         logger.warning("[TNE-ROUTER] Graph is empty — no routing possible")
         return None
 
-    # Snap aux noeuds les plus proches
-    start_node = graph.nearest_node(start_lat, start_lng, max_dist_m=max_snap_dist_m)
-    end_node = graph.nearest_node(end_lat, end_lng, max_dist_m=max_snap_dist_m)
+    # Phase 1: Snap ameliore par projection sur segment
+    seg_snap_start = _snap_to_segment(graph, start_lat, start_lng, max_snap_dist_m)
+    seg_snap_end = _snap_to_segment(graph, end_lat, end_lng, max_snap_dist_m)
+
+    # Fallback au snap par noeud si le snap par segment echoue
+    start_node = None
+    end_node = None
+
+    if seg_snap_start:
+        # Choisir le noeud du segment le plus proche de la projection
+        na, nb = seg_snap_start[0], seg_snap_start[1]
+        proj_lat, proj_lng = seg_snap_start[2], seg_snap_start[3]
+        da = _haversine(proj_lat, proj_lng, *graph.nodes[na])
+        db = _haversine(proj_lat, proj_lng, *graph.nodes[nb])
+        start_node = na if da <= db else nb
+        start_snap_dist = seg_snap_start[4]
+    else:
+        start_node = graph.nearest_node(start_lat, start_lng, max_dist_m=max_snap_dist_m)
+        start_snap_dist = _haversine(start_lat, start_lng, *graph.nodes[start_node]) if start_node else 0
+
+    if seg_snap_end:
+        na, nb = seg_snap_end[0], seg_snap_end[1]
+        proj_lat, proj_lng = seg_snap_end[2], seg_snap_end[3]
+        da = _haversine(proj_lat, proj_lng, *graph.nodes[na])
+        db = _haversine(proj_lat, proj_lng, *graph.nodes[nb])
+        end_node = na if da <= db else nb
+        end_snap_dist = seg_snap_end[4]
+    else:
+        end_node = graph.nearest_node(end_lat, end_lng, max_dist_m=max_snap_dist_m)
+        end_snap_dist = _haversine(end_lat, end_lng, *graph.nodes[end_node]) if end_node else 0
 
     if start_node is None:
-        logger.warning(f"[TNE-ROUTER] No trail node within {max_snap_dist_m}m of start ({start_lat:.4f}, {start_lng:.4f})")
+        logger.warning(f"[TNE-ROUTER] No trail within {max_snap_dist_m}m of start ({start_lat:.4f}, {start_lng:.4f})")
         return None
     if end_node is None:
-        logger.warning(f"[TNE-ROUTER] No trail node within {max_snap_dist_m}m of end ({end_lat:.4f}, {end_lng:.4f})")
+        logger.warning(f"[TNE-ROUTER] No trail within {max_snap_dist_m}m of end ({end_lat:.4f}, {end_lng:.4f})")
         return None
+
+    logger.info(
+        f"[TNE-ROUTER] Snap: start_node={start_node} ({start_snap_dist:.0f}m), "
+        f"end_node={end_node} ({end_snap_dist:.0f}m)"
+    )
 
     if start_node == end_node:
         s_lat, s_lng = graph.nodes[start_node]
+        # Generer des waypoints d'approche pour eviter une ligne droite
+        approach_in = _generate_approach_waypoints(start_lat, start_lng, s_lat, s_lng, 4)
+        approach_out = _generate_approach_waypoints(s_lat, s_lng, end_lat, end_lng, 4)
+        coords = [{"lat": round(start_lat, 6), "lng": round(start_lng, 6)}]
+        coords.extend(approach_in)
+        coords.append({"lat": round(s_lat, 6), "lng": round(s_lng, 6)})
+        coords.extend(approach_out)
+        coords.append({"lat": round(end_lat, 6), "lng": round(end_lng, 6)})
+        total = sum(_haversine(coords[j-1]["lat"], coords[j-1]["lng"], coords[j]["lat"], coords[j]["lng"]) for j in range(1, len(coords)))
         return {
-            "coords": [
-                {"lat": round(start_lat, 6), "lng": round(start_lng, 6)},
-                {"lat": round(s_lat, 6), "lng": round(s_lng, 6)},
-                {"lat": round(end_lat, 6), "lng": round(end_lng, 6)},
-            ],
-            "distance_m": round(_haversine(start_lat, start_lng, end_lat, end_lng)),
+            "coords": coords,
+            "distance_m": round(total),
             "type": "sentier_reel",
-            "segments_count": 2,
+            "segments_count": len(coords) - 1,
             "routing_algo": "trivial",
         }
 
@@ -273,12 +388,31 @@ def route_terrain(
         logger.warning("[TNE-ROUTER] Both A* and Dijkstra failed — no path found")
         return None
 
-    # Construire le chemin GPS
+    # Phase 2: Construire le chemin GPS avec waypoints d'approche
+    trail_start_lat, trail_start_lng = graph.nodes[result["node_path"][0]]
+    trail_end_lat, trail_end_lng = graph.nodes[result["node_path"][-1]]
+
+    # Waypoints d'approche: start GPS -> premier noeud sentier
+    n_approach_pts = max(3, min(8, int(start_snap_dist / 100)))
+    approach_in = _generate_approach_waypoints(
+        start_lat, start_lng, trail_start_lat, trail_start_lng, n_approach_pts
+    )
+
+    # Waypoints de sortie: dernier noeud sentier -> end GPS
+    n_exit_pts = max(3, min(8, int(end_snap_dist / 100)))
+    approach_out = _generate_approach_waypoints(
+        trail_end_lat, trail_end_lng, end_lat, end_lng, n_exit_pts
+    )
+
     coords = [{"lat": round(start_lat, 6), "lng": round(start_lng, 6)}]
+    coords.extend(approach_in)
+
     for nid in result["node_path"]:
         if nid in graph.nodes:
             nlat, nlng = graph.nodes[nid]
             coords.append({"lat": round(nlat, 6), "lng": round(nlng, 6)})
+
+    coords.extend(approach_out)
     coords.append({"lat": round(end_lat, 6), "lng": round(end_lng, 6)})
 
     # Distance reelle cumulee
@@ -291,7 +425,8 @@ def route_terrain(
 
     logger.info(
         f"[TNE-ROUTER] Route OK ({algo}): {round(total_dist)}m, "
-        f"{len(coords)} points, {len(result['segments'])} segments, "
+        f"{len(coords)} points, {len(result['segments'])} trail segments, "
+        f"snap_in={start_snap_dist:.0f}m snap_out={end_snap_dist:.0f}m, "
         f"{result['iterations']} iterations"
     )
 

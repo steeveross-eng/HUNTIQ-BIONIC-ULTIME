@@ -1,402 +1,159 @@
 /**
- * WindFlowLayer — BIONIC V8.2.1 Vent Optimisé
- *
- * 2 modes visuels :
- *   - "particles" : Particules Canvas 2D discrètes (intensité réduite 60%, opacité 0.15-0.25)
- *   - "arrows"    : Flèches directionnelles minimalistes (sans particules, sans saturation)
- *
- * Toggle ON/OFF dans LAYERS. État par défaut : ON mode "arrows" (minimaliste).
- * Synchronisé avec OWM + cache 30 min via /api/v1/bionic/weather-shadow/windfield.
+ * BCE-4X Phase 2.6 — WindFlowLayer
+ * Effet visuel du vent sur la carte Leaflet.
+ * 
+ * SOURCE UNIQUE: useWeatherStore (Weather V3)
+ * ZERO fetch HTTP séparé.
+ * Dessin direct sur canvas overlay.
  */
-
-import { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
+import useWeatherStore from '../../stores/useWeatherStore';
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
-
-// V8.2.1 OPTIMISÉ → V8.4 +25% intensité visuelle (STEEVE-MAX x2310)
-const PARTICLE_COUNT = 1000;        // inchangé
-const PARTICLE_MAX_AGE = 100;       // vie longue, trajectoires douces (inchangé)
-const PARTICLE_LINE_WIDTH = 0.95;   // +25% total (était 0.75 → 0.86 → 0.95)
-const SPEED_SCALE = 0.00024;        // INCHANGÉ — vitesse d'animation préservée
-const FADE_ALPHA = 0.960;           // traînées plus persistantes (+25% total)
-
-// Palette discrète bleu → vert pâle — V8.4 +25% opacité (cap 0.38)
-function speedToColor(speed, maxSpeed) {
-  const t = Math.min(speed / (maxSpeed || 1), 1);
-  if (t < 0.4) return `rgba(140, 190, 220, ${Math.min(0.216 + t * 0.275, 0.380)})`;
-  if (t < 0.7) return `rgba(150, 200, 180, ${Math.min(0.253 + t * 0.178, 0.380)})`;
-  return `rgba(170, 210, 190, ${Math.min(0.290 + t * 0.092, 0.380)})`;
-}
-
-function bilinearInterpolate(grid, row, col) {
-  const rows = grid.length;
-  const cols = grid[0]?.length || 0;
-  const r0 = Math.floor(row);
-  const c0 = Math.floor(col);
-  const r1 = Math.min(r0 + 1, rows - 1);
-  const c1 = Math.min(c0 + 1, cols - 1);
-  const dr = row - r0;
-  const dc = col - c0;
-  return (grid[r0]?.[c0] ?? 0) * (1 - dr) * (1 - dc)
-       + (grid[r0]?.[c1] ?? 0) * (1 - dr) * dc
-       + (grid[r1]?.[c0] ?? 0) * dr * (1 - dc)
-       + (grid[r1]?.[c1] ?? 0) * dr * dc;
-}
-
-export default function WindFlowLayer({ mode = 'arrows' }) {
+export default function WindFlowLayer() {
   const map = useMap();
   const canvasRef = useRef(null);
-  const animRef = useRef(null);
-  const windDataRef = useRef(null);
-  const particlesRef = useRef([]);
-  const [legendData, setLegendData] = useState(null);
-  const modeRef = useRef(mode);
-  modeRef.current = mode;
+  const cleanupRef = useRef(null);
 
-  /**
-   * BCE-4X PURGE: windfield shadow SUPPRIME.
-   * Genere un champ de vent uniforme depuis les donnees v3 du weatherStore.
-   * Si pas de donnees v3, utilise vent par defaut (10 km/h, direction 270).
-   */
-  const fetchWindData = useCallback(async (b) => {
-    try {
-      // Utiliser les donnees meteo v3 du store global (source unique)
-      const res = await fetch(`${API}/v3/weather/current?lat=${((b.north + b.south) / 2).toFixed(4)}&lng=${((b.east + b.west) / 2).toFixed(4)}`);
-      let baseSpeed = 10, baseDir = 270, baseGust = 15;
-      if (res.ok) {
-        const wdata = await res.json();
-        baseSpeed = wdata.wind_speed_kmh || 10;
-        baseDir = wdata.wind_direction_deg || 270;
-        baseGust = wdata.wind_gust_kmh || baseSpeed * 1.5;
-      }
+  // Lire le store meteo
+  const weatherCurrent = useWeatherStore(s => s.current);
 
-      // Generer un windfield uniforme a partir des donnees v3
-      const resolution = 30;
-      const rows = resolution;
-      const cols = resolution;
-      const baseSpeedMs = baseSpeed / 3.6;
-      const dirRad = (baseDir * Math.PI) / 180;
-      const baseU = -baseSpeedMs * Math.sin(dirRad);
-      const baseV = -baseSpeedMs * Math.cos(dirRad);
-
-      const u_grid = [];
-      const v_grid = [];
-      for (let r = 0; r < rows; r++) {
-        const uRow = [];
-        const vRow = [];
-        for (let c = 0; c < cols; c++) {
-          // Ajouter une legere variation pour le realisme
-          const variation = 1 + (Math.sin(r * 0.7 + c * 0.5) * 0.12);
-          uRow.push(baseU * variation);
-          vRow.push(baseV * variation);
-        }
-        u_grid.push(uRow);
-        v_grid.push(vRow);
-      }
-
-      windDataRef.current = {
-        u_grid, v_grid, rows, cols,
-        bounds: { north: b.north, south: b.south, east: b.east, west: b.west },
-        metadata: {
-          base_wind_speed_kmh: baseSpeed,
-          base_wind_direction_deg: baseDir,
-          mean_speed_ms: baseSpeedMs,
-          max_speed_ms: baseSpeedMs * 1.3,
-          base_gust_kmh: baseGust,
-        },
-      };
-
-      setLegendData({
-        speed: baseSpeed,
-        dir: baseDir,
-        mean: baseSpeedMs,
-        max: baseSpeedMs * 1.3,
-        gust: baseGust,
-      });
-    } catch (err) {
-      console.warn('WindFlowLayer: v3 fetch error', err);
-    }
-  }, []);
-
-  // Canvas setup + data fetch
-  useEffect(() => {
-    const container = map.getContainer();
-    const canvas = L.DomUtil.create('canvas', 'wind-flow-canvas');
-    canvas.style.position = 'absolute';
-    canvas.style.top = '0';
-    canvas.style.left = '0';
-    canvas.style.pointerEvents = 'none';
-    canvas.style.zIndex = '400';
-    container.appendChild(canvas);
-    canvasRef.current = canvas;
-
-    const resize = () => {
-      const size = map.getSize();
-      canvas.width = size.x;
-      canvas.height = size.y;
-    };
-    resize();
-    map.on('resize', resize);
-
-    const getBounds = () => ({
-      north: map.getBounds().getNorth(),
-      south: map.getBounds().getSouth(),
-      east: map.getBounds().getEast(),
-      west: map.getBounds().getWest(),
-    });
-    fetchWindData(getBounds());
-
-    const onMoveEnd = () => fetchWindData(getBounds());
-    map.on('moveend', onMoveEnd);
-
-    return () => {
-      map.off('resize', resize);
-      map.off('moveend', onMoveEnd);
-      if (animRef.current) cancelAnimationFrame(animRef.current);
-      if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
-    };
-  }, [map, fetchWindData]);
-
-  // Animation loop (mode-dependent)
-  useEffect(() => {
+  const drawWindArrows = useCallback(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || !map) return;
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Init particles for particle mode
-    const initParticles = () => {
-      const particles = [];
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          age: Math.floor(Math.random() * PARTICLE_MAX_AGE),
-        });
-      }
-      particlesRef.current = particles;
-    };
-    initParticles();
+    // Resize canvas
+    const size = map.getSize();
+    if (size.x === 0 || size.y === 0) return;
+    canvas.width = size.x;
+    canvas.height = size.y;
 
-    const resetParticle = (p) => {
-      p.x = Math.random() * canvas.width;
-      p.y = Math.random() * canvas.height;
-      p.age = 0;
-    };
+    // Lire les donnees vent du store
+    const store = useWeatherStore.getState();
+    const current = store.current;
+    const windSpeed = current?.wind_speed_kmh || 10;
+    const windDir = current?.wind_direction_deg || 270;
+    const windGust = current?.wind_gust_kmh || windSpeed * 1.5;
+    const speedMs = windSpeed / 3.6;
+    const maxSpeedMs = Math.max(speedMs * 1.3, windGust / 3.6);
+    const dirRad = (windDir * Math.PI) / 180;
 
-    // Draw arrow at position — V8.3.B +15% épaisseur & opacité (STEEVE-MAX UX)
-    const drawArrow = (cx, cy, angle, length, opacity) => {
-      const headLen = Math.max(5, length * 0.3);
-      const ex = cx + Math.cos(angle) * length;
-      const ey = cy + Math.sin(angle) * length;
+    // Calculer U et V base
+    const baseU = -speedMs * Math.sin(dirRad);
+    const baseV = -speedMs * Math.cos(dirRad);
 
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.lineTo(ex, ey);
-      ctx.strokeStyle = `rgba(150, 200, 210, ${opacity})`;
-      ctx.lineWidth = 1.15;
-      ctx.stroke();
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Arrowhead
-      ctx.beginPath();
-      ctx.moveTo(ex, ey);
-      ctx.lineTo(ex - headLen * Math.cos(angle - 0.4), ey - headLen * Math.sin(angle - 0.4));
-      ctx.moveTo(ex, ey);
-      ctx.lineTo(ex - headLen * Math.cos(angle + 0.4), ey - headLen * Math.sin(angle + 0.4));
-      ctx.strokeStyle = `rgba(150, 200, 210, ${opacity * 0.8})`;
-      ctx.lineWidth = 1.15;
-      ctx.stroke();
-    };
+    // Bounds de la carte
+    const bounds = map.getBounds();
+    const north = bounds.getNorth();
+    const south = bounds.getSouth();
+    const east = bounds.getEast();
+    const west = bounds.getWest();
 
-    const drawArrowsMode = () => {
-      const wd = windDataRef.current;
-      if (!wd || !wd.u10 || !wd.v10) return;
-      // x4520-H4: Guard — skip if canvas has zero dimensions
-      if (!canvas.width || !canvas.height) return;
+    // Grille de fleches
+    const gridRes = 25;
+    const spacingX = canvas.width / gridRes;
+    const spacingY = canvas.height / gridRes;
+    let arrowCount = 0;
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let r = 0; r < gridRes; r++) {
+      for (let c = 0; c < gridRes; c++) {
+        const px = (c + 0.5) * spacingX;
+        const py = (r + 0.5) * spacingY;
 
-      const rows = wd.grid.rows;
-      const cols = wd.grid.cols;
-      const maxSpeed = wd.metadata?.max_speed_ms || 10;
-
-      // Draw arrows on a grid
-      const stepX = canvas.width / 16;
-      const stepY = canvas.height / 12;
-      const mapBounds = map.getBounds();
-      const north = mapBounds.getNorth();
-      const south = mapBounds.getSouth();
-      const west = mapBounds.getWest();
-      const east = mapBounds.getEast();
-
-      // x4520-H4: Guard — skip if bounds are degenerate (zero-area)
-      if (!north || !south || !east || !west) return;
-      if (Math.abs(north - south) < 1e-10 || Math.abs(east - west) < 1e-10) return;
-
-      for (let px = stepX / 2; px < canvas.width; px += stepX) {
-        for (let py = stepY / 2; py < canvas.height; py += stepY) {
-          // x4520-H4: Guard — wrap in try/catch to prevent NaN crash
-          let point;
-          try {
-            point = map.containerPointToLatLng(L.point(px, py));
-          } catch { continue; }
-          if (!point || isNaN(point.lat) || isNaN(point.lng)) continue;
-
-          const rowF = ((north - point.lat) / (north - south)) * (rows - 1);
-          const colF = ((point.lng - west) / (east - west)) * (cols - 1);
-
-          if (rowF < 0 || rowF >= rows || colF < 0 || colF >= cols) continue;
-          if (isNaN(rowF) || isNaN(colF)) continue;
-
-          const u = bilinearInterpolate(wd.u10, rowF, colF);
-          const v = bilinearInterpolate(wd.v10, rowF, colF);
-          const speed = Math.sqrt(u * u + v * v);
-
-          if (speed < 0.3 || isNaN(speed)) continue;
-
-          const angle = Math.atan2(-v, u); // screen coords: y inverted
-          const t = Math.min(speed / maxSpeed, 1);
-          const length = 11.5 + t * 28.75; // V8.3.B +15% (était 10+t*25)
-          const opacity = Math.min(0.207 + t * 0.138, 0.345); // V8.3.B +15% cap 0.345
-
-          drawArrow(px, py, angle, length, opacity);
-        }
-      }
-    };
-
-    const animateParticles = () => {
-      const wd = windDataRef.current;
-      if (!wd || !wd.u10 || !wd.v10) {
-        animRef.current = requestAnimationFrame(animateParticles);
-        return;
-      }
-      // x4520-H4: Guard — skip if canvas has zero dimensions
-      if (!canvas.width || !canvas.height) {
-        animRef.current = requestAnimationFrame(animateParticles);
-        return;
-      }
-
-      const rows = wd.grid.rows;
-      const cols = wd.grid.cols;
-      let mapBounds, north, south, west, east;
-      try {
-        mapBounds = map.getBounds();
-        north = mapBounds.getNorth();
-        south = mapBounds.getSouth();
-        west = mapBounds.getWest();
-        east = mapBounds.getEast();
-      } catch {
-        animRef.current = requestAnimationFrame(animateParticles);
-        return;
-      }
-
-      // x4520-H4: Guard — skip if bounds are degenerate
-      if (Math.abs(north - south) < 1e-10 || Math.abs(east - west) < 1e-10) {
-        animRef.current = requestAnimationFrame(animateParticles);
-        return;
-      }
-
-      const maxSpeed = wd.metadata?.max_speed_ms || 10;
-
-      ctx.globalCompositeOperation = 'destination-in';
-      ctx.fillStyle = `rgba(0, 0, 0, ${FADE_ALPHA})`;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.globalCompositeOperation = 'lighter';
-
-      const particles = particlesRef.current;
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-        if (p.age >= PARTICLE_MAX_AGE) { resetParticle(p); continue; }
-
-        // x4520-H4: Guard — wrap containerPointToLatLng in try/catch
-        let point;
-        try {
-          point = map.containerPointToLatLng(L.point(p.x, p.y));
-        } catch { resetParticle(p); continue; }
-        if (!point || isNaN(point.lat) || isNaN(point.lng)) { resetParticle(p); continue; }
-
-        const rowF = ((north - point.lat) / (north - south)) * (rows - 1);
-        const colF = ((point.lng - west) / (east - west)) * (cols - 1);
-
-        if (rowF < 0 || rowF >= rows || colF < 0 || colF >= cols) { resetParticle(p); continue; }
-        if (isNaN(rowF) || isNaN(colF)) { resetParticle(p); continue; }
-
-        const u = bilinearInterpolate(wd.u10, rowF, colF);
-        const v = bilinearInterpolate(wd.v10, rowF, colF);
+        // Variation naturelle
+        const variation = 1 + Math.sin(r * 0.7 + c * 0.5) * 0.12;
+        const u = baseU * variation;
+        const v = baseV * variation;
         const speed = Math.sqrt(u * u + v * v);
-        if (isNaN(speed)) { resetParticle(p); continue; }
 
-        const dx = u * SPEED_SCALE * canvas.width;
-        const dy = -v * SPEED_SCALE * canvas.height;
-        const nx = p.x + dx;
-        const ny = p.y + dy;
+        if (speed < 0.3) continue;
 
-        if (isNaN(nx) || isNaN(ny)) { resetParticle(p); continue; }
+        const angle = Math.atan2(-v, u);
+        const t = Math.min(speed / maxSpeedMs, 1);
+        const length = 14 + t * 32;
+        const opacity = 0.4 + t * 0.35;
+
+        // Tige
+        const ex = px + length * Math.cos(angle);
+        const ey = py + length * Math.sin(angle);
 
         ctx.beginPath();
-        ctx.moveTo(p.x, p.y);
-        ctx.lineTo(nx, ny);
-        ctx.strokeStyle = speedToColor(speed, maxSpeed);
-        ctx.lineWidth = PARTICLE_LINE_WIDTH;
+        ctx.moveTo(px, py);
+        ctx.lineTo(ex, ey);
+        ctx.strokeStyle = `rgba(150, 220, 230, ${opacity})`;
+        ctx.lineWidth = 1.8;
         ctx.stroke();
 
-        p.x = nx;
-        p.y = ny;
-        p.age++;
+        // Pointe de fleche
+        const headLen = 5 + t * 4;
+        ctx.beginPath();
+        ctx.moveTo(ex, ey);
+        ctx.lineTo(ex - headLen * Math.cos(angle - 0.4), ey - headLen * Math.sin(angle - 0.4));
+        ctx.moveTo(ex, ey);
+        ctx.lineTo(ex - headLen * Math.cos(angle + 0.4), ey - headLen * Math.sin(angle + 0.4));
+        ctx.strokeStyle = `rgba(150, 220, 230, ${opacity * 0.85})`;
+        ctx.lineWidth = 1.8;
+        ctx.stroke();
 
-        if (p.x < 0 || p.x > canvas.width || p.y < 0 || p.y > canvas.height) resetParticle(p);
+        arrowCount++;
       }
+    }
+  }, [map]);
 
-      animRef.current = requestAnimationFrame(animateParticles);
+  // Setup canvas + event listeners
+  useEffect(() => {
+    if (!map) return;
+
+    const container = map.getContainer();
+    let canvas = canvasRef.current;
+
+    if (!canvas) {
+      canvas = document.createElement('canvas');
+      canvas.style.position = 'absolute';
+      canvas.style.top = '0';
+      canvas.style.left = '0';
+      canvas.style.pointerEvents = 'none';
+      canvas.style.zIndex = '400';
+      container.appendChild(canvas);
+      canvasRef.current = canvas;
+    }
+
+    // Draw immediately
+    drawWindArrows();
+
+    // Redraw on map events
+    const onMoveEnd = () => drawWindArrows();
+    const onResize = () => drawWindArrows();
+    map.on('moveend', onMoveEnd);
+    map.on('zoomend', onMoveEnd);
+    map.on('resize', onResize);
+
+    cleanupRef.current = () => {
+      map.off('moveend', onMoveEnd);
+      map.off('zoomend', onMoveEnd);
+      map.off('resize', onResize);
+      if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
+      canvasRef.current = null;
     };
-
-    // Main loop dispatches by mode
-    let arrowInterval = null;
-
-    const startMode = () => {
-      if (animRef.current) cancelAnimationFrame(animRef.current);
-      if (arrowInterval) clearInterval(arrowInterval);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      if (modeRef.current === 'arrows') {
-        drawArrowsMode();
-        // Redraw on move/zoom
-        arrowInterval = null;
-      } else {
-        initParticles();
-        animateParticles();
-      }
-    };
-
-    startMode();
-
-    const onMove = () => {
-      if (animRef.current) cancelAnimationFrame(animRef.current);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      initParticles();
-      // Restart after short delay
-      setTimeout(startMode, 100);
-    };
-    map.on('moveend', onMove);
-    map.on('zoomend', onMove);
 
     return () => {
-      if (animRef.current) cancelAnimationFrame(animRef.current);
-      if (arrowInterval) clearInterval(arrowInterval);
-      map.off('moveend', onMove);
-      map.off('zoomend', onMove);
+      if (cleanupRef.current) cleanupRef.current();
     };
-  }, [map, mode]);
+  }, [map, drawWindArrows]);
 
-  const dirLabel = (deg) => {
-    if (deg == null) return '?';
-    const dirs = ['N','NE','E','SE','S','SO','O','NO'];
-    return dirs[Math.round(deg / 45) % 8];
-  };
+  // Redraw when weather data changes
+  useEffect(() => {
+    if (weatherCurrent && canvasRef.current) {
+      drawWindArrows();
+    }
+  }, [weatherCurrent, drawWindArrows]);
 
-  // BCE-4X: Legende VENT remplacee par le WeatherPanel unifie
-  // L'animation canvas reste active, seule la legende est supprimee
   return null;
 }
