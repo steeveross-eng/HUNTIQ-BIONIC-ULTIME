@@ -9,8 +9,8 @@ import React, { useRef, useEffect } from 'react';
 import { ArrowLeft, Thermometer, Wind, Zap, Plus, Edit2, Crosshair, X, LocateFixed, Trash2, ToggleLeft } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
-import useBionicStore from '@/stores/useBionicStore';
 import useWeatherStore from '@/stores/useWeatherStore';
+import useBionicStore from '@/stores/useBionicStore';
 import { getProtectedZIndex } from '@/components/territoire/map/BCE4X_UIShield';
 
 export const TerritoireHeader = ({
@@ -33,12 +33,12 @@ export const TerritoireHeader = ({
   const finalScore = (displayScore != null && displayScore > 0) ? displayScore : (storeScore != null && storeScore > 0) ? storeScore : null;
   const finalRating = (scoreRating && scoreRating.ringColor) ? scoreRating : (storeRating && storeRating.ringColor) ? storeRating : null;
 
-  // BCE-4X: Source de verite unique meteo
+  // BCE-4X Phase 2.9: Source de verite UNIQUE meteo — ZERO fallback intelligenceWeather
+  // STEEVE-MAX: Suppression du fallback useBionicStore pour eliminer le mismatch temperature
   const weatherCurrent = useWeatherStore(s => s.current);
-  const intelligenceWeather = useBionicStore(s => s.intelligenceWeather);
-  const temp = weatherCurrent?.temperature_c ?? intelligenceWeather?.temperature;
-  const windDir = weatherCurrent?.wind_direction_deg ?? intelligenceWeather?.wind_direction_deg;
-  const windSpeed = weatherCurrent?.wind_speed_kmh ?? intelligenceWeather?.wind_speed_kmh;
+  const temp = weatherCurrent?.temperature_c ?? null;
+  const windDir = weatherCurrent?.wind_direction_deg ?? null;
+  const windSpeed = weatherCurrent?.wind_speed_kmh ?? null;
 
   const hasScore = finalScore != null && finalScore > 0;
   const isLoading = !hasScore;

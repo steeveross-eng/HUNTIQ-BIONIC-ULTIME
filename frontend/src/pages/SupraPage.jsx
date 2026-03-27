@@ -2,19 +2,14 @@
  * SupraPage.jsx — Route dediee SUPRA v2
  * =======================================
  * Accessible via /supra/:id
- * Affiche le panneau SUPRA v2 en mode pleine page pour un point donne.
+ * Affiche le panneau SUPRA v2 en mode pleine page (100vh, ZERO scroll interne).
  *
- * BCE-4X / STEEVE-MAX V6 — PURGE ARCHITECTURALE
+ * BCE-4X / STEEVE-MAX V6 — PHASE 2.9 FIX SAL-10
  */
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import {
-  ArrowLeft, Droplets, FlaskConical, Loader2, MapPin
-} from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import NutritionPointDetailPanel from '@/components/territoire/NutritionPointDetailPanel';
-
-const API = process.env.REACT_APP_BACKEND_URL;
 
 export default function SupraPage() {
   const { id } = useParams();
@@ -23,11 +18,8 @@ export default function SupraPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Construire un objet nutritionPoint a partir de l'ID
-    // Format attendu: SAL-XX ou coordonnees lat,lng
     const parts = id?.split(',');
     if (parts?.length === 2) {
-      // Coordonnees directes: /supra/47.3,-71.2
       setNutritionPoint({
         id: `SUPRA-${id}`,
         lat: parseFloat(parts[0]),
@@ -37,9 +29,7 @@ export default function SupraPage() {
         soil_type: 'mixte',
         distance_centre_m: 0,
       });
-      setLoading(false);
     } else {
-      // ID de point: /supra/SAL-01
       setNutritionPoint({
         id: id || 'SUPRA',
         lat: 47.3,
@@ -49,38 +39,26 @@ export default function SupraPage() {
         soil_type: 'mixte',
         distance_centre_m: 0,
       });
-      setLoading(false);
     }
+    setLoading(false);
   }, [id]);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0a14] flex items-center justify-center">
+      <div className="h-screen w-screen bg-[#0a0a14] flex items-center justify-center" data-testid="supra-page-loading">
         <Loader2 className="h-8 w-8 animate-spin text-[#FF9800]" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a14] pt-16" data-testid="supra-page">
-      <div className="max-w-3xl mx-auto px-4 py-4">
-        {/* Navigation retour */}
-        <button
-          onClick={() => navigate('/mon-territoire-bionic')}
-          className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors mb-4"
-          data-testid="supra-back-btn"
-        >
-          <ArrowLeft className="h-4 w-4" /> Retour a la carte
-        </button>
-
-        {/* Panel SUPRA v2 en mode standalone */}
-        {nutritionPoint && (
-          <NutritionPointDetailPanel
-            nutritionPoint={nutritionPoint}
-            onClose={() => navigate('/mon-territoire-bionic')}
-          />
-        )}
-      </div>
+    <div className="h-screen w-screen overflow-hidden bg-[#0a0a14]" data-testid="supra-page">
+      {nutritionPoint && (
+        <NutritionPointDetailPanel
+          nutritionPoint={nutritionPoint}
+          onClose={() => navigate('/mon-territoire-bionic')}
+        />
+      )}
     </div>
   );
 }

@@ -302,7 +302,7 @@ const PinnablePanel = ({
       className="pinnable-scroll pinnable-content flex-1"
       style={{
         maxHeight: expanded ? 'calc(100vh - 70px)' : pinned ? `${size.h - 56}px` : fullHeight ? 'calc(100vh - 56px)' : maxHeight,
-        overflowY: fullHeight && !expanded && !pinned ? 'hidden' : expanded ? 'auto' : undefined,
+        overflowY: expanded ? 'auto' : fullHeight && !pinned ? 'auto' : undefined,
         overflowX: 'hidden',
         backgroundColor: expanded ? '#fafafa' : 'transparent',
       }}

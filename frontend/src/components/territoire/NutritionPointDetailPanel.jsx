@@ -76,18 +76,18 @@ const Gauge = ({ value, max = 100, label, color = BIONIC.orange }) => {
   );
 };
 
-// === INFO CARD — Dashboard-style (BCE-4X P0.5) ===
+// === INFO CARD — Dashboard-aligned (BCE-4X Phase 2.9) ===
 const InfoCard = ({ icon, title, items, color = BIONIC.blue }) => (
-  <div className="rounded-xl border p-4" style={{ backgroundColor: BIONIC.card, borderColor: BIONIC.cardBorder }} data-testid={`info-card-${title.toLowerCase()}`}>
+  <div className="rounded-xl border p-4" style={{ backgroundColor: 'rgb(30 41 59)', borderColor: 'rgb(51 65 85)' }} data-testid={`info-card-${title.toLowerCase()}`}>
     <div className="flex items-center gap-2 mb-3">
       <span style={{ color }}>{icon}</span>
-      <span className="text-base font-bold text-white">{title}</span>
+      <span className="text-sm font-semibold text-white">{title}</span>
     </div>
     <div className="space-y-2">
       {items.map((item, i) => (
         <div key={i} className="flex justify-between text-sm">
-          <span className="text-gray-500">{item.label}</span>
-          <span className="font-semibold text-gray-200">{item.value || '—'}</span>
+          <span className="text-slate-400">{item.label}</span>
+          <span className="font-semibold text-slate-200">{item.value || '—'}</span>
         </div>
       ))}
     </div>
@@ -130,10 +130,10 @@ const SUPPORT_HIERARCHY = [
   { name: 'Bloc mineral commercial', score: 60, color: BIONIC.yellow, desc: 'Pratique mais dissolution non controlee.' },
 ];
 
-// === UI COMPONENTS — Dashboard-style (BCE-4X P0.5 typographie verrouillée) ===
+// === UI COMPONENTS — Dashboard-aligned (BCE-4X Phase 2.9 typographie verrouillée) ===
 const Card = ({ children, testId, className = '' }) => (
-  <div className={`rounded-xl border p-6 ${className}`}
-    style={{ backgroundColor: BIONIC.card, borderColor: BIONIC.cardBorder, boxShadow: '0 2px 12px rgba(0,0,0,0.25)' }}
+  <div className={`rounded-xl border p-5 ${className}`}
+    style={{ backgroundColor: 'rgb(30 41 59)', borderColor: 'rgb(51 65 85)', boxShadow: '0 1px 8px rgba(0,0,0,0.2)' }}
     data-testid={testId}>
     {children}
   </div>
@@ -142,21 +142,21 @@ const Card = ({ children, testId, className = '' }) => (
 const CollapsibleSection = ({ icon: Icon, title, color, badge, children, defaultOpen = true, testId }) => {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <Card testId={testId}>
+    <div className="rounded-xl border p-5" style={{ backgroundColor: 'rgb(30 41 59)', borderColor: 'rgb(51 65 85)' }} data-testid={testId}>
       <button onClick={() => setOpen(v => !v)} className="w-full flex items-center justify-between cursor-pointer">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${color}15` }}>
-            <Icon className="h-5 w-5" style={{ color }} />
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${color}15` }}>
+            <Icon className="h-4 w-4" style={{ color }} />
           </div>
-          <span className="text-base font-bold text-white uppercase tracking-wider">{title}</span>
+          <span className="text-sm font-semibold text-white uppercase tracking-wider">{title}</span>
         </div>
         <div className="flex items-center gap-2">
-          {badge && <span className="text-xs font-bold px-3 py-1.5 rounded-lg" style={{ backgroundColor: `${color}18`, color }}>{badge}</span>}
-          {open ? <ChevronUp className="h-5 w-5 text-gray-500" /> : <ChevronDown className="h-5 w-5 text-gray-500" />}
+          {badge && <span className="text-xs font-semibold px-2.5 py-1 rounded-lg" style={{ backgroundColor: `${color}18`, color }}>{badge}</span>}
+          {open ? <ChevronUp className="h-4 w-4 text-slate-500" /> : <ChevronDown className="h-4 w-4 text-slate-500" />}
         </div>
       </button>
-      {open && <div className="mt-5">{children}</div>}
-    </Card>
+      {open && <div className="mt-4">{children}</div>}
+    </div>
   );
 };
 
@@ -299,8 +299,8 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
       fullHeight={true}
     >
       <div className="h-full flex flex-col overflow-hidden" data-testid="supra-v2-panel-content">
-        {/* TABS */}
-        <div className="flex items-center gap-2.5 px-5 pt-5 pb-4 border-b flex-shrink-0" style={{ borderColor: 'rgba(255,255,255,0.08)' }} data-testid="supra-tabs">
+        {/* TABS — Dashboard-aligned */}
+        <div className="flex items-center gap-2 px-5 pt-4 pb-3 border-b flex-shrink-0" style={{ borderColor: 'rgb(51 65 85)' }} data-testid="supra-tabs">
           {TABS.map(tab => {
             const active = activeTab === tab.id;
             const Icon = tab.icon;
@@ -321,9 +321,9 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
           })}
         </div>
 
-        {/* CONTENT */}
-        <div className="flex-1 overflow-y-auto p-6" style={{ maxHeight: 'calc(100vh - 140px)' }}>
-          {loading && <div className="text-center py-12 text-gray-400 text-lg animate-pulse">Analyse SUPRA v2 en cours...</div>}
+        {/* CONTENT — BCE-4X Phase 2.9: ZERO scroll interne, PinnablePanel gere le scroll */}
+        <div className="flex-1 p-5" data-testid="supra-v2-content-area">
+          {loading && <div className="text-center py-12 text-slate-400 text-base animate-pulse">Analyse SUPRA v2 en cours...</div>}
 
           {!loading && score && activeTab === 'analyse' && (
             <AnalyseTab score={score} recipe={recipe} recommendations={recommendations} evidence={evidence}
@@ -344,7 +344,7 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
           )}
         </div>
 
-        <div className="text-center text-xs text-gray-500 py-3 border-t flex-shrink-0" style={{ borderColor: 'rgba(255,255,255,0.06)' }} data-testid="supra-footer">
+        <div className="text-center text-xs text-slate-500 py-2.5 border-t flex-shrink-0" style={{ borderColor: 'rgb(51 65 85)' }} data-testid="supra-footer">
           SUPRA v2 | 7 Moteurs ULTRA | Stripe | BCE-4X / STEEVE-MAX V6
         </div>
       </div>
@@ -438,28 +438,28 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
         </div>
       )}
 
-      {/* Mineraux — barres Dashboard */}
+      {/* Mineraux — barres Dashboard-aligned */}
       <Card testId="supra-minerals-card">
-        <div className="flex items-center gap-3 mb-5">
-          <FlaskConical className="h-6 w-6" style={{ color: BIONIC.yellow }} />
-          <span className="text-xl font-bold text-white">Mineraux</span>
+        <div className="flex items-center gap-2 mb-4">
+          <FlaskConical className="h-5 w-5" style={{ color: '#f5a623' }} />
+          <span className="text-lg font-bold text-white">Mineraux</span>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {Object.entries(score.scores_par_mineral || {}).map(([key, m]) => (
-            <div key={key} className="flex items-center gap-4" data-testid={`supra-mineral-${key}`}>
-              <span className="text-base text-gray-300 w-24 flex-shrink-0">{m.name}</span>
-              <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}>
-                <div className="h-full rounded-full transition-all" style={{ width: `${m.score}%`, backgroundColor: zoneColor(m.zone) }} />
+            <div key={key} className="flex items-center gap-3" data-testid={`supra-mineral-${key}`}>
+              <span className="text-sm text-slate-300 w-20 flex-shrink-0">{m.name}</span>
+              <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
+                <div className="h-full rounded-full transition-all duration-500" style={{ width: `${m.score}%`, backgroundColor: zoneColor(m.zone) }} />
               </div>
-              <span className="text-base font-bold w-10 text-right" style={{ color: zoneColor(m.zone) }}>{m.score}</span>
+              <span className="text-sm font-bold w-8 text-right tabular-nums" style={{ color: zoneColor(m.zone) }}>{m.score}</span>
             </div>
           ))}
         </div>
       </Card>
 
-      {/* SUPRA PREMIUM — Physiologie minerale */}
+      {/* SUPRA PREMIUM — Physiologie minerale — Dashboard-aligned */}
       <CollapsibleSection icon={Crown} title="Physiologie minerale" color={BIONIC.purple} badge={`${species} / ${season}`} testId="supra-physiology">
-        <p className="text-base text-gray-300 leading-relaxed">{physioText}</p>
+        <p className="text-sm text-slate-300 leading-relaxed">{physioText}</p>
       </CollapsibleSection>
 
       {/* SUPRA PREMIUM — Influence du support */}
@@ -479,10 +479,10 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
         </div>
       </CollapsibleSection>
 
-      {/* SUPRA PREMIUM — Comportement des males */}
+      {/* SUPRA PREMIUM — Comportement des males — Dashboard-aligned */}
       {behaviorText && (
         <CollapsibleSection icon={Eye} title="Comportement des males" color={BIONIC.cyan} badge={season} defaultOpen={false} testId="supra-behavior">
-          <p className="text-base text-gray-300 leading-relaxed">{behaviorText}</p>
+          <p className="text-sm text-slate-300 leading-relaxed">{behaviorText}</p>
         </CollapsibleSection>
       )}
 

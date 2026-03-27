@@ -1,38 +1,147 @@
 /**
- * BCE-4X Phase 2.6 — WindFlowLayer
- * Effet visuel du vent sur la carte Leaflet.
+ * BCE-4X Phase 2.9 — WindFlowLayer DYNAMIQUE
+ * Animation particules vent en temps reel sur la carte Leaflet.
  * 
  * SOURCE UNIQUE: useWeatherStore (Weather V3)
- * ZERO fetch HTTP séparé.
- * Dessin direct sur canvas overlay.
+ * ZERO fetch HTTP separe.
+ * requestAnimationFrame loop pour animation fluide.
  */
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { useMap } from 'react-leaflet';
-import L from 'leaflet';
 import useWeatherStore from '../../stores/useWeatherStore';
+
+const PARTICLE_COUNT = 300;
+const PARTICLE_TRAIL_LENGTH = 8;
+const FADE_SPEED = 0.012;
 
 export default function WindFlowLayer() {
   const map = useMap();
   const canvasRef = useRef(null);
-  const cleanupRef = useRef(null);
+  const animFrameRef = useRef(null);
+  const particlesRef = useRef([]);
+  const configRef = useRef({ speedMs: 5, dirRad: Math.PI, maxSpeed: 8 });
 
-  // Lire le store meteo
   const weatherCurrent = useWeatherStore(s => s.current);
 
-  const drawWindArrows = useCallback(() => {
+  const initParticle = useCallback((canvas) => {
+    return {
+      x: Math.random() * (canvas?.width || 800),
+      y: Math.random() * (canvas?.height || 600),
+      age: Math.random(),
+      speed: 0.5 + Math.random() * 1.5,
+    };
+  }, []);
+
+  const resetParticles = useCallback((canvas) => {
+    const particles = [];
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push(initParticle(canvas));
+    }
+    particlesRef.current = particles;
+  }, [initParticle]);
+
+  const animate = useCallback(() => {
     const canvas = canvasRef.current;
-    if (!canvas || !map) return;
+    if (!canvas || !map) {
+      animFrameRef.current = requestAnimationFrame(animate);
+      return;
+    }
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {
+      animFrameRef.current = requestAnimationFrame(animate);
+      return;
+    }
 
-    // Resize canvas
     const size = map.getSize();
-    if (size.x === 0 || size.y === 0) return;
-    canvas.width = size.x;
-    canvas.height = size.y;
+    if (size.x === 0 || size.y === 0) {
+      animFrameRef.current = requestAnimationFrame(animate);
+      return;
+    }
 
-    // Lire les donnees vent du store
+    if (canvas.width !== size.x || canvas.height !== size.y) {
+      canvas.width = size.x;
+      canvas.height = size.y;
+      resetParticles(canvas);
+    }
+
+    const { speedMs, dirRad, maxSpeed } = configRef.current;
+
+    // Wind vector components (pixel velocity per frame)
+    const baseVx = -speedMs * Math.sin(dirRad) * 0.8;
+    const baseVy = speedMs * Math.cos(dirRad) * 0.8;
+
+    // Fade previous frame
+    ctx.globalCompositeOperation = 'destination-in';
+    ctx.fillStyle = `rgba(0, 0, 0, ${1 - FADE_SPEED})`;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.globalCompositeOperation = 'source-over';
+
+    const particles = particlesRef.current;
+    const w = canvas.width;
+    const h = canvas.height;
+
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+
+      // Natural variation per particle
+      const variation = 0.7 + Math.sin(i * 0.37 + p.age * 12) * 0.3;
+      const vx = baseVx * p.speed * variation;
+      const vy = baseVy * p.speed * variation;
+
+      // Move
+      p.x += vx;
+      p.y += vy;
+      p.age += 0.003;
+
+      // Recycle particles that go off-screen or are old
+      if (p.x < -10 || p.x > w + 10 || p.y < -10 || p.y > h + 10 || p.age > 1) {
+        // Respawn from upwind edge
+        const edge = Math.random();
+        if (Math.abs(baseVx) > Math.abs(baseVy)) {
+          // Mostly horizontal wind
+          p.x = baseVx > 0 ? -5 : w + 5;
+          p.y = Math.random() * h;
+        } else {
+          // Mostly vertical wind
+          p.x = Math.random() * w;
+          p.y = baseVy > 0 ? -5 : h + 5;
+        }
+        p.age = 0;
+        p.speed = 0.5 + Math.random() * 1.5;
+        continue;
+      }
+
+      // Color intensity based on speed and age
+      const t = Math.min(speedMs / maxSpeed, 1);
+      const ageFade = Math.sin(p.age * Math.PI);
+      const alpha = (0.15 + t * 0.45) * ageFade;
+
+      // Draw particle dot with trail
+      const trailLen = PARTICLE_TRAIL_LENGTH * p.speed * variation;
+      const tx = p.x - vx * trailLen * 0.15;
+      const ty = p.y - vy * trailLen * 0.15;
+
+      ctx.beginPath();
+      ctx.moveTo(tx, ty);
+      ctx.lineTo(p.x, p.y);
+      ctx.strokeStyle = `rgba(140, 215, 230, ${alpha})`;
+      ctx.lineWidth = 1.2 + t * 0.8;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      // Bright head
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 1 + t * 0.6, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(180, 235, 245, ${alpha * 1.3})`;
+      ctx.fill();
+    }
+
+    animFrameRef.current = requestAnimationFrame(animate);
+  }, [map, resetParticles]);
+
+  // Update wind config when weather data changes
+  useEffect(() => {
     const store = useWeatherStore.getState();
     const current = store.current;
     const windSpeed = current?.wind_speed_kmh || 10;
@@ -40,74 +149,15 @@ export default function WindFlowLayer() {
     const windGust = current?.wind_gust_kmh || windSpeed * 1.5;
     const speedMs = windSpeed / 3.6;
     const maxSpeedMs = Math.max(speedMs * 1.3, windGust / 3.6);
-    const dirRad = (windDir * Math.PI) / 180;
 
-    // Calculer U et V base
-    const baseU = -speedMs * Math.sin(dirRad);
-    const baseV = -speedMs * Math.cos(dirRad);
+    configRef.current = {
+      speedMs,
+      dirRad: (windDir * Math.PI) / 180,
+      maxSpeed: maxSpeedMs,
+    };
+  }, [weatherCurrent]);
 
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Bounds de la carte
-    const bounds = map.getBounds();
-    const north = bounds.getNorth();
-    const south = bounds.getSouth();
-    const east = bounds.getEast();
-    const west = bounds.getWest();
-
-    // Grille de fleches
-    const gridRes = 25;
-    const spacingX = canvas.width / gridRes;
-    const spacingY = canvas.height / gridRes;
-    let arrowCount = 0;
-
-    for (let r = 0; r < gridRes; r++) {
-      for (let c = 0; c < gridRes; c++) {
-        const px = (c + 0.5) * spacingX;
-        const py = (r + 0.5) * spacingY;
-
-        // Variation naturelle
-        const variation = 1 + Math.sin(r * 0.7 + c * 0.5) * 0.12;
-        const u = baseU * variation;
-        const v = baseV * variation;
-        const speed = Math.sqrt(u * u + v * v);
-
-        if (speed < 0.3) continue;
-
-        const angle = Math.atan2(-v, u);
-        const t = Math.min(speed / maxSpeedMs, 1);
-        const length = 14 + t * 32;
-        const opacity = 0.4 + t * 0.35;
-
-        // Tige
-        const ex = px + length * Math.cos(angle);
-        const ey = py + length * Math.sin(angle);
-
-        ctx.beginPath();
-        ctx.moveTo(px, py);
-        ctx.lineTo(ex, ey);
-        ctx.strokeStyle = `rgba(150, 220, 230, ${opacity})`;
-        ctx.lineWidth = 1.8;
-        ctx.stroke();
-
-        // Pointe de fleche
-        const headLen = 5 + t * 4;
-        ctx.beginPath();
-        ctx.moveTo(ex, ey);
-        ctx.lineTo(ex - headLen * Math.cos(angle - 0.4), ey - headLen * Math.sin(angle - 0.4));
-        ctx.moveTo(ex, ey);
-        ctx.lineTo(ex - headLen * Math.cos(angle + 0.4), ey - headLen * Math.sin(angle + 0.4));
-        ctx.strokeStyle = `rgba(150, 220, 230, ${opacity * 0.85})`;
-        ctx.lineWidth = 1.8;
-        ctx.stroke();
-
-        arrowCount++;
-      }
-    }
-  }, [map]);
-
-  // Setup canvas + event listeners
+  // Setup canvas + animation loop
   useEffect(() => {
     if (!map) return;
 
@@ -125,35 +175,27 @@ export default function WindFlowLayer() {
       canvasRef.current = canvas;
     }
 
-    // Draw immediately
-    drawWindArrows();
+    const size = map.getSize();
+    canvas.width = size.x;
+    canvas.height = size.y;
+    resetParticles(canvas);
 
-    // Redraw on map events
-    const onMoveEnd = () => drawWindArrows();
-    const onResize = () => drawWindArrows();
+    // Start animation loop
+    animFrameRef.current = requestAnimationFrame(animate);
+
+    // Reset particles on map move/zoom
+    const onMoveEnd = () => resetParticles(canvas);
     map.on('moveend', onMoveEnd);
     map.on('zoomend', onMoveEnd);
-    map.on('resize', onResize);
 
-    cleanupRef.current = () => {
+    return () => {
+      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
       map.off('moveend', onMoveEnd);
       map.off('zoomend', onMoveEnd);
-      map.off('resize', onResize);
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
       canvasRef.current = null;
     };
-
-    return () => {
-      if (cleanupRef.current) cleanupRef.current();
-    };
-  }, [map, drawWindArrows]);
-
-  // Redraw when weather data changes
-  useEffect(() => {
-    if (weatherCurrent && canvasRef.current) {
-      drawWindArrows();
-    }
-  }, [weatherCurrent, drawWindArrows]);
+  }, [map, animate, resetParticles]);
 
   return null;
 }

@@ -62,14 +62,17 @@ _CACHE_TTL = 1800
 METERS_PER_DEG_LAT = 111320.0
 
 # ══════════════════════════════════════════════════════════
-# V6.x — CERCLES 600m + CACHE EAU LOCAL
+# V6.x — CERCLES 600m + CACHE EAU LOCAL + CACHE URBAIN (Phase 2.9)
 # ══════════════════════════════════════════════════════════
 CIRCLE_RADIUS_M = 600
 CIRCLE_NUM_POINTS = 48
 WATER_OVERLAP_THRESHOLD = 0.15
+URBAN_OVERLAP_THRESHOLD = 0.10  # Phase 2.9: seuil strict pour zones urbaines
 
 _water_union_zone_cache = None
 _water_zone_cache_loaded = False
+_urban_union_zone_cache = None
+_urban_zone_cache_loaded = False
 
 
 def preload_water_cache():
@@ -147,6 +150,93 @@ def _circle_on_water(center_lat: float, center_lng: float) -> bool:
         return False
 
 
+def _load_urban_cache_zones():
+    """Phase 2.9: Charge les polygones urbains depuis le cache OSM local."""
+    global _urban_union_zone_cache, _urban_zone_cache_loaded
+    if _urban_zone_cache_loaded:
+        return _urban_union_zone_cache
+    if not SHAPELY_AVAILABLE:
+        _urban_zone_cache_loaded = True
+        return None
+
+    cache_dir = Path("/app/backend/data/osm_cache")
+    if not cache_dir.exists():
+        _urban_zone_cache_loaded = True
+        return None
+
+    urban_polys = []
+    for fname in os.listdir(cache_dir):
+        if not fname.endswith(".json") or fname.startswith("CA-") or fname == "hydro_debug.json":
+            continue
+        fpath = cache_dir / fname
+        if fpath.stat().st_size < 5000:
+            continue
+        try:
+            with open(fpath) as f:
+                data = json.load(f)
+            for zone in data.get("exclusion_zones", []):
+                ex_type = zone.get("type", "")
+                # Include urban, industrial, commercial, residential zones AND major roads
+                if ex_type not in ("urban", "roads"):
+                    continue
+                # For roads, only include major roads (motorway, trunk, primary)
+                if ex_type == "roads":
+                    sub = (zone.get("sub_type") or "").lower()
+                    if sub not in ("motorway", "trunk", "primary", "motorway_link", "trunk_link"):
+                        continue
+                coords = zone.get("coordinates", [])
+                geom = zone.get("geometry", "polygon")
+                if geom == "polygon" and len(coords) >= 4:
+                    try:
+                        poly = ShapelyPolygon([(c[0], c[1]) for c in coords])
+                        if poly.is_valid and poly.area > 0:
+                            # Apply buffer for roads (line-like features expanded)
+                            if ex_type == "roads":
+                                poly = poly.buffer(0.001)  # ~111m buffer
+                            urban_polys.append(poly)
+                    except Exception:
+                        pass
+                elif geom == "line" and len(coords) >= 2:
+                    # Buffer lines into polygons (roads)
+                    try:
+                        from shapely.geometry import LineString
+                        line = LineString([(c[0], c[1]) for c in coords])
+                        buffered = line.buffer(0.0012)  # ~133m buffer for major roads
+                        if buffered.is_valid and buffered.area > 0:
+                            urban_polys.append(buffered)
+                    except Exception:
+                        pass
+        except Exception:
+            continue
+
+    if urban_polys:
+        try:
+            _urban_union_zone_cache = unary_union(urban_polys)
+            logger.info(f"[Phase2.9-URBAN] Cache urbain charge: {len(urban_polys)} polygones")
+        except Exception:
+            pass
+
+    _urban_zone_cache_loaded = True
+    return _urban_union_zone_cache
+
+
+def _circle_on_urban(center_lat: float, center_lng: float) -> bool:
+    """Phase 2.9: Verifie si un cercle 600m chevauche une zone urbaine/industrielle/route majeure."""
+    urban = _load_urban_cache_zones()
+    if urban is None or not SHAPELY_AVAILABLE:
+        return False
+    try:
+        coords = _make_circle_coords(center_lat, center_lng, CIRCLE_RADIUS_M)
+        poly = ShapelyPolygon(coords)
+        if not poly.is_valid:
+            poly = poly.buffer(0)
+        overlap = poly.intersection(urban).area
+        ratio = overlap / poly.area if poly.area > 0 else 0
+        return ratio > URBAN_OVERLAP_THRESHOLD
+    except Exception:
+        return False
+
+
 def _make_circle_coords(center_lat: float, center_lng: float, radius_m: float) -> list:
     """Genere un cercle en [lng, lat] format GeoJSON."""
     coords = []
@@ -161,11 +251,12 @@ def _make_circle_coords(center_lat: float, center_lng: float, radius_m: float) -
 
 def _convert_features_to_circles(geojson: dict) -> tuple:
     """
-    V6.x — Convertit toutes les features GeoJSON polygone en CERCLES 600m.
-    Exclut les cercles sur eau via le cache V7.
-    Retourne (geojson modifie, nombre exclus eau).
+    V6.x + Phase 2.9 — Convertit toutes les features GeoJSON polygone en CERCLES 600m.
+    Exclut les cercles sur eau (V7) ET zones urbaines/industrielles (Phase 2.9).
+    Retourne (geojson modifie, nombre exclus eau+urbain).
     """
     water_excluded = 0
+    urban_excluded = 0
     valid_features = []
 
     for feature in geojson.get("features", []):
@@ -190,6 +281,11 @@ def _convert_features_to_circles(geojson: dict) -> tuple:
             water_excluded += 1
             continue
 
+        # Phase 2.9: Exclure si en zone urbaine/industrielle/route majeure
+        if _circle_on_urban(center_lat, center_lng):
+            urban_excluded += 1
+            continue
+
         # Remplacer le polygone par un cercle 600m
         circle_coords = _make_circle_coords(center_lat, center_lng, CIRCLE_RADIUS_M)
         feature["geometry"]["coordinates"] = [circle_coords]
@@ -199,7 +295,10 @@ def _convert_features_to_circles(geojson: dict) -> tuple:
         valid_features.append(feature)
 
     geojson["features"] = valid_features
-    return geojson, water_excluded
+    total_excluded = water_excluded + urban_excluded
+    if urban_excluded > 0:
+        logger.info(f"[Phase2.9-URBAN] {urban_excluded} zones exclues (urbain/industriel/routes)")
+    return geojson, total_excluded
 
 # Thread pool for parallel layer processing (CPU-bound)
 _executor = ThreadPoolExecutor(max_workers=10)  # BCE-4X PERF: augmente de 6 a 10
@@ -1269,6 +1368,34 @@ async def generate_organic_zones(
         if pre_filter != len(corridors):
             logger.info(f"[V9-Filter] Removed {pre_filter - len(corridors)} circular corridors")
 
+    # Phase 2.9: Filter corridors crossing urban/industrial zones
+    if corridors and SHAPELY_AVAILABLE:
+        urban_cache = _load_urban_cache_zones()
+        if urban_cache is not None:
+            pre_urban = len(corridors)
+            urban_filtered = []
+            for c in corridors:
+                coords = c.get("geometry", {}).get("coordinates", [])
+                if len(coords) >= 2:
+                    # Sample midpoint of corridor
+                    mid_idx = len(coords) // 2
+                    mid = coords[mid_idx]
+                    mid_lat, mid_lng = mid[1], mid[0]
+                    try:
+                        pt = ShapelyPoint(mid_lng, mid_lat)
+                        if not urban_cache.contains(pt):
+                            urban_filtered.append(c)
+                        else:
+                            logger.debug(f"[Phase2.9] Corridor excluded (urban midpoint)")
+                    except Exception:
+                        urban_filtered.append(c)
+                else:
+                    urban_filtered.append(c)
+            corridors = urban_filtered
+            removed = pre_urban - len(corridors)
+            if removed > 0:
+                logger.info(f"[Phase2.9-URBAN] Removed {removed} corridors crossing urban zones")
+
     # STEVE-MAX++ P0: Ensure 100% topological continuity via graph-based post-processing
     if corridors:
         try:
@@ -1287,13 +1414,15 @@ async def generate_organic_zones(
 
     elapsed = round((time.time() - start) * 1000, 1)
 
-    # V6.x metadata
+    # V6.x + Phase 2.9 metadata
     v6_zone_metadata = {
         "geometry": "circle_600m",
         "circle_radius_m": CIRCLE_RADIUS_M,
         "water_exclusion_engine": "V7-local-cache",
-        "zones_water_excluded": v7_zone_water_excluded,
+        "urban_exclusion_engine": "Phase2.9-local-cache",
+        "zones_excluded": v7_zone_water_excluded,
         "water_cache_active": _water_zone_cache_loaded and _water_union_zone_cache is not None,
+        "urban_cache_active": _urban_zone_cache_loaded and _urban_union_zone_cache is not None,
     }
 
     # BIONIC V7.3: Diagnostic — provide zero_zones_reason when all zones are filtered
