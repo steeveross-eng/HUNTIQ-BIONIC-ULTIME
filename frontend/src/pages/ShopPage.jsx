@@ -1,276 +1,275 @@
-// ShopPage.jsx - Page Magasin avec filtres avancés
-// BIONIC™ Global Container Applied
-import { useState, useMemo } from "react";
+/**
+ * ShopPage.jsx — MAGASIN v2
+ * =========================
+ * Catalogue unifie SALINE_PRODUCTS — Source unique
+ * Panier unifie saline — Stripe Checkout
+ *
+ * BCE-4X / STEEVE-MAX V6 — PHASE P0 FUSION E-COMMERCE
+ */
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import AdvancedFilters from "@/components/filters/AdvancedFilters";
+import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { GlobalContainer } from "@/core/layouts";
+import { toast } from "sonner";
+import axios from "axios";
 import {
-  ShoppingCart,
-  ExternalLink,
-  Star,
-  CloudRain,
-  Shield,
-  Droplet,
-  Eye
+  ShoppingCart, Star, Shield, Droplet, Package, Filter,
+  FlaskConical, Search, ArrowRight, Loader2, Crosshair
 } from "lucide-react";
 
-// Sale Mode Badge
-const SaleModeBadge = ({ mode }) => {
-  const { t } = useLanguage();
-  const config = {
-    dropshipping: { label: t('admin_dropshipping'), color: "bg-blue-600" },
-    affiliation: { label: t('common_partners'), color: "bg-purple-600" },
-    hybrid: { label: t('admin_hybrid'), color: "bg-[#f5a623]" }
-  };
-  const { label, color } = config[mode] || config.dropshipping;
-  return <Badge className={`${color} text-xs`}>{label}</Badge>;
+const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+
+const BIONIC = {
+  green: '#00C853', yellow: '#F9D423', orange: '#FF9800', red: '#D32F2F',
+  blue: '#2196F3', card: '#111122', border: 'rgba(255,255,255,0.06)',
 };
 
-// Product Card Component
-const ProductCard = ({ product, onAddToCart, onAffiliateClick, t }) => {
-  const pastilleColor = product.score >= 75 ? "bg-[#f5a623]" : 
-                        product.score >= 50 ? "bg-yellow-500" : "bg-red-500";
-  
+// Session saline unifiee
+const getSalineSession = () => {
+  let sid = localStorage.getItem('saline_session_id');
+  if (!sid) {
+    sid = 'sal_' + Math.random().toString(36).substr(2, 12);
+    localStorage.setItem('saline_session_id', sid);
+  }
+  return sid;
+};
+
+// Format filter badges
+const FORMAT_OPTIONS = [
+  { value: 'all', label: 'Tous' },
+  { value: 'bloc', label: 'Bloc' },
+  { value: 'granules', label: 'Granules' },
+  { value: 'poudre', label: 'Poudre' },
+  { value: 'liquide', label: 'Liquide' },
+];
+
+const SPECIES_OPTIONS = [
+  { value: 'all', label: 'Toutes especes' },
+  { value: 'orignal', label: 'Orignal' },
+  { value: 'chevreuil', label: 'Chevreuil' },
+  { value: 'ours_noir', label: 'Ours noir' },
+  { value: 'dindon_sauvage', label: 'Dindon sauvage' },
+];
+
+// Product Card
+const SalineProductCard = ({ product, onAddToCart, loading }) => {
+  const scoreColor = product.score >= 90 ? BIONIC.green : product.score >= 85 ? BIONIC.yellow : BIONIC.orange;
+  const navigate = useNavigate();
+
   return (
-    <Card className="bg-card border-border overflow-hidden group hover:border-[#f5a623]/50 transition-all duration-300 hover:shadow-lg hover:shadow-[#f5a623]/10">
-      <div className="relative">
-        {/* Product Image */}
-        <div className="aspect-square overflow-hidden bg-black/20">
-          <img 
-            src={product.image_url} 
-            alt={product.name} 
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-        </div>
-        
-        {/* Rank Badge */}
-        <div className="absolute top-2 left-2 w-8 h-8 rounded-full bg-[#f5a623] text-black font-bold flex items-center justify-center text-sm">
-          #{product.rank}
-        </div>
-        
-        {/* Score Badge */}
-        <div className={`absolute top-2 right-2 px-2 py-1 rounded-full ${pastilleColor} text-white font-bold text-xs`}>
+    <Card className="bg-[#111122] border-white/6 overflow-hidden group hover:border-[#FF9800]/30 transition-all duration-300" data-testid={`shop-product-${product.id}`}>
+      {/* Image placeholder + Score */}
+      <div className="relative h-36 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
+        <Package className="h-12 w-12 text-gray-700 group-hover:text-[#FF9800]/30 transition-colors" />
+        <div className="absolute top-2 right-2 px-2 py-1 rounded-full text-[11px] font-black" style={{ backgroundColor: `${scoreColor}20`, color: scoreColor, border: `1px solid ${scoreColor}40` }}>
           {product.score}/100
         </div>
-        
-        {/* Feature Badges */}
-        <div className="absolute bottom-2 left-2 flex gap-1">
-          {product.rainproof && (
-            <Badge variant="outline" className="bg-black/60 border-cyan-400 text-cyan-400 text-xs">
-              <CloudRain className="h-3 w-3" />
-            </Badge>
-          )}
-          {product.has_pheromones && (
-            <Badge variant="outline" className="bg-black/60 border-pink-400 text-pink-400 text-xs">
-              <Droplet className="h-3 w-3" />
-            </Badge>
-          )}
-          {product.certified_food && (
-            <Badge variant="outline" className="bg-black/60 border-[#f5a623] text-[#f5a623] text-xs">
-              <Shield className="h-3 w-3" />
-            </Badge>
-          )}
+        <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/60 text-[10px] font-bold text-[#FF9800] uppercase">
+          {product.product_format}
+        </div>
+        <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/60 text-[10px] text-gray-400">
+          {product.weight}
         </div>
       </div>
-      
+
       <CardContent className="p-4 space-y-3">
-        {/* Brand & Name */}
         <div>
-          <p className="text-[#f5a623] text-xs font-medium">{product.brand}</p>
-          <h3 className="text-white font-semibold text-sm leading-tight line-clamp-2 min-h-[2.5rem]">
+          <p className="text-[#FF9800] text-[11px] font-semibold uppercase tracking-wider">{product.brand}</p>
+          <h3 className="text-white font-bold text-sm leading-tight mt-0.5 line-clamp-2 min-h-[2.5rem]">
             {product.name}
           </h3>
         </div>
-        
-        {/* Price & Sale Mode */}
-        <div className="flex items-center justify-between">
-          <span className="text-white font-bold text-lg">${product.price}</span>
-          <SaleModeBadge mode={product.sale_mode} />
+
+        <p className="text-gray-400 text-[12px] leading-relaxed line-clamp-2">{product.description}</p>
+
+        {/* Minerals */}
+        <div className="flex flex-wrap gap-1">
+          {Object.keys(product.minerals || {}).slice(0, 4).map(m => (
+            <span key={m} className="text-[10px] px-1.5 py-0.5 rounded" style={{ backgroundColor: `${BIONIC.green}12`, color: BIONIC.green }}>{m}</span>
+          ))}
         </div>
-        
-        {/* Stats */}
-        <div className="flex items-center gap-3 text-xs text-gray-300">
-          <span className="flex items-center gap-1">
-            <Eye className="h-3 w-3" />
-            {product.views || 0}
-          </span>
-          <span className="flex items-center gap-1">
-            <Star className="h-3 w-3" />
-            {product.attraction_days || 7}j
-          </span>
+
+        {/* Target animals */}
+        <div className="flex flex-wrap gap-1">
+          {product.target_animals?.map(a => (
+            <span key={a} className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-gray-400">{a}</span>
+          ))}
         </div>
-        
-        {/* CTA Button */}
-        {product.sale_mode === "affiliation" && product.affiliate_link ? (
-          <Button 
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white text-sm h-9"
-            onClick={() => {
-              if (onAffiliateClick) onAffiliateClick(product);
-              window.open(product.affiliate_link, '_blank');
-            }}
+
+        <div className="flex items-center justify-between pt-2 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+          <span className="text-white font-black text-lg">${product.price}</span>
+          <span className="text-[11px] text-gray-500">CAD</span>
+        </div>
+
+        <div className="flex gap-2">
+          <Button
+            className="flex-1 bg-[#FF9800] hover:bg-[#E68900] text-black text-xs h-9 font-bold"
+            onClick={() => onAddToCart(product.id)}
+            disabled={loading}
+            data-testid={`add-to-cart-${product.id}`}
           >
-            <ExternalLink className="h-4 w-4 mr-2" />
-            Voir chez partenaire
+            {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : <ShoppingCart className="h-3 w-3 mr-1" />}
+            CMD
           </Button>
-        ) : (
-          <Button 
-            className="w-full bg-[#f5a623] hover:bg-[#d4850e] text-black text-sm h-9"
-            onClick={() => onAddToCart && onAddToCart(product)}
+          <Button
+            variant="outline"
+            className="border-white/10 hover:border-[#FF9800]/30 text-gray-300 text-xs h-9"
+            onClick={() => navigate(`/product/${product.id}`)}
+            data-testid={`view-product-${product.id}`}
           >
-            <ShoppingCart className="h-4 w-4 mr-2" />
-            {t('shop_add_to_cart')}
+            Fiche
           </Button>
-        )}
+        </div>
       </CardContent>
     </Card>
   );
 };
 
-// Main Shop Page Component
-const ShopPage = ({ products = [], onAddToCart, onAffiliateClick }) => {
+// Main Shop Page
+export default function ShopPage() {
   const { t } = useLanguage();
-  const [filters, setFilters] = useState({});
-  
-  // Apply filters to products
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [cartLoading, setCartLoading] = useState(false);
+  const [search, setSearch] = useState('');
+  const [formatFilter, setFormatFilter] = useState('all');
+  const [speciesFilter, setSpeciesFilter] = useState('all');
+  const navigate = useNavigate();
+
+  // Fetch SALINE_PRODUCTS from API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const params = {};
+        if (speciesFilter !== 'all') params.species = speciesFilter;
+        if (formatFilter !== 'all') params.format = formatFilter;
+        const res = await axios.get(`${API}/v1/saline/shop/products`, { params });
+        setProducts(res.data.products || []);
+      } catch (e) {
+        console.error('Shop fetch error:', e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, [formatFilter, speciesFilter]);
+
+  // Add to saline cart
+  const handleAddToCart = useCallback(async (productId) => {
+    setCartLoading(true);
+    try {
+      await axios.post(`${API}/v1/saline/shop/cart/add`, {
+        session_id: getSalineSession(), product_id: productId, quantity: 1,
+      });
+      toast.success('Produit ajoute au panier SUPRA');
+    } catch (e) {
+      toast.error("Erreur lors de l'ajout");
+    } finally {
+      setCartLoading(false);
+    }
+  }, []);
+
+  // Filter by search
   const filteredProducts = useMemo(() => {
-    let result = [...products];
-    
-    // Search filter
-    if (filters.search) {
-      const search = filters.search.toLowerCase();
-      result = result.filter(p => 
-        p.name.toLowerCase().includes(search) ||
-        p.brand.toLowerCase().includes(search) ||
-        p.description?.toLowerCase().includes(search)
-      );
-    }
-    
-    // Category filter
-    if (filters.category && filters.category !== "all") {
-      result = result.filter(p => p.product_format === filters.category || p.category === filters.category);
-    }
-    
-    // Animal type filter
-    if (filters.animal_type && filters.animal_type !== "all") {
-      result = result.filter(p => 
-        p.animal_type === filters.animal_type ||
-        p.target_animals?.includes(filters.animal_type)
-      );
-    }
-    
-    // Season filter
-    if (filters.season && filters.season !== "all") {
-      result = result.filter(p => p.season === filters.season);
-    }
-    
-    // Brand filter
-    if (filters.brand && filters.brand !== "all") {
-      result = result.filter(p => p.brand === filters.brand);
-    }
-    
-    // Price range filter
-    if (filters.min_price > 0) {
-      result = result.filter(p => p.price >= filters.min_price);
-    }
-    if (filters.max_price && filters.max_price < 200) {
-      result = result.filter(p => p.price <= filters.max_price);
-    }
-    
-    // Score filter
-    if (filters.min_score > 0) {
-      result = result.filter(p => p.score >= filters.min_score);
-    }
-    
-    // Feature filters
-    if (filters.rainproof) {
-      result = result.filter(p => p.rainproof);
-    }
-    if (filters.has_pheromones) {
-      result = result.filter(p => p.has_pheromones);
-    }
-    if (filters.certified_food) {
-      result = result.filter(p => p.certified_food);
-    }
-    
-    // Sorting
-    const sortField = filters.sort_by || "rank";
-    const sortOrder = filters.sort_order || "asc";
-    
-    result.sort((a, b) => {
-      let aVal = a[sortField];
-      let bVal = b[sortField];
-      
-      if (typeof aVal === "string") {
-        aVal = aVal.toLowerCase();
-        bVal = bVal.toLowerCase();
-      }
-      
-      if (sortOrder === "asc") {
-        return aVal > bVal ? 1 : -1;
-      } else {
-        return aVal < bVal ? 1 : -1;
-      }
-    });
-    
-    return result;
-  }, [products, filters]);
+    if (!search) return products;
+    const s = search.toLowerCase();
+    return products.filter(p =>
+      p.name.toLowerCase().includes(s) ||
+      p.description?.toLowerCase().includes(s) ||
+      Object.keys(p.minerals || {}).some(m => m.toLowerCase().includes(s))
+    );
+  }, [products, search]);
 
   return (
-    <main className="min-h-screen bg-background">
-      <GlobalContainer className="py-6 sm:py-8 pb-16">
+    <main className="min-h-screen bg-[#0a0a14] pt-20" data-testid="shop-page">
+      <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Header */}
-        <div className="mb-6">
-          <h1 className="golden-text text-h1 font-bold mb-2">{t('shop_title')}</h1>
-          <p className="text-gray-300 text-body">
-            {t('shop_all_products')}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#FF980015', border: '2px solid #FF980060' }}>
+              <FlaskConical className="h-5 w-5" style={{ color: '#FF9800' }} />
+            </div>
+            <div>
+              <h1 className="text-2xl font-black text-white uppercase tracking-tight" data-testid="shop-title">Catalogue SUPRA</h1>
+              <p className="text-[12px] text-gray-500 uppercase tracking-wider">Produits salines BIONIC — Source unique certifiee</p>
+            </div>
+          </div>
+          <p className="text-gray-400 text-sm mt-2">
+            Supplements mineraux optimises par les 7 moteurs d'intelligence SUPRA. Chaque produit est note scientifiquement.
           </p>
         </div>
-        
+
         {/* Filters */}
-        <div className="mb-6">
-          <AdvancedFilters 
-            products={products}
-            onFilterChange={setFilters}
-          />
+        <div className="flex flex-wrap items-center gap-3 mb-6">
+          <div className="relative flex-1 min-w-[200px] max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+            <Input
+              placeholder="Rechercher un produit ou mineral..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="pl-10 bg-white/5 border-white/10 text-white text-sm h-9"
+              data-testid="shop-search"
+            />
+          </div>
+
+          {/* Format filter */}
+          <div className="flex gap-1">
+            {FORMAT_OPTIONS.map(opt => (
+              <button key={opt.value} onClick={() => setFormatFilter(opt.value)}
+                className={`px-3 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all ${formatFilter === opt.value ? 'bg-[#FF9800]/20 text-[#FF9800] border border-[#FF9800]/40' : 'bg-white/5 text-gray-400 border border-transparent hover:bg-white/10'}`}
+                data-testid={`filter-format-${opt.value}`}>
+                {opt.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Species filter */}
+          <select value={speciesFilter} onChange={e => setSpeciesFilter(e.target.value)}
+            className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white" data-testid="filter-species">
+            {SPECIES_OPTIONS.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+          </select>
         </div>
-        
-        {/* Results Count */}
-        <div className="mb-4 flex items-center justify-between">
-          <p className="text-gray-300 text-sm">
-            {filteredProducts.length} {t('common_products').toLowerCase()}
-          </p>
+
+        {/* Results count */}
+        <div className="mb-4 text-sm text-gray-400">
+          {filteredProducts.length} produit(s) SUPRA
         </div>
-        
+
         {/* Products Grid */}
-        {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-            {filteredProducts.map((product) => (
-              <ProductCard 
-                key={product.id} 
-                product={product} 
-                onAddToCart={onAddToCart}
-                onAffiliateClick={onAffiliateClick}
-                t={t}
-              />
+        {loading ? (
+          <div className="text-center py-16">
+            <Loader2 className="h-8 w-8 animate-spin text-[#FF9800] mx-auto" />
+            <p className="text-gray-500 text-sm mt-3">Chargement du catalogue...</p>
+          </div>
+        ) : filteredProducts.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {filteredProducts.map(product => (
+              <SalineProductCard key={product.id} product={product} onAddToCart={handleAddToCart} loading={cartLoading} />
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-800 flex items-center justify-center">
-              <ShoppingCart className="h-8 w-8 text-gray-500" />
-            </div>
-            <h3 className="text-white font-semibold mb-2">{t('msg_no_results')}</h3>
-            <p className="text-gray-300 text-sm">
-              {t('shop_clear_filters')}
-            </p>
+          <div className="text-center py-16">
+            <Package className="h-12 w-12 text-gray-600 mx-auto mb-3" />
+            <h3 className="text-white font-semibold mb-1">Aucun produit trouve</h3>
+            <p className="text-gray-500 text-sm">Essayez un autre filtre</p>
           </div>
         )}
-      </GlobalContainer>
+
+        {/* CTA vers carte */}
+        <div className="mt-12 rounded-xl border p-6 text-center" style={{ backgroundColor: '#111122', borderColor: 'rgba(255,255,255,0.06)' }}>
+          <Crosshair className="h-8 w-8 text-[#FF9800] mx-auto mb-3" />
+          <h3 className="text-white font-bold text-lg mb-2">Analyse personnalisee</h3>
+          <p className="text-gray-400 text-sm mb-4">
+            Accedez a ANALYSE TERRITOIRE pour obtenir des recommandations SUPRA adaptees a votre site
+          </p>
+          <Button className="bg-[#FF9800] hover:bg-[#E68900] text-black font-bold" onClick={() => navigate('/mon-territoire-bionic')} data-testid="cta-analyse-territoire">
+            <Crosshair className="h-4 w-4 mr-2" /> Analyse Territoire
+          </Button>
+        </div>
+      </div>
     </main>
   );
-};
-
-export default ShopPage;
+}

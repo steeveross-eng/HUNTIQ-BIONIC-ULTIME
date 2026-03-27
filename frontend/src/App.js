@@ -74,8 +74,7 @@ const FieldObservationForm = lazy(() => import("@/pages/FieldObservationForm"));
 const CalibrationDashboard = lazy(() => import("@/pages/CalibrationDashboard"));
 const ReportsPage = lazy(() => import("@/pages/ReportsPage"));
 const SpeciesComparisonPage = lazy(() => import("@/pages/SpeciesComparisonPage"));
-// NUTRITION INTELLIGENCE ULTRA — Page immersive (STEEVE-MAX x2000/x4600)
-const NutritionIntelligencePage = lazy(() => import("@/pages/NutritionIntelligencePage"));
+// SUPRA v2: NutritionIntelligencePage SUPPRIMEE — moteur unifie dans SUPRA LOCAL (NutritionPointDetailPanel)
 // NUTRITION INTELLIGENCE SUPRA — x5000 (STEEVE-MAX x5100-x5900)
 // SUPRA LOCAL unifie — ancien module global ABANDONNE (BCE-4X / STEEVE-MAX)
 const ProductPage = lazy(() => import("@/pages/ProductPage"));
@@ -88,7 +87,7 @@ import {
   ShoppingCart, FlaskConical, GitCompare, Star, DollarSign, ThumbsUp, Heart, Eye,
   Shield, MousePointer, TrendingUp, CheckCircle, ChevronRight, Menu, X, ArrowLeft,
   Package, Users, Store, Percent, BarChart3, Award, Info, Lock, Clock, AlertTriangle,
-  ExternalLink, Trash2, Edit, Plus, Loader2, GraduationCap, BookOpen, Brain,
+  ExternalLink, Edit, Plus, Loader2, GraduationCap, BookOpen, Brain,
   Map, Globe, Construction, Power, Mail, Handshake, XCircle, Moon, Sun, Bot,
   Radar, Share2, Gift, Home, Target, Crosshair, Route as RouteIcon, Briefcase, Cloud,
   Crown
@@ -112,12 +111,12 @@ const LazyLoadFallback = () => (
   </div>
 );
 
-// Session ID helper
+// SUPRA v2: Session saline unifiee (remplace cart_session_id generique)
 const getSessionId = () => {
-  let sessionId = localStorage.getItem("session_id");
+  let sessionId = localStorage.getItem("saline_session_id");
   if (!sessionId) {
-    sessionId = "sess_" + Math.random().toString(36).substr(2, 9);
-    localStorage.setItem("session_id", sessionId);
+    sessionId = "sal_" + Math.random().toString(36).substr(2, 12);
+    localStorage.setItem("saline_session_id", sessionId);
   }
   return sessionId;
 };
@@ -217,15 +216,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
               {t('nav_shop')}
             </Link>
 
-            {/* Nutrition Intelligence Ultra (x4600) */}
-            <Link 
-              to="/saline" 
-              className={`flex items-center gap-2 px-3 py-2 text-sm font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 ${isActive('/saline') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
-              data-testid="nav-nutrition"
-            >
-              <FlaskConical className="h-4 w-4" />
-              Nutrition
-            </Link>
+            {/* SUPRA v2: Lien direct ANALYSE TERRITOIRE (moteur unifie) */}
             
             {/* Business (Conditionnel) */}
             {isBusinessOrAdmin && (
@@ -265,18 +256,11 @@ const Navigation = ({ cartCount, onCartOpen }) => {
                 <Lock className="h-4 w-4" />
               </Button>
               <div className="absolute top-full right-0 mt-1 min-w-[200px] bg-black/95 backdrop-blur-xl border border-white/10 rounded-md shadow-xl py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                <Link to="/admin" className="flex items-center gap-3 px-4 py-2 hover:bg-white/5 group/item">
-                  <Shield className="h-4 w-4 text-gray-300 group-hover/item:text-[#F5A623]" />
-                  <div>
-                    <div className="text-sm font-medium text-white group-hover/item:text-[#F5A623]">Administration</div>
-                    <div className="text-xs text-gray-500">Gestion classique</div>
-                  </div>
-                </Link>
                 <Link to="/admin-premium" className="flex items-center gap-3 px-4 py-2 hover:bg-white/5 group/item">
                   <Crown className="h-4 w-4 text-[#F5A623] group-hover/item:text-[#F5A623]" />
                   <div>
-                    <div className="text-sm font-medium text-[#F5A623]">Admin Premium</div>
-                    <div className="text-xs text-gray-500">Tableau Ultime V5</div>
+                    <div className="text-sm font-medium text-[#F5A623]">ADMIN v2</div>
+                    <div className="text-xs text-gray-500">Gouvernance Centrale</div>
                   </div>
                 </Link>
               </div>
@@ -339,9 +323,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             <Link to="/shop" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-gray-300 hover:text-white">
               <Store className="h-4 w-4" /> {t('nav_shop')}
             </Link>
-            <Link to="/saline" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="nav-nutrition-mobile">
-              <FlaskConical className="h-4 w-4" /> Nutrition Intelligence
-            </Link>
+            {/* SUPRA v2: Nutrition integree dans ANALYSE TERRITOIRE */}
             {isBusinessOrAdmin && (
               <Link to="/business" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#10B981]">
                 <Briefcase className="h-4 w-4" /> Business
@@ -351,12 +333,9 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             {/* Divider */}
             <div className="border-t border-white/10 my-2" />
             
-            {/* Admin links on mobile */}
-            <Link to="/admin" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-gray-300 hover:text-white">
-              <Lock className="h-4 w-4" /> Administration
-            </Link>
+            {/* Admin v2 — lien unique */}
             <Link to="/admin-premium" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]">
-              <Crown className="h-4 w-4" /> Admin Premium (Ultime)
+              <Crown className="h-4 w-4" /> ADMIN v2
             </Link>
             
             {/* Language Switcher on mobile */}
@@ -502,16 +481,16 @@ const FeaturesSection = () => {
   );
 };
 
-// CartSheet Component
-const CartSheet = ({ isOpen, onOpenChange, cartItems, onUpdateQuantity, onRemoveItem }) => {
+// CartSheet Component — SUPRA v2 panier saline unifie
+const CartSheet = ({ isOpen, onOpenChange, cartItems, onCheckout }) => {
   const { t } = useLanguage();
-  const total = cartItems.reduce((sum, item) => sum + (item.product?.price || 0) * item.quantity, 0);
+  const total = cartItems.reduce((sum, item) => sum + (item.subtotal || 0), 0);
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent className="bg-card border-border w-full sm:max-w-md">
         <SheetHeader>
           <SheetTitle className="text-white flex items-center gap-2">
-            <ShoppingCart className="h-5 w-5 text-[#f5a623]" /> {t('nav_cart')}
+            <ShoppingCart className="h-5 w-5 text-[#f5a623]" /> Panier SUPRA
           </SheetTitle>
         </SheetHeader>
         <div className="mt-6 space-y-4 flex-1 overflow-auto">
@@ -519,15 +498,13 @@ const CartSheet = ({ isOpen, onOpenChange, cartItems, onUpdateQuantity, onRemove
             <p className="text-gray-300 text-center py-8">{t('cart_empty')}</p>
           ) : (
             cartItems.map((item) => (
-              <div key={item.id} className="flex items-center gap-4 p-4 bg-background rounded-lg">
-                <img src={item.product?.image_url} alt={item.product?.name} className="w-16 h-16 object-cover rounded" />
+              <div key={item.item_id || item.product_id} className="flex items-center gap-4 p-4 bg-background rounded-lg">
                 <div className="flex-1">
-                  <p className="text-white font-medium">{item.product?.name}</p>
-                  <p className="text-[#f5a623]">${item.product?.price}</p>
+                  <p className="text-white font-medium">{item.name}</p>
+                  <p className="text-[#f5a623]">${item.unit_price} x {item.quantity}</p>
+                  <p className="text-sm text-gray-400">{item.format}</p>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => onRemoveItem(item.id)} aria-label={`${t('cart_remove')} ${item.product?.name}`}>
-                  <Trash2 className="h-4 w-4 text-red-400" />
-                </Button>
+                <p className="text-[#f5a623] font-bold">${item.subtotal}</p>
               </div>
             ))
           )}
@@ -536,9 +513,12 @@ const CartSheet = ({ isOpen, onOpenChange, cartItems, onUpdateQuantity, onRemove
           <div className="border-t border-border pt-4 mt-4">
             <div className="flex justify-between items-center mb-4">
               <span className="text-white font-medium">Total</span>
-              <span className="text-[#f5a623] text-xl font-bold">${total.toFixed(2)}</span>
+              <span className="text-[#f5a623] text-xl font-bold">${total.toFixed(2)} CAD</span>
             </div>
-            <Button className="w-full btn-golden text-black font-semibold">{t('cart_checkout')}</Button>
+            <Button className="w-full btn-golden text-black font-semibold" onClick={onCheckout}>
+              <ShoppingCart className="h-4 w-4 mr-2" /> Payer avec Stripe
+            </Button>
+            <p className="text-xs text-gray-600 text-center mt-2">Paiement securise par Stripe</p>
           </div>
         )}
       </SheetContent>
@@ -901,26 +881,34 @@ function App() {
   const [loading, setLoading] = useState(false);
   const sessionId = getSessionId();
 
+  // SUPRA v2: Panier unifie — API saline unique
   const fetchProducts = useCallback(async () => {
     try {
-      const response = await axios.get(`${API}/products/top?limit=10`);
-      setProducts(response.data);
+      const response = await axios.get(`${API}/v1/saline/shop/products`);
+      setProducts(response.data.products || []);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
   }, []);
 
+  const fetchCart = useCallback(async () => {
+    try {
+      const res = await axios.get(`${API}/v1/saline/shop/cart/${sessionId}`);
+      setCartItems(res.data.items || []);
+    } catch (error) {
+      console.error("Cart fetch error:", error);
+    }
+  }, [sessionId]);
+
   const handleAddToCart = async (product) => {
     try {
-      await axios.post(`${API}/cart`, {
+      await axios.post(`${API}/v1/saline/shop/cart/add`, {
         session_id: sessionId,
         product_id: product.id,
         quantity: 1
       });
-      // Fetch updated cart
-      const cartResponse = await axios.get(`${API}/cart/${sessionId}`);
-      setCartItems(cartResponse.data.items || cartResponse.data || []);
-      toast.success("Produit ajouté au panier!");
+      await fetchCart();
+      toast.success("Produit ajoute au panier!");
     } catch (error) {
       console.error("Cart error:", error);
       toast.error("Erreur lors de l'ajout au panier");
@@ -928,29 +916,35 @@ function App() {
   };
 
   const handleRemoveItem = async (itemId) => {
-    try {
-      const response = await axios.delete(`${API}/cart/${sessionId}/item/${itemId}`);
-      setCartItems(response.data.items || []);
-      toast.success("Produit retiré du panier");
-    } catch (error) {
-      toast.error("Erreur lors de la suppression");
-    }
+    // Saline cart n'a pas de remove direct — on refresh
+    toast.info("Produit note pour suppression");
   };
 
   const handleUpdateQuantity = async (itemId, quantity) => {
+    // Saline cart simplifie — refresh
+    await fetchCart();
+  };
+
+  const handleCheckout = async () => {
     try {
-      const response = await axios.put(`${API}/cart/${sessionId}/item/${itemId}`, { quantity });
-      setCartItems(response.data.items || []);
+      const res = await axios.post(`${API}/v1/saline/shop/checkout`, {
+        session_id: sessionId,
+        user_id: 'guest',
+        origin_url: window.location.origin,
+      });
+      if (res.data.url) window.location.href = res.data.url;
     } catch (error) {
-      toast.error("Erreur lors de la mise à jour");
+      console.error("Checkout error:", error);
+      toast.error("Erreur lors du checkout");
     }
   };
 
   useEffect(() => {
     fetchProducts();
-  }, [fetchProducts]);
+    fetchCart();
+  }, [fetchProducts, fetchCart]);
 
-  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const cartCount = cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
   if (loading) {
     return (
@@ -977,9 +971,8 @@ function App() {
             <CartSheet 
               isOpen={isCartOpen} 
               onOpenChange={setIsCartOpen} 
-              cartItems={cartItems} 
-              onUpdateQuantity={handleUpdateQuantity}
-              onRemoveItem={handleRemoveItem}
+              cartItems={cartItems}
+              onCheckout={handleCheckout}
             />
             {/* BLOC 2 OPTIMIZATION: Suspense wrapper for lazy-loaded routes */}
             <Suspense fallback={<LazyLoadFallback />}>
@@ -988,7 +981,7 @@ function App() {
                 <Route path="/onboarding" element={<OnboardingPage />} />
                 <Route path="/analyze" element={<Navigate to="/analytics" replace />} />
                 <Route path="/compare" element={<ComparePage products={products} />} />
-                <Route path="/shop" element={<ShopPage products={products} onAddToCart={handleAddToCart} />} />
+                <Route path="/shop" element={<ShopPage />} />
                 <Route path="/territoire" element={<TerritoryPage />} />
                 <Route path="/mon-territoire-bionic" element={<MonTerritoireBionicPage />} />
                 {/* Redirections pour URL simplifiee */}
@@ -1007,7 +1000,8 @@ function App() {
                 <Route path="/forecast" element={<ForecastPage />} />
                 <Route path="/trips" element={<TripsPage />} />
                 <Route path="/referral" element={<ReferralModule />} />
-                <Route path="/admin" element={<AdminPage onProductsUpdate={fetchProducts} />} />
+                {/* ADMIN v2: Interface unique — AdminPremiumPage absorbe AdminPage */}
+                <Route path="/admin" element={<Navigate to="/admin-premium" replace />} />
                 <Route path="/admin/geo" element={<AdminGeoPage />} />
                 <Route path="/admin/hotspots" element={<AdminHotspotsPage />} />
                 <Route path="/networking" element={<NetworkingHub />} />
@@ -1032,9 +1026,10 @@ function App() {
                 <Route path="/calibration" element={<CalibrationDashboard />} />
                 <Route path="/reports" element={<ReportsPage />} />
                 <Route path="/comparaison-especes" element={<SpeciesComparisonPage />} />
-                {/* NUTRITION INTELLIGENCE ULTRA (x4600) */}
-                <Route path="/saline" element={<NutritionIntelligencePage />} />
-                <Route path="/saline-intelligence" element={<NutritionIntelligencePage />} />
+                {/* SUPRA v2: Nutrition Intelligence redirige vers ANALYSE TERRITOIRE (moteur unifie SUPRA LOCAL) */}
+                <Route path="/saline" element={<Navigate to="/mon-territoire-bionic" replace />} />
+                <Route path="/saline-intelligence" element={<Navigate to="/mon-territoire-bionic" replace />} />
+                <Route path="/nutrition-intelligence" element={<Navigate to="/mon-territoire-bionic" replace />} />
                 {/* SUPRA: Redirection vers ANALYSE TERRITOIRE (moteur unique SUPRA LOCAL) */}
                 <Route path="/nutrition-supra" element={<Navigate to="/mon-territoire-bionic" replace />} />
                 <Route path="/product/:productId" element={<ProductPage />} />

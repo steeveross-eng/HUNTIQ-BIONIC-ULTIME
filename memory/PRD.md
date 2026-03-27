@@ -1,103 +1,79 @@
-# HUNTIQ-V6 — PRD (Product Requirements Document)
-## Protocole BCE-4X / MAX ULTRA / STEEVE-MAX
+# HUNTIQ-V6 — Product Requirements Document
+## BCE-4X / STEEVE-MAX V6
 
-### Projet
-Reconstruction, modernisation et stabilisation de la plateforme HUNTIQ-V6.
+---
 
-### Stack Technique
-- **Backend**: FastAPI, ThreadPoolExecutor, MongoDB
+## Enonce original
+Reconstruction et modernisation de la plateforme HUNTIQ-V6 sous gouvernance stricte BCE-4X / MAX ULTRA / STEEVE-MAX. Application full-stack (FastAPI + React) pour la chasse intelligente avec analyse de territoire, nutrition animale, e-commerce de produits salines, et administration centralisee.
+
+## Architecture
+- **Backend**: FastAPI, 84+ modules "engines"
 - **Frontend**: React, Zustand, React-Leaflet, Tailwind
-- **Gouvernance**: BCE-4X, BCE-4X-UI (PositionLock, ZIndexGuard, RenderGuard, LayoutFreeze)
+- **E-commerce**: Stripe via emergentintegrations
+- **Gouvernance UI**: BCE4X_UIShield (PositionLock, RenderGuard, ZIndexGuard, LayoutFreeze)
+- **Branche de travail**: `Work1`
 
 ---
 
-## Travaux Accomplis
+## Ce qui a ete implemente
 
-### Phase 1-3: Import, Archive, Gouvernance, Audits, BSAA
-- Clone, inventaire, ZIP, GOVERNANCE.md, Engine/Coherence/Historical audits, BSAA-0/1
+### Phase P0 — Fusion Totale (27 Mars 2026)
 
-### Optimisation TERRITOIRE
-- Performance backend, Weather Engine v3, Moteurs SUPRA hybrides
-- Bloc Meteo Intelligent, BCE4X_UIShield, Suppression watermark
+#### SUPRA v2 — Moteur Unifie
+- Fusion SUPRA LOCAL + NUTRITION INTELLIGENCE ULTRA + SUPRA PREMIUM
+- Gauge SVG animee (7 moteurs ULTRA)
+- 4 Info Cards (Sol, Metabolisme, Vegetation, Hydrologie)
+- Narration SUPRA PREMIUM (Physiologie, Support, Comportement)
+- Panier Stripe reel dans onglet COMMANDEZ
+- Session unifiee `saline_session_id`
+- Checkout Stripe reel
+- Routes /saline, /saline-intelligence, /nutrition-intelligence → Redirect
 
-### P0 Score Header (26 Mars) — DONE
-### P0 SUPRA Uniformisation (26 Mars) — DONE
-### P0 Weather Engine v3 Unification (27 Mars) — DONE
-### P0 Header Stability Rule (27 Mars) — DONE
-### P0 Navigation Restructuration (27 Mars) — DONE
-### P0 Refonte SUPRA PREMIUM (27 Mars) — DONE
-### P1 Fiches Produits (27 Mars) — DONE
+#### MAGASIN v2 — E-commerce Unifie
+- ShopPage reecrit — Catalogue SALINE_PRODUCTS via API
+- ProductPage reecrit — Fiche produit SALINE via API
+- Filtres par format, espece, recherche textuelle
+- Boutons CMD connectes au panier saline Stripe
+- CartSheet unifie dans App.js
 
-### P0 Unification SUPRA LOCAL (27 Mars)
-- Onglet SUPRA supprime de la navigation (desktop + mobile)
-- Lazy import NutritionIntelligenceSupra supprime
-- Route /nutrition-supra redirige vers /mon-territoire-bionic (ANALYSE TERRITOIRE)
-- SUPRA LOCAL (SAL-XX via NutritionPointDetailPanel) = moteur unique officiel
-- Interaction carte: clic point jaune -> SUPRA SAL-XX (panel contextuel)
-- Tooltip: "VOIR LES BESOINS DE TON SITE" sur survol point jaune
-- Navigation finale: HOME | DASHBOARD | ANALYSE TERRITOIRE | CARTE INTERACTIVE | PERMIS | SHOP | NUTRITION
+#### ADMIN v2 — Gouvernance Centrale
+- AdminPremiumPage absorbe AdminPage
+- Nouvelles sections: Moteurs SUPRA + Catalogue Produits
+- Route /admin → Redirect vers /admin-premium
+- Navigation simplifie: lien unique ADMIN v2
 
----
+#### Nettoyage Technique
+- Suppression import Trash2 inutilise
+- Suppression liens navigation "Nutrition"
+- Unification liens admin (un seul lien)
+- Panier generique → Panier saline unifie
+- Fetch produits unifie sur API saline
 
-## Navigation Officielle (27 Mars 2026)
-1. HOME
-2. DASHBOARD
-3. ANALYSE TERRITOIRE (/mon-territoire-bionic) — Carte strategique
-4. CARTE INTERACTIVE (/map) — Carte terrain GPS
-5. PERMIS & ENREGISTREMENT
-6. SHOP
-7. NUTRITION
-- ~~SUPRA~~ (SUPPRIME — unifie dans SUPRA LOCAL)
-- ~~TRIPS~~ (SUPPRIME)
-
----
-
-## Modules Primaires
-
-### ANALYSE TERRITOIRE (/mon-territoire-bionic)
-Carte strategique + SUPRA LOCAL (SAL-XX) via points jaunes.
-
-### CARTE INTERACTIVE (/map)
-Carte terrain GPS: navigation, tracking, groupe, traces, waypoints.
-
-### SUPRA LOCAL (NutritionPointDetailPanel)
-Moteur unique SUPRA. Ouvert via clic sur point jaune dans ANALYSE TERRITOIRE.
-Score mineral, recettes, physiologie, comportement, couts.
-
-### Fiches Produits (/product/:id)
-Detail produit mineral: role, dosage, prix, disponibilite.
+### Phases precedentes (deja completees)
+- Score Header securise + BCE4X_UIShield
+- Weather Engine v3 unifie
+- Navigation restructuree (ANALYSE TERRITOIRE, CARTE INTERACTIVE)
+- Audits SUPRA vs ULTRA, MAGASIN, ADMIN
+- Architecture BSAA
+- Import V5 → V6, gouvernance, branch Work1
 
 ---
-
-## Taches Prochaines
-### P1 - Frontend Admin x7000
-### P1 - Fiche produit x6030 (enrichissement)
-### P1 - Nettoyage modules V5 residuels
 
 ## Backlog
-### P2 - BSAA-2: Implementation (GELE)
-### P3 - Merge Work1 vers main (INTERDIT sans validation STEEVE-MAX)
+
+### P0 (Validation STEEVE-MAX requise)
+- Validation visuelle de SUPRA v2 sur la carte (clic point → panneau)
+
+### P1
+- Nettoyage V5: Suppression fichiers obsoletes (NutritionIntelligencePage.jsx, AdminPage.jsx, etc.)
+- Enrichissement catalogue via API x6030 (prix dynamiques, stock, variantes)
+
+### P2
+- BSAA-2: Implementation module BIONIC Social Ads Automation (GELE)
+
+### P3
+- Merge Work1 → main (INTERDIT sans validation STEEVE-MAX)
 
 ---
 
-## Fichiers Cles
-- /app/frontend/src/App.js
-- /app/frontend/src/pages/MonTerritoireBionicPage.jsx
-- /app/frontend/src/pages/ProductPage.jsx
-- /app/frontend/src/components/territoire/ui/TerritoireHeader.jsx
-- /app/frontend/src/components/territoire/NutritionPointDetailPanel.jsx (SUPRA LOCAL)
-- /app/frontend/src/components/territoire/NutritionPointsLayer.jsx
-- /app/frontend/src/components/territoire/map/BCE4X_UIShield.jsx
-- /app/frontend/src/stores/useBionicStore.js
-- /app/frontend/src/stores/useWeatherStore.js
-- /app/frontend/src/modules/dashboard/CoreDashboard.jsx
-- /app/frontend/src/modules/weather/components/WeatherWidget.jsx
-
-## API Endpoints
-- /api/v3/weather/current (Weather Engine v3)
-- /api/v6/nutrition-intelligence/full-analysis (SUPRA)
-- /api/v6/supra/advanced
-- /supplier/submit, /supplier/review, /supplier/activate
-
-## Fichiers Obsoletes (non supprimes, desactives)
-- /app/frontend/src/pages/NutritionIntelligenceSupra.jsx (ancien SUPRA global, plus charge)
+*Document mis a jour le 27 Mars 2026 — BCE-4X / STEEVE-MAX V6*

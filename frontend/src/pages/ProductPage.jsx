@@ -1,146 +1,198 @@
 /**
- * ProductPage.jsx — Fiche produit BIONIC SUPRA
- * BCE-4X / STEEVE-MAX V6
- * 
- * Description, Role physiologique, Support optimal,
- * Dosage, Prix, Disponibilite locale
+ * ProductPage.jsx — MAGASIN v2
+ * ============================
+ * Fiche produit unifiee — SALINE_PRODUCTS + API
+ * CMD branche sur panier saline Stripe
+ *
+ * BCE-4X / STEEVE-MAX V6 — PHASE P0
  */
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useCallback } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import axios from "axios";
 import {
-  ArrowLeft, ShoppingCart, Leaf, FlaskConical, TreeDeciduous,
-  Scale, DollarSign, MapPin, Gem, Activity, Droplets, Zap
-} from 'lucide-react';
+  ShoppingCart, ArrowLeft, Package, FlaskConical, Droplets, Shield,
+  Star, MapPin, Scale, DollarSign, Activity, Loader2, Leaf,
+  TreeDeciduous, Mountain, ChevronDown, ChevronUp
+} from "lucide-react";
+
+const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const BIONIC = {
   green: '#00C853', yellow: '#F9D423', orange: '#FF9800', red: '#D32F2F',
   blue: '#2196F3', purple: '#9C27B0', card: '#111122', border: 'rgba(255,255,255,0.06)',
 };
 
-// Base de donnees produits BIONIC (extensible via API)
-const PRODUCT_DB = {
-  'Sodium': { mineral: 'Sodium (Na)', role: "Maintien de l'equilibre osmotique et de l'hydratation cellulaire. Essentiel pour la regulation de la pression arterielle et la transmission nerveuse.", support: 'Bois mou (epinette, sapin)', dosage: '2-4 kg / site / application', prix: '8-15$ CAD / kg', disponibilite: 'Disponible localement (cooperatives agricoles, magasins de chasse)', icon: Droplets, color: BIONIC.blue },
-  'Calcium': { mineral: 'Calcium (Ca)', role: "Croissance et regeneration du panache. Mineralisation osseuse. Essentiel durant la phase de velours (mai-aout).", support: 'Bois mou ou bloc mineral', dosage: '1-3 kg / site / application', prix: '12-20$ CAD / kg', disponibilite: 'Disponible en ligne et en magasin specialise', icon: Gem, color: BIONIC.green },
-  'Phosphore': { mineral: 'Phosphore (P)', role: "Metabolisme energetique (ATP). Synthese ADN. Croissance du panache en synergie avec le calcium (ratio Ca:P = 2:1).", support: 'Bois mou', dosage: '1-2 kg / site / application', prix: '10-18$ CAD / kg', disponibilite: 'Cooperative agricole, fournisseur mineral', icon: Zap, color: BIONIC.orange },
-  'Magnesium': { mineral: 'Magnesium (Mg)', role: "Contraction musculaire, fonction nerveuse, fixation du calcium. Cofacteur de 300+ reactions enzymatiques.", support: 'Bois mou ou sol amendé', dosage: '0.5-1.5 kg / site / application', prix: '8-14$ CAD / kg', disponibilite: 'Disponible localement', icon: Activity, color: BIONIC.purple },
-  'Potassium': { mineral: 'Potassium (K)', role: "Fonction musculaire et cardiaque. Equilibre electrolytique. Essentiel durant le rut (effort physique intense).", support: 'Tous supports', dosage: '1-2 kg / site / application', prix: '6-12$ CAD / kg', disponibilite: 'Largement disponible (engrais agricoles)', icon: Leaf, color: BIONIC.green },
+const getSalineSession = () => {
+  let sid = localStorage.getItem('saline_session_id');
+  if (!sid) {
+    sid = 'sal_' + Math.random().toString(36).substr(2, 12);
+    localStorage.setItem('saline_session_id', sid);
+  }
+  return sid;
 };
 
-const Card = ({ children, className = '' }) => (
-  <div className={`rounded-2xl border p-5 ${className}`} style={{ backgroundColor: BIONIC.card, borderColor: BIONIC.border, boxShadow: '0 2px 12px rgba(0,0,0,0.2)' }}>{children}</div>
+const InfoBlock = ({ icon: Icon, title, children, color = BIONIC.blue }) => (
+  <div className="rounded-xl border p-4" style={{ backgroundColor: BIONIC.card, borderColor: BIONIC.border }}>
+    <div className="flex items-center gap-2 mb-3">
+      <Icon className="h-4 w-4" style={{ color }} />
+      <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">{title}</span>
+    </div>
+    {children}
+  </div>
 );
 
 export default function ProductPage() {
   const { productId } = useParams();
   const navigate = useNavigate();
-  const decoded = decodeURIComponent(productId || '');
-  
-  // Chercher le produit dans la base locale
-  const product = PRODUCT_DB[decoded] || Object.values(PRODUCT_DB).find(p => p.mineral.toLowerCase().includes(decoded.toLowerCase()));
-  
-  // Fallback produit generique
-  const p = product || {
-    mineral: decoded || 'Produit',
-    role: "Information detaillee en cours de chargement. Ce produit fait partie du catalogue BIONIC SUPRA.",
-    support: 'Bois mou recommande',
-    dosage: 'Selon prescription SUPRA',
-    prix: 'Voir fournisseur local',
-    disponibilite: 'Verifier disponibilite locale',
-    icon: FlaskConical,
-    color: BIONIC.orange,
-  };
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [cartLoading, setCartLoading] = useState(false);
+  const [showMinerals, setShowMinerals] = useState(false);
 
-  const Icon = p.icon || FlaskConical;
+  // Fetch product from SALINE API
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await axios.get(`${API}/v1/saline/shop/products`);
+        const p = (res.data.products || []).find(p => p.id === productId);
+        setProduct(p || null);
+      } catch (e) {
+        console.error('[ProductPage]', e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [productId]);
+
+  // Add to saline cart
+  const handleAddToCart = useCallback(async () => {
+    setCartLoading(true);
+    try {
+      await axios.post(`${API}/v1/saline/shop/cart/add`, {
+        session_id: getSalineSession(), product_id: productId, quantity: 1,
+      });
+      toast.success('Produit ajoute au panier SUPRA');
+    } catch (e) {
+      toast.error("Erreur lors de l'ajout");
+    } finally {
+      setCartLoading(false);
+    }
+  }, [productId]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0a0a14] flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-[#FF9800]" />
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="min-h-screen bg-[#0a0a14] flex flex-col items-center justify-center gap-4 pt-20">
+        <Package className="h-16 w-16 text-gray-600" />
+        <h2 className="text-xl font-bold text-white">Produit introuvable</h2>
+        <Button variant="outline" onClick={() => navigate('/shop')} data-testid="back-to-shop">
+          <ArrowLeft className="h-4 w-4 mr-2" /> Retour au catalogue
+        </Button>
+      </div>
+    );
+  }
+
+  const p = product;
+  const scoreColor = p.score >= 90 ? BIONIC.green : p.score >= 85 ? BIONIC.yellow : BIONIC.orange;
 
   return (
-    <div className="min-h-screen bg-[#0a0a14] text-white" data-testid="product-page">
-      {/* Header */}
-      <div className="border-b border-gray-800/50 bg-black/60 backdrop-blur-sm px-6 py-4">
-        <div className="max-w-[800px] mx-auto flex items-center gap-4">
-          <button onClick={() => navigate(-1)} className="text-gray-400 hover:text-white transition-colors" data-testid="product-back-btn">
-            <ArrowLeft className="h-5 w-5" />
+    <div className="min-h-screen bg-[#0a0a14] pt-20" data-testid="product-page">
+      <div className="max-w-3xl mx-auto px-4 py-8 space-y-5">
+        {/* Back */}
+        <button onClick={() => navigate('/shop')} className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors" data-testid="product-back">
+          <ArrowLeft className="h-4 w-4" /> Catalogue SUPRA
+        </button>
+
+        {/* Header Card */}
+        <div className="rounded-xl border p-6 flex items-start gap-5" style={{ backgroundColor: BIONIC.card, borderColor: BIONIC.border }}>
+          <div className="w-20 h-20 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: `linear-gradient(135deg, ${scoreColor}22, ${scoreColor}08)`, border: `2.5px solid ${scoreColor}` }}>
+            <span className="text-3xl font-black" style={{ color: scoreColor }}>{p.score}</span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <span className="text-[11px] text-[#FF9800] font-bold uppercase tracking-wider">{p.brand}</span>
+            <h1 className="text-xl font-black text-white mt-1" data-testid="product-name">{p.name}</h1>
+            <p className="text-sm text-gray-400 mt-1">{p.description}</p>
+            <div className="flex items-center gap-3 mt-3">
+              <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg" style={{ backgroundColor: '#FF980018', color: '#FF9800' }}>{p.product_format}</span>
+              <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg" style={{ backgroundColor: `${scoreColor}18`, color: scoreColor }}>SCORE {p.score}/100</span>
+              <span className="text-[11px] text-gray-500">{p.weight}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Animaux cibles */}
+        <InfoBlock icon={Leaf} title="Animaux cibles" color={BIONIC.green}>
+          <div className="flex flex-wrap gap-2">
+            {p.target_animals?.map(a => (
+              <span key={a} className="text-sm font-semibold px-3 py-1.5 rounded-lg" style={{ backgroundColor: `${BIONIC.green}12`, color: BIONIC.green }}>{a}</span>
+            ))}
+          </div>
+        </InfoBlock>
+
+        {/* Mineraux */}
+        <InfoBlock icon={FlaskConical} title="Composition minerale" color={BIONIC.yellow}>
+          <button onClick={() => setShowMinerals(v => !v)} className="flex items-center gap-2 text-sm text-gray-300 mb-2" data-testid="toggle-minerals">
+            {showMinerals ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            {Object.keys(p.minerals || {}).length} mineraux
           </button>
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${p.color}15`, border: `2px solid ${p.color}60` }}>
-            <Icon className="h-5 w-5" style={{ color: p.color }} />
-          </div>
-          <div>
-            <h1 className="text-lg font-black uppercase tracking-tight" data-testid="product-title">Fiche Produit</h1>
-            <p className="text-xs text-gray-500">{p.mineral} | BIONIC SUPRA</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-[800px] mx-auto px-6 py-6 space-y-4">
-        {/* Nom + Badge */}
-        <Card>
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 rounded-2xl flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${p.color}22, ${p.color}08)`, border: `2.5px solid ${p.color}` }}>
-              <Icon className="h-8 w-8" style={{ color: p.color }} />
+          {showMinerals && (
+            <div className="grid grid-cols-2 gap-2 mt-2">
+              {Object.entries(p.minerals || {}).map(([k, v]) => (
+                <div key={k} className="flex justify-between py-1.5 px-3 rounded-lg" style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
+                  <span className="text-sm text-gray-300">{k}</span>
+                  <span className="text-sm font-bold text-white">{v}</span>
+                </div>
+              ))}
             </div>
+          )}
+        </InfoBlock>
+
+        {/* Saisons recommandees */}
+        <InfoBlock icon={Mountain} title="Saisonnalite" color={BIONIC.orange}>
+          <div className="flex flex-wrap gap-2">
+            {p.recommended_seasons?.map(s => (
+              <span key={s} className="text-sm px-3 py-1 rounded-lg capitalize" style={{ backgroundColor: '#FF980012', color: '#FF9800' }}>{s}</span>
+            ))}
+          </div>
+        </InfoBlock>
+
+        {/* Prix + Commander */}
+        <div className="rounded-xl border p-6" style={{ backgroundColor: BIONIC.card, borderColor: BIONIC.border }}>
+          <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-xl font-black text-white">{p.mineral}</h2>
-              <span className="text-xs font-bold px-2.5 py-0.5 rounded-lg inline-block mt-1" style={{ backgroundColor: `${p.color}18`, color: p.color }}>SUPRA CERTIFIE</span>
+              <span className="text-3xl font-black text-white">${p.price}</span>
+              <span className="text-sm text-gray-500 ml-2">CAD</span>
+            </div>
+            <div className="text-right">
+              <span className="text-[11px] text-gray-500 uppercase">Format</span>
+              <div className="text-sm font-bold text-white">{p.product_format} — {p.weight}</div>
             </div>
           </div>
-        </Card>
-
-        {/* Role physiologique */}
-        <Card>
-          <div className="flex items-center gap-2 mb-3">
-            <Activity className="h-4 w-4" style={{ color: BIONIC.blue }} />
-            <span className="text-sm font-bold text-white uppercase tracking-wider">Role physiologique</span>
-          </div>
-          <p className="text-sm text-gray-300 leading-relaxed" data-testid="product-role">{p.role}</p>
-        </Card>
-
-        {/* Details techniques */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Card>
-            <div className="flex items-center gap-2 mb-2">
-              <TreeDeciduous className="h-4 w-4" style={{ color: BIONIC.green }} />
-              <span className="text-xs font-bold text-gray-400 uppercase">Support optimal</span>
-            </div>
-            <p className="text-sm font-bold text-white" data-testid="product-support">{p.support}</p>
-          </Card>
-          <Card>
-            <div className="flex items-center gap-2 mb-2">
-              <Scale className="h-4 w-4" style={{ color: BIONIC.orange }} />
-              <span className="text-xs font-bold text-gray-400 uppercase">Dosage</span>
-            </div>
-            <p className="text-sm font-bold text-white" data-testid="product-dosage">{p.dosage}</p>
-          </Card>
-          <Card>
-            <div className="flex items-center gap-2 mb-2">
-              <DollarSign className="h-4 w-4" style={{ color: BIONIC.yellow }} />
-              <span className="text-xs font-bold text-gray-400 uppercase">Prix</span>
-            </div>
-            <p className="text-sm font-bold" style={{ color: BIONIC.orange }} data-testid="product-price">{p.prix}</p>
-          </Card>
-          <Card>
-            <div className="flex items-center gap-2 mb-2">
-              <MapPin className="h-4 w-4" style={{ color: BIONIC.purple }} />
-              <span className="text-xs font-bold text-gray-400 uppercase">Disponibilite locale</span>
-            </div>
-            <p className="text-sm text-gray-300" data-testid="product-availability">{p.disponibilite}</p>
-          </Card>
+          <Button
+            className="w-full bg-[#FF9800] hover:bg-[#E68900] text-black font-bold h-11"
+            onClick={handleAddToCart}
+            disabled={cartLoading}
+            data-testid="product-order-btn"
+          >
+            {cartLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <ShoppingCart className="h-4 w-4 mr-2" />}
+            Ajouter au panier SUPRA
+          </Button>
+          <p className="text-[11px] text-gray-600 text-center mt-2">Paiement securise Stripe</p>
         </div>
-
-        {/* Action */}
-        <Card>
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-400">Commander ce produit</span>
-            <button
-              className="flex items-center gap-2 h-10 px-6 rounded-lg font-bold text-sm uppercase tracking-wider transition-all duration-150 hover:brightness-125 active:scale-[0.97]"
-              style={{ backgroundColor: `${BIONIC.orange}18`, color: BIONIC.orange, border: `2px solid ${BIONIC.orange}50` }}
-              data-testid="product-order-btn"
-            >
-              <ShoppingCart className="h-4 w-4" /> Commander
-            </button>
-          </div>
-        </Card>
 
         <div className="text-center text-[10px] text-gray-600 pt-2 pb-6">
-          Fiche Produit BIONIC SUPRA | BCE-4X / STEEVE-MAX V6
+          Fiche Produit BIONIC SUPRA v2 | BCE-4X / STEEVE-MAX V6
         </div>
       </div>
     </div>
