@@ -144,7 +144,7 @@ export const CoreDashboard = ({
     } finally {
       setLoading(false);
     }
-  }, [coordinates, species, season, fetchWeather, weatherCurrent, weatherLoading]);
+  }, [coordinates, species, season, weatherCurrent, weatherLoading]);
 
   useEffect(() => {
     loadDashboardData();

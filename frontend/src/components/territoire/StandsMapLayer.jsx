@@ -52,25 +52,36 @@ const StandsMapLayer = ({
     for (const stand of data.stands) {
       const color = STAND_COLORS[stand.type_key] || '#E74C3C';
 
-      // Approach path — BCE-4X P0.5: Chemin forestier (ligne continue, pas de pointilles)
+      // Approach path — BCE-4X Phase 2: Chemin reel OSM ou estimation annotee
       if (stand.approach_path?.length >= 2) {
         const pathCoords = stand.approach_path.map(p => [p.lat, p.lng]);
         const trailDistanceM = stand.approach_path[0]?.trail_distance_m;
+        const trailType = stand.approach_path[0]?.trail_type;
+        const isEstimation = trailType === 'estimation';
 
-        // Chemin principal — ligne continue style sentier forestier
+        // Couleur: vert = sentier reel, orange = estimation
+        const trailColor = isEstimation ? '#F39C12' : '#2ECC71';
+        const dashArray = isEstimation ? '8, 6' : null;
+
+        // Chemin principal
         const trailLine = L.polyline(pathCoords, {
-          color: '#2ECC71',
+          color: trailColor,
           weight: 3.5,
           opacity: 0.85,
           lineCap: 'round',
           lineJoin: 'round',
+          dashArray: dashArray,
           pane: 'overlayPane',
         });
 
-        // Tooltip avec distance reelle
+        // Tooltip avec distance reelle et type de sentier
         if (trailDistanceM) {
+          const trailType = stand.approach_path[0]?.trail_type;
+          const isEstimation = trailType === 'estimation';
+          const labelColor = isEstimation ? '#F39C12' : '#2ECC71';
+          const labelText = isEstimation ? 'Estimation (pas de sentier OSM)' : 'Sentier reel (OSM)';
           trailLine.bindTooltip(
-            `<span style="font-size:11px;font-weight:700;color:#2ECC71">${trailDistanceM}m</span><br><span style="font-size:9px;color:#aaa">Sentier forestier</span>`,
+            `<span style="font-size:11px;font-weight:700;color:${labelColor}">${trailDistanceM}m</span><br><span style="font-size:9px;color:#aaa">${labelText}</span>`,
             { sticky: true, direction: 'top', offset: [0, -8] }
           );
         }

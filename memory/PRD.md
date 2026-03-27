@@ -30,6 +30,22 @@ Reconstruction et modernisation HUNTIQ-V6 sous gouvernance BCE-4X / MAX ULTRA / 
 ### Phase P0 — Fusion Totale (27 Mars 2026)
 - SUPRA v2, MAGASIN v2, ADMIN v2, Nettoyage
 
+### Phase 2 — Corrections Logiques (27 Mars 2026)
+**AXE 1 — Meteo: Alignement Dashboard <-> Territoire**
+- AdvancedWeatherWidget.jsx reecrit: lecture EXCLUSIVE useWeatherStore, ZERO auto-refresh, ZERO fallback, ZERO smoothing
+- CoreDashboard.jsx: fetchWeather supprime du dependency array
+- Verification: Dashboard et Territoire affichent EXACTEMENT les memes valeurs (-7.9C, 19.7 km/h, 56%, 1015.4 hPa)
+- WeatherWidget.jsx deja aligne sur useWeatherStore
+
+**AXE 2 — Sentiers: Routage REEL via Graphe OSM**
+- Nouveau module: trail_graph.py (Overpass API + graphe A* local)
+- _generate_approach_path() reecrit: interroge Overpass UNE SEULE FOIS, construit graphe, route via A*
+- Cache en memoire par zone (evite re-fetches)
+- Fallback estimation annote si aucun chemin OSM (log WARNING)
+- Sinusoides et waypoints artificiels SUPPRIMES integralement
+- StandsMapLayer.jsx mis a jour: vert continu = sentier reel, orange pointille = estimation
+- Tests: 5/5 sentiers reels (zone urbaine Quebec), 5/5 estimation correcte (zone foret eloignee)
+
 ---
 
 ## Prochain: Verrouillage ULTRA-MAX++
@@ -41,7 +57,7 @@ Reconstruction et modernisation HUNTIQ-V6 sous gouvernance BCE-4X / MAX ULTRA / 
 - File Integrity Lock
 
 ## Backlog
-- P1: Nettoyage fichiers V5, enrichissement catalogue API x6030
+- P1: Nettoyage fichiers V5 (WeatherService.js, bionicWeatherEngine.js, MeteoDashboard.jsx), enrichissement catalogue API x6030
 - P2: BSAA-2 (gele) | P3: Merge Work1 → main
 
 *Mis a jour le 27 Mars 2026*

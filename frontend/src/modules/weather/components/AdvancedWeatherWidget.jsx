@@ -1,163 +1,126 @@
 /**
- * AdvancedWeatherWidget - Widget météo avancé pour Dashboard BIONIC
- * Version: 1.0.0
- * 
- * Affiche les données météo en temps réel avec:
- * - Conditions actuelles détaillées
- * - Prévisions horaires (24h)
- * - Prévisions 7 jours
- * - Score de chasse et recommandations
- * - Phase lunaire
+ * AdvancedWeatherWidget — BCE-4X PHASE 2
+ * SOURCE UNIQUE: useWeatherStore (Weather Engine v3)
+ * ZERO auto-refresh interne. ZERO fallback. ZERO smoothing.
+ * Lecture DIRECTE du store Zustand — aucune transformation.
  */
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
-import { 
-  Cloud, Sun, CloudRain, Wind, Droplets, Thermometer, Eye, 
-  Moon, RefreshCw, MapPin, Clock, Calendar, Target, ChevronLeft, ChevronRight
+import {
+  Cloud, Sun, CloudRain, Wind, Droplets, Thermometer, Eye,
+  Moon, RefreshCw, MapPin, Target
 } from 'lucide-react';
 import useWeatherStore from '../../../stores/useWeatherStore';
-// BCE-4X: WeatherService V1 SUPPRIME — source unique = store v3
 
-const API_URL = process.env.REACT_APP_BACKEND_URL;
-
-// Weather icon mapping
-const getWeatherIcon = (iconCode, size = 'h-8 w-8') => {
-  const iconMap = {
-    '01d': <Sun className={`${size} text-yellow-400`} />,
-    '01n': <Moon className={`${size} text-blue-300`} />,
-    '02d': <Cloud className={`${size} text-gray-300`} />,
-    '02n': <Cloud className={`${size} text-gray-400`} />,
-    '03d': <Cloud className={`${size} text-gray-400`} />,
-    '03n': <Cloud className={`${size} text-gray-500`} />,
-    '04d': <Cloud className={`${size} text-gray-500`} />,
-    '04n': <Cloud className={`${size} text-gray-600`} />,
-    '09d': <CloudRain className={`${size} text-blue-400`} />,
-    '09n': <CloudRain className={`${size} text-blue-500`} />,
-    '10d': <CloudRain className={`${size} text-blue-400`} />,
-    '10n': <CloudRain className={`${size} text-blue-500`} />,
-    '11d': <CloudRain className={`${size} text-purple-400`} />,
-    '11n': <CloudRain className={`${size} text-purple-500`} />,
-    '13d': <Cloud className={`${size} text-blue-200`} />,
-    '13n': <Cloud className={`${size} text-blue-300`} />,
-    '50d': <Cloud className={`${size} text-gray-400`} />,
-    '50n': <Cloud className={`${size} text-gray-500`} />,
-  };
-  return iconMap[iconCode] || <Cloud className={`${size} text-gray-400`} />;
+const getWeatherIconFromCode = (code, size = 'h-8 w-8') => {
+  if (code == null) return <Cloud className={`${size} text-gray-400`} />;
+  const c = parseInt(code);
+  if (c === 0) return <Sun className={`${size} text-yellow-400`} />;
+  if (c <= 3) return <Cloud className={`${size} text-gray-300`} />;
+  if (c >= 45 && c <= 48) return <Cloud className={`${size} text-gray-500`} />;
+  if (c >= 51 && c <= 67) return <CloudRain className={`${size} text-blue-400`} />;
+  if (c >= 71 && c <= 77) return <Cloud className={`${size} text-blue-200`} />;
+  if (c >= 80 && c <= 82) return <CloudRain className={`${size} text-blue-400`} />;
+  if (c >= 95) return <CloudRain className={`${size} text-purple-400`} />;
+  return <Cloud className={`${size} text-gray-400`} />;
 };
 
-// Activity level colors
 const getActivityColor = (level) => {
-  const colors = {
-    peak: 'bg-green-500',
-    high: 'bg-emerald-500',
-    moderate: 'bg-yellow-500',
-    low: 'bg-red-500'
-  };
+  const colors = { peak: 'bg-green-500', high: 'bg-emerald-500', moderate: 'bg-yellow-500', low: 'bg-red-500' };
   return colors[level] || 'bg-gray-500';
 };
 
 const getActivityLabel = (level) => {
-  const labels = {
-    peak: 'Optimale',
-    high: 'Élevée',
-    moderate: 'Modérée',
-    low: 'Faible'
-  };
-  return labels[level] || level;
+  const labels = { peak: 'Optimale', high: 'Elevee', moderate: 'Moderee', low: 'Faible' };
+  return labels[level] || level || 'N/A';
+};
+
+const getWindDirectionText = (deg) => {
+  if (deg == null) return '';
+  const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SO', 'O', 'NO'];
+  return dirs[Math.round(deg / 45) % 8];
 };
 
 /**
- * AdvancedWeatherWidget — BCE-4X CORRECTION LOGIQUE
- * SOURCE UNIQUE: useWeatherStore (Weather Engine v3)
- * Auto-refresh interne SUPPRIME.
- * Aucun appel a WeatherService V1.
+ * BCE-4X Phase 2 — Widget meteo unifie
+ * Lit EXCLUSIVEMENT useWeatherStore. Aucun fetch propre. Aucun state local meteo.
  */
-const AdvancedWeatherWidget = ({ 
-  lat = 46.8139, 
+const AdvancedWeatherWidget = ({
+  lat = 46.8139,
   lng = -71.2080,
-  showHourly = true,
-  showDaily = true,
-  compact = false 
+  compact = false
 }) => {
-  // BCE-4X: Lecture SEULE du store v3 — pas de fetch interne
+  // BCE-4X: Lecture SEULE du store v3
   const weatherCurrent = useWeatherStore(s => s.current);
   const weatherSource = useWeatherStore(s => s.source);
   const weatherLoading = useWeatherStore(s => s.loading);
+  const weatherError = useWeatherStore(s => s.error);
   const fetchAll = useWeatherStore(s => s.fetchAll);
 
-  // Si le store est vide, declencher un seul fetch initial
+  // Si le store est vide, declencher UN SEUL fetch initial (pas d'auto-refresh)
   useEffect(() => {
     if (!weatherCurrent && !weatherLoading) {
       fetchAll(lat, lng);
     }
   }, [weatherCurrent, weatherLoading, fetchAll, lat, lng]);
 
-  // Mapping store → format widget (AUCUNE transformation)
-  const weatherData = useMemo(() => {
+  // Hunting conditions calculees depuis le store (deterministe, zero API)
+  const huntingConditions = useMemo(() => {
     if (!weatherCurrent) return null;
     const w = weatherCurrent;
-    return {
-      current: {
-        temperature: w.temperature_c,
-        feels_like: w.feels_like_c ?? w.temperature_c,
-        humidity: w.humidity_pct,
-        wind_speed: w.wind_speed_kmh,
-        wind_direction: w.wind_direction_deg,
-        wind_gust: w.wind_gust_kmh,
-        pressure: w.pressure_hpa,
-        cloud_cover: w.cloud_cover_pct,
-        uv_index: w.uv_index,
-        condition: w.description || 'N/A',
-        icon: w.weather_code,
-      },
-      source: weatherSource,
-    };
-  }, [weatherCurrent, weatherSource]);
+    const temp = w.temperature_c ?? 0;
+    const wind = w.wind_speed_kmh ?? 0;
+    const press = w.pressure_hpa ?? 1013;
+    const hum = w.humidity_pct ?? 50;
 
-  // Scroll hourly forecast
-  const scrollHourly = (direction) => {
-    const maxIndex = Math.max(0, (weatherData?.hourly?.length || 0) - 8);
-    setHourlyScrollIndex(prev => {
-      if (direction === 'left') return Math.max(0, prev - 4);
-      return Math.min(maxIndex, prev + 4);
-    });
-  };
+    const tempScore = temp >= -5 && temp <= 10 ? 85 : temp >= -15 && temp <= 20 ? 60 : 30;
+    const windScore = wind <= 15 ? 80 : wind <= 25 ? 55 : 25;
+    const pressScore = press >= 1010 && press <= 1030 ? 85 : press >= 990 ? 60 : 35;
+    const humScore = hum >= 40 && hum <= 80 ? 80 : hum >= 20 && hum <= 95 ? 55 : 30;
+    const overall = Math.round(tempScore * 0.3 + windScore * 0.25 + pressScore * 0.25 + humScore * 0.2);
 
-  if (loading) {
+    const level = overall >= 80 ? 'peak' : overall >= 60 ? 'high' : overall >= 40 ? 'moderate' : 'low';
+
+    return { overall_score: overall, activity_level: level };
+  }, [weatherCurrent]);
+
+  if (weatherLoading && !weatherCurrent) {
     return (
       <Card className="bg-gray-900/50 border-gray-700" data-testid="weather-widget-loading">
         <CardContent className="p-6 flex items-center justify-center">
           <RefreshCw className="h-8 w-8 text-amber-500 animate-spin" />
-          <span className="ml-3 text-gray-400">Chargement météo...</span>
+          <span className="ml-3 text-gray-400">Chargement meteo...</span>
         </CardContent>
       </Card>
     );
   }
 
-  if (error) {
+  if (weatherError && !weatherCurrent) {
     return (
       <Card className="bg-gray-900/50 border-red-500/30" data-testid="weather-widget-error">
         <CardContent className="p-6 text-center">
           <Cloud className="h-12 w-12 text-red-400 mx-auto mb-3" />
-          <p className="text-red-400">{error}</p>
-          <Button 
-            variant="ghost" 
-            onClick={fetchWeather}
+          <p className="text-red-400">{weatherError}</p>
+          <Button
+            variant="ghost"
+            onClick={() => fetchAll(lat, lng, true)}
             className="mt-4 text-amber-400"
+            data-testid="weather-retry-btn"
           >
             <RefreshCw className="h-4 w-4 mr-2" />
-            Réessayer
+            Reessayer
           </Button>
         </CardContent>
       </Card>
     );
   }
 
-  if (!weatherData) return null;
+  if (!weatherCurrent) return null;
 
-  const { current, hourly, daily, hunting_analysis, location } = weatherData;
+  // Lecture DIRECTE du store — aucune transformation, aucun smoothing
+  const w = weatherCurrent;
 
   return (
     <Card className="bg-gray-900/50 border-gray-700" data-testid="advanced-weather-widget">
@@ -165,27 +128,28 @@ const AdvancedWeatherWidget = ({
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            {getWeatherIcon(current.condition.icon, 'h-10 w-10')}
+            {getWeatherIconFromCode(w.weather_code, 'h-10 w-10')}
             <div>
               <CardTitle className="text-2xl text-white flex items-center gap-2">
-                {Math.round(current.temperature)}°C
+                {w.temperature_c != null ? Math.round(w.temperature_c) : '--'}°C
                 <span className="text-base text-gray-400 font-normal">
-                  Ressenti {Math.round(current.feels_like)}°C
+                  Ressenti {w.feels_like_c != null ? Math.round(w.feels_like_c) : Math.round(w.temperature_c ?? 0)}°C
                 </span>
               </CardTitle>
-              <p className="text-gray-400 capitalize">{current.condition.description}</p>
+              <p className="text-gray-400 capitalize">{w.description || 'N/A'}</p>
             </div>
           </div>
           <div className="text-right">
             <div className="flex items-center gap-1 text-gray-400 text-sm">
               <MapPin className="h-4 w-4" />
-              <span>{location.city || `${lat.toFixed(2)}, ${lng.toFixed(2)}`}</span>
+              <span>{lat.toFixed(2)}, {lng.toFixed(2)}</span>
             </div>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={fetchWeather}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => fetchAll(lat, lng, true)}
               className="text-gray-500 hover:text-amber-400 p-1"
+              data-testid="weather-refresh-btn"
             >
               <RefreshCw className="h-4 w-4" />
             </Button>
@@ -200,183 +164,65 @@ const AdvancedWeatherWidget = ({
             <Wind className="h-5 w-5 text-blue-400" />
             <div>
               <p className="text-xs text-gray-500">Vent</p>
-              <p className="text-white font-medium">
-                {current.wind.speed} km/h {current.wind.direction_text}
+              <p className="text-white font-medium" data-testid="weather-wind">
+                {w.wind_speed_kmh != null ? Math.round(w.wind_speed_kmh) : '--'} km/h {getWindDirectionText(w.wind_direction_deg)}
               </p>
             </div>
           </div>
           <div className="bg-gray-800/50 rounded-lg p-3 flex items-center gap-2">
             <Droplets className="h-5 w-5 text-cyan-400" />
             <div>
-              <p className="text-xs text-gray-500">Humidité</p>
-              <p className="text-white font-medium">{current.humidity}%</p>
+              <p className="text-xs text-gray-500">Humidite</p>
+              <p className="text-white font-medium" data-testid="weather-humidity">
+                {w.humidity_pct != null ? Math.round(w.humidity_pct) : '--'}%
+              </p>
             </div>
           </div>
           <div className="bg-gray-800/50 rounded-lg p-3 flex items-center gap-2">
             <Thermometer className="h-5 w-5 text-orange-400" />
             <div>
               <p className="text-xs text-gray-500">Pression</p>
-              <p className="text-white font-medium">{current.pressure} hPa</p>
+              <p className="text-white font-medium" data-testid="weather-pressure">
+                {w.pressure_hpa != null ? Math.round(w.pressure_hpa) : '--'} hPa
+              </p>
             </div>
           </div>
           <div className="bg-gray-800/50 rounded-lg p-3 flex items-center gap-2">
             <Eye className="h-5 w-5 text-gray-400" />
             <div>
-              <p className="text-xs text-gray-500">Visibilité</p>
-              <p className="text-white font-medium">{(current.visibility / 1000).toFixed(0)} km</p>
+              <p className="text-xs text-gray-500">Visibilite</p>
+              <p className="text-white font-medium" data-testid="weather-visibility">
+                {w.visibility_km != null ? w.visibility_km : '--'} km
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Hunting Analysis */}
-        <div className="bg-amber-900/20 border border-amber-500/30 rounded-lg p-4">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Target className="h-5 w-5 text-amber-400" />
-              <span className="text-amber-400 font-semibold">Conditions de Chasse</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold text-white">{hunting_analysis.overall_score}</span>
-              <span className="text-gray-400">/10</span>
-              <Badge className={`${getActivityColor(hunting_analysis.activity_level)} text-white ml-2`}>
-                {getActivityLabel(hunting_analysis.activity_level)}
-              </Badge>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <p className="text-xs text-gray-500 mb-1">Meilleurs moments</p>
-              <div className="flex flex-wrap gap-2">
-                {hunting_analysis.best_times_today.map((time, i) => (
-                  <Badge key={i} variant="outline" className="border-amber-500/50 text-amber-300">
-                    <Clock className="h-3 w-3 mr-1" />
-                    {time}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500 mb-1">Phase lunaire</p>
+        {/* Hunting Analysis — from store data, deterministic */}
+        {huntingConditions && (
+          <div className="bg-amber-900/20 border border-amber-500/30 rounded-lg p-4">
+            <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Moon className="h-4 w-4 text-blue-300" />
-                <span className="text-white">{hunting_analysis.moon.phase_name}</span>
-                <span className="text-gray-500 text-sm">({hunting_analysis.moon.illumination}%)</span>
+                <Target className="h-5 w-5 text-amber-400" />
+                <span className="text-amber-400 font-semibold">Conditions de Chasse</span>
               </div>
-            </div>
-          </div>
-          
-          {hunting_analysis.recommendations.length > 0 && (
-            <div className="mt-3 pt-3 border-t border-amber-500/20">
-              <p className="text-xs text-gray-500 mb-1">Recommandations</p>
-              <ul className="text-sm text-gray-300 space-y-1">
-                {hunting_analysis.recommendations.slice(0, 3).map((rec, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span className="text-amber-400 mt-1">•</span>
-                    <span>{rec}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-
-        {/* Hourly Forecast */}
-        {showHourly && hourly && hourly.length > 0 && (
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-medium text-gray-400 flex items-center gap-2">
-                <Clock className="h-4 w-4" />
-                Prévisions horaires
-              </h3>
-              <div className="flex gap-1">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => scrollHourly('left')}
-                  disabled={hourlyScrollIndex === 0}
-                  className="p-1 h-6 w-6"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => scrollHourly('right')}
-                  disabled={hourlyScrollIndex >= hourly.length - 8}
-                  className="p-1 h-6 w-6"
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-bold text-white" data-testid="weather-hunting-score">
+                  {huntingConditions.overall_score}
+                </span>
+                <span className="text-gray-400">/100</span>
+                <Badge className={`${getActivityColor(huntingConditions.activity_level)} text-white ml-2`}>
+                  {getActivityLabel(huntingConditions.activity_level)}
+                </Badge>
               </div>
-            </div>
-            <div className="flex gap-2 overflow-hidden">
-              {hourly.slice(hourlyScrollIndex, hourlyScrollIndex + 8).map((hour, i) => (
-                <div 
-                  key={i} 
-                  className="flex-1 min-w-[60px] bg-gray-800/30 rounded-lg p-2 text-center"
-                >
-                  <p className="text-xs text-gray-500">
-                    {new Date(hour.timestamp).toLocaleTimeString('fr-CA', { hour: '2-digit', minute: '2-digit' })}
-                  </p>
-                  <div className="my-1 flex justify-center">
-                    {getWeatherIcon(hour.condition.icon, 'h-6 w-6')}
-                  </div>
-                  <p className="text-white font-medium">{Math.round(hour.temperature)}°</p>
-                  <p className="text-xs text-blue-400">{Math.round(hour.precipitation_probability)}%</p>
-                </div>
-              ))}
             </div>
           </div>
         )}
 
-        {/* Daily Forecast */}
-        {showDaily && daily && daily.length > 0 && !compact && (
-          <div>
-            <h3 className="text-sm font-medium text-gray-400 flex items-center gap-2 mb-2">
-              <Calendar className="h-4 w-4" />
-              Prévisions 7 jours
-            </h3>
-            <div className="space-y-2">
-              {daily.map((day, i) => (
-                <div 
-                  key={i}
-                  className="flex items-center justify-between bg-gray-800/30 rounded-lg px-3 py-2"
-                >
-                  <div className="flex items-center gap-3 w-1/3">
-                    <span className="text-gray-400 text-sm w-20">
-                      {i === 0 ? "Aujourd'hui" : new Date(day.date).toLocaleDateString('fr-CA', { weekday: 'short', day: 'numeric' })}
-                    </span>
-                    {getWeatherIcon(day.condition.icon, 'h-6 w-6')}
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-blue-400 text-sm">
-                      {Math.round(day.precipitation_probability)}%
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-500">{Math.round(day.temperature.min)}°</span>
-                      <div className="w-16 h-1 bg-gray-700 rounded-full overflow-hidden">
-                        <div 
-                          className="h-full bg-gradient-to-r from-blue-400 to-orange-400 rounded-full"
-                          style={{ 
-                            width: `${((day.temperature.max - day.temperature.min) / 30) * 100}%`,
-                            marginLeft: `${((day.temperature.min + 20) / 50) * 100}%`
-                          }}
-                        />
-                      </div>
-                      <span className="text-white font-medium">{Math.round(day.temperature.max)}°</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Last Updated */}
-        {lastUpdated && (
-          <p className="text-xs text-gray-600 text-right">
-            Mis à jour : {lastUpdated.toLocaleTimeString('fr-CA')}
+        {/* Source indicator */}
+        {!compact && weatherSource && (
+          <p className="text-xs text-gray-600 text-right" data-testid="weather-source">
+            Source: {weatherSource}
           </p>
         )}
       </CardContent>

@@ -143,92 +143,63 @@ def _generate_justification(stand: Dict, factors: Dict) -> Dict[str, str]:
 def _generate_approach_path(
     start_lat: float, start_lng: float,
     stand_lat: float, stand_lng: float,
-    wind_dir: str, corridors: List[Dict], hydro_points: List[Dict]
+    wind_dir: str, corridors: List[Dict], hydro_points: List[Dict],
+    trail_graph=None
 ) -> List[Dict[str, float]]:
     """
-    BCE-4X P0.5 — Chemins & Trails
-    Genere un chemin d'approche realiste suivant les sentiers forestiers.
-    NE GENERE PLUS de lignes droites (vol d'oiseau).
-    Le chemin simule:
-    - chemins forestiers / sentiers quad
-    - pistes de debardage
-    - acces carrossables
-    Ajoute des waypoints intermediaires pour un trace naturel.
-    Calcule la distance reelle cumulee.
+    BCE-4X Phase 2 — Routage REEL sur chemins forestiers.
+    
+    Strategie:
+    1. Si un graphe OSM est disponible: router via A* sur le reseau reel
+    2. Fallback UNIQUEMENT si aucun chemin OSM n'existe dans la zone
+       → annote "estimation", log interne
+    3. INTERDIT de generer des sinusoides ou waypoints artificiels
+       si un graphe existe deja
     """
+    from .trail_graph import route_on_trails
+
+    # Tentative de routage reel via graphe OSM
+    if trail_graph is not None and not trail_graph.is_empty:
+        result = route_on_trails(trail_graph, start_lat, start_lng, stand_lat, stand_lng)
+        if result is not None:
+            path = result["coords"]
+            if path:
+                path[0]["trail_distance_m"] = result["distance_m"]
+                path[0]["trail_type"] = result["type"]
+            logger.info(f"[APPROACH] Routage REEL: {result['distance_m']}m, {len(path)} points")
+            return path
+        else:
+            logger.warning("[APPROACH] A* echoue sur graphe existant — fallback estimation")
+
+    # FALLBACK: aucun graphe OSM ou aucun chemin trouve
+    # Generer un chemin direct annote comme ESTIMATION
+    logger.warning("[APPROACH] FALLBACK estimation — aucun sentier OSM disponible dans la zone")
+
     wind_deg = _wind_angle(wind_dir)
     approach_from = (wind_deg + 180) % 360
     approach_rad = math.radians(approach_from)
 
-    # Point d'entree: decale du stand dans la direction contre-vent
+    # Point d'entree contre-vent
     approach_offset = 0.003
     entry_lat = stand_lat + approach_offset * math.cos(approach_rad)
     entry_lng = stand_lng + approach_offset * math.sin(approach_rad) / math.cos(math.radians(stand_lat))
 
-    # Phase 1: Chemin forestier du depart vers le point d'entree
-    # Simuler un sentier avec des courbes naturelles (pas de ligne droite)
-    n_segments = 12
-    path = []
+    # Chemin direct simplifie (PAS de sinusoides)
+    path = [
+        {"lat": round(start_lat, 6), "lng": round(start_lng, 6)},
+        {"lat": round(entry_lat, 6), "lng": round(entry_lng, 6)},
+        {"lat": round(stand_lat, 6), "lng": round(stand_lng, 6)},
+    ]
 
-    # Calculer la distance totale pour adapter la densite de points
-    dx = entry_lat - start_lat
-    dy = entry_lng - start_lng
-    total_dist = math.sqrt(dx*dx + dy*dy)
-
-    # Direction principale
-    main_angle = math.atan2(dy, dx)
-
-    # Generer des points le long d'un sentier simule
-    # Utilise des courbes de Bezier + bruit de Perlin simplifie pour le realisme
-    for i in range(n_segments + 1):
-        t = i / n_segments
-
-        # Position de base le long de la ligne directe
-        base_lat = start_lat + (entry_lat - start_lat) * t
-        base_lng = start_lng + (entry_lng - start_lng) * t
-
-        # Deviation laterale simulant un sentier forestier
-        # Les sentiers ne sont jamais droits — ils contournent les arbres et le terrain
-        if 0.05 < t < 0.95:
-            # Composante sinusoidale principale (grande courbe du sentier)
-            curve1 = math.sin(t * math.pi * 2.3) * total_dist * 0.12
-            # Composante secondaire (virages plus serres)
-            curve2 = math.sin(t * math.pi * 5.7 + 1.2) * total_dist * 0.04
-            # Composante tertiaire (micro-ajustements du sentier)
-            curve3 = math.sin(t * math.pi * 9.1 + 2.8) * total_dist * 0.015
-
-            deviation = curve1 + curve2 + curve3
-
-            # Appliquer la deviation perpendiculairement a la direction principale
-            perp_angle = main_angle + math.pi / 2
-            base_lat += deviation * math.cos(perp_angle)
-            base_lng += deviation * math.sin(perp_angle) / math.cos(math.radians(base_lat))
-
-        path.append({"lat": round(base_lat, 6), "lng": round(base_lng, 6)})
-
-    # Phase 2: Approche finale (dernier segment plus discret, contre-vent)
-    for i in range(1, 4):
-        t = i / 3
-        f_lat = entry_lat + (stand_lat - entry_lat) * t
-        f_lng = entry_lng + (stand_lng - entry_lng) * t
-        # Leger zigzag final (approche furtive)
-        if i < 3:
-            micro_dev = math.sin(t * math.pi * 2) * 0.00015
-            f_lat += micro_dev
-        path.append({"lat": round(f_lat, 6), "lng": round(f_lng, 6)})
-
-    path.append({"lat": round(stand_lat, 6), "lng": round(stand_lng, 6)})
-
-    # Calculer la distance reelle cumulee (metres)
     total_distance_m = 0.0
     for j in range(1, len(path)):
-        d = _haversine(path[j-1]["lat"], path[j-1]["lng"], path[j]["lat"], path[j]["lng"])
-        total_distance_m += d
+        total_distance_m += _haversine(
+            path[j - 1]["lat"], path[j - 1]["lng"],
+            path[j]["lat"], path[j]["lng"]
+        )
 
-    # Annoter le premier point avec la distance totale
-    if path:
-        path[0]["trail_distance_m"] = round(total_distance_m)
-        path[0]["trail_type"] = "sentier_forestier"
+    path[0]["trail_distance_m"] = round(total_distance_m)
+    path[0]["trail_type"] = "estimation"
 
     return path
 
@@ -241,13 +212,15 @@ def recommend_stands(
 ) -> Dict[str, Any]:
     """
     x4520-C STEEVE-MAX: Affûts scientifiquement positionnés.
-    - Proximité corridors critiques/majeurs (30-80m)
-    - Cohérence écologique: intersection corridors × zones rut/alimentation/repos
-    - Distance stricte ≤ radius_m du waypoint centre (Haversine)
-    - Cohérence avec salines (distance tactique raisonnable)
+    BCE-4X Phase 2: Routage REEL via graphe OSM (Overpass UNE SEULE FOIS).
     """
+    from .trail_graph import get_trail_graph
+
     engine_id = str(uuid.uuid4())[:8]
     logger.info(f"[{engine_id}] Generating stand recommendations at ({lat}, {lng}), wind={wind_direction} {wind_speed_kmh}km/h, radius={radius_m}m")
+
+    # BCE-4X Phase 2: Charger le graphe de sentiers UNE SEULE FOIS pour la zone
+    trail_graph = get_trail_graph(lat, lng)
 
     wind_deg = _wind_angle(wind_direction)
     stands = []
@@ -387,7 +360,7 @@ def recommend_stands(
             "factors": factors,
         }
         stand["justification"] = _generate_justification(stand, factors)
-        stand["approach_path"] = _generate_approach_path(lat, lng, s_lat, s_lng, wind_direction, [], [])
+        stand["approach_path"] = _generate_approach_path(lat, lng, s_lat, s_lng, wind_direction, [], [], trail_graph=trail_graph)
 
         stands.append(stand)
 
