@@ -620,10 +620,33 @@ def analyze_corridors_full(
     )
 
     # GeoJSON corridors avec proprietes normatives + simplification geometrique
+    # Phase 3.2-CV BCE-4X-MAX: EXCLUSION ULTIME sur corridors LineStrings aussi
     geojson_features = []
+    _corridors_excluded_urban = 0
+    _corridors_excluded_water = 0
+    try:
+        from modules.bionic_engine_p0.services.zone_engine_core_v2 import (
+            _circle_on_urban, _circle_on_water,
+        )
+        _has_exclusion_engine = True
+    except ImportError:
+        _has_exclusion_engine = False
+
     for c in enriched_corridors:
         raw_coords = [[pt["lng"], pt["lat"]] for pt in c["path"]]
         coords = _simplify_coords(raw_coords)
+
+        # BCE-4X-MAX: Filtrer corridors dont le POINT MEDIAN est en zone urbaine/eau
+        if _has_exclusion_engine and len(coords) > 0:
+            mid_idx = len(coords) // 2
+            mid_lng, mid_lat = coords[mid_idx][0], coords[mid_idx][1]
+            if _circle_on_urban(mid_lat, mid_lng):
+                _corridors_excluded_urban += 1
+                continue
+            if _circle_on_water(mid_lat, mid_lng):
+                _corridors_excluded_water += 1
+                continue
+
         feature = {
             "type": "Feature",
             "properties": {
@@ -648,6 +671,13 @@ def analyze_corridors_full(
             },
         }
         geojson_features.append(feature)
+
+    import logging as _log_corridors
+    _log_corridors.getLogger("corridors_v10.engine").info(
+        f"[BCE-4X-MAX] Corridor exclusion: "
+        f"input={len(enriched_corridors)}, urban={_corridors_excluded_urban}, "
+        f"water={_corridors_excluded_water}, kept={len(geojson_features)}"
+    )
 
     # GeoJSON zones ecologiques V10 — POLYGONES ORGANIQUES (BCE-4X / Steeve-MAX)
     # STEVE-MAX-MULTI: Fusion + Dimension dynamique + Multi-engine + Smoothing

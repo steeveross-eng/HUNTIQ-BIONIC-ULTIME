@@ -1,109 +1,94 @@
-# HUNTIQ-V6 — Product Requirements Document
-## BCE-4X / STEEVE-MAX V6 / GOLDEN BCE
+# HUNTIQ-V6 — PRD (Product Requirements Document)
+# Protocole BCE-4X / MAX ULTRA / STEEVE-MAX
+
+## Statut General
+- **Branch active:** Work1
+- **Derniere mise a jour:** 28 Mars 2026 — Phase 3.2-CV
 
 ---
 
-## Enonce original
-Reconstruction et modernisation HUNTIQ-V6 sous gouvernance BCE-4X / MAX ULTRA / STEEVE-MAX.
+## Phase 3.2-CV — Contre-Validation (COMPLETE)
 
-## Architecture
-- Backend: FastAPI, 84+ engines, Shapely (exclusions spatiales) | Frontend: React, Zustand, Leaflet, Tailwind
-- E-commerce: Stripe via emergentintegrations | Gouvernance UI: BCE4X_UIShield
-- Branche: Work1
+### Objectif
+Neutraliser le pipeline V5 legacy, appliquer les exclusions ULTIMES a TOUS les pipelines backend, et fournir les preuves visuelles et logs de certification.
 
----
+### Delivrables
+1. **Neutralisation V5** — 3 vecteurs neutralises:
+   - `BionicMapOverlay.jsx` (return null)
+   - `WaypointMap.jsx` (generateBionicZonesV5 desactive)
+   - `SpeciesComparisonPage.jsx` (generateBionicZonesV5 desactive)
 
-## Implemente
+2. **Exclusions ULTIMES appliquees a:**
+   - V6 Corridors LineStrings (midpoint check urbain/eau)
+   - Alimentation V2 salines (point check urbain/eau)
+   - Stands recommendation (point check urbain/eau)
+   - V6 Zone Polygons (deja actif depuis Phase 3.2-S)
+   - V2 Organic Zones (deja actif)
 
-### Purge Architecturale (27 Mars 2026)
-- 5 endpoints SHADOW desactives
-- Meteo: source unique /api/v3/weather/*
-- 15 imports fantomes supprimes
+3. **SAFE MODE permanent:**
+   - Cache version = `bce4xmax_v5neutralized`
+   - IndexedDB v3 (purge auto)
+   - Module-level _cache.clear() au mount
+   - BCE4X_URBAN_CACHE_SAFE_MODE = True
 
-### Phase P0 — Fusion Totale (27 Mars 2026)
-- SUPRA v2, MAGASIN v2, ADMIN v2, Nettoyage
+4. **Rapport certification:** `/audit/bce4x_max_certification_phase32cv.md`
 
-### Phase 2 — Corrections Logiques (27 Mars 2026)
-- AdvancedWeatherWidget: lecture EXCLUSIVE useWeatherStore
-- CoreDashboard: fetchWeather supprime du dependency array
+### Resultats Backend (Zone urbaine Quebec 46.8139, -71.208)
+| Pipeline | Zones | Corridors | Salines | Stands |
+|----------|-------|-----------|---------|--------|
+| V6 analyze-full | 0 | 0 | - | - |
+| V2 organic-zones | 0 | - | - | - |
+| Alimentation V2 | - | - | 0 | - |
+| Stand recommend | - | - | - | 0 |
 
-### Phase 2.5 — TERRAIN NAV ENGINE (TNE) (27 Mars 2026)
-- A* terrain-weighted + Dijkstra fallback + Overpass combinee
-
-### Phase 2.6 — Corrections TNE + Vent (27 Mars 2026)
-- Snap par projection + waypoints intermediaires + cache
-
-### Phase 2.9 — Corrections critiques (27 Mars 2026)
-- SUPRA v2 SAL-10: 100vh, ZERO scroll interne
-- Typographie alignee Dashboard (slate-800/700)
-- Temperature: suppression fallback intelligenceWeather
-- Masques exclusion urbain dans zone_engine_core_v2.py
-- WindFlowLayer: animation rAF particules (v1)
-
-### Phase 3.1 — WindFlow DOUX + Unification Temperature (27 Mars 2026)
-- WindFlow: 140 particules, opacity max 0.35, sinusoidal wavy drift
-- Temperature UNIFIEE via waypoint unique
-
-### Phase 3.2-S — Suppression pollution cumulative cache urbain (27 Mars 2026)
-- _inject_raw_osm_into_urban_cache() DESACTIVEE du pipeline
-- BCE4X_URBAN_CACHE_SAFE_MODE = True
-
-### Phase 3.2-V + 3.3-U-PRIME — VALIDATION VISUELLE + EXCLUSIONS ULTIMES (27 Mars 2026)
-
-**PROBLEME IDENTIFIE:**
-Deux causes racines distinctes:
-1. **Pollution cumulative du cache urbain** (Phase 3.2-S) — CORRIGEE
-2. **SECOND PIPELINE sans exclusions** — `/api/v6/corridors/analyze-full` (engine.py) generait des zones SANS aucun filtre urbain/eau. C'est CE pipeline qui alimentait le rendu visuel via `BionicCorridorsV6Layer`.
-3. **Cache IndexedDB frontend** — Les anciennes zones etaient persistees dans le navigateur de l'utilisateur (DB_VERSION=2, CACHE_VERSION=_v6_core)
-
-**CORRECTIFS:**
-1. Exclusion ULTIME dans `zone_engine_core_v2.py`:
-   - Buffer 55m (0.0005deg) sur le cache urbain au chargement
-   - Check CENTRE (point-in-polygon rapide) + overlap 3%
-   - Check centre eau + overlap 25%
-   - 101,182 polygones urbains statiques
-
-2. Exclusion ULTIME dans `corridors_v10/engine.py`:
-   - Filtre post-generation utilisant _circle_on_urban() et _circle_on_water()
-   - Applique aux zone_polygons AVANT ajout au GeoJSON
-
-3. Invalidation cache frontend:
-   - IndexedDB DB_VERSION: 2 → 3 (purge totale)
-   - CACHE_VERSION: _v6_core → _v6_phase32s
-
-**RESULTATS VERIFIES:**
-| Zone | Pipeline | Input | Urban | Water | Kept |
-|------|----------|-------|-------|-------|------|
-| Ville (waypoint user) | organic-zones | 17 | 17 | 0 | **0** |
-| Ville (waypoint user) | analyze-full | 16 | **16** | 0 | **0** |
-| Foret profonde | analyze-full | 16 | 0 | 0 | **16** |
-| Stabilite 3x ville | analyze-full | 16 | 16 | 0 | 0 (stable) |
-| Post-ville foret | analyze-full | 16 | 0 | 0 | 16 (zero pollution) |
-
-**FICHIERS MODIFIES:**
-- /app/backend/modules/bionic_engine_p0/services/zone_engine_core_v2.py
-- /app/backend/core/scoring_pipeline/corridors_v10/engine.py
-- /app/backend/server.py
-- /app/frontend/src/hooks/useZoneOrchestrator.js
-- /app/frontend/src/hooks/useZoneCache.js
-
-**BACKUP:** /app/backend/data/ARCHIVES_V6/backup_phase32s/
+### Resultats Backend (Zone foret 47.25, -71.40)
+| Pipeline | Zones | Corridors | Salines | Stands |
+|----------|-------|-----------|---------|--------|
+| V6 analyze-full | 16 | 189 | - | - |
+| V2 organic-zones | 21 | - | - | - |
+| Alimentation V2 | - | - | 4 | - |
+| Stand recommend | - | - | - | 5 |
 
 ---
 
-## Charte 3.3-U-PRIME — ACTIVE
-- BCE-4X (non-regression): ACTIVE
-- STEEVE-MAX (gouvernance): ACTIVE
-- GOLDEN BCE (structure): ACTIVE
-- SAFE MODE permanent: ACTIVE
-- Exclusions ULTIMES (2 pipelines): ACTIVE
-- Purge V1-V5 cache dynamique: COMPLETE
+## Statut: EN ATTENTE DE VALIDATION STEEVE-MAX
 
-## En attente: Validation STEEVE-MAX Phase 3.2-V + 3.3-U-PRIME
+### Phases completees:
+- Phase 1-3: Import, Archive, Gouvernance
+- Phase 4: Audit moteurs
+- Phase 5B: Audit coherence
+- Phase 5C: Audit historique
+- Phase BSAA-0: Etude faisabilite
+- Phase BSAA-1: Architecture
+- Phase 2.5-2.9: TNE, Stands, Weather
+- Phase 3.1: WindFlow, Weather sync
+- Phase 3.2-S: Safe Mode, Cache purge
+- Phase 3.2-V: Validation visuelle
+- Phase 3.2-CV: Contre-Validation (PRESENT RAPPORT)
 
-## Backlog
-- P1: Activation ULTRA-MAX++ Lock (Golden State, CSS Hash, API Lock)
-- P1: Nettoyage fichiers V5, enrichissement catalogue API x6030
-- P2: BSAA-2 (gele) | P3: Merge Work1 -> main
+### Phases a venir (BLOQUEES par validation):
+- Phase 3.3-U-PRIME: Nettoyage code legacy V1-V5
+- ULTRA-MAX++ Lock: Verrouillage integrite
+- Phase BSAA-2: Implementation (GELE)
+- Merge Work1 → main (INTERDIT sans validation)
 
-*Mis a jour le 27 Mars 2026 — Phase 3.2-V + 3.3-U-PRIME*
+---
+
+## Architecture Technique
+
+### Pipelines Autorises (BCE-4X-MAX)
+1. `/api/v1/bionic/organic-zones` — Organic Zones V2 (exclusions actives)
+2. `/api/v6/corridors/analyze-full` — Corridors V6 (exclusions actives)
+3. `/api/v2/alimentation/analyze` — Alimentation V2 (exclusions actives)
+4. `/api/v1/stand-recommendation/recommend` — Stands (exclusions actives)
+
+### Pipelines Neutralises (BCE-4X-MAX)
+1. `generateBionicZonesV5` — DESACTIVE (3 vecteurs frontend)
+2. `BionicMapOverlay` → `BionicMicroZones` — NEUTRALISE (return null)
+
+### Parametres Exclusion ULTIME
+- Cache statique: 101,391 polygones (urban=47,139, roads=70,193, infra=46,616)
+- Buffer: 0.002deg (222m)
+- Seuil urbain: 1%
+- Seuil eau: 25%
+- Safe Mode: TRUE (aucune injection dynamique)

@@ -157,25 +157,14 @@ const ComparisonPane = ({ speciesId, isMaster, syncRef, layersVisible }) => {
     setFetchTrigger(prev => prev + 1);
   }, []);
 
+  // ══════════════════════════════════════════════════════════════
+  // BCE-4X-MAX NEUTRALISATION — Pipeline V5 DÉSACTIVÉ
+  // Motif: generateBionicZonesV5 injecte des zones sans exclusions ULTIMES.
+  // ══════════════════════════════════════════════════════════════
   useEffect(() => {
-    if (!boundsRef.current) return;
-    let cancelled = false;
-    setLoading(true);
-
-    const load = async () => {
-      try {
-        const result = await generateBionicZonesV5(boundsRef.current, zoomRef.current, layersVisible, speciesId);
-        if (!cancelled) setZones(result.zones || []);
-      } catch (e) {
-        console.warn("[Comparison] Error:", e);
-        if (!cancelled) setZones([]);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    };
-
-    load();
-    return () => { cancelled = true; };
+    console.warn('[BCE-4X-MAX] Pipeline V5 neutralisé — SpeciesComparison zones DÉSACTIVÉES');
+    setZones([]);
+    setLoading(false);
   }, [fetchTrigger, speciesId, layersVisible]);
 
   return (

@@ -364,6 +364,19 @@ def recommend_stands(
 
         stands.append(stand)
 
+    # BCE-4X-MAX: EXCLUSION ULTIME — filtrer affûts en zone urbaine/eau
+    try:
+        from modules.bionic_engine_p0.services.zone_engine_core_v2 import (
+            _circle_on_urban, _circle_on_water,
+        )
+        _pre = len(stands)
+        stands = [s for s in stands if not _circle_on_urban(s["lat"], s["lng"]) and not _circle_on_water(s["lat"], s["lng"])]
+        _excl = _pre - len(stands)
+        if _excl > 0:
+            logger.info(f"[BCE-4X-MAX] Stands exclusion: input={_pre}, excluded={_excl}, kept={len(stands)}")
+    except ImportError:
+        pass
+
     stands.sort(key=lambda x: x["score"], reverse=True)
     for idx, s in enumerate(stands):
         s["rank"] = idx + 1

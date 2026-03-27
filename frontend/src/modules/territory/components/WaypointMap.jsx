@@ -463,32 +463,17 @@ export const WaypointMap = ({
     corridors: true, peuplements: true,
   };
 
+  // ══════════════════════════════════════════════════════════════
+  // BCE-4X-MAX NEUTRALISATION — Pipeline V5 (generateBionicZonesV5) DÉSACTIVÉ
+  // Motif: Injection de zones sans exclusions ULTIMES.
+  // Seuls pipelines autorisés: Organic Zones V2 + Corridors V6.
+  // ══════════════════════════════════════════════════════════════
   useEffect(() => {
-    if (!showFunctionalZones || !mapRef.current) return;
-    let cancelled = false;
-    const loadZones = async () => {
-      setLoadingZones(true);
-      try {
-        const map = mapRef.current;
-        const b = map.getBounds();
-        const bounds = { north: b.getNorth(), south: b.getSouth(), east: b.getEast(), west: b.getWest() };
-        const zoom = map.getZoom();
-        const result = await generateBionicZonesV5(bounds, zoom, DEFAULT_ZONE_LAYERS, 'moose');
-        if (!cancelled && result?.zones) {
-          setFunctionalZones(result.zones);
-        }
-      } catch (err) {
-        console.warn('Functional zones error:', err);
-      } finally {
-        if (!cancelled) setLoadingZones(false);
-      }
-    };
-    loadZones();
-
-    // STATE LOCKING: Les zones structurelles sont calculées une fois.
-    // Pas de rechargement sur moveend pour garantir la stabilité.
-
-    return () => { cancelled = true; };
+    if (showFunctionalZones) {
+      console.warn('[BCE-4X-MAX] Pipeline V5 neutralisé — generateBionicZonesV5 DÉSACTIVÉ');
+      setFunctionalZones([]);
+      setLoadingZones(false);
+    }
   }, [showFunctionalZones]);
 
   return (
@@ -787,28 +772,11 @@ export const WaypointMap = ({
                   {/* FUNCTIONAL ZONES: 5-layer harmonized visual hierarchy */}
                   {showFunctionalZones && (
                     <>
-                      {/* COUCHE 1: territory.shell — Enveloppe verte #3CB371, 30% */}
-                      {functionalZones.length > 0 && (
-                        <TerritoryShell
-                          zones={functionalZones}
-                          waypointCenter={waypoints.length > 0 ? [waypoints[0].lat, waypoints[0].lng] : null}
-                        />
-                      )}
+                      {/* BCE-4X-MAX: TerritoryShell + BionicMicroZones NEUTRALISÉS */}
+                      {/* Pipeline V5 désactivé — ZERO zone legacy autorisée */}
 
                       {/* COUCHE 2: structure.contrast — Zones anthropisées #A9A9A9, 20% */}
                       <StructureContrastLayer enabled={true} />
-
-                      {/* COUCHES 3+4: behavior.cells + core.nodes — Turquoise/Violet */}
-                      {functionalZones.length > 0 && (
-                        <BionicMicroZones
-                          zones={functionalZones}
-                          corridors={[]}
-                          minPercentage={50}
-                          showCorridors={false}
-                          onZoneClick={() => {}}
-                          onZoneHover={() => {}}
-                        />
-                      )}
                     </>
                   )}
                   

@@ -83,7 +83,9 @@ const LEVEL_ZINDEX = { FAIBLE: 0, MODERE: 1, FORT: 2, MAJEUR: 3, CRITIQUE: 4 };
 // ═══ Phase 3.2-V BCE-4X: Cache avec version auto-invalidation ═══
 // SAFE MODE: Aucun module ne depend d'un refresh manuel.
 // Version bump = cache miss automatique sur TOUTES les entrees.
-const CORRIDORS_CACHE_VERSION = 'phase32cv_222m';
+const CORRIDORS_CACHE_VERSION = 'bce4xmax_v5neutralized';
+// BCE-4X-MAX SAFE MODE: Cache module-level supprimé — ZERO cache stale
+// Chaque mount = requête fraîche au backend sécurisé
 const _cache = new Map();
 _cache.clear();
 function cacheKey(lat, lng, sp, m) { return `${CORRIDORS_CACHE_VERSION}:${lat.toFixed(6)}:${lng.toFixed(6)}:${sp}:${m}`; }

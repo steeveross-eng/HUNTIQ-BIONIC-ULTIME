@@ -68,6 +68,26 @@ def analyze_alimentation_v2(
             max_salines=max_salines, min_distance_m=300.0,
         )
 
+    # BCE-4X-MAX: EXCLUSION ULTIME — filtrer salines en zone urbaine/eau
+    try:
+        from modules.bionic_engine_p0.services.zone_engine_core_v2 import (
+            _circle_on_urban, _circle_on_water,
+        )
+        _pre_count = len(salines)
+        salines = [s for s in salines if not _circle_on_urban(s["lat"], s["lng"]) and not _circle_on_water(s["lat"], s["lng"])]
+        _excluded = _pre_count - len(salines)
+        if _excluded > 0:
+            import logging
+            logging.getLogger("alimentation_v2").info(
+                f"[BCE-4X-MAX] Salines exclusion: input={_pre_count}, excluded={_excluded}, kept={len(salines)}"
+            )
+        # Recalculer les ranks après exclusion
+        for idx, s in enumerate(salines):
+            if s.get("selected"):
+                s["rank"] = idx + 1
+    except ImportError:
+        pass
+
     # 3. Recommandations nutritionnelles
     nutrition = get_nutrition(species)
 

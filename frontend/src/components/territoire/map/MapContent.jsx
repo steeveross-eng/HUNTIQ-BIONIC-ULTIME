@@ -176,8 +176,8 @@ const MapContentInner = React.memo(({
       />
     )}
 
-    {/* CORRIDORS-V6: DESACTIVE TEMPORAIREMENT — Phase 3.2-CV diagnostic */}
-    {false && selectedWaypointForZones && showCorridors && waypointCenter && (
+    {/* CORRIDORS-V6: RÉACTIVÉ — Pipeline V6 autorisé BCE-4X-MAX (exclusions ULTIMES backend actives) */}
+    {selectedWaypointForZones && showCorridors && waypointCenter && (
       <BionicCorridorsV6Layer
         center={waypointCenter}
         species={selectedSpecies}
