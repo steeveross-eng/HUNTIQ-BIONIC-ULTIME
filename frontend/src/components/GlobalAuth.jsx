@@ -638,7 +638,7 @@ export const UserMenu = () => {
     return (
       <Button 
         onClick={openLoginModal}
-        className="bg-[#f5a623] hover:bg-[#d4891c] text-black font-semibold"
+        className="bg-[#F5A623] hover:bg-[#F5A623]/85 text-black font-semibold"
         data-testid="login-button"
       >
         <LogIn className="h-4 w-4 mr-2" />

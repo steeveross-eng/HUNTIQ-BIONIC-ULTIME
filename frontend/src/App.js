@@ -206,10 +206,10 @@ const Navigation = ({ cartCount, onCartOpen }) => {
               Permis & Enregistrement
             </Link>
             
-            {/* Magasin */}
+            {/* Magasin — BCE-4X: texte blanc + espacement droit */}
             <Link 
               to="/shop" 
-              className={`flex items-center gap-2 px-3 py-2 text-sm font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 ${isActive('/shop') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              className={`flex items-center gap-2 px-3 py-2 mr-3 text-sm font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 ${isActive('/shop') ? 'text-white bg-white/10' : 'text-gray-300 hover:text-white'}`}
               data-testid="nav-shop"
             >
               <Store className="h-4 w-4" />
@@ -233,14 +233,14 @@ const Navigation = ({ cartCount, onCartOpen }) => {
           
           {/* Right Content */}
           <div className="flex items-center gap-2 lg:gap-3">
-            {/* Premium CTA - Hidden on mobile */}
+            {/* Premium CTA — BCE-4X: texte blanc + contour orange #F5A623 unifie */}
             <Link to="/pricing" className="hidden lg:block">
               <Button 
                 size="sm" 
-                className="bg-gradient-to-r from-[#F5A623] to-yellow-500 hover:from-[#F5A623]/90 hover:to-yellow-500/90 text-black font-semibold"
+                className="bg-transparent hover:bg-[#F5A623]/10 text-white font-semibold border-2 border-[#F5A623] transition-all duration-200"
                 data-testid="nav-premium"
               >
-                <Crown className="h-4 w-4 mr-1" />
+                <Crown className="h-4 w-4 mr-1 text-[#F5A623]" />
                 Premium
               </Button>
             </Link>
