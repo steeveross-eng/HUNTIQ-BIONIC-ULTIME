@@ -1,41 +1,61 @@
 /**
- * BCE-4X Phase 2.9 — WindFlowLayer DYNAMIQUE
- * Animation particules vent en temps reel sur la carte Leaflet.
+ * BCE-4X Phase 3.1 — WindFlowLayer DOUX / WAVY / SMOOTH
+ * =====================================================
+ * Animation particules vent SUBTILE, non-intrusive.
  * 
+ * Paramètres STEEVE-MAX Phase 3.1:
+ * - 140 particules (réduit de 300)
+ * - Opacité max 0.40 (réduit de 0.90)
+ * - Taille 1.5px (réduit de 3px)
+ * - Vitesse = wind_speed * 0.25 (réduit)
+ * - Interpolation sinusoïdale (wavy drift)
+ * - Smoothing directionnel (lerp)
+ * - Fade-in / fade-out progressif
+ * - ZERO saturation, ZERO dominance
+ *
  * SOURCE UNIQUE: useWeatherStore (Weather V3)
- * ZERO fetch HTTP separe.
- * requestAnimationFrame loop pour animation fluide.
  */
 import { useEffect, useRef, useCallback } from 'react';
 import { useMap } from 'react-leaflet';
 import useWeatherStore from '../../stores/useWeatherStore';
 
-const PARTICLE_COUNT = 300;
-const PARTICLE_TRAIL_LENGTH = 8;
-const FADE_SPEED = 0.012;
+const PARTICLE_COUNT = 140;
+const MAX_OPACITY = 0.35;
+const PARTICLE_SIZE = 1.2;
+const SPEED_FACTOR = 0.25;
+const WAVY_AMPLITUDE = 0.6;
+const WAVY_FREQUENCY = 0.015;
+const FADE_RATE = 0.93;
+const LERP_FACTOR = 0.08;
 
 export default function WindFlowLayer() {
   const map = useMap();
   const canvasRef = useRef(null);
   const animFrameRef = useRef(null);
   const particlesRef = useRef([]);
-  const configRef = useRef({ speedMs: 5, dirRad: Math.PI, maxSpeed: 8 });
+  const configRef = useRef({ speedMs: 2, dirRad: Math.PI, maxSpeed: 5 });
+  const timeRef = useRef(0);
 
   const weatherCurrent = useWeatherStore(s => s.current);
 
-  const initParticle = useCallback((canvas) => {
+  const initParticle = useCallback((canvas, randomAge = true) => {
     return {
       x: Math.random() * (canvas?.width || 800),
       y: Math.random() * (canvas?.height || 600),
-      age: Math.random(),
-      speed: 0.5 + Math.random() * 1.5,
+      age: randomAge ? Math.random() : 0,
+      maxAge: 0.7 + Math.random() * 0.3,
+      speed: 0.4 + Math.random() * 0.6,
+      wavyOffset: Math.random() * Math.PI * 2,
+      // Smoothed velocity for lerp
+      vxSmooth: 0,
+      vySmooth: 0,
     };
   }, []);
 
   const resetParticles = useCallback((canvas) => {
     const particles = [];
     for (let i = 0; i < PARTICLE_COUNT; i++) {
-      particles.push(initParticle(canvas));
+      particles.push(initParticle(canvas, true));
     }
     particlesRef.current = particles;
   }, [initParticle]);
@@ -65,15 +85,17 @@ export default function WindFlowLayer() {
       resetParticles(canvas);
     }
 
-    const { speedMs, dirRad, maxSpeed } = configRef.current;
+    const { speedMs, dirRad } = configRef.current;
+    timeRef.current += 1;
+    const t = timeRef.current;
 
-    // Wind vector components (pixel velocity per frame)
-    const baseVx = -speedMs * Math.sin(dirRad) * 0.8;
-    const baseVy = speedMs * Math.cos(dirRad) * 0.8;
+    // Base wind vector — reduced by SPEED_FACTOR
+    const baseVx = -speedMs * Math.sin(dirRad) * SPEED_FACTOR;
+    const baseVy = speedMs * Math.cos(dirRad) * SPEED_FACTOR;
 
-    // Fade previous frame
+    // Gentle fade of previous frame (creates soft trails)
     ctx.globalCompositeOperation = 'destination-in';
-    ctx.fillStyle = `rgba(0, 0, 0, ${1 - FADE_SPEED})`;
+    ctx.fillStyle = `rgba(0, 0, 0, ${FADE_RATE})`;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.globalCompositeOperation = 'source-over';
 
@@ -84,76 +106,85 @@ export default function WindFlowLayer() {
     for (let i = 0; i < particles.length; i++) {
       const p = particles[i];
 
-      // Natural variation per particle
-      const variation = 0.7 + Math.sin(i * 0.37 + p.age * 12) * 0.3;
-      const vx = baseVx * p.speed * variation;
-      const vy = baseVy * p.speed * variation;
+      // Sinusoidal wavy drift (perpendicular to wind direction)
+      const wavyPhase = t * WAVY_FREQUENCY + p.wavyOffset + i * 0.17;
+      const perpX = Math.cos(dirRad);
+      const perpY = Math.sin(dirRad);
+      const wavyDrift = Math.sin(wavyPhase) * WAVY_AMPLITUDE * p.speed;
 
-      // Move
-      p.x += vx;
-      p.y += vy;
-      p.age += 0.003;
+      // Target velocity with wavy drift
+      const targetVx = baseVx * p.speed + perpX * wavyDrift;
+      const targetVy = baseVy * p.speed + perpY * wavyDrift;
 
-      // Recycle particles that go off-screen or are old
-      if (p.x < -10 || p.x > w + 10 || p.y < -10 || p.y > h + 10 || p.age > 1) {
+      // Lerp smoothing for fluid direction changes
+      p.vxSmooth += (targetVx - p.vxSmooth) * LERP_FACTOR;
+      p.vySmooth += (targetVy - p.vySmooth) * LERP_FACTOR;
+
+      // Move particle
+      p.x += p.vxSmooth;
+      p.y += p.vySmooth;
+      p.age += 0.002;
+
+      // Recycle off-screen or old particles
+      if (p.x < -20 || p.x > w + 20 || p.y < -20 || p.y > h + 20 || p.age > p.maxAge) {
         // Respawn from upwind edge
-        const edge = Math.random();
         if (Math.abs(baseVx) > Math.abs(baseVy)) {
-          // Mostly horizontal wind
           p.x = baseVx > 0 ? -5 : w + 5;
           p.y = Math.random() * h;
         } else {
-          // Mostly vertical wind
           p.x = Math.random() * w;
           p.y = baseVy > 0 ? -5 : h + 5;
         }
         p.age = 0;
-        p.speed = 0.5 + Math.random() * 1.5;
+        p.maxAge = 0.7 + Math.random() * 0.3;
+        p.speed = 0.4 + Math.random() * 0.6;
+        p.wavyOffset = Math.random() * Math.PI * 2;
+        p.vxSmooth = 0;
+        p.vySmooth = 0;
         continue;
       }
 
-      // Color intensity based on speed and age
-      const t = Math.min(speedMs / maxSpeed, 1);
-      const ageFade = Math.sin(p.age * Math.PI);
-      const alpha = (0.15 + t * 0.45) * ageFade;
+      // Fade-in / fade-out envelope (smooth sine curve)
+      const lifeProgress = p.age / p.maxAge;
+      const fadeEnvelope = Math.sin(lifeProgress * Math.PI);
+      const alpha = MAX_OPACITY * fadeEnvelope * p.speed;
 
-      // Draw particle dot with trail
-      const trailLen = PARTICLE_TRAIL_LENGTH * p.speed * variation;
-      const tx = p.x - vx * trailLen * 0.15;
-      const ty = p.y - vy * trailLen * 0.15;
+      if (alpha < 0.01) continue;
+
+      // Draw subtle particle trail
+      const trailX = p.x - p.vxSmooth * 3;
+      const trailY = p.y - p.vySmooth * 3;
 
       ctx.beginPath();
-      ctx.moveTo(tx, ty);
+      ctx.moveTo(trailX, trailY);
       ctx.lineTo(p.x, p.y);
-      ctx.strokeStyle = `rgba(140, 215, 230, ${alpha})`;
-      ctx.lineWidth = 1.2 + t * 0.8;
+      ctx.strokeStyle = `rgba(160, 220, 240, ${alpha * 0.6})`;
+      ctx.lineWidth = PARTICLE_SIZE * 0.8;
       ctx.lineCap = 'round';
       ctx.stroke();
 
-      // Bright head
+      // Soft dot at head
       ctx.beginPath();
-      ctx.arc(p.x, p.y, 1 + t * 0.6, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(180, 235, 245, ${alpha * 1.3})`;
+      ctx.arc(p.x, p.y, PARTICLE_SIZE * 0.5, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(180, 230, 245, ${alpha})`;
       ctx.fill();
     }
 
     animFrameRef.current = requestAnimationFrame(animate);
   }, [map, resetParticles]);
 
-  // Update wind config when weather data changes
+  // Update wind config from store
   useEffect(() => {
-    const store = useWeatherStore.getState();
-    const current = store.current;
+    const current = useWeatherStore.getState().current;
     const windSpeed = current?.wind_speed_kmh || 10;
     const windDir = current?.wind_direction_deg || 270;
-    const windGust = current?.wind_gust_kmh || windSpeed * 1.5;
+    const windGust = current?.wind_gust_kmh || windSpeed * 1.3;
     const speedMs = windSpeed / 3.6;
-    const maxSpeedMs = Math.max(speedMs * 1.3, windGust / 3.6);
 
     configRef.current = {
       speedMs,
       dirRad: (windDir * Math.PI) / 180,
-      maxSpeed: maxSpeedMs,
+      maxSpeed: Math.max(speedMs * 1.2, windGust / 3.6),
     };
   }, [weatherCurrent]);
 
@@ -171,6 +202,7 @@ export default function WindFlowLayer() {
       canvas.style.left = '0';
       canvas.style.pointerEvents = 'none';
       canvas.style.zIndex = '400';
+      canvas.style.opacity = '1';
       container.appendChild(canvas);
       canvasRef.current = canvas;
     }
@@ -180,10 +212,8 @@ export default function WindFlowLayer() {
     canvas.height = size.y;
     resetParticles(canvas);
 
-    // Start animation loop
     animFrameRef.current = requestAnimationFrame(animate);
 
-    // Reset particles on map move/zoom
     const onMoveEnd = () => resetParticles(canvas);
     map.on('moveend', onMoveEnd);
     map.on('zoomend', onMoveEnd);

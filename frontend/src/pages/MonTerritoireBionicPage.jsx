@@ -747,6 +747,25 @@ const MonTerritoireBionicPage = () => {
     }
   }, [layersVisible, updateLayers]);
   
+  // BCE-4X Phase 3.1: Coordonnées METEO = waypoint UNIQUE de l'usager
+  // ZERO fallback sur mapCenter, position GPS, ou coordonnées par défaut
+  const weatherCoords = useMemo(() => {
+    if (selectedWaypointForZones) {
+      const lat = selectedWaypointForZones.lat ?? selectedWaypointForZones.latitude;
+      const lng = selectedWaypointForZones.lng ?? selectedWaypointForZones.longitude;
+      if (lat && lng) return [lat, lng];
+    }
+    // Fallback: premier waypoint actif
+    if (activeWaypoints.length > 0) {
+      const wp = activeWaypoints[0];
+      const lat = wp.lat ?? wp.latitude;
+      const lng = wp.lng ?? wp.longitude;
+      if (lat && lng) return [lat, lng];
+    }
+    // Dernier recours: mapCenter (identique au default Québec si aucun waypoint)
+    return mapCenter;
+  }, [selectedWaypointForZones, activeWaypoints, mapCenter]);
+
   const { 
     weather, 
     isLoading: weatherLoading,
@@ -758,10 +777,10 @@ const MonTerritoireBionicPage = () => {
     sunrise,
     sunset,
     refresh: refreshWeather
-  } = useBionicWeather(mapCenter[0], mapCenter[1], { autoFetch: true, pollInterval: liveMode ? 60000 : 600000 });
+  } = useBionicWeather(weatherCoords[0], weatherCoords[1], { autoFetch: true, pollInterval: liveMode ? 60000 : 600000 });
 
-  // BCE-4X: Hook meteo partage — source unique pour le bloc meteo intelligent
-  const sharedWeather = useSharedWeather(mapCenter[0], mapCenter[1], { autoFetch: true, liveMode });
+  // BCE-4X Phase 3.1: Hook meteo partage — waypoint UNIQUE pour le bloc meteo intelligent
+  const sharedWeather = useSharedWeather(weatherCoords[0], weatherCoords[1], { autoFetch: true, liveMode });
   
   const { scores, calculateHybridScores, globalScore } = useBionicScoring();
   
