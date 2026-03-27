@@ -77,9 +77,9 @@ METERS_PER_DEG_LAT = 111320.0
 CIRCLE_RADIUS_M = 600
 CIRCLE_NUM_POINTS = 48
 WATER_OVERLAP_THRESHOLD = 0.25   # Phase 3.1: 25% overlap eau = exclusion
-URBAN_OVERLAP_THRESHOLD = 0.03   # Phase 3.2-V: 3% overlap urbain = exclusion (ULTIME)
+URBAN_OVERLAP_THRESHOLD = 0.01   # Phase 3.2-CV: 1% overlap urbain = exclusion (ZERO tolerance)
 URBAN_CENTER_BUFFER_DEG = 0.002  # ~222m buffer autour du centre
-URBAN_CACHE_BUFFER_DEG = 0.0005  # Phase 3.2-V: ~55m buffer global cache urbain (comble les trous)
+URBAN_CACHE_BUFFER_DEG = 0.002   # Phase 3.2-CV: ~222m buffer global cache urbain (comble TOUS les trous)
 
 _water_union_zone_cache = None
 _water_zone_cache_loaded = False

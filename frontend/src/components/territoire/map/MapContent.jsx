@@ -124,6 +124,9 @@ const MapContentInner = React.memo(({
     <ZoomHandler onZoomChange={handleZoomChange} onMapMove={handleMapMove} onBoundsChange={handleBoundsChange} />
     {mapClickMode && <MapClickHandler onMapClick={handleMapClickForWaypoint} enabled={true} />}
 
+    {/* ══════════════════════════════════════════════════════════════ */}
+    {/* Phase 3.2-CV: BionicCorridorsV6Layer SEUL DÉSACTIVÉ */}
+    {/* ══════════════════════════════════════════════════════════════ */}
     <HydrographyOverlayLayer enabled={false} opacity={0.25} />
 
     <ExclusionOverlayLayer enabled={showExclusionOverlay && classificationToggles.pression} />
@@ -173,8 +176,8 @@ const MapContentInner = React.memo(({
       />
     )}
 
-    {/* CORRIDORS-V6: Couche corridors fauniques — palette normative (SEULE couche active) */}
-    {selectedWaypointForZones && showCorridors && waypointCenter && (
+    {/* CORRIDORS-V6: DESACTIVE TEMPORAIREMENT — Phase 3.2-CV diagnostic */}
+    {false && selectedWaypointForZones && showCorridors && waypointCenter && (
       <BionicCorridorsV6Layer
         center={waypointCenter}
         species={selectedSpecies}

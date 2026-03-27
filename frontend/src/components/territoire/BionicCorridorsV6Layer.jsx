@@ -80,12 +80,13 @@ const SPECIES_MAP = {
 // Z-index déterministe: FAIBLE → CRITIQUE
 const LEVEL_ZINDEX = { FAIBLE: 0, MODERE: 1, FORT: 2, MAJEUR: 3, CRITIQUE: 4 };
 
-// ═══ PERFORMANCE V3: Cache global persistant (max 20 entrées) ═══
-// x4520-B2: Cache purgé à chaque chargement de module (ZERO stale)
+// ═══ Phase 3.2-V BCE-4X: Cache avec version auto-invalidation ═══
+// SAFE MODE: Aucun module ne depend d'un refresh manuel.
+// Version bump = cache miss automatique sur TOUTES les entrees.
+const CORRIDORS_CACHE_VERSION = 'phase32cv_222m';
 const _cache = new Map();
-// x4520-B2: Purge au chargement — ZERO donnée résiduelle
 _cache.clear();
-function cacheKey(lat, lng, sp, m) { return `${lat.toFixed(6)}:${lng.toFixed(6)}:${sp}:${m}`; }
+function cacheKey(lat, lng, sp, m) { return `${CORRIDORS_CACHE_VERSION}:${lat.toFixed(6)}:${lng.toFixed(6)}:${sp}:${m}`; }
 
 // ═══ PERFORMANCE V3: Douglas-Peucker simplifié côté client ═══
 function simplifyPath(coords, tolerance = 0.00003) {
@@ -623,6 +624,16 @@ const BionicCorridorsV6Layer = ({
       setLoading(false);
     }
   }, [center, species, month, enabled, clearLayers]);
+
+  // Phase 3.2-V BCE-4X SAFE MODE: Purge cache au mount — ZERO stale automatique
+  useEffect(() => {
+    _cache.clear();
+    return () => {
+      if (abortRef.current) abortRef.current.abort();
+      clearLayers();
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Re-render quand les contrôles visuels changent (séparé du fetch)
   useEffect(() => {
