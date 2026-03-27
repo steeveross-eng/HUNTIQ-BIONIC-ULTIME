@@ -44,18 +44,18 @@ export const CoreDashboard = ({
   const [loading, setLoading] = useState(true);
 
   // BCE-4X: Weather Engine v3 — source unique via Zustand store
+  // Le Dashboard LIT le store, il ne fetch PAS (MonTerritoire fetch)
   const weatherCurrent = useWeatherStore(s => s.current);
   const weatherSource = useWeatherStore(s => s.source);
   const weatherLoading = useWeatherStore(s => s.loading);
-  const fetchWeather = useWeatherStore(s => s.fetchAll);
 
-  // Weather v3 -> format compatible avec les composants du dashboard
+  // Weather v3 -> format compatible — AUCUNE transformation/offset autorisee
   const weather = useMemo(() => {
     if (!weatherCurrent) return null;
     const w = weatherCurrent;
     return {
       temperature: w.temperature_c,
-      feels_like: w.temperature_c != null ? Math.round((w.temperature_c - 2) * 10) / 10 : null,
+      feels_like: w.feels_like_c ?? w.temperature_c,
       humidity: w.humidity_pct,
       wind_speed: w.wind_speed_kmh,
       wind_direction: w.wind_direction_deg,
@@ -107,13 +107,12 @@ export const CoreDashboard = ({
     };
   }, [weatherCurrent]);
 
-  // Load non-weather data
+  // Load non-weather data — BCE-4X: Dashboard ne fetch PAS la meteo (lecture store seule)
   const loadDashboardData = useCallback(async () => {
     setLoading(true);
     
     try {
-      // Trigger Weather Engine v3 fetch
-      fetchWeather(coordinates.lat, coordinates.lng);
+      // BCE-4X: PAS de fetchWeather ici — MonTerritoire est la source unique
 
       // Load AI insights
       const insights = await AIService.getInsights({
@@ -123,7 +122,7 @@ export const CoreDashboard = ({
       }).catch(() => ({ insights: [] }));
       setAiInsights(insights.insights || []);
 
-      // Check module health (sans WeatherService V1)
+      // Check module health
       const healthChecks = await Promise.all([
         NutritionService.getHealth().catch(() => ({ status: 'error' })),
         ScoringService.getHealth().catch(() => ({ status: 'error' })),

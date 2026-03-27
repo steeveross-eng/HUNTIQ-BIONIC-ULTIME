@@ -9,7 +9,7 @@
  * - Score de chasse et recommandations
  * - Phase lunaire
  */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
@@ -17,7 +17,8 @@ import {
   Cloud, Sun, CloudRain, Wind, Droplets, Thermometer, Eye, 
   Moon, RefreshCw, MapPin, Clock, Calendar, Target, ChevronLeft, ChevronRight
 } from 'lucide-react';
-import WeatherService from '../WeatherService';
+import useWeatherStore from '../../../stores/useWeatherStore';
+// BCE-4X: WeatherService V1 SUPPRIME — source unique = store v3
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -67,6 +68,12 @@ const getActivityLabel = (level) => {
   return labels[level] || level;
 };
 
+/**
+ * AdvancedWeatherWidget — BCE-4X CORRECTION LOGIQUE
+ * SOURCE UNIQUE: useWeatherStore (Weather Engine v3)
+ * Auto-refresh interne SUPPRIME.
+ * Aucun appel a WeatherService V1.
+ */
 const AdvancedWeatherWidget = ({ 
   lat = 46.8139, 
   lng = -71.2080,
@@ -74,34 +81,40 @@ const AdvancedWeatherWidget = ({
   showDaily = true,
   compact = false 
 }) => {
-  const [weatherData, setWeatherData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [hourlyScrollIndex, setHourlyScrollIndex] = useState(0);
-  const [lastUpdated, setLastUpdated] = useState(null);
+  // BCE-4X: Lecture SEULE du store v3 — pas de fetch interne
+  const weatherCurrent = useWeatherStore(s => s.current);
+  const weatherSource = useWeatherStore(s => s.source);
+  const weatherLoading = useWeatherStore(s => s.loading);
+  const fetchAll = useWeatherStore(s => s.fetchAll);
 
-  // Fetch weather data
-  const fetchWeather = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await WeatherService.getFullWeather(lat, lng);
-      setWeatherData(data);
-      setLastUpdated(new Date());
-    } catch (err) {
-      console.error('Weather fetch error:', err);
-      setError('Impossible de charger les données météo');
-    } finally {
-      setLoading(false);
-    }
-  }, [lat, lng]);
-
+  // Si le store est vide, declencher un seul fetch initial
   useEffect(() => {
-    fetchWeather();
-    // Refresh every 30 minutes
-    const interval = setInterval(fetchWeather, 30 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [fetchWeather]);
+    if (!weatherCurrent && !weatherLoading) {
+      fetchAll(lat, lng);
+    }
+  }, [weatherCurrent, weatherLoading, fetchAll, lat, lng]);
+
+  // Mapping store → format widget (AUCUNE transformation)
+  const weatherData = useMemo(() => {
+    if (!weatherCurrent) return null;
+    const w = weatherCurrent;
+    return {
+      current: {
+        temperature: w.temperature_c,
+        feels_like: w.feels_like_c ?? w.temperature_c,
+        humidity: w.humidity_pct,
+        wind_speed: w.wind_speed_kmh,
+        wind_direction: w.wind_direction_deg,
+        wind_gust: w.wind_gust_kmh,
+        pressure: w.pressure_hpa,
+        cloud_cover: w.cloud_cover_pct,
+        uv_index: w.uv_index,
+        condition: w.description || 'N/A',
+        icon: w.weather_code,
+      },
+      source: weatherSource,
+    };
+  }, [weatherCurrent, weatherSource]);
 
   // Scroll hourly forecast
   const scrollHourly = (direction) => {
