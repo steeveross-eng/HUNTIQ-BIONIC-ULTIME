@@ -77,7 +77,7 @@ const SpeciesComparisonPage = lazy(() => import("@/pages/SpeciesComparisonPage")
 // NUTRITION INTELLIGENCE ULTRA — Page immersive (STEEVE-MAX x2000/x4600)
 const NutritionIntelligencePage = lazy(() => import("@/pages/NutritionIntelligencePage"));
 // NUTRITION INTELLIGENCE SUPRA — x5000 (STEEVE-MAX x5100-x5900)
-const NutritionIntelligenceSupra = lazy(() => import("@/pages/NutritionIntelligenceSupra"));
+// SUPRA LOCAL unifie — ancien module global ABANDONNE (BCE-4X / STEEVE-MAX)
 const ProductPage = lazy(() => import("@/pages/ProductPage"));
 // BIONIC MODULES — 10 modules predictifs (STEEVE-MAX x2000)
 const BionicModulesPage = lazy(() => import("@/pages/BionicModulesPage"));
@@ -91,7 +91,7 @@ import {
   ExternalLink, Trash2, Edit, Plus, Loader2, GraduationCap, BookOpen, Brain,
   Map, Globe, Construction, Power, Mail, Handshake, XCircle, Moon, Sun, Bot,
   Radar, Share2, Gift, Home, Target, Crosshair, Route as RouteIcon, Briefcase, Cloud,
-  Crown, Beaker
+  Crown
 } from "lucide-react";
 import {
   Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle
@@ -226,15 +226,6 @@ const Navigation = ({ cartCount, onCartOpen }) => {
               <FlaskConical className="h-4 w-4" />
               Nutrition
             </Link>
-            {/* Nutrition Intelligence SUPRA x5000 */}
-            <Link 
-              to="/nutrition-supra" 
-              className={`flex items-center gap-2 px-3 py-2 text-sm font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 ${isActive('/nutrition-supra') ? 'text-[#F9D423] bg-[#F9D423]/10' : 'text-gray-300 hover:text-white'}`}
-              data-testid="nav-nutrition-supra"
-            >
-              <Beaker className="h-4 w-4" />
-              Supra
-            </Link>
             
             {/* Business (Conditionnel) */}
             {isBusinessOrAdmin && (
@@ -350,9 +341,6 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             </Link>
             <Link to="/saline" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="nav-nutrition-mobile">
               <FlaskConical className="h-4 w-4" /> Nutrition Intelligence
-            </Link>
-            <Link to="/nutrition-supra" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F9D423]" data-testid="nav-nutrition-supra-mobile">
-              <Beaker className="h-4 w-4" /> Nutrition SUPRA
             </Link>
             {isBusinessOrAdmin && (
               <Link to="/business" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#10B981]">
@@ -1047,8 +1035,8 @@ function App() {
                 {/* NUTRITION INTELLIGENCE ULTRA (x4600) */}
                 <Route path="/saline" element={<NutritionIntelligencePage />} />
                 <Route path="/saline-intelligence" element={<NutritionIntelligencePage />} />
-                {/* NUTRITION INTELLIGENCE SUPRA — x5000 */}
-                <Route path="/nutrition-supra" element={<NutritionIntelligenceSupra />} />
+                {/* SUPRA: Redirection vers ANALYSE TERRITOIRE (moteur unique SUPRA LOCAL) */}
+                <Route path="/nutrition-supra" element={<Navigate to="/mon-territoire-bionic" replace />} />
                 <Route path="/product/:productId" element={<ProductPage />} />
                 {/* BIONIC MODULES — 10 modules predictifs (STEEVE-MAX x2000) */}
                 <Route path="/bionic-modules" element={<BionicModulesPage />} />
