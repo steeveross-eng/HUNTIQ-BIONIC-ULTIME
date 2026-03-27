@@ -4,24 +4,23 @@
 ---
 
 ## Enonce original
-Reconstruction et modernisation de la plateforme HUNTIQ-V6 sous gouvernance stricte BCE-4X / MAX ULTRA / STEEVE-MAX. Application full-stack (FastAPI + React) pour la chasse intelligente avec analyse de territoire, nutrition animale, e-commerce de produits salines, et administration centralisee.
+Reconstruction et modernisation HUNTIQ-V6 sous gouvernance BCE-4X / MAX ULTRA / STEEVE-MAX. Application full-stack (FastAPI + React) — chasse intelligente, analyse de territoire, nutrition animale, e-commerce salines, administration centralisee.
 
 ## Architecture
 - **Backend**: FastAPI, 84+ modules "engines"
 - **Frontend**: React, Zustand, React-Leaflet, Tailwind
 - **E-commerce**: Stripe via emergentintegrations
-- **Gouvernance UI**: BCE4X_UIShield (PositionLock, RenderGuard, ZIndexGuard, LayoutFreeze)
-- **Branche de travail**: `Work1`
+- **Gouvernance UI**: BCE4X_UIShield
+- **Branche**: `Work1`
 
 ---
 
-## Ce qui a ete implemente
+## Implemente
 
-### Correction Header UX (27 Mars 2026)
-- MAGASIN: texte blanc (#FFFFFF), espacement droit (mr-3)
-- PREMIUM: texte blanc, contour orange #F5A623 (2px), fond transparent
-- CONNEXION: orange unifie #F5A623
-- Gradient Premium supprime, couleur harmonisee
+### P0.5 — Corrections UX (27 Mars 2026)
+- **Typographie Dashboard SUPRA**: Polices agrandies (+2px), padding augmente (+1-2), blocs harmonises, icones 18px, barres mineraux h-2, espacement sections gap-6
+- **Chemins & Trails**: Approach paths courbes (sinusoidales composees, 16 points), distance reelle calculee (Haversine), trail_type=sentier_forestier, lignes continues vertes (suppression pointilles cyan)
+- **Header UX**: MAGASIN blanc, PREMIUM blanc+contour orange #F5A623, CONNEXION unifie #F5A623
 
 ### Phase P0 — Fusion Totale (27 Mars 2026)
 - SUPRA v2 — Moteur unifie (Gauge ULTRA + Info Cards + Narration PREMIUM + Panier Stripe)
@@ -31,21 +30,15 @@ Reconstruction et modernisation de la plateforme HUNTIQ-V6 sous gouvernance stri
 
 ### Phases precedentes
 - Score Header securise + BCE4X_UIShield
-- Weather Engine v3 unifie
-- Navigation restructuree
-- Audits techniques (SUPRA, MAGASIN, ADMIN)
-- Architecture BSAA
-- Import V5 → V6, gouvernance, branch Work1
+- Weather Engine v3 unifie, Navigation restructuree
+- Audits techniques (SUPRA, MAGASIN, ADMIN), Architecture BSAA
 
 ---
 
 ## Backlog
 
-### P0 (Validation STEEVE-MAX requise)
-- Validation visuelle SUPRA v2 sur la carte (clic point → panneau)
-
 ### P1
-- Nettoyage V5: Suppression fichiers obsoletes
+- Nettoyage V5: Suppression NutritionIntelligencePage.jsx, AdminPage.jsx, anciens composants ULTRA
 - Enrichissement catalogue API x6030 (prix dynamiques, stock, variantes)
 
 ### P2
@@ -56,4 +49,4 @@ Reconstruction et modernisation de la plateforme HUNTIQ-V6 sous gouvernance stri
 
 ---
 
-*Document mis a jour le 27 Mars 2026 — BCE-4X / STEEVE-MAX V6*
+*Mis a jour le 27 Mars 2026 — BCE-4X / STEEVE-MAX V6*

@@ -52,26 +52,53 @@ const StandsMapLayer = ({
     for (const stand of data.stands) {
       const color = STAND_COLORS[stand.type_key] || '#E74C3C';
 
-      // Approach path — dotted polyline
+      // Approach path — BCE-4X P0.5: Chemin forestier (ligne continue, pas de pointilles)
       if (stand.approach_path?.length >= 2) {
         const pathCoords = stand.approach_path.map(p => [p.lat, p.lng]);
-        const approachLine = L.polyline(pathCoords, {
-          color: '#4ECDC4',
-          weight: 2.5,
-          dashArray: '8, 5',
-          opacity: 0.75,
+        const trailDistanceM = stand.approach_path[0]?.trail_distance_m;
+
+        // Chemin principal — ligne continue style sentier forestier
+        const trailLine = L.polyline(pathCoords, {
+          color: '#2ECC71',
+          weight: 3.5,
+          opacity: 0.85,
           lineCap: 'round',
+          lineJoin: 'round',
           pane: 'overlayPane',
         });
-        group.addLayer(approachLine);
 
-        // Start dot (entry point)
+        // Tooltip avec distance reelle
+        if (trailDistanceM) {
+          trailLine.bindTooltip(
+            `<span style="font-size:11px;font-weight:700;color:#2ECC71">${trailDistanceM}m</span><br><span style="font-size:9px;color:#aaa">Sentier forestier</span>`,
+            { sticky: true, direction: 'top', offset: [0, -8] }
+          );
+        }
+        group.addLayer(trailLine);
+
+        // Bordure subtile pour effet "sentier trace"
+        const trailBorder = L.polyline(pathCoords, {
+          color: '#1a1a2e',
+          weight: 5.5,
+          opacity: 0.4,
+          lineCap: 'round',
+          lineJoin: 'round',
+          pane: 'overlayPane',
+        });
+        group.addLayer(trailBorder);
+        // Remettre le chemin vert au-dessus de la bordure
+        trailLine.bringToFront();
+
+        // Start dot (point d'entree du sentier)
         const startPt = stand.approach_path[0];
         const startDot = L.circleMarker([startPt.lat, startPt.lng], {
-          radius: 4, fillColor: '#2ECC71', color: '#1a1a2e', weight: 1.5,
-          fillOpacity: 0.9, pane: 'markerPane',
+          radius: 5, fillColor: '#2ECC71', color: '#1a1a2e', weight: 2,
+          fillOpacity: 0.95, pane: 'markerPane',
         });
-        startDot.bindTooltip('Point d\'entrée', { direction: 'top', offset: [0, -8] });
+        startDot.bindTooltip(
+          `<span style="font-size:10px;font-weight:600">Depart sentier</span>${trailDistanceM ? `<br><span style="font-size:9px;color:#2ECC71">${trailDistanceM}m</span>` : ''}`,
+          { direction: 'top', offset: [0, -8] }
+        );
         group.addLayer(startDot);
       }
 

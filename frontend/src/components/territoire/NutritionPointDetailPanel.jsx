@@ -76,18 +76,18 @@ const Gauge = ({ value, max = 100, label, color = BIONIC.orange }) => {
   );
 };
 
-// === INFO CARD (from ULTRA — 7 moteurs) ===
+// === INFO CARD — Dashboard-style (BCE-4X P0.5) ===
 const InfoCard = ({ icon, title, items, color = BIONIC.blue }) => (
-  <div className="rounded-xl border p-3" style={{ backgroundColor: BIONIC.card, borderColor: BIONIC.cardBorder }} data-testid={`info-card-${title.toLowerCase()}`}>
-    <div className="flex items-center gap-1.5 mb-2">
+  <div className="rounded-xl border p-4" style={{ backgroundColor: BIONIC.card, borderColor: BIONIC.cardBorder }} data-testid={`info-card-${title.toLowerCase()}`}>
+    <div className="flex items-center gap-2 mb-3">
       <span style={{ color }}>{icon}</span>
-      <span className="text-[13px] font-bold text-white">{title}</span>
+      <span className="text-base font-bold text-white">{title}</span>
     </div>
-    <div className="space-y-1">
+    <div className="space-y-2">
       {items.map((item, i) => (
-        <div key={i} className="flex justify-between text-[12px]">
+        <div key={i} className="flex justify-between text-sm">
           <span className="text-gray-500">{item.label}</span>
-          <span className="font-semibold text-gray-300">{item.value || '—'}</span>
+          <span className="font-semibold text-gray-200">{item.value || '—'}</span>
         </div>
       ))}
     </div>
@@ -130,9 +130,9 @@ const SUPPORT_HIERARCHY = [
   { name: 'Bloc mineral commercial', score: 60, color: BIONIC.yellow, desc: 'Pratique mais dissolution non controlee.' },
 ];
 
-// === UI COMPONENTS ===
+// === UI COMPONENTS — Dashboard-style (BCE-4X P0.5 typographie verrouillée) ===
 const Card = ({ children, testId, className = '' }) => (
-  <div className={`rounded-xl border p-5 ${className}`}
+  <div className={`rounded-xl border p-6 ${className}`}
     style={{ backgroundColor: BIONIC.card, borderColor: BIONIC.cardBorder, boxShadow: '0 2px 12px rgba(0,0,0,0.25)' }}
     data-testid={testId}>
     {children}
@@ -144,18 +144,18 @@ const CollapsibleSection = ({ icon: Icon, title, color, badge, children, default
   return (
     <Card testId={testId}>
       <button onClick={() => setOpen(v => !v)} className="w-full flex items-center justify-between cursor-pointer">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${color}15` }}>
-            <Icon className="h-4 w-4" style={{ color }} />
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${color}15` }}>
+            <Icon className="h-5 w-5" style={{ color }} />
           </div>
-          <span className="text-sm font-bold text-white uppercase tracking-wider">{title}</span>
+          <span className="text-base font-bold text-white uppercase tracking-wider">{title}</span>
         </div>
         <div className="flex items-center gap-2">
-          {badge && <span className="text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ backgroundColor: `${color}18`, color }}>{badge}</span>}
-          {open ? <ChevronUp className="h-4 w-4 text-gray-500" /> : <ChevronDown className="h-4 w-4 text-gray-500" />}
+          {badge && <span className="text-xs font-bold px-3 py-1.5 rounded-lg" style={{ backgroundColor: `${color}18`, color }}>{badge}</span>}
+          {open ? <ChevronUp className="h-5 w-5 text-gray-500" /> : <ChevronDown className="h-5 w-5 text-gray-500" />}
         </div>
       </button>
-      {open && <div className="mt-4">{children}</div>}
+      {open && <div className="mt-5">{children}</div>}
     </Card>
   );
 };
@@ -292,7 +292,7 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
       icon={Droplets}
       accentColor={gc}
       onClose={onClose}
-      defaultWidth={620}
+      defaultWidth={680}
       maxHeight="100vh"
       testId="nutrition-point-detail-panel"
       showPrint={true}
@@ -300,7 +300,7 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
     >
       <div className="h-full flex flex-col overflow-hidden" data-testid="supra-v2-panel-content">
         {/* TABS */}
-        <div className="flex items-center gap-2 px-5 pt-4 pb-3 border-b flex-shrink-0" style={{ borderColor: 'rgba(255,255,255,0.08)' }} data-testid="supra-tabs">
+        <div className="flex items-center gap-2.5 px-5 pt-5 pb-4 border-b flex-shrink-0" style={{ borderColor: 'rgba(255,255,255,0.08)' }} data-testid="supra-tabs">
           {TABS.map(tab => {
             const active = activeTab === tab.id;
             const Icon = tab.icon;
@@ -309,7 +309,7 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
             return (
               <button key={tab.id} data-testid={`supra-tab-${tab.id}`}
                 onClick={() => setActiveTab(tab.id)}
-                className="flex items-center gap-2 h-9 px-4 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-150 relative"
+                className="flex items-center gap-2 h-10 px-5 rounded-lg text-sm font-bold uppercase tracking-wider transition-all duration-150 relative"
                 style={{ backgroundColor: active ? `${activeColor}18` : 'transparent', color: active ? activeColor : '#6b7280', border: active ? `2px solid ${activeColor}50` : '2px solid transparent' }}>
                 <Icon className="h-4 w-4" />
                 {tab.label}
@@ -322,8 +322,8 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
         </div>
 
         {/* CONTENT */}
-        <div className="flex-1 overflow-y-auto p-5" style={{ maxHeight: 'calc(100vh - 140px)' }}>
-          {loading && <div className="text-center py-10 text-gray-400 text-[17px] animate-pulse">Analyse SUPRA v2 en cours...</div>}
+        <div className="flex-1 overflow-y-auto p-6" style={{ maxHeight: 'calc(100vh - 140px)' }}>
+          {loading && <div className="text-center py-12 text-gray-400 text-lg animate-pulse">Analyse SUPRA v2 en cours...</div>}
 
           {!loading && score && activeTab === 'analyse' && (
             <AnalyseTab score={score} recipe={recipe} recommendations={recommendations} evidence={evidence}
@@ -344,7 +344,7 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
           )}
         </div>
 
-        <div className="text-center text-[12px] text-gray-500 py-2.5 border-t flex-shrink-0" style={{ borderColor: 'rgba(255,255,255,0.06)' }} data-testid="supra-footer">
+        <div className="text-center text-xs text-gray-500 py-3 border-t flex-shrink-0" style={{ borderColor: 'rgba(255,255,255,0.06)' }} data-testid="supra-footer">
           SUPRA v2 | 7 Moteurs ULTRA | Stripe | BCE-4X / STEEVE-MAX V6
         </div>
       </div>
@@ -367,18 +367,18 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
   const ratingColor = { premium: BIONIC.amber, optimal: BIONIC.green, adequat: BIONIC.blue, insuffisant: BIONIC.red }[ultraScore.rating] || BIONIC.blue;
 
   return (
-    <div className="space-y-5" data-testid="supra-analyse-tab">
+    <div className="space-y-6" data-testid="supra-analyse-tab">
       {/* ROW 1: Score SUPRA + Gauge ULTRA */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-5">
         <Card testId="supra-score-card">
-          <div className="flex items-center gap-4">
-            <div className="w-[68px] h-[68px] rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: `linear-gradient(135deg, ${gc}22, ${gc}08)`, border: `2.5px solid ${gc}` }}>
-              <span className="text-[24px] font-black" style={{ color: gc }}>{score.score_global}</span>
+          <div className="flex items-center gap-5">
+            <div className="w-[76px] h-[76px] rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: `linear-gradient(135deg, ${gc}22, ${gc}08)`, border: `2.5px solid ${gc}` }}>
+              <span className="text-[28px] font-black" style={{ color: gc }}>{score.score_global}</span>
             </div>
             <div>
-              <div className="text-[18px] font-black text-white leading-tight">Score SUPRA</div>
-              <div className="text-[13px] font-bold px-3 py-1 rounded-lg inline-block mt-1" style={{ backgroundColor: `${gc}18`, color: gc }}>{score.grade}</div>
-              <div className="flex gap-2 mt-1.5 text-[12px]">
+              <div className="text-xl font-black text-white leading-tight">Score SUPRA</div>
+              <div className="text-sm font-bold px-3 py-1.5 rounded-lg inline-block mt-1.5" style={{ backgroundColor: `${gc}18`, color: gc }}>{score.grade}</div>
+              <div className="flex gap-3 mt-2 text-sm">
                 <span style={{ color: BIONIC.green }}>{score.zones_resume?.vert} vert</span>
                 <span style={{ color: BIONIC.orange }}>{score.zones_resume?.jaune} jaune</span>
                 <span style={{ color: BIONIC.red }}>{score.zones_resume?.rouge} rouge</span>
@@ -386,19 +386,18 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
             </div>
           </div>
         </Card>
-        {/* Gauge ULTRA (7 engines) */}
         <Card testId="ultra-gauge-card">
-          <div className="flex items-center justify-center gap-4">
+          <div className="flex items-center justify-center gap-5">
             <div className="relative">
               <Gauge value={ultraScore.global_score || score.score_global || 0} label="ULTRA" color={ratingColor} />
             </div>
             <div className="text-center">
-              <div className="text-[13px] text-gray-400">7 Moteurs</div>
-              <div className="text-[14px] font-bold mt-1" style={{ color: ratingColor }}>
+              <div className="text-sm text-gray-400">7 Moteurs</div>
+              <div className="text-base font-bold mt-1.5" style={{ color: ratingColor }}>
                 {(ultraScore.rating || 'N/A').toUpperCase()}
               </div>
               {ultraDeficits.total_critical > 0 && (
-                <div className="text-[11px] mt-1 text-red-400">{ultraDeficits.total_critical} carences critiques</div>
+                <div className="text-xs mt-1.5 text-red-400">{ultraDeficits.total_critical} carences critiques</div>
               )}
             </div>
           </div>
@@ -409,28 +408,28 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
       {(engines.soil || engines.metabolism || engines.vegetation || engines.hydrology) && (
         <div className="grid grid-cols-2 gap-3">
           {engines.soil && (
-            <InfoCard icon={<Mountain size={14} />} title="Sol" color={BIONIC.amber} items={[
+            <InfoCard icon={<Mountain size={18} />} title="Sol" color={BIONIC.amber} items={[
               { label: 'Type', value: engines.soil.soil_type },
               { label: 'pH', value: engines.soil.pH },
               { label: 'Qualite', value: `${engines.soil.quality_index || 0}/100` },
             ]} />
           )}
           {engines.metabolism && (
-            <InfoCard icon={<Activity size={14} />} title="Metabolisme" color={BIONIC.orange} items={[
+            <InfoCard icon={<Activity size={18} />} title="Metabolisme" color={BIONIC.orange} items={[
               { label: 'Phase', value: (engines.metabolism.metabolic_phase || '').replace(/_/g, ' ') },
               { label: 'Energie', value: `x${engines.metabolism.energy_demand_factor || 0}` },
               { label: 'Activite', value: engines.metabolism.activity_level },
             ]} />
           )}
           {engines.vegetation && (
-            <InfoCard icon={<Leaf size={14} />} title="Vegetation" color={BIONIC.green} items={[
+            <InfoCard icon={<Leaf size={18} />} title="Vegetation" color={BIONIC.green} items={[
               { label: 'Phase', value: engines.vegetation.phenophase },
               { label: 'Couvert', value: `${engines.vegetation.couvert_pct || 0}%` },
               { label: 'Fourrage', value: `${((engines.vegetation.avg_forage_quality || 0) * 100).toFixed(0)}%` },
             ]} />
           )}
           {engines.hydrology && (
-            <InfoCard icon={<Droplets size={14} />} title="Hydrologie" color={BIONIC.blue} items={[
+            <InfoCard icon={<Droplets size={18} />} title="Hydrologie" color={BIONIC.blue} items={[
               { label: 'Drainage', value: engines.hydrology.drainage },
               { label: 'Lessivage', value: engines.hydrology.leaching_risk },
               { label: 'Dist. eau', value: `${engines.hydrology.distance_eau_m || 0}m` },
@@ -439,20 +438,20 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
         </div>
       )}
 
-      {/* Mineraux — barres */}
+      {/* Mineraux — barres Dashboard */}
       <Card testId="supra-minerals-card">
-        <div className="flex items-center gap-2.5 mb-4">
-          <FlaskConical className="h-5 w-5" style={{ color: BIONIC.yellow }} />
-          <span className="text-[18px] font-bold text-white">Mineraux</span>
+        <div className="flex items-center gap-3 mb-5">
+          <FlaskConical className="h-6 w-6" style={{ color: BIONIC.yellow }} />
+          <span className="text-xl font-bold text-white">Mineraux</span>
         </div>
-        <div className="space-y-2">
+        <div className="space-y-3">
           {Object.entries(score.scores_par_mineral || {}).map(([key, m]) => (
-            <div key={key} className="flex items-center gap-3" data-testid={`supra-mineral-${key}`}>
-              <span className="text-[14px] text-gray-300 w-20 flex-shrink-0">{m.name}</span>
-              <div className="flex-1 h-[5px] rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}>
+            <div key={key} className="flex items-center gap-4" data-testid={`supra-mineral-${key}`}>
+              <span className="text-base text-gray-300 w-24 flex-shrink-0">{m.name}</span>
+              <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}>
                 <div className="h-full rounded-full transition-all" style={{ width: `${m.score}%`, backgroundColor: zoneColor(m.zone) }} />
               </div>
-              <span className="text-[14px] font-bold w-8 text-right" style={{ color: zoneColor(m.zone) }}>{m.score}</span>
+              <span className="text-base font-bold w-10 text-right" style={{ color: zoneColor(m.zone) }}>{m.score}</span>
             </div>
           ))}
         </div>
@@ -460,20 +459,20 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
 
       {/* SUPRA PREMIUM — Physiologie minerale */}
       <CollapsibleSection icon={Crown} title="Physiologie minerale" color={BIONIC.purple} badge={`${species} / ${season}`} testId="supra-physiology">
-        <p className="text-[14px] text-gray-300 leading-relaxed">{physioText}</p>
+        <p className="text-base text-gray-300 leading-relaxed">{physioText}</p>
       </CollapsibleSection>
 
       {/* SUPRA PREMIUM — Influence du support */}
       <CollapsibleSection icon={TreeDeciduous} title="Influence du support" color={BIONIC.green} badge="Hierarchie" defaultOpen={false} testId="supra-support">
-        <div className="space-y-2">
+        <div className="space-y-3">
           {SUPPORT_HIERARCHY.map((s, i) => (
-            <div key={i} className="flex items-center gap-3 py-1.5 border-b" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${s.color}15`, border: `2px solid ${s.color}` }}>
-                <span className="text-[12px] font-black" style={{ color: s.color }}>{s.score}</span>
+            <div key={i} className="flex items-center gap-4 py-2.5 border-b" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${s.color}15`, border: `2px solid ${s.color}` }}>
+                <span className="text-sm font-black" style={{ color: s.color }}>{s.score}</span>
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-[13px] font-bold text-white">{s.name}</div>
-                <div className="text-[11px] text-gray-500">{s.desc}</div>
+                <div className="text-base font-bold text-white">{s.name}</div>
+                <div className="text-sm text-gray-500">{s.desc}</div>
               </div>
             </div>
           ))}
@@ -483,26 +482,26 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
       {/* SUPRA PREMIUM — Comportement des males */}
       {behaviorText && (
         <CollapsibleSection icon={Eye} title="Comportement des males" color={BIONIC.cyan} badge={season} defaultOpen={false} testId="supra-behavior">
-          <p className="text-[14px] text-gray-300 leading-relaxed">{behaviorText}</p>
+          <p className="text-base text-gray-300 leading-relaxed">{behaviorText}</p>
         </CollapsibleSection>
       )}
 
       {/* Besoins nutritionnels */}
       {energyProtein && (
         <Card testId="supra-energy-protein-card">
-          <div className="flex items-center gap-2.5 mb-3">
-            <Zap className="h-5 w-5" style={{ color: BIONIC.orange }} />
-            <span className="text-[18px] font-bold text-white">Besoins nutritionnels</span>
+          <div className="flex items-center gap-3 mb-4">
+            <Zap className="h-6 w-6" style={{ color: BIONIC.orange }} />
+            <span className="text-xl font-bold text-white">Besoins nutritionnels</span>
           </div>
-          <div className="text-[14px] text-gray-300 mb-3">{energyProtein.phase}</div>
-          <div className="grid grid-cols-2 gap-3 mb-3">
-            <div className="rounded-lg p-3" style={{ backgroundColor: 'rgba(255,255,255,0.04)', borderLeft: `3px solid ${needColor(energyProtein.energy_need)}` }}>
-              <div className="text-[12px] text-gray-400 mb-1">Energie</div>
-              <div className="text-[15px] font-bold" style={{ color: needColor(energyProtein.energy_need) }}>{energyProtein.energy_need}</div>
+          <div className="text-base text-gray-300 mb-4">{energyProtein.phase}</div>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="rounded-lg p-4" style={{ backgroundColor: 'rgba(255,255,255,0.04)', borderLeft: `3px solid ${needColor(energyProtein.energy_need)}` }}>
+              <div className="text-sm text-gray-400 mb-1.5">Energie</div>
+              <div className="text-lg font-bold" style={{ color: needColor(energyProtein.energy_need) }}>{energyProtein.energy_need}</div>
             </div>
-            <div className="rounded-lg p-3" style={{ backgroundColor: 'rgba(255,255,255,0.04)', borderLeft: `3px solid ${needColor(energyProtein.protein_need)}` }}>
-              <div className="text-[12px] text-gray-400 mb-1">Proteines</div>
-              <div className="text-[15px] font-bold" style={{ color: needColor(energyProtein.protein_need) }}>{energyProtein.protein_need}</div>
+            <div className="rounded-lg p-4" style={{ backgroundColor: 'rgba(255,255,255,0.04)', borderLeft: `3px solid ${needColor(energyProtein.protein_need)}` }}>
+              <div className="text-sm text-gray-400 mb-1.5">Proteines</div>
+              <div className="text-lg font-bold" style={{ color: needColor(energyProtein.protein_need) }}>{energyProtein.protein_need}</div>
             </div>
           </div>
         </Card>
@@ -511,30 +510,30 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
       {/* Ecozone */}
       {ecozone && (
         <Card testId="supra-ecozone-card">
-          <div className="flex items-center gap-2.5 mb-3">
-            <Leaf className="h-5 w-5" style={{ color: BIONIC.green }} />
-            <span className="text-[18px] font-bold text-white">Zone ecologique</span>
+          <div className="flex items-center gap-3 mb-4">
+            <Leaf className="h-6 w-6" style={{ color: BIONIC.green }} />
+            <span className="text-xl font-bold text-white">Zone ecologique</span>
           </div>
-          <div className="text-[15px] text-gray-300 mb-2">{ecozone.nom_commun}</div>
-          <div className="text-[14px] text-gray-400 leading-relaxed">{ecozone.habitat_principal}</div>
+          <div className="text-lg text-gray-300 mb-2">{ecozone.nom_commun}</div>
+          <div className="text-base text-gray-400 leading-relaxed">{ecozone.habitat_principal}</div>
         </Card>
       )}
 
       {/* Recette */}
       {recipe && (
         <Card testId="supra-recipe-card">
-          <div className="flex items-center gap-2.5 mb-3">
-            <BookOpen className="h-5 w-5" style={{ color: BIONIC.green }} />
-            <span className="text-[18px] font-bold text-white">Recette</span>
+          <div className="flex items-center gap-3 mb-4">
+            <BookOpen className="h-6 w-6" style={{ color: BIONIC.green }} />
+            <span className="text-xl font-bold text-white">Recette</span>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {recipe.ingredients_cles?.slice(0, 5).map((ing, i) => (
-              <div key={i} className="flex items-center justify-between py-1.5 border-b" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
+              <div key={i} className="flex items-center justify-between py-2.5 border-b" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
                 <div>
-                  <span className="text-[15px] text-white">{ing.mineral}</span>
-                  <span className="text-[12px] text-gray-400 ml-2">{ing.product}</span>
+                  <span className="text-base text-white">{ing.mineral}</span>
+                  <span className="text-sm text-gray-400 ml-3">{ing.product}</span>
                 </div>
-                <span className="text-[12px] font-bold px-2 py-0.5 rounded" style={{ backgroundColor: `${priorityColor(ing.priority)}15`, color: priorityColor(ing.priority) }}>{ing.priority}</span>
+                <span className="text-xs font-bold px-3 py-1 rounded" style={{ backgroundColor: `${priorityColor(ing.priority)}15`, color: priorityColor(ing.priority) }}>{ing.priority}</span>
               </div>
             ))}
           </div>
@@ -544,18 +543,18 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
       {/* Couts — collapsible */}
       {costs && (
         <CollapsibleSection icon={DollarSign} title="Couts" color={BIONIC.orange} defaultOpen={false} testId="supra-costs">
-          <div className="grid grid-cols-3 gap-3 text-center">
-            <div className="rounded-lg p-3" style={{ backgroundColor: 'rgba(255,255,255,0.04)' }}>
-              <div className="text-[12px] text-gray-400 mb-1">Initial</div>
-              <div className="text-[18px] font-bold text-white">{costs.initial_cost_cad}$</div>
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div className="rounded-lg p-4" style={{ backgroundColor: 'rgba(255,255,255,0.04)' }}>
+              <div className="text-sm text-gray-400 mb-2">Initial</div>
+              <div className="text-xl font-bold text-white">{costs.initial_cost_cad}$</div>
             </div>
-            <div className="rounded-lg p-3" style={{ backgroundColor: 'rgba(255,255,255,0.04)' }}>
-              <div className="text-[12px] text-gray-400 mb-1">Annuel</div>
-              <div className="text-[18px] font-bold" style={{ color: BIONIC.orange }}>{costs.annual_cost_cad}$</div>
+            <div className="rounded-lg p-4" style={{ backgroundColor: 'rgba(255,255,255,0.04)' }}>
+              <div className="text-sm text-gray-400 mb-2">Annuel</div>
+              <div className="text-xl font-bold" style={{ color: BIONIC.orange }}>{costs.annual_cost_cad}$</div>
             </div>
-            <div className="rounded-lg p-3" style={{ backgroundColor: 'rgba(255,255,255,0.04)' }}>
-              <div className="text-[12px] text-gray-400 mb-1">Par visite</div>
-              <div className="text-[18px] font-bold text-white">{costs.cost_per_visit_cad}$</div>
+            <div className="rounded-lg p-4" style={{ backgroundColor: 'rgba(255,255,255,0.04)' }}>
+              <div className="text-sm text-gray-400 mb-2">Par visite</div>
+              <div className="text-xl font-bold text-white">{costs.cost_per_visit_cad}$</div>
             </div>
           </div>
         </CollapsibleSection>
@@ -564,14 +563,14 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
       {/* Preuves scientifiques */}
       {evidence.length > 0 && (
         <CollapsibleSection icon={FileText} title="Preuves scientifiques" color={BIONIC.purple} badge={`${evidence.length} refs`} defaultOpen={false} testId="supra-evidence">
-          <div className="space-y-2">
+          <div className="space-y-3">
             {evidence.slice(0, 4).map((ref, i) => (
-              <div key={i} className="rounded-lg p-3" style={{ backgroundColor: 'rgba(156,39,176,0.06)', borderLeft: `3px solid ${BIONIC.purple}` }}>
+              <div key={i} className="rounded-lg p-4" style={{ backgroundColor: 'rgba(156,39,176,0.06)', borderLeft: `3px solid ${BIONIC.purple}` }}>
                 <div className="flex items-start justify-between gap-2">
-                  <span className="text-[13px] font-bold text-white leading-snug">{ref.titre}</span>
-                  <a href={ref.doi_ou_url} target="_blank" rel="noopener noreferrer" className="flex-shrink-0"><ExternalLink className="h-3 w-3 text-purple-400" /></a>
+                  <span className="text-base font-bold text-white leading-snug">{ref.titre}</span>
+                  <a href={ref.doi_ou_url} target="_blank" rel="noopener noreferrer" className="flex-shrink-0"><ExternalLink className="h-4 w-4 text-purple-400" /></a>
                 </div>
-                <span className="text-[12px] text-gray-400 block mt-1">{ref.auteurs}, {ref.annee}</span>
+                <span className="text-sm text-gray-400 block mt-1.5">{ref.auteurs}, {ref.annee}</span>
               </div>
             ))}
           </div>
