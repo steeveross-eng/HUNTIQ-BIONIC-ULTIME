@@ -78,6 +78,7 @@ const SpeciesComparisonPage = lazy(() => import("@/pages/SpeciesComparisonPage")
 const NutritionIntelligencePage = lazy(() => import("@/pages/NutritionIntelligencePage"));
 // NUTRITION INTELLIGENCE SUPRA — x5000 (STEEVE-MAX x5100-x5900)
 const NutritionIntelligenceSupra = lazy(() => import("@/pages/NutritionIntelligenceSupra"));
+const ProductPage = lazy(() => import("@/pages/ProductPage"));
 // BIONIC MODULES — 10 modules predictifs (STEEVE-MAX x2000)
 const BionicModulesPage = lazy(() => import("@/pages/BionicModulesPage"));
 // BSAA — BIONIC Social Ads Automation (x4500-ULTRA)
@@ -1048,6 +1049,7 @@ function App() {
                 <Route path="/saline-intelligence" element={<NutritionIntelligencePage />} />
                 {/* NUTRITION INTELLIGENCE SUPRA — x5000 */}
                 <Route path="/nutrition-supra" element={<NutritionIntelligenceSupra />} />
+                <Route path="/product/:productId" element={<ProductPage />} />
                 {/* BIONIC MODULES — 10 modules predictifs (STEEVE-MAX x2000) */}
                 <Route path="/bionic-modules" element={<BionicModulesPage />} />
                 <Route path="/intelligence" element={<BionicModulesPage />} />

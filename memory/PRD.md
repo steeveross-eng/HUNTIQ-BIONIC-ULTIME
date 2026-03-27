@@ -7,59 +7,58 @@ Reconstruction, modernisation et stabilisation de la plateforme HUNTIQ-V6.
 ### Stack Technique
 - **Backend**: FastAPI, ThreadPoolExecutor, MongoDB
 - **Frontend**: React, Zustand, React-Leaflet, Tailwind
-- **Gouvernance**: BCE-4X, BCE-4X-UI (PositionLock, ZIndexGuard, RenderGuard, LayoutFreeze, OverlayCompliance)
+- **Gouvernance**: BCE-4X, BCE-4X-UI (PositionLock, ZIndexGuard, RenderGuard, LayoutFreeze)
 
 ---
 
 ## Travaux Accomplis
 
 ### Phase 1-3: Import et Archive
-- Clone bionic-v3-dev depuis HUNTIQ-V5
-- Inventaire certifie + ZIP archive
+- Clone bionic-v3-dev, inventaire certifie, ZIP archive
 
 ### Gouvernance
 - GOVERNANCE.md, EMERGENT_PROTOCOL.md, SECURITY_POLICY.md
-- Protocole ZERO LOSS, ZERO REGRESSION
 
 ### Audits
-- Engine Audit (84+ modules confirmes)
-- Coherence Audit (Phase 5B)
-- Historical Audit V1-V6 (Phase 5C)
+- Engine, Coherence, Historical V1-V6
 
 ### Architecture BSAA
-- Phase BSAA-0/BSAA-1: Etude + Architecture complete
+- Phase BSAA-0/BSAA-1 complete
 
 ### Optimisation TERRITOIRE
-- Performance backend (stale-while-revalidate, ThreadPoolExecutor)
-- Weather Engine v3 (nowcasting, visibilite, score meteo)
-- Moteurs SUPRA avances hybrides
-- Bloc Meteo Intelligent (Zustand store unifie useWeatherStore)
-- Suppression watermark + BCE4X_UIShield
+- Performance backend, Weather Engine v3, Moteurs SUPRA hybrides
+- Bloc Meteo Intelligent, BCE4X_UIShield, Suppression watermark
 
-### P0 Score Header (26 Mars 2026)
-- Score badge TOUJOURS visible, pipeline: globalScore > bionicZones > heatmapV10Data > bionicStats
-- Typographie harmonisee WAYPOINT, position verrouillee
+### P0 Score Header (26 Mars)
+- Score badge TOUJOURS visible, pipeline multi-source, typo WAYPOINT
 
-### P0 SUPRA Uniformisation (26 Mars 2026)
-- Couleur unique #FF9800, SupraButton unifie, RenderGuard actif
+### P0 SUPRA Uniformisation (26 Mars)
+- Couleur unique #FF9800, SupraButton unifie, RenderGuard
 
-### P0 Weather Engine v3 Unification (27 Mars 2026)
-- Dashboard relie a Weather v3 via useWeatherStore (source unique)
-- WeatherWidget reecrit, ancien pipeline V1 elimine du Dashboard
-- CoreDashboard: huntingConditions calcule depuis v3 reel
+### P0 Weather Engine v3 Unification (27 Mars)
+- Dashboard relie a Weather v3, ancien pipeline V1 elimine
 
-### P0 Header Stability Rule (27 Mars 2026)
-- LayoutFreeze(), CSS contain:layout style, Guards periodiques actifs
+### P0 Header Stability Rule (27 Mars)
+- LayoutFreeze, CSS contain:layout style, Guards periodiques
 
-### P0 Navigation Restructuration (27 Mars 2026)
-- MAP dropdown -> 2 entrees nav primaires: ANALYSE TERRITOIRE + CARTE INTERACTIVE
-- TRIPS/SORTIES supprime de la navigation
-- "Mon Territoire" renomme "Analyse Territoire BIONIC"
-- Route /analyse-territoire ajoutee (alias -> MonTerritoireBionicPage)
-- FULL_VIEWPORT_ROUTES mis a jour
-- Nav mobile restructuree en miroir du desktop
-- Activation gold (#F5A623) sur la page active
-- BCE-4X-UI applique sur les deux entrees nav
+### P0 Navigation Restructuration (27 Mars)
+- ANALYSE TERRITOIRE + CARTE INTERACTIVE: nav primaires directes
+- TRIPS/SORTIES supprime, renommage Analyse Territoire BIONIC
+
+### P0 Refonte SUPRA PREMIUM (27 Mars)
+- 9 sections: Score, Phase physio, Physiologie minerale, Influence support, Recette optimale, Score mineral, Comportement males, Guide implantation, Preuves scientifiques
+- Couts deplaces tout en bas (collapsible, ferme par defaut)
+- Recettes intelligentes avec priorites (CRITIQUE/RECOMMANDE)
+- Boutons "VOIR LE PRODUIT" -> lien vers fiche produit
+- Tooltip carte ameliore: "VOIR LES BESOINS DE TON SITE"
+- Donnees narratives: physiologie par espece/saison, comportement males
+- Hierarchie substrats avec scores (bois mou 95, bois dur 70, sol nu 45, bloc 60)
+
+### P1 Fiches Produits (27 Mars)
+- Route /product/:productId
+- 5 mineraux documentes: Sodium, Calcium, Phosphore, Magnesium, Potassium
+- Chaque fiche: Role physiologique, Support optimal, Dosage, Prix, Disponibilite locale
+- Badge SUPRA CERTIFIE + bouton Commander
 
 ### Migration MongoDB x7000
 - Pipeline soumission fournisseur operationnel
@@ -69,19 +68,23 @@ Reconstruction, modernisation et stabilisation de la plateforme HUNTIQ-V6.
 ## Modules Primaires
 
 ### ANALYSE TERRITOIRE (/mon-territoire-bionic)
-Carte strategique: zones, corridors, hotspots, vent, meteo v3, SUPRA, trails optimises.
-Position GPS usager (marker discret). Pas de GPS lourd.
+Carte strategique: zones, corridors, hotspots, vent, meteo v3, SUPRA, trails.
 
 ### CARTE INTERACTIVE (/map)
-Carte terrain GPS: navigation, GPS tracking, groupe, traces, waypoints, notes, sessions.
-GPS Engine v1, Trail Engine v1, Mode GPS, Mode Groupe, Mode Traces.
+Carte terrain GPS: navigation, tracking, groupe, traces, waypoints.
+
+### SUPRA (/nutrition-supra)
+Intelligence terrain: score mineral, recettes, physiologie, comportement, couts.
+
+### Fiches Produits (/product/:id)
+Detail produit mineral: role, dosage, prix, disponibilite.
 
 ---
 
 ## Taches Prochaines
 
 ### P1 - Frontend Admin x7000
-### P1 - Fiche produit x6030
+### P1 - Fiche produit x6030 (enrichissement)
 ### P1 - Nettoyage modules V5 residuels
 
 ### P2 - BSAA-2: Implementation (GELE/BACKLOG)
@@ -90,11 +93,13 @@ GPS Engine v1, Trail Engine v1, Mode GPS, Mode Groupe, Mode Traces.
 ---
 
 ## Fichiers Cles
-- /app/frontend/src/App.js (Navigation principale)
-- /app/frontend/src/components/territoire/ui/TerritoireHeader.jsx
+- /app/frontend/src/App.js
+- /app/frontend/src/pages/NutritionIntelligenceSupra.jsx (SUPRA PREMIUM)
+- /app/frontend/src/pages/ProductPage.jsx (Fiches produits)
 - /app/frontend/src/pages/MonTerritoireBionicPage.jsx
+- /app/frontend/src/components/territoire/ui/TerritoireHeader.jsx
+- /app/frontend/src/components/territoire/NutritionPointsLayer.jsx (Tooltip)
 - /app/frontend/src/components/territoire/NutritionPointDetailPanel.jsx
-- /app/frontend/src/pages/NutritionIntelligenceSupra.jsx
 - /app/frontend/src/components/territoire/map/BCE4X_UIShield.jsx
 - /app/frontend/src/stores/useBionicStore.js
 - /app/frontend/src/stores/useWeatherStore.js
@@ -102,6 +107,7 @@ GPS Engine v1, Trail Engine v1, Mode GPS, Mode Groupe, Mode Traces.
 - /app/frontend/src/modules/weather/components/WeatherWidget.jsx
 
 ## API Endpoints
-- /api/v3/weather/current (Weather Engine v3 — SOURCE UNIQUE)
+- /api/v3/weather/current (Weather Engine v3)
+- /api/v6/nutrition-intelligence/full-analysis (SUPRA)
 - /api/v6/supra/advanced
 - /supplier/submit, /supplier/review, /supplier/activate

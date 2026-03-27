@@ -80,13 +80,17 @@ const NutritionPointsLayer = ({
       const rankLabel = isSelected ? `#${pt.rank}` : 'Candidat';
       const statusLabel = isSelected ? 'SELECTIONNEE' : 'Non retenue';
 
-      // x4520-H: PinnablePanel V2 — click callback au lieu de tooltip Leaflet
+      // x4520-H: PinnablePanel V2 — click callback
       if (onNutritionPointClickRef.current) {
         marker.on('click', () => onNutritionPointClickRef.current(pt));
-        // Tooltip minimal au hover (ID seulement)
+        // SUPRA PREMIUM: Tooltip d'action au hover
         marker.bindTooltip(
-          `<span style="font-size:10px;font-weight:700;color:${fillColor}">${pt.id} — ${pt.score}/100</span>`,
-          { sticky: false, opacity: 0.9, className: 'bionic-nutrition-tooltip-mini' }
+          `<div style="padding:4px 8px;text-align:center">
+            <div style="font-size:11px;font-weight:800;color:${fillColor}">${pt.id} — ${pt.score}/100</div>
+            <div style="font-size:10px;color:#FF9800;margin-top:3px;font-weight:700">VOIR LES BESOINS DE TON SITE</div>
+            <div style="font-size:9px;color:#999;margin-top:1px">Cliquer pour ouvrir SUPRA</div>
+          </div>`,
+          { sticky: false, opacity: 0.95, className: 'bionic-nutrition-tooltip-mini', direction: 'top' }
         );
       } else {
         // Fallback legacy
