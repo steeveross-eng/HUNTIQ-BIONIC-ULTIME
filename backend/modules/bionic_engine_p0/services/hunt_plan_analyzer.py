@@ -308,7 +308,7 @@ class HuntPlanAnalyzer:
         # Traiter la météo
         weather_summary = self._process_weather(weather_data)
         if weather_summary.available:
-            data_sources.append("openweathermap")
+            data_sources.append("weather_v3")
         
         # Traiter les hotspots
         hotspot_analyses = []

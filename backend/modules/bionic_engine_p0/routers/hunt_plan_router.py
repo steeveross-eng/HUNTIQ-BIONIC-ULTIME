@@ -108,7 +108,7 @@ async def analyze_hunt_plan(request: HuntPlanRequest):
     
     **Qualité de l'analyse**:
     - `full`: Météo réelle active, tous les services opérationnels
-    - `partial`: Météo inactive (OWM_API_KEY absent), scores de base
+    - `partial`: Météo inactive, scores de base
     - `minimal`: Données insuffisantes
     """
     try:

@@ -412,14 +412,8 @@ except Exception as e:
 #     logger.warning(f"DEM Shadow not loaded: {e}")
 logger.info("✗ DEM Shadow DESACTIVE — BCE-4X PURGE")
 
-# 24. BCE-4X PURGE: Weather Shadow DESACTIVE (STEEVE-MAX directive)
-# try:
-#     from modules.bionic_engine_p0.routers.weather_shadow_router import router as weather_shadow_router
-#     app.include_router(weather_shadow_router)
-#     logger.info("✓ Weather Shadow registered (/api/v1/bionic/weather-shadow)")
-# except Exception as e:
-#     logger.warning(f"Weather Shadow not loaded: {e}")
-logger.info("✗ Weather Shadow DESACTIVE — BCE-4X PURGE")
+# BCE-4X PURGE COMPLETE: Weather Shadow, Weather V8.2 — Fichiers supprimes 2026-03-28
+logger.info("✗ Weather Shadow PURGE — Fichier supprime")
 
 # 25. BCE-4X PURGE: Full Shadow Comparison DESACTIVE (STEEVE-MAX directive)
 # try:
@@ -479,14 +473,7 @@ try:
 except Exception as e:
     logger.warning(f"BCE not loaded: {e}")
 
-# 32. BCE-4X PURGE: Weather V8.2 DESACTIVE — Source unique = /api/v3/weather/* (STEEVE-MAX directive)
-# try:
-#     from modules.bionic_engine_p0.routers.weather_router import router as weather_v82_router
-#     app.include_router(weather_v82_router)
-#     logger.info("✓ Weather V8.2 registered (/api/v1/weather/now, /forecast, /influence)")
-# except Exception as e:
-#     logger.warning(f"Weather V8.2 not loaded: {e}")
-logger.info("✗ Weather V8.2 DESACTIVE — BCE-4X PURGE — Source unique: /api/v3/weather/*")
+logger.info("✗ Weather V8.2 PURGE — Fichier supprime — Source unique: /api/v3/weather/*")
 
 # 33. Register Compare V8.3 Router
 try:

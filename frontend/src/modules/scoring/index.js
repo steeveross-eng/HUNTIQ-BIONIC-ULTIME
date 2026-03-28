@@ -19,4 +19,3 @@ export { ScoringService } from './ScoringService';
 export { ScoreDisplay } from './components/ScoreDisplay';
 export { ScoreGauge } from './components/ScoreGauge';
 export { ScoreBreakdown } from './components/ScoreBreakdown';
-export { ScoreCompare } from './components/ScoreCompare';

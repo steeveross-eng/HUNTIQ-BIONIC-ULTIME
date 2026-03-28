@@ -158,23 +158,22 @@
                 "provider": "Emergent Labs",
                 "env_file": "backend/.env",
                 "validated": true
-            },
-            "OWM_API_KEY": {
-                "role": "OpenWeatherMap (legacy, remplace par Open-Meteo)",
-                "module": "WEATHER_LEGACY",
-                "status": "active",
-                "type": "api_key",
-                "provider": "OpenWeatherMap",
-                "env_file": "backend/.env",
-                "validated": true,
-                "notes": "Legacy — Open-Meteo est le service principal"
             }
         }
     },
     "caches_mongodb": {
-        "dem_cache": {"ttl": "90 jours", "status": "active"},
-        "weather_cache": {"ttl": "6 heures", "status": "active"},
-        "ndvi_cache": {"ttl": "30 jours", "status": "active"}
+        "dem_cache": {
+            "ttl": "90 jours",
+            "status": "active"
+        },
+        "weather_cache": {
+            "ttl": "6 heures",
+            "status": "active"
+        },
+        "ndvi_cache": {
+            "ttl": "30 jours",
+            "status": "active"
+        }
     },
     "validation_summary": {
         "all_active_keys_validated": true,

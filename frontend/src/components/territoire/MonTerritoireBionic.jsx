@@ -50,11 +50,11 @@ const generateDemoZones = (centerLat, centerLng) => {
   // Générer quelques zones hexagonales
   for (let i = 0; i < 12; i++) {
     const angle = (i * 30) * Math.PI / 180;
-    const distance = 0.02 + Math.random() * 0.03;
+    const distance = 0.02 + (i * 0.0025);
     const lat = centerLat + Math.sin(angle) * distance;
     const lng = centerLng + Math.cos(angle) * distance;
     const category = categories[i % 4];
-    const score = 55 + Math.floor(Math.random() * 40);
+    const score = 55 + (i * 3);
     
     // Créer un hexagone
     const hexPoints = [];

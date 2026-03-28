@@ -10,9 +10,6 @@
 export { GroupeTab } from './components/GroupeTab';
 export { GroupePanel } from './components/GroupePanel';
 
-// Components - Phase 3
-export { MembersTracker } from './components/MembersTracker';
-
 // Components - Phase 3.5
 export { GroupChat } from './components/GroupChat';
 

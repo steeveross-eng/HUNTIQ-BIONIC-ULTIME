@@ -28,9 +28,6 @@ import { AffiliateStats } from '../affiliate';
 import { SupplierCard } from '../suppliers';
 import { CustomerCard } from '../customers';
 
-// Weather Module Import
-import { AdvancedWeatherWidget } from '../weather';
-
 // Services
 import { UserService } from '../user/UserService';
 import { ProductsService } from '../products/ProductsService';
@@ -186,17 +183,6 @@ export const BusinessDashboard = () => {
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="mt-6">
-          {/* Weather Widget - Full Width */}
-          <div className="mb-6">
-            <AdvancedWeatherWidget 
-              lat={46.8139} 
-              lng={-71.2080}
-              showHourly={true}
-              showDaily={true}
-              compact={false}
-            />
-          </div>
-
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left Column - Stats Cards */}
             <div className="space-y-4">

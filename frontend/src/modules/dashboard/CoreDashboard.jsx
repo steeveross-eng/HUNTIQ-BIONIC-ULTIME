@@ -15,7 +15,6 @@ import useWeatherStore from '../../stores/useWeatherStore';
 // Core Module Imports
 import { NutritionAnalyzer, NutritionScore, NutritionCard } from '../nutrition';
 import { ScoreDisplay, ScoreGauge, ScoreBreakdown } from '../scoring';
-import { WeatherWidget, WindRose, HuntingConditions } from '../weather';
 import { AIChat, AIAnalyzer, AIInsights } from '../ai';
 import { StrategyPanel, StrategyTimeline } from '../strategy';
 
@@ -216,17 +215,27 @@ export const CoreDashboard = ({
         {/* Overview Tab */}
         <TabsContent value="overview" className="mt-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left Column - Weather & Conditions */}
+            {/* Left Column - Weather V3 Data */}
             <div className="space-y-4">
-              <WeatherWidget 
-                lat={coordinates.lat} 
-                lng={coordinates.lng}
-              />
-              
-              <HuntingConditions 
-                conditions={huntingConditions}
-                species={species}
-              />
+              <Card className="bg-slate-800 border-slate-700">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg text-white flex items-center gap-2">
+                    <Cloud className="h-5 w-5 text-blue-400" />
+                    Meteo V3
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {weather ? (
+                    <div className="text-sm text-slate-300 space-y-1">
+                      <p>Temperature: {weather.temperature}°C</p>
+                      <p>Vent: {weather.wind_speed} km/h ({weather.wind_direction}°)</p>
+                      <p>Humidite: {weather.humidity}%</p>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-slate-500">Chargement...</p>
+                  )}
+                </CardContent>
+              </Card>
             </div>
 
             {/* Center Column - Scores & Analysis */}
@@ -321,33 +330,30 @@ export const CoreDashboard = ({
         <TabsContent value="weather" className="mt-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <WeatherWidget 
-                lat={coordinates.lat} 
-                lng={coordinates.lng}
-              />
-              
               <Card className="bg-slate-800 border-slate-700">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center gap-2">
-                    <Cloud className="w-5 h-5 text-slate-400" />
-                    Direction du Vent
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg text-white flex items-center gap-2">
+                    <Cloud className="h-5 w-5 text-blue-400" />
+                    Meteo V3 — Open-Meteo GFS
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="flex justify-center">
-                  <WindRose 
-                    direction={weather?.wind_direction || 225}
-                    speed={weather?.wind_speed || 12}
-                    size={180}
-                  />
+                <CardContent>
+                  {weather ? (
+                    <div className="text-sm text-slate-300 space-y-2">
+                      <p>Temperature: {weather.temperature}°C (ressenti: {weather.apparent_temperature}°C)</p>
+                      <p>Vent: {weather.wind_speed} km/h direction {weather.wind_direction}°</p>
+                      <p>Rafales: {weather.gusts} km/h</p>
+                      <p>Humidite: {weather.humidity}%</p>
+                      <p>Pression: {weather.pressure} hPa</p>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-slate-500">Chargement...</p>
+                  )}
                 </CardContent>
               </Card>
             </div>
 
             <div className="space-y-4">
-              <HuntingConditions 
-                conditions={huntingConditions}
-                species={species}
-              />
               
               <ScoreBreakdown 
                 title="Facteurs Meteorologiques (Weather v3)"

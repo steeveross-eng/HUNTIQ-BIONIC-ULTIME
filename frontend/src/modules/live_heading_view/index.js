@@ -24,14 +24,12 @@ export const MODULE_TYPE = 'special';
 export const MODULE_PHASE = 'P6';
 
 // Component exports - Structure LEGO
-export { LiveHeadingView } from './components/LiveHeadingView';
+// BCE-4X PURGE: LiveHeadingView et ForwardCone supprimes (orphelins)
 export { CompassWidget } from './components/CompassWidget';
-export { ForwardCone } from './components/ForwardCone';
 export { WindIndicator } from './components/WindIndicator';
 export { POIMarker } from './components/POIMarker';
 export { AlertToast } from './components/AlertToast';
 export { SessionControls } from './components/SessionControls';
 export { SessionStats } from './components/SessionStats';
 
-// Default export for module registration
-export { LiveHeadingView as default } from './components/LiveHeadingView';
+// Default export removed — LiveHeadingView purged

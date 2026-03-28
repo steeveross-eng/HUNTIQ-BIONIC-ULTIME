@@ -14,6 +14,3 @@ export { default as MapInteractionLayerDefault } from './components/MapInteracti
 
 // Services
 export { WaypointService } from './services/WaypointService';
-
-// Hooks
-export { useMapInteraction } from './hooks/useMapInteraction';

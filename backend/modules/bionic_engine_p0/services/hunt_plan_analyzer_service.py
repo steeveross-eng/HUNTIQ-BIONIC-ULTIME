@@ -648,7 +648,7 @@ class HuntPlanAnalyzerService:
         
         # Recommandation météo
         if weather_summary.status == "inactive":
-            recommendations.append("Activez la météo réelle (OWM_API_KEY) pour une analyse plus précise")
+            recommendations.append("Activez la meteo reelle pour une analyse plus precise")
         elif weather_summary.overall_impact == "favorable":
             recommendations.append("La météo favorise l'activité du gibier")
         elif weather_summary.overall_impact == "unfavorable":

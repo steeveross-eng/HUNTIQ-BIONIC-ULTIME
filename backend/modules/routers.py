@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 from modules.nutrition_engine.v1 import router as nutrition_router
 from modules.scoring_engine.v1 import router as scoring_router
 from modules.ai_engine.v1 import router as ai_router
-from modules.weather_engine.v1 import router as weather_router
+# BCE-4X PURGE: weather_engine.v1 SUPPRIME — Source unique: engines/weather_v3
 from modules.geospatial_engine.v1 import router as geospatial_router
 from modules.wms_engine.v1 import router as wms_router
 
@@ -243,9 +243,8 @@ from modules.partner_engine.router import router as partner_router
 from routes.bionic_engine_router import router as bionic_engine_router
 
 # ==============================================
-# BIONIC WEATHER ENGINE (PHASE P1-ENV)
+# BCE-4X PURGE: BIONIC WEATHER ENGINE SUPPRIME — Source unique: engines/weather_v3
 # ==============================================
-from modules.bionic_engine_p0.weather_router import router as bionic_weather_router
 
 # ==============================================
 # BIONIC SCORING ENGINE (PHASE P1-SCORE)
@@ -303,13 +302,7 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
         "phase": 2, 
         "description": "AI-powered product analysis using GPT-5.2"
     }),
-    # BCE-4X P1-B1: Weather V1 router NEUTRALISE — WEATHER-V3 source unique
-    # (weather_router, {
-    #     "name": "weather_engine",
-    #     "version": "1.0.0",
-    #     "phase": 2,
-    #     "description": "NEUTRALISE BCE-4X: Weather V1 OWM — remplace par V3 Open-Meteo"
-    # }),
+    # BCE-4X PURGE: weather_engine V1 SUPPRIME 2026-03-28
     (geospatial_router, {
         "name": "geospatial_engine",
         "version": "1.0.0",
@@ -824,13 +817,7 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
     # ==========================================
     # BIONIC WEATHER ENGINE (Phase P1-ENV)
     # BCE-4X P1-B2: NEUTRALISE — WEATHER-V3 source unique
-    # ==========================================
-    # (bionic_weather_router, {
-    #     "name": "bionic_weather_engine",
-    #     "version": "1.0.0",
-    #     "phase": "P1-ENV",
-    #     "description": "NEUTRALISE BCE-4X: Bionic Weather OWM — remplace par V3 Open-Meteo"
-    # }),
+    # BCE-4X PURGE: bionic_weather_engine SUPPRIME 2026-03-28
     
     # ==========================================
     # BIONIC SCORING ENGINE (Phase P1-SCORE)

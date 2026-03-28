@@ -878,8 +878,8 @@ const TerritoryMap = ({ userId, userName, onLogout, navigateToCoords, onNavigati
       lng: latlng.lng,
       latDms: decimalToDms(latlng.lat, true),
       lngDms: decimalToDms(latlng.lng, false),
-      altitude: Math.round(200 + Math.random() * 300), // Simulated altitude
-      precision: Math.round(3 + Math.random() * 5), // Simulated precision in meters
+      altitude: 0,
+      precision: 0,
       timestamp: new Date().toISOString()
     };
     
@@ -1886,9 +1886,9 @@ const TerritoryMap = ({ userId, userName, onLogout, navigateToCoords, onNavigati
       
       // Generate success rates based on species
       const successRate = {};
-      if (hasOrignal) successRate.orignal = 35 + Math.floor(Math.random() * 20);
-      if (hasChevreuil) successRate.chevreuil = 30 + Math.floor(Math.random() * 25);
-      if (hasOurs) successRate.ours = 20 + Math.floor(Math.random() * 20);
+      if (hasOrignal) successRate.orignal = 45;
+      if (hasChevreuil) successRate.chevreuil = 42;
+      if (hasOurs) successRate.ours = 30;
       
       // Generate analysis
       const analysis = {

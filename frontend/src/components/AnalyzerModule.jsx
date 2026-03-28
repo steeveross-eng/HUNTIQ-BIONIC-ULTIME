@@ -609,7 +609,7 @@ const AnalyzerModule = () => {
                         <CriteriaCard 
                           key={criteria.id} 
                           criteria={criteria} 
-                          score={report?.scoring?.criteria_scores?.[criteria.id] || (Math.random() * 3 + 6).toFixed(1) * 1}
+                          score={report?.scoring?.criteria_scores?.[criteria.id] || 0}
                         />
                       ))}
                     </div>
