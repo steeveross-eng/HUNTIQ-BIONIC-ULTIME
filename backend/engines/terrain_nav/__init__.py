@@ -25,7 +25,8 @@ _nav_cache: Dict[str, TerrainGraph] = {}
 
 
 def _cache_key(lat: float, lng: float) -> str:
-    return f"tne:{round(lat, 3)}:{round(lng, 3)}"
+    # BCE-4X P0 B4: Elargi de 111m (3 decimales) a 1.1km (2 decimales) — STEEVE-MAX 2026-03-28
+    return f"tne:{round(lat, 2)}:{round(lng, 2)}"
 
 
 def get_terrain_nav(lat: float, lng: float, radius_m: int = 2000) -> TerrainGraph:

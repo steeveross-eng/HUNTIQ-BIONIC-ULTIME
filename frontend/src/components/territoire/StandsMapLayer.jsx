@@ -331,7 +331,10 @@ const StandsMapLayer = ({
     }
 
     const windDeg = resolveWindDeg();
-    const key = `${centerLat.toFixed(5)}:${centerLng.toFixed(5)}:${species}:${windDeg}:${windSpeed}:${session}`;
+    // BCE-4X P0 A1/A2: Inclure feedingSites et fixedBlinds dans la cle de cache
+    const fsKey = feedingSites.length > 0 ? feedingSites.map(f => `${f.lat.toFixed(4)}`).join(',') : '0';
+    const fbKey = fixedBlinds.length > 0 ? fixedBlinds.map(f => `${f.lat.toFixed(4)}`).join(',') : '0';
+    const key = `${centerLat.toFixed(5)}:${centerLng.toFixed(5)}:${species}:${windDeg}:${windSpeed}:${session}:fs${fsKey}:fb${fbKey}`;
     if (lastKeyRef.current === key && layerRef.current) return;
     if (lastKeyRef.current === key && cacheRef.current) {
       renderRef.current(cacheRef.current);

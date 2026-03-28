@@ -32,8 +32,9 @@ OVERPASS_MIRRORS = [
 ]
 
 # Timeout adaptatif: base + rayon/500 secondes
-BASE_TIMEOUT_S = 20
-TIMEOUT_PER_KM = 5
+# BCE-4X P0 B1: Reduit de 20/5 a 8/2 — STEEVE-MAX 2026-03-28
+BASE_TIMEOUT_S = 8
+TIMEOUT_PER_KM = 2
 
 # Rayon de recherche Overpass (metres)
 DEFAULT_SEARCH_RADIUS_M = 2000
@@ -51,8 +52,9 @@ TRAIL_HIGHWAY_TAGS = [
 
 def _zone_key(lat: float, lng: float, radius_m: int) -> str:
     """Cle de cache basee sur le centroide arrondi."""
-    rlat = round(lat, 3)
-    rlng = round(lng, 3)
+    # BCE-4X P0 B4: Elargi de 111m (3 decimales) a 1.1km (2 decimales) — STEEVE-MAX 2026-03-28
+    rlat = round(lat, 2)
+    rlng = round(lng, 2)
     return f"tne:{rlat}:{rlng}:{radius_m}"
 
 

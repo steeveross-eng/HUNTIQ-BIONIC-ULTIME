@@ -553,6 +553,23 @@ const MonTerritoireBionicPage = () => {
   const [selectedNutritionPoint, setSelectedNutritionPoint] = useState(null);
   const [alimentationV2Data, setAlimentationV2Data] = useState(null);
   const [nNutritionPointsMax, setNNutritionPointsMax] = useState(4);
+
+  // BCE-4X P0 A1: Deriver feedingSites depuis alimentationV2Data pour StandsMapLayer
+  const feedingSitesForStands = useMemo(() => {
+    if (!alimentationV2Data?.salines) return [];
+    return alimentationV2Data.salines
+      .filter(s => s.selected)
+      .map(s => ({ lat: s.lat, lng: s.lng, name: s.id || s.type || 'Alimentation' }));
+  }, [alimentationV2Data]);
+
+  // BCE-4X P0 A2: Deriver fixedBlinds depuis savedPlaces type 'affut' pour StandsMapLayer
+  const fixedBlindsForStands = useMemo(() => {
+    if (!savedPlaces?.length) return [];
+    return savedPlaces
+      .filter(p => p.type === 'affut')
+      .map(p => ({ lat: p.lat, lng: p.lng, name: p.name || 'Affut fixe', type_key: 'tree_stand', id: p.id }));
+  }, [savedPlaces]);
+
   const [adminArchitecteMode, setAdminArchitecteMode] = useState(false);
   const [showHeatmapV10, setShowHeatmapV10] = useState(true);
   const [heatmapV10Data, setHeatmapV10Data] = useState(null);
@@ -1234,6 +1251,8 @@ const MonTerritoireBionicPage = () => {
               windSpeed={windInfo?.speed || 12}
               windDirectionDeg={windInfo?.directionDeg || null}
               onStandClick={setSelectedStand}
+              feedingSitesForStands={feedingSitesForStands}
+              fixedBlindsForStands={fixedBlindsForStands}
               onNutritionPointClick={setSelectedNutritionPoint}
               showHeatmapV10={showHeatmapV10}
               onHeatmapDataLoaded={setHeatmapV10Data}

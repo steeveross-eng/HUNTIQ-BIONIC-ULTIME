@@ -96,6 +96,9 @@ const MapContentInner = React.memo(({
   windSpeed,
   windDirectionDeg,
   onStandClick,
+  // BCE-4X P0 A1/A2: Donnees reelles pour l'orchestrateur de chasse
+  feedingSitesForStands,
+  fixedBlindsForStands,
   // HEATMAP V6 consolidée
   showHeatmapV10,
   onHeatmapDataLoaded,
@@ -222,6 +225,8 @@ const MapContentInner = React.memo(({
         windDirectionDeg={windDirectionDeg || null}
         enabled={showStands}
         onStandClick={onStandClick}
+        feedingSites={feedingSitesForStands || []}
+        fixedBlinds={fixedBlindsForStands || []}
       />
     )}
 
