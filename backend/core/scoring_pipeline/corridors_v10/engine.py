@@ -621,56 +621,69 @@ def analyze_corridors_full(
 
     # GeoJSON corridors avec proprietes normatives + simplification geometrique
     # Phase 3.2-CV BCE-4X-MAX: EXCLUSION ULTIME sur corridors LineStrings aussi
+    # BCE-4X-MAX META-EXCLUSION: Si le centre est en zone urbaine mixte, ZERO corridor
     geojson_features = []
     _corridors_excluded_urban = 0
     _corridors_excluded_water = 0
+    _meta_exclusion_active = False
     try:
         from modules.bionic_engine_p0.services.zone_engine_core_v2 import (
-            _circle_on_urban, _circle_on_water,
+            _circle_on_urban, _circle_on_water, center_in_urban_meta_zone,
         )
         _has_exclusion_engine = True
+        # BCE-4X-MAX: Meta-exclusion sur le centre d'analyse
+        _meta_exclusion_active = center_in_urban_meta_zone(center_lat, center_lng)
     except ImportError:
         _has_exclusion_engine = False
 
-    for c in enriched_corridors:
-        raw_coords = [[pt["lng"], pt["lat"]] for pt in c["path"]]
-        coords = _simplify_coords(raw_coords)
+    if _meta_exclusion_active:
+        # ZERO corridor autorise en zone urbaine mixte
+        _corridors_excluded_urban = len(enriched_corridors)
+        import logging as _log_corridors
+        _log_corridors.getLogger("corridors_v10.engine").info(
+            f"[BCE-4X-MAX META] ALL corridors rejected: center ({center_lat},{center_lng}) in urban meta-zone. "
+            f"excluded={_corridors_excluded_urban}"
+        )
+    else:
+        for c in enriched_corridors:
+            raw_coords = [[pt["lng"], pt["lat"]] for pt in c["path"]]
+            coords = _simplify_coords(raw_coords)
 
-        # BCE-4X-MAX: Filtrer corridors dont le POINT MEDIAN est en zone urbaine/eau
-        if _has_exclusion_engine and len(coords) > 0:
-            mid_idx = len(coords) // 2
-            mid_lng, mid_lat = coords[mid_idx][0], coords[mid_idx][1]
-            if _circle_on_urban(mid_lat, mid_lng):
-                _corridors_excluded_urban += 1
-                continue
-            if _circle_on_water(mid_lat, mid_lng):
-                _corridors_excluded_water += 1
-                continue
+            # BCE-4X-MAX: Filtrer corridors dont le POINT MEDIAN est en zone urbaine/eau
+            if _has_exclusion_engine and len(coords) > 0:
+                mid_idx = len(coords) // 2
+                mid_lng, mid_lat = coords[mid_idx][0], coords[mid_idx][1]
+                if _circle_on_urban(mid_lat, mid_lng):
+                    _corridors_excluded_urban += 1
+                    continue
+                if _circle_on_water(mid_lat, mid_lng):
+                    _corridors_excluded_water += 1
+                    continue
 
-        feature = {
-            "type": "Feature",
-            "properties": {
-                "corridor_id": c["id"],
-                "from_type": c["from_zone"]["type"],
-                "to_type": c["to_zone"]["type"],
-                "length_cells": c["length_cells"],
-                "cost": c["cost"],
-                "species": species,
-                "score": c["score_individuel"],
-                "niveau": c["niveau"],
-                "niveau_label": c["niveau_label"],
-                "color": c["color"],
-                "pattern": c["pattern"],
-                "largeur_m": c["largeur_m"],
-                "render_weight": c["render_weight"],
-                "dash_array": c["dash_array"],
-            },
-            "geometry": {
-                "type": "LineString",
-                "coordinates": coords,
-            },
-        }
-        geojson_features.append(feature)
+            feature = {
+                "type": "Feature",
+                "properties": {
+                    "corridor_id": c["id"],
+                    "from_type": c["from_zone"]["type"],
+                    "to_type": c["to_zone"]["type"],
+                    "length_cells": c["length_cells"],
+                    "cost": c["cost"],
+                    "species": species,
+                    "score": c["score_individuel"],
+                    "niveau": c["niveau"],
+                    "niveau_label": c["niveau_label"],
+                    "color": c["color"],
+                    "pattern": c["pattern"],
+                    "largeur_m": c["largeur_m"],
+                    "render_weight": c["render_weight"],
+                    "dash_array": c["dash_array"],
+                },
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": coords,
+                },
+            }
+            geojson_features.append(feature)
 
     import logging as _log_corridors
     _log_corridors.getLogger("corridors_v10.engine").info(
@@ -694,33 +707,43 @@ def analyze_corridors_full(
     )
     
     # Phase 3.2-V BCE-4X: EXCLUSION ULTIME — filtrer zones en ville/eau
-    try:
-        from modules.bionic_engine_p0.services.zone_engine_core_v2 import (
-            _circle_on_urban, _circle_on_water, BCE4X_URBAN_CACHE_SAFE_MODE
-        )
-        filtered_zone_polygons = []
-        excluded_urban = 0
-        excluded_water = 0
-        for zp in zone_polygons:
-            pz = zp["primary_zone"]
-            zlat, zlng = pz["lat"], pz["lng"]
-            if _circle_on_urban(zlat, zlng):
-                excluded_urban += 1
-                continue
-            if _circle_on_water(zlat, zlng):
-                excluded_water += 1
-                continue
-            filtered_zone_polygons.append(zp)
+    # BCE-4X-MAX META-EXCLUSION: Si meta_exclusion active, ZERO zone autorisee
+    if _meta_exclusion_active:
         import logging
         _logger = logging.getLogger("corridors_v10.engine")
         _logger.info(
-            f"[Phase3.2-V] Corridors zone filter: input={len(zone_polygons)}, "
-            f"urban={excluded_urban}, water={excluded_water}, "
-            f"kept={len(filtered_zone_polygons)}, safe_mode={BCE4X_URBAN_CACHE_SAFE_MODE}"
+            f"[BCE-4X-MAX META] ALL zone_polygons rejected: center ({center_lat},{center_lng}) in urban meta-zone. "
+            f"excluded={len(zone_polygons)}"
         )
-        zone_polygons = filtered_zone_polygons
-    except ImportError:
-        pass  # Fallback: si le module n'est pas disponible, garder toutes les zones
+        zone_polygons = []
+    else:
+        try:
+            from modules.bionic_engine_p0.services.zone_engine_core_v2 import (
+                _circle_on_urban, _circle_on_water, BCE4X_URBAN_CACHE_SAFE_MODE
+            )
+            filtered_zone_polygons = []
+            excluded_urban = 0
+            excluded_water = 0
+            for zp in zone_polygons:
+                pz = zp["primary_zone"]
+                zlat, zlng = pz["lat"], pz["lng"]
+                if _circle_on_urban(zlat, zlng):
+                    excluded_urban += 1
+                    continue
+                if _circle_on_water(zlat, zlng):
+                    excluded_water += 1
+                    continue
+                filtered_zone_polygons.append(zp)
+            import logging
+            _logger = logging.getLogger("corridors_v10.engine")
+            _logger.info(
+                f"[Phase3.2-V] Corridors zone filter: input={len(zone_polygons)}, "
+                f"urban={excluded_urban}, water={excluded_water}, "
+                f"kept={len(filtered_zone_polygons)}, safe_mode={BCE4X_URBAN_CACHE_SAFE_MODE}"
+            )
+            zone_polygons = filtered_zone_polygons
+        except ImportError:
+            pass  # Fallback: si le module n'est pas disponible, garder toutes les zones
     
     for zp in zone_polygons:
         cluster = zp["cluster"]

@@ -68,6 +68,18 @@ def analyze_alimentation_v2(
             max_salines=max_salines, min_distance_m=300.0,
         )
 
+    # BCE-4X-MAX META-EXCLUSION: Si le centre est en zone urbaine mixte, ZERO saline
+    try:
+        from modules.bionic_engine_p0.services.zone_engine_core_v2 import center_in_urban_meta_zone
+        if center_in_urban_meta_zone(center_lat, center_lng):
+            import logging
+            logging.getLogger("alimentation_v2").info(
+                f"[BCE-4X-MAX META] ALL salines rejected: center ({center_lat},{center_lng}) in urban meta-zone"
+            )
+            salines = []
+    except ImportError:
+        pass
+
     # BCE-4X-MAX: EXCLUSION ULTIME — filtrer salines en zone urbaine/eau
     try:
         from modules.bionic_engine_p0.services.zone_engine_core_v2 import (

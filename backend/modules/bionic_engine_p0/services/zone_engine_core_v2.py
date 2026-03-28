@@ -80,6 +80,8 @@ WATER_OVERLAP_THRESHOLD = 0.25   # Phase 3.1: 25% overlap eau = exclusion
 URBAN_OVERLAP_THRESHOLD = 0.01   # Phase 3.2-CV: 1% overlap urbain = exclusion (ZERO tolerance)
 URBAN_CENTER_BUFFER_DEG = 0.002  # ~222m buffer autour du centre
 URBAN_CACHE_BUFFER_DEG = 0.002   # Phase 3.2-CV: ~222m buffer global cache urbain (comble TOUS les trous)
+META_ANALYSIS_RADIUS_M = 2000    # BCE-4X-MAX: Rayon meta-analyse (2km = zone d'analyse complete)
+META_URBAN_THRESHOLD = 0.08      # BCE-4X-MAX: 8% overlap urbain sur 2km = ZERO zone autorisee
 
 _water_union_zone_cache = None
 _water_zone_cache_loaded = False
@@ -358,6 +360,39 @@ def _circle_on_urban(center_lat: float, center_lng: float) -> bool:
         ratio = overlap / poly.area if poly.area > 0 else 0
         return ratio > URBAN_OVERLAP_THRESHOLD
     except Exception:
+        return False
+
+
+def center_in_urban_meta_zone(center_lat: float, center_lng: float) -> bool:
+    """
+    BCE-4X-MAX META-EXCLUSION: Verifie si le CENTRE D'ANALYSE (waypoint)
+    est dans une zone a densite urbaine significative.
+    
+    Utilise un cercle de META_ANALYSIS_RADIUS_M (2km) autour du centre.
+    Si l'overlap urbain depasse META_URBAN_THRESHOLD (8%), TOUTES les zones
+    et corridors dans cette analyse sont rejetes.
+    
+    Cible: zones portuaires, perimetres urbains mixtes (foret/ville),
+    patches forestieres entre les batiments qui echappent aux exclusions
+    individuelles de 600m.
+    """
+    urban = _load_urban_cache_zones()
+    if urban is None or not SHAPELY_AVAILABLE:
+        return False
+    try:
+        meta_coords = _make_circle_coords(center_lat, center_lng, META_ANALYSIS_RADIUS_M)
+        meta_circle = ShapelyPolygon(meta_coords)
+        if not meta_circle.is_valid:
+            meta_circle = meta_circle.buffer(0)
+        overlap = meta_circle.intersection(urban).area
+        ratio = overlap / meta_circle.area if meta_circle.area > 0 else 0
+        logger.info(
+            f"[BCE-4X-MAX META] Center ({center_lat:.4f}, {center_lng:.4f}): "
+            f"2km urban overlap = {ratio*100:.1f}% (threshold={META_URBAN_THRESHOLD*100}%)"
+        )
+        return ratio > META_URBAN_THRESHOLD
+    except Exception as e:
+        logger.warning(f"[BCE-4X-MAX META] Error: {e}")
         return False
 
 
@@ -1424,6 +1459,33 @@ async def generate_organic_zones(
     cached = _zone_cache.get(cache_k)
     if cached and (time.time() - cached["ts"]) < _CACHE_TTL:
         return cached["data"]
+
+    # BCE-4X-MAX META-EXCLUSION: Si le centre d'analyse est en zone urbaine mixte, ZERO zone
+    meta_center_lat = (bounds["north"] + bounds["south"]) / 2
+    meta_center_lng = (bounds["east"] + bounds["west"]) / 2
+    if waypoint_center:
+        meta_center_lat = waypoint_center.get("lat", meta_center_lat)
+        meta_center_lng = waypoint_center.get("lng", meta_center_lng)
+    
+    if center_in_urban_meta_zone(meta_center_lat, meta_center_lng):
+        elapsed = time.time() - start
+        logger.info(
+            f"[BCE-4X-MAX META] ALL organic zones rejected: center ({meta_center_lat:.4f}, {meta_center_lng:.4f}) "
+            f"in urban meta-zone. 0 zones returned in {elapsed:.1f}s"
+        )
+        empty_result = {
+            "features": [],
+            "corridors": [],
+            "stats": {
+                "layers_processed": 0, "total_zones": 0, "rejected_exclusion": 0,
+                "exclusions_count": 0, "penalties_applied": 0,
+                "exclusion_engine": EXCLUSION_ENGINE_VERSION,
+                "no_zones_reason": "all_filtered_by_meta_exclusion_urban",
+            },
+            "rejection_diagnostics": {"total_rejected": 0, "by_reason": {"meta_urban_exclusion": 1}},
+        }
+        _zone_cache[cache_k] = {"ts": time.time(), "data": empty_result}
+        return empty_result
 
     # BCE-4X PERFORMANCE: Fetch exclusions + DEM en PARALLELE (economise 2-3s)
     # R3: Pin month once for the entire pipeline (determinism)

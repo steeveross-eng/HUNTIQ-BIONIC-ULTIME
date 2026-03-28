@@ -3,51 +3,38 @@
 
 ## Statut General
 - **Branch active:** Work1
-- **Derniere mise a jour:** 28 Mars 2026 — Phase 3.2-CV
+- **Derniere mise a jour:** 28 Mars 2026 — Phase 3.2-CV v2 (META-EXCLUSION)
 
 ---
 
-## Phase 3.2-CV — Contre-Validation (COMPLETE)
+## Phase 3.2-CV v2 — Contre-Validation avec META-EXCLUSION (COMPLETE)
 
-### Objectif
-Neutraliser le pipeline V5 legacy, appliquer les exclusions ULTIMES a TOUS les pipelines backend, et fournir les preuves visuelles et logs de certification.
+### Probleme resolu
+Zones et corridors apparaissaient dans les patches forestieres entre les batiments de la zone portuaire/Beauport. L'exclusion individuelle (600m) ne couvrait pas ces micro-forets en milieu urbain.
 
-### Delivrables
-1. **Neutralisation V5** — 3 vecteurs neutralises:
-   - `BionicMapOverlay.jsx` (return null)
-   - `WaypointMap.jsx` (generateBionicZonesV5 desactive)
-   - `SpeciesComparisonPage.jsx` (generateBionicZonesV5 desactive)
+### Solution deployee: META-EXCLUSION
+- Cercle de 2km autour du waypoint centre
+- Si overlap urbain > 8%, ZERO zone/corridor/saline/affut autorise
+- Pipeline V5 NEUTRALISE (3 vecteurs frontend)
+- Exclusions ULTIMES etendues a TOUS les pipelines: V6, V2, Alimentation, Stands
 
-2. **Exclusions ULTIMES appliquees a:**
-   - V6 Corridors LineStrings (midpoint check urbain/eau)
-   - Alimentation V2 salines (point check urbain/eau)
-   - Stands recommendation (point check urbain/eau)
-   - V6 Zone Polygons (deja actif depuis Phase 3.2-S)
-   - V2 Organic Zones (deja actif)
+### Pipelines Autorises (exclusions actives)
+1. `/api/v1/bionic/organic-zones` (V2) — meta + individuel
+2. `/api/v6/corridors/analyze-full` (V6) — meta + individuel
+3. `/api/v2/alimentation/analyze` — meta + individuel
+4. `/api/v1/stand-recommendation/recommend` — meta + individuel
 
-3. **SAFE MODE permanent:**
-   - Cache version = `bce4xmax_v5neutralized`
-   - IndexedDB v3 (purge auto)
-   - Module-level _cache.clear() au mount
-   - BCE4X_URBAN_CACHE_SAFE_MODE = True
+### Pipelines Neutralises
+1. `generateBionicZonesV5` — DESACTIVE (3 vecteurs)
+2. `BionicMapOverlay` → `BionicMicroZones` — return null
 
-4. **Rapport certification:** `/audit/bce4x_max_certification_phase32cv.md`
+### SAFE MODE
+- BCE4X_URBAN_CACHE_SAFE_MODE = True
+- Cache statique: 101,391 polygones
+- IndexedDB v3, module cache cleared au mount
+- ZERO injection dynamique OSM
 
-### Resultats Backend (Zone urbaine Quebec 46.8139, -71.208)
-| Pipeline | Zones | Corridors | Salines | Stands |
-|----------|-------|-----------|---------|--------|
-| V6 analyze-full | 0 | 0 | - | - |
-| V2 organic-zones | 0 | - | - | - |
-| Alimentation V2 | - | - | 0 | - |
-| Stand recommend | - | - | - | 0 |
-
-### Resultats Backend (Zone foret 47.25, -71.40)
-| Pipeline | Zones | Corridors | Salines | Stands |
-|----------|-------|-----------|---------|--------|
-| V6 analyze-full | 16 | 189 | - | - |
-| V2 organic-zones | 21 | - | - | - |
-| Alimentation V2 | - | - | 4 | - |
-| Stand recommend | - | - | - | 5 |
+### Rapport: `/audit/bce4x_max_certification_phase32cv.md`
 
 ---
 
@@ -58,37 +45,14 @@ Neutraliser le pipeline V5 legacy, appliquer les exclusions ULTIMES a TOUS les p
 - Phase 4: Audit moteurs
 - Phase 5B: Audit coherence
 - Phase 5C: Audit historique
-- Phase BSAA-0: Etude faisabilite
-- Phase BSAA-1: Architecture
-- Phase 2.5-2.9: TNE, Stands, Weather
-- Phase 3.1: WindFlow, Weather sync
+- Phase BSAA-0/1: Faisabilite + Architecture
+- Phase 2.5-3.1: TNE, Stands, Weather, WindFlow
 - Phase 3.2-S: Safe Mode, Cache purge
 - Phase 3.2-V: Validation visuelle
-- Phase 3.2-CV: Contre-Validation (PRESENT RAPPORT)
+- Phase 3.2-CV v2: META-EXCLUSION (PRESENT)
 
-### Phases a venir (BLOQUEES par validation):
+### Phases a venir (BLOQUEES):
 - Phase 3.3-U-PRIME: Nettoyage code legacy V1-V5
-- ULTRA-MAX++ Lock: Verrouillage integrite
+- ULTRA-MAX++ Lock
 - Phase BSAA-2: Implementation (GELE)
-- Merge Work1 → main (INTERDIT sans validation)
-
----
-
-## Architecture Technique
-
-### Pipelines Autorises (BCE-4X-MAX)
-1. `/api/v1/bionic/organic-zones` — Organic Zones V2 (exclusions actives)
-2. `/api/v6/corridors/analyze-full` — Corridors V6 (exclusions actives)
-3. `/api/v2/alimentation/analyze` — Alimentation V2 (exclusions actives)
-4. `/api/v1/stand-recommendation/recommend` — Stands (exclusions actives)
-
-### Pipelines Neutralises (BCE-4X-MAX)
-1. `generateBionicZonesV5` — DESACTIVE (3 vecteurs frontend)
-2. `BionicMapOverlay` → `BionicMicroZones` — NEUTRALISE (return null)
-
-### Parametres Exclusion ULTIME
-- Cache statique: 101,391 polygones (urban=47,139, roads=70,193, infra=46,616)
-- Buffer: 0.002deg (222m)
-- Seuil urbain: 1%
-- Seuil eau: 25%
-- Safe Mode: TRUE (aucune injection dynamique)
+- Merge Work1 → main (INTERDIT)

@@ -364,6 +364,15 @@ def recommend_stands(
 
         stands.append(stand)
 
+    # BCE-4X-MAX META-EXCLUSION: Si le centre est en zone urbaine mixte, ZERO affut
+    try:
+        from modules.bionic_engine_p0.services.zone_engine_core_v2 import center_in_urban_meta_zone
+        if center_in_urban_meta_zone(lat, lng):
+            logger.info(f"[BCE-4X-MAX META] ALL stands rejected: center ({lat},{lng}) in urban meta-zone")
+            stands = []
+    except ImportError:
+        pass
+
     # BCE-4X-MAX: EXCLUSION ULTIME — filtrer affûts en zone urbaine/eau
     try:
         from modules.bionic_engine_p0.services.zone_engine_core_v2 import (
