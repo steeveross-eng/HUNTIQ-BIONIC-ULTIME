@@ -7,42 +7,38 @@
 
 ---
 
-## CORRECTIONS P1 — LIVREES (EN ATTENTE VALIDATION)
+## LIVRABLES EN ATTENTE DE VALIDATION
 
-### 8/8 P1 traites:
-- B1: Weather V1 router NEUTRALISE (404)
-- B2: Bionic Weather router NEUTRALISE (404)
-- F1: bionicWeatherEngine exports V1 SUPPRIMES
-- F2: WeatherService.js DEPRECIE
-- F3: MeteoDashboard.jsx DEPRECIE
-- U6: BionicScoreBadge REVU (pipeline scoring actif, conserve)
-- U7: ConsolidatedHeatmapLayer REVU (pipeline scoring actif, conserve)
-- U9: MeteoModule MIGRE vers V3 (useWeatherStore)
+### WindFlowLayer Uniformisation + Ajustement Final
+- Halo sombre pour visibilite 100% fond (sombre/clair)
+- -15% densite (140→119), -15% opacite (0.44→0.374), +25% luminosite
+- ZERO impact WEATHER-V3, UI uniquement
+- Rapport: `/app/HUNTIQ-V6-import/audit/windlayer_uniform_fix.md`
 
-### WindFlowLayer Boost P1:
-- +25% opacite (0.35 → 0.44)
-- +25% luminosite particules
-- ZERO impact donnees
-
-### Coherence Dashboard ↔ Territoire: -17.8C identique
-### Tests: 43/43 PASS, 0 regression
-### Rapport: `/app/HUNTIQ-V6-import/audit/p1_fix_report.md`
+### 6 Points P2 Traites
+- B7: Legacy monolith import NEUTRALISE
+- B9: Corridors V6 alias DOCUMENTE
+- B10: Movement Corridors P0 DOCUMENTE
+- F4: config/modules.js → V3 endpoint
+- F5: bionicWeatherEngine.js en-tete DEPRECIE
+- U3: EcoforestryLayers "Inconnu" → "Non defini"
 
 ---
 
 ## LIVRABLES VALIDES PAR STEEVE-MAX
-- P0 Unification Meteo ✓
-- ULTRA-MAX++ v3.0 ✓
-- Audit structurel BIONIC ✓
-- Corrections P0 (OWM neutralise + Math.random supprime) ✓
+- P0 Unification Meteo
+- ULTRA-MAX++ v3.0
+- Audit structurel BIONIC
+- Corrections P0 (OWM + Math.random)
+- Corrections P1 (8/8 + WindFlowLayer Boost)
 
 ---
 
+## Tests: 43/43 PASS, 0 regression
+
 ## GOUVERNANCE
 - Merge Work1 → main: **INTERDIT** sans validation STEEVE-MAX
-- Validation P1: EN ATTENTE
 
 ## Phases a venir (gelees)
-- 6 points P2 (nettoyage)
-- Restauration auto_optimization.py
+- Restauration auto_optimization.py → optimization_engine
 - Phase BSAA-2 Implementation

@@ -871,7 +871,7 @@ export const EcoMapStatusBadge = ({ status, onClick }) => {
       case EcoMapStatus.ERROR:
         return { icon: WifiOff, color: 'text-red-400', bg: 'bg-red-500/20', label: 'Erreur' };
       default:
-        return { icon: Wifi, color: 'text-gray-400', bg: 'bg-gray-500/20', label: 'Inconnu' };
+        return { icon: Wifi, color: 'text-gray-400', bg: 'bg-gray-500/20', label: 'Non defini' };
     }
   };
   

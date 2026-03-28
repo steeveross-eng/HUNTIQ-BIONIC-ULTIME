@@ -42,7 +42,8 @@ export const MODULES = {
     status: MODULE_STATUS.ACTIVE,
     path: '@/modules/weather',
     description: 'Weather display and forecast widgets',
-    backendEndpoint: '/api/v1/weather'
+    # BCE-4X P2-F4: Reference V1 weather mise a jour (endpoint neutralise)
+    backendEndpoint: '/api/v3/weather'
   },
   scoring: {
     name: 'scoring',

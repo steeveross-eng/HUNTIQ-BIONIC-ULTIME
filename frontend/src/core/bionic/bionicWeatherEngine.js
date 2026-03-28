@@ -1,6 +1,13 @@
 /**
  * BIONIC™ Weather Engine
- * Moteur météo LIVE pour analyse stratégique en temps réel
+ * 
+ * BCE-4X P2-F5: NEUTRALISE — CODE MORT
+ * =====================================
+ * Ce fichier contenait les appels V1 weather (/api/v1/weather/now) et
+ * le fallback Open-Meteo direct. Toutes les fonctions fetch sont du CODE MORT.
+ * Seul `getWindDirectionText` reste utilise (par bionicStrategyEngine.js).
+ * Source unique: useWeatherStore → /api/v3/weather/current
+ * Date: 28 Mars 2026 — Autorise par STEEVE-MAX
  */
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;

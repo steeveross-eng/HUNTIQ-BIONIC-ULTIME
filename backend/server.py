@@ -548,7 +548,7 @@ try:
     from core.scoring_pipeline.corridors_v10.router import router_v6 as corridors_v6_router
     app.include_router(corridors_v10_router)
     app.include_router(corridors_v6_router)
-    logger.info("✓ CORRIDORS-V6 registered (/api/v6/corridors + /api/v10/corridors legacy)")
+    logger.info("✓ CORRIDORS-V6 registered (/api/v6/corridors — alias V10, BCE-4X P2-B9 revise)")
 except Exception as e:
     logger.warning(f"CORRIDORS-V6 not loaded: {e}")
 

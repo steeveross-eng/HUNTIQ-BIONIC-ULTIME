@@ -188,13 +188,12 @@ class ServerOrchestrator:
             logger.debug(f"Advanced Zones not available: {e}")
     
     def register_legacy_router(self):
-        """Enregistre le routeur legacy (backward compatibility)"""
-        try:
-            from server_monolith_backup import api_router as legacy_router
-            self.app.include_router(legacy_router)
-            logger.info("✓ Loaded: Legacy monolith router [/api/*] (DEPRECATED)")
-        except ImportError as e:
-            logger.debug(f"Legacy router not available: {e}")
+        """
+        BCE-4X P2-B7: Legacy monolith router NEUTRALISE.
+        Le fichier server_monolith_backup.py n'existe pas.
+        Cette methode est conservee mais ne fait rien.
+        """
+        logger.info("[BCE-4X P2-B7] Legacy monolith router NEUTRALISE — fichier absent, import supprime")
     
     def finalize(self):
         """Finalise l'orchestration et enregistre le routeur principal"""
