@@ -3,44 +3,45 @@
 
 ## Statut General
 - **Branch active:** Work1
-- **Derniere mise a jour:** 28 Mars 2026 — Phase 3.2-CV v2 (META-EXCLUSION)
+- **Derniere mise a jour:** 28 Mars 2026 — Phase 3.2-CV v2 CERTIFICATION
 
 ---
 
-## Phase 3.2-CV v2 — Contre-Validation avec META-EXCLUSION (COMPLETE)
+## Phase 3.2-CV v2 — Contre-Validation CERTIFICATION (COMPLETE — EN ATTENTE VALIDATION)
 
 ### Probleme resolu
-Zones et corridors apparaissaient dans les patches forestieres entre les batiments de la zone portuaire/Beauport. L'exclusion individuelle (600m) ne couvrait pas ces micro-forets en milieu urbain.
+Zones et corridors dans patches forestieres entre batiments zone portuaire Quebec/Beauport.
 
-### Solution deployee: META-EXCLUSION
-- Cercle de 2km autour du waypoint centre
-- Si overlap urbain > 8%, ZERO zone/corridor/saline/affut autorise
+### Solution: META-EXCLUSION
+- Cercle 2km, seuil 8% overlap urbain -> rejet TOTAL tous pipelines
+- Tests unitaires: 12/12 PASSED
 - Pipeline V5 NEUTRALISE (3 vecteurs frontend)
-- Exclusions ULTIMES etendues a TOUS les pipelines: V6, V2, Alimentation, Stands
+- Exclusions ULTIMES: V6, V2, Alimentation, Stands
 
-### Pipelines Autorises (exclusions actives)
-1. `/api/v1/bionic/organic-zones` (V2) — meta + individuel
-2. `/api/v6/corridors/analyze-full` (V6) — meta + individuel
-3. `/api/v2/alimentation/analyze` — meta + individuel
-4. `/api/v1/stand-recommendation/recommend` — meta + individuel
+### Livrables fournis
+1. Snippet implementation + function center_in_urban_meta_zone()
+2. Tests unitaires: /app/backend/tests/test_meta_exclusion_bce4x.py (12/12)
+3. PREVIEW A (MonTerritoire): ZERO element BIONIC
+4. PREVIEW B (/map): BIONIC V5: 0
+5. PREVIEW C (Backend): Urbain=0, Foret=16/189/4/5
+6. Logs backend Beauport: overlap 49% -> ALL rejected
+7. Rapport: /audit/bce4x_max_certification_phase32cv.md
+8. SAFE MODE permanent confirme
+9. Alignement structurel confirme
+
+### Pipelines Autorises
+1. /api/v1/bionic/organic-zones (V2) — meta + individuel
+2. /api/v6/corridors/analyze-full (V6) — meta + individuel
+3. /api/v2/alimentation/analyze — meta + individuel
+4. /api/v1/stand-recommendation/recommend — meta + individuel
 
 ### Pipelines Neutralises
-1. `generateBionicZonesV5` — DESACTIVE (3 vecteurs)
-2. `BionicMapOverlay` → `BionicMicroZones` — return null
-
-### SAFE MODE
-- BCE4X_URBAN_CACHE_SAFE_MODE = True
-- Cache statique: 101,391 polygones
-- IndexedDB v3, module cache cleared au mount
-- ZERO injection dynamique OSM
-
-### Rapport: `/audit/bce4x_max_certification_phase32cv.md`
+1. generateBionicZonesV5 — DESACTIVE (3 vecteurs)
+2. BionicMapOverlay -> BionicMicroZones — return null
 
 ---
 
-## Statut: EN ATTENTE DE VALIDATION STEEVE-MAX
-
-### Phases completees:
+## Phases completees
 - Phase 1-3: Import, Archive, Gouvernance
 - Phase 4: Audit moteurs
 - Phase 5B: Audit coherence
@@ -49,10 +50,10 @@ Zones et corridors apparaissaient dans les patches forestieres entre les batimen
 - Phase 2.5-3.1: TNE, Stands, Weather, WindFlow
 - Phase 3.2-S: Safe Mode, Cache purge
 - Phase 3.2-V: Validation visuelle
-- Phase 3.2-CV v2: META-EXCLUSION (PRESENT)
+- Phase 3.2-CV v2: META-EXCLUSION + CERTIFICATION (PRESENT)
 
-### Phases a venir (BLOQUEES):
+## Phases a venir (BLOQUEES par validation)
 - Phase 3.3-U-PRIME: Nettoyage code legacy V1-V5
 - ULTRA-MAX++ Lock
 - Phase BSAA-2: Implementation (GELE)
-- Merge Work1 → main (INTERDIT)
+- Merge Work1 -> main (INTERDIT)
