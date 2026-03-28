@@ -265,8 +265,8 @@ def validate_corridors_batch(corridors: List[Dict], bounds: Dict = None) -> Dict
 def validate_weather_cache_compliance() -> Dict[str, Any]:
     """BCE-4X: Valide que le Weather Engine respecte la regle 60 min."""
     try:
-        from modules.bionic_engine_p0.engines.weather_engine_v9 import get_owm_cache_status
-        cache = get_owm_cache_status()
+        from modules.bionic_engine_p0.engines.weather_engine_v9 import get_v9_cache_status
+        cache = get_v9_cache_status()
         return {
             "rule": "weather_60min",
             "compliant": cache["bce_compliant"],

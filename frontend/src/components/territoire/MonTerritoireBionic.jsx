@@ -109,13 +109,15 @@ const MonTerritoireBionic = ({ onNavigateToTerritory }) => {
   // Zones de démonstration
   const demoZones = useMemo(() => generateDemoZones(mapCenter[0], mapCenter[1]), [mapCenter]);
   
-  // Score global simulé
+  // Score global — BCE-4X P0 FIX: source V3 deterministe (plus de Math.random())
   const globalScore = useMemo(() => {
-    return Math.round(65 + Math.random() * 20);
-  }, []);
+    if (huntingScore && huntingScore > 0) return Math.round(huntingScore);
+    return 0;
+  }, [huntingScore]);
   
   // Obtenir la classification du score
   const getScoreRating = (score) => {
+    if (!score || score === 0) return { label: 'En attente', color: 'bg-gray-500' };
     if (score >= 80) return { label: 'Excellent', color: 'bg-green-500' };
     if (score >= 65) return { label: 'Très bon', color: 'bg-lime-500' };
     if (score >= 50) return { label: 'Bon', color: 'bg-yellow-500' };

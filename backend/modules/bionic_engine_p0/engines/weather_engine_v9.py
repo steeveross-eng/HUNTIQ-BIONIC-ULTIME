@@ -1,17 +1,20 @@
 """
-Weather Engine V9 — OWM Live + Cache 60 min + BCE-4X Compliance
+Weather Engine V9 — BCE-4X UNIFIED v3.0 (Open-Meteo UNIQUE)
 ================================================================
+BCE-4X P0 FIX: OWM NEUTRALISE — Source unique Open-Meteo (identique a V3)
+Autorise par STEEVE-MAX — 28 Mars 2026
+
 Regles officielles:
   - Frequence standard: 60 minutes
   - Frequence fallback: 60 minutes
   - Interdiction BCE-4X: mise a jour < 60 minutes
   - Cache obligatoire 60 minutes
-  - Derniere donnee valide utilisee si cache actif
+  - Source: Open-Meteo UNIQUEMENT (alignement V3)
+  - OWM: NEUTRALISE DEFINITIVEMENT
 
-Integration: OpenWeatherMap API (live) + fallback algorithmique.
+Integration: Open-Meteo API (identique a /api/v3/weather) + fallback algorithmique.
 """
 
-import os
 import time
 import logging
 import httpx
@@ -20,13 +23,13 @@ from .base import BionicEngine, EngineResult
 
 logger = logging.getLogger("bionic.engines.weather_v9")
 
-OWM_API_KEY = os.environ.get("OWM_API_KEY", "")
-OWM_BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
-OWM_CACHE_TTL_S = 3600  # 60 minutes — REGLE OFFICIELLE BCE-4X
-OWM_MIN_INTERVAL_S = 3600  # Interdiction < 60 min
+# BCE-4X P0: OWM NEUTRALISE — Source unique Open-Meteo
+OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
+V9_CACHE_TTL_S = 3600  # 60 minutes — REGLE OFFICIELLE BCE-4X
+V9_MIN_INTERVAL_S = 3600  # Interdiction < 60 min
 
-# Cache global OWM
-_owm_cache = {
+# Cache global V9 (anciennement OWM, maintenant Open-Meteo)
+_v9_cache = {
     "data": None,
     "fetched_at": 0,
     "lat": None,
@@ -68,89 +71,111 @@ MOON_PHASES = {
 }
 
 
-def _fetch_owm_live(lat: float, lng: float) -> dict:
+def _fetch_open_meteo_v3(lat: float, lng: float) -> dict:
     """
-    Fetch live weather from OpenWeatherMap.
-    BCE-4X: Bloque si derniere mise a jour < 60 min.
+    BCE-4X P0: Fetch meteo depuis Open-Meteo (source UNIQUE, identique a V3).
+    Respecte la regle BCE-4X des 60 minutes.
     """
-    global _owm_cache
+    global _v9_cache
     now = time.time()
-    elapsed = now - _owm_cache["fetched_at"]
+    elapsed = now - _v9_cache["fetched_at"]
 
     # BCE-4X: Interdiction de mise a jour < 60 minutes
-    if elapsed < OWM_MIN_INTERVAL_S and _owm_cache["data"] is not None:
+    if elapsed < V9_MIN_INTERVAL_S and _v9_cache["data"] is not None:
         logger.info(
-            f"[WeatherV9-BCE4X] Cache actif ({elapsed:.0f}s/{OWM_MIN_INTERVAL_S}s). "
+            f"[WeatherV9-BCE4X] Cache actif ({elapsed:.0f}s/{V9_MIN_INTERVAL_S}s). "
             f"Mise a jour BLOQUEE par regle 60 min."
         )
-        return _owm_cache["data"]
-
-    if not OWM_API_KEY:
-        logger.warning("[WeatherV9] OWM_API_KEY non configure, utilisation fallback algorithmique")
-        return _generate_fallback_weather(lat, lng)
+        return _v9_cache["data"]
 
     try:
         resp = httpx.get(
-            OWM_BASE_URL,
+            OPEN_METEO_URL,
             params={
-                "lat": round(lat, 4),
-                "lon": round(lng, 4),
-                "appid": OWM_API_KEY,
-                "units": "metric",
-                "lang": "fr",
+                "latitude": round(lat, 4),
+                "longitude": round(lng, 4),
+                "current": ",".join([
+                    "temperature_2m", "relative_humidity_2m", "apparent_temperature",
+                    "precipitation", "weather_code", "cloud_cover", "surface_pressure",
+                    "wind_speed_10m", "wind_direction_10m", "wind_gusts_10m",
+                    "visibility",
+                ]),
+                "timezone": "America/Toronto",
             },
-            timeout=10,
+            timeout=5,
         )
         if resp.status_code == 200:
             raw = resp.json()
-            weather = _parse_owm_response(raw)
-            _owm_cache = {
+            weather = _parse_open_meteo_response(raw)
+            _v9_cache = {
                 "data": weather,
                 "fetched_at": now,
                 "lat": lat,
                 "lng": lng,
-                "source": "owm",
+                "source": "open-meteo-v3",
             }
-            logger.info(f"[WeatherV9] OWM OK: T={weather['temperature_c']}C, vent={weather['wind_speed_kmh']}km/h")
+            logger.info(f"[WeatherV9] Open-Meteo OK: T={weather['temperature_c']}C, vent={weather['wind_speed_kmh']}km/h")
             return weather
         else:
-            logger.warning(f"[WeatherV9] OWM HTTP {resp.status_code}")
+            logger.warning(f"[WeatherV9] Open-Meteo HTTP {resp.status_code}")
     except Exception as e:
-        logger.warning(f"[WeatherV9] OWM request failed: {e}")
+        logger.warning(f"[WeatherV9] Open-Meteo request failed: {e}")
 
     # Fallback: cache expire ou algorithmique
-    if _owm_cache["data"] is not None:
-        logger.info("[WeatherV9] Utilisation du cache OWM expire (fallback)")
-        return _owm_cache["data"]
+    if _v9_cache["data"] is not None:
+        logger.info("[WeatherV9] Utilisation du cache Open-Meteo expire (fallback)")
+        return _v9_cache["data"]
 
     return _generate_fallback_weather(lat, lng)
 
 
-def _parse_owm_response(raw: dict) -> dict:
-    """Parse la reponse OWM en format unifie."""
-    main = raw.get("main", {})
-    wind = raw.get("wind", {})
-    weather_list = raw.get("weather", [{}])
-    clouds = raw.get("clouds", {})
-    rain = raw.get("rain", {})
-    snow = raw.get("snow", {})
+def _parse_open_meteo_response(raw: dict) -> dict:
+    """Parse la reponse Open-Meteo en format unifie (identique a V3)."""
+    c = raw.get("current", {})
+
+    # WMO weather code → condition text
+    wmo_code = c.get("weather_code", 0)
+    condition = "Clear"
+    condition_desc = "Ciel degage"
+    if wmo_code == 0:
+        condition, condition_desc = "Clear", "Ciel degage"
+    elif wmo_code <= 3:
+        condition, condition_desc = "Clouds", "Partiellement nuageux"
+    elif wmo_code <= 48:
+        condition, condition_desc = "Fog", "Brouillard"
+    elif wmo_code <= 57:
+        condition, condition_desc = "Drizzle", "Bruine"
+    elif wmo_code <= 67:
+        condition, condition_desc = "Rain", "Pluie"
+    elif wmo_code <= 77:
+        condition, condition_desc = "Snow", "Neige"
+    elif wmo_code <= 82:
+        condition, condition_desc = "Rain", "Averses"
+    elif wmo_code >= 95:
+        condition, condition_desc = "Thunderstorm", "Orage"
+
+    precip = c.get("precipitation", 0) or 0
+    # Estimate rain/snow split based on temperature
+    temp = c.get("temperature_2m", 10)
+    rain_mm = precip if temp > 2 else 0
+    snow_mm = precip if temp <= 2 else 0
 
     return {
-        "temperature_c": round(main.get("temp", 10), 1),
-        "feels_like_c": round(main.get("feels_like", 10), 1),
-        "humidity_pct": main.get("humidity", 50),
-        "pressure_hpa": main.get("pressure", 1013),
-        "wind_speed_kmh": round((wind.get("speed", 0) or 0) * 3.6, 1),
-        "wind_deg": wind.get("deg", 0),
-        "wind_gust_kmh": round((wind.get("gust", 0) or 0) * 3.6, 1),
-        "cloud_cover_pct": clouds.get("all", 0),
-        "precipitation_mm": rain.get("1h", 0) + snow.get("1h", 0),
-        "rain_mm": rain.get("1h", 0),
-        "snow_mm": snow.get("1h", 0),
-        "visibility_m": raw.get("visibility", 10000),
-        "condition": weather_list[0].get("main", "Clear") if weather_list else "Clear",
-        "condition_desc": weather_list[0].get("description", "") if weather_list else "",
-        "source": "owm",
+        "temperature_c": round(c.get("temperature_2m", 10), 1),
+        "feels_like_c": round(c.get("apparent_temperature", 10), 1),
+        "humidity_pct": c.get("relative_humidity_2m", 50),
+        "pressure_hpa": round(c.get("surface_pressure", 1013), 1),
+        "wind_speed_kmh": round(c.get("wind_speed_10m", 0), 1),
+        "wind_deg": round(c.get("wind_direction_10m", 0)),
+        "wind_gust_kmh": round(c.get("wind_gusts_10m", 0), 1),
+        "cloud_cover_pct": c.get("cloud_cover", 0),
+        "precipitation_mm": round(precip, 1),
+        "rain_mm": round(rain_mm, 1),
+        "snow_mm": round(snow_mm, 1),
+        "visibility_m": c.get("visibility", 10000),
+        "condition": condition,
+        "condition_desc": condition_desc,
+        "source": "open-meteo-v3",
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
@@ -196,18 +221,19 @@ def _generate_fallback_weather(lat: float, lng: float) -> dict:
     }
 
 
-def get_owm_cache_status() -> dict:
-    """Retourne le statut du cache OWM pour BCE-4X."""
+def get_v9_cache_status() -> dict:
+    """Retourne le statut du cache V9 Open-Meteo pour BCE-4X."""
     now = time.time()
-    elapsed = now - _owm_cache["fetched_at"]
+    elapsed = now - _v9_cache["fetched_at"]
     return {
-        "cache_active": _owm_cache["data"] is not None,
-        "source": _owm_cache.get("source", "none"),
+        "cache_active": _v9_cache["data"] is not None,
+        "source": _v9_cache.get("source", "none"),
         "elapsed_s": round(elapsed, 0),
-        "ttl_remaining_s": max(0, round(OWM_CACHE_TTL_S - elapsed, 0)),
-        "update_blocked": elapsed < OWM_MIN_INTERVAL_S and _owm_cache["data"] is not None,
-        "next_update_in_s": max(0, round(OWM_MIN_INTERVAL_S - elapsed, 0)),
+        "ttl_remaining_s": max(0, round(V9_CACHE_TTL_S - elapsed, 0)),
+        "update_blocked": elapsed < V9_MIN_INTERVAL_S and _v9_cache["data"] is not None,
+        "next_update_in_s": max(0, round(V9_MIN_INTERVAL_S - elapsed, 0)),
         "bce_compliant": True,
+        "owm_neutralized": True,
     }
 
 
@@ -222,9 +248,10 @@ class WeatherEngineV9(BionicEngine):
         species = context.get("species", "moose")
 
         # Fetch live weather (respects 60-min BCE-4X rule)
+        # BCE-4X P0: Source UNIQUE Open-Meteo (identique a V3)
         weather = context.get("weather", {})
         if not weather or not weather.get("source"):
-            weather = _fetch_owm_live(lat, lng)
+            weather = _fetch_open_meteo_v3(lat, lng)
 
         temp = weather.get("temperature_c", 10)
         wind_kmh = weather.get("wind_speed_kmh", 10)
@@ -324,7 +351,7 @@ class WeatherEngineV9(BionicEngine):
 
         score = max(5, min(100, temp_score + wind_mod + precip_mod + pressure_mod + humidity_mod + visibility_mod + cloud_mod))
         impact = 2 if score > 80 else 1 if score > 65 else 0 if score > 40 else -1 if score > 20 else -2
-        certainty = 0.90 if source == "owm" else 0.60 if source == "fallback_algorithmic" else 0.50
+        certainty = 0.90 if source == "open-meteo-v3" else 0.60 if source == "fallback_algorithmic" else 0.50
 
         return EngineResult(
             engine_id=self.ENGINE_ID,
@@ -359,6 +386,7 @@ class WeatherEngineV9(BionicEngine):
                 "visibility_mod": visibility_mod,
                 "cloud_mod": cloud_mod,
                 "source": source,
-                "owm_cache": get_owm_cache_status(),
+                "owm_neutralized": True,
+                "v9_cache": get_v9_cache_status(),
             },
         )

@@ -7,50 +7,42 @@
 
 ---
 
-## LIVRABLES VALIDES PAR STEEVE-MAX
+## CORRECTIONS P0 — LIVREES (EN ATTENTE VALIDATION)
 
-### P0 Unification Meteo — VALIDE
-- `useBionicWeather.js` reecrit → source unique WEATHER-V3
-- `useSharedWeather.js` corrige → codes WMO + fix `!0`
-- Dashboard et Analyse Territoire: meme temperature
+### P0-B4: weather_engine_v9.py — OWM NEUTRALISE
+- OWM completement supprime, remplace par Open-Meteo (identique a V3)
+- Fichier: `modules/bionic_engine_p0/engines/weather_engine_v9.py`
 
-### ULTRA-MAX++ v3.0 — VALIDE
-- 7 verrous runtime, 12 constantes scellees, 43/43 tests PASS
+### P0-U8: MonTerritoireBionic — Score DETERMINISTE
+- Math.random() supprime, remplace par huntingScore V3
+- Fichier: `components/territoire/MonTerritoireBionic.jsx`
+
+### Verification
+- Dashboard et Analyse Territoire: -17.7C identique
+- Score CHASSE: 73.5/100 deterministe (plus aleatoire)
+- Tests: 43/43 PASS, 0 regression
+- Rapport: `/app/HUNTIQ-V6-import/audit/p0_fix_report.md`
+
+---
+
+## LIVRABLES VALIDES
+
+- P0 Unification Meteo (useBionicWeather → V3)
+- ULTRA-MAX++ v3.0 (7 verrous, 12 constantes)
+- Audit structurel BIONIC (16 points identifies)
 
 ---
 
-## AUDIT STRUCTUREL BIONIC — LIVRE (EN ATTENTE VALIDATION)
+## PROCHAINE PHASE: P1 (8 points — apres validation P0)
 
-Rapport: `/app/HUNTIQ-V6-import/audit/bionic_structural_audit.md`
-
-### 2 Points P0 (Critiques)
-- B4: weather_engine_v9.py utilise OWM (divergence temperature vs V3 Open-Meteo)
-- U8: Score ALEATOIRE Math.random() dans MonTerritoireBionic.jsx
-
-### 8 Points P1 (Importants)
-- B1: Weather V1 router actif (10 endpoints OWM)
-- B2: Bionic Weather router actif (5 endpoints OWM)
-- F1: bionicWeatherEngine.js exporte fetch V1 (code mort)
-- F2: WeatherService.js 12 appels V1 (code mort)
-- F3: MeteoDashboard.jsx appelle V1
-- U6: BionicScoreBadge → V1 score-consolide
-- U7: ConsolidatedHeatmapLayer → V1 score-consolide
-- U9: BionicModulesPage MeteoModule → V1 eco-intel (OWM)
-
-### 6 Points P2 (Mineurs)
-- B7: Legacy monolith import absent
-- B9: Corridors V6 alias
-- B10: Movement Corridors P0
-- F4: config/modules.js reference V1
-- F5: bionicWeatherEngine.js fallback Open-Meteo
-- U3: EcoforestryLayers "Inconnu" acceptable
-
----
+1. B1: Weather V1 router (10 endpoints OWM) → neutraliser
+2. B2: Bionic Weather router (5 endpoints OWM) → neutraliser
+3. F1: bionicWeatherEngine.js exports V1 → supprimer
+4. F2: WeatherService.js 12 appels V1 → supprimer
+5. F3: MeteoDashboard.jsx appels V1 → migrer V3
+6. U6: BionicScoreBadge → V1 score-consolide → evaluer
+7. U7: ConsolidatedHeatmapLayer → V1 score-consolide → evaluer
+8. U9: BionicModulesPage MeteoModule → V1 eco-intel → migrer V3
 
 ## GOUVERNANCE
-- Merge Work1 → main: **INTERDIT** (P0 non corriges)
-- Validation audit: EN ATTENTE STEEVE-MAX
-
-## Taches futures (gelees)
-- Restauration auto_optimization.py → optimization_engine (P2)
-- Phase BSAA-2 Implementation (P2)
+- Merge Work1 → main: **INTERDIT** sans validation STEEVE-MAX
