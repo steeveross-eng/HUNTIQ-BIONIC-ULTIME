@@ -48,14 +48,9 @@ export {
   generateRecommendations
 } from './bionicHybridModel';
 
-// Météo
+// Météo — BCE-4X P1-F1: V1 fetch NEUTRALISE, seuls utilitaires conserves
 export {
-  fetchWeatherData,
-  findNextOptimalWindow,
-  getWindDirectionText,
-  getWeatherDescription,
-  THERMAL_STATES,
-  FRONT_TYPES
+  getWindDirectionText,  // Utilise par bionicStrategyEngine
 } from './bionicWeatherEngine';
 
 // Stratégie

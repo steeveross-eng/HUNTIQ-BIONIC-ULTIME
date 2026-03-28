@@ -303,12 +303,13 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
         "phase": 2, 
         "description": "AI-powered product analysis using GPT-5.2"
     }),
-    (weather_router, {
-        "name": "weather_engine",
-        "version": "1.0.0",
-        "phase": 2,
-        "description": "Weather-based hunting condition analysis"
-    }),
+    # BCE-4X P1-B1: Weather V1 router NEUTRALISE — WEATHER-V3 source unique
+    # (weather_router, {
+    #     "name": "weather_engine",
+    #     "version": "1.0.0",
+    #     "phase": 2,
+    #     "description": "NEUTRALISE BCE-4X: Weather V1 OWM — remplace par V3 Open-Meteo"
+    # }),
     (geospatial_router, {
         "name": "geospatial_engine",
         "version": "1.0.0",
@@ -822,13 +823,14 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
     
     # ==========================================
     # BIONIC WEATHER ENGINE (Phase P1-ENV)
+    # BCE-4X P1-B2: NEUTRALISE — WEATHER-V3 source unique
     # ==========================================
-    (bionic_weather_router, {
-        "name": "bionic_weather_engine",
-        "version": "1.0.0",
-        "phase": "P1-ENV",
-        "description": "🌤️ BIONIC Weather Engine - OpenWeatherMap Integration, Behavioral Factors"
-    }),
+    # (bionic_weather_router, {
+    #     "name": "bionic_weather_engine",
+    #     "version": "1.0.0",
+    #     "phase": "P1-ENV",
+    #     "description": "NEUTRALISE BCE-4X: Bionic Weather OWM — remplace par V3 Open-Meteo"
+    # }),
     
     # ==========================================
     # BIONIC SCORING ENGINE (Phase P1-SCORE)

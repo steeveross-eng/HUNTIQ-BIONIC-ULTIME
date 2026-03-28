@@ -1,6 +1,12 @@
 /**
  * Weather Service - API client for weather module
- * Phase 10+ - Connected to real backend with correct endpoints
+ * 
+ * BCE-4X P1-F2: NEUTRALISE — CODE MORT
+ * ======================================
+ * Ce service utilisait /api/v1/weather/* (OWM).
+ * WEATHER-V3 (useWeatherStore) est la source unique.
+ * Ce fichier est conserve pour reference mais ne doit JAMAIS etre importe.
+ * Date: 28 Mars 2026 — Autorise par STEEVE-MAX
  */
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;

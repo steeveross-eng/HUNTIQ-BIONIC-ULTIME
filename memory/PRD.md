@@ -7,42 +7,42 @@
 
 ---
 
-## CORRECTIONS P0 — LIVREES (EN ATTENTE VALIDATION)
+## CORRECTIONS P1 — LIVREES (EN ATTENTE VALIDATION)
 
-### P0-B4: weather_engine_v9.py — OWM NEUTRALISE
-- OWM completement supprime, remplace par Open-Meteo (identique a V3)
-- Fichier: `modules/bionic_engine_p0/engines/weather_engine_v9.py`
+### 8/8 P1 traites:
+- B1: Weather V1 router NEUTRALISE (404)
+- B2: Bionic Weather router NEUTRALISE (404)
+- F1: bionicWeatherEngine exports V1 SUPPRIMES
+- F2: WeatherService.js DEPRECIE
+- F3: MeteoDashboard.jsx DEPRECIE
+- U6: BionicScoreBadge REVU (pipeline scoring actif, conserve)
+- U7: ConsolidatedHeatmapLayer REVU (pipeline scoring actif, conserve)
+- U9: MeteoModule MIGRE vers V3 (useWeatherStore)
 
-### P0-U8: MonTerritoireBionic — Score DETERMINISTE
-- Math.random() supprime, remplace par huntingScore V3
-- Fichier: `components/territoire/MonTerritoireBionic.jsx`
+### WindFlowLayer Boost P1:
+- +25% opacite (0.35 → 0.44)
+- +25% luminosite particules
+- ZERO impact donnees
 
-### Verification
-- Dashboard et Analyse Territoire: -17.7C identique
-- Score CHASSE: 73.5/100 deterministe (plus aleatoire)
-- Tests: 43/43 PASS, 0 regression
-- Rapport: `/app/HUNTIQ-V6-import/audit/p0_fix_report.md`
-
----
-
-## LIVRABLES VALIDES
-
-- P0 Unification Meteo (useBionicWeather → V3)
-- ULTRA-MAX++ v3.0 (7 verrous, 12 constantes)
-- Audit structurel BIONIC (16 points identifies)
+### Coherence Dashboard ↔ Territoire: -17.8C identique
+### Tests: 43/43 PASS, 0 regression
+### Rapport: `/app/HUNTIQ-V6-import/audit/p1_fix_report.md`
 
 ---
 
-## PROCHAINE PHASE: P1 (8 points — apres validation P0)
+## LIVRABLES VALIDES PAR STEEVE-MAX
+- P0 Unification Meteo ✓
+- ULTRA-MAX++ v3.0 ✓
+- Audit structurel BIONIC ✓
+- Corrections P0 (OWM neutralise + Math.random supprime) ✓
 
-1. B1: Weather V1 router (10 endpoints OWM) → neutraliser
-2. B2: Bionic Weather router (5 endpoints OWM) → neutraliser
-3. F1: bionicWeatherEngine.js exports V1 → supprimer
-4. F2: WeatherService.js 12 appels V1 → supprimer
-5. F3: MeteoDashboard.jsx appels V1 → migrer V3
-6. U6: BionicScoreBadge → V1 score-consolide → evaluer
-7. U7: ConsolidatedHeatmapLayer → V1 score-consolide → evaluer
-8. U9: BionicModulesPage MeteoModule → V1 eco-intel → migrer V3
+---
 
 ## GOUVERNANCE
 - Merge Work1 → main: **INTERDIT** sans validation STEEVE-MAX
+- Validation P1: EN ATTENTE
+
+## Phases a venir (gelees)
+- 6 points P2 (nettoyage)
+- Restauration auto_optimization.py
+- Phase BSAA-2 Implementation

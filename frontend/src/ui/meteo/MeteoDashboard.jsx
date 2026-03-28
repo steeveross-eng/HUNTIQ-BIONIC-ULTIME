@@ -2,9 +2,12 @@
  * MeteoDashboard - V5-ULTIME
  * ==========================
  * 
- * Dashboard principal du module Météo.
- * Composant parent isolé - aucun import croisé.
- * PHASE F: Migration vers LightCharts (imports nettoyés)
+ * BCE-4X P1-F3: NEUTRALISE — CODE MORT
+ * ======================================
+ * Ce composant utilisait /api/v1/weather/* (OWM).
+ * WEATHER-V3 (useWeatherStore) est la source unique.
+ * Ce fichier est conserve pour reference mais ne doit JAMAIS etre monte.
+ * Date: 28 Mars 2026 — Autorise par STEEVE-MAX
  */
 
 import React, { useState, useEffect } from 'react';

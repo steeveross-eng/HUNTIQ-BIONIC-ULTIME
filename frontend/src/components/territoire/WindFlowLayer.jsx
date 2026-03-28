@@ -3,14 +3,15 @@
  * =====================================================
  * Animation particules vent SUBTILE, non-intrusive.
  * 
- * Paramètres STEEVE-MAX Phase 3.1:
+ * Paramètres STEEVE-MAX Phase 3.1 + BOOST P1:
  * - 140 particules (réduit de 300)
- * - Opacité max 0.40 (réduit de 0.90)
- * - Taille 1.5px (réduit de 3px)
+ * - Opacité max 0.44 (+25% de 0.35 — BOOST P1 STEEVE-MAX)
+ * - Taille 1.2px
  * - Vitesse = wind_speed * 0.25 (réduit)
  * - Interpolation sinusoïdale (wavy drift)
  * - Smoothing directionnel (lerp)
  * - Fade-in / fade-out progressif
+ * - Luminosité particules +25% (BOOST P1 STEEVE-MAX)
  * - ZERO saturation, ZERO dominance
  *
  * SOURCE UNIQUE: useWeatherStore (Weather V3)
@@ -20,13 +21,17 @@ import { useMap } from 'react-leaflet';
 import useWeatherStore from '../../stores/useWeatherStore';
 
 const PARTICLE_COUNT = 140;
-const MAX_OPACITY = 0.35;
+const MAX_OPACITY = 0.44;  // BOOST P1: +25% (was 0.35)
 const PARTICLE_SIZE = 1.2;
 const SPEED_FACTOR = 0.25;
 const WAVY_AMPLITUDE = 0.6;
 const WAVY_FREQUENCY = 0.015;
 const FADE_RATE = 0.93;
 const LERP_FACTOR = 0.08;
+
+// BOOST P1: Couleurs +25% luminosite
+const TRAIL_COLOR = '200, 248, 255';  // was 160, 220, 240 — +25% brightness
+const HEAD_COLOR = '225, 252, 255';   // was 180, 230, 245 — +25% brightness
 
 export default function WindFlowLayer() {
   const map = useMap();
@@ -158,15 +163,15 @@ export default function WindFlowLayer() {
       ctx.beginPath();
       ctx.moveTo(trailX, trailY);
       ctx.lineTo(p.x, p.y);
-      ctx.strokeStyle = `rgba(160, 220, 240, ${alpha * 0.6})`;
+      ctx.strokeStyle = `rgba(${TRAIL_COLOR}, ${alpha * 0.6})`;
       ctx.lineWidth = PARTICLE_SIZE * 0.8;
       ctx.lineCap = 'round';
       ctx.stroke();
 
-      // Soft dot at head
+      // Soft dot at head — BOOST P1: +25% luminosite
       ctx.beginPath();
       ctx.arc(p.x, p.y, PARTICLE_SIZE * 0.5, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(180, 230, 245, ${alpha})`;
+      ctx.fillStyle = `rgba(${HEAD_COLOR}, ${alpha})`;
       ctx.fill();
     }
 

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import useWeatherStore from "@/stores/useWeatherStore";
 import "@/theme/bionic_theme.css";
 import {
   Target, Cloud, Eye, MapPin, Leaf, Bell, Award, Calendar,
@@ -175,9 +176,31 @@ const PredictionsModule = ({ data, loading }) => {
 // MODULE 02: METEO CHASSE
 // ═══════════════════════════════════════
 const MeteoModule = ({ data, loading }) => {
-  if (loading) return <ModuleLoader />;
-  const w = data?.weather;
-  const s = data?.solunar;
+  // BCE-4X P1-U9: Source UNIQUE Weather V3 (useWeatherStore)
+  const v3Current = useWeatherStore(s => s.current);
+  const v3Loading = useWeatherStore(s => s.loading);
+
+  if (loading && v3Loading) return <ModuleLoader />;
+  
+  // Priorite V3, fallback sur eco-data si disponible
+  const w = v3Current ? {
+    temperature_c: v3Current.temperature_c,
+    humidity_pct: v3Current.humidity_pct,
+    wind_speed_kmh: v3Current.wind_speed_kmh,
+    wind_direction: (() => {
+      const dirs = ['N','NE','E','SE','S','SW','W','NW'];
+      const deg = v3Current.wind_direction_deg || 0;
+      return dirs[Math.round(((deg % 360) + 360) % 360 / 45) % 8];
+    })(),
+    precipitation_mm: v3Current.precipitation_mm || 0,
+    cloud_cover_pct: v3Current.cloud_cover_pct || 0,
+    pressure_hpa: v3Current.pressure_hpa,
+    pressure_trend: "stable",
+    hunting_impact_score: typeof v3Current.hunting_score === 'object' 
+      ? v3Current.hunting_score?.overall ?? 65 
+      : v3Current.hunting_score ?? 65,
+  } : data?.weather;
+  
   if (!w) return <div style={{ color: "rgba(255,255,255,0.4)", padding: 20 }}>Aucune donnee meteo</div>;
 
   return (
