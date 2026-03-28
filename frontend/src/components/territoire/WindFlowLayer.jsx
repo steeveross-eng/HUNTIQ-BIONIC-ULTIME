@@ -196,10 +196,20 @@ export default function WindFlowLayer() {
         p.lng += dLng * p.gustFactor + perpDLng;
         p.age += 0.004;
 
-        // Recycler
+        // Cycle de vie: quand age > maxAge, RESET en place (pas de recyclage)
+        // La particule reste sur la carte et recommence un cycle de fade
+        // Elle ne meurt QUE quand elle sort des bounds géographiques
+        if (p.age > p.maxAge) {
+          p.age = 0;
+          p.maxAge = 0.6 + Math.random() * 0.4;
+          p.gustFactor = 0.7 + Math.random() * 0.6;
+          p.wavyOffset = Math.random() * Math.PI * 2;
+          // prevScreen conservé pour continuité du trail
+        }
+
+        // Recycler SEULEMENT si hors bounds géographiques
         if (p.lat < bds.south || p.lat > bds.north ||
-            p.lng < bds.west || p.lng > bds.east ||
-            p.age > p.maxAge) {
+            p.lng < bds.west || p.lng > bds.east) {
           const newP = createParticle(bds, true);
           p.lat = newP.lat;
           p.lng = newP.lng;
