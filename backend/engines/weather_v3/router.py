@@ -290,3 +290,85 @@ async def get_hunting_score(
         },
         "engine_version": "v3",
     }
+
+
+
+# ============================================================
+# BCE-4X P0: WIND GRID ENDPOINT — Champ de vent griddé
+# ============================================================
+
+from engines.weather_v3.wind_model_provider import get_wind_provider
+
+# Cache simple en mémoire pour le windgrid (clé = bounds arrondies)
+_windgrid_cache = {}
+_CACHE_TTL_SECONDS = 600  # 10 min
+
+
+@router.get("/windgrid")
+async def get_wind_grid(
+    south: float = Query(..., description="Latitude sud du viewport"),
+    north: float = Query(..., description="Latitude nord du viewport"),
+    west: float = Query(..., description="Longitude ouest du viewport"),
+    east: float = Query(..., description="Longitude est du viewport"),
+    resolution: float = Query(0.25, description="Résolution en degrés (paramétrable)"),
+    provider: str = Query("open-meteo", description="Fournisseur de données vent"),
+):
+    """
+    Retourne un champ de vent griddé couvrant le viewport demandé.
+    Format normalisé indépendant du fournisseur.
+    
+    Le frontend utilise ce champ pour l'interpolation bilinéaire
+    des particules terrain-lockées.
+    """
+    import time
+
+    # Arrondir les bounds pour le cache (éviter trop de requêtes)
+    cache_res = max(resolution, 0.1)
+    cache_key = (
+        round(south / cache_res) * cache_res,
+        round(north / cache_res) * cache_res,
+        round(west / cache_res) * cache_res,
+        round(east / cache_res) * cache_res,
+        resolution,
+        provider,
+    )
+
+    now = time.time()
+    if cache_key in _windgrid_cache:
+        cached_time, cached_data = _windgrid_cache[cache_key]
+        if now - cached_time < _CACHE_TTL_SECONDS:
+            return cached_data
+
+    try:
+        wind_provider = get_wind_provider(provider)
+
+        # Ajouter une marge de 20% pour couvrir les bords
+        lat_margin = (north - south) * 0.2
+        lng_margin = (east - west) * 0.2
+
+        grid_data = await wind_provider.fetch_wind_grid(
+            south=south - lat_margin,
+            north=north + lat_margin,
+            west=west - lng_margin,
+            east=east + lng_margin,
+            resolution_deg=resolution,
+        )
+
+        result = grid_data.to_dict()
+        _windgrid_cache[cache_key] = (now, result)
+
+        # Nettoyer les anciennes entrées du cache
+        expired = [k for k, (t, _) in _windgrid_cache.items() if now - t > _CACHE_TTL_SECONDS * 2]
+        for k in expired:
+            del _windgrid_cache[k]
+
+        return result
+
+    except Exception as e:
+        logger.error(f"WindGrid fetch error ({provider}): {e}")
+        return {
+            "error": str(e),
+            "provider": provider,
+            "fallback": True,
+            "grid": None,
+        }

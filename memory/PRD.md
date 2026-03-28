@@ -1,24 +1,30 @@
 # PRD — HUNTIQ V6 | BIONIC HUNT/Chasse
 ## BCE-4X | MAX ULTRA | STEEVE-MAX
 
----
+## Architecture
+- **Backend:** FastAPI + Motor (MongoDB async) + 84+ engine modules
+- **Frontend:** React + Zustand + Leaflet
+- **Météo:** Open-Meteo (WEATHER-V3 + WindGrid GFS)
+- **Sécurité:** 7 verrous ULTRA-MAX++ v3.0 (28 tests)
 
-## Ce qui est implémenté (dernières mises à jour)
+## Implémenté
 
-### WindFlowLayer v4.2 (2026-03-28)
-- P0: Boucle animation découplée du cycle React (useEffect[map] seulement)
-- P1: -40% taille, -50% glow, +30% trail
-- Canvas identifié data-windlayer="v4.2" avec anti-duplication
-- ZERO erreur console, ZERO impact WEATHER-V3
+### Engine Vent Ventusky-Class v5.0 (2026-03-28)
+- Backend: `/api/v3/weather/windgrid` + `wind_model_provider.py` (abstraction provider-agnostique)
+- Frontend: 3000 particules terrain-lockées, interpolation bilinéaire, flèches directionnelles
+- Source: Modèle GFS réel via Open-Meteo, résolution 0.25° adaptative
+- 59,153px couverture, Q1-Q4 uniforme, ZERO trou, ZERO vent synthétique
 
-### Inventaire Legacy (2026-03-28)
-- 91+ éléments legacy identifiés dans legacy_inventory_full.md
-- EN ATTENTE APPROBATION pour purge
+### Autres (précédemment validés)
+- optimization_engine (13 endpoints, validé)
+- Bouton PRINT (validé)
+- ULTRA-MAX++ locks (28 tests)
+- Inventaire legacy (91+ éléments, en attente purge)
 
 ## En cours
-- Validation STEEVE-MAX du rendu WindFlowLayer v4.2
+- Validation STEEVE-MAX de l'engine Ventusky-class
 
 ## Backlog
-- P0: Purge complète (après approbation inventaire)
-- P2: Phase BSAA-2 (GELÉ)
-- P2: Merge Work1 → main (INTERDIT)
+- P0 Purge legacy (GELÉE)
+- P2 BSAA-2 (GELÉ)
+- P2 Merge Work1 → main (INTERDIT)
