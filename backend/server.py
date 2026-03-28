@@ -305,6 +305,15 @@ try:
 except Exception as e:
     logger.warning(f"Weather Engine v3 not loaded: {e}")
 
+# BCE-4X P0: Hunt Orchestrator Engine (vent/odeurs, acces, choix affuts, orchestration)
+try:
+    from engines.hunt_orchestrator.router import router as hunt_orchestrator_router
+    app.include_router(hunt_orchestrator_router)
+    logger.info("✓ Hunt Orchestrator Engine registered (/api/v1/hunt)")
+except Exception as e:
+    logger.warning(f"Hunt Orchestrator Engine not loaded: {e}")
+
+
 
 # BCE-4X: SUPRA Advanced Engines (pertinence, risque, recommandation, correlation)
 try:

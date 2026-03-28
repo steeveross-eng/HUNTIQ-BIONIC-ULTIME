@@ -1230,8 +1230,9 @@ const MonTerritoireBionicPage = () => {
               onAlimentationDataLoaded={setAlimentationV2Data}
               waypointCenter={waypointCenter}
               showStands={showAlimentationV2}
-              windDirection={windMode === 'arrows' ? 'NE' : 'NE'}
-              windSpeed={12}
+              windDirection={windInfo?.directionDeg || 315}
+              windSpeed={windInfo?.speed || 12}
+              windDirectionDeg={windInfo?.directionDeg || null}
               onStandClick={setSelectedStand}
               onNutritionPointClick={setSelectedNutritionPoint}
               showHeatmapV10={showHeatmapV10}
