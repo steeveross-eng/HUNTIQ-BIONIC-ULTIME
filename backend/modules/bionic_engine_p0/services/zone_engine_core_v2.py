@@ -53,14 +53,63 @@ except ImportError:
 # V6 Feature Flag
 EXCLUSION_ENGINE_VERSION = os.environ.get("EXCLUSION_ENGINE_VERSION", "v5")
 
-# ══════════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════════
+# ULTRA-MAX++ LOCK — STEEVE-MAX / BCE-4X-MAX / GOLDEN BCE
+# Activation: 28 Mars 2026 — Autorise par STEEVE-MAX
+#
+# VERROUS STRUCTURELS PERMANENTS:
+#   1. BCE4X_URBAN_CACHE_SAFE_MODE = True (IMMUTABLE)
+#   2. META-EXCLUSION 2km / 8% (IMMUTABLE)
+#   3. SAFE MODE cache statique 101K polygones (IMMUTABLE)
+#   4. Pipeline V5 NEUTRALISE (IMMUTABLE)
+#   5. INVARIANT SCORE=0ELEMENT (IMMUTABLE)
+#
+# TOUTE MODIFICATION de ces constantes sans autorisation STEEVE-MAX
+# est une VIOLATION BCE-4X-MAX et sera loguee comme telle.
+# ══════════════════════════════════════════════════════════════════
+ULTRA_MAX_LOCK_ACTIVE = True
+ULTRA_MAX_LOCK_VERSION = "2.0"
+ULTRA_MAX_LOCK_DATE = "2026-03-28"
+ULTRA_MAX_LOCK_AUTHORITY = "STEEVE-MAX"
+
 # Phase 3.2-S BCE-4X SAFE MODE — STEEVE-MAX
 # INTERDIT toute injection RAW OSM dans un cache global.
-# Toute tentative est logguée comme violation BCE-4X.
-# ══════════════════════════════════════════════════════════
+# Toute tentative est logguee comme violation BCE-4X.
 BCE4X_URBAN_CACHE_SAFE_MODE = True
 
 logger = logging.getLogger("bionic_engine.zone_engine_core_v2")
+
+# ULTRA-MAX++ BOOT GUARD: Verification invariants au demarrage
+def _ultra_max_boot_guard():
+    """
+    Garde-fou ULTRA-MAX++: verifie au boot que tous les invariants sont intacts.
+    Si un invariant est viole, leve une RuntimeError et bloque le demarrage.
+    """
+    violations = []
+    if not BCE4X_URBAN_CACHE_SAFE_MODE:
+        violations.append("BCE4X_URBAN_CACHE_SAFE_MODE is False (MUST be True)")
+    if not ULTRA_MAX_LOCK_ACTIVE:
+        violations.append("ULTRA_MAX_LOCK_ACTIVE is False (MUST be True)")
+    if META_ANALYSIS_RADIUS_M != 2000:
+        violations.append(f"META_ANALYSIS_RADIUS_M = {META_ANALYSIS_RADIUS_M} (MUST be 2000)")
+    if META_URBAN_THRESHOLD != 0.08:
+        violations.append(f"META_URBAN_THRESHOLD = {META_URBAN_THRESHOLD} (MUST be 0.08)")
+    if URBAN_OVERLAP_THRESHOLD != 0.01:
+        violations.append(f"URBAN_OVERLAP_THRESHOLD = {URBAN_OVERLAP_THRESHOLD} (MUST be 0.01)")
+    if URBAN_CACHE_BUFFER_DEG != 0.002:
+        violations.append(f"URBAN_CACHE_BUFFER_DEG = {URBAN_CACHE_BUFFER_DEG} (MUST be 0.002)")
+    
+    if violations:
+        for v in violations:
+            logger.critical(f"[ULTRA-MAX++ VIOLATION] {v}")
+        raise RuntimeError(
+            f"ULTRA-MAX++ LOCK VIOLATION: {len(violations)} invariant(s) viole(s). "
+            f"Demarrage BLOQUE. Contactez STEEVE-MAX."
+        )
+    logger.info(
+        f"[ULTRA-MAX++ LOCK] Boot guard OK — v{ULTRA_MAX_LOCK_VERSION} "
+        f"({ULTRA_MAX_LOCK_DATE}, authority={ULTRA_MAX_LOCK_AUTHORITY})"
+    )
 
 # Cache en memoire (TTL 30 min — BCE-4X Performance Optimization)
 _zone_cache: Dict[str, Any] = {}
@@ -70,8 +119,8 @@ METERS_PER_DEG_LAT = 111320.0
 
 # ══════════════════════════════════════════════════════════
 # V6.x Phase 3.2-S — CERCLES 600m + EXCLUSION STRICTE
-# STEEVE-MAX: ZERO zone en ville, ZERO zone dans l'eau,
-#             ZERO zone sur les routes, ZERO zone sur infrastructure
+# ULTRA-MAX++ LOCK: ZERO zone en ville, ZERO zone dans l'eau,
+#   ZERO zone sur routes, ZERO zone sur infrastructure
 # Cache urbain = STATIQUE (fichiers OSM uniquement, ZERO dynamique)
 # ══════════════════════════════════════════════════════════
 CIRCLE_RADIUS_M = 600
@@ -207,22 +256,16 @@ def _circle_on_water(center_lat: float, center_lng: float) -> bool:
 
 def _load_urban_cache_zones():
     """
-    Phase 3.1-SUPRA FINAL: Charge les polygones anthropiques PERTINENTS.
-    
-    HARD EXCLUDE (toute proximite = rejet):
-    - Urban landuse: residential, commercial, industrial, retail, construction, military
-    - Routes MAJEURES: motorway, trunk, primary (avec buffer genereux)
-    - Infrastructure: railways (avec buffer)
-    
-    IGNORE (pas d'exclusion):
-    - Routes mineures: residential, tertiary, unclassified, track, cycleway, footway
-    - Urban: cemetery, recreation_ground, quarry (espaces ouverts)
-    
-    STEEVE-MAX: ZERO zone dans un quartier, ZERO zone sur autoroute.
+    ULTRA-MAX++ LOCK: Charge les polygones anthropiques PERTINENTS.
+    Execute le boot guard ULTRA-MAX++ au premier chargement.
     """
     global _urban_union_zone_cache, _urban_zone_cache_loaded, _urban_cache_polygon_count
     if _urban_zone_cache_loaded:
         return _urban_union_zone_cache
+    
+    # ULTRA-MAX++ BOOT GUARD: Verification invariants
+    _ultra_max_boot_guard()
+    
     if not SHAPELY_AVAILABLE:
         _urban_zone_cache_loaded = True
         return None
