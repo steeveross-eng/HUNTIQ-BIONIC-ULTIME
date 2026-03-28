@@ -154,8 +154,23 @@ const StandsMapLayer = ({
       if (access?.coords?.length >= 2) {
         const pathCoords = access.coords.map(c => [c.lat, c.lng]);
         const isFeasible = access.feasible;
-        const trailColor = isFeasible ? ACCESS_OK_COLOR : ACCESS_WARN_COLOR;
-        const dashArray = isFeasible ? null : '8, 6';
+        const isDirectLine = access.routing_algo === 'direct_line' || access.trail_type === 'hors_sentier';
+
+        // Style: vert solid (OSM reel), orange tirets (non conforme), jaune pointilles (hors-sentier)
+        let trailColor, dashArray, statusLabel;
+        if (isDirectLine) {
+          trailColor = '#FFD700';
+          dashArray = '6, 8, 2, 8';
+          statusLabel = 'Approche hors-sentier (direction indicative)';
+        } else if (isFeasible) {
+          trailColor = ACCESS_OK_COLOR;
+          dashArray = null;
+          statusLabel = 'Sentier reel OSM';
+        } else {
+          trailColor = ACCESS_WARN_COLOR;
+          dashArray = '8, 6';
+          statusLabel = 'Non conforme vent/odeur';
+        }
 
         // Bordure
         L.polyline(pathCoords, {
@@ -169,7 +184,6 @@ const StandsMapLayer = ({
           lineCap: 'round', lineJoin: 'round', dashArray,
           pane: 'overlayPane',
         });
-        const statusLabel = isFeasible ? 'Sentier reel OSM' : 'Non conforme vent/odeur';
         trail.bindTooltip(
           `<span style="font-size:11px;font-weight:700;color:${trailColor}">${access.distance_m}m</span>` +
           `<br><span style="font-size:9px;color:#aaa">${statusLabel} (${access.routing_algo || 'A*'})</span>`,

@@ -223,7 +223,8 @@ def recommend_blinds(
 
     1. Scorer les affuts fixes (positions connues, non deplacables)
     2. Identifier des positions mobiles optimales sur le reseau de sentiers
-    3. Trier par score total
+    3. Generer des positions strategiques pres des sites alimentation (fallback sans sentiers)
+    4. Trier par score total
     """
     all_blinds = []
 
@@ -290,6 +291,63 @@ def recommend_blinds(
             result["trail_connectivity"] = connectivity
             all_blinds.append(result)
             tested += 1
+
+    # 3. Fallback: positions strategiques pres des sites alimentation
+    #    Active quand le graphe de sentiers est vide OU quand aucun candidat n'a ete trouve
+    has_trail_candidates = any(not b.get("is_fixed") for b in all_blinds)
+    if feeding_sites and not has_trail_candidates:
+        logger.info(
+            f"[CHOIX] Fallback alimentation: {len(feeding_sites)} sites, "
+            f"graphe {'vide' if not trail_graph or trail_graph.is_empty else 'non-vide'}"
+        )
+        # Placer des affuts en AMONT du vent par rapport a chaque site alimentation
+        # Distance d'observation optimale: 80-200m selon l'espece
+        obs_distances = [100, 150, 200] if species == "orignal" else [80, 120, 160]
+        wind_rad = math.radians(wind_direction_deg)
+
+        fs_tested = 0
+        for fs in feeding_sites:
+            if fs_tested >= max_blinds:
+                break
+            fs_lat = fs["lat"]
+            fs_lng = fs["lng"]
+
+            # Position AMONT du vent (le chasseur est face au vent, odeur part derriere)
+            # Le vent souffle VERS wind_direction_deg, le chasseur se place FACE au vent
+            for obs_dist in obs_distances:
+                # Position en amont du vent par rapport au site alimentation
+                offset_lat = (obs_dist / 111320) * math.cos(wind_rad)
+                offset_lng = (obs_dist / (111320 * math.cos(math.radians(fs_lat)))) * math.sin(wind_rad)
+                cand_lat = fs_lat + offset_lat
+                cand_lng = fs_lng + offset_lng
+
+                # Verifier la distance au centre
+                dist_center = _haversine(cand_lat, cand_lng, center_lat, center_lng)
+                if dist_center > radius_m * 1.5:
+                    continue
+
+                # Eviter les positions trop proches d'un affut existant
+                too_close = False
+                for existing in all_blinds:
+                    if _haversine(cand_lat, cand_lng, existing["lat"], existing["lng"]) < 60:
+                        too_close = True
+                        break
+                if too_close:
+                    continue
+
+                result = score_blind_position(
+                    cand_lat, cand_lng,
+                    "ground_blind", False,
+                    wind_direction_deg, wind_speed_kmh, session,
+                    feeding_sites, trail_graph, water_check_fn,
+                    center_lat, center_lng,
+                )
+                result["id"] = f"feeding-approach-{fs_tested}"
+                result["name"] = f"Approche {fs.get('name', f'saline {fs_tested + 1}')} ({round(obs_dist)}m)"
+                result["source"] = "feeding_site_fallback"
+                all_blinds.append(result)
+                fs_tested += 1
+                break  # Un seul candidat par site alimentation
 
     # Trier par score
     all_blinds.sort(key=lambda x: x["score"], reverse=True)
