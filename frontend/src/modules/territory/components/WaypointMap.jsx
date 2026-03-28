@@ -34,12 +34,9 @@ import CursorBionicLayer from '../../../components/territoire/CursorBionicLayer'
 import RoutePlannerLayer from '../../../components/territoire/RoutePlannerLayer';
 // REPLAY: Route animation
 import RouteReplayLayer from '../../../components/territoire/RouteReplayLayer';
-// STEVE-MAX: MovementCorridorsLayer LEGACY V1 — SUPPRIME DEFINITIVEMENT (BCE-4X-UI-003)
-// FUNCTIONAL ZONES: Organic zone polygons (semi-static)
-import BionicMicroZones from '../../../components/territoire/BionicMicroZones';
-import TerritoryShell from '../../../components/territoire/TerritoryShell';
+// BCE-4X-MAX 3.3-U-PRIME: Imports V5 neutralises — conserves pour compatibilite
+// BionicMicroZones, TerritoryShell: rendus null — pipeline V5 DESACTIVE
 import StructureContrastLayer from '../../../components/territoire/StructureContrastLayer';
-import { generateBionicZonesV5 } from '../../../services/BionicZoneService';
 import { BIONIC_MODULES } from '../../../core/bionic';
 // CONTEXT MENU: Right-click on waypoints
 import WaypointContextMenu from '../../../components/territoire/WaypointContextMenu';

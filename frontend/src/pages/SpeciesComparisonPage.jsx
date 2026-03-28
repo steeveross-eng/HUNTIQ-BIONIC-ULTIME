@@ -12,7 +12,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { MapContainer, TileLayer, Polygon, Tooltip, useMap, useMapEvents } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
-import { generateBionicZonesV5 } from "@/services/BionicZoneService";
+// BCE-4X-MAX 3.3-U-PRIME: generateBionicZonesV5 DESACTIVE (retourne vide)
 import useBionicLayers from "@/hooks/useBionicLayers";
 import { SPECIES_LIST } from "@/core/bionic/speciesConfig";
 import { Button } from "@/components/ui/button";

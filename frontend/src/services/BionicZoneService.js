@@ -18,6 +18,8 @@ const API_BASE = process.env.REACT_APP_BACKEND_URL;
 
 // ============================================
 // BIONIC V5 300% — ISOLATION STRUCTURELLE/DYNAMIQUE
+// BCE-4X-MAX Phase 3.3-U-PRIME: Pipeline V5 bounds DESACTIVE.
+// generateBionicZonesV5 = stub vide. generateWaypointZonesV5 = autorise (via _fetchOrganicZonesV2).
 // ============================================
 
 /**
@@ -89,7 +91,23 @@ let _zoneCache = { key: null, data: null };
  * @param {string} speciesId   'moose', 'deer', etc.
  * @returns {Object} { zones: [], stats: {} }
  */
-export const generateBionicZonesV5 = async (bounds, zoom, layersVisible, speciesId = 'tous', waypointCenter = null, biologicalSeason = null) => {
+/**
+ * BCE-4X-MAX Phase 3.3-U-PRIME: generateBionicZonesV5 DEFINITIVEMENT DESACTIVE.
+ * 
+ * Pipeline V5 par bounds NEUTRALISE. Retourne toujours vide.
+ * Seule source autorisee: generateWaypointZonesV5 (via waypoint -> _fetchOrganicZonesV2).
+ */
+export const generateBionicZonesV5 = async () => {
+  console.warn('[BCE-4X-MAX 3.3-U-PRIME] generateBionicZonesV5 DEFINITIVEMENT DESACTIVE');
+  return { zones: [], corridors: [], stats: { total: 0, disabled: true, reason: 'BCE-4X-MAX Phase 3.3-U-PRIME' } };
+};
+
+
+/**
+ * BCE-4X-MAX: Fonction interne autorisee — Appel backend V2 organic-zones.
+ * Conservee UNIQUEMENT pour generateWaypointZonesV5 (par waypoint, avec meta-exclusion).
+ */
+const _fetchOrganicZonesV2 = async (bounds, zoom, layersVisible, speciesId = 'tous', waypointCenter = null, biologicalSeason = null) => {
   if (!bounds) return { zones: [], corridors: [], stats: { total: 0 } };
 
   const speciesLayers = getSpeciesLayers(speciesId);
@@ -100,34 +118,32 @@ export const generateBionicZonesV5 = async (bounds, zoom, layersVisible, species
 
   if (activeLayers.length === 0) return { zones: [], corridors: [], stats: { total: 0 } };
 
-  // x4520-B: Precision .toFixed(6) pour distinguer waypoints proches (<11m)
   const cacheKey = `${bounds.south.toFixed(6)}_${bounds.west.toFixed(6)}_${bounds.north.toFixed(6)}_${bounds.east.toFixed(6)}_${speciesId}_${activeLayers.join(',')}_${biologicalSeason || 'auto'}`;
   if (_zoneCache.key === cacheKey && _zoneCache.data) return _zoneCache.data;
 
   const speciesMap = { orignal: 'moose', chevreuil: 'deer', ours: 'bear', dindon: 'wild_turkey', wapiti: 'elk' };
   const backendSpecies = speciesMap[speciesId] || speciesId || 'moose';
-
   const resolution = zoom >= 16 ? 100 : zoom >= 14 ? 80 : 60;
   const maxPerLayer = zoom >= 16 ? 12 : zoom >= 14 ? 10 : 8;
 
   try {
     const requestBody = {
-        bounds: { north: bounds.north, south: bounds.south, east: bounds.east, west: bounds.west },
-        species: backendSpecies === 'tous' ? 'moose' : backendSpecies,
-        layers: activeLayers,
-        resolution,
-        max_zones_per_layer: maxPerLayer,
-        include_scoring: true,
+      bounds: { north: bounds.north, south: bounds.south, east: bounds.east, west: bounds.west },
+      species: backendSpecies === 'tous' ? 'moose' : backendSpecies,
+      layers: activeLayers,
+      resolution,
+      max_zones_per_layer: maxPerLayer,
+      include_scoring: true,
+    };
+    if (waypointCenter) {
+      requestBody.waypoint_center = {
+        lat: waypointCenter.lat || waypointCenter.latitude,
+        lng: waypointCenter.lng || waypointCenter.longitude,
       };
-      if (waypointCenter) {
-        requestBody.waypoint_center = {
-          lat: waypointCenter.lat || waypointCenter.latitude,
-          lng: waypointCenter.lng || waypointCenter.longitude,
-        };
-      }
-      if (biologicalSeason) {
-        requestBody.biological_season = biologicalSeason;
-      }
+    }
+    if (biologicalSeason) {
+      requestBody.biological_season = biologicalSeason;
+    }
 
     const resp = await fetch(`${API_BASE}/api/v1/bionic/organic-zones`, {
       method: 'POST',
@@ -136,7 +152,7 @@ export const generateBionicZonesV5 = async (bounds, zoom, layersVisible, species
     });
 
     if (!resp.ok) {
-      console.error('[BIONIC V5] Organic zones API error:', resp.status);
+      console.error('[ORGANIC V2] API error:', resp.status);
       return { zones: [], corridors: [], stats: { total: 0, error: true } };
     }
 
@@ -161,7 +177,6 @@ export const generateBionicZonesV5 = async (bounds, zoom, layersVisible, species
         vertices: props.vertices || 0,
         zoom,
         priority: LAYER_TYPES.findIndex(lt => lt.id === props.layer_id) + 1,
-        // V8.2.1: Weather influence data
         weatherMultiplier: props.weather_multiplier || null,
         weatherGlobal: props.weather_global || null,
         scorePreWeather: props.score_pre_weather || null,
@@ -169,15 +184,12 @@ export const generateBionicZonesV5 = async (bounds, zoom, layersVisible, species
       };
     });
 
-    // V9 Corridors — Multi-band ribbon polygons with 5-level gradient
     const corridors = (geojson.corridors || []).map((corridor) => {
       const props = corridor.properties || {};
       const coords = corridor.geometry?.coordinates || [];
       const positions = coords.map(c => [c[1], c[0]]);
       const style = props.style || {};
       const scoring = props.scoring || {};
-
-      // V9: Extract polygon bands and smoothed centerline
       const bands = props.bands || [];
       const centerline = props.centerline || null;
 
@@ -207,7 +219,6 @@ export const generateBionicZonesV5 = async (bounds, zoom, layersVisible, species
         v9Pipeline: props.v9_pipeline || false,
         continuityValid: props.continuity_valid,
         scores10x: props.scores_10x || null,
-        // V9: Band data for multi-layer polygon rendering
         bands,
         centerline,
         hasBands: bands.length > 0,
@@ -226,11 +237,9 @@ export const generateBionicZonesV5 = async (bounds, zoom, layersVisible, species
         ...(geojson.stats || {}),
       },
       rejection_diagnostics: geojson.rejection_diagnostics || null,
-      // V8.2.1: Weather influence metadata
       weather_metadata: geojson.weather_metadata || null,
     };
 
-    // T4 COHERENCE: Validate backend zone count matches parsed zones
     const backendT4Count = geojson.stats?.t4_zone_count;
     const backendFeatureCount = (geojson.features || []).length;
     if (backendT4Count !== undefined && backendT4Count !== zones.length) {
@@ -246,11 +255,16 @@ export const generateBionicZonesV5 = async (bounds, zoom, layersVisible, species
     return result;
 
   } catch (err) {
-    console.error('[BIONIC V5] Organic zones fetch error:', err);
+    console.error('[ORGANIC V2] Fetch error:', err);
     return { zones: [], corridors: [], stats: { total: 0, error: true } };
   }
 };
 
+
+/**
+ * BCE-4X-MAX: generateWaypointZonesV5 (AUTORISE)
+ * Appelle le pipeline V2 organic-zones via waypoint center (meta-exclusion active backend).
+ */
 export const generateWaypointZonesV5 = async (waypoint, zoom, layersVisible, speciesId = 'tous', biologicalSeason = null) => {
   const radius = 0.015;
   const lat = waypoint.lat || waypoint.latitude;
@@ -262,7 +276,7 @@ export const generateWaypointZonesV5 = async (waypoint, zoom, layersVisible, spe
     east: lng + radius,
   };
   const waypointCenter = { lat, lng };
-  return generateBionicZonesV5(bounds, Math.max(zoom, 14), layersVisible, speciesId, waypointCenter, biologicalSeason);
+  return _fetchOrganicZonesV2(bounds, Math.max(zoom, 14), layersVisible, speciesId, waypointCenter, biologicalSeason);
 };
 
 // Legacy exports — kept for backward compatibility (no-op, scoring is backend-only)
