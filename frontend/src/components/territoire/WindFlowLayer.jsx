@@ -1,87 +1,142 @@
 /**
- * BCE-4X — WindFlowLayer UNIFORMISE + AJUSTE
- * ============================================
- * STEEVE-MAX 28 Mars 2026
+ * BCE-4X — WindFlowLayer SCIENTIFIQUE GEOLOCALISÉ v4.0
+ * =====================================================
+ * STEEVE-MAX P0 — 28 Mars 2026
  *
- * UNIFORMISATION:
- *   - Halo sombre derriere chaque particule (visibilite 100% fond)
- *   - ZERO mask basee sur luminosite du fond
- *   - ZERO gradient interne (opacity/density falloff spatial)
- *   - Densite 100% uniforme sur toute la surface visible
- *   - Opacite 100% uniforme sur toute la surface visible
- *   - Luminosite 100% uniforme sur toute la surface visible
+ * MOTEUR GEOLOCALISÉ:
+ *   - Particules ancrées en coordonnées GPS (lat/lng)
+ *   - Flux suit le déplacement de la carte (pan)
+ *   - Recalcul dynamique au zoom
+ *   - Direction réelle: weather_v3.wind_direction_deg
+ *   - Intensité réelle: weather_v3.wind_speed_kmh
+ *   - Rafales: weather_v3.wind_gust_kmh
  *
  * AJUSTEMENT FINAL:
- *   - -15% densite: 140 → 119 particules
- *   - -15% opacite: 0.44 → 0.374
- *   - +25% luminosite: conservee (RGB booste)
+ *   - -15% densité
+ *   - -15% opacité
+ *   - +25% luminosité
  *
  * SOURCE UNIQUE: useWeatherStore (Weather V3)
- * ZERO impact donnees meteo. UI uniquement.
+ * ZERO impact données météo. UI uniquement.
  */
 import { useEffect, useRef, useCallback } from 'react';
 import { useMap } from 'react-leaflet';
 import useWeatherStore from '../../stores/useWeatherStore';
 
 // AJUSTEMENT FINAL — STEEVE-MAX
-const PARTICLE_COUNT = 119;      // -15% de 140
-const MAX_OPACITY = 0.374;       // -15% de 0.44
-const PARTICLE_SIZE = 1.3;
-const SPEED_FACTOR = 0.25;
-const WAVY_AMPLITUDE = 0.6;
-const WAVY_FREQUENCY = 0.015;
-const FADE_RATE = 0.93;
-const LERP_FACTOR = 0.08;
+const PARTICLE_COUNT = 119;       // -15% densité
+const MAX_OPACITY = 0.374;        // -15% opacité
+const PARTICLE_SIZE = 1.4;
+const FADE_RATE = 0.92;
 
-// +25% luminosite (conservee du BOOST P1)
+// +25% luminosité (conservée)
 const TRAIL_COLOR = '200, 248, 255';
 const HEAD_COLOR = '225, 252, 255';
 
-// UNIFORMISATION: Halo sombre pour visibilite sur TOUT fond
+// Halo pour visibilité fond sombre
 const HALO_COLOR = '0, 0, 0';
-const HALO_OPACITY_FACTOR = 0.35;  // Opacite du halo = alpha * facteur
-const HALO_SIZE_FACTOR = 2.8;     // Taille du halo = taille particule * facteur
+const HALO_OPACITY_FACTOR = 0.4;
+const HALO_SIZE_FACTOR = 3.0;
+
+// Conversion: 1 degré lat ≈ 111 320 m
+const METERS_PER_DEG_LAT = 111320;
+
+// Vitesse minimale visuelle pour vent très faible (px/frame)
+const MIN_VISUAL_SPEED = 0.3;
 
 export default function WindFlowLayer() {
   const map = useMap();
   const canvasRef = useRef(null);
   const animFrameRef = useRef(null);
   const particlesRef = useRef([]);
-  const configRef = useRef({ speedMs: 0, dirRad: 0 });
+  const windRef = useRef({ speedKmh: 0, gustKmh: 0, dirDeg: 0 });
   const timeRef = useRef(0);
 
   const current = useWeatherStore(s => s.current);
 
+  // Mettre à jour le vent depuis V3
   useEffect(() => {
     if (!current) return;
-    const speed = current.wind_speed_kmh || 0;
-    const dir = current.wind_direction_deg || 0;
-    configRef.current = {
-      speedMs: speed / 3.6,
-      dirRad: (dir * Math.PI) / 180,
+    windRef.current = {
+      speedKmh: current.wind_speed_kmh || 0,
+      gustKmh: current.wind_gust_kmh || 0,
+      dirDeg: current.wind_direction_deg || 0,
     };
   }, [current]);
 
-  const resetParticles = useCallback((canvas) => {
-    if (!canvas) return;
-    const w = canvas.width;
-    const h = canvas.height;
-    const particles = [];
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      particles.push({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        speed: 0.4 + Math.random() * 0.6,
-        age: Math.random(),
-        maxAge: 0.7 + Math.random() * 0.3,
-        wavyOffset: Math.random() * Math.PI * 2,
-        vxSmooth: 0,
-        vySmooth: 0,
-      });
+  // Calculer les bounds géographiques de la carte avec marge
+  const getGeoBounds = useCallback(() => {
+    const bounds = map.getBounds();
+    const sw = bounds.getSouthWest();
+    const ne = bounds.getNorthEast();
+    const latSpan = ne.lat - sw.lat;
+    const lngSpan = ne.lng - sw.lng;
+    // Marge de 10% pour éviter les bords
+    return {
+      south: sw.lat - latSpan * 0.1,
+      north: ne.lat + latSpan * 0.1,
+      west: sw.lng - lngSpan * 0.1,
+      east: ne.lng + lngSpan * 0.1,
+      latSpan,
+      lngSpan,
+    };
+  }, [map]);
+
+  // Créer une particule à une position géographique aléatoire dans les bounds
+  const createParticle = useCallback((bounds, fromUpwind) => {
+    const { dirDeg, speedKmh, gustKmh } = windRef.current;
+    const dirRad = (dirDeg * Math.PI) / 180;
+
+    let lat, lng;
+    if (fromUpwind && speedKmh > 0.2) {
+      // Spawn au bord d'où vient le vent (upwind edge)
+      // Le vent vient de dirDeg, donc les particules arrivent de cette direction
+      const windFromX = -Math.sin(dirRad); // composante W-E (négatif = vent vers ouest)
+      const windFromY = Math.cos(dirRad);  // composante S-N (positif = vent vers nord)
+
+      if (Math.abs(windFromX) > Math.abs(windFromY)) {
+        // Vent principalement horizontal → spawn sur le bord latéral upwind
+        lng = windFromX > 0 ? bounds.west : bounds.east;
+        lat = bounds.south + Math.random() * (bounds.north - bounds.south);
+      } else {
+        // Vent principalement vertical → spawn sur le bord haut/bas upwind
+        lat = windFromY > 0 ? bounds.south : bounds.north;
+        lng = bounds.west + Math.random() * (bounds.east - bounds.west);
+      }
+    } else {
+      // Position aléatoire uniforme
+      lat = bounds.south + Math.random() * (bounds.north - bounds.south);
+      lng = bounds.west + Math.random() * (bounds.east - bounds.west);
     }
-    particlesRef.current = particles;
+
+    // Facteur de rafale aléatoire (certaines particules sont accélérées)
+    const gustFactor = gustKmh > speedKmh && Math.random() > 0.7
+      ? 0.8 + Math.random() * (gustKmh / Math.max(speedKmh, 0.1)) * 0.3
+      : 0.7 + Math.random() * 0.6;
+
+    return {
+      lat,
+      lng,
+      gustFactor,
+      age: fromUpwind ? 0 : Math.random() * 0.8,
+      maxAge: 0.6 + Math.random() * 0.4,
+      wavyOffset: Math.random() * Math.PI * 2,
+      prevScreenX: null,
+      prevScreenY: null,
+    };
   }, []);
 
+  // Initialiser les particules dans les bounds actuels
+  const resetParticles = useCallback(() => {
+    const bounds = getGeoBounds();
+    const particles = [];
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push(createParticle(bounds, false));
+    }
+    particlesRef.current = particles;
+  }, [getGeoBounds, createParticle]);
+
+  // Boucle d'animation principale
   const animate = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -92,23 +147,29 @@ export default function WindFlowLayer() {
     if (canvas.width !== size.x || canvas.height !== size.y) {
       canvas.width = size.x;
       canvas.height = size.y;
-      resetParticles(canvas);
     }
 
-    const { speedMs, dirRad } = configRef.current;
+    const { speedKmh, dirDeg } = windRef.current;
+    const dirRad = (dirDeg * Math.PI) / 180;
     timeRef.current += 1;
     const t = timeRef.current;
 
-    // Base wind vector
-    const baseVx = -speedMs * Math.sin(dirRad) * SPEED_FACTOR;
-    const baseVy = speedMs * Math.cos(dirRad) * SPEED_FACTOR;
+    // Calculer le vecteur de déplacement géographique par frame
+    // Vent en km/h → deg/frame (60 fps ≈ 16.7ms)
+    const speedMs = speedKmh / 3.6;
+    const speedDegPerFrame = speedMs / METERS_PER_DEG_LAT / 60; // ~60fps
 
-    // Fade previous frame (creates soft trails)
-    ctx.globalCompositeOperation = 'destination-in';
-    ctx.fillStyle = `rgba(0, 0, 0, ${FADE_RATE})`;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // Composantes géographiques du vent (direction d'où vient le vent)
+    // Le vent de 198° (SSO) pousse vers NNE → dx positif (est), dy positif (nord)
+    const dLng = -Math.sin(dirRad) * speedDegPerFrame;
+    const dLat = Math.cos(dirRad) * speedDegPerFrame;
+
+    // Effacer le canvas complètement (pas de trails — on redessine à chaque frame
+    // avec positions géo-converties)
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.globalCompositeOperation = 'source-over';
 
+    const bounds = getGeoBounds();
     const particles = particlesRef.current;
     const w = canvas.width;
     const h = canvas.height;
@@ -116,92 +177,112 @@ export default function WindFlowLayer() {
     for (let i = 0; i < particles.length; i++) {
       const p = particles[i];
 
-      // Sinusoidal wavy drift
-      const wavyPhase = t * WAVY_FREQUENCY + p.wavyOffset + i * 0.17;
-      const perpX = Math.cos(dirRad);
-      const perpY = Math.sin(dirRad);
-      const wavyDrift = Math.sin(wavyPhase) * WAVY_AMPLITUDE * p.speed;
+      // Déplacement géographique réel
+      const wavyPhase = t * 0.015 + p.wavyOffset + i * 0.13;
+      const perpDLat = Math.cos(dirRad) * Math.sin(wavyPhase) * speedDegPerFrame * 0.3;
+      const perpDLng = Math.sin(dirRad) * Math.sin(wavyPhase) * speedDegPerFrame * 0.3;
 
-      const targetVx = baseVx * p.speed + perpX * wavyDrift;
-      const targetVy = baseVy * p.speed + perpY * wavyDrift;
+      p.lat += dLat * p.gustFactor + perpDLat;
+      p.lng += dLng * p.gustFactor + perpDLng;
+      p.age += 0.003;
 
-      // Lerp smoothing
-      p.vxSmooth += (targetVx - p.vxSmooth) * LERP_FACTOR;
-      p.vySmooth += (targetVy - p.vySmooth) * LERP_FACTOR;
-
-      p.x += p.vxSmooth;
-      p.y += p.vySmooth;
-      p.age += 0.002;
-
-      // Recycle off-screen or old particles
-      if (p.x < -20 || p.x > w + 20 || p.y < -20 || p.y > h + 20 || p.age > p.maxAge) {
-        if (Math.abs(baseVx) > Math.abs(baseVy)) {
-          p.x = baseVx > 0 ? -5 : w + 5;
-          p.y = Math.random() * h;
-        } else {
-          p.x = Math.random() * w;
-          p.y = baseVy > 0 ? -5 : h + 5;
-        }
+      // Recycler si hors bounds ou trop vieux
+      if (p.lat < bounds.south || p.lat > bounds.north ||
+          p.lng < bounds.west || p.lng > bounds.east ||
+          p.age > p.maxAge) {
+        const newP = createParticle(bounds, true);
+        p.lat = newP.lat;
+        p.lng = newP.lng;
+        p.gustFactor = newP.gustFactor;
         p.age = 0;
-        p.maxAge = 0.7 + Math.random() * 0.3;
-        p.speed = 0.4 + Math.random() * 0.6;
-        p.wavyOffset = Math.random() * Math.PI * 2;
-        p.vxSmooth = 0;
-        p.vySmooth = 0;
+        p.maxAge = newP.maxAge;
+        p.wavyOffset = newP.wavyOffset;
+        p.prevScreenX = null;
+        p.prevScreenY = null;
         continue;
       }
 
-      // Fade envelope — UNIFORM (no spatial gradient, time-only)
+      // Conversion géo → écran via Leaflet
+      const screenPoint = map.latLngToContainerPoint([p.lat, p.lng]);
+      const sx = screenPoint.x;
+      const sy = screenPoint.y;
+
+      // Vérifier si visible à l'écran
+      if (sx < -20 || sx > w + 20 || sy < -20 || sy > h + 20) {
+        continue;
+      }
+
+      // Enveloppe de fondu (cycle de vie uniforme)
       const lifeProgress = p.age / p.maxAge;
       const fadeEnvelope = Math.sin(lifeProgress * Math.PI);
-      const alpha = MAX_OPACITY * fadeEnvelope * p.speed;
+      const alpha = MAX_OPACITY * fadeEnvelope * Math.min(1, p.gustFactor);
 
-      if (alpha < 0.01) continue;
+      if (alpha < 0.01) {
+        p.prevScreenX = sx;
+        p.prevScreenY = sy;
+        continue;
+      }
 
-      // Trail endpoints
-      const trailX = p.x - p.vxSmooth * 3;
-      const trailY = p.y - p.vySmooth * 3;
+      // Trail (utiliser la position écran précédente)
+      const hasPrev = p.prevScreenX !== null;
+      const trailX = hasPrev ? p.prevScreenX : sx;
+      const trailY = hasPrev ? p.prevScreenY : sy;
 
-      // === UNIFORMISATION: Halo sombre (visibilite sur fond sombre) ===
+      // Calculer la longueur du trail pour vitesse visuelle min
+      const dx = sx - trailX;
+      const dy = sy - trailY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      // Direction du vent en pixels (pour trail quand pas de mouvement visible)
+      let drawTrailX = trailX;
+      let drawTrailY = trailY;
+
+      if (dist < MIN_VISUAL_SPEED && speedKmh > 0) {
+        // Étendre le trail dans la direction du vent pour visibilité
+        const windScreenDx = -Math.sin(dirRad);
+        const windScreenDy = -Math.cos(dirRad);
+        drawTrailX = sx - windScreenDx * 4;
+        drawTrailY = sy - windScreenDy * 4;
+      }
+
+      // === HALO SOMBRE (visibilité fond sombre) ===
       const haloAlpha = alpha * HALO_OPACITY_FACTOR;
-      
-      // Halo trail
+
       ctx.beginPath();
-      ctx.moveTo(trailX, trailY);
-      ctx.lineTo(p.x, p.y);
-      ctx.strokeStyle = `rgba(${HALO_COLOR}, ${haloAlpha * 0.5})`;
+      ctx.moveTo(drawTrailX, drawTrailY);
+      ctx.lineTo(sx, sy);
+      ctx.strokeStyle = `rgba(${HALO_COLOR}, ${haloAlpha * 0.4})`;
       ctx.lineWidth = PARTICLE_SIZE * HALO_SIZE_FACTOR;
       ctx.lineCap = 'round';
       ctx.stroke();
 
-      // Halo dot
       ctx.beginPath();
-      ctx.arc(p.x, p.y, PARTICLE_SIZE * HALO_SIZE_FACTOR * 0.4, 0, Math.PI * 2);
+      ctx.arc(sx, sy, PARTICLE_SIZE * HALO_SIZE_FACTOR * 0.35, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(${HALO_COLOR}, ${haloAlpha})`;
       ctx.fill();
 
-      // === Particule lumineuse (par-dessus le halo) ===
-      
-      // Bright trail
+      // === PARTICULE LUMINEUSE ===
       ctx.beginPath();
-      ctx.moveTo(trailX, trailY);
-      ctx.lineTo(p.x, p.y);
+      ctx.moveTo(drawTrailX, drawTrailY);
+      ctx.lineTo(sx, sy);
       ctx.strokeStyle = `rgba(${TRAIL_COLOR}, ${alpha * 0.6})`;
       ctx.lineWidth = PARTICLE_SIZE * 0.8;
       ctx.lineCap = 'round';
       ctx.stroke();
 
-      // Bright dot at head
       ctx.beginPath();
-      ctx.arc(p.x, p.y, PARTICLE_SIZE * 0.5, 0, Math.PI * 2);
+      ctx.arc(sx, sy, PARTICLE_SIZE * 0.5, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(${HEAD_COLOR}, ${alpha})`;
       ctx.fill();
+
+      p.prevScreenX = sx;
+      p.prevScreenY = sy;
     }
 
     animFrameRef.current = requestAnimationFrame(animate);
-  }, [map, resetParticles]);
+  }, [map, getGeoBounds, createParticle]);
 
-  // Setup canvas and animation lifecycle
+  // Lifecycle: setup canvas, bindmap events
   useEffect(() => {
     if (!map) return;
 
@@ -214,30 +295,46 @@ export default function WindFlowLayer() {
     const size = map.getSize();
     canvas.width = size.x;
     canvas.height = size.y;
-    resetParticles(canvas);
+    resetParticles();
 
     animFrameRef.current = requestAnimationFrame(animate);
 
-    const onResize = () => {
+    const onViewChange = () => {
       const s = map.getSize();
-      canvas.width = s.x;
-      canvas.height = s.y;
-      resetParticles(canvas);
+      if (canvasRef.current) {
+        canvasRef.current.width = s.x;
+        canvasRef.current.height = s.y;
+      }
+      // Redistribuer les particules hors-bounds dans les nouveaux bounds
+      const bounds = getGeoBounds();
+      const particles = particlesRef.current;
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        if (p.lat < bounds.south || p.lat > bounds.north ||
+            p.lng < bounds.west || p.lng > bounds.east) {
+          const newP = createParticle(bounds, false);
+          p.lat = newP.lat;
+          p.lng = newP.lng;
+          p.age = Math.random() * 0.5;
+          p.prevScreenX = null;
+          p.prevScreenY = null;
+        }
+      }
     };
 
-    map.on('resize', onResize);
-    map.on('zoomend', onResize);
-    map.on('moveend', onResize);
+    map.on('resize', onViewChange);
+    map.on('zoomend', onViewChange);
+    map.on('moveend', onViewChange);
 
     return () => {
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
-      map.off('resize', onResize);
-      map.off('zoomend', onResize);
-      map.off('moveend', onResize);
+      map.off('resize', onViewChange);
+      map.off('zoomend', onViewChange);
+      map.off('moveend', onViewChange);
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
       canvasRef.current = null;
     };
-  }, [map, animate, resetParticles]);
+  }, [map, animate, resetParticles, getGeoBounds, createParticle]);
 
   return null;
 }

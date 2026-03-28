@@ -7,30 +7,27 @@
 
 ---
 
-## LIVRABLES EN ATTENTE DE VALIDATION
+## LIVRABLE P0 EN ATTENTE DE VALIDATION
 
-### WindFlowLayer Uniformisation + Ajustement Final
-- Halo sombre pour visibilite 100% fond (sombre/clair)
-- -15% densite (140→119), -15% opacite (0.44→0.374), +25% luminosite
-- ZERO impact WEATHER-V3, UI uniquement
-- Rapport: `/app/HUNTIQ-V6-import/audit/windlayer_uniform_fix.md`
-
-### 6 Points P2 Traites
-- B7: Legacy monolith import NEUTRALISE
-- B9: Corridors V6 alias DOCUMENTE
-- B10: Movement Corridors P0 DOCUMENTE
-- F4: config/modules.js → V3 endpoint
-- F5: bionicWeatherEngine.js en-tete DEPRECIE
-- U3: EcoforestryLayers "Inconnu" → "Non defini"
+### WindFlowLayer Scientifique Geolocalise v4.0
+- Moteur reecrit: particules en lat/lng (GPS), conversion latLngToContainerPoint() par frame
+- Flux suit le deplacement carte (pan), recalcul au zoom
+- Direction reelle: V3 wind_direction_deg (S 189deg)
+- Intensite reelle: V3 wind_speed_kmh (4.4) + wind_gust_kmh (4.3)
+- Spawn upwind, recyclage aux geo-bounds
+- Halo sombre pour visibilite 100%
+- -15% densite, -15% opacite, +25% luminosite
+- Rapport: `/app/HUNTIQ-V6-import/audit/windlayer_scientific_fix.md`
 
 ---
 
 ## LIVRABLES VALIDES PAR STEEVE-MAX
 - P0 Unification Meteo
 - ULTRA-MAX++ v3.0
-- Audit structurel BIONIC
+- Audit structurel BIONIC (16 points)
 - Corrections P0 (OWM + Math.random)
 - Corrections P1 (8/8 + WindFlowLayer Boost)
+- WindFlowLayer Uniformisation + 6 P2
 
 ---
 
