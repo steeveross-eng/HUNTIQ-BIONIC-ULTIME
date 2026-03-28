@@ -1,18 +1,17 @@
 /**
- * BCE-4X — WindFlowLayer v5.0 ENGINE VENTUSKY-CLASS
- * ==================================================
- * STEEVE-MAX P0 — Champ de vent griddé terrain-locké
+ * BCE-4X — WindFlowLayer v5.1 VENTUSKY-CLASS
+ * ============================================
+ * STEEVE-MAX P0 — Fix glissement + réduction visuelle 50%
  *
- * ARCHITECTURE:
- *   - Source: /api/v3/weather/windgrid (modèle météo réel GFS via Open-Meteo)
- *   - Grille de vent en coordonnées géographiques (lat/lng)
- *   - Interpolation bilinéaire entre les points de grille
- *   - Particules terrain-lockées (lat/lng) → rendu via latLngToContainerPoint
- *   - Pan/zoom: le vent reste collé au terrain
- *   - Rechargement automatique si viewport change significativement
- *   - Format normalisé provider-agnostique
+ * CORRECTIFS v5.1:
+ *   - Trail stocké en LAT/LNG (pas screen) → ZERO glissement au pan/zoom
+ *   - Chaque point du trail projeté via latLngToContainerPoint à chaque frame
+ *   - Flèches -50% taille
+ *   - Trail -50% longueur
+ *   - Opacité -30%
+ *   - Lisibilité directionnelle conservée
  *
- * ZERO vent synthétique. ZERO canvas statique. ZERO motif répétitif.
+ * SOURCE: /api/v3/weather/windgrid (modèle GFS réel via Open-Meteo)
  */
 import { useEffect, useRef } from 'react';
 import { useMap } from 'react-leaflet';
@@ -20,12 +19,20 @@ import { useMap } from 'react-leaflet';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 const PARTICLE_COUNT = 3000;
-const MAX_OPACITY = 0.6;
+
+// -30% opacité (0.6 → 0.42)
+const MAX_OPACITY = 0.42;
+
 const TRAIL_COLOR = '210, 245, 255';
 const HEAD_COLOR = '255, 255, 255';
-const ARROW_LENGTH = 7;
-const ARROW_WIDTH = 3.5;
-const TRAIL_LENGTH = 12;
+
+// -50% flèche (7→3.5, 3.5→1.75)
+const ARROW_LENGTH = 3.5;
+const ARROW_WIDTH = 1.75;
+
+// -50% trail (12→6 positions)
+const TRAIL_LENGTH = 6;
+
 const METERS_PER_DEG_LAT = 111320;
 const MIN_RELOAD_INTERVAL = 30000;
 
@@ -43,7 +50,7 @@ export default function WindFlowLayer() {
     if (oldCanvas) oldCanvas.remove();
 
     const canvas = document.createElement('canvas');
-    canvas.setAttribute('data-windlayer', 'v5.0-ventusky');
+    canvas.setAttribute('data-windlayer', 'v5.1-ventusky');
     canvas.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:650;';
     container.appendChild(canvas);
     canvasRef.current = canvas;
@@ -53,7 +60,6 @@ export default function WindFlowLayer() {
     canvas.height = size.y;
     mountedRef.current = true;
 
-    // === STATE LOCAL (pas de refs externes) ===
     let grid = null;
     let particles = [];
     let lastFetchBounds = null;
@@ -63,7 +69,6 @@ export default function WindFlowLayer() {
     // === INTERPOLATION BILINÉAIRE ===
     const interpolateWind = (lat, lng) => {
       if (!grid || grid.rows < 2 || grid.cols < 2) return { u: 0, v: 0 };
-
       const { lats, lngs, u, v } = grid;
 
       let ri = -1;
@@ -74,19 +79,18 @@ export default function WindFlowLayer() {
       for (let j = 0; j < lngs.length - 1; j++) {
         if (lng >= lngs[j] && lng <= lngs[j + 1]) { ci = j; break; }
       }
-
       if (ri < 0) ri = lat < lats[0] ? 0 : lats.length - 2;
       if (ci < 0) ci = lng < lngs[0] ? 0 : lngs.length - 2;
       ri = Math.max(0, Math.min(ri, lats.length - 2));
       ci = Math.max(0, Math.min(ci, lngs.length - 2));
 
-      const latRange = lats[ri + 1] - lats[ri];
-      const lngRange = lngs[ci + 1] - lngs[ci];
-      const tLat = latRange > 0 ? (lat - lats[ri]) / latRange : 0;
-      const tLng = lngRange > 0 ? (lng - lngs[ci]) / lngRange : 0;
+      const latR = lats[ri + 1] - lats[ri];
+      const lngR = lngs[ci + 1] - lngs[ci];
+      const tLat = latR > 0 ? (lat - lats[ri]) / latR : 0;
+      const tLng = lngR > 0 ? (lng - lngs[ci]) / lngR : 0;
 
-      const u00 = u[ri][ci], u10 = u[ri + 1][ci], u01 = u[ri][ci + 1], u11 = u[ri + 1][ci + 1];
-      const v00 = v[ri][ci], v10 = v[ri + 1][ci], v01 = v[ri][ci + 1], v11 = v[ri + 1][ci + 1];
+      const u00 = u[ri][ci], u10 = u[ri+1][ci], u01 = u[ri][ci+1], u11 = u[ri+1][ci+1];
+      const v00 = v[ri][ci], v10 = v[ri+1][ci], v01 = v[ri][ci+1], v11 = v[ri+1][ci+1];
 
       return {
         u: u00*(1-tLat)*(1-tLng) + u10*tLat*(1-tLng) + u01*(1-tLat)*tLng + u11*tLat*tLng,
@@ -97,11 +101,9 @@ export default function WindFlowLayer() {
     // === INIT PARTICULES ===
     const initParticles = () => {
       if (!grid) return;
-      const bounds = map.getBounds();
-      const s = bounds.getSouth(), n = bounds.getNorth();
-      const w = bounds.getWest(), e = bounds.getEast();
-      const latM = (n - s) * 0.1;
-      const lngM = (e - w) * 0.1;
+      const b = map.getBounds();
+      const s = b.getSouth(), n = b.getNorth(), w = b.getWest(), e = b.getEast();
+      const latM = (n - s) * 0.1, lngM = (e - w) * 0.1;
 
       particles = [];
       for (let i = 0; i < PARTICLE_COUNT; i++) {
@@ -110,6 +112,7 @@ export default function WindFlowLayer() {
           lng: w - lngM + Math.random() * (e - w + 2 * lngM),
           age: Math.random(),
           maxAge: 0.4 + Math.random() * 0.6,
+          // Trail en LAT/LNG — ZERO dépendance aux coordonnées écran
           trail: [],
         });
       }
@@ -118,10 +121,8 @@ export default function WindFlowLayer() {
     // === FETCH WIND GRID ===
     const fetchWindGrid = async (force) => {
       if (fetching) return;
-
-      const bounds = map.getBounds();
-      const south = bounds.getSouth(), north = bounds.getNorth();
-      const west = bounds.getWest(), east = bounds.getEast();
+      const b = map.getBounds();
+      const south = b.getSouth(), north = b.getNorth(), west = b.getWest(), east = b.getEast();
 
       const now = Date.now();
       if (!force && lastFetchBounds && now - lastFetchTime < MIN_RELOAD_INTERVAL) {
@@ -132,7 +133,6 @@ export default function WindFlowLayer() {
       }
 
       fetching = true;
-
       const latSpan = north - south;
       let resolution = 0.25;
       if (latSpan < 0.5) resolution = 0.1;
@@ -144,7 +144,6 @@ export default function WindFlowLayer() {
         const resp = await fetch(url);
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const data = await resp.json();
-
         if (data.error || !data.grid) throw new Error(data.error || 'No grid');
 
         grid = data.grid;
@@ -157,7 +156,6 @@ export default function WindFlowLayer() {
       fetching = false;
     };
 
-    // Fetch initial
     fetchWindGrid(true);
 
     // === ANIMATION ===
@@ -180,16 +178,16 @@ export default function WindFlowLayer() {
       }
 
       const bounds = map.getBounds();
-      const visibleLatSpan = Math.max(bounds.getNorth() - bounds.getSouth(), 0.0001);
-      const pixelsPerDeg = sz.y / visibleLatSpan;
-      const minPxPerFrame = 0.8;
+      const visLatSpan = Math.max(bounds.getNorth() - bounds.getSouth(), 0.0001);
+      const pxPerDeg = sz.y / visLatSpan;
+      const minPxFrame = 0.8;
 
       ctx.clearRect(0, 0, cvs.width, cvs.height);
 
       const south = bounds.getSouth(), north = bounds.getNorth();
       const west = bounds.getWest(), east = bounds.getEast();
-      const latMargin = (north - south) * 0.15;
-      const lngMargin = (east - west) * 0.15;
+      const latM = (north - south) * 0.15;
+      const lngM = (east - west) * 0.15;
       const cw = cvs.width, ch = cvs.height;
 
       for (let i = 0; i < particles.length; i++) {
@@ -198,38 +196,32 @@ export default function WindFlowLayer() {
         const wind = interpolateWind(p.lat, p.lng);
         const uDeg = (wind.u / METERS_PER_DEG_LAT) / 60;
         const vDeg = (wind.v / METERS_PER_DEG_LAT) / 60;
-
-        const pxPerFrame = Math.sqrt(uDeg*uDeg + vDeg*vDeg) * pixelsPerDeg;
-        const amp = pxPerFrame > 0 ? Math.max(1, minPxPerFrame / pxPerFrame) : 1;
+        const pxFrame = Math.sqrt(uDeg*uDeg + vDeg*vDeg) * pxPerDeg;
+        const amp = pxFrame > 0 ? Math.max(1, minPxFrame / pxFrame) : 1;
 
         p.lng += uDeg * amp;
         p.lat += vDeg * amp;
         p.age += 0.005;
 
-        if (p.age > p.maxAge) {
-          p.lat = south - latMargin + Math.random() * (north - south + 2*latMargin);
-          p.lng = west - lngMargin + Math.random() * (east - west + 2*lngMargin);
+        // Reset
+        if (p.age > p.maxAge ||
+            p.lat < south - latM || p.lat > north + latM ||
+            p.lng < west - lngM || p.lng > east + lngM) {
+          p.lat = south - latM + Math.random() * (north - south + 2*latM);
+          p.lng = west - lngM + Math.random() * (east - west + 2*lngM);
           p.age = 0;
           p.maxAge = 0.4 + Math.random() * 0.6;
           p.trail = [];
           continue;
         }
 
-        if (p.lat < south - latMargin || p.lat > north + latMargin ||
-            p.lng < west - lngMargin || p.lng > east + lngMargin) {
-          p.lat = south - latMargin + Math.random() * (north - south + 2*latMargin);
-          p.lng = west - lngMargin + Math.random() * (east - west + 2*lngMargin);
-          p.age = 0;
-          p.maxAge = 0.4 + Math.random() * 0.6;
-          p.trail = [];
-          continue;
-        }
+        // Stocker position LAT/LNG dans le trail (PAS screen)
+        p.trail.push({ lat: p.lat, lng: p.lng });
+        if (p.trail.length > TRAIL_LENGTH) p.trail.shift();
 
+        // Projeter la position ACTUELLE → screen
         const sp = map.latLngToContainerPoint([p.lat, p.lng]);
         const sx = sp.x, sy = sp.y;
-
-        p.trail.push({ x: sx, y: sy });
-        if (p.trail.length > TRAIL_LENGTH) p.trail.shift();
 
         if (sx < -30 || sx > cw + 30 || sy < -30 || sy > ch + 30) continue;
 
@@ -238,29 +230,34 @@ export default function WindFlowLayer() {
         const alpha = MAX_OPACITY * fade;
         if (alpha < 0.02) continue;
 
-        // TRAIL
+        // === TRAIL: projeter CHAQUE point lat/lng → screen à ce frame ===
         if (p.trail.length > 1) {
           for (let t = 1; t < p.trail.length; t++) {
-            const prev = p.trail[t-1];
-            const curr = p.trail[t];
+            const prevGeo = p.trail[t - 1];
+            const currGeo = p.trail[t];
+
+            // Projection terrain-lock à chaque frame
+            const prevPt = map.latLngToContainerPoint([prevGeo.lat, prevGeo.lng]);
+            const currPt = map.latLngToContainerPoint([currGeo.lat, currGeo.lng]);
+
             const tp = t / p.trail.length;
             const tAlpha = alpha * tp * 0.7;
             if (tAlpha < 0.01) continue;
+
             ctx.beginPath();
-            ctx.moveTo(prev.x, prev.y);
-            ctx.lineTo(curr.x, curr.y);
+            ctx.moveTo(prevPt.x, prevPt.y);
+            ctx.lineTo(currPt.x, currPt.y);
             ctx.strokeStyle = `rgba(${TRAIL_COLOR}, ${tAlpha})`;
-            ctx.lineWidth = 1.0 + tp * 0.8;
+            ctx.lineWidth = 0.8 + tp * 0.4;
             ctx.lineCap = 'round';
             ctx.stroke();
           }
         }
 
-        // FLÈCHE
-        const windSpeed = Math.sqrt(wind.u*wind.u + wind.v*wind.v);
-        if (windSpeed > 0.01) {
-          const nu = wind.u / windSpeed;
-          const nv = wind.v / windSpeed;
+        // === FLÈCHE DIRECTIONNELLE ===
+        const ws = Math.sqrt(wind.u*wind.u + wind.v*wind.v);
+        if (ws > 0.01) {
+          const nu = wind.u / ws, nv = wind.v / ws;
           const snx = nu, sny = -nv;
 
           const tipX = sx + snx * ARROW_LENGTH * 0.5;
