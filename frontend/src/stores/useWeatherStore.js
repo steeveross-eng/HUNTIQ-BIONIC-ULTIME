@@ -2,7 +2,7 @@
  * BCE-4X — Store Meteo Centralise (Zustand)
  * ==========================================
  * SOURCE DE VERITE UNIQUE pour toutes les donnees meteo dans BIONIC.
- * Strategie: Backend OWM (cache 30min) -> Fallback Open-Meteo (gratuit)
+ * Strategie: Backend V3 Open-Meteo (source unique)
  * 
  * Consommateurs:
  *   - TERRITOIRE (carte, animation vent, overlays)

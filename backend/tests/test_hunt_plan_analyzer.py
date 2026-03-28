@@ -86,7 +86,7 @@ class TestHuntPlanAnalyzerStatus:
         # Hunt plan analyzer should be active
         assert services["hunt_plan_analyzer"] == "active", "Hunt plan analyzer should be active"
         
-        # Weather service should be inactive (no OWM_API_KEY)
+        # Weather service uses V3 Open-Meteo (bridge)
         assert services["weather_service"] == "inactive", "Weather service should be inactive without API key"
         
         print("✓ All services status correct (weather inactive as expected)")

@@ -148,7 +148,7 @@ async def generate_zones(request: OrganicZoneRequest):
         weather_badges = []
         if isinstance(geojson, dict) and waypoint_center:
             try:
-                from modules.bionic_engine_p0.services.weather_service_v1 import (
+                from modules.bionic_engine_p0.services.weather_bridge_v3 import (
                     fetch_current_weather, compute_weather_influence,
                 )
                 weather_snapshot = await fetch_current_weather(

@@ -34,7 +34,7 @@ class CompareRequest(BaseModel):
 async def _generate_for_waypoint(wp: WaypointInput, species: str, layers: List[str]) -> Dict[str, Any]:
     """Génère zones + météo pour un waypoint."""
     from modules.bionic_engine_p0.services.zone_engine_core_v2 import generate_organic_zones
-    from modules.bionic_engine_p0.services.weather_service_v1 import (
+    from modules.bionic_engine_p0.services.weather_bridge_v3 import (
         fetch_current_weather, compute_weather_influence,
     )
 

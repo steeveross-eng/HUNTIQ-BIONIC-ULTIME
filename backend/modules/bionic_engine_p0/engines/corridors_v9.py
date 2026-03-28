@@ -31,7 +31,7 @@ from shapely.ops import unary_union
 
 from modules.bionic_engine_p0.engines.nutrition_engine import NutritionEngine
 from modules.bionic_engine_p0.engines.daily_routine_engine import DailyRoutineEngine
-from modules.bionic_engine_p0.engines.weather_engine_v9 import WeatherEngineV9
+from modules.bionic_engine_p0.engines.weather_engine_v3 import WeatherEngineV3
 from modules.bionic_engine_p0.engines.disturbance_engine import DisturbanceEngine
 from modules.bionic_engine_p0.engines.movement_engine_v9 import MovementEngineV9
 from modules.bionic_engine_p0.engines.phenology_engine import PhenologyEngine
@@ -246,7 +246,7 @@ class CorridorEngineV9:
         self.engines = [
             NutritionEngine(),
             DailyRoutineEngine(),
-            WeatherEngineV9(),
+            WeatherEngineV3(),
             DisturbanceEngine(),
             MovementEngineV9(),
             PhenologyEngine(),
