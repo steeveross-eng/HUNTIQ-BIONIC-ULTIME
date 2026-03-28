@@ -320,11 +320,11 @@ async def create_proposal(proposal: OptimizationProposal):
         
         result = await db.optimization_proposals.insert_one(proposal_data)
         
-        return {
-            "id": str(result.inserted_id),
-            "message": "Proposition créée avec succès",
-            **proposal_data
-        }
+        # MongoDB mutates proposal_data en ajoutant _id — on l'exclut
+        response = {k: v for k, v in proposal_data.items() if k != "_id"}
+        response["id"] = str(result.inserted_id)
+        response["message"] = "Proposition créée avec succès"
+        return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

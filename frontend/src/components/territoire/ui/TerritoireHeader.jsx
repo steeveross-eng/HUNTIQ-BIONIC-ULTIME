@@ -6,7 +6,7 @@
  * Position verrouillee via BCE4X_UIShield (PositionLock + ZIndexGuard).
  */
 import React, { useRef, useEffect } from 'react';
-import { ArrowLeft, Thermometer, Wind, Zap, Plus, Edit2, Crosshair, X, LocateFixed, Trash2, ToggleLeft } from 'lucide-react';
+import { ArrowLeft, Thermometer, Wind, Zap, Plus, Edit2, Crosshair, X, LocateFixed, Trash2, ToggleLeft, Printer } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import useWeatherStore from '@/stores/useWeatherStore';
@@ -194,6 +194,16 @@ export const TerritoireHeader = ({
           <span className="text-[10px] text-gray-500 uppercase">LIVE</span>
           <Switch checked={liveMode} onCheckedChange={setLiveMode} className="data-[state=checked]:bg-green-500 scale-75" />
         </div>
+        {/* BCE-4X P0: Bouton IMPRIMANTE — window.print() direct, ZERO config */}
+        <button
+          onClick={() => window.print()}
+          className="flex items-center gap-1.5 bg-[#111118] rounded-lg px-2.5 py-1.5 border border-[#1a1a2e] hover:bg-[#1a1a2e] transition-colors"
+          title="Imprimer la page"
+          data-testid="header-print-btn"
+        >
+          <Printer className="h-4 w-4 text-gray-400" />
+          <span className="text-[10px] text-gray-500 uppercase">PRINT</span>
+        </button>
       </div>
     </header>
   );
