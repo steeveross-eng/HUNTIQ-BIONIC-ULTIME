@@ -22,15 +22,21 @@ const getWindLabel = (deg) => {
 };
 
 const getConditionLabel = (code) => {
-  if (!code) return 'Inconnu';
+  // BCE-4X WEATHER UNIFICATION: Supporte les codes WMO (V3 Open-Meteo)
+  // IMPORTANT: code 0 = ciel degage en WMO, ne PAS utiliser !code
+  if (code == null) return 'Inconnu';
   const c = parseInt(code);
-  if (c === 800) return 'Ciel degage';
-  if (c >= 801 && c <= 804) return 'Nuageux';
-  if (c >= 500 && c <= 531) return 'Pluie';
-  if (c >= 600 && c <= 622) return 'Neige';
-  if (c >= 200 && c <= 232) return 'Orage';
-  if (c >= 300 && c <= 321) return 'Bruine';
-  if (c >= 701 && c <= 781) return 'Brouillard';
+  if (isNaN(c)) return 'Inconnu';
+  // WMO codes (V3 Open-Meteo source unique)
+  if (c === 0) return 'Ciel degage';
+  if (c >= 1 && c <= 3) return 'Partiellement nuageux';
+  if (c >= 45 && c <= 48) return 'Brouillard';
+  if (c >= 51 && c <= 57) return 'Bruine';
+  if (c >= 61 && c <= 67) return 'Pluie';
+  if (c >= 71 && c <= 77) return 'Neige';
+  if (c >= 80 && c <= 82) return 'Averses';
+  if (c >= 85 && c <= 86) return 'Neige';
+  if (c >= 95) return 'Orage';
   return 'Variable';
 };
 
