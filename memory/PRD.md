@@ -4,82 +4,30 @@
 ---
 
 ## Problème original
-
-Reconstruction du repository HUNTIQ-V6 à partir de la branche `bionic-v3-dev` de HUNTIQ-V5, suivi de:
-1. Import et archivage certifié
-2. Gouvernance BCE-4X stricte (ZERO LOSS, ZERO REGRESSION)
-3. Audits structurels, de cohérence et historiques
-4. Restauration de fonctionnalités perdues (auto_optimization)
-5. Architecture du module BSAA (Social Ads)
-6. Bouton PRINT fonctionnel
-7. WindFlowLayer scientifique géolocalisé
+Reconstruction du repository HUNTIQ-V6, gouvernance BCE-4X stricte (ZERO LOSS, ZERO REGRESSION), audits, restauration de fonctionnalités perdues, et nettoyage architectural.
 
 ## Architecture
-
-- **Backend:** FastAPI + Motor (MongoDB async)
+- **Backend:** FastAPI + Motor (MongoDB async) + 84+ engine modules
 - **Frontend:** React + Zustand + Leaflet
-- **Modules:** 84+ engines modulaires
-- **Météo:** Open-Meteo exclusif (WEATHER-V3), OWM purgé
-- **Sécurité:** 7 verrous ULTRA-MAX++ v3.0 runtime
+- **Météo:** Open-Meteo exclusif (WEATHER-V3), OWM en cours de purge
+- **Sécurité:** 7 verrous ULTRA-MAX++ v3.0 runtime (28 tests)
 
 ## Ce qui est implémenté
+- Import & Gouvernance BCE-4X (FAIT)
+- Audits: Engines, Cohérence, Historique V1-V6 (FAIT)
+- BSAA Architecture phases 0-1 (FAIT)
+- Restauration optimization_engine (FAIT, validé 2026-03-28)
+- ULTRA-MAX++ locks (FAIT, 28 tests PASS)
+- Unification Météo V3 (FAIT)
+- WindFlowLayer Scientifique v4.1 (FAIT, validé 2026-03-28)
+- Bouton PRINT (FAIT, validé 2026-03-28)
+- **Inventaire Legacy complet pré-purge (FAIT, 91+ éléments, 2026-03-28)**
 
-### Phase 1-3: Import & Gouvernance (FAIT)
-- Clone bionic-v3-dev, ZIP certifié
-- GOVERNANCE.md, SECURITY_POLICY.md, EMERGENT_PROTOCOL.md
-
-### Phase 4: Audit Engines (FAIT)
-- 84+ modules vérifiés
-
-### Phase 5A-5B: Audits Cohérence + Structural (FAIT)
-- coherence_matrix.md, duplication_report.md
-- bionic_structural_audit.md
-
-### Phase 5C: Audit Historique V1-V6 (FAIT)
-- Identification auto_optimization.py manquant
-
-### Phase 5C-R: Restauration auto_optimization (FAIT - 2026-03-28)
-- Module `optimization_engine` créé (730 lignes)
-- 13 endpoints API validés par curl
-- Bug ObjectId corrigé
-- Rapports: auto_optimization_integration.md, optimization_integration_validation.md
-
-### BSAA-0, BSAA-1: Architecture BSAA (FAIT)
-- Feasibility study, architecture, endpoints, connectors spec
-
-### P0 Météo Unification (FAIT)
-- Dashboard/Territoire synchronisés via useWeatherStore
-- Bug WMO code 0 corrigé
-
-### P0 ULTRA-MAX++ Locks (FAIT)
-- 7 verrous runtime, 28 tests PASS
-
-### P0 WindFlowLayer v4.1 (FAIT - 2026-03-28)
-- Particules géolocalisées visibles (34K+ pixels, maxAlpha 221)
-- Amplification visuelle 5000x (standard industriel)
-- Direction corrigée (dLat = -cos)
-- Glow cyan lumineux sur fond satellite
-- Rapport: windlayer_v41_rendering_fix.md
-
-### P0 Bouton PRINT (FAIT - 2026-03-28)
-- Icône Printer + label "PRINT" dans TerritoireHeader
-- window.print() direct, ZERO config
-- Rapport: print_button_fix.md
+## En cours
+- P0: Inventaire livré, EN ATTENTE APPROBATION STEEVE-MAX pour la purge
 
 ## Backlog
-
-### P1 — En attente validation STEEVE-MAX
-- Validation visuelle en direct du WindFlowLayer v4.1
-
-### P2 — GELÉ
-- Phase BSAA-2: Implémentation du module Social Ads
-- Merge Work1 → main (STRICTEMENT INTERDIT)
-
-## Branches
-- `Work1`: Branche de développement active
-- `main`: Branche protégée (merge interdit sans autorisation)
-
-## Tests
-- 28 tests ULTRA-MAX++ PASS
-- 10/10 endpoints optimization_engine validés
-- 0 régression confirmée
+- P0: Purge complète (après approbation) — Phases 2A/2B/2C/2D
+- P1: Validation UI header final + Analyse Territoire
+- P2: Phase BSAA-2 (GELÉ)
+- P2: Merge Work1 → main (INTERDIT)
