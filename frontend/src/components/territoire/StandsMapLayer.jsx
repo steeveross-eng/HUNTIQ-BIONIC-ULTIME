@@ -57,6 +57,30 @@ const StandsMapLayer = ({
   const lastKeyRef = useRef('');
   const abortRef = useRef(null);
   const [loading, setLoading] = useState(false);
+  const loadingCtrlRef = useRef(null);
+
+  // BCE-4X P1 B5: Indicateur de chargement sur la carte
+  useEffect(() => {
+    if (!map) return;
+    if (loading && !loadingCtrlRef.current) {
+      const ctrl = L.control({ position: 'topright' });
+      ctrl.onAdd = () => {
+        const div = L.DomUtil.create('div', '');
+        div.setAttribute('data-testid', 'stands-loading-indicator');
+        div.style.cssText = 'background:rgba(0,0,0,0.8);color:#FFD700;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;backdrop-filter:blur(4px);border:1px solid rgba(255,215,0,0.3);pointer-events:none;';
+        div.innerHTML = '<span style="display:inline-block;width:14px;height:14px;border:2px solid #FFD700;border-top-color:transparent;border-radius:50%;animation:spin-stands 0.8s linear infinite"></span>Analyse terrain...';
+        const style = document.createElement('style');
+        style.textContent = '@keyframes spin-stands{to{transform:rotate(360deg)}}';
+        div.appendChild(style);
+        return div;
+      };
+      ctrl.addTo(map);
+      loadingCtrlRef.current = ctrl;
+    } else if (!loading && loadingCtrlRef.current) {
+      map.removeControl(loadingCtrlRef.current);
+      loadingCtrlRef.current = null;
+    }
+  }, [loading, map]);
 
   const centerLat = center?.lat;
   const centerLng = center?.lng;
@@ -386,8 +410,13 @@ const StandsMapLayer = ({
       if (abortRef.current) abortRef.current.abort();
       clearLayers();
       clearLegend();
+      // BCE-4X P1 B5: Cleanup loading indicator on unmount
+      if (loadingCtrlRef.current && map) {
+        try { map.removeControl(loadingCtrlRef.current); } catch (_) { /* noop */ }
+        loadingCtrlRef.current = null;
+      }
     };
-  }, [fetchData, clearLayers, clearLegend]);
+  }, [fetchData, clearLayers, clearLegend, map]);
 
   useEffect(() => {
     if (cacheRef.current) renderOrchestration(cacheRef.current);

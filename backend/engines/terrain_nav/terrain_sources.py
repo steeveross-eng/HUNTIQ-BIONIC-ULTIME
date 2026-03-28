@@ -9,8 +9,7 @@ Sources:
 3. Open-Meteo Elevation API (modele d'elevation DEM)
 
 Robustesse:
-- 3 miroirs Overpass avec rotation automatique
-- Retry exponentiel (3 tentatives)
+- BCE-4X P1 B2: 3 miroirs Overpass en PARALLELE (premier gagne)
 - Timeout adaptatif selon la taille de la zone
 - Cache en memoire par zone (evite les re-fetches)
 
@@ -20,6 +19,7 @@ import logging
 import time
 import hashlib
 import requests
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Dict, List, Tuple, Optional, Any
 
 logger = logging.getLogger("bionic.terrain_nav.sources")
@@ -106,47 +106,50 @@ def _classify_ways(ways: list) -> dict:
     return {"trails": trails, "obstacles": obstacles, "forest": forest}
 
 
+def _fetch_single_mirror(mirror: str, query: str, timeout_s: int) -> Optional[Dict]:
+    """Fetch Overpass depuis un seul miroir. Retourne None en cas d'echec."""
+    try:
+        resp = requests.post(mirror, data={"data": query}, timeout=timeout_s + 5)
+        if resp.status_code == 200:
+            data = resp.json()
+            elements = data.get("elements", [])
+            logger.info(f"[TNE-SRC] Overpass OK: {len(elements)} elements from {mirror}")
+            return data
+        elif resp.status_code == 429:
+            logger.warning(f"[TNE-SRC] Rate limited on {mirror}")
+        elif resp.status_code >= 500:
+            logger.warning(f"[TNE-SRC] Server error {resp.status_code} on {mirror}")
+        else:
+            logger.warning(f"[TNE-SRC] Unexpected {resp.status_code} from {mirror}")
+    except requests.exceptions.Timeout:
+        logger.warning(f"[TNE-SRC] Timeout on {mirror} ({timeout_s}s)")
+    except Exception as e:
+        logger.error(f"[TNE-SRC] Error on {mirror}: {e}")
+    return None
+
+
 def _fetch_overpass(query: str, timeout_s: int, max_retries: int = 3) -> Optional[Dict]:
     """
-    Fetch Overpass avec retry sur miroirs multiples.
-    Strategie: essayer chaque miroir, avec retry exponentiel.
+    BCE-4X P1 B2: Fetch Overpass en PARALLELE sur tous les miroirs.
+    Le premier miroir a repondre avec succes gagne.
     """
-    for attempt in range(max_retries):
-        mirror = OVERPASS_MIRRORS[attempt % len(OVERPASS_MIRRORS)]
-        wait_time = 2 ** attempt if attempt > 0 else 0
+    logger.info(f"[TNE-SRC] Launching parallel fetch on {len(OVERPASS_MIRRORS)} mirrors (timeout={timeout_s}s)")
+    with ThreadPoolExecutor(max_workers=len(OVERPASS_MIRRORS)) as executor:
+        futures = {
+            executor.submit(_fetch_single_mirror, mirror, query, timeout_s): mirror
+            for mirror in OVERPASS_MIRRORS
+        }
+        for future in as_completed(futures):
+            mirror = futures[future]
+            try:
+                result = future.result()
+                if result is not None:
+                    logger.info(f"[TNE-SRC] Parallel winner: {mirror}")
+                    return result
+            except Exception as e:
+                logger.error(f"[TNE-SRC] Future error for {mirror}: {e}")
 
-        if wait_time > 0:
-            logger.info(f"[TNE-SRC] Retry {attempt + 1}/{max_retries}, wait {wait_time}s, mirror: {mirror}")
-            time.sleep(wait_time)
-
-        try:
-            resp = requests.post(
-                mirror,
-                data={"data": query},
-                timeout=timeout_s + 5
-            )
-            if resp.status_code == 200:
-                data = resp.json()
-                elements = data.get("elements", [])
-                logger.info(f"[TNE-SRC] Overpass OK: {len(elements)} elements from {mirror}")
-                return data
-            elif resp.status_code == 429:
-                logger.warning(f"[TNE-SRC] Rate limited on {mirror}, rotating")
-                continue
-            elif resp.status_code >= 500:
-                logger.warning(f"[TNE-SRC] Server error {resp.status_code} on {mirror}")
-                continue
-            else:
-                logger.error(f"[TNE-SRC] Unexpected {resp.status_code} from {mirror}")
-                continue
-        except requests.exceptions.Timeout:
-            logger.warning(f"[TNE-SRC] Timeout on {mirror} ({timeout_s}s)")
-            continue
-        except Exception as e:
-            logger.error(f"[TNE-SRC] Error on {mirror}: {e}")
-            continue
-
-    logger.error(f"[TNE-SRC] ALL {max_retries} attempts FAILED")
+    logger.error(f"[TNE-SRC] ALL {len(OVERPASS_MIRRORS)} parallel mirrors FAILED")
     return None
 
 
