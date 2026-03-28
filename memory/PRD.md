@@ -3,44 +3,41 @@
 
 ## Statut General
 - **Branch active:** Work1
-- **Derniere mise a jour:** 28 Mars 2026 — Phase 3.3-U-PRIME COMPLETE
+- **Derniere mise a jour:** 28 Mars 2026 — INVARIANT SCORE=0ELEMENT + Doc finale
 
 ---
 
-## Phase 3.2-CV v2 — CERTIFIE PAR STEEVE-MAX
-- Meta-exclusion: center_in_urban_meta_zone() — 2km / 8%
-- Tests: 12/12 PASSED
-- PREVIEWS A/B/C valides
+## CERTIFICATION COMPLETE — EN ATTENTE ULTRA-MAX++
 
-## Phase 3.3-U-PRIME — COMPLETE
-- 608 lignes code mort V5 supprimees
-- 3 composants neutralises (BionicMicroZones, TerritoryShell, BionicMapOverlay)
-- 1 fonction V5 desactivee (generateBionicZonesV5 = stub vide)
-- ZERO residu V5 dans le codebase
-- Frontend compile sans erreur
-- Rapport: /audit/phase_33_uprime_report.md
+### Phase 3.2-CV v2: CERTIFIE
+- Meta-exclusion 2km/8% sur TOUS pipelines
+- 15/15 tests PASSED
 
-### Architecture V6 finale
-- Pipelines autorises: V2 organic-zones, V6 corridors, V2 alimentation, V1 stands
-- Pipeline V5 bounds: DEFINITIVEMENT DESACTIVE
-- Meta-exclusion: 2km rayon, 8% seuil, tous pipelines
-- SAFE MODE: TRUE, 101K polygones, 222m buffer, 1% seuil
+### Phase 3.3-U-PRIME: COMPLETE
+- 608 lignes V5 supprimees
+- 3 composants neutralises
+- ZERO residu V5
+
+### INVARIANT SCORE=0ELEMENT: IMPLEMENTE
+- BionicScoreBadge: masque si score=0 ou meta_excluded
+- ModeGuidePro: "Zone urbaine" si meta_excluded
+- displayScore: null si 0 zones + 0 corridors + heatmap exclu
+- score-consolide: 0.0/EXCLU si meta-exclu
+- heatmap: score_avg=0, points=[] si meta-exclu
+- guide-pro: score=0, label=exclu si meta-exclu
+
+### Documentation: LIVREE
+- /audit/bce4x_max_certification_phase32cv.md
+- /audit/phase_33_uprime_report.md
+- /audit/documentation_finale_bce4x_max.md
+
+### Tests: 15/15
+- /backend/tests/test_meta_exclusion_bce4x.py (12)
+- /backend/tests/test_score_invariant_bce4x.py (3)
 
 ---
-
-## Phases completees
-- Phase 1-3: Import, Archive, Gouvernance
-- Phase 4: Audit moteurs
-- Phase 5B: Audit coherence
-- Phase 5C: Audit historique
-- Phase BSAA-0/1: Faisabilite + Architecture
-- Phase 2.5-3.1: TNE, Stands, Weather, WindFlow
-- Phase 3.2-S: Safe Mode, Cache purge
-- Phase 3.2-V: Validation visuelle
-- Phase 3.2-CV v2: META-EXCLUSION (CERTIFIE)
-- Phase 3.3-U-PRIME: Nettoyage V1-V5 (COMPLETE)
 
 ## Phases a venir
-- ULTRA-MAX++ Lock (CONDITIONNE a validation 3.3-U-PRIME)
-- Phase BSAA-2: Implementation (GELE)
-- Merge Work1 -> main (INTERDIT sans validation complete)
+- ULTRA-MAX++ Lock (conditionne a validation)
+- Phase BSAA-2 Implementation (GELE)
+- Merge Work1 -> main (INTERDIT)

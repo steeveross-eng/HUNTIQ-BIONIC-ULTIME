@@ -94,6 +94,27 @@ def compute_consolidated_score(lat, lng, species="CERF", month=10,
     c_lat = center_lat or lat
     c_lng = center_lng or lng
 
+    # BCE-4X-MAX META-EXCLUSION: Si le centre est en zone urbaine mixte, score = 0
+    try:
+        from modules.bionic_engine_p0.services.zone_engine_core_v2 import center_in_urban_meta_zone
+        if center_in_urban_meta_zone(lat, lng):
+            return {
+                "score": 0.0, "classe": "EXCLU", "label": "Zone urbaine",
+                "color": "#6B7280", "species": species.upper(), "month": month,
+                "is_water": False, "meta_excluded": True,
+                "components": {},
+                "weights": {},
+                "tracability": {
+                    "exclusion": "BCE-4X-MAX meta-exclusion urbaine (2km/8%)",
+                    "engines_active": [],
+                    "engines_pending": [],
+                    "corridors_v10_integrated": include_corridors,
+                    "x4100_integrated": False,
+                },
+            }
+    except ImportError:
+        pass
+
     # Extraction layers pour exclusion eau + pression
     layers = alim.get("layers", {})
     hydro_layers = layers.get("hydrographie", {})
@@ -187,6 +208,20 @@ def compute_heatmap_grid(
     x4100: 22 moteurs integres (Option C).
     """
     half = side_m / 2.0
+
+    # BCE-4X-MAX META-EXCLUSION: Heatmap en zone urbaine = grille vide
+    try:
+        from modules.bionic_engine_p0.services.zone_engine_core_v2 import center_in_urban_meta_zone
+        if center_in_urban_meta_zone(center_lat, center_lng):
+            return {
+                "center": [center_lat, center_lng], "grid_size": grid_size,
+                "points": [], "scores": [], "score_avg": 0.0,
+                "meta_excluded": True,
+                "tracability": {"exclusion": "BCE-4X-MAX meta-exclusion urbaine (2km/8%)"},
+            }
+    except ImportError:
+        pass
+
     lat_step = (side_m / grid_size) / 111320.0
     lng_step = (side_m / grid_size) / (111320.0 * math.cos(math.radians(center_lat)))
 

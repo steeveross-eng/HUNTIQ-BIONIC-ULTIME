@@ -53,7 +53,12 @@ export const BionicScoreBadge = ({ center, species = 'cerf', month = 10, compact
 
   if (!score && !loading) return null;
 
+  // BCE-4X-MAX INVARIANT SCORE=0ELEMENT: Si meta_excluded ou classe EXCLU, ZERO affichage
+  if (score?.meta_excluded || score?.classe === 'EXCLU') return null;
+
   const val = score?.score || 0;
+  if (val === 0) return null;  // BCE-4X-MAX: Score 0 = rien a afficher
+
   const cfg = getScoreConfig(val);
   const pct = val / 100;
   const circumference = 2 * Math.PI * 16;

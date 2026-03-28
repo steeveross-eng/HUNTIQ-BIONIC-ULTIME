@@ -406,6 +406,10 @@ async def intelligence_guide_pro(
     sp = resolve_species(species)
     solunar = compute_solunar(lat, lng, date)
     consolidated = compute_consolidated_score(lat, lng, sp, month)
+
+    # BCE-4X-MAX INVARIANT SCORE=0ELEMENT: Si meta-exclu, ZERO score affiche
+    _meta_excluded = consolidated.get("meta_excluded", False)
+
     components = consolidated["components"]
 
     pression_score = components.get("pression", 50)
@@ -413,16 +417,21 @@ async def intelligence_guide_pro(
 
     solunar_score = solunar["solunar_score"]
     terrain_score = consolidated["score"]
-    combined_score = round(solunar_score * 0.4 + terrain_score * 0.6, 1)
 
-    if combined_score >= 80:
-        best_time_label = "extreme"
-    elif combined_score >= 60:
-        best_time_label = "fort"
-    elif combined_score >= 40:
-        best_time_label = "modere"
+    # BCE-4X-MAX: Si meta-exclu, ZERO score combine
+    if _meta_excluded:
+        combined_score = 0.0
+        best_time_label = "exclu"
     else:
-        best_time_label = "faible"
+        combined_score = round(solunar_score * 0.4 + terrain_score * 0.6, 1)
+        if combined_score >= 80:
+            best_time_label = "extreme"
+        elif combined_score >= 60:
+            best_time_label = "fort"
+        elif combined_score >= 40:
+            best_time_label = "modere"
+        else:
+            best_time_label = "faible"
 
     import math
     wind_dir = (hash(f"{lat}{lng}{month}") % 360)
@@ -473,6 +482,7 @@ async def intelligence_guide_pro(
         "species": sp,
         "month": month,
         "location": {"lat": lat, "lng": lng},
+        "meta_excluded": _meta_excluded,
         "solunar": solunar,
         "terrain": terrain_v6,
         "terrain_consolidated": {

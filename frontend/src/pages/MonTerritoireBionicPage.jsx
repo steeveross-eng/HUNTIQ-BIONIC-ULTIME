@@ -957,12 +957,23 @@ const MonTerritoireBionicPage = () => {
   // Score global V9 — BCE-4X P0: Score TOUJOURS disponible
   // Sources: 1. globalScore (hook scoring) 2. bionicZones (orchestrateur) 3. heatmapV10Data (moteur heatmap) 4. bionicStats
   const displayScore = useMemo(() => {
+    // BCE-4X-MAX INVARIANT SCORE=0ELEMENT:
+    // Si aucune zone ET aucun corridor ET heatmap meta-exclu ou vide -> null (ZERO score)
+    const corridors = bionicZonesData?.corridors || [];
+    const hasZones = bionicZones.length > 0;
+    const hasCorridors = corridors.length > 0;
+    const heatmapExcluded = heatmapV10Data?.meta_excluded === true;
+    const heatmapEmpty = !heatmapV10Data?.score_avg || heatmapV10Data.score_avg === 0;
+
+    // Si ZERO element BIONIC genere, ZERO score affiche
+    if (!hasZones && !hasCorridors && (heatmapExcluded || heatmapEmpty)) {
+      return null;
+    }
+
     if (globalScore) return globalScore;
     
-    // Source 1: Zones de l'orchestrateur
-    const corridors = bionicZonesData?.corridors || [];
     let zoneAvg = 0;
-    if (bionicZones.length > 0) {
+    if (hasZones) {
       const validScores = bionicZones.map(z => z.score || 0).filter(s => s > 0);
       if (validScores.length > 0) {
         zoneAvg = validScores.reduce((a, b) => a + b, 0) / validScores.length;
@@ -970,7 +981,7 @@ const MonTerritoireBionicPage = () => {
     }
     
     let corridorAvg = 0;
-    if (corridors.length > 0) {
+    if (hasCorridors) {
       const corridorScores = corridors.map(c => c.score || 0).filter(s => s > 0);
       if (corridorScores.length > 0) {
         corridorAvg = corridorScores.reduce((a, b) => a + b, 0) / corridorScores.length;
@@ -983,12 +994,11 @@ const MonTerritoireBionicPage = () => {
       return Math.round(zoneAvg * 0.65 + corridorAvg * 0.35);
     }
     
-    // Source 2: Heatmap V10 (fallback quand zones vides)
-    if (heatmapV10Data?.score_avg > 0) {
+    // Fallbacks: seulement si heatmap non exclu
+    if (!heatmapExcluded && heatmapV10Data?.score_avg > 0) {
       return Math.round(heatmapV10Data.score_avg);
     }
     
-    // Source 3: Stats brutes du pipeline
     if (bionicStats?.score_global > 0) {
       return Math.round(bionicStats.score_global);
     }

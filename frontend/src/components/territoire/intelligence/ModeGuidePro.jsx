@@ -58,6 +58,13 @@ export default function ModeGuidePro({ location, species, month, onNavigate, onS
   if (loading) return <div style={{ color: P.creamDim }} className="text-base py-12 text-center font-medium">Analyse terrain en cours...</div>;
   if (!data) return <div style={{ color: P.creamDim }} className="text-base py-12 text-center font-medium">Position requise</div>;
 
+  // BCE-4X-MAX INVARIANT SCORE=0ELEMENT: Si meta-exclu, panneau masque
+  if (data.meta_excluded) return (
+    <div style={{ color: P.creamDim }} className="text-base py-12 text-center font-medium">
+      Zone urbaine — Analyse non applicable
+    </div>
+  );
+
   const s = data.solunar;
   const ap = data.approach_plan;
   const bt = data.best_time;
