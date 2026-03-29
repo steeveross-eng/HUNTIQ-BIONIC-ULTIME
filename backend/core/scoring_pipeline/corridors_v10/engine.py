@@ -621,7 +621,6 @@ def analyze_corridors_full(
 
     # Phase 3.2-CV BCE-4X-MAX: EXCLUSION sur corridors LineStrings
     # REGLE ULTRA-MAX++ PERMANENTE: Firewall geometrique anthropique
-    # Test point-in-polygon direct sur l'union des polygones urbains/routiers/infra
     geojson_features = []
     _corridors_excluded_urban = 0
     _corridors_excluded_water = 0
@@ -636,45 +635,54 @@ def analyze_corridors_full(
     except ImportError:
         pass
 
-    for c in enriched_corridors:
-        raw_coords = [[pt["lng"], pt["lat"]] for pt in c["path"]]
-        coords = _simplify_coords(raw_coords)
+    # ULTRA-MAX++: Si le CENTRE d'analyse est en zone urbaine, ZERO element faunique
+    if _meta_exclusion_active:
+        _corridors_excluded_urban = len(enriched_corridors)
+        import logging as _log_meta
+        _log_meta.getLogger("corridors_v10.engine").info(
+            f"[ULTRA-MAX++ FIREWALL] Centre ({center_lat},{center_lng}) en zone urbaine — "
+            f"ZERO corridor autorise. {_corridors_excluded_urban} rejetes."
+        )
+    else:
+        for c in enriched_corridors:
+            raw_coords = [[pt["lng"], pt["lat"]] for pt in c["path"]]
+            coords = _simplify_coords(raw_coords)
 
-        if _has_exclusion_engine and len(coords) > 0:
-            mid_idx = len(coords) // 2
-            mid_lng, mid_lat = coords[mid_idx][0], coords[mid_idx][1]
-            # ULTRA-MAX++: centre geometrique intersecte polygone anthropique → REJET
-            if _point_intersects_anthropic(mid_lat, mid_lng):
-                _corridors_excluded_urban += 1
-                continue
-            if _circle_on_water(mid_lat, mid_lng):
-                _corridors_excluded_water += 1
-                continue
+            if _has_exclusion_engine and len(coords) > 0:
+                mid_idx = len(coords) // 2
+                mid_lng, mid_lat = coords[mid_idx][0], coords[mid_idx][1]
+                # ULTRA-MAX++: centre geometrique intersecte polygone anthropique → REJET
+                if _point_intersects_anthropic(mid_lat, mid_lng):
+                    _corridors_excluded_urban += 1
+                    continue
+                if _circle_on_water(mid_lat, mid_lng):
+                    _corridors_excluded_water += 1
+                    continue
 
-        feature = {
-            "type": "Feature",
-            "properties": {
-                "corridor_id": c["id"],
-                "from_type": c["from_zone"]["type"],
-                "to_type": c["to_zone"]["type"],
-                "length_cells": c["length_cells"],
-                "cost": c["cost"],
-                "species": species,
-                "score": c["score_individuel"],
-                "niveau": c["niveau"],
-                "niveau_label": c["niveau_label"],
-                "color": c["color"],
-                "pattern": c["pattern"],
-                "largeur_m": c["largeur_m"],
-                "render_weight": c["render_weight"],
-                "dash_array": c["dash_array"],
-            },
-            "geometry": {
-                "type": "LineString",
-                "coordinates": coords,
-            },
-        }
-        geojson_features.append(feature)
+            feature = {
+                "type": "Feature",
+                "properties": {
+                    "corridor_id": c["id"],
+                    "from_type": c["from_zone"]["type"],
+                    "to_type": c["to_zone"]["type"],
+                    "length_cells": c["length_cells"],
+                    "cost": c["cost"],
+                    "species": species,
+                    "score": c["score_individuel"],
+                    "niveau": c["niveau"],
+                    "niveau_label": c["niveau_label"],
+                    "color": c["color"],
+                    "pattern": c["pattern"],
+                    "largeur_m": c["largeur_m"],
+                    "render_weight": c["render_weight"],
+                    "dash_array": c["dash_array"],
+                },
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": coords,
+                },
+            }
+            geojson_features.append(feature)
 
     import logging as _log_corridors
     _log_corridors.getLogger("corridors_v10.engine").info(
@@ -699,33 +707,14 @@ def analyze_corridors_full(
     
     # Phase 3.2-V BCE-4X: Filtrage zones — ULTRA-MAX++ firewall anthropique
     if _meta_exclusion_active:
+        # ULTRA-MAX++: Centre en zone urbaine → ZERO zone autorisee
         import logging
         _logger = logging.getLogger("corridors_v10.engine")
         _logger.info(
-            f"[ULTRA-MAX++ FIREWALL] Center urban — filtering {len(zone_polygons)} zone_polygons"
+            f"[ULTRA-MAX++ FIREWALL] Centre ({center_lat},{center_lng}) en zone urbaine — "
+            f"ZERO zone autorisee. {len(zone_polygons)} rejetees."
         )
-        filtered_zone_polygons = []
-        excluded_urban = 0
-        excluded_water = 0
-        for zp in zone_polygons:
-            pz = zp["primary_zone"]
-            zlat, zlng = pz["lat"], pz["lng"]
-            if _has_exclusion_engine and _point_intersects_anthropic(zlat, zlng):
-                excluded_urban += 1
-                continue
-            if _has_exclusion_engine:
-                try:
-                    if _circle_on_water(zlat, zlng):
-                        excluded_water += 1
-                        continue
-                except Exception:
-                    pass
-            filtered_zone_polygons.append(zp)
-        _logger.info(
-            f"[ULTRA-MAX++ FIREWALL] Zone filter: input={len(zone_polygons)}, "
-            f"urban={excluded_urban}, water={excluded_water}, kept={len(filtered_zone_polygons)}"
-        )
-        zone_polygons = filtered_zone_polygons
+        zone_polygons = []
     else:
         try:
             from modules.bionic_engine_p0.services.zone_engine_core_v2 import (

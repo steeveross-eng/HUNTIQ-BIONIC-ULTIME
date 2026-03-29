@@ -323,7 +323,20 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
 
         {/* CONTENT — BCE-4X Phase 2.9: ZERO scroll interne, PinnablePanel gere le scroll */}
         <div className="flex-1 p-5" data-testid="supra-v2-content-area">
-          {loading && <div className="text-center py-12 text-slate-400 text-base animate-pulse">Analyse SUPRA v2 en cours...</div>}
+          {loading && <div className="text-center py-12 text-slate-400 text-base animate-pulse" data-testid="supra-loading">Analyse SUPRA v2 en cours...</div>}
+
+          {!loading && !score && (
+            <div className="text-center py-12 space-y-3" data-testid="supra-no-data">
+              <AlertTriangle className="h-8 w-8 text-amber-400 mx-auto" />
+              <div className="text-slate-300 text-base font-semibold">Donnees SUPRA non disponibles</div>
+              <div className="text-slate-500 text-sm">L&apos;analyse n&apos;a pas pu etre chargee. Verifiez la connexion et reessayez.</div>
+              <button onClick={fetchAll} className="mt-3 px-5 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wider transition-all"
+                style={{ backgroundColor: `${BIONIC.orange}18`, color: BIONIC.orange, border: `2px solid ${BIONIC.orange}40` }}
+                data-testid="supra-retry-btn">
+                Reessayer
+              </button>
+            </div>
+          )}
 
           {!loading && score && activeTab === 'analyse' && (
             <AnalyseTab score={score} recipe={recipe} recommendations={recommendations} evidence={evidence}

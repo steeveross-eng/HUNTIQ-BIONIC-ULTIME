@@ -384,23 +384,28 @@ const MonTerritoireBionicPage = () => {
       return;
     }
 
-    // Priorite 0: Session BCE-MAX x4.1 (position exacte de la derniere session)
+    // Priorite 1: Waypoint selectionne (territoire de chasse = priorite absolue)
+    // ULTRA-MAX++: Le waypoint persiste doit TOUJOURS prendre priorite sur la
+    // position de session pour eviter la contamination par la geolocalisation LIVE
+    if (selectedWaypointForZones) {
+      const lat = selectedWaypointForZones.lat || selectedWaypointForZones.latitude;
+      const lng = selectedWaypointForZones.lng || selectedWaypointForZones.longitude;
+      if (lat && lng) {
+        initialCenterDoneRef.current = true;
+        mapRef.current.setView([lat, lng], 14);
+        console.log(`[BCE-MAX x4.1] Centrage WAYPOINT prioritaire: [${lat}, ${lng}] zoom 14`);
+        return;
+      }
+    }
+
+    // Priorite 2: Session BCE-MAX x4.1 (position de la derniere session — fallback)
     if (hasPreviousSession && savedPosition?.lat && savedPosition?.lng && savedPosition?.zoom) {
       initialCenterDoneRef.current = true;
       mapRef.current.setView([savedPosition.lat, savedPosition.lng], savedPosition.zoom);
-      console.log(`[BCE-MAX x4.1] Session restauree: [${savedPosition.lat.toFixed(4)}, ${savedPosition.lng.toFixed(4)}] zoom ${savedPosition.zoom}`);
+      console.log(`[BCE-MAX x4.1] Session restauree (fallback): [${savedPosition.lat.toFixed(4)}, ${savedPosition.lng.toFixed(4)}] zoom ${savedPosition.zoom}`);
       return;
     }
 
-    // Fallback: Waypoint selectionne (centrage classique)
-    if (!selectedWaypointForZones) return;
-    const lat = selectedWaypointForZones.lat || selectedWaypointForZones.latitude;
-    const lng = selectedWaypointForZones.lng || selectedWaypointForZones.longitude;
-    if (lat && lng) {
-      initialCenterDoneRef.current = true;
-      mapRef.current.setView([lat, lng], 14);
-      console.log(`[BCE-MAX x4.1] Centrage initial: [${lat}, ${lng}] zoom 14`);
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedWaypointForZones?.id, hasPreviousSession, savedPosition]);
 
