@@ -431,23 +431,37 @@ const StandsMapLayer = ({
     group.addTo(map);
     layerRef.current = group;
 
-    // 6. Legende
+    // 6. Legende — STANDARD GOLDEN (position HAUT, exhaustive)
     if (showLegend) {
-      const legend = L.control({ position: 'bottomleft' });
+      const legend = L.control({ position: 'topleft' });
       legend.onAdd = () => {
-        const div = L.DomUtil.create('div', 'bionic-hunt-legend');
-        div.setAttribute('data-testid', 'hunt-legend');
-        div.style.cssText = 'background:#0d1117ee;border:1px solid #333;border-radius:6px;padding:8px 10px;font-family:system-ui;font-size:9px;color:#ccc;min-width:140px;';
+        const div = L.DomUtil.create('div', 'bionic-hunt-legend-golden');
+        div.setAttribute('data-testid', 'hunt-legend-golden');
+        div.style.cssText = 'background:#0d1117ee;border:1px solid #333;border-radius:8px;padding:10px 12px;font-family:system-ui;font-size:9px;color:#ccc;min-width:170px;max-height:calc(100vh - 120px);overflow-y:auto;margin-top:8px;backdrop-filter:blur(8px);';
         div.innerHTML = `
-          <div style="font-weight:700;font-size:10px;color:#fff;margin-bottom:5px">Orchestration Chasse</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:3px 0"><span style="width:10px;height:10px;border-radius:50%;border:2px solid ${FIXED_BORDER};display:inline-block"></span> Affut fixe</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:3px 0"><span style="width:10px;height:10px;border-radius:50%;border:2px solid ${MOBILE_BORDER};display:inline-block"></span> Position mobile</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:3px 0"><span style="width:16px;height:3px;background:${ACCESS_OK_COLOR};display:inline-block;border-radius:2px"></span> Sentier reel OSM</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:3px 0"><span style="width:8px;height:3px;background:${ACCESS_OK_COLOR};display:inline-block;border-radius:2px"></span><span style="width:6px;height:3px;background:#26A69A;display:inline-block;border-radius:2px;border:1px dashed #26A69A"></span> Hybride sentier+terrain</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:3px 0"><span style="width:16px;height:3px;background:${ACCESS_WARN_COLOR};display:inline-block;border-radius:2px;border:1px dashed ${ACCESS_WARN_COLOR}"></span> Non conforme</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:3px 0"><span style="width:10px;height:10px;background:${CONTAMINATION_COLOR}33;border:1px dashed ${CONTAMINATION_COLOR};display:inline-block;border-radius:2px"></span> Zone contamination</div>
-          <div style="margin-top:5px;font-size:7px;color:#666">Vent: ${data.wind?.direction_deg}° ${data.wind?.speed_kmh} km/h | ${data.session}</div>
-          <div style="font-size:7px;color:#666">Sources: OSM, Open-Meteo V3</div>
+          <div style="font-weight:700;font-size:11px;color:#fff;margin-bottom:6px;border-bottom:1px solid #333;padding-bottom:4px">SUPRA/V6 — Legende</div>
+          <div style="font-weight:600;font-size:8px;color:#888;margin:4px 0 2px;text-transform:uppercase;letter-spacing:0.5px">Affuts</div>
+          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:10px;height:10px;border-radius:50%;border:2px solid ${FIXED_BORDER};display:inline-block"></span> Affut fixe</div>
+          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:10px;height:10px;border-radius:50%;border:2px solid ${MOBILE_BORDER};display:inline-block"></span> Position mobile</div>
+          <div style="font-weight:600;font-size:8px;color:#888;margin:6px 0 2px;text-transform:uppercase;letter-spacing:0.5px">Acces</div>
+          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:16px;height:3px;background:${ACCESS_OK_COLOR};display:inline-block;border-radius:2px"></span> Sentier reel OSM</div>
+          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:8px;height:3px;background:${ACCESS_OK_COLOR};display:inline-block;border-radius:2px"></span><span style="width:6px;height:3px;background:#3498DB;display:inline-block;border-radius:2px"></span> Hybride sentier+terrain</div>
+          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:16px;height:3px;background:#F1C40F;display:inline-block;border-radius:2px;border:1px dashed #F1C40F"></span> Hors-sentier optimise</div>
+          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:16px;height:3px;background:#E74C3C;display:inline-block;border-radius:2px"></span> Non conforme</div>
+          <div style="font-weight:600;font-size:8px;color:#888;margin:6px 0 2px;text-transform:uppercase;letter-spacing:0.5px">Zones ecologiques</div>
+          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:10px;height:10px;background:#FF572233;border:2px solid #FF5722;display:inline-block;border-radius:2px"></span> Rut</div>
+          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:10px;height:10px;background:#4CAF5033;border:2px solid #4CAF50;display:inline-block;border-radius:2px"></span> Alimentation</div>
+          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:10px;height:10px;background:#2196F333;border:2px solid #2196F3;display:inline-block;border-radius:2px"></span> Repos</div>
+          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:10px;height:10px;background:#00BCD433;border:2px solid #00BCD4;display:inline-block;border-radius:2px"></span> Eau</div>
+          <div style="font-weight:600;font-size:8px;color:#888;margin:6px 0 2px;text-transform:uppercase;letter-spacing:0.5px">Points d'interet</div>
+          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:10px;height:10px;border-radius:50%;background:#FFD700;display:inline-block"></span> Saline / Nutrition</div>
+          <div style="font-weight:600;font-size:8px;color:#888;margin:6px 0 2px;text-transform:uppercase;letter-spacing:0.5px">Corridors</div>
+          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:16px;height:2px;background:#FF5722;display:inline-block;opacity:0.8"></span> Corridor normal</div>
+          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:16px;height:3px;background:#FF1744;display:inline-block"></span> Corridor intense</div>
+          <div style="font-weight:600;font-size:8px;color:#888;margin:6px 0 2px;text-transform:uppercase;letter-spacing:0.5px">Autres</div>
+          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:10px;height:10px;background:${CONTAMINATION_COLOR}33;border:1px dashed ${CONTAMINATION_COLOR};display:inline-block;border-radius:2px"></span> Zone contamination</div>
+          <div style="margin-top:6px;font-size:7px;color:#555;border-top:1px solid #333;padding-top:4px">Vent: ${data.wind?.direction_deg || '?'}° ${data.wind?.speed_kmh || '?'} km/h | ${data.session || ''}</div>
+          <div style="font-size:7px;color:#555">Sources: OSM, Open-Meteo V3</div>
         `;
         return div;
       };
