@@ -47,7 +47,6 @@ import StandDetailPanel from '@/components/territoire/StandDetailPanel';
 import PlacesSidePanel from '@/components/territoire/PlacesSidePanel';
 import IntelligenceDashboard from '@/components/territoire/IntelligenceDashboard';
 import WeatherPanel from '@/components/territoire/ui/WeatherPanel';
-import HighFidelityMapsPanel from '@/components/territoire/HighFidelityMapsPanel';
 import useSpatialClipping from '@/hooks/useSpatialClipping';
 import { BIONIC_MODULES } from '@/core/bionic';
 import { SPECIES_LIST } from '@/core/bionic/speciesConfig';
@@ -652,7 +651,7 @@ const MonTerritoireBionicPage = () => {
   // CARTE ÉCOFORESTIÈRE - État des couches
   // ============================================
   const [activeEcoLayers, setActiveEcoLayers] = useState({
-    baseMap: 'satellite_hd', // P0 FIX: Satellite par défaut, pas écoforestière
+    baseMap: 'satellite_hd',
     peuplements: false,
     essences: false,
     perturbations: false,
@@ -662,18 +661,8 @@ const MonTerritoireBionicPage = () => {
     lidar_volume: false,
     lidar_st: false,
     courbes_niveau: false,
-    // ÉTAPE 2 BCE-4X: Couches Haute-Fidélité
-    hf_lidar_hd: false,
-    hf_canopy_density: false,
-    hf_orthophoto_hr: false,
-    hf_hydrology: false,
-    hf_forest_roads: false,
-    hf_snow_ground: false,
-    hf_slope_dem: false,
   });
   const [ecoLayerOpacities, setEcoLayerOpacities] = useState({});
-  // BCE-4X ÉTAPE 2: Opacités des couches haute-fidélité
-  const [hfLayerOpacities, setHfLayerOpacities] = useState({});
   
   // Synchroniser le type de carte avec activeEcoLayers.baseMap
   useEffect(() => {
@@ -1080,8 +1069,7 @@ const MonTerritoireBionicPage = () => {
         setShowAddWaypointDialog={setShowAddWaypointDialog}
         onClearWaypoint={clearWaypointTarget}
         onDeleteWaypoint={handleDeleteWaypoint}
-        displayScore={displayScore}
-        scoreRating={rating}
+        sharedWeather={sharedWeather}
         onCenterWaypoint={() => {
           if (selectedWaypointForZones && mapRef.current) {
             mapRef.current.setView([selectedWaypointForZones.lat, selectedWaypointForZones.lng], 14);
@@ -1273,7 +1261,6 @@ const MonTerritoireBionicPage = () => {
               showHeatmapV10={showHeatmapV10}
               onHeatmapDataLoaded={setHeatmapV10Data}
               heatmapIncludeCorridors={heatmapIncludeCorridors}
-              hfLayerOpacities={hfLayerOpacities}
             />
           </MapContainer>
 
@@ -1328,16 +1315,6 @@ const MonTerritoireBionicPage = () => {
             loading={sharedWeather.loading}
             huntingScore={sharedWeather.huntingScore}
           />
-
-          {/* BCE-4X ÉTAPE 2: Panneau Cartes Haute-Fidélité — sous les boutons gauche */}
-          <div className="absolute top-28 left-3 z-[999]" data-testid="hf-container-test">
-            <HighFidelityMapsPanel
-              activeEcoLayers={activeEcoLayers}
-              onLayerToggle={(layerId) => handleEcoLayerToggle(layerId)}
-              opacities={hfLayerOpacities}
-              onOpacityChange={(layerId, val) => setHfLayerOpacities(prev => ({ ...prev, [layerId]: val }))}
-            />
-          </div>
 
           {/* ── Bouton + Waypoint déplacé dans la toolbar (Passe 3 UX) ── */}
           </>

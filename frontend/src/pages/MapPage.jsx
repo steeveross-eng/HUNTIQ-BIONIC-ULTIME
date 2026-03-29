@@ -32,7 +32,6 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { GroupeTab } from '../modules/groupe';
-import HighFidelityMapsPanel from '../components/territoire/HighFidelityMapsPanel';
 
 const MapPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -46,18 +45,6 @@ const MapPage = () => {
   const [showBionicPanel, setShowBionicPanel] = useState(false);
   const [bionicStats, setBionicStats] = useState({});
   const { layersVisible, toggleLayer, showAllLayers, hideAllLayers } = useBionicLayers();
-  
-  // BCE-4X ÉTAPE 2: Couches Haute-Fidélité
-  const [hfActiveEcoLayers, setHfActiveEcoLayers] = useState({
-    hf_lidar_hd: false,
-    hf_canopy_density: false,
-    hf_orthophoto_hr: false,
-    hf_hydrology: false,
-    hf_forest_roads: false,
-    hf_snow_ground: false,
-    hf_slope_dem: false,
-  });
-  const [hfLayerOpacities, setHfLayerOpacities] = useState({});
   
   // Get URL parameters for map centering
   const urlParams = useMemo(() => {
@@ -233,16 +220,6 @@ const MapPage = () => {
                 onStatsUpdate={setBionicStats}
               />
             </WaypointMap>
-
-            {/* BCE-4X ÉTAPE 2: Panneau Cartes Haute-Fidélité */}
-            <div className="absolute top-4 left-14 z-[999]">
-              <HighFidelityMapsPanel
-                activeEcoLayers={hfActiveEcoLayers}
-                onLayerToggle={(layerId) => setHfActiveEcoLayers(prev => ({ ...prev, [layerId]: !prev[layerId] }))}
-                opacities={hfLayerOpacities}
-                onOpacityChange={(layerId, val) => setHfLayerOpacities(prev => ({ ...prev, [layerId]: val }))}
-              />
-            </div>
 
             {/* ============================================ */}
             {/* BIONIC V6 — Panneau de contrôle flottant     */}

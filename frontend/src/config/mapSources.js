@@ -12,7 +12,15 @@ export const MAP_TYPES = {
   SATELLITE: 'satellite',
   IQHO: 'iqho',
   BATHYMETRY: 'bathymetry',
-  FOREST_ROADS: 'forest-roads'
+  FOREST_ROADS: 'forest-roads',
+  // ═══ CARTES HAUTE-FIDÉLITÉ — BCE-4X GOLDEN ═══
+  LIDAR_HD: 'lidar-hd',
+  CANOPY_DENSITY: 'canopy-density',
+  ORTHOPHOTO_HR: 'orthophoto-hr',
+  HYDROLOGY: 'hydrology',
+  CHEMINS_DERIVES: 'chemins-derives',
+  NEIGE_SOL: 'neige-sol',
+  PENTE_DEM: 'pente-dem',
 };
 
 // Configuration complète des cartes
@@ -113,38 +121,192 @@ export const MAP_CONFIGS = {
     id: 'forest-roads',
     name: 'Chemins Forestiers',
     shortName: 'CHEMINS',
-    description: 'Sentiers et accès terrain',
+    description: 'Sentiers et acces terrain',
     iconName: 'route',
     category: 'access',
     isDark: false,
     isPremium: true,
-    // OpenTopoMap avec routes forestières
     tileUrl: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
     attribution: '© OpenTopoMap | © OpenStreetMap',
     maxZoom: 17,
-    // Overlay des chemins depuis geo_entities
     customRoadsSource: 'geo_entities',
     zoneOpacity: {
       fill: 0.20,
       stroke: 1.0
     }
   },
-  
+
+  // ═══ CARTES HAUTE-FIDÉLITÉ — BCE-4X GOLDEN OFFICIELLES ═══
+  [MAP_TYPES.LIDAR_HD]: {
+    id: 'lidar-hd',
+    name: 'LIDAR HD',
+    shortName: 'LIDAR',
+    description: 'Modele hauteur canopee (MHC) haute resolution',
+    iconName: 'mountain',
+    category: 'hf',
+    isDark: true,
+    isPremium: true,
+    isHF: true,
+    tileUrl: 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
+    wmsLayers: [{
+      url: 'https://ca.nfis.org/cubewerx/cubeserv?DATASTORE=NFIS-QC',
+      layers: 'NFIS-QC.lidar_mhc',
+      format: 'image/png',
+      transparent: true
+    }],
+    attribution: '© NFIS-QC LIDAR | © BIONIC',
+    maxZoom: 18,
+    zoneOpacity: { fill: 0.25, stroke: 1.0 }
+  },
+
+  [MAP_TYPES.CANOPY_DENSITY]: {
+    id: 'canopy-density',
+    name: 'Foret ouverte / Canopee',
+    shortName: 'CANOP',
+    description: 'Densite canopee et couvert vegetal',
+    iconName: 'tree-pine',
+    category: 'hf',
+    isDark: true,
+    isPremium: true,
+    isHF: true,
+    tileUrl: 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
+    wmsLayers: [{
+      url: 'https://ca.nfis.org/cubewerx/cubeserv?DATASTORE=SCANFI',
+      layers: 'scanfi_canopy_height_2020',
+      format: 'image/png',
+      transparent: true
+    }],
+    attribution: '© SCANFI | © BIONIC',
+    maxZoom: 18,
+    zoneOpacity: { fill: 0.25, stroke: 1.0 }
+  },
+
+  [MAP_TYPES.ORTHOPHOTO_HR]: {
+    id: 'orthophoto-hr',
+    name: 'Orthophoto HR',
+    shortName: 'ORTHO',
+    description: 'Imagerie aerienne ultra-haute resolution',
+    iconName: 'satellite',
+    category: 'hf',
+    isDark: false,
+    isPremium: true,
+    isHF: true,
+    tileUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attribution: '© Esri, Maxar | Orthophoto HR BIONIC',
+    maxZoom: 19,
+    labelsUrl: 'https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png',
+    zoneOpacity: { fill: 0.30, stroke: 1.0 }
+  },
+
+  [MAP_TYPES.HYDROLOGY]: {
+    id: 'hydrology',
+    name: 'Hydrologie',
+    shortName: 'HYDRO',
+    description: 'Reseau hydrographique et zones humides',
+    iconName: 'droplet',
+    category: 'hf',
+    isDark: true,
+    isPremium: true,
+    isHF: true,
+    tileUrl: 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
+    wmsLayers: [{
+      url: 'https://ca.nfis.org/cubewerx/cubeserv?DATASTORE=NFIS-QC',
+      layers: 'NFIS-QC.hydro',
+      format: 'image/png',
+      transparent: true
+    }],
+    attribution: '© NFIS-QC Hydro | © BIONIC',
+    maxZoom: 18,
+    zoneOpacity: { fill: 0.25, stroke: 1.0 }
+  },
+
+  [MAP_TYPES.CHEMINS_DERIVES]: {
+    id: 'chemins-derives',
+    name: 'Chemins forestiers derives',
+    shortName: 'SDA',
+    description: 'Reseau sentiers et chemins SDA',
+    iconName: 'route',
+    category: 'hf',
+    isDark: false,
+    isPremium: true,
+    isHF: true,
+    tileUrl: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+    attribution: '© MERN SDA | © BIONIC',
+    maxZoom: 17,
+    zoneOpacity: { fill: 0.20, stroke: 1.0 }
+  },
+
+  [MAP_TYPES.NEIGE_SOL]: {
+    id: 'neige-sol',
+    name: 'Neige / Sol',
+    shortName: 'NEIGE',
+    description: 'Depots surface et saisonnalite',
+    iconName: 'mountain',
+    category: 'hf',
+    isDark: true,
+    isPremium: true,
+    isHF: true,
+    tileUrl: 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
+    wmsLayers: [{
+      url: 'https://ca.nfis.org/cubewerx/cubeserv?DATASTORE=NFIS-QC',
+      layers: 'NFIS-QC.depots_surface',
+      format: 'image/png',
+      transparent: true
+    }],
+    attribution: '© NFIS-QC | © BIONIC',
+    maxZoom: 18,
+    zoneOpacity: { fill: 0.25, stroke: 1.0 }
+  },
+
+  [MAP_TYPES.PENTE_DEM]: {
+    id: 'pente-dem',
+    name: 'Pente HD (DEM 1m)',
+    shortName: 'PENTE',
+    description: 'Modele elevation et analyse pente',
+    iconName: 'mountain',
+    category: 'hf',
+    isDark: true,
+    isPremium: true,
+    isHF: true,
+    tileUrl: 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
+    wmsLayers: [{
+      url: 'https://ca.nfis.org/cubewerx/cubeserv?DATASTORE=NFIS-QC',
+      layers: 'NFIS-QC.pentes',
+      format: 'image/png',
+      transparent: true
+    }],
+    attribution: '© NFIS-QC Pentes | © BIONIC',
+    maxZoom: 18,
+    zoneOpacity: { fill: 0.25, stroke: 1.0 }
+  },
 };
 
-// Cartes optimisées pour le mode sombre
+// Cartes optimisees pour le mode sombre
 export const DARK_OPTIMIZED_MAPS = [
   MAP_TYPES.IQHO,
-  MAP_TYPES.BATHYMETRY
+  MAP_TYPES.BATHYMETRY,
+  MAP_TYPES.LIDAR_HD,
+  MAP_TYPES.CANOPY_DENSITY,
+  MAP_TYPES.HYDROLOGY,
+  MAP_TYPES.NEIGE_SOL,
+  MAP_TYPES.PENTE_DEM,
 ];
 
-// Ordre d'affichage dans le sélecteur
+// Ordre d'affichage dans le selecteur (standard + HF)
 export const MAP_DISPLAY_ORDER = [
   MAP_TYPES.ECOFORESTRY,
   MAP_TYPES.SATELLITE,
   MAP_TYPES.IQHO,
   MAP_TYPES.BATHYMETRY,
-  MAP_TYPES.FOREST_ROADS
+  MAP_TYPES.FOREST_ROADS,
+  // Haute-Fidelite
+  MAP_TYPES.LIDAR_HD,
+  MAP_TYPES.CANOPY_DENSITY,
+  MAP_TYPES.ORTHOPHOTO_HR,
+  MAP_TYPES.HYDROLOGY,
+  MAP_TYPES.CHEMINS_DERIVES,
+  MAP_TYPES.NEIGE_SOL,
+  MAP_TYPES.PENTE_DEM,
 ];
 
 // Catégories de cartes

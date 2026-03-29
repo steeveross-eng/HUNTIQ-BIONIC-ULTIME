@@ -1,16 +1,16 @@
 /**
- * TerritoireHeader.jsx — Header BIONIC epure
+ * TerritoireHeader.jsx — Header BIONIC V6+ GOLDEN
  * =============================================
- * BCE-4X P0: Score TOUJOURS visible (chargement ou valeur).
- * Typographie harmonisee avec bouton WAYPOINT.
- * Position verrouillee via BCE4X_UIShield (PositionLock + ZIndexGuard).
+ * BCE-4X: Source UNIQUE météo (sharedWeather prop)
+ * - ZERO duplication avec METEO BIONIC
+ * - SCORE CHASSE V6+ synchronisé depuis SUPRA/V6
+ * - Rafales incluses
+ * - Purge complète V1-V5
  */
 import React, { useRef, useEffect } from 'react';
-import { ArrowLeft, Thermometer, Wind, Zap, Plus, Edit2, Crosshair, X, LocateFixed, Trash2, ToggleLeft, Printer } from 'lucide-react';
+import { ArrowLeft, Thermometer, Wind, Zap, Plus, Edit2, Crosshair, X, LocateFixed, Trash2, ToggleLeft, Printer, Gauge } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
-import useWeatherStore from '@/stores/useWeatherStore';
-import useBionicStore from '@/stores/useBionicStore';
 import { getProtectedZIndex } from '@/components/territoire/map/BCE4X_UIShield';
 
 export const TerritoireHeader = ({
@@ -24,28 +24,37 @@ export const TerritoireHeader = ({
   onClearWaypoint,
   onDeleteWaypoint,
   onCenterWaypoint,
-  displayScore,
-  scoreRating,
+  // BCE-4X V6+: Source UNIQUE météo depuis sharedWeather
+  sharedWeather,
 }) => {
-  // BCE-4X: Score — double source (props + store), props prioritaire
-  const storeScore = useBionicStore(s => s.displayScore);
-  const storeRating = useBionicStore(s => s.scoreRating);
-  const finalScore = (displayScore != null && displayScore > 0) ? displayScore : (storeScore != null && storeScore > 0) ? storeScore : null;
-  const finalRating = (scoreRating && scoreRating.ringColor) ? scoreRating : (storeRating && storeRating.ringColor) ? storeRating : null;
+  // BCE-4X: Extraire les données météo de la source unique
+  const weather = sharedWeather?.weather || {};
+  const wind = sharedWeather?.wind || {};
+  const huntingScore = sharedWeather?.huntingScore || {};
+  const isLoading = sharedWeather?.loading ?? true;
 
-  // BCE-4X Phase 2.9: Source de verite UNIQUE meteo — ZERO fallback intelligenceWeather
-  // STEEVE-MAX: Suppression du fallback useBionicStore pour eliminer le mismatch temperature
-  const weatherCurrent = useWeatherStore(s => s.current);
-  const temp = weatherCurrent?.temperature_c ?? null;
-  const windDir = weatherCurrent?.wind_direction_deg ?? null;
-  const windSpeed = weatherCurrent?.wind_speed_kmh ?? null;
+  const temp = weather?.temperature ?? null;
+  const windDir = wind?.direction ?? null;
+  const windSpeed = wind?.speed ?? null;
+  const windGusts = wind?.gusts ?? null;
+  const windCardinal = wind?.directionLabel ?? '';
 
-  const hasScore = finalScore != null && finalScore > 0;
-  const isLoading = !hasScore;
-  const ringColor = finalRating?.ringColor || '#FF9800';
-  const circumference = 2 * Math.PI * 16;
+  // SCORE CHASSE V6+ depuis SUPRA/V6
+  const scoreValue = huntingScore?.overall ?? null;
+  const scoreLabel = huntingScore?.label ?? '';
+  const hasScore = scoreValue != null && scoreValue > 0;
 
-  // BCE-4X PositionLock: Verrouillage z-index du header
+  // Couleur du score
+  const getScoreColor = (s) => {
+    if (s >= 80) return '#22C55E';
+    if (s >= 60) return '#84CC16';
+    if (s >= 40) return '#F59E0B';
+    if (s >= 20) return '#EF4444';
+    return '#6B7280';
+  };
+  const scoreColor = hasScore ? getScoreColor(scoreValue) : '#6B7280';
+
+  // BCE-4X PositionLock
   const headerRef = useRef(null);
   useEffect(() => {
     if (headerRef.current) {
@@ -70,56 +79,25 @@ export const TerritoireHeader = ({
         <h1 className="text-base font-semibold text-white tracking-tight">Analyse Territoire BIONIC</h1>
       </div>
       <div className="flex items-center gap-3">
-        {/* BCE-4X P0: Score badge — TOUJOURS affiche, a gauche de + WAYPOINT */}
+        {/* BCE-4X V6+: SCORE CHASSE synchronisé SUPRA/V6 */}
         <div
-          className="flex items-center gap-2.5 h-9 px-3 rounded-lg border-2 transition-all"
+          className="flex items-center gap-2 h-9 px-3 rounded-lg border transition-all"
           style={{
-            borderColor: hasScore ? `${ringColor}50` : '#FF980050',
-            backgroundColor: hasScore ? `${ringColor}12` : '#FF980008',
+            borderColor: `${scoreColor}40`,
+            backgroundColor: `${scoreColor}10`,
           }}
-          data-testid="header-score-badge"
-          data-bce4x-locked="true"
+          data-testid="header-score-chasse-v6"
         >
-          <svg width="28" height="28" viewBox="0 0 36 36" className="flex-shrink-0">
-            <circle cx="18" cy="18" r="16" fill="none" stroke="#374151" strokeWidth="2" />
-            {hasScore ? (
-              <circle
-                cx="18" cy="18" r="16" fill="none"
-                stroke={ringColor} strokeWidth="2.5" strokeLinecap="round"
-                strokeDasharray={`${circumference * (finalScore / 100)} ${circumference * (1 - finalScore / 100)}`}
-                transform="rotate(-90 18 18)"
-                style={{ transition: 'stroke-dasharray 0.6s ease-out' }}
-              />
-            ) : (
-              <circle
-                cx="18" cy="18" r="16" fill="none"
-                stroke="#FF9800" strokeWidth="1.5" strokeLinecap="round"
-                strokeDasharray="8 8"
-                className="animate-spin"
-                style={{ transformOrigin: '18px 18px', animationDuration: '3s' }}
-              />
-            )}
-            <text
-              x="18" y="20.5" textAnchor="middle"
-              fill={hasScore ? ringColor : '#FF9800'}
-              fontSize="9" fontWeight="800"
-            >
-              {hasScore ? Math.round(finalScore) : '--'}
-            </text>
-          </svg>
+          <Gauge className="h-4 w-4" style={{ color: scoreColor }} />
           <div className="flex flex-col leading-none">
-            <span
-              className="text-sm font-bold uppercase tracking-wider"
-              style={{ color: hasScore ? ringColor : '#FF9800' }}
-            >
-              {hasScore ? (finalRating?.label || 'Score') : 'Score'}
-            </span>
-            <span className="text-[9px] text-gray-500 font-bold tracking-wide mt-0.5">
-              {hasScore ? `${Math.round(finalScore)}/100` : 'Calcul...'}
+            <span className="text-[10px] text-gray-500 uppercase tracking-wider">Score Chasse</span>
+            <span className="text-xs font-bold" style={{ color: scoreColor }}>
+              {hasScore ? `${Math.round(scoreValue)}/100` : (isLoading ? '...' : '--')}
+              {scoreLabel && <span className="ml-1 text-[9px] font-medium opacity-80">{scoreLabel}</span>}
             </span>
           </div>
         </div>
-        {/* + WAYPOINT — bouton principal (reference typographique) */}
+        {/* + WAYPOINT */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
@@ -173,9 +151,9 @@ export const TerritoireHeader = ({
             )}
           </DropdownMenuContent>
         </DropdownMenu>
-        {/* Section 5: Temperature officielle INTELLIGENCE */}
+        {/* BCE-4X V6+: Météo compacte — source unique sharedWeather */}
         {temp != null && (
-          <div className="flex items-center gap-3 bg-[#111118] rounded-lg px-3 py-1.5 border border-[#1a1a2e]" data-testid="header-weather-official">
+          <div className="flex items-center gap-3 bg-[#111118] rounded-lg px-3 py-1.5 border border-[#1a1a2e]" data-testid="header-weather-v6">
             <div className="flex items-center gap-1">
               <Thermometer className="h-4 w-4" style={{ color: '#4A7A2E' }} />
               <span className="text-xs text-white font-mono">{temp}°C</span>
@@ -183,8 +161,13 @@ export const TerritoireHeader = ({
             {windSpeed != null && (
               <div className="flex items-center gap-1">
                 <Wind className="h-4 w-4" style={{ color: '#8B6F47' }} />
-                <span className="text-xs text-white font-mono">{windDir}° {windSpeed} km/h</span>
+                <span className="text-xs text-white font-mono">
+                  {windCardinal || ''}{windDir != null ? ` ${windDir}°` : ''} {windSpeed} km/h
+                </span>
               </div>
+            )}
+            {windGusts != null && windGusts > windSpeed && (
+              <span className="text-[10px] text-amber-400/80 font-mono">Raf. {windGusts}</span>
             )}
           </div>
         )}
@@ -194,7 +177,7 @@ export const TerritoireHeader = ({
           <span className="text-[10px] text-gray-500 uppercase">LIVE</span>
           <Switch checked={liveMode} onCheckedChange={setLiveMode} className="data-[state=checked]:bg-green-500 scale-75" />
         </div>
-        {/* BCE-4X P0: Bouton IMPRIMANTE — window.print() direct, ZERO config */}
+        {/* PRINT */}
         <button
           onClick={() => window.print()}
           className="flex items-center gap-1.5 bg-[#111118] rounded-lg px-2.5 py-1.5 border border-[#1a1a2e] hover:bg-[#1a1a2e] transition-colors"
@@ -208,4 +191,3 @@ export const TerritoireHeader = ({
     </header>
   );
 };
-

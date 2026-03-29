@@ -517,6 +517,92 @@ export const BASE_MAPS = {
     attribution: '© OpenTopoMap',
     iconName: 'route',
     isDark: false
+  },
+  // ═══ CARTES HAUTE-FIDÉLITÉ — FONDS OFFICIELS BCE-4X ═══
+  'lidar-hd': {
+    id: 'lidar-hd',
+    name: 'LIDAR HD',
+    description: 'Modele hauteur canopee (MHC) haute resolution',
+    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+    attribution: '© NFIS-QC LIDAR | © BIONIC™',
+    iconName: 'mountain',
+    isDark: true,
+    type: 'wms',
+    wmsUrl: 'https://ca.nfis.org/cubewerx/cubeserv?DATASTORE=NFIS-QC',
+    layers: 'NFIS-QC.lidar_mhc',
+    isHF: true,
+  },
+  'canopy-density': {
+    id: 'canopy-density',
+    name: 'Foret ouverte / Canopee',
+    description: 'Densite canopee forestiere et couvert vegetal',
+    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+    attribution: '© SCANFI | © BIONIC™',
+    iconName: 'tree-pine',
+    isDark: true,
+    type: 'wms',
+    wmsUrl: 'https://ca.nfis.org/cubewerx/cubeserv?DATASTORE=SCANFI',
+    layers: 'scanfi_canopy_height_2020',
+    isHF: true,
+  },
+  'orthophoto-hr': {
+    id: 'orthophoto-hr',
+    name: 'Orthophoto HR',
+    description: 'Imagerie aerienne haute resolution',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attribution: '© Esri, Maxar | Orthophoto HR',
+    iconName: 'satellite-dish',
+    isDark: false,
+    isHF: true,
+  },
+  'hydrology': {
+    id: 'hydrology',
+    name: 'Hydrologie',
+    description: 'Reseau hydrographique, cours d\'eau et zones humides',
+    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+    attribution: '© NFIS-QC Hydro | © BIONIC™',
+    iconName: 'droplets',
+    isDark: true,
+    type: 'wms',
+    wmsUrl: 'https://ca.nfis.org/cubewerx/cubeserv?DATASTORE=NFIS-QC',
+    layers: 'NFIS-QC.hydro',
+    isHF: true,
+  },
+  'chemins-derives': {
+    id: 'chemins-derives',
+    name: 'Chemins forestiers derives',
+    description: 'Reseau sentiers et chemins forestiers SDA',
+    url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+    attribution: '© MERN SDA | © BIONIC™',
+    iconName: 'map',
+    isDark: false,
+    isHF: true,
+  },
+  'neige-sol': {
+    id: 'neige-sol',
+    name: 'Neige / Sol',
+    description: 'Depots surface et couverture saisonniere',
+    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+    attribution: '© NFIS-QC | © BIONIC™',
+    iconName: 'snowflake',
+    isDark: true,
+    type: 'wms',
+    wmsUrl: 'https://ca.nfis.org/cubewerx/cubeserv?DATASTORE=NFIS-QC',
+    layers: 'NFIS-QC.depots_surface',
+    isHF: true,
+  },
+  'pente-dem': {
+    id: 'pente-dem',
+    name: 'Pente HD (DEM 1m)',
+    description: 'Modele numerique elevation et analyse pente',
+    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+    attribution: '© NFIS-QC Pentes | © BIONIC™',
+    iconName: 'triangle',
+    isDark: true,
+    type: 'wms',
+    wmsUrl: 'https://ca.nfis.org/cubewerx/cubeserv?DATASTORE=NFIS-QC',
+    layers: 'NFIS-QC.pentes',
+    isHF: true,
   }
 };
 
@@ -992,9 +1078,11 @@ export const EcoforestryLayerControl = ({
           
           {/* Base Maps Section */}
           {activeSection === 'base' && (
-            <div className="p-3 space-y-2">
+            <div className="p-3 space-y-2 max-h-[60vh] overflow-y-auto"
+              style={{ scrollbarWidth: 'thin', scrollbarColor: '#4FC3F7 #1a1a2e' }}
+            >
               <div className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Fond de carte</div>
-              {Object.values(BASE_MAPS).map(baseMap => (
+              {Object.values(BASE_MAPS).filter(m => !m.isHF).map(baseMap => (
                 <div 
                   key={baseMap.id}
                   className={`flex items-center justify-between p-2 rounded-lg cursor-pointer transition-colors ${activeLayers.baseMap === baseMap.id ? 'bg-[#f5a623]/20 border border-[#f5a623]/50' : 'hover:bg-gray-800/50'}`}
@@ -1009,6 +1097,33 @@ export const EcoforestryLayerControl = ({
                   )}
                 </div>
               ))}
+              {/* Séparateur HF */}
+              <div className="border-t border-[#4FC3F7]/20 my-3 pt-2">
+                <div className="text-[10px] text-[#4FC3F7] uppercase tracking-wider mb-2 flex items-center gap-1">
+                  <SatelliteDish className="h-3 w-3" /> Haute-Fidelite
+                </div>
+              </div>
+              {Object.values(BASE_MAPS).filter(m => m.isHF).map(baseMap => (
+                <div 
+                  key={baseMap.id}
+                  className={`flex items-center justify-between p-2 rounded-lg cursor-pointer transition-colors ${activeLayers.baseMap === baseMap.id ? 'bg-[#4FC3F7]/20 border border-[#4FC3F7]/50' : 'hover:bg-gray-800/50'}`}
+                  onClick={() => onToggleLayer('baseMap', baseMap.id)}
+                >
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <span>{baseMap.icon}</span>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-sm text-white truncate">{baseMap.name}</span>
+                      {baseMap.description && (
+                        <span className="text-[9px] text-gray-500 truncate">{baseMap.description}</span>
+                      )}
+                    </div>
+                  </div>
+                  {activeLayers.baseMap === baseMap.id && (
+                    <Badge className="bg-[#4FC3F7] text-black text-[9px] flex-shrink-0">Actif</Badge>
+                  )}
+                </div>
+              ))}
+              <p className="text-[9px] text-gray-600 mt-2">Un seul fond actif. Couches SUPRA/V6 superposables.</p>
             </div>
           )}
           

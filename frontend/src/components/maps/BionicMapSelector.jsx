@@ -12,7 +12,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { 
   Map, ChevronDown, ChevronUp, Check, 
   Satellite, Mountain, Droplets, TreePine, Route,
-  Settings
+  Settings, SatelliteDish
 } from 'lucide-react';
 import { 
   MAP_TYPES, 
@@ -20,7 +20,7 @@ import {
   MAP_DISPLAY_ORDER
 } from '@/config/mapSources';
 
-// Icônes personnalisées pour chaque type de carte
+// Icones personnalisees pour chaque type de carte
 const MAP_ICONS = {
   [MAP_TYPES.ECOFORESTRY]: () => <TreePine className="w-5 h-5 text-[var(--bionic-green-primary)] flex-shrink-0" />,
   [MAP_TYPES.SATELLITE]: () => <Satellite className="w-5 h-5 text-[var(--bionic-blue-light)] flex-shrink-0" />,
@@ -31,6 +31,14 @@ const MAP_ICONS = {
     </div>
   ),
   [MAP_TYPES.FOREST_ROADS]: () => <Route className="w-5 h-5 text-[var(--bionic-gold-primary)] flex-shrink-0" />,
+  // HF Icons
+  [MAP_TYPES.LIDAR_HD]: () => <Mountain className="w-5 h-5 text-amber-400 flex-shrink-0" />,
+  [MAP_TYPES.CANOPY_DENSITY]: () => <TreePine className="w-5 h-5 text-green-400 flex-shrink-0" />,
+  [MAP_TYPES.ORTHOPHOTO_HR]: () => <SatelliteDish className="w-5 h-5 text-blue-400 flex-shrink-0" />,
+  [MAP_TYPES.HYDROLOGY]: () => <Droplets className="w-5 h-5 text-cyan-400 flex-shrink-0" />,
+  [MAP_TYPES.CHEMINS_DERIVES]: () => <Route className="w-5 h-5 text-purple-400 flex-shrink-0" />,
+  [MAP_TYPES.NEIGE_SOL]: () => <Mountain className="w-5 h-5 text-blue-200 flex-shrink-0" />,
+  [MAP_TYPES.PENTE_DEM]: () => <Mountain className="w-5 h-5 text-red-400 flex-shrink-0" />,
 };
 
 /**
@@ -209,10 +217,10 @@ const BionicMapSelector = ({
 
       {/* Contenu expandable - Liste verticale */}
       {isExpanded && (
-        <div className="p-3 space-y-3">
-          {/* Liste des types de cartes */}
+        <div className="p-3 space-y-3 max-h-[55vh] overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#4FC3F7 #0d0d14' }}>
+          {/* Standard Maps */}
           <div className="space-y-1">
-            {MAP_DISPLAY_ORDER.map(mapType => (
+            {MAP_DISPLAY_ORDER.filter(mt => !MAP_CONFIGS[mt]?.isHF).map(mapType => (
               <MapTypeListItem
                 key={mapType}
                 mapType={mapType}
@@ -221,6 +229,25 @@ const BionicMapSelector = ({
                 onClick={onMapTypeChange}
               />
             ))}
+          </div>
+
+          {/* Separateur Haute-Fidelite */}
+          <div className="border-t border-[#4FC3F7]/20 pt-2">
+            <div className="flex items-center gap-1.5 px-2 mb-1.5">
+              <SatelliteDish className="w-3 h-3 text-[#4FC3F7]" />
+              <span className="text-[10px] text-[#4FC3F7] uppercase tracking-wider font-semibold">Haute-Fidelite</span>
+            </div>
+            <div className="space-y-1">
+              {MAP_DISPLAY_ORDER.filter(mt => MAP_CONFIGS[mt]?.isHF).map(mapType => (
+                <MapTypeListItem
+                  key={mapType}
+                  mapType={mapType}
+                  config={MAP_CONFIGS[mapType]}
+                  isSelected={currentMapType === mapType}
+                  onClick={onMapTypeChange}
+                />
+              ))}
+            </div>
           </div>
 
           {/* Note architecture */}
