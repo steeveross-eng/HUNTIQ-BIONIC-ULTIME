@@ -1,33 +1,27 @@
 # HUNTIQ-V6 — PRD
 ## Protocole BCE-4X | BIONIC GOLDEN | STEEVE-MAX
-
 ## Branche souveraine: STEEVE-MAX-x3200-V6-CORE
-## Work1: GELEE
 
 ## Etat courant
 
 ### EXECUTE ET COMMITE (branche souveraine)
-- Phase A: MapInteractionLayer GPS-only
-- Phase B: BionicCorridorsV6Layer alimentation centroids exclus + AlimentationV2Layer useEffect
-- GOVERNANCE.md: PROTOCOLE BIONIC GOLDEN (11 sections)
-- Architecture access_engine_v6: document complet valide par STEEVE-MAX
-- STANDARD GOLDEN Legende: repositionnee en topleft (StandsMapLayer.jsx)
-- **access_engine_v6**: Implementation complete backend + frontend + tests (43/43 PASSES)
-- **STANDARD GOLDEN UI/IU v2.0**: Positionnement dynamique intelligent
-  - Cause racine: L.control() Leaflet = DOM separe des React elements
-  - Correction: Ancrage DOM direct au conteneur carte, position:absolute
-  - Tests: 4 resolutions + 6 modules + 4 interactions = 14 tests PASS
-  - Certification complete: audit/ui_golden_legende_certification.md
+- Phase A+B: Purge V1-V5 (MapInteractionLayer, BionicCorridorsV6Layer, AlimentationV2Layer)
+- GOVERNANCE.md: Sections 1-15 completes (GOLDEN + UI/IU Section 14 + Non-regression Section 15)
+- access_engine_v6: Pipeline complet, 30/30 tests, API operationnelle
+- STANDARD GOLDEN UI/IU v2.0: Positionnement DOM direct, certification complete
+- **OPTIMISATION GOLDEN ACCES** (Directive STEEVE-MAX 2026-03-29):
+  - BUG CRITIQUE CORRIGE: Overpass retournait ways AVANT nodes → 0 aretes → 0% sentier
+  - Correction: deux passes (nodes d'abord, ways ensuite) → 100% trail quand sentiers dispo
+  - Multiplicateurs GOLDEN: trail x0.1, hybrid x0.5, off-trail x3.0, non-conformant x10.0
+  - Requete Overpass elargie (tracktype, chemins de coupe, debardage)
+  - Interpolation Bresenham + rayon d'influence sentier 3 cellules
 
 ### EN ATTENTE VALIDATION STEEVE-MAX
-- Section 14 GOVERNANCE (14.1-14.9): audit/draft_governance_section14_final.md
-- Clause non-regression (15.1-15.6): audit/draft_non_regression_clause_final.md
-- Rapport certification GOLDEN UI/IU: audit/ui_golden_legende_certification.md
+- Architecture ULTRA-MAX++ P1: architecture/ultra_max_pp_architecture.md
 
-### DETTE TECHNIQUE STRUCTURELLE
-- Firewall ULTRA-MAX++ (Shapely geo-fencing) a reimplementer sous GOLDEN
-- Cache terrain persistant .json.gz (Redis recommande pour production)
-- Donnees terrain reelles (DEM, canopy) — actuellement simulees par hash
+### DETTE TECHNIQUE
+- Firewall ULTRA-MAX++ (P1 OUVERT, architecture soumise)
+- Donnees terrain reelles (DEM, canopy) — simulees par hash
 
 ### GELE
 - BSAA-2, Phase 2D, pression historique

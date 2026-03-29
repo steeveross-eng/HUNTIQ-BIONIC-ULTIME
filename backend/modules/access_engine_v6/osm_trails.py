@@ -1,6 +1,14 @@
 """
 OSM Trails — Recuperation graphe sentiers OSM via Overpass API
 PROTOCOLE BIONIC GOLDEN — Pipeline unique acces aux affuts V6
+
+OPTIMISATION GOLDEN (Directive STEEVE-MAX 2026-03-29):
+  Requete Overpass elargie pour capturer TOUS les chemins forestiers:
+  - sentiers pedestres (path, footway, bridleway)
+  - chemins forestiers (track grade1-5)
+  - chemins de coupe et debardage
+  - routes de service forestier
+  - anciennes voies ferrees abandonnees
 """
 import json
 import gzip
@@ -20,14 +28,17 @@ CACHE_TTL_SECONDS = 30 * 24 * 3600  # 30 jours
 
 OVERPASS_URL = "https://overpass-api.de/api/interpreter"
 
+# Types de chemins GOLDEN — elargi pour capturer tous les chemins forestiers
 HIGHWAY_TYPES = {
     "path": {"cost_mult": 1.0, "label": "Sentier"},
     "track": {"cost_mult": 1.0, "label": "Chemin forestier"},
     "footway": {"cost_mult": 1.2, "label": "Sentier pieton"},
+    "bridleway": {"cost_mult": 1.1, "label": "Chemin cavalier/VTT"},
+    "cycleway": {"cost_mult": 1.3, "label": "Piste cyclable"},
     "unclassified": {"cost_mult": 1.5, "label": "Route non classee"},
     "service": {"cost_mult": 1.5, "label": "Route de service"},
-    "secondary": {"cost_mult": 2.0, "label": "Route secondaire"},
     "tertiary": {"cost_mult": 1.8, "label": "Route tertiaire"},
+    "secondary": {"cost_mult": 2.0, "label": "Route secondaire"},
     "residential": {"cost_mult": 2.5, "label": "Route residentielle"},
 }
 
@@ -35,7 +46,8 @@ RAILWAY_ADMITTED = {"abandoned", "disused"}
 
 
 def _cache_key(lat: float, lng: float, radius_m: int) -> str:
-    raw = f"trail_graph_{lat:.4f}_{lng:.4f}_{radius_m}"
+    # Version 2 du cache — invalide l'ancien cache apres optimisation GOLDEN
+    raw = f"trail_graph_v2_{lat:.4f}_{lng:.4f}_{radius_m}"
     return hashlib.md5(raw.encode()).hexdigest()
 
 
@@ -72,7 +84,8 @@ def save_trail_graph_cache(lat: float, lng: float, radius_m: int, data: dict):
 async def fetch_osm_trails(lat: float, lng: float, radius_m: int = 3000) -> dict:
     """
     Recupere le reseau de sentiers OSM autour d'un point.
-    Retourne un graphe {nodes: [...], edges: [...]} pour le routage.
+    GOLDEN: Requete elargie pour capturer tous les chemins forestiers,
+    chemins de coupe, chemins de debardage et sentiers visibles.
     """
     cached = load_cached_trail_graph(lat, lng, radius_m)
     if cached:
@@ -81,10 +94,11 @@ async def fetch_osm_trails(lat: float, lng: float, radius_m: int = 3000) -> dict
 
     highway_filter = "|".join(HIGHWAY_TYPES.keys())
     query = f"""
-    [out:json][timeout:25];
+    [out:json][timeout:30];
     (
       way["highway"~"^({highway_filter})$"](around:{radius_m},{lat},{lng});
       way["railway"~"^(abandoned|disused)$"](around:{radius_m},{lat},{lng});
+      way["tracktype"](around:{radius_m},{lat},{lng});
     );
     out body;
     >;
@@ -100,13 +114,28 @@ async def fetch_osm_trails(lat: float, lng: float, radius_m: int = 3000) -> dict
             resp.raise_for_status()
             data = resp.json()
 
-        for el in data.get("elements", []):
+        elements = data.get("elements", [])
+
+        # PASS 1: Collecter TOUS les noeuds d'abord
+        # (Overpass retourne les ways AVANT les nodes — out body puis out skel)
+        for el in elements:
             if el["type"] == "node":
                 nodes[el["id"]] = {"lat": el["lat"], "lng": el["lon"]}
-            elif el["type"] == "way":
+
+        # PASS 2: Traiter les ways (maintenant que tous les noeuds sont charges)
+        for el in elements:
+            if el["type"] == "way":
                 tags = el.get("tags", {})
                 hw = tags.get("highway", tags.get("railway", "path"))
-                hw_info = HIGHWAY_TYPES.get(hw, {"cost_mult": 2.0, "label": hw})
+                hw_info = HIGHWAY_TYPES.get(hw, {"cost_mult": 1.5, "label": hw})
+
+                # Bonus pour les tracks avec tracktype
+                tracktype = tags.get("tracktype", "")
+                if tracktype in ("grade1", "grade2"):
+                    hw_info = {"cost_mult": 0.8, "label": f"Chemin forestier {tracktype}"}
+                elif tracktype in ("grade3", "grade4", "grade5"):
+                    hw_info = {"cost_mult": 1.0, "label": f"Chemin de coupe {tracktype}"}
+
                 node_ids = el.get("nodes", [])
                 surface = tags.get("surface", "unknown")
                 name = tags.get("name", "")
@@ -120,6 +149,7 @@ async def fetch_osm_trails(lat: float, lng: float, radius_m: int = 3000) -> dict
                             "from": n1, "to": n2,
                             "distance_m": round(dist, 1),
                             "highway_type": hw,
+                            "tracktype": tracktype,
                             "cost_mult": hw_info["cost_mult"],
                             "surface": surface,
                             "name": name,

@@ -30,14 +30,14 @@ class TestTrailPriority:
         assert trail_cost < offtrail_cost, f"Trail cost ({trail_cost}) must be < off-trail cost ({offtrail_cost})"
 
     def test_trail_bonus_factor(self):
-        """Le bonus sentier 0.2x doit diviser le cout par 5."""
+        """Le bonus sentier GOLDEN x0.1 doit diviser le cout par 10."""
         trail_cost = compute_cell_cost(
             is_trail=True, highway_type="path", slope_deg=0,
             canopy_density=0.5, understory_density=0.2, regeneration=0.1,
             is_water=False, is_wetland=False, dist_building_m=1000, dist_road_m=500,
         )
-        # BASE=1.0 * MULT_PENTE=1.0 * MULT_VEG=1.0 * MULT_OBS=1.0 * BONUS=0.2
-        assert trail_cost == pytest.approx(0.2, rel=0.01)
+        # BASE=1.0 * MULT_PENTE=1.0 * MULT_VEG=1.0 * MULT_OBS=1.0 * GOLDEN=0.1
+        assert trail_cost == pytest.approx(0.1, rel=0.01)
 
 
 class TestSlopePenalty:

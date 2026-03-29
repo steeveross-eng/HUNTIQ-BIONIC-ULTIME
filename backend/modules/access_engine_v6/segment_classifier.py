@@ -50,9 +50,11 @@ def classify_path_segments(
         canopy = cell.get("canopy", 0.5)
         slope = cell.get("slope_deg", 0)
 
-        # Classification de la cellule
+        # Classification de la cellule — GOLDEN optimisee (sentiers prioritaires)
         if is_trail:
             cell_type = "trail"
+        elif cell.get("near_trail", False) and cost < 5.0:
+            cell_type = "hybrid"
         elif cost < 3.0 and canopy < 0.6:
             cell_type = "hybrid" if has_trail_phase else "off_trail_optimized"
         elif canopy > 0.8 or slope > 20:
