@@ -173,9 +173,18 @@ const NutritionPointsLayer = ({
     };
   }, [fetchData, clearLayers]);
 
+  // BCE-4X V6 SUPRA: Re-render sur changement de showNutritionPoints uniquement
+  // PURGE V1-V5: L'ancien useEffect [renderNutritionPoints] causait des re-rendus
+  // redondants lors de changements de deps non-visuels. Remplace par un effet
+  // cible sur showNutritionPoints qui utilise le cache sans re-fetch.
   useEffect(() => {
-    if (cacheRef.current) renderNutritionPoints(cacheRef.current);
-  }, [renderNutritionPoints]);
+    if (cacheRef.current) {
+      clearLayers();
+      if (showNutritionPoints && enabled) {
+        renderRef.current(cacheRef.current);
+      }
+    }
+  }, [showNutritionPoints, enabled, clearLayers]);
 
   useEffect(() => {
     if (!enabled) clearLayers();

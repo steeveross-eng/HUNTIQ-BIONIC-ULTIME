@@ -444,6 +444,9 @@ const BionicCorridorsV6Layer = ({
     }
 
     // ═══ COUCHE 3 (Z-HAUT): Points centraux — BCE-4X protégés ═══
+    // BCE-4X PURGE V1-V5: Les centroides de type "alimentation" sont EXCLUS de ce layer.
+    // Les points nutritionnels (salines) sont rendus EXCLUSIVEMENT par NutritionPointsLayer
+    // pour eviter le double halo legacy (V1-V5 overlap).
     if (showPoints) {
       const isChaud = pointsChaudsMode;
 
@@ -451,6 +454,9 @@ const BionicCorridorsV6Layer = ({
         const props = feature.properties;
         const zc = ZONE_COLORS[props.zone_type] || '#9E9E9E';
         const centers = props.all_centers || [];
+
+        // BCE-4X PURGE: Skip alimentation centroids — NutritionPointsLayer is authoritative
+        if (props.zone_type === 'alimentation') continue;
 
         // SOUS-ÉLÉMENT: Filtrage par type de point
         if (!isPointTypeVisible(props.zone_type, isChaud)) continue;

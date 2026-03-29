@@ -242,12 +242,8 @@ const MonTerritoireBionic = ({ onNavigateToTerritory }) => {
                 ))}
                 
                 {/* Map Interaction Layer - Coordonnées GPS + Waypoints */}
-                <MapInteractionLayer 
-                  showCoordinates={true}
-                  enableWaypointCreation={true}
-                  showHint={true}
-                  onWaypointCreated={(waypoint) => console.log('Waypoint créé:', waypoint)}
-                />
+                {/* BCE-4X PURGE V1-V5: GPS overlay uniquement */}
+                <MapInteractionLayer showCoordinates={true} />
               </MapContainer>
               
               {/* Score Overlay */}

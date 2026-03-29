@@ -737,16 +737,8 @@ export const WaypointMap = ({
                   )}
                   
                   {/* Module d'Interaction Cartographique Universel */}
-                  <MapInteractionLayer
-                    showCoordinates={true}
-                    enableWaypointCreation={!isAddingMode}
-                    showHint={!isAddingMode}
-                    onWaypointCreated={(waypoint) => {
-                      toast.success(`Waypoint "${waypoint.name}" créé !`);
-                      loadWaypoints();
-                    }}
-                    userId={getDefaultUserId()}
-                  />
+                  {/* BCE-4X PURGE V1-V5: GPS overlay uniquement */}
+                  <MapInteractionLayer showCoordinates={true} />
                   
                   {/* P1-HOTSPOTS: Overlays BIONIC */}
                   {(hotspotSettings.showHotspots || hotspotSettings.showZones || hotspotSettings.showCorridors) && (

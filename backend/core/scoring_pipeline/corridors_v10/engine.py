@@ -649,13 +649,31 @@ def analyze_corridors_full(
             coords = _simplify_coords(raw_coords)
 
             if _has_exclusion_engine and len(coords) > 0:
-                mid_idx = len(coords) // 2
-                mid_lng, mid_lat = coords[mid_idx][0], coords[mid_idx][1]
-                # ULTRA-MAX++: centre geometrique intersecte polygone anthropique → REJET
-                if _point_intersects_anthropic(mid_lat, mid_lng):
+                # ULTRA-MAX++ REINFORCED: Multi-point sampling (start, 25%, mid, 75%, end)
+                sample_indices = [
+                    0,
+                    max(0, len(coords) // 4),
+                    len(coords) // 2,
+                    min(len(coords) - 1, 3 * len(coords) // 4),
+                    len(coords) - 1,
+                ]
+                sample_indices = sorted(set(sample_indices))
+                
+                urban_hit = False
+                water_hit = False
+                for idx in sample_indices:
+                    s_lng, s_lat = coords[idx][0], coords[idx][1]
+                    if _point_intersects_anthropic(s_lat, s_lng):
+                        urban_hit = True
+                        break
+                    if _circle_on_water(s_lat, s_lng):
+                        water_hit = True
+                        break
+                
+                if urban_hit:
                     _corridors_excluded_urban += 1
                     continue
-                if _circle_on_water(mid_lat, mid_lng):
+                if water_hit:
                     _corridors_excluded_water += 1
                     continue
 

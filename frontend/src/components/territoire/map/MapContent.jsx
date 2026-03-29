@@ -258,7 +258,8 @@ const MapContentInner = React.memo(({
       </Marker>
     ))}
     {privacyMode && <div className="bionic-private-overlay" />}
-    <MapInteractionLayer showCoordinates={true} enableWaypointCreation={!mapClickMode} showHint={!mapClickMode} onWaypointCreated={(waypoint) => { if (syncToBackend) syncToBackend(); }} userId={userId || 'anonymous'} />
+    {/* BCE-4X PURGE V1-V5: GPS overlay uniquement — ZERO double-clic waypoint */}
+    <MapInteractionLayer showCoordinates={true} />
     <BionicAntiDoublesGuard zones={bionicZones} onZoneClick={setSelectedZone} />
   </>
 ));

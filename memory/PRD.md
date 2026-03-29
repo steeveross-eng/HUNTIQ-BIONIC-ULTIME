@@ -1,48 +1,65 @@
-# PRD — HUNTIQ V6 | BIONIC HUNT/Chasse
-## BCE-4X | MAX ULTRA | STEEVE-MAX
+# HUNTIQ-V6 — PRD (Product Requirements Document)
+## Protocole BCE-4X | ULTRA-MAX++ | Autorite STEEVE-MAX
+
+---
+
+## Enonce du Probleme Original
+Reconstruction du repository HUNTIQ-V6 a partir de la branche `bionic-v3-dev` de HUNTIQ-V5, avec gouvernance stricte BCE-4X, audits multi-versions (V1-V6), et implementation de nouvelles fonctionnalites (Trail-First Routing, Terrain Cache, ULTRA-MAX++ Firewall, module BSAA).
 
 ## Architecture
-- **Backend:** FastAPI + Motor (MongoDB async) + 71 modules + Hunt Orchestrator Engine
-- **Frontend:** React + Zustand + Leaflet, StandsMapLayer connecte a l'Orchestrateur
-- **Meteo:** Open-Meteo (WEATHER-V3 + WindGrid GFS) — source unique, DYNAMIQUE
-- **Terrain:** Overpass API enrichi + Cache persistant 3 niveaux (memoire + fichier gzip + Overpass)
-- **Securite:** 7 verrous ULTRA-MAX++ v3.0 + Firewall geometrique anthropique
+- **Backend:** FastAPI, 84+ modules moteur, Shapely (geo-fencing), A* pathfinding
+- **Frontend:** React, Leaflet, modular territory analysis
+- **Cache:** Fichiers `.json.gz` persistants (terrain, OSM)
+- **Branche active:** `Work1` (merge `main` STRICTEMENT INTERDIT)
 
-## Implemente et Valide
+## Ce qui est implemente
 
-### CORRECTIF: 4 Regressions critiques (2026-03-29)
-- R1: Firewall ULTRA-MAX++ restaure — META-EXCLUSION totale quand centre urbain
-  - Quebec City: 0 features | Rimouski: 209 features (16 zones + 193 corridors)
-- R2: Cache terrain purge — reconstruction propre uniquement apres firewall actif
-- R3: Saline descriptions — fallback + bouton retry dans NutritionPointDetailPanel
-- R4: Centrage map — waypoint selectionne > savedPosition (priorite corrigee)
+### Infrastructure & Gouvernance
+- Import et certification du repository HUNTIQ-V6
+- Framework de gouvernance BCE-4X / ULTRA-MAX++ / STEEVE-MAX
+- Branche `Work1` operationnelle avec historique complet
+- Documents: GOVERNANCE.md, SECURITY_POLICY.md, EMERGENT_PROTOCOL.md
 
-### Firewall ULTRA-MAX++ permanent (2026-03-29)
-- `_point_intersects_anthropic(lat, lng)` — Shapely point-in-polygon
-- Injecte dans TOUS les pipelines: corridors, zones, choix_affuts, access_engine
-- META-EXCLUSION totale si centre d'analyse en zone urbaine
+### Audits Completes
+- Audit moteur (84+ engines valides)
+- Audit coherence inter-modules (Phase 5B)
+- Audit historique V1-V6 (Phase 5C) — identification `auto_optimization.py` manquant
+- Architecture BSAA (Phase BSAA-0, BSAA-1)
 
-### Cache terrain persistant (2026-03-29)
-- 3 niveaux: memoire (<1ms) > fichier gzip (~250ms) > Overpass (5-8s)
-- SHA256 + TTL 30j + invalidation API
-- Meteo/vent/scoring DYNAMIQUES (jamais caches)
+### Fonctionnalites Techniques
+- Trail-First Routing (A* hybride sentier+terrain)
+- Cache terrain persistant `.json.gz`
+- Firewall ULTRA-MAX++ (`_point_intersects_anthropic`, multi-point 5 echantillons)
+- Correction geolocation waypoint (priorite `selectedWaypointForZones`)
+- SUPRA V2 fallback UI salines
 
-### Trail-First Routing — Hybride 2 Phases (2026-03-29)
-- BFS composantes connexes + A* sentier + A* grille terrain 25m
+### Purge V1-V5 (Fevrier 2026 — Phase A-D)
+- **Phase A:** Double-clic waypoint SUPPRIME (MapInteractionLayer purifie GPS-only)
+- **Phase B:** Double halo salines ELIMINE (exclusion centroides alimentation de BionicCorridorsV6Layer)
+- **Phase C:** Firewall corridors renforce (5 points echantillonnes au lieu de 1)
+- **Phase D:** Rapport BCE-4X genere et commite
 
-### Correctifs anterieurs (2026-03-28)
-- Vent/odeurs: placement DOWNWIND corrige
-- Overpass parallele (ThreadPoolExecutor)
+## Backlog Priorise
 
-## Backlog
-- P0: Attente validation STEEVE-MAX sur correctifs 4 regressions
-- P2: Phase 2D shadcn + utils (GELE)
-- P2: Pression de chasse historique
-- P2: BSAA-2 (GELE)
-- P2: Merge Work1 → main (INTERDIT)
+### P0 (Bloquant)
+- [COMPLETE] Purge V1-V5 frontend (Phases A-D)
+- [EN ATTENTE VALIDATION] Validation STEEVE-MAX du rapport BCE-4X
 
-## Gouvernance
-- BCE-4X / MAX ULTRA / STEEVE-MAX
-- Firewall ULTRA-MAX++: Section 9 GOVERNANCE.md — PERMANENT
-- WindFlowLayer v5.1: LOCK DEFINITIF
-- MERGE Work1 → main: STRICTEMENT INTERDIT
+### P1 (Important)
+- Restauration `auto_optimization.py` → module `optimization_engine`
+- Rapport integration: `architecture/auto_optimization_integration.md`
+- Validation et commit restauration
+
+### P2 (Futur — GELE)
+- Phase BSAA-2: Implementation module Social Ads
+- Phase 2D: Purge shadcn/utils frontend
+- Pression historique → moteur `choix_affuts`
+- Merge `Work1` → `main` (STRICTEMENT INTERDIT)
+
+## Fichiers Cles
+- `/app/frontend/src/modules/map_interaction/components/MapInteractionLayer.jsx`
+- `/app/frontend/src/components/territoire/NutritionPointsLayer.jsx`
+- `/app/frontend/src/components/territoire/BionicCorridorsV6Layer.jsx`
+- `/app/backend/modules/bionic_engine_p0/services/zone_engine_core_v2.py`
+- `/app/backend/core/scoring_pipeline/corridors_v10/engine.py`
+- `/app/HUNTIQ-V6-import/audit/purge_v1v5_bce4x_validation.md`

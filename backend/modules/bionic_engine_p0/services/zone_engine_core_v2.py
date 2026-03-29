@@ -1934,6 +1934,8 @@ async def generate_organic_zones(
             logger.info(f"[V9-Filter] Removed {pre_filter - len(corridors)} circular corridors")
 
     # Phase 2.9: Filter corridors crossing urban/industrial zones
+    # ULTRA-MAX++ REINFORCED: Multi-point sampling (start, 25%, mid, 75%, end)
+    # Un corridor ne doit JAMAIS traverser une zone anthropique, meme partiellement.
     if corridors and SHAPELY_AVAILABLE:
         urban_cache = _load_urban_cache_zones()
         if urban_cache is not None:
@@ -1942,18 +1944,33 @@ async def generate_organic_zones(
             for c in corridors:
                 coords = c.get("geometry", {}).get("coordinates", [])
                 if len(coords) >= 2:
-                    # Sample midpoint of corridor
-                    mid_idx = len(coords) // 2
-                    mid = coords[mid_idx]
-                    mid_lat, mid_lng = mid[1], mid[0]
-                    try:
-                        pt = ShapelyPoint(mid_lng, mid_lat)
-                        if not urban_cache.contains(pt):
-                            urban_filtered.append(c)
-                        else:
-                            logger.debug(f"[Phase2.9] Corridor excluded (urban midpoint)")
-                    except Exception:
+                    # ULTRA-MAX++: Sample 5 points along corridor
+                    sample_indices = [
+                        0,                          # start
+                        max(0, len(coords) // 4),    # 25%
+                        len(coords) // 2,            # midpoint
+                        min(len(coords) - 1, 3 * len(coords) // 4),  # 75%
+                        len(coords) - 1,             # end
+                    ]
+                    # Remove duplicates for very short corridors
+                    sample_indices = sorted(set(sample_indices))
+                    
+                    urban_hit = False
+                    for idx in sample_indices:
+                        pt_coord = coords[idx]
+                        pt_lat, pt_lng = pt_coord[1], pt_coord[0]
+                        try:
+                            pt = ShapelyPoint(pt_lng, pt_lat)
+                            if urban_cache.contains(pt):
+                                urban_hit = True
+                                break
+                        except Exception:
+                            pass
+                    
+                    if not urban_hit:
                         urban_filtered.append(c)
+                    else:
+                        logger.debug(f"[ULTRA-MAX++ FIREWALL] Corridor excluded (urban intersection at sample point)")
                 else:
                     urban_filtered.append(c)
             corridors = urban_filtered
