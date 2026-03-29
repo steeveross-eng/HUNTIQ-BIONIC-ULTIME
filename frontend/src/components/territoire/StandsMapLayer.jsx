@@ -155,13 +155,29 @@ const StandsMapLayer = ({
         const pathCoords = access.coords.map(c => [c.lat, c.lng]);
         const isFeasible = access.feasible;
         const isDirectLine = access.routing_algo === 'direct_line' || access.trail_type === 'hors_sentier';
+        const isTerrainAware = access.routing_algo === 'terrain_grid_astar';
 
-        // Style: vert solid (OSM reel), orange tirets (non conforme), jaune pointilles (hors-sentier)
+        // Style: vert solid (OSM reel), cyan tirets (terrain-aware), orange (non conforme), jaune pointilles (hors-sentier)
         let trailColor, dashArray, statusLabel;
         if (isDirectLine) {
           trailColor = '#FFD700';
           dashArray = '6, 8, 2, 8';
           statusLabel = 'Approche hors-sentier (direction indicative)';
+        } else if (isTerrainAware) {
+          const terrainType = access.trail_type || 'terrain_aware';
+          if (terrainType === 'corridor_ruisseau') {
+            trailColor = '#00BCD4';
+            dashArray = '10, 4';
+            statusLabel = 'Corridor ruisseau';
+          } else if (terrainType === 'corridor_clairiere') {
+            trailColor = '#8BC34A';
+            dashArray = '10, 4';
+            statusLabel = 'Corridor clairiere';
+          } else {
+            trailColor = '#26A69A';
+            dashArray = '8, 5';
+            statusLabel = 'Terrain naturel optimise';
+          }
         } else if (isFeasible) {
           trailColor = ACCESS_OK_COLOR;
           dashArray = null;

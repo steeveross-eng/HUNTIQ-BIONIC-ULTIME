@@ -73,6 +73,10 @@ def orchestrate_hunt_session(
         from engines.terrain_nav import get_terrain_nav
         trail_graph = get_terrain_nav(center_lat, center_lng, radius_m=max(radius_m * 2, 2000))
 
+    # Charger les donnees terrain brutes pour le routage terrain-aware
+    from engines.terrain_nav import get_raw_terrain_data
+    raw_terrain_data = get_raw_terrain_data(center_lat, center_lng)
+
     # Phase 1: Recommander les affuts
     blinds = recommend_blinds(
         center_lat, center_lng,
@@ -111,6 +115,7 @@ def orchestrate_hunt_session(
                 blind["lat"], blind["lng"],
                 trail_graph, feeding_sites, scent_zone,
                 water_check_fn=water_check_fn,
+                terrain_data=raw_terrain_data,
             )
             access["entry_point"] = {
                 "lat": ep["lat"],
@@ -132,6 +137,7 @@ def orchestrate_hunt_session(
                 blind["lat"], blind["lng"],
                 trail_graph, feeding_sites, scent_zone,
                 water_check_fn=water_check_fn,
+                terrain_data=raw_terrain_data,
             )
             center_access["entry_point"] = {
                 "lat": center_lat,

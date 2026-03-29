@@ -22,6 +22,8 @@ logger = logging.getLogger("bionic.terrain_nav")
 
 # Cache global: { zone_key: TerrainGraph }
 _nav_cache: Dict[str, TerrainGraph] = {}
+# Cache terrain_data brut pour le routage terrain-aware
+_terrain_data_cache: Dict[str, Dict] = {}
 
 
 def _cache_key(lat: float, lng: float) -> str:
@@ -53,7 +55,17 @@ def get_terrain_nav(lat: float, lng: float, radius_m: int = 2000) -> TerrainGrap
     graph = build_terrain_graph(terrain_data)
 
     _nav_cache[key] = graph
+    _terrain_data_cache[key] = terrain_data
     return graph
+
+
+def get_raw_terrain_data(lat: float, lng: float) -> Optional[Dict]:
+    """
+    Obtenir les donnees terrain brutes (waterways, clearings, forest, obstacles).
+    Utilisees par le routage terrain-aware quand pas de sentiers formels.
+    """
+    key = _cache_key(lat, lng)
+    return _terrain_data_cache.get(key)
 
 
 def navigate_terrain(

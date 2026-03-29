@@ -40,6 +40,12 @@ DENSE_FOREST_COST = 8.0    # Foret dense (hors sentier)
 WETLAND_COST = 50.0         # Zone humide = quasi-infranchissable
 WATER_COST = 999.0          # Eau = infranchissable
 
+# Corridors naturels (BCE-4X acces terrain-aware)
+STREAM_BANK_COST = 1.2     # Bord de ruisseau = corridor naturel prefere
+CLEARING_EDGE_COST = 1.4   # Bordure de clairiere = corridor prefere
+CLEARING_INTERIOR_COST = 2.0  # Interieur clairiere (expose mais degagé)
+SCENT_ZONE_PENALTY = 15.0  # Penalite contamination olfactive
+
 # Seuils de pente
 SLOPE_THRESHOLD_EASY = 10.0     # % — pas de penalite
 SLOPE_THRESHOLD_MODERATE = 20.0  # % — penalite lineaire
@@ -88,23 +94,40 @@ def compute_edge_cost(
     in_forest: bool = False,
     in_wetland: bool = False,
     in_water: bool = False,
+    is_stream_bank: bool = False,
+    is_clearing_edge: bool = False,
+    is_clearing_interior: bool = False,
+    in_scent_zone: bool = False,
 ) -> float:
     """
     Calculer le cout total d'une arete du graphe terrain.
-    
-    Cout = distance * type_chemin * pente * terrain
-    
-    Un cout eleve = chemin moins desirable.
-    Un cout de 999 * distance = infranchissable.
+
+    Cout = distance * type_terrain * pente * penalites
+
+    Priorite des corridors:
+    1. Sentiers OSM (1.0-1.6x)
+    2. Bords de ruisseau (1.2x)
+    3. Bordures de clairiere (1.4x)
+    4. Clairiere interieure (2.0x)
+    5. Foret ouverte hors sentier (4.0x)
+    6. Foret dense (8.0x)
+    7. Zone humide (50x)
+    8. Eau (999x infranchissable)
     """
     if in_water:
         return distance_m * WATER_COST
     if in_wetland:
         return distance_m * WETLAND_COST
 
-    # Cout de base: type de chemin
+    # Cout de base: type de terrain (priorite decroissante)
     if highway_type:
         base_cost = get_highway_cost(highway_type)
+    elif is_stream_bank:
+        base_cost = STREAM_BANK_COST
+    elif is_clearing_edge:
+        base_cost = CLEARING_EDGE_COST
+    elif is_clearing_interior:
+        base_cost = CLEARING_INTERIOR_COST
     elif in_forest:
         base_cost = DENSE_FOREST_COST
     else:
@@ -113,7 +136,10 @@ def compute_edge_cost(
     # Penalite de pente
     slope_mult = compute_slope_penalty(elevation_diff_m, distance_m)
 
-    return distance_m * base_cost * slope_mult
+    # Penalite de contamination olfactive
+    scent_mult = SCENT_ZONE_PENALTY if in_scent_zone else 1.0
+
+    return distance_m * base_cost * slope_mult * scent_mult
 
 
 def classify_zone(

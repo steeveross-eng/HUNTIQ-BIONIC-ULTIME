@@ -64,7 +64,7 @@ def _adaptive_timeout(radius_m: int) -> int:
 
 
 def _build_combined_query(lat: float, lng: float, radius_m: int) -> str:
-    """Requete Overpass UNIQUE combinant chemins + obstacles + foret."""
+    """Requete Overpass UNIQUE combinant chemins + obstacles + foret + clairières + cours d'eau."""
     tag_filter = "|".join(TRAIL_HIGHWAY_TAGS)
     timeout = _adaptive_timeout(radius_m)
     return f"""
@@ -76,6 +76,8 @@ def _build_combined_query(lat: float, lng: float, radius_m: int) -> str:
   way["waterway"](around:{radius_m},{lat},{lng});
   way["natural"="wood"](around:{radius_m},{lat},{lng});
   way["landuse"="forest"](around:{radius_m},{lat},{lng});
+  way["natural"~"^(grassland|scrub|heath)$"](around:{radius_m},{lat},{lng});
+  way["landuse"~"^(meadow|farmland|grass)$"](around:{radius_m},{lat},{lng});
 );
 out body;
 >;
@@ -84,10 +86,12 @@ out skel qt;
 
 
 def _classify_ways(ways: list) -> dict:
-    """Classer les ways par categorie: trails, obstacles, forest."""
+    """Classer les ways par categorie: trails, obstacles, forest, waterways, clearings."""
     trails = []
     obstacles = []
     forest = []
+    waterways = []
+    clearings = []
 
     for way in ways:
         tags = way.get("tags", {})
@@ -98,12 +102,17 @@ def _classify_ways(ways: list) -> dict:
 
         if highway in TRAIL_HIGHWAY_TAGS:
             trails.append(way)
-        elif natural in ("water", "wetland") or waterway:
+        elif waterway:
+            waterways.append(way)
+        elif natural in ("water", "wetland"):
             obstacles.append(way)
         elif natural == "wood" or landuse == "forest":
             forest.append(way)
+        elif natural in ("grassland", "scrub", "heath") or landuse in ("meadow", "farmland", "grass"):
+            clearings.append(way)
 
-    return {"trails": trails, "obstacles": obstacles, "forest": forest}
+    return {"trails": trails, "obstacles": obstacles, "forest": forest,
+            "waterways": waterways, "clearings": clearings}
 
 
 def _fetch_single_mirror(mirror: str, query: str, timeout_s: int) -> Optional[Dict]:
@@ -201,10 +210,14 @@ def fetch_terrain_data(
         "trails": {"node_coords": {}, "ways": []},
         "obstacles": {"node_coords": {}, "ways": []},
         "forest": {"node_coords": {}, "ways": []},
+        "waterways": {"node_coords": {}, "ways": []},
+        "clearings": {"node_coords": {}, "ways": []},
         "source": "overpass",
         "has_trails": False,
         "has_obstacles": False,
         "has_forest": False,
+        "has_waterways": False,
+        "has_clearings": False,
     }
 
     # UNE SEULE requete Overpass combinee
@@ -218,14 +231,20 @@ def fetch_terrain_data(
         result["trails"] = {"node_coords": nc, "ways": classified["trails"]}
         result["obstacles"] = {"node_coords": nc, "ways": classified["obstacles"]}
         result["forest"] = {"node_coords": nc, "ways": classified["forest"]}
+        result["waterways"] = {"node_coords": nc, "ways": classified["waterways"]}
+        result["clearings"] = {"node_coords": nc, "ways": classified["clearings"]}
         result["has_trails"] = len(classified["trails"]) > 0
         result["has_obstacles"] = len(classified["obstacles"]) > 0
         result["has_forest"] = len(classified["forest"]) > 0
+        result["has_waterways"] = len(classified["waterways"]) > 0
+        result["has_clearings"] = len(classified["clearings"]) > 0
 
         logger.info(
             f"[TNE-SRC] Combined fetch: {len(classified['trails'])} trails, "
             f"{len(classified['obstacles'])} obstacles, "
             f"{len(classified['forest'])} forest zones, "
+            f"{len(classified['waterways'])} waterways, "
+            f"{len(classified['clearings'])} clearings, "
             f"{len(nc)} total nodes"
         )
 

@@ -1,24 +1,32 @@
 """
-BCE-4X P0 — ENGINE ACCES DYNAMIQUE v1
+BCE-4X P0 — ENGINE ACCES DYNAMIQUE v2
 =======================================
 Moteur de routage d'acces aux affuts base sur donnees REELLES.
 
 Donnees REELLES utilisees:
 - Reseau de sentiers OSM (via terrain_nav/Overpass API)
+- Cours d'eau OSM (bords = corridors naturels preferes)
+- Clairières/prairies OSM (edges = corridors secondaires)
 - Zones d'eau (cache 41K polygones)
 - Foret dense/obstacles (via terrain_nav)
 - Contraintes vent/odeurs (via vent_odeurs engine)
-- Zones d'alimentation (via organic zones)
 
-Priorite absolue: chemins existants.
-ZERO trace geometrique artificiel.
+Priorite de routage:
+1. Sentiers OSM existants (cout 1.0-1.6x)
+2. Bords de ruisseau (cout 1.2x)
+3. Bordures de clairiere (cout 1.4x)
+4. Clairiere degagee (cout 2.0x)
+5. Foret ouverte (cout 4.0x)
+6. Foret dense (cout 8.0x)
+EVITER: marecages (50x), eau (999x), zone contamination (15x)
 
 STEEVE-MAX 2026-03-28 — Standard institutionnel.
 """
 
 import math
+import heapq
 import logging
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Tuple, Set
 
 logger = logging.getLogger("bionic.hunt_orchestrator.access_engine")
 
@@ -33,6 +41,319 @@ def _haversine(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
     return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
 
+def _point_in_scent_cone(lat: float, lng: float, scent_zone: Dict) -> bool:
+    """Verifier si un point est dans la zone de contamination olfactive."""
+    polygon = scent_zone.get("polygon", [])
+    if not polygon or len(polygon) < 3:
+        return False
+    # Ray-casting point-in-polygon
+    n = len(polygon)
+    inside = False
+    j = n - 1
+    for i in range(n):
+        pi = polygon[i]
+        pj = polygon[j]
+        yi, xi = pi["lat"], pi["lng"]
+        yj, xj = pj["lat"], pj["lng"]
+        if ((yi > lat) != (yj > lat)) and (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi):
+            inside = not inside
+        j = i
+    return inside
+
+
+def _build_terrain_grid(
+    entry_lat: float, entry_lng: float,
+    blind_lat: float, blind_lng: float,
+    terrain_data: Optional[Dict],
+    scent_zone: Dict,
+    feeding_sites: List[Dict],
+    grid_spacing_m: float = 35,
+) -> Tuple[Dict[int, Tuple[float, float]], Dict[int, Dict[int, float]], Dict[int, str]]:
+    """
+    Construire une grille de navigation terrain avec couts ponderes.
+    Integre cours d'eau, clairieres, foret, obstacles, et contamination.
+
+    Retourne: (nodes, adjacency, node_types)
+    """
+    from engines.terrain_nav.terrain_costs import (
+        STREAM_BANK_COST, CLEARING_EDGE_COST, CLEARING_INTERIOR_COST,
+        OFF_TRAIL_COST, DENSE_FOREST_COST, WETLAND_COST, WATER_COST,
+        SCENT_ZONE_PENALTY,
+    )
+
+    # Bounding box avec marge 15%
+    min_lat = min(entry_lat, blind_lat)
+    max_lat = max(entry_lat, blind_lat)
+    min_lng = min(entry_lng, blind_lng)
+    max_lng = max(entry_lng, blind_lng)
+    lat_margin = (max_lat - min_lat) * 0.25 + grid_spacing_m / 111320
+    lng_margin = (max_lng - min_lng) * 0.25 + grid_spacing_m / (111320 * math.cos(math.radians(entry_lat)))
+    min_lat -= lat_margin
+    max_lat += lat_margin
+    min_lng -= lng_margin
+    max_lng += lng_margin
+
+    # Convertir espacement en degres
+    dlat = grid_spacing_m / 111320
+    dlng = grid_spacing_m / (111320 * math.cos(math.radians(entry_lat)))
+
+    # Extraire les features OSM pour la classification
+    waterway_segments: List[List[Tuple[float, float]]] = []
+    forest_segments: List[List[Tuple[float, float]]] = []
+    obstacle_segments: List[List[Tuple[float, float]]] = []
+    clearing_segments: List[List[Tuple[float, float]]] = []
+
+    if terrain_data:
+        nc = terrain_data.get("waterways", {}).get("node_coords", {})
+        for way in terrain_data.get("waterways", {}).get("ways", []):
+            seg = []
+            for nid in way.get("nodes", []):
+                if nid in nc:
+                    seg.append(nc[nid])
+            if len(seg) >= 2:
+                waterway_segments.append(seg)
+
+        for way in terrain_data.get("forest", {}).get("ways", []):
+            seg = []
+            for nid in way.get("nodes", []):
+                if nid in nc:
+                    seg.append(nc[nid])
+            if len(seg) >= 2:
+                forest_segments.append(seg)
+
+        for way in terrain_data.get("obstacles", {}).get("ways", []):
+            seg = []
+            for nid in way.get("nodes", []):
+                if nid in nc:
+                    seg.append(nc[nid])
+            if len(seg) >= 2:
+                obstacle_segments.append(seg)
+
+        for way in terrain_data.get("clearings", {}).get("ways", []):
+            seg = []
+            for nid in way.get("nodes", []):
+                if nid in nc:
+                    seg.append(nc[nid])
+            if len(seg) >= 2:
+                clearing_segments.append(seg)
+
+    # Classification locale d'un point
+    def _classify_point(lat: float, lng: float) -> str:
+        """Retourne le type de terrain pour un point."""
+        # Distance au plus proche segment de chaque type
+        min_water_dist = _min_dist_to_segments(lat, lng, obstacle_segments)
+        if min_water_dist < 10:
+            return "water"
+
+        min_wetland_dist = min_water_dist  # Les obstacles incluent wetlands
+        if min_wetland_dist < 20:
+            return "wetland"
+
+        min_stream_dist = _min_dist_to_segments(lat, lng, waterway_segments)
+        if min_stream_dist < 25:  # <25m du ruisseau = bord de ruisseau
+            return "stream_bank"
+
+        min_clearing_dist = _min_dist_to_segments(lat, lng, clearing_segments)
+        if min_clearing_dist < 20:
+            return "clearing_edge"
+        if min_clearing_dist < 60:
+            return "clearing"
+
+        min_forest_dist = _min_dist_to_segments(lat, lng, forest_segments)
+        if min_forest_dist < 30:
+            return "dense_forest"
+
+        return "open_forest"
+
+    # Generer les noeuds de la grille
+    nodes: Dict[int, Tuple[float, float]] = {}
+    node_types: Dict[int, str] = {}
+    nid = 0
+
+    # Ajouter entry et blind comme noeuds speciaux
+    nodes[nid] = (entry_lat, entry_lng)
+    node_types[nid] = "entry"
+    entry_nid = nid
+    nid += 1
+
+    nodes[nid] = (blind_lat, blind_lng)
+    node_types[nid] = "blind"
+    blind_nid = nid
+    nid += 1
+
+    # Ajouter les noeuds le long des cours d'eau (corridors preferes)
+    for seg in waterway_segments:
+        for pt_lat, pt_lng in seg:
+            if min_lat <= pt_lat <= max_lat and min_lng <= pt_lng <= max_lng:
+                # Ajouter le point du cours d'eau
+                nodes[nid] = (pt_lat, pt_lng)
+                node_types[nid] = "stream_bank"
+                nid += 1
+                # Ajouter des points decales sur les berges (±15m)
+                for offset_m in [-15, 15]:
+                    b_lat = pt_lat + offset_m / 111320
+                    if min_lat <= b_lat <= max_lat:
+                        nodes[nid] = (b_lat, pt_lng)
+                        node_types[nid] = "stream_bank"
+                        nid += 1
+
+    # Ajouter les noeuds le long des clairieres
+    for seg in clearing_segments:
+        for pt_lat, pt_lng in seg:
+            if min_lat <= pt_lat <= max_lat and min_lng <= pt_lng <= max_lng:
+                nodes[nid] = (pt_lat, pt_lng)
+                node_types[nid] = "clearing_edge"
+                nid += 1
+
+    # Ajouter la grille reguliere
+    lat = min_lat
+    while lat <= max_lat:
+        lng = min_lng
+        while lng <= max_lng:
+            nodes[nid] = (lat, lng)
+            cls = _classify_point(lat, lng)
+            node_types[nid] = cls
+            nid += 1
+            lng += dlng
+        lat += dlat
+
+    logger.info(f"[ACCESS-GRID] Built terrain grid: {len(nodes)} nodes")
+
+    # Construire les aretes (connecter les voisins proches)
+    adjacency: Dict[int, Dict[int, float]] = {n: {} for n in nodes}
+    max_edge_dist = grid_spacing_m * 1.6  # ~56m pour espacement 35m
+
+    # Indexer par cellule pour les voisins proches
+    node_list = list(nodes.items())
+    for i in range(len(node_list)):
+        nid_a, (lat_a, lng_a) = node_list[i]
+        type_a = node_types[nid_a]
+        if type_a == "water":
+            continue  # Pas d'aretes depuis l'eau
+
+        for j in range(i + 1, len(node_list)):
+            nid_b, (lat_b, lng_b) = node_list[j]
+            type_b = node_types[nid_b]
+            if type_b == "water":
+                continue
+
+            # Distance rapide (approximation)
+            dlat_diff = abs(lat_a - lat_b) * 111320
+            dlng_diff = abs(lng_a - lng_b) * 111320 * math.cos(math.radians(lat_a))
+            approx_dist = math.sqrt(dlat_diff**2 + dlng_diff**2)
+
+            if approx_dist > max_edge_dist:
+                continue
+
+            dist = _haversine(lat_a, lng_a, lat_b, lng_b)
+            if dist > max_edge_dist:
+                continue
+
+            # Calculer le cout de l'arete
+            mid_lat = (lat_a + lat_b) / 2
+            mid_lng = (lng_a + lng_b) / 2
+            in_scent = _point_in_scent_cone(mid_lat, mid_lng, scent_zone)
+
+            # Choisir le type le plus penalisant des deux extremites
+            cost_type = _worst_terrain_type(type_a, type_b)
+
+            if cost_type == "water":
+                cost = dist * WATER_COST
+            elif cost_type == "wetland":
+                cost = dist * WETLAND_COST
+            elif cost_type == "stream_bank":
+                cost = dist * STREAM_BANK_COST
+            elif cost_type == "clearing_edge":
+                cost = dist * CLEARING_EDGE_COST
+            elif cost_type in ("clearing", "clearing_interior"):
+                cost = dist * CLEARING_INTERIOR_COST
+            elif cost_type == "dense_forest":
+                cost = dist * DENSE_FOREST_COST
+            elif cost_type in ("entry", "blind"):
+                cost = dist * 1.0  # Pas de penalite pour les extremites
+            else:
+                cost = dist * OFF_TRAIL_COST
+
+            if in_scent:
+                cost *= SCENT_ZONE_PENALTY
+
+            adjacency[nid_a][nid_b] = cost
+            adjacency[nid_b][nid_a] = cost
+
+    return nodes, adjacency, node_types, entry_nid, blind_nid
+
+
+def _worst_terrain_type(t1: str, t2: str) -> str:
+    """Retourne le type de terrain le plus penalisant."""
+    order = ["water", "wetland", "dense_forest", "open_forest",
+             "clearing", "clearing_interior", "clearing_edge",
+             "stream_bank", "entry", "blind"]
+    i1 = order.index(t1) if t1 in order else 3
+    i2 = order.index(t2) if t2 in order else 3
+    return t1 if i1 < i2 else t2
+
+
+def _min_dist_to_segments(lat: float, lng: float, segments: List[List[Tuple[float, float]]]) -> float:
+    """Distance minimale d'un point aux segments donnés (en metres, approximatif)."""
+    min_d = float("inf")
+    for seg in segments:
+        for pt_lat, pt_lng in seg:
+            dlat = (lat - pt_lat) * 111320
+            dlng = (lng - pt_lng) * 111320 * math.cos(math.radians(lat))
+            d = math.sqrt(dlat**2 + dlng**2)
+            if d < min_d:
+                min_d = d
+    return min_d
+
+
+def _astar_terrain_grid(
+    nodes: Dict[int, Tuple[float, float]],
+    adjacency: Dict[int, Dict[int, float]],
+    start_nid: int,
+    end_nid: int,
+    max_iterations: int = 8000,
+) -> Optional[List[int]]:
+    """A* sur la grille de terrain."""
+    end_lat, end_lng = nodes[end_nid]
+
+    open_set = [(0, start_nid)]
+    came_from: Dict[int, int] = {}
+    g_score: Dict[int, float] = {start_nid: 0}
+    closed: Set[int] = set()
+    iterations = 0
+
+    while open_set and iterations < max_iterations:
+        iterations += 1
+        _, current = heapq.heappop(open_set)
+
+        if current == end_nid:
+            # Reconstruire le chemin
+            path = [current]
+            while current in came_from:
+                current = came_from[current]
+                path.append(current)
+            path.reverse()
+            logger.info(f"[ACCESS-GRID] A* found path: {len(path)} nodes, {iterations} iterations")
+            return path
+
+        if current in closed:
+            continue
+        closed.add(current)
+
+        for neighbor, edge_cost in adjacency.get(current, {}).items():
+            if neighbor in closed:
+                continue
+            tentative_g = g_score[current] + edge_cost
+            if tentative_g < g_score.get(neighbor, float("inf")):
+                came_from[neighbor] = current
+                g_score[neighbor] = tentative_g
+                h = _haversine(*nodes[neighbor], end_lat, end_lng) * 1.2
+                heapq.heappush(open_set, (tentative_g + h, neighbor))
+
+    logger.warning(f"[ACCESS-GRID] A* exhausted after {iterations} iterations")
+    return None
+
+
 def compute_access_route(
     entry_lat: float,
     entry_lng: float,
@@ -42,17 +363,15 @@ def compute_access_route(
     feeding_sites: List[Dict[str, float]],
     scent_zone: Dict[str, Any],
     water_check_fn=None,
+    terrain_data: Optional[Dict] = None,
 ) -> Dict[str, Any]:
     """
     Calculer le chemin d'acces optimal vers un affut.
 
     Strategie:
     1. Router via le graphe de sentiers OSM reels (A* / Dijkstra)
-    2. Valider que le chemin ne traverse pas de zone de contamination
-    3. Valider que le chemin ne passe pas pres des sites d'alimentation
-    4. Exclure les segments traversant des zones d'eau
-
-    Retourne le chemin avec metadata de conformite.
+    2. Si pas de sentiers: router via grille terrain (cours d'eau, clairières)
+    3. Valider contamination, eau, alimentation
     """
     from engines.terrain_nav import navigate_terrain
 
@@ -62,13 +381,65 @@ def compute_access_route(
     )
 
     if route_result is None:
-        logger.warning(
-            f"[ACCESS] Aucun sentier reel entre ({entry_lat:.4f},{entry_lng:.4f}) "
-            f"et ({blind_lat:.4f},{blind_lng:.4f})"
+        logger.info(
+            f"[ACCESS] Pas de sentier OSM — activation routage terrain-aware "
+            f"({entry_lat:.4f},{entry_lng:.4f}) -> ({blind_lat:.4f},{blind_lng:.4f})"
         )
-        # Fallback: trace direct hors-sentier pour indiquer la direction d'approche
+        # Etape 2: Routage terrain-aware via grille
+        try:
+            nodes, adjacency, node_types, start_nid, end_nid = _build_terrain_grid(
+                entry_lat, entry_lng, blind_lat, blind_lng,
+                terrain_data, scent_zone, feeding_sites,
+            )
+            path_nids = _astar_terrain_grid(nodes, adjacency, start_nid, end_nid)
+
+            if path_nids and len(path_nids) >= 2:
+                coords = [{"lat": nodes[nid][0], "lng": nodes[nid][1]} for nid in path_nids]
+                # Calculer distance totale
+                total_dist = 0
+                for i in range(len(coords) - 1):
+                    total_dist += _haversine(
+                        coords[i]["lat"], coords[i]["lng"],
+                        coords[i + 1]["lat"], coords[i + 1]["lng"]
+                    )
+
+                # Identifier les types de terrain traverses
+                terrain_types_used = set()
+                for nid in path_nids:
+                    t = node_types.get(nid, "open_forest")
+                    if t not in ("entry", "blind"):
+                        terrain_types_used.add(t)
+
+                trail_type_label = "terrain_aware"
+                if "stream_bank" in terrain_types_used:
+                    trail_type_label = "corridor_ruisseau"
+                elif "clearing_edge" in terrain_types_used:
+                    trail_type_label = "corridor_clairiere"
+
+                logger.info(
+                    f"[ACCESS] Terrain-aware route: {len(coords)} pts, {round(total_dist)}m, "
+                    f"types: {terrain_types_used}"
+                )
+
+                route_result = {
+                    "coords": coords,
+                    "distance_m": total_dist,
+                    "type": trail_type_label,
+                    "routing_algo": "terrain_grid_astar",
+                    "segments_count": len(coords) - 1,
+                    "terrain_types": list(terrain_types_used),
+                }
+            else:
+                logger.warning("[ACCESS] Terrain-aware A* echec — fallback direct")
+                route_result = None
+        except Exception as e:
+            logger.error(f"[ACCESS] Terrain grid error: {e}")
+            route_result = None
+
+    if route_result is None:
+        # Fallback ultime: ligne directe
         direct_dist = _haversine(entry_lat, entry_lng, blind_lat, blind_lng)
-        n_pts = max(5, int(direct_dist / 50))  # Un point tous les ~50m
+        n_pts = max(5, int(direct_dist / 50))
         direct_coords = []
         for i in range(n_pts + 1):
             t = i / n_pts
@@ -83,11 +454,11 @@ def compute_access_route(
             "trail_type": "hors_sentier",
             "routing_algo": "direct_line",
             "feasible": True,
-            "quality_score": 30,
+            "quality_score": 20,
             "contamination_check": {"compliant": True, "violations": []},
             "water_crossings": [],
             "feeding_proximity_violations": [],
-            "message": "Aucun sentier OSM — trace direct hors-sentier (direction indicative).",
+            "message": "Aucune donnee terrain — trace direct (direction indicative).",
         }
 
     coords = route_result["coords"]
@@ -111,18 +482,25 @@ def compute_access_route(
                 })
 
     # Etape 4: Verifier proximite aux sites d'alimentation
+    # Exclure les points proches de l'affut (derniers 100m): l'approche DOIT
+    # etre pres d'un site alimentation, c'est le but du positionnement
     feeding_proximity_violations = []
+    blind_lat_check = coords[-1]["lat"] if coords else blind_lat
+    blind_lng_check = coords[-1]["lng"] if coords else blind_lng
     for fs in feeding_sites:
         min_dist = float("inf")
         for c in coords:
+            # Ignorer les points dans les derniers 100m de l'affut
+            if _haversine(c["lat"], c["lng"], blind_lat_check, blind_lng_check) < 120:
+                continue
             d = _haversine(c["lat"], c["lng"], fs["lat"], fs["lng"])
             if d < min_dist:
                 min_dist = d
-        if min_dist < 80:  # Seuil 80m
+        if min_dist < 50:  # Seuil 50m (hors zone approche)
             feeding_proximity_violations.append({
                 "feeding_site": fs,
                 "min_distance_m": round(min_dist),
-                "message": f"Chemin passe a {round(min_dist)}m d'un site alimentation",
+                "message": f"Chemin passe a {round(min_dist)}m d'un site alimentation (hors zone approche)",
             })
 
     # Bilan de faisabilite
@@ -133,7 +511,8 @@ def compute_access_route(
     )
 
     # Score de qualite de l'acces (0-100)
-    quality_score = 80  # Base: sentier reel
+    is_terrain_aware = algo == "terrain_grid_astar"
+    quality_score = 65 if is_terrain_aware else 80  # Terrain-aware vs sentier formel
     if not contam["compliant"]:
         quality_score -= 40
     if water_crossings:
