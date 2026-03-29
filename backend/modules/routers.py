@@ -268,6 +268,12 @@ from modules.bionic_ecological_engine.router import router as ecological_intelli
 from modules.bionic_data_fabric.router import router as data_fabric_router
 from modules.bionic_stand_recommendation_engine.router import router as stand_recommendation_router
 
+# ==============================================
+# ACCESS ENGINE V6 — ACCES AUX AFFUTS (GOLDEN)
+# Pipeline unique: Trail-First Dijkstra + Terrain Grid A*
+# ==============================================
+from modules.access_engine_v6.router import router as access_engine_v6_router
+
 
 # List of all available routers with their metadata
 CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
@@ -873,6 +879,16 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
         "version": "1.0.0",
         "phase": "X2280-STANDS",
         "description": "Moteur d'affuts professionnels — recommandations, orientation, justification, chemin d'approche"
+    }),
+
+    # ==========================================
+    # ACCESS ENGINE V6 — GOLDEN (1 pipeline, 1 API)
+    # ==========================================
+    (access_engine_v6_router, {
+        "name": "access_engine_v6",
+        "version": "1.0.0",
+        "phase": "V6-ACCESS-GOLDEN",
+        "description": "Moteur d'acces aux affuts V6 — Trail-First Dijkstra + Terrain Grid A*"
     }),
 ]
 

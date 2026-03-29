@@ -25,6 +25,7 @@ import BionicCorridorsV6Layer from '@/components/territoire/BionicCorridorsV6Lay
 import NutritionPointsLayer from '@/components/territoire/NutritionPointsLayer';
 import ConsolidatedHeatmapLayer from '@/components/territoire/ConsolidatedHeatmapLayer';
 import StandsMapLayer from '@/components/territoire/StandsMapLayer';
+import AccessRouteV6Layer from '@/components/territoire/AccessRouteV6Layer';
 import { LeafletShield, useRenderGuard, createLoadTimer } from '@/components/territoire/map/BCE4X_UIShield';
 
 const MapContentInner = React.memo(({
@@ -114,6 +115,9 @@ const MapContentInner = React.memo(({
   pointSubFilters,
   // STABILITÉ V2: Centre memoizé
   waypointCenter,
+  // ACCESS ENGINE V6 — GOLDEN (1 Layer unique)
+  accessRouteData,
+  showAccessRoute,
 }) => (
   <>
     <EcoforestryLayers
@@ -227,6 +231,14 @@ const MapContentInner = React.memo(({
         onStandClick={onStandClick}
         feedingSites={feedingSitesForStands || []}
         fixedBlinds={fixedBlindsForStands || []}
+      />
+    )}
+
+    {/* ACCESS ENGINE V6 — GOLDEN: Layer unique rendu 4 couleurs (vert/bleu/or/rouge) */}
+    {showAccessRoute && accessRouteData && (
+      <AccessRouteV6Layer
+        routeData={accessRouteData}
+        enabled={showAccessRoute}
       />
     )}
 
