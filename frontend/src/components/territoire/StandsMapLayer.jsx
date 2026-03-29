@@ -431,9 +431,9 @@ const StandsMapLayer = ({
     group.addTo(map);
     layerRef.current = group;
 
-    // 6. Legende — STANDARD GOLDEN (position HAUT, exhaustive)
+    // 6. Legende — STANDARD GOLDEN (position HAUT-DROITE, exhaustive, zero chevauchement zoom)
     if (showLegend) {
-      const legend = L.control({ position: 'topleft' });
+      const legend = L.control({ position: 'topright' });
       legend.onAdd = () => {
         const div = L.DomUtil.create('div', 'bionic-hunt-legend-golden');
         div.setAttribute('data-testid', 'hunt-legend-golden');
