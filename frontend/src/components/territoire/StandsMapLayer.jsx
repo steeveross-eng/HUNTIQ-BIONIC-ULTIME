@@ -431,13 +431,13 @@ const StandsMapLayer = ({
     group.addTo(map);
     layerRef.current = group;
 
-    // 6. Legende — STANDARD GOLDEN (position HAUT-DROITE, exhaustive, zero chevauchement zoom)
+    // 6. Legende — STANDARD GOLDEN (position HAUT-GAUCHE sous zoom, ZERO chevauchement)
     if (showLegend) {
-      const legend = L.control({ position: 'topright' });
+      const legend = L.control({ position: 'topleft' });
       legend.onAdd = () => {
         const div = L.DomUtil.create('div', 'bionic-hunt-legend-golden');
         div.setAttribute('data-testid', 'hunt-legend-golden');
-        div.style.cssText = 'background:#0d1117ee;border:1px solid #333;border-radius:8px;padding:10px 12px;font-family:system-ui;font-size:9px;color:#ccc;min-width:170px;max-height:calc(100vh - 120px);overflow-y:auto;margin-top:8px;backdrop-filter:blur(8px);';
+        div.style.cssText = 'background:#0d1117ee;border:1px solid #333;border-radius:8px;padding:10px 12px;font-family:system-ui;font-size:9px;color:#ccc;min-width:170px;max-height:calc(100vh - 340px);overflow-y:auto;margin-top:120px;backdrop-filter:blur(8px);pointer-events:auto;';
         div.innerHTML = `
           <div style="font-weight:700;font-size:11px;color:#fff;margin-bottom:6px;border-bottom:1px solid #333;padding-bottom:4px">SUPRA/V6 — Legende</div>
           <div style="font-weight:600;font-size:8px;color:#888;margin:4px 0 2px;text-transform:uppercase;letter-spacing:0.5px">Affuts</div>
