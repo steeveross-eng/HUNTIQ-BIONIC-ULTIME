@@ -5,7 +5,7 @@
  * Ce fichier est la référence unique pour les couleurs, catégories
  * et interprétations des zones BIONIC.
  * 
- * CONFORME: BIONIC V5 PHASE F — Structure modulaire
+ * CONFORME: BIONIC V6 V6 GOLDEN — Structure modulaire
  * ALIGNÉ: Correspondance 1:1 avec BIONIC_LAYERS (core/bionic/index.js)
  */
 

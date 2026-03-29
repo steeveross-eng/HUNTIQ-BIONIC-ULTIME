@@ -1,5 +1,5 @@
 """
-BIONIC V5 — MOBILITY MODELS (NIVEAU 5)
+BIONIC V6 — MOBILITY MODELS (NIVEAU 5)
 ======================================
 NIVEAU 5 — Mobilité Dynamique
 
@@ -24,7 +24,7 @@ CENTRALISATION:
 - Traçabilité obligatoire (source_ids, version)
 
 VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 NIVEAU 5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 NIVEAU 5
 """
 
 from typing import Dict, List, Optional, Any, Tuple
@@ -409,7 +409,7 @@ class MobilityRegistry:
         corridor_type: str = "primary"
     ) -> MobilityState:
         """
-        NIVEAU 5 BIONIC V5 — Calcul de l'état de mobilité dynamique.
+        NIVEAU 5 BIONIC V6 — Calcul de l'état de mobilité dynamique.
         
         Calcule l'état de mobilité en intégrant tous les facteurs des NIVEAUx 1-4.
         
@@ -680,7 +680,7 @@ class MobilityRegistry:
         corridor_type: str = "primary"
     ) -> Tuple[float, Dict[str, Any], List[str]]:
         """
-        NIVEAU 5 BIONIC V5 — Obtenir le modificateur de mobilité.
+        NIVEAU 5 BIONIC V6 — Obtenir le modificateur de mobilité.
         
         Interface simplifiée pour UnifiedScoringService.
         

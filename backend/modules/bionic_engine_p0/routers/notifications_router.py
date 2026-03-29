@@ -1,5 +1,5 @@
 """
-BIONIC V5 — NOTIFICATIONS ROUTER (PHASE F — NOTIFICATIONS PUSH)
+BIONIC V6 — NOTIFICATIONS ROUTER (PHASE F — NOTIFICATIONS PUSH)
 ================================================================
 VAPID Natif — 100% Autonome
 
@@ -16,7 +16,7 @@ ENDPOINTS:
 - GET  /api/v1/bionic/notifications/health          - Health check
 
 VERSION: 7.2.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 MASTER
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 MASTER
 """
 
 import logging
@@ -318,7 +318,7 @@ async def update_location(request: UpdateLocationRequest):
     description="""
     Retourne les règles de déclenchement centralisées.
     
-    Conformité BIONIC V5:
+    Conformité BIONIC V6:
     - Règles versionnées
     - Documentées
     - Traçables (source_ids)

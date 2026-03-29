@@ -1,7 +1,7 @@
 /**
  * ScoringRadar - V5-ULTIME
  * ========================
- * PHASE F: Migration vers LightCharts
+ * V6 GOLDEN: Migration vers LightCharts
  */
 
 import React from 'react';

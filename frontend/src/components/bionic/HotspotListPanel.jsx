@@ -1,7 +1,7 @@
 /**
  * HotspotListPanel - Panneau de Liste des Hotspots avec Tri/Filtrage
  * ===================================================================
- * BIONIC V5 ULTIME - PHASE 5.5
+ * BIONIC V6 ULTIME - PHASE 5.5
  * 
  * RESPONSABILITÉ UNIQUE:
  * - Afficher la liste des hotspots avec tri et filtrage
@@ -20,7 +20,7 @@
  * - Aucune logique métier, aucun calcul de score
  * - Données via props uniquement
  * 
- * Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+ * Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
  */
 
 import React, { useState, useMemo } from 'react';

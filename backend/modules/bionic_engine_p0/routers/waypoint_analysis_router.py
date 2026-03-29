@@ -15,7 +15,7 @@ ISOLATION:
 - Orchestration pure
 
 CONTRACT VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 import logging
@@ -222,7 +222,7 @@ def _generate_heatmap(lat: float, lng: float, resolution: int, base_score: float
         400: {"model": ErrorResponse, "description": "Paramètres invalides"},
         500: {"model": ErrorResponse, "description": "Erreur serveur"}
     },
-    summary="Analyse waypoint-centric BIONIC V5",
+    summary="Analyse waypoint-centric BIONIC V6",
     description="""
     Effectue une analyse complète centrée sur le waypoint de référence.
     
@@ -668,7 +668,7 @@ async def predict_mobility(
     include_trajectory: bool = True
 ):
     """
-    NIVEAU 6 BIONIC V5 — Prédiction de mobilité sur fenêtre temporelle.
+    NIVEAU 6 BIONIC V6 — Prédiction de mobilité sur fenêtre temporelle.
     
     Génère des prédictions de mouvement avec zones probables en GeoJSON.
     
@@ -750,7 +750,7 @@ async def predict_mobility(
 @router.get("/calibration/status")
 async def get_calibration_status():
     """
-    NIVEAU 6 BIONIC V5 — Statut de calibration du modèle.
+    NIVEAU 6 BIONIC V6 — Statut de calibration du modèle.
     
     Returns:
         Statut de calibration, version du modèle, métriques de validation

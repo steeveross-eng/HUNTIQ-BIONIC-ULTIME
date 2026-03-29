@@ -1,6 +1,6 @@
 """
 MODULE VFE — Visual Fusion Engine
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #5
+BIONIC V6 GOLDEN — Phase d'Optimisation #5
 
 Fusion des couches certifiees SSE + OSG + CME + WSE/WIV:
   - visibility_field: champ de visibilite par espece

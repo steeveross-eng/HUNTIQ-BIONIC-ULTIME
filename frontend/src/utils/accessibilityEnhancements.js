@@ -2,7 +2,7 @@
  * Accessibility Enhancements - BRANCHE 1 POLISH FINAL
  * 
  * WCAG 2.2 AAA Polish - Focus states, contrastes, ARIA, navigation clavier
- * Conforme aux exigences BIONIC V5
+ * Conforme aux exigences BIONIC V6
  * 
  * OBJECTIF: Conformité WCAG AAA 100%
  * 

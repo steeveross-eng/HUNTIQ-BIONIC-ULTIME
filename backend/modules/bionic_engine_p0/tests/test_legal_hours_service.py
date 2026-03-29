@@ -10,7 +10,7 @@ COUVERTURE:
 - Clipping des fenêtres temporelles
 - Facteur temporel (temporal_factor)
 
-Conformité: G-QA | BIONIC V5
+Conformité: G-QA | BIONIC V6
 """
 
 import pytest
@@ -338,7 +338,7 @@ class TestTemporalFactor:
             region="CA-QC"
         )
         
-        # RÈGLE BIONIC V5: temporal_factor = 0 hors période légale
+        # RÈGLE BIONIC V6: temporal_factor = 0 hors période légale
         assert factor == 0.0
     
     def test_temporal_factor_high_dawn(self, service, quebec_coords, test_date):

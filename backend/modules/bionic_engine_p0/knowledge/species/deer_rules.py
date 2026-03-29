@@ -1,5 +1,5 @@
 """
-BIONIC V5 — WHITE-TAILED DEER BEHAVIOR RULES
+BIONIC V6 — WHITE-TAILED DEER BEHAVIOR RULES
 =============================================
 PHASE 7 — Knowledge Layer
 
@@ -13,7 +13,7 @@ SOURCES PRINCIPALES:
 - SRC-UMAINE-001: University of Maine
 
 VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 from typing import List, Tuple

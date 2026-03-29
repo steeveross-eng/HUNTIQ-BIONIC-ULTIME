@@ -1,5 +1,5 @@
 """
-TEST DEM OpenTopography API — BIONIC V5 ULTIME 300%
+TEST DEM OpenTopography API — BIONIC V6 GOLDEN
 ===================================================
 Tests for:
 - GET  /api/v1/bionic/dem/status  (healthcheck)

@@ -1,5 +1,5 @@
 """
-TEST: Route Planner API — BIONIC V5 ULTIME 300%
+TEST: Route Planner API — BIONIC V6 GOLDEN
 Tests for POST /api/v1/bionic/route-planner/compute and GET /api/v1/bionic/route-planner/status
 
 Iteration 86 - New Feature Testing

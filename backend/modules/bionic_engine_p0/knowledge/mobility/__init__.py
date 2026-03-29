@@ -1,5 +1,5 @@
 """
-BIONIC V5 — MOBILITY MODULE (NIVEAU 5)
+BIONIC V6 — MOBILITY MODULE (NIVEAU 5)
 ======================================
 Module de gestion de la mobilité dynamique.
 
@@ -14,7 +14,7 @@ PARAMÈTRES DE MOBILITÉ:
 - Contraintes thermiques
 - Modulation PRES-HUMAN
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 NIVEAU 5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 NIVEAU 5
 """
 
 from .mobility_models import (

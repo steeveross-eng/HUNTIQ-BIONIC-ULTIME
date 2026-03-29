@@ -1,6 +1,6 @@
 """
 TEST SSE ENGINE — Satellite-to-Semantic Engine
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #1
+BIONIC V6 GOLDEN — Phase d'Optimisation #1
 
 Tests:
   - POST /api/v1/bionic/sse/analyze for all 5 species

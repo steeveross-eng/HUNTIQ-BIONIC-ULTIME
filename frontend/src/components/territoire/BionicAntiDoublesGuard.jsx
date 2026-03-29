@@ -1,7 +1,7 @@
 /**
  * BionicAntiDoublesGuard.jsx
  * 
- * BIONIC V5 300% — Protection anti-doublons ISOLÉE
+ * BIONIC V6 GOLDEN — Protection anti-doublons ISOLÉE
  * 
  * RÔLE :
  *   1. Supprime TOUS les tooltips/popups parasites via injection CSS

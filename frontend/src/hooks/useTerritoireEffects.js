@@ -107,7 +107,7 @@ export function useSnapshotExport(selectedWaypointForZones, generateSnapshot, se
           doc.addImage(canvas.toDataURL('image/jpeg', 0.8), 'JPEG', 10, 10, 180, 120);
         }
         const y0 = 135;
-        doc.setFontSize(14); doc.text(`Snapshot Territoire — BIONIC V5 300%`, 10, y0);
+        doc.setFontSize(14); doc.text(`Snapshot Territoire — BIONIC V6 GOLDEN`, 10, y0);
         doc.setFontSize(9);
         doc.text(`Waypoint: ${snap.waypoint?.name || 'N/A'}`, 10, y0 + 7);
         doc.text(`Coords: ${snap.waypoint?.lat?.toFixed(6)}, ${snap.waypoint?.lng?.toFixed(6)}`, 10, y0 + 12);

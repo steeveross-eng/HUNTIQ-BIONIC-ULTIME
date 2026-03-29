@@ -1,5 +1,5 @@
 """
-BIONIC V5 — NOTIFICATION REGISTRY (PHASE F — NOTIFICATIONS PUSH)
+BIONIC V6 — NOTIFICATION REGISTRY (PHASE F — NOTIFICATIONS PUSH)
 =================================================================
 VAPID Natif — 100% Autonome
 
@@ -18,7 +18,7 @@ TYPES D'ALERTES:
 - safety_update: Mise à jour de sécurité
 
 VERSION: 7.2.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 MASTER
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 MASTER
 """
 
 from typing import Dict, List, Optional, Any
@@ -243,7 +243,7 @@ class NotificationPayload:
 class AlertTriggerRule:
     """
     Règle de déclenchement d'alerte centralisée.
-    Conformité BIONIC V5: règles versionnées, documentées, traçables.
+    Conformité BIONIC V6: règles versionnées, documentées, traçables.
     """
     
     rule_id: str
@@ -259,7 +259,7 @@ class AlertTriggerRule:
     resulting_priority: AlertPriority = AlertPriority.MEDIUM
     
     # Message template
-    title_template: str = "Alerte BIONIC V5"
+    title_template: str = "Alerte BIONIC V6"
     body_template: str = "Une nouvelle alerte a été détectée dans votre zone."
     
     # Activation
@@ -297,7 +297,7 @@ class AlertTriggerRule:
 
 class NotificationRegistry:
     """
-    Registre centralisé des notifications BIONIC V5.
+    Registre centralisé des notifications BIONIC V6.
     
     RESPONSABILITÉS:
     1. Génération et stockage des clés VAPID

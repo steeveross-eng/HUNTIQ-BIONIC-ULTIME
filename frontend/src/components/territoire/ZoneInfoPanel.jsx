@@ -1,13 +1,13 @@
 /**
  * ZoneInfoPanel — Panneau d'information persistant des zones BIONIC
- * BIONIC V5 ULTIME 300% — zone_info_panel_v1
+ * BIONIC V6 GOLDEN — zone_info_panel_v1
  *
  * Affiche en permanence les détails d'une zone ciblée :
  *  - Type de zone, score, interprétation
  *  - Superficie, coordonnées
  *  - Code couleur BIONIC
  *
- * Norme UI/UX BIONIC V5 300% :
+ * Norme UI/UX BIONIC V6 GOLDEN :
  *  - Ancré, z-index élevé, jamais masqué
  *  - Scroll interne si nécessaire
  *  - Responsive desktop/mobile

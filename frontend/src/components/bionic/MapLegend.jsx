@@ -1,7 +1,7 @@
 /**
  * MapLegend - Légende de la Carte BIONIC avec Coloration Dynamique
  * ================================================================
- * BIONIC V5 ULTIME - PHASE 5.6
+ * BIONIC V6 ULTIME - PHASE 5.6
  * 
  * RESPONSABILITÉ UNIQUE:
  * - Afficher la légende des scores avec échelle de 10
@@ -20,7 +20,7 @@
  * - Aucune logique métier
  * - Données via props uniquement
  * 
- * Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+ * Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
  */
 
 import React from 'react';

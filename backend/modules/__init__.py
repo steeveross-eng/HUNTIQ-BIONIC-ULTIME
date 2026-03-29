@@ -1,4 +1,4 @@
-"""BIONIC V3 - Modular Architecture
+"""BIONIC V6 - Modular Architecture
 
 This package contains all modular engines for the BIONIC platform.
 Each module is isolated and versioned independently.

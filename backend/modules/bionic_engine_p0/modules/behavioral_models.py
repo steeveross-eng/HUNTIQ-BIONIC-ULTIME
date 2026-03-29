@@ -6,7 +6,7 @@ Version: 1.0.0-beta2
 Module de modelisation et prediction comportementale.
 Strictement conforme au contrat: behavioral_models_contract.json
 
-INTEGRATION DES 12 FACTEURS COMPORTEMENTAUX (BIONIC V5 ULTIME x2):
+INTEGRATION DES 12 FACTEURS COMPORTEMENTAUX (BIONIC V6 ULTIME x2):
 1. Predation (PredatorRisk, PredatorCorridors)
 2. Stress physiologique (Thermal/Hydric/Social Stress)
 3. Hierarchie sociale (DominanceScore, GroupBehavior)

@@ -1,6 +1,6 @@
 """
 SERVICE HABITAT SCORE — Multi-Factor Habitat Quality Grid
-BIONIC V5 ULTIME 300% — habitat_score_v1
+BIONIC V6 GOLDEN — habitat_score_v1
 
 Calcul multi-facteurs du score d'habitat optimal (0-100%).
 Genere une grille pre-calculee pour interpolation frontend.

@@ -1,7 +1,7 @@
 """
-BIONIC V5 Iteration 61 — Organic Pipeline V2 Validation Tests
+BIONIC V6 Iteration 61 — Organic Pipeline V2 Validation Tests
 
-Testing BIONIC V5 corrections:
+Testing BIONIC V6 corrections:
 1) Simplex noise isotrope (behavioral_rasterizer.py)
 2) Blob extraction via composantes connexes (organic_zone_generator_v2.py)
 3) Zone validation: aspect ratio < 3, 50+ vertices, compactness > 0.10
@@ -27,7 +27,7 @@ TEST_BOUNDS = {
 
 
 class TestOrganicZonesV2:
-    """Tests for BIONIC V5 organic pipeline V2 corrections"""
+    """Tests for BIONIC V6 organic pipeline V2 corrections"""
     
     def test_organic_zones_endpoint_status(self):
         """Test that POST /api/v1/bionic/organic-zones returns 200"""

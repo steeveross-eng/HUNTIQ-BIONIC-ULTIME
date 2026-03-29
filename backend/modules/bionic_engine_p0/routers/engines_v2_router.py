@@ -1,6 +1,6 @@
 """
 STEVE-MAX: BIONIC Engines V2 Router
-Endpoints for executing and querying the 12 BIONIC V2 engines.
+Endpoints for executing and querying the 12 BIONIC V6 engines.
 """
 
 from fastapi import APIRouter
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/v1/bionic", tags=["engines-v2"])
 @router.post("/engines-v2/compute")
 async def compute_all_engines_endpoint(request: dict):
     """
-    Execute all 12 BIONIC V2 engines with the given context.
+    Execute all 12 BIONIC V6 engines with the given context.
     Returns individual scores + global attractiveness score.
     """
     try:
@@ -49,7 +49,7 @@ async def compute_all_engines_endpoint(request: dict):
 
 @router.get("/engines-v2/status")
 async def engines_v2_status():
-    """Return status of all 12 BIONIC V2 engines."""
+    """Return status of all 12 BIONIC V6 engines."""
     try:
         from modules.bionic_engine_p0.engines.engines_v2 import get_engine_statuses
         statuses = get_engine_statuses()

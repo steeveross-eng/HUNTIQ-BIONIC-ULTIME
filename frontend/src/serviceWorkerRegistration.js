@@ -70,7 +70,7 @@ function registerValidSW(swUrl, config) {
             if (navigator.serviceWorker.controller) {
               console.log(`[SW ${SW_VERSION}] Nouveau code détecté — activation forcée`);
               
-              // BIONIC V5 300%: Force le nouveau SW à prendre le contrôle IMMÉDIATEMENT
+              // BIONIC V6 GOLDEN: Force le nouveau SW à prendre le contrôle IMMÉDIATEMENT
               installingWorker.postMessage({ type: 'SKIP_WAITING' });
               
               if (config && config.onUpdate) {
@@ -87,7 +87,7 @@ function registerValidSW(swUrl, config) {
         };
       };
       
-      // BIONIC V5 300% FIX: Rechargement unique garanti par sessionStorage
+      // BIONIC V6 GOLDEN FIX: Rechargement unique garanti par sessionStorage
       // Empêche la boucle infinie de reload SW
       navigator.serviceWorker.addEventListener('controllerchange', () => {
         const reloadKey = `sw_reload_${SW_VERSION}`;

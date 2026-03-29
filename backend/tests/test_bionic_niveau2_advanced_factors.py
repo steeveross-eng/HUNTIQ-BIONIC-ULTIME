@@ -1,5 +1,5 @@
 """
-BIONIC V5 NIVEAU 2 — Validation Exhaustive des 4 Facteurs Comportementaux Avancés (PHASE B)
+BIONIC V6 NIVEAU 2 — Validation Exhaustive des 4 Facteurs Comportementaux Avancés (PHASE B)
 ============================================================================================
 
 Ce module valide les 4 facteurs comportementaux avancés de la PHASE B:
@@ -20,7 +20,7 @@ SAISONS TESTÉES: rut, pre_rut, default
 RANGS SOCIAUX: alpha, subordinate
 COMPÉTITEURS: bear, deer
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 import pytest

@@ -2,7 +2,7 @@
  * Performance Optimizations - BRANCHE 1 POLISH FINAL
  * 
  * Micro-optimisations CPU Main Thread et détection des tâches longues
- * Conforme aux exigences BIONIC V5
+ * Conforme aux exigences BIONIC V6
  * 
  * OBJECTIF: Aucune tâche bloquante > 50ms
  * 

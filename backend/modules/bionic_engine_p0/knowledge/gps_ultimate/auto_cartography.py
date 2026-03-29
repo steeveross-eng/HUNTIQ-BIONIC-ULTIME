@@ -1,5 +1,5 @@
 """
-BIONIC V5 — AUTO-CARTOGRAPHY ENGINE (PHASE F)
+BIONIC V6 — AUTO-CARTOGRAPHY ENGINE (PHASE F)
 ==============================================
 PHASE F — GPS ULTIMATE
 
@@ -11,7 +11,7 @@ FONCTIONNALITÉS:
 3. Recalcul continu selon NIVEAU 1-6
 
 VERSION: 7.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 PHASE F
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 PHASE F
 """
 
 from typing import Dict, List, Optional, Any, Tuple

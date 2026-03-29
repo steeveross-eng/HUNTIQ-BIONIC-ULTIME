@@ -1,5 +1,5 @@
 """
-BIONIC V5 — GPS ULTIMATE MODULE (PHASE F)
+BIONIC V6 — GPS ULTIMATE MODULE (PHASE F)
 ==========================================
 Module GPS ULTIMATE pour analyse en temps réel.
 
@@ -9,7 +9,7 @@ PHASE F — GPS ULTIMATE:
 3. Real-Time Integration (GPS chasseurs, recalcul instantané)
 4. Observations Terrain (calibration vers MASTER)
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 PHASE F
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 PHASE F
 """
 
 from .auto_cartography import (

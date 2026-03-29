@@ -1,7 +1,7 @@
 """
 BIONIC ENGINE — Scoring Services Package
 =========================================
-Architecture des 9 scores canoniques BIONIC V5 ULTIME.
+Architecture des 9 scores canoniques BIONIC V6 ULTIME.
 
 SCORES:
 1. ScoreProbabilityService  - Probabilité de succès de chasse
@@ -19,7 +19,7 @@ ISOLATION:
 - Aucun import transversal
 - Interface commune via BaseScoreService
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 from .base_score_service import (

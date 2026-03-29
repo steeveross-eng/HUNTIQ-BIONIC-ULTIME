@@ -1,5 +1,5 @@
 """
-BIONIC V5 — Dynamic Exclusion Scores Router
+BIONIC V6 — Dynamic Exclusion Scores Router
 =============================================
 Endpoint: POST /api/v1/bionic/dynamic-scores
 

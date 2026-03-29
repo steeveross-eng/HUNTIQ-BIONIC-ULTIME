@@ -1,5 +1,5 @@
 """
-FULL SHADOW COMPARISON — BIONIC V5 ULTIME 300%
+FULL SHADOW COMPARISON — BIONIC V6 GOLDEN
 ===============================================
 Test: POST /api/v1/bionic/shadow/full-comparison
 Test: GET /api/v1/bionic/shadow/full-comparison/status

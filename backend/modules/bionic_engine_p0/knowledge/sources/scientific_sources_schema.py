@@ -1,10 +1,10 @@
 """
-BIONIC V5 — SCIENTIFIC SOURCES SCHEMA
+BIONIC V6 — SCIENTIFIC SOURCES SCHEMA
 ======================================
 PHASE 7 — Knowledge Layer
 
 Schéma standardisé pour intégrer et tracer les sources scientifiques
-et empiriques dans le moteur BIONIC V5.
+et empiriques dans le moteur BIONIC V6.
 
 EXIGENCES DE TRAÇABILITÉ:
 - Chaque règle comportementale DOIT référencer une ou plusieurs sources
@@ -20,7 +20,7 @@ CATÉGORIES DE SOURCES:
 - ASSOCIATION: NDA, QDMA, programmes Alberta/BC
 
 VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 from enum import Enum

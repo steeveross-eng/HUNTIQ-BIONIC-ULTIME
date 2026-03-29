@@ -1,5 +1,5 @@
 """
-BIONIC V5 — MULE DEER BEHAVIOR RULES
+BIONIC V6 — MULE DEER BEHAVIOR RULES
 =====================================
 PHASE 7 — Knowledge Layer
 

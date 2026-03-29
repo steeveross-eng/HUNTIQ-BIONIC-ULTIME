@@ -1,6 +1,6 @@
 """
 TEST SUITE — BMPE API (Behavioral Micro-Patterns Engine)
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #9
+BIONIC V6 GOLDEN — Phase d'Optimisation #9
 
 Tests:
 - POST /api/v1/bionic/bmpe/analyze — 5 espèces x 3 territoires

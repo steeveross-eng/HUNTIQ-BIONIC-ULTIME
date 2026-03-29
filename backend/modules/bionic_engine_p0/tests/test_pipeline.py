@@ -1,6 +1,6 @@
 """
 TEST SUITE — Pipeline Full Analysis & Metrics
-BIONIC V5 ULTIME 300% — PHASE G
+BIONIC V6 GOLDEN — PHASE G
 
 Validation:
 - Full pipeline 10 modules en ordre strict
@@ -8,7 +8,7 @@ Validation:
 - Metriques globales multi-especes
 - source_ids dynamiques pour les 10 modules
 - Corridor analyses (PME, BMPE, TFE)
-- Conformite BIONIC V5 ULTIME 300%
+- Conformite BIONIC V6 GOLDEN
 """
 
 import pytest

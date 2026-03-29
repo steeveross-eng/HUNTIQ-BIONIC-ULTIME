@@ -18,7 +18,7 @@ ISOLATION:
 - Interface pure pour héritage
 - Accès Knowledge Layer via points d'entrée unifiés uniquement
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 import logging
@@ -92,7 +92,7 @@ class ScoreContext:
     Contient toutes les informations nécessaires pour calculer un score,
     centrées sur un waypoint de référence.
     
-    BIONIC V5 - Architecture Modulaire:
+    BIONIC V6 - Architecture Modulaire:
     - Les modificateurs avancés sont calculés par UnifiedScoringService
     - Les services individuels CONSOMMENT ces modificateurs sans logique locale
     """

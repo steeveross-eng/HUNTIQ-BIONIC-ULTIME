@@ -1,12 +1,12 @@
 """
-BIONIC V5 — REALTIME INTEGRATION SERVICE (PHASE F)
+BIONIC V6 — REALTIME INTEGRATION SERVICE (PHASE F)
 ====================================================
 PHASE F — GPS ULTIMATE
 
 Service d'intégration temps réel pour GPS chasseurs.
 
 VERSION: 7.0.0 (stub)
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 PHASE F
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 PHASE F
 """
 
 from typing import Dict, List, Optional, Any

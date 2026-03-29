@@ -1,5 +1,5 @@
 """
-BIONIC V5 - Iteration 55 Testing
+BIONIC V6 - Iteration 55 Testing
 Tests for organic polygon generation, water exclusion, and terrain data API
 
 Key changes to verify:

@@ -1,7 +1,7 @@
 /**
- * CarteBionic - Carte Interactive BIONIC V5
+ * CarteBionic - Carte Interactive BIONIC V6
  * ==========================================
- * BIONIC V5 ULTIME - PHASE 6 - ACTION 5
+ * BIONIC V6 ULTIME - PHASE 6 - ACTION 5
  * 
  * RESPONSABILITÉ UNIQUE:
  * - Afficher la carte interactive avec Leaflet
@@ -18,7 +18,7 @@
  * - Appel API via service dédié
  * - État local pour les layers
  * 
- * Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+ * Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
  */
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
@@ -168,7 +168,7 @@ const MapController = ({ center, zoom }) => {
 
 /**
  * Composant pour initialiser les panes de layers avec z-index distincts
- * Garantit la superposabilité sans conflit visuel (P0.2 BIONIC V5)
+ * Garantit la superposabilité sans conflit visuel (P0.2 BIONIC V6)
  */
 const LayerPanesInitializer = () => {
   const map = useMap();
@@ -809,7 +809,7 @@ const AnalysisInfoPanel = ({ analysisData, isLoading }) => {
 /**
  * CarteBionic
  * 
- * Carte interactive BIONIC V5 avec intégration des layers depuis l'API.
+ * Carte interactive BIONIC V6 avec intégration des layers depuis l'API.
  * 
  * @param {Object} waypoint - Waypoint sélectionné à analyser
  * @param {string} species - Espèce cible (défaut: orignal)
@@ -941,7 +941,7 @@ const CarteBionic = ({
             <CardTitle className="flex items-center justify-between text-white text-base">
               <div className="flex items-center gap-2">
                 <Layers className="w-5 h-5" style={{ color: BIONIC_COLORS.gold.primary }} />
-                Carte BIONIC V5
+                Carte BIONIC V6
                 {analysisData && (
                   <Badge variant="outline" className="text-xs ml-2">
                     {analysisData.analysis_id}

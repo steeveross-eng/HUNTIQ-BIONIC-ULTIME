@@ -1,5 +1,5 @@
 """
-BIONIC V5 300% — Tests Anti-Régression: Spatial Clipping
+BIONIC V6 GOLDEN — Tests Anti-Régression: Spatial Clipping
 =========================================================
 INVARIANT: Ces tests doivent PASSER à chaque build.
 0 débordement, 0 géométrie complète, 0 variation après figement.
@@ -158,7 +158,7 @@ class TestClipZones:
 
 
 class TestClippingInvariance:
-    """Tests de non-régression — INVARIANTS BIONIC V5 300%."""
+    """Tests de non-régression — INVARIANTS BIONIC V6 GOLDEN."""
     
     def test_clipping_deterministic(self):
         """Même entrée = même sortie."""

@@ -1,5 +1,5 @@
 """
-BIONIC V5 PHASE C — API & Frontend Integration Tests
+BIONIC V6 PHASE C — API & Frontend Integration Tests
 =====================================================
 Tests for the new Phase C API endpoints and frontend integration.
 

@@ -1,7 +1,7 @@
 /**
  * AdminBionicHotspots - Module d'Administration des Hotspots BIONIC
  * ==================================================================
- * BIONIC V5 ULTIME - PHASE 5.7
+ * BIONIC V6 ULTIME - PHASE 5.7
  * 
  * RESPONSABILITÉ UNIQUE:
  * - Afficher la liste des hotspots analytiques BIONIC
@@ -16,7 +16,7 @@
  * - Aucune logique métier interne
  * - Toutes les actions via callbacks (props)
  * 
- * Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+ * Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
  */
 
 import React, { useState, useMemo } from 'react';

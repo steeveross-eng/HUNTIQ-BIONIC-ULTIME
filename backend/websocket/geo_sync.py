@@ -360,7 +360,7 @@ async def list_active_groups():
 async def websocket_health():
     """
     Health check pour le service WebSocket.
-    P0.3 BIONIC V5 - Validation du support wss://
+    P0.3 BIONIC V6 - Validation du support wss://
     """
     return {
         "status": "healthy",

@@ -17,7 +17,7 @@ SCALABILITÉ INTERNATIONALE:
 - États-Unis (tous états)
 - Europe, Amérique du Sud, Afrique, Océanie
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 from typing import Dict, List, Tuple, Optional, Any

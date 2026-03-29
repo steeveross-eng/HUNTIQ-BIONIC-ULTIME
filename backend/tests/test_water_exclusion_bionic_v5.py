@@ -1,5 +1,5 @@
 """
-Test suite for BIONIC V5 Water Exclusion Rule Validation
+Test suite for BIONIC V6 Water Exclusion Rule Validation
 =========================================================
 
 Tests validating:

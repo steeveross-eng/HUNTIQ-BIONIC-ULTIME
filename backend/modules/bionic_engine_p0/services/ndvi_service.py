@@ -1,6 +1,6 @@
 """
 SERVICE NDVI — NDVI Calculation via Sentinel Hub Process API
-BIONIC V5 ULTIME 300% — ndvi_v1
+BIONIC V6 GOLDEN — ndvi_v1
 
 Utilise l'API Sentinel Hub Process pour calculer le NDVI directement
 cote serveur (pas besoin de telecharger les bandes brutes).

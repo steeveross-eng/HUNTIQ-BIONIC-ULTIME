@@ -104,7 +104,7 @@ class TestBackendHealthAndEndpoints:
         for engine in engines:
             assert engine.get('status') == 'active'
         
-        print(f"✓ 12 BIONIC V2 engines active: {[e['id'] for e in engines]}")
+        print(f"✓ 12 BIONIC V6 engines active: {[e['id'] for e in engines]}")
 
 
 class TestFrontendColorHarmonization:

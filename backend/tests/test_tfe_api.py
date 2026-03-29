@@ -1,6 +1,6 @@
 """
 TFE (Thermal Flow Engine) — API Test Suite
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #10
+BIONIC V6 GOLDEN — Phase d'Optimisation #10
 
 Testing:
 - POST /api/v1/bionic/tfe/analyze — 5 espèces x 3 territoires

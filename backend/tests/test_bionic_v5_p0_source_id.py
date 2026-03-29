@@ -1,5 +1,5 @@
 """
-BIONIC V5 P0 — Dynamic source_id Validation Tests
+BIONIC V6 P0 — Dynamic source_id Validation Tests
 Tests the P0 fix: source_id must be dynamic based on species from orchestrator.
 No hardcoded fallback allowed.
 

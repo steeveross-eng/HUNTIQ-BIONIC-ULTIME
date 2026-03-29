@@ -1,6 +1,6 @@
 """
 TEST NDVI SHADOW API — Sentinel-2 NDVI Integration (Shadow Mode)
-BIONIC V5 ULTIME 300% — Iteration 83
+BIONIC V6 GOLDEN — Iteration 83
 
 Tests for:
   GET  /api/v1/bionic/ndvi-shadow/status  — Service status with valid credentials

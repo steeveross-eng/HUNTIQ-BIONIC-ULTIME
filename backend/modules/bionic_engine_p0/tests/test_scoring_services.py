@@ -9,7 +9,7 @@ COUVERTURE:
 - Vérification des data contracts
 - Test de calculate() avec contexte minimal
 
-Conformité: G-QA | BIONIC V5
+Conformité: G-QA | BIONIC V6
 """
 
 import pytest

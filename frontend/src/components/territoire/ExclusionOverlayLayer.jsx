@@ -1,5 +1,5 @@
 /**
- * ExclusionOverlayLayer.jsx — Couche visuelle zones d'exclusion BIONIC V5 300%
+ * ExclusionOverlayLayer.jsx — Couche visuelle zones d'exclusion BIONIC V6 GOLDEN
  *
  * Overlay semi-transparent affichant les zones d'exclusion (eau, urbain, routes, infrastructure)
  * directement sur la carte. Source: API terrain-data (Overpass).

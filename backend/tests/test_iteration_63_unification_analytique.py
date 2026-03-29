@@ -1,5 +1,5 @@
 """
-Iteration 63 — Unification analytique BIONIC V3
+Iteration 63 — Unification analytique BIONIC V6
 =================================================
 Tests for INTELLIGENCE as the SOLE analytic source.
 Verifies:

@@ -1,7 +1,7 @@
 /**
  * BIONIC Charts - Index des exports
  * ==================================
- * BIONIC V5 ULTIME - PHASE 5.3
+ * BIONIC V6 ULTIME - PHASE 5.3
  */
 
 export { default as ScoreRadarPanel } from './ScoreRadarPanel';

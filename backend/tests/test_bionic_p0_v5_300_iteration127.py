@@ -1,5 +1,5 @@
 """
-BIONIC V5 300% Backend Tests - Iteration 127
+BIONIC V6 GOLDEN Backend Tests - Iteration 127
 Tests for P0, P1, P1.1, P2 requirements
 """
 import pytest

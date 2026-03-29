@@ -1,6 +1,6 @@
 """
 MODULE CME — Corridor Morphology Engine
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #3
+BIONIC V6 GOLDEN — Phase d'Optimisation #3
 
 Generation de corridors organiques morphologiquement realistes:
   - Routage par vallees et micro-relief (SSE.microrelief)

@@ -2,7 +2,7 @@
  * SEO Head Component - PHASE E (SEO AVANCÉ)
  * 
  * Gère les balises meta, OpenGraph, Twitter Cards, Canonical et Schema.org JSON-LD
- * Conforme aux directives BIONIC V5 et aux standards Google 2026
+ * Conforme aux directives BIONIC V6 et aux standards Google 2026
  * 
  * @module SEOHead
  * @version 2.0.0

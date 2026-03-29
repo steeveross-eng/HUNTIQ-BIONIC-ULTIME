@@ -1,6 +1,6 @@
 """
 MODULE SSE — Satellite-to-Semantic Engine
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #1
+BIONIC V6 GOLDEN — Phase d'Optimisation #1
 
 Extraction semantique du terrain:
   - Couvert forestier (densite, type, continuite)

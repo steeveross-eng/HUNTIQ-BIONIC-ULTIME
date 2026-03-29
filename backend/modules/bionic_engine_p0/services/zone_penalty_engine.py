@@ -1,6 +1,6 @@
 """
 MODULE P1 — Zone Penalty Engine
-BIONIC V5 — Pénalités Semi-Statiques
+BIONIC V6 — Pénalités Semi-Statiques
 
 Calcule des multiplicateurs de pénalité (0.0 → 1.0) pour chaque zone valide.
 Appliqué APRÈS exclusions dures (P0), AVANT scoring final.
@@ -35,7 +35,7 @@ BAND_FAR = 1000     # 500-1000m
 # MATRICE DE PÉNALITÉ PAR COUCHE × TYPE DE PROXIMITÉ
 # Format: { layer_id: { exclusion_type: { "close": mult, "medium": mult, "far": mult } } }
 #
-# Ajustements BIONIC V5 300% validés:
+# Ajustements BIONIC V6 GOLDEN validés:
 #   - Eau close repos/rut: ×0.70 (exposition accrue)
 #   - Routes close: ×0.30 (risque élevé + perturbation)
 #   - Infra close: ×0.40 (alignement routes)

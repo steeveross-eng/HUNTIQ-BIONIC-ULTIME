@@ -1,5 +1,5 @@
 """
-BIONIC V5 — PHASE C.2: JUVENILE DISPERSAL MODELS
+BIONIC V6 — PHASE C.2: JUVENILE DISPERSAL MODELS
 =================================================
 
 Modèles de dispersion juvénile espèce-spécifiques et région-spécifiques.
@@ -19,7 +19,7 @@ ESPÈCES SUPPORTÉES:
 - Ours noir (Ursus americanus)
 - Wapiti (Cervus canadensis)
 
-CONFORMITÉ: G-SEC | G-QA | G-DOC | BIONIC V5
+CONFORMITÉ: G-SEC | G-QA | G-DOC | BIONIC V6
 TRAÇABILITÉ: source_ids obligatoires
 VERSION: 1.0.0
 """
@@ -178,7 +178,7 @@ class JuvenileDispersalRegistry:
     """
     Registre central des modèles de dispersion juvénile.
     
-    Pipeline BIONIC V5:
+    Pipeline BIONIC V6:
     - Données centralisées dans le Knowledge Layer
     - Basé sur études GPS et télémétrie
     - Traçabilité source_ids obligatoire

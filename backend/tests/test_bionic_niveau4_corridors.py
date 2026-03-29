@@ -1,5 +1,5 @@
 """
-BIONIC V5 NIVEAU 4 — Corridor Tests
+BIONIC V6 NIVEAU 4 — Corridor Tests
 ====================================
 Test complet des corridors de déplacement NIVEAU 4 - Habitat & Corridors.
 
@@ -17,7 +17,7 @@ TYPES DE CORRIDORS:
 - THERMAL: #FF4D4D, continu semi-transparent (0.6), 5px
 - RISK: #CC0000, continu, 6px avec halo rose (#FFCCCC)
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 NIVEAU 4
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 NIVEAU 4
 """
 
 import pytest

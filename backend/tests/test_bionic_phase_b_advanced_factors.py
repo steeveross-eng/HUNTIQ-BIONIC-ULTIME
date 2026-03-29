@@ -1,5 +1,5 @@
 """
-BIONIC V5 — PHASE B: Advanced Factors Integration Tests
+BIONIC V6 — PHASE B: Advanced Factors Integration Tests
 =========================================================
 
 Tests for the 4 advanced factors integrated per service:

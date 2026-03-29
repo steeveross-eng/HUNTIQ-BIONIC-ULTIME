@@ -1,5 +1,5 @@
 """
-BIONIC V5 — MOBILITY PREDICTION (NIVEAU 6)
+BIONIC V6 — MOBILITY PREDICTION (NIVEAU 6)
 ==========================================
 NIVEAU 6 — Mesure & Figeage
 
@@ -14,7 +14,7 @@ FONCTIONNALITÉS:
 - Intégration des facteurs NIVEAU 1-5
 
 VERSION: 6.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 NIVEAU 6
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 NIVEAU 6
 """
 
 from typing import Dict, List, Optional, Any, Tuple
@@ -361,7 +361,7 @@ class MobilityPredictionService:
         trajectory_interval_min: int = 30
     ) -> MobilityPrediction:
         """
-        NIVEAU 6 BIONIC V5 — Prédiction de mobilité sur fenêtre temporelle.
+        NIVEAU 6 BIONIC V6 — Prédiction de mobilité sur fenêtre temporelle.
         
         Args:
             start_lat, start_lng: Position de départ

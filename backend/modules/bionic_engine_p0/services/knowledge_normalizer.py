@@ -1,5 +1,5 @@
 """
-BIONIC V5 — PHASE D: Knowledge Layer Normalizer
+BIONIC V6 — PHASE D: Knowledge Layer Normalizer
 ==================================================
 PHASE D.3 — Normalisation avancée du Knowledge Layer
 
@@ -13,7 +13,7 @@ VALIDATIONS:
 - Rapport d'intégrité
 
 VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 PHASE D
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 PHASE D
 """
 
 import logging
@@ -83,7 +83,7 @@ class KnowledgeLayerReport:
 
 class KnowledgeLayerNormalizer:
     """
-    Validateur et normaliseur du Knowledge Layer BIONIC V5.
+    Validateur et normaliseur du Knowledge Layer BIONIC V6.
     
     Vérifie l'intégrité de chaque module et produit un rapport.
     """

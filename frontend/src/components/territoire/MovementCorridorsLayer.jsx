@@ -1,6 +1,6 @@
 /**
  * MovementCorridorsLayer — Corridors de déplacement réels vs estimés
- * BIONIC V5 ULTIME 300% — movement_corridors_v1
+ * BIONIC V6 GOLDEN — movement_corridors_v1
  *
  * - Lignes continues pleines = déplacements réels, confirmés, structurels
  * - Lignes pointillées = déplacements estimés, influencés par conditions actuelles

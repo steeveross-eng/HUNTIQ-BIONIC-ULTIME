@@ -1,5 +1,5 @@
 """
-BIONIC V5 — PHASE C.4: HUNTING PRESSURE MODELS
+BIONIC V6 — PHASE C.4: HUNTING PRESSURE MODELS
 ===============================================
 
 Modèles de pression de chasse réelle basés sur données terrain.
@@ -16,7 +16,7 @@ TYPES DE PRESSION:
 - Pression dynamique: activité en temps réel
 - Pression cumulative: effet d'accumulation sur la saison
 
-CONFORMITÉ: G-SEC | G-QA | G-DOC | BIONIC V5
+CONFORMITÉ: G-SEC | G-QA | G-DOC | BIONIC V6
 TRAÇABILITÉ: source_ids obligatoires
 VERSION: 1.0.0
 """
@@ -228,7 +228,7 @@ class HuntingPressureRegistry:
     """
     Registre central de la pression de chasse.
     
-    Pipeline BIONIC V5:
+    Pipeline BIONIC V6:
     - Intègre données terrain et statistiques officielles
     - Calcule la pression dynamique basée sur observations
     - Traçabilité source_ids obligatoire

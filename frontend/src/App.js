@@ -20,7 +20,7 @@ import { LanguageProvider, useLanguage, LanguageSwitcher } from "@/contexts/Lang
 import BionicLogo, { BionicLogoGlobal } from "@/components/BionicLogo";
 import ScrollNavigator from "@/components/ScrollNavigator";
 import { NotificationProvider } from "@/modules/notifications";
-// PHASE F: Centre de notifications push temps réel
+// V6 GOLDEN: Centre de notifications push temps réel
 import AlertNotificationCenter from "@/components/AlertNotificationCenter";
 
 // BCE-4X PURGE: Imports fantomes SUPPRIMES (STEEVE-MAX directive)
@@ -58,7 +58,7 @@ const AdminPremiumPage = lazy(() => import("@/pages/AdminPremiumPage"));
 const MarketingCalendarPage = lazy(() => import("@/pages/MarketingCalendarPage"));
 const HuntingLicensePage = lazy(() => import("@/pages/HuntingLicensePage"));
 const BionicAnalysisDemoPage = lazy(() => import("@/pages/BionicAnalysisDemoPage"));
-// PHASE F: Interface d'observations terrain
+// V6 GOLDEN: Interface d'observations terrain
 const FieldObservationForm = lazy(() => import("@/pages/FieldObservationForm"));
 // CALIBRATION MASTER: Dashboard de calibration
 const CalibrationDashboard = lazy(() => import("@/pages/CalibrationDashboard"));
@@ -1001,9 +1001,9 @@ function App() {
                 <Route path="/admin-premium" element={<AdminPremiumPage />} />
                 {/* Marketing Calendar V2 */}
                 <Route path="/marketing-calendar" element={<MarketingCalendarPage />} />
-                {/* BIONIC V5 Demo Page */}
+                {/* BIONIC V6 Demo Page */}
                 <Route path="/bionic-demo" element={<BionicAnalysisDemoPage />} />
-                {/* PHASE F: Interface d'observations terrain */}
+                {/* V6 GOLDEN: Interface d'observations terrain */}
                 <Route path="/observations" element={<FieldObservationForm />} />
                 {/* CALIBRATION MASTER: Dashboard de calibration */}
                 <Route path="/calibration" element={<CalibrationDashboard />} />
@@ -1031,7 +1031,7 @@ function App() {
             <Toaster position="bottom-right" richColors />
             <CookieConsent />
             <OfflineIndicator />
-            {/* PHASE F: Centre de notifications push temps réel */}
+            {/* V6 GOLDEN: Centre de notifications push temps réel */}
             <AlertNotificationCenter position="bottom-right" />
           </BrowserRouter>
         </div>

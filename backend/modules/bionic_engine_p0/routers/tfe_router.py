@@ -1,6 +1,6 @@
 """
 ROUTER TFE — Thermal Flow Engine
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #10
+BIONIC V6 GOLDEN — Phase d'Optimisation #10
 
 Endpoint: POST /api/v1/bionic/tfe/analyze
 Endpoint: GET /api/v1/bionic/tfe/status

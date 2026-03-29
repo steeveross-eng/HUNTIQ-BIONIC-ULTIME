@@ -1,12 +1,12 @@
 """
-BIONIC V5 — CALIBRATION MODULE (NIVEAU 6 + MASTER)
+BIONIC V6 — CALIBRATION MODULE (NIVEAU 6 + MASTER)
 ====================================================
 Module de mesure, calibration et figeage du modèle.
 
 NIVEAU 6 — Mesure & Figeage:
 - Tests prédictifs (concordance spatiale, temporelle, comportementale)
 - Calibration (pondérations, modificateurs, seuils)
-- Versionnage maître (BIONIC V5 MASTER)
+- Versionnage maître (BIONIC V6 MASTER)
 
 PHASE F → MASTER — Calibration Optimizer:
 - Comparaison prédiction vs observation
@@ -14,7 +14,7 @@ PHASE F → MASTER — Calibration Optimizer:
 - Dashboard de calibration
 - Verrouillage MASTER à 95%+
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 MASTER
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 MASTER
 """
 
 from .calibration_models import (

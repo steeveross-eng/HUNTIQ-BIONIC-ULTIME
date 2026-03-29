@@ -1,7 +1,7 @@
 /**
  * SeasonalFactorsPanel - Panneau des Facteurs Saisonniers PHASE C
  * ================================================================
- * BIONIC V5 — PHASE C Frontend Integration
+ * BIONIC V6 — PHASE C Frontend Integration
  * 
  * Affiche l'état des 4 modules saisonniers:
  * - C.1 Mise bas / Calving
@@ -13,7 +13,7 @@
  * Données via props (analysisData.scores.advanced_factors_details)
  * 
  * VERSION: 1.0.0
- * Conformité: BIONIC V5 PHASE C
+ * Conformité: BIONIC V6 PHASE C
  */
 
 import React, { useMemo } from 'react';

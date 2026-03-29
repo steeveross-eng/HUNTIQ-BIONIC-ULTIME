@@ -1,6 +1,6 @@
 """
 MODULE TFE — Thermal Flow Engine
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #10
+BIONIC V6 GOLDEN — Phase d'Optimisation #10
 
 Gradients thermiques et flux de chaleur par espece:
   - thermal_gradient_field: gradient thermique spatial (exposition, couvert, elevation)

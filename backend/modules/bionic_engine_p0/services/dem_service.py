@@ -1,6 +1,6 @@
 """
 SERVICE DEM — Digital Elevation Model (OpenTopography)
-BIONIC V5 ULTIME 300% — PHASE G+ Real Data
+BIONIC V6 GOLDEN — PHASE G+ Real Data
 
 Wrapper pour l'API OpenTopography (SRTM GL1 30m, GL3 90m, AW3D30).
 Retourne les donnees d'elevation en numpy array + stats derivees.

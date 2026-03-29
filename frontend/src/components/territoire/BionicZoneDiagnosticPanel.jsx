@@ -1,7 +1,7 @@
 /**
  * BionicZoneDiagnosticPanel.jsx
  * 
- * BIONIC V5 300% — PANNEAU DE DIAGNOSTIC INTELLIGENT (VERSION ULTIME)
+ * BIONIC V6 GOLDEN — PANNEAU DE DIAGNOSTIC INTELLIGENT (VERSION ULTIME)
  * 
  * SPÉCIFICATION COMPLÈTE :
  *   1. En-tête dynamique (type, attractivité, superficie, tier)
@@ -21,7 +21,7 @@
  *   - Highlight animé sur les recommandations
  *   - Hover : halo, élévation, scale sur les boutons
  * 
- * STYLE : Layout militaire, blocs, sections, précision BIONIC V5 300%
+ * STYLE : Layout militaire, blocs, sections, précision BIONIC V6 GOLDEN
  */
 
 import React, { useMemo, useState, useEffect, useRef } from 'react';
@@ -291,7 +291,7 @@ const BionicZoneDiagnosticPanel = React.memo(({ zone, onClose, onAddWaypoint }) 
   return (
     <PinnablePanel
       title={mod.label}
-      subtitle="DIAGNOSTIC BIONIC V5"
+      subtitle="DIAGNOSTIC V6 GOLDEN"
       accentColor={color}
       onClose={onClose}
       defaultWidth={340}
@@ -310,7 +310,7 @@ const BionicZoneDiagnosticPanel = React.memo(({ zone, onClose, onAddWaypoint }) 
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="text-xs font-black text-white tracking-wide truncate uppercase">{mod.label}</h3>
-              <span className="text-[8px] text-gray-500 font-mono tracking-widest">DIAGNOSTIC BIONIC V5</span>
+              <span className="text-[8px] text-gray-500 font-mono tracking-widest">DIAGNOSTIC V6 GOLDEN</span>
             </div>
           </div>
           <div className="px-3 py-2.5">

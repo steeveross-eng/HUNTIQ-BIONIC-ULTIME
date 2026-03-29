@@ -1,5 +1,5 @@
 """
-BIONIC V5 — VALIDATION PIPELINE
+BIONIC V6 — VALIDATION PIPELINE
 ================================
 PHASE 7 — Knowledge Layer
 
@@ -10,7 +10,7 @@ Ce module permet de valider les règles du Knowledge Layer
 contre des données réelles collectées sur le terrain.
 
 VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 from typing import Dict, List, Optional, Any

@@ -146,7 +146,7 @@ const MonTerritoireBionicPage = () => {
     hasPreviousSession,
   } = useBionicSession();
   
-  // BIONIC V5 300% — Ref directe vers l'instance Leaflet map
+  // BIONIC V6 GOLDEN — Ref directe vers l'instance Leaflet map
   const mapRef = useRef(null);
 
   // ═══ HOTSPOT DEEP LINK — état du highlight ═══
@@ -330,10 +330,10 @@ const MonTerritoireBionicPage = () => {
     },
   });
 
-  // BIONIC V5 300% INVARIANT: Spatial Clipping 1km × 1km (doit être après useWaypointActions)
+  // BIONIC V6 GOLDEN INVARIANT: Spatial Clipping 1km × 1km (doit être après useWaypointActions)
   const { analysisBbox, bboxBounds, clipZonesClient, snapshotData, isGeneratingSnapshot, generateSnapshot, ANALYSIS_BOX_SIZE_M } = useSpatialClipping(selectedWaypointForZones);
 
-  // BIONIC V5 300% — AUTO-SELECTION DU DERNIER WAYPOINT ACTIF
+  // BIONIC V6 GOLDEN — AUTO-SELECTION DU DERNIER WAYPOINT ACTIF
   // BCE-MAX x4.1: Priorite au waypointId de la session
   // PATCH 3D-RESTORE: Auto-select se relance si selectedWaypointForZones est perdu
   const autoSelectDoneRef = useRef(false);
@@ -603,7 +603,7 @@ const MonTerritoireBionicPage = () => {
   const toggleCorridorSub = (k) => setCorridorSubFilters(p => ({ ...p, [k]: !p[k] }));
   const togglePointSub = (k) => setPointSubFilters(p => ({ ...p, [k]: !p[k] }));
   
-  // BIONIC V5 300% — CLASSIFICATION TOGGLES (restaures depuis session BCE-MAX)
+  // BIONIC V6 GOLDEN — CLASSIFICATION TOGGLES (restaures depuis session BCE-MAX)
   const [classificationToggles, setClassificationToggles] = useState(() => {
     if (savedClassificationToggles && typeof savedClassificationToggles === 'object') {
       return savedClassificationToggles;
@@ -857,7 +857,7 @@ const MonTerritoireBionicPage = () => {
   }, []);
   
   // ============================================
-  // BIONIC V5 300% — PIPELINE WAYPOINT EXCLUSIF + ORCHESTRATEUR DE ZONES
+  // BIONIC V6 GOLDEN — PIPELINE WAYPOINT EXCLUSIF + ORCHESTRATEUR DE ZONES
   // 
   // Architecture modulaire stricte:
   //   1. useZoneOrchestrator: orchestration (cache → backend)
@@ -901,7 +901,7 @@ const MonTerritoireBionicPage = () => {
   useZoneToasts(zeroZonesReason, isLoadingZones, bionicZonesData);
 
   // ============================================
-  // BIONIC V5 300% — SPATIAL CLIPPING + STATE LOCKING
+  // BIONIC V6 GOLDEN — SPATIAL CLIPPING + STATE LOCKING
   // 1. Les zones sont calculées pour TOUTES les couches structurelles
   // 2. Le clipping 1km × 1km est appliqué quand un waypoint est actif
   // 3. La visibilité est appliquée au RENDU, pas au calcul

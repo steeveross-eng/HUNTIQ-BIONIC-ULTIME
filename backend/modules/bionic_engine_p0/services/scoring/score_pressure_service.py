@@ -16,7 +16,7 @@ ISOLATION:
 - Aucune dépendance aux autres services de scoring
 - Utilise uniquement BaseScoreService + Knowledge Layer
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 import logging

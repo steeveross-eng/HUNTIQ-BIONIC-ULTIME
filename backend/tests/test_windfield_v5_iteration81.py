@@ -1,5 +1,5 @@
 """
-TEST WINDFIELD API — BIONIC V5 ULTIME 300% — Phase P2
+TEST WINDFIELD API — BIONIC V6 GOLDEN — Phase P2
 Iteration 81 — POST /api/v1/bionic/weather-shadow/windfield
 
 Tests the NEW windfield endpoint that returns u10/v10 wind vector data

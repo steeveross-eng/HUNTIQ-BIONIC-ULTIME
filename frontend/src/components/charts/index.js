@@ -1,5 +1,5 @@
 /**
- * Charts Module - PHASE F BIONIC ULTIMATE
+ * Charts Module - V6 GOLDEN BIONIC ULTIMATE
  * 
  * Bibliothèque de graphiques légère remplaçant Recharts
  * ~15KB vs ~450KB

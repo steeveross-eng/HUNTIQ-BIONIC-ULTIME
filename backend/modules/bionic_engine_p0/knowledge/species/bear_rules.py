@@ -1,5 +1,5 @@
 """
-BIONIC V5 — BLACK BEAR BEHAVIOR RULES
+BIONIC V6 — BLACK BEAR BEHAVIOR RULES
 ======================================
 PHASE 7 — Knowledge Layer
 

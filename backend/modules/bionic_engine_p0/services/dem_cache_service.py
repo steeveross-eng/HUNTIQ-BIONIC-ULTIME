@@ -1,6 +1,6 @@
 """
 SERVICE DEM CACHE — MongoDB Cache for DEM Data
-BIONIC V5 ULTIME 300% — Norme de modularite stricte
+BIONIC V6 GOLDEN — Norme de modularite stricte
 
 Cache versionne des resultats DEM par territoire + dataset + resolution.
 TTL configurable (defaut 90 jours). Logs complets: hit/miss/fallback.

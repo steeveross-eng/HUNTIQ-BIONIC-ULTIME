@@ -1,6 +1,6 @@
 """
 ROUTER SHADOW — Full Comparison + Wind Field
-BIONIC V5 ULTIME 300% — PHASE P2
+BIONIC V6 GOLDEN — PHASE P2
 
 Endpoints:
   POST /api/v1/bionic/shadow/full-comparison  — Synthetic vs Real (DEM+Weather)

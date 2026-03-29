@@ -1,6 +1,6 @@
 """
 ROUTER DEM — Digital Elevation Model (OpenTopography)
-BIONIC V5 ULTIME 300% — PHASE G+ Real Data
+BIONIC V6 GOLDEN — PHASE G+ Real Data
 
 Endpoints:
   POST /api/v1/bionic/dem/fetch        — Fetch DEM data for bounds

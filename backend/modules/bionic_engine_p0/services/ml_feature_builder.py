@@ -1,6 +1,6 @@
 """
 SERVICE ML — Feature Builder
-BIONIC V5 ULTIME 300% — PHASE H
+BIONIC V6 GOLDEN — PHASE H
 
 Extrait les features des 10 modules pour l'apprentissage comportemental.
 Chaque espece/territoire produit un vecteur de features unifie.

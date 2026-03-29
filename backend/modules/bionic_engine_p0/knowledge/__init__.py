@@ -1,10 +1,10 @@
 """
-BIONIC V5 — KNOWLEDGE LAYER
+BIONIC V6 — KNOWLEDGE LAYER
 ============================
 PHASE 7 — Architecture Principale
 
 Le Knowledge Layer est le référentiel central de toutes les connaissances
-scientifiques et empiriques utilisées par le moteur BIONIC V5.
+scientifiques et empiriques utilisées par le moteur BIONIC V6.
 
 PRINCIPES FONDAMENTAUX:
 1. Toute règle comportementale DOIT être traçable à une source
@@ -21,7 +21,7 @@ STRUCTURE:
 
 STATUT: PRODUCTION
 VERSION: 1.1.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 from .sources.scientific_sources_schema import (
@@ -115,4 +115,4 @@ __all__ = [
 ]
 
 __version__ = "1.1.0"
-__author__ = "BIONIC V5 Team"
+__author__ = "BIONIC V6 Team"

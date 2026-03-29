@@ -1,7 +1,7 @@
 /**
  * GeoSyncToggle - Real-time WebSocket Synchronization Toggle
  * Phase P6.4 - WebSocket Integration
- * P0.3 BIONIC V5 - Correction wss:// production
+ * P0.3 BIONIC V6 - Correction wss:// production
  * 
  * Provides a toggle to enable/disable real-time sync with hunting group members.
  * 

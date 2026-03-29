@@ -1,5 +1,5 @@
 """
-BIONIC V5 — PHASE D: Multi-Factor Scoring Engine
+BIONIC V6 — PHASE D: Multi-Factor Scoring Engine
 ===================================================
 PHASE D.1 — Optimisation du scoring comportemental
 
@@ -18,7 +18,7 @@ INTÉGRATION:
 - HuntingPressureRegistry (C.4)
 
 VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 PHASE D
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 PHASE D
 """
 
 import logging

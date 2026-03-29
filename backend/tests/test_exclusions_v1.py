@@ -1,5 +1,5 @@
 """
-ExclusionsSpatiales.v1 — Tests Anti-Régression BIONIC V5
+ExclusionsSpatiales.v1 — Tests Anti-Régression BIONIC V6
 5 tests bloquants pour valider les exclusions spatiales.
 
 Usage: pytest /app/backend/tests/test_exclusions_v1.py -v

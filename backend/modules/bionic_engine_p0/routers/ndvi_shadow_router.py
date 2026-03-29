@@ -1,6 +1,6 @@
 """
 ROUTER NDVI SHADOW — Sentinel-2 NDVI Integration (Shadow Mode)
-BIONIC V5 ULTIME 300% — PHASE P2 Shadow Mode
+BIONIC V6 GOLDEN — PHASE P2 Shadow Mode
 
 Endpoints:
   POST /api/v1/bionic/ndvi-shadow/fetch    — Fetch NDVI data (real or synthetic)

@@ -842,7 +842,7 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
         "name": "hotspot_admin_engine",
         "version": "1.0.0",
         "phase": "ADMIN-V3",
-        "description": "BIONIC V3 Hotspot Extraction & Scoring Admin Engine"
+        "description": "BIONIC V6 Hotspot Extraction & Scoring Admin Engine"
     }),
 
     # ==========================================

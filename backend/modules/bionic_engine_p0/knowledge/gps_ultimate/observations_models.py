@@ -1,5 +1,5 @@
 """
-BIONIC V5 — OBSERVATIONS MODELS (PHASE F)
+BIONIC V6 — OBSERVATIONS MODELS (PHASE F)
 ==========================================
 PHASE F — GPS ULTIMATE
 
@@ -8,7 +8,7 @@ Modèles de données pour les observations terrain.
 OBJECTIF:
 - Capturer les observations de faune sur le terrain
 - Alimenter le CalibrationRegistry pour atteindre 95%+ de précision
-- Permettre la transition vers BIONIC V5 MASTER
+- Permettre la transition vers BIONIC V6 MASTER
 
 CHAMPS:
 - Espèce observée
@@ -20,7 +20,7 @@ CHAMPS:
 - Qualité de l'observation
 
 VERSION: 7.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 PHASE F
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 PHASE F
 """
 
 from typing import Dict, List, Optional, Any
@@ -93,7 +93,7 @@ class ObservationSource(str, Enum):
 @dataclass
 class FieldObservation:
     """
-    Observation terrain pour la calibration BIONIC V5.
+    Observation terrain pour la calibration BIONIC V6.
     
     Cette structure capture toutes les informations nécessaires
     pour valider et calibrer les prédictions du moteur.
@@ -174,7 +174,7 @@ class FieldObservation:
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: Optional[datetime] = None
     
-    # Traçabilité BIONIC V5
+    # Traçabilité BIONIC V6
     source_ids: List[str] = field(default_factory=lambda: ["SRC-OBSERVATION-TERRAIN"])
     version: str = "7.0.0"
     

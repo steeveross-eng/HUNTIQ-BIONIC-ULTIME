@@ -1,5 +1,5 @@
 """
-BIONIC V5 NIVEAU 5 — Test Suite Mobilité Dynamique
+BIONIC V6 NIVEAU 5 — Test Suite Mobilité Dynamique
 ===================================================
 Tests complets pour la validation du NIVEAU 5 - Mobilité Dynamique.
 
@@ -22,7 +22,7 @@ Exigences utilisateur à valider:
 9. Tests par espèce (moose, deer, bear)
 10. Tests par mode d'analyse (rut, pre_rut, post_rut, live)
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 NIVEAU 5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 NIVEAU 5
 """
 
 import pytest

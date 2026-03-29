@@ -31,7 +31,7 @@ INPUTS:
 OUTPUTS:
 - WaypointAnalysisResult (analyse complète)
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 import logging

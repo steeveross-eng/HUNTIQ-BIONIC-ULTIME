@@ -1,5 +1,5 @@
 /**
- * BIONIC V5 300% — INVARIANT: Spatial Clipping Hook
+ * BIONIC V6 GOLDEN — INVARIANT: Spatial Clipping Hook
  * 
  * Calcule le AnalysisBoundingBox 1km × 1km centré sur le waypoint actif.
  * Applique le clipping géométrique strict côté client (rendu uniquement).

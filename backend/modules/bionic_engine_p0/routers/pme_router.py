@@ -1,6 +1,6 @@
 """
 ROUTER PME — Pressure Memory Engine
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #8
+BIONIC V6 GOLDEN — Phase d'Optimisation #8
 
 Endpoint: POST /api/v1/bionic/pme/analyze
 Endpoint: GET /api/v1/bionic/pme/status

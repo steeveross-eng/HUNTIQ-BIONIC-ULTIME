@@ -1,6 +1,6 @@
 """
 MODULE PHASE E — Service Conditions Saisonnières
-BIONIC V5 — Module 100% isolé
+BIONIC V6 — Module 100% isolé
 
 Calcule les conditions saisonnières pour un point géographique:
   - Météo estimée (température, vent, précipitations, pression)

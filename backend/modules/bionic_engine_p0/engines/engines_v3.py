@@ -1,5 +1,5 @@
 """
-BIONIC V3 — Integration Totale des Engines
+BIONIC V6 — Integration Totale des Engines
 STEVE-MAX++: 24 engines connectes au scoring, zones, corridors, hotspots, faunique et IA.
 
 Architecture:
@@ -600,7 +600,7 @@ AI_ENGINES = {
 
 def compute_all_v3(context: Dict[str, Any]) -> Dict[str, Any]:
     """
-    BIONIC V3: Execute ALL engines (V2 + V3 + IA + Faunique) and return integrated results.
+    BIONIC V6: Execute ALL engines (V2 + V3 + IA + Faunique) and return integrated results.
 
     Pipeline:
     Phase 1: Independent V2+V3 engines

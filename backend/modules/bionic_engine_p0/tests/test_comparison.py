@@ -1,11 +1,11 @@
 """
 TEST SUITE — PHASE G+ (Comparison + API Keys Healthcheck)
-BIONIC V5 ULTIME 300%
+BIONIC V6 GOLDEN
 
 Validation:
 - /pipeline/comparison: 5 especes, 3 paires de territoires
 - /system/api-keys/status: healthcheck des cles
-- Conformite BIONIC V5 ULTIME 300%
+- Conformite BIONIC V6 GOLDEN
 """
 
 import pytest

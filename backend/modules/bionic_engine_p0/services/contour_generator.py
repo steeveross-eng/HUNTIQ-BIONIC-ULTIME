@@ -2,7 +2,7 @@
 BIONIC ENGINE - Contour Generator V2
 PHASE P1-HOTSPOTS REFONTE
 
-Generateur de hotspots CIRCULAIRES naturels conformes aux specifications BIONIC V5.
+Generateur de hotspots CIRCULAIRES naturels conformes aux specifications BIONIC V6.
 
 SPECIFICATIONS OBLIGATOIRES:
 - Forme de base CIRCULAIRE avec perturbations naturelles
@@ -13,7 +13,7 @@ SPECIFICATIONS OBLIGATOIRES:
 - Alignement par espece (chevreuil, orignal, ours, etc.)
 - Precision geographique (OSM, LiDAR, Sentinel-2)
 
-Conformite: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformite: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 from typing import List, Tuple, Dict, Any, Optional
@@ -410,7 +410,7 @@ class NaturalCircleGenerator:
 
 def create_hotspot_style(hotspot_type: str, species: str = "moose") -> Dict[str, Any]:
     """
-    Cree un style conforme aux specifications visuelles BIONIC V5.
+    Cree un style conforme aux specifications visuelles BIONIC V6.
     
     OBLIGATOIRE:
     - Contour 1-2px, colore

@@ -18,7 +18,7 @@ ISOLATION:
 - Aucun import transversal
 - Interface pure via fonctions et dataclasses
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 import logging
@@ -568,7 +568,7 @@ class LegalHoursService:
         check = self.check_legal_status(target_time, latitude, longitude, region)
         
         if not check.is_legal:
-            # RÈGLE BIONIC V5: temporal_factor = 0 hors période légale
+            # RÈGLE BIONIC V6: temporal_factor = 0 hors période légale
             return 0.0
         
         legal_window = check.legal_window

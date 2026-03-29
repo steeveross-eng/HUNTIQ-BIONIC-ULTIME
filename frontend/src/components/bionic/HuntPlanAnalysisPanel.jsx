@@ -1,7 +1,7 @@
 /**
  * HuntPlanAnalysisPanel - Panneau d'Analyse du Plan de Chasse
  * ============================================================
- * BIONIC V5 ULTIME - PHASE 5.1
+ * BIONIC V6 ULTIME - PHASE 5.1
  * 
  * RESPONSABILITÉ UNIQUE:
  * - Affichage de l'analyse waypoint-centric
@@ -21,7 +21,7 @@
  * - Communication via props
  * - Aucun fichier existant modifié
  * 
- * Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+ * Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
  */
 
 import React from 'react';

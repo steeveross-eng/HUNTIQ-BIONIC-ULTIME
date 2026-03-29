@@ -1,1 +1,1 @@
-# Hotspots BIONIC V3 Module
+# Hotspots BIONIC V6 Module

@@ -1,5 +1,5 @@
 """
-Test Suite: Movement Corridors API (BIONIC V5)
+Test Suite: Movement Corridors API (BIONIC V6)
 Tests for real vs estimated movement corridors endpoints.
 """
 

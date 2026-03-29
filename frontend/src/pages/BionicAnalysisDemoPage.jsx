@@ -1,5 +1,5 @@
 /**
- * BionicAnalysisDemoPage - Page de démonstration BIONIC V5
+ * BionicAnalysisDemoPage - Page de démonstration BIONIC V6
  * =========================================================
  * Phases 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 6.4, 6.5
  */
@@ -338,7 +338,7 @@ const BionicAnalysisDemoPage = () => {
             className="text-2xl font-bold mb-2"
             style={{ color: BIONIC_COLORS.gold.primary }}
           >
-            BIONIC V5 - Demo Components
+            BIONIC V6 - Demo Components
           </h1>
           <p className="text-gray-400 text-sm mb-4">
             Phase 6 - ACTION 5: CarteBionic + Intégration API

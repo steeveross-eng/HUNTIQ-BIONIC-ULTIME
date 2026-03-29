@@ -1,6 +1,6 @@
 """
 ROUTER WSE/WIV — Wind/Weather Scoring Engine + Wind Impact Vector
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #4
+BIONIC V6 GOLDEN — Phase d'Optimisation #4
 
 Endpoint: POST /api/v1/bionic/wse-wiv/analyze
 Endpoint: GET /api/v1/bionic/wse-wiv/status

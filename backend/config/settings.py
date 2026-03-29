@@ -1,4 +1,4 @@
-"""BIONIC V3 - Centralized Configuration Settings
+"""BIONIC V6 - Centralized Configuration Settings
 
 This module contains all configuration constants for the modular architecture.
 DO NOT modify existing values without validation.

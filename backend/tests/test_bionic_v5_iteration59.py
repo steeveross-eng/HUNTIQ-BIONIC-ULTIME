@@ -1,5 +1,5 @@
 """
-BIONIC V5 — Iteration 59 Tests
+BIONIC V6 — Iteration 59 Tests
 Bug Fix Validation:
 1) Router bug fix: uses filtered 'layers' variable (5 layers max) instead of request.layers (15 layers)
 2) Pipeline parallelization: ThreadPoolExecutor with 6 workers
@@ -20,7 +20,7 @@ import time
 BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', '').rstrip('/')
 
 class TestOrganicZonesBugFixes:
-    """Tests validating the 3 bug fixes in BIONIC V5"""
+    """Tests validating the 3 bug fixes in BIONIC V6"""
 
     def test_health_check(self):
         """Verify backend is running"""

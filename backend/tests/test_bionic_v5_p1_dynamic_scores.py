@@ -1,5 +1,5 @@
 """
-Test BIONIC V5 300% - P1 Dynamic Scores API
+Test BIONIC V6 GOLDEN - P1 Dynamic Scores API
 =============================================
 Tests pour l'endpoint POST /api/v1/bionic/dynamic/scores
 

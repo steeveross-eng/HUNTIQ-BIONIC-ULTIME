@@ -14,7 +14,7 @@ FONCTIONNALITÉS:
 - Recommandations contextuelles
 - Architecture préparant P2 (Moteur de Recommandations)
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 import logging
@@ -209,7 +209,7 @@ SPECIES_LABELS = {
 
 class HuntPlanAnalyzerService:
     """
-    Service d'analyse du plan de chasse BIONIC V5.
+    Service d'analyse du plan de chasse BIONIC V6.
     
     Orchestre les services HotspotService, WeatherService et DynamicScoringService
     pour produire une analyse consolidée du potentiel de chasse.

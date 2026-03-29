@@ -2,7 +2,7 @@
  * AnalyticsDashboard - Main analytics dashboard component
  * Phase P3 - Advanced Analytics
  * BIONIC Design System compliant
- * PHASE F: Migration vers LightCharts
+ * V6 GOLDEN: Migration vers LightCharts
  */
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui/card';

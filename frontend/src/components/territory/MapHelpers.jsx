@@ -1,5 +1,5 @@
 /**
- * TerritoryMap Helper Components - BIONIC V5
+ * TerritoryMap Helper Components - BIONIC V6
  * 
  * Extracted from TerritoryMap.jsx for better maintainability
  * @module territory/MapHelpers

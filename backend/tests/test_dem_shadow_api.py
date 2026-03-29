@@ -1,5 +1,5 @@
 """
-TEST DEM SHADOW API — BIONIC V5 ULTIME 300%
+TEST DEM SHADOW API — BIONIC V6 GOLDEN
 Shadow Pipeline with Real DEM Injection
 
 Tests:

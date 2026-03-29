@@ -1,5 +1,5 @@
 """
-BIONIC V5 — Test Suite for Iteration 54
+BIONIC V6 — Test Suite for Iteration 54
 Tests AUDIT TOLÉRANCE ZÉRO fixes:
 - detail_level parameter (low returns residential roads, high returns buildings+service roads+streams)
 - Bbox limit validation (>0.3 lat or >0.4 lng returns 400)

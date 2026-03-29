@@ -1,4 +1,4 @@
-"""BIONIC V5 — Validation Pipeline Module"""
+"""BIONIC V6 — Validation Pipeline Module"""
 from .validation_pipeline import (
     ValidationSource,
     ValidationOutcome,

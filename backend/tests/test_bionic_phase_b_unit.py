@@ -1,5 +1,5 @@
 """
-BIONIC V5 — PHASE B: Unit Tests for Advanced Factors per Service
+BIONIC V6 — PHASE B: Unit Tests for Advanced Factors per Service
 ==================================================================
 
 Deep dive unit tests to verify the internal implementation of:

@@ -1,7 +1,7 @@
 """
 BIONIC ENGINE — Heatmap Fusion Service
 =======================================
-Service de fusion pour la Heatmap Unifiée BIONIC V5 ULTIME.
+Service de fusion pour la Heatmap Unifiée BIONIC V6 ULTIME.
 
 RESPONSABILITÉ UNIQUE:
 - Fusionner WQS (structure) avec SCORE_FINAL (dynamique)
@@ -26,7 +26,7 @@ INPUTS:
 OUTPUTS:
 - HeatmapUnifieeResult (grille unifiée + métadonnées)
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 import logging
@@ -342,7 +342,7 @@ class HeatmapUnifieeResult:
 
 class HeatmapFusionService:
     """
-    Service de fusion pour la Heatmap Unifiée BIONIC V5 ULTIME.
+    Service de fusion pour la Heatmap Unifiée BIONIC V6 ULTIME.
     
     RESPONSABILITÉ:
     - Appeler UnifiedScoringService pour obtenir le SCORE_FINAL

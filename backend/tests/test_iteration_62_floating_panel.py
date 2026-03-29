@@ -1,5 +1,5 @@
 """
-Iteration 62 — BIONIC V3 Floating Intelligence Panel
+Iteration 62 — BIONIC V6 Floating Intelligence Panel
 =====================================================
 Tests for the refactored architecture:
 - IntelligenceDashboard is now a floating non-blocking panel

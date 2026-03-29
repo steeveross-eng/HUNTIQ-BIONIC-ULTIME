@@ -1,6 +1,6 @@
 /**
  * SpeciesComparisonPage.jsx
- * Mode "Comparaison Espèces" — Split-screen BIONIC V5
+ * Mode "Comparaison Espèces" — Split-screen BIONIC V6
  *
  * Pipeline strict:
  *  - 2 appels API indépendants (1 par espèce)

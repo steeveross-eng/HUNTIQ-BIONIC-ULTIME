@@ -1,6 +1,6 @@
 """
 SERVICE NDVI CACHE — MongoDB Cache for Sentinel-2 NDVI Data
-BIONIC V5 ULTIME 300% — Norme de modularite stricte
+BIONIC V6 GOLDEN — Norme de modularite stricte
 
 Cache versionne des resultats NDVI par territoire + resolution.
 TTL long (30 jours) car NDVI change lentement (vegetatif).

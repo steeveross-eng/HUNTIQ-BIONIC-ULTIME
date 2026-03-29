@@ -1,6 +1,6 @@
 /**
- * WaypointContextMenu — Menu contextuel BIONIC V5 pour waypoints
- * BIONIC V5 ULTIME 300% — waypoint_contextmenu_v1
+ * WaypointContextMenu — Menu contextuel BIONIC V6 pour waypoints
+ * BIONIC V6 GOLDEN — waypoint_contextmenu_v1
  *
  * Clic droit (desktop) ou long press (mobile) sur un waypoint.
  * Options : Analyser | Modifier | Supprimer (avec confirmation)

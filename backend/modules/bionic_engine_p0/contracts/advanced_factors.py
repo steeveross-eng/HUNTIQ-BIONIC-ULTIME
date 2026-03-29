@@ -3,7 +3,7 @@ BIONIC ENGINE - Advanced Behavioral Factors
 PHASE G - P0-BETA2 IMPLEMENTATION
 Version: 1.0.0-beta2
 
-12 Facteurs Comportementaux Avances pour BIONIC V5 ULTIME x2
+12 Facteurs Comportementaux Avances pour BIONIC V6 ULTIME x2
 
 Conformite: G-SEC | G-QA | G-DOC
 """

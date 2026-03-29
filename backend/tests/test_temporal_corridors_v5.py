@@ -1,5 +1,5 @@
 """
-Test: BIONIC V5 ULTIME 300% — Temporal Corridors + Tooltips Batch 1
+Test: BIONIC V6 GOLDEN — Temporal Corridors + Tooltips Batch 1
 =====================================================================
 Tests movement corridors API with time_of_day parameter:
 - time_of_day=6 should return temporal_activity corridor (peak hour for moose)

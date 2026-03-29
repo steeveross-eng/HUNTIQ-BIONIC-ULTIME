@@ -1,5 +1,5 @@
 """
-BIONIC V5 — PHASE C.3: THERMAL STRESS MODELS
+BIONIC V6 — PHASE C.3: THERMAL STRESS MODELS
 =============================================
 
 Modèles de stress thermique estival espèce-spécifiques.
@@ -20,7 +20,7 @@ ESPÈCES SENSIBLES:
 - Ours: PEU SENSIBLE (adaptation large)
 - Wapiti: SENSIBLE (seuil critique ~25°C)
 
-CONFORMITÉ: G-SEC | G-QA | G-DOC | BIONIC V5
+CONFORMITÉ: G-SEC | G-QA | G-DOC | BIONIC V6
 TRAÇABILITÉ: source_ids obligatoires
 VERSION: 1.0.0
 """
@@ -263,7 +263,7 @@ class ThermalStressRegistry:
     """
     Registre central des profils de stress thermique.
     
-    Pipeline BIONIC V5:
+    Pipeline BIONIC V6:
     - Données centralisées dans le Knowledge Layer
     - Basé sur études physiologiques (Renecker, Dussault, etc.)
     - Traçabilité source_ids obligatoire

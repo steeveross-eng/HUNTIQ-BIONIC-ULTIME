@@ -1,7 +1,7 @@
 """
 BIONIC ENGINE — Unified Scoring Service
 ========================================
-Orchestrateur central des 9 services de scoring BIONIC V5 ULTIME.
+Orchestrateur central des 9 services de scoring BIONIC V6 ULTIME.
 
 RESPONSABILITÉ UNIQUE:
 - Orchestrer les 9 services de scoring
@@ -23,7 +23,7 @@ INPUTS:
 OUTPUTS:
 - UnifiedScoreResult (score final agrégé + détail par service)
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 import logging
@@ -225,7 +225,7 @@ class UnifiedScoreResult:
 
 class UnifiedScoringService:
     """
-    Service d'orchestration du scoring unifié BIONIC V5 ULTIME.
+    Service d'orchestration du scoring unifié BIONIC V6 ULTIME.
     
     RESPONSABILITÉ:
     - Instancier et appeler les 9 services de scoring
@@ -636,7 +636,7 @@ class UnifiedScoringService:
         """
         Calcule le score unifié pour un contexte donné.
         
-        PROCESSUS BIONIC V5 (centralisation PHASE B):
+        PROCESSUS BIONIC V6 (centralisation PHASE B):
         1. INJECTER les modificateurs avancés dans le contexte (CENTRALISATION)
         2. Appeler chaque service de scoring avec le contexte enrichi
         3. Collecter les ScoreResult
@@ -689,7 +689,7 @@ class UnifiedScoringService:
         logger.info(f"[{score_id}] Raw aggregated score: {raw_score:.1f}")
         
         # ==== ÉTAPE 4: Récupérer les modificateurs avancés du contexte (PHASE B) ====
-        # NOTE BIONIC V5: Les modificateurs ont été calculés et injectés à l'ÉTAPE 0.
+        # NOTE BIONIC V6: Les modificateurs ont été calculés et injectés à l'ÉTAPE 0.
         # Les services CONSOMMENT ces valeurs sans logique locale.
         # Cette étape récupère les valeurs pour la traçabilité.
         
@@ -763,7 +763,7 @@ class UnifiedScoringService:
             context.advanced_modifiers.get("mobility_source_ids", [])  # NIVEAU 5
         )
         
-        # PHASE B + C + NIVEAU 5 BIONIC V5: Le score brut intègre déjà les modificateurs via les services
+        # PHASE B + C + NIVEAU 5 BIONIC V6: Le score brut intègre déjà les modificateurs via les services
         score_after_advanced = raw_score
         
         logger.info(f"[{score_id}] Advanced factors (centralized): "
@@ -934,7 +934,7 @@ class UnifiedScoringService:
         """
         Calcule l'ajustement temporel via LegalHoursService.
         
-        RÈGLE BIONIC V5:
+        RÈGLE BIONIC V6:
         - temporal_factor = 0 si hors heures légales
         - Le score final est modulé par ce facteur
         """
@@ -980,7 +980,7 @@ class UnifiedScoringService:
         """
         Applique l'ajustement temporel au score brut.
         
-        RÈGLE BIONIC V5:
+        RÈGLE BIONIC V6:
         - Si hors heures légales: temporal_factor = 0, donc score = 0
         - Sinon: score modulé par le facteur temporel
         
@@ -1075,7 +1075,7 @@ class UnifiedScoringService:
         analysis_mode: str = "rut"
     ) -> CorridorNetwork:
         """
-        NIVEAU 4 BIONIC V5 — Génération des corridors de déplacement.
+        NIVEAU 4 BIONIC V6 — Génération des corridors de déplacement.
         
         Génère le réseau complet de corridors en utilisant les scores calculés
         par le UnifiedScoringService et les facteurs des NIVEAUx 1-3.

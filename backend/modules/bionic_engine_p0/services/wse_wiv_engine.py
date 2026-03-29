@@ -1,6 +1,6 @@
 """
 MODULE WSE/WIV — Wind/Weather Scoring Engine + Wind Impact Vector
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #4
+BIONIC V6 GOLDEN — Phase d'Optimisation #4
 
 WSE — Wind Scoring Engine:
   - Champ de vent au sol (wind_field, gust_field)

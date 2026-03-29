@@ -1,11 +1,11 @@
 """
-BIONIC V5 — SEASONAL MODELS (Foundation Module)
+BIONIC V6 — SEASONAL MODELS (Foundation Module)
 =================================================
 PHASE 7 — Knowledge Layer — Module de base saisonnier
 
 Ce fichier est le MODULE FONDATION du système saisonnier.
 Il fournit les types, énumérations et registres de base utilisés par
-l'ensemble du moteur BIONIC V5.
+l'ensemble du moteur BIONIC V6.
 
 EXPORTS CRITIQUES:
 - SeasonType (Enum): Types de saisons comportementales
@@ -23,7 +23,7 @@ NOTE: Ce fichier NE DOIT PAS être supprimé. Les modules C.1-C.4
       étendent ce module de base, ils ne le remplacent pas.
 
 VERSION: 2.0.0-PHASE-C
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 from typing import Dict, List, Optional, Any, Tuple
@@ -94,7 +94,7 @@ class JuvenileDispersalWindow:
     Calculée dynamiquement à partir de la date de naissance.
     10-14 mois après naissance = période de dispersion des juvéniles.
     
-    Conforme BIONIC V5:
+    Conforme BIONIC V6:
     - Aucune date calendaire fixe
     - Calcul dynamique basé sur calving/fawning
     - Traçabilité complète
@@ -311,7 +311,7 @@ class SeasonalModel:
         """
         PHASE C.1: Calcul dynamique de la fenêtre de dispersion juvénile.
         
-        Logique BIONIC V5 (NON NÉGOCIABLE):
+        Logique BIONIC V6 (NON NÉGOCIABLE):
         - La dispersion se produit 10-14 mois APRÈS la naissance
         - La date de naissance est déterminée par la période calving/fawning
         - AUCUNE date calendaire fixe

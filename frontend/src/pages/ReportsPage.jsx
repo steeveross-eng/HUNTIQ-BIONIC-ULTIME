@@ -103,7 +103,7 @@ export default function ReportsPage() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-white">Rapports BIONIC V5</h1>
+            <h1 className="text-2xl font-bold text-white">Rapports BIONIC V6</h1>
             <p className="text-sm text-white/50">Télécharger ou mettre à jour les documents d'analyse</p>
           </div>
         </div>

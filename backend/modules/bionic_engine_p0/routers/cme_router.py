@@ -1,6 +1,6 @@
 """
 ROUTER CME — Corridor Morphology Engine
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #3
+BIONIC V6 GOLDEN — Phase d'Optimisation #3
 
 Endpoint: POST /api/v1/bionic/cme/generate
 Endpoint: GET /api/v1/bionic/cme/status

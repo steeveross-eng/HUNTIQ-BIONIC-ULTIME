@@ -1,4 +1,4 @@
-"""BIONIC V5 — Habitat Weights Module"""
+"""BIONIC V6 — Habitat Weights Module"""
 from .habitat_weights import (
     HabitatCategory,
     HabitatWeight,

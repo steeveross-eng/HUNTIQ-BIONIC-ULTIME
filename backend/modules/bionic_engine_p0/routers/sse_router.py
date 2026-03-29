@@ -1,6 +1,6 @@
 """
 ROUTER SSE — Satellite-to-Semantic Engine
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #1
+BIONIC V6 GOLDEN — Phase d'Optimisation #1
 
 Endpoint: POST /api/v1/bionic/sse/analyze
 Endpoint: GET /api/v1/bionic/sse/status

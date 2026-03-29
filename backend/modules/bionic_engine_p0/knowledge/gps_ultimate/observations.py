@@ -1,5 +1,5 @@
 """
-BIONIC V5 — OBSERVATIONS MODULE (PHASE F)
+BIONIC V6 — OBSERVATIONS MODULE (PHASE F)
 ==========================================
 Re-export pour compatibilité avec l'ancien __init__.py.
 

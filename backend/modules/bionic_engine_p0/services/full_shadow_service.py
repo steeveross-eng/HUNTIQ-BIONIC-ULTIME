@@ -1,6 +1,6 @@
 """
 SERVICE SHADOW FULL COMPARISON — DEM + Meteo combines
-BIONIC V5 ULTIME 300% — full_comparison_v1
+BIONIC V6 GOLDEN — full_comparison_v1
 
 Compare le pipeline synthetique complet vs le pipeline avec
 TOUTES les donnees reelles (DEM + meteo injectees simultanement).

@@ -1,5 +1,5 @@
 """
-BIONIC V5 — TERRAIN DATA MODULE
+BIONIC V6 — TERRAIN DATA MODULE
 ================================
 PHASE A — Données Terrain (priorité absolue)
 
@@ -17,7 +17,7 @@ KNOWLEDGE LAYER INTEGRATION:
 - Versionnement des données
 
 VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 from typing import Dict, List, Optional, Any, Tuple

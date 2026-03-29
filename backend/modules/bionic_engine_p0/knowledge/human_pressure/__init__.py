@@ -1,5 +1,5 @@
 """
-BIONIC V5 — Human Pressure Module
+BIONIC V6 — Human Pressure Module
 ==================================
 NIVEAU 3 — Pression Humaine Réelle (PRES-HUMAN)
 

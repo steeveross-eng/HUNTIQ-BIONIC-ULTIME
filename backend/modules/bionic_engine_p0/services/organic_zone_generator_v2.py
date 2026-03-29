@@ -1,6 +1,6 @@
 """
 MODULE B — Organic Zone Generator V2
-BIONIC V5 — Pipeline Organique Unifié
+BIONIC V6 — Pipeline Organique Unifié
 
 Marching Squares + Chaikin 4x + Vertex Jitter.
 

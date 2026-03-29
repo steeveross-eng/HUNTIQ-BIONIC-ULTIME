@@ -1,6 +1,6 @@
 """
 MODULE E — Scoring Zone Integration
-BIONIC V5 — Pipeline Organique Unifié
+BIONIC V6 — Pipeline Organique Unifié
 
 Intégration des zones organiques dans le scoring:
 - scoring habitat

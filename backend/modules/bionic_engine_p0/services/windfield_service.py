@@ -1,6 +1,6 @@
 """
 SERVICE WINDFIELD — Vector Wind Field for Ventusky-like Rendering
-BIONIC V5 ULTIME 300% — windfield_v1
+BIONIC V6 GOLDEN — windfield_v1
 
 Genere un champ vectoriel de vent (u10, v10) a partir des donnees
 Open-Meteo reelles, pour un rendu Canvas 2D type Ventusky.

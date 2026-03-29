@@ -1,6 +1,6 @@
 """
 ROUTER PIPELINE — Full Pipeline & Metrics
-BIONIC V5 ULTIME 300% — PHASE G
+BIONIC V6 GOLDEN — PHASE G
 
 Endpoints:
   POST /api/v1/bionic/pipeline/full-analysis

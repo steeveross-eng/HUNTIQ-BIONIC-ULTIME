@@ -3,7 +3,7 @@
  * =======================================
  * 
  * Statistiques et métriques du Plan Maître.
- * PHASE F: Migration vers LightCharts
+ * V6 GOLDEN: Migration vers LightCharts
  */
 
 import React, { useState, useEffect } from 'react';

@@ -1,6 +1,6 @@
 """
 MODULE BMPE — Behavioral Micro-Patterns Engine
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #9
+BIONIC V6 GOLDEN — Phase d'Optimisation #9
 
 Micro-patterns comportementaux par espece:
   - micro_retreat_field: probabilite de micro-recul (pression/exposition)

@@ -1,6 +1,6 @@
 """
 TEST SUITE — BMPE (Behavioral Micro-Patterns Engine)
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #9
+BIONIC V6 GOLDEN — Phase d'Optimisation #9
 
 Validation exhaustive:
 - Multi-especes (5): moose, deer, bear, wild_turkey, elk
@@ -9,7 +9,7 @@ Validation exhaustive:
 - Pipeline 9 modules: SSE→OSG→CME→WSE→VFE→SSVL→TCVE→PME→BMPE
 - 5 champs micro-pattern: retreat, exploration, hesitation, fine_movement, composite
 - Corridor micro-pattern analysis
-- Conformite BIONIC V5 ULTIME 300%
+- Conformite BIONIC V6 GOLDEN
 """
 
 import pytest
@@ -297,7 +297,7 @@ class TestPipelineIntegrity:
 
 
 # =================================================================
-# 8. CONFORMITE BIONIC V5 ULTIME 300%
+# 8. CONFORMITE BIONIC V6 GOLDEN
 # =================================================================
 
 class TestConformiteBionicV5:

@@ -1,6 +1,6 @@
 /**
  * DiagnosticExclusionsPanel — Onglet Diagnostic Exclusions
- * BIONIC V5 300% — Migration du panneau d'analyse droit
+ * BIONIC V6 GOLDEN — Migration du panneau d'analyse droit
  * 
  * Contenu migré:
  * - ZoneInfoPanel (détails zone survolée/sélectionnée)
@@ -232,7 +232,7 @@ const DiagnosticExclusionsPanel = ({
               </div>
             </div>
 
-            {/* Exclusions Dynamiques — BIONIC V5 300% */}
+            {/* Exclusions Dynamiques — BIONIC V6 GOLDEN */}
             <div className="bg-purple-900/30 rounded-lg p-4 border border-purple-500/30" data-testid="diag-dynamic-scores">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">

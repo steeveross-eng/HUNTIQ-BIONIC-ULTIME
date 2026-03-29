@@ -1,6 +1,6 @@
 """
 PHASE E — Router Conditions Saisonnières
-BIONIC V5 — Endpoint isolé, 0 transversalité
+BIONIC V6 — Endpoint isolé, 0 transversalité
 
 GET /api/v1/bionic/seasonal-conditions?lat=X&lng=Y
 """

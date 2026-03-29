@@ -1,6 +1,6 @@
 """
 SERVICE SENTINEL OAUTH2 — Client Credentials Flow
-BIONIC V5 ULTIME 300% — sentinel_oauth_v1
+BIONIC V6 GOLDEN — sentinel_oauth_v1
 
 Gere l'authentification OAuth2 avec Copernicus Data Space.
 Token cache en memoire avec renouvellement automatique.

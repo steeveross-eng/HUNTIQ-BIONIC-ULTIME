@@ -1,5 +1,5 @@
 """
-BIONIC V5 — SPECIES RULES BASE
+BIONIC V6 — SPECIES RULES BASE
 ===============================
 PHASE 7 — Knowledge Layer
 
@@ -7,7 +7,7 @@ Classe de base pour les règles comportementales par espèce.
 Chaque règle DOIT être traçable à une source scientifique.
 
 VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 from abc import ABC, abstractmethod

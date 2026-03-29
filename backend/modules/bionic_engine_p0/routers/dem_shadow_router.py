@@ -1,6 +1,6 @@
 """
 ROUTER DEM SHADOW — Shadow Pipeline with Real DEM
-BIONIC V5 ULTIME 300% — Mode Shadow (non destructif)
+BIONIC V6 GOLDEN — Mode Shadow (non destructif)
 
 Endpoints:
   POST /api/v1/bionic/dem-shadow/pipeline   — Full pipeline with real DEM injection

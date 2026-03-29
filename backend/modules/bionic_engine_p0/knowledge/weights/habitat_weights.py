@@ -1,5 +1,5 @@
 """
-BIONIC V5 — HABITAT WEIGHTS
+BIONIC V6 — HABITAT WEIGHTS
 ============================
 PHASE 7 — Knowledge Layer
 
@@ -11,7 +11,7 @@ Ce module remplace les pondérations arbitraires (0.10-0.15)
 des services score_*_service.py par des valeurs calibrées.
 
 VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 from typing import Dict, List, Optional, Any

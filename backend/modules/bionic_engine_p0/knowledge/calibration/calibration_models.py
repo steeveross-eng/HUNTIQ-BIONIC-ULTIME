@@ -1,9 +1,9 @@
 """
-BIONIC V5 — CALIBRATION MODELS (NIVEAU 6)
+BIONIC V6 — CALIBRATION MODELS (NIVEAU 6)
 ==========================================
 NIVEAU 6 — Mesure & Figeage
 
-Module de calibration et versionnage du modèle BIONIC V5.
+Module de calibration et versionnage du modèle BIONIC V6.
 
 TESTS PRÉDICTIFS:
 1. Concordance spatiale (distance réelle vs prédite)
@@ -18,11 +18,11 @@ CALIBRATION:
 - Ajustement des seuils (saisonniers, thermiques, PRES-HUMAN)
 
 VERSIONNAGE MAÎTRE:
-- BIONIC V5 MASTER = modèle verrouillé et validé
+- BIONIC V6 MASTER = modèle verrouillé et validé
 - Documentation complète des paramètres
 
 VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 NIVEAU 6
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 NIVEAU 6
 """
 
 from typing import Dict, List, Optional, Any
@@ -201,7 +201,7 @@ class PredictiveTestResult:
         if not self.tests:
             return 0.0
         
-        # Pondérations officielles BIONIC V5
+        # Pondérations officielles BIONIC V6
         weights = {
             "spatial": 0.35,
             "temporal": 0.25,
@@ -293,7 +293,7 @@ class CalibrationParameter:
 @dataclass
 class CalibrationProfile:
     """
-    Profil de calibration complet pour le modèle BIONIC V5.
+    Profil de calibration complet pour le modèle BIONIC V6.
     """
     
     profile_id: str
@@ -373,9 +373,9 @@ class CalibrationProfile:
 @dataclass
 class ModelVersion:
     """
-    Version du modèle BIONIC V5.
+    Version du modèle BIONIC V6.
     
-    BIONIC V5 MASTER = version verrouillée et validée à 95%+ de précision.
+    BIONIC V6 MASTER = version verrouillée et validée à 95%+ de précision.
     """
     
     version_id: str
@@ -482,13 +482,13 @@ class CalibrationRegistry:
         # Profil de calibration courant
         self._current_profile = CalibrationProfile(
             profile_id="CALIB-DEFAULT",
-            profile_name="BIONIC V5 Default Calibration"
+            profile_name="BIONIC V6 Default Calibration"
         )
         
         # Version du modèle
         self._current_model_version = ModelVersion(
             version_id="BIONIC-V5-001",
-            version_name="BIONIC V5 Pre-Master",
+            version_name="BIONIC V6 Pre-Master",
             version_number="5.0.0",
             changelog=[
                 "NIVEAU 1: Saisonnalité et phénologie",

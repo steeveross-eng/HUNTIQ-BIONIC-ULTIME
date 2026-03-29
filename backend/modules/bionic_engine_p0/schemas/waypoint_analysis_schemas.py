@@ -14,7 +14,7 @@ ISOLATION:
 - Modèles de données purs
 
 CONTRACT VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 from datetime import datetime
@@ -69,7 +69,7 @@ class FusionMode(str, Enum):
 
 
 class AnalysisMode(str, Enum):
-    """Mode d'analyse BIONIC V5 — basé sur les périodes biologiques."""
+    """Mode d'analyse BIONIC V6 — basé sur les périodes biologiques."""
     LIVE = "live"                        # Score temps réel (date/heure système)
     PRE_RUT = "pre_rut"                  # Score période pré-rut
     RUT = "rut"                          # Score période rut (pic)
@@ -673,7 +673,7 @@ class WaypointAnalysisResponse(BaseModel):
     """
     Réponse complète de l'analyse waypoint-centric.
     
-    Structure contractuelle BIONIC V5:
+    Structure contractuelle BIONIC V6:
     - scores: Score final + breakdown des 9 composants
     - layers: 5 familles de couches géospatiales
     - corridors: Réseau de corridors de déplacement (NIVEAU 4)

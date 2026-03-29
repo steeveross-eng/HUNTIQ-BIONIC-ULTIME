@@ -1,5 +1,5 @@
 """
-BIONIC V5 — HUMAN PRESSURE MODEL (PRES-HUMAN)
+BIONIC V6 — HUMAN PRESSURE MODEL (PRES-HUMAN)
 ==============================================
 NIVEAU 3 — Pression Humaine Réelle
 
@@ -21,7 +21,7 @@ CENTRALISATION:
 - Traçabilité obligatoire (source_ids, version)
 
 VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 NIVEAU 3
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 NIVEAU 3
 """
 
 from typing import Dict, List, Optional, Any, Tuple
@@ -502,7 +502,7 @@ class HumanPressureRegistry:
         """
         Calculer le modificateur de pression pour une espèce.
         
-        NIVEAU 3 BIONIC V5:
+        NIVEAU 3 BIONIC V6:
         - Utilisé par UnifiedScoringService pour modifier le score
         - Intègre la sensibilité espèce × saison × intensité
         
@@ -543,7 +543,7 @@ class HumanPressureRegistry:
         """
         Calculer le modèle de pression humaine à un point.
         
-        NIVEAU 3 BIONIC V5:
+        NIVEAU 3 BIONIC V6:
         - Agrège les observations dans le rayon
         - Calcule densité, fréquence, intensité
         - Génère les zones d'évitement
@@ -667,7 +667,7 @@ class HumanPressureRegistry:
         hunting_pressure_detected: bool = False
     ) -> Tuple[float, Dict[str, Any], List[str]]:
         """
-        NIVEAU 3 BIONIC V5 — Méthode principale pour UnifiedScoringService
+        NIVEAU 3 BIONIC V6 — Méthode principale pour UnifiedScoringService
         
         Calcule le modificateur de pression de chasse pour le pipeline de scoring.
         

@@ -1,5 +1,5 @@
 """
-BIONIC V5 PHASE C - Seasonal Modules Validation Tests
+BIONIC V6 PHASE C - Seasonal Modules Validation Tests
 =======================================================
 
 Tests exhaustifs pour les 4 modules saisonniers du Knowledge Layer:
@@ -11,7 +11,7 @@ Tests exhaustifs pour les 4 modules saisonniers du Knowledge Layer:
 ESPÈCES: moose, deer, bear, elk
 RÉGIONS: CA-QC, CA-ON, CA-BC, CA-AB, US-ME, US-AK
 
-CONFORMITÉ: BIONIC V5 | G-QA | Traçabilité source_ids
+CONFORMITÉ: BIONIC V6 | G-QA | Traçabilité source_ids
 """
 
 import pytest
@@ -133,7 +133,7 @@ class TestCalvingModels:
         print("✓ is_calving_active() retourne True/False correctement")
     
     def test_calving_source_ids_traceability(self):
-        """Vérifie que tous les modèles ont des source_ids pour traçabilité BIONIC V5"""
+        """Vérifie que tous les modèles ont des source_ids pour traçabilité BIONIC V6"""
         from modules.bionic_engine_p0.knowledge.seasonal.calving_models import (
             get_calving_registry
         )
@@ -142,7 +142,7 @@ class TestCalvingModels:
         
         for key, model_dict in models.items():
             source_ids = model_dict.get("source_ids", [])
-            assert len(source_ids) > 0, f"Model {key} missing source_ids for BIONIC V5 traceability"
+            assert len(source_ids) > 0, f"Model {key} missing source_ids for BIONIC V6 traceability"
         
         print(f"✓ Tous les {len(models)} modèles ont source_ids pour traçabilité")
     
@@ -283,7 +283,7 @@ class TestJuvenileDispersion:
                 source_ids = pattern.get("metadata", {}).get("source_ids", [])
                 assert len(source_ids) > 0, f"Pattern {species} missing source_ids"
         
-        print("✓ Tous les patterns ont source_ids pour traçabilité BIONIC V5")
+        print("✓ Tous les patterns ont source_ids pour traçabilité BIONIC V6")
 
 
 # =============================================================================
@@ -407,7 +407,7 @@ class TestThermalStress:
             profile = registry.get_profile(species)
             assert len(profile.source_ids) > 0, f"{species} profile missing source_ids"
         
-        print("✓ Tous les profils ont source_ids pour traçabilité BIONIC V5")
+        print("✓ Tous les profils ont source_ids pour traçabilité BIONIC V6")
 
 
 # =============================================================================
@@ -548,7 +548,7 @@ class TestHuntingPressure:
             source_ids = profile_data.get("source_ids", [])
             assert len(source_ids) > 0, f"{species} profile missing source_ids"
         
-        print("✓ Tous les profils ont source_ids pour traçabilité BIONIC V5")
+        print("✓ Tous les profils ont source_ids pour traçabilité BIONIC V6")
 
 
 # =============================================================================

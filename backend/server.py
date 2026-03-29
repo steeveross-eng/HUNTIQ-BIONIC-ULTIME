@@ -212,7 +212,7 @@ try:
 except Exception as e:
     logger.warning(f"Organic Zones V2 not loaded: {e}")
 
-# 6b. Register Spatial Clipping router (BIONIC V5 300% INVARIANT)
+# 6b. Register Spatial Clipping router (BIONIC V6 GOLDEN INVARIANT)
 try:
     from modules.bionic_engine_p0.routers.spatial_clipping_router import router as spatial_clipping_router
     app.include_router(spatial_clipping_router)

@@ -1,7 +1,7 @@
 /**
- * WaypointSelector - Sélecteur de Waypoint BIONIC V5
+ * WaypointSelector - Sélecteur de Waypoint BIONIC V6
  * ===================================================
- * BIONIC V5 ULTIME - PHASE 5.2
+ * BIONIC V6 ULTIME - PHASE 5.2
  * 
  * RESPONSABILITÉ UNIQUE:
  * - Afficher une liste de waypoints sélectionnables
@@ -21,7 +21,7 @@
  * - Communication via props
  * - Aucun appel API, aucun calcul métier
  * 
- * Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+ * Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
  */
 
 import React, { useState, useMemo } from 'react';

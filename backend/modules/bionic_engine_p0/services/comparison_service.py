@@ -1,6 +1,6 @@
 """
 SERVICE COMPARISON — Territory Comparison Engine
-BIONIC V5 ULTIME 300% — PHASE G+
+BIONIC V6 GOLDEN — PHASE G+
 
 Compare deux territoires cote-a-cote pour une espece donnee.
 Execute le pipeline complet sur chaque territoire, puis produit

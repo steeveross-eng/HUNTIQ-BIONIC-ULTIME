@@ -1,6 +1,6 @@
 """
 MODULE SSVL — Species-Specific Visual Logic
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #6
+BIONIC V6 GOLDEN — Phase d'Optimisation #6
 
 Preferences visuelles comportementales par espece:
   - prudence_field: niveau de prudence spatiale

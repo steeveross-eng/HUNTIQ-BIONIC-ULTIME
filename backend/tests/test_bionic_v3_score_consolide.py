@@ -1,5 +1,5 @@
 """
-BIONIC V3 - Score Consolidé & Plan de Match Testing
+BIONIC V6 - Score Consolidé & Plan de Match Testing
 =====================================================
 Tests for:
 - Plan de Match Steeve-MAX v1 document (MD + PDF)

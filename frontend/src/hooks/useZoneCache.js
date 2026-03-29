@@ -5,7 +5,7 @@
  *   Input:  cacheKey (string), zones data (object)
  *   Output: cached zones or null
  * 
- * NORME BIONIC V5 300%:
+ * NORME BIONIC V6 GOLDEN:
  *   - Zéro lien avec le calcul backend ou le preview
  *   - Zéro mutation silencieuse
  *   - Invalidation automatique si clé change

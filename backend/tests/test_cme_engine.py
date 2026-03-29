@@ -1,5 +1,5 @@
 """
-CME ENGINE (Corridor Morphology Engine) — BIONIC V5 ULTIME 300% Phase #3 Tests
+CME ENGINE (Corridor Morphology Engine) — BIONIC V6 GOLDEN Phase #3 Tests
 Tests for POST /api/v1/bionic/cme/generate and GET /api/v1/bionic/cme/status
 
 Validates:

@@ -1,6 +1,6 @@
 /**
  * RoutePlannerLayer — Tactical Route Visualization on Leaflet Map
- * BIONIC V5 ULTIME 300% — RoutePlannerLayer_v1
+ * BIONIC V6 GOLDEN — RoutePlannerLayer_v1
  *
  * Displays optimal tactical route between hotspots using polylines.
  * Color-coded by habitat score along path segments.

@@ -1,5 +1,5 @@
 /**
- * WaypointUnifiedPanel.jsx — Panneau latéral unifié BIONIC V5 300%
+ * WaypointUnifiedPanel.jsx — Panneau latéral unifié BIONIC V6 GOLDEN
  *
  * Source de vérité unique pour toutes les interactions waypoint.
  * Panneau latéral unifié — source de vérité unique pour les waypoints.
@@ -44,7 +44,7 @@ const WaypointUnifiedPanel = ({
   dynamicScores,
   currentMapCenter,
   PLACE_TYPES = [],
-  // BIONIC V5 300%: Snapshot Territoire
+  // BIONIC V6 GOLDEN: Snapshot Territoire
   onGenerateSnapshot,
   isGeneratingSnapshot = false,
   snapshotData = null,
@@ -407,7 +407,7 @@ const WaypointUnifiedPanel = ({
               )}
             </div>
 
-            {/* BIONIC V5 300%: Snapshot Territoire — Export PDF/JSON */}
+            {/* BIONIC V6 GOLDEN: Snapshot Territoire — Export PDF/JSON */}
             <div className="bg-[#f5a623]/10 rounded-lg p-3 border border-[#f5a623]/20" data-testid="waypoint-snapshot-section">
               <div className="flex items-center gap-2 mb-2">
                 <Camera className="h-3.5 w-3.5 text-[#f5a623]" />

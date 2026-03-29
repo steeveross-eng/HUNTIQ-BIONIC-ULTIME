@@ -1,5 +1,5 @@
 """
-BIONIC V5 — PHASE F GPS ULTIMATE Tests
+BIONIC V6 — PHASE F GPS ULTIMATE Tests
 =======================================
 Tests for Observations and GPS Ultimate endpoints.
 

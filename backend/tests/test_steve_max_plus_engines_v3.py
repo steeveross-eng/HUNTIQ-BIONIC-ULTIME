@@ -1,5 +1,5 @@
 """
-STEVE-MAX++ BIONIC V3 Integration Testing
+STEVE-MAX++ BIONIC V6 Integration Testing
 Tests 27 engines (12 V2 + 12 V3 + 3 AI) + 3 species models (moose, deer, bear)
 + AI predictions (24h/72h/7d with decay)
 

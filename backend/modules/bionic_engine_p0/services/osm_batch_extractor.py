@@ -10,7 +10,7 @@ Usage:
     python osm_batch_extractor.py --regions CA-ON US-NY FR-ARA
     python osm_batch_extractor.py --all
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 import sys
@@ -272,7 +272,7 @@ def get_cache_status():
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Extraction OSM multi-régions pour BIONIC V5",
+        description="Extraction OSM multi-régions pour BIONIC V6",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Exemples:

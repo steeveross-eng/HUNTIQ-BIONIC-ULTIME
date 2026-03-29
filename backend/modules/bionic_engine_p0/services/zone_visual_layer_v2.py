@@ -1,6 +1,6 @@
 """
 MODULE D — Zone Visual Layer V2
-BIONIC V5 — Pipeline Organique Unifié
+BIONIC V6 — Pipeline Organique Unifié
 
 Génération des couches visuelles organiques.
 Couleurs BIONIC, opacité dynamique, bordures lissées.
@@ -11,7 +11,7 @@ Sortie: GeoJSON strict.
 
 from typing import Dict, List, Any
 
-# Palette BIONIC V5 officielle — identique à bionicModules.js
+# Palette BIONIC V6 officielle — identique à bionicModules.js
 BIONIC_COLORS = {
     "rut":            {"color": "#FF4D6D", "label": "Zone de rut",            "category": "behavioral"},
     "repos":          {"color": "#8B5CF6", "label": "Zone de repos",          "category": "behavioral"},
@@ -41,7 +41,7 @@ def zone_to_geojson_feature(
 ) -> Dict[str, Any]:
     """
     Convertit une zone organique en GeoJSON Feature.
-    BIONIC V5 P1: Inclut penalty_factor et penalty_details.
+    BIONIC V6 P1: Inclut penalty_factor et penalty_details.
     """
     meta = BIONIC_COLORS.get(layer_id, {"color": "#999999", "label": layer_id, "category": "unknown"})
 
@@ -115,7 +115,7 @@ def zones_to_geojson(
 ) -> Dict[str, Any]:
     """
     Convertit toutes les zones en GeoJSON FeatureCollection.
-    BIONIC V5 P1: Inclut les pénalités semi-statiques par zone.
+    BIONIC V6 P1: Inclut les pénalités semi-statiques par zone.
     """
     features = []
     zone_idx = 0

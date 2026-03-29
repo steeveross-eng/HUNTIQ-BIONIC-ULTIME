@@ -11,7 +11,7 @@ COUVERTURE:
 - Conformité aux heures légales
 - Sérialisation des résultats
 
-Conformité: G-QA | BIONIC V5
+Conformité: G-QA | BIONIC V6
 """
 
 import pytest

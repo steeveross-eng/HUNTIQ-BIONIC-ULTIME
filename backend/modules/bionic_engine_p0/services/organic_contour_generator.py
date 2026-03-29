@@ -3,7 +3,7 @@ BIONIC ENGINE - Organic Contour Generator V3
 PHASE P1-HOTSPOTS — REFONTE MAJEURE
 
 Générateur de hotspots ORGANIQUES naturels via Marching Squares + Chaikin.
-Conformité stricte BIONIC V5.
+Conformité stricte BIONIC V6.
 
 SPÉCIFICATIONS OBLIGATOIRES:
 - Formes 100% ORGANIQUES, irrégulières, naturelles
@@ -22,7 +22,7 @@ PIPELINE:
 5. Validation évitement OSM
 6. Ajustement comportemental par espèce
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 from typing import List, Tuple, Dict, Any, Optional
@@ -526,7 +526,7 @@ class IntensityGridGenerator:
 
 class OrganicContourGenerator:
     """
-    Générateur de contours organiques BIONIC V5.
+    Générateur de contours organiques BIONIC V6.
     
     Pipeline complet:
     1. Génération grille d'intensité (P0-STABLE)
@@ -551,7 +551,7 @@ class OrganicContourGenerator:
         max_area: float = MAX_AREA_M2
     ) -> Optional[List[List[float]]]:
         """
-        Génère un hotspot organique conforme BIONIC V5.
+        Génère un hotspot organique conforme BIONIC V6.
         
         Args:
             bounds: Limites géographiques
@@ -760,12 +760,12 @@ class OrganicContourGenerator:
 
 
 # =============================================================================
-# STYLES CONFORMES BIONIC V5
+# STYLES CONFORMES BIONIC V6
 # =============================================================================
 
 def create_hotspot_style(hotspot_type: str, species: str = "moose") -> Dict[str, Any]:
     """
-    Crée un style conforme aux spécifications visuelles BIONIC V5.
+    Crée un style conforme aux spécifications visuelles BIONIC V6.
     
     OBLIGATOIRE:
     - Contour 1-2px, coloré

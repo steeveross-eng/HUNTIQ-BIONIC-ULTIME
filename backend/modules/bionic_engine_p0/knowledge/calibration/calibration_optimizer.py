@@ -1,7 +1,7 @@
 """
-BIONIC V5 — CALIBRATION OPTIMIZER (PHASE F → MASTER)
+BIONIC V6 — CALIBRATION OPTIMIZER (PHASE F → MASTER)
 ======================================================
-Calibration vers BIONIC V5 MASTER
+Calibration vers BIONIC V6 MASTER
 
 Module d'optimisation hybride des pondérations et modificateurs.
 - Suggestions automatiques basées sur les écarts observés
@@ -11,7 +11,7 @@ Module d'optimisation hybride des pondérations et modificateurs.
 OBJECTIF: Atteindre ≥95% de précision globale pour le statut MASTER
 
 VERSION: 7.1.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 MASTER
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 MASTER
 """
 
 from typing import Dict, List, Optional, Any
@@ -300,7 +300,7 @@ class CalibrationOptimizer:
     4. Application contrôlée des ajustements
     5. Suivi de la progression vers MASTER
     
-    OBJECTIF: Atteindre ≥95% de précision pour le statut BIONIC V5 MASTER
+    OBJECTIF: Atteindre ≥95% de précision pour le statut BIONIC V6 MASTER
     """
     
     def __init__(self):

@@ -164,7 +164,7 @@ export const WaypointMap = ({
   defaultCenter = { lat: 46.8139, lng: -71.2080 },
   initialCenter = null,  // [lat, lng] from URL params
   initialZoom = null,    // zoom level from URL params
-  children = null        // BIONIC V5: Couches additionnelles (BionicMapOverlay)
+  children = null        // BIONIC V6: Couches additionnelles (BionicMapOverlay)
 }) => {
   const [waypoints, setWaypoints] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -193,7 +193,7 @@ export const WaypointMap = ({
   const [showMovementCorridors, setShowMovementCorridors] = useState(false);
   // TEMPORAL SCENE: Hour slider for estimated corridors
   const [temporalHour, setTemporalHour] = useState(null);
-  // FUNCTIONAL ZONES: Semi-static organic zones — TOUJOURS ACTIVES (BIONIC V5 300%)
+  // FUNCTIONAL ZONES: Semi-static organic zones — TOUJOURS ACTIVES (BIONIC V6 GOLDEN)
   const [showFunctionalZones, setShowFunctionalZones] = useState(true);
   const [functionalZones, setFunctionalZones] = useState([]);
   const [loadingZones, setLoadingZones] = useState(false);
@@ -307,7 +307,7 @@ export const WaypointMap = ({
     loadWaypoints();
   }, [loadWaypoints]);
 
-  // BIONIC V5: Synchronisation bidirectionnelle instantanée des waypoints
+  // BIONIC V6: Synchronisation bidirectionnelle instantanée des waypoints
   // Polling toutes les 3s — un waypoint créé/supprimé dans Mon Territoire
   // apparaît immédiatement dans Carte Interactive et vice versa.
   useEffect(() => {
@@ -454,7 +454,7 @@ export const WaypointMap = ({
   };
 
   // FUNCTIONAL ZONES: Load zones when toggled on (semi-static, map-based)
-  // BIONIC V5 P0: layers par défaut pour que le toggle "Zones" génère réellement des zones
+  // BIONIC V6 P0: layers par défaut pour que le toggle "Zones" génère réellement des zones
   const DEFAULT_ZONE_LAYERS = {
     habitats: true, rut: true, repos: true, alimentation: true,
     corridors: true, peuplements: true,
@@ -483,7 +483,7 @@ export const WaypointMap = ({
             <div className="flex items-center justify-between mb-1.5">
               <CardTitle className="text-sm text-white flex items-center gap-2">
                 <Map className="h-4 w-4 text-[#f5a623]" />
-                <span className="text-xs font-medium">Carte Tactique BIONIC V5</span>
+                <span className="text-xs font-medium">Carte Tactique BIONIC V6</span>
               </CardTitle>
               {isAddingMode && (
                 <span className="text-[10px] text-[#f5a623] flex items-center gap-1">
@@ -800,7 +800,7 @@ export const WaypointMap = ({
                   
                   {/* STEVE-MAX: Legacy MovementCorridorsLayer PURGE — BCE-4X-UI-003 */}
                   
-                  {/* BIONIC V5: Couches organiques injectées par le parent */}
+                  {/* BIONIC V6: Couches organiques injectées par le parent */}
                   {children}
                 </MapContainer>
               )}
@@ -845,7 +845,7 @@ export const WaypointMap = ({
               </div>
             )}
 
-            {/* BIONIC V5 300%: Panneau latéral = seule source de vérité waypoint */}
+            {/* BIONIC V6 GOLDEN: Panneau latéral = seule source de vérité waypoint */}
             {selectedWaypoint && (
               <div className="absolute bottom-3 right-3 z-[1000] bg-black/90 backdrop-blur-sm rounded-lg border border-[#f5a623]/30 p-3 max-w-[200px]" data-testid="waypoint-selected-indicator">
                 <div className="flex items-center gap-2">

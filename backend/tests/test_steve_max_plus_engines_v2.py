@@ -1,5 +1,5 @@
 """
-STEVE-MAX++ Testing Suite — 12 BIONIC V2 Engines Integration
+STEVE-MAX++ Testing Suite — 12 BIONIC V6 Engines Integration
 ============================================================
 Tests all features requested in iteration 13:
 1. GET /api/v1/bionic/engines-v2/status returns 12 engines all active

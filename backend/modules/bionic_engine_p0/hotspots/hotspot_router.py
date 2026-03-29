@@ -1,5 +1,5 @@
 """
-BIONIC V3 — Hotspot Admin API Router
+BIONIC V6 — Hotspot Admin API Router
 =====================================
 Admin endpoints for hotspot extraction, listing, export.
 

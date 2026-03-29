@@ -1,5 +1,5 @@
 """
-BIONIC V5 NIVEAU 3 — Validation Exhaustive PRES-HUMAN (Pression Humaine Réelle)
+BIONIC V6 NIVEAU 3 — Validation Exhaustive PRES-HUMAN (Pression Humaine Réelle)
 ================================================================================
 
 Ce module valide le modèle de pression humaine NIVEAU 3:
@@ -19,7 +19,7 @@ INTENSITÉS TESTÉES: none, low, moderate, high, extreme
 TYPES D'ACTIVITÉ: hunting, scouting, recreation, forestry
 SOURCE_IDS ATTENDUS: SRC-GPS-HUNT, SRC-TERRAIN-CAM, SRC-PRES-HUMAN
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 NIVEAU 3
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 NIVEAU 3
 """
 
 import pytest

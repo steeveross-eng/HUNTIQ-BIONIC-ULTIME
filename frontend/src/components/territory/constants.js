@@ -1,5 +1,5 @@
 /**
- * TerritoryMap Constants - BIONIC V5
+ * TerritoryMap Constants - BIONIC V6
  * 
  * Extracted from TerritoryMap.jsx for better maintainability
  * @module territory/constants

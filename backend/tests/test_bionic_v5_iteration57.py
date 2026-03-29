@@ -1,5 +1,5 @@
 """
-BIONIC V5 Iteration 57 — Ring Assembly & Large Water Exclusion Tests
+BIONIC V6 Iteration 57 — Ring Assembly & Large Water Exclusion Tests
 
 Tests for the CRITICAL fix: Saint Lawrence River zones bug
 ROOT CAUSE FIXED:
@@ -19,7 +19,7 @@ import os
 BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', '').rstrip('/')
 
 class TestBionicV5Iteration57:
-    """BIONIC V5 Iteration 57 — Saint Lawrence River Water Exclusion Fix"""
+    """BIONIC V6 Iteration 57 — Saint Lawrence River Water Exclusion Fix"""
 
     def test_health_endpoint(self):
         """Test terrain-data health endpoint is operational"""

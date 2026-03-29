@@ -1,5 +1,5 @@
 """
-BIONIC V5 — GPS ULTIMATE ROUTER (PHASE F)
+BIONIC V6 — GPS ULTIMATE ROUTER (PHASE F)
 ==========================================
 PHASE F — GPS ULTIMATE
 
@@ -8,7 +8,7 @@ Endpoints REST pour les services temps réel:
 - Safety Engine (zones de danger, alertes)
 
 VERSION: 7.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 PHASE F
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 PHASE F
 """
 
 import logging

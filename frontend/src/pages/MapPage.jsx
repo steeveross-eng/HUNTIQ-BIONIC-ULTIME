@@ -1,15 +1,15 @@
 /**
  * MapPage - Interactive Map Page for Waypoints
- * PHASE F — GPS ULTIMATE + BIONIC V5 Organic Zones
+ * V6 GOLDEN — GPS ULTIMATE + BIONIC V6 Organic Zones
  * 
- * Carte interactive avec intégration BIONIC V5:
+ * Carte interactive avec intégration BIONIC V6:
  * - Waypoints et GPS Tracking
  * - Hotspots dynamiques (AutoCartographyEngine)
  * - Zones de danger (SafetyEngine)
- * - Zones BIONIC V5 organiques avec espèce + ON/OFF
+ * - Zones BIONIC V6 organiques avec espèce + ON/OFF
  * 
  * VERSION: 7.3.0
- * Conformité: BIONIC V5 PHASE F
+ * Conformité: BIONIC V6 V6 GOLDEN
  */
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
@@ -40,7 +40,7 @@ const MapPage = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   
-  // BIONIC V5 States
+  // BIONIC V6 States
   const [selectedSpecies, setSelectedSpecies] = useState('tous');
   const [showBionicPanel, setShowBionicPanel] = useState(false);
   const [bionicStats, setBionicStats] = useState({});
@@ -109,7 +109,7 @@ const MapPage = () => {
       style={{ paddingTop: '64px' }}
       data-testid="map-page"
     >
-      {/* Header compact PHASE F */}
+      {/* Header compact V6 GOLDEN */}
       <div className="flex-shrink-0 bg-black/95 border-b border-[#f5a623]/20 px-4 py-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -125,16 +125,16 @@ const MapPage = () => {
             <div className="flex items-center gap-2">
               <Map className="h-5 w-5 text-[#f5a623]" />
               <div>
-                <h1 className="text-sm font-bold text-white leading-tight">Carte Interactive PHASE F</h1>
+                <h1 className="text-sm font-bold text-white leading-tight">Carte Interactive V6 GOLDEN</h1>
                 <p className="text-[10px] text-gray-400 leading-tight">
-                  Waypoints • GPS Tracking • Hotspots • BIONIC V5
+                  Waypoints • GPS Tracking • Hotspots • BIONIC V6
                 </p>
               </div>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            {/* BIONIC V5 Toggle Button */}
+            {/* BIONIC V6 Toggle Button */}
             <Button
               variant="ghost"
               size="sm"
@@ -143,7 +143,7 @@ const MapPage = () => {
               data-testid="toggle-bionic-panel"
             >
               <Layers className="h-3.5 w-3.5 mr-1.5" />
-              BIONIC V5
+              BIONIC V6
               {visibleLayerCount > 0 && (
                 <Badge className="ml-1.5 bg-amber-500/30 text-amber-300 text-[9px] px-1">{bionicStats.total || 0}</Badge>
               )}
@@ -211,7 +211,7 @@ const MapPage = () => {
               initialCenter={urlParams.hasParams ? [urlParams.lat, urlParams.lng] : null}
               initialZoom={urlParams.hasParams ? urlParams.zoom : null}
             >
-              {/* BIONIC V5 Organic Zones Overlay */}
+              {/* BIONIC V6 Organic Zones Overlay */}
               <BionicMapOverlay
                 selectedSpecies={selectedSpecies}
                 layersVisible={layersVisible}
@@ -222,7 +222,7 @@ const MapPage = () => {
             </WaypointMap>
 
             {/* ============================================ */}
-            {/* BIONIC V5 — Panneau de contrôle flottant     */}
+            {/* BIONIC V6 — Panneau de contrôle flottant     */}
             {/* ============================================ */}
             {showBionicPanel && (
               <div 
@@ -233,7 +233,7 @@ const MapPage = () => {
                 <div className="flex items-center justify-between px-3 py-2 bg-amber-500/10 border-b border-amber-500/20">
                   <div className="flex items-center gap-2">
                     <Layers className="h-4 w-4 text-amber-400" />
-                    <span className="text-xs font-bold text-white">BIONIC V5</span>
+                    <span className="text-xs font-bold text-white">BIONIC V6</span>
                   </div>
                   <button onClick={() => setShowBionicPanel(false)} className="text-gray-400 hover:text-white">
                     <X className="h-3.5 w-3.5" />

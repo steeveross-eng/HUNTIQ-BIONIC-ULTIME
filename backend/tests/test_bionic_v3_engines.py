@@ -1,5 +1,5 @@
 """
-BIONIC V3 - ALIMENTATION-V1 & REPOS-V1 Engines Test Suite
+BIONIC V6 - ALIMENTATION-V1 & REPOS-V1 Engines Test Suite
 ==========================================================
 Tests for:
 - ALIMENTATION-V1: Food scoring engine (5 species: CERF, ORIGNAL, OURS, DINDON, WAPITI)

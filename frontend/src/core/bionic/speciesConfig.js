@@ -1,10 +1,10 @@
 /**
- * speciesConfig.js — Configuration des espèces pour BIONIC V5
+ * speciesConfig.js — Configuration des espèces pour BIONIC V6
  *
  * Définit les espèces cibles, leurs couches BIONIC pertinentes,
  * et les préférences d'habitat pour le filtrage et l'alignement.
  *
- * CONFORME: BIONIC V5 — Alignement par espèce
+ * CONFORME: BIONIC V6 — Alignement par espèce
  */
 
 export const SPECIES = {

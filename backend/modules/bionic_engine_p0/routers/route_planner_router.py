@@ -1,6 +1,6 @@
 """
 ROUTER ROUTE PLANNER — Tactical Route Optimization
-BIONIC V5 ULTIME 300% — route_planner_v1
+BIONIC V6 GOLDEN — route_planner_v1
 
 Endpoints:
   POST /api/v1/bionic/route-planner/compute  — Compute optimal tactical route

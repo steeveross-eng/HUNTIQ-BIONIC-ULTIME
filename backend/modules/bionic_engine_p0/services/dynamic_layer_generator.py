@@ -1,5 +1,5 @@
 """
-BIONIC V5 — PHASE D: Dynamic Layer Generator
+BIONIC V6 — PHASE D: Dynamic Layer Generator
 ===============================================
 PHASE D.2 — Couches dynamiques multi-facteurs
 
@@ -16,7 +16,7 @@ INTÉGRATION:
 S'intègre dans le LayerAggregatorService comme 6ème famille de layers.
 
 VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 PHASE D
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 PHASE D
 """
 
 import logging

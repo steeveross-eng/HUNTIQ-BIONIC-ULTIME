@@ -1,7 +1,7 @@
 /**
- * LayerControlPanel - Panneau de Contrôle des Layers BIONIC V5
+ * LayerControlPanel - Panneau de Contrôle des Layers BIONIC V6
  * =============================================================
- * BIONIC V5 ULTIME - PHASE 6 - ACTION 4
+ * BIONIC V6 ULTIME - PHASE 6 - ACTION 4
  * 
  * RESPONSABILITÉ UNIQUE:
  * - Afficher les toggles pour activer/désactiver chaque layer
@@ -21,7 +21,7 @@
  * - Aucune logique métier
  * - Données et callbacks via props uniquement
  * 
- * Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+ * Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
  */
 
 import React, { useState, useCallback, useMemo } from 'react';

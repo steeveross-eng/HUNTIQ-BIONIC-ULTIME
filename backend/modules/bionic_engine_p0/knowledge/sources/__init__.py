@@ -1,5 +1,5 @@
 """
-BIONIC V5 — Knowledge Layer Sources
+BIONIC V6 — Knowledge Layer Sources
 """
 from .scientific_sources_schema import (
     ScientificSource,

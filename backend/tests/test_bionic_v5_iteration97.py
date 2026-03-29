@@ -1,5 +1,5 @@
 """
-BIONIC V5 — Iteration 97 Tests
+BIONIC V6 — Iteration 97 Tests
 Mode Hybride & Synchronisation Waypoints
 
 Tests for 3 critical fixes:

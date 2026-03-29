@@ -5,7 +5,7 @@
 # ══════════════════════════════════════════════════════════════
 """
 SERVICE PIPELINE — Full Pipeline Orchestrator
-BIONIC V5 ULTIME 300% — PHASE G
+BIONIC V6 GOLDEN — PHASE G
 
 Orchestre les 10 modules dans l'ordre strict:
 SSE -> OSG -> CME -> WSE -> VFE -> SSVL -> TCVE -> PME -> BMPE -> TFE

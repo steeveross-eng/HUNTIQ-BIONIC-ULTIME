@@ -5,7 +5,7 @@ PHASE P1-HOTSPOTS V3 — Module d'Extraction OSM Optimisé
 Version optimisée pour grandes régions: extraction par sous-régions
 avec fusion automatique des résultats.
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 import json

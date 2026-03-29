@@ -1,10 +1,10 @@
 """
-BIONIC V5 — PHASE G: Validation Terrain Multi-Années/Multi-Espèces
+BIONIC V6 — PHASE G: Validation Terrain Multi-Années/Multi-Espèces
 ====================================================================
 Structure de validation pour la certification MASTER.
 
 OBJECTIF:
-Fournir un cadre pour valider le modèle BIONIC V5 sur:
+Fournir un cadre pour valider le modèle BIONIC V6 sur:
 - Plusieurs saisons consécutives (multi-années)
 - Plusieurs espèces simultanément
 - Des métriques standardisées et reproductibles
@@ -17,7 +17,7 @@ MÉTRIQUES DE VALIDATION:
 
 STATUT: Structure préparée — En attente de données terrain
 VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 MASTER
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 MASTER
 """
 
 from typing import Dict, List, Optional, Any

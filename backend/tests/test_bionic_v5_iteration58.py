@@ -1,9 +1,9 @@
 """
-BIONIC V5 Iteration 58 — Testing Species Comparison Page + Organic Zones API
+BIONIC V6 Iteration 58 — Testing Species Comparison Page + Organic Zones API
 Test the features fixed by main agent:
 1. /comparaison-especes page (split-screen multi-species comparison)
 2. POST /api/v1/bionic/organic-zones endpoint returns valid GeoJSON
-3. /map page loads with BIONIC V5 zones
+3. /map page loads with BIONIC V6 zones
 4. /territoire page loads with BIONIC Premium map
 """
 

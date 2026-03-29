@@ -1,6 +1,6 @@
 """
 MODULE A — Behavioral Rasterizer V2
-BIONIC V5 — Pipeline Organique Unifié
+BIONIC V6 — Pipeline Organique Unifié
 
 Génère des rasters d'intensité continus (grille numpy) pour chaque couche
 comportementale et environnementale.

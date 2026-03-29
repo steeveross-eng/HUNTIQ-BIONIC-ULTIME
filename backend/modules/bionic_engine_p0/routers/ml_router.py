@@ -1,6 +1,6 @@
 """
 ROUTER ML — Machine Learning Behavioral Engine
-BIONIC V5 ULTIME 300% — PHASE H
+BIONIC V6 GOLDEN — PHASE H
 
 Endpoints:
   POST /api/v1/bionic/ml/features        — Build feature vector

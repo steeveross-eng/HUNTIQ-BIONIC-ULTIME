@@ -1,6 +1,6 @@
 """
 ROUTER SSVL — Species-Specific Visual Logic
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #6
+BIONIC V6 GOLDEN — Phase d'Optimisation #6
 
 Endpoint: POST /api/v1/bionic/ssvl/analyze
 Endpoint: GET /api/v1/bionic/ssvl/status

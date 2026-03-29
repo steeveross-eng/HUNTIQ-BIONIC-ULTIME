@@ -675,7 +675,7 @@ export const ECOFORESTRY_LAYERS = {
 };
 
 /**
- * TILE LOCKING SYSTEM — BIONIC V5 300%
+ * TILE LOCKING SYSTEM — BIONIC V6 GOLDEN
  * 
  * Mécanisme de verrouillage des tuiles WMS :
  * - Aucune tuile visible tant que 100% du viewport n'est pas prêt

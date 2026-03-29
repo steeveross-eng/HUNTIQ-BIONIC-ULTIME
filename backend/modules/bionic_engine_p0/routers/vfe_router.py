@@ -1,6 +1,6 @@
 """
 ROUTER VFE — Visual Fusion Engine
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #5
+BIONIC V6 GOLDEN — Phase d'Optimisation #5
 
 Endpoint: POST /api/v1/bionic/vfe/analyze
 Endpoint: GET /api/v1/bionic/vfe/status

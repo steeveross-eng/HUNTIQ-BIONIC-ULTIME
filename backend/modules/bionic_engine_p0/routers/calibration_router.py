@@ -1,7 +1,7 @@
 """
-BIONIC V5 — CALIBRATION ROUTER (PHASE F → MASTER)
+BIONIC V6 — CALIBRATION ROUTER (PHASE F → MASTER)
 ===================================================
-Calibration vers BIONIC V5 MASTER
+Calibration vers BIONIC V6 MASTER
 
 Endpoints REST pour le système de calibration:
 - Comparaison prédiction vs observation
@@ -10,7 +10,7 @@ Endpoints REST pour le système de calibration:
 - Suivi de la progression vers MASTER
 
 VERSION: 7.1.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 MASTER
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 MASTER
 """
 
 import logging
@@ -350,7 +350,7 @@ async def get_terrain_calibration_status():
     - Concordance comportementale
     - Score de concordance global
     
-    Chaque comparaison contribue à la calibration vers BIONIC V5 MASTER.
+    Chaque comparaison contribue à la calibration vers BIONIC V6 MASTER.
     """
 )
 async def compare_prediction_vs_observation(request: CompareRequest):
@@ -734,7 +734,7 @@ async def apply_approved_suggestions():
     response_model=dict,
     summary="Statut MASTER",
     description="""
-    Vérifie si le modèle est prêt pour le statut BIONIC V5 MASTER.
+    Vérifie si le modèle est prêt pour le statut BIONIC V6 MASTER.
     
     Critère: Précision globale ≥ 95%
     """
@@ -785,7 +785,7 @@ async def get_master_status():
     description="""
     ATTENTION: Action irréversible
     
-    Verrouille le modèle actuel comme BIONIC V5 MASTER si la précision ≥ 95%.
+    Verrouille le modèle actuel comme BIONIC V6 MASTER si la précision ≥ 95%.
     Une fois verrouillé, le modèle ne peut plus être modifié.
     """
 )
@@ -835,7 +835,7 @@ async def lock_as_master():
         
         return {
             "status": "success",
-            "message": "BIONIC V5 MASTER verrouillé avec succès !",
+            "message": "BIONIC V6 MASTER verrouillé avec succès !",
             "model_version": model_version.to_dict(),
             "final_precision": round(dashboard.global_precision, 1)
         }

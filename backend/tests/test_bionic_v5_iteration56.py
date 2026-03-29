@@ -1,5 +1,5 @@
 """
-BIONIC V5 Iteration 56 — Backend API Tests for Terrain Data Exclusion
+BIONIC V6 Iteration 56 — Backend API Tests for Terrain Data Exclusion
 
 Tests POST /api/v1/bionic/terrain/terrain-data endpoint to verify:
 1. Water exclusion zones (natural=water, waterway, wetland, bay, strait)
@@ -12,7 +12,7 @@ Expected thresholds for Quebec/Lévis bbox (46.78,-71.28,46.85,-71.15):
 - Urban > 2500
 - Road > 3500
 
-CONFORME: BIONIC V5 — TOLÉRANCE ZÉRO
+CONFORME: BIONIC V6 — TOLÉRANCE ZÉRO
 """
 
 import pytest

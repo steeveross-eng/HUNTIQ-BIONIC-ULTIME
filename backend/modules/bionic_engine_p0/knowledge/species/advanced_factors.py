@@ -1,5 +1,5 @@
 """
-BIONIC V5 — ADVANCED BEHAVIORAL FACTORS
+BIONIC V6 — ADVANCED BEHAVIORAL FACTORS
 ========================================
 PHASE B — Facteurs Comportementaux Avancés
 
@@ -15,7 +15,7 @@ KNOWLEDGE LAYER INTEGRATION:
 - Intégration via knowledge/species/ et seasonal/
 
 VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 from typing import Dict, List, Optional, Any, Tuple

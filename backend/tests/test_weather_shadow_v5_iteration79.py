@@ -1,5 +1,5 @@
 """
-TEST WEATHER SHADOW — BIONIC V5 ULTIME 300%
+TEST WEATHER SHADOW — BIONIC V6 GOLDEN
 ============================================
 
 Weather Shadow Integration Tests — Open-Meteo (Free API, no key required)

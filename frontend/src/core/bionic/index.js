@@ -68,7 +68,7 @@ export {
 // Modules BIONIC — Source de vérité pour couleurs, catégories, interprétations
 export { BIONIC_MODULES } from './bionicModules';
 
-// Configuration des espèces — BIONIC V5
+// Configuration des espèces — BIONIC V6
 export { SPECIES, SPECIES_LIST, getSpeciesLayers, getSpeciesWeight } from './speciesConfig';
 
 // Types et constantes - BIONIC Design System compliant (iconName for Lucide icons)

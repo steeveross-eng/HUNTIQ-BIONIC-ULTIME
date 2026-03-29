@@ -4,7 +4,7 @@
  * 
  * Dashboard principal du module Scoring.
  * Composant parent isolé - aucun import croisé.
- * PHASE F: Migration vers LightCharts
+ * V6 GOLDEN: Migration vers LightCharts
  */
 
 import React, { useState, useEffect } from 'react';

@@ -1,6 +1,6 @@
 """
 ROUTER OSG — Organic Shape Generator
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #2
+BIONIC V6 GOLDEN — Phase d'Optimisation #2
 
 Endpoint: POST /api/v1/bionic/osg/generate
 Endpoint: GET /api/v1/bionic/osg/status

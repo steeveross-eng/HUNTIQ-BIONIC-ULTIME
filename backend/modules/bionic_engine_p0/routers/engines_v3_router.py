@@ -1,5 +1,5 @@
 """
-BIONIC V3 Router — API pour le pipeline integre complet.
+BIONIC V6 Router — API pour le pipeline integre complet.
 STEVE-MAX++: 24 engines + 3 modeles fauniques + 3 IA engines.
 """
 

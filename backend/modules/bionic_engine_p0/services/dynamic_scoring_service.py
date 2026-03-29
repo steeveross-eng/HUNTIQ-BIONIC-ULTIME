@@ -15,7 +15,7 @@ COMPOSANTS DU SCORE:
 - Score Lunaire (lunar_score): Phase de la lune
 - Score Final (composite_score): Moyenne pondérée
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 import logging
@@ -251,7 +251,7 @@ class HotspotScore:
 
 class DynamicScoringService:
     """
-    Service de calcul de scores dynamiques pour BIONIC V5.
+    Service de calcul de scores dynamiques pour BIONIC V6.
     
     Calcule les scores comportementaux en intégrant:
     - Conditions météorologiques

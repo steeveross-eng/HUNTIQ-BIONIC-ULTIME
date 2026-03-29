@@ -1,5 +1,5 @@
 """
-BIONIC V3 Certification Tests - P0 Security & Module Migration
+BIONIC V6 Certification Tests - P0 Security & Module Migration
 ===============================================================
 Tests for 7 P0 tasks:
 1) BCE-4X removed from user space (territory header)

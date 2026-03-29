@@ -1,5 +1,5 @@
 """
-BIONIC V5 — Test Suite for Iteration 53
+BIONIC V6 — Test Suite for Iteration 53
 Tests zero-tolerance validation, terrain exclusion, and API functionality
 """
 import pytest

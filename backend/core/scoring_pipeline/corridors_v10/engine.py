@@ -239,7 +239,7 @@ def _cluster_zones_by_type(zones, n):
 
 def _generate_zone_polygons(zones, cell_data, n, center_lat, center_lng, side_m, cell_m, month=10):
     """
-    NORME STEEVE-MAX — Polygones organiques BIONIC V10
+    NORME STEEVE-MAX — Polygones organiques BIONIC V60
     Superposition libre + Dimension dynamique + Adoucissement
     Protection BCE-4X obligatoire.
 

@@ -1,5 +1,5 @@
 """
-BIONIC V5 — NIVEAU 6 Tests (Mesure & Figeage)
+BIONIC V6 — NIVEAU 6 Tests (Mesure & Figeage)
 =============================================
 Tests for:
 - POST /api/v1/bionic/mobility_prediction → GeoJSON FeatureCollection

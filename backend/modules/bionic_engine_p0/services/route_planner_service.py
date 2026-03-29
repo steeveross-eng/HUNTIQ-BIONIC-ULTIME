@@ -1,6 +1,6 @@
 """
 SERVICE ROUTE PLANNER — Tactical Route Optimization (A* Weighted)
-BIONIC V5 ULTIME 300% — route_planner_v1
+BIONIC V6 GOLDEN — route_planner_v1
 
 Calcule le parcours tactique optimal entre les hotspots (>70%)
 en utilisant A* pondere sur la grille habitat_score.

@@ -10,7 +10,7 @@ PHASE G - P1-HOTSPOTS
 Service de generation des zones comportementales.
 Consomme les outputs P0-STABLE pour generer des zones 200% realistes.
 
-Conformite: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformite: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 from typing import Dict, List, Any, Optional

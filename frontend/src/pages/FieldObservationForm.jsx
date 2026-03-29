@@ -1,7 +1,7 @@
 /**
  * FieldObservationForm - Formulaire de saisie des observations terrain
  * =====================================================================
- * PHASE F — GPS ULTIMATE
+ * V6 GOLDEN — GPS ULTIMATE
  * 
  * Interface pour capturer les observations de faune sur le terrain.
  * Ces données alimentent le CalibrationRegistry pour atteindre 95%+ de précision.
@@ -236,7 +236,7 @@ const FieldObservationForm = () => {
           </div>
           <div>
             <h1 className="text-2xl font-bold">Observation Terrain</h1>
-            <p className="text-slate-400 text-sm">PHASE F — Calibration BIONIC V5 MASTER</p>
+            <p className="text-slate-400 text-sm">V6 GOLDEN — Calibration BIONIC V6 MASTER</p>
           </div>
         </div>
 
@@ -694,7 +694,7 @@ const FieldObservationForm = () => {
                 <Check className="w-6 h-6 text-emerald-400" />
                 <div>
                   <div className="font-medium text-emerald-400">Observation enregistrée !</div>
-                  <div className="text-sm text-slate-300">Cette donnée contribue à la calibration BIONIC V5 MASTER.</div>
+                  <div className="text-sm text-slate-300">Cette donnée contribue à la calibration BIONIC V6 MASTER.</div>
                 </div>
               </div>
             )}
@@ -729,8 +729,8 @@ const FieldObservationForm = () => {
 
       {/* Info footer */}
       <div className="max-w-2xl mx-auto mt-8 text-center text-xs text-slate-500">
-        <p>PHASE F — GPS ULTIMATE</p>
-        <p>Les observations validées contribuent à atteindre 95%+ de précision pour BIONIC V5 MASTER</p>
+        <p>V6 GOLDEN — GPS ULTIMATE</p>
+        <p>Les observations validées contribuent à atteindre 95%+ de précision pour BIONIC V6 MASTER</p>
       </div>
 
       <style jsx>{`

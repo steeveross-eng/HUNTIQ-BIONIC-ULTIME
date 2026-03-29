@@ -10,7 +10,7 @@ Endpoints:
 - POST /api/v1/bionic/score/batch — Scores pour plusieurs hotspots
 - GET /api/v1/bionic/score/weights — Configuration des pondérations
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 from fastapi import APIRouter, HTTPException

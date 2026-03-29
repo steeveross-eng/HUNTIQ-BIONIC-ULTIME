@@ -1,5 +1,5 @@
 """
-BIONIC V5 P0 Validation Tests
+BIONIC V6 P0 Validation Tests
 ==============================
 Tests pour valider les corrections P0 avant passage à PHASE C:
 - P0.1: Pipeline organique Marching Squares + Chaikin intégré
@@ -23,7 +23,7 @@ BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://huntiq-restore.previ
 
 
 class TestBionicP0Validation:
-    """Tests de validation P0 BIONIC V5"""
+    """Tests de validation P0 BIONIC V6"""
     
     # =========================================================================
     # P0.1 - Pipeline Organique Marching Squares + Chaikin

@@ -1,9 +1,9 @@
 """
-BIONIC V5 300% — Spatial Clipping Engine
+BIONIC V6 GOLDEN — Spatial Clipping Engine
 =========================================
 Invariant: Clipping strict 1km × 1km centré sur le waypoint actif.
 
-Ce module est un INVARIANT BIONIC V5 300%:
+Ce module est un INVARIANT BIONIC V6 GOLDEN:
 - Non modifiable
 - Non surchargé
 - Non influençable par des pipelines futurs
@@ -30,7 +30,7 @@ def compute_analysis_bbox(lat: float, lng: float, size_m: int = ANALYSIS_BOX_SIZ
     Calcule un carré exact de size_m × size_m centré sur (lat, lng).
     Retourne les bounds {north, south, east, west} en degrés décimaux.
     
-    INVARIANT BIONIC V5 300%: Aucun padding, aucun buffer, aucune marge.
+    INVARIANT BIONIC V6 GOLDEN: Aucun padding, aucun buffer, aucune marge.
     """
     half_m = size_m / 2.0
     
@@ -106,7 +106,7 @@ def clip_zones(zones: List[Dict[str, Any]], bbox: Dict[str, float]) -> List[Dict
     """
     Applique le clipping spatial strict sur une liste de zones.
     
-    INVARIANT BIONIC V5 300%:
+    INVARIANT BIONIC V6 GOLDEN:
     - Aucune géométrie hors périmètre
     - Aucun débordement visuel
     - Aucun padding, aucun buffer

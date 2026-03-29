@@ -1,6 +1,6 @@
 """
 SERVICE OPEN-METEO — Real Weather Data (Free API)
-BIONIC V5 ULTIME 300% — PHASE P2 Shadow Mode
+BIONIC V6 GOLDEN — PHASE P2 Shadow Mode
 
 Wrapper pour l'API Open-Meteo (gratuite, pas de cle requise).
 Recupere: temperature, vent, humidite, precipitations, pression.

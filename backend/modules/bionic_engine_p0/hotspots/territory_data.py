@@ -1,5 +1,5 @@
 """
-BIONIC V3 — Donnees Territoriales Enrichies
+BIONIC V6 — Donnees Territoriales Enrichies
 =============================================
 Genere des donnees realistes (ville, code postal, altitude, type territoire,
 gestionnaire, acces proprietaire) basees sur les coordonnees GPS des hotspots

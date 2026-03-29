@@ -61,7 +61,7 @@ initSSRConfig();
 preloadCriticalRoutes();
 
 // BRANCHE 3: Register Service Worker V2 for advanced caching
-// BIONIC V5 300% FIX: Un seul mécanisme de reload (controllerchange dans serviceWorkerRegistration.js)
+// BIONIC V6 GOLDEN FIX: Un seul mécanisme de reload (controllerchange dans serviceWorkerRegistration.js)
 // Le message SW_UPDATED n'est plus utilisé pour recharger car il créait une boucle infinie
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.addEventListener('message', (event) => {

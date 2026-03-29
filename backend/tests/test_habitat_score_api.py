@@ -1,5 +1,5 @@
 """
-Test Habitat Score API — BIONIC V5 ULTIME 300%
+Test Habitat Score API — BIONIC V6 GOLDEN
 Tests for POST /api/v1/bionic/habitat-score/realtime and GET /api/v1/bionic/habitat-score/status
 Iteration 85 — cursor_bionic_v1 + waypoint_quickadd_v1
 """

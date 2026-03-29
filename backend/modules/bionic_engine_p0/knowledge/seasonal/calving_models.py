@@ -1,5 +1,5 @@
 """
-BIONIC V5 — PHASE C.1: CALVING/FAWNING MODELS
+BIONIC V6 — PHASE C.1: CALVING/FAWNING MODELS
 ==============================================
 
 Modèles de mise bas espèce-spécifiques et région-spécifiques.
@@ -18,7 +18,7 @@ RÉGIONS SUPPORTÉES:
 - US-ME (Maine)
 - US-MN (Minnesota)
 
-CONFORMITÉ: G-SEC | G-QA | G-DOC | BIONIC V5
+CONFORMITÉ: G-SEC | G-QA | G-DOC | BIONIC V6
 TRAÇABILITÉ: source_ids obligatoires
 VERSION: 1.0.0
 """
@@ -112,7 +112,7 @@ class CalvingPeriod:
     max_temp_celsius: float         # Température maximale favorable
     snow_depth_max_cm: float        # Profondeur neige max acceptable
     
-    # Traçabilité BIONIC V5
+    # Traçabilité BIONIC V6
     source_ids: List[str] = field(default_factory=list)
     confidence: float = 0.85
     version: str = "1.0.0"
@@ -197,7 +197,7 @@ class CalvingModelRegistry:
     """
     Registre central des modèles de mise bas.
     
-    Pipeline BIONIC V5:
+    Pipeline BIONIC V6:
     - Données centralisées dans le Knowledge Layer
     - Aucun calcul local
     - Traçabilité source_ids obligatoire

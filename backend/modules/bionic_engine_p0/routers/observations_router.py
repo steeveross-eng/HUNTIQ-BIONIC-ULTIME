@@ -1,5 +1,5 @@
 """
-BIONIC V5 — OBSERVATIONS ROUTER (PHASE F)
+BIONIC V6 — OBSERVATIONS ROUTER (PHASE F)
 ==========================================
 PHASE F — GPS ULTIMATE
 
@@ -13,7 +13,7 @@ ENDPOINTS:
 - GET  /api/v1/bionic/observations/stats   - Statistiques
 
 VERSION: 7.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 PHASE F
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 PHASE F
 """
 
 import logging
@@ -161,7 +161,7 @@ class ValidateObservationRequest(BaseModel):
     description="""
     PHASE F — GPS ULTIMATE
     
-    Enregistre une nouvelle observation terrain pour calibrer le modèle BIONIC V5.
+    Enregistre une nouvelle observation terrain pour calibrer le modèle BIONIC V6.
     
     Cette observation sera utilisée pour:
     - Valider les prédictions du moteur
@@ -381,7 +381,7 @@ async def get_observation(observation_id: str):
     Valide une observation pour inclusion dans la calibration.
     
     Les observations validées contribuent directement à l'amélioration
-    de la précision du modèle BIONIC V5.
+    de la précision du modèle BIONIC V6.
     """
 )
 async def validate_observation(observation_id: str, request: ValidateObservationRequest):

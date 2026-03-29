@@ -1,5 +1,5 @@
 """
-BIONIC V5 - CALIBRATION MASTER Infrastructure Tests
+BIONIC V6 - CALIBRATION MASTER Infrastructure Tests
 ======================================================
 Tests for the Calibration MASTER pipeline including:
 - MongoDB CRUD operations for observations terrain

@@ -1,5 +1,5 @@
 """
-BIONIC V5 — NOTIFICATIONS MODULE (PHASE F)
+BIONIC V6 — NOTIFICATIONS MODULE (PHASE F)
 ==========================================
 VAPID Natif — 100% Autonome
 
@@ -11,7 +11,7 @@ COMPOSANTS:
 - Règles de déclenchement: Centralisées, versionnées, traçables
 
 VERSION: 7.2.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 MASTER
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 MASTER
 """
 
 from .notification_registry import (

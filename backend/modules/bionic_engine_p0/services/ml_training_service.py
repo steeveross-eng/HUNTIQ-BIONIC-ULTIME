@@ -1,6 +1,6 @@
 """
 SERVICE ML — Training Session
-BIONIC V5 ULTIME 300% — PHASE H
+BIONIC V6 GOLDEN — PHASE H
 
 Sessions d'entrainement versionnees.
 Utilise sklearn en fallback interne (pas de cle ML externe requise).

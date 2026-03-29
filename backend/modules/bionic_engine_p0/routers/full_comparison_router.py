@@ -1,6 +1,6 @@
 """
 ROUTER FULL SHADOW COMPARISON — DEM + Meteo combines
-BIONIC V5 ULTIME 300% — full_comparison_v1
+BIONIC V6 GOLDEN — full_comparison_v1
 
 Endpoint:
   POST /api/v1/bionic/shadow/full-comparison — Compare synthetic vs full-real pipeline

@@ -1,6 +1,6 @@
 /**
  * RouteReplayLayer — Animation tactique du parcours optimisé
- * BIONIC V5 ULTIME 300% — route_replay_v1
+ * BIONIC V6 GOLDEN — route_replay_v1
  *
  * Module isolé, zéro dépendance circulaire.
  * Utilise le parcours calculé par RoutePlannerLayer pour animer un marqueur mobile.

@@ -1,5 +1,5 @@
 /**
- * CalibrationDashboard - Dashboard de Calibration vers BIONIC V5 MASTER
+ * CalibrationDashboard - Dashboard de Calibration vers BIONIC V6 MASTER
  * ======================================================================
  * CALIBRATION VERS MASTER
  * 
@@ -307,7 +307,7 @@ const CalibrationDashboard = () => {
 
   // Verrouiller comme MASTER
   const handleLockMaster = async () => {
-    if (!window.confirm('Êtes-vous sûr de vouloir verrouiller le modèle comme BIONIC V5 MASTER ? Cette action est irréversible.')) {
+    if (!window.confirm('Êtes-vous sûr de vouloir verrouiller le modèle comme BIONIC V6 MASTER ? Cette action est irréversible.')) {
       return;
     }
 
@@ -318,7 +318,7 @@ const CalibrationDashboard = () => {
       });
 
       if (response.ok) {
-        toast.success('BIONIC V5 MASTER verrouillé avec succès !');
+        toast.success('BIONIC V6 MASTER verrouillé avec succès !');
         fetchData();
       } else {
         const error = await response.json();
@@ -353,7 +353,7 @@ const CalibrationDashboard = () => {
             </div>
             <div>
               <h1 className="text-2xl font-bold">Dashboard de Calibration</h1>
-              <p className="text-slate-400 text-sm">Progression vers BIONIC V5 MASTER — Objectif: 95%+</p>
+              <p className="text-slate-400 text-sm">Progression vers BIONIC V6 MASTER — Objectif: 95%+</p>
             </div>
           </div>
           <button
@@ -869,7 +869,7 @@ const CalibrationDashboard = () => {
 
       {/* Footer */}
       <div className="max-w-7xl mx-auto mt-8 text-center text-xs text-slate-500">
-        <p>CALIBRATION VERS MASTER — BIONIC V5</p>
+        <p>CALIBRATION VERS MASTER — BIONIC V6</p>
         <p>Objectif: ≥95% de précision pour verrouiller la version MASTER</p>
       </div>
     </div>

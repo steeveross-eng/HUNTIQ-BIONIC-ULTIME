@@ -5,11 +5,11 @@ PHASE G - P1-HOTSPOTS
 Service de generation des corridors de deplacement.
 Consomme les outputs P0-STABLE pour generer des corridors 200% realistes.
 
-RÈGLE BIONIC V5: Les corridors ne doivent JAMAIS traverser de grandes masses d'eau.
+RÈGLE BIONIC V6: Les corridors ne doivent JAMAIS traverser de grandes masses d'eau.
 - Tout corridor intersectant un lac, fleuve, réservoir ou marais est recalculé ou annulé
 - Aucune exception n'est autorisée
 
-Conformite: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformite: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 from typing import Dict, List, Any, Optional
@@ -374,7 +374,7 @@ class CorridorService:
         """
         Cree un corridor avec validation obligatoire contre les masses d'eau.
         
-        RÈGLE BIONIC V5: Les corridors ne traversent JAMAIS de grandes masses d'eau.
+        RÈGLE BIONIC V6: Les corridors ne traversent JAMAIS de grandes masses d'eau.
         Si une intersection est détectée, le corridor est recalculé ou annulé.
         """
         

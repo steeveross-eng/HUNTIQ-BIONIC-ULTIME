@@ -2,7 +2,7 @@
 BIONIC ENGINE - OpenWeatherMap Integration Service
 PHASE P1-ENV — Module Météorologique
 
-Service d'intégration OpenWeatherMap pour BIONIC V5.
+Service d'intégration OpenWeatherMap pour BIONIC V6.
 Fournit les données météorologiques nécessaires au scoring dynamique.
 
 FONCTIONNALITÉS:
@@ -12,7 +12,7 @@ FONCTIONNALITÉS:
 - Cache local pour optimiser les appels API
 - Facteurs comportementaux gibier intégrés
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 import os
@@ -254,7 +254,7 @@ class WeatherResponse:
 
 class WeatherService:
     """
-    Service météorologique OpenWeatherMap pour BIONIC V5.
+    Service météorologique OpenWeatherMap pour BIONIC V6.
     
     Fournit les données météo nécessaires au scoring dynamique
     et à l'analyse comportementale du gibier.

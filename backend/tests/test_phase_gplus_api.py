@@ -1,6 +1,6 @@
 """
 TEST SUITE — PHASE G+ (Comparison + API Keys Healthcheck)
-BIONIC V5 ULTIME 300%
+BIONIC V6 GOLDEN
 
 API Tests for:
 - POST /api/v1/bionic/pipeline/comparison — 5 species, 3 territory pairs

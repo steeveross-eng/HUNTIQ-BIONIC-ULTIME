@@ -1,12 +1,12 @@
 /**
- * AlertNotificationCenter - Centre de notifications temps réel
+ * AlertNotificationCenter - Centre de notifications temps reel
  * ============================================================
- * PHASE F — NOTIFICATIONS PUSH
+ * BIONIC V6 GOLDEN — NOTIFICATIONS
  * 
- * Composant pour gérer les notifications push et temps réel:
+ * Composant pour gerer les notifications push et temps reel:
  * - Enregistrement Service Worker
  * - Abonnement Web Push (VAPID natif)
- * - Affichage des alertes en temps réel
+ * - Affichage des alertes en temps reel
  * - Historique des notifications
  */
 
@@ -331,7 +331,7 @@ const AlertNotificationCenter = ({ position = 'bottom-right' }) => {
           <div className="p-4 border-b border-slate-700 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Bell className="w-5 h-5 text-emerald-400" />
-              <span className="font-semibold text-white">Alertes BIONIC V5</span>
+              <span className="font-semibold text-white">Centre d'alertes V6</span>
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -438,7 +438,7 @@ const AlertNotificationCenter = ({ position = 'bottom-right' }) => {
 
           {/* Footer */}
           <div className="p-2 bg-slate-900/50 text-center">
-            <span className="text-xs text-slate-500">PHASE F — Safety Engine Integration</span>
+            <span className="text-xs text-slate-500">V6 GOLDEN — Safety Engine Integration</span>
           </div>
         </div>
       )}

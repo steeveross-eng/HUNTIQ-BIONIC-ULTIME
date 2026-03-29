@@ -1,6 +1,6 @@
 """
 SERVICE ML — Target Builder
-BIONIC V5 ULTIME 300% — PHASE H
+BIONIC V6 GOLDEN — PHASE H
 
 Genere les cibles comportementales pour l'apprentissage ML.
 Cibles: presence, deplacement, micro-patterns, pression.

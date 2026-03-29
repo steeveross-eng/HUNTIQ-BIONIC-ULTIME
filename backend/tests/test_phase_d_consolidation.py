@@ -1,5 +1,5 @@
 """
-BIONIC V5 — PHASE D Consolidation & Pré-Optimisation Tests
+BIONIC V6 — PHASE D Consolidation & Pré-Optimisation Tests
 ============================================================
 Tests for:
 - D.1 Multifactor Scoring Engine
@@ -406,7 +406,7 @@ class TestCanvasTerrainDocument:
         response = requests.get(f"{BASE_URL}/canvas_donnees_terrain_bionic_v5.md")
         assert response.status_code == 200
         content = response.text
-        assert "BIONIC V5" in content
+        assert "BIONIC V6" in content
         assert "Canvas Données Terrain" in content
 
     def test_canvas_terrain_has_required_sections(self):

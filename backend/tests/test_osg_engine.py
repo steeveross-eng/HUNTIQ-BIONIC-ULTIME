@@ -1,6 +1,6 @@
 """
 TEST OSG ENGINE — Organic Shape Generator
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #2
+BIONIC V6 GOLDEN — Phase d'Optimisation #2
 
 Tests:
   - POST /api/v1/bionic/osg/generate for all 5 species

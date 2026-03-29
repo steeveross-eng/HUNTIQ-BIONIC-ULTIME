@@ -1,6 +1,6 @@
 """
 ROUTER HABITAT SCORE — Real-time Habitat Quality Grid
-BIONIC V5 ULTIME 300% — habitat_score_v1
+BIONIC V6 GOLDEN — habitat_score_v1
 
 Endpoint:
   POST /api/v1/bionic/habitat-score/realtime — Pre-computed grid for cursor interpolation

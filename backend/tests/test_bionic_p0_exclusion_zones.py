@@ -1,5 +1,5 @@
 """
-BIONIC V5 P0 — Test des exclusions de zones fonctionnelles
+BIONIC V6 P0 — Test des exclusions de zones fonctionnelles
 Tests pour vérifier les corrections critiques:
 1. Routes + infrastructure ajoutées au filtrage (hard mask)
 2. Filtrage multi-points (centroïde + 4 cardinaux) au lieu de centroïde seul

@@ -1,6 +1,6 @@
 """
 MODULE OSG — Organic Shape Generator
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #2
+BIONIC V6 GOLDEN — Phase d'Optimisation #2
 
 Generation de formes organiques enrichies par le SSE:
   - Modulation par couvert forestier (SSE.landcover)

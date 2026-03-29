@@ -1,7 +1,7 @@
 /**
  * ScoreRadarPanel - Profil Analytique des 9 Scores BIONIC
  * ========================================================
- * BIONIC V5 ULTIME - PHASE 5.3
+ * BIONIC V6 ULTIME - PHASE 5.3
  * 
  * RESPONSABILITÉ UNIQUE:
  * - Afficher les 9 scores BIONIC sous forme de barres analytiques
@@ -19,7 +19,7 @@
  * - Aucune logique métier, aucun calcul
  * - Données via props uniquement
  * 
- * Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+ * Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
  */
 
 import React from 'react';

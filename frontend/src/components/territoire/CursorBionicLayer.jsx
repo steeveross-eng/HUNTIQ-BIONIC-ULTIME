@@ -1,6 +1,6 @@
 /**
  * CursorBionicLayer — Real-time Habitat Score Badge at Cursor
- * BIONIC V5 ULTIME 300% — cursor_bionic_v1
+ * BIONIC V6 GOLDEN — cursor_bionic_v1
  *
  * Displays a dynamic habitat quality score (0-100%) badge near cursor.
  * Uses pre-computed grid from /api/v1/bionic/habitat-score/realtime.
@@ -95,7 +95,7 @@ export default function CursorBionicLayer({ species = 'moose', onQuickAddWaypoin
   useEffect(() => {
     const container = map.getContainer();
 
-    // Badge element — BIONIC V5: taille ×2 (flèche + score doublés)
+    // Badge element — BIONIC V6: taille ×2 (flèche + score doublés)
     const badge = document.createElement('div');
     badge.className = 'cursor-bionic-badge';
     badge.style.cssText = `
@@ -152,7 +152,7 @@ export default function CursorBionicLayer({ species = 'moose', onQuickAddWaypoin
       lastScoreRef.current = score;
       const color = scoreColor(score);
 
-      // BIONIC V5: flèche ×2 + score ×2
+      // BIONIC V6: flèche ×2 + score ×2
       const arrow = score >= 70 ? '▲' : score >= 40 ? '►' : '▼';
       badge.innerHTML = `<span style="font-size:28px;vertical-align:middle;margin-right:4px;">${arrow}</span><span>${score}%</span>`;
       badge.style.color = color;

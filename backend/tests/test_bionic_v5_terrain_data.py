@@ -1,5 +1,5 @@
 """
-BIONIC V5 — Terrain Data Router Tests
+BIONIC V6 — Terrain Data Router Tests
 Tests for Overpass API proxy endpoint for terrain exclusion data
 
 Endpoint tested:

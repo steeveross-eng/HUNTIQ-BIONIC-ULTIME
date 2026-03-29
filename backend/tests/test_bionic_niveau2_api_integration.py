@@ -1,5 +1,5 @@
 """
-BIONIC V5 NIVEAU 2 — API Integration Tests for Advanced Behavioral Factors (PHASE B)
+BIONIC V6 NIVEAU 2 — API Integration Tests for Advanced Behavioral Factors (PHASE B)
 ====================================================================================
 
 API-level tests for the 4 advanced behavioral factors:

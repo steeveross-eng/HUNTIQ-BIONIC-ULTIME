@@ -1,5 +1,5 @@
 """
-BIONIC V5 — NOTIFICATIONS PUSH TEST SUITE
+BIONIC V6 — NOTIFICATIONS PUSH TEST SUITE
 ==========================================
 PHASE F — VAPID Natif — Testing Suite
 

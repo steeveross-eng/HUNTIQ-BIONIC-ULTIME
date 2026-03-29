@@ -1,6 +1,6 @@
 """
 TEST SUITE — TFE (Thermal Flow Engine)
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #10
+BIONIC V6 GOLDEN — Phase d'Optimisation #10
 
 Validation exhaustive:
 - Multi-especes (5): moose, deer, bear, wild_turkey, elk
@@ -9,7 +9,7 @@ Validation exhaustive:
 - Pipeline 10 modules: SSE->OSG->CME->WSE->VFE->SSVL->TCVE->PME->BMPE->TFE
 - 5 champs thermiques: gradient, inertia, hot_pocket, cold_pocket, composite
 - Corridor thermal analysis
-- Conformite BIONIC V5 ULTIME 300%
+- Conformite BIONIC V6 GOLDEN
 """
 
 import pytest
@@ -299,7 +299,7 @@ class TestPipelineIntegrity:
 
 
 # =================================================================
-# 8. CONFORMITE BIONIC V5 ULTIME 300%
+# 8. CONFORMITE BIONIC V6 GOLDEN
 # =================================================================
 
 class TestConformiteBionicV5:

@@ -1,5 +1,5 @@
 """
-BIONIC V5 — SAFETY ENGINE (PHASE F)
+BIONIC V6 — SAFETY ENGINE (PHASE F)
 ====================================
 PHASE F — GPS ULTIMATE
 
@@ -12,7 +12,7 @@ FONCTIONNALITÉS:
 4. Intégration NIVEAU 3 (PRES-HUMAN)
 
 VERSION: 7.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 PHASE F
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 PHASE F
 """
 
 from typing import Dict, List, Optional, Any, Tuple

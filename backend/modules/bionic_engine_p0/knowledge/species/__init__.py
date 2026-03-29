@@ -1,5 +1,5 @@
 """
-BIONIC V5 — SPECIES RULES MODULE
+BIONIC V6 — SPECIES RULES MODULE
 =================================
 PHASE 7 — Knowledge Layer
 PHASE B — Facteurs Avancés

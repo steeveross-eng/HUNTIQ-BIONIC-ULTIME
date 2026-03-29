@@ -1,5 +1,5 @@
 """
-BIONIC V5 — CALIBRATION SERVICE (MASTER Pipeline)
+BIONIC V6 — CALIBRATION SERVICE (MASTER Pipeline)
 ====================================================
 Service central de calibration terrain.
 
@@ -16,7 +16,7 @@ PRINCIPES:
 - Traçabilité complète
 
 VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 MASTER
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 MASTER
 """
 
 from typing import Dict, List, Optional, Any
@@ -84,7 +84,7 @@ def create_observation_doc(
 
 class CalibrationService:
     """
-    Service central de calibration BIONIC V5.
+    Service central de calibration BIONIC V6.
     
     Orchestre le pipeline complet:
     Observation → Prédiction → Comparaison → Métriques → Ajustement
@@ -366,7 +366,7 @@ class CalibrationService:
         """Récupère les suggestions d'ajustement du CalibrationOptimizer."""
         profile = CalibrationProfile(
             profile_id="default",
-            profile_name="BIONIC V5 Pre-Master"
+            profile_name="BIONIC V6 Pre-Master"
         )
         
         suggestions = self._optimizer.generate_suggestions(

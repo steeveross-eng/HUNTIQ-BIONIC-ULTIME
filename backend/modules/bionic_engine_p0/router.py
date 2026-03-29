@@ -6,7 +6,7 @@ Version: 1.1.0
 Routes API pour les modules P0 du moteur BIONIC.
 Prefixe: /api/v1/bionic/
 
-Conformite: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformite: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 from fastapi import APIRouter, HTTPException, Query
@@ -55,7 +55,7 @@ from modules.bionic_engine_p0.routers.calibration_router import router as calibr
 # NOTIFICATIONS PUSH: Import du router de notifications
 from modules.bionic_engine_p0.routers.notifications_router import router as notifications_router
 
-# BIONIC V5: Import du router de données terrain (Overpass proxy)
+# BIONIC V6: Import du router de données terrain (Overpass proxy)
 from modules.bionic_engine_p0.routers.terrain_data_router import router as terrain_data_router
 
 logger = logging.getLogger("bionic_engine.router")
@@ -78,10 +78,10 @@ router.include_router(calibration_router)
 # NOTIFICATIONS PUSH: Inclusion du router de notifications
 router.include_router(notifications_router)
 
-# BIONIC V5: Inclusion du router de données terrain
+# BIONIC V6: Inclusion du router de données terrain
 router.include_router(terrain_data_router)
 
-# BIONIC V5: Inclusion du router de scores dynamiques
+# BIONIC V6: Inclusion du router de scores dynamiques
 from modules.bionic_engine_p0.routers.dynamic_scores_router import router as dynamic_scores_router
 router.include_router(dynamic_scores_router)
 
@@ -672,7 +672,7 @@ async def get_map_hotspots(request: HotspotRequest):
     
     PHASE P1-HOTSPOTS - Endpoint principal
     
-    Specifications visuelles BIONIC V5:
+    Specifications visuelles BIONIC V6:
     - Contours ultra-fins (1-2px)
     - Centre 100% transparent (fill_opacity = 0)
     - Formes naturelles (Chaikin smoothing)

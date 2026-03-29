@@ -1,6 +1,6 @@
 """
 MODULE PME — Pressure Memory Engine
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #8
+BIONIC V6 GOLDEN — Phase d'Optimisation #8
 
 Memoire de pression de chasse par espece:
   - pressure_history_field: historique de pression spatiale

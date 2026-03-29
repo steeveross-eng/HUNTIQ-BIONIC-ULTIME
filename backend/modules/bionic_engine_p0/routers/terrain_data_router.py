@@ -1,6 +1,6 @@
 """
 BIONIC ENGINE — Terrain Data Router (Overpass API Proxy)
-BIONIC V5 — Exclusion de terrain — TOLÉRANCE ZÉRO
+BIONIC V6 — Exclusion de terrain — TOLÉRANCE ZÉRO
 
 Fournit les données d'exclusion géospatiales (eau, routes, urbain, infrastructures)
 via un proxy vers l'API Overpass (OpenStreetMap).
@@ -9,7 +9,7 @@ Endpoint: POST /api/v1/bionic/terrain/terrain-data
 Cache: MongoDB persistant TTL 1h (R5)
 Tiling: Le frontend découpe les grands viewports en tuiles
 
-Conformité: BIONIC V5 — Exclusion stricte des zones interdites
+Conformité: BIONIC V6 — Exclusion stricte des zones interdites
 """
 
 from fastapi import APIRouter, HTTPException
@@ -156,7 +156,7 @@ async def _save_cache(cache_key: str, data: dict):
 
 def _build_overpass_query(south, west, north, east, exclude_types, detail_level):
     """
-    Build an Overpass QL query — BIONIC V5 STRICT.
+    Build an Overpass QL query — BIONIC V6 STRICT.
     
     TOLÉRANCE ZÉRO: Toutes les entités eau, urbaines, anthropiques,
     routes et infrastructures doivent être détectées et exclues.

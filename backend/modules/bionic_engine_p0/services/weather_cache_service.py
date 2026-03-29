@@ -1,6 +1,6 @@
 """
 SERVICE WEATHER CACHE — MongoDB Cache for Weather Data
-BIONIC V5 ULTIME 300% — Norme de modularite stricte
+BIONIC V6 GOLDEN — Norme de modularite stricte
 
 Cache versionne des resultats meteo par territoire + resolution.
 TTL court (6h) car meteo change rapidement.

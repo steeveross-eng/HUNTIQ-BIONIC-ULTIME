@@ -1,5 +1,5 @@
 """
-BIONIC V5 — CORRIDORS MODULE (NIVEAU 4)
+BIONIC V6 — CORRIDORS MODULE (NIVEAU 4)
 =======================================
 Module de gestion des corridors de déplacement.
 
@@ -10,7 +10,7 @@ TYPES DE CORRIDORS:
 - Thermiques (thermal)
 - À risque (risk) - PRES-HUMAN + stress thermique
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 NIVEAU 4
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 NIVEAU 4
 """
 
 from .corridor_models import (

@@ -1,6 +1,6 @@
 """
 ROUTER BMPE — Behavioral Micro-Patterns Engine
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #9
+BIONIC V6 GOLDEN — Phase d'Optimisation #9
 
 Endpoint: POST /api/v1/bionic/bmpe/analyze
 Endpoint: GET /api/v1/bionic/bmpe/status

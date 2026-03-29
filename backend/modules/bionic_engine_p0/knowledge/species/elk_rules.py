@@ -1,5 +1,5 @@
 """
-BIONIC V5 — ELK BEHAVIOR RULES
+BIONIC V6 — ELK BEHAVIOR RULES
 ===============================
 PHASE 7 — Knowledge Layer
 

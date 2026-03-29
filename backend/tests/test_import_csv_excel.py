@@ -1,5 +1,5 @@
 """
-BIONIC V5 — CSV/Excel Import Service Tests
+BIONIC V6 — CSV/Excel Import Service Tests
 ============================================
 Tests for the import endpoint POST /calibration/observations/import
 and template endpoint GET /calibration/import/template.

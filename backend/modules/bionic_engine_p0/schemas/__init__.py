@@ -3,7 +3,7 @@ BIONIC ENGINE — Schemas Package
 ================================
 Schémas Pydantic pour la validation des entrées/sorties API.
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 from .waypoint_analysis_schemas import (

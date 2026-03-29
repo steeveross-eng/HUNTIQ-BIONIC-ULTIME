@@ -22,7 +22,7 @@ CARACTÉRISTIQUES:
 - Logging détaillé
 - Support multi-régions
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 import sys
@@ -568,7 +568,7 @@ class OSMDataExtractor:
 def main():
     """Point d'entrée CLI."""
     parser = argparse.ArgumentParser(
-        description="Extracteur de données OSM pour BIONIC V5",
+        description="Extracteur de données OSM pour BIONIC V6",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Exemples:

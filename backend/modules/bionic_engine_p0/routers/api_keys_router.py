@@ -1,6 +1,6 @@
 """
 ROUTER API KEYS STATUS — System Healthcheck
-BIONIC V5 ULTIME 300% — PHASE G+
+BIONIC V6 GOLDEN — PHASE G+
 
 Endpoint: GET /api/v1/system/api-keys/status
 

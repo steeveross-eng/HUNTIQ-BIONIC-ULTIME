@@ -13,7 +13,7 @@ KNOWLEDGE LAYER INTEGRATION (PHASE 7):
 - Interactions comportement-environnement via SpeciesRules
 - Effets de seuil via paramètres comportementaux
 
-PHASE B - ARCHITECTURE CENTRALISÉE BIONIC V5:
+PHASE B - ARCHITECTURE CENTRALISÉE BIONIC V6:
 - Ce service NE CALCULE PAS les modificateurs avancés
 - Les modificateurs sont FOURNIS par UnifiedScoringService via context.advanced_modifiers
 - Ce service CONSOMME uniquement les valeurs pré-calculées
@@ -24,7 +24,7 @@ ISOLATION:
 - Utilise uniquement BaseScoreService + Knowledge Layer
 - Modificateurs avancés fournis via ScoreContext.advanced_modifiers
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 import logging
@@ -49,7 +49,7 @@ class ScoreMultiFactorService(BaseScoreService):
     """
     Service de calcul du score multi-facteurs.
     
-    BIONIC V5 - ARCHITECTURE CENTRALISÉE:
+    BIONIC V6 - ARCHITECTURE CENTRALISÉE:
     - Ce service NE CALCULE PAS les modificateurs avancés
     - Les modificateurs sont FOURNIS par UnifiedScoringService via context.advanced_modifiers
     - Ce service CONSOMME uniquement les valeurs pré-calculées

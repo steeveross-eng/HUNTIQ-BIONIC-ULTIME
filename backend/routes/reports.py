@@ -16,12 +16,12 @@ REPORTS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 AVAILABLE_REPORTS = {
     "analyse-360": {
         "filename": "ANALYSE_360_BIONIC_V5.md",
-        "title": "Analyse Totale 360° — BIONIC V5",
+        "title": "Analyse Totale 360° — BIONIC V6",
         "description": "Analyse complète des modules MON TERRITOIRE et CARTE INTERACTIVE"
     },
     "analyse-360-absolue": {
         "filename": "ANALYSE_360_ABSOLUE_BIONIC_V5.md",
-        "title": "Analyse 360° ABSOLUE — BIONIC V5 (14 Dimensions)",
+        "title": "Analyse 360° ABSOLUE — BIONIC V6 (14 Dimensions)",
         "description": "Extraction exhaustive: architecture, moteurs, scoring, especes, meteo, strategie, freemium, SEO, securite, performance"
     }
 }

@@ -1,5 +1,5 @@
 """
-BIONIC V5 — CORRIDOR MODELS (NIVEAU 4)
+BIONIC V6 — CORRIDOR MODELS (NIVEAU 4)
 ======================================
 NIVEAU 4 — Habitat & Corridors
 
@@ -24,7 +24,7 @@ CENTRALISATION:
 - Traçabilité obligatoire (source_ids, version)
 
 VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 NIVEAU 4
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 NIVEAU 4
 """
 
 from typing import Dict, List, Optional, Any, Tuple
@@ -42,7 +42,7 @@ logger = logging.getLogger(__name__)
 # =============================================================================
 
 class CorridorType(str, Enum):
-    """Types de corridors BIONIC V5 NIVEAU 4"""
+    """Types de corridors BIONIC V6 NIVEAU 4"""
     PRIMARY = "primary"           # Principaux - #FF8A00
     SECONDARY = "secondary"       # Secondaires - #FFC04D
     SEASONAL = "seasonal"         # Saisonniers - #4DA6FF
@@ -195,7 +195,7 @@ class Corridor:
     """
     Corridor de déplacement complet.
     
-    NIVEAU 4 BIONIC V5:
+    NIVEAU 4 BIONIC V6:
     - Généré dynamiquement en fonction du waypoint
     - Pondéré par habitat, edges, stress thermique, PRES-HUMAN
     """
@@ -302,7 +302,7 @@ class CorridorNetwork:
     """
     Réseau complet de corridors pour un waypoint.
     
-    NIVEAU 4 BIONIC V5:
+    NIVEAU 4 BIONIC V6:
     - Agrège tous les types de corridors
     - Retourné par l'API dans la clé `corridors`
     """
@@ -526,7 +526,7 @@ class CorridorRegistry:
         extra_params: Optional[Dict[str, Any]] = None
     ) -> CorridorNetwork:
         """
-        NIVEAU 4 BIONIC V5 — Génération dynamique des corridors.
+        NIVEAU 4 BIONIC V6 — Génération dynamique des corridors.
         
         Génère le réseau complet de corridors pour un waypoint donné,
         en intégrant les facteurs des NIVEAUx 1, 2 et 3.

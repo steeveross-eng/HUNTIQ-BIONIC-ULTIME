@@ -4,7 +4,7 @@ PHASE G - BIONIC ULTIMATE INTEGRATION
 Version: 1.0.0-alpha
 
 Orchestrateur central du moteur BIONIC.
-Respecte strictement l'architecture modulaire BIONIC V5.
+Respecte strictement l'architecture modulaire BIONIC V6.
 
 Conformite: G-SEC | G-QA | G-DOC
 """

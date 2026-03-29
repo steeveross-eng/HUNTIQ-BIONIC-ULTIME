@@ -1,4 +1,4 @@
-"""BIONIC V5 — Seasonal Models Module"""
+"""BIONIC V6 — Seasonal Models Module"""
 from .seasonal_models import (
     SeasonType,
     SeasonPeriod,

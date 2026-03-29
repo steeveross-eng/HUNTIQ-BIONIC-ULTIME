@@ -1,7 +1,7 @@
 """
 Test WMS Proxy & Ecoforestry Layer Stability - Iteration 107
 ============================================================
-Tests for BIONIC V5 - Mon Territoire WMS ecoforestry layer fixes.
+Tests for BIONIC V6 - Mon Territoire WMS ecoforestry layer fixes.
 
 Features tested:
 1. WMS proxy /api/wms-proxy/check endpoint

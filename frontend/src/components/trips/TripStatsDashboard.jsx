@@ -1,7 +1,7 @@
 /**
  * TripStatsDashboard - Statistics dashboard for hunting trips
  * BIONIC Design System compliant - No emojis
- * PHASE F: Migration vers LightCharts
+ * V6 GOLDEN: Migration vers LightCharts
  */
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

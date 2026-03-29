@@ -1,6 +1,6 @@
 """
 MODULE TCVE — Terrain Calibration Visual Engine
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #7
+BIONIC V6 GOLDEN — Phase d'Optimisation #7
 
 Calibration terrain + visibilite par espece:
   - slope_visibility_calibration: impact pente sur visibilite

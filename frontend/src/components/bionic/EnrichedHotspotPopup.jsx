@@ -1,7 +1,7 @@
 /**
  * EnrichedHotspotPopup - Popup Enrichi pour Hotspots BIONIC
  * ==========================================================
- * BIONIC V5 ULTIME - PHASE 5.4
+ * BIONIC V6 ULTIME - PHASE 5.4
  * 
  * RESPONSABILITÉ UNIQUE:
  * - Afficher les informations détaillées d'un hotspot
@@ -24,7 +24,7 @@
  * - Aucune logique métier, aucun calcul
  * - Données via props uniquement
  * 
- * Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+ * Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
  */
 
 import React from 'react';

@@ -1,8 +1,8 @@
 /**
- * Lightweight Charts Library - PHASE F BIONIC ULTIMATE
+ * Lightweight Charts Library - V6 GOLDEN BIONIC ULTIMATE
  * 
  * Remplace Recharts (~450KB) par des composants SVG natifs (~15KB)
- * Conformité BIONIC V5 Design System
+ * Conformité BIONIC V6 Design System
  * 
  * @module charts
  * @version 1.0.0

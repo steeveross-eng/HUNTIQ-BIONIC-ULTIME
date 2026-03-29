@@ -1,5 +1,5 @@
 """
-BIONIC V5 — CALIBRATION MASTER TESTS
+BIONIC V6 — CALIBRATION MASTER TESTS
 =====================================
 Tests for the calibration system (PHASE F → MASTER)
 

@@ -1,5 +1,5 @@
 """
-BIONIC V5 P1 — Zone Penalty Engine Tests
+BIONIC V6 P1 — Zone Penalty Engine Tests
 Tests for semi-static penalties applied to organic zones AFTER P0 exclusions.
 
 Test coordinates:
@@ -20,7 +20,7 @@ import os
 BASE_URL = os.environ.get("REACT_APP_BACKEND_URL", "").rstrip("/")
 
 class TestBionicP1ZonePenalties:
-    """Test BIONIC V5 P1 semi-static zone penalty system"""
+    """Test BIONIC V6 P1 semi-static zone penalty system"""
 
     @pytest.fixture(autouse=True)
     def api_client(self):

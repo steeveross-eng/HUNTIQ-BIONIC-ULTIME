@@ -1,6 +1,6 @@
 """
 ROUTER TCVE — Terrain Calibration Visual Engine
-BIONIC V5 ULTIME 300% — Phase d'Optimisation #7
+BIONIC V6 GOLDEN — Phase d'Optimisation #7
 
 Endpoint: POST /api/v1/bionic/tcve/analyze
 Endpoint: GET /api/v1/bionic/tcve/status

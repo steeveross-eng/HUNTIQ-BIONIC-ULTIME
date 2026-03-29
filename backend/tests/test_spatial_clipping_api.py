@@ -1,5 +1,5 @@
 """
-BIONIC V5 300% — API Integration Tests: Spatial Clipping & Snapshot
+BIONIC V6 GOLDEN — API Integration Tests: Spatial Clipping & Snapshot
 =====================================================================
 Tests the /api/v1/bionic/clipped-zones and /api/v1/bionic/snapshot endpoints.
 """

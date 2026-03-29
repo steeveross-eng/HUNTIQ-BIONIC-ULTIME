@@ -1,5 +1,5 @@
 """
-BIONIC V5 — Movement Corridors Router v1
+BIONIC V6 — Movement Corridors Router v1
 ==========================================
 Endpoint pour les corridors de déplacement réels vs estimés.
 
@@ -7,7 +7,7 @@ Endpoint pour les corridors de déplacement réels vs estimés.
 - Estimés (prévisionnels): basés sur vent, météo, pression, heure → dynamiques
 
 VERSION: 10X — Intégration Classification WWF et critères biologiques enrichis
-Norme BIONIC V5 ULTIME 300%: modularité absolue, zéro dépendance circulaire.
+Norme BIONIC V6 GOLDEN: modularité absolue, zéro dépendance circulaire.
 """
 
 from fastapi import APIRouter

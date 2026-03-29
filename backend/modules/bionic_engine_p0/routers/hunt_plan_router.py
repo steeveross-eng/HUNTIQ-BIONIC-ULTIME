@@ -5,7 +5,7 @@ PHASE P1-FINAL — Endpoint d'Analyse du Plan de Chasse
 Expose l'endpoint POST /api/v1/bionic/analyze_hunt_plan
 pour l'analyse consolidée du potentiel de chasse.
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 import logging

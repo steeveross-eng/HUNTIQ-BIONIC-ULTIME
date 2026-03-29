@@ -1,5 +1,5 @@
 """
-BIONIC V5 — PHASE C.3 VALIDATION EXHAUSTIVE
+BIONIC V6 — PHASE C.3 VALIDATION EXHAUSTIVE
 =============================================
 
 Tests exhaustifs demandés par COPILOT MAÎTRE pour valider:

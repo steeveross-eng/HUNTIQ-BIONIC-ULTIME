@@ -1,6 +1,6 @@
 """
 API Router — Organic Zones V2
-BIONIC V5 — Pipeline Organique Unifié
+BIONIC V6 — Pipeline Organique Unifié
 
 POST /api/v1/bionic/organic-zones
 Entrée: bounds + species + layers[]
@@ -59,7 +59,7 @@ BIOLOGICAL_SEASON_WEIGHTS = {
 @router.post("/organic-zones")
 async def generate_zones(request: OrganicZoneRequest):
     """
-    Génère des zones organiques BIONIC V5 pour les bounds donnés.
+    Génère des zones organiques BIONIC V6 pour les bounds donnés.
 
     Pipeline complet:
     1. Rasterisation comportementale (behavioral_rasterizer)

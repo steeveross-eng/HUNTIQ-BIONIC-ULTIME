@@ -1,5 +1,5 @@
 """
-BIONIC V3 Hotspots P0 Features Tests
+BIONIC V6 Hotspots P0 Features Tests
 =====================================
 Testing the 4 P0 features for Certification Finale:
 1. Scheduler annuel endpoint (POST /scheduler/run)

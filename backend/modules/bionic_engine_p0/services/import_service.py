@@ -1,5 +1,5 @@
 """
-BIONIC V5 — IMPORT SERVICE (Calibration MASTER)
+BIONIC V6 — IMPORT SERVICE (Calibration MASTER)
 ==================================================
 Service d'importation en lot de données terrain.
 
@@ -24,7 +24,7 @@ SÉCURITÉ:
 - Parsing sécurisé (pas d'exécution de code)
 
 VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 MASTER
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 MASTER
 """
 
 import csv

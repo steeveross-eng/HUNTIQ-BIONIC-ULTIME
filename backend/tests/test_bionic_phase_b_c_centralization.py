@@ -1,5 +1,5 @@
 """
-BIONIC V5 — PHASE B + PHASE C: Centralization & Phenology Tests
+BIONIC V6 — PHASE B + PHASE C: Centralization & Phenology Tests
 =================================================================
 
 PHASE B: Tests for centralized modifier calculation in UnifiedScoringService._inject_advanced_modifiers()
@@ -239,7 +239,7 @@ class TestPhaseCAdvancedFactorsDetails:
         
         breakdown = data.get("scores", {}).get("breakdown", {})
         
-        # Expected 9 components based on BIONIC V5
+        # Expected 9 components based on BIONIC V6
         expected_components = [
             "H_habitat",
             "R_risk",

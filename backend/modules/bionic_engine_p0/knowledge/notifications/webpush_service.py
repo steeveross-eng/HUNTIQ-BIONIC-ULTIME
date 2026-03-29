@@ -1,12 +1,12 @@
 """
-BIONIC V5 — WEB PUSH SERVICE (PHASE F — NOTIFICATIONS PUSH)
+BIONIC V6 — WEB PUSH SERVICE (PHASE F — NOTIFICATIONS PUSH)
 ============================================================
 VAPID Natif — 100% Autonome
 
 Service d'envoi de notifications push via Web Push API.
 
 VERSION: 7.2.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5 MASTER
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6 MASTER
 """
 
 from typing import Dict, Optional, Any, Tuple
@@ -29,7 +29,7 @@ class WebPushService:
     """
     Service d'envoi de notifications Web Push.
     
-    CONFORMITÉ BIONIC V5:
+    CONFORMITÉ BIONIC V6:
     - Service 100% passif (aucune logique locale)
     - Utilise exclusivement NotificationRegistry (Knowledge Layer)
     - Traçabilité complète des envois

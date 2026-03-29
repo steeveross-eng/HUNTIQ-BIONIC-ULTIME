@@ -1,16 +1,16 @@
 """
-BIONIC V5 — Knowledge Layer: Water Exclusion for Corridors
+BIONIC V6 — Knowledge Layer: Water Exclusion for Corridors
 ============================================================
 
 Module obligatoire pour garantir que les corridors ne traversent JAMAIS
 de grandes masses d'eau (lacs, fleuves, réservoirs, marais).
 
-Règle BIONIC V5:
+Règle BIONIC V6:
 - Tout corridor intersectant une masse d'eau est soit recalculé soit annulé
 - Aucune exception n'est autorisée
 - Les animaux contournent systématiquement les grandes masses d'eau
 
-Source: Règles écologiques BIONIC V5
+Source: Règles écologiques BIONIC V6
 Version: 1.0.0
 """
 
@@ -97,7 +97,7 @@ class WaterExclusionService:
     """
     Service Knowledge Layer pour l'exclusion des masses d'eau dans les corridors.
     
-    Pipeline BIONIC V5:
+    Pipeline BIONIC V6:
     1. Analyser le tracé du corridor
     2. Détecter les intersections avec les masses d'eau
     3. Si intersection détectée:

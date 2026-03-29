@@ -9,7 +9,7 @@ COUVERTURE:
 - Cas hors période légale (score neutralisé)
 - Intégration des services (UnifiedScoring, Heatmap, Legal)
 
-CONFORMITÉ: G-SEC | G-QA | G-DOC | BIONIC V5
+CONFORMITÉ: G-SEC | G-QA | G-DOC | BIONIC V6
 
 Minimum requis: 15 tests
 """

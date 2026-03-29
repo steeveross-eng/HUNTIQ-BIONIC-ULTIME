@@ -1,5 +1,5 @@
 """
-BIONIC V5 Iteration 60 — Phase E + Corridors Fix
+BIONIC V6 Iteration 60 — Phase E + Corridors Fix
 ================================================
 
 Tests for:

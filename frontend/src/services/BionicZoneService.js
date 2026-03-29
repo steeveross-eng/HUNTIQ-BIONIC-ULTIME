@@ -17,7 +17,7 @@
 const API_BASE = process.env.REACT_APP_BACKEND_URL;
 
 // ============================================
-// BIONIC V5 300% — ISOLATION STRUCTURELLE/DYNAMIQUE
+// BIONIC V6 GOLDEN — ISOLATION STRUCTURELLE/DYNAMIQUE
 // BCE-4X-MAX Phase 3.3-U-PRIME: Pipeline V5 bounds DESACTIVE.
 // generateBionicZonesV5 = stub vide. generateWaypointZonesV5 = autorise (via _fetchOrganicZonesV2).
 // ============================================

@@ -1,6 +1,6 @@
 """
 SERVICE SENTINEL STAC — Catalogue Search for Sentinel-2 L2A
-BIONIC V5 ULTIME 300% — sentinel_stac_v1
+BIONIC V6 GOLDEN — sentinel_stac_v1
 
 Interroge le catalogue STAC de Copernicus Data Space pour
 trouver les meilleures images Sentinel-2 L2A sur un territoire.

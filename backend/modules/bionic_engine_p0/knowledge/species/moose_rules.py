@@ -1,5 +1,5 @@
 """
-BIONIC V5 — MOOSE BEHAVIOR RULES
+BIONIC V6 — MOOSE BEHAVIOR RULES
 =================================
 PHASE 7 — Knowledge Layer
 
@@ -13,7 +13,7 @@ SOURCES PRINCIPALES:
 - SRC-GAGNON-001: Expertise terrain guides nordiques
 
 VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 from typing import Dict, List, Tuple, Any

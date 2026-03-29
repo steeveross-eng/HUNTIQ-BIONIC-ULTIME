@@ -31,7 +31,7 @@ PIPELINE ORGANIQUE OBLIGATOIRE:
 6. Area validation (5000-10000 m²)
 
 CONTRACT VERSION: 1.0.0
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 import logging
@@ -99,7 +99,7 @@ logger = logging.getLogger(__name__)
 # CONSTANTS
 # =============================================================================
 
-# Palette BIONIC V5
+# Palette BIONIC V6
 BIONIC_COLORS = {
     "bedding": "#1E3A8A",       # Bleu profond
     "feeding": "#00A676",       # Vert analytique
@@ -165,7 +165,7 @@ class LayerGenerationResult:
 
 class LayerAggregatorService:
     """
-    Service d'agrégation des layers géospatiales BIONIC V5.
+    Service d'agrégation des layers géospatiales BIONIC V6.
     
     Génère les 5 familles de layers de manière modulaire et indépendante.
     Applique le pipeline organique obligatoire sur toutes les zones.
@@ -175,7 +175,7 @@ class LayerAggregatorService:
     - Aucune fusion implicite
     - organic: true sur toutes les zones comportementales
     - Compatibilité avec tableau dynamique de contrôle
-    - Les corridors ne traversent JAMAIS de grandes masses d'eau (BIONIC V5)
+    - Les corridors ne traversent JAMAIS de grandes masses d'eau (BIONIC V6)
     """
     
     def __init__(self):
@@ -273,7 +273,7 @@ class LayerAggregatorService:
         """
         Génère les zones de repos avec pipeline organique COMPLET.
         
-        Pipeline BIONIC V5:
+        Pipeline BIONIC V6:
         1. Marching Squares pour extraction iso-contours
         2. Chaikin Smoothing 3 passes
         3. Validation superficie 5000-10000 m²
@@ -339,7 +339,7 @@ class LayerAggregatorService:
         """
         Génère les zones d'alimentation avec pipeline organique COMPLET.
         
-        Pipeline BIONIC V5:
+        Pipeline BIONIC V6:
         1. Marching Squares pour extraction iso-contours
         2. Chaikin Smoothing 3 passes
         3. Validation superficie 5000-10000 m²
@@ -402,7 +402,7 @@ class LayerAggregatorService:
         """
         Génère les zones de rut avec pipeline organique COMPLET.
         
-        Pipeline BIONIC V5:
+        Pipeline BIONIC V6:
         1. Marching Squares pour extraction iso-contours
         2. Chaikin Smoothing 3 passes
         3. Validation superficie 5000-10000 m²
@@ -460,7 +460,7 @@ class LayerAggregatorService:
         """
         Génère les corridors de mouvement avec validation obligatoire contre les masses d'eau.
         
-        RÈGLE BIONIC V5: Les corridors ne traversent JAMAIS de grandes masses d'eau.
+        RÈGLE BIONIC V6: Les corridors ne traversent JAMAIS de grandes masses d'eau.
         """
         corridors = []
         
@@ -543,7 +543,7 @@ class LayerAggregatorService:
         """
         Génère les zones d'évitement de pression avec pipeline organique COMPLET.
         
-        Pipeline BIONIC V5:
+        Pipeline BIONIC V6:
         1. Marching Squares + Chaikin
         2. Validation superficie
         """
@@ -677,7 +677,7 @@ class LayerAggregatorService:
         """
         Génère les refuges thermiques avec pipeline organique COMPLET.
         
-        Pipeline BIONIC V5:
+        Pipeline BIONIC V6:
         1. Marching Squares + Chaikin
         2. Validation superficie
         """
@@ -1002,7 +1002,7 @@ class LayerAggregatorService:
         """
         Génère une zone organique avec le pipeline COMPLET Marching Squares + Chaikin.
         
-        Pipeline BIONIC V5 OBLIGATOIRE:
+        Pipeline BIONIC V6 OBLIGATOIRE:
         1. Génération grille d'intensité (P0-STABLE)
         2. Extraction iso-contours via Marching Squares
         3. Filtrage par superficie (5000-10000 m²)

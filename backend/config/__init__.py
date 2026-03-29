@@ -1,2 +1,2 @@
-"""BIONIC V3 - Configuration Module"""
+"""BIONIC V6 - Configuration Module"""
 from .settings import *

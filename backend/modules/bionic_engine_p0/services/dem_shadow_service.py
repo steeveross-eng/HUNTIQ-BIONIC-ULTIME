@@ -1,6 +1,6 @@
 """
 SERVICE DEM SHADOW — Shadow Integration Layer
-BIONIC V5 ULTIME 300% — Mode Shadow (non destructif)
+BIONIC V6 GOLDEN — Mode Shadow (non destructif)
 
 Enrichit les donnees SSE microrelief avec le DEM reel d'OpenTopography
 AVANT injection dans le pipeline certifie. Les modules TCVE/TFE recoivent

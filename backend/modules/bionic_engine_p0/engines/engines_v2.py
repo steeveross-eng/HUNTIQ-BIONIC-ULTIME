@@ -1,6 +1,6 @@
 """
 BIONIC HUNT — Engines V2 Registry
-STEVE-MAX: 12 moteurs BIONIC V2 integres dans le pipeline.
+STEVE-MAX: 12 moteurs BIONIC V6 integres dans le pipeline.
 
 Chaque moteur:
 - a un compute() qui retourne un score [0-100] + metadata
@@ -18,7 +18,7 @@ logger = logging.getLogger("bionic.engines_v2")
 
 
 class BionicEngineV2Base:
-    """Base class for all BIONIC V2 engines."""
+    """Base class for all BIONIC V6 engines."""
     engine_id: str = "base"
     engine_name: str = "Base Engine"
     version: str = "2.0"
@@ -547,7 +547,7 @@ ENGINE_REGISTRY_V2 = {
 
 def compute_all_engines(context: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Execute all 12 BIONIC V2 engines and return combined results.
+    Execute all 12 BIONIC V6 engines and return combined results.
     Engines #8 (Global Attractiveness), #9 (Action Plan), and #10 (Predictive AI)
     run AFTER others since they depend on previous engine scores.
     """

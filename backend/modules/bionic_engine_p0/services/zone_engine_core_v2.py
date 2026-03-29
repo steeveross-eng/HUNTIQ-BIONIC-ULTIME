@@ -1486,7 +1486,7 @@ def _process_single_layer(
 ) -> Dict[str, Any]:
     """
     Process a single layer (CPU-bound, runs in thread pool).
-    BIONIC V5 P1: Applique les pénalités semi-statiques après exclusion dure.
+    BIONIC V6 P1: Applique les pénalités semi-statiques après exclusion dure.
     BIONIC V6: Utilise le moteur Shapely si EXCLUSION_ENGINE_VERSION=v6.
     BIONIC V7: DEM SRTM data passed for terrain-aware scoring.
     R3: pinned_month propagé pour déterminisme.

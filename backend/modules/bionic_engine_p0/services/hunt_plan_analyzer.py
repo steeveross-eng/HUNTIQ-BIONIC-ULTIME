@@ -9,7 +9,7 @@ Service d'analyse complète combinant:
 - Fenêtres temporelles optimales
 - Synthèse comportementale par espèce
 
-Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
 """
 
 import logging
@@ -238,7 +238,7 @@ class HuntPlanAnalysis:
 
 class HuntPlanAnalyzer:
     """
-    Service d'analyse de plan de chasse BIONIC V5.
+    Service d'analyse de plan de chasse BIONIC V6.
     
     Combine hotspots, scoring dynamique et météo pour produire
     une analyse complète avec recommandations.

@@ -1,7 +1,7 @@
 """
-BIONIC V5 300% — Spatial Clipping & Snapshot Router
+BIONIC V6 GOLDEN — Spatial Clipping & Snapshot Router
 =====================================================
-INVARIANT BIONIC V5 300%:
+INVARIANT BIONIC V6 GOLDEN:
 - POST /api/v1/bionic/clipped-zones — Zones clippées 1km × 1km (CACHED)
 - POST /api/v1/bionic/snapshot — Snapshot Territoire exportable
 """
@@ -80,7 +80,7 @@ async def generate_clipped_zones(request: ClippedZonesRequest):
     """
     Génère des zones organiques clippées dans un carré 1km × 1km.
     
-    INVARIANT BIONIC V5 300%:
+    INVARIANT BIONIC V6 GOLDEN:
     - Aucune géométrie hors périmètre
     - Clipping strict via ST_Intersection (Shapely)
     """

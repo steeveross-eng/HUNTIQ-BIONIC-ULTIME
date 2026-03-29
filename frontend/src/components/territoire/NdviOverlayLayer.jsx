@@ -1,6 +1,6 @@
 /**
  * NdviOverlayLayer — NDVI Vegetation Overlay (Sentinel-2)
- * BIONIC V5 ULTIME 300% — ndvi_layer_v1
+ * BIONIC V6 GOLDEN — ndvi_layer_v1
  *
  * Renders an NDVI heatmap overlay on a Leaflet map using Canvas 2D.
  * Color scale: red (bare) -> yellow -> green (dense vegetation).

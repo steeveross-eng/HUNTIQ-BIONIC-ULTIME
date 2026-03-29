@@ -1,5 +1,5 @@
 """
-TEST DEM CACHE MONGODB — BIONIC V5 ULTIME 300% — Iteration 78
+TEST DEM CACHE MONGODB — BIONIC V6 GOLDEN — Iteration 78
 MongoDB Cache for DEM data with TTL 90 days.
 
 Tests:

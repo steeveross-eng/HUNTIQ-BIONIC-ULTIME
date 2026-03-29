@@ -1,7 +1,7 @@
 /**
  * OptimalWindowsTimeline - Timeline des Fenêtres Optimales
  * =========================================================
- * BIONIC V5 ULTIME - PHASE 5.3
+ * BIONIC V6 ULTIME - PHASE 5.3
  * 
  * RESPONSABILITÉ UNIQUE:
  * - Afficher les fenêtres temporelles optimales de chasse
@@ -19,7 +19,7 @@
  * - Aucune logique métier, aucun calcul
  * - Données via props uniquement
  * 
- * Conformité: G-SEC | G-QA | G-DOC | BIONIC V5
+ * Conformité: G-SEC | G-QA | G-DOC | BIONIC V6
  */
 
 import React from 'react';

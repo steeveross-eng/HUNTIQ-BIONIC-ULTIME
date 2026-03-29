@@ -1,7 +1,7 @@
 /**
  * HydrographyOverlayLayer.jsx
  * 
- * BIONIC V5 300% — Couche hydrographique ISOLÉE
+ * BIONIC V6 GOLDEN — Couche hydrographique ISOLÉE
  * Overlay indépendant pour rivières et zones d'eau (NFIS-QC.hydro)
  * 
  * HIÉRARCHIE DE RENDU GARANTIE :

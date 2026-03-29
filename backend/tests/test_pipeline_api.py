@@ -1,6 +1,6 @@
 """
 TEST API — Pipeline Full Analysis & Metrics Endpoints
-BIONIC V5 ULTIME 300% — PHASE G
+BIONIC V6 GOLDEN — PHASE G
 
 Tests:
 - GET /api/v1/bionic/pipeline/status
