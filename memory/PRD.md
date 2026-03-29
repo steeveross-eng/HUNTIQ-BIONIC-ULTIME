@@ -1,38 +1,29 @@
 # HUNTIQ-V6 — PRD
 ## Protocole BCE-4X | BIONIC GOLDEN | STEEVE-MAX
 
-## Architecture
-- Branche souveraine: `STEEVE-MAX-x3200-V6-CORE`
-- Branche gelee: `Work1` (ZERO commit futur)
+## Branche souveraine: STEEVE-MAX-x3200-V6-CORE
+## Work1: GELEE
 
-## Etat Branche Souveraine (STEEVE-MAX-x3200-V6-CORE)
+## Etat courant
 
-### EXECUTE
-- Phase A: MapInteractionLayer purifie GPS-only (commit ce3b87c9)
-- Phase B: BionicCorridorsV6Layer alimentation centroids exclus (commit 54dc0d12)
-- Phase B: AlimentationV2Layer useEffect legacy remplace (commit 54dc0d12)
-- GOVERNANCE.md: PROTOCOLE BIONIC GOLDEN insere (11 sections) (commit ce3b87c9)
-- Justification technique Phase B/C produite (commit 54dc0d12)
+### EXECUTE ET COMMITE (branche souveraine)
+- Phase A: MapInteractionLayer GPS-only
+- Phase B: BionicCorridorsV6Layer alimentation centroids exclus + AlimentationV2Layer useEffect
+- GOVERNANCE.md: PROTOCOLE BIONIC GOLDEN (11 sections)
+- Architecture access_engine_v6: document complet soumis a validation
+- Draft Section 14 GOVERNANCE: soumis a validation
+- Draft clause non-regression: soumis a validation
 
-### NON APPLICABLE (justifie)
-- Phase B StandsMapLayer._feeding_sites_display: pipeline inexistant sur branche souveraine
-- Phase C Firewall ULTRA-MAX++ (Shapely): infrastructure absente
-- Phase C Corridor multi-point: pipeline absent
+### EN ATTENTE VALIDATION STEEVE-MAX
+- Point 5: Architecture access_engine_v6 (ZERO codage avant validation)
+- Point 6: Section 14 GOVERNANCE.md (draft pret)
+- Point 7: Clause non-regression (draft pret)
 
-### DETTE TECHNIQUE (a implementer sous validation STEEVE-MAX)
-- Firewall ULTRA-MAX++ (Shapely geo-fencing)
+### DETTE TECHNIQUE STRUCTURELLE
+- Firewall ULTRA-MAX++ (Shapely geo-fencing) a reimplementer sous GOLDEN
 - Cache terrain persistant .json.gz
-- Trail-First Routing hybride
+- Trail-First Routing (sera dans access_engine_v6)
 
-## Backlog
-### P0 (EN ATTENTE VALIDATION)
-- Validation STEEVE-MAX justification Phase B/C
-- Deblocage Points 5-7
-
-### P0 (SUSPENDU)
-- Point 5: Acces aux affuts V6
-- Point 6: GOVERNANCE.md Section 14
-- Point 7: Clause non-regression
-
-### P2 (GELE)
-- BSAA-2, Phase 2D, pression historique, merge main INTERDIT
+### GELE
+- BSAA-2, Phase 2D, pression historique
+- Merge main: STRICTEMENT INTERDIT
