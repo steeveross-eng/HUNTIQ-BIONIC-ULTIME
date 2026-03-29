@@ -781,12 +781,24 @@ def find_best_entry_point(
     if trail_graph.is_empty:
         return []
 
+    # ULTRA-MAX++ FIREWALL: Import du test geometrique anthropique
+    _has_anthropic_firewall = False
+    try:
+        from modules.bionic_engine_p0.services.zone_engine_core_v2 import _point_intersects_anthropic
+        _has_anthropic_firewall = True
+    except ImportError:
+        pass
+
     # Direction upwind (d'ou on doit arriver pour ne pas contaminer)
     upwind_deg = wind_direction_deg  # Le vent vient de cette direction
 
     candidates = []
     for nid, (nlat, nlng) in trail_graph.nodes.items():
         if nid in trail_graph.obstacle_nodes:
+            continue
+
+        # ULTRA-MAX++: Firewall anthropique sur points d'entree
+        if _has_anthropic_firewall and _point_intersects_anthropic(nlat, nlng):
             continue
 
         dist = _haversine(nlat, nlng, blind_lat, blind_lng)

@@ -12,6 +12,7 @@ STEEVE-MAX 2026-03-28 — Standard institutionnel.
 """
 
 import logging
+import time
 from typing import Optional, List
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
@@ -164,19 +165,110 @@ async def hunt_orchestrator_status():
     """Statut de l'engine d'orchestration de chasse."""
     return {
         "engine": "hunt_orchestrator",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "status": "active",
         "modules": [
             "vent_odeurs_v1",
             "access_engine_v1",
             "choix_affuts_v1",
             "orchestrator_v1",
+            "terrain_cache_persistent_v1",
         ],
         "data_sources": {
-            "wind": "Open-Meteo V3 (reel)",
-            "trails": "OSM/Overpass (reel)",
+            "wind": "Open-Meteo V3 (reel, dynamique)",
+            "trails": "OSM/Overpass (reel, cache persistant)",
             "water": "OSM cache (41K polygones)",
             "dominant_wind": "NW hardcode (Quebec, autorise STEEVE-MAX)",
         },
-        "governance": "BCE-4X P0 — STEEVE-MAX",
+        "governance": "BCE-4X ULTRA-MAX++ — STEEVE-MAX",
+    }
+
+
+@router.get("/terrain-cache/stats")
+async def terrain_cache_stats():
+    """Statistiques du cache terrain persistant."""
+    from engines.terrain_nav.terrain_sources import (
+        PERSISTENT_CACHE_DIR, _source_cache, CACHE_VERSION, CACHE_TTL_SECONDS,
+    )
+    import os
+
+    # Stats cache memoire
+    memory_keys = list(_source_cache.keys())
+
+    # Stats cache persistant
+    persistent_files = []
+    total_size_kb = 0
+    if PERSISTENT_CACHE_DIR.exists():
+        for f in PERSISTENT_CACHE_DIR.glob("*.json.gz"):
+            stat = f.stat()
+            age_days = (time.time() - stat.st_mtime) / 86400
+            persistent_files.append({
+                "filename": f.name,
+                "size_kb": round(stat.st_size / 1024, 1),
+                "age_days": round(age_days, 1),
+            })
+            total_size_kb += stat.st_size / 1024
+
+    return {
+        "cache_version": CACHE_VERSION,
+        "ttl_days": CACHE_TTL_SECONDS / 86400,
+        "memory_cache": {
+            "entries": len(memory_keys),
+            "keys": memory_keys[:10],
+        },
+        "persistent_cache": {
+            "directory": str(PERSISTENT_CACHE_DIR),
+            "files_count": len(persistent_files),
+            "total_size_kb": round(total_size_kb, 1),
+            "files": persistent_files,
+        },
+    }
+
+
+class CacheInvalidateRequest(BaseModel):
+    lat: Optional[float] = None
+    lng: Optional[float] = None
+    invalidate_all: bool = False
+
+
+@router.post("/terrain-cache/invalidate")
+async def terrain_cache_invalidate(req: CacheInvalidateRequest):
+    """
+    Invalider le cache terrain (memoire + persistant).
+    - invalidate_all=true: purge complete
+    - lat+lng: invalider une zone specifique
+    """
+    from engines.terrain_nav.terrain_sources import (
+        PERSISTENT_CACHE_DIR, _source_cache, _zone_key, _persistent_cache_path,
+    )
+
+    purged_memory = 0
+    purged_files = 0
+
+    if req.invalidate_all:
+        purged_memory = len(_source_cache)
+        _source_cache.clear()
+        if PERSISTENT_CACHE_DIR.exists():
+            for f in PERSISTENT_CACHE_DIR.glob("*.json.gz"):
+                f.unlink(missing_ok=True)
+                purged_files += 1
+        logger.info(f"[CACHE-INVALIDATE] ALL purged: {purged_memory} memory, {purged_files} files")
+    elif req.lat is not None and req.lng is not None:
+        key = _zone_key(req.lat, req.lng, 2000)
+        if key in _source_cache:
+            del _source_cache[key]
+            purged_memory = 1
+        filepath = _persistent_cache_path(req.lat, req.lng, 2000)
+        if filepath.exists():
+            filepath.unlink()
+            purged_files = 1
+        logger.info(f"[CACHE-INVALIDATE] Zone ({req.lat},{req.lng}) purged: {purged_memory}+{purged_files}")
+    else:
+        return {"status": "error", "message": "Fournir lat+lng ou invalidate_all=true"}
+
+    return {
+        "status": "ok",
+        "purged_memory": purged_memory,
+        "purged_files": purged_files,
+        "governance": "BCE-4X ULTRA-MAX++ — Cache terrain persistant",
     }

@@ -620,34 +620,21 @@ def analyze_corridors_full(
     )
 
     # Phase 3.2-CV BCE-4X-MAX: EXCLUSION sur corridors LineStrings
-    # BCE-4X-MAX: Filtrage adapte — point-in-core-urban (pas le circle 600m)
-    # Le filtre _circle_on_urban (600m+1%) est concu pour les zones organiques individuelles.
-    # Pour les corridors, on utilise un test point-in-polygon direct (centre dans zone urbaine batie)
-    # afin de preserver les corridors fauniques en zone forestiere proche des routes.
+    # REGLE ULTRA-MAX++ PERMANENTE: Firewall geometrique anthropique
+    # Test point-in-polygon direct sur l'union des polygones urbains/routiers/infra
     geojson_features = []
     _corridors_excluded_urban = 0
     _corridors_excluded_water = 0
     _has_exclusion_engine = False
-    _urban_zone_poly = None
+    _meta_exclusion_active = False
     try:
         from modules.bionic_engine_p0.services.zone_engine_core_v2 import (
-            _circle_on_water, _load_urban_cache_zones, center_in_urban_meta_zone,
+            _circle_on_water, _point_intersects_anthropic, center_in_urban_meta_zone,
         )
         _has_exclusion_engine = True
-        _urban_zone_poly = _load_urban_cache_zones()
         _meta_exclusion_active = center_in_urban_meta_zone(center_lat, center_lng)
     except ImportError:
-        _meta_exclusion_active = False
-
-    def _point_in_core_urban(lat, lng):
-        """Test si un POINT est dans la zone urbaine batie (sans expansion 600m)."""
-        if _urban_zone_poly is None:
-            return False
-        try:
-            from shapely.geometry import Point as _SPt
-            return _urban_zone_poly.contains(_SPt(lng, lat))
-        except Exception:
-            return False
+        pass
 
     for c in enriched_corridors:
         raw_coords = [[pt["lng"], pt["lat"]] for pt in c["path"]]
@@ -656,7 +643,8 @@ def analyze_corridors_full(
         if _has_exclusion_engine and len(coords) > 0:
             mid_idx = len(coords) // 2
             mid_lng, mid_lat = coords[mid_idx][0], coords[mid_idx][1]
-            if _point_in_core_urban(mid_lat, mid_lng):
+            # ULTRA-MAX++: centre geometrique intersecte polygone anthropique → REJET
+            if _point_intersects_anthropic(mid_lat, mid_lng):
                 _corridors_excluded_urban += 1
                 continue
             if _circle_on_water(mid_lat, mid_lng):
@@ -709,14 +697,12 @@ def analyze_corridors_full(
         center_lat, center_lng, side_m, cell_m, month=month,
     )
     
-    # Phase 3.2-V BCE-4X: Filtrage zones — point-in-core-urban (adapte)
-    # Meme strategie que les corridors: test point direct au lieu de circle 600m
+    # Phase 3.2-V BCE-4X: Filtrage zones — ULTRA-MAX++ firewall anthropique
     if _meta_exclusion_active:
-        # BCE-4X-MAX META: Centre en zone urbaine mixte — filtrage INDIVIDUEL renforce
         import logging
         _logger = logging.getLogger("corridors_v10.engine")
         _logger.info(
-            f"[BCE-4X-MAX META] Center urban — applying POINT-IN-URBAN filtering on {len(zone_polygons)} zone_polygons"
+            f"[ULTRA-MAX++ FIREWALL] Center urban — filtering {len(zone_polygons)} zone_polygons"
         )
         filtered_zone_polygons = []
         excluded_urban = 0
@@ -724,7 +710,7 @@ def analyze_corridors_full(
         for zp in zone_polygons:
             pz = zp["primary_zone"]
             zlat, zlng = pz["lat"], pz["lng"]
-            if _point_in_core_urban(zlat, zlng):
+            if _has_exclusion_engine and _point_intersects_anthropic(zlat, zlng):
                 excluded_urban += 1
                 continue
             if _has_exclusion_engine:
@@ -736,7 +722,7 @@ def analyze_corridors_full(
                     pass
             filtered_zone_polygons.append(zp)
         _logger.info(
-            f"[Phase3.2-V META-POINT] Zone filter: input={len(zone_polygons)}, "
+            f"[ULTRA-MAX++ FIREWALL] Zone filter: input={len(zone_polygons)}, "
             f"urban={excluded_urban}, water={excluded_water}, kept={len(filtered_zone_polygons)}"
         )
         zone_polygons = filtered_zone_polygons

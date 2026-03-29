@@ -11,18 +11,49 @@ Sources:
 Robustesse:
 - BCE-4X P1 B2: 3 miroirs Overpass en PARALLELE (premier gagne)
 - Timeout adaptatif selon la taille de la zone
-- Cache en memoire par zone (evite les re-fetches)
+- Cache PERSISTANT fichier gzip (ZERO appel Overpass apres 1ere visite)
+- Cache memoire par zone (acces ultra-rapide)
 
 STEEVE-MAX: Aucun appel live apres le build initial du graphe.
+ULTRA-MAX++: Cache persistant versionne SHA256, TTL 30 jours.
 """
+import gzip
+import json
 import logging
+import os
 import time
 import hashlib
 import requests
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Dict, List, Tuple, Optional, Any
+from pathlib import Path
 
 logger = logging.getLogger("bionic.terrain_nav.sources")
+
+# Miroirs Overpass — rotation automatique en cas de timeout
+OVERPASS_MIRRORS = [
+    "https://overpass-api.de/api/interpreter",
+    "https://overpass.kumi.systems/api/interpreter",
+    "https://lz4.overpass-api.de/api/interpreter",
+]
+
+# Timeout adaptatif: base + rayon/500 secondes
+# BCE-4X P0 B1: Reduit de 20/5 a 8/2 — STEEVE-MAX 2026-03-28
+BASE_TIMEOUT_S = 8
+TIMEOUT_PER_KM = 2
+
+# Rayon de recherche Overpass (metres)
+DEFAULT_SEARCH_RADIUS_M = 2000
+
+# Cache global en memoire
+_source_cache: Dict[str, Dict] = {}
+
+# ============================================================================
+# CACHE PERSISTANT — ULTRA-MAX++ BCE-4X
+# ============================================================================
+PERSISTENT_CACHE_DIR = Path("/app/backend/data/terrain_cache")
+CACHE_TTL_SECONDS = 30 * 24 * 3600  # 30 jours
+CACHE_VERSION = "v1"
 
 # Miroirs Overpass — rotation automatique en cas de timeout
 OVERPASS_MIRRORS = [
@@ -56,6 +87,143 @@ def _zone_key(lat: float, lng: float, radius_m: int) -> str:
     rlat = round(lat, 2)
     rlng = round(lng, 2)
     return f"tne:{rlat}:{rlng}:{radius_m}"
+
+
+def _persistent_cache_path(lat: float, lng: float, radius_m: int) -> Path:
+    """Chemin fichier cache persistant: {lat}_{lng}_{radius}.json.gz"""
+    rlat = round(lat, 2)
+    rlng = round(lng, 2)
+    filename = f"{rlat}_{rlng}_{radius_m}_{CACHE_VERSION}.json.gz"
+    return PERSISTENT_CACHE_DIR / filename
+
+
+def _ensure_cache_dir():
+    """Creer le repertoire de cache s'il n'existe pas."""
+    PERSISTENT_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def _save_persistent_cache(lat: float, lng: float, radius_m: int, result: Dict) -> bool:
+    """
+    Sauvegarder les donnees terrain dans le cache persistant (gzip JSON).
+    Inclut metadata: SHA256, timestamp, version.
+    """
+    try:
+        _ensure_cache_dir()
+        filepath = _persistent_cache_path(lat, lng, radius_m)
+
+        # Serialiser node_coords: convertir clefs int en str pour JSON
+        serializable = _make_json_serializable(result)
+
+        # Ajouter metadata
+        payload = {
+            "cache_version": CACHE_VERSION,
+            "created_at": time.time(),
+            "created_iso": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            "center_lat": round(lat, 2),
+            "center_lng": round(lng, 2),
+            "radius_m": radius_m,
+            "data": serializable,
+        }
+        raw = json.dumps(payload, separators=(",", ":")).encode("utf-8")
+        payload["sha256"] = hashlib.sha256(raw).hexdigest()
+
+        with gzip.open(filepath, "wt", encoding="utf-8", compresslevel=6) as f:
+            json.dump(payload, f, separators=(",", ":"))
+
+        size_kb = filepath.stat().st_size / 1024
+        logger.info(
+            f"[TNE-CACHE-PERSIST] SAVED: {filepath.name} ({size_kb:.1f} KB), "
+            f"SHA256={payload['sha256'][:16]}..."
+        )
+        return True
+    except Exception as e:
+        logger.error(f"[TNE-CACHE-PERSIST] Save FAILED: {e}")
+        return False
+
+
+def _load_persistent_cache(lat: float, lng: float, radius_m: int) -> Optional[Dict]:
+    """
+    Charger les donnees terrain depuis le cache persistant.
+    Valide TTL et version. Retourne None si invalide.
+    """
+    filepath = _persistent_cache_path(lat, lng, radius_m)
+    if not filepath.exists():
+        return None
+
+    try:
+        with gzip.open(filepath, "rt", encoding="utf-8") as f:
+            payload = json.load(f)
+
+        # Valider version
+        if payload.get("cache_version") != CACHE_VERSION:
+            logger.info(f"[TNE-CACHE-PERSIST] Version mismatch: {payload.get('cache_version')} != {CACHE_VERSION}")
+            filepath.unlink(missing_ok=True)
+            return None
+
+        # Valider TTL
+        created = payload.get("created_at", 0)
+        age_s = time.time() - created
+        if age_s > CACHE_TTL_SECONDS:
+            age_days = age_s / 86400
+            logger.info(f"[TNE-CACHE-PERSIST] TTL expired: {age_days:.1f} days > 30 days")
+            filepath.unlink(missing_ok=True)
+            return None
+
+        # Valider SHA256
+        stored_hash = payload.pop("sha256", None)
+        verify_raw = json.dumps(payload, separators=(",", ":")).encode("utf-8")
+        computed_hash = hashlib.sha256(verify_raw).hexdigest()
+        if stored_hash and stored_hash != computed_hash:
+            logger.warning("[TNE-CACHE-PERSIST] SHA256 MISMATCH — cache corrompu, suppression")
+            filepath.unlink(missing_ok=True)
+            return None
+
+        # Deserialiser: convertir clefs str back en int pour node_coords
+        result = _restore_from_json(payload["data"])
+        age_min = age_s / 60
+
+        size_kb = filepath.stat().st_size / 1024
+        logger.info(
+            f"[TNE-CACHE-PERSIST] HIT: {filepath.name} ({size_kb:.1f} KB), "
+            f"age={age_min:.0f}min, SHA256={computed_hash[:16]}..."
+        )
+        return result
+    except Exception as e:
+        logger.error(f"[TNE-CACHE-PERSIST] Load FAILED: {e}")
+        return None
+
+
+def _make_json_serializable(result: Dict) -> Dict:
+    """Convertir node_coords (clefs int) en clefs string pour JSON."""
+    out = {}
+    for category in ("trails", "obstacles", "forest", "waterways", "clearings"):
+        cat_data = result.get(category, {})
+        nc = cat_data.get("node_coords", {})
+        out[category] = {
+            "node_coords": {str(k): list(v) for k, v in nc.items()},
+            "ways": cat_data.get("ways", []),
+        }
+    for flag in ("has_trails", "has_obstacles", "has_forest", "has_waterways", "has_clearings"):
+        out[flag] = result.get(flag, False)
+    return out
+
+
+def _restore_from_json(data: Dict) -> Dict:
+    """Restaurer node_coords (clefs string → int) depuis JSON."""
+    result = {
+        "source": "persistent_cache",
+    }
+    for category in ("trails", "obstacles", "forest", "waterways", "clearings"):
+        cat_data = data.get(category, {})
+        nc_raw = cat_data.get("node_coords", {})
+        nc = {int(k): tuple(v) for k, v in nc_raw.items()}
+        result[category] = {
+            "node_coords": nc,
+            "ways": cat_data.get("ways", []),
+        }
+    for flag in ("has_trails", "has_obstacles", "has_forest", "has_waterways", "has_clearings"):
+        result[flag] = data.get(flag, False)
+    return result
 
 
 def _adaptive_timeout(radius_m: int) -> int:
@@ -183,27 +351,52 @@ def fetch_terrain_data(
     """
     Acquisition complete des donnees terrain pour une zone.
     UNE SEULE requete Overpass combinee (chemins + obstacles + foret).
-    Cache en memoire.
+
+    Cascade de cache (priorite decroissante):
+    1. Cache MEMOIRE (ultra-rapide, volatile)
+    2. Cache PERSISTANT fichier gzip (survit aux redemarrages)
+    3. Overpass API (appel reseau, sauvegarde dans les 2 caches)
+
+    ZERO appel Overpass apres la premiere visite.
+    Meteo/vent/contamination/scoring restent dynamiques.
 
     Retourne:
     {
         "trails": {"node_coords": {...}, "ways": [...]},
         "obstacles": {"node_coords": {...}, "ways": [...]},
         "forest": {"node_coords": {...}, "ways": [...]},
-        "source": "overpass" | "cache",
+        "source": "cache" | "persistent_cache" | "overpass",
         "has_trails": bool,
         "has_obstacles": bool,
         "has_forest": bool,
     }
     """
+    t0 = time.time()
     key = _zone_key(lat, lng, radius_m)
+
+    # --- Niveau 1: Cache memoire ---
     if key in _source_cache:
-        logger.info(f"[TNE-SRC] Cache HIT for {key}")
+        elapsed = (time.time() - t0) * 1000
+        logger.info(f"[TNE-SRC] MEMORY Cache HIT for {key} ({elapsed:.1f}ms)")
         cached = _source_cache[key]
         cached["source"] = "cache"
+        cached["cache_level"] = "memory"
+        cached["fetch_ms"] = round(elapsed, 1)
         return cached
 
-    logger.info(f"[TNE-SRC] Fetching terrain data for ({lat:.4f}, {lng:.4f}), radius={radius_m}m")
+    # --- Niveau 2: Cache persistant fichier ---
+    persistent = _load_persistent_cache(lat, lng, radius_m)
+    if persistent is not None:
+        elapsed = (time.time() - t0) * 1000
+        persistent["cache_level"] = "persistent_file"
+        persistent["fetch_ms"] = round(elapsed, 1)
+        # Charger en memoire pour acces ultra-rapide suivant
+        _source_cache[key] = persistent
+        logger.info(f"[TNE-SRC] PERSISTENT Cache HIT for {key} ({elapsed:.1f}ms)")
+        return persistent
+
+    # --- Niveau 3: Overpass API (appel reseau) ---
+    logger.info(f"[TNE-SRC] CACHE MISS — Fetching terrain data for ({lat:.4f}, {lng:.4f}), radius={radius_m}m")
     timeout = _adaptive_timeout(radius_m)
 
     result: Dict[str, Any] = {
@@ -248,5 +441,13 @@ def fetch_terrain_data(
             f"{len(nc)} total nodes"
         )
 
+    elapsed = (time.time() - t0) * 1000
+    result["cache_level"] = "overpass_fresh"
+    result["fetch_ms"] = round(elapsed, 1)
+
+    # Sauvegarder dans les 2 niveaux de cache
     _source_cache[key] = result
+    _save_persistent_cache(lat, lng, radius_m, result)
+
+    logger.info(f"[TNE-SRC] Overpass fetch + cache save: {elapsed:.0f}ms")
     return result

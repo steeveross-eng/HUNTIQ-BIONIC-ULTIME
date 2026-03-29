@@ -228,11 +228,29 @@ def recommend_blinds(
     """
     all_blinds = []
 
+    # ULTRA-MAX++ FIREWALL: Import du test geometrique anthropique
+    _has_anthropic_firewall = False
+    try:
+        from modules.bionic_engine_p0.services.zone_engine_core_v2 import _point_intersects_anthropic
+        _has_anthropic_firewall = True
+    except ImportError:
+        pass
+
+    def _firewall_check(lat, lng):
+        """ULTRA-MAX++: Rejeter si centre intersecte polygone anthropique."""
+        if _has_anthropic_firewall:
+            return _point_intersects_anthropic(lat, lng)
+        return False
+
     # 1. Scorer les affuts fixes de l'utilisateur
     if fixed_blinds:
         for fb in fixed_blinds:
             dist = _haversine(fb["lat"], fb["lng"], center_lat, center_lng)
             if dist > radius_m * 1.5:
+                continue
+            # ULTRA-MAX++: Firewall anthropique sur affuts fixes
+            if _firewall_check(fb["lat"], fb["lng"]):
+                logger.info(f"[CHOIX-FIREWALL] Affut fixe ({fb['lat']:.5f},{fb['lng']:.5f}) REJETE — polygone anthropique")
                 continue
             result = score_blind_position(
                 fb["lat"], fb["lng"],
@@ -266,6 +284,9 @@ def recommend_blinds(
         for nid, nlat, nlng, dist, connectivity in candidate_nodes:
             if tested >= max_blinds * 3:
                 break
+            # ULTRA-MAX++: Firewall anthropique sur candidats mobiles
+            if _firewall_check(nlat, nlng):
+                continue
             # Eviter les positions trop proches d'un affut deja selectionne
             too_close = False
             for existing in all_blinds:
@@ -326,6 +347,10 @@ def recommend_blinds(
                 # Verifier la distance au centre
                 dist_center = _haversine(cand_lat, cand_lng, center_lat, center_lng)
                 if dist_center > radius_m * 1.5:
+                    continue
+
+                # ULTRA-MAX++: Firewall anthropique sur candidats alimentation
+                if _firewall_check(cand_lat, cand_lng):
                     continue
 
                 # Eviter les positions trop proches d'un affut existant

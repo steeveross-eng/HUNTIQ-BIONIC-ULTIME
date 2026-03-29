@@ -538,6 +538,32 @@ def _load_urban_cache_zones():
     return _urban_union_zone_cache
 
 
+def _point_intersects_anthropic(lat: float, lng: float) -> bool:
+    """
+    REGLE ULTRA-MAX++ PERMANENTE — Firewall geometrique anthropique.
+
+    Verifie si un POINT (centre geometrique) intersecte un polygone
+    urbain, routier ou infrastructurel du cache anthropique.
+
+    Test Shapely point-in-polygon direct sur l'union bufferisee.
+    AUCUNE expansion de cercle — test ponctuel pur.
+
+    Usage obligatoire: Aucun element faunique (zone, saline, corridor,
+    sentier, hotspot, affut) ne peut etre genere, affiche ou recommande
+    si son centre geometrique intersecte un polygone anthropique.
+
+    Authority: STEEVE-MAX | BCE-4X ULTRA-MAX++ | Permanent.
+    """
+    urban = _load_urban_cache_zones()
+    if urban is None or not SHAPELY_AVAILABLE:
+        return False
+    try:
+        from shapely.geometry import Point as ShapelyPoint
+        return urban.contains(ShapelyPoint(lng, lat))
+    except Exception:
+        return False
+
+
 def _circle_on_urban(center_lat: float, center_lng: float) -> bool:
     """
     Phase 3.2-V ULTIME: Exclusion anthropique renforcee.
