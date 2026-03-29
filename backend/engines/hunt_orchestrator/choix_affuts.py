@@ -300,10 +300,14 @@ def recommend_blinds(
             f"[CHOIX] Fallback alimentation: {len(feeding_sites)} sites, "
             f"graphe {'vide' if not trail_graph or trail_graph.is_empty else 'non-vide'}"
         )
-        # Placer des affuts en AMONT du vent par rapport a chaque site alimentation
+        # Placer des affuts SOUS LE VENT (downwind) par rapport a chaque site alimentation
+        # Le chasseur est DOWNWIND: son odeur est emportee LOIN de la saline
         # Distance d'observation optimale: 80-200m selon l'espece
         obs_distances = [100, 150, 200] if species == "orignal" else [80, 120, 160]
-        wind_rad = math.radians(wind_direction_deg)
+        # wind_direction_deg = direction D'OU vient le vent (convention meteo)
+        # downwind = direction VERS laquelle souffle le vent = wind_direction_deg + 180
+        # Le chasseur se place dans la direction downwind par rapport a la saline
+        downwind_rad = math.radians((wind_direction_deg + 180) % 360)
 
         fs_tested = 0
         for fs in feeding_sites:
@@ -312,12 +316,10 @@ def recommend_blinds(
             fs_lat = fs["lat"]
             fs_lng = fs["lng"]
 
-            # Position AMONT du vent (le chasseur est face au vent, odeur part derriere)
-            # Le vent souffle VERS wind_direction_deg, le chasseur se place FACE au vent
             for obs_dist in obs_distances:
-                # Position en amont du vent par rapport au site alimentation
-                offset_lat = (obs_dist / 111320) * math.cos(wind_rad)
-                offset_lng = (obs_dist / (111320 * math.cos(math.radians(fs_lat)))) * math.sin(wind_rad)
+                # Offset DOWNWIND: le chasseur est dans la direction ou le vent va
+                offset_lat = (obs_dist / 111320) * math.cos(downwind_rad)
+                offset_lng = (obs_dist / (111320 * math.cos(math.radians(fs_lat)))) * math.sin(downwind_rad)
                 cand_lat = fs_lat + offset_lat
                 cand_lng = fs_lng + offset_lng
 
