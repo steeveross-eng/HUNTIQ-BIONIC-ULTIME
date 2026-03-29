@@ -276,9 +276,17 @@ def _generate_justification(
 
     # Acces
     if access and access.get("feasible"):
-        parts.append(
-            f"Acces: {access['distance_m']}m via sentier reel OSM ({access['routing_algo']})."
-        )
+        if access.get("routing_algo") == "hybrid_trail_terrain":
+            p1 = access.get("phase1_distance_m", 0)
+            p2 = access.get("phase2_distance_m", 0)
+            parts.append(
+                f"Acces HYBRIDE: {access['distance_m']}m — "
+                f"sentier OSM {p1}m + approche terrain {p2}m ({access['routing_algo']})."
+            )
+        else:
+            parts.append(
+                f"Acces: {access['distance_m']}m via sentier reel OSM ({access['routing_algo']})."
+            )
     elif access and access.get("coords"):
         parts.append(
             f"Acces: {access['distance_m']}m — ATTENTION: {access['contamination_check']['violations_count']} violation(s)."

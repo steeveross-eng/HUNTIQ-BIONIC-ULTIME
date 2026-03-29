@@ -152,60 +152,144 @@ const StandsMapLayer = ({
     for (const rec of recs) {
       const access = rec.access;
       if (access?.coords?.length >= 2) {
-        const pathCoords = access.coords.map(c => [c.lat, c.lng]);
-        const isFeasible = access.feasible;
         const isDirectLine = access.routing_algo === 'direct_line' || access.trail_type === 'hors_sentier';
         const isTerrainAware = access.routing_algo === 'terrain_grid_astar';
+        const isHybrid = access.routing_algo === 'hybrid_trail_terrain';
+        const isFeasible = access.feasible;
 
-        // Style: vert solid (OSM reel), cyan tirets (terrain-aware), orange (non conforme), jaune pointilles (hors-sentier)
-        let trailColor, dashArray, statusLabel;
-        if (isDirectLine) {
-          trailColor = '#FFD700';
-          dashArray = '6, 8, 2, 8';
-          statusLabel = 'Approche hors-sentier (direction indicative)';
-        } else if (isTerrainAware) {
-          const terrainType = access.trail_type || 'terrain_aware';
-          if (terrainType === 'corridor_ruisseau') {
-            trailColor = '#00BCD4';
-            dashArray = '10, 4';
-            statusLabel = 'Corridor ruisseau';
-          } else if (terrainType === 'corridor_clairiere') {
-            trailColor = '#8BC34A';
-            dashArray = '10, 4';
-            statusLabel = 'Corridor clairiere';
-          } else {
-            trailColor = '#26A69A';
-            dashArray = '8, 5';
-            statusLabel = 'Terrain naturel optimise';
+        if (isHybrid && access.trail_segment_end_idx > 0) {
+          // === RENDU HYBRIDE: 2 segments visuellement distincts ===
+          const junctionIdx = access.trail_segment_end_idx;
+          const trailCoords = access.coords.slice(0, junctionIdx + 1).map(c => [c.lat, c.lng]);
+          const terrainCoords = access.coords.slice(junctionIdx).map(c => [c.lat, c.lng]);
+
+          // Segment 1: Sentier OSM (vert continu)
+          if (trailCoords.length >= 2) {
+            L.polyline(trailCoords, {
+              color: '#1a1a2e', weight: 5.5, opacity: 0.4,
+              lineCap: 'round', lineJoin: 'round', pane: 'overlayPane',
+            }).addTo(group);
+            const trailLine = L.polyline(trailCoords, {
+              color: ACCESS_OK_COLOR, weight: 3.5, opacity: 0.9,
+              lineCap: 'round', lineJoin: 'round',
+              pane: 'overlayPane',
+            });
+            trailLine.bindTooltip(
+              `<span style="font-size:11px;font-weight:700;color:${ACCESS_OK_COLOR}">${access.phase1_distance_m || '?'}m</span>` +
+              `<br><span style="font-size:9px;color:#aaa">Sentier OSM reel (Phase 1)</span>`,
+              { sticky: true, direction: 'top', offset: [0, -8] }
+            );
+            group.addLayer(trailLine);
           }
-        } else if (isFeasible) {
-          trailColor = ACCESS_OK_COLOR;
-          dashArray = null;
-          statusLabel = 'Sentier reel OSM';
+
+          // Segment 2: Approche terrain (teal tirete)
+          if (terrainCoords.length >= 2) {
+            const p2Types = access.phase2_terrain_types || [];
+            let terrainColor = '#26A69A';
+            let terrainLabel = 'Approche terrain';
+            if (p2Types.includes('stream_bank')) {
+              terrainColor = '#00BCD4';
+              terrainLabel = 'Approche ruisseau';
+            } else if (p2Types.includes('clearing_edge')) {
+              terrainColor = '#8BC34A';
+              terrainLabel = 'Approche clairiere';
+            }
+
+            L.polyline(terrainCoords, {
+              color: '#1a1a2e', weight: 5.5, opacity: 0.4,
+              lineCap: 'round', lineJoin: 'round', pane: 'overlayPane',
+            }).addTo(group);
+            const terrainLine = L.polyline(terrainCoords, {
+              color: terrainColor, weight: 3.5, opacity: 0.85,
+              lineCap: 'round', lineJoin: 'round', dashArray: '8, 5',
+              pane: 'overlayPane',
+            });
+            terrainLine.bindTooltip(
+              `<span style="font-size:11px;font-weight:700;color:${terrainColor}">${access.phase2_distance_m || '?'}m</span>` +
+              `<br><span style="font-size:9px;color:#aaa">${terrainLabel} (Phase 2)</span>`,
+              { sticky: true, direction: 'top', offset: [0, -8] }
+            );
+            group.addLayer(terrainLine);
+          }
+
+          // Point de jonction sentier/terrain
+          if (access.junction) {
+            L.circleMarker([access.junction.lat, access.junction.lng], {
+              radius: 6, fillColor: '#FFD700', color: '#1a1a2e',
+              weight: 2.5, fillOpacity: 0.95, pane: 'markerPane',
+            }).bindTooltip(
+              `<span style="font-size:10px;font-weight:700;color:#FFD700">Jonction sentier/terrain</span>` +
+              `<br><span style="font-size:9px;color:#aaa">Quitter le sentier ici</span>`,
+              { direction: 'top', offset: [0, -10] }
+            ).addTo(group);
+          }
+
+          // Tooltip global sur l'ensemble du trace
+          const fullCoords = access.coords.map(c => [c.lat, c.lng]);
+          const invisibleFull = L.polyline(fullCoords, {
+            color: 'transparent', weight: 12, opacity: 0, pane: 'overlayPane',
+          });
+          invisibleFull.bindTooltip(
+            `<span style="font-size:11px;font-weight:700;color:#FFD700">${access.distance_m}m HYBRIDE</span>` +
+            `<br><span style="font-size:9px;color:${ACCESS_OK_COLOR}">Sentier: ${access.phase1_distance_m || '?'}m</span>` +
+            `<br><span style="font-size:9px;color:#26A69A">Approche: ${access.phase2_distance_m || '?'}m</span>`,
+            { sticky: true, direction: 'top', offset: [0, -12] }
+          );
+          group.addLayer(invisibleFull);
+
         } else {
-          trailColor = ACCESS_WARN_COLOR;
-          dashArray = '8, 6';
-          statusLabel = 'Non conforme vent/odeur';
+          // === RENDU STANDARD (non-hybride) ===
+          const pathCoords = access.coords.map(c => [c.lat, c.lng]);
+
+          let trailColor, dashArray, statusLabel;
+          if (isDirectLine) {
+            trailColor = '#FFD700';
+            dashArray = '6, 8, 2, 8';
+            statusLabel = 'Approche hors-sentier (direction indicative)';
+          } else if (isTerrainAware) {
+            const terrainType = access.trail_type || 'terrain_aware';
+            if (terrainType === 'corridor_ruisseau') {
+              trailColor = '#00BCD4';
+              dashArray = '10, 4';
+              statusLabel = 'Corridor ruisseau';
+            } else if (terrainType === 'corridor_clairiere') {
+              trailColor = '#8BC34A';
+              dashArray = '10, 4';
+              statusLabel = 'Corridor clairiere';
+            } else {
+              trailColor = '#26A69A';
+              dashArray = '8, 5';
+              statusLabel = 'Terrain naturel optimise';
+            }
+          } else if (isFeasible) {
+            trailColor = ACCESS_OK_COLOR;
+            dashArray = null;
+            statusLabel = 'Sentier reel OSM';
+          } else {
+            trailColor = ACCESS_WARN_COLOR;
+            dashArray = '8, 6';
+            statusLabel = 'Non conforme vent/odeur';
+          }
+
+          // Bordure
+          L.polyline(pathCoords, {
+            color: '#1a1a2e', weight: 5.5, opacity: 0.4,
+            lineCap: 'round', lineJoin: 'round', pane: 'overlayPane',
+          }).addTo(group);
+
+          // Chemin
+          const trail = L.polyline(pathCoords, {
+            color: trailColor, weight: 3.5, opacity: 0.85,
+            lineCap: 'round', lineJoin: 'round', dashArray,
+            pane: 'overlayPane',
+          });
+          trail.bindTooltip(
+            `<span style="font-size:11px;font-weight:700;color:${trailColor}">${access.distance_m}m</span>` +
+            `<br><span style="font-size:9px;color:#aaa">${statusLabel} (${access.routing_algo || 'A*'})</span>`,
+            { sticky: true, direction: 'top', offset: [0, -8] }
+          );
+          group.addLayer(trail);
         }
-
-        // Bordure
-        L.polyline(pathCoords, {
-          color: '#1a1a2e', weight: 5.5, opacity: 0.4,
-          lineCap: 'round', lineJoin: 'round', pane: 'overlayPane',
-        }).addTo(group);
-
-        // Chemin
-        const trail = L.polyline(pathCoords, {
-          color: trailColor, weight: 3.5, opacity: 0.85,
-          lineCap: 'round', lineJoin: 'round', dashArray,
-          pane: 'overlayPane',
-        });
-        trail.bindTooltip(
-          `<span style="font-size:11px;font-weight:700;color:${trailColor}">${access.distance_m}m</span>` +
-          `<br><span style="font-size:9px;color:#aaa">${statusLabel} (${access.routing_algo || 'A*'})</span>`,
-          { sticky: true, direction: 'top', offset: [0, -8] }
-        );
-        group.addLayer(trail);
 
         // Point d'entree
         const ep = access.entry_point;
@@ -292,11 +376,13 @@ const StandsMapLayer = ({
         </div>`;
       }).join('');
 
+      const isHybridAccess = rec.access?.routing_algo === 'hybrid_trail_terrain';
       const accessInfo = rec.access ? (
         `<div style="margin-top:6px;padding:4px 6px;background:rgba(46,204,113,0.05);border-left:2px solid ${rec.access.feasible ? ACCESS_OK_COLOR : ACCESS_WARN_COLOR};border-radius:0 4px 4px 0">
           <div style="font-size:9px;font-weight:600;color:${rec.access.feasible ? ACCESS_OK_COLOR : ACCESS_WARN_COLOR}">
             Acces: ${rec.access.distance_m}m via ${rec.access.trail_type} (${rec.access.routing_algo})
           </div>
+          ${isHybridAccess ? `<div style="font-size:8px;color:#2ECC71;margin-top:2px">Sentier: ${rec.access.phase1_distance_m || '?'}m | <span style="color:#26A69A">Approche: ${rec.access.phase2_distance_m || '?'}m</span></div>` : ''}
           <div style="font-size:8px;color:#aaa">${rec.access.feasible ? 'Conforme vent/odeur' : 'NON CONFORME — ' + (rec.access.contamination_check?.violations?.[0]?.message || 'Violations')}</div>
         </div>`
       ) : '<div style="color:#E74C3C;font-size:9px;margin-top:4px">Aucun acces sentier reel</div>';
@@ -360,6 +446,7 @@ const StandsMapLayer = ({
           <div style="display:flex;align-items:center;gap:5px;margin:3px 0"><span style="width:10px;height:10px;border-radius:50%;border:2px solid ${FIXED_BORDER};display:inline-block"></span> Affut fixe</div>
           <div style="display:flex;align-items:center;gap:5px;margin:3px 0"><span style="width:10px;height:10px;border-radius:50%;border:2px solid ${MOBILE_BORDER};display:inline-block"></span> Position mobile</div>
           <div style="display:flex;align-items:center;gap:5px;margin:3px 0"><span style="width:16px;height:3px;background:${ACCESS_OK_COLOR};display:inline-block;border-radius:2px"></span> Sentier reel OSM</div>
+          <div style="display:flex;align-items:center;gap:5px;margin:3px 0"><span style="width:8px;height:3px;background:${ACCESS_OK_COLOR};display:inline-block;border-radius:2px"></span><span style="width:6px;height:3px;background:#26A69A;display:inline-block;border-radius:2px;border:1px dashed #26A69A"></span> Hybride sentier+terrain</div>
           <div style="display:flex;align-items:center;gap:5px;margin:3px 0"><span style="width:16px;height:3px;background:${ACCESS_WARN_COLOR};display:inline-block;border-radius:2px;border:1px dashed ${ACCESS_WARN_COLOR}"></span> Non conforme</div>
           <div style="display:flex;align-items:center;gap:5px;margin:3px 0"><span style="width:10px;height:10px;background:${CONTAMINATION_COLOR}33;border:1px dashed ${CONTAMINATION_COLOR};display:inline-block;border-radius:2px"></span> Zone contamination</div>
           <div style="display:flex;align-items:center;gap:5px;margin:3px 0"><span style="width:10px;height:10px;border-radius:50%;background:${FEEDING_COLOR};display:inline-block"></span> Site alimentation</div>

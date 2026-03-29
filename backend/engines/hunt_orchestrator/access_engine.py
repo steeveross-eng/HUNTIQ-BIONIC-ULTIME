@@ -354,6 +354,195 @@ def _astar_terrain_grid(
     return None
 
 
+def _find_reachable_closest_to_target(
+    trail_graph,
+    entry_lat: float, entry_lng: float,
+    target_lat: float, target_lng: float,
+    min_dist_to_target_m: float = 40.0,
+    max_snap_dist_m: float = 1200.0,
+) -> Optional[Tuple[int, float, float, float]]:
+    """
+    BFS depuis le noeud sentier le plus proche de l'entree.
+    Retourne le noeud ACCESSIBLE (meme composante connexe) le plus proche de la cible.
+
+    Ignore les noeuds a <min_dist_to_target_m de la cible (trop proches = inutile).
+    Retourne: (node_id, node_lat, node_lng, dist_to_target_m) ou None.
+    """
+    if trail_graph is None or trail_graph.is_empty:
+        return None
+
+    entry_node = trail_graph.nearest_node(entry_lat, entry_lng, max_dist_m=max_snap_dist_m)
+    if entry_node is None:
+        return None
+
+    # BFS pour trouver tous les noeuds accessibles depuis entry_node
+    visited = set()
+    queue = [entry_node]
+    visited.add(entry_node)
+
+    while queue:
+        current = queue.pop(0)
+        for neighbor, _, _, _ in trail_graph.adj.get(current, []):
+            if neighbor not in visited and neighbor not in trail_graph.obstacle_nodes:
+                visited.add(neighbor)
+                queue.append(neighbor)
+
+    # Parmi les noeuds accessibles, trouver le plus proche de la cible
+    best_node = None
+    best_dist = float("inf")
+
+    for nid in visited:
+        nlat, nlng = trail_graph.nodes[nid]
+        d = _haversine(nlat, nlng, target_lat, target_lng)
+        if d < min_dist_to_target_m:
+            continue  # Trop proche = inutile pour le segment terrain
+        if d < best_dist:
+            best_dist = d
+            best_node = nid
+
+    if best_node is None:
+        return None
+
+    nlat, nlng = trail_graph.nodes[best_node]
+    return (best_node, nlat, nlng, best_dist)
+
+
+def _attempt_hybrid_trail_terrain(
+    entry_lat: float, entry_lng: float,
+    blind_lat: float, blind_lng: float,
+    trail_graph,
+    terrain_data: Optional[Dict],
+    scent_zone: Dict,
+    feeding_sites: List[Dict],
+) -> Optional[Dict]:
+    """
+    BCE-4X Trail-First Routing — Algorithme hybride 2 phases.
+
+    Phase 1 (SENTIER): Entree → noeud sentier OSM le plus proche de l'affut
+                        via A* sur graphe de sentiers reels.
+    Phase 2 (TERRAIN): Noeud sentier → affut
+                        via A* grille terrain (approche finale hors-sentier).
+
+    Retourne un dict route_result ou None si echec.
+    """
+    from engines.terrain_nav import navigate_terrain
+
+    if trail_graph is None or trail_graph.is_empty:
+        return None
+
+    # --- Trouver le noeud sentier ACCESSIBLE le plus proche de l'affut ---
+    # BFS depuis l'entree pour trouver les noeuds sur la meme composante connexe
+    result = _find_reachable_closest_to_target(
+        trail_graph, entry_lat, entry_lng, blind_lat, blind_lng,
+        min_dist_to_target_m=40.0, max_snap_dist_m=1200.0,
+    )
+    if result is None:
+        logger.info("[ACCESS-HYBRID] Aucun noeud sentier ACCESSIBLE a proximite de l'affut — hybride impossible")
+        return None
+
+    closest_node_id, junction_lat, junction_lng, junction_to_blind_m = result
+
+    logger.info(
+        f"[ACCESS-HYBRID] Phase 1: entree -> noeud sentier #{closest_node_id} "
+        f"({junction_lat:.5f},{junction_lng:.5f}), "
+        f"Phase 2: noeud sentier -> affut ({junction_to_blind_m:.0f}m)"
+    )
+
+    # --- PHASE 1: Entree → noeud sentier via graphe OSM ---
+    phase1_result = navigate_terrain(
+        trail_graph, entry_lat, entry_lng, junction_lat, junction_lng
+    )
+    if phase1_result is None:
+        logger.info("[ACCESS-HYBRID] Phase 1 echec — pas de sentier entre entree et noeud jonction")
+        return None
+
+    phase1_coords = phase1_result["coords"]
+    phase1_dist = phase1_result["distance_m"]
+    logger.info(
+        f"[ACCESS-HYBRID] Phase 1 OK: {len(phase1_coords)} pts, {phase1_dist}m via sentier OSM"
+    )
+
+    # --- PHASE 2: Noeud sentier → affut via grille terrain ---
+    phase2_coords = []
+    phase2_dist = 0.0
+    phase2_terrain_types = set()
+
+    try:
+        nodes, adjacency, node_types, start_nid, end_nid = _build_terrain_grid(
+            junction_lat, junction_lng, blind_lat, blind_lng,
+            terrain_data, scent_zone, feeding_sites,
+            grid_spacing_m=25,  # Resolution plus fine pour approche finale
+        )
+        path_nids = _astar_terrain_grid(nodes, adjacency, start_nid, end_nid)
+
+        if path_nids and len(path_nids) >= 2:
+            phase2_coords = [{"lat": nodes[nid][0], "lng": nodes[nid][1]} for nid in path_nids]
+            for i in range(len(phase2_coords) - 1):
+                phase2_dist += _haversine(
+                    phase2_coords[i]["lat"], phase2_coords[i]["lng"],
+                    phase2_coords[i + 1]["lat"], phase2_coords[i + 1]["lng"]
+                )
+            for nid in path_nids:
+                t = node_types.get(nid, "open_forest")
+                if t not in ("entry", "blind"):
+                    phase2_terrain_types.add(t)
+            logger.info(
+                f"[ACCESS-HYBRID] Phase 2 OK: {len(phase2_coords)} pts, {round(phase2_dist)}m, "
+                f"types: {phase2_terrain_types}"
+            )
+        else:
+            logger.info("[ACCESS-HYBRID] Phase 2 A* echec — fallback interpolation lineaire")
+    except Exception as e:
+        logger.error(f"[ACCESS-HYBRID] Phase 2 grille erreur: {e}")
+
+    # Fallback phase 2: interpolation directe noeud sentier → affut
+    if not phase2_coords:
+        n_pts = max(4, int(junction_to_blind_m / 30))
+        phase2_coords = []
+        for i in range(n_pts + 1):
+            t = i / n_pts
+            phase2_coords.append({
+                "lat": junction_lat + t * (blind_lat - junction_lat),
+                "lng": junction_lng + t * (blind_lng - junction_lng),
+            })
+        phase2_dist = junction_to_blind_m
+        phase2_terrain_types = {"open_forest"}
+
+    # --- COUTURE: Assembler Phase 1 + Phase 2 ---
+    # Eviter doublon au point de jonction
+    stitched_coords = list(phase1_coords)
+    trail_segment_end_idx = len(stitched_coords) - 1
+
+    if phase2_coords:
+        # Sauter le premier point de phase2 s'il est < 5m du dernier point de phase1
+        first_p2 = phase2_coords[0]
+        last_p1 = stitched_coords[-1]
+        gap = _haversine(last_p1["lat"], last_p1["lng"], first_p2["lat"], first_p2["lng"])
+        start_idx = 1 if gap < 5 else 0
+        stitched_coords.extend(phase2_coords[start_idx:])
+
+    total_dist = phase1_dist + phase2_dist
+
+    logger.info(
+        f"[ACCESS-HYBRID] COMPLET: {len(stitched_coords)} pts total, "
+        f"{round(total_dist)}m (sentier {phase1_dist}m + terrain {round(phase2_dist)}m), "
+        f"jonction idx={trail_segment_end_idx}"
+    )
+
+    return {
+        "coords": stitched_coords,
+        "distance_m": total_dist,
+        "type": "hybride_sentier_terrain",
+        "routing_algo": "hybrid_trail_terrain",
+        "segments_count": len(stitched_coords) - 1,
+        "trail_segment_end_idx": trail_segment_end_idx,
+        "phase1_distance_m": round(phase1_dist),
+        "phase2_distance_m": round(phase2_dist),
+        "phase2_terrain_types": list(phase2_terrain_types),
+        "junction": {"lat": junction_lat, "lng": junction_lng},
+    }
+
+
 def compute_access_route(
     entry_lat: float,
     entry_lng: float,
@@ -366,26 +555,40 @@ def compute_access_route(
     terrain_data: Optional[Dict] = None,
 ) -> Dict[str, Any]:
     """
-    Calculer le chemin d'acces optimal vers un affut.
+    BCE-4X Trail-First Routing — Calculer le chemin d'acces optimal vers un affut.
 
-    Strategie:
-    1. Router via le graphe de sentiers OSM reels (A* / Dijkstra)
-    2. Si pas de sentiers: router via grille terrain (cours d'eau, clairières)
-    3. Valider contamination, eau, alimentation
+    Strategie en cascade (priorite decroissante):
+    1. Route sentier OSM complete (entree → affut via graphe)
+    2. Route HYBRIDE: sentier OSM → noeud jonction → approche terrain (A* grille)
+    3. Route terrain-aware pure (grille A* integrale)
+    4. Fallback: ligne directe (indicatif uniquement)
+
+    Validation: contamination, eau, alimentation sur chaque resultat.
     """
     from engines.terrain_nav import navigate_terrain
 
-    # Etape 1: Routage via sentiers reels OSM
+    # --- Strategie 1: Routage sentier OSM complet ---
     route_result = navigate_terrain(
         trail_graph, entry_lat, entry_lng, blind_lat, blind_lng
     )
 
+    # --- Strategie 2: Routage HYBRIDE trail-first ---
     if route_result is None:
         logger.info(
-            f"[ACCESS] Pas de sentier OSM — activation routage terrain-aware "
+            f"[ACCESS] Sentier complet echec — tentative hybride trail-first "
             f"({entry_lat:.4f},{entry_lng:.4f}) -> ({blind_lat:.4f},{blind_lng:.4f})"
         )
-        # Etape 2: Routage terrain-aware via grille
+        route_result = _attempt_hybrid_trail_terrain(
+            entry_lat, entry_lng, blind_lat, blind_lng,
+            trail_graph, terrain_data, scent_zone, feeding_sites,
+        )
+
+    # --- Strategie 3: Routage terrain-aware pur ---
+    if route_result is None:
+        logger.info(
+            f"[ACCESS] Hybride echec — activation routage terrain-aware pur "
+            f"({entry_lat:.4f},{entry_lng:.4f}) -> ({blind_lat:.4f},{blind_lng:.4f})"
+        )
         try:
             nodes, adjacency, node_types, start_nid, end_nid = _build_terrain_grid(
                 entry_lat, entry_lng, blind_lat, blind_lng,
@@ -395,7 +598,6 @@ def compute_access_route(
 
             if path_nids and len(path_nids) >= 2:
                 coords = [{"lat": nodes[nid][0], "lng": nodes[nid][1]} for nid in path_nids]
-                # Calculer distance totale
                 total_dist = 0
                 for i in range(len(coords) - 1):
                     total_dist += _haversine(
@@ -403,7 +605,6 @@ def compute_access_route(
                         coords[i + 1]["lat"], coords[i + 1]["lng"]
                     )
 
-                # Identifier les types de terrain traverses
                 terrain_types_used = set()
                 for nid in path_nids:
                     t = node_types.get(nid, "open_forest")
@@ -511,8 +712,14 @@ def compute_access_route(
     )
 
     # Score de qualite de l'acces (0-100)
+    is_hybrid = algo == "hybrid_trail_terrain"
     is_terrain_aware = algo == "terrain_grid_astar"
-    quality_score = 65 if is_terrain_aware else 80  # Terrain-aware vs sentier formel
+    if is_hybrid:
+        quality_score = 75  # Hybride: sentier + approche terrain
+    elif is_terrain_aware:
+        quality_score = 65  # Terrain-aware pur
+    else:
+        quality_score = 80  # Sentier formel complet
     if not contam["compliant"]:
         quality_score -= 40
     if water_crossings:
@@ -522,6 +729,17 @@ def compute_access_route(
     if distance_m > 1000:
         quality_score -= min(20, (distance_m - 1000) / 100)
     quality_score = max(0, min(100, quality_score))
+
+    # Metadata specifique hybride
+    hybrid_meta = {}
+    if algo == "hybrid_trail_terrain":
+        hybrid_meta = {
+            "trail_segment_end_idx": route_result.get("trail_segment_end_idx", 0),
+            "phase1_distance_m": route_result.get("phase1_distance_m", 0),
+            "phase2_distance_m": route_result.get("phase2_distance_m", 0),
+            "phase2_terrain_types": route_result.get("phase2_terrain_types", []),
+            "junction": route_result.get("junction", {}),
+        }
 
     return {
         "status": "ok" if feasible else "violations",
@@ -535,9 +753,11 @@ def compute_access_route(
         "contamination_check": contam,
         "water_crossings": water_crossings,
         "feeding_proximity": feeding_proximity_violations,
+        **hybrid_meta,
         "message": (
             f"Acces {'CONFORME' if feasible else 'NON CONFORME'}: "
             f"{round(distance_m)}m via {trail_type} ({algo}). "
+            + (f"Sentier {hybrid_meta.get('phase1_distance_m', 0)}m + approche {hybrid_meta.get('phase2_distance_m', 0)}m. " if hybrid_meta else "")
             + ("ZERO violation." if feasible else f"{contam['violations_count']} violation(s) vent/odeur.")
         ),
     }
