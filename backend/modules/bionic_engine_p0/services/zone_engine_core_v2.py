@@ -1655,24 +1655,12 @@ async def generate_organic_zones(
         meta_center_lng = waypoint_center.get("lng", meta_center_lng)
     
     if center_in_urban_meta_zone(meta_center_lat, meta_center_lng):
-        elapsed = time.time() - start
         logger.info(
-            f"[BCE-4X-MAX META] ALL organic zones rejected: center ({meta_center_lat:.4f}, {meta_center_lng:.4f}) "
-            f"in urban meta-zone. 0 zones returned in {elapsed:.1f}s"
+            f"[BCE-4X-MAX META] Center ({meta_center_lat:.4f}, {meta_center_lng:.4f}) in urban meta-zone — "
+            f"applying INDIVIDUAL filtering instead of total rejection"
         )
-        empty_result = {
-            "features": [],
-            "corridors": [],
-            "stats": {
-                "layers_processed": 0, "total_zones": 0, "rejected_exclusion": 0,
-                "exclusions_count": 0, "penalties_applied": 0,
-                "exclusion_engine": EXCLUSION_ENGINE_VERSION,
-                "no_zones_reason": "all_filtered_by_meta_exclusion_urban",
-            },
-            "rejection_diagnostics": {"total_rejected": 0, "by_reason": {"meta_urban_exclusion": 1}},
-        }
-        _zone_cache[cache_k] = {"ts": time.time(), "data": empty_result}
-        return empty_result
+        # Continuer avec le pipeline normal — le filtrage individuel
+        # (per-zone urban/water check) exclura les zones en ville
 
     # BCE-4X PERFORMANCE: Fetch exclusions + DEM en PARALLELE (economise 2-3s)
     # R3: Pin month once for the entire pipeline (determinism)

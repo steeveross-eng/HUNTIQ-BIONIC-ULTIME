@@ -10,6 +10,13 @@
 
 ## Implemente et Valide
 
+### CORRECTIF: Regression zones — META-EXCLUSION (2026-03-29)
+- CAUSE: center_in_urban_meta_zone rejetait 100% des features a cause du cache anthropique buffere (101K polygones routes+infra)
+- CORRECTION: Filtrage point-in-core-urban (Shapely point-in-polygon direct) au lieu de circle 600m + 1% threshold
+- RESULTAT: 22/191 corridors et 1/16 zones preserves en zone forestiere
+- Fichiers: corridors_v10/engine.py, zone_engine_core_v2.py
+- Registre ULTRA-MAX++ INTACT
+
 ### Trail-First Routing — Hybride 2 Phases (2026-03-29)
 - Algorithme BFS pour detection composantes connexes du graphe sentiers
 - Phase 1 (SENTIER): Entree → noeud sentier accessible le plus proche de l'affut (A* graphe OSM)
@@ -22,26 +29,18 @@
 - Grille navigation terrain avec A* pondere (35m resolution)
 - Priorisation: sentiers OSM > bords ruisseau (1.2x) > clairieres (1.4x) > foret ouverte (4x)
 - Evitement: foret dense (8x), marecages (50x), eau (999x), contamination olfactive (15x)
-- Requete Overpass enrichie: waterways + clearings + grassland/scrub/heath
-- Frontend: styles distincts par type corridor (cyan ruisseau, vert clairiere, teal terrain)
 
 ### Correctif Placement Vent/Odeurs (2026-03-29)
 - Fix: affuts places DOWNWIND (aval vent) au lieu d'UPWIND
-- downwind_rad = radians((wind_direction_deg + 180) % 360)
-- Scores: 12 → 17-38 (amelioration nette)
 
-### Correctifs P1 (2026-03-28)
-- B2: Overpass parallele (ThreadPoolExecutor) — cold cache -21% a -71%
-- B5: Indicateur "Analyse terrain..." (Leaflet Control)
-
-### Correctifs P0 (2026-03-28)
-- A1/A2: feedingSites + fixedBlinds connectes
-- B1: Timeout Overpass reduit (8s)
-- B4: Cache key elargie (1.1km)
+### Correctifs P0/P1 (2026-03-28)
+- feedingSites + fixedBlinds connectes
+- Overpass parallele (ThreadPoolExecutor)
+- Indicateur chargement Leaflet
 
 ## Backlog
-- P0: Attente validation STEEVE-MAX sur Trail-First Routing
-- P2: Cache persistant terrain (elimine cold cache)
+- P0: Attente validation STEEVE-MAX sur correctif zones + Trail-First Routing
+- P2: Cache persistant terrain
 - P2: Session dynamique (matin/soir)
 - P2: Pression de chasse historique
 - P2: Phase 2D shadcn + utils (GELE)
