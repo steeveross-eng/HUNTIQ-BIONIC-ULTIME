@@ -347,10 +347,12 @@ const BionicCorridorsV6Layer = ({
       }
 
       // Fallback points si pas de polygones
+      // BCE-4X PURGE V1-V5: Exclure alimentation — NutritionPointsLayer autoritaire
       if (zonePolygons.length === 0) {
         for (const feature of zonePoints) {
           const [lng, lat] = feature.geometry.coordinates;
           const props = feature.properties;
+          if (props.zone_type === 'alimentation') continue; // BCE-4X PURGE
           const zc = ZONE_COLORS[props.zone_type] || '#9E9E9E';
           const inZone = isInAnalysisRadius(lat, lng, box);
           if (!inZone) continue;

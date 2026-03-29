@@ -306,17 +306,14 @@ const StandsMapLayer = ({
       }
     }
 
-    // 3. Sites d'alimentation
-    for (const fs of (data._feeding_sites_display || [])) {
-      L.circleMarker([fs.lat, fs.lng], {
-        radius: 7, fillColor: FEEDING_COLOR, color: '#1a1a2e',
-        weight: 2, fillOpacity: 0.9, pane: 'markerPane',
-      }).bindTooltip(
-        `<span style="font-size:10px;font-weight:700;color:${FEEDING_COLOR}">Alimentation</span>` +
-        (fs.name ? `<br><span style="font-size:9px;color:#aaa">${fs.name}</span>` : ''),
-        { direction: 'top', offset: [0, -10] }
-      ).addTo(group);
-    }
+    // 3. Sites d'alimentation — BCE-4X PURGE V1-V5
+    // SUPPRIME: Ce rendu creait un DOUBLE HALO en superposant des circleMarkers
+    // dorés (radius 7, #FFD700, border #1a1a2e) aux MEMES coordonnées que
+    // NutritionPointsLayer (radius 9, #FFD700, border #B8860B).
+    // NutritionPointsLayer est le layer AUTORITAIRE V6/SUPRA pour les salines.
+    // StandsMapLayer ne doit PLUS rendre de markers aux positions de salines.
+    // Cause racine: data._feeding_sites_display contenait les mêmes points
+    // que NutritionPointsLayer, provoquant un double rendu visuel.
 
     // 4. Marqueurs d'affuts
     for (const rec of recs) {
@@ -449,7 +446,6 @@ const StandsMapLayer = ({
           <div style="display:flex;align-items:center;gap:5px;margin:3px 0"><span style="width:8px;height:3px;background:${ACCESS_OK_COLOR};display:inline-block;border-radius:2px"></span><span style="width:6px;height:3px;background:#26A69A;display:inline-block;border-radius:2px;border:1px dashed #26A69A"></span> Hybride sentier+terrain</div>
           <div style="display:flex;align-items:center;gap:5px;margin:3px 0"><span style="width:16px;height:3px;background:${ACCESS_WARN_COLOR};display:inline-block;border-radius:2px;border:1px dashed ${ACCESS_WARN_COLOR}"></span> Non conforme</div>
           <div style="display:flex;align-items:center;gap:5px;margin:3px 0"><span style="width:10px;height:10px;background:${CONTAMINATION_COLOR}33;border:1px dashed ${CONTAMINATION_COLOR};display:inline-block;border-radius:2px"></span> Zone contamination</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:3px 0"><span style="width:10px;height:10px;border-radius:50%;background:${FEEDING_COLOR};display:inline-block"></span> Site alimentation</div>
           <div style="margin-top:5px;font-size:7px;color:#666">Vent: ${data.wind?.direction_deg}° ${data.wind?.speed_kmh} km/h | ${data.session}</div>
           <div style="font-size:7px;color:#666">Sources: OSM, Open-Meteo V3</div>
         `;
@@ -510,8 +506,8 @@ const StandsMapLayer = ({
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
-      // Attach feeding sites for display
-      data._feeding_sites_display = feedingSites;
+      // BCE-4X PURGE V1-V5: _feeding_sites_display SUPPRIME
+      // Les feeding sites sont rendus EXCLUSIVEMENT par NutritionPointsLayer (V6/SUPRA)
       cacheRef.current = data;
       if (lastKeyRef.current === key) renderRef.current(data);
     } catch (err) {
