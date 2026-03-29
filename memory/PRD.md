@@ -1,58 +1,49 @@
 # HUNTIQ-V6 — PRD (Product Requirements Document)
-## Protocole BCE-4X | ULTRA-MAX++ | Autorite STEEVE-MAX
+## Protocole BCE-4X | BIONIC GOLDEN | STEEVE-MAX
 
 ---
 
 ## Enonce du Probleme Original
-Reconstruction du repository HUNTIQ-V6 a partir de la branche `bionic-v3-dev` de HUNTIQ-V5, avec gouvernance stricte BCE-4X, audits multi-versions (V1-V6), implementation de nouvelles fonctionnalites (Trail-First Routing, Terrain Cache, ULTRA-MAX++ Firewall), et purge complete des pipelines V1-V5 legacy.
+Reconstruction HUNTIQ-V6, gouvernance BCE-4X, purge V1-V5, implementation Trail-First Routing, Terrain Cache, ULTRA-MAX++ Firewall, Protocole BIONIC GOLDEN.
 
 ## Architecture
-- **Backend:** FastAPI, 84+ modules moteur, Shapely (geo-fencing), A* pathfinding
-- **Frontend:** React, Leaflet, modular territory analysis
-- **Cache:** Fichiers `.json.gz` persistants (terrain, OSM)
-- **Branche active:** `Work1` (merge `main` STRICTEMENT INTERDIT)
+- **Backend:** FastAPI, 84+ modules, Shapely, A* pathfinding
+- **Frontend:** React, Leaflet
+- **Cache:** `.json.gz` persistants
+- **Branche souveraine:** `STEEVE-MAX-x3200-V6-CORE`
+- **Branche gelee:** `Work1` (AUCUN commit futur)
 
 ## Ce qui est implemente
 
-### Purge V1-V5 (Fevrier 2026 — Phase A-D) — EN ATTENTE VALIDATION
-- **Phase A:** Double-clic waypoint SUPPRIME. MapInteractionLayer purifie GPS-only (362->107 lignes). 3 sites appel mis a jour.
-- **Phase B (v2):** Double halo salines ELIMINE. CAUSE RACINE: `StandsMapLayer._feeding_sites_display` (markers dores navy #1a1a2e). AUSSI: centroides alimentation BionicCorridorsV6Layer exclus (3 modes). DOM Evidence: 4 V6/SUPRA markers, 0 legacy.
-- **Phase C:** Firewall corridors renforce (5 points echantillonnes: 0%, 25%, 50%, 75%, 100%)
-- **Phase D:** Rapport BCE-4X v2 genere avec cause racine corrigee, commite Work1
+### Purge V1-V5 (Phases A-D)
+- Phase A: MapInteractionLayer purifie GPS-only (Work1 + STEEVE-MAX-x3200-V6-CORE)
+- Phase B: Double halo salines elimine — StandsMapLayer._feeding_sites_display + BionicCorridorsV6Layer alimentation centroides (Work1)
+- Phase C: Firewall corridors multi-point 5 echantillons (Work1)
+- Phase D: Rapport BCE-4X v2 (Work1 + STEEVE-MAX-x3200-V6-CORE)
 
-### Fonctionnalites Anterieures
-- Trail-First Routing (A* hybride sentier+terrain)
-- Cache terrain persistant `.json.gz`
-- Firewall ULTRA-MAX++ (`_point_intersects_anthropic`, multi-point)
-- Correction geolocation waypoint
-- SUPRA V2 fallback UI salines
+### Migration branche
+- Phase A migree sur STEEVE-MAX-x3200-V6-CORE
+- GOVERNANCE.md PROTOCOLE BIONIC GOLDEN insere (11 sections)
+- Rapport migration cree
 
-## Backlog Priorise
+### Preuves visuelles finales
+- DOM Scan: 4 V6/SUPRA markers, 0 legacy ghost
+- Rendu parallele: 0 chevauchements detectes
+- SAL-06: halo unique, tooltip SUPRA actif
 
-### P0 (BLOQUANT — En attente validation STEEVE-MAX)
-- Validation rapport BCE-4X v2 (Phases A-D)
+## Backlog
 
-### P0 (SUSPENDU — Conditionne a validation Phase B)
-- Point 5: Acces aux affuts V6 (logique circulation + vegetation)
+### P0 (EN ATTENTE VALIDATION STEEVE-MAX)
+- Validation finale rapport BCE-4X + preuves visuelles
+- Phase B non applicable sur branche souveraine (architecture differente)
+
+### P0 (SUSPENDU)
+- Point 5: Acces aux affuts V6
 - Point 6: GOVERNANCE.md Section 14
 - Point 7: Clause non-regression
 
 ### P1
-- Restauration `auto_optimization.py` (module `optimization_engine`)
+- Restauration auto_optimization.py
 
 ### P2 (GELE)
-- Phase BSAA-2: Implementation module Social Ads
-- Phase 2D: Purge shadcn/utils frontend
-- Pression historique -> moteur `choix_affuts`
-- Merge `Work1` -> `main` (STRICTEMENT INTERDIT)
-
-## Fichiers Modifies (Purge V1-V5)
-1. `frontend/src/modules/map_interaction/components/MapInteractionLayer.jsx` — Reecrit GPS-only
-2. `frontend/src/components/territoire/map/MapContent.jsx` — Props purgees
-3. `frontend/src/components/territoire/MonTerritoireBionic.jsx` — Props purgees
-4. `frontend/src/modules/territory/components/WaypointMap.jsx` — Props purgees
-5. `frontend/src/components/territoire/StandsMapLayer.jsx` — feeding_sites SUPPRIME
-6. `frontend/src/components/territoire/BionicCorridorsV6Layer.jsx` — alimentation centroides exclus
-7. `frontend/src/components/territoire/NutritionPointsLayer.jsx` — useEffect legacy remplace
-8. `backend/modules/bionic_engine_p0/services/zone_engine_core_v2.py` — Firewall multi-point
-9. `backend/core/scoring_pipeline/corridors_v10/engine.py` — Firewall multi-point
+- BSAA-2, Phase 2D, pression historique, merge main INTERDIT
