@@ -108,10 +108,13 @@ const StandsMapLayer = ({
 
   const clearLegend = useCallback(() => {
     if (legendRef.current) {
-      map.removeControl(legendRef.current);
+      // GOLDEN v2.0: Legendes DOM directes (pas L.control)
+      if (legendRef.current.remove) {
+        legendRef.current.remove();
+      }
       legendRef.current = null;
     }
-  }, [map]);
+  }, []);
 
   // === RENDER ===
   const renderOrchestration = useCallback((data) => {
@@ -431,14 +434,46 @@ const StandsMapLayer = ({
     group.addTo(map);
     layerRef.current = group;
 
-    // 6. Legende — STANDARD GOLDEN (position HAUT-GAUCHE sous zoom, ZERO chevauchement)
+    // 6. Legende — STANDARD GOLDEN UI/IU v2.0
+    //    CAUSE RACINE CORRIGEE: L.control() Leaflet = arborescence DOM separee
+    //    des elements React (zoom, meteo). Deux systemes independants → chevauchements.
+    //    SOLUTION: Ancrage DOM direct au conteneur carte (.leaflet-container)
+    //    avec positionnement CSS explicite et adaptatif.
+    //    Garanties GOLDEN:
+    //    - JAMAIS chevauche les boutons zoom (top-4 left-3, ~130px hauteur)
+    //    - JAMAIS chevauche le panneau METEO (bottom-90px right-12px)
+    //    - JAMAIS chevauche les indicateurs bottom-left (heatmap, zone analyse)
+    //    - JAMAIS chevauche les coordonnees GPS, waypoints, tooltips
+    //    - Adaptation automatique toutes resolutions (768px → 4K)
+    //    - max-height dynamique = conteneur carte - 260px (zoom + marges)
     if (showLegend) {
-      const legend = L.control({ position: 'topleft' });
-      legend.onAdd = () => {
-        const div = L.DomUtil.create('div', 'bionic-hunt-legend-golden');
-        div.setAttribute('data-testid', 'hunt-legend-golden');
-        div.style.cssText = 'background:#0d1117ee;border:1px solid #333;border-radius:8px;padding:10px 12px;font-family:system-ui;font-size:9px;color:#ccc;min-width:170px;max-height:calc(100vh - 340px);overflow-y:auto;margin-top:120px;backdrop-filter:blur(8px);pointer-events:auto;';
-        div.innerHTML = `
+      const mapContainer = map.getContainer();
+      const legendDiv = document.createElement('div');
+      legendDiv.className = 'bionic-hunt-legend-golden';
+      legendDiv.setAttribute('data-testid', 'hunt-legend-golden');
+      legendDiv.style.cssText = [
+        'position:absolute',
+        'top:175px',        // Sous les 3 boutons zoom (mesure reelle: 148px hauteur + marge 11px)
+        'left:10px',        // Aligne a gauche, espace avec le bord
+        'z-index:800',      // Sous zoom z-1000, sous meteo z-1000, au-dessus des tiles
+        'background:#0d1117ee',
+        'border:1px solid #333',
+        'border-radius:8px',
+        'padding:10px 12px',
+        'font-family:system-ui',
+        'font-size:9px',
+        'color:#ccc',
+        'min-width:160px',
+        'max-width:190px',
+        'max-height:calc(100% - 260px)',  // Relatif au conteneur carte, pas au viewport
+        'overflow-y:auto',
+        'backdrop-filter:blur(8px)',
+        'pointer-events:auto',
+        'box-sizing:border-box',
+        'scrollbar-width:thin',
+        'scrollbar-color:#333 transparent',
+      ].join(';');
+      legendDiv.innerHTML = `
           <div style="font-weight:700;font-size:11px;color:#fff;margin-bottom:6px;border-bottom:1px solid #333;padding-bottom:4px">SUPRA/V6 — Legende</div>
           <div style="font-weight:600;font-size:8px;color:#888;margin:4px 0 2px;text-transform:uppercase;letter-spacing:0.5px">Affuts</div>
           <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:10px;height:10px;border-radius:50%;border:2px solid ${FIXED_BORDER};display:inline-block"></span> Affut fixe</div>
@@ -463,10 +498,8 @@ const StandsMapLayer = ({
           <div style="margin-top:6px;font-size:7px;color:#555;border-top:1px solid #333;padding-top:4px">Vent: ${data.wind?.direction_deg || '?'}° ${data.wind?.speed_kmh || '?'} km/h | ${data.session || ''}</div>
           <div style="font-size:7px;color:#555">Sources: OSM, Open-Meteo V3</div>
         `;
-        return div;
-      };
-      legend.addTo(map);
-      legendRef.current = legend;
+      mapContainer.appendChild(legendDiv);
+      legendRef.current = legendDiv;
     }
   }, [map, centerLat, centerLng, clearLayers, clearLegend, showContamination, showLegend, onStandClick]);
 

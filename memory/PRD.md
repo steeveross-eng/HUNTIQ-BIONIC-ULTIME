@@ -11,27 +11,18 @@
 - Phase B: BionicCorridorsV6Layer alimentation centroids exclus + AlimentationV2Layer useEffect
 - GOVERNANCE.md: PROTOCOLE BIONIC GOLDEN (11 sections)
 - Architecture access_engine_v6: document complet valide par STEEVE-MAX
-- Draft Section 14 GOVERNANCE: soumis a validation
-- Draft clause non-regression: soumis a validation
 - STANDARD GOLDEN Legende: repositionnee en topleft (StandsMapLayer.jsx)
 - **access_engine_v6**: Implementation complete backend + frontend + tests (43/43 PASSES)
-  - engine.py: Orchestrateur Trail-First Dijkstra + Terrain Grid A*
-  - router.py: POST /api/v6/access/compute + /compute-batch + /health
-  - osm_trails.py: Graphe sentiers OSM via Overpass API + cache .json.gz
-  - access_cost_grid.py: Grille de couts (BASE * PENTE * VEG * OBSTACLE)
-  - vegetation_analyzer.py: Analyse vegetation corridors hors-sentier
-  - pathfinder_v6.py: A* grille + Dijkstra graphe sentiers
-  - segment_classifier.py: Classification 4 couleurs
-  - AccessRouteV6Layer.jsx: Layer unique 4 couleurs (vert/bleu/or/rouge)
-  - useAccessRoute.js: Hook unique
-  - MapContent.jsx: Integration Layer
-  - routers.py: Enregistrement routeur
-  - Tests: 20 structurels + 10 GOLDEN + 13 API = 43 total
+- **STANDARD GOLDEN UI/IU v2.0**: Positionnement dynamique intelligent
+  - Cause racine: L.control() Leaflet = DOM separe des React elements
+  - Correction: Ancrage DOM direct au conteneur carte, position:absolute
+  - Tests: 4 resolutions + 6 modules + 4 interactions = 14 tests PASS
+  - Certification complete: audit/ui_golden_legende_certification.md
 
 ### EN ATTENTE VALIDATION STEEVE-MAX
-- Point 6: Section 14 GOVERNANCE.md (draft pret)
-- Point 7: Clause non-regression (draft pret)
-- **access_engine_v6**: Rapport d'execution livré — en attente validation
+- Section 14 GOVERNANCE (14.1-14.9): audit/draft_governance_section14_final.md
+- Clause non-regression (15.1-15.6): audit/draft_non_regression_clause_final.md
+- Rapport certification GOLDEN UI/IU: audit/ui_golden_legende_certification.md
 
 ### DETTE TECHNIQUE STRUCTURELLE
 - Firewall ULTRA-MAX++ (Shapely geo-fencing) a reimplementer sous GOLDEN
