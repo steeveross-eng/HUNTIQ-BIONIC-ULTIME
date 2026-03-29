@@ -26,6 +26,7 @@ import NutritionPointsLayer from '@/components/territoire/NutritionPointsLayer';
 import ConsolidatedHeatmapLayer from '@/components/territoire/ConsolidatedHeatmapLayer';
 import StandsMapLayer from '@/components/territoire/StandsMapLayer';
 import AccessRouteV6Layer from '@/components/territoire/AccessRouteV6Layer';
+import HighFidelityMapLayers from '@/components/territoire/HighFidelityMapLayers';
 import { LeafletShield, useRenderGuard, createLoadTimer } from '@/components/territoire/map/BCE4X_UIShield';
 
 const MapContentInner = React.memo(({
@@ -118,6 +119,8 @@ const MapContentInner = React.memo(({
   // ACCESS ENGINE V6 — GOLDEN (1 Layer unique)
   accessRouteData,
   showAccessRoute,
+  // ÉTAPE 2 BCE-4X: Couches Haute-Fidélité
+  hfLayerOpacities,
 }) => (
   <>
     <EcoforestryLayers
@@ -127,6 +130,8 @@ const MapContentInner = React.memo(({
       fallbackStatus={ecoMapStatus}
       activeFallback={activeFallback}
     />
+    {/* BCE-4X ÉTAPE 2: Couches Haute-Fidélité */}
+    <HighFidelityMapLayers activeEcoLayers={activeEcoLayers} opacities={hfLayerOpacities} />
     <MapRefCapture mapRefProp={mapRef} />
     <MapResizer />
     <ZoomHandler onZoomChange={handleZoomChange} onMapMove={handleMapMove} onBoundsChange={handleBoundsChange} />

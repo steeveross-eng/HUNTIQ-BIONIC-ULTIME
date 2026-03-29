@@ -741,7 +741,7 @@ def compute_access_route(
             "junction": route_result.get("junction", {}),
         }
 
-    return {
+    result = {
         "status": "ok" if feasible else "violations",
         "coords": coords,
         "distance_m": round(distance_m),
@@ -761,6 +761,16 @@ def compute_access_route(
             + ("ZERO violation." if feasible else f"{contam['violations_count']} violation(s) vent/odeur.")
         ),
     }
+
+    # BCE-4X V7: Appliquer le pipeline de clarte access_clarity_engine_v7
+    try:
+        from modules.access_clarity_engine_v7.clarity_engine import apply_clarity
+        result = apply_clarity(result)
+    except Exception as e:
+        logger.warning(f"[ACCESS] clarity_v7 application failed: {e}")
+        result["clarity_applied"] = False
+
+    return result
 
 
 def find_best_entry_point(

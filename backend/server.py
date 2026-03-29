@@ -592,6 +592,14 @@ try:
 except Exception as e:
     logger.warning(f"BSAA not loaded: {e}")
 
+# ═══ ACCESS CLARITY ENGINE V7 — Moteur de guidance optimale (BCE-4X) ═══
+try:
+    from modules.access_clarity_engine_v7.router import router as clarity_v7_router
+    app.include_router(clarity_v7_router)
+    logger.info("✓ ACCESS CLARITY V7 registered (/api/v7/clarity)")
+except Exception as e:
+    logger.warning(f"ACCESS CLARITY V7 not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

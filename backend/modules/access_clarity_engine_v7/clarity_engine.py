@@ -1,186 +1,200 @@
 """
 clarity_engine.py — Moteur de guidance optimale access_clarity_engine_v7
 PROTOCOLE BIONIC GOLDEN | BCE-4X | STEEVE-MAX
+Branche: STEEVE-MAX-x3200-V6-CORE
 
-Pipeline:
-  1. access_engine_v6.compute_access_route (Dijkstra + A* corrige)
-  2. Lissage Douglas-Peucker (reduction bruit)
-  3. Interpolation naturelle (courbes Catmull-Rom)
-  4. Score de clarte (0→100)
-  5. Conversion format compatible bionic_stand_recommendation_engine
+Pipeline complet:
+  1. Recoit les coordonnees brutes depuis hunt_orchestrator/access_engine
+  2. Applique suppression zigzags
+  3. Lissage Douglas-Peucker (reduction bruit grille)
+  4. Interpolation naturelle Catmull-Rom (courbes humaines)
+  5. Score TCS complet (Terrain Clarity Score 0->100)
+  6. Auto-correction des acces non naturels
+  7. Metadonnees de rendu visuel (bleu-clair optimise)
+
+Modele optimal d'acces forestier Quebec:
+  - Sentiers reels prioritaires (x0.1)
+  - Bordures ruisseaux = corridors naturels
+  - Clairieres = zones de transition
+  - Foret ouverte = praticable
+  - Foret dense = penalise
+  - Zones humides = eviter
 """
 import logging
 import math
 
-from modules.access_engine_v6.engine import compute_access_route
-from .smoother import douglas_peucker, interpolate_natural
-from .scorer import compute_clarity_score
+from .smoother import smooth_full_pipeline
+from .scorer import compute_tcs
 
 logger = logging.getLogger("access_clarity_engine_v7")
 
+# Rendu visuel GOLDEN — bleu-clair optimise
+CLARITY_RENDER = {
+    "color_primary": "#4FC3F7",
+    "color_secondary": "#0288D1",
+    "color_trail": "#26A69A",
+    "color_terrain": "#4FC3F7",
+    "color_fallback": "#FFD700",
+    "weight": 3.5,
+    "opacity": 0.90,
+    "glow_color": "rgba(79, 195, 247, 0.25)",
+    "glow_radius": 6,
+}
 
-async def compute_clear_path(
-    start_lat: float, start_lng: float,
-    stand_lat: float, stand_lng: float,
-    month: int = 10,
-    species: str = "orignal",
-    analysis_radius_m: int = 2000,
+# Seuils auto-correction
+MIN_ACCEPTABLE_TCS = 25
+MIN_SMOOTHNESS = 30
+
+
+def apply_clarity(
+    access_data: dict,
+    terrain_context: dict = None,
 ) -> dict:
     """
-    Pipeline unique de guidance optimale.
-    Retourne un trace lisible, naturel et coherent terrain.
+    Applique le pipeline de clarte v7 sur les donnees d'acces existantes.
+
+    access_data: sortie de hunt_orchestrator.access_engine.compute_access_route
+    terrain_context: donnees supplementaires (LIDAR, vegetation, hydro)
+
+    Retourne access_data enrichi avec:
+    - coords lissees
+    - tcs (Terrain Clarity Score)
+    - render (metadonnees visuelles)
+    - clarity_applied: True
     """
-    # Phase 1: Calcul via access_engine_v6 (Dijkstra + A* avec fix Overpass)
-    route_data = await compute_access_route(
-        origin={"lat": start_lat, "lng": start_lng},
-        destination={"lat": stand_lat, "lng": stand_lng},
-        month=month,
-        species=species,
-        analysis_radius_m=analysis_radius_m,
+    if terrain_context is None:
+        terrain_context = {}
+
+    coords = access_data.get("coords", [])
+    if len(coords) < 2:
+        access_data["clarity_applied"] = False
+        access_data["tcs"] = {"score": 0, "grade": "F", "components": {}, "summary": "Aucun chemin"}
+        return access_data
+
+    # Phase 1-3: Pipeline de lissage complet
+    smoothed = smooth_full_pipeline(
+        coords,
+        dp_tolerance=0.00003,
+        zigzag_angle_threshold=115.0,
+        interp_points=2,
     )
 
-    if route_data.get("status") != "ok" or not route_data.get("route", {}).get("segments"):
-        logger.warning("clarity_v7: access_engine_v6 returned no route, using direct fallback")
-        return _direct_fallback(start_lat, start_lng, stand_lat, stand_lng)
+    # Garantir que premier et dernier points sont preserves
+    if smoothed and coords:
+        first_orig = coords[0]
+        last_orig = coords[-1]
+        if isinstance(smoothed[0], dict):
+            smoothed[0] = {"lat": first_orig["lat"], "lng": first_orig["lng"]}
+            smoothed[-1] = {"lat": last_orig["lat"], "lng": last_orig["lng"]}
 
-    route = route_data["route"]
-    segments = route["segments"]
+    # Phase 4: Score TCS
+    tcs_input = {**access_data, "coords": smoothed}
+    tcs = compute_tcs(tcs_input, terrain_context)
 
-    # Phase 2: Assembler toutes les coordonnees en une seule liste
-    all_coords = []
-    for seg in segments:
-        for c in seg.get("coordinates", []):
-            if isinstance(c, list):
-                all_coords.append({"lng": c[0], "lat": c[1]})
-            elif isinstance(c, dict):
-                all_coords.append(c)
+    # Phase 5: Auto-correction si TCS trop bas
+    if tcs["score"] < MIN_ACCEPTABLE_TCS and len(smoothed) >= 3:
+        logger.info(f"clarity_v7: TCS={tcs['score']} < {MIN_ACCEPTABLE_TCS}, auto-correction activee")
+        smoothed = _auto_correct(smoothed, coords)
+        tcs_input_corrected = {**access_data, "coords": smoothed}
+        tcs = compute_tcs(tcs_input_corrected, terrain_context)
 
-    if len(all_coords) < 2:
-        return _direct_fallback(start_lat, start_lng, stand_lat, stand_lng)
+    # Phase 6: Determiner le rendu visuel
+    render = _compute_render_style(access_data, tcs)
 
-    # Phase 3: Lissage Douglas-Peucker (supprimer bruit grille)
-    smoothed = douglas_peucker(all_coords, tolerance=0.00003)
+    # Recalculer la distance apres lissage
+    smoothed_distance = _compute_distance(smoothed)
 
-    # Phase 4: Interpolation naturelle (courbes entre segments rectilignes)
-    if len(smoothed) >= 3:
-        natural = interpolate_natural(smoothed, num_interp=2)
-    else:
-        natural = smoothed
-
-    # Phase 5: Score de clarte
-    clarity = compute_clarity_score(route_data)
-
-    # Phase 6: Determiner le type dominant et l'algo de routage
-    trail_pct = route.get("trail_percentage", 0)
-    if trail_pct > 70:
-        routing_algo = "hybrid_trail_terrain"
-        trail_type = "sentier_reel"
-    elif trail_pct > 20:
-        routing_algo = "hybrid_trail_terrain"
-        trail_type = "hybride"
-    else:
-        routing_algo = "terrain_grid_astar"
-        trail_type = "terrain_naturel"
-
-    total_distance = route.get("total_distance_m", 0)
-
-    # Phase 7: Construire la reponse au format bionic_stand_recommendation
-    coords_list = []
-    for c in natural:
-        if isinstance(c, dict):
-            coords_list.append({"lat": round(c["lat"], 7), "lng": round(c["lng"], 7)})
-        else:
-            coords_list.append({"lat": round(c[1], 7), "lng": round(c[0], 7)})
-
-    # S'assurer que le premier et dernier point sont origin et destination
-    if coords_list:
-        coords_list[0] = {"lat": round(start_lat, 7), "lng": round(start_lng, 7)}
-        coords_list[-1] = {"lat": round(stand_lat, 7), "lng": round(stand_lng, 7)}
-
-    # Enrichir le premier point avec les metadonnees
-    if coords_list:
-        coords_list[0]["trail_distance_m"] = round(total_distance)
-        coords_list[0]["trail_type"] = trail_type
-        coords_list[0]["routing_algo"] = routing_algo
-        coords_list[0]["clarity_score"] = clarity["score"]
-        coords_list[0]["clarity_grade"] = clarity["grade"]
-
-    # Calculer le point de jonction sentier/terrain si hybride
-    junction = None
-    phase1_dist = 0
-    phase2_dist = 0
-    trail_seg_end = 0
-
-    if trail_pct > 0:
-        for i, seg in enumerate(segments):
-            if seg["type"] == "trail":
-                phase1_dist += seg.get("distance_m", 0)
-                trail_seg_end += len(seg.get("coordinates", []))
-            else:
-                phase2_dist += seg.get("distance_m", 0)
-
-        if trail_seg_end > 0 and trail_seg_end < len(coords_list):
-            jc = coords_list[min(trail_seg_end, len(coords_list) - 1)]
-            junction = {"lat": jc["lat"], "lng": jc["lng"]}
-
-    result = {
-        "coords": coords_list,
-        "distance_m": round(total_distance),
-        "clarity_score": clarity["score"],
-        "clarity_grade": clarity["grade"],
-        "clarity_components": clarity["components"],
-        "trail_percentage": trail_pct,
-        "routing_algo": routing_algo,
-        "trail_type": trail_type,
-        "phase1_distance_m": round(phase1_dist),
-        "phase2_distance_m": round(phase2_dist),
-        "junction": junction,
-        "trail_segment_end_idx": trail_seg_end,
-        "segments_count": len(segments),
-        "engine": "access_clarity_engine_v7",
-    }
+    # Mettre a jour les donnees d'acces
+    access_data["coords"] = smoothed
+    access_data["coords_count"] = len(smoothed)
+    access_data["distance_m"] = round(smoothed_distance)
+    access_data["tcs"] = tcs
+    access_data["render"] = render
+    access_data["clarity_applied"] = True
+    access_data["engine"] = "access_clarity_engine_v7"
 
     logger.info(
-        f"clarity_v7: {total_distance:.0f}m, trail={trail_pct}%, "
-        f"clarity={clarity['score']}/{clarity['grade']}, "
-        f"coords={len(coords_list)}, algo={routing_algo}"
+        f"clarity_v7: TCS={tcs['score']}/{tcs['grade']}, "
+        f"pts={len(smoothed)}, dist={smoothed_distance:.0f}m, "
+        f"algo={access_data.get('routing_algo', '?')}"
     )
 
-    return result
+    return access_data
 
 
-def _direct_fallback(start_lat, start_lng, stand_lat, stand_lng) -> dict:
-    """Fallback direct quand aucun chemin n'est trouve."""
-    dist = _haversine(start_lat, start_lng, stand_lat, stand_lng)
+def _auto_correct(smoothed: list, original: list) -> list:
+    """
+    Auto-correction: si le lissage a degrade le chemin,
+    revenir aux coords originales avec un lissage plus doux.
+    """
+    return smooth_full_pipeline(
+        original,
+        dp_tolerance=0.00005,
+        zigzag_angle_threshold=135.0,
+        interp_points=1,
+    )
+
+
+def _compute_render_style(access_data: dict, tcs: dict) -> dict:
+    """
+    Determiner le style de rendu visuel base sur le TCS et le type de route.
+    """
+    routing_algo = access_data.get("routing_algo", "")
+    trail_type = access_data.get("trail_type", "")
+    grade = tcs.get("grade", "F")
+
+    # Couleur principale basee sur le grade TCS
+    if grade in ("S", "A"):
+        color = CLARITY_RENDER["color_trail"]
+        dash = None
+        label = "Acces optimal v7"
+    elif grade == "B":
+        color = CLARITY_RENDER["color_primary"]
+        dash = None
+        label = "Acces clair v7"
+    elif grade == "C":
+        color = CLARITY_RENDER["color_secondary"]
+        dash = "8, 5"
+        label = "Acces modere v7"
+    else:
+        color = CLARITY_RENDER["color_fallback"]
+        dash = "6, 8, 2, 8"
+        label = "Acces faible v7"
+
+    # Override pour sentiers reels
+    if trail_type in ("sentier_reel", "trail") or routing_algo in ("a_star", "dijkstra"):
+        color = CLARITY_RENDER["color_trail"]
+        dash = None
+        label = "Sentier reel v7"
+
     return {
-        "coords": [
-            {
-                "lat": round(start_lat, 7), "lng": round(start_lng, 7),
-                "trail_distance_m": round(dist),
-                "trail_type": "estimation",
-                "routing_algo": "direct_fallback",
-                "clarity_score": 5,
-                "clarity_grade": "F",
-            },
-            {"lat": round(stand_lat, 7), "lng": round(stand_lng, 7)},
-        ],
-        "distance_m": round(dist),
-        "clarity_score": 5,
-        "clarity_grade": "F",
-        "clarity_components": {"trail_ratio": 0, "smoothness": 5, "directness": 0, "safety": 0},
-        "trail_percentage": 0,
-        "routing_algo": "direct_fallback",
-        "trail_type": "estimation",
-        "phase1_distance_m": 0,
-        "phase2_distance_m": round(dist),
-        "junction": None,
-        "trail_segment_end_idx": 0,
-        "segments_count": 0,
-        "engine": "access_clarity_engine_v7_fallback",
+        "color": color,
+        "weight": CLARITY_RENDER["weight"],
+        "opacity": CLARITY_RENDER["opacity"],
+        "dash_array": dash,
+        "glow": CLARITY_RENDER["glow_color"],
+        "glow_radius": CLARITY_RENDER["glow_radius"],
+        "label": label,
+        "tcs_badge": f"TCS {tcs['score']:.0f} ({grade})",
     }
 
 
-def _haversine(lat1, lng1, lat2, lng2):
+def _compute_distance(coords: list) -> float:
+    """Distance totale d'une liste de coordonnees."""
+    total = 0
+    for i in range(len(coords) - 1):
+        total += _haversine_coord(coords[i], coords[i + 1])
+    return total
+
+
+def _haversine_coord(c1, c2) -> float:
+    if isinstance(c1, dict):
+        lat1, lng1 = c1["lat"], c1["lng"]
+        lat2, lng2 = c2["lat"], c2["lng"]
+    else:
+        lng1, lat1 = c1[0], c1[1]
+        lng2, lat2 = c2[0], c2[1]
+
     R = 6371000
     dlat = math.radians(lat2 - lat1)
     dlng = math.radians(lng2 - lng1)

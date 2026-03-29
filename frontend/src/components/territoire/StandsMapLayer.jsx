@@ -151,7 +151,7 @@ const StandsMapLayer = ({
       }
     }
 
-    // 2. Chemins d'acces reels
+    // 2. Chemins d'acces — ACCESS CLARITY ENGINE V7
     for (const rec of recs) {
       const access = rec.access;
       if (access?.coords?.length >= 2) {
@@ -159,6 +159,14 @@ const StandsMapLayer = ({
         const isTerrainAware = access.routing_algo === 'terrain_grid_astar';
         const isHybrid = access.routing_algo === 'hybrid_trail_terrain';
         const isFeasible = access.feasible;
+        const hasClarityV7 = access.clarity_applied === true;
+        const tcs = access.tcs || {};
+        const render = access.render || {};
+
+        // TCS Badge pour tooltip
+        const tcsBadge = tcs.score != null
+          ? `<br><span style="font-size:9px;font-weight:700;color:#4FC3F7">TCS ${tcs.score}/${tcs.grade || '?'}</span>`
+          : '';
 
         if (isHybrid && access.trail_segment_end_idx > 0) {
           // === RENDU HYBRIDE: 2 segments visuellement distincts ===
@@ -179,23 +187,33 @@ const StandsMapLayer = ({
             });
             trailLine.bindTooltip(
               `<span style="font-size:11px;font-weight:700;color:${ACCESS_OK_COLOR}">${access.phase1_distance_m || '?'}m</span>` +
-              `<br><span style="font-size:9px;color:#aaa">Sentier OSM reel (Phase 1)</span>`,
+              `<br><span style="font-size:9px;color:#aaa">Sentier OSM reel (Phase 1)</span>` + tcsBadge,
               { sticky: true, direction: 'top', offset: [0, -8] }
             );
             group.addLayer(trailLine);
           }
 
-          // Segment 2: Approche terrain (teal tirete)
+          // Segment 2: Approche terrain v7 (bleu-clair lisse)
           if (terrainCoords.length >= 2) {
             const p2Types = access.phase2_terrain_types || [];
-            let terrainColor = '#26A69A';
-            let terrainLabel = 'Approche terrain';
-            if (p2Types.includes('stream_bank')) {
-              terrainColor = '#00BCD4';
-              terrainLabel = 'Approche ruisseau';
-            } else if (p2Types.includes('clearing_edge')) {
-              terrainColor = '#8BC34A';
-              terrainLabel = 'Approche clairiere';
+            let terrainColor = hasClarityV7 ? (render.color || '#4FC3F7') : '#26A69A';
+            let terrainLabel = hasClarityV7 ? (render.label || 'Approche v7') : 'Approche terrain';
+            if (!hasClarityV7) {
+              if (p2Types.includes('stream_bank')) {
+                terrainColor = '#00BCD4';
+                terrainLabel = 'Approche ruisseau';
+              } else if (p2Types.includes('clearing_edge')) {
+                terrainColor = '#8BC34A';
+                terrainLabel = 'Approche clairiere';
+              }
+            }
+
+            // Glow v7 (halo bleu-clair)
+            if (hasClarityV7 && render.glow) {
+              L.polyline(terrainCoords, {
+                color: terrainColor, weight: render.glow_radius || 6, opacity: 0.15,
+                lineCap: 'round', lineJoin: 'round', pane: 'overlayPane',
+              }).addTo(group);
             }
 
             L.polyline(terrainCoords, {
@@ -203,13 +221,13 @@ const StandsMapLayer = ({
               lineCap: 'round', lineJoin: 'round', pane: 'overlayPane',
             }).addTo(group);
             const terrainLine = L.polyline(terrainCoords, {
-              color: terrainColor, weight: 3.5, opacity: 0.85,
-              lineCap: 'round', lineJoin: 'round', dashArray: '8, 5',
+              color: terrainColor, weight: render.weight || 3.5, opacity: render.opacity || 0.85,
+              lineCap: 'round', lineJoin: 'round', dashArray: render.dash_array || '8, 5',
               pane: 'overlayPane',
             });
             terrainLine.bindTooltip(
               `<span style="font-size:11px;font-weight:700;color:${terrainColor}">${access.phase2_distance_m || '?'}m</span>` +
-              `<br><span style="font-size:9px;color:#aaa">${terrainLabel} (Phase 2)</span>`,
+              `<br><span style="font-size:9px;color:#aaa">${terrainLabel} (Phase 2)</span>` + tcsBadge,
               { sticky: true, direction: 'top', offset: [0, -8] }
             );
             group.addLayer(terrainLine);
@@ -235,17 +253,23 @@ const StandsMapLayer = ({
           invisibleFull.bindTooltip(
             `<span style="font-size:11px;font-weight:700;color:#FFD700">${access.distance_m}m HYBRIDE</span>` +
             `<br><span style="font-size:9px;color:${ACCESS_OK_COLOR}">Sentier: ${access.phase1_distance_m || '?'}m</span>` +
-            `<br><span style="font-size:9px;color:#26A69A">Approche: ${access.phase2_distance_m || '?'}m</span>`,
+            `<br><span style="font-size:9px;color:#4FC3F7">Approche v7: ${access.phase2_distance_m || '?'}m</span>` + tcsBadge,
             { sticky: true, direction: 'top', offset: [0, -12] }
           );
           group.addLayer(invisibleFull);
 
         } else {
-          // === RENDU STANDARD (non-hybride) ===
+          // === RENDU v7 / STANDARD ===
           const pathCoords = access.coords.map(c => [c.lat, c.lng]);
 
           let trailColor, dashArray, statusLabel;
-          if (isDirectLine) {
+
+          if (hasClarityV7 && render.color) {
+            // Rendu ACCESS CLARITY ENGINE V7
+            trailColor = render.color;
+            dashArray = render.dash_array || null;
+            statusLabel = render.label || 'Acces v7';
+          } else if (isDirectLine) {
             trailColor = '#FFD700';
             dashArray = '6, 8, 2, 8';
             statusLabel = 'Approche hors-sentier (direction indicative)';
@@ -274,6 +298,14 @@ const StandsMapLayer = ({
             statusLabel = 'Non conforme vent/odeur';
           }
 
+          // Glow v7 (halo bleu-clair)
+          if (hasClarityV7 && render.glow) {
+            L.polyline(pathCoords, {
+              color: trailColor, weight: render.glow_radius || 6, opacity: 0.15,
+              lineCap: 'round', lineJoin: 'round', pane: 'overlayPane',
+            }).addTo(group);
+          }
+
           // Bordure
           L.polyline(pathCoords, {
             color: '#1a1a2e', weight: 5.5, opacity: 0.4,
@@ -282,13 +314,13 @@ const StandsMapLayer = ({
 
           // Chemin
           const trail = L.polyline(pathCoords, {
-            color: trailColor, weight: 3.5, opacity: 0.85,
+            color: trailColor, weight: render.weight || 3.5, opacity: render.opacity || 0.85,
             lineCap: 'round', lineJoin: 'round', dashArray,
             pane: 'overlayPane',
           });
           trail.bindTooltip(
             `<span style="font-size:11px;font-weight:700;color:${trailColor}">${access.distance_m}m</span>` +
-            `<br><span style="font-size:9px;color:#aaa">${statusLabel} (${access.routing_algo || 'A*'})</span>`,
+            `<br><span style="font-size:9px;color:#aaa">${statusLabel} (${access.routing_algo || 'A*'})</span>` + tcsBadge,
             { sticky: true, direction: 'top', offset: [0, -8] }
           );
           group.addLayer(trail);
@@ -377,13 +409,19 @@ const StandsMapLayer = ({
       }).join('');
 
       const isHybridAccess = rec.access?.routing_algo === 'hybrid_trail_terrain';
+      const hasTCS = rec.access?.tcs?.score != null;
+      const tcsScore = rec.access?.tcs?.score || 0;
+      const tcsGrade = rec.access?.tcs?.grade || '?';
+      const tcsColor = tcsScore >= 80 ? '#4FC3F7' : tcsScore >= 60 ? '#26A69A' : tcsScore >= 40 ? '#F39C12' : '#E74C3C';
       const accessInfo = rec.access ? (
-        `<div style="margin-top:6px;padding:4px 6px;background:rgba(46,204,113,0.05);border-left:2px solid ${rec.access.feasible ? ACCESS_OK_COLOR : ACCESS_WARN_COLOR};border-radius:0 4px 4px 0">
-          <div style="font-size:9px;font-weight:600;color:${rec.access.feasible ? ACCESS_OK_COLOR : ACCESS_WARN_COLOR}">
+        `<div style="margin-top:6px;padding:4px 6px;background:rgba(79,195,247,0.05);border-left:2px solid ${rec.access.feasible ? (hasTCS ? tcsColor : ACCESS_OK_COLOR) : ACCESS_WARN_COLOR};border-radius:0 4px 4px 0">
+          <div style="font-size:9px;font-weight:600;color:${rec.access.feasible ? (hasTCS ? tcsColor : ACCESS_OK_COLOR) : ACCESS_WARN_COLOR}">
             Acces: ${rec.access.distance_m}m via ${rec.access.trail_type} (${rec.access.routing_algo})
           </div>
-          ${isHybridAccess ? `<div style="font-size:8px;color:#2ECC71;margin-top:2px">Sentier: ${rec.access.phase1_distance_m || '?'}m | <span style="color:#26A69A">Approche: ${rec.access.phase2_distance_m || '?'}m</span></div>` : ''}
+          ${hasTCS ? `<div style="font-size:9px;font-weight:700;color:${tcsColor};margin-top:2px">TCS ${tcsScore}/100 (Grade ${tcsGrade})</div>` : ''}
+          ${isHybridAccess ? `<div style="font-size:8px;color:#2ECC71;margin-top:2px">Sentier: ${rec.access.phase1_distance_m || '?'}m | <span style="color:#4FC3F7">Approche v7: ${rec.access.phase2_distance_m || '?'}m</span></div>` : ''}
           <div style="font-size:8px;color:#aaa">${rec.access.feasible ? 'Conforme vent/odeur' : 'NON CONFORME — ' + (rec.access.contamination_check?.violations?.[0]?.message || 'Violations')}</div>
+          ${rec.access.clarity_applied ? '<div style="font-size:7px;color:#4FC3F7;margin-top:2px">ACCESS CLARITY ENGINE V7</div>' : ''}
         </div>`
       ) : '<div style="color:#E74C3C;font-size:9px;margin-top:4px">Aucun acces sentier reel</div>';
 
@@ -478,10 +516,11 @@ const StandsMapLayer = ({
           <div style="font-weight:600;font-size:8px;color:#888;margin:4px 0 2px;text-transform:uppercase;letter-spacing:0.5px">Affuts</div>
           <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:10px;height:10px;border-radius:50%;border:2px solid ${FIXED_BORDER};display:inline-block"></span> Affut fixe</div>
           <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:10px;height:10px;border-radius:50%;border:2px solid ${MOBILE_BORDER};display:inline-block"></span> Position mobile</div>
-          <div style="font-weight:600;font-size:8px;color:#888;margin:6px 0 2px;text-transform:uppercase;letter-spacing:0.5px">Acces</div>
+          <div style="font-weight:600;font-size:8px;color:#888;margin:6px 0 2px;text-transform:uppercase;letter-spacing:0.5px">Acces (Clarity V7)</div>
           <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:16px;height:3px;background:${ACCESS_OK_COLOR};display:inline-block;border-radius:2px"></span> Sentier reel OSM</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:8px;height:3px;background:${ACCESS_OK_COLOR};display:inline-block;border-radius:2px"></span><span style="width:6px;height:3px;background:#3498DB;display:inline-block;border-radius:2px"></span> Hybride sentier+terrain</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:16px;height:3px;background:#F1C40F;display:inline-block;border-radius:2px;border:1px dashed #F1C40F"></span> Hors-sentier optimise</div>
+          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:16px;height:3px;background:#4FC3F7;display:inline-block;border-radius:2px;box-shadow:0 0 4px rgba(79,195,247,0.4)"></span> Terrain lisse v7</div>
+          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:8px;height:3px;background:${ACCESS_OK_COLOR};display:inline-block;border-radius:2px"></span><span style="width:6px;height:3px;background:#4FC3F7;display:inline-block;border-radius:2px"></span> Hybride sentier+v7</div>
+          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:16px;height:3px;background:#F1C40F;display:inline-block;border-radius:2px;border:1px dashed #F1C40F"></span> Hors-sentier</div>
           <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:16px;height:3px;background:#E74C3C;display:inline-block;border-radius:2px"></span> Non conforme</div>
           <div style="font-weight:600;font-size:8px;color:#888;margin:6px 0 2px;text-transform:uppercase;letter-spacing:0.5px">Zones ecologiques</div>
           <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:10px;height:10px;background:#FF572233;border:2px solid #FF5722;display:inline-block;border-radius:2px"></span> Rut</div>
