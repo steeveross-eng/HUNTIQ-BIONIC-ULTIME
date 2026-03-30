@@ -262,7 +262,6 @@ export const MAP_CONFIGS = {
 // Cartes optimisees pour le mode sombre
 export const DARK_OPTIMIZED_MAPS = [
   MAP_TYPES.IQHO,
-  MAP_TYPES.BATHYMETRY,
   MAP_TYPES.LIDAR_HD,
   MAP_TYPES.CANOPY_DENSITY,
   MAP_TYPES.HYDROLOGY,

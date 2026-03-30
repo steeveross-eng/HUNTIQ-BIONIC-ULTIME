@@ -182,7 +182,7 @@ const AdminGeoPage = () => {
   return (
     <div 
       className="fixed inset-0 bg-slate-900 flex flex-col overflow-hidden" 
-      style={{ paddingTop: '64px' }}
+      style={{ paddingTop: '136px' }}
       data-testid="admin-geo-page"
     >
       {/* Header Compact */}

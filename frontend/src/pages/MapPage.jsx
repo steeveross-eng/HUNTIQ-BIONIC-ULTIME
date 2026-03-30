@@ -106,7 +106,7 @@ const MapPage = () => {
   return (
     <div 
       className="fixed inset-0 bg-black flex flex-col overflow-hidden"
-      style={{ paddingTop: '64px' }}
+      style={{ paddingTop: '136px' }}
       data-testid="map-page"
     >
       {/* Header compact V6 GOLDEN */}

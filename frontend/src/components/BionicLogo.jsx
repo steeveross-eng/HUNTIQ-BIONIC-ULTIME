@@ -1,41 +1,48 @@
 /**
- * BionicLogo — BCE-4X GOLDEN Phase L v5
- * 
- * DIRECTIVES STEEVE-MAX:
- * - PAGES SECONDAIRES: Logo 48px DANS le header (pas en fixed overlay)
- * - PAGE PRINCIPALE (/): Grand logo 560px dans le contenu (sous header)
- * - PAGE PREMIUM (/admin-premium): Logo 1260px dans le contenu
- * - ZERO glow, ZERO halo, ZERO animation, ZERO hover scale
- * - AUCUNE superposition avec onglets, photos ou textes
+ * BionicLogo — BCE-4X GOLDEN Phase L v6
+ * EXECUTION EXACTE DES DIRECTIVES STEEVE-MAX:
+ *
+ * PAGES SECONDAIRES: 128px DANS le header, coin superieur gauche
+ *   - ZERO superposition avec onglets, photos ou textes
+ *   - ZERO halo, ZERO glow, ZERO animation
+ *
+ * PAGE PRINCIPALE (/): 560px, coin superieur gauche
+ *   - Superposition controlee sur le sous-header
+ *
+ * PAGE PREMIUM (/admin-premium): 1260px, coin superieur gauche
+ *   - Impact visuel PREMIUM+
  */
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import OptimizedImage from '@/components/ui/OptimizedImage';
 
-export const INNER_LOGO_SIZE = 48;
+export const INNER_LOGO_SIZE = 128;
 export const INNER_LOGO_LEFT = 0;
 
+const PREMIUM_ROUTES = ['/admin-premium', '/admin'];
+
 /**
- * BionicLogoHeader — Logo compact DANS le header nav (48px)
- * Utilise sur TOUTES les pages dans la barre de navigation principale.
+ * BionicLogoHeader — Logo 128px DANS le header nav.
+ * Le header est agrandi pour l'accueillir sans superposition.
  */
 export const BionicLogoHeader = () => {
   return (
     <Link 
       to="/"
-      className="flex-shrink-0 mr-2"
+      className="flex-shrink-0"
       data-testid="bionic-logo-header"
       aria-label="BIONIC - Retour a l'accueil"
+      style={{ marginRight: '8px' }}
     >
       <OptimizedImage 
         src="/logos/bionic-logo-official.png"
         alt="BIONIC"
-        width={48}
-        height={48}
+        width={128}
+        height={128}
         className="bionic-logo-static"
         style={{
-          width: '48px',
-          height: '48px',
+          width: '128px',
+          height: '128px',
           objectFit: 'contain',
           mixBlendMode: 'screen',
         }}
@@ -45,32 +52,32 @@ export const BionicLogoHeader = () => {
 };
 
 /**
- * BionicLogoGlobal — Grand logo pour page principale et premium.
- * Positionne DANS le contenu de la page (pas en fixed overlay).
- * Visible UNIQUEMENT sur / et /admin-premium.
+ * BionicLogoGlobal — Grand logo pour page principale et premium UNIQUEMENT.
+ * Page principale: 560px, coin superieur gauche, superposition controlee.
+ * Page premium: 1260px, impact visuel maximal.
+ * Pages secondaires: NE S'AFFICHE PAS (return null).
  */
 export const BionicLogoGlobal = () => {
   const location = useLocation();
   const path = location.pathname;
   const isHomePage = path === '/' || path === '';
-  const isPremiumPage = path.startsWith('/admin-premium') || path.startsWith('/admin');
+  const isPremiumPage = PREMIUM_ROUTES.some(r => path.startsWith(r));
   
-  // Seulement visible sur page principale et premium
   if (!isHomePage && !isPremiumPage) return null;
   
-  const logoSize = isPremiumPage ? 600 : 400;
+  const logoSize = isPremiumPage ? 1260 : 560;
   
   return (
     <div 
       style={{
         position: 'fixed',
-        top: '64px',
+        top: '0px',
         left: '0px',
-        zIndex: 30,
+        zIndex: 35,
         width: `${logoSize}px`,
         height: `${logoSize}px`,
         pointerEvents: 'none',
-        opacity: 0.15,
+        opacity: isPremiumPage ? 0.12 : 0.10,
       }}
       data-testid="bionic-logo-global"
     >

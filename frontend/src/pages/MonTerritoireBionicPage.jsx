@@ -1055,7 +1055,7 @@ const MonTerritoireBionicPage = () => {
   const categoryScores = useCategoryScores(scores, currentMapCenter);
 
   return (
-    <div className="fixed inset-0 bg-[#0a0a0f] overflow-hidden flex flex-col" style={{ paddingTop: '64px' }} data-testid="mon-territoire-bionic-page">
+    <div className="fixed inset-0 bg-[#0a0a0f] overflow-hidden flex flex-col" style={{ paddingTop: '136px' }} data-testid="mon-territoire-bionic-page">
       {/* ═══ SECTION 1 — HEADER (composant extrait IM1) ═══ */}
       <TerritoireHeader
         navigate={navigate}

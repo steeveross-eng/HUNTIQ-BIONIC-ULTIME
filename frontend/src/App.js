@@ -143,8 +143,8 @@ const Navigation = ({ cartCount, onCartOpen }) => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo 48px DANS le header — BCE-4X Phase L v5 */}
+        <div className="flex items-center justify-between" style={{ height: '136px' }}>
+          {/* Logo 128px DANS le header — BCE-4X Phase L v6 */}
           <BionicLogoHeader />
           
           {/* Desktop Navigation - BIONIC TACTICAL Style */}
@@ -540,7 +540,7 @@ const HomePage = ({ products, onAddToCart }) => (
 
 // AnalyzePage Component
 const AnalyzePage = ({ products }) => (
-  <main className="pt-20 min-h-screen bg-background">
+  <main className="min-h-screen bg-background" style={{ paddingTop: '144px' }}>
     <div className="max-w-7xl mx-auto px-4 py-8">
       <h1 className="golden-text text-4xl font-bold mb-4">Analysez</h1>
       <p className="text-gray-300 mb-8">Analysez en profondeur chaque attractant avec nos critères scientifiques.</p>
@@ -692,7 +692,7 @@ const FormationsPage = () => {
   ];
 
   return (
-    <main className="min-h-screen bg-background pt-20 pb-16">
+    <main className="min-h-screen bg-background pb-16" style={{ paddingTop: '144px' }}>
       <div className="max-w-7xl mx-auto px-4">
         {/* Back Button */}
         <Button 

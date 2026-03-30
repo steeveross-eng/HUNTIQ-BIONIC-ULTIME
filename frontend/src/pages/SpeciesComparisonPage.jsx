@@ -217,7 +217,7 @@ export default function SpeciesComparisonPage() {
   const speciesOptions = SPECIES_LIST.filter((s) => s.id !== "tous");
 
   return (
-    <div className="fixed inset-0 bg-[#0a0f1a] flex flex-col pt-16" data-testid="species-comparison-page">
+    <div className="fixed inset-0 bg-[#0a0f1a] flex flex-col" style={{ paddingTop: '136px' }} data-testid="species-comparison-page">
       {/* Header */}
       <div className="flex-shrink-0 bg-black/95 border-b border-[#f5a623]/20 px-4 py-2">
         <div className="flex items-center justify-between">
