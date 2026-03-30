@@ -1,27 +1,26 @@
 /**
- * BionicLogo - BCE-4X GOLDEN Phase L — Logo Statique Optimise
+ * BionicLogo — BCE-4X GOLDEN Phase L v2 — Logo Premium Statique
  * 
  * DIRECTIVES STEEVE-MAX:
  * - 100% STATIQUE (ZERO rotation, ZERO animation)
- * - Page accueil: 100px, sous header
- * - Pages secondaires: 50px, compact
- * - ZERO superposition sur aucune page
- * - Alignement GOLDEN conforme
+ * - Version PREMIUM: imposant, professionnel, impact visuel eleve
+ * - Taille optimisee selon espace disponible
+ * - Position: coin superieur gauche, superposition controlee du header
+ * - Non flashy, professionnel
  */
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import OptimizedImage from '@/components/ui/OptimizedImage';
 
-export const INNER_LOGO_SIZE = 50;
+export const INNER_LOGO_SIZE = 60;
 export const INNER_LOGO_LEFT = 12;
 
 export const BionicLogoGlobal = () => {
   const location = useLocation();
   const isHomePage = location.pathname === '/' || location.pathname === '';
   
-  const logoSize = isHomePage ? 100 : INNER_LOGO_SIZE;
-  const topPos = isHomePage ? '72px' : '68px';
+  const logoSize = isHomePage ? 120 : INNER_LOGO_SIZE;
+  const topPos = isHomePage ? '70px' : '66px';
   
   return (
     <Link 
@@ -34,9 +33,19 @@ export const BionicLogoGlobal = () => {
         width: `${logoSize}px`,
         height: `${logoSize}px`,
         display: 'block',
+        filter: 'drop-shadow(0 0 8px rgba(245, 166, 35, 0.25))',
+        transition: 'transform 0.2s ease, filter 0.2s ease',
       }}
       data-testid="bionic-logo-global"
       aria-label="BIONIC - Retour a l'accueil"
+      onMouseEnter={e => {
+        e.currentTarget.style.transform = 'scale(1.05)';
+        e.currentTarget.style.filter = 'drop-shadow(0 0 14px rgba(245, 166, 35, 0.4))';
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.transform = 'scale(1)';
+        e.currentTarget.style.filter = 'drop-shadow(0 0 8px rgba(245, 166, 35, 0.25))';
+      }}
     >
       <OptimizedImage 
         src="/logos/bionic-logo-official.png"
@@ -62,12 +71,12 @@ const BionicLogo = ({ className = '' }) => {
     <OptimizedImage 
       src="/logos/bionic-logo-official.png"
       alt="BIONIC"
-      width={32}
-      height={32}
+      width={36}
+      height={36}
       className={`bionic-logo-static ${className}`}
       style={{ 
-        width: '32px', 
-        height: '32px',
+        width: '36px', 
+        height: '36px',
         objectFit: 'contain',
         mixBlendMode: 'screen',
       }}

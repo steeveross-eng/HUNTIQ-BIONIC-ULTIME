@@ -4,10 +4,11 @@ import {
   ShoppingCart, DollarSign, BookOpen, FileText, ExternalLink, Zap, Package,
   Construction, Scale, BarChart3, ArrowRight, ChevronDown, ChevronUp,
   Mountain, Activity, Thermometer, Wind, Plus, Minus, X, Loader2,
-  TreeDeciduous, Gem, Crown, Eye, Crosshair
+  TreeDeciduous, Gem, Crown, Eye, Crosshair, Share2, Shield, ClipboardList
 } from 'lucide-react';
 import axios from 'axios';
 import PinnablePanel from './PinnablePanel';
+import { ShareBionicButton } from './ui/ShareBionicButton';
 
 /**
  * SUPRA v2 — Moteur Unifie
@@ -174,6 +175,7 @@ const SupraButton = ({ children, onClick, size = 'md', disabled = false, testId 
 
 const TABS = [
   { id: 'analyse', label: 'Analyse', icon: FlaskConical },
+  { id: 'fiche', label: 'Fiche', icon: ClipboardList },
   { id: 'intelligence', label: 'Intelligence', icon: BarChart3 },
   { id: 'comparez', label: 'Comparez', icon: Scale },
   { id: 'commandez', label: 'Commandez', icon: ShoppingCart },
@@ -192,6 +194,8 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
   const [cart, setCart] = useState({ items: [], item_count: 0, total: 0 });
   const [cartLoading, setCartLoading] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  // FICHE SALINE ULTIME state
+  const [ficheData, setFicheData] = useState(null);
 
   const np = nutritionPoint;
   const species = np?.species || 'chevreuil';
@@ -208,7 +212,7 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
     if (!np) return;
     setLoading(true);
     try {
-      const [supraRes, ultraRes] = await Promise.allSettled([
+      const [supraRes, ultraRes, ficheRes] = await Promise.allSettled([
         axios.post(`${API}/api/v6/nutrition-intelligence/supra-panel`, {
           species, season, soil_type: soilType, substrate: 'bois_mou',
         }),
@@ -216,9 +220,11 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
           lat: parseFloat(lat), lng: parseFloat(lng), species, sex: 'male', age: 'adult',
           month, season: seasonMap[month] || season,
         }),
+        axios.get(`${API}/api/v1/salines-ultime/fiche?lat=${parseFloat(lat)}&lng=${parseFloat(lng)}&species=${species}&season=${seasonMap[month] || season}`),
       ]);
       if (supraRes.status === 'fulfilled') setSupraData(supraRes.value.data);
       if (ultraRes.status === 'fulfilled') setUltraData(ultraRes.value.data);
+      if (ficheRes.status === 'fulfilled') setFicheData(ficheRes.value.data);
     } catch (e) {
       console.error('[SUPRA v2]', e);
     } finally {
@@ -298,7 +304,7 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
       fullHeight={true}
     >
       <div className="h-full flex flex-col overflow-hidden" data-testid="supra-v2-panel-content">
-        {/* TABS — Dashboard-aligned */}
+        {/* TABS — Dashboard-aligned + PARTAGER */}
         <div className="flex items-center gap-2 px-5 pt-4 pb-3 border-b flex-shrink-0" style={{ borderColor: 'rgb(51 65 85)' }} data-testid="supra-tabs">
           {TABS.map(tab => {
             const active = activeTab === tab.id;
@@ -308,7 +314,7 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
             return (
               <button key={tab.id} data-testid={`supra-tab-${tab.id}`}
                 onClick={() => setActiveTab(tab.id)}
-                className="flex items-center gap-2 h-10 px-5 rounded-lg text-sm font-bold uppercase tracking-wider transition-all duration-150 relative"
+                className="flex items-center gap-2 h-10 px-4 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-150 relative"
                 style={{ backgroundColor: active ? `${activeColor}18` : 'transparent', color: active ? activeColor : '#6b7280', border: active ? `2px solid ${activeColor}50` : '2px solid transparent' }}>
                 <Icon className="h-4 w-4" />
                 {tab.label}
@@ -318,6 +324,9 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
               </button>
             );
           })}
+          <div className="ml-auto flex-shrink-0">
+            <ShareBionicButton />
+          </div>
         </div>
 
         {/* CONTENT — BCE-4X Phase 2.9: ZERO scroll interne, PinnablePanel gere le scroll */}
@@ -342,6 +351,9 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
               costs={costs} comparison={comparison} ecozone={ecozone} energyProtein={energyProtein}
               terrainSolutions={terrainSolutions} gc={gc} np={np} engines={engines}
               ultraScore={ultraScore} ultraDeficits={ultraDeficits} species={species} season={season} />
+          )}
+          {!loading && activeTab === 'fiche' && (
+            <FicheTab ficheData={ficheData} species={species} season={season} lat={lat} lng={lng} np={np} />
           )}
           {!loading && products && activeTab === 'intelligence' && (
             <IntelligenceTab products={products} gc={gc} compareIds={compareIds} toggleCompare={toggleCompare} addToCart={addToCart} cartLoading={cartLoading} />
@@ -642,6 +654,166 @@ const IntelligenceTab = ({ products, gc, compareIds, toggleCompare, addToCart, c
     </div>
   </div>
 );
+
+// ============================================================
+// TAB: FICHE — SALINES ULTIME (5 Scores + 20 Sources + Guides)
+// ============================================================
+const FICHE_SCORES = {
+  logistique: { label: 'Score Logistique', icon: MapPin, color: '#3b82f6', desc: 'Accessibilite, maintenance, infrastructure, securite' },
+  gros_males: { label: 'Score Gros Males', icon: TreeDeciduous, color: '#22c55e', desc: 'Corridors, couvert, eau, observations, tranquillite' },
+  strategique: { label: 'Score Strategique', icon: Shield, color: '#f59e0b', desc: 'Position affuts, vent, visibilite, complementarite' },
+  cout_roi: { label: 'Cout / ROI', icon: DollarSign, color: '#a855f7', desc: 'Cout mineraux, transport, temps, retour observation' },
+  tcs: { label: 'TCS (Terrain Clarity)', icon: Mountain, color: '#ef4444', desc: 'Sentiers, lissage, penetrabilite, topographie' },
+};
+
+const FicheGradeTag = ({ grade, color }) => {
+  const colors = { S: '#f59e0b', A: '#22c55e', B: '#3b82f6', C: '#f97316', D: '#ef4444', F: '#991b1b' };
+  const c = colors[grade] || color || '#6b7280';
+  return <span className="px-2 py-0.5 text-xs font-black rounded" style={{ backgroundColor: `${c}20`, color: c, border: `1px solid ${c}40` }}>{grade}</span>;
+};
+
+const FicheTab = ({ ficheData, species, season, lat, lng, np }) => {
+  const [showSources, setShowSources] = useState(false);
+
+  if (!ficheData) {
+    return (
+      <div className="text-center py-12 space-y-3" data-testid="fiche-loading">
+        <Droplets className="h-8 w-8 text-cyan-400 mx-auto" />
+        <div className="text-slate-300 text-base font-semibold">FICHE SALINE ULTIME</div>
+        <div className="text-slate-500 text-sm">Chargement des 5 scores...</div>
+      </div>
+    );
+  }
+
+  const { global_score, scores, scientific_sources } = ficheData;
+
+  return (
+    <div className="space-y-4" data-testid="supra-fiche-tab">
+      {/* Score Global */}
+      <Card testId="fiche-global-score">
+        <div className="flex items-center gap-4">
+          <div className="w-[76px] h-[76px] rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #00BCD422, #00BCD408)', border: '2.5px solid #00BCD4' }}>
+            <span className="text-[28px] font-black text-cyan-400">{global_score.score}</span>
+          </div>
+          <div>
+            <div className="text-lg font-black text-white leading-tight">FICHE SALINE ULTIME</div>
+            <div className="flex items-center gap-2 mt-1">
+              <FicheGradeTag grade={global_score.grade} color="#00BCD4" />
+              <span className="text-xs text-slate-400">5 scores | 20 sources | BCE-4X</span>
+            </div>
+            <div className="text-xs text-slate-500 mt-1">{species} | {season} | {np?.id || `${lat}, ${lng}`}</div>
+          </div>
+        </div>
+      </Card>
+
+      {/* 5 Score Cards — Vertical */}
+      {Object.entries(scores).map(([key, data]) => {
+        const config = FICHE_SCORES[key];
+        if (!config) return null;
+        const Icon = config.icon;
+        return (
+          <Card key={key} testId={`fiche-score-${key}`}>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${config.color}15` }}>
+                  <Icon className="h-4 w-4" style={{ color: config.color }} />
+                </div>
+                <div>
+                  <span className="text-sm font-bold text-white">{config.label}</span>
+                  <div className="text-[10px] text-slate-500">{config.desc}</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xl font-black text-white">{data.score}</span>
+                <FicheGradeTag grade={data.grade} color={config.color} />
+              </div>
+            </div>
+            {/* Progress bar */}
+            <div className="w-full h-2 rounded-full mb-3" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}>
+              <div className="h-2 rounded-full transition-all duration-700" style={{ width: `${data.score}%`, backgroundColor: config.color }} />
+            </div>
+            {/* Components grid */}
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
+              {Object.entries(data.components || {}).map(([ck, cv]) => (
+                <div key={ck} className="flex items-center justify-between text-xs py-0.5">
+                  <span className="text-slate-500 truncate">{ck.replace(/_/g, ' ')}</span>
+                  <span className="text-slate-200 font-semibold ml-2">{cv.value}</span>
+                </div>
+              ))}
+            </div>
+            {/* Sources for this score */}
+            {data.sources && (
+              <div className="flex flex-wrap gap-1 mt-2 pt-2 border-t" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
+                {data.sources.map((s, i) => (
+                  <span key={i} className="text-[9px] px-1.5 py-0.5 rounded" style={{ backgroundColor: `${config.color}10`, color: config.color }}>{s}</span>
+                ))}
+              </div>
+            )}
+          </Card>
+        );
+      })}
+
+      {/* Guide SUPRA Descriptif — Plan Gros Males */}
+      <CollapsibleSection icon={TreeDeciduous} title="Plan Gros Males" color={BIONIC.green} badge="GUIDE SUPRA" testId="fiche-plan-males">
+        <div className="space-y-2 text-sm text-slate-300">
+          <p>Positionnez la saline a proximite des corridors de deplacement identifies par les donnees telemetriques et les observations historiques.</p>
+          <p>Les gros males preferent les zones de transition foret-clairiere avec couvert lateral superieur a 60%. Maintenez un acces discret a au moins 150m de l'affut principal.</p>
+          <p>Frequence d'entretien recommandee: bi-mensuelle en pre-rut, hebdomadaire pendant le rut actif.</p>
+        </div>
+      </CollapsibleSection>
+
+      {/* Guide SUPRA — Logistique */}
+      <CollapsibleSection icon={MapPin} title="Guide Logistique" color={BIONIC.blue} badge="GUIDE SUPRA" defaultOpen={false} testId="fiche-guide-logistique">
+        <div className="space-y-2 text-sm text-slate-300">
+          <p>Evaluez l'accessibilite vehiculaire: les chemins forestiers principaux doivent permettre le transport de mineraux (sacs 20-25kg). Distance maximale de portage recommandee: 200m.</p>
+          <p>Prevoyez un budget annuel de 150-250$ pour le renouvellement des mineraux selon la taille du site et la frequentation.</p>
+        </div>
+      </CollapsibleSection>
+
+      {/* Guide SUPRA — ROI */}
+      <CollapsibleSection icon={DollarSign} title="Analyse Cout / ROI" color={BIONIC.purple} badge="GUIDE SUPRA" defaultOpen={false} testId="fiche-guide-roi">
+        <div className="space-y-2 text-sm text-slate-300">
+          <p>Le retour sur investissement d'une saline active se mesure en nombre d'observations qualitatives par saison. Objectif: minimum 15 observations positives par saison active.</p>
+          <p>Le cout par observation diminue avec le temps — une saline mature (2+ saisons) reduit le cout/observation de 40-60%.</p>
+        </div>
+      </CollapsibleSection>
+
+      {/* 20 Sources Scientifiques */}
+      <Card testId="fiche-sources-card">
+        <button onClick={() => setShowSources(!showSources)}
+          className="w-full flex items-center justify-between cursor-pointer"
+          data-testid="fiche-toggle-sources">
+          <div className="flex items-center gap-2">
+            <BookOpen className="h-4 w-4 text-cyan-400" />
+            <span className="text-sm font-bold text-white">20 Sources Scientifiques</span>
+          </div>
+          {showSources ? <ChevronUp className="h-4 w-4 text-slate-500" /> : <ChevronDown className="h-4 w-4 text-slate-500" />}
+        </button>
+        {showSources && (
+          <div className="mt-3 space-y-1">
+            {(scientific_sources || []).map((src) => (
+              <div key={src.id} className="flex items-start gap-2 py-1.5 border-b" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
+                <span className="text-[10px] font-bold text-cyan-500 w-5 flex-shrink-0">[{src.id}]</span>
+                <div className="min-w-0">
+                  <span className="text-xs text-white font-medium">{src.ref}</span>
+                  <span className="text-[10px] text-slate-500 block">{src.title}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </Card>
+
+      {/* Integrations badges */}
+      <div className="flex flex-wrap gap-1.5 pt-1">
+        <span className="text-[10px] px-2 py-1 rounded-lg font-bold" style={{ backgroundColor: '#00BCD415', color: '#00BCD4', border: '1px solid #00BCD430' }}>SUPRA/V6</span>
+        <span className="text-[10px] px-2 py-1 rounded-lg font-bold" style={{ backgroundColor: '#22c55e15', color: '#22c55e', border: '1px solid #22c55e30' }}>ACCESS v7</span>
+        <span className="text-[10px] px-2 py-1 rounded-lg font-bold" style={{ backgroundColor: '#34d39915', color: '#34d399', border: '1px solid #34d39930' }}>PARTAGER</span>
+        <span className="text-[10px] px-2 py-1 rounded-lg font-bold" style={{ backgroundColor: '#f5a62315', color: '#f5a623', border: '1px solid #f5a62330' }}>ADMIN Premium</span>
+      </div>
+    </div>
+  );
+};
 
 // ============================================================
 // TAB: COMPAREZ

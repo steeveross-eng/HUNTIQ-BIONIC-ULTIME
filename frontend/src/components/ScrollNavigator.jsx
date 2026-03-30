@@ -17,12 +17,6 @@ import { useLocation } from 'react-router-dom';
 
 // Routes where ScrollNavigator should be hidden (full-viewport pages)
 const FULL_VIEWPORT_ROUTES = [
-  '/map',
-  '/territoire',
-  '/forecast',
-  '/analyze',
-  '/admin-geo',
-  '/admin-premium'
 ];
 
 const ScrollNavigator = () => {
