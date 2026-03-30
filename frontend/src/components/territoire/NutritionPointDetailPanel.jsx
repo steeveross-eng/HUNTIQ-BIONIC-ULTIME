@@ -4,11 +4,12 @@ import {
   ShoppingCart, DollarSign, BookOpen, FileText, ExternalLink, Zap, Package,
   Construction, Scale, BarChart3, ArrowRight, ChevronDown, ChevronUp,
   Mountain, Activity, Thermometer, Wind, Plus, Minus, X, Loader2,
-  TreeDeciduous, Gem, Crown, Eye, Crosshair, Share2, Shield, ClipboardList
+  TreeDeciduous, Gem, Crown, Eye, Crosshair, Share2, Shield, ClipboardList, Info
 } from 'lucide-react';
 import axios from 'axios';
 import PinnablePanel from './PinnablePanel';
 import { ShareBionicButton } from './ui/ShareBionicButton';
+import { CriteriaDetailModal } from './ui/CriteriaDetailModal';
 
 /**
  * SUPRA v2 — Moteur Unifie
@@ -728,6 +729,13 @@ const FicheGradeTag = ({ grade, color }) => {
 
 const FicheTab = ({ ficheData, species, season, lat, lng, np }) => {
   const [showSources, setShowSources] = useState(false);
+  const [selectedCriteria, setSelectedCriteria] = useState(null);
+  const [selectedCriteriaValue, setSelectedCriteriaValue] = useState(null);
+
+  const openCriteria = (key, value) => {
+    setSelectedCriteria(key);
+    setSelectedCriteriaValue(value);
+  };
 
   if (!ficheData) {
     return (
@@ -747,8 +755,32 @@ const FicheTab = ({ ficheData, species, season, lat, lng, np }) => {
     </div>
   );
 
+  // Composant de sous-critère CLIQUABLE avec hyperlien
+  const CriteriaRow = ({ criteriaKey, criteriaValue }) => (
+    <button
+      onClick={() => openCriteria(criteriaKey, criteriaValue)}
+      className="w-full flex items-center justify-between py-1 px-1 rounded-lg cursor-pointer transition-all hover:bg-white/5 group"
+      data-testid={`criteria-link-${criteriaKey.replace(/[\s_]/g, '-')}`}
+      title={`Cliquez pour voir la fiche complete: ${criteriaKey.replace(/_/g, ' ')}`}
+    >
+      <span className="text-[14px] text-slate-400 group-hover:text-cyan-400 transition-colors flex items-center gap-1.5">
+        <Info className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: '#00BCD4' }} />
+        {criteriaKey.replace(/_/g, ' ')}
+      </span>
+      <span className="text-[16px] text-white font-medium group-hover:text-cyan-300 transition-colors underline decoration-dotted decoration-slate-600 group-hover:decoration-cyan-500">{criteriaValue.value}</span>
+    </button>
+  );
+
   return (
     <div className="space-y-3" data-testid="supra-fiche-tab">
+      {/* Modal fiche explicative */}
+      {selectedCriteria && (
+        <CriteriaDetailModal
+          criteriaKey={selectedCriteria}
+          criteriaValue={selectedCriteriaValue}
+          onClose={() => { setSelectedCriteria(null); setSelectedCriteriaValue(null); }}
+        />
+      )}
       {/* ═══ Score Global FICHE — STANDARD GOLDEN pleine largeur ═══ */}
       <GoldenCard testId="fiche-global-score" accentColor="#00BCD4" compact>
         <div className="flex items-center gap-4">
@@ -792,10 +824,7 @@ const FicheTab = ({ ficheData, species, season, lat, lng, np }) => {
                   <div className="h-full rounded-full" style={{ width: `${data.score}%`, backgroundColor: color }} />
                 </div>
                 {Object.entries(data.components || {}).map(([ck, cv]) => (
-                  <div key={ck} className="flex items-center justify-between py-0.5">
-                    <span className="text-[14px] text-slate-400">{ck.replace(/_/g, ' ')}</span>
-                    <span className="text-[16px] text-white font-medium">{cv.value}</span>
-                  </div>
+                  <CriteriaRow key={ck} criteriaKey={ck} criteriaValue={cv} />
                 ))}
               </GoldenCard>
             );
@@ -832,10 +861,7 @@ const FicheTab = ({ ficheData, species, season, lat, lng, np }) => {
                   <div className="h-full rounded-full" style={{ width: `${data.score}%`, backgroundColor: color }} />
                 </div>
                 {Object.entries(data.components || {}).map(([ck, cv]) => (
-                  <div key={ck} className="flex items-center justify-between py-0.5">
-                    <span className="text-[14px] text-slate-400">{ck.replace(/_/g, ' ')}</span>
-                    <span className="text-[16px] text-white font-medium">{cv.value}</span>
-                  </div>
+                  <CriteriaRow key={ck} criteriaKey={ck} criteriaValue={cv} />
                 ))}
               </GoldenCard>
             );

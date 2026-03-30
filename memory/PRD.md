@@ -4,7 +4,7 @@
 ---
 
 ## Probleme Original
-Application HUNTIQ V6 — Plateforme avancee de chasse avec modules territoire, nutrition, scoring, IA, salines, meteo, shop, admin premium. Architecture modulaire FastAPI + React. Gouvernance stricte BCE-4X / STEEVE-MAX / GOLDEN.
+Application HUNTIQ V6 — Plateforme avancee de chasse. Architecture modulaire FastAPI + React. Gouvernance stricte BCE-4X / STEEVE-MAX / GOLDEN.
 
 ## Architecture
 - **Backend:** FastAPI, MongoDB, 84+ modules engines
@@ -16,45 +16,40 @@ Application HUNTIQ V6 — Plateforme avancee de chasse avec modules territoire, 
 
 ## What's Been Implemented
 
-### Session 2 — Feb 2026 (CURRENT)
+### Session 3 — Feb 30, 2026 (CURRENT)
 
-1. **SUPRA v2 — 5/5 Sous-tableaux en 3 Colonnes GOLDEN** (P0 - DONE)
-   - **ANALYSE**: Col1 (Score+Gauge+Ecozone+Besoins) | Col2 (Sol+Metabolisme+Vegetation+Hydrologie) | Col3 (Mineraux+Recette+Couts) + PREMIUM collapsibles pleine largeur
-   - **FICHE**: Col1 (Logistique+Gros Males) | Col2 (Strategique+Cout/ROI+TCS) | Col3 (Plan Gros Males+ROI+Sources)
-   - **INTELLIGENCE**: 3 colonnes de produits avec scores, tags, CMD buttons, mini-bars
-   - **COMPAREZ**: 3 colonnes cote-a-cote avec MEILLEUR CHOIX, mini-bars comparatives
-   - **COMMANDEZ**: Col1 (Recette complete) | Col2 (Produits individuels) | Col3 (Panier Stripe)
-   - Compact mode pour densite maximale, accent bars, icones en cercles, mini-bars 6px
+1. **HYPERLIENS sous-criteres FICHE SALINE ULTIME** (P0 - DONE)
+   - CriteriaDetailModal.jsx: modal fiche explicative pour 17+ sous-criteres
+   - Chaque critere: titre complet (ZERO abbreviation), definition, methodologie scoring, justification score, facteurs influents, recommandations, seuils vert/jaune/rouge, sources
+   - Base de donnees: accessibilite_vehicule, facilite_maintenance, proximite_infrastructure, securite_acces, frequence_visite, potentiel_trophee, corridors_deplacement, couvert_lateral, zone_transition, densite_population, position_vent, visibilite_affut, connectivite_territoire, cout_installation, cout_annuel, retour_investissement, drainage_sol, topographie_locale, clarte_terrain
+   - CriteriaRow dans FicheTab: chaque sous-critere CLIQUABLE, hover underline dotted, icone Info
 
-2. **Marketing Engine V2 — PARTAGER** (P0 - DONE)
-   - POST /api/share/track — Enrichi: auto-capture user_email + recipient_email + context
-   - POST /api/share/capture-lead — Capture manuelle de leads marketing
-   - GET /api/share/contacts — Liste contacts marketing (10 contacts auto-crees)
-   - GET /api/share/marketing-stats — Stats enrichies (conversion, channels, sources)
-   - Auto-creation contacts MongoDB (marketing_contacts + marketing_events)
-   - Lead scoring, BCE-4X logs, Master Switch sync, Admin Premium integration
+2. **PARTAGER — Reconstruction complete** (P0 - DONE)
+   - ShareBionicButton.jsx reecrit: panneau absolute position au lieu de Popover
+   - 14 canaux fonctionnels: Partage natif, Gmail, Outlook, Yahoo, Facebook, Messenger, WhatsApp, X, LinkedIn, Instagram, TikTok, SMS, Copier lien
+   - 3 templates: Territoire / Premium / Viral
+   - Master Switch integration + status fetch
+   - Auto-capture marketing: page_context, user_email, user_id via localStorage
+   - window.open pour chaque canal, navigator.share pour natif, clipboard pour copy/instagram/tiktok
 
-3. **STANDARD GOLDEN — Propagation Universelle** (P0 - DONE)
-   - CSS variables Tailwind (--card: #1E293B, --border: transparent, --background: #0F172A)
-   - CoreDashboard.jsx: GoldenCard, GCard, accent bars, zero bordure
-   - AdminPremiumPage.jsx: Sidebar GOLDEN accent bar
-   - App.css: Overrides globaux (borders, bg-slate, tabs active)
-   - GoldenComponents.jsx: Composants partages universels
-   - index.css: Variables CSS racine modifiees
+### Session 2 — VALIDATED
+
+1. **SUPRA v2 — 5/5 Sous-tableaux en 3 Colonnes GOLDEN** (VALIDATED)
+2. **Marketing Engine V2 — PARTAGER Backend** (VALIDATED)
+3. **STANDARD GOLDEN — Propagation Universelle** (VALIDATED)
 
 ### Session 1 — Previous
 - Import/Archive V5 → V6, Governance BCE-4X, Branch Work1
 - BSAA Architecture, Engine/Coherence/Historical Audits
-- Removed BIONIC watermark, Fixed Map crash, Fixed Biology logic
-- PARTAGER 13 canaux UI, SUPRA v2 base panel
+- PARTAGER 13 canaux UI base, SUPRA v2 base panel
 
 ---
 
 ## Prioritized Backlog
 
 ### P1 — Upcoming
-- [ ] Verification rapport confirming GOLDEN + BCE-4X standards
-- [ ] Commit all to STEEVE-MAX-x3200-V6-CORE branch
+- [ ] Verification finale GOLDEN + BCE-4X standards
+- [ ] Commit final STEEVE-MAX-x3200-V6-CORE
 
 ### P2 — Future / GELE
 - [ ] Phase 2D: Purge frontend shadcn/utils
@@ -65,28 +60,20 @@ Application HUNTIQ V6 — Plateforme avancee de chasse avec modules territoire, 
 
 ---
 
+## Key Files Modified (Session 3)
+- /app/frontend/src/components/territoire/ui/CriteriaDetailModal.jsx — NEW: 17+ fiches explicatives
+- /app/frontend/src/components/territoire/ui/ShareBionicButton.jsx — REWRITTEN: 14 canaux, absolute panel
+- /app/frontend/src/components/territoire/NutritionPointDetailPanel.jsx — FicheTab CriteriaRow cliquables
+
 ## Key Endpoints (Marketing Engine V2)
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | POST | /api/share/track | Share event + auto-capture marketing |
 | POST | /api/share/capture-lead | Manual lead capture |
-| GET | /api/share/contacts | List marketing contacts |
-| GET | /api/share/marketing-stats | Enriched marketing stats |
-| GET | /api/share/stats | Share stats (Admin Premium) |
-| GET | /api/share/status | Module + Master Switch + Marketing Engine status |
-| GET | /api/share/master-switch | Master Switch state |
-| PUT | /api/share/master-switch | Update Master Switch (STEEVE-MAX only) |
+| GET | /api/share/contacts | List marketing contacts (13 contacts) |
+| GET | /api/share/marketing-stats | Stats: 12 shares, 13 events, 108% conversion |
 
 ## Key DB Collections (MongoDB)
-- marketing_contacts: Auto-created contacts (email, name, phone, source, score, channels, interactions)
-- marketing_events: Marketing events (event_type, channel, data, timestamp, protocol)
-- share_events: Share tracking events (channel, template, url, user/recipient info)
-
-## Key Files Modified
-- /app/frontend/src/components/territoire/NutritionPointDetailPanel.jsx — 5 tabs 3-col GOLDEN
-- /app/frontend/src/components/territoire/ui/GoldenComponents.jsx — Shared GOLDEN components
-- /app/frontend/src/modules/dashboard/CoreDashboard.jsx — Dashboard GOLDEN
-- /app/frontend/src/pages/AdminPremiumPage.jsx — Admin sidebar GOLDEN
-- /app/frontend/src/App.css — Global GOLDEN overrides
-- /app/frontend/src/index.css — CSS variables GOLDEN
-- /app/backend/modules/share_engine/router.py — Marketing Engine V2
+- marketing_contacts: 13 contacts auto-crees (email, name, score, channels_used, interactions)
+- marketing_events: 13 evenements (share_executed, lead_captured)
+- share_events: 12 partages (gmail, facebook, whatsapp, linkedin, native)
