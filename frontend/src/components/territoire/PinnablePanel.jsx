@@ -18,7 +18,7 @@
  */
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { Pin, PinOff, Maximize2, Minimize2, X, GripVertical, Printer } from 'lucide-react';
+import { Pin, PinOff, Maximize2, Minimize2, X, GripVertical } from 'lucide-react';
 
 const PINNABLE_CSS_ID = 'pinnable-panel-css-v2';
 const PINNABLE_CSS = `
@@ -154,7 +154,6 @@ const PinnablePanel = ({
   className = '',
   testId = 'pinnable-panel',
   headerExtra = null,
-  showPrint = false,
   fullHeight = false,
 }) => {
   const [pinned, setPinned] = useState(false);
@@ -229,12 +228,6 @@ const PinnablePanel = ({
 
   const toggleExpand = useCallback(() => setExpanded(p => !p), []);
 
-  const handlePrint = useCallback(() => {
-    const wasExpanded = expanded;
-    if (!wasExpanded) setExpanded(true);
-    setTimeout(() => { window.print(); if (!wasExpanded) setExpanded(false); }, 300);
-  }, [expanded]);
-
   const panelStyle = expanded ? {}
     : pinned ? { position: 'fixed', left: pos.x, top: pos.y, zIndex: 2000, width: size.w, height: size.h }
     : fullHeight ? { position: 'fixed', top: 0, left: 0, zIndex: 9990, width: '100vw', height: '100vh', overflow: 'hidden' }
@@ -278,11 +271,6 @@ const PinnablePanel = ({
       {!isFullHeightActive && (
         <div className="flex items-center gap-1.5 flex-shrink-0 ml-3">
           {headerExtra}
-          {showPrint && (
-            <button data-testid={`${testId}-print-btn`} onClick={handlePrint} title="Imprimer" className="p-2 rounded-lg transition-all" style={{ backgroundColor: expanded ? '#e8f5e9' : 'rgba(255,255,255,0.06)', color: expanded ? '#2e7d32' : '#9ca3af' }}>
-              <Printer className="h-4 w-4" />
-            </button>
-          )}
           <button data-testid={`${testId}-pin-btn`} onClick={togglePin} title={pinned ? 'Detacher' : 'Fixer'} className="p-2 rounded-lg transition-all" style={{ backgroundColor: pinned ? `${accentColor}20` : expanded ? '#f0f0f5' : 'rgba(255,255,255,0.06)', color: pinned ? accentColor : expanded ? '#333' : '#9ca3af' }}>
             {pinned ? <PinOff className="h-4 w-4" /> : <Pin className="h-4 w-4" />}
           </button>
@@ -328,23 +316,6 @@ const PinnablePanel = ({
       >
         <X className="h-5 w-5" />
       </button>
-      {showPrint && (
-        <button
-          data-testid={`${testId}-float-print-btn`}
-          onClick={handlePrint}
-          title="Imprimer"
-          style={{
-            position: 'absolute', top: 16, right: 68, zIndex: 10,
-            width: 44, height: 44, borderRadius: 12,
-            backgroundColor: '#1b5e20', color: '#fff',
-            border: '2px solid rgba(255,255,255,0.3)',
-            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 4px 24px rgba(27,94,32,0.5), 0 0 0 1px rgba(0,0,0,0.2)',
-          }}
-        >
-          <Printer className="h-5 w-5" />
-        </button>
-      )}
     </>
   ) : null;
 

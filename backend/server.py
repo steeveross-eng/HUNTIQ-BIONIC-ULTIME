@@ -600,6 +600,14 @@ try:
 except Exception as e:
     logger.warning(f"ACCESS CLARITY V7 not loaded: {e}")
 
+# ═══ SHARE ENGINE — Module PARTAGER BCE-4X GOLDEN V6+ ═══
+try:
+    from modules.share_engine.router import router as share_router
+    app.include_router(share_router)
+    logger.info("✓ SHARE ENGINE registered (/api/share)")
+except Exception as e:
+    logger.warning(f"SHARE ENGINE not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

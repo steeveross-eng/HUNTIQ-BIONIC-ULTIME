@@ -8,15 +8,13 @@
  * - Purge complète V1-V5
  */
 import React, { useRef, useEffect } from 'react';
-import { ArrowLeft, Thermometer, Wind, Zap, Plus, Edit2, Crosshair, X, LocateFixed, Trash2, ToggleLeft, Printer, Gauge } from 'lucide-react';
-import { Switch } from '@/components/ui/switch';
+import { ArrowLeft, Thermometer, Wind, Share2, Plus, Edit2, Crosshair, X, LocateFixed, Trash2, ToggleLeft, Gauge } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { getProtectedZIndex } from '@/components/territoire/map/BCE4X_UIShield';
+import { ShareBionicButton } from '@/components/territoire/ui/ShareBionicButton';
 
 export const TerritoireHeader = ({
   navigate,
-  liveMode,
-  setLiveMode,
   selectedWaypointForZones,
   mapClickMode,
   setMapClickMode,
@@ -171,22 +169,8 @@ export const TerritoireHeader = ({
             )}
           </div>
         )}
-        {/* LIVE */}
-        <div className="flex items-center gap-1.5 bg-[#111118] rounded-lg px-2.5 py-1.5 border border-[#1a1a2e]" data-testid="header-live">
-          <Zap className={`h-4 w-4 ${liveMode ? 'text-green-400' : 'text-gray-600'}`} />
-          <span className="text-[10px] text-gray-500 uppercase">LIVE</span>
-          <Switch checked={liveMode} onCheckedChange={setLiveMode} className="data-[state=checked]:bg-green-500 scale-75" />
-        </div>
-        {/* PRINT */}
-        <button
-          onClick={() => window.print()}
-          className="flex items-center gap-1.5 bg-[#111118] rounded-lg px-2.5 py-1.5 border border-[#1a1a2e] hover:bg-[#1a1a2e] transition-colors"
-          title="Imprimer la page"
-          data-testid="header-print-btn"
-        >
-          <Printer className="h-4 w-4 text-gray-400" />
-          <span className="text-[10px] text-gray-500 uppercase">PRINT</span>
-        </button>
+        {/* BCE-4X V6+ PARTAGER — Module BIONIC Share */}
+        <ShareBionicButton sharedWeather={sharedWeather} />
       </div>
     </header>
   );

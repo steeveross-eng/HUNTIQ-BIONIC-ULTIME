@@ -295,7 +295,6 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose }) => {
       defaultWidth={680}
       maxHeight="100vh"
       testId="nutrition-point-detail-panel"
-      showPrint={true}
       fullHeight={true}
     >
       <div className="h-full flex flex-col overflow-hidden" data-testid="supra-v2-panel-content">

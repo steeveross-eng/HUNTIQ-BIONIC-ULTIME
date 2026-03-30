@@ -300,7 +300,7 @@ const HEADER_STABILITY_CONFIG = {
     'header-score-badge',
     'add-waypoint-main-btn',
     'header-weather-official',
-    'header-live',
+    'header-share-btn',
     'header-back-btn',
   ],
   css: {

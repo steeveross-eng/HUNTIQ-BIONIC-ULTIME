@@ -65,7 +65,6 @@ const StandDetailPanel = ({ stand, onClose }) => {
       defaultWidth={580}
       maxHeight="100vh"
       testId="stand-detail-panel"
-      showPrint={true}
       fullHeight={true}
     >
       {/* GRID LAYOUT — 2 colonnes pour tout afficher en 100vh sans scroll */}

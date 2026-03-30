@@ -53,7 +53,7 @@ const getWindScore = (speed, gusts) => {
 };
 
 const useSharedWeather = (lat, lng, options = {}) => {
-  const { autoFetch = true, liveMode = false } = options;
+  const { autoFetch = true } = options;
   const mountedRef = useRef(true);
 
   const current = useWeatherStore(s => s.current);
@@ -71,14 +71,14 @@ const useSharedWeather = (lat, lng, options = {}) => {
     mountedRef.current = true;
     if (autoFetch && lat && lng) {
       fetchAll(lat, lng);
-      const interval = liveMode ? 60000 : 600000;
+      const interval = 600000;
       startPolling(lat, lng, interval);
     }
     return () => {
       mountedRef.current = false;
       stopPolling();
     };
-  }, [lat, lng, autoFetch, liveMode, fetchAll, startPolling, stopPolling]);
+  }, [lat, lng, autoFetch, fetchAll, startPolling, stopPolling]);
 
   const refresh = useCallback(() => {
     if (lat && lng) fetchAll(lat, lng, true);

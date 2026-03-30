@@ -519,7 +519,6 @@ const MonTerritoireBionicPage = () => {
   
   // Panneaux
   const [showLayersPanel, setShowLayersPanel] = useState(true);
-  const [liveMode, setLiveMode] = useState(false);
   const [showCursorBionic, setShowCursorBionic] = useState(false); // P0 FIX: BBox debug caché par défaut
   
   // ============================================
@@ -799,10 +798,10 @@ const MonTerritoireBionicPage = () => {
     sunrise,
     sunset,
     refresh: refreshWeather
-  } = useBionicWeather(weatherCoords[0], weatherCoords[1], { autoFetch: true, pollInterval: liveMode ? 60000 : 600000 });
+  } = useBionicWeather(weatherCoords[0], weatherCoords[1], { autoFetch: true, pollInterval: 600000 });
 
   // BCE-4X Phase 3.1: Hook meteo partage — waypoint UNIQUE pour le bloc meteo intelligent
-  const sharedWeather = useSharedWeather(weatherCoords[0], weatherCoords[1], { autoFetch: true, liveMode });
+  const sharedWeather = useSharedWeather(weatherCoords[0], weatherCoords[1], { autoFetch: true });
   
   const { scores, calculateHybridScores, globalScore } = useBionicScoring();
   
@@ -1061,8 +1060,6 @@ const MonTerritoireBionicPage = () => {
       {/* ═══ SECTION 1 — HEADER (composant extrait IM1) ═══ */}
       <TerritoireHeader
         navigate={navigate}
-        liveMode={liveMode}
-        setLiveMode={setLiveMode}
         selectedWaypointForZones={selectedWaypointForZones}
         mapClickMode={mapClickMode}
         setMapClickMode={setMapClickMode}
