@@ -17,7 +17,7 @@ import SEOHead from "@/components/SEOHead";
 import { AuthProvider, UserMenu, useAuth } from "@/components/GlobalAuth";
 import { OfflineIndicator } from "@/components/OfflineIndicator";
 import { LanguageProvider, useLanguage, LanguageSwitcher } from "@/contexts/LanguageContext";
-import BionicLogo, { BionicLogoGlobal } from "@/components/BionicLogo";
+import BionicLogo, { BionicLogoGlobal, BionicLogoHeader } from "@/components/BionicLogo";
 import ScrollNavigator from "@/components/ScrollNavigator";
 import { NotificationProvider } from "@/modules/notifications";
 // V6 GOLDEN: Centre de notifications push temps réel
@@ -144,7 +144,8 @@ const Navigation = ({ cartCount, onCartOpen }) => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo retiré du header - Logo global BionicLogoGlobal utilisé à la place */}
+          {/* Logo 48px DANS le header — BCE-4X Phase L v5 */}
+          <BionicLogoHeader />
           
           {/* Desktop Navigation - BIONIC TACTICAL Style */}
           <nav className="hidden lg:flex items-center gap-1">

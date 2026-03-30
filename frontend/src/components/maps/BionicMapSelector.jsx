@@ -25,11 +25,6 @@ const MAP_ICONS = {
   [MAP_TYPES.ECOFORESTRY]: () => <TreePine className="w-5 h-5 text-[var(--bionic-green-primary)] flex-shrink-0" />,
   [MAP_TYPES.SATELLITE]: () => <Satellite className="w-5 h-5 text-[var(--bionic-blue-light)] flex-shrink-0" />,
   [MAP_TYPES.IQHO]: () => <Droplets className="w-5 h-5 text-[var(--bionic-cyan-primary)] flex-shrink-0" />,
-  [MAP_TYPES.BATHYMETRY]: () => (
-    <div className="w-5 h-5 rounded bg-gradient-to-b from-[var(--bionic-cyan-primary)] to-[var(--bionic-blue-primary)] flex items-center justify-center flex-shrink-0">
-      <span className="text-white text-[10px] font-bold">~</span>
-    </div>
-  ),
   [MAP_TYPES.FOREST_ROADS]: () => <Route className="w-5 h-5 text-[var(--bionic-gold-primary)] flex-shrink-0" />,
   // HF Icons
   [MAP_TYPES.LIDAR_HD]: () => <Mountain className="w-5 h-5 text-amber-400 flex-shrink-0" />,
