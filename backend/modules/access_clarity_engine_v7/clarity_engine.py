@@ -71,12 +71,13 @@ def apply_clarity(
         access_data["tcs"] = {"score": 0, "grade": "F", "components": {}, "summary": "Aucun chemin"}
         return access_data
 
-    # Phase 1-3: Pipeline de lissage complet
+    # Phase 1-3: Pipeline de lissage complet ×1000%
     smoothed = smooth_full_pipeline(
         coords,
         dp_tolerance=0.00003,
         zigzag_angle_threshold=115.0,
         interp_points=2,
+        terrain_context=terrain_context,
     )
 
     # Garantir que premier et dernier points sont preserves
