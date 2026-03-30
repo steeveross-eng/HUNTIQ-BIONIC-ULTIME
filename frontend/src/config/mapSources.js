@@ -11,7 +11,6 @@ export const MAP_TYPES = {
   ECOFORESTRY: 'ecoforestry',
   SATELLITE: 'satellite',
   IQHO: 'iqho',
-  BATHYMETRY: 'bathymetry',
   FOREST_ROADS: 'forest-roads',
   // ═══ CARTES HAUTE-FIDÉLITÉ — BCE-4X GOLDEN ═══
   LIDAR_HD: 'lidar-hd',
@@ -92,27 +91,6 @@ export const MAP_CONFIGS = {
     },
     zoneOpacity: {
       fill: 0.30,
-      stroke: 1.0
-    }
-  },
-  
-  [MAP_TYPES.BATHYMETRY]: {
-    id: 'bathymetry',
-    name: 'Bathymétrie',
-    shortName: 'BATHY',
-    description: 'Courbes de profondeur',
-    iconName: 'bar-chart-3',
-    category: 'water',
-    isDark: true,
-    isPremium: true,
-    // Base sombre avec overlay bathymétrique
-    tileUrl: 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
-    attribution: '© BIONIC™ | © CARTO | Données MFFP',
-    maxZoom: 18,
-    // Sera complété avec données utilisateur
-    bathymetrySource: 'user-provided',
-    zoneOpacity: {
-      fill: 0.25,
       stroke: 1.0
     }
   },

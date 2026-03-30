@@ -671,7 +671,6 @@ const MonTerritoireBionicPage = () => {
       'ecoforestry': 'ecoforestry',
       'satellite': 'satellite_hd',
       'iqho': 'iqho',
-      'bathymetry': 'bathymetry',
       'forest-roads': 'forest-roads'
     };
     

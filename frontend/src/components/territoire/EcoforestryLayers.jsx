@@ -500,15 +500,6 @@ export const BASE_MAPS = {
     wmsUrl: 'https://ca.nfis.org/cubewerx/cubeserv?DATASTORE=NFIS-QC',
     layers: 'NFIS-QC.produits_ecoforestiers'
   },
-  // Bathymétrie
-  bathymetry: {
-    id: 'bathymetry',
-    name: 'Bathymétrie',
-    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    attribution: '© BIONIC™ | © OpenStreetMap | © CARTO',
-    iconName: 'waves',
-    isDark: true
-  },
   // Chemins Forestiers
   'forest-roads': {
     id: 'forest-roads',
@@ -1264,12 +1255,12 @@ const EcoforestryLayers = React.memo(({
   fallbackStatus,
   activeFallback
 }) => {
-  const baseMap = BASE_MAPS[baseMapId] || BASE_MAPS.dark;
+  const baseMap = BASE_MAPS[baseMapId] || BASE_MAPS.satellite;
   const isEcoMapSelected = baseMapId === 'ecoforestry';
   
   // Déterminer le fond de carte effectif à utiliser
   const effectiveBaseMap = baseMap;
-  const shouldRenderWMS = isEcoMapSelected || baseMap.type === 'wms';
+  const shouldRenderWMS = isEcoMapSelected || (baseMap && baseMap.type === 'wms');
   
   const API_BASE = process.env.REACT_APP_BACKEND_URL || '';
   
