@@ -9,7 +9,7 @@ import { Button } from '../../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 import { Badge } from '../../components/ui/badge';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { BarChart3, Cloud, FlaskConical, Target, Bot, Loader2, Beef, Gem, CircleDot, Timer, Lightbulb } from 'lucide-react';
+import { BarChart3, Cloud, FlaskConical, Target, Bot, Loader2, Beef, Gem, CircleDot, Timer, Lightbulb, Droplets } from 'lucide-react';
 import useWeatherStore from '../../stores/useWeatherStore';
 
 // Core Module Imports
@@ -17,6 +17,9 @@ import { NutritionAnalyzer, NutritionScore, NutritionCard } from '../nutrition';
 import { ScoreDisplay, ScoreGauge, ScoreBreakdown } from '../scoring';
 import { AIChat, AIAnalyzer, AIInsights } from '../ai';
 import { StrategyPanel, StrategyTimeline } from '../strategy';
+
+// SALINES ULTIME — BCE-4X Phase S
+import { SalinesFichePanel, SalinesFicheCompact } from './SalinesFichePanel';
 
 // Services (non-weather)
 import { NutritionService } from '../nutrition/NutritionService';
@@ -210,6 +213,10 @@ export const CoreDashboard = ({
             <Bot className="h-4 w-4 mr-2" />
             {t('dashboard_tab_ai')}
           </TabsTrigger>
+          <TabsTrigger value="salines" className="data-[state=active]:bg-[#f5a623] data-[state=active]:text-black">
+            <Droplets className="h-4 w-4 mr-2" />
+            SALINES
+          </TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
@@ -296,10 +303,13 @@ export const CoreDashboard = ({
               </div>
             </div>
 
-            {/* Right Column - AI Insights & Active Trip */}
+            {/* Right Column - AI Insights & Active Trip & Salines */}
             <div className="space-y-4">
               {/* Active Trip Widget */}
               <ActiveTripWidget />
+              
+              {/* SALINES ULTIME — Compact */}
+              <SalinesFicheCompact lat={coordinates.lat} lng={coordinates.lng} />
               
               <AIInsights 
                 insights={aiInsights.length > 0 ? aiInsights : [
@@ -472,6 +482,43 @@ export const CoreDashboard = ({
                   { type: 'warning', title: 'Attention', message: 'Changement météo prévu dans 48h - profitez des conditions actuelles.' }
                 ]}
               />
+            </div>
+          </div>
+        </TabsContent>
+
+        {/* SALINES ULTIME Tab — BCE-4X Phase S */}
+        <TabsContent value="salines" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <SalinesFichePanel lat={coordinates.lat} lng={coordinates.lng} />
+            <div className="space-y-4">
+              <ScoreBreakdown 
+                title="Facteurs Salines (5 dimensions)"
+                breakdown={[
+                  { name: 'Logistique', value: 76, color: '#3b82f6' },
+                  { name: 'Gros Males', value: 79, color: '#22c55e' },
+                  { name: 'Strategique', value: 80, color: '#f59e0b' },
+                  { name: 'Cout/ROI', value: 67, color: '#a855f7' },
+                  { name: 'TCS', value: 67, color: '#ef4444' },
+                ]}
+              />
+              <Card className="bg-gradient-to-br from-cyan-900/20 to-slate-900 border-cyan-700/30">
+                <CardContent className="p-4">
+                  <h4 className="text-cyan-400 font-medium mb-2 flex items-center gap-2">
+                    <Droplets className="h-4 w-4" />
+                    Protocole SALINES BIONIC ULTIME
+                  </h4>
+                  <p className="text-slate-300 text-sm">
+                    Analyse scientifique complete basee sur 20 sources academiques et gouvernementales. 
+                    5 scores independants evaluent la qualite logistique, le potentiel gros males, 
+                    la valeur strategique, le retour sur investissement et la clarte du terrain.
+                  </p>
+                  <div className="flex flex-wrap gap-1 mt-3">
+                    <Badge className="bg-cyan-900/40 text-cyan-400 text-[10px]">20 Sources</Badge>
+                    <Badge className="bg-cyan-900/40 text-cyan-400 text-[10px]">5 Scores</Badge>
+                    <Badge className="bg-cyan-900/40 text-cyan-400 text-[10px]">BCE-4X GOLDEN</Badge>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </TabsContent>

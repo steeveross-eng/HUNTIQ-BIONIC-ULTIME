@@ -608,12 +608,30 @@ try:
 except Exception as e:
     logger.warning(f"SHARE ENGINE not loaded: {e}")
 
+# ═══ ULTRA-MAX++ FIREWALL — Geo-fencing Urbain BCE-4X Phase C ═══
+try:
+    from modules.ultra_max_firewall.router import router as firewall_router
+    app.include_router(firewall_router)
+    logger.info("✓ ULTRA-MAX++ FIREWALL registered (/api/firewall)")
+except Exception as e:
+    logger.warning(f"ULTRA-MAX++ FIREWALL not loaded: {e}")
+
+# ═══ SALINES ULTIME ENGINE — 5 Scores + 20 Sources + FICHE ═══
+try:
+    from modules.salines_ultime_engine.router import router as salines_ultime_router
+    app.include_router(salines_ultime_router)
+    logger.info("✓ SALINES ULTIME registered (/api/v1/salines-ultime)")
+except Exception as e:
+    logger.warning(f"SALINES ULTIME not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")
 logger.info("✓ x4100: Score consolide 22 moteurs (Option C)")
 logger.info("✓ x4500-ULTRA: BSAA active")
 logger.info("✓ BCE: BIONIC Compliance Engine active")
+logger.info("✓ ULTRA-MAX++ FIREWALL: Geo-fencing Shapely active")
+logger.info("✓ SALINES ULTIME: 5 scores + 20 sources active")
 logger.info("=" * 60)
 
 
