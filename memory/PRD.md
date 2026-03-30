@@ -10,6 +10,8 @@
 - **Branche:** `STEEVE-MAX-x3200-V6-CORE`
 
 ## 2. Implemente
+
+### Infrastructures
 - Logo v5: 128px DANS le header nav, watermark 560px accueil / 1260px premium
 - Carte Interactive: erreur 'Cannot read name' CORRIGEE (Bathymetrie purgee)
 - PARTAGER global (header App.js + panel SUPRA v2)
@@ -17,27 +19,27 @@
 - SALINES ULTIME (5 scores, 20 sources, FICHE)
 - Scroll GOLDEN toutes pages
 
-### REFONTE DASHBOARD-DENSE SUPRA v2 (30 mars 2026)
-- **ANALYSE:** Redesign complet en style Dashboard dense
-  - ROW 1: Score SUPRA + Gauge ULTRA (grid-cols-2 compact)
-  - ROW 2: 4 Moteurs (Sol, Metabolisme, Vegetation, Hydrologie) en grid 2x2 MicroCards
-  - ROW 3: Mineraux mini-bars (col-span-3) + Besoins/Ecozone (col-span-2)
-  - ROW 4: Recette + Couts (grid-cols-2)
-  - ROW 5: Physiologie, Comportement, Support, Sources (collapsibles fermes)
-  - TOUT visible en UNE PAGE sans scroll
-- **FICHE:** Redesign identique
-  - Score global 68/B compact
-  - 5 scores avec mini-bars colorees dans 1 card
-  - Details en grid 2x2
-  - 3 Guides en grid 2-col
-  - 20 Sources collapsibles
-  - TOUT visible en UNE PAGE
+### SUPRA v2 — Refonte 100% VERTICAL GOLDEN (30 mars 2026)
+- **Structure** : ZERO grid-cols-2, ZERO grid-cols-3, toutes cartes pleine largeur
+- **Typographie** : 16px pour TOUS les textes (labels, valeurs, titres)
+- **Scroll GOLDEN** : overflow-y-auto avec scrollBehavior smooth
+- **Cartes ANALYSE** : Score SUPRA, Gauge ULTRA, Sol, Metabolisme, Vegetation, Hydrologie, Mineraux (barres), Besoins, Ecozone, Recette, Couts — TOUS en vertical
+- **Sections collapsibles** : Physiologie, Comportement, Support, Sources — fermes par defaut
+- **FICHE** : 5 scores individuels avec barres, Guides, 20 Sources — tous en vertical
 
-## 3. Composants redesignes
-- GaugeMini: SVG 56x56px avec texte integre
-- MicroCard: px-2.5 py-2, text-[10px], icones 12px
-- Card: px-3 py-2 (reduit de px-4 py-3)
-- CollapsibleSection: py-1.5, text-[10px]
+### Alignement biologique ORIGNAL (30 mars 2026)
+- Store Zustand defaut: ORIGNAL (remplace CHEVREUIL)
+- NutritionPointDetailPanel: accepte selectedSpecies prop
+- SupraPage: lit species depuis store global
+- MonTerritoireBionicPage: passe selectedSpecies au panel
+- Ecozone affiche maintenant: "Orignal (Alces americanus)"
+- Besoins: "Sortie ravage + croissance bois massifs" (orignal/printemps)
+
+## 3. Fichiers modifies (session courante)
+- `/app/frontend/src/components/territoire/NutritionPointDetailPanel.jsx`
+- `/app/frontend/src/pages/SupraPage.jsx`
+- `/app/frontend/src/pages/MonTerritoireBionicPage.jsx`
+- `/app/frontend/src/stores/useBionicStore.js`
 
 ## 4. Backlog GELE
 - [ ] Purge shadcn/utils
