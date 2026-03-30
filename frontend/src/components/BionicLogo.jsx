@@ -1,26 +1,40 @@
 /**
- * BionicLogo — BCE-4X GOLDEN Phase L v3 — Logo Premium Statique
+ * BionicLogo — BCE-4X GOLDEN Phase L v4 — Logo PREMIUM STEEVE-MAX
  * 
- * DIRECTIVES STEEVE-MAX:
- * - 100% STATIQUE (ZERO rotation, ZERO animation, ZERO hover scale)
- * - Version PREMIUM: imposant, professionnel, impact visuel eleve, non flashy
- * - Accueil: analyse automatique de l'espace → 140px
- * - Pages secondaires: uniforme, coin superieur gauche → 64px
- * - Position: fixed, coin superieur gauche
+ * DIRECTIVES:
+ * - PAGE PRINCIPALE (/): Doubler la taille → 280px
+ * - PAGE PREMIUM (/admin-premium): Tripler la taille → 420px
+ * - PAGES SECONDAIRES: Doubler → 128px, uniforme, coin superieur gauche
+ * - Superposition controlee sur le sous-header
+ * - ZERO rotation, ZERO hover scale, ZERO animation
+ * - Impact visuel PREMIUM, professionnel, non flashy
  */
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import OptimizedImage from '@/components/ui/OptimizedImage';
 
-export const INNER_LOGO_SIZE = 64;
+export const INNER_LOGO_SIZE = 128;
 export const INNER_LOGO_LEFT = 12;
+
+const PREMIUM_ROUTES = ['/admin-premium', '/admin'];
 
 export const BionicLogoGlobal = () => {
   const location = useLocation();
-  const isHomePage = location.pathname === '/' || location.pathname === '';
+  const path = location.pathname;
+  const isHomePage = path === '/' || path === '';
+  const isPremiumPage = PREMIUM_ROUTES.some(r => path.startsWith(r));
   
-  const logoSize = isHomePage ? 140 : INNER_LOGO_SIZE;
-  const topPos = isHomePage ? '68px' : '66px';
+  let logoSize, topPos;
+  if (isPremiumPage) {
+    logoSize = 420;
+    topPos = '62px';
+  } else if (isHomePage) {
+    logoSize = 280;
+    topPos = '62px';
+  } else {
+    logoSize = INNER_LOGO_SIZE;
+    topPos = '62px';
+  }
   
   return (
     <Link 
@@ -33,7 +47,8 @@ export const BionicLogoGlobal = () => {
         width: `${logoSize}px`,
         height: `${logoSize}px`,
         display: 'block',
-        filter: 'drop-shadow(0 0 10px rgba(245, 166, 35, 0.20))',
+        filter: 'drop-shadow(0 0 12px rgba(245, 166, 35, 0.18))',
+        pointerEvents: 'auto',
       }}
       data-testid="bionic-logo-global"
       aria-label="BIONIC - Retour a l'accueil"
@@ -62,12 +77,12 @@ const BionicLogo = ({ className = '' }) => {
     <OptimizedImage 
       src="/logos/bionic-logo-official.png"
       alt="BIONIC"
-      width={36}
-      height={36}
+      width={40}
+      height={40}
       className={`bionic-logo-static ${className}`}
       style={{ 
-        width: '36px', 
-        height: '36px',
+        width: '40px', 
+        height: '40px',
         objectFit: 'contain',
         mixBlendMode: 'screen',
       }}
