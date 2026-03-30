@@ -8,10 +8,9 @@
  * - Purge complète V1-V5
  */
 import React, { useRef, useEffect } from 'react';
-import { ArrowLeft, Thermometer, Wind, Share2, Plus, Edit2, Crosshair, X, LocateFixed, Trash2, ToggleLeft, Gauge } from 'lucide-react';
+import { ArrowLeft, Thermometer, Wind, Plus, Edit2, Crosshair, X, LocateFixed, Trash2, ToggleLeft, Gauge } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { getProtectedZIndex } from '@/components/territoire/map/BCE4X_UIShield';
-import { ShareBionicButton } from '@/components/territoire/ui/ShareBionicButton';
 
 export const TerritoireHeader = ({
   navigate,
