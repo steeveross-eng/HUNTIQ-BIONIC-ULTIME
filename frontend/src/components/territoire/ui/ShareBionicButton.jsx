@@ -63,6 +63,9 @@ const trackShare = async (channel, template, metadata = {}) => {
         template,
         url: buildShareUrl(),
         timestamp: new Date().toISOString(),
+        page_context: typeof window !== 'undefined' ? window.location.pathname : '',
+        user_email: localStorage.getItem('huntiq_user_email') || null,
+        user_id: localStorage.getItem('huntiq_user_id') || null,
         ...metadata,
       }),
     });

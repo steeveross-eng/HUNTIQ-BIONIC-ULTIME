@@ -127,8 +127,8 @@ const GOLDEN = {
   shadow: '0 2px 8px rgba(0,0,0,0.25)',
 };
 
-const GoldenCard = ({ children, testId, accentColor, className = '' }) => (
-  <div className={`rounded-xl px-5 py-4 ${className}`}
+const GoldenCard = ({ children, testId, accentColor, className = '', compact = false }) => (
+  <div className={`rounded-xl ${compact ? 'px-3 py-2.5' : 'px-5 py-4'} ${className}`}
     style={{
       backgroundColor: GOLDEN.cardBg,
       boxShadow: GOLDEN.shadow,
@@ -381,7 +381,9 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose, selectedSpecies })
 };
 
 // ============================================================
-// TAB: ANALYSE — Score + Gauge + 7 Engines + Narration
+// TAB: ANALYSE — GRILLE 3 COLONNES RÉPLIQUE DASHBOARD BIONIC™
+// Score + Gauge | 4 Moteurs | Minéraux + Besoins + Recette + Coûts
+// BCE-4X STEEVE-MAX — STANDARD GOLDEN — DENSITÉ MAXIMALE
 // ============================================================
 const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, comparison, ecozone, energyProtein, terrainSolutions, gc, np, engines, ultraScore, ultraDeficits, species, season }) => {
   const needColor = (level) => {
@@ -394,193 +396,209 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
   const behaviorText = MALE_BEHAVIOR[species]?.[season] || MALE_BEHAVIOR.chevreuil?.printemps;
   const ratingColor = { premium: BIONIC.amber, optimal: BIONIC.green, adequat: BIONIC.blue, insuffisant: BIONIC.red }[ultraScore.rating] || BIONIC.blue;
 
-  // === ICON-IN-CIRCLE helper ===
-  const IconCircle = ({ Icon, color, size = 32 }) => (
-    <div className="rounded-full flex items-center justify-center flex-shrink-0" style={{ width: size, height: size, backgroundColor: `${color}20` }}>
-      <Icon style={{ color, width: size * 0.5, height: size * 0.5 }} />
+  const IC = ({ Icon, color, sz = 28 }) => (
+    <div className="rounded-full flex items-center justify-center flex-shrink-0" style={{ width: sz, height: sz, backgroundColor: `${color}20` }}>
+      <Icon style={{ color, width: sz * 0.5, height: sz * 0.5 }} />
     </div>
   );
 
   return (
     <div className="space-y-3" data-testid="supra-analyse-tab">
-      {/* ═══ Score SUPRA — STANDARD GOLDEN ═══ */}
-      <GoldenCard testId="supra-score-card" accentColor={gc}>
-        <div className="flex items-center gap-4">
-          <div className="w-[56px] h-[56px] rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: `linear-gradient(135deg, ${gc}30, ${gc}10)` }}>
-            <span className="text-[32px] font-black tabular-nums" style={{ color: gc }}>{score.score_global}</span>
-          </div>
-          <div className="min-w-0">
-            <div className="text-[16px] font-black text-white">Score SUPRA</div>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="text-[14px] font-bold px-2.5 py-0.5 rounded-lg" style={{ backgroundColor: `${gc}20`, color: gc }}>{score.grade}</span>
-              <span className="text-[14px]" style={{ color: BIONIC.green }}>{score.zones_resume?.vert} vert</span>
-              <span className="text-[14px]" style={{ color: BIONIC.orange }}>{score.zones_resume?.jaune} jaune</span>
-              <span className="text-[14px]" style={{ color: BIONIC.red }}>{score.zones_resume?.rouge} rouge</span>
-            </div>
-          </div>
-        </div>
-      </GoldenCard>
+      {/* ═══════════════════════════════════════════════════════
+          GRILLE 3 COLONNES — RÉPLIQUE EXACTE DASHBOARD BIONIC™
+          Densité GOLDEN | Compaction maximale | BCE-4X
+          ═══════════════════════════════════════════════════════ */}
+      <div className="grid grid-cols-3 gap-3" data-testid="supra-3col-grid">
 
-      {/* ═══ Gauge ULTRA — STANDARD GOLDEN ═══ */}
-      <GoldenCard testId="ultra-gauge-card" accentColor={ratingColor}>
-        <div className="flex items-center gap-4">
-          <GaugeMini value={ultraScore.global_score || score.score_global || 0} label="ULTRA" color={ratingColor} />
-          <div>
-            <div className="text-[16px] font-bold text-white">7 Moteurs ULTRA</div>
-            <div className="text-[30px] font-black leading-none mt-1" style={{ color: ratingColor }}>{(ultraScore.rating || 'N/A').toUpperCase()}</div>
-            {ultraDeficits.total_critical > 0 && (
-              <div className="text-[14px] text-red-400 mt-1">{ultraDeficits.total_critical} carences critiques</div>
-            )}
-          </div>
-        </div>
-      </GoldenCard>
-
-      {/* ═══ 4 Moteurs — STANDARD GOLDEN avec accent bars ═══ */}
-      {engines.soil && (
-        <GoldenCard testId="info-card-sol" accentColor={BIONIC.amber}>
-          <div className="flex items-center gap-3 mb-2">
-            <IconCircle Icon={Mountain} color={BIONIC.amber} />
-            <span className="text-[16px] font-bold text-white">Sol</span>
-          </div>
-          {[{ l: 'Type', v: engines.soil.soil_type }, { l: 'pH', v: engines.soil.pH }, { l: 'Qualite', v: `${engines.soil.quality_index || 0}/100` }].map((r, i) => (
-            <div key={i} className="flex justify-between py-1">
-              <span className="text-[14px] text-slate-400">{r.l}</span>
-              <span className="text-[16px] font-semibold text-white">{r.v || '—'}</span>
-            </div>
-          ))}
-        </GoldenCard>
-      )}
-      {engines.metabolism && (
-        <GoldenCard testId="info-card-metabolisme" accentColor={BIONIC.orange}>
-          <div className="flex items-center gap-3 mb-2">
-            <IconCircle Icon={Activity} color={BIONIC.orange} />
-            <span className="text-[16px] font-bold text-white">Metabolisme</span>
-          </div>
-          {[{ l: 'Phase', v: (engines.metabolism.metabolic_phase || '').replace(/_/g, ' ') }, { l: 'Energie', v: `x${engines.metabolism.energy_demand_factor || 0}` }, { l: 'Activite', v: engines.metabolism.activity_level }].map((r, i) => (
-            <div key={i} className="flex justify-between py-1">
-              <span className="text-[14px] text-slate-400">{r.l}</span>
-              <span className="text-[16px] font-semibold text-white">{r.v || '—'}</span>
-            </div>
-          ))}
-        </GoldenCard>
-      )}
-      {engines.vegetation && (
-        <GoldenCard testId="info-card-vegetation" accentColor={BIONIC.green}>
-          <div className="flex items-center gap-3 mb-2">
-            <IconCircle Icon={Leaf} color={BIONIC.green} />
-            <span className="text-[16px] font-bold text-white">Vegetation</span>
-          </div>
-          {[{ l: 'Phase', v: engines.vegetation.phenophase }, { l: 'Couvert', v: `${engines.vegetation.couvert_pct || 0}%` }, { l: 'Fourrage', v: `${((engines.vegetation.avg_forage_quality || 0) * 100).toFixed(0)}%` }].map((r, i) => (
-            <div key={i} className="flex justify-between py-1">
-              <span className="text-[14px] text-slate-400">{r.l}</span>
-              <span className="text-[16px] font-semibold text-white">{r.v || '—'}</span>
-            </div>
-          ))}
-        </GoldenCard>
-      )}
-      {engines.hydrology && (
-        <GoldenCard testId="info-card-hydrologie" accentColor={BIONIC.blue}>
-          <div className="flex items-center gap-3 mb-2">
-            <IconCircle Icon={Droplets} color={BIONIC.blue} />
-            <span className="text-[16px] font-bold text-white">Hydrologie</span>
-          </div>
-          {[{ l: 'Drainage', v: engines.hydrology.drainage }, { l: 'Lessivage', v: engines.hydrology.leaching_risk }, { l: 'Dist. eau', v: `${engines.hydrology.distance_eau_m || 0}m` }].map((r, i) => (
-            <div key={i} className="flex justify-between py-1">
-              <span className="text-[14px] text-slate-400">{r.l}</span>
-              <span className="text-[16px] font-semibold text-white">{r.v || '—'}</span>
-            </div>
-          ))}
-        </GoldenCard>
-      )}
-
-      {/* ═══ Mineraux — mini-bars STANDARD GOLDEN ═══ */}
-      <GoldenCard testId="supra-minerals-card" accentColor="#f5a623">
-        <div className="flex items-center gap-3 mb-3">
-          <IconCircle Icon={FlaskConical} color="#f5a623" />
-          <span className="text-[16px] font-bold text-white">Mineraux</span>
-        </div>
-        <div className="space-y-2">
-          {Object.entries(score.scores_par_mineral || {}).map(([key, m]) => (
-            <div key={key} className="flex items-center gap-3" data-testid={`supra-mineral-${key}`}>
-              <span className="text-[14px] text-slate-400 w-[80px] flex-shrink-0">{m.name}</span>
-              <div className="flex-1 h-[6px] rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}>
-                <div className="h-full rounded-full" style={{ width: `${m.score}%`, backgroundColor: zoneColor(m.zone) }} />
+        {/* ══════════ COLONNE 1: Score + Gauge + Ecozone ══════════ */}
+        <div className="space-y-3" data-testid="supra-col-1">
+          {/* Score SUPRA */}
+          <GoldenCard testId="supra-score-card" accentColor={gc} compact>
+            <div className="flex items-center gap-3">
+              <div className="w-[48px] h-[48px] rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: `linear-gradient(135deg, ${gc}30, ${gc}10)` }}>
+                <span className="text-[30px] font-black tabular-nums" style={{ color: gc }}>{score.score_global}</span>
               </div>
-              <span className="text-[16px] font-bold w-10 text-right tabular-nums" style={{ color: zoneColor(m.zone) }}>{m.score}</span>
+              <div className="min-w-0">
+                <div className="text-[16px] font-black text-white">Score SUPRA</div>
+                <span className="text-[14px] font-bold px-2 py-0.5 rounded-lg" style={{ backgroundColor: `${gc}20`, color: gc }}>{score.grade}</span>
+              </div>
             </div>
-          ))}
-        </div>
-      </GoldenCard>
-
-      {/* ═══ Besoins nutritionnels — STANDARD GOLDEN ═══ */}
-      {energyProtein && (
-        <GoldenCard testId="supra-energy-protein-card" accentColor={BIONIC.orange}>
-          <div className="flex items-center gap-3 mb-3">
-            <IconCircle Icon={Zap} color={BIONIC.orange} />
-            <span className="text-[16px] font-bold text-white">Besoins nutritionnels</span>
-          </div>
-          <div className="text-[14px] text-gray-400 mb-2">{energyProtein.phase}</div>
-          <div className="space-y-2">
-            <div className="flex justify-between items-center rounded-xl px-4 py-3" style={{ backgroundColor: 'rgba(255,255,255,0.04)', borderLeft: `4px solid ${needColor(energyProtein.energy_need)}` }}>
-              <span className="text-[14px] text-gray-400">Energie</span>
-              <span className="text-[16px] font-bold" style={{ color: needColor(energyProtein.energy_need) }}>{energyProtein.energy_need}</span>
+            <div className="flex items-center gap-3 mt-2">
+              <span className="text-[14px] font-semibold" style={{ color: BIONIC.green }}>{score.zones_resume?.vert} vert</span>
+              <span className="text-[14px] font-semibold" style={{ color: BIONIC.orange }}>{score.zones_resume?.jaune} jaune</span>
+              <span className="text-[14px] font-semibold" style={{ color: BIONIC.red }}>{score.zones_resume?.rouge} rouge</span>
             </div>
-            <div className="flex justify-between items-center rounded-xl px-4 py-3" style={{ backgroundColor: 'rgba(255,255,255,0.04)', borderLeft: `4px solid ${needColor(energyProtein.protein_need)}` }}>
-              <span className="text-[14px] text-gray-400">Proteines</span>
-              <span className="text-[16px] font-bold" style={{ color: needColor(energyProtein.protein_need) }}>{energyProtein.protein_need}</span>
-            </div>
-          </div>
-        </GoldenCard>
-      )}
+          </GoldenCard>
 
-      {/* ═══ Ecozone — STANDARD GOLDEN ═══ */}
-      {ecozone && (
-        <GoldenCard testId="supra-ecozone-card" accentColor={BIONIC.green}>
-          <div className="flex items-center gap-3 mb-2">
-            <IconCircle Icon={Leaf} color={BIONIC.green} />
-            <span className="text-[16px] font-bold text-white">Ecozone</span>
-          </div>
-          <div className="text-[16px] text-gray-300 font-semibold">{ecozone.nom_commun}</div>
-          <div className="text-[14px] text-gray-400 mt-1 leading-relaxed">{ecozone.habitat_principal}</div>
-        </GoldenCard>
-      )}
-
-      {/* ═══ Recette — STANDARD GOLDEN ═══ */}
-      {recipe && (
-        <GoldenCard testId="supra-recipe-card" accentColor={BIONIC.green}>
-          <div className="flex items-center gap-3 mb-3">
-            <IconCircle Icon={BookOpen} color={BIONIC.green} />
-            <span className="text-[16px] font-bold text-white">Recette</span>
-          </div>
-          {recipe.ingredients_cles?.slice(0, 5).map((ing, i) => (
-            <div key={i} className="flex items-center justify-between py-2 border-b" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
+          {/* Gauge ULTRA */}
+          <GoldenCard testId="ultra-gauge-card" accentColor={ratingColor} compact>
+            <div className="flex items-center gap-3">
+              <GaugeMini value={ultraScore.global_score || score.score_global || 0} label="ULTRA" color={ratingColor} />
               <div>
-                <span className="text-[16px] text-white">{ing.mineral}</span>
-                <span className="text-[14px] text-gray-400 ml-2">{ing.product}</span>
+                <div className="text-[14px] font-bold text-white">7 Moteurs ULTRA</div>
+                <div className="text-[30px] font-black leading-none" style={{ color: ratingColor }}>{(ultraScore.rating || 'N/A').toUpperCase()}</div>
+                {ultraDeficits.total_critical > 0 && (
+                  <div className="text-[14px] text-red-400">{ultraDeficits.total_critical} carences</div>
+                )}
               </div>
-              <span className="text-[14px] font-bold px-2.5 py-0.5 rounded-lg" style={{ backgroundColor: `${priorityColor(ing.priority)}15`, color: priorityColor(ing.priority) }}>{ing.priority}</span>
             </div>
-          ))}
-        </GoldenCard>
-      )}
+          </GoldenCard>
 
-      {/* ═══ Couts — STANDARD GOLDEN ═══ */}
-      {costs && (
-        <GoldenCard testId="supra-costs-card" accentColor={BIONIC.orange}>
-          <div className="flex items-center gap-3 mb-3">
-            <IconCircle Icon={DollarSign} color={BIONIC.orange} />
-            <span className="text-[16px] font-bold text-white">Couts</span>
-          </div>
-          {[{ l: 'Initial', v: `${costs.initial_cost_cad}$`, c: 'white' }, { l: 'Annuel', v: `${costs.annual_cost_cad}$`, c: BIONIC.orange }, { l: 'Par visite', v: `${costs.cost_per_visit_cad}$`, c: 'white' }].map((r, i) => (
-            <div key={i} className="flex justify-between py-1.5">
-              <span className="text-[14px] text-gray-400">{r.l}</span>
-              <span className="text-[16px] font-bold" style={{ color: r.c }}>{r.v}</span>
+          {/* Ecozone */}
+          {ecozone && (
+            <GoldenCard testId="supra-ecozone-card" accentColor={BIONIC.green} compact>
+              <div className="flex items-center gap-2 mb-1">
+                <IC Icon={Leaf} color={BIONIC.green} />
+                <span className="text-[16px] font-bold text-white">Ecozone</span>
+              </div>
+              <div className="text-[16px] text-gray-300 font-semibold">{ecozone.nom_commun}</div>
+              <div className="text-[14px] text-gray-400 mt-1 leading-snug">{ecozone.habitat_principal}</div>
+            </GoldenCard>
+          )}
+
+          {/* Besoins nutritionnels */}
+          {energyProtein && (
+            <GoldenCard testId="supra-energy-protein-card" accentColor={BIONIC.orange} compact>
+              <div className="flex items-center gap-2 mb-2">
+                <IC Icon={Zap} color={BIONIC.orange} />
+                <span className="text-[16px] font-bold text-white">Besoins</span>
+              </div>
+              <div className="text-[14px] text-gray-400 mb-1.5">{energyProtein.phase}</div>
+              <div className="rounded-lg px-3 py-2 mb-1.5" style={{ backgroundColor: 'rgba(255,255,255,0.04)', borderLeft: `4px solid ${needColor(energyProtein.energy_need)}` }}>
+                <div className="flex justify-between">
+                  <span className="text-[14px] text-gray-400">Energie</span>
+                  <span className="text-[16px] font-bold" style={{ color: needColor(energyProtein.energy_need) }}>{energyProtein.energy_need}</span>
+                </div>
+              </div>
+              <div className="rounded-lg px-3 py-2" style={{ backgroundColor: 'rgba(255,255,255,0.04)', borderLeft: `4px solid ${needColor(energyProtein.protein_need)}` }}>
+                <div className="flex justify-between">
+                  <span className="text-[14px] text-gray-400">Proteines</span>
+                  <span className="text-[16px] font-bold" style={{ color: needColor(energyProtein.protein_need) }}>{energyProtein.protein_need}</span>
+                </div>
+              </div>
+            </GoldenCard>
+          )}
+        </div>
+
+        {/* ══════════ COLONNE 2: 4 Moteurs ULTRA ══════════ */}
+        <div className="space-y-3" data-testid="supra-col-2">
+          {engines.soil && (
+            <GoldenCard testId="info-card-sol" accentColor={BIONIC.amber} compact>
+              <div className="flex items-center gap-2 mb-2">
+                <IC Icon={Mountain} color={BIONIC.amber} />
+                <span className="text-[16px] font-bold text-white">Sol</span>
+              </div>
+              {[{ l: 'Type', v: engines.soil.soil_type }, { l: 'pH', v: engines.soil.pH }, { l: 'Qualite', v: `${engines.soil.quality_index || 0}/100` }].map((r, i) => (
+                <div key={i} className="flex justify-between py-0.5">
+                  <span className="text-[14px] text-slate-400">{r.l}</span>
+                  <span className="text-[16px] font-semibold text-white">{r.v || '—'}</span>
+                </div>
+              ))}
+            </GoldenCard>
+          )}
+          {engines.metabolism && (
+            <GoldenCard testId="info-card-metabolisme" accentColor={BIONIC.orange} compact>
+              <div className="flex items-center gap-2 mb-2">
+                <IC Icon={Activity} color={BIONIC.orange} />
+                <span className="text-[16px] font-bold text-white">Metabolisme</span>
+              </div>
+              {[{ l: 'Phase', v: (engines.metabolism.metabolic_phase || '').replace(/_/g, ' ') }, { l: 'Energie', v: `x${engines.metabolism.energy_demand_factor || 0}` }, { l: 'Activite', v: engines.metabolism.activity_level }].map((r, i) => (
+                <div key={i} className="flex justify-between py-0.5">
+                  <span className="text-[14px] text-slate-400">{r.l}</span>
+                  <span className="text-[16px] font-semibold text-white">{r.v || '—'}</span>
+                </div>
+              ))}
+            </GoldenCard>
+          )}
+          {engines.vegetation && (
+            <GoldenCard testId="info-card-vegetation" accentColor={BIONIC.green} compact>
+              <div className="flex items-center gap-2 mb-2">
+                <IC Icon={Leaf} color={BIONIC.green} />
+                <span className="text-[16px] font-bold text-white">Vegetation</span>
+              </div>
+              {[{ l: 'Phase', v: engines.vegetation.phenophase }, { l: 'Couvert', v: `${engines.vegetation.couvert_pct || 0}%` }, { l: 'Fourrage', v: `${((engines.vegetation.avg_forage_quality || 0) * 100).toFixed(0)}%` }].map((r, i) => (
+                <div key={i} className="flex justify-between py-0.5">
+                  <span className="text-[14px] text-slate-400">{r.l}</span>
+                  <span className="text-[16px] font-semibold text-white">{r.v || '—'}</span>
+                </div>
+              ))}
+            </GoldenCard>
+          )}
+          {engines.hydrology && (
+            <GoldenCard testId="info-card-hydrologie" accentColor={BIONIC.blue} compact>
+              <div className="flex items-center gap-2 mb-2">
+                <IC Icon={Droplets} color={BIONIC.blue} />
+                <span className="text-[16px] font-bold text-white">Hydrologie</span>
+              </div>
+              {[{ l: 'Drainage', v: engines.hydrology.drainage }, { l: 'Lessivage', v: engines.hydrology.leaching_risk }, { l: 'Dist. eau', v: `${engines.hydrology.distance_eau_m || 0}m` }].map((r, i) => (
+                <div key={i} className="flex justify-between py-0.5">
+                  <span className="text-[14px] text-slate-400">{r.l}</span>
+                  <span className="text-[16px] font-semibold text-white">{r.v || '—'}</span>
+                </div>
+              ))}
+            </GoldenCard>
+          )}
+        </div>
+
+        {/* ══════════ COLONNE 3: Minéraux + Recette + Coûts ══════════ */}
+        <div className="space-y-3" data-testid="supra-col-3">
+          {/* Mineraux — mini-bars */}
+          <GoldenCard testId="supra-minerals-card" accentColor="#f5a623" compact>
+            <div className="flex items-center gap-2 mb-2">
+              <IC Icon={FlaskConical} color="#f5a623" />
+              <span className="text-[16px] font-bold text-white">Mineraux</span>
             </div>
-          ))}
-        </GoldenCard>
-      )}
+            <div className="space-y-1.5">
+              {Object.entries(score.scores_par_mineral || {}).map(([key, m]) => (
+                <div key={key} className="flex items-center gap-2" data-testid={`supra-mineral-${key}`}>
+                  <span className="text-[14px] text-slate-400 w-[60px] flex-shrink-0 truncate">{m.name}</span>
+                  <div className="flex-1 h-[6px] rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}>
+                    <div className="h-full rounded-full" style={{ width: `${m.score}%`, backgroundColor: zoneColor(m.zone) }} />
+                  </div>
+                  <span className="text-[16px] font-bold w-8 text-right tabular-nums" style={{ color: zoneColor(m.zone) }}>{m.score}</span>
+                </div>
+              ))}
+            </div>
+          </GoldenCard>
 
-      {/* ═══ Sections PREMIUM collapsibles — STANDARD GOLDEN ═══ */}
+          {/* Recette */}
+          {recipe && (
+            <GoldenCard testId="supra-recipe-card" accentColor={BIONIC.green} compact>
+              <div className="flex items-center gap-2 mb-2">
+                <IC Icon={BookOpen} color={BIONIC.green} />
+                <span className="text-[16px] font-bold text-white">Recette</span>
+              </div>
+              {recipe.ingredients_cles?.slice(0, 4).map((ing, i) => (
+                <div key={i} className="flex items-center justify-between py-1 border-b" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
+                  <div className="min-w-0 flex-1">
+                    <span className="text-[14px] text-white">{ing.mineral}</span>
+                    <span className="text-[14px] text-gray-500 ml-1">{ing.product}</span>
+                  </div>
+                  <span className="text-[14px] font-bold px-1.5 py-0.5 rounded-lg flex-shrink-0" style={{ backgroundColor: `${priorityColor(ing.priority)}15`, color: priorityColor(ing.priority) }}>{ing.priority}</span>
+                </div>
+              ))}
+            </GoldenCard>
+          )}
+
+          {/* Couts */}
+          {costs && (
+            <GoldenCard testId="supra-costs-card" accentColor={BIONIC.orange} compact>
+              <div className="flex items-center gap-2 mb-2">
+                <IC Icon={DollarSign} color={BIONIC.orange} />
+                <span className="text-[16px] font-bold text-white">Couts</span>
+              </div>
+              {[{ l: 'Initial', v: `${costs.initial_cost_cad}$`, c: 'white' }, { l: 'Annuel', v: `${costs.annual_cost_cad}$`, c: BIONIC.orange }, { l: 'Par visite', v: `${costs.cost_per_visit_cad}$`, c: 'white' }].map((r, i) => (
+                <div key={i} className="flex justify-between py-0.5">
+                  <span className="text-[14px] text-gray-400">{r.l}</span>
+                  <span className="text-[16px] font-bold" style={{ color: r.c }}>{r.v}</span>
+                </div>
+              ))}
+            </GoldenCard>
+          )}
+        </div>
+      </div>
+
+      {/* ═══ Sections PREMIUM collapsibles — FULL WIDTH — STANDARD GOLDEN ═══ */}
       <GoldenCollapsible icon={Crown} title="Physiologie minerale" color={BIONIC.purple} badge={`${species} / ${season}`} defaultOpen={false} testId="supra-physiology">
         <p className="text-[16px] text-slate-300 leading-relaxed">{physioText}</p>
       </GoldenCollapsible>

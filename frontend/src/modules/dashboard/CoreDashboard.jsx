@@ -1,13 +1,11 @@
 /**
- * CoreDashboard - Central dashboard integrating all 5 core modules
- * BCE-4X: Weather Engine v3 UNIFIED — source unique useWeatherStore
- * Phase 8 - Frontend Core Integration
+ * CoreDashboard - STANDARD GOLDEN — BCE-4X STEEVE-MAX
+ * Intégration centrale des 5 modules core
+ * GOLDEN: ZERO bordure | Accent bars | Icônes en cercles | 16px typo
  */
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Badge } from '../../components/ui/badge';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { BarChart3, Cloud, FlaskConical, Target, Bot, Loader2, Beef, Gem, CircleDot, Timer, Lightbulb, Droplets } from 'lucide-react';
 import useWeatherStore from '../../stores/useWeatherStore';
@@ -29,6 +27,17 @@ import { StrategyService } from '../strategy/StrategyService';
 
 // Trip Widget
 import ActiveTripWidget from '../../components/trips/ActiveTripWidget';
+
+// STANDARD GOLDEN — Composants
+const GOLDEN = { cardBg: '#1E293B', pageBg: '#0F172A', shadow: '0 2px 8px rgba(0,0,0,0.25)' };
+const GCard = ({ children, accent, testId, className = '' }) => (
+  <div className={`rounded-xl px-5 py-4 ${className}`} style={{ backgroundColor: GOLDEN.cardBg, boxShadow: GOLDEN.shadow, borderLeft: accent ? `4px solid ${accent}` : 'none' }} data-testid={testId}>{children}</div>
+);
+const GIcon = ({ Icon, color }) => (
+  <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${color}20` }}>
+    <Icon className="h-4 w-4" style={{ color }} />
+  </div>
+);
 
 const DEFAULT_COORDS = { lat: 46.8139, lng: -71.2082 };
 
@@ -164,153 +173,115 @@ export const CoreDashboard = ({
   }
 
   return (
-    <div className="space-y-6" data-testid="core-dashboard">
-      {/* Header */}
+    <div className="space-y-6" data-testid="core-dashboard" style={{ backgroundColor: GOLDEN.pageBg }}>
+      {/* Header — STANDARD GOLDEN */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-            <Target className="h-7 w-7 text-[#f5a623]" />
+            <GIcon Icon={Target} color="#f5a623" />
             {t('dashboard_title')}
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-[14px] text-slate-400 mt-1">
             {t('dashboard_modules_core')}
           </p>
         </div>
         
-        {/* Module Status */}
+        {/* Module Status — GOLDEN badges */}
         <div className="flex items-center gap-2">
           {Object.entries(moduleStatus).map(([module, isOnline]) => (
-            <Badge 
-              key={module}
-              className={`${isOnline ? 'bg-emerald-900/50 text-emerald-400' : 'bg-red-900/50 text-red-400'}`}
-            >
-              {isOnline ? '●' : '○'} {module}
-            </Badge>
+            <span key={module} className="text-[14px] font-semibold px-2.5 py-0.5 rounded-lg"
+              style={{ backgroundColor: isOnline ? '#00C85318' : '#D32F2F18', color: isOnline ? '#00C853' : '#D32F2F' }}>
+              {isOnline ? '\u25CF' : '\u25CB'} {module}
+            </span>
           ))}
         </div>
       </div>
 
-      {/* Tab Navigation */}
+      {/* Tab Navigation — GOLDEN */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="bg-slate-800 border border-slate-700 w-full justify-start">
-          <TabsTrigger value="overview" className="data-[state=active]:bg-[#f5a623] data-[state=active]:text-black">
+        <TabsList className="border-none w-full justify-start" style={{ backgroundColor: GOLDEN.cardBg }}>
+          <TabsTrigger value="overview" className="data-[state=active]:bg-[#f5a623] data-[state=active]:text-black text-[14px] font-bold">
             <BarChart3 className="h-4 w-4 mr-2" />
             {t('dashboard_tab_overview')}
           </TabsTrigger>
-          <TabsTrigger value="weather" className="data-[state=active]:bg-[#f5a623] data-[state=active]:text-black">
+          <TabsTrigger value="weather" className="data-[state=active]:bg-[#f5a623] data-[state=active]:text-black text-[14px] font-bold">
             <Cloud className="h-4 w-4 mr-2" />
             {t('dashboard_tab_weather')}
           </TabsTrigger>
-          <TabsTrigger value="analysis" className="data-[state=active]:bg-[#f5a623] data-[state=active]:text-black">
+          <TabsTrigger value="analysis" className="data-[state=active]:bg-[#f5a623] data-[state=active]:text-black text-[14px] font-bold">
             <FlaskConical className="h-4 w-4 mr-2" />
             {t('dashboard_tab_analysis')}
           </TabsTrigger>
-          <TabsTrigger value="strategy" className="data-[state=active]:bg-[#f5a623] data-[state=active]:text-black">
+          <TabsTrigger value="strategy" className="data-[state=active]:bg-[#f5a623] data-[state=active]:text-black text-[14px] font-bold">
             <Target className="h-4 w-4 mr-2" />
             {t('dashboard_tab_strategy')}
           </TabsTrigger>
-          <TabsTrigger value="ai" className="data-[state=active]:bg-[#f5a623] data-[state=active]:text-black">
+          <TabsTrigger value="ai" className="data-[state=active]:bg-[#f5a623] data-[state=active]:text-black text-[14px] font-bold">
             <Bot className="h-4 w-4 mr-2" />
             {t('dashboard_tab_ai')}
           </TabsTrigger>
-          <TabsTrigger value="salines" className="data-[state=active]:bg-[#f5a623] data-[state=active]:text-black">
+          <TabsTrigger value="salines" className="data-[state=active]:bg-[#f5a623] data-[state=active]:text-black text-[14px] font-bold">
             <Droplets className="h-4 w-4 mr-2" />
             SALINES
           </TabsTrigger>
         </TabsList>
 
-        {/* Overview Tab */}
+        {/* Overview Tab — STANDARD GOLDEN 3 colonnes */}
         <TabsContent value="overview" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Left Column - Weather V3 Data */}
             <div className="space-y-4">
-              <Card className="bg-slate-800 border-slate-700">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-white flex items-center gap-2">
-                    <Cloud className="h-5 w-5 text-blue-400" />
-                    Meteo V3
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {weather ? (
-                    <div className="text-sm text-slate-300 space-y-1">
-                      <p>Temperature: {weather.temperature}°C</p>
-                      <p>Vent: {weather.wind_speed} km/h ({weather.wind_direction}°)</p>
-                      <p>Humidite: {weather.humidity}%</p>
-                    </div>
-                  ) : (
-                    <p className="text-sm text-slate-500">Chargement...</p>
-                  )}
-                </CardContent>
-              </Card>
+              <GCard accent="#2196F3" testId="dashboard-weather-card">
+                <div className="flex items-center gap-3 mb-3">
+                  <GIcon Icon={Cloud} color="#2196F3" />
+                  <span className="text-[16px] font-bold text-white">Meteo V3</span>
+                </div>
+                {weather ? (
+                  <div className="text-[16px] text-slate-300 space-y-1">
+                    <div className="flex justify-between py-0.5"><span className="text-[14px] text-slate-400">Temperature</span><span className="text-[16px] font-semibold text-white">{weather.temperature}°C</span></div>
+                    <div className="flex justify-between py-0.5"><span className="text-[14px] text-slate-400">Vent</span><span className="text-[16px] font-semibold text-white">{weather.wind_speed} km/h ({weather.wind_direction}°)</span></div>
+                    <div className="flex justify-between py-0.5"><span className="text-[14px] text-slate-400">Humidite</span><span className="text-[16px] font-semibold text-white">{weather.humidity}%</span></div>
+                  </div>
+                ) : (
+                  <p className="text-[16px] text-slate-500">Chargement...</p>
+                )}
+              </GCard>
             </div>
 
             {/* Center Column - Scores & Analysis */}
             <div className="space-y-4">
-              <Card className="bg-slate-800 border-slate-700">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-white flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5 text-[#f5a623]" />
-                    {t('dashboard_quick_scores')}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 gap-4">
-                    <ScoreDisplay 
-                      score={huntingConditions?.overall_score || 0}
-                      label={t('dashboard_conditions')}
-                      size="md"
-                    />
-                    <ScoreGauge 
-                      value={huntingConditions?.overall_score || 0}
-                      label={t('dashboard_hunting_index')}
-                      color="#f5a623"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
+              <GCard accent="#f5a623" testId="dashboard-scores-card">
+                <div className="flex items-center gap-3 mb-3">
+                  <GIcon Icon={BarChart3} color="#f5a623" />
+                  <span className="text-[16px] font-bold text-white">{t('dashboard_quick_scores')}</span>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <ScoreDisplay 
+                    score={huntingConditions?.overall_score || 0}
+                    label={t('dashboard_conditions')}
+                    size="md"
+                  />
+                  <ScoreGauge 
+                    value={huntingConditions?.overall_score || 0}
+                    label={t('dashboard_hunting_index')}
+                    color="#f5a623"
+                  />
+                </div>
+              </GCard>
 
               {/* Quick Nutrition Cards */}
               <div className="grid grid-cols-2 gap-3">
-                <NutritionCard 
-                  title={t('dashboard_proteins')}
-                  value="24.5"
-                  unit="g"
-                  IconComponent={Beef}
-                  color="emerald"
-                />
-                <NutritionCard 
-                  title={t('dashboard_minerals')}
-                  value="8.2"
-                  unit="g"
-                  IconComponent={Gem}
-                  color="blue"
-                />
-                <NutritionCard 
-                  title={t('dashboard_attractiveness')}
-                  value="92"
-                  unit="%"
-                  IconComponent={CircleDot}
-                  color="amber"
-                />
-                <NutritionCard 
-                  title={t('dashboard_effect_duration')}
-                  value="48"
-                  unit="h"
-                  IconComponent={Timer}
-                  color="purple"
-                />
+                <NutritionCard title={t('dashboard_proteins')} value="24.5" unit="g" IconComponent={Beef} color="emerald" />
+                <NutritionCard title={t('dashboard_minerals')} value="8.2" unit="g" IconComponent={Gem} color="blue" />
+                <NutritionCard title={t('dashboard_attractiveness')} value="92" unit="%" IconComponent={CircleDot} color="amber" />
+                <NutritionCard title={t('dashboard_effect_duration')} value="48" unit="h" IconComponent={Timer} color="purple" />
               </div>
             </div>
 
             {/* Right Column - AI Insights & Active Trip & Salines */}
             <div className="space-y-4">
-              {/* Active Trip Widget */}
               <ActiveTripWidget />
-              
-              {/* SALINES ULTIME — Compact */}
               <SalinesFicheCompact lat={coordinates.lat} lng={coordinates.lng} />
-              
               <AIInsights 
                 insights={aiInsights.length > 0 ? aiInsights : [
                   { type: 'tip', title: t('dashboard_optimal_period'), message: t('dashboard_rut_peak') },
@@ -318,53 +289,49 @@ export const CoreDashboard = ({
                   { type: 'warning', title: t('dashboard_unfavorable_wind'), message: t('dashboard_south_wind') }
                 ]}
               />
-              
-              <Card className="bg-slate-800 border-slate-700">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-slate-400 text-xs">Prochaine action</p>
-                      <p className="text-white font-medium">Repositionnement recommandé</p>
-                    </div>
-                    <Button size="sm" className="bg-[#f5a623] text-black hover:bg-[#d4890e]">
-                      Voir détails
-                    </Button>
+              <GCard accent="#00C853" testId="dashboard-next-action">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[14px] text-slate-400">Prochaine action</p>
+                    <p className="text-[16px] text-white font-semibold">Repositionnement recommande</p>
                   </div>
-                </CardContent>
-              </Card>
+                  <Button size="sm" className="bg-[#f5a623] text-black hover:bg-[#d4890e] font-bold">
+                    Voir details
+                  </Button>
+                </div>
+              </GCard>
             </div>
           </div>
         </TabsContent>
 
-        {/* Weather Tab */}
+        {/* Weather Tab — STANDARD GOLDEN */}
         <TabsContent value="weather" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <Card className="bg-slate-800 border-slate-700">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-white flex items-center gap-2">
-                    <Cloud className="h-5 w-5 text-blue-400" />
-                    Meteo V3 — Open-Meteo GFS
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {weather ? (
-                    <div className="text-sm text-slate-300 space-y-2">
-                      <p>Temperature: {weather.temperature}°C (ressenti: {weather.apparent_temperature}°C)</p>
-                      <p>Vent: {weather.wind_speed} km/h direction {weather.wind_direction}°</p>
-                      <p>Rafales: {weather.gusts} km/h</p>
-                      <p>Humidite: {weather.humidity}%</p>
-                      <p>Pression: {weather.pressure} hPa</p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <GCard accent="#2196F3" testId="dashboard-weather-detail">
+              <div className="flex items-center gap-3 mb-3">
+                <GIcon Icon={Cloud} color="#2196F3" />
+                <span className="text-[16px] font-bold text-white">Meteo V3 — Open-Meteo GFS</span>
+              </div>
+              {weather ? (
+                <div className="space-y-1">
+                  {[
+                    { l: 'Temperature', v: `${weather.temperature}°C` },
+                    { l: 'Vent', v: `${weather.wind_speed} km/h dir ${weather.wind_direction}°` },
+                    { l: 'Rafales', v: `${weather.wind_gust || '--'} km/h` },
+                    { l: 'Humidite', v: `${weather.humidity}%` },
+                    { l: 'Pression', v: `${weather.pressure} hPa` },
+                  ].map((r, i) => (
+                    <div key={i} className="flex justify-between py-1">
+                      <span className="text-[14px] text-slate-400">{r.l}</span>
+                      <span className="text-[16px] font-semibold text-white">{r.v}</span>
                     </div>
-                  ) : (
-                    <p className="text-sm text-slate-500">Chargement...</p>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-
+                  ))}
+                </div>
+              ) : (
+                <p className="text-[16px] text-slate-500">Chargement...</p>
+              )}
+            </GCard>
             <div className="space-y-4">
-              
               <ScoreBreakdown 
                 title="Facteurs Meteorologiques (Weather v3)"
                 breakdown={[
@@ -378,117 +345,89 @@ export const CoreDashboard = ({
           </div>
         </TabsContent>
 
-        {/* Analysis Tab */}
+        {/* Analysis Tab — STANDARD GOLDEN */}
         <TabsContent value="analysis" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="space-y-4">
-              <NutritionAnalyzer 
-                productId={productId || 'demo-product'}
-                productName={productName || 'Attractant Demo'}
-              />
-              
-              <Card className="bg-slate-800 border-slate-700">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center gap-2">
-                    <Target className="h-5 w-5 text-[#f5a623]" />
-                    Score Nutritionnel
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="flex justify-center">
+              <NutritionAnalyzer productId={productId || 'demo-product'} productName={productName || 'Attractant Demo'} />
+              <GCard accent="#f5a623" testId="dashboard-nutrition-score">
+                <div className="flex items-center gap-3 mb-3">
+                  <GIcon Icon={Target} color="#f5a623" />
+                  <span className="text-[16px] font-bold text-white">Score Nutritionnel</span>
+                </div>
+                <div className="flex justify-center">
                   <NutritionScore score={78} size="lg" />
-                </CardContent>
-              </Card>
+                </div>
+              </GCard>
             </div>
-
             <div className="space-y-4">
-              <AIAnalyzer 
-                productId={productId || 'demo-product'}
-                productName={productName || 'Attractant Demo'}
-              />
-              
+              <AIAnalyzer productId={productId || 'demo-product'} productName={productName || 'Attractant Demo'} />
               <ScoreBreakdown 
-                title="Critères d'Analyse (13 critères)"
+                title="Criteres d'Analyse (13 criteres)"
                 breakdown={[
                   { name: 'Composition', value: 85, color: '#10b981' },
                   { name: 'Concentration', value: 72, color: '#22c55e' },
                   { name: 'Persistance', value: 68, color: '#84cc16' },
-                  { name: 'Attractivité', value: 91, color: '#f59e0b' },
+                  { name: 'Attractivite', value: 91, color: '#f59e0b' },
                   { name: 'Dispersion', value: 76, color: '#3b82f6' },
-                  { name: 'Résistance', value: 64, color: '#8b5cf6' }
+                  { name: 'Resistance', value: 64, color: '#8b5cf6' }
                 ]}
               />
             </div>
           </div>
         </TabsContent>
 
-        {/* Strategy Tab */}
+        {/* Strategy Tab — STANDARD GOLDEN */}
         <TabsContent value="strategy" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <StrategyPanel 
-              species={species}
-              season={season}
-              weather={weather}
-            />
-
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <StrategyPanel species={species} season={season} weather={weather} />
             <div className="space-y-4">
               <StrategyTimeline 
                 schedule={[
-                  { time: '05:30', activity: 'Mise en place', notes: 'Arrivée silencieuse', location: 'Cache principale' },
+                  { time: '05:30', activity: 'Mise en place', notes: 'Arrivee silencieuse', location: 'Cache principale' },
                   { time: '06:00', activity: 'Observation aube', notes: 'Premier mouvement attendu' },
                   { time: '08:30', activity: 'Appel discret', notes: 'Utiliser le grunt call' },
                   { time: '11:00', activity: 'Pause midi', notes: 'Repos et collation' },
                   { time: '15:30', activity: 'Repositionnement', notes: 'Zone sud-est', location: 'Point B' },
-                  { time: '17:00', activity: 'Session soir', notes: 'Période la plus active' },
+                  { time: '17:00', activity: 'Session soir', notes: 'Periode la plus active' },
                   { time: '19:00', activity: 'Fin de session', notes: 'Retrait discret' }
                 ]}
               />
-              
-              <Card className="bg-gradient-to-br from-emerald-900/30 to-slate-900 border-emerald-700/50">
-                <CardContent className="p-4">
-                  <h4 className="text-emerald-400 font-medium mb-2 flex items-center gap-2">
-                    <Lightbulb className="h-4 w-4" />
-                    Conseil du jour
-                  </h4>
-                  <p className="text-slate-300 text-sm">
-                    Les conditions météo actuelles sont favorables pour la chasse à l'affût. 
-                    Le vent du nord-ouest maintiendra votre odeur loin des zones de passage.
-                    Privilégiez les heures dorées (aube/crépuscule).
-                  </p>
-                </CardContent>
-              </Card>
+              <GCard accent="#00C853" testId="dashboard-conseil-jour">
+                <div className="flex items-center gap-3 mb-2">
+                  <GIcon Icon={Lightbulb} color="#00C853" />
+                  <span className="text-[16px] font-bold text-white">Conseil du jour</span>
+                </div>
+                <p className="text-[16px] text-slate-300 leading-relaxed">
+                  Les conditions meteo actuelles sont favorables pour la chasse a l'affut. 
+                  Le vent du nord-ouest maintiendra votre odeur loin des zones de passage.
+                </p>
+              </GCard>
             </div>
           </div>
         </TabsContent>
 
-        {/* AI Tab */}
+        {/* AI Tab — STANDARD GOLDEN */}
         <TabsContent value="ai" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <AIChat 
-              context={{
-                species,
-                season,
-                weather,
-                location: coordinates
-              }}
-            />
-            
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <AIChat context={{ species, season, weather, location: coordinates }} />
             <div className="space-y-4">
               <AIInsights 
                 insights={[
-                  { type: 'success', title: 'Conditions optimales', message: 'La pression atmosphérique est stable - excellent pour l\'activité du gibier.' },
-                  { type: 'tip', title: 'Stratégie recommandée', message: 'Utilisez l\'appel de contact en début de session, puis passez au grunt agressif après 8h.' },
-                  { type: 'trend', title: 'Prédiction d\'activité', message: 'Pic d\'activité prévu entre 6h30-8h00 et 16h30-18h00.' },
-                  { type: 'info', title: 'Phase lunaire', message: 'Lune gibbeuse décroissante - activité nocturne modérée.' },
-                  { type: 'warning', title: 'Attention', message: 'Changement météo prévu dans 48h - profitez des conditions actuelles.' }
+                  { type: 'success', title: 'Conditions optimales', message: 'La pression atmospherique est stable.' },
+                  { type: 'tip', title: 'Strategie recommandee', message: 'Grunt call agressif apres 8h.' },
+                  { type: 'trend', title: 'Prediction activite', message: 'Pic entre 6h30-8h00 et 16h30-18h00.' },
+                  { type: 'info', title: 'Phase lunaire', message: 'Lune gibbeuse decroissante.' },
+                  { type: 'warning', title: 'Attention', message: 'Changement meteo prevu dans 48h.' }
                 ]}
               />
             </div>
           </div>
         </TabsContent>
 
-        {/* SALINES ULTIME Tab — BCE-4X Phase S */}
+        {/* SALINES ULTIME Tab — STANDARD GOLDEN */}
         <TabsContent value="salines" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <SalinesFichePanel lat={coordinates.lat} lng={coordinates.lng} />
             <div className="space-y-4">
               <ScoreBreakdown 
@@ -501,24 +440,21 @@ export const CoreDashboard = ({
                   { name: 'TCS', value: 67, color: '#ef4444' },
                 ]}
               />
-              <Card className="bg-gradient-to-br from-cyan-900/20 to-slate-900 border-cyan-700/30">
-                <CardContent className="p-4">
-                  <h4 className="text-cyan-400 font-medium mb-2 flex items-center gap-2">
-                    <Droplets className="h-4 w-4" />
-                    Protocole SALINES BIONIC ULTIME
-                  </h4>
-                  <p className="text-slate-300 text-sm">
-                    Analyse scientifique complete basee sur 20 sources academiques et gouvernementales. 
-                    5 scores independants evaluent la qualite logistique, le potentiel gros males, 
-                    la valeur strategique, le retour sur investissement et la clarte du terrain.
-                  </p>
-                  <div className="flex flex-wrap gap-1 mt-3">
-                    <Badge className="bg-cyan-900/40 text-cyan-400 text-[10px]">20 Sources</Badge>
-                    <Badge className="bg-cyan-900/40 text-cyan-400 text-[10px]">5 Scores</Badge>
-                    <Badge className="bg-cyan-900/40 text-cyan-400 text-[10px]">BCE-4X GOLDEN</Badge>
-                  </div>
-                </CardContent>
-              </Card>
+              <GCard accent="#00BCD4" testId="dashboard-salines-protocol">
+                <div className="flex items-center gap-3 mb-2">
+                  <GIcon Icon={Droplets} color="#00BCD4" />
+                  <span className="text-[16px] font-bold text-white">Protocole SALINES BIONIC ULTIME</span>
+                </div>
+                <p className="text-[16px] text-slate-300 leading-relaxed">
+                  Analyse scientifique complete basee sur 20 sources academiques. 
+                  5 scores independants evaluent la qualite logistique et le potentiel.
+                </p>
+                <div className="flex flex-wrap gap-1 mt-3">
+                  <span className="text-[14px] font-semibold px-2.5 py-0.5 rounded-lg" style={{ backgroundColor: '#00BCD418', color: '#00BCD4' }}>20 Sources</span>
+                  <span className="text-[14px] font-semibold px-2.5 py-0.5 rounded-lg" style={{ backgroundColor: '#00BCD418', color: '#00BCD4' }}>5 Scores</span>
+                  <span className="text-[14px] font-semibold px-2.5 py-0.5 rounded-lg" style={{ backgroundColor: '#00BCD418', color: '#00BCD4' }}>BCE-4X GOLDEN</span>
+                </div>
+              </GCard>
             </div>
           </div>
         </TabsContent>

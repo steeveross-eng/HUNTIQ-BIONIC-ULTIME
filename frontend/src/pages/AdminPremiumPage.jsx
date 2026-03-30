@@ -216,14 +216,16 @@ const AdminPremiumPage = () => {
       className="min-h-screen bg-[#050510] pt-20"
     >
       <div className="flex">
-        {/* Sidebar */}
-        <aside className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 bg-[#0a0a15] border-r border-[#F5A623]/10 p-4 overflow-y-auto">
+        {/* Sidebar — STANDARD GOLDEN */}
+        <aside className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 p-4 overflow-y-auto" style={{ backgroundColor: '#0F172A' }}>
           {/* Logo */}
-          <div className="flex items-center gap-3 mb-6 p-3 bg-gradient-to-r from-[#F5A623]/20 to-transparent rounded-lg">
-            <Crown className="h-8 w-8 text-[#F5A623]" />
+          <div className="flex items-center gap-3 mb-6 p-3 rounded-xl" style={{ backgroundColor: '#1E293B', borderLeft: '4px solid #F5A623' }}>
+            <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#F5A62320' }}>
+              <Crown className="h-4 w-4 text-[#F5A623]" />
+            </div>
             <div>
-              <h1 className="text-white font-bold">ADMIN v2</h1>
-              <p className="text-gray-500 text-xs">Gouvernance Centrale</p>
+              <h1 className="text-white font-bold text-[16px]">ADMIN v2</h1>
+              <p className="text-gray-500 text-[14px]">Gouvernance Centrale</p>
             </div>
           </div>
 

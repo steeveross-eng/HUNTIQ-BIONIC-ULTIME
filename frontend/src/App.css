@@ -679,3 +679,65 @@
 .fill-zone-alimentation { fill: rgba(34, 197, 94, 0.25); }
 .fill-zone-habitat { fill: rgba(16, 185, 129, 0.20); }
 .fill-zone-hotspot { fill: rgba(255, 107, 107, 0.30); }
+
+/* ============================================
+   STANDARD GOLDEN — PROPAGATION UNIVERSELLE
+   BCE-4X STEEVE-MAX — ZERO DEVIATION
+   Norme: ZERO bordure | Accent bars | 16px corps
+   Coins: rounded-xl | Contraste: fond separation
+   ============================================ */
+
+/* --- GOLDEN: Cards shadcn universelles — suppression bordure --- */
+.rounded-xl.border,
+.rounded-lg.border,
+.border-slate-700,
+.border-slate-600,
+.border-gray-700,
+.border-gray-600 {
+  border-color: transparent !important;
+}
+
+/* --- GOLDEN: fond de card forcé --- */
+.bg-slate-800,
+.bg-slate-900,
+.bg-gray-800,
+.bg-gray-900 {
+  background-color: #1E293B !important;
+}
+
+/* --- GOLDEN: TabsList universelle --- */
+[role="tablist"] {
+  background-color: #1E293B !important;
+  border: none !important;
+  border-radius: 12px !important;
+}
+
+[role="tab"] {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  border: none !important;
+}
+
+[role="tab"][data-state="active"] {
+  background-color: #f5a623 !important;
+  color: #000 !important;
+}
+
+/* --- GOLDEN: Suppression ombres de gradient --- */
+.bg-gradient-to-br,
+.bg-gradient-to-r,
+.bg-gradient-to-b {
+  background-image: none !important;
+  background-color: #1E293B !important;
+}
+
+/* Page body backgrounds */
+.min-h-screen.bg-background,
+.golden-page {
+  background-color: #0F172A !important;
+}
+
+/* --- GOLDEN: Scrollbar subtile --- */
+.golden-scroll::-webkit-scrollbar { width: 4px; }
+.golden-scroll::-webkit-scrollbar-track { background: transparent; }
+.golden-scroll::-webkit-scrollbar-thumb { background: rgba(100,100,100,0.3); border-radius: 4px; }
