@@ -717,8 +717,8 @@ const FICHE_SCORES = [
   { key: 'logistique', label: 'Logistique', icon: MapPin, color: '#3b82f6' },
   { key: 'gros_males', label: 'Gros Males', icon: TreeDeciduous, color: '#22c55e' },
   { key: 'strategique', label: 'Strategique', icon: Shield, color: '#f59e0b' },
-  { key: 'cout_roi', label: 'Cout / ROI', icon: DollarSign, color: '#a855f7' },
-  { key: 'tcs', label: 'TCS', icon: Mountain, color: '#ef4444' },
+  { key: 'cout_roi', label: 'Retour sur Investissement', icon: DollarSign, color: '#a855f7' },
+  { key: 'tcs', label: 'Terrain — Conditions Structurelles', icon: Mountain, color: '#ef4444' },
 ];
 
 const FicheGradeTag = ({ grade, color }) => {
@@ -773,11 +773,13 @@ const FicheTab = ({ ficheData, species, season, lat, lng, np }) => {
 
   return (
     <div className="space-y-3" data-testid="supra-fiche-tab">
-      {/* Modal fiche explicative */}
+      {/* Modal fiche explicative — GUIDE BIONIC NIVEAU PROFESSIONNEL */}
       {selectedCriteria && (
         <CriteriaDetailModal
           criteriaKey={selectedCriteria}
           criteriaValue={selectedCriteriaValue}
+          species={species}
+          season={season}
           onClose={() => { setSelectedCriteria(null); setSelectedCriteriaValue(null); }}
         />
       )}
