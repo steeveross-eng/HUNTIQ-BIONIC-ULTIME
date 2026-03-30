@@ -169,8 +169,7 @@ export const TerritoireHeader = ({
             )}
           </div>
         )}
-        {/* BCE-4X V6+ PARTAGER — Module BIONIC Share */}
-        <ShareBionicButton sharedWeather={sharedWeather} />
+        {/* BCE-4X V6+ — PARTAGER est maintenant dans le header global (uniformité toutes pages) */}
       </div>
     </header>
   );

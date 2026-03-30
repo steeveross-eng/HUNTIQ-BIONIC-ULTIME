@@ -91,6 +91,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
 import { Toaster, toast } from "sonner";
+import { ShareBionicButton } from "@/components/territoire/ui/ShareBionicButton";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -224,6 +225,11 @@ const Navigation = ({ cartCount, onCartOpen }) => {
           
           {/* Right Content */}
           <div className="flex items-center gap-2 lg:gap-3">
+            {/* PARTAGER — BCE-4X GOLDEN: Élément institutionnel permanent sur toutes les pages */}
+            <div className="hidden lg:block" data-testid="global-share-container">
+              <ShareBionicButton />
+            </div>
+            
             {/* Premium CTA — BCE-4X: texte blanc + contour orange #F5A623 unifie */}
             <Link to="/pricing" className="hidden lg:block">
               <Button 
@@ -332,6 +338,11 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             {/* Language Switcher on mobile */}
             <div className="px-3 py-2">
               <LanguageSwitcher />
+            </div>
+            
+            {/* PARTAGER — BCE-4X GOLDEN: Accessible en tout temps sur mobile */}
+            <div className="px-3 py-2" data-testid="mobile-share-container">
+              <ShareBionicButton />
             </div>
           </div>
         </div>
