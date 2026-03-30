@@ -624,6 +624,14 @@ try:
 except Exception as e:
     logger.warning(f"SALINES ULTIME not loaded: {e}")
 
+# SOIL ENGINE — BCE-4X GOLDEN | Classification pedologique GPS
+try:
+    from modules.soil_engine.router import router as soil_router
+    app.include_router(soil_router)
+    logger.info("✓ SOIL ENGINE registered (/api/v1/soil)")
+except Exception as e:
+    logger.warning(f"SOIL ENGINE not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

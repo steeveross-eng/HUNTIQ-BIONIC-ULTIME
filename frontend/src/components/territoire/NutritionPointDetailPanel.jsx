@@ -200,6 +200,8 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose, selectedSpecies })
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   // FICHE SALINE ULTIME state
   const [ficheData, setFicheData] = useState(null);
+  // SOIL ENGINE state
+  const [soilData, setSoilData] = useState(null);
 
   const np = nutritionPoint;
   // PRIORITE: selectedSpecies (choix utilisateur) > np.species > fallback orignal
@@ -217,7 +219,7 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose, selectedSpecies })
     if (!np) return;
     setLoading(true);
     try {
-      const [supraRes, ultraRes, ficheRes] = await Promise.allSettled([
+      const [supraRes, ultraRes, ficheRes, soilRes] = await Promise.allSettled([
         axios.post(`${API}/api/v6/nutrition-intelligence/supra-panel`, {
           species, season, soil_type: soilType, substrate: 'bois_mou',
         }),
@@ -226,10 +228,12 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose, selectedSpecies })
           month, season: seasonMap[month] || season,
         }),
         axios.get(`${API}/api/v1/salines-ultime/fiche?lat=${parseFloat(lat)}&lng=${parseFloat(lng)}&species=${species}&season=${seasonMap[month] || season}`),
+        axios.get(`${API}/api/v1/soil/analyze?lat=${parseFloat(lat)}&lng=${parseFloat(lng)}&species=${species}&season=${seasonMap[month] || season}`),
       ]);
       if (supraRes.status === 'fulfilled') setSupraData(supraRes.value.data);
       if (ultraRes.status === 'fulfilled') setUltraData(ultraRes.value.data);
       if (ficheRes.status === 'fulfilled') setFicheData(ficheRes.value.data);
+      if (soilRes.status === 'fulfilled') setSoilData(soilRes.value.data);
     } catch (e) {
       console.error('[SUPRA v2]', e);
     } finally {
@@ -355,10 +359,10 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose, selectedSpecies })
             <AnalyseTab score={score} recipe={recipe} recommendations={recommendations} evidence={evidence}
               costs={costs} comparison={comparison} ecozone={ecozone} energyProtein={energyProtein}
               terrainSolutions={terrainSolutions} gc={gc} np={np} engines={engines}
-              ultraScore={ultraScore} ultraDeficits={ultraDeficits} species={species} season={season} />
+              ultraScore={ultraScore} ultraDeficits={ultraDeficits} species={species} season={season} soilData={soilData} />
           )}
           {!loading && activeTab === 'fiche' && (
-            <FicheTab ficheData={ficheData} species={species} season={season} lat={lat} lng={lng} np={np} />
+            <FicheTab ficheData={ficheData} species={species} season={season} lat={lat} lng={lng} np={np} soilData={soilData} />
           )}
           {!loading && products && activeTab === 'intelligence' && (
             <IntelligenceTab products={products} gc={gc} compareIds={compareIds} toggleCompare={toggleCompare} addToCart={addToCart} cartLoading={cartLoading} />
@@ -386,7 +390,7 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose, selectedSpecies })
 // Score + Gauge | 4 Moteurs | Minéraux + Besoins + Recette + Coûts
 // BCE-4X STEEVE-MAX — STANDARD GOLDEN — DENSITÉ MAXIMALE
 // ============================================================
-const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, comparison, ecozone, energyProtein, terrainSolutions, gc, np, engines, ultraScore, ultraDeficits, species, season }) => {
+const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, comparison, ecozone, energyProtein, terrainSolutions, gc, np, engines, ultraScore, ultraDeficits, species, season, soilData }) => {
   const needColor = (level) => {
     if (level === 'EXTREME' || level === 'CRITIQUE') return BIONIC.red;
     if (level === 'TRES ELEVE' || level === 'ELEVE') return BIONIC.orange;
@@ -483,18 +487,38 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
 
         {/* ══════════ COLONNE 2: 4 Moteurs ULTRA ══════════ */}
         <div className="space-y-3" data-testid="supra-col-2">
-          {engines.soil && (
+          {(engines.soil || soilData) && (
             <GoldenCard testId="info-card-sol" accentColor={BIONIC.amber} compact>
               <div className="flex items-center gap-2 mb-2">
                 <IC Icon={Mountain} color={BIONIC.amber} />
-                <span className="text-[16px] font-bold text-white">Sol</span>
+                <span className="text-[16px] font-bold text-white">Sol — Analyse pedologique</span>
+                {soilData?.grade && <span className="text-[14px] font-bold px-2 py-0.5 rounded-lg ml-auto" style={{ backgroundColor: soilData.grade === 'S' || soilData.grade === 'A' ? `${BIONIC.green}18` : soilData.grade === 'B' ? `${BIONIC.orange}18` : `${BIONIC.red}18`, color: soilData.grade === 'S' || soilData.grade === 'A' ? BIONIC.green : soilData.grade === 'B' ? BIONIC.orange : BIONIC.red }}>{soilData.grade} — {soilData.score}/100</span>}
               </div>
-              {[{ l: 'Type', v: engines.soil.soil_type }, { l: 'pH', v: engines.soil.pH }, { l: 'Qualite', v: `${engines.soil.quality_index || 0}/100` }].map((r, i) => (
-                <div key={i} className="flex justify-between py-0.5">
-                  <span className="text-[14px] text-slate-400">{r.l}</span>
-                  <span className="text-[16px] font-semibold text-white">{r.v || '—'}</span>
-                </div>
-              ))}
+              {soilData ? (
+                <>
+                  {[{ l: 'Type', v: soilData.soil_name }, { l: 'Classe', v: soilData.soil_class }, { l: 'Retention min.', v: `${soilData.metrics?.retention_mineraux}/100` }, { l: 'Drainage', v: `${soilData.metrics?.drainage_naturel}/100` }, { l: 'Lessivage', v: `${soilData.metrics?.risque_lessivage}/100` }, { l: 'Portance', v: `${soilData.metrics?.capacite_portance}/100` }, { l: 'pH', v: soilData.metrics?.ph_typique }, { l: 'Profondeur', v: `${soilData.metrics?.profondeur_cm} cm` }, { l: 'Mat. org.', v: `${soilData.metrics?.matiere_organique_pct}%` }].map((r, i) => (
+                    <div key={i} className="flex justify-between py-0.5">
+                      <span className="text-[14px] text-slate-400">{r.l}</span>
+                      <span className="text-[16px] font-semibold text-white">{r.v || '—'}</span>
+                    </div>
+                  ))}
+                  <div className="mt-2 rounded-lg px-3 py-2" style={{ backgroundColor: '#0F172A' }}>
+                    <p className="text-[14px] text-slate-300 leading-relaxed">{soilData.description}</p>
+                  </div>
+                  <div className="mt-2">
+                    <span className="text-[14px] text-slate-500">Texture: Argile {soilData.texture?.argile_pct}% | Sable {soilData.texture?.sable_pct}% | Limon {soilData.texture?.limon_pct}%</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {[{ l: 'Type', v: engines.soil?.soil_type }, { l: 'pH', v: engines.soil?.pH }, { l: 'Qualite', v: `${engines.soil?.quality_index || 0}/100` }].map((r, i) => (
+                    <div key={i} className="flex justify-between py-0.5">
+                      <span className="text-[14px] text-slate-400">{r.l}</span>
+                      <span className="text-[16px] font-semibold text-white">{r.v || '—'}</span>
+                    </div>
+                  ))}
+                </>
+              )}
             </GoldenCard>
           )}
           {engines.metabolism && (
@@ -727,7 +751,7 @@ const FicheGradeTag = ({ grade, color }) => {
   return <span className="px-2 py-0.5 text-[10px] font-black rounded" style={{ backgroundColor: `${c}20`, color: c, border: `1px solid ${c}40` }}>{grade}</span>;
 };
 
-const FicheTab = ({ ficheData, species, season, lat, lng, np }) => {
+const FicheTab = ({ ficheData, species, season, lat, lng, np, soilData }) => {
   const [showSources, setShowSources] = useState(false);
   const [selectedCriteria, setSelectedCriteria] = useState(null);
   const [selectedCriteriaValue, setSelectedCriteriaValue] = useState(null);
@@ -892,6 +916,33 @@ const FicheTab = ({ ficheData, species, season, lat, lng, np }) => {
             </div>
             <p className="text-[14px] text-slate-400 leading-relaxed">ROI = observations qualitatives par saison. Objectif: 15+ observations positives. Saline mature (2+ saisons) reduit cout/observation de 40-60%.</p>
           </GoldenCard>
+
+          {/* SOIL ENGINE — Analyse pedologique */}
+          {soilData && (
+            <GoldenCard testId="fiche-soil-analysis" accentColor={BIONIC.amber} compact>
+              <div className="flex items-center gap-2 mb-1.5">
+                <IC Icon={Mountain} color={BIONIC.amber} />
+                <span className="text-[16px] font-bold text-white">Sol — Type detecte</span>
+                <span className="text-[14px] px-1.5 py-0.5 rounded-lg font-bold ml-auto" style={{ backgroundColor: soilData.grade === 'A' || soilData.grade === 'S' ? `${BIONIC.green}18` : `${BIONIC.orange}18`, color: soilData.grade === 'A' || soilData.grade === 'S' ? BIONIC.green : BIONIC.orange }}>{soilData.grade} — {soilData.score}/100</span>
+              </div>
+              <div className="space-y-1">
+                <div className="flex justify-between"><span className="text-[14px] text-slate-400">Type</span><span className="text-[16px] font-semibold text-white">{soilData.soil_name}</span></div>
+                <div className="flex justify-between"><span className="text-[14px] text-slate-400">Retention</span><span className="text-[16px] font-semibold text-white">{soilData.metrics?.retention_mineraux}/100</span></div>
+                <div className="flex justify-between"><span className="text-[14px] text-slate-400">Drainage</span><span className="text-[16px] font-semibold text-white">{soilData.metrics?.drainage_naturel}/100</span></div>
+                <div className="flex justify-between"><span className="text-[14px] text-slate-400">Lessivage</span><span className="text-[16px] font-semibold text-white">{soilData.metrics?.risque_lessivage}/100</span></div>
+              </div>
+              <p className="text-[14px] text-slate-500 mt-1.5 leading-relaxed">{soilData.seasonal_note}</p>
+              {soilData.recommendations?.length > 0 && (
+                <div className="mt-2 space-y-1">
+                  {soilData.recommendations.slice(0, 4).map((r, i) => (
+                    <p key={i} className="text-[14px] text-slate-400 leading-relaxed flex items-start gap-1.5">
+                      <span className="text-amber-500 mt-0.5 flex-shrink-0">&#9670;</span>{r}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </GoldenCard>
+          )}
 
           {/* 20 Sources Scientifiques */}
           <GoldenCard testId="fiche-sources-card" accentColor="#00BCD4" compact>

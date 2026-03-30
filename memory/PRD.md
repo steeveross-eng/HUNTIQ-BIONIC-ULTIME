@@ -1,79 +1,74 @@
-# HUNTIQ-V6 — PRD (Product Requirements Document)
-## BCE-4X / STEEVE-MAX V6 — PROTOCOLE GOLDEN
+# HUNTIQ-V6 / BIONIC HUNT — PRD (Product Requirements Document)
+## BCE-4X GOLDEN / STEEVE-MAX
+
+### Probleme original
+Application de chasse BIONIC HUNT — plateforme d'analyse de territoire, intelligence nutritionnelle, gestion de salines, et recommandations scientifiques. Reconstruction du module SUPRA v2 avec grilles 3 colonnes, Standard GOLDEN, Marketing Engine (PARTAGER), Soil Engine, et fiches explicatives GUIDE BIONIC — NIVEAU PROFESSIONNEL.
+
+### Architecture
+- **Backend**: FastAPI (port 8001)
+- **Frontend**: React (port 3000)
+- **Database**: MongoDB
+- **Modules backend**: 72+ modules (moteurs), dont share_engine, salines_ultime_engine, soil_engine
+- **UI**: STANDARD GOLDEN (#1E293B, no borders, grid-cols-3)
 
 ---
 
-## Probleme Original
-Application HUNTIQ V6 — Plateforme avancee de chasse. Architecture modulaire FastAPI + React. Gouvernance stricte BCE-4X / STEEVE-MAX / GOLDEN.
+## IMPLEMENTE
 
-## Architecture
-- **Backend:** FastAPI, MongoDB, 84+ modules engines
-- **Frontend:** React, Tailwind CSS, shadcn/ui, Leaflet
-- **Integrations:** Stripe, Shapely, Leaflet, Open-Meteo
-- **Branch:** STEEVE-MAX-x3200-V6-CORE (MERGE MAIN INTERDIT)
+### Phase 1: SUPRA v2 — Grilles 3 colonnes (TERMINE)
+- 5 onglets (Analyse, Fiche, Intelligence, Comparez, Commandez) en grid-cols-3
+- Standard GOLDEN global (CSS vars, no borders, contrast-only separation)
 
----
+### Phase 2: PARTAGER — Marketing Engine (TERMINE)
+- 14 canaux de partage (gmail, facebook, whatsapp, linkedin, etc.)
+- Backend share_engine: log events, create contacts, master-switch
 
-## What's Been Implemented
+### Phase 3: Fiches GUIDE BIONIC — NIVEAU PROFESSIONNEL™ (TERMINE — 2026-03-30)
+- Tous les sous-criteres dans l'onglet FICHE sont cliquables (30 sous-criteres)
+- Ouverture de modales avec 15 sections obligatoires
+- Separation stricte par espece: Orignal, Chevreuil, Ours, Wapiti, Dindon
+- 10-20 recommandations terrain concretes par espece (distances, angles, hauteurs)
+- Sources TOP-TIER: 5-17 references par fiche
+  - Niveau 1: MFFP, UQAR, ULaval, UQAC, Parcs Canada, USGS, USDA
+  - Niveau 2: J. Wildlife Mgmt, Can. J. Zoology, Wildlife Soc. Bulletin
+  - Niveau 3: NDA, RMEF, NWTF, Bear Trust, QDMA
+  - Niveau 4: MSU Deer Lab, UGA Deer Lab, Alberta Fish & Wildlife
+- Fichier de donnees: criteriaDatabase.js (5 criteres detailles + DEFAULT professionnel)
+- Criteres entierement detailles: position_vs_affuts, accessibilite_vehicule, couverture_vent, corridors_deplacement, couvert_forestier
+- Criteres avec DEFAULT professionnel espece-specifique: 25 autres sous-criteres
 
-### Session 3 — Feb 30, 2026 (CURRENT)
-
-1. **HYPERLIENS sous-criteres FICHE SALINE ULTIME** (P0 - DONE)
-   - CriteriaDetailModal.jsx: modal fiche explicative pour 17+ sous-criteres
-   - Chaque critere: titre complet (ZERO abbreviation), definition, methodologie scoring, justification score, facteurs influents, recommandations, seuils vert/jaune/rouge, sources
-   - Base de donnees: accessibilite_vehicule, facilite_maintenance, proximite_infrastructure, securite_acces, frequence_visite, potentiel_trophee, corridors_deplacement, couvert_lateral, zone_transition, densite_population, position_vent, visibilite_affut, connectivite_territoire, cout_installation, cout_annuel, retour_investissement, drainage_sol, topographie_locale, clarte_terrain
-   - CriteriaRow dans FicheTab: chaque sous-critere CLIQUABLE, hover underline dotted, icone Info
-
-2. **PARTAGER — Reconstruction complete** (P0 - DONE)
-   - ShareBionicButton.jsx reecrit: panneau absolute position au lieu de Popover
-   - 14 canaux fonctionnels: Partage natif, Gmail, Outlook, Yahoo, Facebook, Messenger, WhatsApp, X, LinkedIn, Instagram, TikTok, SMS, Copier lien
-   - 3 templates: Territoire / Premium / Viral
-   - Master Switch integration + status fetch
-   - Auto-capture marketing: page_context, user_email, user_id via localStorage
-   - window.open pour chaque canal, navigator.share pour natif, clipboard pour copy/instagram/tiktok
-
-### Session 2 — VALIDATED
-
-1. **SUPRA v2 — 5/5 Sous-tableaux en 3 Colonnes GOLDEN** (VALIDATED)
-2. **Marketing Engine V2 — PARTAGER Backend** (VALIDATED)
-3. **STANDARD GOLDEN — Propagation Universelle** (VALIDATED)
-
-### Session 1 — Previous
-- Import/Archive V5 → V6, Governance BCE-4X, Branch Work1
-- BSAA Architecture, Engine/Coherence/Historical Audits
-- PARTAGER 13 canaux UI base, SUPRA v2 base panel
+### Phase 4: SOIL ENGINE — Classification pedologique (TERMINE — 2026-03-30)
+- Backend module: /app/backend/modules/soil_engine/router.py
+- Endpoint: GET /api/v1/soil/analyze?lat=X&lng=Y&species=X&season=X
+- 7 types de sol: loam_sableux, argile_limoneuse, sable_grossier, organique_tourbeux, roc_affleurant, loam_argileux, glaciaire_morainique
+- Score pedologique (0-100) avec grade (S/A/B/C/D/F)
+- Metriques: retention_mineraux, drainage_naturel, risque_lessivage, capacite_portance, permeabilite, pH, profondeur, matiere_organique, texture
+- Recommandations espece-specifiques (orignal, chevreuil, ours, wapiti, dindon)
+- Notes saisonnieres
+- Sources: IRDA Quebec, MRNF, CGQ, MFFP, SLC, USDA
+- Integration SUPRA v2: affiche dans onglet ANALYSE (carte Sol complete) et onglet FICHE (panneau Sol — Type detecte avec recommandations)
 
 ---
 
-## Prioritized Backlog
+## BACKLOG / GELE
 
-### P1 — Upcoming
-- [ ] Verification finale GOLDEN + BCE-4X standards
-- [ ] Commit final STEEVE-MAX-x3200-V6-CORE
-
-### P2 — Future / GELE
-- [ ] Phase 2D: Purge frontend shadcn/utils
-- [ ] Pression historique chasse → choix_affuts engine
-- [ ] BSAA-2: Implementation Social Ads module
-- [ ] auto_optimization.py restoration into optimization_engine
-- [ ] Merge main — STRICTEMENT INTERDIT
+- P2: Phase 2D — Purge frontend shadcn/utils (GELE)
+- P2: Pression historique chasse → choix_affuts engine (GELE)
+- P2: Phase BSAA-2 — Implementation Social Ads module (GELE)
+- P2: Merge vers main — STRICTEMENT INTERDIT
 
 ---
 
-## Key Files Modified (Session 3)
-- /app/frontend/src/components/territoire/ui/CriteriaDetailModal.jsx — NEW: 17+ fiches explicatives
-- /app/frontend/src/components/territoire/ui/ShareBionicButton.jsx — REWRITTEN: 14 canaux, absolute panel
-- /app/frontend/src/components/territoire/NutritionPointDetailPanel.jsx — FicheTab CriteriaRow cliquables
+## FICHIERS CLES
+- /app/frontend/src/components/territoire/ui/CriteriaDetailModal.jsx
+- /app/frontend/src/components/territoire/ui/criteriaDatabase.js
+- /app/frontend/src/components/territoire/NutritionPointDetailPanel.jsx
+- /app/backend/modules/soil_engine/router.py
+- /app/backend/modules/share_engine/router.py
+- /app/backend/server.py
 
-## Key Endpoints (Marketing Engine V2)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | /api/share/track | Share event + auto-capture marketing |
-| POST | /api/share/capture-lead | Manual lead capture |
-| GET | /api/share/contacts | List marketing contacts (13 contacts) |
-| GET | /api/share/marketing-stats | Stats: 12 shares, 13 events, 108% conversion |
-
-## Key DB Collections (MongoDB)
-- marketing_contacts: 13 contacts auto-crees (email, name, score, channels_used, interactions)
-- marketing_events: 13 evenements (share_executed, lead_captured)
-- share_events: 12 partages (gmail, facebook, whatsapp, linkedin, native)
+## API ENDPOINTS
+- GET /api/v1/soil/analyze — Analyse pedologique GPS
+- GET /api/v1/soil/status — Status du module
+- POST /api/share/log-event — Log partage
+- POST /api/share/master-switch — Switch marketing
