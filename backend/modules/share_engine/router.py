@@ -31,18 +31,23 @@ DB_NAME = os.environ.get("DB_NAME", "huntiq_v6")
 # Mode ON permanent jusqu'à désactivation manuelle par STEEVE-MAX
 # ═══════════════════════════════════════════
 MASTER_SWITCH_STATE = {
-    "global_enabled": False,        # OFF par défaut — activation manuelle STEEVE-MAX uniquement
-    "override_mode": False,         # Pas d'override — contrôle manuel total
-    "authority": "STEEVE-MAX",      # Seul STEEVE-MAX peut activer
+    "global_enabled": True,         # ON par defaut — STANDARD GOLDEN
+    "override_mode": False,
+    "authority": "STEEVE-MAX",
     "channels": {
-        "native":    {"enabled": False, "label": "Partage OS",  "priority": 1},
-        "facebook":  {"enabled": False, "label": "Facebook",    "priority": 2},
-        "messenger": {"enabled": False, "label": "Messenger",   "priority": 3},
-        "whatsapp":  {"enabled": False, "label": "WhatsApp",    "priority": 4},
-        "instagram": {"enabled": False, "label": "Instagram",   "priority": 5},
-        "tiktok":    {"enabled": False, "label": "TikTok",      "priority": 6},
-        "sms":       {"enabled": False, "label": "SMS",         "priority": 7},
-        "copy":      {"enabled": False, "label": "Copier lien", "priority": 8},
+        "native":    {"enabled": True, "label": "Partage OS",  "priority": 1},
+        "gmail":     {"enabled": True, "label": "Gmail",       "priority": 2},
+        "outlook":   {"enabled": True, "label": "Outlook",     "priority": 3},
+        "yahoo":     {"enabled": True, "label": "Yahoo Mail",  "priority": 4},
+        "facebook":  {"enabled": True, "label": "Facebook",    "priority": 5},
+        "messenger": {"enabled": True, "label": "Messenger",   "priority": 6},
+        "whatsapp":  {"enabled": True, "label": "WhatsApp",    "priority": 7},
+        "x":         {"enabled": True, "label": "X (Twitter)", "priority": 8},
+        "linkedin":  {"enabled": True, "label": "LinkedIn",    "priority": 9},
+        "instagram": {"enabled": True, "label": "Instagram",   "priority": 10},
+        "tiktok":    {"enabled": True, "label": "TikTok",      "priority": 11},
+        "sms":       {"enabled": True, "label": "SMS",         "priority": 12},
+        "copy":      {"enabled": True, "label": "Copier lien", "priority": 13},
     },
     "admin_sync": {
         "messaging_engine": True,

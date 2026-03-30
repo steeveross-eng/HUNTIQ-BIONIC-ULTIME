@@ -15,12 +15,17 @@ import { Share2, Facebook, MessageCircle, Send, Smartphone, Link, CheckCircle, E
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 
 const SHARE_CHANNELS = [
-  { id: 'native', label: 'Partage OS', icon: Smartphone, color: '#3CB371', desc: 'Contacts natifs' },
+  { id: 'native', label: 'Partage OS', icon: Smartphone, color: '#3CB371', desc: 'iOS / Android natif' },
+  { id: 'gmail', label: 'Gmail', icon: Send, color: '#EA4335', desc: 'Courriel Gmail' },
+  { id: 'outlook', label: 'Outlook', icon: Send, color: '#0078D4', desc: 'Courriel Outlook' },
+  { id: 'yahoo', label: 'Yahoo Mail', icon: Send, color: '#6001D2', desc: 'Courriel Yahoo' },
   { id: 'facebook', label: 'Facebook', icon: Facebook, color: '#1877F2', desc: 'Groupes & Feed' },
   { id: 'messenger', label: 'Messenger', icon: MessageCircle, color: '#0099FF', desc: 'Message direct' },
   { id: 'whatsapp', label: 'WhatsApp', icon: MessageCircle, color: '#25D366', desc: 'Contacts & Groupes' },
+  { id: 'x', label: 'X (Twitter)', icon: ExternalLink, color: '#000000', desc: 'Tweet & DM' },
+  { id: 'linkedin', label: 'LinkedIn', icon: ExternalLink, color: '#0A66C2', desc: 'Post & Message' },
   { id: 'instagram', label: 'Instagram', icon: ExternalLink, color: '#E4405F', desc: 'Story & DM' },
-  { id: 'tiktok', label: 'TikTok', icon: ExternalLink, color: '#000000', desc: 'Profil & Message' },
+  { id: 'tiktok', label: 'TikTok', icon: ExternalLink, color: '#FF0050', desc: 'Profil & Message' },
   { id: 'sms', label: 'SMS', icon: Send, color: '#4CAF50', desc: 'Texto direct' },
   { id: 'copy', label: 'Copier lien', icon: Link, color: '#9CA3AF', desc: 'Presse-papiers' },
 ];
@@ -123,6 +128,21 @@ export function ShareBionicButton({ sharedWeather }) {
         }
         break;
 
+      case 'gmail':
+        window.open(`https://mail.google.com/mail/?view=cm&su=${encodeURIComponent(title)}&body=${encodeURIComponent(`${text}\n${url}`)}`, '_blank');
+        setLastShared('gmail');
+        break;
+
+      case 'outlook':
+        window.open(`https://outlook.live.com/mail/0/deeplink/compose?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`${text}\n${url}`)}`, '_blank');
+        setLastShared('outlook');
+        break;
+
+      case 'yahoo':
+        window.open(`https://compose.mail.yahoo.com/?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`${text}\n${url}`)}`, '_blank');
+        setLastShared('yahoo');
+        break;
+
       case 'facebook':
         window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`, '_blank', 'width=600,height=400');
         setLastShared('facebook');
@@ -139,6 +159,16 @@ export function ShareBionicButton({ sharedWeather }) {
       case 'whatsapp':
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(`${title}\n${text}\n${url}`)}`, '_blank');
         setLastShared('whatsapp');
+        break;
+
+      case 'x':
+        window.open(`https://x.com/intent/tweet?text=${encodeURIComponent(`${text}`)}&url=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400');
+        setLastShared('x');
+        break;
+
+      case 'linkedin':
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400');
+        setLastShared('linkedin');
         break;
 
       case 'instagram':
@@ -189,25 +219,29 @@ export function ShareBionicButton({ sharedWeather }) {
       <PopoverContent
         align="end"
         sideOffset={8}
-        className="w-80 bg-gray-950/98 backdrop-blur-xl border-emerald-500/20 p-0 shadow-2xl shadow-black/60"
+        className="w-96 bg-[#0F172A] border-none p-0 shadow-2xl shadow-black/60"
+        style={{ borderRadius: '16px' }}
         data-testid="share-popover"
       >
-        <div className="p-3 border-b border-gray-700/40">
-          <div className="flex items-center gap-2 mb-2">
-            <Share2 className="h-4 w-4 text-emerald-400" />
-            <span className="text-xs font-bold text-white uppercase tracking-wider">Partager BIONIC</span>
+        <div className="p-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#3CB37120' }}>
+              <Share2 className="h-4 w-4 text-emerald-400" />
+            </div>
+            <span className="text-[16px] font-bold text-white">Partager BIONIC</span>
           </div>
           {/* Template selector */}
-          <div className="flex gap-1">
+          <div className="flex gap-2">
             {Object.entries(SHARE_TEMPLATES).map(([key, tmpl]) => (
               <button
                 key={key}
                 onClick={() => setSelectedTemplate(key)}
-                className={`flex-1 px-2 py-1 rounded text-[9px] font-bold uppercase tracking-wider transition-all ${
-                  selectedTemplate === key
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                    : 'bg-gray-800/50 text-gray-500 border border-gray-700/30 hover:text-gray-300'
-                }`}
+                className="flex-1 px-3 py-1.5 rounded-xl text-[14px] font-bold transition-all"
+                style={{
+                  backgroundColor: selectedTemplate === key ? '#10B98120' : '#1E293B',
+                  color: selectedTemplate === key ? '#10B981' : '#6b7280',
+                  border: selectedTemplate === key ? '1px solid #10B98140' : '1px solid transparent',
+                }}
                 data-testid={`share-template-${key}`}
               >
                 {key === 'territoire' ? 'Territoire' : key === 'premium' ? 'Premium' : 'Viral'}
@@ -217,17 +251,17 @@ export function ShareBionicButton({ sharedWeather }) {
         </div>
 
         {/* Preview */}
-        <div className="px-3 py-2 border-b border-gray-700/30">
-          <div className="text-[9px] text-gray-500 uppercase font-bold mb-1">Apercu du contenu</div>
-          <p className="text-[10px] text-gray-300 leading-relaxed line-clamp-3">{shareText.slice(0, 160)}...</p>
+        <div className="px-4 py-3 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+          <div className="text-[12px] text-gray-500 uppercase font-bold mb-1">Apercu</div>
+          <p className="text-[14px] text-gray-300 leading-relaxed line-clamp-2">{shareText.slice(0, 140)}...</p>
         </div>
 
-        {/* Share channels — filtered by Master Switch */}
-        <div className="p-2 space-y-0.5" data-testid="share-channels-list">
+        {/* Share channels — STANDARD GOLDEN */}
+        <div className="p-2 max-h-[320px] overflow-y-auto" style={{ scrollBehavior: 'smooth' }} data-testid="share-channels-list">
           {!masterSwitch.global && (
-            <div className="px-3 py-4 text-center">
-              <div className="text-[10px] text-red-400 font-bold uppercase tracking-wider mb-1">Master Switch OFF</div>
-              <div className="text-[9px] text-gray-500">Activation manuelle par STEEVE-MAX requise</div>
+            <div className="px-4 py-6 text-center">
+              <div className="text-[14px] text-red-400 font-bold uppercase mb-1">Master Switch OFF</div>
+              <div className="text-[14px] text-gray-500">Activation par STEEVE-MAX requise</div>
             </div>
           )}
           {SHARE_CHANNELS.filter(ch => masterSwitch.global && masterSwitch.channels[ch.id] !== false).map((ch) => {
@@ -237,12 +271,13 @@ export function ShareBionicButton({ sharedWeather }) {
               <button
                 key={ch.id}
                 onClick={() => handleShare(ch.id)}
-                className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left transition-all ${
-                  isLastShared ? 'bg-emerald-500/15' : 'hover:bg-white/5'
-                }`}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all"
+                style={{ backgroundColor: isLastShared ? '#10B98115' : 'transparent' }}
+                onMouseEnter={e => { if (!isLastShared) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.04)'; }}
+                onMouseLeave={e => { if (!isLastShared) e.currentTarget.style.backgroundColor = 'transparent'; }}
                 data-testid={`share-channel-${ch.id}`}
               >
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${ch.color}20` }}>
+                <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${ch.color}20` }}>
                   {isLastShared ? (
                     <CheckCircle className="h-4 w-4 text-emerald-400" />
                   ) : (
@@ -250,28 +285,28 @@ export function ShareBionicButton({ sharedWeather }) {
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="text-xs font-medium text-white">{ch.label}</div>
-                  <div className="text-[9px] text-gray-500">{ch.desc}</div>
+                  <div className="text-[16px] font-medium text-white">{ch.label}</div>
+                  <div className="text-[12px] text-gray-500">{ch.desc}</div>
                 </div>
                 {ch.id === 'copy' && copied && (
-                  <span className="text-[9px] text-emerald-400 font-bold">Copie!</span>
+                  <span className="text-[14px] text-emerald-400 font-bold">Copie!</span>
                 )}
               </button>
             );
           })}
         </div>
 
-        {/* Footer — Master Switch Status */}
-        <div className="px-3 py-2 border-t border-gray-700/30 bg-gray-900/50">
+        {/* Footer — Master Switch */}
+        <div className="px-4 py-2.5 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)', backgroundColor: '#1E293B', borderRadius: '0 0 16px 16px' }}>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <div className={`w-1.5 h-1.5 rounded-full ${masterSwitch.global ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`} />
-              <span className={`text-[8px] uppercase font-bold tracking-wider ${masterSwitch.global ? 'text-gray-500' : 'text-red-400'}`}>
+            <div className="flex items-center gap-2">
+              <div className={`w-2 h-2 rounded-full ${masterSwitch.global ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`} />
+              <span className={`text-[12px] uppercase font-bold tracking-wider ${masterSwitch.global ? 'text-gray-500' : 'text-red-400'}`}>
                 Master Switch {masterSwitch.global ? 'ON' : 'OFF'}
               </span>
             </div>
-            <span className={`text-[8px] font-bold tracking-wider ${masterSwitch.global ? 'text-emerald-500/60' : 'text-red-400/60'}`} data-testid="master-switch-indicator">
-              {Object.values(masterSwitch.channels).filter(Boolean).length}/8 CANAUX
+            <span className={`text-[12px] font-bold tracking-wider ${masterSwitch.global ? 'text-emerald-500/60' : 'text-red-400/60'}`} data-testid="master-switch-indicator">
+              {Object.values(masterSwitch.channels).filter(Boolean).length}/13 CANAUX
             </span>
           </div>
         </div>

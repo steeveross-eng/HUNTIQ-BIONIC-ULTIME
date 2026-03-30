@@ -58,14 +58,15 @@ export const BionicLogoHeader = () => {
  * Pages secondaires: NE S'AFFICHE PAS (return null).
  */
 export const BionicLogoGlobal = () => {
+  // BCE-4X STEEVE-MAX: Shadow/watermark SUPPRIME — ZERO ombre, ZERO silhouette sur page principale
+  // Seule la page ADMIN Premium conserve le watermark
   const location = useLocation();
   const path = location.pathname;
-  const isHomePage = path === '/' || path === '';
   const isPremiumPage = PREMIUM_ROUTES.some(r => path.startsWith(r));
   
-  if (!isHomePage && !isPremiumPage) return null;
+  if (!isPremiumPage) return null;
   
-  const logoSize = isPremiumPage ? 1260 : 560;
+  const logoSize = 1260;
   
   return (
     <div 
@@ -77,7 +78,7 @@ export const BionicLogoGlobal = () => {
         width: `${logoSize}px`,
         height: `${logoSize}px`,
         pointerEvents: 'none',
-        opacity: isPremiumPage ? 0.12 : 0.10,
+        opacity: 0.12,
       }}
       data-testid="bionic-logo-global"
     >
