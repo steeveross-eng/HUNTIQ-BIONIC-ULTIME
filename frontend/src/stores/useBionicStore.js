@@ -10,7 +10,7 @@ const API = process.env.REACT_APP_BACKEND_URL;
 
 const useBionicStore = create((set, get) => ({
   // ── État partagé carte ↔ intelligence ──
-  species: 'CHEVREUIL',
+  species: 'ORIGNAL',
   month: new Date().getMonth() + 1,
   location: null, // { lat, lng }
 

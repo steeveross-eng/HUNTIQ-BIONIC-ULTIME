@@ -1474,6 +1474,7 @@ const MonTerritoireBionicPage = () => {
         <NutritionPointDetailPanel
           nutritionPoint={selectedNutritionPoint}
           onClose={() => setSelectedNutritionPoint(null)}
+          selectedSpecies={selectedSpecies}
         />
       )}
       

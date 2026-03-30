@@ -11,20 +11,24 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import NutritionPointDetailPanel from '@/components/territoire/NutritionPointDetailPanel';
 
+import useBionicStore from '@/stores/useBionicStore';
+
 export default function SupraPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [nutritionPoint, setNutritionPoint] = useState(null);
   const [loading, setLoading] = useState(true);
+  const storeSpecies = useBionicStore(s => s.species);
 
   useEffect(() => {
+    const sp = (storeSpecies || 'orignal').toLowerCase();
     const parts = id?.split(',');
     if (parts?.length === 2) {
       setNutritionPoint({
         id: `SUPRA-${id}`,
         lat: parseFloat(parts[0]),
         lng: parseFloat(parts[1]),
-        species: 'chevreuil',
+        species: sp,
         season: 'printemps',
         soil_type: 'mixte',
         distance_centre_m: 0,
@@ -34,14 +38,14 @@ export default function SupraPage() {
         id: id || 'SUPRA',
         lat: 47.3,
         lng: -71.2,
-        species: 'chevreuil',
+        species: sp,
         season: 'printemps',
         soil_type: 'mixte',
         distance_centre_m: 0,
       });
     }
     setLoading(false);
-  }, [id]);
+  }, [id, storeSpecies]);
 
   if (loading) {
     return (
