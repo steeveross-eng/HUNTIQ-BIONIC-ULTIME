@@ -9,39 +9,82 @@
 - **Base de donnees:** MongoDB
 - **Branche:** `STEEVE-MAX-x3200-V6-CORE`
 
-## 2. Implemente
+## 2. STANDARD GOLDEN — Implemente (30 mars 2026)
 
-### Infrastructures
-- Logo v5: 128px DANS le header nav, watermark 560px accueil / 1260px premium
-- Carte Interactive: erreur 'Cannot read name' CORRIGEE (Bathymetrie purgee)
-- PARTAGER global (header App.js + panel SUPRA v2)
-- ULTRA-MAX++ Firewall Shapely (7 zones Quebec, 5 endpoints)
-- SALINES ULTIME (5 scores, 20 sources, FICHE)
-- Scroll GOLDEN toutes pages
+### Composants STANDARD GOLDEN
+- `GoldenCard`: fond #1E293B, ZERO bordure, accent bar 4px gauche, rounded-xl, box-shadow GOLDEN
+- `GoldenCollapsible`: meme standard + icone en cercle colore + badge
+- `GaugeMini`: SVG 64x64 avec valeur et label integres
 
-### SUPRA v2 — Refonte 100% VERTICAL GOLDEN (30 mars 2026)
-- **Structure** : ZERO grid-cols-2, ZERO grid-cols-3, toutes cartes pleine largeur
-- **Typographie** : 16px pour TOUS les textes (labels, valeurs, titres)
-- **Scroll GOLDEN** : overflow-y-auto avec scrollBehavior smooth
-- **Cartes ANALYSE** : Score SUPRA, Gauge ULTRA, Sol, Metabolisme, Vegetation, Hydrologie, Mineraux (barres), Besoins, Ecozone, Recette, Couts — TOUS en vertical
-- **Sections collapsibles** : Physiologie, Comportement, Support, Sources — fermes par defaut
-- **FICHE** : 5 scores individuels avec barres, Guides, 20 Sources — tous en vertical
+### SUPRA v2 — STANDARD GOLDEN APPLIQUE
+**Onglet ANALYSE:**
+- Score SUPRA: nombre 32px, grade badge, zones vert/jaune/rouge
+- Gauge ULTRA: rating 30px ("INSUFFISANT"), carences critiques
+- Sol: icone cercle amber, accent bar amber
+- Metabolisme: icone cercle orange, accent bar orange
+- Vegetation: icone cercle vert, accent bar vert
+- Hydrologie: icone cercle bleu, accent bar bleu
+- Mineraux: barres colorees mini 6px
+- Besoins nutritionnels: accent bars internes par niveau
+- Ecozone: ORIGNAL (Alces americanus) corrige
+- Recette, Couts: accent bars colorees
+- Collapsibles PREMIUM: fermes par defaut (Physiologie, Comportement, Support, Sources)
 
-### Alignement biologique ORIGNAL (30 mars 2026)
-- Store Zustand defaut: ORIGNAL (remplace CHEVREUIL)
-- NutritionPointDetailPanel: accepte selectedSpecies prop
-- SupraPage: lit species depuis store global
-- MonTerritoireBionicPage: passe selectedSpecies au panel
-- Ecozone affiche maintenant: "Orignal (Alces americanus)"
-- Besoins: "Sortie ravage + croissance bois massifs" (orignal/printemps)
+**Onglet FICHE:**
+- Score global: 32px, accent bar cyan
+- 5 scores: nombre 30px, barres 6px, composants detailles
+- 3 guides: icones cercles, badges GUIDE
+- 20 sources: collapsible
 
-## 3. Fichiers modifies (session courante)
+### Alignement biologique ORIGNAL
+- Store Zustand: defaut ORIGNAL (remplace CHEVREUIL)
+- Props selectedSpecies propagees: MonTerritoireBionicPage -> NutritionPointDetailPanel
+- SupraPage lit species depuis store global
+- Ecozone: "Orignal (Alces americanus)"
+- Besoins: "Sortie ravage + croissance bois massifs"
+
+### Shadow/Watermark BIONIC SUPPRIME
+- BionicLogoGlobal: retire de la page principale (/)
+- Conserve uniquement sur pages ADMIN Premium
+
+### PARTAGER 200% FONCTIONNEL — 13/13 CANAUX
+1. Partage OS natif (iOS/Android)
+2. Gmail
+3. Outlook
+4. Yahoo Mail
+5. Facebook
+6. Messenger
+7. WhatsApp
+8. X (Twitter)
+9. LinkedIn
+10. Instagram
+11. TikTok
+12. SMS
+13. Copier lien
+- Menu GOLDEN: fond #0F172A, icones cercles, typo 16px, ZERO bordure
+- Master Switch ON par defaut, 13/13 canaux actifs
+- Templates: Territoire, Premium, Viral
+
+### Typographie 16px
+- Labels: 14px text-slate-400
+- Valeurs: 16px font-semibold text-white
+- Titres: 16px font-bold text-white
+- Scores principaux: 30-40px font-black
+
+## 3. Documents crees
+- `/app/HUNTIQ-V6-import/architecture/dashboard_standards.md` — Standard GOLDEN officiel
+
+## 4. Fichiers modifies (session)
 - `/app/frontend/src/components/territoire/NutritionPointDetailPanel.jsx`
+- `/app/frontend/src/components/territoire/ui/ShareBionicButton.jsx`
+- `/app/frontend/src/components/BionicLogo.jsx`
 - `/app/frontend/src/pages/SupraPage.jsx`
 - `/app/frontend/src/pages/MonTerritoireBionicPage.jsx`
 - `/app/frontend/src/stores/useBionicStore.js`
+- `/app/backend/modules/share_engine/router.py`
 
-## 4. Backlog GELE
+## 5. Backlog GELE
+- [ ] Propagation STANDARD GOLDEN aux autres modules (Dashboard, Analyse Territoire, etc.)
 - [ ] Purge shadcn/utils
 - [ ] Pression historique chasse
 - [ ] BSAA-2
