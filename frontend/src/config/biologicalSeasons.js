@@ -112,7 +112,7 @@ export const BIOLOGICAL_SEASONS = [
   {
     id: 'spring',
     label: 'Printemps',
-    shortLabel: 'Print.',
+    shortLabel: 'Printemps',
     description: 'Reprise d\'activité, alimentation verte, dispersion des jeunes',
     months: [3, 4, 5, 6, 7, 8], // Mars-Août
     dateRange: '1 mars — 31 août',

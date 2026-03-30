@@ -69,6 +69,27 @@ export function ShareBionicButton({ sharedWeather }) {
   const [selectedTemplate, setSelectedTemplate] = useState('territoire');
   const [copied, setCopied] = useState(false);
   const [lastShared, setLastShared] = useState(null);
+  const [masterSwitch, setMasterSwitch] = useState({ global: true, channels: {} });
+
+  // Master Switch — Vérification état au montage et à chaque ouverture
+  const fetchMasterSwitch = useCallback(async () => {
+    try {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || '';
+      const res = await fetch(`${backendUrl}/api/share/master-switch`);
+      if (res.ok) {
+        const data = await res.json();
+        setMasterSwitch({
+          global: data.global_enabled,
+          channels: Object.fromEntries(
+            Object.entries(data.channels || {}).map(([k, v]) => [k, v.enabled])
+          ),
+        });
+      }
+    } catch (_) { /* Master Switch fallback: ON */ }
+  }, []);
+
+  React.useEffect(() => { fetchMasterSwitch(); }, [fetchMasterSwitch]);
+  React.useEffect(() => { if (open) fetchMasterSwitch(); }, [open, fetchMasterSwitch]);
 
   const template = SHARE_TEMPLATES[selectedTemplate];
   const shareUrl = buildShareUrl();
@@ -201,9 +222,9 @@ export function ShareBionicButton({ sharedWeather }) {
           <p className="text-[10px] text-gray-300 leading-relaxed line-clamp-3">{shareText.slice(0, 160)}...</p>
         </div>
 
-        {/* Share channels */}
+        {/* Share channels — filtered by Master Switch */}
         <div className="p-2 space-y-0.5" data-testid="share-channels-list">
-          {SHARE_CHANNELS.map((ch) => {
+          {SHARE_CHANNELS.filter(ch => masterSwitch.global && masterSwitch.channels[ch.id] !== false).map((ch) => {
             const Icon = ch.icon;
             const isLastShared = lastShared === ch.id;
             return (
@@ -234,11 +255,14 @@ export function ShareBionicButton({ sharedWeather }) {
           })}
         </div>
 
-        {/* Footer tracking info */}
+        {/* Footer — Master Switch + Tracking */}
         <div className="px-3 py-2 border-t border-gray-700/30 bg-gray-900/50">
-          <div className="flex items-center gap-1.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[8px] text-gray-500 uppercase font-bold tracking-wider">Tracking Premium actif</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[8px] text-gray-500 uppercase font-bold tracking-wider">Master Switch ON</span>
+            </div>
+            <span className="text-[8px] text-emerald-500/60 font-bold tracking-wider" data-testid="master-switch-indicator">8/8 CANAUX</span>
           </div>
         </div>
       </PopoverContent>
