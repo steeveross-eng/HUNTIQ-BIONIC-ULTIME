@@ -14,7 +14,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Switch } from '@/components/ui/switch';
 import BionicMapSelector from '@/components/maps/BionicMapSelector';
-import { BiologicalSeasonSelector } from '@/components/territoire/ui/BiologicalSeasonSelector';
 import { BionicScoreBadge } from '@/components/territoire/BionicScoreBadge';
 import { SPECIES_LIST } from '@/core/bionic/speciesConfig';
 
@@ -54,15 +53,8 @@ export function TerritoireToolbar({
   return (
     <nav className="flex-shrink-0 h-[44px] bg-[#0d0d14] border-b border-[#1a1a2e] px-4 flex items-center relative z-40" data-testid="bionic-tabs">
       <div className="flex items-center gap-0.5 bg-black/60 backdrop-blur-sm rounded-lg border border-gray-700/40 p-1">
-        {/* 1. SAISON */}
-        {!splitViewEnabled && (
-          <>
-            <BiologicalSeasonSelector selectedSeason={selectedBiologicalSeason} onSeasonChange={setSelectedBiologicalSeason} />
-            <div className="w-px h-5 bg-gray-700/50 mx-0.5" />
-          </>
-        )}
 
-        {/* 2. SPLIT */}
+        {/* 1. SPLIT */}
         <button onClick={toggleSplitView} className={`h-8 px-2.5 flex items-center gap-1.5 rounded-md text-[11px] font-bold uppercase tracking-wider transition-all duration-150 flex-shrink-0 ${splitViewEnabled ? 'bg-[#3CB371]/15 text-[#3CB371]' : 'text-gray-500 hover:text-gray-300 hover:bg-white/5'}`} data-testid="split-view-toggle" title="Comparer deux saisons">
           <SplitSquareHorizontal className="h-3.5 w-3.5" />
           <span className="hidden sm:inline">Split</span>

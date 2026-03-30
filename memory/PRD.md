@@ -1,4 +1,4 @@
-# HUNTIQ-V6 — PRD (Product Requirements Document)
+# HUNTIQ-V6 — PRD
 ## PROTOCOLE BCE-4X | STEEVE-MAX-x3200-V6-CORE
 
 ---
@@ -7,62 +7,53 @@
 - **Backend:** FastAPI (Python) sur port 8001
 - **Frontend:** React (CRA + craco) sur port 3000
 - **Base de données:** MongoDB
-- **Branche active:** `STEEVE-MAX-x3200-V6-CORE` (EXCLUSIVEMENT)
+- **Branche active:** `STEEVE-MAX-x3200-V6-CORE`
 
-## 2. Fonctionnalités Implémentées
+## 2. Implémenté
 
-### Share Engine v2.0 + Master Switch Premium (2026-03-30)
-- 8 canaux: Native OS, Facebook, Messenger, WhatsApp, Instagram, TikTok, SMS, Copier
-- Master Switch: ON permanent, override, authority STEEVE-MAX, 8/8 canaux
-- Pipeline: ShareBionicButton → Master Switch gate → MongoDB share_events
-- Admin sync: 9 modules ADMIN Premium connectés
-- API: `/api/share/{track|stats|status|master-switch}`
+### Share Engine v2.0 + Master Switch Premium
+- 8 canaux interconnectés au Master Switch
+- **Mode OFF par défaut** — activation manuelle STEEVE-MAX uniquement
+- Pipeline: ShareBionicButton → Master Switch gate → MongoDB
+- UI: Indicateur dynamique ON/OFF, message "Activation manuelle STEEVE-MAX"
 
-### Clarity Engine v7 ×1000% (2026-03-30)
-- +3 phases: fragmentation (80m), déviation naturelle, passe-bas
-- Modèle Québec: 7 types terrain (sentier ×0.1 → non conforme ×10.0)
-- TCS: 6 composantes, grades S→F
+### Clarity Engine v7 x1000%
+- +3 phases: fragmentation 80m, deviation naturelle, passe-bas
+- Modele Quebec: 7 types terrain
 
-### Purge V1-V5 TOTALE (2026-03-30)
-- PRINT bouton: SUPPRIMÉ (TerritoireHeader, PinnablePanel)
-- LIVE bouton: SUPPRIMÉ (TerritoireHeader, MonTerritoireBionicPage)
-- "Print." shortLabel: CORRIGÉ → "Printemps" (biologicalSeasons.js)
-- Confirmation: grep ZÉRO résultat sur tout le codebase
+### Purge V1-V5 TOTALE
+- PRINT bouton: SUPPRIME
+- LIVE bouton: SUPPRIME
+- "Print." shortLabel: CORRIGE → "Printemps"
+- **PRINTEMPS (BiologicalSeasonSelector): SUPPRIME de la toolbar (Phase X)**
 
-### GOVERNANCE.md v3.0 INSTITUTIONNELLE (2026-03-30)
-- 8 sections: BCE-4X, PARTAGER, Header V6+, Pipelines, Scoring, ×1000%, Livrables, Annexes
+### GOVERNANCE.md v3.0 INSTITUTIONNELLE
+- 8 sections completes, verrouillee
 
-## 3. Documents Produits
-| Document | Type |
-|----------|------|
-| GOVERNANCE.md v3.0 | Gouvernance institutionnelle |
-| governance_integration_certification.md | Audit |
-| ui_header_v6_certification.md | Audit |
-| ui_header_share_button_certification.md | Audit |
-| pipelines_externes_certification.md | Audit |
-| scoring_ambassadeur_certification.md | Audit |
-| access_v7_optimization_certification.md | Audit |
-| admin_premium_v2_share_ecosystem_audit.md | Audit |
-| print_residual_root_cause_analysis.md | RCA |
-| master_switch_share_integration_certification.md | Certification |
-| share_module_architecture.md | Architecture |
-| admin_premium_v2_share_integration_plan.md | Architecture |
-| ultra_max_pp_firewall_phaseC_preparation.md | Architecture P1 |
-| saline_module_ULTIME_implementation_plan.md | Architecture P1 |
+## 3. Audits Produits
+- governance_integration_certification.md
+- ui_header_v6_certification.md (MAJ Phase X)
+- ui_header_share_button_certification.md
+- pipelines_externes_certification.md
+- scoring_ambassadeur_certification.md
+- access_v7_optimization_certification.md
+- admin_premium_v2_share_ecosystem_audit.md
+- print_residual_root_cause_analysis.md
+- master_switch_share_integration_certification.md (MAJ Phase Y)
 
 ## 4. Backlog
-### P0 — COMPLÉTÉ
-- [x] Purge PRINT+LIVE + RCA "Print."
-- [x] Module PARTAGER + Master Switch 8/8
-- [x] GOVERNANCE.md v3.0 institutionnelle
-- [x] Optimisation ×1000% smoother
+### P0 — COMPLETE
+- [x] Purge PRINT+LIVE+PRINTEMPS
+- [x] Module PARTAGER + Master Switch OFF
+- [x] GOVERNANCE.md v3.0
+- [x] Optimisation x1000%
 - [x] 10+ audits/certifications
 
-### P1 — À venir
+### P1 — A venir
 - [ ] ULTRA-MAX++ Firewall (Phase C) — Geo-fencing urbain
 - [ ] Module Salines BIONIC ULTIME
 
-### P2 — GELÉ
+### P2 — GELE
 - [ ] Purge frontend shadcn/utils
 - [ ] Pression historique chasse
 - [ ] BSAA-2 (Social Ads)

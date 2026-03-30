@@ -31,18 +31,18 @@ DB_NAME = os.environ.get("DB_NAME", "huntiq_v6")
 # Mode ON permanent jusqu'à désactivation manuelle par STEEVE-MAX
 # ═══════════════════════════════════════════
 MASTER_SWITCH_STATE = {
-    "global_enabled": True,         # ON permanent — override
-    "override_mode": True,          # Empêche toute désactivation automatique
-    "authority": "STEEVE-MAX",      # Seul STEEVE-MAX peut désactiver
+    "global_enabled": False,        # OFF par défaut — activation manuelle STEEVE-MAX uniquement
+    "override_mode": False,         # Pas d'override — contrôle manuel total
+    "authority": "STEEVE-MAX",      # Seul STEEVE-MAX peut activer
     "channels": {
-        "native":    {"enabled": True, "label": "Partage OS",  "priority": 1},
-        "facebook":  {"enabled": True, "label": "Facebook",    "priority": 2},
-        "messenger": {"enabled": True, "label": "Messenger",   "priority": 3},
-        "whatsapp":  {"enabled": True, "label": "WhatsApp",    "priority": 4},
-        "instagram": {"enabled": True, "label": "Instagram",   "priority": 5},
-        "tiktok":    {"enabled": True, "label": "TikTok",      "priority": 6},
-        "sms":       {"enabled": True, "label": "SMS",         "priority": 7},
-        "copy":      {"enabled": True, "label": "Copier lien", "priority": 8},
+        "native":    {"enabled": False, "label": "Partage OS",  "priority": 1},
+        "facebook":  {"enabled": False, "label": "Facebook",    "priority": 2},
+        "messenger": {"enabled": False, "label": "Messenger",   "priority": 3},
+        "whatsapp":  {"enabled": False, "label": "WhatsApp",    "priority": 4},
+        "instagram": {"enabled": False, "label": "Instagram",   "priority": 5},
+        "tiktok":    {"enabled": False, "label": "TikTok",      "priority": 6},
+        "sms":       {"enabled": False, "label": "SMS",         "priority": 7},
+        "copy":      {"enabled": False, "label": "Copier lien", "priority": 8},
     },
     "admin_sync": {
         "messaging_engine": True,
@@ -186,16 +186,13 @@ async def update_master_switch(update: MasterSwitchUpdate):
             detail="ACCÈS REFUSÉ — Seul STEEVE-MAX peut modifier le Master Switch"
         )
 
-    if MASTER_SWITCH_STATE["override_mode"] and update.global_enabled is False:
-        logger.warning("[MASTER-SWITCH] Tentative de désactivation en mode override — BLOQUÉ")
-        raise HTTPException(
-            status_code=403,
-            detail="Master Switch en mode OVERRIDE ON permanent. Désactivation interdite."
-        )
-
     if update.global_enabled is not None:
         MASTER_SWITCH_STATE["global_enabled"] = update.global_enabled
-        logger.info(f"[MASTER-SWITCH] Global: {'ON' if update.global_enabled else 'OFF'}")
+        # Si activation globale, activer tous les canaux
+        if update.global_enabled:
+            for ch_id in MASTER_SWITCH_STATE["channels"]:
+                MASTER_SWITCH_STATE["channels"][ch_id]["enabled"] = True
+        logger.info(f"[MASTER-SWITCH] Global: {'ON' if update.global_enabled else 'OFF'} — par STEEVE-MAX")
 
     if update.channel_updates:
         for ch_id, enabled in update.channel_updates.items():

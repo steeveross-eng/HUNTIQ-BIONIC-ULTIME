@@ -224,6 +224,12 @@ export function ShareBionicButton({ sharedWeather }) {
 
         {/* Share channels — filtered by Master Switch */}
         <div className="p-2 space-y-0.5" data-testid="share-channels-list">
+          {!masterSwitch.global && (
+            <div className="px-3 py-4 text-center">
+              <div className="text-[10px] text-red-400 font-bold uppercase tracking-wider mb-1">Master Switch OFF</div>
+              <div className="text-[9px] text-gray-500">Activation manuelle par STEEVE-MAX requise</div>
+            </div>
+          )}
           {SHARE_CHANNELS.filter(ch => masterSwitch.global && masterSwitch.channels[ch.id] !== false).map((ch) => {
             const Icon = ch.icon;
             const isLastShared = lastShared === ch.id;
@@ -255,14 +261,18 @@ export function ShareBionicButton({ sharedWeather }) {
           })}
         </div>
 
-        {/* Footer — Master Switch + Tracking */}
+        {/* Footer — Master Switch Status */}
         <div className="px-3 py-2 border-t border-gray-700/30 bg-gray-900/50">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[8px] text-gray-500 uppercase font-bold tracking-wider">Master Switch ON</span>
+              <div className={`w-1.5 h-1.5 rounded-full ${masterSwitch.global ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`} />
+              <span className={`text-[8px] uppercase font-bold tracking-wider ${masterSwitch.global ? 'text-gray-500' : 'text-red-400'}`}>
+                Master Switch {masterSwitch.global ? 'ON' : 'OFF'}
+              </span>
             </div>
-            <span className="text-[8px] text-emerald-500/60 font-bold tracking-wider" data-testid="master-switch-indicator">8/8 CANAUX</span>
+            <span className={`text-[8px] font-bold tracking-wider ${masterSwitch.global ? 'text-emerald-500/60' : 'text-red-400/60'}`} data-testid="master-switch-indicator">
+              {Object.values(masterSwitch.channels).filter(Boolean).length}/8 CANAUX
+            </span>
           </div>
         </div>
       </PopoverContent>
