@@ -632,55 +632,81 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
 };
 
 // ============================================================
-// TAB: INTELLIGENCE — Produits avec match_score
+// TAB: INTELLIGENCE — 3 COLONNES GOLDEN — BCE-4X STEEVE-MAX
+// Produits avec match_score en grille dense
 // ============================================================
-const IntelligenceTab = ({ products, gc, compareIds, toggleCompare, addToCart, cartLoading }) => (
-  <div className="space-y-4" data-testid="supra-intelligence-tab">
-    <div className="text-[15px] text-gray-300 mb-3">Score d'adequation — {products.total} produits</div>
-    <div className="space-y-2.5">
-      {products.products?.map((p) => {
-        const sc = p.score_global >= 85 ? BIONIC.green : p.score_global >= 70 ? BIONIC.yellow : p.score_global >= 50 ? BIONIC.orange : BIONIC.red;
-        const isCompared = compareIds.includes(p.product_id);
-        return (
-          <Card key={p.product_id} testId={`product-${p.product_id}`}>
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: `linear-gradient(135deg, ${sc}22, ${sc}08)`, border: `2px solid ${sc}` }}>
-                <span className="text-[18px] font-black" style={{ color: sc }}>{p.score_global}</span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-[15px] font-bold text-white truncate">{p.name}</div>
-                <div className="text-[12px] text-gray-400 mt-0.5">{p.type} | {p.price_cad}$ | {p.weight_kg}kg</div>
-                <div className="flex gap-1 mt-1 flex-wrap">
-                  {p.optimal_for?.map((tag, j) => (
-                    <span key={j} className="text-[10px] px-1.5 py-0.5 rounded" style={{ backgroundColor: `${BIONIC.green}15`, color: BIONIC.green }}>{tag}</span>
-                  ))}
-                </div>
-              </div>
-              <div className="flex flex-col gap-1.5 flex-shrink-0">
-                <div className="grid grid-cols-3 gap-1 text-center">
-                  <div><div className="text-[10px] text-gray-500">Esp</div><div className="text-[13px] font-bold" style={{ color: p.score_species >= 85 ? BIONIC.green : BIONIC.orange }}>{p.score_species}%</div></div>
-                  <div><div className="text-[10px] text-gray-500">Sai</div><div className="text-[13px] font-bold" style={{ color: p.score_season >= 85 ? BIONIC.green : BIONIC.orange }}>{p.score_season}%</div></div>
-                  <div><div className="text-[10px] text-gray-500">Sol</div><div className="text-[13px] font-bold" style={{ color: p.score_soil >= 85 ? BIONIC.green : BIONIC.orange }}>{p.score_soil}%</div></div>
-                </div>
-                <div className="flex gap-1">
-                  <button onClick={() => toggleCompare(p.product_id)}
-                    className="text-[11px] font-bold px-2 py-1 rounded-lg transition-all"
-                    style={{ backgroundColor: isCompared ? `${BIONIC.blue}20` : 'rgba(255,255,255,0.05)', color: isCompared ? BIONIC.blue : '#9ca3af' }}
-                    data-testid={`compare-toggle-${p.product_id}`}>
-                    {isCompared ? 'Retire' : 'Comp.'}
-                  </button>
-                  <SupraButton size="sm" onClick={() => addToCart(p.product_id)} disabled={cartLoading} testId={`add-cart-${p.product_id}`}>
-                    <ShoppingCart className="h-3 w-3" /> CMD
-                  </SupraButton>
-                </div>
-              </div>
-            </div>
-          </Card>
-        );
-      })}
+const IntelligenceTab = ({ products, gc, compareIds, toggleCompare, addToCart, cartLoading }) => {
+  const productList = products.products || [];
+  const third = Math.ceil(productList.length / 3);
+  const col1 = productList.slice(0, third);
+  const col2 = productList.slice(third, third * 2);
+  const col3 = productList.slice(third * 2);
+
+  const IC = ({ Icon, color, sz = 28 }) => (
+    <div className="rounded-full flex items-center justify-center flex-shrink-0" style={{ width: sz, height: sz, backgroundColor: `${color}20` }}>
+      <Icon style={{ color, width: sz * 0.5, height: sz * 0.5 }} />
     </div>
-  </div>
-);
+  );
+
+  const ProductCard = ({ p }) => {
+    const sc = p.score_global >= 85 ? BIONIC.green : p.score_global >= 70 ? BIONIC.yellow : p.score_global >= 50 ? BIONIC.orange : BIONIC.red;
+    const isCompared = compareIds.includes(p.product_id);
+    return (
+      <GoldenCard testId={`product-${p.product_id}`} accentColor={sc} compact>
+        <div className="flex items-center gap-2.5">
+          <div className="w-[42px] h-[42px] rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: `linear-gradient(135deg, ${sc}30, ${sc}10)` }}>
+            <span className="text-[18px] font-black tabular-nums" style={{ color: sc }}>{p.score_global}</span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-[16px] font-bold text-white truncate">{p.name}</div>
+            <div className="text-[14px] text-gray-400">{p.type} | {p.price_cad}$ | {p.weight_kg}kg</div>
+          </div>
+        </div>
+        <div className="flex gap-1 mt-1.5 flex-wrap">
+          {p.optimal_for?.slice(0, 3).map((tag, j) => (
+            <span key={j} className="text-[14px] px-1.5 py-0.5 rounded-lg" style={{ backgroundColor: `${BIONIC.green}15`, color: BIONIC.green }}>{tag}</span>
+          ))}
+        </div>
+        <div className="grid grid-cols-3 gap-1 text-center mt-2">
+          <div><span className="text-[14px] text-gray-500">Esp</span><div className="text-[16px] font-bold" style={{ color: p.score_species >= 85 ? BIONIC.green : BIONIC.orange }}>{p.score_species}%</div></div>
+          <div><span className="text-[14px] text-gray-500">Sai</span><div className="text-[16px] font-bold" style={{ color: p.score_season >= 85 ? BIONIC.green : BIONIC.orange }}>{p.score_season}%</div></div>
+          <div><span className="text-[14px] text-gray-500">Sol</span><div className="text-[16px] font-bold" style={{ color: p.score_soil >= 85 ? BIONIC.green : BIONIC.orange }}>{p.score_soil}%</div></div>
+        </div>
+        <div className="flex gap-1.5 mt-2">
+          <button onClick={() => toggleCompare(p.product_id)}
+            className="flex-1 text-[14px] font-bold px-2 py-1.5 rounded-lg transition-all"
+            style={{ backgroundColor: isCompared ? `${BIONIC.blue}20` : 'rgba(255,255,255,0.05)', color: isCompared ? BIONIC.blue : '#9ca3af' }}
+            data-testid={`compare-toggle-${p.product_id}`}>
+            {isCompared ? 'Retire' : 'Comparer'}
+          </button>
+          <SupraButton size="sm" onClick={() => addToCart(p.product_id)} disabled={cartLoading} testId={`add-cart-${p.product_id}`}>
+            <ShoppingCart className="h-3 w-3" /> CMD
+          </SupraButton>
+        </div>
+      </GoldenCard>
+    );
+  };
+
+  return (
+    <div className="space-y-3" data-testid="supra-intelligence-tab">
+      {/* Header GOLDEN */}
+      <GoldenCard testId="intelligence-header" accentColor={BIONIC.amber} compact>
+        <div className="flex items-center gap-3">
+          <IC Icon={FlaskConical} color={BIONIC.amber} />
+          <span className="text-[16px] font-bold text-white">Score d'adequation</span>
+          <span className="text-[14px] font-semibold px-2 py-0.5 rounded-lg ml-auto" style={{ backgroundColor: `${BIONIC.amber}18`, color: BIONIC.amber }}>{products.total} produits</span>
+        </div>
+      </GoldenCard>
+
+      {/* GRILLE 3 COLONNES — RÉPLIQUE DASHBOARD */}
+      <div className="grid grid-cols-3 gap-3" data-testid="intelligence-3col-grid">
+        <div className="space-y-3">{col1.map(p => <ProductCard key={p.product_id} p={p} />)}</div>
+        <div className="space-y-3">{col2.map(p => <ProductCard key={p.product_id} p={p} />)}</div>
+        <div className="space-y-3">{col3.map(p => <ProductCard key={p.product_id} p={p} />)}</div>
+      </div>
+    </div>
+  );
+};
 
 // ============================================================
 // TAB: FICHE — SALINES ULTIME (5 Scores + 20 Sources + Guides)
@@ -715,17 +741,23 @@ const FicheTab = ({ ficheData, species, season, lat, lng, np }) => {
 
   const { global_score, scores, scientific_sources } = ficheData;
 
+  const IC = ({ Icon, color, sz = 28 }) => (
+    <div className="rounded-full flex items-center justify-center flex-shrink-0" style={{ width: sz, height: sz, backgroundColor: `${color}20` }}>
+      <Icon style={{ color, width: sz * 0.5, height: sz * 0.5 }} />
+    </div>
+  );
+
   return (
     <div className="space-y-3" data-testid="supra-fiche-tab">
-      {/* ═══ Score Global FICHE — STANDARD GOLDEN ═══ */}
-      <GoldenCard testId="fiche-global-score" accentColor="#00BCD4">
+      {/* ═══ Score Global FICHE — STANDARD GOLDEN pleine largeur ═══ */}
+      <GoldenCard testId="fiche-global-score" accentColor="#00BCD4" compact>
         <div className="flex items-center gap-4">
-          <div className="w-[56px] h-[56px] rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #00BCD430, #00BCD410)' }}>
-            <span className="text-[32px] font-black text-cyan-400">{global_score.score}</span>
+          <div className="w-[48px] h-[48px] rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #00BCD430, #00BCD410)' }}>
+            <span className="text-[30px] font-black text-cyan-400">{global_score.score}</span>
           </div>
           <div className="min-w-0">
             <div className="text-[16px] font-black text-white">FICHE SALINE ULTIME</div>
-            <div className="flex items-center gap-2 mt-1">
+            <div className="flex items-center gap-2 mt-0.5">
               <FicheGradeTag grade={global_score.grade} color="#00BCD4" />
               <span className="text-[14px] text-slate-500">5 scores | 20 sources</span>
             </div>
@@ -734,158 +766,237 @@ const FicheTab = ({ ficheData, species, season, lat, lng, np }) => {
         </div>
       </GoldenCard>
 
-      {/* ═══ 5 Scores — STANDARD GOLDEN vertical ═══ */}
-      {FICHE_SCORES.map(({ key, label, icon: Icon, color }) => {
-        const data = scores?.[key];
-        if (!data) return null;
-        return (
-          <GoldenCard key={key} testId={`fiche-score-${key}`} accentColor={color}>
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${color}20` }}>
-                  <Icon className="h-4 w-4" style={{ color }} />
+      {/* ═══════════════════════════════════════════════════════
+          GRILLE 3 COLONNES — RÉPLIQUE EXACTE DASHBOARD BIONIC™
+          ═══════════════════════════════════════════════════════ */}
+      <div className="grid grid-cols-3 gap-3" data-testid="fiche-3col-grid">
+
+        {/* ══════════ COLONNE 1: Logistique + Gros Males ══════════ */}
+        <div className="space-y-3">
+          {FICHE_SCORES.slice(0, 2).map(({ key, label, icon: Icon, color }) => {
+            const data = scores?.[key];
+            if (!data) return null;
+            return (
+              <GoldenCard key={key} testId={`fiche-score-${key}`} accentColor={color} compact>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <IC Icon={Icon} color={color} />
+                    <span className="text-[16px] font-bold text-white">{label}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[30px] font-black text-white leading-none">{data.score}</span>
+                    <FicheGradeTag grade={data.grade} color={color} />
+                  </div>
                 </div>
-                <span className="text-[16px] font-bold text-white">{label}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[30px] font-black text-white leading-none">{data.score}</span>
-                <FicheGradeTag grade={data.grade} color={color} />
-              </div>
+                <div className="w-full h-[6px] rounded-full mb-2" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}>
+                  <div className="h-full rounded-full" style={{ width: `${data.score}%`, backgroundColor: color }} />
+                </div>
+                {Object.entries(data.components || {}).map(([ck, cv]) => (
+                  <div key={ck} className="flex items-center justify-between py-0.5">
+                    <span className="text-[14px] text-slate-400">{ck.replace(/_/g, ' ')}</span>
+                    <span className="text-[16px] text-white font-medium">{cv.value}</span>
+                  </div>
+                ))}
+              </GoldenCard>
+            );
+          })}
+          {/* Guide Logistique */}
+          <GoldenCard testId="fiche-guide-logistique" accentColor={BIONIC.blue} compact>
+            <div className="flex items-center gap-2 mb-1.5">
+              <IC Icon={MapPin} color={BIONIC.blue} />
+              <span className="text-[16px] font-bold text-white">Logistique</span>
+              <span className="text-[14px] px-1.5 py-0.5 rounded-lg font-bold ml-auto" style={{ backgroundColor: `${BIONIC.blue}15`, color: BIONIC.blue }}>GUIDE</span>
             </div>
-            <div className="w-full h-[6px] rounded-full mb-3" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}>
-              <div className="h-full rounded-full" style={{ width: `${data.score}%`, backgroundColor: color }} />
-            </div>
-            {Object.entries(data.components || {}).map(([ck, cv]) => (
-              <div key={ck} className="flex items-center justify-between py-1">
-                <span className="text-[14px] text-slate-400">{ck.replace(/_/g, ' ')}</span>
-                <span className="text-[16px] text-white font-medium">{cv.value}</span>
-              </div>
-            ))}
+            <p className="text-[14px] text-slate-400 leading-relaxed">Accessibilite vehiculaire: transport mineraux (20-25kg). Portage max: 200m. Budget annuel: 150-250$.</p>
           </GoldenCard>
-        );
-      })}
+        </div>
 
-      {/* ═══ Guide SUPRA — Plan Gros Males — STANDARD GOLDEN ═══ */}
-      <GoldenCard testId="fiche-plan-males" accentColor={BIONIC.green}>
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${BIONIC.green}20` }}>
-            <TreeDeciduous className="h-4 w-4" style={{ color: BIONIC.green }} />
-          </div>
-          <span className="text-[16px] font-bold text-white">Plan Gros Males</span>
-          <span className="text-[12px] px-2 py-0.5 rounded-lg font-bold ml-auto" style={{ backgroundColor: `${BIONIC.green}15`, color: BIONIC.green }}>GUIDE</span>
+        {/* ══════════ COLONNE 2: Strategique + Cout/ROI + TCS ══════════ */}
+        <div className="space-y-3">
+          {FICHE_SCORES.slice(2, 5).map(({ key, label, icon: Icon, color }) => {
+            const data = scores?.[key];
+            if (!data) return null;
+            return (
+              <GoldenCard key={key} testId={`fiche-score-${key}`} accentColor={color} compact>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <IC Icon={Icon} color={color} />
+                    <span className="text-[16px] font-bold text-white">{label}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[30px] font-black text-white leading-none">{data.score}</span>
+                    <FicheGradeTag grade={data.grade} color={color} />
+                  </div>
+                </div>
+                <div className="w-full h-[6px] rounded-full mb-2" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}>
+                  <div className="h-full rounded-full" style={{ width: `${data.score}%`, backgroundColor: color }} />
+                </div>
+                {Object.entries(data.components || {}).map(([ck, cv]) => (
+                  <div key={ck} className="flex items-center justify-between py-0.5">
+                    <span className="text-[14px] text-slate-400">{ck.replace(/_/g, ' ')}</span>
+                    <span className="text-[16px] text-white font-medium">{cv.value}</span>
+                  </div>
+                ))}
+              </GoldenCard>
+            );
+          })}
         </div>
-        <div className="text-[16px] text-slate-400 leading-relaxed">
-          <p>Positionnez la saline a proximite des corridors de deplacement. Les gros males preferent les zones de transition foret-clairiere avec couvert lateral 60%+.</p>
-          <p className="mt-1.5">Frequence: bi-mensuelle en pre-rut, hebdomadaire pendant le rut actif.</p>
-        </div>
-      </GoldenCard>
 
-      {/* ═══ Guide Logistique — STANDARD GOLDEN ═══ */}
-      <GoldenCard testId="fiche-guide-logistique" accentColor={BIONIC.blue}>
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${BIONIC.blue}20` }}>
-            <MapPin className="h-4 w-4" style={{ color: BIONIC.blue }} />
-          </div>
-          <span className="text-[16px] font-bold text-white">Logistique</span>
-          <span className="text-[12px] px-2 py-0.5 rounded-lg font-bold ml-auto" style={{ backgroundColor: `${BIONIC.blue}15`, color: BIONIC.blue }}>GUIDE</span>
-        </div>
-        <div className="text-[16px] text-slate-400 leading-relaxed">
-          <p>Accessibilite vehiculaire: transport mineraux (20-25kg). Portage max: 200m. Budget annuel: 150-250$.</p>
-        </div>
-      </GoldenCard>
-
-      {/* ═══ Guide Cout/ROI — STANDARD GOLDEN ═══ */}
-      <GoldenCard testId="fiche-guide-roi" accentColor={BIONIC.purple}>
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${BIONIC.purple}20` }}>
-            <DollarSign className="h-4 w-4" style={{ color: BIONIC.purple }} />
-          </div>
-          <span className="text-[16px] font-bold text-white">Analyse Cout / ROI</span>
-          <span className="text-[12px] px-2 py-0.5 rounded-lg font-bold ml-auto" style={{ backgroundColor: `${BIONIC.purple}15`, color: BIONIC.purple }}>GUIDE</span>
-        </div>
-        <div className="text-[16px] text-slate-400 leading-relaxed">
-          <p>ROI = observations qualitatives par saison. Objectif: 15+ observations positives. Saline mature (2+ saisons) reduit cout/observation de 40-60%.</p>
-        </div>
-      </GoldenCard>
-
-      {/* ═══ 20 Sources Scientifiques — STANDARD GOLDEN ═══ */}
-      <GoldenCard testId="fiche-sources-card" accentColor="#00BCD4">
-        <button onClick={() => setShowSources(!showSources)} className="w-full flex items-center justify-between" data-testid="fiche-toggle-sources">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#00BCD420' }}>
-              <BookOpen className="h-4 w-4 text-cyan-400" />
+        {/* ══════════ COLONNE 3: Plan Gros Males + ROI + Sources ══════════ */}
+        <div className="space-y-3">
+          {/* Plan Gros Males */}
+          <GoldenCard testId="fiche-plan-males" accentColor={BIONIC.green} compact>
+            <div className="flex items-center gap-2 mb-1.5">
+              <IC Icon={TreeDeciduous} color={BIONIC.green} />
+              <span className="text-[16px] font-bold text-white">Plan Gros Males</span>
+              <span className="text-[14px] px-1.5 py-0.5 rounded-lg font-bold ml-auto" style={{ backgroundColor: `${BIONIC.green}15`, color: BIONIC.green }}>GUIDE</span>
             </div>
-            <span className="text-[16px] font-bold text-white">20 Sources Scientifiques</span>
-          </div>
-          {showSources ? <ChevronUp className="h-4 w-4 text-slate-500" /> : <ChevronDown className="h-4 w-4 text-slate-500" />}
-        </button>
-        {showSources && (
-          <div className="mt-3 space-y-1">
-            {(scientific_sources || []).map((src) => (
-              <div key={src.id} className="flex items-start gap-2 py-1.5 border-b" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
-                <span className="text-[14px] font-bold text-cyan-500 flex-shrink-0">[{src.id}]</span>
-                <span className="text-[14px] text-slate-300">{src.ref} — <span className="text-slate-500">{src.title}</span></span>
+            <p className="text-[14px] text-slate-400 leading-relaxed">Positionnez la saline a proximite des corridors de deplacement. Les gros males preferent les zones de transition foret-clairiere avec couvert lateral 60%+.</p>
+            <p className="text-[14px] text-slate-400 mt-1">Frequence: bi-mensuelle en pre-rut, hebdomadaire pendant le rut actif.</p>
+          </GoldenCard>
+
+          {/* Guide ROI */}
+          <GoldenCard testId="fiche-guide-roi" accentColor={BIONIC.purple} compact>
+            <div className="flex items-center gap-2 mb-1.5">
+              <IC Icon={DollarSign} color={BIONIC.purple} />
+              <span className="text-[16px] font-bold text-white">Analyse Cout / ROI</span>
+              <span className="text-[14px] px-1.5 py-0.5 rounded-lg font-bold ml-auto" style={{ backgroundColor: `${BIONIC.purple}15`, color: BIONIC.purple }}>GUIDE</span>
+            </div>
+            <p className="text-[14px] text-slate-400 leading-relaxed">ROI = observations qualitatives par saison. Objectif: 15+ observations positives. Saline mature (2+ saisons) reduit cout/observation de 40-60%.</p>
+          </GoldenCard>
+
+          {/* 20 Sources Scientifiques */}
+          <GoldenCard testId="fiche-sources-card" accentColor="#00BCD4" compact>
+            <button onClick={() => setShowSources(!showSources)} className="w-full flex items-center justify-between cursor-pointer" data-testid="fiche-toggle-sources">
+              <div className="flex items-center gap-2">
+                <IC Icon={BookOpen} color="#00BCD4" />
+                <span className="text-[16px] font-bold text-white">20 Sources</span>
               </div>
+              {showSources ? <ChevronUp className="h-4 w-4 text-slate-500" /> : <ChevronDown className="h-4 w-4 text-slate-500" />}
+            </button>
+            {showSources && (
+              <div className="mt-2 space-y-1">
+                {(scientific_sources || []).map((src) => (
+                  <div key={src.id} className="flex items-start gap-2 py-1 border-b" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
+                    <span className="text-[14px] font-bold text-cyan-500 flex-shrink-0">[{src.id}]</span>
+                    <span className="text-[14px] text-slate-300">{src.ref}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </GoldenCard>
+
+          {/* Integrations */}
+          <div className="flex flex-wrap gap-1">
+            {['SUPRA/V6', 'ACCESS v7', 'PARTAGER', 'ADMIN Premium'].map((tag, i) => (
+              <span key={i} className="text-[14px] px-1.5 py-0.5 rounded font-bold" style={{ backgroundColor: `${['#00BCD4', '#22c55e', '#34d399', '#f5a623'][i]}10`, color: ['#00BCD4', '#22c55e', '#34d399', '#f5a623'][i] }}>{tag}</span>
             ))}
           </div>
-        )}
-      </GoldenCard>
-
-      {/* ═══ Integrations ═══ */}
-      <div className="flex flex-wrap gap-1 pt-0.5">
-        <span className="text-[9px] px-1.5 py-0.5 rounded font-bold" style={{ backgroundColor: '#00BCD410', color: '#00BCD4' }}>SUPRA/V6</span>
-        <span className="text-[9px] px-1.5 py-0.5 rounded font-bold" style={{ backgroundColor: '#22c55e10', color: '#22c55e' }}>ACCESS v7</span>
-        <span className="text-[9px] px-1.5 py-0.5 rounded font-bold" style={{ backgroundColor: '#34d39910', color: '#34d399' }}>PARTAGER</span>
-        <span className="text-[9px] px-1.5 py-0.5 rounded font-bold" style={{ backgroundColor: '#f5a62310', color: '#f5a623' }}>ADMIN Premium</span>
+        </div>
       </div>
     </div>
   );
 };
 
 // ============================================================
-// TAB: COMPAREZ
+// TAB: COMPAREZ — 3 COLONNES GOLDEN — BCE-4X STEEVE-MAX
 // ============================================================
 const ComparezTab = ({ products, compareIds, gc, toggleCompare }) => {
   const compared = (products.products || []).filter(p => compareIds.includes(p.product_id));
+
+  const IC = ({ Icon, color, sz = 28 }) => (
+    <div className="rounded-full flex items-center justify-center flex-shrink-0" style={{ width: sz, height: sz, backgroundColor: `${color}20` }}>
+      <Icon style={{ color, width: sz * 0.5, height: sz * 0.5 }} />
+    </div>
+  );
+
   if (compared.length === 0) {
     return (
       <div className="text-center py-12" data-testid="supra-comparez-tab">
-        <Scale className="h-10 w-10 text-gray-500 mx-auto mb-4" />
-        <div className="text-[16px] text-gray-300 font-semibold">Aucun produit selectionne</div>
-        <div className="text-[13px] text-gray-500 mt-2">Allez dans l'onglet INTELLIGENCE et selectionnez 2-4 produits</div>
+        <div className="grid grid-cols-3 gap-3">
+          <div />
+          <GoldenCard testId="compare-empty" accentColor={BIONIC.blue} compact>
+            <div className="text-center py-6">
+              <IC Icon={Scale} color={BIONIC.blue} sz={40} />
+              <div className="text-[16px] text-gray-300 font-semibold mt-3">Aucun produit selectionne</div>
+              <div className="text-[14px] text-gray-500 mt-1">Allez dans INTELLIGENCE et selectionnez 2-4 produits</div>
+            </div>
+          </GoldenCard>
+          <div />
+        </div>
       </div>
     );
   }
+
   const best = compared.reduce((a, b) => a.score_global > b.score_global ? a : b);
+
+  // Pad to exactly 3 columns
+  const padded = [...compared];
+  while (padded.length < 3) padded.push(null);
+
   return (
-    <div data-testid="supra-comparez-tab">
-      <div className="text-[15px] text-gray-300 mb-4">{compared.length} produit(s) compares</div>
-      <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${Math.min(compared.length, 2)}, 1fr)` }}>
-        {compared.map(p => {
+    <div className="space-y-3" data-testid="supra-comparez-tab">
+      {/* Header GOLDEN */}
+      <GoldenCard testId="compare-header" accentColor={BIONIC.blue} compact>
+        <div className="flex items-center gap-3">
+          <IC Icon={Scale} color={BIONIC.blue} />
+          <span className="text-[16px] font-bold text-white">Comparaison</span>
+          <span className="text-[14px] font-semibold px-2 py-0.5 rounded-lg ml-auto" style={{ backgroundColor: `${BIONIC.blue}18`, color: BIONIC.blue }}>{compared.length} produit(s)</span>
+        </div>
+      </GoldenCard>
+
+      {/* GRILLE 3 COLONNES — RÉPLIQUE DASHBOARD */}
+      <div className="grid grid-cols-3 gap-3" data-testid="compare-3col-grid">
+        {padded.slice(0, 3).map((p, idx) => {
+          if (!p) return <div key={`empty-${idx}`} />;
           const isBest = p.product_id === best.product_id;
           const sc = p.score_global >= 85 ? BIONIC.green : p.score_global >= 70 ? BIONIC.yellow : p.score_global >= 50 ? BIONIC.orange : BIONIC.red;
           return (
-            <Card key={p.product_id} testId={`compare-card-${p.product_id}`} className={isBest ? 'ring-1 ring-green-500/30' : ''}>
-              {isBest && <div className="text-[12px] font-bold text-center mb-2" style={{ color: BIONIC.green }}>MEILLEUR CHOIX</div>}
+            <GoldenCard key={p.product_id} testId={`compare-card-${p.product_id}`} accentColor={isBest ? BIONIC.green : sc} compact>
+              {isBest && <div className="text-[14px] font-bold text-center mb-2" style={{ color: BIONIC.green }}>MEILLEUR CHOIX</div>}
               <div className="text-center mb-3">
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto" style={{ background: `linear-gradient(135deg, ${sc}22, ${sc}08)`, border: `2px solid ${sc}` }}>
-                  <span className="text-[20px] font-black" style={{ color: sc }}>{p.score_global}</span>
+                <div className="w-[56px] h-[56px] rounded-xl flex items-center justify-center mx-auto" style={{ background: `linear-gradient(135deg, ${sc}30, ${sc}10)` }}>
+                  <span className="text-[30px] font-black tabular-nums" style={{ color: sc }}>{p.score_global}</span>
                 </div>
-                <div className="text-[14px] font-bold text-white mt-2">{p.name}</div>
+                <div className="text-[16px] font-bold text-white mt-2">{p.name}</div>
+                <div className="text-[14px] text-gray-400">{p.type}</div>
               </div>
               <div className="space-y-1.5">
                 {[
-                  { label: 'Espece', val: `${p.score_species}%` }, { label: 'Saison', val: `${p.score_season}%` },
-                  { label: 'Sol', val: `${p.score_soil}%` }, { label: 'Prix', val: `${p.price_cad}$` },
+                  { label: 'Espece', val: `${p.score_species}%`, c: p.score_species >= 85 ? BIONIC.green : BIONIC.orange },
+                  { label: 'Saison', val: `${p.score_season}%`, c: p.score_season >= 85 ? BIONIC.green : BIONIC.orange },
+                  { label: 'Sol', val: `${p.score_soil}%`, c: p.score_soil >= 85 ? BIONIC.green : BIONIC.orange },
+                  { label: 'Prix', val: `${p.price_cad}$`, c: 'white' },
+                  { label: 'Poids', val: `${p.weight_kg}kg`, c: 'white' },
                 ].map((row, i) => (
-                  <div key={i} className="flex justify-between py-1 border-b text-[12px]" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
-                    <span className="text-gray-400">{row.label}</span>
-                    <span className="font-bold text-white">{row.val}</span>
+                  <div key={i} className="flex justify-between py-0.5">
+                    <span className="text-[14px] text-gray-400">{row.label}</span>
+                    <span className="text-[16px] font-bold" style={{ color: row.c }}>{row.val}</span>
                   </div>
                 ))}
               </div>
-              <button onClick={() => toggleCompare(p.product_id)} className="w-full mt-2 text-[12px] font-bold py-1.5 rounded-lg" style={{ backgroundColor: `${BIONIC.red}15`, color: BIONIC.red }}>Retirer</button>
-            </Card>
+              {/* Mini-bars pour les 3 scores */}
+              <div className="space-y-1.5 mt-2">
+                {[
+                  { l: 'Espece', v: p.score_species, c: p.score_species >= 85 ? BIONIC.green : BIONIC.orange },
+                  { l: 'Saison', v: p.score_season, c: p.score_season >= 85 ? BIONIC.green : BIONIC.orange },
+                  { l: 'Sol', v: p.score_soil, c: p.score_soil >= 85 ? BIONIC.green : BIONIC.orange },
+                ].map((bar, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <span className="text-[14px] text-slate-500 w-12">{bar.l}</span>
+                    <div className="flex-1 h-[6px] rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}>
+                      <div className="h-full rounded-full" style={{ width: `${bar.v}%`, backgroundColor: bar.c }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <button onClick={() => toggleCompare(p.product_id)}
+                className="w-full mt-3 text-[14px] font-bold py-2 rounded-lg transition-all"
+                style={{ backgroundColor: `${BIONIC.red}15`, color: BIONIC.red }}
+                data-testid={`compare-remove-${p.product_id}`}>
+                Retirer
+              </button>
+            </GoldenCard>
           );
         })}
       </div>
@@ -894,100 +1005,131 @@ const ComparezTab = ({ products, compareIds, gc, toggleCompare }) => {
 };
 
 // ============================================================
-// TAB: COMMANDEZ — Panier Stripe REEL + Checkout
+// TAB: COMMANDEZ — 3 COLONNES GOLDEN — BCE-4X STEEVE-MAX
+// Panier Stripe REEL + Checkout
 // ============================================================
-const CommandezTab = ({ order, products, recipe, gc, cart, addToCart, cartLoading, handleCheckout, checkoutLoading, fetchCart }) => (
-  <div className="space-y-5" data-testid="supra-commandez-tab">
-    {/* Pack complet (SUPRA recette) */}
-    {order && (
-      <Card testId="order-pack-card">
-        <div className="flex items-center gap-3 mb-4">
-          <Package className="h-5 w-5" style={{ color: SUPRA_CMD_COLOR }} />
-          <span className="text-[18px] font-bold text-white">Recette complete</span>
-          <span className="text-[16px] font-bold ml-auto" style={{ color: SUPRA_CMD_COLOR }}>{order.summary?.cost_initial_cad}$</span>
-        </div>
-        <div className="space-y-0">
-          {order.items?.map((item, i) => (
-            <div key={i} className="flex items-center gap-3 py-2.5 border-b" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
-              <div className="flex-1 min-w-0">
-                <div className="text-[14px] font-bold text-white truncate">{item.name}</div>
-                <div className="text-[11px] text-gray-500">{item.brand} | {item.dosage} | Qte: {item.quantity}</div>
-              </div>
-              <span className="text-[13px] font-bold text-white w-14 text-right">{item.total_price_cad}$</span>
-              <SupraButton size="sm" onClick={() => addToCart(item.product_id || `sal_00${i+1}`)} disabled={cartLoading} testId={`order-add-${i}`}>
-                <Plus className="h-3 w-3" />
-              </SupraButton>
-            </div>
-          ))}
-        </div>
-      </Card>
-    )}
-
-    {/* Produits individuels avec CMD reel */}
-    <div className="text-[14px] font-bold text-gray-300 uppercase tracking-wider mb-2">Produits individuels</div>
-    <div className="space-y-2">
-      {products?.products?.slice(0, 8).map(p => {
-        const sc = p.score_global >= 85 ? BIONIC.green : p.score_global >= 70 ? BIONIC.yellow : p.score_global >= 50 ? BIONIC.orange : BIONIC.red;
-        return (
-          <div key={p.product_id} className="flex items-center gap-3 px-4 py-2.5 rounded-xl border transition-all hover:border-[#FF980030]"
-            style={{ backgroundColor: BIONIC.card, borderColor: BIONIC.cardBorder }} data-testid={`shop-product-${p.product_id}`}>
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: `${sc}12`, border: `2px solid ${sc}` }}>
-              <span className="text-[13px] font-black" style={{ color: sc }}>{p.score_global}</span>
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-[13px] font-bold text-white truncate">{p.name}</div>
-              <div className="text-[11px] text-gray-500">{p.type} | {p.weight_kg}kg</div>
-            </div>
-            <span className="text-[13px] font-bold text-white w-12 text-right">{p.price_cad}$</span>
-            <SupraButton size="sm" onClick={() => addToCart(p.product_id)} disabled={cartLoading} testId={`shop-order-${p.product_id}`}>
-              <ShoppingCart className="h-3 w-3" /> CMD
-            </SupraButton>
-          </div>
-        );
-      })}
+const CommandezTab = ({ order, products, recipe, gc, cart, addToCart, cartLoading, handleCheckout, checkoutLoading, fetchCart }) => {
+  const IC = ({ Icon, color, sz = 28 }) => (
+    <div className="rounded-full flex items-center justify-center flex-shrink-0" style={{ width: sz, height: sz, backgroundColor: `${color}20` }}>
+      <Icon style={{ color, width: sz * 0.5, height: sz * 0.5 }} />
     </div>
+  );
 
-    {/* PANIER STRIPE REEL */}
-    <Card testId="supra-cart-stripe">
-      <div className="flex items-center gap-2.5 mb-4">
-        <ShoppingCart className="h-5 w-5" style={{ color: SUPRA_CMD_COLOR }} />
-        <span className="text-[18px] font-bold text-white">Panier</span>
-        <span className="text-[13px] text-gray-400 ml-auto">{cart.item_count || 0} article(s)</span>
-      </div>
-      {cart.items?.length > 0 ? (
-        <>
-          <div className="space-y-2">
-            {cart.items.map((item) => (
-              <div key={item.item_id} className="flex items-center gap-3 py-2 border-b" style={{ borderColor: 'rgba(255,255,255,0.04)' }} data-testid={`cart-item-${item.product_id}`}>
-                <div className="flex-1 min-w-0">
-                  <div className="text-[13px] font-semibold text-white truncate">{item.name}</div>
-                  <div className="text-[11px] text-gray-500">{item.format} — {item.unit_price}$/u</div>
-                </div>
-                <span className="text-[12px] font-bold text-gray-300">x{item.quantity}</span>
-                <span className="text-[13px] font-bold w-14 text-right" style={{ color: BIONIC.amber }}>{item.subtotal}$</span>
+  return (
+    <div className="space-y-3" data-testid="supra-commandez-tab">
+      {/* GRILLE 3 COLONNES — RÉPLIQUE DASHBOARD */}
+      <div className="grid grid-cols-3 gap-3" data-testid="commandez-3col-grid">
+
+        {/* ══════════ COLONNE 1: Recette complete ══════════ */}
+        <div className="space-y-3">
+          {order && (
+            <GoldenCard testId="order-pack-card" accentColor={SUPRA_CMD_COLOR} compact>
+              <div className="flex items-center gap-2 mb-2">
+                <IC Icon={Package} color={SUPRA_CMD_COLOR} />
+                <span className="text-[16px] font-bold text-white">Recette complete</span>
               </div>
-            ))}
-          </div>
-          <div className="flex items-center justify-between mt-4 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
-            <span className="text-[14px] text-gray-400">Total</span>
-            <span className="text-[20px] font-bold" style={{ color: BIONIC.amber }}>{cart.total}$ <span className="text-[11px] text-gray-500">CAD</span></span>
-          </div>
-          <SupraButton size="lg" onClick={handleCheckout} disabled={checkoutLoading} testId="supra-checkout-btn">
-            {checkoutLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShoppingCart className="h-4 w-4" />}
-            {checkoutLoading ? 'Traitement...' : 'Payer avec Stripe'}
-            <ArrowRight className="h-4 w-4" />
-          </SupraButton>
-          <p className="text-[11px] text-gray-600 text-center mt-2">Paiement securise par Stripe</p>
-        </>
-      ) : (
-        <div className="text-center py-6">
-          <ShoppingCart className="h-8 w-8 text-gray-600 mx-auto mb-2" />
-          <p className="text-[13px] text-gray-500">Votre panier est vide</p>
-          <p className="text-[11px] text-gray-600 mt-1">Cliquez CMD pour ajouter des produits</p>
+              <div className="text-[30px] font-black mb-2" style={{ color: SUPRA_CMD_COLOR }}>{order.summary?.cost_initial_cad}$</div>
+              <div className="space-y-0">
+                {order.items?.map((item, i) => (
+                  <div key={i} className="flex items-center gap-2 py-2 border-b" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-[14px] font-bold text-white truncate">{item.name}</div>
+                      <div className="text-[14px] text-gray-500">{item.brand} | {item.dosage}</div>
+                    </div>
+                    <span className="text-[16px] font-bold text-white flex-shrink-0">{item.total_price_cad}$</span>
+                    <SupraButton size="sm" onClick={() => addToCart(item.product_id || `sal_00${i+1}`)} disabled={cartLoading} testId={`order-add-${i}`}>
+                      <Plus className="h-3 w-3" />
+                    </SupraButton>
+                  </div>
+                ))}
+              </div>
+            </GoldenCard>
+          )}
+          {!order && (
+            <GoldenCard testId="order-empty" accentColor={BIONIC.orange} compact>
+              <div className="text-center py-4">
+                <IC Icon={Package} color={BIONIC.orange} sz={36} />
+                <div className="text-[16px] text-gray-400 mt-2">Aucune recette disponible</div>
+              </div>
+            </GoldenCard>
+          )}
         </div>
-      )}
-    </Card>
-  </div>
-);
+
+        {/* ══════════ COLONNE 2: Produits individuels ══════════ */}
+        <div className="space-y-3">
+          <GoldenCard testId="shop-header" accentColor={BIONIC.amber} compact>
+            <div className="flex items-center gap-2">
+              <IC Icon={ShoppingCart} color={BIONIC.amber} />
+              <span className="text-[16px] font-bold text-white">Produits individuels</span>
+            </div>
+          </GoldenCard>
+          {products?.products?.slice(0, 6).map(p => {
+            const sc = p.score_global >= 85 ? BIONIC.green : p.score_global >= 70 ? BIONIC.yellow : p.score_global >= 50 ? BIONIC.orange : BIONIC.red;
+            return (
+              <GoldenCard key={p.product_id} testId={`shop-product-${p.product_id}`} accentColor={sc} compact>
+                <div className="flex items-center gap-2">
+                  <div className="w-[36px] h-[36px] rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: `linear-gradient(135deg, ${sc}30, ${sc}10)` }}>
+                    <span className="text-[16px] font-black tabular-nums" style={{ color: sc }}>{p.score_global}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[14px] font-bold text-white truncate">{p.name}</div>
+                    <div className="text-[14px] text-gray-500">{p.type} | {p.weight_kg}kg</div>
+                  </div>
+                  <span className="text-[16px] font-bold text-white flex-shrink-0">{p.price_cad}$</span>
+                  <SupraButton size="sm" onClick={() => addToCart(p.product_id)} disabled={cartLoading} testId={`shop-order-${p.product_id}`}>
+                    <ShoppingCart className="h-3 w-3" />
+                  </SupraButton>
+                </div>
+              </GoldenCard>
+            );
+          })}
+        </div>
+
+        {/* ══════════ COLONNE 3: Panier Stripe REEL ══════════ */}
+        <div className="space-y-3">
+          <GoldenCard testId="supra-cart-stripe" accentColor={BIONIC.amber} compact>
+            <div className="flex items-center gap-2 mb-3">
+              <IC Icon={ShoppingCart} color={BIONIC.amber} />
+              <span className="text-[16px] font-bold text-white">Panier</span>
+              <span className="text-[14px] text-gray-400 ml-auto">{cart.item_count || 0} article(s)</span>
+            </div>
+            {cart.items?.length > 0 ? (
+              <>
+                <div className="space-y-1.5">
+                  {cart.items.map((item) => (
+                    <div key={item.item_id} className="flex items-center gap-2 py-1.5 border-b" style={{ borderColor: 'rgba(255,255,255,0.04)' }} data-testid={`cart-item-${item.product_id}`}>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[14px] font-semibold text-white truncate">{item.name}</div>
+                        <div className="text-[14px] text-gray-500">{item.format} — {item.unit_price}$/u</div>
+                      </div>
+                      <span className="text-[14px] font-bold text-gray-300">x{item.quantity}</span>
+                      <span className="text-[16px] font-bold" style={{ color: BIONIC.amber }}>{item.subtotal}$</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex items-center justify-between mt-3 pt-2 border-t" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
+                  <span className="text-[14px] text-gray-400">Total</span>
+                  <span className="text-[30px] font-black tabular-nums" style={{ color: BIONIC.amber }}>{cart.total}$</span>
+                </div>
+                <SupraButton size="lg" onClick={handleCheckout} disabled={checkoutLoading} testId="supra-checkout-btn">
+                  {checkoutLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShoppingCart className="h-4 w-4" />}
+                  {checkoutLoading ? 'Traitement...' : 'Payer avec Stripe'}
+                  <ArrowRight className="h-4 w-4" />
+                </SupraButton>
+                <p className="text-[14px] text-gray-600 text-center mt-1.5">Paiement securise par Stripe</p>
+              </>
+            ) : (
+              <div className="text-center py-6">
+                <IC Icon={ShoppingCart} color={BIONIC.amber} sz={36} />
+                <p className="text-[14px] text-gray-500 mt-2">Votre panier est vide</p>
+                <p className="text-[14px] text-gray-600 mt-0.5">Cliquez CMD pour ajouter</p>
+              </div>
+            )}
+          </GoldenCard>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default NutritionPointDetailPanel;

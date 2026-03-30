@@ -16,50 +16,44 @@ Application HUNTIQ V6 — Plateforme avancee de chasse avec modules territoire, 
 
 ## What's Been Implemented
 
-### Completed (Session Feb 2026)
+### Session 2 — Feb 2026 (CURRENT)
 
-1. **SUPRA v2 — Grille 3 Colonnes** (P0 - DONE)
-   - Reconstruction complete de NutritionPointDetailPanel.jsx AnalyseTab
-   - Structure grid-cols-3: Col1 (Score+Gauge+Ecozone+Besoins) | Col2 (Sol+Metabolisme+Vegetation+Hydrologie) | Col3 (Mineraux+Recette+Couts)
-   - Compact mode pour densification dans colonnes etroites
-   - PREMIUM collapsibles pleine largeur (Physiologie, Comportement, Support, Sources)
-   - Accent bars, icones en cercles, mini-bars 6px, rounded-xl
+1. **SUPRA v2 — 5/5 Sous-tableaux en 3 Colonnes GOLDEN** (P0 - DONE)
+   - **ANALYSE**: Col1 (Score+Gauge+Ecozone+Besoins) | Col2 (Sol+Metabolisme+Vegetation+Hydrologie) | Col3 (Mineraux+Recette+Couts) + PREMIUM collapsibles pleine largeur
+   - **FICHE**: Col1 (Logistique+Gros Males) | Col2 (Strategique+Cout/ROI+TCS) | Col3 (Plan Gros Males+ROI+Sources)
+   - **INTELLIGENCE**: 3 colonnes de produits avec scores, tags, CMD buttons, mini-bars
+   - **COMPAREZ**: 3 colonnes cote-a-cote avec MEILLEUR CHOIX, mini-bars comparatives
+   - **COMMANDEZ**: Col1 (Recette complete) | Col2 (Produits individuels) | Col3 (Panier Stripe)
+   - Compact mode pour densite maximale, accent bars, icones en cercles, mini-bars 6px
 
 2. **Marketing Engine V2 — PARTAGER** (P0 - DONE)
-   - POST /api/share/track — Enrichi: auto-capture user_email + recipient_email + page_context + species + sal_id
+   - POST /api/share/track — Enrichi: auto-capture user_email + recipient_email + context
    - POST /api/share/capture-lead — Capture manuelle de leads marketing
-   - GET /api/share/contacts — Liste contacts marketing auto-crees (MongoDB)
-   - GET /api/share/marketing-stats — Stats enrichies: channels, sources, conversion rate
-   - Auto-creation contacts MongoDB (collection marketing_contacts + marketing_events)
-   - Lead scoring (10 points auto-captured, 5 points phone-only)
-   - Integration ADMIN Premium + Master Switch synchronisation
-   - BCE-4X logs complets
+   - GET /api/share/contacts — Liste contacts marketing (10 contacts auto-crees)
+   - GET /api/share/marketing-stats — Stats enrichies (conversion, channels, sources)
+   - Auto-creation contacts MongoDB (marketing_contacts + marketing_events)
+   - Lead scoring, BCE-4X logs, Master Switch sync, Admin Premium integration
 
 3. **STANDARD GOLDEN — Propagation Universelle** (P0 - DONE)
-   - CSS variables Tailwind mise a jour (--card: #1E293B, --border: transparent, --background: #0F172A)
-   - CoreDashboard.jsx: Card/Badge/Tabs converti en GoldenCard/GCard (zero bordure, accent bars, icones cercles)
-   - AdminPremiumPage.jsx: Sidebar GOLDEN (accent bar gauche, icone en cercle)
-   - App.css: Overrides globaux (borders transparent, bg-slate-800 → #1E293B, tabs active → #f5a623)
-   - GoldenComponents.jsx: Composants partages (GoldenCard, GoldenCollapsible, IconCircle, GoldenMiniBar, GoldenDataRow, GoldenBadge, GoldenScoreBox)
+   - CSS variables Tailwind (--card: #1E293B, --border: transparent, --background: #0F172A)
+   - CoreDashboard.jsx: GoldenCard, GCard, accent bars, zero bordure
+   - AdminPremiumPage.jsx: Sidebar GOLDEN accent bar
+   - App.css: Overrides globaux (borders, bg-slate, tabs active)
+   - GoldenComponents.jsx: Composants partages universels
+   - index.css: Variables CSS racine modifiees
 
-### Completed (Previous Sessions)
-- Import/Archive V5 → V6
-- Governance BCE-4X / STEEVE-MAX framework
-- Branch Work1 / STEEVE-MAX-x3200-V6-CORE
-- BSAA Module Architecture (Feasibility + Specs)
-- Engine Audit, Coherence Audit, Historical Audit
-- Removed BIONIC watermark
-- Fixed Map crash
-- Fixed Biology logic (Orignal vs Chevreuil)
-- PARTAGER 13 canaux UI
-- SUPRA v2 base panel
+### Session 1 — Previous
+- Import/Archive V5 → V6, Governance BCE-4X, Branch Work1
+- BSAA Architecture, Engine/Coherence/Historical Audits
+- Removed BIONIC watermark, Fixed Map crash, Fixed Biology logic
+- PARTAGER 13 canaux UI, SUPRA v2 base panel
 
 ---
 
 ## Prioritized Backlog
 
 ### P1 — Upcoming
-- [ ] Final verification report confirming GOLDEN + BCE-4X standards
+- [ ] Verification rapport confirming GOLDEN + BCE-4X standards
 - [ ] Commit all to STEEVE-MAX-x3200-V6-CORE branch
 
 ### P2 — Future / GELE
@@ -84,6 +78,15 @@ Application HUNTIQ V6 — Plateforme avancee de chasse avec modules territoire, 
 | PUT | /api/share/master-switch | Update Master Switch (STEEVE-MAX only) |
 
 ## Key DB Collections (MongoDB)
-- `marketing_contacts`: Auto-created contacts (email, name, phone, source, score, channels_used, interaction_count)
-- `marketing_events`: All marketing events (event_type, channel, data, timestamp, protocol)
-- `share_events`: Share tracking events (channel, template, url, user/recipient info)
+- marketing_contacts: Auto-created contacts (email, name, phone, source, score, channels, interactions)
+- marketing_events: Marketing events (event_type, channel, data, timestamp, protocol)
+- share_events: Share tracking events (channel, template, url, user/recipient info)
+
+## Key Files Modified
+- /app/frontend/src/components/territoire/NutritionPointDetailPanel.jsx — 5 tabs 3-col GOLDEN
+- /app/frontend/src/components/territoire/ui/GoldenComponents.jsx — Shared GOLDEN components
+- /app/frontend/src/modules/dashboard/CoreDashboard.jsx — Dashboard GOLDEN
+- /app/frontend/src/pages/AdminPremiumPage.jsx — Admin sidebar GOLDEN
+- /app/frontend/src/App.css — Global GOLDEN overrides
+- /app/frontend/src/index.css — CSS variables GOLDEN
+- /app/backend/modules/share_engine/router.py — Marketing Engine V2
