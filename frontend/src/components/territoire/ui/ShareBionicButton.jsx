@@ -21,7 +21,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || '';
 // ═══ TEXTE OFFICIEL BIONIC — x5002 CERTIFIE ═══
 const OFFICIAL_TEXT_FR = {
   description: "Chasse Bionic\u2122 red\u00e9finit l\u2019art de la chasse moderne. Analysez et comparez en toute confiance votre territoire, ses zones d\u2019achalandage, les terres \u00e0 louer, les pourvoiries et les produits les plus performants. Gr\u00e2ce \u00e0 une plateforme fond\u00e9e exclusivement sur des donn\u00e9es scientifiques, publiques, d\u00e9clar\u00e9es et v\u00e9rifiables, vous acc\u00e9dez \u00e0 un v\u00e9ritable \u00e9cosyst\u00e8me de pr\u00e9cision\u2026 directement au bout des doigts.",
-  highlight: "Identifiez les zones les plus performantes et acc\u00e9dez instantan\u00e9ment aux meilleures strat\u00e9gies, solutions et prix afin d\u2019optimiser vos r\u00e9sultats de chasse.",
+  highlight: "Identifiez et analysez les zones les plus performantes et acc\u00e9dez instantan\u00e9ment aux meilleures strat\u00e9gies, approches et solutions afin d\u2019optimiser vos r\u00e9sultats et site de chasse.",
   slogan: "La science valide ce que le terrain confirme.\u2122",
   watermark: "Analyse g\u00e9n\u00e9r\u00e9e avec BIONIC OS \u2014 IA Terrain",
 };
