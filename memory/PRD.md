@@ -116,6 +116,13 @@ Plateforme d'analyse de territoires de chasse avec scoring multi-criteres, guide
 - [x] Section C: Double redondance — /api/archive/v5201/ operationnel (list + download)
 - [x] Section D: Rapport ARCHIVE_PERMANENTE_v5201.md genere — v5201 protegee
 
+### Directive x5304 — ARCHIVE_GITHUB_PERMANENTE
+- [x] Section A: Sauvegarde GitHub validee operationnelle
+- [x] Section B: Export prepare — 8 fichiers + 4 configs systeme + ENV chiffrees + RECONSTRUCT.sh
+- [x] Section B: ZIP fractionnes <95 MB (GitHub compatible) — integrite MD5 + Python zipfile verifiee
+- [x] Section C: Procedure "Save to GitHub" + tag + Release documentee
+- [x] Section D: Rapport ARCHIVE_GITHUB_PERMANENTE_v5201.md genere
+
 ---
 
 ## Backlog (GELE par STEEVE-MAX)

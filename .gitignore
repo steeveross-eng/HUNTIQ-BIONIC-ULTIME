@@ -223,3 +223,5 @@ backend/static/archive_v5201/BIONIC_OS_7BLOCS_v5201.zip
 # Environment files
 *.env
 *.env.*
+archive_github_v5201/BIONIC_OS_BACKUP_COMPLET_v5201.zip.part_aa
+archive_github_v5201/BIONIC_OS_7BLOCS_v5201.zip.part_aa
