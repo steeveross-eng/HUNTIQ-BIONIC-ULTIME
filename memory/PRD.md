@@ -110,6 +110,12 @@ Plateforme d'analyse de territoires de chasse avec scoring multi-criteres, guide
 - [x] Section C: Point de restauration scelle BIONIC_OS_v5201 (RESTORE_POINT_v5201.md)
 - [x] Section D: Protocole ZERO-REGRESSION BCE-4X actif (ZERO_REGRESSION_PROTOCOL_v5201.md)
 
+### Directive x5302 — ARCHIVE_PERMANENTE_BIONIC_OS
+- [x] Section A: Archivage long terme — 4 fichiers en triple redondance (public/, static/, memory/)
+- [x] Section B: Accessibilite HTTPS verifiee — Endpoint 1 (frontend) + Endpoint 2 (backend API)
+- [x] Section C: Double redondance — /api/archive/v5201/ operationnel (list + download)
+- [x] Section D: Rapport ARCHIVE_PERMANENTE_v5201.md genere — v5201 protegee
+
 ---
 
 ## Backlog (GELE par STEEVE-MAX)

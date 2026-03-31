@@ -729,6 +729,48 @@ async def serve_audit_file(filename: str):
 
 
 # ==============================================
+# ARCHIVE PERMANENTE v5201 — Directive x5302
+# Second endpoint HTTPS (double redondance)
+# ==============================================
+_ARCHIVE_DIR = _os.path.join(_os.path.dirname(__file__), "static", "archive_v5201")
+
+@app.get("/api/archive/v5201/list")
+async def list_archive_v5201():
+    """Liste les fichiers de l'archive permanente v5201."""
+    files = []
+    if _os.path.exists(_ARCHIVE_DIR):
+        for f in sorted(_os.listdir(_ARCHIVE_DIR)):
+            fpath = _os.path.join(_ARCHIVE_DIR, f)
+            if _os.path.isfile(fpath):
+                ext = _os.path.splitext(f)[1].lower()
+                files.append({
+                    "filename": f,
+                    "size_bytes": _os.path.getsize(fpath),
+                    "type": _MIME_MAP.get(ext, "application/octet-stream"),
+                    "download_url": f"/api/archive/v5201/{f}",
+                })
+    return JSONResponse(content={
+        "archive": "BIONIC_OS_v5201",
+        "status": "SCELLE — IMMUTABLE",
+        "protocol": "BCE-4X GOLDEN V6+",
+        "files": files,
+        "total": len(files),
+    })
+
+@app.get("/api/archive/v5201/{filename}")
+async def serve_archive_v5201(filename: str):
+    """Sert les fichiers de l'archive permanente v5201 (second endpoint)."""
+    safe_name = _os.path.basename(filename)
+    path = _os.path.join(_ARCHIVE_DIR, safe_name)
+    if _os.path.exists(path):
+        ext = _os.path.splitext(safe_name)[1].lower()
+        media = _MIME_MAP.get(ext, "application/octet-stream")
+        return FileResponse(path, filename=safe_name, media_type=media)
+    from fastapi import HTTPException as _HTTPException
+    raise _HTTPException(status_code=404, detail="Archive file not found")
+
+
+# ==============================================
 # MAIN
 # ==============================================
 if __name__ == "__main__":
