@@ -219,3 +219,7 @@ frontend/public/BIONIC_OS_BACKUP_COMPLET_v5201.zip
 frontend/public/BIONIC_OS_7BLOCS_v5201.zip
 backend/static/archive_v5201/BIONIC_OS_BACKUP_COMPLET_v5201.zip
 backend/static/archive_v5201/BIONIC_OS_7BLOCS_v5201.zip
+-e 
+# Environment files
+*.env
+*.env.*
