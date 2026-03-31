@@ -88,6 +88,18 @@ class ShareTrackEvent(BaseModel):
     page_context: Optional[str] = None
     species: Optional[str] = None
     sal_id: Optional[str] = None
+    share_id: Optional[str] = None
+    easylead_url: Optional[str] = None
+    has_screenshot: Optional[bool] = False
+
+
+class EasyLeadGenerate(BaseModel):
+    share_id: str
+    user_id: str
+    channel: str
+    page_shared: Optional[str] = "/"
+    easylead_url: Optional[str] = None
+    has_screenshot: Optional[bool] = False
 
 
 class MarketingLeadCapture(BaseModel):
@@ -190,6 +202,9 @@ async def track_share(event: ShareTrackEvent):
         "page_context": event.page_context,
         "species": event.species,
         "sal_id": event.sal_id,
+        "share_id": event.share_id,
+        "easylead_url": event.easylead_url,
+        "has_screenshot": event.has_screenshot,
     }
     await db.share_events.insert_one(doc)
 
@@ -456,11 +471,12 @@ async def update_master_switch(update: MasterSwitchUpdate):
 
 @router.get("/status")
 async def share_status():
-    """Status du module SHARE BIONIC + Master Switch + Marketing Engine."""
+    """Status du module SHARE BIONIC + Master Switch + Marketing Engine + EASYlead."""
     return {
         "module": "share_engine",
-        "version": "3.0.0",
+        "version": "4.0.0",
         "protocol": "BCE-4X GOLDEN V6+",
+        "directive": "x5001-SHARE_ENGINE_V1_EASYLEAD",
         "status": "OPERATIONAL",
         "master_switch": {
             "global": "ON" if MASTER_SWITCH_STATE["global_enabled"] else "OFF",
@@ -478,9 +494,147 @@ async def share_status():
             "lead_scoring": True,
             "admin_sync": True,
         },
+        "easylead_engine": {
+            "status": "OPERATIONAL",
+            "version": "1.0.0",
+            "url_format": "?ref=USER_ID&lead=SHARE_ID&page=PAGE_SHARED",
+            "screenshot_watermark": True,
+            "watermark_text": "Analyse generee avec BIONIC OS — IA Terrain",
+        },
         "channels": list(MASTER_SWITCH_STATE["channels"].keys()),
         "templates": ["territoire", "premium", "viral"],
         "tracking": "ACTIVE",
         "admin_premium_ready": True,
         "admin_sync_modules": list(MASTER_SWITCH_STATE["admin_sync"].keys()),
+    }
+
+
+# ═══════════════════════════════════════════
+# EASYLEAD ENGINE V1 — Directive x5001
+# Tracking URL: ?ref=USER_ID&lead=SHARE_ID&page=PAGE_SHARED
+# ═══════════════════════════════════════════
+
+@router.post("/easylead/generate")
+async def easylead_generate(payload: EasyLeadGenerate):
+    """Genere et enregistre un lien EASYlead — BCE-4X Share Engine V1."""
+    db = get_db()
+    now = datetime.now(timezone.utc).isoformat()
+
+    doc = {
+        "share_id": payload.share_id,
+        "user_id": payload.user_id,
+        "channel": payload.channel,
+        "page_shared": payload.page_shared,
+        "easylead_url": payload.easylead_url,
+        "has_screenshot": payload.has_screenshot,
+        "clicks": 0,
+        "conversions": 0,
+        "status": "active",
+        "created_at": now,
+        "protocol": "BCE-4X GOLDEN V6+",
+        "engine": "easylead_v1",
+    }
+    await db.easylead_links.insert_one(doc)
+
+    # Auto-capture lead si user_id disponible
+    if payload.user_id and payload.user_id != "anonymous":
+        await _log_marketing_event(db, "easylead_generated", payload.channel, {
+            "share_id": payload.share_id,
+            "user_id": payload.user_id,
+            "page": payload.page_shared,
+        })
+
+    logger.info(
+        f"[EASYLEAD-ENGINE] Link generated: share_id={payload.share_id}, "
+        f"channel={payload.channel}, page={payload.page_shared}"
+    )
+
+    return {
+        "status": "generated",
+        "share_id": payload.share_id,
+        "easylead_url": payload.easylead_url,
+        "tracking_params": {
+            "ref": payload.user_id,
+            "lead": payload.share_id,
+            "page": payload.page_shared,
+        },
+        "protocol": "BCE-4X",
+    }
+
+
+@router.get("/easylead/track")
+async def easylead_track(ref: str = "", lead: str = "", page: str = "/"):
+    """Enregistre un clic sur un lien EASYlead — tracking entrant."""
+    db = get_db()
+    now = datetime.now(timezone.utc).isoformat()
+
+    # Incrementer compteur de clics
+    if lead:
+        await db.easylead_links.update_one(
+            {"share_id": lead},
+            {"$inc": {"clicks": 1}, "$set": {"last_click_at": now}}
+        )
+
+    # Log evenement
+    click_doc = {
+        "ref_user_id": ref,
+        "share_id": lead,
+        "page": page,
+        "clicked_at": now,
+        "protocol": "BCE-4X",
+        "engine": "easylead_v1",
+    }
+    await db.easylead_clicks.insert_one(click_doc)
+
+    await _log_marketing_event(db, "easylead_click", "inbound", {
+        "ref": ref, "lead": lead, "page": page,
+    })
+
+    logger.info(f"[EASYLEAD-ENGINE] Click tracked: lead={lead}, ref={ref}, page={page}")
+
+    return {
+        "status": "tracked",
+        "share_id": lead,
+        "ref": ref,
+        "page": page,
+    }
+
+
+@router.get("/easylead/stats")
+async def easylead_stats():
+    """Statistiques EASYlead — Admin Premium."""
+    db = get_db()
+
+    total_links = await db.easylead_links.count_documents({})
+    total_clicks = await db.easylead_clicks.count_documents({})
+    active_links = await db.easylead_links.count_documents({"status": "active"})
+
+    # Top canaux
+    pipeline_channels = [{"$group": {"_id": "$channel", "count": {"$sum": 1}}}]
+    links_by_channel = {}
+    async for doc in db.easylead_links.aggregate(pipeline_channels):
+        links_by_channel[doc["_id"]] = doc["count"]
+
+    # Top pages partagees
+    pipeline_pages = [{"$group": {"_id": "$page_shared", "count": {"$sum": 1}}}]
+    links_by_page = {}
+    async for doc in db.easylead_links.aggregate(pipeline_pages):
+        links_by_page[doc["_id"]] = doc["count"]
+
+    # Liens recents
+    recent_links = []
+    cursor = db.easylead_links.find({}, {"_id": 0}).sort("created_at", -1).limit(10)
+    async for doc in cursor:
+        recent_links.append(doc)
+
+    return {
+        "total_links": total_links,
+        "total_clicks": total_clicks,
+        "active_links": active_links,
+        "click_rate": round((total_clicks / max(total_links, 1)) * 100, 1),
+        "links_by_channel": links_by_channel,
+        "links_by_page": links_by_page,
+        "recent_links": recent_links,
+        "protocol": "BCE-4X GOLDEN V6+",
+        "engine": "easylead_v1",
     }

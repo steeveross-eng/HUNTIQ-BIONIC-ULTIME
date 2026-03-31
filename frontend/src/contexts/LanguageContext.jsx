@@ -590,8 +590,16 @@ export const TRANSLATIONS = {
     // Hero Section
     hero_order: "Commandez",
     hero_description: "Chasse Bionic™ redéfinit l'art de la chasse moderne. Analysez et comparez en toute confiance votre territoire, ses zones d'achalandage, les terres à louer, les pourvoiries et les produits les plus performants. Grâce à une plateforme fondée exclusivement sur des données scientifiques, publiques, déclarées et vérifiables, vous accédez à un véritable écosystème de précision… directement au bout des doigts.",
-    hero_highlight: "Identifiez gratuitement les plus performants et repérez instantanément les meilleures solutions et prix.",
+    hero_highlight: "Identifiez les zones les plus performantes et accédez instantanément aux meilleures stratégies, solutions et prix afin d'optimiser vos résultats de chasse.",
     hero_subtitle: "Devenez le professionnel des leurres en quelques clics.",
+    
+    // Share Engine V1 — Texte officiel BIONIC (×5001)
+    share_official_text: "Chasse Bionic\u2122 red\u00e9finit l'art de la chasse moderne. Analysez et comparez en toute confiance votre territoire, ses zones d'achalandage, les terres \u00e0 louer, les pourvoiries et les produits les plus performants. Gr\u00e2ce \u00e0 une plateforme fond\u00e9e exclusivement sur des donn\u00e9es scientifiques, publiques, d\u00e9clar\u00e9es et v\u00e9rifiables, vous acc\u00e9dez \u00e0 un v\u00e9ritable \u00e9cosyst\u00e8me de pr\u00e9cision\u2026 directement au bout des doigts.",
+    share_official_highlight: "Identifiez les zones les plus performantes et acc\u00e9dez instantan\u00e9ment aux meilleures strat\u00e9gies, solutions et prix afin d'optimiser vos r\u00e9sultats de chasse.",
+    share_official_slogan: "La science valide ce que le terrain confirme.\u2122",
+    share_watermark: "Analyse g\u00e9n\u00e9r\u00e9e avec BIONIC OS \u2014 IA Terrain",
+    share_card_title: "BIONIC \u2014 Analyse Territoire de Chasse",
+    share_easylead_cta: "D\u00e9couvrez votre territoire avec BIONIC",
     
     // Features
     feature_analyze_desc: "13 critères évalués par IA",
@@ -2016,8 +2024,16 @@ export const TRANSLATIONS = {
     // Hero Section
     hero_order: "Order",
     hero_description: "Bionic Hunt™ redefines the art of modern hunting. Analyze and compare with confidence your territory, its hotspots, lands for rent, outfitters and top-performing products. With a platform built exclusively on scientific, public, declared and verifiable data, you access a true precision ecosystem… right at your fingertips.",
-    hero_highlight: "Identify the best performers for free and instantly spot the best solutions and prices.",
+    hero_highlight: "Identify the top-performing zones and instantly access the best strategies, solutions and prices to optimize your hunting results.",
     hero_subtitle: "Become a lure professional in just a few clicks.",
+    
+    // Share Engine V1 — Official BIONIC text (×5001)
+    share_official_text: "Bionic Hunt\u2122 redefines the art of modern hunting. Analyze and compare with confidence your territory, its hotspots, lands for rent, outfitters and top-performing products. With a platform built exclusively on scientific, public, declared and verifiable data, you access a true precision ecosystem\u2026 right at your fingertips.",
+    share_official_highlight: "Identify the top-performing zones and instantly access the best strategies, solutions and prices to optimize your hunting results.",
+    share_official_slogan: "Science validates what the field confirms.\u2122",
+    share_watermark: "Analysis generated with BIONIC OS \u2014 Field AI",
+    share_card_title: "BIONIC \u2014 Hunting Territory Analysis",
+    share_easylead_cta: "Discover your territory with BIONIC",
     
     // Features
     feature_analyze_desc: "13 AI-evaluated criteria",
