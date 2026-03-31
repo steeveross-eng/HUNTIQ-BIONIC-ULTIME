@@ -78,7 +78,7 @@ export function CriteriaDetailModal({ criteriaKey, criteriaValue, species = 'ori
 
   return (
     <div className="fixed inset-0 flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 99999 }} onClick={onClose} data-testid="criteria-modal-overlay">
-      <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl" style={{ backgroundColor: GOLDEN.pageBg, boxShadow: '0 8px 48px rgba(0,0,0,0.7)' }} onClick={e => e.stopPropagation()} data-testid="criteria-modal">
+      <div className="w-full max-w-6xl max-h-[92vh] overflow-y-auto rounded-lg" style={{ backgroundColor: GOLDEN.pageBg, boxShadow: '0 8px 48px rgba(0,0,0,0.7)' }} onClick={e => e.stopPropagation()} data-testid="criteria-modal">
 
         {/* Header */}
         <div className="sticky top-0 z-10 px-6 py-4 flex items-start justify-between" style={{ backgroundColor: GOLDEN.pageBg, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
@@ -96,122 +96,143 @@ export function CriteriaDetailModal({ criteriaKey, criteriaValue, species = 'ori
           </button>
         </div>
 
-        <div className="px-6 py-4 space-y-4">
-          {/* 1. Definition */}
-          <Section icon={BookOpen} color={B.cyan} title="1. Definition du critere">
-            <p className="text-[16px] text-slate-300 leading-relaxed">{data.definition}</p>
-          </Section>
+        <div className="px-6 py-3 space-y-3">
+          {/* ═══ RANGEE 1: Definition + Methodologie (2 colonnes) ═══ */}
+          <div className="grid grid-cols-2 gap-3">
+            {/* 1. Definition */}
+            <Section icon={BookOpen} color={B.cyan} title="1. Definition du critere">
+              <p className="text-[14px] text-slate-300 leading-relaxed">{data.definition}</p>
+            </Section>
 
-          {/* 2. Methodologie */}
-          <Section icon={Target} color={B.purple} title="2. Methodologie de scoring">
-            <p className="text-[16px] text-slate-300 leading-relaxed">{data.methodology}</p>
-          </Section>
+            {/* 2. Methodologie */}
+            <Section icon={Target} color={B.purple} title="2. Methodologie de scoring">
+              <p className="text-[14px] text-slate-300 leading-relaxed">{data.methodology}</p>
+            </Section>
+          </div>
 
           {/* 3. Justification — ESPECE ACTIVE UNIQUEMENT */}
           <Section icon={CheckCircle} color={sc} title={`3. Justification du score — ${spShort}`}>
-            <p className="text-[16px] text-slate-300 leading-relaxed">{justif}</p>
+            <p className="text-[14px] text-slate-300 leading-relaxed">{justif}</p>
           </Section>
 
-          {/* 4. Recommandations terrain — ESPECE ACTIVE UNIQUEMENT */}
+          {/* 4. Recommandations terrain — ESPECE ACTIVE UNIQUEMENT (2 colonnes) */}
           <Section icon={MapPin} color={B.green} title={`4. Recommandations terrain — ${spShort} (${recosTerrain.length})`}>
-            <BulletList items={recosTerrain} icon="&#10003;" color={B.green} />
-          </Section>
-
-          {/* 5. Strategies optimisation — ESPECE ACTIVE UNIQUEMENT */}
-          <Section icon={Crosshair} color={B.amber} title={`5. Strategies d'optimisation — ${spShort}`}>
-            <BulletList items={strats} icon="&#9654;" color={B.amber} />
-          </Section>
-
-          {/* 6. Techniques chasse — ESPECE ACTIVE UNIQUEMENT */}
-          <Section icon={Eye} color={B.orange} title={`6. Techniques de chasse — ${spShort}`}>
-            <BulletList items={techniques} icon="&#9679;" color={B.orange} />
-          </Section>
-
-          {/* 7. Erreurs a eviter — ESPECE ACTIVE UNIQUEMENT */}
-          <Section icon={AlertTriangle} color={B.red} title={`7. Erreurs a eviter — ${spShort}`}>
-            <BulletList items={erreurs} icon="&#10007;" color={B.red} />
-          </Section>
-
-          {/* 8. Optimisations saisonnieres */}
-          <Section icon={ThermometerSun} color={B.yellow} title={`8. Optimisations saisonnieres — ${season}`}>
-            <p className="text-[16px] text-slate-300 leading-relaxed mb-3"><strong className="text-white">{season}:</strong> {seasonData}</p>
-            {typeof data.optimisations_saisonnieres === 'object' && !Array.isArray(data.optimisations_saisonnieres) &&
-              Object.entries(data.optimisations_saisonnieres).filter(([k]) => k !== season).map(([k, v]) => (
-                <p key={k} className="text-[14px] text-slate-400 leading-relaxed py-1"><strong className="text-slate-300">{k}:</strong> {typeof v === 'string' ? v : ''}</p>
-              ))
-            }
-          </Section>
-
-          {/* 9. Optimisations espece — NOM DE L'ESPECE ACTIVE */}
-          <Section icon={Footprints} color={B.cyan} title={`9. Alignement espece — ${spLabel}`}>
-            <p className="text-[16px] text-slate-300 leading-relaxed mb-2">
-              Toutes les recommandations, strategies et erreurs de cette fiche sont <strong className="text-white">strictement alignees</strong> sur <strong style={{ color: B.green }}>{spLabel}</strong>.
-              Aucun melange inter-especes. Chaque conseil est calibre selon les comportements, les distances, les reactions et les besoins specifiques de cette espece.
-            </p>
-            <div className="rounded-lg px-3 py-2 mt-2" style={{ backgroundColor: `${B.green}10`, borderLeft: `3px solid ${B.green}` }}>
-              <p className="text-[14px] text-slate-300"><strong className="text-white">Espece active:</strong> {spLabel}</p>
-              <p className="text-[14px] text-slate-400 mt-1">Pour consulter les fiches des autres especes, changez l'espece active dans le panneau SUPRA v2.</p>
-            </div>
-          </Section>
-
-          {/* 10. Optimisations support */}
-          <Section icon={Construction} color={B.blue} title="10. Optimisations support">
-            <BulletList items={data.optimisations_support || []} icon="&#9670;" color={B.blue} />
-          </Section>
-
-          {/* 11. Optimisations meteo */}
-          <Section icon={Wind} color={B.purple} title="11. Optimisations selon la meteo">
-            <BulletList items={data.optimisations_meteo || []} icon="&#9729;" color={B.purple} />
-          </Section>
-
-          {/* 12. Optimisations pression chasse */}
-          <Section icon={Shield} color={B.orange} title="12. Optimisations selon la pression de chasse">
-            <BulletList items={data.optimisations_pression || []} icon="&#9888;" color={B.orange} />
-          </Section>
-
-          {/* 13. Seuils */}
-          <Section icon={AlertTriangle} color={B.amber} title="13. Seuils (vert / jaune / rouge)">
-            <div className="space-y-2">
-              <Threshold label="VERT" text={data.thresholds?.green} color={B.green} />
-              <Threshold label="JAUNE" text={data.thresholds?.yellow} color={B.orange} />
-              <Threshold label="ROUGE" text={data.thresholds?.red} color={B.red} />
-            </div>
-          </Section>
-
-          {/* 14. Sources scientifiques TOP-TIER */}
-          <Section icon={BookOpen} color={B.blue} title={`14. Sources scientifiques (${data.sources?.length || 0})`}>
-            <ul className="space-y-1">
-              {(data.sources || []).map((s, i) => (
-                <li key={i} className="text-[14px] text-slate-400 py-0.5">[{i + 1}] {s}</li>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-0">
+              {recosTerrain.map((item, i) => (
+                <div key={i} className="flex items-start gap-2 py-1">
+                  <span className="text-[13px] mt-0.5 flex-shrink-0" style={{ color: B.green }}>&#10003;</span>
+                  <span className="text-[13px] text-slate-300 leading-snug">{typeof item === 'string' ? item : item?.text || ''}</span>
+                </div>
               ))}
-            </ul>
-          </Section>
-
-          {/* 15. Conformite GUIDE BIONIC */}
-          <Section icon={Leaf} color={B.green} title="15. Conformite GUIDE BIONIC">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: B.green }} />
-                <span className="text-[14px] text-slate-300">15 sections obligatoires — <strong className="text-white">CONFORME</strong></span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: B.green }} />
-                <span className="text-[14px] text-slate-300">Separation stricte par espece — <strong className="text-white">{spShort} UNIQUEMENT</strong></span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: B.green }} />
-                <span className="text-[14px] text-slate-300">Recommandations terrain concretes — <strong className="text-white">{recosTerrain.length} recommandations</strong></span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: B.green }} />
-                <span className="text-[14px] text-slate-300">Sources TOP-TIER — <strong className="text-white">{data.sources?.length || 0} references</strong></span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: B.green }} />
-                <span className="text-[14px] text-slate-300">Protocole — <strong className="text-white">BCE-4X / STEEVE-MAX / GOLDEN</strong></span>
-              </div>
             </div>
           </Section>
+
+          {/* ═══ RANGEE 2: Strategies + Techniques + Erreurs (3 colonnes) ═══ */}
+          <div className="grid grid-cols-3 gap-3">
+            {/* 5. Strategies optimisation — ESPECE ACTIVE UNIQUEMENT */}
+            <Section icon={Crosshair} color={B.amber} title={`5. Strategies — ${spShort}`}>
+              <BulletList items={strats} icon="&#9654;" color={B.amber} />
+            </Section>
+
+            {/* 6. Techniques chasse — ESPECE ACTIVE UNIQUEMENT */}
+            <Section icon={Eye} color={B.orange} title={`6. Techniques — ${spShort}`}>
+              <BulletList items={techniques} icon="&#9679;" color={B.orange} />
+            </Section>
+
+            {/* 7. Erreurs a eviter — ESPECE ACTIVE UNIQUEMENT */}
+            <Section icon={AlertTriangle} color={B.red} title={`7. Erreurs — ${spShort}`}>
+              <BulletList items={erreurs} icon="&#10007;" color={B.red} />
+            </Section>
+          </div>
+
+          {/* ═══ RANGEE 3: Saisonnier + Espece (2 colonnes) ═══ */}
+          <div className="grid grid-cols-2 gap-3">
+            {/* 8. Optimisations saisonnieres */}
+            <Section icon={ThermometerSun} color={B.yellow} title={`8. Saisonnier — ${season}`}>
+              <p className="text-[14px] text-slate-300 leading-snug mb-2"><strong className="text-white">{season}:</strong> {seasonData}</p>
+              {typeof data.optimisations_saisonnieres === 'object' && !Array.isArray(data.optimisations_saisonnieres) &&
+                Object.entries(data.optimisations_saisonnieres).filter(([k]) => k !== season).map(([k, v]) => (
+                  <p key={k} className="text-[13px] text-slate-400 leading-snug py-0.5"><strong className="text-slate-300">{k}:</strong> {typeof v === 'string' ? v : ''}</p>
+                ))
+              }
+            </Section>
+
+            {/* 9. Optimisations espece — NOM DE L'ESPECE ACTIVE */}
+            <Section icon={Footprints} color={B.cyan} title={`9. Espece — ${spLabel}`}>
+              <p className="text-[14px] text-slate-300 leading-snug mb-1.5">
+                Toutes les recommandations sont <strong className="text-white">strictement alignees</strong> sur <strong style={{ color: B.green }}>{spLabel}</strong>.
+                Aucun melange inter-especes.
+              </p>
+              <div className="rounded-lg px-2.5 py-1.5 mt-1" style={{ backgroundColor: `${B.green}10`, borderLeft: `3px solid ${B.green}` }}>
+                <p className="text-[13px] text-slate-300"><strong className="text-white">Espece active:</strong> {spLabel}</p>
+              </div>
+            </Section>
+          </div>
+
+          {/* ═══ RANGEE 4: Support + Meteo + Pression (3 colonnes) ═══ */}
+          <div className="grid grid-cols-3 gap-3">
+            {/* 10. Optimisations support */}
+            <Section icon={Construction} color={B.blue} title="10. Support">
+              <BulletList items={data.optimisations_support || []} icon="&#9670;" color={B.blue} />
+            </Section>
+
+            {/* 11. Optimisations meteo */}
+            <Section icon={Wind} color={B.purple} title="11. Meteo">
+              <BulletList items={data.optimisations_meteo || []} icon="&#9729;" color={B.purple} />
+            </Section>
+
+            {/* 12. Optimisations pression chasse */}
+            <Section icon={Shield} color={B.orange} title="12. Pression">
+              <BulletList items={data.optimisations_pression || []} icon="&#9888;" color={B.orange} />
+            </Section>
+          </div>
+
+          {/* ═══ RANGEE 5: Seuils + Sources + Conformite (3 colonnes) ═══ */}
+          <div className="grid grid-cols-3 gap-3">
+            {/* 13. Seuils */}
+            <Section icon={AlertTriangle} color={B.amber} title="13. Seuils">
+              <div className="space-y-1.5">
+                <Threshold label="VERT" text={data.thresholds?.green} color={B.green} />
+                <Threshold label="JAUNE" text={data.thresholds?.yellow} color={B.orange} />
+                <Threshold label="ROUGE" text={data.thresholds?.red} color={B.red} />
+              </div>
+            </Section>
+
+            {/* 14. Sources scientifiques TOP-TIER */}
+            <Section icon={BookOpen} color={B.blue} title={`14. Sources (${data.sources?.length || 0})`}>
+              <ul className="space-y-0.5">
+                {(data.sources || []).map((s, i) => (
+                  <li key={i} className="text-[12px] text-slate-400 py-0.5 leading-snug">[{i + 1}] {s}</li>
+                ))}
+              </ul>
+            </Section>
+
+            {/* 15. Conformite GUIDE BIONIC */}
+            <Section icon={Leaf} color={B.green} title="15. Conformite">
+              <div className="space-y-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: B.green }} />
+                  <span className="text-[13px] text-slate-300">15 sections — <strong className="text-white">CONFORME</strong></span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: B.green }} />
+                  <span className="text-[13px] text-slate-300">Espece — <strong className="text-white">{spShort}</strong></span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: B.green }} />
+                  <span className="text-[13px] text-slate-300">Recos — <strong className="text-white">{recosTerrain.length}</strong></span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: B.green }} />
+                  <span className="text-[13px] text-slate-300">Sources — <strong className="text-white">{data.sources?.length || 0}</strong></span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: B.green }} />
+                  <span className="text-[13px] text-slate-300">BCE-4X — <strong className="text-white">GOLDEN</strong></span>
+                </div>
+              </div>
+            </Section>
+          </div>
         </div>
       </div>
     </div>

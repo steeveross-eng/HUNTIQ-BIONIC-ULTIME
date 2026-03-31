@@ -115,17 +115,18 @@ const PINNABLE_CSS = `
 .pinnable-scroll {
   overflow-y: auto;
   overflow-x: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(100,100,100,0.3) transparent;
+  scrollbar-width: auto;
+  scrollbar-color: #FF9800 #0a0a14;
 }
-.pinnable-scroll::-webkit-scrollbar { width: 6px; }
-.pinnable-scroll::-webkit-scrollbar-track { background: transparent; }
+.pinnable-scroll::-webkit-scrollbar { width: 14px; }
+.pinnable-scroll::-webkit-scrollbar-track { background: #0a0a14; }
 .pinnable-scroll::-webkit-scrollbar-thumb {
-  background: rgba(100,100,100,0.25);
-  border-radius: 6px;
+  background: linear-gradient(180deg, #FF9800, #E65100);
+  border-radius: 7px;
+  border: 2px solid #0a0a14;
 }
 .pinnable-scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(100,100,100,0.4);
+  background: linear-gradient(180deg, #FFB74D, #FF9800);
 }
 .pinnable-drag-header { cursor: default; user-select: none; }
 .pinnable-drag-header.draggable { cursor: grab; }

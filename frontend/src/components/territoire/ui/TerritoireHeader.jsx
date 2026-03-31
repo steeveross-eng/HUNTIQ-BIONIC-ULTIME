@@ -8,7 +8,7 @@
  * - Purge complète V1-V5
  */
 import React, { useRef, useEffect } from 'react';
-import { ArrowLeft, Thermometer, Wind, Plus, Edit2, Crosshair, X, LocateFixed, Trash2, ToggleLeft, Gauge } from 'lucide-react';
+import { ArrowLeft, Plus, Edit2, Crosshair, X, LocateFixed, Trash2, ToggleLeft, Gauge } from 'lucide-react';
 import { ShareBionicButton } from '@/components/territoire/ui/ShareBionicButton';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { getProtectedZIndex } from '@/components/territoire/map/BCE4X_UIShield';
@@ -149,26 +149,8 @@ export const TerritoireHeader = ({
             )}
           </DropdownMenuContent>
         </DropdownMenu>
-        {/* BCE-4X V6+: Météo compacte — source unique sharedWeather */}
-        {temp != null && (
-          <div className="flex items-center gap-2 bg-[#111118] rounded-lg px-2.5 py-1.5 border border-[#1a1a2e] flex-shrink-0 max-w-[280px]" data-testid="header-weather-v6">
-            <div className="flex items-center gap-1 flex-shrink-0">
-              <Thermometer className="h-3.5 w-3.5" style={{ color: '#4A7A2E' }} />
-              <span className="text-[11px] text-white font-mono">{temp}°C</span>
-            </div>
-            {windSpeed != null && (
-              <div className="flex items-center gap-1 flex-shrink-0">
-                <Wind className="h-3.5 w-3.5" style={{ color: '#8B6F47' }} />
-                <span className="text-[11px] text-white font-mono whitespace-nowrap">
-                  {windCardinal || ''} {windSpeed}km/h
-                </span>
-              </div>
-            )}
-            {windGusts != null && windGusts > windSpeed && (
-              <span className="text-[10px] text-amber-400/80 font-mono whitespace-nowrap flex-shrink-0">R.{windGusts}</span>
-            )}
-          </div>
-        )}
+        {/* BCE-4X V9: Meteo RETIREE du sub-header — Directive x4950-STEEVE_MAX SECTION A */}
+        {/* La meteo est disponible via le panneau METEO BIONIC uniquement — ZERO duplication */}
         {/* BCE-4X V8: PARTAGER relocalisé ici — Directive ×4850-STEEVE_MAX */}
         <div className="flex-shrink-0" data-testid="subheader-share-container">
           <ShareBionicButton />

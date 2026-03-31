@@ -129,11 +129,11 @@ const GOLDEN = {
 };
 
 const GoldenCard = ({ children, testId, accentColor, className = '', compact = false }) => (
-  <div className={`rounded-xl ${compact ? 'px-3 py-2.5' : 'px-5 py-4'} ${className}`}
+  <div className={`rounded-lg ${compact ? 'px-2.5 py-2' : 'px-4 py-3'} ${className}`}
     style={{
       backgroundColor: GOLDEN.cardBg,
       boxShadow: GOLDEN.shadow,
-      borderLeft: accentColor ? `4px solid ${accentColor}` : 'none',
+      borderLeft: accentColor ? `3px solid ${accentColor}` : 'none',
     }}
     data-testid={testId}>
     {children}
@@ -143,7 +143,7 @@ const GoldenCard = ({ children, testId, accentColor, className = '', compact = f
 const GoldenCollapsible = ({ icon: Icon, title, color, badge, children, defaultOpen = true, testId }) => {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="rounded-xl px-5 py-3" style={{ backgroundColor: GOLDEN.cardBg, boxShadow: GOLDEN.shadow }} data-testid={testId}>
+    <div className="rounded-lg px-4 py-2.5" style={{ backgroundColor: GOLDEN.cardBg, boxShadow: GOLDEN.shadow }} data-testid={testId}>
       <button onClick={() => setOpen(v => !v)} className="w-full flex items-center justify-between cursor-pointer">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${color}20` }}>
@@ -408,15 +408,15 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
   );
 
   return (
-    <div className="space-y-3" data-testid="supra-analyse-tab">
+    <div className="space-y-1.5" data-testid="supra-analyse-tab">
       {/* ═══════════════════════════════════════════════════════
           GRILLE 3 COLONNES — RÉPLIQUE EXACTE DASHBOARD BIONIC™
-          Densité GOLDEN | Compaction maximale | BCE-4X
+          Densité GOLDEN V9 | Gaps eliminés | BCE-4X
           ═══════════════════════════════════════════════════════ */}
-      <div className="grid grid-cols-3 gap-3" data-testid="supra-3col-grid">
+      <div className="grid grid-cols-3 gap-1.5" data-testid="supra-3col-grid">
 
         {/* ══════════ COLONNE 1: Score + Gauge + Ecozone ══════════ */}
-        <div className="space-y-3" data-testid="supra-col-1">
+        <div className="space-y-1.5" data-testid="supra-col-1">
           {/* Score SUPRA */}
           <GoldenCard testId="supra-score-card" accentColor={gc} compact>
             <div className="flex items-center gap-3">
@@ -486,7 +486,7 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
         </div>
 
         {/* ══════════ COLONNE 2: 4 Moteurs ULTRA ══════════ */}
-        <div className="space-y-3" data-testid="supra-col-2">
+        <div className="space-y-1.5" data-testid="supra-col-2">
           {(engines.soil || soilData) && (
             <GoldenCard testId="info-card-sol" accentColor={BIONIC.amber} compact>
               <div className="flex items-center gap-2 mb-2">
@@ -566,7 +566,7 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
         </div>
 
         {/* ══════════ COLONNE 3: Minéraux + Recette + Coûts ══════════ */}
-        <div className="space-y-3" data-testid="supra-col-3">
+        <div className="space-y-1.5" data-testid="supra-col-3">
           {/* Mineraux — mini-bars */}
           <GoldenCard testId="supra-minerals-card" accentColor="#f5a623" compact>
             <div className="flex items-center gap-2 mb-2">
@@ -713,7 +713,7 @@ const IntelligenceTab = ({ products, gc, compareIds, toggleCompare, addToCart, c
   };
 
   return (
-    <div className="space-y-3" data-testid="supra-intelligence-tab">
+    <div className="space-y-1.5" data-testid="supra-intelligence-tab">
       {/* Header GOLDEN */}
       <GoldenCard testId="intelligence-header" accentColor={BIONIC.amber} compact>
         <div className="flex items-center gap-3">
@@ -724,10 +724,10 @@ const IntelligenceTab = ({ products, gc, compareIds, toggleCompare, addToCart, c
       </GoldenCard>
 
       {/* GRILLE 3 COLONNES — RÉPLIQUE DASHBOARD */}
-      <div className="grid grid-cols-3 gap-3" data-testid="intelligence-3col-grid">
-        <div className="space-y-3">{col1.map(p => <ProductCard key={p.product_id} p={p} />)}</div>
-        <div className="space-y-3">{col2.map(p => <ProductCard key={p.product_id} p={p} />)}</div>
-        <div className="space-y-3">{col3.map(p => <ProductCard key={p.product_id} p={p} />)}</div>
+      <div className="grid grid-cols-3 gap-1.5" data-testid="intelligence-3col-grid">
+        <div className="space-y-1.5">{col1.map(p => <ProductCard key={p.product_id} p={p} />)}</div>
+        <div className="space-y-1.5">{col2.map(p => <ProductCard key={p.product_id} p={p} />)}</div>
+        <div className="space-y-1.5">{col3.map(p => <ProductCard key={p.product_id} p={p} />)}</div>
       </div>
     </div>
   );
@@ -796,7 +796,7 @@ const FicheTab = ({ ficheData, species, season, lat, lng, np, soilData }) => {
   );
 
   return (
-    <div className="space-y-3" data-testid="supra-fiche-tab">
+    <div className="space-y-1.5" data-testid="supra-fiche-tab">
       {/* Modal fiche explicative — GUIDE BIONIC NIVEAU PROFESSIONNEL */}
       {selectedCriteria && (
         <CriteriaDetailModal
@@ -827,10 +827,10 @@ const FicheTab = ({ ficheData, species, season, lat, lng, np, soilData }) => {
       {/* ═══════════════════════════════════════════════════════
           GRILLE 3 COLONNES — RÉPLIQUE EXACTE DASHBOARD BIONIC™
           ═══════════════════════════════════════════════════════ */}
-      <div className="grid grid-cols-3 gap-3" data-testid="fiche-3col-grid">
+      <div className="grid grid-cols-3 gap-1.5" data-testid="fiche-3col-grid">
 
         {/* ══════════ COLONNE 1: Logistique + Gros Males ══════════ */}
-        <div className="space-y-3">
+        <div className="space-y-1.5">
           {FICHE_SCORES.slice(0, 2).map(({ key, label, icon: Icon, color }) => {
             const data = scores?.[key];
             if (!data) return null;
@@ -867,7 +867,7 @@ const FicheTab = ({ ficheData, species, season, lat, lng, np, soilData }) => {
         </div>
 
         {/* ══════════ COLONNE 2: Strategique + Cout/ROI + TCS ══════════ */}
-        <div className="space-y-3">
+        <div className="space-y-1.5">
           {FICHE_SCORES.slice(2, 5).map(({ key, label, icon: Icon, color }) => {
             const data = scores?.[key];
             if (!data) return null;
@@ -895,7 +895,7 @@ const FicheTab = ({ ficheData, species, season, lat, lng, np, soilData }) => {
         </div>
 
         {/* ══════════ COLONNE 3: Plan Gros Males + ROI + Sources ══════════ */}
-        <div className="space-y-3">
+        <div className="space-y-1.5">
           {/* Plan Gros Males */}
           <GoldenCard testId="fiche-plan-males" accentColor={BIONIC.green} compact>
             <div className="flex items-center gap-2 mb-1.5">
@@ -992,7 +992,7 @@ const ComparezTab = ({ products, compareIds, gc, toggleCompare }) => {
   if (compared.length === 0) {
     return (
       <div className="text-center py-12" data-testid="supra-comparez-tab">
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-1.5">
           <div />
           <GoldenCard testId="compare-empty" accentColor={BIONIC.blue} compact>
             <div className="text-center py-6">
@@ -1014,7 +1014,7 @@ const ComparezTab = ({ products, compareIds, gc, toggleCompare }) => {
   while (padded.length < 3) padded.push(null);
 
   return (
-    <div className="space-y-3" data-testid="supra-comparez-tab">
+    <div className="space-y-1.5" data-testid="supra-comparez-tab">
       {/* Header GOLDEN */}
       <GoldenCard testId="compare-header" accentColor={BIONIC.blue} compact>
         <div className="flex items-center gap-3">
@@ -1025,7 +1025,7 @@ const ComparezTab = ({ products, compareIds, gc, toggleCompare }) => {
       </GoldenCard>
 
       {/* GRILLE 3 COLONNES — RÉPLIQUE DASHBOARD */}
-      <div className="grid grid-cols-3 gap-3" data-testid="compare-3col-grid">
+      <div className="grid grid-cols-3 gap-1.5" data-testid="compare-3col-grid">
         {padded.slice(0, 3).map((p, idx) => {
           if (!p) return <div key={`empty-${idx}`} />;
           const isBest = p.product_id === best.product_id;
@@ -1095,12 +1095,12 @@ const CommandezTab = ({ order, products, recipe, gc, cart, addToCart, cartLoadin
   );
 
   return (
-    <div className="space-y-3" data-testid="supra-commandez-tab">
+    <div className="space-y-1.5" data-testid="supra-commandez-tab">
       {/* GRILLE 3 COLONNES — RÉPLIQUE DASHBOARD */}
-      <div className="grid grid-cols-3 gap-3" data-testid="commandez-3col-grid">
+      <div className="grid grid-cols-3 gap-1.5" data-testid="commandez-3col-grid">
 
         {/* ══════════ COLONNE 1: Recette complete ══════════ */}
-        <div className="space-y-3">
+        <div className="space-y-1.5">
           {order && (
             <GoldenCard testId="order-pack-card" accentColor={SUPRA_CMD_COLOR} compact>
               <div className="flex items-center gap-2 mb-2">
@@ -1135,7 +1135,7 @@ const CommandezTab = ({ order, products, recipe, gc, cart, addToCart, cartLoadin
         </div>
 
         {/* ══════════ COLONNE 2: Produits individuels ══════════ */}
-        <div className="space-y-3">
+        <div className="space-y-1.5">
           <GoldenCard testId="shop-header" accentColor={BIONIC.amber} compact>
             <div className="flex items-center gap-2">
               <IC Icon={ShoppingCart} color={BIONIC.amber} />
@@ -1165,7 +1165,7 @@ const CommandezTab = ({ order, products, recipe, gc, cart, addToCart, cartLoadin
         </div>
 
         {/* ══════════ COLONNE 3: Panier Stripe REEL ══════════ */}
-        <div className="space-y-3">
+        <div className="space-y-1.5">
           <GoldenCard testId="supra-cart-stripe" accentColor={BIONIC.amber} compact>
             <div className="flex items-center gap-2 mb-3">
               <IC Icon={ShoppingCart} color={BIONIC.amber} />
