@@ -9,6 +9,7 @@
  */
 import React, { useRef, useEffect } from 'react';
 import { ArrowLeft, Thermometer, Wind, Plus, Edit2, Crosshair, X, LocateFixed, Trash2, ToggleLeft, Gauge } from 'lucide-react';
+import { ShareBionicButton } from '@/components/territoire/ui/ShareBionicButton';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { getProtectedZIndex } from '@/components/territoire/map/BCE4X_UIShield';
 
@@ -106,7 +107,7 @@ export const TerritoireHeader = ({
               data-testid="add-waypoint-main-btn"
             >
               <Plus className="h-4 w-4" />
-              <span className="text-xs">{mapClickMode ? 'Cliquez...' : 'WPT'}</span>
+              <span className="text-xs">{mapClickMode ? 'Cliquez...' : 'WAYPOINT'}</span>
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="bg-gray-950 border-gray-700/60 shadow-xl min-w-[220px]" side="bottom" align="center">
@@ -168,7 +169,10 @@ export const TerritoireHeader = ({
             )}
           </div>
         )}
-        {/* BCE-4X V6+ — PARTAGER est maintenant dans le header global (uniformité toutes pages) */}
+        {/* BCE-4X V8: PARTAGER relocalisé ici — Directive ×4850-STEEVE_MAX */}
+        <div className="flex-shrink-0" data-testid="subheader-share-container">
+          <ShareBionicButton />
+        </div>
       </div>
     </header>
   );

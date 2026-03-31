@@ -12,6 +12,29 @@
  * SOURCES NIVEAU 4: MSU Deer Lab, UGA Deer Lab, Alberta Fish & Wildlife
  */
 
+// BCE-4X: Import des 19 criteres P1/P2 reecrits au standard V2
+import {
+  accessibilite_pieton,
+  facilite_maintenance,
+  proximite_infrastructure,
+  securite_acces,
+  frequence_visite,
+  historique_observations,
+  adaptabilite_saisonniere,
+  complementarite_reseau,
+  potentiel_expansion,
+  cout_mineraux_annuel,
+  cout_transport,
+  cout_temps,
+  retour_observation,
+  retour_recolte,
+  durabilite,
+  alignement_sentiers,
+  lissage,
+  penetrabilite,
+  effort_reel,
+} from './criteriaDatabase_P1P2';
+
 const SP = {
   orignal: 'Orignal (Alces alces)',
   chevreuil: 'Chevreuil de Virginie (Odocoileus virginianus)',
@@ -1479,26 +1502,26 @@ export const CRITERIA_DB = {
   topographie_lidar,
   hydrologie,
   drainage_sol,
-  // P1/P2 — En cours de reecriture V2 (contenu professionnel avec titre unique)
-  accessibilite_pieton: { ...DEFAULT, title: "Accessibilite a pied — Acces pedestre et portage au site de saline" },
-  facilite_maintenance: { ...DEFAULT, title: "Facilite de maintenance — Entretien regulier et suivi du site" },
-  proximite_infrastructure: { ...DEFAULT, title: "Proximite des infrastructures — Camp, stationnement, eau, reseau" },
-  securite_acces: { ...DEFAULT, title: "Securite et controle de l'acces — Protection du site et des equipements" },
-  frequence_visite: { ...DEFAULT, title: "Frequence optimale de visite — Calendrier d'entretien et de suivi" },
-  historique_observations: { ...DEFAULT, title: "Historique des observations — Donnees cameras trail et observations terrain" },
-  complementarite_reseau: { ...DEFAULT, title: "Complementarite du reseau — Integration avec les autres sites du territoire" },
-  adaptabilite_saisonniere: { ...DEFAULT, title: "Adaptabilite saisonniere — Capacite du site a performer toute l'annee" },
-  potentiel_expansion: { ...DEFAULT, title: "Potentiel d'expansion — Possibilite d'agrandir ou ameliorer le reseau de salines" },
-  cout_mineraux_annuel: { ...DEFAULT, title: "Cout des mineraux annuel — Budget mineral pour la saison complete" },
-  cout_transport: { ...DEFAULT, title: "Cout de transport — Frais de deplacement et logistique" },
-  cout_temps: { ...DEFAULT, title: "Cout en temps — Temps investi par visite et par saison" },
-  retour_observation: { ...DEFAULT, title: "Retour sur observation — Nombre d'observations qualitatives par saison" },
-  retour_recolte: { ...DEFAULT, title: "Retour sur recolte — Potentiel de recolte par rapport a l'investissement" },
-  durabilite: { ...DEFAULT, title: "Durabilite du site — Capacite du site a performer sur 5-10 ans" },
-  alignement_sentiers: { ...DEFAULT, title: "Alignement des sentiers — Qualite et orientation des sentiers d'acces et corridors" },
-  lissage: { ...DEFAULT, title: "Lissage du terrain — Uniformite et praticabilite du sol autour du site" },
-  penetrabilite: { ...DEFAULT, title: "Penetrabilite du terrain — Facilite de deplacement en foret autour du site" },
-  effort_reel: { ...DEFAULT, title: "Effort reel de deplacement — Temps et energie necessaires pour atteindre le site" },
+  // P1/P2 — REECRITS AU STANDARD V2 (BCE-4X ×4850-STEEVE_MAX)
+  accessibilite_pieton,
+  facilite_maintenance,
+  proximite_infrastructure,
+  securite_acces,
+  frequence_visite,
+  historique_observations,
+  complementarite_reseau,
+  adaptabilite_saisonniere,
+  potentiel_expansion,
+  cout_mineraux_annuel,
+  cout_transport,
+  cout_temps,
+  retour_observation,
+  retour_recolte,
+  durabilite,
+  alignement_sentiers,
+  lissage,
+  penetrabilite,
+  effort_reel,
 };
 
 export const SPECIES_LABELS = SP;

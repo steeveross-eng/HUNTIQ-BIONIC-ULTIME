@@ -91,7 +91,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
 import { Toaster, toast } from "sonner";
-import { ShareBionicButton } from "@/components/territoire/ui/ShareBionicButton";
+// BCE-4X V8: ShareBionicButton relocalisé dans TerritoireHeader (Directive ×4850)
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -226,10 +226,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
           
           {/* Right Content */}
           <div className="flex items-center gap-1.5 lg:gap-2 flex-shrink-0">
-            {/* PARTAGER — BCE-4X GOLDEN: Élément institutionnel permanent sur toutes les pages */}
-            <div className="hidden lg:block" data-testid="global-share-container">
-              <ShareBionicButton />
-            </div>
+            {/* BCE-4X V8: PARTAGER relocalisé dans TerritoireHeader.jsx (sub-header) — Directive ×4850 */}
             
             {/* Premium CTA — BCE-4X: texte blanc + contour orange #F5A623 unifie */}
             <Link to="/pricing" className="hidden lg:block">
@@ -341,10 +338,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
               <LanguageSwitcher />
             </div>
             
-            {/* PARTAGER — BCE-4X GOLDEN: Accessible en tout temps sur mobile */}
-            <div className="px-3 py-2" data-testid="mobile-share-container">
-              <ShareBionicButton />
-            </div>
+            {/* BCE-4X V8: PARTAGER relocalisé dans sub-header Territoire — Directive ×4850 */}
           </div>
         </div>
       )}

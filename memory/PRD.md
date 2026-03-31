@@ -1,103 +1,99 @@
-# HUNTIQ-V6 / BIONIC HUNT — PRD (Product Requirements Document)
-## BCE-4X GOLDEN / STEEVE-MAX
-## Derniere mise a jour: 2026-03-30
+# HUNTIQ-V6 / BIONIC HUNT — PRD
+## Protocole BCE-4X — STEEVE-MAX — GOLDEN UI
 
 ---
 
-### Probleme original
-Application de chasse BIONIC HUNT. Reconstruction SUPRA v2 (3 colonnes), Standard GOLDEN, Marketing Engine, Soil Engine, fiches GUIDE BIONIC NIVEAU PROFESSIONNEL.
+## Probleme Original
+Plateforme d'analyse de territoires de chasse avec scoring multi-criteres, guide BIONIC professionnel, intelligence IA, et fonctionnalites e-commerce (Premium, Shop, Commandez).
 
-### Architecture
-- **Backend**: FastAPI (port 8001) | **Frontend**: React (port 3000) | **Database**: MongoDB
-- **Modules backend**: 72+ modules + soil_engine + share_engine
-- **UI**: STANDARD GOLDEN (#1E293B, no borders, grid-cols-3)
+## Utilisateurs
+- Chasseurs professionnels Quebec/Canada
+- Gestionnaires de territoires fauniques
+- Guides de chasse et pourvoiries
 
----
+## Architecture
+- Frontend: React + Leaflet + Shadcn UI
+- Backend: FastAPI + MongoDB
+- Modules: Soil Engine, Guide BIONIC (criteriaDatabase), Meteo, Score Chasse
 
-## STATUT: V1 INTERNE — NON CERTIFIEE
+## Fonctionnalites Implementees
 
----
+### UI / Navigation
+- Header principal: HOME, DASHBOARD, ANALYSE TERRITOIRE, CARTE, PERMIS, SHOP
+- Sub-header Territoire: SPLIT, CARTE, ESPECES, OBSERVATION, INTELLIGENCE, ZONES, ALIMENTATION, POINTS CHAUDS, SEUIL, CURSEUR
+- Bouton WAYPOINT (anciennement WPT) dans le sub-header
+- Bouton PARTAGER relocalise dans le sub-header (V8)
+- SCORE CHASSE dans le sub-header
+- METEO BIONIC compact
+- Cookie banner conforme Quebec
 
-## IMPLEMENTE
+### Guide BIONIC — Niveau Professionnel V2
+- **32 criteres au standard V2 complet** (ZERO DEFAULT generique)
+- 13 criteres originaux (V1 + P0 V2) dans `criteriaDatabase.js`
+- **19 criteres P1/P2 dans `criteriaDatabase_P1P2.js`** (1327 lignes, 197 KB)
+- 5 especes par critere: Orignal, Chevreuil, Ours noir, Wapiti, Dindon sauvage
+- 15 sections par critere: definition, methodologie, justification, recommandations, strategies, techniques, erreurs, optimisations (4 saisons + meteo + support + pression), seuils, sources TOP-TIER
+- Sources: MFFP, UQAR, ULaval, NDA, RMEF, NWTF, MSU Deer Lab, UGA Deer Lab
 
-### SUPRA v2 — 3 colonnes (TERMINE)
-- 5 onglets: Analyse, Fiche, Intelligence, Comparez, Commandez
-- Standard GOLDEN global
+### Backend
+- GET /api/v1/soil — Soil Engine (pedologie, LiDAR)
+- Scoring multi-criteres sur 100 points par critere
 
-### PARTAGER — Marketing Engine (TERMINE)
-- 14 canaux de partage | Backend: log events, create contacts
-
-### GUIDE BIONIC — NIVEAU PROFESSIONNEL™ (V2 EN COURS)
-
-#### 13 criteres ENTIEREMENT DETAILLES (P0 termines):
-1. position_vs_affuts — 15 recos/espece, 17 sources
-2. accessibilite_vehicule — 10-12 recos/espece, 8 sources
-3. couverture_vent — 10 recos/espece, 10 sources
-4. corridors_deplacement — 11 recos/espece, 10 sources
-5. couvert_forestier — 8 recos/espece, 10 sources
-6. source_eau — 10 recos/espece, 10 sources (P0 V2)
-7. pression_chasse — 10 recos/espece, 10 sources (P0 V2)
-8. tranquillite_zone — 8 recos/espece, 9 sources (P0 V2)
-9. potentiel_trophee — 8 recos/espece, 10 sources (P0 V2)
-10. visibilite_affuts — 9 recos/espece, 8 sources (P0 V2)
-11. topographie_lidar — 8 recos/espece, 8 sources (P0 V2)
-12. hydrologie — 8 recos/espece, 8 sources (P0 V2)
-13. drainage_sol — 7 recos/espece, 6 sources (P0 V2)
-
-#### 17 criteres en DEFAULT professionnel (P1/P2 a reecrire):
-- accessibilite_pieton, facilite_maintenance, proximite_infrastructure
-- securite_acces, frequence_visite, historique_observations
-- complementarite_reseau, adaptabilite_saisonniere, potentiel_expansion
-- cout_mineraux_annuel, cout_transport, cout_temps
-- retour_observation, retour_recolte, durabilite
-- alignement_sentiers, lissage, penetrabilite, effort_reel
-
-#### Especes supportees: Orignal, Chevreuil, Ours noir, Wapiti, Dindon sauvage
-
-### SOIL ENGINE V1 (TERMINE — DETERMINISTE)
-- Endpoint: GET /api/v1/soil/analyze
-- 7 types de sol, score 0-100, grade S/A/B/C/D/F
-- **LIMITATION V1**: GPS hash deterministe, PAS de donnees reelles
-- Integration: SUPRA ANALYSE + FICHE (cartes Sol avec recommandations)
-- Marqueurs V1 dans API + code + documentation
+### Integrations
+- Stripe (paiement Premium)
+- Shapely (geometrie territoriale)
+- Leaflet (cartographie)
 
 ---
 
-## DOCUMENTATION LIVREE
-- /app/memory/ARCHITECTURE_INTERCONNEXION.md — Schema des flux, dependances, validations, rollback, phasage P1-P6
-- /app/memory/PLAN_V2_SOUS_CRITERES.md — Liste des 25 sous-criteres, priorites, echeancier
+## Livrables Completes (Directive x4850-x4852)
+
+### Section A — UI_HEADER_ALIGNMENT_V8
+- [x] PARTAGER relocalise App.js → TerritoireHeader.jsx
+- [x] WPT renomme en WAYPOINT
+- [x] AUDIT_CSS_HEADER_V8.md genere
+
+### Section B — REWRITE_19_SUBCRITERIA_P1_P2
+- [x] criteriaDatabase_P1P2.js cree (19 criteres, 1327 lignes)
+- [x] Import dans criteriaDatabase.js (ES module)
+- [x] 19 entrees DEFAULT remplacees par les imports reels
+- [x] SOUS_CRITERES_V2_COMPLET.md genere
+- [x] Frontend compile et fonctionne
+
+### Section C — INTERCONNEXIONS_P3_P6
+- [x] INTERCONNEXIONS_P3_P6.md genere
+- [x] Cartographie: SUPRA ↔ Strategie du Jour ↔ Intelligence IA ↔ Admin Premium ↔ BCE-4X
+- [x] Matrice des flux de donnees
+- [x] Regles d'interconnexion et de validation
+- [x] Phases d'implementation P3-P6 definies
 
 ---
 
-## BACKLOG V2
+## Backlog (GELE par STEEVE-MAX)
 
-### P1 — Reecriture sous-criteres (17 restants)
-- Voir PLAN_V2_SOUS_CRITERES.md
-
-### P2 — Soil Engine V2
-- Cartographie IRDA, LiDAR MRNF, hydrologie, score reel
-- Voir ARCHITECTURE_INTERCONNEXION.md section 7
-
-### P2 — Interconnexions P3-P6
-- SUPRA <-> Strategie du Jour, Intelligence IA, Admin Premium, BCE-4X
-
-### GELE
-- Phase 2D: Purge frontend shadcn/utils
-- Pression historique → choix_affuts engine
-- BSAA-2: Social Ads module
-- Merge main — STRICTEMENT INTERDIT
+- P2: Soil Engine V2 (donnees pedologiques reelles, LiDAR) — GELE
+- P2: Phase 2D (Purge shadcn/utils) — GELE
+- P2: Phase BSAA-2 (Social Ads Automation) — GELE
+- P2: Implementation P3-P6 (Interconnexions) — GELE
+- INTERDIT: Merge vers main — STRICTEMENT INTERDIT
 
 ---
 
-## FICHIERS CLES
-- /app/frontend/src/components/territoire/ui/criteriaDatabase.js
-- /app/frontend/src/components/territoire/ui/CriteriaDetailModal.jsx
-- /app/frontend/src/components/territoire/NutritionPointDetailPanel.jsx
-- /app/backend/modules/soil_engine/router.py
-- /app/backend/server.py
+## Fichiers Cles
+- `/app/frontend/src/App.js`
+- `/app/frontend/src/components/territoire/ui/TerritoireHeader.jsx`
+- `/app/frontend/src/components/territoire/ui/criteriaDatabase.js`
+- `/app/frontend/src/components/territoire/ui/criteriaDatabase_P1P2.js`
+- `/app/memory/AUDIT_CSS_HEADER_V8.md`
+- `/app/memory/SOUS_CRITERES_V2_COMPLET.md`
+- `/app/memory/INTERCONNEXIONS_P3_P6.md`
+- `/app/memory/PLAN_V2_SOUS_CRITERES.md`
 
-## API ENDPOINTS
-- GET /api/v1/soil/analyze — Analyse pedologique GPS (V1 deterministe)
-- GET /api/v1/soil/status — Status Soil Engine
-- POST /api/share/log-event — Log partage
-- POST /api/share/master-switch — Switch marketing
+---
+
+## Regles de Gouvernance
+- Protocole BCE-4X / GOLDEN UI
+- Autorite: STEEVE-MAX
+- ZERO LOSS, ZERO REGRESSION
+- Validation explicite requise pour chaque phase
+- Merge main STRICTEMENT INTERDIT
