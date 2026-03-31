@@ -104,6 +104,12 @@ Plateforme d'analyse de territoires de chasse avec scoring multi-criteres, guide
 - [x] Section B: Liste complete 87 modules backend (MODULES_BACKEND_COMPLET_V1.md)
 - [x] Section C: Objectifs preparatoires (certification, V2, EASYlead Admin, P3-P6)
 
+### Directive x5300 — BACKUP_TOTAL_BIONIC_OS
+- [x] Section A: ZIP principal (128 MB) + MongoDB dump (34 collections, 703 docs) + Snapshot systeme
+- [x] Section B: ZIP #2 (128 MB) — 7 blocs critiques (Frontend, Backend, MongoDB, ENV, Assets, Build, System)
+- [x] Section C: Point de restauration scelle BIONIC_OS_v5201 (RESTORE_POINT_v5201.md)
+- [x] Section D: Protocole ZERO-REGRESSION BCE-4X actif (ZERO_REGRESSION_PROTOCOL_v5201.md)
+
 ---
 
 ## Backlog (GELE par STEEVE-MAX)

@@ -215,3 +215,5 @@ frontend/node_modules/.cache/default-development/128.pack
 # Environment files
 *.env
 *.env.*
+frontend/public/BIONIC_OS_BACKUP_COMPLET_v5201.zip
+frontend/public/BIONIC_OS_7BLOCS_v5201.zip
