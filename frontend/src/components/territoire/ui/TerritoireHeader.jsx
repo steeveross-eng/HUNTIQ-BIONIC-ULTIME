@@ -98,15 +98,15 @@ export const TerritoireHeader = ({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className={`h-9 px-6 flex items-center gap-2 rounded-lg font-bold text-sm uppercase tracking-wider transition-all duration-150 ${
+              className={`h-8 px-4 flex items-center gap-1.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-150 flex-shrink-0 ${
                 mapClickMode
                   ? 'bg-green-500/20 border-2 border-green-500/60 text-green-400'
                   : 'bg-[#FF9800]/15 border-2 border-[#FF9800]/50 hover:bg-[#FF9800]/25 text-[#FF9800]'
               }`}
               data-testid="add-waypoint-main-btn"
             >
-              <Plus className="h-5 w-5" />
-              <span className="text-sm">{mapClickMode ? 'Cliquez...' : 'Waypoint'}</span>
+              <Plus className="h-4 w-4" />
+              <span className="text-xs">{mapClickMode ? 'Cliquez...' : 'WPT'}</span>
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="bg-gray-950 border-gray-700/60 shadow-xl min-w-[220px]" side="bottom" align="center">
@@ -150,21 +150,21 @@ export const TerritoireHeader = ({
         </DropdownMenu>
         {/* BCE-4X V6+: Météo compacte — source unique sharedWeather */}
         {temp != null && (
-          <div className="flex items-center gap-3 bg-[#111118] rounded-lg px-3 py-1.5 border border-[#1a1a2e]" data-testid="header-weather-v6">
-            <div className="flex items-center gap-1">
-              <Thermometer className="h-4 w-4" style={{ color: '#4A7A2E' }} />
-              <span className="text-xs text-white font-mono">{temp}°C</span>
+          <div className="flex items-center gap-2 bg-[#111118] rounded-lg px-2.5 py-1.5 border border-[#1a1a2e] flex-shrink-0 max-w-[280px]" data-testid="header-weather-v6">
+            <div className="flex items-center gap-1 flex-shrink-0">
+              <Thermometer className="h-3.5 w-3.5" style={{ color: '#4A7A2E' }} />
+              <span className="text-[11px] text-white font-mono">{temp}°C</span>
             </div>
             {windSpeed != null && (
-              <div className="flex items-center gap-1">
-                <Wind className="h-4 w-4" style={{ color: '#8B6F47' }} />
-                <span className="text-xs text-white font-mono">
-                  {windCardinal || ''}{windDir != null ? ` ${windDir}°` : ''} {windSpeed} km/h
+              <div className="flex items-center gap-1 flex-shrink-0">
+                <Wind className="h-3.5 w-3.5" style={{ color: '#8B6F47' }} />
+                <span className="text-[11px] text-white font-mono whitespace-nowrap">
+                  {windCardinal || ''} {windSpeed}km/h
                 </span>
               </div>
             )}
             {windGusts != null && windGusts > windSpeed && (
-              <span className="text-[10px] text-amber-400/80 font-mono">Raf. {windGusts}</span>
+              <span className="text-[10px] text-amber-400/80 font-mono whitespace-nowrap flex-shrink-0">R.{windGusts}</span>
             )}
           </div>
         )}

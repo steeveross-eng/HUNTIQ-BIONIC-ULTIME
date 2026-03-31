@@ -142,17 +142,17 @@ const Navigation = ({ cartCount, onCartOpen }) => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-[1800px] mx-auto px-6">
         <div className="flex items-center justify-between" style={{ height: '136px' }}>
           {/* Logo 128px DANS le header — BCE-4X Phase L v6 */}
           <BionicLogoHeader />
           
           {/* Desktop Navigation - BIONIC TACTICAL Style */}
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-0.5 flex-1 min-w-0 overflow-x-auto scrollbar-none" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {/* Home */}
             <Link 
               to="/" 
-              className={`flex items-center gap-2 px-3 py-2 text-sm font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 ${isActive('/') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
               data-testid="nav-home"
             >
               <Home className="h-4 w-4" />
@@ -162,7 +162,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             {/* Dashboard */}
             <Link 
               to="/dashboard" 
-              className={`flex items-center gap-2 px-3 py-2 text-sm font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 ${isActive('/dashboard') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/dashboard') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
               data-testid="nav-dashboard"
             >
               <BarChart3 className="h-4 w-4" />
@@ -172,7 +172,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             {/* ANALYSE TERRITOIRE — Module primaire (carte strategique) */}
             <Link 
               to="/mon-territoire-bionic" 
-              className={`flex items-center gap-2 px-3 py-2 text-sm font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 ${['/mon-territoire-bionic', '/mon-territoire', '/analyse-territoire'].includes(location.pathname) ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${['/mon-territoire-bionic', '/mon-territoire', '/analyse-territoire'].includes(location.pathname) ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
               data-testid="nav-analyse-territoire"
             >
               <Crosshair className="h-4 w-4" />
@@ -182,30 +182,30 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             {/* CARTE INTERACTIVE — Module primaire (carte terrain GPS) */}
             <Link 
               to="/map" 
-              className={`flex items-center gap-2 px-3 py-2 text-sm font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 ${isActive('/map') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/map') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
               data-testid="nav-carte-interactive"
             >
-              <Globe className="h-4 w-4" />
-              Carte Interactive
+              <Globe className="h-3.5 w-3.5" />
+              Carte
             </Link>
             
             {/* Permis de chasse - Module Stratégique Indépendant */}
             <Link 
               to="/permis-chasse" 
-              className={`flex items-center gap-2 px-3 py-2 text-sm font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 ${isActive('/permis-chasse') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/permis-chasse') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
               data-testid="nav-permis-chasse"
             >
-              <Shield className="h-4 w-4" />
-              Permis & Enregistrement
+              <Shield className="h-3.5 w-3.5" />
+              Permis
             </Link>
             
             {/* Magasin — BCE-4X: texte blanc + espacement droit */}
             <Link 
               to="/shop" 
-              className={`flex items-center gap-2 px-3 py-2 mr-3 text-sm font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 ${isActive('/shop') ? 'text-white bg-white/10' : 'text-gray-300 hover:text-white'}`}
+              className={`flex items-center gap-1.5 px-2 py-2 mr-1 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/shop') ? 'text-white bg-white/10' : 'text-gray-300 hover:text-white'}`}
               data-testid="nav-shop"
             >
-              <Store className="h-4 w-4" />
+              <Store className="h-3.5 w-3.5" />
               {t('nav_shop')}
             </Link>
 
@@ -215,17 +215,17 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             {isBusinessOrAdmin && (
               <Link 
                 to="/business" 
-                className={`flex items-center gap-2 px-3 py-2 text-sm font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 ${isActive('/business') ? 'text-[#10B981] bg-[#10B981]/10' : 'text-[#10B981]/70 hover:text-[#10B981]'}`}
+                className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/business') ? 'text-[#10B981] bg-[#10B981]/10' : 'text-[#10B981]/70 hover:text-[#10B981]'}`}
                 data-testid="nav-business"
               >
-                <Briefcase className="h-4 w-4" />
+                <Briefcase className="h-3.5 w-3.5" />
                 Business
               </Link>
             )}
           </nav>
           
           {/* Right Content */}
-          <div className="flex items-center gap-2 lg:gap-3">
+          <div className="flex items-center gap-1.5 lg:gap-2 flex-shrink-0">
             {/* PARTAGER — BCE-4X GOLDEN: Élément institutionnel permanent sur toutes les pages */}
             <div className="hidden lg:block" data-testid="global-share-container">
               <ShareBionicButton />
