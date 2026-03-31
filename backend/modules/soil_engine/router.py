@@ -1,12 +1,31 @@
 """
-SOIL ENGINE — BCE-4X GOLDEN | Classification pedologique automatique
+SOIL ENGINE V1 — BCE-4X GOLDEN | Classification pedologique automatique
 =====================================================================
-Detecte le type de sol a partir de la position GPS.
-Classifie selon taxonomie officielle Quebec (MFFP, MRNF, CGQ, IRDA).
-Integre donnees pedologiques, hydrologiques et LiDAR.
+VERSION: V1 — INTERNE — NON CERTIFIEE
+STATUT: Deterministe (GPS hash) — AUCUNE donnee pedologique reelle integree
+=====================================================================
+
+LIMITES V1 (a documenter pour toute communication):
+- Classification DETERMINISTE basee sur un hash MD5 des coordonnees GPS
+- AUCUNE integration de donnees pedologiques reelles (IRDA, MFFP, MRNF, CGQ)
+- AUCUNE integration LiDAR reelle (relief, micro-vallons, thermiques)
+- AUCUNE integration hydrologique reelle (drainage, saturation, ruissellement)
+- Le score de sol est SIMULE, PAS MESURE
+- Les 7 types de sol sont corrects taxonomiquement mais attribues aleatoirement
+
+PLAN V2 (requis pour certification):
+- P1: Integration cartographie pedologique IRDA Quebec (shapefiles sols)
+- P2: Integration donnees LiDAR MRNF (DEM, canopee, pentes)
+- P3: Integration hydrologique (reseau hydrique MRNF, zones humides)
+- P4: Score de sol base sur donnees REELLES (texture mesure, pH mesure)
+- P5: Validation terrain par echantillonnage pedologique
+- P6: Certification BCE-4X par STEEVE-MAX
+
+AUCUNE COMMUNICATION EXTERNE ne doit presenter le SOIL ENGINE V1 comme
+"reel" tant que la V2 n'est pas livree et validee par STEEVE-MAX.
 
 Endpoints:
-  GET  /api/v1/soil/analyze   — Analyse pedologique complete
+  GET  /api/v1/soil/analyze   — Analyse pedologique (V1: deterministe)
   GET  /api/v1/soil/status    — Statut du module
 
 Score: qualite_sol (0-100), retention, lessivage, drainage
@@ -273,6 +292,13 @@ async def analyze_soil(
         "species": species,
         "season": season,
         "protocol": "BCE-4X GOLDEN V6+",
+        "version": "V1",
+        "version_status": "INTERNE — NON CERTIFIEE",
+        "v1_limitations": [
+            "Classification deterministe (GPS hash) — PAS de donnees pedologiques reelles",
+            "Score de sol SIMULE — PAS MESURE",
+            "Aucune integration LiDAR / hydrologique reelle",
+        ],
     }
 
 
@@ -281,9 +307,22 @@ async def soil_status():
     return {
         "status": "operational",
         "engine": "SOIL ENGINE",
-        "version": "1.0.0",
+        "version": "V1",
+        "version_status": "INTERNE — NON CERTIFIEE — Classification deterministe",
         "soil_types_count": len(SOIL_TYPES),
         "protocol": "BCE-4X GOLDEN V6+",
         "authority": "STEEVE-MAX",
         "sources": ["IRDA Quebec", "MRNF", "CGQ", "MFFP", "SLC", "USDA"],
+        "v1_limitations": [
+            "GPS hash deterministe — AUCUNE donnee pedologique reelle",
+            "Score SIMULE — V2 requise pour certification",
+        ],
+        "v2_plan": [
+            "P1: Cartographie pedologique IRDA Quebec (shapefiles)",
+            "P2: LiDAR MRNF (DEM, canopee, pentes)",
+            "P3: Hydrologie (reseau hydrique, zones humides)",
+            "P4: Score sur donnees REELLES",
+            "P5: Validation terrain echantillonnage",
+            "P6: Certification BCE-4X STEEVE-MAX",
+        ],
     }

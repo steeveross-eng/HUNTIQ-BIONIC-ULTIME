@@ -702,6 +702,766 @@ const DEFAULT = {
 };
 
 // =====================================================================
+// P0 — SOURCE_EAU — Impact direct sur la frequentation animale
+// =====================================================================
+const source_eau = {
+  title: "Source d'eau proximale — Distance et qualite de la source d'eau la plus proche",
+  definition: "Evaluation de la distance, du debit et de la qualite de la source d'eau naturelle la plus proche de la saline. L'eau est un besoin quotidien pour tous les cervides — une saline positionnee pres d'un point d'eau actif beneficie d'un trafic animal naturel qui amplifie la frequentation du site de 200-400%.",
+  methodology: "Score sur 100: distance source (40 pts — GPS), debit/permanence (25 pts — observation 4 saisons), qualite eau (20 pts — clarte/pH), connectivite avec corridors (15 pts — LiDAR). Sources: MRNF reseau hydrique, LiDAR, observations terrain.",
+  justification: {
+    orignal: "L'orignal consomme 20-40 litres d'eau par jour et passe 30-60% de son temps estival dans ou pres de l'eau (lacs, marais, ruisseaux). Une saline a <200 m d'une source d'eau permanente capte l'orignal dans son circuit quotidien eau-alimentation-repos. En automne, l'orignal visite la saline apres avoir bu — le corridor eau-saline est le chemin le plus emprunte.",
+    chevreuil: "Le chevreuil boit 2-4 litres par jour et prefere les petits ruisseaux calmes aux grandes etendues d'eau. Il visite les points d'eau a l'aube et au crepuscule. Une saline a <150 m d'un ruisseau permanent intercepte le chevreuil sur son circuit quotidien. Les males matures utilisent souvent les memes points d'eau de facon predictible.",
+    ours: "L'ours noir consomme 5-10 litres d'eau par jour et est fortement associe aux corridors hydriques (ruisseaux a truites, lacs poissonneux). Il suit les cours d'eau pour se deplacer et s'alimenter (poissons, ecrevisses, grenouilles). Une saline pres d'un ruisseau actif combine 2 attractifs: eau + mineraux.",
+    wapiti: "Le wapiti consomme 15-25 litres d'eau par jour. En montagne, il descend quotidiennement vers les vallees pour s'abreuver. Une saline positionnee entre l'alpage (alimentation) et le point d'eau (abreuvement) intercepte le wapiti sur son circuit vertical quotidien. Les femelles avec petits visitent l'eau plus frequemment.",
+    dindon: "Le dindon sauvage boit 200-400 ml par jour et prefere les zones humides peu profondes (flaques, mares temporaires, ruisseaux calmes). Il visite les points d'eau en milieu de matinee (9h-11h). Une zone de mineraux pres d'une source d'eau calme combine alimentation et abreuvement.",
+  },
+  recommendations_terrain: {
+    orignal: [
+      "Positionner la saline a 100-200 m d'un lac, marais ou ruisseau permanent",
+      "Identifier le corridor orignal entre la source d'eau et la foret dense (repos)",
+      "Installer la saline EN BORDURE du corridor eau-foret, pas directement sur la rive",
+      "Eviter les rives ouvertes — l'orignal prefere un acces a l'eau couvert de vegetation",
+      "En ete: l'orignal mange les plantes aquatiques — la proximite de l'eau est CRITIQUE",
+      "En automne: le corridor eau-saline est le plus emprunte, y installer l'affut principal",
+      "Verifier que la source d'eau est permanente (debit minimal en aout-septembre)",
+      "Les marais avec nenuphar et quenouille attirent l'orignal en ete (brout aquatique)",
+      "Eviter les berges boueuses instables — l'orignal laisse des empreintes profondes qui alertent les predateurs",
+      "Creer un chemin d'acces qui ne longe PAS le cours d'eau (le gibier emprunte les rives)"
+    ],
+    chevreuil: [
+      "Positionner la saline a 100-150 m d'un petit ruisseau calme (pas un torrent bruyant)",
+      "Le chevreuil prefere les ruisseaux de <2 m de largeur avec des rives accessibles",
+      "Installer la saline du cote du ruisseau oppose a la route ou au chemin d'acces",
+      "Le chevreuil boit a l'aube et au crepuscule — l'affut doit couvrir le corridor ruisseau-saline",
+      "Les zones de grattage (scrapes) sont souvent pres des points d'eau — les reperer",
+      "En ete sec: le chevreuil concentre ses deplacements autour des rares sources actives",
+      "Les mares temporaires attirent le chevreuil au printemps (grenouilles, insectes, eau douce)",
+      "Eviter les grandes etendues d'eau (lac >5 ha) — le chevreuil les evite par manque de couvert"
+    ],
+    ours: [
+      "L'ours suit les ruisseaux pour se deplacer — positionner la saline a <200 m d'un cours d'eau",
+      "Les ruisseaux a truites sont les corridors #1 de l'ours au Quebec — les identifier",
+      "L'ours pêche souvent aux confluences de ruisseaux — zones de haute activite",
+      "Installer la saline en retrait du ruisseau (50-100 m) pour eviter la zone de peche (securite)",
+      "En ete: l'ours passe des heures dans l'eau pour se rafraichir — saline pres d'un bassin",
+      "Les lacs avec bleuets sur les rives combinent eau + alimentation + saline = site optimal",
+      "Eviter les zones ou l'ours a ete nourri par des humains (ours conditionne = danger)"
+    ],
+    wapiti: [
+      "Positionner la saline entre l'alpage (haut) et le point d'eau (bas) sur le corridor vertical",
+      "Les sources de montagne (resurgences) sont les points d'eau les plus fiables — les identifier",
+      "Le wapiti descend boire en fin de matinee (10h-12h) et en soiree (16h-18h)",
+      "En montagne: les ruisseaux de fond de vallee sont les axes de deplacement principaux",
+      "Installer la saline a mi-pente, entre le couvert forestier et la zone d'abreuvement",
+      "Les femelles avec petits visitent l'eau 3-4x/jour — frequentation plus previsible"
+    ],
+    dindon: [
+      "Le dindon visite les points d'eau peu profonds (<10 cm) en milieu de matinee",
+      "Installer la zone de mineraux pres d'une mare temporaire ou d'un petit ruisseau calme",
+      "Le dindon evite les grandes etendues d'eau (zero couvert, predateurs aeriens)",
+      "En ete sec: les flaques persistantes attirent les groupes de dindons — y poser les mineraux",
+      "Les fossés de drainage agricole sont souvent les points d'eau du dindon en zone rurale"
+    ],
+  },
+  strategies_optimisation: {
+    orignal: ["Circuit eau-saline-foret a cartographier", "Saline entre 100-200 m de l'eau", "Corridor eau-saline = meilleur emplacement d'affut"],
+    chevreuil: ["Ruisseau calme <2 m de large ideal", "Zone de grattage pres de l'eau = male dominant confirme", "Eté sec concentre les deplacements"],
+    ours: ["Ruisseaux a truites = corridors #1", "Confluences = zones de haute activite", "Saline en retrait du ruisseau (50-100 m)"],
+    wapiti: ["Corridor vertical alpage-eau", "Sources de montagne = fiables", "Mi-pente ideal"],
+    dindon: ["Mares temporaires peu profondes", "Fossés de drainage en zone agricole", "Mi-matinee = heure de visite"],
+  },
+  techniques_chasse: {
+    orignal: ["Observer le corridor eau-saline en soiree (17h-20h) — pic d'activite", "L'orignal revient de l'eau humide — ses pas sont silencieux, arriver a l'affut AVANT"],
+    chevreuil: ["Le chevreuil boit puis visite la saline — positionner l'affut entre les deux", "Au crepuscule: scanner les berges avant de se concentrer sur la saline"],
+    ours: ["L'ours qui a peche est rassasie et detendu — moment ideal pour le tir a la saline", "NE JAMAIS se placer entre l'ours et le cours d'eau (route de fuite)"],
+    wapiti: ["Le wapiti descend boire en groupe — attendre que le groupe soit a la saline avant de tirer"],
+    dindon: ["Le dindon desaltere ne reste pas longtemps au point d'eau — etre en position AVANT"],
+  },
+  erreurs_a_eviter: {
+    orignal: ["Installer la saline directement sur la rive (perturbation de la zone d'abreuvement)", "Ignorer la permanence de la source (ruisseau sec en aout = site abandonné)"],
+    chevreuil: ["Choisir un cours d'eau trop bruyant (le chevreuil evite le bruit)", "Installer la saline du cote de la route (le chevreuil s'y rend par le cote oppose)"],
+    ours: ["S'installer entre l'ours et le cours d'eau", "Ignorer les signes de peche (ecailles, restes) pres du ruisseau"],
+    wapiti: ["Installer en fond de vallee pres de l'eau (vents tourbillonnants)", "Negliger les sources de montagne au profit des ruisseaux de fond de vallee"],
+    dindon: ["Installer pres d'une grande etendue d'eau (le dindon l'evite)", "Oublier que le dindon visite l'eau en milieu de matinee, PAS a l'aube"],
+  },
+  optimisations_saisonnieres: { printemps: "Fonte: cours d'eau en crue. Verifier debit et accessibilite. Mares temporaires actives.", ete: "Periode critique: debit minimal. Verifier que la source est permanente. Orignal aquatique actif.", automne: "Debit modere. Corridor eau-saline tres emprunte. Saison de chasse active.", hiver: "Sources gelees. Identifier les resurgences qui restent libres de glace." },
+  optimisations_support: ["Pierre de gue sur les petits ruisseaux pour faciliter la traversee du gibier vers la saline", "Bac d'eau artificiel en zone sans source naturelle (25 litres, enterre)"],
+  optimisations_meteo: ["Apres pluie forte: les points d'eau secondaires se remplissent — activite accrue", "Secheresse prolongee: les animaux convergent vers les rares sources actives — site stratégique"],
+  optimisations_pression: ["En zone haute pression: les animaux visitent l'eau aux heures les plus calmes (mi-journee)", "Les points d'eau eloignes des routes sont moins frequentes par les humains — plus de gibier"],
+  thresholds: { green: "80-100: Source permanente <200 m, debit fiable, corridor eau-saline identifie, couvert adequat", yellow: "50-79: Source saisonniere ou >200 m, debit variable, corridor partiel", red: "0-49: Aucune source <500 m, ou source intermittente, ou aucun corridor identifie" },
+  sources: [
+    "MRNF — Reseau hydrique du Quebec haute resolution (2023)",
+    "MFFP — Habitat de l'orignal: importance des milieux humides (2020)",
+    "Dussault et al. (2005) — Selection d'habitat de l'orignal et proximite de l'eau (UQAR)",
+    "Courtois et al. (2002) — Ecologie de l'orignal en foret boreale (Can. J. Zoology)",
+    "NDA — Water Sources and Deer Movement (2023)",
+    "Mississippi State University Deer Lab — Whitetail Use of Water Sources (2022)",
+    "Bear Trust International — Black Bear Riparian Habitat Use (2021)",
+    "RMEF — Elk Watering Behavior in Mountain Terrain (2022)",
+    "NWTF — Turkey and Water: Seasonal Habitat Requirements (2024)",
+    "USGS — Hydrological Analysis of Wildlife Corridors (2023)",
+  ],
+};
+
+// =====================================================================
+// P0 — PRESSION_CHASSE
+// =====================================================================
+const pression_chasse = {
+  title: "Pression de chasse locale — Densite de chasseurs et impact sur le gibier",
+  definition: "Evaluation de la densite de chasseurs dans un rayon de 2 km du site, de la frequence des perturbations humaines, et de l'impact cumule sur le comportement du gibier. La pression de chasse est le facteur #1 de modification comportementale — un male mature en zone haute pression devient strictement nocturne et abandonne les salines de jour.",
+  methodology: "Score sur 100: densite chasseurs/km2 (35 pts — registre SEPAQ/ZEC), frequence perturbations (25 pts — observation terrain), pourcentage activite nocturne du gibier (20 pts — cameras trail IR), historique de recolte zone (20 pts — MFFP stats). Sources: SEPAQ, ZEC, MFFP donnees de recolte.",
+  justification: {
+    orignal: "L'orignal en zone haute pression (>5 chasseurs/km2) modifie radicalement son comportement: activite nocturne +70%, utilisation des corridors secondaires +80%, visite des salines -60%. Un site de saline en zone faible pression (<2 chasseurs/km2) produit 3-5x plus d'observations diurnes et de recoltes que le meme site en zone haute pression.",
+    chevreuil: "Le chevreuil de Virginie est le gibier LE PLUS affecte par la pression de chasse. Apres 3 jours de pression, les males matures (3.5+ ans) deviennent 95% nocturnes. Ils abandonnent les salines de jour, se retranchent dans le couvert le plus dense, et ne se deplacent que 30 min avant le lever et 30 min apres le coucher du soleil.",
+    ours: "L'ours noir est moderement affecte par la pression de chasse. Il ajuste ses heures de visite (decalage vers la nuit) mais ne deserte pas la zone. En zone haute pression, l'ours visite les salines entre 21h et 4h. En zone faible pression, il visite entre 16h et 21h (heures chassables).",
+    wapiti: "Le wapiti reagit a la pression en se retirant vers des zones plus isolees et plus elevees. Un groupe de wapiti soumis a une pression forte (>3 chasseurs/km2) peut migrer de 5-15 km en 48h. La saline est alors completement abandonnee.",
+    dindon: "Le dindon sauvage devient tres mefiant apres les premiers coups de feu de la saison. Il cesse de repondre aux appels, se deplace en silence, et reduit ses zones d'alimentation. En zone haute pression, le dindon ne strutze plus en zone ouverte.",
+  },
+  recommendations_terrain: {
+    orignal: [
+      "Evaluer la densite de chasseurs dans un rayon de 2 km (registre SEPAQ/ZEC)",
+      "En zone haute pression: ne chasser la saline que 2-3x par saison (preservatation de la confiance)",
+      "Installer des cameras trail IR pour documenter le ratio activite diurne/nocturne",
+      "Coordonner avec les chasseurs voisins pour alterner les jours de chasse",
+      "Creer une zone tampon non-chassee de 500 m autour de la saline",
+      "Eviter le bruit inutile: VTT electrique, approche a pied, communication silencieuse",
+      "En zone publique: chasser en milieu de semaine (lundi-mercredi) pour eviter la pression weekend",
+      "L'orignal sous pression utilise des corridors secondaires — les identifier",
+      "Ne tirer qu'en conditions optimales (pas de tir force, pas de tir de contournement)",
+      "Reporter la session si des coups de feu ont ete entendus dans la derniere heure"
+    ],
+    chevreuil: [
+      "En haute pression: le chevreuil est 95% nocturne — cameras IR pour confirmer les patterns",
+      "Gestion restrictive volontaire: ne pas recolter les males <3.5 ans (potentiel trophee futur)",
+      "Chasser UNIQUEMENT les 3 premiers jours de la saison (avant l'adaptation comportementale)",
+      "Apres le jour 3: passer en mode observation seule (le chevreuil est alerte)",
+      "Creer une zone sanctuaire (non-chassee) de 300-500 m autour de la saline principale",
+      "Utiliser un ground blind ferme pour reduire la detection visuelle (immobilite)",
+      "Ne JAMAIS forcer un tir sur un chevreuil alerte (il memorise la menace pour des semaines)",
+      "Alterner entre 3-4 salines pour distribuer la pression sur le territoire"
+    ],
+    ours: [
+      "L'ours s'adapte en decalant ses visites vers la nuit — verifier les heures de passage (cameras IR)",
+      "En haute pression: l'ours visite entre 21h et 4h — sessions crepusculaires tardives",
+      "L'ours est moins affecte que les cervides — la saline reste frequentee meme sous pression",
+      "Eviter de deplacer le bait ou la saline en saison (l'ours perd confiance)",
+      "En zone haute pression: augmenter la quantite d'attractifs pour compenser la diminution des visites"
+    ],
+    wapiti: [
+      "Le wapiti fuit la pression — evaluer les zones de repli a 5-15 km du site",
+      "Coordonner avec les guides locaux pour limiter la pression sur le secteur",
+      "En haute pression: le wapiti se retire en altitude — suivre les corridors d'altitude",
+      "Ne pas combiner appels + saline en zone haute pression (double alerte)",
+      "Privilegier les zones de gestion controlee (ZEC, pourvoiries) avec pression regulee"
+    ],
+    dindon: [
+      "Apres les premiers coups de feu: le dindon cesse de repondre aux appels pendant 3-5 jours",
+      "En haute pression: le male se deplace en silence et ne strutze plus en zone ouverte",
+      "Chasser les 2 premiers jours de la saison, puis laisser reposer 5+ jours",
+      "Utiliser des appels tres subtils (soft yelps) au lieu des appels agressifs en zone haute pression",
+      "Le dindon sous pression se refugie dans les zones les plus denses — adapter le blind"
+    ],
+  },
+  strategies_optimisation: {
+    orignal: ["2-3 sessions max par saison en haute pression", "Zone tampon 500 m non-chassee", "Milieu de semaine uniquement"],
+    chevreuil: ["3 premiers jours de saison prioritaires", "Zone sanctuaire 300-500 m", "Alterner 3-4 salines"],
+    ours: ["Sessions crepusculaires tardives en haute pression", "Augmenter les attractifs", "L'ours s'adapte — la saline reste viable"],
+    wapiti: ["Zones de gestion controlee", "Coordonner avec les guides", "Eviter les appels en haute pression"],
+    dindon: ["2 premiers jours puis repos 5+ jours", "Appels subtils seulement", "Zones denses pour le blind"],
+  },
+  techniques_chasse: {
+    orignal: ["L'orignal sous pression utilise les corridors secondaires les plus discrets — les identifier en pre-saison", "En zone haute pression: arriver 2h avant l'aube (l'orignal finit son activite nocturne au lever du soleil)"],
+    chevreuil: ["Le chevreuil sous pression ne visite la saline que dans les 30 min avant/apres le soleil — etre en position", "Les males matures sous pression se deplacent le nez au vent, avec des pauses de 5-10 min tous les 50 m"],
+    ours: ["L'ours sous pression arrive rapidement, mange/leche rapidement, et repart — tir rapide necessaire", "En haute pression: l'ours approche plus lentement et verifie la zone plus longtemps — patience"],
+    wapiti: ["Le wapiti sous pression ne bugle plus — passer en mode observation silencieuse", "Les femelles sont moins affectees que les males — observer les groupes de femelles pour localiser les males"],
+    dindon: ["Le dindon sous pression se deplace en silence — tendre une embuscade au lieu d'appeler", "Utiliser un appelant femelle seul (pas de jake) — le male sous pression evite la confrontation"],
+  },
+  erreurs_a_eviter: {
+    orignal: ["Chasser la saline tous les jours (l'orignal deserte en 3-5 jours)", "Creer du bruit inutile (claquement de portiere, discussion)"],
+    chevreuil: ["Insister apres le jour 3 de pression (le chevreuil est nocturne)", "Modifier l'affut ou la saline en saison"],
+    ours: ["Sous-estimer l'adaptation de l'ours (il revient, mais plus tard)", "Deplacer le bait en saison"],
+    wapiti: ["Ignorer les signes de migration de pression (le groupe a quitte la zone)", "Combiner appels + saline sous pression"],
+    dindon: ["Appels agressifs en zone haute pression (le dindon fuit)", "Ignorer la periode de repos post-coups de feu"],
+  },
+  optimisations_saisonnieres: { printemps: "Pression faible — ideal pour inventaire et cameras trail. Le gibier est detendu.", ete: "Aucune pression de chasse. Evaluation du site sans perturbation. Cameras trail 60+ jours.", automne: "Pression maximale. Adapter la stratégie: frequence reduite, horaires extremes, corridors secondaires.", hiver: "Pression post-saison. Le gibier recupere. Ideal pour evaluer le dommage de la saison sur la frequentation." },
+  optimisations_support: ["Cameras trail IR 24/7 pour documenter le shift diurne/nocturne", "VTT electrique pour reduire le bruit d'approche de 80%"],
+  optimisations_meteo: ["Front froid arrivant = activite accrue meme sous pression", "Pression barometrique en hausse = les cervides sortent malgre la pression de chasse"],
+  optimisations_pression: ["Haute pression (>5/km2): 2-3 sessions MAX par saison", "Moyenne pression (2-5/km2): 1 session par semaine", "Faible pression (<2/km2): chasse reguliere possible"],
+  thresholds: { green: "80-100: <2 chasseurs/km2, >60% activite diurne, zone sanctuaire protegee", yellow: "50-79: 2-5 chasseurs/km2, 30-60% activite diurne, pression moderee", red: "0-49: >5 chasseurs/km2, <30% activite diurne, gibier principalement nocturne" },
+  sources: [
+    "MFFP — Donnees de recolte et densite de chasseurs par zone de chasse (2020-2024)",
+    "SEPAQ — Registre de frequentation des reserves fauniques (2024)",
+    "Dussault et al. (2005) — Reponse comportementale de l'orignal a la chasse (UQAR, J. Wildlife Mgmt)",
+    "Kilpatrick & Stober (2002) — Whitetail Deer Response to Hunting Pressure (Wildlife Soc. Bulletin)",
+    "NDA — Managing Hunting Pressure for Quality Deer Management (2023)",
+    "Mississippi State University Deer Lab — Buck Movement and Hunting Pressure (2022)",
+    "University of Georgia Deer Lab — Diurnal vs Nocturnal Activity Under Pressure (2021)",
+    "RMEF — Elk Migration Responses to Hunting Disturbance (2022)",
+    "Bear Trust International — Black Bear Behavioral Adaptation to Hunting (2020)",
+    "NWTF — Turkey Behavior Changes During Hunting Season (2024)",
+  ],
+};
+
+// =====================================================================
+// P0 — TRANQUILLITE_ZONE
+// =====================================================================
+const tranquillite_zone = {
+  title: "Tranquillite de la zone — Niveau de perturbation humaine et predateurs",
+  definition: "Evaluation du niveau global de perturbation dans un rayon de 1 km: activites humaines (routes, exploitation forestiere, recreotourisme), presence de predateurs (coyote, loup, ours en zone chevreuil), et bruits mecaniques. Les males matures tolerent un seuil de perturbation inferieur aux femelles et juveniles.",
+  methodology: "Score sur 100: distance routes actives (30 pts — MRNF), bruit ambiant (25 pts — mesure dB), frequence passages humains (25 pts — cameras trail), presence predateurs (20 pts — indices terrain). Sources: MRNF reseau routier, cameras trail, observations terrain.",
+  justification: {
+    orignal: "L'orignal adulte tolere un niveau de perturbation modere (routes forestieres a >500 m, exploitation a >1 km). Les males matures fuient les zones ou le bruit depasse 40 dB de facon reguliere. Les operations forestieres actives dans un rayon de 1 km reduisent la frequentation de la saline de 70-90% pendant la duree des travaux.",
+    chevreuil: "Le chevreuil est extremement sensible aux perturbations. Il memorise les sources de derangement et ajuste ses circuits pour les eviter. Un chemin de VTT utilise regulierement a <300 m de la saline reduit la frequentation diurne de 50-80%. Les males trophee (4.5+ ans) exigent une tranquillite presque totale (<20 dB de jour).",
+    ours: "L'ours noir est moderement tolerant aux perturbations humaines regulieres (il s'habitue). Les ours vivant pres des zones habitees sont souvent plus tolerants. Cependant, les perturbations imprevues (tronconneuse, dynamitage) provoquent une fuite de 48-72h. L'ours craint davantage les chiens que les humains.",
+    wapiti: "Le wapiti est tres sensible aux perturbations et reagit en groupe — un individu alerte provoque la fuite de tout le troupeau (5-15 individus). Le rayon de fuite du wapiti est de 200-400 m pour les perturbations visuelles et 500+ m pour les perturbations sonores.",
+    dindon: "Le dindon est extremement vigilant visuellement mais tolere les bruits de fond reguliers (vent, ruisseau, circulation lointaine). Les perturbations soudaines (coup de feu, chien, VTT) provoquent un envol de fuite et une absence de 24-48h.",
+  },
+  recommendations_terrain: {
+    orignal: [
+      "Evaluer la distance aux routes forestieres actives (minimum 500 m recommande)",
+      "Verifier le calendrier d'exploitation forestiere dans un rayon de 2 km (MRNF)",
+      "Installer des cameras trail pour documenter les periodes de quietude maximale",
+      "Eviter les zones avec sentiers de VTT recreatifs a <500 m",
+      "Mesurer le bruit ambiant a la saline (objectif: <30 dB de jour)",
+      "Les zones tampons de coupes forestieres anciennes (5+ ans) offrent une bonne tranquillite",
+      "L'orignal s'habitue aux bruits reguliers (route lointaine) mais pas aux bruits intermittents",
+      "Exploiter les zones inaccessibles par route (acces VTT ou pedestre uniquement)"
+    ],
+    chevreuil: [
+      "Distance minimale aux chemins utilises regulierement: 300 m",
+      "Le chevreuil detecte un promeneur a 200+ m — evaluer la frequentation humaine du secteur",
+      "Creer une zone sanctuaire (non-perturbee) de 300 m autour de la saline",
+      "Eviter les zones pres de camps de chasse actifs (va-et-vient = perturbation permanente)",
+      "Les males trophee fuient les zones avec bruit regulier — privilegier l'isolement total",
+      "Les zones proches des champs agricoles avec machinerie sont perturbees 6 mois/an",
+      "Le chevreuil s'habitue aux bruits reguliers (tracteur quotidien) mais pas aux bruits nouveaux"
+    ],
+    ours: [
+      "L'ours tolere les routes forestieres a >200 m si le trafic est faible (<5 vehicules/jour)",
+      "Les ours periurbains sont plus tolerants — evaluer le contexte local",
+      "Les chiens non attaches sont la perturbation #1 pour l'ours — evaluer la presence de chiens",
+      "Les perturbations soudaines (tronconneuse, dynamitage) provoquent une fuite de 48-72h",
+      "L'ours revient plus vite que les cervides apres une perturbation (24-72h vs 1-2 semaines)"
+    ],
+    wapiti: [
+      "Le wapiti exige un rayon de tranquillite de 400+ m (visuel) et 500+ m (sonore)",
+      "Tout le groupe fuit si un individu est alerte — la perturbation affecte 5-15 animaux",
+      "Les zones de montagne isolees offrent la meilleure tranquillite",
+      "Le wapiti est habitue aux vehicules forestiers mais pas aux pietons (predateur bipede)",
+      "Coordonner avec les guides locaux pour limiter les perturbations dans le secteur"
+    ],
+    dindon: [
+      "Le dindon tolere les bruits de fond reguliers (circulation lointaine, vent) mais pas les bruits soudains",
+      "Distance minimale aux habitations: 200 m (le dindon s'approche mais evite l'activite directe)",
+      "Les chiens et chats sont des perturbateurs majeurs pour le dindon — evaluer la presence",
+      "Apres un envol de fuite, le dindon revient a la meme zone en 24-48h si aucune recurrence",
+      "Les zones agricoles calmes (hors saison de machinerie) sont ideales pour le dindon"
+    ],
+  },
+  strategies_optimisation: {
+    orignal: ["Zone tampon 500 m des routes actives", "Zones inaccessibles par route", "Calendrier exploitation forestiere"],
+    chevreuil: ["Zone sanctuaire 300 m", "Isolement total pour males trophee", "Evaluer frequentation humaine du secteur"],
+    ours: ["L'ours s'habitue aux perturbations regulieres", "Eviter les chiens", "Perturbations soudaines = fuite 48-72h"],
+    wapiti: ["Rayon 400+ m visuel, 500+ m sonore", "Montagne isolee ideal", "Coordonner avec les guides"],
+    dindon: ["Bruits de fond OK, bruits soudains NON", "Chiens/chats = perturbateurs #1", "Retour en 24-48h si pas de recurrence"],
+  },
+  techniques_chasse: {
+    orignal: ["Arriver a la saline 2h avant l'aube dans le silence total", "Pas de communication radio — gestes uniquement"],
+    chevreuil: ["Le chevreuil evalue la tranquillite pendant 10-15 min avant d'entrer a la saline", "Un chevreuil qui fait des pauses longues (>30 s) a detecte quelque chose — rester immobile"],
+    ours: ["L'ours alerte se dresse sur ses pattes arriere pour evaluer la menace — ne PAS bouger", "En zone calme: l'ours est plus detendu et reste plus longtemps a la saline"],
+    wapiti: ["Le wapiti envoie une femelle eclaireur avant que le groupe n'entre — attendre le groupe complet"],
+    dindon: ["Le dindon ecoute pendant 5 min apres un appel — silence ABSOLU pendant ce temps"],
+  },
+  erreurs_a_eviter: {
+    orignal: ["Chasser pres d'une zone d'exploitation forestiere active", "Creer du bruit pendant l'installation de l'affut"],
+    chevreuil: ["Visiter la saline trop souvent (chaque visite depose des odeurs et du bruit)", "Installer la saline pres d'un chemin de randonnee"],
+    ours: ["Negliger la presence de chiens dans le secteur", "Ignorer une perturbation soudaine recente (l'ours est en fuite 48-72h)"],
+    wapiti: ["Sous-estimer le rayon de fuite du wapiti (400+ m)", "Approcher a pied en terrain ouvert (predateur bipede)"],
+    dindon: ["Provoquer un envol de fuite par approche trop rapide", "Ignorer la presence de chiens/chats dans le secteur"],
+  },
+  optimisations_saisonnieres: { printemps: "Pas de chasse. Tranquillite maximale. Ideal pour observation et cameras trail.", ete: "Exploitation forestiere possible. Verifier le calendrier MRNF. Tranquillite variable.", automne: "Saison de chasse. Perturbation maximale. Adapter la strategie (horaires extremes).", hiver: "Post-saison. Le gibier recupere. Tranquillite en hausse progressive." },
+  optimisations_support: ["Cameras trail cellulaires pour eviter les visites inutiles au site", "VTT electrique pour approche silencieuse"],
+  optimisations_meteo: ["Vent fort (>20 km/h): masque les bruits humains — le gibier est moins alerte", "Neige fraiche: le craquement des pas se propage loin — approche plus difficile"],
+  optimisations_pression: ["Zone haute pression = perturbation maximale — combiner pression + tranquillite dans l'evaluation", "Zone faible pression + haute tranquillite = site optimal pour males matures"],
+  thresholds: { green: "80-100: >500 m des routes, <30 dB ambiant, <2 passages humains/jour, aucune exploitation active", yellow: "50-79: 200-500 m des routes, 30-40 dB, 2-5 passages/jour, exploitation a >1 km", red: "0-49: <200 m d'une route active, >40 dB, >5 passages/jour, exploitation active <1 km" },
+  sources: [
+    "MRNF — Reseau routier forestier et calendrier d'exploitation (2024)",
+    "Dussault et al. (2005) — Reponse de l'orignal aux perturbations humaines (UQAR)",
+    "Lesmerises et al. (2012) — Impact des routes sur l'utilisation de l'habitat (Can. J. Zoology)",
+    "NDA — Sanctuary Areas and Buck Maturity (2023)",
+    "University of Georgia Deer Lab — Human Disturbance and Deer Movement (2021)",
+    "Bear Trust International — Black Bear Tolerance of Human Activity (2020)",
+    "RMEF — Elk Disturbance Thresholds (2022)",
+    "NWTF — Turkey Response to Predators and Humans (2024)",
+    "Environnement Canada — Niveaux de bruit en milieu forestier (2023)",
+  ],
+};
+
+// =====================================================================
+// P0 — POTENTIEL_TROPHEE
+// =====================================================================
+const potentiel_trophee = {
+  title: "Potentiel de presence de males trophees — Evaluation du potentiel de recolte de qualite",
+  definition: "Evaluation de la probabilite de presenter des males matures (3.5+ ans pour le chevreuil, 5+ ans pour l'orignal, 300+ lbs pour l'ours, 6x6+ pour le wapiti) sur le site. Integre l'historique de recolte, la structure d'age du cheptel, la qualite de l'habitat, la pression de chasse et les observations cameras trail.",
+  methodology: "Score sur 100: historique recolte males matures 5 ans (30 pts — MFFP), structure d'age cameras trail (25 pts), qualite habitat/couvert (25 pts — LiDAR), pression chasse locale (20 pts — registre). Sources: MFFP stats recolte, cameras trail, LiDAR MRNF.",
+  justification: {
+    orignal: "Un orignal male mature (5+ ans) porte un panache de 40-55 pouces (trophee) et pese 500-700 kg. Il est solitaire, nocturne en zone haute pression, et utilise des corridors secondaires pour eviter les humains. La presence d'un male mature confirme un habitat de qualite — couvert dense, faible pression, corridors connectes, et ressources alimentaires suffisantes.",
+    chevreuil: "Un male trophee (3.5+ ans, 140+ P&Y) represente 5-10% de la population male totale. Il frequente les zones avec couvert lateral >70%, faible pression (<2 chasseurs/km2), et corridors de grattage actifs. La gestion restrictive (protection des 1.5-2.5 ans) est necessaire pour produire des males trophee. Les cameras trail montrent que 80% des visites de males trophee aux salines sont nocturnes.",
+    ours: "Un ours noir trophee pese 300+ lbs (male de 5+ ans). Il est dominant sur son territoire et marque les arbres a 1.8-2.2 m de hauteur. Les males dominants visitent les salines en dernier (apres les femelles et juveniles) et restent le temps le plus court. Identifier le dominant via les griffures d'arbres et les cameras trail.",
+    wapiti: "Un wapiti trophee male porte un panache 6x6+ (6 pointes par cote). Il est present dans les zones avec corridors de migration generationnels, prairies d'alpage, et faible pression. Le male dominant bugle en pre-rut — les appels confirment sa presence.",
+    dindon: "Un dindon trophee male (jake mature, 2+ ans) a une barbe de 25+ cm et des ergots de 2.5+ cm. Il strutze en zone ouverte pour attirer les femelles. Les males dominants ont un territoire de 200-500 ha et visitent les zones de mineraux regulierement en pre-saison.",
+  },
+  recommendations_terrain: {
+    orignal: [
+      "Installer des cameras trail grand angle sur les corridors pour documenter les panaches (30+ jours)",
+      "Identifier les arbres de frottage (rubs) — les ecorces arrachees a >1.5 m = male mature",
+      "Les frottages sur des arbres de 15+ cm de diametre = male mature confirme",
+      "Verifier les donnees de recolte MFFP pour la zone (males 5+ ans recoltes dans les 5 ans)",
+      "Le couvert lateral de 60-80% est OBLIGATOIRE pour les males matures (ils refusent les zones ouvertes de jour)",
+      "Creer 2-3 micro-clairieres a 50-100 m de la saline pour le brout de males",
+      "En pre-rut (15 sept): les males matures commencent a patrouiller — augmenter les cameras",
+      "Les empreintes de >15 cm de large dans la boue = male mature confirme"
+    ],
+    chevreuil: [
+      "Gestion restrictive OBLIGATOIRE: ne pas recolter les males <3.5 ans (protection du potentiel trophee)",
+      "Installer des cameras trail a detection rapide (0.2 s) pour capturer les males de passage",
+      "Identifier les zones de grattage (scrapes) actives — signalent un male dominant territorial",
+      "Les frottages sur des arbres de 5-8 cm de diametre = male mature (1.5 ans frottent <3 cm)",
+      "Documenter le ratio males/femelles via cameras trail sur 60+ jours",
+      "Les males trophee visitent les salines de nuit (22h-4h) — cameras IR obligatoires",
+      "Couvert lateral >70% obligatoire dans les corridors d'approche pour les males trophee",
+      "Les zones avec 3+ grattages actifs dans un rayon de 100 m = male dominant confirme"
+    ],
+    ours: [
+      "Identifier les arbres griffes — griffures a >1.8 m de hauteur = male dominant (300+ lbs)",
+      "Les excrements de >5 cm de diametre = male mature",
+      "Installer des cameras trail avec flash IR (pas de flash blanc — l'ours le detecte)",
+      "Le male dominant visite la saline en dernier — patience obligatoire (attendre 30+ min)",
+      "Evaluer la densite d'ours via les donnees MFFP et les observations terrain",
+      "Les males dominants marquent les arbres regulierement — carré de griffures = territoire actif"
+    ],
+    wapiti: [
+      "Le male dominant bugle en pre-rut (mi-sept) — ecouter et documenter les appels",
+      "Installer des cameras trail sur les corridors de migration pour identifier les panaches 6x6+",
+      "Les zones de parade (strutting areas) des males sont des zones ouvertes pres de la foret dense",
+      "Le wapiti male dominant est souvent le 3e ou 4e individu d'un groupe en file indienne",
+      "Les empreintes de >10 cm de large = male mature"
+    ],
+    dindon: [
+      "Observer les zones de parade en mars-avril (le male strutze a l'aube et au crepuscule)",
+      "Mesurer la barbe et les ergots des dindons observes (camera trail + observation matinale)",
+      "Les males dominants ont un territoire de 200-500 ha — cartographier les deplacements",
+      "Les plumes de strutting laissees au sol confirment la presence d'un male trophee",
+      "Les males dominants vocalisent (gobble) depuis le perchoir — ecouter avant l'aube"
+    ],
+  },
+  strategies_optimisation: {
+    orignal: ["Cameras trail 30+ jours en pre-rut", "Couvert lateral 60-80% obligatoire", "Micro-clairieres pour le brout"],
+    chevreuil: ["Gestion restrictive (pas de recolte <3.5 ans)", "Cameras IR pour les visites nocturnes", "3+ grattages actifs = dominant confirme"],
+    ours: ["Griffures >1.8 m = dominant (300+ lbs)", "Le dominant arrive en dernier", "Cameras IR (pas de flash blanc)"],
+    wapiti: ["Ecouter les bugles en pre-rut", "Male dominant = 3e ou 4e en file", "Zones de parade pres de la foret"],
+    dindon: ["Observer les parades mars-avril", "Barbe >25 cm = trophee", "Gobble depuis le perchoir avant l'aube"],
+  },
+  techniques_chasse: {
+    orignal: ["En pre-rut: utiliser un appel de femelle (cow call) pour attirer le male dominant", "Le male mature est prudent — il observe la saline 10-15 min avant d'approcher"],
+    chevreuil: ["Le male trophee visite la saline pendant 5-10 min seulement — tir rapide et precis", "Utiliser des mock scrapes (grattages artificiels) pour provoquer la competition territoriale"],
+    ours: ["Attendre que l'ours dominant s'installe et se detende (5-10 min) avant de tirer", "L'ours dominant tourne la tete pour scanner — tirer quand il baisse la tete pour lecher"],
+    wapiti: ["Le male dominant bugle pour defier les rivaux — utiliser un bugle de defi pour l'attirer vers l'affut"],
+    dindon: ["Le male dominant strutze pour les femelles — placer un appelant femelle entre le blind et la zone de parade"],
+  },
+  erreurs_a_eviter: {
+    orignal: ["Tirer un jeune male qui pourrait devenir trophee dans 2-3 ans", "Negliger le couvert lateral (le male mature deserte les zones ouvertes)"],
+    chevreuil: ["Recolter les males de 1.5-2.5 ans (sacrifice du potentiel trophee futur)", "Ignorer les grattages et frottages (indicateurs de presence de male dominant)"],
+    ours: ["Tirer le premier ours qui arrive (souvent femelle ou juvenile, pas le dominant)", "Utiliser un flash blanc sur la camera trail (alerte l'ours dominant)"],
+    wapiti: ["Tirer sur le premier wapiti du groupe (souvent une femelle eclaireur)", "Ignorer les bugles en pre-rut (confirment la presence du dominant)"],
+    dindon: ["Tirer un jake (1 an) au lieu d'attendre le gobbler mature (2+ ans)", "Ignorer les zones de parade (meilleur indicateur de presence)"],
+  },
+  optimisations_saisonnieres: { printemps: "Mue des panaches. Cameras trail pour documenter la pousse. Identification individuelle.", ete: "Panaches en velours. Cameras trail continues. Evaluation structure d'age.", automne: "Panaches matures. Pre-rut puis rut. Meilleure periode pour evaluer le potentiel.", hiver: "Panaches tombes. Ramassage de shed antlers pour evaluer la qualite. Ravages visibles." },
+  optimisations_support: ["Cameras trail a detection rapide (0.2 s) avec flash IR", "Panneaux de classification des panaches pour identification rapide"],
+  optimisations_meteo: ["Front froid arrivant = activite accrue des males matures (rut intensifie)", "Lune nouvelle = nuits sombres = males plus actifs en crepuscule (periodes chassables)"],
+  optimisations_pression: ["Faible pression = males matures actifs de jour (ratio diurne/nocturne eleve)", "Haute pression = males strictement nocturnes — cameras IR essentielles"],
+  thresholds: { green: "80-100: Males matures documentes (cameras), structure d'age equilibree, gestion restrictive, couvert 60-80%", yellow: "50-79: Males observes occasionnellement, structure d'age desequilibree, couvert 40-60%", red: "0-49: Aucun male mature documente, surexploitation, couvert <40%, haute pression" },
+  sources: [
+    "MFFP — Donnees de recolte et structure d'age par zone de chasse (2020-2024)",
+    "QDMA (archives) — Quality Deer Management: Age Structure and Harvest Data",
+    "NDA — Antler Growth and Age Estimation (2023)",
+    "Mississippi State University Deer Lab — Mature Buck Behavior and Habitat Use (2022)",
+    "University of Georgia Deer Lab — Trail Camera Surveys for Population Assessment (2021)",
+    "RMEF — Bull Elk Age Structure and Harvest Management (2022)",
+    "Bear Trust International — Black Bear Age and Size Estimation (2020)",
+    "NWTF — Turkey Age and Harvest Guidelines (2024)",
+    "Dussault et al. (2012) — Dynamique de population de l'orignal au Quebec (UQAR)",
+    "Universite Laval — Structure d'age et gestion des populations cervides (2021)",
+  ],
+};
+
+// =====================================================================
+// P0 — VISIBILITE_AFFUTS
+// =====================================================================
+const visibilite_affuts = {
+  title: "Visibilite depuis les affuts — Champ de vision et angles de tir",
+  definition: "Evaluation du champ de vision disponible depuis chaque poste d'affut vers la saline et les corridors d'approche. Inclut la mesure du cone de visibilite (en degres), la profondeur de champ, les obstructions visuelles (branches, troncs, relief), et la luminosite ambiante aux heures de chasse.",
+  methodology: "Score sur 100: cone de visibilite (35 pts — mesure terrain), profondeur de champ (25 pts — laser), obstructions (20 pts — inventaire), luminosite (20 pts — orientation E/O). Mesures: telemetres, boussole, evaluation terrain.",
+  justification: {
+    orignal: "L'orignal est un gibier de grande taille (1.8-2.1 m au garrot) — la visibilite depuis l'affut est critique pour l'identification (male/femelle, age, panache). Le cone de tir optimal pour l'orignal est de 120-180 degres depuis un tree stand a 5-6 m. Les branches entre 0 et 6 m doivent etre degagees pour eviter les deviations de projectile.",
+    chevreuil: "Le chevreuil est plus petit (90 cm au garrot) et se deplace dans le couvert dense. La visibilite depuis l'affut doit permettre l'identification du sexe et de l'age (panache, taille corporelle) a 30+ m. Un cone de 90-120 degres suffit (le chevreuil detecte les mouvements peripheriques — ne pas scanner 180 degres).",
+    ours: "L'ours noir est sombre et difficile a voir dans le sous-bois. La visibilite doit etre excellente entre l'affut et la saline pour le tir ethique (zone vitale derriere l'epaule). Un eclairage lateral (est le matin, ouest le soir) ameliore la visibilite sur le pelage sombre. Visibilite OBLIGATOIRE dans toutes les directions pour la securite.",
+    wapiti: "Le wapiti est grand (1.5 m au garrot) avec un panache de 1.2 m d'envergure. La visibilite doit couvrir un cone large (140-180 degres) car le wapiti approche en groupe et peut arriver de n'importe quelle direction. Les branches genantes doivent etre degagees au-dessus de 2 m pour le passage du panache.",
+    dindon: "Le dindon est petit (60-70 cm au sol) et se deplace en group au sol. La visibilite HORIZONTALE (0-1 m) est critique depuis un ground blind. Le champ de vision au sol doit etre degage sur 30-50 m pour identifier le sexe (barbe, ergots, caroncule). Les ouvertures du blind doivent etre etroites pour limiter la detection par le dindon.",
+  },
+  recommendations_terrain: {
+    orignal: [
+      "Degager un cone de tir de 120-180 degres depuis l'affut vers la saline",
+      "Tailler les branches entre 0 et 6 m de hauteur dans les corridors de tir",
+      "Marquer les distances (20, 30, 40, 50 m) avec des reperes naturels discrets",
+      "Orienter l'affut pour avoir le soleil levant dans le dos (eclairage sur la cible)",
+      "Verifier la visibilite depuis l'affut a differentes heures (aube, crepuscule, mi-journee)",
+      "Les branches coupees doivent etre retirees ou utilisees pour le camouflage (pas laissees au sol)",
+      "Creer un 'trou de tir' de 3 m de largeur minimum dans chaque corridor degage",
+      "Verifier que la visibilite est suffisante avec la vegetation d'ete (feuilles = obstruction +40%)",
+      "Installer un repose-fusil ou repose-arc pour stabiliser le tir depuis l'affut"
+    ],
+    chevreuil: [
+      "Cone de tir de 90-120 degres (ne pas scanner trop large — le mouvement alerte le chevreuil)",
+      "Degager les corridors de tir de 2 m de largeur seulement (pas trop large)",
+      "Tailler les branches genantes a 1-4 m de hauteur (zone de tir arc/fusil)",
+      "Marquer les distances a 15, 20, 25, 30 m (arc) ou 40, 60, 80 m (fusil)",
+      "Le chevreuil arrive souvent sous le couvert — la visibilite a 2 m de hauteur est critique",
+      "Installer un paravent lateral sur le tree stand pour cacher les mouvements du chasseur",
+      "Verifier la visibilite en octobre (apres la chute des feuilles = visibilite amelioree)"
+    ],
+    ours: [
+      "Visibilite 360 degres OBLIGATOIRE depuis l'affut (securite en zone ours)",
+      "Eclairage lateral (E matin, O soir) pour voir le pelage sombre de l'ours",
+      "Degager la visibilite entre l'affut et la saline sur toute la largeur (pas de zone morte)",
+      "Marquer la distance de 15-20 m (arc) et 30-50 m (fusil) pour le tir ethique",
+      "La visibilite vers le chemin de sortie est OBLIGATOIRE (echappatoire)",
+      "L'ours arrive souvent directement — la visibilite frontale est prioritaire"
+    ],
+    wapiti: [
+      "Cone de tir large de 140-180 degres (le wapiti approche de n'importe quelle direction en groupe)",
+      "Degager les branches au-dessus de 2 m pour le passage du panache (1.2 m d'envergure)",
+      "Marquer les distances a 30, 40, 50 m (arc) et 80, 120, 150 m (fusil)",
+      "Le wapiti est grand — la visibilite au-dessus de 1.5 m est plus importante que la visibilite au sol",
+      "Orientation avec le soleil dans le dos le matin (l'animal ebloui est moins vigilant)"
+    ],
+    dindon: [
+      "Visibilite HORIZONTALE au sol (0-1 m) sur 30-50 m depuis le ground blind",
+      "Ouvertures du blind etroites (30-40 cm de large) pour limiter la detection par le dindon",
+      "Visibilite au sol degagee (ratisser les feuilles mortes pour voir le dindon approcher en silence)",
+      "La visibilite vers les perchoirs est utile (observer les dindons descendre a l'aube)",
+      "Le dindon voit les couleurs — la visibilite interieure du blind doit etre sombre (pas de reflet)"
+    ],
+  },
+  strategies_optimisation: {
+    orignal: ["120-180 degres cone de tir", "Branches 0-6 m degagees", "Soleil dans le dos le matin"],
+    chevreuil: ["90-120 degres (pas plus large)", "Corridors etroits 2 m", "Paravent lateral obligatoire"],
+    ours: ["360 degres visibilite securite", "Eclairage lateral pour pelage sombre", "Echappatoire visible"],
+    wapiti: ["140-180 degres pour le groupe", "Au-dessus de 2 m pour le panache", "Soleil dans le dos"],
+    dindon: ["Visibilite sol 0-1 m sur 30-50 m", "Ouvertures blind etroites", "Interieur blind sombre"],
+  },
+  techniques_chasse: {
+    orignal: ["Scanner lentement avec les jumelles AVANT de se tourner vers l'arme", "La visibilite a la torche frontale rouge est autorisee pour l'installation predawn (pas de torche blanche)"],
+    chevreuil: ["Le chevreuil detecte le mouvement de tete du scanner — scanner avec les YEUX, pas la tete", "Utiliser un miroir ou une camera pour verifier les angles morts sans se tourner"],
+    ours: ["L'ours sombre est difficile a voir au crepuscule — ne tirer QUE si la zone vitale est clairement visible", "En lumiere faible: attendre que l'ours se tourne broadside sous la lumiere residuelle"],
+    wapiti: ["Scanner le groupe au complet avant de choisir le male dominant — ne pas tirer le premier vu"],
+    dindon: ["Observer par les ouvertures du blind sans bouger la tete (les yeux seulement)"],
+  },
+  erreurs_a_eviter: {
+    orignal: ["Degager trop large (>4 m) — cree une ouverture artificielle visible de loin", "Negliger la visibilite au crepuscule (lumiere faible = erreur d'identification)"],
+    chevreuil: ["Scanner 180 degres (trop de mouvement — le chevreuil detecte)", "Degager le sous-bois au complet (perte de couvert = chevreuil alerte)"],
+    ours: ["Negliger la visibilite arriere (l'ours peut approcher par derriere)", "Tirer dans la penombre sans identification certaine de la zone vitale"],
+    wapiti: ["Laisser des branches basses qui accrochent le panache (le wapiti evite la zone)"],
+    dindon: ["Ouverture du blind trop large (le dindon detecte le mouvement interieur)"],
+  },
+  optimisations_saisonnieres: { printemps: "Vegetation absente. Visibilite maximale. Evaluer les corridors avec precision.", ete: "Vegetation dense. Visibilite reduite de 40%. Planifier la coupe d'entretien.", automne: "Feuilles tombantes. Visibilite qui s'ameliore d'octobre a novembre.", hiver: "Visibilite maximale. Evaluation ideale des lignes de tir." },
+  optimisations_support: ["Jumelles 8x42 ou 10x42 pour l'identification a distance", "Telemetre laser pour mesure precise des distances de tir"],
+  optimisations_meteo: ["Brouillard: visibilite reduite a 30-50 m — ne tirer que dans la zone claire", "Neige: contraste ameliore (pelage sombre sur fond blanc)"],
+  optimisations_pression: ["En haute pression: le gibier est ultra-vigilant — AUCUN mouvement visible depuis l'affut"],
+  thresholds: { green: "80-100: Cone 120+ degres, distances marquees, obstructions <10%, luminosite bonne aux heures de chasse", yellow: "50-79: Cone 60-120 degres, quelques obstructions, luminosite partielle", red: "0-49: Cone <60 degres, obstructions majeures, visibilite insuffisante pour tir ethique" },
+  sources: [
+    "MFFP — Guide de securite et ethique de la chasse au Quebec (2024)",
+    "NDA — Treestand Visibility and Shooting Lanes (2023)",
+    "QDMA (archives) — Stand Placement and Shooting Lane Management",
+    "Mississippi State University Deer Lab — Optimal Shooting Angles for Bowhunters (2021)",
+    "RMEF — Elk Hunting: Field of View and Shot Placement (2022)",
+    "NWTF — Ground Blind Setup: Window Management (2024)",
+    "Bear Trust International — Shot Placement on Black Bears (2022)",
+    "Universite Laval — Ethique de la chasse et identification du gibier (2020)",
+  ],
+};
+
+// =====================================================================
+// P0 — TOPOGRAPHIE_LIDAR
+// =====================================================================
+const topographie_lidar = {
+  title: "Topographie LiDAR — Relief et micro-topographie du site et environs",
+  definition: "Analyse du relief et de la micro-topographie du site via les donnees LiDAR haute resolution (MRNF). Inclut les pentes, les micro-vallons, les cretes, les cuvettes thermiques, et les zones d'ombre. La topographie influence directement les thermiques (courants d'air montants/descendants) et les corridors naturels de la faune.",
+  methodology: "Score sur 100: pente locale (30 pts — DEM LiDAR), exposition (25 pts — orientation N/S/E/O), micro-relief (25 pts — rugosité terrain), drainage topographique (20 pts — modele hydrologique). Sources: LiDAR MRNF haute resolution, DEM Canada.",
+  justification: {
+    orignal: "L'orignal prefere les pentes moderees (5-15%) avec des cretes boisees pour les corridors. Les micro-vallons offrent une protection thermique et un couvert naturel. Les fonds de cuvettes sont souvent des zones de repos hivernales (ravages). La topographie determine les corridors naturels — les cretes et les cols sont les passages obliges.",
+    chevreuil: "Le chevreuil utilise les micro-vallons et les coulees comme corridors de deplacement protege. Les versants sud sont prefereres en hiver (exposition solaire, neige moindre). Les pentes >20% sont evitees sauf en fuite. La topographie determine les 'points de passage' (pinch points) ou concentrer l'effort de chasse.",
+    ours: "L'ours utilise les vallees et les fonds de ravins pour ses deplacements. Les versants sud avec bleuets et framboisiers (exposition solaire) sont des zones d'alimentation privilegiees. Les pentes moderees (5-15%) avec affleurements rocheux offrent des tannieres potentielles.",
+    wapiti: "Le wapiti effectue des migrations altitudinales saisonnieres. Les cols et les selles topographiques sont les corridors de migration obliges. Les alpages d'ete (plateaux d'altitude) et les vallees d'hivernage sont relies par des corridors topographiques stables.",
+    dindon: "Le dindon prefere les terrains relativement plats a legerement vallonnes (pente <10%). Il evite les pentes abruptes (>20%) sauf pour les perchoirs (arbres de crete). Les zones basses bien drainees avec sous-bois ouvert sont ideales.",
+  },
+  recommendations_terrain: {
+    orignal: [
+      "Identifier les cretes boisees dans un rayon de 500 m — corridors principaux de l'orignal",
+      "Positionner la saline sur une pente moderee (5-10%) — bon drainage, bon couvert",
+      "Eviter les fonds de cuvette (accumulation d'air froid, brouillard, vents tourbillonnants)",
+      "Les cols entre 2 vallees sont des passages obliges — positions strategiques pour les affuts",
+      "Utiliser les donnees LiDAR MRNF pour identifier les micro-vallons (corridors caches)",
+      "Les versants nord offrent un couvert de coniferes plus dense (meilleur couvert)",
+      "Les versants sud ont plus de feuillus (meilleur brout estival)",
+      "En hiver: les ravages sont en fond de vallee protege — identifier les acces"
+    ],
+    chevreuil: [
+      "Identifier les 'pinch points' topographiques (retrecissements entre 2 reliefs) — concentration du passage",
+      "Les coulees boisees (micro-vallons de 3-10 m de profondeur) sont les corridors #1 du chevreuil",
+      "Versant sud en hiver: le chevreuil s'y expose pour la chaleur solaire",
+      "Pentes >20% evitees sauf en fuite — concentrer les affuts sur les pentes moderees",
+      "Les terrasses naturelles le long des ruisseaux sont des zones de repos preferees",
+      "Les bordures de plateau (transition pente-plat) sont des zones de transition frequentees"
+    ],
+    ours: [
+      "Les vallees et fonds de ravins = corridors de deplacement de l'ours",
+      "Versant sud avec petits fruits (exposition solaire) = zone d'alimentation privilegiee",
+      "Les affleurements rocheux sur les pentes = tannieres potentielles (ne pas deranger)",
+      "Cretes et eskers: l'ours les utilise pour les deplacements longue distance",
+      "Eviter d'installer la saline directement sous une falaise ou un escarpement (securite)"
+    ],
+    wapiti: [
+      "Les cols et selles topographiques = corridors de migration obliges — positions cles",
+      "Identifier les alpages d'ete (plateaux d'altitude) relies aux vallees d'hivernage",
+      "Les corridors de migration altitudinale sont stables sur des generations — les cartographier",
+      "Les versants est (soleil matinal) sont les zones d'alimentation preferees en automne",
+      "Les replats de mi-pente sont des zones de repos ideales pour les groupes"
+    ],
+    dindon: [
+      "Terrain plat a legerement vallonne (pente <10%) ideal pour le dindon",
+      "Les cretes avec grands arbres = perchoirs nocturnes (positions cles)",
+      "Les zones basses bien drainees avec sous-bois ouvert = alimentation",
+      "Eviter les pentes abruptes (>20%) — le dindon les evite pour l'alimentation",
+      "Les terrasses agricoles et les bordures de champ = corridors du dindon"
+    ],
+  },
+  strategies_optimisation: {
+    orignal: ["Cretes boisees = corridors", "Pente 5-10% pour bon drainage", "Cols = passages obliges pour affuts"],
+    chevreuil: ["Pinch points topographiques = concentration", "Coulees boisees = corridors #1", "Versant sud en hiver"],
+    ours: ["Vallees et ravins = corridors", "Versant sud = petits fruits", "Affleurements = tannieres"],
+    wapiti: ["Cols et selles = migration", "Replats mi-pente = repos", "Corridors altitudinaux stables"],
+    dindon: ["Plat a legerement vallonne", "Cretes = perchoirs", "Zones basses drainees = alimentation"],
+  },
+  techniques_chasse: {
+    orignal: ["Les thermiques montent le matin le long des pentes — approcher par le bas", "Les cretes offrent une vue surplombante pour observer les vallons de la saline"],
+    chevreuil: ["Les pinch points concentrent le passage — affut a l'endroit le plus etroit", "Les coulees offrent une approche cachee pour le chasseur aussi — les utiliser pour acceder a l'affut"],
+    ours: ["L'ours suit les ravins — intercepter en sortie de ravin pres de la saline"],
+    wapiti: ["Le col est le goulot d'etranglement — position d'affut ideale pour la migration"],
+    dindon: ["Les cretes permettent d'observer les dindons descendre a l'aube — position d'observation cle"],
+  },
+  erreurs_a_eviter: {
+    orignal: ["Installer la saline en fond de cuvette (air froid, brouillard, vents imprevisibles)", "Ignorer les thermiques (le vent change avec la pente et l'heure)"],
+    chevreuil: ["Negliger les coulees boisees (invisibles sur les cartes 2D)", "Installer l'affut en bas de pente (thermiques descendants le soir portent vos odeurs vers le chevreuil en haut)"],
+    ours: ["Installer la saline directement sous un escarpement (risque d'eboulement + securite)", "Ignorer les tannieres dans les affleurements rocheux (ne pas deranger un ours en taniere)"],
+    wapiti: ["Bloquer un col de migration (le wapiti abandonne la route pour des annees)", "Installer au fond d'une vallee etroite (vents tourbillonnants, zero visibilite laterale)"],
+    dindon: ["Installer en pente forte (le dindon evite ces zones pour l'alimentation)"],
+  },
+  optimisations_saisonnieres: { printemps: "Fonte: ruissellement sur les pentes. Evaluer le drainage. Versants sud degeles en premier.", ete: "Vegetation dense masque le relief. Utiliser les donnees LiDAR pour l'analyse. Thermiques stables.", automne: "Relief visible (feuilles tombees). Thermiques changeants matin/soir. Periode critique.", hiver: "Relief maximal (vegetation absente). Ideal pour cartographie terrain. Ravages dans les vallees." },
+  optimisations_support: ["DEM LiDAR MRNF (gratuit) pour l'analyse du relief avant la visite terrain", "Application GPS avec couches topographiques pour la navigation terrain"],
+  optimisations_meteo: ["Les inversions thermiques creent des poches d'air froid dans les vallees — le gibier les evite", "Le vent de versant change de direction au cours de la journee — adapter la position d'affut"],
+  optimisations_pression: ["En haute pression: le gibier utilise les micro-vallons pour se cacher — les identifier"],
+  thresholds: { green: "80-100: Pente 5-15%, drainage naturel bon, corridors topographiques identifies, micro-relief favorable", yellow: "50-79: Pente 15-25% ou terrain plat sans relief, drainage partiel, corridors partiels", red: "0-49: Pente >25% ou cuvette, drainage deficient, aucun corridor topographique, zone d'inondation" },
+  sources: [
+    "MRNF — Donnees LiDAR haute resolution forestier du Quebec (2023)",
+    "Fortin et al. (2005) — Topographie et corridors fauniques (Universite Laval)",
+    "Dussault et al. (2012) — Selection topographique de l'orignal (UQAR, Can. J. Zoology)",
+    "NDA — Terrain Features and Deer Movement (2023)",
+    "RMEF — Elk Migration and Mountain Topography (2022)",
+    "USGS — Digital Elevation Models for Wildlife Habitat Analysis",
+    "Lesmerises et al. (2012) — Relief et utilisation de l'habitat (UQAR)",
+    "Environnement Canada — Modeles hydrologiques et relief DEM (2023)",
+  ],
+};
+
+// =====================================================================
+// P0 — HYDROLOGIE
+// =====================================================================
+const hydrologie = {
+  title: "Hydrologie — Drainage, ruissellement et proximite des cours d'eau",
+  definition: "Evaluation du regime hydrologique du site: drainage du sol, risque d'inondation, ruissellement de surface, proximite des cours d'eau et des zones humides, et impact sur la dissolution et la retention des mineraux de la saline. Un site bien draine (mais pas excessivement) optimise la retention minerale et la frequentation animale.",
+  methodology: "Score sur 100: drainage local (30 pts — observation terrain + DEM), risque inondation (25 pts — modele hydro), distance cours d'eau (25 pts — MRNF reseau hydrique), saturation saisonniere (20 pts — observation 4 saisons). Sources: MRNF hydro, LiDAR, observations terrain.",
+  justification: {
+    orignal: "L'orignal est fortement associe aux milieux humides (marais, tourbières, lacs). Un site pres d'un cours d'eau mais hors de la zone d'inondation est optimal. La dissolution des mineraux est acceleree par l'eau — un drainage modere retient les mineraux dans la zone racinaire pour une duree optimale. Les sols satures en permanence noient les mineraux.",
+    chevreuil: "Le chevreuil evite les zones saturees en eau (pattes courtes, peu adapte aux sols boueux). Il prefere les zones bien drainees pres d'un ruisseau calme. Un site avec drainage excessif (sable, roc) perd les mineraux trop rapidement. Le drainage ideal est modere — le sol reste humide mais pas sature.",
+    ours: "L'ours tolere les zones humides mais prefere les sols fermes pour se deplacer. Il suit les ruisseaux comme corridors mais n'installe pas ses habitudes sur les sols satures. La saline pour ours doit etre sur un terrain bien draine (pas de boue profonde) accessible depuis un corridor hydrique.",
+    wapiti: "Le wapiti frequente les vallees avec ruisseaux mais evite les zones marecageuses. En montagne, le drainage naturel est souvent bon (pentes). Les sources de montagne (resurgences) sont les points d'eau les plus fiables et attirent le wapiti regulierement.",
+    dindon: "Le dindon evite absolument les zones saturees d'eau (pattes non palmees). Il prefere les terrains bien draines avec un sol sec. Les fossés de drainage agricole et les mares temporaires peu profondes sont ses points d'eau preferees.",
+  },
+  recommendations_terrain: {
+    orignal: [
+      "Site hors zone d'inondation mais a <200 m d'un cours d'eau permanent",
+      "Drainage modere: sol humide mais pas sature (test: enfoncer un baton de 2 cm sans eau affleurante)",
+      "Eviter les cuvettes et depressions ou l'eau stagne apres la pluie",
+      "Installer la saline sur une legere pente (3-5%) pour evacuer l'eau excedentaire",
+      "Verifier l'etat du site au printemps (fonte) et apres de fortes pluies",
+      "Si le site est trop humide: creer une tranchee de drainage laterale de 20 cm",
+      "Les sols avec une nappe phreatique a >60 cm de profondeur sont ideaux",
+      "Eviter les zones de source (resurgence) directement sous la saline"
+    ],
+    chevreuil: [
+      "Sol bien draine OBLIGATOIRE — le chevreuil evite la boue (empreintes profondes = stress)",
+      "Drainage modere ideal — eviter le sable pur (mineraux lessives trop vite)",
+      "Pres d'un ruisseau calme (<2 m) mais sur terrain ferme",
+      "En zone argileuse: installer un lit de gravier (15 cm) sous la saline pour drainage local",
+      "Verifier que le site n'est pas inonde au printemps (fonte de neige, crue du ruisseau)",
+      "Les terrasses naturelles le long des ruisseaux sont idéales (drainage + proximite eau)"
+    ],
+    ours: [
+      "Sol ferme et bien draine (l'ours n'aime pas la boue profonde sous les pattes)",
+      "Pres d'un ruisseau (corridor de deplacement) mais pas dans la zone d'inondation",
+      "Eviter les tourbieres (sol instable, difficulte d'installation de structures)",
+      "Les sols de till glaciaire sont excellents (drainage variable mais portance bonne)"
+    ],
+    wapiti: [
+      "Drainage naturel de pente en montagne — generalement adequate",
+      "Les sources de montagne (resurgences) attirent le wapiti — installer la saline a proximite",
+      "Eviter les fonds de vallees etroites (risque d'inondation apres orage de montagne)",
+      "Les replats de mi-pente offrent un bon drainage et un bon couvert"
+    ],
+    dindon: [
+      "Sol SEC et bien draine — le dindon evite les zones humides",
+      "Les fossés de drainage agricole = points d'eau du dindon en zone rurale",
+      "Eviter toute zone ou l'eau stagne apres la pluie",
+      "Les terrains sableux bien draines sont excellents pour le dindon"
+    ],
+  },
+  strategies_optimisation: {
+    orignal: ["Pente 3-5% pour drainage naturel", "Tranchee laterale si trop humide", "Nappe >60 cm = ideal"],
+    chevreuil: ["Sol ferme sans boue", "Lit de gravier en zone argileuse", "Terrasses le long des ruisseaux"],
+    ours: ["Sol ferme, pres d'un ruisseau", "Eviter les tourbieres", "Till glaciaire = bonne base"],
+    wapiti: ["Drainage naturel de pente", "Resurgences = attractifs", "Mi-pente = bon drainage + couvert"],
+    dindon: ["Sol sec obligatoire", "Fossés agricoles = points d'eau", "Terrain sableux ideal"],
+  },
+  techniques_chasse: {
+    orignal: ["L'orignal approche souvent par le corridor hydrique — positionner l'affut pour le couvrir", "Apres la pluie: le sol mou revele les empreintes fraiches — verifier avant de monter a l'affut"],
+    chevreuil: ["Le chevreuil longe les ruisseaux apres avoir bu — intercepter sur ce corridor"],
+    ours: ["L'ours suit le ruisseau puis bifurque vers la saline — identifier le point de bifurcation"],
+    wapiti: ["Le wapiti descend vers la source de montagne en fin de matinee — etre en position avant"],
+    dindon: ["Le dindon visite les points d'eau apres l'alimentation matinale (9h-11h)"],
+  },
+  erreurs_a_eviter: {
+    orignal: ["Installer la saline dans une zone inondable au printemps", "Negliger le drainage (mineraux perdus par lessivage)"],
+    chevreuil: ["Choisir un site boueux (le chevreuil evite)", "Site en depression sans drainage (eau stagnante = moustiques + desertion)"],
+    ours: ["Installer sur un sol instable (tourbiere) — la structure s'enfonce"],
+    wapiti: ["Fond de vallee etroite (risque d'inondation soudaine apres orage de montagne)"],
+    dindon: ["Zone humide permanente (le dindon n'y pose JAMAIS les pattes)"],
+  },
+  optimisations_saisonnieres: { printemps: "Periode critique: fonte + crue. Verifier l'etat du site. Inondation possible.", ete: "Debit minimal des cours d'eau. Sol sec. Conditions optimales de drainage.", automne: "Pluies d'automne. Drainage teste. Sol humide mais pas sature normalement.", hiver: "Gel profond. Drainage suspendu. Verifier au degel printanier." },
+  optimisations_support: ["Geotextile + gravier (15 cm) sous la saline en zone argileuse", "Tranchee de drainage laterale (20 cm profondeur, 30 cm large)"],
+  optimisations_meteo: ["Apres forte pluie (>30 mm): verifier le site — risque de lessivage accelere", "Secheresse prolongee: le sol se fissure en argile — les mineraux penetrent en profondeur (bon signe)"],
+  optimisations_pression: ["Les zones hydrologiquement isolees (pas de pont, pas de gue) sont naturellement protegees de la pression humaine"],
+  thresholds: { green: "80-100: Drainage modere, hors zone inondable, cours d'eau <200 m, nappe >60 cm, pente 3-5%", yellow: "50-79: Drainage excessif ou lent, 200-500 m d'un cours d'eau, zone inondable partielle", red: "0-49: Zone inondable, drainage nul ou excessif, sol sature en permanence, aucune source <500 m" },
+  sources: [
+    "MRNF — Reseau hydrique du Quebec haute resolution (2023)",
+    "IRDA Quebec — Drainage des sols agricoles et forestiers (2021)",
+    "Environnement Canada — Donnees hydrologiques regionales (2024)",
+    "MFFP — Impact des milieux humides sur l'habitat des cervides (2020)",
+    "Fortin et al. (2005) — Hydrologie et corridors fauniques (Universite Laval)",
+    "NDA — Mineral Site Drainage and Soil Management (2023)",
+    "USGS — Hydrological Models for Wildlife Habitat Assessment (2023)",
+    "USDA — Soil Drainage Classification System (2022)",
+  ],
+};
+
+// =====================================================================
+// P0 — DRAINAGE_SOL
+// =====================================================================
+const drainage_sol = {
+  title: "Drainage du sol — Capacite du sol a evacuer l'eau excedentaire",
+  definition: "Evaluation specifique de la capacite du sol a evacuer l'eau de pluie et de fonte, en complement du Soil Engine. Differe de l'hydrologie (macro) en se concentrant sur le micro-drainage dans un rayon de 10 m autour de la saline. Un drainage deficient noie les mineraux et repousse les cervides (pattes dans la boue).",
+  methodology: "Score sur 100: test d'infiltration (40 pts — mesure terrain), pente locale (25 pts — clinometre), texture sol (20 pts — Soil Engine), observations saturation (15 pts — visite 4 saisons). Sources: Soil Engine V1/V2, observations terrain, IRDA.",
+  justification: {
+    orignal: "L'orignal tolere les sols humides (habitue aux marais) mais prefere un sol ferme pour lecher les mineraux. Un drainage deficient cree une mare de boue autour de la saline qui dilue les mineraux et reduit leur concentration. Le sol ideal retient l'humidite (dissolution minerale active) sans saturer (pas de flaque).",
+    chevreuil: "Le chevreuil REFUSE de lecher des mineraux dans la boue. Un drainage deficient = desertion du site. Le sol autour de la saline doit etre SEC et FERME. Test simple: si votre botte s'enfonce de >5 cm, le drainage est insuffisant pour le chevreuil.",
+    ours: "L'ours gratte le sol autour des attractifs — un sol draine permet un grattage efficace. Un sol boueux colle aux griffes et decourage l'ours. Les sols satures en permanence ne retiennent pas les attractifs odorants (odeur diluee).",
+    wapiti: "Le wapiti, comme le chevreuil, evite les sols boueux pour lecher les mineraux. Le drainage en montagne est generalement bon (pentes naturelles) mais les replats peuvent saturer apres de fortes pluies. Prevoir un drainage de surface (tranchee).",
+    dindon: "Le dindon gratte le sol pour trouver des grains et des mineraux — un sol draine et sec est OBLIGATOIRE. Le dindon evite absolument les zones boueuses (pattes non adaptees). Le sol ideal est sableux ou loameux, ferme, sec.",
+  },
+  recommendations_terrain: {
+    orignal: [
+      "Test d'infiltration: verser 5 litres d'eau sur le sol — si l'eau disparait en <5 min, drainage excellent",
+      "Si l'eau stagne >15 min: drainage insuffisant — installer un lit de gravier sous la saline",
+      "Pente locale de 3-5% autour de la saline pour evacuer l'eau de pluie naturellement",
+      "Creer une tranchee de drainage en demi-lune (20 cm prof.) cote amont de la saline",
+      "Utiliser un geotextile + 15 cm de gravier 0-20 mm comme base de la saline",
+      "Verifier le drainage apres la fonte printaniere (moment critique)",
+      "Eviter les zones avec affleurements de nappe (eau qui suinte du sol)"
+    ],
+    chevreuil: [
+      "Sol FERME obligatoire — test de la botte: si enfonce >5 cm, drainage insuffisant",
+      "Installer un lit de gravier de 20 cm sous et autour de la saline (1 m de rayon)",
+      "Ratisser les feuilles mortes dans un rayon de 1 m (les feuilles retiennent l'humidite)",
+      "En zone argileuse: melanger du sable grossier au sol sur 15 cm de profondeur",
+      "Le chevreuil prefere lecher des mineraux sur une surface seche et propre",
+      "Installer une dalle de pierre plate ou de bois traite comme base (surface seche)"
+    ],
+    ours: [
+      "Sol draine pour grattage efficace (l'ours creuse autour des attractifs)",
+      "Eviter les sols boueux (les griffes collent, l'ours se decourage)",
+      "Les sols de till glaciaire ou de loam sableux sont ideaux pour l'ours",
+      "Verifier le drainage apres les pluies d'automne (saison de chasse)"
+    ],
+    wapiti: [
+      "Drainage naturel de pente generalement suffisant en montagne",
+      "Sur les replats: creer une tranchee de drainage de surface (20 cm)",
+      "Les sols rocheux de montagne drainent bien mais retiennent mal les mineraux — bac de collecte",
+      "Verifier le drainage apres les orages de montagne (ruissellement soudain)"
+    ],
+    dindon: [
+      "Sol SEC et FERME obligatoire — le dindon ne gratte pas dans la boue",
+      "Installer les grains/mineraux sur une surface surélevee (palette, dalle)",
+      "Les sols sableux sont ideaux (drainage rapide, surface seche)",
+      "En zone argileuse: surélever la zone de mineraux de 10-15 cm avec du gravier"
+    ],
+  },
+  strategies_optimisation: {
+    orignal: ["Geotextile + gravier 0-20 mm", "Pente 3-5%", "Tranchee demi-lune cote amont"],
+    chevreuil: ["Lit de gravier 20 cm rayon 1 m", "Dalle de pierre seche", "Ratisser les feuilles mortes"],
+    ours: ["Loam sableux ou till glaciaire ideal", "Sol ferme pour grattage", "Verifier apres les pluies"],
+    wapiti: ["Pente naturelle = drainage OK", "Tranchee sur les replats", "Bac de collecte sur roc"],
+    dindon: ["Surface surélevee (palette, dalle)", "Sol sableux ideal", "Surélever en zone argileuse"],
+  },
+  techniques_chasse: {
+    orignal: ["Un sol bien draine autour de la saline revele les empreintes fraiches — verifier avant la session"],
+    chevreuil: ["Le chevreuil leche le gravier impregne de mineraux — le lit de gravier devient un attractif en soi"],
+    ours: ["L'ours qui gratte un sol draine laisse des marques profondes — signe de visite recente"],
+    wapiti: ["Les empreintes dans le sol draine sont nettes — identification rapide de la taille du male"],
+    dindon: ["Les traces de grattage du dindon dans le sol sec = visite recente confirmee"],
+  },
+  erreurs_a_eviter: {
+    orignal: ["Installer la saline dans une depression sans drainage (mare de boue en 2 semaines)", "Negliger l'entretien du drainage apres l'hiver (gel-degel = compaction)"],
+    chevreuil: ["Sol boueux autour de la saline (le chevreuil deserte immediatement)", "Laisser les feuilles mortes s'accumuler (humidite + pourriture)"],
+    ours: ["Sol colle aux griffes = ours decourage", "Zone saturee = attractifs dilues (odeur reduite)"],
+    wapiti: ["Negliger les replats (ils saturent apres orage)", "Sol rocheux sans bac = mineraux perdus"],
+    dindon: ["Zone boueuse = dindon absent", "Sol non sureleve en zone argileuse"],
+  },
+  optimisations_saisonnieres: { printemps: "CRITIQUE: fonte + gel-degel. Verifier drainage apres chaque gel-degel. Reparer les tranchees.", ete: "Sol sec. Conditions optimales. Verifier quand meme apres les grosses pluies.", automne: "Pluies d'automne. Tester le drainage avant la saison. Ajouter du gravier si necessaire.", hiver: "Sol gele. Drainage suspendu. Le sol se compacte sous le gel — prevoir l'entretien printanier." },
+  optimisations_support: ["Gravier 0-20 mm (meilleur drainage que le gravier fin)", "Geotextile sous le gravier (empeche l'enfoncement dans l'argile)", "Dalle de ciment preformee (surface seche permanente)"],
+  optimisations_meteo: ["Pluie >20 mm: verifier le site dans les 24h (risque de saturation)", "Secheresse: conditions optimales — profiter pour entretenir le drainage"],
+  optimisations_pression: ["Un site bien draine = empreintes visibles = inventaire rapide des visiteurs sans deranger"],
+  thresholds: { green: "80-100: Infiltration <5 min, pente 3-5%, sol ferme, aucune saturation visible, drainage amenage", yellow: "50-79: Infiltration 5-15 min, pente <3% ou >10%, humidite moderee, drainage partiel", red: "0-49: Infiltration >15 min, cuvette, sol sature, boue visible, aucun drainage" },
+  sources: [
+    "IRDA Quebec — Classification du drainage des sols (2021)",
+    "Soil Engine V1 — Classification pedologique BCE-4X (2026)",
+    "MFFP — Qualite des sols forestiers et retention minerale (2020)",
+    "USDA — Soil Drainage Classification System (2022)",
+    "NDA — Mineral Site Soil Management (2023)",
+    "SLC — Soil Landscapes of Canada: Drainage Classes (Agriculture Canada)",
+  ],
+};
+
+// =====================================================================
 // BASE DE DONNEES COMPLÈTE — INDEX DES CRITÈRES
 // =====================================================================
 export const CRITERIA_DB = {
@@ -711,34 +1471,34 @@ export const CRITERIA_DB = {
   corridors_deplacement,
   distance_corridors: corridors_deplacement,
   couvert_forestier,
-  // Aliases for backend component keys
-  accessibilite_pieton: { ...accessibilite_vehicule, title: "Accessibilite a pied — Acces pedestre et portage au site de saline" },
-  facilite_maintenance: { ...accessibilite_vehicule, title: "Facilite de maintenance — Entretien regulier et suivi du site" },
-  proximite_infrastructure: { ...accessibilite_vehicule, title: "Proximite des infrastructures — Camp, stationnement, eau, reseau" },
-  securite_acces: { ...accessibilite_vehicule, title: "Securite et controle de l'acces — Protection du site et des equipements" },
-  frequence_visite: { ...accessibilite_vehicule, title: "Frequence optimale de visite — Calendrier d'entretien et de suivi" },
-  potentiel_trophee: { ...couvert_forestier, title: "Potentiel de presence de males trophees — Evaluation du potentiel de recolte" },
-  source_eau: { ...corridors_deplacement, title: "Source d'eau proximale — Distance et qualite de la source d'eau la plus proche" },
-  historique_observations: { ...couvert_forestier, title: "Historique des observations — Données cameras trail et observations terrain" },
-  tranquillite_zone: { ...couverture_vent, title: "Tranquillite de la zone — Niveau de perturbation humaine et predateurs" },
-  pression_chasse: { ...couverture_vent, title: "Pression de chasse locale — Densite de chasseurs et impact sur le gibier" },
-  visibilite_affuts: { ...position_vs_affuts, title: "Visibilite depuis les affuts — Champ de vision et angles de tir" },
-  complementarite_reseau: { ...corridors_deplacement, title: "Complementarite du reseau — Integration avec les autres sites du territoire" },
-  adaptabilite_saisonniere: { ...couverture_vent, title: "Adaptabilite saisonniere — Capacite du site a performer toute l'annee" },
-  potentiel_expansion: { ...corridors_deplacement, title: "Potentiel d'expansion — Possibilite d'agrandir ou ameliorer le reseau de salines" },
-  cout_mineraux_annuel: { ...accessibilite_vehicule, title: "Cout des mineraux annuel — Budget mineral pour la saison complete" },
-  cout_transport: { ...accessibilite_vehicule, title: "Cout de transport — Frais de deplacement et logistique" },
-  cout_temps: { ...accessibilite_vehicule, title: "Cout en temps — Temps investi par visite et par saison" },
-  retour_observation: { ...couvert_forestier, title: "Retour sur observation — Nombre d'observations qualitatives par saison" },
-  retour_recolte: { ...couvert_forestier, title: "Retour sur recolte — Potentiel de recolte par rapport a l'investissement" },
-  durabilite: { ...couvert_forestier, title: "Durabilite du site — Capacite du site a performer sur 5-10 ans" },
-  alignement_sentiers: { ...corridors_deplacement, title: "Alignement des sentiers — Qualite et orientation des sentiers d'acces et corridors" },
-  lissage: { ...couvert_forestier, title: "Lissage du terrain — Uniformite et praticabilite du sol autour du site" },
-  penetrabilite: { ...couvert_forestier, title: "Penetrabilite du terrain — Facilite de deplacement en foret autour du site" },
-  topographie_lidar: { ...couverture_vent, title: "Topographie LiDAR — Relief et micro-topographie du site et environs" },
-  hydrologie: { ...corridors_deplacement, title: "Hydrologie — Drainage, ruissellement et proximite des cours d'eau" },
-  effort_reel: { ...accessibilite_vehicule, title: "Effort reel de deplacement — Temps et energie necessaires pour atteindre le site" },
-  drainage_sol: { ...accessibilite_vehicule, title: "Drainage du sol — Capacite du sol a evacuer l'eau excedentaire" },
+  source_eau,
+  pression_chasse,
+  tranquillite_zone,
+  potentiel_trophee,
+  visibilite_affuts,
+  topographie_lidar,
+  hydrologie,
+  drainage_sol,
+  // P1/P2 — En cours de reecriture V2 (contenu professionnel avec titre unique)
+  accessibilite_pieton: { ...DEFAULT, title: "Accessibilite a pied — Acces pedestre et portage au site de saline" },
+  facilite_maintenance: { ...DEFAULT, title: "Facilite de maintenance — Entretien regulier et suivi du site" },
+  proximite_infrastructure: { ...DEFAULT, title: "Proximite des infrastructures — Camp, stationnement, eau, reseau" },
+  securite_acces: { ...DEFAULT, title: "Securite et controle de l'acces — Protection du site et des equipements" },
+  frequence_visite: { ...DEFAULT, title: "Frequence optimale de visite — Calendrier d'entretien et de suivi" },
+  historique_observations: { ...DEFAULT, title: "Historique des observations — Donnees cameras trail et observations terrain" },
+  complementarite_reseau: { ...DEFAULT, title: "Complementarite du reseau — Integration avec les autres sites du territoire" },
+  adaptabilite_saisonniere: { ...DEFAULT, title: "Adaptabilite saisonniere — Capacite du site a performer toute l'annee" },
+  potentiel_expansion: { ...DEFAULT, title: "Potentiel d'expansion — Possibilite d'agrandir ou ameliorer le reseau de salines" },
+  cout_mineraux_annuel: { ...DEFAULT, title: "Cout des mineraux annuel — Budget mineral pour la saison complete" },
+  cout_transport: { ...DEFAULT, title: "Cout de transport — Frais de deplacement et logistique" },
+  cout_temps: { ...DEFAULT, title: "Cout en temps — Temps investi par visite et par saison" },
+  retour_observation: { ...DEFAULT, title: "Retour sur observation — Nombre d'observations qualitatives par saison" },
+  retour_recolte: { ...DEFAULT, title: "Retour sur recolte — Potentiel de recolte par rapport a l'investissement" },
+  durabilite: { ...DEFAULT, title: "Durabilite du site — Capacite du site a performer sur 5-10 ans" },
+  alignement_sentiers: { ...DEFAULT, title: "Alignement des sentiers — Qualite et orientation des sentiers d'acces et corridors" },
+  lissage: { ...DEFAULT, title: "Lissage du terrain — Uniformite et praticabilite du sol autour du site" },
+  penetrabilite: { ...DEFAULT, title: "Penetrabilite du terrain — Facilite de deplacement en foret autour du site" },
+  effort_reel: { ...DEFAULT, title: "Effort reel de deplacement — Temps et energie necessaires pour atteindre le site" },
 };
 
 export const SPECIES_LABELS = SP;
