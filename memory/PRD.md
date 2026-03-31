@@ -99,6 +99,11 @@ Plateforme d'analyse de territoires de chasse avec scoring multi-criteres, guide
 - [x] Section I: Texte officiel mis a jour (hero_highlight x5200)
 - [x] Livrable: /app/memory/ARCHITECTURE_BIONIC_OS_V1.md
 
+### Directive x5201 — ARCHITECTURE_AUDIT_EXPORT_REQUEST
+- [x] Section A: Export HTTPS (ARCHITECTURE + MODULES via /public/)
+- [x] Section B: Liste complete 87 modules backend (MODULES_BACKEND_COMPLET_V1.md)
+- [x] Section C: Objectifs preparatoires (certification, V2, EASYlead Admin, P3-P6)
+
 ---
 
 ## Backlog (GELE par STEEVE-MAX)
@@ -124,6 +129,7 @@ Plateforme d'analyse de territoires de chasse avec scoring multi-criteres, guide
 - /app/memory/SHARE_ENGINE_V1_SPEC.md
 - /app/memory/EASYLEAD_TRACKING_MAP.md
 - /app/memory/ARCHITECTURE_BIONIC_OS_V1.md
+- /app/memory/MODULES_BACKEND_COMPLET_V1.md
 - /app/memory/AUDIT_CSS_HEADER_V8.md
 - /app/memory/AUDIT_UI_V9.md
 - /app/memory/SOUS_CRITERES_V2_COMPLET.md
