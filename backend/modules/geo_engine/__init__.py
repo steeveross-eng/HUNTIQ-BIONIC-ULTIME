@@ -1,10 +1,10 @@
 """
-Geo Engine - Unified Geospatial Module for BIONIC HUNT/Chasse V3
-Phase P6.2 - Normalization & Phase P6.3 - Optimization
-
-Single source of truth for all geospatial operations.
-Collection: geo_entities (with 2dsphere index)
+DEPRECATED — geo_engine
+Fusionne dans geospatial_engine (Directive STEEVE-MAX consolidate V6)
+Toute la logique est desormais dans modules/geospatial_engine/
+Prefixes API preserves: /api/v1/geo, /api/admin/geo
 """
-
-__version__ = "1.0.0"
-__module_type__ = "core"
+__version__ = "1.0.0-DEPRECATED"
+__module_type__ = "deprecated"
+__deprecated__ = True
+__successor__ = "geospatial_engine"

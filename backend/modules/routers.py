@@ -3,12 +3,19 @@
 Central router integration for all BIONIC HUNT/Chasse modules.
 This file is the single point of import for server.py
 
-Version: 3.0.0 - P0 Admin Refactor (STEEVE-MAX x1900)
+Version: 4.0.0 - Consolidation V6 (STEEVE-MAX)
 
 Architecture:
 - All routers centralized here
 - No manual router registration in server.py
 - Legacy monolith isolated
+
+Consolidation V6 (STEEVE-MAX):
+- Merged: geo_engine → geospatial_engine (logique interne absorbee)
+- Merged: affiliate_ads_engine + ad_spaces_engine → ads_engine
+- Merged: tutorial_engine + formations_engine → learning_engine
+- Deprecated: geo_engine, core/alimentation
+- Reclassed: chasseur_jumeau.py → experiments/, liste_epicerie.py → utils/
 
 P0 Cleanup (STEEVE-MAX x1900):
 - Removed: admin_unified_engine (fusionne dans admin_engine)
@@ -140,12 +147,14 @@ from modules.strategy_master_engine.router import router as strategy_master_rout
 
 # ==============================================
 # PHASE P3 - MONÉTISATION ENGINES (5 modules)
+# tutorial_engine → learning_engine (Consolidation V6)
 # ==============================================
 from modules.payment_engine.router import router as payment_router
 from modules.freemium_engine.router import router as freemium_router
 from modules.upsell_engine.router import router as upsell_router
 from modules.onboarding_engine.router import router as onboarding_router
 from modules.tutorial_engine.router import router as tutorial_router
+# Consolidated into: learning_engine (tutorial_engine + formations_engine)
 
 # ==============================================
 # ADMINISTRATION PREMIUM ENGINE
@@ -173,14 +182,16 @@ from modules.seo_engine.seo_suppliers_router import router as seo_suppliers_rout
 from modules.affiliate_switch_engine.router import router as affiliate_switch_router
 
 # ==============================================
-# AFFILIATE AD AUTOMATION ENGINE (COMMANDE 3)
+# AFFILIATE AD AUTOMATION ENGINE → ads_engine (Consolidation V6)
 # ==============================================
 from modules.affiliate_ads_engine.router import router as affiliate_ads_router
+# Consolidated into: ads_engine (affiliate_ads_engine + ad_spaces_engine)
 
 # ==============================================
-# AD SPACES ENGINE (COMMANDE 4)
+# AD SPACES ENGINE → ads_engine (Consolidation V6)
 # ==============================================
 from modules.ad_spaces_engine.router import router as ad_spaces_router
+# Consolidated into: ads_engine (affiliate_ads_engine + ad_spaces_engine)
 
 # ==============================================
 # MESSAGING ENGINE (Communications Bilingues Premium)
@@ -234,6 +245,7 @@ from modules.master_switch.router import router as master_switch_router
 # ==============================================
 from modules.backup_cloud_engine.router import router as backup_cloud_router
 from modules.formations_engine.router import router as formations_router
+# Consolidated into: learning_engine (tutorial_engine + formations_engine)
 # x3104: social_engine purge vers /app/legacy/api_obsoletes_x3103/social_engine/
 from modules.partner_engine.router import router as partner_router
 
@@ -311,9 +323,9 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
     # BCE-4X PURGE: weather_engine V1 SUPPRIME 2026-03-28
     (geospatial_router, {
         "name": "geospatial_engine",
-        "version": "1.0.0",
+        "version": "2.0.0",
         "phase": 2,
-        "description": "Geospatial analysis for territory management"
+        "description": "Geospatial analysis + Geo Engine (consolidated V6)"
     }),
     (wms_router, {
         "name": "wms_engine",
@@ -585,10 +597,10 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
         "description": "Cloud backup (MongoDB Atlas, GCS, ZIP) avec notifications email"
     }),
     (formations_router, {
-        "name": "formations_engine",
+        "name": "learning_engine_formations",
         "version": "1.0.0",
         "phase": "V5-V2",
-        "description": "Formations FédéCP et BIONIC Academy"
+        "description": "Learning Engine Formations (consolidated) - FédéCP et BIONIC Academy"
     }),
     
     # ==========================================
@@ -649,10 +661,10 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
         "description": "Parcours d'accueil et profilage automatique"
     }),
     (tutorial_router, {
-        "name": "tutorial_engine",
+        "name": "learning_engine",
         "version": "1.0.0",
         "phase": "P3-MONETISATION",
-        "description": "Tutoriels dynamiques et tips contextuels"
+        "description": "Learning Engine (consolidated) - Tutoriels + Formations"
     }),
     
     # ==========================================
@@ -776,23 +788,23 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
     }),
     
     # ==========================================
-    # AFFILIATE AD AUTOMATION ENGINE (COMMANDE 3)
+    # AFFILIATE AD AUTOMATION → ads_engine (Consolidation V6)
     # ==========================================
     (affiliate_ads_router, {
-        "name": "affiliate_ads",
+        "name": "ads_engine",
         "version": "1.0.0",
         "phase": "AD-AUTOMATION",
-        "description": "Affiliate Ad Automation Engine - Cycle de vente publicitaire 100% automatisé"
+        "description": "Ads Engine (consolidated) - Affiliate Ads + Ad Spaces"
     }),
     
     # ==========================================
-    # AD SPACES ENGINE (COMMANDE 4)
+    # AD SPACES ENGINE → ads_engine (Consolidation V6)
     # ==========================================
     (ad_spaces_router, {
-        "name": "ad_spaces",
+        "name": "ads_engine_spaces",
         "version": "1.0.0",
         "phase": "AD-SPACES",
-        "description": "Ad Spaces Engine - Gestion des emplacements publicitaires BIONIC"
+        "description": "Ads Engine Spaces (consolidated) - Emplacements publicitaires BIONIC"
     }),
     
     # ==========================================
