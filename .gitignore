@@ -237,3 +237,8 @@ archive_github_v5201/BIONIC_OS_7BLOCS_v5201.zip.part_aa
 # Environment files
 *.env
 *.env.*
+backend/data/osm_cache/
+backend/data/ARCHIVES_V6/
+backend/data/freeze_baseline/
+backend/uploads/
+backup/
