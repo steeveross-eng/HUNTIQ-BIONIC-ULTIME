@@ -123,6 +123,16 @@ Plateforme d'analyse de territoires de chasse avec scoring multi-criteres, guide
 - [x] Section C: Procedure "Save to GitHub" + tag + Release documentee
 - [x] Section D: Rapport ARCHIVE_GITHUB_PERMANENTE_v5201.md genere
 
+### Consolidation V6 (STEEVE-MAX)
+- [x] Merge: geo_engine → geospatial_engine (logique absorbee, prefix API preserve)
+- [x] Merge: affiliate_ads_engine + ad_spaces_engine → ads_engine (facade, 30 endpoints)
+- [x] Merge: tutorial_engine + formations_engine → learning_engine (facade, 12 endpoints)
+- [x] Deprecate: geo_engine (marque DEPRECATED, successor=geospatial_engine)
+- [x] Deprecate: core/alimentation (marque DEPRECATED, successor=nutrition_engine)
+- [x] Reclass: chasseur_jumeau.py → experiments/ (redirect d'import conserve)
+- [x] Reclass: liste_epicerie.py → utility_modules/ (redirect d'import conserve)
+- [x] routers.py mis a jour v4.0.0 — Backend stable, tous modules charges
+
 ---
 
 ## Backlog (GELE par STEEVE-MAX)
