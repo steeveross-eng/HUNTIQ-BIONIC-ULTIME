@@ -160,13 +160,19 @@ Plateforme d'analyse de territoires de chasse avec scoring multi-criteres, guide
 - [x] Format: AUBO_V2.md (1518 lignes, 72 KB, 6 parties, 17 sections + 2 annexes)
 - [x] Livrable: /app/memory/AUBO_V2.md
 
+### Directive x5310 — Phase Pipeline (3 livrables)
+- [x] SUPRA_PIPELINE_V1: Specification complete pipeline scoring 10 modules (SSE→TFE) + 9 services scoring + 20 sous-moteurs core + pipeline V7 + 5 especes + endpoints + validation BCE-4X (801 lignes, 31 KB)
+- [x] E_COMMERCE_PIPELINE_V1: Specification complete pipeline e-commerce — produits, panier, Stripe, commandes, affiliation (3 modules), abonnements Free/Premium/Pro, upsell, 118 endpoints, modeles donnees, etats/transitions (687 lignes, 24 KB)
+- [x] INTERCONNEXIONS_P3_P6_V2: Mise a jour V2 — P3 Marketing (9 modules), P4 Intelligence (8 modules), P5 Monetisation (7 modules + facade), P6 Territoire (7 modules), matrice flux, 13 regles, impacts consolidation V6 (559 lignes, 21 KB)
+- [x] Livrables: /app/memory/SUPRA_PIPELINE_V1.md, /app/memory/E_COMMERCE_PIPELINE_V1.md, /app/memory/INTERCONNEXIONS_P3_P6_V2.md
+
 ---
 
 ## Backlog (GELE par STEEVE-MAX)
 - P2: Soil Engine V2 (donnees pedologiques reelles, LiDAR) — GELE
 - P2: Phase 2D (Purge shadcn/utils) — GELE
 - P2: Phase BSAA-2 (Social Ads Automation) — GELE
-- P2: Implementation P3-P6 (Interconnexions modules) — GELE
+- P2: EASYlead Analytics x5100 — GELE
 - INTERDIT: Merge vers main — STRICTEMENT INTERDIT
 
 ---
