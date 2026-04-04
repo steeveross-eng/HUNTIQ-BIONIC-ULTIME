@@ -623,3 +623,93 @@ async def get_strategy_analytics(user_id: str, period: str = Query("month")):
             "Documentez vos observations pour améliorer les prédictions"
         ]
     }
+
+
+# ==============================================
+# SUPRA BRIDGE — Phase I x5400 (BCE-4X)
+# Interconnexion Pipeline SUPRA → Strategy Master
+# ZERO couplage direct — via MongoDB (pipeline_results)
+# ==============================================
+
+class SupraStrategyRequest(BaseModel):
+    user_id: str = Field(..., description="ID utilisateur")
+    species: str = Field("deer", description="Espece cible")
+
+
+@router.post("/strategy/generate-from-supra")
+async def generate_strategy_from_supra(request: SupraStrategyRequest):
+    """
+    Generate a hunting strategy based on the latest SUPRA pipeline analysis.
+    Reads from pipeline_results collection (stored by pipeline_router hook).
+    """
+    from modules.strategy_master_engine.services.supra_bridge import (
+        get_latest_analysis, get_analysis_history
+    )
+
+    latest = await get_latest_analysis(request.user_id, request.species)
+    if not latest:
+        return {
+            "success": False,
+            "error": "no_analysis",
+            "message": f"Aucune analyse SUPRA disponible pour {request.species}. Effectuez une analyse de territoire d'abord.",
+            "species": request.species
+        }
+
+    history = await get_analysis_history(request.user_id, limit=5)
+
+    corridor_count = latest.get("corridor_count", 0)
+    if corridor_count > 3:
+        primary_strategy = "ambush_intersection"
+        strategy_label = "Affut aux intersections de corridors"
+    elif corridor_count > 0:
+        primary_strategy = "ambush_corridor"
+        strategy_label = "Embuscade le long du corridor principal"
+    else:
+        primary_strategy = "stalking"
+        strategy_label = "Approche et pistage actif"
+
+    return {
+        "success": True,
+        "strategy": {
+            "primary_type": primary_strategy,
+            "label": strategy_label,
+            "confidence": "high" if latest.get("validation", {}).get("all_modules_executed") else "medium",
+            "based_on_corridors": corridor_count
+        },
+        "analysis_summary": {
+            "species": request.species,
+            "pipeline_version": latest.get("pipeline_version"),
+            "module_count": latest.get("module_count"),
+            "total_computation_time_ms": latest.get("total_computation_time_ms"),
+            "corridor_count": corridor_count,
+            "resolution": latest.get("resolution"),
+            "analyzed_at": latest.get("created_at")
+        },
+        "history_count": len(history),
+        "validation": latest.get("validation", {}),
+        "source": "supra_bridge",
+        "directive": "x5400-Phase-I"
+    }
+
+
+@router.get("/analysis-history/{user_id}")
+async def get_supra_analysis_history(
+    user_id: str,
+    limit: int = Query(10, ge=1, le=50, description="Max results")
+):
+    """
+    Retrieve SUPRA pipeline analysis history for a user.
+    Reads from pipeline_results collection.
+    """
+    from modules.strategy_master_engine.services.supra_bridge import get_analysis_history
+
+    history = await get_analysis_history(user_id, limit=limit)
+
+    return {
+        "success": True,
+        "user_id": user_id,
+        "count": len(history),
+        "analyses": history,
+        "source": "supra_bridge",
+        "directive": "x5400-Phase-I"
+    }

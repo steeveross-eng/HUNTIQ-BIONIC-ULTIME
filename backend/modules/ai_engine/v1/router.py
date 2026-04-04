@@ -381,3 +381,67 @@ async def get_suggestions(
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Suggestions failed: {str(e)}")
+
+
+
+# ==============================================
+# STRATEGY RECOMMENDER — Phase I x5400 (BCE-4X)
+# Bridge IA → Strategie
+# ZERO couplage direct — via MongoDB (pipeline_results, ai_recommendations)
+# ==============================================
+
+class StrategyRecommendRequest(BaseModel):
+    """Request for AI strategy recommendations"""
+    user_id: str
+    species: str = "deer"
+
+
+@router.post("/recommend/strategy")
+async def recommend_strategy(request: StrategyRecommendRequest):
+    """
+    Generate strategic recommendations based on SUPRA pipeline history.
+    Reads from pipeline_results, writes to ai_recommendations.
+    """
+    from .strategy_recommender import generate_recommendations, store_recommendation
+
+    recommendations = await generate_recommendations(request.user_id, request.species)
+
+    stored_ids = []
+    for rec in recommendations:
+        rec_id = await store_recommendation(request.user_id, rec)
+        stored_ids.append(rec_id)
+
+    return {
+        "success": True,
+        "user_id": request.user_id,
+        "species": request.species,
+        "recommendations": recommendations,
+        "count": len(recommendations),
+        "stored": len(stored_ids),
+        "source": "strategy_recommender",
+        "directive": "x5400-Phase-I"
+    }
+
+
+@router.get("/recommendations/{user_id}")
+async def get_recommendations(
+    user_id: str,
+    species: Optional[str] = Query(None, description="Filtrer par espece")
+):
+    """
+    Retrieve active AI recommendations for a user.
+    Reads from ai_recommendations collection.
+    """
+    from .strategy_recommender import get_user_recommendations
+
+    recommendations = await get_user_recommendations(user_id, species=species)
+
+    return {
+        "success": True,
+        "user_id": user_id,
+        "species_filter": species,
+        "recommendations": recommendations,
+        "count": len(recommendations),
+        "source": "strategy_recommender",
+        "directive": "x5400-Phase-I"
+    }

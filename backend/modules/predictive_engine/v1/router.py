@@ -7,6 +7,7 @@ API Prefix: /api/v1/predictive
 """
 
 from fastapi import APIRouter, HTTPException, Query
+from pydantic import BaseModel
 from datetime import date, datetime
 from typing import Optional
 import json
@@ -365,3 +366,81 @@ async def get_forecast(
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erreur: {str(e)}")
+
+
+
+# ==============================================
+# PREDICTIVE FROM HISTORY — Phase I x5400 (BCE-4X)
+# Feed predictive depuis historique pipeline_results
+# ZERO couplage direct — via MongoDB
+# ==============================================
+
+class PredictFromHistoryRequest(BaseModel):
+    user_id: str
+    species: str = "deer"
+    lat: float = 46.8139
+    lng: float = -71.2080
+
+
+@router.post("/predict-from-history")
+async def predict_from_history(request: PredictFromHistoryRequest):
+    """
+    Enhanced prediction using SUPRA pipeline history.
+    Combines PredictiveService with historical analysis data from pipeline_results.
+    """
+    from motor.motor_asyncio import AsyncIOMotorClient
+    import os
+
+    mongo_url = os.environ.get('MONGO_URL')
+    db_name = os.environ.get('DB_NAME')
+    client = AsyncIOMotorClient(mongo_url)
+    db = client[db_name]
+
+    # Get historical analyses
+    cursor = db.pipeline_results.find(
+        {"user_id": request.user_id, "species": request.species},
+        {"_id": 0}
+    ).sort("created_at", -1).limit(10)
+
+    analyses = []
+    async for doc in cursor:
+        analyses.append(doc)
+
+    # Base prediction from PredictiveService
+    from modules.legal_time_engine.v1.models import LocationInput
+    loc = LocationInput(latitude=request.lat, longitude=request.lng)
+    base_prediction = _service.predict_hunting_success(
+        species=request.species,
+        target_date=date.today(),
+        location=loc
+    )
+
+    # Enhance with history
+    history_bonus = min(len(analyses) * 2, 10)
+    avg_corridors = 0
+    if analyses:
+        corridor_counts = [a.get("corridor_count", 0) for a in analyses]
+        avg_corridors = sum(corridor_counts) / len(corridor_counts)
+
+    enhanced_probability = min(100, base_prediction.success_probability + history_bonus)
+
+    return {
+        "success": True,
+        "user_id": request.user_id,
+        "species": request.species,
+        "prediction": {
+            "probability_24h": enhanced_probability,
+            "base_probability": base_prediction.success_probability,
+            "history_bonus": history_bonus,
+            "confidence": base_prediction.confidence,
+            "optimal_window": str(base_prediction.optimal_times[0].time) if base_prediction.optimal_times else None,
+            "recommendation": base_prediction.recommendation
+        },
+        "history": {
+            "analysis_count": len(analyses),
+            "avg_corridors": round(avg_corridors, 1),
+            "latest_analysis": analyses[0].get("created_at") if analyses else None
+        },
+        "source": "predictive_history_bridge",
+        "directive": "x5400-Phase-I"
+    }

@@ -37,6 +37,7 @@ class FullAnalysisRequest(BaseModel):
     max_corridors: int = Field(default=6, ge=1, le=20)
     base_wind_kmh: float = Field(default=15.0, ge=0, le=120)
     base_direction_deg: float = Field(default=270.0, ge=0, le=360)
+    user_id: Optional[str] = Field(default="anonymous", description="User ID for SUPRA bridge tracking")
 
 
 class MetricsRequest(BaseModel):
@@ -73,6 +74,15 @@ async def pipeline_full_analysis(request: FullAnalysisRequest):
         request.layers, request.max_zones_per_layer, request.max_corridors,
         request.base_wind_kmh, request.base_direction_deg,
     )
+
+    # Hook post-pipeline Phase I x5400 — store result for SUPRA bridge
+    try:
+        from modules.strategy_master_engine.services.supra_bridge import store_pipeline_result
+        user_id = getattr(request, 'user_id', 'anonymous')
+        await store_pipeline_result(user_id, bounds, request.species, result)
+    except Exception as e:
+        logger.warning(f"SUPRA bridge store failed (non-blocking): {e}")
+
     return result
 
 
