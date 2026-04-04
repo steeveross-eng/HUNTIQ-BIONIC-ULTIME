@@ -443,3 +443,29 @@ async def list_executions(
     except Exception as e:
         logger.error(f"Error listing executions: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ==============================================
+# ANALYTICS FEED — Phase III x5400 (BCE-4X)
+# Bridge Marketing → Analytics
+# ==============================================
+
+@router.get("/analytics-feed")
+async def marketing_analytics_feed(
+    period: int = Query(30, ge=1, le=365, description="Periode en jours")
+):
+    """
+    Aggregate marketing metrics for analytics dashboard.
+    Phase III x5400 — BCE-4X.
+    """
+    from .services.analytics_feed import get_marketing_analytics
+
+    analytics = await get_marketing_analytics(period_days=period)
+
+    return {
+        "success": True,
+        "analytics": analytics,
+        "source": "analytics_feed",
+        "directive": "x5400-Phase-III"
+    }
+

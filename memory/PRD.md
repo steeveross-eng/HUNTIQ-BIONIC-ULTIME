@@ -188,6 +188,26 @@ Plateforme d'analyse de territoires de chasse avec scoring multi-criteres, guide
 - [x] Hook post-pipeline dans pipeline_router.py (stockage auto)
 - [x] Non-regression: endpoints existants verifies (200)
 
+### Execution Phase II (P5 E-Commerce) — COMPLETE
+- [x] payment_engine: creation automatique commande dans orders via _process_successful_payment
+- [x] upsell_notifier.py (service intermediaire via MongoDB upsell_events)
+- [x] Hook quota_reached dans freemium_engine/router.py
+- [x] GET /api/v1/freemium/upsell-events/{user_id} — HTTP 200 OK
+
+### Execution Phase III (P3 Marketing) — COMPLETE
+- [x] tracking_bridge.py (hook share_engine → tracking_events collection)
+- [x] analytics_feed.py (service marketing → marketing_analytics collection)
+- [x] Hook share tracking dans share_engine/router.py (track + click)
+- [x] GET /api/v1/marketing/analytics-feed — HTTP 200 OK
+
+### Execution Phase IV (P6 Territoire) — COMPLETE
+- [x] POST /api/v1/trips/{trip_id}/waypoints — HTTP 200 (404 si trip inexistant = correct)
+- [x] GET /api/v1/trips/{trip_id}/waypoints — HTTP 200 (404 si trip inexistant = correct)
+
+### Non-regression globale
+- [x] 18 endpoints existants verifies HTTP 200
+- [x] 5 collections MongoDB creees (pipeline_results, ai_recommendations, upsell_events, tracking_events, marketing_analytics)
+
 ---
 
 ## Backlog (GELE par STEEVE-MAX)

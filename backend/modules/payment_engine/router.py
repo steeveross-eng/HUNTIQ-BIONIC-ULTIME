@@ -326,7 +326,23 @@ async def _process_successful_payment(db, user_id: str, tier: str, duration_days
         "expires_at": expires_at,
         "processed_at": datetime.now(timezone.utc)
     })
-    
+
+    # Phase II x5400 — Create order in orders collection
+    import uuid
+    order_doc = {
+        "order_id": str(uuid.uuid4()),
+        "user_id": user_id,
+        "package_type": tier,
+        "amount": PACKAGES.get(f"{tier}_monthly", PACKAGES.get(f"{tier}_yearly", {})).get("amount", 0),
+        "currency": "CAD",
+        "status": "completed",
+        "payment_session_id": session_id,
+        "duration_days": duration_days,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.orders.insert_one(order_doc)
+    logger.info(f"Order created: {order_doc['order_id']} for user {user_id}")
+
     logger.info(f"User {user_id} upgraded to {tier} until {expires_at}")
 
 # ==============================================

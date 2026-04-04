@@ -303,7 +303,24 @@ async def increment_quota(user_id: str, feature: str, amount: int = 1):
         {"$inc": {"count": amount}},
         upsert=True
     )
-    
+
+    # Phase II x5400 — Check if quota now reached, notify upsell
+    try:
+        sub = await db.subscriptions.find_one({"user_id": user_id}, {"_id": 0})
+        tier = SubscriptionTier(sub.get("tier", "free")) if sub else SubscriptionTier.FREE
+        limits = TIER_LIMITS.get(tier, TIER_LIMITS[SubscriptionTier.FREE])
+        limit = limits.get(feature, 0)
+        if isinstance(limit, int) and limit > 0:
+            usage = await db.quota_usage.find_one(
+                {"user_id": user_id, "feature": feature, "date": today}, {"_id": 0}
+            )
+            current = usage.get("count", 0) if usage else 0
+            if current >= limit:
+                from modules.freemium_engine.services.upsell_notifier import notify_quota_reached
+                await notify_quota_reached(user_id, feature, current, limit)
+    except Exception as e:
+        logger.warning(f"Upsell notify failed (non-blocking): {e}")
+
     return {"success": True, "incremented": amount}
 
 # ==============================================
@@ -360,6 +377,31 @@ async def check_feature_access(request: FeatureCheckRequest):
         "access": access.value,
         "can_access": can_access,
         "upgrade_required": not can_access and tier == SubscriptionTier.FREE
+    }
+
+# Phase II x5400 — Notify upsell on feature blocked
+    # (hook added after response, non-blocking)
+
+
+@router.get("/upsell-events/{user_id}")
+async def get_upsell_events(
+    user_id: str
+):
+    """
+    Get upsell events for a user (quota_reached, feature_blocked).
+    Phase II x5400 — BCE-4X.
+    """
+    from modules.freemium_engine.services.upsell_notifier import get_user_upsell_events
+
+    events = await get_user_upsell_events(user_id)
+
+    return {
+        "success": True,
+        "user_id": user_id,
+        "count": len(events),
+        "events": events,
+        "source": "upsell_notifier",
+        "directive": "x5400-Phase-II"
     }
 
 # ==============================================

@@ -4,7 +4,9 @@ Real data logging for hunting trips, waypoint visits, and observations
 Feeds data to analytics_engine, waypoint_scoring_engine, and geolocation_engine
 """
 from fastapi import APIRouter, HTTPException, Depends, Request, Query
+from pydantic import BaseModel, Field
 from typing import List, Optional
+from datetime import datetime, timezone
 import os
 import logging
 
@@ -397,3 +399,76 @@ async def list_observations(
     except Exception as e:
         logger.error(f"Error listing observations: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ==============================================
+# WAYPOINT FEED — Phase IV x5400 (BCE-4X)
+# Interconnexion Waypoint → Trip Logger
+# ==============================================
+
+class WaypointAssociationRequest(BaseModel):
+    waypoint_ids: List[str] = Field(..., description="IDs des waypoints a associer")
+
+
+@router.post("/{trip_id}/waypoints", response_model=dict, summary="Associer waypoints a une sortie")
+async def associate_waypoints_to_trip(trip_id: str, request: WaypointAssociationRequest):
+    """
+    Associate waypoints to a hunting trip.
+    Phase IV x5400 — BCE-4X.
+    """
+    db = get_db()
+
+    trip = await db.hunting_trips.find_one({"trip_id": trip_id})
+    if not trip:
+        raise HTTPException(status_code=404, detail=f"Sortie {trip_id} introuvable")
+
+    await db.hunting_trips.update_one(
+        {"trip_id": trip_id},
+        {
+            "$addToSet": {"associated_waypoints": {"$each": request.waypoint_ids}},
+            "$set": {"updated_at": datetime.now(timezone.utc).isoformat()}
+        }
+    )
+
+    return {
+        "success": True,
+        "trip_id": trip_id,
+        "associated_waypoints": request.waypoint_ids,
+        "source": "waypoint_feed",
+        "directive": "x5400-Phase-IV"
+    }
+
+
+@router.get("/{trip_id}/waypoints", response_model=dict, summary="Waypoints d'une sortie")
+async def get_trip_waypoints(trip_id: str):
+    """
+    Get waypoints associated to a hunting trip.
+    Phase IV x5400 — BCE-4X.
+    """
+    db = get_db()
+
+    trip = await db.hunting_trips.find_one({"trip_id": trip_id}, {"_id": 0})
+    if not trip:
+        raise HTTPException(status_code=404, detail=f"Sortie {trip_id} introuvable")
+
+    waypoint_ids = trip.get("associated_waypoints", [])
+
+    waypoints = []
+    if waypoint_ids:
+        cursor = db.user_waypoints.find(
+            {"waypoint_id": {"$in": waypoint_ids}},
+            {"_id": 0}
+        )
+        async for wp in cursor:
+            waypoints.append(wp)
+
+    return {
+        "success": True,
+        "trip_id": trip_id,
+        "waypoint_ids": waypoint_ids,
+        "waypoints": waypoints,
+        "count": len(waypoints),
+        "source": "waypoint_feed",
+        "directive": "x5400-Phase-IV"
+    }
+

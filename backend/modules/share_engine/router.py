@@ -208,6 +208,13 @@ async def track_share(event: ShareTrackEvent):
     }
     await db.share_events.insert_one(doc)
 
+    # Phase III x5400 — Notify tracking_engine
+    try:
+        from modules.share_engine.services.tracking_bridge import notify_share_event
+        await notify_share_event(event.channel, event.template, event.user_id, {"page": event.page_context, "species": event.species})
+    except Exception as e:
+        logger.warning(f"Tracking bridge failed (non-blocking): {e}")
+
     contact_status = None
     if event.user_email:
         contact_status = await _auto_create_contact(
@@ -585,6 +592,13 @@ async def easylead_track(ref: str = "", lead: str = "", page: str = "/"):
         "engine": "easylead_v1",
     }
     await db.easylead_clicks.insert_one(click_doc)
+
+    # Phase III x5400 — Notify tracking_engine
+    try:
+        from modules.share_engine.services.tracking_bridge import notify_click_event
+        await notify_click_event(lead, ref, page)
+    except Exception as e:
+        logger.warning(f"Tracking bridge click failed (non-blocking): {e}")
 
     await _log_marketing_event(db, "easylead_click", "inbound", {
         "ref": ref, "lead": lead, "page": page,
