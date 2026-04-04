@@ -99,8 +99,9 @@ class TestNonRegressionP3:
         r = client.get(f"{BASE}/v1/marketing/")
         assert r.status_code == 200
 
-    def test_share_channels(self, client):
-        r = client.get(f"{BASE}/share/channels")
+    def test_share_master_switch(self, client):
+        """Non-regression: master-switch endpoint"""
+        r = client.get(f"{BASE}/share/master-switch")
         assert r.status_code == 200
 
     def test_health(self, client):
