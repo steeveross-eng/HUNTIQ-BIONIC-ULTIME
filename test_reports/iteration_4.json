@@ -1,34 +1,46 @@
 {
   "iteration": 4,
-  "date": "2026-03-27",
-  "agent": "BCE-4X",
-  "directive": "Directive 7 Parties STEEVE-MAX",
-  "tests": [
-    {"id": "T1", "name": "x7000 Soumission valide", "status": "PASS", "details": "SUB-00003 cree, status=validation_auto_ok"},
-    {"id": "T2", "name": "x7000 Soumission invalide", "status": "PASS", "details": "Auto-rejet, 0/6 checks"},
-    {"id": "T3", "name": "x7000 Get submission", "status": "PASS", "details": "MongoDB read OK"},
-    {"id": "T4", "name": "x7000 Review (approve)", "status": "PASS", "details": "Status approuve"},
-    {"id": "T5", "name": "x7000 Activate", "status": "PASS", "details": "Status actif_magasin"},
-    {"id": "T6", "name": "x7000 Pipeline stats", "status": "PASS", "details": "storage=mongodb, total=4"},
-    {"id": "T7", "name": "x7000 List with filter", "status": "PASS", "details": "2 produits actifs"},
-    {"id": "T8", "name": "Performance organic-zones", "status": "PASS", "details": "1304ms (cache hit, < 5s threshold)"}
-  ],
-  "summary": {
-    "total": 8,
-    "passed": 8,
+  "timestamp": "2026-04-04",
+  "directive": "x6500-B",
+  "protocol": "BCE-4X GOLDEN V6+",
+  "authority": "STEEVE-MAX",
+  "test_suite": "Non-regression post-directive x6500-B",
+  "results": {
+    "total_tests": 58,
+    "passed": 58,
     "failed": 0,
-    "skipped": 0
+    "errors": 0,
+    "execution_time_seconds": 5.01
   },
-  "performance": {
-    "organic_zones_cold_before": "8010ms",
-    "organic_zones_cold_after": "3283ms",
-    "organic_zones_cache_hit": "208ms",
-    "improvement_percent": "59%"
-  },
-  "notes": [
-    "Frontend TERRITOIRE NON TESTE par testing_agent (Protection BCE-4X)",
-    "Screenshot smoke test OK — homepage charge correctement",
-    "Migration x7000 vers MongoDB COMPLETE",
-    "Pipeline complet: Soumission → Validation auto → Revue humaine → Activation"
-  ]
+  "deliverables": [
+    {
+      "directive": "x6500-B Directive 3.1 + 3.2",
+      "phase": "VALIDATION_INTERCONNEXION_NUTRITIONNELLE_V5_V6",
+      "status": "COMPLETE",
+      "path": "/app/memory/VALIDATION_INTERCONNEXION_NUTRITIONNELLE_V5_V6.md",
+      "content": {
+        "moteurs_nutritionnels_audites": 13,
+        "chaine_complete": "Sol → Nutriments → Fourrage → Gibier → Synthese",
+        "anti_doublon_sections": 10,
+        "modules_interdits_de_recreation": 12,
+        "points_de_fusion_par_phase": 5,
+        "verrouillage_conditions": 5
+      }
+    },
+    {
+      "directive": "x6500-B Directive 3.2.4",
+      "phase": "BIONIC_V6_MAP_INTELLIGENCE_PLAN mise a jour",
+      "status": "COMPLETE",
+      "modifications": [
+        "Section 3.8/3.9 ANTI-DOUBLON M1 ajoutees",
+        "Section 4.8/4.9 ANTI-DOUBLON M2 ajoutees",
+        "Section 5.8/5.9 ANTI-DOUBLON M3 ajoutees",
+        "Section 6.8/6.9 ANTI-DOUBLON M4 ajoutees",
+        "Section 7.8/7.9 ANTI-DOUBLON M5 ajoutees",
+        "Points de fusion SUPRA/Zone/P6/Species/Predictive par phase"
+      ]
+    }
+  ],
+  "non_regression": "58/58 PASSED — ZERO modification de code",
+  "verdict": "DIRECTIVE x6500-B CERTIFIEE — Documents canoniques generes, ZERO code modifie"
 }

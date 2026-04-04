@@ -230,6 +230,21 @@ legales geospatiales (periodes, quotas, restrictions).
 | Volume de donnees GeoJSON | FAIBLE | MODERE | Index 2dsphere MongoDB |
 | Dep: legal_time_engine | AUCUNE | - | Lecture seule, zero couplage |
 
+## 3.8 ANTI-DOUBLON M1
+
+| Sources utilisees | Modules consommes (LECTURE) | Modules INTERDITS de recreation |
+|-------------------|---------------------------|-------------------------------|
+| Donnees publiques nationales (MFFP, MRNF) | soil_composition_engine, territory_engine, geo_engine, legal_time_engine | soil_engine (classification), geospatial_engine (analyses spatiales) |
+
+## 3.9 ANTI-DOUBLON NUTRITIONNEL M1
+
+| Sources nutritionnelles | Consommation | Interdiction |
+|------------------------|-------------|-------------|
+| soil_composition_engine | LECTURE profils ecozone → enrichissement boundaries | NE PAS recalculer pH, mineraux, texture |
+| nutrient_deficiency_engine | LECTURE deficits → classification zones | NE PAS recalculer couverture besoins |
+
+**Points de fusion** : SUPRA (strategy_master) / Zone Engine (territory_engine) / P6 (territory navigation) / Species (wildlife_behavior) / Predictive (predictive_engine)
+
 ---
 
 # 4. M2 — BIONIC POI GRAPH
@@ -365,6 +380,22 @@ Le graphe permet une analyse relationnelle entre POIs et genere des scores de po
 | Graphe deconnecte | FAIBLE | FAIBLE | Algorithme de cluster auto-connect |
 | Dep: camera_engine, waypoint_engine | AUCUNE | - | Lecture seule MongoDB |
 
+## 4.8 ANTI-DOUBLON M2
+
+| Sources utilisees | Modules consommes (LECTURE) | Modules INTERDITS de recreation |
+|-------------------|---------------------------|-------------------------------|
+| camera_engine, waypoint_engine, hunting_trip_logger | scoring_engine, M1 (zones) | waypoint_scoring_engine (scoring waypoints), scoring_engine (scoring attractants) |
+
+## 4.9 ANTI-DOUBLON NUTRITIONNEL M2
+
+| Sources nutritionnelles | Consommation | Interdiction |
+|------------------------|-------------|-------------|
+| vegetation_forage_engine | LECTURE qualite fourrage → POI type "nourriture" | NE PAS recalculer phenologie, mineraux vegetaux |
+| nutrition_engine P0 | LECTURE NDVI + attractivite → enrichissement score POI | NE PAS recalculer NDVI |
+| saline_recommendation_engine | LECTURE scores intelligence → POI salines | NE PAS recalculer synthese saline |
+
+**Points de fusion** : SUPRA (scoring_engine) / Zone Engine (territory_engine) / Species (wildlife_behavior_engine)
+
 ---
 
 # 5. M3 — PREDICTIVE LAYER ENGINE + TIME-SERIES ENGINE
@@ -479,6 +510,23 @@ meteo-faune.
 | Calcul heatmap couteux | MODERE | MODERE | Cache Redis ou MongoDB TTL |
 | Correlation meteo imprecise | MODERE | FAIBLE | Multi-facteurs (solunar + meteo + historique) |
 | Dep: predictive_engine, solunar | AUCUNE | - | Lecture seule |
+
+## 5.8 ANTI-DOUBLON M3
+
+| Sources utilisees | Modules consommes (LECTURE) | Modules INTERDITS de recreation |
+|-------------------|---------------------------|-------------------------------|
+| predictive_engine, weather_fauna_simulation, solunar | M1 (zones), M2 (POIs), hunting_trip_logger | predictive_engine (predictions existantes), solunar (calendrier) |
+
+## 5.9 ANTI-DOUBLON NUTRITIONNEL M3
+
+| Sources nutritionnelles | Consommation | Interdiction |
+|------------------------|-------------|-------------|
+| nutrient_deficiency_engine | LECTURE deficits → facteur prediction nutritionnel | NE PAS recalculer deficits |
+| seasonal_metabolism_engine | LECTURE etat metabolique → ponderation saisonniere | NE PAS recalculer metabolisme |
+| phenology_engine | LECTURE phase phenologique → impact fourrage temporal | NE PAS recalculer phenologie |
+| vegetation_forage_engine | LECTURE qualite fourrage saisonniere → heatmap nutritionnelle | NE PAS recalculer fourrage |
+
+**Points de fusion** : SUPRA (strategy_master) / Predictive (predictive_engine) / Zone Engine (territory_engine) / Species (wildlife_behavior_engine)
 
 ---
 
@@ -657,6 +705,22 @@ vers les POIs les plus prometteurs.
 | Calcul route couteux | MODERE | MODERE | Pre-calcul des segments frequents |
 | Dep: M1, M2, M3 | M1-M3 doivent etre deployes | ELEVE | Fallback sur donnees statiques |
 
+## 6.8 ANTI-DOUBLON M4
+
+| Sources utilisees | Modules consommes (LECTURE) | Modules INTERDITS de recreation |
+|-------------------|---------------------------|-------------------------------|
+| hunting_trip_logger, M2, M3, M1 | live_heading_engine, tracking_engine, strategy_master | recommendation_engine (recommandations existantes) |
+
+## 6.9 ANTI-DOUBLON NUTRITIONNEL M4
+
+| Sources nutritionnelles | Consommation | Interdiction |
+|------------------------|-------------|-------------|
+| wildlife_nutritional_engine | LECTURE besoins espece ciblee → ponderation itineraire | NE PAS redefinir besoins journaliers |
+| vegetation_forage_engine | LECTURE qualite fourrage → scoring route | NE PAS recalculer fourrage |
+| saline_recommendation_engine | LECTURE score intelligence → conseils contextuels | NE PAS recalculer synthese saline |
+
+**Points de fusion** : SUPRA (strategy_master) / P6 (live_heading + tracking) / Zone Engine (territory_engine) / Predictive (M3)
+
 ---
 
 # 7. M5 — OFFLINE MODE ULTRA + TERRAIN & SPECIES INTELLIGENCE
@@ -832,6 +896,24 @@ vegetation, hydrographie) croise avec l'intelligence des especes.
 | Donnees terrain insuffisantes | MODERE | MODERE | Fallback sur donnees generiques par biome |
 | Sync conflit (offline edits vs online) | FAIBLE | ELEVE | Strategie last-write-wins avec historique |
 | Dep: M1-M4 + soil + eco + wildlife | Toutes phases precedentes | ELEVE | Chaque couche est optionnelle dans le paquet |
+
+## 7.8 ANTI-DOUBLON M5
+
+| Sources utilisees | Modules consommes (LECTURE) | Modules INTERDITS de recreation |
+|-------------------|---------------------------|-------------------------------|
+| M1-M4 (toutes couches), soil_engine, ecoforestry_engine | bionic_ecological_engine, wildlife_behavior_engine | ecoforestry_engine (donnees forestieres), soil_engine (classification) |
+
+## 7.9 ANTI-DOUBLON NUTRITIONNEL M5
+
+| Sources nutritionnelles | Consommation | Interdiction |
+|------------------------|-------------|-------------|
+| saline_recommendation_engine | LECTURE analyse complete → paquet offline | NE PAS recalculer synthese |
+| soil_composition_engine | LECTURE profils sol → couche terrain | NE PAS recalculer sol |
+| vegetation_forage_engine | LECTURE fourrage → couche terrain | NE PAS recalculer fourrage |
+| wildlife_nutritional_engine | LECTURE besoins → suitability habitat | NE PAS redefinir besoins |
+| bionic_ecological_engine | LECTURE intelligence eco → paquet offline | NE PAS recalculer intelligence |
+
+**Points de fusion** : SUPRA (strategy_master) / Zone Engine (territory_engine) / Species (wildlife_behavior) / Predictive (M3 + predictive_engine) / P6 (M4 navigation)
 
 ---
 
