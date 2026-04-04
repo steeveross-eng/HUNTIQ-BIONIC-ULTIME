@@ -22,6 +22,9 @@ import ScrollNavigator from "@/components/ScrollNavigator";
 import { NotificationProvider } from "@/modules/notifications";
 // V6 GOLDEN: Centre de notifications push temps réel
 import AlertNotificationCenter from "@/components/AlertNotificationCenter";
+// P5-OPTIMIZATION V2: Cart Panel (x5400-G)
+import { CartPanel } from "@/modules/cart";
+import { CartService } from "@/modules/cart";
 
 // BCE-4X PURGE: Imports fantomes SUPPRIMES (STEEVE-MAX directive)
 // 15 composants importes sans route ont ete supprimes:
@@ -478,50 +481,9 @@ const FeaturesSection = () => {
   );
 };
 
-// CartSheet Component — SUPRA v2 panier saline unifie
-const CartSheet = ({ isOpen, onOpenChange, cartItems, onCheckout }) => {
-  const { t } = useLanguage();
-  const total = cartItems.reduce((sum, item) => sum + (item.subtotal || 0), 0);
-  return (
-    <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent className="bg-card border-border w-full sm:max-w-md">
-        <SheetHeader>
-          <SheetTitle className="text-white flex items-center gap-2">
-            <ShoppingCart className="h-5 w-5 text-[#f5a623]" /> Panier SUPRA
-          </SheetTitle>
-        </SheetHeader>
-        <div className="mt-6 space-y-4 flex-1 overflow-auto">
-          {cartItems.length === 0 ? (
-            <p className="text-gray-300 text-center py-8">{t('cart_empty')}</p>
-          ) : (
-            cartItems.map((item) => (
-              <div key={item.item_id || item.product_id} className="flex items-center gap-4 p-4 bg-background rounded-lg">
-                <div className="flex-1">
-                  <p className="text-white font-medium">{item.name}</p>
-                  <p className="text-[#f5a623]">${item.unit_price} x {item.quantity}</p>
-                  <p className="text-sm text-gray-400">{item.format}</p>
-                </div>
-                <p className="text-[#f5a623] font-bold">${item.subtotal}</p>
-              </div>
-            ))
-          )}
-        </div>
-        {cartItems.length > 0 && (
-          <div className="border-t border-border pt-4 mt-4">
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-white font-medium">Total</span>
-              <span className="text-[#f5a623] text-xl font-bold">${total.toFixed(2)} CAD</span>
-            </div>
-            <Button className="w-full btn-golden text-black font-semibold" onClick={onCheckout}>
-              <ShoppingCart className="h-4 w-4 mr-2" /> Payer avec Stripe
-            </Button>
-            <p className="text-xs text-gray-600 text-center mt-2">Paiement securise par Stripe</p>
-          </div>
-        )}
-      </SheetContent>
-    </Sheet>
-  );
-};
+// CartSheet Component — SUPRA v2 panier saline unifie + P5-OPTIMIZATION V2
+// NOTE: CartSheet V1 PRESERVE pour backward compat saline.
+// CartPanel V2 utilise dans le render principal.
 
 // HomePage Component
 const HomePage = ({ products, onAddToCart }) => (
@@ -866,6 +828,7 @@ function App() {
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
   const sessionId = getSessionId();
 
   // SUPRA v2: Panier unifie — API saline unique
@@ -887,14 +850,39 @@ function App() {
     }
   }, [sessionId]);
 
+  // P5-OPTIMIZATION V2: Fetch cart count from V2 API
+  const fetchCartV2Count = useCallback(async () => {
+    try {
+      const userId = CartService.getUserId();
+      const summary = await CartService.getSummaryV2(userId);
+      setCartCount(summary.item_count || 0);
+    } catch {
+      // fallback to saline cart count
+    }
+  }, []);
+
   const handleAddToCart = async (product) => {
     try {
+      // V1: Saline cart
       await axios.post(`${API}/v1/saline/shop/cart/add`, {
         session_id: sessionId,
         product_id: product.id,
         quantity: 1
       });
       await fetchCart();
+
+      // V2: Also add to Cart V2 for unified experience
+      const userId = CartService.getUserId();
+      await CartService.addItemV2(userId, {
+        product_type: 'package',
+        product_id: product.id,
+        name: product.name,
+        unit_price: product.price || 0,
+        quantity: 1,
+        description: product.brand || ''
+      });
+      await fetchCartV2Count();
+
       toast.success("Produit ajoute au panier!");
     } catch (error) {
       console.error("Cart error:", error);
@@ -903,12 +891,10 @@ function App() {
   };
 
   const handleRemoveItem = async (itemId) => {
-    // Saline cart n'a pas de remove direct — on refresh
     toast.info("Produit note pour suppression");
   };
 
   const handleUpdateQuantity = async (itemId, quantity) => {
-    // Saline cart simplifie — refresh
     await fetchCart();
   };
 
@@ -926,12 +912,16 @@ function App() {
     }
   };
 
+  // P5-OPTIMIZATION V2: Cart update callback
+  const handleCartUpdate = useCallback((count) => {
+    setCartCount(count);
+  }, []);
+
   useEffect(() => {
     fetchProducts();
     fetchCart();
-  }, [fetchProducts, fetchCart]);
-
-  const cartCount = cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    fetchCartV2Count();
+  }, [fetchProducts, fetchCart, fetchCartV2Count]);
 
   if (loading) {
     return (
@@ -955,11 +945,11 @@ function App() {
             {/* Logo BIONIC Global - Visible sur toutes les pages (desktop) */}
             <BionicLogoGlobal />
             <Navigation cartCount={cartCount} onCartOpen={() => setIsCartOpen(true)} />
-            <CartSheet 
-              isOpen={isCartOpen} 
-              onOpenChange={setIsCartOpen} 
-              cartItems={cartItems}
-              onCheckout={handleCheckout}
+            {/* P5-OPTIMIZATION V2: CartPanel remplace CartSheet */}
+            <CartPanel
+              isOpen={isCartOpen}
+              onOpenChange={setIsCartOpen}
+              onCartUpdate={handleCartUpdate}
             />
             {/* BLOC 2 OPTIMIZATION: Suspense wrapper for lazy-loaded routes */}
             <Suspense fallback={<LazyLoadFallback />}>
