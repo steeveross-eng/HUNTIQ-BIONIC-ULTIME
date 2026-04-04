@@ -166,6 +166,17 @@ Plateforme d'analyse de territoires de chasse avec scoring multi-criteres, guide
 - [x] INTERCONNEXIONS_P3_P6_V2: Mise a jour V2 — P3 Marketing (9 modules), P4 Intelligence (8 modules), P5 Monetisation (7 modules + facade), P6 Territoire (7 modules), matrice flux, 13 regles, impacts consolidation V6 (559 lignes, 21 KB)
 - [x] Livrables: /app/memory/SUPRA_PIPELINE_V1.md, /app/memory/E_COMMERCE_PIPELINE_V1.md, /app/memory/INTERCONNEXIONS_P3_P6_V2.md
 
+### Directive x5400 — Plan d'Implementation V1
+- [x] Audit conformite code vs specs: 2 gaps critiques (P4), 5 moderes, 4 faibles, 10 OK
+- [x] Phase I (P4 SUPRA): 2 services bridges + 5 endpoints (supra_bridge, strategy_recommender, predictive feed)
+- [x] Phase II (P5 E-Commerce): payment→orders + freemium→upsell (1 service + 1 endpoint)
+- [x] Phase III (P3 Marketing): share→tracking + marketing→analytics (2 services + 1 endpoint)
+- [x] Phase IV (P6 Territoire): waypoint→trip_logger (1 service + 2 endpoints)
+- [x] Phase V (Tests): 4 fichiers tests integration
+- [x] Inventaire: 7 fichiers a creer, 6 a modifier, 11 endpoints, 4 collections MongoDB, ~740 lignes
+- [x] Livrable: /app/memory/IMPLEMENTATION_PLAN_V1.md (597 lignes, 22 KB)
+- [ ] ATTENTE VALIDATION STEEVE-MAX
+
 ---
 
 ## Backlog (GELE par STEEVE-MAX)
