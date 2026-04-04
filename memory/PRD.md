@@ -133,6 +133,14 @@ Plateforme d'analyse de territoires de chasse avec scoring multi-criteres, guide
 - [x] Reclass: liste_epicerie.py → utility_modules/ (redirect d'import conserve)
 - [x] routers.py mis a jour v4.0.0 — Backend stable, tous modules charges
 
+### Directive x5300 — AUBO_V1
+- [x] Section A: Structure 7 sections (Domaines, Pipelines, Moteurs, Core, Interconnexions, Gouvernance, Securite)
+- [x] Section B: Cartographie complete (91 modules, 5 engines, 9 core, 1675+ endpoints)
+- [x] Section C: Objectifs preparatoires (SUPRA, E-Commerce, P3-P6, EASYlead, Certification V2)
+- [x] Section D: Contraintes BCE-4X respectees (ZERO LOSS, ZERO REGRESSION, ZERO INTERPRETATION)
+- [x] Section E: Format — AUBO_V1.md (673 lignes, 30 KB, hierarchie H1-H4, table des matieres)
+- [x] Livrable: /app/memory/AUBO_V1.md
+
 ---
 
 ## Backlog (GELE par STEEVE-MAX)
