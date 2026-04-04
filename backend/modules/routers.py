@@ -286,6 +286,16 @@ from modules.bionic_stand_recommendation_engine.router import router as stand_re
 # ==============================================
 from modules.access_engine_v6.router import router as access_engine_v6_router
 
+# ==============================================
+# NUTRITION V6 INTERFACE — x6800-A (Wrappers V5)
+# ==============================================
+from modules.nutrition_v6_interface.router import router as nutrition_v6_router
+
+# ==============================================
+# NATIONAL DATA HARVESTER — M1 MAP INTELLIGENCE (x6800-A)
+# ==============================================
+from modules.national_data_harvester.router import router as national_data_harvester_router
+
 
 # List of all available routers with their metadata
 CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
@@ -901,6 +911,26 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
         "version": "1.0.0",
         "phase": "V6-ACCESS-GOLDEN",
         "description": "Moteur d'acces aux affuts V6 — Trail-First Dijkstra + Terrain Grid A*"
+    }),
+
+    # ==========================================
+    # NUTRITION V6 INTERFACE — x6800-A (Wrappers V5)
+    # ==========================================
+    (nutrition_v6_router, {
+        "name": "nutrition_v6_interface",
+        "version": "6.0.0",
+        "phase": "V6-NUTRITION",
+        "description": "Interface nutritionnelle V6 unifiee — Encapsulation 13 moteurs V5 (x6800-A)"
+    }),
+
+    # ==========================================
+    # NATIONAL DATA HARVESTER — M1 (x6800-A)
+    # ==========================================
+    (national_data_harvester_router, {
+        "name": "national_data_harvester",
+        "version": "1.0.0",
+        "phase": "V6-M1-MAP",
+        "description": "National Data Harvester + Legal Boundary Engine (M1 MAP Intelligence)"
     }),
 ]
 
