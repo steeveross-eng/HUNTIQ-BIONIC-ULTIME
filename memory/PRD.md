@@ -141,6 +141,25 @@ Plateforme d'analyse de territoires de chasse avec scoring multi-criteres, guide
 - [x] Section E: Format — AUBO_V1.md (673 lignes, 30 KB, hierarchie H1-H4, table des matieres)
 - [x] Livrable: /app/memory/AUBO_V1.md
 
+### Directive x5302 — AUBO_V2 (Architecture Canonique)
+- [x] Section A: Parametres valides par STEEVE-MAX (facades=redirections, deprecated=gardes, niveau=module, frontend=pages+composants)
+- [x] Ajout 1: Sous-routeurs bionic_engine_p0 (38 sous-routeurs, 154 endpoints, 21 moteurs calcul)
+- [x] Ajout 2: Cartographie frontend (38 pages, 143 composants, 18 hooks, 2 stores, 31 modules)
+- [x] Ajout 3: Base de donnees MongoDB (34 collections, ~703 docs, schemas complets)
+- [x] Ajout 4: Routes backend /routes/ (13 fichiers, 135 endpoints, sous-module territory)
+- [x] Ajout 5: BCE Engine detail (15 validateurs, golden_state.json, 17 endpoints)
+- [x] Ajout 6: Integrations externes (Stripe, OSM, Open-Meteo, Sentinel, WMS MRNF, html2canvas, Google OAuth)
+- [x] Correction 1: Comptage exact endpoints 1701 (vs 1675+ approximation V1)
+- [x] Correction 2: Classification modules 4 categories (ACTIF, FACADE, DEPRECATED, STANDALONE)
+- [x] Section manquante 1: Deploiement & Infrastructure (Supervisor, env vars, architecture reseau)
+- [x] Section manquante 2: Monitoring & Observabilite (health checks, logs, metriques, alerting)
+- [x] Section manquante 3: Tests & Qualite (10 fichiers tests P0, plan non-regression BCE-4X)
+- [x] Section manquante 4: Changelog Consolidation V6 (historique, mapping, impact comptage)
+- [x] Annexe A (V2): Cartographie complete mise a jour avec metriques exactes
+- [x] Annexe B: Delta V1→V2 (ajouts, corrections, clarifications, contenu preserve)
+- [x] Format: AUBO_V2.md (1518 lignes, 72 KB, 6 parties, 17 sections + 2 annexes)
+- [x] Livrable: /app/memory/AUBO_V2.md
+
 ---
 
 ## Backlog (GELE par STEEVE-MAX)
