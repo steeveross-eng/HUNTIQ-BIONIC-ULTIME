@@ -296,6 +296,11 @@ from modules.nutrition_v6_interface.router import router as nutrition_v6_router
 # ==============================================
 from modules.national_data_harvester.router import router as national_data_harvester_router
 
+# ==============================================
+# POI GRAPH ENGINE — M2 MAP INTELLIGENCE (x6900-M2)
+# ==============================================
+from modules.poi_graph_engine.router import router as poi_graph_engine_router
+
 
 # List of all available routers with their metadata
 CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
@@ -931,6 +936,16 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
         "version": "1.0.0",
         "phase": "V6-M1-MAP",
         "description": "National Data Harvester + Legal Boundary Engine (M1 MAP Intelligence)"
+    }),
+
+    # ==========================================
+    # POI GRAPH ENGINE — M2 (x6900-M2)
+    # ==========================================
+    (poi_graph_engine_router, {
+        "name": "poi_graph_engine",
+        "version": "1.0.0",
+        "phase": "V6-M2-MAP",
+        "description": "POI Graph Engine — Graphe POI, scoring multi-critere, clusters, relations spatiales (M2 MAP Intelligence)"
     }),
 ]
 

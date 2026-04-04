@@ -28,7 +28,7 @@ nutritionnelle V6 unifiee.
 - BIONIC_V6_MAP_INTELLIGENCE_PLAN (M1→M5)
 - VALIDATION_INTERCONNEXION_NUTRITIONNELLE_V5_V6
 
-### Session actuelle — x6800-A — 2026-04-04
+### Session precedente — x6800-A — 2026-04-04
 
 #### Directive 1 — M1 National Data Harvester
 - Module `national_data_harvester` deploye (4 services, 10 endpoints)
@@ -38,18 +38,27 @@ nutritionnelle V6 unifiee.
 
 #### Directive 2 — Wrappers V6
 - Module `nutrition_v6_interface` deploye (4 wrappers, 12 endpoints)
-- 13 moteurs V5 encapsules : soil, nutrient, wildlife, vegetation, hydrology, metabolism, saline_recommendation, nutrition_p0, phenology, soil_engine, nutrition_v1, ecological, behavior
+- 13 moteurs V5 encapsules
 - Verrouillage V5 au niveau API
 
 #### Directive 3 — Activation Nutrition V6
 - V6 = source unique officielle
-- soil_nutrients_layer, forage_quality_model, wildlife_nutrition_attractiveness, cross_layer_integration actifs
-- /api/v1/nutrition-v6/lockout-status confirme
 
 #### Directive 4 — Synchronisation documentaire
 - Score de coherence : 98/100
-- ZERO doublon, ZERO contradiction, ZERO obsolescence
-- Rapport genere
+
+### Session actuelle — x6900-M2 — 2026-04-04
+
+#### Directive x6900-M2 — M2 BIONIC POI Graph
+- Module `poi_graph_engine` deploye (3 services, 11 endpoints)
+- POIGraphBuilder : CRUD complet (create, get, update, delete, list, filters)
+- POIScorer : Scoring multi-critere (accessibilite, activite, strategique, nutrition)
+- POIRelationResolver : Near, clusters, aretes, distances Haversine
+- 2 collections MongoDB : poi_nodes (2dsphere), poi_edges
+- 14 points de fusion documentes (PF-M1 et PF-N2 actifs)
+- ANTI-DOUBLON strict : 5 modules interdits de recreation
+- Tests : 40/40 PASS + 58/58 non-regression = 98/98 TOTAL
+- Rapport final : /app/memory/M2_RAPPORT_FINAL.md
 
 ---
 
@@ -59,14 +68,14 @@ nutritionnelle V6 unifiee.
 - [x] M1 deploye (10 endpoints)
 - [x] Nutrition V6 Interface (12 endpoints, 13 V5 wraps)
 - [x] Synchronisation documentaire (score 98/100)
-- [ ] Validation STEEVE-MAX x6800-A
+- [x] Validation STEEVE-MAX x6800-A
+- [x] M2: BIONIC POI Graph (11 endpoints, 40/40 tests, 14 points de fusion)
 
 ### P1 — Prochain
-- [ ] M2: BIONIC POI Graph (10 endpoints)
 - [ ] M3: Predictive Layer + Time-Series (9 endpoints)
+- [ ] M4: Adaptive Profile + Navigation IA (11 endpoints)
 
 ### P2 — Futur
-- [ ] M4: Adaptive Profile + Navigation IA (11 endpoints)
 - [ ] M5: Offline Mode Ultra + Terrain Intelligence (8 endpoints)
 - [ ] BSAA-2, Soil Engine V2
 - [ ] Merge Work1 → main (INTERDIT)
@@ -79,6 +88,8 @@ nutritionnelle V6 unifiee.
 |----------|--------|---------|
 | PRD | /app/memory/PRD.md | actuel |
 | MAP_INTELLIGENCE_PLAN | /app/memory/BIONIC_V6_MAP_INTELLIGENCE_PLAN.md | 1.1.0 |
+| M2_POI_GRAPH_PLAN | /app/memory/M2_POI_GRAPH_PLAN.md | 1.0.0 |
+| M2_RAPPORT_FINAL | /app/memory/M2_RAPPORT_FINAL.md | 1.0.0 |
 | INTERCONNEXION_NUTRITIONNELLE | /app/memory/VALIDATION_INTERCONNEXION_NUTRITIONNELLE_V5_V6.md | 1.0.0 |
 | RAPPORT_SYNC_DOC | /app/memory/RAPPORT_SYNCHRONISATION_DOCUMENTAIRE_V6.md | 1.0.0 |
 | IMPLEMENTATION_PLAN_V1 | /app/memory/IMPLEMENTATION_PLAN_V1.md | 1.0.0 |
@@ -87,4 +98,4 @@ nutritionnelle V6 unifiee.
 
 ---
 
-**Derniere mise a jour** : 2026-04-04
+**Derniere mise a jour** : 2026-04-04 — Directive x6900-M2 complete
