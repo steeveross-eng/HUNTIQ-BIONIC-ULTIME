@@ -162,6 +162,15 @@ nutritionnelle V6 unifiee.
 - [x] Rapport audit : /app/memory/AUDIT_ARBORESCENCE_ZONES_x7200.md
 - En attente : validation STEEVE-MAX pour Option B (union geometrique hydro)
 
+#### Directive x7200 — UNION HYDRO OPTION B + AUDIT TRAJETS
+- [x] Option B implementee : _unify_hydro_zones_shapely() dans pipeline_v7.py
+- [x] Test : 2 zones hydro → 1 zone unifiee (Shapely unary_union + composantes connexes)
+- [x] Post-merge non-destructif : execute APRES la generation, ZERO modification logique maitresse
+- [x] Audit trajets vers affuts COMPLET : cause racine = table couts unique animal/humain
+- [x] 5 solutions proposees, Solution 1+4 recommandees (table HUMAN_TRAJET_COSTS + post-filtre foret)
+- [x] Rapport : /app/memory/AUDIT_TRAJETS_AFFUTS_x7200.md
+- En attente : validation STEEVE-MAX pour implementer corrections trajets
+
 ### P1 — Prochain
 - [ ] Phase E: GUIDE PRO (chasse guidee 100%) — DEBLOQUEE par validation x7200
 - [ ] Phase F: Module Gestionnaire UI (CARTE tabs + SECOURS button)

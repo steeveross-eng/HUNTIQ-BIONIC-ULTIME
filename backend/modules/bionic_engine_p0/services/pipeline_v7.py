@@ -153,6 +153,97 @@ def _merge_nearby_same_type_zones(zones: List[Dict], max_dist_m: float = 200.0) 
     return merged_zones
 
 
+def _unify_hydro_zones_shapely(zones: List[Dict]) -> List[Dict]:
+    """
+    V7.2 x7200 Option B — Union geometrique des zones hydro chevauchantes.
+    
+    Post-merge non-destructif:
+    1. Convertir toutes les zones hydro en polygones Shapely
+    2. unary_union pour fusionner les chevauchements
+    3. Decomposer en composantes connexes distinctes
+    4. Chaque composante = une zone hydro unifiee
+    
+    ZERO modification de la logique maitresse.
+    """
+    try:
+        from shapely.geometry import Polygon as ShapelyPoly, MultiPolygon
+        from shapely.ops import unary_union
+    except ImportError:
+        logger.warning("[V7.2-x7200] Shapely non disponible — union hydro ignoree")
+        return zones
+
+    if len(zones) < 2:
+        return zones
+
+    # Separer hydro des non-hydro
+    hydro_zones = [z for z in zones if z.get("layer_id", z.get("layerId", "")) == "hydro"]
+    non_hydro_zones = [z for z in zones if z.get("layer_id", z.get("layerId", "")) != "hydro"]
+
+    if len(hydro_zones) < 2:
+        return zones
+
+    # Convertir en polygones Shapely
+    shapely_polys = []
+    zone_metadata = []
+    for hz in hydro_zones:
+        coords = hz.get("coordinates", [])
+        if len(coords) >= 3:
+            try:
+                poly = ShapelyPoly([(c[0], c[1]) for c in coords])
+                if poly.is_valid and poly.area > 0:
+                    shapely_polys.append(poly)
+                    zone_metadata.append(hz)
+            except Exception:
+                pass
+
+    if len(shapely_polys) < 2:
+        return zones
+
+    # Union geometrique
+    try:
+        unified = unary_union(shapely_polys)
+    except Exception as e:
+        logger.warning(f"[V7.2-x7200] Union hydro echouee: {e}")
+        return zones
+
+    # Decomposer en composantes connexes
+    if isinstance(unified, MultiPolygon):
+        components = list(unified.geoms)
+    else:
+        components = [unified]
+
+    # Reconstruire les zones hydro unifiees
+    unified_hydro = []
+    best_zone = max(zone_metadata, key=lambda z: z.get("v7", {}).get("score", z.get("score", 0)))
+
+    for idx, comp in enumerate(components):
+        if not comp.is_valid or comp.area <= 0:
+            continue
+        
+        exterior_coords = list(comp.exterior.coords)
+        centroid = comp.centroid
+
+        # Creer la zone unifiee en copiant les metadonnees du meilleur score
+        new_zone = {**best_zone}
+        new_zone["coordinates"] = [[round(c[0], 6), round(c[1], 6)] for c in exterior_coords]
+        new_zone["centroid"] = {"lat": round(centroid.y, 6), "lng": round(centroid.x, 6)}
+        new_zone["zone_id"] = f"z_hydro_unified_{idx:03d}"
+        new_zone["area_m2"] = round(comp.area * 111320 * 111320, 1)
+        if "v7" not in new_zone:
+            new_zone["v7"] = {}
+        new_zone["v7"]["hydro_unified"] = True
+        new_zone["v7"]["components_merged"] = len(shapely_polys)
+        unified_hydro.append(new_zone)
+
+    logger.info(
+        f"[V7.2-x7200] Union hydro: {len(hydro_zones)} zones → "
+        f"{len(unified_hydro)} zones unifiees ({len(shapely_polys)} polygones fusionnes)"
+    )
+
+    return non_hydro_zones + unified_hydro
+
+
+
 def process_zones_v7(
     raw_zones: List[Dict],
     bounds: Dict[str, float],
@@ -271,6 +362,14 @@ def process_zones_v7(
     # STEP 6: BIONIC V7.2 — Merge same-type zones within 200m
     valid_zones = _merge_nearby_same_type_zones(valid_zones, max_dist_m=200.0)
     stats["valid_after_merge"] = len(valid_zones)
+
+    # STEP 6B: V7.2 x7200 — Union geometrique hydro (Option B)
+    # Post-merge non-destructif: unary_union de toutes les zones hydro chevauchantes
+    # Chaque composante connexe = une zone hydro unifiee
+    # ZERO modification de la logique maitresse (execute APRES la generation)
+    if layer_id == "hydro":
+        valid_zones = _unify_hydro_zones_shapely(valid_zones)
+        stats["valid_after_hydro_union"] = len(valid_zones)
 
     merge_info = ""
     if stats["valid"] != stats["valid_after_merge"]:
