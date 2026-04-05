@@ -503,7 +503,7 @@ export default function GuideProPage() {
 
   const fetchSessions = useCallback(async () => {
     try {
-      const res = await fetch(`${API}/api/v1/guide-pro/sessions`);
+      const res = await fetch(`${API}/api/v1/guide-pro/sessions/guide/guide-default`);
       const data = await res.json();
       if (data.sessions) setSessions(data.sessions);
     } catch (err) {

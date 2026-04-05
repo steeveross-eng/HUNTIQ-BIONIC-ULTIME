@@ -78,6 +78,8 @@ const SupraPage = lazy(() => import("@/pages/SupraPage"));
 const BionicModulesPage = lazy(() => import("@/pages/BionicModulesPage"));
 // BSAA — BIONIC Social Ads Automation (x4500-ULTRA)
 const BsaaDashboardPage = lazy(() => import("@/pages/BsaaDashboardPage"));
+// GUIDE PRO — Phase E-2 Frontend (BCE-4X BDRE-FIRST)
+const GuideProPage = lazy(() => import("@/pages/GuideProPage"));
 // V7.2: AdminHotspotsPage standalone SUPPRIME — Source de verite = Admin Premium (directive x7200)
 import { 
   ShoppingCart, FlaskConical, GitCompare, Star, DollarSign, ThumbsUp, Heart, Eye,
@@ -224,6 +226,16 @@ const Navigation = ({ cartCount, onCartOpen }) => {
               {t('nav_shop')}
             </Link>
 
+            {/* GUIDE PRO — Phase E-2 BCE-4X BDRE-FIRST */}
+            <Link 
+              to="/guide-pro" 
+              className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/guide-pro') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              data-testid="nav-guide-pro"
+            >
+              <RouteIcon className="h-3.5 w-3.5" />
+              Guide Pro
+            </Link>
+
             {/* SUPRA v2: Lien direct ANALYSE TERRITOIRE (moteur unifie) */}
             
             {/* Business (Conditionnel) */}
@@ -335,6 +347,10 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             </Link>
             <Link to="/shop" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-gray-300 hover:text-white">
               <Store className="h-4 w-4" /> {t('nav_shop')}
+            </Link>
+            {/* GUIDE PRO — Phase E-2 BCE-4X BDRE-FIRST */}
+            <Link to="/guide-pro" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="mobile-nav-guide-pro">
+              <RouteIcon className="h-4 w-4" /> Guide Pro
             </Link>
             {/* SUPRA v2: Nutrition integree dans ANALYSE TERRITOIRE */}
             {isBusinessOrAdmin && (
@@ -1038,6 +1054,8 @@ function App() {
                 {/* BSAA — BIONIC Social Ads Automation (x4500-ULTRA) */}
                 <Route path="/bsaa" element={<BsaaDashboardPage />} />
                 <Route path="/ads" element={<BsaaDashboardPage />} />
+                {/* GUIDE PRO — Phase E-2 BCE-4X BDRE-FIRST */}
+                <Route path="/guide-pro" element={<GuideProPage />} />
               </Routes>
             </Suspense>
             <Footer />

@@ -51,47 +51,24 @@ nutritionnelle V6 unifiee.
 
 #### Directive x6900-M2 — M2 BIONIC POI Graph
 - Module `poi_graph_engine` deploye (3 services, 11 endpoints)
-- POIGraphBuilder : CRUD complet (create, get, update, delete, list, filters)
-- POIScorer : Scoring multi-critere (accessibilite, activite, strategique, nutrition)
-- POIRelationResolver : Near, clusters, aretes, distances Haversine
+- POIGraphBuilder : CRUD complet
+- POIScorer : Scoring multi-critere
+- POIRelationResolver : Near, clusters, aretes
 - 2 collections MongoDB : poi_nodes (2dsphere), poi_edges
-- 14 points de fusion documentes (PF-M1 et PF-N2 actifs)
-- ANTI-DOUBLON strict : 5 modules interdits de recreation
-- Tests : 40/40 PASS + 58/58 non-regression = 98/98 TOTAL
-- Rapport final : /app/memory/M2_RAPPORT_FINAL.md
+- Tests : 98/98 TOTAL
 
 #### Directive x7000-M3 — M3 Predictive Layer Engine + Time-Series Engine
 - Module `predictive_layer_engine` deploye (4 services, 10 endpoints)
-- PredictiveLayerComputer : Couches predictives 24h, heatmaps, best-times, prediction GPS
-- TimeSeriesCollector : Collecte et stockage series temporelles (4 metriques)
-- SeasonalTrendAnalyzer : Tendances saisonnieres multi-annuelles
-- MeteoFaunaCorrelator : Matrice de correlation meteo-faune (6 facteurs)
-- 3 collections MongoDB : timeseries_data, predictive_layers, seasonal_trends
-- 22 points de fusion documentes (14 actifs, 8 prets)
-- Formule : P(h) = base(0.25) + season(0.15) + solunar(0.15) + meteo(0.20) + historical(0.15) + nutrition(0.10)
-- ANTI-DOUBLON strict : 6 modules interdits de recreation
-- Tests : 46/46 PASS + 98/98 non-regression = 144/144 TOTAL
+- Tests : 144/144 TOTAL
+
 #### Directive x7000-M3-DASHBOARD — Integration Dashboard Intelligence V6
-- Data Fusion Layer (DFL) deploye : 8 methodes de fusion, cache TTL 5min
-- Event Bus V6 deploye : 13 channels, anti-debounce 500ms
-- Data Contracts V6 deployes : 8 contrats stricts
-- 8 widgets operationnels : ScoreConsolide, PredictiveLayer, BestTimes, Heatmap, Trends, Correlation, TimeSeries, POIDetail
-- Page /intelligence-v6 avec auto-sync (espece/zone/date → refresh tous widgets)
-- ZERO modification backend, ZERO modification modules V5
-- Rapport final : /app/memory/DASH_RAPPORT_FINAL.md
+- Data Fusion Layer (DFL), Event Bus V6, Data Contracts V6
+- 8 widgets operationnels
+- Page /intelligence-v6
 
 #### Directive x7100-M4 — M4 Adaptive User Profile + Outdoor Navigation IA
 - Module `adaptive_navigation_engine` deploye (4 services, 12 endpoints)
-- UserProfileLearner : Profil adaptatif chasseur, apprentissage auto, skill_level, affinites
-- NavigationPlanner : Planification itineraires, sessions lifecycle (plan → start → end)
-- RouteOptimizer : Re-optimisation multi-critere dynamique (5 facteurs ponderes)
-- ContextualAdvisor : Conseils contextuels GPS, suggestions personnalisees
-- 2 collections MongoDB : hunter_profiles, navigation_sessions
-- 19 points de fusion documentes (SUPRA, Solunaire, Meteo, M1, M2, M3, Chasse, Nutrition)
-- Score combine : prediction(0.30) + poi(0.25) + affinity(0.20) + distance(0.15) + legal(0.10)
-- ANTI-DOUBLON strict : 5 modules interdits de recreation
-- Tests : 31/31 PASS + 144/144 non-regression = 175/175 TOTAL
-- Rapport final : /app/memory/M4_RAPPORT_FINAL.md
+- Tests : 175/175 TOTAL
 
 ---
 
@@ -101,107 +78,48 @@ nutritionnelle V6 unifiee.
 - [x] M1 deploye (10 endpoints)
 - [x] Nutrition V6 Interface (12 endpoints, 13 V5 wraps)
 - [x] Synchronisation documentaire (score 98/100)
-- [x] Validation STEEVE-MAX x6800-A
 - [x] M2: BIONIC POI Graph (11 endpoints, 40/40 tests, 14 points de fusion)
 - [x] M3: Predictive Layer + Time-Series (10 endpoints, 46/46 tests, 22 points de fusion)
 - [x] DASH: Integration Dashboard Intelligence V6 (8 widgets, DFL, EventBus, DataContracts)
 - [x] M4: Adaptive Profile + Navigation IA (12 endpoints, 31/31 tests, 19 points de fusion)
 
-#### Directive x7100-M4 Phase C — Gestionnaire + Hotspots + DataContracts
-- Module `gestionnaire_engine` deploye (12 endpoints backend)
-- 6 nouveaux DataContracts (DC-09 HunterProfile, DC-10 NavigationSession, DC-11 ContextualAdvice, DC-12 LivePosition, DC-13 SectorStatus, DC-14 EmergencyAlert)
-- 6 nouveaux channels EventBus (EB-14→EB-19)
-- 7 nouvelles methodes DFL (fetchHunterProfile, fetchNavigationSession, fetchContextualAdvice, fetchSuggestions, emitLivePosition, emitSectorUpdate, emitEmergencyAlert)
-- Module Gestionnaire frontend (GestionnairePositionService, GestionnaireSectorService, GestionnairePermissionService, SecoursService)
-- Validation geographique hotspots (QC/CA/USA seulement)
-- Architecture consentement GPS documentee
-- Harmonisation CARTE ↔ MON TERRITOIRE documentee
-- Tests : 44/45 PASS + 0 FAIL
-- Rapport final : /app/memory/PHASE_C_RAPPORT.md
+#### Phase C — Gestionnaire + Hotspots + DataContracts
+- [x] Module `gestionnaire_engine` deploye (12 endpoints backend)
+- [x] Tests : 44/45 PASS
 
-- [x] Phase D: Widgets M4 (HunterProfileWidget W10, NavigationWidget W11, AdviceWidget W12)
-- [x] INTELLIGENCE V6-CORE: 9 widgets (6 M3 + 3 M4), badge M1+M2+M3+M4 FUSION
+#### Phase D — Widgets M4
+- [x] INTELLIGENCE V6-CORE: 9 widgets (6 M3 + 3 M4)
 
-#### Directive x7200 — UNIFICATION HOTSPOTS ADMIN PREMIUM ET LOGIQUE BIONIC
-- [x] Moteur Hotspot V7.2 deploye : scoring terrain-aware, ecologie latitude/habitat, eau embarquee
-- [x] Base de donnees eau embarquee : 54 lacs/rivieres QC + 11 zones urbaines
-- [x] Contraintes ecologiques : dindon ≤46.8°N, orignal boreal, ours large, chevreuil sud
-- [x] Dispersion minimale 1.5km inter-hotspots (0 violations)
-- [x] Exclusion eau : 1183 cellules exclues (vs 0 avant)
-- [x] Admin Premium = SOURCE DE VERITE avec gradient BIONIC (vert/jaune/orange/rouge)
-- [x] Route /admin/hotspots standalone SUPPRIMEE (redirect → /admin-premium)
-- [x] Tableau enrichi : ID, Region, Ville, Score, Gradient, Espece, Habitat, Territoire, Acces, Alt, Intensite, GPS
-- [x] Metadonnees V7.2 : habitat_type, water_proximity, ecological_coherence, intensity, density_factor, terrain_factors
-- [x] BCE-4X PASS : 2100/2100
-- [x] Rapport audit : /app/memory/AUDIT_HOTSPOTS_x7200.md
-- Fichiers modifies : hotspot_engine.py, water_bodies_qc.py (nouveau), AdminHotspots.jsx, App.js
+#### Directive x7200 — UNIFICATION HOTSPOTS / CORRIDORS / ZONES / TRAJETS
+- [x] Toutes corrections implementees (water cost, Bezier anti-eau, post-filtre, union hydro, HUMAN_TRAJET_COSTS)
+- [x] Tests : 6/6 PASS
 
-#### Directive x7200 etendue — SYNCHRONISATION ZONES
-- [x] Toggle 'Eau' ajoute au panneau Zones dans TerritoireToolbar (sky blue, ON/OFF dedie)
-- [x] Zones hydro desormais controlees par classificationToggles.hydro + zoneSubFilters.eau
-- [x] Mapping 'eau' dedie dans BionicCorridorsV6Layer (remplace mapping habitat)
-- [x] Synchronisation ON/OFF instantanee verifiee (aucun lag, aucun polygone residuel)
-- [x] Logique maitresse Mon Territoire INTOUCHEE (zone_engine_core_v2.py, pipeline_service, etc.)
-- [x] Rapport audit : /app/memory/AUDIT_ZONES_SYNC_x7200.md
-- Fichiers modifies : MonTerritoireBionicPage.jsx, TerritoireToolbar.jsx, BionicCorridorsV6Layer.jsx
-
-#### Directive x7200 — AUDIT CORRIDORS ET CORRECTION INCOHERENCES EAU
-- [x] Cause racine identifiee : water_body cost=8.0 (trop faible), Bezier ignorant terrain, absence post-filtre
-- [x] FIX A : water_body cost 8.0 → 999.0 (IMPASSABLE) dans corridor_10x.py
-- [x] FIX B : Bezier anti-eau avec deflection perpendiculaire dans zone_engine_core_v2.py
-- [x] FIX C : Post-filtre _filter_corridors_water() avec intersection Shapely
-- [x] Logique maitresse Mon Territoire INTOUCHEE (zone generation, pipeline, rasterizer, SRTM)
-- [x] Rapport audit : /app/memory/AUDIT_CORRIDORS_EAU_x7200.md
-
-#### Directive x7200 — AUDIT ARBORESCENCE ZONES ET ORIGINE ZONES D'EAU
-- [x] Diagnostic precis : hydro zones generees par bruit Simplex, PAS par donnees reelles
-- [x] Pipeline trace : behavioral_rasterizer → zone_engine_core_v2 → pipeline_v7 → corridors
-- [x] Arborescence complete : 15 couches, 4 fichiers cles, exclusions et priorites documentees
-- [x] Cause non-fusion : seuil 200m entre centroides insuffisant pour plans d'eau > 400m
-- [x] 3 options proposees : A (seuil 600m), B (union Shapely post-merge, RECOMMANDEE), C (donnees reelles)
-- [x] Rapport audit : /app/memory/AUDIT_ARBORESCENCE_ZONES_x7200.md
-- En attente : validation STEEVE-MAX pour Option B (union geometrique hydro)
-
-#### Directive x7200 — UNION HYDRO OPTION B + AUDIT TRAJETS
-- [x] Option B implementee : _unify_hydro_zones_shapely() dans pipeline_v7.py
-- [x] Test : 2 zones hydro → 1 zone unifiee (Shapely unary_union + composantes connexes)
-- [x] Post-merge non-destructif : execute APRES la generation, ZERO modification logique maitresse
-- [x] Audit trajets vers affuts COMPLET : cause racine = table couts unique animal/humain
-- [x] 5 solutions proposees, Solution 1+4 recommandees (table HUMAN_TRAJET_COSTS + post-filtre foret)
-- [x] Rapport : /app/memory/AUDIT_TRAJETS_AFFUTS_x7200.md
-
-#### Directive x7200 — SECTION C: TRAJETS HUMAINS (CORRECTION + IMPLEMENTATION)
-- [x] FIX BLOQUEUR : IndentationError corrigee (except vide → except: filtered.append(corridor))
-- [x] _assess_forest_ratio extraite comme fonction autonome (zone_engine_core_v2.py:952-1001)
-- [x] HUMAN_TRAJET_COSTS : 23 types terrain, foret x2.9 vs animal, eau=999.0 (corridor_10x.py:499-533)
-- [x] human_trajet_pathfinder : singleton separe (corridor_10x.py:757)
-- [x] HUMAN_PAIRS : 10 paires definies (affuts/trajets/salines)
-- [x] Post-filtre _assess_forest_ratio : marque forest_heavy si humain + >60% foret
-- [x] Tag movement_type : "human"/"animal" sur chaque corridor
-- [x] Tests : 6/6 PASS (couts, pathfinder, forest_ratio 3 scenarios, HUMAN_PAIRS)
-- [x] Backend : demarrage OK, ZERO WARNING, 78 modules charges
-- [x] Logique maitresse Mon Territoire : INTOUCHEE
-- [x] Rapport : /app/memory/AUDIT_TRAJETS_HUMAINS_x7200.md
-- En attente : validation finale STEEVE-MAX
-
-### P1 — Prochain
-- [x] Phase E-1: GUIDE PRO Backend — DEPLOYE (15/15 endpoints PASS)
-  - guide_session_manager: CRUD + lifecycle sessions
-  - group_tracker: Positions LIVE + dispersion  
-  - guided_route_builder: Parcours multi-clients
-  - post_hunt_reporter: Rapports post-chasse
-  - Flow E2E: Create→Clients→Routes→Start→Track→End→Report
-- [x] Pipeline Terrain A+F+G — IMPLEMENTE (ENGINE_OSM_LITE operationnel)
-  - A: _build_terrain_grid enrichie OSM
-  - F: ENGINE_OSM_LITE (engine_osm_lite.py)
-  - G: Fusion Access Engine V6 (12282 noeuds)
-- [ ] Phase E-2: Frontend GUIDE PRO (6 composants React)
+### P1 — Deploye
+- [x] Phase E-1: GUIDE PRO Backend (15/15 endpoints PASS)
+- [x] Pipeline Terrain A+F+G (ENGINE_OSM_LITE operationnel)
+- [x] Phase E-2: Frontend GUIDE PRO — DEPLOYE (7 composants React, 9 endpoints connectes)
+  - GuideProPage: Dashboard 3 tabs (Dashboard, Sessions, BDRE)
+  - BDREMonitor, TerrainScoreCard, SessionCreator, RouteViewer, AuditLogPanel, AnomalyPanel
+  - Route /guide-pro + Navigation desktop/mobile integree
+  - 17 data-testid, BDRE-FIRST natif, lazy loading
+  - Rapport: E2_GUIDE_PRO_FRONTEND_REPORT.md
 - [ ] Phase F: Module Gestionnaire UI (CARTE tabs + SECOURS button)
 
 ### P2 — Futur
 - [ ] M5: Offline Mode Ultra + Terrain Intelligence (8 endpoints)
+- [ ] Integration BDRE dans Intelligence V6 / Mon Territoire / Admin Premium
 - [ ] BSAA-2, Soil Engine V2
 - [ ] Merge Work1 → main (INTERDIT)
+
+---
+
+## Politique BDRE-FIRST (Invariant Permanent)
+
+Tout composant BIONIC OS doit :
+- Integrer scores BDRE, niveaux L1-L4, anomalies, corridors
+- Statuts de validation territoire et journaux BDRE
+- Etre revu et optimise en continu sans regression
+- Etre trace dans BIONIC_OPTIMISATION_LOG.md
 
 ---
 
@@ -211,41 +129,25 @@ nutritionnelle V6 unifiee.
 |----------|--------|---------|
 | PRD | /app/memory/PRD.md | actuel |
 | MAP_INTELLIGENCE_PLAN | /app/memory/BIONIC_V6_MAP_INTELLIGENCE_PLAN.md | 1.1.0 |
-| M2_POI_GRAPH_PLAN | /app/memory/M2_POI_GRAPH_PLAN.md | 1.0.0 |
 | M2_RAPPORT_FINAL | /app/memory/M2_RAPPORT_FINAL.md | 1.0.0 |
-| M3_PREDICTIVE_LAYER_PLAN | /app/memory/M3_PREDICTIVE_LAYER_PLAN.md | 1.0.0 |
 | M3_RAPPORT_FINAL | /app/memory/M3_RAPPORT_FINAL.md | 1.0.0 |
-| M3_DASHBOARD_INTEGRATION_PLAN | /app/memory/M3_DASHBOARD_INTEGRATION_PLAN.md | 1.0.0 |
 | DASH_RAPPORT_FINAL | /app/memory/DASH_RAPPORT_FINAL.md | 1.0.0 |
-| PHASE_D_RAPPORT | /app/memory/PHASE_D_RAPPORT.md | 1.0.0 |
-| PHASE_C_RAPPORT | /app/memory/PHASE_C_RAPPORT.md | 1.0.0 |
-| AUDIT_BIONIC_OS_DEDUP | /app/memory/AUDIT_BIONIC_OS_DEDUP.md | 1.0.0 |
-| PHASE_A_RAPPORT | /app/memory/PHASE_A_RAPPORT.md | 1.0.0 |
-| M4_ADAPTIVE_NAVIGATION_PLAN | /app/memory/M4_ADAPTIVE_NAVIGATION_PLAN.md | 1.0.0 |
 | M4_RAPPORT_FINAL | /app/memory/M4_RAPPORT_FINAL.md | 1.0.0 |
-| INTERCONNEXION_NUTRITIONNELLE | /app/memory/VALIDATION_INTERCONNEXION_NUTRITIONNELLE_V5_V6.md | 1.0.0 |
-| RAPPORT_SYNC_DOC | /app/memory/RAPPORT_SYNCHRONISATION_DOCUMENTAIRE_V6.md | 1.0.0 |
-| IMPLEMENTATION_PLAN_V1 | /app/memory/IMPLEMENTATION_PLAN_V1.md | 1.0.0 |
-| P5_OPTIMIZATION_PLAN | /app/memory/P5_OPTIMIZATION_PLAN.md | 1.0.0 |
-| AUBO_V2 | /app/memory/AUBO_V2.md | 2.0.0 |
-| AUDIT_HOTSPOTS_x7200 | /app/memory/AUDIT_HOTSPOTS_x7200.md | 1.0.0 |
-| AUDIT_TRAJETS_HUMAINS_x7200 | /app/memory/AUDIT_TRAJETS_HUMAINS_x7200.md | 1.0.0 |
-| RAPPORT_POST_VALIDATION_SECTION_C | /app/memory/RAPPORT_POST_VALIDATION_SECTION_C.md | 1.0.0 |
+| PHASE_C_RAPPORT | /app/memory/PHASE_C_RAPPORT.md | 1.0.0 |
+| PHASE_D_RAPPORT | /app/memory/PHASE_D_RAPPORT.md | 1.0.0 |
 | PHASE_E_GUIDE_PRO_ARCHITECTURE | /app/memory/PHASE_E_GUIDE_PRO_ARCHITECTURE.md | 1.0.0 |
-| AUDIT_TRAJETS_VERS_AFFUTS_HUMAN | /app/memory/AUDIT_TRAJETS_VERS_AFFUTS_HUMAN.md | 1.0.0 |
-| RAPPORT_BIONIC_OS_V8_5 | /app/memory/RAPPORT_BIONIC_OS_V8_5.md | 1.0.0 |
-| RAPPORT_CAUSES_PROFONDES_TNE | /app/memory/RAPPORT_CAUSES_PROFONDES_TNE.md | 1.0.0 |
+| E2_GUIDE_PRO_FRONTEND_REPORT | /app/memory/E2_GUIDE_PRO_FRONTEND_REPORT.md | 1.0.0 |
+| BIONIC_OPTIMISATION_LOG | /app/memory/BIONIC_OPTIMISATION_LOG.md | 1.0.0 |
+| BDRE_TABLEAU_OPTIMISATION_REPORT | /app/memory/BDRE_TABLEAU_OPTIMISATION_REPORT.md | 1.0.0 |
 | BDRE_CONFORMITY_REPORT | /app/memory/BDRE_CONFORMITY_REPORT.md | 1.0.0 |
-| BDRE_ROOT_SPEC_V2 | /app/memory/BDRE_SPECS_CORRIGEES_V2/BDRE_ROOT_SPEC_V2.md | 2.0.0 |
-| BDRE_INTEGRATION_PLAN_V2 | /app/memory/BDRE_SPECS_CORRIGEES_V2/BDRE_INTEGRATION_PLAN_V2.md | 2.0.0 |
-| BDRE_SCORING_MATRIX_V2 | /app/memory/BDRE_SPECS_CORRIGEES_V2/BDRE_SCORING_MATRIX_V2.md | 2.0.0 |
-| BDRE_API_MONITORING_V2 | /app/memory/BDRE_SPECS_CORRIGEES_V2/BDRE_API_MONITORING_V2.md | 2.0.0 |
-| BDRE_ENGINE_INTEGRATION_V2 | /app/memory/BDRE_SPECS_CORRIGEES_V2/BDRE_ENGINE_INTEGRATION_V2.md | 2.0.0 |
 | BDRE_PHASE1_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE1_IMPLEMENTATION_REPORT.md | 1.0.0 |
 | BDRE_PHASE2_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE2_IMPLEMENTATION_REPORT.md | 1.0.0 |
 | BDRE_PHASE3_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE3_IMPLEMENTATION_REPORT.md | 1.0.0 |
 | BDRE_PHASE4_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE4_IMPLEMENTATION_REPORT.md | 1.0.0 |
+| AFFUTS_BDRE_VALIDATION_REPORT | /app/memory/AFFUTS_BDRE_VALIDATION_REPORT.md | 1.0.0 |
+| AUDIT_HOTSPOTS_x7200 | /app/memory/AUDIT_HOTSPOTS_x7200.md | 1.0.0 |
+| AUDIT_TRAJETS_HUMAINS_x7200 | /app/memory/AUDIT_TRAJETS_HUMAINS_x7200.md | 1.0.0 |
 
 ---
 
-**Derniere mise a jour** : 2026-04-06 — BDRE PHASE 4 IMPLEMENTATION COMPLETE. BDRE institutionnalise dans 5 engines: TNE, Access Engine, Stand Recommendation, GUIDE PRO, Weather. 11 endpoints, 10 composants. Dashboard institutionnel a /api/v1/bdre/dashboard. GUIDE PRO annote chaque route avec bdre_terrain_score et bdre_terrain_status. Post-hunt reporter inclut metriques BDRE. Weather journalise dans BDRE. BDRE PLEINEMENT OPERATIONNEL.
+**Derniere mise a jour** : 2026-04-05 — PHASE E-2 GUIDE PRO FRONTEND COMPLETE. 7 composants React deployes, route /guide-pro active, navigation desktop/mobile integree, 9 endpoints GUIDE PRO + BDRE connectes, 17 data-testid. Institution politique BDRE-FIRST comme invariant permanent. Rapports: E2_GUIDE_PRO_FRONTEND_REPORT.md, BIONIC_OPTIMISATION_LOG.md, BDRE_TABLEAU_OPTIMISATION_REPORT.md.
