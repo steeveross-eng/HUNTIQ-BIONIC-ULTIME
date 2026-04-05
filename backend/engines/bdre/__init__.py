@@ -1,6 +1,6 @@
 """
 BDRE — BIONIC Data Reliability Engine
-BCE-4X GOLDEN V6+ | Phase 1 Fondations
+BCE-4X GOLDEN V6+ | Phase 1+2 Fondations + Monitoring
 Directive STEEVE-MAX | 2026-04-06
 
 Point d'entree unique du BDRE.
@@ -12,6 +12,8 @@ from .source_registry import SourceRegistry
 from .quality_scorer import QualityScorer
 from .audit_logger import AuditLogger
 from .waterway_classifier import WaterwayClassifier
+from .health_monitor import HealthMonitor
+from .anomaly_detector import AnomalyDetector
 
 logger = logging.getLogger("bionic.bdre")
 
@@ -19,6 +21,8 @@ _registry = SourceRegistry()
 _scorer = QualityScorer(_registry)
 _audit = AuditLogger()
 _waterway = WaterwayClassifier()
+_monitor = HealthMonitor(_registry)
+_anomaly = AnomalyDetector(_registry, _audit)
 
 
 def check_source(source_id: str) -> dict:
@@ -81,3 +85,13 @@ def get_scorer() -> QualityScorer:
 def get_audit_logger() -> AuditLogger:
     """Acces au journal pour le router."""
     return _audit
+
+
+def get_health_monitor() -> HealthMonitor:
+    """Acces au moniteur de sante pour le router."""
+    return _monitor
+
+
+def get_anomaly_detector() -> AnomalyDetector:
+    """Acces au detecteur d'anomalies pour le router."""
+    return _anomaly

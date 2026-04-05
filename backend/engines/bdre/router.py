@@ -43,13 +43,15 @@ async def bdre_health():
         "module": "bdre",
         "version": "V2",
         "protocol": "BCE-4X GOLDEN V6+",
-        "phase": "Phase 1 — Fondations",
-        "endpoints": 8,
+        "phase": "Phase 2 — Monitoring + Integration TNE",
+        "endpoints": 10,
         "components": [
             "source_registry",
             "quality_scorer",
             "waterway_classifier",
             "audit_logger",
+            "health_monitor",
+            "anomaly_detector",
         ],
         "sources_registered": len(registry.get_all_sources()),
         "audit_stats": stats,
@@ -225,4 +227,38 @@ async def validate_territory(territory_id: str):
             f"Territoire {territory_id}: score minimal {min_score:.3f}. "
             f"Recommendation: {recommendation}."
         ),
+    }
+
+
+# =====================================================================
+# ENDPOINT 8: HEALTH MONITOR STATUS (Phase 2)
+# =====================================================================
+
+@router.get("/monitor/status", tags=["bdre"])
+async def get_monitor_status():
+    """Statut du monitoring de sante de toutes les sources."""
+    from engines.bdre import get_health_monitor
+    monitor = get_health_monitor()
+    return {
+        "monitor": "active",
+        "sources": monitor.get_all_statuses(),
+    }
+
+
+# =====================================================================
+# ENDPOINT 9: ANOMALIES (Phase 2)
+# =====================================================================
+
+@router.get("/anomalies/recent", tags=["bdre"])
+async def get_recent_anomalies(
+    limit: int = Query(20, ge=1, le=100),
+):
+    """Dernieres anomalies detectees par le BDRE."""
+    from engines.bdre import get_anomaly_detector
+    detector = get_anomaly_detector()
+    anomalies = detector.get_recent_anomalies(limit=limit)
+    return {
+        "total": len(anomalies),
+        "limit": limit,
+        "anomalies": anomalies,
     }

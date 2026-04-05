@@ -16,7 +16,11 @@ import math
 import logging
 from typing import Dict, List, Tuple, Optional, Set
 
-from .terrain_costs import compute_edge_cost, build_obstacle_set, build_forest_set
+from .terrain_costs import (
+    compute_edge_cost, build_obstacle_set, build_forest_set,
+    build_waterway_corridor_set,
+    STREAM_BANK_COST, CLEARING_EDGE_COST,
+)
 
 logger = logging.getLogger("bionic.terrain_nav.graph")
 
@@ -138,13 +142,17 @@ def build_terrain_graph(terrain_data: Dict) -> TerrainGraph:
     """
     Construire un TerrainGraph a partir des donnees terrain brutes.
     
-    1. Marquer les zones infranchissables (eau, zones humides)
+    BDRE Phase 2 — Pipeline enrichi:
+    1. Marquer les zones infranchissables (eau, zones humides) — DS-8 BDRE
     2. Marquer les zones forestieres
-    3. Ajouter les chemins OSM avec couts terrain
+    3. Identifier les corridors waterway navigables (BDRE Level 1)
+    4. Ajouter les chemins OSM avec couts terrain
+    5. Ajouter les corridors waterway comme sentiers a faible cout
+    6. Ajouter les clairieres comme corridors alternatifs (BDRE Level 2)
     """
     graph = TerrainGraph()
 
-    # Phase 1: Identifier les zones infranchissables
+    # Phase 1: Identifier les zones infranchissables (DS-8 BDRE classifie)
     obs_data = terrain_data.get("obstacles", {})
     obs_nc = obs_data.get("node_coords", {})
     obs_ways = obs_data.get("ways", [])
@@ -156,7 +164,12 @@ def build_terrain_graph(terrain_data: Dict) -> TerrainGraph:
     forest_ways = forest_data.get("ways", [])
     graph.forest_nodes = build_forest_set(forest_nc, forest_ways)
 
-    # Phase 3: Construire le graphe avec les chemins praticables
+    # Phase 3: Identifier les corridors waterway navigables (BDRE DS-8)
+    waterway_data = terrain_data.get("waterways", {})
+    ww_nc = waterway_data.get("node_coords", {})
+    ww_ways = waterway_data.get("ways", [])
+
+    # Phase 4: Construire le graphe avec les chemins praticables
     trails_data = terrain_data.get("trails", {})
     trail_nc = trails_data.get("node_coords", {})
     trail_ways = trails_data.get("ways", [])
@@ -168,6 +181,80 @@ def build_terrain_graph(terrain_data: Dict) -> TerrainGraph:
 
         if len(nids) >= 2:
             graph.add_way(nids, trail_nc, highway_type=highway_type)
+
+    # Phase 5: Ajouter les corridors waterway comme sentiers (BDRE Level 1)
+    ww_corridors_added = 0
+    for way in ww_ways:
+        tags = way.get("tags", {})
+        waterway_type = tags.get("waterway", "")
+        if waterway_type not in ("stream", "ditch", "drain"):
+            continue
+
+        nids = way.get("nodes", [])
+        if len(nids) < 2:
+            continue
+
+        for nid in nids:
+            if nid in ww_nc and nid not in graph.nodes:
+                graph.nodes[nid] = ww_nc[nid]
+                graph.adj[nid] = []
+
+        for i in range(len(nids) - 1):
+            n1 = nids[i]
+            n2 = nids[i + 1]
+            if n1 not in graph.nodes or n2 not in graph.nodes:
+                continue
+            if n1 in graph.obstacle_nodes or n2 in graph.obstacle_nodes:
+                continue
+
+            dist = _haversine(
+                graph.nodes[n1][0], graph.nodes[n1][1],
+                graph.nodes[n2][0], graph.nodes[n2][1]
+            )
+            cost = dist * STREAM_BANK_COST
+            hw_type = f"waterway_{waterway_type}"
+            graph.adj[n1].append((n2, cost, dist, hw_type))
+            graph.adj[n2].append((n1, cost, dist, hw_type))
+            ww_corridors_added += 1
+
+    # Phase 6: Ajouter les clairieres comme corridors (BDRE Level 2)
+    clearing_data = terrain_data.get("clearings", {})
+    cl_nc = clearing_data.get("node_coords", {})
+    cl_ways = clearing_data.get("ways", [])
+    cl_edges_added = 0
+
+    for way in cl_ways:
+        nids = way.get("nodes", [])
+        if len(nids) < 2:
+            continue
+
+        for nid in nids:
+            if nid in cl_nc and nid not in graph.nodes:
+                graph.nodes[nid] = cl_nc[nid]
+                graph.adj[nid] = []
+
+        for i in range(len(nids) - 1):
+            n1 = nids[i]
+            n2 = nids[i + 1]
+            if n1 not in graph.nodes or n2 not in graph.nodes:
+                continue
+            if n1 in graph.obstacle_nodes or n2 in graph.obstacle_nodes:
+                continue
+
+            dist = _haversine(
+                graph.nodes[n1][0], graph.nodes[n1][1],
+                graph.nodes[n2][0], graph.nodes[n2][1]
+            )
+            cost = dist * CLEARING_EDGE_COST
+            graph.adj[n1].append((n2, cost, dist, "clearing_edge"))
+            graph.adj[n2].append((n1, cost, dist, "clearing_edge"))
+            cl_edges_added += 1
+
+    if ww_corridors_added > 0 or cl_edges_added > 0:
+        logger.info(
+            f"[TNE-GRAPH] BDRE enrichment: +{ww_corridors_added} waterway edges, "
+            f"+{cl_edges_added} clearing edges"
+        )
 
     graph.finalize_stats()
     return graph

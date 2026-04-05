@@ -179,17 +179,54 @@ def build_obstacle_set(
 ) -> Set[int]:
     """
     Construire un ensemble de node_ids qui sont dans des zones infranchissables.
-    Approche simplifiee: tous les noeuds des ways obstacle sont marques.
+
+    Classification hydrologique BDRE (DS-8):
+    - natural=water/wetland -> OBSTACLE (infranchissable)
+    - waterway=river/canal -> OBSTACLE (centre d'eau)
+    - waterway=stream/ditch/drain -> CORRIDOR navigable (berges), PAS obstacle
     """
     obstacle_nodes: Set[int] = set()
     for way in obstacle_ways:
         tags = way.get("tags", {})
         natural = tags.get("natural", "")
         waterway = tags.get("waterway", "")
-        if natural in ("water", "wetland") or waterway:
+
+        # natural=water/wetland: toujours obstacle
+        if natural in ("water", "wetland"):
             for nid in way.get("nodes", []):
                 obstacle_nodes.add(nid)
+        # river/canal: obstacles (centre eau profonde)
+        elif waterway in ("river", "canal", "riverbank"):
+            for nid in way.get("nodes", []):
+                obstacle_nodes.add(nid)
+        # stream/ditch/drain: corridors navigables — PAS des obstacles (BDRE DS-8)
+        elif waterway in ("stream", "ditch", "drain"):
+            pass
+        # Autre waterway inconnu: obstacle par precaution
+        elif waterway:
+            for nid in way.get("nodes", []):
+                obstacle_nodes.add(nid)
+
     return obstacle_nodes
+
+
+def build_waterway_corridor_set(
+    waterway_node_coords: Dict[int, Tuple[float, float]],
+    waterway_ways: list,
+) -> Set[int]:
+    """
+    BDRE DS-8 — Construire un ensemble de node_ids qui sont des corridors
+    navigables (berges de ruisseaux, fosses, drains).
+    Ces noeuds seront ajoutes au graphe comme sentiers a faible cout.
+    """
+    corridor_nodes: Set[int] = set()
+    for way in waterway_ways:
+        tags = way.get("tags", {})
+        waterway = tags.get("waterway", "")
+        if waterway in ("stream", "ditch", "drain"):
+            for nid in way.get("nodes", []):
+                corridor_nodes.add(nid)
+    return corridor_nodes
 
 
 def build_forest_set(
