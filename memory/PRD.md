@@ -107,9 +107,20 @@ nutritionnelle V6 unifiee.
 - [x] DASH: Integration Dashboard Intelligence V6 (8 widgets, DFL, EventBus, DataContracts)
 - [x] M4: Adaptive Profile + Navigation IA (12 endpoints, 31/31 tests, 19 points de fusion)
 
+#### Directive x7100-M4 Phase C — Gestionnaire + Hotspots + DataContracts
+- Module `gestionnaire_engine` deploye (12 endpoints backend)
+- 6 nouveaux DataContracts (DC-09 HunterProfile, DC-10 NavigationSession, DC-11 ContextualAdvice, DC-12 LivePosition, DC-13 SectorStatus, DC-14 EmergencyAlert)
+- 6 nouveaux channels EventBus (EB-14→EB-19)
+- 7 nouvelles methodes DFL (fetchHunterProfile, fetchNavigationSession, fetchContextualAdvice, fetchSuggestions, emitLivePosition, emitSectorUpdate, emitEmergencyAlert)
+- Module Gestionnaire frontend (GestionnairePositionService, GestionnaireSectorService, GestionnairePermissionService, SecoursService)
+- Validation geographique hotspots (QC/CA/USA seulement)
+- Architecture consentement GPS documentee
+- Harmonisation CARTE ↔ MON TERRITOIRE documentee
+- Tests : 44/45 PASS + 0 FAIL
+- Rapport final : /app/memory/PHASE_C_RAPPORT.md
+
 ### P1 — Prochain
-- [ ] DASH-M4: Widgets frontend profil + navigation + conseils (3 widgets)
-- [ ] M5: Offline Mode Ultra + Terrain Intelligence (8 endpoints)
+- [ ] Phase D: Widgets M4 (HunterProfileWidget, NavigationWidget, AdviceWidget)
 
 ### P2 — Futur
 - [ ] M5: Offline Mode Ultra + Terrain Intelligence (8 endpoints)
@@ -130,6 +141,7 @@ nutritionnelle V6 unifiee.
 | M3_RAPPORT_FINAL | /app/memory/M3_RAPPORT_FINAL.md | 1.0.0 |
 | M3_DASHBOARD_INTEGRATION_PLAN | /app/memory/M3_DASHBOARD_INTEGRATION_PLAN.md | 1.0.0 |
 | DASH_RAPPORT_FINAL | /app/memory/DASH_RAPPORT_FINAL.md | 1.0.0 |
+| PHASE_C_RAPPORT | /app/memory/PHASE_C_RAPPORT.md | 1.0.0 |
 | AUDIT_BIONIC_OS_DEDUP | /app/memory/AUDIT_BIONIC_OS_DEDUP.md | 1.0.0 |
 | PHASE_A_RAPPORT | /app/memory/PHASE_A_RAPPORT.md | 1.0.0 |
 | M4_ADAPTIVE_NAVIGATION_PLAN | /app/memory/M4_ADAPTIVE_NAVIGATION_PLAN.md | 1.0.0 |
@@ -142,4 +154,4 @@ nutritionnelle V6 unifiee.
 
 ---
 
-**Derniere mise a jour** : 2026-04-05 — Phase B audit strategique BIONIC OS complete (4 doublons identifies, module Gestionnaire defini)
+**Derniere mise a jour** : 2026-04-05 — Phase C complete (Gestionnaire 12 endpoints, 6 DC, 6 EB, hotspots valides, 44/45 PASS)

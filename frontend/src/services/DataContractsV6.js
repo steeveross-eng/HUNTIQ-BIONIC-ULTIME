@@ -149,3 +149,183 @@ export function validateBestTimes(raw) {
 }
 
 export { getRating, getRatingColor };
+
+// ==============================================
+// DC-09 — HunterProfile (M4)
+// ==============================================
+export function validateHunterProfile(raw) {
+  const p = raw?.profile || raw || {};
+  return {
+    profile_id: p.profile_id || '',
+    user_id: p.user_id || '',
+    species_preferences: (p.species_preferences || []).map(sp => ({
+      species: sp.species || '', frequency: sp.frequency ?? 0,
+      success_rate: sp.success_rate ?? 0, preferred_weapon: sp.preferred_weapon || '',
+      preferred_zones: sp.preferred_zones || [],
+    })),
+    zone_preferences: (p.zone_preferences || []).map(zp => ({
+      zone_id: zp.zone_id || '', visit_count: zp.visit_count ?? 0,
+      last_visit: zp.last_visit || '', satisfaction_score: zp.satisfaction_score ?? 0,
+    })),
+    time_preferences: {
+      preferred_hours: p.time_preferences?.preferred_hours || [5, 6, 7, 16, 17, 18],
+      preferred_days: p.time_preferences?.preferred_days || ['samedi', 'dimanche'],
+      preferred_season_weeks: p.time_preferences?.preferred_season_weeks || [],
+    },
+    meteo_preferences: {
+      min_temp_c: p.meteo_preferences?.min_temp_c ?? -5,
+      max_temp_c: p.meteo_preferences?.max_temp_c ?? 15,
+      wind_tolerance_kmh: p.meteo_preferences?.wind_tolerance_kmh ?? 20,
+      rain_tolerance: p.meteo_preferences?.rain_tolerance || 'light',
+    },
+    equipment: {
+      has_gps: p.equipment?.has_gps ?? true,
+      has_radio: p.equipment?.has_radio ?? false,
+      mobility: p.equipment?.mobility || 'a_pied',
+    },
+    skill_level: p.skill_level || 'intermediaire',
+    history_stats: {
+      total_trips: p.history_stats?.total_trips ?? 0,
+      total_hours: p.history_stats?.total_hours ?? 0,
+      species_harvested: p.history_stats?.species_harvested || {},
+      avg_distance_km: p.history_stats?.avg_distance_km ?? 0,
+    },
+    species_affinity: (raw?.species_affinity || []).map(a => ({
+      species: a.species || '', affinity: a.affinity ?? 0,
+      frequency: a.frequency ?? 0, success_rate: a.success_rate ?? 0,
+    })),
+    created_at: p.created_at || '', updated_at: p.updated_at || '',
+  };
+}
+
+// ==============================================
+// DC-10 — NavigationSession (M4)
+// ==============================================
+export function validateNavigationSession(raw) {
+  const s = raw?.session || raw || {};
+  return {
+    session_id: s.session_id || '',
+    user_id: s.user_id || '',
+    target_species: s.target_species || '',
+    zone_id: s.zone_id || '',
+    status: s.status || 'planned',
+    start_position: {
+      lat: s.start_position?.lat ?? 0,
+      lng: s.start_position?.lng ?? 0,
+    },
+    waypoints: (s.waypoints || []).map(w => ({
+      poi_id: w.poi_id || '', name: w.name || '', type: w.type || '',
+      lat: w.lat ?? 0, lng: w.lng ?? 0,
+      distance_m: w.distance_m ?? 0, score: w.score ?? 0,
+      eta_minutes: w.eta_minutes ?? 0, prediction_prob: w.prediction_prob ?? 0,
+    })),
+    waypoints_count: s.waypoints_count ?? 0,
+    route_summary: {
+      total_distance_m: s.route_summary?.total_distance_m ?? 0,
+      total_eta_minutes: s.route_summary?.total_eta_minutes ?? 0,
+      prediction_score: s.route_summary?.prediction_score ?? 0,
+    },
+    metrics: {
+      distance_walked_km: s.metrics?.distance_walked_km ?? 0,
+      duration_hours: s.metrics?.duration_hours ?? 0,
+      pois_visited: s.metrics?.pois_visited ?? 0,
+    },
+    created_at: s.created_at || '', updated_at: s.updated_at || '',
+  };
+}
+
+// ==============================================
+// DC-11 — ContextualAdvice (M4)
+// ==============================================
+export function validateContextualAdvice(raw) {
+  return {
+    position: {
+      lat: raw?.position?.lat ?? 0,
+      lng: raw?.position?.lng ?? 0,
+    },
+    species: raw?.species || '',
+    prediction: {
+      current_probability: raw?.prediction?.current_probability ?? 0,
+      peak_hour: raw?.prediction?.peak_hour ?? 6,
+      trend: raw?.prediction?.trend || 'stable',
+    },
+    solunar: {
+      score: raw?.solunar?.score ?? 0,
+      phase: raw?.solunar?.phase || 'inconnue',
+      next_window: raw?.solunar?.next_window || 'N/A',
+    },
+    advice: (raw?.advice || []).map(a => ({
+      type: a.type || '', priority: a.priority || 'low', text: a.text || '',
+    })),
+    nearby_pois: (raw?.nearby_pois || []).map(p => ({
+      poi_id: p.poi_id || '', name: p.name || '',
+      distance_m: p.distance_m ?? 0, score: p.score ?? 0,
+    })),
+    source: raw?.source || 'contextual_advisor',
+  };
+}
+
+// ==============================================
+// DC-12 — LivePosition (Gestionnaire)
+// ==============================================
+export function validateLivePosition(raw) {
+  return {
+    user_id: raw?.user_id || '',
+    lat: raw?.lat ?? 0,
+    lng: raw?.lng ?? 0,
+    accuracy: raw?.accuracy ?? 0,
+    heading: raw?.heading ?? null,
+    speed: raw?.speed ?? 0,
+    altitude: raw?.altitude ?? null,
+    timestamp: raw?.timestamp || new Date().toISOString(),
+    status: raw?.status || 'unknown',
+    consent: raw?.consent || 'none',
+    territory_id: raw?.territory_id || '',
+  };
+}
+
+// ==============================================
+// DC-13 — SectorStatus (Gestionnaire)
+// ==============================================
+export function validateSectorStatus(raw) {
+  return {
+    sector_id: raw?.sector_id || '',
+    name: raw?.name || '',
+    territory_id: raw?.territory_id || '',
+    status: raw?.status || 'libre',
+    capacity: raw?.capacity ?? 0,
+    hunters: (raw?.hunters || []).map(h => ({
+      user_id: h.user_id || '', name: h.name || '',
+      entered_at: h.entered_at || '',
+    })),
+    hunters_count: raw?.hunters_count ?? (raw?.hunters || []).length,
+    geometry: raw?.geometry || null,
+    updated_at: raw?.updated_at || new Date().toISOString(),
+  };
+}
+
+// ==============================================
+// DC-14 — EmergencyAlert (SECOURS)
+// ==============================================
+export function validateEmergencyAlert(raw) {
+  return {
+    alert_id: raw?.alert_id || '',
+    user_id: raw?.user_id || '',
+    user_name: raw?.user_name || '',
+    position: {
+      lat: raw?.position?.lat ?? 0,
+      lng: raw?.position?.lng ?? 0,
+      accuracy: raw?.position?.accuracy ?? 0,
+    },
+    timestamp: raw?.timestamp || new Date().toISOString(),
+    status: raw?.status || 'active',
+    type: raw?.type || 'general',
+    message: raw?.message || '',
+    channel_id: raw?.channel_id || '',
+    territory_id: raw?.territory_id || '',
+    responders: (raw?.responders || []).map(r => ({
+      user_id: r.user_id || '', name: r.name || '',
+      acknowledged_at: r.acknowledged_at || '',
+    })),
+  };
+}

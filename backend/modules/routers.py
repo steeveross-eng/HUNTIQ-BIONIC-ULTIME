@@ -311,6 +311,11 @@ from modules.predictive_layer_engine.router import router as predictive_layer_en
 # ==============================================
 from modules.adaptive_navigation_engine.router import router as adaptive_navigation_engine_router
 
+# ==============================================
+# GESTIONNAIRE ENGINE — M4 PHASE C (x7100-M4)
+# ==============================================
+from modules.gestionnaire_engine.router import router as gestionnaire_engine_router
+
 
 # List of all available routers with their metadata
 CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
@@ -976,6 +981,16 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
         "version": "1.0.0",
         "phase": "V6-M4-MAP",
         "description": "Adaptive Navigation Engine — Profil adaptatif, itineraires intelligents, conseils contextuels GPS (M4 MAP Intelligence)"
+    }),
+
+    # ==========================================
+    # GESTIONNAIRE ENGINE — M4 PHASE C (x7100-M4)
+    # ==========================================
+    (gestionnaire_engine_router, {
+        "name": "gestionnaire_engine",
+        "version": "1.0.0",
+        "phase": "V6-M4-GESTIONNAIRE",
+        "description": "Gestionnaire Engine — Localisation LIVE, secteurs, SECOURS, consentement GPS (M4 Phase C)"
     }),
 ]
 

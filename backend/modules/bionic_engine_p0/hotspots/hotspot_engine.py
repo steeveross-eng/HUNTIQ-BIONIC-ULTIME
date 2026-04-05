@@ -76,6 +76,24 @@ HOTSPOT_CATEGORIES = [
 ]
 
 # ══════════════════════════════════════════════════════════
+# ZONES GEOGRAPHIQUES VALIDES (BCE-4X Phase C)
+# ══════════════════════════════════════════════════════════
+VALID_GEO_BOUNDS = {
+    "QC": {"lat_min": 44.99, "lat_max": 62.60, "lng_min": -79.77, "lng_max": -57.10, "country": "CA"},
+    "CA": {"lat_min": 41.68, "lat_max": 83.11, "lng_min": -141.00, "lng_max": -52.62, "country": "CA"},
+    "US": {"lat_min": 24.52, "lat_max": 49.38, "lng_min": -124.77, "lng_max": -66.95, "country": "US"},
+}
+
+
+def validate_hotspot_coordinates(lat: float, lng: float) -> dict:
+    """Valide qu'un point est dans QC/CA/USA. Retourne zone et validite."""
+    for zone_id, bounds in VALID_GEO_BOUNDS.items():
+        if (bounds["lat_min"] <= lat <= bounds["lat_max"]
+                and bounds["lng_min"] <= lng <= bounds["lng_max"]):
+            return {"valid": True, "zone": zone_id, "country": bounds["country"]}
+    return {"valid": False, "zone": None, "country": None}
+
+# ══════════════════════════════════════════════════════════
 # REGIONS OFFICIELLES BIONIC (Quebec)
 # ══════════════════════════════════════════════════════════
 BIONIC_REGIONS = [
@@ -462,6 +480,12 @@ def extract_hotspots_for_region(
             v7_hotspots_excluded += 1
             continue
 
+        # BCE-4X Phase C: Validation geographique stricte (QC/CA/USA)
+        geo_valid = validate_hotspot_coordinates(center_lat, center_lng)
+        if not geo_valid["valid"]:
+            logger.warning(f"[BCE-4X] Hotspot {center_lat:.4f},{center_lng:.4f} REJETE: hors QC/CA/USA")
+            continue
+
         # V6: Cercle parfait 600m au lieu de polygone convex hull
         polygon = _generate_circle_polygon_latlon(center_lat, center_lng, CIRCLE_RADIUS_M)
         species = determine_dominant_species(avg_engines, center_lat, center_lng)
@@ -491,6 +515,8 @@ def extract_hotspots_for_region(
             "cell_count": len(cluster),
             "accessibility": accessibility,
             "corridor_nearby": has_corridor_nearby,
+            "geo_zone": geo_valid["zone"],
+            "country": geo_valid["country"],
             "extracted_at": datetime.now(timezone.utc).isoformat(),
         })
 

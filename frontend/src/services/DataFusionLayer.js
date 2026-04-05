@@ -9,9 +9,12 @@
 
 import { PredictiveLayerAPI } from '../modules/intelligence-v6/PredictiveLayerService';
 import { POIGraphAPI } from '../modules/intelligence-v6/POIGraphService';
+import { AdaptiveNavAPI } from '../modules/intelligence-v6/AdaptiveNavService';
 import {
   validateConsolidatedView, validateScoreConsolide, validateHeatmapData,
   validateTimeSeries, validateTrends, validateCorrelation, validateBestTimes,
+  validateHunterProfile, validateNavigationSession, validateContextualAdvice,
+  validateLivePosition, validateSectorStatus, validateEmergencyAlert,
 } from './DataContractsV6';
 import { EventBusV6, CHANNELS } from './EventBusV6';
 
@@ -170,6 +173,70 @@ export const DataFusionLayer = {
   },
 
   clearCache() { _cache.clear(); },
+
+  // ==============================================
+  // DFL M4 — Adaptive Navigation (DC-09, DC-10, DC-11)
+  // ==============================================
+
+  async fetchHunterProfile(userId) {
+    const key = cacheKey('profile', userId);
+    const cached = getCache(key);
+    if (cached) return cached;
+
+    const raw = await AdaptiveNavAPI.getProfile(userId);
+    const validated = validateHunterProfile(raw);
+    setCache(key, validated);
+    EventBusV6.emit(CHANNELS.HUNTER_PROFILE_UPDATED, validated);
+    return validated;
+  },
+
+  async fetchNavigationSession(sessionId) {
+    const raw = await AdaptiveNavAPI.getSession(sessionId);
+    const validated = validateNavigationSession(raw);
+    EventBusV6.emit(CHANNELS.NAVIGATION_SESSION_UPDATED, validated);
+    return validated;
+  },
+
+  async fetchContextualAdvice(userId, lat, lng) {
+    const raw = await AdaptiveNavAPI.getAdvice(userId, lat, lng);
+    const validated = validateContextualAdvice(raw);
+    EventBusV6.emit(CHANNELS.CONTEXTUAL_ADVICE_UPDATED, validated);
+    return validated;
+  },
+
+  async fetchSuggestions(userId) {
+    return AdaptiveNavAPI.getSuggestions(userId);
+  },
+
+  // ==============================================
+  // DFL Gestionnaire — LivePosition (DC-12)
+  // ==============================================
+
+  emitLivePosition(positionData) {
+    const validated = validateLivePosition(positionData);
+    EventBusV6.emitImmediate(CHANNELS.LIVE_POSITION_UPDATED, validated);
+    return validated;
+  },
+
+  // ==============================================
+  // DFL Gestionnaire — SectorStatus (DC-13)
+  // ==============================================
+
+  emitSectorUpdate(sectorData) {
+    const validated = validateSectorStatus(sectorData);
+    EventBusV6.emit(CHANNELS.SECTOR_UPDATED, validated);
+    return validated;
+  },
+
+  // ==============================================
+  // DFL Gestionnaire — EmergencyAlert (DC-14)
+  // ==============================================
+
+  emitEmergencyAlert(alertData) {
+    const validated = validateEmergencyAlert(alertData);
+    EventBusV6.emitImmediate(CHANNELS.EMERGENCY_ALERT, validated);
+    return validated;
+  },
 };
 
 export default DataFusionLayer;
