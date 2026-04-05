@@ -242,7 +242,8 @@ nutritionnelle V6 unifiee.
 | BDRE_API_MONITORING_V2 | /app/memory/BDRE_SPECS_CORRIGEES_V2/BDRE_API_MONITORING_V2.md | 2.0.0 |
 | BDRE_ENGINE_INTEGRATION_V2 | /app/memory/BDRE_SPECS_CORRIGEES_V2/BDRE_ENGINE_INTEGRATION_V2.md | 2.0.0 |
 | BDRE_PHASE1_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE1_IMPLEMENTATION_REPORT.md | 1.0.0 |
+| BDRE_PHASE2_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE2_IMPLEMENTATION_REPORT.md | 1.0.0 |
 
 ---
 
-**Derniere mise a jour** : 2026-04-06 — BDRE PHASE 1 IMPLEMENTATION COMPLETE. 6 fichiers crees (engines/bdre/), 8/8 endpoints operationnels, lint passe, zero regression. Composants: source_registry (16 sources), quality_scorer (5 criteres), waterway_classifier (DS-8), audit_logger (rotatif 1000). VALIDE PAR STEEVE-MAX. Phase BDRE-2 EN ATTENTE DIRECTIVE.
+**Derniere mise a jour** : 2026-04-06 — BDRE PHASE 2 IMPLEMENTATION COMPLETE. DS-8 resolue dans le code (stream/ditch/drain = corridors navigables). build_terrain_graph enrichi avec waterways Phase 5 + clearings Phase 6. Hooks BDRE integres dans TNE (pre-call, post-call, scoring, anomaly detection). Test: graphe passe de 0 a 28 noeuds sur territoire 48.19,-68.39. health_monitor + anomaly_detector operationnels. 10/10 endpoints. Phase BDRE-3 EN ATTENTE DIRECTIVE.
