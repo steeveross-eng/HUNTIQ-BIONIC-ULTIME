@@ -194,6 +194,16 @@ const Navigation = ({ cartCount, onCartOpen }) => {
               Carte
             </Link>
             
+            {/* INTELLIGENCE V6-CORE — Dashboard M1+M2+M3+M4 FUSION */}
+            <Link 
+              to="/intelligence-v6" 
+              className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/intelligence-v6') ? 'text-[#8B5CF6] bg-[#8B5CF6]/10' : 'text-[#8B5CF6]/70 hover:text-[#8B5CF6]'}`}
+              data-testid="nav-intelligence-v6"
+            >
+              <Brain className="h-3.5 w-3.5" />
+              Intelligence
+            </Link>
+            
             {/* Permis de chasse - Module Stratégique Indépendant */}
             <Link 
               to="/permis-chasse" 
@@ -316,6 +326,9 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             </Link>
             <Link to="/map" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-gray-300 hover:text-white" data-testid="mobile-nav-carte-interactive">
               <Globe className="h-4 w-4" /> Carte Interactive
+            </Link>
+            <Link to="/intelligence-v6" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#8B5CF6]" data-testid="mobile-nav-intelligence-v6">
+              <Brain className="h-4 w-4" /> Intelligence V6
             </Link>
             <Link to="/permis-chasse" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="mobile-nav-permis-chasse">
               <Shield className="h-4 w-4" /> Permis & Enregistrement
