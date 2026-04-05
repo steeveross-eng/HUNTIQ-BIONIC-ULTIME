@@ -47,7 +47,7 @@ nutritionnelle V6 unifiee.
 #### Directive 4 — Synchronisation documentaire
 - Score de coherence : 98/100
 
-### Session actuelle — x6900-M2 — 2026-04-04
+### Session actuelle — x7000-M3 — 2026-04-04
 
 #### Directive x6900-M2 — M2 BIONIC POI Graph
 - Module `poi_graph_engine` deploye (3 services, 11 endpoints)
@@ -60,6 +60,19 @@ nutritionnelle V6 unifiee.
 - Tests : 40/40 PASS + 58/58 non-regression = 98/98 TOTAL
 - Rapport final : /app/memory/M2_RAPPORT_FINAL.md
 
+#### Directive x7000-M3 — M3 Predictive Layer Engine + Time-Series Engine
+- Module `predictive_layer_engine` deploye (4 services, 10 endpoints)
+- PredictiveLayerComputer : Couches predictives 24h, heatmaps, best-times, prediction GPS
+- TimeSeriesCollector : Collecte et stockage series temporelles (4 metriques)
+- SeasonalTrendAnalyzer : Tendances saisonnieres multi-annuelles
+- MeteoFaunaCorrelator : Matrice de correlation meteo-faune (6 facteurs)
+- 3 collections MongoDB : timeseries_data, predictive_layers, seasonal_trends
+- 22 points de fusion documentes (14 actifs, 8 prets)
+- Formule : P(h) = base(0.25) + season(0.15) + solunar(0.15) + meteo(0.20) + historical(0.15) + nutrition(0.10)
+- ANTI-DOUBLON strict : 6 modules interdits de recreation
+- Tests : 46/46 PASS + 98/98 non-regression = 144/144 TOTAL
+- Rapport final : /app/memory/M3_RAPPORT_FINAL.md
+
 ---
 
 ## Backlog priorise
@@ -70,9 +83,9 @@ nutritionnelle V6 unifiee.
 - [x] Synchronisation documentaire (score 98/100)
 - [x] Validation STEEVE-MAX x6800-A
 - [x] M2: BIONIC POI Graph (11 endpoints, 40/40 tests, 14 points de fusion)
+- [x] M3: Predictive Layer + Time-Series (10 endpoints, 46/46 tests, 22 points de fusion)
 
 ### P1 — Prochain
-- [ ] M3: Predictive Layer + Time-Series (9 endpoints)
 - [ ] M4: Adaptive Profile + Navigation IA (11 endpoints)
 
 ### P2 — Futur
@@ -90,6 +103,8 @@ nutritionnelle V6 unifiee.
 | MAP_INTELLIGENCE_PLAN | /app/memory/BIONIC_V6_MAP_INTELLIGENCE_PLAN.md | 1.1.0 |
 | M2_POI_GRAPH_PLAN | /app/memory/M2_POI_GRAPH_PLAN.md | 1.0.0 |
 | M2_RAPPORT_FINAL | /app/memory/M2_RAPPORT_FINAL.md | 1.0.0 |
+| M3_PREDICTIVE_LAYER_PLAN | /app/memory/M3_PREDICTIVE_LAYER_PLAN.md | 1.0.0 |
+| M3_RAPPORT_FINAL | /app/memory/M3_RAPPORT_FINAL.md | 1.0.0 |
 | INTERCONNEXION_NUTRITIONNELLE | /app/memory/VALIDATION_INTERCONNEXION_NUTRITIONNELLE_V5_V6.md | 1.0.0 |
 | RAPPORT_SYNC_DOC | /app/memory/RAPPORT_SYNCHRONISATION_DOCUMENTAIRE_V6.md | 1.0.0 |
 | IMPLEMENTATION_PLAN_V1 | /app/memory/IMPLEMENTATION_PLAN_V1.md | 1.0.0 |
@@ -98,4 +113,4 @@ nutritionnelle V6 unifiee.
 
 ---
 
-**Derniere mise a jour** : 2026-04-04 — Directive x6900-M2 complete
+**Derniere mise a jour** : 2026-04-04 — Directive x7000-M3 complete

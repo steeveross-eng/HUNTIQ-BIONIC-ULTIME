@@ -301,6 +301,11 @@ from modules.national_data_harvester.router import router as national_data_harve
 # ==============================================
 from modules.poi_graph_engine.router import router as poi_graph_engine_router
 
+# ==============================================
+# PREDICTIVE LAYER ENGINE — M3 MAP INTELLIGENCE (x7000-M3)
+# ==============================================
+from modules.predictive_layer_engine.router import router as predictive_layer_engine_router
+
 
 # List of all available routers with their metadata
 CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
@@ -946,6 +951,16 @@ CORE_ROUTERS: List[Tuple[APIRouter, dict]] = [
         "version": "1.0.0",
         "phase": "V6-M2-MAP",
         "description": "POI Graph Engine — Graphe POI, scoring multi-critere, clusters, relations spatiales (M2 MAP Intelligence)"
+    }),
+
+    # ==========================================
+    # PREDICTIVE LAYER ENGINE — M3 (x7000-M3)
+    # ==========================================
+    (predictive_layer_engine_router, {
+        "name": "predictive_layer_engine",
+        "version": "1.0.0",
+        "phase": "V6-M3-MAP",
+        "description": "Predictive Layer Engine — Couches predictives, series temporelles, tendances, correlations meteo-faune (M3 MAP Intelligence)"
     }),
 ]
 
