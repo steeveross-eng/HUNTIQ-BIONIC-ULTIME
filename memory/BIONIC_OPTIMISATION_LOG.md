@@ -90,6 +90,40 @@ conformement a la directive d'optimisation continue totale BDRE-FIRST.
 
 ---
 
+### 2026-04-05 — DASHBOARD FRONTEND — BDRE GLOBAL
+
+- **Scope** : DashboardPage.jsx
+- **Action** : Ajout indicateur BDRE global dans le header (version, sources, fallbacks, dots)
+- **API** : /api/v1/bdre/dashboard, /api/v1/bdre/sources (30s auto-refresh)
+- **Impact** : Dashboard = 11eme module BDRE-FIRST
+- **Regression** : ZERO
+- **Rapport** : DASHBOARD_BDRE_INTEGRATION_REPORT.md
+
+---
+
+### 2026-04-05 — CORRIDOR-FIRST X1000 — INVARIANT INSTITUTIONNEL
+
+- **Scope** : terrain_costs.py
+- **Action** : Recalibration complete des couts terrain
+- **Corridors** : Couts reduits 20-29% (routes 0.6-0.8, stream bank 0.9, clearing 1.0)
+- **Foret** : Couts augmentes 200-213% (off-trail 12.0, dense 25.0)
+- **Ratio** : Corridors 4x plus favorises vs foret par rapport a l'ancien calibrage
+- **Impact** : Le pathfinder selectionne les sentiers reels en priorite absolue
+- **Verification** : trail_type=sentier_reel, 28pts, HUNTER_START=True
+- **Regression** : ZERO
+- **Rapport** : AFFUTS_CORRIDOR_FIRST_REPORT.md
+
+---
+
+### 2026-04-05 — P2 PREPARATION — M5 + BSAA-2
+
+- **Scope** : Documentation
+- **Action** : Preparation architecturale M5 Offline Mode Ultra (8 endpoints) et BSAA-2 (18 endpoints)
+- **Rapport** : P2_PREPARATION_REPORT.md
+- **Statut** : EN ATTENTE DIRECTIVE STEEVE-MAX
+
+---
+
 ### 2026-04-05 — BDRE-FIRST — INSTITUTION
 
 - **Scope** : Tous composants BIONIC OS

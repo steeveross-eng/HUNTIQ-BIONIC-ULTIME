@@ -122,8 +122,21 @@ nutritionnelle V6 unifiee.
   - Admin Premium: Section BDRE Monitor (dashboard, registre 16 sources, 5 engines, journal, anomalies)
   - Rapport: P1_BDRE_OPTIMISATION_REPORT.md
   - 10/10 modules BIONIC integres BDRE
+- [x] Dashboard Frontend: Indicateur BDRE global dans header — COMPLET
+  - data-testid: dashboard-bdre-indicator, auto-refresh 30s
+  - 11/11 modules BDRE-FIRST (couverture TOTALE)
+  - Rapport: DASHBOARD_BDRE_INTEGRATION_REPORT.md
+- [x] CORRIDOR-FIRST X1000 — INVARIANT INSTITUTIONNEL
+  - Corridors: couts reduits 20-29% (routes 0.6-0.8, stream bank 0.9)
+  - Foret: couts augmentes 200-213% (off-trail 12.0, dense 25.0)
+  - Ratio corridor/foret ameliore x4.0
+  - Rapport: AFFUTS_CORRIDOR_FIRST_REPORT.md
+- [x] P2 Preparation (M5 + BSAA-2) — Documentation complete
+  - M5: 8 endpoints prevus, hooks BDRE identifies
+  - BSAA-2: 18 endpoints prevus, architecture existante
+  - Rapport: P2_PREPARATION_REPORT.md
+  - Execution EN ATTENTE directive STEEVE-MAX
 - [ ] M5: Offline Mode Ultra + Terrain Intelligence (8 endpoints)
-- [ ] Dashboard Frontend: Indicateur BDRE global dans header
 - [ ] BSAA-2, Soil Engine V2
 - [ ] Merge Work1 → main (INTERDIT)
 
@@ -160,11 +173,13 @@ Tout composant BIONIC OS doit :
 | BDRE_PHASE2_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE2_IMPLEMENTATION_REPORT.md | 1.0.0 |
 | BDRE_PHASE3_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE3_IMPLEMENTATION_REPORT.md | 1.0.0 |
 | BDRE_PHASE4_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE4_IMPLEMENTATION_REPORT.md | 1.0.0 |
-| P1_BDRE_OPTIMISATION_REPORT | /app/memory/P1_BDRE_OPTIMISATION_REPORT.md | 1.0.0 |
+| DASHBOARD_BDRE_INTEGRATION_REPORT | /app/memory/DASHBOARD_BDRE_INTEGRATION_REPORT.md | 1.0.0 |
+| AFFUTS_CORRIDOR_FIRST_REPORT | /app/memory/AFFUTS_CORRIDOR_FIRST_REPORT.md | 1.0.0 |
+| P2_PREPARATION_REPORT | /app/memory/P2_PREPARATION_REPORT.md | 1.0.0 |
 | PHASE_F_GESTIONNAIRE_UI_REPORT | /app/memory/PHASE_F_GESTIONNAIRE_UI_REPORT.md | 1.0.0 |
 | AUDIT_HOTSPOTS_x7200 | /app/memory/AUDIT_HOTSPOTS_x7200.md | 1.0.0 |
 | AUDIT_TRAJETS_HUMAINS_x7200 | /app/memory/AUDIT_TRAJETS_HUMAINS_x7200.md | 1.0.0 |
 
 ---
 
-**Derniere mise a jour** : 2026-04-05 — P1 BDRE-FIRST OPTIMISATION COMPLETE. BDRE integre dans Intelligence V6 (widget health), Mon Territoire (indicateur carte), Admin Premium (section BDRE Monitor). 10/10 modules BIONIC couverts par BDRE. Rapport: P1_BDRE_OPTIMISATION_REPORT.md.
+**Derniere mise a jour** : 2026-04-05 — DASHBOARD BDRE + CORRIDOR-FIRST X1000 + P2 PREPARATION. 11/11 modules BDRE-FIRST (couverture totale). Couts terrain recalibres: corridors -25%, foret dense +213%. P2 documente (M5: 8 endpoints, BSAA-2: 18 endpoints). Rapports: DASHBOARD_BDRE_INTEGRATION_REPORT.md, AFFUTS_CORRIDOR_FIRST_REPORT.md, P2_PREPARATION_REPORT.md.
