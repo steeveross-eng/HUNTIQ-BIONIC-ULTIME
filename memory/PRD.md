@@ -122,10 +122,23 @@ nutritionnelle V6 unifiee.
 - [x] Phase D: Widgets M4 (HunterProfileWidget W10, NavigationWidget W11, AdviceWidget W12)
 - [x] INTELLIGENCE V6-CORE: 9 widgets (6 M3 + 3 M4), badge M1+M2+M3+M4 FUSION
 
+#### Directive x7200 — UNIFICATION HOTSPOTS ADMIN PREMIUM ET LOGIQUE BIONIC
+- [x] Moteur Hotspot V7.2 deploye : scoring terrain-aware, ecologie latitude/habitat, eau embarquee
+- [x] Base de donnees eau embarquee : 54 lacs/rivieres QC + 11 zones urbaines
+- [x] Contraintes ecologiques : dindon ≤46.8°N, orignal boreal, ours large, chevreuil sud
+- [x] Dispersion minimale 1.5km inter-hotspots (0 violations)
+- [x] Exclusion eau : 1183 cellules exclues (vs 0 avant)
+- [x] Admin Premium = SOURCE DE VERITE avec gradient BIONIC (vert/jaune/orange/rouge)
+- [x] Route /admin/hotspots standalone SUPPRIMEE (redirect → /admin-premium)
+- [x] Tableau enrichi : ID, Region, Ville, Score, Gradient, Espece, Habitat, Territoire, Acces, Alt, Intensite, GPS
+- [x] Metadonnees V7.2 : habitat_type, water_proximity, ecological_coherence, intensity, density_factor, terrain_factors
+- [x] BCE-4X PASS : 2100/2100
+- [x] Rapport audit : /app/memory/AUDIT_HOTSPOTS_x7200.md
+- Fichiers modifies : hotspot_engine.py, water_bodies_qc.py (nouveau), AdminHotspots.jsx, App.js
+
 ### P1 — Prochain
-- [ ] Phase E: GUIDE PRO (chasse guidee 100%)
+- [ ] Phase E: GUIDE PRO (chasse guidee 100%) — DEBLOQUEE par validation x7200
 - [ ] Phase F: Module Gestionnaire UI (CARTE tabs + SECOURS button)
-- [ ] M5: Offline Mode Ultra + Terrain Intelligence
 
 ### P2 — Futur
 - [ ] M5: Offline Mode Ultra + Terrain Intelligence (8 endpoints)
@@ -157,7 +170,8 @@ nutritionnelle V6 unifiee.
 | IMPLEMENTATION_PLAN_V1 | /app/memory/IMPLEMENTATION_PLAN_V1.md | 1.0.0 |
 | P5_OPTIMIZATION_PLAN | /app/memory/P5_OPTIMIZATION_PLAN.md | 1.0.0 |
 | AUBO_V2 | /app/memory/AUBO_V2.md | 2.0.0 |
+| AUDIT_HOTSPOTS_x7200 | /app/memory/AUDIT_HOTSPOTS_x7200.md | 1.0.0 |
 
 ---
 
-**Derniere mise a jour** : 2026-04-05 — Phase D complete (3 widgets M4, INTELLIGENCE V6-CORE, 9 widgets total, 44/44 PASS)
+**Derniere mise a jour** : 2026-04-05 — Directive x7200 COMPLETE (Hotspots V7.2 terrain-aware, Admin Premium SOURCE DE VERITE, gradient BIONIC, ecologie, eau embarquee, dispersion 1.5km)

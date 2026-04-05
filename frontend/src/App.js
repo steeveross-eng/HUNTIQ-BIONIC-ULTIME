@@ -78,7 +78,7 @@ const SupraPage = lazy(() => import("@/pages/SupraPage"));
 const BionicModulesPage = lazy(() => import("@/pages/BionicModulesPage"));
 // BSAA — BIONIC Social Ads Automation (x4500-ULTRA)
 const BsaaDashboardPage = lazy(() => import("@/pages/BsaaDashboardPage"));
-const AdminHotspotsPage = lazy(() => import("@/ui/administration/admin_hotspots/AdminHotspots"));
+// V7.2: AdminHotspotsPage standalone SUPPRIME — Source de verite = Admin Premium (directive x7200)
 import { 
   ShoppingCart, FlaskConical, GitCompare, Star, DollarSign, ThumbsUp, Heart, Eye,
   Shield, MousePointer, TrendingUp, CheckCircle, ChevronRight, Menu, X, ArrowLeft,
@@ -997,7 +997,8 @@ function App() {
                 {/* ADMIN v2: Interface unique — AdminPremiumPage absorbe AdminPage */}
                 <Route path="/admin" element={<Navigate to="/admin-premium" replace />} />
                 <Route path="/admin/geo" element={<AdminGeoPage />} />
-                <Route path="/admin/hotspots" element={<AdminHotspotsPage />} />
+                {/* V7.2: /admin/hotspots SUPPRIME — Admin Premium = source de verite (x7200) */}
+                <Route path="/admin/hotspots" element={<Navigate to="/admin-premium" replace />} />
                 <Route path="/networking" element={<NetworkingHub />} />
                 <Route path="/lands" element={<LandsRental />} />
                 <Route path="/reset-password" element={<ResetPasswordPage />} />

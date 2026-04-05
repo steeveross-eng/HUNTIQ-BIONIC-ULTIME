@@ -1,10 +1,11 @@
 /**
- * AdminHotspots V6 — Section ADMIN complete
+ * AdminHotspots V7.2 — SOURCE DE VERITE ADMIN PREMIUM
  * Carte Leaflet + Tableau enrichi + Filtres + Export + Scheduler + Gestionnaire
- * V6: Cercles 600m + Exclusion eau V7 + GOLDEN-BCE-4X
+ * V7.2: Gradient BIONIC + Ecologie + Terrain-aware + Dispersion 1.5km
+ * Directive x7200 — UNIFICATION HOTSPOTS ADMIN PREMIUM
  */
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { MapPin, Download, RefreshCw, Filter, ChevronDown, Shield, BarChart3, Clock, MapIcon, List, Phone, Globe, Mail, ExternalLink, Mountain, Navigation, Map } from 'lucide-react';
+import { MapPin, Download, RefreshCw, Filter, ChevronDown, Shield, BarChart3, Clock, MapIcon, List, Phone, Globe, Mail, ExternalLink, Mountain, Navigation, Map, Leaf, TreePine, Droplets, Gauge } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import L from 'leaflet';
@@ -13,11 +14,22 @@ import 'leaflet/dist/leaflet.css';
 const API = process.env.REACT_APP_BACKEND_URL;
 const HOTSPOT_API = `${API}/api/v1/admin/bionic-hotspots`;
 
-const CLS_STYLES = {
-  MAJEUR: { bg: 'bg-red-500/20', text: 'text-red-400', border: 'border-red-500/30', color: '#ef4444' },
-  FORT: { bg: 'bg-orange-500/20', text: 'text-orange-400', border: 'border-orange-500/30', color: '#f97316' },
-  MODERE: { bg: 'bg-yellow-500/20', text: 'text-yellow-400', border: 'border-yellow-500/30', color: '#eab308' },
+// V7.2 — Gradient BIONIC officiel (directive x7200)
+const BIONIC_GRADIENT = {
+  GREEN: { min: 80, bg: 'bg-emerald-500/20', text: 'text-emerald-400', border: 'border-emerald-500/30', color: '#10b981', label: '80-100%' },
+  YELLOW: { min: 60, bg: 'bg-yellow-500/20', text: 'text-yellow-400', border: 'border-yellow-500/30', color: '#eab308', label: '60-80%' },
+  ORANGE: { min: 40, bg: 'bg-orange-500/20', text: 'text-orange-400', border: 'border-orange-500/30', color: '#f97316', label: '40-60%' },
+  RED: { min: 0, bg: 'bg-red-500/20', text: 'text-red-400', border: 'border-red-500/30', color: '#ef4444', label: '<40%' },
 };
+
+const getGradientStyle = (score) => {
+  if (score >= 80) return BIONIC_GRADIENT.GREEN;
+  if (score >= 60) return BIONIC_GRADIENT.YELLOW;
+  if (score >= 40) return BIONIC_GRADIENT.ORANGE;
+  return BIONIC_GRADIENT.RED;
+};
+
+const getGradientColor = (score) => getGradientStyle(score).color;
 
 const TT_BADGES = {
   'ZEC': 'bg-emerald-500/20 text-emerald-400',
@@ -176,24 +188,28 @@ const HotspotMap = ({ hotspots, selectedRegion }) => {
     hotspots.forEach(h => {
       if (!h.polygon?.length) return;
       const coords = h.polygon.map(p => [p[0], p[1]]);
-      const cls = h.classification || 'FORT';
-      const color = CLS_STYLES[cls]?.color || '#f97316';
+      const score = h.score || 0;
+      const color = getGradientColor(score);
+      const gradientStyle = getGradientStyle(score);
 
       const poly = L.polygon(coords, {
         color, fillColor: color, fillOpacity: 0.35, weight: 2,
       });
 
       poly.bindPopup(`
-        <div style="font-family:system-ui;min-width:220px;color:#e5e5e5;background:#1a1a2e;padding:10px;border-radius:8px;">
-          <div style="font-weight:800;font-size:14px;color:${color};margin-bottom:6px;">${h.id} — ${cls}</div>
+        <div style="font-family:system-ui;min-width:240px;color:#e5e5e5;background:#1a1a2e;padding:10px;border-radius:8px;">
+          <div style="font-weight:800;font-size:14px;color:${color};margin-bottom:6px;">${h.id} — ${h.classification}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:11px;">
-            <span style="color:#888;">Score</span><span style="font-weight:700;">${h.score}/100</span>
+            <span style="color:#888;">Score</span><span style="font-weight:700;color:${color};">${h.score}/100</span>
             <span style="color:#888;">Espece</span><span style="color:#f5a623;">${h.dominant_species}</span>
+            <span style="color:#888;">Habitat</span><span>${h.habitat_type || '—'}</span>
+            <span style="color:#888;">Intensite</span><span>${h.intensity || '—'}</span>
             <span style="color:#888;">Territoire</span><span>${h.territory_type || '—'}</span>
             <span style="color:#888;">Acces</span><span>${h.access_status || '—'}</span>
             <span style="color:#888;">Ville</span><span>${h.ville || '—'}</span>
             <span style="color:#888;">Altitude</span><span>${h.altitude_m || '—'}m</span>
             <span style="color:#888;">GPS</span><span style="font-size:10px;">${h.center[0].toFixed(4)}, ${h.center[1].toFixed(4)}</span>
+            <span style="color:#888;">Eau prox.</span><span>${h.water_proximity != null ? (h.water_proximity * 100).toFixed(0) + '%' : '—'}</span>
           </div>
           <div style="margin-top:6px;font-size:10px;color:#666;">
             ${(h.justification || []).slice(0, 3).join('<br/>')}
@@ -203,6 +219,15 @@ const HotspotMap = ({ hotspots, selectedRegion }) => {
 
       poly.addTo(layerRef.current);
       bounds.push(...coords);
+
+      // V7.2: Point central colore selon gradient BIONIC
+      L.circleMarker([h.center[0], h.center[1]], {
+        radius: 5,
+        color: '#fff',
+        fillColor: color,
+        fillOpacity: 1,
+        weight: 1.5,
+      }).addTo(layerRef.current);
     });
 
     if (bounds.length > 0) {
@@ -372,11 +397,19 @@ const AdminHotspots = () => {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <MapPin className="h-5 w-5 text-[#f5a623]" /> Hotspots BIONIC V6 / Terres a louer
+            <MapPin className="h-5 w-5 text-[#f5a623]" /> Hotspots BIONIC V7.2 — Source de Verite
           </h2>
-          <p className="text-sm text-gray-400 mt-1">Extraction, scoring et donnees territoriales</p>
+          <p className="text-sm text-gray-400 mt-1">Terrain-aware + Ecologie + Dispersion 1.5km + Exclusion eau embarquee</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
+          {/* V7.2: Legende gradient BIONIC */}
+          <div className="flex items-center gap-1 mr-2 bg-gray-900/50 rounded-lg px-2 py-1 border border-gray-700/30" data-testid="bionic-gradient-legend">
+            <span className="text-[9px] text-gray-500 mr-1">GRADIENT:</span>
+            <span className="w-3 h-3 rounded-full bg-emerald-500" title="80-100%" />
+            <span className="w-3 h-3 rounded-full bg-yellow-500" title="60-80%" />
+            <span className="w-3 h-3 rounded-full bg-orange-500" title="40-60%" />
+            <span className="w-3 h-3 rounded-full bg-red-500" title="<40%" />
+          </div>
           <Button onClick={runScheduler} disabled={loading} className="bg-[#f5a623] hover:bg-[#f5a623]/90 text-black font-bold" data-testid="extract-all-btn">
             {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <RefreshCw className="h-4 w-4 mr-2" />}
             {loading ? 'Extraction...' : 'Extraction annuelle'}
@@ -548,32 +581,46 @@ const AdminHotspots = () => {
                   <th className="px-2 py-2 text-left">Region</th>
                   <th className="px-2 py-2 text-left">Ville</th>
                   <th className="px-2 py-2 text-center">Score</th>
-                  <th className="px-2 py-2 text-center">Class.</th>
+                  <th className="px-2 py-2 text-center">Gradient</th>
                   <th className="px-2 py-2 text-left">Espece</th>
+                  <th className="px-2 py-2 text-left">Habitat</th>
                   <th className="px-2 py-2 text-left">Territoire</th>
                   <th className="px-2 py-2 text-left">Acces</th>
                   <th className="px-2 py-2 text-center">Alt.</th>
+                  <th className="px-2 py-2 text-center">Intensite</th>
                   <th className="px-2 py-2 text-left">GPS</th>
-                  <th className="px-2 py-2 text-center">Corr. V9</th>
                   <th className="px-2 py-2 text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {hotspots.map(h => {
-                  const cls = CLS_STYLES[h.classification] || CLS_STYLES.FORT;
+                  const gradient = getGradientStyle(h.score);
                   return (
                     <tr key={h.id} className="border-t border-gray-800/50 hover:bg-white/5 transition-colors">
                       <td className="px-2 py-2 font-mono text-gray-400 text-[10px]">{h.id}</td>
                       <td className="px-2 py-2 text-gray-300">{h.region_name}</td>
                       <td className="px-2 py-2 text-gray-300">{h.ville || '—'}</td>
                       <td className="px-2 py-2 text-center"><span className="text-white font-bold">{h.score}</span></td>
-                      <td className="px-2 py-2 text-center"><Badge className={`${cls.bg} ${cls.text} border ${cls.border} text-[9px]`}>{h.classification}</Badge></td>
+                      <td className="px-2 py-2 text-center">
+                        <div className="flex items-center justify-center gap-1">
+                          <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: gradient.color }} />
+                          <Badge className={`${gradient.bg} ${gradient.text} border ${gradient.border} text-[9px]`}>{h.classification}</Badge>
+                        </div>
+                      </td>
                       <td className="px-2 py-2 text-amber-400">{h.dominant_species}</td>
+                      <td className="px-2 py-2 text-gray-300 text-[10px]">{h.habitat_type || '—'}</td>
                       <td className="px-2 py-2"><Badge className={`${TT_BADGES[h.territory_type] || 'bg-gray-500/20 text-gray-400'} text-[9px]`}>{h.territory_type || '—'}</Badge></td>
                       <td className="px-2 py-2 text-gray-300">{h.access_status || '—'}</td>
                       <td className="px-2 py-2 text-center text-gray-400">{h.altitude_m || '—'}m</td>
+                      <td className="px-2 py-2 text-center">
+                        <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${
+                          h.intensity === 'EXTREME' ? 'bg-red-500/20 text-red-400' :
+                          h.intensity === 'INTENSE' ? 'bg-orange-500/20 text-orange-400' :
+                          h.intensity === 'MODERE' ? 'bg-yellow-500/20 text-yellow-400' :
+                          'bg-gray-500/20 text-gray-400'
+                        }`}>{h.intensity || '—'}</span>
+                      </td>
                       <td className="px-2 py-2 font-mono text-[9px] text-gray-500">{h.center?.[0]?.toFixed(4)}, {h.center?.[1]?.toFixed(4)}</td>
-                      <td className="px-2 py-2 text-center">{h.corridor_nearby ? <span className="text-green-400">Oui</span> : <span className="text-red-400">Non</span>}</td>
                       <td className="px-2 py-2 text-center">
                         <div className="flex items-center justify-center gap-1.5">
                           <button onClick={() => setSelectedHotspot(h)} className="text-[10px] text-cyan-400 hover:text-cyan-300 underline" data-testid={`contact-btn-${h.id}`}>
@@ -595,7 +642,7 @@ const AdminHotspots = () => {
       {viewMode === 'map' && hotspots.length > 0 && (
         <div className="bg-gray-900/50 border border-gray-700/30 rounded-xl overflow-hidden" data-testid="hotspots-table-below-map">
           <div className="px-4 py-3 border-b border-gray-800">
-            <span className="text-sm font-bold text-white">{hotspots.length} hotspots — Donnees territoriales</span>
+            <span className="text-sm font-bold text-white">{hotspots.length} hotspots — Donnees territoriales V7.2</span>
           </div>
           <div className="overflow-x-auto max-h-[350px] overflow-y-auto">
             <table className="w-full text-xs">
@@ -605,28 +652,43 @@ const AdminHotspots = () => {
                   <th className="px-2 py-2 text-left">Ville</th>
                   <th className="px-2 py-2 text-center">Score</th>
                   <th className="px-2 py-2 text-left">Espece</th>
+                  <th className="px-2 py-2 text-left">Habitat</th>
                   <th className="px-2 py-2 text-left">Territoire</th>
                   <th className="px-2 py-2 text-left">Gestionnaire</th>
+                  <th className="px-2 py-2 text-center">Intensite</th>
                   <th className="px-2 py-2 text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
-                {hotspots.slice(0, 50).map(h => (
-                  <tr key={h.id} className="border-t border-gray-800/50 hover:bg-white/5">
-                    <td className="px-2 py-1.5 font-mono text-gray-400 text-[10px]">{h.id}</td>
-                    <td className="px-2 py-1.5 text-gray-300">{h.ville || '—'}</td>
-                    <td className="px-2 py-1.5 text-center text-white font-bold">{h.score}</td>
-                    <td className="px-2 py-1.5 text-amber-400">{h.dominant_species}</td>
-                    <td className="px-2 py-1.5"><Badge className={`${TT_BADGES[h.territory_type] || 'bg-gray-500/20'} text-[9px]`}>{h.territory_type || '—'}</Badge></td>
-                    <td className="px-2 py-1.5 text-gray-300 text-[10px]">{h.gestionnaire?.nom || '—'}</td>
-                    <td className="px-2 py-1.5 text-center">
-                      <div className="flex items-center justify-center gap-1.5">
-                        <button onClick={() => setSelectedHotspot(h)} className="text-[10px] text-cyan-400 hover:underline">Contacter</button>
-                        <CarteButton hotspot={h} />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                {hotspots.slice(0, 50).map(h => {
+                  const gradient = getGradientStyle(h.score);
+                  return (
+                    <tr key={h.id} className="border-t border-gray-800/50 hover:bg-white/5">
+                      <td className="px-2 py-1.5 font-mono text-gray-400 text-[10px]">{h.id}</td>
+                      <td className="px-2 py-1.5 text-gray-300">{h.ville || '—'}</td>
+                      <td className="px-2 py-1.5 text-center">
+                        <span className="font-bold" style={{ color: gradient.color }}>{h.score}</span>
+                      </td>
+                      <td className="px-2 py-1.5 text-amber-400">{h.dominant_species}</td>
+                      <td className="px-2 py-1.5 text-gray-300 text-[10px]">{h.habitat_type || '—'}</td>
+                      <td className="px-2 py-1.5"><Badge className={`${TT_BADGES[h.territory_type] || 'bg-gray-500/20'} text-[9px]`}>{h.territory_type || '—'}</Badge></td>
+                      <td className="px-2 py-1.5 text-gray-300 text-[10px]">{h.gestionnaire?.nom || '—'}</td>
+                      <td className="px-2 py-1.5 text-center">
+                        <span className={`text-[9px] px-1 py-0.5 rounded font-bold ${
+                          h.intensity === 'EXTREME' ? 'bg-red-500/20 text-red-400' :
+                          h.intensity === 'INTENSE' ? 'bg-orange-500/20 text-orange-400' :
+                          'bg-gray-500/20 text-gray-400'
+                        }`}>{h.intensity || '—'}</span>
+                      </td>
+                      <td className="px-2 py-1.5 text-center">
+                        <div className="flex items-center justify-center gap-1.5">
+                          <button onClick={() => setSelectedHotspot(h)} className="text-[10px] text-cyan-400 hover:underline">Contacter</button>
+                          <CarteButton hotspot={h} />
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
