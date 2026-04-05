@@ -234,7 +234,8 @@ nutritionnelle V6 unifiee.
 | PHASE_E_GUIDE_PRO_ARCHITECTURE | /app/memory/PHASE_E_GUIDE_PRO_ARCHITECTURE.md | 1.0.0 |
 | AUDIT_TRAJETS_VERS_AFFUTS_HUMAN | /app/memory/AUDIT_TRAJETS_VERS_AFFUTS_HUMAN.md | 1.0.0 |
 | RAPPORT_BIONIC_OS_V8_5 | /app/memory/RAPPORT_BIONIC_OS_V8_5.md | 1.0.0 |
+| RAPPORT_CAUSES_PROFONDES_TNE | /app/memory/RAPPORT_CAUSES_PROFONDES_TNE.md | 1.0.0 |
 
 ---
 
-**Derniere mise a jour** : 2026-04-05 — BIONIC OS V8.5 OPERATIONNEL. Pipeline Terrain A+F+G deploye. GUIDE PRO E-1 backend 15/15 endpoints. 10 blocs actives.
+**Derniere mise a jour** : 2026-04-05 — AUDIT CAUSES PROFONDES TNE COMPLETE. 7 defaillances structurelles documentees. Cause racine: ABSENCE TOTALE de sentiers OSM dans la zone des affuts. Solution institutionnelle hybride 4 niveaux proposee. AUCUNE correction appliquee. EN ATTENTE DECISION STEEVE-MAX.
