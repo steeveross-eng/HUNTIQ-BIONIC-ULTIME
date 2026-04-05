@@ -245,3 +245,7 @@ backup/
 frontend/node_modules/.cache/default-development/131.pack
 frontend/node_modules/.cache/default-development/132.pack
 frontend/node_modules/.cache/default-development/132.pack
+-e 
+# Environment files
+*.env
+*.env.*
