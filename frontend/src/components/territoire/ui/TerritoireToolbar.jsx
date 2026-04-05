@@ -155,7 +155,7 @@ export function TerritoireToolbar({
                 </div>
                 {showZonesLayer && (
                   <div className="ml-3 pl-2 border-l border-emerald-800/40 space-y-0.5">
-                    {[{k:'alimentation',label:'Alimentation',color:'text-green-400'},{k:'repos',label:'Repos',color:'text-blue-400'},{k:'rut',label:'Rut',color:'text-orange-400'},{k:'habitat',label:'Habitat',color:'text-cyan-400'},{k:'affuts',label:'Affuts',color:'text-red-400'},{k:'trajets',label:'Trajets',color:'text-yellow-400'},{k:'multiEngines',label:'Multi-Engines',color:'text-emerald-300'}].map(item => (
+                    {[{k:'alimentation',label:'Alimentation',color:'text-green-400'},{k:'repos',label:'Repos',color:'text-blue-400'},{k:'rut',label:'Rut',color:'text-orange-400'},{k:'habitat',label:'Habitat',color:'text-cyan-400'},{k:'affuts',label:'Affuts',color:'text-red-400'},{k:'trajets',label:'Trajets',color:'text-yellow-400'},{k:'eau',label:'Eau',color:'text-sky-400'},{k:'multiEngines',label:'Multi-Engines',color:'text-emerald-300'}].map(item => (
                       <button key={item.k} onClick={() => toggleZoneSub(item.k)} className={`w-full flex items-center gap-1.5 px-1.5 py-0.5 rounded text-[10px] transition-all ${zoneSubFilters[item.k] ? `${item.color} bg-white/5` : 'text-gray-600 hover:text-gray-400'}`} data-testid={`zone-sub-${item.k}`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${zoneSubFilters[item.k] ? 'bg-current' : 'bg-gray-700'}`} />{item.label}
                       </button>

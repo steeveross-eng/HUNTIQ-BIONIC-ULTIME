@@ -256,7 +256,7 @@ const BionicCorridorsV6Layer = ({
       alimentation: zoneSubFilters.alimentation || zoneSubFilters.trajets,
       repos: zoneSubFilters.repos || zoneSubFilters.habitat,
       rut: zoneSubFilters.rut || zoneSubFilters.affuts,
-      eau: zoneSubFilters.habitat,
+      eau: zoneSubFilters.eau,
     };
     return map[zoneType] ?? true;
   }, [zoneSubFilters]);
@@ -282,7 +282,7 @@ const BionicCorridorsV6Layer = ({
       alimentation: pointSubFilters.alimentation || pointSubFilters.trajets,
       repos: pointSubFilters.repos || pointSubFilters.habitat,
       rut: pointSubFilters.rut || pointSubFilters.affuts,
-      eau: pointSubFilters.habitat,
+      eau: pointSubFilters.eau || false,
     };
     return map[zoneType] ?? true;
   }, [pointSubFilters]);

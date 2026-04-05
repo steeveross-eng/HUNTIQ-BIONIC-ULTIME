@@ -136,6 +136,15 @@ nutritionnelle V6 unifiee.
 - [x] Rapport audit : /app/memory/AUDIT_HOTSPOTS_x7200.md
 - Fichiers modifies : hotspot_engine.py, water_bodies_qc.py (nouveau), AdminHotspots.jsx, App.js
 
+#### Directive x7200 etendue — SYNCHRONISATION ZONES
+- [x] Toggle 'Eau' ajoute au panneau Zones dans TerritoireToolbar (sky blue, ON/OFF dedie)
+- [x] Zones hydro desormais controlees par classificationToggles.hydro + zoneSubFilters.eau
+- [x] Mapping 'eau' dedie dans BionicCorridorsV6Layer (remplace mapping habitat)
+- [x] Synchronisation ON/OFF instantanee verifiee (aucun lag, aucun polygone residuel)
+- [x] Logique maitresse Mon Territoire INTOUCHEE (zone_engine_core_v2.py, pipeline_service, etc.)
+- [x] Rapport audit : /app/memory/AUDIT_ZONES_SYNC_x7200.md
+- Fichiers modifies : MonTerritoireBionicPage.jsx, TerritoireToolbar.jsx, BionicCorridorsV6Layer.jsx
+
 ### P1 — Prochain
 - [ ] Phase E: GUIDE PRO (chasse guidee 100%) — DEBLOQUEE par validation x7200
 - [ ] Phase F: Module Gestionnaire UI (CARTE tabs + SECOURS button)
@@ -174,4 +183,4 @@ nutritionnelle V6 unifiee.
 
 ---
 
-**Derniere mise a jour** : 2026-04-05 — Directive x7200 COMPLETE (Hotspots V7.2 terrain-aware, Admin Premium SOURCE DE VERITE, gradient BIONIC, ecologie, eau embarquee, dispersion 1.5km)
+**Derniere mise a jour** : 2026-04-05 — Directive x7200 etendue COMPLETE (Synchronisation zones, toggle Eau, ON/OFF instantane, logique maitresse INTOUCHEE)

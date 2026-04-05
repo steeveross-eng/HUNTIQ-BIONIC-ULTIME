@@ -590,7 +590,7 @@ const MonTerritoireBionicPage = () => {
 
   // STEEVE-MAX V3: Sous-éléments granulaires par couche
   const [zoneSubFilters, setZoneSubFilters] = useState({
-    alimentation: true, repos: true, rut: true, habitat: true, affuts: true, trajets: true, multiEngines: true,
+    alimentation: true, repos: true, rut: true, habitat: true, affuts: true, trajets: true, multiEngines: true, eau: true,
   });
   const [corridorSubFilters, setCorridorSubFilters] = useState({
     normaux: true, intenses: true, extreme: true, saisonniers: true,
@@ -962,7 +962,8 @@ const MonTerritoireBionicPage = () => {
     return allZones.filter(z => {
       if (layersVisible[z.layerId] === false) return false;
       if (!classificationToggles.relief && RELIEF_LAYERS.has(z.layerId)) return false;
-      if (HYDRO_LAYERS.has(z.layerId)) return false;
+      // BCE-4X x7200: Zones hydro controlees par classificationToggles.hydro + zoneSubFilters.eau
+      if (HYDRO_LAYERS.has(z.layerId) && !classificationToggles.hydro) return false;
       if (!classificationToggles.foret && FORET_LAYERS.has(z.layerId)) return false;
       if (!classificationToggles.dominantes && DOMINANT_LAYERS.has(z.layerId)) return false;
       return true;
