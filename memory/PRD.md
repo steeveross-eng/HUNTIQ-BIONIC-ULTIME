@@ -154,6 +154,12 @@ nutritionnelle V6 unifiee.
   - Execution EN ATTENTE directive STEEVE-MAX
 - [x] P2 Gel complet — DIRECTIVE STEEVE-MAX 2026-04-06
   - Rapport: P2_READY_REPORT.md
+- [x] PREUVE VISUELLE TERRAIN — DIRECTIVE STEEVE-MAX 2026-04-06
+  - 3 pages interactives Leaflet (corridor_proof_index, corridor_proof, corridor_proof_forest)
+  - Superposition 7 couches: corridors, sentiers, chemins, acces BDRE, foret, eau, distances
+  - 6 routes sur 2 zones: 100% corridor, 0% foret, MATCHES_HUNTER=OUI, CONFORME 95/5
+  - Zone 1: 2632 sentiers, 11811 noeuds, 3 routes
+  - Zone 2: 855 sentiers, 8729 noeuds, 1502 noeuds foret, 3 routes
 - [ ] M5: Offline Mode Ultra + Terrain Intelligence (8 endpoints)
 - [ ] BSAA-2, Soil Engine V2
 - [ ] Merge Work1 -> main (INTERDIT)

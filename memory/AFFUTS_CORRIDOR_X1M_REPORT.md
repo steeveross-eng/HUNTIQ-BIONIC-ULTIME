@@ -168,4 +168,56 @@ BDRE composite: 10.2 / 100
 ---
 
 **CORRIDOR-FIRST X1 000 000% : CORRIGE + ENGINES INTEGRES**
+
+---
+
+## 8. PREUVES VISUELLES TERRAIN (DIRECTIVE A — 2026-04-06)
+
+### URLs des preuves interactives
+| Preuve | URL |
+|---|---|
+| INDEX (synthese) | `/corridor_proof_index.html` |
+| Carte Zone 1 (periurbaine) | `/corridor_proof.html` |
+| Carte Zone 2 (forestiere) | `/corridor_proof_forest.html` |
+
+### Zone 1 — Periurbaine (46.81, -71.21)
+- **Donnees** : 2632 sentiers, 7 waterways, 63 clairieres, 73 foret, 12 obstacles
+- **Graphe** : 11 811 noeuds
+- **Resultats** : 3 affuts, 3 routes A*, toutes 100% corridor, 0% foret
+- **MATCHES_HUNTER** : OUI (3/3)
+- **CONFORME 95/5** : OUI (3/3)
+
+### Zone 2 — Forestiere (46.85, -71.42)
+- **Donnees** : 855 sentiers, 15 waterways, 27 clairieres, 61 foret, 1502 noeuds foret
+- **Graphe** : 8 729 noeuds (dont 1502 en zone foret)
+- **Resultats** : 3 affuts, 3 routes A*, toutes 100% corridor, 0% foret
+- **MATCHES_HUNTER** : OUI (3/3)
+- **CONFORME 95/5** : OUI (3/3)
+
+### Superposition visuelle confirme
+| Element | Visible sur carte | Couleur |
+|---|---|---|
+| Corridors forestiers (sentiers OSM) | OUI | Vert |
+| Sentiers reels | OUI | Vert (variantes par type) |
+| Chemins forestiers existants | OUI | Vert |
+| Acces genere par BDRE | OUI | Orange (route superposee) |
+| Zones de foret dense | OUI | Vert fonce (polygones) |
+| Berges ruisseau (corridors naturels) | OUI | Bleu |
+| Clairieres/prairies | OUI | Jaune |
+| Eau/obstacles (interdit) | OUI | Rouge |
+| Waypoint chasseur (DEPART) | OUI | Point rouge |
+| Affuts (DESTINATION) | OUI | Points bleus |
+| Distances comparees | OUI | Tableau sous carte |
+
+### Criteres de conformite visuelle — BILAN
+| Critere | Seuil | Resultat (6 routes) | Statut |
+|---|---|---|---|
+| 95% trajet sur corridors reels | >= 95% | 100% (6/6) | CONFORME |
+| <= 5% en foret dense | <= 5% | 0% (6/6) | CONFORME |
+| MATCHES_HUNTER=True | True | True (6/6) | CONFORME |
+| Distance minimale corridor → affut | - | Sentier reel A* (6/6) | CONFORME |
+| Absence segments hors-sentier non justifies | 0 | 0 (6/6) | CONFORME |
+
+---
+
 **EN ATTENTE VALIDATION STEEVE-MAX**

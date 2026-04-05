@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>BCE-4X — INDEX PREUVES VISUELLES TERRAIN</title>
+<style>
+* { margin:0;padding:0;box-sizing:border-box; }
+body { font-family:'Courier New',monospace; background:#0a0a0a;color:#e0e0e0; padding:20px; }
+h1 { color:#e94560; font-size:16px; letter-spacing:3px; margin-bottom:20px; text-align:center; }
+.card {
+  background:#111; border:1px solid #333; border-radius:8px;
+  padding:20px; margin:15px auto; max-width:900px;
+}
+.card h2 { color:#00ff88; font-size:14px; margin-bottom:12px; }
+.card a {
+  display:inline-block; padding:10px 20px;
+  background:#0f3460; color:#00d4ff; border-radius:4px;
+  text-decoration:none; font-size:12px; font-weight:bold;
+  margin:5px 0; transition: background 0.2s;
+}
+.card a:hover { background:#1a4a80; }
+table { width:100%; border-collapse:collapse; font-size:11px; margin-top:10px; }
+th { text-align:left; color:#e94560; padding:6px 10px; border-bottom:1px solid #333; }
+td { padding:6px 10px; border-bottom:1px solid #1a1a1a; }
+.ok { color:#00ff88; font-weight:bold; }
+.badge {
+  display:inline-block; background:#0a3a0a; color:#88ffaa;
+  padding:3px 8px; border-radius:3px; font-size:10px; margin:2px;
+}
+.summary { background:#0a1a0a; border:1px solid #0a4a0a; padding:15px; border-radius:6px; margin-top:15px; }
+.summary h3 { color:#00ff88; font-size:12px; margin-bottom:8px; }
+</style>
+</head>
+<body>
+<h1>BCE-4X GOLDEN V6+ — PREUVES VISUELLES CORRIDOR-FIRST X1 000 000%</h1>
+<p style="text-align:center;color:#888;font-size:11px;margin-bottom:20px;">Autorite : STEEVE-MAX | Date : 2026-04-06 | Protocole : ZERO LOSS, ZERO REGRESSION</p>
+
+<div class="card">
+  <h2>PREUVE 1 — ZONE URBAINE/PERIURBAINE (46.81, -71.21)</h2>
+  <span class="badge">2632 sentiers</span>
+  <span class="badge">7 waterways</span>
+  <span class="badge">63 clairieres</span>
+  <span class="badge">73 zones foret</span>
+  <span class="badge">11811 noeuds graphe</span>
+  <br><br>
+  <a href="/corridor_proof.html" target="_blank">OUVRIR LA CARTE INTERACTIVE</a>
+  <table>
+    <tr><th>Affut</th><th>Distance</th><th>Corridor</th><th>Foret</th><th>MATCHES_HUNTER</th><th>Conforme</th></tr>
+    <tr><td>#1</td><td>1381m</td><td class="ok">100%</td><td class="ok">0%</td><td class="ok">OUI</td><td class="ok">CONFORME</td></tr>
+    <tr><td>#2</td><td>1549m</td><td class="ok">100%</td><td class="ok">0%</td><td class="ok">OUI</td><td class="ok">CONFORME</td></tr>
+    <tr><td>#3</td><td>1620m</td><td class="ok">100%</td><td class="ok">0%</td><td class="ok">OUI</td><td class="ok">CONFORME</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2>PREUVE 2 — ZONE FORESTIERE (46.85, -71.42)</h2>
+  <span class="badge">855 sentiers</span>
+  <span class="badge">15 waterways</span>
+  <span class="badge">27 clairieres</span>
+  <span class="badge">61 zones foret</span>
+  <span class="badge">1502 noeuds foret</span>
+  <span class="badge">8729 noeuds graphe</span>
+  <br><br>
+  <a href="/corridor_proof_forest.html" target="_blank">OUVRIR LA CARTE INTERACTIVE</a>
+  <table>
+    <tr><th>Affut</th><th>Distance</th><th>Corridor</th><th>Foret</th><th>MATCHES_HUNTER</th><th>Conforme</th></tr>
+    <tr><td>#1</td><td>2710m</td><td class="ok">100%</td><td class="ok">0%</td><td class="ok">OUI</td><td class="ok">CONFORME</td></tr>
+    <tr><td>#2</td><td>384m</td><td class="ok">100%</td><td class="ok">0%</td><td class="ok">OUI</td><td class="ok">CONFORME</td></tr>
+    <tr><td>#3</td><td>1522m</td><td class="ok">100%</td><td class="ok">0%</td><td class="ok">OUI</td><td class="ok">CONFORME</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <div class="summary">
+    <h3>BILAN CORRIDOR-FIRST X1 000 000%</h3>
+    <table>
+      <tr><th>Critere</th><th>Seuil</th><th>Resultat</th><th>Statut</th></tr>
+      <tr><td>Corridor minimum</td><td>&gt;= 95%</td><td>100% (6/6 routes)</td><td class="ok">CONFORME</td></tr>
+      <tr><td>Foret maximum</td><td>&lt;= 5%</td><td>0% (6/6 routes)</td><td class="ok">CONFORME</td></tr>
+      <tr><td>Max segment foret</td><td>&lt;= 5% du total</td><td>0% (6/6 routes)</td><td class="ok">CONFORME</td></tr>
+      <tr><td>MATCHES_HUNTER</td><td>True</td><td>True (6/6 routes)</td><td class="ok">CONFORME</td></tr>
+      <tr><td>Type sentier</td><td>sentier_reel</td><td>sentier_reel (6/6)</td><td class="ok">CONFORME</td></tr>
+      <tr><td>Algorithme</td><td>A*</td><td>a_star (6/6)</td><td class="ok">CONFORME</td></tr>
+    </table>
+    <p style="margin-top:10px;color:#00ff88;font-size:11px;">
+      ENGINES INTEGRES : trail_graph (50%) + quality_scorer (20%) + anomaly_detector (15%) + terrain_costs (15%)
+    </p>
+    <p style="color:#888;font-size:10px;margin-top:5px;">
+      Ponderation orchestrateur BDRE-FIRST : blind(40%) + access(30%) + corridor(30%)
+    </p>
+  </div>
+</div>
+
+<p style="text-align:center;color:#e94560;font-size:11px;margin-top:20px;">
+  EN ATTENTE VALIDATION STEEVE-MAX — MERGE INTERDIT — P2 GELE
+</p>
+</body>
+</html>
