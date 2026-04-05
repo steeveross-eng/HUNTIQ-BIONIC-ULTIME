@@ -33,6 +33,32 @@ conformement a la directive d'optimisation continue totale BDRE-FIRST.
 
 ---
 
+### 2026-04-05 — AFFUTS TRAJETS — CORRECTION INVARIANT
+
+- **Scope** : orchestrator.py, fallback_chain.py
+- **Action** : Correction BCE-4X INVARIANT — point de depart = waypoint chasseur
+- **Avant** : compute_access_route() utilisait des noeuds de sentier arbitraires (find_best_entry_point)
+- **Apres** : compute_access_route(center_lat, center_lng, ...) — TOUJOURS waypoint chasseur
+- **Impact** : Tous les sentiers vers affuts partent desormais du waypoint chasseur
+- **BDRE** : _annotate() enrichi avec hunter_lat/hunter_lng pour forcer coords[0] = hunter
+- **Verification** : MATCHES_HUNTER=True, 28 points, 585m sentier reel
+- **Regression** : ZERO
+- **Rapport** : AFFUTS_BDRE_CORRECTION_REPORT.md
+
+---
+
+### 2026-04-05 — GESTIONNAIRE UI — PHASE F
+
+- **Scope** : GestionnairePage.jsx, App.js
+- **Action** : Deploiement Module Gestionnaire UI (5 onglets + SECOURS)
+- **Onglets** : CARTE, BDRE, ANOMALIES, JOURNAL, SOURCES
+- **Impact** : 8 composants, 11 endpoints connectes, 25+ data-testid
+- **BDRE** : BDRE omnipresent (onglet dedie + journal + anomalies + sources)
+- **Regression** : ZERO
+- **Rapport** : PHASE_F_GESTIONNAIRE_UI_REPORT.md
+
+---
+
 ### 2026-04-05 — BDRE-FIRST — INSTITUTION
 
 - **Scope** : Tous composants BIONIC OS

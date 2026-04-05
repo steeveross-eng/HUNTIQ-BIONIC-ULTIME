@@ -80,6 +80,8 @@ const BionicModulesPage = lazy(() => import("@/pages/BionicModulesPage"));
 const BsaaDashboardPage = lazy(() => import("@/pages/BsaaDashboardPage"));
 // GUIDE PRO — Phase E-2 Frontend (BCE-4X BDRE-FIRST)
 const GuideProPage = lazy(() => import("@/pages/GuideProPage"));
+// GESTIONNAIRE — Phase F Frontend (BCE-4X BDRE-FIRST)
+const GestionnairePage = lazy(() => import("@/pages/GestionnairePage"));
 // V7.2: AdminHotspotsPage standalone SUPPRIME — Source de verite = Admin Premium (directive x7200)
 import { 
   ShoppingCart, FlaskConical, GitCompare, Star, DollarSign, ThumbsUp, Heart, Eye,
@@ -236,6 +238,16 @@ const Navigation = ({ cartCount, onCartOpen }) => {
               Guide Pro
             </Link>
 
+            {/* GESTIONNAIRE — Phase F BCE-4X BDRE-FIRST */}
+            <Link 
+              to="/gestionnaire" 
+              className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/gestionnaire') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              data-testid="nav-gestionnaire"
+            >
+              <Users className="h-3.5 w-3.5" />
+              Gestionnaire
+            </Link>
+
             {/* SUPRA v2: Lien direct ANALYSE TERRITOIRE (moteur unifie) */}
             
             {/* Business (Conditionnel) */}
@@ -351,6 +363,10 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             {/* GUIDE PRO — Phase E-2 BCE-4X BDRE-FIRST */}
             <Link to="/guide-pro" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="mobile-nav-guide-pro">
               <RouteIcon className="h-4 w-4" /> Guide Pro
+            </Link>
+            {/* GESTIONNAIRE — Phase F BCE-4X BDRE-FIRST */}
+            <Link to="/gestionnaire" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="mobile-nav-gestionnaire">
+              <Users className="h-4 w-4" /> Gestionnaire
             </Link>
             {/* SUPRA v2: Nutrition integree dans ANALYSE TERRITOIRE */}
             {isBusinessOrAdmin && (
@@ -1056,6 +1072,8 @@ function App() {
                 <Route path="/ads" element={<BsaaDashboardPage />} />
                 {/* GUIDE PRO — Phase E-2 BCE-4X BDRE-FIRST */}
                 <Route path="/guide-pro" element={<GuideProPage />} />
+                {/* GESTIONNAIRE — Phase F BCE-4X BDRE-FIRST */}
+                <Route path="/gestionnaire" element={<GestionnairePage />} />
               </Routes>
             </Suspense>
             <Footer />

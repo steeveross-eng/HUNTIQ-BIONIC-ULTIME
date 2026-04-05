@@ -89,68 +89,39 @@ def orchestrate_hunt_session(
         max_blinds=max_blinds,
     )
 
-    # Phase 2: Pour chaque affut, trouver le meilleur point d'entree et calculer l'acces
+    # Phase 2: Pour chaque affut, calculer l'acces DEPUIS le waypoint chasseur
+    # BCE-4X INVARIANT INSTITUTIONNEL: start = center_lat, center_lng (STEEVE-MAX)
+    # find_best_entry_point conserve UNIQUEMENT pour scoring vent dans justifications
     recommendations = []
     for blind in blinds:
-        # Trouver les meilleurs points d'entree
-        entry_points = find_best_entry_point(
-            blind["lat"], blind["lng"],
-            trail_graph, wind_direction_deg,
-            max_entries=2,
-        )
-
         # Calculer le cone de contamination pour cet affut
         scent_zone = compute_scent_zone(
             blind["lat"], blind["lng"],
             wind_direction_deg, wind_speed_kmh, session,
         )
 
-        best_access = None
-        access_alternatives = []
+        # BCE-4X: Route d'acces TOUJOURS depuis le waypoint du chasseur
+        best_access = compute_access_route(
+            center_lat, center_lng,
+            blind["lat"], blind["lng"],
+            trail_graph, feeding_sites, scent_zone,
+            water_check_fn=water_check_fn,
+            terrain_data=raw_terrain_data,
+        )
+        best_access["entry_point"] = {
+            "lat": center_lat,
+            "lng": center_lng,
+            "wind_alignment_score": 0,
+        }
 
-        # Essayer chaque point d'entree
-        for ep in entry_points:
-            access = compute_access_route(
-                ep["lat"], ep["lng"],
-                blind["lat"], blind["lng"],
-                trail_graph, feeding_sites, scent_zone,
-                water_check_fn=water_check_fn,
-                terrain_data=raw_terrain_data,
-            )
-            access["entry_point"] = {
-                "lat": ep["lat"],
-                "lng": ep["lng"],
-                "wind_alignment_score": ep["wind_alignment_score"],
-            }
-
-            if access["feasible"] and (best_access is None or access["quality_score"] > best_access["quality_score"]):
-                if best_access:
-                    access_alternatives.append(best_access)
-                best_access = access
-            else:
-                access_alternatives.append(access)
-
-        # Si aucun acces n'est faisable, essayer depuis le centre
-        if best_access is None:
-            center_access = compute_access_route(
-                center_lat, center_lng,
-                blind["lat"], blind["lng"],
-                trail_graph, feeding_sites, scent_zone,
-                water_check_fn=water_check_fn,
-                terrain_data=raw_terrain_data,
-            )
-            center_access["entry_point"] = {
-                "lat": center_lat,
-                "lng": center_lng,
-                "wind_alignment_score": 0,
-            }
-            if center_access["feasible"]:
-                best_access = center_access
-            else:
-                # Garder le meilleur meme non conforme
-                all_attempts = access_alternatives + ([center_access] if center_access["coords"] else [])
-                if all_attempts:
-                    best_access = max(all_attempts, key=lambda a: a.get("quality_score", 0))
+        # Enrichir le scoring vent via find_best_entry_point (scoring UNIQUEMENT)
+        entry_points = find_best_entry_point(
+            blind["lat"], blind["lng"],
+            trail_graph, wind_direction_deg,
+            max_entries=1,
+        )
+        if entry_points:
+            best_access["entry_point"]["wind_alignment_score"] = entry_points[0].get("wind_alignment_score", 0)
 
         # Generer la justification textuelle
         justification = _generate_justification(
@@ -171,7 +142,7 @@ def orchestrate_hunt_session(
                 "factors": blind["factors"],
             },
             "access": best_access,
-            "access_alternatives": access_alternatives[:1],
+            "access_alternatives": [],
             "scent_zone": {
                 "polygon": scent_zone["polygon"],
                 "bearing_deg": scent_zone["scent"]["bearing_deg"],

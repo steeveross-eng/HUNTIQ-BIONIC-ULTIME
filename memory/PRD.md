@@ -103,7 +103,17 @@ nutritionnelle V6 unifiee.
   - Route /guide-pro + Navigation desktop/mobile integree
   - 17 data-testid, BDRE-FIRST natif, lazy loading
   - Rapport: E2_GUIDE_PRO_FRONTEND_REPORT.md
-- [ ] Phase F: Module Gestionnaire UI (CARTE tabs + SECOURS button)
+- [x] Phase F: Module Gestionnaire UI — DEPLOYE (5 onglets + SECOURS, 11 endpoints)
+  - GestionnairePage: 5 tabs (CARTE, BDRE, ANOMALIES, JOURNAL, SOURCES)
+  - Bouton SECOURS institutionnel (confirmation 2 etapes)
+  - 8 composants, 25+ data-testid, auto-refresh 15s
+  - Rapport: PHASE_F_GESTIONNAIRE_UI_REPORT.md
+- [x] Correction Affuts BCE-4X — INVARIANT INSTITUTIONNEL
+  - Start point = waypoint chasseur (center_lat, center_lng)
+  - Applique dans orchestrator.py + fallback_chain.py (L0-L4)
+  - Verifie: MATCHES_HUNTER=True
+  - Rapport: AFFUTS_BDRE_CORRECTION_REPORT.md
+- [ ] Phase G: (En attente directive STEEVE-MAX)
 
 ### P2 — Futur
 - [ ] M5: Offline Mode Ultra + Terrain Intelligence (8 endpoints)
@@ -144,10 +154,11 @@ Tout composant BIONIC OS doit :
 | BDRE_PHASE2_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE2_IMPLEMENTATION_REPORT.md | 1.0.0 |
 | BDRE_PHASE3_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE3_IMPLEMENTATION_REPORT.md | 1.0.0 |
 | BDRE_PHASE4_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE4_IMPLEMENTATION_REPORT.md | 1.0.0 |
-| AFFUTS_BDRE_VALIDATION_REPORT | /app/memory/AFFUTS_BDRE_VALIDATION_REPORT.md | 1.0.0 |
+| AFFUTS_BDRE_CORRECTION_REPORT | /app/memory/AFFUTS_BDRE_CORRECTION_REPORT.md | 1.0.0 |
+| PHASE_F_GESTIONNAIRE_UI_REPORT | /app/memory/PHASE_F_GESTIONNAIRE_UI_REPORT.md | 1.0.0 |
 | AUDIT_HOTSPOTS_x7200 | /app/memory/AUDIT_HOTSPOTS_x7200.md | 1.0.0 |
 | AUDIT_TRAJETS_HUMAINS_x7200 | /app/memory/AUDIT_TRAJETS_HUMAINS_x7200.md | 1.0.0 |
 
 ---
 
-**Derniere mise a jour** : 2026-04-05 — PHASE E-2 GUIDE PRO FRONTEND COMPLETE. 7 composants React deployes, route /guide-pro active, navigation desktop/mobile integree, 9 endpoints GUIDE PRO + BDRE connectes, 17 data-testid. Institution politique BDRE-FIRST comme invariant permanent. Rapports: E2_GUIDE_PRO_FRONTEND_REPORT.md, BIONIC_OPTIMISATION_LOG.md, BDRE_TABLEAU_OPTIMISATION_REPORT.md.
+**Derniere mise a jour** : 2026-04-05 — PHASE F GESTIONNAIRE UI COMPLETE + CORRECTION AFFUTS BCE-4X INVARIANT. 5 onglets (CARTE, BDRE, ANOMALIES, JOURNAL, SOURCES) + bouton SECOURS deployes. Invariant trajets affuts corrige: start = waypoint chasseur TOUJOURS. 3 rapports: AFFUTS_BDRE_CORRECTION_REPORT.md, PHASE_F_GESTIONNAIRE_UI_REPORT.md, BIONIC_OPTIMISATION_LOG.md mis a jour.

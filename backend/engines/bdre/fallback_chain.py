@@ -68,7 +68,9 @@ class FallbackChain:
         Pipeline unifie BDRE pour le calcul de route d'acces.
         REMPLACE la cascade A de access_engine.py.
 
+        BCE-4X INVARIANT: entry_lat/entry_lng = waypoint chasseur (STEEVE-MAX).
         Retourne toujours un resultat avec trail_type annote par le BDRE.
+        Le premier point de coords[] est TOUJOURS le waypoint chasseur.
         """
         if scent_zone is None:
             scent_zone = {}
@@ -92,7 +94,8 @@ class FallbackChain:
                     engine="ACCESS", action="success", score=0.85,
                     territory=territory, details="Source primaire TNE: sentier OSM reel"
                 )
-                return self._annotate(route_result, "real_osm", 0, levels_tried)
+                return self._annotate(route_result, "real_osm", 0, levels_tried,
+                                      hunter_lat=entry_lat, hunter_lng=entry_lng)
 
         levels_tried.append(0)
         logger.info("[BDRE-CHAIN] Source primaire echouee — declenchement pipeline hybride")
@@ -124,7 +127,8 @@ class FallbackChain:
                         fallback_level=1, territory=territory,
                         details="L1 waterway bank routing via graphe enrichi"
                     )
-                    return self._annotate(result, "waterway_guided", 1, levels_tried)
+                    return self._annotate(result, "waterway_guided", 1, levels_tried,
+                                          hunter_lat=entry_lat, hunter_lng=entry_lng)
 
         levels_tried.append(1)
 
@@ -144,7 +148,8 @@ class FallbackChain:
                     fallback_level=2, territory=territory,
                     details="L2 hybride trail-terrain"
                 )
-                return self._annotate(hybrid_result, "hybride_sentier_terrain", 2, levels_tried)
+                return self._annotate(hybrid_result, "hybride_sentier_terrain", 2, levels_tried,
+                                      hunter_lat=entry_lat, hunter_lng=entry_lng)
         except Exception as e:
             logger.warning(f"[BDRE-CHAIN] L2 erreur: {e}")
 
@@ -198,7 +203,8 @@ class FallbackChain:
                     fallback_level=3, territory=territory,
                     details=f"L3 terrain A* {round(total_dist)}m types={terrain_types_used}"
                 )
-                return self._annotate(route_result, trail_label, 3, levels_tried)
+                return self._annotate(route_result, trail_label, 3, levels_tried,
+                                      hunter_lat=entry_lat, hunter_lng=entry_lng)
 
         except Exception as e:
             logger.warning(f"[BDRE-CHAIN] L3 erreur: {e}")
@@ -228,7 +234,8 @@ class FallbackChain:
             "type": "estimation_enriched",
             "routing_algo": "bdre_estimation_enriched",
             "segments_count": len(estimation_coords) - 1,
-        }, "estimation_enriched", 4, levels_tried)
+        }, "estimation_enriched", 4, levels_tried,
+        hunter_lat=entry_lat, hunter_lng=entry_lng)
 
     def compute_approach_path(
         self,
@@ -243,9 +250,12 @@ class FallbackChain:
         Pipeline unifie BDRE pour le calcul de route d'approche vers un affut.
         REMPLACE la cascade B de stand_recommendation/engine.py.
 
+        BCE-4X INVARIANT: start_lat/start_lng = waypoint chasseur (STEEVE-MAX).
+        Le premier point de path[] est TOUJOURS le waypoint chasseur.
         Retourne un dict avec trail_type annote par le BDRE.
         """
         territory = f"{start_lat:.4f},{start_lng:.4f}->{stand_lat:.4f},{stand_lng:.4f}"
+        hunter_start = {"lat": round(start_lat, 6), "lng": round(start_lng, 6)}
         levels_tried = []
 
         # SOURCE PRIMAIRE: TNE navigate_terrain
@@ -255,6 +265,9 @@ class FallbackChain:
             result = navigate_terrain(trail_graph, start_lat, start_lng, stand_lat, stand_lng)
             if result is not None:
                 path = result["coords"]
+                # BCE-4X INVARIANT: Forcer waypoint chasseur en tete
+                if path and (abs(path[0].get("lat", 0) - start_lat) > 0.00001 or abs(path[0].get("lng", 0) - start_lng) > 0.00001):
+                    path.insert(0, hunter_start)
                 self._log(
                     engine="STAND_RECO", action="success", score=0.85,
                     territory=territory, details="Source primaire TNE: sentier OSM reel"
@@ -276,13 +289,17 @@ class FallbackChain:
             from engines.terrain_nav.terrain_router import route_terrain
             result = route_terrain(trail_graph, start_lat, start_lng, stand_lat, stand_lng)
             if result is not None:
+                path = result["coords"]
+                # BCE-4X INVARIANT: Forcer waypoint chasseur en tete
+                if path and (abs(path[0].get("lat", 0) - start_lat) > 0.00001 or abs(path[0].get("lng", 0) - start_lng) > 0.00001):
+                    path.insert(0, hunter_start)
                 self._log(
                     engine="STAND_RECO", action="fallback_L1", score=0.60,
                     fallback_level=1, territory=territory,
                     details="L1 waterway guided approach"
                 )
                 return {
-                    "path": result["coords"],
+                    "path": path,
                     "trail_type": "waterway_guided",
                     "distance_m": result["distance_m"],
                     "routing_algo": result.get("routing_algo", "unknown"),
@@ -309,6 +326,9 @@ class FallbackChain:
 
                 if path_nids and len(path_nids) >= 2:
                     coords = [{"lat": nodes[nid][0], "lng": nodes[nid][1]} for nid in path_nids]
+                    # BCE-4X INVARIANT: Forcer waypoint chasseur en tete
+                    if coords and (abs(coords[0]["lat"] - start_lat) > 0.00001 or abs(coords[0]["lng"] - start_lng) > 0.00001):
+                        coords.insert(0, hunter_start)
                     total_dist = sum(
                         _haversine(
                             coords[i]["lat"], coords[i]["lng"],
@@ -383,12 +403,28 @@ class FallbackChain:
     def _annotate(
         self, route_result: Dict, trail_type: str,
         fallback_level: int, levels_tried: List[int],
+        hunter_lat: float = None, hunter_lng: float = None,
     ) -> Dict:
-        """Annoter un resultat avec les metadonnees BDRE."""
+        """
+        Annoter un resultat avec les metadonnees BDRE.
+        BCE-4X INVARIANT: Si hunter_lat/lng fournis, forcer le premier point
+        des coords a etre le waypoint chasseur.
+        """
         route_result["trail_type"] = trail_type
         route_result["bdre_fallback_level"] = fallback_level
         route_result["bdre_levels_tried"] = list(levels_tried)
         route_result["bdre_source"] = f"BDRE_L{fallback_level}" if fallback_level > 0 else "TNE"
+
+        # BCE-4X INVARIANT: Forcer le premier coord = waypoint chasseur
+        if hunter_lat is not None and hunter_lng is not None:
+            coords = route_result.get("coords", [])
+            if coords:
+                first = coords[0]
+                if abs(first.get("lat", 0) - hunter_lat) > 0.00001 or abs(first.get("lng", 0) - hunter_lng) > 0.00001:
+                    coords.insert(0, {"lat": round(hunter_lat, 6), "lng": round(hunter_lng, 6)})
+                    route_result["coords"] = coords
+                    logger.info(f"[BDRE-INVARIANT] Waypoint chasseur force en tete: ({hunter_lat:.6f}, {hunter_lng:.6f})")
+
         return route_result
 
     def _log(self, engine: str, action: str, score: float,
