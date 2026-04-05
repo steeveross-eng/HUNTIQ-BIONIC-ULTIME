@@ -130,6 +130,7 @@ nutritionnelle V6 unifiee.
 | M3_RAPPORT_FINAL | /app/memory/M3_RAPPORT_FINAL.md | 1.0.0 |
 | M3_DASHBOARD_INTEGRATION_PLAN | /app/memory/M3_DASHBOARD_INTEGRATION_PLAN.md | 1.0.0 |
 | DASH_RAPPORT_FINAL | /app/memory/DASH_RAPPORT_FINAL.md | 1.0.0 |
+| AUDIT_BIONIC_OS_DEDUP | /app/memory/AUDIT_BIONIC_OS_DEDUP.md | 1.0.0 |
 | PHASE_A_RAPPORT | /app/memory/PHASE_A_RAPPORT.md | 1.0.0 |
 | M4_ADAPTIVE_NAVIGATION_PLAN | /app/memory/M4_ADAPTIVE_NAVIGATION_PLAN.md | 1.0.0 |
 | M4_RAPPORT_FINAL | /app/memory/M4_RAPPORT_FINAL.md | 1.0.0 |
@@ -141,4 +142,4 @@ nutritionnelle V6 unifiee.
 
 ---
 
-**Derniere mise a jour** : 2026-04-05 — Phase A livraisons immediates complete (M4 Rapport + DataContracts V6 inventaire)
+**Derniere mise a jour** : 2026-04-05 — Phase B audit strategique BIONIC OS complete (4 doublons identifies, module Gestionnaire defini)
