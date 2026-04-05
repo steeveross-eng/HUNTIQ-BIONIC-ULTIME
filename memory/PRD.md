@@ -243,7 +243,8 @@ nutritionnelle V6 unifiee.
 | BDRE_ENGINE_INTEGRATION_V2 | /app/memory/BDRE_SPECS_CORRIGEES_V2/BDRE_ENGINE_INTEGRATION_V2.md | 2.0.0 |
 | BDRE_PHASE1_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE1_IMPLEMENTATION_REPORT.md | 1.0.0 |
 | BDRE_PHASE2_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE2_IMPLEMENTATION_REPORT.md | 1.0.0 |
+| BDRE_PHASE3_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE3_IMPLEMENTATION_REPORT.md | 1.0.0 |
 
 ---
 
-**Derniere mise a jour** : 2026-04-06 — BDRE PHASE 2 IMPLEMENTATION COMPLETE. DS-8 resolue dans le code (stream/ditch/drain = corridors navigables). build_terrain_graph enrichi avec waterways Phase 5 + clearings Phase 6. Hooks BDRE integres dans TNE (pre-call, post-call, scoring, anomaly detection). Test: graphe passe de 0 a 28 noeuds sur territoire 48.19,-68.39. health_monitor + anomaly_detector operationnels. 10/10 endpoints. Phase BDRE-3 EN ATTENTE DIRECTIVE.
+**Derniere mise a jour** : 2026-04-06 — BDRE PHASE 3 IMPLEMENTATION COMPLETE. Pipeline hybride 4 niveaux (fallback_chain.py) + source_selector.py. CASCADE A (access_engine) et CASCADE B (stand_recommendation) REMPLACEES par delegation au BDRE. trail_type annote par BDRE: 6 valeurs (real_osm, waterway_guided, hybride_sentier_terrain, corridor_astar, terrain_topology, estimation_enriched). _legacy_cascade safety backup conserve. Test: access_route hybride L2 1218m/34pts, approach corridor_astar L3 566m/14pts. Journal BDRE 7 entrees. Phase BDRE-4 EN ATTENTE DIRECTIVE.
