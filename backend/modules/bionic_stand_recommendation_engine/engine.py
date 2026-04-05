@@ -147,18 +147,44 @@ def _generate_approach_path(
     trail_graph=None
 ) -> List[Dict[str, float]]:
     """
-    BCE-4X Phase 2.5 — Routage REEL via TERRAIN NAV ENGINE (TNE).
+    BCE-4X Phase 3 — BDRE Pipeline Unifie pour routes d'approche.
     
-    Strategie:
-    1. Si un graphe terrain est disponible: router via TNE (A* + Dijkstra)
-    2. Fallback UNIQUEMENT si aucun chemin trouve dans la zone
-       → annote "estimation", log interne
-    3. INTERDIT de generer des sinusoides ou waypoints artificiels
-       si un graphe existe deja
+    Delegation au BDRE FallbackChain qui orchestre 4 niveaux:
+    0. TNE sentier OSM reel
+    1. Waterway bank routing (DS-8)
+    2. Hybride trail-terrain
+    3. Terrain A* HUMAN_TRAJET_COSTS
+    4. Estimation enrichie (dernier recours)
+    
+    INTERDIT de generer des sinusoides ou waypoints artificiels.
     """
+    # BDRE Phase 3: Deleguer au pipeline hybride unifie
+    try:
+        from engines.bdre import get_fallback_chain
+        chain = get_fallback_chain()
+        bdre_result = chain.compute_approach_path(
+            start_lat, start_lng, stand_lat, stand_lng,
+            wind_dir=wind_dir, trail_graph=trail_graph,
+            corridors=corridors, hydro_points=hydro_points,
+        )
+        path = bdre_result["path"]
+        if path:
+            path[0]["trail_distance_m"] = bdre_result["distance_m"]
+            path[0]["trail_type"] = bdre_result["trail_type"]
+            path[0]["routing_algo"] = bdre_result["routing_algo"]
+            path[0]["bdre_fallback_level"] = bdre_result["bdre_fallback_level"]
+        logger.info(
+            f"[APPROACH-BDRE] Route: {bdre_result['trail_type']} "
+            f"level={bdre_result['bdre_fallback_level']} "
+            f"dist={bdre_result['distance_m']}m"
+        )
+        return path
+    except Exception as e:
+        logger.warning(f"[APPROACH-BDRE] Pipeline BDRE erreur: {e} — fallback legacy")
+
+    # Fallback legacy si BDRE echoue
     from engines.terrain_nav import navigate_terrain
 
-    # Tentative de routage reel via TNE
     if trail_graph is not None and not trail_graph.is_empty:
         result = navigate_terrain(trail_graph, start_lat, start_lng, stand_lat, stand_lng)
         if result is not None:
@@ -167,40 +193,27 @@ def _generate_approach_path(
                 path[0]["trail_distance_m"] = result["distance_m"]
                 path[0]["trail_type"] = result["type"]
                 path[0]["routing_algo"] = result.get("routing_algo", "unknown")
-            logger.info(f"[APPROACH] TNE Routage REEL: {result['distance_m']}m, {len(path)} points, algo={result.get('routing_algo')}")
             return path
-        else:
-            logger.warning("[APPROACH] TNE routing failed on existing graph — fallback estimation")
 
-    # FALLBACK: aucun graphe terrain ou aucun chemin trouve
-    logger.warning("[APPROACH] FALLBACK estimation — aucun sentier terrain disponible dans la zone")
-
+    # Estimation legacy (dernier recours)
     wind_deg = _wind_angle(wind_dir)
     approach_from = (wind_deg + 180) % 360
     approach_rad = math.radians(approach_from)
-
-    # Point d'entree contre-vent
     approach_offset = 0.003
     entry_lat = stand_lat + approach_offset * math.cos(approach_rad)
     entry_lng = stand_lng + approach_offset * math.sin(approach_rad) / math.cos(math.radians(stand_lat))
 
-    # Chemin direct simplifie (PAS de sinusoides)
     path = [
         {"lat": round(start_lat, 6), "lng": round(start_lng, 6)},
         {"lat": round(entry_lat, 6), "lng": round(entry_lng, 6)},
         {"lat": round(stand_lat, 6), "lng": round(stand_lng, 6)},
     ]
-
-    total_distance_m = 0.0
-    for j in range(1, len(path)):
-        total_distance_m += _haversine(
-            path[j - 1]["lat"], path[j - 1]["lng"],
-            path[j]["lat"], path[j]["lng"]
-        )
-
+    total_distance_m = sum(
+        _haversine(path[j - 1]["lat"], path[j - 1]["lng"], path[j]["lat"], path[j]["lng"])
+        for j in range(1, len(path))
+    )
     path[0]["trail_distance_m"] = round(total_distance_m)
-    path[0]["trail_type"] = "estimation"
-
+    path[0]["trail_type"] = "estimation_enriched"
     return path
 
 

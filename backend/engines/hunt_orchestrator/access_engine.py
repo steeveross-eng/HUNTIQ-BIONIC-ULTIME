@@ -557,110 +557,42 @@ def compute_access_route(
     """
     BCE-4X Trail-First Routing — Calculer le chemin d'acces optimal vers un affut.
 
-    Strategie en cascade (priorite decroissante):
-    1. Route sentier OSM complete (entree → affut via graphe)
-    2. Route HYBRIDE: sentier OSM → noeud jonction → approche terrain (A* grille)
-    3. Route terrain-aware pure (grille A* integrale)
-    4. Fallback: ligne directe (indicatif uniquement)
+    BDRE Phase 3: Delegation au pipeline hybride 4 niveaux BDRE.
+    La logique metier est CONSERVEE dans ce fichier (hybrid, terrain grid, A*).
+    Le BDRE ORCHESTRE l'ordre d'appel et annote les trail_type.
 
-    Validation: contamination, eau, alimentation sur chaque resultat.
+    Niveaux BDRE:
+    0. Source primaire: sentier OSM reel (TNE)
+    1. Waterway bank routing (graphe enrichi DS-8)
+    2. Hybride trail-terrain (sentier + approche A*)
+    3. Terrain-aware A* pur
+    4. Estimation enrichie (dernier recours)
     """
-    from engines.terrain_nav import navigate_terrain
-
-    # --- Strategie 1: Routage sentier OSM complet ---
-    route_result = navigate_terrain(
-        trail_graph, entry_lat, entry_lng, blind_lat, blind_lng
-    )
-
-    # --- Strategie 2: Routage HYBRIDE trail-first ---
-    if route_result is None:
-        logger.info(
-            f"[ACCESS] Sentier complet echec — tentative hybride trail-first "
-            f"({entry_lat:.4f},{entry_lng:.4f}) -> ({blind_lat:.4f},{blind_lng:.4f})"
+    # BDRE Phase 3: Deleguer au pipeline hybride unifie
+    try:
+        from engines.bdre import get_fallback_chain
+        chain = get_fallback_chain()
+        route_result = chain.compute_access_route(
+            entry_lat, entry_lng, blind_lat, blind_lng,
+            trail_graph, terrain_data=terrain_data,
+            scent_zone=scent_zone, feeding_sites=feeding_sites,
         )
-        route_result = _attempt_hybrid_trail_terrain(
+        logger.info(
+            f"[ACCESS-BDRE] Route calculee: trail_type={route_result.get('trail_type')}, "
+            f"level={route_result.get('bdre_fallback_level', '?')}, "
+            f"dist={route_result.get('distance_m', 0)}m"
+        )
+    except Exception as e:
+        logger.warning(f"[ACCESS-BDRE] Pipeline BDRE erreur: {e} — fallback cascade legacy")
+        # Fallback legacy si BDRE echoue
+        route_result = _legacy_cascade(
             entry_lat, entry_lng, blind_lat, blind_lng,
             trail_graph, terrain_data, scent_zone, feeding_sites,
         )
 
-    # --- Strategie 3: Routage terrain-aware pur ---
-    if route_result is None:
-        logger.info(
-            f"[ACCESS] Hybride echec — activation routage terrain-aware pur "
-            f"({entry_lat:.4f},{entry_lng:.4f}) -> ({blind_lat:.4f},{blind_lng:.4f})"
-        )
-        try:
-            nodes, adjacency, node_types, start_nid, end_nid = _build_terrain_grid(
-                entry_lat, entry_lng, blind_lat, blind_lng,
-                terrain_data, scent_zone, feeding_sites,
-            )
-            path_nids = _astar_terrain_grid(nodes, adjacency, start_nid, end_nid)
-
-            if path_nids and len(path_nids) >= 2:
-                coords = [{"lat": nodes[nid][0], "lng": nodes[nid][1]} for nid in path_nids]
-                total_dist = 0
-                for i in range(len(coords) - 1):
-                    total_dist += _haversine(
-                        coords[i]["lat"], coords[i]["lng"],
-                        coords[i + 1]["lat"], coords[i + 1]["lng"]
-                    )
-
-                terrain_types_used = set()
-                for nid in path_nids:
-                    t = node_types.get(nid, "open_forest")
-                    if t not in ("entry", "blind"):
-                        terrain_types_used.add(t)
-
-                trail_type_label = "terrain_aware"
-                if "stream_bank" in terrain_types_used:
-                    trail_type_label = "corridor_ruisseau"
-                elif "clearing_edge" in terrain_types_used:
-                    trail_type_label = "corridor_clairiere"
-
-                logger.info(
-                    f"[ACCESS] Terrain-aware route: {len(coords)} pts, {round(total_dist)}m, "
-                    f"types: {terrain_types_used}"
-                )
-
-                route_result = {
-                    "coords": coords,
-                    "distance_m": total_dist,
-                    "type": trail_type_label,
-                    "routing_algo": "terrain_grid_astar",
-                    "segments_count": len(coords) - 1,
-                    "terrain_types": list(terrain_types_used),
-                }
-            else:
-                logger.warning("[ACCESS] Terrain-aware A* echec — fallback direct")
-                route_result = None
-        except Exception as e:
-            logger.error(f"[ACCESS] Terrain grid error: {e}")
-            route_result = None
-
-    if route_result is None:
-        # Fallback ultime: ligne directe
-        direct_dist = _haversine(entry_lat, entry_lng, blind_lat, blind_lng)
-        n_pts = max(5, int(direct_dist / 50))
-        direct_coords = []
-        for i in range(n_pts + 1):
-            t = i / n_pts
-            direct_coords.append({
-                "lat": entry_lat + t * (blind_lat - entry_lat),
-                "lng": entry_lng + t * (blind_lng - entry_lng),
-            })
-        return {
-            "status": "direct_hors_sentier",
-            "coords": direct_coords,
-            "distance_m": round(direct_dist),
-            "trail_type": "hors_sentier",
-            "routing_algo": "direct_line",
-            "feasible": True,
-            "quality_score": 20,
-            "contamination_check": {"compliant": True, "violations": []},
-            "water_crossings": [],
-            "feeding_proximity_violations": [],
-            "message": "Aucune donnee terrain — trace direct (direction indicative).",
-        }
+    if route_result.get("routing_algo") == "direct_line" or route_result.get("trail_type") == "hors_sentier":
+        # Le BDRE a retourne une estimation — pas de validation supplementaire
+        return route_result
 
     coords = route_result["coords"]
     distance_m = route_result["distance_m"]
@@ -856,3 +788,65 @@ def find_best_entry_point(
     # Trier par score
     candidates.sort(key=lambda x: x["total_score"], reverse=True)
     return candidates[:max_entries]
+
+
+
+def _legacy_cascade(
+    entry_lat, entry_lng, blind_lat, blind_lng,
+    trail_graph, terrain_data, scent_zone, feeding_sites,
+):
+    """
+    BDRE safety fallback — Cascade legacy si le BDRE echoue.
+    Reproduit l'ancien comportement (pre-BDRE Phase 3).
+    """
+    from engines.terrain_nav import navigate_terrain
+
+    route_result = navigate_terrain(
+        trail_graph, entry_lat, entry_lng, blind_lat, blind_lng
+    ) if trail_graph and not trail_graph.is_empty else None
+
+    if route_result is None:
+        route_result = _attempt_hybrid_trail_terrain(
+            entry_lat, entry_lng, blind_lat, blind_lng,
+            trail_graph, terrain_data, scent_zone or {}, feeding_sites or [],
+        )
+
+    if route_result is None:
+        try:
+            nodes, adjacency, node_types, start_nid, end_nid = _build_terrain_grid(
+                entry_lat, entry_lng, blind_lat, blind_lng,
+                terrain_data, scent_zone or {}, feeding_sites or [],
+            )
+            path_nids = _astar_terrain_grid(nodes, adjacency, start_nid, end_nid)
+            if path_nids and len(path_nids) >= 2:
+                coords = [{"lat": nodes[nid][0], "lng": nodes[nid][1]} for nid in path_nids]
+                total_dist = sum(
+                    _haversine(coords[i]["lat"], coords[i]["lng"],
+                               coords[i + 1]["lat"], coords[i + 1]["lng"])
+                    for i in range(len(coords) - 1)
+                )
+                route_result = {
+                    "coords": coords, "distance_m": total_dist,
+                    "type": "terrain_aware", "routing_algo": "terrain_grid_astar",
+                    "segments_count": len(coords) - 1,
+                }
+        except Exception:
+            route_result = None
+
+    if route_result is None:
+        direct_dist = _haversine(entry_lat, entry_lng, blind_lat, blind_lng)
+        n_pts = max(5, int(direct_dist / 50))
+        coords = [
+            {"lat": entry_lat + (i / n_pts) * (blind_lat - entry_lat),
+             "lng": entry_lng + (i / n_pts) * (blind_lng - entry_lng)}
+            for i in range(n_pts + 1)
+        ]
+        return {
+            "status": "direct_hors_sentier", "coords": coords,
+            "distance_m": round(direct_dist), "trail_type": "hors_sentier",
+            "routing_algo": "direct_line", "feasible": True, "quality_score": 20,
+            "contamination_check": {"compliant": True, "violations": []},
+            "water_crossings": [], "feeding_proximity_violations": [],
+        }
+
+    return route_result

@@ -14,6 +14,8 @@ from .audit_logger import AuditLogger
 from .waterway_classifier import WaterwayClassifier
 from .health_monitor import HealthMonitor
 from .anomaly_detector import AnomalyDetector
+from .source_selector import SourceSelector
+from .fallback_chain import FallbackChain
 
 logger = logging.getLogger("bionic.bdre")
 
@@ -23,6 +25,8 @@ _audit = AuditLogger()
 _waterway = WaterwayClassifier()
 _monitor = HealthMonitor(_registry)
 _anomaly = AnomalyDetector(_registry, _audit)
+_selector = SourceSelector(_registry, _scorer)
+_chain = FallbackChain(_registry, _scorer, _audit)
 
 
 def check_source(source_id: str) -> dict:
@@ -95,3 +99,13 @@ def get_health_monitor() -> HealthMonitor:
 def get_anomaly_detector() -> AnomalyDetector:
     """Acces au detecteur d'anomalies pour le router."""
     return _anomaly
+
+
+def get_source_selector() -> SourceSelector:
+    """Acces au selecteur de source (F4)."""
+    return _selector
+
+
+def get_fallback_chain() -> FallbackChain:
+    """Acces au pipeline hybride 4 niveaux (F5)."""
+    return _chain

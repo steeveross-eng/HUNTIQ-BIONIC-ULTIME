@@ -43,7 +43,7 @@ async def bdre_health():
         "module": "bdre",
         "version": "V2",
         "protocol": "BCE-4X GOLDEN V6+",
-        "phase": "Phase 2 — Monitoring + Integration TNE",
+        "phase": "Phase 3 — Pipeline Hybride + Remplacement Cascades",
         "endpoints": 10,
         "components": [
             "source_registry",
@@ -52,6 +52,8 @@ async def bdre_health():
             "audit_logger",
             "health_monitor",
             "anomaly_detector",
+            "source_selector",
+            "fallback_chain",
         ],
         "sources_registered": len(registry.get_all_sources()),
         "audit_stats": stats,
