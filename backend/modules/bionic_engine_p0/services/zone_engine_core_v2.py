@@ -941,6 +941,12 @@ def _filter_corridors_water(corridors, hydro_zones):
                 continue
             filtered.append(corridor)
         except Exception:
+            filtered.append(corridor)
+
+    if rejected > 0:
+        logger.info(f"[V7.2-x7200] {rejected} corridors rejetes (intersection eau)")
+
+    return filtered
 
 
 def _assess_forest_ratio(corridors, terrain_data):
@@ -950,20 +956,20 @@ def _assess_forest_ratio(corridors, terrain_data):
     Ajoute les metriques forest_ratio et terrain_breakdown aux proprietes.
     """
     FOREST_TYPES = {"mature_forest", "mixed_forest", "conifer_forest", "deciduous_forest", "dense_thicket"}
-    
+
     for corridor in corridors:
         path_coords = corridor.get("geometry", {}).get("coordinates", [])
         props = corridor.get("properties", {})
-        
+
         if len(path_coords) < 2:
             props["forest_ratio"] = 0.0
             props["terrain_breakdown"] = {}
             continue
-        
+
         # Echantillonner le terrain le long du trajet
         terrain_counts = {}
         total_samples = 0
-        
+
         for coord in path_coords:
             key = f"{coord[1]:.4f},{coord[0]:.4f}" if len(coord) >= 2 else None
             if key and key in terrain_data:
@@ -972,18 +978,18 @@ def _assess_forest_ratio(corridors, terrain_data):
                 t_type = "unknown"
             terrain_counts[t_type] = terrain_counts.get(t_type, 0) + 1
             total_samples += 1
-        
+
         if total_samples == 0:
             props["forest_ratio"] = 0.0
             props["terrain_breakdown"] = {}
             continue
-        
+
         forest_count = sum(terrain_counts.get(ft, 0) for ft in FOREST_TYPES)
         forest_ratio = forest_count / total_samples
-        
+
         props["forest_ratio"] = round(forest_ratio, 2)
         props["terrain_breakdown"] = {k: round(v / total_samples, 2) for k, v in terrain_counts.items()}
-        
+
         # Marquer les trajets humains avec trop de foret
         if props.get("movement_type") == "human" and forest_ratio > 0.6:
             props["forest_heavy"] = True
@@ -991,15 +997,8 @@ def _assess_forest_ratio(corridors, terrain_data):
                 f"[V7.2-x7200] Trajet humain {corridor.get('id', '?')}: "
                 f"forest_ratio={forest_ratio:.0%} > 60% — marque forest_heavy"
             )
-    
+
     return corridors
-
-            filtered.append(corridor)
-
-    if rejected > 0:
-        logger.info(f"[V7.2-x7200] {rejected} corridors rejetes (intersection eau)")
-
-    return filtered
 
 
 def _build_terrain_grid(zone_polygons, bounds):

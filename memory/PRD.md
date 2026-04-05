@@ -169,7 +169,20 @@ nutritionnelle V6 unifiee.
 - [x] Audit trajets vers affuts COMPLET : cause racine = table couts unique animal/humain
 - [x] 5 solutions proposees, Solution 1+4 recommandees (table HUMAN_TRAJET_COSTS + post-filtre foret)
 - [x] Rapport : /app/memory/AUDIT_TRAJETS_AFFUTS_x7200.md
-- En attente : validation STEEVE-MAX pour implementer corrections trajets
+
+#### Directive x7200 — SECTION C: TRAJETS HUMAINS (CORRECTION + IMPLEMENTATION)
+- [x] FIX BLOQUEUR : IndentationError corrigee (except vide → except: filtered.append(corridor))
+- [x] _assess_forest_ratio extraite comme fonction autonome (zone_engine_core_v2.py:952-1001)
+- [x] HUMAN_TRAJET_COSTS : 23 types terrain, foret x2.9 vs animal, eau=999.0 (corridor_10x.py:499-533)
+- [x] human_trajet_pathfinder : singleton separe (corridor_10x.py:757)
+- [x] HUMAN_PAIRS : 10 paires definies (affuts/trajets/salines)
+- [x] Post-filtre _assess_forest_ratio : marque forest_heavy si humain + >60% foret
+- [x] Tag movement_type : "human"/"animal" sur chaque corridor
+- [x] Tests : 6/6 PASS (couts, pathfinder, forest_ratio 3 scenarios, HUMAN_PAIRS)
+- [x] Backend : demarrage OK, ZERO WARNING, 78 modules charges
+- [x] Logique maitresse Mon Territoire : INTOUCHEE
+- [x] Rapport : /app/memory/AUDIT_TRAJETS_HUMAINS_x7200.md
+- En attente : validation finale STEEVE-MAX
 
 ### P1 — Prochain
 - [ ] Phase E: GUIDE PRO (chasse guidee 100%) — DEBLOQUEE par validation x7200
@@ -206,7 +219,8 @@ nutritionnelle V6 unifiee.
 | P5_OPTIMIZATION_PLAN | /app/memory/P5_OPTIMIZATION_PLAN.md | 1.0.0 |
 | AUBO_V2 | /app/memory/AUBO_V2.md | 2.0.0 |
 | AUDIT_HOTSPOTS_x7200 | /app/memory/AUDIT_HOTSPOTS_x7200.md | 1.0.0 |
+| AUDIT_TRAJETS_HUMAINS_x7200 | /app/memory/AUDIT_TRAJETS_HUMAINS_x7200.md | 1.0.0 |
 
 ---
 
-**Derniere mise a jour** : 2026-04-05 — AUDIT ARBORESCENCE ZONES COMPLETE (pipeline trace, cause racine identifiee, 3 options proposees, Option B recommandee)
+**Derniere mise a jour** : 2026-04-05 — SECTION C TRAJETS HUMAINS COMPLETE (IndentationError corrigee, HUMAN_TRAJET_COSTS deploye, _assess_forest_ratio autonome, 6/6 tests PASS)
