@@ -226,7 +226,8 @@ nutritionnelle V6 unifiee.
 | AUDIT_TRAJETS_HUMAINS_x7200 | /app/memory/AUDIT_TRAJETS_HUMAINS_x7200.md | 1.0.0 |
 | RAPPORT_POST_VALIDATION_SECTION_C | /app/memory/RAPPORT_POST_VALIDATION_SECTION_C.md | 1.0.0 |
 | PHASE_E_GUIDE_PRO_ARCHITECTURE | /app/memory/PHASE_E_GUIDE_PRO_ARCHITECTURE.md | 1.0.0 |
+| AUDIT_TRAJETS_VERS_AFFUTS_HUMAN | /app/memory/AUDIT_TRAJETS_VERS_AFFUTS_HUMAN.md | 1.0.0 |
 
 ---
 
-**Derniere mise a jour** : 2026-04-05 — SECTION C VALIDEE. PHASE E ARCHITECTURE GENEREE (15 endpoints, 4 services, 15 points de fusion). EN ATTENTE VALIDATION STEEVE-MAX.
+**Derniere mise a jour** : 2026-04-05 — AUDIT TRAJETS VERS AFFUTS COMPLET. Cause racine: grille terrain synthetique sans sentiers OSM reels. 3 options proposees. EN ATTENTE DECISION STEEVE-MAX.
