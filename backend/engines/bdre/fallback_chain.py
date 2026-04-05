@@ -97,7 +97,8 @@ class FallbackChain:
                     territory=territory, details="Source primaire TNE: sentier OSM reel"
                 )
                 return self._annotate(route_result, "real_osm", 0, levels_tried,
-                                      hunter_lat=entry_lat, hunter_lng=entry_lng)
+                                      hunter_lat=entry_lat, hunter_lng=entry_lng,
+                                      trail_graph=trail_graph)
 
         levels_tried.append(0)
         logger.info("[BDRE-CHAIN] Source primaire echouee — declenchement pipeline hybride")
@@ -130,7 +131,8 @@ class FallbackChain:
                         details="L1 waterway bank routing via graphe enrichi"
                     )
                     return self._annotate(result, "waterway_guided", 1, levels_tried,
-                                          hunter_lat=entry_lat, hunter_lng=entry_lng)
+                                          hunter_lat=entry_lat, hunter_lng=entry_lng,
+                                          trail_graph=trail_graph)
 
         levels_tried.append(1)
 
@@ -151,7 +153,8 @@ class FallbackChain:
                     details="L2 hybride trail-terrain"
                 )
                 return self._annotate(hybrid_result, "hybride_sentier_terrain", 2, levels_tried,
-                                      hunter_lat=entry_lat, hunter_lng=entry_lng)
+                                      hunter_lat=entry_lat, hunter_lng=entry_lng,
+                                      trail_graph=trail_graph)
         except Exception as e:
             logger.warning(f"[BDRE-CHAIN] L2 erreur: {e}")
 
@@ -206,7 +209,8 @@ class FallbackChain:
                     details=f"L3 terrain A* {round(total_dist)}m types={terrain_types_used}"
                 )
                 return self._annotate(route_result, trail_label, 3, levels_tried,
-                                      hunter_lat=entry_lat, hunter_lng=entry_lng)
+                                      hunter_lat=entry_lat, hunter_lng=entry_lng,
+                                      trail_graph=trail_graph)
 
         except Exception as e:
             logger.warning(f"[BDRE-CHAIN] L3 erreur: {e}")
@@ -237,7 +241,8 @@ class FallbackChain:
             "routing_algo": "bdre_estimation_enriched",
             "segments_count": len(estimation_coords) - 1,
         }, "estimation_enriched", 4, levels_tried,
-        hunter_lat=entry_lat, hunter_lng=entry_lng)
+        hunter_lat=entry_lat, hunter_lng=entry_lng,
+        trail_graph=trail_graph)
 
     def compute_approach_path(
         self,
@@ -408,6 +413,7 @@ class FallbackChain:
         self, route_result: Dict, trail_type: str,
         fallback_level: int, levels_tried: List[int],
         hunter_lat: float = None, hunter_lng: float = None,
+        trail_graph=None,
     ) -> Dict:
         """
         Annoter un resultat avec les metadonnees BDRE.
@@ -430,26 +436,21 @@ class FallbackChain:
                     route_result["coords"] = coords
                     logger.info(f"[BDRE-INVARIANT] Waypoint chasseur force en tete: ({hunter_lat:.6f}, {hunter_lng:.6f})")
 
-        # BCE-4X CORRIDOR-FIRST 500%: Metriques corridor/foret
-        if trail_type in ("real_osm", "waterway_guided", "hybride_sentier_terrain"):
-            route_result["corridor_pct"] = 95
-            route_result["forest_pct"] = 5
-        elif trail_type in ("corridor_astar", "terrain_topology"):
-            route_result["corridor_pct"] = 80
-            route_result["forest_pct"] = 20
-        elif trail_type == "estimation_enriched":
-            route_result["corridor_pct"] = 0
-            route_result["forest_pct"] = 100
-        else:
-            route_result["corridor_pct"] = 50
-            route_result["forest_pct"] = 50
-
-        # BCE-4X CORRIDOR-FIRST X1 000 000%: Post-analyse via corridor_optimizer_v2
+        # BCE-4X CORRIDOR-FIRST X1 000 000% (CORRECTION STEEVE-MAX 2026-04-06):
+        # CALCUL REEL via corridor_optimizer_v2 — PLUS de pourcentages hardcodes.
+        # Le trail_graph est transmis pour detection multi-point stricte.
         try:
             from engines.bdre.corridor_optimizer_v2 import enforce_corridor_lock
-            route_result = enforce_corridor_lock(route_result)
+            route_result = enforce_corridor_lock(route_result, trail_graph)
         except Exception as e:
             logger.warning(f"[BDRE] corridor_optimizer_v2 error: {e}")
+            # Fallback estimatif UNIQUEMENT en cas d'erreur module
+            if trail_type in ("real_osm", "waterway_guided"):
+                route_result["corridor_pct"] = 95
+                route_result["forest_pct"] = 5
+            else:
+                route_result["corridor_pct"] = 50
+                route_result["forest_pct"] = 50
 
         return route_result
 

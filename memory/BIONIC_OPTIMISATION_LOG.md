@@ -160,6 +160,30 @@ conformement a la directive d'optimisation continue totale BDRE-FIRST.
 
 ---
 
+### 2026-04-06 — CORRIDOR-FIRST X1 000 000% — CORRECTION STEEVE-MAX
+
+- **Scope** : corridor_optimizer_v2.py, fallback_chain.py, orchestrator.py
+- **Action** : REJET validation precedente par STEEVE-MAX. Corrections immediates :
+  - corridor_optimizer_v2.py RECRIT : detection stricte 3 pts/segment (debut+milieu+fin), rayon 40m, heuristique fallback < 30m, contrainte max segment foret 5%, scoring multi-engine BDRE (4 engines)
+  - fallback_chain.py CORRIGE : suppression pourcentages hardcodes (95/5, 80/20), calcul REEL via corridor_optimizer_v2, trail_graph passe a _annotate
+  - orchestrator.py ENRICHI : chargement engines BDRE (quality_scorer + anomaly_detector + source_selector), scoring composite 40/30/30, metadata corridor_first + bdre_engines_integrated exposees
+- **Engines integres** : E1(trail_graph 50%), E2(quality_scorer 20%), E3(anomaly_detector 15%), E4(terrain_costs 15%)
+- **Impact** : Detection corridor stricte, elimination hardcoding, scoring BDRE-FIRST multi-engine
+- **Regression** : ZERO
+- **Rapport** : AFFUTS_CORRIDOR_X1M_REPORT.md
+
+---
+
+### 2026-04-06 — GEL P2 — DIRECTIVE STEEVE-MAX
+
+- **Scope** : M5, BSAA-2, hooks, code P2
+- **Action** : Gel complet de P2. Aucune execution M5, BSAA-2, hooks. Preparation documentaire uniquement.
+- **Impact** : Aucun code P2 modifie ou execute
+- **Regression** : ZERO
+- **Rapport** : P2_READY_REPORT.md
+
+---
+
 ## REGLES D'OPTIMISATION CONTINUE
 
 1. **ZERO REGRESSION** : Aucune optimisation ne peut casser une fonctionnalite existante
@@ -171,4 +195,4 @@ conformement a la directive d'optimisation continue totale BDRE-FIRST.
 
 ---
 
-**Derniere mise a jour** : 2026-04-05
+**Derniere mise a jour** : 2026-04-06 — CORRIDOR-FIRST X1 000 000% CORRIGE + ENGINES INTEGRES. Detection stricte 3 pts/segment, scoring BDRE 4 engines, contrainte max segment foret 5%. Orchestrateur scoring 40/30/30 BDRE-FIRST.

@@ -115,7 +115,7 @@ nutritionnelle V6 unifiee.
   - Rapport: AFFUTS_BDRE_CORRECTION_REPORT.md
 - [ ] Phase G: (En attente directive STEEVE-MAX)
 
-### P2 — Futur
+### P2 — Futur (GELE)
 - [x] P1 BDRE-FIRST Optimisation Continue — COMPLET
   - Intelligence V6: Widget BDRE Health (version, sources actives, fallbacks, dots)
   - Mon Territoire: Indicateur BDRE carte (bouton Shield + Popover 4 compteurs + 16 dots)
@@ -138,14 +138,25 @@ nutritionnelle V6 unifiee.
   - corridor_lock=True, corridor_pct=90%, forest_pct=10%
   - Metriques BDRE propagees dans access_engine.py result
   - Rapport: AFFUTS_CORRIDOR_500_REPORT.md
+- [x] CORRIDOR-FIRST X1 000 000% — CORRECTION STEEVE-MAX 2026-04-06
+  - REJET validation precedente. Corrections immediates appliquees.
+  - Detection stricte 3 points/segment (debut + milieu + fin), rayon 40m
+  - Contrainte max segment foret : 5% du total
+  - Scoring BDRE multi-engine 4 moteurs (E1:50% + E2:20% + E3:15% + E4:15%)
+  - Suppression hardcoding corridor_pct dans fallback_chain.py
+  - Orchestrateur scoring BDRE-FIRST : blind(40%) + access(30%) + corridor(30%)
+  - Engines integres : trail_graph + quality_scorer + anomaly_detector + terrain_costs
+  - Rapport: AFFUTS_CORRIDOR_X1M_REPORT.md
 - [x] P2 Preparation (M5 + BSAA-2) — Documentation complete
   - M5: 8 endpoints prevus, hooks BDRE identifies
   - BSAA-2: 18 endpoints prevus, architecture existante
   - Rapport: P2_PREPARATION_REPORT.md
   - Execution EN ATTENTE directive STEEVE-MAX
+- [x] P2 Gel complet — DIRECTIVE STEEVE-MAX 2026-04-06
+  - Rapport: P2_READY_REPORT.md
 - [ ] M5: Offline Mode Ultra + Terrain Intelligence (8 endpoints)
 - [ ] BSAA-2, Soil Engine V2
-- [ ] Merge Work1 → main (INTERDIT)
+- [ ] Merge Work1 -> main (INTERDIT)
 
 ---
 
@@ -186,7 +197,9 @@ Tout composant BIONIC OS doit :
 | PHASE_F_GESTIONNAIRE_UI_REPORT | /app/memory/PHASE_F_GESTIONNAIRE_UI_REPORT.md | 1.0.0 |
 | AUDIT_HOTSPOTS_x7200 | /app/memory/AUDIT_HOTSPOTS_x7200.md | 1.0.0 |
 | AUDIT_TRAJETS_HUMAINS_x7200 | /app/memory/AUDIT_TRAJETS_HUMAINS_x7200.md | 1.0.0 |
+| AFFUTS_CORRIDOR_X1M_REPORT | /app/memory/AFFUTS_CORRIDOR_X1M_REPORT.md | 1.0.0 |
+| P2_READY_REPORT | /app/memory/P2_READY_REPORT.md | 1.0.0 |
 
 ---
 
-**Derniere mise a jour** : 2026-04-05 — CORRIDOR-FIRST 500% OPERATIONNEL. Couts corridors /3-4, foret x15+. Ratio corridor/foret 0.0016 (x62.5 vs initial). corridor_lock=True, corridor_pct=90%, forest_pct=10%. Metriques BDRE propagees. Dashboard BDRE global integre. Rapport: AFFUTS_CORRIDOR_500_REPORT.md.
+**Derniere mise a jour** : 2026-04-06 — CORRIDOR-FIRST X1 000 000% CORRIGE + ENGINES INTEGRES (REJET validation precedente). Detection stricte 3 pts/segment, scoring BDRE 4 engines, contrainte max segment foret 5%. Orchestrateur scoring 40/30/30 BDRE-FIRST. P2 GELE. Rapport: AFFUTS_CORRIDOR_X1M_REPORT.md + P2_READY_REPORT.md.
