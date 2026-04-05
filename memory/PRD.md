@@ -185,11 +185,17 @@ nutritionnelle V6 unifiee.
 - En attente : validation finale STEEVE-MAX
 
 ### P1 — Prochain
-- [ ] Phase E: GUIDE PRO (chasse guidee 100%) — DEBLOQUEE, ARCHITECTURE PRETE
-  - Architecture: /app/memory/PHASE_E_GUIDE_PRO_ARCHITECTURE.md
-  - 15 endpoints, 4 services, 3 DataContracts, 4 EventBus channels
-  - 15 points de fusion, 7 modules ANTI-DOUBLON
-  - EN ATTENTE VALIDATION STEEVE-MAX pour implementation
+- [x] Phase E-1: GUIDE PRO Backend — DEPLOYE (15/15 endpoints PASS)
+  - guide_session_manager: CRUD + lifecycle sessions
+  - group_tracker: Positions LIVE + dispersion  
+  - guided_route_builder: Parcours multi-clients
+  - post_hunt_reporter: Rapports post-chasse
+  - Flow E2E: Create→Clients→Routes→Start→Track→End→Report
+- [x] Pipeline Terrain A+F+G — IMPLEMENTE (ENGINE_OSM_LITE operationnel)
+  - A: _build_terrain_grid enrichie OSM
+  - F: ENGINE_OSM_LITE (engine_osm_lite.py)
+  - G: Fusion Access Engine V6 (12282 noeuds)
+- [ ] Phase E-2: Frontend GUIDE PRO (6 composants React)
 - [ ] Phase F: Module Gestionnaire UI (CARTE tabs + SECOURS button)
 
 ### P2 — Futur
@@ -227,7 +233,8 @@ nutritionnelle V6 unifiee.
 | RAPPORT_POST_VALIDATION_SECTION_C | /app/memory/RAPPORT_POST_VALIDATION_SECTION_C.md | 1.0.0 |
 | PHASE_E_GUIDE_PRO_ARCHITECTURE | /app/memory/PHASE_E_GUIDE_PRO_ARCHITECTURE.md | 1.0.0 |
 | AUDIT_TRAJETS_VERS_AFFUTS_HUMAN | /app/memory/AUDIT_TRAJETS_VERS_AFFUTS_HUMAN.md | 1.0.0 |
+| RAPPORT_BIONIC_OS_V8_5 | /app/memory/RAPPORT_BIONIC_OS_V8_5.md | 1.0.0 |
 
 ---
 
-**Derniere mise a jour** : 2026-04-05 — AUDIT TRAJETS VERS AFFUTS COMPLET. Cause racine: grille terrain synthetique sans sentiers OSM reels. 3 options proposees. EN ATTENTE DECISION STEEVE-MAX.
+**Derniere mise a jour** : 2026-04-05 — BIONIC OS V8.5 OPERATIONNEL. Pipeline Terrain A+F+G deploye. GUIDE PRO E-1 backend 15/15 endpoints. 10 blocs actives.

@@ -632,6 +632,14 @@ try:
 except Exception as e:
     logger.warning(f"SOIL ENGINE not loaded: {e}")
 
+# GUIDE PRO ENGINE — BIONIC OS V8.5 | Phase E-1 | Chasse guidee 100%
+try:
+    from modules.guide_pro_engine.router import router as guide_pro_router
+    app.include_router(guide_pro_router)
+    logger.info("✓ GUIDE PRO ENGINE registered (/api/v1/guide-pro)")
+except Exception as e:
+    logger.warning(f"GUIDE PRO ENGINE not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

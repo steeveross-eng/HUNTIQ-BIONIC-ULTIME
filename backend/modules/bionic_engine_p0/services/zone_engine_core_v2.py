@@ -764,6 +764,15 @@ def _generate_corridors_10x(zones_by_layer, species, waypoint_center, bounds):
     # --- Phase 2: Construire terrain_data pour le A* ---
     terrain_data = _build_terrain_grid(zone_polygons, bounds)
 
+    # --- Phase 2b V8.5: Enrichissement OSM (ENGINE_OSM_LITE A+F+G) ---
+    try:
+        from modules.bionic_engine_p0.services.engine_osm_lite import enrich_terrain_grid
+        pre_count = len(terrain_data)
+        terrain_data = enrich_terrain_grid(terrain_data, bounds)
+        logger.info(f"[V8.5-OSM_LITE] Grille enrichie: {pre_count} → {len(terrain_data)} cellules")
+    except Exception as e:
+        logger.warning(f"[V8.5-OSM_LITE] Enrichissement OSM non disponible: {e}")
+
     # --- Phase 3: Générer les corridors avec A* ---
     CONNECT_PAIRS = [
         ("alimentation", "repos"), ("alimentation", "rut"), ("repos", "rut"),
