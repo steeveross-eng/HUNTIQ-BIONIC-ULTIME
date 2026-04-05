@@ -640,6 +640,14 @@ try:
 except Exception as e:
     logger.warning(f"GUIDE PRO ENGINE not loaded: {e}")
 
+# BDRE — BIONIC Data Reliability Engine | BCE-4X GOLDEN V6+ | Phase 1
+try:
+    from engines.bdre.router import router as bdre_router
+    app.include_router(bdre_router)
+    logger.info("✓ BDRE registered (/api/v1/bdre) — 8 endpoints")
+except Exception as e:
+    logger.warning(f"BDRE not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")
