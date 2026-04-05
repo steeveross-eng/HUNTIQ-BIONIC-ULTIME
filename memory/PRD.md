@@ -235,7 +235,14 @@ nutritionnelle V6 unifiee.
 | AUDIT_TRAJETS_VERS_AFFUTS_HUMAN | /app/memory/AUDIT_TRAJETS_VERS_AFFUTS_HUMAN.md | 1.0.0 |
 | RAPPORT_BIONIC_OS_V8_5 | /app/memory/RAPPORT_BIONIC_OS_V8_5.md | 1.0.0 |
 | RAPPORT_CAUSES_PROFONDES_TNE | /app/memory/RAPPORT_CAUSES_PROFONDES_TNE.md | 1.0.0 |
+| BDRE_CONFORMITY_REPORT | /app/memory/BDRE_CONFORMITY_REPORT.md | 1.0.0 |
+| BDRE_ROOT_SPEC_V2 | /app/memory/BDRE_SPECS_CORRIGEES_V2/BDRE_ROOT_SPEC_V2.md | 2.0.0 |
+| BDRE_INTEGRATION_PLAN_V2 | /app/memory/BDRE_SPECS_CORRIGEES_V2/BDRE_INTEGRATION_PLAN_V2.md | 2.0.0 |
+| BDRE_SCORING_MATRIX_V2 | /app/memory/BDRE_SPECS_CORRIGEES_V2/BDRE_SCORING_MATRIX_V2.md | 2.0.0 |
+| BDRE_API_MONITORING_V2 | /app/memory/BDRE_SPECS_CORRIGEES_V2/BDRE_API_MONITORING_V2.md | 2.0.0 |
+| BDRE_ENGINE_INTEGRATION_V2 | /app/memory/BDRE_SPECS_CORRIGEES_V2/BDRE_ENGINE_INTEGRATION_V2.md | 2.0.0 |
+| BDRE_PHASE1_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE1_IMPLEMENTATION_REPORT.md | 1.0.0 |
 
 ---
 
-**Derniere mise a jour** : 2026-04-05 — AUDIT CAUSES PROFONDES TNE COMPLETE. 7 defaillances structurelles documentees. Cause racine: ABSENCE TOTALE de sentiers OSM dans la zone des affuts. Solution institutionnelle hybride 4 niveaux proposee. AUCUNE correction appliquee. EN ATTENTE DECISION STEEVE-MAX.
+**Derniere mise a jour** : 2026-04-06 — BDRE PHASE 1 IMPLEMENTATION COMPLETE. 6 fichiers crees (engines/bdre/), 8/8 endpoints operationnels, lint passe, zero regression. Composants: source_registry (16 sources), quality_scorer (5 criteres), waterway_classifier (DS-8), audit_logger (rotatif 1000). VALIDE PAR STEEVE-MAX. Phase BDRE-2 EN ATTENTE DIRECTIVE.
