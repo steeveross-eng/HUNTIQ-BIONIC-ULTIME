@@ -15,10 +15,10 @@
 | Stand Recommendation | OUI | - | OUI | OUI | - | COMPLET |
 | Weather V3 | OUI | - | - | OUI | - | COMPLET |
 | Dashboard BDRE (Backend) | OUI | OUI | OUI | OUI | OUI | COMPLET |
-| Intelligence V6 (Frontend) | - | - | - | - | - | A EVALUER |
-| Mon Territoire (Frontend) | - | - | - | - | - | A EVALUER |
+| Intelligence V6 (Frontend) | OUI | - | - | - | - | COMPLET |
+| Mon Territoire (Frontend) | OUI | - | - | - | - | COMPLET |
 | Carte Interactive (Frontend) | - | - | - | - | - | A EVALUER |
-| Admin Premium (Frontend) | - | - | - | - | - | A EVALUER |
+| Admin Premium (Frontend) | OUI | OUI | - | OUI | - | COMPLET |
 | Dashboard (Frontend) | - | - | - | - | - | A EVALUER |
 
 ---
@@ -89,9 +89,9 @@ Chaque niveau est documente avec :
 
 | Priorite | Module | Optimisation Proposee | Statut |
 |----------|--------|----------------------|--------|
-| P1 | Intelligence V6 | Ajouter widget BDRE Health dans le dashboard | EN ATTENTE |
-| P1 | Mon Territoire | Afficher score BDRE sur la carte interactive | EN ATTENTE |
-| P2 | Admin Premium | Panel BDRE administration (sources, thresholds) | EN ATTENTE |
+| P1 | Intelligence V6 | Widget BDRE Health dans le dashboard | COMPLET |
+| P1 | Mon Territoire | Indicateur BDRE Score sur la carte interactive | COMPLET |
+| P2 | Admin Premium | Panel BDRE administration (sources, thresholds) | COMPLET |
 | P2 | Dashboard | Indicateur BDRE global dans le header | EN ATTENTE |
 | P3 | Carte Interactive | Overlay couche BDRE sur la carte | EN ATTENTE |
 

@@ -116,8 +116,14 @@ nutritionnelle V6 unifiee.
 - [ ] Phase G: (En attente directive STEEVE-MAX)
 
 ### P2 — Futur
+- [x] P1 BDRE-FIRST Optimisation Continue — COMPLET
+  - Intelligence V6: Widget BDRE Health (version, sources actives, fallbacks, dots)
+  - Mon Territoire: Indicateur BDRE carte (bouton Shield + Popover 4 compteurs + 16 dots)
+  - Admin Premium: Section BDRE Monitor (dashboard, registre 16 sources, 5 engines, journal, anomalies)
+  - Rapport: P1_BDRE_OPTIMISATION_REPORT.md
+  - 10/10 modules BIONIC integres BDRE
 - [ ] M5: Offline Mode Ultra + Terrain Intelligence (8 endpoints)
-- [ ] Integration BDRE dans Intelligence V6 / Mon Territoire / Admin Premium
+- [ ] Dashboard Frontend: Indicateur BDRE global dans header
 - [ ] BSAA-2, Soil Engine V2
 - [ ] Merge Work1 → main (INTERDIT)
 
@@ -154,11 +160,11 @@ Tout composant BIONIC OS doit :
 | BDRE_PHASE2_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE2_IMPLEMENTATION_REPORT.md | 1.0.0 |
 | BDRE_PHASE3_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE3_IMPLEMENTATION_REPORT.md | 1.0.0 |
 | BDRE_PHASE4_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE4_IMPLEMENTATION_REPORT.md | 1.0.0 |
-| AFFUTS_BDRE_CORRECTION_REPORT | /app/memory/AFFUTS_BDRE_CORRECTION_REPORT.md | 1.0.0 |
+| P1_BDRE_OPTIMISATION_REPORT | /app/memory/P1_BDRE_OPTIMISATION_REPORT.md | 1.0.0 |
 | PHASE_F_GESTIONNAIRE_UI_REPORT | /app/memory/PHASE_F_GESTIONNAIRE_UI_REPORT.md | 1.0.0 |
 | AUDIT_HOTSPOTS_x7200 | /app/memory/AUDIT_HOTSPOTS_x7200.md | 1.0.0 |
 | AUDIT_TRAJETS_HUMAINS_x7200 | /app/memory/AUDIT_TRAJETS_HUMAINS_x7200.md | 1.0.0 |
 
 ---
 
-**Derniere mise a jour** : 2026-04-05 — PHASE F GESTIONNAIRE UI COMPLETE + CORRECTION AFFUTS BCE-4X INVARIANT. 5 onglets (CARTE, BDRE, ANOMALIES, JOURNAL, SOURCES) + bouton SECOURS deployes. Invariant trajets affuts corrige: start = waypoint chasseur TOUJOURS. 3 rapports: AFFUTS_BDRE_CORRECTION_REPORT.md, PHASE_F_GESTIONNAIRE_UI_REPORT.md, BIONIC_OPTIMISATION_LOG.md mis a jour.
+**Derniere mise a jour** : 2026-04-05 — P1 BDRE-FIRST OPTIMISATION COMPLETE. BDRE integre dans Intelligence V6 (widget health), Mon Territoire (indicateur carte), Admin Premium (section BDRE Monitor). 10/10 modules BIONIC couverts par BDRE. Rapport: P1_BDRE_OPTIMISATION_REPORT.md.

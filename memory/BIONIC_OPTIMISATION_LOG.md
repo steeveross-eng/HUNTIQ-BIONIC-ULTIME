@@ -59,6 +59,37 @@ conformement a la directive d'optimisation continue totale BDRE-FIRST.
 
 ---
 
+### 2026-04-05 — P1 BDRE-FIRST — INTELLIGENCE V6
+
+- **Scope** : IntelligenceV6Page.jsx
+- **Action** : Ajout widget BDRE Health au-dessus de la section M4
+- **Affichage** : Version, sources actives/offline, fallbacks, dots scores
+- **API** : /api/v1/bdre/dashboard, /api/v1/bdre/sources
+- **Regression** : ZERO
+
+---
+
+### 2026-04-05 — P1 BDRE-FIRST — MON TERRITOIRE
+
+- **Scope** : MonTerritoireBionicPage.jsx
+- **Action** : Ajout indicateur BDRE sur les controles carte (bouton + Popover)
+- **Affichage** : Pastille statut, popover 4 compteurs + 16 dots sources
+- **API** : /api/v1/bdre/dashboard, /api/v1/bdre/sources (30s auto-refresh)
+- **Regression** : ZERO
+
+---
+
+### 2026-04-05 — P1 BDRE-FIRST — ADMIN PREMIUM
+
+- **Scope** : AdminPremiumPage.jsx
+- **Action** : Ajout section BDRE Monitor dans sidebar admin
+- **Affichage** : Dashboard complet (stats, registre 16 sources, 5 engines, journal 20, anomalies)
+- **API** : /api/v1/bdre/dashboard, /api/v1/bdre/sources, /api/v1/bdre/anomalies/recent, /api/v1/bdre/audit/log
+- **Regression** : ZERO
+- **Rapport** : P1_BDRE_OPTIMISATION_REPORT.md
+
+---
+
 ### 2026-04-05 — BDRE-FIRST — INSTITUTION
 
 - **Scope** : Tous composants BIONIC OS

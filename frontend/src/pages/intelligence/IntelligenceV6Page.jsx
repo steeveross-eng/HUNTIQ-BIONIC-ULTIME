@@ -25,7 +25,9 @@ import { NavigationWidget } from '@/modules/intelligence-v6/components/Navigatio
 import { AdviceWidget } from '@/modules/intelligence-v6/components/AdviceWidget';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Brain, RefreshCw, Loader2, User, Navigation, Lightbulb } from 'lucide-react';
+import { Brain, RefreshCw, Loader2, User, Navigation, Lightbulb, Shield, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react';
+
+const API = process.env.REACT_APP_BACKEND_URL;
 
 const SPECIES_OPTIONS = [
   { value: 'orignal', label: 'Orignal' },
@@ -40,6 +42,8 @@ export default function IntelligenceV6Page() {
   const [userId, setUserId] = useState('default_hunter');
   const [loading, setLoading] = useState(false);
   const [m4Data, setM4Data] = useState({ profile: null, advice: null, suggestions: null });
+  const [bdreHealth, setBdreHealth] = useState(null);
+  const [bdreSources, setBdreSources] = useState([]);
 
   const {
     setPredictiveLayer, setTrendsData, setCorrelationData,
@@ -51,7 +55,7 @@ export default function IntelligenceV6Page() {
     setM3Loading(true);
 
     try {
-      const [consolidated, score, trends, correlation, bestTimes, timeseries, profile, advice] = await Promise.all([
+      const [consolidated, score, trends, correlation, bestTimes, timeseries, profile, advice, bdreDash, bdreSrc] = await Promise.all([
         DataFusionLayer.fetchConsolidatedView(zoneId, species, null, 46.85, -71.25),
         DataFusionLayer.fetchScoreConsolide(zoneId, species, null, 46.85, -71.25),
         DataFusionLayer.fetchTrends(species, zoneId),
@@ -60,6 +64,8 @@ export default function IntelligenceV6Page() {
         DataFusionLayer.fetchTimeSeries(zoneId, species, 'activity_index'),
         DataFusionLayer.fetchHunterProfile(userId),
         DataFusionLayer.fetchContextualAdvice(userId, 46.85, -71.25),
+        fetch(`${API}/api/v1/bdre/dashboard`).then(r => r.json()).catch(() => null),
+        fetch(`${API}/api/v1/bdre/sources`).then(r => r.json()).catch(() => null),
       ]);
 
       setPredictiveLayer(consolidated);
@@ -69,6 +75,8 @@ export default function IntelligenceV6Page() {
       setBestTimesData(bestTimes);
 
       setM4Data(prev => ({ ...prev, profile, advice }));
+      if (bdreDash) setBdreHealth(bdreDash);
+      if (bdreSrc?.sources) setBdreSources(bdreSrc.sources);
     } catch (err) {
       console.error('DFL refresh error:', err);
     } finally {
@@ -116,6 +124,48 @@ export default function IntelligenceV6Page() {
               className="h-8 w-8 flex items-center justify-center rounded bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 transition-colors">
               {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-400" /> : <RefreshCw className="w-3.5 h-3.5 text-zinc-400" />}
             </button>
+          </div>
+        </div>
+
+        {/* BDRE Health — BCE-4X BDRE-FIRST P1 */}
+        <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-3" data-testid="bdre-health-widget">
+          <div className="flex items-center gap-2 mb-2">
+            <Shield className="w-4 h-4 text-[#F5A623]" />
+            <span className="text-xs font-medium text-zinc-300">BDRE Data Reliability</span>
+            <Badge variant="outline" className="text-[9px] border-[#F5A623]/30 text-[#F5A623] ml-auto">
+              {bdreHealth?.bdre_version || '—'}
+            </Badge>
+          </div>
+          <div className="flex items-center gap-4">
+            {bdreSources.length > 0 ? (
+              <>
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3 h-3 text-green-400" />
+                  <span className="text-[10px] text-zinc-400">
+                    {bdreSources.filter(s => s.status === 'healthy').length} sources actives
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <XCircle className="w-3 h-3 text-zinc-500" />
+                  <span className="text-[10px] text-zinc-500">
+                    {bdreSources.filter(s => s.status !== 'healthy').length} non connectees
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <AlertTriangle className="w-3 h-3 text-yellow-500" />
+                  <span className="text-[10px] text-zinc-400">
+                    {bdreHealth?.audit_stats?.total_fallbacks ?? 0} fallbacks
+                  </span>
+                </div>
+                <div className="flex gap-0.5 ml-auto">
+                  {bdreSources.slice(0, 8).map((src, i) => (
+                    <div key={i} className={`w-2 h-2 rounded-full ${src.status === 'healthy' ? (src.score >= 0.8 ? 'bg-green-400' : src.score >= 0.3 ? 'bg-yellow-400' : 'bg-red-400') : 'bg-zinc-600'}`} title={`${src.source_id}: ${(src.score * 100).toFixed(0)}%`} />
+                  ))}
+                </div>
+              </>
+            ) : (
+              <span className="text-[10px] text-zinc-500">Chargement BDRE...</span>
+            )}
           </div>
         </div>
 

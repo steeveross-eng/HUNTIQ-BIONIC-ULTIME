@@ -241,6 +241,8 @@ const MonTerritoireBionicPage = () => {
   const [windMode, setWindMode] = useState(savedWindMode || 'arrows');
   const [temporalHourMT, setTemporalHourMT] = useState(null);
   const [contextMenuMT, setContextMenuMT] = useState(null);
+  // BDRE-FIRST P1: BDRE score indicator on map
+  const [bdreStatus, setBdreStatus] = useState(null);
   
   // Géolocalisation (hook extrait IM1)
   const { userPosition, setUserPosition, watchingPosition, startWatchingPosition, stopWatchingPosition, centerOnUser } = useGeolocation(mapRef);
@@ -495,6 +497,31 @@ const MonTerritoireBionicPage = () => {
   
   // Notifications
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications(userId);
+
+  // BDRE-FIRST P1: Fetch BDRE status for map indicator
+  const BACKEND = process.env.REACT_APP_BACKEND_URL;
+  useEffect(() => {
+    const fetchBdre = async () => {
+      try {
+        const [dashRes, srcRes] = await Promise.all([
+          fetch(`${BACKEND}/api/v1/bdre/dashboard`).then(r => r.json()),
+          fetch(`${BACKEND}/api/v1/bdre/sources`).then(r => r.json()),
+        ]);
+        setBdreStatus({
+          version: dashRes.bdre_version,
+          totalSources: dashRes.sources?.total || 0,
+          healthy: dashRes.sources?.by_status?.healthy || 0,
+          notConnected: dashRes.sources?.by_status?.not_connected || 0,
+          fallbacks: dashRes.audit_stats?.total_fallbacks || 0,
+          alerts: dashRes.audit_stats?.total_alerts || 0,
+          sources: srcRes.sources || [],
+        });
+      } catch { /* silent */ }
+    };
+    fetchBdre();
+    const interval = setInterval(fetchBdre, 30000);
+    return () => clearInterval(interval);
+  }, [BACKEND]);
   
   // Groupes de chasse
   const { allGroups: myGroups, loading: groupsLoading, refresh: refreshGroups } = useHuntingGroups(userId);
@@ -1303,6 +1330,52 @@ const MonTerritoireBionicPage = () => {
             <button className={`${userPosition ? 'bg-blue-600' : 'bg-[#111118]/90'} text-white border border-[#1a1a2e] h-8 w-8 rounded-lg flex items-center justify-center hover:bg-[#1a1a2e] transition-colors`} onClick={centerOnUser}>
               <LocateFixed className="h-4 w-4" />
             </button>
+            {/* BDRE-FIRST P1: BDRE indicator on map */}
+            {bdreStatus && (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    data-testid="map-bdre-indicator"
+                    className="bg-[#111118]/90 text-white border border-[#1a1a2e] h-8 w-8 rounded-lg flex items-center justify-center hover:bg-[#1a1a2e] transition-colors relative"
+                    title="BDRE Data Reliability"
+                  >
+                    <Shield className="h-4 w-4 text-[#F5A623]" />
+                    <span className={`absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-[#111118] ${bdreStatus.alerts > 0 ? 'bg-red-500' : bdreStatus.healthy > 0 ? 'bg-green-400' : 'bg-yellow-400'}`} />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent side="right" className="w-56 bg-[#111118] border-[#1a1a2e] p-3" data-testid="map-bdre-popover">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Shield className="h-3.5 w-3.5 text-[#F5A623]" />
+                      <span className="text-xs font-medium text-gray-200">BDRE {bdreStatus.version}</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      <div className="bg-[#0a0a14] rounded px-2 py-1 text-center">
+                        <div className="text-green-400 text-sm font-bold">{bdreStatus.healthy}</div>
+                        <div className="text-[9px] text-gray-500">ACTIVES</div>
+                      </div>
+                      <div className="bg-[#0a0a14] rounded px-2 py-1 text-center">
+                        <div className="text-gray-400 text-sm font-bold">{bdreStatus.notConnected}</div>
+                        <div className="text-[9px] text-gray-500">HORS LIGNE</div>
+                      </div>
+                      <div className="bg-[#0a0a14] rounded px-2 py-1 text-center">
+                        <div className="text-yellow-400 text-sm font-bold">{bdreStatus.fallbacks}</div>
+                        <div className="text-[9px] text-gray-500">FALLBACKS</div>
+                      </div>
+                      <div className="bg-[#0a0a14] rounded px-2 py-1 text-center">
+                        <div className="text-red-400 text-sm font-bold">{bdreStatus.alerts}</div>
+                        <div className="text-[9px] text-gray-500">ALERTES</div>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-0.5 pt-1">
+                      {bdreStatus.sources.slice(0, 16).map((src, i) => (
+                        <div key={i} className={`w-2.5 h-2.5 rounded-sm ${src.status === 'healthy' ? (src.score >= 0.8 ? 'bg-green-500' : src.score >= 0.3 ? 'bg-yellow-500' : 'bg-red-500') : 'bg-zinc-600'}`} title={`${src.source_id}: ${src.name} (${(src.score*100).toFixed(0)}%)`} />
+                      ))}
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            )}
           </div>
 
           {/* BCE-4X: Bloc Meteo Intelligent — droite, au-dessus du Score */}

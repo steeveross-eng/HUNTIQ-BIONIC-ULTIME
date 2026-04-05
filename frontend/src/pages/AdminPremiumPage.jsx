@@ -8,7 +8,7 @@
  * BCE-4X / STEEVE-MAX V6 — PHASE P0 FUSION ADMIN
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -20,7 +20,8 @@ import {
   FileText, Shield, ShoppingCart, FolderTree, Archive,
   Wrench, Contact, Trees, Network, Mail, Sparkles,
   Handshake, Palette, Brain, Search, ToggleLeft, Activity,
-  FlaskConical, Power, Store, UserCheck, Megaphone, LayoutGrid, Lock
+  FlaskConical, Power, Store, UserCheck, Megaphone, LayoutGrid, Lock,
+  Database, RefreshCw, CheckCircle, AlertTriangle,
 } from 'lucide-react';
 
 // Import all admin modules
@@ -65,6 +66,8 @@ import { AdminMessaging } from '@/ui/administration/admin_messaging';
 
 const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  // --- BDRE-FIRST P1 ---
+  { id: 'bdre', label: 'BDRE Monitor', icon: Shield, highlight: true },
   // --- SUPRA v2 & MAGASIN v2 ---
   { id: 'supra-engines', label: 'Moteurs SUPRA', icon: FlaskConical, highlight: true },
   { id: 'products-catalog', label: 'Catalogue Produits', icon: Store, highlight: true },
@@ -171,6 +174,7 @@ const AdminPremiumPage = () => {
   const renderContent = () => {
     switch (activeSection) {
       case 'dashboard': return <AdminDashboard onNavigate={setActiveSection} />;
+      case 'bdre': return <AdminBDREMonitor />;
       case 'supra-engines': return <AdminSupraEngines />;
       case 'products-catalog': return <AdminProductsCatalog />;
       case 'global-switch': return <AdminGlobalSwitch />;
@@ -376,6 +380,163 @@ const AdminProductsCatalog = () => {
               </div>
             </Card>
           ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// === ADMIN v2 — BDRE Monitor (P1 BDRE-FIRST) ===
+const AdminBDREMonitor = () => {
+  const [dashboard, setDashboard] = useState(null);
+  const [sources, setSources] = useState([]);
+  const [anomalies, setAnomalies] = useState([]);
+  const [auditLog, setAuditLog] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
+  const fetchAll = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [dashRes, srcRes, anomRes, auditRes] = await Promise.all([
+        axios.get(`${BACKEND_URL}/api/v1/bdre/dashboard`),
+        axios.get(`${BACKEND_URL}/api/v1/bdre/sources`),
+        axios.get(`${BACKEND_URL}/api/v1/bdre/anomalies/recent?limit=10`),
+        axios.get(`${BACKEND_URL}/api/v1/bdre/audit/log?limit=20`),
+      ]);
+      setDashboard(dashRes.data);
+      setSources(srcRes.data.sources || []);
+      setAnomalies(anomRes.data.anomalies || []);
+      setAuditLog(auditRes.data.entries || []);
+    } catch (e) {
+      console.error('BDRE fetch error:', e);
+    } finally {
+      setLoading(false);
+    }
+  }, [BACKEND_URL]);
+
+  useEffect(() => { fetchAll(); }, [fetchAll]);
+
+  const healthyCount = sources.filter(s => s.status === 'healthy').length;
+  const offlineCount = sources.filter(s => s.status !== 'healthy').length;
+  const avgScore = sources.length > 0 ? (sources.reduce((sum, s) => sum + (s.score || 0), 0) / sources.length) : 0;
+
+  return (
+    <div data-testid="admin-bdre-monitor">
+      <div className="flex items-center gap-3 mb-6">
+        <Shield className="h-6 w-6 text-[#F5A623]" />
+        <h2 className="text-xl font-bold text-white">BDRE Monitor</h2>
+        <span className="text-xs text-gray-500 ml-auto">BIONIC Data Reliability Engine</span>
+        <Button variant="outline" size="sm" onClick={fetchAll} className="border-gray-700 text-gray-400" data-testid="admin-bdre-refresh">
+          <RefreshCw className="h-3.5 w-3.5" />
+        </Button>
+      </div>
+
+      {loading ? (
+        <p className="text-gray-500">Chargement BDRE...</p>
+      ) : (
+        <div className="space-y-4">
+          {/* Stats Cards */}
+          <div className="grid grid-cols-5 gap-3">
+            <Card className="bg-[#0a0a15] border-white/5 p-4 text-center">
+              <div className="text-[#F5A623] text-lg font-bold">{dashboard?.bdre_version || '—'}</div>
+              <div className="text-[10px] text-gray-500 uppercase">Version</div>
+            </Card>
+            <Card className="bg-[#0a0a15] border-white/5 p-4 text-center">
+              <div className="text-green-400 text-lg font-bold">{healthyCount}</div>
+              <div className="text-[10px] text-gray-500 uppercase">Actives</div>
+            </Card>
+            <Card className="bg-[#0a0a15] border-white/5 p-4 text-center">
+              <div className="text-gray-400 text-lg font-bold">{offlineCount}</div>
+              <div className="text-[10px] text-gray-500 uppercase">Hors ligne</div>
+            </Card>
+            <Card className="bg-[#0a0a15] border-white/5 p-4 text-center">
+              <div className="text-yellow-400 text-lg font-bold">{dashboard?.audit_stats?.total_fallbacks ?? 0}</div>
+              <div className="text-[10px] text-gray-500 uppercase">Fallbacks</div>
+            </Card>
+            <Card className="bg-[#0a0a15] border-white/5 p-4 text-center">
+              <div className={`text-lg font-bold ${avgScore >= 0.6 ? 'text-green-400' : avgScore >= 0.3 ? 'text-yellow-400' : 'text-red-400'}`}>{(avgScore * 100).toFixed(0)}%</div>
+              <div className="text-[10px] text-gray-500 uppercase">Score Moyen</div>
+            </Card>
+          </div>
+
+          {/* Sources Registry */}
+          <Card className="bg-[#0a0a15] border-white/5 p-4">
+            <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+              <Database className="h-4 w-4 text-blue-400" /> Registre des Sources ({sources.length})
+            </h3>
+            <div className="space-y-1.5 max-h-[300px] overflow-y-auto">
+              {sources.map((src, i) => (
+                <div key={i} className="flex items-center justify-between bg-black/30 px-3 py-2 rounded" data-testid={`admin-src-${src.source_id}`}>
+                  <div className="flex items-center gap-2">
+                    <span className={`w-2 h-2 rounded-full ${src.status === 'healthy' ? 'bg-green-400' : 'bg-gray-500'}`} />
+                    <span className="text-xs font-mono text-[#F5A623]">{src.source_id}</span>
+                    <span className="text-xs text-gray-300">{src.name}</span>
+                    <span className="text-[10px] text-gray-600">{src.type}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-16 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                      <div className={`h-full rounded-full ${src.score >= 0.8 ? 'bg-green-500' : src.score >= 0.3 ? 'bg-yellow-500' : 'bg-red-500'}`} style={{ width: `${src.score * 100}%` }} />
+                    </div>
+                    <span className="text-xs text-gray-400 w-10 text-right">{(src.score * 100).toFixed(0)}%</span>
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded ${src.status === 'healthy' ? 'bg-green-500/20 text-green-400' : 'bg-gray-700 text-gray-400'}`}>
+                      {src.status}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* Engines + Audit */}
+          <div className="grid grid-cols-2 gap-4">
+            <Card className="bg-[#0a0a15] border-white/5 p-4">
+              <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                <Zap className="h-4 w-4 text-green-400" /> Engines Integres
+              </h3>
+              <div className="space-y-1.5">
+                {(dashboard?.engines_integrated || []).map((eng, i) => (
+                  <div key={i} className="flex items-center gap-2 bg-black/30 px-3 py-2 rounded">
+                    <CheckCircle className="h-3 w-3 text-green-400" />
+                    <span className="text-xs text-gray-300">{eng}</span>
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            <Card className="bg-[#0a0a15] border-white/5 p-4">
+              <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                <FileText className="h-4 w-4 text-purple-400" /> Journal Recent ({auditLog.length})
+              </h3>
+              <div className="space-y-1 max-h-[200px] overflow-y-auto">
+                {auditLog.map((entry, i) => (
+                  <div key={i} className="bg-black/30 px-3 py-1.5 rounded">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] text-gray-600">{entry.engine}</span>
+                      <span className="text-xs text-gray-300">{entry.action}</span>
+                      {entry.fallback_level > 0 && <span className="text-[9px] px-1 py-0.5 rounded bg-yellow-900/50 text-yellow-300">L{entry.fallback_level}</span>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </div>
+
+          {/* Anomalies */}
+          {anomalies.length > 0 && (
+            <Card className="bg-red-950/20 border-red-800/30 p-4">
+              <h3 className="text-sm font-bold text-red-300 mb-3 flex items-center gap-2">
+                <AlertTriangle className="h-4 w-4 text-red-400" /> Anomalies ({anomalies.length})
+              </h3>
+              <div className="space-y-1.5">
+                {anomalies.map((a, i) => (
+                  <div key={i} className="bg-red-900/20 px-3 py-2 rounded border-l-2 border-red-500/40">
+                    <span className="text-xs text-red-200">{a.type}: {a.details || a.message}</span>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          )}
         </div>
       )}
     </div>
