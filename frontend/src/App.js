@@ -52,6 +52,8 @@ const PlanMaitrePage = lazy(() => import("@/pages/intelligence/PlanMaitrePage"))
 const AnalyticsPage = lazy(() => import("@/pages/intelligence/AnalyticsPage"));
 const MapPage = lazy(() => import("@/pages/MapPage"));
 const ForecastPage = lazy(() => import("@/pages/intelligence/ForecastPage"));
+// V6-M3-DASHBOARD: Intelligence V6 Dashboard (x7000-M3-DASHBOARD)
+const IntelligenceV6Page = lazy(() => import("@/pages/intelligence/IntelligenceV6Page"));
 const AdminGeoPage = lazy(() => import("@/pages/AdminGeoPage"));
 const OnboardingPage = lazy(() => import("@/pages/OnboardingPage"));
 const PricingPage = lazy(() => import("@/pages/PricingPage"));
@@ -1017,6 +1019,8 @@ function App() {
                 <Route path="/bionic-modules" element={<BionicModulesPage />} />
                 <Route path="/intelligence" element={<BionicModulesPage />} />
                 <Route path="/ecological-intelligence" element={<BionicModulesPage />} />
+                {/* V6-M3-DASHBOARD: Intelligence V6 (x7000-M3-DASHBOARD) */}
+                <Route path="/intelligence-v6" element={<IntelligenceV6Page />} />
                 {/* BSAA — BIONIC Social Ads Automation (x4500-ULTRA) */}
                 <Route path="/bsaa" element={<BsaaDashboardPage />} />
                 <Route path="/ads" element={<BsaaDashboardPage />} />

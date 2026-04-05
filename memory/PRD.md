@@ -71,7 +71,14 @@ nutritionnelle V6 unifiee.
 - Formule : P(h) = base(0.25) + season(0.15) + solunar(0.15) + meteo(0.20) + historical(0.15) + nutrition(0.10)
 - ANTI-DOUBLON strict : 6 modules interdits de recreation
 - Tests : 46/46 PASS + 98/98 non-regression = 144/144 TOTAL
-- Rapport final : /app/memory/M3_RAPPORT_FINAL.md
+#### Directive x7000-M3-DASHBOARD — Integration Dashboard Intelligence V6
+- Data Fusion Layer (DFL) deploye : 8 methodes de fusion, cache TTL 5min
+- Event Bus V6 deploye : 13 channels, anti-debounce 500ms
+- Data Contracts V6 deployes : 8 contrats stricts
+- 8 widgets operationnels : ScoreConsolide, PredictiveLayer, BestTimes, Heatmap, Trends, Correlation, TimeSeries, POIDetail
+- Page /intelligence-v6 avec auto-sync (espece/zone/date → refresh tous widgets)
+- ZERO modification backend, ZERO modification modules V5
+- Rapport final : /app/memory/DASH_RAPPORT_FINAL.md
 
 ---
 
@@ -84,6 +91,7 @@ nutritionnelle V6 unifiee.
 - [x] Validation STEEVE-MAX x6800-A
 - [x] M2: BIONIC POI Graph (11 endpoints, 40/40 tests, 14 points de fusion)
 - [x] M3: Predictive Layer + Time-Series (10 endpoints, 46/46 tests, 22 points de fusion)
+- [x] DASH: Integration Dashboard Intelligence V6 (8 widgets, DFL, EventBus, DataContracts)
 
 ### P1 — Prochain
 - [ ] M4: Adaptive Profile + Navigation IA (11 endpoints)
@@ -105,6 +113,8 @@ nutritionnelle V6 unifiee.
 | M2_RAPPORT_FINAL | /app/memory/M2_RAPPORT_FINAL.md | 1.0.0 |
 | M3_PREDICTIVE_LAYER_PLAN | /app/memory/M3_PREDICTIVE_LAYER_PLAN.md | 1.0.0 |
 | M3_RAPPORT_FINAL | /app/memory/M3_RAPPORT_FINAL.md | 1.0.0 |
+| M3_DASHBOARD_INTEGRATION_PLAN | /app/memory/M3_DASHBOARD_INTEGRATION_PLAN.md | 1.0.0 |
+| DASH_RAPPORT_FINAL | /app/memory/DASH_RAPPORT_FINAL.md | 1.0.0 |
 | INTERCONNEXION_NUTRITIONNELLE | /app/memory/VALIDATION_INTERCONNEXION_NUTRITIONNELLE_V5_V6.md | 1.0.0 |
 | RAPPORT_SYNC_DOC | /app/memory/RAPPORT_SYNCHRONISATION_DOCUMENTAIRE_V6.md | 1.0.0 |
 | IMPLEMENTATION_PLAN_V1 | /app/memory/IMPLEMENTATION_PLAN_V1.md | 1.0.0 |
@@ -113,4 +123,4 @@ nutritionnelle V6 unifiee.
 
 ---
 
-**Derniere mise a jour** : 2026-04-04 — Directive x7000-M3 complete
+**Derniere mise a jour** : 2026-04-05 — Directive x7000-M3-DASHBOARD complete

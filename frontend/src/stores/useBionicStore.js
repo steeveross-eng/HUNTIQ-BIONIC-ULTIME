@@ -116,6 +116,24 @@ const useBionicStore = create((set, get) => ({
 
   setIntelligenceWeather: (weather) => set({ intelligenceWeather: weather }),
 
+  // ── M3 Predictive Layer Intelligence (DASH-A EXTENSION) ──
+  // ZERO modification des slices existants ci-dessus
+  predictiveLayer: null,
+  heatmapData: null,
+  trendsData: null,
+  correlationData: null,
+  scoreConsolide: null,
+  bestTimesData: null,
+  m3Loading: false,
+
+  setPredictiveLayer: (data) => set({ predictiveLayer: data }),
+  setHeatmapData: (data) => set({ heatmapData: data }),
+  setTrendsData: (data) => set({ trendsData: data }),
+  setCorrelationData: (data) => set({ correlationData: data }),
+  setScoreConsolide: (data) => set({ scoreConsolide: data }),
+  setBestTimesData: (data) => set({ bestTimesData: data }),
+  setM3Loading: (v) => set({ m3Loading: v }),
+
   fetchAll: async () => {
     const state = get();
     if (!state.location) return;
