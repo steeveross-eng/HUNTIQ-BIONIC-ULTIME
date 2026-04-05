@@ -724,7 +724,7 @@ def _generate_corridors_10x(zones_by_layer, species, waypoint_center, bounds):
     entre zones fonctionnelles, en tenant compte des coûts de terrain.
     """
     from modules.bionic_engine_p0.services.corridor_10x import (
-        corridor_10x_service, corridor_pathfinder
+        corridor_10x_service, corridor_pathfinder, human_trajet_pathfinder
     )
 
     # --- Phase 1: Extraire les centroides par couche fonctionnelle ---
@@ -775,6 +775,15 @@ def _generate_corridors_10x(zones_by_layer, species, waypoint_center, bounds):
         ("affuts", "repos"), ("affuts", "alimentation"),
     ]
 
+    # V7.2 x7200: Paires impliquant un deplacement HUMAIN (waypoint → affut/trajet)
+    HUMAN_PAIRS = {
+        ("affuts", "habitats"), ("affuts", "rut"), ("affuts", "trajets"),
+        ("affuts", "repos"), ("affuts", "alimentation"),
+        ("trajets", "alimentation"), ("trajets", "rut"),
+        ("salines", "affuts"), ("salines", "trajets"),
+        ("habitats", "trajets"),
+    }
+
     corridors = []
     corridor_id = 0
     seen_pairs = set()
@@ -784,6 +793,9 @@ def _generate_corridors_10x(zones_by_layer, species, waypoint_center, bounds):
         to_zones = zone_centroids.get(to_layer, [])
         if not from_zones or not to_zones:
             continue
+
+        # V7.2 x7200: Determiner si c'est un trajet humain ou un corridor animal
+        is_human_trajet = (from_layer, to_layer) in HUMAN_PAIRS or (to_layer, from_layer) in HUMAN_PAIRS
 
         for fz in from_zones[:3]:
             best_tz = None
@@ -808,15 +820,21 @@ def _generate_corridors_10x(zones_by_layer, species, waypoint_center, bounds):
             wwf_type = corridor_10x_service.classify_corridor_wwf(best_dist * 0.3)
             connectivity = corridor_10x_service.calculate_connectivity_score(from_layer, to_layer)
 
-            # A* pathfinding
+            # V7.2 x7200: A* avec table de couts appropriee
+            # Determiner le pathfinder selon le type de deplacement
+            active_pathfinder = human_trajet_pathfinder if is_human_trajet else corridor_pathfinder
             path_coords = _find_astar_path(
-                fz, best_tz, terrain_data, corridor_pathfinder, best_dist
+                fz, best_tz, terrain_data, active_pathfinder, best_dist,
+                is_human=is_human_trajet
             )
 
-            corridors.append(_build_corridor_feature_astar(
+            corridor_feature = _build_corridor_feature_astar(
                 corridor_id, fz, best_tz, from_layer, to_layer, best_dist,
                 wwf_type, connectivity, corridor_10x_service, path_coords
-            ))
+            )
+            # V7.2 x7200: Marquer le type de deplacement
+            corridor_feature["properties"]["movement_type"] = "human" if is_human_trajet else "animal"
+            corridors.append(corridor_feature)
             corridor_id += 1
 
             if corridor_id >= 20:
@@ -860,6 +878,13 @@ def _generate_corridors_10x(zones_by_layer, species, waypoint_center, bounds):
     if hydro_zones and SHAPELY_AVAILABLE:
         corridors = _filter_corridors_water(corridors, hydro_zones)
         logger.info(f"[Corridor A*] After water filter: {len(corridors)} corridors remaining")
+
+    # ═══════════════════════════════════════════════════════════════════
+    # V7.2 x7200 Solution 4: POST-FILTRE — Minimiser foret pour trajets humains
+    # Un trajet humain ne devrait pas traverser > 60% de foret dense.
+    # Si > 60% → on marque le trajet comme "forest_heavy" pour le frontend.
+    # ═══════════════════════════════════════════════════════════════════
+    corridors = _assess_forest_ratio(corridors, terrain_data)
 
     return corridors
 
@@ -916,6 +941,59 @@ def _filter_corridors_water(corridors, hydro_zones):
                 continue
             filtered.append(corridor)
         except Exception:
+
+
+def _assess_forest_ratio(corridors, terrain_data):
+    """
+    V7.2 x7200 Solution 4: Evalue le ratio foret pour chaque corridor/trajet.
+    Pour les trajets humains (movement_type=human), marque ceux avec > 60% foret.
+    Ajoute les metriques forest_ratio et terrain_breakdown aux proprietes.
+    """
+    FOREST_TYPES = {"mature_forest", "mixed_forest", "conifer_forest", "deciduous_forest", "dense_thicket"}
+    
+    for corridor in corridors:
+        path_coords = corridor.get("geometry", {}).get("coordinates", [])
+        props = corridor.get("properties", {})
+        
+        if len(path_coords) < 2:
+            props["forest_ratio"] = 0.0
+            props["terrain_breakdown"] = {}
+            continue
+        
+        # Echantillonner le terrain le long du trajet
+        terrain_counts = {}
+        total_samples = 0
+        
+        for coord in path_coords:
+            key = f"{coord[1]:.4f},{coord[0]:.4f}" if len(coord) >= 2 else None
+            if key and key in terrain_data:
+                t_type = terrain_data[key].get("type", "unknown")
+            else:
+                t_type = "unknown"
+            terrain_counts[t_type] = terrain_counts.get(t_type, 0) + 1
+            total_samples += 1
+        
+        if total_samples == 0:
+            props["forest_ratio"] = 0.0
+            props["terrain_breakdown"] = {}
+            continue
+        
+        forest_count = sum(terrain_counts.get(ft, 0) for ft in FOREST_TYPES)
+        forest_ratio = forest_count / total_samples
+        
+        props["forest_ratio"] = round(forest_ratio, 2)
+        props["terrain_breakdown"] = {k: round(v / total_samples, 2) for k, v in terrain_counts.items()}
+        
+        # Marquer les trajets humains avec trop de foret
+        if props.get("movement_type") == "human" and forest_ratio > 0.6:
+            props["forest_heavy"] = True
+            logger.info(
+                f"[V7.2-x7200] Trajet humain {corridor.get('id', '?')}: "
+                f"forest_ratio={forest_ratio:.0%} > 60% — marque forest_heavy"
+            )
+    
+    return corridors
+
             filtered.append(corridor)
 
     if rejected > 0:
@@ -978,10 +1056,11 @@ def _build_terrain_grid(zone_polygons, bounds):
     return terrain_data
 
 
-def _find_astar_path(fz, tz, terrain_data, pathfinder, distance):
+def _find_astar_path(fz, tz, terrain_data, pathfinder, distance, is_human=False):
     """
     Trouve un chemin A* entre deux zones. Fallback Bezier si echec.
     V7.2 x7200: Bezier avec deflection anti-eau.
+    V7.2 x7200: is_human=True → utilise HUMAN_TRAJET_COSTS (foret=4.0+).
     """
     start = (fz["lat"], fz["lng"])
     end = (tz["lat"], tz["lng"])

@@ -455,7 +455,7 @@ class Corridor10XService:
 
 # Coûts de traversée par type de terrain (A*)
 TERRAIN_COSTS = {
-    # Coût faible — terrain préféré
+    # Coût faible — terrain préféré (corridors animaux)
     "valley": 1.0,
     "coulee": 1.0,
     "ravine": 1.2,
@@ -465,7 +465,7 @@ TERRAIN_COSTS = {
     "riparian": 1.0,
     "forest_edge": 1.2,
     
-    # Coût moyen — terrain acceptable
+    # Coût moyen — terrain acceptable (corridors animaux)
     "mixed_forest": 1.5,
     "mature_forest": 1.4,
     "conifer_forest": 1.6,
@@ -488,6 +488,48 @@ TERRAIN_COSTS = {
     "water_body": 999.0,  # V7.2 x7200: IMPASSABLE — aucun corridor ne traverse l'eau
     "cliff": 15.0,
     "highway": 12.0,
+}
+
+
+# ═══════════════════════════════════════════════════════════════
+# V7.2 x7200 Solution 1 — Table de couts HUMAINS (trajets vers affuts)
+# Les humains preferent sentiers/routes, evitent la foret dense.
+# ZERO modification de TERRAIN_COSTS (corridors animaux inchanges).
+# ═══════════════════════════════════════════════════════════════
+HUMAN_TRAJET_COSTS = {
+    # Cout minimal — sentiers et chemins (preferes par les humains)
+    "valley": 1.0,         # Fond de vallee = sentier naturel
+    "wooded_strip": 1.0,   # Bande boisee = chemin forestier
+    "hedgerow": 1.0,       # Haie = sentier en bordure
+    "riparian": 1.2,       # Rive = chemin praticable
+    "forest_edge": 1.2,    # Lisiere = acces clair
+    "coulee": 1.3,         # Coulee = sentier naturel
+    "saddle": 1.3,         # Col = passage nature
+    
+    # Cout faible — terrain ouvert (facile pour un humain)
+    "open_field": 1.5,     # Champ ouvert = marche facile
+    "agriculture": 1.5,    # Zone agricole = terrain degage
+    "road_crossing": 1.5,  # Traversee de route = infrastructure
+    "plateau": 1.6,        # Plateau = marche plate
+    "gentle_ridge": 1.8,   # Crete douce = vue degagee
+    "clearcut": 2.0,       # Coupe forestiere = terrain ouvert
+    
+    # Cout eleve — foret (difficile pour un humain)
+    "deciduous_forest": 3.0,  # Feuillu = traversable mais difficile
+    "mixed_forest": 3.5,      # Mixte = sous-bois dense
+    "mature_forest": 4.0,     # Mature = sous-bois + obstacles
+    "conifer_forest": 4.5,    # Coniferes = branches basses, dense
+    "dense_thicket": 6.0,     # Fourre = quasi-impenetrable
+    "ravine": 3.0,            # Ravin = pente difficile
+    "drainage": 2.5,          # Drainage = terrain humide
+    "steep_slope": 5.0,       # Pente raide = effort intense
+    
+    # Cout prohibitif — obstacles infranchissables
+    "urban": 8.0,             # Urbain = pas de chasse en ville
+    "urban_edge": 6.0,        # Bordure urbaine = a eviter
+    "water_body": 999.0,      # Eau = impassable
+    "cliff": 999.0,           # Falaise = impassable
+    "highway": 8.0,           # Autoroute = dangereux
 }
 
 
@@ -516,14 +558,17 @@ class CorridorPathfinder:
     """
     Algorithme A* pour trouver des corridors écologiques optimaux.
     Intègre les coûts de terrain et les critères biologiques.
+    V7.2 x7200: Supporte HUMAN_TRAJET_COSTS pour les trajets humains.
     """
     
-    def __init__(self, grid_resolution: float = 100.0):
+    def __init__(self, grid_resolution: float = 100.0, cost_table=None):
         """
         Args:
             grid_resolution: Résolution de la grille en mètres
+            cost_table: Table de couts personnalisee (defaut: TERRAIN_COSTS)
         """
         self.grid_resolution = grid_resolution
+        self.cost_table = cost_table or TERRAIN_COSTS
         self.logger = logging.getLogger("bionic_engine.corridor_pathfinder")
     
     def _heuristic(self, pos1: Tuple[float, float], pos2: Tuple[float, float]) -> float:
@@ -550,7 +595,7 @@ class CorridorPathfinder:
         terrain_info = terrain_data.get(key, {})
         terrain_type = terrain_info.get("type", "mixed_forest")
         
-        base_cost = TERRAIN_COSTS.get(terrain_type, 2.0)
+        base_cost = self.cost_table.get(terrain_type, 2.0)
         
         # Modificateurs additionnels
         slope = terrain_info.get("slope", 5)
@@ -705,8 +750,11 @@ class CorridorPathfinder:
         return smoothed
 
 
-# Instance singleton pathfinder
+# Instance singleton pathfinder (corridors animaux)
 corridor_pathfinder = CorridorPathfinder(grid_resolution=100.0)
+
+# V7.2 x7200: Instance singleton pathfinder HUMAIN (trajets vers affuts)
+human_trajet_pathfinder = CorridorPathfinder(grid_resolution=100.0, cost_table=HUMAN_TRAJET_COSTS)
 
 # Instance singleton service
 corridor_10x_service = Corridor10XService()
