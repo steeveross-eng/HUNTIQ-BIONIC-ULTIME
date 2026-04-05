@@ -153,6 +153,15 @@ nutritionnelle V6 unifiee.
 - [x] Logique maitresse Mon Territoire INTOUCHEE (zone generation, pipeline, rasterizer, SRTM)
 - [x] Rapport audit : /app/memory/AUDIT_CORRIDORS_EAU_x7200.md
 
+#### Directive x7200 — AUDIT ARBORESCENCE ZONES ET ORIGINE ZONES D'EAU
+- [x] Diagnostic precis : hydro zones generees par bruit Simplex, PAS par donnees reelles
+- [x] Pipeline trace : behavioral_rasterizer → zone_engine_core_v2 → pipeline_v7 → corridors
+- [x] Arborescence complete : 15 couches, 4 fichiers cles, exclusions et priorites documentees
+- [x] Cause non-fusion : seuil 200m entre centroides insuffisant pour plans d'eau > 400m
+- [x] 3 options proposees : A (seuil 600m), B (union Shapely post-merge, RECOMMANDEE), C (donnees reelles)
+- [x] Rapport audit : /app/memory/AUDIT_ARBORESCENCE_ZONES_x7200.md
+- En attente : validation STEEVE-MAX pour Option B (union geometrique hydro)
+
 ### P1 — Prochain
 - [ ] Phase E: GUIDE PRO (chasse guidee 100%) — DEBLOQUEE par validation x7200
 - [ ] Phase F: Module Gestionnaire UI (CARTE tabs + SECOURS button)
@@ -191,4 +200,4 @@ nutritionnelle V6 unifiee.
 
 ---
 
-**Derniere mise a jour** : 2026-04-05 — Directive x7200 CORRIDORS EAU COMPLETE (water_body=999, post-filtre Shapely, Bezier anti-eau, toggle Eau)
+**Derniere mise a jour** : 2026-04-05 — AUDIT ARBORESCENCE ZONES COMPLETE (pipeline trace, cause racine identifiee, 3 options proposees, Option B recommandee)
