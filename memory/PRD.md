@@ -145,6 +145,14 @@ nutritionnelle V6 unifiee.
 - [x] Rapport audit : /app/memory/AUDIT_ZONES_SYNC_x7200.md
 - Fichiers modifies : MonTerritoireBionicPage.jsx, TerritoireToolbar.jsx, BionicCorridorsV6Layer.jsx
 
+#### Directive x7200 — AUDIT CORRIDORS ET CORRECTION INCOHERENCES EAU
+- [x] Cause racine identifiee : water_body cost=8.0 (trop faible), Bezier ignorant terrain, absence post-filtre
+- [x] FIX A : water_body cost 8.0 → 999.0 (IMPASSABLE) dans corridor_10x.py
+- [x] FIX B : Bezier anti-eau avec deflection perpendiculaire dans zone_engine_core_v2.py
+- [x] FIX C : Post-filtre _filter_corridors_water() avec intersection Shapely
+- [x] Logique maitresse Mon Territoire INTOUCHEE (zone generation, pipeline, rasterizer, SRTM)
+- [x] Rapport audit : /app/memory/AUDIT_CORRIDORS_EAU_x7200.md
+
 ### P1 — Prochain
 - [ ] Phase E: GUIDE PRO (chasse guidee 100%) — DEBLOQUEE par validation x7200
 - [ ] Phase F: Module Gestionnaire UI (CARTE tabs + SECOURS button)
@@ -183,4 +191,4 @@ nutritionnelle V6 unifiee.
 
 ---
 
-**Derniere mise a jour** : 2026-04-05 — Directive x7200 etendue COMPLETE (Synchronisation zones, toggle Eau, ON/OFF instantane, logique maitresse INTOUCHEE)
+**Derniere mise a jour** : 2026-04-05 — Directive x7200 CORRIDORS EAU COMPLETE (water_body=999, post-filtre Shapely, Bezier anti-eau, toggle Eau)

@@ -851,7 +851,77 @@ def _generate_corridors_10x(zones_by_layer, species, waypoint_center, bounds):
                 break
 
     logger.info(f"[Corridor A*] Generated {len(corridors)} corridors for species={species}")
+
+    # ═══════════════════════════════════════════════════════════════════
+    # V7.2 x7200: POST-FILTRE — Exclusion corridors traversant l'eau
+    # Garantit qu'aucun corridor ne traverse un plan d'eau non franchissable
+    # ═══════════════════════════════════════════════════════════════════
+    hydro_zones = zones_by_layer.get("hydro", [])
+    if hydro_zones and SHAPELY_AVAILABLE:
+        corridors = _filter_corridors_water(corridors, hydro_zones)
+        logger.info(f"[Corridor A*] After water filter: {len(corridors)} corridors remaining")
+
     return corridors
+
+
+def _filter_corridors_water(corridors, hydro_zones):
+    """
+    V7.2 x7200: Rejette tout corridor dont le trajet intersecte une zone hydro.
+    Un corridor qui traverse un plan d'eau est ecologiquement impossible
+    pour le gibier terrestre (orignal, chevreuil, ours, dindon).
+    """
+    try:
+        from shapely.geometry import LineString as ShapelyLine, Polygon as ShapelyPoly
+        from shapely.ops import unary_union
+    except ImportError:
+        return corridors
+
+    # Construire l'union des polygones hydro
+    hydro_polys = []
+    for hz in hydro_zones:
+        coords = hz.get("coordinates", [])
+        if len(coords) >= 3:
+            try:
+                poly = ShapelyPoly([(c[0], c[1]) for c in coords])
+                if poly.is_valid and poly.area > 0:
+                    hydro_polys.append(poly)
+            except Exception:
+                pass
+
+    if not hydro_polys:
+        return corridors
+
+    try:
+        water_union = unary_union(hydro_polys)
+    except Exception:
+        return corridors
+
+    filtered = []
+    rejected = 0
+    for corridor in corridors:
+        path_coords = corridor.get("geometry", {}).get("coordinates", [])
+        if len(path_coords) < 2:
+            filtered.append(corridor)
+            continue
+
+        try:
+            line = ShapelyLine([(c[0], c[1]) for c in path_coords])
+            if line.intersects(water_union):
+                # Corridor traverse l'eau — REJETE
+                rejected += 1
+                logger.info(
+                    f"[V7.2-x7200] Corridor {corridor.get('properties', {}).get('source', '?')}-"
+                    f"{corridor.get('id', '?')} REJETE: traverse zone hydro"
+                )
+                continue
+            filtered.append(corridor)
+        except Exception:
+            filtered.append(corridor)
+
+    if rejected > 0:
+        logger.info(f"[V7.2-x7200] {rejected} corridors rejetes (intersection eau)")
+
+    return filtered
 
 
 def _build_terrain_grid(zone_polygons, bounds):
@@ -910,7 +980,8 @@ def _build_terrain_grid(zone_polygons, bounds):
 
 def _find_astar_path(fz, tz, terrain_data, pathfinder, distance):
     """
-    Trouve un chemin A* entre deux zones. Fallback Bezier si échec.
+    Trouve un chemin A* entre deux zones. Fallback Bezier si echec.
+    V7.2 x7200: Bezier avec deflection anti-eau.
     """
     start = (fz["lat"], fz["lng"])
     end = (tz["lat"], tz["lng"])
@@ -937,13 +1008,27 @@ def _find_astar_path(fz, tz, terrain_data, pathfinder, distance):
     except Exception as e:
         logger.warning(f"[Corridor A*] Pathfinding failed: {e}")
 
-    # Fallback: Bezier quadratique
+    # V7.2 x7200: Fallback Bezier avec deflection anti-eau
     n_points = max(5, int(distance / 50))
     path_coords = []
+
+    # V7.2: Verifier si le trajet direct passe par une zone a cout eleve (eau)
+    mid_key = f"{(fz['lat'] + tz['lat']) / 2:.4f},{(fz['lng'] + tz['lng']) / 2:.4f}"
+    mid_terrain = terrain_data.get(mid_key, {})
+    has_water_obstacle = mid_terrain.get("type") == "water_body"
+
+    # Deflection perpendiculaire amplifiee si obstacle eau au centre
+    deflection = 0.0005 if has_water_obstacle else 0.0002
+    dx = tz["lng"] - fz["lng"]
+    dy = tz["lat"] - fz["lat"]
+    norm = max(0.0001, math.sqrt(dx ** 2 + dy ** 2))
+    perp_x = -dy * deflection / norm
+    perp_y = dx * deflection / norm
+
     for i in range(n_points + 1):
         t = i / n_points
-        mid_lat = (fz["lat"] + tz["lat"]) / 2 + (0.0002 * math.sin(t * math.pi))
-        mid_lng = (fz["lng"] + tz["lng"]) / 2 + (0.0002 * math.cos(t * math.pi))
+        mid_lat = (fz["lat"] + tz["lat"]) / 2 + perp_y * math.sin(t * math.pi)
+        mid_lng = (fz["lng"] + tz["lng"]) / 2 + perp_x * math.sin(t * math.pi)
         lat = (1 - t) ** 2 * fz["lat"] + 2 * (1 - t) * t * mid_lat + t ** 2 * tz["lat"]
         lng = (1 - t) ** 2 * fz["lng"] + 2 * (1 - t) * t * mid_lng + t ** 2 * tz["lng"]
         path_coords.append([round(lng, 6), round(lat, 6)])

@@ -485,7 +485,7 @@ TERRAIN_COSTS = {
     
     # Coût prohibitif — obstacles
     "urban": 10.0,
-    "water_body": 8.0,
+    "water_body": 999.0,  # V7.2 x7200: IMPASSABLE — aucun corridor ne traverse l'eau
     "cliff": 15.0,
     "highway": 12.0,
 }
