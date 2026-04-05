@@ -47,7 +47,7 @@ nutritionnelle V6 unifiee.
 #### Directive 4 — Synchronisation documentaire
 - Score de coherence : 98/100
 
-### Session actuelle — x7000-M3 — 2026-04-04
+### Session actuelle — x7100-M4 — 2026-04-05
 
 #### Directive x6900-M2 — M2 BIONIC POI Graph
 - Module `poi_graph_engine` deploye (3 services, 11 endpoints)
@@ -80,6 +80,19 @@ nutritionnelle V6 unifiee.
 - ZERO modification backend, ZERO modification modules V5
 - Rapport final : /app/memory/DASH_RAPPORT_FINAL.md
 
+#### Directive x7100-M4 — M4 Adaptive User Profile + Outdoor Navigation IA
+- Module `adaptive_navigation_engine` deploye (4 services, 12 endpoints)
+- UserProfileLearner : Profil adaptatif chasseur, apprentissage auto, skill_level, affinites
+- NavigationPlanner : Planification itineraires, sessions lifecycle (plan → start → end)
+- RouteOptimizer : Re-optimisation multi-critere dynamique (5 facteurs ponderes)
+- ContextualAdvisor : Conseils contextuels GPS, suggestions personnalisees
+- 2 collections MongoDB : hunter_profiles, navigation_sessions
+- 19 points de fusion documentes (SUPRA, Solunaire, Meteo, M1, M2, M3, Chasse, Nutrition)
+- Score combine : prediction(0.30) + poi(0.25) + affinity(0.20) + distance(0.15) + legal(0.10)
+- ANTI-DOUBLON strict : 5 modules interdits de recreation
+- Tests : 31/31 PASS + 144/144 non-regression = 175/175 TOTAL
+- Rapport final : /app/memory/M4_RAPPORT_FINAL.md
+
 ---
 
 ## Backlog priorise
@@ -92,9 +105,11 @@ nutritionnelle V6 unifiee.
 - [x] M2: BIONIC POI Graph (11 endpoints, 40/40 tests, 14 points de fusion)
 - [x] M3: Predictive Layer + Time-Series (10 endpoints, 46/46 tests, 22 points de fusion)
 - [x] DASH: Integration Dashboard Intelligence V6 (8 widgets, DFL, EventBus, DataContracts)
+- [x] M4: Adaptive Profile + Navigation IA (12 endpoints, 31/31 tests, 19 points de fusion)
 
 ### P1 — Prochain
-- [ ] M4: Adaptive Profile + Navigation IA (11 endpoints)
+- [ ] DASH-M4: Widgets frontend profil + navigation + conseils (3 widgets)
+- [ ] M5: Offline Mode Ultra + Terrain Intelligence (8 endpoints)
 
 ### P2 — Futur
 - [ ] M5: Offline Mode Ultra + Terrain Intelligence (8 endpoints)
@@ -115,6 +130,8 @@ nutritionnelle V6 unifiee.
 | M3_RAPPORT_FINAL | /app/memory/M3_RAPPORT_FINAL.md | 1.0.0 |
 | M3_DASHBOARD_INTEGRATION_PLAN | /app/memory/M3_DASHBOARD_INTEGRATION_PLAN.md | 1.0.0 |
 | DASH_RAPPORT_FINAL | /app/memory/DASH_RAPPORT_FINAL.md | 1.0.0 |
+| M4_ADAPTIVE_NAVIGATION_PLAN | /app/memory/M4_ADAPTIVE_NAVIGATION_PLAN.md | 1.0.0 |
+| M4_RAPPORT_FINAL | /app/memory/M4_RAPPORT_FINAL.md | 1.0.0 |
 | INTERCONNEXION_NUTRITIONNELLE | /app/memory/VALIDATION_INTERCONNEXION_NUTRITIONNELLE_V5_V6.md | 1.0.0 |
 | RAPPORT_SYNC_DOC | /app/memory/RAPPORT_SYNCHRONISATION_DOCUMENTAIRE_V6.md | 1.0.0 |
 | IMPLEMENTATION_PLAN_V1 | /app/memory/IMPLEMENTATION_PLAN_V1.md | 1.0.0 |
@@ -123,4 +140,4 @@ nutritionnelle V6 unifiee.
 
 ---
 
-**Derniere mise a jour** : 2026-04-05 — Directive x7000-M3-DASHBOARD complete
+**Derniere mise a jour** : 2026-04-05 — Directive x7100-M4 complete (175/175 tests PASS)
