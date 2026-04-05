@@ -21,34 +21,35 @@ logger = logging.getLogger("bionic.terrain_nav.costs")
 
 
 # Cout de base par type de chemin OSM
-# BCE-4X CORRIDOR-FIRST 500%: sentiers OSM = voie PREFEREE ABSOLUE (/3)
+# BCE-4X CORRIDOR-FIRST X1 000 000%: sentiers OSM = voie PREFEREE ABSOLUE (/10)
 HIGHWAY_COST_MULTIPLIER = {
-    "secondary": 0.2,       # Route secondaire (initial: 0.8, /4)
-    "tertiary": 0.22,       # Route tertiaire (initial: 0.85, /3.9)
-    "residential": 0.25,    # Route residentielle (initial: 0.9, /3.6)
-    "unclassified": 0.3,    # Route non classee (initial: 1.0, /3.3)
-    "service": 0.3,         # Route de service (initial: 1.0, /3.3)
-    "track": 0.3,           # Chemin forestier praticable (initial: 1.1, /3.7)
-    "cycleway": 0.32,       # Piste cyclable (initial: 1.2, /3.75)
-    "bridleway": 0.35,      # Sentier equestre (initial: 1.3, /3.7)
-    "path": 0.4,            # Sentier pietonne (initial: 1.5, /3.75)
-    "footway": 0.45,        # Sentier de randonnee (initial: 1.6, /3.6)
+    "secondary": 0.08,      # Route secondaire (initial: 0.8, /10)
+    "tertiary": 0.085,      # Route tertiaire (initial: 0.85, /10)
+    "residential": 0.09,    # Route residentielle (initial: 0.9, /10)
+    "unclassified": 0.1,    # Route non classee (initial: 1.0, /10)
+    "service": 0.1,         # Route de service (initial: 1.0, /10)
+    "track": 0.11,          # Chemin forestier praticable (initial: 1.1, /10)
+    "cycleway": 0.12,       # Piste cyclable (initial: 1.2, /10)
+    "bridleway": 0.13,      # Sentier equestre (initial: 1.3, /10)
+    "path": 0.15,           # Sentier pietonne (initial: 1.5, /10)
+    "footway": 0.16,        # Sentier de randonnee (initial: 1.6, /10)
 }
 
 # Cout pour traversee hors-sentier
-# BCE-4X CORRIDOR-FIRST 500% (STEEVE-MAX):
-# 90% du trajet = corridors existants. Foret dense = 10% max (dernier segment).
-# Cout foret dense x5 vs calibration initiale. Cout corridor /3.
-OFF_TRAIL_COST = 60.0        # Foret ouverte sans sentier (initial: 4.0, x15)
-DENSE_FOREST_COST = 125.0   # Foret dense hors sentier (initial: 8.0, x15.6)
-WETLAND_COST = 200.0         # Zone humide = infranchissable
-WATER_COST = 999.0           # Eau = infranchissable
+# BCE-4X CORRIDOR-FIRST X1 000 000% (STEEVE-MAX):
+# 95% du trajet = corridors existants. Foret dense = 5% max (dernier segment).
+# Cout foret dense x50 vs calibration initiale. Cout corridor /10.
+# Interdiction segments hors-sentier > 5%.
+OFF_TRAIL_COST = 200.0       # Foret ouverte sans sentier (initial: 4.0, x50)
+DENSE_FOREST_COST = 400.0   # Foret dense hors sentier (initial: 8.0, x50)
+WETLAND_COST = 800.0         # Zone humide = INFRANCHISSABLE
+WATER_COST = 999.0           # Eau = INFRANCHISSABLE
 
-# Corridors naturels (BCE-4X CORRIDOR-FIRST 500%)
-# Couts divises par 3 vs calibration initiale pour attraction maximale.
-STREAM_BANK_COST = 0.3      # Bord de ruisseau = CORRIDOR OPTIMAL ABSOLU (initial: 1.2, /4)
-CLEARING_EDGE_COST = 0.35   # Bordure de clairiere = CORRIDOR PREFERE ABSOLU (initial: 1.4, /4)
-CLEARING_INTERIOR_COST = 0.6  # Interieur clairiere (initial: 2.0, /3.3)
+# Corridors naturels (BCE-4X CORRIDOR-FIRST X1 000 000%)
+# Couts divises par 10 vs calibration initiale pour attraction ABSOLUE.
+STREAM_BANK_COST = 0.12     # Bord de ruisseau = CORRIDOR ABSOLU (initial: 1.2, /10)
+CLEARING_EDGE_COST = 0.14   # Bordure de clairiere = CORRIDOR ABSOLU (initial: 1.4, /10)
+CLEARING_INTERIOR_COST = 0.2  # Interieur clairiere (initial: 2.0, /10)
 SCENT_ZONE_PENALTY = 15.0  # Penalite contamination olfactive
 
 # Seuils de pente
@@ -109,18 +110,18 @@ def compute_edge_cost(
 
     Cout = distance * type_terrain * pente * penalites
 
-    BCE-4X CORRIDOR-FIRST 500% — Priorite ABSOLUE des corridors:
-    1. Routes OSM (0.2-0.3x) — CORRIDOR ABSOLU
-    2. Sentiers OSM (0.3-0.45x) — CORRIDOR OPTIMAL
-    3. Bords de ruisseau (0.3x) — CORRIDOR NATUREL ABSOLU
-    4. Bordures de clairiere (0.35x) — CORRIDOR NATUREL PREFERE
-    5. Clairiere interieure (0.6x) — CORRIDOR SECONDAIRE
-    6. Foret ouverte hors sentier (60.0x) — FORTEMENT PENALISE
-    7. Foret dense (125.0x) — QUASI-INFRANCHISSABLE
-    8. Zone humide (200x) — INFRANCHISSABLE
+    BCE-4X CORRIDOR-FIRST X1 000 000% — Priorite ABSOLUE EXTREME:
+    1. Routes OSM (0.08-0.1x) — CORRIDOR ABSOLU ZERO COUT
+    2. Sentiers OSM (0.11-0.16x) — CORRIDOR OPTIMAL ZERO COUT
+    3. Bords de ruisseau (0.12x) — CORRIDOR NATUREL ABSOLU
+    4. Bordures de clairiere (0.14x) — CORRIDOR NATUREL PREFERE
+    5. Clairiere interieure (0.2x) — CORRIDOR SECONDAIRE
+    6. Foret ouverte hors sentier (200.0x) — QUASI-INTERDIT
+    7. Foret dense (400.0x) — INTERDIT (5% max)
+    8. Zone humide (800x) — INFRANCHISSABLE
     9. Eau (999x) — INFRANCHISSABLE
 
-    RATIO CORRIDOR/FORET: Route(0.2)/Dense(125) = 0.0016 → corridor 625x prefere
+    RATIO: Route(0.08)/Dense(400) = 0.0002 → corridor 5000x prefere
     """
     if in_water:
         return distance_m * WATER_COST

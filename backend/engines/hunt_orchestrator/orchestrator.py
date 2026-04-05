@@ -101,7 +101,7 @@ def orchestrate_hunt_session(
         )
 
         # BCE-4X: Route d'acces TOUJOURS depuis le waypoint du chasseur
-        # BCE-4X CORRIDOR-FIRST 500%: corridor_lock=True
+        # BCE-4X CORRIDOR-FIRST X1 000 000%: corridor_lock=True, 95% corridor / 5% foret
         best_access = compute_access_route(
             center_lat, center_lng,
             blind["lat"], blind["lng"],
@@ -110,6 +110,14 @@ def orchestrate_hunt_session(
             terrain_data=raw_terrain_data,
             corridor_lock=True,
         )
+
+        # BCE-4X CORRIDOR-FIRST X1M: Post-optimisation via corridor_optimizer_v2
+        try:
+            from engines.bdre.corridor_optimizer_v2 import enforce_corridor_lock
+            best_access = enforce_corridor_lock(best_access, trail_graph)
+        except Exception as e:
+            logger.warning(f"[ORCHESTRATOR] corridor_optimizer_v2 error: {e}")
+
         best_access["entry_point"] = {
             "lat": center_lat,
             "lng": center_lng,

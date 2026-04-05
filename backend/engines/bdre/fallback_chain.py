@@ -432,17 +432,24 @@ class FallbackChain:
 
         # BCE-4X CORRIDOR-FIRST 500%: Metriques corridor/foret
         if trail_type in ("real_osm", "waterway_guided", "hybride_sentier_terrain"):
-            route_result["corridor_pct"] = 90
-            route_result["forest_pct"] = 10
+            route_result["corridor_pct"] = 95
+            route_result["forest_pct"] = 5
         elif trail_type in ("corridor_astar", "terrain_topology"):
-            route_result["corridor_pct"] = 75
-            route_result["forest_pct"] = 25
+            route_result["corridor_pct"] = 80
+            route_result["forest_pct"] = 20
         elif trail_type == "estimation_enriched":
             route_result["corridor_pct"] = 0
             route_result["forest_pct"] = 100
         else:
             route_result["corridor_pct"] = 50
             route_result["forest_pct"] = 50
+
+        # BCE-4X CORRIDOR-FIRST X1 000 000%: Post-analyse via corridor_optimizer_v2
+        try:
+            from engines.bdre.corridor_optimizer_v2 import enforce_corridor_lock
+            route_result = enforce_corridor_lock(route_result)
+        except Exception as e:
+            logger.warning(f"[BDRE] corridor_optimizer_v2 error: {e}")
 
         return route_result
 
