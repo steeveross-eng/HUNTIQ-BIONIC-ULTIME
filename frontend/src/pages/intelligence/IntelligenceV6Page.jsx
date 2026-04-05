@@ -1,22 +1,31 @@
 /**
- * Intelligence V6 Dashboard Page
- * Directive x7000-M3-DASHBOARD | BCE-4X GOLDEN V6+
+ * Intelligence V6 Dashboard Page — INTELLIGENCE V6-CORE
+ * Directive x7000-M3-DASHBOARD + x7100-M4 Phase D | BCE-4X GOLDEN V6+
  * 
  * Dashboard auto-sync : change espece/zone/date → tous les widgets se rafraichissent
  * Consomme exclusivement DataFusionLayer + DataContracts V6
+ * 
+ * Widgets M3 : W1 (ScoreConsolide), W2 (PredictiveLayer), W3 (BestTimes),
+ *              W6 (Trends), W7 (Correlation), W9 (TimeSeries)
+ * Widgets M4 : W10 (HunterProfile), W11 (Navigation), W12 (Advice)
+ * 
+ * Synchronise : CARTE, MON TERRITOIRE, Gestionnaire, SUPRA
  */
 import React, { useState, useEffect, useCallback } from 'react';
 import useBionicStore from '@/stores/useBionicStore';
-import { DataFusionLayer } from '@/services/DataFusionLayer';
+import DataFusionLayer from '@/services/DataFusionLayer';
 import { ScoreConsolideWidget } from '@/modules/intelligence-v6/components/ScoreConsolideWidget';
 import { PredictiveLayerWidget } from '@/modules/intelligence-v6/components/PredictiveLayerWidget';
 import { BestTimesWidget } from '@/modules/intelligence-v6/components/BestTimesWidget';
 import { TrendsChart } from '@/modules/intelligence-v6/components/TrendsChart';
 import { CorrelationMatrixWidget } from '@/modules/intelligence-v6/components/CorrelationMatrixWidget';
 import { TimeSeriesChart } from '@/modules/intelligence-v6/components/TimeSeriesChart';
+import { HunterProfileWidget } from '@/modules/intelligence-v6/components/HunterProfileWidget';
+import { NavigationWidget } from '@/modules/intelligence-v6/components/NavigationWidget';
+import { AdviceWidget } from '@/modules/intelligence-v6/components/AdviceWidget';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Brain, RefreshCw, Loader2 } from 'lucide-react';
+import { Brain, RefreshCw, Loader2, User, Navigation, Lightbulb } from 'lucide-react';
 
 const SPECIES_OPTIONS = [
   { value: 'orignal', label: 'Orignal' },
@@ -28,7 +37,9 @@ const SPECIES_OPTIONS = [
 export default function IntelligenceV6Page() {
   const [species, setSpecies] = useState('orignal');
   const [zoneId, setZoneId] = useState('zone-01');
+  const [userId, setUserId] = useState('default_hunter');
   const [loading, setLoading] = useState(false);
+  const [m4Data, setM4Data] = useState({ profile: null, advice: null, suggestions: null });
 
   const {
     setPredictiveLayer, setTrendsData, setCorrelationData,
@@ -40,13 +51,15 @@ export default function IntelligenceV6Page() {
     setM3Loading(true);
 
     try {
-      const [consolidated, score, trends, correlation, bestTimes, timeseries] = await Promise.all([
+      const [consolidated, score, trends, correlation, bestTimes, timeseries, profile, advice] = await Promise.all([
         DataFusionLayer.fetchConsolidatedView(zoneId, species, null, 46.85, -71.25),
         DataFusionLayer.fetchScoreConsolide(zoneId, species, null, 46.85, -71.25),
         DataFusionLayer.fetchTrends(species, zoneId),
         DataFusionLayer.fetchCorrelationMatrix(zoneId, species, 46.85, -71.25),
         DataFusionLayer.fetchBestTimes(zoneId, species, null, 46.85, -71.25),
         DataFusionLayer.fetchTimeSeries(zoneId, species, 'activity_index'),
+        DataFusionLayer.fetchHunterProfile(userId),
+        DataFusionLayer.fetchContextualAdvice(userId, 46.85, -71.25),
       ]);
 
       setPredictiveLayer(consolidated);
@@ -54,13 +67,15 @@ export default function IntelligenceV6Page() {
       setTrendsData(trends);
       setCorrelationData(correlation);
       setBestTimesData(bestTimes);
+
+      setM4Data(prev => ({ ...prev, profile, advice }));
     } catch (err) {
       console.error('DFL refresh error:', err);
     } finally {
       setLoading(false);
       setM3Loading(false);
     }
-  }, [species, zoneId, setPredictiveLayer, setTrendsData, setCorrelationData, setScoreConsolide, setBestTimesData, setM3Loading]);
+  }, [species, zoneId, userId, setPredictiveLayer, setTrendsData, setCorrelationData, setScoreConsolide, setBestTimesData, setM3Loading]);
 
   useEffect(() => {
     refreshAll();
@@ -75,9 +90,9 @@ export default function IntelligenceV6Page() {
         {/* Header */}
         <div className="flex flex-wrap items-center gap-3">
           <Brain className="w-5 h-5 text-violet-400" />
-          <h1 className="text-lg font-semibold tracking-tight">Intelligence V6</h1>
+          <h1 className="text-lg font-semibold tracking-tight">Intelligence V6-CORE</h1>
           <Badge variant="outline" className="border-violet-500/30 text-violet-400 text-[10px]">
-            M1 + M2 + M3 FUSION
+            M1 + M2 + M3 + M4 FUSION
           </Badge>
 
           <div className="ml-auto flex items-center gap-2">
@@ -102,6 +117,28 @@ export default function IntelligenceV6Page() {
               {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-400" /> : <RefreshCw className="w-3.5 h-3.5 text-zinc-400" />}
             </button>
           </div>
+        </div>
+
+        {/* Section M4 — Profil + Conseils IA */}
+        <div className="flex items-center gap-2 pt-2">
+          <User className="w-4 h-4 text-violet-400/60" />
+          <span className="text-xs text-zinc-500 uppercase tracking-wider font-medium">Profil Adaptatif + Navigation IA</span>
+          <div className="flex-1 h-px bg-zinc-800" />
+          <Badge variant="outline" className="text-[9px] border-cyan-500/20 text-cyan-400">M4</Badge>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <HunterProfileWidget initialData={m4Data.profile} userId={userId} />
+          <NavigationWidget initialData={null} />
+          <AdviceWidget initialData={m4Data.advice} />
+        </div>
+
+        {/* Section M3 — Predictif */}
+        <div className="flex items-center gap-2 pt-2">
+          <Brain className="w-4 h-4 text-violet-400/60" />
+          <span className="text-xs text-zinc-500 uppercase tracking-wider font-medium">Intelligence Predictive</span>
+          <div className="flex-1 h-px bg-zinc-800" />
+          <Badge variant="outline" className="text-[9px] border-violet-500/20 text-violet-400">M3</Badge>
         </div>
 
         {/* Grid W1 + W3 + W8 */}

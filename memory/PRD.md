@@ -119,8 +119,13 @@ nutritionnelle V6 unifiee.
 - Tests : 44/45 PASS + 0 FAIL
 - Rapport final : /app/memory/PHASE_C_RAPPORT.md
 
+- [x] Phase D: Widgets M4 (HunterProfileWidget W10, NavigationWidget W11, AdviceWidget W12)
+- [x] INTELLIGENCE V6-CORE: 9 widgets (6 M3 + 3 M4), badge M1+M2+M3+M4 FUSION
+
 ### P1 — Prochain
-- [ ] Phase D: Widgets M4 (HunterProfileWidget, NavigationWidget, AdviceWidget)
+- [ ] Phase E: GUIDE PRO (chasse guidee 100%)
+- [ ] Phase F: Module Gestionnaire UI (CARTE tabs + SECOURS button)
+- [ ] M5: Offline Mode Ultra + Terrain Intelligence
 
 ### P2 — Futur
 - [ ] M5: Offline Mode Ultra + Terrain Intelligence (8 endpoints)
@@ -141,6 +146,7 @@ nutritionnelle V6 unifiee.
 | M3_RAPPORT_FINAL | /app/memory/M3_RAPPORT_FINAL.md | 1.0.0 |
 | M3_DASHBOARD_INTEGRATION_PLAN | /app/memory/M3_DASHBOARD_INTEGRATION_PLAN.md | 1.0.0 |
 | DASH_RAPPORT_FINAL | /app/memory/DASH_RAPPORT_FINAL.md | 1.0.0 |
+| PHASE_D_RAPPORT | /app/memory/PHASE_D_RAPPORT.md | 1.0.0 |
 | PHASE_C_RAPPORT | /app/memory/PHASE_C_RAPPORT.md | 1.0.0 |
 | AUDIT_BIONIC_OS_DEDUP | /app/memory/AUDIT_BIONIC_OS_DEDUP.md | 1.0.0 |
 | PHASE_A_RAPPORT | /app/memory/PHASE_A_RAPPORT.md | 1.0.0 |
@@ -154,4 +160,4 @@ nutritionnelle V6 unifiee.
 
 ---
 
-**Derniere mise a jour** : 2026-04-05 — Phase C complete (Gestionnaire 12 endpoints, 6 DC, 6 EB, hotspots valides, 44/45 PASS)
+**Derniere mise a jour** : 2026-04-05 — Phase D complete (3 widgets M4, INTELLIGENCE V6-CORE, 9 widgets total, 44/44 PASS)
