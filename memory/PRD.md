@@ -244,7 +244,8 @@ nutritionnelle V6 unifiee.
 | BDRE_PHASE1_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE1_IMPLEMENTATION_REPORT.md | 1.0.0 |
 | BDRE_PHASE2_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE2_IMPLEMENTATION_REPORT.md | 1.0.0 |
 | BDRE_PHASE3_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE3_IMPLEMENTATION_REPORT.md | 1.0.0 |
+| BDRE_PHASE4_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE4_IMPLEMENTATION_REPORT.md | 1.0.0 |
 
 ---
 
-**Derniere mise a jour** : 2026-04-06 — BDRE PHASE 3 IMPLEMENTATION COMPLETE. Pipeline hybride 4 niveaux (fallback_chain.py) + source_selector.py. CASCADE A (access_engine) et CASCADE B (stand_recommendation) REMPLACEES par delegation au BDRE. trail_type annote par BDRE: 6 valeurs (real_osm, waterway_guided, hybride_sentier_terrain, corridor_astar, terrain_topology, estimation_enriched). _legacy_cascade safety backup conserve. Test: access_route hybride L2 1218m/34pts, approach corridor_astar L3 566m/14pts. Journal BDRE 7 entrees. Phase BDRE-4 EN ATTENTE DIRECTIVE.
+**Derniere mise a jour** : 2026-04-06 — BDRE PHASE 4 IMPLEMENTATION COMPLETE. BDRE institutionnalise dans 5 engines: TNE, Access Engine, Stand Recommendation, GUIDE PRO, Weather. 11 endpoints, 10 composants. Dashboard institutionnel a /api/v1/bdre/dashboard. GUIDE PRO annote chaque route avec bdre_terrain_score et bdre_terrain_status. Post-hunt reporter inclut metriques BDRE. Weather journalise dans BDRE. BDRE PLEINEMENT OPERATIONNEL.
