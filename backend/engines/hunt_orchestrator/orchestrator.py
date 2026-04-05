@@ -101,12 +101,14 @@ def orchestrate_hunt_session(
         )
 
         # BCE-4X: Route d'acces TOUJOURS depuis le waypoint du chasseur
+        # BCE-4X CORRIDOR-FIRST 500%: corridor_lock=True
         best_access = compute_access_route(
             center_lat, center_lng,
             blind["lat"], blind["lng"],
             trail_graph, feeding_sites, scent_zone,
             water_check_fn=water_check_fn,
             terrain_data=raw_terrain_data,
+            corridor_lock=True,
         )
         best_access["entry_point"] = {
             "lat": center_lat,

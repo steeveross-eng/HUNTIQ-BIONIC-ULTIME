@@ -124,6 +124,32 @@ conformement a la directive d'optimisation continue totale BDRE-FIRST.
 
 ---
 
+### 2026-04-05 — CORRIDOR-FIRST 500% — INVARIANT ULTIME
+
+- **Scope** : terrain_costs.py, fallback_chain.py, access_engine.py, orchestrator.py
+- **Action** : Recalibration extreme des couts terrain (500% amelioration)
+- **Corridors** : Couts divises par 3-4 (routes 0.2-0.3, stream bank 0.3, paths 0.4-0.45)
+- **Foret** : Couts multiplies par 15+ (off-trail 60.0, dense 125.0, wetland 200.0)
+- **Ratio** : Corridors 56-62x plus favorises vs V6 initiale
+- **corridor_lock** : True dans toute la chaine BDRE
+- **corridor_pct** : 90%, forest_pct: 10%
+- **Verification** : MATCHES_HUNTER=True, sentier_reel, 28pts, 585m, bdre_level=0
+- **Regression** : ZERO
+- **Rapport** : AFFUTS_CORRIDOR_500_REPORT.md
+
+---
+
+### 2026-04-05 — DASHBOARD FRONTEND — BDRE GLOBAL
+
+- **Scope** : DashboardPage.jsx
+- **Action** : Indicateur BDRE global dans header (version, sources, fallbacks, dots)
+- **data-testid** : dashboard-bdre-indicator
+- **Impact** : 11/11 modules BDRE-FIRST
+- **Regression** : ZERO
+- **Rapport** : DASHBOARD_BDRE_INTEGRATION_REPORT.md
+
+---
+
 ### 2026-04-05 — BDRE-FIRST — INSTITUTION
 
 - **Scope** : Tous composants BIONIC OS

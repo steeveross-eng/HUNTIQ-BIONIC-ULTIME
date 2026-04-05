@@ -63,12 +63,14 @@ class FallbackChain:
         terrain_data: Optional[Dict] = None,
         scent_zone: Optional[Dict] = None,
         feeding_sites: Optional[List[Dict]] = None,
+        corridor_lock: bool = True,
     ) -> Dict[str, Any]:
         """
         Pipeline unifie BDRE pour le calcul de route d'acces.
         REMPLACE la cascade A de access_engine.py.
 
         BCE-4X INVARIANT: entry_lat/entry_lng = waypoint chasseur (STEEVE-MAX).
+        BCE-4X CORRIDOR-FIRST 500%: corridor_lock=True force 90% corridor.
         Retourne toujours un resultat avec trail_type annote par le BDRE.
         Le premier point de coords[] est TOUJOURS le waypoint chasseur.
         """
@@ -245,12 +247,14 @@ class FallbackChain:
         trail_graph=None,
         corridors: Optional[List[Dict]] = None,
         hydro_points: Optional[List[Dict]] = None,
+        corridor_lock: bool = True,
     ) -> Dict[str, Any]:
         """
         Pipeline unifie BDRE pour le calcul de route d'approche vers un affut.
         REMPLACE la cascade B de stand_recommendation/engine.py.
 
         BCE-4X INVARIANT: start_lat/start_lng = waypoint chasseur (STEEVE-MAX).
+        BCE-4X CORRIDOR-FIRST 500%: corridor_lock=True force 90% corridor.
         Le premier point de path[] est TOUJOURS le waypoint chasseur.
         Retourne un dict avec trail_type annote par le BDRE.
         """
@@ -407,13 +411,14 @@ class FallbackChain:
     ) -> Dict:
         """
         Annoter un resultat avec les metadonnees BDRE.
-        BCE-4X INVARIANT: Si hunter_lat/lng fournis, forcer le premier point
-        des coords a etre le waypoint chasseur.
+        BCE-4X INVARIANT: waypoint chasseur en tete.
+        BCE-4X CORRIDOR-FIRST 500%: corridor_lock + metriques corridor/foret.
         """
         route_result["trail_type"] = trail_type
         route_result["bdre_fallback_level"] = fallback_level
         route_result["bdre_levels_tried"] = list(levels_tried)
         route_result["bdre_source"] = f"BDRE_L{fallback_level}" if fallback_level > 0 else "TNE"
+        route_result["corridor_lock"] = True
 
         # BCE-4X INVARIANT: Forcer le premier coord = waypoint chasseur
         if hunter_lat is not None and hunter_lng is not None:
@@ -424,6 +429,20 @@ class FallbackChain:
                     coords.insert(0, {"lat": round(hunter_lat, 6), "lng": round(hunter_lng, 6)})
                     route_result["coords"] = coords
                     logger.info(f"[BDRE-INVARIANT] Waypoint chasseur force en tete: ({hunter_lat:.6f}, {hunter_lng:.6f})")
+
+        # BCE-4X CORRIDOR-FIRST 500%: Metriques corridor/foret
+        if trail_type in ("real_osm", "waterway_guided", "hybride_sentier_terrain"):
+            route_result["corridor_pct"] = 90
+            route_result["forest_pct"] = 10
+        elif trail_type in ("corridor_astar", "terrain_topology"):
+            route_result["corridor_pct"] = 75
+            route_result["forest_pct"] = 25
+        elif trail_type == "estimation_enriched":
+            route_result["corridor_pct"] = 0
+            route_result["forest_pct"] = 100
+        else:
+            route_result["corridor_pct"] = 50
+            route_result["forest_pct"] = 50
 
         return route_result
 

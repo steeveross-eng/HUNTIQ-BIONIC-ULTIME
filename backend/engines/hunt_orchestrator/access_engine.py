@@ -553,13 +553,13 @@ def compute_access_route(
     scent_zone: Dict[str, Any],
     water_check_fn=None,
     terrain_data: Optional[Dict] = None,
+    corridor_lock: bool = True,
 ) -> Dict[str, Any]:
     """
     BCE-4X Trail-First Routing — Calculer le chemin d'acces optimal vers un affut.
 
     BDRE Phase 3: Delegation au pipeline hybride 4 niveaux BDRE.
-    La logique metier est CONSERVEE dans ce fichier (hybrid, terrain grid, A*).
-    Le BDRE ORCHESTRE l'ordre d'appel et annote les trail_type.
+    BCE-4X CORRIDOR-FIRST 500%: corridor_lock=True force 90% corridor.
 
     Niveaux BDRE:
     0. Source primaire: sentier OSM reel (TNE)
@@ -576,6 +576,7 @@ def compute_access_route(
             entry_lat, entry_lng, blind_lat, blind_lng,
             trail_graph, terrain_data=terrain_data,
             scent_zone=scent_zone, feeding_sites=feeding_sites,
+            corridor_lock=corridor_lock,
         )
         logger.info(
             f"[ACCESS-BDRE] Route calculee: trail_type={route_result.get('trail_type')}, "
@@ -685,12 +686,21 @@ def compute_access_route(
         "contamination_check": contam,
         "water_crossings": water_crossings,
         "feeding_proximity": feeding_proximity_violations,
+        # BCE-4X CORRIDOR-FIRST 500%: Propagation metadonnees BDRE
+        "corridor_lock": route_result.get("corridor_lock", True),
+        "corridor_pct": route_result.get("corridor_pct"),
+        "forest_pct": route_result.get("forest_pct"),
+        "bdre_fallback_level": route_result.get("bdre_fallback_level"),
+        "bdre_levels_tried": route_result.get("bdre_levels_tried"),
+        "bdre_source": route_result.get("bdre_source"),
+        "bdre_terrain_score": route_result.get("bdre_terrain_score"),
         **hybrid_meta,
         "message": (
             f"Acces {'CONFORME' if feasible else 'NON CONFORME'}: "
             f"{round(distance_m)}m via {trail_type} ({algo}). "
             + (f"Sentier {hybrid_meta.get('phase1_distance_m', 0)}m + approche {hybrid_meta.get('phase2_distance_m', 0)}m. " if hybrid_meta else "")
             + ("ZERO violation." if feasible else f"{contam['violations_count']} violation(s) vent/odeur.")
+            + (f" CORRIDOR-FIRST 500%: {route_result.get('corridor_pct', '?')}% corridor, {route_result.get('forest_pct', '?')}% foret." if route_result.get("corridor_lock") else "")
         ),
     }
 
