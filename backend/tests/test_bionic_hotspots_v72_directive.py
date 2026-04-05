@@ -16,7 +16,7 @@ import requests
 import os
 import math
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', '').rstrip('/')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://huntiq-restore.preview.emergentagent.com').rstrip('/')
 HOTSPOT_API = f"{BASE_URL}/api/v1/admin/bionic-hotspots"
 
 # Known water body coordinates from water_bodies_qc.py
