@@ -78,6 +78,7 @@ def generate_report(session: Dict) -> Dict:
         "session_title": session.get("title", ""),
         "species": session.get("species", ""),
         "territory_id": session.get("territory_id", ""),
+        "bdre_metrics": _get_bdre_metrics(session),
     }
 
     # Stocker le rapport dans la session
@@ -107,3 +108,28 @@ def get_report(session: Dict) -> Dict:
     if not report.get("generated"):
         return {"success": False, "error": "REPORT_NOT_GENERATED"}
     return {"success": True, "report": report}
+
+
+def _get_bdre_metrics(session: Dict) -> Dict:
+    """
+    BDRE Phase 4: Inclure les metriques BDRE dans le rapport post-chasse.
+    """
+    # Metriques de la validation terrain effectuee lors de la generation des routes
+    bdre_validation = session.get("bdre_validation", {})
+
+    # Metriques du journal BDRE pour cette session
+    try:
+        from engines.bdre import get_audit_logger
+        audit = get_audit_logger()
+        recent = audit.get_recent_fallbacks(limit=10)
+        fallback_count = len(recent)
+    except Exception:
+        fallback_count = 0
+
+    return {
+        "terrain_score": bdre_validation.get("min_score", 0.0),
+        "terrain_status": bdre_validation.get("recommendation", "UNKNOWN"),
+        "terrain_warning": bdre_validation.get("warning"),
+        "fallbacks_during_session": fallback_count,
+        "data_reliability": "BDRE Phase 4 active",
+    }

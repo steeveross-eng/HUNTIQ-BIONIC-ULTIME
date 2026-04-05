@@ -215,10 +215,34 @@ async def get_current_weather(
         data["engine_version"] = "v3"
         data["timestamp"] = datetime.now(timezone.utc).isoformat()
 
+        # BDRE Phase 4: Journaliser l'acces meteo
+        try:
+            from engines.bdre import log_audit
+            score = data["hunting_score"]["overall"] / 100.0
+            log_audit(
+                engine="WEATHER", source_id="SRC-07",
+                action="fetch_current", score=score,
+                territory=f"{lat},{lng}",
+                details=f"hunting_score={data['hunting_score']['overall']}"
+            )
+        except Exception:
+            pass
+
         return data
 
     except Exception as e:
         logger.error(f"[Weather v3] Error: {e}")
+        # BDRE Phase 4: Journaliser l'echec meteo
+        try:
+            from engines.bdre import log_audit
+            log_audit(
+                engine="WEATHER", source_id="SRC-07",
+                action="fetch_error", score=0.0,
+                territory=f"{lat},{lng}",
+                details=str(e)
+            )
+        except Exception:
+            pass
         return {"error": str(e), "engine_version": "v3"}
 
 

@@ -43,8 +43,8 @@ async def bdre_health():
         "module": "bdre",
         "version": "V2",
         "protocol": "BCE-4X GOLDEN V6+",
-        "phase": "Phase 3 — Pipeline Hybride + Remplacement Cascades",
-        "endpoints": 10,
+        "phase": "Phase 4 — Institutionnalisation BDRE",
+        "endpoints": 11,
         "components": [
             "source_registry",
             "quality_scorer",
@@ -263,4 +263,87 @@ async def get_recent_anomalies(
         "total": len(anomalies),
         "limit": limit,
         "anomalies": anomalies,
+    }
+
+
+# =====================================================================
+# ENDPOINT 10: DASHBOARD INSTITUTIONNEL (Phase 4)
+# =====================================================================
+
+@router.get("/dashboard", tags=["bdre"])
+async def get_dashboard():
+    """
+    Dashboard institutionnel BDRE.
+    Vue consolidee de toutes les metriques pour monitoring STEEVE-MAX.
+    """
+    from engines.bdre import (
+        get_registry, get_scorer, get_audit_logger,
+        get_health_monitor, get_anomaly_detector,
+    )
+
+    registry = get_registry()
+    scorer = get_scorer()
+    audit = get_audit_logger()
+    monitor = get_health_monitor()
+    detector = get_anomaly_detector()
+
+    # Sources externes avec statut
+    external = registry.get_external_sources()
+    internal = registry.get_internal_sources()
+
+    # Compter par statut
+    status_counts = {}
+    for src in external + internal:
+        st = src.get("status", "unknown")
+        status_counts[st] = status_counts.get(st, 0) + 1
+
+    # Dernier score par source
+    source_scores = []
+    for src in external:
+        last = scorer.get_last_score(src["source_id"])
+        source_scores.append({
+            "source_id": src["source_id"],
+            "name": src.get("name", ""),
+            "status": src["status"],
+            "score": last["score"] if last else src.get("score", 0.0),
+            "classification": last["classification"] if last else "NON EVALUE",
+        })
+
+    # Stats audit
+    audit_stats = audit.get_stats()
+    recent_fallbacks = audit.get_recent_fallbacks(limit=5)
+
+    # Anomalies
+    anomalies = detector.get_recent_anomalies(limit=5)
+
+    # Monitoring
+    monitor_status = monitor.get_all_statuses()
+
+    return {
+        "protocol": "BCE-4X GOLDEN V6+",
+        "bdre_version": "Phase 4",
+        "status": "OPERATIONAL",
+        "sources": {
+            "total": len(external) + len(internal),
+            "external": len(external),
+            "internal": len(internal),
+            "by_status": status_counts,
+        },
+        "source_scores": source_scores,
+        "audit": {
+            "total_entries": audit_stats["total_entries"],
+            "total_fallbacks": audit_stats["total_fallbacks"],
+            "total_alerts": audit_stats["total_alerts"],
+            "total_empty": audit_stats["total_empty"],
+        },
+        "recent_fallbacks": recent_fallbacks,
+        "recent_anomalies": anomalies,
+        "monitor": monitor_status,
+        "engines_integrated": [
+            "TNE (Terrain Nav Engine)",
+            "Access Engine V6",
+            "Stand Recommendation Engine",
+            "GUIDE PRO Engine",
+            "Weather Engine V3",
+        ],
     }

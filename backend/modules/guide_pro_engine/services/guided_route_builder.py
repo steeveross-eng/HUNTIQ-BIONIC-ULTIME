@@ -22,11 +22,17 @@ def generate_routes(session: Dict) -> Dict:
     Generer des parcours optimises pour chaque client de la session.
     Utilise le pipeline HUMAN_TRAJET_COSTS existant.
 
+    BDRE Phase 4: Validation terrain avant routage.
+    1. Interroger le BDRE pour valider les sources terrain du territoire
+    2. Inclure le score BDRE dans chaque route generee
+    3. Avertir si le score terrain est faible (< 0.40)
+
     Strategie:
     1. Recuperer les hotspots et zones du territoire (PF-E12)
-    2. Pour chaque client, generer un parcours via A* (PF-E8, PF-E13)
-    3. Appliquer _assess_forest_ratio (PF-E14)
-    4. Enrichir avec les predictions M3 (PF-E9/10)
+    2. Valider la fiabilite terrain via BDRE (Phase 4)
+    3. Pour chaque client, generer un parcours via A* (PF-E8, PF-E13)
+    4. Appliquer _assess_forest_ratio (PF-E14)
+    5. Enrichir avec les predictions M3 (PF-E9/10)
     """
     territory_id = session.get("territory_id", "")
     species = session.get("species", "deer")
@@ -36,6 +42,9 @@ def generate_routes(session: Dict) -> Dict:
 
     if not clients:
         return {"success": False, "error": "NO_CLIENTS"}
+
+    # BDRE Phase 4: Validation terrain du territoire
+    bdre_validation = _validate_terrain_bdre(territory_id)
 
     routes = []
 
@@ -54,6 +63,9 @@ def generate_routes(session: Dict) -> Dict:
             client_index=idx,
             total_clients=len(clients),
         )
+        # BDRE Phase 4: Annoter la route avec le score terrain BDRE
+        client_route["bdre_terrain_score"] = bdre_validation.get("min_score", 0.0)
+        client_route["bdre_terrain_status"] = bdre_validation.get("recommendation", "UNKNOWN")
         routes.append(client_route)
 
     # Guide route (parcours du guide lui-meme)
@@ -66,16 +78,19 @@ def generate_routes(session: Dict) -> Dict:
         "forest_ratio": 0,
         "movement_type": "human",
         "role": "guide",
+        "bdre_terrain_score": bdre_validation.get("min_score", 0.0),
+        "bdre_terrain_status": bdre_validation.get("recommendation", "UNKNOWN"),
     }
     routes.append(guide_route)
 
     # Stocker les routes et predictions dans la session
     session["routes"] = routes
     session["predictions"] = predictions
+    session["bdre_validation"] = bdre_validation
 
     logger.info(
         f"[GUIDE PRO] {len(routes)} parcours generes pour session "
-        f"{session.get('session_id', '?')}"
+        f"{session.get('session_id', '?')} — BDRE score={bdre_validation.get('min_score', 0):.3f}"
     )
 
     return {
@@ -83,6 +98,7 @@ def generate_routes(session: Dict) -> Dict:
         "routes": routes,
         "predictions": predictions,
         "total_routes": len(routes),
+        "bdre_validation": bdre_validation,
     }
 
 
@@ -106,6 +122,69 @@ def _get_territory_hotspots(territory_id: str, species: str) -> List[Dict]:
         logger.debug(f"[ROUTE BUILDER] Hotspots non disponibles: {e}")
 
     return []
+
+
+def _validate_terrain_bdre(territory_id: str) -> Dict:
+    """
+    BDRE Phase 4: Valider la fiabilite terrain du territoire.
+    Interroge le BDRE pour obtenir le score global des sources terrain.
+    """
+    try:
+        from engines.bdre import check_source, log_audit
+
+        terrain_sources = ["SRC-01", "SRC-02", "SRC-03"]
+        min_score = 1.0
+        sources_checked = []
+
+        for src_id in terrain_sources:
+            health = check_source(src_id)
+            sources_checked.append({
+                "source_id": src_id,
+                "score": health["score"],
+                "status": health["status"],
+            })
+            if health["score"] < min_score:
+                min_score = health["score"]
+
+        if min_score >= 0.60:
+            recommendation = "TERRAIN_FIABLE"
+        elif min_score >= 0.40:
+            recommendation = "TERRAIN_DEGRADE"
+        elif min_score >= 0.20:
+            recommendation = "TERRAIN_DEFICIENT"
+        else:
+            recommendation = "TERRAIN_INUTILISABLE"
+
+        log_audit(
+            engine="GUIDE_PRO", source_id="BDRE_VALIDATION",
+            action="validate_terrain", score=min_score,
+            territory=territory_id,
+            details=f"recommendation={recommendation}"
+        )
+
+        if min_score < 0.40:
+            logger.warning(
+                f"[GUIDE PRO-BDRE] ATTENTION: Terrain DEFICIENT pour {territory_id} "
+                f"(score={min_score:.3f}). Routes potentiellement imprecises."
+            )
+
+        return {
+            "min_score": round(min_score, 4),
+            "recommendation": recommendation,
+            "sources": sources_checked,
+            "warning": (
+                "Donnees terrain insuffisantes. Routes basees sur estimations."
+                if min_score < 0.40 else None
+            ),
+        }
+    except Exception as e:
+        logger.debug(f"[GUIDE PRO-BDRE] Validation BDRE non disponible: {e}")
+        return {
+            "min_score": 0.0,
+            "recommendation": "BDRE_UNAVAILABLE",
+            "sources": [],
+            "warning": "BDRE non disponible pour validation terrain.",
+        }
 
 
 def _get_predictions(territory_id: str, species: str, bounds: Dict) -> Dict:
