@@ -96,7 +96,7 @@ export default function ContaminationOverlayLayer({
       const polygon = zone.polygon;
       if (!polygon || polygon.length < 3) continue;
 
-      const coords = polygon.map(p => [p[0], p[1]]);
+      const coords = polygon.map(p => [p.lat, p.lng]);
       const isHunter = zone.source === 'hunter_center';
       const color = isHunter ? HUNTER_ZONE_COLOR : SALINE_ZONE_COLOR;
       const opacity = isHunter ? 0.12 : 0.08;

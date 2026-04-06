@@ -649,7 +649,7 @@ const StandsMapLayer = ({
     } finally {
       setLoading(false);
     }
-  }, [centerLat, centerLng, species, windSpeed, windDirection, windDirectionDeg, session, enabled, feedingSites, fixedBlinds, clearLayers, clearLegend, resolveWindDeg]);
+  }, [centerLat, centerLng, species, windSpeed, windDirection, windDirectionDeg, session, enabled, feedingSites, fixedBlinds, clearLayers, clearLegend, resolveWindDeg]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // BCE-4X BLOC 3: Fetch relocation alternatives pour affuts a_eviter
   const _fetchRelocation = useCallback(async (avoidRecs, windDeg, feedingSitesArr) => {

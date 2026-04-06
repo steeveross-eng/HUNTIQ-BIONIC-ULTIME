@@ -244,7 +244,7 @@ const MapContentInner = React.memo(({
         feedingSites={feedingSitesForStands || []}
         windDirectionDeg={windDirectionDeg || windDirection || 315}
         windSpeed={windSpeed || 12}
-        session={analysisSession || 'matin'}
+        session={'matin'}
         enabled={showStands}
       />
     )}
