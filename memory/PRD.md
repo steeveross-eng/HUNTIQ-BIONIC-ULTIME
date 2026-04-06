@@ -22,35 +22,34 @@ Application de routage terrain pour la chasse avec pathfinding A* et integration
 - [x] VALIDATION AUTONOMIE TOTALE (7/7 tests PASS)
 
 ### Session 2026-04-06 (fork actuel)
-- [x] P0 — MODULE PEDAGOGIQUE ULTRA COMPLET
-  - Fichier: PedagogieModule.jsx (32.5 KB, 10 sections)
-  - POSITIONNEMENT: Apres grille 3 colonnes, AVANT sections historiques
-  - Separateur dore + Header haute visibilite + Bouton Export PDF
+- [x] P0 — MODULE PEDAGOGIQUE ULTRA COMPLET (GRILLE 3 COLONNES)
+  - Fichier: PedagogieModule.jsx — REECRIT en grille 3 colonnes STANDARD GOLDEN
+  - 9 cards compactes en grille 3x3: icone + titre + badge + preview 2-3 lignes
+  - Expansion inline pleine largeur sur clic avec donnees completes
+  - Capsule narrative pleine largeur
+  - Separateur dore "SECTION PEDAGOGIQUE"
+  - Header haute visibilite avec bouton PDF et badge ULTRA
   - Flag PEDAGOGIE_SALINE_ENABLED = true
-  - Validation: 3 screenshots conformes
+  - Sections historiques PRESERVEES apres le module
 
 - [x] P1 — BOUTON EXPORT PDF (html2canvas + jsPDF, multi-page A4)
 
 - [x] P0 — AUDIT QUALITE COMPLET (10 points)
   - Rapport: /app/memory/AUDIT_QUALITE_ALIMENTATION_BCE4X.md
-  - Generation salines: CONFORME (4/4, API POST /api/v2/alimentation/analyze)
-  - Scoring: CONFORME (score_global 57, scores individuels 57/56/51/37)
-  - Positionnement: CONFORME (262-403m du centre)
-  - Selection candidats: CONFORME (4/4)
-  - Coherence BDRE/SUPRA: CONFORME (16 sources, 11 healthy)
-  - Rendu visuel: CONFORME (MODULE PEDAGOGIQUE + sections historiques)
-  - Cache/rafraichissement: CONFORME
-  - Sync backend/frontend: CONFORME
-  - Erreurs silencieuses: CONFORME (V5 blocked = intentionnel)
-  - Coherence donnees: CONFORME (3 anomalies mineures documentees)
-  - ANOMALIES: 0 critique, 3 mineures (V6 wrappers zeros, 1 source degraded)
+  - 10/10 points CONFORMES, 0 anomalie critique, 3 mineures documentees
+
+- [x] P0 — HARMONISATION ERGONOMIQUE GRILLE 3 COLONNES
+  - Non-conformite identifiee: disposition uniligne (1 colonne)
+  - Correction: reconversion complete en grille 3 colonnes identique au haut SUPRA
+  - Validation: screenshot montre grille 3x3 + expansion inline + capsule narrative
 
 ## Backlog
 
 ### P0 (Aucun)
 
 ### P1 (En attente directive STEEVE-MAX)
-- Validation MODULE PEDAGOGIQUE + PDF + Audit
+- Validation MODULE PEDAGOGIQUE grille 3 colonnes
+- Validation AUDIT QUALITE
 
 ### P2 (GELE)
 - M5 Offline Mode Ultra
