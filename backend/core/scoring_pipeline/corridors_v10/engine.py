@@ -621,9 +621,11 @@ def analyze_corridors_full(
 
     # Phase 3.2-CV BCE-4X-MAX: EXCLUSION sur corridors LineStrings
     # REGLE ULTRA-MAX++ PERMANENTE: Firewall geometrique anthropique
+    # PATCH HYDRO BCE-4X 2026-04-06: Fallback cost_surface.is_water quand cache OSM absent
     geojson_features = []
     _corridors_excluded_urban = 0
     _corridors_excluded_water = 0
+    _corridors_excluded_water_cs = 0
     _has_exclusion_engine = False
     _meta_exclusion_active = False
     try:
@@ -634,6 +636,24 @@ def analyze_corridors_full(
         _meta_exclusion_active = center_in_urban_meta_zone(center_lat, center_lng)
     except ImportError:
         pass
+
+    # PATCH HYDRO: Charger cost_surface comme fallback eau universel
+    _cs_water_available = False
+    try:
+        from core.scoring_pipeline.corridors_v10.cost_surface import _load_cell_data as _cs_load
+        _cs_water_available = True
+    except ImportError:
+        pass
+
+    def _point_on_water_fallback(p_lat, p_lng):
+        """Fallback cost_surface: detection eau point-a-point quand cache OSM absent."""
+        if not _cs_water_available:
+            return False
+        try:
+            cell = _cs_load(p_lat, p_lng, 10)
+            return cell.get("is_water", False) or cell.get("distance_eau_m", 500) < 30
+        except Exception:
+            return False
 
     # ULTRA-MAX++: Si le CENTRE d'analyse est en zone urbaine, ZERO element faunique
     if _meta_exclusion_active:
@@ -648,7 +668,7 @@ def analyze_corridors_full(
             raw_coords = [[pt["lng"], pt["lat"]] for pt in c["path"]]
             coords = _simplify_coords(raw_coords)
 
-            if _has_exclusion_engine and len(coords) > 0:
+            if len(coords) > 0:
                 # ULTRA-MAX++ REINFORCED: Multi-point sampling (start, 25%, mid, 75%, end)
                 sample_indices = [
                     0,
@@ -661,13 +681,20 @@ def analyze_corridors_full(
                 
                 urban_hit = False
                 water_hit = False
+                water_hit_cs = False
                 for idx in sample_indices:
                     s_lng, s_lat = coords[idx][0], coords[idx][1]
-                    if _point_intersects_anthropic(s_lat, s_lng):
+                    # Check 1: Exclusion anthropique (si moteur disponible)
+                    if _has_exclusion_engine and _point_intersects_anthropic(s_lat, s_lng):
                         urban_hit = True
                         break
-                    if _circle_on_water(s_lat, s_lng):
+                    # Check 2: Exclusion eau OSM cache (si moteur disponible)
+                    if _has_exclusion_engine and _circle_on_water(s_lat, s_lng):
                         water_hit = True
+                        break
+                    # Check 3: FALLBACK — Exclusion eau cost_surface (TOUJOURS disponible)
+                    if _point_on_water_fallback(s_lat, s_lng):
+                        water_hit_cs = True
                         break
                 
                 if urban_hit:
@@ -675,6 +702,9 @@ def analyze_corridors_full(
                     continue
                 if water_hit:
                     _corridors_excluded_water += 1
+                    continue
+                if water_hit_cs:
+                    _corridors_excluded_water_cs += 1
                     continue
 
             feature = {
@@ -704,9 +734,10 @@ def analyze_corridors_full(
 
     import logging as _log_corridors
     _log_corridors.getLogger("corridors_v10.engine").info(
-        f"[BCE-4X-MAX] Corridor exclusion: "
+        f"[BCE-4X-MAX HYDRO] Corridor exclusion: "
         f"input={len(enriched_corridors)}, urban={_corridors_excluded_urban}, "
-        f"water={_corridors_excluded_water}, kept={len(geojson_features)}"
+        f"water_osm={_corridors_excluded_water}, water_cs={_corridors_excluded_water_cs}, "
+        f"kept={len(geojson_features)}"
     )
 
     # GeoJSON zones ecologiques V10 — POLYGONES ORGANIQUES (BCE-4X / Steeve-MAX)
@@ -748,6 +779,10 @@ def analyze_corridors_full(
                     excluded_urban += 1
                     continue
                 if _circle_on_water(zlat, zlng):
+                    excluded_water += 1
+                    continue
+                # PATCH HYDRO: Fallback cost_surface pour zones hors couverture OSM cache
+                if _point_on_water_fallback(zlat, zlng):
                     excluded_water += 1
                     continue
                 filtered_zone_polygons.append(zp)
