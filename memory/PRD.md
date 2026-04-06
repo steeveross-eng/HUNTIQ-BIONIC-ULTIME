@@ -28,101 +28,82 @@ Application de routage terrain pour la chasse avec pathfinding A* et integration
 - [x] score_source: "SUPRA_UNIFIED" confirme le moteur unifie
 - [x] Frontend: NutritionPointDetailPanel passe np.score + lat + lng au SUPRA panel
 - [x] RESULTAT: Score carte = Score SUPRA = IDENTIQUE (teste: 71=71)
-- [x] random.uniform NON utilise dans V2 (deja deterministe via _seed MD5)
 
 #### P0 — UNIFICATION ERGONOMIQUE (Grille 3 colonnes)
-- [x] AnalyseTab restructure en 3 niveaux:
-  - Niveau 1 (Resume): Score SUPRA UNIFIE + badge UNIFIE + Score mineral + 7 Moteurs + Besoins
-  - Niveau 2 (Analyse): Sol/Pedologie + Mineraux barres + Recette + Couts
-  - Niveau 3 (Pedagogie): MODULE PEDAGOGIQUE grille 3x3 (9 cards)
-- [x] Collapsibles historiques transformes en cards 3 colonnes (Physiologie | Comportement | Support)
+- [x] AnalyseTab restructure en 3 niveaux
+- [x] Collapsibles historiques transformes en cards 3 colonnes
 - [x] Sources scientifiques en card compacte
-- [x] Zero rupture visuelle entre les niveaux
 
 #### P0 — MODULE PEDAGOGIQUE
 - [x] PedagogieModule.jsx en grille 3 colonnes STANDARD GOLDEN
-- [x] 9 cards + capsule narrative + bouton PDF + badge ULTRA
-- [x] Expansion inline pleine largeur sur clic
 
 #### P0 — AUDIT QUALITE
-- [x] 10/10 points audites, 0 critique, 3 mineures documentees
-- [x] Rapport: /app/memory/AUDIT_QUALITE_ALIMENTATION_BCE4X.md
+- [x] 10/10 points audites
 
 #### P0 — HARMONISATION DES ONGLETS
-- [x] Les 5 onglets utilisent deja des grilles 3 colonnes:
-  - ANALYSE: 3-col + pedagogie 3x3 + premium 3-col
-  - FICHE: 3-col (Logistique/GrosMales | Strategique/CoutROI/TCS | Plans/Sol/Sources)
-  - INTELLIGENCE: 3-col produits
-  - COMPAREZ: 3-col comparaison
-  - COMMANDEZ: 3-col (Recette | Produits | Panier)
+- [x] Les 5 onglets utilisent des grilles 3 colonnes
 
 ### Session 2026-04-06 (fork 3 — BIONIC_REWRITE_P0)
 
-#### P0 — RAPPORT LOGIQUE GLOBALE BIONIC
-- [x] Partie 1: Logique salines (generation, scoring, selection, affichage) — LIVRE
-- [x] Partie 2: Logique affuts (score 14.2, absence seuil, classification) — LIVRE
-- [x] Failles F1-F4 identifiees et documentees
-
 #### P0 — SECURISATION TOTALE PRE-REFONTE
-- [x] Branche BIONIC_STABLE_V6_LOCK creee (snapshot immutable)
-- [x] Branche BIONIC_REWRITE_P0 creee (refonte controlee)
-- [x] Manifeste sanctuarisation: /app/memory/BIONIC_STABLE_V6_LOCK_MANIFEST.md
-- [x] Gel operations: /app/memory/GEL_OPERATIONS_P0.md
-- [x] Plan technique P0: /app/memory/PLAN_TECHNIQUE_P0_REFONTE.md
+- [x] Branche BIONIC_STABLE_V6_LOCK + BIONIC_REWRITE_P0
+- [x] Manifeste sanctuarisation + Gel operations + Plan technique P0
 
-#### P0-C — IMPLEMENTATION MOTEURS V3/V2 (valide par STEEVE-MAX)
-- [x] Moteur SALINES V3: Critere Eau → distance reelle OSM (30-80m/80-150m/>150m)
-- [x] Moteur SALINES V3: Critere Accessibilite → distance reelle sentier OSM (remplace MD5)
-- [x] Moteur SALINES V3: Critere Habitat → calcul composite terrain reel (remplace MD5)
-- [x] Moteur SALINES V3: criteres_sources tracable dans chaque candidat
-- [x] Moteur AFFUTS V2: Seuils institutionnels (rejet <30, badge <50, recommande >=50)
-- [x] Moteur AFFUTS V2: Classification (rejected/a_eviter/recommended)
-- [x] Moteur AFFUTS V2: Filtre rejet dans recommend_blinds()
-- [x] Orchestrateur: Propagation champ classification
-- [x] Frontend: Badge "A EVITER" rouge barre pour affuts 30-49
-- [x] Frontend: Rejet visuel des affuts "rejected" (double securite)
-- [x] Rapport: /app/memory/P0C_RAPPORT_IMPLEMENTATION.md
+#### P0-C — IMPLEMENTATION MOTEURS V3/V2
+- [x] Moteur SALINES V3 + AFFUTS V2 (seuils institutionnels)
 
-#### P0-I — SHADOW MODE (2026-04-06)
-- [x] shadow_mode.py: Moteur V2 sanctuarise execute en parallele de V3
-- [x] Comparaison automatique: avg scores, deltas, detection regression
-- [x] Integre dans engine.py: resultat shadow_mode dans chaque reponse API
-- [x] Teste sur 3 waypoints: Shadow actif, 0 regression detectee
-- [x] Deltas attendus: V3 < V2 de 11-23 pts (OSM indisponible en preview)
+#### P0-I — SHADOW MODE
+- [x] shadow_mode.py: V2 sanctuarise en parallele de V3
 
-#### P0-X — PLAN TECHNIQUE SALINES V4 (2026-04-06)
-- [x] Document complet livre: /app/memory/PLAN_TECHNIQUE_P0X_SALINES_V4.md
-- [x] 9 sections: schema terrain-centre, 9 criteres, BDRE, densite adaptative
-- [x] Ponderations proposees: Eau 20%, Corridor 15%, Couvert 15%, etc.
-- [x] Echeancier: 10 phases (P0-X-0 a P0-X-10)
-- [x] VALIDE PAR STEEVE-MAX
+#### P0-X — SALINES V4 (TERRAIN-CENTRE)
+- [x] 9 criteres SUPRA valides scientifiquement (22 sources)
+- [x] Triple Shadow V2/V3/V4
 
-#### SUPRA — VALIDATION SCIENTIFIQUE V4 (2026-04-06)
-- [x] 9 criteres analyses sur 6 axes SUPRA
-- [x] 22 sources scientifiques citees
-- [x] 3 especes (CERF, ORIGNAL, WAPITI) analysees
-- [x] 8/9 criteres PLEINEMENT VALIDES, 1/9 partiel (Securite 5%)
-- [x] Document: /app/memory/SUPRA_VALIDATION_SCIENTIFIQUE_V4.md
-- [x] VALIDE PAR STEEVE-MAX
+#### SUPRA — VALIDATION SCIENTIFIQUE V4
+- [x] 8/9 criteres PLEINEMENT VALIDES
 
-#### P0-X — IMPLEMENTATION SALINES V4 (2026-04-06)
-- [x] terrain_features.py: Detection eau OSM, sentiers OSM, ecotones, fallback 3x3
-- [x] mineral_scorer.py: Scoring mineraux inverse + multiplicateurs saisonniers
-- [x] bdre_integration.py: Scoring corridor BDRE + generation candidats corridor
-- [x] salines_v4.py: Moteur principal 9 criteres SUPRA, selection gloutonne Top-4
-- [x] Endpoint POST /api/v4/alimentation/analyze
-- [x] Shadow V3/V4 integre (comparaison automatique)
-- [x] Tests 3 waypoints: Montmorency (59), Portneuf (56), LacStJean (38)
+### Session 2026-04-06 (fork courant — BLOCS 1/2/3/4)
+
+#### BLOC 1 — CORRIDOR_UNIFIED (VALIDE STEEVE-MAX, IMPLEMENTE)
+- [x] corridor_model.py: Modele CorridorSegment + classification CRITIQUE/MAJEUR/MINEUR
+- [x] corridor_builder.py: Fusion trail_graph OSM + BDRE interne
+- [x] router.py: POST /api/v1/corridor-unified/build + GET /status
+- [x] 7 attributs: intensite, direction, saisonnalite, espece, largeur, zone_tampon, risque
+- [x] Teste API: 8 corridors retournes (2 MAJEUR, 6 MINEUR)
+
+#### BLOC 2 — BDRE PEDAGOGIQUE (VALIDE STEEVE-MAX, IMPLEMENTE)
+- [x] POST /api/v1/hunt/contamination-zones
+- [x] Zones chasseur (rouge) + salines (orange) + message pedagogique FR
+- [x] Conseil approche directionnelle + classification risque
+- [x] Teste API: 2 zones, pedagogy message OK
+
+#### BLOC 3 — RELOCALISATION AUTOMATIQUE (VALIDE STEEVE-MAX, IMPLEMENTE)
+- [x] candidate_generator.py: 12-24 candidats en anneaux (CERF 200m, ORIGNAL 300m, WAPITI 400m)
+- [x] relocation_engine.py: 6 phases (generation → SUPRA → affut → BDRE → selection → affichage)
+- [x] router.py: POST /api/v1/relocation/evaluate + GET /status
+- [x] Score composite: saline*0.40 + affut*0.35 + bdre*0.25
+- [x] Teste API: triggered=true, 26 candidats, alternative score=52.9
+
+#### BLOC 4 — AUDIT COMPLET (LIVRE)
+- [x] 4 fiches modules (INTELLIGENCE, TABLEAU DE BORD, SUPRA ANALYSE, SUPRA FICHE)
+- [x] 8 doublons identifies (D1-D8): 2 CRITIQUES, 3 HAUTS, 3 FAIBLES
+- [x] Schema flux complet + Tableau comparatif
+- [x] Matrice RACI + Plan fusion systemique 4 phases (F1→F4)
+- [x] Recommandations institutionnelles
+- [x] Document: /app/memory/AUDIT_BLOC4_INTELLIGENCE_SUPRA.md
 
 ## Backlog
 
 ### P0 (En attente validation STEEVE-MAX)
-- P0-J: Monitoring shadow V2/V3/V4 — comparaison automatique active
+- P0-J: Monitoring shadow V2/V3/V4
 - P0-K: Validation finale STEEVE-MAX
-- Tests regression V3 → V4 complets
+- Tests regression V3 -> V4 complets
+- Integration frontend BLOC 2 (ContaminationLayer.jsx)
+- Integration frontend BLOC 3 (RelocationPanel.jsx)
+- Execution plan fusion BLOC 4 (F1→F4)
 
 ### P1 (En attente directive STEEVE-MAX)
-- Confirmation harmonisation x1000%
+- Harmonisation x1000%
 - Test export PDF
 
 ### P2 (GELE)
