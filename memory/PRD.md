@@ -112,11 +112,10 @@ Application de routage terrain pour la chasse avec pathfinding A* et integration
 ## Backlog
 
 ### P0 (En attente validation STEEVE-MAX)
-- P0-J: Monitoring shadow V2/V3/V4
-- P0-K: Validation finale STEEVE-MAX
+- [x] P0-J: Monitoring 48h — Rapport livre (0 violation, 8/8 actifs, 5/5 zones PASS)
+- [x] Correction fenetre BDRE: bouton FERMER + typographie x2
+- [ ] P0-K: Validation finale STEEVE-MAX (bloque: monitoring + validation BDRE)
 - Tests regression V3 -> V4 complets
-- Integration frontend BLOC 2 (ContaminationLayer.jsx)
-- Integration frontend BLOC 3 (RelocationPanel.jsx)
 - Execution plan fusion BLOC 4 (F1→F4)
 
 ### P1 (En attente directive STEEVE-MAX)
