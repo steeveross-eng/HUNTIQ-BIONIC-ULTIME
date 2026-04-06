@@ -83,12 +83,25 @@ Application de routage terrain pour la chasse avec pathfinding A* et integration
 - [x] Frontend: Rejet visuel des affuts "rejected" (double securite)
 - [x] Rapport: /app/memory/P0C_RAPPORT_IMPLEMENTATION.md
 
+#### P0-I — SHADOW MODE (2026-04-06)
+- [x] shadow_mode.py: Moteur V2 sanctuarise execute en parallele de V3
+- [x] Comparaison automatique: avg scores, deltas, detection regression
+- [x] Integre dans engine.py: resultat shadow_mode dans chaque reponse API
+- [x] Teste sur 3 waypoints: Shadow actif, 0 regression detectee
+- [x] Deltas attendus: V3 < V2 de 11-23 pts (OSM indisponible en preview)
+
+#### P0-X — PLAN TECHNIQUE SALINES V4 (2026-04-06)
+- [x] Document complet livre: /app/memory/PLAN_TECHNIQUE_P0X_SALINES_V4.md
+- [x] 9 sections: schema terrain-centre, 9 criteres, BDRE, densite adaptative
+- [x] Ponderations proposees: Eau 20%, Corridor 15%, Couvert 15%, etc.
+- [x] Echeancier: 10 phases (P0-X-0 a P0-X-10)
+- [ ] EN ATTENTE VALIDATION STEEVE-MAX
+
 ## Backlog
 
 ### P0 (En attente validation STEEVE-MAX)
-- P0-E/F/G/H: Rapports livres — en attente validation STEEVE-MAX
-- P0-I: Shadow mode (nouveau moteur en parallele) — apres validation
-- P0-J: Monitoring 48h — apres P0-I
+- P0-X: Plan technique SALINES V4 en attente validation
+- P0-J: Monitoring 48h — apres activation shadow en production
 - P0-K: Validation finale STEEVE-MAX — apres P0-J
 
 ### P1 (En attente directive STEEVE-MAX)
