@@ -94,6 +94,15 @@ def generate_relocation_candidates(
                 "corridor_distance_m": None,
             }
 
+            # COUCHE BCE-4X UNIVERSELLE — Exclure les candidats en zone interdite
+            try:
+                from bce.exclusion_layer_bce4x import check_point_exclusions
+                excl = check_point_exclusions(cand_lat, cand_lng)
+                if excl["excluded"]:
+                    continue
+            except ImportError:
+                pass
+
             # Enrichir avec le corridor le plus proche
             if corridors:
                 candidate = _enrich_with_corridor(candidate, corridors)

@@ -406,4 +406,15 @@ def recommend_blinds(
             f"(score < {SCORE_THRESHOLD_REJECT})"
         )
 
+    # COUCHE BCE-4X UNIVERSELLE — Exclure affuts en zone interdite
+    try:
+        from bce.exclusion_layer_bce4x import check_point_exclusions
+        pre_bce = len(all_blinds)
+        all_blinds = [b for b in all_blinds if not check_point_exclusions(b["lat"], b["lng"])["excluded"]]
+        bce_excluded = pre_bce - len(all_blinds)
+        if bce_excluded > 0:
+            logger.info(f"[CHOIX-V2 BCE-4X] {bce_excluded} affût(s) exclus (zone interdite)")
+    except ImportError:
+        pass
+
     return all_blinds[:max_blinds]

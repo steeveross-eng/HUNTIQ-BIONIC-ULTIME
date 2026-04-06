@@ -549,6 +549,27 @@ def select_shortest_corridor(
     if not alternatives:
         return None
 
+    # COUCHE BCE-4X UNIVERSELLE — Filtrer les alternatives en zone interdite
+    try:
+        from bce.exclusion_layer_bce4x import check_point_exclusions
+        clean_alts = []
+        for alt in alternatives:
+            path = alt.get("path", alt.get("coords", []))
+            excluded = False
+            if path:
+                start = path[0] if isinstance(path[0], dict) else {"lat": path[0][1], "lng": path[0][0]}
+                end = path[-1] if isinstance(path[-1], dict) else {"lat": path[-1][1], "lng": path[-1][0]}
+                if check_point_exclusions(start.get("lat", 0), start.get("lng", 0))["excluded"]:
+                    excluded = True
+                elif check_point_exclusions(end.get("lat", 0), end.get("lng", 0))["excluded"]:
+                    excluded = True
+            if not excluded:
+                clean_alts.append(alt)
+        if clean_alts:
+            alternatives = clean_alts
+    except ImportError:
+        pass
+
     # Annoter toutes les alternatives
     for alt in alternatives:
         enforce_corridor_lock(alt, trail_graph)

@@ -429,6 +429,15 @@ def compute_salines_v4(
 
     scored = []
     for cand in filtered:
+        # COUCHE BCE-4X UNIVERSELLE — Exclure avant scoring
+        try:
+            from bce.exclusion_layer_bce4x import check_point_exclusions
+            bce_excl = check_point_exclusions(cand["lat"], cand["lng"])
+            if bce_excl["excluded"]:
+                continue
+        except ImportError:
+            pass
+
         score, criteres, justifications, criteres_sources, excluded = score_candidate_v4(
             cand, terrain, species, month, center_lat, center_lng, trail_graph,
         )

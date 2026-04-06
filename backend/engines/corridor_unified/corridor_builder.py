@@ -20,6 +20,7 @@ from .corridor_model import (
     _haversine_m,
     _seed_float,
 )
+from bce.exclusion_layer_bce4x import check_segment_exclusions
 
 logger = logging.getLogger("bionic.corridor_unified.builder")
 
@@ -52,16 +53,18 @@ def build_unified_corridors(
 
     # Phase 3: Scorer, filtrer eau, et construire les corridors unifies
     for i, seg in enumerate(raw_segments):
-        # MASQUE EAU OBLIGATOIRE — ORDONNANCE STEEVE-MAX
-        hydro_check = check_segment_water_exclusion(seg["coords"])
-        if hydro_check["excluded"]:
+        # COUCHE BCE-4X UNIVERSELLE — TOUTES EXCLUSIONS (eau + urbain + routes + humain + securite)
+        bce_check = check_segment_exclusions(seg["coords"], f"CU-{i + 1:03d}")
+        if bce_check["excluded"]:
+            types = [e["types"] for e in bce_check["exclusions_found"]]
+            flat_types = [t for sub in types for t in sub]
             water_excluded.append({
                 "segment_id": f"CU-{i + 1:03d}",
-                "reason": hydro_check["reason"],
-                "details": hydro_check["details"],
+                "reason": f"BCE-4X: {', '.join(set(flat_types))}",
+                "details": bce_check["exclusions_found"],
             })
             logger.warning(
-                f"[CORRIDOR-UNIFIED] EXCLUSION EAU: CU-{i + 1:03d} — {hydro_check['reason']}"
+                f"[CORRIDOR-UNIFIED] EXCLUSION BCE-4X: CU-{i + 1:03d} — {', '.join(set(flat_types))}"
             )
             continue
 
@@ -235,15 +238,16 @@ def _generate_bdre_only_corridors(
         if osm_covered:
             continue  # Deja couvert par un sentier OSM
 
-        # MASQUE EAU OBLIGATOIRE — ORDONNANCE STEEVE-MAX
+        # COUCHE BCE-4X UNIVERSELLE — TOUTES EXCLUSIONS
         segment_coords = [
             {"lat": round(start_lat, 6), "lng": round(start_lng, 6)},
             {"lat": round(end_lat, 6), "lng": round(end_lng, 6)},
         ]
-        hydro_check = check_segment_water_exclusion(segment_coords)
-        if hydro_check["excluded"]:
+        bce_check = check_segment_exclusions(segment_coords, f"CU-BDRE-{bearing_deg:03d}")
+        if bce_check["excluded"]:
+            types = [t for e in bce_check["exclusions_found"] for t in e["types"]]
             logger.warning(
-                f"[CORRIDOR-UNIFIED] EXCLUSION EAU BDRE: CU-BDRE-{bearing_deg:03d} — {hydro_check['reason']}"
+                f"[CORRIDOR-UNIFIED] EXCLUSION BCE-4X BDRE: CU-BDRE-{bearing_deg:03d} — {', '.join(set(types))}"
             )
             continue
 
