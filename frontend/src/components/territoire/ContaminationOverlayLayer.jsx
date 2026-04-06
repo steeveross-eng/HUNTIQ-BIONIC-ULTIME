@@ -29,7 +29,9 @@ export default function ContaminationOverlayLayer({
   const layerGroupRef = useRef(null);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [pedagogyVisible, setPedagogyVisible] = useState(true);
   const lastKeyRef = useRef('');
+  const pedagogyMarkerRef = useRef(null);
 
   const fetchZones = useCallback(async () => {
     if (!center || !enabled) return;
@@ -118,12 +120,12 @@ export default function ContaminationOverlayLayer({
         : '<span style="color:#66bb6a;font-weight:700">RISQUE FAIBLE</span>';
 
       poly.bindPopup(`
-        <div style="font-size:11px;line-height:1.5;min-width:180px;background:#0f1525;color:#e0e8f0;padding:10px;border-radius:8px;">
-          <div style="font-weight:700;font-size:12px;margin-bottom:4px;color:${color}">
+        <div style="font-size:18px;line-height:1.6;min-width:260px;background:#0f1525;color:#e0e8f0;padding:16px;border-radius:10px;">
+          <div style="font-weight:700;font-size:20px;margin-bottom:6px;color:${color}">
             ${zone.label || 'Zone de contamination'}
           </div>
-          <div style="margin-bottom:4px">${riskBadge}</div>
-          <div style="font-size:10px;color:#9ca3af">
+          <div style="margin-bottom:6px;font-size:18px">${riskBadge}</div>
+          <div style="font-size:16px;color:#9ca3af">
             Vent ${zone.bearing_deg || 0}° | Portee ${zone.range_m || 0}m
           </div>
         </div>
@@ -132,29 +134,54 @@ export default function ContaminationOverlayLayer({
       group.addLayer(poly);
     }
 
-    // Pedagogy label
+    // Pedagogy label — TYPOGRAPHIE x2 + BOUTON FERMER (ORDONNANCE STEEVE-MAX)
     const pedagogy = data.pedagogy;
-    if (pedagogy && center) {
+    if (pedagogy && center && pedagogyVisible) {
+      const closeFnName = '__bdre_pedagogy_close';
+      window[closeFnName] = () => {
+        if (pedagogyMarkerRef.current && layerGroupRef.current) {
+          layerGroupRef.current.removeLayer(pedagogyMarkerRef.current);
+          pedagogyMarkerRef.current = null;
+        }
+        setPedagogyVisible(false);
+      };
+
       const pedagogyIcon = L.divIcon({
         className: 'contamination-pedagogy',
         html: `<div data-testid="contamination-pedagogy" style="
-          background:rgba(15,21,37,0.92);backdrop-filter:blur(8px);
-          border:1px solid rgba(255,136,0,0.3);border-radius:8px;
-          padding:6px 10px;color:#e0e8f0;font-size:10px;line-height:1.4;
-          max-width:220px;white-space:normal;pointer-events:auto;
+          background:rgba(15,21,37,0.95);backdrop-filter:blur(12px);
+          border:2px solid rgba(255,136,0,0.5);border-radius:12px;
+          padding:16px 20px;color:#e0e8f0;font-size:20px;line-height:1.5;
+          max-width:420px;min-width:280px;white-space:normal;pointer-events:auto;
+          box-shadow:0 4px 24px rgba(0,0,0,0.5);
+          position:relative;
         ">
-          <div style="font-weight:700;font-size:10px;color:#FF8800;margin-bottom:2px">BDRE PEDAGOGIQUE</div>
-          <div style="font-size:9px;color:#9ca3af">${pedagogy.conseil || ''}</div>
+          <button data-testid="bdre-pedagogy-close-btn" onclick="window.${closeFnName}()" style="
+            position:absolute;top:8px;right:10px;
+            background:rgba(255,68,68,0.15);border:2px solid rgba(255,68,68,0.5);
+            color:#ff6666;font-size:22px;font-weight:700;
+            width:36px;height:36px;border-radius:8px;
+            cursor:pointer;display:flex;align-items:center;justify-content:center;
+            transition:background 0.2s;line-height:1;
+          " onmouseover="this.style.background='rgba(255,68,68,0.35)'"
+             onmouseout="this.style.background='rgba(255,68,68,0.15)'"
+          >X</button>
+          <div style="font-weight:700;font-size:22px;color:#FF8800;margin-bottom:8px;padding-right:40px;">
+            BDRE PEDAGOGIQUE
+          </div>
+          <div style="font-size:18px;color:#c8d0dc;line-height:1.5;">${pedagogy.conseil || ''}</div>
         </div>`,
-        iconSize: [220, 60],
-        iconAnchor: [110, -10],
+        iconSize: [420, 120],
+        iconAnchor: [210, -10],
       });
 
       const marker = L.marker([center.lat, center.lng], {
         icon: pedagogyIcon,
-        interactive: false,
-        zIndexOffset: -100,
+        interactive: true,
+        zIndexOffset: 1000,
       });
+
+      pedagogyMarkerRef.current = marker;
       group.addLayer(marker);
     }
 
@@ -166,7 +193,7 @@ export default function ContaminationOverlayLayer({
         map.removeLayer(layerGroupRef.current);
       }
     };
-  }, [data, map, enabled, center]);
+  }, [data, map, enabled, center, pedagogyVisible]);
 
   return null;
 }
