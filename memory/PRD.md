@@ -97,6 +97,18 @@ Application de routage terrain pour la chasse avec pathfinding A* et integration
 - [x] Recommandations institutionnelles
 - [x] Document: /app/memory/AUDIT_BLOC4_INTELLIGENCE_SUPRA.md
 
+#### COUCHE D'EXCLUSIONS UNIVERSELLE BCE-4X (CERTIFIE)
+- [x] `exclusion_layer_bce4x.py`: 5 types (EAU 30m, URBAIN 55m, ROUTES 15m, HUMAIN 40m, SECURITE 150m)
+- [x] 8 points d'injection dans 6 moteurs (corridors_v10, corridor_unified, bdre_optimizer, choix_affuts, relocalisation, salines_v4)
+- [x] Matrice couverture 30/30 (5 types x 6 moteurs = 100%)
+- [x] Detection URBAIN: Cache Shapely OSM (polygones urbains union)
+- [x] Detection ROUTES: Cache routier OSM dedie + cost_surface fallback
+- [x] Detection HUMAIN/SECURITE: Cache Shapely OSM anthropique
+- [x] Detection EAU: cost_surface + hash fallback
+- [x] DEMONSTRATION URBAINE: 8/8 corridors exclus, 0 violation post-filtre
+- [x] DEMONSTRATION FORESTIERE: 7/8 exclus EAU, 1 valide, 0 violation
+- [x] Document: /app/memory/AUDIT_ULTIME_EXCLUSIONS.md
+
 ## Backlog
 
 ### P0 (En attente validation STEEVE-MAX)

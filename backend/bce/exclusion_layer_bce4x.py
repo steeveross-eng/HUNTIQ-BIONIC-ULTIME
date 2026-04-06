@@ -89,8 +89,78 @@ def _is_urban(lat, lng):
         return False
 
 
+_road_cache = None
+_road_cache_loaded = False
+
+
+def _load_road_cache():
+    """Charger les polygones ROUTIERS specifiquement depuis le cache OSM."""
+    global _road_cache, _road_cache_loaded
+    if _road_cache_loaded:
+        return _road_cache
+    _road_cache_loaded = True
+    try:
+        from shapely.geometry import LineString as ShapelyLine
+        from shapely.ops import unary_union
+        import json, os
+        cache_dir = "/app/backend/data/osm_cache"
+        if not os.path.isdir(cache_dir):
+            return None
+        ROAD_BUFFERS = {
+            "motorway": 0.002, "motorway_link": 0.0015,
+            "trunk": 0.0015, "trunk_link": 0.001,
+            "primary": 0.001, "primary_link": 0.0008,
+            "secondary": 0.0005, "secondary_link": 0.0004,
+            "tertiary": 0.0003, "residential": 0.00015,
+        }
+        road_polys = []
+        for fname in os.listdir(cache_dir):
+            if not fname.endswith(".json") or fname.startswith("CA-"):
+                continue
+            fpath = os.path.join(cache_dir, fname)
+            if os.path.getsize(fpath) < 2000:
+                continue
+            with open(fpath) as f:
+                data = json.load(f)
+            for zone in data.get("exclusion_zones", []):
+                if zone.get("type") != "roads":
+                    continue
+                sub = (zone.get("sub_type") or "").lower()
+                if sub not in ROAD_BUFFERS:
+                    continue
+                coords = zone.get("coordinates", [])
+                geom = zone.get("geometry", "polygon")
+                buf = ROAD_BUFFERS[sub]
+                if geom == "line" and len(coords) >= 2:
+                    line = ShapelyLine([(c[0], c[1]) for c in coords])
+                    buffered = line.buffer(buf)
+                    if buffered.is_valid and buffered.area > 0:
+                        road_polys.append(buffered)
+                elif geom == "polygon" and len(coords) >= 4:
+                    from shapely.geometry import Polygon as ShapelyPoly
+                    poly = ShapelyPoly([(c[0], c[1]) for c in coords])
+                    if poly.is_valid and poly.area > 0:
+                        road_polys.append(poly.buffer(buf))
+        if road_polys:
+            _road_cache = unary_union(road_polys)
+            logger.info(f"[BCE-4X ROADS] Cache routier charge: {len(road_polys)} segments")
+    except Exception as e:
+        logger.warning(f"[BCE-4X ROADS] Erreur chargement cache: {e}")
+    return _road_cache
+
+
 def _is_road(lat, lng):
-    """Detection route: cost_surface UNIQUEMENT (donnees reelles)."""
+    """Detection route: cache OSM routier Shapely + cost_surface fallback."""
+    # Couche 1: Cache routier OSM (polygones bufferes)
+    road_union = _load_road_cache()
+    if road_union is not None:
+        try:
+            from shapely.geometry import Point as ShapelyPoint
+            if road_union.contains(ShapelyPoint(lng, lat)):
+                return True
+        except Exception:
+            pass
+    # Couche 2: cost_surface fallback
     try:
         from core.scoring_pipeline.corridors_v10.cost_surface import _load_cell_data
         cell = _load_cell_data(lat, lng, 10)
