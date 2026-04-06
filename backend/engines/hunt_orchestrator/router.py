@@ -71,6 +71,17 @@ class AccessRouteRequest(BaseModel):
     feeding_sites: List[FeedingSite] = Field(default_factory=list)
 
 
+class ContaminationZoneRequest(BaseModel):
+    """BCE-4X BLOC 2 — BDRE PEDAGOGIQUE: Contamination permanente."""
+    center_lat: float
+    center_lng: float
+    wind_direction_deg: float = Field(..., ge=0, lt=360)
+    wind_speed_kmh: float = Field(..., ge=0)
+    session: str = Field("matin")
+    feeding_sites: List[FeedingSite] = Field(default_factory=list)
+
+
+
 # === Endpoints ===
 
 @router.post("/orchestrate")
@@ -123,6 +134,115 @@ async def compute_scent(req: ScentZoneRequest):
     except Exception as e:
         logger.error(f"[SCENT-ZONE] Erreur: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/contamination-zones")
+async def compute_contamination_zones(req: ContaminationZoneRequest):
+    """
+    BCE-4X BLOC 2 — BDRE PEDAGOGIQUE.
+
+    Calcule les zones de contamination olfactive PERMANENTES pour:
+    - Le chasseur (position centre)
+    - Chaque site d'alimentation
+
+    Objectif pedagogique: comprendre les risques AVANT de placer un affut.
+    Independant de la presence d'un affut.
+    """
+    try:
+        from engines.hunt_orchestrator.vent_odeurs import compute_scent_zone
+
+        zones = []
+
+        # Zone de contamination du chasseur (position centre)
+        hunter_zone = compute_scent_zone(
+            req.center_lat, req.center_lng,
+            req.wind_direction_deg, req.wind_speed_kmh,
+            req.session,
+        )
+        zones.append({
+            "source": "hunter_center",
+            "label": "Chasseur (centre)",
+            "polygon": hunter_zone["polygon"],
+            "bearing_deg": hunter_zone["scent"]["bearing_deg"],
+            "range_m": hunter_zone["scent"]["range_m"],
+            "risk_level": _classify_risk(hunter_zone["scent"]["range_m"]),
+            "style": {"color": "red", "opacity": 0.15},
+        })
+
+        # Zones de contamination pour chaque site d'alimentation
+        for i, fs in enumerate(req.feeding_sites):
+            fs_zone = compute_scent_zone(
+                fs.lat, fs.lng,
+                req.wind_direction_deg, req.wind_speed_kmh,
+                req.session,
+            )
+            zones.append({
+                "source": f"feeding_site_{i + 1}",
+                "label": fs.name or f"Saline {i + 1}",
+                "polygon": fs_zone["polygon"],
+                "bearing_deg": fs_zone["scent"]["bearing_deg"],
+                "range_m": fs_zone["scent"]["range_m"],
+                "risk_level": _classify_risk(fs_zone["scent"]["range_m"]),
+                "style": {"color": "orange", "opacity": 0.10},
+            })
+
+        # Message pedagogique
+        scent_bearing = hunter_zone["scent"]["bearing_deg"]
+        approach_deg = (scent_bearing + 180) % 360
+        cardinal = _deg_to_cardinal(approach_deg)
+
+        pedagogy = {
+            "message_fr": (
+                f"Zone rouge: votre odeur est portee vers {_deg_to_cardinal(scent_bearing)} "
+                f"sur {hunter_zone['scent']['range_m']}m. "
+                f"Session {req.session}: {hunter_zone['scent']['thermal']['description']}."
+            ),
+            "conseil": (
+                f"Approchez par le {cardinal} pour eviter la contamination. "
+                f"Placez votre affut HORS des zones colorees."
+            ),
+            "risque_global": "HIGH" if len(req.feeding_sites) > 0 and hunter_zone["scent"]["range_m"] > 400 else "MODERATE",
+        }
+
+        return {
+            "zones": zones,
+            "wind": {
+                "direction_deg": req.wind_direction_deg,
+                "speed_kmh": req.wind_speed_kmh,
+            },
+            "session": req.session,
+            "pedagogy": pedagogy,
+            "total_zones": len(zones),
+            "version": "BDRE_PEDAGOGIQUE_V1",
+            "governance": "BCE-4X GOLDEN V6+ — STEEVE-MAX",
+        }
+
+    except Exception as e:
+        logger.error(f"[CONTAMINATION-ZONES] Erreur: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+def _classify_risk(range_m: float) -> str:
+    """Classifier le niveau de risque."""
+    if range_m >= 500:
+        return "HIGH"
+    elif range_m >= 300:
+        return "MODERATE"
+    else:
+        return "LOW"
+
+
+def _deg_to_cardinal(deg: float) -> str:
+    """Convertir des degres en direction cardinale."""
+    directions = [
+        "Nord", "Nord-Nord-Est", "Nord-Est", "Est-Nord-Est",
+        "Est", "Est-Sud-Est", "Sud-Est", "Sud-Sud-Est",
+        "Sud", "Sud-Sud-Ouest", "Sud-Ouest", "Ouest-Sud-Ouest",
+        "Ouest", "Ouest-Nord-Ouest", "Nord-Ouest", "Nord-Nord-Ouest",
+    ]
+    idx = round(deg / 22.5) % 16
+    return directions[idx]
+
 
 
 @router.post("/access-route")

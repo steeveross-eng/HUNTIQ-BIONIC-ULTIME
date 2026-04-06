@@ -313,6 +313,24 @@ try:
 except Exception as e:
     logger.warning(f"Hunt Orchestrator Engine not loaded: {e}")
 
+# BCE-4X BLOC 1: Corridor Unified Engine (fusion corridors OSM + BDRE)
+try:
+    from engines.corridor_unified.router import router as corridor_unified_router
+    app.include_router(corridor_unified_router)
+    logger.info("BLOC 1: Corridor Unified Engine registered (/api/v1/corridor-unified)")
+except Exception as e:
+    logger.warning(f"Corridor Unified Engine not loaded: {e}")
+
+# BCE-4X BLOC 3: Relocalisation Automatique Engine (salines/affuts)
+try:
+    from engines.relocation.router import router as relocation_router
+    app.include_router(relocation_router)
+    logger.info("BLOC 3: Relocalisation Automatique Engine registered (/api/v1/relocation)")
+except Exception as e:
+    logger.warning(f"Relocalisation Engine not loaded: {e}")
+
+
+
 
 
 # BCE-4X: SUPRA Advanced Engines (pertinence, risque, recommandation, correlation)
