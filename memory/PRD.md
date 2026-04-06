@@ -56,9 +56,40 @@ Application de routage terrain pour la chasse avec pathfinding A* et integration
   - COMPAREZ: 3-col comparaison
   - COMMANDEZ: 3-col (Recette | Produits | Panier)
 
+### Session 2026-04-06 (fork 3 — BIONIC_REWRITE_P0)
+
+#### P0 — RAPPORT LOGIQUE GLOBALE BIONIC
+- [x] Partie 1: Logique salines (generation, scoring, selection, affichage) — LIVRE
+- [x] Partie 2: Logique affuts (score 14.2, absence seuil, classification) — LIVRE
+- [x] Failles F1-F4 identifiees et documentees
+
+#### P0 — SECURISATION TOTALE PRE-REFONTE
+- [x] Branche BIONIC_STABLE_V6_LOCK creee (snapshot immutable)
+- [x] Branche BIONIC_REWRITE_P0 creee (refonte controlee)
+- [x] Manifeste sanctuarisation: /app/memory/BIONIC_STABLE_V6_LOCK_MANIFEST.md
+- [x] Gel operations: /app/memory/GEL_OPERATIONS_P0.md
+- [x] Plan technique P0: /app/memory/PLAN_TECHNIQUE_P0_REFONTE.md
+
+#### P0-C — IMPLEMENTATION MOTEURS V3/V2 (valide par STEEVE-MAX)
+- [x] Moteur SALINES V3: Critere Eau → distance reelle OSM (30-80m/80-150m/>150m)
+- [x] Moteur SALINES V3: Critere Accessibilite → distance reelle sentier OSM (remplace MD5)
+- [x] Moteur SALINES V3: Critere Habitat → calcul composite terrain reel (remplace MD5)
+- [x] Moteur SALINES V3: criteres_sources tracable dans chaque candidat
+- [x] Moteur AFFUTS V2: Seuils institutionnels (rejet <30, badge <50, recommande >=50)
+- [x] Moteur AFFUTS V2: Classification (rejected/a_eviter/recommended)
+- [x] Moteur AFFUTS V2: Filtre rejet dans recommend_blinds()
+- [x] Orchestrateur: Propagation champ classification
+- [x] Frontend: Badge "A EVITER" rouge barre pour affuts 30-49
+- [x] Frontend: Rejet visuel des affuts "rejected" (double securite)
+- [x] Rapport: /app/memory/P0C_RAPPORT_IMPLEMENTATION.md
+
 ## Backlog
 
-### P0 (Aucun — tout livre)
+### P0 (En attente validation STEEVE-MAX)
+- P0-E: Tests terrain (3 waypoints, 3 analyses)
+- P0-F: Verification integration frontend badges
+- P0-G: Audit SUPRA + BDRE + UX + Performance
+- P0-H: Audit regression (comparaison V2/V3, V1.5/V2)
 
 ### P1 (En attente directive STEEVE-MAX)
 - Confirmation harmonisation x1000%
