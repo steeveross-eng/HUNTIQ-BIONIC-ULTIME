@@ -16,6 +16,7 @@ from typing import Dict, List, Any, Optional
 
 from .corridor_model import (
     build_corridor_segment,
+    check_segment_water_exclusion,
     _haversine_m,
     _seed_float,
 )
@@ -41,6 +42,7 @@ def build_unified_corridors(
     5. Trier par score_unified decroissant
     """
     corridors = []
+    water_excluded = []
 
     # Phase 1: Charger le graphe terrain OSM
     trail_graph = _load_trail_graph(center_lat, center_lng, radius_m)
@@ -48,8 +50,21 @@ def build_unified_corridors(
     # Phase 2: Extraire segments du graphe
     raw_segments = _extract_graph_segments(trail_graph, center_lat, center_lng, radius_m)
 
-    # Phase 3: Scorer et construire les corridors unifies
+    # Phase 3: Scorer, filtrer eau, et construire les corridors unifies
     for i, seg in enumerate(raw_segments):
+        # MASQUE EAU OBLIGATOIRE — ORDONNANCE STEEVE-MAX
+        hydro_check = check_segment_water_exclusion(seg["coords"])
+        if hydro_check["excluded"]:
+            water_excluded.append({
+                "segment_id": f"CU-{i + 1:03d}",
+                "reason": hydro_check["reason"],
+                "details": hydro_check["details"],
+            })
+            logger.warning(
+                f"[CORRIDOR-UNIFIED] EXCLUSION EAU: CU-{i + 1:03d} — {hydro_check['reason']}"
+            )
+            continue
+
         bdre_score = _compute_segment_bdre_score(seg, trail_graph)
         corridor = build_corridor_segment(
             segment_id=f"CU-{i + 1:03d}",
@@ -78,7 +93,8 @@ def build_unified_corridors(
     n_mineur = sum(1 for c in corridors if c["type"] == "MINEUR")
     logger.info(
         f"[CORRIDOR-UNIFIED] Construit {len(corridors)} corridors: "
-        f"CRITIQUE={n_critique} MAJEUR={n_majeur} MINEUR={n_mineur}"
+        f"CRITIQUE={n_critique} MAJEUR={n_majeur} MINEUR={n_mineur} "
+        f"| EXCLUS EAU={len(water_excluded)}"
     )
 
     return corridors
@@ -219,14 +235,23 @@ def _generate_bdre_only_corridors(
         if osm_covered:
             continue  # Deja couvert par un sentier OSM
 
+        # MASQUE EAU OBLIGATOIRE — ORDONNANCE STEEVE-MAX
+        segment_coords = [
+            {"lat": round(start_lat, 6), "lng": round(start_lng, 6)},
+            {"lat": round(end_lat, 6), "lng": round(end_lng, 6)},
+        ]
+        hydro_check = check_segment_water_exclusion(segment_coords)
+        if hydro_check["excluded"]:
+            logger.warning(
+                f"[CORRIDOR-UNIFIED] EXCLUSION EAU BDRE: CU-BDRE-{bearing_deg:03d} — {hydro_check['reason']}"
+            )
+            continue
+
         # Creer un corridor BDRE estime
         bdre_score = 30 + _seed_float(start_lat, start_lng, "bdre_only") * 25
         corridor = build_corridor_segment(
             segment_id=f"CU-BDRE-{bearing_deg:03d}",
-            coords=[
-                {"lat": round(start_lat, 6), "lng": round(start_lng, 6)},
-                {"lat": round(end_lat, 6), "lng": round(end_lng, 6)},
-            ],
+            coords=segment_coords,
             bdre_score=bdre_score,
             has_osm_trail=False,
             connectivity=1,

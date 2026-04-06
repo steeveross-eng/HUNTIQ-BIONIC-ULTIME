@@ -54,12 +54,17 @@ async def build_corridors(req: CorridorBuildRequest):
                 "majeur": n_majeur,
                 "mineur": n_mineur,
             },
+            "water_exclusion": {
+                "active": True,
+                "buffer_min_m": 30,
+                "checks": ["is_water", "distance_eau_m", "midpoint", "25pct", "75pct"],
+            },
             "center": {"lat": req.center_lat, "lng": req.center_lng},
             "radius_m": req.radius_m,
             "species": req.species,
             "season": req.season,
-            "version": "CORRIDOR_UNIFIED_V1",
-            "governance": "BCE-4X GOLDEN V6+ — STEEVE-MAX",
+            "version": "CORRIDOR_UNIFIED_V1.1_HYDRO",
+            "governance": "BCE-4X GOLDEN V6+ — STEEVE-MAX — MASQUE EAU ACTIF",
         }
     except Exception as e:
         logger.error(f"[CORRIDOR-UNIFIED] Erreur build: {e}", exc_info=True)

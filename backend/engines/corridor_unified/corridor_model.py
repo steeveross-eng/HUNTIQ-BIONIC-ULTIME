@@ -2,6 +2,7 @@
 BCE-4X BLOC 1 — CORRIDOR_UNIFIED MODEL
 =========================================
 ORDONNANCE STEEVE-MAX 2026-04-06 | Branche BIONIC_REWRITE_P0
+PATCH URGENCE 2026-04-06: Masque eau obligatoire — ZERO corridor sur zone eau
 
 Modele de donnees unifie pour les corridors.
 Fusion corridors VISIBLES (sentiers OSM) + corridors BDRE INTERNES.
@@ -10,6 +11,11 @@ Classification:
   CRITIQUE : Sentier OSM + BDRE score > 80 + noeud haut degre
   MAJEUR   : Sentier OSM OU BDRE score > 50
   MINEUR   : BDRE score < 50 OU segment isole
+
+EXCLUSIONS HYDROGRAPHIQUES:
+  - Tout point sur zone eau (is_water) = EXCLUSION TOTALE
+  - Buffer eau minimum 30m = segment rejete
+  - Midpoint segment sur eau = segment rejete
 
 Attributs obligatoires:
   intensite, direction, saisonnalite, espece, largeur, zone_tampon, risque
@@ -20,6 +26,9 @@ import logging
 from typing import Dict, List, Any, Optional
 
 logger = logging.getLogger("bionic.corridor_unified.model")
+
+# Buffer hydrographique minimum (metres)
+WATER_BUFFER_MIN_M = 30
 
 # Seuils de classification institutionnels STEEVE-MAX
 THRESHOLD_CRITIQUE_BDRE = 80
@@ -42,6 +51,88 @@ def _haversine_m(lat1, lng1, lat2, lng2):
         * math.sin((lng2 - lng1) * p / 2) ** 2
     )
     return R * 2 * math.asin(math.sqrt(a))
+
+
+
+def _is_water_at(lat: float, lng: float) -> bool:
+    """
+    MASQUE EAU OBLIGATOIRE — BCE-4X URGENCE HYDROGRAPHIQUE.
+    Detecte si un point est situe sur une zone d'eau
+    en utilisant la couche cost_surface de corridors_v10.
+    """
+    try:
+        from core.scoring_pipeline.corridors_v10.cost_surface import _load_cell_data
+        cell = _load_cell_data(lat, lng, 10)
+        return cell.get("is_water", False)
+    except Exception:
+        # Fallback deterministe identique a cost_surface
+        h = hashlib.md5(f"{lat:.6f}:{lng:.6f}:water_body".encode()).hexdigest()
+        return (int(h[:8], 16) / 0xFFFFFFFF) > 0.88
+
+
+def _distance_eau_at(lat: float, lng: float) -> float:
+    """Distance a la zone d'eau la plus proche (metres)."""
+    try:
+        from core.scoring_pipeline.corridors_v10.cost_surface import _load_cell_data
+        cell = _load_cell_data(lat, lng, 10)
+        return cell.get("distance_eau_m", 500)
+    except Exception:
+        h = hashlib.md5(f"{lat:.6f}:{lng:.6f}:dist_eau".encode()).hexdigest()
+        return 10 + 490 * (int(h[:8], 16) / 0xFFFFFFFF)
+
+
+def check_segment_water_exclusion(coords: List[Dict[str, float]]) -> Dict[str, Any]:
+    """
+    VERIFICATION HYDRO OBLIGATOIRE — ORDONNANCE STEEVE-MAX.
+    Verifie qu'un segment ne traverse PAS de zone d'eau.
+
+    Controles:
+    1. Aucun endpoint sur eau (is_water)
+    2. Midpoint du segment pas sur eau
+    3. Distance eau >= WATER_BUFFER_MIN_M (30m) pour tous les points
+    4. Echantillonnage supplementaire a 25/75% du segment
+
+    Retourne:
+      {"excluded": True/False, "reason": str, "details": dict}
+    """
+    if not coords or len(coords) < 2:
+        return {"excluded": False, "reason": "segment_vide", "details": {}}
+
+    check_points = []
+
+    # Points de controle: debut, 25%, midpoint, 75%, fin
+    for frac in [0.0, 0.25, 0.5, 0.75, 1.0]:
+        if frac == 0.0:
+            check_points.append(("debut", coords[0]))
+        elif frac == 1.0:
+            check_points.append(("fin", coords[-1]))
+        else:
+            lat = coords[0]["lat"] + frac * (coords[-1]["lat"] - coords[0]["lat"])
+            lng = coords[0]["lng"] + frac * (coords[-1]["lng"] - coords[0]["lng"])
+            check_points.append((f"frac_{int(frac*100)}pct", {"lat": lat, "lng": lng}))
+
+    for label, point in check_points:
+        lat, lng = point["lat"], point["lng"]
+
+        # Check 1: Point sur eau
+        if _is_water_at(lat, lng):
+            return {
+                "excluded": True,
+                "reason": f"point_sur_eau ({label})",
+                "details": {"lat": lat, "lng": lng, "check": label, "is_water": True},
+            }
+
+        # Check 2: Buffer eau
+        dist_eau = _distance_eau_at(lat, lng)
+        if dist_eau < WATER_BUFFER_MIN_M:
+            return {
+                "excluded": True,
+                "reason": f"buffer_eau_insuffisant ({label}, {dist_eau:.0f}m < {WATER_BUFFER_MIN_M}m)",
+                "details": {"lat": lat, "lng": lng, "check": label, "distance_eau_m": dist_eau},
+            }
+
+    return {"excluded": False, "reason": "segment_valide", "details": {}}
+
 
 
 def _seed_float(lat, lng, salt=""):
