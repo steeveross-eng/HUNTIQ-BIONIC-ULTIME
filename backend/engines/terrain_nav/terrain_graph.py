@@ -20,6 +20,7 @@ from .terrain_costs import (
     compute_edge_cost, build_obstacle_set, build_forest_set,
     build_waterway_corridor_set,
     STREAM_BANK_COST, CLEARING_EDGE_COST,
+    is_excluded_highway, is_allowed_highway,
 )
 
 logger = logging.getLogger("bionic.terrain_nav.graph")
@@ -178,6 +179,10 @@ def build_terrain_graph(terrain_data: Dict) -> TerrainGraph:
         nids = way.get("nodes", [])
         tags = way.get("tags", {})
         highway_type = tags.get("highway", "path")
+
+        # BCE-4X EXCLUSION TERRITORIALE: Ignorer les ways de type urbain/routier
+        if is_excluded_highway(highway_type):
+            continue
 
         if len(nids) >= 2:
             graph.add_way(nids, trail_nc, highway_type=highway_type)

@@ -3,12 +3,20 @@ BCE-4X Phase 2.5 — TERRAIN NAV ENGINE (TNE)
 =============================================
 terrain_costs.py — Calcul des couts de traversee terrain
 
-Modele de couts:
-- Type de chemin OSM (track, path, footway, etc.)
-- Pente (penalite exponentielle au-dessus de 15%)
-- Densite forestiere (penalite pour hors-sentier en foret dense)
-- Zones humides (cout prohibitif = infranchissable)
-- Praticabilite (surface, largeur, obstacles)
+CORRECTION STEEVE-MAX 2026-04-06 — EXCLUSIONS TERRITORIALES BCE-4X:
+- Routes, highways, residentiel, zones urbaines = INTERDIT (1 000 000)
+- Eau, rivieres, ruisseaux, marecages, zones inondables = INTERDIT (1 000 000)
+- Zones ecologiques sensibles = INTERDIT (1 000 000)
+- SEULS corridors autorises: sentiers forestiers, chemins forestiers,
+  berges de ruisseau, clairieres.
+
+Modele de couts (ACCES AFFUTS UNIQUEMENT):
+- Sentiers forestiers (track, path, footway, bridleway) = CORRIDOR PREFERE
+- Berges de ruisseau (stream bank) = CORRIDOR NATUREL
+- Clairieres = CORRIDOR SECONDAIRE
+- Foret ouverte = PENALISE (dernier recours 5% max)
+- Foret dense = QUASI-INTERDIT (5% max)
+- Routes, residentiel, eau, marecages = INTERDIT ABSOLU (1 000 000)
 
 STEEVE-MAX: Aucun trajet geometrique artificiel.
 Le cout determine l'itineraire reel.
@@ -20,48 +28,101 @@ from typing import Dict, Tuple, Optional, Set
 logger = logging.getLogger("bionic.terrain_nav.costs")
 
 
-# Cout de base par type de chemin OSM
-# BCE-4X CORRIDOR-FIRST X1 000 000%: sentiers OSM = voie PREFEREE ABSOLUE (/10)
+# ============================================================================
+# BCE-4X EXCLUSIONS TERRITORIALES — TYPES INTERDITS (ACCES AFFUTS)
+# ============================================================================
+# Types OSM INTERDITS pour les acces affuts.
+# Un noeud sur ces types sera EXCLUS du graphe de routage.
+# CONTEXTE TERRITORIAL: En zone forestiere de chasse (Bas-Saint-Laurent),
+# les "unclassified" et "service" sont des chemins forestiers de debardage,
+# PAS des routes urbaines. Ils sont AUTORISES comme corridors secondaires.
+BCE4X_EXCLUDED_HIGHWAY_TYPES = {
+    "motorway", "motorway_link",
+    "trunk", "trunk_link",
+    "primary", "primary_link",
+    "secondary", "secondary_link",
+    "tertiary", "tertiary_link",
+    "residential",
+    "living_street",
+    "pedestrian",
+    "bus_guideway",
+    "road",
+}
+
+# Types OSM AUTORISES pour les acces affuts (corridors forestiers)
+# Priorite: track > path > footway > bridleway > cycleway > unclassified > service
+BCE4X_ALLOWED_HIGHWAY_TYPES = {
+    "track",       # Chemin forestier praticable — CORRIDOR PRINCIPAL
+    "path",        # Sentier pieton forestier — CORRIDOR OPTIMAL
+    "footway",     # Sentier de randonnee — CORRIDOR VALIDE
+    "bridleway",   # Sentier equestre — CORRIDOR VALIDE
+    "cycleway",    # Piste cyclable forestiere — CORRIDOR SECONDAIRE
+    "unclassified", # Chemin de debardage forestier — CORRIDOR SECONDAIRE
+    "service",      # Chemin de service forestier — CORRIDOR TERTIAIRE
+}
+
+# Cout INTERDIT ABSOLU pour tout type exclu
+EXCLUDED_COST = 1_000_000.0
+
+
+# ============================================================================
+# COUTS CORRIDORS FORESTIERS (ACCES AFFUTS UNIQUEMENT)
+# ============================================================================
+# BCE-4X CORRIDOR-FIRST X1 000 000%: sentiers forestiers = voie PREFEREE ABSOLUE
 HIGHWAY_COST_MULTIPLIER = {
-    "secondary": 0.08,      # Route secondaire (initial: 0.8, /10)
-    "tertiary": 0.085,      # Route tertiaire (initial: 0.85, /10)
-    "residential": 0.09,    # Route residentielle (initial: 0.9, /10)
-    "unclassified": 0.1,    # Route non classee (initial: 1.0, /10)
-    "service": 0.1,         # Route de service (initial: 1.0, /10)
-    "track": 0.11,          # Chemin forestier praticable (initial: 1.1, /10)
-    "cycleway": 0.12,       # Piste cyclable (initial: 1.2, /10)
-    "bridleway": 0.13,      # Sentier equestre (initial: 1.3, /10)
-    "path": 0.15,           # Sentier pietonne (initial: 1.5, /10)
-    "footway": 0.16,        # Sentier de randonnee (initial: 1.6, /10)
+    "track": 0.11,          # Chemin forestier praticable — CORRIDOR PRINCIPAL
+    "bridleway": 0.13,      # Sentier equestre — CORRIDOR VALIDE
+    "path": 0.15,           # Sentier pieton forestier — CORRIDOR OPTIMAL
+    "footway": 0.16,        # Sentier de randonnee — CORRIDOR VALIDE
+    "cycleway": 0.12,       # Piste cyclable forestiere — CORRIDOR SECONDAIRE
+    "unclassified": 0.18,   # Chemin de debardage forestier — CORRIDOR SECONDAIRE
+    "service": 0.20,        # Chemin de service forestier — CORRIDOR TERTIAIRE
 }
 
 # Cout pour traversee hors-sentier
 # BCE-4X CORRIDOR-FIRST X1 000 000% (STEEVE-MAX):
 # 95% du trajet = corridors existants. Foret dense = 5% max (dernier segment).
-# Cout foret dense x50 vs calibration initiale. Cout corridor /10.
-# Interdiction segments hors-sentier > 5%.
-OFF_TRAIL_COST = 200.0       # Foret ouverte sans sentier (initial: 4.0, x50)
-DENSE_FOREST_COST = 400.0   # Foret dense hors sentier (initial: 8.0, x50)
-WETLAND_COST = 800.0         # Zone humide = INFRANCHISSABLE
-WATER_COST = 999.0           # Eau = INFRANCHISSABLE
+OFF_TRAIL_COST = 200.0       # Foret ouverte sans sentier (x50 vs initial)
+DENSE_FOREST_COST = 400.0   # Foret dense hors sentier (x50 vs initial)
+WETLAND_COST = EXCLUDED_COST  # Zone humide = INTERDIT ABSOLU
+WATER_COST = EXCLUDED_COST    # Eau = INTERDIT ABSOLU
 
 # Corridors naturels (BCE-4X CORRIDOR-FIRST X1 000 000%)
-# Couts divises par 10 vs calibration initiale pour attraction ABSOLUE.
-STREAM_BANK_COST = 0.12     # Bord de ruisseau = CORRIDOR ABSOLU (initial: 1.2, /10)
-CLEARING_EDGE_COST = 0.14   # Bordure de clairiere = CORRIDOR ABSOLU (initial: 1.4, /10)
-CLEARING_INTERIOR_COST = 0.2  # Interieur clairiere (initial: 2.0, /10)
+STREAM_BANK_COST = 0.12     # Bord de ruisseau = CORRIDOR NATUREL (berge, PAS l'eau)
+CLEARING_EDGE_COST = 0.14   # Bordure de clairiere = CORRIDOR NATUREL
+CLEARING_INTERIOR_COST = 0.2  # Interieur clairiere = CORRIDOR SECONDAIRE
 SCENT_ZONE_PENALTY = 15.0  # Penalite contamination olfactive
 
 # Seuils de pente
-SLOPE_THRESHOLD_EASY = 10.0     # % — pas de penalite
-SLOPE_THRESHOLD_MODERATE = 20.0  # % — penalite lineaire
-SLOPE_THRESHOLD_HARD = 35.0     # % — penalite exponentielle
-SLOPE_THRESHOLD_IMPASSABLE = 50.0  # % — infranchissable
+SLOPE_THRESHOLD_EASY = 10.0
+SLOPE_THRESHOLD_MODERATE = 20.0
+SLOPE_THRESHOLD_HARD = 35.0
+SLOPE_THRESHOLD_IMPASSABLE = 50.0
 
 # Penalites de pente
 SLOPE_PENALTY_MODERATE = 1.5
 SLOPE_PENALTY_HARD = 3.0
 SLOPE_PENALTY_IMPASSABLE = 50.0
+
+
+def is_excluded_highway(highway_type: str) -> bool:
+    """
+    BCE-4X: Verifier si un type de chemin OSM est EXCLU pour les acces affuts.
+    Retourne True si le type est interdit (routes, residentiel, urbain).
+    """
+    if not highway_type:
+        return False
+    return highway_type.lower() in BCE4X_EXCLUDED_HIGHWAY_TYPES
+
+
+def is_allowed_highway(highway_type: str) -> bool:
+    """
+    BCE-4X: Verifier si un type de chemin OSM est AUTORISE pour les acces affuts.
+    Retourne True si le type est un corridor forestier valide.
+    """
+    if not highway_type:
+        return False
+    return highway_type.lower() in BCE4X_ALLOWED_HIGHWAY_TYPES
 
 
 def compute_slope_penalty(elevation_diff_m: float, distance_m: float) -> float:
@@ -89,7 +150,12 @@ def compute_slope_penalty(elevation_diff_m: float, distance_m: float) -> float:
 
 
 def get_highway_cost(highway_type: str) -> float:
-    """Cout de base pour un type de chemin OSM."""
+    """
+    Cout de base pour un type de chemin OSM.
+    BCE-4X: Les types exclus retournent EXCLUDED_COST (1 000 000).
+    """
+    if is_excluded_highway(highway_type):
+        return EXCLUDED_COST
     return HIGHWAY_COST_MULTIPLIER.get(highway_type, OFF_TRAIL_COST)
 
 

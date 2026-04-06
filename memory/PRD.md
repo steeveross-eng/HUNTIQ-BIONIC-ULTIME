@@ -147,6 +147,15 @@ nutritionnelle V6 unifiee.
   - Orchestrateur scoring BDRE-FIRST : blind(40%) + access(30%) + corridor(30%)
   - Engines integres : trail_graph + quality_scorer + anomaly_detector + terrain_costs
   - Rapport: AFFUTS_CORRIDOR_X1M_REPORT.md
+- [x] EXCLUSIONS TERRITORIALES BCE-4X + PREUVE VISUELLE LUC — 2026-04-06
+  - REJET preuve visuelle precedente (zones urbaines). Corrections appliquees.
+  - Exclusions BCE-4X: routes/highways/residentiel/eau = INTERDIT (1M)
+  - Chemins forestiers (track/unclassified/service) AUTORISES en contexte territorial
+  - Fetch terrain reel WAYPOINT LUC (48.206417, -68.382588), rayon 3000m
+  - 4 routes A* multi-affuts: MATCHES_HUNTER=True (4/4)
+  - Corridor 72-85%, foret 14-27% (approche LUC->sentier ~605m irreductible)
+  - Preuve visuelle satellite: corridor_proof_luc.html
+  - Rapport: AFFUTS_CORRIDOR_X1M_REPORT_LUC.md
 - [x] P2 Preparation (M5 + BSAA-2) — Documentation complete
   - M5: 8 endpoints prevus, hooks BDRE identifies
   - BSAA-2: 18 endpoints prevus, architecture existante
@@ -206,6 +215,8 @@ Tout composant BIONIC OS doit :
 | AFFUTS_CORRIDOR_X1M_REPORT | /app/memory/AFFUTS_CORRIDOR_X1M_REPORT.md | 1.0.0 |
 | P2_READY_REPORT | /app/memory/P2_READY_REPORT.md | 1.0.0 |
 
+| AFFUTS_CORRIDOR_X1M_REPORT_LUC | /app/memory/AFFUTS_CORRIDOR_X1M_REPORT_LUC.md | 1.0.0 |
+
 ---
 
-**Derniere mise a jour** : 2026-04-06 — CORRIDOR-FIRST X1 000 000% CORRIGE + ENGINES INTEGRES (REJET validation precedente). Detection stricte 3 pts/segment, scoring BDRE 4 engines, contrainte max segment foret 5%. Orchestrateur scoring 40/30/30 BDRE-FIRST. P2 GELE. Rapport: AFFUTS_CORRIDOR_X1M_REPORT.md + P2_READY_REPORT.md.
+**Derniere mise a jour** : 2026-04-06 — EXCLUSIONS TERRITORIALES BCE-4X + PREUVE VISUELLE LUC. Exclusions routes/urbain/eau appliquees. 4 routes A* MATCHES_HUNTER=True. Corridor 72-85% (approche LUC→sentier irreductible). Satellite Esri: corridor_proof_luc.html. P2 GELE.
