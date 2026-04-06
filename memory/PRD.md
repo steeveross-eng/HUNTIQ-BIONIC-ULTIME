@@ -86,10 +86,10 @@ Application de routage terrain pour la chasse avec pathfinding A* et integration
 ## Backlog
 
 ### P0 (En attente validation STEEVE-MAX)
-- P0-E: Tests terrain (3 waypoints, 3 analyses)
-- P0-F: Verification integration frontend badges
-- P0-G: Audit SUPRA + BDRE + UX + Performance
-- P0-H: Audit regression (comparaison V2/V3, V1.5/V2)
+- P0-E/F/G/H: Rapports livres — en attente validation STEEVE-MAX
+- P0-I: Shadow mode (nouveau moteur en parallele) — apres validation
+- P0-J: Monitoring 48h — apres P0-I
+- P0-K: Validation finale STEEVE-MAX — apres P0-J
 
 ### P1 (En attente directive STEEVE-MAX)
 - Confirmation harmonisation x1000%
