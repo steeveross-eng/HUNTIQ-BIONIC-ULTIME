@@ -38,9 +38,9 @@ OVERPASS_MIRRORS = [
 ]
 
 # Timeout adaptatif: base + rayon/500 secondes
-# BCE-4X P0 B1: Reduit de 20/5 a 8/2 — STEEVE-MAX 2026-03-28
-BASE_TIMEOUT_S = 8
-TIMEOUT_PER_KM = 2
+# BCE-4X CORRECTION STEEVE-MAX 2026-04-06: Timeout augmente pour zones forestieres profondes
+BASE_TIMEOUT_S = 25
+TIMEOUT_PER_KM = 5
 
 # Rayon de recherche Overpass (metres)
 DEFAULT_SEARCH_RADIUS_M = 2000
@@ -63,9 +63,9 @@ OVERPASS_MIRRORS = [
 ]
 
 # Timeout adaptatif: base + rayon/500 secondes
-# BCE-4X P0 B1: Reduit de 20/5 a 8/2 — STEEVE-MAX 2026-03-28
-BASE_TIMEOUT_S = 8
-TIMEOUT_PER_KM = 2
+# BCE-4X CORRECTION STEEVE-MAX 2026-04-06: Timeout augmente pour zones forestieres profondes
+BASE_TIMEOUT_S = 25
+TIMEOUT_PER_KM = 5
 
 # Rayon de recherche Overpass (metres)
 DEFAULT_SEARCH_RADIUS_M = 2000

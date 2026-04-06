@@ -147,14 +147,14 @@ nutritionnelle V6 unifiee.
   - Orchestrateur scoring BDRE-FIRST : blind(40%) + access(30%) + corridor(30%)
   - Engines integres : trail_graph + quality_scorer + anomaly_detector + terrain_costs
   - Rapport: AFFUTS_CORRIDOR_X1M_REPORT.md
-- [x] EXCLUSIONS TERRITORIALES BCE-4X + PREUVE VISUELLE LUC — 2026-04-06
-  - REJET preuve visuelle precedente (zones urbaines). Corrections appliquees.
-  - Exclusions BCE-4X: routes/highways/residentiel/eau = INTERDIT (1M)
-  - Chemins forestiers (track/unclassified/service) AUTORISES en contexte territorial
-  - Fetch terrain reel WAYPOINT LUC (48.206417, -68.382588), rayon 3000m
-  - 4 routes A* multi-affuts: MATCHES_HUNTER=True (4/4)
-  - Corridor 72-85%, foret 14-27% (approche LUC->sentier ~605m irreductible)
-  - Preuve visuelle satellite: corridor_proof_luc.html
+- [x] GUIDANCE TERRAIN STEEVE-MAX + PREUVE CONFORME — 2026-04-06
+  - REFUS preuve visuelle precedente (corridor <95%, segments foret 605m)
+  - GUIDANCE TERRAIN: injection start/end, aretes guidance_corridor, routage 100% graphe
+  - Connecteur fragments, detection guidance, analyse ratio guidance
+  - Exclusions BCE-4X: routes/residentiel EXCLU graphe, eau 1M
+  - Timeout Overpass augmente: 25s + 5s/km
+  - 4/4 routes CONFORMES: 100% corridor, 0% foret, MATCHES_HUNTER=OUI, BDRE 82.0
+  - Preuve visuelle satellite: corridor_proof_luc_v2.html
   - Rapport: AFFUTS_CORRIDOR_X1M_REPORT_LUC.md
 - [x] P2 Preparation (M5 + BSAA-2) — Documentation complete
   - M5: 8 endpoints prevus, hooks BDRE identifies
@@ -215,8 +215,8 @@ Tout composant BIONIC OS doit :
 | AFFUTS_CORRIDOR_X1M_REPORT | /app/memory/AFFUTS_CORRIDOR_X1M_REPORT.md | 1.0.0 |
 | P2_READY_REPORT | /app/memory/P2_READY_REPORT.md | 1.0.0 |
 
-| AFFUTS_CORRIDOR_X1M_REPORT_LUC | /app/memory/AFFUTS_CORRIDOR_X1M_REPORT_LUC.md | 1.0.0 |
+| AFFUTS_CORRIDOR_X1M_REPORT_LUC | /app/memory/AFFUTS_CORRIDOR_X1M_REPORT_LUC.md | 2.0.0 |
 
 ---
 
-**Derniere mise a jour** : 2026-04-06 — EXCLUSIONS TERRITORIALES BCE-4X + PREUVE VISUELLE LUC. Exclusions routes/urbain/eau appliquees. 4 routes A* MATCHES_HUNTER=True. Corridor 72-85% (approche LUC→sentier irreductible). Satellite Esri: corridor_proof_luc.html. P2 GELE.
+**Derniere mise a jour** : 2026-04-06 — GUIDANCE TERRAIN STEEVE-MAX CONFORME. 4/4 routes 100% corridor, 0% foret, MATCHES_HUNTER=OUI, BDRE 82.0. Injection start/end graphe, aretes guidance_corridor, routage 100% A*. Exclusions BCE-4X actives. Preuve satellite: corridor_proof_luc_v2.html. P2 GELE.

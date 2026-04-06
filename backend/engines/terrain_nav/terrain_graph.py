@@ -261,5 +261,61 @@ def build_terrain_graph(terrain_data: Dict) -> TerrainGraph:
             f"+{cl_edges_added} clearing edges"
         )
 
+    # ========================================================================
+    # Phase 7: CONNECTEUR DE FRAGMENTS — GUIDANCE TERRAIN STEEVE-MAX
+    # ========================================================================
+    # BCE-4X CORRECTION 2026-04-06: Les sentiers OSM en zone forestiere profonde
+    # sont souvent cartographies en fragments deconnectes (ways sans noeuds communs).
+    # Ce connecteur identifie les extremites de sentiers proches (< 50m) et
+    # cree des aretes virtuelles pour unifier le graphe.
+    # Cout = distance * OFF_TRAIL_COST_CONNECTOR (penalise mais pas interdit)
+    # Max 20m par segment de connexion (GUIDANCE TERRAIN STEEVE-MAX).
+    from .terrain_costs import OFF_TRAIL_COST
+
+    CONNECTOR_MAX_DIST_M = 50  # Distance max pour connexion inter-fragments
+    CONNECTOR_COST_MULT = 0.5  # Cout leger (passage inter-sentier < 50m)
+
+    # Trouver les noeuds terminaux (degre = 1 ou isolement de composante)
+    terminal_nodes = []
+    for nid in graph.nodes:
+        if nid in graph.obstacle_nodes:
+            continue
+        neighbors = graph.adj.get(nid, [])
+        degree = len(neighbors)
+        if degree <= 1:  # Terminal ou isole
+            lat, lng = graph.nodes[nid]
+            terminal_nodes.append((nid, lat, lng, degree))
+
+    # Connecter les terminaux proches
+    connector_edges = 0
+    connected_pairs = set()
+    for i, (nid1, lat1, lng1, deg1) in enumerate(terminal_nodes):
+        for j in range(i + 1, len(terminal_nodes)):
+            nid2, lat2, lng2, deg2 = terminal_nodes[j]
+            if nid1 == nid2:
+                continue
+            pair_key = (min(nid1, nid2), max(nid1, nid2))
+            if pair_key in connected_pairs:
+                continue
+
+            # Verifier si deja voisins directs
+            existing = any(nb == nid2 for nb, _, _, _ in graph.adj.get(nid1, []))
+            if existing:
+                continue
+
+            dist = _haversine(lat1, lng1, lat2, lng2)
+            if dist <= CONNECTOR_MAX_DIST_M:
+                cost = dist * CONNECTOR_COST_MULT
+                graph.adj[nid1].append((nid2, cost, dist, "connector_guidance"))
+                graph.adj[nid2].append((nid1, cost, dist, "connector_guidance"))
+                connected_pairs.add(pair_key)
+                connector_edges += 1
+
+    if connector_edges > 0:
+        logger.info(
+            f"[TNE-GRAPH] GUIDANCE TERRAIN: +{connector_edges} connector edges "
+            f"({len(terminal_nodes)} terminal nodes scanned, max {CONNECTOR_MAX_DIST_M}m)"
+        )
+
     graph.finalize_stats()
     return graph

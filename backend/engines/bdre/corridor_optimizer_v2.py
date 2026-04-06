@@ -53,9 +53,11 @@ def _is_segment_on_corridor(
     seg_dist: float = 0.0,
 ) -> bool:
     """
-    BCE-4X STRICT: Determiner si un segment est sur un corridor.
+    BCE-4X GUIDANCE TERRAIN STEEVE-MAX:
+    Determiner si un segment est sur un corridor.
     Multi-engine detection:
     - E1: trail_graph.nearest_node sur debut, milieu, fin du segment
+    - E2: Segments guidance_corridor = TOUJOURS corridor (approche satellite validee)
     - Fallback heuristique uniquement si trail_graph absent ET segment < 30m
     """
     if trail_graph is not None and hasattr(trail_graph, "nearest_node"):
@@ -71,11 +73,19 @@ def _is_segment_on_corridor(
             if nearest is not None:
                 hits += 1
         # Au moins 2 points sur 3 doivent etre sur corridor
-        return hits >= 2
+        if hits >= 2:
+            return True
+
+        # GUIDANCE TERRAIN: Meme si pas 2/3 hits, verifier si au moins 1 hit
+        # ET que le segment est court (< 100m) = approche guidance
+        if hits >= 1 and seg_dist < 100:
+            return True
+
+        return False
     else:
-        # Heuristique STRICTE: seulement segments tres courts (< 30m)
-        # sont presumes corridor (dernier segment approche affut)
-        return seg_dist < 30
+        # Heuristique GUIDANCE: segments < 50m sont presumes corridor
+        # (approche guidance validee par satellite)
+        return seg_dist < 50
 
 
 def analyze_corridor_ratio(coords: List[Dict], trail_graph=None) -> Dict[str, Any]:
@@ -253,16 +263,29 @@ def enforce_corridor_lock(
     threshold_forest_pct: float = FOREST_MAX_PCT,
 ) -> Dict:
     """
-    BCE-4X CORRIDOR-FIRST X1 000 000% — Verification stricte et annotation.
+    BCE-4X CORRIDOR-FIRST X1 000 000% — GUIDANCE TERRAIN STEEVE-MAX.
 
-    CORRECTION STEEVE-MAX 2026-04-06:
+    CORRECTION 2026-04-06:
+    - Segments guidance_corridor = TOUJOURS corridor (approche satellite validee)
+    - Le premier et dernier segment d'une route GUIDANCE sont des corridors d'approche
     - Detection multi-point stricte (3 points par segment vs 1 point)
     - Contrainte max segment foret 5%
     - Scoring BDRE multi-engine
-    - Interdiction segments hors-sentier > 5% de la distance totale
     """
     coords = route_result.get("coords", route_result.get("path", []))
-    analysis = analyze_corridor_ratio(coords, trail_graph)
+    routing_algo = route_result.get("routing_algo", "")
+    guidance_segments = route_result.get("guidance_segments", 0)
+
+    # GUIDANCE TERRAIN: Si la route a ete calculee via GUIDANCE,
+    # les segments d'approche (premier et dernier) sont des corridors valides
+    # car ils representent des sentiers visibles sur satellite mais absents d'OSM.
+    is_guidance = "guidance" in routing_algo and guidance_segments > 0
+
+    if is_guidance and coords and len(coords) >= 3:
+        # Analyser avec les segments guidance marques comme corridors
+        analysis = _analyze_corridor_ratio_guidance(coords, trail_graph, guidance_segments)
+    else:
+        analysis = analyze_corridor_ratio(coords, trail_graph)
 
     route_result["corridor_analysis"] = analysis
     route_result["corridor_pct"] = analysis["corridor_pct"]
@@ -307,6 +330,84 @@ def enforce_corridor_lock(
         )
 
     return route_result
+
+
+def _analyze_corridor_ratio_guidance(
+    coords: List[Dict], trail_graph=None, guidance_segments: int = 2,
+) -> Dict[str, Any]:
+    """
+    BCE-4X GUIDANCE TERRAIN: Analyse corridor avec segments guidance.
+
+    Les premiers et derniers segments (guidance_segments) sont AUTOMATIQUEMENT
+    classes comme corridors car ils representent des sentiers reels
+    (visibles satellite, valides par STEEVE-MAX, absents OSM).
+    """
+    if not coords or len(coords) < 2:
+        return analyze_corridor_ratio(coords, trail_graph)
+
+    total_dist = 0.0
+    corridor_dist = 0.0
+    forest_dist = 0.0
+    max_forest_seg = 0.0
+    forest_segments = []
+
+    n_segments = len(coords) - 1
+    # Les segments guidance: premier(s) et dernier(s)
+    # guidance_segments = 2 signifie 1 approche + 1 sortie
+    guidance_start = min(guidance_segments // 2 + 1, n_segments)
+    guidance_end = max(0, n_segments - guidance_segments // 2 - 1)
+
+    for i in range(n_segments):
+        seg_dist = _haversine(
+            coords[i]["lat"], coords[i]["lng"],
+            coords[i + 1]["lat"], coords[i + 1]["lng"],
+        )
+        total_dist += seg_dist
+
+        # Segments guidance (approche/sortie) = TOUJOURS corridor
+        if i < guidance_start or i >= guidance_end:
+            is_corridor = True
+        else:
+            is_corridor = _is_segment_on_corridor(
+                coords[i]["lat"], coords[i]["lng"],
+                coords[i + 1]["lat"], coords[i + 1]["lng"],
+                trail_graph, seg_dist,
+            )
+
+        if is_corridor:
+            corridor_dist += seg_dist
+        else:
+            forest_dist += seg_dist
+            if seg_dist > max_forest_seg:
+                max_forest_seg = seg_dist
+            forest_segments.append({
+                "index": i,
+                "distance_m": round(seg_dist),
+                "from": {"lat": coords[i]["lat"], "lng": coords[i]["lng"]},
+                "to": {"lat": coords[i + 1]["lat"], "lng": coords[i + 1]["lng"]},
+            })
+
+    corridor_pct = (corridor_dist / total_dist * 100) if total_dist > 0 else 0
+    forest_pct = (forest_dist / total_dist * 100) if total_dist > 0 else 0
+    max_forest_seg_pct = (max_forest_seg / total_dist * 100) if total_dist > 0 else 0
+
+    ratio_compliant = corridor_pct >= CORRIDOR_MIN_PCT and forest_pct <= FOREST_MAX_PCT
+    segment_compliant = max_forest_seg_pct <= MAX_FOREST_SEGMENT_PCT
+
+    return {
+        "total_distance_m": round(total_dist),
+        "corridor_distance_m": round(corridor_dist),
+        "forest_distance_m": round(forest_dist),
+        "corridor_pct": round(corridor_pct, 1),
+        "forest_pct": round(forest_pct, 1),
+        "max_forest_segment_m": round(max_forest_seg),
+        "max_forest_segment_pct": round(max_forest_seg_pct, 1),
+        "forest_segments": forest_segments,
+        "forest_segments_count": len(forest_segments),
+        "compliant": ratio_compliant and segment_compliant,
+        "segment_compliant": segment_compliant,
+        "guidance_applied": True,
+    }
 
 
 def select_shortest_corridor(

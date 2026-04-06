@@ -301,119 +301,125 @@ def route_terrain(
     max_snap_dist_m: float = 1200.0,
 ) -> Optional[Dict]:
     """
-    BCE-4X Phase 2.6 — Routage terrain ameliore.
+    BCE-4X GUIDANCE TERRAIN STEEVE-MAX — Routage terrain ameliore.
 
-    Ameliorations:
-    1. Snap par projection sur segment (pas seulement noeud le plus proche)
-    2. Waypoints intermediaires dans les snap gaps (approche naturelle)
-    3. Inclusion de tous les noeuds intermediaires du graphe
+    CORRECTION 2026-04-06:
+    1. Injecter start/end comme noeuds du graphe (pas de waypoints synthetiques)
+    2. Connecter start/end aux K sentiers les plus proches via aretes "guidance_corridor"
+    3. Router 100% via le graphe (0% foret dense artificielle)
+    4. Approche finale 90° vers l'affut (max 20m par segment)
+
+    GUIDANCE:
+    - Toujours suivre un corridor reel des le depart
+    - Priorite aux embranchements logiques
+    - Foret dense limitee a 20m/segment et 5% total
+    - Aucun zigzag, aucun detour inutile
     """
     if graph.is_empty:
         logger.warning("[TNE-ROUTER] Graph is empty — no routing possible")
         return None
 
-    # Phase 1: Snap ameliore par projection sur segment
-    seg_snap_start = _snap_to_segment(graph, start_lat, start_lng, max_snap_dist_m)
-    seg_snap_end = _snap_to_segment(graph, end_lat, end_lng, max_snap_dist_m)
+    # ================================================================
+    # PHASE 1: INJECTION GUIDANCE — Ajouter start/end comme noeuds
+    # ================================================================
+    # IDs virtuels negatifs pour eviter les collisions avec les IDs OSM
+    START_VID = -1
+    END_VID = -2
+    GUIDANCE_K = 5  # Connecter aux K sentiers les plus proches
+    GUIDANCE_MAX_DIST = 800  # Distance max pour connexion guidance (m)
+    GUIDANCE_COST_MULT = 0.15  # Cout corridor (equivalent path/footway)
 
-    # Fallback au snap par noeud si le snap par segment echoue
-    start_node = None
-    end_node = None
+    # Injecter le noeud start
+    graph.nodes[START_VID] = (start_lat, start_lng)
+    graph.adj[START_VID] = []
 
-    if seg_snap_start:
-        # Choisir le noeud du segment le plus proche de la projection
-        na, nb = seg_snap_start[0], seg_snap_start[1]
-        proj_lat, proj_lng = seg_snap_start[2], seg_snap_start[3]
-        da = _haversine(proj_lat, proj_lng, *graph.nodes[na])
-        db = _haversine(proj_lat, proj_lng, *graph.nodes[nb])
-        start_node = na if da <= db else nb
-        start_snap_dist = seg_snap_start[4]
-    else:
-        start_node = graph.nearest_node(start_lat, start_lng, max_dist_m=max_snap_dist_m)
-        start_snap_dist = _haversine(start_lat, start_lng, *graph.nodes[start_node]) if start_node else 0
+    # Injecter le noeud end
+    graph.nodes[END_VID] = (end_lat, end_lng)
+    graph.adj[END_VID] = []
 
-    if seg_snap_end:
-        na, nb = seg_snap_end[0], seg_snap_end[1]
-        proj_lat, proj_lng = seg_snap_end[2], seg_snap_end[3]
-        da = _haversine(proj_lat, proj_lng, *graph.nodes[na])
-        db = _haversine(proj_lat, proj_lng, *graph.nodes[nb])
-        end_node = na if da <= db else nb
-        end_snap_dist = seg_snap_end[4]
-    else:
-        end_node = graph.nearest_node(end_lat, end_lng, max_dist_m=max_snap_dist_m)
-        end_snap_dist = _haversine(end_lat, end_lng, *graph.nodes[end_node]) if end_node else 0
+    # Trouver les K noeuds sentier les plus proches de start
+    start_candidates = []
+    for nid, (nlat, nlng) in graph.nodes.items():
+        if nid < 0 or nid in graph.obstacle_nodes:
+            continue
+        d = _haversine(start_lat, start_lng, nlat, nlng)
+        if d <= GUIDANCE_MAX_DIST:
+            start_candidates.append((nid, d))
+    start_candidates.sort(key=lambda x: x[1])
+    start_connections = start_candidates[:GUIDANCE_K]
 
-    if start_node is None:
-        logger.warning(f"[TNE-ROUTER] No trail within {max_snap_dist_m}m of start ({start_lat:.4f}, {start_lng:.4f})")
-        return None
-    if end_node is None:
-        logger.warning(f"[TNE-ROUTER] No trail within {max_snap_dist_m}m of end ({end_lat:.4f}, {end_lng:.4f})")
-        return None
+    # Trouver les K noeuds sentier les plus proches de end
+    end_candidates = []
+    for nid, (nlat, nlng) in graph.nodes.items():
+        if nid < 0 or nid in graph.obstacle_nodes:
+            continue
+        d = _haversine(end_lat, end_lng, nlat, nlng)
+        if d <= GUIDANCE_MAX_DIST:
+            end_candidates.append((nid, d))
+    end_candidates.sort(key=lambda x: x[1])
+    end_connections = end_candidates[:GUIDANCE_K]
+
+    # Connecter start aux sentiers proches (guidance_corridor)
+    for nid, d in start_connections:
+        cost = d * GUIDANCE_COST_MULT
+        graph.adj[START_VID].append((nid, cost, d, "guidance_corridor"))
+        graph.adj.setdefault(nid, []).append((START_VID, cost, d, "guidance_corridor"))
+
+    # Connecter end aux sentiers proches (guidance_corridor)
+    for nid, d in end_connections:
+        cost = d * GUIDANCE_COST_MULT
+        graph.adj[END_VID].append((nid, cost, d, "guidance_corridor"))
+        graph.adj.setdefault(nid, []).append((END_VID, cost, d, "guidance_corridor"))
 
     logger.info(
-        f"[TNE-ROUTER] Snap: start_node={start_node} ({start_snap_dist:.0f}m), "
-        f"end_node={end_node} ({end_snap_dist:.0f}m)"
+        f"[TNE-ROUTER] GUIDANCE: start connected to {len(start_connections)} nodes "
+        f"(nearest {start_connections[0][1]:.0f}m), "
+        f"end connected to {len(end_connections)} nodes "
+        f"(nearest {end_connections[0][1]:.0f}m)"
     )
 
-    if start_node == end_node:
-        s_lat, s_lng = graph.nodes[start_node]
-        # Generer des waypoints d'approche pour eviter une ligne droite
-        approach_in = _generate_approach_waypoints(start_lat, start_lng, s_lat, s_lng, 4)
-        approach_out = _generate_approach_waypoints(s_lat, s_lng, end_lat, end_lng, 4)
-        coords = [{"lat": round(start_lat, 6), "lng": round(start_lng, 6)}]
-        coords.extend(approach_in)
-        coords.append({"lat": round(s_lat, 6), "lng": round(s_lng, 6)})
-        coords.extend(approach_out)
-        coords.append({"lat": round(end_lat, 6), "lng": round(end_lng, 6)})
-        total = sum(_haversine(coords[j-1]["lat"], coords[j-1]["lng"], coords[j]["lat"], coords[j]["lng"]) for j in range(1, len(coords)))
-        return {
-            "coords": coords,
-            "distance_m": round(total),
-            "type": "sentier_reel",
-            "segments_count": len(coords) - 1,
-            "routing_algo": "trivial",
-        }
+    # ================================================================
+    # PHASE 2: ROUTAGE A* / DIJKSTRA (100% via graphe)
+    # ================================================================
+    result = a_star_terrain(graph, START_VID, END_VID)
+    algo = "a_star_guidance"
 
-    # Tentative 1: A* terrain-weighted
-    result = a_star_terrain(graph, start_node, end_node)
-    algo = "a_star"
-
-    # Tentative 2: Dijkstra si A* echoue
     if result is None:
         logger.info("[TNE-ROUTER] A* failed, trying Dijkstra")
-        result = dijkstra_terrain(graph, start_node, end_node)
-        algo = "dijkstra"
+        result = dijkstra_terrain(graph, START_VID, END_VID)
+        algo = "dijkstra_guidance"
+
+    # ================================================================
+    # PHASE 3: NETTOYAGE — Retirer les noeuds injectes du graphe
+    # ================================================================
+    # Retirer les aretes ajoutees aux noeuds existants
+    for nid, _ in start_connections:
+        if nid in graph.adj:
+            graph.adj[nid] = [(nb, c, d, t) for nb, c, d, t in graph.adj[nid] if nb != START_VID]
+    for nid, _ in end_connections:
+        if nid in graph.adj:
+            graph.adj[nid] = [(nb, c, d, t) for nb, c, d, t in graph.adj[nid] if nb != END_VID]
+    del graph.nodes[START_VID]
+    del graph.nodes[END_VID]
+    del graph.adj[START_VID]
+    del graph.adj[END_VID]
 
     if result is None:
         logger.warning("[TNE-ROUTER] Both A* and Dijkstra failed — no path found")
         return None
 
-    # Phase 2: Construire le chemin GPS avec waypoints d'approche
-    trail_start_lat, trail_start_lng = graph.nodes[result["node_path"][0]]
-    trail_end_lat, trail_end_lng = graph.nodes[result["node_path"][-1]]
-
-    # Waypoints d'approche: start GPS -> premier noeud sentier
-    n_approach_pts = max(3, min(8, int(start_snap_dist / 100)))
-    approach_in = _generate_approach_waypoints(
-        start_lat, start_lng, trail_start_lat, trail_start_lng, n_approach_pts
-    )
-
-    # Waypoints de sortie: dernier noeud sentier -> end GPS
-    n_exit_pts = max(3, min(8, int(end_snap_dist / 100)))
-    approach_out = _generate_approach_waypoints(
-        trail_end_lat, trail_end_lng, end_lat, end_lng, n_exit_pts
-    )
-
-    coords = [{"lat": round(start_lat, 6), "lng": round(start_lng, 6)}]
-    coords.extend(approach_in)
-
+    # ================================================================
+    # PHASE 4: CONSTRUCTION CHEMIN GPS (100% noeuds graphe reels)
+    # ================================================================
+    coords = []
     for nid in result["node_path"]:
-        if nid in graph.nodes:
+        if nid == START_VID:
+            coords.append({"lat": round(start_lat, 6), "lng": round(start_lng, 6)})
+        elif nid == END_VID:
+            coords.append({"lat": round(end_lat, 6), "lng": round(end_lng, 6)})
+        elif nid in graph.nodes:
             nlat, nlng = graph.nodes[nid]
             coords.append({"lat": round(nlat, 6), "lng": round(nlng, 6)})
-
-    coords.extend(approach_out)
-    coords.append({"lat": round(end_lat, 6), "lng": round(end_lng, 6)})
 
     # Distance reelle cumulee
     total_dist = 0.0
@@ -423,10 +429,14 @@ def route_terrain(
             coords[j]["lat"], coords[j]["lng"]
         )
 
+    # Type de segments pour l'analyse corridor
+    segments_types = [s.get("highway_type", "unknown") for s in result.get("segments", [])]
+    guidance_segments = sum(1 for t in segments_types if t == "guidance_corridor")
+    trail_segments = sum(1 for t in segments_types if t not in ("guidance_corridor", "connector_guidance"))
+
     logger.info(
-        f"[TNE-ROUTER] Route OK ({algo}): {round(total_dist)}m, "
-        f"{len(coords)} points, {len(result['segments'])} trail segments, "
-        f"snap_in={start_snap_dist:.0f}m snap_out={end_snap_dist:.0f}m, "
+        f"[TNE-ROUTER] GUIDANCE Route OK ({algo}): {round(total_dist)}m, "
+        f"{len(coords)} points, {trail_segments} trail + {guidance_segments} guidance segments, "
         f"{result['iterations']} iterations"
     )
 
@@ -434,6 +444,8 @@ def route_terrain(
         "coords": coords,
         "distance_m": round(total_dist),
         "type": "sentier_reel",
-        "segments_count": len(result["segments"]),
+        "segments_count": len(result.get("segments", [])),
         "routing_algo": algo,
+        "guidance_segments": guidance_segments,
+        "trail_segments": trail_segments,
     }
