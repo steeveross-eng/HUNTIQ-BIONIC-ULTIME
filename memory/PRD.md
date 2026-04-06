@@ -95,7 +95,7 @@ Application de routage terrain pour la chasse avec pathfinding A* et integration
 - [x] 9 sections: schema terrain-centre, 9 criteres, BDRE, densite adaptative
 - [x] Ponderations proposees: Eau 20%, Corridor 15%, Couvert 15%, etc.
 - [x] Echeancier: 10 phases (P0-X-0 a P0-X-10)
-- [ ] EN ATTENTE VALIDATION STEEVE-MAX
+- [x] VALIDE PAR STEEVE-MAX
 
 #### SUPRA — VALIDATION SCIENTIFIQUE V4 (2026-04-06)
 - [x] 9 criteres analyses sur 6 axes SUPRA
@@ -103,14 +103,23 @@ Application de routage terrain pour la chasse avec pathfinding A* et integration
 - [x] 3 especes (CERF, ORIGNAL, WAPITI) analysees
 - [x] 8/9 criteres PLEINEMENT VALIDES, 1/9 partiel (Securite 5%)
 - [x] Document: /app/memory/SUPRA_VALIDATION_SCIENTIFIQUE_V4.md
-- [ ] EN ATTENTE VALIDATION STEEVE-MAX
+- [x] VALIDE PAR STEEVE-MAX
+
+#### P0-X — IMPLEMENTATION SALINES V4 (2026-04-06)
+- [x] terrain_features.py: Detection eau OSM, sentiers OSM, ecotones, fallback 3x3
+- [x] mineral_scorer.py: Scoring mineraux inverse + multiplicateurs saisonniers
+- [x] bdre_integration.py: Scoring corridor BDRE + generation candidats corridor
+- [x] salines_v4.py: Moteur principal 9 criteres SUPRA, selection gloutonne Top-4
+- [x] Endpoint POST /api/v4/alimentation/analyze
+- [x] Shadow V3/V4 integre (comparaison automatique)
+- [x] Tests 3 waypoints: Montmorency (59), Portneuf (56), LacStJean (38)
 
 ## Backlog
 
 ### P0 (En attente validation STEEVE-MAX)
-- P0-X: Plan technique SALINES V4 en attente validation
-- P0-J: Monitoring 48h — apres activation shadow en production
-- P0-K: Validation finale STEEVE-MAX — apres P0-J
+- P0-J: Monitoring shadow V2/V3/V4 — comparaison automatique active
+- P0-K: Validation finale STEEVE-MAX
+- Tests regression V3 → V4 complets
 
 ### P1 (En attente directive STEEVE-MAX)
 - Confirmation harmonisation x1000%
