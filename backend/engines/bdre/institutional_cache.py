@@ -384,7 +384,7 @@ def certify_territory_full(
             }
 
             # Certifier
-            cert = certify_route(territory_id, aid, hunter_lat, hunter_lng, alat, alng, route_data)
+            certify_route(territory_id, aid, hunter_lat, hunter_lng, alat, alng, route_data)
             results.append({"affut_id": aid, "label": alabel, "status": "CERTIFIE", **route_data})
 
             # Enregistrer les corridors virtuels d'approche

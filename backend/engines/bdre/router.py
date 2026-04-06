@@ -44,7 +44,7 @@ async def bdre_health():
         "version": "V2",
         "protocol": "BCE-4X GOLDEN V6+",
         "phase": "Phase 4 — Institutionnalisation BDRE",
-        "endpoints": 11,
+        "endpoints": 17,
         "components": [
             "source_registry",
             "quality_scorer",
@@ -346,4 +346,226 @@ async def get_dashboard():
             "GUIDE PRO Engine",
             "Weather Engine V3",
         ],
+    }
+
+
+# =====================================================================
+# BCE-4X NORME A→L — CACHE INSTITUTIONNEL (consultation legere <1s)
+# =====================================================================
+
+@router.get("/cache/routes/{territory_id}", tags=["bdre", "cache"])
+async def get_cached_routes(territory_id: str, affut_id: Optional[str] = Query(None)):
+    """
+    I) Consultation legere des routes pre-certifiees (<1s).
+    Aucun recalcul. Lecture cache uniquement.
+    """
+    import time
+    t0 = time.time()
+    from engines.bdre.institutional_cache import get_certified_route, list_certified_routes
+
+    if affut_id:
+        # Recherche d'une route specifique (sans coordonnees chasseur = listing)
+        routes = list_certified_routes(territory_id)
+        matched = [r for r in routes if r.get("affut_id") == affut_id]
+        elapsed_ms = (time.time() - t0) * 1000
+        return {
+            "territory_id": territory_id,
+            "affut_id": affut_id,
+            "routes": matched,
+            "count": len(matched),
+            "elapsed_ms": round(elapsed_ms, 1),
+            "source": "cache_institutionnel",
+            "norme": "BCE-4X A→L section I",
+        }
+
+    routes = list_certified_routes(territory_id)
+    elapsed_ms = (time.time() - t0) * 1000
+    return {
+        "territory_id": territory_id,
+        "routes": routes,
+        "count": len(routes),
+        "elapsed_ms": round(elapsed_ms, 1),
+        "source": "cache_institutionnel",
+        "norme": "BCE-4X A→L section I",
+    }
+
+
+@router.get("/cache/objects/{territory_id}", tags=["bdre", "cache"])
+async def get_cached_objects(
+    territory_id: str,
+    object_type: Optional[str] = Query(None, description="Type: affuts, sites_alimentation, zones_contamination, zones_ecologiques"),
+):
+    """
+    L) Consultation legere des objets institutionnels (<1s).
+    Objets INTOUCHABLES: affuts, sites alimentation, zones contamination, zones ecologiques.
+    """
+    import time
+    t0 = time.time()
+    from engines.bdre.institutional_cache import get_institutional_objects
+
+    objects = get_institutional_objects(territory_id, object_type)
+    total = sum(len(v) for v in objects.values())
+    elapsed_ms = (time.time() - t0) * 1000
+
+    return {
+        "territory_id": territory_id,
+        "objects": objects,
+        "total": total,
+        "elapsed_ms": round(elapsed_ms, 1),
+        "source": "cache_institutionnel",
+        "norme": "BCE-4X A→L section L",
+        "intouchable": True,
+    }
+
+
+@router.get("/cache/corridors/{territory_id}", tags=["bdre", "cache"])
+async def get_cached_corridors(territory_id: str):
+    """
+    G) Consultation legere des corridors virtuels permanents (<1s).
+    Segments institutionnels reutilisables pour toutes les requetes futures.
+    """
+    import time
+    t0 = time.time()
+    from engines.bdre.institutional_cache import get_virtual_corridors
+
+    corridors = get_virtual_corridors(territory_id)
+    elapsed_ms = (time.time() - t0) * 1000
+
+    return {
+        "territory_id": territory_id,
+        "corridors": corridors,
+        "count": len(corridors),
+        "elapsed_ms": round(elapsed_ms, 1),
+        "source": "cache_institutionnel",
+        "norme": "BCE-4X A→L section G",
+        "permanent": True,
+    }
+
+
+@router.post("/cache/certify/{territory_id}", tags=["bdre", "cache"])
+async def certify_territory(
+    territory_id: str,
+    hunter_lat: float = Query(..., description="Latitude waypoint chasseur"),
+    hunter_lng: float = Query(..., description="Longitude waypoint chasseur"),
+    radius_m: int = Query(4000, description="Rayon de fetch terrain (m)"),
+):
+    """
+    I) Calcul institutionnel lourd (offline).
+    Reconstruit le graphe, injecte les corridors virtuels, applique BCE-4X + GUIDANCE,
+    pre-certifie tous les acces affuts, stocke dans le cache institutionnel.
+    
+    ATTENTION: Calcul lourd — plusieurs secondes. Utiliser en mode OFFLINE uniquement.
+    """
+    from engines.bdre.institutional_cache import (
+        certify_territory_full,
+        get_institutional_objects,
+        register_institutional_object,
+    )
+
+    # Recuperer les affuts existants du cache (objets institutionnels)
+    existing = get_institutional_objects(territory_id, "affuts")
+    affuts_list = []
+    for obj in existing.get("affuts", []):
+        data = obj.get("data", {})
+        affuts_list.append({
+            "id": obj.get("object_id", ""),
+            "lat": data.get("lat", 0),
+            "lng": data.get("lng", 0),
+            "label": data.get("label", ""),
+        })
+
+    if not affuts_list:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Aucun affut institutionnel enregistre pour le territoire {territory_id}. "
+                   f"Enregistrez d'abord les affuts via POST /cache/objects/{territory_id}."
+        )
+
+    report = certify_territory_full(
+        territory_id=territory_id,
+        hunter_lat=hunter_lat,
+        hunter_lng=hunter_lng,
+        affuts=affuts_list,
+        radius_m=radius_m,
+    )
+
+    return {
+        "status": "CERTIFICATION_COMPLETE",
+        "territory_id": territory_id,
+        "report": report,
+        "norme": "BCE-4X A→L section I",
+        "mode": "calcul_lourd_offline",
+    }
+
+
+@router.get("/cache/audit/{territory_id}", tags=["bdre", "cache"])
+async def audit_territory_cache(territory_id: str):
+    """
+    K) Audit de non-regression des objets institutionnels (<1s).
+    Verifie que tous les objets enregistres sont presents.
+    Toute disparition = ERREUR BLOQUANTE.
+    """
+    import time
+    t0 = time.time()
+    from engines.bdre.institutional_cache import audit_non_regression
+
+    audit = audit_non_regression(territory_id)
+    elapsed_ms = (time.time() - t0) * 1000
+    audit["elapsed_ms"] = round(elapsed_ms, 1)
+
+    status_code = 200 if audit["status"] == "CONFORME" else 500
+    if status_code == 500:
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "status": "ERREUR_BLOQUANTE",
+                "audit": audit,
+                "message": "REGRESSION DETECTEE — Objets institutionnels manquants.",
+                "norme": "BCE-4X A→L section K",
+            }
+        )
+
+    return {
+        "territory_id": territory_id,
+        "audit": audit,
+        "elapsed_ms": round(elapsed_ms, 1),
+        "source": "cache_institutionnel",
+        "norme": "BCE-4X A→L section K",
+    }
+
+
+@router.post("/cache/objects/{territory_id}", tags=["bdre", "cache"])
+async def register_object(
+    territory_id: str,
+    object_type: str = Query(..., description="Type: affuts, sites_alimentation, zones_contamination, zones_ecologiques"),
+    object_id: str = Query(..., description="ID unique de l'objet"),
+    lat: float = Query(..., description="Latitude"),
+    lng: float = Query(..., description="Longitude"),
+    label: str = Query("", description="Label descriptif"),
+):
+    """
+    L) Enregistrer un objet institutionnel INTOUCHABLE.
+    Ces objets NE PEUVENT PAS etre supprimes par les filtres BCE-4X.
+    """
+    from engines.bdre.institutional_cache import register_institutional_object, OBJECT_TYPES
+
+    if object_type not in OBJECT_TYPES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Type invalide: {object_type}. Types autorises: {OBJECT_TYPES}"
+        )
+
+    obj = register_institutional_object(
+        territory_id=territory_id,
+        object_type=object_type,
+        object_id=object_id,
+        object_data={"lat": lat, "lng": lng, "label": label, "type": "registered"},
+    )
+
+    return {
+        "status": "ENREGISTRE",
+        "territory_id": territory_id,
+        "object": obj,
+        "norme": "BCE-4X A→L section L",
+        "intouchable": True,
     }

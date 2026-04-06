@@ -37,6 +37,55 @@ def _haversine(lat1, lng1, lat2, lng2):
     return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
 
+def _check_institutional_cache(
+    territory_id: str,
+    center_lat: float,
+    center_lng: float,
+    fixed_blinds: List[Dict],
+) -> Optional[Dict]:
+    """
+    BCE-4X NORME A→L Section I: Consultation cache institutionnel AVANT calcul A*.
+    Si des routes pre-certifiees existent pour ce territoire et ces affuts,
+    retourner les resultats caches (<1s). Aucun recalcul autorise.
+    """
+    try:
+        from engines.bdre.institutional_cache import (
+            list_certified_routes, get_institutional_objects,
+        )
+        import time
+        t0 = time.time()
+
+        routes = list_certified_routes(territory_id)
+        if not routes:
+            return None
+
+        # Verifier que les routes cachees correspondent au waypoint chasseur actuel
+        matching_routes = []
+        for route in routes:
+            hunter_lat = route.get("hunter_lat", 0)
+            hunter_lng = route.get("hunter_lng", 0)
+            if (abs(hunter_lat - center_lat) < 0.001 and
+                abs(hunter_lng - center_lng) < 0.001):
+                matching_routes.append(route)
+
+        if not matching_routes:
+            return None
+
+        elapsed_ms = (time.time() - t0) * 1000
+        logger.info(
+            f"[ORCHESTRATOR-CACHE] {len(matching_routes)} routes pre-certifiees trouvees "
+            f"pour {territory_id} ({elapsed_ms:.0f}ms)"
+        )
+        return {
+            "cached_routes": matching_routes,
+            "territory_id": territory_id,
+            "elapsed_ms": elapsed_ms,
+        }
+    except Exception as e:
+        logger.warning(f"[ORCHESTRATOR-CACHE] Cache consultation failed: {e}")
+        return None
+
+
 def orchestrate_hunt_session(
     center_lat: float,
     center_lng: float,
@@ -50,11 +99,13 @@ def orchestrate_hunt_session(
     trail_graph=None,
     water_check_fn=None,
     max_blinds: int = 5,
+    territory_id: str = None,
 ) -> Dict[str, Any]:
     """
     Orchestration complete d'une session de chasse.
 
     Etapes:
+    0. BCE-4X NORME A→L: Consulter le cache institutionnel AVANT tout calcul
     1. Charger/recevoir le graphe de sentiers (terrain_nav)
     2. Recommander les affuts (choix_affuts)
     3. Pour chaque affut recommande, calculer l'acces optimal (access_engine)
@@ -67,6 +118,34 @@ def orchestrate_hunt_session(
         feeding_sites = []
     if fixed_blinds is None:
         fixed_blinds = []
+
+    # ================================================================
+    # PHASE 0: BCE-4X NORME A→L — Consultation cache institutionnel
+    # ================================================================
+    if territory_id:
+        cached = _check_institutional_cache(
+            territory_id, center_lat, center_lng, fixed_blinds,
+        )
+        if cached and cached.get("cached_routes"):
+            logger.info(
+                f"[ORCHESTRATOR] CACHE HIT: {len(cached['cached_routes'])} routes "
+                f"pre-certifiees — AUCUN recalcul A* ({cached['elapsed_ms']:.0f}ms)"
+            )
+            return {
+                "status": "success",
+                "timestamp": timestamp,
+                "session": session,
+                "species": species,
+                "center": {"lat": center_lat, "lng": center_lng},
+                "radius_m": radius_m,
+                "source": "cache_institutionnel",
+                "norme": "BCE-4X A→L section I",
+                "cached_routes": cached["cached_routes"],
+                "total_cached": len(cached["cached_routes"]),
+                "elapsed_ms": cached["elapsed_ms"],
+                "recalcul": False,
+                "governance": "BCE-4X P0 — Consultation legere <1s",
+            }
 
     # Charger le graphe terrain si pas fourni
     if trail_graph is None:

@@ -219,4 +219,25 @@ Tout composant BIONIC OS doit :
 
 ---
 
-**Derniere mise a jour** : 2026-04-06 — GUIDANCE TERRAIN STEEVE-MAX CONFORME. 4/4 routes 100% corridor, 0% foret, MATCHES_HUNTER=OUI, BDRE 82.0. Injection start/end graphe, aretes guidance_corridor, routage 100% A*. Exclusions BCE-4X actives. Preuve satellite: corridor_proof_luc_v2.html. P2 GELE.
+**Derniere mise a jour** : 2026-04-07 — NORME OFFICIELLE A→L IMPLEMENTEE.
+
+### Session 2026-04-07 — NORME A→L Cache Institutionnel
+
+#### NORME A→L — Cache Institutionnel BCE-4X (COMPLETE)
+- Module `institutional_cache.py` : cache permanent JSON (affuts, zones, corridors, routes)
+- 6 nouveaux endpoints BDRE : `/api/v1/bdre/cache/*` (consultation legere < 1ms)
+- Orchestrateur cache-first : consultation cache AVANT calcul A*
+- Certification territoire : pipeline lourd offline (graphe + GUIDANCE + BCE-4X)
+- Audit non-regression : verification 0 objets manquants
+- Tests : 10/10 pytest PASS + 10 tests curl E2E PASS
+- Rapport : AFFUTS_ZONES_NON_REGRESSION_REPORT.md
+- Temps de reponse : < 1 ms (objectif < 1000 ms)
+
+| Endpoint | Methode | Fonction |
+|----------|---------|----------|
+| `/api/v1/bdre/cache/objects/{t}` | GET | Consultation objets institutionnels |
+| `/api/v1/bdre/cache/objects/{t}` | POST | Enregistrement objet INTOUCHABLE |
+| `/api/v1/bdre/cache/routes/{t}` | GET | Consultation routes pre-certifiees |
+| `/api/v1/bdre/cache/corridors/{t}` | GET | Consultation corridors virtuels |
+| `/api/v1/bdre/cache/certify/{t}` | POST | Certification territoire (offline) |
+| `/api/v1/bdre/cache/audit/{t}` | GET | Audit non-regression |
