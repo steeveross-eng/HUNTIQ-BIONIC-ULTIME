@@ -20,9 +20,19 @@ from engines.hunt_orchestrator.vent_odeurs import (
     compute_scent_zone, wind_deg_from_cardinal, DOMINANT_WIND_DEG,
 )
 from engines.hunt_orchestrator.choix_affuts import recommend_blinds
-from engines.hunt_orchestrator.access_engine import (
-    compute_access_route, find_best_entry_point,
-)
+
+# ORDONNANCE STEEVE-MAX 2026-04-07: Import conditionnel du moteur d'acces.
+# En MODE OFF, l'import est protege pour garantir l'AUTONOMIE TOTALE
+# de l'orchestrateur meme si le module d'acces est en erreur/absent.
+try:
+    from engines.hunt_orchestrator.access_engine import (
+        compute_access_route, find_best_entry_point,
+    )
+    _ACCESS_MODULE_AVAILABLE = True
+except ImportError:
+    _ACCESS_MODULE_AVAILABLE = False
+    compute_access_route = None
+    find_best_entry_point = None
 
 logger = logging.getLogger("bionic.hunt_orchestrator")
 
@@ -246,13 +256,18 @@ def orchestrate_hunt_session(
         }
 
         # Enrichir le scoring vent via find_best_entry_point (scoring UNIQUEMENT)
-        entry_points = find_best_entry_point(
-            blind["lat"], blind["lng"],
-            trail_graph, wind_direction_deg,
-            max_entries=1,
-        )
-        if entry_points:
-            best_access["entry_point"]["wind_alignment_score"] = entry_points[0].get("wind_alignment_score", 0)
+        # AUTONOMIE: Protege si module d'acces indisponible
+        if _ACCESS_MODULE_AVAILABLE and find_best_entry_point is not None:
+            try:
+                entry_points = find_best_entry_point(
+                    blind["lat"], blind["lng"],
+                    trail_graph, wind_direction_deg,
+                    max_entries=1,
+                )
+                if entry_points:
+                    best_access["entry_point"]["wind_alignment_score"] = entry_points[0].get("wind_alignment_score", 0)
+            except Exception:
+                pass  # Scoring vent non critique — autonomie preservee
 
         # Generer la justification textuelle
         justification = _generate_justification(

@@ -12,37 +12,37 @@ Application de routage terrain pour la chasse (affuts, corridors, zones) avec pa
 ## Ce qui a ete implemente
 
 ### Session 2026-04-06
-- [x] BCE-4X Territorial Exclusions (cout 1,000,000 pour eau/routes/urbain)
-- [x] Terrain Graph fragment connector (composants deconnectes)
-- [x] STEEVE-MAX Terrain Guidance (corridors virtuels waypoint LUC + affuts)
-- [x] Preuve visuelle 100% corridor adherence (corridor_proof_luc_v2.html)
-- [x] Multi-engine BDRE integration orchestrateur
-- [x] P2 Gel complet — DIRECTIVE STEEVE-MAX
+- [x] BCE-4X Territorial Exclusions
+- [x] Terrain Graph fragment connector
+- [x] STEEVE-MAX Terrain Guidance
+- [x] Multi-engine BDRE integration
+- [x] P2 Gel complet
 
 ### Session 2026-04-07
 - [x] NORME OFFICIELLE A->L — Cache Institutionnel BCE-4X
-  - Module `institutional_cache.py`: cache permanent JSON
-  - 6 endpoints `/api/v1/bdre/cache/*` (consultation legere < 1ms)
-  - Orchestrateur cache-first: consultation cache AVANT calcul A*
-  - Audit non-regression: verification 0 objets manquants
-- [x] BUG FIX: Alimentation 3/4 -> 4/4 (promotion candidats)
-- [x] BUG FIX: Routes V-shape -> routes directes (junction directionnelle + seuils adaptatifs)
-- [x] ORDONNANCE: DESACTIVATION SECURISEE ACCES AUX AFFUTS
-  - Inventaire complet: 66 fichiers, 6 geometries, 5 caches, 8 endpoints, 4 couches
-  - Archive institutionnelle: `/app/LEGACY_ACCESS_AFFUTS/` (2.7 MB)
-  - MODE OFF: Backend (orchestrateur + 6 endpoints) + Frontend (3 couches)
-  - Validation: 8/8 tests PASS, 0 regression
-  - Donnees PRESERVEES (non supprimees)
-  - Reactivation documentee dans CONFIRMATION_DESACTIVATION.md
+- [x] BUG FIX: Alimentation 3/4 -> 4/4
+- [x] BUG FIX: Routes V-shape -> routes directes
+- [x] DESACTIVATION SECURISEE ACCES AUX AFFUTS
+  - Archive: `/app/LEGACY_ACCESS_AFFUTS/` (66 fichiers, 2.7 MB)
+  - MODE OFF Backend + Frontend
+  - Donnees preservees (non supprimees)
+- [x] VALIDATION AUTONOMIE TOTALE
+  - Affuts: AUTONOME (suggestions, scores, recommandations)
+  - Salines: AUTONOME (4/4, pipeline independant)
+  - Zones contamination: AUTONOME (polygone 15 points)
+  - Corridors deplacement: AUTONOME (BDRE 17 endpoints)
+  - Cache institutionnel: AUTONOME (CONFORME)
+  - Import conditionnel moteur acces (try/except)
+  - 7/7 tests integrite PASS
 
 ## Backlog
 
-### P0 (Aucun — tout P0 complete)
+### P0 (Aucun)
 
 ### P1 (En attente directive STEEVE-MAX)
-- Validation utilisateur de la desactivation securisee
+- Confirmation utilisateur
 
-### P2 (GELE — NE PAS TOUCHER)
+### P2 (GELE)
 - M5 Offline Mode Ultra
 - BSAA-2 Social Ads Automation
-- Merge Work1 -> main (STRICTEMENT INTERDIT)
+- Merge Work1 -> main (INTERDIT)
