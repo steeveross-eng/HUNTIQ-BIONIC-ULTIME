@@ -97,6 +97,14 @@ Application de routage terrain pour la chasse avec pathfinding A* et integration
 - [x] Echeancier: 10 phases (P0-X-0 a P0-X-10)
 - [ ] EN ATTENTE VALIDATION STEEVE-MAX
 
+#### SUPRA — VALIDATION SCIENTIFIQUE V4 (2026-04-06)
+- [x] 9 criteres analyses sur 6 axes SUPRA
+- [x] 22 sources scientifiques citees
+- [x] 3 especes (CERF, ORIGNAL, WAPITI) analysees
+- [x] 8/9 criteres PLEINEMENT VALIDES, 1/9 partiel (Securite 5%)
+- [x] Document: /app/memory/SUPRA_VALIDATION_SCIENTIFIQUE_V4.md
+- [ ] EN ATTENTE VALIDATION STEEVE-MAX
+
 ## Backlog
 
 ### P0 (En attente validation STEEVE-MAX)
