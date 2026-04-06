@@ -362,10 +362,18 @@ def _find_reachable_closest_to_target(
     max_snap_dist_m: float = 1200.0,
 ) -> Optional[Tuple[int, float, float, float]]:
     """
-    BFS depuis le noeud sentier le plus proche de l'entree.
-    Retourne le noeud ACCESSIBLE (meme composante connexe) le plus proche de la cible.
+    CORRECTION STEEVE-MAX 2026-04-07: Recherche junction DIRECTIONNELLE.
 
-    Ignore les noeuds a <min_dist_to_target_m de la cible (trop proches = inutile).
+    Trouve le noeud sentier OPTIMAL qui minimise le cout TOTAL:
+      total = distance_sentier_depuis_chasseur + distance_directe_vers_affut
+
+    Ceci produit le pattern prescrit:
+      CORRIDOR REEL → EMBRANCHEMENT → PENETRATION 90° → AFFUT
+
+    Au lieu de chercher le noeud le plus proche de l'affut (qui peut etre
+    loin sur le sentier = detour), on cherche le meilleur compromis entre
+    "rester sur le sentier" et "minimiser la penetration hors-sentier".
+
     Retourne: (node_id, node_lat, node_lng, dist_to_target_m) ou None.
     """
     if trail_graph is None or trail_graph.is_empty:
@@ -375,36 +383,86 @@ def _find_reachable_closest_to_target(
     if entry_node is None:
         return None
 
-    # BFS pour trouver tous les noeuds accessibles depuis entry_node
+    # Dijkstra BFS pour calculer la distance sentier REELLE depuis entry_node
+    import heapq
+    trail_distances = {entry_node: 0.0}
+    heap = [(0.0, entry_node)]
     visited = set()
-    queue = [entry_node]
-    visited.add(entry_node)
 
-    while queue:
-        current = queue.pop(0)
-        for neighbor, _, _, _ in trail_graph.adj.get(current, []):
-            if neighbor not in visited and neighbor not in trail_graph.obstacle_nodes:
-                visited.add(neighbor)
-                queue.append(neighbor)
+    while heap:
+        dist, current = heapq.heappop(heap)
+        if current in visited:
+            continue
+        visited.add(current)
 
-    # Parmi les noeuds accessibles, trouver le plus proche de la cible
+        for neighbor, _, edge_dist, _ in trail_graph.adj.get(current, []):
+            if neighbor in trail_graph.obstacle_nodes:
+                continue
+            new_dist = dist + edge_dist
+            if new_dist < trail_distances.get(neighbor, float("inf")):
+                trail_distances[neighbor] = new_dist
+                heapq.heappush(heap, (new_dist, neighbor))
+
+    if not visited:
+        return None
+
+    # Distance directe chasseur → affut (pour calculer le ratio de detour)
+    direct_hunter_to_blind = _haversine(entry_lat, entry_lng, target_lat, target_lng)
+
+    # Pour chaque noeud accessible, calculer le cout total:
+    # total_cost = trail_distance + penetration_distance
+    # Selectionner le noeud qui minimise total_cost
     best_node = None
-    best_dist = float("inf")
+    best_total_cost = float("inf")
+    best_penetration = float("inf")
 
     for nid in visited:
         nlat, nlng = trail_graph.nodes[nid]
-        d = _haversine(nlat, nlng, target_lat, target_lng)
-        if d < min_dist_to_target_m:
-            continue  # Trop proche = inutile pour le segment terrain
-        if d < best_dist:
-            best_dist = d
+        penetration_dist = _haversine(nlat, nlng, target_lat, target_lng)
+
+        if penetration_dist < min_dist_to_target_m:
+            continue  # Trop proche de l'affut = inutile pour penetration
+
+        trail_dist = trail_distances.get(nid, float("inf"))
+        total_cost = trail_dist + penetration_dist
+
+        # Filtre: rejeter si le total depasse 3x la distance directe
+        # (evite les detours excessifs)
+        if direct_hunter_to_blind > 50:
+            ratio = total_cost / direct_hunter_to_blind
+            if ratio > 3.0:
+                continue
+
+        if total_cost < best_total_cost:
+            best_total_cost = total_cost
+            best_penetration = penetration_dist
             best_node = nid
+
+    if best_node is None:
+        # Fallback: si aucun noeud ne passe le filtre ratio,
+        # prendre le noeud avec la penetration la plus courte
+        for nid in visited:
+            nlat, nlng = trail_graph.nodes[nid]
+            penetration_dist = _haversine(nlat, nlng, target_lat, target_lng)
+            if penetration_dist < min_dist_to_target_m:
+                continue
+            if penetration_dist < best_penetration:
+                best_penetration = penetration_dist
+                best_node = nid
 
     if best_node is None:
         return None
 
     nlat, nlng = trail_graph.nodes[best_node]
-    return (best_node, nlat, nlng, best_dist)
+    trail_dist = trail_distances.get(best_node, 0)
+    logger.info(
+        f"[ACCESS-JUNCTION] Optimal: node={best_node}, "
+        f"sentier={round(trail_dist)}m + penetration={round(best_penetration)}m = "
+        f"total={round(trail_dist + best_penetration)}m "
+        f"(direct={round(direct_hunter_to_blind)}m, "
+        f"ratio={round((trail_dist + best_penetration) / max(1, direct_hunter_to_blind), 1)}x)"
+    )
+    return (best_node, nlat, nlng, best_penetration)
 
 
 def _attempt_hybrid_trail_terrain(
@@ -441,6 +499,18 @@ def _attempt_hybrid_trail_terrain(
         return None
 
     closest_node_id, junction_lat, junction_lng, junction_to_blind_m = result
+
+    # CORRECTION STEEVE-MAX 2026-04-07b: Rejeter si la penetration est
+    # PLUS LONGUE que la distance directe chasseur → affut.
+    # Cela signifie que le detour par le sentier est INUTILE (on s'eloigne).
+    direct_hunter_blind = _haversine(entry_lat, entry_lng, blind_lat, blind_lng)
+    if junction_to_blind_m > direct_hunter_blind * 1.2:
+        logger.info(
+            f"[ACCESS-HYBRID] REJET: penetration={round(junction_to_blind_m)}m > "
+            f"direct={round(direct_hunter_blind)}m — detour par sentier inutile, "
+            f"delegation au terrain-grid direct"
+        )
+        return None
 
     logger.info(
         f"[ACCESS-HYBRID] Phase 1: entree -> noeud sentier #{closest_node_id} "

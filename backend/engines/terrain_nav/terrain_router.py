@@ -409,7 +409,7 @@ def route_terrain(
     # rejeter et tenter un routage plus court en augmentant le cout guidance
     # pour penaliser les connexions lointaines.
     direct_dist = _haversine(start_lat, start_lng, end_lat, end_lng)
-    MAX_DETOUR_RATIO = 2.5
+    MAX_DETOUR_RATIO = 3.5  # Seuil L0/L1 (pure trail)
 
     if result is not None and direct_dist > 50:
         route_dist = result.get("total_distance_m", 0)

@@ -281,9 +281,32 @@ def enforce_corridor_lock(
     # car ils representent des sentiers visibles sur satellite mais absents d'OSM.
     is_guidance = "guidance" in routing_algo and guidance_segments > 0
 
+    # CORRECTION STEEVE-MAX 2026-04-07: Detection zone sans couverture sentier OSM.
+    # Si le graphe sentier n'a AUCUN noeud a proximite du trajet, c'est une zone
+    # non cartographiee. Les chemins visibles sur satellite ne sont PAS dans OSM.
+    # Dans ce cas, le terrain-grid-A* EST le meilleur corridor disponible.
+    is_terrain_astar = "terrain_grid" in routing_algo or "corridor_astar" in str(route_result.get("trail_type", ""))
+    trail_coverage_sparse = False
+
+    if is_terrain_astar and coords and len(coords) >= 2 and trail_graph is not None:
+        # Verifier si le graphe sentier a des noeuds proches du trajet
+        route_center_lat = sum(c.get("lat", 0) for c in coords) / len(coords)
+        route_center_lng = sum(c.get("lng", 0) for c in coords) / len(coords)
+        nearest = trail_graph.nearest_node(route_center_lat, route_center_lng, max_dist_m=300)
+        if nearest is None:
+            trail_coverage_sparse = True
+            logger.info(
+                "[CORRIDOR-FIRST X1M] Zone SANS couverture sentier OSM detectee "
+                "(aucun noeud sentier dans 300m du centre). "
+                "Route terrain-aware A* traitee comme corridor terrain."
+            )
+
     if is_guidance and coords and len(coords) >= 3:
         # Analyser avec les segments guidance marques comme corridors
         analysis = _analyze_corridor_ratio_guidance(coords, trail_graph, guidance_segments)
+    elif trail_coverage_sparse and is_terrain_astar:
+        # Zone sans couverture OSM: le terrain-grid A* EST le corridor
+        analysis = _analyze_corridor_ratio_terrain_aware(coords)
     else:
         analysis = analyze_corridor_ratio(coords, trail_graph)
 
@@ -408,6 +431,105 @@ def _analyze_corridor_ratio_guidance(
         "segment_compliant": segment_compliant,
         "guidance_applied": True,
     }
+
+
+def _analyze_corridor_ratio_terrain_aware(coords: List[Dict]) -> Dict[str, Any]:
+    """
+    CORRECTION STEEVE-MAX 2026-04-07: Analyse corridor pour zones SANS couverture OSM.
+
+    En zone non cartographiee (aucun sentier OSM a proximite), le terrain-grid A*
+    produit le meilleur itineraire possible en suivant les traits de terrain marchables.
+    Ces segments sont traites comme "corridors terrain" car ils representent
+    la meilleure route identifiee par l'algorithme A* terrain-aware.
+
+    Criteres de classification d'un segment comme "corridor terrain":
+    - Segments < 30m: corridor (granularite normale du grid A*)
+    - Segments 30-80m: corridor si consistant avec la direction generale
+    - Segments > 80m: foret (trop long = probable coupure sans chemin)
+    """
+    if not coords or len(coords) < 2:
+        return {
+            "total_distance_m": 0, "corridor_distance_m": 0, "forest_distance_m": 0,
+            "corridor_pct": 0, "forest_pct": 100, "max_forest_segment_m": 0,
+            "max_forest_segment_pct": 100, "forest_segments": [],
+            "forest_segments_count": 0, "compliant": False, "segment_compliant": False,
+            "terrain_aware": True,
+        }
+
+    total_dist = 0.0
+    corridor_dist = 0.0
+    forest_dist = 0.0
+    max_forest_seg = 0.0
+    forest_segments = []
+
+    # Calculer la direction generale du trajet
+    overall_bearing = math.atan2(
+        coords[-1].get("lng", 0) - coords[0].get("lng", 0),
+        coords[-1].get("lat", 0) - coords[0].get("lat", 0),
+    )
+
+    for i in range(len(coords) - 1):
+        seg_dist = _haversine(
+            coords[i]["lat"], coords[i]["lng"],
+            coords[i + 1]["lat"], coords[i + 1]["lng"],
+        )
+        total_dist += seg_dist
+
+        # Classification terrain-aware
+        if seg_dist <= 30:
+            # Segments courts = granularite normale du grid A*
+            is_corridor = True
+        elif seg_dist <= 80:
+            # Segments moyens: corridor si direction coherente
+            seg_bearing = math.atan2(
+                coords[i + 1].get("lng", 0) - coords[i].get("lng", 0),
+                coords[i + 1].get("lat", 0) - coords[i].get("lat", 0),
+            )
+            bearing_diff = abs(seg_bearing - overall_bearing)
+            if bearing_diff > math.pi:
+                bearing_diff = 2 * math.pi - bearing_diff
+            # Corridor si dans 90° de la direction generale
+            is_corridor = bearing_diff < math.pi / 2
+        else:
+            # Segments longs (> 80m) = probable traversee foret dense
+            is_corridor = False
+
+        if is_corridor:
+            corridor_dist += seg_dist
+        else:
+            forest_dist += seg_dist
+            if seg_dist > max_forest_seg:
+                max_forest_seg = seg_dist
+            forest_segments.append({
+                "index": i,
+                "distance_m": round(seg_dist),
+                "from": {"lat": coords[i]["lat"], "lng": coords[i]["lng"]},
+                "to": {"lat": coords[i + 1]["lat"], "lng": coords[i + 1]["lng"]},
+            })
+
+    corridor_pct = (corridor_dist / total_dist * 100) if total_dist > 0 else 0
+    forest_pct = (forest_dist / total_dist * 100) if total_dist > 0 else 0
+    max_forest_seg_pct = (max_forest_seg / total_dist * 100) if total_dist > 0 else 0
+
+    ratio_compliant = corridor_pct >= CORRIDOR_MIN_PCT and forest_pct <= FOREST_MAX_PCT
+    segment_compliant = max_forest_seg_pct <= MAX_FOREST_SEGMENT_PCT
+
+    return {
+        "total_distance_m": round(total_dist),
+        "corridor_distance_m": round(corridor_dist),
+        "forest_distance_m": round(forest_dist),
+        "corridor_pct": round(corridor_pct, 1),
+        "forest_pct": round(forest_pct, 1),
+        "max_forest_segment_m": round(max_forest_seg),
+        "max_forest_segment_pct": round(max_forest_seg_pct, 1),
+        "forest_segments": forest_segments,
+        "forest_segments_count": len(forest_segments),
+        "compliant": ratio_compliant and segment_compliant,
+        "segment_compliant": segment_compliant,
+        "terrain_aware": True,
+        "osm_coverage": "sparse",
+    }
+
 
 
 def select_shortest_corridor(

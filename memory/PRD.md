@@ -21,44 +21,43 @@ Application de routage terrain pour la chasse (affuts, corridors, zones) avec pa
 - [x] P2 Gel complet — DIRECTIVE STEEVE-MAX
 
 ### Session 2026-04-07
-- [x] NORME OFFICIELLE A→L — Cache Institutionnel BCE-4X
-  - Module `institutional_cache.py`: cache permanent JSON (affuts, zones, corridors, routes)
-  - 6 nouveaux endpoints `/api/v1/bdre/cache/*` (consultation legere < 1ms)
+- [x] NORME OFFICIELLE A->L — Cache Institutionnel BCE-4X
+  - Module `institutional_cache.py`: cache permanent JSON
+  - 6 endpoints `/api/v1/bdre/cache/*` (consultation legere < 1ms)
   - Orchestrateur cache-first: consultation cache AVANT calcul A*
-  - Certification territoire: pipeline lourd offline (graphe + GUIDANCE + BCE-4X)
+  - Certification territoire: pipeline lourd offline
   - Audit non-regression: verification 0 objets manquants
   - Tests: 10/10 pytest PASS + E2E curl PASS
-  - Rapport: AFFUTS_ZONES_NON_REGRESSION_REPORT.md
-- [x] BUG FIX: Alimentation 3/4 → 4/4 (promotion candidats apres exclusion BCE-4X)
-  - Fichier: `alimentation_v2/engine.py` — ajout logique de promotion
-- [x] BUG FIX: Routes V-shape (detour nord) → routes directes
-  - Garde-fou ratio detour (MAX 2.5x) dans `terrain_router.py` et `fallback_chain.py`
-  - Cascade: L0/L1/L2 rejetes si detour excessif → L3 terrain-grid-A* (route directe)
-  - Ratio apres fix: 1.0x-1.1x (avant: 3.7x-7.6x)
+- [x] BUG FIX: Alimentation 3/4 -> 4/4
+  - Promotion candidats apres exclusion BCE-4X dans engine.py
+- [x] BUG FIX: Routes V-shape (detour nord) -> routes directes
+  - Junction directionnelle (Dijkstra, minimise trail+penetration)
+  - Seuils adaptatifs (L0/L1: 3.5x, L2: 5.0x)
+  - Rejet L2 si penetration > distance directe
+  - Terrain-aware corridor detection pour zones sans OSM
+  - Ratio final: 1.0-1.1x, VA_AU_NORD=NON, Corridor 100%, BDRE 86.5
 
 ## Endpoints cles
 
 | Endpoint | Methode | Description |
 |----------|---------|-------------|
-| `/api/v1/hunt/orchestrate` | POST | Orchestration session de chasse |
+| `/api/v1/hunt/orchestrate` | POST | Orchestration session chasse |
 | `/api/v2/alimentation/analyze` | POST | Analyse sites alimentation |
-| `/api/v1/bdre/cache/objects/{t}` | GET | Consultation objets institutionnels |
-| `/api/v1/bdre/cache/objects/{t}` | POST | Enregistrement objet INTOUCHABLE |
-| `/api/v1/bdre/cache/routes/{t}` | GET | Consultation routes pre-certifiees |
-| `/api/v1/bdre/cache/corridors/{t}` | GET | Consultation corridors virtuels |
-| `/api/v1/bdre/cache/certify/{t}` | POST | Certification territoire (offline) |
+| `/api/v1/bdre/cache/objects/{t}` | GET/POST | Objets institutionnels |
+| `/api/v1/bdre/cache/routes/{t}` | GET | Routes pre-certifiees |
+| `/api/v1/bdre/cache/corridors/{t}` | GET | Corridors virtuels |
+| `/api/v1/bdre/cache/certify/{t}` | POST | Certification offline |
 | `/api/v1/bdre/cache/audit/{t}` | GET | Audit non-regression |
-| `/api/v1/bdre/health` | GET | Sante BDRE (17 endpoints) |
 
 ## Backlog
 
-### P0 (Aucun — tout P0 est complete)
+### P0 (Aucun — tout P0 complete)
 
 ### P1 (En attente directive STEEVE-MAX)
 - Validation utilisateur des corrections bugs
-- Validation visuelle frontend des routes directes
+- Validation visuelle frontend routes directes + 4/4 alimentation
 
 ### P2 (GELE — NE PAS TOUCHER)
 - M5 Offline Mode Ultra
 - BSAA-2 Social Ads Automation
-- Merge Work1 → main (STRICTEMENT INTERDIT)
+- Merge Work1 -> main (STRICTEMENT INTERDIT)

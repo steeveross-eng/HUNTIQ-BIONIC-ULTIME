@@ -452,17 +452,23 @@ class FallbackChain:
         # Si la route fait un detour excessif, REJETER et deleguer au niveau suivant.
         # Les niveaux L3 (terrain-grid-A*) et L4 (estimation) sont exempts car ils
         # construisent leur propre grille independante du reseau de sentiers.
-        MAX_DETOUR_RATIO = 2.5
+        # CORRECTION 2026-04-07b: Seuils adaptatifs par niveau:
+        #   L0/L1 (pure trail): 3.5x — rejette les V-shapes extremes
+        #   L2 (hybrid corridor → penetration): 5.0x — accepte le pattern prescrit
+        #   quand le chasseur est eloigne du reseau de sentiers
+        DETOUR_LIMITS = {0: 3.5, 1: 3.5, 2: 5.0}
+        max_ratio = DETOUR_LIMITS.get(fallback_level, 999)
+
         if (hunter_lat is not None and blind_lat is not None
-                and fallback_level < 3):  # Seulement L0, L1, L2
+                and fallback_level in DETOUR_LIMITS):
             direct_dist = _haversine(hunter_lat, hunter_lng, blind_lat, blind_lng)
             route_dist = route_result.get("distance_m", 0)
             if direct_dist > 50 and route_dist > 0:
                 ratio = route_dist / direct_dist
-                if ratio > MAX_DETOUR_RATIO:
+                if ratio > max_ratio:
                     logger.warning(
                         f"[BDRE-DETOUR] L{fallback_level} REJET: route={round(route_dist)}m, "
-                        f"direct={round(direct_dist)}m, ratio={ratio:.1f}x > {MAX_DETOUR_RATIO}x — "
+                        f"direct={round(direct_dist)}m, ratio={ratio:.1f}x > {max_ratio}x — "
                         f"delegation au niveau suivant"
                     )
                     return None

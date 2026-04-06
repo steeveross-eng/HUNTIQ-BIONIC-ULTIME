@@ -133,20 +133,33 @@ Le cache institutionnel BCE-4X est pleinement operationnel :
 | max_salines=4, 1 exclu | 3/4 candidats affiches | 4/4 candidats affiches |
 | Mecanisme | Exclusion SANS remplacement | Exclusion + PROMOTION du meilleur non-selectionne |
 | Fichier | `alimentation_v2/engine.py` | CORRIGE |
+| Backend verifie | - | n_salines=4, n_candidates=4 |
 
-### 8.2 Routes acces : Garde-fou ratio detour
+### 8.2 Routes acces : Elimination detours V-shape + Junction directionnelle
 
 | Element | AVANT | APRES |
 |---------|-------|-------|
 | Detour ratio | 3.7x a 7.6x (V-shape nord) | 1.0x a 1.1x (direct) |
 | Direction | VA_AU_NORD=OUI (3/3) | VA_AU_NORD=NON (3/3) |
 | Distance route | 1004m-3453m | 297m-544m |
-| BDRE source | L0/L2 (sentier detourne) | L3 (terrain-grid direct) |
+| Corridor % | 0% (L3 sans detection) | 100% (terrain-aware) |
+| BDRE Score | ~20 | 86.5 |
 
-**Cascade de rejet implementee :**
-- `terrain_router.py`: MAX_DETOUR_RATIO=2.5x dans route_terrain()
-- `fallback_chain.py`: Garde-fou dans _annotate() pour L0, L1, L2
-- L3 (terrain-grid-A*) et L4 (estimation) exempts car routes directes
+**Fichiers modifies :**
+- `terrain_router.py`: Garde-fou detour 3.5x dans route_terrain() + re-routage tight
+- `fallback_chain.py`: Seuils adaptatifs par niveau (L0/L1: 3.5x, L2: 5.0x)
+- `fallback_chain.py`: _annotate() avec blind_lat/blind_lng + retour None si excessif
+- `access_engine.py`: _find_reachable_closest_to_target() — Dijkstra directionnel
+  (minimise trail_distance + penetration, au lieu de min(penetration) seul)
+- `access_engine.py`: Rejet L2 hybride si penetration > distance directe
+- `corridor_optimizer_v2.py`: _analyze_corridor_ratio_terrain_aware() pour zones sans OSM
+
+**Cascade BDRE corrigee :**
+1. L0 (TNE trail): detour > 3.5x → REJET
+2. L1 (waterway): detour > 3.5x → REJET
+3. L2 (hybride): penetration > direct → REJET (detour par sentier inutile)
+4. L3 (terrain-grid A*): route DIRECTE 1.0-1.1x, corridor terrain 100% → ACCEPTE
+5. Corridor detection: zone sans couverture OSM → terrain-aware (segments A* = corridors)
 
 ---
 
