@@ -64,12 +64,15 @@ Application de routage terrain pour la chasse avec pathfinding A* et integration
 
 ### Session 2026-04-06 (fork courant — BLOCS 1/2/3/4)
 
-#### BLOC 1 — CORRIDOR_UNIFIED (VALIDE STEEVE-MAX, IMPLEMENTE)
+#### BLOC 1 — CORRIDOR_UNIFIED (VALIDE STEEVE-MAX, IMPLEMENTE, PATCH HYDRO V1.1)
 - [x] corridor_model.py: Modele CorridorSegment + classification CRITIQUE/MAJEUR/MINEUR
 - [x] corridor_builder.py: Fusion trail_graph OSM + BDRE interne
 - [x] router.py: POST /api/v1/corridor-unified/build + GET /status
 - [x] 7 attributs: intensite, direction, saisonnalite, espece, largeur, zone_tampon, risque
-- [x] Teste API: 8 corridors retournes (2 MAJEUR, 6 MINEUR)
+- [x] PATCH HYDRO V1.1: Masque eau obligatoire (_is_water_at, _distance_eau_at, check_segment_water_exclusion)
+- [x] 5 points de controle par segment (0%, 25%, 50%, 75%, 100%)
+- [x] Buffer minimum 30m, 3 corridors exclus (sur eau), ZERO regression
+- [x] Teste API: 5 corridors restants (1 MAJEUR, 4 MINEUR), version V1.1_HYDRO
 
 #### BLOC 2 — BDRE PEDAGOGIQUE (VALIDE STEEVE-MAX, IMPLEMENTE)
 - [x] POST /api/v1/hunt/contamination-zones
