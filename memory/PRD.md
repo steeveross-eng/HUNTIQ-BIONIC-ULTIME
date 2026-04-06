@@ -35,12 +35,33 @@ Application de routage terrain pour la chasse (affuts, corridors, zones) avec pa
   - Import conditionnel moteur acces (try/except)
   - 7/7 tests integrite PASS
 
+### Session 2026-04-06 (fork)
+- [x] MODULE PEDAGOGIQUE — Integration ULTRA COMPLETE dans onglet ANALYSE
+  - Fichier cree: `/app/frontend/src/components/territoire/PedagogieModule.jsx`
+  - Integre dans: `/app/frontend/src/components/territoire/NutritionPointDetailPanel.jsx` (AnalyseTab)
+  - Flag: `PEDAGOGIE_SALINE_ENABLED = true`
+  - 10 sections implementees:
+    1. Besoins mineraux par groupe (4 groupes: Males alpha, Femelles, Veaux, Periode chasse)
+    2. Besoins en proteines (500g/3j males, 300-400g femelles, 200-300g veaux)
+    3. Oligo-elements essentiels (Zn, Cu, Se, Fe, Mn, Iode)
+    4. Solutions terrain (Soya, luzerne, trefle, chicoree, mais, pommes, betteraves)
+    5. Comparatif visuel des supports (Souche decomposition 98 -> Baton 30)
+    6. Strategies d'optimisation (Mini-champ, Synergies, Territoriales, Comportementales, Saisonnieres)
+    7. Gestion pre-chasse optimisee (5 regles)
+    8. Hyper-attractive periode de chasse (6 criteres ELITE)
+    9. A EVITER (9 erreurs courantes)
+    10. Capsule narrative "L'Histoire de ta saline" (contextuelle espece/saison)
+  - STANDARD GOLDEN respecte (cards, collapsibles, palette BIONIC)
+  - ZERO REMPLACEMENT du contenu existant — ENRICHISSEMENT UNIQUEMENT
+  - Validation visuelle: PASS (screenshot confirme les 10 sections rendues)
+  - 100% AUTONOME — aucun impact sur BDRE, corridors, zones, affuts
+
 ## Backlog
 
 ### P0 (Aucun)
 
 ### P1 (En attente directive STEEVE-MAX)
-- Confirmation utilisateur
+- Confirmation utilisateur MODULE PEDAGOGIQUE
 
 ### P2 (GELE)
 - M5 Offline Mode Ultra

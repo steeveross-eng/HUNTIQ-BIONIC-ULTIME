@@ -10,6 +10,7 @@ import axios from 'axios';
 import PinnablePanel from './PinnablePanel';
 import { ShareBionicButton } from './ui/ShareBionicButton';
 import { CriteriaDetailModal } from './ui/CriteriaDetailModal';
+import PedagogieModule from './PedagogieModule';
 
 /**
  * SUPRA v2 — Moteur Unifie
@@ -652,6 +653,13 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
           ))}
         </GoldenCollapsible>
       )}
+
+      {/* ═══════════════════════════════════════════════════════
+          MODULE PÉDAGOGIQUE — BCE-4X GOLDEN V6+
+          ENRICHISSEMENT onglet ANALYSE — COMMANDANT STEEVE-MAX
+          100% AUTONOME — Flag PEDAGOGIE_SALINE_ENABLED
+          ═══════════════════════════════════════════════════════ */}
+      <PedagogieModule species={species} season={season} score={score} gc={gc} />
     </div>
   );
 };
