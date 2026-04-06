@@ -124,6 +124,30 @@ Le cache institutionnel BCE-4X est pleinement operationnel :
 
 **Aucune regression detectee. ZERO perte. ZERO filtrage silencieux.**
 
+## 8. CORRECTIONS BUGS STEEVE-MAX 2026-04-07
+
+### 8.1 Alimentation : Promotion candidats apres exclusion BCE-4X
+
+| Element | AVANT | APRES |
+|---------|-------|-------|
+| max_salines=4, 1 exclu | 3/4 candidats affiches | 4/4 candidats affiches |
+| Mecanisme | Exclusion SANS remplacement | Exclusion + PROMOTION du meilleur non-selectionne |
+| Fichier | `alimentation_v2/engine.py` | CORRIGE |
+
+### 8.2 Routes acces : Garde-fou ratio detour
+
+| Element | AVANT | APRES |
+|---------|-------|-------|
+| Detour ratio | 3.7x a 7.6x (V-shape nord) | 1.0x a 1.1x (direct) |
+| Direction | VA_AU_NORD=OUI (3/3) | VA_AU_NORD=NON (3/3) |
+| Distance route | 1004m-3453m | 297m-544m |
+| BDRE source | L0/L2 (sentier detourne) | L3 (terrain-grid direct) |
+
+**Cascade de rejet implementee :**
+- `terrain_router.py`: MAX_DETOUR_RATIO=2.5x dans route_terrain()
+- `fallback_chain.py`: Garde-fou dans _annotate() pour L0, L1, L2
+- L3 (terrain-grid-A*) et L4 (estimation) exempts car routes directes
+
 ---
 
 **Signe : Agent BCE-4X | Autorite : COMMANDANT STEEVE-MAX**

@@ -360,6 +360,19 @@ def route_terrain(
     end_connections = end_candidates[:GUIDANCE_K]
 
     # Connecter start aux sentiers proches (guidance_corridor)
+    if not start_connections or not end_connections:
+        # Pas assez de noeuds sentier a portee — routage impossible
+        logger.warning(
+            f"[TNE-ROUTER] GUIDANCE impossible: start_connections={len(start_connections)}, "
+            f"end_connections={len(end_connections)} — pas de noeuds sentier a portee"
+        )
+        # Nettoyage des noeuds injectes
+        del graph.nodes[START_VID]
+        del graph.nodes[END_VID]
+        del graph.adj[START_VID]
+        del graph.adj[END_VID]
+        return None
+
     for nid, d in start_connections:
         cost = d * GUIDANCE_COST_MULT
         graph.adj[START_VID].append((nid, cost, d, "guidance_corridor"))
@@ -388,6 +401,86 @@ def route_terrain(
         logger.info("[TNE-ROUTER] A* failed, trying Dijkstra")
         result = dijkstra_terrain(graph, START_VID, END_VID)
         algo = "dijkstra_guidance"
+
+    # ================================================================
+    # PHASE 2.5: GARDE-FOU RATIO DETOUR (CORRECTION STEEVE-MAX 2026-04-07)
+    # ================================================================
+    # Si la route fait un detour excessif (route > 2.5x distance directe),
+    # rejeter et tenter un routage plus court en augmentant le cout guidance
+    # pour penaliser les connexions lointaines.
+    direct_dist = _haversine(start_lat, start_lng, end_lat, end_lng)
+    MAX_DETOUR_RATIO = 2.5
+
+    if result is not None and direct_dist > 50:
+        route_dist = result.get("total_distance_m", 0)
+        ratio = route_dist / direct_dist if direct_dist > 0 else 999
+        if ratio > MAX_DETOUR_RATIO:
+            logger.warning(
+                f"[TNE-ROUTER] DETOUR EXCESSIF: route={round(route_dist)}m, "
+                f"direct={round(direct_dist)}m, ratio={ratio:.1f}x > {MAX_DETOUR_RATIO}x — "
+                f"rejet et re-routage avec connexions plus proches"
+            )
+            # Retirer les connexions guidance actuelles
+            for nid, _ in start_connections:
+                if nid in graph.adj:
+                    graph.adj[nid] = [(nb, c, d, t) for nb, c, d, t in graph.adj[nid] if nb != START_VID]
+            for nid, _ in end_connections:
+                if nid in graph.adj:
+                    graph.adj[nid] = [(nb, c, d, t) for nb, c, d, t in graph.adj[nid] if nb != END_VID]
+            graph.adj[START_VID] = []
+            graph.adj[END_VID] = []
+
+            # Re-connecter avec distance max reduite et cout augmente
+            TIGHT_MAX_DIST = min(400, GUIDANCE_MAX_DIST)
+            TIGHT_COST_MULT = 0.8  # Penaliser plus les connexions guidance
+            TIGHT_K = 3
+
+            tight_start = [(nid, d) for nid, d in start_candidates if d <= TIGHT_MAX_DIST][:TIGHT_K]
+            tight_end = [(nid, d) for nid, d in end_candidates if d <= TIGHT_MAX_DIST][:TIGHT_K]
+
+            for nid, d in tight_start:
+                cost = d * TIGHT_COST_MULT
+                graph.adj[START_VID].append((nid, cost, d, "guidance_corridor"))
+                graph.adj.setdefault(nid, []).append((START_VID, cost, d, "guidance_corridor"))
+            for nid, d in tight_end:
+                cost = d * TIGHT_COST_MULT
+                graph.adj[END_VID].append((nid, cost, d, "guidance_corridor"))
+                graph.adj.setdefault(nid, []).append((END_VID, cost, d, "guidance_corridor"))
+
+            # Re-router avec connexions resserrees
+            result2 = a_star_terrain(graph, START_VID, END_VID)
+            if result2 is not None:
+                route_dist2 = result2.get("total_distance_m", 0)
+                ratio2 = route_dist2 / direct_dist if direct_dist > 0 else 999
+                if ratio2 <= MAX_DETOUR_RATIO:
+                    logger.info(
+                        f"[TNE-ROUTER] RE-ROUTAGE TIGHT OK: {round(route_dist2)}m "
+                        f"(ratio {ratio2:.1f}x, amelioration {round(route_dist - route_dist2)}m)"
+                    )
+                    result = result2
+                    algo = "a_star_guidance_tight"
+                else:
+                    # Re-routage tight ameliore mais toujours excessif — REJET TOTAL
+                    logger.warning(
+                        f"[TNE-ROUTER] RE-ROUTAGE TIGHT toujours excessif ({ratio2:.1f}x) — "
+                        f"REJET TOTAL, delegation au BDRE cascade"
+                    )
+                    result = None
+            else:
+                # Re-routage tight echoue — REJET TOTAL du tracé excessif
+                logger.warning(
+                    f"[TNE-ROUTER] RE-ROUTAGE TIGHT echoue — REJET TOTAL "
+                    f"du trace excessif ({ratio:.1f}x), delegation au BDRE cascade"
+                )
+                result = None
+
+            # Nettoyer les tight connections
+            for nid, _ in tight_start:
+                if nid in graph.adj:
+                    graph.adj[nid] = [(nb, c, d, t) for nb, c, d, t in graph.adj[nid] if nb != START_VID]
+            for nid, _ in tight_end:
+                if nid in graph.adj:
+                    graph.adj[nid] = [(nb, c, d, t) for nb, c, d, t in graph.adj[nid] if nb != END_VID]
 
     # ================================================================
     # PHASE 3: NETTOYAGE — Retirer les noeuds injectes du graphe

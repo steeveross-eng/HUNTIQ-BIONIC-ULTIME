@@ -1,243 +1,64 @@
-# PRD — HUNTIQ BIONIC OS
-## Protocole BCE-4X GOLDEN V6+ | Autorite : STEEVE-MAX
+# PRD — HUNTIQ BIONIC V6 | BCE-4X GOLDEN V6+
 
----
+## Probleme original
+Application de routage terrain pour la chasse (affuts, corridors, zones) avec pathfinding A* et integration OSM/Overpass. Gouvernance stricte BCE-4X GOLDEN V6+ sous autorite COMMANDANT STEEVE-MAX.
 
-## Enonce du probleme original
-
-Reconstruction du repository HUNTIQ-V6, implementation de l'architecture modulaire
-BIONIC OS avec 82+ engines decouples, gouvernance BCE-4X stricte, et implementation
-sequentielle de pipelines inter-modules, Cart V2, MAP Intelligence, et interface
-nutritionnelle V6 unifiee.
-
-## Exigences fondamentales
-
-1. ZERO LOSS, ZERO REGRESSION, ZERO INTERPRETATION
-2. Merge vers `main` STRICTEMENT INTERDIT
-3. Validation STEEVE-MAX requise entre chaque phase
-
----
+## Architecture
+- Backend: FastAPI + A* Pathfinding + OSM/Overpass
+- Frontend: React 19 + Leaflet Maps
+- Modules: 84+ engines backend (BDRE, Terrain Nav, Hunt Orchestrator, Access Engine, etc.)
+- Routing: Virtual corridor injection (GUIDANCE) + BCE-4X exclusions (cout 1,000,000)
+- Governance: BCE-4X / STEEVE-MAX / ZERO LOSS / ZERO REGRESSION
 
 ## Ce qui a ete implemente
 
-### Sessions precedentes
-- Import/certification HUNTIQ-V6, governance BCE-4X
-- BSAA architecture, audits complets
-- Phases I→V (SUPRA, E-Commerce, Marketing, Territoire, Tests)
-- P5-OPTIMIZATION Cart V2 (backend + frontend, 58/58 tests)
-- BIONIC_V6_MAP_INTELLIGENCE_PLAN (M1→M5)
-- VALIDATION_INTERCONNEXION_NUTRITIONNELLE_V5_V6
+### Session 2026-04-06
+- [x] BCE-4X Territorial Exclusions (cout 1,000,000 pour eau/routes/urbain)
+- [x] Terrain Graph fragment connector (composants deconnectes)
+- [x] STEEVE-MAX Terrain Guidance (corridors virtuels waypoint LUC + affuts)
+- [x] Preuve visuelle 100% corridor adherence (corridor_proof_luc_v2.html)
+- [x] Multi-engine BDRE integration orchestrateur
+- [x] P2 Gel complet — DIRECTIVE STEEVE-MAX
 
-### Session precedente — x6800-A — 2026-04-04
+### Session 2026-04-07
+- [x] NORME OFFICIELLE A→L — Cache Institutionnel BCE-4X
+  - Module `institutional_cache.py`: cache permanent JSON (affuts, zones, corridors, routes)
+  - 6 nouveaux endpoints `/api/v1/bdre/cache/*` (consultation legere < 1ms)
+  - Orchestrateur cache-first: consultation cache AVANT calcul A*
+  - Certification territoire: pipeline lourd offline (graphe + GUIDANCE + BCE-4X)
+  - Audit non-regression: verification 0 objets manquants
+  - Tests: 10/10 pytest PASS + E2E curl PASS
+  - Rapport: AFFUTS_ZONES_NON_REGRESSION_REPORT.md
+- [x] BUG FIX: Alimentation 3/4 → 4/4 (promotion candidats apres exclusion BCE-4X)
+  - Fichier: `alimentation_v2/engine.py` — ajout logique de promotion
+- [x] BUG FIX: Routes V-shape (detour nord) → routes directes
+  - Garde-fou ratio detour (MAX 2.5x) dans `terrain_router.py` et `fallback_chain.py`
+  - Cascade: L0/L1/L2 rejetes si detour excessif → L3 terrain-grid-A* (route directe)
+  - Ratio apres fix: 1.0x-1.1x (avant: 3.7x-7.6x)
 
-#### Directive 1 — M1 National Data Harvester
-- Module `national_data_harvester` deploye (4 services, 10 endpoints)
-- boundary_resolver, legal_constraint_engine, harvest_scheduler, data_normalizer
-- Connexions SUPRA/Zone/P6/Species/Predictive via MongoDB bridges
-- Integration nutritionnelle V6 dans legal-check
+## Endpoints cles
 
-#### Directive 2 — Wrappers V6
-- Module `nutrition_v6_interface` deploye (4 wrappers, 12 endpoints)
-- 13 moteurs V5 encapsules
-- Verrouillage V5 au niveau API
-
-#### Directive 3 — Activation Nutrition V6
-- V6 = source unique officielle
-
-#### Directive 4 — Synchronisation documentaire
-- Score de coherence : 98/100
-
-### Session actuelle — x7100-M4 — 2026-04-05
-
-#### Directive x6900-M2 — M2 BIONIC POI Graph
-- Module `poi_graph_engine` deploye (3 services, 11 endpoints)
-- POIGraphBuilder : CRUD complet
-- POIScorer : Scoring multi-critere
-- POIRelationResolver : Near, clusters, aretes
-- 2 collections MongoDB : poi_nodes (2dsphere), poi_edges
-- Tests : 98/98 TOTAL
-
-#### Directive x7000-M3 — M3 Predictive Layer Engine + Time-Series Engine
-- Module `predictive_layer_engine` deploye (4 services, 10 endpoints)
-- Tests : 144/144 TOTAL
-
-#### Directive x7000-M3-DASHBOARD — Integration Dashboard Intelligence V6
-- Data Fusion Layer (DFL), Event Bus V6, Data Contracts V6
-- 8 widgets operationnels
-- Page /intelligence-v6
-
-#### Directive x7100-M4 — M4 Adaptive User Profile + Outdoor Navigation IA
-- Module `adaptive_navigation_engine` deploye (4 services, 12 endpoints)
-- Tests : 175/175 TOTAL
-
----
-
-## Backlog priorise
-
-### P0 — Immediat
-- [x] M1 deploye (10 endpoints)
-- [x] Nutrition V6 Interface (12 endpoints, 13 V5 wraps)
-- [x] Synchronisation documentaire (score 98/100)
-- [x] M2: BIONIC POI Graph (11 endpoints, 40/40 tests, 14 points de fusion)
-- [x] M3: Predictive Layer + Time-Series (10 endpoints, 46/46 tests, 22 points de fusion)
-- [x] DASH: Integration Dashboard Intelligence V6 (8 widgets, DFL, EventBus, DataContracts)
-- [x] M4: Adaptive Profile + Navigation IA (12 endpoints, 31/31 tests, 19 points de fusion)
-
-#### Phase C — Gestionnaire + Hotspots + DataContracts
-- [x] Module `gestionnaire_engine` deploye (12 endpoints backend)
-- [x] Tests : 44/45 PASS
-
-#### Phase D — Widgets M4
-- [x] INTELLIGENCE V6-CORE: 9 widgets (6 M3 + 3 M4)
-
-#### Directive x7200 — UNIFICATION HOTSPOTS / CORRIDORS / ZONES / TRAJETS
-- [x] Toutes corrections implementees (water cost, Bezier anti-eau, post-filtre, union hydro, HUMAN_TRAJET_COSTS)
-- [x] Tests : 6/6 PASS
-
-### P1 — Deploye
-- [x] Phase E-1: GUIDE PRO Backend (15/15 endpoints PASS)
-- [x] Pipeline Terrain A+F+G (ENGINE_OSM_LITE operationnel)
-- [x] Phase E-2: Frontend GUIDE PRO — DEPLOYE (7 composants React, 9 endpoints connectes)
-  - GuideProPage: Dashboard 3 tabs (Dashboard, Sessions, BDRE)
-  - BDREMonitor, TerrainScoreCard, SessionCreator, RouteViewer, AuditLogPanel, AnomalyPanel
-  - Route /guide-pro + Navigation desktop/mobile integree
-  - 17 data-testid, BDRE-FIRST natif, lazy loading
-  - Rapport: E2_GUIDE_PRO_FRONTEND_REPORT.md
-- [x] Phase F: Module Gestionnaire UI — DEPLOYE (5 onglets + SECOURS, 11 endpoints)
-  - GestionnairePage: 5 tabs (CARTE, BDRE, ANOMALIES, JOURNAL, SOURCES)
-  - Bouton SECOURS institutionnel (confirmation 2 etapes)
-  - 8 composants, 25+ data-testid, auto-refresh 15s
-  - Rapport: PHASE_F_GESTIONNAIRE_UI_REPORT.md
-- [x] Correction Affuts BCE-4X — INVARIANT INSTITUTIONNEL
-  - Start point = waypoint chasseur (center_lat, center_lng)
-  - Applique dans orchestrator.py + fallback_chain.py (L0-L4)
-  - Verifie: MATCHES_HUNTER=True
-  - Rapport: AFFUTS_BDRE_CORRECTION_REPORT.md
-- [ ] Phase G: (En attente directive STEEVE-MAX)
-
-### P2 — Futur (GELE)
-- [x] P1 BDRE-FIRST Optimisation Continue — COMPLET
-  - Intelligence V6: Widget BDRE Health (version, sources actives, fallbacks, dots)
-  - Mon Territoire: Indicateur BDRE carte (bouton Shield + Popover 4 compteurs + 16 dots)
-  - Admin Premium: Section BDRE Monitor (dashboard, registre 16 sources, 5 engines, journal, anomalies)
-  - Rapport: P1_BDRE_OPTIMISATION_REPORT.md
-  - 10/10 modules BIONIC integres BDRE
-- [x] Dashboard Frontend: Indicateur BDRE global dans header — COMPLET
-  - data-testid: dashboard-bdre-indicator, auto-refresh 30s
-  - 11/11 modules BDRE-FIRST (couverture TOTALE)
-  - Rapport: DASHBOARD_BDRE_INTEGRATION_REPORT.md
-- [x] CORRIDOR-FIRST X1000 — INVARIANT INSTITUTIONNEL
-  - Corridors: couts reduits 20-29% (routes 0.6-0.8, stream bank 0.9)
-  - Foret: couts augmentes 200-213% (off-trail 12.0, dense 25.0)
-  - Ratio corridor/foret ameliore x4.0
-  - Rapport: AFFUTS_CORRIDOR_FIRST_REPORT.md
-- [x] CORRIDOR-FIRST 500% — INVARIANT ULTIME
-  - Corridors divises par 3-4 (routes 0.2-0.3, stream bank 0.3)
-  - Foret multipliee par 15+ (off-trail 60.0, dense 125.0)
-  - Ratio corridor/foret: 0.0016 (x62.5 vs initial)
-  - corridor_lock=True, corridor_pct=90%, forest_pct=10%
-  - Metriques BDRE propagees dans access_engine.py result
-  - Rapport: AFFUTS_CORRIDOR_500_REPORT.md
-- [x] CORRIDOR-FIRST X1 000 000% — CORRECTION STEEVE-MAX 2026-04-06
-  - REJET validation precedente. Corrections immediates appliquees.
-  - Detection stricte 3 points/segment (debut + milieu + fin), rayon 40m
-  - Contrainte max segment foret : 5% du total
-  - Scoring BDRE multi-engine 4 moteurs (E1:50% + E2:20% + E3:15% + E4:15%)
-  - Suppression hardcoding corridor_pct dans fallback_chain.py
-  - Orchestrateur scoring BDRE-FIRST : blind(40%) + access(30%) + corridor(30%)
-  - Engines integres : trail_graph + quality_scorer + anomaly_detector + terrain_costs
-  - Rapport: AFFUTS_CORRIDOR_X1M_REPORT.md
-- [x] GUIDANCE TERRAIN STEEVE-MAX + PREUVE CONFORME — 2026-04-06
-  - REFUS preuve visuelle precedente (corridor <95%, segments foret 605m)
-  - GUIDANCE TERRAIN: injection start/end, aretes guidance_corridor, routage 100% graphe
-  - Connecteur fragments, detection guidance, analyse ratio guidance
-  - Exclusions BCE-4X: routes/residentiel EXCLU graphe, eau 1M
-  - Timeout Overpass augmente: 25s + 5s/km
-  - 4/4 routes CONFORMES: 100% corridor, 0% foret, MATCHES_HUNTER=OUI, BDRE 82.0
-  - Preuve visuelle satellite: corridor_proof_luc_v2.html
-  - Rapport: AFFUTS_CORRIDOR_X1M_REPORT_LUC.md
-- [x] P2 Preparation (M5 + BSAA-2) — Documentation complete
-  - M5: 8 endpoints prevus, hooks BDRE identifies
-  - BSAA-2: 18 endpoints prevus, architecture existante
-  - Rapport: P2_PREPARATION_REPORT.md
-  - Execution EN ATTENTE directive STEEVE-MAX
-- [x] P2 Gel complet — DIRECTIVE STEEVE-MAX 2026-04-06
-  - Rapport: P2_READY_REPORT.md
-- [x] PREUVE VISUELLE TERRAIN — DIRECTIVE STEEVE-MAX 2026-04-06
-  - 3 pages interactives Leaflet (corridor_proof_index, corridor_proof, corridor_proof_forest)
-  - Superposition 7 couches: corridors, sentiers, chemins, acces BDRE, foret, eau, distances
-  - 6 routes sur 2 zones: 100% corridor, 0% foret, MATCHES_HUNTER=OUI, CONFORME 95/5
-  - Zone 1: 2632 sentiers, 11811 noeuds, 3 routes
-  - Zone 2: 855 sentiers, 8729 noeuds, 1502 noeuds foret, 3 routes
-- [ ] M5: Offline Mode Ultra + Terrain Intelligence (8 endpoints)
-- [ ] BSAA-2, Soil Engine V2
-- [ ] Merge Work1 -> main (INTERDIT)
-
----
-
-## Politique BDRE-FIRST (Invariant Permanent)
-
-Tout composant BIONIC OS doit :
-- Integrer scores BDRE, niveaux L1-L4, anomalies, corridors
-- Statuts de validation territoire et journaux BDRE
-- Etre revu et optimise en continu sans regression
-- Etre trace dans BIONIC_OPTIMISATION_LOG.md
-
----
-
-## Documents canoniques
-
-| Document | Chemin | Version |
-|----------|--------|---------|
-| PRD | /app/memory/PRD.md | actuel |
-| MAP_INTELLIGENCE_PLAN | /app/memory/BIONIC_V6_MAP_INTELLIGENCE_PLAN.md | 1.1.0 |
-| M2_RAPPORT_FINAL | /app/memory/M2_RAPPORT_FINAL.md | 1.0.0 |
-| M3_RAPPORT_FINAL | /app/memory/M3_RAPPORT_FINAL.md | 1.0.0 |
-| DASH_RAPPORT_FINAL | /app/memory/DASH_RAPPORT_FINAL.md | 1.0.0 |
-| M4_RAPPORT_FINAL | /app/memory/M4_RAPPORT_FINAL.md | 1.0.0 |
-| PHASE_C_RAPPORT | /app/memory/PHASE_C_RAPPORT.md | 1.0.0 |
-| PHASE_D_RAPPORT | /app/memory/PHASE_D_RAPPORT.md | 1.0.0 |
-| PHASE_E_GUIDE_PRO_ARCHITECTURE | /app/memory/PHASE_E_GUIDE_PRO_ARCHITECTURE.md | 1.0.0 |
-| E2_GUIDE_PRO_FRONTEND_REPORT | /app/memory/E2_GUIDE_PRO_FRONTEND_REPORT.md | 1.0.0 |
-| BIONIC_OPTIMISATION_LOG | /app/memory/BIONIC_OPTIMISATION_LOG.md | 1.0.0 |
-| BDRE_TABLEAU_OPTIMISATION_REPORT | /app/memory/BDRE_TABLEAU_OPTIMISATION_REPORT.md | 1.0.0 |
-| BDRE_CONFORMITY_REPORT | /app/memory/BDRE_CONFORMITY_REPORT.md | 1.0.0 |
-| BDRE_PHASE1_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE1_IMPLEMENTATION_REPORT.md | 1.0.0 |
-| BDRE_PHASE2_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE2_IMPLEMENTATION_REPORT.md | 1.0.0 |
-| BDRE_PHASE3_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE3_IMPLEMENTATION_REPORT.md | 1.0.0 |
-| BDRE_PHASE4_IMPLEMENTATION_REPORT | /app/memory/BDRE_PHASE4_IMPLEMENTATION_REPORT.md | 1.0.0 |
-| DASHBOARD_BDRE_INTEGRATION_REPORT | /app/memory/DASHBOARD_BDRE_INTEGRATION_REPORT.md | 1.0.0 |
-| AFFUTS_CORRIDOR_500_REPORT | /app/memory/AFFUTS_CORRIDOR_500_REPORT.md | 1.0.0 |
-| P2_PREPARATION_REPORT | /app/memory/P2_PREPARATION_REPORT.md | 1.0.0 |
-| PHASE_F_GESTIONNAIRE_UI_REPORT | /app/memory/PHASE_F_GESTIONNAIRE_UI_REPORT.md | 1.0.0 |
-| AUDIT_HOTSPOTS_x7200 | /app/memory/AUDIT_HOTSPOTS_x7200.md | 1.0.0 |
-| AUDIT_TRAJETS_HUMAINS_x7200 | /app/memory/AUDIT_TRAJETS_HUMAINS_x7200.md | 1.0.0 |
-| AFFUTS_CORRIDOR_X1M_REPORT | /app/memory/AFFUTS_CORRIDOR_X1M_REPORT.md | 1.0.0 |
-| P2_READY_REPORT | /app/memory/P2_READY_REPORT.md | 1.0.0 |
-
-| AFFUTS_CORRIDOR_X1M_REPORT_LUC | /app/memory/AFFUTS_CORRIDOR_X1M_REPORT_LUC.md | 2.0.0 |
-
----
-
-**Derniere mise a jour** : 2026-04-07 — NORME OFFICIELLE A→L IMPLEMENTEE.
-
-### Session 2026-04-07 — NORME A→L Cache Institutionnel
-
-#### NORME A→L — Cache Institutionnel BCE-4X (COMPLETE)
-- Module `institutional_cache.py` : cache permanent JSON (affuts, zones, corridors, routes)
-- 6 nouveaux endpoints BDRE : `/api/v1/bdre/cache/*` (consultation legere < 1ms)
-- Orchestrateur cache-first : consultation cache AVANT calcul A*
-- Certification territoire : pipeline lourd offline (graphe + GUIDANCE + BCE-4X)
-- Audit non-regression : verification 0 objets manquants
-- Tests : 10/10 pytest PASS + 10 tests curl E2E PASS
-- Rapport : AFFUTS_ZONES_NON_REGRESSION_REPORT.md
-- Temps de reponse : < 1 ms (objectif < 1000 ms)
-
-| Endpoint | Methode | Fonction |
-|----------|---------|----------|
+| Endpoint | Methode | Description |
+|----------|---------|-------------|
+| `/api/v1/hunt/orchestrate` | POST | Orchestration session de chasse |
+| `/api/v2/alimentation/analyze` | POST | Analyse sites alimentation |
 | `/api/v1/bdre/cache/objects/{t}` | GET | Consultation objets institutionnels |
 | `/api/v1/bdre/cache/objects/{t}` | POST | Enregistrement objet INTOUCHABLE |
 | `/api/v1/bdre/cache/routes/{t}` | GET | Consultation routes pre-certifiees |
 | `/api/v1/bdre/cache/corridors/{t}` | GET | Consultation corridors virtuels |
 | `/api/v1/bdre/cache/certify/{t}` | POST | Certification territoire (offline) |
 | `/api/v1/bdre/cache/audit/{t}` | GET | Audit non-regression |
+| `/api/v1/bdre/health` | GET | Sante BDRE (17 endpoints) |
+
+## Backlog
+
+### P0 (Aucun — tout P0 est complete)
+
+### P1 (En attente directive STEEVE-MAX)
+- Validation utilisateur des corrections bugs
+- Validation visuelle frontend des routes directes
+
+### P2 (GELE — NE PAS TOUCHER)
+- M5 Offline Mode Ultra
+- BSAA-2 Social Ads Automation
+- Merge Work1 → main (STRICTEMENT INTERDIT)

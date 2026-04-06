@@ -96,9 +96,13 @@ class FallbackChain:
                     engine="ACCESS", action="success", score=0.85,
                     territory=territory, details="Source primaire TNE: sentier OSM reel"
                 )
-                return self._annotate(route_result, "real_osm", 0, levels_tried,
+                annotated = self._annotate(route_result, "real_osm", 0, levels_tried,
                                       hunter_lat=entry_lat, hunter_lng=entry_lng,
-                                      trail_graph=trail_graph)
+                                      trail_graph=trail_graph,
+                                      blind_lat=blind_lat, blind_lng=blind_lng)
+                if annotated is not None:
+                    return annotated
+                # Detour excessif — continuer la cascade
 
         levels_tried.append(0)
         logger.info("[BDRE-CHAIN] Source primaire echouee — declenchement pipeline hybride")
@@ -132,7 +136,8 @@ class FallbackChain:
                     )
                     return self._annotate(result, "waterway_guided", 1, levels_tried,
                                           hunter_lat=entry_lat, hunter_lng=entry_lng,
-                                          trail_graph=trail_graph)
+                                          trail_graph=trail_graph,
+                                          blind_lat=blind_lat, blind_lng=blind_lng)
 
         levels_tried.append(1)
 
@@ -152,9 +157,13 @@ class FallbackChain:
                     fallback_level=2, territory=territory,
                     details="L2 hybride trail-terrain"
                 )
-                return self._annotate(hybrid_result, "hybride_sentier_terrain", 2, levels_tried,
+                annotated = self._annotate(hybrid_result, "hybride_sentier_terrain", 2, levels_tried,
                                       hunter_lat=entry_lat, hunter_lng=entry_lng,
-                                      trail_graph=trail_graph)
+                                      trail_graph=trail_graph,
+                                      blind_lat=blind_lat, blind_lng=blind_lng)
+                if annotated is not None:
+                    return annotated
+                # Detour excessif — continuer la cascade
         except Exception as e:
             logger.warning(f"[BDRE-CHAIN] L2 erreur: {e}")
 
@@ -414,11 +423,14 @@ class FallbackChain:
         fallback_level: int, levels_tried: List[int],
         hunter_lat: float = None, hunter_lng: float = None,
         trail_graph=None,
-    ) -> Dict:
+        blind_lat: float = None, blind_lng: float = None,
+    ) -> Optional[Dict]:
         """
         Annoter un resultat avec les metadonnees BDRE.
         BCE-4X INVARIANT: waypoint chasseur en tete.
         BCE-4X CORRIDOR-FIRST 500%: corridor_lock + metriques corridor/foret.
+        CORRECTION STEEVE-MAX 2026-04-07: Garde-fou ratio detour integre.
+        Retourne None si le detour est excessif (cascade au niveau suivant).
         """
         route_result["trail_type"] = trail_type
         route_result["bdre_fallback_level"] = fallback_level
@@ -436,15 +448,32 @@ class FallbackChain:
                     route_result["coords"] = coords
                     logger.info(f"[BDRE-INVARIANT] Waypoint chasseur force en tete: ({hunter_lat:.6f}, {hunter_lng:.6f})")
 
+        # GARDE-FOU RATIO DETOUR (STEEVE-MAX 2026-04-07):
+        # Si la route fait un detour excessif, REJETER et deleguer au niveau suivant.
+        # Les niveaux L3 (terrain-grid-A*) et L4 (estimation) sont exempts car ils
+        # construisent leur propre grille independante du reseau de sentiers.
+        MAX_DETOUR_RATIO = 2.5
+        if (hunter_lat is not None and blind_lat is not None
+                and fallback_level < 3):  # Seulement L0, L1, L2
+            direct_dist = _haversine(hunter_lat, hunter_lng, blind_lat, blind_lng)
+            route_dist = route_result.get("distance_m", 0)
+            if direct_dist > 50 and route_dist > 0:
+                ratio = route_dist / direct_dist
+                if ratio > MAX_DETOUR_RATIO:
+                    logger.warning(
+                        f"[BDRE-DETOUR] L{fallback_level} REJET: route={round(route_dist)}m, "
+                        f"direct={round(direct_dist)}m, ratio={ratio:.1f}x > {MAX_DETOUR_RATIO}x — "
+                        f"delegation au niveau suivant"
+                    )
+                    return None
+
         # BCE-4X CORRIDOR-FIRST X1 000 000% (CORRECTION STEEVE-MAX 2026-04-06):
         # CALCUL REEL via corridor_optimizer_v2 — PLUS de pourcentages hardcodes.
-        # Le trail_graph est transmis pour detection multi-point stricte.
         try:
             from engines.bdre.corridor_optimizer_v2 import enforce_corridor_lock
             route_result = enforce_corridor_lock(route_result, trail_graph)
         except Exception as e:
             logger.warning(f"[BDRE] corridor_optimizer_v2 error: {e}")
-            # Fallback estimatif UNIQUEMENT en cas d'erreur module
             if trail_type in ("real_osm", "waterway_guided"):
                 route_result["corridor_pct"] = 95
                 route_result["forest_pct"] = 5

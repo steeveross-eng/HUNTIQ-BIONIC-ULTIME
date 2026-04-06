@@ -81,6 +81,8 @@ def analyze_alimentation_v2(
         pass
 
     # BCE-4X-MAX: EXCLUSION ULTIME — filtrer salines en zone urbaine/eau
+    # CORRECTION STEEVE-MAX 2026-04-07: Promotion des candidats non-selectionnes
+    # pour combler les trous apres exclusion — ZERO perte de comptage.
     try:
         from modules.bionic_engine_p0.services.zone_engine_core_v2 import (
             _circle_on_urban, _circle_on_water,
@@ -90,13 +92,45 @@ def analyze_alimentation_v2(
         _excluded = _pre_count - len(salines)
         if _excluded > 0:
             import logging
-            logging.getLogger("alimentation_v2").info(
+            _log = logging.getLogger("alimentation_v2")
+            _log.info(
                 f"[BCE-4X-MAX] Salines exclusion: input={_pre_count}, excluded={_excluded}, kept={len(salines)}"
             )
-        # Recalculer les ranks après exclusion
-        for idx, s in enumerate(salines):
+
+            # PROMOTION: Si des salines selectionnees ont ete exclues,
+            # promouvoir les meilleurs candidats non-selectionnes restants
+            _selected_remaining = [s for s in salines if s.get("selected")]
+            _n_selected = len(_selected_remaining)
+            _n_needed = max_salines - _n_selected
+
+            if _n_needed > 0:
+                # Candidats non-selectionnes, tries par score decroissant
+                _non_selected = sorted(
+                    [s for s in salines if not s.get("selected")],
+                    key=lambda s: s["score"],
+                    reverse=True,
+                )
+                _promoted = 0
+                for cand in _non_selected:
+                    if _promoted >= _n_needed:
+                        break
+                    cand["selected"] = True
+                    _promoted += 1
+                    _log.info(
+                        f"[BCE-4X-MAX] Promotion: {cand['id']} (score={cand['score']}) "
+                        f"promu pour remplacer saline exclue"
+                    )
+
+        # Recalculer les ranks apres exclusion ET promotion
+        _rank = 0
+        for s in sorted(salines, key=lambda s: (-int(s.get("selected", False)), -s["score"])):
             if s.get("selected"):
-                s["rank"] = idx + 1
+                _rank += 1
+                s["rank"] = _rank
+            else:
+                s["rank"] = 0
+        # Re-trier: selectionnes d'abord (par score), puis non-selectionnes
+        salines.sort(key=lambda c: (-int(c.get("selected", False)), -c["score"]))
     except ImportError:
         pass
 
