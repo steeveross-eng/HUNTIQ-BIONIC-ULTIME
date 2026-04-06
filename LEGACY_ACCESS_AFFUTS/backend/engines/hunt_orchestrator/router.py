@@ -127,23 +127,37 @@ async def compute_scent(req: ScentZoneRequest):
 
 @router.post("/access-route")
 async def compute_access(req: AccessRouteRequest):
-    """
-    Calculer la route d'acces optimale vers un affut.
-    
-    ORDONNANCE STEEVE-MAX 2026-04-07: MODE OFF — DESACTIVE.
-    Archive: /app/LEGACY_ACCESS_AFFUTS/
-    """
-    return {
-        "status": "disabled",
-        "mode": "OFF",
-        "ordonnance": "STEEVE-MAX 2026-04-07 — DESACTIVATION SECURISEE",
-        "message": "Calcul d'acces desactive par ordonnance. Archive disponible dans /LEGACY_ACCESS_AFFUTS/.",
-        "distance_m": 0,
-        "coords": [],
-        "routing_algo": "disabled",
-        "trail_type": "disabled",
-        "feasible": False,
-    }
+    """Calculer la route d'acces optimale vers un affut."""
+    try:
+        from engines.terrain_nav import get_terrain_nav
+        from engines.hunt_orchestrator.vent_odeurs import compute_scent_zone
+        from engines.hunt_orchestrator.access_engine import compute_access_route
+
+        # Charger le graphe terrain
+        mid_lat = (req.entry_lat + req.blind_lat) / 2
+        mid_lng = (req.entry_lng + req.blind_lng) / 2
+        trail_graph = get_terrain_nav(mid_lat, mid_lng, radius_m=2000)
+
+        # Zone de contamination
+        scent_zone = compute_scent_zone(
+            req.blind_lat, req.blind_lng,
+            req.wind_direction_deg, req.wind_speed_kmh,
+            req.session,
+        )
+
+        feeding = [{"lat": fs.lat, "lng": fs.lng} for fs in req.feeding_sites]
+
+        result = compute_access_route(
+            req.entry_lat, req.entry_lng,
+            req.blind_lat, req.blind_lng,
+            trail_graph, feeding, scent_zone,
+        )
+
+        return result
+
+    except Exception as e:
+        logger.error(f"[ACCESS-ROUTE] Erreur: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/status")

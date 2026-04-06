@@ -197,47 +197,23 @@ def orchestrate_hunt_session(
             wind_direction_deg, wind_speed_kmh, session,
         )
 
-        # ================================================================
-        # ORDONNANCE STEEVE-MAX 2026-04-07: MODE OFF — ACCES DESACTIVES
-        # Les routes d'acces ne sont PAS calculees.
-        # Les donnees en base sont PRESERVEES (non supprimees).
-        # Archive: /app/LEGACY_ACCESS_AFFUTS/
-        # Pour reactiver: remettre ACCESS_ROUTES_ENABLED = True
-        # ================================================================
-        ACCESS_ROUTES_ENABLED = False
+        # BCE-4X: Route d'acces TOUJOURS depuis le waypoint du chasseur
+        # BCE-4X CORRIDOR-FIRST X1 000 000%: corridor_lock=True, 95% corridor / 5% foret
+        best_access = compute_access_route(
+            center_lat, center_lng,
+            blind["lat"], blind["lng"],
+            trail_graph, feeding_sites, scent_zone,
+            water_check_fn=water_check_fn,
+            terrain_data=raw_terrain_data,
+            corridor_lock=True,
+        )
 
-        if ACCESS_ROUTES_ENABLED:
-            best_access = compute_access_route(
-                center_lat, center_lng,
-                blind["lat"], blind["lng"],
-                trail_graph, feeding_sites, scent_zone,
-                water_check_fn=water_check_fn,
-                terrain_data=raw_terrain_data,
-                corridor_lock=True,
-            )
-            try:
-                from engines.bdre.corridor_optimizer_v2 import enforce_corridor_lock
-                best_access = enforce_corridor_lock(best_access, trail_graph)
-            except Exception as e:
-                logger.warning(f"[ORCHESTRATOR] corridor_optimizer_v2 error: {e}")
-        else:
-            # MODE OFF: acces vide mais structure preservee
-            best_access = {
-                "status": "disabled",
-                "mode": "OFF",
-                "distance_m": 0,
-                "coords": [],
-                "routing_algo": "disabled",
-                "trail_type": "disabled",
-                "corridor_pct": 0,
-                "forest_pct": 0,
-                "feasible": False,
-                "quality_score": 0,
-                "bdre_corridor_score": 0,
-                "corridor_compliant": False,
-                "segment_compliant": False,
-                "ordonnance": "STEEVE-MAX 2026-04-07 — DESACTIVATION SECURISEE",
-            }
+        # BCE-4X CORRIDOR-FIRST X1M: Post-optimisation via corridor_optimizer_v2
+        try:
+            from engines.bdre.corridor_optimizer_v2 import enforce_corridor_lock
+            best_access = enforce_corridor_lock(best_access, trail_graph)
+        except Exception as e:
+            logger.warning(f"[ORCHESTRATOR] corridor_optimizer_v2 error: {e}")
 
         best_access["entry_point"] = {
             "lat": center_lat,

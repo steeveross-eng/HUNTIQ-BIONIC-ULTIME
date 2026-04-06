@@ -144,9 +144,11 @@ const MapContentInner = React.memo(({
     {/* STEVE-MAX: MovementCorridorsLayer PURGE DEFINITIVE — BCE-4X-UI-003 */}
 
     {/* STEVE-MAX P3: Hunting Path Layer — z-index 700 (above corridors) */}
-    {showHuntingPath && huntingPathData && (
+    {/* HUNTING PATH — ORDONNANCE STEEVE-MAX 2026-04-07: MODE OFF */}
+    {/* Pour reactiver: decommenter le bloc ci-dessous */}
+    {/* showHuntingPath && huntingPathData && (
       <HuntingPathLayer huntingPath={huntingPathData} />
-    )}
+    ) */}
 
     {/* BIONIC Zone 2 km² — Carré unique centré sur le waypoint actif */}
     {selectedWaypointForZones && (
@@ -234,13 +236,15 @@ const MapContentInner = React.memo(({
       />
     )}
 
-    {/* ACCESS ENGINE V6 — GOLDEN: Layer unique rendu 4 couleurs (vert/bleu/or/rouge) */}
-    {showAccessRoute && accessRouteData && (
+    {/* ACCESS ENGINE V6 — ORDONNANCE STEEVE-MAX 2026-04-07: MODE OFF */}
+    {/* DESACTIVATION SECURISEE — Archive: /LEGACY_ACCESS_AFFUTS/ */}
+    {/* Pour reactiver: decommenter le bloc ci-dessous */}
+    {/* showAccessRoute && accessRouteData && (
       <AccessRouteV6Layer
         routeData={accessRouteData}
         enabled={showAccessRoute}
       />
-    )}
+    ) */}
 
     {userPosition && (
       <Marker position={[userPosition.lat, userPosition.lng]} icon={createCustomIcon('#3b82f6', 'user')}>

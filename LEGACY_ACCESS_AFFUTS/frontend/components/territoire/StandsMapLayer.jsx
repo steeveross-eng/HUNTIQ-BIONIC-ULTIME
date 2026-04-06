@@ -151,14 +151,7 @@ const StandsMapLayer = ({
       }
     }
 
-    // 2. Chemins d'acces — ORDONNANCE STEEVE-MAX 2026-04-07: MODE OFF
-    // DESACTIVATION SECURISEE: Les lignes d'acces, segments, penetrations,
-    // corridors calcules et points intermediaires sont retires de la carte.
-    // Archive: /app/LEGACY_ACCESS_AFFUTS/
-    // Pour reactiver: retirer le bloc MODE OFF et restaurer depuis l'archive.
-    const ACCESS_ROUTES_ENABLED = false;
-    
-    if (ACCESS_ROUTES_ENABLED) {
+    // 2. Chemins d'acces — ACCESS CLARITY ENGINE V7
     for (const rec of recs) {
       const access = rec.access;
       if (access?.coords?.length >= 2) {
@@ -347,7 +340,6 @@ const StandsMapLayer = ({
         }
       }
     }
-    } // FIN MODE OFF — ORDONNANCE STEEVE-MAX 2026-04-07
 
     // 3. Sites d'alimentation — BCE-4X PURGE V1-V5
     // SUPPRIME: Ce rendu creait un DOUBLE HALO en superposant des circleMarkers

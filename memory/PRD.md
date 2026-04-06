@@ -7,7 +7,6 @@ Application de routage terrain pour la chasse (affuts, corridors, zones) avec pa
 - Backend: FastAPI + A* Pathfinding + OSM/Overpass
 - Frontend: React 19 + Leaflet Maps
 - Modules: 84+ engines backend (BDRE, Terrain Nav, Hunt Orchestrator, Access Engine, etc.)
-- Routing: Virtual corridor injection (GUIDANCE) + BCE-4X exclusions (cout 1,000,000)
 - Governance: BCE-4X / STEEVE-MAX / ZERO LOSS / ZERO REGRESSION
 
 ## Ce qui a ete implemente
@@ -25,37 +24,23 @@ Application de routage terrain pour la chasse (affuts, corridors, zones) avec pa
   - Module `institutional_cache.py`: cache permanent JSON
   - 6 endpoints `/api/v1/bdre/cache/*` (consultation legere < 1ms)
   - Orchestrateur cache-first: consultation cache AVANT calcul A*
-  - Certification territoire: pipeline lourd offline
   - Audit non-regression: verification 0 objets manquants
-  - Tests: 10/10 pytest PASS + E2E curl PASS
-- [x] BUG FIX: Alimentation 3/4 -> 4/4
-  - Promotion candidats apres exclusion BCE-4X dans engine.py
-- [x] BUG FIX: Routes V-shape (detour nord) -> routes directes
-  - Junction directionnelle (Dijkstra, minimise trail+penetration)
-  - Seuils adaptatifs (L0/L1: 3.5x, L2: 5.0x)
-  - Rejet L2 si penetration > distance directe
-  - Terrain-aware corridor detection pour zones sans OSM
-  - Ratio final: 1.0-1.1x, VA_AU_NORD=NON, Corridor 100%, BDRE 86.5
-
-## Endpoints cles
-
-| Endpoint | Methode | Description |
-|----------|---------|-------------|
-| `/api/v1/hunt/orchestrate` | POST | Orchestration session chasse |
-| `/api/v2/alimentation/analyze` | POST | Analyse sites alimentation |
-| `/api/v1/bdre/cache/objects/{t}` | GET/POST | Objets institutionnels |
-| `/api/v1/bdre/cache/routes/{t}` | GET | Routes pre-certifiees |
-| `/api/v1/bdre/cache/corridors/{t}` | GET | Corridors virtuels |
-| `/api/v1/bdre/cache/certify/{t}` | POST | Certification offline |
-| `/api/v1/bdre/cache/audit/{t}` | GET | Audit non-regression |
+- [x] BUG FIX: Alimentation 3/4 -> 4/4 (promotion candidats)
+- [x] BUG FIX: Routes V-shape -> routes directes (junction directionnelle + seuils adaptatifs)
+- [x] ORDONNANCE: DESACTIVATION SECURISEE ACCES AUX AFFUTS
+  - Inventaire complet: 66 fichiers, 6 geometries, 5 caches, 8 endpoints, 4 couches
+  - Archive institutionnelle: `/app/LEGACY_ACCESS_AFFUTS/` (2.7 MB)
+  - MODE OFF: Backend (orchestrateur + 6 endpoints) + Frontend (3 couches)
+  - Validation: 8/8 tests PASS, 0 regression
+  - Donnees PRESERVEES (non supprimees)
+  - Reactivation documentee dans CONFIRMATION_DESACTIVATION.md
 
 ## Backlog
 
 ### P0 (Aucun — tout P0 complete)
 
 ### P1 (En attente directive STEEVE-MAX)
-- Validation utilisateur des corrections bugs
-- Validation visuelle frontend routes directes + 4/4 alimentation
+- Validation utilisateur de la desactivation securisee
 
 ### P2 (GELE — NE PAS TOUCHER)
 - M5 Offline Mode Ultra

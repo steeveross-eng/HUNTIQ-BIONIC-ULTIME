@@ -63,29 +63,57 @@ class ComputeBatchRequest(BaseModel):
 @router.post("/compute")
 async def compute_access(req: ComputeAccessRequest):
     """
-    ORDONNANCE STEEVE-MAX 2026-04-07: MODE OFF — DESACTIVE.
-    Archive: /app/LEGACY_ACCESS_AFFUTS/
+    Calcul du chemin d'acces optimal entre un point d'entree et un affut.
+    Pipeline GOLDEN: Trail-First Dijkstra + Terrain Grid A*.
     """
-    return {
-        "status": "disabled",
-        "mode": "OFF",
-        "ordonnance": "STEEVE-MAX 2026-04-07 — DESACTIVATION SECURISEE",
-        "distance_m": 0, "coords": [], "feasible": False,
-    }
+    opts = req.options or AccessOptions()
+
+    try:
+        result = await compute_access_route(
+            origin={"lat": req.origin.lat, "lng": req.origin.lng},
+            destination={"lat": req.destination.lat, "lng": req.destination.lng},
+            month=req.month,
+            species=req.species,
+            max_off_trail_km=opts.max_off_trail_km,
+            prefer_trails=opts.prefer_trails,
+            analysis_radius_m=opts.analysis_radius_m,
+        )
+        return result
+    except Exception as e:
+        logger.error(f"Access compute error: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Erreur calcul acces: {str(e)}")
 
 
 @router.post("/compute-batch")
 async def compute_access_batch(req: ComputeBatchRequest):
     """
-    ORDONNANCE STEEVE-MAX 2026-04-07: MODE OFF — DESACTIVE.
-    Archive: /app/LEGACY_ACCESS_AFFUTS/
+    Calcul batch des chemins d'acces pour plusieurs affuts.
+    Pipeline GOLDEN: Meme pipeline applique a chaque destination.
     """
-    return {
-        "status": "disabled",
-        "mode": "OFF",
-        "ordonnance": "STEEVE-MAX 2026-04-07 — DESACTIVATION SECURISEE",
-        "routes": [],
-    }
+    opts = req.options or AccessOptions()
+    routes = []
+
+    for dest in req.destinations:
+        try:
+            result = await compute_access_route(
+                origin={"lat": req.origin.lat, "lng": req.origin.lng},
+                destination={"lat": dest.lat, "lng": dest.lng},
+                month=req.month,
+                species=req.species,
+                max_off_trail_km=opts.max_off_trail_km,
+                prefer_trails=opts.prefer_trails,
+                analysis_radius_m=opts.analysis_radius_m,
+            )
+            routes.append({"stand_id": dest.id, "route": result.get("route")})
+        except Exception as e:
+            logger.error(f"Batch error for {dest.id}: {e}")
+            routes.append({
+                "stand_id": dest.id,
+                "route": None,
+                "error": str(e),
+            })
+
+    return {"routes": routes}
 
 
 @router.get("/health")
@@ -93,8 +121,7 @@ async def access_health():
     """Healthcheck du module access_engine_v6."""
     return {
         "module": "access_engine_v6",
-        "status": "disabled_by_ordonnance",
-        "ordonnance": "STEEVE-MAX 2026-04-07 — DESACTIVATION SECURISEE",
+        "status": "operational",
         "protocol": "BIONIC GOLDEN",
-        "archive": "/LEGACY_ACCESS_AFFUTS/",
+        "pipeline": "Trail-First Dijkstra + Terrain Grid A*",
     }
