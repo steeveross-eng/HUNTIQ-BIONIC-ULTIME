@@ -72,20 +72,22 @@ Application de routage terrain pour la chasse avec pathfinding A* et integration
 - [x] PATCH HYDRO V1.1: Masque eau obligatoire (_is_water_at, _distance_eau_at, check_segment_water_exclusion)
 - [x] 5 points de controle par segment (0%, 25%, 50%, 75%, 100%)
 - [x] Buffer minimum 30m, 3 corridors exclus (sur eau), ZERO regression
-- [x] Teste API: 5 corridors restants (1 MAJEUR, 4 MINEUR), version V1.1_HYDRO
+- [x] PIPELINE REALIGNE: corridors_v10/engine.py + fallback cost_surface.is_water
+- [x] 193 corridors → 103 exclus eau → 90 valides (GeoJSON)
+- [x] Teste API: 102 features (90 corridors + 12 zones)
 
-#### BLOC 2 — BDRE PEDAGOGIQUE (VALIDE STEEVE-MAX, IMPLEMENTE)
-- [x] POST /api/v1/hunt/contamination-zones
-- [x] Zones chasseur (rouge) + salines (orange) + message pedagogique FR
-- [x] Conseil approche directionnelle + classification risque
-- [x] Teste API: 2 zones, pedagogy message OK
+#### BLOC 2 — BDRE PEDAGOGIQUE (INTEGRATION FRONTEND COMPLETE)
+- [x] POST /api/v1/hunt/contamination-zones — Backend operationnel
+- [x] ContaminationOverlayLayer.jsx CREE — Zones rouges/orange permanentes
+- [x] Integre dans MapContent.jsx apres StandsMapLayer
+- [x] Couverture 100%: 7/7 zones (1 chasseur + 6 salines)
+- [x] Message pedagogique FR avec conseil approche
 
-#### BLOC 3 — RELOCALISATION AUTOMATIQUE (VALIDE STEEVE-MAX, IMPLEMENTE)
-- [x] candidate_generator.py: 12-24 candidats en anneaux (CERF 200m, ORIGNAL 300m, WAPITI 400m)
-- [x] relocation_engine.py: 6 phases (generation → SUPRA → affut → BDRE → selection → affichage)
-- [x] router.py: POST /api/v1/relocation/evaluate + GET /status
-- [x] Score composite: saline*0.40 + affut*0.35 + bdre*0.25
-- [x] Teste API: triggered=true, 26 candidats, alternative score=52.9
+#### BLOC 3 — RELOCALISATION AUTOMATIQUE (INTEGRATION FRONTEND COMPLETE)
+- [x] candidate_generator.py + relocation_engine.py + router.py — Backend operationnel
+- [x] StandsMapLayer.jsx ENRICHI — Detection auto affuts a_eviter/rejected
+- [x] Marqueur vert pulsant ALT + ligne pointillee + popup justification
+- [x] Cas complet: triggered=true, winner composite=52.9, corridor MAJEUR, 240m
 
 #### BLOC 4 — AUDIT COMPLET (LIVRE)
 - [x] 4 fiches modules (INTELLIGENCE, TABLEAU DE BORD, SUPRA ANALYSE, SUPRA FICHE)
