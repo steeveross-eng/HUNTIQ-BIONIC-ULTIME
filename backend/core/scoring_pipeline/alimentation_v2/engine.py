@@ -199,7 +199,7 @@ def analyze_alimentation_v2(
         },
     }
 
-    # ═══ BCE-4X P0-I: SHADOW MODE ═══
+    # ═══ BCE-4X P0-I: SHADOW MODE V2 ═══
     # Execute le moteur V2 sanctuarise en parallele et compare
     try:
         from .shadow_mode import compute_salines_v2_shadow, run_shadow_comparison
@@ -221,8 +221,32 @@ def analyze_alimentation_v2(
             "max_delta": shadow_report["max_delta"],
         }
     except Exception as e:
-        _shadow_logger.warning(f"[SHADOW] Erreur shadow mode: {e}")
+        _shadow_logger.warning(f"[SHADOW] Erreur shadow mode V2: {e}")
         result["shadow_mode"] = {"active": False, "error": str(e)}
+
+    # ═══ BCE-4X P0-X: SHADOW MODE V4 ═══
+    # Execute le moteur V4 terrain-centre en parallele et compare avec V3
+    try:
+        from core.scoring_pipeline.alimentation_v4.salines_v4 import compute_salines_v4
+        v4_salines = compute_salines_v4(
+            center_lat, center_lng, terrain, species, month, max_salines,
+        )
+        v4_selected = [s for s in v4_salines if s.get("selected")]
+        v4_avg = sum(s["score"] for s in v4_salines) / max(len(v4_salines), 1)
+        v3_avg = sum(s["score"] for s in salines) / max(len(salines), 1)
+        result["shadow_v4"] = {
+            "active": True,
+            "v3_avg": round(v3_avg, 1),
+            "v4_avg": round(v4_avg, 1),
+            "delta_v3_v4": round(v4_avg - v3_avg, 1),
+            "v4_candidates": len(v4_salines),
+            "v4_selected": len(v4_selected),
+            "v4_top_score": v4_selected[0]["score"] if v4_selected else 0,
+            "v4_generation_sources": list({s.get("generation_source", "?") for s in v4_salines}),
+        }
+    except Exception as e:
+        _shadow_logger.warning(f"[SHADOW] Erreur shadow mode V4: {e}")
+        result["shadow_v4"] = {"active": False, "error": str(e)}
 
     return result
 

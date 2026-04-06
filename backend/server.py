@@ -527,6 +527,11 @@ try:
     from core.scoring_pipeline.alimentation_v2.router import router as alimentation_v2_router
     app.include_router(alimentation_v2_router)
     logger.info("✓ ALIMENTATION-V2 registered (/api/v2/alimentation)")
+
+    # BCE-4X P0-X: SALINES V4 — Moteur terrain-centre SUPRA valide
+    from core.scoring_pipeline.alimentation_v2.router import router_v4 as alimentation_v4_router
+    app.include_router(alimentation_v4_router)
+    logger.info("✓ ALIMENTATION-V4 registered (/api/v4/alimentation)")
 except Exception as e:
     logger.warning(f"ALIMENTATION-V1 not loaded: {e}")
 
