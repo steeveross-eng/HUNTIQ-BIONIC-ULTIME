@@ -12,44 +12,57 @@ Application de routage terrain pour la chasse avec pathfinding A* et integration
 ## Ce qui a ete implemente
 
 ### Sessions precedentes
-- [x] BCE-4X Territorial Exclusions
-- [x] Terrain Graph fragment connector + STEEVE-MAX Guidance
+- [x] BCE-4X Territorial Exclusions + Terrain Graph + STEEVE-MAX Guidance
 - [x] Multi-engine BDRE integration
 - [x] NORME OFFICIELLE A->L Cache Institutionnel
-- [x] BUG FIX: Alimentation 3/4 -> 4/4
-- [x] BUG FIX: Routes V-shape -> routes directes
+- [x] BUG FIX: Alimentation 3/4 -> 4/4 + Routes V-shape
 - [x] DESACTIVATION SECURISEE ACCES AUX AFFUTS
 - [x] VALIDATION AUTONOMIE TOTALE (7/7 tests PASS)
 
 ### Session 2026-04-06 (fork actuel)
-- [x] P0 — MODULE PEDAGOGIQUE ULTRA COMPLET (GRILLE 3 COLONNES)
-  - Fichier: PedagogieModule.jsx — REECRIT en grille 3 colonnes STANDARD GOLDEN
-  - 9 cards compactes en grille 3x3: icone + titre + badge + preview 2-3 lignes
-  - Expansion inline pleine largeur sur clic avec donnees completes
-  - Capsule narrative pleine largeur
-  - Separateur dore "SECTION PEDAGOGIQUE"
-  - Header haute visibilite avec bouton PDF et badge ULTRA
-  - Flag PEDAGOGIE_SALINE_ENABLED = true
-  - Sections historiques PRESERVEES apres le module
 
-- [x] P1 — BOUTON EXPORT PDF (html2canvas + jsPDF, multi-page A4)
+#### P0 — UNIFICATION DES SCORES (SUPRA_SCORE UNIFIE)
+- [x] Backend: RecipeRequest accepte lat, lng, saline_score
+- [x] Endpoint /supra-panel utilise saline_score comme score_global principal
+- [x] Score mineral x5100 conserve comme score_mineral (complementaire)
+- [x] score_source: "SUPRA_UNIFIED" confirme le moteur unifie
+- [x] Frontend: NutritionPointDetailPanel passe np.score + lat + lng au SUPRA panel
+- [x] RESULTAT: Score carte = Score SUPRA = IDENTIQUE (teste: 71=71)
+- [x] random.uniform NON utilise dans V2 (deja deterministe via _seed MD5)
 
-- [x] P0 — AUDIT QUALITE COMPLET (10 points)
-  - Rapport: /app/memory/AUDIT_QUALITE_ALIMENTATION_BCE4X.md
-  - 10/10 points CONFORMES, 0 anomalie critique, 3 mineures documentees
+#### P0 — UNIFICATION ERGONOMIQUE (Grille 3 colonnes)
+- [x] AnalyseTab restructure en 3 niveaux:
+  - Niveau 1 (Resume): Score SUPRA UNIFIE + badge UNIFIE + Score mineral + 7 Moteurs + Besoins
+  - Niveau 2 (Analyse): Sol/Pedologie + Mineraux barres + Recette + Couts
+  - Niveau 3 (Pedagogie): MODULE PEDAGOGIQUE grille 3x3 (9 cards)
+- [x] Collapsibles historiques transformes en cards 3 colonnes (Physiologie | Comportement | Support)
+- [x] Sources scientifiques en card compacte
+- [x] Zero rupture visuelle entre les niveaux
 
-- [x] P0 — HARMONISATION ERGONOMIQUE GRILLE 3 COLONNES
-  - Non-conformite identifiee: disposition uniligne (1 colonne)
-  - Correction: reconversion complete en grille 3 colonnes identique au haut SUPRA
-  - Validation: screenshot montre grille 3x3 + expansion inline + capsule narrative
+#### P0 — MODULE PEDAGOGIQUE
+- [x] PedagogieModule.jsx en grille 3 colonnes STANDARD GOLDEN
+- [x] 9 cards + capsule narrative + bouton PDF + badge ULTRA
+- [x] Expansion inline pleine largeur sur clic
+
+#### P0 — AUDIT QUALITE
+- [x] 10/10 points audites, 0 critique, 3 mineures documentees
+- [x] Rapport: /app/memory/AUDIT_QUALITE_ALIMENTATION_BCE4X.md
+
+#### P0 — HARMONISATION DES ONGLETS
+- [x] Les 5 onglets utilisent deja des grilles 3 colonnes:
+  - ANALYSE: 3-col + pedagogie 3x3 + premium 3-col
+  - FICHE: 3-col (Logistique/GrosMales | Strategique/CoutROI/TCS | Plans/Sol/Sources)
+  - INTELLIGENCE: 3-col produits
+  - COMPAREZ: 3-col comparaison
+  - COMMANDEZ: 3-col (Recette | Produits | Panier)
 
 ## Backlog
 
-### P0 (Aucun)
+### P0 (Aucun — tout livre)
 
 ### P1 (En attente directive STEEVE-MAX)
-- Validation MODULE PEDAGOGIQUE grille 3 colonnes
-- Validation AUDIT QUALITE
+- Confirmation harmonisation x1000%
+- Test export PDF
 
 ### P2 (GELE)
 - M5 Offline Mode Ultra

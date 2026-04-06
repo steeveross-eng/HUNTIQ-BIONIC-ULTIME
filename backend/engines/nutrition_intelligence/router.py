@@ -68,6 +68,9 @@ class RecipeRequest(BaseModel):
     soil_type: str = "mixte"
     substrate: str = "bois_mou"
     site_minerals: Optional[dict] = None
+    lat: Optional[float] = None
+    lng: Optional[float] = None
+    saline_score: Optional[int] = None
 
 
 class CostRequest(BaseModel):
@@ -209,8 +212,24 @@ async def ecozones(species: str = None):
 # Endpoint SUPRA PANEL complet — pour clic sur point nutritionnel
 @router.post("/supra-panel")
 async def supra_panel(req: RecipeRequest):
-    """Endpoint complet pour le SUPRA PANEL declenche par clic carte."""
+    """Endpoint complet pour le SUPRA PANEL declenche par clic carte.
+    BCE-4X UNIFIED: Si saline_score est fourni (score carte), il devient le score_global principal.
+    Le score mineral x5100 devient score_mineral (complementaire).
+    """
     score_data = compute_mineral_score(req.species, req.season, req.soil_type, req.site_minerals)
+
+    # BCE-4X SUPRA_SCORE UNIFIE: score carte = score principal
+    if req.saline_score is not None:
+        score_data["score_mineral"] = score_data.get("score_global", 0)
+        score_data["score_global"] = req.saline_score
+        score_data["score_source"] = "SUPRA_UNIFIED"
+    else:
+        score_data["score_mineral"] = score_data.get("score_global", 0)
+        score_data["score_source"] = "x5100_mineral"
+
+    if req.lat is not None and req.lng is not None:
+        score_data["location"] = {"lat": req.lat, "lng": req.lng}
+
     reco_data = compute_recommendations(req.species, req.season, req.soil_type, req.site_minerals)
     energy = compute_energy_protein(req.species, req.season)
     recipe_data = generate_recipe(req.species, req.season, req.soil_type, req.substrate, req.site_minerals)

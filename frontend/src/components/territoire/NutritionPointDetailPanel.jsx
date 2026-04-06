@@ -223,6 +223,8 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose, selectedSpecies })
       const [supraRes, ultraRes, ficheRes, soilRes] = await Promise.allSettled([
         axios.post(`${API}/api/v6/nutrition-intelligence/supra-panel`, {
           species, season, soil_type: soilType, substrate: 'bois_mou',
+          lat: parseFloat(lat), lng: parseFloat(lng),
+          saline_score: np?.score || null,
         }),
         axios.post(`${API}/api/v1/saline/analyze`, {
           lat: parseFloat(lat), lng: parseFloat(lng), species, sex: 'male', age: 'adult',
@@ -426,7 +428,10 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
               </div>
               <div className="min-w-0">
                 <div className="text-[16px] font-black text-white">Score SUPRA</div>
-                <span className="text-[14px] font-bold px-2 py-0.5 rounded-lg" style={{ backgroundColor: `${gc}20`, color: gc }}>{score.grade}</span>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <span className="text-[14px] font-bold px-2 py-0.5 rounded-lg" style={{ backgroundColor: `${gc}20`, color: gc }}>{score.grade}</span>
+                  {score.score_source === 'SUPRA_UNIFIED' && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: '#00BCD415', color: '#00BCD4' }}>UNIFIE</span>}
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-3 mt-2">
@@ -434,6 +439,12 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
               <span className="text-[14px] font-semibold" style={{ color: BIONIC.orange }}>{score.zones_resume?.jaune} jaune</span>
               <span className="text-[14px] font-semibold" style={{ color: BIONIC.red }}>{score.zones_resume?.rouge} rouge</span>
             </div>
+            {score.score_mineral != null && (
+              <div className="flex items-center justify-between mt-1.5 pt-1.5 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+                <span className="text-[12px] text-slate-500">Score mineral</span>
+                <span className="text-[14px] font-bold" style={{ color: BIONIC.purple }}>{score.score_mineral}/100</span>
+              </div>
+            )}
           </GoldenCard>
 
           {/* Gauge ULTRA */}
@@ -632,34 +643,56 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
           ═══════════════════════════════════════════════════════ */}
       <PedagogieModule species={species} season={season} score={score} gc={gc} />
 
-      {/* ═══ Sections PREMIUM collapsibles — FULL WIDTH — STANDARD GOLDEN ═══ */}
-      <GoldenCollapsible icon={Crown} title="Physiologie minerale" color={BIONIC.purple} badge={`${species} / ${season}`} defaultOpen={false} testId="supra-physiology">
-        <p className="text-[16px] text-slate-300 leading-relaxed">{physioText}</p>
-      </GoldenCollapsible>
-
-      <GoldenCollapsible icon={Eye} title="Comportement males" color={BIONIC.cyan} badge={season} defaultOpen={false} testId="supra-behavior">
-        <p className="text-[16px] text-slate-300 leading-relaxed">{behaviorText}</p>
-      </GoldenCollapsible>
-
-      <GoldenCollapsible icon={TreeDeciduous} title="Influence du support" color={BIONIC.green} badge="Hierarchie" defaultOpen={false} testId="supra-support">
-        <div className="space-y-2">
-          {SUPPORT_HIERARCHY.map((s, i) => (
-            <div key={i} className="flex items-center justify-between text-[16px] py-1.5 border-b" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
-              <span className="text-slate-300">{s.name}</span>
-              <span className="font-bold" style={{ color: s.color }}>{s.score}</span>
-            </div>
-          ))}
-        </div>
-      </GoldenCollapsible>
+      {/* ═══ Sections PREMIUM — intégrées grille 3 colonnes — STANDARD GOLDEN ═══ */}
+      <div className="grid grid-cols-3 gap-2 mt-1.5" data-testid="supra-premium-grid">
+        <GoldenCard testId="supra-physiology" accentColor={BIONIC.purple} compact>
+          <div className="flex items-center gap-2 mb-1.5">
+            <IC Icon={Crown} color={BIONIC.purple} sz={24} />
+            <span className="text-[13px] font-bold text-white">Physiologie</span>
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded ml-auto" style={{ backgroundColor: `${BIONIC.purple}15`, color: BIONIC.purple }}>{species}</span>
+          </div>
+          <p className="text-[11px] text-slate-400 leading-snug line-clamp-4">{physioText}</p>
+        </GoldenCard>
+        <GoldenCard testId="supra-behavior" accentColor={BIONIC.cyan} compact>
+          <div className="flex items-center gap-2 mb-1.5">
+            <IC Icon={Eye} color={BIONIC.cyan} sz={24} />
+            <span className="text-[13px] font-bold text-white">Comportement males</span>
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded ml-auto" style={{ backgroundColor: `${BIONIC.cyan}15`, color: BIONIC.cyan }}>{season}</span>
+          </div>
+          <p className="text-[11px] text-slate-400 leading-snug line-clamp-4">{behaviorText}</p>
+        </GoldenCard>
+        <GoldenCard testId="supra-support" accentColor={BIONIC.green} compact>
+          <div className="flex items-center gap-2 mb-1.5">
+            <IC Icon={TreeDeciduous} color={BIONIC.green} sz={24} />
+            <span className="text-[13px] font-bold text-white">Support</span>
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded ml-auto" style={{ backgroundColor: `${BIONIC.green}15`, color: BIONIC.green }}>Hierarchie</span>
+          </div>
+          <div className="space-y-0.5">
+            {SUPPORT_HIERARCHY.map((s, i) => (
+              <div key={i} className="flex items-center justify-between">
+                <span className="text-[11px] text-slate-400 truncate">{s.name}</span>
+                <span className="text-[12px] font-bold tabular-nums" style={{ color: s.color }}>{s.score}</span>
+              </div>
+            ))}
+          </div>
+        </GoldenCard>
+      </div>
 
       {evidence.length > 0 && (
-        <GoldenCollapsible icon={FileText} title="Sources scientifiques" color={BIONIC.purple} badge={`${evidence.length} refs`} defaultOpen={false} testId="supra-evidence">
-          {evidence.slice(0, 4).map((ref, i) => (
-            <div key={i} className="text-[16px] text-slate-300 py-1.5 border-b" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
-              <span className="font-semibold text-white">{ref.titre}</span> — {ref.auteurs}, {ref.annee}
+        <div className="mt-1.5">
+          <GoldenCard testId="supra-evidence" accentColor={BIONIC.purple} compact>
+            <div className="flex items-center gap-2 mb-1.5">
+              <IC Icon={FileText} color={BIONIC.purple} sz={24} />
+              <span className="text-[13px] font-bold text-white">Sources scientifiques</span>
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded ml-auto" style={{ backgroundColor: `${BIONIC.purple}15`, color: BIONIC.purple }}>{evidence.length} refs</span>
             </div>
-          ))}
-        </GoldenCollapsible>
+            <div className="flex flex-wrap gap-1.5">
+              {evidence.slice(0, 4).map((ref, i) => (
+                <span key={i} className="text-[10px] text-slate-400 px-1.5 py-0.5 rounded" style={{ backgroundColor: 'rgba(255,255,255,0.04)' }}>{ref.auteurs} ({ref.annee})</span>
+              ))}
+            </div>
+          </GoldenCard>
+        </div>
       )}
     </div>
   );
