@@ -4,10 +4,15 @@ ALIMENTATION-V2 — Engine principal
 Analyse territoriale + Salines + Recommandations nutritionnelles.
 100% algorithmique interne, zéro API externe.
 Conforme BCE-4X: aucune modification des 16 zones ou 64 centres.
+
+BCE-4X P0-I: SHADOW MODE integre — V2 shadow s'execute en parallele de V3.
 """
+import logging
 from .terrain import analyze_terrain
 from .salines import compute_salines
 from .nutrition import get_nutrition, NUTRITION_DB
+
+_shadow_logger = logging.getLogger("bionic.shadow_mode")
 
 SPECIES_MAP = {
     "CERF": "CERF", "ORIGNAL": "ORIGNAL", "OURS": "OURS",
@@ -193,6 +198,31 @@ def analyze_alimentation_v2(
             "centres_modifies": 0,
         },
     }
+
+    # ═══ BCE-4X P0-I: SHADOW MODE ═══
+    # Execute le moteur V2 sanctuarise en parallele et compare
+    try:
+        from .shadow_mode import compute_salines_v2_shadow, run_shadow_comparison
+        v2_shadow = compute_salines_v2_shadow(
+            center_lat, center_lng, terrain, species, month,
+            side_m, max_salines, 300.0, 600.0,
+        )
+        shadow_report = run_shadow_comparison(
+            salines, v2_shadow,
+            {"lat": center_lat, "lng": center_lng},
+        )
+        result["shadow_mode"] = {
+            "active": True,
+            "v2_avg": shadow_report["avg_score_v2"],
+            "v3_avg": shadow_report["avg_score_v3"],
+            "delta": shadow_report["avg_delta"],
+            "regression_detected": shadow_report["regression_detected"],
+            "common_count": shadow_report["common_count"],
+            "max_delta": shadow_report["max_delta"],
+        }
+    except Exception as e:
+        _shadow_logger.warning(f"[SHADOW] Erreur shadow mode: {e}")
+        result["shadow_mode"] = {"active": False, "error": str(e)}
 
     return result
 
