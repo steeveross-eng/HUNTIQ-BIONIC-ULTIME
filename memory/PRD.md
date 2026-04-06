@@ -11,36 +11,25 @@ Application de routage terrain pour la chasse (affuts, corridors, zones) avec pa
 
 ## Ce qui a ete implemente
 
-### Session 2026-04-06
+### Sessions precedentes
 - [x] BCE-4X Territorial Exclusions
 - [x] Terrain Graph fragment connector
 - [x] STEEVE-MAX Terrain Guidance
 - [x] Multi-engine BDRE integration
-- [x] P2 Gel complet
-
-### Session 2026-04-07
 - [x] NORME OFFICIELLE A->L — Cache Institutionnel BCE-4X
 - [x] BUG FIX: Alimentation 3/4 -> 4/4
 - [x] BUG FIX: Routes V-shape -> routes directes
-- [x] DESACTIVATION SECURISEE ACCES AUX AFFUTS
-  - Archive: `/app/LEGACY_ACCESS_AFFUTS/` (66 fichiers, 2.7 MB)
-  - MODE OFF Backend + Frontend
-  - Donnees preservees (non supprimees)
-- [x] VALIDATION AUTONOMIE TOTALE
-  - Affuts: AUTONOME (suggestions, scores, recommandations)
-  - Salines: AUTONOME (4/4, pipeline independant)
-  - Zones contamination: AUTONOME (polygone 15 points)
-  - Corridors deplacement: AUTONOME (BDRE 17 endpoints)
-  - Cache institutionnel: AUTONOME (CONFORME)
-  - Import conditionnel moteur acces (try/except)
-  - 7/7 tests integrite PASS
+- [x] DESACTIVATION SECURISEE ACCES AUX AFFUTS (Archive: /LEGACY_ACCESS_AFFUTS/)
+- [x] VALIDATION AUTONOMIE TOTALE (7/7 tests PASS)
 
-### Session 2026-04-06 (fork)
-- [x] MODULE PEDAGOGIQUE — Integration ULTRA COMPLETE dans onglet ANALYSE
-  - Fichier cree: `/app/frontend/src/components/territoire/PedagogieModule.jsx`
-  - Integre dans: `/app/frontend/src/components/territoire/NutritionPointDetailPanel.jsx` (AnalyseTab)
+### Session 2026-04-06 (fork actuel)
+- [x] P0 — MODULE PEDAGOGIQUE ULTRA COMPLET (NON-CONFORMITE CORRIGEE)
+  - Fichier: `/app/frontend/src/components/territoire/PedagogieModule.jsx` (32.5 KB)
+  - Integre dans: `NutritionPointDetailPanel.jsx` AnalyseTab
   - Flag: `PEDAGOGIE_SALINE_ENABLED = true`
-  - 10 sections implementees:
+  - POSITIONNEMENT CORRIGE: Immediatement apres la grille 3 colonnes, AVANT les sections historiques
+  - Separateur dore "SECTION PEDAGOGIQUE" + Header haute visibilite (18px, bordure doree, glow)
+  - 10 SECTIONS CONFORMES:
     1. Besoins mineraux par groupe (4 groupes: Males alpha, Femelles, Veaux, Periode chasse)
     2. Besoins en proteines (500g/3j males, 300-400g femelles, 200-300g veaux)
     3. Oligo-elements essentiels (Zn, Cu, Se, Fe, Mn, Iode)
@@ -50,18 +39,34 @@ Application de routage terrain pour la chasse (affuts, corridors, zones) avec pa
     7. Gestion pre-chasse optimisee (5 regles)
     8. Hyper-attractive periode de chasse (6 criteres ELITE)
     9. A EVITER (9 erreurs courantes)
-    10. Capsule narrative "L'Histoire de ta saline" (contextuelle espece/saison)
-  - STANDARD GOLDEN respecte (cards, collapsibles, palette BIONIC)
-  - ZERO REMPLACEMENT du contenu existant — ENRICHISSEMENT UNIQUEMENT
-  - Validation visuelle: PASS (screenshot confirme les 10 sections rendues)
-  - 100% AUTONOME — aucun impact sur BDRE, corridors, zones, affuts
+    10. Capsule narrative "L'Histoire de ta saline" (orignal/chevreuil x 4-6 saisons)
+  - Sections historiques PRESERVEES apres le module (ZERO REMPLACEMENT)
+  - STANDARD GOLDEN respecte (cards, collapsibles, palette BIONIC, icones)
+  - Validation screenshot: 10/10 sections visibles ✅
+
+- [x] P1 — BOUTON EXPORT PDF
+  - html2canvas + jsPDF integres
+  - Export multi-page A4 avec footer BCE-4X
+  - Bouton vert dans le header MODULE PEDAGOGIQUE
+  - Validation: bouton visible ✅
+
+- [x] P0 — AUDIT QUALITE
+  - BDRE Health: OPERATIONNEL (V2, 17 endpoints, 8 composants)
+  - Saline Intelligence: OPERATIONNEL (7 moteurs)
+  - Nutrition-V6: OPERATIONNEL (4 modules, 13 V5 engines)
+  - BDRE Dashboard: OPERATIONNEL (16 sources, 11 healthy)
+  - Scoring: OPERATIONNEL (retourne donnees)
+  - Erreurs backend: V5 legacy bloque (INTENTIONNEL)
+  - Erreurs frontend: ZERO
+  - Coherence BDRE <-> SUPRA: CONFORME (endpoints actifs, donnees synchronisees)
+  - Rendu visuel ANALYSE: CONFORME (MODULE PEDAGOGIQUE + sections historiques)
 
 ## Backlog
 
 ### P0 (Aucun)
 
 ### P1 (En attente directive STEEVE-MAX)
-- Confirmation utilisateur MODULE PEDAGOGIQUE
+- Confirmation utilisateur MODULE PEDAGOGIQUE + PDF
 
 ### P2 (GELE)
 - M5 Offline Mode Ultra

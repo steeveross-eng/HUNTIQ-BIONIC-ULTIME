@@ -624,6 +624,14 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
         </div>
       </div>
 
+      {/* ═══════════════════════════════════════════════════════
+          MODULE PÉDAGOGIQUE — BCE-4X GOLDEN V6+
+          ENRICHISSEMENT onglet ANALYSE — COMMANDANT STEEVE-MAX
+          POSITIONNEMENT PRIORITAIRE — IMMÉDIATEMENT APRÈS LA GRILLE
+          100% AUTONOME — Flag PEDAGOGIE_SALINE_ENABLED
+          ═══════════════════════════════════════════════════════ */}
+      <PedagogieModule species={species} season={season} score={score} gc={gc} />
+
       {/* ═══ Sections PREMIUM collapsibles — FULL WIDTH — STANDARD GOLDEN ═══ */}
       <GoldenCollapsible icon={Crown} title="Physiologie minerale" color={BIONIC.purple} badge={`${species} / ${season}`} defaultOpen={false} testId="supra-physiology">
         <p className="text-[16px] text-slate-300 leading-relaxed">{physioText}</p>
@@ -653,13 +661,6 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
           ))}
         </GoldenCollapsible>
       )}
-
-      {/* ═══════════════════════════════════════════════════════
-          MODULE PÉDAGOGIQUE — BCE-4X GOLDEN V6+
-          ENRICHISSEMENT onglet ANALYSE — COMMANDANT STEEVE-MAX
-          100% AUTONOME — Flag PEDAGOGIE_SALINE_ENABLED
-          ═══════════════════════════════════════════════════════ */}
-      <PedagogieModule species={species} season={season} score={score} gc={gc} />
     </div>
   );
 };

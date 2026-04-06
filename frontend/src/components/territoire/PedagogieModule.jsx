@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import {
   BookOpen, FlaskConical, Leaf, AlertTriangle, Beaker,
   Zap, Shield, ChevronDown, ChevronUp, Mountain, Activity,
   TreeDeciduous, Crown, Eye, Target, Calendar, Ban,
   Heart, Baby, Crosshair, Sparkles, Wheat, Apple,
-  CircleAlert, ThermometerSun, Timer, Layers, Star
+  CircleAlert, ThermometerSun, Timer, Layers, Star,
+  Download, Loader2
 } from 'lucide-react';
 
 /**
@@ -256,26 +257,99 @@ const BesoinTag = ({ level }) => {
 // ═══════════════════════════════════════════════════════
 
 const PedagogieModule = ({ species = 'orignal', season = 'printemps', score, gc }) => {
-  if (!PEDAGOGIE_SALINE_ENABLED) return null;
-
   const speciesKey = species.toLowerCase();
   const seasonKey = season.toLowerCase();
   const narrativeSpecies = NARRATIVES[speciesKey] || NARRATIVES.orignal;
   const narrativeText = narrativeSpecies[seasonKey] || narrativeSpecies.printemps || narrativeSpecies[Object.keys(narrativeSpecies)[0]];
+  const moduleRef = useRef(null);
+  const [pdfExporting, setPdfExporting] = useState(false);
+
+  const handleExportPDF = useCallback(async () => {
+    if (!moduleRef.current || pdfExporting) return;
+    setPdfExporting(true);
+    try {
+      const html2canvas = (await import('html2canvas')).default;
+      const { jsPDF } = await import('jspdf');
+      // Temporarily expand all collapsibles for PDF capture
+      const buttons = moduleRef.current.querySelectorAll('[data-testid^="pedagogie-"] button');
+      buttons.forEach(btn => btn.click());
+      await new Promise(r => setTimeout(r, 300));
+      const canvas = await html2canvas(moduleRef.current, {
+        backgroundColor: '#0F172A',
+        scale: 2,
+        useCORS: true,
+        logging: false,
+      });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      const pageW = pdf.internal.pageSize.getWidth();
+      const pageH = pdf.internal.pageSize.getHeight();
+      const margin = 8;
+      const contentW = pageW - margin * 2;
+      const imgRatio = canvas.height / canvas.width;
+      const contentH = contentW * imgRatio;
+      // Multi-page support
+      let yPos = 0;
+      const totalH = contentH;
+      const usableH = pageH - margin * 2;
+      let pageNum = 0;
+      while (yPos < totalH) {
+        if (pageNum > 0) pdf.addPage();
+        const srcY = (yPos / totalH) * canvas.height;
+        const srcH = Math.min((usableH / totalH) * canvas.height, canvas.height - srcY);
+        const drawH = Math.min(usableH, totalH - yPos);
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = srcH;
+        const ctx = tempCanvas.getContext('2d');
+        ctx.drawImage(canvas, 0, srcY, canvas.width, srcH, 0, 0, canvas.width, srcH);
+        pdf.addImage(tempCanvas.toDataURL('image/png'), 'PNG', margin, margin, contentW, drawH);
+        // Footer
+        pdf.setFontSize(7);
+        pdf.setTextColor(100);
+        pdf.text(`BCE-4X GOLDEN V6+ | Module Pedagogique | ${speciesKey} / ${seasonKey} | Page ${pageNum + 1}`, pageW / 2, pageH - 3, { align: 'center' });
+        yPos += usableH;
+        pageNum++;
+      }
+      pdf.save(`HUNTIQ_Pedagogie_${speciesKey}_${seasonKey}.pdf`);
+    } catch (err) {
+      console.error('[PEDAGOGIE PDF]', err);
+    } finally {
+      setPdfExporting(false);
+    }
+  }, [speciesKey, seasonKey, pdfExporting]);
+
+  if (!PEDAGOGIE_SALINE_ENABLED) return null;
 
   return (
-    <div className="space-y-1.5 mt-3" data-testid="pedagogie-module">
-      {/* ═══ HEADER MODULE PÉDAGOGIQUE ═══ */}
-      <PedaCard testId="pedagogie-header" accentColor={BIONIC.amber}>
+    <div className="space-y-1.5 mt-4" data-testid="pedagogie-module" ref={moduleRef}>
+      {/* ═══ SÉPARATEUR VISUEL — ENTRÉE MODULE PÉDAGOGIQUE ═══ */}
+      <div className="flex items-center gap-3 py-2" data-testid="pedagogie-separator">
+        <div className="flex-1 h-[2px]" style={{ background: `linear-gradient(to right, transparent, ${BIONIC.amber}, transparent)` }} />
+        <span className="text-[12px] font-bold tracking-widest uppercase" style={{ color: BIONIC.amber }}>SECTION PEDAGOGIQUE</span>
+        <div className="flex-1 h-[2px]" style={{ background: `linear-gradient(to right, transparent, ${BIONIC.amber}, transparent)` }} />
+      </div>
+
+      {/* ═══ HEADER MODULE PÉDAGOGIQUE — HAUTE VISIBILITÉ + EXPORT PDF ═══ */}
+      <div className="rounded-lg px-4 py-3" style={{ backgroundColor: '#1a2744', boxShadow: `0 0 20px ${BIONIC.amber}15, ${GOLDEN.shadow}`, border: `2px solid ${BIONIC.amber}40` }} data-testid="pedagogie-header">
         <div className="flex items-center gap-3">
-          <IC Icon={BookOpen} color={BIONIC.amber} sz={32} />
-          <div>
-            <div className="text-[16px] font-black text-white">MODULE PEDAGOGIQUE</div>
+          <div className="w-[40px] h-[40px] rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: `linear-gradient(135deg, ${BIONIC.amber}35, ${BIONIC.amber}10)` }}>
+            <BookOpen style={{ color: BIONIC.amber, width: 22, height: 22 }} />
+          </div>
+          <div className="flex-1">
+            <div className="text-[18px] font-black text-white tracking-wide">MODULE PEDAGOGIQUE</div>
             <div className="text-[14px] text-slate-400">Pourquoi ce site est optimal? — {speciesKey} / {seasonKey}</div>
           </div>
-          <span className="text-[14px] font-bold px-2.5 py-0.5 rounded-lg ml-auto" style={{ backgroundColor: `${BIONIC.amber}18`, color: BIONIC.amber }}>ULTRA</span>
+          <button onClick={handleExportPDF} disabled={pdfExporting}
+            className="flex items-center gap-2 h-9 px-4 rounded-lg text-[13px] font-bold uppercase tracking-wider transition-all hover:brightness-125 active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed"
+            style={{ backgroundColor: `${BIONIC.green}18`, color: BIONIC.green, border: `2px solid ${BIONIC.green}50` }}
+            data-testid="pedagogie-export-pdf-btn">
+            {pdfExporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+            {pdfExporting ? 'Export...' : 'PDF'}
+          </button>
+          <span className="text-[14px] font-black px-3 py-1 rounded-lg" style={{ background: `linear-gradient(135deg, ${BIONIC.amber}30, ${BIONIC.amber}15)`, color: BIONIC.amber, border: `1px solid ${BIONIC.amber}50` }}>ULTRA</span>
         </div>
-      </PedaCard>
+      </div>
 
       {/* ═══ 1. BESOINS MINÉRAUX PAR GROUPE ═══ */}
       <PedaCollapsible icon={FlaskConical} title="Besoins mineraux par groupe" color={BIONIC.orange} badge="4 groupes" testId="pedagogie-besoins-mineraux">
