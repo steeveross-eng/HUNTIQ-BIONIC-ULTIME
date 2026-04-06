@@ -285,6 +285,7 @@ def orchestrate_hunt_session(
                 "type_name": blind["type_name"],
                 "is_fixed": blind.get("is_fixed", False),
                 "score": blind["score"],
+                "classification": blind.get("classification", "recommended"),
                 "factors": blind["factors"],
             },
             "access": best_access,

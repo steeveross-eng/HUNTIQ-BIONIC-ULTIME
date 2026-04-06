@@ -1,19 +1,29 @@
 """
-ALIMENTATION-V2 — Optimiseur de salines V2
+ALIMENTATION-V3 — Optimiseur de salines V3
 =============================================
+BCE-4X P0-C REWRITE — ORDONNANCE STEEVE-MAX 2026-04-06
+Branche: BIONIC_REWRITE_P0
+
 Positionne les salines optimales dans un carré 2km×2km.
 STEEVE-MAX: Diversification spatiale obligatoire (min_distance 250-400m).
 Sélection intelligente 1-4 salines avec stratégie de placement.
 
-Critères de scoring:
-  - Accessibilité (pente, distance)
-  - Couvert forestier (40-80% optimal)
-  - Proximité eau
-  - Sécurité (pression humaine)
-  - Diversité micro-habitats
+Critères de scoring V3 (DONNEES REELLES):
+  - Proximité eau (25%) — distance réelle OSM (optimal 30-80m)
+  - Couvert forestier (20%) — couvert_pct terrain (INCHANGE)
+  - Pente / accessibilité (20%) — pente terrain (INCHANGE)
+  - Accessibilité sentier (15%) — distance réelle sentier OSM (remplace MD5)
+  - Sécurité (10%) — distance au centre (INCHANGE)
+  - Diversité micro-habitat (10%) — calcul terrain réel (remplace MD5)
+
+Seuils institutionnels STEEVE-MAX:
+  - Eau optimale: 30-80m | Acceptable: 80-150m | Pénalité: >150m
 """
 import math
 import hashlib
+import logging
+
+logger = logging.getLogger("bionic.salines_v3")
 
 
 def _seed(lat, lng, salt=""):
@@ -37,36 +47,113 @@ def _haversine_m(lat1, lng1, lat2, lng2):
     return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
 
-def _score_candidate(terrain, lat, lng, center_lat, center_lng, dist_m, half_m, idx):
-    """Score un candidat saline (0-100) selon 6 critères STEEVE-MAX."""
-    eau_prox = terrain.get("eau", {}).get("score_hydrique", 0.5)
+def _nearest_water_distance_saline(lat, lng):
+    """
+    BCE-4X P0-C V3: Distance réelle au point d'eau le plus proche.
+    Teste des cercles concentriques (8 directions) pour détecter l'eau.
+    Utilise le cache eau de zone_engine_core_v2.
+    Retourne la distance en mètres (600 si aucun point d'eau trouvé).
+    """
+    try:
+        from modules.bionic_engine_p0.services.zone_engine_core_v2 import _circle_on_water
+    except ImportError:
+        return 600  # Fallback: eau inconnue
+
+    # Tester des distances croissantes avec 8 directions
+    for radius_m in [30, 50, 80, 100, 150, 200, 300, 500]:
+        for angle in range(0, 360, 45):
+            rad = math.radians(angle)
+            test_lat = lat + (radius_m / 111320) * math.cos(rad)
+            test_lng = lng + (radius_m / (111320 * math.cos(math.radians(lat)))) * math.sin(rad)
+            try:
+                if _circle_on_water(test_lat, test_lng):
+                    return radius_m
+            except Exception:
+                continue
+    return 600
+
+
+def _nearest_trail_distance_saline(lat, lng, trail_graph):
+    """
+    BCE-4X P0-C V3: Distance réelle au sentier OSM le plus proche.
+    Réutilise le graphe terrain_nav (cache automatique).
+    """
+    if trail_graph is None or trail_graph.is_empty:
+        return 600  # Fallback: aucun sentier
+
+    nearest = trail_graph.nearest_node(lat, lng, max_dist_m=2000)
+    if nearest is None:
+        return 600
+
+    n_lat, n_lng = trail_graph.nodes[nearest]
+    return _haversine_m(lat, lng, n_lat, n_lng)
+
+
+def _score_candidate(terrain, lat, lng, center_lat, center_lng, dist_m, half_m, idx,
+                     trail_graph=None):
+    """
+    Score un candidat saline (0-100) selon 6 critères STEEVE-MAX V3.
+    BCE-4X P0-C: Critères 1, 4, 6 basés sur données RÉELLES (OSM).
+    """
     couvert = terrain.get("foret", {}).get("couvert_pct", 60) / 100
     pente = terrain.get("relief", {}).get("pente_moyenne_pct", 10)
 
-    # 1. Proximité eau (25%)
-    score_eau = min(1.0, eau_prox * 1.2)
-    # Variation par position
-    score_eau *= (0.85 + 0.3 * _seed(lat, lng, "eau_var"))
+    # ═══ 1. Proximité eau (25%) — DISTANCE RÉELLE OSM ═══
+    # Seuils institutionnels STEEVE-MAX:
+    #   30-80m = OPTIMAL (100) | 80-150m = ACCEPTABLE (75)
+    #   < 30m = PÉNALITÉ terrain mou (40) | > 150m = PÉNALITÉ (score décroissant)
+    water_dist = _nearest_water_distance_saline(lat, lng)
+    if 30 <= water_dist <= 80:
+        score_eau = 1.0   # OPTIMAL
+    elif 80 < water_dist <= 150:
+        score_eau = 0.75  # ACCEPTABLE
+    elif water_dist < 30:
+        score_eau = 0.40  # Terrain mou, risque inondation
+    elif 150 < water_dist <= 300:
+        score_eau = 0.45  # Pénalité modérée
+    else:
+        score_eau = 0.20  # Pénalité sévère (> 300m)
 
-    # 2. Couvert forestier (20%) — 40-80% = optimal
+    # Micro-variation déterministe pour départager les candidats à même distance
+    score_eau *= (0.95 + 0.1 * _seed(lat, lng, "eau_var"))
+    score_eau = min(1.0, score_eau)
+
+    # ═══ 2. Couvert forestier (20%) — INCHANGÉ ═══
     if 0.3 < couvert < 0.85:
         score_couvert = 0.7 + 0.3 * _seed(lat, lng, "couv")
     else:
         score_couvert = 0.3 + 0.2 * _seed(lat, lng, "couv")
 
-    # 3. Pente / accessibilité (20%)
+    # ═══ 3. Pente / accessibilité (20%) — INCHANGÉ ═══
     score_pente = max(0.2, 1.0 - pente / 25)
     score_pente *= (0.8 + 0.4 * _seed(lat, lng, "pente_var"))
 
-    # 4. Accessibilité terrain (15%)
-    score_acces = _seed(lat, lng, f"acces_{idx}")
+    # ═══ 4. Accessibilité sentier (15%) — DISTANCE RÉELLE OSM ═══
+    # Remplace le hash MD5 par la distance au sentier OSM le plus proche
+    trail_dist = _nearest_trail_distance_saline(lat, lng, trail_graph)
+    if trail_dist < 100:
+        score_acces = 0.90
+    elif trail_dist < 300:
+        score_acces = 0.70
+    elif trail_dist < 600:
+        score_acces = 0.40
+    else:
+        score_acces = 0.10
 
-    # 5. Sécurité / pression humaine (10%)
+    # ═══ 5. Sécurité / pression humaine (10%) — INCHANGÉ ═══
     score_securite = max(0.3, 1.0 - (dist_m / half_m) * 0.5)
     score_securite *= (0.8 + 0.4 * _seed(lat, lng, "sec"))
 
-    # 6. Diversité micro-habitat (10%)
-    score_habitat = _seed(lat, lng, "habitat_div")
+    # ═══ 6. Diversité micro-habitat (10%) — CALCUL TERRAIN RÉEL ═══
+    # Combine couvert forestier, proximité eau et relief pour estimer
+    # la diversité écologique de la micro-zone (remplace hash MD5)
+    habitat_couvert = min(1.0, couvert * 1.2) if 0.2 < couvert < 0.9 else 0.3
+    habitat_eau = 0.8 if water_dist < 200 else 0.4
+    habitat_relief = max(0.3, 1.0 - pente / 20)
+    score_habitat = (habitat_couvert * 0.4 + habitat_eau * 0.35 + habitat_relief * 0.25)
+    # Micro-variation pour unicité
+    score_habitat *= (0.9 + 0.2 * _seed(lat, lng, "habitat_div"))
+    score_habitat = min(1.0, score_habitat)
 
     total = (
         score_eau * 0.25
@@ -86,19 +173,34 @@ def _score_candidate(terrain, lat, lng, center_lat, center_lng, dist_m, half_m, 
         "habitat": round(score_habitat * 100),
     }
 
+    # Données sources traçables (BCE-4X)
+    criteres_sources = {
+        "eau_distance_m": round(water_dist),
+        "trail_distance_m": round(trail_dist),
+        "eau_source": "OSM_water_cache",
+        "trail_source": "OSM_terrain_nav",
+        "habitat_source": "terrain_composite",
+    }
+
     justifications = []
-    if score_eau > 0.6:
-        justifications.append("Bonne proximité eau")
+    if score_eau > 0.7:
+        justifications.append(f"Eau à {round(water_dist)}m (optimal)")
+    elif score_eau > 0.5:
+        justifications.append(f"Eau à {round(water_dist)}m (acceptable)")
+    else:
+        justifications.append(f"Eau à {round(water_dist)}m (éloigné)")
     if score_couvert > 0.6:
         justifications.append("Couvert forestier optimal")
     if score_pente > 0.7:
         justifications.append("Terrain plat/accessible")
+    if score_acces > 0.6:
+        justifications.append(f"Sentier à {round(trail_dist)}m")
     if score_securite > 0.6:
         justifications.append("Zone sécurisée")
     if score_habitat > 0.6:
         justifications.append("Micro-habitat diversifié")
 
-    return round(total * 100), criteres, justifications or ["Emplacement convenable"]
+    return round(total * 100), criteres, justifications or ["Emplacement convenable"], criteres_sources
 
 
 def _select_with_min_distance(candidates, max_n, min_dist_m):
@@ -140,17 +242,27 @@ def compute_salines(
     max_radius_m: float = 600.0,
 ) -> list:
     """
-    Calcule les emplacements optimaux de salines avec diversification spatiale.
-    x4520-C: Filtrage strict Haversine ≤ max_radius_m (600m par defaut).
+    BCE-4X P0-C V3: Calcule les emplacements optimaux de salines.
+    DONNÉES RÉELLES: eau OSM, sentiers OSM, habitat terrain.
 
-    1. Génère 16 candidats répartis sur le territoire
-    2. Score chaque candidat (6 critères STEEVE-MAX)
-    3. FILTRE STRICT: exclut tout candidat > max_radius_m du centre (Haversine)
-    4. Sélectionne max_salines avec distance minimale (gloutonne)
-    5. Retourne tous les candidats avec flag 'selected'
+    1. Charge le graphe terrain OSM (cache automatique)
+    2. Génère 16 candidats répartis sur le territoire
+    3. Score chaque candidat (6 critères V3 — données réelles)
+    4. FILTRE STRICT: exclut tout candidat > max_radius_m du centre
+    5. Sélectionne max_salines avec distance minimale (gloutonne)
+    6. Retourne tous les candidats avec flag 'selected'
     """
     half = side_m / 2
     max_salines = max(1, min(4, max_salines))
+
+    # BCE-4X P0-C V3: Charger le graphe terrain OSM (cache automatique)
+    trail_graph = None
+    try:
+        from engines.terrain_nav import get_terrain_nav
+        trail_graph = get_terrain_nav(center_lat, center_lng, radius_m=max(int(max_radius_m * 2), 2000))
+        logger.info(f"[SALINES-V3] Trail graph chargé: empty={trail_graph.is_empty}")
+    except Exception as e:
+        logger.warning(f"[SALINES-V3] Trail graph indisponible: {e}")
 
     # Générer 16 candidats bien répartis (grille 4×4 perturbée)
     candidates = []
@@ -185,8 +297,9 @@ def compute_salines(
             if dist_haversine > max_radius_m:
                 continue  # REJET TOTAL — aucune saline hors 600m
 
-            score, criteres, justifications = _score_candidate(
-                terrain, lat, lng, center_lat, center_lng, dist_haversine, half, idx
+            score, criteres, justifications, criteres_sources = _score_candidate(
+                terrain, lat, lng, center_lat, center_lng, dist_haversine, half, idx,
+                trail_graph=trail_graph,
             )
 
             # Type de saline selon espèce
@@ -219,6 +332,8 @@ def compute_salines(
                 "justifications": justifications,
                 "carences_zone": carences or ["Aucune carence majeure détectée"],
                 "criteres": criteres,
+                "criteres_sources": criteres_sources,
+                "scoring_version": "V3",
                 "selected": False,
             })
 

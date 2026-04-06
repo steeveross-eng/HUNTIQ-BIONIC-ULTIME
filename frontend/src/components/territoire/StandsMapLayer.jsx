@@ -358,29 +358,51 @@ const StandsMapLayer = ({
     // Cause racine: data._feeding_sites_display contenait les mêmes points
     // que NutritionPointsLayer, provoquant un double rendu visuel.
 
-    // 4. Marqueurs d'affuts
+    // 4. Marqueurs d'affuts — BCE-4X P0-C SEUILS INSTITUTIONNELS
     for (const rec of recs) {
       const b = rec.blind;
+      const classification = b.classification || 'recommended';
+
+      // BCE-4X P0-C: Les affûts "rejected" (score < 30) ne sont JAMAIS affichés
+      // Ils sont filtrés côté backend, mais double-sécurité frontend
+      if (classification === 'rejected') continue;
+
+      const isAvoid = classification === 'a_eviter';
       const color = STAND_COLORS[b.type_key] || '#E74C3C';
       const borderColor = b.is_fixed ? FIXED_BORDER : MOBILE_BORDER;
       const typeLabel = b.is_fixed ? 'FIXE' : 'MOBILE';
       const scoreColor = b.score > 70 ? '#2ECC71' : b.score > 50 ? '#F39C12' : '#E74C3C';
 
+      // BCE-4X P0-C: Badge "À ÉVITER" pour score 30-49
+      const avoidBadge = isAvoid
+        ? `<div style="
+            position:absolute;top:-36px;left:50%;transform:translateX(-50%);
+            background:#D32F2F;border:1px solid #B71C1C;border-radius:3px;
+            padding:1px 5px;white-space:nowrap;
+            font-size:8px;font-weight:800;color:#fff;letter-spacing:0.5px;
+            text-transform:uppercase;
+          ">A EVITER</div>`
+        : '';
+
       const standIcon = L.divIcon({
         className: 'bionic-stand-marker',
         html: `<div style="
           width:32px;height:32px;border-radius:50%;
-          background:${color}33;border:2.5px solid ${borderColor};
+          background:${isAvoid ? '#D32F2F22' : `${color}33`};border:2.5px solid ${isAvoid ? '#D32F2F' : borderColor};
           display:flex;align-items:center;justify-content:center;
-          box-shadow:0 0 10px ${color}66;position:relative;
+          box-shadow:0 0 10px ${isAvoid ? '#D32F2F44' : `${color}66`};position:relative;
+          ${isAvoid ? 'opacity:0.7;' : ''}
         ">
-          <div style="width:12px;height:2px;background:${color};position:absolute"></div>
-          <div style="width:2px;height:12px;background:${color};position:absolute"></div>
+          <div style="width:12px;height:2px;background:${isAvoid ? '#D32F2F' : color};position:absolute"></div>
+          <div style="width:2px;height:12px;background:${isAvoid ? '#D32F2F' : color};position:absolute"></div>
+          ${isAvoid ? '<div style="position:absolute;width:24px;height:2px;background:#D32F2F;transform:rotate(45deg);opacity:0.8"></div>' : ''}
+          ${avoidBadge}
           <div style="
-            position:absolute;top:-20px;left:50%;transform:translateX(-50%);
+            position:absolute;top:${isAvoid ? '-20px' : '-20px'};left:50%;transform:translateX(-50%);
             background:#0d1117;border:1px solid ${scoreColor}88;border-radius:4px;
             padding:1px 6px;white-space:nowrap;
             font-size:10px;font-weight:700;color:${scoreColor};
+            ${isAvoid ? 'text-decoration:line-through;' : ''}
           ">${b.score}</div>
           <div style="
             position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);

@@ -1,21 +1,20 @@
 """
-BCE-4X P0 — ENGINE CHOIX DES AFFUTS v1
+BCE-4X P0-C — ENGINE CHOIX DES AFFUTS v2
 ========================================
+ORDONNANCE STEEVE-MAX 2026-04-06 — Branche BIONIC_REWRITE_P0
+
 Recommandation d'affuts basee sur donnees REELLES.
 
-Donnees REELLES:
-- Vent V3 (Open-Meteo) via engine vent_odeurs
-- Sentiers OSM (terrain_nav)
-- Zones d'eau (cache backend)
-- Zones d'alimentation (organic zones)
-- Waypoints utilisateur (affuts fixes)
+SEUILS INSTITUTIONNELS STEEVE-MAX:
+  - score < 30 = CATASTROPHIQUE → REJET TOTAL (non affiché)
+  - 30 <= score < 50 = MÉDIOCRE → badge "À ÉVITER"
+  - score >= 50 = RECOMMANDÉ
 
-ZERO donnee simulee (corridor, topographie, cover, pressure = SUPPRIMES).
 Scoring base UNIQUEMENT sur:
-1. Wind/scent score (contamination des sites alimentation)
-2. Trail accessibility score (acces reel via sentier OSM)
-3. Water proximity (distance au point d'eau reel)
-4. Feeding site positioning (distance et angle aux sites alimentation)
+1. Wind/scent score (contamination des sites alimentation) — 40%
+2. Trail accessibility score (acces reel via sentier OSM) — 25%
+3. Water proximity (distance au point d'eau reel) — 15%
+4. Feeding site positioning (distance et angle aux sites alimentation) — 20%
 
 STEEVE-MAX 2026-03-28 — Standard institutionnel.
 """
@@ -26,6 +25,20 @@ from typing import Dict, List, Any, Optional
 from datetime import datetime, timezone
 
 logger = logging.getLogger("bionic.hunt_orchestrator.choix_affuts")
+
+# BCE-4X P0-C SEUILS INSTITUTIONNELS — ORDONNANCE STEEVE-MAX 2026-04-06
+SCORE_THRESHOLD_REJECT = 30      # < 30 = CATASTROPHIQUE → rejet immédiat
+SCORE_THRESHOLD_AVOID = 50       # 30-49 = MÉDIOCRE → badge "À ÉVITER"
+# >= 50 = RECOMMANDÉ
+
+def _classify_blind(score):
+    """Classifier un affût selon les seuils institutionnels STEEVE-MAX."""
+    if score < SCORE_THRESHOLD_REJECT:
+        return "rejected"       # CATASTROPHIQUE — non affiché
+    elif score < SCORE_THRESHOLD_AVOID:
+        return "a_eviter"       # MÉDIOCRE — badge "À ÉVITER"
+    else:
+        return "recommended"    # RECOMMANDÉ
 
 # Types d'affuts
 STAND_TYPES = {
@@ -172,6 +185,7 @@ def score_blind_position(
         "concealment": blind_info["concealment"],
         "is_fixed": is_fixed,
         "score": round(total, 1),
+        "classification": _classify_blind(round(total, 1)),
         "factors": {
             "wind_scent": {
                 "score": round(wind_score, 1),
@@ -378,4 +392,18 @@ def recommend_blinds(
 
     # Trier par score
     all_blinds.sort(key=lambda x: x["score"], reverse=True)
+
+    # BCE-4X P0-C SEUILS INSTITUTIONNELS — FILTRE DE REJET
+    # score < 30 = CATASTROPHIQUE → rejet immédiat (non retourné)
+    # 30-49 = MÉDIOCRE → conservé avec classification "a_eviter"
+    # >= 50 = RECOMMANDÉ
+    pre_filter_count = len(all_blinds)
+    all_blinds = [b for b in all_blinds if b["score"] >= SCORE_THRESHOLD_REJECT]
+    rejected_count = pre_filter_count - len(all_blinds)
+    if rejected_count > 0:
+        logger.info(
+            f"[CHOIX-V2] Seuil STEEVE-MAX: {rejected_count} affût(s) rejetés "
+            f"(score < {SCORE_THRESHOLD_REJECT})"
+        )
+
     return all_blinds[:max_blinds]
