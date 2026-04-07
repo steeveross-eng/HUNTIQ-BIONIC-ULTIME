@@ -116,10 +116,14 @@ Application de routage terrain pour la chasse avec pathfinding A* et integration
 - [x] Correction fenetre BDRE: bouton FERMER + typographie x2
 - [x] P0-K: Legende dynamique BCE-4X repliable (7 items, typo x1.5)
 - [x] P0-K: Harmonisation UX popups (bouton X unifie, typo x1.5)
-- [x] P0-K: Diagnostic SAL-10 (score 45 < seuil 50 → site non-viable)
 - [x] P0-K: BDRE directionnel confirme (cone, pas cercle, delta < 10°)
 - [x] P0-K: Rapport P0-K consolide
-- [ ] P0-K: Validation finale STEEVE-MAX
+- [x] P0-K+: Correction SAL-10 mode SAL-ALT (reloc meme si saline < 50)
+- [x] P0-K+: BionicLegend restauree sur /analyse-territoire (PERSISTANTE)
+- [x] P0-K+: Diagnostic regression Mon Territoire (cause: BionicLegend retire + waypoint urbain)
+- [x] P0-K+: Affuts demo 5 types sur homepage Mon Territoire
+- [x] P0-K+: Rapport diagnostic SAL-10 + regression
+- [ ] P0-K+: Validation finale STEEVE-MAX
 - Tests regression V3 -> V4 complets
 - Execution plan fusion BLOC 4 (F1→F4)
 
