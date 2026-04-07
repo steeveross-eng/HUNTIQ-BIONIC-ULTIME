@@ -123,7 +123,12 @@ Application de routage terrain pour la chasse avec pathfinding A* et integration
 - [x] P0-K+: Diagnostic regression Mon Territoire (cause: BionicLegend retire + waypoint urbain)
 - [x] P0-K+: Affuts demo 5 types sur homepage Mon Territoire
 - [x] P0-K+: Rapport diagnostic SAL-10 + regression
-- [ ] P0-K+: Validation finale STEEVE-MAX
+- [x] P0-K++: Amendement BDRE -40% typographie (titre 13px, contenu 11px)
+- [x] P0-K++: Suppression legende dupliquee (BionicLegend retiree, StandsMapLayer seule)
+- [x] P0-K++: Analyse comparative 4 modules (DASHBOARD, INTELLIGENCE, FICHE, SUPRA)
+- [x] P0-K++: Tableau croise CONFORME/PARTIEL/NON-CONFORME
+- [x] P0-K++: 5 duplications, 7 manquants, 3 contradictions identifiees
+- [ ] P0-K++: Validation finale STEEVE-MAX
 - Tests regression V3 -> V4 complets
 - Execution plan fusion BLOC 4 (F1→F4)
 
