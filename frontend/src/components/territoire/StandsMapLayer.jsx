@@ -438,12 +438,12 @@ const StandsMapLayer = ({
         if (!f) return '';
         const sc = f.score || 0;
         const barCol = sc > 70 ? '#2ECC71' : sc > 50 ? '#F39C12' : '#E74C3C';
-        return `<div style="display:flex;align-items:center;gap:3px;margin:2px 0">
-          <span style="width:68px;font-size:8px;color:#999">${label} (${Math.round(f.weight * 100)}%)</span>
-          <div style="flex:1;height:4px;background:rgba(255,255,255,0.08);border-radius:2px">
-            <div style="width:${sc}%;height:100%;background:${barCol};border-radius:2px"></div>
+        return `<div style="display:flex;align-items:center;gap:5px;margin:3px 0">
+          <span style="width:80px;font-size:12px;color:#999">${label} (${Math.round(f.weight * 100)}%)</span>
+          <div style="flex:1;height:6px;background:rgba(255,255,255,0.08);border-radius:3px">
+            <div style="width:${sc}%;height:100%;background:${barCol};border-radius:3px"></div>
           </div>
-          <span style="width:24px;font-size:8px;color:${barCol};text-align:right;font-weight:700">${Math.round(sc)}</span>
+          <span style="width:30px;font-size:12px;color:${barCol};text-align:right;font-weight:700">${Math.round(sc)}</span>
         </div>`;
       }).join('');
 
@@ -453,33 +453,38 @@ const StandsMapLayer = ({
       const tcsGrade = rec.access?.tcs?.grade || '?';
       const tcsColor = tcsScore >= 80 ? '#4FC3F7' : tcsScore >= 60 ? '#26A69A' : tcsScore >= 40 ? '#F39C12' : '#E74C3C';
       const accessInfo = rec.access ? (
-        `<div style="margin-top:6px;padding:4px 6px;background:rgba(79,195,247,0.05);border-left:2px solid ${rec.access.feasible ? (hasTCS ? tcsColor : ACCESS_OK_COLOR) : ACCESS_WARN_COLOR};border-radius:0 4px 4px 0">
-          <div style="font-size:9px;font-weight:600;color:${rec.access.feasible ? (hasTCS ? tcsColor : ACCESS_OK_COLOR) : ACCESS_WARN_COLOR}">
+        `<div style="margin-top:8px;padding:6px 8px;background:rgba(79,195,247,0.05);border-left:3px solid ${rec.access.feasible ? (hasTCS ? tcsColor : ACCESS_OK_COLOR) : ACCESS_WARN_COLOR};border-radius:0 6px 6px 0">
+          <div style="font-size:13px;font-weight:600;color:${rec.access.feasible ? (hasTCS ? tcsColor : ACCESS_OK_COLOR) : ACCESS_WARN_COLOR}">
             Acces: ${rec.access.distance_m}m via ${rec.access.trail_type} (${rec.access.routing_algo})
           </div>
-          ${hasTCS ? `<div style="font-size:9px;font-weight:700;color:${tcsColor};margin-top:2px">TCS ${tcsScore}/100 (Grade ${tcsGrade})</div>` : ''}
-          ${isHybridAccess ? `<div style="font-size:8px;color:#2ECC71;margin-top:2px">Sentier: ${rec.access.phase1_distance_m || '?'}m | <span style="color:#4FC3F7">Approche v7: ${rec.access.phase2_distance_m || '?'}m</span></div>` : ''}
-          <div style="font-size:8px;color:#aaa">${rec.access.feasible ? 'Conforme vent/odeur' : 'NON CONFORME — ' + (rec.access.contamination_check?.violations?.[0]?.message || 'Violations')}</div>
-          ${rec.access.clarity_applied ? '<div style="font-size:7px;color:#4FC3F7;margin-top:2px">ACCESS CLARITY ENGINE V7</div>' : ''}
+          ${hasTCS ? `<div style="font-size:13px;font-weight:700;color:${tcsColor};margin-top:3px">TCS ${tcsScore}/100 (Grade ${tcsGrade})</div>` : ''}
+          ${isHybridAccess ? `<div style="font-size:12px;color:#2ECC71;margin-top:3px">Sentier: ${rec.access.phase1_distance_m || '?'}m | <span style="color:#4FC3F7">Approche v7: ${rec.access.phase2_distance_m || '?'}m</span></div>` : ''}
+          <div style="font-size:12px;color:#aaa">${rec.access.feasible ? 'Conforme vent/odeur' : 'NON CONFORME — ' + (rec.access.contamination_check?.violations?.[0]?.message || 'Violations')}</div>
+          ${rec.access.clarity_applied ? '<div style="font-size:11px;color:#4FC3F7;margin-top:3px">ACCESS CLARITY ENGINE V7</div>' : ''}
         </div>`
-      ) : '<div style="color:#E74C3C;font-size:9px;margin-top:4px">Aucun acces sentier reel</div>';
+      ) : '<div style="color:#E74C3C;font-size:13px;margin-top:6px">Aucun acces sentier reel</div>';
 
       const popupContent = `
-        <div style="min-width:260px;max-width:320px;max-height:380px;overflow-y:auto;padding:4px;font-family:system-ui" data-testid="stand-popup">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,0.1)">
+        <div style="min-width:300px;max-width:380px;max-height:420px;overflow-y:auto;padding:8px;font-family:system-ui;position:relative" data-testid="stand-popup">
+          <button data-testid="stand-popup-close" onclick="this.closest('.leaflet-popup').querySelector('.leaflet-popup-close-button').click()" style="
+            position:absolute;top:6px;right:6px;background:rgba(255,68,68,0.15);border:2px solid rgba(255,68,68,0.4);
+            color:#ff6666;font-size:18px;font-weight:700;width:30px;height:30px;border-radius:6px;
+            cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;
+          ">X</button>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:8px;padding-right:36px;border-bottom:1px solid rgba(255,255,255,0.1)">
             <div>
-              <div style="font-size:12px;font-weight:700;color:#fff">#${rec.rank} ${b.type_name}</div>
-              <div style="font-size:9px;color:${borderColor}">${typeLabel} | ${b.name}</div>
+              <div style="font-size:16px;font-weight:700;color:#fff">#${rec.rank} ${b.type_name}</div>
+              <div style="font-size:13px;color:${borderColor}">${typeLabel} | ${b.name}</div>
             </div>
-            <div style="width:40px;height:40px;border-radius:50%;border:3px solid ${scoreColor};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:${scoreColor}">${b.score}</div>
+            <div style="width:48px;height:48px;border-radius:50%;border:3px solid ${scoreColor};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${scoreColor}">${b.score}</div>
           </div>
-          <div style="font-size:9px;font-weight:600;color:#f5a623;margin-bottom:4px">Facteurs reels (4)</div>
+          <div style="font-size:13px;font-weight:600;color:#f5a623;margin-bottom:6px">Facteurs reels (4)</div>
           ${barsHtml}
           ${accessInfo}
-          <div style="margin-top:6px;padding:4px 6px;background:rgba(255,255,255,0.02);border-radius:4px">
-            <div style="font-size:8px;color:#aaa;line-height:1.4">${rec.justification}</div>
+          <div style="margin-top:8px;padding:6px 8px;background:rgba(255,255,255,0.02);border-radius:6px">
+            <div style="font-size:12px;color:#aaa;line-height:1.5">${rec.justification}</div>
           </div>
-          <div style="margin-top:4px;font-size:7px;color:#555">Sources: OSM/Overpass, Open-Meteo V3 | BCE-4X P0</div>
+          <div style="margin-top:6px;font-size:11px;color:#555">Sources: OSM/Overpass, Open-Meteo V3 | BCE-4X P0</div>
         </div>`;
 
       if (onStandClick) {
@@ -502,7 +507,7 @@ const StandsMapLayer = ({
         { color: '#fff', weight: 2, opacity: 0.7, dashArray: '3, 3', pane: 'overlayPane' }
       );
       arrow.bindTooltip(
-        `<span style="font-size:10px;font-weight:700;color:#fff">Vent ${data.wind.direction_deg}° ${data.wind.speed_kmh} km/h</span>`,
+        `<span style="font-size:14px;font-weight:700;color:#fff">Vent ${data.wind.direction_deg}° ${data.wind.speed_kmh} km/h</span>`,
         { permanent: false, direction: 'top' }
       );
       group.addLayer(arrow);
@@ -511,18 +516,7 @@ const StandsMapLayer = ({
     group.addTo(map);
     layerRef.current = group;
 
-    // 6. Legende — STANDARD GOLDEN UI/IU v2.0
-    //    CAUSE RACINE CORRIGEE: L.control() Leaflet = arborescence DOM separee
-    //    des elements React (zoom, meteo). Deux systemes independants → chevauchements.
-    //    SOLUTION: Ancrage DOM direct au conteneur carte (.leaflet-container)
-    //    avec positionnement CSS explicite et adaptatif.
-    //    Garanties GOLDEN:
-    //    - JAMAIS chevauche les boutons zoom (top-4 left-3, ~130px hauteur)
-    //    - JAMAIS chevauche le panneau METEO (bottom-90px right-12px)
-    //    - JAMAIS chevauche les indicateurs bottom-left (heatmap, zone analyse)
-    //    - JAMAIS chevauche les coordonnees GPS, waypoints, tooltips
-    //    - Adaptation automatique toutes resolutions (768px → 4K)
-    //    - max-height dynamique = conteneur carte - 260px (zoom + marges)
+    // 6. Legende BCE-4X GOLDEN — REPLIABLE + TYPOGRAPHIE x1.5 (ORDONNANCE STEEVE-MAX P0-K)
     if (showLegend) {
       const mapContainer = map.getContainer();
       const legendDiv = document.createElement('div');
@@ -530,52 +524,96 @@ const StandsMapLayer = ({
       legendDiv.setAttribute('data-testid', 'hunt-legend-golden');
       legendDiv.style.cssText = [
         'position:absolute',
-        'top:175px',        // Sous les 3 boutons zoom (mesure reelle: 148px hauteur + marge 11px)
-        'left:10px',        // Aligne a gauche, espace avec le bord
-        'z-index:800',      // Sous zoom z-1000, sous meteo z-1000, au-dessus des tiles
-        'background:#0d1117ee',
-        'border:1px solid #333',
-        'border-radius:8px',
-        'padding:10px 12px',
+        'top:175px',
+        'left:10px',
+        'z-index:800',
+        'background:rgba(13,17,23,0.95)',
+        'border:2px solid #333',
+        'border-radius:10px',
+        'padding:14px 16px',
         'font-family:system-ui',
-        'font-size:9px',
+        'font-size:13px',
         'color:#ccc',
-        'min-width:160px',
-        'max-width:190px',
-        'max-height:calc(100% - 260px)',  // Relatif au conteneur carte, pas au viewport
+        'min-width:220px',
+        'max-width:260px',
+        'max-height:calc(100% - 260px)',
         'overflow-y:auto',
-        'backdrop-filter:blur(8px)',
+        'backdrop-filter:blur(12px)',
         'pointer-events:auto',
         'box-sizing:border-box',
         'scrollbar-width:thin',
         'scrollbar-color:#333 transparent',
+        'box-shadow:0 4px 20px rgba(0,0,0,0.4)',
+        'transition:max-height 0.3s ease',
       ].join(';');
+
+      const windInfo = `${data.wind?.direction_deg || '?'}° — ${data.wind?.speed_kmh || '?'} km/h`;
+      const itemStyle = 'display:flex;align-items:center;gap:8px;margin:4px 0;font-size:13px;line-height:1.4';
+      const sectionStyle = 'font-weight:700;font-size:11px;color:#888;margin:10px 0 4px;text-transform:uppercase;letter-spacing:0.5px';
+
       legendDiv.innerHTML = `
-          <div style="font-weight:700;font-size:11px;color:#fff;margin-bottom:6px;border-bottom:1px solid #333;padding-bottom:4px">SUPRA/V6 — Legende</div>
-          <div style="font-weight:600;font-size:8px;color:#888;margin:4px 0 2px;text-transform:uppercase;letter-spacing:0.5px">Affuts</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:10px;height:10px;border-radius:50%;border:2px solid ${FIXED_BORDER};display:inline-block"></span> Affut fixe</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:10px;height:10px;border-radius:50%;border:2px solid ${MOBILE_BORDER};display:inline-block"></span> Position mobile</div>
-          <div style="font-weight:600;font-size:8px;color:#888;margin:6px 0 2px;text-transform:uppercase;letter-spacing:0.5px">Acces (Clarity V7)</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:16px;height:3px;background:${ACCESS_OK_COLOR};display:inline-block;border-radius:2px"></span> Sentier reel OSM</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:16px;height:3px;background:#4FC3F7;display:inline-block;border-radius:2px;box-shadow:0 0 4px rgba(79,195,247,0.4)"></span> Terrain lisse v7</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:8px;height:3px;background:${ACCESS_OK_COLOR};display:inline-block;border-radius:2px"></span><span style="width:6px;height:3px;background:#4FC3F7;display:inline-block;border-radius:2px"></span> Hybride sentier+v7</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:16px;height:3px;background:#F1C40F;display:inline-block;border-radius:2px;border:1px dashed #F1C40F"></span> Hors-sentier</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:16px;height:3px;background:#E74C3C;display:inline-block;border-radius:2px"></span> Non conforme</div>
-          <div style="font-weight:600;font-size:8px;color:#888;margin:6px 0 2px;text-transform:uppercase;letter-spacing:0.5px">Zones ecologiques</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:10px;height:10px;background:#FF572233;border:2px solid #FF5722;display:inline-block;border-radius:2px"></span> Rut</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:10px;height:10px;background:#4CAF5033;border:2px solid #4CAF50;display:inline-block;border-radius:2px"></span> Alimentation</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:10px;height:10px;background:#2196F333;border:2px solid #2196F3;display:inline-block;border-radius:2px"></span> Repos</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:10px;height:10px;background:#00BCD433;border:2px solid #00BCD4;display:inline-block;border-radius:2px"></span> Eau</div>
-          <div style="font-weight:600;font-size:8px;color:#888;margin:6px 0 2px;text-transform:uppercase;letter-spacing:0.5px">Points d'interet</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:10px;height:10px;border-radius:50%;background:#FFD700;display:inline-block"></span> Saline / Nutrition</div>
-          <div style="font-weight:600;font-size:8px;color:#888;margin:6px 0 2px;text-transform:uppercase;letter-spacing:0.5px">Corridors</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:16px;height:2px;background:#FF5722;display:inline-block;opacity:0.8"></span> Corridor normal</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:16px;height:3px;background:#FF1744;display:inline-block"></span> Corridor intense</div>
-          <div style="font-weight:600;font-size:8px;color:#888;margin:6px 0 2px;text-transform:uppercase;letter-spacing:0.5px">Autres</div>
-          <div style="display:flex;align-items:center;gap:5px;margin:2px 0"><span style="width:10px;height:10px;background:${CONTAMINATION_COLOR}33;border:1px dashed ${CONTAMINATION_COLOR};display:inline-block;border-radius:2px"></span> Zone contamination</div>
-          <div style="margin-top:6px;font-size:7px;color:#555;border-top:1px solid #333;padding-top:4px">Vent: ${data.wind?.direction_deg || '?'}° ${data.wind?.speed_kmh || '?'} km/h | ${data.session || ''}</div>
-          <div style="font-size:7px;color:#555">Sources: OSM, Open-Meteo V3</div>
-        `;
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;border-bottom:2px solid #333;padding-bottom:6px;">
+          <span style="font-weight:700;font-size:15px;color:#fff">BCE-4X — Legende</span>
+          <button data-testid="legend-toggle-btn" class="legend-toggle-btn" style="
+            background:rgba(255,255,255,0.08);border:1px solid #555;color:#aaa;
+            font-size:16px;font-weight:700;width:28px;height:28px;border-radius:6px;
+            cursor:pointer;display:flex;align-items:center;justify-content:center;
+            transition:background 0.2s;line-height:1;
+          " onmouseover="this.style.background='rgba(255,255,255,0.15)'"
+             onmouseout="this.style.background='rgba(255,255,255,0.08)'"
+          >—</button>
+        </div>
+        <div data-testid="legend-content" class="legend-content">
+          <div style="${sectionStyle}">Exclusions BCE-4X</div>
+          <div style="${itemStyle}"><span style="width:14px;height:14px;background:#FF444433;border:2px solid #FF4444;display:inline-block;border-radius:3px"></span><span style="color:#FF4444;font-weight:600">Zone A EVITER</span></div>
+          <div style="${itemStyle}"><span style="width:14px;height:14px;background:#FF880033;border:2px solid #FF8800;display:inline-block;border-radius:3px"></span><span style="color:#FF8800;font-weight:600">Contamination saline</span></div>
+          <div style="${itemStyle}"><span style="width:14px;height:14px;background:#FFD70033;border:2px solid #FFD700;display:inline-block;border-radius:3px"></span><span style="color:#FFD700;font-weight:600">Contamination chasseur</span></div>
+          <div style="${itemStyle}"><span style="width:14px;height:14px;border-radius:50%;background:#2ECC7133;border:2px solid #2ECC71;display:inline-block"></span><span style="color:#2ECC71;font-weight:600">Affut alternatif (ALT)</span></div>
+          <div style="${itemStyle}"><span style="width:14px;height:14px;border-radius:50%;background:#3498DB33;border:2px solid #3498DB;display:inline-block"></span><span style="color:#3498DB;font-weight:600">Affut</span></div>
+          <div style="${itemStyle}"><span style="width:14px;height:14px;border:2px dashed #aaa;border-radius:50%;display:inline-block"></span><span>Portee (rayon)</span></div>
+          <div style="${itemStyle}"><span style="width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:12px solid #E74C3C;display:inline-block"></span><span style="color:#E74C3C;font-weight:600">Zone critique</span></div>
+
+          <div style="${sectionStyle}">Affuts</div>
+          <div style="${itemStyle}"><span style="width:12px;height:12px;border-radius:50%;border:2px solid ${FIXED_BORDER};display:inline-block"></span> Affut fixe</div>
+          <div style="${itemStyle}"><span style="width:12px;height:12px;border-radius:50%;border:2px solid ${MOBILE_BORDER};display:inline-block"></span> Position mobile</div>
+
+          <div style="${sectionStyle}">Acces terrain</div>
+          <div style="${itemStyle}"><span style="width:20px;height:3px;background:${ACCESS_OK_COLOR};display:inline-block;border-radius:2px"></span> Sentier OSM</div>
+          <div style="${itemStyle}"><span style="width:20px;height:3px;background:#4FC3F7;display:inline-block;border-radius:2px"></span> Terrain lisse</div>
+          <div style="${itemStyle}"><span style="width:20px;height:3px;background:#F1C40F;display:inline-block;border-radius:2px;border:1px dashed #F1C40F"></span> Hors-sentier</div>
+          <div style="${itemStyle}"><span style="width:20px;height:3px;background:#E74C3C;display:inline-block;border-radius:2px"></span> Non conforme</div>
+
+          <div style="${sectionStyle}">Zones ecologiques</div>
+          <div style="${itemStyle}"><span style="width:12px;height:12px;background:#FF572233;border:2px solid #FF5722;display:inline-block;border-radius:3px"></span> Rut</div>
+          <div style="${itemStyle}"><span style="width:12px;height:12px;background:#4CAF5033;border:2px solid #4CAF50;display:inline-block;border-radius:3px"></span> Alimentation</div>
+          <div style="${itemStyle}"><span style="width:12px;height:12px;background:#2196F333;border:2px solid #2196F3;display:inline-block;border-radius:3px"></span> Repos</div>
+          <div style="${itemStyle}"><span style="width:12px;height:12px;background:#00BCD433;border:2px solid #00BCD4;display:inline-block;border-radius:3px"></span> Eau</div>
+
+          <div style="${sectionStyle}">Corridors</div>
+          <div style="${itemStyle}"><span style="width:20px;height:3px;background:#FF5722;display:inline-block;opacity:0.8"></span> Corridor normal</div>
+          <div style="${itemStyle}"><span style="width:20px;height:4px;background:#FF1744;display:inline-block"></span> Corridor intense</div>
+
+          <div style="margin-top:10px;font-size:11px;color:#666;border-top:1px solid #333;padding-top:8px">
+            Vent: ${windInfo} | ${data.session || ''}<br/>
+            Sources: OSM, Open-Meteo V3
+          </div>
+        </div>
+      `;
+
+      // Attach toggle handler
+      setTimeout(() => {
+        const toggleBtn = legendDiv.querySelector('.legend-toggle-btn');
+        const contentDiv = legendDiv.querySelector('.legend-content');
+        if (toggleBtn && contentDiv) {
+          toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isHidden = contentDiv.style.display === 'none';
+            contentDiv.style.display = isHidden ? 'block' : 'none';
+            toggleBtn.textContent = isHidden ? '—' : '+';
+          });
+        }
+      }, 50);
+
       mapContainer.appendChild(legendDiv);
       legendRef.current = legendDiv;
     }
@@ -700,9 +738,9 @@ const StandsMapLayer = ({
             animation:pulse-reloc 2s ease-in-out infinite;
           ">
             <div style="width:8px;height:8px;border-radius:50%;background:#2ECC71"></div>
-            <div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);
+            <div style="position:absolute;top:-22px;left:50%;transform:translateX(-50%);
               background:#0d1117;border:1px solid #2ECC71;border-radius:4px;
-              padding:1px 5px;white-space:nowrap;font-size:9px;font-weight:700;color:#2ECC71;
+              padding:2px 6px;white-space:nowrap;font-size:13px;font-weight:700;color:#2ECC71;
             ">ALT ${altSaline.score}</div>
           </div>`,
           iconSize: [28, 28],
@@ -711,37 +749,42 @@ const StandsMapLayer = ({
 
         const salineMarker = L.marker([altSaline.lat, altSaline.lng], { icon: salineIcon, pane: 'markerPane' });
         salineMarker.bindPopup(`
-          <div style="min-width:240px;padding:4px;font-family:system-ui" data-testid="relocation-popup">
-            <div style="font-size:12px;font-weight:700;color:#2ECC71;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid rgba(46,204,113,0.3)">
+          <div style="min-width:300px;padding:14px;font-family:system-ui;position:relative" data-testid="relocation-popup">
+            <button data-testid="relocation-popup-close" onclick="this.closest('.leaflet-popup').querySelector('.leaflet-popup-close-button').click()" style="
+              position:absolute;top:8px;right:8px;background:rgba(255,68,68,0.15);border:2px solid rgba(255,68,68,0.4);
+              color:#ff6666;font-size:18px;font-weight:700;width:30px;height:30px;border-radius:6px;
+              cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;
+            ">X</button>
+            <div style="font-size:16px;font-weight:700;color:#2ECC71;margin-bottom:8px;padding-bottom:6px;padding-right:36px;border-bottom:1px solid rgba(46,204,113,0.3)">
               RELOCALISATION PROPOSEE
             </div>
-            <div style="font-size:10px;color:#aaa;margin-bottom:4px">
+            <div style="font-size:14px;color:#aaa;margin-bottom:6px">
               Site actuel: <span style="color:#E74C3C;font-weight:700">A EVITER</span> (score ${b.score})
             </div>
-            <div style="display:flex;gap:8px;margin-bottom:6px">
-              <div style="flex:1;background:rgba(46,204,113,0.08);border-radius:4px;padding:4px 6px">
-                <div style="font-size:8px;color:#2ECC71;font-weight:700">SALINE</div>
-                <div style="font-size:14px;font-weight:800;color:#fff">${altSaline.score}</div>
+            <div style="display:flex;gap:10px;margin-bottom:8px">
+              <div style="flex:1;background:rgba(46,204,113,0.08);border-radius:6px;padding:6px 8px">
+                <div style="font-size:11px;color:#2ECC71;font-weight:700">SALINE</div>
+                <div style="font-size:20px;font-weight:800;color:#fff">${altSaline.score}</div>
               </div>
-              <div style="flex:1;background:rgba(52,152,219,0.08);border-radius:4px;padding:4px 6px">
-                <div style="font-size:8px;color:#3498DB;font-weight:700">AFFUT</div>
-                <div style="font-size:14px;font-weight:800;color:#fff">${altAffut.score}</div>
+              <div style="flex:1;background:rgba(52,152,219,0.08);border-radius:6px;padding:6px 8px">
+                <div style="font-size:11px;color:#3498DB;font-weight:700">AFFUT</div>
+                <div style="font-size:20px;font-weight:800;color:#fff">${altAffut.score}</div>
               </div>
-              <div style="flex:1;background:rgba(241,196,15,0.08);border-radius:4px;padding:4px 6px">
-                <div style="font-size:8px;color:#F1C40F;font-weight:700">COMPOSITE</div>
-                <div style="font-size:14px;font-weight:800;color:#fff">${alt.composite_score}</div>
+              <div style="flex:1;background:rgba(241,196,15,0.08);border-radius:6px;padding:6px 8px">
+                <div style="font-size:11px;color:#F1C40F;font-weight:700">COMPOSITE</div>
+                <div style="font-size:20px;font-weight:800;color:#fff">${alt.composite_score}</div>
               </div>
             </div>
-            <div style="font-size:9px;color:#9ca3af;line-height:1.4">
+            <div style="font-size:13px;color:#9ca3af;line-height:1.5">
               <div>Corridor: <span style="color:#FF8C00;font-weight:600">${alt.corridor_type || 'N/A'}</span></div>
               <div>Distance: ${alt.distance_from_original_m}m</div>
-              <div style="margin-top:4px;padding-top:4px;border-top:1px solid rgba(255,255,255,0.1)">
+              <div style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.1)">
                 ${alt.justification?.supra || ''}
               </div>
             </div>
-            <div style="margin-top:4px;font-size:7px;color:#555">BCE-4X BLOC 3 — RELOCALISATION V1</div>
+            <div style="margin-top:6px;font-size:10px;color:#555">BCE-4X BLOC 3 — RELOCALISATION V1</div>
           </div>
-        `, { maxWidth: 300, className: 'bionic-stand-popup' });
+        `, { maxWidth: 360, className: 'bionic-stand-popup' });
         relGroup.addLayer(salineMarker);
 
         // Ligne pointillee relocation (du site actuel vers l'alternative)
