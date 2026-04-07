@@ -89,8 +89,29 @@ async def orchestrate_hunt(req: OrchestrationRequest):
     """
     Orchestration complete d'une session de chasse.
     Combine vent/odeurs + acces dynamique + choix d'affuts.
+    BCE-4X: Exclusion urbaine AVANT tout calcul.
     """
     try:
+        from bce.exclusion_layer_bce4x import check_point_exclusions
+
+        # BCE-4X EXCLUSION URBAINE
+        center_exclusion = check_point_exclusions(req.center_lat, req.center_lng)
+        if center_exclusion["excluded"] and "URBAIN" in center_exclusion["exclusions"]:
+            logger.info(
+                f"[ORCHESTRATOR] BCE-4X EXCLUSION URBAINE: "
+                f"({req.center_lat}, {req.center_lng}) => {center_exclusion['exclusions']}"
+            )
+            return {
+                "status": "excluded",
+                "exclusion_bce4x": {
+                    "excluded": True,
+                    "types": center_exclusion["exclusions"],
+                    "reason": "ZONE_URBAINE",
+                },
+                "message": "Zone urbaine detectee — orchestration impossible (BCE-4X).",
+                "governance": "BCE-4X GOLDEN V6+ — STEEVE-MAX",
+            }
+
         from engines.hunt_orchestrator.orchestrator import orchestrate_hunt_session
 
         # Convertir les modeles Pydantic en dicts
@@ -145,10 +166,51 @@ async def compute_contamination_zones(req: ContaminationZoneRequest):
     - Le chasseur (position centre)
     - Chaque site d'alimentation
 
+    EXCLUSION BCE-4X: Si le centre est en zone urbaine, AUCUNE zone
+    de contamination n'est generee. Directive STEEVE-MAX: ZERO zone
+    en milieu urbain.
+
     Objectif pedagogique: comprendre les risques AVANT de placer un affut.
     Independant de la presence d'un affut.
     """
     try:
+        from bce.exclusion_layer_bce4x import check_point_exclusions
+
+        # BCE-4X EXCLUSION URBAINE: Verifier le centre AVANT tout calcul
+        center_exclusion = check_point_exclusions(req.center_lat, req.center_lng)
+        if center_exclusion["excluded"] and "URBAIN" in center_exclusion["exclusions"]:
+            logger.info(
+                f"[CONTAMINATION-ZONES] BCE-4X EXCLUSION URBAINE: "
+                f"({req.center_lat}, {req.center_lng}) => {center_exclusion['exclusions']}"
+            )
+            return {
+                "zones": [],
+                "wind": {
+                    "direction_deg": req.wind_direction_deg,
+                    "speed_kmh": req.wind_speed_kmh,
+                },
+                "session": req.session,
+                "pedagogy": {
+                    "message_fr": (
+                        "Zone urbaine detectee. Aucune zone de contamination "
+                        "ne peut etre generee en milieu urbain (BCE-4X)."
+                    ),
+                    "conseil": (
+                        "Deplacez votre waypoint vers une zone forestiere ou rurale "
+                        "pour obtenir l'analyse de contamination olfactive."
+                    ),
+                    "risque_global": "EXCLUDED",
+                },
+                "total_zones": 0,
+                "exclusion_bce4x": {
+                    "excluded": True,
+                    "types": center_exclusion["exclusions"],
+                    "reason": "ZONE_URBAINE",
+                },
+                "version": "BDRE_PEDAGOGIQUE_V1",
+                "governance": "BCE-4X GOLDEN V6+ — STEEVE-MAX",
+            }
+
         from engines.hunt_orchestrator.vent_odeurs import compute_scent_zone
 
         zones = []
@@ -170,7 +232,15 @@ async def compute_contamination_zones(req: ContaminationZoneRequest):
         })
 
         # Zones de contamination pour chaque site d'alimentation
+        # BCE-4X: Exclure les sites en zone urbaine
         for i, fs in enumerate(req.feeding_sites):
+            fs_exclusion = check_point_exclusions(fs.lat, fs.lng)
+            if fs_exclusion["excluded"] and "URBAIN" in fs_exclusion["exclusions"]:
+                logger.info(
+                    f"[CONTAMINATION-ZONES] BCE-4X: Site {fs.name} exclu (urbain)"
+                )
+                continue
+
             fs_zone = compute_scent_zone(
                 fs.lat, fs.lng,
                 req.wind_direction_deg, req.wind_speed_kmh,
@@ -213,6 +283,10 @@ async def compute_contamination_zones(req: ContaminationZoneRequest):
             "session": req.session,
             "pedagogy": pedagogy,
             "total_zones": len(zones),
+            "exclusion_bce4x": {
+                "excluded": False,
+                "types": [],
+            },
             "version": "BDRE_PEDAGOGIQUE_V1",
             "governance": "BCE-4X GOLDEN V6+ — STEEVE-MAX",
         }

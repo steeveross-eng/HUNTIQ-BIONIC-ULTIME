@@ -453,7 +453,7 @@ const StandsMapLayer = ({
       const tcsGrade = rec.access?.tcs?.grade || '?';
       const tcsColor = tcsScore >= 80 ? '#4FC3F7' : tcsScore >= 60 ? '#26A69A' : tcsScore >= 40 ? '#F39C12' : '#E74C3C';
       const accessInfo = rec.access ? (
-        `<div style="margin-top:8px;padding:6px 8px;background:rgba(79,195,247,0.05);border-left:3px solid ${rec.access.feasible ? (hasTCS ? tcsColor : ACCESS_OK_COLOR) : ACCESS_WARN_COLOR};border-radius:0 6px 6px 0">
+        `<div style="margin:8px 0 0 0;padding:6px 8px;background:rgba(79,195,247,0.05);border-style:none none none solid;border-width:0 0 0 3px;border-color:${rec.access.feasible ? (hasTCS ? tcsColor : ACCESS_OK_COLOR) : ACCESS_WARN_COLOR};border-radius:0 6px 6px 0">
           <div style="font-size:13px;font-weight:600;color:${rec.access.feasible ? (hasTCS ? tcsColor : ACCESS_OK_COLOR) : ACCESS_WARN_COLOR}">
             Acces: ${rec.access.distance_m}m via ${rec.access.trail_type} (${rec.access.routing_algo})
           </div>
@@ -516,108 +516,8 @@ const StandsMapLayer = ({
     group.addTo(map);
     layerRef.current = group;
 
-    // 6. BCE-4X ORDONNANCE STEEVE-MAX: LEGENDE INTERNE SUPPRIMEE DEFINITIVEMENT
-    //    BionicLegend.jsx est la SEULE LEGENDE AUTORISEE (Directive P0-K++)
-    if (false) { // NEUTRALISE: showLegend JAMAIS ACTIF
-      const mapContainer = map.getContainer();
-      const legendDiv = document.createElement('div');
-      legendDiv.className = 'bionic-hunt-legend-golden';
-      legendDiv.setAttribute('data-testid', 'hunt-legend-golden');
-      legendDiv.style.cssText = [
-        'position:absolute',
-        'top:175px',
-        'left:10px',
-        'z-index:800',
-        'background:rgba(13,17,23,0.95)',
-        'border:2px solid #333',
-        'border-radius:10px',
-        'padding:14px 16px',
-        'font-family:system-ui',
-        'font-size:13px',
-        'color:#ccc',
-        'min-width:220px',
-        'max-width:260px',
-        'max-height:calc(100% - 260px)',
-        'overflow-y:auto',
-        'backdrop-filter:blur(12px)',
-        'pointer-events:auto',
-        'box-sizing:border-box',
-        'scrollbar-width:thin',
-        'scrollbar-color:#333 transparent',
-        'box-shadow:0 4px 20px rgba(0,0,0,0.4)',
-        'transition:max-height 0.3s ease',
-      ].join(';');
-
-      const windInfo = `${data.wind?.direction_deg || '?'}° — ${data.wind?.speed_kmh || '?'} km/h`;
-      const itemStyle = 'display:flex;align-items:center;gap:8px;margin:4px 0;font-size:13px;line-height:1.4';
-      const sectionStyle = 'font-weight:700;font-size:11px;color:#888;margin:10px 0 4px;text-transform:uppercase;letter-spacing:0.5px';
-
-      legendDiv.innerHTML = `
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;border-bottom:2px solid #333;padding-bottom:6px;">
-          <span style="font-weight:700;font-size:15px;color:#fff">BCE-4X — Legende</span>
-          <button data-testid="legend-toggle-btn" class="legend-toggle-btn" style="
-            background:rgba(255,255,255,0.08);border:1px solid #555;color:#aaa;
-            font-size:16px;font-weight:700;width:28px;height:28px;border-radius:6px;
-            cursor:pointer;display:flex;align-items:center;justify-content:center;
-            transition:background 0.2s;line-height:1;
-          " onmouseover="this.style.background='rgba(255,255,255,0.15)'"
-             onmouseout="this.style.background='rgba(255,255,255,0.08)'"
-          >—</button>
-        </div>
-        <div data-testid="legend-content" class="legend-content">
-          <div style="${sectionStyle}">Exclusions BCE-4X</div>
-          <div style="${itemStyle}"><span style="width:14px;height:14px;background:#FF444433;border:2px solid #FF4444;display:inline-block;border-radius:3px"></span><span style="color:#FF4444;font-weight:600">Zone A EVITER</span></div>
-          <div style="${itemStyle}"><span style="width:14px;height:14px;background:#FF880033;border:2px solid #FF8800;display:inline-block;border-radius:3px"></span><span style="color:#FF8800;font-weight:600">Contamination saline</span></div>
-          <div style="${itemStyle}"><span style="width:14px;height:14px;background:#FFD70033;border:2px solid #FFD700;display:inline-block;border-radius:3px"></span><span style="color:#FFD700;font-weight:600">Contamination chasseur</span></div>
-          <div style="${itemStyle}"><span style="width:14px;height:14px;border-radius:50%;background:#2ECC7133;border:2px solid #2ECC71;display:inline-block"></span><span style="color:#2ECC71;font-weight:600">Affut alternatif (ALT)</span></div>
-          <div style="${itemStyle}"><span style="width:14px;height:14px;border-radius:50%;background:#3498DB33;border:2px solid #3498DB;display:inline-block"></span><span style="color:#3498DB;font-weight:600">Affut</span></div>
-          <div style="${itemStyle}"><span style="width:14px;height:14px;border:2px dashed #aaa;border-radius:50%;display:inline-block"></span><span>Portee (rayon)</span></div>
-          <div style="${itemStyle}"><span style="width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:12px solid #E74C3C;display:inline-block"></span><span style="color:#E74C3C;font-weight:600">Zone critique</span></div>
-
-          <div style="${sectionStyle}">Affuts</div>
-          <div style="${itemStyle}"><span style="width:12px;height:12px;border-radius:50%;border:2px solid ${FIXED_BORDER};display:inline-block"></span> Affut fixe</div>
-          <div style="${itemStyle}"><span style="width:12px;height:12px;border-radius:50%;border:2px solid ${MOBILE_BORDER};display:inline-block"></span> Position mobile</div>
-
-          <div style="${sectionStyle}">Acces terrain</div>
-          <div style="${itemStyle}"><span style="width:20px;height:3px;background:${ACCESS_OK_COLOR};display:inline-block;border-radius:2px"></span> Sentier OSM</div>
-          <div style="${itemStyle}"><span style="width:20px;height:3px;background:#4FC3F7;display:inline-block;border-radius:2px"></span> Terrain lisse</div>
-          <div style="${itemStyle}"><span style="width:20px;height:3px;background:#F1C40F;display:inline-block;border-radius:2px;border:1px dashed #F1C40F"></span> Hors-sentier</div>
-          <div style="${itemStyle}"><span style="width:20px;height:3px;background:#E74C3C;display:inline-block;border-radius:2px"></span> Non conforme</div>
-
-          <div style="${sectionStyle}">Zones ecologiques</div>
-          <div style="${itemStyle}"><span style="width:12px;height:12px;background:#FF572233;border:2px solid #FF5722;display:inline-block;border-radius:3px"></span> Rut</div>
-          <div style="${itemStyle}"><span style="width:12px;height:12px;background:#4CAF5033;border:2px solid #4CAF50;display:inline-block;border-radius:3px"></span> Alimentation</div>
-          <div style="${itemStyle}"><span style="width:12px;height:12px;background:#2196F333;border:2px solid #2196F3;display:inline-block;border-radius:3px"></span> Repos</div>
-          <div style="${itemStyle}"><span style="width:12px;height:12px;background:#00BCD433;border:2px solid #00BCD4;display:inline-block;border-radius:3px"></span> Eau</div>
-
-          <div style="${sectionStyle}">Corridors</div>
-          <div style="${itemStyle}"><span style="width:20px;height:3px;background:#FF5722;display:inline-block;opacity:0.8"></span> Corridor normal</div>
-          <div style="${itemStyle}"><span style="width:20px;height:4px;background:#FF1744;display:inline-block"></span> Corridor intense</div>
-
-          <div style="margin-top:10px;font-size:11px;color:#666;border-top:1px solid #333;padding-top:8px">
-            Vent: ${windInfo} | ${data.session || ''}<br/>
-            Sources: OSM, Open-Meteo V3
-          </div>
-        </div>
-      `;
-
-      // Attach toggle handler
-      setTimeout(() => {
-        const toggleBtn = legendDiv.querySelector('.legend-toggle-btn');
-        const contentDiv = legendDiv.querySelector('.legend-content');
-        if (toggleBtn && contentDiv) {
-          toggleBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isHidden = contentDiv.style.display === 'none';
-            contentDiv.style.display = isHidden ? 'block' : 'none';
-            toggleBtn.textContent = isHidden ? '—' : '+';
-          });
-        }
-      }, 50);
-
-      mapContainer.appendChild(legendDiv);
-      legendRef.current = legendDiv;
-    }
+    // BCE-4X ORDONNANCE STEEVE-MAX: Legende interne SUPPRIMEE DEFINITIVEMENT.
+    // BionicLegend.jsx est la SEULE LEGENDE AUTORISEE (Directive P0-K++).
   }, [map, centerLat, centerLng, clearLayers, clearLegend, showContamination, showLegend, onStandClick]);
 
   const renderRef = useRef(renderOrchestration);

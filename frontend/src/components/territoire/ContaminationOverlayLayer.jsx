@@ -69,7 +69,16 @@ export default function ContaminationOverlayLayer({
         return;
       }
 
-      setData(await res.json());
+      const responseData = await res.json();
+
+      // BCE-4X EXCLUSION URBAINE: Si le backend signale une exclusion, ne rien afficher
+      if (responseData.exclusion_bce4x?.excluded) {
+        console.info('[CONTAMINATION] BCE-4X: Zone urbaine detectee — ZERO zone affichee');
+        setData(null);
+        return;
+      }
+
+      setData(responseData);
     } catch (err) {
       console.warn('[CONTAMINATION] fetch error:', err);
     } finally {
