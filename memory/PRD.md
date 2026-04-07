@@ -1,8 +1,9 @@
 # PRD — HUNTIQ BIONIC V6+ | BCE-4X GOLDEN V6+
 # ============================================================
 # Autorite: COMMANDANT STEEVE-MAX
-# Protocole: BCE-4X-GLOBAL-PLUS-TOTAL | 10 Validateurs
+# Protocole: BCE-4X-GLOBAL-PLUS-TOTAL | 11 Validateurs
 # Branche: BIONIC_REWRITE_P0 (VERITE INSTITUTIONNELLE)
+# Certification: ACCORDEE (2026-04-07)
 # ============================================================
 
 ## Objectif Principal
@@ -19,47 +20,35 @@ avec gouvernance stricte BCE-4X GOLDEN V6+.
 
 ### Moteurs V6 Operationnels
 - Hunt Orchestrator (contamination-zones, orchestrate, scent-zone)
-- Corridor Analysis V6 (analyze-full)
-- Nutrition Intelligence (supra-panel)
-- BDRE Scoring
-- Relocation Engine
-- Intelligence V6 Dashboard
-
-### Couches Frontend
-- BionicCorridorsV6Layer, ContaminationOverlayLayer, StandsMapLayer
-- BionicLegend (repositionnee: left:60px, maxHeight:340px — NoControlOverlap)
-- PedagogieModule / GUIDE PRO overlay
-- ExclusionOverlayLayer
+- Corridor Analysis V6, Nutrition Intelligence, BDRE Scoring
+- Relocation Engine, Intelligence V6 Dashboard
 
 ### Gouvernance BCE-4X
 - 5 fichiers institutionnels scelles SHA256
 - Gatekeeper pre-commit actif (21 controles)
+- 11 validateurs BCE-4X-GLOBAL-PLUS-TOTAL actifs
 - Branche main INTERDITE de merge
-- 10 validateurs BCE-4X-GLOBAL-PLUS-TOTAL actives
 
-### Corrections P0 Completees (Session actuelle)
-- CORRECTION VIOLATION CRITIQUE: Exclusion urbaine BCE-4X
-  - Backend: check_point_exclusions dans contamination-zones + orchestrate
-  - Frontend: Guard ContaminationOverlayLayer
-- CORRECTION UX: Legende/zoom NoControlOverlap (repositionnement + maxHeight)
-- CORRECTION UX: Grille Vegetation/Hydrologie (cote a cote grid-cols-2)
-- CORRECTION UX: GUIDE PRO remonte en tete de hierarchie
-- Nettoyage code mort StandsMapLayer + correction faux positif Gatekeeper CSS
+### Corrections P0 Session Actuelle
+1. VIOLATION CRITIQUE: Exclusion urbaine BCE-4X (backend + frontend)
+2. UX: Legende/zoom NoControlOverlap (repositionnement)
+3. UX: Grille Vegetation/Hydrologie (cote a cote)
+4. UX: GUIDE PRO remonte en tete de hierarchie
+5. Nettoyage code mort StandsMapLayer + faux positif Gatekeeper
+6. Admin Premium: Grille 3x3, alignement, auth fixee, hierarchie restauree
 
 ## Audits Livres
-- AUDIT INSTITUTIONNEL TOTAL — /app/memory/AUDIT_INSTITUTIONNEL_TOTAL.md
-- AUDIT VALIDATION URBAINE — /app/memory/AUDIT_VALIDATION_URBAINE.md
-- BCE-4X-GLOBAL-PLUS-TOTAL VALIDATION — /app/memory/BCE4X_GLOBAL_PLUS_TOTAL_VALIDATION.md
+- AUDIT_INSTITUTIONNEL_TOTAL.md
+- AUDIT_VALIDATION_URBAINE.md
+- BCE4X_GLOBAL_PLUS_TOTAL_VALIDATION.md
+- ADMIN_PREMIUM_VALIDATION.md
 
 ## Taches Restantes
 
-### P0
-- Certification finale de l'audit par le Commandant
-
-### P1 (Gele)
+### P1 (AUTORISEE)
 - Harmonisation x1000% + Test export PDF
 
-### P2 (Gele)
+### P2 (GELE)
 - M5 Offline Mode Ultra
 - BSAA-2 Social Ads Automation
 
