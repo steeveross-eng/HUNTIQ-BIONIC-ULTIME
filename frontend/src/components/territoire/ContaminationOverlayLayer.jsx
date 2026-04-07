@@ -120,12 +120,12 @@ export default function ContaminationOverlayLayer({
         : '<span style="color:#66bb6a;font-weight:700">RISQUE FAIBLE</span>';
 
       poly.bindPopup(`
-        <div style="font-size:18px;line-height:1.6;min-width:260px;background:#0f1525;color:#e0e8f0;padding:16px;border-radius:10px;">
-          <div style="font-weight:700;font-size:20px;margin-bottom:6px;color:${color}">
+        <div style="font-size:12px;line-height:1.5;min-width:200px;background:#0f1525;color:#e0e8f0;padding:10px;border-radius:8px;">
+          <div style="font-weight:700;font-size:13px;margin-bottom:4px;color:${color}">
             ${zone.label || 'Zone de contamination'}
           </div>
-          <div style="margin-bottom:6px;font-size:18px">${riskBadge}</div>
-          <div style="font-size:16px;color:#9ca3af">
+          <div style="margin-bottom:4px;font-size:12px">${riskBadge}</div>
+          <div style="font-size:11px;color:#9ca3af">
             Vent ${zone.bearing_deg || 0}° | Portee ${zone.range_m || 0}m
           </div>
         </div>
@@ -134,7 +134,7 @@ export default function ContaminationOverlayLayer({
       group.addLayer(poly);
     }
 
-    // Pedagogy label — TYPOGRAPHIE x2 + BOUTON FERMER (ORDONNANCE STEEVE-MAX)
+    // Pedagogy label — AMENDEMENT -40% TYPOGRAPHIE (ORDONNANCE STEEVE-MAX P0-K+)
     const pedagogy = data.pedagogy;
     if (pedagogy && center && pedagogyVisible) {
       const closeFnName = '__bdre_pedagogy_close';
@@ -150,14 +150,14 @@ export default function ContaminationOverlayLayer({
         className: 'contamination-pedagogy',
         html: `<div data-testid="contamination-pedagogy" style="
           background:rgba(15,21,37,0.95);backdrop-filter:blur(12px);
-          border:2px solid rgba(255,136,0,0.5);border-radius:12px;
-          padding:16px 20px;color:#e0e8f0;font-size:20px;line-height:1.5;
-          max-width:420px;min-width:280px;white-space:normal;pointer-events:auto;
-          box-shadow:0 4px 24px rgba(0,0,0,0.5);
+          border:2px solid rgba(255,136,0,0.5);border-radius:10px;
+          padding:10px 12px;color:#e0e8f0;font-size:12px;line-height:1.4;
+          max-width:300px;min-width:200px;white-space:normal;pointer-events:auto;
+          box-shadow:0 4px 20px rgba(0,0,0,0.4);
           position:relative;
         ">
           <button data-testid="bdre-pedagogy-close-btn" onclick="window.${closeFnName}()" style="
-            position:absolute;top:8px;right:10px;
+            position:absolute;top:6px;right:8px;
             background:rgba(255,68,68,0.15);border:2px solid rgba(255,68,68,0.5);
             color:#ff6666;font-size:22px;font-weight:700;
             width:36px;height:36px;border-radius:8px;
@@ -166,13 +166,13 @@ export default function ContaminationOverlayLayer({
           " onmouseover="this.style.background='rgba(255,68,68,0.35)'"
              onmouseout="this.style.background='rgba(255,68,68,0.15)'"
           >X</button>
-          <div style="font-weight:700;font-size:22px;color:#FF8800;margin-bottom:8px;padding-right:40px;">
+          <div style="font-weight:700;font-size:13px;color:#FF8800;margin-bottom:5px;padding-right:40px;">
             BDRE PEDAGOGIQUE
           </div>
-          <div style="font-size:18px;color:#c8d0dc;line-height:1.5;">${pedagogy.conseil || ''}</div>
+          <div style="font-size:11px;color:#c8d0dc;line-height:1.4;">${pedagogy.conseil || ''}</div>
         </div>`,
-        iconSize: [420, 120],
-        iconAnchor: [210, -10],
+        iconSize: [300, 80],
+        iconAnchor: [150, -10],
       });
 
       const marker = L.marker([center.lat, center.lng], {
