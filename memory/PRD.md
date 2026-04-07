@@ -32,11 +32,20 @@ Gouvernance stricte BCE-4X GOLDEN V6+.
 - BCE4X_GLOBAL_PLUS_TOTAL_VALIDATION.md
 - ADMIN_PREMIUM_VALIDATION.md
 - BCE4X_AUTH_USAGER_VALIDATION.md
+- SUPRA_ONGLETS_AUDIT_COMPLET.md (2026-02-07) — 6 entites, 29 moteurs, 14 ecarts
+- SUPRA_ECARTS_DETAILLES.md (2026-02-07) — 14 ecarts + Impact Matrix + Test Matrix (20 tests) + Roadmap P0-R
+- SUPRA_BASELINES_INSTITUTIONNELLES.md (2026-02-07) — Scores, flux, performance
+- SUPRA_DEPENDANCES_BACKEND.md (2026-02-07) — 29 moteurs, fragilites, propagation
+- SUPRA_RISQUES_INSTITUTIONNELS.md (2026-02-07) — 29 risques (7 critiques)
 
 ## Taches Restantes
-### P1 (AUTORISEE apres certification AUTH-USAGER)
+### P0 (EN COURS — EN ATTENTE VALIDATION)
+- Audit SUPRA complet: LIVRE, 3 complements LIVRES
+- Reconstruction SUPRA x1000%: STRICTEMENT INTERDITE jusqu'a validation des 3 complements
+### P1 (GELEE — apres reconstruction SUPRA)
 - Harmonisation x1000% + Test export PDF
 ### P2 (GELE)
+- Deprecation 9 endpoints obsoletes AUTH-USAGER
 - M5 Offline Mode Ultra
 - BSAA-2 Social Ads Automation
 ### INTERDIT
