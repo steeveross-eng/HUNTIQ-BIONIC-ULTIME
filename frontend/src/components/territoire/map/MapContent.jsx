@@ -234,6 +234,7 @@ const MapContentInner = React.memo(({
         onStandClick={onStandClick}
         feedingSites={feedingSitesForStands || []}
         fixedBlinds={fixedBlindsForStands || []}
+        showLegend={false}
       />
     )}
 
