@@ -1,0 +1,586 @@
+{
+  "_meta": {
+    "version": "0.1.0",
+    "created": "2026-04-07",
+    "branch": "BIONIC-ULTIME-INIT",
+    "authority": "COMMANDANT STEEVE-MAX",
+    "protocol": "BCE-4X-GLOBAL",
+    "status": "SCELLE",
+    "modification_policy": "AUCUNE MODIFICATION SANS VALIDATION EXPLICITE STEEVE-MAX",
+    "hash_integrity": "PENDING_SEAL",
+    "coverage": "100% BIONIC"
+  },
+
+  "UX_GLOBAL": {
+    "typographies": {
+      "h1": { "size": "16px", "weight": 900, "transform": "uppercase", "tracking": "wide" },
+      "h2": { "size": "13px", "weight": 700, "transform": "uppercase", "tracking": "wider" },
+      "h3": { "size": "11px", "weight": 700, "transform": "uppercase", "tracking": "widest" },
+      "section_title": { "size": "10px", "weight": 700, "transform": "uppercase", "tracking": "wider" },
+      "body": { "size": "12px", "weight": 400, "line_height": 1.5 },
+      "small": { "size": "10px", "weight": 400 },
+      "micro": { "size": "8px", "weight": 400, "usage": "footers, signatures" },
+      "badge": { "size": "10px", "weight": 700, "transform": "uppercase" }
+    },
+    "couleurs": {
+      "primary_amber": "#F5A623",
+      "primary_green": "#22C55E",
+      "primary_cyan": "#06B6D4",
+      "primary_red": "#EF4444",
+      "background_dark": "#0a0a0f",
+      "background_card": "#0c0c14",
+      "background_elevated": "#111118",
+      "background_input": "#1a1a2e",
+      "border_default": "rgba(255,255,255,0.08)",
+      "border_active": "rgba(245,166,35,0.5)",
+      "text_primary": "#e0e8f0",
+      "text_secondary": "#9ca3af",
+      "text_muted": "#6b7280",
+      "text_accent_amber": "#F5A623",
+      "text_accent_green": "#86efac",
+      "text_accent_red": "#fca5a5",
+      "shadow_glow_amber": "0 0 16px rgba(245,166,35,0.1)",
+      "shadow_glow_green": "0 0 16px rgba(34,197,94,0.1)",
+      "shadow_card": "0 4px 20px rgba(0,0,0,0.4)"
+    },
+    "icones": {
+      "library": "lucide-react",
+      "fallback": "FontAwesome CDN",
+      "interdit": ["emoji characters", "inline SVG sans justification"],
+      "taille_default": "16px",
+      "taille_small": "14px",
+      "taille_badge": "12px"
+    },
+    "grilles": {
+      "colonnes_desktop": 12,
+      "colonnes_mobile": 4,
+      "gap_default": "8px",
+      "gap_large": "16px",
+      "max_width": "1440px"
+    },
+    "layouts": {
+      "sidebar_width": "280px",
+      "header_height": "64px",
+      "toolbar_height": "40px",
+      "footer_height": "48px",
+      "map_full_bleed": true,
+      "padding_page": "16px",
+      "padding_card": "12px 16px"
+    },
+    "popups": {
+      "background": "rgba(15,21,37,0.95)",
+      "backdrop_filter": "blur(12px)",
+      "border_radius": "10px",
+      "border": "2px solid rgba(245,166,35,0.5)",
+      "padding": "10px 12px",
+      "max_width": "300px",
+      "shadow": "0 4px 20px rgba(0,0,0,0.4)"
+    },
+    "modales": {
+      "overlay": "rgba(0,0,0,0.7)",
+      "background": "#111118",
+      "border_radius": "12px",
+      "padding": "24px",
+      "max_width": "600px",
+      "animation": "fade-in 200ms"
+    },
+    "interactions": {
+      "hover_brightness": 1.25,
+      "active_scale": 0.97,
+      "transition_default": "all 200ms ease",
+      "focus_ring": "2px solid #F5A623",
+      "disabled_opacity": 0.4,
+      "cursor_interactive": "pointer"
+    },
+    "responsive": {
+      "breakpoints": {
+        "mobile": "0-639px",
+        "tablet": "640-1023px",
+        "desktop": "1024-1919px",
+        "ultrawide": "1920px+"
+      },
+      "mobile_first": true,
+      "touch_target_min": "44px"
+    },
+    "accessibilite": {
+      "contrast_ratio_min": 4.5,
+      "aria_labels_obligatoires": true,
+      "keyboard_navigation": true,
+      "screen_reader_support": true,
+      "focus_visible": true,
+      "reduced_motion_support": true
+    },
+    "composants_transversaux": {
+      "toast": { "library": "sonner", "position": "bottom-right", "duration": 4000 },
+      "tooltip": { "delay": 300, "max_width": "200px" },
+      "skeleton": { "animation": "pulse", "background": "#1a1a2e" },
+      "spinner": { "type": "Loader2 animate-spin", "size": "16px" },
+      "badge_bce4x": { "background": "linear-gradient(135deg, #F5A62325, #F5A62310)", "color": "#F5A623", "border": "1px solid #F5A62340" }
+    }
+  },
+
+  "BDRE": {
+    "guide_pro": {
+      "titre": "GUIDE PRO",
+      "ancien_titre_interdit": "BDRE PEDAGOGIQUE",
+      "typographie": { "size": "10px", "weight": 700, "tracking": "wider", "transform": "uppercase" },
+      "couleur_titre": "#F5A623",
+      "position": { "type": "absolute", "top": "16px", "right": "16px", "z_index": 900 },
+      "position_interdite": "Leaflet divIcon / marker (cause chevauchement zoom)",
+      "composant": "ContaminationOverlayLayer.jsx",
+      "close_button": true,
+      "footer": "BCE-4X + Steeve-MAX"
+    },
+    "intensite": {
+      "levels": ["EXTREME", "TRES_FORT", "FORT", "MODERE", "FAIBLE"],
+      "couleurs": ["#dc2626", "#f97316", "#eab308", "#84cc16", "#22c55e"]
+    },
+    "corridors_contamination": {
+      "hunter_color": "#FF4444",
+      "saline_color": "#FF8800",
+      "risk_levels": ["HIGH", "MODERATE", "LOW"],
+      "polygon_opacity": { "hunter": 0.12, "saline": 0.08 }
+    },
+    "sante_sources": {
+      "status": ["healthy", "fallback", "not_connected", "alert"],
+      "couleurs": ["#22c55e", "#eab308", "#6b7280", "#ef4444"]
+    },
+    "fenetres": {
+      "max_width": "280px",
+      "min_width": "220px",
+      "background": "#0c0c14/95",
+      "border": "border-gray-700/50",
+      "border_radius": "rounded-lg"
+    },
+    "calculs": {
+      "contamination_api": "POST /api/v1/hunt/contamination-zones",
+      "sources_api": "GET /api/v1/bdre/sources",
+      "dashboard_api": "GET /api/v1/bdre/dashboard"
+    }
+  },
+
+  "SUPRA": {
+    "zones": {
+      "types": ["habitat_optimal", "zone_rut", "zone_repos", "alimentation", "zones_humides", "forets_matures"],
+      "couleurs": {
+        "habitat_optimal": "#22c55e",
+        "zone_rut": "#f97316",
+        "zone_repos": "#3b82f6",
+        "alimentation": "#eab308",
+        "zones_humides": "#06b6d4",
+        "forets_matures": "#16a34a"
+      }
+    },
+    "intensite": {
+      "levels": ["critique", "majeur", "fort", "modere", "faible"],
+      "scoring": [100, 80, 60, 40, 20]
+    },
+    "fenetres": {
+      "diagnostic_panel": "BionicZoneDiagnosticPanel.jsx",
+      "overlay": "BionicMapOverlay.jsx"
+    },
+    "calculs": {
+      "scoring_api": "POST /api/v1/scoring/evaluate",
+      "zones_api": "POST /api/v1/zones/generate"
+    }
+  },
+
+  "AFFUTS": {
+    "types": {
+      "affut_standard": { "icone": "Crosshair", "couleur": "#22c55e" },
+      "affut_alt_sal": { "icone": "Target", "couleur": "#f59e0b", "label": "SAL-ALT" },
+      "affut_exclu": { "icone": "Ban", "couleur": "#ef4444" }
+    },
+    "portee": {
+      "standard_m": 200,
+      "max_m": 500,
+      "min_m": 50,
+      "unite": "metres"
+    },
+    "zones_critiques": {
+      "rayon_securite_m": 300,
+      "zone_exclusion_route_m": 200,
+      "zone_exclusion_batiment_m": 200
+    },
+    "zones_a_eviter": ["routes", "batiments", "zones_residentielles", "cours_eau_navigables"],
+    "recommandations": {
+      "orientation_vent": true,
+      "elevation_preference": "altitude_superieure",
+      "couvert_vegetal": "minimum_60_pourcent"
+    },
+    "composant": "StandsMapLayer.jsx",
+    "legende_interne": "DESACTIVEE — BionicLegend seule autorisee"
+  },
+
+  "BIONIC_LEGEND": {
+    "composant": "BionicLegend.jsx",
+    "statut": "LEGENDE ULTIME ET EXCLUSIVE",
+    "items": {
+      "zones_ecologiques": ["Habitat optimal", "Zone de rut", "Zone de repos", "Alimentation", "Zones humides", "Forets matures"],
+      "corridors": ["Critique", "Majeur", "Fort", "Modere", "Faible"],
+      "facteurs": ["NDVI", "Pentes", "Orientation", "Eau", "Couvert"],
+      "affuts": ["Optimal", "Viable", "SAL-ALT", "Exclu"]
+    },
+    "structure": {
+      "position": "absolute bottom-14 left-2 z-[1000]",
+      "collapsed": { "width": "auto", "height": "32px", "label": "LEGENDE" },
+      "expanded": { "max_height": "440px", "width": "260px", "scrollable": true }
+    },
+    "regles": {
+      "R1": "BionicLegend est la SEULE legende autorisee sur toute carte BIONIC",
+      "R2": "Aucun autre composant ne peut rendre de legende visible",
+      "R3": "Les legendes parasites sont neutralisees par CSS + code source",
+      "R4": "BionicLegend persiste sur tous les modules carte",
+      "R5": "Le toggle collapsed/expanded est toujours fonctionnel",
+      "R6": "Duplication = violation BCE-4X = blocage immediat",
+      "R7": "Typographie conforme a UX_GLOBAL.typographies.section_title",
+      "R8": "Couleurs conformes a SUPRA.zones.couleurs",
+      "R9": "Le compteur d'items est affiche dans le badge",
+      "R10": "Le bouclier CSS nucleaire dans index.css est PERMANENT"
+    }
+  },
+
+  "COUCHE_UNIVERSELLE_BCE4X": {
+    "exclusions": {
+      "composant": "exclusion_layer_bce4x.py",
+      "categories": ["ROUTES", "BATIMENTS", "HYDROGRAPHIE", "ZONES_PROTEGEES"],
+      "politique": "ZERO TOLERANCE — aucun affut dans une zone exclue",
+      "api": "integrée au scoring pipeline"
+    },
+    "corridors": {
+      "composant": "BionicCorridorsV6Layer.jsx",
+      "backend": "corridors V6 + V10",
+      "palette": { "critique": "#dc2626", "majeur": "#f97316", "fort": "#eab308", "modere": "#84cc16", "faible": "#22c55e" }
+    },
+    "deplacements": {
+      "composant": "MovementCorridorsLayer.jsx",
+      "types": ["reel", "estime"],
+      "legende_interne": "DESACTIVEE"
+    },
+    "zones_humides": { "source": "OSM/Overpass", "couleur": "#06b6d4" },
+    "forets_matures": { "source": "Ecoforestry + NDVI", "couleur": "#16a34a" },
+    "facteurs": {
+      "ndvi": { "composant": "NdviOverlayLayer.jsx", "source": "Sentinel-2", "legende_interne": "DESACTIVEE" },
+      "pentes": { "source": "DEM analysis" },
+      "orientation": { "source": "aspect calculation" }
+    },
+    "habitat": { "scoring": "SUPRA zones", "overlays": "BionicPrecisionZonesLayer.jsx" },
+    "parcours": { "composant": "RoutePlannerLayer.jsx", "legende_interne": "DESACTIVEE" }
+  },
+
+  "CARTE": {
+    "moteur_couches": {
+      "base": "Esri Satellite",
+      "alternatives": ["OpenStreetMap", "Topo"],
+      "framework": "react-leaflet",
+      "library": "Leaflet"
+    },
+    "moteur_rendu": {
+      "polygons": "L.polygon",
+      "markers": "L.marker + L.divIcon",
+      "heatmap": "ConsolidatedHeatmapLayer",
+      "tiles": "L.tileLayer + WMSTileLayer"
+    },
+    "zoom": {
+      "min": 4,
+      "max": 18,
+      "default": 13,
+      "controls_position": "top-left",
+      "custom_buttons": true,
+      "native_zoomControl": false
+    },
+    "waypoints": {
+      "creation": "+ WAYPOINT button",
+      "persistence": "localStorage + backend",
+      "partage": "URL params (lat, lng, zoom)"
+    },
+    "route_planner": {
+      "composant": "RoutePlannerLayer.jsx + GuidedRouteLayer.jsx",
+      "scoring_integration": true
+    },
+    "overlays": ["contamination", "exclusions", "corridors", "ndvi", "heatmap", "hydrography", "ecoforestry", "precision_zones"],
+    "controles": {
+      "zoom_plus": "top:16px left:12px",
+      "zoom_moins": "top:48px left:12px",
+      "gps": "top:96px left:12px",
+      "bdre_shield": "top:144px left:12px",
+      "bionic_legend": "bottom:56px left:8px",
+      "guide_pro": "top:16px right:16px",
+      "zone_interdit_chevauchement": true
+    }
+  },
+
+  "ANALYSE_TERRITOIRE": {
+    "page": "MonTerritoireBionicPage.jsx",
+    "composant_carte": "MapContent.jsx",
+    "onglets": ["SPLIT", "CARTE", "TOUTES LES ESPECES", "OBSERVATION", "INTELLIGENCE", "ZONES", "ALIMENTATION", "POINTS CHAUDS", "SEUIL", "CURSEUR"],
+    "filtres": {
+      "especes": true,
+      "saisons": true,
+      "seuil_score": { "min": 0, "max": 100, "default": 30 }
+    },
+    "corridors": "BionicCorridorsV6Layer",
+    "deplacements": "MovementCorridorsLayer",
+    "zones_critiques": "BionicPrecisionZonesLayer",
+    "recommandations": "NutritionPointDetailPanel + BionicZoneDiagnosticPanel"
+  },
+
+  "MON_TERRITOIRE": {
+    "composant": "MonTerritoireBionic.jsx",
+    "territoires": {
+      "sauvegarde": true,
+      "partage": true,
+      "max_territoires": "illimite (premium)"
+    },
+    "favoris": { "gestion": "localStorage + backend" },
+    "historique": { "sorties": true, "observations": true },
+    "synchronisation": { "temps_reel": false, "intervalle": "au chargement" }
+  },
+
+  "INTELLIGENCE": {
+    "v6": {
+      "page": "IntelligenceDashboardPage.jsx",
+      "composants": ["ScoreConsolideV6", "PredictionHoraire", "MeilleursCreneaux", "TendancesSaisonnieres"],
+      "scoring_pipeline": true
+    },
+    "v7": {
+      "statut": "FUTUR — non implemente",
+      "features_planifiees": ["IA predictive", "apprentissage continu", "recommandations personnalisees"]
+    },
+    "scoring": {
+      "modules": ["Predictif P(h)", "Solunaire", "Meteo-Faune", "Nutrition V6", "Territoire/POI", "Legal"],
+      "score_max": 100,
+      "notation": { "A": "80-100", "B": "60-79", "C": "40-59", "D": "20-39", "F": "0-19" }
+    }
+  },
+
+  "DASHBOARD": {
+    "page": "DashboardPage.jsx",
+    "statistiques": ["sorties", "heures_terrain", "distance_km", "observations"],
+    "graphiques": ["tendances", "repartition_especes", "scores_historiques"],
+    "indicateurs": ["score_consolide", "bdre_status", "alertes"]
+  },
+
+  "PAGE_PRINCIPALE": {
+    "composant": "HomePage",
+    "sections": ["hero", "features", "pricing", "testimonials", "cta"],
+    "responsive": true
+  },
+
+  "BOUTIQUE": {
+    "page": "ShopPage.jsx",
+    "produits": true,
+    "abonnements": { "plans": ["free", "premium", "pro"] },
+    "paiements": { "processor": "a_definir" },
+    "panier": true,
+    "checkout": true,
+    "promotions": { "codes_promo": true },
+    "upsells": true,
+    "historique_achats": true
+  },
+
+  "ADMIN_PREMIUM": {
+    "page": "AdminPremiumPage.jsx",
+    "utilisateurs": { "crud": true, "recherche": true },
+    "roles": ["admin", "premium", "standard", "guest"],
+    "permissions": { "granulaire": true },
+    "territoires": { "gestion_admin": true },
+    "equipes": { "statut": "FUTUR" },
+    "licences": { "gestion": true },
+    "acces": { "controle": "role-based" }
+  },
+
+  "SEO": {
+    "metadonnees": { "title_template": "BIONIC Chasse/Hunt | {page}" },
+    "opengraph": { "type": "website", "image": "/og-bionic.png" },
+    "sitemap": { "auto_generation": true },
+    "indexation": { "robots_txt": true },
+    "performance_seo": { "core_web_vitals": true },
+    "accessibilite_seo": { "aria_landmarks": true, "semantic_html": true }
+  },
+
+  "PAGES_PUBLIQUES": {
+    "landing_pages": ["homepage", "pricing", "features"],
+    "blog": { "statut": "FUTUR" },
+    "articles": { "statut": "FUTUR" }
+  },
+
+  "TRACKING_MARKETING": {
+    "pixels": { "facebook": "a_configurer", "google_analytics": "a_configurer" },
+    "evenements": { "tracking_library": "a_definir" },
+    "funnels": { "statut": "FUTUR" }
+  },
+
+  "API": {
+    "endpoints": {
+      "prefix": "/api",
+      "version": "v1",
+      "format": "/api/v1/{module}/{action}"
+    },
+    "auth": {
+      "type": "JWT",
+      "refresh_token": true,
+      "expiration": "24h"
+    },
+    "permissions": { "middleware": true },
+    "rate_limiting": { "requests_per_minute": 60, "burst": 10 },
+    "logs": { "level": "INFO", "format": "structured_json" },
+    "securite_api": {
+      "cors": true,
+      "helmet": true,
+      "input_validation": true,
+      "sql_injection_protection": "parameterized_queries"
+    }
+  },
+
+  "BACKEND": {
+    "framework": "FastAPI",
+    "services": {
+      "scoring_pipeline": "core/scoring_pipeline/",
+      "relocation_engine": "engines/relocation/",
+      "exclusion_layer": "bce/exclusion_layer_bce4x.py",
+      "contamination": "hunt/contamination_zones",
+      "bdre": "bdre/"
+    },
+    "workers": { "statut": "FUTUR — background tasks" },
+    "cron_jobs": { "statut": "FUTUR — scheduled computations" },
+    "pipelines": {
+      "scoring": "score consolidation V6",
+      "zones": "zone generation pipeline",
+      "corridors": "corridor computation V6/V10"
+    },
+    "calculs_bdre_supra": {
+      "bdre": "contamination olfactive + pedagogie",
+      "supra": "zone scoring + diagnostic"
+    },
+    "stockage": {
+      "database": "MongoDB",
+      "cache": "in-memory + localStorage",
+      "osm_cache": "JSON offline files"
+    }
+  },
+
+  "FRONTEND": {
+    "framework": "React",
+    "stores": {
+      "state_management": "React useState/useReducer + Context",
+      "persistence": "localStorage"
+    },
+    "composants": {
+      "ui_library": "shadcn/ui",
+      "path": "/components/ui/",
+      "carte": "/components/territoire/",
+      "pages": "/pages/"
+    },
+    "hooks": {
+      "custom": ["useSplitViewZones", "useBionicScore"],
+      "convention": "use{Feature}()"
+    },
+    "contexts": {
+      "auth": "AuthContext",
+      "theme": "dark_only"
+    }
+  },
+
+  "MOBILE": {
+    "ios": { "statut": "FUTUR" },
+    "android": { "statut": "FUTUR" },
+    "pwa": {
+      "statut": "PARTIEL — responsive web",
+      "manifest": true,
+      "service_worker": "a_implementer",
+      "offline": "FUTUR — Offline Mode Ultra"
+    }
+  },
+
+  "DESKTOP": {
+    "web_desktop": { "statut": "ACTIF — responsive 1024px+" },
+    "electron": { "statut": "FUTUR" }
+  },
+
+  "ANALYTICS": {
+    "evenements": { "tracking": "a_definir" },
+    "heatmaps_ux": { "statut": "FUTUR" },
+    "funnels_conversion": { "statut": "FUTUR" },
+    "performance": { "core_web_vitals": true }
+  },
+
+  "MONITORING": {
+    "logs": { "backend": "/var/log/supervisor/", "frontend": "console" },
+    "erreurs": { "tracking": "console.warn/error" },
+    "crash_reports": { "statut": "FUTUR — Sentry ou equivalent" },
+    "temps_reponse": { "tracking": "FUTUR" }
+  },
+
+  "PERFORMANCE": {
+    "optimisation": {
+      "lazy_loading": { "pages": "React.lazy + Suspense", "images": "loading=lazy" },
+      "compression": { "gzip": true },
+      "caching": { "api": "in-memory", "static": "service-worker (FUTUR)" },
+      "cdn": { "statut": "FUTUR" },
+      "prechargement": { "critical_css": true },
+      "minification": { "js": "webpack production", "css": "postcss" }
+    }
+  },
+
+  "SECURITE": {
+    "auth": { "type": "JWT", "hashing": "bcrypt", "refresh": true },
+    "permissions": { "rbac": true, "roles": ["admin", "premium", "standard", "guest"] },
+    "sessions": { "duration": "24h", "secure_cookie": true },
+    "chiffrement": { "transport": "HTTPS/TLS", "storage": "a_implementer" },
+    "anti_fraude": { "statut": "FUTUR" },
+    "anti_bot": { "statut": "FUTUR — captcha" },
+    "anti_injection": { "sql": "parameterized", "xss": "sanitize_input", "csrf": "token" },
+    "anti_contournement": { "rate_limit": true, "ip_blacklist": "FUTUR" }
+  },
+
+  "MODULES_FUTURS": {
+    "offline_mode_ultra": { "phase": "P2", "statut": "GELE" },
+    "bsaa_2": { "phase": "P2", "statut": "GELE", "description": "BIONIC Social Ads Automation" },
+    "seo_engine_ai": { "phase": "P3", "statut": "PLANIFIE" },
+    "admin_premium_ai": { "phase": "P3", "statut": "PLANIFIE" },
+    "boutique_ai": { "phase": "P4", "statut": "PLANIFIE" },
+    "carte_ai": { "phase": "P4", "statut": "PLANIFIE" },
+    "intelligence_v7": { "phase": "P3", "statut": "PLANIFIE" },
+    "bionic_os_v9": { "phase": "P5", "statut": "VISION" }
+  },
+
+  "MODULES_INSTITUTIONNELS": {
+    "bce_4x": {
+      "fichier": "exclusion_layer_bce4x.py",
+      "couverture": "scoring pipeline + carte + zones",
+      "politique": "ZERO TOLERANCE"
+    },
+    "bce_4x_global": {
+      "fichier": "BCE4X_GLOBAL_LOCK.json",
+      "couverture": "100% BIONIC",
+      "statut": "SCELLE"
+    },
+    "charte_bionic_legend": {
+      "fichier": "CHARTE_BIONIC_LEGEND.md",
+      "autorite": "STEEVE-MAX",
+      "regles": 10
+    },
+    "charte_ux_globale": {
+      "source": "UX_GLOBAL section de ce fichier",
+      "autorite": "STEEVE-MAX"
+    },
+    "atlas_visuel": {
+      "statut": "A CREER — reference visuelle exhaustive"
+    },
+    "pipeline_certification": {
+      "etapes": ["audit_code", "audit_ux", "audit_performance", "validation_steeve_max"],
+      "bloquant": true
+    },
+    "comite_bce_4x": {
+      "president": "COMMANDANT STEEVE-MAX",
+      "pouvoir": "VETO ABSOLU sur toute modification",
+      "quorum": "1 (STEEVE-MAX seul)"
+    },
+    "gatekeeper_steeve_max": {
+      "fichier": "STEEVE_MAX_VALIDATOR_GLOBAL.js",
+      "role": "Blocage automatique de toute derive",
+      "autorite": "STEEVE-MAX"
+    }
+  }
+}

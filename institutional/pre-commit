@@ -1,0 +1,38 @@
+#!/bin/bash
+# ================================================================
+# PRE-COMMIT HOOK — BCE-4X-GLOBAL GATEKEEPER
+# ================================================================
+# Ce hook intercepte TOUT commit et execute le Gatekeeper
+# STEEVE-MAX avant d'autoriser la fusion.
+#
+# Installation: cp pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+# ================================================================
+
+INSTITUTIONAL_DIR="$(git rev-parse --show-toplevel)/institutional"
+GATEKEEPER="$INSTITUTIONAL_DIR/GATEKEEPER_PIPELINE.js"
+
+if [ ! -f "$GATEKEEPER" ]; then
+  echo "[BCE-4X-GLOBAL] ERREUR: GATEKEEPER_PIPELINE.js introuvable!"
+  echo "[BCE-4X-GLOBAL] Chemin attendu: $GATEKEEPER"
+  exit 1
+fi
+
+echo "[BCE-4X-GLOBAL] Gatekeeper Steeve-Max active..."
+echo "[BCE-4X-GLOBAL] Analyse du commit en cours..."
+
+# Obtenir la branche courante
+BRANCH=$(git branch --show-current 2>/dev/null)
+
+# Executer le Gatekeeper
+node "$GATEKEEPER" 2>&1
+RESULT=$?
+
+if [ $RESULT -ne 0 ]; then
+  echo ""
+  echo "[BCE-4X-GLOBAL] >>> COMMIT BLOQUE PAR LE GATEKEEPER <<<"
+  echo "[BCE-4X-GLOBAL] Corriger les violations avant de retenter."
+  exit 1
+fi
+
+echo "[BCE-4X-GLOBAL] Commit autorise."
+exit 0
