@@ -413,6 +413,13 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
   return (
     <div className="space-y-1.5" data-testid="supra-analyse-tab">
       {/* ═══════════════════════════════════════════════════════
+          GUIDE PRO — BCE-4X GOLDEN V6+
+          POSITIONNEMENT PRIORITAIRE — EN TETE DE HIERARCHIE
+          COMMANDANT STEEVE-MAX
+          ═══════════════════════════════════════════════════════ */}
+      <PedagogieModule species={species} season={season} score={score} gc={gc} />
+
+      {/* ═══════════════════════════════════════════════════════
           GRILLE 3 COLONNES — RÉPLIQUE EXACTE DASHBOARD BIONIC™
           Densité GOLDEN V9 | Gaps eliminés | BCE-4X
           ═══════════════════════════════════════════════════════ */}
@@ -547,6 +554,8 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
               ))}
             </GoldenCard>
           )}
+          {/* Vegetation + Hydrologie — BCE-4X: cote a cote pour equilibre visuel */}
+          <div className="grid grid-cols-2 gap-1.5">
           {engines.vegetation && (
             <GoldenCard testId="info-card-vegetation" accentColor={BIONIC.green} compact>
               <div className="flex items-center gap-2 mb-2">
@@ -575,6 +584,7 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
               ))}
             </GoldenCard>
           )}
+          </div>
         </div>
 
         {/* ══════════ COLONNE 3: Minéraux + Recette + Coûts ══════════ */}
@@ -634,14 +644,6 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
           )}
         </div>
       </div>
-
-      {/* ═══════════════════════════════════════════════════════
-          MODULE PÉDAGOGIQUE — BCE-4X GOLDEN V6+
-          ENRICHISSEMENT onglet ANALYSE — COMMANDANT STEEVE-MAX
-          POSITIONNEMENT PRIORITAIRE — IMMÉDIATEMENT APRÈS LA GRILLE
-          100% AUTONOME — Flag PEDAGOGIE_SALINE_ENABLED
-          ═══════════════════════════════════════════════════════ */}
-      <PedagogieModule species={species} season={season} score={score} gc={gc} />
 
       {/* ═══ Sections PREMIUM — intégrées grille 3 colonnes — STANDARD GOLDEN ═══ */}
       <div className="grid grid-cols-3 gap-2 mt-1.5" data-testid="supra-premium-grid">

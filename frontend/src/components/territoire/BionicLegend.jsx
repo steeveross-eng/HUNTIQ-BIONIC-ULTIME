@@ -91,8 +91,8 @@ export default function BionicLegend({
   return (
     <div
       data-testid="bionic-legend"
-      className="absolute bottom-14 left-2 z-[1000] select-none"
-      style={{ pointerEvents: 'auto' }}
+      className="absolute bottom-14 z-[1000] select-none"
+      style={{ pointerEvents: 'auto', left: '60px' }}
       onMouseDown={(e) => e.stopPropagation()}
       onClick={(e) => e.stopPropagation()}
       onDoubleClick={(e) => e.stopPropagation()}
@@ -116,7 +116,7 @@ export default function BionicLegend({
         <div
           data-testid="bionic-legend-expanded"
           className="bg-[#0c0c14]/95 border border-gray-700/50 rounded-lg shadow-2xl backdrop-blur-sm"
-          style={{ width: 248, maxHeight: 440, overflowY: 'auto' }}
+          style={{ width: 248, maxHeight: 340, overflowY: 'auto' }}
         >
           {/* Header */}
           <button
