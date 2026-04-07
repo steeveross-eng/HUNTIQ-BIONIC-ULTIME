@@ -14,14 +14,11 @@ import {
   ThermometerSun, Footprints, Leaf, Construction
 } from 'lucide-react';
 import { getCriteria, SPECIES_LABELS } from './criteriaDatabase';
+import IconCircle from './IconCircle';
 
 const GOLDEN = { cardBg: '#1E293B', pageBg: '#0F172A' };
 const B = { green: '#00C853', yellow: '#F9D423', orange: '#FF9800', red: '#D32F2F', blue: '#2196F3', purple: '#9C27B0', amber: '#FFB300', cyan: '#00BCD4' };
-const IC = ({ Icon, color, sz = 28 }) => (
-  <div className="rounded-full flex items-center justify-center flex-shrink-0" style={{ width: sz, height: sz, backgroundColor: `${color}20` }}>
-    <Icon style={{ color, width: sz * 0.5, height: sz * 0.5 }} />
-  </div>
-);
+const IC = IconCircle;
 
 const Section = ({ icon: SIcon, color, title, children }) => (
   <div className="rounded-xl px-5 py-4" style={{ backgroundColor: GOLDEN.cardBg, borderLeft: `4px solid ${color}` }}>

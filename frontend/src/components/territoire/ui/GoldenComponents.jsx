@@ -54,11 +54,7 @@ export const GoldenCollapsible = ({ icon: Icon, title, color, badge, children, d
   );
 };
 
-export const IconCircle = ({ Icon, color, size = 32 }) => (
-  <div className="rounded-full flex items-center justify-center flex-shrink-0" style={{ width: size, height: size, backgroundColor: `${color}20` }}>
-    <Icon style={{ color, width: size * 0.5, height: size * 0.5 }} />
-  </div>
-);
+export { default as IconCircle } from './IconCircle';
 
 export const GoldenMiniBar = ({ value, max = 100, color, height = 6 }) => (
   <div className="flex-1 rounded-full overflow-hidden" style={{ height, backgroundColor: 'rgba(255,255,255,0.06)' }}>
