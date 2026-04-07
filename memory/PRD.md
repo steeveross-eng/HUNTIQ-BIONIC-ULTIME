@@ -40,8 +40,10 @@ Gouvernance stricte BCE-4X GOLDEN V6+.
 
 ## Taches Restantes
 ### P0 (EN COURS — EN ATTENTE VALIDATION)
-- Audit SUPRA complet: LIVRE, 3 complements LIVRES
-- Reconstruction SUPRA x1000%: STRICTEMENT INTERDITE jusqu'a validation des 3 complements
+- Audit SUPRA complet: LIVRE (L1-L9, 12 documents, 4870 lignes)
+- 3 complements Pression x2 phase 1: LIVRES (Validation croisee, Couverture, Propagation, Stabilite)
+- 3 complements Pression x2 phase 2: LIVRES (Synthese Maitre, Engagement R1-R9, Plan Rollback)
+- Reconstruction SUPRA x1000%: STRICTEMENT INTERDITE jusqu'a validation finale du Commandant
 ### P1 (GELEE — apres reconstruction SUPRA)
 - Harmonisation x1000% + Test export PDF
 ### P2 (GELE)
