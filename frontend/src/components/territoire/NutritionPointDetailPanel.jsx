@@ -10,6 +10,7 @@ import axios from 'axios';
 import PinnablePanel from './PinnablePanel';
 import { ShareBionicButton } from './ui/ShareBionicButton';
 import { CriteriaDetailModal } from './ui/CriteriaDetailModal';
+import IconCircle from './ui/IconCircle';
 import PedagogieModule from './PedagogieModule';
 
 /**
@@ -45,10 +46,10 @@ function gradeColor(grade) {
 function zoneColor(z) { return z === 'vert' ? BIONIC.green : z === 'jaune' ? BIONIC.orange : BIONIC.red; }
 function priorityColor(p) { return p === 'CRITIQUE' ? BIONIC.red : p === 'RECOMMANDE' ? BIONIC.orange : BIONIC.green; }
 
-// === SESSION SALINE (Panier Stripe unifie) ===
+// === SESSION SALINE (Panier Stripe unifie — BCE-4X E03 fix) ===
 const getSalineSession = () => {
   let sid = localStorage.getItem('saline_session_id');
-  if (!sid) {
+  if (!sid || !/^sal_[a-z0-9]{8,16}$/.test(sid)) {
     sid = 'sal_' + Math.random().toString(36).substr(2, 12);
     localStorage.setItem('saline_session_id', sid);
   }
@@ -161,10 +162,6 @@ const GoldenCollapsible = ({ icon: Icon, title, color, badge, children, defaultO
     </div>
   );
 };
-
-// Backward compat aliases
-const Card = GoldenCard;
-const CollapsibleSection = GoldenCollapsible;
 
 const SupraButton = ({ children, onClick, size = 'md', disabled = false, testId }) => {
   const sizeClasses = { sm: 'h-8 px-3 text-xs gap-1.5', md: 'h-9 px-5 text-sm gap-2', lg: 'h-10 px-6 text-sm gap-2' };
@@ -404,11 +401,7 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
   const behaviorText = MALE_BEHAVIOR[species]?.[season] || MALE_BEHAVIOR.chevreuil?.printemps;
   const ratingColor = { premium: BIONIC.amber, optimal: BIONIC.green, adequat: BIONIC.blue, insuffisant: BIONIC.red }[ultraScore.rating] || BIONIC.blue;
 
-  const IC = ({ Icon, color, sz = 28 }) => (
-    <div className="rounded-full flex items-center justify-center flex-shrink-0" style={{ width: sz, height: sz, backgroundColor: `${color}20` }}>
-      <Icon style={{ color, width: sz * 0.5, height: sz * 0.5 }} />
-    </div>
-  );
+  const IC = IconCircle;
 
   return (
     <div className="space-y-1.5" data-testid="supra-analyse-tab">
@@ -706,16 +699,12 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
 // ============================================================
 const IntelligenceTab = ({ products, gc, compareIds, toggleCompare, addToCart, cartLoading }) => {
   const productList = products.products || [];
-  const third = Math.ceil(productList.length / 3);
-  const col1 = productList.slice(0, third);
-  const col2 = productList.slice(third, third * 2);
-  const col3 = productList.slice(third * 2);
+  // Round-robin distribution for balanced columns (E09 fix)
+  const col1 = productList.filter((_, i) => i % 3 === 0);
+  const col2 = productList.filter((_, i) => i % 3 === 1);
+  const col3 = productList.filter((_, i) => i % 3 === 2);
 
-  const IC = ({ Icon, color, sz = 28 }) => (
-    <div className="rounded-full flex items-center justify-center flex-shrink-0" style={{ width: sz, height: sz, backgroundColor: `${color}20` }}>
-      <Icon style={{ color, width: sz * 0.5, height: sz * 0.5 }} />
-    </div>
-  );
+  const IC = IconCircle;
 
   const ProductCard = ({ p }) => {
     const sc = p.score_global >= 85 ? BIONIC.green : p.score_global >= 70 ? BIONIC.yellow : p.score_global >= 50 ? BIONIC.orange : BIONIC.red;
@@ -817,11 +806,7 @@ const FicheTab = ({ ficheData, species, season, lat, lng, np, soilData }) => {
 
   const { global_score, scores, scientific_sources } = ficheData;
 
-  const IC = ({ Icon, color, sz = 28 }) => (
-    <div className="rounded-full flex items-center justify-center flex-shrink-0" style={{ width: sz, height: sz, backgroundColor: `${color}20` }}>
-      <Icon style={{ color, width: sz * 0.5, height: sz * 0.5 }} />
-    </div>
-  );
+  const IC = IconCircle;
 
   // Composant de sous-critère CLIQUABLE avec hyperlien
   const CriteriaRow = ({ criteriaKey, criteriaValue }) => (
@@ -1027,11 +1012,7 @@ const FicheTab = ({ ficheData, species, season, lat, lng, np, soilData }) => {
 const ComparezTab = ({ products, compareIds, gc, toggleCompare }) => {
   const compared = (products.products || []).filter(p => compareIds.includes(p.product_id));
 
-  const IC = ({ Icon, color, sz = 28 }) => (
-    <div className="rounded-full flex items-center justify-center flex-shrink-0" style={{ width: sz, height: sz, backgroundColor: `${color}20` }}>
-      <Icon style={{ color, width: sz * 0.5, height: sz * 0.5 }} />
-    </div>
-  );
+  const IC = IconCircle;
 
   if (compared.length === 0) {
     return (
@@ -1132,11 +1113,7 @@ const ComparezTab = ({ products, compareIds, gc, toggleCompare }) => {
 // Panier Stripe REEL + Checkout
 // ============================================================
 const CommandezTab = ({ order, products, recipe, gc, cart, addToCart, cartLoading, handleCheckout, checkoutLoading, fetchCart }) => {
-  const IC = ({ Icon, color, sz = 28 }) => (
-    <div className="rounded-full flex items-center justify-center flex-shrink-0" style={{ width: sz, height: sz, backgroundColor: `${color}20` }}>
-      <Icon style={{ color, width: sz * 0.5, height: sz * 0.5 }} />
-    </div>
-  );
+  const IC = IconCircle;
 
   return (
     <div className="space-y-1.5" data-testid="supra-commandez-tab">
