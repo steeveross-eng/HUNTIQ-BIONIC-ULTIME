@@ -153,41 +153,7 @@ export default function MovementCorridorsLayer({ species = 'moose', showReal = t
           Calcul des corridors...
         </div>
       )}
-      {data && (
-        <div
-          data-testid="movement-corridors-legend"
-          style={{
-            position: 'absolute', bottom: '16px', left: '16px', zIndex: 1100,
-            background: 'rgba(10,15,25,0.92)', backdropFilter: 'blur(12px)',
-            borderRadius: '10px', padding: '10px 14px', color: '#e0e8f0',
-            fontSize: '11px', lineHeight: '1.6', pointerEvents: 'auto',
-            border: '1px solid rgba(76,175,80,0.25)', minWidth: '180px',
-          }}
-        >
-          <div style={{ fontWeight: 700, fontSize: '11px', marginBottom: '8px', color: '#a5d6a7', letterSpacing: '0.5px' }}>
-            DÉPLACEMENTS <span style={{ opacity: 0.5, fontSize: '9px' }}>v1</span>
-          </div>
-
-          {/* Légende réels */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', opacity: showReal ? 1 : 0.4 }}>
-            <div style={{ width: '24px', height: '3px', background: '#4CAF50', borderRadius: '2px' }} />
-            <span>Réels ({data.real_corridors?.length || 0})</span>
-          </div>
-
-          {/* Légende estimés */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', opacity: showEstimated ? 1 : 0.4 }}>
-            <div style={{
-              width: '24px', height: '3px', borderRadius: '2px',
-              background: 'repeating-linear-gradient(90deg, #FF9800 0px, #FF9800 4px, transparent 4px, transparent 8px)',
-            }} />
-            <span>Estimés ({data.estimated_corridors?.length || 0})</span>
-          </div>
-
-          <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '4px', marginTop: '2px', fontSize: '10px', color: '#9ca3af' }}>
-            Total: {(data.real_corridors?.length || 0) + (data.estimated_corridors?.length || 0)} corridors
-          </div>
-        </div>
-      )}
+      {/* BCE-4X ORDONNANCE STEEVE-MAX: LEGENDE DEPLACEMENTS SUPPRIMEE — BionicLegend SEULE AUTORISEE */}
     </>
   );
 }

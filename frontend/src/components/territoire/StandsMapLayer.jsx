@@ -56,7 +56,7 @@ const StandsMapLayer = ({
   fixedBlinds = [],
   onStandClick = null,
   showContamination = true,
-  showLegend = true,
+  showLegend = false, // BCE-4X ORDONNANCE STEEVE-MAX: DESACTIVE DEFINITIVEMENT — BionicLegend est la SEULE legende
 }) => {
   const map = useMap();
   const layerRef = useRef(null);
@@ -516,8 +516,9 @@ const StandsMapLayer = ({
     group.addTo(map);
     layerRef.current = group;
 
-    // 6. Legende BCE-4X GOLDEN — REPLIABLE + TYPOGRAPHIE x1.5 (ORDONNANCE STEEVE-MAX P0-K)
-    if (showLegend) {
+    // 6. BCE-4X ORDONNANCE STEEVE-MAX: LEGENDE INTERNE SUPPRIMEE DEFINITIVEMENT
+    //    BionicLegend.jsx est la SEULE LEGENDE AUTORISEE (Directive P0-K++)
+    if (false) { // NEUTRALISE: showLegend JAMAIS ACTIF
       const mapContainer = map.getContainer();
       const legendDiv = document.createElement('div');
       legendDiv.className = 'bionic-hunt-legend-golden';

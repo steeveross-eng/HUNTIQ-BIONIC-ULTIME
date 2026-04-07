@@ -159,41 +159,7 @@ export default function RoutePlannerLayer({ species = 'moose', anchorWaypoints =
           Calcul du parcours tactique...
         </div>
       )}
-      {routeData?.route && (
-        <div
-          data-testid="route-planner-legend"
-          style={{
-            position: 'absolute', top: '70px', right: '12px', zIndex: 1000,
-            background: 'rgba(10,15,25,0.88)', backdropFilter: 'blur(12px)',
-            borderRadius: '10px', padding: '10px 14px', color: '#e0e8f0',
-            fontSize: '11px', lineHeight: '1.6', pointerEvents: 'auto',
-            border: '1px solid rgba(59,130,246,0.25)', minWidth: '155px',
-          }}
-        >
-          <div style={{ fontWeight: 600, fontSize: '11px', marginBottom: '6px', color: '#93c5fd', letterSpacing: '0.5px' }}>
-            PARCOURS <span style={{ opacity: 0.5, fontSize: '9px' }}>v1</span>
-          </div>
-          <div style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '5px', marginBottom: '5px' }}>
-            <div>{routeData.route.points.length} points</div>
-            <div style={{ fontWeight: 600 }}>{routeData.route.total_distance_km.toFixed(1)} km</div>
-            <div style={{ opacity: 0.7 }}>{Math.floor(routeData.route.total_time_min / 60)}h{Math.round(routeData.route.total_time_min % 60).toString().padStart(2,'0')}</div>
-          </div>
-          <div>
-            <div>Score moyen: <b style={{ color: scoreToLineColor(routeData.route.avg_path_score) }}>{routeData.route.avg_path_score}%</b></div>
-            <div style={{ opacity: 0.6 }}>Hotspots: {routeData.hotspots_found}</div>
-          </div>
-          <div style={{ display: 'flex', gap: '3px', marginTop: '6px', height: '6px', borderRadius: '3px', overflow: 'hidden' }}>
-            <div style={{ flex: 1, background: '#ef4444' }} title="<40%" />
-            <div style={{ flex: 1, background: '#f97316' }} title="40-55%" />
-            <div style={{ flex: 1, background: '#eab308' }} title="55-65%" />
-            <div style={{ flex: 1, background: '#84cc16' }} title="65-75%" />
-            <div style={{ flex: 1, background: '#22c55e' }} title=">75%" />
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', opacity: 0.5, marginTop: '2px' }}>
-            <span>Faible</span><span>Optimal</span>
-          </div>
-        </div>
-      )}
+      {/* BCE-4X ORDONNANCE STEEVE-MAX: LEGENDE PARCOURS SUPPRIMEE — BionicLegend SEULE AUTORISEE */}
     </>
   );
 }

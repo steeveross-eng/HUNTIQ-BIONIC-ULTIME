@@ -465,3 +465,15 @@ html {
 .bionic-smart-tooltip::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
 }
+
+/* BCE-4X ORDONNANCE STEEVE-MAX: BOUCLIER CSS — NEUTRALISATION TOTALE LEGENDES PARASITES
+   BionicLegend.jsx ([data-testid="bionic-legend"]) est la SEULE LEGENDE AUTORISEE */
+.bionic-hunt-legend-golden,
+[data-testid="hunt-legend-golden"],
+[data-testid="ndvi-legend"],
+[data-testid="movement-corridors-legend"],
+[data-testid="route-planner-legend"] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}

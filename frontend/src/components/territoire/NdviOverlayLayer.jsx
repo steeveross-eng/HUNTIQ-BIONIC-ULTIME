@@ -172,45 +172,7 @@ export default function NdviOverlayLayer({ bounds: propBounds }) {
           Chargement NDVI Sentinel-2...
         </div>
       )}
-      {legendData && (
-        <div
-          data-testid="ndvi-legend"
-          style={{
-            position: 'absolute', bottom: '24px', left: '12px', zIndex: 1000,
-            background: 'rgba(10,15,25,0.88)', backdropFilter: 'blur(12px)',
-            borderRadius: '10px', padding: '10px 14px', color: '#e0e8f0',
-            fontSize: '11px', lineHeight: '1.6', pointerEvents: 'auto',
-            border: '1px solid rgba(80,200,120,0.25)', minWidth: '155px',
-          }}
-        >
-          <div style={{ fontWeight: 600, fontSize: '11px', marginBottom: '6px', color: '#86efac', letterSpacing: '0.5px' }}>
-            NDVI <span style={{ opacity: 0.5, fontSize: '9px' }}>Sentinel-2</span>
-          </div>
-          <div style={{ display: 'flex', gap: '2px', marginBottom: '4px', height: '10px', borderRadius: '4px', overflow: 'hidden' }}>
-            <div style={{ flex: 1, background: '#b4643c' }} />
-            <div style={{ flex: 1, background: '#d29632' }} />
-            <div style={{ flex: 1, background: '#e6d83c' }} />
-            <div style={{ flex: 1, background: '#8cc832' }} />
-            <div style={{ flex: 1, background: '#28a032' }} />
-            <div style={{ flex: 1, background: '#0a7814' }} />
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', opacity: 0.6, marginBottom: '6px' }}>
-            <span>Sol nu</span><span>Dense</span>
-          </div>
-          <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '5px' }}>
-            <div>NDVI moy: <b style={{ color: '#86efac' }}>{legendData.mean?.toFixed(3)}</b></div>
-            <div style={{ opacity: 0.7 }}>Min: {legendData.min?.toFixed(3)} / Max: {legendData.max?.toFixed(3)}</div>
-            <div style={{ marginTop: '4px' }}>
-              <span style={{ color: '#4ade80' }}>{legendData.vegPct}%</span> veg.
-              {legendData.densePct > 0 && <span style={{ opacity: 0.6 }}> ({legendData.densePct}% dense)</span>}
-            </div>
-            <div style={{ opacity: 0.5, fontSize: '9px', marginTop: '2px' }}>
-              {legendData.source === 'sentinel2_real' ? 'Donnees reelles' : 'Synthetique'}
-              {legendData.cached && ' (cache)'}
-            </div>
-          </div>
-        </div>
-      )}
+      {/* BCE-4X ORDONNANCE STEEVE-MAX: LEGENDE NDVI SUPPRIMEE — BionicLegend SEULE AUTORISEE */}
     </>
   );
 }
