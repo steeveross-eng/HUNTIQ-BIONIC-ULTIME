@@ -125,8 +125,8 @@ const AdminPremiumPage = () => {
     e.preventDefault();
     setLoginLoading(true);
     try {
-      await axios.post(`${BACKEND_URL}/api/v1/admin/login`, {
-        email: "admin@huntiq.ca",
+      await axios.post(`${BACKEND_URL}/api/auth/login`, {
+        email: "admin@huntiq.com",
         password,
       });
       localStorage.setItem('admin_premium_authenticated', 'true');
