@@ -114,7 +114,12 @@ Application de routage terrain pour la chasse avec pathfinding A* et integration
 ### P0 (En attente validation STEEVE-MAX)
 - [x] P0-J: Monitoring 48h — Rapport livre (0 violation, 8/8 actifs, 5/5 zones PASS)
 - [x] Correction fenetre BDRE: bouton FERMER + typographie x2
-- [ ] P0-K: Validation finale STEEVE-MAX (bloque: monitoring + validation BDRE)
+- [x] P0-K: Legende dynamique BCE-4X repliable (7 items, typo x1.5)
+- [x] P0-K: Harmonisation UX popups (bouton X unifie, typo x1.5)
+- [x] P0-K: Diagnostic SAL-10 (score 45 < seuil 50 → site non-viable)
+- [x] P0-K: BDRE directionnel confirme (cone, pas cercle, delta < 10°)
+- [x] P0-K: Rapport P0-K consolide
+- [ ] P0-K: Validation finale STEEVE-MAX
 - Tests regression V3 -> V4 complets
 - Execution plan fusion BLOC 4 (F1→F4)
 
