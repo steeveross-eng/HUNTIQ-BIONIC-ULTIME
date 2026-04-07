@@ -307,7 +307,7 @@ const PedagogieModule = ({ species = 'orignal', season = 'printemps', score, gc 
       {/* ═══ SÉPARATEUR VISUEL ═══ */}
       <div className="flex items-center gap-3 py-2 mb-1" data-testid="pedagogie-separator">
         <div className="flex-1 h-[2px]" style={{ background: `linear-gradient(to right, transparent, ${BIONIC.amber}, transparent)` }} />
-        <span className="text-[11px] font-bold tracking-widest uppercase" style={{ color: BIONIC.amber }}>SECTION PEDAGOGIQUE</span>
+        <span className="text-[11px] font-bold tracking-widest uppercase" style={{ color: BIONIC.amber }}>GUIDE PRO</span>
         <div className="flex-1 h-[2px]" style={{ background: `linear-gradient(to right, transparent, ${BIONIC.amber}, transparent)` }} />
       </div>
 
@@ -318,7 +318,7 @@ const PedagogieModule = ({ species = 'orignal', season = 'printemps', score, gc 
             <BookOpen style={{ color: BIONIC.amber, width: 20, height: 20 }} />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-[16px] font-black text-white tracking-wide">MODULE PEDAGOGIQUE</div>
+            <div className="text-[16px] font-black text-white tracking-wide">GUIDE PRO</div>
             <div className="text-[12px] text-slate-400">Pourquoi ce site est optimal? — {speciesKey} / {seasonKey}</div>
           </div>
           <button onClick={handleExportPDF} disabled={pdfExporting}

@@ -1,16 +1,20 @@
 /**
- * ContaminationOverlayLayer.jsx — BCE-4X BLOC 2: BDRE PEDAGOGIQUE
+ * ContaminationOverlayLayer.jsx — BCE-4X BLOC 2: GUIDE PRO
  * ================================================================
- * ORDONNANCE STEEVE-MAX 2026-04-06 | Branche BIONIC_REWRITE_P0
+ * ORDONNANCE STEEVE-MAX 2026-04-07 | Branche BIONIC_REWRITE_P0
  *
  * Affichage PERMANENT des zones de contamination olfactive BDRE
  * pour 100% des salines actives, INDEPENDAMMENT des affuts.
+ *
+ * GUIDE PRO: Fenetre pedagogique positionnee en overlay React fixe
+ * (JAMAIS sous les controles zoom/layers/navigation)
  *
  * Consomme: POST /api/v1/hunt/contamination-zones
  */
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
+import { X, BookOpen } from 'lucide-react';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -31,7 +35,6 @@ export default function ContaminationOverlayLayer({
   const [loading, setLoading] = useState(false);
   const [pedagogyVisible, setPedagogyVisible] = useState(true);
   const lastKeyRef = useRef('');
-  const pedagogyMarkerRef = useRef(null);
 
   const fetchZones = useCallback(async () => {
     if (!center || !enabled) return;
@@ -80,7 +83,7 @@ export default function ContaminationOverlayLayer({
     }
   }, [center, enabled, feedingSites.length, windDirectionDeg, windSpeed, fetchZones]);
 
-  // Render contamination zones on the map
+  // Render contamination zones on the map (polygons only — pedagogy is now React overlay)
   useEffect(() => {
     if (layerGroupRef.current) {
       layerGroupRef.current.clearLayers();
@@ -134,57 +137,6 @@ export default function ContaminationOverlayLayer({
       group.addLayer(poly);
     }
 
-    // Pedagogy label — AMENDEMENT -40% TYPOGRAPHIE (ORDONNANCE STEEVE-MAX P0-K+)
-    const pedagogy = data.pedagogy;
-    if (pedagogy && center && pedagogyVisible) {
-      const closeFnName = '__bdre_pedagogy_close';
-      window[closeFnName] = () => {
-        if (pedagogyMarkerRef.current && layerGroupRef.current) {
-          layerGroupRef.current.removeLayer(pedagogyMarkerRef.current);
-          pedagogyMarkerRef.current = null;
-        }
-        setPedagogyVisible(false);
-      };
-
-      const pedagogyIcon = L.divIcon({
-        className: 'contamination-pedagogy',
-        html: `<div data-testid="contamination-pedagogy" style="
-          background:rgba(15,21,37,0.95);backdrop-filter:blur(12px);
-          border:2px solid rgba(255,136,0,0.5);border-radius:10px;
-          padding:10px 12px;color:#e0e8f0;font-size:12px;line-height:1.4;
-          max-width:300px;min-width:200px;white-space:normal;pointer-events:auto;
-          box-shadow:0 4px 20px rgba(0,0,0,0.4);
-          position:relative;
-        ">
-          <button data-testid="bdre-pedagogy-close-btn" onclick="window.${closeFnName}()" style="
-            position:absolute;top:6px;right:8px;
-            background:rgba(255,68,68,0.15);border:2px solid rgba(255,68,68,0.5);
-            color:#ff6666;font-size:22px;font-weight:700;
-            width:36px;height:36px;border-radius:8px;
-            cursor:pointer;display:flex;align-items:center;justify-content:center;
-            transition:background 0.2s;line-height:1;
-          " onmouseover="this.style.background='rgba(255,68,68,0.35)'"
-             onmouseout="this.style.background='rgba(255,68,68,0.15)'"
-          >X</button>
-          <div style="font-weight:700;font-size:13px;color:#FF8800;margin-bottom:5px;padding-right:40px;">
-            BDRE PEDAGOGIQUE
-          </div>
-          <div style="font-size:11px;color:#c8d0dc;line-height:1.4;">${pedagogy.conseil || ''}</div>
-        </div>`,
-        iconSize: [300, 80],
-        iconAnchor: [150, -10],
-      });
-
-      const marker = L.marker([center.lat, center.lng], {
-        icon: pedagogyIcon,
-        interactive: true,
-        zIndexOffset: 1000,
-      });
-
-      pedagogyMarkerRef.current = marker;
-      group.addLayer(marker);
-    }
-
     group.addTo(map);
 
     return () => {
@@ -195,5 +147,57 @@ export default function ContaminationOverlayLayer({
     };
   }, [data, map, enabled, center, pedagogyVisible]);
 
-  return null;
+  // BCE-4X GUIDE PRO — Overlay React fixe (JAMAIS sous les controles)
+  const pedagogy = data?.pedagogy;
+  const showGuide = pedagogy && pedagogyVisible && enabled;
+
+  return showGuide ? (
+    <div
+      data-testid="guide-pro-overlay"
+      style={{
+        position: 'absolute',
+        top: '16px',
+        right: '16px',
+        zIndex: 900,
+        pointerEvents: 'auto',
+      }}
+      onMouseDown={(e) => e.stopPropagation()}
+      onClick={(e) => e.stopPropagation()}
+      onDoubleClick={(e) => e.stopPropagation()}
+    >
+      <div
+        data-testid="guide-pro-window"
+        className="bg-[#0c0c14]/95 border border-gray-700/50 rounded-lg shadow-2xl backdrop-blur-sm"
+        style={{ maxWidth: 280, minWidth: 220 }}
+      >
+        {/* Header — Typographie BionicLegend */}
+        <div className="flex items-center justify-between px-3 py-2 border-b border-gray-800/60">
+          <div className="flex items-center gap-2">
+            <BookOpen className="w-3.5 h-3.5 text-[#F5A623]" />
+            <span className="text-[10px] font-bold tracking-wider text-gray-100 uppercase">GUIDE PRO</span>
+          </div>
+          <button
+            data-testid="guide-pro-close-btn"
+            onClick={() => setPedagogyVisible(false)}
+            className="w-6 h-6 rounded flex items-center justify-center hover:bg-white/10 transition-colors"
+          >
+            <X className="w-3.5 h-3.5 text-gray-400 hover:text-red-400" />
+          </button>
+        </div>
+
+        {/* Contenu pedagogique */}
+        <div className="px-3 py-2.5">
+          <p className="text-[10px] text-gray-300 leading-relaxed">
+            {pedagogy.conseil || ''}
+          </p>
+        </div>
+
+        {/* Footer BCE-4X */}
+        <div className="px-3 py-1.5 border-t border-gray-800/40 flex items-center justify-between">
+          <span className="text-[8px] text-gray-600 tracking-wide">BCE-4X + Steeve-MAX</span>
+          <span className="text-[8px] text-gray-600">GUIDE PRO</span>
+        </div>
+      </div>
+    </div>
+  ) : null;
 }
