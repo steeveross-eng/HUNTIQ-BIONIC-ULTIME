@@ -97,7 +97,7 @@ async def evaluate_relocation(req: RelocationRequest):
             corridors=corridors,
         )
 
-        result["version"] = "RELOCATION_V1"
+        result["version"] = "RELOCATION_V2_SAL_ALT"
         result["governance"] = "BCE-4X GOLDEN V6+ — STEEVE-MAX"
         return result
 
@@ -111,9 +111,13 @@ async def relocation_status():
     """Statut du module de relocalisation."""
     return {
         "engine": "relocation_automatique",
-        "version": "1.0.0",
+        "version": "2.0.0",
         "status": "active",
-        "trigger": "saline >= 50 + affut impossible",
+        "trigger": "BCE-4X SAL-ALT: affut impossible → reloc SALINE + AFFUT (seuil 50 supprime)",
+        "modes": {
+            "AFFUT_RELOC": "saline >= 50 + affut impossible → reloc affut",
+            "SAL_ALT": "saline < 50 + affut impossible → reloc saline entiere",
+        },
         "species_radius": {"CERF": 200, "ORIGNAL": 300, "WAPITI": 400},
         "composite_weights": {"saline": 0.40, "affut": 0.35, "bdre": 0.25},
         "governance": "BCE-4X GOLDEN V6+ — STEEVE-MAX",

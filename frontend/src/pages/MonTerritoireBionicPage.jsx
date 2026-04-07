@@ -73,6 +73,7 @@ import { TerritoireHeader } from '@/components/territoire/ui/TerritoireHeader';
 // IM1.2 — Modules extraits (Passe 2)
 import { useWaypointActions } from '@/hooks/useWaypointActions';
 import { MapContent } from '@/components/territoire/map/MapContent';
+import BionicLegend from '@/components/territoire/BionicLegend';
 // V8.1 — Saisons biologiques
 import { BiologicalSeasonSelector } from '@/components/territoire/ui/BiologicalSeasonSelector';
 import { getCurrentBiologicalSeason } from '@/config/biologicalSeasons';
@@ -1288,7 +1289,15 @@ const MonTerritoireBionicPage = () => {
             />
           </MapContainer>
 
-          {/* BCE-4X: BionicLegend absorbee par INTELLIGENCE — carte epuree */}
+          {/* BCE-4X P0-K RESTAURATION: Legende BCE-4X PERSISTANTE — ORDONNANCE STEEVE-MAX */}
+          <BionicLegend
+            pipelineState={{ ready: true }}
+            zoneCount={bionicZonesData?.zones?.length || 0}
+            corridorCount={0}
+            windDeg={windInfo?.direction || 225}
+            selectedSpecies={selectedSpecies}
+            showCorridors={classificationToggles?.corridors}
+          />
 
           {/* ── Indicateur Zone d'Analyse — ADMIN PREMIUM uniquement ── */}
           {adminArchitecteMode && selectedWaypointForZones && (

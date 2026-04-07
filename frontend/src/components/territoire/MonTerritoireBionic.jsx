@@ -25,6 +25,109 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 });
 
+// BCE-4X — Affuts de demonstration pour Mon Territoire
+const DEMO_AFFUTS_TYPES = {
+  actuel:    { color: '#3498DB', border: '#2980B9', label: 'Affut actuel' },
+  alt:       { color: '#2ECC71', border: '#27AE60', label: 'ALT' },
+  a_eviter:  { color: '#E74C3C', border: '#C0392B', label: 'A EVITER' },
+  propose:   { color: '#F39C12', border: '#E67E22', label: 'Propose' },
+  historique:{ color: '#95A5A6', border: '#7F8C8D', label: 'Historique' },
+};
+
+const generateDemoAffuts = (centerLat, centerLng) => {
+  const affuts = [];
+  const types = Object.keys(DEMO_AFFUTS_TYPES);
+  for (let i = 0; i < types.length; i++) {
+    const angle = ((i * 72) + 15) * Math.PI / 180;
+    const dist = 0.018 + i * 0.004;
+    affuts.push({
+      id: `affut-${types[i]}`,
+      lat: centerLat + Math.sin(angle) * dist,
+      lng: centerLng + Math.cos(angle) * dist,
+      type: types[i],
+      score: types[i] === 'a_eviter' ? 28 : types[i] === 'historique' ? 55 : 65 + i * 5,
+      ...DEMO_AFFUTS_TYPES[types[i]],
+    });
+  }
+  return affuts;
+};
+
+// BCE-4X Legend for Mon Territoire map
+const MonTerritoireLegend = () => {
+  const map = useMap();
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    const container = map.getContainer();
+    const existing = container.querySelector('.mt-bce4x-legend');
+    if (existing) existing.remove();
+
+    const legendDiv = document.createElement('div');
+    legendDiv.className = 'mt-bce4x-legend';
+    legendDiv.setAttribute('data-testid', 'mon-territoire-legend');
+    legendDiv.style.cssText = [
+      'position:absolute', 'bottom:60px', 'left:10px', 'z-index:1000',
+      'background:rgba(13,17,23,0.95)', 'border:2px solid #333', 'border-radius:10px',
+      'padding:12px 14px', 'font-family:system-ui', 'font-size:13px', 'color:#ccc',
+      'min-width:200px', 'max-width:240px', 'pointer-events:auto',
+      'backdrop-filter:blur(12px)', 'box-shadow:0 4px 20px rgba(0,0,0,0.4)',
+    ].join(';');
+
+    const itemStyle = 'display:flex;align-items:center;gap:8px;margin:3px 0;font-size:12px;line-height:1.4';
+    const sectionStyle = 'font-weight:700;font-size:10px;color:#888;margin:8px 0 3px;text-transform:uppercase;letter-spacing:0.5px';
+
+    const contentHtml = `
+      <div style="${sectionStyle}">Exclusions BCE-4X</div>
+      <div style="${itemStyle}"><span style="width:12px;height:12px;background:#FF444433;border:2px solid #FF4444;display:inline-block;border-radius:3px"></span><span style="color:#FF4444;font-weight:600">Zone A EVITER</span></div>
+      <div style="${itemStyle}"><span style="width:12px;height:12px;background:#FF880033;border:2px solid #FF8800;display:inline-block;border-radius:3px"></span><span style="color:#FF8800;font-weight:600">Contamination saline</span></div>
+      <div style="${itemStyle}"><span style="width:12px;height:12px;background:#FFD70033;border:2px solid #FFD700;display:inline-block;border-radius:3px"></span><span style="color:#FFD700;font-weight:600">Contamination chasseur</span></div>
+      <div style="${sectionStyle}">Affuts</div>
+      <div style="${itemStyle}"><span style="width:12px;height:12px;border-radius:50%;background:#3498DB33;border:2px solid #3498DB;display:inline-block"></span><span style="color:#3498DB;font-weight:600">Affut actuel</span></div>
+      <div style="${itemStyle}"><span style="width:12px;height:12px;border-radius:50%;background:#2ECC7133;border:2px solid #2ECC71;display:inline-block"></span><span style="color:#2ECC71;font-weight:600">Affut ALT</span></div>
+      <div style="${itemStyle}"><span style="width:12px;height:12px;border-radius:50%;background:#E74C3C33;border:2px solid #E74C3C;display:inline-block"></span><span style="color:#E74C3C;font-weight:600">A eviter</span></div>
+      <div style="${itemStyle}"><span style="width:12px;height:12px;border-radius:50%;background:#F39C1233;border:2px solid #F39C12;display:inline-block"></span><span style="color:#F39C12;font-weight:600">Propose</span></div>
+      <div style="${itemStyle}"><span style="width:12px;height:12px;border-radius:50%;background:#95A5A633;border:2px solid #95A5A6;display:inline-block"></span><span style="color:#95A5A6;">Historique</span></div>
+      <div style="${sectionStyle}">Zones</div>
+      <div style="${itemStyle}"><span style="width:12px;height:12px;background:#22c55e33;border:2px solid #22c55e;display:inline-block;border-radius:3px"></span> Habitat</div>
+      <div style="${itemStyle}"><span style="width:12px;height:12px;background:#e91e6333;border:2px solid #e91e63;display:inline-block;border-radius:3px"></span> Rut</div>
+      <div style="${itemStyle}"><span style="width:12px;height:12px;background:#ff572233;border:2px solid #ff5722;display:inline-block;border-radius:3px"></span> Corridor</div>
+      <div style="margin-top:8px;font-size:10px;color:#555;border-top:1px solid #333;padding-top:6px">BCE-4X GOLDEN V6+ | STEEVE-MAX</div>
+    `;
+
+    legendDiv.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;border-bottom:2px solid #333;padding-bottom:5px;">
+        <span style="font-weight:700;font-size:14px;color:#fff">BCE-4X — Legende</span>
+        <button data-testid="mt-legend-toggle-btn" class="mt-legend-toggle" style="
+          background:rgba(255,255,255,0.08);border:1px solid #555;color:#aaa;
+          font-size:14px;font-weight:700;width:26px;height:26px;border-radius:6px;
+          cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;
+        ">—</button>
+      </div>
+      <div class="mt-legend-content">${contentHtml}</div>
+    `;
+
+    setTimeout(() => {
+      const toggleBtn = legendDiv.querySelector('.mt-legend-toggle');
+      const contentDiv = legendDiv.querySelector('.mt-legend-content');
+      if (toggleBtn && contentDiv) {
+        toggleBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isHidden = contentDiv.style.display === 'none';
+          contentDiv.style.display = isHidden ? 'block' : 'none';
+          toggleBtn.textContent = isHidden ? '—' : '+';
+        });
+      }
+    }, 50);
+
+    container.appendChild(legendDiv);
+    return () => {
+      try { container.removeChild(legendDiv); } catch (_) {}
+    };
+  }, [map]);
+
+  return null;
+};
+
 // Composant pour centrer la carte
 const MapController = ({ center }) => {
   const map = useMap();
@@ -108,6 +211,9 @@ const MonTerritoireBionic = ({ onNavigateToTerritory }) => {
   
   // Zones de démonstration
   const demoZones = useMemo(() => generateDemoZones(mapCenter[0], mapCenter[1]), [mapCenter]);
+  
+  // Affuts de demonstration BCE-4X
+  const demoAffuts = useMemo(() => generateDemoAffuts(mapCenter[0], mapCenter[1]), [mapCenter]);
   
   // Score global — BCE-4X P0 FIX: source V3 deterministe (plus de Math.random())
   const globalScore = useMemo(() => {
@@ -244,6 +350,47 @@ const MonTerritoireBionic = ({ onNavigateToTerritory }) => {
                 {/* Map Interaction Layer - Coordonnées GPS + Waypoints */}
                 {/* BCE-4X PURGE V1-V5: GPS overlay uniquement */}
                 <MapInteractionLayer showCoordinates={true} />
+                
+                {/* BCE-4X P0-K: Affuts de demonstration */}
+                {showLayers && demoAffuts.map(affut => {
+                  const icon = L.divIcon({
+                    className: `affut-marker-${affut.type}`,
+                    html: `<div data-testid="affut-marker-${affut.type}" style="
+                      width:22px;height:22px;border-radius:50%;
+                      background:${affut.color}33;border:2.5px solid ${affut.border};
+                      display:flex;align-items:center;justify-content:center;
+                      box-shadow:0 0 8px ${affut.color}66;
+                    ">
+                      <div style="width:7px;height:7px;border-radius:50%;background:${affut.color}"></div>
+                      <div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);
+                        background:#0d1117;border:1px solid ${affut.border};border-radius:3px;
+                        padding:1px 5px;white-space:nowrap;font-size:11px;font-weight:700;color:${affut.color};
+                      ">${affut.label} ${affut.score}</div>
+                    </div>`,
+                    iconSize: [22, 22],
+                    iconAnchor: [11, 11],
+                  });
+                  return (
+                    <Marker key={affut.id} position={[affut.lat, affut.lng]} icon={icon}>
+                      <Popup>
+                        <div className="text-center p-2" data-testid={`affut-popup-${affut.type}`}>
+                          <div className="font-bold text-sm" style={{ color: affut.color }}>{affut.label}</div>
+                          <div className="text-lg font-bold" style={{ color: affut.color }}>{affut.score}/100</div>
+                          <div className="text-xs text-gray-500 mt-1">
+                            {affut.type === 'a_eviter' ? 'Site non-conforme BCE-4X' :
+                             affut.type === 'alt' ? 'Alternative SAL-ALT proposee' :
+                             affut.type === 'historique' ? 'Position historique archivee' :
+                             affut.type === 'propose' ? 'Recommandation SUPRA/BDRE' :
+                             'Position active validee BCE-4X'}
+                          </div>
+                        </div>
+                      </Popup>
+                    </Marker>
+                  );
+                })}
+                
+                {/* BCE-4X P0-K: Legende dynamique */}
+                <MonTerritoireLegend />
               </MapContainer>
               
               {/* Score Overlay */}

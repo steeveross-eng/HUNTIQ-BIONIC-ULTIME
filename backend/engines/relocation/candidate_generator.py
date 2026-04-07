@@ -53,14 +53,18 @@ def generate_relocation_candidates(
     center_lng: float,
     species: str = "ORIGNAL",
     corridors: List[Dict[str, Any]] = None,
+    min_candidates: int = 12,
+    radius_override: int = None,
 ) -> List[Dict[str, Any]]:
     """
     Generer 12-24 candidats en anneaux concentriques.
 
     Les candidats proches de corridors CRITIQUES ou MAJEURS sont
     priorises par un decalage angulaire vers le corridor le plus proche.
+
+    BCE-4X SAL-ALT: radius_override force le rayon max (ex: 400m).
     """
-    max_radius = SPECIES_RADIUS.get(species.upper(), 300)
+    max_radius = radius_override or SPECIES_RADIUS.get(species.upper(), 300)
     candidates = []
 
     for ring in RING_CONFIG:

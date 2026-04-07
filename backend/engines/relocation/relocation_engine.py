@@ -24,8 +24,13 @@ from typing import Dict, List, Any, Optional
 logger = logging.getLogger("bionic.relocation.engine")
 
 # Seuils de declenchement
-SALINE_MIN_SCORE = 50    # Saline doit etre viable
+SALINE_MIN_SCORE = 50    # Saline doit etre viable (pour reloc AFFUT)
 AFFUT_IMPOSSIBLE_THRESHOLD = 50  # Affut impossible si score < 50
+
+# BCE-4X ORDONNANCE STEEVE-MAX P0-K:
+# Mode SAL-ALT: Si AUCUN affut stable n'est possible (classification a_eviter/rejected),
+# declencher la generation de salines alternatives MEME SI score saline < 50.
+SALINE_ALT_MODE_ENABLED = True
 
 # Ponderations composite
 W_SALINE = 0.40
@@ -73,15 +78,27 @@ def evaluate_relocation(
     diagnostic = _build_diagnostic(current_affut)
 
     # Verifier si relocalisation necessaire
-    needs_relocation = (
-        saline_score >= SALINE_MIN_SCORE
-        and (affut_class in ("rejected", "a_eviter") or affut_score < AFFUT_IMPOSSIBLE_THRESHOLD)
+    # Mode 1 (STANDARD): saline >= 50 ET affut impossible → relocaliser l'AFFUT
+    # Mode 2 (SAL-ALT BCE-4X): affut impossible ET saline < 50 → relocaliser la SALINE
+    affut_impossible = (
+        affut_class in ("rejected", "a_eviter") or affut_score < AFFUT_IMPOSSIBLE_THRESHOLD
     )
+
+    mode = None
+    if saline_score >= SALINE_MIN_SCORE and affut_impossible:
+        mode = "AFFUT_RELOC"
+        needs_relocation = True
+    elif SALINE_ALT_MODE_ENABLED and affut_impossible and saline_score < SALINE_MIN_SCORE:
+        mode = "SAL_ALT"
+        needs_relocation = True
+    else:
+        needs_relocation = False
 
     if not needs_relocation:
         return {
             "triggered": False,
             "reason": "site_acceptable",
+            "mode": None,
             "current_site": {
                 "saline": {
                     "id": current_saline.get("id", "SAL-CURRENT"),
@@ -100,11 +117,17 @@ def evaluate_relocation(
 
     # Phase 1: Generer les candidats
     from engines.relocation.candidate_generator import generate_relocation_candidates
+
+    # SAL-ALT mode: rayon etendu a 400m minimum
+    effective_radius_override = 400 if mode == "SAL_ALT" else None
+
     candidates = generate_relocation_candidates(
         center_lat=center_lat,
         center_lng=center_lng,
         species=species,
         corridors=corridors or [],
+        min_candidates=12,
+        radius_override=effective_radius_override,
     )
 
     # Phases 2-4: Evaluer chaque candidat
@@ -126,9 +149,12 @@ def evaluate_relocation(
 
     alternative = top_candidates[0] if top_candidates else None
 
+    reason = "affut_impossible" if mode == "AFFUT_RELOC" else "saline_non_viable_affut_impossible"
+
     return {
         "triggered": True,
-        "reason": "affut_impossible",
+        "reason": reason,
+        "mode": mode,
         "current_site": {
             "saline": {
                 "id": current_saline.get("id", "SAL-CURRENT"),

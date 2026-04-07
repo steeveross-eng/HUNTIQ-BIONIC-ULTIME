@@ -782,7 +782,7 @@ const StandsMapLayer = ({
                 ${alt.justification?.supra || ''}
               </div>
             </div>
-            <div style="margin-top:6px;font-size:10px;color:#555">BCE-4X BLOC 3 — RELOCALISATION V1</div>
+            <div style="margin-top:6px;font-size:10px;color:#555">BCE-4X BLOC 3 — RELOCALISATION V2 SAL-ALT</div>
           </div>
         `, { maxWidth: 360, className: 'bionic-stand-popup' });
         relGroup.addLayer(salineMarker);
