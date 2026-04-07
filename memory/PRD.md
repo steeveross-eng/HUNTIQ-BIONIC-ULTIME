@@ -127,7 +127,7 @@ Application de routage terrain pour la chasse avec pathfinding A* et integration
 - [x] P0-K++: Suppression legende dupliquee (BionicLegend retiree, StandsMapLayer seule)
 - [x] P0-K++: Analyse comparative 4 modules (DASHBOARD, INTELLIGENCE, FICHE, SUPRA)
 - [x] P0-K++: Tableau croise CONFORME/PARTIEL/NON-CONFORME
-- [x] P0-K++: 5 duplications, 7 manquants, 3 contradictions identifiees
+- [x] P0-K++: BionicLegend retablie comme LEGENDE ULTIME (StandsMapLayer desactivee)
 - [ ] P0-K++: Validation finale STEEVE-MAX
 - Tests regression V3 -> V4 complets
 - Execution plan fusion BLOC 4 (F1→F4)
