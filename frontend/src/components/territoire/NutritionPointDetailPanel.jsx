@@ -93,6 +93,8 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose, selectedSpecies })
   const lng = np?.lng || np?.position?.[1] || -71.2;
   const seasonMap = { 1:'hiver',2:'hiver',3:'printemps',4:'printemps',5:'ete',6:'ete',7:'ete',8:'pre_rut',9:'pre_rut',10:'rut',11:'post_rut',12:'hiver' };
   const month = new Date().getMonth() + 1;
+  // R5.2: Saison harmonisee — seasonMap[month] prioritaire, np.season fallback
+  const resolvedSeason = seasonMap[month] || season;
 
   // Fetch SUPRA + ULTRA data in parallel
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -102,16 +104,16 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose, selectedSpecies })
     try {
       const [supraRes, ultraRes, ficheRes, soilRes] = await Promise.allSettled([
         axios.post(`${API}/api/v6/nutrition-intelligence/supra-panel`, {
-          species, season, soil_type: soilType, substrate: 'bois_mou',
+          species, season: resolvedSeason, soil_type: soilType, substrate: 'bois_mou',
           lat: parseFloat(lat), lng: parseFloat(lng),
           saline_score: np?.score || null,
         }),
         axios.post(`${API}/api/v1/saline/analyze`, {
           lat: parseFloat(lat), lng: parseFloat(lng), species, sex: 'male', age: 'adult',
-          month, season: seasonMap[month] || season,
+          month, season: resolvedSeason,
         }),
-        axios.get(`${API}/api/v1/salines-ultime/fiche?lat=${parseFloat(lat)}&lng=${parseFloat(lng)}&species=${species}&season=${seasonMap[month] || season}`),
-        axios.get(`${API}/api/v1/soil/analyze?lat=${parseFloat(lat)}&lng=${parseFloat(lng)}&species=${species}&season=${seasonMap[month] || season}`),
+        axios.get(`${API}/api/v1/salines-ultime/fiche?lat=${parseFloat(lat)}&lng=${parseFloat(lng)}&species=${species}&season=${resolvedSeason}`),
+        axios.get(`${API}/api/v1/soil/analyze?lat=${parseFloat(lat)}&lng=${parseFloat(lng)}&species=${species}&season=${resolvedSeason}`),
       ]);
       if (supraRes.status === 'fulfilled') setSupraData(supraRes.value.data);
       if (ultraRes.status === 'fulfilled') setUltraData(ultraRes.value.data);
