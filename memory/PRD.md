@@ -13,22 +13,14 @@ Application de chasse et gestion de territoire avec analyse nutritionnelle, scor
 ### R0: Préparation ✅
 ### R1: Nettoyage (dead code, E09 round-robin, E03 session) ✅
 ### R2: Zéro duplication (CriteriaDetailModal, GoldenComponents) ✅
-### R3: Découpage monolithe (5 onglets + stabilisation) ✅ COMPLET
-- R3.1: constants.js (165 lignes) ✅
-- R3.2: AnalyseTab.jsx (331 lignes) ✅
-- R3.4: FicheTab.jsx (260 lignes) ✅
-- R3.6: IntelligenceTab.jsx (88 lignes) ✅
-- R3.7: ComparezTab.jsx (117 lignes) ✅
-- R3.8: CommandezTab.jsx (139 lignes) ✅
-- R3.10: Stabilisation finale (271 lignes shell pur) ✅
-- R3.11-R3.13: Certification (72/72 tests, triple baseline) ✅
-- **Résultat**: 1235 → 271 lignes (-78.1%), ZERO régression
+### R3: Découpage monolithe (5 onglets + stabilisation) ✅ CERTIFIÉ
+- 1235 → 271 lignes (-78.1%), 6 modules autonomes, 72/72 tests
+### R4: Corrections UX ✅ COMPLET
+- R4.1: COMPAREZ grid-cols-3 → grid-cols-4 (support 4 produits)
+- R4.2: Round-robin INTELLIGENCE confirmé conforme
+- R4.3: Fallback product_id supprimé, avertissement si ID manquant
 
-### R4: Corrections UX ⏳ EN ATTENTE AUTORISATION
-- COMPAREZ grid-cols-4
-- Round-robin INTELLIGENCE amélioration
-
-### R5: Cohérence données ⏳
+### R5: Cohérence données ⏳ EN ATTENTE AUTORISATION
 ### R6: Optimisation backend ⏳
 ### R7: Externalisation PREMIUM ⏳
 
@@ -37,7 +29,7 @@ Application de chasse et gestion de territoire avec analyse nutritionnelle, scor
 - P2: Déprécation 9 endpoints AUTH-USAGER
 - P2: M5 Offline Mode Ultra
 - P2: BSAA-2 Social Ads Automation
-- ⛔ Merge SUPRA_RECONSTRUCTION → main: STRICTEMENT INTERDIT
+- INTERDIT: Merge SUPRA_RECONSTRUCTION → main
 
 ## Scores de référence (session courante)
 SUPRA=52 | ULTRA=39.3 | FICHE=68 | SOL=47
