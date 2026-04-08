@@ -1,9 +1,10 @@
 {
-  "version": "1.0.0",
+  "version": "2.0.0",
   "protocol": "BCE-4X ULTIME ABSOLU",
   "authority": "COMMANDANT STEEVE-MAX",
   "created_at": "2026-04-08T03:00:00Z",
-  "schema_version": "K0",
+  "updated_at": "2026-04-08T04:00:00Z",
+  "schema_version": "K2",
 
   "evidence_levels": {
     "E1": {"code": "PEER_REVIEWED", "description": "Etude publiee dans revue peer-reviewed", "reliability": 0.95},
@@ -174,6 +175,210 @@
     {"id": "luvisol", "name_fr": "Luvisol argileux", "class": "Luvisol", "retention_mineraux": 75, "drainage_naturel": 45, "ph_typique": 6.0, "source_ids": ["usda_soil", "ulaval_cen"], "evidence": "E2"},
     {"id": "regosol", "name_fr": "Regosol sableux", "class": "Regosol", "retention_mineraux": 25, "drainage_naturel": 90, "ph_typique": 5.5, "source_ids": ["usda_soil"], "evidence": "E2"}
   ],
+
+  "seasonal_behaviors": {
+    "_description": "K2.1 — Modeles comportementaux saisonniers par espece",
+    "moose": {
+      "spring": {"activity_peak_hours": [5, 6, 18, 19], "feeding_intensity": 0.9, "movement_km_day": 3.5, "sodium_seeking": true, "aquatic_feeding": true, "stress_level": "low", "aggregation": "solitary", "source_ids": ["cjz", "uqar_wildlife"], "evidence": "E1"},
+      "summer": {"activity_peak_hours": [4, 5, 20, 21], "feeding_intensity": 0.8, "movement_km_day": 2.0, "sodium_seeking": false, "aquatic_feeding": true, "stress_level": "medium_heat", "aggregation": "solitary", "source_ids": ["cjz", "mffp_quebec"], "evidence": "E1"},
+      "fall": {"activity_peak_hours": [6, 7, 17, 18], "feeding_intensity": 0.7, "movement_km_day": 8.0, "sodium_seeking": false, "aquatic_feeding": false, "stress_level": "high_rut", "aggregation": "rut_pairs", "source_ids": ["cjz", "uqar_wildlife", "mffp_quebec"], "evidence": "E1"},
+      "winter": {"activity_peak_hours": [8, 9, 15, 16], "feeding_intensity": 0.5, "movement_km_day": 1.0, "sodium_seeking": false, "aquatic_feeding": false, "stress_level": "high_energy_conservation", "aggregation": "yard", "source_ids": ["ulaval_cen", "mffp_quebec"], "evidence": "E2"}
+    },
+    "deer": {
+      "spring": {"activity_peak_hours": [5, 6, 19, 20], "feeding_intensity": 0.85, "movement_km_day": 2.0, "sodium_seeking": true, "aggregation": "doe_groups", "source_ids": ["uga_deer_lab", "nda"], "evidence": "E3"},
+      "summer": {"activity_peak_hours": [5, 6, 20, 21], "feeding_intensity": 0.8, "movement_km_day": 1.5, "sodium_seeking": false, "aggregation": "bachelor_groups", "source_ids": ["uga_deer_lab", "jwm"], "evidence": "E1"},
+      "fall": {"activity_peak_hours": [6, 7, 17, 18], "feeding_intensity": 0.6, "movement_km_day": 5.0, "sodium_seeking": false, "aggregation": "rut_territory", "source_ids": ["cjz", "uga_deer_lab", "nda"], "evidence": "E1"},
+      "winter": {"activity_peak_hours": [8, 9, 15, 16], "feeding_intensity": 0.5, "movement_km_day": 0.8, "sodium_seeking": false, "aggregation": "deer_yard", "source_ids": ["mffp_quebec", "uga_deer_lab"], "evidence": "E2"}
+    },
+    "bear": {
+      "spring": {"activity_peak_hours": [6, 7, 18, 19], "feeding_intensity": 0.95, "movement_km_day": 8.0, "hyperphagia": false, "aggregation": "solitary", "source_ids": ["usgs_wildlife", "mffp_quebec"], "evidence": "E2"},
+      "summer": {"activity_peak_hours": [5, 6, 19, 20], "feeding_intensity": 0.8, "movement_km_day": 5.0, "hyperphagia": false, "aggregation": "mating_pairs", "source_ids": ["usgs_wildlife", "cjz"], "evidence": "E1"},
+      "fall": {"activity_peak_hours": [4, 5, 6, 17, 18, 19], "feeding_intensity": 1.0, "movement_km_day": 12.0, "hyperphagia": true, "aggregation": "salmon_runs", "source_ids": ["usgs_wildlife", "adfg_alaska"], "evidence": "E2"},
+      "winter": {"activity_peak_hours": [], "feeding_intensity": 0.0, "movement_km_day": 0.0, "hibernation": true, "aggregation": "den", "source_ids": ["usgs_wildlife", "mffp_quebec"], "evidence": "E2"}
+    },
+    "elk": {
+      "spring": {"activity_peak_hours": [5, 6, 18, 19], "feeding_intensity": 0.85, "movement_km_day": 4.0, "migration_active": true, "aggregation": "cow_calf_herds", "source_ids": ["uwyo_migration", "jwm"], "evidence": "E1"},
+      "summer": {"activity_peak_hours": [5, 6, 20, 21], "feeding_intensity": 0.8, "movement_km_day": 3.0, "migration_active": false, "aggregation": "bachelor_herds", "source_ids": ["uwyo_migration", "usgs_wildlife"], "evidence": "E2"},
+      "fall": {"activity_peak_hours": [6, 7, 17, 18], "feeding_intensity": 0.6, "movement_km_day": 6.0, "bugling": true, "aggregation": "harems", "source_ids": ["jwm", "boone_crockett"], "evidence": "E1"},
+      "winter": {"activity_peak_hours": [9, 10, 14, 15], "feeding_intensity": 0.4, "movement_km_day": 1.5, "migration_active": true, "aggregation": "winter_range_herds", "source_ids": ["uwyo_migration", "usgs_wildlife"], "evidence": "E2"}
+    }
+  },
+
+  "dynamic_corridors": {
+    "_description": "K2.2 — Corridors dynamiques par saison et espece",
+    "models": [
+      {
+        "id": "spring_mineral_lick",
+        "type": "attraction",
+        "season": "spring",
+        "species": ["moose", "deer", "elk"],
+        "description": "Deplacement vers les salines naturelles et points d'eau mineralises apres la fonte",
+        "max_distance_km": 15,
+        "frequency": "daily_to_weekly",
+        "drivers": ["sodium_deficiency", "mineral_craving", "snowmelt_access"],
+        "source_ids": ["msu_deer_lab", "nda", "mffp_quebec"],
+        "evidence": "E3"
+      },
+      {
+        "id": "fall_rut_circuit",
+        "type": "territorial",
+        "season": "fall",
+        "species": ["moose", "deer", "elk"],
+        "description": "Circuit de rut des males — marquage, vocalisations, competition",
+        "max_distance_km": 25,
+        "frequency": "daily",
+        "drivers": ["testosterone", "photoperiod", "female_proximity"],
+        "source_ids": ["cjz", "jwm", "uqar_wildlife"],
+        "evidence": "E1"
+      },
+      {
+        "id": "winter_yard_migration",
+        "type": "migration",
+        "season": "winter",
+        "species": ["moose", "deer"],
+        "description": "Migration vers les ravages d'hiver (coniferes denses, protection thermique)",
+        "max_distance_km": 40,
+        "frequency": "seasonal",
+        "drivers": ["snow_depth", "thermal_cover", "food_availability"],
+        "source_ids": ["mffp_quebec", "ulaval_cen", "uqar_wildlife"],
+        "evidence": "E2"
+      },
+      {
+        "id": "summer_altitudinal",
+        "type": "altitudinal",
+        "season": "summer",
+        "species": ["elk", "moose"],
+        "description": "Deplacement altitudinal pour eviter la chaleur et les insectes",
+        "max_distance_km": 20,
+        "frequency": "daily",
+        "drivers": ["temperature", "insect_pressure", "forage_quality"],
+        "source_ids": ["uwyo_migration", "adfg_alaska"],
+        "evidence": "E3"
+      },
+      {
+        "id": "fall_hyperphagia_circuit",
+        "type": "foraging",
+        "season": "fall",
+        "species": ["bear"],
+        "description": "Circuit d'hyperphagie pre-hibernation — baies, noix, saumon",
+        "max_distance_km": 50,
+        "frequency": "daily",
+        "drivers": ["caloric_deficit", "fat_reserves", "hibernation_prep"],
+        "source_ids": ["usgs_wildlife", "adfg_alaska", "cjz"],
+        "evidence": "E1"
+      },
+      {
+        "id": "spring_calving_dispersal",
+        "type": "dispersal",
+        "season": "spring",
+        "species": ["moose", "elk"],
+        "description": "Dispersion des femelles gestantes vers des sites de mise bas isoles",
+        "max_distance_km": 30,
+        "frequency": "seasonal",
+        "drivers": ["parturition", "predator_avoidance", "isolation_seeking"],
+        "source_ids": ["ulaval_cen", "uwyo_migration", "cjz"],
+        "evidence": "E1"
+      }
+    ]
+  },
+
+  "ecological_zones": {
+    "_description": "K2.4 — Zones ecologiques avec parametres environnementaux",
+    "zones": [
+      {
+        "id": "boreal_shield",
+        "name_fr": "Bouclier boreal",
+        "biome": "boreal",
+        "latitude_range": {"min": 47, "max": 55},
+        "dominant_species": ["moose", "bear"],
+        "dominant_soil": "podzol",
+        "vegetation": ["epinette_noire", "sapin_baumier", "bouleau_blanc", "mousse"],
+        "precipitation_mm_year": 800,
+        "temperature_mean_annual": -1,
+        "snow_depth_cm_winter": 120,
+        "source_ids": ["ulaval_cen", "mffp_quebec", "parcs_canada"],
+        "evidence": "E2"
+      },
+      {
+        "id": "mixed_forest_laurentides",
+        "name_fr": "Foret mixte laurentienne",
+        "biome": "temperate_mixed",
+        "latitude_range": {"min": 45, "max": 48},
+        "dominant_species": ["deer", "moose", "bear"],
+        "dominant_soil": "brunisol",
+        "vegetation": ["erable_sucre", "bouleau_jaune", "sapin", "epinette"],
+        "precipitation_mm_year": 1000,
+        "temperature_mean_annual": 3,
+        "snow_depth_cm_winter": 80,
+        "source_ids": ["mffp_quebec", "uqar_wildlife"],
+        "evidence": "E2"
+      },
+      {
+        "id": "great_plains_transition",
+        "name_fr": "Transition grandes plaines",
+        "biome": "prairie_forest_ecotone",
+        "latitude_range": {"min": 49, "max": 54},
+        "dominant_species": ["deer", "elk"],
+        "dominant_soil": "luvisol",
+        "vegetation": ["trembles", "saules", "graminee_native"],
+        "precipitation_mm_year": 450,
+        "temperature_mean_annual": 1,
+        "snow_depth_cm_winter": 50,
+        "source_ids": ["sask_wildlife", "usgs_wildlife"],
+        "evidence": "E2"
+      },
+      {
+        "id": "rocky_mountain_subalpine",
+        "name_fr": "Subalpin des Rocheuses",
+        "biome": "subalpine",
+        "latitude_range": {"min": 42, "max": 50},
+        "dominant_species": ["elk", "moose", "bear"],
+        "dominant_soil": "regosol",
+        "vegetation": ["pin_tordu", "epinette_engelmann", "sapin_subalpin"],
+        "precipitation_mm_year": 700,
+        "temperature_mean_annual": 0,
+        "snow_depth_cm_winter": 200,
+        "source_ids": ["uwyo_migration", "usgs_wildlife"],
+        "evidence": "E2"
+      },
+      {
+        "id": "southeastern_deciduous",
+        "name_fr": "Feuillus du sud-est",
+        "biome": "temperate_deciduous",
+        "latitude_range": {"min": 32, "max": 38},
+        "dominant_species": ["deer"],
+        "dominant_soil": "luvisol",
+        "vegetation": ["chene", "hickory", "pin_jaune"],
+        "precipitation_mm_year": 1300,
+        "temperature_mean_annual": 15,
+        "snow_depth_cm_winter": 5,
+        "source_ids": ["uga_deer_lab", "nda"],
+        "evidence": "E3"
+      }
+    ]
+  },
+
+  "cross_species_inference": {
+    "_description": "K2.5 — Inferences inter-especes scientifiquement validees",
+    "competition_matrix": {
+      "moose_deer": {"type": "exploitative", "intensity": 0.3, "shared_resources": ["browse", "mineral_licks"], "displacement": "moose_dominant", "source_ids": ["cjz", "mffp_quebec"], "evidence": "E1"},
+      "moose_elk": {"type": "exploitative", "intensity": 0.4, "shared_resources": ["browse", "willow", "mineral_licks"], "displacement": "size_dependent", "source_ids": ["jwm", "uwyo_migration"], "evidence": "E1"},
+      "deer_elk": {"type": "exploitative", "intensity": 0.5, "shared_resources": ["graze", "browse", "agricultural"], "displacement": "elk_dominant", "source_ids": ["jwm", "usgs_wildlife"], "evidence": "E1"},
+      "bear_moose": {"type": "predation", "intensity": 0.2, "context": "calf_predation_spring", "source_ids": ["uqar_wildlife", "adfg_alaska", "cjz"], "evidence": "E1"},
+      "bear_deer": {"type": "predation", "intensity": 0.1, "context": "fawn_predation_opportunistic", "source_ids": ["usgs_wildlife"], "evidence": "E2"}
+    },
+    "habitat_overlap": {
+      "moose_deer": {"overlap_pct": 35, "peak_season": "winter", "conflict_zone": "yard_edge", "source_ids": ["mffp_quebec", "cjz"], "evidence": "E1"},
+      "moose_elk": {"overlap_pct": 25, "peak_season": "summer", "conflict_zone": "riparian", "source_ids": ["uwyo_migration"], "evidence": "E3"},
+      "deer_elk": {"overlap_pct": 45, "peak_season": "fall", "conflict_zone": "ecotone", "source_ids": ["jwm", "sask_wildlife"], "evidence": "E1"},
+      "bear_all_cervids": {"overlap_pct": 60, "peak_season": "spring", "conflict_zone": "calving_areas", "source_ids": ["usgs_wildlife", "uqar_wildlife"], "evidence": "E2"}
+    },
+    "disease_transmission": {
+      "cwd": {"species": ["deer", "elk", "moose"], "transmission": "direct_contact_prion", "risk": "high", "source_ids": ["usgs_wildlife", "cjz", "sask_wildlife"], "evidence": "E1"},
+      "brainworm": {"species": ["deer", "moose"], "transmission": "gastropod_intermediate", "risk": "high_for_moose", "source_ids": ["cjz", "mffp_quebec"], "evidence": "E1"},
+      "winter_tick": {"species": ["moose"], "transmission": "direct_infestation", "risk": "high_warming_climate", "source_ids": ["ulaval_cen", "uqar_wildlife", "eco_evo"], "evidence": "E1"}
+    }
+  },
 
   "_certification": {
     "zero_interpretation": true,
