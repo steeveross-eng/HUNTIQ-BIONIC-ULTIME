@@ -43,6 +43,14 @@ Application de chasse et gestion de territoire avec analyse nutritionnelle, scor
 - R8.3: Document DECOUPAGE_PLAN.md cree (preparation, aucune execution)
 - Baselines B+C = SUPRA=52|ULTRA=39.3|FICHE=68|SOL=47
 
+### R9: Finalisation SUPRA Reconstruction ✅ COMPLET
+- R9.1: Audit final frontend — 0 unused imports critiques, 0 TODO/FIXME, console.error catch-only
+- R9.2: Cross-validation inter-moteurs 100% — species/season/coordinates 4/4 CONFORME
+- R9.3: AUTH_DEPRECATION_PLAN.md cree — 9 endpoints, 3 phases D1/D2/D3 (preparation uniquement)
+- Baselines B+C = SUPRA=52|ULTRA=39.3|FICHE=68|SOL=47
+
+## SUPRA RECONSTRUCTION — CERTIFIEE R3→R9 ✅
+
 
 ## Tâches gelées
 - P2: Déprécation 9 endpoints AUTH-USAGER
