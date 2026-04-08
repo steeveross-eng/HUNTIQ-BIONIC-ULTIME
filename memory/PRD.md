@@ -71,8 +71,14 @@ Bilan:
 - knowledge.json — 18 sources, 4 especes, 15 habitats, 5 sols, nutrition, corridors
 - SHA256 scelles, ZERO orphan source_ids, evidence coverage 100%
 
+## K1: Knowledge Engine — Integration ✅ COMPLET
+- knowledge_provider.py (223L) — singleton d'acces, 8 fonctions lookup
+- Batch endpoint enrichi: bloc _knowledge (species, nutrition, corridors, evidence)
+- Endpoint GET /knowledge/{species_id} — consultation directe
+- ZERO modification SUPRA R3-R9, Baselines A/B/C identiques
+
 ## Tâches gelées
-- K1+: Integration knowledge.json dans les moteurs (attente validation K0)
+- K2+: Enrichissement scientifique avance (attente validation K1)
 - P2: Déprécation 9 endpoints AUTH-USAGER
 - P2: M5 Offline Mode Ultra
 - P2: BSAA-2 Social Ads Automation

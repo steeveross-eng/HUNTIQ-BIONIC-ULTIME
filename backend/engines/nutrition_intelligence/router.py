@@ -409,12 +409,41 @@ async def supra_batch(req: SupraBatchRequest):
     fiche_result["_meta"] = _build_meta("FICHE", fiche_gs.get("score"), fiche_gs.get("grade"))
     soil_result["_meta"] = _build_meta("SOL", soil_result.get("score"), soil_result.get("grade"))
 
+    # K1: Injection knowledge.json — annotations scientifiques ADDITIVES
+    from modules.bionic_knowledge_engine.knowledge_provider import (
+        get_species_data, get_species_nutrition_needs, get_corridors_for_species,
+        get_soil_data, get_all_sources, get_knowledge_meta, get_sources_for_ids,
+    )
+    k_species = get_species_data(req.species)
+    k_nutrition = get_species_nutrition_needs(req.species, req.season)
+    k_corridors = get_corridors_for_species(req.species)
+    k_meta = get_knowledge_meta()
+
+    # K1 — Bloc _knowledge ADDITIF (ZERO modification des scores existants)
+    knowledge_block = {
+        "species": {
+            "id": k_species["id"] if k_species else None,
+            "scientific_name": k_species["scientific_name"] if k_species else None,
+            "weight_kg": k_species["weight_kg"] if k_species else None,
+            "home_range_km2": k_species["home_range_km2"] if k_species else None,
+            "temperature_range": k_species["temperature_range"] if k_species else None,
+            "habitat_preferences": k_species["habitat_preferences"] if k_species else [],
+            "human_tolerance": k_species["human_tolerance"] if k_species else None,
+            "breeding": k_species["breeding"] if k_species else None,
+        } if k_species else None,
+        "nutrition": k_nutrition if k_nutrition else None,
+        "corridors": k_corridors,
+        "evidence_levels": {"E1": "PEER_REVIEWED", "E2": "GOVERNMENT", "E3": "UNIVERSITY", "E4": "SPECIALIST", "E5": "EMPIRICAL"},
+        "knowledge_meta": k_meta,
+    }
+
     return {
         "supra": supra_result,
         "ultra": ultra_result,
         "fiche": fiche_result,
         "soil": soil_result,
         "_harmonized": True,
+        "_knowledge": knowledge_block,
         "_meta": {
             "engines": ["SUPRA", "ULTRA", "FICHE", "SOL"],
             "scores": {
@@ -428,7 +457,39 @@ async def supra_batch(req: SupraBatchRequest):
             "coordinates": {"lat": req.lat, "lng": req.lng},
             "species": req.species,
             "season": req.season,
+            "knowledge_version": k_meta.get("version"),
         },
+    }
+
+
+# K1.3: Endpoint Knowledge — consultation directe des donnees scientifiques
+@router.get("/knowledge/{species_id}")
+async def get_knowledge(species_id: str, season: str = "automne"):
+    """K1.3: Retourne les donnees scientifiques annotees pour une espece.
+    Inclut: espece, nutrition, corridors, sources, evidence_levels.
+    BCE-4X GOLDEN V6+ | STEEVE-MAX | ZERO_INTERPRETATION
+    """
+    from modules.bionic_knowledge_engine.knowledge_provider import (
+        get_species_data, get_species_nutrition_needs, get_corridors_for_species,
+        get_all_soils, get_all_sources, get_knowledge_meta,
+    )
+    k_species = get_species_data(species_id)
+    if not k_species:
+        return {"error": f"Species '{species_id}' not found", "available": ["orignal", "cerf", "ours", "wapiti"]}
+    k_nutrition = get_species_nutrition_needs(species_id, season)
+    k_corridors = get_corridors_for_species(species_id)
+    k_soils = get_all_soils()
+    k_sources = get_all_sources()
+    k_meta = get_knowledge_meta()
+    return {
+        "species": k_species,
+        "nutrition": k_nutrition,
+        "corridors": k_corridors,
+        "soils": k_soils,
+        "sources": k_sources,
+        "knowledge_meta": k_meta,
+        "evidence_levels": {"E1": "PEER_REVIEWED", "E2": "GOVERNMENT", "E3": "UNIVERSITY", "E4": "SPECIALIST", "E5": "EMPIRICAL"},
+        "protocol": "BCE-4X GOLDEN V6+",
     }
 
 
