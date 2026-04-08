@@ -29,22 +29,7 @@
 import { useEffect, useRef, useCallback, useState, useMemo } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
-
-// CSS animation: pulsation lente pour trails CRITIQUE (1.5s)
-if (typeof document !== 'undefined' && !document.getElementById('corridor-critique-pulse-style')) {
-  const style = document.createElement('style');
-  style.id = 'corridor-critique-pulse-style';
-  style.textContent = `
-    @keyframes corridorCritiquePulse {
-      0%, 100% { stroke-opacity: 0.85; }
-      50% { stroke-opacity: 0.55; }
-    }
-    .corridor-critique-pulse {
-      animation: corridorCritiquePulse 1.5s ease-in-out infinite;
-    }
-  `;
-  document.head.appendChild(style);
-}
+import './corridors-critique.css';
 
 const CORRIDOR_PALETTE = {
   CRITIQUE: { color: '#FF4500', contour: '#CC3700', weight: 4, hasPattern: true, patternDash: '4,3', dashArray: null, label: 'Critique', glow: true },
@@ -207,6 +192,7 @@ const BionicCorridorsV6Layer = ({
   const cachedDataRef = useRef(null);
   const cachedSpeciesRef = useRef('');
 
+
   const clearLayers = useCallback(() => {
     if (layerGroupRef.current) {
       map.removeLayer(layerGroupRef.current);
@@ -251,19 +237,22 @@ const BionicCorridorsV6Layer = ({
   // ═══ SOUS-ÉLÉMENTS: Helpers de filtrage granulaire ═══
   const isZoneTypeVisible = useCallback((zoneType) => {
     if (!zoneSubFilters) return true;
-    if (zoneSubFilters.multiEngines) return true; // Multi-Engines = tout afficher
+    // CORRECTION BCE-4X: Chaque type controle independamment — ZERO aliasing
     const map = {
-      alimentation: zoneSubFilters.alimentation || zoneSubFilters.trajets,
-      repos: zoneSubFilters.repos || zoneSubFilters.habitat,
-      rut: zoneSubFilters.rut || zoneSubFilters.affuts,
+      alimentation: zoneSubFilters.alimentation,
+      repos: zoneSubFilters.repos,
+      rut: zoneSubFilters.rut,
       eau: zoneSubFilters.eau,
+      habitat: zoneSubFilters.habitat,
+      trajets: zoneSubFilters.trajets,
+      affuts: zoneSubFilters.affuts,
     };
     return map[zoneType] ?? true;
   }, [zoneSubFilters]);
 
   const isCorridorLevelVisible = useCallback((niveau) => {
     if (!corridorSubFilters) return true;
-    if (corridorSubFilters.saisonniers) return true; // Saisonniers = tout afficher
+    // CORRECTION BCE-4X: Chaque niveau controle independamment — ZERO court-circuit
     switch (niveau) {
       case 'FAIBLE': case 'MODERE': return corridorSubFilters.normaux;
       case 'FORT': case 'MAJEUR': return corridorSubFilters.intenses;
@@ -277,12 +266,15 @@ const BionicCorridorsV6Layer = ({
     // Mode toggle: centroïdes (normal) vs individuels (chauds)
     if (isChaudMode && !pointSubFilters.individuels) return false;
     if (!isChaudMode && !pointSubFilters.centroides) return false;
-    // Type filter
+    // CORRECTION BCE-4X: Chaque type controle independamment — ZERO aliasing
     const map = {
-      alimentation: pointSubFilters.alimentation || pointSubFilters.trajets,
-      repos: pointSubFilters.repos || pointSubFilters.habitat,
-      rut: pointSubFilters.rut || pointSubFilters.affuts,
+      alimentation: pointSubFilters.alimentation,
+      repos: pointSubFilters.repos,
+      rut: pointSubFilters.rut,
       eau: pointSubFilters.eau || false,
+      habitat: pointSubFilters.habitat,
+      trajets: pointSubFilters.trajets,
+      affuts: pointSubFilters.affuts,
     };
     return map[zoneType] ?? true;
   }, [pointSubFilters]);

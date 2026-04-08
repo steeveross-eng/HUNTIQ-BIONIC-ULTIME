@@ -1,0 +1,8 @@
+/* BCE-4X GUIDE PRO: Animation pulsation CRITIQUE corridors */
+@keyframes corridorCritiquePulse {
+  0%, 100% { stroke-opacity: 0.85; }
+  50% { stroke-opacity: 0.55; }
+}
+.corridor-critique-pulse {
+  animation: corridorCritiquePulse 1.5s ease-in-out infinite;
+}

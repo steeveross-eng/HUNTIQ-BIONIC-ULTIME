@@ -81,7 +81,7 @@ const MapContentInner = React.memo(({
   // Groupe
   groupMembersPositions,
   isGroupeTrackingActive,
-  // STEVE-MAX: Hunting Path
+  // BCE-4X GUIDE PRO: Hunting Path
   huntingPathData,
   showHuntingPath,
   // CORRIDORS-V6
@@ -105,7 +105,7 @@ const MapContentInner = React.memo(({
   showHeatmapV10,
   onHeatmapDataLoaded,
   heatmapIncludeCorridors,
-  // STEEVE-MAX UX: Contrôles couches et points chauds
+  // BCE-4X GUIDE PRO: Controles couches et points chauds
   showZonesLayer,
   showCorridorsLayer,
   showPointsLayer,
@@ -119,6 +119,8 @@ const MapContentInner = React.memo(({
   // ACCESS ENGINE V6 — GOLDEN (1 Layer unique)
   accessRouteData,
   showAccessRoute,
+  // BCE-4X GUIDE PRO: Hydrographie reactivee
+  showHydro,
 }) => (
   <>
     <EcoforestryLayers
@@ -136,20 +138,19 @@ const MapContentInner = React.memo(({
     {/* ══════════════════════════════════════════════════════════════ */}
     {/* Phase 3.2-CV: BionicCorridorsV6Layer SEUL DÉSACTIVÉ */}
     {/* ══════════════════════════════════════════════════════════════ */}
-    <HydrographyOverlayLayer enabled={false} opacity={0.25} />
+    <HydrographyOverlayLayer enabled={showHydro} opacity={0.25} />
 
     <ExclusionOverlayLayer enabled={showExclusionOverlay && classificationToggles.pression} />
     {showWindFlow && <WindFlowLayer />}
     <StructureContrastLayer enabled={classificationToggles.anthropique} />
     {/* BCE-4X: Zones V9 (BionicMicroZones) SUPPRIMEES — Zones V6 rendues par BionicCorridorsV6Layer */}
-    {/* STEVE-MAX: MovementCorridorsLayer PURGE DEFINITIVE — BCE-4X-UI-003 */}
+    {/* BCE-4X GUIDE PRO: MovementCorridorsLayer PURGE DEFINITIVE — BCE-4X-UI-003 */}
 
-    {/* STEVE-MAX P3: Hunting Path Layer — z-index 700 (above corridors) */}
-    {/* HUNTING PATH — ORDONNANCE STEEVE-MAX 2026-04-07: MODE OFF */}
-    {/* Pour reactiver: decommenter le bloc ci-dessous */}
-    {/* showHuntingPath && huntingPathData && (
+    {/* BCE-4X GUIDE PRO: Hunting Path Layer — z-index 700 (above corridors) */}
+    {/* BCE-4X GUIDE PRO: Hunting Path Layer reactive — z-index 700 */}
+    {showHuntingPath && huntingPathData && (
       <HuntingPathLayer huntingPath={huntingPathData} />
-    ) */}
+    )}
 
     {/* BIONIC Zone 2 km² — Carré unique centré sur le waypoint actif */}
     {selectedWaypointForZones && (
@@ -238,7 +239,7 @@ const MapContentInner = React.memo(({
       />
     )}
 
-    {/* BCE-4X BLOC 2: BDRE PEDAGOGIQUE — Contamination permanente toutes salines */}
+    {/* BCE-4X GUIDE PRO BLOC 2: Contamination permanente toutes salines */}
     {selectedWaypointForZones && showStands && waypointCenter && (
       <ContaminationOverlayLayer
         center={waypointCenter}
@@ -250,15 +251,13 @@ const MapContentInner = React.memo(({
       />
     )}
 
-    {/* ACCESS ENGINE V6 — ORDONNANCE STEEVE-MAX 2026-04-07: MODE OFF */}
-    {/* DESACTIVATION SECURISEE — Archive: /LEGACY_ACCESS_AFFUTS/ */}
-    {/* Pour reactiver: decommenter le bloc ci-dessous */}
-    {/* showAccessRoute && accessRouteData && (
+    {/* BCE-4X GUIDE PRO: Access Engine V6 reactive */}
+    {showAccessRoute && accessRouteData && (
       <AccessRouteV6Layer
         routeData={accessRouteData}
         enabled={showAccessRoute}
       />
-    ) */}
+    )}
 
     {userPosition && (
       <Marker position={[userPosition.lat, userPosition.lng]} icon={createCustomIcon('#3b82f6', 'user')}>

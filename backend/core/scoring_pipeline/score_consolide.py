@@ -19,7 +19,7 @@ BCE-4X: Ponderations Option C certifiees par STEEVE-MAX.
 """
 import math
 
-from core.scoring_pipeline.common.constants import ENGINE_WEIGHTS
+from core.scoring_pipeline.common.constants import ENGINE_WEIGHTS, get_species_weights
 from core.scoring_pipeline.common.classification import classify, CLASSIFICATION_CONFIGS
 
 # ── Imports directs des moteurs CORE ──
@@ -52,30 +52,43 @@ from core.scoring_pipeline.trajets_v1.engine import score_point_consolidated as 
 from core.scoring_pipeline.visibility_v1.engine import score_point_consolidated as visibility_point
 from core.scoring_pipeline.learning_v1.engine import score_point_consolidated as learning_point
 
+# ── MS-2: Import RSF Engine (Resource Selection Function par espece) ──
+from core.scoring_pipeline.rsf_engine.engine import score_point_consolidated as rsf_point
+
 # ── Ponderations normalisees ──
 ACTIVE_WEIGHTS = {k: v for k, v in ENGINE_WEIGHTS.items() if v > 0}
 _TOTAL = sum(ACTIVE_WEIGHTS.values())
 NORMALIZED_WEIGHTS = {k: v / _TOTAL for k, v in ACTIVE_WEIGHTS.items()}
 
 # ── Mapping moteur → fonction de scoring ──
+# MS-5: Les 11 moteurs CORE++/CORE+++/BIONIC-OS utilisent maintenant
+# un hybride RSF (60%) + hash original (40%) pour differenciation espece
+def _rsf_hybrid(original_fn, rsf_ratio=0.6):
+    """Cree un hybride RSF/hash : RSF ratio% + original (1-ratio)%."""
+    def hybrid(lat, lng, c_lat, c_lng, species, month):
+        rsf_score = rsf_point(lat, lng, c_lat, c_lng, species, month)
+        original_score = original_fn(lat, lng, c_lat, c_lng, species, month)
+        return rsf_score * rsf_ratio + original_score * (1 - rsf_ratio)
+    return hybrid
+
 _ENGINE_FUNCTIONS = {
-    "hydro": hydro_point,
-    "thermal": thermal_point,
-    "ndvi_vegetation": ndvi_point,
-    "weather": weather_point,
-    "temporal": temporal_point,
-    "habitat": habitat_point,
-    "ecosystem": ecosystem_point,
-    "behavior": behavior_point,
-    "risk": risk_point,
-    "opportunity": opportunity_point,
-    "attractors": attractors_point,
-    "scenario": scenario_point,
-    "simulation": simulation_point,
+    "hydro": _rsf_hybrid(hydro_point, 0.5),
+    "thermal": _rsf_hybrid(thermal_point, 0.6),
+    "ndvi_vegetation": _rsf_hybrid(ndvi_point, 0.7),
+    "weather": _rsf_hybrid(weather_point, 0.5),
+    "temporal": _rsf_hybrid(temporal_point, 0.6),
+    "habitat": _rsf_hybrid(habitat_point, 0.5),
+    "ecosystem": _rsf_hybrid(ecosystem_point, 0.7),
+    "behavior": _rsf_hybrid(behavior_point, 0.5),
+    "risk": _rsf_hybrid(risk_point, 0.6),
+    "opportunity": _rsf_hybrid(opportunity_point, 0.7),
+    "attractors": _rsf_hybrid(attractors_point, 0.7),
+    "scenario": _rsf_hybrid(scenario_point, 0.6),
+    "simulation": _rsf_hybrid(simulation_point, 0.7),
     "multi_species": multi_species_point,
-    "trajets": trajets_point,
-    "visibility": visibility_point,
-    "learning": learning_point,
+    "trajets": _rsf_hybrid(trajets_point, 0.5),
+    "visibility": _rsf_hybrid(visibility_point, 0.6),
+    "learning": _rsf_hybrid(learning_point, 0.6),
 }
 
 
@@ -142,11 +155,14 @@ def compute_consolidated_score(lat, lng, species="CERF", month=10,
     for engine_key, engine_fn in _ENGINE_FUNCTIONS.items():
         scores[engine_key] = round(engine_fn(lat, lng, c_lat, c_lng, species, month), 1)
 
-    # Ponderations dynamiques
+    # MS-1: Ponderations dynamiques par espece (BCE-4X)
+    species_weights = get_species_weights(species)
     if include_corridors:
-        weights = NORMALIZED_WEIGHTS
+        active = {k: v for k, v in species_weights.items() if v > 0}
+        total = sum(active.values())
+        weights = {k: v / total for k, v in active.items()}
     else:
-        active = {k: v for k, v in ENGINE_WEIGHTS.items() if k != "corridors_v10" and v > 0}
+        active = {k: v for k, v in species_weights.items() if k != "corridors_v10" and v > 0}
         total = sum(active.values())
         weights = {k: v / total for k, v in active.items()}
 

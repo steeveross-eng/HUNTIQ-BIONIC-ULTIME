@@ -90,46 +90,57 @@ def _nearest_trail_distance_saline(lat, lng, trail_graph):
 
 
 def _score_candidate(terrain, lat, lng, center_lat, center_lng, dist_m, half_m, idx,
-                     trail_graph=None):
+                     trail_graph=None, species="CERF"):
     """
     Score un candidat saline (0-100) selon 6 critères STEEVE-MAX V3.
-    BCE-4X P0-C: Critères 1, 4, 6 basés sur données RÉELLES (OSM).
+    BCE-4X MS-6: Critères différenciés par espèce.
     """
     couvert = terrain.get("foret", {}).get("couvert_pct", 60) / 100
     pente = terrain.get("relief", {}).get("pente_moyenne_pct", 10)
 
-    # ═══ 1. Proximité eau (25%) — DISTANCE RÉELLE OSM ═══
-    # Seuils institutionnels STEEVE-MAX:
-    #   30-80m = OPTIMAL (100) | 80-150m = ACCEPTABLE (75)
-    #   < 30m = PÉNALITÉ terrain mou (40) | > 150m = PÉNALITÉ (score décroissant)
-    water_dist = _nearest_water_distance_saline(lat, lng)
-    if 30 <= water_dist <= 80:
-        score_eau = 1.0   # OPTIMAL
-    elif 80 < water_dist <= 150:
-        score_eau = 0.75  # ACCEPTABLE
-    elif water_dist < 30:
-        score_eau = 0.40  # Terrain mou, risque inondation
-    elif 150 < water_dist <= 300:
-        score_eau = 0.45  # Pénalité modérée
-    else:
-        score_eau = 0.20  # Pénalité sévère (> 300m)
+    # MS-6: Profil de positionnement par espèce
+    try:
+        from core.scoring_pipeline.rsf_engine.coefficients import SALINE_POSITIONING_PROFILES
+        profile = SALINE_POSITIONING_PROFILES.get(species.upper(), {})
+    except ImportError:
+        profile = {}
 
-    # Micro-variation déterministe pour départager les candidats à même distance
+    eau_range = profile.get("eau_optimal_m", (30, 80))
+    eau_penalite = profile.get("eau_penalite_m", 150)
+    couvert_range = profile.get("couvert_optimal_pct", (30, 85))
+    pente_range = profile.get("pente_optimal_deg", (0, 20))
+    route_min = profile.get("distance_route_min_m", 200)
+    sp_weights = profile.get("poids", {"eau": 0.25, "couvert": 0.20, "pente": 0.20, "vegetation": 0.0, "route": 0.15, "topo": 0.10})
+
+    # ═══ 1. Proximité eau (MS-6: seuils par espèce) ═══
+    water_dist = _nearest_water_distance_saline(lat, lng)
+    eau_min, eau_max = eau_range
+    if eau_min <= water_dist <= eau_max:
+        score_eau = 1.0
+    elif eau_max < water_dist <= eau_penalite:
+        score_eau = 0.75
+    elif water_dist < eau_min:
+        score_eau = 0.40
+    elif eau_penalite < water_dist <= eau_penalite * 2:
+        score_eau = 0.45
+    else:
+        score_eau = 0.20
     score_eau *= (0.95 + 0.1 * _seed(lat, lng, "eau_var"))
     score_eau = min(1.0, score_eau)
 
-    # ═══ 2. Couvert forestier (20%) — INCHANGÉ ═══
-    if 0.3 < couvert < 0.85:
+    # ═══ 2. Couvert forestier (MS-6: plage par espèce) ═══
+    couvert_min, couvert_max = couvert_range[0] / 100, couvert_range[1] / 100
+    if couvert_min < couvert < couvert_max:
         score_couvert = 0.7 + 0.3 * _seed(lat, lng, "couv")
     else:
         score_couvert = 0.3 + 0.2 * _seed(lat, lng, "couv")
 
-    # ═══ 3. Pente / accessibilité (20%) — INCHANGÉ ═══
-    score_pente = max(0.2, 1.0 - pente / 25)
+    # ═══ 3. Pente / accessibilité (MS-6: tolérance par espèce) ═══
+    pente_max = pente_range[1]
+    score_pente = max(0.2, 1.0 - pente / max(1, pente_max))
     score_pente *= (0.8 + 0.4 * _seed(lat, lng, "pente_var"))
 
-    # ═══ 4. Accessibilité sentier (15%) — DISTANCE RÉELLE OSM ═══
-    # Remplace le hash MD5 par la distance au sentier OSM le plus proche
+    # ═══ 4. Accessibilité sentier (15%) ═══
     trail_dist = _nearest_trail_distance_saline(lat, lng, trail_graph)
     if trail_dist < 100:
         score_acces = 0.90
@@ -140,28 +151,46 @@ def _score_candidate(terrain, lat, lng, center_lat, center_lng, dist_m, half_m, 
     else:
         score_acces = 0.10
 
-    # ═══ 5. Sécurité / pression humaine (10%) — INCHANGÉ ═══
-    score_securite = max(0.3, 1.0 - (dist_m / half_m) * 0.5)
+    # ═══ 5. Sécurité / pression humaine (MS-6: distance route par espèce) ═══
+    route_sim_dist = 50 + _seed(lat, lng, "infra_route") * 1000
+    if route_sim_dist >= route_min:
+        score_securite = max(0.5, 1.0 - (dist_m / half_m) * 0.3)
+    else:
+        score_securite = 0.3 * (route_sim_dist / route_min)
     score_securite *= (0.8 + 0.4 * _seed(lat, lng, "sec"))
 
-    # ═══ 6. Diversité micro-habitat (10%) — CALCUL TERRAIN RÉEL ═══
-    # Combine couvert forestier, proximité eau et relief pour estimer
-    # la diversité écologique de la micro-zone (remplace hash MD5)
+    # ═══ 6. Diversité micro-habitat (10%) ═══
     habitat_couvert = min(1.0, couvert * 1.2) if 0.2 < couvert < 0.9 else 0.3
     habitat_eau = 0.8 if water_dist < 200 else 0.4
     habitat_relief = max(0.3, 1.0 - pente / 20)
     score_habitat = (habitat_couvert * 0.4 + habitat_eau * 0.35 + habitat_relief * 0.25)
-    # Micro-variation pour unicité
     score_habitat *= (0.9 + 0.2 * _seed(lat, lng, "habitat_div"))
     score_habitat = min(1.0, score_habitat)
 
+    # MS-6: Poids par espèce (si disponible) ou poids par défaut
+    w_eau = sp_weights.get("eau", 0.25)
+    w_couvert = sp_weights.get("couvert", 0.20)
+    w_pente = 0.20
+    w_acces = 0.15
+    w_securite = sp_weights.get("route", 0.10)
+    w_habitat = sp_weights.get("topo", 0.10)
+    # Normaliser
+    w_total = w_eau + w_couvert + w_pente + w_acces + w_securite + w_habitat
+    if w_total > 0:
+        w_eau /= w_total
+        w_couvert /= w_total
+        w_pente /= w_total
+        w_acces /= w_total
+        w_securite /= w_total
+        w_habitat /= w_total
+
     total = (
-        score_eau * 0.25
-        + score_couvert * 0.20
-        + score_pente * 0.20
-        + score_acces * 0.15
-        + score_securite * 0.10
-        + score_habitat * 0.10
+        score_eau * w_eau
+        + score_couvert * w_couvert
+        + score_pente * w_pente
+        + score_acces * w_acces
+        + score_securite * w_securite
+        + score_habitat * w_habitat
     )
 
     criteres = {
@@ -299,7 +328,7 @@ def compute_salines(
 
             score, criteres, justifications, criteres_sources = _score_candidate(
                 terrain, lat, lng, center_lat, center_lng, dist_haversine, half, idx,
-                trail_graph=trail_graph,
+                trail_graph=trail_graph, species=species,
             )
 
             # Type de saline selon espèce
@@ -337,8 +366,16 @@ def compute_salines(
                 "selected": False,
             })
 
-    # Sélection intelligente avec contrainte de distance minimale
-    selected = _select_with_min_distance(candidates, max_salines, min_distance_m)
+    # MS-6: Espacement inter-salines par espece
+    try:
+        from core.scoring_pipeline.rsf_engine.coefficients import SALINE_POSITIONING_PROFILES
+        sp_profile = SALINE_POSITIONING_PROFILES.get(species.upper(), {})
+        effective_min_distance = sp_profile.get("espacement_salines_m", min_distance_m)
+    except ImportError:
+        effective_min_distance = min_distance_m
+
+    # Sélection intelligente avec contrainte de distance minimale par espece
+    selected = _select_with_min_distance(candidates, max_salines, effective_min_distance)
     selected_ids = {s["id"] for s in selected}
 
     # Marquer les candidats sélectionnés
