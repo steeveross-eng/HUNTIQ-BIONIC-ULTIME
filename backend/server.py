@@ -671,6 +671,14 @@ try:
 except Exception as e:
     logger.warning(f"BDRE not loaded: {e}")
 
+# SPECIES ENGINE K3 — BCE-4X ULTIME ABSOLU | STEEVE-MAX
+try:
+    from modules.species_engine.router import router as species_engine_router
+    app.include_router(species_engine_router)
+    logger.info("✓ Species Engine K3 registered (/api/v6/species-engine) — 12 endpoints")
+except Exception as e:
+    logger.warning(f"Species Engine K3 not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

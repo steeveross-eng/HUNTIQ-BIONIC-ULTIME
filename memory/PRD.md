@@ -77,7 +77,7 @@ Bilan:
 - Endpoint GET /knowledge/{species_id} — consultation directe
 - ZERO modification SUPRA R3-R9, Baselines A/B/C identiques
 
-## K2: Knowledge Engine — Enrichissement scientifique avance ✅ COMPLET
+## K2: Knowledge Engine — Enrichissement scientifique avance ✅ CERTIFIE
 - 5 blocs scientifiques injectes dans knowledge.json v2.0.0 :
   - K2.1: seasonal_behaviors (4 especes x 4 saisons = 16 profils)
   - K2.2: dynamic_corridors (6 modeles de deplacement)
@@ -90,6 +90,24 @@ Bilan:
 - Checksum knowledge.json : 105448a04a9819732d6ebe0532f195f7
 - ZERO modification moteurs de scoring, ZERO filtre biologique
 - Rapport : K2_RAPPORT_ENRICHISSEMENT.md
+- CERTIFIE PAR COMMANDANT STEEVE-MAX
+
+## K3: Species Engine (S0-S9) ✅ COMPLET
+- Module ADDITIF `species_engine/` cree (11 fichiers, 680L)
+- S0: Architecture documentee (K3_ARCHITECTURE.md)
+- S1: Foundation — router /api/v6/species-engine, health, registry (8 especes, 4 K2)
+- S2: Species ID Resolver — 30 alias (FR/EN/Latin), mapping bidirectionnel
+- S3: Knowledge Bridge — fusion profiles + K2, endpoint /full-profile
+- S4: Seasonal Intelligence — K2.1, comportements 4 saisons x 4 especes
+- S5: Dynamic Corridors — K2.2, 6 modeles de deplacement
+- S6: Ecological Zones — K2.4, 5 zones bioclimatiques
+- S7: Cross-Species Intelligence — K2.5, matrice competition + overlap + maladies
+- S8: Advanced Nutrition — K2.3, oligo-elements (Se, Zn, Cu, Mn) + sodium saisonnier
+- S9: Certification — 11 endpoints verifies, baselines stables
+- ZERO modification SUPRA/ULTRA/FICHE/SOL
+- ZERO modification bionic_ecological_engine / bionic_knowledge_engine
+- Baseline : SUPRA=52|ULTRA=48.2|FICHE=74|SOL=32 (ZERO DERIVE)
+- Rapport : K3_RAPPORT.md
 - EN ATTENTE VALIDATION COMMANDANT STEEVE-MAX
 
 ## Taches gelees
