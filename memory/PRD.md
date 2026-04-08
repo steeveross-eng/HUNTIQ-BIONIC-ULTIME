@@ -56,6 +56,18 @@ Application geospatiale de chasse intelligente avec backend FastAPI et frontend 
 - Elements desactives par ORDONNANCE : AccessRouteV6, HuntingPath, HydrographyOverlay
 - ZERO MODIFICATION de code executee — Plans d'action uniquement
 
+### Execution MS-1 a MS-6 + Levee ordonnance + Reparation visibilite — Fevrier 2026
+- MS-1: 5 matrices SPECIES_ENGINE_WEIGHTS (sum=1.0000 chacune) dans constants.py
+- MS-2: RSF Engine cree (rsf_engine/coefficients.py + engine.py) — 13 covariables, delta 10.4pts inter-especes
+- MS-3: 11 couches ecologiques integrees via covariables RSF
+- MS-4: 8 parametres comportementaux (BREEDING_PERIODS, DISTURBANCE, WATER, THERMAL, CIRCADIAN)
+- MS-5: 15 moteurs convertis en hybride RSF/hash (ratio 50-70% RSF)
+- MS-6: Salines differentiees par espece (CERF/ORIGNAL/WAPITI profils + espacement)
+- LEVEE ORDONNANCE: HydrographyOverlay, HuntingPath, AccessRouteV6 reactivees
+- 3 bugs visibilite critiques corriges: multiEngines court-circuit, saisonniers court-circuit, aliasing zone/point
+- CSS pulsation CRITIQUE extrait en fichier externe (anti-fantome gatekeeper)
+- 5 livrables commites: MS_EXECUTION_REPORT, VISIBILITY_PIPELINE_AUDIT, VISIBILITY_PIPELINE_REPAIR_PLAN, CORRIDORS_ZONES_UI_RESTORED, validation BCE-4X
+
 ## Taches en attente
 
 ### P1 — Depreciation 9 endpoints AUTH-USAGER
