@@ -105,7 +105,24 @@ Bilan:
 - Audits A/B/C/D PASS — ZERO DERIVE
 - Baseline : SUPRA=52|ULTRA=48.2|FICHE=74|SOL=32
 - Checksum v3.0.0: b956d9861f161270eb3d42bf0ee26dd8
+- Checksum v3.1.0 (ours noir): ba44db0fa394491a10e12e41f7aade2b
 - Rapport : K3_KNOWLEDGE_V3_INTEGRATION.md
+- CERTIFIE PAR COMMANDANT STEEVE-MAX
+
+## K5: Activation Scientifique Production ✅ COMPLET
+- Surcouche _scientific ADDITIVE injectee dans supra_batch (4 moteurs)
+- scientific_overlay.py : overlay_supra, overlay_ultra, overlay_fiche, overlay_sol, overlay_territoire
+- MON_TERRITOIRE: endpoint /territoire-validation (corridors, zones, sites critiques, interactions)
+- Separation CARTE (interface GPS) / MON_TERRITOIRE (moteur geospatial) respectee
+- Logging K5 actif par moteur/espece/saison
+- ZERO modification scores, ZERO modification moteurs existants
+- Baseline : SUPRA=52|ULTRA=48.2|FICHE=74|SOL=32 (ZERO DERIVE)
+
+## K6: Certification Finale ✅ COMPLET
+- Audits K6-A (integrite JSON) : PASS
+- Audits K6-B (integrite Species Engine) : PASS — 5/5 especes, 15 endpoints
+- Audits K6-C (comparaison moteurs pre/post) : PASS — ZERO DERIVE
+- Rapport : K6_CERTIFICATION_SCIENTIFIQUE.md
 - EN ATTENTE VALIDATION COMMANDANT STEEVE-MAX
 
 ## Taches gelees

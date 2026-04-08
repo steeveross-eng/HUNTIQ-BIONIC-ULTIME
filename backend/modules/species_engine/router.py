@@ -29,6 +29,7 @@ from modules.species_engine.cross_species import get_cross_inference_all, get_cr
 from modules.species_engine.nutrition import get_nutrition
 from modules.species_engine.climate import get_climate, get_snow_tolerance
 from modules.species_engine.critical_sites import get_critical_sites
+from modules.species_engine.scientific_overlay import overlay_territoire
 
 logger = logging.getLogger("species_engine.router")
 
@@ -259,4 +260,27 @@ async def species_critical_sites(species_id: str):
     return {"status": "success", **data}
 
 
-logger.info("Species Engine K3 v3.0.0 loaded — 14 endpoints, 8 species, K2+ bridge active")
+# ============================================================
+# K5: MON_TERRITOIRE — Validation scientifique
+# ============================================================
+
+@router.get("/{species_id}/territoire-validation")
+async def territoire_validation(
+    species_id: str, season: str = "automne",
+    lat: float = 47.5, lng: float = -72.0
+):
+    """K5: Validation scientifique pour MON_TERRITOIRE.
+    Corridors, zones, sites critiques, interactions especes.
+    LECTURE SEULE — ZERO modification des zones existantes.
+    """
+    data = overlay_territoire(species_id, season, lat, lng)
+    if not data.get("_k5_activated"):
+        return {
+            "status": "error",
+            "message": f"Pas de donnees K2+ pour '{species_id}'",
+            "k2_species": get_k2_species_ids(),
+        }
+    return {"status": "success", **data}
+
+
+logger.info("Species Engine K3 v3.0.0 loaded — 15 endpoints, 8 species, K5 active")

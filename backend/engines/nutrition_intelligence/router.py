@@ -437,6 +437,16 @@ async def supra_batch(req: SupraBatchRequest):
         "knowledge_meta": k_meta,
     }
 
+    # K5: Activation scientifique — Surcouche Species Engine v3 ADDITIVE
+    # ZERO modification des scores. Annotations scientifiques par moteur.
+    from modules.species_engine.scientific_overlay import (
+        overlay_supra, overlay_ultra, overlay_fiche, overlay_sol,
+    )
+    supra_result["_scientific"] = overlay_supra(req.species, req.season, req.lat, req.lng)
+    ultra_result["_scientific"] = overlay_ultra(req.species, req.season, req.lat, req.lng)
+    fiche_result["_scientific"] = overlay_fiche(req.species, req.season, req.lat, req.lng)
+    soil_result["_scientific"] = overlay_sol(req.species, req.season, req.lat, req.lng)
+
     return {
         "supra": supra_result,
         "ultra": ultra_result,
@@ -446,6 +456,7 @@ async def supra_batch(req: SupraBatchRequest):
         "_knowledge": knowledge_block,
         "_meta": {
             "engines": ["SUPRA", "ULTRA", "FICHE", "SOL"],
+            "k5_activation": True,
             "scores": {
                 "SUPRA": supra_score.get("score_global"),
                 "ULTRA": ultra_is.get("global_score"),
