@@ -32,6 +32,13 @@ Application geospatiale de chasse intelligente avec backend FastAPI et frontend 
 - 14/14 couches geospatiales intactes, MonTerritoireBionicPage.jsx inchange
 - ZERO derive sur 4 baselines
 
+### Audit Integrite Scientifique — Fevrier 2026
+- AUDIT_INTEGRITE_SCIENTIFIQUE.md genere et commite
+- 9 points institutionnels verifies: 7/9 CONFORME, 2/9 CONSTATATIONS
+- Constatation 1 (MODEREE): knowledge.json regenere a K3 sous directive explicite (14/18 sources K0 remplacees, impact operationnel NUL)
+- Constatation 2 (MINEURE): 3 types list→dict + 8 cles ajoutees (impact operationnel NUL)
+- ZERO derive scores, ZERO impact moteurs, ZERO impact MON_TERRITOIRE
+
 ## Taches en attente
 
 ### P1 — Depreciation 9 endpoints AUTH-USAGER
