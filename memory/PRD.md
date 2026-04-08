@@ -52,7 +52,7 @@ Application de chasse et gestion de territoire avec analyse nutritionnelle, scor
 ## SUPRA RECONSTRUCTION — CERTIFIEE R3→R9 ✅ CLOTUREE
 **Date de cloture: 2026-04-08**
 **Autorite: COMMANDANT STEEVE-MAX**
-**Statut: VERROUILLEE — Aucune modification avant P2 (AUTH) et K0 (Knowledge Engine)**
+**Statut: VERROUILLEE — Aucune modification avant K0 (Knowledge Engine) et P2 (AUTH)**
 
 Bilan:
 - Monolithe 1235→293 lignes (-76%) + 5 onglets autonomes (930L)
