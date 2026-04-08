@@ -45,8 +45,6 @@ function gradeColor(grade) {
   if (grade === 'MODERE') return BIONIC.orange;
   return BIONIC.red;
 }
-function zoneColor(z) { return z === 'vert' ? BIONIC.green : z === 'jaune' ? BIONIC.orange : BIONIC.red; }
-function priorityColor(p) { return p === 'CRITIQUE' ? BIONIC.red : p === 'RECOMMANDE' ? BIONIC.orange : BIONIC.green; }
 
 // === SESSION SALINE (Panier Stripe unifie — BCE-4X E03 fix) ===
 const getSalineSession = () => {
@@ -58,37 +56,7 @@ const getSalineSession = () => {
   return sid;
 };
 
-// === CODE MORT R3.2: GaugeMini, PHYSIOLOGY_DATA, MALE_BEHAVIOR, SUPPORT_HIERARCHY ===
-// === SUPPRIMÉS — externalisés vers supra/constants.js ===
-
-// ============================================================================
-// STANDARD GOLDEN — COMPOSANTS UI BCE-4X STEEVE-MAX
-// Norme: ZERO bordure visible | Accent bar gauche | Icones en cercles
-// Hierarchie: Valeurs 30-40px | Labels 14px | Corps 16px
-// Coins: rounded-xl (12-16px) | Contraste: fond #0F172A / carte #1E293B
-// Box-shadow: leger GOLDEN | Structure: 100% VERTICALE
-// ============================================================================
-
-const GOLDEN = {
-  cardBg: '#1E293B',
-  pageBg: '#0F172A',
-  shadow: '0 2px 8px rgba(0,0,0,0.25)',
-};
-
-const GoldenCard = ({ children, testId, accentColor, className = '', compact = false }) => (
-  <div className={`rounded-lg ${compact ? 'px-2.5 py-2' : 'px-4 py-3'} ${className}`}
-    style={{
-      backgroundColor: GOLDEN.cardBg,
-      boxShadow: GOLDEN.shadow,
-      borderLeft: accentColor ? `3px solid ${accentColor}` : 'none',
-    }}
-    data-testid={testId}>
-    {children}
-  </div>
-);
-
-// GoldenCollapsible — SUPPRIMÉ R3.2 (externalisé vers supra/constants.js, 0 usage restant)
-// SupraButton — SUPPRIMÉ R3.8 (externalisé vers supra/constants.js, 0 usage restant)
+// === R3 COMPLETE: Composants UI externalisés → supra/constants.js ===
 
 const TABS = [
   { id: 'analyse', label: 'Analyse', icon: FlaskConical },
@@ -299,41 +267,5 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose, selectedSpecies })
     </PinnablePanel>
   );
 };
-
-// ============================================================
-// TAB: ANALYSE — EXTERNALISÉ → supra/AnalyseTab.jsx (R3.2)
-// BCE-4X ULTIME ABSOLU x3 / STEEVE-MAX
-// ============================================================
-// [SUPPRIMÉ R3.2: 302 lignes extraites vers supra/AnalyseTab.jsx]
-
-// ============================================================
-// TAB: INTELLIGENCE — EXTERNALISÉ → supra/IntelligenceTab.jsx (R3.6)
-// BCE-4X ULTIME ABSOLU x3 / STEEVE-MAX
-// ============================================================
-// [SUPPRIMÉ R3.6: 68 lignes extraites vers supra/IntelligenceTab.jsx]
-
-
-// ============================================================
-// TAB: FICHE — EXTERNALISÉ → supra/FicheTab.jsx (R3.4)
-// BCE-4X ULTIME ABSOLU x3 / STEEVE-MAX
-// ============================================================
-// [SUPPRIMÉ R3.4: 239 lignes extraites vers supra/FicheTab.jsx]
-
-
-
-// ============================================================
-// TAB: COMPAREZ — EXTERNALISÉ → supra/ComparezTab.jsx (R3.7)
-// BCE-4X ULTIME ABSOLU / STEEVE-MAX
-// ============================================================
-// [SUPPRIMÉ R3.7: 98 lignes extraites vers supra/ComparezTab.jsx]
-
-
-
-// ============================================================
-// TAB: COMMANDEZ — EXTERNALISÉ → supra/CommandezTab.jsx (R3.8)
-// BCE-4X ULTIME ABSOLU / STEEVE-MAX
-// ============================================================
-// [SUPPRIMÉ R3.8: 119 lignes extraites vers supra/CommandezTab.jsx]
-
 
 export default NutritionPointDetailPanel;
