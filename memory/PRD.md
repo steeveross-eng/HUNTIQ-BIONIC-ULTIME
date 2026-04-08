@@ -39,6 +39,14 @@ Application geospatiale de chasse intelligente avec backend FastAPI et frontend 
 - Constatation 2 (MINEURE): 3 types list→dict + 8 cles ajoutees (impact operationnel NUL)
 - ZERO derive scores, ZERO impact moteurs, ZERO impact MON_TERRITOIRE
 
+### Audit Multi-Especes Points Chauds & Salines — Fevrier 2026
+- MULTI_SPECIES_HOTSPOTS_SALINES_AUDIT.md genere et commite
+- Diagnostic: convergence inter-especes expliquee par 6 causes racines
+- ~44% du score consolide (11 moteurs hash + PRESSION) = ZERO differenciation inter-especes
+- Saline positionnement = 100% geophysique, aucun critere espece-specifique
+- 11 couches manquantes, 8 parametres comportementaux absents, 6 logiques saline manquantes identifies
+- Actions correctives proposees : P0 (ponderations dynamiques + RSF Engine) → P2 (DEM reel + hyperphagie ours)
+
 ## Taches en attente
 
 ### P1 — Depreciation 9 endpoints AUTH-USAGER
