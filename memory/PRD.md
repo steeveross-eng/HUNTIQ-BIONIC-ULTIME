@@ -31,7 +31,12 @@ Application de chasse et gestion de territoire avec analyse nutritionnelle, scor
 - R6.2b: Frontend adapte pour utiliser le batch endpoint
 - R6.3: Audit latence — tous endpoints < 220ms, batch = 118ms
 - Baselines B+C = SUPRA=52|ULTRA=39.3|FICHE=68|SOL=47
-### R7: Externalisation PREMIUM ⏳
+### R7: Externalisation PREMIUM ✅ COMPLET
+- R7.1: Cree premium_guard.py — 3 guards FastAPI Depends() (require_premium, require_pro, require_feature)
+- R7.2: Separation freemium_engine (486→337 lignes, -149). Source unique TIER_LIMITS dans premium_guard.py
+- R7.3: Audit securite — tous endpoints freemium fonctionnels, guard disponible pour tout endpoint
+- Architecture: auth_helpers.py (JWT) | premium_guard.py (tier gating) | freemium_engine (CRUD sub)
+- Baselines B+C = SUPRA=52|ULTRA=39.3|FICHE=68|SOL=47
 
 ## Tâches gelées
 - P1: Harmonisation x1000% + Test export PDF

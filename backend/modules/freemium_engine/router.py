@@ -1,15 +1,17 @@
 """
-Freemium Engine Router - V5-ULTIME Monétisation
+Freemium Engine Router - V5-ULTIME Monetisation
 ===============================================
 
-Gestion des limitations, quotas et niveaux d'accès freemium.
+R7: Separe en CRUD subscription + pricing UNIQUEMENT.
+La logique d'acces/guard est externalisee dans premium_guard.py.
 
 Niveaux:
-- FREE: Accès limité, quotas stricts
-- PREMIUM: Accès complet, sans limitations
-- PRO: Fonctionnalités avancées + support prioritaire
+- FREE: Acces limite, quotas stricts
+- PREMIUM: Acces complet, sans limitations
+- PRO: Fonctionnalites avancees + support prioritaire
 
-Version: 1.0.0
+Version: 2.0.0 (R7 — Separation AUTH/PREMIUM)
+Protocol: BCE-4X GOLDEN V6+ | STEEVE-MAX
 """
 
 from fastapi import APIRouter
@@ -21,9 +23,12 @@ import os
 import logging
 from motor.motor_asyncio import AsyncIOMotorClient
 
+# R7: Import source unique depuis premium_guard
+from premium_guard import TIER_LIMITS, TIERS, check_quota
+
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/api/v1/freemium", tags=["Freemium Engine - Monétisation"])
+router = APIRouter(prefix="/api/v1/freemium", tags=["Freemium Engine - Monetisation"])
 
 # Database
 MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
@@ -52,62 +57,27 @@ class FeatureAccess(str, Enum):
     LIMITED = "limited"
     LOCKED = "locked"
 
-# Default quotas and limits per tier
-TIER_LIMITS = {
-    SubscriptionTier.FREE: {
-        "daily_strategy_generations": 3,
-        "daily_weather_checks": 10,
-        "territory_zones": 2,
-        "waypoints_per_zone": 5,
-        "analytics_history_days": 7,
-        "ai_recommendations": 5,
-        "plan_maitre_phases": 2,
-        "export_reports": False,
-        "custom_rules": False,
-        "priority_support": False,
-        "advanced_layers": False,
-        "live_heading": False,
-    },
-    SubscriptionTier.PREMIUM: {
-        "daily_strategy_generations": 50,
-        "daily_weather_checks": 100,
-        "territory_zones": 10,
-        "waypoints_per_zone": 50,
-        "analytics_history_days": 90,
-        "ai_recommendations": 50,
-        "plan_maitre_phases": 5,
-        "export_reports": True,
-        "custom_rules": True,
-        "priority_support": False,
-        "advanced_layers": True,
-        "live_heading": True,
-    },
-    SubscriptionTier.PRO: {
-        "daily_strategy_generations": -1,  # Unlimited
-        "daily_weather_checks": -1,
-        "territory_zones": -1,
-        "waypoints_per_zone": -1,
-        "analytics_history_days": 365,
-        "ai_recommendations": -1,
-        "plan_maitre_phases": 5,
-        "export_reports": True,
-        "custom_rules": True,
-        "priority_support": True,
-        "advanced_layers": True,
-        "live_heading": True,
-    }
-}
+class UserSubscription(BaseModel):
+    user_id: str
+    tier: SubscriptionTier = SubscriptionTier.FREE
+    expires_at: Optional[datetime] = None
+    stripe_customer_id: Optional[str] = None
+    stripe_subscription_id: Optional[str] = None
+
+class FeatureCheckRequest(BaseModel):
+    user_id: str
+    feature: str
 
 # Feature descriptions for UI
 FEATURES = {
     "daily_strategy_generations": {
-        "name": "Générations de stratégie",
-        "description": "Nombre de stratégies générées par jour",
+        "name": "Generations de strategie",
+        "description": "Nombre de strategies generees par jour",
         "type": "quota"
     },
     "territory_zones": {
         "name": "Zones de territoire",
-        "description": "Nombre de zones de chasse personnalisées",
+        "description": "Nombre de zones de chasse personnalisees",
         "type": "quota"
     },
     "analytics_history_days": {
@@ -117,48 +87,30 @@ FEATURES = {
     },
     "export_reports": {
         "name": "Export de rapports",
-        "description": "Exporter les données en PDF/Excel",
+        "description": "Exporter les donnees en PDF/Excel",
         "type": "feature"
     },
     "custom_rules": {
-        "name": "Règles personnalisées",
-        "description": "Créer vos propres règles de chasse",
+        "name": "Regles personnalisees",
+        "description": "Creer vos propres regles de chasse",
         "type": "feature"
     },
     "live_heading": {
         "name": "Live Heading View",
-        "description": "Navigation immersive en temps réel",
+        "description": "Navigation immersive en temps reel",
         "type": "feature"
     },
     "advanced_layers": {
-        "name": "Couches avancées",
-        "description": "Accès aux couches 3D, simulation, comportement",
+        "name": "Couches avancees",
+        "description": "Acces aux couches 3D, simulation, comportement",
         "type": "feature"
     },
     "priority_support": {
         "name": "Support prioritaire",
-        "description": "Assistance rapide et dédiée",
+        "description": "Assistance rapide et dediee",
         "type": "feature"
     }
 }
-
-class UserSubscription(BaseModel):
-    user_id: str
-    tier: SubscriptionTier = SubscriptionTier.FREE
-    expires_at: Optional[datetime] = None
-    stripe_customer_id: Optional[str] = None
-    stripe_subscription_id: Optional[str] = None
-
-class QuotaUsage(BaseModel):
-    feature: str
-    used: int
-    limit: int
-    remaining: int
-    reset_at: datetime
-
-class FeatureCheckRequest(BaseModel):
-    user_id: str
-    feature: str
 
 # ==============================================
 # MODULE INFO
@@ -169,28 +121,24 @@ async def freemium_engine_info():
     """Get freemium engine information"""
     return {
         "module": "freemium_engine",
-        "version": "1.0.0",
-        "description": "Gestion freemium V5-ULTIME",
-        "tiers": [t.value for t in SubscriptionTier],
+        "version": "2.0.0",
+        "description": "Gestion freemium V5-ULTIME — R7 Separation AUTH/PREMIUM",
+        "tiers": list(TIERS),
         "features_count": len(FEATURES),
-        "tier_limits": {
-            tier.value: limits for tier, limits in TIER_LIMITS.items()
-        }
+        "tier_limits": TIER_LIMITS,
+        "guard": "premium_guard.py",
     }
 
 # ==============================================
-# SUBSCRIPTION MANAGEMENT
+# SUBSCRIPTION MANAGEMENT (PREMIUM CRUD)
 # ==============================================
 
 @router.get("/subscription/{user_id}")
 async def get_subscription(user_id: str):
     """Get user subscription details"""
     db = get_db()
-    
     sub = await db.subscriptions.find_one({"user_id": user_id}, {"_id": 0})
-    
     if not sub:
-        # Return default free subscription
         sub = {
             "user_id": user_id,
             "tier": SubscriptionTier.FREE.value,
@@ -198,38 +146,30 @@ async def get_subscription(user_id: str):
             "created_at": datetime.now(timezone.utc)
         }
         await db.subscriptions.insert_one(sub)
-    
-    # Check if subscription is expired
+        sub.pop("_id", None)
     if sub.get("expires_at") and sub["expires_at"] < datetime.now(timezone.utc):
         sub["tier"] = SubscriptionTier.FREE.value
         sub["expired"] = True
-    
-    # Add limits for current tier
-    tier = SubscriptionTier(sub.get("tier", "free"))
-    sub["limits"] = TIER_LIMITS.get(tier, TIER_LIMITS[SubscriptionTier.FREE])
-    
+    tier = sub.get("tier", "free")
+    sub["limits"] = TIER_LIMITS.get(tier, TIER_LIMITS["free"])
     return {"success": True, "subscription": sub}
 
 @router.post("/subscription/upgrade")
 async def upgrade_subscription(user_id: str, tier: SubscriptionTier, duration_days: int = 30):
     """Upgrade user subscription (called after payment)"""
     db = get_db()
-    
     expires_at = datetime.now(timezone.utc) + timedelta(days=duration_days)
-    
     sub_data = {
         "user_id": user_id,
         "tier": tier.value,
         "expires_at": expires_at,
         "upgraded_at": datetime.now(timezone.utc)
     }
-    
     await db.subscriptions.update_one(
         {"user_id": user_id},
         {"$set": sub_data},
         upsert=True
     )
-    
     return {
         "success": True,
         "subscription": sub_data,
@@ -237,115 +177,45 @@ async def upgrade_subscription(user_id: str, tier: SubscriptionTier, duration_da
     }
 
 # ==============================================
-# QUOTA MANAGEMENT
+# QUOTA MANAGEMENT — R7: delegue a premium_guard
 # ==============================================
 
 @router.get("/quota/{user_id}/{feature}")
 async def get_quota_usage(user_id: str, feature: str):
-    """Get quota usage for a specific feature"""
-    db = get_db()
-    
-    # Get user subscription
-    sub = await db.subscriptions.find_one({"user_id": user_id}, {"_id": 0})
-    tier = SubscriptionTier(sub.get("tier", "free")) if sub else SubscriptionTier.FREE
-    
-    # Get limit for feature
-    limits = TIER_LIMITS.get(tier, TIER_LIMITS[SubscriptionTier.FREE])
-    limit = limits.get(feature, 0)
-    
-    if limit == -1:  # Unlimited
-        return {
-            "success": True,
-            "quota": {
-                "feature": feature,
-                "used": 0,
-                "limit": -1,
-                "remaining": -1,
-                "unlimited": True,
-                "reset_at": None
-            }
-        }
-    
-    # Get usage for today
-    today = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
-    tomorrow = today + timedelta(days=1)
-    
-    usage = await db.quota_usage.find_one({
-        "user_id": user_id,
-        "feature": feature,
-        "date": {"$gte": today, "$lt": tomorrow}
-    }, {"_id": 0})
-    
-    used = usage.get("count", 0) if usage else 0
-    remaining = max(0, limit - used)
-    
-    return {
-        "success": True,
-        "quota": {
-            "feature": feature,
-            "used": used,
-            "limit": limit,
-            "remaining": remaining,
-            "unlimited": False,
-            "reset_at": tomorrow.isoformat()
-        }
-    }
+    """Get quota usage for a specific feature — R7: delegue a premium_guard.check_quota"""
+    quota = await check_quota(user_id, feature)
+    return {"success": True, "quota": quota}
 
 @router.post("/quota/{user_id}/{feature}/increment")
 async def increment_quota(user_id: str, feature: str, amount: int = 1):
     """Increment quota usage"""
     db = get_db()
-    
     today = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
-    
     await db.quota_usage.update_one(
         {"user_id": user_id, "feature": feature, "date": today},
         {"$inc": {"count": amount}},
         upsert=True
     )
-
-    # Phase II x5400 — Check if quota now reached, notify upsell
     try:
-        sub = await db.subscriptions.find_one({"user_id": user_id}, {"_id": 0})
-        tier = SubscriptionTier(sub.get("tier", "free")) if sub else SubscriptionTier.FREE
-        limits = TIER_LIMITS.get(tier, TIER_LIMITS[SubscriptionTier.FREE])
-        limit = limits.get(feature, 0)
-        if isinstance(limit, int) and limit > 0:
-            usage = await db.quota_usage.find_one(
-                {"user_id": user_id, "feature": feature, "date": today}, {"_id": 0}
-            )
-            current = usage.get("count", 0) if usage else 0
-            if current >= limit:
-                from modules.freemium_engine.services.upsell_notifier import notify_quota_reached
-                await notify_quota_reached(user_id, feature, current, limit)
+        quota = await check_quota(user_id, feature)
+        if not quota.get("unlimited") and quota.get("remaining", 1) <= 0:
+            from modules.freemium_engine.services.upsell_notifier import notify_quota_reached
+            await notify_quota_reached(user_id, feature, quota["used"], quota["limit"])
     except Exception as e:
         logger.warning(f"Upsell notify failed (non-blocking): {e}")
-
     return {"success": True, "incremented": amount}
 
 # ==============================================
-# FEATURE ACCESS CHECK
+# FEATURE ACCESS CHECK — R7: delegue a premium_guard
 # ==============================================
 
 @router.post("/check-access")
 async def check_feature_access(request: FeatureCheckRequest):
-    """Check if user has access to a feature"""
-    db = get_db()
-    
-    # Get user subscription
-    sub = await db.subscriptions.find_one({"user_id": request.user_id}, {"_id": 0})
-    tier = SubscriptionTier(sub.get("tier", "free")) if sub else SubscriptionTier.FREE
-    
-    # Check expiration
-    if sub and sub.get("expires_at"):
-        if sub["expires_at"] < datetime.now(timezone.utc):
-            tier = SubscriptionTier.FREE
-    
-    # Get limits for tier
-    limits = TIER_LIMITS.get(tier, TIER_LIMITS[SubscriptionTier.FREE])
+    """Check if user has access to a feature — R7: utilise premium_guard"""
+    from premium_guard import _get_user_tier
+    tier = await _get_user_tier(request.user_id)
+    limits = TIER_LIMITS.get(tier, TIER_LIMITS["free"])
     feature_value = limits.get(request.feature)
-    
-    # Determine access
     if feature_value is None:
         access = FeatureAccess.LOCKED
         can_access = False
@@ -356,11 +226,8 @@ async def check_feature_access(request: FeatureCheckRequest):
         access = FeatureAccess.FULL
         can_access = True
     elif feature_value > 0:
-        # Check quota
-        quota_result = await get_quota_usage(request.user_id, request.feature)
-        remaining = quota_result["quota"]["remaining"]
-        
-        if remaining > 0:
+        quota = await check_quota(request.user_id, request.feature)
+        if quota.get("remaining", 0) > 0 or quota.get("unlimited"):
             access = FeatureAccess.FULL
             can_access = True
         else:
@@ -369,32 +236,20 @@ async def check_feature_access(request: FeatureCheckRequest):
     else:
         access = FeatureAccess.LOCKED
         can_access = False
-    
     return {
         "success": True,
         "feature": request.feature,
-        "tier": tier.value,
+        "tier": tier,
         "access": access.value,
         "can_access": can_access,
-        "upgrade_required": not can_access and tier == SubscriptionTier.FREE
+        "upgrade_required": not can_access and tier == "free"
     }
 
-# Phase II x5400 — Notify upsell on feature blocked
-    # (hook added after response, non-blocking)
-
-
 @router.get("/upsell-events/{user_id}")
-async def get_upsell_events(
-    user_id: str
-):
-    """
-    Get upsell events for a user (quota_reached, feature_blocked).
-    Phase II x5400 — BCE-4X.
-    """
+async def get_upsell_events(user_id: str):
+    """Get upsell events for a user. Phase II x5400 — BCE-4X."""
     from modules.freemium_engine.services.upsell_notifier import get_user_upsell_events
-
     events = await get_user_upsell_events(user_id)
-
     return {
         "success": True,
         "user_id": user_id,
@@ -410,9 +265,8 @@ async def get_upsell_events(
 
 @router.get("/tiers/compare")
 async def compare_tiers():
-    """Get comparison of all tiers"""
+    """Get comparison of all tiers — R7: source unique TIER_LIMITS"""
     comparison = []
-    
     for feature_id, feature_info in FEATURES.items():
         feature_comparison = {
             "id": feature_id,
@@ -421,21 +275,18 @@ async def compare_tiers():
             "type": feature_info["type"],
             "tiers": {}
         }
-        
-        for tier in SubscriptionTier:
+        for tier in TIERS:
             value = TIER_LIMITS[tier].get(feature_id)
             if isinstance(value, bool):
-                feature_comparison["tiers"][tier.value] = "✓" if value else "✗"
+                feature_comparison["tiers"][tier] = "Y" if value else "N"
             elif value == -1:
-                feature_comparison["tiers"][tier.value] = "∞"
+                feature_comparison["tiers"][tier] = "illimite"
             else:
-                feature_comparison["tiers"][tier.value] = str(value)
-        
+                feature_comparison["tiers"][tier] = str(value)
         comparison.append(feature_comparison)
-    
     return {
         "success": True,
-        "tiers": [t.value for t in SubscriptionTier],
+        "tiers": list(TIERS),
         "features": comparison
     }
 
@@ -444,11 +295,11 @@ async def compare_tiers():
 # ==============================================
 
 PRICING = {
-    SubscriptionTier.PREMIUM: {
+    "premium": {
         "monthly": {"amount": 9.99, "currency": "CAD", "stripe_price_id": None},
         "yearly": {"amount": 99.99, "currency": "CAD", "stripe_price_id": None}
     },
-    SubscriptionTier.PRO: {
+    "pro": {
         "monthly": {"amount": 19.99, "currency": "CAD", "stripe_price_id": None},
         "yearly": {"amount": 199.99, "currency": "CAD", "stripe_price_id": None}
     }
@@ -464,22 +315,23 @@ async def get_pricing():
             "free": {
                 "name": "Gratuit",
                 "price": 0,
-                "description": "Pour découvrir BIONIC HUNT/Chasse",
-                "features": ["3 stratégies/jour", "2 zones", "7 jours d'historique"]
+                "description": "Pour decouvrir BIONIC HUNT/Chasse",
+                "features": ["3 strategies/jour", "2 zones", "7 jours d'historique"]
             },
             "premium": {
                 "name": "Premium",
                 "monthly_price": 9.99,
                 "yearly_price": 99.99,
-                "description": "Pour les chasseurs réguliers",
-                "features": ["50 stratégies/jour", "10 zones", "90 jours d'historique", "Règles personnalisées", "Export PDF"]
+                "description": "Pour les chasseurs reguliers",
+                "features": ["50 strategies/jour", "10 zones", "90 jours d'historique", "Regles personnalisees", "Export PDF"]
             },
             "pro": {
                 "name": "Pro",
                 "monthly_price": 19.99,
                 "yearly_price": 199.99,
                 "description": "Pour les chasseurs experts",
-                "features": ["Illimité", "Support prioritaire", "1 an d'historique", "Toutes les fonctionnalités"]
+                "features": ["Illimite", "Support prioritaire", "1 an d'historique", "Toutes les fonctionnalites"]
             }
         }
     }
+
