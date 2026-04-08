@@ -1,10 +1,10 @@
 {
-  "version": "3.0.0",
+  "version": "3.1.0",
   "protocol": "BCE-4X ULTIME ABSOLU x3",
   "authority": "COMMANDANT STEEVE-MAX",
   "created_at": "2026-02-14",
-  "updated_at": "2026-04-08",
-  "schema_version": "3.0.0",
+  "updated_at": "2026-02-14",
+  "schema_version": "3.1.0",
   "coverage_years": "2004-2024",
   "bce4x_protocol": "ULTIME_ABSOLU_X3",
   "sources_policy": [
@@ -249,6 +249,34 @@
       "type": "UNI",
       "country": "International",
       "url": "https://besjournals.onlinelibrary.wiley.com/journal/13652664"
+    },
+    {
+      "id": "j_mammalogy",
+      "name": "Journal of Mammalogy",
+      "type": "UNI",
+      "country": "International",
+      "url": "https://academic.oup.com/jmammal"
+    },
+    {
+      "id": "ursus_journal",
+      "name": "Ursus (Bear Research Journal)",
+      "type": "UNI",
+      "country": "International",
+      "url": "https://bioone.org/journals/ursus"
+    },
+    {
+      "id": "bearwise",
+      "name": "BearWise Program",
+      "type": "PR",
+      "country": "USA/Canada",
+      "url": "https://bearwise.org"
+    },
+    {
+      "id": "state_wildlife_me_vt_nh",
+      "name": "State Wildlife Agencies (ME, VT, NH)",
+      "type": "GOV",
+      "country": "USA",
+      "url": "https://www.maine.gov/ifw"
     }
   ],
   "species": {
@@ -1291,11 +1319,21 @@
       },
       "habitat_preferences": [
         {
-          "type": "dense_forest",
+          "type": "mixed_forest",
           "affinity": 0.9,
           "season": "all",
           "source_ids": [
-            "mffp_quebec"
+            "mffp_quebec",
+            "jwm"
+          ]
+        },
+        {
+          "type": "regeneration",
+          "affinity": 0.85,
+          "season": "summer",
+          "source_ids": [
+            "jwm",
+            "ecological_apps"
           ]
         },
         {
@@ -1303,7 +1341,8 @@
           "affinity": 0.85,
           "season": "spring",
           "source_ids": [
-            "mffp_quebec"
+            "mffp_quebec",
+            "cjz"
           ]
         },
         {
@@ -1311,7 +1350,8 @@
           "affinity": 0.95,
           "season": "summer",
           "source_ids": [
-            "mffp_quebec"
+            "mffp_quebec",
+            "jwm"
           ]
         },
         {
@@ -1319,15 +1359,40 @@
           "affinity": 0.9,
           "season": "fall",
           "source_ids": [
-            "mffp_quebec"
+            "mffp_quebec",
+            "jwm"
+          ]
+        },
+        {
+          "type": "forest_agriculture_mosaic",
+          "affinity": 0.7,
+          "season": "all",
+          "source_ids": [
+            "jae",
+            "ecological_apps"
+          ]
+        },
+        {
+          "type": "sheltered_slopes",
+          "affinity": 0.8,
+          "season": "winter",
+          "source_ids": [
+            "mffp_quebec",
+            "ursus_journal"
           ]
         }
       ],
       "human_tolerance": {
         "flight_distance_m": 100,
         "road_avoidance_m": 300,
+        "urban_avoidance": true,
+        "agricultural_use": "opportunistic",
+        "conflict_factor": "food_availability",
+        "notes": "Evitement zones urbaines denses, utilisation opportuniste zones agricoles, fragmentation = augmentation conflits",
         "source_ids": [
-          "mffp_quebec"
+          "jae",
+          "mffp_quebec",
+          "bearwise"
         ]
       },
       "breeding": {
@@ -1336,8 +1401,21 @@
           "july"
         ],
         "gestation_days": 220,
+        "delayed_implantation": true,
+        "litter_size": {
+          "min": 1,
+          "max": 4,
+          "typical": 2
+        },
+        "cub_survival_factors": [
+          "food_availability",
+          "den_quality",
+          "female_condition"
+        ],
         "source_ids": [
-          "mffp_quebec"
+          "mffp_quebec",
+          "jwm",
+          "ursus_journal"
         ]
       },
       "evidence": {
@@ -1346,18 +1424,241 @@
             "evidence_id": "BEAR_GOV_001",
             "institution": "MFFP Quebec",
             "year": 2023,
-            "title": "Plan de gestion de l'ours noir",
+            "title": "Suivi ours noir, inventaires, analyses d'habitat",
             "doi_or_url": "https://mffp.gouv.qc.ca",
             "category": "GOV",
-            "methodology": "Inventaires, telemetrie",
-            "data_summary": "Densite, mortalite",
-            "results_summary": "Population stable",
+            "methodology": "Inventaires, telemetrie, analyses habitat",
+            "data_summary": "Densite, reproduction, mortalite, conflits humains",
+            "results_summary": "Population stable, conflits en hausse en zones periurbaines",
             "limitations": "Variabilite regionale",
             "region": "Quebec"
+          },
+          {
+            "evidence_id": "BEAR_GOV_002",
+            "institution": "Ontario MNRF",
+            "year": 2022,
+            "title": "Black Bear Management Reports",
+            "doi_or_url": "https://www.ontario.ca/page/ministry-natural-resources-and-forestry",
+            "category": "GOV",
+            "methodology": "Inventaires, series temporelles",
+            "data_summary": "Densite, quotas, mortalite, habitat",
+            "results_summary": "Stabilite globale, augmentation conflits",
+            "limitations": "Donnees manquantes zones isolees",
+            "region": "Ontario"
+          },
+          {
+            "evidence_id": "BEAR_GOV_003",
+            "institution": "NB DNR",
+            "year": 2021,
+            "title": "Black Bear Population Trends",
+            "doi_or_url": "https://www2.gnb.ca",
+            "category": "GOV",
+            "methodology": "Inventaires, series temporelles",
+            "data_summary": "Tendances, climat, mortalite",
+            "results_summary": "Stabilite, variations regionales",
+            "limitations": "Couverture limitee",
+            "region": "Nouveau-Brunswick"
+          },
+          {
+            "evidence_id": "BEAR_GOV_004",
+            "institution": "USGS",
+            "year": 2020,
+            "title": "Black Bear Movement Dataset",
+            "doi_or_url": "https://www.usgs.gov",
+            "category": "GOV",
+            "methodology": "GPS, telemetrie",
+            "data_summary": "Deplacements, corridors, telemetrie",
+            "results_summary": "Corridors fonctionnels stables, evitement urbain",
+            "limitations": "Couverture geographique limitee",
+            "region": "USA"
+          },
+          {
+            "evidence_id": "BEAR_GOV_005",
+            "institution": "USFWS",
+            "year": 2022,
+            "title": "Habitat & Population Assessments",
+            "doi_or_url": "https://www.fws.gov",
+            "category": "GOV",
+            "methodology": "Inventaires, analyses de repartition",
+            "data_summary": "Repartition, statut, habitat critique",
+            "results_summary": "Habitat critique identifie",
+            "limitations": "Ciblage sur especes menacees",
+            "region": "USA"
+          },
+          {
+            "evidence_id": "BEAR_GOV_006",
+            "institution": "NOAA",
+            "year": 2024,
+            "title": "Donnees neige/temperature",
+            "doi_or_url": "https://www.noaa.gov",
+            "category": "GOV",
+            "methodology": "Stations meteo, teledetection",
+            "data_summary": "Climat, neige, anomalies",
+            "results_summary": "Tendances climatiques impactant hibernation",
+            "limitations": "Resolution spatiale",
+            "region": "Amerique du Nord"
+          },
+          {
+            "evidence_id": "BEAR_GOV_007",
+            "institution": "NASA EarthData",
+            "year": 2024,
+            "title": "NDVI, raster thermiques",
+            "doi_or_url": "https://earthdata.nasa.gov",
+            "category": "GOV",
+            "methodology": "Teledetection, NDVI",
+            "data_summary": "Productivite vegetale, stress thermique",
+            "results_summary": "Correlation NDVI et disponibilite alimentaire",
+            "limitations": "Resolution temporelle",
+            "region": "Amerique du Nord"
+          },
+          {
+            "evidence_id": "BEAR_GOV_008",
+            "institution": "State Wildlife Agencies (ME, VT, NH)",
+            "year": 2023,
+            "title": "Bear Status Reports",
+            "doi_or_url": "https://www.maine.gov/ifw",
+            "category": "GOV",
+            "methodology": "Inventaires, reproduction, conflits",
+            "data_summary": "Tendances, reproduction, conflits humains",
+            "results_summary": "Population en croissance dans plusieurs Etats",
+            "limitations": "Variabilite inter-etats",
+            "region": "USA/Nord-Est"
           }
         ],
-        "uni": [],
-        "pr": []
+        "uni": [
+          {
+            "evidence_id": "BEAR_UNI_001",
+            "institution": "Journal of Wildlife Management",
+            "year": 2016,
+            "title": "Black bear habitat selection and movement in mixed landscapes",
+            "doi_or_url": "https://doi.org/10.1002/jwmg.1032",
+            "category": "UNI",
+            "methodology": "RSF, GPS",
+            "data_summary": "Selection habitat, deplacements",
+            "results_summary": "Selection forets mixtes, zones de regeneration",
+            "limitations": "Zone d'etude restreinte",
+            "region": "USA"
+          },
+          {
+            "evidence_id": "BEAR_UNI_002",
+            "institution": "Ecological Applications",
+            "year": 2013,
+            "title": "Resource selection by black bears in human-dominated landscapes",
+            "doi_or_url": "https://doi.org/10.1890/12-0289.1",
+            "category": "UNI",
+            "methodology": "RSF, analyses spatiales",
+            "data_summary": "Selection ressources, pression humaine",
+            "results_summary": "Utilisation opportuniste zones agricoles, evitement urbain",
+            "limitations": "Contexte periurbain specifique",
+            "region": "USA/Colorado"
+          },
+          {
+            "evidence_id": "BEAR_UNI_003",
+            "institution": "Journal of Applied Ecology",
+            "year": 2014,
+            "title": "Human-bear conflicts driven by anthropogenic food availability",
+            "doi_or_url": "https://doi.org/10.1111/1365-2664.12279",
+            "category": "UNI",
+            "methodology": "Analyses statistiques, series temporelles",
+            "data_summary": "Conflits ours-humains, disponibilite alimentaire",
+            "results_summary": "Conflits correles a la disponibilite anthropique",
+            "limitations": "Donnees centrees sur zones de conflits",
+            "region": "USA/Colorado"
+          },
+          {
+            "evidence_id": "BEAR_UNI_004",
+            "institution": "Journal of Wildlife Management",
+            "year": 2015,
+            "title": "Dynamics of black bear populations in North America",
+            "doi_or_url": "https://doi.org/10.1002/jwmg.890",
+            "category": "UNI",
+            "methodology": "Analyses demographiques, modelisation",
+            "data_summary": "Dynamique populationnelle, survie, reproduction",
+            "results_summary": "Stabilite/croissance dans la plupart des regions",
+            "limitations": "Synthese, variabilite regionale",
+            "region": "Amerique du Nord"
+          },
+          {
+            "evidence_id": "BEAR_UNI_005",
+            "institution": "Canadian Journal of Zoology",
+            "year": 2018,
+            "title": "Black bear ecology in boreal forests",
+            "doi_or_url": "https://cdnsciencepub.com/journal/cjz",
+            "category": "UNI",
+            "methodology": "GPS, analyses habitat",
+            "data_summary": "Ecologie, utilisation habitat, corridors",
+            "results_summary": "Dependance forets mixtes, corridors forestiers continus",
+            "limitations": "Region specifique",
+            "region": "Quebec"
+          },
+          {
+            "evidence_id": "BEAR_UNI_006",
+            "institution": "Ursus (Bear Research Journal)",
+            "year": 2020,
+            "title": "Hibernation ecology and den selection in black bears",
+            "doi_or_url": "https://bioone.org/journals/ursus",
+            "category": "UNI",
+            "methodology": "Telemetrie, analyses tanieres",
+            "data_summary": "Selection tanieres, duree hibernation",
+            "results_summary": "Preference cavites rocheuses, arbres creux",
+            "limitations": "Echantillonnage limite",
+            "region": "Amerique du Nord"
+          },
+          {
+            "evidence_id": "BEAR_UNI_007",
+            "institution": "Movement Ecology",
+            "year": 2019,
+            "title": "GPS-based movement patterns of black bears in fragmented landscapes",
+            "doi_or_url": "https://movementecologyjournal.biomedcentral.com",
+            "category": "UNI",
+            "methodology": "GPS, SSF",
+            "data_summary": "Corridors, fragmentation",
+            "results_summary": "Fragmentation augmente conflits, corridors essentiels",
+            "limitations": "Donnees saisonnieres",
+            "region": "USA/Est"
+          }
+        ],
+        "pr": [
+          {
+            "evidence_id": "BEAR_PR_001",
+            "institution": "BearWise Program",
+            "year": 2024,
+            "title": "Habitat, conflits humains, SIG",
+            "doi_or_url": "https://bearwise.org",
+            "category": "PR",
+            "methodology": "Donnees terrain, SIG, prevention",
+            "data_summary": "Conflits, attractifs, prevention",
+            "results_summary": "Strategies de prevention efficaces",
+            "limitations": "Donnees de prevention, pas de recherche primaire",
+            "region": "USA/Canada"
+          },
+          {
+            "evidence_id": "BEAR_PR_002",
+            "institution": "Programmes regionaux de telemetrie",
+            "year": 2022,
+            "title": "Colliers GPS ours noir",
+            "doi_or_url": "https://www.usgs.gov",
+            "category": "PR",
+            "methodology": "Colliers GPS",
+            "data_summary": "Deplacements, corridors",
+            "results_summary": "Corridors fonctionnels identifies",
+            "limitations": "Couverture geographique limitee",
+            "region": "USA/Nord-Est"
+          },
+          {
+            "evidence_id": "BEAR_PR_003",
+            "institution": "Cooperatives fauniques",
+            "year": 2021,
+            "title": "Releves terrain, reproduction, tanieres",
+            "doi_or_url": "https://mffp.gouv.qc.ca",
+            "category": "PR",
+            "methodology": "Releves terrain, reproduction",
+            "data_summary": "Tanieres, survie juvenile",
+            "results_summary": "Importance qualite tanieres pour survie",
+            "limitations": "Donnees terrain limitees",
+            "region": "Quebec"
+          }
+        ]
       }
     }
   },
@@ -1707,6 +2008,37 @@
         "nwtf",
         "jwm"
       ]
+    },
+    "bear_specific": {
+      "description": "Regime omnivore opportuniste - besoins specifiques ours noir",
+      "protein_needs": {
+        "spring": "high",
+        "summer": "moderate",
+        "fall": "high",
+        "winter": "none"
+      },
+      "berry_dependency": {
+        "summer": "critical",
+        "fall": "high"
+      },
+      "mast_dependency": {
+        "fall": "critical",
+        "species": [
+          "oak_acorn",
+          "beech_nut"
+        ]
+      },
+      "insect_consumption": {
+        "spring": "moderate",
+        "summer": "moderate"
+      },
+      "hyperphagia_factor": 1.5,
+      "hibernation_energy_reserve_months": 6,
+      "source_ids": [
+        "mffp_quebec",
+        "jwm",
+        "ecological_apps"
+      ]
     }
   },
   "corridors": {
@@ -1822,6 +2154,54 @@
         "source_ids": [
           "nwtf",
           "usgs"
+        ]
+      },
+      {
+        "id": "bear_seasonal_foraging",
+        "species": [
+          "bear"
+        ],
+        "season": "summer",
+        "type": "foraging",
+        "driver": "berry_fruit_availability",
+        "max_distance_km": 20,
+        "frequency": "daily_seasonal",
+        "description": "Corridors fonctionnels entre zones de nourriture et repos, deplacements accrus en ete",
+        "source_ids": [
+          "jwm",
+          "movement_ecology"
+        ]
+      },
+      {
+        "id": "bear_hyperphagia_circuit",
+        "species": [
+          "bear"
+        ],
+        "season": "fall",
+        "type": "foraging_intensive",
+        "driver": "mast_hyperphagia",
+        "max_distance_km": 30,
+        "frequency": "daily",
+        "description": "Deplacements intensifs en automne, hyperphagie, recherche de zones de mast concentrees",
+        "source_ids": [
+          "mffp_quebec",
+          "ecological_apps"
+        ]
+      },
+      {
+        "id": "bear_den_access",
+        "species": [
+          "bear"
+        ],
+        "season": "fall",
+        "type": "denning_approach",
+        "driver": "hibernation_preparation",
+        "max_distance_km": 10,
+        "frequency": "seasonal",
+        "description": "Deplacement vers tanieres d'hibernation, selection zones a faible accumulation de neige",
+        "source_ids": [
+          "ursus_journal",
+          "mffp_quebec"
         ]
       }
     ]
@@ -2051,8 +2431,16 @@
         "movement_km_day": 6.0,
         "sodium_seeking": false,
         "aggregation": "solitary",
+        "behavior_notes": "Sortie d'hibernation, recherche de nourriture riche en proteines, deplacements moderes",
+        "diet_focus": [
+          "herbaceous_plants",
+          "insects",
+          "carrion"
+        ],
         "source_ids": [
-          "mffp_quebec"
+          "mffp_quebec",
+          "jwm",
+          "cjz"
         ]
       },
       "summer": {
@@ -2066,8 +2454,16 @@
         "movement_km_day": 8.0,
         "sodium_seeking": false,
         "aggregation": "solitary",
+        "behavior_notes": "Deplacements accrus, alimentation variee (fruits, insectes, vegetaux), selection zones ombragees",
+        "diet_focus": [
+          "berries",
+          "insects",
+          "vegetation",
+          "fruit"
+        ],
         "source_ids": [
-          "mffp_quebec"
+          "mffp_quebec",
+          "jwm"
         ]
       },
       "fall": {
@@ -2081,9 +2477,18 @@
         "movement_km_day": 12.0,
         "sodium_seeking": false,
         "hyperphagia": true,
-        "aggregation": "concentrated_food",
+        "aggregation": "concentrated_food_sources",
+        "behavior_notes": "Hyperphagie pre-hibernation, deplacements intensifs, dependance mast (glands, faines)",
+        "diet_focus": [
+          "acorns",
+          "beechnuts",
+          "berries",
+          "high_energy_foods"
+        ],
         "source_ids": [
-          "mffp_quebec"
+          "mffp_quebec",
+          "jwm",
+          "ecological_apps"
         ]
       },
       "winter": {
@@ -2093,8 +2498,14 @@
         "sodium_seeking": false,
         "hibernation": true,
         "aggregation": "den",
+        "behavior_notes": "Hibernation (duree variable selon latitude), dependance tanieres isolees (cavites, arbres creux, zones rocheuses)",
+        "hibernation_duration_months": {
+          "north": 6,
+          "south": 4
+        },
         "source_ids": [
-          "mffp_quebec"
+          "mffp_quebec",
+          "ursus_journal"
         ]
       }
     },
@@ -2301,6 +2712,54 @@
           "ecological_apps",
           "rmef"
         ]
+      },
+      {
+        "id": "bear_seasonal_foraging",
+        "species": [
+          "bear"
+        ],
+        "season": "summer",
+        "type": "foraging",
+        "driver": "berry_fruit_availability",
+        "max_distance_km": 20,
+        "frequency": "daily_seasonal",
+        "description": "Corridors fonctionnels entre zones de nourriture et repos, deplacements accrus en ete",
+        "source_ids": [
+          "jwm",
+          "movement_ecology"
+        ]
+      },
+      {
+        "id": "bear_hyperphagia_circuit",
+        "species": [
+          "bear"
+        ],
+        "season": "fall",
+        "type": "foraging_intensive",
+        "driver": "mast_hyperphagia",
+        "max_distance_km": 30,
+        "frequency": "daily",
+        "description": "Deplacements intensifs en automne, hyperphagie, recherche de zones de mast concentrees",
+        "source_ids": [
+          "mffp_quebec",
+          "ecological_apps"
+        ]
+      },
+      {
+        "id": "bear_den_access",
+        "species": [
+          "bear"
+        ],
+        "season": "fall",
+        "type": "denning_approach",
+        "driver": "hibernation_preparation",
+        "max_distance_km": 10,
+        "frequency": "seasonal",
+        "description": "Deplacement vers tanieres d'hibernation, selection zones a faible accumulation de neige",
+        "source_ids": [
+          "ursus_journal",
+          "mffp_quebec"
+        ]
       }
     ]
   },
@@ -2429,7 +2888,8 @@
         "latitude_range": "43-47N",
         "dominant_species": [
           "deer",
-          "turkey"
+          "turkey",
+          "bear"
         ],
         "vegetation": "cultures, haies, boisés résiduels, clairières",
         "precipitation_mm_year": 900,
@@ -2501,6 +2961,26 @@
           "nwtf",
           "nda"
         ]
+      },
+      "bear_deer_mast": {
+        "type": "exploitative",
+        "intensity": 0.3,
+        "resource": "mast_acorns_beechnuts",
+        "notes": "Competition alimentaire dans zones de mast (glands, faines)",
+        "source_ids": [
+          "mffp_quebec",
+          "jwm"
+        ]
+      },
+      "bear_coyote_wolf": {
+        "type": "spatial_interference",
+        "intensity": 0.15,
+        "resource": "carrion_territory",
+        "notes": "Interactions spatiales avec coyotes et loups, partage de charognes",
+        "source_ids": [
+          "jwm",
+          "cjz"
+        ]
       }
     },
     "habitat_overlap": {
@@ -2551,6 +3031,19 @@
         "source_ids": [
           "nwtf",
           "nda"
+        ]
+      },
+      "bear_deer_forest": {
+        "overlap_percent": 45,
+        "zones": [
+          "mixed_forest_laurentian",
+          "great_lakes_transition",
+          "forest_agriculture_mosaic"
+        ],
+        "notes": "Chevauchement important dans mosaiques forestieres",
+        "source_ids": [
+          "mffp_quebec",
+          "jwm"
         ]
       }
     },
@@ -2621,6 +3114,21 @@
           "jwd",
           "nwtf"
         ]
+      },
+      "bear_fawn_predation": {
+        "name": "Predation neonatale",
+        "species": [
+          "bear",
+          "moose",
+          "deer"
+        ],
+        "risk": "moderate",
+        "transmission": "predation_directe",
+        "notes": "Predation occasionnelle sur faons (orignal, chevreuil) au printemps",
+        "source_ids": [
+          "mffp_quebec",
+          "jwm"
+        ]
       }
     }
   },
@@ -2677,12 +3185,15 @@
     "bear": {
       "thermal_stress_threshold_c": 30,
       "thermal_stress_range_c": "30-35",
-      "behavioral_response": "Recherche de zones ombragees, activite nocturne accrue",
-      "habitat_shift": "Forets denses, zones humides",
+      "behavioral_response": "Selection de zones ombragees en ete, activite nocturne accrue, deplacements crepusculaires",
+      "habitat_shift": "Forets denses, milieux humides, zones ombragees",
       "vulnerability": "low",
-      "notes": "Tolerance thermique large, hibernation hivernal",
+      "notes": "Tolerance thermique elevee, hibernation elimine stress hivernal, sensibilite au climat via disponibilite alimentaire",
+      "climate_food_link": "Variations climatiques impactent production de baies et de mast, affectant condition pre-hibernation",
       "source_ids": [
-        "mffp_quebec"
+        "mffp_quebec",
+        "noaa",
+        "nasa_earthdata"
       ]
     }
   },
@@ -2733,13 +3244,16 @@
       ]
     },
     "bear": {
-      "mobility_threshold_cm": 999,
-      "mobility_range_cm": "N/A (hibernation)",
-      "behavioral_response": "Hibernation elimine impact neige",
-      "mortality_risk": "low",
-      "notes": "Hibernation de novembre a mars/avril",
+      "mobility_threshold_cm": 50,
+      "mobility_range_cm": "40-60 (pre-hibernation only)",
+      "behavioral_response": "Selection zones a faible accumulation pour deplacements automnaux, impact sur choix de tanieres",
+      "mortality_risk": "low (hibernation)",
+      "notes": "Mobilite reduite en neige profonde pour deplacements automnaux, mais hibernation elimine l'impact hivernal",
+      "denning_impact": "Neige profonde influence accessibilite des tanieres et timing d'entree en hibernation",
       "source_ids": [
-        "mffp_quebec"
+        "mffp_quebec",
+        "ursus_journal",
+        "noaa"
       ]
     }
   },
@@ -2921,29 +3435,62 @@
     },
     "bear": {
       "denning": {
-        "habitat": "Cavites rocheuses, arbres creux, terriers",
+        "habitat": "Cavites rocheuses, arbres creux, terriers, pentes abritees",
         "season": "november-april",
+        "factors": [
+          "slope_aspect",
+          "snow_cover",
+          "isolation",
+          "drainage"
+        ],
         "source_ids": [
-          "mffp_quebec"
+          "mffp_quebec",
+          "ursus_journal"
         ]
       },
       "spring_feeding": {
-        "habitat": "Zones humides, bords de cours d'eau",
+        "habitat": "Zones humides, bords de cours d'eau, clairieres avec vegetation herbacee",
         "season": "april-may",
+        "diet": [
+          "herbaceous_plants",
+          "insects",
+          "carrion"
+        ],
         "source_ids": [
-          "mffp_quebec"
+          "mffp_quebec",
+          "cjz"
         ]
       },
       "berry_patches": {
-        "habitat": "Bleuetiers, framboisiers, zones de coupes",
+        "habitat": "Bleuetiers, framboisiers, zones de coupes en regeneration",
         "season": "july-august",
+        "critical_factor": "berry_production_volume",
         "source_ids": [
-          "mffp_quebec"
+          "mffp_quebec",
+          "jwm"
         ]
       },
       "mast_sites": {
-        "habitat": "Chenaies, hetraies",
+        "habitat": "Chenaies, hetraies, zones de production de glands",
         "season": "september-october",
+        "critical_factor": "mast_crop_success",
+        "source_ids": [
+          "mffp_quebec",
+          "ecological_apps"
+        ]
+      },
+      "corridors_continus": {
+        "habitat": "Corridors forestiers continus reliant zones de nourriture, repos et tanieres",
+        "season": "all",
+        "critical_factor": "habitat_connectivity",
+        "source_ids": [
+          "movement_ecology",
+          "jwm"
+        ]
+      },
+      "resting": {
+        "habitat": "Couvert dense, forets matures",
+        "season": "all",
         "source_ids": [
           "mffp_quebec"
         ]
@@ -3020,15 +3567,27 @@
     },
     "bear": {
       "population_trend": "stable_to_increasing",
-      "details": "Population stable a croissante dans la plupart des regions",
+      "details": "Stabilite ou croissance dans plusieurs regions, expansion vers le nord dans certaines zones, augmentation des conflits humains",
       "key_factors": [
-        "habitat_availability",
-        "human_conflict"
+        "food_availability",
+        "human_conflict_increase",
+        "habitat_fragmentation",
+        "climate_food_link"
       ],
-      "climate_impact": "Impact modere, adaptabilite elevee",
-      "disease_impact": "Faible",
+      "climate_impact": "Influence sur disponibilite alimentaire (baies, mast), modification timing hibernation",
+      "disease_impact": "Faible impact pathologique direct",
+      "human_conflict_trend": "increasing",
+      "human_conflict_drivers": [
+        "food_attractants",
+        "habitat_fragmentation",
+        "urban_expansion"
+      ],
       "source_ids": [
-        "mffp_quebec"
+        "mffp_quebec",
+        "ontario_mnrf",
+        "bearwise",
+        "jwm",
+        "jae"
       ]
     }
   },
@@ -3073,12 +3632,13 @@
         "coverage_quality": "high"
       },
       "bear": {
-        "gov_sources": 1,
-        "uni_sources": 0,
-        "pr_sources": 0,
-        "total_evidence_ids": 1,
-        "gps_data_available": false,
-        "coverage_quality": "moderate"
+        "gov_sources": 8,
+        "uni_sources": 7,
+        "pr_sources": 3,
+        "total_evidence_ids": 18,
+        "gps_data_available": true,
+        "coverage_quality": "high",
+        "notes": "Enrichissement complet depuis rapport scientifique OURS NOIR 2004-2024"
       }
     }
   },
@@ -3090,6 +3650,6 @@
     "additive_only": true,
     "protocol": "BCE-4X ULTIME ABSOLU x3",
     "authority": "COMMANDANT STEEVE-MAX",
-    "evidence_coverage": "GOV/UNI/PR exhaustive per species"
+    "evidence_coverage": "GOV/UNI/PR exhaustive per species (5/5 enriched)"
   }
 }
