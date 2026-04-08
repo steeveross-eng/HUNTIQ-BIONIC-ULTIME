@@ -96,29 +96,23 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose, selectedSpecies })
   // R5.2: Saison harmonisee — seasonMap[month] prioritaire, np.season fallback
   const resolvedSeason = seasonMap[month] || season;
 
-  // Fetch SUPRA + ULTRA data in parallel
+  // R6.2: Fetch ALL via batch endpoint — 1 requete HTTP au lieu de 4
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const fetchAll = useCallback(async () => {
     if (!np) return;
     setLoading(true);
     try {
-      const [supraRes, ultraRes, ficheRes, soilRes] = await Promise.allSettled([
-        axios.post(`${API}/api/v6/nutrition-intelligence/supra-panel`, {
-          species, season: resolvedSeason, soil_type: soilType, substrate: 'bois_mou',
-          lat: parseFloat(lat), lng: parseFloat(lng),
-          saline_score: np?.score || null,
-        }),
-        axios.post(`${API}/api/v1/saline/analyze`, {
-          lat: parseFloat(lat), lng: parseFloat(lng), species, sex: 'male', age: 'adult',
-          month, season: resolvedSeason,
-        }),
-        axios.get(`${API}/api/v1/salines-ultime/fiche?lat=${parseFloat(lat)}&lng=${parseFloat(lng)}&species=${species}&season=${resolvedSeason}`),
-        axios.get(`${API}/api/v1/soil/analyze?lat=${parseFloat(lat)}&lng=${parseFloat(lng)}&species=${species}&season=${resolvedSeason}`),
-      ]);
-      if (supraRes.status === 'fulfilled') setSupraData(supraRes.value.data);
-      if (ultraRes.status === 'fulfilled') setUltraData(ultraRes.value.data);
-      if (ficheRes.status === 'fulfilled') setFicheData(ficheRes.value.data);
-      if (soilRes.status === 'fulfilled') setSoilData(soilRes.value.data);
+      const batchRes = await axios.post(`${API}/api/v6/nutrition-intelligence/supra-batch`, {
+        species, season: resolvedSeason, soil_type: soilType, substrate: 'bois_mou',
+        lat: parseFloat(lat), lng: parseFloat(lng),
+        saline_score: np?.score || null,
+        sex: 'male', age: 'adult', month,
+      });
+      const d = batchRes.data;
+      if (d.supra) setSupraData(d.supra);
+      if (d.ultra) setUltraData(d.ultra);
+      if (d.fiche) setFicheData(d.fiche);
+      if (d.soil) setSoilData(d.soil);
     } catch (e) {
       console.error('[SUPRA v2]', e);
     } finally {

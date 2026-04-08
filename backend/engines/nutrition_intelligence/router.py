@@ -4,7 +4,7 @@ Endpoints pour tous les moteurs x5100-x6012.
 BCE-4X / STEEVE-MAX V6
 """
 from fastapi import APIRouter
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional, List
 
 from engines.nutrition_intelligence import (
@@ -240,28 +240,38 @@ async def supra_panel(req: RecipeRequest):
     order = generate_order(req.species, req.season, req.soil_type, None, req.site_minerals)
     ecozone = get_ecological_zones(req.species)
 
-    # x6010-x6012: Enrichissement produits (qualite, dispo, conformite)
+    # R6.1: Enrichissement produits BATCH — elimination N+1
+    # 3 appels batch au lieu de 3*N appels individuels
+    all_quality = analyze_all_quality()
+    all_availability = get_all_availability("QC")
+    all_compliance = compute_all_compliance()
+
+    # Lookup par product_id — O(1) par produit
+    quality_map = {q["product_id"]: q for q in all_quality.get("products", [])}
+    availability_map = {a["product_id"]: a for a in all_availability.get("products", [])}
+    compliance_map = {c["product_id"]: c for c in all_compliance.get("products", [])}
+
     enriched_products = []
     for p in products.get("products", []):
         pid = p.get("product_id")
-        quality = analyze_product_quality(pid) if pid else {}
-        availability = get_product_availability(pid, "QC") if pid else {}
-        compliance = compute_compliance_score(pid) if pid else {}
+        quality = quality_map.get(pid, {})
+        availability = availability_map.get(pid, {})
+        compliance = compliance_map.get(pid, {})
         p["quality"] = {
             "score": quality.get("score_qualite", 0),
             "grade": quality.get("grade", "N/A"),
             "efficiency_ratio": quality.get("efficiency_ratio", 0),
-        } if "error" not in quality else None
+        } if quality else None
         p["availability"] = {
             "canada_score": availability.get("availability_score", {}).get("canada_score", 0),
             "province_status": availability.get("province_detail", {}).get("status", "inconnu"),
             "usa_available": availability.get("usa", {}).get("available", False),
-        } if "error" not in availability else None
+        } if availability else None
         p["compliance"] = {
             "score": compliance.get("score_compliance", 0),
             "grade": compliance.get("grade", "N/A"),
             "certifications": compliance.get("certifications", []),
-        } if "error" not in compliance else None
+        } if compliance else None
         enriched_products.append(p)
 
     products["products"] = enriched_products
@@ -285,6 +295,101 @@ async def supra_panel(req: RecipeRequest):
         "order": order,
         "ecozone": ecozone,
         "terrain_solutions": terrain_solutions,
+    }
+
+
+# R6.2: Endpoint batch unifie — 4 moteurs en 1 appel HTTP
+class SupraBatchRequest(BaseModel):
+    species: str = "orignal"
+    season: str = "printemps"
+    soil_type: str = "mixte"
+    substrate: str = "bois_mou"
+    lat: float = Field(..., ge=-90, le=90)
+    lng: float = Field(..., ge=-180, le=180)
+    saline_score: Optional[int] = None
+    site_minerals: Optional[dict] = None
+    sex: str = "male"
+    age: str = "adult"
+    month: int = Field(..., ge=1, le=12)
+
+
+@router.post("/supra-batch")
+async def supra_batch(req: SupraBatchRequest):
+    """R6.2: Endpoint batch — SUPRA + ULTRA + FICHE + SOL en 1 appel.
+    Remplace 4 requetes HTTP paralleles par 1 seule.
+    Structure de sortie identique aux 4 appels individuels.
+    BCE-4X GOLDEN V6+ | STEEVE-MAX
+    """
+    # 1. SUPRA PANEL (reutilise le handler existant)
+    supra_req = RecipeRequest(
+        species=req.species, season=req.season, soil_type=req.soil_type,
+        substrate=req.substrate, lat=req.lat, lng=req.lng,
+        saline_score=req.saline_score, site_minerals=req.site_minerals,
+    )
+    supra_result = await supra_panel(supra_req)
+
+    # 2. ULTRA (saline/analyze)
+    from modules.saline_engine.router import full_analysis as _saline_analyze
+    from modules.saline_engine.models import SalineAnalysisRequest, SpeciesEnum, SexEnum, AgeEnum, SeasonEnum
+    species_enum = SpeciesEnum(req.species) if req.species in SpeciesEnum.__members__.values() else SpeciesEnum.ORIGNAL
+    sex_enum = SexEnum(req.sex) if req.sex in SexEnum.__members__.values() else SexEnum.MALE
+    age_enum = AgeEnum(req.age) if req.age in AgeEnum.__members__.values() else AgeEnum.ADULT
+    season_enum = SeasonEnum(req.season) if req.season in SeasonEnum.__members__.values() else SeasonEnum.AUTOMNE
+    saline_req = SalineAnalysisRequest(
+        lat=req.lat, lng=req.lng, species=species_enum,
+        sex=sex_enum, age=age_enum, month=req.month, season=season_enum,
+    )
+    ultra_result = await _saline_analyze(saline_req)
+
+    # 3. FICHE (salines-ultime/fiche)
+    from modules.salines_ultime_engine.router import generate_fiche as _generate_fiche, FicheRequest
+    fiche_req = FicheRequest(lat=req.lat, lng=req.lng, species=req.species, season=req.season)
+    fiche_result = await _generate_fiche(fiche_req)
+
+    # 4. SOL (soil/analyze)
+    from modules.soil_engine.router import _classify_soil, _compute_soil_score, _grade as _soil_grade, _get_recommendations, SOIL_TYPES
+    soil_key = _classify_soil(req.lat, req.lng)
+    soil_data = SOIL_TYPES[soil_key]
+    soil_score = _compute_soil_score(soil_data)
+    soil_grade = _soil_grade(soil_score)
+    soil_recs = _get_recommendations(soil_key, req.species)
+    seasonal_notes = {
+        "printemps": f"Sol {soil_data['nom']}: risque de saturation apres la fonte. Drainage naturel: {soil_data['drainage_naturel']}/100. Verifier l'etat du support apres le gel-degel.",
+        "ete": f"Sol {soil_data['nom']}: conditions optimales. Dissolution minerale active. Retention: {soil_data['retention_mineraux']}/100.",
+        "automne": f"Sol {soil_data['nom']}: sol ferme, conditions ideales pour maintenance. Preparer le site pour l'hiver.",
+        "hiver": f"Sol {soil_data['nom']}: gel en profondeur ({soil_data['profondeur_typique_cm']} cm). Dissolution quasi nulle. Verifier integrite structurelle.",
+    }
+    soil_result = {
+        "soil_type": soil_key, "soil_name": soil_data["nom"],
+        "soil_class": soil_data["classe"], "description": soil_data["description"],
+        "score": soil_score, "grade": soil_grade,
+        "metrics": {
+            "retention_mineraux": soil_data["retention_mineraux"],
+            "drainage_naturel": soil_data["drainage_naturel"],
+            "risque_lessivage": soil_data["risque_lessivage"],
+            "capacite_portance": soil_data["capacite_portance"],
+            "permeabilite": soil_data["permeabilite"],
+            "ph_typique": soil_data["ph_typique"],
+            "profondeur_cm": soil_data["profondeur_typique_cm"],
+            "matiere_organique_pct": soil_data["matiere_organique_pct"],
+        },
+        "texture": {
+            "argile_pct": soil_data["texture_argile_pct"],
+            "sable_pct": soil_data["texture_sable_pct"],
+            "limon_pct": soil_data["texture_limon_pct"],
+        },
+        "recommendations": soil_recs,
+        "seasonal_note": seasonal_notes.get(req.season, seasonal_notes["automne"]),
+        "coordinates": {"lat": req.lat, "lng": req.lng},
+        "species": req.species, "season": req.season,
+        "protocol": "BCE-4X GOLDEN V6+", "version": "V1",
+    }
+
+    return {
+        "supra": supra_result,
+        "ultra": ultra_result,
+        "fiche": fiche_result,
+        "soil": soil_result,
     }
 
 

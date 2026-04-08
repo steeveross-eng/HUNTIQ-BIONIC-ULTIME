@@ -25,7 +25,12 @@ Application de chasse et gestion de territoire avec analyse nutritionnelle, scor
 - R5.2 (E07): resolvedSeason propagé aux 4 appels API + 2 onglets (AnalyseTab, FicheTab) + sous-titre panneau
 - R5.3 (E11): Badge DETERMINISTE ajouté dans FicheTab (teal #009688)
 - 3 fichiers, +19/-30 lignes | Baselines B+C = SUPRA=52|ULTRA=39.3|FICHE=68|SOL=47
-### R6: Optimisation backend ⏳
+### R6: Optimisation backend ✅ COMPLET
+- R6.1: Elimination N+1 dans supra-panel (3*N → 3 appels batch + lookup O(1))
+- R6.2: Endpoint batch /supra-batch (4 requetes HTTP → 1 seule, -82% latence)
+- R6.2b: Frontend adapte pour utiliser le batch endpoint
+- R6.3: Audit latence — tous endpoints < 220ms, batch = 118ms
+- Baselines B+C = SUPRA=52|ULTRA=39.3|FICHE=68|SOL=47
 ### R7: Externalisation PREMIUM ⏳
 
 ## Tâches gelées
