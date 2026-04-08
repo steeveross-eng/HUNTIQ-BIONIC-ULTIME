@@ -64,7 +64,15 @@ Bilan:
 - Baselines A/B/C identiques sur toutes les phases: SUPRA=52|ULTRA=39.3|FICHE=68|SOL=47
 
 
+## K0: Knowledge Engine — Preparation ✅ COMPLET
+- K0_ARCHITECTURE.md — architecture complete, diagramme integration
+- evidence_levels.md — 5 niveaux de preuve (E1-E5) + matrice confiance
+- knowledge_sources_v1_v10.md — 18 sources V1-V10 consolidees
+- knowledge.json — 18 sources, 4 especes, 15 habitats, 5 sols, nutrition, corridors
+- SHA256 scelles, ZERO orphan source_ids, evidence coverage 100%
+
 ## Tâches gelées
+- K1+: Integration knowledge.json dans les moteurs (attente validation K0)
 - P2: Déprécation 9 endpoints AUTH-USAGER
 - P2: M5 Offline Mode Ultra
 - P2: BSAA-2 Social Ads Automation

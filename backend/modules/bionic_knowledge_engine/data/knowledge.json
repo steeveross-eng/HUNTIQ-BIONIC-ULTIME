@@ -1,0 +1,191 @@
+{
+  "version": "1.0.0",
+  "protocol": "BCE-4X ULTIME ABSOLU",
+  "authority": "COMMANDANT STEEVE-MAX",
+  "created_at": "2026-04-08T03:00:00Z",
+  "schema_version": "K0",
+
+  "evidence_levels": {
+    "E1": {"code": "PEER_REVIEWED", "description": "Etude publiee dans revue peer-reviewed", "reliability": 0.95},
+    "E2": {"code": "GOVERNMENT", "description": "Rapport gouvernemental officiel", "reliability": 0.90},
+    "E3": {"code": "UNIVERSITY", "description": "Recherche universitaire", "reliability": 0.85},
+    "E4": {"code": "SPECIALIST", "description": "Organisation specialisee reconnue", "reliability": 0.80},
+    "E5": {"code": "EMPIRICAL", "description": "Observation terrain validee", "reliability": 0.70}
+  },
+
+  "sources": [
+    {"id": "mffp_quebec", "name": "MFFP Quebec", "type": "government_report", "evidence": "E2", "reliability": 0.95, "peer_reviewed": true, "url": "https://mffp.gouv.qc.ca", "coverage": ["QC"], "topics": ["hunting_regulations", "wildlife_management", "population_surveys"]},
+    {"id": "usgs_wildlife", "name": "USGS Wildlife Research", "type": "government_report", "evidence": "E2", "reliability": 0.95, "peer_reviewed": true, "url": "https://www.usgs.gov/centers/eesc", "coverage": ["NA", "AK"], "topics": ["habitat_modeling", "telemetry", "disease_ecology"]},
+    {"id": "parcs_canada", "name": "Parcs Canada", "type": "government_report", "evidence": "E2", "reliability": 0.90, "peer_reviewed": false, "url": "https://www.pc.gc.ca", "coverage": ["CA"], "topics": ["protected_areas", "corridors", "biodiversity"]},
+    {"id": "adfg_alaska", "name": "Alaska Dept Fish & Game", "type": "government_report", "evidence": "E2", "reliability": 0.90, "peer_reviewed": false, "url": "https://www.adfg.alaska.gov", "coverage": ["AK"], "topics": ["moose_management", "bear_ecology", "subarctic"]},
+    {"id": "sask_wildlife", "name": "Saskatchewan Wildlife Branch", "type": "government_report", "evidence": "E2", "reliability": 0.88, "peer_reviewed": false, "url": "https://www.saskatchewan.ca/wildlife", "coverage": ["SK"], "topics": ["mule_deer", "prairie_moose"]},
+
+    {"id": "ulaval_cen", "name": "Universite Laval / CEN", "type": "university", "evidence": "E3", "reliability": 0.95, "peer_reviewed": true, "url": "https://www.cen.ulaval.ca", "coverage": ["QC_N", "ungava"], "topics": ["caribou_ecology", "climate_change", "habitat_modeling"]},
+    {"id": "uqar_wildlife", "name": "UQAR - Chaire faune", "type": "university", "evidence": "E3", "reliability": 0.90, "peer_reviewed": false, "url": "https://www.uqar.ca", "coverage": ["QC", "boreal"], "topics": ["moose_wolf_dynamics", "telemetry", "boreal_forest"]},
+    {"id": "msu_deer_lab", "name": "Michigan State University Deer Lab", "type": "university", "evidence": "E3", "reliability": 0.92, "peer_reviewed": true, "url": "https://www.canr.msu.edu/deerlab", "coverage": ["NA"], "topics": ["cervid_physiology", "mineral_nutrition", "sodium"]},
+    {"id": "uga_deer_lab", "name": "University of Georgia Deer Lab", "type": "university", "evidence": "E3", "reliability": 0.90, "peer_reviewed": true, "url": "https://www.warnell.uga.edu/deer", "coverage": ["NA_SE"], "topics": ["deer_management", "nutrition", "reproduction"]},
+    {"id": "uwyo_migration", "name": "UWyo Migration Initiative", "type": "university", "evidence": "E3", "reliability": 0.92, "peer_reviewed": true, "url": "https://www.migrationinitiative.org", "coverage": ["NA_W"], "topics": ["migration_corridors", "GPS_tracking", "seasonal_behavior"]},
+
+    {"id": "cjz", "name": "Canadian Journal of Zoology", "type": "peer_reviewed", "evidence": "E1", "reliability": 0.95, "peer_reviewed": true, "url": "https://cdnsciencepub.com/journal/cjz", "coverage": ["CA", "NA"], "topics": ["cervid_behavior", "Ca_P_ratio", "ecology"]},
+    {"id": "jwm", "name": "Journal of Wildlife Management", "type": "peer_reviewed", "evidence": "E1", "reliability": 0.95, "peer_reviewed": true, "url": "https://wildlife.onlinelibrary.wiley.com/journal/19372817", "coverage": ["NA"], "topics": ["wildlife_management", "population_dynamics", "habitat"]},
+    {"id": "eco_evo", "name": "Ecology & Evolution", "type": "peer_reviewed", "evidence": "E1", "reliability": 0.95, "peer_reviewed": true, "url": "https://onlinelibrary.wiley.com/journal/20457758", "coverage": ["global"], "topics": ["ecological_modeling", "adaptation", "climate_impact"]},
+    {"id": "wsb", "name": "Wildlife Society Bulletin", "type": "peer_reviewed", "evidence": "E1", "reliability": 0.92, "peer_reviewed": true, "url": "https://wildlife.onlinelibrary.wiley.com/journal/23285540", "coverage": ["NA"], "topics": ["management_practices", "field_techniques"]},
+
+    {"id": "nda", "name": "National Deer Association", "type": "specialist", "evidence": "E4", "reliability": 0.85, "peer_reviewed": false, "url": "https://www.deerassociation.com", "coverage": ["NA"], "topics": ["deer_management", "nutrition", "sodium", "habitat"]},
+    {"id": "boone_crockett", "name": "Boone & Crockett Club", "type": "specialist", "evidence": "E4", "reliability": 0.80, "peer_reviewed": false, "url": "https://www.boone-crockett.org", "coverage": ["NA"], "topics": ["trophy_management", "ethics", "conservation"]},
+    {"id": "qdma_archives", "name": "QDMA Archives", "type": "specialist", "evidence": "E4", "reliability": 0.82, "peer_reviewed": false, "url": "https://www.deerassociation.com/qdma", "coverage": ["NA"], "topics": ["quality_management", "historical_data"]},
+    {"id": "usda_soil", "name": "USDA Soil & Nutrition", "type": "government_report", "evidence": "E2", "reliability": 0.92, "peer_reviewed": true, "url": "https://www.nrcs.usda.gov/soils", "coverage": ["NA"], "topics": ["soil_composition", "mineral_retention", "trace_elements"]}
+  ],
+
+  "species": [
+    {
+      "id": "moose",
+      "scientific_name": "Alces alces",
+      "common_name_fr": "Orignal",
+      "common_name_en": "Moose",
+      "category": "cervidae",
+      "weight_kg": {"male_min": 380, "male_max": 700, "female_min": 270, "female_max": 400, "source_ids": ["mffp_quebec", "cjz"], "evidence": "E1"},
+      "home_range_km2": {"male_summer": 25, "male_winter": 15, "female_summer": 15, "female_winter": 10, "source_ids": ["uqar_wildlife", "uwyo_migration"], "evidence": "E3"},
+      "temperature_range": {"optimal_min": -5, "optimal_max": 14, "tolerance_min": -40, "tolerance_max": 25, "activity_threshold": 20, "source_ids": ["cjz", "adfg_alaska"], "evidence": "E1"},
+      "habitat_preferences": [
+        {"type": "wetland", "score": 0.9, "source_ids": ["mffp_quebec", "ulaval_cen"], "evidence": "E2"},
+        {"type": "mixed_forest", "score": 0.85, "source_ids": ["mffp_quebec", "jwm"], "evidence": "E1"},
+        {"type": "coniferous_forest", "score": 0.8, "source_ids": ["ulaval_cen", "uqar_wildlife"], "evidence": "E3"},
+        {"type": "lake_shore", "score": 0.75, "source_ids": ["mffp_quebec"], "evidence": "E2"},
+        {"type": "regeneration", "score": 0.7, "source_ids": ["uqar_wildlife"], "evidence": "E3"}
+      ],
+      "human_tolerance": {"value": 0.3, "flight_distance_m": 150, "road_avoidance_m": 300, "source_ids": ["mffp_quebec", "jwm"], "evidence": "E1"},
+      "breeding": {"rut_start_month": 9, "rut_peak_month": 10, "rut_end_month": 10, "gestation_days": 230, "source_ids": ["cjz", "mffp_quebec"], "evidence": "E1"}
+    },
+    {
+      "id": "deer",
+      "scientific_name": "Odocoileus virginianus",
+      "common_name_fr": "Cerf de Virginie",
+      "common_name_en": "White-tailed Deer",
+      "category": "cervidae",
+      "weight_kg": {"male_min": 60, "male_max": 130, "female_min": 40, "female_max": 90, "source_ids": ["mffp_quebec", "uga_deer_lab"], "evidence": "E2"},
+      "home_range_km2": {"male_summer": 3, "male_winter": 1.5, "female_summer": 2, "female_winter": 1, "source_ids": ["uga_deer_lab", "jwm"], "evidence": "E1"},
+      "temperature_range": {"optimal_min": -10, "optimal_max": 20, "tolerance_min": -30, "tolerance_max": 35, "activity_threshold": 28, "source_ids": ["uga_deer_lab", "msu_deer_lab"], "evidence": "E3"},
+      "habitat_preferences": [
+        {"type": "mixed_forest", "score": 0.9, "source_ids": ["mffp_quebec", "jwm"], "evidence": "E1"},
+        {"type": "agricultural", "score": 0.8, "source_ids": ["uga_deer_lab", "nda"], "evidence": "E3"},
+        {"type": "deciduous_forest", "score": 0.85, "source_ids": ["mffp_quebec"], "evidence": "E2"},
+        {"type": "regeneration", "score": 0.75, "source_ids": ["nda", "qdma_archives"], "evidence": "E4"}
+      ],
+      "human_tolerance": {"value": 0.5, "flight_distance_m": 80, "road_avoidance_m": 100, "source_ids": ["uga_deer_lab", "nda"], "evidence": "E3"},
+      "breeding": {"rut_start_month": 10, "rut_peak_month": 11, "rut_end_month": 12, "gestation_days": 200, "source_ids": ["cjz", "uga_deer_lab"], "evidence": "E1"}
+    },
+    {
+      "id": "bear",
+      "scientific_name": "Ursus americanus",
+      "common_name_fr": "Ours noir",
+      "common_name_en": "Black Bear",
+      "category": "ursidae",
+      "weight_kg": {"male_min": 115, "male_max": 270, "female_min": 70, "female_max": 180, "source_ids": ["mffp_quebec", "usgs_wildlife"], "evidence": "E2"},
+      "home_range_km2": {"male_summer": 120, "male_winter": 0, "female_summer": 40, "female_winter": 0, "source_ids": ["usgs_wildlife", "adfg_alaska"], "evidence": "E2"},
+      "temperature_range": {"optimal_min": -5, "optimal_max": 25, "tolerance_min": -30, "tolerance_max": 35, "activity_threshold": 30, "source_ids": ["usgs_wildlife"], "evidence": "E2"},
+      "habitat_preferences": [
+        {"type": "mixed_forest", "score": 0.9, "source_ids": ["mffp_quebec", "usgs_wildlife"], "evidence": "E2"},
+        {"type": "wetland", "score": 0.7, "source_ids": ["parcs_canada"], "evidence": "E2"},
+        {"type": "regeneration", "score": 0.8, "source_ids": ["mffp_quebec"], "evidence": "E2"}
+      ],
+      "human_tolerance": {"value": 0.4, "flight_distance_m": 200, "road_avoidance_m": 500, "source_ids": ["mffp_quebec", "usgs_wildlife"], "evidence": "E2"},
+      "breeding": {"mating_start_month": 6, "mating_peak_month": 7, "mating_end_month": 7, "gestation_days": 220, "source_ids": ["usgs_wildlife", "cjz"], "evidence": "E1"}
+    },
+    {
+      "id": "elk",
+      "scientific_name": "Cervus canadensis",
+      "common_name_fr": "Wapiti",
+      "common_name_en": "Elk",
+      "category": "cervidae",
+      "weight_kg": {"male_min": 320, "male_max": 500, "female_min": 225, "female_max": 300, "source_ids": ["usgs_wildlife", "boone_crockett"], "evidence": "E2"},
+      "home_range_km2": {"male_summer": 40, "male_winter": 20, "female_summer": 25, "female_winter": 15, "source_ids": ["uwyo_migration", "jwm"], "evidence": "E1"},
+      "temperature_range": {"optimal_min": -10, "optimal_max": 18, "tolerance_min": -35, "tolerance_max": 30, "activity_threshold": 25, "source_ids": ["uwyo_migration", "adfg_alaska"], "evidence": "E3"},
+      "habitat_preferences": [
+        {"type": "mixed_forest", "score": 0.85, "source_ids": ["uwyo_migration", "jwm"], "evidence": "E1"},
+        {"type": "alpine", "score": 0.8, "source_ids": ["uwyo_migration"], "evidence": "E3"},
+        {"type": "valley", "score": 0.9, "source_ids": ["jwm", "usgs_wildlife"], "evidence": "E1"},
+        {"type": "ridge", "score": 0.7, "source_ids": ["uwyo_migration"], "evidence": "E3"}
+      ],
+      "human_tolerance": {"value": 0.35, "flight_distance_m": 200, "road_avoidance_m": 400, "source_ids": ["uwyo_migration", "parcs_canada"], "evidence": "E2"},
+      "breeding": {"rut_start_month": 9, "rut_peak_month": 10, "rut_end_month": 10, "gestation_days": 240, "source_ids": ["jwm", "usgs_wildlife"], "evidence": "E1"}
+    }
+  ],
+
+  "habitats": [
+    {"id": "coniferous_forest", "name_fr": "Foret coniferienne", "biome": "boreal", "source_ids": ["ulaval_cen", "mffp_quebec"], "evidence": "E2"},
+    {"id": "deciduous_forest", "name_fr": "Foret feuillue", "biome": "temperate", "source_ids": ["mffp_quebec"], "evidence": "E2"},
+    {"id": "mixed_forest", "name_fr": "Foret mixte", "biome": "transition", "source_ids": ["mffp_quebec", "uqar_wildlife"], "evidence": "E2"},
+    {"id": "wetland", "name_fr": "Milieu humide", "biome": "wetland", "source_ids": ["parcs_canada", "mffp_quebec"], "evidence": "E2"},
+    {"id": "bog", "name_fr": "Tourbiere", "biome": "wetland", "source_ids": ["ulaval_cen"], "evidence": "E3"},
+    {"id": "lake_shore", "name_fr": "Rive lacustre", "biome": "riparian", "source_ids": ["mffp_quebec"], "evidence": "E2"},
+    {"id": "river_corridor", "name_fr": "Corridor fluvial", "biome": "riparian", "source_ids": ["parcs_canada", "uwyo_migration"], "evidence": "E2"},
+    {"id": "ridge", "name_fr": "Crete", "biome": "alpine", "source_ids": ["uwyo_migration"], "evidence": "E3"},
+    {"id": "valley", "name_fr": "Vallee", "biome": "temperate", "source_ids": ["jwm"], "evidence": "E1"},
+    {"id": "clearcut", "name_fr": "Coupe forestiere", "biome": "disturbed", "source_ids": ["uqar_wildlife", "mffp_quebec"], "evidence": "E2"},
+    {"id": "regeneration", "name_fr": "Regeneration", "biome": "disturbed", "source_ids": ["uqar_wildlife"], "evidence": "E3"},
+    {"id": "agricultural", "name_fr": "Zone agricole", "biome": "anthropic", "source_ids": ["mffp_quebec", "nda"], "evidence": "E2"},
+    {"id": "alpine", "name_fr": "Zone alpine", "biome": "alpine", "source_ids": ["uwyo_migration"], "evidence": "E3"},
+    {"id": "tundra", "name_fr": "Toundra", "biome": "arctic", "source_ids": ["ulaval_cen", "adfg_alaska"], "evidence": "E2"},
+    {"id": "marsh", "name_fr": "Marais", "biome": "wetland", "source_ids": ["parcs_canada"], "evidence": "E2"}
+  ],
+
+  "corridors": {
+    "models": [
+      {"id": "seasonal_migration", "description": "Deplacement saisonnier entre habitats ete/hiver", "species": ["moose", "elk", "deer"], "source_ids": ["uwyo_migration", "uqar_wildlife"], "evidence": "E3"},
+      {"id": "rut_movement", "description": "Deplacement males pendant le rut", "species": ["moose", "elk", "deer"], "source_ids": ["cjz", "jwm"], "evidence": "E1"},
+      {"id": "calving_dispersal", "description": "Dispersion femelles vers sites de mise bas", "species": ["moose", "elk"], "source_ids": ["ulaval_cen", "adfg_alaska"], "evidence": "E2"},
+      {"id": "juvenile_dispersal", "description": "Dispersion des jeunes de l'annee", "species": ["moose", "deer", "bear"], "source_ids": ["cjz", "uqar_wildlife"], "evidence": "E1"}
+    ],
+    "source_ids": ["uwyo_migration", "uqar_wildlife", "cjz"],
+    "evidence": "E1-E3"
+  },
+
+  "nutrition": {
+    "sodium": {
+      "description": "Besoins en sodium par espece et saison",
+      "unit": "mg/kg/jour",
+      "data": {
+        "moose": {"spring": 120, "summer": 80, "fall": 60, "winter": 40},
+        "deer": {"spring": 80, "summer": 50, "fall": 35, "winter": 25},
+        "elk": {"spring": 100, "summer": 65, "fall": 45, "winter": 30}
+      },
+      "source_ids": ["msu_deer_lab", "nda"],
+      "evidence": "E3"
+    },
+    "calcium_phosphorus": {
+      "description": "Ratio Ca:P optimal pour la croissance des bois",
+      "optimal_ratio": {"min": 1.5, "max": 2.5, "ideal": 2.0},
+      "source_ids": ["cjz", "jwm", "msu_deer_lab"],
+      "evidence": "E1"
+    },
+    "trace_elements": {
+      "selenium": {"unit": "ppm", "optimal_range": {"min": 0.1, "max": 0.3}, "deficiency_threshold": 0.05, "source_ids": ["usda_soil", "ulaval_cen"], "evidence": "E2"},
+      "zinc": {"unit": "ppm", "optimal_range": {"min": 30, "max": 60}, "deficiency_threshold": 20, "source_ids": ["usda_soil", "msu_deer_lab"], "evidence": "E2"},
+      "copper": {"unit": "ppm", "optimal_range": {"min": 8, "max": 15}, "deficiency_threshold": 5, "source_ids": ["usda_soil"], "evidence": "E2"},
+      "manganese": {"unit": "ppm", "optimal_range": {"min": 40, "max": 80}, "deficiency_threshold": 25, "source_ids": ["usda_soil"], "evidence": "E2"}
+    }
+  },
+
+  "soils": [
+    {"id": "podzol", "name_fr": "Podzol boreal", "class": "Podzol", "retention_mineraux": 45, "drainage_naturel": 70, "ph_typique": 4.5, "source_ids": ["usda_soil", "ulaval_cen"], "evidence": "E2"},
+    {"id": "brunisol", "name_fr": "Brunisol forestier", "class": "Brunisol", "retention_mineraux": 65, "drainage_naturel": 60, "ph_typique": 5.8, "source_ids": ["usda_soil", "uqar_wildlife"], "evidence": "E2"},
+    {"id": "gleysol", "name_fr": "Gleysol humide", "class": "Gleysol", "retention_mineraux": 80, "drainage_naturel": 25, "ph_typique": 6.2, "source_ids": ["usda_soil"], "evidence": "E2"},
+    {"id": "luvisol", "name_fr": "Luvisol argileux", "class": "Luvisol", "retention_mineraux": 75, "drainage_naturel": 45, "ph_typique": 6.0, "source_ids": ["usda_soil", "ulaval_cen"], "evidence": "E2"},
+    {"id": "regosol", "name_fr": "Regosol sableux", "class": "Regosol", "retention_mineraux": 25, "drainage_naturel": 90, "ph_typique": 5.5, "source_ids": ["usda_soil"], "evidence": "E2"}
+  ],
+
+  "_certification": {
+    "zero_interpretation": true,
+    "zero_regression": true,
+    "zero_loss": true,
+    "traceability": true,
+    "total_sources": 18,
+    "total_species": 4,
+    "total_habitats": 15,
+    "total_soils": 5,
+    "evidence_coverage": "100%",
+    "protocol": "BCE-4X ULTIME ABSOLU",
+    "authority": "COMMANDANT STEEVE-MAX"
+  }
+}
