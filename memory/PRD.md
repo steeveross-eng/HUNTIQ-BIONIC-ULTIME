@@ -47,6 +47,15 @@ Application geospatiale de chasse intelligente avec backend FastAPI et frontend 
 - 11 couches manquantes, 8 parametres comportementaux absents, 6 logiques saline manquantes identifies
 - Actions correctives proposees : P0 (ponderations dynamiques + RSF Engine) → P2 (DEM reel + hyperphagie ours)
 
+### Plans de Restauration — Fevrier 2026
+- MULTI_SPECIES_RESTORATION_PLAN.md genere et commite (6 phases MS-1→MS-6)
+- CORRIDORS_ZONES_UI_RESTORATION_PLAN.md genere et commite
+- Diagnostic UI/UX : infrastructure corridors + zones + toggles = OPERATIONNELLE
+- Corridors V6 (683 lignes, rendering 5 niveaux, glow CRITIQUE) = OPERATIONNEL
+- Zones (alimentation, repos, rut, eau) + 15+ toggles + sous-filtres = OPERATIONNELS
+- Elements desactives par ORDONNANCE : AccessRouteV6, HuntingPath, HydrographyOverlay
+- ZERO MODIFICATION de code executee — Plans d'action uniquement
+
 ## Taches en attente
 
 ### P1 — Depreciation 9 endpoints AUTH-USAGER
