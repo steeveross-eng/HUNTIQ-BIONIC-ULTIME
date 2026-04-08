@@ -49,7 +49,19 @@ Application de chasse et gestion de territoire avec analyse nutritionnelle, scor
 - R9.3: AUTH_DEPRECATION_PLAN.md cree — 9 endpoints, 3 phases D1/D2/D3 (preparation uniquement)
 - Baselines B+C = SUPRA=52|ULTRA=39.3|FICHE=68|SOL=47
 
-## SUPRA RECONSTRUCTION — CERTIFIEE R3→R9 ✅
+## SUPRA RECONSTRUCTION — CERTIFIEE R3→R9 ✅ CLOTUREE
+**Date de cloture: 2026-04-08**
+**Autorite: COMMANDANT STEEVE-MAX**
+**Statut: VERROUILLEE — Aucune modification avant P2 (AUTH) et K0 (Knowledge Engine)**
+
+Bilan:
+- Monolithe 1235→293 lignes (-76%) + 5 onglets autonomes (930L)
+- Batch endpoint /supra-batch (4→1 appel HTTP, -82% latence)
+- N+1 elimine (3*N→3 appels batch)
+- Export PDF /export-pdf (fpdf2)
+- premium_guard.py (separation AUTH/PREMIUM, 3 guards Depends())
+- Harmonisation _meta + cross-validation inter-moteurs 100%
+- Baselines A/B/C identiques sur toutes les phases: SUPRA=52|ULTRA=39.3|FICHE=68|SOL=47
 
 
 ## Tâches gelées
