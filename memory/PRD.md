@@ -77,15 +77,29 @@ Bilan:
 - Endpoint GET /knowledge/{species_id} — consultation directe
 - ZERO modification SUPRA R3-R9, Baselines A/B/C identiques
 
-## Tâches gelées
-- K2+: Enrichissement scientifique avance (attente validation K1)
-- P2: Déprécation 9 endpoints AUTH-USAGER
-- P2: M5 Offline Mode Ultra
-- P2: BSAA-2 Social Ads Automation
+## K2: Knowledge Engine — Enrichissement scientifique avance ✅ COMPLET
+- 5 blocs scientifiques injectes dans knowledge.json v2.0.0 :
+  - K2.1: seasonal_behaviors (4 especes x 4 saisons = 16 profils)
+  - K2.2: dynamic_corridors (6 modeles de deplacement)
+  - K2.3: advanced_nutrition (4 oligo-elements: Se, Zn, Cu, Mn)
+  - K2.4: ecological_zones (5 zones bioclimatiques)
+  - K2.5: cross_species_inference (5 competitions, 4 overlaps, 3 maladies)
+- Audit A (integrite JSON) : PASS
+- Audit B (propagation knowledge_provider.py) : PASS
+- Baseline B/C : scores stables SUPRA=52|ULTRA=48.2|FICHE=74|SOL=32
+- Checksum knowledge.json : 105448a04a9819732d6ebe0532f195f7
+- ZERO modification moteurs de scoring, ZERO filtre biologique
+- Rapport : K2_RAPPORT_ENRICHISSEMENT.md
+- EN ATTENTE VALIDATION COMMANDANT STEEVE-MAX
+
+## Taches gelees
+- P2: Deprecation 9 endpoints AUTH-USAGER
+- M5: Offline Mode Ultra
+- BSAA-2: Social Ads Automation
 - INTERDIT: Merge SUPRA_RECONSTRUCTION → main
 
-## Scores de référence (session courante)
-SUPRA=52 | ULTRA=39.3 | FICHE=68 | SOL=47
+## Scores de reference (coordonnees: lat=47.5, lng=-72.0, orignal, printemps)
+SUPRA=52 | ULTRA=48.2 | FICHE=74 | SOL=32
 
 ## Credentials
 Admin Premium: admin@huntiq.com / Saturn5858*
