@@ -23,15 +23,17 @@ const ComparezTab = ({ products, compareIds, gc, toggleCompare }) => {
   if (compared.length === 0) {
     return (
       <div className="text-center py-12" data-testid="supra-comparez-tab">
-        <div className="grid grid-cols-3 gap-1.5">
+        <div className="grid grid-cols-4 gap-1.5">
           <div />
-          <GoldenCard testId="compare-empty" accentColor={BIONIC.blue} compact>
-            <div className="text-center py-6">
-              <IC Icon={Scale} color={BIONIC.blue} sz={40} />
-              <div className="text-[16px] text-gray-300 font-semibold mt-3">Aucun produit selectionne</div>
-              <div className="text-[14px] text-gray-500 mt-1">Allez dans INTELLIGENCE et selectionnez 2-4 produits</div>
-            </div>
-          </GoldenCard>
+          <div className="col-span-2">
+            <GoldenCard testId="compare-empty" accentColor={BIONIC.blue} compact>
+              <div className="text-center py-6">
+                <IC Icon={Scale} color={BIONIC.blue} sz={40} />
+                <div className="text-[16px] text-gray-300 font-semibold mt-3">Aucun produit selectionne</div>
+                <div className="text-[14px] text-gray-500 mt-1">Allez dans INTELLIGENCE et selectionnez 2-4 produits</div>
+              </div>
+            </GoldenCard>
+          </div>
           <div />
         </div>
       </div>
@@ -40,9 +42,9 @@ const ComparezTab = ({ products, compareIds, gc, toggleCompare }) => {
 
   const best = compared.reduce((a, b) => a.score_global > b.score_global ? a : b);
 
-  // Pad to exactly 3 columns
+  // Pad to exactly 4 columns (R4: E10 fix — support 4 produits comparés)
   const padded = [...compared];
-  while (padded.length < 3) padded.push(null);
+  while (padded.length < 4) padded.push(null);
 
   return (
     <div className="space-y-1.5" data-testid="supra-comparez-tab">
@@ -55,9 +57,9 @@ const ComparezTab = ({ products, compareIds, gc, toggleCompare }) => {
         </div>
       </GoldenCard>
 
-      {/* GRILLE 3 COLONNES — RÉPLIQUE DASHBOARD */}
-      <div className="grid grid-cols-3 gap-1.5" data-testid="compare-3col-grid">
-        {padded.slice(0, 3).map((p, idx) => {
+      {/* GRILLE 4 COLONNES — R4 E10 FIX */}
+      <div className="grid grid-cols-4 gap-1.5" data-testid="compare-4col-grid">
+        {padded.slice(0, 4).map((p, idx) => {
           if (!p) return <div key={`empty-${idx}`} />;
           const isBest = p.product_id === best.product_id;
           const sc = p.score_global >= 85 ? BIONIC.green : p.score_global >= 70 ? BIONIC.yellow : p.score_global >= 50 ? BIONIC.orange : BIONIC.red;

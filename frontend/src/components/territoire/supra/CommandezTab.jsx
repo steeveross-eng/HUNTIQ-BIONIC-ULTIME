@@ -41,9 +41,13 @@ const CommandezTab = ({ order, products, recipe, gc, cart, addToCart, cartLoadin
                       <div className="text-[14px] text-gray-500">{item.brand} | {item.dosage}</div>
                     </div>
                     <span className="text-[16px] font-bold text-white flex-shrink-0">{item.total_price_cad}$</span>
-                    <SupraButton size="sm" onClick={() => addToCart(item.product_id || `sal_00${i+1}`)} disabled={cartLoading} testId={`order-add-${i}`}>
-                      <Plus className="h-3 w-3" />
-                    </SupraButton>
+                    {item.product_id ? (
+                      <SupraButton size="sm" onClick={() => addToCart(item.product_id)} disabled={cartLoading} testId={`order-add-${i}`}>
+                        <Plus className="h-3 w-3" />
+                      </SupraButton>
+                    ) : (
+                      <span className="text-[10px] text-red-400 px-1.5 py-0.5 rounded" style={{ backgroundColor: 'rgba(239,68,68,0.1)' }} data-testid={`order-no-id-${i}`}>ID manquant</span>
+                    )}
                   </div>
                 ))}
               </div>
