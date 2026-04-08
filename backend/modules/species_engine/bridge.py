@@ -17,6 +17,7 @@ from modules.bionic_knowledge_engine.knowledge_provider import (
     get_species_nutrition_needs,
     get_corridors_for_species,
     get_knowledge_meta,
+    _load_knowledge,
 )
 from modules.species_engine.resolver import resolve, has_k2_data
 
@@ -88,6 +89,27 @@ def get_full_profile(species_input: str, season: str = "automne") -> Optional[di
 
         unified["scientific_nutrition"] = k2_nutrition
         unified["scientific_corridors"] = k2_corridors
+
+        # v3.0.0: Evidence per species
+        if k2_species:
+            evidence = k2_species.get("evidence")
+            if evidence:
+                unified["evidence"] = evidence
+
+        # v3.0.0: Climate + Snow + Critical sites
+        k = _load_knowledge()
+        cs = k.get("climate_sensitivity", {}).get(k2_id)
+        if cs:
+            unified["climate_sensitivity"] = cs
+        st = k.get("snow_tolerance", {}).get(k2_id)
+        if st:
+            unified["snow_tolerance"] = st
+        crit = k.get("critical_sites", {}).get(k2_id)
+        if crit:
+            unified["critical_sites"] = crit
+        lt = k.get("long_term_trends", {}).get(k2_id)
+        if lt:
+            unified["long_term_trends"] = lt
 
         unified["knowledge_meta"] = {
             "version": k2_meta.get("version"),

@@ -27,6 +27,8 @@ from modules.species_engine.corridors import get_corridors
 from modules.species_engine.zones import get_zones, get_all_zones
 from modules.species_engine.cross_species import get_cross_inference_all, get_cross_inference_pair
 from modules.species_engine.nutrition import get_nutrition
+from modules.species_engine.climate import get_climate, get_snow_tolerance
+from modules.species_engine.critical_sites import get_critical_sites
 
 logger = logging.getLogger("species_engine.router")
 
@@ -216,4 +218,45 @@ async def species_nutrition(species_id: str, season: str):
     return {"status": "success", **data}
 
 
-logger.info("Species Engine K3 loaded — 12 endpoints, 8 species, K2 bridge active")
+# ============================================================
+# K3 v3.0.0: CLIMATE SENSITIVITY
+# ============================================================
+
+@router.get("/{species_id}/climate")
+async def species_climate(species_id: str):
+    """Sensibilite climatique et tolerance a la neige pour une espece."""
+    climate = get_climate(species_id)
+    snow = get_snow_tolerance(species_id)
+    if climate is None and snow is None:
+        return {
+            "status": "error",
+            "message": f"Pas de donnees climatiques pour '{species_id}'",
+            "k2_species": get_k2_species_ids(),
+        }
+    result = {"status": "success", "species_id": climate["species_id"] if climate else snow["species_id"]}
+    if climate:
+        result["climate_sensitivity"] = climate["climate_sensitivity"]
+    if snow:
+        result["snow_tolerance"] = snow["snow_tolerance"]
+    result["_source"] = "K3_climate_snow"
+    return result
+
+
+# ============================================================
+# K3 v3.0.0: CRITICAL SITES
+# ============================================================
+
+@router.get("/{species_id}/critical-sites")
+async def species_critical_sites(species_id: str):
+    """Sites critiques pour une espece."""
+    data = get_critical_sites(species_id)
+    if data is None:
+        return {
+            "status": "error",
+            "message": f"Pas de donnees de sites critiques pour '{species_id}'",
+            "k2_species": get_k2_species_ids(),
+        }
+    return {"status": "success", **data}
+
+
+logger.info("Species Engine K3 v3.0.0 loaded — 14 endpoints, 8 species, K2+ bridge active")

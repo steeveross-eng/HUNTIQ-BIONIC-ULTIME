@@ -54,18 +54,23 @@ def _load_knowledge() -> dict:
 # ==============================================
 
 def get_species_data(species_id: str) -> Optional[dict]:
-    """Get species data by id (moose, deer, bear, elk).
-    Maps common names: orignal->moose, cerf->deer, ours->bear, wapiti->elk.
+    """Get species data by id (moose, deer, bear, elk, turkey).
+    Maps common names: orignal->moose, cerf->deer, ours->bear, wapiti->elk, dindon->turkey.
+    Compatible v3.0.0 (dict) and v2.0.0 (list).
     """
     k = _load_knowledge()
     name_map = {
         "orignal": "moose", "moose": "moose",
-        "cerf": "deer", "deer": "deer", "chevreuil": "deer",
-        "ours": "bear", "bear": "bear",
-        "wapiti": "elk", "elk": "elk", "caribou": "elk",
+        "cerf": "deer", "deer": "deer", "chevreuil": "deer", "cerf_virginie": "deer",
+        "ours": "bear", "bear": "bear", "ours_noir": "bear",
+        "wapiti": "elk", "elk": "elk",
+        "dindon": "turkey", "turkey": "turkey", "dindon_sauvage": "turkey",
     }
     mapped_id = name_map.get(species_id.lower(), species_id.lower())
-    for sp in k["species"]:
+    species_data = k["species"]
+    if isinstance(species_data, dict):
+        return species_data.get(mapped_id)
+    for sp in species_data:
         if sp["id"] == mapped_id:
             return sp
     return None
@@ -80,7 +85,9 @@ def get_species_habitat_preferences(species_id: str) -> list:
 
 
 def get_species_nutrition_needs(species_id: str, season: str) -> dict:
-    """Get nutritional needs (sodium, Ca:P) for species+season."""
+    """Get nutritional needs (sodium, Ca:P, trace) for species+season.
+    Compatible v3.0.0 structure.
+    """
     k = _load_knowledge()
     sp = get_species_data(species_id)
     if not sp:
@@ -97,27 +104,32 @@ def get_species_nutrition_needs(species_id: str, season: str) -> dict:
     sodium_need = sodium["data"].get(mapped_id, {}).get(season_en, 0)
     ca_p = k["nutrition"]["calcium_phosphorus"]
     trace = k["nutrition"]["trace_elements"]
+
+    # v3.0.0: calcium_phosphorus is per-species dict
+    if "data" in ca_p:
+        ca_p_data = ca_p["data"].get(mapped_id, {})
+    else:
+        ca_p_data = ca_p
+
+    # Build trace elements response
+    trace_result = {}
+    for el, data in trace.items():
+        trace_result[el] = {
+            "optimal_range": data.get("optimal", data.get("optimal_range")),
+            "unit": data.get("unit", "ppm"),
+        }
+
     return {
         "sodium": {
             "value": sodium_need,
             "unit": sodium["unit"],
-            "source_ids": sodium["source_ids"],
-            "evidence": sodium["evidence"],
+            "source_ids": sodium.get("source_ids", []),
         },
         "calcium_phosphorus": {
-            "optimal_ratio": ca_p["optimal_ratio"],
-            "source_ids": ca_p["source_ids"],
-            "evidence": ca_p["evidence"],
+            "optimal_ratio": ca_p_data.get("optimal_ratio", ca_p.get("optimal_ratio", "N/A")),
+            "source_ids": ca_p_data.get("source_ids", ca_p.get("source_ids", [])),
         },
-        "trace_elements": {
-            el: {
-                "optimal_range": data["optimal_range"],
-                "unit": data["unit"],
-                "source_ids": data["source_ids"],
-                "evidence": data["evidence"],
-            }
-            for el, data in trace.items()
-        },
+        "trace_elements": trace_result,
     }
 
 
@@ -126,9 +138,12 @@ def get_species_nutrition_needs(species_id: str, season: str) -> dict:
 # ==============================================
 
 def get_habitat_data(habitat_id: str) -> Optional[dict]:
-    """Get habitat data by id."""
+    """Get habitat data by id. Compatible v3.0.0 (dict) and v2.0.0 (list)."""
     k = _load_knowledge()
-    for h in k["habitats"]:
+    habitats = k["habitats"]
+    if isinstance(habitats, dict):
+        return habitats.get(habitat_id)
+    for h in habitats:
         if h["id"] == habitat_id:
             return h
     return None
@@ -136,7 +151,10 @@ def get_habitat_data(habitat_id: str) -> Optional[dict]:
 
 def get_all_habitats() -> list:
     """Get all habitats."""
-    return _load_knowledge()["habitats"]
+    habitats = _load_knowledge()["habitats"]
+    if isinstance(habitats, dict):
+        return list(habitats.values())
+    return habitats
 
 
 # ==============================================
@@ -144,9 +162,12 @@ def get_all_habitats() -> list:
 # ==============================================
 
 def get_soil_data(soil_id: str) -> Optional[dict]:
-    """Get soil data by id."""
+    """Get soil data by id. Compatible v3.0.0 (dict) and v2.0.0 (list)."""
     k = _load_knowledge()
-    for s in k["soils"]:
+    soils = k["soils"]
+    if isinstance(soils, dict):
+        return soils.get(soil_id)
+    for s in soils:
         if s["id"] == soil_id:
             return s
     return None
@@ -154,7 +175,10 @@ def get_soil_data(soil_id: str) -> Optional[dict]:
 
 def get_all_soils() -> list:
     """Get all soils."""
-    return _load_knowledge()["soils"]
+    soils = _load_knowledge()["soils"]
+    if isinstance(soils, dict):
+        return list(soils.values())
+    return soils
 
 
 # ==============================================
@@ -212,12 +236,19 @@ def get_all_sources() -> list:
 def get_knowledge_meta() -> dict:
     """Get knowledge.json metadata for API responses."""
     k = _load_knowledge()
+    cert = k.get("_certification", {})
+    species_data = k.get("species", {})
+    species_count = len(species_data) if isinstance(species_data, dict) else len(species_data)
+    habitats_data = k.get("habitats", {})
+    habitats_count = len(habitats_data) if isinstance(habitats_data, dict) else len(habitats_data)
+    soils_data = k.get("soils", {})
+    soils_count = len(soils_data) if isinstance(soils_data, dict) else len(soils_data)
     return {
-        "version": k["version"],
-        "protocol": k["protocol"],
-        "total_sources": k["_certification"]["total_sources"],
-        "total_species": k["_certification"]["total_species"],
-        "total_habitats": k["_certification"]["total_habitats"],
-        "total_soils": k["_certification"]["total_soils"],
-        "evidence_coverage": k["_certification"]["evidence_coverage"],
+        "version": k.get("version"),
+        "protocol": k.get("protocol"),
+        "total_sources": len(k.get("sources", [])),
+        "total_species": species_count,
+        "total_habitats": habitats_count,
+        "total_soils": soils_count,
+        "evidence_coverage": cert.get("evidence_coverage", "N/A"),
     }

@@ -92,22 +92,20 @@ Bilan:
 - Rapport : K2_RAPPORT_ENRICHISSEMENT.md
 - CERTIFIE PAR COMMANDANT STEEVE-MAX
 
-## K3: Species Engine (S0-S9) ✅ COMPLET
-- Module ADDITIF `species_engine/` cree (11 fichiers, 680L)
-- S0: Architecture documentee (K3_ARCHITECTURE.md)
-- S1: Foundation — router /api/v6/species-engine, health, registry (8 especes, 4 K2)
-- S2: Species ID Resolver — 30 alias (FR/EN/Latin), mapping bidirectionnel
-- S3: Knowledge Bridge — fusion profiles + K2, endpoint /full-profile
-- S4: Seasonal Intelligence — K2.1, comportements 4 saisons x 4 especes
-- S5: Dynamic Corridors — K2.2, 6 modeles de deplacement
-- S6: Ecological Zones — K2.4, 5 zones bioclimatiques
-- S7: Cross-Species Intelligence — K2.5, matrice competition + overlap + maladies
-- S8: Advanced Nutrition — K2.3, oligo-elements (Se, Zn, Cu, Mn) + sodium saisonnier
-- S9: Certification — 11 endpoints verifies, baselines stables
-- ZERO modification SUPRA/ULTRA/FICHE/SOL
-- ZERO modification bionic_ecological_engine / bionic_knowledge_engine
-- Baseline : SUPRA=52|ULTRA=48.2|FICHE=74|SOL=32 (ZERO DERIVE)
-- Rapport : K3_RAPPORT.md
+## K3: Species Engine (S0-S9) + Knowledge v3.0.0 ✅ COMPLET
+- Module ADDITIF `species_engine/` cree (13 fichiers)
+- S0-S9: Foundation, Resolver, Bridge, Seasonal, Corridors, Zones, Cross-Species, Nutrition
+- knowledge.json v3.0.0 (87 KB): 5 especes K2+, 43 evidence_ids, 27 sources
+- 4 rapports scientifiques integres (chevreuil, orignal, wapiti, dindon sauvage)
+- Nouveaux blocs: climate_sensitivity, snow_tolerance, critical_sites, long_term_trends, data_quality
+- Evidence tracable: 18 GOV + 17 UNI + 8 PR
+- Dindon sauvage (turkey) ajoute comme 5e espece K2+
+- knowledge_provider.py adapte v3.0.0 (compatible dict/list)
+- 14 endpoints operationnels dont 2 nouveaux: /climate, /critical-sites
+- Audits A/B/C/D PASS — ZERO DERIVE
+- Baseline : SUPRA=52|ULTRA=48.2|FICHE=74|SOL=32
+- Checksum v3.0.0: b956d9861f161270eb3d42bf0ee26dd8
+- Rapport : K3_KNOWLEDGE_V3_INTEGRATION.md
 - EN ATTENTE VALIDATION COMMANDANT STEEVE-MAX
 
 ## Taches gelees

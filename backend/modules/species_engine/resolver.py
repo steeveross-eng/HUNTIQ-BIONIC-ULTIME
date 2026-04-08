@@ -20,6 +20,7 @@ _OP_TO_K2 = {
     "cerf_virginie": "deer",
     "ours_noir": "bear",
     "wapiti": "elk",
+    "dindon_sauvage": "turkey",
 }
 
 _K2_TO_OP = {v: k for k, v in _OP_TO_K2.items()}
@@ -52,7 +53,7 @@ _ALIAS_MAP = {
     "elk": "wapiti",
     "cervus canadensis": "wapiti",
 
-    # Dindon sauvage (pas de K2)
+    # Dindon sauvage (K2+ v3.0.0)
     "dindon_sauvage": "dindon_sauvage",
     "dindon": "dindon_sauvage",
     "wild turkey": "dindon_sauvage",
@@ -114,7 +115,7 @@ def has_k2_data(species_input: str) -> bool:
 
 def get_all_species_ids() -> list:
     """Retourne tous les IDs operationnels."""
-    return list(_OP_TO_K2.keys()) + ["dindon_sauvage", "caribou", "cerf_mulet", "pronghorn"]
+    return list(_OP_TO_K2.keys()) + ["caribou", "cerf_mulet", "pronghorn"]
 
 
 def get_k2_species_ids() -> list:
