@@ -134,38 +134,26 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
 
         {/* ══════════ COLONNE 2: 4 Moteurs ULTRA ══════════ */}
         <div className="space-y-1.5" data-testid="supra-col-2">
-          {(engines.soil || soilData) && (
+          {/* R5.1 (E06): Source SOL unifiee — soilData (soil_engine) EXCLUSIF */}
+          {soilData && (
             <GoldenCard testId="info-card-sol" accentColor={BIONIC.amber} compact>
               <div className="flex items-center gap-2 mb-2">
                 <IC Icon={Mountain} color={BIONIC.amber} />
                 <span className="text-[16px] font-bold text-white">Sol — Analyse pedologique</span>
-                {soilData?.grade && <span className="text-[14px] font-bold px-2 py-0.5 rounded-lg ml-auto" style={{ backgroundColor: soilData.grade === 'S' || soilData.grade === 'A' ? `${BIONIC.green}18` : soilData.grade === 'B' ? `${BIONIC.orange}18` : `${BIONIC.red}18`, color: soilData.grade === 'S' || soilData.grade === 'A' ? BIONIC.green : soilData.grade === 'B' ? BIONIC.orange : BIONIC.red }}>{soilData.grade} — {soilData.score}/100</span>}
+                <span className="text-[14px] font-bold px-2 py-0.5 rounded-lg ml-auto" style={{ backgroundColor: soilData.grade === 'S' || soilData.grade === 'A' ? `${BIONIC.green}18` : soilData.grade === 'B' ? `${BIONIC.orange}18` : `${BIONIC.red}18`, color: soilData.grade === 'S' || soilData.grade === 'A' ? BIONIC.green : soilData.grade === 'B' ? BIONIC.orange : BIONIC.red }}>{soilData.grade} — {soilData.score}/100</span>
               </div>
-              {soilData ? (
-                <>
-                  {[{ l: 'Type', v: soilData.soil_name }, { l: 'Classe', v: soilData.soil_class }, { l: 'Retention min.', v: `${soilData.metrics?.retention_mineraux}/100` }, { l: 'Drainage', v: `${soilData.metrics?.drainage_naturel}/100` }, { l: 'Lessivage', v: `${soilData.metrics?.risque_lessivage}/100` }, { l: 'Portance', v: `${soilData.metrics?.capacite_portance}/100` }, { l: 'pH', v: soilData.metrics?.ph_typique }, { l: 'Profondeur', v: `${soilData.metrics?.profondeur_cm} cm` }, { l: 'Mat. org.', v: `${soilData.metrics?.matiere_organique_pct}%` }].map((r, i) => (
-                    <div key={i} className="flex justify-between py-0.5">
-                      <span className="text-[14px] text-slate-400">{r.l}</span>
-                      <span className="text-[16px] font-semibold text-white">{r.v || '—'}</span>
-                    </div>
-                  ))}
-                  <div className="mt-2 rounded-lg px-3 py-2" style={{ backgroundColor: '#0F172A' }}>
-                    <p className="text-[14px] text-slate-300 leading-relaxed">{soilData.description}</p>
-                  </div>
-                  <div className="mt-2">
-                    <span className="text-[14px] text-slate-500">Texture: Argile {soilData.texture?.argile_pct}% | Sable {soilData.texture?.sable_pct}% | Limon {soilData.texture?.limon_pct}%</span>
-                  </div>
-                </>
-              ) : (
-                <>
-                  {[{ l: 'Type', v: engines.soil?.soil_type }, { l: 'pH', v: engines.soil?.pH }, { l: 'Qualite', v: `${engines.soil?.quality_index || 0}/100` }].map((r, i) => (
-                    <div key={i} className="flex justify-between py-0.5">
-                      <span className="text-[14px] text-slate-400">{r.l}</span>
-                      <span className="text-[16px] font-semibold text-white">{r.v || '—'}</span>
-                    </div>
-                  ))}
-                </>
-              )}
+              {[{ l: 'Type', v: soilData.soil_name }, { l: 'Classe', v: soilData.soil_class }, { l: 'Retention min.', v: `${soilData.metrics?.retention_mineraux}/100` }, { l: 'Drainage', v: `${soilData.metrics?.drainage_naturel}/100` }, { l: 'Lessivage', v: `${soilData.metrics?.risque_lessivage}/100` }, { l: 'Portance', v: `${soilData.metrics?.capacite_portance}/100` }, { l: 'pH', v: soilData.metrics?.ph_typique }, { l: 'Profondeur', v: `${soilData.metrics?.profondeur_cm} cm` }, { l: 'Mat. org.', v: `${soilData.metrics?.matiere_organique_pct}%` }].map((r, i) => (
+                <div key={i} className="flex justify-between py-0.5">
+                  <span className="text-[14px] text-slate-400">{r.l}</span>
+                  <span className="text-[16px] font-semibold text-white">{r.v || '—'}</span>
+                </div>
+              ))}
+              <div className="mt-2 rounded-lg px-3 py-2" style={{ backgroundColor: '#0F172A' }}>
+                <p className="text-[14px] text-slate-300 leading-relaxed">{soilData.description}</p>
+              </div>
+              <div className="mt-2">
+                <span className="text-[14px] text-slate-500">Texture: Argile {soilData.texture?.argile_pct}% | Sable {soilData.texture?.sable_pct}% | Limon {soilData.texture?.limon_pct}%</span>
+              </div>
             </GoldenCard>
           )}
           {engines.metabolism && (

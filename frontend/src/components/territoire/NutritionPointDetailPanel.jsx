@@ -188,7 +188,7 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose, selectedSpecies })
   return (
     <PinnablePanel
       title={`SUPRA v2 — ${np.id}`}
-      subtitle={`${species} | ${season} | ${soilType} | ${np.distance_centre_m}m`}
+      subtitle={`${species} | ${resolvedSeason} | ${soilType} | ${np.distance_centre_m}m`}
       icon={Droplets}
       accentColor={gc}
       onClose={onClose}
@@ -244,10 +244,10 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose, selectedSpecies })
             <AnalyseTab score={score} recipe={recipe} recommendations={recommendations} evidence={evidence}
               costs={costs} comparison={comparison} ecozone={ecozone} energyProtein={energyProtein}
               terrainSolutions={terrainSolutions} gc={gc} np={np} engines={engines}
-              ultraScore={ultraScore} ultraDeficits={ultraDeficits} species={species} season={season} soilData={soilData} />
+              ultraScore={ultraScore} ultraDeficits={ultraDeficits} species={species} season={resolvedSeason} soilData={soilData} />
           )}
           {!loading && activeTab === 'fiche' && (
-            <FicheTab ficheData={ficheData} species={species} season={season} lat={lat} lng={lng} np={np} soilData={soilData} />
+            <FicheTab ficheData={ficheData} species={species} season={resolvedSeason} lat={lat} lng={lng} np={np} soilData={soilData} />
           )}
           {!loading && products && activeTab === 'intelligence' && (
             <IntelligenceTab products={products} gc={gc} compareIds={compareIds} toggleCompare={toggleCompare} addToCart={addToCart} cartLoading={cartLoading} />

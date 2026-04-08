@@ -97,6 +97,7 @@ const FicheTab = ({ ficheData, species, season, lat, lng, np, soilData }) => {
             <div className="text-[16px] font-black text-white">FICHE SALINE ULTIME</div>
             <div className="flex items-center gap-2 mt-0.5">
               <FicheGradeTag grade={global_score.grade} color="#00BCD4" />
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: '#00968815', color: '#009688', border: '1px solid #00968830' }} data-testid="fiche-deterministic-badge">DETERMINISTE</span>
               <span className="text-[14px] text-slate-500">5 scores | 20 sources</span>
             </div>
             <div className="text-[14px] text-slate-600">{species} | {season} | {np?.id || `${parseFloat(lat).toFixed(2)}, ${parseFloat(lng).toFixed(2)}`}</div>

@@ -20,7 +20,11 @@ Application de chasse et gestion de territoire avec analyse nutritionnelle, scor
 - R4.2: Round-robin INTELLIGENCE confirmé conforme
 - R4.3: Fallback product_id supprimé, avertissement si ID manquant
 
-### R5: Cohérence données ⏳ EN ATTENTE AUTORISATION
+### R5: Cohérence données ✅ COMPLET
+- R5.1 (E06): Source SOL unifiée → soilData (soil_engine) EXCLUSIF, fallback engines.soil supprimé
+- R5.2 (E07): resolvedSeason propagé aux 4 appels API + 2 onglets (AnalyseTab, FicheTab) + sous-titre panneau
+- R5.3 (E11): Badge DETERMINISTE ajouté dans FicheTab (teal #009688)
+- 3 fichiers, +19/-30 lignes | Baselines B+C = SUPRA=52|ULTRA=39.3|FICHE=68|SOL=47
 ### R6: Optimisation backend ⏳
 ### R7: Externalisation PREMIUM ⏳
 
