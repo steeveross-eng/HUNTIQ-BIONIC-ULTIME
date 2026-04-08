@@ -4,6 +4,7 @@ Endpoints pour tous les moteurs x5100-x6012.
 BCE-4X / STEEVE-MAX V6
 """
 from fastapi import APIRouter
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 from typing import Optional, List
 
@@ -385,12 +386,178 @@ async def supra_batch(req: SupraBatchRequest):
         "protocol": "BCE-4X GOLDEN V6+", "version": "V1",
     }
 
+    # R8.1: Harmonisation x1000% — Bloc _meta unifie pour chaque moteur
+    from datetime import datetime, timezone
+    now = datetime.now(timezone.utc).isoformat()
+    meta_base = {
+        "species": req.species,
+        "season": req.season,
+        "coordinates": {"lat": req.lat, "lng": req.lng},
+        "protocol": "BCE-4X GOLDEN V6+",
+        "timestamp": now,
+    }
+
+    def _build_meta(engine_name, score, grade, version="V6"):
+        return {**meta_base, "engine": engine_name, "score": score, "grade": grade, "version": version}
+
+    supra_score = supra_result.get("score", {})
+    ultra_is = ultra_result.get("analysis", {}).get("intelligence_score", {})
+    fiche_gs = fiche_result.get("global_score", {})
+
+    supra_result["_meta"] = _build_meta("SUPRA", supra_score.get("score_global"), supra_score.get("grade"))
+    ultra_result["_meta"] = _build_meta("ULTRA", ultra_is.get("global_score"), ultra_is.get("rating"))
+    fiche_result["_meta"] = _build_meta("FICHE", fiche_gs.get("score"), fiche_gs.get("grade"))
+    soil_result["_meta"] = _build_meta("SOL", soil_result.get("score"), soil_result.get("grade"))
+
     return {
         "supra": supra_result,
         "ultra": ultra_result,
         "fiche": fiche_result,
         "soil": soil_result,
+        "_harmonized": True,
+        "_meta": {
+            "engines": ["SUPRA", "ULTRA", "FICHE", "SOL"],
+            "scores": {
+                "SUPRA": supra_score.get("score_global"),
+                "ULTRA": ultra_is.get("global_score"),
+                "FICHE": fiche_gs.get("score"),
+                "SOL": soil_result.get("score"),
+            },
+            "timestamp": now,
+            "protocol": "BCE-4X GOLDEN V6+",
+            "coordinates": {"lat": req.lat, "lng": req.lng},
+            "species": req.species,
+            "season": req.season,
+        },
     }
+
+
+# R8.2: Export PDF — Rapport complet 4 moteurs
+@router.post("/export-pdf")
+async def export_pdf(req: SupraBatchRequest):
+    """R8.2: Genere un rapport PDF complet SUPRA+ULTRA+FICHE+SOL.
+    Retourne le PDF en streaming.
+    BCE-4X GOLDEN V6+ | STEEVE-MAX
+    """
+    import io
+    from fpdf import FPDF
+
+    # 1. Fetch all data via batch
+    batch_data = await supra_batch(req)
+    meta = batch_data.get("_meta", {})
+    scores = meta.get("scores", {})
+
+    # 2. Build PDF
+    pdf = FPDF()
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
+
+    # Helper: sanitize text for Helvetica (ASCII only)
+    def _s(text):
+        return str(text).replace("\u2014", "-").replace("\u2013", "-").replace("\u2019", "'").replace("\u00e9", "e").replace("\u00e8", "e").replace("\u00ea", "e").replace("\u00e0", "a").replace("\u00f4", "o").replace("\u00ee", "i").replace("\u00fb", "u").replace("\u00e7", "c").encode("ascii", "replace").decode("ascii")
+
+    # Header
+    pdf.set_font("Helvetica", "B", 18)
+    pdf.cell(0, 12, _s("RAPPORT SUPRA - Analyse Nutritionnelle Complete"), ln=True, align="C")
+    pdf.set_font("Helvetica", "", 10)
+    pdf.cell(0, 6, _s(f"Protocole: {meta.get('protocol', 'BCE-4X')} | {meta.get('timestamp', '')}"), ln=True, align="C")
+    pdf.cell(0, 6, _s(f"Espece: {meta.get('species', '')} | Saison: {meta.get('season', '')} | Coords: {req.lat}, {req.lng}"), ln=True, align="C")
+    pdf.ln(8)
+
+    # Scores Summary
+    pdf.set_font("Helvetica", "B", 14)
+    pdf.cell(0, 10, _s("1. Resume des Scores"), ln=True)
+    pdf.set_font("Helvetica", "", 11)
+    for engine, score in scores.items():
+        grade = batch_data.get(engine.lower(), {}).get("_meta", {}).get("grade", "N/A")
+        pdf.cell(0, 7, _s(f"  {engine}: {score}/100 (Grade: {grade})"), ln=True)
+    pdf.ln(5)
+
+    # SUPRA Details
+    supra = batch_data.get("supra", {})
+    pdf.set_font("Helvetica", "B", 14)
+    pdf.cell(0, 10, _s("2. SUPRA - Score Nutritionnel"), ln=True)
+    pdf.set_font("Helvetica", "", 10)
+    s_score = supra.get("score", {})
+    for mineral, val in s_score.get("scores_par_mineral", {}).items():
+        pdf.cell(0, 6, _s(f"  {mineral}: {val}/100"), ln=True)
+
+    # Recommendations
+    recs = supra.get("recommendations", {})
+    if recs.get("recommendations"):
+        pdf.ln(3)
+        pdf.set_font("Helvetica", "B", 12)
+        pdf.cell(0, 8, _s("Recommandations:"), ln=True)
+        pdf.set_font("Helvetica", "", 9)
+        for r in recs["recommendations"][:5]:
+            text = _s(f"- {r.get('mineral', '')}: {r.get('recommendation', '')}")
+            pdf.set_x(10)
+            pdf.multi_cell(190, 5, text)
+    pdf.ln(5)
+
+    # ULTRA Details
+    ultra = batch_data.get("ultra", {})
+    pdf.set_font("Helvetica", "B", 14)
+    pdf.cell(0, 10, _s("3. ULTRA - Intelligence Score"), ln=True)
+    pdf.set_font("Helvetica", "", 10)
+    components = ultra.get("analysis", {}).get("intelligence_score", {}).get("components", {})
+    for comp, val in components.items():
+        pdf.cell(0, 6, _s(f"  {comp}: {val}"), ln=True)
+
+    # Engines
+    engines = ultra.get("engines", {})
+    if engines:
+        pdf.ln(3)
+        pdf.set_font("Helvetica", "B", 12)
+        pdf.cell(0, 8, _s("  Moteurs actifs:"), ln=True)
+        pdf.set_font("Helvetica", "", 10)
+        for eng_name, eng_data in engines.items():
+            if isinstance(eng_data, dict):
+                eng_score = eng_data.get("score", eng_data.get("quality_index", "N/A"))
+                pdf.cell(0, 6, _s(f"  {eng_name}: {eng_score}"), ln=True)
+    pdf.ln(5)
+
+    # FICHE Details
+    fiche = batch_data.get("fiche", {})
+    pdf.set_font("Helvetica", "B", 14)
+    pdf.cell(0, 10, _s("4. FICHE SALINE ULTIME"), ln=True)
+    pdf.set_font("Helvetica", "", 10)
+    fiche_scores = fiche.get("scores", {})
+    for cat, cat_data in fiche_scores.items():
+        if isinstance(cat_data, dict):
+            pdf.cell(0, 6, _s(f"  {cat}: {cat_data.get('score', 'N/A')}/100 (Grade: {cat_data.get('grade', 'N/A')})"), ln=True)
+    pdf.ln(5)
+
+    # SOL Details
+    sol = batch_data.get("soil", {})
+    pdf.set_font("Helvetica", "B", 14)
+    pdf.cell(0, 10, _s("5. SOL - Analyse Pedologique"), ln=True)
+    pdf.set_font("Helvetica", "", 10)
+    pdf.cell(0, 6, _s(f"  Type: {sol.get('soil_name', 'N/A')} ({sol.get('soil_class', 'N/A')})"), ln=True)
+    metrics = sol.get("metrics", {})
+    for m, v in metrics.items():
+        label = m.replace("_", " ").capitalize()
+        pdf.cell(0, 6, _s(f"  {label}: {v}"), ln=True)
+    if sol.get("seasonal_note"):
+        pdf.ln(3)
+        pdf.set_font("Helvetica", "I", 9)
+        pdf.set_x(10)
+        pdf.multi_cell(190, 5, _s(f"Note saisonniere: {sol['seasonal_note']}"))
+    pdf.ln(5)
+
+    # Footer
+    pdf.set_font("Helvetica", "B", 10)
+    pdf.cell(0, 8, _s("BCE-4X GOLDEN V6+ | STEEVE-MAX | ZERO ABSOLU"), ln=True, align="C")
+
+    # 3. Stream PDF
+    pdf_bytes = pdf.output()
+    buffer = io.BytesIO(pdf_bytes)
+    filename = f"SUPRA_rapport_{req.species}_{req.season}_{req.lat}_{req.lng}.pdf"
+    return StreamingResponse(
+        buffer,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename={filename}"},
+    )
 
 
 # --- x6010 PRODUCT_QUALITY_ANALYZER ---

@@ -37,9 +37,14 @@ Application de chasse et gestion de territoire avec analyse nutritionnelle, scor
 - R7.3: Audit securite — tous endpoints freemium fonctionnels, guard disponible pour tout endpoint
 - Architecture: auth_helpers.py (JWT) | premium_guard.py (tier gating) | freemium_engine (CRUD sub)
 - Baselines B+C = SUPRA=52|ULTRA=39.3|FICHE=68|SOL=47
+### R8: Harmonisation x1000% + Export PDF ✅ COMPLET
+- R8.1: Harmonisation _meta ajoutee au batch endpoint (4 blocs _meta + 1 global _harmonized)
+- R8.2: Export PDF endpoint /export-pdf operationnel (fpdf2, 3KB) + bouton frontend
+- R8.3: Document DECOUPAGE_PLAN.md cree (preparation, aucune execution)
+- Baselines B+C = SUPRA=52|ULTRA=39.3|FICHE=68|SOL=47
+
 
 ## Tâches gelées
-- P1: Harmonisation x1000% + Test export PDF
 - P2: Déprécation 9 endpoints AUTH-USAGER
 - P2: M5 Offline Mode Ultra
 - P2: BSAA-2 Social Ads Automation

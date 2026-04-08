@@ -5,6 +5,7 @@ import {
   Scale, BarChart3,
   X,
   ClipboardList,
+  FileDown,
 } from 'lucide-react';
 import axios from 'axios';
 import PinnablePanel from './PinnablePanel';
@@ -212,7 +213,32 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose, selectedSpecies })
               </button>
             );
           })}
-          <div className="ml-auto flex-shrink-0">
+          <div className="ml-auto flex-shrink-0 flex items-center gap-2">
+            <button
+              data-testid="supra-export-pdf-btn"
+              onClick={async () => {
+                try {
+                  const res = await axios.post(`${API}/api/v6/nutrition-intelligence/export-pdf`, {
+                    species, season: resolvedSeason, soil_type: soilType, substrate: 'bois_mou',
+                    lat: parseFloat(lat), lng: parseFloat(lng),
+                    saline_score: np?.score || null,
+                    sex: 'male', age: 'adult', month,
+                  }, { responseType: 'blob' });
+                  const url = window.URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }));
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `SUPRA_rapport_${species}_${resolvedSeason}.pdf`;
+                  a.click();
+                  window.URL.revokeObjectURL(url);
+                } catch (e) { /* silent */ }
+              }}
+              className="flex items-center gap-1 h-8 px-2.5 rounded-lg text-[12px] font-bold uppercase tracking-wider transition-all"
+              style={{ backgroundColor: '#10B98118', color: '#10B981', border: '1px solid #10B98130' }}
+              title="Exporter le rapport PDF"
+            >
+              <FileDown className="h-3.5 w-3.5" />
+              PDF
+            </button>
             <ShareBionicButton />
           </div>
         </div>
