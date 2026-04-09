@@ -103,6 +103,20 @@ Application geospatiale de chasse intelligente avec backend FastAPI et frontend 
 - Livrable: AFFUTS_AUDIT.md
 - Statut: CORRIGE ET VERIFIE
 
+### Audit Couches Inactives — Fevrier 2026
+- Habitat, Trajets, Multi-Engines: RETIRES (zero donnee backend, toggles orphelins)
+- Eau: CONSERVE (dependance exclusions salines/affuts)
+- 7 boutons orphelins retires de TerritoireToolbar.jsx
+- Livrables: UNUSED_LAYERS_AUDIT.md
+- Statut: APPLIQUE ET VERIFIE
+
+### Couverture RUT Hotspots 100% — Fevrier 2026
+- BFS aligne sur 780m (buffer UI) au lieu de 600m (scientifique)
+- 9 polygones generes (4 alim, 3 repos, 2 rut), 36 centres couverts
+- 0 point chaud sans zone delimitee
+- Livrables: RUT_HOTSPOTS_AUDIT.md, RUT_HOTSPOTS_COVERAGE_FIX.md
+- Statut: CORRIGE ET VERIFIE
+
 ### P1 — Depreciation 9 endpoints AUTH-USAGER
 - NON AUTORISE. En attente d'ordre explicite du Commandant.
 - Reference: `/app/backend/AUTH_DEPRECATION_PLAN.md`

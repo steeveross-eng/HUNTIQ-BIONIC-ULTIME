@@ -262,8 +262,8 @@ def _generate_zone_polygons(zones, cell_data, n, center_lat, center_lng, side_m,
     lat_start = center_lat - half / METERS_PER_DEG_LAT
     lng_start = center_lng - half / m_per_lng
 
-    # BCE-4X P0.1: Rayon d'analyse pour contraindre le BFS (600m scientifique)
-    ANALYSIS_RADIUS_M = 600.0
+    # BCE-4X P0.1: Rayon d'analyse pour contraindre le BFS (780m = 600m scientifique + 30% buffer UI)
+    ANALYSIS_RADIUS_M = 780.0
 
     NEIGHBORS_8 = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
 

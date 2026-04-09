@@ -155,7 +155,7 @@ export function TerritoireToolbar({
                 </div>
                 {showZonesLayer && (
                   <div className="ml-3 pl-2 border-l border-emerald-800/40 space-y-0.5">
-                    {[{k:'alimentation',label:'Alimentation',color:'text-green-400'},{k:'repos',label:'Repos',color:'text-blue-400'},{k:'rut',label:'Rut',color:'text-orange-400'},{k:'habitat',label:'Habitat',color:'text-cyan-400'},{k:'affuts',label:'Affuts',color:'text-red-400'},{k:'trajets',label:'Trajets',color:'text-yellow-400'},{k:'eau',label:'Eau',color:'text-sky-400'},{k:'multiEngines',label:'Multi-Engines',color:'text-emerald-300'}].map(item => (
+                    {[{k:'alimentation',label:'Alimentation',color:'text-green-400'},{k:'repos',label:'Repos',color:'text-blue-400'},{k:'rut',label:'Rut',color:'text-orange-400'},{k:'affuts',label:'Affuts',color:'text-red-400'},{k:'eau',label:'Eau',color:'text-sky-400'}].map(item => (
                       <button key={item.k} onClick={() => toggleZoneSub(item.k)} className={`w-full flex items-center gap-1.5 px-1.5 py-0.5 rounded text-[10px] transition-all ${zoneSubFilters[item.k] ? `${item.color} bg-white/5` : 'text-gray-600 hover:text-gray-400'}`} data-testid={`zone-sub-${item.k}`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${zoneSubFilters[item.k] ? 'bg-current' : 'bg-gray-700'}`} />{item.label}
                       </button>
@@ -189,7 +189,7 @@ export function TerritoireToolbar({
                 </div>
                 {showPointsLayer && (
                   <div className="ml-3 pl-2 border-l border-gray-700/40 space-y-0.5">
-                    {[{k:'alimentation',label:'Alimentation',color:'text-green-400'},{k:'rut',label:'Rut',color:'text-orange-400'},{k:'repos',label:'Repos',color:'text-blue-400'},{k:'trajets',label:'Trajets',color:'text-yellow-400'},{k:'affuts',label:'Affuts',color:'text-red-400'},{k:'habitat',label:'Habitat',color:'text-cyan-400'},{k:'centroides',label:'Centroides',color:'text-white'},{k:'individuels',label:'Individuels',color:'text-gray-300'}].map(item => (
+                    {[{k:'alimentation',label:'Alimentation',color:'text-green-400'},{k:'rut',label:'Rut',color:'text-orange-400'},{k:'repos',label:'Repos',color:'text-blue-400'},{k:'affuts',label:'Affuts',color:'text-red-400'},{k:'centroides',label:'Centroides',color:'text-white'},{k:'individuels',label:'Individuels',color:'text-gray-300'}].map(item => (
                       <button key={item.k} onClick={() => togglePointSub(item.k)} className={`w-full flex items-center gap-1.5 px-1.5 py-0.5 rounded text-[10px] transition-all ${pointSubFilters[item.k] ? `${item.color} bg-white/5` : 'text-gray-600 hover:text-gray-400'}`} data-testid={`point-sub-${item.k}`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${pointSubFilters[item.k] ? 'bg-current' : 'bg-gray-700'}`} />{item.label}
                       </button>
@@ -301,7 +301,7 @@ export function TerritoireToolbar({
               </div>
               {pointsChaudsMode && (
                 <div className="space-y-1.5 pt-1 border-t border-gray-700/40">
-                  {[{key:'tous',label:'Tous les points',color:'text-white'},{key:'alimentation',label:'Alimentation',color:'text-green-400'},{key:'rut',label:'Rut',color:'text-orange-400'},{key:'repos',label:'Repos',color:'text-blue-400'},{key:'trajets',label:'Trajets',color:'text-yellow-400'},{key:'affuts',label:'Affuts',color:'text-red-400'},{key:'habitat',label:'Habitat',color:'text-teal-400'}].map(item => (
+                  {[{key:'tous',label:'Tous les points',color:'text-white'},{key:'alimentation',label:'Alimentation',color:'text-green-400'},{key:'rut',label:'Rut',color:'text-orange-400'},{key:'repos',label:'Repos',color:'text-blue-400'},{key:'affuts',label:'Affuts',color:'text-red-400'}].map(item => (
                     <button key={item.key} onClick={() => setPointsChaudsFilter(item.key)} className={`w-full text-left px-2 py-1 rounded text-xs font-medium transition-all ${pointsChaudsFilter === item.key ? `${item.color} bg-white/10` : 'text-gray-500 hover:text-gray-300 hover:bg-white/5'}`} data-testid={`points-chauds-filter-${item.key}`}>{item.label}</button>
                   ))}
                 </div>

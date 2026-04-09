@@ -243,8 +243,6 @@ const BionicCorridorsV6Layer = ({
       repos: zoneSubFilters.repos,
       rut: zoneSubFilters.rut,
       eau: zoneSubFilters.eau,
-      habitat: zoneSubFilters.habitat,
-      trajets: zoneSubFilters.trajets,
       affuts: zoneSubFilters.affuts,
     };
     return map[zoneType] ?? true;
@@ -272,8 +270,6 @@ const BionicCorridorsV6Layer = ({
       repos: pointSubFilters.repos,
       rut: pointSubFilters.rut,
       eau: pointSubFilters.eau || false,
-      habitat: pointSubFilters.habitat,
-      trajets: pointSubFilters.trajets,
       affuts: pointSubFilters.affuts,
     };
     return map[zoneType] ?? true;
@@ -464,9 +460,7 @@ const BionicCorridorsV6Layer = ({
             alimentation: 'alimentation',
             rut: 'rut',
             repos: 'repos',
-            trajets: 'alimentation',
             affuts: 'rut',
-            habitat: 'repos',
           };
           if (props.zone_type !== filterMap[pointsChaudsFilter]) continue;
         }

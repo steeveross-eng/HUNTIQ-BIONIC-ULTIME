@@ -619,13 +619,13 @@ const MonTerritoireBionicPage = () => {
 
   // STEEVE-MAX V3: Sous-éléments granulaires par couche
   const [zoneSubFilters, setZoneSubFilters] = useState({
-    alimentation: true, repos: true, rut: true, habitat: true, affuts: true, trajets: true, multiEngines: true, eau: true,
+    alimentation: true, repos: true, rut: true, affuts: true, eau: true,
   });
   const [corridorSubFilters, setCorridorSubFilters] = useState({
     normaux: true, intenses: true, extreme: true, saisonniers: true,
   });
   const [pointSubFilters, setPointSubFilters] = useState({
-    alimentation: true, rut: true, repos: true, trajets: true, affuts: true, habitat: true, centroides: true, individuels: true,
+    alimentation: true, rut: true, repos: true, affuts: true, centroides: true, individuels: true,
   });
   const toggleZoneSub = (k) => setZoneSubFilters(p => ({ ...p, [k]: !p[k] }));
   const toggleCorridorSub = (k) => setCorridorSubFilters(p => ({ ...p, [k]: !p[k] }));
@@ -986,7 +986,7 @@ const MonTerritoireBionicPage = () => {
     const RELIEF_LAYERS = new Set(['altitude', 'pentes', 'orientation', 'ensoleillement']);
     const HYDRO_LAYERS = new Set(['hydro']);
     const FORET_LAYERS = new Set(['peuplements', 'ndvi']);
-    const DOMINANT_LAYERS = new Set(['habitats', 'rut', 'repos', 'alimentation', 'salines', 'affuts', 'trajets', 'corridors']);
+    const DOMINANT_LAYERS = new Set(['rut', 'repos', 'alimentation', 'salines', 'affuts', 'corridors']);
     
     return allZones.filter(z => {
       if (layersVisible[z.layerId] === false) return false;
