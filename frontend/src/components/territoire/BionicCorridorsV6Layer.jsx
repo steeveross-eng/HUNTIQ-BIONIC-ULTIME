@@ -4,7 +4,7 @@
  * DIRECTIVE x4520-F2: TOTAL PURGE V10 — Migration V6
  *
  * HIÉRARCHIE VISUELLE STEEVE-MAX (obligatoire):
- *   DOMINANT  → Zones (contours opaques, weight=3, fillOpacity=0)
+ *   DOMINANT  → Zones (contours opaques, weight=3, fillOpacity=0.08 — RUT-RENDER-Ω)
  *   SECONDAIRE → Corridors (opacity réduite, weight réduit)
  *   TERTIAIRE  → Points centraux (radius réduit, opacité réduite)
  *
@@ -299,19 +299,21 @@ const BionicCorridorsV6Layer = ({
         const rawRings = feature.geometry.coordinates[0].map(c => [c[1], c[0]]);
         const zc = ZONE_COLORS[props.zone_type] || '#9E9E9E';
 
-        const cLat = props.center_lat || ringsCentroid(rawRings)[0];
-        const cLng = props.center_lng || ringsCentroid(rawRings)[1];
-        const inZone = isInAnalysisRadius(cLat, cLng, box);
+        // RUT-RENDER-Ω FIX: Utiliser le centroide geometrique REEL du polygone
+        // au lieu de props.center_lat/lng (centre de zone reseau, souvent hors rayon)
+        const [centroidLat, centroidLng] = ringsCentroid(rawRings);
+        const inZone = isInAnalysisRadius(centroidLat, centroidLng, box);
         if (!inZone) continue;
 
         const rings = clipRingsToCircle(rawRings, box, ZONE_RADIUS_M);
 
+        // RUT-RENDER-Ω: fillOpacity subtil pour distinguer zones vs corridors
         const polygon = L.polygon(rings, {
           color: zc,
           weight: 3,
           opacity: 1.0,
-          fillColor: 'transparent',
-          fillOpacity: 0,
+          fillColor: zc,
+          fillOpacity: 0.08,
           lineCap: 'round',
           lineJoin: 'round',
           interactive: true,
