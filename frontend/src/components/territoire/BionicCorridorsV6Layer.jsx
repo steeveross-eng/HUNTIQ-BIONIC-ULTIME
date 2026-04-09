@@ -304,8 +304,11 @@ const BionicCorridorsV6Layer = ({
         const rawRings = feature.geometry.coordinates[0].map(c => [c[1], c[0]]);
         const zc = ZONE_COLORS[props.zone_type] || '#9E9E9E';
 
-        // DIRECTIVE x4520-E: Buffer 30% — centroïde check + clip vertices to circle
-        const [cLat, cLng] = ringsCentroid(rawRings);
+        // DIRECTIVE x4520-E: Buffer 30% — centre ecologique primaire check + clip vertices to circle
+        // FIX BCE-4X REPOS: Utiliser center_lat/center_lng (centre ecologique) au lieu du
+        // centroide geometrique (ringsCentroid) qui derive avec les polygones 1000+ vertices
+        const cLat = props.center_lat || ringsCentroid(rawRings)[0];
+        const cLng = props.center_lng || ringsCentroid(rawRings)[1];
         const inZone = isInAnalysisRadius(cLat, cLng, box);
 
         // ZERO rendu hors buffer (pas d'attenuation, suppression totale)

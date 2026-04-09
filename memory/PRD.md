@@ -80,6 +80,16 @@ Application geospatiale de chasse intelligente avec backend FastAPI et frontend 
 
 ## Taches en attente
 
+### Correctif Zone Repos — Incoherence Rendu — Fevrier 2026
+- BUG: Polygone repos non rendu malgre toggle actif et donnees backend valides
+- CAUSE: `ringsCentroid(rawRings)` calculait le centroide geometrique des 1000+ vertices du polygone lisse
+  Le centroide derivait hors du rayon d'analyse (780m), eliminant le polygone entier
+- FIX: Remplacement par `props.center_lat/center_lng` (centre ecologique primaire) avec fallback ringsCentroid
+- Fichier modifie: `frontend/src/components/territoire/BionicCorridorsV6Layer.jsx` (3 lignes)
+- ZERO modification backend / RSF / SSF / couches ecologiques
+- Livrable: REPOS_ZONE_AUDIT.md
+- Statut: CORRIGE ET VERIFIE VISUELLEMENT
+
 ### P1 — Depreciation 9 endpoints AUTH-USAGER
 - NON AUTORISE. En attente d'ordre explicite du Commandant.
 - Reference: `/app/backend/AUTH_DEPRECATION_PLAN.md`
