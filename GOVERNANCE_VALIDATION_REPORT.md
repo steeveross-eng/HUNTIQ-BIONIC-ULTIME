@@ -4,7 +4,7 @@
 
 ---
 
-**DATE DE CERTIFICATION:** 2026-04-09 13:21 UTC
+**DATE DE CERTIFICATION:** 2026-04-09 18:04 UTC
 **METHODE:** Execution LIVE T1-T5 sur https://huntiq-restore.preview.emergentagent.com
 **BRANCHE:** SUPRA_RECONSTRUCTION
 **VERDICT:** 13/13 PRESENTS, COMPLETS, APPLIQUES, OPERATIONNELS
@@ -35,11 +35,11 @@
 
 ## SECTION B — VERIFICATION D'APPLICATION EFFECTIVE
 
-Chaque document a ete verifie par execution LIVE (API curl + grep code source) le 2026-04-09.
+Chaque document a ete verifie par execution LIVE (API curl + grep code source) le 2026-04-09 18:04 UTC.
 
 ### Document 1 — VISUAL_RESTORE_REPORT.md
 **Regle:** Restauration visuelle autorisee — suppression casings blancs et fills non autorises.
-**Preuve LIVE (grep BionicCorridorsV6Layer.jsx):**
+**Preuve LIVE (grep BionicCorridorsV6Layer.jsx 2026-04-09 18:04 UTC):**
 ```
 L313: fillColor: 'transparent',
 L314: fillOpacity: 0,
@@ -55,21 +55,27 @@ L458: color: '#FFFFFF' → uniquement sur centroides de zones, ZERO sur polygone
 
 ### Document 3 — SCORE_PATCH_PROHIBITION.md
 **Regle:** Interdiction de patcher les scores — selection par algorithme uniquement.
-**Preuve LIVE (API POST /api/v2/alimentation/analyze):**
+**Preuve LIVE (API POST /api/v2/alimentation/analyze 2026-04-09 18:04 UTC):**
+```json
+{"id":"SAL-06","score":55,"criteres":{"eau":46,"couvert":43,"pente":22,"accessibilite":90,"securite":93,"habitat":58}}
+{"id":"SAL-10","score":48,"criteres":{"eau":43,"couvert":40,"pente":22,"accessibilite":40,"securite":103,"habitat":60}}
+{"id":"SAL-11","score":48,"criteres":{"eau":43,"couvert":32,"pente":18,"accessibilite":70,"securite":90,"habitat":61}}
+{"id":"SAL-07","score":45,"criteres":{"eau":43,"couvert":49,"pente":22,"accessibilite":90,"securite":19,"habitat":62}}
 ```
-SAL-06: score=55 (calculated by _score_candidate L92-232)
-SAL-10: score=48 (calculated by _score_candidate L92-232)
-SAL-11: score=48 (calculated by _score_candidate L92-232)
-SAL-07: score=45 (calculated by _score_candidate L92-232)
-```
-Scores calcules par le moteur M1 scoring, ZERO patch manuel.
+Scores calcules par le moteur M1 _score_candidate (L92-232 salines.py), ZERO patch manuel.
 **Verdict:** APPLIQUE — T1 PASSE (4/4)
 
 ### Document 4 — LOGIC_CORRECTION_POLICY.md
 **Regle:** Corrections dans la logique algorithmique, jamais dans les donnees.
-**Preuve LIVE (grep salines.py L235-246):**
+**Preuve LIVE (code salines.py L235-246 — capture sed 2026-04-09 18:04 UTC):**
 ```python
 def _select_with_min_distance(candidates, max_n, min_dist_m):
+    """
+    BCE-4X STEEVE-MAX: Selection stricte par score.
+    Toute saline ayant un score superieur a une saline active doit etre
+    automatiquement consideree dans la selection finale.
+    ZERO exclusion silencieuse par distance.
+    """
     if not candidates:
         return []
     sorted_cands = sorted(candidates, key=lambda c: c["score"], reverse=True)
@@ -80,27 +86,27 @@ La correction a ete faite dans la LOGIQUE (suppression exclusion distance), pas 
 
 ### Document 5 — BCE4X_REGRESSION_SUITE.md
 **Regle:** Suite T1-T5 definie et executable.
-**Preuve LIVE:** Suite executee le 2026-04-09 13:21-13:22 UTC. 21/21 tests PASSES.
+**Preuve LIVE:** Suite executee le 2026-04-09 18:04:25-18:04:27 UTC. 21/21 tests PASSES.
 **Verdict:** APPLIQUE — OPERATIONNEL
 
 ### Document 6 — BCE4X_REGRESSION_REPORT_LAST_RUN.md
 **Regle:** Rapport de la derniere execution T1-T5.
-**Preuve:** Mis a jour avec les resultats LIVE du 2026-04-09 (voir BCE4X_REGRESSION_EXECUTION_PROOF.md).
+**Preuve:** Mis a jour avec les resultats LIVE du 2026-04-09 18:04 UTC (voir BCE4X_REGRESSION_EXECUTION_PROOF.md).
 **Verdict:** APPLIQUE — MIS A JOUR
 
 ### Document 7 — MODULAR_ARCHITECTURE_SPEC.md
 **Regle:** 5 modules isoles, testables, remplacables.
-**Preuve LIVE:**
-- M1 (scoring): salines.py _score_candidate() — 6 criteres ponderes
-- M2 (selection): salines.py _select_with_min_distance() — top-N strict
-- M3 (zones): corridors_v10/engine.py — BFS + GeoJSON, 11 polygones generes LIVE
-- M4 (UI): BionicCorridorsV6Layer.jsx — composant React avec ZONE_COLORS
-- M5 (regles): router.py Field(2,ge=1,le=2) + engine.py/salines.py max(1,min(2))
+**Preuve LIVE (2026-04-09 18:04 UTC):**
+- M1 (scoring): salines.py _score_candidate() L92-232 — 6 criteres ponderes (25/20/20/15/10/10)
+- M2 (selection): salines.py _select_with_min_distance() L235-246 — top-N strict
+- M3 (zones): corridors_v10/engine.py L266 — BFS 780m, 11 polygones, 58 corridors generes LIVE
+- M4 (UI): BionicCorridorsV6Layer.jsx — ZONE_COLORS L49-54, LEVEL_ZINDEX L66
+- M5 (regles): router.py L25 Field(2,ge=1,le=2) + engine.py L62 + salines.py L272 max(1,min(2))
 **Verdict:** APPLIQUE — 5/5 modules isoles
 
 ### Document 8 — MODULES_DEPENDENCY_GRAPH.md
 **Regle:** ZERO dependance circulaire.
-**Preuve LIVE (grep):**
+**Preuve LIVE (grep 2026-04-09 18:04 UTC):**
 - salines.py: imports optionnels (try/except) vers trail_graph et water
 - engine.py: autonome
 - BionicCorridorsV6Layer.jsx: props uniquement
@@ -109,27 +115,27 @@ La correction a ete faite dans la LOGIQUE (suppression exclusion distance), pas 
 
 ### Document 9 — SALINES_SELECTION_RULES.md
 **Regle:** Algorithme top-N strict sans exclusion distance.
-**Preuve LIVE (API):**
+**Preuve LIVE (API 2026-04-09 18:04 UTC):**
 ```
 POST /api/v2/alimentation/analyze → SAL-06(55) + SAL-10(48) selectionnees
 min_selected(48) >= max_non_selected(48) → CONFORME
 ```
-**Preuve LIVE (code salines.py L235-246):** sorted(score,reverse=True)[:max_n]
+**Preuve code (salines.py L235-246):** sorted(score,reverse=True)[:max_n]
 **Verdict:** APPLIQUE — T1 PASSE
 
 ### Document 10 — SALINES_SELECTION_TESTS_REPORT.md
 **Regle:** Tests de selection documentes et passes.
-**Preuve LIVE:** T1a-T1d tous passes (voir BCE4X_REGRESSION_EXECUTION_PROOF.md)
+**Preuve LIVE (2026-04-09 18:04 UTC):** T1a-T1d tous passes
 **Verdict:** APPLIQUE
 
 ### Document 11 — BCE4X_GOVERNANCE_LOG.md
 **Regle:** Journal de gouvernance avec entrees horodatees.
-**Preuve:** Journal actif avec 8+ entrees couvrant toutes les modifications effectuees.
+**Preuve:** Journal actif avec 8+ entrees couvrant toutes les modifications.
 **Verdict:** APPLIQUE
 
 ### Document 12 — CHANGE_CONTROL_PROTOCOL.md
 **Regle:** 9 etapes obligatoires pour toute modification.
-**Preuve:** Procedure documentee dans ABSOLUTE_LOCK_STATUS.md — respectee pour chaque modification.
+**Preuve:** Procedure documentee dans ABSOLUTE_LOCK_STATUS.md — respectee.
 **Verdict:** APPLIQUE
 
 ### Document 13 — BRANCH_LOCK_STATUS.md
@@ -155,6 +161,6 @@ min_selected(48) >= max_non_selected(48) → CONFORME
 
 ---
 
-**Date de certification:** 2026-04-09 13:21 UTC
+**Date de certification:** 2026-04-09 18:04 UTC
 **Environnement:** https://huntiq-restore.preview.emergentagent.com
 **Auteur:** Agent BCE-4X sous ordres COMMANDANT STEEVE-MAX
