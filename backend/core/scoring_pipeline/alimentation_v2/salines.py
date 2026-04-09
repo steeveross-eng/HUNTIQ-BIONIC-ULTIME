@@ -234,29 +234,16 @@ def _score_candidate(terrain, lat, lng, center_lat, center_lng, dist_m, half_m, 
 
 def _select_with_min_distance(candidates, max_n, min_dist_m):
     """
-    Sélection gloutonne: meilleur score d'abord, puis filtrage par distance minimale.
-    Stratégie adaptée au nombre de salines demandé.
+    BCE-4X STEEVE-MAX: Selection stricte par score.
+    Toute saline ayant un score superieur a une saline active doit etre
+    automatiquement consideree dans la selection finale.
+    ZERO exclusion silencieuse par distance.
     """
     if not candidates:
         return []
 
     sorted_cands = sorted(candidates, key=lambda c: c["score"], reverse=True)
-    selected = []
-
-    for cand in sorted_cands:
-        if len(selected) >= max_n:
-            break
-        # Vérifier distance minimale avec toutes les salines déjà sélectionnées
-        too_close = False
-        for sel in selected:
-            d = _haversine_m(cand["lat"], cand["lng"], sel["lat"], sel["lng"])
-            if d < min_dist_m:
-                too_close = True
-                break
-        if not too_close:
-            selected.append(cand)
-
-    return selected
+    return sorted_cands[:max_n]
 
 
 def compute_salines(

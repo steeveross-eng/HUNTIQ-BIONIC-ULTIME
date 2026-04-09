@@ -103,6 +103,20 @@ Application geospatiale de chasse intelligente avec backend FastAPI et frontend 
 - Livrable: AFFUTS_AUDIT.md
 - Statut: CORRIGE ET VERIFIE
 
+### Rectification RUT Hotspots — Fevrier 2026
+- Cause: Zones rendues SOUS les corridors (z-index incorrect) + outlines trop fins (3px) + couleur identique aux corridors
+- Fix 1: Ordre de rendu inverse (Corridors → Zones → Points)
+- Fix 2: Casing blanc (6px, 0.5 opacity) + fill semi-transparent (8%)
+- Fix 3: BFS 780m (aligne sur buffer UI)
+- Livrables: RUT_HOTSPOTS_RECTIFICATION.md, RUT_HOTSPOTS_100PCT_FIX.md
+- Statut: CORRIGE ET VERIFIE VISUELLEMENT
+
+### Audit SAL-06 / SAL-11 — Fevrier 2026
+- Cause: Algorithme glouton _select_with_min_distance excluait SAL-06/SAL-11 (score superieur) au profit de candidats plus eloignes mais de score inferieur
+- Fix: Selection stricte top-N par score, ZERO exclusion par distance (directive STEEVE-MAX)
+- Livrables: SAL06_SAL11_AUDIT.md
+- Statut: CORRIGE ET VERIFIE (API)
+
 ### Audit Couches Inactives — Fevrier 2026
 - Habitat, Trajets, Multi-Engines: RETIRES (zero donnee backend, toggles orphelins)
 - Eau: CONSERVE (dependance exclusions salines/affuts)

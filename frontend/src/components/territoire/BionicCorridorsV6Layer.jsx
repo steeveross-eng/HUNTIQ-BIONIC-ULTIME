@@ -290,90 +290,12 @@ const BionicCorridorsV6Layer = ({
     const zonePoints = features.filter(f => f.geometry.type === 'Point');
     const box = analysisCenter;
 
-    // ═══ COUCHE 1 (Z-BAS): Zones polygonales organiques — BCE-4X protégées ═══
-    if (showZones) {
-      for (const feature of zonePolygons) {
-        const props = feature.properties;
-        // SOUS-ÉLÉMENT: Filtrage par type de zone
-        if (!isZoneTypeVisible(props.zone_type)) continue;
-
-        const rawRings = feature.geometry.coordinates[0].map(c => [c[1], c[0]]);
-        const zc = ZONE_COLORS[props.zone_type] || '#9E9E9E';
-
-        // DIRECTIVE x4520-E: Buffer 30% — centre ecologique primaire check + clip vertices to circle
-        // FIX BCE-4X REPOS: Utiliser center_lat/center_lng (centre ecologique) au lieu du
-        // centroide geometrique (ringsCentroid) qui derive avec les polygones 1000+ vertices
-        const cLat = props.center_lat || ringsCentroid(rawRings)[0];
-        const cLng = props.center_lng || ringsCentroid(rawRings)[1];
-        const inZone = isInAnalysisRadius(cLat, cLng, box);
-
-        // ZERO rendu hors buffer (pas d'attenuation, suppression totale)
-        if (!inZone) continue;
-
-        // x4520-E: Clip polygon vertices to 780m radius (buffer zone)
-        const rings = clipRingsToCircle(rawRings, box, ZONE_RADIUS_M);
-
-        const polygon = L.polygon(rings, {
-          color: zc,
-          weight: 3,
-          opacity: 1.0,
-          fillColor: 'transparent',
-          fillOpacity: 0,
-          lineCap: 'round',
-          lineJoin: 'round',
-          interactive: true,
-        });
-
-        // Tooltips + hover (toujours in-zone apres filtre)
-        polygon.bindTooltip(
-            `<div style="font-size:12px;font-weight:600;color:${zc}">
-              ${props.zone_type.charAt(0).toUpperCase() + props.zone_type.slice(1)}
-            </div>
-            <div style="font-size:11px;color:#555">Score: ${props.score} | ${sp}</div>`,
-            { sticky: true, opacity: 0.95 }
-          );
-          polygon.on('mouseover', function() { this.setStyle({ weight: 4, opacity: 1.0 }); });
-          polygon.on('mouseout', function() { this.setStyle({ weight: 3, opacity: 1.0 }); });
-        group.addLayer(polygon);
-      }
-
-      // Fallback points si pas de polygones
-      // BCE-4X PURGE V1-V5: Exclure alimentation — NutritionPointsLayer autoritaire
-      if (zonePolygons.length === 0) {
-        for (const feature of zonePoints) {
-          const [lng, lat] = feature.geometry.coordinates;
-          const props = feature.properties;
-          if (props.zone_type === 'alimentation') continue; // BCE-4X PURGE
-          const zc = ZONE_COLORS[props.zone_type] || '#9E9E9E';
-          const inZone = isInAnalysisRadius(lat, lng, box);
-          if (!inZone) continue;
-          const c = L.circleMarker([lat, lng], {
-            radius: 6,
-            fillColor: zc,
-            color: darkenHex(zc, 0.82),
-            weight: 1.5,
-            fillOpacity: 0.8,
-            opacity: 0.9,
-            interactive: true,
-          });
-          c.bindTooltip(
-            `<span style="font-size:11px;font-weight:600;color:${zc}">${
-              props.zone_type.charAt(0).toUpperCase() + props.zone_type.slice(1)
-            }</span>`,
-            { sticky: true }
-          );
-          group.addLayer(c);
-        }
-      }
-    }
-
-    // ═══ COUCHE 2 (Z-MILIEU): Corridors filtrés ═══
+    // ═══ COUCHE 1 (Z-BAS): Corridors filtrés — rendus en PREMIER (sous les zones) ═══
     const corridors = allCorridors.filter(f => (f.properties.score || 0) >= minPercentage);
 
     if (showCorridorsLayer) {
       for (const feature of corridors) {
         const props = feature.properties;
-        // SOUS-ÉLÉMENT: Filtrage par niveau de corridor
         if (!isCorridorLevelVisible(props.niveau)) continue;
 
         const raw = feature.geometry.coordinates.map(c => [c[1], c[0]]);
@@ -383,22 +305,16 @@ const BionicCorridorsV6Layer = ({
         const isExtreme = props.niveau === 'CRITIQUE';
         const style = precomputedStyles[props.niveau] || precomputedStyles.FORT;
 
-        // DIRECTIVE x4520-E: ALL corridors (including CRITIQUE) checked against buffer radius
         const [mLat, mLng] = corridorMidpoint(coords);
         const inZone = isInAnalysisRadius(mLat, mLng, box);
 
         if (inZone) {
-          // x4520-E: Clip corridor coords to buffer radius (780m)
           const clippedCoords = clipCoordsToCircle(coords, box, ZONE_RADIUS_M);
           if (clippedCoords.length < 2) continue;
-          // Glow externe (CRITIQUE uniquement)
           if (style.glowOuter) group.addLayer(L.polyline(clippedCoords, style.glowOuter));
           if (style.glowMid) group.addLayer(L.polyline(clippedCoords, style.glowMid));
-          // Contour
           group.addLayer(L.polyline(clippedCoords, style.contour));
-          // Ligne principale
           const line = L.polyline(clippedCoords, style.main);
-          // Tooltip enrichi (CRITIQUE: badge + score gras + flèche)
           const pal = CORRIDOR_PALETTE[props.niveau] || CORRIDOR_PALETTE.FORT;
           const isCrit = props.niveau === 'CRITIQUE';
           line.bindTooltip(
@@ -419,11 +335,9 @@ const BionicCorridorsV6Layer = ({
           line.on('mouseover', function() { this.setStyle(style.hover); });
           line.on('mouseout', function() { this.setStyle(style.restore); });
           group.addLayer(line);
-          // Glow interne blanc (CRITIQUE uniquement)
           if (style.glowInner) group.addLayer(L.polyline(clippedCoords, style.glowInner));
           if (style.hachure) group.addLayer(L.polyline(clippedCoords, style.hachure));
         } else {
-          // PERFORMANCE V3: Style atténué, zéro interaction, zéro tooltip
           group.addLayer(L.polyline(coords, {
             color: style.main.color,
             weight: 1,
@@ -432,6 +346,87 @@ const BionicCorridorsV6Layer = ({
             lineJoin: 'round',
             interactive: false,
           }));
+        }
+      }
+    }
+
+    // ═══ COUCHE 2 (Z-MILIEU): Zones polygonales organiques — AU-DESSUS des corridors ═══
+    if (showZones) {
+      for (const feature of zonePolygons) {
+        const props = feature.properties;
+        if (!isZoneTypeVisible(props.zone_type)) continue;
+
+        const rawRings = feature.geometry.coordinates[0].map(c => [c[1], c[0]]);
+        const zc = ZONE_COLORS[props.zone_type] || '#9E9E9E';
+
+        const cLat = props.center_lat || ringsCentroid(rawRings)[0];
+        const cLng = props.center_lng || ringsCentroid(rawRings)[1];
+        const inZone = isInAnalysisRadius(cLat, cLng, box);
+        if (!inZone) continue;
+
+        const rings = clipRingsToCircle(rawRings, box, ZONE_RADIUS_M);
+
+        // BCE-4X: Casing blanc pour visibilite au-dessus des corridors
+        group.addLayer(L.polygon(rings, {
+          color: '#FFFFFF',
+          weight: 6,
+          opacity: 0.5,
+          fillColor: 'transparent',
+          fillOpacity: 0,
+          lineCap: 'round',
+          lineJoin: 'round',
+          interactive: false,
+        }));
+
+        // Zone polygon principal avec fill semi-transparent
+        const polygon = L.polygon(rings, {
+          color: zc,
+          weight: 3.5,
+          opacity: 1.0,
+          fillColor: zc,
+          fillOpacity: 0.08,
+          lineCap: 'round',
+          lineJoin: 'round',
+          interactive: true,
+        });
+
+        polygon.bindTooltip(
+            `<div style="font-size:12px;font-weight:600;color:${zc}">
+              ${props.zone_type.charAt(0).toUpperCase() + props.zone_type.slice(1)}
+            </div>
+            <div style="font-size:11px;color:#555">Score: ${props.score} | ${sp}</div>`,
+            { sticky: true, opacity: 0.95 }
+          );
+          polygon.on('mouseover', function() { this.setStyle({ weight: 5, fillOpacity: 0.15 }); });
+          polygon.on('mouseout', function() { this.setStyle({ weight: 3.5, fillOpacity: 0.08 }); });
+        group.addLayer(polygon);
+      }
+
+      // Fallback points si pas de polygones
+      if (zonePolygons.length === 0) {
+        for (const feature of zonePoints) {
+          const [lng, lat] = feature.geometry.coordinates;
+          const props = feature.properties;
+          if (props.zone_type === 'alimentation') continue;
+          const zc = ZONE_COLORS[props.zone_type] || '#9E9E9E';
+          const inZone = isInAnalysisRadius(lat, lng, box);
+          if (!inZone) continue;
+          const c = L.circleMarker([lat, lng], {
+            radius: 6,
+            fillColor: zc,
+            color: darkenHex(zc, 0.82),
+            weight: 1.5,
+            fillOpacity: 0.8,
+            opacity: 0.9,
+            interactive: true,
+          });
+          c.bindTooltip(
+            `<span style="font-size:11px;font-weight:600;color:${zc}">${
+              props.zone_type.charAt(0).toUpperCase() + props.zone_type.slice(1)
+            }</span>`,
+            { sticky: true }
+          );
+          group.addLayer(c);
         }
       }
     }
