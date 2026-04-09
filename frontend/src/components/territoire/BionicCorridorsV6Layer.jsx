@@ -290,7 +290,75 @@ const BionicCorridorsV6Layer = ({
     const zonePoints = features.filter(f => f.geometry.type === 'Point');
     const box = analysisCenter;
 
-    // ═══ COUCHE 1 (Z-BAS): Corridors filtrés — rendus en PREMIER (sous les zones) ═══
+    // ═══ COUCHE 1 (Z-BAS): Zones polygonales organiques — BCE-4X proteges ═══
+    if (showZones) {
+      for (const feature of zonePolygons) {
+        const props = feature.properties;
+        if (!isZoneTypeVisible(props.zone_type)) continue;
+
+        const rawRings = feature.geometry.coordinates[0].map(c => [c[1], c[0]]);
+        const zc = ZONE_COLORS[props.zone_type] || '#9E9E9E';
+
+        const cLat = props.center_lat || ringsCentroid(rawRings)[0];
+        const cLng = props.center_lng || ringsCentroid(rawRings)[1];
+        const inZone = isInAnalysisRadius(cLat, cLng, box);
+        if (!inZone) continue;
+
+        const rings = clipRingsToCircle(rawRings, box, ZONE_RADIUS_M);
+
+        const polygon = L.polygon(rings, {
+          color: zc,
+          weight: 3,
+          opacity: 1.0,
+          fillColor: 'transparent',
+          fillOpacity: 0,
+          lineCap: 'round',
+          lineJoin: 'round',
+          interactive: true,
+        });
+
+        polygon.bindTooltip(
+            `<div style="font-size:12px;font-weight:600;color:${zc}">
+              ${props.zone_type.charAt(0).toUpperCase() + props.zone_type.slice(1)}
+            </div>
+            <div style="font-size:11px;color:#555">Score: ${props.score} | ${sp}</div>`,
+            { sticky: true, opacity: 0.95 }
+          );
+          polygon.on('mouseover', function() { this.setStyle({ weight: 4, opacity: 1.0 }); });
+          polygon.on('mouseout', function() { this.setStyle({ weight: 3, opacity: 1.0 }); });
+        group.addLayer(polygon);
+      }
+
+      // Fallback points si pas de polygones
+      if (zonePolygons.length === 0) {
+        for (const feature of zonePoints) {
+          const [lng, lat] = feature.geometry.coordinates;
+          const props = feature.properties;
+          if (props.zone_type === 'alimentation') continue;
+          const zc = ZONE_COLORS[props.zone_type] || '#9E9E9E';
+          const inZone = isInAnalysisRadius(lat, lng, box);
+          if (!inZone) continue;
+          const c = L.circleMarker([lat, lng], {
+            radius: 6,
+            fillColor: zc,
+            color: darkenHex(zc, 0.82),
+            weight: 1.5,
+            fillOpacity: 0.8,
+            opacity: 0.9,
+            interactive: true,
+          });
+          c.bindTooltip(
+            `<span style="font-size:11px;font-weight:600;color:${zc}">${
+              props.zone_type.charAt(0).toUpperCase() + props.zone_type.slice(1)
+            }</span>`,
+            { sticky: true }
+          );
+          group.addLayer(c);
+        }
+      }
+    }
+
+    // ═══ COUCHE 2 (Z-MILIEU): Corridors filtres ═══
     const corridors = allCorridors.filter(f => (f.properties.score || 0) >= minPercentage);
 
     if (showCorridorsLayer) {
@@ -346,87 +414,6 @@ const BionicCorridorsV6Layer = ({
             lineJoin: 'round',
             interactive: false,
           }));
-        }
-      }
-    }
-
-    // ═══ COUCHE 2 (Z-MILIEU): Zones polygonales organiques — AU-DESSUS des corridors ═══
-    if (showZones) {
-      for (const feature of zonePolygons) {
-        const props = feature.properties;
-        if (!isZoneTypeVisible(props.zone_type)) continue;
-
-        const rawRings = feature.geometry.coordinates[0].map(c => [c[1], c[0]]);
-        const zc = ZONE_COLORS[props.zone_type] || '#9E9E9E';
-
-        const cLat = props.center_lat || ringsCentroid(rawRings)[0];
-        const cLng = props.center_lng || ringsCentroid(rawRings)[1];
-        const inZone = isInAnalysisRadius(cLat, cLng, box);
-        if (!inZone) continue;
-
-        const rings = clipRingsToCircle(rawRings, box, ZONE_RADIUS_M);
-
-        // BCE-4X: Casing blanc pour visibilite au-dessus des corridors
-        group.addLayer(L.polygon(rings, {
-          color: '#FFFFFF',
-          weight: 6,
-          opacity: 0.5,
-          fillColor: 'transparent',
-          fillOpacity: 0,
-          lineCap: 'round',
-          lineJoin: 'round',
-          interactive: false,
-        }));
-
-        // Zone polygon principal avec fill semi-transparent
-        const polygon = L.polygon(rings, {
-          color: zc,
-          weight: 3.5,
-          opacity: 1.0,
-          fillColor: zc,
-          fillOpacity: 0.08,
-          lineCap: 'round',
-          lineJoin: 'round',
-          interactive: true,
-        });
-
-        polygon.bindTooltip(
-            `<div style="font-size:12px;font-weight:600;color:${zc}">
-              ${props.zone_type.charAt(0).toUpperCase() + props.zone_type.slice(1)}
-            </div>
-            <div style="font-size:11px;color:#555">Score: ${props.score} | ${sp}</div>`,
-            { sticky: true, opacity: 0.95 }
-          );
-          polygon.on('mouseover', function() { this.setStyle({ weight: 5, fillOpacity: 0.15 }); });
-          polygon.on('mouseout', function() { this.setStyle({ weight: 3.5, fillOpacity: 0.08 }); });
-        group.addLayer(polygon);
-      }
-
-      // Fallback points si pas de polygones
-      if (zonePolygons.length === 0) {
-        for (const feature of zonePoints) {
-          const [lng, lat] = feature.geometry.coordinates;
-          const props = feature.properties;
-          if (props.zone_type === 'alimentation') continue;
-          const zc = ZONE_COLORS[props.zone_type] || '#9E9E9E';
-          const inZone = isInAnalysisRadius(lat, lng, box);
-          if (!inZone) continue;
-          const c = L.circleMarker([lat, lng], {
-            radius: 6,
-            fillColor: zc,
-            color: darkenHex(zc, 0.82),
-            weight: 1.5,
-            fillOpacity: 0.8,
-            opacity: 0.9,
-            interactive: true,
-          });
-          c.bindTooltip(
-            `<span style="font-size:11px;font-weight:600;color:${zc}">${
-              props.zone_type.charAt(0).toUpperCase() + props.zone_type.slice(1)
-            }</span>`,
-            { sticky: true }
-          );
-          group.addLayer(c);
         }
       }
     }

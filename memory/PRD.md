@@ -103,6 +103,16 @@ Application geospatiale de chasse intelligente avec backend FastAPI et frontend 
 - Livrable: AFFUTS_AUDIT.md
 - Statut: CORRIGE ET VERIFIE
 
+### Verrou institutionnel BCE-4X ULTIME — Fevrier 2026
+- Section 1: Restauration visuelle (revert casing, fill, z-index, poids)
+- Section 2: UNAUTHORIZED_CHANGES_LOCK.md — interdiction totale sans ordre explicite
+- Section 3: SCORE_PATCH_PROHIBITION.md + LOGIC_CORRECTION_POLICY.md
+- Section 4: BCE4X_REGRESSION_SUITE.md (T1-T5) + rapport derniere execution
+- Section 5: MODULAR_ARCHITECTURE_SPEC.md + MODULES_DEPENDENCY_GRAPH.md
+- Section 6: SALINES_SELECTION_RULES.md + tests
+- Section 7: BCE4X_GOVERNANCE_LOG.md + CHANGE_CONTROL_PROTOCOL.md + BRANCH_LOCK_STATUS.md
+- Statut: TOUS LIVRABLES CREES ET DEPLOYS
+
 ### Rectification RUT Hotspots — Fevrier 2026
 - Cause: Zones rendues SOUS les corridors (z-index incorrect) + outlines trop fins (3px) + couleur identique aux corridors
 - Fix 1: Ordre de rendu inverse (Corridors → Zones → Points)
