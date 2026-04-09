@@ -266,7 +266,7 @@ def compute_salines(
     species: str = "CERF",
     month: int = 10,
     side_m: float = 2000.0,
-    max_salines: int = 4,
+    max_salines: int = 2,
     min_distance_m: float = 300.0,
     max_radius_m: float = 600.0,
 ) -> list:
@@ -282,7 +282,7 @@ def compute_salines(
     6. Retourne tous les candidats avec flag 'selected'
     """
     half = side_m / 2
-    max_salines = max(1, min(4, max_salines))
+    max_salines = max(1, min(2, max_salines))
 
     # BCE-4X P0-C V3: Charger le graphe terrain OSM (cache automatique)
     trail_graph = None

@@ -585,7 +585,7 @@ const MonTerritoireBionicPage = () => {
   const [selectedStand, setSelectedStand] = useState(null);
   const [selectedNutritionPoint, setSelectedNutritionPoint] = useState(null);
   const [alimentationV2Data, setAlimentationV2Data] = useState(null);
-  const [nNutritionPointsMax, setNNutritionPointsMax] = useState(4);
+  const [nNutritionPointsMax, setNNutritionPointsMax] = useState(2);
 
   // BCE-4X P0 A1: Deriver feedingSites depuis alimentationV2Data pour StandsMapLayer
   const feedingSitesForStands = useMemo(() => {

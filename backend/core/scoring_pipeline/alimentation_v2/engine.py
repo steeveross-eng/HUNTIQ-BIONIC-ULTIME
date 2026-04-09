@@ -45,7 +45,7 @@ def analyze_alimentation_v2(
     species: str = "CERF",
     month: int = 10,
     side_m: float = 2000.0,
-    max_salines: int = 4,
+    max_salines: int = 2,
 ) -> dict:
     """
     Analyse alimentaire complète V2.
@@ -59,7 +59,7 @@ def analyze_alimentation_v2(
         species_resolved = "CERF"
     species = species_resolved
 
-    max_salines = max(1, min(4, max_salines))
+    max_salines = max(1, min(2, max_salines))
 
     # 1. Analyse territoriale
     terrain = analyze_terrain(center_lat, center_lng, side_m)

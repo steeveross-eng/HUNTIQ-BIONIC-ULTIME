@@ -74,14 +74,14 @@ def _score_candidate_v2(terrain, lat, lng, center_lat, center_lng, dist_m, half_
 
 
 def compute_salines_v2_shadow(center_lat, center_lng, terrain, species="CERF",
-                               month=10, side_m=2000.0, max_salines=4,
+                               month=10, side_m=2000.0, max_salines=2,
                                min_distance_m=300.0, max_radius_m=600.0):
     """
     V2 Shadow — Reproduction fidele du moteur sanctuarise.
     Retourne uniquement les scores pour comparaison.
     """
     half = side_m / 2
-    max_salines = max(1, min(4, max_salines))
+    max_salines = max(1, min(2, max_salines))
     grid_size = 4
     cell_size = side_m / grid_size
     results = []

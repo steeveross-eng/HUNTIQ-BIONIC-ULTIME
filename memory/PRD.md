@@ -68,6 +68,16 @@ Application geospatiale de chasse intelligente avec backend FastAPI et frontend 
 - CSS pulsation CRITIQUE extrait en fichier externe (anti-fantome gatekeeper)
 - 5 livrables commites: MS_EXECUTION_REPORT, VISIBILITY_PIPELINE_AUDIT, VISIBILITY_PIPELINE_REPAIR_PLAN, CORRIDORS_ZONES_UI_RESTORED, validation BCE-4X
 
+### Mise a jour regle metier Points Nutritionnels — Fevrier 2026
+- DIRECTIVE COMMANDANT: Limite maximale de points nutritionnels par zone = 2 (anciennement 4)
+- Relaxation progressive min_distance_m REFUSEE
+- Backend: router.py, engine.py, salines.py, shadow_mode.py, salines_v4.py, schemas.py — tous mis a jour
+- Frontend: MonTerritoireBionicPage.jsx (state initial=2), NutritionPointsLayer.jsx (default=2), TerritoireToolbar.jsx (selecteur [1,2])
+- Validation Pydantic rejette max_salines > 2
+- ZERO modification aux moteurs RSF, couches ecologiques, pipelines geospatiaux
+- Livrable: NUTRITION_POINTS_POLICY_UPDATE.md
+- Statut: APPLIQUE ET VERIFIE (API + UI)
+
 ## Taches en attente
 
 ### P1 — Depreciation 9 endpoints AUTH-USAGER

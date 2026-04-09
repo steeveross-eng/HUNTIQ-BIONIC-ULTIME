@@ -22,7 +22,7 @@ class AlimentationV2Request(BaseModel):
     center_lng: float = Field(..., description="Longitude du centre")
     species: str = Field("CERF", description="Espece: CERF, ORIGNAL, OURS, WAPITI, DINDON")
     month: int = Field(10, ge=1, le=12, description="Mois (1-12)")
-    max_salines: int = Field(4, ge=1, le=4, description="Nombre max de salines (1-4)")
+    max_salines: int = Field(2, ge=1, le=2, description="Nombre max de salines (1-2) — Règle métier STEEVE-MAX")
 
 
 @router.post("/analyze")

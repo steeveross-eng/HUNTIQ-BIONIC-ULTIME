@@ -348,7 +348,7 @@ def compute_salines_v4(
     terrain: dict,
     species: str = "CERF",
     month: int = 10,
-    max_salines: int = 4,
+    max_salines: int = 2,
     min_distance_m: float = 300.0,
     max_radius_m: float = 600.0,
 ) -> list:
@@ -361,11 +361,11 @@ def compute_salines_v4(
     4. Fallback grille 3x3 si < 8 candidats
     5. Filtre (Haversine, exclusion centre, pente > 20%)
     6. Score 9 criteres SUPRA valides
-    7. Selection gloutonne Top-4
+    7. Selection gloutonne Top-2 (règle métier STEEVE-MAX)
 
     Retourne: liste de tous les candidats avec flag 'selected'
     """
-    max_salines = max(1, min(4, max_salines))
+    max_salines = max(1, min(2, max_salines))
 
     # ═══ PHASE 0: Charger le graphe terrain OSM ═══
     trail_graph = None

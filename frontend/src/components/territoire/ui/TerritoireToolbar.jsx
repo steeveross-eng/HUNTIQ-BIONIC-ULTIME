@@ -258,7 +258,7 @@ export function TerritoireToolbar({
                   <div className="space-y-1" data-testid="nutrition-points-count-selector">
                     <div className="text-[9px] text-gray-500 uppercase font-bold">Nombre de points nutritionnels</div>
                     <div className="flex gap-1">
-                      {[1,2,3,4].map(n => (
+                      {[1,2].map(n => (
                         <button key={n} onClick={() => setNNutritionPointsMax(n)} className={`flex-1 h-7 rounded text-xs font-bold transition-all ${nNutritionPointsMax === n ? 'bg-yellow-500/30 text-yellow-300 border border-yellow-500/50' : 'bg-gray-800/60 text-gray-500 border border-gray-700/30 hover:text-gray-300'}`} data-testid={`nutrition-points-count-${n}`}>{n}</button>
                       ))}
                     </div>

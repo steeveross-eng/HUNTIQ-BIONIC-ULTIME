@@ -43,7 +43,7 @@ class CorridorAnalysisInput(CoreAnalysisInput):
 @dataclass
 class AlimentationV2Input(CoreAnalysisInput):
     """Schema d'entree pour ALIMENTATION-V2."""
-    max_salines: int = 4
+    max_salines: int = 2
 
 
 # ══════════════════════════════════════════════════════════════════
