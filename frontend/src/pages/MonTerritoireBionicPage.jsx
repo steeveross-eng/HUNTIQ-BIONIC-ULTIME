@@ -1276,7 +1276,7 @@ const MonTerritoireBionicPage = () => {
               nNutritionPointsMax={nNutritionPointsMax}
               onAlimentationDataLoaded={setAlimentationV2Data}
               waypointCenter={waypointCenter}
-              showStands={showAlimentationV2}
+              showStands={zoneSubFilters.affuts}
               windDirection={windInfo?.directionDeg || 315}
               windSpeed={windInfo?.speed || 12}
               windDirectionDeg={windInfo?.directionDeg || null}

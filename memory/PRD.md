@@ -81,14 +81,27 @@ Application geospatiale de chasse intelligente avec backend FastAPI et frontend 
 ## Taches en attente
 
 ### Correctif Zone Repos — Incoherence Rendu — Fevrier 2026
-- BUG: Polygone repos non rendu malgre toggle actif et donnees backend valides
-- CAUSE: `ringsCentroid(rawRings)` calculait le centroide geometrique des 1000+ vertices du polygone lisse
-  Le centroide derivait hors du rayon d'analyse (780m), eliminant le polygone entier
-- FIX: Remplacement par `props.center_lat/center_lng` (centre ecologique primaire) avec fallback ringsCentroid
-- Fichier modifie: `frontend/src/components/territoire/BionicCorridorsV6Layer.jsx` (3 lignes)
-- ZERO modification backend / RSF / SSF / couches ecologiques
-- Livrable: REPOS_ZONE_AUDIT.md
-- Statut: CORRIGE ET VERIFIE VISUELLEMENT
+- BUG INITIAL: Polygone repos non rendu (centroide geometrique hors rayon)
+- FIX 1: `props.center_lat/center_lng` au lieu de `ringsCentroid()` dans COUCHE 1
+- BUG RESIDUEL: Polygones repos = arcs lineaires au bord du cercle (BFS non contraint)
+- FIX 2 (P0.1): Contrainte BFS 600m dans `_generate_zone_polygons()` + clamp fallback synthetique
+- Resultat: Repos = polygones organiques identiques a alimentation/rut (max_dist 628-635m)
+- Livrables: REPOS_ZONE_AUDIT.md, REPOS_ZONE_FIX.md
+- Statut: CORRIGE ET VERIFIE (API + UI)
+
+### Delimitation zones points chauds — Fevrier 2026
+- P0.2: Verification que chaque cluster de points a un polygone correspondant
+- Resultat: 0 point sans zone — 8 polygones (3 alim, 3 repos, 2 rut), 32 centres
+- Livrable: HOTSPOTS_ZONE_GENERATION.md
+- Statut: VERIFIE
+
+### Audit Affuts — Fevrier 2026
+- P0.3: Toggle "Affuts" deconnecte de StandsMapLayer (lie a showAlimentationV2)
+- FIX: showStands={zoneSubFilters.affuts} dans MonTerritoireBionicPage.jsx
+- API /api/v1/hunt/orchestrate retourne 5 affuts (score 61, classification recommended)
+- Regle "2 salines max" n'interfere pas avec la generation d'affuts
+- Livrable: AFFUTS_AUDIT.md
+- Statut: CORRIGE ET VERIFIE
 
 ### P1 — Depreciation 9 endpoints AUTH-USAGER
 - NON AUTORISE. En attente d'ordre explicite du Commandant.

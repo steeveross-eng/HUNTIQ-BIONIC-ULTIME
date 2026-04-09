@@ -262,6 +262,9 @@ def _generate_zone_polygons(zones, cell_data, n, center_lat, center_lng, side_m,
     lat_start = center_lat - half / METERS_PER_DEG_LAT
     lng_start = center_lng - half / m_per_lng
 
+    # BCE-4X P0.1: Rayon d'analyse pour contraindre le BFS (600m scientifique)
+    ANALYSIS_RADIUS_M = 600.0
+
     NEIGHBORS_8 = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
 
     # ══════ Phase 0: Fusion ecologique ══════
@@ -302,6 +305,16 @@ def _generate_zone_polygons(zones, cell_data, n, center_lat, center_lng, side_m,
             if abs(r - cluster_cr) > max_radius or abs(c - cluster_cc) > max_radius:
                 continue
 
+            # BCE-4X P0.1: Contrainte rayon d'analyse — ZERO cellule hors 600m du centre
+            cell_lat = lat_start + (r + 0.5) * d_lat
+            cell_lng = lng_start + (c + 0.5) * d_lng
+            dist_to_center_m = math.sqrt(
+                ((cell_lat - center_lat) * METERS_PER_DEG_LAT) ** 2 +
+                ((cell_lng - center_lng) * m_per_lng) ** 2
+            )
+            if dist_to_center_m > ANALYSIS_RADIUS_M:
+                continue
+
             cell = cell_data[r][c]
 
             if dist <= inner_ring and not cell.get("barrier"):
@@ -325,7 +338,17 @@ def _generate_zone_polygons(zones, cell_data, n, center_lat, center_lng, side_m,
 
         if len(zone_cells) < 3:
             clat, clng = primary_zone["lat"], primary_zone["lng"]
+            # BCE-4X P0.1: Verifier que le centre est dans le rayon d'analyse
+            dist_center_m = math.sqrt(
+                ((clat - center_lat) * METERS_PER_DEG_LAT) ** 2 +
+                ((clng - center_lng) * m_per_lng) ** 2
+            )
+            if dist_center_m > ANALYSIS_RADIUS_M:
+                continue  # Centre hors rayon — ZERO polygone
             base_r = cell_m * (3.0 + score_factor * 4.0)
+            # BCE-4X P0.1: Limiter base_r pour rester dans le rayon d'analyse
+            max_base_r = max(30.0, ANALYSIS_RADIUS_M - dist_center_m)
+            base_r = min(base_r, max_base_r)
             radius_deg = base_r / METERS_PER_DEG_LAT
             radius_lng = base_r / m_per_lng
             ctrl_pts = []
