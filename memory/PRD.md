@@ -37,7 +37,8 @@
 - [x] Phase D2 (2 endpoints territory cameras)
 
 ### P1 — En attente
-- [ ] Phase D3: marketplace+lands (4 endpoints, RISQUE ELEVE, migration frontend obligatoire)
+- [ ] Phase D3: marketplace+lands (4+2 endpoints auth, RISQUE ELEVE, migration frontend obligatoire)
+  - D3_PREP_REPORT.md livre 2026-04-13 — En attente validation Commandant pour EXEC-D3
 
 ### P2 — Gele
 - [ ] M5 Offline Mode Ultra / BSAA-2
