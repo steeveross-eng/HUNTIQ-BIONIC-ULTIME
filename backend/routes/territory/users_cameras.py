@@ -1,12 +1,16 @@
 """
 Territory Module - Users & Cameras API
 Phase 1.8 - Split from territory.py
+D2-DEPRECIATION: Endpoints auto-login/login DEPRECIES (BCE-4X P2)
+  Migration vers /api/auth/* (auth_engine institutionnel)
 """
 import uuid
 import hashlib
+import logging
 from datetime import datetime, timezone
 
 from fastapi import HTTPException, Request
+from fastapi.responses import JSONResponse
 
 from ._base import territory_router, get_db, logger
 from .models import (
@@ -14,10 +18,26 @@ from .models import (
     CameraCreate, CameraResponse,
 )
 
+_d2_logger = logging.getLogger("territory.deprecation")
+
+
+def _deprecated_territory_response(data: dict, migration_target: str) -> JSONResponse:
+    """Wrap response with deprecation headers."""
+    data["_deprecated"] = True
+    data["_migration"] = f"Migrer vers {migration_target} (auth_engine institutionnel)"
+    response = JSONResponse(content=data)
+    response.headers["X-Deprecated"] = "true"
+    response.headers["X-Migration-Target"] = migration_target
+    response.headers["X-Deprecation-Phase"] = "D2-BCE4X-P2"
+    return response
+
 
 @territory_router.get("/users/auto-login")
 async def auto_login_by_ip(request: Request):
-    """Auto-login or create user based on IP address"""
+    """Auto-login or create user based on IP address.
+    D2-DEPRECATED: Migrer vers POST /api/auth/login ou Google OAuth
+    """
+    _d2_logger.warning("[D2-DEPRECATED] GET /api/territory/users/auto-login — migrer vers /api/auth/login")
     database = await get_db()
     client_ip = request.client.host
     forwarded_for = request.headers.get("x-forwarded-for")
@@ -27,15 +47,15 @@ async def auto_login_by_ip(request: Request):
     auto_email = f"user_{ip_hash}@territory.local"
     existing = await database.territory_users.find_one({"email": auto_email})
     if existing:
-        return {
+        return _deprecated_territory_response({
             "id": str(existing['_id']),
             "email": existing['email'],
             "name": existing.get('name') or f"Utilisateur {ip_hash[:6]}",
             "plan_type": existing.get('plan_type', 'free'),
-            "created_at": existing.get('created_at', datetime.now(timezone.utc)),
+            "created_at": str(existing.get('created_at', datetime.now(timezone.utc))),
             "auto_created": False,
             "client_ip": client_ip
-        }
+        }, "POST /api/auth/login")
     else:
         user_id = str(uuid.uuid4())
         user_name = f"Chasseur {ip_hash[:6].upper()}"
@@ -49,32 +69,35 @@ async def auto_login_by_ip(request: Request):
             "created_at": now
         }
         await database.territory_users.insert_one(new_user)
-        return {
+        return _deprecated_territory_response({
             "id": user_id,
             "email": auto_email,
             "name": user_name,
             "plan_type": "free",
-            "created_at": now,
+            "created_at": str(now),
             "auto_created": True,
             "client_ip": client_ip
-        }
+        }, "POST /api/auth/login")
 
 
 @territory_router.post("/users/login")
 async def login_user(credentials: UserLogin):
-    """Login existing user or create new one"""
+    """Login existing user or create new one.
+    D2-DEPRECATED: Migrer vers POST /api/auth/login
+    """
+    _d2_logger.warning("[D2-DEPRECATED] POST /api/territory/users/login — migrer vers /api/auth/login")
     database = await get_db()
     password_hash = hashlib.sha256(credentials.password.encode()).hexdigest()
     existing = await database.territory_users.find_one({"email": credentials.email})
     if existing:
         if existing.get('password_hash') == password_hash:
-            return UserResponse(
-                id=str(existing['_id']),
-                email=existing['email'],
-                name=existing.get('name'),
-                plan_type=existing.get('plan_type', 'free'),
-                created_at=existing.get('created_at', datetime.now(timezone.utc))
-            )
+            return _deprecated_territory_response({
+                "id": str(existing['_id']),
+                "email": existing['email'],
+                "name": existing.get('name'),
+                "plan_type": existing.get('plan_type', 'free'),
+                "created_at": str(existing.get('created_at', datetime.now(timezone.utc)))
+            }, "POST /api/auth/login")
         else:
             raise HTTPException(status_code=401, detail="Mot de passe incorrect")
     else:
@@ -89,13 +112,13 @@ async def login_user(credentials: UserLogin):
             "created_at": now
         }
         await database.territory_users.insert_one(new_user)
-        return UserResponse(
-            id=user_id,
-            email=credentials.email,
-            name=credentials.email.split('@')[0],
-            plan_type="free",
-            created_at=now
-        )
+        return _deprecated_territory_response({
+            "id": user_id,
+            "email": credentials.email,
+            "name": credentials.email.split('@')[0],
+            "plan_type": "free",
+            "created_at": str(now)
+        }, "POST /api/auth/register")
 
 
 @territory_router.post("/users", response_model=UserResponse)

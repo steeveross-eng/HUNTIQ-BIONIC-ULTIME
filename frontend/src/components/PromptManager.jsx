@@ -125,7 +125,7 @@ const PromptManager = () => {
           "POST /api/send-report - Envoyer rapport email"
         ],
         territory: [
-          "GET /api/territory/users/auto-login - Connexion auto IP",
+          "GET /api/territory/users/auto-login - [D2-DEPRECATED] Connexion auto IP — migrer vers /api/auth/login",
           "POST /api/territory/events - Créer observation",
           "GET /api/territory/events/recent - Événements récents",
           "POST /api/territory/photos/upload - Upload photo + IA",
