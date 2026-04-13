@@ -1,6 +1,7 @@
 /**
  * User Service - API client for user module
  * Phase 9 - Business Modules
+ * D1-DEPRECIATION: register/login/logout migrés vers /api/auth/* (auth_engine institutionnel)
  */
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
@@ -11,34 +12,42 @@ export class UserService {
     return response.json();
   }
 
+  // D1-MIGRATED: register -> /api/auth/register (auth_engine institutionnel)
   static async register(userData) {
-    const response = await fetch(`${API_URL}/api/v1/user/register`, {
+    const response = await fetch(`${API_URL}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userData)
+      body: JSON.stringify({
+        name: userData.name,
+        email: userData.email,
+        password: userData.password,
+        phone: userData.phone || null
+      })
     });
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.detail || 'Registration failed');
+      throw new Error(error.detail || error.message || 'Registration failed');
     }
     return response.json();
   }
 
+  // D1-MIGRATED: login -> /api/auth/login (auth_engine institutionnel)
   static async login(email, password) {
-    const response = await fetch(`${API_URL}/api/v1/user/login`, {
+    const response = await fetch(`${API_URL}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.detail || 'Login failed');
+      throw new Error(error.detail || error.message || 'Login failed');
     }
     return response.json();
   }
 
+  // D1-MIGRATED: logout -> /api/auth/logout (auth_engine institutionnel)
   static async logout(token) {
-    const response = await fetch(`${API_URL}/api/v1/user/logout`, {
+    const response = await fetch(`${API_URL}/api/auth/logout`, {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${token}` }
     });

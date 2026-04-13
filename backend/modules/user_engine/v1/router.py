@@ -4,20 +4,36 @@ FastAPI router for user management endpoints.
 
 Version: 1.0.0
 API Prefix: /api/v1/user
+D1-DEPRECIATION: Endpoints register/login/logout DEPRECIES (BCE-4X P2)
+  Migration vers /api/auth/* (auth_engine institutionnel)
 """
 
 from fastapi import APIRouter, HTTPException, Header, Query
+from fastapi.responses import JSONResponse
 from typing import Optional
 from .service import UserService
 from .models import (
     UserCreate, UserUpdate,
     UserLogin, UserRole, UserStatus
 )
+import logging
 
 router = APIRouter(prefix="/api/v1/user", tags=["User Engine"])
+_logger = logging.getLogger("user_engine.deprecation")
 
 # Initialize service
 _service = UserService()
+
+
+def _deprecated_response(data: dict, migration_target: str) -> JSONResponse:
+    """Wrap response with deprecation headers and migration info."""
+    data["_deprecated"] = True
+    data["_migration"] = f"Migrer vers {migration_target} (auth_engine institutionnel)"
+    response = JSONResponse(content=data)
+    response.headers["X-Deprecated"] = "true"
+    response.headers["X-Migration-Target"] = migration_target
+    response.headers["X-Deprecation-Phase"] = "D1-BCE4X-P2"
+    return response
 
 
 @router.get("/")
@@ -47,12 +63,12 @@ async def user_engine_info():
 async def register_user(user_data: UserCreate):
     """
     Register a new user account.
-    
-    Creates user with default profile and preferences.
+    D1-DEPRECATED: Migrer vers POST /api/auth/register
     """
+    _logger.warning("[D1-DEPRECATED] POST /api/v1/user/register — migrer vers /api/auth/register")
     try:
         user = await _service.create_user(user_data)
-        return {
+        return _deprecated_response({
             "success": True,
             "message": "User registered successfully",
             "user": {
@@ -61,7 +77,7 @@ async def register_user(user_data: UserCreate):
                 "name": user.name,
                 "role": user.role.value
             }
-        }
+        }, "POST /api/auth/register")
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
@@ -72,36 +88,39 @@ async def register_user(user_data: UserCreate):
 async def login_user(credentials: UserLogin):
     """
     Authenticate user and create session.
-    
-    Returns user data and session token.
+    D1-DEPRECATED: Migrer vers POST /api/auth/login
     """
+    _logger.warning("[D1-DEPRECATED] POST /api/v1/user/login — migrer vers /api/auth/login")
     result = await _service.authenticate(credentials.email, credentials.password)
     
     if not result:
         raise HTTPException(status_code=401, detail="Invalid email or password")
     
-    return {
+    return _deprecated_response({
         "success": True,
         "message": "Login successful",
         "user": result["user"],
         "token": result["token"],
         "expires_at": result["expires_at"]
-    }
+    }, "POST /api/auth/login")
 
 
 @router.post("/logout")
 async def logout_user(authorization: str = Header(None)):
-    """Logout and invalidate session"""
+    """Logout and invalidate session.
+    D1-DEPRECATED: Migrer vers POST /api/auth/logout
+    """
+    _logger.warning("[D1-DEPRECATED] POST /api/v1/user/logout — migrer vers /api/auth/logout")
     if not authorization:
         raise HTTPException(status_code=401, detail="No authorization token")
     
     token = authorization.replace("Bearer ", "")
     success = await _service.logout(token)
     
-    return {
+    return _deprecated_response({
         "success": success,
         "message": "Logged out successfully" if success else "Session not found"
-    }
+    }, "POST /api/auth/logout")
 
 
 @router.get("/me")

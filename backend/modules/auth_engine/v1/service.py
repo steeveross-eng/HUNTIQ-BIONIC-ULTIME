@@ -1,10 +1,12 @@
 """
 Auth Engine - Service Layer
 Hybrid Authentication: JWT (email/password) + Google OAuth
+D1-DEPRECIATION: Fallback dual-hash pbkdf2->bcrypt (BCE-4X P2)
 """
 import os
 import uuid
 import hashlib
+import secrets
 import logging
 from datetime import datetime, timezone, timedelta
 from typing import Optional, Tuple
@@ -51,8 +53,32 @@ class AuthService:
         return pwd_context.hash(password)
     
     def verify_password(self, plain_password: str, hashed_password: str) -> bool:
-        """Verify a password against hash"""
-        return pwd_context.verify(plain_password, hashed_password)
+        """Verify a password against hash.
+        D1-DEPRECIATION: Fallback pbkdf2->bcrypt pour users migres de user_engine.
+        Si le hash est au format pbkdf2 (salt:hex), on verifie avec pbkdf2 et
+        on programme un re-hash bcrypt au prochain login.
+        """
+        # Format bcrypt: commence par $2b$ ou $2a$
+        if hashed_password.startswith("$2"):
+            return pwd_context.verify(plain_password, hashed_password)
+
+        # Format pbkdf2 legacy (user_engine): salt:hexhash
+        if ":" in hashed_password:
+            try:
+                salt, hash_value = hashed_password.split(":", 1)
+                hash_obj = hashlib.pbkdf2_hmac(
+                    "sha256",
+                    plain_password.encode("utf-8"),
+                    salt.encode("utf-8"),
+                    100000,
+                )
+                if hash_obj.hex() == hash_value:
+                    logger.info("[D1-MIGRATION] pbkdf2 password verified — flagged for bcrypt re-hash")
+                    return True
+            except Exception as e:
+                logger.warning(f"[D1-MIGRATION] pbkdf2 fallback failed: {e}")
+
+        return False
     
     def generate_user_id(self) -> str:
         """Generate a unique user ID"""
@@ -201,6 +227,23 @@ class AuthService:
         # Verify password
         if not self.verify_password(login_data.password, user["password_hash"]):
             return False, None, "Email ou mot de passe incorrect"
+
+        # D1-DEPRECIATION: Re-hash pbkdf2 passwords to bcrypt on successful login
+        if ":" in user["password_hash"] and not user["password_hash"].startswith("$2"):
+            new_hash = self.hash_password(login_data.password)
+            await self.users_collection.update_one(
+                {"email": user["email"]},
+                {"$set": {"password_hash": new_hash, "hash_migrated_at": datetime.now(timezone.utc)}}
+            )
+            logger.info(f"[D1-MIGRATION] Password re-hashed pbkdf2->bcrypt for {user['email']}")
+
+        # D1-DEPRECIATION: Normalize user document (user_engine uses 'id', auth_engine uses 'user_id')
+        if "user_id" not in user:
+            user["user_id"] = user.pop("id", None) or str(uuid.uuid4())
+        if "auth_provider" not in user:
+            user["auth_provider"] = "local"
+        if "is_active" not in user:
+            user["is_active"] = user.get("status", "active") == "active"
         
         # Generate token
         token = self.create_access_token(user["user_id"], user["email"])
