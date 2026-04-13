@@ -3,7 +3,7 @@ Hunt Marketplace API
 Marketplace pour acheter, vendre ou louer des articles de chasse
 """
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Request, Response
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional, List
 from datetime import datetime, timezone, timedelta
@@ -13,6 +13,7 @@ import secrets
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
+from auth_helpers import decode_token
 
 logger = logging.getLogger(__name__)
 
@@ -206,6 +207,61 @@ def generate_token() -> str:
     """Generate a secure random token"""
     return secrets.token_urlsafe(32)
 
+async def resolve_marketplace_seller(request: Request, token: Optional[str], database) -> Optional[dict]:
+    """D3: Resolve seller from JWT (new) or opaque token (legacy).
+    JWT flow: Authorization header -> decode -> email -> find seller.
+    Legacy flow: opaque token query param -> find seller by token field.
+    """
+    # 1. Try JWT from Authorization header
+    auth_header = request.headers.get("Authorization", "")
+    if auth_header.startswith("Bearer "):
+        jwt_token = auth_header[7:]
+        payload = decode_token(jwt_token)
+        if payload:
+            email = payload.get("email")
+            if email:
+                seller = await database.marketplace_sellers.find_one({"email": email.lower()})
+                if seller:
+                    return seller
+                # Auto-create seller profile for JWT-authenticated user with no seller record
+                user_id = payload.get("sub", "")
+                seller_id = str(uuid.uuid4())
+                now = datetime.now(timezone.utc).isoformat()
+                new_seller = {
+                    "id": seller_id,
+                    "email": email.lower(),
+                    "password_hash": "",
+                    "name": payload.get("name", email.split("@")[0]),
+                    "phone": None,
+                    "business_name": None,
+                    "location": None,
+                    "is_business": False,
+                    "is_pro": False,
+                    "is_verified": False,
+                    "rating": 0.0,
+                    "total_ratings": 0,
+                    "total_sales": 0,
+                    "total_listings": 0,
+                    "free_listings_remaining": 3,
+                    "subscription_type": "free",
+                    "token": "",
+                    "token_expires": "",
+                    "created_at": now,
+                    "last_login": now,
+                    "auth_engine_user_id": user_id,
+                }
+                await database.marketplace_sellers.insert_one(new_seller)
+                new_seller.pop("_id", None)
+                logger.info(f"[D3] Auto-created seller profile for {email}")
+                return new_seller
+
+    # 2. Fallback: legacy opaque token
+    if token:
+        seller = await database.marketplace_sellers.find_one({"token": token})
+        return seller
+
+    return None
+
 def serialize_listing(listing: dict, seller: dict = None) -> dict:
     """Convert MongoDB listing to response format"""
     return {
@@ -241,8 +297,11 @@ def serialize_listing(listing: dict, seller: dict = None) -> dict:
 # ============================================
 
 @marketplace_router.post("/auth/register")
-async def register_seller(data: SellerRegister):
-    """Register a new seller account"""
+async def register_seller(data: SellerRegister, response: Response):
+    """Register a new seller account [X-DEPRECATED D3: Use POST /api/auth/register]"""
+    response.headers["X-Deprecated"] = "true"
+    response.headers["X-Deprecated-Since"] = "D3-2026-04-13"
+    response.headers["X-Deprecated-Use"] = "POST /api/auth/register"
     database = await get_db()
     
     # Check if email already exists
@@ -293,8 +352,11 @@ async def register_seller(data: SellerRegister):
     }
 
 @marketplace_router.post("/auth/login")
-async def login_seller(data: SellerLogin):
-    """Login seller and return token"""
+async def login_seller(data: SellerLogin, response: Response):
+    """Login seller and return token [X-DEPRECATED D3: Use POST /api/auth/login]"""
+    response.headers["X-Deprecated"] = "true"
+    response.headers["X-Deprecated-Since"] = "D3-2026-04-13"
+    response.headers["X-Deprecated-Use"] = "POST /api/auth/login"
     database = await get_db()
     
     seller = await database.marketplace_sellers.find_one({
@@ -335,11 +397,11 @@ async def login_seller(data: SellerLogin):
     }
 
 @marketplace_router.get("/auth/me")
-async def get_current_seller(token: str = Query(...)):
-    """Get current seller profile from token"""
+async def get_current_seller(request: Request, token: Optional[str] = Query(None)):
+    """Get current seller profile from token (JWT or legacy)"""
     database = await get_db()
     
-    seller = await database.marketplace_sellers.find_one({"token": token})
+    seller = await resolve_marketplace_seller(request, token, database)
     if not seller:
         raise HTTPException(status_code=401, detail="Token invalide ou expiré")
     
@@ -372,12 +434,12 @@ async def get_current_seller(token: str = Query(...)):
 # ============================================
 
 @marketplace_router.post("/listings")
-async def create_listing(data: ListingCreate, token: str = Query(...)):
+async def create_listing(data: ListingCreate, request: Request, token: Optional[str] = Query(None)):
     """Create a new listing"""
     database = await get_db()
     
     # Verify seller
-    seller = await database.marketplace_sellers.find_one({"token": token})
+    seller = await resolve_marketplace_seller(request, token, database)
     if not seller:
         raise HTTPException(status_code=401, detail="Authentification requise")
     
@@ -547,12 +609,12 @@ async def get_listing(listing_id: str):
     return serialize_listing(listing, seller)
 
 @marketplace_router.put("/listings/{listing_id}")
-async def update_listing(listing_id: str, data: ListingUpdate, token: str = Query(...)):
+async def update_listing(listing_id: str, data: ListingUpdate, request: Request, token: Optional[str] = Query(None)):
     """Update a listing"""
     database = await get_db()
     
     # Verify seller
-    seller = await database.marketplace_sellers.find_one({"token": token})
+    seller = await resolve_marketplace_seller(request, token, database)
     if not seller:
         raise HTTPException(status_code=401, detail="Authentification requise")
     
@@ -578,12 +640,12 @@ async def update_listing(listing_id: str, data: ListingUpdate, token: str = Quer
     return serialize_listing(updated, seller)
 
 @marketplace_router.delete("/listings/{listing_id}")
-async def delete_listing(listing_id: str, token: str = Query(...)):
+async def delete_listing(listing_id: str, request: Request, token: Optional[str] = Query(None)):
     """Delete (soft) a listing"""
     database = await get_db()
     
     # Verify seller
-    seller = await database.marketplace_sellers.find_one({"token": token})
+    seller = await resolve_marketplace_seller(request, token, database)
     if not seller:
         raise HTTPException(status_code=401, detail="Authentification requise")
     
@@ -612,11 +674,11 @@ async def delete_listing(listing_id: str, token: str = Query(...)):
     return {"success": True, "message": "Annonce supprimée"}
 
 @marketplace_router.get("/my-listings")
-async def get_my_listings(token: str = Query(...), page: int = 1, limit: int = 20):
+async def get_my_listings(request: Request, token: Optional[str] = Query(None), page: int = 1, limit: int = 20):
     """Get current seller's listings"""
     database = await get_db()
     
-    seller = await database.marketplace_sellers.find_one({"token": token})
+    seller = await resolve_marketplace_seller(request, token, database)
     if not seller:
         raise HTTPException(status_code=401, detail="Authentification requise")
     
@@ -645,11 +707,11 @@ async def get_my_listings(token: str = Query(...), page: int = 1, limit: int = 2
 # ============================================
 
 @marketplace_router.post("/listings/{listing_id}/favorite")
-async def toggle_favorite(listing_id: str, token: str = Query(...)):
+async def toggle_favorite(listing_id: str, request: Request, token: Optional[str] = Query(None)):
     """Toggle favorite on a listing"""
     database = await get_db()
     
-    seller = await database.marketplace_sellers.find_one({"token": token})
+    seller = await resolve_marketplace_seller(request, token, database)
     if not seller:
         raise HTTPException(status_code=401, detail="Authentification requise")
     
@@ -681,11 +743,11 @@ async def toggle_favorite(listing_id: str, token: str = Query(...)):
         return {"success": True, "favorited": True}
 
 @marketplace_router.get("/favorites")
-async def get_favorites(token: str = Query(...)):
+async def get_favorites(request: Request, token: Optional[str] = Query(None)):
     """Get user's favorite listings"""
     database = await get_db()
     
-    seller = await database.marketplace_sellers.find_one({"token": token})
+    seller = await resolve_marketplace_seller(request, token, database)
     if not seller:
         raise HTTPException(status_code=401, detail="Authentification requise")
     
@@ -704,11 +766,11 @@ async def get_favorites(token: str = Query(...)):
 # ============================================
 
 @marketplace_router.post("/messages")
-async def send_message(data: MessageCreate, token: str = Query(...)):
+async def send_message(data: MessageCreate, request: Request, token: Optional[str] = Query(None)):
     """Send a message to a listing seller"""
     database = await get_db()
     
-    sender = await database.marketplace_sellers.find_one({"token": token})
+    sender = await resolve_marketplace_seller(request, token, database)
     if not sender:
         raise HTTPException(status_code=401, detail="Authentification requise")
     
@@ -733,11 +795,11 @@ async def send_message(data: MessageCreate, token: str = Query(...)):
     return {"success": True, "message": "Message envoyé"}
 
 @marketplace_router.get("/messages")
-async def get_messages(token: str = Query(...)):
+async def get_messages(request: Request, token: Optional[str] = Query(None)):
     """Get all messages for current user"""
     database = await get_db()
     
-    seller = await database.marketplace_sellers.find_one({"token": token})
+    seller = await resolve_marketplace_seller(request, token, database)
     if not seller:
         raise HTTPException(status_code=401, detail="Authentification requise")
     

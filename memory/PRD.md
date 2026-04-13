@@ -26,6 +26,14 @@
 - 2 endpoints territory cameras deprecies + reference PromptManager.jsx nettoyee
 - D2_EXEC_REPORT.md — ZERO regression T1-T5
 
+### Phase D3 (2026-04-13)
+- 6 endpoints marketplace+lands deprecies (auth/register, auth/login, owners/login, owners/register, renters/login, renters/register)
+- Fallback SHA256→bcrypt dans auth_engine + re-hash automatique
+- Frontend HuntMarketplace.jsx et LandsRental.jsx migres vers JWT auth_engine
+- Script migration donnees /app/backend/scripts/migrate_d3_users.py
+- Routers marketplace + lands enregistres dans server_orchestrator
+- D3_EXEC_REPORT.md — 25 tests anti-regression, ZERO regression
+
 ---
 
 ## Backlog priorise
@@ -37,8 +45,11 @@
 - [x] Phase D2 (2 endpoints territory cameras)
 
 ### P1 — En attente
-- [ ] Phase D3: marketplace+lands (4+2 endpoints auth, RISQUE ELEVE, migration frontend obligatoire)
-  - D3_PREP_REPORT.md livre 2026-04-13 — En attente validation Commandant pour EXEC-D3
+- [x] Phase D3: marketplace+lands (6 endpoints auth deprecated + frontend migre)
+  - D3_EXEC_REPORT.md livre 2026-04-13 — CERTIFIE 15/15
+
+### P1 — Complet (Phase P2 Auth Depreciation)
+- [x] Phase P2 terminee: 11 endpoints AUTH-USAGER deprecies (D1:3 + D2:2 + D3:6)
 
 ### P2 — Gele
 - [ ] M5 Offline Mode Ultra / BSAA-2

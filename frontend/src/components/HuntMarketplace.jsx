@@ -73,7 +73,7 @@ import {
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 // ============================================
-// AUTH CONTEXT & STORAGE
+// AUTH CONTEXT & STORAGE (D3: Migrated to auth_engine JWT)
 // ============================================
 
 const getStoredAuth = () => {
@@ -92,6 +92,11 @@ const setStoredAuth = (auth) => {
     localStorage.removeItem('marketplace_auth');
   }
 };
+
+// D3: Helper to create axios config with JWT Authorization header
+const authHeaders = (token) => ({
+  headers: { Authorization: `Bearer ${token}` }
+});
 
 // ============================================
 // MAIN MARKETPLACE COMPONENT
@@ -234,7 +239,7 @@ const HuntMarketplace = () => {
   const loadMyListings = async () => {
     if (!auth?.token) return;
     try {
-      const response = await axios.get(`${API}/marketplace/my-listings?token=${auth.token}`);
+      const response = await axios.get(`${API}/marketplace/my-listings`, authHeaders(auth.token));
       setMyListings(response.data.listings || []);
     } catch (error) {
       console.error('Error loading my listings:', error);
@@ -242,17 +247,25 @@ const HuntMarketplace = () => {
   };
 
   // ============================================
-  // AUTH HANDLERS
+  // AUTH HANDLERS (D3: Migrated to auth_engine JWT)
   // ============================================
 
   const handleLogin = async (email, password) => {
     try {
-      const response = await axios.post(`${API}/marketplace/auth/login`, { email, password });
-      const authData = { token: response.data.token, seller: response.data.seller };
+      // D3: Login via centralized auth_engine
+      const response = await axios.post(`${API}/auth/login`, { email, password });
+      const jwt = response.data.token;
+      const user = response.data.user;
+      
+      // Fetch or auto-create seller profile via JWT
+      const sellerResponse = await axios.get(`${API}/marketplace/auth/me`, authHeaders(jwt));
+      const seller = sellerResponse.data;
+      
+      const authData = { token: jwt, user, seller };
       setAuth(authData);
       setStoredAuth(authData);
       setShowAuthModal(false);
-      toast.success(`Bienvenue ${response.data.seller.name}!`);
+      toast.success(`Bienvenue ${user.name || seller.name}!`);
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Erreur de connexion');
     }
@@ -260,8 +273,21 @@ const HuntMarketplace = () => {
 
   const handleRegister = async (data) => {
     try {
-      const response = await axios.post(`${API}/marketplace/auth/register`, data);
-      const authData = { token: response.data.token, seller: response.data.seller };
+      // D3: Register via centralized auth_engine
+      const response = await axios.post(`${API}/auth/register`, {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        phone: data.phone || null
+      });
+      const jwt = response.data.token;
+      const user = response.data.user;
+      
+      // Auto-create seller profile via JWT
+      const sellerResponse = await axios.get(`${API}/marketplace/auth/me`, authHeaders(jwt));
+      const seller = sellerResponse.data;
+      
+      const authData = { token: jwt, user, seller };
       setAuth(authData);
       setStoredAuth(authData);
       setShowAuthModal(false);
@@ -288,7 +314,7 @@ const HuntMarketplace = () => {
       return;
     }
     try {
-      const response = await axios.post(`${API}/marketplace/listings?token=${auth.token}`, data);
+      const response = await axios.post(`${API}/marketplace/listings`, data, authHeaders(auth.token));
       toast.success('Annonce créée avec succès!');
       setShowCreateModal(false);
       loadListings();
@@ -302,7 +328,7 @@ const HuntMarketplace = () => {
     if (!auth?.token) return;
     if (!confirm('Supprimer cette annonce?')) return;
     try {
-      await axios.delete(`${API}/marketplace/listings/${listingId}?token=${auth.token}`);
+      await axios.delete(`${API}/marketplace/listings/${listingId}`, authHeaders(auth.token));
       toast.success('Annonce supprimée');
       loadMyListings();
       loadListings();
@@ -327,7 +353,7 @@ const HuntMarketplace = () => {
       return;
     }
     try {
-      const response = await axios.post(`${API}/marketplace/listings/${listingId}/favorite?token=${auth.token}`);
+      const response = await axios.post(`${API}/marketplace/listings/${listingId}/favorite`, {}, authHeaders(auth.token));
       toast.success(response.data.favorited ? '❤️ Ajouté aux favoris' : 'Retiré des favoris');
     } catch (error) {
       toast.error('Erreur');

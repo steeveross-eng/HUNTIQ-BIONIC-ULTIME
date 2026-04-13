@@ -2,6 +2,7 @@
 Auth Engine - Service Layer
 Hybrid Authentication: JWT (email/password) + Google OAuth
 D1-DEPRECIATION: Fallback dual-hash pbkdf2->bcrypt (BCE-4X P2)
+D3-DEPRECIATION: Fallback SHA256 pur->bcrypt (BCE-4X P2 marketplace/lands)
 """
 import os
 import uuid
@@ -55,8 +56,7 @@ class AuthService:
     def verify_password(self, plain_password: str, hashed_password: str) -> bool:
         """Verify a password against hash.
         D1-DEPRECIATION: Fallback pbkdf2->bcrypt pour users migres de user_engine.
-        Si le hash est au format pbkdf2 (salt:hex), on verifie avec pbkdf2 et
-        on programme un re-hash bcrypt au prochain login.
+        D3-DEPRECIATION: Fallback SHA256 pur->bcrypt pour users migres de marketplace/lands.
         """
         # Format bcrypt: commence par $2b$ ou $2a$
         if hashed_password.startswith("$2"):
@@ -77,6 +77,12 @@ class AuthService:
                     return True
             except Exception as e:
                 logger.warning(f"[D1-MIGRATION] pbkdf2 fallback failed: {e}")
+
+        # Format SHA256 legacy (marketplace/lands): 64 hex chars, no salt
+        if len(hashed_password) == 64 and all(c in '0123456789abcdef' for c in hashed_password):
+            if hashlib.sha256(plain_password.encode()).hexdigest() == hashed_password:
+                logger.info("[D3-MIGRATION] SHA256 password verified — flagged for bcrypt re-hash")
+                return True
 
         return False
     
@@ -228,14 +234,15 @@ class AuthService:
         if not self.verify_password(login_data.password, user["password_hash"]):
             return False, None, "Email ou mot de passe incorrect"
 
-        # D1-DEPRECIATION: Re-hash pbkdf2 passwords to bcrypt on successful login
-        if ":" in user["password_hash"] and not user["password_hash"].startswith("$2"):
+        # D1/D3-DEPRECIATION: Re-hash legacy passwords (pbkdf2 or SHA256) to bcrypt on successful login
+        if user.get("password_hash") and not user["password_hash"].startswith("$2"):
             new_hash = self.hash_password(login_data.password)
             await self.users_collection.update_one(
                 {"email": user["email"]},
                 {"$set": {"password_hash": new_hash, "hash_migrated_at": datetime.now(timezone.utc)}}
             )
-            logger.info(f"[D1-MIGRATION] Password re-hashed pbkdf2->bcrypt for {user['email']}")
+            legacy_type = "pbkdf2" if ":" in user["password_hash"] else "SHA256"
+            logger.info(f"[D3-MIGRATION] Password re-hashed {legacy_type}->bcrypt for {user['email']}")
 
         # D1-DEPRECIATION: Normalize user document (user_engine uses 'id', auth_engine uses 'user_id')
         if "user_id" not in user:

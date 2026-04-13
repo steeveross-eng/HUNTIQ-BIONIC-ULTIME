@@ -137,6 +137,22 @@ class ServerOrchestrator:
     def register_special_routers(self):
         """Enregistre les routeurs spéciaux (root-level, awaiting migration)"""
         
+        # Marketplace (marketplace.py - root-level with /api/marketplace prefix)
+        try:
+            from marketplace import marketplace_router
+            self.app.include_router(marketplace_router)
+            logger.info("✓ Loaded: Marketplace [/api/marketplace/*]")
+        except ImportError as e:
+            logger.debug(f"Marketplace not available: {e}")
+        
+        # Lands Rental (lands_rental.py - root-level with /api/lands prefix)
+        try:
+            from lands_rental import lands_router
+            self.app.include_router(lands_router)
+            logger.info("✓ Loaded: Lands Rental [/api/lands/*]")
+        except ImportError as e:
+            logger.debug(f"Lands Rental not available: {e}")
+        
         # Site access control
         try:
             from site_access import access_router

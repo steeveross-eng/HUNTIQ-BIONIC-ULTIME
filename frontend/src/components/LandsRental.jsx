@@ -106,7 +106,7 @@ const TERRAIN_ICONS = {
 };
 
 // ============================================
-// AUTH STORAGE
+// AUTH STORAGE (D3: Migrated to auth_engine JWT)
 // ============================================
 
 const getStoredAuth = (type) => {
@@ -128,6 +128,11 @@ const setStoredAuth = (type, auth) => {
     localStorage.removeItem(`lands_${type}_auth`);
   }
 };
+
+// D3: Helper to create axios config with JWT Authorization header
+const landsAuthHeaders = (token) => ({
+  headers: { Authorization: `Bearer ${token}` }
+});
 
 // ============================================
 // MAIN COMPONENT
@@ -302,20 +307,25 @@ const LandsRental = () => {
   }, [config, loadListings]);
 
   // ============================================
-  // AUTH HANDLERS
+  // AUTH HANDLERS (D3: Migrated to auth_engine JWT)
   // ============================================
 
   const handleLogin = async (type, credentials) => {
     try {
-      const endpoint = type === 'owner' ? '/lands/owners/login' : '/lands/renters/login';
-      const response = await axios.post(`${API}${endpoint}?email=${encodeURIComponent(credentials.email)}&password=${encodeURIComponent(credentials.password)}`);
+      // D3: Login via centralized auth_engine
+      const response = await axios.post(`${API}/auth/login`, {
+        email: credentials.email,
+        password: credentials.password
+      });
+      const jwt = response.data.token;
+      const user = response.data.user;
       
       if (type === 'owner') {
-        setOwnerAuth(response.data);
-        setStoredAuth('owner', response.data);
+        setOwnerAuth({ success: true, token: jwt, user, owner: { id: user.user_id, name: user.name, email: user.email } });
+        setStoredAuth('owner', { success: true, token: jwt, user, owner: { id: user.user_id, name: user.name, email: user.email } });
       } else {
-        setRenterAuth(response.data);
-        setStoredAuth('renter', response.data);
+        setRenterAuth({ success: true, token: jwt, user, renter: { id: user.user_id, name: user.name, email: user.email, subscription_tier: 'free' } });
+        setStoredAuth('renter', { success: true, token: jwt, user, renter: { id: user.user_id, name: user.name, email: user.email, subscription_tier: 'free' } });
       }
       
       toast.success('Connexion réussie!');
@@ -327,16 +337,39 @@ const LandsRental = () => {
 
   const handleRegister = async (type, data) => {
     try {
-      const endpoint = type === 'owner' ? '/lands/owners/register' : '/lands/renters/register';
-      const params = new URLSearchParams(data);
-      const response = await axios.post(`${API}${endpoint}?${params.toString()}`);
+      // D3: Register via centralized auth_engine
+      const response = await axios.post(`${API}/auth/register`, {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        phone: data.phone || null
+      });
+      const jwt = response.data.token;
+      const user = response.data.user;
+      
+      // Also create the module-specific profile (owner or renter)
+      try {
+        const endpoint = type === 'owner' ? '/lands/owners/register' : '/lands/renters/register';
+        const params = new URLSearchParams({
+          name: data.name,
+          email: data.email,
+          phone: data.phone || '',
+          password: data.password,
+          ...(data.hunting_license ? { hunting_license: data.hunting_license } : {}),
+          ...(data.address ? { address: data.address } : {})
+        });
+        await axios.post(`${API}${endpoint}?${params.toString()}`);
+      } catch (profileErr) {
+        // Profile may already exist or creation is non-blocking
+        console.warn('Module profile creation:', profileErr?.response?.data?.detail);
+      }
       
       if (type === 'owner') {
-        setOwnerAuth(response.data);
-        setStoredAuth('owner', response.data);
+        setOwnerAuth({ success: true, token: jwt, user, owner: { id: user.user_id, name: user.name, email: user.email } });
+        setStoredAuth('owner', { success: true, token: jwt, user, owner: { id: user.user_id, name: user.name, email: user.email } });
       } else {
-        setRenterAuth(response.data);
-        setStoredAuth('renter', response.data);
+        setRenterAuth({ success: true, token: jwt, user, renter: { id: user.user_id, name: user.name, email: user.email, subscription_tier: 'free' } });
+        setStoredAuth('renter', { success: true, token: jwt, user, renter: { id: user.user_id, name: user.name, email: user.email, subscription_tier: 'free' } });
       }
       
       toast.success('Inscription réussie!');
@@ -379,8 +412,9 @@ const LandsRental = () => {
       };
 
       const response = await axios.post(
-        `${API}/lands/listings?owner_id=${ownerAuth.owner.id}`,
-        listingData
+        `${API}/lands/listings`,
+        listingData,
+        landsAuthHeaders(ownerAuth.token)
       );
 
       toast.success(`Annonce créée! Frais de publication: ${response.data.payment_required}$`);
@@ -435,13 +469,14 @@ const LandsRental = () => {
 
     try {
       const response = await axios.post(
-        `${API}/lands/agreements?renter_id=${renterAuth.renter.id}`,
+        `${API}/lands/agreements`,
         {
           land_id: selectedListing.listing.id,
           ...agreementForm,
           total_price: parseFloat(agreementForm.total_price),
           num_hunters: parseInt(agreementForm.num_hunters)
-        }
+        },
+        landsAuthHeaders(renterAuth.token)
       );
 
       toast.success('Demande de location envoyée!');
@@ -462,9 +497,9 @@ const LandsRental = () => {
 
   const handlePurchase = async (serviceId, listingId = null) => {
     const userType = ownerAuth ? 'owner' : 'renter';
-    const userId = ownerAuth?.owner?.id || renterAuth?.renter?.id;
+    const token = ownerAuth?.token || renterAuth?.token;
 
-    if (!userId) {
+    if (!token) {
       setAuthType(listingId ? 'owner' : 'renter');
       setShowAuthModal(true);
       return;
@@ -474,12 +509,11 @@ const LandsRental = () => {
       const params = new URLSearchParams({
         service_id: serviceId,
         user_type: userType,
-        user_id: userId,
         origin_url: window.location.origin
       });
       if (listingId) params.append('listing_id', listingId);
 
-      const response = await axios.post(`${API}/lands/purchase?${params.toString()}`);
+      const response = await axios.post(`${API}/lands/purchase?${params.toString()}`, {}, landsAuthHeaders(token));
       
       if (response.data.checkout_url) {
         window.location.href = response.data.checkout_url;

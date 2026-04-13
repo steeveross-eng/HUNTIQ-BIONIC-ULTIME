@@ -6,7 +6,7 @@ Module "Terres à Louer" - Location de terrains de chasse
 - Zéro responsabilité légale pour la plateforme
 """
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Request, Response
 from pydantic import BaseModel, Field
 from typing import Optional, List, Literal, Dict, Any
 from datetime import datetime, timezone, timedelta
@@ -16,6 +16,7 @@ import os
 import logging
 from motor.motor_asyncio import AsyncIOMotorClient
 from dotenv import load_dotenv
+from auth_helpers import decode_token
 
 load_dotenv()
 
@@ -266,6 +267,48 @@ def calculate_distance(lat1, lng1, lat2, lng2):
     return R * c
 
 # ============================================
+# D3: JWT RESOLUTION HELPERS
+# ============================================
+
+async def resolve_land_owner(request: Request, owner_id: Optional[str], database) -> Optional[dict]:
+    """D3: Resolve owner from JWT (new) or owner_id query param (legacy)."""
+    # 1. Try JWT from Authorization header
+    auth_header = request.headers.get("Authorization", "")
+    if auth_header.startswith("Bearer "):
+        jwt_token = auth_header[7:]
+        payload = decode_token(jwt_token)
+        if payload:
+            email = payload.get("email")
+            if email:
+                owner = await database.land_owners.find_one({"email": email.lower()})
+                if owner:
+                    return owner
+    # 2. Fallback: legacy owner_id
+    if owner_id:
+        owner = await database.land_owners.find_one({"id": owner_id})
+        return owner
+    return None
+
+
+async def resolve_land_renter(request: Request, renter_id: Optional[str], database) -> Optional[dict]:
+    """D3: Resolve renter from JWT (new) or renter_id query param (legacy)."""
+    auth_header = request.headers.get("Authorization", "")
+    if auth_header.startswith("Bearer "):
+        jwt_token = auth_header[7:]
+        payload = decode_token(jwt_token)
+        if payload:
+            email = payload.get("email")
+            if email:
+                renter = await database.land_renters.find_one({"email": email.lower()})
+                if renter:
+                    return renter
+    if renter_id:
+        renter = await database.land_renters.find_one({"id": renter_id})
+        return renter
+    return None
+
+
+# ============================================
 # LISTINGS API ENDPOINTS
 # ============================================
 
@@ -436,15 +479,18 @@ async def get_land_listing(listing_id: str):
 @lands_router.post("/listings")
 async def create_land_listing(
     listing: LandListingCreate,
-    owner_id: str = Query(...)
+    request: Request,
+    owner_id: Optional[str] = Query(None)
 ):
     """Create a new land listing"""
     database = await get_db()
     
-    # Verify owner exists
-    owner = await database.land_owners.find_one({"id": owner_id})
+    # Verify owner (JWT or legacy)
+    owner = await resolve_land_owner(request, owner_id, database)
     if not owner:
         raise HTTPException(status_code=404, detail="Propriétaire non trouvé")
+    
+    owner_id_resolved = owner["id"]
     
     # Check if owner needs to pay for listing
     pricing = await get_pricing()
@@ -456,7 +502,7 @@ async def create_land_listing(
     
     listing_data = {
         "id": listing_id,
-        "owner_id": owner_id,
+        "owner_id": owner_id_resolved,
         **listing.dict(),
         "surface_hectares": listing.surface_acres * 0.404686 if not listing.surface_hectares else listing.surface_hectares,
         "status": "pending",  # Requires payment to activate
@@ -481,7 +527,7 @@ async def create_land_listing(
     
     # Update owner's listing count
     await database.land_owners.update_one(
-        {"id": owner_id},
+        {"id": owner_id_resolved},
         {"$inc": {"total_listings": 1}}
     )
     
@@ -496,13 +542,20 @@ async def create_land_listing(
 async def update_land_listing(
     listing_id: str,
     updates: LandListingUpdate,
-    owner_id: str = Query(...)
+    request: Request,
+    owner_id: Optional[str] = Query(None)
 ):
     """Update a land listing"""
     database = await get_db()
     
+    # Resolve owner (JWT or legacy)
+    owner = await resolve_land_owner(request, owner_id, database)
+    if not owner:
+        raise HTTPException(status_code=404, detail="Propriétaire non trouvé")
+    owner_id_resolved = owner["id"]
+    
     # Verify ownership
-    listing = await database.land_listings.find_one({"id": listing_id, "owner_id": owner_id})
+    listing = await database.land_listings.find_one({"id": listing_id, "owner_id": owner_id_resolved})
     if not listing:
         raise HTTPException(status_code=404, detail="Annonce non trouvée ou accès refusé")
     
@@ -520,11 +573,16 @@ async def update_land_listing(
     return {"success": True, "message": "Annonce mise à jour"}
 
 @lands_router.delete("/listings/{listing_id}")
-async def delete_land_listing(listing_id: str, owner_id: str = Query(...)):
+async def delete_land_listing(listing_id: str, request: Request, owner_id: Optional[str] = Query(None)):
     """Delete a land listing"""
     database = await get_db()
     
-    result = await database.land_listings.delete_one({"id": listing_id, "owner_id": owner_id})
+    owner = await resolve_land_owner(request, owner_id, database)
+    if not owner:
+        raise HTTPException(status_code=404, detail="Propriétaire non trouvé")
+    owner_id_resolved = owner["id"]
+    
+    result = await database.land_listings.delete_one({"id": listing_id, "owner_id": owner_id_resolved})
     
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Annonce non trouvée ou accès refusé")
@@ -537,13 +595,17 @@ async def delete_land_listing(listing_id: str, owner_id: str = Query(...)):
 
 @lands_router.post("/owners/register")
 async def register_owner(
+    response: Response,
     name: str = Query(...),
     email: str = Query(...),
     phone: str = Query(...),
     password: str = Query(...),
     address: Optional[str] = None
 ):
-    """Register as a land owner"""
+    """Register as a land owner [X-DEPRECATED D3: Use POST /api/auth/register]"""
+    response.headers["X-Deprecated"] = "true"
+    response.headers["X-Deprecated-Since"] = "D3-2026-04-13"
+    response.headers["X-Deprecated-Use"] = "POST /api/auth/register"
     database = await get_db()
     
     # Check if email exists
@@ -586,8 +648,11 @@ async def register_owner(
     }
 
 @lands_router.post("/owners/login")
-async def login_owner(email: str = Query(...), password: str = Query(...)):
-    """Login as a land owner"""
+async def login_owner(response: Response, email: str = Query(...), password: str = Query(...)):
+    """Login as a land owner [X-DEPRECATED D3: Use POST /api/auth/login]"""
+    response.headers["X-Deprecated"] = "true"
+    response.headers["X-Deprecated-Since"] = "D3-2026-04-13"
+    response.headers["X-Deprecated-Use"] = "POST /api/auth/login"
     database = await get_db()
     
     import hashlib
@@ -615,13 +680,17 @@ async def login_owner(email: str = Query(...), password: str = Query(...)):
 
 @lands_router.post("/renters/register")
 async def register_renter(
+    response: Response,
     name: str = Query(...),
     email: str = Query(...),
     phone: str = Query(...),
     password: str = Query(...),
     hunting_license: Optional[str] = None
 ):
-    """Register as a renter (hunter)"""
+    """Register as a renter (hunter) [X-DEPRECATED D3: Use POST /api/auth/register]"""
+    response.headers["X-Deprecated"] = "true"
+    response.headers["X-Deprecated-Since"] = "D3-2026-04-13"
+    response.headers["X-Deprecated-Use"] = "POST /api/auth/register"
     database = await get_db()
     
     existing = await database.land_renters.find_one({"email": email.lower()})
@@ -663,8 +732,11 @@ async def register_renter(
     }
 
 @lands_router.post("/renters/login")
-async def login_renter(email: str = Query(...), password: str = Query(...)):
-    """Login as a renter"""
+async def login_renter(response: Response, email: str = Query(...), password: str = Query(...)):
+    """Login as a renter [X-DEPRECATED D3: Use POST /api/auth/login]"""
+    response.headers["X-Deprecated"] = "true"
+    response.headers["X-Deprecated-Since"] = "D3-2026-04-13"
+    response.headers["X-Deprecated-Use"] = "POST /api/auth/login"
     database = await get_db()
     
     import hashlib
@@ -714,10 +786,17 @@ async def get_renter_subscription(renter_id: str):
 @lands_router.post("/agreements")
 async def create_rental_agreement(
     agreement: RentalAgreementCreate,
-    renter_id: str = Query(...)
+    request: Request,
+    renter_id: Optional[str] = Query(None)
 ):
     """Create a rental agreement request"""
     database = await get_db()
+    
+    # Resolve renter (JWT or legacy)
+    renter = await resolve_land_renter(request, renter_id, database)
+    if not renter:
+        raise HTTPException(status_code=404, detail="Locataire non trouvé")
+    renter_id_resolved = renter["id"]
     
     # Get land and owner
     land = await database.land_listings.find_one({"id": agreement.land_id, "status": "active"})
@@ -725,10 +804,6 @@ async def create_rental_agreement(
         raise HTTPException(status_code=404, detail="Terre non trouvée ou non disponible")
     
     owner = await database.land_owners.find_one({"id": land["owner_id"]})
-    renter = await database.land_renters.find_one({"id": renter_id})
-    
-    if not renter:
-        raise HTTPException(status_code=404, detail="Locataire non trouvé")
     
     # Calculate fees
     pricing = await get_pricing()
@@ -749,7 +824,7 @@ async def create_rental_agreement(
         "owner_name": owner.get("name") if owner else "",
         "owner_email": owner.get("email") if owner else "",
         "owner_phone": owner.get("phone") if owner else "",
-        "renter_id": renter_id,
+        "renter_id": renter_id_resolved,
         "renter_name": renter.get("name"),
         "renter_email": renter.get("email"),
         "renter_phone": renter.get("phone"),
@@ -998,14 +1073,34 @@ Locataire : {'✓ SIGNÉ le ' + agreement['renter_signed_at'] if agreement.get('
 
 @lands_router.post("/purchase")
 async def purchase_service(
+    request: Request,
     service_id: str = Query(...),
     user_type: Literal["owner", "renter"] = Query(...),
-    user_id: str = Query(...),
+    user_id: Optional[str] = Query(None),
     listing_id: Optional[str] = None,
     origin_url: str = Query(...)
 ):
     """Purchase a service (uses Stripe)"""
     database = await get_db()
+    
+    # D3: Resolve user_id from JWT if not provided
+    if not user_id:
+        auth_header = request.headers.get("Authorization", "")
+        if auth_header.startswith("Bearer "):
+            payload = decode_token(auth_header[7:])
+            if payload:
+                email = payload.get("email")
+                if email and user_type == "owner":
+                    owner = await database.land_owners.find_one({"email": email.lower()})
+                    if owner:
+                        user_id = owner["id"]
+                elif email and user_type == "renter":
+                    renter = await database.land_renters.find_one({"email": email.lower()})
+                    if renter:
+                        user_id = renter["id"]
+    
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Authentification requise")
     
     pricing = await get_pricing()
     service = pricing.get(service_id)
