@@ -58,6 +58,7 @@
 
 ### P2 — Actif
 - [x] Module Cameras (CAM-EXEC-Omega: 6 phases executees 2026-04-14, 12 endpoints, frontend /cameras)
+- [ ] Localisation Cameras (CAM-LOC-PREP: rapport livre 2026-04-14, 5 sous-phases LOC-A a LOC-E)
 
 ### P3 — Gele
 - [ ] M5 Offline Mode Ultra / BSAA-2
