@@ -159,21 +159,21 @@ const Navigation = ({ cartCount, onCartOpen }) => {
           <BionicLogoHeader />
           
           {/* Desktop Navigation - BIONIC TACTICAL Style */}
-          <nav className="hidden lg:flex items-center gap-0.5 flex-1 min-w-0 overflow-x-auto scrollbar-none" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <nav className="hidden lg:flex items-center gap-0 flex-1 min-w-0" style={{ overflow: 'visible' }}>
             {/* Home */}
             <Link 
               to="/" 
-              className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              className={`flex items-center gap-1 px-1.5 py-2 text-[11px] font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
               data-testid="nav-home"
             >
-              <Home className="h-4 w-4" />
+              <Home className="h-3.5 w-3.5" />
               {t('common_home')}
             </Link>
 
             {/* MAGASIN — Restauré entre Accueil et Tableau de bord (CAM-UI-LOC) */}
             <Link 
               to="/shop" 
-              className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/shop') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              className={`flex items-center gap-1 px-1.5 py-2 text-[11px] font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/shop') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
               data-testid="nav-shop"
             >
               <Store className="h-3.5 w-3.5" />
@@ -183,27 +183,27 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             {/* Dashboard */}
             <Link 
               to="/dashboard" 
-              className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/dashboard') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              className={`flex items-center gap-1 px-1.5 py-2 text-[11px] font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/dashboard') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
               data-testid="nav-dashboard"
             >
-              <BarChart3 className="h-4 w-4" />
-              {t('common_dashboard')}
+              <BarChart3 className="h-3.5 w-3.5" />
+              T. Bord
             </Link>
             
             {/* ANALYSE TERRITOIRE — Module primaire (carte strategique) */}
             <Link 
               to="/mon-territoire-bionic" 
-              className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${['/mon-territoire-bionic', '/mon-territoire', '/analyse-territoire'].includes(location.pathname) ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              className={`flex items-center gap-1 px-1.5 py-2 text-[11px] font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${['/mon-territoire-bionic', '/mon-territoire', '/analyse-territoire'].includes(location.pathname) ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
               data-testid="nav-analyse-territoire"
             >
-              <Crosshair className="h-4 w-4" />
-              Analyse Territoire
+              <Crosshair className="h-3.5 w-3.5" />
+              Territoire
             </Link>
             
             {/* CARTE INTERACTIVE — Module primaire (carte terrain GPS) */}
             <Link 
               to="/map" 
-              className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/map') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              className={`flex items-center gap-1 px-1.5 py-2 text-[11px] font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/map') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
               data-testid="nav-carte-interactive"
             >
               <Globe className="h-3.5 w-3.5" />
@@ -213,53 +213,33 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             {/* CAM-ADMIN-HEADER: Module Cameras — entre CARTE et INTELLIGENCE */}
             <Link 
               to="/cameras" 
-              className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/cameras') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              className={`flex items-center gap-1 px-1.5 py-2 text-[11px] font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/cameras') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
               data-testid="nav-cameras"
             >
               <Camera className="h-3.5 w-3.5" />
               Cameras
             </Link>
             
-            {/* INTELLIGENCE V6-CORE — Dashboard M1+M2+M3+M4 FUSION */}
+            {/* INTELLIGENCE V6-CORE — TOUJOURS VISIBLE */}
             <Link 
               to="/intelligence-v6" 
-              className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/intelligence-v6') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              className={`flex items-center gap-1 px-1.5 py-2 text-[11px] font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/intelligence-v6') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
               data-testid="nav-intelligence-v6"
             >
               <Brain className="h-3.5 w-3.5" />
               Intelligence
             </Link>
             
-            {/* Permis de chasse - Module Stratégique Indépendant */}
+            {/* Permis de chasse */}
             <Link 
               to="/permis-chasse" 
-              className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/permis-chasse') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              className={`flex items-center gap-1 px-1.5 py-2 text-[11px] font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/permis-chasse') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
               data-testid="nav-permis-chasse"
             >
               <Shield className="h-3.5 w-3.5" />
               Permis
             </Link>
             
-            {/* GUIDE PRO — Phase E-2 BCE-4X BDRE-FIRST */}
-            <Link 
-              to="/guide-pro" 
-              className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/guide-pro') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
-              data-testid="nav-guide-pro"
-            >
-              <RouteIcon className="h-3.5 w-3.5" />
-              Guide Pro
-            </Link>
-
-            {/* GESTIONNAIRE — Phase F BCE-4X BDRE-FIRST */}
-            <Link 
-              to="/gestionnaire" 
-              className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/gestionnaire') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
-              data-testid="nav-gestionnaire"
-            >
-              <Users className="h-3.5 w-3.5" />
-              Gestionnaire
-            </Link>
-
             {/* SUPRA v2: Lien direct ANALYSE TERRITOIRE (moteur unifie) */}
             
             {/* Business (Conditionnel) */}
@@ -302,6 +282,15 @@ const Navigation = ({ cartCount, onCartOpen }) => {
                 <Lock className="h-4 w-4" />
               </Button>
               <div className="absolute top-full right-0 mt-1 min-w-[200px] bg-black/95 backdrop-blur-xl border border-white/10 rounded-md shadow-xl py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <Link to="/guide-pro" className="flex items-center gap-3 px-4 py-2 hover:bg-white/5 group/item" data-testid="nav-guide-pro">
+                  <RouteIcon className="h-4 w-4 text-[#F5A623]" />
+                  <div className="text-sm font-medium text-gray-300 group-hover/item:text-[#F5A623]">Guide Pro</div>
+                </Link>
+                <Link to="/gestionnaire" className="flex items-center gap-3 px-4 py-2 hover:bg-white/5 group/item" data-testid="nav-gestionnaire">
+                  <Users className="h-4 w-4 text-[#F5A623]" />
+                  <div className="text-sm font-medium text-gray-300 group-hover/item:text-[#F5A623]">Gestionnaire</div>
+                </Link>
+                <div className="border-t border-white/10 my-1" />
                 <Link to="/admin-premium" className="flex items-center gap-3 px-4 py-2 hover:bg-white/5 group/item">
                   <Crown className="h-4 w-4 text-[#F5A623] group-hover/item:text-[#F5A623]" />
                   <div>
