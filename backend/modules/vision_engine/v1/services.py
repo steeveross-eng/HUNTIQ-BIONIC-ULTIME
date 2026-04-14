@@ -484,3 +484,187 @@ class VisionAnalysisService:
             "anomalies": anomalies,
             "top_alphas": sorted(alpha_analyses, key=lambda a: a.get("alpha_score", 0), reverse=True)[:10]
         }
+
+
+    # ============================================
+    # VIS-B: INDIVIDUAL CLUSTERING
+    # ============================================
+
+    async def cluster_individuals(self, user_id: str) -> list:
+        """VIS-B: Cluster analyses into pseudo-individuals by species+camera proximity+time."""
+        analyses = await self.get_analyses(user_id, limit=1000)
+        if not analyses:
+            return []
+
+        # Group by species + camera
+        groups = {}
+        for a in analyses:
+            sp = a.get("species", "inconnu")
+            if sp == "aucun_animal":
+                continue
+            cam = a.get("camera_id", "")
+            key = f"{sp}_{cam}"
+            if key not in groups:
+                groups[key] = []
+            groups[key].append(a)
+
+        individuals = []
+        for key, group in groups.items():
+            sp = group[0].get("species", "inconnu")
+            scores = [a.get("alpha_score", 0) for a in group]
+            cameras_seen = list(set(a.get("camera_id", "") for a in group))
+            lats = [a["gps_lat"] for a in group if a.get("gps_lat")]
+            lons = [a["gps_lon"] for a in group if a.get("gps_lon")]
+
+            ind = {
+                "id": f"ind_{str(uuid.uuid4())[:8]}",
+                "user_id": user_id,
+                "species": sp,
+                "sex": group[0].get("sex", "indetermine"),
+                "estimated_age": "adult" if max(scores) >= 60 else "juvenile",
+                "alpha_score_avg": round(sum(scores) / len(scores)),
+                "alpha_score_max": max(scores),
+                "sightings_count": len(group),
+                "first_seen": min(a.get("analyzed_at", "") for a in group),
+                "last_seen": max(a.get("analyzed_at", "") for a in group),
+                "cameras_seen": cameras_seen,
+                "photo_ids": [a.get("photo_id", "") for a in group][:20],
+                "analysis_ids": [a.get("id", "") for a in group][:20],
+                "is_alpha": max(scores) >= 85,
+                "is_recurring": len(group) >= 3,
+                "territory_center": {
+                    "type": "Point",
+                    "coordinates": [sum(lons) / len(lons), sum(lats) / len(lats)]
+                } if lats and lons else None,
+                "territory_radius_m": 2000 if len(cameras_seen) > 1 else 800,
+                "created_at": datetime.now(timezone.utc).isoformat()
+            }
+            individuals.append(ind)
+
+        # Store
+        if individuals:
+            await self.individuals.delete_many({"user_id": user_id})
+            await self.individuals.insert_many(individuals)
+            for ind in individuals:
+                ind.pop("_id", None)
+
+        return sorted(individuals, key=lambda i: i["alpha_score_avg"], reverse=True)
+
+    async def get_individuals(self, user_id: str, species: Optional[str] = None, alpha_only: bool = False) -> list:
+        query = {"user_id": user_id}
+        if species:
+            query["species"] = species
+        if alpha_only:
+            query["is_alpha"] = True
+        cursor = self.individuals.find(query, {"_id": 0}).sort("alpha_score_avg", -1)
+        return await cursor.to_list(length=200)
+
+    # ============================================
+    # VIS-E: NOTIFICATIONS IA
+    # ============================================
+
+    async def generate_notifications(self, user_id: str) -> list:
+        """Generate IA notifications based on analyses, hotspots, trajectories."""
+        notifications = []
+        analyses = await self.get_analyses(user_id, limit=50)
+        hotspots = await self.get_hotspots(user_id)
+        trajectories = await self.get_trajectories(user_id)
+        anomalies = await self.detect_anomalies(user_id)
+
+        # 1. Alpha detected
+        for a in analyses:
+            if a.get("alpha_score", 0) >= 85:
+                notifications.append({
+                    "id": f"notif_{str(uuid.uuid4())[:8]}",
+                    "type": "alpha_detected",
+                    "priority": "high",
+                    "title": f"ALPHA detecte: {a.get('species', 'inconnu')}",
+                    "detail": f"Score {a['alpha_score']} — Camera {a.get('camera_id', '')[:8]}",
+                    "gps_lat": a.get("gps_lat"),
+                    "gps_lon": a.get("gps_lon"),
+                    "timestamp": a.get("analyzed_at"),
+                    "read": False
+                })
+
+        # 2. Active corridors (trajectories)
+        if trajectories:
+            notifications.append({
+                "id": f"notif_{str(uuid.uuid4())[:8]}",
+                "type": "corridor_active",
+                "priority": "medium",
+                "title": f"{len(trajectories)} trajectoire(s) active(s)",
+                "detail": "Corridors detectes entre vos cameras",
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "read": False
+            })
+
+        # 3. Activity spike (hotspots with high activity)
+        for hs in hotspots:
+            if hs.get("activity_level") == "extreme":
+                notifications.append({
+                    "id": f"notif_{str(uuid.uuid4())[:8]}",
+                    "type": "activity_spike",
+                    "priority": "high",
+                    "title": f"Activite extreme: {hs.get('dominant_species', 'multi-especes')}",
+                    "detail": f"{hs.get('total_sightings', 0)} observations",
+                    "gps_lat": hs.get("gps_lat"),
+                    "gps_lon": hs.get("gps_lon"),
+                    "timestamp": hs.get("last_activity"),
+                    "read": False
+                })
+
+        # 4. Anomalies
+        for anom in anomalies:
+            notifications.append({
+                "id": f"notif_{str(uuid.uuid4())[:8]}",
+                "type": f"anomaly_{anom['type']}",
+                "priority": anom.get("severity", "medium"),
+                "title": anom.get("detail", "Anomalie detectee"),
+                "detail": f"Camera {anom.get('camera_id', '')[:8]}",
+                "timestamp": anom.get("detected_at"),
+                "read": False
+            })
+
+        return sorted(notifications, key=lambda n: n.get("timestamp", ""), reverse=True)[:50]
+
+    # ============================================
+    # SECTION 3: ADVANCED ANOMALIES
+    # ============================================
+
+    async def detect_advanced_anomalies(self, user_id: str) -> list:
+        """Section 3: Extended anomaly detection including camera security."""
+        base_anomalies = await self.detect_anomalies(user_id)
+
+        # Camera offline detection
+        cameras = await self.db["cameras"].find(
+            {"user_id": user_id}, {"_id": 0}
+        ).to_list(length=100)
+
+        for cam in cameras:
+            if cam.get("status") == "offline":
+                base_anomalies.append({
+                    "type": "camera_offline",
+                    "camera_id": cam.get("id", ""),
+                    "severity": "medium",
+                    "detail": f"Camera {cam.get('name', '')} hors-ligne",
+                    "detected_at": datetime.now(timezone.utc).isoformat()
+                })
+
+        # Behavioral change: species diversity drop
+        analyses = await self.get_analyses(user_id, limit=200)
+        if len(analyses) >= 10:
+            recent = analyses[:10]
+            older = analyses[10:]
+            recent_species = set(a.get("species") for a in recent if a.get("species") != "aucun_animal")
+            older_species = set(a.get("species") for a in older if a.get("species") != "aucun_animal")
+            disappeared = older_species - recent_species
+            for sp in disappeared:
+                base_anomalies.append({
+                    "type": "species_disappearance",
+                    "camera_id": "",
+                    "severity": "low",
+                    "detail": f"Espece '{sp}' non detectee recemment",
+                    "detected_at": datetime.now(timezone.utc).isoformat()
+                })
+
+        return base_anomalies

@@ -251,6 +251,64 @@ async def get_commercial_report(
     return report
 
 
+# ============================================
+# VIS-B: INDIVIDUALS CLUSTERING
+# ============================================
+
+@router.post("/individuals/cluster")
+async def cluster_individuals(
+    user: UserWithRole = Depends(get_current_user_with_role),
+    db: AsyncIOMotorDatabase = Depends(get_camera_db)
+):
+    """VIS-B: Cluster analyses into pseudo-individuals."""
+    service = VisionAnalysisService(db)
+    individuals = await service.cluster_individuals(user.user_id)
+    return {"success": True, "individuals": individuals, "total": len(individuals)}
+
+
+@router.get("/individuals")
+async def get_individuals(
+    species: Optional[str] = Query(None),
+    alpha_only: bool = Query(False),
+    user: UserWithRole = Depends(get_current_user_with_role),
+    db: AsyncIOMotorDatabase = Depends(get_camera_db)
+):
+    """Get clustered individuals."""
+    service = VisionAnalysisService(db)
+    individuals = await service.get_individuals(user.user_id, species, alpha_only)
+    return {"individuals": individuals, "total": len(individuals)}
+
+
+# ============================================
+# VIS-E: NOTIFICATIONS IA
+# ============================================
+
+@router.get("/notifications")
+async def get_notifications(
+    user: UserWithRole = Depends(get_current_user_with_role),
+    db: AsyncIOMotorDatabase = Depends(get_camera_db)
+):
+    """Get IA-generated notifications."""
+    service = VisionAnalysisService(db)
+    notifications = await service.generate_notifications(user.user_id)
+    return {"notifications": notifications, "total": len(notifications)}
+
+
+# ============================================
+# SECTION 3: ADVANCED ANOMALIES
+# ============================================
+
+@router.get("/anomalies/advanced")
+async def get_advanced_anomalies(
+    user: UserWithRole = Depends(get_current_user_with_role),
+    db: AsyncIOMotorDatabase = Depends(get_camera_db)
+):
+    """Section 3: Advanced anomaly detection."""
+    service = VisionAnalysisService(db)
+    anomalies = await service.detect_advanced_anomalies(user.user_id)
+    return {"anomalies": anomalies, "total": len(anomalies)}
+
+
 async def ensure_vision_indexes(db: AsyncIOMotorDatabase):
     """Create MongoDB indexes for vision collections."""
     await db["vision_analyses"].create_index([("user_id", 1), ("analyzed_at", -1)])

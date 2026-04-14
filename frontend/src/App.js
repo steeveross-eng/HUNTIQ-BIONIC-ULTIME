@@ -84,6 +84,8 @@ const GuideProPage = lazy(() => import("@/pages/GuideProPage"));
 const GestionnairePage = lazy(() => import("@/pages/GestionnairePage"));
 // CAM-Omega: Module Cameras de chasse
 const CameraModule = lazy(() => import("@/components/CameraModule"));
+// VIS-E: Vision Notifications Panel
+import VisionNotificationsPanel from '@/components/VisionNotificationsPanel';
 // V7.2: AdminHotspotsPage standalone SUPPRIME — Source de verite = Admin Premium (directive x7200)
 import { 
   ShoppingCart, FlaskConical, GitCompare, Star, DollarSign, ThumbsUp, Heart, Eye,
@@ -92,7 +94,7 @@ import {
   ExternalLink, Edit, Plus, Loader2, GraduationCap, BookOpen, Brain,
   Map, Globe, Construction, Power, Mail, Handshake, XCircle, Moon, Sun, Bot,
   Radar, Share2, Gift, Home, Target, Crosshair, Route as RouteIcon, Briefcase, Cloud,
-  Crown, Camera
+  Crown, Camera, Bell
 } from "lucide-react";
 import {
   Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle
@@ -260,6 +262,9 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             {/* BCE-4X V8: PARTAGER relocalisé dans TerritoireHeader.jsx (sub-header) — Directive ×4850 */}
             
             {/* Premium CTA — BCE-4X: texte blanc + contour orange #F5A623 unifie */}
+            {/* VIS-E: Alertes IA */}
+            <VisionNotificationsToggle />
+
             <Link to="/pricing" className="hidden lg:block">
               <Button 
                 size="sm" 
@@ -874,6 +879,21 @@ const FormationsPage = () => {
     </main>
   );
 };
+
+// VIS-E: Notification toggle component (self-contained with state)
+const VisionNotificationsToggle = () => {
+  const [showPanel, setShowPanel] = React.useState(false);
+  const { token } = useAuth();
+  return (
+    <div className="hidden lg:block relative">
+      <Button variant="ghost" size="sm" className="text-gray-300 hover:text-amber-400 hover:bg-white/5" onClick={() => setShowPanel(p => !p)} data-testid="vision-alerts-toggle">
+        <Bell className="h-4 w-4" />
+      </Button>
+      <VisionNotificationsPanel token={token} isOpen={showPanel} onClose={() => setShowPanel(false)} />
+    </div>
+  );
+};
+
 
 // Main App Component
 function App() {

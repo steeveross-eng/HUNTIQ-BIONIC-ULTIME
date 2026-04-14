@@ -60,10 +60,12 @@
 - [x] Module Cameras (CAM-EXEC-Omega: 6 phases executees 2026-04-14, 12 endpoints, frontend /cameras)
 - [x] IA Vision Engine (VIS-A à VIS-F: backend + API + frontend, GPT-4o via Emergent Key, 2026-04-14)
 - [x] ALPHA Layer carte (AlphaHotspotsLayer + useAlphaLayer IA, TrajectoriesLayer, integre cartes)
-- [x] Valeur commerciale ALPHA (H1-H6: scores territoires, indices, anomalies, rapports, AdminTerritoryValue, 2026-04-14)
+- [x] IA Vision Phase 2 Final (VIS-B clustering, VIS-E notifications 7 types, anomalies avancees, 15 endpoints, 2026-04-14)
+- [x] Valeur commerciale ALPHA (H1-H6: scores territoires, indices, anomalies, rapports, AdminTerritoryValue)
 
 ### P3 — Gele
-- [ ] IA Vision Ultime — Phases avancees (VIS-B individus/clustering, VIS-E notifications avancees, rapports auto)
+- [ ] Heatmap IA unifiee (HEAT-UNIFY: fusion zones chaudes + heat IA, modes temporels)
+- [ ] Securite cameras (CAMERA-SEC: halo couverture, detection vol/obstruction)
 - [ ] M5 Offline Mode Ultra / BSAA-2
 - [ ] Integration DEM LIDAR et SIEF ecoforesterie
 - [ ] Module optimization_engine (Work1)
