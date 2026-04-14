@@ -55,7 +55,7 @@ const useCameraLayer = (token, activeWaypoints = [], groupWaypoints = []) => {
     return allCameras.map(cam => {
       const camLat = cam.gps_lat || cam.location?.coordinates?.[1];
       const camLon = cam.gps_lon || cam.location?.coordinates?.[0];
-      if (!camLat || !camLon) return { ...cam, inZone600m: false, nearestWaypointDist: null };
+      if (!camLat || !camLon) return { ...cam, nearestWaypointDist: null };
 
       let minDist = Infinity;
       for (const wp of allWaypoints) {
@@ -69,7 +69,6 @@ const useCameraLayer = (token, activeWaypoints = [], groupWaypoints = []) => {
 
       return {
         ...cam,
-        inZone600m: minDist <= 600,
         nearestWaypointDist: minDist === Infinity ? null : Math.round(minDist)
       };
     });
