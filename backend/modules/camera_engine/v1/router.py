@@ -21,12 +21,26 @@ from .models import (
     PhotoUploadResponse, CameraStatsResponse, CameraLocationUpdate
 )
 from .services import CameraRegistryService, EmailIngestionService, ExifReaderService, ImageEncryptionService
+from .brands_config import CAMERA_BRANDS_CONFIG, CAMERA_TYPES
 from ...roles_engine.v1.dependencies import get_current_user_with_role
 from ...roles_engine.v1.models import UserWithRole
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/v1/camera", tags=["Camera Engine"])
+
+
+# ============================================
+# BRANDS CONFIG ENDPOINT (CAMERA-BRANDS-Omega)
+# ============================================
+
+@router.get("/brands-config")
+async def get_brands_config():
+    """Return complete brands/models/types configuration. Public endpoint."""
+    return {
+        "brands": CAMERA_BRANDS_CONFIG,
+        "types": CAMERA_TYPES
+    }
 
 
 # ============================================
@@ -169,6 +183,83 @@ async def update_camera_location(
         "location": camera.location,
         "gps_lat": camera.gps_lat,
         "gps_lon": camera.gps_lon
+    }
+
+
+# ============================================
+# CAMERA POPUP DATA (CAMERA-POPUP-Omega)
+# ============================================
+
+@router.get("/cameras/{camera_id}/popup-data")
+async def get_camera_popup_data(
+    camera_id: str,
+    species_filter: Optional[str] = Query(None),
+    limit: int = Query(12, ge=1, le=50),
+    user: UserWithRole = Depends(get_current_user_with_role),
+    db: AsyncIOMotorDatabase = Depends(get_camera_db)
+):
+    """
+    CAMERA-POPUP-Omega: Get bundled camera data for rich map popup.
+    Returns camera info + recent events/photos + IA Vision analyses + species summary.
+    """
+    cam_doc = await db['cameras'].find_one(
+        {"id": camera_id, "user_id": user.user_id},
+        {"_id": 0}
+    )
+    if not cam_doc:
+        raise HTTPException(status_code=404, detail="Camera non trouvee")
+
+    event_filter = {
+        "camera_id": camera_id,
+        "user_id": user.user_id,
+        "is_quarantined": False
+    }
+    if species_filter:
+        event_filter["species"] = species_filter
+
+    events_cursor = db['camera_events'].find(
+        event_filter, {"_id": 0, "raw_image_url": 0}
+    ).sort("timestamp", -1).limit(limit)
+    events = await events_cursor.to_list(length=limit)
+
+    analyses_cursor = db['vision_analyses'].find(
+        {"camera_id": camera_id, "user_id": user.user_id},
+        {"_id": 0}
+    ).sort("analyzed_at", -1).limit(20)
+    analyses = await analyses_cursor.to_list(length=20)
+
+    species_pipeline = [
+        {"$match": {
+            "camera_id": camera_id,
+            "user_id": user.user_id,
+            "species": {"$nin": [None, "aucun_animal", ""]}
+        }},
+        {"$group": {
+            "_id": "$species",
+            "count": {"$sum": 1},
+            "last_seen": {"$max": "$analyzed_at"}
+        }},
+        {"$sort": {"count": -1}}
+    ]
+    species_summary = await db['vision_analyses'].aggregate(species_pipeline).to_list(length=100)
+
+    total_events = await db['camera_events'].count_documents(
+        {"camera_id": camera_id, "user_id": user.user_id}
+    )
+    total_analyses = await db['vision_analyses'].count_documents(
+        {"camera_id": camera_id, "user_id": user.user_id}
+    )
+
+    return {
+        "camera": cam_doc,
+        "events": events,
+        "analyses": analyses,
+        "species_summary": [
+            {"species": s["_id"], "count": s["count"], "last_seen": s.get("last_seen")}
+            for s in species_summary
+        ],
+        "total_events": total_events,
+        "total_analyses": total_analyses
     }
 
 

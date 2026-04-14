@@ -112,6 +112,7 @@ class CameraRegistryService:
             model=data.model,
             serial=data.serial,
             name=data.name,
+            camera_type=getattr(data, 'camera_type', None),
             gps_lat=data.gps_lat,
             gps_lon=data.gps_lon,
             location=location,

@@ -1,9 +1,10 @@
 /**
  * useCameraLayer — Hook pour charger et filtrer les cameras pour la carte
- * CAM-LOC-Omega: Charge les cameras de l'utilisateur, filtre par zone 600m des waypoints
+ * CAM-LOC-Omega + MAP-PERF-Omega: Cache client sessionStorage
  */
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
+import { getCachedMapData, setCachedMapData } from '@/utils/mapCache';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -11,9 +12,6 @@ const getAuthHeaders = (token) => ({
   headers: { Authorization: `Bearer ${token}` }
 });
 
-/**
- * Haversine distance in meters between two lat/lon points
- */
 function haversineDistance(lat1, lon1, lat2, lon2) {
   const R = 6371000;
   const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -25,7 +23,11 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
 }
 
 const useCameraLayer = (token, activeWaypoints = [], groupWaypoints = []) => {
-  const [allCameras, setAllCameras] = useState([]);
+  const [allCameras, setAllCameras] = useState(() => {
+    // MAP-PERF-Omega: Instant load from cache
+    const cached = getCachedMapData('cameras');
+    return cached || [];
+  });
   const [loading, setLoading] = useState(false);
 
   const loadCameras = useCallback(async () => {
@@ -33,7 +35,9 @@ const useCameraLayer = (token, activeWaypoints = [], groupWaypoints = []) => {
     setLoading(true);
     try {
       const res = await axios.get(`${API}/v1/camera/cameras?limit=100`, getAuthHeaders(token));
-      setAllCameras(res.data.cameras || []);
+      const cameras = res.data.cameras || [];
+      setAllCameras(cameras);
+      setCachedMapData('cameras', cameras);
     } catch (err) {
       console.error('Camera layer: load error', err);
     } finally {
@@ -45,7 +49,6 @@ const useCameraLayer = (token, activeWaypoints = [], groupWaypoints = []) => {
     loadCameras();
   }, [loadCameras]);
 
-  // Compute which cameras are within 600m of any waypoint (user + group)
   const camerasWithProximity = useMemo(() => {
     const allWaypoints = [...(activeWaypoints || []), ...(groupWaypoints || [])];
 
@@ -72,7 +75,6 @@ const useCameraLayer = (token, activeWaypoints = [], groupWaypoints = []) => {
     });
   }, [allCameras, activeWaypoints, groupWaypoints]);
 
-  // Cameras with valid position
   const positionedCameras = useMemo(() =>
     camerasWithProximity.filter(c => c.gps_lat || c.location?.coordinates),
     [camerasWithProximity]

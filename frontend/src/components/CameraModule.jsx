@@ -1,10 +1,10 @@
 /**
  * CameraModule — Module Cameras BIONIC
- * CAM-Omega: Gestion cameras, upload photos, galerie, carte
+ * CAMERA-BRANDS-Omega-FINAL: Marques/modeles standardises, type obligatoire, ZERO texte libre
  */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,28 +15,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { useAuth } from '@/components/GlobalAuth';
 import {
-  Camera, Plus, Upload, Image, Grid, List, MapPin, Clock, Eye,
-  Trash2, Settings, Loader2, X, CheckCircle, AlertCircle, RefreshCw,
-  Activity, BarChart3, Filter, ChevronRight, Copy, ArrowLeft, Target
+  Camera, Plus, Upload, Image, MapPin, Eye,
+  Trash2, Loader2, CheckCircle, Activity, ArrowLeft, Target, Copy, Wifi, WifiOff
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import CameraMapPicker from '@/components/CameraMapPicker';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
-
-const MANUFACTURERS = [
-  { value: 'spypoint', label: 'Spypoint' },
-  { value: 'tactacam', label: 'Tactacam' },
-  { value: 'cuddeback', label: 'Cuddeback' },
-  { value: 'bushnell', label: 'Bushnell' },
-  { value: 'moultrie', label: 'Moultrie' },
-  { value: 'reconyx', label: 'Reconyx' },
-  { value: 'stealth_cam', label: 'Stealth Cam' },
-  { value: 'browning', label: 'Browning' },
-  { value: 'wildgame', label: 'Wildgame' },
-  { value: 'other', label: 'Autre' }
-];
 
 const STATUS_COLORS = {
   active: 'bg-green-500/20 text-green-400 border-green-500/30',
@@ -54,37 +40,41 @@ const CameraModule = () => {
   const { user, token } = useAuth();
   const [activeTab, setActiveTab] = useState('cameras');
 
-  // Data
   const [cameras, setCameras] = useState([]);
   const [events, setEvents] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userWaypoints, setUserWaypoints] = useState([]);
 
-  // Modals
+  // Brands config from API
+  const [brandsConfig, setBrandsConfig] = useState(null);
+
   const [showCreateCamera, setShowCreateCamera] = useState(false);
   const [showUpload, setShowUpload] = useState(false);
-  const [selectedCamera, setSelectedCamera] = useState(null);
-  const [showCameraDetail, setShowCameraDetail] = useState(false);
   const [showLocationPicker, setShowLocationPicker] = useState(false);
   const [locationPickerCam, setLocationPickerCam] = useState(null);
-  const [pickerLat, setPickerLat] = useState('');
-  const [pickerLon, setPickerLon] = useState('');
   const [showCreateMapPicker, setShowCreateMapPicker] = useState(false);
 
-  // Upload state
   const [uploadFiles, setUploadFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadCameraId, setUploadCameraId] = useState('');
 
-  // Create camera form
   const [newCamera, setNewCamera] = useState({
     name: '', manufacturer: 'spypoint', model: '', serial: '',
-    waypoint_id: '', gps_lat: '', gps_lon: '', integration_type: 'manual'
+    camera_type: '', waypoint_id: '', gps_lat: '', gps_lon: '', integration_type: 'manual'
   });
 
-  // Load data
+  // Load brands config
+  const loadBrandsConfig = useCallback(async () => {
+    try {
+      const res = await axios.get(`${API}/v1/camera/brands-config`);
+      setBrandsConfig(res.data);
+    } catch (err) {
+      console.error('Error loading brands config:', err);
+    }
+  }, []);
+
   const loadCameras = useCallback(async () => {
     if (!token) return;
     try {
@@ -118,18 +108,12 @@ const CameraModule = () => {
   const loadWaypoints = useCallback(async () => {
     if (!token || !user) return;
     const email = user.email || '';
-    const uid = user.user_id || '';
     try {
-      // Priority 1: user-data waypoints by email (most reliable)
       if (email) {
         const res = await axios.get(`${API}/user-data/waypoints/${encodeURIComponent(email)}`, getAuthHeaders(token));
         const wps = Array.isArray(res.data) ? res.data : (res.data.waypoints || []);
-        if (wps.length > 0) {
-          setUserWaypoints(wps);
-          return;
-        }
+        if (wps.length > 0) { setUserWaypoints(wps); return; }
       }
-      // Priority 2: territory waypoints by email
       if (email) {
         const res2 = await axios.get(`${API}/territory/waypoints?user_id=${encodeURIComponent(email)}`, getAuthHeaders(token));
         const wps2 = Array.isArray(res2.data) ? res2.data : (res2.data.waypoints || []);
@@ -138,7 +122,6 @@ const CameraModule = () => {
           return;
         }
       }
-      // Priority 3: cameras with GPS as pseudo-waypoints
       const camRes = await axios.get(`${API}/v1/camera/cameras`, getAuthHeaders(token));
       const camsWithGps = (camRes.data.cameras || []).filter(c => c.gps_lat && c.gps_lon);
       if (camsWithGps.length > 0) {
@@ -152,6 +135,10 @@ const CameraModule = () => {
   }, [token, user]);
 
   useEffect(() => {
+    loadBrandsConfig();
+  }, [loadBrandsConfig]);
+
+  useEffect(() => {
     if (token) {
       setLoading(true);
       Promise.all([loadCameras(), loadEvents(), loadStats(), loadWaypoints()])
@@ -159,12 +146,25 @@ const CameraModule = () => {
     }
   }, [token, loadCameras, loadEvents, loadStats]);
 
-  // Create camera
+  // Dynamic models based on selected brand
+  const availableModels = useMemo(() => {
+    if (!brandsConfig?.brands) return [];
+    const brandConfig = brandsConfig.brands[newCamera.manufacturer];
+    return brandConfig?.models || ['Autres modeles'];
+  }, [brandsConfig, newCamera.manufacturer]);
+
+  // Sorted brands for select
+  const brandOptions = useMemo(() => {
+    if (!brandsConfig?.brands) return [];
+    return Object.entries(brandsConfig.brands).map(([value, config]) => ({
+      value, label: config.label
+    }));
+  }, [brandsConfig]);
+
   const handleCreateCamera = async () => {
-    if (!newCamera.name) {
-      toast.error('Le nom est obligatoire');
-      return;
-    }
+    if (!newCamera.name) { toast.error('Le nom est obligatoire'); return; }
+    if (!newCamera.camera_type) { toast.error('Le type de camera est obligatoire'); return; }
+    if (!newCamera.model) { toast.error('Le modele est obligatoire'); return; }
     try {
       const payload = {
         ...newCamera,
@@ -174,7 +174,7 @@ const CameraModule = () => {
       await axios.post(`${API}/v1/camera/cameras`, payload, getAuthHeaders(token));
       toast.success('Camera creee avec succes!');
       setShowCreateCamera(false);
-      setNewCamera({ name: '', manufacturer: 'spypoint', model: '', serial: '', waypoint_id: '', gps_lat: '', gps_lon: '', integration_type: 'manual' });
+      setNewCamera({ name: '', manufacturer: 'spypoint', model: '', serial: '', camera_type: '', waypoint_id: '', gps_lat: '', gps_lon: '', integration_type: 'manual' });
       loadCameras();
       loadStats();
     } catch (err) {
@@ -182,7 +182,6 @@ const CameraModule = () => {
     }
   };
 
-  // Delete camera
   const handleDeleteCamera = async (cameraId) => {
     if (!confirm('Desactiver cette camera?')) return;
     try {
@@ -195,57 +194,47 @@ const CameraModule = () => {
     }
   };
 
-  // LOC-D: Location picker
   const openLocationPicker = (cam) => {
     setLocationPickerCam(cam);
-    setPickerLat(cam.gps_lat ? String(cam.gps_lat) : '');
-    setPickerLon(cam.gps_lon ? String(cam.gps_lon) : '');
     setShowLocationPicker(true);
   };
 
-  const handleSaveLocation = async () => {
-    // Legacy handler — now handled by CameraMapPicker onConfirm
-  };
-
-  // Upload photos
   const handleUploadPhotos = async () => {
-    if (!uploadCameraId || uploadFiles.length === 0) {
-      toast.error('Selectionnez une camera et des photos');
-      return;
-    }
+    if (!uploadCameraId || uploadFiles.length === 0) { toast.error('Selectionnez une camera et des photos'); return; }
     setUploading(true);
     setUploadProgress(0);
     try {
       const formData = new FormData();
       formData.append('camera_id', uploadCameraId);
       uploadFiles.forEach(f => formData.append('files', f));
-
       const res = await axios.post(`${API}/v1/camera/photos/upload`, formData, {
         ...getAuthHeaders(token),
         headers: { ...getAuthHeaders(token).headers, 'Content-Type': 'multipart/form-data' },
-        onUploadProgress: (e) => {
-          setUploadProgress(Math.round((e.loaded / e.total) * 100));
-        }
+        onUploadProgress: (e) => { setUploadProgress(Math.round((e.loaded / e.total) * 100)); }
       });
-
       toast.success(`${res.data.events_created} photo(s) importee(s)!`);
       setShowUpload(false);
       setUploadFiles([]);
       setUploadCameraId('');
-      loadEvents();
-      loadCameras();
-      loadStats();
+      loadEvents(); loadCameras(); loadStats();
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Erreur lors de l\'upload');
+      toast.error(err.response?.data?.detail || "Erreur lors de l'upload");
     } finally {
       setUploading(false);
     }
   };
 
-  // Copy email alias
   const copyEmailAlias = (alias) => {
     navigator.clipboard.writeText(alias);
     toast.success('Alias email copie!');
+  };
+
+  // Brand label helper
+  const getBrandLabel = (val) => brandsConfig?.brands?.[val]?.label || val;
+  const getTypeLabel = (val) => {
+    if (val === 'cellulaire') return 'Cellulaire (LTE)';
+    if (val === 'reguliere') return 'Reguliere';
+    return val || '—';
   };
 
   if (!token) {
@@ -289,41 +278,28 @@ const CameraModule = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-6">
-        {/* Stats Row */}
+        {/* Stats */}
         {stats && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6" data-testid="camera-stats">
-            <Card className="bg-zinc-900/50 border-zinc-800">
-              <CardContent className="p-4 text-center">
-                <Camera className="h-5 w-5 text-amber-500 mx-auto mb-1" />
-                <p className="text-2xl font-bold">{stats.total_cameras}</p>
-                <p className="text-xs text-zinc-500">Cameras</p>
-              </CardContent>
-            </Card>
-            <Card className="bg-zinc-900/50 border-zinc-800">
-              <CardContent className="p-4 text-center">
-                <Activity className="h-5 w-5 text-green-500 mx-auto mb-1" />
-                <p className="text-2xl font-bold">{stats.active_cameras}</p>
-                <p className="text-xs text-zinc-500">Actives</p>
-              </CardContent>
-            </Card>
-            <Card className="bg-zinc-900/50 border-zinc-800">
-              <CardContent className="p-4 text-center">
-                <Image className="h-5 w-5 text-blue-500 mx-auto mb-1" />
-                <p className="text-2xl font-bold">{stats.total_photos}</p>
-                <p className="text-xs text-zinc-500">Photos</p>
-              </CardContent>
-            </Card>
-            <Card className="bg-zinc-900/50 border-zinc-800">
-              <CardContent className="p-4 text-center">
-                <Eye className="h-5 w-5 text-purple-500 mx-auto mb-1" />
-                <p className="text-2xl font-bold">{stats.total_events}</p>
-                <p className="text-xs text-zinc-500">Evenements</p>
-              </CardContent>
-            </Card>
+            <Card className="bg-zinc-900/50 border-zinc-800"><CardContent className="p-4 text-center">
+              <Camera className="h-5 w-5 text-amber-500 mx-auto mb-1" />
+              <p className="text-2xl font-bold">{stats.total_cameras}</p><p className="text-xs text-zinc-500">Cameras</p>
+            </CardContent></Card>
+            <Card className="bg-zinc-900/50 border-zinc-800"><CardContent className="p-4 text-center">
+              <Activity className="h-5 w-5 text-green-500 mx-auto mb-1" />
+              <p className="text-2xl font-bold">{stats.active_cameras}</p><p className="text-xs text-zinc-500">Actives</p>
+            </CardContent></Card>
+            <Card className="bg-zinc-900/50 border-zinc-800"><CardContent className="p-4 text-center">
+              <Image className="h-5 w-5 text-blue-500 mx-auto mb-1" />
+              <p className="text-2xl font-bold">{stats.total_photos}</p><p className="text-xs text-zinc-500">Photos</p>
+            </CardContent></Card>
+            <Card className="bg-zinc-900/50 border-zinc-800"><CardContent className="p-4 text-center">
+              <Eye className="h-5 w-5 text-purple-500 mx-auto mb-1" />
+              <p className="text-2xl font-bold">{stats.total_events}</p><p className="text-xs text-zinc-500">Evenements</p>
+            </CardContent></Card>
           </div>
         )}
 
-        {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="bg-zinc-900 border border-zinc-800 mb-4">
             <TabsTrigger value="cameras" data-testid="tab-cameras">Cameras</TabsTrigger>
@@ -356,25 +332,26 @@ const CameraModule = () => {
                           <Camera className="h-5 w-5 text-amber-500" />
                           <div>
                             <p className="font-medium text-sm">{cam.name || 'Camera'}</p>
-                            <p className="text-xs text-zinc-500">{cam.manufacturer}</p>
+                            <p className="text-xs text-zinc-500">{getBrandLabel(cam.manufacturer)} {cam.model && cam.model !== 'Autres modeles' ? `— ${cam.model}` : ''}</p>
                           </div>
                         </div>
-                        <Badge className={`text-xs ${STATUS_COLORS[cam.status] || STATUS_COLORS.inactive}`}>
-                          {cam.status}
-                        </Badge>
+                        <div className="flex items-center gap-1.5">
+                          {cam.camera_type === 'cellulaire' ? (
+                            <Badge className="text-xs bg-blue-500/20 text-blue-400 border-blue-500/30"><Wifi className="h-3 w-3 mr-0.5" />LTE</Badge>
+                          ) : cam.camera_type === 'reguliere' ? (
+                            <Badge className="text-xs bg-zinc-600/30 text-zinc-400 border-zinc-500/30"><WifiOff className="h-3 w-3 mr-0.5" />Reg</Badge>
+                          ) : null}
+                          <Badge className={`text-xs ${STATUS_COLORS[cam.status] || STATUS_COLORS.inactive}`}>{cam.status}</Badge>
+                        </div>
                       </div>
                       <div className="space-y-1.5 text-xs text-zinc-400">
                         {cam.model && <p>Modele: {cam.model}</p>}
-                        <p className="flex items-center gap-1">
-                          <Image className="h-3 w-3" /> {cam.photo_count} photos
-                        </p>
+                        <p className="flex items-center gap-1"><Image className="h-3 w-3" /> {cam.photo_count} photos</p>
                         {cam.waypoint_id && (
                           <p className="flex items-center gap-1 text-blue-400/70">
                             <Target className="h-3 w-3" /> WP: {cam.waypoint_id.slice(0, 12)}
                             {cameras.filter(c => c.waypoint_id === cam.waypoint_id).length > 1 && (
-                              <span className="text-amber-400/70 ml-1">
-                                (+{cameras.filter(c => c.waypoint_id === cam.waypoint_id).length - 1})
-                              </span>
+                              <span className="text-amber-400/70 ml-1">(+{cameras.filter(c => c.waypoint_id === cam.waypoint_id).length - 1})</span>
                             )}
                           </p>
                         )}
@@ -386,15 +363,10 @@ const CameraModule = () => {
                             </Button>
                           </div>
                         )}
-                        {cam.gps_lat && cam.gps_lon && (
-                          <p className="flex items-center gap-1 text-green-400/70">
-                            <MapPin className="h-3 w-3" /> {cam.gps_lat.toFixed(5)}, {cam.gps_lon.toFixed(5)}
-                          </p>
-                        )}
-                        {!cam.gps_lat && !cam.gps_lon && (
-                          <p className="flex items-center gap-1 text-zinc-600">
-                            <MapPin className="h-3 w-3" /> Non localisee
-                          </p>
+                        {cam.gps_lat && cam.gps_lon ? (
+                          <p className="flex items-center gap-1 text-green-400/70"><MapPin className="h-3 w-3" /> {cam.gps_lat.toFixed(5)}, {cam.gps_lon.toFixed(5)}</p>
+                        ) : (
+                          <p className="flex items-center gap-1 text-zinc-600"><MapPin className="h-3 w-3" /> Non localisee</p>
                         )}
                       </div>
                       <div className="flex gap-1.5 mt-3">
@@ -484,9 +456,9 @@ const CameraModule = () => {
         </Tabs>
       </div>
 
-      {/* CREATE CAMERA MODAL */}
+      {/* CREATE CAMERA MODAL — CAMERA-BRANDS-Omega: ZERO texte libre */}
       <Dialog open={showCreateCamera} onOpenChange={setShowCreateCamera}>
-        <DialogContent className="bg-zinc-900 border-zinc-800 max-w-md" data-testid="create-camera-modal">
+        <DialogContent className="bg-zinc-900 border-zinc-800 max-w-md max-h-[90vh] overflow-y-auto" data-testid="create-camera-modal">
           <DialogHeader>
             <DialogTitle className="text-white">Nouvelle Camera</DialogTitle>
             <DialogDescription>Enregistrez une camera de chasse</DialogDescription>
@@ -497,21 +469,36 @@ const CameraModule = () => {
               <Input className="bg-zinc-800 border-zinc-700" value={newCamera.name} onChange={e => setNewCamera(p => ({ ...p, name: e.target.value }))} placeholder="Camera Nord-Est" data-testid="camera-name-input" />
             </div>
             <div>
-              <Label className="text-zinc-300 text-sm">Fabricant</Label>
-              <Select value={newCamera.manufacturer} onValueChange={v => setNewCamera(p => ({ ...p, manufacturer: v }))}>
+              <Label className="text-zinc-300 text-sm">Marque *</Label>
+              <Select value={newCamera.manufacturer} onValueChange={v => setNewCamera(p => ({ ...p, manufacturer: v, model: '' }))}>
                 <SelectTrigger className="bg-zinc-800 border-zinc-700" data-testid="camera-manufacturer-select"><SelectValue /></SelectTrigger>
-                <SelectContent>{MANUFACTURERS.map(m => <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>)}</SelectContent>
+                <SelectContent className="max-h-60">
+                  {brandOptions.map(b => <SelectItem key={b.value} value={b.value}>{b.label}</SelectItem>)}
+                </SelectContent>
               </Select>
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <Label className="text-zinc-300 text-sm">Modele</Label>
-                <Input className="bg-zinc-800 border-zinc-700" value={newCamera.model} onChange={e => setNewCamera(p => ({ ...p, model: e.target.value }))} placeholder="FLEX-DARK" />
-              </div>
-              <div>
-                <Label className="text-zinc-300 text-sm">No serie</Label>
-                <Input className="bg-zinc-800 border-zinc-700" value={newCamera.serial} onChange={e => setNewCamera(p => ({ ...p, serial: e.target.value }))} placeholder="SP-12345" />
-              </div>
+            <div>
+              <Label className="text-zinc-300 text-sm">Modele *</Label>
+              <Select value={newCamera.model} onValueChange={v => setNewCamera(p => ({ ...p, model: v }))}>
+                <SelectTrigger className="bg-zinc-800 border-zinc-700" data-testid="camera-model-select"><SelectValue placeholder="Selectionnez un modele" /></SelectTrigger>
+                <SelectContent className="max-h-60">
+                  {availableModels.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-zinc-300 text-sm">Type de camera *</Label>
+              <Select value={newCamera.camera_type} onValueChange={v => setNewCamera(p => ({ ...p, camera_type: v }))}>
+                <SelectTrigger className="bg-zinc-800 border-zinc-700" data-testid="camera-type-select"><SelectValue placeholder="Selectionnez le type" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="cellulaire">Camera cellulaire (LTE)</SelectItem>
+                  <SelectItem value="reguliere">Camera reguliere (non cellulaire)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-zinc-300 text-sm">No serie</Label>
+              <Input className="bg-zinc-800 border-zinc-700" value={newCamera.serial} onChange={e => setNewCamera(p => ({ ...p, serial: e.target.value }))} placeholder="SP-12345" data-testid="camera-serial-input" />
             </div>
             <div>
               <Label className="text-zinc-300 text-sm">Waypoint ID (optionnel)</Label>
@@ -521,11 +508,11 @@ const CameraModule = () => {
             <div className="grid grid-cols-2 gap-2">
               <div>
                 <Label className="text-zinc-300 text-sm">Latitude</Label>
-                <Input className="bg-zinc-800 border-zinc-700 font-mono" value={newCamera.gps_lat} onChange={e => setNewCamera(p => ({ ...p, gps_lat: e.target.value }))} placeholder="Auto" readOnly={!!newCamera.gps_lat && showCreateMapPicker === false} />
+                <Input className="bg-zinc-800 border-zinc-700 font-mono" value={newCamera.gps_lat} readOnly placeholder="Auto" />
               </div>
               <div>
                 <Label className="text-zinc-300 text-sm">Longitude</Label>
-                <Input className="bg-zinc-800 border-zinc-700 font-mono" value={newCamera.gps_lon} onChange={e => setNewCamera(p => ({ ...p, gps_lon: e.target.value }))} placeholder="Auto" readOnly={!!newCamera.gps_lon && showCreateMapPicker === false} />
+                <Input className="bg-zinc-800 border-zinc-700 font-mono" value={newCamera.gps_lon} readOnly placeholder="Auto" />
               </div>
             </div>
             <Button type="button" variant="outline" className="w-full border-amber-500/30 text-amber-400 hover:bg-amber-500/10" onClick={() => setShowCreateMapPicker(true)} data-testid="open-create-map-picker">
@@ -581,10 +568,7 @@ const CameraModule = () => {
               )}
             </div>
             {uploading && (
-              <div>
-                <Progress value={uploadProgress} className="h-2" />
-                <p className="text-xs text-zinc-500 mt-1 text-center">{uploadProgress}%</p>
-              </div>
+              <div><Progress value={uploadProgress} className="h-2" /><p className="text-xs text-zinc-500 mt-1 text-center">{uploadProgress}%</p></div>
             )}
           </div>
           <DialogFooter>
@@ -597,7 +581,7 @@ const CameraModule = () => {
         </DialogContent>
       </Dialog>
 
-      {/* LOCATION PICKER — Carte interactive Leaflet (CAMERA-LOC-MAP) */}
+      {/* LOCATION PICKER (existing camera) */}
       <CameraMapPicker
         isOpen={showLocationPicker}
         onClose={() => setShowLocationPicker(false)}

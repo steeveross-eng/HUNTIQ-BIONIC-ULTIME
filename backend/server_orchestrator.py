@@ -210,6 +210,14 @@ class ServerOrchestrator:
             logger.info("✓ Loaded: Advanced Zones [/api/territory/zones/*]")
         except ImportError as e:
             logger.debug(f"Advanced Zones not available: {e}")
+        
+        # MAP-PERF-Omega: Preload endpoint + cache
+        try:
+            from routes.map_perf import router as map_perf_router
+            self.app.include_router(map_perf_router)
+            logger.info("✓ Loaded: Map Performance [/api/map/*]")
+        except ImportError as e:
+            logger.debug(f"Map Perf not available: {e}")
     
     def register_legacy_router(self):
         """
