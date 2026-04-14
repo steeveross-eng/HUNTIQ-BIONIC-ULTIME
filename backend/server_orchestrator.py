@@ -153,6 +153,14 @@ class ServerOrchestrator:
         except ImportError as e:
             logger.debug(f"Lands Rental not available: {e}")
         
+        # Vision Engine IA
+        try:
+            from modules.vision_engine.v1 import vision_router
+            self.app.include_router(vision_router, prefix="/api")
+            logger.info("✓ Loaded: Vision Engine IA [/api/v1/vision/*]")
+        except ImportError as e:
+            logger.debug(f"Vision Engine not available: {e}")
+        
         # Site access control
         try:
             from site_access import access_router

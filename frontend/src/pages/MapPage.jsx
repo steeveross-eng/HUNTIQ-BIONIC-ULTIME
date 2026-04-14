@@ -37,6 +37,7 @@ import useCameraLayer from '@/hooks/useCameraLayer';
 import useAlphaLayer from '@/hooks/useAlphaLayer';
 import CameraMarkersLayer from '@/components/territoire/CameraMarkersLayer';
 import AlphaHotspotsLayer from '@/components/territoire/AlphaHotspotsLayer';
+import TrajectoriesLayer from '@/components/territoire/TrajectoriesLayer';
 
 const MapPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -54,7 +55,7 @@ const MapPage = () => {
     (mapCamList || []).forEach(c => { lookup[c.id] = c; });
     return lookup;
   }, [mapCamList]);
-  const { alphaHotspots } = useAlphaLayer(authToken, mapCamLookup);
+  const { alphaHotspots, trajectories: mapTrajectories } = useAlphaLayer(authToken, mapCamLookup);
   
   // BIONIC V6 States
   const [selectedSpecies, setSelectedSpecies] = useState('tous');
@@ -239,6 +240,7 @@ const MapPage = () => {
               {positionedCameras.length > 0 && <CameraMarkersLayer cameras={positionedCameras} />}
               {/* ALPHA Hotspots on map */}
               {alphaHotspots.length > 0 && <AlphaHotspotsLayer hotspots={alphaHotspots} />}
+              {mapTrajectories.length > 0 && <TrajectoriesLayer trajectories={mapTrajectories} />}
             </WaypointMap>
 
             {/* ============================================ */}

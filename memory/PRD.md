@@ -58,11 +58,12 @@
 
 ### P2 — Actif
 - [x] Module Cameras (CAM-EXEC-Omega: 6 phases executees 2026-04-14, 12 endpoints, frontend /cameras)
-- [x] ALPHA Layer carte (AlphaHotspotsLayer + useAlphaLayer, integre MapContent + MonTerritoire + MapPage, 2026-04-14)
+- [x] IA Vision Engine (VIS-A à VIS-F: backend + API + frontend, GPT-4o via Emergent Key, 2026-04-14)
+- [x] ALPHA Layer carte (AlphaHotspotsLayer + useAlphaLayer IA, TrajectoriesLayer, integre cartes)
 - [x] Header institutionnel: Accueil>Magasin>TdB>Analyse>Carte>Cameras>Intelligence>Permis (ambre, INTEL toujours visible)
 
 ### P3 — Gele
-- [ ] IA Vision Ultime (IA-VISION-PREP: rapport livre 2026-04-14, 6 phases VIS-A a VIS-F, ~4-5 sessions)
+- [ ] IA Vision Ultime — Phases avancees (VIS-B individus/clustering, VIS-E notifications avancees, rapports auto)
 - [ ] M5 Offline Mode Ultra / BSAA-2
 - [ ] Integration DEM LIDAR et SIEF ecoforesterie
 - [ ] Module optimization_engine (Work1)

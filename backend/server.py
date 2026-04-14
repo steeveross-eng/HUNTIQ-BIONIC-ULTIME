@@ -109,6 +109,16 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning(f"Camera engine index creation warning: {e}")
     
+    # VIS-A: Create vision engine indexes
+    try:
+        from modules.vision_engine.v1.router import ensure_vision_indexes
+        from modules.camera_engine.dependencies import get_camera_db as get_vis_db
+        vis_db = get_vis_db()
+        await ensure_vision_indexes(vis_db)
+        logger.info("✓ Vision engine indexes created")
+    except Exception as e:
+        logger.warning(f"Vision engine index creation warning: {e}")
+    
     logger.info("=" * 60)
     logger.info("✓ All modules loaded successfully")
     logger.info("=" * 60)

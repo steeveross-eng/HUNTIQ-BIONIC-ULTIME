@@ -64,9 +64,11 @@ const AdminAlphaAnalysis = () => {
     if (!token) return;
     setLoading(true);
     try {
-      const [eventsRes, camerasRes] = await Promise.all([
-        axios.get(`${API}/v1/camera/events?limit=200`, { headers }),
-        axios.get(`${API}/v1/camera/cameras?limit=100`, { headers })
+      // VIS-E: Load from IA Vision API first, fallback to camera events
+      const [analysesRes, camerasRes, trajRes] = await Promise.all([
+        axios.get(`${API}/v1/vision/analyses?limit=200`, { headers }).catch(() => null),
+        axios.get(`${API}/v1/camera/cameras?limit=100`, { headers }),
+        axios.get(`${API}/v1/vision/trajectories`, { headers }).catch(() => ({ data: { trajectories: [] } }))
       ]);
 
       // Build camera lookup
@@ -74,31 +76,44 @@ const AdminAlphaAnalysis = () => {
       (camerasRes.data.cameras || []).forEach(c => { camLookup[c.id] = c; });
       setCameras(camLookup);
 
-      // Enrich events with ALPHA scoring
-      const enriched = (eventsRes.data.events || []).map(evt => {
-        const cam = camLookup[evt.camera_id] || {};
-        // Simulate ALPHA analysis pipeline
-        const species = evt.species || simulateSpeciesDetection(evt);
-        const sex = evt.sex || simulateSexDetection(species);
-        const sizeScore = evt.size_score || simulateSizeScore(evt);
-        const alphaScore = evt.alpha_score || computeAlphaScore(species, sex, sizeScore, evt);
-        const gpsLat = evt.exif_data?.gps_lat || cam.gps_lat;
-        const gpsLon = evt.exif_data?.gps_lon || cam.gps_lon;
-
-        return {
-          ...evt,
-          species,
-          sex,
-          size_score: sizeScore,
-          alpha_score: alphaScore,
-          alpha_category: getAlphaCategory(alphaScore),
-          gps_lat: gpsLat,
-          gps_lon: gpsLon,
-          camera_name: cam.name || 'Inconnue',
-          camera_manufacturer: cam.manufacturer || '',
-          region: deriveRegion(gpsLat, gpsLon)
-        };
-      });
+      let enriched;
+      if (analysesRes && analysesRes.data.analyses && analysesRes.data.analyses.length > 0) {
+        // Use IA Vision analyses
+        enriched = analysesRes.data.analyses.map(a => {
+          const cam = camLookup[a.camera_id] || {};
+          return {
+            ...a,
+            alpha_category: getAlphaCategory(a.alpha_score || 50),
+            gps_lat: a.gps_lat || cam.gps_lat,
+            gps_lon: a.gps_lon || cam.gps_lon,
+            camera_name: cam.name || 'Inconnue',
+            camera_manufacturer: cam.manufacturer || '',
+            region: deriveRegion(a.gps_lat || cam.gps_lat, a.gps_lon || cam.gps_lon),
+            size_score: a.alpha_score || 50,
+            is_ia: true
+          };
+        });
+      } else {
+        // Fallback: Load camera events with simulated scoring
+        const eventsRes = await axios.get(`${API}/v1/camera/events?limit=200`, { headers });
+        enriched = (eventsRes.data.events || []).map(evt => {
+          const cam = camLookup[evt.camera_id] || {};
+          const species = evt.species || simulateSpeciesDetection(evt);
+          const sex = evt.sex || simulateSexDetection(species);
+          const sizeScore = evt.size_score || simulateSizeScore(evt);
+          const alphaScore = evt.alpha_score || computeAlphaScore(species, sex, sizeScore, evt);
+          return {
+            ...evt, species, sex, size_score: sizeScore, alpha_score: alphaScore,
+            alpha_category: getAlphaCategory(alphaScore),
+            gps_lat: evt.exif_data?.gps_lat || cam.gps_lat,
+            gps_lon: evt.exif_data?.gps_lon || cam.gps_lon,
+            camera_name: cam.name || 'Inconnue',
+            camera_manufacturer: cam.manufacturer || '',
+            region: deriveRegion(evt.exif_data?.gps_lat || cam.gps_lat, evt.exif_data?.gps_lon || cam.gps_lon),
+            is_ia: false
+          };
+        });
+      }
 
       setEvents(enriched);
     } catch (err) {
@@ -110,14 +125,34 @@ const AdminAlphaAnalysis = () => {
 
   useEffect(() => { loadData(); }, [loadData]);
 
-  // Run batch analysis
+  // Run batch analysis via IA Vision API
   const runBatchAnalysis = async () => {
     setAnalyzing(true);
-    // Simulate analysis pipeline
-    await new Promise(r => setTimeout(r, 1500));
-    loadData();
-    toast.success('Analyse ALPHA terminee!');
-    setAnalyzing(false);
+    try {
+      // Get photo IDs to analyze
+      const photosRes = await axios.get(`${API}/v1/camera/events?limit=50`, { headers });
+      const photoEvents = photosRes.data.events || [];
+      
+      if (photoEvents.length === 0) {
+        toast.error('Aucune photo a analyser');
+        setAnalyzing(false);
+        return;
+      }
+
+      // Trigger hotspot and trajectory generation
+      await Promise.all([
+        axios.post(`${API}/v1/vision/hotspots/generate`, {}, { headers }).catch(() => null),
+        axios.post(`${API}/v1/vision/trajectories/generate?days=30`, {}, { headers }).catch(() => null)
+      ]);
+
+      await loadData();
+      toast.success('Analyse ALPHA IA terminee!');
+    } catch (err) {
+      toast.error('Erreur lors de l\'analyse');
+      console.error(err);
+    } finally {
+      setAnalyzing(false);
+    }
   };
 
   // Filter and sort

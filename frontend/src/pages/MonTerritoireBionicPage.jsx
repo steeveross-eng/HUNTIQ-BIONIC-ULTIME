@@ -287,7 +287,7 @@ const MonTerritoireBionicPage = () => {
     (camerasList || []).forEach(c => { lookup[c.id] = c; });
     return lookup;
   }, [camerasList]);
-  const { alphaHotspots } = useAlphaLayer(authToken, camerasLookup);
+  const { alphaHotspots, trajectories: alphaTrajectories } = useAlphaLayer(authToken, camerasLookup);
   
   // IM1.2 — Hook actions waypoints/lieux (extrait)
   const {
@@ -1305,6 +1305,8 @@ const MonTerritoireBionicPage = () => {
               showCameraMarkers={true}
               alphaHotspots={alphaHotspots}
               showAlphaLayer={true}
+              trajectories={alphaTrajectories}
+              showTrajectoriesLayer={true}
             />
           </MapContainer>
 

@@ -1,7 +1,8 @@
 /**
- * useAlphaLayer — Hook pour les données ALPHA hotspots sur la carte
- * Charge les événements camera, applique le scoring ALPHA simulé,
- * et retourne les hotspots géolocalisés pour le layer carte.
+ * useAlphaLayer — Hook pour les données ALPHA hotspots IA sur la carte
+ * VIS-D: Charge les hotspots IA depuis /api/v1/vision/hotspots/alpha
+ * et les trajectoires depuis /api/v1/vision/trajectories
+ * Fallback: simulation locale si API indisponible
  */
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
@@ -17,78 +18,95 @@ function hashCode(str) {
   return h;
 }
 
-function simulateSpecies(id) {
-  const species = ['orignal', 'cerf', 'ours_noir', 'caribou', 'dindon', 'chevreuil'];
-  return species[Math.abs(hashCode(id || '')) % species.length];
-}
-
-function computeAlphaScore(id) {
-  const base = 50 + (Math.abs(hashCode(id || '')) % 48);
-  return Math.min(99, Math.max(1, base + 15));
-}
-
-function getAlphaCategory(score) {
-  if (score >= 85) return 'alpha';
-  if (score >= 65) return 'dominant';
-  if (score >= 40) return 'standard';
-  return 'juvenile';
-}
-
 const useAlphaLayer = (token, camerasLookup = {}) => {
-  const [events, setEvents] = useState([]);
+  const [alphaHotspots, setAlphaHotspots] = useState([]);
+  const [trajectories, setTrajectories] = useState([]);
+  const [visionAnalyses, setVisionAnalyses] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const loadEvents = useCallback(async () => {
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+  const loadData = useCallback(async () => {
     if (!token) return;
     setLoading(true);
     try {
-      const res = await axios.get(`${API}/v1/camera/events?limit=200`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setEvents(res.data.events || []);
+      const [hotspotsRes, trajRes, analysesRes] = await Promise.all([
+        axios.get(`${API}/v1/vision/hotspots/alpha`, { headers }).catch(() => ({ data: { hotspots: [] } })),
+        axios.get(`${API}/v1/vision/trajectories`, { headers }).catch(() => ({ data: { trajectories: [] } })),
+        axios.get(`${API}/v1/vision/analyses?limit=100`, { headers }).catch(() => ({ data: { analyses: [] } }))
+      ]);
+
+      let hotspots = hotspotsRes.data.hotspots || [];
+      const trajs = trajRes.data.trajectories || [];
+      const analyses = analysesRes.data.analyses || [];
+
+      setVisionAnalyses(analyses);
+      setTrajectories(trajs);
+
+      // If no IA hotspots, generate from camera events (fallback simulation)
+      if (hotspots.length === 0 && Object.keys(camerasLookup).length > 0) {
+        hotspots = generateFallbackHotspots(camerasLookup);
+      }
+
+      // Enrich hotspots for map display
+      const enriched = hotspots.map(hs => {
+        const lat = hs.gps_lat || hs.location?.coordinates?.[1];
+        const lon = hs.gps_lon || hs.location?.coordinates?.[0];
+        if (!lat || !lon) return null;
+
+        const score = hs.score || 50;
+        const category = score >= 85 ? 'alpha' : score >= 65 ? 'dominant' : 'standard';
+
+        return {
+          id: hs.id,
+          lat, lon,
+          species: hs.dominant_species || (hs.species && hs.species[0]) || 'inconnu',
+          sex: 'male',
+          score,
+          category,
+          haloRadius: hs.radius_m || 800,
+          cameraName: '',
+          timestamp: hs.last_activity,
+          totalSightings: hs.total_sightings || 0,
+          alphaCount: hs.alpha_count || 0,
+          activityLevel: hs.activity_level || 'moderate',
+          peakHours: hs.peak_hours || [],
+          speciesList: hs.species || []
+        };
+      }).filter(Boolean);
+
+      setAlphaHotspots(enriched);
     } catch (err) {
-      console.error('Alpha layer: load error', err);
+      console.error('Alpha layer error:', err);
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, [token, camerasLookup]);
 
-  useEffect(() => { loadEvents(); }, [loadEvents]);
+  useEffect(() => { loadData(); }, [loadData]);
 
-  const alphaHotspots = useMemo(() => {
-    return events.map(evt => {
-      const cam = camerasLookup[evt.camera_id] || {};
-      const lat = evt.exif_data?.gps_lat || cam.gps_lat;
-      const lon = evt.exif_data?.gps_lon || cam.gps_lon;
-      if (!lat || !lon) return null;
-
-      const species = evt.species || simulateSpecies(evt.id);
-      const score = evt.alpha_score || computeAlphaScore(evt.id);
-      const category = getAlphaCategory(score);
-      // Only show dominant and alpha on map
-      if (category !== 'alpha' && category !== 'dominant') return null;
-
-      const sex = Math.random() > 0.4 ? 'male' : 'femelle';
-      // Halo radius: 600m for small species, ~800m (sqrt(2km²/pi)) for large
-      const haloRadius = ['orignal', 'caribou', 'ours_noir'].includes(species) ? 800 : 600;
-
-      return {
-        id: evt.id,
-        lat,
-        lon,
-        species,
-        sex,
-        score,
-        category,
-        haloRadius,
-        cameraName: cam.name || 'Inconnue',
-        timestamp: evt.timestamp,
-        cameraId: evt.camera_id
-      };
-    }).filter(Boolean);
-  }, [events, camerasLookup]);
-
-  return { alphaHotspots, loading, reload: loadEvents };
+  return { alphaHotspots, trajectories, visionAnalyses, loading, reload: loadData };
 };
+
+function generateFallbackHotspots(camerasLookup) {
+  const cams = Object.values(camerasLookup);
+  return cams.filter(c => c.gps_lat && c.gps_lon).map(c => {
+    const h = Math.abs(hashCode(c.id || ''));
+    const species = ['orignal', 'cerf', 'ours_noir', 'caribou'][h % 4];
+    return {
+      id: `fb_${c.id?.slice(0, 8)}`,
+      gps_lat: c.gps_lat,
+      gps_lon: c.gps_lon,
+      score: 50 + (h % 45),
+      dominant_species: species,
+      species: [species],
+      total_sightings: 1 + (h % 5),
+      alpha_count: h % 3,
+      activity_level: ['moderate', 'high', 'extreme'][h % 3],
+      radius_m: ['orignal', 'caribou'].includes(species) ? 800 : 600,
+      peak_hours: ['05:00-07:00', '17:00-19:00']
+    };
+  });
+}
 
 export default useAlphaLayer;
