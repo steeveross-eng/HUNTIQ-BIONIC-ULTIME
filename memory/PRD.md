@@ -57,6 +57,7 @@
 - [x] Phase P2 terminee: 11 endpoints AUTH-USAGER deprecies (D1:3 + D2:2 + D3:6)
 
 ### P2 — Gele
+- [ ] Module Cameras (CAM-PREP-Omega: rapport livre 2026-04-14, 6 sous-phases planifiees)
 - [ ] M5 Offline Mode Ultra / BSAA-2
 - [ ] Integration DEM LIDAR et SIEF ecoforesterie
 - [ ] Module optimization_engine (Work1)
