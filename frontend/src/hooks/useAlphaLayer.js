@@ -89,24 +89,10 @@ const useAlphaLayer = (token, camerasLookup = {}) => {
 };
 
 function generateFallbackHotspots(camerasLookup) {
-  const cams = Object.values(camerasLookup);
-  return cams.filter(c => c.gps_lat && c.gps_lon).map(c => {
-    const h = Math.abs(hashCode(c.id || ''));
-    const species = ['orignal', 'cerf', 'ours_noir', 'caribou'][h % 4];
-    return {
-      id: `fb_${c.id?.slice(0, 8)}`,
-      gps_lat: c.gps_lat,
-      gps_lon: c.gps_lon,
-      score: 50 + (h % 45),
-      dominant_species: species,
-      species: [species],
-      total_sightings: 1 + (h % 5),
-      alpha_count: h % 3,
-      activity_level: ['moderate', 'high', 'extreme'][h % 3],
-      radius_m: ['orignal', 'caribou'].includes(species) ? 800 : 600,
-      peak_hours: ['05:00-07:00', '17:00-19:00']
-    };
-  });
+  // TERRITOIRE-CAM-ICON-Omega: Fallback hotspots DESACTIVE
+  // Les hotspots simules aux positions cameras creaient des halos
+  // circulaires autour des icones cameras. ZERO hotspot fallback.
+  return [];
 }
 
 export default useAlphaLayer;
