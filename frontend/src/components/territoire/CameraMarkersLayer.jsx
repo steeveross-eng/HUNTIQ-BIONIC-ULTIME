@@ -16,12 +16,11 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const cameraIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>`;
 
-const createCameraIcon = (inZone600m) => {
-  const color = inZone600m ? '#F59E0B' : '#6B7280';
-  const glow = inZone600m ? 'box-shadow:0 0 12px 4px rgba(245,158,11,0.5);' : '';
+const createCameraIcon = () => {
+  const color = '#F59E0B';
   return L.divIcon({
     className: 'camera-map-marker',
-    html: `<div style="background:${color};border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border:2px solid #fff;${glow}">${cameraIconSvg}</div>`,
+    html: `<div style="background:${color};border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border:2px solid #fff;">${cameraIconSvg}</div>`,
     iconSize: [30, 30],
     iconAnchor: [15, 15],
     popupAnchor: [0, -18]
@@ -308,10 +307,9 @@ const CameraMarkersLayer = ({ cameras = [] }) => {
 
         return (
           <React.Fragment key={cam.id}>
-            {/* SECTION 5 MAP-FIX-Omega-V3: Buffer 600m SUPPRIME des cartes publiques */}
             <Marker
               position={[lat, lon]}
-              icon={createCameraIcon(cam.inZone600m)}
+              icon={createCameraIcon()}
               data-testid={`camera-marker-${cam.id}`}
             >
               <Popup maxWidth={380} minWidth={300} autoPan={true} className="camera-rich-popup">
