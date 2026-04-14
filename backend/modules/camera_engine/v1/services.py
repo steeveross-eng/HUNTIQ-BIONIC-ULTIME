@@ -83,15 +83,16 @@ class CameraRegistryService:
     
     async def create_camera(self, user_id: str, data: CameraCreate) -> Tuple[Optional[Camera], Optional[str]]:
         """
-        Create a new camera with MANDATORY waypoint association.
+        Create a new camera. Waypoint association is optional (multi-cameras per waypoint).
         
         Returns: (camera, error_message)
         """
-        # RÈGLE ABSOLUE: Vérifier que le waypoint existe
-        waypoint_exists = await self._validate_waypoint_exists(data.waypoint_id, user_id)
-        if not waypoint_exists:
-            logger.warning(f"Camera creation rejected: waypoint {data.waypoint_id} not found for user {user_id}")
-            return None, "REJET: Le waypoint spécifié n'existe pas ou n'appartient pas à l'utilisateur"
+        # Validate waypoint only if provided
+        if data.waypoint_id:
+            waypoint_exists = await self._validate_waypoint_exists(data.waypoint_id, user_id)
+            if not waypoint_exists:
+                logger.warning(f"Camera creation rejected: waypoint {data.waypoint_id} not found for user {user_id}")
+                return None, "REJET: Le waypoint spécifié n'existe pas ou n'appartient pas à l'utilisateur"
         
         camera_id = str(uuid.uuid4())
         email_alias = self._generate_email_alias(user_id, camera_id)

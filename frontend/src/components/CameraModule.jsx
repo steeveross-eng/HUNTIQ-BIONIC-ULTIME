@@ -17,7 +17,7 @@ import { useAuth } from '@/components/GlobalAuth';
 import {
   Camera, Plus, Upload, Image, Grid, List, MapPin, Clock, Eye,
   Trash2, Settings, Loader2, X, CheckCircle, AlertCircle, RefreshCw,
-  Activity, BarChart3, Filter, ChevronRight, Copy, ArrowLeft
+  Activity, BarChart3, Filter, ChevronRight, Copy, ArrowLeft, Target
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
@@ -122,8 +122,8 @@ const CameraModule = () => {
 
   // Create camera
   const handleCreateCamera = async () => {
-    if (!newCamera.name || !newCamera.waypoint_id) {
-      toast.error('Nom et waypoint sont obligatoires');
+    if (!newCamera.name) {
+      toast.error('Le nom est obligatoire');
       return;
     }
     try {
@@ -343,6 +343,16 @@ const CameraModule = () => {
                         <p className="flex items-center gap-1">
                           <Image className="h-3 w-3" /> {cam.photo_count} photos
                         </p>
+                        {cam.waypoint_id && (
+                          <p className="flex items-center gap-1 text-blue-400/70">
+                            <Target className="h-3 w-3" /> WP: {cam.waypoint_id.slice(0, 12)}
+                            {cameras.filter(c => c.waypoint_id === cam.waypoint_id).length > 1 && (
+                              <span className="text-amber-400/70 ml-1">
+                                (+{cameras.filter(c => c.waypoint_id === cam.waypoint_id).length - 1})
+                              </span>
+                            )}
+                          </p>
+                        )}
                         {cam.email_alias && (
                           <div className="flex items-center gap-1">
                             <span className="truncate font-mono text-amber-400/70">{cam.email_alias}</span>
@@ -479,8 +489,9 @@ const CameraModule = () => {
               </div>
             </div>
             <div>
-              <Label className="text-zinc-300 text-sm">Waypoint ID *</Label>
-              <Input className="bg-zinc-800 border-zinc-700" value={newCamera.waypoint_id} onChange={e => setNewCamera(p => ({ ...p, waypoint_id: e.target.value }))} placeholder="ID du waypoint associe" data-testid="camera-waypoint-input" />
+              <Label className="text-zinc-300 text-sm">Waypoint ID (optionnel)</Label>
+              <Input className="bg-zinc-800 border-zinc-700" value={newCamera.waypoint_id} onChange={e => setNewCamera(p => ({ ...p, waypoint_id: e.target.value }))} placeholder="ID du waypoint (optionnel)" data-testid="camera-waypoint-input" />
+              <p className="text-xs text-zinc-600 mt-1">Plusieurs cameras peuvent partager le meme waypoint</p>
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
@@ -558,45 +569,82 @@ const CameraModule = () => {
         </DialogContent>
       </Dialog>
 
-      {/* LOCATION PICKER MODAL (LOC-D) */}
+      {/* LOCATION PICKER MODAL — Carte interactive (CAM-UI-LOC) */}
       <Dialog open={showLocationPicker} onOpenChange={setShowLocationPicker}>
-        <DialogContent className="bg-zinc-900 border-zinc-800 max-w-md" data-testid="location-picker-modal">
+        <DialogContent className="bg-zinc-900 border-zinc-800 max-w-lg" data-testid="location-picker-modal">
           <DialogHeader>
             <DialogTitle className="text-white flex items-center gap-2">
               <MapPin className="h-5 w-5 text-amber-500" />
               Localiser: {locationPickerCam?.name || 'Camera'}
             </DialogTitle>
-            <DialogDescription>Entrez les coordonnees GPS de la camera</DialogDescription>
+            <DialogDescription>Cliquez sur la carte pour definir la position</DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label className="text-zinc-300 text-sm">Latitude</Label>
-                <Input className="bg-zinc-800 border-zinc-700 font-mono" value={pickerLat} onChange={e => setPickerLat(e.target.value)} placeholder="47.1234" data-testid="location-lat-input" />
+            {/* Interactive map placeholder — click to set position */}
+            <div
+              className="relative w-full h-64 bg-zinc-800 rounded-lg overflow-hidden border border-zinc-700 cursor-crosshair"
+              data-testid="location-map-area"
+              onClick={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width;
+                const y = (e.clientY - rect.top) / rect.height;
+                // Map click to Quebec region: lat 45-50, lon -65 to -80
+                const lat = (50 - y * 5).toFixed(5);
+                const lon = (-80 + x * 15).toFixed(5);
+                setPickerLat(lat);
+                setPickerLon(lon);
+              }}
+            >
+              {/* Grid background */}
+              <div className="absolute inset-0" style={{
+                backgroundImage: 'linear-gradient(rgba(245,158,11,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(245,158,11,0.1) 1px, transparent 1px)',
+                backgroundSize: '40px 40px'
+              }} />
+              {/* Region label */}
+              <div className="absolute top-2 left-2 text-xs text-zinc-500 bg-zinc-900/80 px-2 py-1 rounded">
+                Quebec (45-50N, 65-80W)
               </div>
-              <div>
-                <Label className="text-zinc-300 text-sm">Longitude</Label>
-                <Input className="bg-zinc-800 border-zinc-700 font-mono" value={pickerLon} onChange={e => setPickerLon(e.target.value)} placeholder="-71.5678" data-testid="location-lon-input" />
-              </div>
+              {/* Marker if position set */}
+              {pickerLat && pickerLon && (
+                <div
+                  className="absolute w-6 h-6 -translate-x-3 -translate-y-3 pointer-events-none"
+                  style={{
+                    left: `${((parseFloat(pickerLon) + 80) / 15) * 100}%`,
+                    top: `${((50 - parseFloat(pickerLat)) / 5) * 100}%`
+                  }}
+                >
+                  <div className="w-6 h-6 bg-amber-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
+                    <Camera className="h-3 w-3 text-white" />
+                  </div>
+                  <div className="absolute w-10 h-10 -top-2 -left-2 rounded-full border-2 border-amber-500/40 animate-ping" />
+                </div>
+              )}
+              {/* Click instruction */}
+              {!pickerLat && !pickerLon && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <MapPin className="h-8 w-8 text-zinc-600 mx-auto mb-2" />
+                    <p className="text-sm text-zinc-500">Cliquez pour placer la camera</p>
+                  </div>
+                </div>
+              )}
             </div>
             {pickerLat && pickerLon && (
-              <div className="bg-zinc-800/50 rounded-lg p-3 text-center">
-                <p className="text-xs text-zinc-400">Position GeoJSON:</p>
-                <code className="text-xs text-amber-400 font-mono">
-                  [{parseFloat(pickerLon || 0).toFixed(5)}, {parseFloat(pickerLat || 0).toFixed(5)}]
-                </code>
+              <div className="bg-zinc-800/50 rounded-lg p-3 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-zinc-400">Position selectionnee</p>
+                  <code className="text-sm text-amber-400 font-mono">
+                    {parseFloat(pickerLat).toFixed(5)}, {parseFloat(pickerLon).toFixed(5)}
+                  </code>
+                </div>
+                <CheckCircle className="h-5 w-5 text-green-500" />
               </div>
-            )}
-            {locationPickerCam?.gps_lat && locationPickerCam?.gps_lon && (
-              <p className="text-xs text-zinc-500">
-                Position actuelle: {locationPickerCam.gps_lat.toFixed(5)}, {locationPickerCam.gps_lon.toFixed(5)}
-              </p>
             )}
           </div>
           <DialogFooter>
             <Button variant="outline" className="border-zinc-700" onClick={() => setShowLocationPicker(false)}>Annuler</Button>
             <Button className="bg-amber-600 hover:bg-amber-700" onClick={handleSaveLocation} disabled={!pickerLat || !pickerLon} data-testid="location-save-btn">
-              <MapPin className="h-4 w-4 mr-1" /> Enregistrer
+              <MapPin className="h-4 w-4 mr-1" /> Enregistrer la position
             </Button>
           </DialogFooter>
         </DialogContent>

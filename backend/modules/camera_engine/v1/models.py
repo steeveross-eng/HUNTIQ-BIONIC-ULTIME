@@ -66,15 +66,8 @@ class CameraBase(BaseModel):
 
 
 class CameraCreate(CameraBase):
-    """Model for creating a new camera - waypoint_id is MANDATORY"""
-    waypoint_id: str = Field(..., description="ID du waypoint associé - OBLIGATOIRE")
-    
-    @field_validator('waypoint_id')
-    @classmethod
-    def waypoint_must_not_be_empty(cls, v: str) -> str:
-        if not v or not v.strip():
-            raise ValueError("waypoint_id est OBLIGATOIRE - une caméra ne peut pas exister sans waypoint")
-        return v.strip()
+    """Model for creating a new camera - waypoint_id is OPTIONAL (multi-cameras per waypoint)"""
+    waypoint_id: Optional[str] = Field(None, description="ID du waypoint associé - optionnel")
 
 
 class CameraUpdate(BaseModel):
@@ -101,7 +94,7 @@ class Camera(CameraBase):
     user_id: str
     email_alias: str  # Unique email for this camera's photo ingestion
     api_secret: str = ""  # CAM-B: Secret token for webhook/API auth
-    waypoint_id: str  # MANDATORY - enforced at creation
+    waypoint_id: Optional[str] = None  # Optional - multiple cameras per waypoint allowed
     location: Optional[dict] = None  # GeoJSON Point: {"type": "Point", "coordinates": [lon, lat]}
     status: CameraStatus = CameraStatus.ACTIVE
     photo_count: int = 0
@@ -122,7 +115,7 @@ class CameraResponse(BaseModel):
     user_id: str
     email_alias: str
     api_secret: str = ""
-    waypoint_id: str
+    waypoint_id: Optional[str] = None
     manufacturer: CameraManufacturer
     model: Optional[str]
     serial: Optional[str]
@@ -170,7 +163,7 @@ class CameraEvent(CameraEventBase):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     user_id: str
     camera_id: str
-    waypoint_id: str  # Denormalized for faster queries
+    waypoint_id: Optional[str] = None  # Denormalized for faster queries
     timestamp: datetime
     raw_image_url: str  # Encrypted
     thumbnail_url: Optional[str] = None
@@ -191,7 +184,7 @@ class CameraEventResponse(BaseModel):
     id: str
     user_id: str
     camera_id: str
-    waypoint_id: str
+    waypoint_id: Optional[str] = None
     timestamp: datetime
     species: Optional[str]
     direction: EventDirection
