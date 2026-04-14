@@ -60,7 +60,7 @@
 - [x] Module Cameras (CAM-EXEC-Omega: 6 phases executees 2026-04-14, 12 endpoints, frontend /cameras)
 - [x] IA Vision Engine (VIS-A à VIS-F: backend + API + frontend, GPT-4o via Emergent Key, 2026-04-14)
 - [x] ALPHA Layer carte (AlphaHotspotsLayer + useAlphaLayer IA, TrajectoriesLayer, integre cartes)
-- [x] Header institutionnel: Accueil>Magasin>TdB>Analyse>Carte>Cameras>Intelligence>Permis (ambre, INTEL toujours visible)
+- [x] Valeur commerciale ALPHA (H1-H6: scores territoires, indices, anomalies, rapports, AdminTerritoryValue, 2026-04-14)
 
 ### P3 — Gele
 - [ ] IA Vision Ultime — Phases avancees (VIS-B individus/clustering, VIS-E notifications avancees, rapports auto)

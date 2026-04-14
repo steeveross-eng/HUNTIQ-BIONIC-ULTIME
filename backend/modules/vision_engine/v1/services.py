@@ -309,3 +309,178 @@ class VisionAnalysisService:
         for h, _ in sorted_h[:2]:
             peaks.append(f"{h:02d}:00-{(h + 2) % 24:02d}:00")
         return peaks
+
+    # ============================================
+    # H1-H6: COMMERCIAL VALUE SERVICES
+    # ============================================
+
+    async def compute_territory_scores(self, user_id: str) -> list:
+        """H2: Generate territory scores from vision analyses and hotspots."""
+        analyses = await self.get_analyses(user_id, limit=1000)
+        hotspots = await self.get_hotspots(user_id)
+        trajectories = await self.get_trajectories(user_id)
+
+        if not analyses and not hotspots:
+            return []
+
+        # Group analyses by camera location grid (0.02 degree ~ 2km)
+        territories = {}
+        for a in analyses:
+            lat, lon = a.get("gps_lat"), a.get("gps_lon")
+            if not lat or not lon or a.get("species") == "aucun_animal":
+                continue
+            key = f"{round(lat, 2)}_{round(lon, 2)}"
+            if key not in territories:
+                territories[key] = {
+                    "lat": lat, "lon": lon, "analyses": [],
+                    "alpha_count": 0, "species": set(), "total_score": 0
+                }
+            territories[key]["analyses"].append(a)
+            territories[key]["species"].add(a.get("species", ""))
+            territories[key]["total_score"] += a.get("alpha_score", 0)
+            if a.get("alpha_score", 0) >= 85:
+                territories[key]["alpha_count"] += 1
+
+        results = []
+        for key, t in territories.items():
+            n = len(t["analyses"])
+            avg_score = t["total_score"] / n if n > 0 else 0
+            alpha_ratio = t["alpha_count"] / n if n > 0 else 0
+            species_diversity = len(t["species"])
+
+            # H2: Territory ALPHA score
+            territory_score = min(99, round(
+                avg_score * 0.4 +
+                alpha_ratio * 100 * 0.25 +
+                min(n, 20) * 2 * 0.2 +
+                species_diversity * 8 * 0.15
+            ))
+
+            # H3: Quality tier
+            if territory_score >= 85:
+                quality_tier = "ALPHA"
+            elif territory_score >= 70:
+                quality_tier = "Or"
+            elif territory_score >= 50:
+                quality_tier = "Argent"
+            else:
+                quality_tier = "Bronze"
+
+            # H3: Frequency index (based on recent activity)
+            recent = sum(1 for a in t["analyses"] if a.get("activity_level") == "high")
+            freq_index = min(100, round(recent / max(n, 1) * 100))
+
+            # H3: Dominance index
+            dominant_scores = [a["alpha_score"] for a in t["analyses"] if a.get("alpha_score", 0) >= 65]
+            dominance_index = round(sum(dominant_scores) / len(dominant_scores)) if dominant_scores else 0
+
+            # Trajectory count for this territory
+            traj_count = sum(1 for tr in trajectories if any(
+                abs(seg.get("from_lat", 0) - t["lat"]) < 0.02
+                for seg in tr.get("segments", [])
+            ))
+
+            results.append({
+                "id": f"terr_{key}",
+                "user_id": user_id,
+                "gps_lat": t["lat"],
+                "gps_lon": t["lon"],
+                "location": {"type": "Point", "coordinates": [t["lon"], t["lat"]]},
+                "territory_score": territory_score,
+                "quality_tier": quality_tier,
+                "frequency_index": freq_index,
+                "dominance_index": dominance_index,
+                "alpha_count": t["alpha_count"],
+                "total_sightings": n,
+                "species": list(t["species"]),
+                "species_diversity": species_diversity,
+                "trajectory_count": traj_count,
+                "avg_alpha_score": round(avg_score),
+                "peak_hours": self._compute_peak_hours(t["analyses"]),
+                "created_at": datetime.now(timezone.utc).isoformat()
+            })
+
+        results.sort(key=lambda r: r["territory_score"], reverse=True)
+        return results
+
+    async def detect_anomalies(self, user_id: str) -> list:
+        """H6: Detect anomalies in territory activity."""
+        analyses = await self.get_analyses(user_id, limit=500)
+        anomalies = []
+
+        if len(analyses) < 5:
+            return anomalies
+
+        # Group by camera
+        by_cam = {}
+        for a in analyses:
+            cid = a.get("camera_id", "")
+            if cid not in by_cam:
+                by_cam[cid] = []
+            by_cam[cid].append(a)
+
+        for cid, cam_analyses in by_cam.items():
+            if len(cam_analyses) < 3:
+                continue
+            scores = [a.get("alpha_score", 0) for a in cam_analyses]
+
+            # Check for activity drop (last 3 vs rest)
+            if len(scores) >= 6:
+                recent_avg = sum(scores[-3:]) / 3
+                older_avg = sum(scores[:-3]) / len(scores[:-3])
+                if older_avg > 0 and recent_avg < older_avg * 0.5:
+                    anomalies.append({
+                        "type": "activity_drop",
+                        "camera_id": cid,
+                        "severity": "high",
+                        "detail": f"Baisse activite: {round(older_avg)} -> {round(recent_avg)}",
+                        "detected_at": datetime.now(timezone.utc).isoformat()
+                    })
+
+            # Check for ALPHA disappearance
+            alphas = [a for a in cam_analyses if a.get("alpha_score", 0) >= 85]
+            if len(alphas) >= 2:
+                last_alpha = max(a.get("analyzed_at", "") for a in alphas)
+                last_any = max(a.get("analyzed_at", "") for a in cam_analyses)
+                if last_alpha < last_any:
+                    anomalies.append({
+                        "type": "alpha_disappearance",
+                        "camera_id": cid,
+                        "severity": "medium",
+                        "detail": f"ALPHA non revu depuis {last_alpha[:10]}",
+                        "detected_at": datetime.now(timezone.utc).isoformat()
+                    })
+
+        return anomalies
+
+    async def generate_commercial_report(self, user_id: str) -> dict:
+        """H4: Generate commercial report for territories."""
+        scores = await self.compute_territory_scores(user_id)
+        anomalies = await self.detect_anomalies(user_id)
+        analyses = await self.get_analyses(user_id, limit=100)
+        hotspots = await self.get_hotspots(user_id)
+
+        alpha_analyses = [a for a in analyses if a.get("alpha_score", 0) >= 85]
+        species_counts = {}
+        for a in analyses:
+            sp = a.get("species", "inconnu")
+            if sp != "aucun_animal":
+                species_counts[sp] = species_counts.get(sp, 0) + 1
+
+        return {
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "user_id": user_id,
+            "summary": {
+                "total_territories": len(scores),
+                "alpha_territories": sum(1 for s in scores if s["quality_tier"] == "ALPHA"),
+                "gold_territories": sum(1 for s in scores if s["quality_tier"] == "Or"),
+                "total_analyses": len(analyses),
+                "total_alphas": len(alpha_analyses),
+                "total_hotspots": len(hotspots),
+                "species_detected": species_counts,
+                "anomalies_count": len(anomalies)
+            },
+            "territories": scores[:20],
+            "anomalies": anomalies,
+            "top_alphas": sorted(alpha_analyses, key=lambda a: a.get("alpha_score", 0), reverse=True)[:10]
+        }

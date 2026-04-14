@@ -21,7 +21,7 @@ import {
   Wrench, Contact, Trees, Network, Mail, Sparkles,
   Handshake, Palette, Brain, Search, ToggleLeft, Activity,
   FlaskConical, Power, Store, UserCheck, Megaphone, LayoutGrid, Lock,
-  Database, RefreshCw, CheckCircle, AlertTriangle,
+  Database, RefreshCw, CheckCircle, AlertTriangle, TrendingUp,
 } from 'lucide-react';
 
 // Import all admin modules
@@ -65,11 +65,13 @@ import { AdminGlobalSwitch } from '@/ui/administration/admin_global_switch';
 import { AdminMessaging } from '@/ui/administration/admin_messaging';
 // CAM-ALPHA: Module Analyse Photos ALPHA
 import AdminAlphaAnalysis from '@/components/admin/AdminAlphaAnalysis';
+import AdminTerritoryValue from '@/components/admin/AdminTerritoryValue';
 
 const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
   // --- ALPHA Analysis ---
   { id: 'alpha-analysis', label: 'Analyse ALPHA', icon: Crown, highlight: true },
+  { id: 'territory-value', label: 'Valeur Territoires', icon: TrendingUp, highlight: true },
   // --- BDRE-FIRST P1 ---
   { id: 'bdre', label: 'BDRE Monitor', icon: Shield, highlight: true },
   // --- SUPRA v2 & MAGASIN v2 ---
@@ -179,6 +181,7 @@ const AdminPremiumPage = () => {
     switch (activeSection) {
       case 'dashboard': return <AdminDashboard onNavigate={setActiveSection} />;
       case 'alpha-analysis': return <AdminAlphaAnalysis />;
+      case 'territory-value': return <AdminTerritoryValue />;
       case 'bdre': return <AdminBDREMonitor />;
       case 'supra-engines': return <AdminSupraEngines />;
       case 'products-catalog': return <AdminProductsCatalog />;

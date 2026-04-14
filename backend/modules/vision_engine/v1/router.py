@@ -214,6 +214,43 @@ async def get_vision_stats(
     }
 
 
+# ============================================
+# H: COMMERCIAL VALUE ENDPOINTS
+# ============================================
+
+@router.get("/territories/scores")
+async def get_territory_scores(
+    user: UserWithRole = Depends(get_current_user_with_role),
+    db: AsyncIOMotorDatabase = Depends(get_camera_db)
+):
+    """H2: Get territory scores based on ALPHA analysis."""
+    service = VisionAnalysisService(db)
+    scores = await service.compute_territory_scores(user.user_id)
+    return {"territories": scores, "total": len(scores)}
+
+
+@router.get("/territories/anomalies")
+async def get_anomalies(
+    user: UserWithRole = Depends(get_current_user_with_role),
+    db: AsyncIOMotorDatabase = Depends(get_camera_db)
+):
+    """H6: Detect anomalies in territory activity."""
+    service = VisionAnalysisService(db)
+    anomalies = await service.detect_anomalies(user.user_id)
+    return {"anomalies": anomalies, "total": len(anomalies)}
+
+
+@router.get("/territories/report")
+async def get_commercial_report(
+    user: UserWithRole = Depends(get_current_user_with_role),
+    db: AsyncIOMotorDatabase = Depends(get_camera_db)
+):
+    """H4: Generate commercial report for territories."""
+    service = VisionAnalysisService(db)
+    report = await service.generate_commercial_report(user.user_id)
+    return report
+
+
 async def ensure_vision_indexes(db: AsyncIOMotorDatabase):
     """Create MongoDB indexes for vision collections."""
     await db["vision_analyses"].create_index([("user_id", 1), ("analyzed_at", -1)])
