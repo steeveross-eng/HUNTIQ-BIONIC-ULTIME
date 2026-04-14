@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import CameraMapPicker from '@/components/CameraMapPicker';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -68,6 +69,7 @@ const CameraModule = () => {
   const [locationPickerCam, setLocationPickerCam] = useState(null);
   const [pickerLat, setPickerLat] = useState('');
   const [pickerLon, setPickerLon] = useState('');
+  const [showCreateMapPicker, setShowCreateMapPicker] = useState(false);
 
   // Upload state
   const [uploadFiles, setUploadFiles] = useState([]);
@@ -165,21 +167,7 @@ const CameraModule = () => {
   };
 
   const handleSaveLocation = async () => {
-    if (!locationPickerCam || !pickerLat || !pickerLon) {
-      toast.error('Entrez la latitude et la longitude');
-      return;
-    }
-    try {
-      await axios.put(`${API}/v1/camera/cameras/${locationPickerCam.id}/location`, {
-        lat: parseFloat(pickerLat),
-        lon: parseFloat(pickerLon)
-      }, getAuthHeaders(token));
-      toast.success('Position mise a jour!');
-      setShowLocationPicker(false);
-      loadCameras();
-    } catch (err) {
-      toast.error(err.response?.data?.detail || 'Erreur de mise a jour');
-    }
+    // Legacy handler — now handled by CameraMapPicker onConfirm
   };
 
   // Upload photos
@@ -496,13 +484,16 @@ const CameraModule = () => {
             <div className="grid grid-cols-2 gap-2">
               <div>
                 <Label className="text-zinc-300 text-sm">Latitude</Label>
-                <Input className="bg-zinc-800 border-zinc-700" value={newCamera.gps_lat} onChange={e => setNewCamera(p => ({ ...p, gps_lat: e.target.value }))} placeholder="47.1234" />
+                <Input className="bg-zinc-800 border-zinc-700 font-mono" value={newCamera.gps_lat} onChange={e => setNewCamera(p => ({ ...p, gps_lat: e.target.value }))} placeholder="Auto" readOnly={!!newCamera.gps_lat && showCreateMapPicker === false} />
               </div>
               <div>
                 <Label className="text-zinc-300 text-sm">Longitude</Label>
-                <Input className="bg-zinc-800 border-zinc-700" value={newCamera.gps_lon} onChange={e => setNewCamera(p => ({ ...p, gps_lon: e.target.value }))} placeholder="-71.5678" />
+                <Input className="bg-zinc-800 border-zinc-700 font-mono" value={newCamera.gps_lon} onChange={e => setNewCamera(p => ({ ...p, gps_lon: e.target.value }))} placeholder="Auto" readOnly={!!newCamera.gps_lon && showCreateMapPicker === false} />
               </div>
             </div>
+            <Button type="button" variant="outline" className="w-full border-amber-500/30 text-amber-400 hover:bg-amber-500/10" onClick={() => setShowCreateMapPicker(true)} data-testid="open-create-map-picker">
+              <MapPin className="h-4 w-4 mr-1" /> Naviguer sur la carte pour positionner
+            </Button>
           </div>
           <DialogFooter>
             <Button variant="outline" className="border-zinc-700" onClick={() => setShowCreateCamera(false)}>Annuler</Button>
@@ -569,86 +560,38 @@ const CameraModule = () => {
         </DialogContent>
       </Dialog>
 
-      {/* LOCATION PICKER MODAL — Carte interactive (CAM-UI-LOC) */}
-      <Dialog open={showLocationPicker} onOpenChange={setShowLocationPicker}>
-        <DialogContent className="bg-zinc-900 border-zinc-800 max-w-lg" data-testid="location-picker-modal">
-          <DialogHeader>
-            <DialogTitle className="text-white flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-amber-500" />
-              Localiser: {locationPickerCam?.name || 'Camera'}
-            </DialogTitle>
-            <DialogDescription>Cliquez sur la carte pour definir la position</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-3">
-            {/* Interactive map placeholder — click to set position */}
-            <div
-              className="relative w-full h-64 bg-zinc-800 rounded-lg overflow-hidden border border-zinc-700 cursor-crosshair"
-              data-testid="location-map-area"
-              onClick={(e) => {
-                const rect = e.currentTarget.getBoundingClientRect();
-                const x = (e.clientX - rect.left) / rect.width;
-                const y = (e.clientY - rect.top) / rect.height;
-                // Map click to Quebec region: lat 45-50, lon -65 to -80
-                const lat = (50 - y * 5).toFixed(5);
-                const lon = (-80 + x * 15).toFixed(5);
-                setPickerLat(lat);
-                setPickerLon(lon);
-              }}
-            >
-              {/* Grid background */}
-              <div className="absolute inset-0" style={{
-                backgroundImage: 'linear-gradient(rgba(245,158,11,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(245,158,11,0.1) 1px, transparent 1px)',
-                backgroundSize: '40px 40px'
-              }} />
-              {/* Region label */}
-              <div className="absolute top-2 left-2 text-xs text-zinc-500 bg-zinc-900/80 px-2 py-1 rounded">
-                Quebec (45-50N, 65-80W)
-              </div>
-              {/* Marker if position set */}
-              {pickerLat && pickerLon && (
-                <div
-                  className="absolute w-6 h-6 -translate-x-3 -translate-y-3 pointer-events-none"
-                  style={{
-                    left: `${((parseFloat(pickerLon) + 80) / 15) * 100}%`,
-                    top: `${((50 - parseFloat(pickerLat)) / 5) * 100}%`
-                  }}
-                >
-                  <div className="w-6 h-6 bg-amber-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
-                    <Camera className="h-3 w-3 text-white" />
-                  </div>
-                  <div className="absolute w-10 h-10 -top-2 -left-2 rounded-full border-2 border-amber-500/40 animate-ping" />
-                </div>
-              )}
-              {/* Click instruction */}
-              {!pickerLat && !pickerLon && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <MapPin className="h-8 w-8 text-zinc-600 mx-auto mb-2" />
-                    <p className="text-sm text-zinc-500">Cliquez pour placer la camera</p>
-                  </div>
-                </div>
-              )}
-            </div>
-            {pickerLat && pickerLon && (
-              <div className="bg-zinc-800/50 rounded-lg p-3 flex items-center justify-between">
-                <div>
-                  <p className="text-xs text-zinc-400">Position selectionnee</p>
-                  <code className="text-sm text-amber-400 font-mono">
-                    {parseFloat(pickerLat).toFixed(5)}, {parseFloat(pickerLon).toFixed(5)}
-                  </code>
-                </div>
-                <CheckCircle className="h-5 w-5 text-green-500" />
-              </div>
-            )}
-          </div>
-          <DialogFooter>
-            <Button variant="outline" className="border-zinc-700" onClick={() => setShowLocationPicker(false)}>Annuler</Button>
-            <Button className="bg-amber-600 hover:bg-amber-700" onClick={handleSaveLocation} disabled={!pickerLat || !pickerLon} data-testid="location-save-btn">
-              <MapPin className="h-4 w-4 mr-1" /> Enregistrer la position
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* LOCATION PICKER — Carte interactive Leaflet (CAMERA-LOC-MAP) */}
+      <CameraMapPicker
+        isOpen={showLocationPicker}
+        onClose={() => setShowLocationPicker(false)}
+        onConfirm={async (lat, lon) => {
+          if (locationPickerCam) {
+            try {
+              await axios.put(`${API}/v1/camera/cameras/${locationPickerCam.id}/location`, { lat, lon }, getAuthHeaders(token));
+              toast.success('Position mise a jour!');
+              loadCameras();
+            } catch (err) {
+              toast.error(err.response?.data?.detail || 'Erreur de mise a jour');
+            }
+          }
+        }}
+        initialLat={locationPickerCam?.gps_lat}
+        initialLng={locationPickerCam?.gps_lon}
+        cameraName={locationPickerCam?.name}
+      />
+
+      {/* MAP PICKER for CREATE form */}
+      <CameraMapPicker
+        isOpen={showCreateMapPicker}
+        onClose={() => setShowCreateMapPicker(false)}
+        onConfirm={(lat, lon) => {
+          setNewCamera(p => ({ ...p, gps_lat: String(lat), gps_lon: String(lon) }));
+          toast.success('Position selectionnee!');
+        }}
+        initialLat={newCamera.gps_lat ? parseFloat(newCamera.gps_lat) : null}
+        initialLng={newCamera.gps_lon ? parseFloat(newCamera.gps_lon) : null}
+        cameraName={newCamera.name || 'Nouvelle camera'}
+      />
     </div>
   );
 };

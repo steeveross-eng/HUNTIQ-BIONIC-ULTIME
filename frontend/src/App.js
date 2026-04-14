@@ -882,7 +882,7 @@ const FormationsPage = () => {
 
 // VIS-E: Notification toggle component (self-contained with state)
 const VisionNotificationsToggle = () => {
-  const [showPanel, setShowPanel] = React.useState(false);
+  const [showPanel, setShowPanel] = useState(false);
   const { token } = useAuth();
   return (
     <div className="hidden lg:block relative">
