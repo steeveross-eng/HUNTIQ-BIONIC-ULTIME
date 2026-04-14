@@ -39,11 +39,18 @@ const MapClickHandler = ({ onPositionSelect }) => {
 
 const AutoCenter = ({ lat, lng, zoom }) => {
   const map = useMap();
+  const hasCentered = React.useRef(false);
   useEffect(() => {
-    if (lat && lng) {
-      map.setView([lat, lng], zoom || 14, { animate: true });
+    if (lat && lng && !hasCentered.current) {
+      // Force immediate fly to waypoint center — ZERO default view allowed
+      map.flyTo([lat, lng], zoom || 15, { duration: 0.5 });
+      hasCentered.current = true;
     }
   }, [lat, lng, zoom, map]);
+  // Reset when dialog reopens
+  useEffect(() => {
+    hasCentered.current = false;
+  }, []);
   return null;
 };
 
@@ -51,20 +58,25 @@ const CameraMapPicker = ({ isOpen, onClose, onConfirm, initialLat, initialLng, c
   const [selectedLat, setSelectedLat] = useState(initialLat || null);
   const [selectedLng, setSelectedLng] = useState(initialLng || null);
 
-  // Compute center from waypoints, camera position, or Quebec default
+  // Compute center: WAYPOINTS FIRST — ZERO default view if waypoints exist
   const { centerLat, centerLng, centerZoom } = useMemo(() => {
-    // Priority 1: existing camera position
+    // Priority 1: existing camera position (editing)
     if (initialLat && initialLng) {
       return { centerLat: initialLat, centerLng: initialLng, centerZoom: 15 };
     }
-    // Priority 2: waypoints centroid
-    const wps = (waypoints || []).filter(w => (w.lat || w.gps_lat) && (w.lng || w.lon || w.gps_lon));
+    // Priority 2: waypoints centroid — MANDATORY if any waypoint has coordinates
+    const wps = (waypoints || []).filter(w => {
+      const lat = w.lat || w.gps_lat || w.latitude;
+      const lng = w.lng || w.lon || w.gps_lon || w.longitude;
+      return lat && lng;
+    });
     if (wps.length > 0) {
-      const avgLat = wps.reduce((s, w) => s + (w.lat || w.gps_lat), 0) / wps.length;
-      const avgLng = wps.reduce((s, w) => s + (w.lng || w.lon || w.gps_lon), 0) / wps.length;
-      return { centerLat: avgLat, centerLng: avgLng, centerZoom: wps.length === 1 ? 15 : 13 };
+      const avgLat = wps.reduce((s, w) => s + (w.lat || w.gps_lat || w.latitude), 0) / wps.length;
+      const avgLng = wps.reduce((s, w) => s + (w.lng || w.lon || w.gps_lon || w.longitude), 0) / wps.length;
+      const zoom = wps.length === 1 ? 15 : 14;
+      return { centerLat: avgLat, centerLng: avgLng, centerZoom: zoom };
     }
-    // Priority 3: Quebec default
+    // Priority 3 (ONLY if NO waypoints): Quebec fallback
     return { centerLat: 47.3, centerLng: -71.9, centerZoom: 8 };
   }, [initialLat, initialLng, waypoints]);
 
@@ -122,8 +134,8 @@ const CameraMapPicker = ({ isOpen, onClose, onConfirm, initialLat, initialLng, c
 
             {/* Waypoint markers (blue, click to snap) */}
             {(waypoints || []).map((wp, idx) => {
-              const wLat = wp.lat || wp.gps_lat;
-              const wLng = wp.lng || wp.lon || wp.gps_lon;
+              const wLat = wp.lat || wp.gps_lat || wp.latitude;
+              const wLng = wp.lng || wp.lon || wp.gps_lon || wp.longitude;
               if (!wLat || !wLng) return null;
               return (
                 <Marker

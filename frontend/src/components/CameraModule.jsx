@@ -116,18 +116,38 @@ const CameraModule = () => {
   }, [token]);
 
   const loadWaypoints = useCallback(async () => {
-    if (!token || !user?.user_id) return;
+    if (!token || !user) return;
+    const email = user.email || '';
+    const uid = user.user_id || '';
     try {
-      const res = await axios.get(`${API}/user-data/waypoints/${user.user_id}`, getAuthHeaders(token));
-      setUserWaypoints(res.data.waypoints || res.data || []);
-    } catch {
-      // Fallback: try territory waypoints
-      try {
-        const res2 = await axios.get(`${API}/territory/waypoints`, getAuthHeaders(token));
-        setUserWaypoints(res2.data.waypoints || res2.data || []);
-      } catch {
-        setUserWaypoints([]);
+      // Priority 1: user-data waypoints by email (most reliable)
+      if (email) {
+        const res = await axios.get(`${API}/user-data/waypoints/${encodeURIComponent(email)}`, getAuthHeaders(token));
+        const wps = Array.isArray(res.data) ? res.data : (res.data.waypoints || []);
+        if (wps.length > 0) {
+          setUserWaypoints(wps);
+          return;
+        }
       }
+      // Priority 2: territory waypoints by email
+      if (email) {
+        const res2 = await axios.get(`${API}/territory/waypoints?user_id=${encodeURIComponent(email)}`, getAuthHeaders(token));
+        const wps2 = Array.isArray(res2.data) ? res2.data : (res2.data.waypoints || []);
+        if (wps2.length > 0) {
+          setUserWaypoints(wps2.map(w => ({ ...w, lat: w.lat || w.latitude, lng: w.lng || w.longitude })));
+          return;
+        }
+      }
+      // Priority 3: cameras with GPS as pseudo-waypoints
+      const camRes = await axios.get(`${API}/v1/camera/cameras`, getAuthHeaders(token));
+      const camsWithGps = (camRes.data.cameras || []).filter(c => c.gps_lat && c.gps_lon);
+      if (camsWithGps.length > 0) {
+        setUserWaypoints(camsWithGps.map(c => ({ id: c.id, name: c.name, lat: c.gps_lat, lng: c.gps_lon })));
+        return;
+      }
+      setUserWaypoints([]);
+    } catch {
+      setUserWaypoints([]);
     }
   }, [token, user]);
 
