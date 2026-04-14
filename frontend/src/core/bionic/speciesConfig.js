@@ -62,7 +62,7 @@ export const SPECIES = {
     color: '#6B7280',
     layers: [
       'habitats', 'alimentation', 'corridors', 'repos',
-      'hydro', 'peuplements', 'ndvi', 'pentes',
+      'hydro', 'salines', 'peuplements', 'ndvi', 'pentes',
     ],
     habitatPrefs: {
       prefersWaterProximity: true,
@@ -73,7 +73,7 @@ export const SPECIES = {
     },
     scoreWeights: {
       habitats: 1.0, alimentation: 1.4, corridors: 0.8,
-      repos: 1.1, hydro: 1.0, peuplements: 1.2,
+      repos: 1.1, hydro: 1.0, salines: 0.7, peuplements: 1.2,
       ndvi: 1.3, pentes: 0.6,
     },
   },
