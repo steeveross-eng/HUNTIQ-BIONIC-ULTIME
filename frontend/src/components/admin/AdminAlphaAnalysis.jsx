@@ -369,7 +369,7 @@ const AdminAlphaAnalysis = () => {
                       <div className="flex gap-1">
                         {hs.gps_lat && (
                           <Button size="sm" variant="outline" className="h-6 text-[10px] border-zinc-700 px-2"
-                            onClick={() => window.open(`/map?lat=${hs.gps_lat}&lng=${hs.gps_lon}&zoom=15`, '_blank')}>
+                            onClick={() => window.location.href = `/mon-territoire-bionic?lat=${hs.gps_lat}&lng=${hs.gps_lon}&zoom=15`}>
                             <MapPin className="h-3 w-3 mr-0.5" /> Carte
                           </Button>
                         )}

@@ -58,8 +58,8 @@
 
 ### P2 — Actif
 - [x] Module Cameras (CAM-EXEC-Omega: 6 phases executees 2026-04-14, 12 endpoints, frontend /cameras)
-- [x] Module Admin ALPHA Analysis (AdminAlphaAnalysis.jsx + AdminPremiumPage integration, 2026-04-14)
-- [x] Header institutionnel: Accueil>Magasin>TdB>Analyse>Carte>Cameras>Intelligence>Permis (ambre)
+- [x] ALPHA Layer carte (AlphaHotspotsLayer + useAlphaLayer, integre MapContent + MonTerritoire + MapPage, 2026-04-14)
+- [x] Header institutionnel: Accueil>Magasin>TdB>Analyse>Carte>Cameras>Intelligence>Permis (ambre, INTEL toujours visible)
 
 ### P3 — Gele
 - [ ] M5 Offline Mode Ultra / BSAA-2

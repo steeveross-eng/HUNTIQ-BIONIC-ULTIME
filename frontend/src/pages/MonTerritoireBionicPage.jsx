@@ -49,6 +49,7 @@ import IntelligenceDashboard from '@/components/territoire/IntelligenceDashboard
 import WeatherPanel from '@/components/territoire/ui/WeatherPanel';
 import useSpatialClipping from '@/hooks/useSpatialClipping';
 import useCameraLayer from '@/hooks/useCameraLayer';
+import useAlphaLayer from '@/hooks/useAlphaLayer';
 import { BIONIC_MODULES } from '@/core/bionic';
 import { SPECIES_LIST } from '@/core/bionic/speciesConfig';
 import { useZoneOrchestrator } from '@/hooks/useZoneOrchestrator';
@@ -278,7 +279,15 @@ const MonTerritoireBionicPage = () => {
   } = useUserData(userId, { autoSync: true });
   
   // CAM-LOC-Omega: Camera layer with 600m zone detection
-  const { positionedCameras } = useCameraLayer(authToken, activeWaypoints, []);
+  const { positionedCameras, allCameras: camerasList } = useCameraLayer(authToken, activeWaypoints, []);
+  
+  // ALPHA layer: hotspots from camera events
+  const camerasLookup = useMemo(() => {
+    const lookup = {};
+    (camerasList || []).forEach(c => { lookup[c.id] = c; });
+    return lookup;
+  }, [camerasList]);
+  const { alphaHotspots } = useAlphaLayer(authToken, camerasLookup);
   
   // IM1.2 — Hook actions waypoints/lieux (extrait)
   const {
@@ -1294,6 +1303,8 @@ const MonTerritoireBionicPage = () => {
               showHydro={showHydro}
               userCameras={positionedCameras}
               showCameraMarkers={true}
+              alphaHotspots={alphaHotspots}
+              showAlphaLayer={true}
             />
           </MapContainer>
 

@@ -34,7 +34,9 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { GroupeTab } from '../modules/groupe';
 import { useAuth } from '@/components/GlobalAuth';
 import useCameraLayer from '@/hooks/useCameraLayer';
+import useAlphaLayer from '@/hooks/useAlphaLayer';
 import CameraMarkersLayer from '@/components/territoire/CameraMarkersLayer';
+import AlphaHotspotsLayer from '@/components/territoire/AlphaHotspotsLayer';
 
 const MapPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -45,7 +47,14 @@ const MapPage = () => {
   const { token: authToken } = useAuth();
   
   // CAM-LOC-Omega: Camera layer
-  const { positionedCameras } = useCameraLayer(authToken, [], []);
+  const { positionedCameras, allCameras: mapCamList } = useCameraLayer(authToken, [], []);
+  // ALPHA layer
+  const mapCamLookup = useMemo(() => {
+    const lookup = {};
+    (mapCamList || []).forEach(c => { lookup[c.id] = c; });
+    return lookup;
+  }, [mapCamList]);
+  const { alphaHotspots } = useAlphaLayer(authToken, mapCamLookup);
   
   // BIONIC V6 States
   const [selectedSpecies, setSelectedSpecies] = useState('tous');
@@ -228,6 +237,8 @@ const MapPage = () => {
               />
               {/* CAM-LOC-Omega: Camera markers on map */}
               {positionedCameras.length > 0 && <CameraMarkersLayer cameras={positionedCameras} />}
+              {/* ALPHA Hotspots on map */}
+              {alphaHotspots.length > 0 && <AlphaHotspotsLayer hotspots={alphaHotspots} />}
             </WaypointMap>
 
             {/* ============================================ */}

@@ -26,6 +26,7 @@ import NutritionPointsLayer from '@/components/territoire/NutritionPointsLayer';
 import ConsolidatedHeatmapLayer from '@/components/territoire/ConsolidatedHeatmapLayer';
 import StandsMapLayer from '@/components/territoire/StandsMapLayer';
 import CameraMarkersLayer from '@/components/territoire/CameraMarkersLayer';
+import AlphaHotspotsLayer from '@/components/territoire/AlphaHotspotsLayer';
 import ContaminationOverlayLayer from '@/components/territoire/ContaminationOverlayLayer';
 import AccessRouteV6Layer from '@/components/territoire/AccessRouteV6Layer';
 import { LeafletShield, useRenderGuard, createLoadTimer } from '@/components/territoire/map/BCE4X_UIShield';
@@ -125,6 +126,9 @@ const MapContentInner = React.memo(({
   // CAM-LOC-Omega: Cameras sur carte
   userCameras,
   showCameraMarkers,
+  // ALPHA Hotspots layer
+  alphaHotspots,
+  showAlphaLayer,
 }) => (
   <>
     <EcoforestryLayers
@@ -293,6 +297,8 @@ const MapContentInner = React.memo(({
     {privacyMode && <div className="bionic-private-overlay" />}
     {/* CAM-LOC-Omega: Camera markers layer */}
     {showCameraMarkers && userCameras && <CameraMarkersLayer cameras={userCameras} />}
+    {/* ALPHA Hotspots layer */}
+    {showAlphaLayer && alphaHotspots && <AlphaHotspotsLayer hotspots={alphaHotspots} />}
     {/* BCE-4X PURGE V1-V5: GPS overlay uniquement — ZERO double-clic waypoint */}
     <MapInteractionLayer showCoordinates={true} />
     <BionicAntiDoublesGuard zones={bionicZones} onZoneClick={setSelectedZone} />
