@@ -39,7 +39,7 @@ export const SPECIES = {
     color: '#F5A623',
     layers: [
       'habitats', 'alimentation', 'corridors', 'rut',
-      'affuts', 'repos', 'peuplements', 'ensoleillement',
+      'affuts', 'repos', 'salines', 'peuplements', 'ensoleillement',
     ],
     habitatPrefs: {
       prefersWaterProximity: false,
@@ -50,8 +50,8 @@ export const SPECIES = {
     },
     scoreWeights: {
       habitats: 1.1, alimentation: 1.2, corridors: 1.0,
-      rut: 1.3, affuts: 1.1, repos: 0.9, peuplements: 0.8,
-      ensoleillement: 0.7,
+      rut: 1.3, affuts: 1.1, repos: 0.9, salines: 1.3,
+      peuplements: 0.8, ensoleillement: 0.7,
     },
   },
   ours_noir: {
@@ -85,7 +85,7 @@ export const SPECIES = {
     color: '#D97706',
     layers: [
       'habitats', 'alimentation', 'repos', 'affuts',
-      'peuplements', 'ensoleillement', 'ndvi',
+      'salines', 'peuplements', 'ensoleillement', 'ndvi',
     ],
     habitatPrefs: {
       prefersWaterProximity: false,
@@ -96,8 +96,8 @@ export const SPECIES = {
     },
     scoreWeights: {
       habitats: 1.0, alimentation: 1.3, repos: 1.0,
-      affuts: 1.2, peuplements: 1.1, ensoleillement: 0.9,
-      ndvi: 1.0,
+      affuts: 1.2, salines: 0.8, peuplements: 1.1,
+      ensoleillement: 0.9, ndvi: 1.0,
     },
   },
   wapiti: {
@@ -108,7 +108,7 @@ export const SPECIES = {
     color: '#B8860B',
     layers: [
       'habitats', 'alimentation', 'corridors', 'repos',
-      'hydro', 'peuplements', 'pentes', 'ndvi',
+      'hydro', 'salines', 'peuplements', 'pentes', 'ndvi',
     ],
     habitatPrefs: {
       prefersWaterProximity: true,
@@ -119,7 +119,7 @@ export const SPECIES = {
     },
     scoreWeights: {
       habitats: 1.1, alimentation: 1.3, corridors: 1.0,
-      repos: 1.0, hydro: 0.9, peuplements: 1.1,
+      repos: 1.0, hydro: 0.9, salines: 1.2, peuplements: 1.1,
       pentes: 0.8, ndvi: 1.0,
     },
   },
@@ -157,3 +157,44 @@ export const getSpeciesWeight = (speciesId, moduleId) => {
  * Liste des espèces pour le dropdown.
  */
 export const SPECIES_LIST = Object.values(SPECIES);
+
+/**
+ * TERRITOIRE-FULL-RESTORE-Omega: Couches institutionnelles protegees.
+ * Ces couches ne peuvent JAMAIS etre desactivees par filtrage espece.
+ * Elles sont toujours presentes quel que soit le preset ou l'espece.
+ */
+export const PROTECTED_LAYERS = [
+  'habitats', 'alimentation', 'corridors', 'salines',
+  'hydro', 'affuts', 'repos', 'rut',
+];
+
+/**
+ * TERRITOIRE-FULL-RESTORE-Omega: Preset institutionnel complet.
+ * Force TOUTES les couches au chargement de TERRITOIRE.
+ */
+export const PRESET_TERRITOIRE_COMPLET = {
+  zones: true,
+  corridors: true,
+  points: true,
+  alimentation: true,
+  salines: true,
+  affuts: true,
+  rut: true,
+  repos: true,
+  eau: true,
+  heatmap: true,
+  wind: true,
+  cameras: true,
+  hotspots_ia: true,
+  trajectories_ia: true,
+};
+
+/**
+ * Retourne les couches pour une espece, en FORCANT les couches protegees.
+ */
+export const getProtectedSpeciesLayers = (speciesId) => {
+  const species = SPECIES[speciesId];
+  if (!species?.layers) return null; // 'tous' = pas de filtrage
+  const layers = [...new Set([...species.layers, ...PROTECTED_LAYERS])];
+  return layers;
+};
