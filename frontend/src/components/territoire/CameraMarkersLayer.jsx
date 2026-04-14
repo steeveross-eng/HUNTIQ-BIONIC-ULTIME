@@ -7,7 +7,7 @@
  * - Actions rapides (galerie, analyses IA, modifier)
  */
 import React, { useState, useEffect, useCallback } from 'react';
-import { Marker, Popup, Circle, useMap } from 'react-leaflet';
+import { Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { useAuth } from '@/components/GlobalAuth';
 import axios from 'axios';
@@ -308,20 +308,7 @@ const CameraMarkersLayer = ({ cameras = [] }) => {
 
         return (
           <React.Fragment key={cam.id}>
-            {cam.inZone600m && (
-              <Circle
-                center={[lat, lon]}
-                radius={600}
-                pathOptions={{
-                  color: '#F59E0B',
-                  weight: 1,
-                  opacity: 0.4,
-                  fillColor: '#F59E0B',
-                  fillOpacity: 0.08,
-                  dashArray: '6 4'
-                }}
-              />
-            )}
+            {/* SECTION 5 MAP-FIX-Omega-V3: Buffer 600m SUPPRIME des cartes publiques */}
             <Marker
               position={[lat, lon]}
               icon={createCameraIcon(cam.inZone600m)}

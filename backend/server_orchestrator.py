@@ -218,6 +218,14 @@ class ServerOrchestrator:
             logger.info("✓ Loaded: Map Performance [/api/map/*]")
         except ImportError as e:
             logger.debug(f"Map Perf not available: {e}")
+        
+        # AFFUT-IA-Omega-PLUS: Moteur IA Affuts
+        try:
+            from modules.affut_ia_engine import affut_ia_router
+            self.app.include_router(affut_ia_router)
+            logger.info("✓ Loaded: Affut IA Engine [/api/v1/affuts-ia/*]")
+        except ImportError as e:
+            logger.debug(f"Affut IA Engine not available: {e}")
     
     def register_legacy_router(self):
         """

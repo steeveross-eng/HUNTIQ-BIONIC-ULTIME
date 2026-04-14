@@ -13,99 +13,84 @@
 ## Ce qui a ete implemente (sessions recentes)
 
 ### RUT-RENDER-Omega (2026-04-09)
-- Polygones RUT restaures — VALIDE PAR COMMANDANT
+- Polygones RUT restaures — VALIDE
 
-### Certifications (2026-04-10)
-- K1/K2/CMP/SHIELD/GLOBAL-CERT: 33/33 — 100%
-
-### Phase D1 (2026-04-13)
-- 3 endpoints user_engine deprecies + fallback dual-hash pbkdf2->bcrypt
-- UserService.js migre vers /api/auth/* — D1_EXEC_REPORT.md
-
-### Phase D2 (2026-04-13)
-- 2 endpoints territory cameras deprecies + reference PromptManager.jsx nettoyee
-- D2_EXEC_REPORT.md — ZERO regression T1-T5
-
-### Phase D3 (2026-04-13)
-- 6 endpoints marketplace+lands deprecies (auth/register, auth/login, owners/login, owners/register, renters/login, renters/register)
-- Fallback SHA256->bcrypt dans auth_engine + re-hash automatique
-- Frontend HuntMarketplace.jsx et LandsRental.jsx migres vers JWT auth_engine
-- Script migration donnees /app/backend/scripts/migrate_d3_users.py
-- Routers marketplace + lands enregistres dans server_orchestrator
-- D3_EXEC_REPORT.md — 25 tests anti-regression, ZERO regression
-
-### Cloture Phase P2 + Reset Auth (2026-04-14)
-- Phase P2 officiellement close: 11 endpoints AUTH-USAGER deprecies
-- Reset mot de passe admin@huntiq.com: bcrypt re-hash + 485 sessions invalidees
+### Phase D1-D3 Auth Migration (2026-04-13)
+- 11 endpoints AUTH-USAGER deprecies (D1:3 + D2:2 + D3:6)
 
 ### CAMERA-Omega-ULTRA (2026-04-14)
-#### Section 1 — CAMERA-BRANDS-Omega-FINAL
-- 21 marques officielles Canada/USA (Spypoint, Browning, Bushnell, Moultrie, Tactacam Reveal, Stealth Cam, Wildgame Innovations, Cuddeback/CuddeLink, Covert, Reconyx, Exodus, Spartan, Primos, GardePro, Campark, Meidase, CreativeXP, Wosports, GSM Outdoors, Boly/BolyGuard, Autres)
-- Modeles par marque (Boly BG310-M..BG960-K30 LTE inclus) + "Autres modeles" — ZERO texte libre
-- Type de camera obligatoire: Cellulaire (LTE) / Reguliere
-- Backend: CameraManufacturer 21 enum, CameraType enum, brands_config.py, endpoint /api/v1/camera/brands-config
-- Frontend: CameraModule.jsx formulaire avec Select dynamique marque->modeles
-- Validation: T1-T4 PASS (curl/bash)
+- 21 marques officielles, modeles dynamiques, type obligatoire, ZERO texte libre
+- Popup riche (infos + photos + IA Vision + actions), endpoint popup-data
 
-#### Section 2 — CAMERA-POPUP-Omega
-- CameraMarkersLayer.jsx reecrit: popup riche avec infos camera, GPS copiable, thumbnails photos, filtre espece, historique IA Vision, actions rapides
-- Endpoint /api/v1/camera/cameras/{id}/popup-data bundlant camera+events+analyses+species_summary
-- Validation: T5-T6 PASS (curl/bash)
+### MAP-PERF-Omega (2026-04-14)
+- GZip middleware, cache serveur TTL 5min, endpoint preload, cache client sessionStorage
 
-#### Section 3 — MAP-PERF-Omega
-- GZip middleware ajoute (GZipMiddleware min 500 bytes)
-- Cache serveur in-memory avec TTL 5 min
-- Endpoint /api/map/preload bundlant cameras+hotspots+trajectories+species
-- Cache client sessionStorage (useCameraLayer, mapCache.js)
-- Validation: T7 (115ms < 900ms), T8 (117ms cached), T9 (ZERO OSM hardcode dans carte principale), T10 (ZERO regression localisation)
+### AFFUT-IA-Omega-PLUS (2026-04-14)
+- Moteur IA affuts potentiels integrant: IA Vision + Salines 20-100m + Corridors + Vent + Science BIONIC
+- 5 references scientifiques, 4 especes (orignal, cerf, ours noir, caribou), scoring multi-couches 0-100
+- Justification IA + biologique + scientifique par affut
+- Endpoints: generate, list, explain, references
+- Regle biologique saline: <20m=0, 20-40m=max, 40-100m=decroissant, >100m=faible
 
-## Backlog priorise
-- ZERO perte de donnees
+### MAP-FIX-Omega-V3 (2026-04-14)
+- Buffer 600m cameras SUPPRIME des cartes publiques (MON TERRITOIRE, CARTE, Analyse)
+- Toggle "Eau" dans toolbar lie a HydrographyOverlayLayer (effectiveShowHydro)
+- Opacite hydrographique augmentee 0.25→0.45
+
+### IA-VISION-CERT-Omega (2026-04-14)
+- 12/12 endpoints certifies, compatibilite totale avec tous les moteurs
+- Rapport: /app/IA_VISION_CERT_REPORT.md
 
 ---
 
+## Backlog priorise
+
 ### P0 — Complet
 - [x] RUT-RENDER-Omega
-- [x] Certifications
-- [x] Phase D1 (3 endpoints user_engine)
-- [x] Phase D2 (2 endpoints territory cameras)
+- [x] Certifications K1/K2/CMP/SHIELD/GLOBAL-CERT
+- [x] Phase D1-D3 Auth Migration
 
 ### P1 — Complet
-- [x] Phase D3: marketplace+lands (6 endpoints auth deprecated + frontend migre)
-- [x] Phase P2 terminee: 11 endpoints AUTH-USAGER deprecies (D1:3 + D2:2 + D3:6)
+- [x] Phase P2 Auth Depreciation (11 endpoints)
 
 ### P2 — Complet
-- [x] Module Cameras (CAM-EXEC-Omega: 6 phases executees 2026-04-14, 12 endpoints, frontend /cameras)
-- [x] IA Vision Engine (VIS-A a VIS-F: backend + API + frontend, GPT-4o via Emergent Key, 2026-04-14)
-- [x] ALPHA Layer carte (AlphaHotspotsLayer + useAlphaLayer IA, TrajectoriesLayer, integre cartes)
-- [x] IA Vision Phase 2 Final (VIS-B clustering, VIS-E notifications 7 types, anomalies avancees, 15 endpoints, 2026-04-14)
-- [x] Valeur commerciale ALPHA (H1-H6: scores territoires, indices, anomalies, rapports, AdminTerritoryValue)
-- [x] MAP-ENGINE-UNIFY-Omega (unification sources tuiles cartes via localStorage bionic_map_preferences)
-- [x] CAMERA-BRANDS-Omega-FINAL (21 marques, modeles par marque, type obligatoire, ZERO texte libre)
-- [x] CAMERA-POPUP-Omega (popup riche: infos+photos+IA Vision+actions rapides)
-- [x] MAP-PERF-Omega (GZip, cache serveur, preload, cache client)
+- [x] Module Cameras (CAM-EXEC-Omega)
+- [x] IA Vision Engine (VIS-A a VIS-F)
+- [x] ALPHA Layer + Trajectories carte
+- [x] IA Vision Phase 2 (clustering, notifications, anomalies)
+- [x] Valeur commerciale ALPHA (Section H)
+- [x] MAP-ENGINE-UNIFY-Omega
+- [x] CAMERA-BRANDS-Omega-FINAL (21 marques)
+- [x] CAMERA-POPUP-Omega (popup riche)
+- [x] MAP-PERF-Omega (GZip, cache, preload)
+- [x] AFFUT-IA-Omega-PLUS (moteur IA affuts)
+- [x] MAP-FIX-Omega-V3 (eau, buffer 600m, hydro precision)
+- [x] IA-VISION-CERT-Omega (12/12 certifie)
 
-### P3 — Gele
-- [ ] Heatmap IA unifiee (HEAT-UNIFY: fusion zones chaudes + heat IA, modes temporels)
-- [ ] Securite cameras (CAMERA-SEC: halo couverture, detection vol/obstruction)
-- [ ] M5 Offline Mode Ultra / BSAA-2
+### P3 — En attente
+- [ ] OPTIMIZATION_ENGINE-Omega (moteur centralise ponderation)
+- [ ] Heatmap IA unifiee (HEAT-UNIFY)
+- [ ] Securite cameras (CAMERA-SEC)
+- [ ] M5 Offline Mode Ultra
 - [ ] Integration DEM LIDAR et SIEF ecoforesterie
-- [ ] Module optimization_engine (Work1)
+- [ ] MVT Tiles conversion
 
-## Regles verrouillees
-BFS 780m | max_salines=2 | top-N | M1-M5 | T1-T5
-
-## Fichiers cles modifies (CAMERA-Omega-ULTRA)
+## Fichiers cles modifies (session courante)
+- /app/backend/modules/affut_ia_engine/ (NEW - moteur IA affuts)
 - /app/backend/modules/camera_engine/v1/brands_config.py (NEW)
-- /app/backend/modules/camera_engine/v1/models.py (UPDATED)
-- /app/backend/modules/camera_engine/v1/router.py (UPDATED)
-- /app/backend/modules/camera_engine/v1/services.py (UPDATED)
-- /app/backend/routes/map_perf.py (NEW)
-- /app/backend/server_orchestrator.py (UPDATED)
-- /app/backend/server.py (UPDATED)
+- /app/backend/modules/camera_engine/v1/models.py (UPDATED - CameraType)
+- /app/backend/modules/camera_engine/v1/router.py (UPDATED - brands-config, popup-data)
+- /app/backend/routes/map_perf.py (NEW - preload + cache)
+- /app/backend/server.py (UPDATED - GZip)
 - /app/frontend/src/components/CameraModule.jsx (UPDATED)
 - /app/frontend/src/components/territoire/CameraMarkersLayer.jsx (REWRITTEN)
-- /app/frontend/src/hooks/useCameraLayer.js (UPDATED)
+- /app/frontend/src/components/territoire/map/MapContent.jsx (UPDATED - hydro opacity)
+- /app/frontend/src/hooks/useCameraLayer.js (UPDATED - cache client)
 - /app/frontend/src/utils/mapCache.js (NEW)
+- /app/frontend/src/pages/MonTerritoireBionicPage.jsx (UPDATED - effectiveShowHydro)
+- /app/IA_VISION_CERT_REPORT.md (NEW)
+
+## Regles verrouillees
+BFS 780m | max_salines=2 | top-N | M1-M5 | T1-T5 | Salines 20-100m
 
 FIN DU DOCUMENT

@@ -150,7 +150,7 @@ const MapContentInner = React.memo(({
     {/* ══════════════════════════════════════════════════════════════ */}
     {/* Phase 3.2-CV: BionicCorridorsV6Layer SEUL DÉSACTIVÉ */}
     {/* ══════════════════════════════════════════════════════════════ */}
-    <HydrographyOverlayLayer enabled={showHydro} opacity={0.25} />
+    <HydrographyOverlayLayer enabled={showHydro} opacity={0.45} />
 
     <ExclusionOverlayLayer enabled={showExclusionOverlay && classificationToggles.pression} />
     {showWindFlow && <WindFlowLayer />}
