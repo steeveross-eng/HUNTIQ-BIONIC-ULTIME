@@ -242,8 +242,6 @@ const MonTerritoireBionicPage = () => {
   const [showExclusionOverlay, setShowExclusionOverlay] = useState(savedShowExclusionOverlay ?? false);
   const [showWindFlow, setShowWindFlow] = useState(true); // BCE-4X Phase 2.6: Vent TOUJOURS actif
   const [showHydro, setShowHydro] = useState(true); // ORDONNANCE LEVEE: Hydrographie reactivee
-  // MAP-FIX-Omega-V3: showHydro lie au toggle Eau de la toolbar
-  const effectiveShowHydro = showHydro && (zoneSubFilters?.eau !== false);
   const [windMode, setWindMode] = useState(savedWindMode || 'arrows');
   const [temporalHourMT, setTemporalHourMT] = useState(null);
   const [contextMenuMT, setContextMenuMT] = useState(null);
@@ -643,6 +641,8 @@ const MonTerritoireBionicPage = () => {
     alimentation: true, rut: true, repos: true, affuts: true, centroides: true, individuels: true,
   });
   const toggleZoneSub = (k) => setZoneSubFilters(p => ({ ...p, [k]: !p[k] }));
+  // MAP-FIX-Omega-V3: showHydro lie au toggle Eau de la toolbar
+  const effectiveShowHydro = showHydro && (zoneSubFilters?.eau !== false);
   const toggleCorridorSub = (k) => setCorridorSubFilters(p => ({ ...p, [k]: !p[k] }));
   const togglePointSub = (k) => setPointSubFilters(p => ({ ...p, [k]: !p[k] }));
   
