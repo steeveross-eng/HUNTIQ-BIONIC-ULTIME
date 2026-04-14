@@ -64,6 +64,10 @@ const CameraModule = () => {
   const [showUpload, setShowUpload] = useState(false);
   const [selectedCamera, setSelectedCamera] = useState(null);
   const [showCameraDetail, setShowCameraDetail] = useState(false);
+  const [showLocationPicker, setShowLocationPicker] = useState(false);
+  const [locationPickerCam, setLocationPickerCam] = useState(null);
+  const [pickerLat, setPickerLat] = useState('');
+  const [pickerLon, setPickerLon] = useState('');
 
   // Upload state
   const [uploadFiles, setUploadFiles] = useState([]);
@@ -149,6 +153,32 @@ const CameraModule = () => {
       loadStats();
     } catch (err) {
       toast.error('Erreur lors de la suppression');
+    }
+  };
+
+  // LOC-D: Location picker
+  const openLocationPicker = (cam) => {
+    setLocationPickerCam(cam);
+    setPickerLat(cam.gps_lat ? String(cam.gps_lat) : '');
+    setPickerLon(cam.gps_lon ? String(cam.gps_lon) : '');
+    setShowLocationPicker(true);
+  };
+
+  const handleSaveLocation = async () => {
+    if (!locationPickerCam || !pickerLat || !pickerLon) {
+      toast.error('Entrez la latitude et la longitude');
+      return;
+    }
+    try {
+      await axios.put(`${API}/v1/camera/cameras/${locationPickerCam.id}/location`, {
+        lat: parseFloat(pickerLat),
+        lon: parseFloat(pickerLon)
+      }, getAuthHeaders(token));
+      toast.success('Position mise a jour!');
+      setShowLocationPicker(false);
+      loadCameras();
+    } catch (err) {
+      toast.error(err.response?.data?.detail || 'Erreur de mise a jour');
     }
   };
 
@@ -321,8 +351,21 @@ const CameraModule = () => {
                             </Button>
                           </div>
                         )}
+                        {cam.gps_lat && cam.gps_lon && (
+                          <p className="flex items-center gap-1 text-green-400/70">
+                            <MapPin className="h-3 w-3" /> {cam.gps_lat.toFixed(5)}, {cam.gps_lon.toFixed(5)}
+                          </p>
+                        )}
+                        {!cam.gps_lat && !cam.gps_lon && (
+                          <p className="flex items-center gap-1 text-zinc-600">
+                            <MapPin className="h-3 w-3" /> Non localisee
+                          </p>
+                        )}
                       </div>
                       <div className="flex gap-1.5 mt-3">
+                        <Button size="sm" variant="outline" className="flex-1 h-7 text-xs border-zinc-700" onClick={() => openLocationPicker(cam)} data-testid={`camera-locate-btn-${cam.id}`}>
+                          <MapPin className="h-3 w-3 mr-1" /> Localiser
+                        </Button>
                         <Button size="sm" variant="outline" className="flex-1 h-7 text-xs border-zinc-700" onClick={() => { setUploadCameraId(cam.id); setShowUpload(true); }}>
                           <Upload className="h-3 w-3 mr-1" /> Upload
                         </Button>
@@ -510,6 +553,50 @@ const CameraModule = () => {
             <Button className="bg-amber-600 hover:bg-amber-700" onClick={handleUploadPhotos} disabled={uploading || !uploadCameraId || uploadFiles.length === 0} data-testid="upload-submit-btn">
               {uploading ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Upload className="h-4 w-4 mr-1" />}
               {uploading ? 'Import en cours...' : `Importer ${uploadFiles.length} photo(s)`}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* LOCATION PICKER MODAL (LOC-D) */}
+      <Dialog open={showLocationPicker} onOpenChange={setShowLocationPicker}>
+        <DialogContent className="bg-zinc-900 border-zinc-800 max-w-md" data-testid="location-picker-modal">
+          <DialogHeader>
+            <DialogTitle className="text-white flex items-center gap-2">
+              <MapPin className="h-5 w-5 text-amber-500" />
+              Localiser: {locationPickerCam?.name || 'Camera'}
+            </DialogTitle>
+            <DialogDescription>Entrez les coordonnees GPS de la camera</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label className="text-zinc-300 text-sm">Latitude</Label>
+                <Input className="bg-zinc-800 border-zinc-700 font-mono" value={pickerLat} onChange={e => setPickerLat(e.target.value)} placeholder="47.1234" data-testid="location-lat-input" />
+              </div>
+              <div>
+                <Label className="text-zinc-300 text-sm">Longitude</Label>
+                <Input className="bg-zinc-800 border-zinc-700 font-mono" value={pickerLon} onChange={e => setPickerLon(e.target.value)} placeholder="-71.5678" data-testid="location-lon-input" />
+              </div>
+            </div>
+            {pickerLat && pickerLon && (
+              <div className="bg-zinc-800/50 rounded-lg p-3 text-center">
+                <p className="text-xs text-zinc-400">Position GeoJSON:</p>
+                <code className="text-xs text-amber-400 font-mono">
+                  [{parseFloat(pickerLon || 0).toFixed(5)}, {parseFloat(pickerLat || 0).toFixed(5)}]
+                </code>
+              </div>
+            )}
+            {locationPickerCam?.gps_lat && locationPickerCam?.gps_lon && (
+              <p className="text-xs text-zinc-500">
+                Position actuelle: {locationPickerCam.gps_lat.toFixed(5)}, {locationPickerCam.gps_lon.toFixed(5)}
+              </p>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" className="border-zinc-700" onClick={() => setShowLocationPicker(false)}>Annuler</Button>
+            <Button className="bg-amber-600 hover:bg-amber-700" onClick={handleSaveLocation} disabled={!pickerLat || !pickerLon} data-testid="location-save-btn">
+              <MapPin className="h-4 w-4 mr-1" /> Enregistrer
             </Button>
           </DialogFooter>
         </DialogContent>

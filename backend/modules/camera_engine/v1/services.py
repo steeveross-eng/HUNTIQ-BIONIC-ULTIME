@@ -96,6 +96,11 @@ class CameraRegistryService:
         camera_id = str(uuid.uuid4())
         email_alias = self._generate_email_alias(user_id, camera_id)
         
+        # LOC-A: Generate GeoJSON location from gps_lat/gps_lon
+        location = None
+        if data.gps_lat is not None and data.gps_lon is not None:
+            location = {"type": "Point", "coordinates": [data.gps_lon, data.gps_lat]}
+        
         camera = Camera(
             id=camera_id,
             user_id=user_id,
@@ -108,6 +113,7 @@ class CameraRegistryService:
             name=data.name,
             gps_lat=data.gps_lat,
             gps_lon=data.gps_lon,
+            location=location,
             integration_type=data.integration_type,
             status=CameraStatus.ACTIVE,
             created_at=datetime.now(timezone.utc),
@@ -156,12 +162,50 @@ class CameraRegistryService:
         update_data = data.model_dump(exclude_unset=True)
         update_data["updated_at"] = datetime.now(timezone.utc)
         
+        # LOC-A: Sync location GeoJSON when gps_lat/gps_lon change
+        lat = update_data.get("gps_lat", existing.gps_lat)
+        lon = update_data.get("gps_lon", existing.gps_lon)
+        if lat is not None and lon is not None:
+            update_data["location"] = {"type": "Point", "coordinates": [lon, lat]}
+        
         await self.cameras_collection.update_one(
             {"id": camera_id, "user_id": user_id},
             {"$set": update_data}
         )
         
         return await self.get_camera(camera_id, user_id), None
+    
+    async def update_camera_location(self, camera_id: str, user_id: str, lat: float, lon: float) -> Tuple[Optional[Camera], Optional[str]]:
+        """LOC-C: Update camera geographic location."""
+        existing = await self.get_camera(camera_id, user_id)
+        if not existing:
+            return None, "Caméra non trouvée"
+        
+        location = {"type": "Point", "coordinates": [lon, lat]}
+        await self.cameras_collection.update_one(
+            {"id": camera_id, "user_id": user_id},
+            {"$set": {
+                "gps_lat": lat,
+                "gps_lon": lon,
+                "location": location,
+                "updated_at": datetime.now(timezone.utc)
+            }}
+        )
+        return await self.get_camera(camera_id, user_id), None
+    
+    async def find_cameras_nearby(self, user_id: str, lat: float, lon: float, radius_km: float, limit: int = 20) -> List[Camera]:
+        """LOC-C: Find cameras near a geographic point."""
+        query = {
+            "user_id": user_id,
+            "location": {
+                "$nearSphere": {
+                    "$geometry": {"type": "Point", "coordinates": [lon, lat]},
+                    "$maxDistance": radius_km * 1000  # Convert km to meters
+                }
+            }
+        }
+        cursor = self.cameras_collection.find(query, {"_id": 0}).limit(limit)
+        return [Camera(**doc) async for doc in cursor]
     
     async def delete_camera(self, camera_id: str, user_id: str) -> bool:
         """Delete camera (soft delete by setting status to inactive)."""

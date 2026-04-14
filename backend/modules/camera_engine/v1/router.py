@@ -18,7 +18,7 @@ from .models import (
     CameraCreate, CameraUpdate, CameraResponse, CameraListResponse,
     CameraEventResponse, CameraEventListResponse,
     EmailIngestionRequest, EmailIngestionResponse,
-    PhotoUploadResponse, CameraStatsResponse
+    PhotoUploadResponse, CameraStatsResponse, CameraLocationUpdate
 )
 from .services import CameraRegistryService, EmailIngestionService, ExifReaderService, ImageEncryptionService
 from ...roles_engine.v1.dependencies import get_current_user_with_role
@@ -72,6 +72,26 @@ async def list_cameras(
     )
 
 
+@router.get("/cameras/nearby")
+async def find_cameras_nearby(
+    lat: float = Query(..., ge=-90, le=90),
+    lon: float = Query(..., ge=-180, le=180),
+    radius_km: float = Query(10, ge=0.1, le=500),
+    user: UserWithRole = Depends(get_current_user_with_role),
+    db: AsyncIOMotorDatabase = Depends(get_camera_db)
+):
+    """Find cameras near a geographic point (LOC-C). Must be before {camera_id}."""
+    service = CameraRegistryService(db)
+    cameras = await service.find_cameras_nearby(user.user_id, lat, lon, radius_km)
+    
+    return {
+        "cameras": [CameraResponse(**c.model_dump()) for c in cameras],
+        "total": len(cameras),
+        "center": {"lat": lat, "lon": lon},
+        "radius_km": radius_km
+    }
+
+
 @router.get("/cameras/{camera_id}", response_model=CameraResponse)
 async def get_camera(
     camera_id: str,
@@ -123,6 +143,33 @@ async def delete_camera(
         raise HTTPException(status_code=404, detail="Caméra non trouvée")
     
     return None
+
+
+# ============================================
+# CAMERA LOCATION ENDPOINTS (LOC-C)
+# ============================================
+
+@router.put("/cameras/{camera_id}/location")
+async def update_camera_location(
+    camera_id: str,
+    data: CameraLocationUpdate,
+    user: UserWithRole = Depends(get_current_user_with_role),
+    db: AsyncIOMotorDatabase = Depends(get_camera_db)
+):
+    """Update camera geographic location (LOC-C)."""
+    service = CameraRegistryService(db)
+    camera, error = await service.update_camera_location(camera_id, user.user_id, data.lat, data.lon)
+    
+    if error:
+        raise HTTPException(status_code=404, detail=error)
+    
+    return {
+        "success": True,
+        "camera_id": camera_id,
+        "location": camera.location,
+        "gps_lat": camera.gps_lat,
+        "gps_lon": camera.gps_lon
+    }
 
 
 # ============================================
@@ -495,6 +542,8 @@ async def ensure_camera_indexes(db: AsyncIOMotorDatabase):
     """Create MongoDB indexes for camera collections."""
     await db['cameras'].create_index([("user_id", 1), ("status", 1)])
     await db['cameras'].create_index("email_alias", unique=True, sparse=True)
+    # LOC-B: 2dsphere index for geospatial queries
+    await db['cameras'].create_index([("location", "2dsphere")], sparse=True)
     await db['camera_events'].create_index([("user_id", 1), ("timestamp", -1)])
     await db['camera_events'].create_index([("camera_id", 1), ("timestamp", -1)])
     await db['camera_events'].create_index([("waypoint_id", 1), ("timestamp", -1)])

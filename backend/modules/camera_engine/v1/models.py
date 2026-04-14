@@ -89,6 +89,12 @@ class CameraUpdate(BaseModel):
     integration_type: Optional[str] = None
 
 
+class CameraLocationUpdate(BaseModel):
+    """Model for updating camera location"""
+    lat: float = Field(..., ge=-90, le=90)
+    lon: float = Field(..., ge=-180, le=180)
+
+
 class Camera(CameraBase):
     """Complete camera model for database storage and responses"""
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -96,10 +102,11 @@ class Camera(CameraBase):
     email_alias: str  # Unique email for this camera's photo ingestion
     api_secret: str = ""  # CAM-B: Secret token for webhook/API auth
     waypoint_id: str  # MANDATORY - enforced at creation
+    location: Optional[dict] = None  # GeoJSON Point: {"type": "Point", "coordinates": [lon, lat]}
     status: CameraStatus = CameraStatus.ACTIVE
     photo_count: int = 0
     last_photo_at: Optional[datetime] = None
-    external_account: Optional[dict] = None  # {"provider": "spypoint", ...}
+    external_account: Optional[dict] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -122,6 +129,7 @@ class CameraResponse(BaseModel):
     name: Optional[str]
     gps_lat: Optional[float]
     gps_lon: Optional[float]
+    location: Optional[dict] = None
     status: CameraStatus
     photo_count: int
     last_photo_at: Optional[datetime]
