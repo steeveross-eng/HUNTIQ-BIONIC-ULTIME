@@ -58,7 +58,8 @@
 
 ### P2 — Actif
 - [x] Module Cameras (CAM-EXEC-Omega: 6 phases executees 2026-04-14, 12 endpoints, frontend /cameras)
-- [x] Localisation Cameras (CAM-LOC-EXEC V2: MON TERRITOIRE + CARTE + zone 600m + halo + groupes, 2026-04-14)
+- [x] Module Admin ALPHA Analysis (AdminAlphaAnalysis.jsx + AdminPremiumPage integration, 2026-04-14)
+- [x] Header institutionnel: Accueil>Magasin>TdB>Analyse>Carte>Cameras>Intelligence>Permis (ambre)
 
 ### P3 — Gele
 - [ ] M5 Offline Mode Ultra / BSAA-2

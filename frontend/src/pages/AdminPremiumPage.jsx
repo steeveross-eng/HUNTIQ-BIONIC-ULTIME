@@ -63,9 +63,13 @@ import { AdminAffiliateAds } from '@/ui/administration/admin_affiliate_ads';
 import { AdminAdSpaces } from '@/ui/administration/admin_ad_spaces';
 import { AdminGlobalSwitch } from '@/ui/administration/admin_global_switch';
 import { AdminMessaging } from '@/ui/administration/admin_messaging';
+// CAM-ALPHA: Module Analyse Photos ALPHA
+import AdminAlphaAnalysis from '@/components/admin/AdminAlphaAnalysis';
 
 const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  // --- ALPHA Analysis ---
+  { id: 'alpha-analysis', label: 'Analyse ALPHA', icon: Crown, highlight: true },
   // --- BDRE-FIRST P1 ---
   { id: 'bdre', label: 'BDRE Monitor', icon: Shield, highlight: true },
   // --- SUPRA v2 & MAGASIN v2 ---
@@ -174,6 +178,7 @@ const AdminPremiumPage = () => {
   const renderContent = () => {
     switch (activeSection) {
       case 'dashboard': return <AdminDashboard onNavigate={setActiveSection} />;
+      case 'alpha-analysis': return <AdminAlphaAnalysis />;
       case 'bdre': return <AdminBDREMonitor />;
       case 'supra-engines': return <AdminSupraEngines />;
       case 'products-catalog': return <AdminProductsCatalog />;
