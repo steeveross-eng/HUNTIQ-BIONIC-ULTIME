@@ -25,7 +25,7 @@ import PedagogieModule from '../PedagogieModule';
 // Score + Gauge | 4 Moteurs | Minéraux + Besoins + Recette + Coûts
 // BCE-4X STEEVE-MAX — STANDARD GOLDEN — DENSITÉ MAXIMALE
 // ============================================================
-const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, comparison, ecozone, energyProtein, terrainSolutions, gc, np, engines, ultraScore, ultraDeficits, species, season, soilData }) => {
+const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, comparison, ecozone, energyProtein, terrainSolutions, gc, np, engines, ultraScore, ultraDeficits, species, season, soilData, territoryIa }) => {
   const needColor = (level) => {
     if (level === 'EXTREME' || level === 'CRITIQUE') return BIONIC.red;
     if (level === 'TRES ELEVE' || level === 'ELEVE') return BIONIC.orange;
@@ -311,6 +311,68 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
             </div>
           </GoldenCard>
         </div>
+      )}
+
+      {/* SUPRA-REACT-Omega: Bloc IA Territoire */}
+      {territoryIa && (territoryIa.cameras?.length > 0 || territoryIa.vision_analyses?.length > 0 || territoryIa.hotspots?.length > 0 || territoryIa.affuts_ia?.length > 0) && (
+        <GoldenCard accentColor={BIONIC.cyan} testId="supra-territory-ia-card" className="mt-3">
+          <div className="flex items-center gap-2 mb-2">
+            <IC icon={Eye} color={BIONIC.cyan} size={28} />
+            <span className="text-[15px] font-bold text-white">Intelligence Territoire IA</span>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            {territoryIa.cameras?.length > 0 && (
+              <div className="rounded-lg p-2" style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
+                <div className="text-[22px] font-black text-amber-400">{territoryIa.cameras.length}</div>
+                <div className="text-[11px] text-slate-400">Cameras actives</div>
+              </div>
+            )}
+            {territoryIa.vision_analyses?.length > 0 && (
+              <div className="rounded-lg p-2" style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
+                <div className="text-[22px] font-black text-green-400">{territoryIa.vision_analyses.length}</div>
+                <div className="text-[11px] text-slate-400">Analyses IA Vision</div>
+              </div>
+            )}
+            {territoryIa.hotspots?.length > 0 && (
+              <div className="rounded-lg p-2" style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
+                <div className="text-[22px] font-black text-purple-400">{territoryIa.hotspots.length}</div>
+                <div className="text-[11px] text-slate-400">Hotspots IA</div>
+              </div>
+            )}
+            {territoryIa.affuts_ia?.length > 0 && (
+              <div className="rounded-lg p-2" style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
+                <div className="text-[22px] font-black text-red-400">{territoryIa.affuts_ia.length}</div>
+                <div className="text-[11px] text-slate-400">Affuts IA</div>
+              </div>
+            )}
+          </div>
+          {territoryIa.species_detections?.length > 0 && (
+            <div className="mt-2">
+              <div className="text-[11px] font-semibold text-slate-500 mb-1">Especes detectees par IA:</div>
+              <div className="flex flex-wrap gap-1">
+                {territoryIa.species_detections.map(sp => (
+                  <span key={sp.species} className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: `${BIONIC.green}15`, color: BIONIC.green }}>
+                    {sp.species} ({sp.count})
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+          {territoryIa.affuts_ia?.length > 0 && (
+            <div className="mt-2">
+              <div className="text-[11px] font-semibold text-slate-500 mb-1">Meilleurs affuts IA:</div>
+              {territoryIa.affuts_ia.slice(0, 3).map((a, i) => (
+                <div key={i} className="flex items-center gap-2 text-[11px] mb-0.5">
+                  <span className="font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: a.score >= 60 ? `${BIONIC.green}20` : `${BIONIC.orange}20`, color: a.score >= 60 ? BIONIC.green : BIONIC.orange }}>
+                    {Math.round(a.score)}
+                  </span>
+                  <span className="text-slate-300">{a.stand_name_fr}</span>
+                  {a.saline_distance_m != null && <span className="text-slate-500">| Saline: {Math.round(a.saline_distance_m)}m</span>}
+                </div>
+              ))}
+            </div>
+          )}
+        </GoldenCard>
       )}
     </div>
   );

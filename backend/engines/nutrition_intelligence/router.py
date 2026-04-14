@@ -447,21 +447,38 @@ async def supra_batch(req: SupraBatchRequest):
     fiche_result["_scientific"] = overlay_fiche(req.species, req.season, req.lat, req.lng)
     soil_result["_scientific"] = overlay_sol(req.species, req.season, req.lat, req.lng)
 
+    # SUPRA-REACT-Omega: Inject territory IA data (cameras, vision, hotspots, affuts)
+    territory_ia = {}
+    try:
+        from engines.supra_advanced.territory_bridge import get_territory_ia_data
+        territory_ia = await get_territory_ia_data(req.lat, req.lng, req.species)
+    except Exception as e_tia:
+        logger.warning(f"[SUPRA-TERRITORY] Territory IA bridge error: {e_tia}")
+
     return {
         "supra": supra_result,
         "ultra": ultra_result,
         "fiche": fiche_result,
         "soil": soil_result,
+        "territory_ia": territory_ia,
         "_harmonized": True,
         "_knowledge": knowledge_block,
         "_meta": {
-            "engines": ["SUPRA", "ULTRA", "FICHE", "SOL"],
+            "engines": ["SUPRA", "ULTRA", "FICHE", "SOL", "TERRITORY_IA"],
             "k5_activation": True,
+            "supra_react_omega": True,
             "scores": {
                 "SUPRA": supra_score.get("score_global"),
                 "ULTRA": ultra_is.get("global_score"),
                 "FICHE": fiche_gs.get("score"),
                 "SOL": soil_result.get("score"),
+            },
+            "territory_ia_stats": {
+                "cameras": len(territory_ia.get("cameras", [])),
+                "analyses": len(territory_ia.get("vision_analyses", [])),
+                "hotspots": len(territory_ia.get("hotspots", [])),
+                "trajectories": len(territory_ia.get("trajectories", [])),
+                "affuts_ia": len(territory_ia.get("affuts_ia", [])),
             },
             "timestamp": now,
             "protocol": "BCE-4X GOLDEN V6+",

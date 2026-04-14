@@ -35,7 +35,7 @@ const FicheGradeTag = ({ grade, color }) => {
   return <span className="px-2 py-0.5 text-[10px] font-black rounded" style={{ backgroundColor: `${c}20`, color: c, border: `1px solid ${c}40` }}>{grade}</span>;
 };
 
-const FicheTab = ({ ficheData, species, season, lat, lng, np, soilData }) => {
+const FicheTab = ({ ficheData, species, season, lat, lng, np, soilData, territoryIa }) => {
   const [showSources, setShowSources] = useState(false);
   const [selectedCriteria, setSelectedCriteria] = useState(null);
   const [selectedCriteriaValue, setSelectedCriteriaValue] = useState(null);

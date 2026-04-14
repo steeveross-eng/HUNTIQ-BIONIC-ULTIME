@@ -84,6 +84,8 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose, selectedSpecies })
   const [ficheData, setFicheData] = useState(null);
   // SOIL ENGINE state
   const [soilData, setSoilData] = useState(null);
+  // SUPRA-REACT-Omega: Territory IA state
+  const [territoryIa, setTerritoryIa] = useState(null);
 
   const np = nutritionPoint;
   // PRIORITE: selectedSpecies (choix utilisateur) > np.species > fallback orignal
@@ -114,6 +116,7 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose, selectedSpecies })
       if (d.ultra) setUltraData(d.ultra);
       if (d.fiche) setFicheData(d.fiche);
       if (d.soil) setSoilData(d.soil);
+      if (d.territory_ia) setTerritoryIa(d.territory_ia);
     } catch (e) {
       console.error('[SUPRA v2]', e);
     } finally {
@@ -264,10 +267,12 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose, selectedSpecies })
             <AnalyseTab score={score} recipe={recipe} recommendations={recommendations} evidence={evidence}
               costs={costs} comparison={comparison} ecozone={ecozone} energyProtein={energyProtein}
               terrainSolutions={terrainSolutions} gc={gc} np={np} engines={engines}
-              ultraScore={ultraScore} ultraDeficits={ultraDeficits} species={species} season={resolvedSeason} soilData={soilData} />
+              ultraScore={ultraScore} ultraDeficits={ultraDeficits} species={species} season={resolvedSeason} soilData={soilData}
+              territoryIa={territoryIa} />
           )}
           {!loading && activeTab === 'fiche' && (
-            <FicheTab ficheData={ficheData} species={species} season={resolvedSeason} lat={lat} lng={lng} np={np} soilData={soilData} />
+            <FicheTab ficheData={ficheData} species={species} season={resolvedSeason} lat={lat} lng={lng} np={np} soilData={soilData}
+              territoryIa={territoryIa} />
           )}
           {!loading && products && activeTab === 'intelligence' && (
             <IntelligenceTab products={products} gc={gc} compareIds={compareIds} toggleCompare={toggleCompare} addToCart={addToCart} cartLoading={cartLoading} />
