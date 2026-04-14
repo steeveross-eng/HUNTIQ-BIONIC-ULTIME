@@ -226,6 +226,14 @@ class ServerOrchestrator:
             logger.info("✓ Loaded: Affut IA Engine [/api/v1/affuts-ia/*]")
         except ImportError as e:
             logger.debug(f"Affut IA Engine not available: {e}")
+        
+        # P1-ENGINE-Omega + SYSTEM-Omega-EXPANSION-V1: 12 moteurs unifies
+        try:
+            from modules.p1_engines import p1_engines_router
+            self.app.include_router(p1_engines_router)
+            logger.info("✓ Loaded: P1 Engines [/api/v1/p1/*] (12 moteurs, 14 endpoints)")
+        except ImportError as e:
+            logger.debug(f"P1 Engines not available: {e}")
     
     def register_legacy_router(self):
         """
