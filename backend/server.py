@@ -99,6 +99,16 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning(f"x7000 index creation warning: {e}")
     
+    # CAM-Omega: Create camera engine indexes
+    try:
+        from modules.camera_engine.v1.router import ensure_camera_indexes
+        from modules.camera_engine.dependencies import get_camera_db
+        cam_db = get_camera_db()
+        await ensure_camera_indexes(cam_db)
+        logger.info("✓ Camera engine indexes created")
+    except Exception as e:
+        logger.warning(f"Camera engine index creation warning: {e}")
+    
     logger.info("=" * 60)
     logger.info("✓ All modules loaded successfully")
     logger.info("=" * 60)

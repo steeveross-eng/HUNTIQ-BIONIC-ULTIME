@@ -62,6 +62,7 @@ class CameraBase(BaseModel):
     name: Optional[str] = None
     gps_lat: Optional[float] = None
     gps_lon: Optional[float] = None
+    integration_type: str = "manual"  # manual, email, api
 
 
 class CameraCreate(CameraBase):
@@ -85,6 +86,7 @@ class CameraUpdate(BaseModel):
     gps_lat: Optional[float] = None
     gps_lon: Optional[float] = None
     status: Optional[CameraStatus] = None
+    integration_type: Optional[str] = None
 
 
 class Camera(CameraBase):
@@ -92,10 +94,12 @@ class Camera(CameraBase):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     user_id: str
     email_alias: str  # Unique email for this camera's photo ingestion
+    api_secret: str = ""  # CAM-B: Secret token for webhook/API auth
     waypoint_id: str  # MANDATORY - enforced at creation
     status: CameraStatus = CameraStatus.ACTIVE
     photo_count: int = 0
     last_photo_at: Optional[datetime] = None
+    external_account: Optional[dict] = None  # {"provider": "spypoint", ...}
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -110,6 +114,7 @@ class CameraResponse(BaseModel):
     id: str
     user_id: str
     email_alias: str
+    api_secret: str = ""
     waypoint_id: str
     manufacturer: CameraManufacturer
     model: Optional[str]
@@ -120,6 +125,8 @@ class CameraResponse(BaseModel):
     status: CameraStatus
     photo_count: int
     last_photo_at: Optional[datetime]
+    integration_type: str = "manual"
+    external_account: Optional[dict] = None
     created_at: datetime
     updated_at: datetime
 
@@ -160,6 +167,7 @@ class CameraEvent(CameraEventBase):
     raw_image_url: str  # Encrypted
     thumbnail_url: Optional[str] = None
     exif_data: Optional[dict] = None
+    source: str = "manual"  # email, api, manual, bulk
     is_quarantined: bool = False
     quarantine_reason: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
@@ -232,3 +240,44 @@ class IngestionLog(BaseModel):
     event_id: Optional[str] = None
     error_details: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+# ============================================
+# PHOTO MODELS (CAM-A)
+# ============================================
+
+class CameraPhoto(BaseModel):
+    """Individual photo stored for a camera event"""
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    event_id: str
+    camera_id: str
+    user_id: str
+    filename_original: str
+    storage_path: str
+    thumbnail_path: Optional[str] = None
+    file_size: int = 0
+    mime_type: str = "image/jpeg"
+    width: Optional[int] = None
+    height: Optional[int] = None
+    validation_status: str = "valid"  # valid, invalid
+    validation_reason: Optional[str] = None
+    exif_quality_score: int = 0
+    encrypted: bool = True
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class PhotoUploadResponse(BaseModel):
+    """Response from photo upload endpoint"""
+    success: bool
+    events_created: int
+    events: List[dict] = []
+    validation_results: List[dict] = []
+
+
+class CameraStatsResponse(BaseModel):
+    """Stats for camera dashboard"""
+    total_cameras: int = 0
+    active_cameras: int = 0
+    total_photos: int = 0
+    total_events: int = 0
+    recent_events: List[dict] = []

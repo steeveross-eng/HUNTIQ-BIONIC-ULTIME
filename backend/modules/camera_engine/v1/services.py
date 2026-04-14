@@ -100,6 +100,7 @@ class CameraRegistryService:
             id=camera_id,
             user_id=user_id,
             email_alias=email_alias,
+            api_secret=hashlib.sha256(f"{camera_id}:{user_id}:{uuid.uuid4()}".encode()).hexdigest()[:32],
             waypoint_id=data.waypoint_id,
             manufacturer=data.manufacturer,
             model=data.model,
@@ -107,6 +108,7 @@ class CameraRegistryService:
             name=data.name,
             gps_lat=data.gps_lat,
             gps_lon=data.gps_lon,
+            integration_type=data.integration_type,
             status=CameraStatus.ACTIVE,
             created_at=datetime.now(timezone.utc),
             updated_at=datetime.now(timezone.utc)
