@@ -59,6 +59,7 @@ const CameraModule = () => {
   const [events, setEvents] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [userWaypoints, setUserWaypoints] = useState([]);
 
   // Modals
   const [showCreateCamera, setShowCreateCamera] = useState(false);
@@ -114,10 +115,26 @@ const CameraModule = () => {
     }
   }, [token]);
 
+  const loadWaypoints = useCallback(async () => {
+    if (!token || !user?.user_id) return;
+    try {
+      const res = await axios.get(`${API}/user-data/waypoints/${user.user_id}`, getAuthHeaders(token));
+      setUserWaypoints(res.data.waypoints || res.data || []);
+    } catch {
+      // Fallback: try territory waypoints
+      try {
+        const res2 = await axios.get(`${API}/territory/waypoints`, getAuthHeaders(token));
+        setUserWaypoints(res2.data.waypoints || res2.data || []);
+      } catch {
+        setUserWaypoints([]);
+      }
+    }
+  }, [token, user]);
+
   useEffect(() => {
     if (token) {
       setLoading(true);
-      Promise.all([loadCameras(), loadEvents(), loadStats()])
+      Promise.all([loadCameras(), loadEvents(), loadStats(), loadWaypoints()])
         .finally(() => setLoading(false));
     }
   }, [token, loadCameras, loadEvents, loadStats]);
@@ -578,6 +595,7 @@ const CameraModule = () => {
         initialLat={locationPickerCam?.gps_lat}
         initialLng={locationPickerCam?.gps_lon}
         cameraName={locationPickerCam?.name}
+        waypoints={userWaypoints}
       />
 
       {/* MAP PICKER for CREATE form */}
@@ -591,6 +609,7 @@ const CameraModule = () => {
         initialLat={newCamera.gps_lat ? parseFloat(newCamera.gps_lat) : null}
         initialLng={newCamera.gps_lon ? parseFloat(newCamera.gps_lon) : null}
         cameraName={newCamera.name || 'Nouvelle camera'}
+        waypoints={userWaypoints}
       />
     </div>
   );
