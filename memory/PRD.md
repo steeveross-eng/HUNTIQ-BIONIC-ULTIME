@@ -62,6 +62,7 @@
 - [x] Header institutionnel: Accueil>Magasin>TdB>Analyse>Carte>Cameras>Intelligence>Permis (ambre, INTEL toujours visible)
 
 ### P3 — Gele
+- [ ] IA Vision Ultime (IA-VISION-PREP: rapport livre 2026-04-14, 6 phases VIS-A a VIS-F, ~4-5 sessions)
 - [ ] M5 Offline Mode Ultra / BSAA-2
 - [ ] Integration DEM LIDAR et SIEF ecoforesterie
 - [ ] Module optimization_engine (Work1)
