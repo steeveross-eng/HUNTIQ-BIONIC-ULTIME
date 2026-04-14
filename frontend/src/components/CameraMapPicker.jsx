@@ -8,7 +8,22 @@ import L from 'leaflet';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { MapPin, CheckCircle, Navigation } from 'lucide-react';
+import { getMapConfig, MAP_TYPES } from '@/config/mapSources';
 import 'leaflet/dist/leaflet.css';
+
+// Read user's map preference from localStorage (same key as useMapType)
+function getUserMapConfig() {
+  try {
+    const saved = localStorage.getItem('bionic_map_preferences');
+    if (saved) {
+      const prefs = JSON.parse(saved);
+      const config = getMapConfig(prefs.mapType);
+      if (config && config.tileUrl) return config;
+    }
+  } catch {}
+  // Fallback to satellite (default BIONIC) — never plain OSM
+  return getMapConfig(MAP_TYPES.SATELLITE);
+}
 
 const cameraPickerIcon = L.divIcon({
   className: 'camera-picker-marker',
@@ -57,6 +72,9 @@ const AutoCenter = ({ lat, lng, zoom }) => {
 const CameraMapPicker = ({ isOpen, onClose, onConfirm, initialLat, initialLng, cameraName, waypoints = [] }) => {
   const [selectedLat, setSelectedLat] = useState(initialLat || null);
   const [selectedLng, setSelectedLng] = useState(initialLng || null);
+
+  // Use the SAME map tile as MON TERRITOIRE — single source of truth
+  const mapConfig = useMemo(() => getUserMapConfig(), []);
 
   // Compute center: WAYPOINTS FIRST — ZERO default view if waypoints exist
   const { centerLat, centerLng, centerZoom } = useMemo(() => {
@@ -126,9 +144,14 @@ const CameraMapPicker = ({ isOpen, onClose, onConfirm, initialLat, initialLng, c
             scrollWheelZoom={true}
           >
             <TileLayer
-              attribution='&copy; OpenStreetMap'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution={mapConfig.attribution || ''}
+              url={mapConfig.tileUrl}
+              maxZoom={mapConfig.maxZoom || 19}
             />
+            {/* Labels overlay if available */}
+            {mapConfig.labelsUrl && (
+              <TileLayer url={mapConfig.labelsUrl} maxZoom={mapConfig.maxZoom || 19} />
+            )}
             <AutoCenter lat={centerLat} lng={centerLng} zoom={centerZoom} />
             <MapClickHandler onPositionSelect={handlePositionSelect} />
 

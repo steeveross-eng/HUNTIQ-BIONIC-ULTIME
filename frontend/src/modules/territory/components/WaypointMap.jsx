@@ -7,6 +7,7 @@
  */
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
+import { getMapConfig, MAP_TYPES } from '@/config/mapSources';
 import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
@@ -684,8 +685,20 @@ export const WaypointMap = ({
                   style={{ background: '#000' }}
                 >
                   <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution={(() => {
+                      try {
+                        const saved = localStorage.getItem('bionic_map_preferences');
+                        if (saved) { const cfg = getMapConfig(JSON.parse(saved).mapType); if (cfg?.attribution) return cfg.attribution; }
+                      } catch {}
+                      return '© Esri, Maxar';
+                    })()}
+                    url={(() => {
+                      try {
+                        const saved = localStorage.getItem('bionic_map_preferences');
+                        if (saved) { const cfg = getMapConfig(JSON.parse(saved).mapType); if (cfg?.tileUrl) return cfg.tileUrl; }
+                      } catch {}
+                      return 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+                    })()}
                   />
                   {/* Handle URL params for centering (from Admin) */}
                   {initialCenter && <SetViewFromProps initialCenter={initialCenter} initialZoom={initialZoom} />}
