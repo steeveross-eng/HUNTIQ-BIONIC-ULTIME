@@ -32,6 +32,9 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { GroupeTab } from '../modules/groupe';
+import { useAuth } from '@/components/GlobalAuth';
+import useCameraLayer from '@/hooks/useCameraLayer';
+import CameraMarkersLayer from '@/components/territoire/CameraMarkersLayer';
 
 const MapPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -39,6 +42,10 @@ const MapPage = () => {
   const [refreshKey, setRefreshKey] = useState(0);
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const { token: authToken } = useAuth();
+  
+  // CAM-LOC-Omega: Camera layer
+  const { positionedCameras } = useCameraLayer(authToken, [], []);
   
   // BIONIC V6 States
   const [selectedSpecies, setSelectedSpecies] = useState('tous');
@@ -219,6 +226,8 @@ const MapPage = () => {
                 showCorridors={true}
                 onStatsUpdate={setBionicStats}
               />
+              {/* CAM-LOC-Omega: Camera markers on map */}
+              {positionedCameras.length > 0 && <CameraMarkersLayer cameras={positionedCameras} />}
             </WaypointMap>
 
             {/* ============================================ */}

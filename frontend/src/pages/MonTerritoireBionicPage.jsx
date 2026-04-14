@@ -48,6 +48,7 @@ import PlacesSidePanel from '@/components/territoire/PlacesSidePanel';
 import IntelligenceDashboard from '@/components/territoire/IntelligenceDashboard';
 import WeatherPanel from '@/components/territoire/ui/WeatherPanel';
 import useSpatialClipping from '@/hooks/useSpatialClipping';
+import useCameraLayer from '@/hooks/useCameraLayer';
 import { BIONIC_MODULES } from '@/core/bionic';
 import { SPECIES_LIST } from '@/core/bionic/speciesConfig';
 import { useZoneOrchestrator } from '@/hooks/useZoneOrchestrator';
@@ -250,7 +251,7 @@ const MonTerritoireBionicPage = () => {
   const { userPosition, setUserPosition, watchingPosition, startWatchingPosition, stopWatchingPosition, centerOnUser } = useGeolocation(mapRef);
   
   // P0 FIX: Use auth context for userId instead of broken localStorage read
-  const { user: authUser } = useAuth();
+  const { user: authUser, token: authToken } = useAuth();
   const userId = useMemo(() => {
     if (authUser?.id) return authUser.id;
     if (authUser?.email) return authUser.email;
@@ -275,6 +276,9 @@ const MonTerritoireBionicPage = () => {
     deletePlace,
     syncToBackend
   } = useUserData(userId, { autoSync: true });
+  
+  // CAM-LOC-Omega: Camera layer with 600m zone detection
+  const { positionedCameras } = useCameraLayer(authToken, activeWaypoints, []);
   
   // IM1.2 — Hook actions waypoints/lieux (extrait)
   const {
@@ -1288,6 +1292,8 @@ const MonTerritoireBionicPage = () => {
               onHeatmapDataLoaded={setHeatmapV10Data}
               heatmapIncludeCorridors={heatmapIncludeCorridors}
               showHydro={showHydro}
+              userCameras={positionedCameras}
+              showCameraMarkers={true}
             />
           </MapContainer>
 

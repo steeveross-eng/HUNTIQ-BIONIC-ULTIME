@@ -58,7 +58,7 @@
 
 ### P2 — Actif
 - [x] Module Cameras (CAM-EXEC-Omega: 6 phases executees 2026-04-14, 12 endpoints, frontend /cameras)
-- [x] Localisation Cameras (CAM-LOC-EXEC: 5 phases, GeoJSON+2dsphere+nearby+picker+layer, 2026-04-14)
+- [x] Localisation Cameras (CAM-LOC-EXEC V2: MON TERRITOIRE + CARTE + zone 600m + halo + groupes, 2026-04-14)
 
 ### P3 — Gele
 - [ ] M5 Offline Mode Ultra / BSAA-2
