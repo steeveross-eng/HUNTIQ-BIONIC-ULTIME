@@ -234,6 +234,14 @@ class ServerOrchestrator:
             logger.info("✓ Loaded: P1 Engines [/api/v1/p1/*] (12 moteurs, 14 endpoints)")
         except ImportError as e:
             logger.debug(f"P1 Engines not available: {e}")
+        
+        # CRITICAL-MODULES-Omega-ACTIVATION: 7 modules critiques
+        try:
+            from modules.critical_modules import critical_modules_router
+            self.app.include_router(critical_modules_router)
+            logger.info("✓ Loaded: Critical Modules [/api/v1/critical/*] (7 modules, 9 endpoints)")
+        except ImportError as e:
+            logger.debug(f"Critical Modules not available: {e}")
     
     def register_legacy_router(self):
         """

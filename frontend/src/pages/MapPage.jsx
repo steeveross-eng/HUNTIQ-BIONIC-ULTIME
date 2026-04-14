@@ -25,7 +25,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Map, Satellite, RefreshCw, X, Users, MapPin, Bell, BarChart3, 
   Smartphone, ArrowLeft, Layers, Eye, EyeOff, ChevronDown, ChevronUp,
-  Target, CheckCircle
+  Target, CheckCircle, Compass
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -38,6 +38,7 @@ import useAlphaLayer from '@/hooks/useAlphaLayer';
 import CameraMarkersLayer from '@/components/territoire/CameraMarkersLayer';
 import AlphaHotspotsLayer from '@/components/territoire/AlphaHotspotsLayer';
 import TrajectoriesLayer from '@/components/territoire/TrajectoriesLayer';
+import GuideProPanel from '@/components/GuideProPanel';
 
 const MapPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -60,6 +61,7 @@ const MapPage = () => {
   // BIONIC V6 States
   const [selectedSpecies, setSelectedSpecies] = useState('tous');
   const [showBionicPanel, setShowBionicPanel] = useState(false);
+  const [showGuideProPanel, setShowGuideProPanel] = useState(false);
   const [bionicStats, setBionicStats] = useState({});
   const { layersVisible, toggleLayer, showAllLayers, hideAllLayers } = useBionicLayers();
   
@@ -151,6 +153,18 @@ const MapPage = () => {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* GUIDE PRO Button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowGuideProPanel(!showGuideProPanel)}
+              className={`h-8 px-3 text-xs ${showGuideProPanel ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-400 hover:text-white'}`}
+              data-testid="toggle-guide-pro-panel"
+            >
+              <Compass className="h-3.5 w-3.5 mr-1.5" />
+              GUIDE PRO
+            </Button>
+
             {/* BIONIC V6 Toggle Button */}
             <Button
               variant="ghost"
@@ -242,6 +256,14 @@ const MapPage = () => {
               {alphaHotspots.length > 0 && <AlphaHotspotsLayer hotspots={alphaHotspots} />}
               {mapTrajectories.length > 0 && <TrajectoriesLayer trajectories={mapTrajectories} />}
             </WaypointMap>
+
+            {/* GUIDE-PRO-Omega: Panneau Guide Pro */}
+            <GuideProPanel
+              isOpen={showGuideProPanel}
+              onClose={() => setShowGuideProPanel(false)}
+              mapCenter={{ lat: urlParams.hasParams ? urlParams.lat : 47.5, lng: urlParams.hasParams ? urlParams.lng : -71.8 }}
+              selectedSpecies={selectedSpecies}
+            />
 
             {/* ============================================ */}
             {/* BIONIC V6 — Panneau de contrôle flottant     */}
