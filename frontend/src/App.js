@@ -92,7 +92,7 @@ import {
   ExternalLink, Edit, Plus, Loader2, GraduationCap, BookOpen, Brain,
   Map, Globe, Construction, Power, Mail, Handshake, XCircle, Moon, Sun, Bot,
   Radar, Share2, Gift, Home, Target, Crosshair, Route as RouteIcon, Briefcase, Cloud,
-  Crown
+  Crown, Camera
 } from "lucide-react";
 import {
   Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle
@@ -199,6 +199,16 @@ const Navigation = ({ cartCount, onCartOpen }) => {
               <Globe className="h-3.5 w-3.5" />
               Carte
             </Link>
+
+            {/* CAM-ADMIN-HEADER: Module Cameras — entre CARTE et INTELLIGENCE */}
+            <Link 
+              to="/cameras" 
+              className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/cameras') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
+              data-testid="nav-cameras"
+            >
+              <Camera className="h-3.5 w-3.5" />
+              Cameras
+            </Link>
             
             {/* INTELLIGENCE V6-CORE — Dashboard M1+M2+M3+M4 FUSION */}
             <Link 
@@ -248,16 +258,6 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             >
               <Users className="h-3.5 w-3.5" />
               Gestionnaire
-            </Link>
-
-            {/* CAM-Omega: Module Cameras */}
-            <Link 
-              to="/cameras" 
-              className={`flex items-center gap-1.5 px-2 py-2 text-xs font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/cameras') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
-              data-testid="nav-cameras"
-            >
-              <Radar className="h-3.5 w-3.5" />
-              Cameras
             </Link>
 
             {/* SUPRA v2: Lien direct ANALYSE TERRITOIRE (moteur unifie) */}
@@ -363,6 +363,10 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             <Link to="/map" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-gray-300 hover:text-white" data-testid="mobile-nav-carte-interactive">
               <Globe className="h-4 w-4" /> Carte Interactive
             </Link>
+            {/* CAM-ADMIN-HEADER: Cameras entre Carte et Intelligence */}
+            <Link to="/cameras" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="mobile-nav-cameras">
+              <Camera className="h-4 w-4" /> Cameras
+            </Link>
             <Link to="/intelligence-v6" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#8B5CF6]" data-testid="mobile-nav-intelligence-v6">
               <Brain className="h-4 w-4" /> Intelligence V6
             </Link>
@@ -379,10 +383,6 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             {/* GESTIONNAIRE — Phase F BCE-4X BDRE-FIRST */}
             <Link to="/gestionnaire" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="mobile-nav-gestionnaire">
               <Users className="h-4 w-4" /> Gestionnaire
-            </Link>
-            {/* CAM-Omega: Module Cameras */}
-            <Link to="/cameras" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="mobile-nav-cameras">
-              <Radar className="h-4 w-4" /> Cameras
             </Link>
             {/* SUPRA v2: Nutrition integree dans ANALYSE TERRITOIRE */}
             {isBusinessOrAdmin && (
