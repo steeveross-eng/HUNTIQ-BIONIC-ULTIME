@@ -34,9 +34,14 @@
 - Routers marketplace + lands enregistres dans server_orchestrator
 - D3_EXEC_REPORT.md — 25 tests anti-regression, ZERO regression
 
----
+### Cloture Phase P2 + Reset Auth (2026-04-14)
+- Phase P2 officiellement close: 11 endpoints AUTH-USAGER deprecies
+- Reset mot de passe admin@huntiq.com: bcrypt re-hash + 485 sessions invalidees
 
 ## Backlog priorise
+- ZERO perte de donnees
+
+---
 
 ### P0 — Complet
 - [x] RUT-RENDER-Omega
