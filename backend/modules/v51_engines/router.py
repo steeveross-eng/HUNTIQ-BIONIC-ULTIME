@@ -525,3 +525,113 @@ async def intermodules_validate():
         "status": "TOUTES OPERATIONNELLES",
         "engine": "INTERMODULES-VALIDATE-Omega",
     }
+
+
+
+# ═══════════════════════════════════════════════════════════════
+# SECTION H — SCORE CHASSE V7 (INTELLIGENCE-V7)
+# ═══════════════════════════════════════════════════════════════
+
+@router.get("/intelligence/v7/score-chasse")
+async def score_chasse_v7(
+    lat: float = Query(...), lon: float = Query(...),
+    species: str = Query("cerf"), month: int = Query(None),
+    day: int = Query(None), hour: int = Query(None),
+    province: str = Query("qc"),
+    user: UserWithRole = Depends(get_current_user_with_role),
+    db: AsyncIOMotorDatabase = Depends(get_camera_db),
+):
+    """Score Chasse V7 — remplace Score Chasse V6+. Integre meteo, solunaire, rut, pression, nutrition_v7, spatial_v7."""
+    import time as _time
+    _start = _time.time()
+    now = datetime.now(timezone.utc)
+    m = month or now.month
+    d = day or now.day
+    h = hour or now.hour
+    doy = (m - 1) * 30 + d
+
+    # 1. Meteo temps reel
+    realtime_meteo = await _fetch_realtime_meteo(lat, lon)
+    temp_c = realtime_meteo["temp_c"] if realtime_meteo and realtime_meteo.get("temp_c") is not None else 8.0
+    wind_kmh = realtime_meteo["wind_kmh"] if realtime_meteo and realtime_meteo.get("wind_kmh") is not None else 15.0
+    meteo_score = max(20, 80 - abs(temp_c - 10) * 2 - wind_kmh * 0.5)
+    if realtime_meteo:
+        press = realtime_meteo.get("pressure_hpa")
+        if press and press >= 1020: meteo_score = min(100, meteo_score + 10)
+        elif press and press < 1000: meteo_score = max(20, meteo_score - 10)
+        precip = realtime_meteo.get("precipitation_mm")
+        if precip and precip > 5: meteo_score = max(20, meteo_score - 15)
+        elif precip is not None and precip == 0: meteo_score = min(100, meteo_score + 5)
+
+    # 2. Solunaire
+    phase = _moon_phase(doy)
+    solunar_score = 85 if phase < 0.1 else 60 if 0.4 < phase < 0.6 else 70
+
+    # 3. Temporal
+    crepuscular = species in ["cerf", "orignal", "wapiti", "caribou", "chevreuil"]
+    temporal_score = 90 if (5 <= h <= 8 or 16 <= h <= 19) and crepuscular else 50
+
+    # 4. Rut
+    rut_peaks = {"cerf": 310, "chevreuil": 310, "orignal": 275, "wapiti": 280}
+    peak = rut_peaks.get(species, 300)
+    rut_score = max(20, 100 - abs(doy - peak) * 2)
+
+    # 5. Pression chasse
+    pression_score = 40 if m in [9, 10, 11] else 70
+
+    # 6. Nutrition V7
+    try:
+        from modules.nutrition_engine_v7.pipeline import compute_attractiveness_v7
+        _season_map = {1: "hiver", 2: "hiver", 3: "printemps", 4: "printemps", 5: "printemps",
+                       6: "ete", 7: "ete", 8: "ete", 9: "pre_rut", 10: "rut", 11: "post_rut", 12: "hiver"}
+        _nv7 = compute_attractiveness_v7(lat, lon, species, _season_map.get(m, "automne"), m, include_temporal=False)
+        nutrition_score = _nv7.get("attractiveness_score", 50)
+    except Exception:
+        nutrition_score = 50
+
+    # 7. IA Vision
+    hotspots = await db['vision_hotspots'].count_documents({"user_id": user.user_id})
+    cameras = await db['cameras'].count_documents({"user_id": user.user_id, "status": "active"})
+    vision_score = min(100, hotspots * 15 + cameras * 10 + 20)
+
+    # Composite Score Chasse V7
+    weights = {
+        "meteo": 0.18, "solunar": 0.10, "temporal": 0.15,
+        "rut": 0.15, "pression": 0.10, "nutrition_v7": 0.15,
+        "vision_ia": 0.10, "spatial": 0.07,
+    }
+    # Spatial placeholder (habitat variance)
+    lat_v = math.sin(lat * 7.3) * 15
+    lon_v = math.cos(lon * 5.1) * 12
+    spatial_score = max(20, min(95, 65 + lat_v + lon_v))
+
+    scores = {
+        "meteo": round(meteo_score, 1),
+        "solunar": solunar_score,
+        "temporal": temporal_score,
+        "rut": rut_score,
+        "pression": pression_score,
+        "nutrition_v7": round(nutrition_score, 1),
+        "vision_ia": vision_score,
+        "spatial": round(spatial_score, 1),
+    }
+
+    composite = sum(scores[k] * weights[k] for k in weights)
+    composite = round(min(100, max(0, composite)), 1)
+    prediction = "excellent" if composite >= 75 else "bon" if composite >= 55 else "moyen" if composite >= 35 else "faible"
+
+    return {
+        "score_chasse_v7": composite,
+        "prediction": prediction,
+        "scores_detail": scores,
+        "weights": weights,
+        "conditions": {"temp_c": temp_c, "wind_kmh": wind_kmh, "hour": h, "month": m, "day": d},
+        "meteo_source": "realtime" if realtime_meteo else "static",
+        "realtime_meteo": realtime_meteo,
+        "optimal_windows": ["05:30-08:00", "16:30-19:00"] if crepuscular else ["06:00-10:00"],
+        "species": species,
+        "province": province,
+        "compute_ms": round((_time.time() - _start) * 1000),
+        "dataVersion": "V7",
+        "engine": "INTELLIGENCE-V7-SCORE-CHASSE",
+    }

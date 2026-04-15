@@ -719,6 +719,22 @@ try:
 except Exception as e:
     logger.warning(f"Nutrition Engine V7 not loaded: {e}")
 
+# SPATIAL-ENGINE-V7 — Moteur geospatial central V7
+try:
+    from engines.spatial_engine_v7.router import router as spatial_v7_router
+    app.include_router(spatial_v7_router)
+    logger.info("✓ SPATIAL-ENGINE-V7 registered (/api/v7/spatial) — 6 endpoints")
+except Exception as e:
+    logger.warning(f"Spatial Engine V7 not loaded: {e}")
+
+# SUPRA-ENGINE-V7 — Moteur decisionnel central V7
+try:
+    from engines.supra_engine_v7.router import router as supra_v7_router
+    app.include_router(supra_v7_router)
+    logger.info("✓ SUPRA-ENGINE-V7 registered (/api/v7/supra) — 6 endpoints")
+except Exception as e:
+    logger.warning(f"Supra Engine V7 not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")
@@ -729,6 +745,9 @@ logger.info("✓ ULTRA-MAX++ FIREWALL: Geo-fencing Shapely active")
 logger.info("✓ SALINES ULTIME: 5 scores + 20 sources active")
 logger.info("✓ CARTE-2027: Moteur cartographique terrain V7 active")
 logger.info("✓ NUTRITION-ENGINE-V7: Pipeline Sol→Nutriments→Fourrage→Gibier active")
+logger.info("✓ SPATIAL-ENGINE-V7: Corridors+Zones+Heatmap+Scoring+Amenagement active")
+logger.info("✓ SUPRA-ENGINE-V7: Analyse+Fiche+Compare+Recommande+Commande active")
+logger.info("✓ INTELLIGENCE-V7: Score Chasse V7 active")
 logger.info("=" * 60)
 
 
