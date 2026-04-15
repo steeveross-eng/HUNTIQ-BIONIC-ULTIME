@@ -13,6 +13,7 @@ Hierarchie: TERRITOIRE -> INTELLIGENCE -> CARTE 2027 (L3).
 import math
 import time
 import logging
+from datetime import datetime, timezone
 from typing import Optional, List
 from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel
@@ -153,22 +154,57 @@ async def carte2027_wind(
     lat: float = Query(...), lon: float = Query(...),
     user: UserWithRole = Depends(get_current_user_with_role),
 ):
-    """Donnees vent pour carte terrain."""
-    # Simulation basee sur heure et position
-    import random
-    random.seed(int(lat * 100) + int(lon * 100))
-    direction = random.randint(0, 359)
-    speed = round(random.uniform(5, 30), 1)
-    gusts = round(speed * random.uniform(1.2, 1.8), 1)
+    """Donnees vent temps reel pour carte terrain (ECCC/NOAA via Open-Meteo)."""
+    import httpx
 
-    return {
-        "direction_deg": direction,
-        "speed_kmh": speed,
-        "gusts_kmh": gusts,
-        "compass": ["N", "NE", "E", "SE", "S", "SO", "O", "NO"][direction // 45 % 8],
-        "hunting_impact": "favorable" if speed < 15 else "moderee" if speed < 25 else "defavorable",
-        "engine": "CARTE-2027-WIND-V7",
-    }
+    OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
+    try:
+        params = {
+            "latitude": lat, "longitude": lon,
+            "current": "wind_speed_10m,wind_direction_10m,wind_gusts_10m,temperature_2m,surface_pressure,relative_humidity_2m,precipitation,cloud_cover",
+            "timezone": "auto", "forecast_days": 1,
+        }
+        async with httpx.AsyncClient(timeout=4) as client:
+            resp = await client.get(OPEN_METEO_URL, params=params)
+            resp.raise_for_status()
+            raw = resp.json()
+        c = raw.get("current", {})
+        direction = c.get("wind_direction_10m", 0)
+        speed = c.get("wind_speed_10m", 0)
+        gusts = c.get("wind_gusts_10m", 0)
+        compass_dirs = ["N", "NE", "E", "SE", "S", "SO", "O", "NO"]
+        compass = compass_dirs[int(direction / 45) % 8] if direction is not None else "N"
+        impact = "favorable" if speed and speed < 15 else "moderee" if speed and speed < 25 else "defavorable"
+
+        return {
+            "direction_deg": round(direction) if direction else 0,
+            "speed_kmh": round(speed, 1) if speed else 0,
+            "gusts_kmh": round(gusts, 1) if gusts else 0,
+            "compass": compass,
+            "hunting_impact": impact,
+            "temperature_c": c.get("temperature_2m"),
+            "pressure_hpa": c.get("surface_pressure"),
+            "humidity_pct": c.get("relative_humidity_2m"),
+            "precipitation_mm": c.get("precipitation"),
+            "cloud_cover_pct": c.get("cloud_cover"),
+            "source": "ECCC/NOAA/GFS-realtime",
+            "engine": "CARTE-2027-WIND-V7-REALTIME",
+        }
+    except Exception as e:
+        import random
+        random.seed(int(lat * 100) + int(lon * 100))
+        direction = random.randint(0, 359)
+        speed = round(random.uniform(5, 30), 1)
+        gusts = round(speed * random.uniform(1.2, 1.8), 1)
+        return {
+            "direction_deg": direction,
+            "speed_kmh": speed,
+            "gusts_kmh": gusts,
+            "compass": ["N", "NE", "E", "SE", "S", "SO", "O", "NO"][direction // 45 % 8],
+            "hunting_impact": "favorable" if speed < 15 else "moderee" if speed < 25 else "defavorable",
+            "source": "fallback-simulated",
+            "engine": "CARTE-2027-WIND-V7-FALLBACK",
+        }
 
 
 @router.get("/corridors-overlay")
@@ -176,35 +212,69 @@ async def carte2027_corridors(
     lat: float = Query(...), lon: float = Query(...),
     species: str = Query("cerf"),
     radius_km: float = Query(10),
+    month: int = Query(None), day: int = Query(None), hour: int = Query(None),
     user: UserWithRole = Depends(get_current_user_with_role),
 ):
-    """Corridors de mouvement pour overlay carte."""
+    """Corridors de mouvement V7 avec ponderation temporelle + solunaire."""
+    now = datetime.now(timezone.utc)
+    m = month if month else now.month
+    d = day if day else now.day
+    h = hour if hour else now.hour
+    doy = (m - 1) * 30 + d
+
+    # V7 temporal weight
+    crepuscular = species in ["cerf", "orignal", "wapiti", "caribou"]
+    temporal_mult = 1.3 if (5 <= h <= 8 or 16 <= h <= 19) and crepuscular else 0.7 if 10 <= h <= 14 else 1.0
+
+    # V7 solunar weight
+    phase = abs(((doy % 29.53) / 29.53) * 2 - 1)
+    solunar_mult = 1.2 if phase < 0.15 else 0.85 if 0.4 < phase < 0.6 else 1.0
+
+    # V7 rut weight
+    rut_peaks = {"cerf": 310, "orignal": 275, "wapiti": 280, "dindon_sauvage": 130}
+    peak = rut_peaks.get(species, 300)
+    rut_dist = abs(doy - peak)
+    rut_mult = 1.4 if rut_dist < 10 else 1.1 if rut_dist < 30 else 0.9
+
     corridors = []
     step = radius_km / 111.0 / 4
 
-    for i in range(6):
-        angle = i * 60
+    for i in range(8):
+        angle = i * 45
         rad = math.radians(angle)
-        start_lat = lat + math.sin(rad) * step * 0.5
-        start_lon = lon + math.cos(rad) * step * 0.5 / math.cos(math.radians(lat))
-        end_lat = lat + math.sin(rad) * step * 2
-        end_lon = lon + math.cos(rad) * step * 2 / math.cos(math.radians(lat))
+        start_lat = lat + math.sin(rad) * step * 0.3
+        start_lon = lon + math.cos(rad) * step * 0.3 / math.cos(math.radians(lat))
+        end_lat = lat + math.sin(rad) * step * 2.2
+        end_lon = lon + math.cos(rad) * step * 2.2 / math.cos(math.radians(lat))
 
-        intensity = 0.3 + abs(math.sin(angle * 0.05 + lat)) * 0.7
+        base_intensity = 0.25 + abs(math.sin(angle * 0.05 + lat)) * 0.55
+        # V7 ponderation multi-facteur
+        v7_intensity = min(1.0, base_intensity * temporal_mult * solunar_mult * rut_mult)
+
         corridors.append({
-            "id": f"corridor_{i}",
+            "id": f"corridor_v7_{i}",
             "start": {"lat": round(start_lat, 5), "lng": round(start_lon, 5)},
             "end": {"lat": round(end_lat, 5), "lng": round(end_lon, 5)},
-            "intensity": round(intensity, 2),
+            "intensity": round(v7_intensity, 2),
+            "base_intensity": round(base_intensity, 2),
+            "v7_multiplier": round(temporal_mult * solunar_mult * rut_mult, 2),
             "species": species,
-            "type": "primary" if intensity > 0.6 else "secondary",
+            "type": "primary" if v7_intensity > 0.6 else "secondary",
+            "v7_weights": {
+                "temporal": round(temporal_mult, 2),
+                "solunar": round(solunar_mult, 2),
+                "rut": round(rut_mult, 2),
+            },
         })
+
+    corridors.sort(key=lambda c: c["intensity"], reverse=True)
 
     return {
         "corridors": corridors,
         "total": len(corridors),
         "species": species,
-        "engine": "CARTE-2027-CORRIDORS-V7",
+        "v7_conditions": {"month": m, "day": d, "hour": h, "doy": doy},
+        "engine": "CARTE-2027-CORRIDORS-V7-TEMPORAL",
     }
 
 

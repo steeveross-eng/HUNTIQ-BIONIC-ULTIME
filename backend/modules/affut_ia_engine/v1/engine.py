@@ -255,6 +255,15 @@ def _generate_justification(species: str, scores: dict, stand_type: dict, season
     parts.append(f"Heures optimales: {', '.join(sp_config['best_hours'])}.")
     parts.append(f"Ref. scientifique: {sp_config['science_ref']}.")
 
+    # V7-P1-CMD04: V7 Temporal enrichissement
+    v7t = scores.get("v7_temporal", 0)
+    if v7t >= 70:
+        parts.append(f"V7 Intelligence: Periode OPTIMALE (score temporel {round(v7t)}/100).")
+    elif v7t >= 40:
+        parts.append(f"V7 Intelligence: Periode moderee (score temporel {round(v7t)}/100).")
+    else:
+        parts.append(f"V7 Intelligence: Periode calme (score temporel {round(v7t)}/100) — planifier pour heures crepusculaires.")
+
     return " ".join(parts)
 
 
@@ -472,18 +481,43 @@ class AffutIAEngine:
             "wind": wind_score,
             "hotspot_ia": min(100, hotspot_score),
             "water": water_score,
-            "access": access_score
+            "access": access_score,
+            "v7_temporal": self._compute_v7_temporal(candidate, sp_config),
         }
 
+    def _compute_v7_temporal(self, candidate, sp_config):
+        """V7-P1-CMD04: Score V7 temporel pour ponderation affuts."""
+        now = datetime.now(timezone.utc)
+        h = now.hour
+        m = now.month
+        doy = (m - 1) * 30 + now.day
+
+        # Temporal
+        crepuscular = sp_config.get("activity_pattern") == "crepusculaire"
+        temporal = 90 if (5 <= h <= 8 or 16 <= h <= 19) and crepuscular else 50
+
+        # Solunar
+        phase = abs(((doy % 29.53) / 29.53) * 2 - 1)
+        solunar = 85 if phase < 0.1 else 60 if 0.4 < phase < 0.6 else 70
+
+        # Rut
+        species_name = sp_config.get("name_fr", "").lower()
+        rut_peaks = {"orignal": 275, "cerf": 310, "wapiti": 280, "caribou": 265}
+        peak = rut_peaks.get(next((k for k in rut_peaks if k in species_name), "cerf"), 300)
+        rut = max(20, 100 - abs(doy - peak) * 2)
+
+        return round(temporal * 0.40 + solunar * 0.25 + rut * 0.35, 1)
+
     def _compute_total_score(self, scores):
-        """Ponderation finale multi-couches."""
+        """Ponderation finale multi-couches + V7 TEMPORAL (P1-CMD04)."""
         weights = {
-            "saline": 0.25,
-            "corridor": 0.15,
-            "wind": 0.15,
-            "hotspot_ia": 0.25,
-            "water": 0.10,
-            "access": 0.10
+            "saline": 0.22,
+            "corridor": 0.13,
+            "wind": 0.13,
+            "hotspot_ia": 0.22,
+            "water": 0.08,
+            "access": 0.07,
+            "v7_temporal": 0.15,
         }
         total = sum(scores.get(k, 0) * w for k, w in weights.items())
         return min(100.0, max(0.0, total))

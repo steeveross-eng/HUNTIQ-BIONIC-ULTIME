@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 from typing import Optional
 from fastapi import APIRouter, Depends, Query
 from motor.motor_asyncio import AsyncIOMotorDatabase
+import httpx
 
 from modules.camera_engine.dependencies import get_camera_db
 from modules.roles_engine.v1.dependencies import get_current_user_with_role
@@ -19,6 +20,40 @@ from modules.roles_engine.v1.models import UserWithRole
 
 logger = logging.getLogger("bionic.v51_engines")
 router = APIRouter(prefix="/api/v1/v51", tags=["V5.1 Engines"])
+
+
+# ═══════════════════════════════════════════════════════════════
+# V7-P1-CMD01: METEO TEMPS REEL (ECCC/NOAA via Open-Meteo)
+# ═══════════════════════════════════════════════════════════════
+OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
+
+async def _fetch_realtime_meteo(lat: float, lon: float) -> dict:
+    """Recupere meteo temps reel depuis Open-Meteo (ECCC/NOAA/GFS)."""
+    try:
+        params = {
+            "latitude": lat, "longitude": lon,
+            "current": "temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,surface_pressure,relative_humidity_2m,precipitation,cloud_cover",
+            "timezone": "auto", "forecast_days": 1,
+        }
+        async with httpx.AsyncClient(timeout=4) as client:
+            resp = await client.get(OPEN_METEO_URL, params=params)
+            resp.raise_for_status()
+            raw = resp.json()
+        c = raw.get("current", {})
+        return {
+            "temp_c": c.get("temperature_2m"),
+            "wind_kmh": c.get("wind_speed_10m"),
+            "wind_dir_deg": c.get("wind_direction_10m"),
+            "wind_gust_kmh": c.get("wind_gusts_10m"),
+            "pressure_hpa": c.get("surface_pressure"),
+            "humidity_pct": c.get("relative_humidity_2m"),
+            "precipitation_mm": c.get("precipitation"),
+            "cloud_cover_pct": c.get("cloud_cover"),
+            "source": "ECCC/NOAA/GFS-realtime",
+        }
+    except Exception as e:
+        logger.warning(f"[METEO-V7] Fallback statique: {e}")
+        return None
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -288,13 +323,23 @@ async def intelligence_v7_score(
     lat: float = Query(...), lon: float = Query(...),
     species: str = Query("cerf"), month: int = Query(10), day: int = Query(15),
     hour: int = Query(6), province: str = Query("qc"),
-    temp_c: float = Query(8), wind_kmh: float = Query(15),
+    temp_c: Optional[float] = Query(None), wind_kmh: Optional[float] = Query(None),
     user: UserWithRole = Depends(get_current_user_with_role),
     db: AsyncIOMotorDatabase = Depends(get_camera_db)
 ):
-    """INTELLIGENCE-PREDICTIVE-V7: Score consolide fusionnant tous les moteurs."""
+    """INTELLIGENCE-PREDICTIVE-V7: Score consolide fusionnant tous les moteurs + METEO TEMPS REEL."""
     start = time.time()
     doy = (month - 1) * 30 + day
+
+    # V7-P1-CMD01: Fetch meteo temps reel si pas fourni en parametre
+    realtime_meteo = None
+    if temp_c is None or wind_kmh is None:
+        realtime_meteo = await _fetch_realtime_meteo(lat, lon)
+    if temp_c is None:
+        temp_c = realtime_meteo["temp_c"] if realtime_meteo and realtime_meteo.get("temp_c") is not None else 8.0
+    if wind_kmh is None:
+        wind_kmh = realtime_meteo["wind_kmh"] if realtime_meteo and realtime_meteo.get("wind_kmh") is not None else 15.0
+    meteo_source = "realtime" if realtime_meteo else "static"
 
     # Temporal
     crepuscular = species in ["cerf", "orignal", "wapiti", "caribou"]
@@ -304,8 +349,20 @@ async def intelligence_v7_score(
     phase = _moon_phase(doy)
     lunar_score = 85 if phase < 0.1 else 60 if 0.4 < phase < 0.6 else 70
 
-    # Meteo
-    meteo_score = max(20, 80 - abs(temp_c - 10) * 2 - wind_kmh * 0.5)
+    # Meteo V7 enrichi (pression + precipitation + humidite si dispo)
+    base_meteo = max(20, 80 - abs(temp_c - 10) * 2 - wind_kmh * 0.5)
+    if realtime_meteo:
+        press = realtime_meteo.get("pressure_hpa")
+        if press and press >= 1020:
+            base_meteo = min(100, base_meteo + 10)
+        elif press and press < 1000:
+            base_meteo = max(20, base_meteo - 10)
+        precip = realtime_meteo.get("precipitation_mm")
+        if precip and precip > 5:
+            base_meteo = max(20, base_meteo - 15)
+        elif precip and precip == 0:
+            base_meteo = min(100, base_meteo + 5)
+    meteo_score = round(base_meteo, 1)
 
     # IA Vision
     hotspots = await db['vision_hotspots'].count_documents({"user_id": user.user_id})
@@ -320,7 +377,7 @@ async def intelligence_v7_score(
     # Nutrition (salines)
     nutrition_score = 70
 
-    # Pression
+    # Pression chasse
     pressure_score = 40 if month in [9, 10, 11] else 70
 
     # Composite V7
@@ -339,11 +396,13 @@ async def intelligence_v7_score(
         "species": species, "province": province,
         "coordinates": {"lat": lat, "lon": lon},
         "conditions": {"temp_c": temp_c, "wind_kmh": wind_kmh, "hour": hour, "month": month, "day": day},
+        "meteo_source": meteo_source,
+        "realtime_meteo": realtime_meteo if realtime_meteo else None,
         "moon_phase": round(phase, 2),
         "prediction": "excellent" if v7_score >= 75 else "bon" if v7_score >= 55 else "moyen" if v7_score >= 35 else "faible",
         "optimal_windows": ["05:30-08:00", "16:30-19:00"] if crepuscular else ["06:00-10:00"],
         "compute_ms": elapsed,
-        "engine": "INTELLIGENCE-PREDICTIVE-V7",
+        "engine": "INTELLIGENCE-PREDICTIVE-V7-REALTIME",
         "shadow_mode": False,
     }
 

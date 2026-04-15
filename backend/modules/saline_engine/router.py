@@ -66,9 +66,9 @@ async def health_check():
 @router.post("/analyze")
 async def full_analysis(request: SalineAnalysisRequest):
     """
-    Analyse COMPLETE Saline Intelligence Ultra.
-    Orchestre les 7 sous-moteurs et produit la recommandation finale.
-    Interconnecte: alimentation_v2/terrain, solunar/engine, weather.
+    Analyse COMPLETE Saline Intelligence Ultra + V7 TEMPORAL.
+    Orchestre les 7 sous-moteurs + injection V7 temporel/solunaire.
+    V7-P1-CMD03: Salines sensibles a la periode optimale.
     """
     # Fetch terrain data from alimentation_v2
     terrain = _get_terrain_data(request.lat, request.lng)
@@ -88,6 +88,33 @@ async def full_analysis(request: SalineAnalysisRequest):
         solunar_data=solunar_data,
         weather_data=None,
     )
+
+    # V7-P1-CMD03: Injection V7 temporal + solunaire
+    import math
+    from datetime import datetime, timezone
+    now = datetime.now(timezone.utc)
+    h = now.hour
+    doy = (request.month - 1) * 30 + now.day
+    crepuscular = request.species.value in ["orignal", "cerf", "chevreuil", "wapiti", "caribou"]
+    temporal_score = 90 if (5 <= h <= 8 or 16 <= h <= 19) and crepuscular else 50
+    phase = abs(((doy % 29.53) / 29.53) * 2 - 1)
+    solunar_score = 85 if phase < 0.1 else 60 if 0.4 < phase < 0.6 else 70
+    rut_peaks = {"cerf": 310, "chevreuil": 310, "orignal": 275, "wapiti": 280}
+    peak = rut_peaks.get(request.species.value, 300)
+    rut_score = max(20, 100 - abs(doy - peak) * 2)
+
+    v7_temporal_block = {
+        "temporal_score": temporal_score,
+        "solunar_score": solunar_score,
+        "rut_score": rut_score,
+        "composite_v7": round((temporal_score * 0.35 + solunar_score * 0.30 + rut_score * 0.35), 1),
+        "optimal_now": temporal_score >= 70,
+        "recommendation": "Periode optimale — activite maximale" if temporal_score >= 70 else "Periode calme — preparer le terrain",
+        "engine": "SALINE-V7-TEMPORAL",
+    }
+
+    if isinstance(result, dict):
+        result["v7_temporal"] = v7_temporal_block
     return result
 
 
