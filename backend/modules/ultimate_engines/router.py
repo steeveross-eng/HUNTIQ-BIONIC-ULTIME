@@ -287,12 +287,236 @@ async def multi_species_balance(user: UserWithRole = Depends(get_current_user_wi
             "engine": "MULTI-SPECIES-BALANCE-Omega"}
 
 
-# ═══════════ MASTER STATUS ═══════════
+# ═══════════════════════════════════════════════════════════════
+# ENGINES-Omega-ULTIMATE-V3 — 6 MOTEURS SCIENTIFIQUES MANQUANTS
+# ═══════════════════════════════════════════════════════════════
+
+# ═══════════ V3-1. CWD-SPREAD (Chevreuil) ═══════════
+
+CWD_PARAMS = {
+    "transmission_rate_direct": 0.15,
+    "transmission_rate_environmental": 0.05,
+    "incubation_months": 16,
+    "corridor_spread_factor": 1.8,
+    "anthropic_corridor_factor": 2.5,
+}
+
+@router.get("/cwd-spread")
+async def cwd_spread(
+    lat: float = Query(...), lon: float = Query(...),
+    deer_density_per_km2: float = Query(8.0),
+    corridor_density: float = Query(0.5, ge=0, le=1),
+    anthropic_roads_km: float = Query(2.0),
+):
+    """ENGINE-CWD-SPREAD-Omega: Modelisation dispersion CWD via corridors anthropiques.
+    Ref: LaSharr et al. 2025 — PLOS One."""
+    base_risk = min(1.0, deer_density_per_km2 / 30)
+    corridor_mult = 1 + corridor_density * CWD_PARAMS["corridor_spread_factor"]
+    anthropic_mult = 1 + (anthropic_roads_km / 10) * CWD_PARAMS["anthropic_corridor_factor"]
+    spread_risk = min(1.0, base_risk * corridor_mult * anthropic_mult * 0.3)
+    risk_level = "critique" if spread_risk > 0.6 else "eleve" if spread_risk > 0.3 else "modere" if spread_risk > 0.1 else "faible"
+
+    return {
+        "lat": lat, "lon": lon,
+        "species": "cerf",
+        "spread_risk": round(spread_risk, 3),
+        "risk_level": risk_level,
+        "deer_density_per_km2": deer_density_per_km2,
+        "factors": {
+            "base_density_risk": round(base_risk, 3),
+            "corridor_multiplier": round(corridor_mult, 2),
+            "anthropic_multiplier": round(anthropic_mult, 2),
+        },
+        "parameters": CWD_PARAMS,
+        "recommendations": [
+            "Surveillance accrue aux carrefours de corridors anthropiques",
+            "Echantillonnage CWD prioritaire dans zones a haute densite",
+            "Restriction alimentation supplementaire dans zone a risque",
+        ] if spread_risk > 0.2 else ["Risque faible — surveillance standard"],
+        "ref": "LaSharr et al. 2025 — PLOS One: CWD spread via anthropic corridors",
+        "engine": "CWD-SPREAD-Omega",
+    }
+
+
+# ═══════════ V3-2. NEST-SURVIVAL (Dindon sauvage) ═══════════
+
+NEST_HABITAT_SCORES = {
+    "deciduous_mature": 0.82, "mixed_edge": 0.75, "conifer_dense": 0.45,
+    "grassland": 0.70, "shrubland": 0.65, "wetland_edge": 0.55,
+    "agricultural_edge": 0.60, "disturbed": 0.30,
+}
+
+@router.get("/nest-survival")
+async def nest_survival(
+    habitat_type: str = Query("mixed_edge"),
+    canopy_cover_pct: float = Query(60, ge=0, le=100),
+    distance_road_m: float = Query(200),
+    predator_index: float = Query(0.3, ge=0, le=1),
+    month: int = Query(5, ge=1, le=12),
+):
+    """ENGINE-NEST-SURVIVAL-Omega: Prediction succes nidification dindon sauvage.
+    Ref: Kilburg 2014 & Little 2016 — JWM."""
+    base = NEST_HABITAT_SCORES.get(habitat_type, 0.5)
+    canopy_factor = 1.0 if 40 <= canopy_cover_pct <= 80 else 0.7
+    road_factor = min(1.0, distance_road_m / 300)
+    predator_factor = 1 - predator_index * 0.6
+    season_factor = 1.0 if month in [4, 5, 6] else 0.3
+    survival_prob = min(1.0, base * canopy_factor * road_factor * predator_factor * season_factor)
+
+    return {
+        "species": "dindon_sauvage",
+        "habitat_type": habitat_type,
+        "nest_survival_probability": round(survival_prob, 3),
+        "factors": {
+            "habitat_base": round(base, 2), "canopy_factor": round(canopy_factor, 2),
+            "road_factor": round(road_factor, 2), "predator_factor": round(predator_factor, 2),
+            "season_factor": round(season_factor, 2),
+        },
+        "optimal_nesting": survival_prob > 0.6,
+        "recommendations": [
+            "Zone favorable — maintenir couvert arbustif 40-80%",
+            "Proteger les bordures de champs contre predation",
+        ] if survival_prob > 0.5 else [
+            "Zone sous-optimale — ameliorer couvert nidification",
+        ],
+        "ref": "Kilburg 2014 & Little 2016 — JWM: Turkey nest survival",
+        "engine": "NEST-SURVIVAL-Omega",
+    }
+
+
+# ═══════════ V3-3. HUMAN-BEAR-CONFLICT (Ours noir) ═══════════
+
+@router.get("/human-bear-conflict")
+async def human_bear_conflict(
+    lat: float = Query(...), lon: float = Query(...),
+    attractant_count: int = Query(2, ge=0),
+    fragmentation_index: float = Query(0.3, ge=0, le=1),
+    human_density_per_km2: float = Query(5.0),
+    season: str = Query("summer"),
+):
+    """ENGINE-HUMAN-BEAR-CONFLICT-Omega: Modele conflits humains-ours.
+    Ref: Baruch-Mordo 2014 — JAE."""
+    attractant_risk = min(1.0, attractant_count * 0.2)
+    fragmentation_risk = fragmentation_index * 0.8
+    density_risk = min(1.0, human_density_per_km2 / 50)
+    seasonal_mult = {"spring": 1.2, "summer": 1.5, "pre_rut": 1.3, "rut": 0.8, "post_rut": 0.6, "winter": 0.1}.get(season, 1.0)
+    conflict_prob = min(1.0, (attractant_risk * 0.4 + fragmentation_risk * 0.3 + density_risk * 0.3) * seasonal_mult)
+
+    return {
+        "lat": lat, "lon": lon, "species": "ours_noir",
+        "conflict_probability": round(conflict_prob, 3),
+        "risk_level": "critique" if conflict_prob > 0.6 else "eleve" if conflict_prob > 0.35 else "modere" if conflict_prob > 0.15 else "faible",
+        "factors": {
+            "attractant_risk": round(attractant_risk, 2),
+            "fragmentation_risk": round(fragmentation_risk, 2),
+            "density_risk": round(density_risk, 2),
+            "seasonal_multiplier": seasonal_mult,
+        },
+        "mitigation": [
+            "Securiser les poubelles et composteurs",
+            "Retirer les mangeoires a oiseaux mai-novembre",
+            "Installer clotures electriques autour des ruchers",
+        ] if conflict_prob > 0.3 else ["Risque faible — mesures preventives standard"],
+        "ref": "Baruch-Mordo 2014 — JAE: Human-bear conflict model",
+        "engine": "HUMAN-BEAR-CONFLICT-Omega",
+    }
+
+
+# ═══════════ V3-4. DEN-SITE-SELECTION (Ours noir) ═══════════
+
+@router.get("/den-site-selection")
+async def den_site_selection(
+    lat: float = Query(...), lon: float = Query(...),
+    slope_deg: float = Query(15), aspect: str = Query("N"),
+    canopy_cover_pct: float = Query(70), elevation_m: float = Query(400),
+    soil_depth_cm: float = Query(60),
+):
+    """ENGINE-DEN-SITE-SELECTION-Omega: Selection sites tanieres ours noir.
+    Ref: Donnees GOV/UNI/PR — Quebec."""
+    slope_score = 1.0 if 10 <= slope_deg <= 30 else 0.5
+    aspect_score = {"N": 0.9, "NE": 0.85, "NW": 0.85, "E": 0.6, "W": 0.6, "S": 0.3, "SE": 0.4, "SW": 0.4}.get(aspect, 0.5)
+    canopy_score = min(1.0, canopy_cover_pct / 80)
+    elevation_score = 1.0 if 300 <= elevation_m <= 600 else 0.6
+    soil_score = min(1.0, soil_depth_cm / 80)
+    total = (slope_score * 0.25 + aspect_score * 0.2 + canopy_score * 0.2 + elevation_score * 0.15 + soil_score * 0.2)
+
+    return {
+        "lat": lat, "lon": lon, "species": "ours_noir",
+        "den_suitability": round(total * 100),
+        "scores": {
+            "slope": round(slope_score * 100), "aspect": round(aspect_score * 100),
+            "canopy": round(canopy_score * 100), "elevation": round(elevation_score * 100),
+            "soil": round(soil_score * 100),
+        },
+        "optimal_den": total > 0.7,
+        "preferred_features": ["Pente 10-30 deg", "Exposition N/NE", "Canopee >70%", "Sol profond >60cm"],
+        "ref": "Donnees GOV/UNI/PR — Selection tanieres ours noir Quebec",
+        "engine": "DEN-SITE-SELECTION-Omega",
+    }
+
+
+# ═══════════ V3-5. MIGRATION-ELK (Wapiti) ═══════════
+
+ELK_MIGRATION = {
+    "spring": {"direction": "elevation_up", "trigger": "green_wave", "distance_km": 15, "duration_days": 21},
+    "pre_rut": {"direction": "rut_areas", "trigger": "photoperiod", "distance_km": 8, "duration_days": 14},
+    "rut": {"direction": "stable", "trigger": "breeding", "distance_km": 3, "duration_days": 30},
+    "post_rut": {"direction": "elevation_down", "trigger": "snow_depth", "distance_km": 12, "duration_days": 18},
+    "winter": {"direction": "winter_range", "trigger": "snow_depth", "distance_km": 20, "duration_days": 90},
+}
+
+@router.get("/migration-elk")
+async def migration_elk(month: int = Query(10), snow_depth_cm: float = Query(0)):
+    """ENGINE-MIGRATION-ELK-Omega: Modele migration saisonniere wapiti.
+    Ref: Proffitt 2016 & Hebblewhite 2010 — JWM / JAE."""
+    s = _season(month)
+    pattern = ELK_MIGRATION.get(s, ELK_MIGRATION["pre_rut"])
+    snow_trigger = snow_depth_cm > 30
+    active = s in ["spring", "post_rut", "winter"] or snow_trigger
+
+    return {
+        "species": "wapiti", "season": s, "month": month,
+        "migration_active": active,
+        "pattern": pattern,
+        "snow_depth_cm": snow_depth_cm,
+        "snow_triggered": snow_trigger,
+        "current_phase": "migration" if active else "resident",
+        "ref": "Proffitt 2016 & Hebblewhite 2010 — JWM/JAE: Elk migration",
+        "engine": "MIGRATION-ELK-Omega",
+    }
+
+
+# ═══════════ V3-6. RUT-DYNAMICS (Wapiti) ═══════════
+
+@router.get("/rut-dynamics")
+async def rut_dynamics(month: int = Query(10), herd_size: int = Query(15)):
+    """ENGINE-RUT-DYNAMICS-Omega: Dynamique du rut wapiti — harems, zones, corridors."""
+    s = _season(month)
+    rut_active = s in ["rut", "pre_rut"]
+    intensity = {"pre_rut": 0.5, "rut": 0.95, "post_rut": 0.15}.get(s, 0.0)
+    harem_size = max(1, int(herd_size * 0.4)) if rut_active else 0
+    satellite_bulls = max(0, int(herd_size * 0.2)) if rut_active else 0
+
+    return {
+        "species": "wapiti", "season": s, "month": month,
+        "rut_active": rut_active,
+        "intensity": intensity,
+        "herd_size": herd_size,
+        "harem_size": harem_size,
+        "satellite_bulls": satellite_bulls,
+        "bugling_activity": "intense" if intensity > 0.8 else "moderee" if intensity > 0.3 else "absente",
+        "preferred_rut_terrain": ["prairies ouvertes", "lisieres", "cretes", "vallees"] if rut_active else [],
+        "movement_pattern": "patrouille_harem" if intensity > 0.8 else "exploration" if intensity > 0.3 else "repos",
+        "engine": "RUT-DYNAMICS-Omega",
+    }
+
+
+# ═══════════ MASTER STATUS V3 ═══════════
 
 @router.get("/status")
 async def ultimate_engines_status():
-    """Statut global des 23 moteurs ULTIMES."""
-    engines = [
+    """Statut global des 29 moteurs ULTIMES (V2 + V3)."""
+    engines_v2 = [
         "THERMO-STRESS", "HEAT-BEHAVIOR", "COLD-SURVIVAL",
         "MAST-NUTRITION", "SPRING-PROTEIN", "SUMMER-HYDRATION",
         "HABITAT-SELECTION", "ECOLOGICAL-ZONES", "RESTING-SITES", "RUT-ZONES",
@@ -302,9 +526,16 @@ async def ultimate_engines_status():
         "VISION-FUSION", "HEAT-UNIFY-PLUS", "AFFUT-IA-V2",
         "MULTI-SPECIES-BALANCE"
     ]
+    engines_v3 = [
+        "CWD-SPREAD", "NEST-SURVIVAL", "HUMAN-BEAR-CONFLICT",
+        "DEN-SITE-SELECTION", "MIGRATION-ELK", "RUT-DYNAMICS"
+    ]
+    all_engines = engines_v2 + engines_v3
     return {
-        "engines": [{"name": f"ENGINE-{e}-Omega", "status": "OPERATIONNEL"} for e in engines],
-        "total": len(engines),
-        "version": "ENGINES-Omega-ULTIMATE-V2",
+        "engines": [{"name": f"ENGINE-{e}-Omega", "status": "OPERATIONNEL"} for e in all_engines],
+        "total": len(all_engines),
+        "v2_count": len(engines_v2),
+        "v3_count": len(engines_v3),
+        "version": "ENGINES-Omega-ULTIMATE-V3",
         "bce4x": "V6.2",
     }

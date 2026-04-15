@@ -2,13 +2,13 @@
 ## BCE-4X ULTIME ABSOLU V6.2 — COMMANDANT STEEVE-MAX
 **MAJ:** 2026-04-15
 
-## 59 MOTEURS ACTIFS
+## 65 MOTEURS ACTIFS
 
 ### Groupe A — Terrain (5 moteurs, 41 endpoints)
 camera_engine, vision_engine, affut_ia_engine, map_perf, guide_pro_engine
 
 ### Groupe B — P1 Engines (12 moteurs, 14 endpoints)
-OPTIMIZATION(recalibre 15 couches), HEAT-UNIFY, PREDICT-BEHAVIOR, ECO-DYNAMICS,
+OPTIMIZATION(15 couches recalibrees), HEAT-UNIFY, PREDICT-BEHAVIOR, ECO-DYNAMICS,
 TERRAIN-RISK-PLUS, CONSISTENCY, SCIENCE-CHECK, SHIELD-PLUS, GLOBAL-CERT, CMP-CERT, TRACE-LOG, BRANCH-REALIGN
 
 ### Groupe C — Critical (7 modules, 9 endpoints)
@@ -21,14 +21,16 @@ SUPRA+ULTRA+FICHE+SOL+TERRITORY_IA + 4 advanced
 auth_engine, roles_engine, optimization_engine(legacy)
 
 ### Groupe F — ULTIMATE V2 (23 moteurs)
-THERMO-STRESS, HEAT-BEHAVIOR, COLD-SURVIVAL, MAST-NUTRITION, SPRING-PROTEIN,
-SUMMER-HYDRATION, HABITAT-SELECTION, ECOLOGICAL-ZONES, RESTING-SITES, RUT-ZONES,
-CORRIDOR-STABILITY, DISPERSAL, CONNECTIVITY, FRAGMENTATION-RISK, ROAD-AVOIDANCE,
-HUMAN-PRESSURE, DEM-LIDAR, HYDRO, FOREST-STRUCTURE, VISION-FUSION,
-HEAT-UNIFY-PLUS, AFFUT-IA-V2, MULTI-SPECIES-BALANCE
+Thermo(3), Nutrition(3), Habitat(4), Paysage(5), Pression(1), Geo(3), IA Fusion(3), Multi-especes(1)
 
-## CARTE: RETIRE (redirect /territoire)
-## PROTECTIONS: SHIELD-MAX + ANTI-LEGACY + BCE-4X-V6.2
-## PERFORMANCE: Preload 157ms, GZip actif
+### Groupe G — ULTIMATE V3 (6 moteurs)
+- CWD-SPREAD-Omega (chevreuil, LaSharr 2025)
+- NEST-SURVIVAL-Omega (dindon, Kilburg 2014 & Little 2016)
+- HUMAN-BEAR-CONFLICT-Omega (ours, Baruch-Mordo 2014)
+- DEN-SITE-SELECTION-Omega (ours, GOV/UNI/PR)
+- MIGRATION-ELK-Omega (wapiti, Proffitt 2016 & Hebblewhite 2010)
+- RUT-DYNAMICS-Omega (wapiti, dynamique harems)
+
+## CARTE: RETIRE | PROTECTIONS: SHIELD-MAX + BCE-4X-V6.2
 
 FIN DU DOCUMENT
