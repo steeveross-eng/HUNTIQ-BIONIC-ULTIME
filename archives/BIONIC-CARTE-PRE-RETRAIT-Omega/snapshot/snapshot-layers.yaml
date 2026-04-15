@@ -1,0 +1,64 @@
+# BIONIC-CARTE-PRE-RETRAIT-Omega — Snapshot Layers
+# Date: 2026-04-14
+
+carte_layers:
+  actifs:
+    - name: CameraMarkersLayer
+      file: /frontend/src/components/territoire/CameraMarkersLayer.jsx
+      status: ACTIF
+    - name: AlphaHotspotsLayer
+      file: /frontend/src/components/territoire/AlphaHotspotsLayer.jsx
+      status: ACTIF
+    - name: TrajectoriesLayer
+      file: /frontend/src/components/territoire/TrajectoriesLayer.jsx
+      status: ACTIF
+    - name: HotspotOverlay
+      file: /frontend/src/modules/map_hotspots
+      status: ACTIF
+    - name: HeatmapLayer
+      file: /frontend/src/components/HeatmapLayer.jsx
+      status: ACTIF
+    - name: WindFlowLayer
+      file: /frontend/src/components/territoire/WindFlowLayer.jsx
+      status: ACTIF
+    - name: NdviOverlay
+      file: /frontend/src/modules/territory/components
+      status: ACTIF
+    - name: RouteReplayLayer
+      file: /frontend/src/components/territoire/RouteReplayLayer.jsx
+      status: ACTIF
+    - name: WaypointMarkers
+      file: /frontend/src/modules/territory/components/WaypointMap.jsx
+      status: ACTIF
+    - name: MapInteractionLayer
+      file: /frontend/src/modules/map_interaction
+      status: ACTIF
+  neutralises:
+    - name: BionicMapOverlay
+      file: /frontend/src/components/territoire/BionicMapOverlay.jsx
+      status: NEUTRALISE
+      action: SUPPRIMER
+    - name: FunctionalZonesV5
+      file: WaypointMap.jsx (inline)
+      status: NEUTRALISE
+      action: SUPPRIMER
+
+territoire_layers_18:
+  - EcoforestryLayers
+  - HydrographyOverlayLayer
+  - ExclusionOverlayLayer
+  - WindFlowLayer
+  - StructureContrastLayer
+  - CursorBionicLayer
+  - BionicZone2kmLayer
+  - HuntingPathLayer
+  - ConsolidatedHeatmapLayer
+  - BionicCorridorsV6Layer
+  - NutritionPointsLayer
+  - StandsMapLayer
+  - ContaminationOverlayLayer
+  - AccessRouteV6Layer
+  - CameraMarkersLayer
+  - AlphaHotspotsLayer
+  - TrajectoriesLayer
+  - MapInteractionLayer

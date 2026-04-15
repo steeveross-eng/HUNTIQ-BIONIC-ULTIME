@@ -1,0 +1,33 @@
+BIONIC-CARTE-PRE-RETRAIT-Omega — INSTRUCTIONS DE RESTAURATION
+================================================================
+
+RESTAURATION RAPIDE (< 10 minutes):
+1. Extraire l'archive ZIP
+2. cd codebase/
+3. tar xzf frontend.tar.gz -C /app/
+4. tar xzf backend.tar.gz -C /app/
+5. cd /app/frontend && yarn install
+6. cd /app/backend && pip install -r requirements.txt
+7. sudo supervisorctl restart backend frontend
+8. Verifier: curl https://[preview-url]/api/health
+
+RESTAURATION GIT:
+  git checkout freeze/carte-pre-retrait
+  OU
+  git checkout BIONIC-CARTE-PRE-RETRAIT-Omega
+
+RESTAURATION EMERGENT:
+  Utiliser la fonction "Rollback" dans l'interface Emergent
+  pour revenir au checkpoint pre-retrait.
+
+VERIFICATION POST-RESTAURATION:
+  1. curl /api/health → 200
+  2. curl /api/v1/camera/brands-config → 200
+  3. curl /api/v1/p1/status → 12 engines
+  4. curl /api/v1/critical/status → 7 modules
+  5. curl /api/v1/guide-pro/health → 200
+  6. Frontend accessible → 200
+
+CONTACTS:
+  Commandant: STEEVE-MAX
+  Protocole: BCE-4X ULTIME ABSOLU

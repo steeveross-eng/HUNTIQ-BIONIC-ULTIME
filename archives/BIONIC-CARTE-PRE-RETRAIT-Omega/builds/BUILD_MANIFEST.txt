@@ -1,0 +1,26 @@
+BIONIC-CARTE-PRE-RETRAIT-Omega — Build Manifest
+=================================================
+Date: 2026-04-15
+
+WEB BUILD:
+  Source: /app/frontend (React 19 + Leaflet)
+  Build cmd: cd /app/frontend && yarn build
+  Output: /app/frontend/build/
+  Status: HOT-RELOAD ACTIF (dev mode)
+
+API BUILD:
+  Source: /app/backend (FastAPI + Uvicorn)
+  Start cmd: uvicorn server:app --host 0.0.0.0 --port 8001
+  Status: PRODUCTION-READY via supervisor
+
+TERRITOIRE BUILD:
+  Source: MonTerritoireBionicPage.jsx + MapContent.jsx + 18 layers
+  Status: OPERATIONNEL (18 couches actives)
+
+MOBILE:
+  PWA: Service Worker registered via CRA
+  Android APK: Build via Capacitor (non genere dans container)
+  iOS IPA: Build via Capacitor (non genere dans container)
+
+NOTE: Les builds natifs mobile (APK/IPA) necessitent un pipeline CI/CD
+externe (Capacitor + Android Studio / Xcode). La codebase est prete.
