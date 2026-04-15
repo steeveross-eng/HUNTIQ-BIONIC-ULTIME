@@ -1,6 +1,6 @@
 # HUNTIQ V6 — PRD
-## BCE-4X V6.2 — SYSTEM-Omega-ULTIMATE-V5.4-FINAL + CARTE-2027-REBUILD
-**MAJ:** 2026-04-15 | **87 MOTEURS ACTIFS** | **CARTE-2027 DEPLOYEE**
+## BCE-4X V6.2 — SYSTEM-Omega-ULTIMATE-V5.4-FINAL + CARTE-2027 + AUDIT-V7
+**MAJ:** 2026-04-15 | **87 MOTEURS ACTIFS** | **CARTE-2027 DEPLOYEE** | **AUDIT V7 COMPLETE**
 
 ## Hierarchie cartes institutionnelle
 - L1: TERRITOIRE (carte institutionnelle, 87 moteurs, source verite)
@@ -29,19 +29,23 @@
 - Panneau Intelligence V7 flottant (Score V7, prevision 24h, solunaire, vent)
 - Couches: corridors mouvement, zones legales, POI, cameras, vent
 - Navigation GPS geolocalisation
-- Selecteurs espece + province
-- Compatible full-viewport (footer masque)
 - Backend: /api/v1/carte2027/* (5 endpoints)
 
-## Intelligence V7: Score V7, prediction horaire 24h, solunaire, multi-especes
+## AUDIT V7-SUBLAYERS — 2026-04-15
+- 62 sous-couches auditees
+- 18 V7-OK (29%) | 14 partielles (23%) | 22 non-V7 (35%) | 5 a migrer (8%) | 3 a reconstruire (5%)
+- 9 commandes correctives identifiees (P1: 4, P2: 3, P3: 2)
+- Rapport: /app/V7-SUBLAYERS-AUDIT-REPORT.md
 
-## Taches P0 completees
-- CARTE-2027-REBUILD-Omega-FULL-DEPLOY
-
-## Taches futures
-- P1: API meteo temps reel (ECCC / NOAA)
-- P1: M5 Offline Mode Ultra (PWA caching + heatmaps offline)
-- P2: LiDAR haute resolution (MFFP)
-- P2: MVT tiles conversion reelle
+## Taches futures (par priorite audit)
+- P1-CMD01: API meteo temps reel (ECCC/NOAA) pour Carte-2027 wind
+- P1-CMD02: Migration corridors V6 -> V7 (ponderation temporelle+solunaire)
+- P1-CMD03: Injection V7 dans saline_engine
+- P1-CMD04: Ponderation affuts IA avec V7 score
+- P2-CMD05: V7 comme couche #13 dans optimization engine
+- P2-CMD06: Rebuild ConsolidatedHeatmapLayer sur V7
+- P2-CMD07: Migration IntelligenceDashboard vers V7
+- P3-CMD08: Vision IA scoring V7
+- P3-CMD09: CursorBionicLayer migration V7
 
 FIN DU DOCUMENT
