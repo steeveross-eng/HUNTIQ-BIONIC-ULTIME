@@ -242,6 +242,14 @@ class ServerOrchestrator:
             logger.info("✓ Loaded: Critical Modules [/api/v1/critical/*] (7 modules, 9 endpoints)")
         except ImportError as e:
             logger.debug(f"Critical Modules not available: {e}")
+        
+        # ENGINES-Omega-ULTIMATE-V2: 23 moteurs scientifiques
+        try:
+            from modules.ultimate_engines import ultimate_engines_router
+            self.app.include_router(ultimate_engines_router)
+            logger.info("✓ Loaded: Ultimate Engines V2 [/api/v1/engines/*] (23 moteurs)")
+        except ImportError as e:
+            logger.debug(f"Ultimate Engines not available: {e}")
     
     def register_legacy_router(self):
         """

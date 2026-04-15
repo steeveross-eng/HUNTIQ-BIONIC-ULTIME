@@ -1,36 +1,34 @@
 # HUNTIQ V6 — PRD
-## BCE-4X ULTIME ABSOLU — COMMANDANT STEEVE-MAX
+## BCE-4X ULTIME ABSOLU V6.2 — COMMANDANT STEEVE-MAX
 **MAJ:** 2026-04-15
 
-## Stack: FastAPI + React + Leaflet + MongoDB
+## 59 MOTEURS ACTIFS
 
-## CARTE-RETRAIT-Omega-ZERO-RISK (2026-04-15)
-- Lien CARTE retire (desktop + mobile)
-- Route /map redirigee → /mon-territoire-bionic
-- Import MapPage, preloader, adjacency retires
-- Config routes: showInNav=false, disabled=true
-- ZERO regression: 9/9 services HTTP 200
-- TRACE-LOG journalise
+### Groupe A — Terrain (5 moteurs, 41 endpoints)
+camera_engine, vision_engine, affut_ia_engine, map_perf, guide_pro_engine
 
-## Modules actifs
-- TERRITOIRE: 18 couches, 5 especes, PROTECTED_LAYERS
-- Camera Engine: 21 marques, popup riche
-- IA Vision: 12 endpoints certifies
-- AFFUT-IA: 4 endpoints, salines 20-100m
-- P1 Engines: 12 moteurs, 14 endpoints
-- Critical Modules: 7 modules, 9 endpoints
-- Guide-Pro: 15 endpoints
-- SUPRA v2: 9 moteurs + territory_bridge
-- MAP-PERF: GZip + cache + preload (157ms)
+### Groupe B — P1 Engines (12 moteurs, 14 endpoints)
+OPTIMIZATION(recalibre 15 couches), HEAT-UNIFY, PREDICT-BEHAVIOR, ECO-DYNAMICS,
+TERRAIN-RISK-PLUS, CONSISTENCY, SCIENCE-CHECK, SHIELD-PLUS, GLOBAL-CERT, CMP-CERT, TRACE-LOG, BRANCH-REALIGN
 
-## Backlog
-- [x] CARTE-RETRAIT-Omega (COMPLETE)
-- [ ] CARTE-2027-REBUILD (reconstruction future)
-- [ ] SYSTEM-Omega-TOTAL-V4 (consolidation)
+### Groupe C — Critical (7 modules, 9 endpoints)
+CAMERA-SEC, M5-OFFLINE, DEM-LIDAR, SIEF-ECO, LIDAR-FUSION, SIEF-ECO-HABITAT, MVT-TILES
 
-## Backup
-- ZIP: /app/BIONIC-CARTE-PRE-RETRAIT-Omega.zip (380MB)
-- TAG: BIONIC-CARTE-PRE-RETRAIT-Omega
-- BRANCH: freeze/carte-pre-retrait
+### Groupe D — SUPRA (9 moteurs)
+SUPRA+ULTRA+FICHE+SOL+TERRITORY_IA + 4 advanced
+
+### Groupe E — Core (3 moteurs)
+auth_engine, roles_engine, optimization_engine(legacy)
+
+### Groupe F — ULTIMATE V2 (23 moteurs)
+THERMO-STRESS, HEAT-BEHAVIOR, COLD-SURVIVAL, MAST-NUTRITION, SPRING-PROTEIN,
+SUMMER-HYDRATION, HABITAT-SELECTION, ECOLOGICAL-ZONES, RESTING-SITES, RUT-ZONES,
+CORRIDOR-STABILITY, DISPERSAL, CONNECTIVITY, FRAGMENTATION-RISK, ROAD-AVOIDANCE,
+HUMAN-PRESSURE, DEM-LIDAR, HYDRO, FOREST-STRUCTURE, VISION-FUSION,
+HEAT-UNIFY-PLUS, AFFUT-IA-V2, MULTI-SPECIES-BALANCE
+
+## CARTE: RETIRE (redirect /territoire)
+## PROTECTIONS: SHIELD-MAX + ANTI-LEGACY + BCE-4X-V6.2
+## PERFORMANCE: Preload 157ms, GZip actif
 
 FIN DU DOCUMENT
