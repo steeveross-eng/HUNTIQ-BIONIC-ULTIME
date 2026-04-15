@@ -247,9 +247,17 @@ class ServerOrchestrator:
         try:
             from modules.ultimate_engines import ultimate_engines_router
             self.app.include_router(ultimate_engines_router)
-            logger.info("✓ Loaded: Ultimate Engines V2 [/api/v1/engines/*] (23 moteurs)")
+            logger.info("✓ Loaded: Ultimate Engines V2+V3 [/api/v1/engines/*] (29 moteurs)")
         except ImportError as e:
             logger.debug(f"Ultimate Engines not available: {e}")
+        
+        # SYSTEM-Omega-ULTIMATE-V5.1: 22 moteurs (temporels, solunaires, provinciaux, ecosystemique, V7)
+        try:
+            from modules.v51_engines import v51_engines_router
+            self.app.include_router(v51_engines_router)
+            logger.info("✓ Loaded: V5.1 Engines [/api/v1/v51/*] (22 moteurs)")
+        except ImportError as e:
+            logger.debug(f"V5.1 Engines not available: {e}")
     
     def register_legacy_router(self):
         """
