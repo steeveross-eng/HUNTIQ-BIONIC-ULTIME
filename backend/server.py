@@ -723,6 +723,14 @@ try:
 except Exception as e:
     logger.warning(f"Canada V7.2 not loaded: {e}")
 
+# V8-NATIONAL — Moteurs nationaux V8 pancanadiens
+try:
+    from engines.v8_national.router import router as v8_national_router
+    app.include_router(v8_national_router)
+    logger.info("✓ V8-NATIONAL registered (/api/v8/national) — 5 endpoints | 9 biomes | 6 regimes | 8 especes")
+except Exception as e:
+    logger.warning(f"V8 National not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")
@@ -736,6 +744,7 @@ logger.info("✓ NUTRITION-ENGINE-V7: Pipeline Sol→Nutriments→Fourrage→Gib
 logger.info("✓ SPATIAL-ENGINE-V7: Corridors+Zones+Heatmap+Scoring+Amenagement active")
 logger.info("✓ SUPRA-ENGINE-V7: Analyse+Fiche+Compare+Recommande+Commande active")
 logger.info("✓ INTELLIGENCE-V7: Score Chasse V7 active")
+logger.info("✓ V8-NATIONAL: Moteurs nationaux V8 active (9 biomes, 6 regimes, 8 especes)")
 logger.info("=" * 60)
 
 

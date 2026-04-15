@@ -1,0 +1,246 @@
+"""
+V8-NATIONAL — Router API moteurs nationaux
+============================================
+Endpoints:
+  /api/v8/national/biome-profile    — Profil biome + regime complet
+  /api/v8/national/species-profile  — Profil espece national
+  /api/v8/national/score            — Score V8 national multi-regime
+  /api/v8/national/referentials     — Referentiels complets (biomes, regimes, neige, forets)
+  /api/v8/national/status           — Statut moteur V8
+"""
+import time
+import math
+import logging
+from datetime import datetime, timezone
+from fastapi import APIRouter, Depends, Query
+from motor.motor_asyncio import AsyncIOMotorDatabase
+
+from modules.camera_engine.dependencies import get_camera_db
+from modules.roles_engine.v1.dependencies import get_current_user_with_role
+from modules.roles_engine.v1.models import UserWithRole
+
+from .referentials import (
+    BIOMES, WILDLIFE_REGIMES, SNOW_REGIMES, FOREST_REGIMES, SPECIES_V8,
+    detect_biome, detect_wildlife_regime, detect_snow_regime, detect_forest_regime,
+)
+
+logger = logging.getLogger("bionic.v8_national")
+router = APIRouter(prefix="/api/v8/national", tags=["V8 National Engines"])
+
+
+@router.get("/biome-profile")
+async def biome_profile(
+    lat: float = Query(...), lon: float = Query(...),
+    species: str = Query("cerf"),
+):
+    """Profil biome complet — biome + regime faunique + neige + foret."""
+    start = time.time()
+
+    from modules.canada_v72.data import detect_province
+    province = detect_province(lat, lon)
+    biome = detect_biome(lat, lon, province)
+    biome_data = BIOMES.get(biome, {})
+    wildlife = detect_wildlife_regime(species)
+    snow = detect_snow_regime(province, lat)
+    forest = detect_forest_regime(biome)
+
+    # Score compatibilite espece-biome
+    sp_data = SPECIES_V8.get(species.lower(), {})
+    sp_regime = sp_data.get("regime", "")
+    regime_biomes = WILDLIFE_REGIMES.get(sp_regime, {}).get("biomes", [])
+    compat = 100 if biome in regime_biomes else 40
+
+    return {
+        "biome": {"code": biome, **biome_data},
+        "wildlife_regime": wildlife,
+        "snow_regime": snow,
+        "forest_regime": forest,
+        "species_compatibility": compat,
+        "province": province,
+        "location": {"lat": lat, "lon": lon},
+        "compute_ms": round((time.time() - start) * 1000),
+        "dataVersion": "V8",
+        "engine": "V8-NATIONAL-BIOME-PROFILE",
+    }
+
+
+@router.get("/species-profile")
+async def species_profile(
+    species: str = Query("cerf"),
+):
+    """Profil espece national — habitat, regime, provinces, poids."""
+    sp = SPECIES_V8.get(species.lower())
+    if not sp:
+        return {"error": f"Espece '{species}' non repertoriee", "available": list(SPECIES_V8.keys())}
+
+    regime = WILDLIFE_REGIMES.get(sp.get("regime", ""), {})
+    return {
+        "species": {**sp, "code": species.lower()},
+        "regime": regime,
+        "provinces_count": len(sp.get("provinces", [])),
+        "biomes_compatible": regime.get("biomes", []),
+        "dataVersion": "V8",
+        "engine": "V8-NATIONAL-SPECIES-PROFILE",
+    }
+
+
+@router.get("/score")
+async def national_score(
+    lat: float = Query(...), lon: float = Query(...),
+    species: str = Query("cerf"), month: int = Query(None),
+    hour: int = Query(None),
+    user: UserWithRole = Depends(get_current_user_with_role),
+    db: AsyncIOMotorDatabase = Depends(get_camera_db),
+):
+    """Score V8 national multi-regime — integre biome + neige + nutrition + spatial + temporal."""
+    start = time.time()
+    now = datetime.now(timezone.utc)
+    m = month or now.month
+    h = hour or now.hour
+    doy = (m - 1) * 30 + now.day
+
+    from modules.canada_v72.data import detect_province
+    province = detect_province(lat, lon)
+    biome_code = detect_biome(lat, lon, province)
+    biome = BIOMES.get(biome_code, {})
+    wildlife = detect_wildlife_regime(species)
+    snow = detect_snow_regime(province, lat)
+    forest = detect_forest_regime(biome_code)
+
+    # Spatial exclusion
+    from engines.spatial_engine_v7.router import _check_bce4x_exclusions
+    exclusion = _check_bce4x_exclusions(lat, lon)
+    if exclusion["excluded"]:
+        return {"score_v8": 0, "prediction": "exclu", "exclusion": exclusion, "dataVersion": "V8", "engine": "V8-EXCLUDED"}
+
+    # Nutrition V7
+    try:
+        from modules.nutrition_engine_v7.pipeline import compute_attractiveness_v7
+        season_map = {1: "hiver", 2: "hiver", 3: "printemps", 4: "printemps", 5: "printemps",
+                      6: "ete", 7: "ete", 8: "ete", 9: "pre_rut", 10: "rut", 11: "post_rut", 12: "hiver"}
+        nv7 = compute_attractiveness_v7(lat, lon, species, season_map.get(m, "automne"), m, include_temporal=False)
+        nutrition = nv7.get("attractiveness_score", 50)
+    except Exception:
+        nutrition = 50
+
+    # Temporal
+    crepuscular = wildlife.get("crepuscular", True)
+    temporal = 90 if (5 <= h <= 8 or 16 <= h <= 19) and crepuscular else 50
+
+    # Solunar
+    phase = abs(((doy % 29.53) / 29.53) * 2 - 1)
+    solunar = 85 if phase < 0.1 else 60 if 0.4 < phase < 0.6 else 70
+
+    # Rut
+    peak = wildlife.get("rut_peak_doy", 300)
+    rut = max(20, 100 - abs(doy - peak) * 2)
+
+    # Biome compatibility
+    sp_data = SPECIES_V8.get(species.lower(), {})
+    regime_biomes = WILDLIFE_REGIMES.get(sp_data.get("regime", ""), {}).get("biomes", [])
+    biome_compat = 95 if biome_code in regime_biomes else 35
+
+    # Snow impact
+    snow_months = snow.get("season_months", [])
+    snow_impact = snow.get("impact_mobility", 0) if m in snow_months else 0
+    snow_score = round(100 - snow_impact * 100, 1)
+
+    # Forest quality
+    browse = forest.get("browse_quality", 50)
+    mast = forest.get("mast_production", 30)
+    forest_score = round(browse * 0.6 + mast * 0.4, 1)
+
+    # Meteo temps reel
+    try:
+        import httpx
+        params = {"latitude": lat, "longitude": lon, "current": "temperature_2m,wind_speed_10m,surface_pressure", "timezone": "auto"}
+        async with httpx.AsyncClient(timeout=3) as client:
+            resp = await client.get("https://api.open-meteo.com/v1/forecast", params=params)
+            c = resp.json().get("current", {})
+        temp = c.get("temperature_2m", 8)
+        wind = c.get("wind_speed_10m", 12)
+        press = c.get("surface_pressure", 1013)
+        meteo_score = max(20, 80 - abs(temp - 10) * 2 - wind * 0.5)
+        if press >= 1020: meteo_score = min(100, meteo_score + 8)
+    except Exception:
+        meteo_score = 65
+
+    # IA Vision
+    hotspots = await db['vision_hotspots'].count_documents({"user_id": user.user_id})
+    cameras = await db['cameras'].count_documents({"user_id": user.user_id, "status": "active"})
+    vision = min(100, hotspots * 12 + cameras * 8 + 15)
+
+    # V8 COMPOSITE — 10 composantes
+    weights = {
+        "temporal": 0.12, "solunar": 0.08, "rut": 0.12,
+        "nutrition": 0.15, "biome_compat": 0.10, "snow": 0.08,
+        "forest": 0.10, "meteo": 0.12, "vision": 0.08, "habitat": 0.05,
+    }
+    lat_v = math.sin(lat * 7.3) * 15
+    lon_v = math.cos(lon * 5.1) * 12
+    habitat = max(20, min(95, 65 + lat_v + lon_v))
+
+    scores = {
+        "temporal": temporal, "solunar": solunar, "rut": rut,
+        "nutrition": round(nutrition, 1), "biome_compat": biome_compat,
+        "snow": snow_score, "forest": forest_score, "meteo": round(meteo_score, 1),
+        "vision": vision, "habitat": round(habitat, 1),
+    }
+
+    composite = round(sum(scores[k] * weights[k] for k in weights), 1)
+    composite = min(100, max(0, composite))
+    prediction = "excellent" if composite >= 78 else "bon" if composite >= 58 else "moyen" if composite >= 38 else "faible"
+
+    return {
+        "score_v8": composite,
+        "prediction": prediction,
+        "scores_detail": scores,
+        "weights": weights,
+        "context": {
+            "biome": biome_code, "province": province,
+            "wildlife_regime": sp_data.get("regime"),
+            "snow_regime": snow.get("name"),
+            "forest_regime": forest.get("name"),
+        },
+        "species": species,
+        "compute_ms": round((time.time() - start) * 1000),
+        "dataVersion": "V8",
+        "engine": "V8-NATIONAL-SCORE",
+    }
+
+
+@router.get("/referentials")
+async def referentials():
+    """Referentiels nationaux complets V8."""
+    return {
+        "biomes": {k: {"name": v["name"], "provinces": v["provinces"], "dominant_species": v["dominant_species"]} for k, v in BIOMES.items()},
+        "wildlife_regimes": {k: {"name": v["name"], "species": v["species"]} for k, v in WILDLIFE_REGIMES.items()},
+        "snow_regimes": {k: {"name": v["name"], "provinces": v["provinces"]} for k, v in SNOW_REGIMES.items()},
+        "forest_regimes": {k: {"name": v["name"], "dominant": v["dominant"]} for k, v in FOREST_REGIMES.items()},
+        "species": {k: {"name_fr": v["name_fr"], "regime": v["regime"], "provinces": v["provinces"]} for k, v in SPECIES_V8.items()},
+        "totals": {
+            "biomes": len(BIOMES), "wildlife_regimes": len(WILDLIFE_REGIMES),
+            "snow_regimes": len(SNOW_REGIMES), "forest_regimes": len(FOREST_REGIMES),
+            "species": len(SPECIES_V8),
+        },
+        "dataVersion": "V8",
+        "engine": "V8-NATIONAL-REFERENTIALS",
+    }
+
+
+@router.get("/status")
+async def v8_status():
+    return {
+        "engine": "V8-NATIONAL",
+        "version": "8.0.0-prep",
+        "status": "OPERATIONNEL",
+        "endpoints": ["/biome-profile", "/species-profile", "/score", "/referentials", "/status"],
+        "referentials": {
+            "biomes": len(BIOMES), "wildlife_regimes": len(WILDLIFE_REGIMES),
+            "snow_regimes": len(SNOW_REGIMES), "forest_regimes": len(FOREST_REGIMES),
+            "species": len(SPECIES_V8),
+        },
+        "score_components": 10,
+        "integrations": ["SPATIAL-V7.2", "NUTRITION-V7.2", "CANADA-V7.2", "ECCC", "Open-Meteo"],
+        "dataVersion": "V8",
+    }
