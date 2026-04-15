@@ -26,14 +26,15 @@ router = APIRouter(prefix="/api/v1/p1", tags=["P1 Engines"])
 # 1. OPTIMIZATION_ENGINE-Omega
 # ============================================================
 OPTIM_WEIGHTS = {
-    "corridors_ia": 0.09, "hotspots_ia": 0.09, "heatmap_ia": 0.06,
-    "salines_distance": 0.09, "hydrographie": 0.05, "vent_contamination": 0.06,
-    "zones_ecologiques": 0.05, "accessibilite": 0.03, "pression_chasse": 0.04,
-    "cameras_couverture": 0.04, "valeur_territoire": 0.04,
-    "thermo_stress": 0.04, "habitat_selection": 0.04, "corridor_stability": 0.04,
+    "corridors_ia": 0.08, "hotspots_ia": 0.08, "heatmap_ia": 0.05,
+    "salines_distance": 0.08, "hydrographie": 0.04, "vent_contamination": 0.05,
+    "zones_ecologiques": 0.04, "accessibilite": 0.03, "pression_chasse": 0.04,
+    "cameras_couverture": 0.04, "valeur_territoire": 0.03,
+    "thermo_stress": 0.03, "habitat_selection": 0.04, "corridor_stability": 0.04,
     "forest_structure": 0.04,
-    "temporal_activity": 0.05, "lunar_activity": 0.03, "rut_forecast": 0.05,
-    "ecosystem_interaction": 0.03, "provincial_data": 0.04,
+    "temporal_activity": 0.04, "lunar_activity": 0.03, "rut_forecast": 0.04,
+    "ecosystem_interaction": 0.03, "provincial_data": 0.03,
+    "nutrition_v7": 0.12,
 }
 
 SPECIES_SCIENCE = {
@@ -79,7 +80,19 @@ async def optimization_score(
         "forest_structure": 65,
         "temporal_activity": 75, "lunar_activity": 65, "rut_forecast": 70,
         "ecosystem_interaction": 55, "provincial_data": 60,
+        "nutrition_v7": 50,
     }
+
+    # NUTRITION-ENGINE-V7 couche #13
+    try:
+        from modules.nutrition_engine_v7.pipeline import compute_attractiveness_v7
+        _season_map = {1: "hiver", 2: "hiver", 3: "printemps", 4: "printemps", 5: "printemps",
+                       6: "ete", 7: "ete", 8: "ete", 9: "pre_rut", 10: "rut", 11: "post_rut", 12: "hiver"}
+        _m = datetime.now(timezone.utc).month
+        _nv7 = compute_attractiveness_v7(lat, lon, species, _season_map.get(_m, "automne"), _m, include_temporal=False)
+        scores["nutrition_v7"] = _nv7.get("attractiveness_score", 50)
+    except Exception:
+        pass
 
     sp_w = SPECIES_SCIENCE.get(species, {})
     total = sum(scores.get(k, 0) * w * sp_w.get(k, 1.0) for k, w in OPTIM_WEIGHTS.items())

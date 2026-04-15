@@ -155,6 +155,16 @@ def compute_consolidated_score(lat, lng, species="CERF", month=10,
     for engine_key, engine_fn in _ENGINE_FUNCTIONS.items():
         scores[engine_key] = round(engine_fn(lat, lng, c_lat, c_lng, species, month), 1)
 
+    # NUTRITION-ENGINE-V7 — couche #23 (P2-CMD06)
+    try:
+        from modules.nutrition_engine_v7.pipeline import compute_attractiveness_v7
+        _season_map = {1: "hiver", 2: "hiver", 3: "printemps", 4: "printemps", 5: "printemps",
+                       6: "ete", 7: "ete", 8: "ete", 9: "pre_rut", 10: "rut", 11: "post_rut", 12: "hiver"}
+        _nv7 = compute_attractiveness_v7(lat, lng, species, _season_map.get(month, "automne"), month, include_temporal=False)
+        scores["nutrition_v7"] = round(_nv7.get("attractiveness_score", 50), 1)
+    except Exception:
+        scores["nutrition_v7"] = 50
+
     # MS-1: Ponderations dynamiques par espece (BCE-4X)
     species_weights = get_species_weights(species)
     if include_corridors:

@@ -315,15 +315,39 @@ class SupraBatchRequest(BaseModel):
 
 
 def _compute_nutrition_v7_block(lat, lng, species, season, month):
-    """Bloc NUTRITION-ENGINE-V7 pour injection SUPRA."""
+    """Bloc NUTRITION-ENGINE-V7 complet pour injection SUPRA — avec justifications."""
     try:
         from modules.nutrition_engine_v7.pipeline import compute_attractiveness_v7
         result = compute_attractiveness_v7(lat, lng, species, season, month)
+        att = result.get("attractiveness_score", 0)
+        rating = result.get("rating", "inconnu")
+        snl = result.get("soil_nutrients_layer", {})
+        fqm = result.get("forage_quality_model", {})
+        wna = result.get("wildlife_nutrition_attractiveness", {})
+
+        # Justifications automatiques
+        justifications = []
+        if snl.get("score", 0) < 40:
+            justifications.append(f"Sol defavorable ({snl.get('score')}/100) — drainage {snl.get('drainage')}, pH {snl.get('ph')}")
+        if fqm.get("score", 0) < 40:
+            justifications.append(f"Fourrage insuffisant ({fqm.get('score')}/100) — canopee {fqm.get('canopy_density')}%")
+        if wna.get("critical_count", 0) > 3:
+            justifications.append(f"{wna.get('critical_count')} carences minerales critiques detectees")
+        if att >= 70:
+            justifications.append(f"Zone nutritionnellement premium ({att}/100) — attractivite {rating}")
+        elif att >= 50:
+            justifications.append(f"Zone nutritionnellement adequate ({att}/100) — potentiel amelioration")
+
         return {
-            "attractiveness_score": result.get("attractiveness_score"),
-            "rating": result.get("rating"),
+            "attractiveness_score": att,
+            "rating": rating,
             "scores_detail": result.get("scores_detail"),
+            "soil_nutrients_layer": snl,
+            "forage_quality_model": fqm,
+            "wildlife_nutrition_attractiveness": wna,
+            "justifications": justifications,
             "pipeline": result.get("pipeline"),
+            "source": "NUTRITION-ENGINE-V7",
             "engine": result.get("engine"),
         }
     except Exception as e:
