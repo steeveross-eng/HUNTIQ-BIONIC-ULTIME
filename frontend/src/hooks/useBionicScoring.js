@@ -1,6 +1,8 @@
 /**
  * useBionicScoring Hook
  * Calcule les scores BIONIC pour un waypoint ou une position
+ * RECABLE V7: Integre /api/v7/spatial/scoring + score_chasse_v7
+ * dataVersion: V7 — BCE-4X TRACE-LOG-Omega
  */
 
 import { useState, useCallback, useRef } from 'react';
@@ -10,13 +12,15 @@ import {
   adaptWaypointData 
 } from '@/core/bionic';
 
+const API = process.env.REACT_APP_BACKEND_URL;
+
 const useBionicScoring = () => {
   const [scores, setScores] = useState(null);
   const [isCalculating, setIsCalculating] = useState(false);
   const [error, setError] = useState(null);
   const [lastCalculation, setLastCalculation] = useState(null);
+  const [scoreChasseV7, setScoreChasseV7] = useState(null);
   
-  // Cache pour éviter les recalculs inutiles
   const cacheRef = useRef(new Map());
   
   /**
@@ -137,6 +141,31 @@ const useBionicScoring = () => {
   const clearCache = useCallback(() => {
     cacheRef.current.clear();
   }, []);
+
+  /**
+   * Fetch Score Chasse V7 depuis INTELLIGENCE-V7
+   * RECABLE V7: /api/v1/v51/intelligence/v7/score-chasse
+   */
+  const fetchScoreChasseV7 = useCallback(async (lat, lon, species, token) => {
+    try {
+      const now = new Date();
+      const params = new URLSearchParams({
+        lat, lon, species: species || 'cerf',
+        month: now.getMonth() + 1, day: now.getDate(), hour: now.getHours(),
+        province: 'qc',
+      });
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const res = await fetch(`${API}/api/v1/v51/intelligence/v7/score-chasse?${params}`, { headers });
+      if (res.ok) {
+        const data = await res.json();
+        setScoreChasseV7(data);
+        return data;
+      }
+    } catch (err) {
+      console.error('[SCORE-CHASSE-V7]', err);
+    }
+    return null;
+  }, []);
   
   return {
     // État
@@ -144,6 +173,7 @@ const useBionicScoring = () => {
     isCalculating,
     error,
     lastCalculation,
+    scoreChasseV7,
     
     // Actions
     calculateScores,
@@ -151,6 +181,7 @@ const useBionicScoring = () => {
     calculateBatchScores,
     resetScores,
     clearCache,
+    fetchScoreChasseV7,
     
     // Raccourcis pour les scores individuels
     habitatScore: scores?.score_H,
@@ -159,7 +190,10 @@ const useBionicScoring = () => {
     affutsScore: scores?.score_A,
     trajetsScore: scores?.score_T,
     peuplementsScore: scores?.score_P,
-    globalScore: scores?.score_Bionic_final || scores?.score_Bionic
+    globalScore: scores?.score_Bionic_final || scores?.score_Bionic,
+    // V7
+    scoreChasseV7Score: scoreChasseV7?.score_chasse_v7,
+    scoreChasseV7Prediction: scoreChasseV7?.prediction,
   };
 };
 

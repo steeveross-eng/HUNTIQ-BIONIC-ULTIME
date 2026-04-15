@@ -1,9 +1,10 @@
 /**
  * ConsolidatedHeatmapLayer.jsx — Score consolidé multi-moteurs (data-only)
- * STEEVE-MAX: 100% transparent — zero rendu graphique, fetch + callback score uniquement
- * Intègre: CORRIDORS-V6 + ALIMENTATION-V2 + repos + pression
+ * RECABLE V7: Consomme /api/v7/spatial/heatmap (SPATIAL-ENGINE-V7)
+ * dataVersion: V7 — BCE-4X TRACE-LOG-Omega
  */
 import { useEffect, useRef, useCallback } from 'react';
+import { useAuth } from '@/components/GlobalAuth';
 
 const ConsolidatedHeatmapLayer = ({
   center,
@@ -13,6 +14,7 @@ const ConsolidatedHeatmapLayer = ({
   onDataLoaded = null,
   includeCorridors = true,
 }) => {
+  const { token } = useAuth();
   const cacheRef = useRef(null);
   const lastKeyRef = useRef('');
   const abortRef = useRef(null);
@@ -38,25 +40,36 @@ const ConsolidatedHeatmapLayer = ({
 
     try {
       const apiUrl = process.env.REACT_APP_BACKEND_URL;
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
       const params = new URLSearchParams({
-        lat: centerLat, lng: centerLng,
-        species, month, grid_size: 20,
-        include_corridors: includeCorridors ? '1' : '0',
+        lat: centerLat, lon: centerLng,
+        species: species === 'CERF' ? 'cerf' : species.toLowerCase(),
+        month, grid_size: 12,
       });
-      const res = await fetch(`${apiUrl}/api/v1/score-consolide/heatmap?${params}`, {
+      // V7 RECABLE: SPATIAL-ENGINE-V7
+      const res = await fetch(`${apiUrl}/api/v7/spatial/heatmap?${params}`, {
+        headers,
         signal: abortRef.current.signal,
       });
       if (!res.ok) return;
       const data = await res.json();
-      cacheRef.current = data;
+
+      // Adapter la sortie V7 au format attendu par le callback
+      const adapted = {
+        ...data,
+        dataVersion: 'V7',
+        score_global: data.points ? Math.round(data.points.reduce((s, p) => s + p.score, 0) / data.points.length) : 0,
+        grid: data.points || [],
+      };
+      cacheRef.current = adapted;
 
       if (lastKeyRef.current === key && onDataLoadedRef.current) {
-        onDataLoadedRef.current(data);
+        onDataLoadedRef.current(adapted);
       }
     } catch (err) {
-      if (err.name !== 'AbortError') console.error('[HEATMAP]', err);
+      if (err.name !== 'AbortError') console.error('[HEATMAP-V7]', err);
     }
-  }, [centerLat, centerLng, species, month, enabled, includeCorridors]);
+  }, [centerLat, centerLng, species, month, enabled, includeCorridors, token]);
 
   useEffect(() => {
     fetchData();

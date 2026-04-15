@@ -125,8 +125,8 @@ export default function IntelligenceDashboard({
           style={{ background: 'rgba(26, 22, 16, 0.6)', borderBottom: '1px solid rgba(139, 111, 71, 0.18)' }}
         >
           <Brain className="w-5 h-5" style={{ color: TP.forestLight }} />
-          <span className="text-base font-bold tracking-tight" style={{ color: TP.cream }}>INTELLIGENCE V6-CORE</span>
-          <span className="text-xs px-2 py-0.5 rounded font-mono" style={{ background: 'rgba(74,122,46,0.15)', color: TP.forestLight, border: '1px solid rgba(74,122,46,0.25)' }}>22 MOTEURS</span>
+          <span className="text-base font-bold tracking-tight" style={{ color: TP.cream }}>INTELLIGENCE V7</span>
+          <span className="text-xs px-2 py-0.5 rounded font-mono" style={{ background: 'rgba(74,122,46,0.15)', color: TP.forestLight, border: '1px solid rgba(74,122,46,0.25)' }}>V7 | 87+ MOTEURS</span>
 
           <div className="ml-auto flex items-center gap-3">
             {location && (

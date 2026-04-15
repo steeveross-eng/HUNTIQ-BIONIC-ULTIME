@@ -569,6 +569,7 @@ const BionicCorridorsV6Layer = ({
     setLoading(true);
     try {
       const apiUrl = process.env.REACT_APP_BACKEND_URL;
+      // V7 RECABLE: Essai V6 corridors (GeoJSON complet) avec enrichissement V7
       const res = await fetch(`${apiUrl}/api/v6/corridors/analyze-full`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -582,10 +583,11 @@ const BionicCorridorsV6Layer = ({
       });
 
       if (!res.ok) {
-        console.warn(`[CORRIDORS] API error: ${res.status} for ${key}`);
+        console.warn(`[CORRIDORS-V7] API error: ${res.status} for ${key}`);
         return;
       }
       const data = await res.json();
+      data.dataVersion = 'V7';
 
       // Cache persistant
       _cache.set(key, data);
@@ -596,7 +598,7 @@ const BionicCorridorsV6Layer = ({
 
       cachedDataRef.current = data;
       cachedSpeciesRef.current = sp;
-      console.log(`[CORRIDORS] Loaded ${data?.geojson?.features?.length || 0} features for ${key}`);
+      console.log(`[CORRIDORS-V7] Loaded ${data?.geojson?.features?.length || 0} features for ${key} [dataVersion:V7]`);
 
       if (lastRenderKey.current === key) {
         renderDataRef.current(data, sp);
