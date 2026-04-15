@@ -182,15 +182,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
               {t('nav_shop')}
             </Link>
             
-            {/* Dashboard */}
-            <Link 
-              to="/dashboard" 
-              className={`flex items-center gap-1 px-1.5 py-2 text-[11px] font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/dashboard') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
-              data-testid="nav-dashboard"
-            >
-              <BarChart3 className="h-3.5 w-3.5" />
-              T. Bord
-            </Link>
+            {/* V5.2: T. BORD fusionne dans INTELLIGENCE — Lien supprime */}
             
             {/* ANALYSE TERRITOIRE — Module primaire (carte strategique) */}
             <Link 
@@ -344,9 +336,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             <Link to="/shop" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="mobile-nav-shop">
               <Store className="h-4 w-4" /> {t('nav_shop')}
             </Link>
-            <Link to="/dashboard" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-gray-300 hover:text-white">
-              <BarChart3 className="h-4 w-4" /> {t('common_dashboard')}
-            </Link>
+            {/* V5.2: T. BORD fusionne dans INTELLIGENCE */}
             <Link to="/mon-territoire-bionic" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="mobile-nav-analyse-territoire">
               <Crosshair className="h-4 w-4" /> Analyse Territoire
             </Link>
@@ -1033,7 +1023,8 @@ function App() {
                 <Route path="/formations" element={<FormationsPage />} />
                 {/* Module Permis de chasse */}
                 <Route path="/permis-chasse" element={<HuntingLicensePage />} />
-                <Route path="/dashboard" element={<DashboardPage />} />
+                {/* V5.2: Dashboard fusionne dans Intelligence */}
+                <Route path="/dashboard" element={<Navigate to="/intelligence-v6" replace />} />
                 <Route path="/business" element={<BusinessPage />} />
                 <Route path="/plan-maitre" element={<PlanMaitrePage />} />
                 {/* V5-ULTIME: Analytics réactivé */}

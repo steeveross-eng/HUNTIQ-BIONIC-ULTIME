@@ -26,12 +26,14 @@ router = APIRouter(prefix="/api/v1/p1", tags=["P1 Engines"])
 # 1. OPTIMIZATION_ENGINE-Omega
 # ============================================================
 OPTIM_WEIGHTS = {
-    "corridors_ia": 0.12, "hotspots_ia": 0.12, "heatmap_ia": 0.08,
-    "salines_distance": 0.12, "hydrographie": 0.06, "vent_contamination": 0.08,
-    "zones_ecologiques": 0.06, "accessibilite": 0.04, "pression_chasse": 0.04,
+    "corridors_ia": 0.09, "hotspots_ia": 0.09, "heatmap_ia": 0.06,
+    "salines_distance": 0.09, "hydrographie": 0.05, "vent_contamination": 0.06,
+    "zones_ecologiques": 0.05, "accessibilite": 0.03, "pression_chasse": 0.04,
     "cameras_couverture": 0.04, "valeur_territoire": 0.04,
-    "thermo_stress": 0.05, "habitat_selection": 0.05, "corridor_stability": 0.05,
-    "forest_structure": 0.05,
+    "thermo_stress": 0.04, "habitat_selection": 0.04, "corridor_stability": 0.04,
+    "forest_structure": 0.04,
+    "temporal_activity": 0.05, "lunar_activity": 0.03, "rut_forecast": 0.05,
+    "ecosystem_interaction": 0.03, "provincial_data": 0.04,
 }
 
 SPECIES_SCIENCE = {
@@ -75,6 +77,8 @@ async def optimization_score(
         "thermo_stress": 70, "habitat_selection": 65,
         "corridor_stability": min(100, len(trajectories) * 20 + 40),
         "forest_structure": 65,
+        "temporal_activity": 75, "lunar_activity": 65, "rut_forecast": 70,
+        "ecosystem_interaction": 55, "provincial_data": 60,
     }
 
     sp_w = SPECIES_SCIENCE.get(species, {})
