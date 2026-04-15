@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bionic-hunt-cache-v4';
+const CACHE_NAME = 'bionic-hunt-cache-v7.2';
 const OFFLINE_URL = '/offline.html';
 
 // Assets to cache immediately on install
@@ -10,13 +10,25 @@ const STATIC_ASSETS = [
   '/logos/bionic-logo.svg'
 ];
 
-// API routes to cache with network-first strategy
+// V7.2 API routes to cache with network-first strategy
 const API_CACHE_ROUTES = [
   '/api/user/waypoints',
+  '/api/v7/spatial/status',
+  '/api/v7/nutrition/status',
+  '/api/v7/supra/status',
+  '/api/v1/v51/status',
   '/api/v1/waypoint-scoring/wqs',
   '/api/v1/waypoint-scoring/forecast/quick',
   '/api/v1/analytics/overview',
   '/api/v1/legal-time/legal-window'
+];
+
+// V7.2 Tile layers to cache for offline heatmaps
+const TILE_CACHE_NAME = 'bionic-tiles-v7.2';
+const TILE_PATTERNS = [
+  'basemaps.cartocdn.com',
+  'server.arcgisonline.com',
+  'tile.opentopomap.org',
 ];
 
 // Background geolocation config

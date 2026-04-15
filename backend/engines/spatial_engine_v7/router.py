@@ -500,6 +500,82 @@ async def spatial_analyze_full(
     }
 
 
+
+# ═══════════════════════════════════════════════════════
+# 7. VISION IA SCORING V7.2
+# ═══════════════════════════════════════════════════════
+
+@router.get("/vision-scoring")
+async def spatial_vision_scoring(
+    lat: float = Query(...), lon: float = Query(...),
+    species: str = Query("cerf"),
+    user: UserWithRole = Depends(get_current_user_with_role),
+    db: AsyncIOMotorDatabase = Depends(get_camera_db),
+):
+    """Vision IA Scoring V7.2 — Analyse hotspots + trajectoires avec scoring V7."""
+    start = time.time()
+    now = datetime.now(timezone.utc)
+    m = now.month
+
+    # Fetch user's vision data
+    hotspots = await db['vision_hotspots'].find(
+        {"user_id": user.user_id},
+        {"_id": 0, "lat": 1, "lng": 1, "score": 1, "species": 1, "confidence": 1, "timestamp": 1}
+    ).to_list(100)
+
+    trajectories = await db['vision_trajectories'].find(
+        {"user_id": user.user_id},
+        {"_id": 0, "points": 1, "species": 1, "confidence": 1, "direction": 1}
+    ).to_list(50)
+
+    cameras = await db['cameras'].find(
+        {"user_id": user.user_id, "status": "active"},
+        {"_id": 0, "name": 1, "lat": 1, "lng": 1, "brand": 1}
+    ).to_list(50)
+
+    # V7.2 scoring: Score each hotspot with nutrition + temporal context
+    nutr = _nutrition_score(lat, lon, species, m)
+    t_mult, s_mult, r_mult = _v7_temporal_mults(species, m, now.day, now.hour)
+    temporal_mult = round(t_mult * s_mult * r_mult, 2)
+
+    scored_hotspots = []
+    for h in hotspots:
+        base = h.get("score", 50)
+        v7_score = round(min(100, base * 0.6 + nutr * 0.2 + temporal_mult * 20), 1)
+        scored_hotspots.append({
+            "lat": h.get("lat"), "lng": h.get("lng"),
+            "base_score": base,
+            "v7_score": v7_score,
+            "species": h.get("species", "unknown"),
+            "confidence": h.get("confidence", 0),
+        })
+    scored_hotspots.sort(key=lambda x: x["v7_score"], reverse=True)
+
+    # Species detected
+    species_detected = {}
+    for h in hotspots:
+        sp = h.get("species", "unknown")
+        species_detected[sp] = species_detected.get(sp, 0) + 1
+
+    vision_global = round(
+        min(100, len(hotspots) * 8 + len(cameras) * 5 + len(trajectories) * 10 + nutr * 0.15), 1
+    )
+
+    return {
+        "vision_score": vision_global,
+        "hotspots": scored_hotspots[:20],
+        "hotspots_total": len(hotspots),
+        "trajectories_total": len(trajectories),
+        "cameras_active": len(cameras),
+        "species_detected": species_detected,
+        "temporal_multiplier": temporal_mult,
+        "nutrition_score": nutr,
+        "compute_ms": round((time.time() - start) * 1000),
+        "dataVersion": "V7.2",
+        "engine": "SPATIAL-ENGINE-V7.2-VISION-SCORING",
+    }
+
+
 # ═══════════════════════════════════════════════════════
 # STATUS
 # ═══════════════════════════════════════════════════════
@@ -511,7 +587,8 @@ async def spatial_status():
         "version": "7.0.0",
         "status": "OPERATIONNEL",
         "endpoints": [
-            "/corridors", "/zones", "/heatmap", "/scoring", "/amenagement",
+            "/corridors", "/zones", "/heatmap", "/scoring",
+            "/amenagement", "/analyze-full", "/vision-scoring",
         ],
         "integrations": ["NUTRITION-ENGINE-V7", "INTELLIGENCE-V7", "TERRITOIRE-V7", "CARTE-2027"],
         "dataVersion": "V7",
