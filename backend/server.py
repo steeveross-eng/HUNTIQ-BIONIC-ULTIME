@@ -715,6 +715,14 @@ try:
 except Exception as e:
     logger.warning(f"Supra Engine V7 not loaded: {e}")
 
+# CANADA-V7.2 — Module national pancanadien
+try:
+    from modules.canada_v72.router import router as canada_v72_router
+    app.include_router(canada_v72_router)
+    logger.info("✓ CANADA-V7.2 registered (/api/v7/canada) — 6 endpoints | 13 provinces | 16 écozones")
+except Exception as e:
+    logger.warning(f"Canada V7.2 not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

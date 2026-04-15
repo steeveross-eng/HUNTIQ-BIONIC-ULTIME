@@ -16,6 +16,8 @@ const API_CACHE_ROUTES = [
   '/api/v7/spatial/status',
   '/api/v7/nutrition/status',
   '/api/v7/supra/status',
+  '/api/v7/canada/status',
+  '/api/v7/canada/provinces',
   '/api/v1/v51/status',
   '/api/v1/waypoint-scoring/wqs',
   '/api/v1/waypoint-scoring/forecast/quick',
