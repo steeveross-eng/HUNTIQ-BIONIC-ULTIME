@@ -195,7 +195,15 @@ const Navigation = ({ cartCount, onCartOpen }) => {
               Territoire
             </Link>
             
-            {/* CARTE-RETRAIT-Omega: Module CARTE retire pour lancement 2026 */}
+            {/* CARTE-2027-REBUILD-Omega: Carte terrain V7 active */}
+            <Link 
+              to="/carte-2027" 
+              className={`flex items-center gap-1 px-1.5 py-2 text-[11px] font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/carte-2027') ? 'text-[#10B981] bg-[#10B981]/10' : 'text-gray-300 hover:text-white'}`}
+              data-testid="nav-carte-2027"
+            >
+              <Map className="h-3.5 w-3.5" />
+              Carte
+            </Link>
 
             {/* CAM-ADMIN-HEADER: Module Cameras — entre CARTE et INTELLIGENCE */}
             <Link 
@@ -341,7 +349,10 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             <Link to="/mon-territoire-bionic" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="mobile-nav-analyse-territoire">
               <Crosshair className="h-4 w-4" /> Analyse Territoire
             </Link>
-            {/* CARTE-RETRAIT-Omega: Carte Interactive retiree pour lancement 2026 */}
+            {/* CARTE-2027-REBUILD-Omega: Carte terrain V7 (mobile) */}
+            <Link to="/carte-2027" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#10B981]" data-testid="mobile-nav-carte-2027">
+              <Map className="h-4 w-4" /> Carte Terrain V7
+            </Link>
             {/* CAM-ADMIN-HEADER: Cameras entre Carte et Intelligence */}
             <Link to="/cameras" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="mobile-nav-cameras">
               <Camera className="h-4 w-4" /> Cameras
@@ -389,7 +400,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
 };
 
 // Footer Component - Hidden on full-viewport pages
-const FULL_VIEWPORT_ROUTES = ['/mon-territoire-bionic', '/mon-territoire', '/analyse-territoire', '/forecast', '/admin-geo', '/admin-premium'];
+const FULL_VIEWPORT_ROUTES = ['/mon-territoire-bionic', '/mon-territoire', '/analyse-territoire', '/forecast', '/admin-geo', '/admin-premium', '/carte-2027'];
 
 const Footer = () => {
   const location = useLocation();

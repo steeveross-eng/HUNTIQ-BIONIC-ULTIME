@@ -703,6 +703,14 @@ try:
 except Exception as e:
     logger.warning(f"Species Engine K3 not loaded: {e}")
 
+# CARTE-2027-REBUILD-Omega — Engine cartographique terrain V7
+try:
+    from modules.carte2027_engine.router import router as carte2027_router
+    app.include_router(carte2027_router)
+    logger.info("✓ Carte 2027 Engine registered (/api/v1/carte2027) — 5 endpoints")
+except Exception as e:
+    logger.warning(f"Carte 2027 Engine not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")
@@ -711,6 +719,7 @@ logger.info("✓ x4500-ULTRA: BSAA active")
 logger.info("✓ BCE: BIONIC Compliance Engine active")
 logger.info("✓ ULTRA-MAX++ FIREWALL: Geo-fencing Shapely active")
 logger.info("✓ SALINES ULTIME: 5 scores + 20 sources active")
+logger.info("✓ CARTE-2027: Moteur cartographique terrain V7 active")
 logger.info("=" * 60)
 
 
