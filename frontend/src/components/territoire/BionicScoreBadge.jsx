@@ -32,13 +32,22 @@ export const BionicScoreBadge = ({ center, species = 'cerf', month = 10, compact
     const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
     try {
+      // DELETE-LEGACY-V6: Recable vers SPATIAL-ENGINE-V7
+      const headers = {};
+      const token = localStorage.getItem('token');
+      if (token) headers.Authorization = `Bearer ${token}`;
       const res = await fetch(
-        `${apiUrl}/api/v1/score-consolide/point?lat=${center.lat}&lng=${center.lng}&species=${sp}&month=${month}`,
-        { signal: abortRef.current.signal }
+        `${apiUrl}/api/v7/spatial/scoring?lat=${center.lat}&lon=${center.lng}&species=${sp.toLowerCase()}&month=${month}`,
+        { headers, signal: abortRef.current.signal }
       );
       if (res.ok) {
         const data = await res.json();
-        setScore(data);
+        setScore({
+          score_global: data.spatial_score,
+          classe: data.rating === 'premium' ? 'EXCELLENT' : data.rating === 'optimal' ? 'BON' : data.rating === 'adequat' ? 'MOYEN' : 'FAIBLE',
+          dataVersion: 'V7',
+          ...data,
+        });
       }
     } catch (e) {
       if (e.name !== 'AbortError') console.error('[ScoreBadge]', e);

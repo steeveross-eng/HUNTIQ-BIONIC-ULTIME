@@ -586,40 +586,23 @@ except Exception as e:
     logger.warning(f"REPOS-V1 not loaded: {e}")
 
 # ═══ CORRIDORS-V10 — Moteur corridors fauniques multi-especes ═══
+# DELETE-LEGACY-V6: router_v6 SUPPRIME — BionicCorridorsV6Layer utilise toujours analyze-full
+# On garde le router V6 car le frontend BionicCorridorsV6Layer en a besoin pour le GeoJSON complet
+# La suppression complete sera faite quand le frontend sera recable sur SPATIAL-ENGINE-V7 GeoJSON
 try:
     from core.scoring_pipeline.corridors_v10.router import router as corridors_v10_router
     from core.scoring_pipeline.corridors_v10.router import router_v6 as corridors_v6_router
     app.include_router(corridors_v10_router)
     app.include_router(corridors_v6_router)
-    logger.info("✓ CORRIDORS-V6 registered (/api/v6/corridors — alias V10, BCE-4X P2-B9 revise)")
+    logger.info("✓ CORRIDORS-V6: PRESERVE (GeoJSON requis par TERRITOIRE) — SPATIAL-V7 en parallele")
 except Exception as e:
     logger.warning(f"CORRIDORS-V6 not loaded: {e}")
 
 
-# ═══ SCORE CONSOLIDÉ — Heatmap multi-moteurs ═══
-try:
-    from modules.score_consolide import compute_consolidated_score, compute_heatmap_grid
-    from fastapi import Query as _Query
-
-    @app.get("/api/v1/score-consolide/point", tags=["SCORE-CONSOLIDE"])
-    async def get_consolidated_score(
-        lat: float = _Query(...), lng: float = _Query(...),
-        species: str = _Query("CERF"), month: int = _Query(10, ge=1, le=12),
-    ):
-        return compute_consolidated_score(lat, lng, species, month)
-
-    @app.get("/api/v1/score-consolide/heatmap", tags=["SCORE-CONSOLIDE"])
-    async def get_heatmap_grid(
-        lat: float = _Query(...), lng: float = _Query(...),
-        species: str = _Query("CERF"), month: int = _Query(10, ge=1, le=12),
-        grid_size: int = _Query(20, ge=5, le=40),
-        include_corridors: int = _Query(1, ge=0, le=1),
-    ):
-        return compute_heatmap_grid(lat, lng, species, month, grid_size, include_corridors=bool(include_corridors))
-
-    logger.info("✓ SCORE-CONSOLIDE registered (/api/v1/score-consolide)")
-except Exception as e:
-    logger.warning(f"SCORE-CONSOLIDE not loaded: {e}")
+# ═══ SCORE CONSOLIDÉ V6 — SUPPRIME (DELETE-LEGACY-V6-Omega) ═══
+# Remplace par SPATIAL-ENGINE-V7 /api/v7/spatial/heatmap
+# Endpoints V6 /api/v1/score-consolide/* retires le 2026-04-15
+logger.info("✓ SCORE-CONSOLIDE V6: SUPPRIME — remplace par SPATIAL-ENGINE-V7")
 
 
 # ═══ ENGINE REGISTRY V3 — API Gateway auto-adaptative ═══

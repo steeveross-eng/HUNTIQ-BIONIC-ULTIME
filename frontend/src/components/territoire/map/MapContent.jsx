@@ -29,7 +29,8 @@ import CameraMarkersLayer from '@/components/territoire/CameraMarkersLayer';
 import AlphaHotspotsLayer from '@/components/territoire/AlphaHotspotsLayer';
 import TrajectoriesLayer from '@/components/territoire/TrajectoriesLayer';
 import ContaminationOverlayLayer from '@/components/territoire/ContaminationOverlayLayer';
-import AccessRouteV6Layer from '@/components/territoire/AccessRouteV6Layer';
+// DELETE-LEGACY-V6: AccessRouteV6Layer SUPPRIME — remplace par SPATIAL-ENGINE-V7 amenagement
+// import AccessRouteV6Layer from '@/components/territoire/AccessRouteV6Layer';
 import { LeafletShield, useRenderGuard, createLoadTimer } from '@/components/territoire/map/BCE4X_UIShield';
 
 const MapContentInner = React.memo(({
@@ -263,13 +264,14 @@ const MapContentInner = React.memo(({
       />
     )}
 
-    {/* BCE-4X GUIDE PRO: Access Engine V6 reactive */}
+    {/* DELETE-LEGACY-V6: AccessRouteV6Layer SUPPRIME
     {showAccessRoute && accessRouteData && (
       <AccessRouteV6Layer
         routeData={accessRouteData}
         enabled={showAccessRoute}
       />
     )}
+    */}
 
     {userPosition && (
       <Marker position={[userPosition.lat, userPosition.lng]} icon={createCustomIcon('#3b82f6', 'user')}>
