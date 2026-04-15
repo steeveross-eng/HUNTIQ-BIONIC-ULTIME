@@ -731,6 +731,14 @@ try:
 except Exception as e:
     logger.warning(f"V8 National not loaded: {e}")
 
+# EXCLUSION-ENGINE-V8 — Moteur centralise d'exclusion BCE-4X
+try:
+    from engines.v8_national.exclusion_engine import router as exclusion_v8_router
+    app.include_router(exclusion_v8_router)
+    logger.info("✓ EXCLUSION-ENGINE-V8 registered (/api/v8/exclusion) — 11 criteres | 24 zones urbaines | 7 zones legales")
+except Exception as e:
+    logger.warning(f"Exclusion Engine V8 not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

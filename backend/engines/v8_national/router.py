@@ -107,10 +107,10 @@ async def national_score(
     snow = detect_snow_regime(province, lat)
     forest = detect_forest_regime(biome_code)
 
-    # Spatial exclusion
-    from engines.spatial_engine_v7.router import _check_bce4x_exclusions
-    exclusion = _check_bce4x_exclusions(lat, lon)
-    if exclusion["excluded"]:
+    # Spatial exclusion — V8 EXCLUSION-ENGINE centralise
+    from engines.v8_national.exclusion_engine import evaluate_exclusion
+    exclusion = evaluate_exclusion(lat, lon, species)
+    if exclusion["decision"] == "EXCLUDED":
         return {"score_v8": 0, "prediction": "exclu", "exclusion": exclusion, "dataVersion": "V8", "engine": "V8-EXCLUDED"}
 
     # Nutrition V7

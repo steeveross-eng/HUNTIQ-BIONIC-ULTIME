@@ -1,9 +1,9 @@
 /**
- * Carte2027Page — CARTE-2027-REBUILD-Omega-FULL-DEPLOY
- * Carte terrain V7 interactive Leaflet.
- * Architecture: TERRITOIRE (L1) -> INTELLIGENCE (L2) -> CARTE 2027 (L3)
+ * Carte2027Page — CARTE-2027 V8-INTEGRATION-Omega
+ * Carte terrain V8 interactive Leaflet.
+ * Architecture: TERRITOIRE (L1) -> V8-NATIONAL (L2) -> CARTE 2027 (L3)
  *
- * Integrations: 87 moteurs, heatmaps comportementales V7, cameras, POI,
+ * Integrations: V8 National Score, biome-profile, heatmaps V7, cameras, POI,
  * GPS, vent, corridors, zones legales, solunaire, prevision 24h.
  */
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
@@ -17,11 +17,12 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import useBionicScoringV8 from '@/hooks/useBionicScoringV8';
 import {
   Map, Brain, Clock, Moon, TreePine, Wind, Camera, MapPin,
   Crosshair, Loader2, RefreshCw, ChevronDown, ChevronUp,
   LocateFixed, Layers, Eye, EyeOff, Navigation, Shield,
-  Thermometer, Target, Compass
+  Thermometer, Target, Compass, Gauge
 } from 'lucide-react';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -32,6 +33,9 @@ const SPECIES = [
   { value: 'ours_noir', label: 'Ours noir' },
   { value: 'wapiti', label: 'Wapiti' },
   { value: 'dindon_sauvage', label: 'Dindon sauvage' },
+  { value: 'caribou', label: 'Caribou' },
+  { value: 'cerf_mulet', label: 'Cerf mulet' },
+  { value: 'boeuf_musque', label: 'Boeuf musque' },
 ];
 
 const PROVINCES = [
@@ -39,8 +43,9 @@ const PROVINCES = [
   { value: 'nb', label: 'N.-Brunswick' }, { value: 'ns', label: 'N.-Ecosse' },
   { value: 'mb', label: 'Manitoba' }, { value: 'sk', label: 'Saskatchewan' },
   { value: 'ab', label: 'Alberta' }, { value: 'bc', label: 'C.-Britannique' },
+  { value: 'nl', label: 'T.-N.-et-L.' }, { value: 'pei', label: 'I.-P.-E.' },
   { value: 'yt', label: 'Yukon' }, { value: 'nt', label: 'T.N.-O.' },
-  { value: 'pei', label: 'I.-P.-E.' },
+  { value: 'nu', label: 'Nunavut' },
 ];
 
 const TILE_LAYERS = {
@@ -316,62 +321,113 @@ const ZoneRectangles = ({ zones, visible }) => {
 };
 
 
-/* ═══ INTELLIGENCE PANEL (floating) ═══ */
+/* ═══ V8 NATIONAL INTEL PANEL (floating) ═══ */
 
-const IntelPanel = ({ v7Score, hourlyForecast, solunar, lunar, windData, hour }) => {
+const COMP_META = {
+  temporal: { l: 'Temporel', c: '#F59E0B' }, solunar: { l: 'Solunaire', c: '#A78BFA' },
+  rut: { l: 'Rut', c: '#EC4899' }, nutrition: { l: 'Nutrition', c: '#10B981' },
+  biome_compat: { l: 'Biome', c: '#3B82F6' }, snow: { l: 'Neige', c: '#E2E8F0' },
+  forest: { l: 'Foret', c: '#22C55E' }, meteo: { l: 'Meteo', c: '#60A5FA' },
+  vision: { l: 'Vision', c: '#F97316' }, habitat: { l: 'Habitat', c: '#14B8A6' },
+};
+
+const V8IntelPanel = ({ v8Score, biomeProfile, hourlyForecast, solunar, lunar, windData, hour, loading }) => {
   const [open, setOpen] = useState(true);
-  const predLabel = v7Score?.prediction || '--';
-  const predColor = predLabel === 'excellent' ? '#10B981' : predLabel === 'bon' ? '#22D3EE' : predLabel === 'moyen' ? '#F59E0B' : '#EF4444';
+  const score = v8Score?.score_v8 ?? null;
+  const prediction = v8Score?.prediction || '--';
+  const detail = v8Score?.scores_detail || {};
+  const context = v8Score?.context || {};
+  const excluded = v8Score?.engine === 'V8-EXCLUDED';
+  const predColor = prediction === 'excellent' ? '#10B981' : prediction === 'bon' ? '#22D3EE' : prediction === 'moyen' ? '#F59E0B' : '#EF4444';
 
   return (
-    <div className="absolute top-2 right-2 z-[500] w-64" data-testid="carte2027-intel-panel">
+    <div className="absolute top-2 right-2 z-[500] w-72" data-testid="carte2027-v8-panel">
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between px-3 py-2 bg-gray-950/90 backdrop-blur-md border border-gray-700/50 rounded-t-lg text-white text-xs font-bold"
-        data-testid="carte2027-intel-toggle"
+        data-testid="carte2027-v8-toggle"
       >
         <span className="flex items-center gap-1.5">
-          <Brain className="h-3.5 w-3.5 text-emerald-400" />
-          INTELLIGENCE V7
+          <Gauge className="h-3.5 w-3.5 text-emerald-400" />
+          SCORE V8 NATIONAL
         </span>
+        {score !== null && (
+          <span className="text-[10px] font-bold" style={{ color: predColor }}>{Math.round(score)}/100</span>
+        )}
         {open ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
       </button>
 
       {open && (
         <div className="bg-gray-950/90 backdrop-blur-md border border-t-0 border-gray-700/50 rounded-b-lg p-3 space-y-3 max-h-[calc(100vh-200px)] overflow-y-auto">
-          {/* V7 Score */}
-          {v7Score && (
-            <div data-testid="carte2027-v7-score">
+          {/* V8 Score composite */}
+          {loading ? (
+            <div className="flex items-center justify-center py-4">
+              <Loader2 className="h-5 w-5 animate-spin text-emerald-400" />
+              <span className="ml-2 text-[10px] text-gray-400">Calcul V8...</span>
+            </div>
+          ) : excluded ? (
+            <div className="text-center py-3" data-testid="carte2027-v8-excluded">
+              <Shield className="h-6 w-6 mx-auto text-red-500 mb-1" />
+              <div className="text-xs text-red-400 font-bold">ZONE EXCLUE BCE-4X</div>
+              <div className="text-[9px] text-gray-500 mt-1">{v8Score?.exclusion?.reasons?.join(', ')}</div>
+            </div>
+          ) : v8Score ? (
+            <div data-testid="carte2027-v8-score">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] text-gray-500 uppercase tracking-wider">Score Global</span>
+                <span className="text-[10px] text-gray-500 uppercase tracking-wider">Score V8 Composite</span>
                 <Badge className="text-[9px] font-bold px-1.5 py-0" style={{ backgroundColor: `${predColor}20`, color: predColor }}>
-                  {predLabel}
+                  {prediction}
                 </Badge>
               </div>
-              <div className="text-center mb-2">
-                <div className="text-3xl font-black" style={{ color: predColor }}>{Math.round(v7Score.v7_score)}</div>
+              <div className="text-center mb-3">
+                <div className="text-3xl font-black" style={{ color: predColor }}>{Math.round(score)}</div>
                 <div className="text-[9px] text-gray-500">/100</div>
               </div>
-              <div className="grid grid-cols-3 gap-1.5 text-center">
-                {[
-                  { k: 'temporal', l: 'Temporel', c: '#F59E0B' },
-                  { k: 'meteo', l: 'Meteo', c: '#3B82F6' },
-                  { k: 'rut', l: 'Rut', c: '#EC4899' },
-                ].map(s => (
-                  <div key={s.k} className="bg-gray-900/60 rounded px-1 py-1">
-                    <div className="text-sm font-bold" style={{ color: s.c }}>{Math.round(v7Score.scores_detail?.[s.k] || 0)}</div>
-                    <div className="text-[8px] text-gray-500">{s.l}</div>
-                  </div>
-                ))}
+
+              {/* 10 composantes */}
+              <div className="space-y-1 mb-3">
+                {Object.entries(COMP_META).map(([k, m]) => {
+                  const val = detail[k] ?? 0;
+                  return (
+                    <div key={k} className="flex items-center gap-1.5" data-testid={`carte2027-v8-comp-${k}`}>
+                      <span className="text-[8px] font-bold w-12 text-right truncate" style={{ color: m.c }}>{m.l}</span>
+                      <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                        <div className="h-full rounded-full transition-all duration-500" style={{ width: `${Math.min(100, val)}%`, backgroundColor: m.c }} />
+                      </div>
+                      <span className="text-[9px] font-bold text-gray-300 w-5 text-right">{Math.round(val)}</span>
+                    </div>
+                  );
+                })}
               </div>
-              {v7Score.optimal_windows && (
-                <div className="mt-2 flex items-center gap-1 text-[9px] text-gray-400">
-                  <Clock className="h-2.5 w-2.5 text-amber-400" />
-                  <span>{v7Score.optimal_windows.join(' | ')}</span>
+
+              {/* Contexte biome */}
+              {context.biome && (
+                <div className="border-t border-gray-800/50 pt-2 space-y-0.5">
+                  <div className="text-[9px] text-gray-500 uppercase tracking-wider mb-1">Contexte National</div>
+                  <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[9px]">
+                    <span className="text-gray-500">Biome</span>
+                    <span className="text-white font-medium">{biomeProfile?.biome?.name || context.biome}</span>
+                    <span className="text-gray-500">Province</span>
+                    <span className="text-white font-medium uppercase">{context.province}</span>
+                    <span className="text-gray-500">Faune</span>
+                    <span className="text-white font-medium">{context.wildlife_regime}</span>
+                    <span className="text-gray-500">Neige</span>
+                    <span className="text-white font-medium">{context.snow_regime}</span>
+                    <span className="text-gray-500">Foret</span>
+                    <span className="text-white font-medium">{context.forest_regime}</span>
+                  </div>
+                  {biomeProfile?.species_compatibility != null && (
+                    <div className="flex items-center justify-between mt-1 text-[9px]">
+                      <span className="text-gray-500">Compat. espece-biome</span>
+                      <span className="font-bold" style={{ color: biomeProfile.species_compatibility >= 80 ? '#10B981' : '#F59E0B' }}>
+                        {biomeProfile.species_compatibility}%
+                      </span>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
-          )}
+          ) : null}
 
           {/* Hourly Forecast mini */}
           {hourlyForecast?.forecast && (
@@ -440,6 +496,12 @@ const IntelPanel = ({ v7Score, hourlyForecast, solunar, lunar, windData, hour })
               </div>
             </div>
           )}
+
+          {/* Engine footer */}
+          <div className="flex items-center justify-between text-[8px] text-gray-600 border-t border-gray-800/50 pt-1">
+            <span>{v8Score?.engine || 'V8-NATIONAL'}</span>
+            <span>{v8Score?.compute_ms ? `${v8Score.compute_ms}ms` : ''}</span>
+          </div>
         </div>
       )}
     </div>
@@ -534,8 +596,12 @@ export default function Carte2027Page() {
     heatmap: true, pois: true, corridors: true, zones: false, wind: true,
   });
 
+  // V8 National Score
+  const {
+    scoreV8: v8Score, biomeProfile, loading: v8Loading, fetchScoreV8,
+  } = useBionicScoringV8();
+
   // Data
-  const [v7Score, setV7Score] = useState(null);
   const [hourlyForecast, setHourlyForecast] = useState(null);
   const [solunar, setSolunar] = useState(null);
   const [lunar, setLunar] = useState(null);
@@ -562,9 +628,11 @@ export default function Carte2027Page() {
     const lat = center?.lat || mapCenter.lat;
     const lon = center?.lng || mapCenter.lng;
 
+    // V8 Score (parallel via hook)
+    fetchScoreV8(lat, lon, species);
+
     try {
-      const [v7, forecast, sol, lun, heat, pois, wind, corr, zones] = await Promise.all([
-        axios.get(`${API}/v1/v51/intelligence/v7/score?lat=${lat}&lon=${lon}&species=${species}&month=${month}&day=${day}&hour=${hour}&province=${province}&temp_c=8&wind_kmh=12`, { headers }).catch(() => null),
+      const [forecast, sol, lun, heat, pois, wind, corr, zones] = await Promise.all([
         axios.get(`${API}/v1/v51/intelligence/v7/hourly-forecast?lat=${lat}&lon=${lon}&species=${species}&month=${month}&day=${day}`, { headers }).catch(() => null),
         axios.get(`${API}/v1/v51/solunar/windows?month=${month}&day=${day}&lat=${lat}`).catch(() => null),
         axios.get(`${API}/v1/v51/lunar/activity?month=${month}&day=${day}&species=${species}`).catch(() => null),
@@ -575,7 +643,6 @@ export default function Carte2027Page() {
         axios.get(`${API}/v1/carte2027/zones-legales?province=${province}&species=${species}`, { headers }).catch(() => null),
       ]);
 
-      if (v7) setV7Score(v7.data);
       if (forecast) setHourlyForecast(forecast.data);
       if (sol) setSolunar(sol.data);
       if (lun) setLunar(lun.data);
@@ -589,7 +656,7 @@ export default function Carte2027Page() {
     } finally {
       setLoading(false);
     }
-  }, [token, species, province, month, day, hour, headers, mapCenter]);
+  }, [token, species, province, month, day, hour, headers, mapCenter, fetchScoreV8]);
 
   useEffect(() => { loadAll(); }, [loadAll]);
 
@@ -631,7 +698,7 @@ export default function Carte2027Page() {
       {/* COMPACT HEADER */}
       <div className="absolute top-[136px] left-0 right-0 z-[600] flex items-center gap-2 px-3 py-1.5 bg-gray-950/80 backdrop-blur-md border-b border-gray-800/30">
         <Map className="h-4 w-4 text-emerald-400 flex-shrink-0" />
-        <span className="text-xs font-bold text-white tracking-wider flex-shrink-0">CARTE TERRAIN V7</span>
+        <span className="text-xs font-bold text-white tracking-wider flex-shrink-0">CARTE TERRAIN V8</span>
         <Badge className="bg-emerald-500/20 text-emerald-400 text-[8px] flex-shrink-0">2027</Badge>
 
         <div className="flex items-center gap-1.5 ml-auto">
@@ -663,11 +730,11 @@ export default function Carte2027Page() {
 
       {/* MAP */}
       <div className="absolute inset-0" style={{ top: '136px' }}>
-        {loading && !v7Score && (
+        {loading && !v8Score && (
           <div className="absolute inset-0 z-[1000] flex items-center justify-center bg-gray-950/60">
             <div className="flex flex-col items-center gap-2">
               <Loader2 className="h-8 w-8 animate-spin text-emerald-400" />
-              <span className="text-xs text-gray-400">Chargement moteurs V7...</span>
+              <span className="text-xs text-gray-400">Chargement moteurs V8...</span>
             </div>
           </div>
         )}
@@ -726,13 +793,15 @@ export default function Carte2027Page() {
           setTileKey={setTileKey}
         />
 
-        <IntelPanel
-          v7Score={v7Score}
+        <V8IntelPanel
+          v8Score={v8Score}
+          biomeProfile={biomeProfile}
           hourlyForecast={hourlyForecast}
           solunar={solunar}
           lunar={lunar}
           windData={windData}
           hour={hour}
+          loading={v8Loading}
         />
 
         {/* Coordinates display */}
@@ -742,7 +811,7 @@ export default function Carte2027Page() {
 
         {/* Engine badge */}
         <div className="absolute bottom-2 right-2 z-[500] px-2 py-1 bg-gray-950/80 backdrop-blur-sm rounded text-[8px] text-emerald-500/60 font-mono" data-testid="carte2027-engine-badge">
-          87 MOTEURS | CARTE-2027-V7
+          V8-NATIONAL | CARTE-2027
         </div>
       </div>
     </div>
