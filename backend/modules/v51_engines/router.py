@@ -374,8 +374,15 @@ async def intelligence_v7_score(
     peak = rut_peaks.get(species, 300)
     rut_score = max(20, 100 - abs(doy - peak) * 2)
 
-    # Nutrition (salines)
-    nutrition_score = 70
+    # Nutrition V7 (pipeline NUTRITION-ENGINE-V7)
+    try:
+        from modules.nutrition_engine_v7.pipeline import compute_attractiveness_v7
+        _season_map = {1: "hiver", 2: "hiver", 3: "printemps", 4: "printemps", 5: "printemps",
+                       6: "ete", 7: "ete", 8: "ete", 9: "pre_rut", 10: "rut", 11: "post_rut", 12: "hiver"}
+        _nv7 = compute_attractiveness_v7(lat, lon, species, _season_map.get(month, "automne"), month, include_temporal=False)
+        nutrition_score = _nv7.get("attractiveness_score", 70)
+    except Exception:
+        nutrition_score = 70
 
     # Pression chasse
     pressure_score = 40 if month in [9, 10, 11] else 70

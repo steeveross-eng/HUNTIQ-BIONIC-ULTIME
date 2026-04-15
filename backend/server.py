@@ -711,6 +711,14 @@ try:
 except Exception as e:
     logger.warning(f"Carte 2027 Engine not loaded: {e}")
 
+# NUTRITION-ENGINE-V7 — Moteur central nutritionnel institutionnel
+try:
+    from modules.nutrition_engine_v7.router import router as nutrition_v7_router
+    app.include_router(nutrition_v7_router)
+    logger.info("✓ NUTRITION-ENGINE-V7 registered (/api/v7/nutrition) — 7 endpoints")
+except Exception as e:
+    logger.warning(f"Nutrition Engine V7 not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")
@@ -720,6 +728,7 @@ logger.info("✓ BCE: BIONIC Compliance Engine active")
 logger.info("✓ ULTRA-MAX++ FIREWALL: Geo-fencing Shapely active")
 logger.info("✓ SALINES ULTIME: 5 scores + 20 sources active")
 logger.info("✓ CARTE-2027: Moteur cartographique terrain V7 active")
+logger.info("✓ NUTRITION-ENGINE-V7: Pipeline Sol→Nutriments→Fourrage→Gibier active")
 logger.info("=" * 60)
 
 

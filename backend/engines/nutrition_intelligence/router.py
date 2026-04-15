@@ -314,6 +314,22 @@ class SupraBatchRequest(BaseModel):
     month: int = Field(..., ge=1, le=12)
 
 
+def _compute_nutrition_v7_block(lat, lng, species, season, month):
+    """Bloc NUTRITION-ENGINE-V7 pour injection SUPRA."""
+    try:
+        from modules.nutrition_engine_v7.pipeline import compute_attractiveness_v7
+        result = compute_attractiveness_v7(lat, lng, species, season, month)
+        return {
+            "attractiveness_score": result.get("attractiveness_score"),
+            "rating": result.get("rating"),
+            "scores_detail": result.get("scores_detail"),
+            "pipeline": result.get("pipeline"),
+            "engine": result.get("engine"),
+        }
+    except Exception as e:
+        return {"error": str(e), "engine": "NUTRITION-ENGINE-V7-FALLBACK"}
+
+
 @router.post("/supra-batch")
 async def supra_batch(req: SupraBatchRequest):
     """R6.2: Endpoint batch — SUPRA + ULTRA + FICHE + SOL en 1 appel.
@@ -507,6 +523,7 @@ async def supra_batch(req: SupraBatchRequest):
         "soil": soil_result,
         "territory_ia": territory_ia,
         "v7_intelligence": v7_intelligence,
+        "nutrition_v7": _compute_nutrition_v7_block(req.lat, req.lng, req.species, req.season, req.month),
         "_harmonized": True,
         "_knowledge": knowledge_block,
         "_meta": {

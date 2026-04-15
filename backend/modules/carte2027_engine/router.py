@@ -78,14 +78,30 @@ async def carte2027_heatmap_grid(
             points.append({"lat": round(pt_lat, 5), "lng": round(pt_lon, 5), "score": score, "probability": round(score / 100, 2)})
 
     elapsed = round((time.time() - start) * 1000)
+
+    # Nutrition V7 enrichissement au centre
+    nutrition_v7_center = None
+    try:
+        from modules.nutrition_engine_v7.pipeline import compute_attractiveness_v7
+        _season_map = {1: "hiver", 2: "hiver", 3: "printemps", 4: "printemps", 5: "printemps",
+                       6: "ete", 7: "ete", 8: "ete", 9: "pre_rut", 10: "rut", 11: "post_rut", 12: "hiver"}
+        nv7 = compute_attractiveness_v7(lat, lon, species, _season_map.get(month, "automne"), month, include_temporal=False)
+        nutrition_v7_center = {
+            "attractiveness": nv7.get("attractiveness_score"),
+            "rating": nv7.get("rating"),
+        }
+    except Exception:
+        pass
+
     return {
         "points": points,
         "center": {"lat": lat, "lng": lon},
         "grid_size": grid_size,
         "radius_km": radius_km,
         "species": species,
+        "nutrition_v7": nutrition_v7_center,
         "compute_ms": elapsed,
-        "engine": "CARTE-2027-HEATMAP-V7",
+        "engine": "CARTE-2027-HEATMAP-V7-NUTRITION",
     }
 
 
