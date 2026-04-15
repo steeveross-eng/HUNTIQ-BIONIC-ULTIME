@@ -50,7 +50,21 @@ export const BionicScoreBadge = ({ center, species = 'cerf', month = 10, compact
         });
       }
     } catch (e) {
-      if (e.name !== 'AbortError') console.error('[ScoreBadge]', e);
+      if (e.name === 'AbortError') return;
+      if (e.name === 'DataCloneError') {
+        try {
+          const headers = {};
+          const token = localStorage.getItem('token');
+          if (token) headers.Authorization = `Bearer ${token}`;
+          const retryRes = await fetch(`${apiUrl}/api/v7/spatial/scoring?lat=${center.lat}&lon=${center.lng}&species=${sp.toLowerCase()}&month=${month}`, { headers });
+          if (retryRes.ok) {
+            const data = await retryRes.json();
+            setScore({ score_global: data.spatial_score, classe: data.rating === 'premium' ? 'EXCELLENT' : data.rating === 'optimal' ? 'BON' : data.rating === 'adequat' ? 'MOYEN' : 'FAIBLE', dataVersion: 'V7', ...data });
+          }
+        } catch (_) {}
+      } else {
+        console.error('[ScoreBadge]', e);
+      }
     }
     setLoading(false);
   }, [center, species, month]);

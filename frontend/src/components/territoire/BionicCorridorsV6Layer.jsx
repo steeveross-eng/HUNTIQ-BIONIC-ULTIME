@@ -51,6 +51,8 @@ const ZONE_COLORS = {
   repos: '#2196F3',
   rut: '#FF5722',
   eau: '#00BCD4',
+  salines: '#00FFCC',
+  affuts: '#FF0000',
 };
 
 const SPECIES_MAP = {
@@ -63,7 +65,7 @@ const SPECIES_MAP = {
 };
 
 // Z-index déterministe: FAIBLE → CRITIQUE
-const LEVEL_ZINDEX = { FAIBLE: 0, MODERE: 1, FORT: 2, MAJEUR: 3, CRITIQUE: 4 };
+const LEVEL_ZINDEX = { FAIBLE: 0, MOYEN: 1, MODERE: 1, FORT: 2, MAJEUR: 3, CRITIQUE: 4 };
 
 // ═══ Phase 3.2-V BCE-4X: Cache avec version auto-invalidation ═══
 // SAFE MODE: Aucun module ne depend d'un refresh manuel.
@@ -244,6 +246,7 @@ const BionicCorridorsV6Layer = ({
       rut: zoneSubFilters.rut,
       eau: zoneSubFilters.eau,
       affuts: zoneSubFilters.affuts,
+      salines: zoneSubFilters.alimentation, // salines = sous-type alimentation
     };
     return map[zoneType] ?? true;
   }, [zoneSubFilters]);
@@ -252,7 +255,7 @@ const BionicCorridorsV6Layer = ({
     if (!corridorSubFilters) return true;
     // CORRECTION BCE-4X: Chaque niveau controle independamment — ZERO court-circuit
     switch (niveau) {
-      case 'FAIBLE': case 'MODERE': return corridorSubFilters.normaux;
+      case 'FAIBLE': case 'MODERE': case 'MOYEN': return corridorSubFilters.normaux;
       case 'FORT': case 'MAJEUR': return corridorSubFilters.intenses;
       case 'CRITIQUE': return corridorSubFilters.extreme;
       default: return true;
@@ -607,7 +610,33 @@ const BionicCorridorsV6Layer = ({
         renderDataRef.current(data, sp);
       }
     } catch (err) {
-      if (err.name !== 'AbortError') console.error('[CORRIDORS]', err);
+      if (err.name === 'AbortError') return;
+      if (err.name === 'DataCloneError') {
+        // Preview environment interceptor — retry sans signal
+        try {
+          const apiUrl = process.env.REACT_APP_BACKEND_URL;
+          const token = localStorage.getItem('token');
+          const retryHeaders = { 'Content-Type': 'application/json' };
+          if (token) retryHeaders.Authorization = `Bearer ${token}`;
+          const retryRes = await fetch(`${apiUrl}/api/v7/spatial/analyze-full`, {
+            method: 'POST', headers: retryHeaders,
+            body: JSON.stringify({ center_lat: center.lat, center_lng: center.lng, species: sp, month }),
+          });
+          if (retryRes.ok) {
+            const retryData = await retryRes.json();
+            retryData.dataVersion = 'V7';
+            _cache.set(key, retryData);
+            cachedDataRef.current = retryData;
+            cachedSpeciesRef.current = sp;
+            console.log(`[CORRIDORS-V7] Retry OK: ${retryData?.geojson?.features?.length || 0} features`);
+            if (lastRenderKey.current === key) renderDataRef.current(retryData, sp);
+          }
+        } catch (retryErr) {
+          console.error('[CORRIDORS-V7] Retry failed:', retryErr);
+        }
+      } else {
+        console.error('[CORRIDORS-V7]', err);
+      }
     } finally {
       setLoading(false);
     }

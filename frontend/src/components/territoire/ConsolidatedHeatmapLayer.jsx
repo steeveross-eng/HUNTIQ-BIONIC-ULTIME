@@ -67,7 +67,26 @@ const ConsolidatedHeatmapLayer = ({
         onDataLoadedRef.current(adapted);
       }
     } catch (err) {
-      if (err.name !== 'AbortError') console.error('[HEATMAP-V7]', err);
+      if (err.name === 'AbortError') return;
+      if (err.name === 'DataCloneError') {
+        try {
+          const apiUrl = process.env.REACT_APP_BACKEND_URL;
+          const retryHeaders = token ? { Authorization: `Bearer ${token}` } : {};
+          const params = new URLSearchParams({
+            lat: centerLat, lon: centerLng,
+            species: species === 'CERF' ? 'cerf' : species.toLowerCase(), month, grid_size: 12,
+          });
+          const retryRes = await fetch(`${apiUrl}/api/v7/spatial/heatmap?${params}`, { headers: retryHeaders });
+          if (retryRes.ok) {
+            const data = await retryRes.json();
+            const adapted = { ...data, dataVersion: 'V7', score_global: data.points ? Math.round(data.points.reduce((s, p) => s + p.score, 0) / data.points.length) : 0, grid: data.points || [] };
+            cacheRef.current = adapted;
+            if (lastKeyRef.current === key && onDataLoadedRef.current) onDataLoadedRef.current(adapted);
+          }
+        } catch (retryErr) { console.error('[HEATMAP-V7] Retry failed:', retryErr); }
+      } else {
+        console.error('[HEATMAP-V7]', err);
+      }
     }
   }, [centerLat, centerLng, species, month, enabled, includeCorridors, token]);
 

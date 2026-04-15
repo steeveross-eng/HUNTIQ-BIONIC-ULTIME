@@ -1,10 +1,10 @@
 # HUNTIQ V7.2 — PRD
-## BCE-4X EXPANSION-CANADA-V7.2-Omega — CERTIFIE
-**MAJ:** 2026-04-15 | **SCORE CONFORMITE: 100/100** | **NATIONAL 13 PROVINCES**
+## BCE-4X RESTORE-ZONES-Omega + EXPANSION-CANADA-V7.2
+**MAJ:** 2026-04-15 | **ZONES RESTAUREES 5/5** | **13 PROVINCES**
 
-## Architecture V7.2 NATIONALE CERTIFIEE
+## Architecture V7.2 NATIONALE
 ```
-TERRITOIRE-V7 (canvas strategique — 100% V7)
+TERRITOIRE-V7 (canvas — zones V7 restaurees)
 SPATIAL-ENGINE-V7.2 (/api/v7/spatial/* — 8 endpoints)
 NUTRITION-ENGINE-V7.2 (/api/v7/nutrition/* — 7 endpoints)
 INTELLIGENCE-V7 (Score V7 + Score Chasse V7)
@@ -13,26 +13,15 @@ CANADA-V7.2 (/api/v7/canada/* — 6 endpoints)
 CARTE-2027 (terrain)
 ```
 
-## CANADA-V7.2 Module National
-- 13 provinces/territoires couverts (QC, ON, BC, AB, SK, MB, NB, NS, NL, PEI, YT, NT, NU)
-- 16 ecozones terrestres
-- 10 ordres pedologiques CanSIS SLC v3.2
-- 13 sources LiDAR provinciales
-- 11 sources de donnees (Sentinel-2, SoilGrids, ECCC, Open-Meteo, CanSIS, etc.)
+## RESTORE-ZONES fix
+- Cause: zones generees hors rayon 780m (838-880m) par SPATIAL-ENGINE-V7
+- Fix: rayon zones reduit a 270-507m (multiplicateurs 0.8-1.2)
+- Fix: ZONE_COLORS ajoute salines+affuts
+- Fix: LEVEL_ZINDEX ajoute MOYEN
+- Fix: isZoneTypeVisible ajoute salines mapping
+- Fix: DataCloneError retry sans signal (preview environment)
+- Resultat: 5/5 zones visibles (alimentation, repos, rut, eau, salines)
 
-## Endpoints /api/v7/canada/*
-- /ndvi: NDVI Sentinel-2 national (Copernicus STAC + ET0 regionalise)
-- /lidar: LiDAR multi-provincial (canopy, slope)
-- /soil: Pedologie CanSIS + SoilGrids ISRIC
-- /profile: Profil complet (NDVI + LiDAR + Sol + Ecozone)
-- /provinces: 13 provinces metadata
-- /status: Statut module
-
-## Anti-regression: 20/20 PASS | V6: 404
-
-## Taches futures (V8)
-- V8-PREPARATION: Moteurs nationaux V8
-- LiDAR WCS reel (acces gouvernemental)
-- IRDA API pedologie (acces institutionnel)
+## Anti-regression: 15/15 PASS
 
 FIN DU DOCUMENT

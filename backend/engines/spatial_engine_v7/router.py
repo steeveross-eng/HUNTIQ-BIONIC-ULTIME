@@ -408,12 +408,14 @@ async def spatial_analyze_full(
     features = []
     step = 1.0 / 111.0 / 3  # ~333m grid inside 1km radius
 
-    # ZONES (Polygones)
+    # ZONES (Polygones) — RESTORE-ZONES-Omega: toutes zones dans rayon 600m
+    zone_radii = [0.8, 0.9, 1.0, 1.1, 1.2]  # multiplicateurs pour rester dans 600m
     for i, ztype in enumerate(ZONE_TYPES_GEO):
         angle = i * 72 + 20
         rad = math.radians(angle)
-        c_lat = lat + math.sin(rad) * step * (1.2 + i * 0.25)
-        c_lon = lon + math.cos(rad) * step * (1.2 + i * 0.25) / math.cos(math.radians(lat))
+        r = zone_radii[i] if i < len(zone_radii) else 1.0
+        c_lat = lat + math.sin(rad) * step * r
+        c_lon = lon + math.cos(rad) * step * r / math.cos(math.radians(lat))
 
         base = 40 + abs(math.sin(c_lat * 11 + c_lon * 7)) * 50
         if ztype == "alimentation":
@@ -421,7 +423,7 @@ async def spatial_analyze_full(
         elif ztype == "rut" and month in [9, 10, 11]:
             base = min(100, base * 1.2)
 
-        sz = step * 0.35
+        sz = step * 0.45
         ring = [
             [c_lon - sz, c_lat - sz], [c_lon + sz, c_lat - sz],
             [c_lon + sz, c_lat + sz], [c_lon - sz, c_lat + sz],
