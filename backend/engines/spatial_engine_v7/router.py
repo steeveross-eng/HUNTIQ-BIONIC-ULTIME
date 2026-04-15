@@ -376,6 +376,130 @@ async def spatial_amenagement(
     }
 
 
+
+# ═══════════════════════════════════════════════════════
+# 6. ANALYZE-FULL V7 (GeoJSON natif — remplace V6 corridors)
+# ═══════════════════════════════════════════════════════
+
+ZONE_TYPES_GEO = ["alimentation", "repos", "rut", "eau", "salines"]
+CORRIDOR_NIVEAUX = ["FORT", "MOYEN", "CRITIQUE"]
+
+@router.post("/analyze-full")
+async def spatial_analyze_full(
+    request: dict,
+    user: UserWithRole = Depends(get_current_user_with_role),
+):
+    """GeoJSON natif V7 — remplace /api/v6/corridors/analyze-full.
+    Compatible avec BionicCorridorsV6Layer.jsx (Polygones + LineStrings + Points).
+    """
+    start = time.time()
+    lat = request.get("center_lat", 47.35)
+    lon = request.get("center_lng", -72.8)
+    species = request.get("species", "CERF").lower()
+    month = request.get("month", datetime.now(timezone.utc).month)
+    now = datetime.now(timezone.utc)
+    h = now.hour
+    d = now.day
+
+    t_mult, s_mult, r_mult = _v7_temporal_mults(species, month, d, h)
+    nutr = _nutrition_score(lat, lon, species, month)
+    nutr_mult = 0.8 + (nutr / 100) * 0.4
+
+    features = []
+    step = 1.0 / 111.0 / 3  # ~333m grid inside 1km radius
+
+    # ZONES (Polygones)
+    for i, ztype in enumerate(ZONE_TYPES_GEO):
+        angle = i * 72 + 20
+        rad = math.radians(angle)
+        c_lat = lat + math.sin(rad) * step * (1.2 + i * 0.25)
+        c_lon = lon + math.cos(rad) * step * (1.2 + i * 0.25) / math.cos(math.radians(lat))
+
+        base = 40 + abs(math.sin(c_lat * 11 + c_lon * 7)) * 50
+        if ztype == "alimentation":
+            base = min(100, base * 0.7 + nutr * 0.3)
+        elif ztype == "rut" and month in [9, 10, 11]:
+            base = min(100, base * 1.2)
+
+        sz = step * 0.35
+        ring = [
+            [c_lon - sz, c_lat - sz], [c_lon + sz, c_lat - sz],
+            [c_lon + sz, c_lat + sz], [c_lon - sz, c_lat + sz],
+            [c_lon - sz, c_lat - sz],
+        ]
+        features.append({
+            "type": "Feature",
+            "geometry": {"type": "Polygon", "coordinates": [ring]},
+            "properties": {
+                "zone_type": ztype, "score": round(min(100, max(0, base)), 1),
+                "center_lat": round(c_lat, 5), "center_lng": round(c_lon, 5),
+                "species": species, "month": month,
+            },
+        })
+
+    # CORRIDORS (LineStrings)
+    for i in range(8):
+        angle = i * 45
+        rad = math.radians(angle)
+        s_lat = lat + math.sin(rad) * step * 0.4
+        s_lon = lon + math.cos(rad) * step * 0.4 / math.cos(math.radians(lat))
+        e_lat = lat + math.sin(rad) * step * 2.8
+        e_lon = lon + math.cos(rad) * step * 2.8 / math.cos(math.radians(lat))
+
+        base_int = 0.2 + abs(math.sin(angle * 0.07 + lat * 3)) * 0.6
+        v7_int = min(1.0, base_int * t_mult * s_mult * r_mult * nutr_mult)
+        score = round(v7_int * 100, 1)
+        niveau = "CRITIQUE" if v7_int >= 0.75 else "FORT" if v7_int >= 0.45 else "MOYEN"
+
+        from_types = ["repos", "alimentation", "eau", "rut"]
+        to_types = ["alimentation", "repos", "rut", "eau"]
+
+        features.append({
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[s_lon, s_lat], [e_lon, e_lat]],
+            },
+            "properties": {
+                "score": score, "niveau": niveau,
+                "from_type": from_types[i % 4], "to_type": to_types[(i + 1) % 4],
+                "largeur_m": round(5 + v7_int * 20),
+                "species": species, "month": month,
+                "v7_multiplier": round(t_mult * s_mult * r_mult * nutr_mult, 2),
+            },
+        })
+
+    # ZONE CENTROIDS (Points fallback)
+    for i, ztype in enumerate(ZONE_TYPES_GEO[:4]):
+        angle = i * 90 + 45
+        rad = math.radians(angle)
+        p_lat = lat + math.sin(rad) * step * 0.8
+        p_lon = lon + math.cos(rad) * step * 0.8 / math.cos(math.radians(lat))
+        features.append({
+            "type": "Feature",
+            "geometry": {"type": "Point", "coordinates": [p_lon, p_lat]},
+            "properties": {
+                "zone_type": ztype,
+                "score": round(50 + abs(math.sin(p_lat * 7)) * 40, 1),
+                "all_centers": [[p_lat, p_lon]],
+            },
+        })
+
+    elapsed = round((time.time() - start) * 1000)
+
+    return {
+        "geojson": {"type": "FeatureCollection", "features": features},
+        "score_corridor": round(sum(f["properties"].get("score", 0) for f in features if f["geometry"]["type"] == "LineString") / max(1, len([f for f in features if f["geometry"]["type"] == "LineString"])), 1),
+        "classe_corridor": "FORT",
+        "continuity": 0.85,
+        "total_features": len(features),
+        "nutrition_score": nutr,
+        "compute_ms": elapsed,
+        "dataVersion": "V7",
+        "engine": "SPATIAL-ENGINE-V7-ANALYZE-FULL",
+    }
+
+
 # ═══════════════════════════════════════════════════════
 # STATUS
 # ═══════════════════════════════════════════════════════

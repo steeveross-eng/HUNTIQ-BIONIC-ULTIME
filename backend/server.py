@@ -585,18 +585,15 @@ try:
 except Exception as e:
     logger.warning(f"REPOS-V1 not loaded: {e}")
 
-# ═══ CORRIDORS-V10 — Moteur corridors fauniques multi-especes ═══
-# DELETE-LEGACY-V6: router_v6 SUPPRIME — BionicCorridorsV6Layer utilise toujours analyze-full
-# On garde le router V6 car le frontend BionicCorridorsV6Layer en a besoin pour le GeoJSON complet
-# La suppression complete sera faite quand le frontend sera recable sur SPATIAL-ENGINE-V7 GeoJSON
+# ═══ CORRIDORS-V10 — DELETE-LEGACY-V6: V6 router SUPPRIME ═══
+# Remplace par SPATIAL-ENGINE-V7 /api/v7/spatial/analyze-full
+# Le V10 router est conserve pour les endpoints internes non-V6
 try:
     from core.scoring_pipeline.corridors_v10.router import router as corridors_v10_router
-    from core.scoring_pipeline.corridors_v10.router import router_v6 as corridors_v6_router
     app.include_router(corridors_v10_router)
-    app.include_router(corridors_v6_router)
-    logger.info("✓ CORRIDORS-V6: PRESERVE (GeoJSON requis par TERRITOIRE) — SPATIAL-V7 en parallele")
+    logger.info("✓ CORRIDORS-V10 registered (V10 interne) — V6 router SUPPRIME")
 except Exception as e:
-    logger.warning(f"CORRIDORS-V6 not loaded: {e}")
+    logger.warning(f"CORRIDORS-V10 not loaded: {e}")
 
 
 # ═══ SCORE CONSOLIDÉ V6 — SUPPRIME (DELETE-LEGACY-V6-Omega) ═══

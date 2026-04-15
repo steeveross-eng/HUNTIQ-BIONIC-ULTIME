@@ -569,10 +569,13 @@ const BionicCorridorsV6Layer = ({
     setLoading(true);
     try {
       const apiUrl = process.env.REACT_APP_BACKEND_URL;
-      // V7 RECABLE: Essai V6 corridors (GeoJSON complet) avec enrichissement V7
-      const res = await fetch(`${apiUrl}/api/v6/corridors/analyze-full`, {
+      // V7-ULTIME: SPATIAL-ENGINE-V7 GeoJSON natif — remplace V6 corridors
+      const token = localStorage.getItem('token');
+      const fetchHeaders = { 'Content-Type': 'application/json' };
+      if (token) fetchHeaders.Authorization = `Bearer ${token}`;
+      const res = await fetch(`${apiUrl}/api/v7/spatial/analyze-full`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: fetchHeaders,
         body: JSON.stringify({
           center_lat: center.lat,
           center_lng: center.lng,
