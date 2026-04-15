@@ -86,6 +86,8 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose, selectedSpecies })
   const [soilData, setSoilData] = useState(null);
   // SUPRA-REACT-Omega: Territory IA state
   const [territoryIa, setTerritoryIa] = useState(null);
+  // SUPRA-V7: Intelligence V7 state
+  const [v7Intelligence, setV7Intelligence] = useState(null);
 
   const np = nutritionPoint;
   // PRIORITE: selectedSpecies (choix utilisateur) > np.species > fallback orignal
@@ -117,6 +119,7 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose, selectedSpecies })
       if (d.fiche) setFicheData(d.fiche);
       if (d.soil) setSoilData(d.soil);
       if (d.territory_ia) setTerritoryIa(d.territory_ia);
+      if (d.v7_intelligence) setV7Intelligence(d.v7_intelligence);
     } catch (e) {
       console.error('[SUPRA v2]', e);
     } finally {
@@ -268,7 +271,7 @@ const NutritionPointDetailPanel = ({ nutritionPoint, onClose, selectedSpecies })
               costs={costs} comparison={comparison} ecozone={ecozone} energyProtein={energyProtein}
               terrainSolutions={terrainSolutions} gc={gc} np={np} engines={engines}
               ultraScore={ultraScore} ultraDeficits={ultraDeficits} species={species} season={resolvedSeason} soilData={soilData}
-              territoryIa={territoryIa} />
+              territoryIa={territoryIa} v7Intelligence={v7Intelligence} />
           )}
           {!loading && activeTab === 'fiche' && (
             <FicheTab ficheData={ficheData} species={species} season={resolvedSeason} lat={lat} lng={lng} np={np} soilData={soilData}

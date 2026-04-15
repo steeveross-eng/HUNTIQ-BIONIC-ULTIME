@@ -25,7 +25,7 @@ import PedagogieModule from '../PedagogieModule';
 // Score + Gauge | 4 Moteurs | Minéraux + Besoins + Recette + Coûts
 // BCE-4X STEEVE-MAX — STANDARD GOLDEN — DENSITÉ MAXIMALE
 // ============================================================
-const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, comparison, ecozone, energyProtein, terrainSolutions, gc, np, engines, ultraScore, ultraDeficits, species, season, soilData, territoryIa }) => {
+const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, comparison, ecozone, energyProtein, terrainSolutions, gc, np, engines, ultraScore, ultraDeficits, species, season, soilData, territoryIa, v7Intelligence }) => {
   const needColor = (level) => {
     if (level === 'EXTREME' || level === 'CRITIQUE') return BIONIC.red;
     if (level === 'TRES ELEVE' || level === 'ELEVE') return BIONIC.orange;
@@ -372,6 +372,48 @@ const AnalyseTab = ({ score, recipe, recommendations, evidence, costs, compariso
               ))}
             </div>
           )}
+        </GoldenCard>
+      )}
+
+      {/* SUPRA-V7: Bloc Intelligence V7 */}
+      {v7Intelligence && v7Intelligence.v7_score != null && (
+        <GoldenCard accentColor="#10B981" testId="supra-v7-intelligence-card" className="mt-3">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <IC icon={Target} color="#10B981" size={28} />
+              <span className="text-[15px] font-bold text-white">Score V7</span>
+            </div>
+            <span className="text-[22px] font-black" style={{ color: v7Intelligence.v7_score >= 70 ? '#10B981' : v7Intelligence.v7_score >= 40 ? '#F59E0B' : '#EF4444' }}>
+              {Math.round(v7Intelligence.v7_score)}
+            </span>
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            <div className="rounded-lg p-2" style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
+              <div className="text-[10px] text-slate-500">Temporel</div>
+              <div className="text-[14px] font-bold text-amber-400">{v7Intelligence.temporal?.score}</div>
+              <div className="text-[9px] text-slate-600">{v7Intelligence.temporal?.pattern}</div>
+            </div>
+            <div className="rounded-lg p-2" style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
+              <div className="text-[10px] text-slate-500">Lunaire</div>
+              <div className="text-[14px] font-bold text-purple-400">{v7Intelligence.lunar?.score}</div>
+              <div className="text-[9px] text-slate-600">{v7Intelligence.lunar?.phase}</div>
+            </div>
+            <div className="rounded-lg p-2" style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}>
+              <div className="text-[10px] text-slate-500">Rut</div>
+              <div className="text-[14px] font-bold text-red-400">{v7Intelligence.rut?.score}</div>
+              <div className="text-[9px] text-slate-600">J-{Math.abs(v7Intelligence.rut?.days_to_peak || 0)}</div>
+            </div>
+          </div>
+          {v7Intelligence.optimal_windows && (
+            <div className="mt-2 text-[10px] text-slate-400">
+              Creneaux: <span className="text-white font-bold">{v7Intelligence.optimal_windows.join(' | ')}</span>
+            </div>
+          )}
+          <div className="mt-1 text-[10px]">
+            <span className="font-bold px-2 py-0.5 rounded" style={{ backgroundColor: v7Intelligence.prediction === 'excellent' ? '#10B98120' : v7Intelligence.prediction === 'bon' ? '#22D3EE20' : '#F59E0B20', color: v7Intelligence.prediction === 'excellent' ? '#10B981' : v7Intelligence.prediction === 'bon' ? '#22D3EE' : '#F59E0B' }}>
+              {v7Intelligence.prediction}
+            </span>
+          </div>
         </GoldenCard>
       )}
     </div>
