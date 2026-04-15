@@ -34,6 +34,105 @@ SEASON_MAP = {1: "hiver", 2: "hiver", 3: "printemps", 4: "printemps", 5: "printe
               6: "ete", 7: "ete", 8: "ete", 9: "pre_rut", 10: "rut", 11: "post_rut", 12: "hiver"}
 
 
+# ═══════════════════════════════════════════════════════
+# EXCLUSIONS BCE-4X — Moteur d'exclusion multi-criteres
+# ═══════════════════════════════════════════════════════
+
+# Exclusion zones urbaines majeures Canada (polygones simplifies)
+URBAN_EXCLUSIONS = [
+    # (lat_min, lat_max, lon_min, lon_max, name)
+    (45.40, 45.62, -73.98, -73.47, "Montreal"),
+    (46.76, 46.88, -71.32, -71.14, "Quebec-City"),
+    (45.35, 45.45, -75.78, -75.62, "Ottawa-Gatineau"),
+    (43.58, 43.72, -79.50, -79.30, "Toronto"),
+    (49.20, 49.32, -123.22, -123.02, "Vancouver"),
+    (51.00, 51.10, -114.18, -113.98, "Calgary"),
+    (53.48, 53.60, -113.58, -113.38, "Edmonton"),
+    (49.82, 49.92, -97.20, -97.05, "Winnipeg"),
+    (52.10, 52.18, -106.72, -106.58, "Saskatoon"),
+    (46.06, 46.14, -64.82, -64.70, "Moncton"),
+    (44.62, 44.70, -63.62, -63.52, "Halifax"),
+    (47.50, 47.58, -52.78, -52.68, "St-Johns"),
+    (46.22, 46.28, -63.14, -63.10, "Charlottetown"),
+    (46.07, 46.13, -66.68, -66.62, "Fredericton"),
+    (48.38, 48.48, -89.28, -89.18, "Thunder-Bay"),
+    (46.48, 46.55, -80.98, -80.90, "Sudbury"),
+    (45.28, 45.35, -75.92, -75.82, "Gatineau"),
+    (45.50, 45.58, -73.60, -73.50, "Laval"),
+    (45.52, 45.58, -73.46, -73.38, "Longueuil"),
+    (46.80, 46.86, -71.26, -71.18, "Levis"),
+]
+
+# Exclusion rayon autour des villes moyennes (lat, lon, rayon_km)
+TOWN_EXCLUSION_RADIUS_KM = 2.0
+
+# Seuils population pour exclusion
+CANOPY_MIN_PCT = 10  # Minimum couvert forestier pour zone faunique valide
+ALTITUDE_MAX_M = 2500  # Altitude max praticable
+
+
+def _check_bce4x_exclusions(lat: float, lon: float) -> dict:
+    """Moteur d'exclusion BCE-4X multi-criteres.
+    Retourne: {excluded: bool, reasons: list, habitat_score: 0-100}
+    """
+    reasons = []
+    habitat = 100
+
+    # 1. Exclusion urbaine (polygones)
+    for (lat_min, lat_max, lon_min, lon_max, name) in URBAN_EXCLUSIONS:
+        if lat_min <= lat <= lat_max and lon_min <= lon <= lon_max:
+            reasons.append(f"URBAN:{name}")
+            habitat = 0
+            return {"excluded": True, "reasons": reasons, "habitat_score": 0, "type": "urban"}
+
+    # 2. Exclusion proximite urbaine (buffer 2km)
+    for (lat_min, lat_max, lon_min, lon_max, name) in URBAN_EXCLUSIONS:
+        center_lat = (lat_min + lat_max) / 2
+        center_lon = (lon_min + lon_max) / 2
+        dist_km = math.sqrt((lat - center_lat)**2 + (lon - center_lon)**2) * 111
+        if dist_km < TOWN_EXCLUSION_RADIUS_KM:
+            reasons.append(f"URBAN_BUFFER:{name}({dist_km:.1f}km)")
+            habitat = max(0, habitat - 40)
+
+    # 3. Exclusion basee sur la densite de population estimee
+    # Heuristique: zones peuplees du sud du Canada (corridors urbains)
+    # Corridor QC-ON: lat 45.0-46.0, lon -74 to -71
+    if 45.0 <= lat <= 46.0 and -74.5 <= lon <= -71.0:
+        reasons.append("CORRIDOR_URBAIN:QC-MTL-QC")
+        habitat = max(0, habitat - 25)
+    # Corridor ON: lat 43.5-44.5, lon -80 to -79
+    if 43.5 <= lat <= 44.5 and -80.0 <= lon <= -79.0:
+        reasons.append("CORRIDOR_URBAIN:GTA")
+        habitat = max(0, habitat - 30)
+    # Corridor BC: lat 49.0-49.3, lon -123.5 to -122.5
+    if 49.0 <= lat <= 49.3 and -123.5 <= lon <= -122.5:
+        reasons.append("CORRIDOR_URBAIN:Metro_Vancouver")
+        habitat = max(0, habitat - 30)
+
+    # 4. Exclusion altitude extreme (au-dessus de la ligne des arbres)
+    if lat > 72:
+        reasons.append("HORS_BIOME:Arctique")
+        habitat = 0
+        return {"excluded": True, "reasons": reasons, "habitat_score": 0, "type": "arctic"}
+
+    # 5. Exclusion toundra (pas de couvert forestier)
+    if lat > 62 and lon > -100:
+        reasons.append("BIOME_LIMITE:Toundra_subarctique")
+        habitat = max(0, habitat - 50)
+
+    # 6. Score habitat final
+    excluded = habitat < 15
+    if excluded and not reasons:
+        reasons.append("HABITAT_INSUFFISANT")
+
+    return {
+        "excluded": excluded,
+        "reasons": reasons,
+        "habitat_score": max(0, habitat),
+        "type": "excluded" if excluded else "valid",
+    }
+
+
 def _moon_phase(doy):
     return abs(((doy % 29.53) / 29.53) * 2 - 1)
 
@@ -80,6 +179,11 @@ async def spatial_corridors(
     t_mult, s_mult, r_mult = _v7_temporal_mults(species, m, d, h)
     nutr = _nutrition_score(lat, lon, species, m)
     nutr_mult = 0.8 + (nutr / 100) * 0.4  # 0.8 to 1.2
+
+    # BCE-4X Exclusion check
+    exclusion = _check_bce4x_exclusions(lat, lon)
+    if exclusion["excluded"]:
+        return {"corridors": [], "total": 0, "species": species, "exclusion": exclusion, "dataVersion": "V7.2", "engine": "SPATIAL-V7.2-EXCLUDED"}
 
     step = radius_km / 111.0 / 4
     corridors = []
@@ -405,6 +509,23 @@ async def spatial_analyze_full(
     nutr = _nutrition_score(lat, lon, species, month)
     nutr_mult = 0.8 + (nutr / 100) * 0.4
 
+    # ═══ BCE-4X EXCLUSIONS ═══
+    exclusion = _check_bce4x_exclusions(lat, lon)
+    if exclusion["excluded"]:
+        elapsed = round((time.time() - start) * 1000)
+        return {
+            "geojson": {"type": "FeatureCollection", "features": []},
+            "score_corridor": 0,
+            "classe_corridor": "EXCLU",
+            "continuity": 0,
+            "total_features": 0,
+            "nutrition_score": nutr,
+            "exclusion": exclusion,
+            "compute_ms": elapsed,
+            "dataVersion": "V7.2",
+            "engine": "SPATIAL-ENGINE-V7.2-EXCLUDED",
+        }
+
     features = []
     step = 1.0 / 111.0 / 3  # ~333m grid inside 1km radius
 
@@ -585,14 +706,30 @@ async def spatial_vision_scoring(
 @router.get("/status")
 async def spatial_status():
     return {
-        "engine": "SPATIAL-ENGINE-V7",
-        "version": "7.0.0",
+        "engine": "SPATIAL-ENGINE-V7.2",
+        "version": "7.2.0",
         "status": "OPERATIONNEL",
         "endpoints": [
             "/corridors", "/zones", "/heatmap", "/scoring",
-            "/amenagement", "/analyze-full", "/vision-scoring",
+            "/amenagement", "/analyze-full", "/vision-scoring", "/exclusion-check",
         ],
+        "exclusions_bce4x": {
+            "urban_zones": len(URBAN_EXCLUSIONS),
+            "buffer_km": TOWN_EXCLUSION_RADIUS_KM,
+            "corridors_urbains": 3,
+            "arctic_threshold_lat": 72,
+            "tundra_threshold_lat": 62,
+            "habitat_min_score": 15,
+        },
         "integrations": ["NUTRITION-ENGINE-V7", "INTELLIGENCE-V7", "TERRITOIRE-V7", "CARTE-2027"],
-        "dataVersion": "V7",
-        "protections": ["SHIELD-Omega-MAX", "TRACE-LOG-Omega", "BCE4X-LOCK"],
+        "dataVersion": "V7.2",
+        "protections": ["SHIELD-Omega-MAX", "TRACE-LOG-Omega", "BCE4X-LOCK", "EXCLUSION-ENGINE-V7.2"],
     }
+
+
+@router.get("/exclusion-check")
+async def spatial_exclusion_check(
+    lat: float = Query(...), lon: float = Query(...),
+):
+    """Diagnostic d'exclusion BCE-4X pour un point donne."""
+    return _check_bce4x_exclusions(lat, lon)
