@@ -84,6 +84,7 @@ const GuideProPage = lazy(() => import("@/pages/GuideProPage"));
 const GestionnairePage = lazy(() => import("@/pages/GestionnairePage"));
 // CAM-Omega: Module Cameras de chasse
 const CameraModule = lazy(() => import("@/components/CameraModule"));
+const Carte2027Page = lazy(() => import("@/pages/Carte2027Page"));
 // VIS-E: Vision Notifications Panel
 import VisionNotificationsPanel from '@/components/VisionNotificationsPanel';
 // V7.2: AdminHotspotsPage standalone SUPPRIME — Source de verite = Admin Premium (directive x7200)
@@ -1031,6 +1032,8 @@ function App() {
                 <Route path="/analytics" element={<AnalyticsPage />} />
                 {/* CARTE-RETRAIT-Omega: /map redirige vers territoire */}
                 <Route path="/map" element={<Navigate to="/mon-territoire-bionic" replace />} />
+                {/* CARTE-2027-REBUILD: Nouvelle carte terrain V7 */}
+                <Route path="/carte-2027" element={<Carte2027Page />} />
                 <Route path="/forecast" element={<ForecastPage />} />
                 <Route path="/trips" element={<TripsPage />} />
                 <Route path="/referral" element={<ReferralModule />} />
