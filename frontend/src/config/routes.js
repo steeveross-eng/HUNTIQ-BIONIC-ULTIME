@@ -123,6 +123,7 @@ export const ROUTES = [
   // ==========================================
   // TERRITORY ROUTES (Dropdown Group)
   // ==========================================
+  // CARTE-RETRAIT-Omega: Module CARTE retire pour lancement 2026
   {
     path: '/map',
     name: 'map',
@@ -133,9 +134,10 @@ export const ROUTES = [
     icon: Globe,
     category: ROUTE_CATEGORIES.TERRITORY,
     module: 'geospatial',
-    showInNav: true,
+    showInNav: false,
     navGroup: 'territory',
-    requiresAuth: false
+    requiresAuth: false,
+    disabled: true
   },
   {
     path: '/territoire',

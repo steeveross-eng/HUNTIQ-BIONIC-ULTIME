@@ -50,7 +50,7 @@ const DashboardPage = lazy(() => import("@/pages/DashboardPage"));
 const BusinessPage = lazy(() => import("@/pages/BusinessPage"));
 const PlanMaitrePage = lazy(() => import("@/pages/intelligence/PlanMaitrePage"));
 const AnalyticsPage = lazy(() => import("@/pages/intelligence/AnalyticsPage"));
-const MapPage = lazy(() => import("@/pages/MapPage"));
+// CARTE-RETRAIT-Omega: MapPage retire pour lancement 2026
 const ForecastPage = lazy(() => import("@/pages/intelligence/ForecastPage"));
 // V6-M3-DASHBOARD: Intelligence V6 Dashboard (x7000-M3-DASHBOARD)
 const IntelligenceV6Page = lazy(() => import("@/pages/intelligence/IntelligenceV6Page"));
@@ -202,15 +202,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
               Territoire
             </Link>
             
-            {/* CARTE INTERACTIVE — Module primaire (carte terrain GPS) */}
-            <Link 
-              to="/map" 
-              className={`flex items-center gap-1 px-1.5 py-2 text-[11px] font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/map') ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
-              data-testid="nav-carte-interactive"
-            >
-              <Globe className="h-3.5 w-3.5" />
-              Carte
-            </Link>
+            {/* CARTE-RETRAIT-Omega: Module CARTE retire pour lancement 2026 */}
 
             {/* CAM-ADMIN-HEADER: Module Cameras — entre CARTE et INTELLIGENCE */}
             <Link 
@@ -358,9 +350,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             <Link to="/mon-territoire-bionic" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="mobile-nav-analyse-territoire">
               <Crosshair className="h-4 w-4" /> Analyse Territoire
             </Link>
-            <Link to="/map" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-gray-300 hover:text-white" data-testid="mobile-nav-carte-interactive">
-              <Globe className="h-4 w-4" /> Carte Interactive
-            </Link>
+            {/* CARTE-RETRAIT-Omega: Carte Interactive retiree pour lancement 2026 */}
             {/* CAM-ADMIN-HEADER: Cameras entre Carte et Intelligence */}
             <Link to="/cameras" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="mobile-nav-cameras">
               <Camera className="h-4 w-4" /> Cameras
@@ -408,7 +398,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
 };
 
 // Footer Component - Hidden on full-viewport pages
-const FULL_VIEWPORT_ROUTES = ['/map', '/mon-territoire-bionic', '/mon-territoire', '/analyse-territoire', '/forecast', '/admin-geo', '/admin-premium'];
+const FULL_VIEWPORT_ROUTES = ['/mon-territoire-bionic', '/mon-territoire', '/analyse-territoire', '/forecast', '/admin-geo', '/admin-premium'];
 
 const Footer = () => {
   const location = useLocation();
@@ -1048,7 +1038,8 @@ function App() {
                 <Route path="/plan-maitre" element={<PlanMaitrePage />} />
                 {/* V5-ULTIME: Analytics réactivé */}
                 <Route path="/analytics" element={<AnalyticsPage />} />
-                <Route path="/map" element={<MapPage />} />
+                {/* CARTE-RETRAIT-Omega: /map redirige vers territoire */}
+                <Route path="/map" element={<Navigate to="/mon-territoire-bionic" replace />} />
                 <Route path="/forecast" element={<ForecastPage />} />
                 <Route path="/trips" element={<TripsPage />} />
                 <Route path="/referral" element={<ReferralModule />} />

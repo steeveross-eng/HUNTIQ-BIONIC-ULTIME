@@ -1,41 +1,36 @@
 # HUNTIQ V6 — PRD
 ## BCE-4X ULTIME ABSOLU — COMMANDANT STEEVE-MAX
-**MAJ:** 2026-04-14
+**MAJ:** 2026-04-15
 
 ## Stack: FastAPI + React + Leaflet + MongoDB
 
-## Deploiements session courante
+## CARTE-RETRAIT-Omega-ZERO-RISK (2026-04-15)
+- Lien CARTE retire (desktop + mobile)
+- Route /map redirigee → /mon-territoire-bionic
+- Import MapPage, preloader, adjacency retires
+- Config routes: showInNav=false, disabled=true
+- ZERO regression: 9/9 services HTTP 200
+- TRACE-LOG journalise
 
-### CAMERA-Omega-ULTRA — 21 marques, popup riche, ZERO texte libre
-### AFFUT-IA-Omega-PLUS — Moteur IA affuts, salines 20-100m, 5 refs scientifiques
-### SUPRA-REACT-Omega — SUPRA v2 reconnecte, territory_bridge, 9 moteurs
-### TERRITOIRE-FULL-RESTORE — 18 couches, 5 especes, PROTECTED_LAYERS, PRESET
-### P1-ENGINE-Omega (12 moteurs): OPTIMIZATION, HEAT-UNIFY, PREDICT-BEHAVIOR, ECO-DYNAMICS, TERRAIN-RISK-PLUS, CONSISTENCY, SCIENCE-CHECK, SHIELD-PLUS, GLOBAL-CERT, CMP-CERT, TRACE-LOG, BRANCH-REALIGN
-### CRITICAL-MODULES-Omega (7 modules): CAMERA-SEC, M5-OFFLINE-ULTRA, DEM-LIDAR, SIEF-ECOFORESTERIE, LIDAR-FUSION, SIEF-ECO, MVT-TILES
-### GUIDE-PRO-Omega — UI panel integre dans CARTE avec 4 modes (LIVE, POINT, ZONE, ESPECE)
+## Modules actifs
+- TERRITOIRE: 18 couches, 5 especes, PROTECTED_LAYERS
+- Camera Engine: 21 marques, popup riche
+- IA Vision: 12 endpoints certifies
+- AFFUT-IA: 4 endpoints, salines 20-100m
+- P1 Engines: 12 moteurs, 14 endpoints
+- Critical Modules: 7 modules, 9 endpoints
+- Guide-Pro: 15 endpoints
+- SUPRA v2: 9 moteurs + territory_bridge
+- MAP-PERF: GZip + cache + preload (157ms)
 
-## Architecture endpoints
-- /api/v1/camera/* (camera engine, brands, popup-data)
-- /api/v1/affuts-ia/* (generate, list, explain, references)
-- /api/v1/vision/* (analyses, trajectories, hotspots, stats, individuals, notifications, anomalies, territories)
-- /api/v1/p1/* (12 moteurs, 14 endpoints)
-- /api/v1/critical/* (7 modules, 9 endpoints)
-- /api/v1/guide-pro/* (15 endpoints)
-- /api/map/preload (cache + GZip)
-- /api/v6/nutrition-intelligence/* (SUPRA + territory_ia)
-- /api/v6/supra/advanced/* (terrain, risk, recommendations, correlation)
+## Backlog
+- [x] CARTE-RETRAIT-Omega (COMPLETE)
+- [ ] CARTE-2027-REBUILD (reconstruction future)
+- [ ] SYSTEM-Omega-TOTAL-V4 (consolidation)
 
-## Backlog COMPLET
-- [x] P1-ENGINE-Omega (12 moteurs)
-- [x] Critical Modules (7 modules)
-- [x] GUIDE-PRO-Omega UI
-- [x] Cercle 600m SUPPRIME
-- [x] 5/5 especes avec salines
-
-## Performance
-- Map preload: 150ms (< 1s)
-- GZip: actif (500+ bytes)
-- Cache serveur: TTL 5min
-- Cache client: sessionStorage
+## Backup
+- ZIP: /app/BIONIC-CARTE-PRE-RETRAIT-Omega.zip (380MB)
+- TAG: BIONIC-CARTE-PRE-RETRAIT-Omega
+- BRANCH: freeze/carte-pre-retrait
 
 FIN DU DOCUMENT

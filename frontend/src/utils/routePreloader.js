@@ -16,7 +16,7 @@ const routeImportMap = {
   '/dashboard': () => import('@/pages/DashboardPage'),
   '/shop': () => import('@/pages').then(m => m.ShopPage),
   '/compare': () => import('@/pages').then(m => m.ComparePage),
-  '/map': () => import('@/pages/MapPage'),
+  // CARTE-RETRAIT-Omega: /map preload retire
   '/analyze': () => import('@/components/AnalyzerModule'),
   '/admin': () => import('@/pages/AdminPage'),
   '/trips': () => import('@/pages/TripsPage'),
@@ -27,9 +27,10 @@ const routeImportMap = {
 // Navigation probability based on current route
 const navigationProbability = {
   '/': ['/dashboard', '/shop', '/analyze'],
-  '/dashboard': ['/map', '/territory', '/trips'],
+  // CARTE-RETRAIT-Omega: /map retire
+  '/dashboard': ['/territory', '/trips'],
   '/shop': ['/compare', '/dashboard'],
-  '/map': ['/territory', '/dashboard'],
+  // CARTE-RETRAIT-Omega: /map adjacency retire
   '/analyze': ['/shop', '/compare'],
 };
 
