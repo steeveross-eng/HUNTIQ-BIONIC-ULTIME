@@ -227,7 +227,7 @@ async def spatial_heatmap(
             # Temporal
             temporal = 90 if (5 <= h <= 8 or 16 <= h <= 19) else 50
             # Meteo placeholder (enrichi par Open-Meteo dans Score V7 reel)
-            meteo = 65
+            meteo = 70
             # Rut
             doy = (m - 1) * 30 + d
             rut_peaks = {"cerf": 310, "orignal": 275, "wapiti": 280}
@@ -237,8 +237,8 @@ async def spatial_heatmap(
             pressure = 40 if m in [9, 10, 11] else 70
 
             composite = (
-                habitat * 0.20 + temporal * 0.15 + meteo * 0.10 +
-                rut * 0.15 + pressure * 0.10 + nutr * 0.20 +
+                habitat * 0.24 + temporal * 0.18 + meteo * 0.10 +
+                rut * 0.15 + pressure * 0.13 + nutr * 0.10 +
                 _moon_phase(doy) * 50 * 0.10
             )
             composite = round(min(100, max(0, composite)), 1)

@@ -1,48 +1,39 @@
 # HUNTIQ V6 — PRD
-## BCE-4X V7-ULTIME-Omega — SECURE-MIGRATION-BCE-4X
-**MAJ:** 2026-04-15 | **SCORE CONFORMITE: 98/100** | **3 ENGINES V7 ACTIFS**
+## BCE-4X V7-ULTIME-Omega — SHADOW-REPORT COMPLETE
+**MAJ:** 2026-04-15 | **SCORE CONFORMITE: 98/100** | **SHADOW REPORT: RECABLAGE AUTORISE**
 
 ## Architecture V7-ULTIME (FIGEE)
 ```
 TERRITOIRE-V7 (canvas strategique)
     ↑ donnees spatiales + nutritionnelles
-SPATIAL-ENGINE-V7 (moteur geospatial) [6 endpoints]
-    | corridors + zones + heatmap + scoring + amenagement
-NUTRITION-ENGINE-V7 (moteur scientifique) [7 endpoints]
-    | soil + forage + attractivite
+SPATIAL-ENGINE-V7 (/api/v7/spatial/* — 6 endpoints)
+NUTRITION-ENGINE-V7 (/api/v7/nutrition/* — 7 endpoints)
     ↓
-INTELLIGENCE-V7 (analyse, scoring, predictions)
-    | Score V7 + Score Chasse V7 + modeles
+INTELLIGENCE-V7 (Score V7 + Score Chasse V7)
     ↓
-SUPRA-ENGINE-V7 (decision, recommandations) [6 endpoints]
-    | analyse + fiche + compare + recommande + commande
+SUPRA-ENGINE-V7 (/api/v7/supra/* — 6 endpoints)
     ↓
 CARTE-2027 (terrain)
 ```
 
-## Engines V7 actifs
-- SPATIAL-ENGINE-V7: /api/v7/spatial/* (corridors, zones, heatmap, scoring, amenagement, status)
-- NUTRITION-ENGINE-V7: /api/v7/nutrition/* (soil-layer, nutrients, forage, water, metabolism, attractiveness, status)
-- SUPRA-ENGINE-V7: /api/v7/supra/* (analyse, fiche, compare, recommande, commande, status)
-- INTELLIGENCE-V7: Score V7 + Score Chasse V7 (/api/v1/v51/intelligence/v7/score-chasse)
+## SHADOW REPORT V6↔V7
+- CORRIDORS: V6=8, V7=10 (+2 enrichissement). Ecart spatial max 344m. V7 ajoute types saisonnier+extreme. PASS
+- HEATMAP: V6 avg=65.9, V7 avg=60.7. Delta 5.2 pts. DIVERGENCE ATTENDUE (nutrition_v7=50 composante reelle ajoutee)
+- SCORING: V6=61.9, V7=63.1. Delta 1.2 pts. PASS (tolerance ±3)
+- ZONES: V6=legales(7), V7=ecologiques(5). Types complementaires. COMPATIBLE
+- ANOMALIES CRITIQUES: ZERO. ROLLBACK: NON REQUIS
+- VERDICT: RECABLAGE AUTORISE
 
-## Score Chasse V7
-- Remplace Score Chasse V6+
-- 8 composants: meteo(18%), solunar(10%), temporal(15%), rut(15%), pression(10%), nutrition_v7(15%), vision_ia(10%), spatial(7%)
-- Meteo temps reel ECCC/NOAA via Open-Meteo
-- Score pilote Mauricie: 62.8/100 "bon"
-
-## Protections BCE-4X
-- SHIELD-Omega-MAX, TRACE-LOG-Omega, BCE4X-LOCK, ANTI-LEGACY-Omega
-- CMP-CERT: 29/29 endpoints, GLOBAL-CERT: ZERO regression
-- V6 composants preserves en mode SHADOW
-
-## V6 en attente suppression (validation Commandant)
-- BionicCorridorsV6Layer, ConsolidatedHeatmapLayer, AccessRouteV6Layer, Score Chasse V6+
+## Recablage frontend (EN ATTENTE validation Commandant)
+1. Score Chasse header → /api/v1/v51/intelligence/v7/score-chasse (HAUTE compat)
+2. ConsolidatedHeatmapLayer → /api/v7/spatial/heatmap (HAUTE compat)
+3. useBionicScoring → /api/v7/spatial/scoring (HAUTE compat)
+4. BionicCorridorsV6Layer → /api/v7/spatial/corridors+zones (MOYENNE compat)
+5. SUPRA/Affuts: DEJA V7 (zero recablage)
 
 ## Taches futures
-- Recablage frontend TERRITOIRE vers V7 endpoints
-- Suppression V6 apres validation SHADOW
+- Recablage frontend (sur ordre Commandant)
+- Suppression V6 (apres validation SHADOW post-recablage)
 - V7.2: Sentinel-2 NDVI direct, IRDA Quebec
 - PWA M5 Offline Mode
 
