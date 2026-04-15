@@ -1,6 +1,6 @@
 # HUNTIQ V8 — PRD
-## BCE-4X V8-PREPARATION-Omega — NATIONAL-ENGINES-INIT CERTIFIE
-**MAJ:** 2026-04-15 | **19/19 PASS** | **V8 NATIONAL ACTIF**
+## BCE-4X V8-INTEGRATION-Omega — PHASE 1 CERTIFIE
+**MAJ:** 2026-04-15 | **Phase 1: 8/8 PASS** | **V8 FRONTEND ACTIF**
 
 ## Architecture V8 NATIONALE
 ```
@@ -30,5 +30,42 @@ CARTE-2027 (terrain)
 - /api/v8/national/score
 - /api/v8/national/referentials
 - /api/v8/national/status
+
+## V8-INTEGRATION-Omega — PHASE 1 (COMPLETE 2026-04-15)
+### Fichiers crees/modifies:
+- `/app/frontend/src/hooks/useBionicScoringV8.js` — Hook dedie Score V8 National
+- `/app/frontend/src/components/territoire/ScoreV8Badge.jsx` — Badge SVG + 10 composantes + panneau detail
+- `/app/frontend/src/components/territoire/ui/TerritoireHeader.jsx` — Remplace Score Chasse V6 par ScoreV8Badge
+- `/app/frontend/src/pages/MonTerritoireBionicPage.jsx` — Integration hook V8 + props
+
+### Resultats certification Phase 1:
+1. Hook V8 operationnel (fetch score + biome-profile en parallele, cache 90s)
+2. Badge V8 avec anneau SVG, 10 composantes, prediction, contexte biome
+3. Panneau detail expandable (click) avec barres de progression colorees
+4. V6 Score purge du header (ZERO-LEGACY)
+5. Exclusions BCE-4X fonctionnelles (urbain=0, foret=64.5+)
+6. Multi-province multi-espece verifie (AB, BC, ON, NU, QC, NB, NS, MB, SK, YT, NT)
+7. Compilation webpack reussie (ZERO erreur)
+
+## Taches restantes
+### P0: Phase 2 — CARTE-2027 Integration V8
+- Modifier Carte2027Page.jsx — Remplacer INTELLIGENCE V7 par Score V8
+- Ajouter couches V8 (biome profile, corridors V8, compatibility layer)
+- Integrer useBionicScoringV8 dans CARTE-2027
+
+### P0: Phase 3 — Normalisation inter-provinciale
+- Harmoniser 10 composantes V8 pour 10 provinces + 3 territoires
+- Coherence Canada-wide sans brisures
+
+### P0: Phase 4 — Validation V8
+- Rapport V8-INTEGRATION >= 98/100
+
+### P1 (Futur): 
+- LiDAR WCS real multi-provincial (acces gouvernemental requis)
+- IRDA API pedologie reelle Quebec (acces institutionnel requis)
+
+## Mocked/Fallback
+- LiDAR MRNF: fallback Copernicus/Open-Meteo
+- IRDA pedologie: fallback SoilGrids
 
 FIN DU DOCUMENT

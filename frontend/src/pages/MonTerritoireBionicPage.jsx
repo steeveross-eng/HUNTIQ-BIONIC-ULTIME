@@ -33,6 +33,7 @@ import { TerritoireDialogs } from '@/components/territoire/ui/TerritoireDialogs'
 import useBionicWeather from '@/hooks/useBionicWeather';
 import useSharedWeather from '@/hooks/useSharedWeather';
 import useBionicScoring from '@/hooks/useBionicScoring';
+import useBionicScoringV8 from '@/hooks/useBionicScoringV8';
 import useBionicStore from '@/stores/useBionicStore';
 import { enforceOverlayCompliance, enforcePositionLock, enforceRenderGuard, enforceLayoutFreeze } from '@/components/territoire/map/BCE4X_UIShield';
 import { useUserData } from '@/hooks/useUserData';
@@ -630,6 +631,11 @@ const MonTerritoireBionicPage = () => {
     };
   }, [selectedWaypointForZones?.lat, selectedWaypointForZones?.lng, selectedWaypointForZones?.latitude, selectedWaypointForZones?.longitude]);
 
+  // ═══ BCE-4X V8-INTEGRATION-Omega: Score V8 National ═══
+  const {
+    scoreV8, biomeProfile, loading: scoreV8Loading, fetchScoreV8,
+  } = useBionicScoringV8();
+
   // STEEVE-MAX V3: Sous-éléments granulaires par couche
   const [zoneSubFilters, setZoneSubFilters] = useState({
     alimentation: true, repos: true, rut: true, affuts: true, eau: true,
@@ -685,6 +691,16 @@ const MonTerritoireBionicPage = () => {
       updateSpecies(selectedSpecies);
     }
   }, [selectedSpecies, updateSpecies]);
+
+  // ═══ BCE-4X V8: Fetch automatique Score V8 quand position ou espece change ═══
+  useEffect(() => {
+    const lat = waypointCenter?.lat || currentMapCenter?.lat;
+    const lng = waypointCenter?.lng || currentMapCenter?.lng;
+    if (lat && lng) {
+      const sp = selectedSpecies === 'tous' ? 'cerf' : selectedSpecies;
+      fetchScoreV8(lat, lng, sp);
+    }
+  }, [waypointCenter?.lat, waypointCenter?.lng, currentMapCenter?.lat, currentMapCenter?.lng, selectedSpecies, fetchScoreV8]);
   
   // Les exclusions sont gérées 100% backend. Ces variables sont gardées pour compatibilité UI.
   const terrainExclusions = [];
@@ -1111,6 +1127,9 @@ const MonTerritoireBionicPage = () => {
         onClearWaypoint={clearWaypointTarget}
         onDeleteWaypoint={handleDeleteWaypoint}
         sharedWeather={sharedWeather}
+        scoreV8={scoreV8}
+        biomeProfile={biomeProfile}
+        scoreV8Loading={scoreV8Loading}
         onCenterWaypoint={() => {
           if (selectedWaypointForZones && mapRef.current) {
             mapRef.current.setView([selectedWaypointForZones.lat, selectedWaypointForZones.lng], 14);

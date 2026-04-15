@@ -1,15 +1,16 @@
 /**
- * TerritoireHeader.jsx — Header BIONIC V6+ GOLDEN
- * =============================================
- * BCE-4X: Source UNIQUE météo (sharedWeather prop)
- * - ZERO duplication avec METEO BIONIC
- * - SCORE CHASSE V6+ synchronisé depuis SUPRA/V6
- * - Rafales incluses
- * - Purge complète V1-V5
+ * TerritoireHeader.jsx — Header BIONIC V8 NATIONAL
+ * ==================================================
+ * BCE-4X V8-INTEGRATION-Omega — PHASE 1
+ * - ScoreV8Badge integre (10 composantes nationales)
+ * - ZERO relique V6/V7 scoring
+ * - Source UNIQUE meteo (sharedWeather prop)
+ * - Purge complete V1-V7 scoring
  */
 import React, { useRef, useEffect } from 'react';
-import { ArrowLeft, Plus, Edit2, Crosshair, X, LocateFixed, Trash2, ToggleLeft, Gauge } from 'lucide-react';
+import { ArrowLeft, Plus, Edit2, Crosshair, X, LocateFixed, Trash2, ToggleLeft } from 'lucide-react';
 import { ShareBionicButton } from '@/components/territoire/ui/ShareBionicButton';
+import { ScoreV8Badge } from '@/components/territoire/ScoreV8Badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { getProtectedZIndex } from '@/components/territoire/map/BCE4X_UIShield';
 
@@ -24,34 +25,11 @@ export const TerritoireHeader = ({
   onCenterWaypoint,
   // BCE-4X V6+: Source UNIQUE météo depuis sharedWeather
   sharedWeather,
+  // BCE-4X V8: Score V8 National
+  scoreV8,
+  biomeProfile,
+  scoreV8Loading,
 }) => {
-  // BCE-4X: Extraire les données météo de la source unique
-  const weather = sharedWeather?.weather || {};
-  const wind = sharedWeather?.wind || {};
-  const huntingScore = sharedWeather?.huntingScore || {};
-  const isLoading = sharedWeather?.loading ?? true;
-
-  const temp = weather?.temperature ?? null;
-  const windDir = wind?.direction ?? null;
-  const windSpeed = wind?.speed ?? null;
-  const windGusts = wind?.gusts ?? null;
-  const windCardinal = wind?.directionLabel ?? '';
-
-  // SCORE CHASSE V6+ depuis SUPRA/V6
-  const scoreValue = huntingScore?.overall ?? null;
-  const scoreLabel = huntingScore?.label ?? '';
-  const hasScore = scoreValue != null && scoreValue > 0;
-
-  // Couleur du score
-  const getScoreColor = (s) => {
-    if (s >= 80) return '#22C55E';
-    if (s >= 60) return '#84CC16';
-    if (s >= 40) return '#F59E0B';
-    if (s >= 20) return '#EF4444';
-    return '#6B7280';
-  };
-  const scoreColor = hasScore ? getScoreColor(scoreValue) : '#6B7280';
-
   // BCE-4X PositionLock
   const headerRef = useRef(null);
   useEffect(() => {
@@ -77,24 +55,12 @@ export const TerritoireHeader = ({
         <h1 className="text-base font-semibold text-white tracking-tight">Analyse Territoire BIONIC</h1>
       </div>
       <div className="flex items-center gap-3">
-        {/* BCE-4X V6+: SCORE CHASSE synchronisé SUPRA/V6 */}
-        <div
-          className="flex items-center gap-2 h-9 px-3 rounded-lg border transition-all"
-          style={{
-            borderColor: `${scoreColor}40`,
-            backgroundColor: `${scoreColor}10`,
-          }}
-          data-testid="header-score-chasse-v6"
-        >
-          <Gauge className="h-4 w-4" style={{ color: scoreColor }} />
-          <div className="flex flex-col leading-none">
-            <span className="text-[10px] text-gray-500 uppercase tracking-wider">Score Chasse</span>
-            <span className="text-xs font-bold" style={{ color: scoreColor }}>
-              {hasScore ? `${Math.round(scoreValue)}/100` : (isLoading ? '...' : '--')}
-              {scoreLabel && <span className="ml-1 text-[9px] font-medium opacity-80">{scoreLabel}</span>}
-            </span>
-          </div>
-        </div>
+        {/* BCE-4X V8: SCORE V8 NATIONAL — 10 composantes */}
+        <ScoreV8Badge
+          scoreV8={scoreV8}
+          biomeProfile={biomeProfile}
+          loading={scoreV8Loading}
+        />
         {/* + WAYPOINT */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
