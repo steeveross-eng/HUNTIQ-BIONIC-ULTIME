@@ -15,13 +15,14 @@ const useMapBundleV8 = () => {
   const abortRef = useRef(null);
   const cacheRef = useRef(new Map());
 
-  const fetchBundle = useCallback(async (lat, lon, species = 'cerf', month, hour) => {
+  const fetchBundle = useCallback(async (lat, lon, species = 'cerf', month, hour, windDeg) => {
     if (!lat || !lon) return null;
 
     const now = new Date();
     const m = month || (now.getMonth() + 1);
     const h = hour || now.getHours();
-    const cacheKey = `${lat.toFixed(3)}_${lon.toFixed(3)}_${species}_${m}`;
+    const w = windDeg || 225;
+    const cacheKey = `${lat.toFixed(3)}_${lon.toFixed(3)}_${species}_${m}_w${Math.round(w)}`;
 
     const cached = cacheRef.current.get(cacheKey);
     if (cached && Date.now() - cached.ts < 30000) {
@@ -36,7 +37,7 @@ const useMapBundleV8 = () => {
 
     try {
       const res = await fetch(
-        `${API}/api/v8/map/bundle?lat=${lat}&lon=${lon}&species=${species}&month=${m}&hour=${h}`,
+        `${API}/api/v8/map/bundle?lat=${lat}&lon=${lon}&species=${species}&month=${m}&hour=${h}&wind_deg=${w}`,
         { signal: abortRef.current.signal }
       );
       if (!res.ok) return null;

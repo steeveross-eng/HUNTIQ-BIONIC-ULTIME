@@ -190,6 +190,7 @@ async def map_bundle(
     lat: float = Query(...), lon: float = Query(...),
     species: str = Query("cerf"),
     month: int = Query(None), hour: int = Query(None),
+    wind_deg: float = Query(225),
     include_p1: bool = Query(False),
     db: AsyncIOMotorDatabase = Depends(get_camera_db),
 ):
@@ -199,7 +200,7 @@ async def map_bundle(
     m = month or now.month
     h = hour or now.hour
 
-    ck = _cache_key(lat, lon, species, m)
+    ck = _cache_key(lat, lon, species, m) + f"_w{int(wind_deg)}"
     cached = _BUNDLE_CACHE.get(ck)
     if cached and (time.time() - cached["ts"]) < _CACHE_TTL_S:
         result = {**cached["data"], "from_cache": True, "cache_age_ms": round((time.time() - cached["ts"]) * 1000)}
@@ -217,7 +218,7 @@ async def map_bundle(
     from engines.v8_national.phase_b_engines import generate_zones_ta, generate_corridors_ta, generate_affuts_ta
     zones = generate_zones_ta(lat, lon, species, m)
     corridors = generate_corridors_ta(lat, lon, species, m, h)
-    affuts = generate_affuts_ta(lat, lon, species, zones, corridors, wind_deg=180)
+    affuts = generate_affuts_ta(lat, lon, species, zones, corridors, wind_deg=wind_deg)
 
     # Phase C — Thermal + Multi-Engine (inline dans le bundle)
     from engines.v8_national.phase_c_engines import _thermal_model, _multi_engine_score

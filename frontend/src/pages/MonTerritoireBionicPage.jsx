@@ -730,7 +730,8 @@ const MonTerritoireBionicPage = () => {
     if (lat && lng) {
       const sp = selectedSpecies === 'tous' ? 'cerf' : selectedSpecies;
       fetchScoreV8(lat, lng, sp);
-      fetchBundleV8(lat, lng, sp);
+      const windDeg = windInfo?.directionDeg || 225;
+      fetchBundleV8(lat, lng, sp, undefined, undefined, windDeg);
     }
   }, [waypointCenter?.lat, waypointCenter?.lng, currentMapCenter?.lat, currentMapCenter?.lng, selectedSpecies, fetchScoreV8, fetchBundleV8]);
   

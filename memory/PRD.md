@@ -1,30 +1,29 @@
 # HUNTIQ V8 — PRD
-## V8-ULTIME-ALIGNEMENT-V6-Omega — RAPPORT SOUMIS
-**MAJ:** 2026-04-16 | **37/37 CONFORMES** | **CERTIFICATION SUSPENDUE**
+## V8-ULTIME-REVISION-CONTRADICTOIRE-Omega — AUDIT EN COURS
+**MAJ:** 2026-04-16 | **10 NON-CONFORMITES CORRIGEES** | **CERTIFICATION SUSPENDUE**
 
-## Rapport Conformite V6↔V8
-- 37 criteres verifies: zones, corridors, affuts, exclusions, regles dessin, superpositions
-- 0 ecart residuel, 0 correction necessaire
-- Couleurs V6 institutionnelles appliquees (C62828/2E7D32/1565C0/29B6F6/FDD835)
-- Epaisseurs V6 par type (rut 2.5, alim 2.0, repos 1.8, eau 1.5)
-- Corridors: opacite 100%, ZERO glow, poids V6 (3.0/2.5/2.0/1.5/1.2)
-- Affuts: jaune #FDD835 uniforme, ZERO halo
-- Exclusions terrain actives (eau<20m, pente>35deg)
+## Audit Contradictoire V6↔V8
+- Rapport 37/37 precedent: ANNULE
+- 10 non-conformites identifiees et corrigees:
+  1. Corridors longueur: 11km→2km max
+  2. Corridors types: uniformes→distribution reelle (majeur/modere/fort/critique)
+  3. Affuts orientation: 0deg fixe→variable (wind_deg transmis)
+  4. Zones vertices: 12 fixes→14-19 variables
+  5. Zones tailles: uniformes→variables par type
+  6. Wind_deg: hardcode→parametre bundle
+  7-10. Couleurs/glow/halo/affuts (corriges session precedente)
 
 ## Architecture V8 Pure
 ### Backend
-- phase_a_engines.py — Relocalisation + Salines
-- phase_b_engines.py — Zones/Corridors/Affuts terrain-aware + exclusions
-- phase_c_engines.py — Thermal + Scenario + Multi-Engine
-- map_bundle.py — Bundle consolide (<5ms)
+- phase_b_engines.py: corridors V6-conformes (0.5-2km, types varies, exclusions eau/pente)
+- map_bundle.py: wind_deg parametre, cache par vent
+- phase_c_engines.py: Thermal+Scenario+Multi-Engine
+- phase_a_engines.py: Relocalisation+Salines
 
-### Frontend  
-- BionicLayersV8.jsx — Rendu V6-conforme (couleurs/epaisseurs/opacites institutionnelles)
-- PhaseALayerV8.jsx + PhaseAPanelV8.jsx — Phase A UI
-- PhaseCPanelV8.jsx — Phase C UI
-
-### Purge V6 Totale
-7 routers desregistres + BionicCorridorsV6Layer supprime du rendu
+### Frontend
+- BionicLayersV8.jsx: couleurs V6 institutionnelles, epaisseurs par type, ZERO glow/halo
+- useMapBundleV8.js: wind_deg passe au bundle
+- Tooltips: terrain + exclusion + cost surface
 
 ## CERTIFICATION: SUSPENDUE — EN ATTENTE ORDRE COMMANDANT
 

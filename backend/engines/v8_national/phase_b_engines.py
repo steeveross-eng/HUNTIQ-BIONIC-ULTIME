@@ -162,22 +162,24 @@ def _cost_surface_score(terrain):
 
 
 def _corridor_intensity(terrain_start, terrain_end, month, hour, species):
-    """Intensite corridor basee sur terrain + temporel."""
+    """Intensite corridor V6-conforme: variabilite reelle entre types."""
     crep = species in ["cerf", "orignal", "wapiti", "caribou", "chevreuil"]
-    t_mult = 1.3 if (5 <= hour <= 8 or 16 <= hour <= 19) and crep else 0.7 if 10 <= hour <= 14 else 1.0
+    t_mult = 1.2 if (5 <= hour <= 8 or 16 <= hour <= 19) and crep else 0.6 if 10 <= hour <= 14 else 1.0
 
-    # Moyenne cost surface start/end
     cost_avg = (_cost_surface_score(terrain_start) + _cost_surface_score(terrain_end)) / 2
-    # Faible cost = passage facile = haute intensite
-    base_intensity = (1 - cost_avg) * 80 + 20
 
-    # Continuite COR-006: bonus transition foret-clairiere
-    transition_bonus = 0
+    # V6-CONFORME: intensite base 20-80 (pas 20-100) pour permettre variete de types
+    base_intensity = (1 - cost_avg) * 60 + 20
+
+    # COR-006: bonus transition foret-clairiere
     canopy_diff = abs(terrain_start["canopy"] - terrain_end["canopy"])
-    if canopy_diff > 0.2:
-        transition_bonus = canopy_diff * 20  # forte transition = corridor probable
+    transition_bonus = canopy_diff * 15 if canopy_diff > 0.15 else 0
 
-    intensity = min(100, max(10, (base_intensity + transition_bonus) * t_mult))
+    # Penalite pente (corridors en pente = moins utilises)
+    pente_avg = (terrain_start["pente_deg"] + terrain_end["pente_deg"]) / 2
+    pente_penalty = max(0, (pente_avg - 10) * 1.5)
+
+    intensity = min(100, max(10, (base_intensity + transition_bonus - pente_penalty) * t_mult))
     return round(intensity, 1)
 
 
@@ -208,8 +210,13 @@ def generate_zones_ta(lat, lon, species, month, radius_km=1):
             excluded = True
             exclusion_reason = "pente_extreme"
 
-        radius_deg = 0.0025 + abs(math.sin(i * 3.7 + lat * 5.1)) * 0.001
-        polygon = _organic_polygon(c_lat, c_lon, radius_deg, n_vertices=12, seed=i + lat * 100)
+        # V6-CONFORME: taille variable par type (rut=large, eau=petit)
+        type_radius = {"alimentation": 0.003, "repos": 0.0035, "rut": 0.004, "affuts": 0.0025, "eau": 0.002}
+        base_r = type_radius.get(ztype, 0.003)
+        radius_deg = base_r + abs(math.sin(i * 3.7 + lat * 5.1)) * 0.001
+        # V6-CONFORME: plus de vertices pour formes plus irregulieres
+        n_verts = 14 + int(_seed(lat, lon, f"verts_{i}") * 6)  # 14-20 vertices
+        polygon = _organic_polygon(c_lat, c_lon, radius_deg, n_vertices=n_verts, seed=i + lat * 100)
 
         zones.append({
             "id": f"zone_v8_{ztype}_{i}", "type": ztype,
@@ -223,19 +230,24 @@ def generate_zones_ta(lat, lon, species, month, radius_km=1):
     return zones
 
 
-def generate_corridors_ta(lat, lon, species, month, hour, radius_km=10):
-    """Corridors terrain-aware: cost surface + continuite COR-006."""
+def generate_corridors_ta(lat, lon, species, month, hour, radius_km=2):
+    """Corridors terrain-aware V6-conformes: localisés, intensité variable."""
     corridors = []
+    cos_lat = max(0.5, math.cos(math.radians(lat)))
     for i in range(10):
-        angle = i * 36 + 10
+        angle = i * 36 + _seed(lat, lon, f"corr_angle_{i}") * 30
         rad = math.radians(angle)
-        dist = (i + 1) * radius_km / 11 / 111.0
-        s_lat = lat + math.sin(rad) * dist
-        s_lon = lon + math.cos(rad) * dist / math.cos(math.radians(lat))
-        e_angle = angle + 30 + math.sin(i * 1.7) * 20
+        # V6-CONFORME: corridors localisés 0.2-1.8km
+        base_dist = 0.2 + _seed(lat, lon, f"corr_dist_{i}") * 1.6  # 0.2-1.8 km
+        dist = base_dist / 111.0
+        s_lat = lat + math.sin(rad) * dist * 0.4
+        s_lon = lon + math.cos(rad) * dist * 0.4 / cos_lat
+        # End point: shorter, more localized
+        e_angle = angle + 25 + _seed(lat, lon, f"corr_ea_{i}") * 40
         e_rad = math.radians(e_angle)
-        e_lat = lat + math.sin(e_rad) * dist * 1.3
-        e_lon = lon + math.cos(e_rad) * dist * 1.3 / math.cos(math.radians(lat))
+        e_dist = dist * (0.5 + _seed(lat, lon, f"corr_ed_{i}") * 0.6)
+        e_lat = s_lat + math.sin(e_rad) * e_dist
+        e_lon = s_lon + math.cos(e_rad) * e_dist / cos_lat
 
         terrain_s = _terrain_profile(s_lat, s_lon)
         terrain_e = _terrain_profile(e_lat, e_lon)
