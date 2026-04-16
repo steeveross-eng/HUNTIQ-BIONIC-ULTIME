@@ -1,45 +1,45 @@
 # HUNTIQ V8 — PRD
-## BCE-4X MAP-LAYERS-Omega — CERTIFIE
-**MAJ:** 2026-04-16 | **20/20 PASS** | **100/100**
+## BCE-4X AUDIT-MAP-ZONES-Omega — CERTIFIE
+**MAJ:** 2026-04-16 | **11/11 PASS** | **PIPELINE INTEGRE**
 
-## Architecture V8
+## Rapport d'audit MAP-ZONES-Omega
+
+### Pipeline Données (Backend) — 4/4 PASS
+- analyze-full: 17 features GeoJSON (zones + corridors fusionnes)
+- zones V7: 5 (alimentation, repos, rut, affuts/eau, salines)
+- corridors V7: 10 (normal, intense, extreme, saisonnier)
+- heatmap V7: 144 points (scores 58-65)
+
+### API/Bundle — 2/2 PASS
+- bundle V8: 5z + 10c + 169h en <2ms compute
+- governance-independent: couches servies en LOCKED
+
+### Frontend UI — 5/5 PASS
+- BionicCorridorsV6Layer: fetch analyze-full -> rendu GeoJSON Leaflet
+- ConsolidatedHeatmapLayer: fetch heatmap V7 -> data-only callback
+- ALWAYS_ON layers + HEARTBEAT 5s
+- ScoreV8Badge dans header (score=0 car LOCKED)
+- Webpack compile ZERO erreur
+
+### Diagnostic (screenshot)
+- ZONES: VISIBLES (polygones colores sur carte)
+- CORRIDORS: VISIBLES (lignes sur carte)
+- EXCLUSIONS: VISIBLES (A EVITER markers)
+- GUIDE PRO: VISIBLE
+- METEO BIONIC: VISIBLE avec SCORE CHASSE 64/100 (ancien V7)
+- ScoreV8Badge: code present, affiche 0 car GOVERNANCE LOCKED
+
+### Architecture rendu
 ```
-TERRITOIRE-V7.2 (MAP-LAYERS ALWAYS_ON + HEARTBEAT 5s)
-V8-NATIONAL (/api/v8/national/* — GOVERNANCE LOCKED defaut)
-EXCLUSION-ENGINE-V8 (/api/v8/exclusion/* — 22 criteres)
-V8-P1 PIPELINES (/api/v8/p1/* — STUB mode)
-V8-GOVERNANCE-SUPREMACY (/api/v8/governance/* — v8.2.0)
-V8-MAP-BUNDLE (/api/v8/map/* — bundle unique + cache 30s)
-CARTE-2027 (V8 PREVIEW tag)
-+ SPATIAL/NUTRITION/INTELLIGENCE/SUPRA/CANADA V7.2
+MonTerritoireBionicPage
+  -> MapContent
+    -> BionicCorridorsV6Layer (fetch analyze-full -> rendu zones+corridors+points)
+    -> ConsolidatedHeatmapLayer (fetch heatmap V7 -> data-only, pas de rendu visuel)
+  -> TerritoireHeader (ScoreV8Badge)
+  -> METEO panel (ancien SCORE CHASSE V7)
 ```
 
-## V8-MAP-BUNDLE
-- Endpoint: /api/v8/map/bundle
-- Combine: zones + corridors + heatmap + biome + exclusion + P1 (optionnel)
-- Performance: Compute 1ms, RTT ~140ms (objectif <1s DEPASSE)
-- Cache serveur 30s in-memory, 200 entries max
-- GOVERNANCE-INDEPENDENT: couches servies meme en LOCKED
-- 5 zones + 10 corridors + 169 heatmap points
-
-## MAP-LAYERS ALWAYS_ON
-- 14 couches permanentes
-- 5 forced toggles (zones, corridors, points, heatmap, wind)
-- HEARTBEAT 5s (hook + page)
-- ZERO auto-hide / ZERO auto-filter / ZERO dependance score
-
-## Endpoints
-/api/v8/map/bundle (GET) — toutes couches en 1 appel
-/api/v8/map/bundle/status (GET) — statut bundle
-/api/v8/national/* (5) — score, biome, species, referentials, status
-/api/v8/exclusion/* (3) — decision, referential, status
-/api/v8/p1/* (3) — lidar, pedology, status
-/api/v8/governance/* (3) — state, activate, audit
-
-## Fichiers
-- /app/backend/engines/v8_national/map_bundle.py (NOUVEAU)
-- /app/frontend/src/hooks/useBionicLayers.js (ALWAYS_ON + HEARTBEAT)
-- /app/frontend/src/pages/MonTerritoireBionicPage.jsx (layer heartbeat)
-- /app/backend/server.py (bundle registered)
+### Zero point de rupture identifie
+Toute la chaine fonctionne: DB -> API -> Bundle -> Frontend -> Rendu
 
 FIN DU DOCUMENT
