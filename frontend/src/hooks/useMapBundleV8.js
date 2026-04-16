@@ -33,13 +33,11 @@ const useMapBundleV8 = () => {
     abortRef.current = new AbortController();
 
     setLoading(true);
-    const token = localStorage.getItem('token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
     try {
       const res = await fetch(
         `${API}/api/v8/map/bundle?lat=${lat}&lon=${lon}&species=${species}&month=${m}&hour=${h}`,
-        { headers, signal: abortRef.current.signal }
+        { signal: abortRef.current.signal }
       );
       if (!res.ok) return null;
       const data = await res.json();

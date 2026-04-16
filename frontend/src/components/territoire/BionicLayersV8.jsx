@@ -199,22 +199,7 @@ const BionicLayersV8 = ({
     return () => clearOwnLayers();
   }, [renderLayers, clearOwnLayers]);
 
-  // Loading indicator if bundle not yet loaded
-  if (!bundleData && enabled) {
-    return (
-      <div
-        data-testid="v8-layers-loading"
-        style={{
-          position: 'absolute', top: 12, left: 60, zIndex: 1000,
-          background: 'rgba(0,0,0,0.8)', color: '#22D3EE',
-          padding: '4px 12px', borderRadius: 6, fontSize: 11, fontWeight: 600,
-        }}
-      >
-        Chargement V8...
-      </div>
-    );
-  }
-
+  // Pas de rendu HTML dans un contexte Leaflet
   return null;
 };
 

@@ -12,8 +12,6 @@ from fastapi import APIRouter, Depends, Query
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from modules.camera_engine.dependencies import get_camera_db
-from modules.roles_engine.v1.dependencies import get_current_user_with_role
-from modules.roles_engine.v1.models import UserWithRole
 
 logger = logging.getLogger("bionic.v8_map_bundle")
 router = APIRouter(prefix="/api/v8/map", tags=["V8 Map Bundle"])
@@ -122,10 +120,9 @@ async def map_bundle(
     species: str = Query("cerf"),
     month: int = Query(None), hour: int = Query(None),
     include_p1: bool = Query(False),
-    user: UserWithRole = Depends(get_current_user_with_role),
     db: AsyncIOMotorDatabase = Depends(get_camera_db),
 ):
-    """Bundle unique toutes couches — INDEPENDANT du GOVERNANCE-LOCK."""
+    """Bundle unique toutes couches — PUBLIC, GOVERNANCE-INDEPENDENT."""
     start = time.time()
     now = datetime.now(timezone.utc)
     m = month or now.month
