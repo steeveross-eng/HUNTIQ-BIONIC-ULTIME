@@ -213,10 +213,11 @@ async def map_bundle(
     from engines.v8_national.exclusion_engine import evaluate_exclusion
     exclusion = evaluate_exclusion(lat, lon, species)
 
-    # Couches geospatiales V8 — organiques
-    zones = _generate_zones_inline(lat, lon, species, m)
-    corridors = _generate_corridors_inline(lat, lon, species, m, h)
-    affuts = _generate_affuts_inline(lat, lon, species, zones, wind_deg=180)
+    # Couches geospatiales V8 — TERRAIN-AWARE (Phase B upgrade)
+    from engines.v8_national.phase_b_engines import generate_zones_ta, generate_corridors_ta, generate_affuts_ta
+    zones = generate_zones_ta(lat, lon, species, m)
+    corridors = generate_corridors_ta(lat, lon, species, m, h)
+    affuts = generate_affuts_ta(lat, lon, species, zones, corridors, wind_deg=180)
 
     biome_data = BIOMES.get(biome_code, {})
 

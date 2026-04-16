@@ -228,13 +228,12 @@ except ImportError as e:
 except Exception as e:
     logger.error(f"BIONIC Engine P0 registration failed: {e}")
 
-# 6. Register Organic Zones V2 router (Pipeline Organique Unifié)
-try:
-    from modules.bionic_engine_p0.routers.organic_zones_router import router as organic_zones_router
-    app.include_router(organic_zones_router)
-    logger.info("✓ Organic Zones V2 registered (/api/v1/bionic/organic-zones)")
-except Exception as e:
-    logger.warning(f"Organic Zones V2 not loaded: {e}")
+# PURGE-V6-PHASE-B: Organic Zones V2 DEPRECATED (V8 Bundle terrain-aware)
+# try:
+#     from modules.bionic_engine_p0.routers.organic_zones_router import router as organic_zones_router
+#     app.include_router(organic_zones_router)
+# except Exception as e:
+#     pass
 
 # 6b. Register Spatial Clipping router (BIONIC V6 GOLDEN INVARIANT)
 try:
@@ -338,12 +337,12 @@ except Exception as e:
     logger.warning(f"Hunt Orchestrator Engine not loaded: {e}")
 
 # BCE-4X BLOC 1: Corridor Unified Engine (fusion corridors OSM + BDRE)
-try:
-    from engines.corridor_unified.router import router as corridor_unified_router
-    app.include_router(corridor_unified_router)
-    logger.info("BLOC 1: Corridor Unified Engine registered (/api/v1/corridor-unified)")
-except Exception as e:
-    logger.warning(f"Corridor Unified Engine not loaded: {e}")
+# PURGE-V6-PHASE-B: Corridor Unified DEPRECATED (V8 corridors terrain-aware)
+# try:
+#     from engines.corridor_unified.router import router as corridor_unified_router
+#     app.include_router(corridor_unified_router)
+# except Exception as e:
+#     pass
 
 # PURGE-V6-ANTI-DUPLICATION-A-Omega: V6 Relocalisation Router DEPRECATED
 # Relocalisation desormais geree par /api/v8/map/relocalisation (phase_a_engines.py)
@@ -508,13 +507,12 @@ try:
 except Exception as e:
     logger.warning(f"WMS Proxy not loaded: {e}")
 
-# 30. Register Movement Corridors router (Real vs Estimated corridors)
-try:
-    from modules.bionic_engine_p0.routers.movement_corridors_router import router as movement_corridors_router
-    app.include_router(movement_corridors_router)
-    logger.info("✓ Movement Corridors registered (/api/v1/bionic/movement-corridors)")
-except Exception as e:
-    logger.warning(f"Movement Corridors not loaded: {e}")
+# PURGE-V6-PHASE-B: Movement Corridors DEPRECATED (V8 corridors terrain-aware)
+# try:
+#     from modules.bionic_engine_p0.routers.movement_corridors_router import router as movement_corridors_router
+#     app.include_router(movement_corridors_router)
+# except Exception as e:
+#     pass
 
 # 31. Register BIONIC Compliance Engine (BCE)
 try:
@@ -587,13 +585,12 @@ except Exception as e:
 
 # ═══ CORRIDORS-V10 — DELETE-LEGACY-V6: V6 router SUPPRIME ═══
 # Remplace par SPATIAL-ENGINE-V7 /api/v7/spatial/analyze-full
-# Le V10 router est conserve pour les endpoints internes non-V6
-try:
-    from core.scoring_pipeline.corridors_v10.router import router as corridors_v10_router
-    app.include_router(corridors_v10_router)
-    logger.info("✓ CORRIDORS-V10 registered (V10 interne) — V6 router SUPPRIME")
-except Exception as e:
-    logger.warning(f"CORRIDORS-V10 not loaded: {e}")
+# PURGE-V6-PHASE-B: Corridors V10 DEPRECATED (V8 corridors terrain-aware)
+# try:
+#     from core.scoring_pipeline.corridors_v10.router import router as corridors_v10_router
+#     app.include_router(corridors_v10_router)
+# except Exception as e:
+#     pass
 
 
 # ═══ SCORE CONSOLIDÉ V6 — SUPPRIME (DELETE-LEGACY-V6-Omega) ═══
@@ -644,13 +641,12 @@ except Exception as e:
     logger.warning(f"ULTRA-MAX++ FIREWALL not loaded: {e}")
 
 # ═══ SALINES ULTIME ENGINE — FROZEN (PURGE-V6 Phase B) ═══
-# Conserve pour SalinesFichePanel SUPRA — purge complete en Phase B
-try:
-    from modules.salines_ultime_engine.router import router as salines_ultime_router
-    app.include_router(salines_ultime_router)
-    logger.info("SALINES ULTIME registered (/api/v1/salines-ultime) [FROZEN — purge Phase B]")
-except Exception as e:
-    logger.warning(f"SALINES ULTIME not loaded: {e}")
+# PURGE-V6-PHASE-B: Salines Ultime DEPRECATED (V8 Phase A salines)
+# try:
+#     from modules.salines_ultime_engine.router import router as salines_ultime_router
+#     app.include_router(salines_ultime_router)
+# except Exception as e:
+#     pass
 
 # SOIL ENGINE — BCE-4X GOLDEN | Classification pedologique GPS
 try:
@@ -768,9 +764,17 @@ except Exception as e:
 try:
     from engines.v8_national.phase_a_engines import router as phase_a_router
     app.include_router(phase_a_router)
-    logger.info("✓ V8-PHASE-A registered (/api/v8/map) — Relocalisation + Salines (sandbox)")
+    logger.info("V8-PHASE-A registered (/api/v8/map) — Relocalisation + Salines")
 except Exception as e:
     logger.warning(f"V8 Phase A not loaded: {e}")
+
+# V8-PHASE-B — Zones + Corridors + Affuts terrain-aware (sandbox)
+try:
+    from engines.v8_national.phase_b_engines import router as phase_b_router
+    app.include_router(phase_b_router)
+    logger.info("V8-PHASE-B registered (/api/v8/map) — Zones/Corridors/Affuts TA")
+except Exception as e:
+    logger.warning(f"V8 Phase B not loaded: {e}")
 
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
