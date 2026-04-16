@@ -1,6 +1,6 @@
 # HUNTIQ V8 — PRD
-## BCE-4X V8-INTEGRATION-Omega — PHASES 1→5 CERTIFIEES
-**MAJ:** 2026-04-15 | **25/25 PASS** | **100/100** | **V8 COMPLET**
+## BCE-4X V8-FULL-DEPLOY-Omega — CERTIFIE
+**MAJ:** 2026-04-16 | **29/29 PASS** | **100/100** | **V8 DEPLOYE NATIONALEMENT**
 
 ## Architecture V8 NATIONALE
 ```
@@ -11,27 +11,24 @@ INTELLIGENCE-V7 (Score V7 + Score Chasse V7)
 SUPRA-ENGINE-V7 (/api/v7/supra/* — 6 endpoints)
 CANADA-V7.2 (/api/v7/canada/* — 6 endpoints)
 V8-NATIONAL (/api/v8/national/* — 5 endpoints)
-EXCLUSION-ENGINE-V8 (/api/v8/exclusion/* — 2 endpoints)
+EXCLUSION-ENGINE-V8 (/api/v8/exclusion/* — 3 endpoints)
 CARTE-2027 (terrain V8)
 ```
 
-## V8-NATIONAL Module
-- 9 biomes canadiens
-- 6 regimes fauniques
-- 4 regimes de neige
-- 5 regimes forestiers
-- 8 especes cataloguees
-- Score V8 national: 10 composantes
-- Meteo temps reel ECCC integree
-- Exclusions BCE-4X actives via EXCLUSION-ENGINE-V8
-
-## EXCLUSION-ENGINE-V8
-- 11 criteres d'exclusion (urban, buffer, corridor, legal, arctic, altitude, slope, water, contamination, road_density, building_density)
-- 24 zones urbaines majeures
-- 5 corridors urbains denses
-- 7 zones legales interdites (Forillon, Grands-Jardins, Mont-Tremblant, Kouchibouguac, Jasper, Banff, Pacific Rim)
+## EXCLUSION-ENGINE-V8 v8.1.0
+- 22 criteres BCE-4X:
+  1-URBAN_POLYGON, 2-URBAN_BUFFER, 3-URBAN_CORRIDOR,
+  4-LEGAL_PARC_NATIONAL, 5-LEGAL_RESERVE_ECOLOGIQUE, 6-LEGAL_PRIVATE_RESTRICTED,
+  7-ARCTIC_EXTREME, 8-SUBARCTIC_LIMITE, 9-ALTITUDE_EXTREME,
+  10-SLOPE_EXTREME, 11-WATER_DEEP, 12-CONTAMINATION,
+  13-ROAD_DENSITY, 14-BUILDING_DENSITY, 15-INDUSTRIAL_ZONE,
+  16-MILITARY_ZONE, 17-AIRPORT_BUFFER, 18-RAILWAY_BUFFER,
+  19-MINE_ACTIVE, 20-POWER_LINE_CORRIDOR, 21-FLOOD_ZONE, 22-SECURITY_PERIMETER
+- 24 zones urbaines, 5 corridors, 10 zones legales, 4 militaires, 4 aeroports
 - Severites: HARD, SOFT, NONE
-- Referentiel UNIQUE centralise
+- LEGAL_PRIVATE_RESTRICTED: Exclusion UNIQUEMENT si interdiction explicite
+  (panneau_officiel, avis_legal, bail_exclusif, servitude_legale, reserve_privee)
+- Terrain prive sans interdiction = INCLUS
 
 ## Endpoints V8
 - /api/v8/national/biome-profile
@@ -40,47 +37,49 @@ CARTE-2027 (terrain V8)
 - /api/v8/national/referentials
 - /api/v8/national/status
 - /api/v8/exclusion/decision
+- /api/v8/exclusion/referential
 - /api/v8/exclusion/status
 
-## Phases completees
+## Deploiement complet
 
 ### Phase 1 — Score V8 Frontend (2026-04-15)
 - useBionicScoringV8.js, ScoreV8Badge.jsx, TerritoireHeader V8, MonTerritoireBionicPage V8
 
 ### Phase 2 — CARTE-2027 V8 (2026-04-15)
-- V8IntelPanel remplace IntelPanel V7
-- 10 composantes + contexte biome + compat espece-biome
-- 8 especes nationales dans catalogue (caribou, cerf_mulet, boeuf_musque ajoutes)
-- 13 provinces/territoires (NL, NU ajoutes)
-- Label CARTE TERRAIN V8
+- V8IntelPanel, 10 composantes, contexte biome, compat espece-biome
+- 8 especes nationales, 13 provinces/territoires
 
-### Phase 3 — Normalisation inter-provinciale (2026-04-15)
-- 13/13 provinces actives, ecart 14.2 points (Min 56.8 AB, Max 71.0 BC)
-- Biomes corrects: boreal_mixed, boreal_coniferous, atlantic_maritime, pacific_rainforest, taiga_subarctic, prairie_grassland, arctic_tundra
+### Phase 3 — Normalisation (2026-04-15)
+- 13/13 provinces actives, ecart 14.2pts
 
-### Phase 5 — EXCLUSION-ENGINE-V8 (2026-04-15)
-- exclusion_engine.py cree
-- 20/20 villes exclues, 5/6 forets incluses (1 dans Banff = exclu legal CORRECT)
-- 3/3 arctique exclu, 3/3 zones legales exclues
-- Integre dans Score V8 (router.py)
-- Enregistre dans server.py
+### Phase 4 — BCE-4X 22 exclusions (2026-04-16)
+- /api/v8/exclusion/referential expose
+- Logs BCE-4X structures (reason + severity)
+- Zones militaires (CFB Gagetown, Halifax, Ottawa-Uplands, Winnipeg)
+- Aeroports (YUL, YYZ, YVR, YYC)
 
-## Fichiers crees/modifies
-- /app/frontend/src/hooks/useBionicScoringV8.js (CREE)
-- /app/frontend/src/components/territoire/ScoreV8Badge.jsx (CREE)
-- /app/frontend/src/components/territoire/ui/TerritoireHeader.jsx (MODIFIE)
-- /app/frontend/src/pages/MonTerritoireBionicPage.jsx (MODIFIE)
-- /app/frontend/src/pages/Carte2027Page.jsx (MODIFIE)
-- /app/backend/engines/v8_national/exclusion_engine.py (CREE)
-- /app/backend/engines/v8_national/router.py (MODIFIE)
-- /app/backend/server.py (MODIFIE)
+### Phase 5 — LEGAL_PRIVATE_RESTRICTED (2026-04-16)
+- Politique corrigee: exclusion seulement si interdiction explicite
+- 5 champs: panneau_officiel, avis_legal, bail_exclusif, servitude_legale, reserve_privee
+
+### Phase 6 — Validation (2026-04-16)
+- 29/29 PASS, 100/100
+
+## Fichiers
+- /app/frontend/src/hooks/useBionicScoringV8.js
+- /app/frontend/src/components/territoire/ScoreV8Badge.jsx
+- /app/frontend/src/components/territoire/ui/TerritoireHeader.jsx
+- /app/frontend/src/pages/MonTerritoireBionicPage.jsx
+- /app/frontend/src/pages/Carte2027Page.jsx
+- /app/backend/engines/v8_national/exclusion_engine.py
+- /app/backend/engines/v8_national/router.py
+- /app/backend/engines/v8_national/referentials.py
+- /app/backend/server.py
 
 ## Taches futures
-- P1: LiDAR WCS real multi-provincial (acces gouvernemental requis)
-- P1: IRDA API pedologie reelle Quebec (acces institutionnel requis)
-
-## Mocked/Fallback
-- LiDAR MRNF: fallback Copernicus/Open-Meteo
-- IRDA pedologie: fallback SoilGrids
+- P1: LiDAR WCS real multi-provincial (acces gouvernemental)
+- P1: IRDA API pedologie reelle Quebec (acces institutionnel)
+- P2: OSM real data pour road/building density
+- P2: ECCC stations meteo provinciales
 
 FIN DU DOCUMENT

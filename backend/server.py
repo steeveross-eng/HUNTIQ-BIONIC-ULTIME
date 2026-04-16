@@ -735,7 +735,7 @@ except Exception as e:
 try:
     from engines.v8_national.exclusion_engine import router as exclusion_v8_router
     app.include_router(exclusion_v8_router)
-    logger.info("✓ EXCLUSION-ENGINE-V8 registered (/api/v8/exclusion) — 11 criteres | 24 zones urbaines | 7 zones legales")
+    logger.info("✓ EXCLUSION-ENGINE-V8 registered (/api/v8/exclusion) — 22 criteres | 24 zones urbaines | 10 zones legales | 4 militaires | 4 aeroports")
 except Exception as e:
     logger.warning(f"Exclusion Engine V8 not loaded: {e}")
 
