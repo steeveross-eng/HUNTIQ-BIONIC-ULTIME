@@ -13,6 +13,8 @@ const PREDICTION_CONFIG = {
   bon:       { color: '#22D3EE', label: 'BON' },
   moyen:     { color: '#F59E0B', label: 'MOYEN' },
   faible:    { color: '#EF4444', label: 'FAIBLE' },
+  exclu:     { color: '#EF4444', label: 'EXCLU BCE-4X' },
+  locked:    { color: '#6B7280', label: 'LOCKED' },
 };
 
 const COMPONENT_META = {
@@ -53,11 +55,13 @@ export const ScoreV8Badge = ({ scoreV8, biomeProfile, loading, compact = false }
   if (!scoreV8) return null;
 
   const score = scoreV8.score_v8;
-  const prediction = scoreV8.prediction || 'moyen';
+  const isExcluded = scoreV8.engine === 'V8-EXCLUDED' || scoreV8.prediction === 'exclu';
+  const isLocked = scoreV8.engine === 'V8-GOVERNANCE-LOCKED' || scoreV8.prediction === 'locked';
+  const prediction = isExcluded ? 'exclu' : isLocked ? 'locked' : (scoreV8.prediction || 'moyen');
   const detail = scoreV8.scores_detail || {};
   const context = scoreV8.context || {};
   const predCfg = PREDICTION_CONFIG[prediction] || PREDICTION_CONFIG.moyen;
-  const scoreColor = getScoreColor(score);
+  const scoreColor = isExcluded ? '#EF4444' : isLocked ? '#6B7280' : getScoreColor(score);
 
   const pct = Math.min(1, Math.max(0, score / 100));
   const circumference = 2 * Math.PI * 14;
@@ -141,10 +145,26 @@ export const ScoreV8Badge = ({ scoreV8, biomeProfile, loading, compact = false }
             <span className="text-[9px] text-gray-500 font-mono">{scoreV8.engine}</span>
           </div>
 
-          <div className="text-center">
-            <div className="text-4xl font-black" style={{ color: scoreColor }}>{Math.round(score)}</div>
-            <div className="text-[10px] font-bold mt-0.5" style={{ color: predCfg.color }}>{predCfg.label}</div>
-          </div>
+          {/* Exclusion / Locked special display */}
+          {isExcluded ? (
+            <div className="text-center py-2" data-testid="score-v8-excluded">
+              <div className="text-2xl font-black text-red-500">EXCLU</div>
+              <div className="text-[10px] text-red-400 font-bold mt-1">ZONE BCE-4X</div>
+              {scoreV8.exclusion?.reasons && (
+                <div className="text-[9px] text-gray-500 mt-1">{scoreV8.exclusion.reasons.join(', ')}</div>
+              )}
+            </div>
+          ) : isLocked ? (
+            <div className="text-center py-2" data-testid="score-v8-locked">
+              <div className="text-2xl font-black text-gray-500">LOCKED</div>
+              <div className="text-[10px] text-gray-400 font-bold mt-1">Activation Master Switch requise</div>
+            </div>
+          ) : (
+            <>
+              <div className="text-center">
+                <div className="text-4xl font-black" style={{ color: scoreColor }}>{Math.round(score)}</div>
+                <div className="text-[10px] font-bold mt-0.5" style={{ color: predCfg.color }}>{predCfg.label}</div>
+              </div>
 
           {/* 10 composantes */}
           <div className="space-y-1">
@@ -168,6 +188,8 @@ export const ScoreV8Badge = ({ scoreV8, biomeProfile, loading, compact = false }
               })}
             </div>
           </div>
+            </>
+          )}
 
           {/* Contexte biome */}
           {context.biome && (
