@@ -12,10 +12,8 @@ export const MAP_TYPES = {
   SATELLITE: 'satellite',
   IQHO: 'iqho',
   FOREST_ROADS: 'forest-roads',
-  // ═══ CARTES HAUTE-FIDÉLITÉ — BCE-4X GOLDEN ═══
-  LIDAR_HD: 'lidar-hd',
-  CANOPY_DENSITY: 'canopy-density',
-  ORTHOPHOTO_HR: 'orthophoto-hr',
+  // ═══ CARTES HAUTE-FIDÉLITÉ V8 — CONSOLIDEES ═══
+  LIDAR_CANOPY: 'lidar-canopy',
   HYDROLOGY: 'hydrology',
   CHEMINS_DERIVES: 'chemins-derives',
   NEIGE_SOL: 'neige-sol',
@@ -115,11 +113,11 @@ export const MAP_CONFIGS = {
   },
 
   // ═══ CARTES HAUTE-FIDÉLITÉ — BCE-4X GOLDEN OFFICIELLES ═══
-  [MAP_TYPES.LIDAR_HD]: {
-    id: 'lidar-hd',
-    name: 'LIDAR HD',
+  [MAP_TYPES.LIDAR_CANOPY]: {
+    id: 'lidar-canopy',
+    name: 'LIDAR + Canopee',
     shortName: 'LIDAR',
-    description: 'Modele hauteur canopee (MHC) haute resolution',
+    description: 'Modele hauteur canopee (MHC) + densite couvert',
     iconName: 'mountain',
     category: 'hf',
     isDark: true,
@@ -132,48 +130,9 @@ export const MAP_CONFIGS = {
       format: 'image/png',
       transparent: true
     }],
-    attribution: '© NFIS-QC LIDAR | © BIONIC',
+    attribution: '© NFIS-QC LIDAR + SCANFI | © BIONIC V8',
     maxZoom: 18,
     zoneOpacity: { fill: 0.25, stroke: 1.0 }
-  },
-
-  [MAP_TYPES.CANOPY_DENSITY]: {
-    id: 'canopy-density',
-    name: 'Foret ouverte / Canopee',
-    shortName: 'CANOP',
-    description: 'Densite canopee et couvert vegetal',
-    iconName: 'tree-pine',
-    category: 'hf',
-    isDark: true,
-    isPremium: true,
-    isHF: true,
-    tileUrl: 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
-    wmsLayers: [{
-      url: 'https://ca.nfis.org/cubewerx/cubeserv?DATASTORE=SCANFI',
-      layers: 'scanfi_canopy_height_2020',
-      format: 'image/png',
-      transparent: true
-    }],
-    attribution: '© SCANFI | © BIONIC',
-    maxZoom: 18,
-    zoneOpacity: { fill: 0.25, stroke: 1.0 }
-  },
-
-  [MAP_TYPES.ORTHOPHOTO_HR]: {
-    id: 'orthophoto-hr',
-    name: 'Orthophoto HR',
-    shortName: 'ORTHO',
-    description: 'Imagerie aerienne ultra-haute resolution',
-    iconName: 'satellite',
-    category: 'hf',
-    isDark: false,
-    isPremium: true,
-    isHF: true,
-    tileUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    attribution: '© Esri, Maxar | Orthophoto HR BIONIC',
-    maxZoom: 19,
-    labelsUrl: 'https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png',
-    zoneOpacity: { fill: 0.30, stroke: 1.0 }
   },
 
   [MAP_TYPES.HYDROLOGY]: {
@@ -262,23 +221,20 @@ export const MAP_CONFIGS = {
 // Cartes optimisees pour le mode sombre
 export const DARK_OPTIMIZED_MAPS = [
   MAP_TYPES.IQHO,
-  MAP_TYPES.LIDAR_HD,
-  MAP_TYPES.CANOPY_DENSITY,
+  MAP_TYPES.LIDAR_CANOPY,
   MAP_TYPES.HYDROLOGY,
   MAP_TYPES.NEIGE_SOL,
   MAP_TYPES.PENTE_DEM,
 ];
 
-// Ordre d'affichage dans le selecteur (standard + HF)
+// V8-ULTIME: Ordre consolide (9 cartes — ZERO doublon)
 export const MAP_DISPLAY_ORDER = [
   MAP_TYPES.ECOFORESTRY,
   MAP_TYPES.SATELLITE,
   MAP_TYPES.IQHO,
   MAP_TYPES.FOREST_ROADS,
-  // Haute-Fidelite
-  MAP_TYPES.LIDAR_HD,
-  MAP_TYPES.CANOPY_DENSITY,
-  MAP_TYPES.ORTHOPHOTO_HR,
+  // Haute-Fidelite V8
+  MAP_TYPES.LIDAR_CANOPY,
   MAP_TYPES.HYDROLOGY,
   MAP_TYPES.CHEMINS_DERIVES,
   MAP_TYPES.NEIGE_SOL,

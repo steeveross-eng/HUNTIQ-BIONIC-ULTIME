@@ -198,6 +198,16 @@ def generate_zones_ta(lat, lon, species, month, radius_km=1):
         terrain = _terrain_profile(c_lat, c_lon)
         score = _score_zone_terrain(terrain, ztype, month)
 
+        # EXCLUSION: zones sur eau directe ou pente extreme — flag
+        excluded = False
+        exclusion_reason = None
+        if terrain["distance_eau_m"] < 15:
+            excluded = True
+            exclusion_reason = "zone_sur_eau"
+        elif terrain["pente_deg"] > 40:
+            excluded = True
+            exclusion_reason = "pente_extreme"
+
         radius_deg = 0.0025 + abs(math.sin(i * 3.7 + lat * 5.1)) * 0.001
         polygon = _organic_polygon(c_lat, c_lon, radius_deg, n_vertices=12, seed=i + lat * 100)
 
@@ -205,8 +215,10 @@ def generate_zones_ta(lat, lon, species, month, radius_km=1):
             "id": f"zone_v8_{ztype}_{i}", "type": ztype,
             "center": {"lat": round(c_lat, 5), "lng": round(c_lon, 5)},
             "polygon": polygon,
-            "score": score,
+            "score": 0 if excluded else score,
             "terrain": terrain,
+            "excluded": excluded,
+            "exclusion_reason": exclusion_reason,
         })
     return zones
 
@@ -227,6 +239,13 @@ def generate_corridors_ta(lat, lon, species, month, hour, radius_km=10):
 
         terrain_s = _terrain_profile(s_lat, s_lon)
         terrain_e = _terrain_profile(e_lat, e_lon)
+
+        # EXCLUSION TERRAIN: rejeter corridors sur eau ou pente extreme
+        if terrain_s["distance_eau_m"] < 20 or terrain_e["distance_eau_m"] < 20:
+            continue  # corridor traverse eau — EXCLU
+        if terrain_s["pente_deg"] > 35 or terrain_e["pente_deg"] > 35:
+            continue  # pente extreme — EXCLU
+
         intensity = _corridor_intensity(terrain_s, terrain_e, month, hour, species)
         cost = (_cost_surface_score(terrain_s) + _cost_surface_score(terrain_e)) / 2
 

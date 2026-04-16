@@ -72,13 +72,22 @@ const BionicLayersV8 = ({
             weight: 2.5,
             opacity: 1.0,
             fillColor: colors.stroke,
-            fillOpacity: 0,
+            fillOpacity: z.excluded ? 0.15 : 0,
             lineCap: 'round',
             lineJoin: 'round',
             interactive: true,
+            dashArray: z.excluded ? '6,4' : null,
           });
+          const t = z.terrain || {};
+          const terrainInfo = t.canopy !== undefined
+            ? `<br><span style="font-size:9px;color:#888">Canopy: ${Math.round(t.canopy*100)}% | Pente: ${t.pente_deg}° | Eau: ${t.distance_eau_m}m</span>`
+            + `<br><span style="font-size:9px;color:#888">Strate: ${Math.round(t.strate_1_3m*100)}% | Feuillus: ${Math.round(t.feuillus_ratio*100)}% | Route: ${t.distance_route_m}m</span>`
+            : '';
+          const exclInfo = z.excluded
+            ? `<br><span style="font-size:9px;color:#EF4444;font-weight:700">EXCLU: ${z.exclusion_reason || 'terrain'}</span>`
+            : '';
           poly.bindTooltip(
-            `<b style="color:${colors.stroke}">${colors.label}</b><br><span style="font-size:10px">Score: ${z.score}/100</span>`,
+            `<b style="color:${colors.stroke}">${colors.label}</b><br><span style="font-size:10px">Score: ${z.score}/100</span>${terrainInfo}${exclInfo}`,
             { sticky: true, opacity: 0.92 }
           );
           poly.on('mouseover', function () { this.setStyle({ weight: 4, fillOpacity: 0.08 }); });
@@ -117,8 +126,15 @@ const BionicLayersV8 = ({
           lineJoin: 'round',
           interactive: true,
         });
+        const costInfo = c.cost_surface !== undefined
+          ? `<br><span style="font-size:9px;color:#888">Cost surface: ${c.cost_surface}</span>`
+          : '';
+        const tStart = c.terrain_start || {};
+        const terrainCorr = tStart.pente_deg !== undefined
+          ? `<br><span style="font-size:9px;color:#888">Pente: ${tStart.pente_deg}° | Canopy: ${Math.round(tStart.canopy*100)}%</span>`
+          : '';
         line.bindTooltip(
-          `<b style="color:${style.color}">${style.label}</b><br><span style="font-size:10px">Intensite: ${c.intensity}</span>`,
+          `<b style="color:${style.color}">${style.label}</b><br><span style="font-size:10px">Intensite: ${c.intensity}</span>${costInfo}${terrainCorr}`,
           { sticky: true }
         );
         line.on('mouseover', function () { this.setStyle({ weight: style.weight + 2 }); });
@@ -154,9 +170,14 @@ const BionicLayersV8 = ({
           opacity: 1.0,
           interactive: true,
         });
+        const affutScore = a.score !== undefined ? a.score : a.zone_score;
+        const corrBonus = a.corridor_proximity_bonus !== undefined
+          ? `<br><span style="font-size:9px;color:#888">Corridor bonus: +${a.corridor_proximity_bonus}</span>`
+          : '';
         triangle.bindTooltip(
           `<b style="color:${q.color}">Affut ${a.quality}</b><br>` +
-          `<span style="font-size:10px">Zone: ${a.zone_type} (${a.zone_score})<br>Orient: ${a.orientation_deg}&deg;</span>`,
+          `<span style="font-size:10px">Score: ${affutScore} | Zone: ${a.zone_type}</span>` +
+          `<br><span style="font-size:10px">Orient: ${a.orientation_deg}&deg;</span>${corrBonus}`,
           { sticky: true }
         );
         group.addLayer(triangle);

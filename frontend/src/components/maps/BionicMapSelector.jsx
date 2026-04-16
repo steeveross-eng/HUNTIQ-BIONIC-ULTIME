@@ -27,9 +27,7 @@ const MAP_ICONS = {
   [MAP_TYPES.IQHO]: () => <Droplets className="w-5 h-5 text-[var(--bionic-cyan-primary)] flex-shrink-0" />,
   [MAP_TYPES.FOREST_ROADS]: () => <Route className="w-5 h-5 text-[var(--bionic-gold-primary)] flex-shrink-0" />,
   // HF Icons
-  [MAP_TYPES.LIDAR_HD]: () => <Mountain className="w-5 h-5 text-amber-400 flex-shrink-0" />,
-  [MAP_TYPES.CANOPY_DENSITY]: () => <TreePine className="w-5 h-5 text-green-400 flex-shrink-0" />,
-  [MAP_TYPES.ORTHOPHOTO_HR]: () => <SatelliteDish className="w-5 h-5 text-blue-400 flex-shrink-0" />,
+  [MAP_TYPES.LIDAR_CANOPY]: () => <Mountain className="w-5 h-5 text-amber-400 flex-shrink-0" />,
   [MAP_TYPES.HYDROLOGY]: () => <Droplets className="w-5 h-5 text-cyan-400 flex-shrink-0" />,
   [MAP_TYPES.CHEMINS_DERIVES]: () => <Route className="w-5 h-5 text-purple-400 flex-shrink-0" />,
   [MAP_TYPES.NEIGE_SOL]: () => <Mountain className="w-5 h-5 text-blue-200 flex-shrink-0" />,
