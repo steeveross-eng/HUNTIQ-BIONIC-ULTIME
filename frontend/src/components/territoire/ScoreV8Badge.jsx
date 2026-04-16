@@ -116,7 +116,10 @@ export const ScoreV8Badge = ({ scoreV8, biomeProfile, loading, compact = false }
           </text>
         </svg>
         <div className="flex flex-col leading-none">
-          <span className="text-[10px] text-gray-500 uppercase tracking-wider">Score V8</span>
+          <div className="flex items-center gap-1">
+            <span className="text-[10px] text-gray-500 uppercase tracking-wider">Score V8</span>
+            <span className="text-[7px] px-1 py-px rounded bg-emerald-500/20 text-emerald-400 font-bold uppercase tracking-wider">PREVIEW</span>
+          </div>
           <span className="text-xs font-bold" style={{ color: predCfg.color }}>
             {Math.round(score)}/100 <span className="text-[9px] font-medium opacity-80">{predCfg.label}</span>
           </span>

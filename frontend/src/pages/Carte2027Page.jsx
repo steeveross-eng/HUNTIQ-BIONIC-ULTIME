@@ -350,6 +350,7 @@ const V8IntelPanel = ({ v8Score, biomeProfile, hourlyForecast, solunar, lunar, w
         <span className="flex items-center gap-1.5">
           <Gauge className="h-3.5 w-3.5 text-emerald-400" />
           SCORE V8 NATIONAL
+          <span className="text-[7px] px-1 py-px rounded bg-cyan-500/15 text-cyan-400 font-bold border border-cyan-500/30">PREVIEW</span>
         </span>
         {score !== null && (
           <span className="text-[10px] font-bold" style={{ color: predColor }}>{Math.round(score)}/100</span>
@@ -700,6 +701,7 @@ export default function Carte2027Page() {
         <Map className="h-4 w-4 text-emerald-400 flex-shrink-0" />
         <span className="text-xs font-bold text-white tracking-wider flex-shrink-0">CARTE TERRAIN V8</span>
         <Badge className="bg-emerald-500/20 text-emerald-400 text-[8px] flex-shrink-0">2027</Badge>
+        <Badge className="bg-cyan-500/15 text-cyan-400 text-[7px] flex-shrink-0 border border-cyan-500/30">PREVIEW</Badge>
 
         <div className="flex items-center gap-1.5 ml-auto">
           <Select value={species} onValueChange={setSpecies}>

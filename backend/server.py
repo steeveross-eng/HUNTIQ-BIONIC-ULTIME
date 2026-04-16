@@ -739,6 +739,14 @@ try:
 except Exception as e:
     logger.warning(f"Exclusion Engine V8 not loaded: {e}")
 
+# V8-P1 — Pipelines donnees reelles (LiDAR WCS + IRDA Pedologie)
+try:
+    from engines.v8_national.p1_pipelines import router as p1_router
+    app.include_router(p1_router)
+    logger.info("✓ V8-P1 PIPELINES registered (/api/v8/p1) — LiDAR WCS + IRDA Pedologie (STUB mode)")
+except Exception as e:
+    logger.warning(f"V8 P1 Pipelines not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

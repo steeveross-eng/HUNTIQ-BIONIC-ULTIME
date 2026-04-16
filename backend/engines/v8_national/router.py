@@ -170,15 +170,32 @@ async def national_score(
     cameras = await db['cameras'].count_documents({"user_id": user.user_id, "status": "active"})
     vision = min(100, hotspots * 12 + cameras * 8 + 15)
 
+    # Habitat — enrichi P1 (LiDAR + Pedologie)
+    try:
+        from engines.v8_national.p1_pipelines import fetch_lidar_data, fetch_pedology_data
+        lidar = await fetch_lidar_data(lat, lon, province)
+        pedo = await fetch_pedology_data(lat, lon, province)
+        # Habitat = mix relief + sol + heuristique
+        slope_penalty = max(0, (lidar["slope_deg"] - 25) * 2) if lidar["slope_deg"] > 25 else 0
+        habitat = max(20, min(95,
+            pedo["faunal_score"] * 0.4 +
+            pedo["mineral_score"] * 0.2 +
+            (100 - slope_penalty) * 0.2 +
+            lidar["altitude_m"] / 30 * 0.2
+        ))
+        p1_source = {"lidar": lidar["source"], "pedology": pedo["source"], "real_lidar": lidar["real_lidar"], "real_irda": pedo["real_irda"]}
+    except Exception:
+        lat_v = math.sin(lat * 7.3) * 15
+        lon_v = math.cos(lon * 5.1) * 12
+        habitat = max(20, min(95, 65 + lat_v + lon_v))
+        p1_source = {"lidar": "fallback", "pedology": "fallback", "real_lidar": False, "real_irda": False}
+
     # V8 COMPOSITE — 10 composantes
     weights = {
         "temporal": 0.12, "solunar": 0.08, "rut": 0.12,
         "nutrition": 0.15, "biome_compat": 0.10, "snow": 0.08,
         "forest": 0.10, "meteo": 0.12, "vision": 0.08, "habitat": 0.05,
     }
-    lat_v = math.sin(lat * 7.3) * 15
-    lon_v = math.cos(lon * 5.1) * 12
-    habitat = max(20, min(95, 65 + lat_v + lon_v))
 
     scores = {
         "temporal": temporal, "solunar": solunar, "rut": rut,
@@ -202,9 +219,11 @@ async def national_score(
             "snow_regime": snow.get("name"),
             "forest_regime": forest.get("name"),
         },
+        "p1_data": p1_source,
         "species": species,
         "compute_ms": round((time.time() - start) * 1000),
         "dataVersion": "V8",
+        "mode": "PREVIEW",
         "engine": "V8-NATIONAL-SCORE",
     }
 
@@ -232,8 +251,9 @@ async def referentials():
 async def v8_status():
     return {
         "engine": "V8-NATIONAL",
-        "version": "8.0.0-prep",
+        "version": "8.1.0-preview",
         "status": "OPERATIONNEL",
+        "mode": "PREVIEW",
         "endpoints": ["/biome-profile", "/species-profile", "/score", "/referentials", "/status"],
         "referentials": {
             "biomes": len(BIOMES), "wildlife_regimes": len(WILDLIFE_REGIMES),
@@ -241,6 +261,7 @@ async def v8_status():
             "species": len(SPECIES_V8),
         },
         "score_components": 10,
-        "integrations": ["SPATIAL-V7.2", "NUTRITION-V7.2", "CANADA-V7.2", "ECCC", "Open-Meteo"],
+        "integrations": ["SPATIAL-V7.2", "NUTRITION-V7.2", "CANADA-V7.2", "ECCC", "Open-Meteo", "EXCLUSION-ENGINE-V8"],
+        "exclusion_engine": "V8.1.0 — 22 criteres",
         "dataVersion": "V8",
     }
