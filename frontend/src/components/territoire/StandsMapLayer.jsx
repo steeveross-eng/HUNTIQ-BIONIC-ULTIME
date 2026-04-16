@@ -21,13 +21,7 @@ import { useEffect, useRef, useCallback, useState } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 
-// BCE-4X BLOC 3: Animation pulsation relocalisation
-if (typeof document !== 'undefined' && !document.getElementById('reloc-pulse-style')) {
-  const style = document.createElement('style');
-  style.id = 'reloc-pulse-style';
-  style.textContent = `@keyframes pulse-reloc{0%,100%{box-shadow:0 0 8px rgba(46,204,113,0.4)}50%{box-shadow:0 0 20px rgba(46,204,113,0.8)}}`;
-  document.head.appendChild(style);
-}
+// PURGE-V6-ANTI-DUPLICATION-A-Omega: BLOC 3 animation PURGE (pulse-reloc supprime)
 
 const STAND_COLORS = {
   tree_stand: '#E74C3C',
@@ -66,7 +60,7 @@ const StandsMapLayer = ({
   const abortRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const loadingCtrlRef = useRef(null);
-  const relocationLayerRef = useRef(null);
+  // PURGE-V6: relocationLayerRef removed (BLOC 3 purged)
 
   // BCE-4X P1 B5: Indicateur de chargement sur la carte
   useEffect(() => {
@@ -575,14 +569,9 @@ const StandsMapLayer = ({
       cacheRef.current = data;
       if (lastKeyRef.current === key) renderRef.current(data);
 
-      // BCE-4X BLOC 3: RELOCALISATION AUTOMATIQUE
-      // Detecter les affuts a_eviter/rejected et appeler la relocalisation
-      const avoidRecs = (data.recommendations || []).filter(r =>
-        r.blind?.classification === 'a_eviter' || r.blind?.classification === 'rejected'
-      );
-      if (avoidRecs.length > 0 && feedingSites.length > 0) {
-        _fetchRelocation(avoidRecs, windDeg, feedingSites);
-      }
+      // PURGE-V6-ANTI-DUPLICATION-A-Omega: BLOC 3 RELOCALISATION V6 NEUTRALISE
+      // Relocalisation desormais geree par PhaseALayerV8 + usePhaseAV8 (V8 natif)
+      // Ancien code: appel /api/v1/relocation/evaluate SUPPRIME
     } catch (err) {
       if (err.name !== 'AbortError') console.error('[HUNT-ORCHESTRATOR]', err);
     } finally {
@@ -590,124 +579,8 @@ const StandsMapLayer = ({
     }
   }, [centerLat, centerLng, species, windSpeed, windDirection, windDirectionDeg, session, enabled, feedingSites, fixedBlinds, clearLayers, clearLegend, resolveWindDeg]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // BCE-4X BLOC 3: Fetch relocation alternatives pour affuts a_eviter
-  const _fetchRelocation = useCallback(async (avoidRecs, windDeg, feedingSitesArr) => {
-    if (!centerLat || !centerLng) return;
-    // Clear previous relocation markers
-    if (relocationLayerRef.current) {
-      map.removeLayer(relocationLayerRef.current);
-      relocationLayerRef.current = null;
-    }
-    const relGroup = L.featureGroup();
-    const apiUrl = process.env.REACT_APP_BACKEND_URL;
-
-    for (const rec of avoidRecs) {
-      const b = rec.blind;
-      const fs = feedingSitesArr[0] || { lat: centerLat, lng: centerLng };
-      try {
-        const relRes = await fetch(`${apiUrl}/api/v1/relocation/evaluate`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            center_lat: centerLat,
-            center_lng: centerLng,
-            current_saline: { lat: fs.lat, lng: fs.lng, score: 65 },
-            current_affut: { lat: b.lat, lng: b.lng, score: b.score, classification: b.classification, factors: b.factors },
-            wind_direction_deg: windDeg,
-            wind_speed_kmh: windSpeed || 12,
-            session: session,
-            species: species,
-            month: new Date().getMonth() + 1,
-          }),
-        });
-        if (!relRes.ok) continue;
-        const relData = await relRes.json();
-        if (!relData.triggered || !relData.alternative) continue;
-
-        const alt = relData.alternative;
-        const altSaline = alt.saline;
-        const altAffut = alt.affut;
-
-        // Marqueur saline alternative (vert)
-        const salineIcon = L.divIcon({
-          className: 'relocation-saline',
-          html: `<div data-testid="relocation-saline-marker" style="
-            width:28px;height:28px;border-radius:50%;
-            background:rgba(46,204,113,0.25);border:2.5px solid #2ECC71;
-            display:flex;align-items:center;justify-content:center;
-            box-shadow:0 0 12px rgba(46,204,113,0.5);
-            animation:pulse-reloc 2s ease-in-out infinite;
-          ">
-            <div style="width:8px;height:8px;border-radius:50%;background:#2ECC71"></div>
-            <div style="position:absolute;top:-22px;left:50%;transform:translateX(-50%);
-              background:#0d1117;border:1px solid #2ECC71;border-radius:4px;
-              padding:2px 6px;white-space:nowrap;font-size:13px;font-weight:700;color:#2ECC71;
-            ">ALT ${altSaline.score}</div>
-          </div>`,
-          iconSize: [28, 28],
-          iconAnchor: [14, 14],
-        });
-
-        const salineMarker = L.marker([altSaline.lat, altSaline.lng], { icon: salineIcon, pane: 'markerPane' });
-        salineMarker.bindPopup(`
-          <div style="min-width:300px;padding:14px;font-family:system-ui;position:relative" data-testid="relocation-popup">
-            <button data-testid="relocation-popup-close" onclick="this.closest('.leaflet-popup').querySelector('.leaflet-popup-close-button').click()" style="
-              position:absolute;top:8px;right:8px;background:rgba(255,68,68,0.15);border:2px solid rgba(255,68,68,0.4);
-              color:#ff6666;font-size:18px;font-weight:700;width:30px;height:30px;border-radius:6px;
-              cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;
-            ">X</button>
-            <div style="font-size:16px;font-weight:700;color:#2ECC71;margin-bottom:8px;padding-bottom:6px;padding-right:36px;border-bottom:1px solid rgba(46,204,113,0.3)">
-              RELOCALISATION PROPOSEE
-            </div>
-            <div style="font-size:14px;color:#aaa;margin-bottom:6px">
-              Site actuel: <span style="color:#E74C3C;font-weight:700">A EVITER</span> (score ${b.score})
-            </div>
-            <div style="display:flex;gap:10px;margin-bottom:8px">
-              <div style="flex:1;background:rgba(46,204,113,0.08);border-radius:6px;padding:6px 8px">
-                <div style="font-size:11px;color:#2ECC71;font-weight:700">SALINE</div>
-                <div style="font-size:20px;font-weight:800;color:#fff">${altSaline.score}</div>
-              </div>
-              <div style="flex:1;background:rgba(52,152,219,0.08);border-radius:6px;padding:6px 8px">
-                <div style="font-size:11px;color:#3498DB;font-weight:700">AFFUT</div>
-                <div style="font-size:20px;font-weight:800;color:#fff">${altAffut.score}</div>
-              </div>
-              <div style="flex:1;background:rgba(241,196,15,0.08);border-radius:6px;padding:6px 8px">
-                <div style="font-size:11px;color:#F1C40F;font-weight:700">COMPOSITE</div>
-                <div style="font-size:20px;font-weight:800;color:#fff">${alt.composite_score}</div>
-              </div>
-            </div>
-            <div style="font-size:13px;color:#9ca3af;line-height:1.5">
-              <div>Corridor: <span style="color:#FF8C00;font-weight:600">${alt.corridor_type || 'N/A'}</span></div>
-              <div>Distance: ${alt.distance_from_original_m}m</div>
-              <div style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.1)">
-                ${alt.justification?.supra || ''}
-              </div>
-            </div>
-            <div style="margin-top:6px;font-size:10px;color:#555">BCE-4X BLOC 3 — RELOCALISATION V2 SAL-ALT</div>
-          </div>
-        `, { maxWidth: 360, className: 'bionic-stand-popup' });
-        relGroup.addLayer(salineMarker);
-
-        // Ligne pointillee relocation (du site actuel vers l'alternative)
-        const relocLine = L.polyline(
-          [[b.lat, b.lng], [altSaline.lat, altSaline.lng]],
-          { color: '#2ECC71', weight: 2, opacity: 0.6, dashArray: '8, 6', pane: 'overlayPane' }
-        );
-        relocLine.bindTooltip(
-          `<span style="font-size:9px;color:#2ECC71;font-weight:700">Relocalisation: ${alt.distance_from_original_m}m</span>`,
-          { permanent: false, direction: 'center' }
-        );
-        relGroup.addLayer(relocLine);
-      } catch (err) {
-        console.warn('[RELOCATION] Error:', err);
-      }
-    }
-
-    if (relGroup.getLayers().length > 0) {
-      relGroup.addTo(map);
-      relocationLayerRef.current = relGroup;
-    }
-  }, [centerLat, centerLng, species, windSpeed, session, map]);
+  // PURGE-V6-ANTI-DUPLICATION-A-Omega: BLOC 3 V6 RELOCALISATION SUPPRIME
+  // Toute la logique de relocalisation est desormais dans PhaseALayerV8.jsx (V8 natif)
 
   useEffect(() => {
     fetchData();
@@ -715,11 +588,6 @@ const StandsMapLayer = ({
       if (abortRef.current) abortRef.current.abort();
       clearLayers();
       clearLegend();
-      // BCE-4X BLOC 3: Cleanup relocation markers
-      if (relocationLayerRef.current && map) {
-        try { map.removeLayer(relocationLayerRef.current); } catch (_) { /* noop */ }
-        relocationLayerRef.current = null;
-      }
       // BCE-4X P1 B5: Cleanup loading indicator on unmount
       if (loadingCtrlRef.current && map) {
         try { map.removeControl(loadingCtrlRef.current); } catch (_) { /* noop */ }

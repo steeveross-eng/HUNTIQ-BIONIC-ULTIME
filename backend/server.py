@@ -345,13 +345,13 @@ try:
 except Exception as e:
     logger.warning(f"Corridor Unified Engine not loaded: {e}")
 
-# BCE-4X BLOC 3: Relocalisation Automatique Engine (salines/affuts)
-try:
-    from engines.relocation.router import router as relocation_router
-    app.include_router(relocation_router)
-    logger.info("BLOC 3: Relocalisation Automatique Engine registered (/api/v1/relocation)")
-except Exception as e:
-    logger.warning(f"Relocalisation Engine not loaded: {e}")
+# PURGE-V6-ANTI-DUPLICATION-A-Omega: V6 Relocalisation Router DEPRECATED
+# Relocalisation desormais geree par /api/v8/map/relocalisation (phase_a_engines.py)
+# try:
+#     from engines.relocation.router import router as relocation_router
+#     app.include_router(relocation_router)
+# except Exception as e:
+#     pass
 
 
 
@@ -643,11 +643,12 @@ try:
 except Exception as e:
     logger.warning(f"ULTRA-MAX++ FIREWALL not loaded: {e}")
 
-# ═══ SALINES ULTIME ENGINE — 5 Scores + 20 Sources + FICHE ═══
+# ═══ SALINES ULTIME ENGINE — FROZEN (PURGE-V6 Phase B) ═══
+# Conserve pour SalinesFichePanel SUPRA — purge complete en Phase B
 try:
     from modules.salines_ultime_engine.router import router as salines_ultime_router
     app.include_router(salines_ultime_router)
-    logger.info("✓ SALINES ULTIME registered (/api/v1/salines-ultime)")
+    logger.info("SALINES ULTIME registered (/api/v1/salines-ultime) [FROZEN — purge Phase B]")
 except Exception as e:
     logger.warning(f"SALINES ULTIME not loaded: {e}")
 
