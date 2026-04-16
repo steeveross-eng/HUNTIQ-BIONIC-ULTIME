@@ -29,17 +29,16 @@ def _cache_key(lat, lon, species, month):
 
 
 def _generate_zones_inline(lat, lon, species, month, radius_km=1):
-    """Generate zones inline — lightweight, no heavy imports."""
-    # Nutrition score heuristique rapide (evite import lourd)
+    """Generate zones inline — TERRITOIRE-V8-FIX: polygones ~300m comme V6."""
     nutr = 50 + abs(math.sin(lat * 3.7 + lon * 2.1)) * 30
 
     zones = []
-    step = radius_km / 111.0 / 3
+    step = radius_km / 111.0 / 2.5  # ~360m espacement entre centres
     for i, ztype in enumerate(ZONE_TYPES):
         angle = i * 72 + 15
         rad = math.radians(angle)
-        c_lat = lat + math.sin(rad) * step * (1 + i * 0.3)
-        c_lon = lon + math.cos(rad) * step * (1 + i * 0.3) / math.cos(math.radians(lat))
+        c_lat = lat + math.sin(rad) * step * (0.8 + i * 0.15)
+        c_lon = lon + math.cos(rad) * step * (0.8 + i * 0.15) / math.cos(math.radians(lat))
         base_score = 40 + abs(math.sin(c_lat * 11 + c_lon * 7)) * 50
         if ztype == "alimentation":
             base_score = min(100, base_score * 0.7 + nutr * 0.3)
@@ -47,7 +46,8 @@ def _generate_zones_inline(lat, lon, species, month, radius_km=1):
             base_score = min(100, base_score * 1.2)
         elif ztype == "eau":
             base_score = min(100, base_score * 0.9)
-        sz = step * 0.4
+        # TERRITOIRE-V8-FIX: taille ~300m par cote (0.0027 deg)
+        sz = 0.0027
         polygon = [
             [round(c_lat-sz,5), round(c_lon-sz,5)],
             [round(c_lat-sz,5), round(c_lon+sz,5)],

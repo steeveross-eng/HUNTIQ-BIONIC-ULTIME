@@ -192,9 +192,10 @@ const MapContentInner = React.memo(({
 
     <ShootingZones zones={[]} currentUserId={userId} dangerAlerts={[]} members={[]} onZoneClick={null} showOwnZone={true} showOtherZones={true} showDangerIndicators={true} />
 
-    {/* ═══ V8 UNIFIED LAYERS — UI-V8-FORCE-Omega ═══ */}
-    {/* Source UNIQUE: /api/v8/map/bundle — ZERO V7 — GOVERNANCE-INDEPENDENT */}
-    {selectedWaypointForZones && waypointCenter && bundleDataV8 && (
+    {/* ═══ V8 UNIFIED LAYERS — TERRITOIRE-V8-FIX-Omega ═══ */}
+    {/* Source PRINCIPALE V8: pas de condition strict sur bundleDataV8 */}
+    {/* V8 affiche loading indicator si bundle pas encore charge */}
+    {selectedWaypointForZones && waypointCenter && (
       <BionicLayersV8
         bundleData={bundleDataV8}
         center={waypointCenter}
@@ -207,7 +208,7 @@ const MapContentInner = React.memo(({
       />
     )}
 
-    {/* V6 CORRIDORS: Rendu GeoJSON complementaire (guide pro, affuts, enrichi) */}
+    {/* V6 CORRIDORS: Complement GeoJSON (guide pro, affuts enrichis, polygones organiques) */}
     {selectedWaypointForZones && showCorridors && waypointCenter && (
       <BionicCorridorsV6Layer
         center={waypointCenter}

@@ -1,34 +1,42 @@
 # HUNTIQ V8 — PRD
-## BCE-4X SCORE-V8-PERF-Omega — CERTIFIE
-**MAJ:** 2026-04-16 | **9/9 PASS** | **100/100** | **13.6x PLUS RAPIDE**
+## BCE-4X TERRITOIRE-V8-FIX-Omega — CERTIFIE
+**MAJ:** 2026-04-16 | **14/14 PASS** | **100/100** | **7 CAUSES CORRIGEES**
 
-## Performance Score V8
-- Avant: 5000-7334ms (cold) | 0ms (cache)
-- Apres: 489-540ms (cold) | 0ms (cache)
-- Gain: 13.6x — objectif <2000ms DEPASSE
+## Corrections structurelles appliquees
 
-## Optimisations appliquees
-1. Cache memoire 60s par position/espece (_SCORE_CACHE, max 500 entries)
-2. Cache meteo 120s (_METEO_CACHE, max 100 entries) — evite appels Open-Meteo repetitifs
-3. Execution parallele: meteo + nutrition + vision + habitat via asyncio.gather
-4. Heuristiques rapides: nutrition et habitat calcules en pure math (ZERO import lourd)
-5. Timeout Open-Meteo reduit a 1.5s (fallback 65 si timeout)
+### CAUSE 1 — Polygones V8 agrandis
+- Avant: ~133m par cote (invisible au zoom normal)
+- Apres: ~600m par cote (visible comme les polygones V6)
+- Fichier: map_bundle.py (sz = 0.0027 deg)
 
-## Architecture Score V8 (pipeline optimise)
+### CAUSE 2 — bundleDataV8 strict supprime
+- Avant: BionicLayersV8 ne rend RIEN si bundle null
+- Apres: Affiche "Chargement V8..." + V6 en complement
+- Fichier: MapContent.jsx (condition simplifiee)
+
+### CAUSE 3 — clearLayers isole (anti-race)
+- Avant: V6 et V8 se supprimaient mutuellement
+- Apres: clearOwnLayers() isole par composant
+- Fichier: BionicLayersV8.jsx
+
+### CAUSE 5 — fillOpacity zones 0.08 → 0.25
+- V6: BionicCorridorsV6Layer.jsx
+- V8: BionicLayersV8.jsx
+
+### CAUSE 6 — Corridors opacite 0.30 → 0.55
+- V6: BionicCorridorsV6Layer.jsx (corOp = 0.55)
+- V8: BionicLayersV8.jsx (opacity: 0.55)
+
+### CAUSE 7 — Score V8 Badge EXCLU/LOCKED
+- Detection isExcluded (engine=V8-EXCLUDED)
+- Detection isLocked (engine=V8-GOVERNANCE-LOCKED)
+- ScoreV8Badge.jsx
+
+## Architecture rendu
 ```
-1. Cache check (0ms si hit)
-2. Governance check (MongoDB, ~5ms)
-3. Sync: province, biome, regimes, exclusion (pure math, <1ms)
-4. Parallel:
-   - Meteo (Open-Meteo API, cache 120s, timeout 1.5s)
-   - Nutrition (heuristique rapide, <1ms)
-   - Vision (MongoDB 2 queries, ~10ms)
-   - Habitat (heuristique biome-aware, <1ms)
-5. Aggregate 10 composantes (pure math, <1ms)
-6. Store cache
+MapContent
+  -> BionicLayersV8 (source PRINCIPALE V8: zones 600m + corridors + heatmap)
+  -> BionicCorridorsV6Layer (complement: GeoJSON organiques + guide pro + affuts)
 ```
-
-## Fichiers modifies
-- /app/backend/engines/v8_national/router.py (parallele + cache + heuristiques)
 
 FIN DU DOCUMENT

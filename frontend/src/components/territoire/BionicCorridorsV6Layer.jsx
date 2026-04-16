@@ -214,7 +214,8 @@ const BionicCorridorsV6Layer = ({
   // Pré-calculer les styles — Hiérarchie Visuelle STEEVE-MAX
   // CRITIQUE: glow externe 6-8px #FF4500 op0.65 + glow interne 2px #FFF op0.25 + pulsation
   const precomputedStyles = useMemo(() => {
-    const corOp = 0.30;
+    // TERRITOIRE-V8-FIX-Omega: opacite corridors 0.55 pour visibilite
+    const corOp = 0.55;
     const styles = {};
     for (const [level, p] of Object.entries(CORRIDOR_PALETTE)) {
       const isExtreme = level === 'CRITIQUE';
@@ -310,13 +311,13 @@ const BionicCorridorsV6Layer = ({
 
         const rings = clipRingsToCircle(rawRings, box, ZONE_RADIUS_M);
 
-        // RUT-RENDER-Ω: fillOpacity subtil pour distinguer zones vs corridors
+        // TERRITOIRE-V8-FIX-Omega: fillOpacity 0.25 pour visibilite sur satellite
         const polygon = L.polygon(rings, {
           color: zc,
           weight: 3,
           opacity: 1.0,
           fillColor: zc,
-          fillOpacity: 0.08,
+          fillOpacity: 0.25,
           lineCap: 'round',
           lineJoin: 'round',
           interactive: true,
