@@ -755,6 +755,14 @@ try:
 except Exception as e:
     logger.warning(f"V8 Governance not loaded: {e}")
 
+# V8-MAP-BUNDLE — Endpoint unique toutes couches territoire
+try:
+    from engines.v8_national.map_bundle import router as map_bundle_router
+    app.include_router(map_bundle_router)
+    logger.info("✓ V8-MAP-BUNDLE registered (/api/v8/map) — Bundle unique + cache 30s")
+except Exception as e:
+    logger.warning(f"V8 Map Bundle not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")
