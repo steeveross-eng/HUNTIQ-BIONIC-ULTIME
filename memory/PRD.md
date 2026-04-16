@@ -1,61 +1,47 @@
 # HUNTIQ V8 — PRD
-## PHASE-B-V8-SAFE-INTEGRATION-Omega — CERTIFIE
-**MAJ:** 2026-04-16 | **8/8 PASS** | **TERRAIN-AWARE COMPLET** | **6 ROUTERS V6 PURGES**
+## PHASE-C-V8-SAFE-INTEGRATION-Omega — CERTIFIE
+**MAJ:** 2026-04-16 | **9/9 PASS** | **MOTEURS AVANCES COMPLETS** | **V8 PURE**
 
-## Architecture V8 Pure — Terrain-Aware
+## Architecture V8 Complète
 
 ### Backend Engines (V8 National)
 - `router.py` — Score V8, Biome, Habitat
-- `referentials.py` — Donnees reference 13 provinces
+- `referentials.py` — 13 provinces
 - `exclusion_engine.py` — 22 criteres BCE-4X
-- `governance.py` — Master Switch PREVIEW/PUBLIC
-- `map_bundle.py` — Bundle (delegue Phase B terrain-aware, TTFB <5ms, SANS auth)
+- `governance.py` — Master Switch
+- `map_bundle.py` — Bundle terrain-aware (delegue Phase B)
 - `phase_a_engines.py` — Relocalisation + Salines V8
-- `phase_b_engines.py` — Zones/Corridors/Affuts terrain-aware V8
+- `phase_b_engines.py` — Zones/Corridors/Affuts terrain-aware
+- `phase_c_engines.py` — Scenario + Thermal + Multi-Engine Scoring
 - `p1_pipelines.py` — Stubs LiDAR/IRDA
 
-### Phase B — Terrain-Aware V8
-- `generate_zones_ta()` — 5 types, scoring terrain (canopy/pente/eau/route/strate/feuillus)
-- `generate_corridors_ta()` — 10 corridors, cost surface simplifie, continuite COR-006
-- `generate_affuts_ta()` — 3 affuts, coherence zones+corridors, bonus proximite corridor
-- `_cost_surface_score()` — penalite deplacement (pente/eau/route vs couvert)
-- `_corridor_intensity()` — intensite temporelle + cost surface
+### Phase C — Moteurs Avancés
+- Thermal Engine: temperature, wind chill, dissipation, confort animal, shelter canopy
+- Scenario Engine: 8 presets what-if (rut_peak, canicule, tempete, nuit, etc.)
+- Multi-Engine: composite terrain(30%)+thermal(15%)+temporal(10%)+saline(15%)+affut(10%)+zones(20%)
 
-### Purge V6 — 6 Routers Deregistres
-1. relocation_router → 404
-2. organic_zones_router → 404
-3. corridor_unified_router → 404
-4. movement_corridors_router → 404
-5. corridors_v10_router → 404
-6. salines_ultime_router → 404
+### Key Endpoints V8
+- `/api/v8/map/bundle` — Bundle terrain-aware
+- `/api/v8/map/relocalisation` + `/api/v8/map/salines` — Phase A
+- `/api/v8/map/zones-ta` + `/api/v8/map/corridors-ta` + `/api/v8/map/affuts-ta` — Phase B
+- `/api/v8/engines/thermal` — Thermal Engine
+- `/api/v8/engines/scenario` + `/api/v8/engines/scenario/presets` — Scenario Engine
+- `/api/v8/engines/multi-score` — Multi-Engine Scoring
+- `/api/v8/national/score` + `/api/v8/governance/state` — Core
 
-### Frontend V8 (inchange)
-- BionicLayersV8 consomme bundle V8 terrain-aware
-- PhaseALayerV8 consomme Phase A
-- PhaseAPanelV8 panneau lateral
-
-## Key API Endpoints (V8 Only)
-- `GET /api/v8/map/bundle` — Bundle terrain-aware (NO AUTH)
-- `GET /api/v8/map/zones-ta` — Zones terrain-aware sandbox
-- `GET /api/v8/map/corridors-ta` — Corridors terrain-aware sandbox
-- `GET /api/v8/map/affuts-ta` — Affuts terrain-aware sandbox
-- `GET /api/v8/map/relocalisation` — Relocalisation V8
-- `GET /api/v8/map/salines` — Salines V8
-- `GET /api/v8/national/score` — Score V8 National
-- `GET /api/v8/governance/state` — Governance
+### Purge V6 Totale — 6 Routers
+relocation, organic_zones, corridor_unified, movement_corridors, corridors_v10, salines_ultime
 
 ## Completed Work
-1-9. Phases precedentes (voir historique)
-10. V8-FRONTEND-PHASE-A-Omega
-11. PURGE-V6-ANTI-DUPLICATION-A-Omega
-12. V8-REINTEGRATION-PHASE-B-Omega (Zones+Corridors+Affuts terrain-aware)
-13. PURGE-V6-PHASE-B (6 routers V6 purges)
-14. AUDIT-ANTI-DUPLICATION-B (8/8 PASS)
+1-11. Phases precedentes
+12. V8-REINTEGRATION-PHASE-B-Omega (Terrain-aware)
+13. PURGE-V6-PHASE-B (6 routers)
+14. V8-PHASE-C-Omega (Scenario+Thermal+Multi-Engine)
 
-## Phase C — FUTUR
-- Scenario Engine
-- Thermal Engine
-- Multi-Engine Scoring
+## Phase Finale — CONSOLIDATION V8-ULTIME
+- Audit final total
+- Frontend integration Phase C (panneau TERRITOIRE)
+- V8-ULTIME-INSTITUTIONNEL-Omega
 
 ## Credentials
 - Admin: admin@huntiq.com / Saturn5858*

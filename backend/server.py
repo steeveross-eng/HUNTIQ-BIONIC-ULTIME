@@ -776,6 +776,14 @@ try:
 except Exception as e:
     logger.warning(f"V8 Phase B not loaded: {e}")
 
+# V8-PHASE-C — Scenario + Thermal + Multi-Engine Scoring
+try:
+    from engines.v8_national.phase_c_engines import router as phase_c_router
+    app.include_router(phase_c_router)
+    logger.info("V8-PHASE-C registered (/api/v8/engines) — Scenario/Thermal/Multi-Engine")
+except Exception as e:
+    logger.warning(f"V8 Phase C not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")
