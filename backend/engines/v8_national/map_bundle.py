@@ -26,12 +26,27 @@ def _cache_key(lat, lon, species, month):
     return f"{round(lat,3)}:{round(lon,3)}:{species}:{month}"
 
 
-def _generate_zones_inline(lat, lon, species, month, radius_km=1):
-    """Generate zones inline — TERRITOIRE-V8-FIX: polygones ~300m comme V6."""
-    nutr = 50 + abs(math.sin(lat * 3.7 + lon * 2.1)) * 30
+def _organic_polygon(c_lat, c_lon, radius_deg, n_vertices=12, seed=0):
+    """Generate organic polygon via spline-like jitter on circle vertices."""
+    points = []
+    cos_lat = max(0.5, math.cos(math.radians(c_lat)))
+    for j in range(n_vertices):
+        angle = (j / n_vertices) * 2 * math.pi
+        # Organic jitter: pseudo-random deformation per vertex
+        jitter = 0.7 + 0.6 * abs(math.sin(seed * 7.3 + j * 2.9 + c_lat * 11.1))
+        r = radius_deg * jitter
+        p_lat = c_lat + math.sin(angle) * r
+        p_lon = c_lon + math.cos(angle) * r / cos_lat
+        points.append([round(p_lat, 6), round(p_lon, 6)])
+    points.append(points[0])  # Close polygon
+    return points
 
+
+def _generate_zones_inline(lat, lon, species, month, radius_km=1):
+    """Generate V8 zones with ORGANIC polygons (spline-like, non-rectangular)."""
+    nutr = 50 + abs(math.sin(lat * 3.7 + lon * 2.1)) * 30
     zones = []
-    step = radius_km / 111.0 / 2.5  # ~360m espacement entre centres
+    step = radius_km / 111.0 / 2.5
     for i, ztype in enumerate(ZONE_TYPES):
         angle = i * 72 + 15
         rad = math.radians(angle)
@@ -44,29 +59,49 @@ def _generate_zones_inline(lat, lon, species, month, radius_km=1):
             base_score = min(100, base_score * 1.2)
         elif ztype == "eau":
             base_score = min(100, base_score * 0.9)
-        # TERRITOIRE-V8-FIX: taille ~300m par cote (0.0027 deg)
-        sz = 0.0027
-        polygon = [
-            [round(c_lat-sz,5), round(c_lon-sz,5)],
-            [round(c_lat-sz,5), round(c_lon+sz,5)],
-            [round(c_lat+sz,5), round(c_lon+sz,5)],
-            [round(c_lat+sz,5), round(c_lon-sz,5)],
-        ]
+        # Organic polygon ~250-350m radius, 12 vertices, seed unique per zone
+        radius_deg = 0.0025 + abs(math.sin(i * 3.7 + lat * 5.1)) * 0.001
+        polygon = _organic_polygon(c_lat, c_lon, radius_deg, n_vertices=12, seed=i + lat * 100)
         zones.append({
-            "id": f"zone_v7_{ztype}_{i}", "type": ztype,
-            "center": {"lat": round(c_lat,5), "lng": round(c_lon,5)},
+            "id": f"zone_v8_{ztype}_{i}", "type": ztype,
+            "center": {"lat": round(c_lat, 5), "lng": round(c_lon, 5)},
             "polygon": polygon,
             "score": round(min(100, max(0, base_score)), 1),
         })
     return zones
 
 
-def _generate_corridors_inline(lat, lon, species, month, hour, radius_km=10):
-    """Generate corridors inline."""
-    doy = (month - 1) * 30 + 15
-    crep = species in ["cerf","orignal","wapiti","caribou","chevreuil"]
-    t_mult = 1.3 if (5<=hour<=8 or 16<=hour<=19) and crep else 0.7 if 10<=hour<=14 else 1.0
+def _bezier_curve(start, end, n_points=8, curvature_seed=0):
+    """Generate curved path between two points via quadratic Bezier."""
+    s_lat, s_lon = start
+    e_lat, e_lon = end
+    mid_lat = (s_lat + e_lat) / 2
+    mid_lon = (s_lon + e_lon) / 2
+    # Perpendicular offset for curvature
+    dx = e_lon - s_lon
+    dy = e_lat - s_lat
+    dist = math.sqrt(dx*dx + dy*dy)
+    if dist < 1e-8:
+        return [[s_lat, s_lon], [e_lat, e_lon]]
+    # Offset perpendicular to the line
+    curve_strength = 0.15 + 0.2 * abs(math.sin(curvature_seed * 3.7))
+    ctrl_lat = mid_lat + (-dx) * curve_strength * (1 if curvature_seed % 2 == 0 else -1)
+    ctrl_lon = mid_lon + (dy) * curve_strength * (1 if curvature_seed % 2 == 0 else -1)
+    points = []
+    for j in range(n_points + 1):
+        t = j / n_points
+        inv = 1 - t
+        p_lat = inv*inv*s_lat + 2*inv*t*ctrl_lat + t*t*e_lat
+        p_lon = inv*inv*s_lon + 2*inv*t*ctrl_lon + t*t*e_lon
+        points.append([round(p_lat, 6), round(p_lon, 6)])
+    return points
 
+
+def _generate_corridors_inline(lat, lon, species, month, hour, radius_km=10):
+    """Generate V8 corridors with CURVED paths and intensity levels."""
+    doy = (month - 1) * 30 + 15
+    crep = species in ["cerf", "orignal", "wapiti", "caribou", "chevreuil"]
+    t_mult = 1.3 if (5 <= hour <= 8 or 16 <= hour <= 19) and crep else 0.7 if 10 <= hour <= 14 else 1.0
     corridors = []
     for i in range(10):
         angle = i * 36 + 10
@@ -80,14 +115,50 @@ def _generate_corridors_inline(lat, lon, species, month, hour, radius_km=10):
         e_lon = lon + math.cos(e_rad) * dist * 1.3 / math.cos(math.radians(lat))
         raw = abs(math.sin(s_lat * 7.3 + s_lon * 5.1 + doy * 0.1)) * 100
         intensity = min(100, max(10, raw * t_mult))
-        ctype = "extreme" if intensity > 80 else "intense" if intensity > 55 else "saisonnier" if i % 3 == 0 else "normal"
+        if intensity > 80:
+            ctype = "critique"
+        elif intensity > 65:
+            ctype = "majeur"
+        elif intensity > 50:
+            ctype = "fort"
+        elif intensity > 30:
+            ctype = "modere"
+        else:
+            ctype = "faible"
+        # Bezier curved path (8 intermediate points)
+        path = _bezier_curve([s_lat, s_lon], [e_lat, e_lon], n_points=8, curvature_seed=i)
         corridors.append({
-            "id": f"corr_v7_{i}", "type": ctype,
-            "start": {"lat": round(s_lat,5), "lng": round(s_lon,5)},
-            "end": {"lat": round(e_lat,5), "lng": round(e_lon,5)},
+            "id": f"corr_v8_{i}", "type": ctype,
+            "path": path,
+            "start": {"lat": round(s_lat, 5), "lng": round(s_lon, 5)},
+            "end": {"lat": round(e_lat, 5), "lng": round(e_lon, 5)},
             "intensity": round(intensity, 1),
         })
     return corridors
+
+
+def _generate_affuts_inline(lat, lon, species, zones, wind_deg=180):
+    """Generate V8 enriched affuts with orientation based on wind + zones."""
+    affuts = []
+    cos_lat = max(0.5, math.cos(math.radians(lat)))
+    for i, z in enumerate(zones):
+        if z["type"] in ("alimentation", "rut", "repos"):
+            zc = z["center"]
+            # Place affut OUTSIDE zone, opposite wind direction
+            wind_rad = math.radians((wind_deg + 180) % 360)
+            offset = 0.004 + abs(math.sin(i * 5.3)) * 0.002
+            a_lat = zc["lat"] + math.sin(wind_rad) * offset
+            a_lon = zc["lng"] + math.cos(wind_rad) * offset / cos_lat
+            affuts.append({
+                "id": f"affut_v8_{i}",
+                "lat": round(a_lat, 6),
+                "lng": round(a_lon, 6),
+                "orientation_deg": round((wind_deg + 180) % 360, 1),
+                "zone_type": z["type"],
+                "zone_score": z["score"],
+                "quality": "optimal" if z["score"] > 70 else "bon" if z["score"] > 50 else "acceptable",
+            })
+    return affuts
 
 
 def _generate_heatmap_inline(lat, lon, species, month, hour, grid_size=12, radius_km=1.5):
@@ -142,10 +213,10 @@ async def map_bundle(
     from engines.v8_national.exclusion_engine import evaluate_exclusion
     exclusion = evaluate_exclusion(lat, lon, species)
 
-    # Couches geospatiales (synchrone, rapide)
+    # Couches geospatiales V8 — organiques
     zones = _generate_zones_inline(lat, lon, species, m)
     corridors = _generate_corridors_inline(lat, lon, species, m, h)
-    heatmap = _generate_heatmap_inline(lat, lon, species, m, h)
+    affuts = _generate_affuts_inline(lat, lon, species, zones, wind_deg=180)
 
     biome_data = BIOMES.get(biome_code, {})
 
@@ -178,7 +249,7 @@ async def map_bundle(
     result = {
         "zones": zones, "zones_count": len(zones),
         "corridors": corridors, "corridors_count": len(corridors),
-        "heatmap": heatmap, "heatmap_count": len(heatmap),
+        "affuts": affuts, "affuts_count": len(affuts),
         "biome": {"code": biome_code, "name": biome_data.get("name", biome_code), "dominant_species": biome_data.get("dominant_species", [])},
         "exclusion": {"decision": exclusion["decision"], "reasons": exclusion.get("reasons", []), "severity": exclusion.get("severity", "NONE"), "habitat_score": exclusion.get("habitat_score", 0)},
         "governance_mode": gov_mode,

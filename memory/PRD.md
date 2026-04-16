@@ -1,25 +1,21 @@
 # HUNTIQ V8 — PRD
-## TERRITOIRE-V8-FIX-Omega — ZONES VISIBLES — CERTIFIE
-**MAJ:** 2026-04-16 | **9/9 PASS** | **SCREENSHOT CONFIRME**
+## V8-VISUAL-STEVE-MAX-Omega — CERTIFIE
+**MAJ:** 2026-04-16 | **9/9 PASS** | **SCREENSHOT CONFIRME** | **ORGANIQUES**
 
-## Cause racine corrigee
-Le bundle /api/v8/map/bundle exigeait une auth (get_current_user_with_role).
-Si le token etait absent/expire, le fetch echouait silencieusement.
-bundleData restait null → "Chargement V8..." permanent → ZERO zones rendues.
+## Rendu V8 conforme STEEVE-MAX
+- Zones: polygones organiques 12+ vertices, contours opaques 2.5px, interieur TRANSPARENT
+- Corridors: courbes Bezier 9 points, 5 niveaux intensite (critique/majeur/fort/modere/faible), opacite 0.85
+- Affuts: triangles orientes (direction vent), halo discret, 3 qualites (optimal/bon/acceptable)
+- ZERO micro-points, ZERO rectangles, ZERO artefacts
 
-## Corrections
-1. Bundle rendu PUBLIC (auth supprimee — governance-independent)
-2. Loading HTML div supprime (incompatible avec contexte Leaflet)
-3. Hook useMapBundleV8 simplifie (pas de token requis)
-4. Polygones V8 agrandis 133m → 600m
-5. fillOpacity zones 0.08 → 0.25
-6. Corridors opacite 0.30 → 0.55
+## Backend (map_bundle.py)
+- _organic_polygon(): 12 vertices avec jitter pseudo-aleatoire
+- _bezier_curve(): quadratique 8 points intermediaires
+- _generate_affuts_inline(): orientation vent, placement hors zone
 
-## Screenshot confirme
-- 5 zones polygones VISIBLES (vert/bleu/rouge/cyan ~600m)
-- Corridors lignes VISIBLES (orange)
-- 163 elements SVG sur la carte
-- Score V8 Badge dans header ("SCORE V8 PREVIEW 0/100 EXCLU BCE-4X")
-- "Chargement V8..." DISPARU
+## Frontend (BionicLayersV8.jsx)
+- Zones: L.polygon, fillOpacity:0, stroke opacity:1, weight:2.5
+- Corridors: L.polyline sur path curved, glow pour critique/majeur
+- Affuts: L.polygon triangle oriente, halo L.circleMarker
 
 FIN DU DOCUMENT

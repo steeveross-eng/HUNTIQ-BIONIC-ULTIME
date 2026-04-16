@@ -193,16 +193,13 @@ const MapContentInner = React.memo(({
     <ShootingZones zones={[]} currentUserId={userId} dangerAlerts={[]} members={[]} onZoneClick={null} showOwnZone={true} showOtherZones={true} showDangerIndicators={true} />
 
     {/* ═══ V8 UNIFIED LAYERS — TERRITOIRE-V8-FIX-Omega ═══ */}
-    {/* Source PRINCIPALE V8: pas de condition strict sur bundleDataV8 */}
-    {/* V8 affiche loading indicator si bundle pas encore charge */}
+    {/* Source PRINCIPALE V8: organiques, pas de condition strict */}
     {selectedWaypointForZones && waypointCenter && (
       <BionicLayersV8
         bundleData={bundleDataV8}
-        center={waypointCenter}
         showZones={showZonesLayer !== false}
         showCorridors={showCorridorsLayer !== false}
-        showHeatmap={showHeatmapV10}
-        showPoints={showPointsLayer !== false}
+        showAffuts={showPointsLayer !== false}
         enabled={showCorridors}
         onDataLoaded={onHeatmapDataLoaded}
       />

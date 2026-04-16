@@ -67,7 +67,7 @@ const useMapBundleV8 = () => {
     fetchBundle,
     zones: bundleData?.zones || [],
     corridors: bundleData?.corridors || [],
-    heatmap: bundleData?.heatmap || [],
+    affuts: bundleData?.affuts || [],
     exclusion: bundleData?.exclusion || null,
     biome: bundleData?.biome || null,
     governanceMode: bundleData?.governance_mode || 'LOCKED',
