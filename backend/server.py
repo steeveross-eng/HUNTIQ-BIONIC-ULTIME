@@ -784,6 +784,13 @@ try:
 except Exception as e:
     logger.warning(f"V8 Phase C not loaded: {e}")
 
+# V13-AUDIT — Public report endpoint
+try:
+    from routes.audit_report_route import router as audit_report_router
+    app.include_router(audit_report_router)
+except Exception as e:
+    logger.warning(f"Audit report route not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")
