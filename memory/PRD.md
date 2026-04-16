@@ -1,63 +1,44 @@
 # HUNTIQ V8 — PRD
-## BCE-4X GOVERNANCE-Omega MASTER-SWITCH-SUPREMACY — CERTIFIE
-**MAJ:** 2026-04-16 | **23/23 PASS** | **100/100** | **MASTER SWITCH SUPREME**
+## BCE-4X GOVERNANCE+MAP-LAYERS-Omega — CERTIFIE
+**MAJ:** 2026-04-16 | **23/23 PASS** | **100/100**
 
-## Architecture V8 NATIONALE
+## Architecture V8
 ```
-TERRITOIRE-V7.2 (ScoreV8Badge PREVIEW tag)
-SPATIAL-ENGINE-V7.2 (/api/v7/spatial/*)
-NUTRITION-ENGINE-V7.2 (/api/v7/nutrition/*)
-INTELLIGENCE-V7
-SUPRA-ENGINE-V7 (/api/v7/supra/*)
-CANADA-V7.2 (/api/v7/canada/*)
-V8-NATIONAL (/api/v8/national/* — GOVERNANCE LOCKED par defaut)
+TERRITOIRE-V7.2 (MAP-LAYERS ALWAYS_ON + ScoreV8Badge + HEARTBEAT 5s)
+V8-NATIONAL (/api/v8/national/* — GOVERNANCE LOCKED defaut)
 EXCLUSION-ENGINE-V8 (/api/v8/exclusion/* — 22 criteres)
 V8-P1 PIPELINES (/api/v8/p1/* — STUB mode)
-V8-GOVERNANCE-SUPREMACY (/api/v8/governance/* — Master Switch)
-CARTE-2027 (terrain V8 PREVIEW tag)
+V8-GOVERNANCE-SUPREMACY (/api/v8/governance/* — Master Switch v8.2.0)
+CARTE-2027 (V8 PREVIEW tag)
++ SPATIAL/NUTRITION/INTELLIGENCE/SUPRA/CANADA V7.2
 ```
 
+## MAP-LAYERS-Omega
+- TERRITOIRE_PRESET = ALWAYS_ON
+- 14 couches permanentes: habitats, repos, rut, trajets, corridors, ensoleillement, peuplements, affuts, pentes, orientation, altitude, eau, hydro, ndvi
+- 5 forced toggles: zones, corridors, points, heatmap, wind
+- MAP-LAYER-PERSISTENCE = TRUE
+- MAP-LAYER-HEARTBEAT = 5000ms (re-force toutes les 5s)
+- ZERO auto-hide, ZERO auto-filter, ZERO dependance score
+- Survit: reload, changement espece/province/preset/moteur/governance
+
 ## V8-GOVERNANCE-SUPREMACY v8.2.0
-- Authority: COMMANDANT_STEEVE_MAX exclusivement (admin@huntiq.com)
-- POST-PREVIEW LOCKDOWN: Defaut = LOCKED (JAMAIS PREVIEW/PUBLIC au boot)
-- Score V8 retourne 0 + V8-GOVERNANCE-LOCKED quand LOCKED
-- Activation PREVIEW/PUBLIC = Master Switch Admin Premium seulement
+- Defaut = LOCKED (POST-PREVIEW LOCKDOWN)
+- Authority COMMANDANT_STEEVE_MAX exclusive
+- Score V8 = 0 + V8-GOVERNANCE-LOCKED quand LOCKED
+- Audit trail MongoDB
 - Non-auth = REFUS AUTOMATIQUE
-- Audit trail MongoDB (v8_governance_audit collection)
-- Transitions loggees: from_mode -> to_mode + by + at + authority
-- 4 supremacy rules dans /state, 7 dans /audit
-- Endpoints: /state, /activate (POST), /audit
-
-## Endpoints V8
-### V8-GOVERNANCE (3)
-/state, /activate (POST admin), /audit (admin)
-
-### V8-NATIONAL (5)
-/biome-profile, /species-profile, /score (governance-gated), /referentials, /status
-
-### EXCLUSION-ENGINE-V8 (3)
-/decision (22 criteres), /referential, /status
-
-### V8-P1 PIPELINES (3)
-/lidar, /pedology, /status
 
 ## Fichiers
-- /app/backend/engines/v8_national/governance.py (v8.2.0 SUPREMACY)
-- /app/backend/engines/v8_national/router.py
-- /app/backend/engines/v8_national/referentials.py
+- /app/frontend/src/hooks/useBionicLayers.js (ALWAYS_ON + HEARTBEAT)
+- /app/frontend/src/pages/MonTerritoireBionicPage.jsx (layer heartbeat)
+- /app/backend/engines/v8_national/router.py (map_layers status)
+- /app/backend/engines/v8_national/governance.py (SUPREMACY v8.2.0)
 - /app/backend/engines/v8_national/exclusion_engine.py
 - /app/backend/engines/v8_national/p1_pipelines.py
-- /app/backend/server.py
-- /app/frontend/src/hooks/useBionicScoringV8.js
-- /app/frontend/src/components/territoire/ScoreV8Badge.jsx
-- /app/frontend/src/components/territoire/ui/TerritoireHeader.jsx
-- /app/frontend/src/pages/MonTerritoireBionicPage.jsx
-- /app/frontend/src/pages/Carte2027Page.jsx
+- /app/backend/engines/v8_national/referentials.py
 
 ## Taches futures
-- P1-ACTIVATION: Cles WCS (MRNF QC, OMNR ON, GeoBC, AB Env, SNB NB)
-- P1-ACTIVATION: Acces IRDA API institutionnel Quebec
-- P2: OSM road/building density
-- P2: ECCC stations meteo provinciales
-
+- P1: Cles WCS + IRDA API reelles
+- P2: OSM + ECCC
 FIN DU DOCUMENT

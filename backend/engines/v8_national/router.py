@@ -269,9 +269,17 @@ async def referentials():
 async def v8_status():
     return {
         "engine": "V8-NATIONAL",
-        "version": "8.1.0-preview",
+        "version": "8.2.0-governance",
         "status": "OPERATIONNEL",
-        "mode": "PREVIEW",
+        "mode": "GOVERNANCE_CONTROLLED",
+        "map_layers": {
+            "preset": "ALWAYS_ON",
+            "persistence": True,
+            "heartbeat_ms": 5000,
+            "always_on": ["habitats", "repos", "rut", "trajets", "corridors", "ensoleillement",
+                          "peuplements", "affuts", "pentes", "orientation", "altitude", "eau", "hydro", "ndvi"],
+            "forced_toggles": ["zones", "corridors", "points", "heatmap", "wind"],
+        },
         "endpoints": ["/biome-profile", "/species-profile", "/score", "/referentials", "/status"],
         "referentials": {
             "biomes": len(BIOMES), "wildlife_regimes": len(WILDLIFE_REGIMES),
@@ -281,5 +289,6 @@ async def v8_status():
         "score_components": 10,
         "integrations": ["SPATIAL-V7.2", "NUTRITION-V7.2", "CANADA-V7.2", "ECCC", "Open-Meteo", "EXCLUSION-ENGINE-V8"],
         "exclusion_engine": "V8.1.0 — 22 criteres",
+        "governance": "V8.2.0 — MASTER-SWITCH-SUPREMACY",
         "dataVersion": "V8",
     }

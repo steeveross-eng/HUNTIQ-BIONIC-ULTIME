@@ -584,12 +584,24 @@ const MonTerritoireBionicPage = () => {
   const [corridorV10Data, setCorridorV10Data] = useState(null); // CORRIDORS-V10 niveau distribution
   const [minPercentageFilter, setMinPercentageFilter] = useState(30);
   
-  // STEEVE-MAX UX: Contrôles couches et points chauds
+  // STEEVE-MAX UX: Controles couches et points chauds — MAP-LAYERS-Omega ALWAYS_ON
   const [showZonesLayer, setShowZonesLayer] = useState(true);
   const [showCorridorsLayer, setShowCorridorsLayer] = useState(true);
   const [showPointsLayer, setShowPointsLayer] = useState(true);
   const [pointsChaudsMode, setPointsChaudsMode] = useState(false);
   const [pointsChaudsFilter, setPointsChaudsFilter] = useState('tous');
+
+  // MAP-LAYERS-Omega HEARTBEAT: Re-force les couches principales toutes les 5s
+  useEffect(() => {
+    const layerHeartbeat = setInterval(() => {
+      setShowZonesLayer(true);
+      setShowCorridorsLayer(true);
+      setShowPointsLayer(true);
+      setShowHeatmapV10(true);
+      setShowWindFlow(true);
+    }, 5000);
+    return () => clearInterval(layerHeartbeat);
+  }, []);
 
   // ALIMENTATION-V2: Points nutritionnels + Recommandations
   const [showAlimentationV2, setShowAlimentationV2] = useState(true);
