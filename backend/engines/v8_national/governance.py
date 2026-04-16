@@ -1,22 +1,27 @@
 """
-V8-GOVERNANCE — Master Switch Admin Premium
-=============================================
-V8-PREVIEW-Omega — GOVERNANCE-LOCK
+V8-GOVERNANCE — Master Switch Admin Premium SUPREMACY
+======================================================
+GOVERNANCE-Omega — MASTER-SWITCH-SUPREMACY + POST-PREVIEW-LOCKDOWN
 
-Seul le Master Switch Admin Premium (Steeve) peut activer PREVIEW/PUBLIC.
-Aucun module, moteur, pipeline ou commande ne peut modifier le mode
-sans autorisation explicite via ce module.
+REGLE ABSOLUE: Le Master Switch Admin Premium (Commandant Steeve-Max)
+est l'UNIQUE autorite capable d'activer PREVIEW/PUBLIC.
 
-Etats possibles:
-  LOCKED    — V8 construit, non accessible utilisateurs (defaut)
-  PREVIEW   — V8 accessible en mode preview (admin premium seulement)
-  PUBLIC    — V8 accessible a tous les utilisateurs
+POST-PREVIEW LOCKDOWN:
+  - Defaut systeme = LOCKED (JAMAIS PREVIEW/PUBLIC au boot)
+  - Score V8 retourne 0 + engine=V8-GOVERNANCE-LOCKED quand LOCKED
+  - TERRITOIRE/CARTE-2027 affichent PREVIEW TAG mais INACTIF quand LOCKED
+  - ZERO activation automatique, ZERO contournement API
 
-Authority: COMMANDANT STEEVE-MAX exclusivement.
+Etats:
+  LOCKED  — V8 construit, ZERO acces (defaut systeme)
+  PREVIEW — Admin premium seulement (activation Steeve requise)
+  PUBLIC  — Tous utilisateurs (activation Steeve requise)
+
+Authority: COMMANDANT STEEVE-MAX — admin@huntiq.com — EXCLUSIVEMENT.
 """
 import logging
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException, Body
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
@@ -31,13 +36,14 @@ router = APIRouter(prefix="/api/v8/governance", tags=["V8 Governance"])
 GOVERNANCE_COLLECTION = "v8_governance"
 GOVERNANCE_DOC_ID = "master_switch"
 
-# Etat par defaut en memoire (fallback si MongoDB indisponible)
+# MASTER SWITCH SUPREMACY: Defaut = LOCKED (POST-PREVIEW LOCKDOWN)
 _DEFAULT_STATE = {
-    "mode": "PREVIEW",
+    "mode": "LOCKED",
     "authority": "COMMANDANT_STEEVE_MAX",
-    "activated_by": "admin@huntiq.com",
+    "activated_by": "SYSTEM_BOOT",
     "activated_at": "2026-04-16T00:00:00Z",
-    "lock_version": "8.1.0",
+    "lock_version": "8.2.0",
+    "lockdown_reason": "POST-PREVIEW-LOCKDOWN — Activation explicite requise via Master Switch",
 }
 
 
@@ -67,17 +73,26 @@ async def _is_admin_premium(user: UserWithRole) -> bool:
 async def governance_state(
     db: AsyncIOMotorDatabase = Depends(get_camera_db),
 ):
-    """Etat actuel du Master Switch V8."""
+    """Etat actuel du Master Switch V8 — SUPREMACY."""
     state = await _get_governance_state(db)
+    mode = state.get("mode", "LOCKED")
     return {
-        "mode": state.get("mode", "LOCKED"),
+        "mode": mode,
+        "master_switch": "LOCKED" if mode == "LOCKED" else "ACTIVE",
         "authority": state.get("authority"),
         "activated_by": state.get("activated_by"),
         "activated_at": state.get("activated_at"),
-        "lock_version": state.get("lock_version"),
+        "lock_version": state.get("lock_version", "8.2.0"),
+        "lockdown_reason": state.get("lockdown_reason"),
         "allowed_modes": ["LOCKED", "PREVIEW", "PUBLIC"],
+        "supremacy_rules": [
+            "AUCUN module ne peut activer PREVIEW/PUBLIC sans Master Switch",
+            "Defaut systeme = LOCKED (POST-PREVIEW LOCKDOWN)",
+            "Authority = COMMANDANT_STEEVE_MAX exclusivement",
+            "Toute tentative hors Master Switch = REFUS AUTOMATIQUE",
+        ],
         "governance_policy": "Activation PREVIEW/PUBLIC reservee exclusivement au Master Switch Admin Premium (Commandant Steeve-Max)",
-        "engine": "V8-GOVERNANCE",
+        "engine": "V8-GOVERNANCE-SUPREMACY",
         "dataVersion": "V8",
     }
 
@@ -88,18 +103,19 @@ async def activate_mode(
     user: UserWithRole = Depends(get_current_user_with_role),
     db: AsyncIOMotorDatabase = Depends(get_camera_db),
 ):
-    """Activer un mode V8 — RESERVE Admin Premium (Steeve)."""
-    # Verification autorite
+    """Activer un mode V8 — RESERVE EXCLUSIF Master Switch Admin Premium (Steeve)."""
+    # SUPREMACY CHECK
     if not await _is_admin_premium(user):
-        logger.warning(f"[GOVERNANCE] REFUS activation {mode} par {user.email} (role={user.role})")
+        logger.warning(f"[GOVERNANCE-SUPREMACY] REFUS ABSOLU activation {mode} par {user.email} (role={user.role})")
         raise HTTPException(
             status_code=403,
             detail={
-                "error": "GOVERNANCE_LOCK_VIOLATION",
-                "message": "Activation PREVIEW/PUBLIC reservee exclusivement au Master Switch Admin Premium",
-                "required_role": "admin",
+                "error": "MASTER_SWITCH_SUPREMACY_VIOLATION",
+                "message": "Activation PREVIEW/PUBLIC reservee EXCLUSIVEMENT au Master Switch Admin Premium (Commandant Steeve-Max)",
+                "required_authority": "COMMANDANT_STEEVE_MAX",
+                "your_email": user.email,
                 "your_role": user.role,
-                "authority": "COMMANDANT_STEEVE_MAX",
+                "action": "REFUS_AUTOMATIQUE",
             }
         )
 
@@ -107,12 +123,17 @@ async def activate_mode(
         raise HTTPException(status_code=400, detail=f"Mode invalide: {mode}. Valeurs: LOCKED, PREVIEW, PUBLIC")
 
     now = datetime.now(timezone.utc).isoformat()
+    prev_state = await _get_governance_state(db)
+    prev_mode = prev_state.get("mode", "LOCKED")
+
     update = {
         "mode": mode,
         "authority": "COMMANDANT_STEEVE_MAX",
         "activated_by": user.email,
         "activated_at": now,
-        "lock_version": "8.1.0",
+        "lock_version": "8.2.0",
+        "lockdown_reason": f"Mode {mode} active par Master Switch" if mode != "LOCKED" else "POST-PREVIEW-LOCKDOWN",
+        "previous_mode": prev_mode,
     }
 
     await db[GOVERNANCE_COLLECTION].update_one(
@@ -121,15 +142,26 @@ async def activate_mode(
         upsert=True,
     )
 
-    logger.info(f"[GOVERNANCE] Mode {mode} ACTIVE par {user.email} (authority=COMMANDANT_STEEVE_MAX)")
+    # Audit log
+    await db[GOVERNANCE_COLLECTION + "_audit"].insert_one({
+        "action": "MODE_CHANGE",
+        "from_mode": prev_mode,
+        "to_mode": mode,
+        "by": user.email,
+        "at": now,
+        "authority": "COMMANDANT_STEEVE_MAX",
+    })
+
+    logger.info(f"[GOVERNANCE-SUPREMACY] {prev_mode} -> {mode} par {user.email} (authority=COMMANDANT_STEEVE_MAX)")
 
     return {
         "success": True,
         "mode": mode,
+        "previous_mode": prev_mode,
         "activated_by": user.email,
         "activated_at": now,
-        "message": f"V8 mode {mode} active par autorite COMMANDANT_STEEVE_MAX",
-        "engine": "V8-GOVERNANCE",
+        "message": f"V8 mode {prev_mode} -> {mode} par autorite COMMANDANT_STEEVE_MAX",
+        "engine": "V8-GOVERNANCE-SUPREMACY",
     }
 
 
@@ -140,20 +172,26 @@ async def governance_audit(
 ):
     """Audit de gouvernance V8 — acces admin uniquement."""
     if not await _is_admin_premium(user):
-        raise HTTPException(status_code=403, detail="Acces audit reserve admin premium")
+        raise HTTPException(status_code=403, detail="Acces audit reserve Master Switch Admin Premium")
 
     state = await _get_governance_state(db)
+
+    # Fetch audit trail
+    audit_cursor = db[GOVERNANCE_COLLECTION + "_audit"].find({}, {"_id": 0}).sort("at", -1).limit(20)
+    audit_trail = await audit_cursor.to_list(length=20)
+
     return {
         "current_state": state,
-        "governance_rules": [
-            "1. Aucun module ne peut activer PREVIEW/PUBLIC sans Master Switch",
-            "2. Master Switch = Admin Premium exclusivement",
-            "3. Authority = COMMANDANT_STEEVE_MAX",
-            "4. Tout changement de mode est logge et auditable",
-            "5. Mode LOCKED = V8 construit mais non accessible",
-            "6. Mode PREVIEW = accessible admin premium seulement",
-            "7. Mode PUBLIC = accessible tous utilisateurs",
+        "audit_trail": audit_trail,
+        "supremacy_rules": [
+            "1. AUCUN module ne peut activer PREVIEW/PUBLIC sans Master Switch",
+            "2. Master Switch = COMMANDANT_STEEVE_MAX exclusivement",
+            "3. Defaut systeme = LOCKED (POST-PREVIEW LOCKDOWN)",
+            "4. Tout changement de mode est logge dans audit_trail",
+            "5. Score V8 retourne 0 quand LOCKED",
+            "6. ZERO activation automatique PREVIEW/PUBLIC",
+            "7. ZERO contournement API possible",
         ],
-        "engine": "V8-GOVERNANCE",
+        "engine": "V8-GOVERNANCE-SUPREMACY",
         "dataVersion": "V8",
     }
