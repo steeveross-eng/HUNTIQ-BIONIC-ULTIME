@@ -11,26 +11,29 @@ import { useEffect, useRef, useCallback } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 
+// V8-ULTIME-ALIGNEMENT-V6: Couleurs institutionnelles V6
 const ZONE_COLORS = {
-  alimentation: { stroke: '#4CAF50', label: 'Alimentation' },
-  repos:        { stroke: '#2196F3', label: 'Repos' },
-  rut:          { stroke: '#FF9800', label: 'Rut' },
-  affuts:       { stroke: '#F44336', label: 'Affuts' },
-  eau:          { stroke: '#00BCD4', label: 'Eau' },
+  alimentation: { stroke: '#2E7D32', label: 'Alimentation', weight: 2.0 },
+  repos:        { stroke: '#1565C0', label: 'Repos', weight: 1.8 },
+  rut:          { stroke: '#C62828', label: 'Rut', weight: 2.5 },
+  affuts:       { stroke: '#F44336', label: 'Affuts', weight: 2.0 },
+  eau:          { stroke: '#29B6F6', label: 'Eau', weight: 1.5 },
 };
 
+// V8-ULTIME-ALIGNEMENT-V6: Corridors style "veines animales" (opacite 100%, poids V6)
 const CORRIDOR_STYLES = {
-  critique: { color: '#FF0000', weight: 4.0, opacity: 0.85, label: 'Critique' },
-  majeur:   { color: '#CC0000', weight: 3.5, opacity: 0.85, label: 'Majeur' },
-  fort:     { color: '#FF8C00', weight: 3.0, opacity: 0.85, label: 'Fort' },
-  modere:   { color: '#FFD700', weight: 2.5, opacity: 0.85, label: 'Modere' },
-  faible:   { color: '#9E9E9E', weight: 2.0, opacity: 0.85, label: 'Faible' },
+  critique: { color: '#FF0000', weight: 3.0, opacity: 1.0, label: 'Critique' },
+  majeur:   { color: '#CC0000', weight: 2.5, opacity: 1.0, label: 'Majeur' },
+  fort:     { color: '#FF8C00', weight: 2.0, opacity: 1.0, label: 'Fort' },
+  modere:   { color: '#FFD700', weight: 1.5, opacity: 1.0, label: 'Modere' },
+  faible:   { color: '#9E9E9E', weight: 1.2, opacity: 1.0, label: 'Faible' },
 };
 
+// V8-ULTIME-ALIGNEMENT-V6: Affuts jaune institutionnel #FDD835, ZERO halo
 const AFFUT_QUALITY = {
-  optimal:    { color: '#10B981', radius: 8, halo: 14 },
-  bon:        { color: '#F59E0B', radius: 7, halo: 12 },
-  acceptable: { color: '#EF4444', radius: 6, halo: 10 },
+  optimal:    { color: '#FDD835', radius: 8 },
+  bon:        { color: '#FDD835', radius: 7 },
+  acceptable: { color: '#FDD835', radius: 6 },
 };
 
 const BionicLayersV8 = ({
@@ -69,7 +72,7 @@ const BionicLayersV8 = ({
         if (z.polygon && z.polygon.length >= 4) {
           const poly = L.polygon(z.polygon, {
             color: colors.stroke,
-            weight: 2.5,
+            weight: colors.weight || 2.0,
             opacity: 1.0,
             fillColor: colors.stroke,
             fillOpacity: z.excluded ? 0.15 : 0,
@@ -90,8 +93,8 @@ const BionicLayersV8 = ({
             `<b style="color:${colors.stroke}">${colors.label}</b><br><span style="font-size:10px">Score: ${z.score}/100</span>${terrainInfo}${exclInfo}`,
             { sticky: true, opacity: 0.92 }
           );
-          poly.on('mouseover', function () { this.setStyle({ weight: 4, fillOpacity: 0.08 }); });
-          poly.on('mouseout', function () { this.setStyle({ weight: 2.5, fillOpacity: 0 }); });
+          poly.on('mouseover', function () { this.setStyle({ weight: (colors.weight || 2.0) + 1.5, fillOpacity: 0.08 }); });
+          poly.on('mouseout', function () { this.setStyle({ weight: colors.weight || 2.0, fillOpacity: z.excluded ? 0.15 : 0 }); });
           group.addLayer(poly);
         }
       });
@@ -106,17 +109,7 @@ const BionicLayersV8 = ({
         const style = CORRIDOR_STYLES[c.type] || CORRIDOR_STYLES.faible;
         const path = c.path || [[c.start.lat, c.start.lng], [c.end.lat, c.end.lng]];
 
-        // Glow for critique + majeur
-        if (c.type === 'critique' || c.type === 'majeur') {
-          L.polyline(path, {
-            color: style.color, weight: style.weight + 5, opacity: 0.12,
-            lineCap: 'round', lineJoin: 'round', interactive: false,
-          }).addTo(group);
-          L.polyline(path, {
-            color: style.color, weight: style.weight + 2.5, opacity: 0.25,
-            lineCap: 'round', lineJoin: 'round', interactive: false,
-          }).addTo(group);
-        }
+        // V8-ALIGNEMENT-V6: ZERO glow, ZERO halo — style "veines animales" pur
 
         const line = L.polyline(path, {
           color: style.color,
@@ -143,17 +136,12 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ AFFUTS ENRICHIS (icone + halo + orientation) ═══
+    // ═══ AFFUTS V6 INSTITUTIONNEL (jaune #FDD835, ZERO halo) ═══
     if (showAffuts && affuts.length > 0) {
       affuts.forEach(a => {
         const q = AFFUT_QUALITY[a.quality] || AFFUT_QUALITY.acceptable;
 
-        // Halo discret
-        L.circleMarker([a.lat, a.lng], {
-          radius: q.halo, color: 'transparent',
-          fillColor: q.color, fillOpacity: 0.12,
-          weight: 0, interactive: false,
-        }).addTo(group);
+        // V8-ALIGNEMENT-V6: ZERO halo — affut direct
 
         // Affut marker (triangle oriented by wind)
         const orientRad = (a.orientation_deg || 0) * Math.PI / 180;
