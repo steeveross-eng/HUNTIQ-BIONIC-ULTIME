@@ -747,6 +747,14 @@ try:
 except Exception as e:
     logger.warning(f"V8 P1 Pipelines not loaded: {e}")
 
+# V8-GOVERNANCE — Master Switch Admin Premium
+try:
+    from engines.v8_national.governance import router as governance_router
+    app.include_router(governance_router)
+    logger.info("✓ V8-GOVERNANCE registered (/api/v8/governance) — Master Switch COMMANDANT_STEEVE_MAX")
+except Exception as e:
+    logger.warning(f"V8 Governance not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

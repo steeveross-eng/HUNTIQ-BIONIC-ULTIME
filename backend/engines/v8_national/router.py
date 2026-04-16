@@ -94,6 +94,22 @@ async def national_score(
 ):
     """Score V8 national multi-regime — integre biome + neige + nutrition + spatial + temporal."""
     start = time.time()
+
+    # GOVERNANCE CHECK — V8 doit etre en mode PREVIEW ou PUBLIC
+    try:
+        from engines.v8_national.governance import _get_governance_state
+        gov = await _get_governance_state(db)
+        gov_mode = gov.get("mode", "LOCKED")
+        if gov_mode == "LOCKED":
+            return {
+                "score_v8": 0, "prediction": "locked",
+                "message": "V8 en mode LOCKED — Activation requise via Master Switch Admin Premium",
+                "governance_mode": gov_mode,
+                "dataVersion": "V8", "engine": "V8-GOVERNANCE-LOCKED",
+            }
+    except Exception:
+        gov_mode = "PREVIEW"  # Fallback safe si governance indisponible
+
     now = datetime.now(timezone.utc)
     m = month or now.month
     h = hour or now.hour
