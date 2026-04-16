@@ -763,6 +763,14 @@ try:
 except Exception as e:
     logger.warning(f"V8 Map Bundle not loaded: {e}")
 
+# V8-PHASE-A — Relocalisation + Salines (sandbox isolee)
+try:
+    from engines.v8_national.phase_a_engines import router as phase_a_router
+    app.include_router(phase_a_router)
+    logger.info("✓ V8-PHASE-A registered (/api/v8/map) — Relocalisation + Salines (sandbox)")
+except Exception as e:
+    logger.warning(f"V8 Phase A not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")
