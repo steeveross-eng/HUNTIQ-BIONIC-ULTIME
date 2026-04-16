@@ -1,28 +1,30 @@
 # HUNTIQ V8 — PRD
-## V8-ULTIME-PROTOCOLE-V6-ABSOLU-Omega-FINAL
-**MAJ:** 2026-04-16 | **16 CORRECTIONS V6** | **CERTIFICATION SUSPENDUE**
+## V8-VERIFICATION-DONNEES-CORRIDORS-V6 — DIAGNOSTIC COMPLET
+**MAJ:** 2026-04-16 | **RAPPORT TECHNIQUE** | **CERTIFICATION SUSPENDUE**
 
-## Protocole V6 Absolu — Restauration Complete
-16 corrections appliquees pour conformite V6 exacte:
-- Corridors: couleur UNIQUE #FF8F00, epaisseurs 1.2/2.0/3.0, smoothFactor 0
-- Zones: fillOpacity 0, lineCap butt, lineJoin miter, smoothFactor 0, 14-20 vertices
-- Affuts: #FDD835 unique, fillOpacity 1.0, ZERO halo, smoothFactor 0
-- ZERO hover/mouseover, ZERO glow, ZERO variation dynamique, ZERO multicolore
-- Z-order strict: zones dessous > corridors milieu > affuts dessus
+## Diagnostic V6 vs V8 — Preuves Techniques
 
-## Architecture V8 Pure
-### Backend
-- phase_a_engines.py — Relocalisation + Salines
-- phase_b_engines.py — Zones/Corridors/Affuts terrain-aware (V6-conforme 0.5-2km)
-- phase_c_engines.py — Thermal + Scenario + Multi-Engine
-- map_bundle.py — Bundle consolide + wind_deg param
+### 1. DONNEES SOURCES V6
+- **GPS/Telemetrie animale**: INEXISTANTES. V6 n'a jamais utilise de donnees GPS.
+- **Zones V6**: CERCLES PROCEDURAUX 600m (36 points reguliers via _make_circle_coords)
+- **Corridors V6**: A* pathfinding procedural sur grille terrain derivee des zones
+- **Affuts V6**: Derives des centroides de zones, position procedurale
+- **Sources externes V6**: OSM/Overpass (exclusions), SRTM DEM (fallback heuristique)
+- Les sources externes servaient aux EXCLUSIONS, pas a la geometrie
 
-### Frontend
-- BionicLayersV8.jsx — PROTOCOLE V6 ABSOLU (zero deviation)
-- PhaseALayerV8.jsx + PhaseAPanelV8.jsx + PhaseCPanelV8.jsx — Panneaux V8
-- useMapBundleV8.js — wind_deg transmis
+### 2. ECART REEL V6↔V8
+- V6 zones = cercles 600m reguliers → V8 = polygones 14-20 vertices irreguliers (V8 PLUS organique)
+- V6 corridors = A* sur grille terrain → V8 = Bezier entre points (ECART: pas de pathfinding)
+- V6 affuts = centroides zones → V8 = oppose au vent + corridor bonus
 
-## CERTIFICATION: SUSPENDUE — EN ATTENTE ORDRE COMMANDANT
+### 3. CORRECTION POSSIBLE
+- Reimplanter A* de corridor_10x.py dans V8 pour corridors terrain-aware reels
+
+## Architecture V8
+- phase_b_engines.py: generateurs terrain-aware (scoring, exclusions, Bezier)
+- corridor_10x.py: A* pathfinding V6 (existe, non integre dans V8)
+
+## CERTIFICATION: SUSPENDUE — EN ATTENTE DECISION COMMANDANT
 
 ## Credentials
 - Admin: admin@huntiq.com / Saturn5858*
