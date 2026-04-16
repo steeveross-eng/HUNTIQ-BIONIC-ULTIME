@@ -35,6 +35,7 @@ import useSharedWeather from '@/hooks/useSharedWeather';
 import useBionicScoring from '@/hooks/useBionicScoring';
 import useBionicScoringV8 from '@/hooks/useBionicScoringV8';
 import useMapBundleV8 from '@/hooks/useMapBundleV8';
+import usePhaseAV8 from '@/hooks/usePhaseAV8';
 import useBionicStore from '@/stores/useBionicStore';
 import { enforceOverlayCompliance, enforcePositionLock, enforceRenderGuard, enforceLayoutFreeze } from '@/components/territoire/map/BCE4X_UIShield';
 import { useUserData } from '@/hooks/useUserData';
@@ -48,6 +49,7 @@ import NutritionPointDetailPanel from '@/components/territoire/NutritionPointDet
 import StandDetailPanel from '@/components/territoire/StandDetailPanel';
 import PlacesSidePanel from '@/components/territoire/PlacesSidePanel';
 import IntelligenceDashboard from '@/components/territoire/IntelligenceDashboard';
+import PhaseAPanelV8 from '@/components/territoire/PhaseAPanelV8';
 import WeatherPanel from '@/components/territoire/ui/WeatherPanel';
 import useSpatialClipping from '@/hooks/useSpatialClipping';
 import useCameraLayer from '@/hooks/useCameraLayer';
@@ -654,6 +656,15 @@ const MonTerritoireBionicPage = () => {
     bundleData: bundleDataV8, loading: bundleV8Loading, fetchBundle: fetchBundleV8,
   } = useMapBundleV8();
 
+  // ═══ V8-FRONTEND-PHASE-A-Omega: Relocalisation + Salines ═══
+  const {
+    relocData: phaseARelocData, salinesData: phaseASalinesData,
+    loading: phaseALoading, error: phaseAError, fetchPhaseA,
+    relocalisations: phaseARelocalisations, siteActuel: phaseASiteActuel,
+    salines: phaseASalines,
+  } = usePhaseAV8();
+  const [showPhaseA, setShowPhaseA] = useState(false);
+
   // STEEVE-MAX V3: Sous-éléments granulaires par couche
   const [zoneSubFilters, setZoneSubFilters] = useState({
     alimentation: true, repos: true, rut: true, affuts: true, eau: true,
@@ -882,6 +893,18 @@ const MonTerritoireBionicPage = () => {
   const sharedWeather = useSharedWeather(weatherCoords[0], weatherCoords[1], { autoFetch: true });
   
   const { scores, calculateHybridScores, globalScore } = useBionicScoring();
+
+  // ═══ V8-PHASE-A: Fetch Relocalisation+Salines quand Phase A active + position change ═══
+  useEffect(() => {
+    if (!showPhaseA) return;
+    const lat = waypointCenter?.lat || currentMapCenter?.lat;
+    const lng = waypointCenter?.lng || currentMapCenter?.lng;
+    if (lat && lng) {
+      const sp = selectedSpecies === 'tous' ? 'cerf' : selectedSpecies;
+      const windDeg = windInfo?.directionDeg || 180;
+      fetchPhaseA(lat, lng, sp, undefined, windDeg);
+    }
+  }, [showPhaseA, waypointCenter?.lat, waypointCenter?.lng, currentMapCenter?.lat, currentMapCenter?.lng, selectedSpecies, windInfo?.directionDeg, fetchPhaseA]);
   
   // Hook pour les zones favorites et alertes
   const {
@@ -1193,6 +1216,7 @@ const MonTerritoireBionicPage = () => {
         privacyMode={privacyMode} setPrivacyMode={setPrivacyMode}
         activeWaypoints={activeWaypoints} savedPlaces={savedPlaces}
         selectedWaypointForZones={selectedWaypointForZones}
+        showPhaseA={showPhaseA} setShowPhaseA={setShowPhaseA}
       />
 
       {/* ════════════════════════════════════════════════════════════════
@@ -1348,6 +1372,10 @@ const MonTerritoireBionicPage = () => {
               trajectories={alphaTrajectories}
               showTrajectoriesLayer={true}
               bundleDataV8={bundleDataV8}
+              showPhaseA={showPhaseA}
+              phaseARelocalisations={phaseARelocalisations}
+              phaseASalines={phaseASalines}
+              phaseASiteActuel={phaseASiteActuel}
             />
           </MapContainer>
 
@@ -1591,6 +1619,22 @@ const MonTerritoireBionicPage = () => {
           />
         )}
       </div>
+
+      {/* ═══ PHASE A V8 — Panneau lateral Relocalisation + Salines ═══ */}
+      {showPhaseA && (
+        <PhaseAPanelV8
+          relocData={phaseARelocData}
+          salinesData={phaseASalinesData}
+          loading={phaseALoading}
+          error={phaseAError}
+          onClose={() => setShowPhaseA(false)}
+          onNavigateToPosition={(lat, lon) => {
+            if (mapRef.current) {
+              mapRef.current.setView([lat, lon], 15);
+            }
+          }}
+        />
+      )}
 
       {/* ═══ PANNEAU RECOMMANDATIONS NUTRITIONNELLES — ALIMENTATION-V2 (composant extrait) ═══ */}
       {showNutritionPanel && alimentationV2Data && (

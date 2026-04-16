@@ -30,6 +30,7 @@ import CameraMarkersLayer from '@/components/territoire/CameraMarkersLayer';
 import AlphaHotspotsLayer from '@/components/territoire/AlphaHotspotsLayer';
 import TrajectoriesLayer from '@/components/territoire/TrajectoriesLayer';
 import ContaminationOverlayLayer from '@/components/territoire/ContaminationOverlayLayer';
+import PhaseALayerV8 from '@/components/territoire/PhaseALayerV8';
 // DELETE-LEGACY-V6: AccessRouteV6Layer SUPPRIME — remplace par SPATIAL-ENGINE-V7 amenagement
 // import AccessRouteV6Layer from '@/components/territoire/AccessRouteV6Layer';
 import { LeafletShield, useRenderGuard, createLoadTimer } from '@/components/territoire/map/BCE4X_UIShield';
@@ -137,6 +138,13 @@ const MapContentInner = React.memo(({
   showTrajectoriesLayer,
   // V8 Bundle unified layers
   bundleDataV8,
+  // Phase A V8 — Relocalisation + Salines
+  showPhaseA,
+  phaseARelocalisations,
+  phaseASalines,
+  phaseASiteActuel,
+  onPhaseARelocClick,
+  onPhaseASalineClick,
 }) => (
   <>
     <EcoforestryLayers
@@ -202,6 +210,20 @@ const MapContentInner = React.memo(({
         showAffuts={showPointsLayer !== false}
         enabled={showCorridors}
         onDataLoaded={onHeatmapDataLoaded}
+      />
+    )}
+
+    {/* ═══ PHASE A V8 — Relocalisation + Salines (couche activable) ═══ */}
+    {showPhaseA && selectedWaypointForZones && (
+      <PhaseALayerV8
+        relocalisations={phaseARelocalisations || []}
+        salines={phaseASalines || []}
+        siteActuel={phaseASiteActuel}
+        showReloc={true}
+        showSalines={true}
+        enabled={true}
+        onRelocClick={onPhaseARelocClick}
+        onSalineClick={onPhaseASalineClick}
       />
     )}
 
