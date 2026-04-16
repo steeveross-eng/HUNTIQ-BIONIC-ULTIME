@@ -219,6 +219,11 @@ async def map_bundle(
     corridors = generate_corridors_ta(lat, lon, species, m, h)
     affuts = generate_affuts_ta(lat, lon, species, zones, corridors, wind_deg=180)
 
+    # Phase C — Thermal + Multi-Engine (inline dans le bundle)
+    from engines.v8_national.phase_c_engines import _thermal_model, _multi_engine_score
+    thermal = _thermal_model(lat, lon, m, h)
+    multi = _multi_engine_score(lat, lon, species, m, h)
+
     biome_data = BIOMES.get(biome_code, {})
 
     # P1 data (optionnel — seulement si include_p1=true)
@@ -251,6 +256,8 @@ async def map_bundle(
         "zones": zones, "zones_count": len(zones),
         "corridors": corridors, "corridors_count": len(corridors),
         "affuts": affuts, "affuts_count": len(affuts),
+        "thermal": thermal,
+        "multi_engine": {"composite_score": multi["composite_score"], "classification": multi["classification"], "breakdown": multi["breakdown"]},
         "biome": {"code": biome_code, "name": biome_data.get("name", biome_code), "dominant_species": biome_data.get("dominant_species", [])},
         "exclusion": {"decision": exclusion["decision"], "reasons": exclusion.get("reasons", []), "severity": exclusion.get("severity", "NONE"), "habitat_score": exclusion.get("habitat_score", 0)},
         "governance_mode": gov_mode,

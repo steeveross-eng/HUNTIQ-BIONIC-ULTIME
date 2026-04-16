@@ -21,7 +21,7 @@ import HuntingPathLayer from '@/components/territoire/HuntingPathLayer';
 import { MapInteractionLayer } from '@/modules/map_interaction';
 import { BIONIC_MODULES } from '@/core/bionic';
 import { PLACE_TYPES } from '@/config/placeTypes';
-import BionicCorridorsV6Layer from '@/components/territoire/BionicCorridorsV6Layer';
+// PURGE-V6-ULTIME: BionicCorridorsV6Layer SUPPRIME — V8 terrain-aware exclusif
 import NutritionPointsLayer from '@/components/territoire/NutritionPointsLayer';
 import ConsolidatedHeatmapLayer from '@/components/territoire/ConsolidatedHeatmapLayer';
 import BionicLayersV8 from '@/components/territoire/BionicLayersV8';
@@ -227,26 +227,8 @@ const MapContentInner = React.memo(({
       />
     )}
 
-    {/* V6 CORRIDORS: Complement GeoJSON (guide pro, affuts enrichis, polygones organiques) */}
-    {selectedWaypointForZones && showCorridors && waypointCenter && (
-      <BionicCorridorsV6Layer
-        center={waypointCenter}
-        species={selectedSpecies}
-        month={new Date().getMonth() + 1}
-        enabled={showCorridors}
-        opacity={0.55}
-        minPercentage={minPercentageFilter}
-        onDataLoaded={onCorridorDataLoaded}
-        showZones={showZonesLayer !== false}
-        showCorridorsLayer={showCorridorsLayer !== false}
-        showPoints={showPointsLayer !== false}
-        pointsChaudsMode={pointsChaudsMode || false}
-        pointsChaudsFilter={pointsChaudsFilter || 'tous'}
-        zoneSubFilters={zoneSubFilters}
-        corridorSubFilters={corridorSubFilters}
-        pointSubFilters={pointSubFilters}
-      />
-    )}
+    {/* PURGE-V6-ULTIME: BionicCorridorsV6Layer SUPPRIME DEFINITIVEMENT */}
+    {/* Zones+Corridors+Affuts rendus exclusivement par BionicLayersV8 (terrain-aware Phase B) */}
 
     {/* ALIMENTATION-V2: Points nutritionnels optimaux dans la zone 2km x 2km */}
     {selectedWaypointForZones && showAlimentationV2 && waypointCenter && (

@@ -50,6 +50,7 @@ import StandDetailPanel from '@/components/territoire/StandDetailPanel';
 import PlacesSidePanel from '@/components/territoire/PlacesSidePanel';
 import IntelligenceDashboard from '@/components/territoire/IntelligenceDashboard';
 import PhaseAPanelV8 from '@/components/territoire/PhaseAPanelV8';
+import PhaseCPanelV8 from '@/components/territoire/PhaseCPanelV8';
 import WeatherPanel from '@/components/territoire/ui/WeatherPanel';
 import useSpatialClipping from '@/hooks/useSpatialClipping';
 import useCameraLayer from '@/hooks/useCameraLayer';
@@ -664,6 +665,7 @@ const MonTerritoireBionicPage = () => {
     salines: phaseASalines,
   } = usePhaseAV8();
   const [showPhaseA, setShowPhaseA] = useState(false);
+  const [showPhaseC, setShowPhaseC] = useState(false);
 
   // STEEVE-MAX V3: Sous-éléments granulaires par couche
   const [zoneSubFilters, setZoneSubFilters] = useState({
@@ -1217,6 +1219,7 @@ const MonTerritoireBionicPage = () => {
         activeWaypoints={activeWaypoints} savedPlaces={savedPlaces}
         selectedWaypointForZones={selectedWaypointForZones}
         showPhaseA={showPhaseA} setShowPhaseA={setShowPhaseA}
+        showPhaseC={showPhaseC} setShowPhaseC={setShowPhaseC}
       />
 
       {/* ════════════════════════════════════════════════════════════════
@@ -1633,6 +1636,15 @@ const MonTerritoireBionicPage = () => {
               mapRef.current.setView([lat, lon], 15);
             }
           }}
+        />
+      )}
+
+      {/* ═══ PHASE C V8 — Panneau Thermal + Scenario + Multi-Engine ═══ */}
+      {showPhaseC && (
+        <PhaseCPanelV8
+          waypointCenter={waypointCenter}
+          selectedSpecies={selectedSpecies}
+          onClose={() => setShowPhaseC(false)}
         />
       )}
 
