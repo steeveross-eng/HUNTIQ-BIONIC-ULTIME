@@ -35,7 +35,7 @@ const getWindScoreLabel = (score) => {
   return 'Mauvais';
 };
 
-const WeatherPanel = memo(({ wind, weather, loading, huntingScore }) => {
+const WeatherPanel = memo(({ wind, weather, loading, huntingScore, scoreV8 }) => {
   if (!wind && !weather) return null;
 
   const windSpeed = wind?.speed;
@@ -196,8 +196,22 @@ const WeatherPanel = memo(({ wind, weather, loading, huntingScore }) => {
         </div>
       )}
 
-      {/* Hunting Score v3 */}
-      {huntingScore && (
+      {/* Score V8 National (prioritaire) ou Score Chasse V7 (fallback) */}
+      {scoreV8 && scoreV8.score_v8 > 0 ? (
+        <div style={{
+          marginTop: '6px', paddingTop: '6px',
+          borderTop: '1px solid rgba(100, 160, 180, 0.15)',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        }}>
+          <span style={{ fontSize: '9px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Score V8</span>
+          <span style={{
+            fontSize: '11px', fontWeight: 700,
+            color: scoreV8.score_v8 >= 65 ? '#22c55e' : scoreV8.score_v8 >= 50 ? '#eab308' : '#f97316',
+          }}>
+            {Math.round(scoreV8.score_v8)}/100 — {scoreV8.prediction || 'V8'}
+          </span>
+        </div>
+      ) : huntingScore && (
         <div style={{
           marginTop: '6px', paddingTop: '6px',
           borderTop: '1px solid rgba(100, 160, 180, 0.15)',

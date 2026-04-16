@@ -34,6 +34,7 @@ import useBionicWeather from '@/hooks/useBionicWeather';
 import useSharedWeather from '@/hooks/useSharedWeather';
 import useBionicScoring from '@/hooks/useBionicScoring';
 import useBionicScoringV8 from '@/hooks/useBionicScoringV8';
+import useMapBundleV8 from '@/hooks/useMapBundleV8';
 import useBionicStore from '@/stores/useBionicStore';
 import { enforceOverlayCompliance, enforcePositionLock, enforceRenderGuard, enforceLayoutFreeze } from '@/components/territoire/map/BCE4X_UIShield';
 import { useUserData } from '@/hooks/useUserData';
@@ -648,6 +649,11 @@ const MonTerritoireBionicPage = () => {
     scoreV8, biomeProfile, loading: scoreV8Loading, fetchScoreV8,
   } = useBionicScoringV8();
 
+  // ═══ UI-V8-FORCE-Omega: Bundle V8 unique (zones+corridors+heatmap) ═══
+  const {
+    bundleData: bundleDataV8, loading: bundleV8Loading, fetchBundle: fetchBundleV8,
+  } = useMapBundleV8();
+
   // STEEVE-MAX V3: Sous-éléments granulaires par couche
   const [zoneSubFilters, setZoneSubFilters] = useState({
     alimentation: true, repos: true, rut: true, affuts: true, eau: true,
@@ -711,8 +717,9 @@ const MonTerritoireBionicPage = () => {
     if (lat && lng) {
       const sp = selectedSpecies === 'tous' ? 'cerf' : selectedSpecies;
       fetchScoreV8(lat, lng, sp);
+      fetchBundleV8(lat, lng, sp);
     }
-  }, [waypointCenter?.lat, waypointCenter?.lng, currentMapCenter?.lat, currentMapCenter?.lng, selectedSpecies, fetchScoreV8]);
+  }, [waypointCenter?.lat, waypointCenter?.lng, currentMapCenter?.lat, currentMapCenter?.lng, selectedSpecies, fetchScoreV8, fetchBundleV8]);
   
   // Les exclusions sont gérées 100% backend. Ces variables sont gardées pour compatibilité UI.
   const terrainExclusions = [];
@@ -1340,6 +1347,7 @@ const MonTerritoireBionicPage = () => {
               showAlphaLayer={true}
               trajectories={alphaTrajectories}
               showTrajectoriesLayer={true}
+              bundleDataV8={bundleDataV8}
             />
           </MapContainer>
 
@@ -1447,6 +1455,7 @@ const MonTerritoireBionicPage = () => {
             weather={sharedWeather.weather}
             loading={sharedWeather.loading}
             huntingScore={sharedWeather.huntingScore}
+            scoreV8={scoreV8}
           />
 
           {/* ── Bouton + Waypoint déplacé dans la toolbar (Passe 3 UX) ── */}

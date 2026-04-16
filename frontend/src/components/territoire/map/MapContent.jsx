@@ -24,6 +24,7 @@ import { PLACE_TYPES } from '@/config/placeTypes';
 import BionicCorridorsV6Layer from '@/components/territoire/BionicCorridorsV6Layer';
 import NutritionPointsLayer from '@/components/territoire/NutritionPointsLayer';
 import ConsolidatedHeatmapLayer from '@/components/territoire/ConsolidatedHeatmapLayer';
+import BionicLayersV8 from '@/components/territoire/BionicLayersV8';
 import StandsMapLayer from '@/components/territoire/StandsMapLayer';
 import CameraMarkersLayer from '@/components/territoire/CameraMarkersLayer';
 import AlphaHotspotsLayer from '@/components/territoire/AlphaHotspotsLayer';
@@ -134,6 +135,8 @@ const MapContentInner = React.memo(({
   // Trajectories layer
   trajectories,
   showTrajectoriesLayer,
+  // V8 Bundle unified layers
+  bundleDataV8,
 }) => (
   <>
     <EcoforestryLayers
@@ -189,19 +192,22 @@ const MapContentInner = React.memo(({
 
     <ShootingZones zones={[]} currentUserId={userId} dangerAlerts={[]} members={[]} onZoneClick={null} showOwnZone={true} showOtherZones={true} showDangerIndicators={true} />
 
-    {/* SCORE CONSOLIDÉ V6: Data-only (100% transparent, zero rendu graphique) */}
-    {selectedWaypointForZones && showHeatmapV10 && waypointCenter && (
-      <ConsolidatedHeatmapLayer
+    {/* ═══ V8 UNIFIED LAYERS — UI-V8-FORCE-Omega ═══ */}
+    {/* Source UNIQUE: /api/v8/map/bundle — ZERO V7 — GOVERNANCE-INDEPENDENT */}
+    {selectedWaypointForZones && waypointCenter && bundleDataV8 && (
+      <BionicLayersV8
+        bundleData={bundleDataV8}
         center={waypointCenter}
-        species={selectedSpecies}
-        month={new Date().getMonth() + 1}
-        enabled={showHeatmapV10}
+        showZones={showZonesLayer !== false}
+        showCorridors={showCorridorsLayer !== false}
+        showHeatmap={showHeatmapV10}
+        showPoints={showPointsLayer !== false}
+        enabled={showCorridors}
         onDataLoaded={onHeatmapDataLoaded}
-        includeCorridors={heatmapIncludeCorridors}
       />
     )}
 
-    {/* CORRIDORS-V6: RÉACTIVÉ — Pipeline V6 autorisé BCE-4X-MAX (exclusions ULTIMES backend actives) */}
+    {/* V6 CORRIDORS: Rendu GeoJSON complementaire (guide pro, affuts, enrichi) */}
     {selectedWaypointForZones && showCorridors && waypointCenter && (
       <BionicCorridorsV6Layer
         center={waypointCenter}
