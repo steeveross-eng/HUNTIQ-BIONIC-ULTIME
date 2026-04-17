@@ -792,6 +792,14 @@ try:
 except Exception as e:
     logger.warning(f"V8 Institutional not loaded: {e}")
 
+# ESI-Omega — Engine Securite Institutionnelle (Guardian Central)
+try:
+    from engines.v8_institutional.esi_omega import router as esi_router
+    app.include_router(esi_router)
+    logger.info("ESI-Omega registered (/api/v8/esi) — Guardian Central V8-PURE")
+except Exception as e:
+    logger.warning(f"ESI-Omega not loaded: {e}")
+
 # V13-AUDIT — Public report endpoint
 try:
     from routes.audit_report_route import router as audit_report_router
