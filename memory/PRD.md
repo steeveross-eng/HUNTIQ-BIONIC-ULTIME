@@ -1,34 +1,19 @@
 # HUNTIQ V8 — PRD
-## PHASE-1 VERROUILLAGE ULTIME MAX — TERMINE
-**MAJ:** 2026-04-16 | **24 ENGINES** | **4 PILIERS** | **62 DECISIONS**
+## PHASE-1 CORRECTIONS APPLIQUEES — PRET POUR PHASE-2
+**MAJ:** 2026-04-16 | **24/24 ACTIFS** | **ZERO STUB** | **ZERO HERITAGE**
 
-## Document Maitre
-- /app/memory/DOCUMENT_MAITRE_ULTIME_MAX.md (GELE — SSOT)
+## Rectifications Appliquees
+1. 4 STUBS convertis en ENGINES COMPLETS (bio-signes, audio-acoustique, psychologie, prediction 48h)
+2. 10 sub-engines P0 (SSE-TFE) fusionnes dans 24 engines institutionnels
+3. Optimisations Phase A/B/C preservees et integrees explicitement
+4. BCE-4X applique: zero regression, zero duplication, zero heritage V6/V7
+5. Document Maitre mis a jour: 24/24 ACTIF
 
-## 24 Engines Institutionnels (/app/backend/engines/v8_institutional/)
-- 20 ACTIFS: zones, corridors, affuts, hotspots, vent, heatmap, salines, nutrition, pression, risque, frequentation, saisonnalite, comportement, comportement-avance, terrain-cost, visibilite, cameras, prediction, connectivite, intelligence, score-global
-- 4 STUBS: bio-signes, audio-acoustique, psychologie-animale
-
-## 4 Piliers (piliers_router.py)
-- BIO-SYSTEME: /api/v8/institutional/pilier/bio-systeme
-- COMPORTEMENT-HUMAIN: /api/v8/institutional/pilier/comportement-humain
-- SYSTEME-SENSORIEL: /api/v8/institutional/pilier/systeme-sensoriel
-- PREDICTION-INTELLIGENCE: /api/v8/institutional/pilier/prediction-intelligence
-- FULL: /api/v8/institutional/full
-
-## Matrice Migration: 62 decisions
-- CONSERVER: 6 | CONSERVER+FUSIONNER: 22 | FUSIONNER: 28 | ELIMINER: 6
-
-## Terrain Rules (Document Maitre)
-- pente > 45deg = EXCLUSION
-- eau < 10m = EXCLUSION
-- zero smoothing, zero simplification polygonale
-
-## Signatures Visuelles
-- AFFUTS: cercle gris #9E9E9E + X central #424242
-- CORRIDORS: #FF8F00
-- ZONES: BCE-4X (rut #C62828, alim #2E7D32, repos #1565C0, eau #29B6F6)
-- SALINES: cercle organique jaune #FDD835
+## 24 Engines Institutionnels — 24/24 ACTIFS
+- BIO-SYSTEME (8): zones, corridors, affuts, hotspots, vent, heatmap, salines, nutrition
+- COMPORTEMENT HUMAIN (6): pression, risque, frequentation, saisonnalite, comportement, comportement-avance
+- SYSTEME SENSORIEL (5): terrain-cost, visibilite, cameras, bio-signes, audio-acoustique
+- PREDICTION-INTELLIGENCE (5): psychologie, prediction-48h, connectivite, intelligence, score-global
 
 ## Credentials
 - Admin: admin@huntiq.com / Saturn5858*

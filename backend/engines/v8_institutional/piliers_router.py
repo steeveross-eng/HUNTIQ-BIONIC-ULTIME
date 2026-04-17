@@ -30,6 +30,9 @@ from engines.v8_institutional.engine_connectivite import compute_connectivite
 from engines.v8_institutional.engine_intelligence import compute_intelligence
 from engines.v8_institutional.engine_score_global import compute_score_global
 from engines.v8_institutional.engine_prediction import compute_prediction_48h
+from engines.v8_institutional.engine_bio_signes import compute_bio_signes
+from engines.v8_institutional.engine_audio_acoustique import compute_audio_acoustique
+from engines.v8_institutional.engine_psychologie import compute_psychologie
 
 
 # ═══ PILIER 1: BIO-SYSTEME ═══
@@ -82,16 +85,19 @@ async def pilier_comportement_humain(
 @router.get("/pilier/systeme-sensoriel")
 async def pilier_systeme_sensoriel(
     lat: float = Query(...), lon: float = Query(...),
+    species: str = Query("cerf"), month: int = Query(10), hour: int = Query(7),
 ):
     start = time.time()
     terrain = compute_terrain_cost(lat, lon)
     visibilite = compute_visibilite(lat, lon)
+    bio_signes = compute_bio_signes(lat, lon, species, month)
+    audio = compute_audio_acoustique(lat, lon, species, hour)
     return {
         "pilier": "SYSTEME-SENSORIEL",
         "terrain_cost": terrain, "visibilite": visibilite,
+        "bio_signes": bio_signes,
+        "audio_acoustique": audio,
         "cameras": {"status": "ACTIF — delegation camera_engine/vision_engine"},
-        "bio_signes": {"status": "STUB"},
-        "audio_acoustique": {"status": "STUB"},
         "compute_ms": round((time.time() - start) * 1000),
     }
 
@@ -108,11 +114,13 @@ async def pilier_prediction_intelligence(
     intelligence = compute_intelligence(lat, lon, species, month, wind_deg)
     score = compute_score_global(lat, lon, species, month, hour)
     conn = compute_connectivite(lat, lon, zones, corridors)
+    psycho = compute_psychologie(lat, lon, species, month, hour, 30)
+    pred = compute_prediction_48h(lat, lon, species, month, hour)
     return {
         "pilier": "PREDICTION-INTELLIGENCE",
         "intelligence": intelligence, "score_global": score, "connectivite": conn,
-        "prediction_48h": {"status": "ACTIF — 8 scenarios"},
-        "psychologie_animale": {"status": "STUB"},
+        "psychologie_animale": psycho,
+        "prediction_48h": {"best_window": pred["best_window"], "optimal_count": len(pred["optimal_windows"]), "scenarios": pred["scenarios"]},
         "compute_ms": round((time.time() - start) * 1000),
     }
 
@@ -163,7 +171,7 @@ async def institutional_status():
         "mode": "STRICT-INSTITUTIONNEL",
         "engines": 24,
         "piliers": 4,
-        "actifs": 20,
-        "stubs": 4,
-        "status": "VERROUILLE",
+        "actifs": 24,
+        "stubs": 0,
+        "status": "VERROUILLE — ZERO STUB",
     }
