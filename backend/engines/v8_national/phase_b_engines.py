@@ -77,26 +77,33 @@ def _organic_polygon(c_lat, c_lon, radius_deg, n_vertices=12, seed=0):
 
 
 def _bezier_curve(start, end, n_points=8, curvature_seed=0):
+    """Generate ANGULAR terrain-following path — ZERO smooth curve.
+    V8-INSTITUTIONNEL: veines animales directionnelles.
+    3-5 segments angulaires, ZERO Bezier, ZERO interpolation lissee.
+    """
     s_lat, s_lon = start
     e_lat, e_lon = end
-    mid_lat = (s_lat + e_lat) / 2
-    mid_lon = (s_lon + e_lon) / 2
     dx = e_lon - s_lon
     dy = e_lat - s_lat
     dist = math.sqrt(dx * dx + dy * dy)
     if dist < 1e-8:
         return [[s_lat, s_lon], [e_lat, e_lon]]
-    curve_strength = 0.15 + 0.2 * abs(math.sin(curvature_seed * 3.7))
-    sign = 1 if curvature_seed % 2 == 0 else -1
-    ctrl_lat = mid_lat + (-dx) * curve_strength * sign
-    ctrl_lon = mid_lon + (dy) * curve_strength * sign
-    points = []
-    for j in range(n_points + 1):
-        t = j / n_points
-        inv = 1 - t
-        p_lat = inv * inv * s_lat + 2 * inv * t * ctrl_lat + t * t * e_lat
-        p_lon = inv * inv * s_lon + 2 * inv * t * ctrl_lon + t * t * e_lon
-        points.append([round(p_lat, 6), round(p_lon, 6)])
+
+    # Angular directional path: 3-5 waypoints with sharp direction changes
+    n_segments = 3 + int(abs(math.sin(curvature_seed * 2.7)) * 2)  # 3-5
+    points = [[s_lat, s_lon]]
+    for j in range(1, n_segments):
+        t = j / n_segments
+        # Base linear interpolation
+        base_lat = s_lat + dy * t
+        base_lon = s_lon + dx * t
+        # Angular offset perpendicular (terrain-aware jitter, not smooth)
+        offset_strength = 0.08 + 0.12 * abs(math.sin(curvature_seed * 3.7 + j * 5.3))
+        sign = 1 if (curvature_seed + j) % 2 == 0 else -1
+        perp_lat = base_lat + (-dx) * offset_strength * sign
+        perp_lon = base_lon + (dy) * offset_strength * sign
+        points.append([round(perp_lat, 6), round(perp_lon, 6)])
+    points.append([e_lat, e_lon])
     return points
 
 

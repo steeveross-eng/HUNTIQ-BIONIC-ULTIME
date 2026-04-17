@@ -1,39 +1,34 @@
 /**
- * MapContent.jsx — Contenu de la carte Leaflet BIONIC
- * Extrait de MonTerritoireBionicPage.jsx (IM1.2 Refactorisation)
+ * MapContent.jsx — RENDERING V8-INSTITUTIONNEL EXCLUSIF
+ * ======================================================
+ * PHASE-4B: PURGE TOTALE couches legacy V6/V7/debug.
+ * Source UNIQUE: BionicLayersV8 via /api/v8/institutional/territoire
+ * ZERO fallback. ZERO substitution. ZERO reactivation.
  *
- * Rendu de tous les layers, markers et interactions de la carte.
+ * Couches AUTORISEES:
+ *   - EcoforestryLayers (tuiles de base)
+ *   - BionicLayersV8 (V8-INSTITUTIONNEL EXCLUSIF)
+ *   - Markers (waypoints, position utilisateur)
+ *   - MapInteractionLayer (GPS overlay)
+ *
+ * Couches INTERDITES (purgees):
+ *   - BionicCorridorsV6Layer, BionicZone2km, BionicZone600m
+ *   - StandsMapLayer, ContaminationOverlayLayer
+ *   - NutritionPointsLayer, ConsolidatedHeatmapLayer
+ *   - HuntingPathLayer, AlphaHotspotsLayer, TrajectoriesLayer
+ *   - PhaseALayerV8, ExclusionOverlayLayer, StructureContrastLayer
+ *   - HydrographyOverlayLayer, AccessRouteV6Layer
+ *   - Circle, Rectangle (shapes geometriques)
+ *   - BionicAntiDoublesGuard, ShootingZones
  */
 import React from 'react';
-import { Marker, Popup, Circle, Rectangle } from 'react-leaflet';
+import { Marker, Popup } from 'react-leaflet';
 import EcoforestryLayers from '@/components/territoire/EcoforestryLayers';
 import { MapRefCapture, ZoomHandler, MapResizer, MapClickHandler, createCustomIcon } from '@/components/territoire/map/MapHelpers';
-import HydrographyOverlayLayer from '@/components/territoire/HydrographyOverlayLayer';
-import ExclusionOverlayLayer from '@/components/territoire/ExclusionOverlayLayer';
-import WindFlowLayer from '@/components/territoire/WindFlowLayer';
-import StructureContrastLayer from '@/components/territoire/StructureContrastLayer';
-// BCE-4X-UI-003: BionicMicroZones (V9) SUPPRIME DEFINITIVEMENT — Zones rendues par BionicCorridorsV6Layer
-import { ShootingZones } from '@/modules/groupe';
 import CursorBionicLayer from '@/components/territoire/CursorBionicLayer';
-import BionicAntiDoublesGuard from '@/components/territoire/BionicAntiDoublesGuard';
-import { BionicZone2kmLayer } from '@/components/territoire/BionicZone2km';
-import HuntingPathLayer from '@/components/territoire/HuntingPathLayer';
-import { MapInteractionLayer } from '@/modules/map_interaction';
-import { BIONIC_MODULES } from '@/core/bionic';
-import { PLACE_TYPES } from '@/config/placeTypes';
-// PURGE-V6-ULTIME: BionicCorridorsV6Layer SUPPRIME — V8 terrain-aware exclusif
-import NutritionPointsLayer from '@/components/territoire/NutritionPointsLayer';
-import ConsolidatedHeatmapLayer from '@/components/territoire/ConsolidatedHeatmapLayer';
 import BionicLayersV8 from '@/components/territoire/BionicLayersV8';
-import StandsMapLayer from '@/components/territoire/StandsMapLayer';
-import CameraMarkersLayer from '@/components/territoire/CameraMarkersLayer';
-import AlphaHotspotsLayer from '@/components/territoire/AlphaHotspotsLayer';
-import TrajectoriesLayer from '@/components/territoire/TrajectoriesLayer';
-import ContaminationOverlayLayer from '@/components/territoire/ContaminationOverlayLayer';
-import PhaseALayerV8 from '@/components/territoire/PhaseALayerV8';
-// DELETE-LEGACY-V6: AccessRouteV6Layer SUPPRIME — remplace par SPATIAL-ENGINE-V7 amenagement
-// import AccessRouteV6Layer from '@/components/territoire/AccessRouteV6Layer';
-import { LeafletShield, useRenderGuard, createLoadTimer } from '@/components/territoire/map/BCE4X_UIShield';
+import { MapInteractionLayer } from '@/modules/map_interaction';
+import { PLACE_TYPES } from '@/config/placeTypes';
 
 const MapContentInner = React.memo(({
   // Eco layers
@@ -50,95 +45,83 @@ const MapContentInner = React.memo(({
   handleMapClickForWaypoint,
   // Classification & toggles
   classificationToggles,
-  showExclusionOverlay,
-  showWindFlow,
-  windMode,
-  showCorridorsV1,
-  showCorridors,
   showCursorBionic,
   isPrivateDataVisible,
   privacyMode,
-  // Zones & corridors
-  bionicZones,
-  bionicZonesData,
-  minPercentageFilter,
-  selectedSpecies,
-  temporalHourMT,
-  layersVisible,
   // Waypoints & places
   selectedWaypointForZones,
-  bboxBounds,
   activeWaypoints,
   savedPlaces,
   selectWaypointAsTarget,
   setContextMenuMT,
-  // Favorites
+  // User
+  userPosition,
+  userId,
+  // V8 Bundle unified layers — SOURCE UNIQUE
+  bundleDataV8,
+  // Layer toggles V8
+  showZonesLayer,
+  showCorridorsLayer,
+  showPointsLayer,
+  showCorridors,
+  // Wapoint center
+  waypointCenter,
+  // Heatmap callback
+  onHeatmapDataLoaded,
+  selectedSpecies,
+
+  // PROPS LEGACY (acceptes mais IGNORES — PURGE V6/V7)
+  showExclusionOverlay,
+  showWindFlow,
+  windMode,
+  showCorridorsV1,
+  bionicZones,
+  bionicZonesData,
+  minPercentageFilter,
+  temporalHourMT,
+  layersVisible,
+  bboxBounds,
   isZoneFavorite,
   addFavorite,
   getFavoriteId,
   removeFavorite,
-  // Zone click
   setSelectedZone,
   setHoveredZone,
-  // User
-  userPosition,
-  userId,
   syncToBackend,
-  // Groupe
   groupMembersPositions,
   isGroupeTrackingActive,
-  // BCE-4X GUIDE PRO: Hunting Path
   huntingPathData,
   showHuntingPath,
-  // CORRIDORS-V6
   onCorridorDataLoaded,
-  // ALIMENTATION-V2 (Points nutritionnels)
   showAlimentationV2,
   showNutritionPoints,
   nNutritionPointsMax,
   onAlimentationDataLoaded,
   onNutritionPointClick,
-  // STANDS x2280/x2320
   showStands,
   windDirection,
   windSpeed,
   windDirectionDeg,
   onStandClick,
-  // BCE-4X P0 A1/A2: Donnees reelles pour l'orchestrateur de chasse
   feedingSitesForStands,
   fixedBlindsForStands,
-  // HEATMAP V6 consolidée
   showHeatmapV10,
-  onHeatmapDataLoaded,
+  onHeatmapDataLoaded: _,
   heatmapIncludeCorridors,
-  // BCE-4X GUIDE PRO: Controles couches et points chauds
-  showZonesLayer,
-  showCorridorsLayer,
-  showPointsLayer,
   pointsChaudsMode,
   pointsChaudsFilter,
   zoneSubFilters,
   corridorSubFilters,
   pointSubFilters,
-  // STABILITÉ V2: Centre memoizé
-  waypointCenter,
-  // ACCESS ENGINE V6 — GOLDEN (1 Layer unique)
   accessRouteData,
   showAccessRoute,
-  // BCE-4X GUIDE PRO: Hydrographie reactivee
   showHydro,
-  // CAM-LOC-Omega: Cameras sur carte
   userCameras,
   showCameraMarkers,
-  // ALPHA Hotspots layer
   alphaHotspots,
   showAlphaLayer,
-  // Trajectories layer
   trajectories,
   showTrajectoriesLayer,
-  // V8 Bundle unified layers
-  bundleDataV8,
-  // Phase A V8 — Relocalisation + Salines
   showPhaseA,
   phaseARelocalisations,
   phaseASalines,
@@ -147,6 +130,7 @@ const MapContentInner = React.memo(({
   onPhaseASalineClick,
 }) => (
   <>
+    {/* COUCHE 1: TUILES DE BASE */}
     <EcoforestryLayers
       activeLayers={activeEcoLayers}
       layerOpacities={ecoLayerOpacities}
@@ -154,142 +138,40 @@ const MapContentInner = React.memo(({
       fallbackStatus={ecoMapStatus}
       activeFallback={activeFallback}
     />
+
+    {/* UTILITAIRES CARTE */}
     <MapRefCapture mapRefProp={mapRef} />
     <MapResizer />
     <ZoomHandler onZoomChange={handleZoomChange} onMapMove={handleMapMove} onBoundsChange={handleBoundsChange} />
     {mapClickMode && <MapClickHandler onMapClick={handleMapClickForWaypoint} enabled={true} />}
 
     {/* ══════════════════════════════════════════════════════════════ */}
-    {/* Phase 3.2-CV: BionicCorridorsV6Layer SEUL DÉSACTIVÉ */}
+    {/* V8-INSTITUTIONNEL EXCLUSIF — SOURCE UNIQUE RENDERING         */}
+    {/* ZERO couche legacy. ZERO fallback. ZERO debug.               */}
     {/* ══════════════════════════════════════════════════════════════ */}
-    <HydrographyOverlayLayer enabled={showHydro} opacity={0.45} />
-
-    <ExclusionOverlayLayer enabled={showExclusionOverlay && classificationToggles.pression} />
-    {showWindFlow && <WindFlowLayer />}
-    <StructureContrastLayer enabled={classificationToggles.anthropique} />
-    {/* BCE-4X: Zones V9 (BionicMicroZones) SUPPRIMEES — Zones V6 rendues par BionicCorridorsV6Layer */}
-    {/* BCE-4X GUIDE PRO: MovementCorridorsLayer PURGE DEFINITIVE — BCE-4X-UI-003 */}
-
-    {/* BCE-4X GUIDE PRO: Hunting Path Layer — z-index 700 (above corridors) */}
-    {/* BCE-4X GUIDE PRO: Hunting Path Layer reactive — z-index 700 */}
-    {showHuntingPath && huntingPathData && (
-      <HuntingPathLayer huntingPath={huntingPathData} />
-    )}
-
-    {/* BIONIC Zone 2 km² — Carré unique centré sur le waypoint actif */}
-    {selectedWaypointForZones && (
-      <BionicZone2kmLayer 
-        waypoints={activeWaypoints}
-        selectedWaypoint={selectedWaypointForZones}
-        showForAll={false}
-        opacity={0.7}
-      />
-    )}
-
-    {/* P0 FIX: BBox Rectangle hidden by default — only show when Curseur BIONIC is active */}
-    {selectedWaypointForZones && bboxBounds && showCursorBionic && (
-      <Rectangle
-        bounds={bboxBounds}
-        pathOptions={{ color: '#FF9800', fillColor: 'transparent', fillOpacity: 0, weight: 2, dashArray: '8, 4' }}
-        data-testid="analysis-bbox-overlay"
-      />
-    )}
-    {selectedWaypointForZones && (
-      <Circle center={[selectedWaypointForZones.lat, selectedWaypointForZones.lng]} radius={30} pathOptions={{ color: '#FF9800', fillColor: 'transparent', fillOpacity: 0, weight: 2 }} />
-    )}
-
-    <ShootingZones zones={[]} currentUserId={userId} dangerAlerts={[]} members={[]} onZoneClick={null} showOwnZone={true} showOtherZones={true} showDangerIndicators={true} />
-
-    {/* ═══ V8 UNIFIED LAYERS — TERRITOIRE-V8-FIX-Omega ═══ */}
-    {/* Source PRINCIPALE V8: organiques, pas de condition strict */}
     {selectedWaypointForZones && waypointCenter && (
       <BionicLayersV8
         bundleData={bundleDataV8}
         showZones={showZonesLayer !== false}
         showCorridors={showCorridorsLayer !== false}
         showAffuts={showPointsLayer !== false}
-        enabled={showCorridors}
+        showSalines={true}
+        showHotspots={true}
+        enabled={true}
         onDataLoaded={onHeatmapDataLoaded}
       />
     )}
 
-    {/* ═══ PHASE A V8 — Relocalisation + Salines (couche activable) ═══ */}
-    {showPhaseA && selectedWaypointForZones && (
-      <PhaseALayerV8
-        relocalisations={phaseARelocalisations || []}
-        salines={phaseASalines || []}
-        siteActuel={phaseASiteActuel}
-        showReloc={true}
-        showSalines={true}
-        enabled={true}
-        onRelocClick={onPhaseARelocClick}
-        onSalineClick={onPhaseASalineClick}
-      />
-    )}
-
-    {/* PURGE-V6-ULTIME: BionicCorridorsV6Layer SUPPRIME DEFINITIVEMENT */}
-    {/* Zones+Corridors+Affuts rendus exclusivement par BionicLayersV8 (terrain-aware Phase B) */}
-
-    {/* ALIMENTATION-V2: Points nutritionnels optimaux dans la zone 2km x 2km */}
-    {selectedWaypointForZones && showAlimentationV2 && waypointCenter && (
-      <NutritionPointsLayer
-        center={waypointCenter}
-        species={selectedSpecies}
-        month={new Date().getMonth() + 1}
-        enabled={showAlimentationV2}
-        showNutritionPoints={showNutritionPoints}
-        maxNutritionPoints={nNutritionPointsMax}
-        onDataLoaded={onAlimentationDataLoaded}
-        onNutritionPointClick={onNutritionPointClick}
-      />
-    )}
-
-    {/* STANDS x2280/x2320: Affûts professionnels + chemins d'approche */}
-    {selectedWaypointForZones && showStands && waypointCenter && (
-      <StandsMapLayer
-        center={waypointCenter}
-        species={selectedSpecies}
-        windDirection={windDirection || 315}
-        windSpeed={windSpeed || 12}
-        windDirectionDeg={windDirectionDeg || null}
-        enabled={showStands}
-        onStandClick={onStandClick}
-        feedingSites={feedingSitesForStands || []}
-        fixedBlinds={fixedBlindsForStands || []}
-        showLegend={false}
-      />
-    )}
-
-    {/* BCE-4X GUIDE PRO BLOC 2: Contamination permanente toutes salines */}
-    {selectedWaypointForZones && showStands && waypointCenter && (
-      <ContaminationOverlayLayer
-        center={waypointCenter}
-        feedingSites={feedingSitesForStands || []}
-        windDirectionDeg={windDirectionDeg || windDirection || 315}
-        windSpeed={windSpeed || 12}
-        session={'matin'}
-        enabled={showStands}
-      />
-    )}
-
-    {/* DELETE-LEGACY-V6: AccessRouteV6Layer SUPPRIME
-    {showAccessRoute && accessRouteData && (
-      <AccessRouteV6Layer
-        routeData={accessRouteData}
-        enabled={showAccessRoute}
-      />
-    )}
-    */}
-
+    {/* MARQUEURS WAYPOINTS — Seuls elements interactifs non-V8 autorises */}
     {userPosition && (
       <Marker position={[userPosition.lat, userPosition.lng]} icon={createCustomIcon('#3b82f6', 'user')}>
         <Popup><div className="text-center font-bold">Ma position</div></Popup>
       </Marker>
     )}
-    {showCursorBionic && classificationToggles.curseurBionic && (
+    {showCursorBionic && classificationToggles?.curseurBionic && (
       <CursorBionicLayer species={selectedSpecies} onQuickAddWaypoint={null} />
     )}
-    {isPrivateDataVisible && classificationToggles.waypoints && activeWaypoints.map(wp => (
+    {isPrivateDataVisible && classificationToggles?.waypoints && activeWaypoints?.map(wp => (
       <Marker
         key={wp.id}
         position={[wp.lat, wp.lng]}
@@ -303,21 +185,38 @@ const MapContentInner = React.memo(({
         }}
       />
     ))}
-    {isPrivateDataVisible && classificationToggles.waypoints && savedPlaces.map(place => (
+    {isPrivateDataVisible && classificationToggles?.waypoints && savedPlaces?.map(place => (
       <Marker key={place.id} position={[place.lat, place.lng]} icon={createCustomIcon(PLACE_TYPES.find(t => t.id === place.type)?.color || '#6b7280', 'place')}>
         <Popup><div className="text-center"><div className="font-bold">{place.name}</div><div className="text-xs">{PLACE_TYPES.find(t => t.id === place.type)?.name}</div></div></Popup>
       </Marker>
     ))}
     {privacyMode && <div className="bionic-private-overlay" />}
-    {/* CAM-LOC-Omega: Camera markers layer */}
-    {showCameraMarkers && userCameras && <CameraMarkersLayer cameras={userCameras} />}
-    {/* ALPHA Hotspots layer */}
-    {showAlphaLayer && alphaHotspots && <AlphaHotspotsLayer hotspots={alphaHotspots} />}
-    {/* Trajectories layer */}
-    {showTrajectoriesLayer && trajectories && <TrajectoriesLayer trajectories={trajectories} />}
-    {/* BCE-4X PURGE V1-V5: GPS overlay uniquement — ZERO double-clic waypoint */}
+
+    {/* GPS overlay */}
     <MapInteractionLayer showCoordinates={true} />
-    <BionicAntiDoublesGuard zones={bionicZones} onZoneClick={setSelectedZone} />
+
+    {/* ══════════════════════════════════════════════════════════════ */}
+    {/* PURGE V6/V7/DEBUG — TOUT CE QUI SUIT EST DESACTIVE           */}
+    {/* ZERO reactivation. ZERO fallback. ZERO substitution.         */}
+    {/* ══════════════════════════════════════════════════════════════ */}
+    {/* PURGE: HydrographyOverlayLayer — DESACTIVE */}
+    {/* PURGE: ExclusionOverlayLayer — DESACTIVE */}
+    {/* PURGE: WindFlowLayer — DESACTIVE */}
+    {/* PURGE: StructureContrastLayer — DESACTIVE */}
+    {/* PURGE: HuntingPathLayer — DESACTIVE */}
+    {/* PURGE: BionicZone2kmLayer — DESACTIVE */}
+    {/* PURGE: Rectangle bbox — DESACTIVE */}
+    {/* PURGE: Circle waypoint — DESACTIVE */}
+    {/* PURGE: ShootingZones — DESACTIVE */}
+    {/* PURGE: StandsMapLayer — DESACTIVE */}
+    {/* PURGE: ContaminationOverlayLayer — DESACTIVE */}
+    {/* PURGE: NutritionPointsLayer — DESACTIVE */}
+    {/* PURGE: PhaseALayerV8 — DESACTIVE */}
+    {/* PURGE: CameraMarkersLayer — DESACTIVE */}
+    {/* PURGE: AlphaHotspotsLayer — DESACTIVE */}
+    {/* PURGE: TrajectoriesLayer — DESACTIVE */}
+    {/* PURGE: BionicAntiDoublesGuard — DESACTIVE */}
+    {/* PURGE: ConsolidatedHeatmapLayer — DESACTIVE */}
   </>
 ));
 

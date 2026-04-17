@@ -1,9 +1,9 @@
 /**
- * useMapBundleV8 — Hook bundle V8 unique
- * ========================================
- * UI-V8-FORCE-Omega: Consomme EXCLUSIVEMENT /api/v8/map/bundle
- * ZERO source V7. GOVERNANCE-INDEPENDENT.
- * Cache 30s, abort automatique.
+ * useMapBundleV8 — Hook V8-INSTITUTIONNEL EXCLUSIF
+ * ==================================================
+ * PHASE-4B: Consomme EXCLUSIVEMENT /api/v8/institutional/territoire
+ * ZERO source legacy. ZERO fallback. ZERO cache externe.
+ * ESI-Omega validation integree cote serveur.
  */
 import { useState, useCallback, useRef, useEffect } from 'react';
 
@@ -22,7 +22,7 @@ const useMapBundleV8 = () => {
     const m = month || (now.getMonth() + 1);
     const h = hour || now.getHours();
     const w = windDeg || 225;
-    const cacheKey = `${lat.toFixed(3)}_${lon.toFixed(3)}_${species}_${m}_w${Math.round(w)}`;
+    const cacheKey = `${lat.toFixed(3)}_${lon.toFixed(3)}_${species}_${m}_${h}_w${Math.round(w)}`;
 
     const cached = cacheRef.current.get(cacheKey);
     if (cached && Date.now() - cached.ts < 30000) {
@@ -36,8 +36,9 @@ const useMapBundleV8 = () => {
     setLoading(true);
 
     try {
+      // SOURCE UNIQUE V8-INSTITUTIONNEL — ZERO fallback
       const res = await fetch(
-        `${API}/api/v8/map/bundle?lat=${lat}&lon=${lon}&species=${species}&month=${m}&hour=${h}&wind_deg=${w}`,
+        `${API}/api/v8/institutional/territoire?lat=${lat}&lon=${lon}&species=${species}&month=${m}&hour=${h}&wind_deg=${w}`,
         { signal: abortRef.current.signal }
       );
       if (!res.ok) return null;
@@ -51,7 +52,7 @@ const useMapBundleV8 = () => {
       return data;
     } catch (err) {
       if (err.name === 'AbortError') return null;
-      console.error('[V8-BUNDLE]', err);
+      console.error('[V8-INSTITUTIONNEL]', err);
       return null;
     } finally {
       setLoading(false);
@@ -69,11 +70,12 @@ const useMapBundleV8 = () => {
     zones: bundleData?.zones || [],
     corridors: bundleData?.corridors || [],
     affuts: bundleData?.affuts || [],
-    exclusion: bundleData?.exclusion || null,
-    biome: bundleData?.biome || null,
-    governanceMode: bundleData?.governance_mode || 'LOCKED',
+    hotspots: bundleData?.hotspots || [],
+    salines: bundleData?.salines || [],
+    windVectors: bundleData?.wind_vectors || [],
+    esiOmega: bundleData?.esi_omega || null,
+    source: bundleData?.source || null,
     computeMs: bundleData?.compute_ms || 0,
-    fromCache: bundleData?.from_cache || false,
   };
 };
 
