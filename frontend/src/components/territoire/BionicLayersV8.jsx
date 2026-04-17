@@ -1,24 +1,20 @@
 /**
- * BionicLayersV8.jsx — RENDERING V8-INSTITUTIONNEL EXCLUSIF
- * ===========================================================
- * PHASE-4B: Source UNIQUE /api/v8/institutional/territoire
+ * BionicLayersV8.jsx — RENDERING V8-INSTITUTIONNEL COMPLET
+ * ==========================================================
+ * PHASE-4E: TOUS ENGINES TERRITOIRE RÉINTRODUITS
  *
- * ZONES:    polygones organiques terrain-aware, 14-20 vertices
- *           contours 100% opaques, interieurs 100% transparents
- *           ZERO smoothing, ZERO arrondi, ZERO interpolation
+ * ZONES:       polygones organiques ultra-précis (24-36 vertices Catmull-Rom)
+ *              courbes douces, zéro angle, contours opaques, fill transparent
+ * CORRIDORS:   veines animales continues (Bézier cubique, 8-12 pts)
+ *              #FF8F00, rayon 600m, extension ±30%
+ * AFFUTS:      cercle gris #9E9E9E + X central #424242
+ * SALINES:     cercle organique #FDD835
+ * HOTSPOTS:    marqueur multi-intensité 1-5 (rouge gradué)
+ * VENT:        flèches directionnelles #90CAF9 (direction+intensité+turbulence)
+ * CONTAMINATION: cône directionnel décroissant #FF7043→transparent
+ * PRESSION:    gradient intensité zone humaine #EF5350
  *
- * CORRIDORS: veines animales directionnelles, angulaires
- *            couleur UNIQUE #FF8F00, ZERO glow, ZERO halo
- *            lineCap butt, lineJoin miter, smoothFactor 0
- *
- * AFFUTS:   cercle gris #9E9E9E + X central #424242
- *           ZERO halo, ZERO glow
- *
- * SALINES:  cercle organique #FDD835, opacite 100%
- *
- * HOTSPOTS: marqueur rouge #E53935
- *
- * Z-ORDER:  zones < corridors < salines < hotspots < affuts
+ * Z-ORDER: pression < zones < corridors < vent < contamination < salines < hotspots < affûts
  */
 import { useEffect, useRef, useCallback } from 'react';
 import { useMap } from 'react-leaflet';
@@ -33,20 +29,21 @@ const ZONE_COLORS = {
   affuts:       { stroke: '#C62828', weight: 2.0 },
 };
 
-// CORRIDOR: COULEUR UNIQUE #FF8F00 — ZERO multicolore
 const CORRIDOR_COLOR = '#FF8F00';
-const CORRIDOR_WEIGHT = { faible: 1.2, modere: 2.0, fort: 3.0, majeur: 3.0, critique: 3.0 };
+const CORRIDOR_WEIGHT = { faible: 1.2, modere: 2.0, fort: 3.0, majeur: 3.5, critique: 4.0 };
 
-// AFFUT: cercle gris + X central
 const AFFUT_COLOR = '#9E9E9E';
 const AFFUT_X_COLOR = '#424242';
 const AFFUT_SIZE = { optimal: 8, bon: 7, acceptable: 6 };
 
-// SALINE: cercle organique jaune
 const SALINE_COLOR = '#FDD835';
+const WIND_COLOR = '#90CAF9';
+const CONTAM_COLOR = '#FF7043';
+const PRESSION_COLOR = '#EF5350';
 
-// HOTSPOT: rouge
-const HOTSPOT_COLOR = '#E53935';
+// Hotspot intensité 1-5
+const HOTSPOT_COLORS = ['#FFCDD2', '#EF9A9A', '#EF5350', '#E53935', '#B71C1C'];
+const HOTSPOT_SIZES = [4, 5, 6, 7, 8];
 
 const BionicLayersV8 = ({
   bundleData,
@@ -55,6 +52,9 @@ const BionicLayersV8 = ({
   showAffuts = true,
   showSalines = true,
   showHotspots = true,
+  showWind = true,
+  showContamination = true,
+  showPression = true,
   enabled = true,
   onDataLoaded = null,
 }) => {
@@ -80,10 +80,36 @@ const BionicLayersV8 = ({
     const affuts = bundleData.affuts || [];
     const salines = bundleData.salines || [];
     const hotspots = bundleData.hotspots || [];
+    const windVectors = bundleData.wind_vectors || [];
+    const contamination = bundleData.contamination || null;
+    const pression = bundleData.pression || null;
 
-    // Z-ORDER 1: ZONES (dessous)
-    // Polygones organiques, contours opaques, interieurs transparents
-    // ZERO smoothing, ZERO arrondi
+    // ═══ Z-ORDER 1: PRESSION HUMAINE (gradient) ═══
+    if (showPression && pression && pression.pression_score !== undefined) {
+      const score = pression.pression_score;
+      if (score > 10) {
+        const center = map.getCenter();
+        const opacity = Math.min(0.35, score / 200);
+        const radius = 300 + score * 3;
+        const circle = L.circle([center.lat, center.lng], {
+          radius: radius,
+          color: PRESSION_COLOR,
+          fillColor: PRESSION_COLOR,
+          fillOpacity: opacity,
+          weight: 1,
+          opacity: 0.4,
+          dashArray: '4,4',
+          interactive: true,
+        });
+        circle.bindTooltip(
+          `<b style="color:${PRESSION_COLOR}">Pression humaine</b> ${score}/100`,
+          { sticky: true, opacity: 0.95 }
+        );
+        group.addLayer(circle);
+      }
+    }
+
+    // ═══ Z-ORDER 2: ZONES (polygones organiques ultra-précis) ═══
     if (showZones && zones.length > 0) {
       zones.forEach(z => {
         const cfg = ZONE_COLORS[z.type] || ZONE_COLORS.alimentation;
@@ -95,9 +121,9 @@ const BionicLayersV8 = ({
           opacity: 1.0,
           fillColor: cfg.stroke,
           fillOpacity: 0,
-          lineCap: 'butt',
-          lineJoin: 'miter',
-          smoothFactor: 0,
+          lineCap: 'round',
+          lineJoin: 'round',
+          smoothFactor: 1,
           interactive: true,
         });
 
@@ -117,10 +143,7 @@ const BionicLayersV8 = ({
       });
     }
 
-    // Z-ORDER 2: CORRIDORS (milieu)
-    // Veines animales directionnelles, angulaires
-    // lineCap BUTT, lineJoin MITER, smoothFactor 0
-    // ZERO glow, ZERO halo, ZERO multicolore
+    // ═══ Z-ORDER 3: CORRIDORS (veines animales continues Bézier) ═══
     if (showCorridors && corridors.length > 0) {
       corridors.forEach(c => {
         const path = c.path || [[c.start.lat, c.start.lng], [c.end.lat, c.end.lng]];
@@ -130,9 +153,9 @@ const BionicLayersV8 = ({
           color: CORRIDOR_COLOR,
           weight: w,
           opacity: 1.0,
-          lineCap: 'butt',
-          lineJoin: 'miter',
-          smoothFactor: 0,
+          lineCap: 'round',
+          lineJoin: 'round',
+          smoothFactor: 1,
           interactive: true,
         });
 
@@ -144,10 +167,69 @@ const BionicLayersV8 = ({
       });
     }
 
-    // Z-ORDER 3: SALINES
-    // Cercle organique jaune, opacite 100%
+    // ═══ Z-ORDER 4: VECTEURS VENT (flèches directionnelles) ═══
+    if (showWind && windVectors.length > 0) {
+      windVectors.forEach(wv => {
+        const start = wv.start;
+        const end = wv.end;
+        if (!start || !end) return;
+
+        // Ligne directionnelle
+        const line = L.polyline([[start.lat, start.lng], [end.lat, end.lng]], {
+          color: WIND_COLOR,
+          weight: 1.5,
+          opacity: wv.decay || 0.6,
+          dashArray: '6,3',
+          interactive: true,
+        });
+
+        // Flèche au bout
+        const arrowSize = 0.001;
+        const angle = Math.atan2(end.lng - start.lng, end.lat - start.lat);
+        const a1Lat = end.lat - arrowSize * Math.cos(angle - 0.4);
+        const a1Lng = end.lng - arrowSize * Math.sin(angle - 0.4);
+        const a2Lat = end.lat - arrowSize * Math.cos(angle + 0.4);
+        const a2Lng = end.lng - arrowSize * Math.sin(angle + 0.4);
+        const arrow = L.polygon([[end.lat, end.lng], [a1Lat, a1Lng], [a2Lat, a2Lng]], {
+          color: WIND_COLOR,
+          fillColor: WIND_COLOR,
+          fillOpacity: wv.decay || 0.6,
+          weight: 1,
+          opacity: wv.decay || 0.6,
+          interactive: false,
+        });
+
+        line.bindTooltip(
+          `<b style="color:${WIND_COLOR}">Vent</b> ${wv.direction_deg}deg ${wv.speed_kmh}km/h`,
+          { sticky: true, opacity: 0.95 }
+        );
+        group.addLayer(line);
+        group.addLayer(arrow);
+      });
+    }
+
+    // ═══ Z-ORDER 5: CONTAMINATION OLFACTIVE (cône directionnel) ═══
+    if (showContamination && contamination && contamination.polygon) {
+      const cone = L.polygon(contamination.polygon, {
+        color: CONTAM_COLOR,
+        weight: 1.5,
+        opacity: 0.7,
+        fillColor: CONTAM_COLOR,
+        fillOpacity: 0.15,
+        dashArray: '4,4',
+        interactive: true,
+      });
+
+      cone.bindTooltip(
+        `<b style="color:${CONTAM_COLOR}">Contamination olfactive</b><br>Direction: ${contamination.direction_deg}deg | Portee: ${contamination.reach_m}m`,
+        { sticky: true, opacity: 0.95 }
+      );
+      group.addLayer(cone);
+    }
+
+    // ═══ Z-ORDER 6: SALINES ═══
     if (showSalines && salines.length > 0) {
-      salines.forEach((s, idx) => {
+      salines.forEach(s => {
         const lat = s.lat || s.center?.lat;
         const lon = s.lng || s.lon || s.center?.lng;
         if (!lat || !lon) return;
@@ -170,18 +252,23 @@ const BionicLayersV8 = ({
       });
     }
 
-    // Z-ORDER 4: HOTSPOTS
-    // Marqueur rouge
+    // ═══ Z-ORDER 7: HOTSPOTS (intensité 1-5) ═══
     if (showHotspots && hotspots.length > 0) {
       hotspots.forEach(h => {
         const lat = h.lat || h.center?.lat;
         const lon = h.lng || h.lon || h.center?.lng;
         if (!lat || !lon) return;
 
+        // Intensité 1-5 basée sur le score
+        const intensity = h.intensity || 50;
+        const level = Math.min(4, Math.max(0, Math.floor(intensity / 20)));
+        const color = HOTSPOT_COLORS[level];
+        const size = HOTSPOT_SIZES[level];
+
         const circle = L.circleMarker([lat, lon], {
-          radius: 5,
-          color: HOTSPOT_COLOR,
-          fillColor: HOTSPOT_COLOR,
+          radius: size,
+          color: color,
+          fillColor: color,
           fillOpacity: 0.6,
           weight: 2,
           opacity: 1.0,
@@ -189,20 +276,18 @@ const BionicLayersV8 = ({
         });
 
         circle.bindTooltip(
-          `<b style="color:${HOTSPOT_COLOR}">Hotspot</b> ${h.score || ''}/100`,
+          `<b style="color:${color}">Hotspot</b> intensite:${level+1}/5 (${Math.round(intensity)})`,
           { sticky: true, opacity: 0.95 }
         );
         group.addLayer(circle);
       });
     }
 
-    // Z-ORDER 5: AFFUTS (dessus)
-    // DOCUMENT MAITRE: cercle gris + X central, opacite 100%, ZERO halo
+    // ═══ Z-ORDER 8: AFFUTS (dessus — cercle gris + X) ═══
     if (showAffuts && affuts.length > 0) {
       affuts.forEach(a => {
         const sz_px = AFFUT_SIZE[a.quality] || 6;
 
-        // Cercle gris
         const circle = L.circleMarker([a.lat, a.lng], {
           radius: sz_px,
           color: AFFUT_COLOR,
@@ -213,7 +298,6 @@ const BionicLayersV8 = ({
           interactive: true,
         });
 
-        // X central via divIcon
         const xIcon = L.divIcon({
           className: 'affut-x-v8',
           html: `<div style="width:${sz_px*2}px;height:${sz_px*2}px;display:flex;align-items:center;justify-content:center;font-size:${sz_px+2}px;font-weight:900;color:${AFFUT_X_COLOR};line-height:1;">X</div>`,
@@ -241,11 +325,14 @@ const BionicLayersV8 = ({
         affuts_count: affuts.length,
         salines_count: salines.length,
         hotspots_count: hotspots.length,
-        engine: 'V8-INSTITUTIONNEL-EXCLUSIF',
+        wind_count: windVectors.length,
+        contamination: !!contamination,
+        pression: !!(pression && pression.pression_score > 0),
+        engine: 'V8-INSTITUTIONNEL-COMPLET',
         esi_omega: bundleData.esi_omega,
       });
     }
-  }, [map, bundleData, enabled, showZones, showCorridors, showAffuts, showSalines, showHotspots, clearOwnLayers]);
+  }, [map, bundleData, enabled, showZones, showCorridors, showAffuts, showSalines, showHotspots, showWind, showContamination, showPression, clearOwnLayers]);
 
   useEffect(() => {
     renderLayers();

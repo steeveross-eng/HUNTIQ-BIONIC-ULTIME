@@ -157,6 +157,9 @@ const MapContentInner = React.memo(({
         showAffuts={showPointsLayer !== false}
         showSalines={true}
         showHotspots={true}
+        showWind={true}
+        showContamination={true}
+        showPression={true}
         enabled={true}
         onDataLoaded={onHeatmapDataLoaded}
       />

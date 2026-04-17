@@ -171,14 +171,17 @@ async def institutional_territoire(
     wind_deg: float = Query(225), wind_speed: float = Query(15),
 ):
     """TERRITOIRE V8-INSTITUTIONNEL — Source UNIQUE de rendering.
-    Retourne zones, corridors, affuts, hotspots, salines, vent
-    avec validation ESI-Omega integree.
+    Retourne TOUTES couches: zones, corridors, affuts, hotspots, salines,
+    vent, contamination, pression.
+    ESI-Omega validation integree.
     ZERO source legacy. ZERO fallback. ZERO cache externe.
     """
     start = time.time()
     from engines.v8_institutional.engine_salines import compute_salines
     from engines.v8_institutional.engine_hotspots import compute_hotspots
-    from engines.v8_institutional.engine_vent import compute_wind_vectors
+    from engines.v8_institutional.engine_vent import compute_wind_vectors, compute_scent_cone
+    from engines.v8_institutional.engine_pression import compute_pression
+    from engines.v8_institutional.engine_heatmap import compute_heatmap
 
     zones = compute_zones(lat, lon, species, month)
     corridors = compute_corridors(lat, lon, species, month, hour)
@@ -186,6 +189,9 @@ async def institutional_territoire(
     hotspots = compute_hotspots(lat, lon, species, zones, corridors, affuts)
     salines = compute_salines(lat, lon, species, month)
     wind = compute_wind_vectors(lat, lon, wind_deg, wind_speed)
+    scent_cone = compute_scent_cone(lat, lon, wind_deg, wind_speed)
+    pression = compute_pression(lat, lon)
+    heatmap = compute_heatmap(lat, lon)
 
     # ESI-Omega validation inline
     from engines.v8_institutional.esi_omega import validate_bundle, _log_audit
@@ -199,6 +205,9 @@ async def institutional_territoire(
         "hotspots": hotspots,
         "salines": salines,
         "wind_vectors": wind,
+        "contamination": scent_cone,
+        "pression": pression,
+        "heatmap": heatmap,
         "esi_omega": bv["conformite"],
         "document_maitre": "V8-ENGINES-INSTITUTIONNEL-Omega-ULTIME-MAX-2026",
         "source": "V8-INSTITUTIONNEL-EXCLUSIF",

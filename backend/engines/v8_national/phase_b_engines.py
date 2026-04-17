@@ -63,23 +63,49 @@ def _offset_m(lat, lon, dx_m, dy_m):
 # ═══════════════════════════════════════════════════════
 
 def _organic_polygon(c_lat, c_lon, radius_deg, n_vertices=12, seed=0):
-    points = []
+    """Generate ULTRA-precise organic polygon — courbes douces, zero angle.
+    V8-INSTITUTIONNEL: 24-32 vertices, Catmull-Rom spline-like smoothing.
+    Formes biologiques irregulieres naturelles.
+    """
     cos_lat = max(0.5, math.cos(math.radians(c_lat)))
+    # Generate control points with organic jitter
+    control_pts = []
     for j in range(n_vertices):
         angle = (j / n_vertices) * 2 * math.pi
-        jitter = 0.7 + 0.6 * abs(math.sin(seed * 7.3 + j * 2.9 + c_lat * 11.1))
+        jitter = 0.65 + 0.7 * abs(math.sin(seed * 7.3 + j * 2.9 + c_lat * 11.1))
         r = radius_deg * jitter
         p_lat = c_lat + math.sin(angle) * r
         p_lon = c_lon + math.cos(angle) * r / cos_lat
-        points.append([round(p_lat, 6), round(p_lon, 6)])
-    points.append(points[0])
+        control_pts.append((p_lat, p_lon))
+
+    # Catmull-Rom subdivision for smooth organic curves
+    points = []
+    n = len(control_pts)
+    subdivisions = 3  # 3 interpolated points between each control point
+    for i in range(n):
+        p0 = control_pts[(i - 1) % n]
+        p1 = control_pts[i]
+        p2 = control_pts[(i + 1) % n]
+        p3 = control_pts[(i + 2) % n]
+        for s in range(subdivisions):
+            t = s / subdivisions
+            t2 = t * t
+            t3 = t2 * t
+            lat_v = 0.5 * ((2 * p1[0]) + (-p0[0] + p2[0]) * t +
+                    (2*p0[0] - 5*p1[0] + 4*p2[0] - p3[0]) * t2 +
+                    (-p0[0] + 3*p1[0] - 3*p2[0] + p3[0]) * t3)
+            lon_v = 0.5 * ((2 * p1[1]) + (-p0[1] + p2[1]) * t +
+                    (2*p0[1] - 5*p1[1] + 4*p2[1] - p3[1]) * t2 +
+                    (-p0[1] + 3*p1[1] - 3*p2[1] + p3[1]) * t3)
+            points.append([round(lat_v, 6), round(lon_v, 6)])
+    points.append(points[0])  # Close polygon
     return points
 
 
 def _bezier_curve(start, end, n_points=8, curvature_seed=0):
-    """Generate ANGULAR terrain-following path — ZERO smooth curve.
-    V8-INSTITUTIONNEL: veines animales directionnelles.
-    3-5 segments angulaires, ZERO Bezier, ZERO interpolation lissee.
+    """Generate organic animal vein path — Bezier terrain-aware.
+    V8-INSTITUTIONNEL: veines animales continues, courbes organiques naturelles.
+    8-12 points intermediaires, curvature terrain-influenced.
     """
     s_lat, s_lon = start
     e_lat, e_lon = end
@@ -89,21 +115,36 @@ def _bezier_curve(start, end, n_points=8, curvature_seed=0):
     if dist < 1e-8:
         return [[s_lat, s_lon], [e_lat, e_lon]]
 
-    # Angular directional path: 3-5 waypoints with sharp direction changes
-    n_segments = 3 + int(abs(math.sin(curvature_seed * 2.7)) * 2)  # 3-5
-    points = [[s_lat, s_lon]]
-    for j in range(1, n_segments):
-        t = j / n_segments
-        # Base linear interpolation
-        base_lat = s_lat + dy * t
-        base_lon = s_lon + dx * t
-        # Angular offset perpendicular (terrain-aware jitter, not smooth)
-        offset_strength = 0.08 + 0.12 * abs(math.sin(curvature_seed * 3.7 + j * 5.3))
-        sign = 1 if (curvature_seed + j) % 2 == 0 else -1
-        perp_lat = base_lat + (-dx) * offset_strength * sign
-        perp_lon = base_lon + (dy) * offset_strength * sign
-        points.append([round(perp_lat, 6), round(perp_lon, 6)])
-    points.append([e_lat, e_lon])
+    mid_lat = (s_lat + e_lat) / 2
+    mid_lon = (s_lon + e_lon) / 2
+
+    # Organic curvature via dual control points (cubic Bezier)
+    curve_strength = 0.12 + 0.15 * abs(math.sin(curvature_seed * 3.7))
+    sign = 1 if curvature_seed % 2 == 0 else -1
+
+    # Control point 1 (1/3 of path)
+    t1 = 0.33
+    c1_lat = s_lat + dy * t1 + (-dx) * curve_strength * sign
+    c1_lon = s_lon + dx * t1 + (dy) * curve_strength * sign
+
+    # Control point 2 (2/3 of path) — opposite curvature for S-shape
+    t2 = 0.67
+    sign2 = sign * (-1 if abs(math.sin(curvature_seed * 5.1)) > 0.5 else 1)
+    curve2 = curve_strength * 0.7
+    c2_lat = s_lat + dy * t2 + (-dx) * curve2 * sign2
+    c2_lon = s_lon + dx * t2 + (dy) * curve2 * sign2
+
+    # Cubic Bezier with n_points
+    points = []
+    actual_n = max(8, n_points)
+    for j in range(actual_n + 1):
+        t = j / actual_n
+        inv = 1 - t
+        p_lat = (inv**3 * s_lat + 3 * inv**2 * t * c1_lat +
+                 3 * inv * t**2 * c2_lat + t**3 * e_lat)
+        p_lon = (inv**3 * s_lon + 3 * inv**2 * t * c1_lon +
+                 3 * inv * t**2 * c2_lon + t**3 * e_lon)
+        points.append([round(p_lat, 6), round(p_lon, 6)])
     return points
 
 
@@ -222,8 +263,8 @@ def generate_zones_ta(lat, lon, species, month, radius_km=1):
         type_radius = {"alimentation": 0.003, "repos": 0.0035, "rut": 0.004, "affuts": 0.0025, "eau": 0.002}
         base_r = type_radius.get(ztype, 0.003)
         radius_deg = base_r + abs(math.sin(i * 3.7 + lat * 5.1)) * 0.001
-        # V6-CONFORME: plus de vertices pour formes plus irregulieres
-        n_verts = 14 + int(_seed(lat, lon, f"verts_{i}") * 6)  # 14-20 vertices
+        # V8-INSTITUTIONNEL: plus de vertices pour formes ultra-precises organiques
+        n_verts = 8 + int(_seed(lat, lon, f"verts_{i}") * 4)  # 8-12 control points -> 24-36 final vertices via Catmull-Rom
         polygon = _organic_polygon(c_lat, c_lon, radius_deg, n_vertices=n_verts, seed=i + lat * 100)
 
         zones.append({
@@ -238,15 +279,18 @@ def generate_zones_ta(lat, lon, species, month, radius_km=1):
     return zones
 
 
-def generate_corridors_ta(lat, lon, species, month, hour, radius_km=2):
-    """Corridors terrain-aware V6-conformes: localisés, intensité variable."""
+def generate_corridors_ta(lat, lon, species, month, hour, radius_km=0.6):
+    """Corridors terrain-aware V8: veines animales continues, rayon 600m + extension ±30%."""
     corridors = []
     cos_lat = max(0.5, math.cos(math.radians(lat)))
+    # Extension ±30% du rayon de base
+    ext_min = radius_km * 0.7
+    ext_max = radius_km * 1.3
     for i in range(10):
         angle = i * 36 + _seed(lat, lon, f"corr_angle_{i}") * 30
         rad = math.radians(angle)
-        # V6-CONFORME: corridors localisés 0.2-1.8km
-        base_dist = 0.2 + _seed(lat, lon, f"corr_dist_{i}") * 1.6  # 0.2-1.8 km
+        # V8-INSTITUTIONNEL: corridors 600m rayon, extension ±30%
+        base_dist = ext_min + _seed(lat, lon, f"corr_dist_{i}") * (ext_max - ext_min)
         dist = base_dist / 111.0
         s_lat = lat + math.sin(rad) * dist * 0.4
         s_lon = lon + math.cos(rad) * dist * 0.4 / cos_lat
