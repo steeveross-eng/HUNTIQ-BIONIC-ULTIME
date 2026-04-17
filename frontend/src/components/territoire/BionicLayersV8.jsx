@@ -33,8 +33,9 @@ const ZONE_COLORS = {
 const CORRIDOR_WEIGHT = { faible: 1.2, modere: 2.0, fort: 3.0, majeur: 3.0, critique: 3.0 };
 const CORRIDOR_COLOR = '#FF8F00';
 
-// ═══ PROTOCOLE V6 ABSOLU — AFFUT JAUNE #FDD835 ═══
-const AFFUT_COLOR = '#FDD835';
+// ═══ DOCUMENT MAITRE ULTIME MAX — AFFUT: cercle gris + X central ═══
+const AFFUT_COLOR = '#9E9E9E';
+const AFFUT_X_COLOR = '#424242';
 const AFFUT_SIZE = { optimal: 8, bon: 7, acceptable: 6 };
 
 const BionicLayersV8 = ({
@@ -129,34 +130,37 @@ const BionicLayersV8 = ({
     }
 
     // ═══ Z-ORDER 3: AFFUTS (dessus) ═══
-    // Jaune #FDD835, 6-8px, opacite 100%, ZERO halo
+    // DOCUMENT MAITRE: cercle gris + X central, opacite 100%, ZERO halo
     if (showAffuts && affuts.length > 0) {
       affuts.forEach(a => {
         const sz_px = AFFUT_SIZE[a.quality] || 6;
-        const sz = sz_px * 0.000018;
-        const orientRad = (a.orientation_deg || 0) * Math.PI / 180;
-        const cos_lat = Math.max(0.5, Math.cos(a.lat * Math.PI / 180));
 
-        const tip = [a.lat + Math.cos(orientRad) * sz * 2, a.lng + Math.sin(orientRad) * sz * 2 / cos_lat];
-        const left = [a.lat + Math.cos(orientRad + 2.3) * sz, a.lng + Math.sin(orientRad + 2.3) * sz / cos_lat];
-        const right = [a.lat + Math.cos(orientRad - 2.3) * sz, a.lng + Math.sin(orientRad - 2.3) * sz / cos_lat];
-
-        const triangle = L.polygon([tip, left, right], {
+        // Cercle gris
+        const circle = L.circleMarker([a.lat, a.lng], {
+          radius: sz_px,
           color: AFFUT_COLOR,
           fillColor: AFFUT_COLOR,
-          fillOpacity: 1.0,
-          weight: 1.5,
+          fillOpacity: 0.3,
+          weight: 2,
           opacity: 1.0,
-          smoothFactor: 0,
           interactive: true,
         });
 
+        // X central via divIcon
+        const xIcon = L.divIcon({
+          className: 'affut-x-v8',
+          html: `<div style="width:${sz_px*2}px;height:${sz_px*2}px;display:flex;align-items:center;justify-content:center;font-size:${sz_px+2}px;font-weight:900;color:${AFFUT_X_COLOR};line-height:1;">X</div>`,
+          iconSize: [sz_px*2, sz_px*2],
+          iconAnchor: [sz_px, sz_px],
+        });
+        L.marker([a.lat, a.lng], { icon: xIcon, interactive: false }).addTo(group);
+
         const score = a.score !== undefined ? a.score : a.zone_score;
-        triangle.bindTooltip(
+        circle.bindTooltip(
           `<b style="color:${AFFUT_COLOR}">Affut</b> ${a.quality} ${score}/100 ${a.orientation_deg}°`,
           { sticky: true, opacity: 0.95 }
         );
-        group.addLayer(triangle);
+        group.addLayer(circle);
       });
     }
 

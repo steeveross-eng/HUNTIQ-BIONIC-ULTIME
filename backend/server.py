@@ -784,6 +784,14 @@ try:
 except Exception as e:
     logger.warning(f"V8 Phase C not loaded: {e}")
 
+# V8-INSTITUTIONAL — 24 Engines + 4 Piliers (DOCUMENT MAITRE ULTIME MAX)
+try:
+    from engines.v8_institutional.piliers_router import router as institutional_router
+    app.include_router(institutional_router)
+    logger.info("V8-INSTITUTIONAL registered (/api/v8/institutional) — 24 Engines + 4 Piliers")
+except Exception as e:
+    logger.warning(f"V8 Institutional not loaded: {e}")
+
 # V13-AUDIT — Public report endpoint
 try:
     from routes.audit_report_route import router as audit_report_router
