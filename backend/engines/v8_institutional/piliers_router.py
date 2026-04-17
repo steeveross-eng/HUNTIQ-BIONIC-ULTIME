@@ -43,7 +43,7 @@ async def pilier_bio_systeme(
 ):
     start = time.time()
     zones = compute_zones(lat, lon, species, month)
-    corridors = compute_corridors(lat, lon, species, month, hour)
+    corridors = compute_corridors(lat, lon, species, month, hour, wind_deg, zones=zones)
     affuts = compute_affuts(lat, lon, species, zones, corridors, wind_deg)
     hotspots = compute_hotspots(lat, lon, species, zones, corridors, affuts)
     wind = compute_wind_vectors(lat, lon, wind_deg, 15)
@@ -134,7 +134,7 @@ async def institutional_full(
 ):
     start = time.time()
     zones = compute_zones(lat, lon, species, month)
-    corridors = compute_corridors(lat, lon, species, month, hour)
+    corridors = compute_corridors(lat, lon, species, month, hour, wind_deg, zones=zones)
     affuts = compute_affuts(lat, lon, species, zones, corridors, wind_deg)
     hotspots = compute_hotspots(lat, lon, species, zones, corridors, affuts)
     wind = compute_wind_vectors(lat, lon, wind_deg, wind_speed)
@@ -184,7 +184,7 @@ async def institutional_territoire(
     from engines.v8_institutional.engine_heatmap import compute_heatmap
 
     zones = compute_zones(lat, lon, species, month)
-    corridors = compute_corridors(lat, lon, species, month, hour)
+    corridors = compute_corridors(lat, lon, species, month, hour, wind_deg, zones=zones)
     affuts = compute_affuts(lat, lon, species, zones, corridors, wind_deg)
     hotspots = compute_hotspots(lat, lon, species, zones, corridors, affuts)
     salines = compute_salines(lat, lon, species, month)

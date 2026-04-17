@@ -30,7 +30,15 @@ const ZONE_COLORS = {
 };
 
 const CORRIDOR_COLOR = '#FF8F00';
-const CORRIDOR_WEIGHT = { faible: 1.2, modere: 2.0, fort: 3.0, majeur: 3.5, critique: 4.0 };
+const CORRIDOR_COLORS = {
+  critique: '#FF0000',
+  majeur: '#D32F2F',
+  fort: '#FF8F00',
+  modere: '#FFEB3B',
+  faible: '#FFFFFF',
+};
+const CORRIDOR_WEIGHT = { faible: 1.4, modere: 1.8, fort: 2.2, majeur: 2.4, critique: 2.6 };
+const CORRIDOR_OPACITY = { faible: 0.65, modere: 0.75, fort: 0.85, majeur: 0.90, critique: 0.95 };
 
 const AFFUT_COLOR = '#9E9E9E';
 const AFFUT_X_COLOR = '#424242';
@@ -143,16 +151,18 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-ORDER 3: CORRIDORS (veines animales continues Bézier) ═══
+    // ═══ Z-ORDER 3: CORRIDORS (veines animales Catmull-Rom V9-x20) ═══
     if (showCorridors && corridors.length > 0) {
       corridors.forEach(c => {
         const path = c.path || [[c.start.lat, c.start.lng], [c.end.lat, c.end.lng]];
         const w = CORRIDOR_WEIGHT[c.type] || 2.0;
+        const color = CORRIDOR_COLORS[c.type] || CORRIDOR_COLOR;
+        const opacity = CORRIDOR_OPACITY[c.type] || 0.85;
 
         const line = L.polyline(path, {
-          color: CORRIDOR_COLOR,
+          color: color,
           weight: w,
-          opacity: 1.0,
+          opacity: opacity,
           lineCap: 'round',
           lineJoin: 'round',
           smoothFactor: 1,
@@ -160,7 +170,7 @@ const BionicLayersV8 = ({
         });
 
         line.bindTooltip(
-          `<b style="color:${CORRIDOR_COLOR}">${c.type}</b> int:${c.intensity}`,
+          `<b style="color:${color}">${c.type}</b> int:${c.intensity} | ${c.species_profile || ''}`,
           { sticky: true, opacity: 0.95 }
         );
         group.addLayer(line);

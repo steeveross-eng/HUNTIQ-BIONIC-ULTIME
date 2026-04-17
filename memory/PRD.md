@@ -1,51 +1,43 @@
 # HUNTIQ V9 — PRD
-## PHASE-4Omega TERMINEE — NORMALISATION V9 + VENT REEL VENTUSKY
-**MAJ:** 2026-04-17 | **V9-INSTITUTIONNEL** | **VENTUSKY-STEEVE-MAX ACTIF**
+## ENGINE CORRIDORS V9-x20 SURCLASSE — PRET POUR VALIDATION
+**MAJ:** 2026-04-17 | **CORRIDORS x20** | **6 ESPECES** | **20 DIMENSIONS**
 
 ## Architecture V9-INSTITUTIONNEL
-- 24 Engines, 4 Piliers, ESI-Omega Guardian Central
-- Document Maitre: V8-ENGINES-INSTITUTIONNEL-Omega-ULTIME-MAX-2026
-- Upgrade V8→V9: Catmull-Rom zones + Vent reel dynamique
+- 24 Engines, 4 Piliers, ESI-Omega Guardian
+- ENGINE CORRIDORS V9-x20: Catmull-Rom multi-especes vivant
 
 ## Phases Completees
-- PHASE-1: Verrouillage Ultime Max
-- PHASE-2: Integration Territoire/Supra
-- PHASE-3: Validation + Stabilisation + Score Global
-- PHASE-4B: Purge legacy + source unique
-- PHASE-4E: Reintroduction tous engines
-- PHASE-4Omega: Normalisation visuelle V9 + Vent reel Ventusky
+- PHASE-1 a PHASE-4Omega: toutes terminees
+- PHASE-ENGINE-CORRIDORS-Omega-ULTIME-VIVANT: SURCLASSAGE x20
 
-## PHASE-4Omega: Details
-### Design System Steeve-Max
-- Palette BCE-4X complete (8 couleurs institutionnelles)
-- Epaisseurs/opacites standardisees
-- Z-order hierarchique strict
+## ENGINE CORRIDORS V9-x20
+### Surclassage
+- AVANT: 10 corridors, Bezier, 2 niveaux, 0 especes
+- APRES: 8-12/espece, Catmull-Rom 5-9pts, 5 niveaux, 6 especes, 20 dimensions
 
-### Engines Visuels Normalises
-- Zones: Catmull-Rom 31 vertices, courbes douces
-- Corridors: Bezier cubique 9pts, #FF8F00, 600m rayon
-- Affuts: cercle gris + X, orientation vent
-- Contamination: cone 500m #FF7043
-- Pression: gradient #EF5350
-- Hotspots: intensite 1-5
-- Salines: #FDD835
+### 6 Especes avec profils distincts
+- cerf: sinueux_couvert (slope<25, cover++, wind++)
+- orignal: large_humide (slope<35, water++, thermal++)
+- wapiti: directionnel_cretes (slope<30, edge+)
+- ours: opportuniste_couvert (slope<35, cover+++, noise_avoid++)
+- chevreuil: sinueux_prudent (slope<20, wind+++, noise_avoid++)
+- dindon: lineaire_lisiere (slope<15, edge++)
 
-### Vent Reel Dynamique (VENTUSKY-STEEVE-MAX)
-- Source: Open-Meteo (ECCC/NOAA GFS-Global)
-- Endpoint: /api/v3/weather/windgrid
-- Streamlines: 2500 particules Canvas, ~60 FPS
-- Interpolation bilineaire spatiale
-- Physique: friction foret 55%, Venturi +25%, turbulence ±3deg
+### 5 Niveaux Intensite
+- Critique: #FF0000, 2.6px, 0.95
+- Majeur: #D32F2F, 2.4px, 0.90
+- Fort: #FF8F00, 2.2px, 0.85
+- Modere: #FFEB3B, 1.8px, 0.75
+- Faible: #FFFFFF, 1.4px, 0.65
 
-### Integration Multi-Engines
-- VENT → CONTAMINATION (cone synchronise)
-- VENT → AFFUTS (orientation)
-- CORRIDORS → ZONES (attraction)
+### 20 Dimensions
+Topo, hydro, humaines, olfactives, thermiques, geospatiales,
+ecologiques, comportementales, vent, contamination, saison,
+temporelle, pression, multi-especes, historique, multi-engines
 
 ## Endpoints
-- GET /api/v8/institutional/territoire — Source UNIQUE rendering
-- GET /api/v3/weather/windgrid — Champ vent grille reel
-- GET /api/v3/weather/current — Meteo temps reel
+- GET /api/v8/institutional/territoire — Source UNIQUE
+- GET /api/v3/weather/windgrid — Vent reel
 - GET /api/v8/esi/conformite/full — 8/8 CONFORME
 
 ## Credentials

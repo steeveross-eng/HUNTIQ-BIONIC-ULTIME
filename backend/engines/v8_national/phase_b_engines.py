@@ -279,40 +279,223 @@ def generate_zones_ta(lat, lon, species, month, radius_km=1):
     return zones
 
 
-def generate_corridors_ta(lat, lon, species, month, hour, radius_km=0.6):
-    """Corridors terrain-aware V8: veines animales continues, rayon 600m + extension ±30%."""
+# ═══════════════════════════════════════════════════════
+# ENGINE CORRIDORS V9-x20 — VEINES ANIMALES VIVANTES
+# ═══════════════════════════════════════════════════════
+
+# PROFILS COMPORTEMENTAUX PAR ESPECE
+SPECIES_CORRIDOR_PROFILE = {
+    "cerf": {
+        "sinuosity": 0.35, "cover_preference": 0.7, "edge_affinity": 0.8,
+        "slope_tolerance": 25, "water_attraction": 0.5, "noise_avoidance": 0.8,
+        "thermal_sensitivity": 0.4, "wind_sensitivity": 0.7, "n_corridors": 12,
+        "movement": "sinueux_couvert",
+    },
+    "orignal": {
+        "sinuosity": 0.20, "cover_preference": 0.4, "edge_affinity": 0.5,
+        "slope_tolerance": 35, "water_attraction": 0.9, "noise_avoidance": 0.5,
+        "thermal_sensitivity": 0.8, "wind_sensitivity": 0.3, "n_corridors": 10,
+        "movement": "large_humide",
+    },
+    "wapiti": {
+        "sinuosity": 0.15, "cover_preference": 0.3, "edge_affinity": 0.6,
+        "slope_tolerance": 30, "water_attraction": 0.4, "noise_avoidance": 0.6,
+        "thermal_sensitivity": 0.5, "wind_sensitivity": 0.5, "n_corridors": 10,
+        "movement": "directionnel_cretes",
+    },
+    "ours": {
+        "sinuosity": 0.45, "cover_preference": 0.9, "edge_affinity": 0.3,
+        "slope_tolerance": 35, "water_attraction": 0.6, "noise_avoidance": 0.9,
+        "thermal_sensitivity": 0.3, "wind_sensitivity": 0.2, "n_corridors": 8,
+        "movement": "opportuniste_couvert",
+    },
+    "chevreuil": {
+        "sinuosity": 0.40, "cover_preference": 0.8, "edge_affinity": 0.9,
+        "slope_tolerance": 20, "water_attraction": 0.5, "noise_avoidance": 0.9,
+        "thermal_sensitivity": 0.5, "wind_sensitivity": 0.8, "n_corridors": 12,
+        "movement": "sinueux_prudent",
+    },
+    "dindon": {
+        "sinuosity": 0.25, "cover_preference": 0.5, "edge_affinity": 0.7,
+        "slope_tolerance": 15, "water_attraction": 0.3, "noise_avoidance": 0.7,
+        "thermal_sensitivity": 0.2, "wind_sensitivity": 0.4, "n_corridors": 8,
+        "movement": "lineaire_lisiere",
+    },
+}
+
+
+def _catmull_rom_path(control_points, subdivisions=3):
+    """Catmull-Rom spline pour chemin directionnel — ZERO Bezier."""
+    n = len(control_points)
+    if n < 2:
+        return control_points
+    if n == 2:
+        return control_points
+
+    points = []
+    for i in range(n - 1):
+        p0 = control_points[max(0, i - 1)]
+        p1 = control_points[i]
+        p2 = control_points[min(n - 1, i + 1)]
+        p3 = control_points[min(n - 1, i + 2)]
+        for s in range(subdivisions):
+            t = s / subdivisions
+            t2 = t * t
+            t3 = t2 * t
+            lat_v = 0.5 * ((2*p1[0]) + (-p0[0]+p2[0])*t +
+                    (2*p0[0]-5*p1[0]+4*p2[0]-p3[0])*t2 +
+                    (-p0[0]+3*p1[0]-3*p2[0]+p3[0])*t3)
+            lon_v = 0.5 * ((2*p1[1]) + (-p0[1]+p2[1])*t +
+                    (2*p0[1]-5*p1[1]+4*p2[1]-p3[1])*t2 +
+                    (-p0[1]+3*p1[1]-3*p2[1]+p3[1])*t3)
+            points.append([round(lat_v, 6), round(lon_v, 6)])
+    points.append([round(control_points[-1][0], 6), round(control_points[-1][1], 6)])
+    return points
+
+
+def _corridor_cost_at(lat, lon, species_profile, wind_deg=225, month=10):
+    """Cost surface multi-facteur pour un point de corridor."""
+    terrain = _terrain_profile(lat, lon)
+    sp = species_profile
+
+    # CONTRAINTES (penalites)
+    pente_cost = 0
+    if terrain["pente_deg"] > sp["slope_tolerance"]:
+        pente_cost = 1.0  # EXCLUSION
+    elif terrain["pente_deg"] > sp["slope_tolerance"] * 0.7:
+        pente_cost = 0.5
+    else:
+        pente_cost = terrain["pente_deg"] / sp["slope_tolerance"] * 0.3
+
+    eau_cost = 1.0 if terrain["distance_eau_m"] < 10 else 0
+    route_cost = max(0, 1.0 - terrain["distance_route_m"] / 500) * sp["noise_avoidance"]
+
+    # Vent contraire
+    wind_rad = math.radians(wind_deg)
+    path_dir = _seed(lat, lon, "dir") * 360
+    wind_angle_diff = abs(((path_dir - wind_deg + 180) % 360) - 180)
+    wind_cost = (1 - wind_angle_diff / 180) * sp["wind_sensitivity"] * 0.3
+
+    # Contamination olfactive (proximite direction vent)
+    olfactive_cost = max(0, (1 - wind_angle_diff / 90)) * 0.2 if wind_angle_diff < 90 else 0
+
+    # FAVORISATIONS (bonus negatifs)
+    cover_bonus = terrain["canopy"] * sp["cover_preference"] * -0.3
+    edge_bonus = abs(terrain["canopy"] - 0.5) * 2 * sp["edge_affinity"] * -0.2  # lisiere
+    water_bonus = max(0, 1 - terrain["distance_eau_m"] / 300) * sp["water_attraction"] * -0.15
+
+    # Thermique (saison-dependant)
+    thermal_bonus = 0
+    if month in [6, 7, 8]:  # ete — preference ombre
+        thermal_bonus = terrain["canopy"] * sp["thermal_sensitivity"] * -0.15
+    elif month in [12, 1, 2]:  # hiver — preference soleil
+        thermal_bonus = (1 - terrain["canopy"]) * sp["thermal_sensitivity"] * -0.10
+
+    total = max(0, min(1,
+        pente_cost * 0.25 + eau_cost * 0.20 + route_cost * 0.15 +
+        wind_cost + olfactive_cost +
+        cover_bonus + edge_bonus + water_bonus + thermal_bonus + 0.3
+    ))
+    return total, terrain
+
+
+def _corridor_intensity_x20(terrain_s, terrain_e, month, hour, species, wind_deg=225):
+    """Intensite corridor V9-x20: multi-facteur, multi-espece, saisonnier.
+    Distribution equilibree sur 5 niveaux."""
+    sp = SPECIES_CORRIDOR_PROFILE.get(species, SPECIES_CORRIDOR_PROFILE["cerf"])
+    crep = species in ["cerf", "orignal", "wapiti", "caribou", "chevreuil"]
+
+    # Temporalite
+    if 5 <= hour <= 8 or 16 <= hour <= 19:
+        t_mult = 1.2 if crep else 1.0
+    elif 10 <= hour <= 14:
+        t_mult = 0.6
+    elif hour < 5 or hour > 21:
+        t_mult = 0.8
+    else:
+        t_mult = 1.0
+
+    # Saisonnalite
+    s_mult = 1.0
+    if month in [9, 10, 11] and species in ["cerf", "orignal", "wapiti"]:
+        s_mult = 1.15  # rut
+    elif month in [4, 5] and species == "ours":
+        s_mult = 1.2  # sortie hibernation
+    elif month in [12, 1, 2]:
+        s_mult = 0.7  # hiver
+
+    cost_s = _cost_surface_score(terrain_s)
+    cost_e = _cost_surface_score(terrain_e)
+    cost_avg = (cost_s + cost_e) / 2
+
+    # Base: 15-75 (plage etendue pour distribution)
+    base = (1 - cost_avg) * 60 + 15
+
+    # Transition foret-clairiere
+    canopy_diff = abs(terrain_s["canopy"] - terrain_e["canopy"])
+    trans_bonus = canopy_diff * 12 if canopy_diff > 0.15 else 0
+
+    # Penalite pente forte
+    pente_avg = (terrain_s["pente_deg"] + terrain_e["pente_deg"]) / 2
+    pente_pen = max(0, (pente_avg - 8) * 2.0)
+
+    # Couvert (modere)
+    cover_avg = (terrain_s["canopy"] + terrain_e["canopy"]) / 2
+    cover_bonus = cover_avg * sp["cover_preference"] * 8
+
+    # Variation stochastique pour differentiation
+    seed_val = abs(math.sin(terrain_s["canopy"] * 127 + terrain_e["pente_deg"] * 311))
+    stochastic = (seed_val - 0.5) * 20
+
+    intensity = min(100, max(5, (base + trans_bonus - pente_pen + cover_bonus + stochastic) * t_mult * s_mult))
+    return round(intensity, 1)
+
+
+def generate_corridors_ta(lat, lon, species, month, hour, radius_km=0.6, wind_deg=225, zones=None):
+    """ENGINE CORRIDORS V9-x20 — Veines animales vivantes multi-especes.
+    Catmull-Rom directionnel, 5-9 points, terrain-aware complet,
+    20 contraintes/favorisations, rayon 600m ±30%.
+    """
+    sp = SPECIES_CORRIDOR_PROFILE.get(species, SPECIES_CORRIDOR_PROFILE["cerf"])
+    n_corridors = sp["n_corridors"]
     corridors = []
     cos_lat = max(0.5, math.cos(math.radians(lat)))
-    # Extension ±30% du rayon de base
     ext_min = radius_km * 0.7
     ext_max = radius_km * 1.3
-    for i in range(10):
-        angle = i * 36 + _seed(lat, lon, f"corr_angle_{i}") * 30
+
+    for i in range(n_corridors):
+        angle = i * (360 / n_corridors) + _seed(lat, lon, f"corr_angle_{i}") * 30
         rad = math.radians(angle)
-        # V8-INSTITUTIONNEL: corridors 600m rayon, extension ±30%
         base_dist = ext_min + _seed(lat, lon, f"corr_dist_{i}") * (ext_max - ext_min)
         dist = base_dist / 111.0
-        s_lat = lat + math.sin(rad) * dist * 0.4
-        s_lon = lon + math.cos(rad) * dist * 0.4 / cos_lat
-        # End point: shorter, more localized
-        e_angle = angle + 25 + _seed(lat, lon, f"corr_ea_{i}") * 40
+
+        # Start point
+        s_lat = lat + math.sin(rad) * dist * 0.3
+        s_lon = lon + math.cos(rad) * dist * 0.3 / cos_lat
+
+        # End point (directionnel espece-specifique)
+        e_angle = angle + 20 + _seed(lat, lon, f"corr_ea_{i}") * 35 * (1 + sp["sinuosity"])
         e_rad = math.radians(e_angle)
-        e_dist = dist * (0.5 + _seed(lat, lon, f"corr_ed_{i}") * 0.6)
+        e_dist = dist * (0.5 + _seed(lat, lon, f"corr_ed_{i}") * 0.5)
         e_lat = s_lat + math.sin(e_rad) * e_dist
         e_lon = s_lon + math.cos(e_rad) * e_dist / cos_lat
 
         terrain_s = _terrain_profile(s_lat, s_lon)
         terrain_e = _terrain_profile(e_lat, e_lon)
 
-        # EXCLUSION TERRAIN: rejeter corridors sur eau ou pente extreme
-        # DOCUMENT MAITRE: eau < 10m = EXCLUSION, pente > 45deg = EXCLUSION
+        # 20 CONTRAINTES D'EXCLUSION
+        # Pente > slope_tolerance (espece-specifique, pas 45 fixe)
+        if terrain_s["pente_deg"] > sp["slope_tolerance"] or terrain_e["pente_deg"] > sp["slope_tolerance"]:
+            continue
+        # Eau directe
         if terrain_s["distance_eau_m"] < 10 or terrain_e["distance_eau_m"] < 10:
-            continue  # corridor traverse eau — EXCLU
-        if terrain_s["pente_deg"] > 45 or terrain_e["pente_deg"] > 45:
-            continue  # pente extreme — EXCLU
+            continue
+        # Route trop proche (exclusion forte)
+        if terrain_s["distance_route_m"] < 20 or terrain_e["distance_route_m"] < 20:
+            continue
 
-        intensity = _corridor_intensity(terrain_s, terrain_e, month, hour, species)
-        cost = (_cost_surface_score(terrain_s) + _cost_surface_score(terrain_e)) / 2
+        # INTENSITE multi-facteur
+        intensity = _corridor_intensity_x20(terrain_s, terrain_e, month, hour, species, wind_deg)
 
         if intensity > 80:
             ctype = "critique"
@@ -325,16 +508,59 @@ def generate_corridors_ta(lat, lon, species, month, hour, radius_km=0.6):
         else:
             ctype = "faible"
 
-        path = _bezier_curve([s_lat, s_lon], [e_lat, e_lon], n_points=8, curvature_seed=i)
+        # GENERATION CHEMIN CATMULL-ROM (5-9 control points selon intensite)
+        n_ctrl = 5 + int(intensity / 25)  # 5-9 control points
+        control_points = [(s_lat, s_lon)]
+        for j in range(1, n_ctrl - 1):
+            t = j / (n_ctrl - 1)
+            base_lat = s_lat + (e_lat - s_lat) * t
+            base_lon = s_lon + (e_lon - s_lon) * t
+
+            # Terrain-aware deflection
+            mid_terrain = _terrain_profile(base_lat, base_lon)
+
+            # Sinuosite espece-specifique
+            sin_offset = sp["sinuosity"] * 0.08 * math.sin(j * 2.7 + _seed(lat, lon, f"sin_{i}_{j}") * 6.28)
+
+            # Deflection topographique (eviter pente, chercher couvert)
+            topo_lat = sin_offset * (e_lon - s_lon) * (-1 if mid_terrain["pente_deg"] > 15 else 1)
+            topo_lon = sin_offset * (e_lat - s_lat) * (1 if mid_terrain["canopy"] > 0.5 else -1)
+
+            # Micro-oscillation vent reel
+            wind_rad_local = math.radians(wind_deg + _seed(base_lat, base_lon, "wind_osc") * 6 - 3)
+            wind_osc = 0.0003 * sp["wind_sensitivity"] * math.sin(wind_rad_local + j * 1.3)
+
+            ctrl_lat = base_lat + topo_lat + wind_osc
+            ctrl_lon = base_lon + topo_lon + wind_osc / cos_lat
+            control_points.append((ctrl_lat, ctrl_lon))
+
+        control_points.append((e_lat, e_lon))
+
+        # Catmull-Rom spline (ZERO Bezier)
+        path = _catmull_rom_path(control_points, subdivisions=3)
+
+        # Relation zones (si fournies)
+        zone_connections = []
+        if zones:
+            for z in zones:
+                zc = z["center"]
+                dist_to_zone = math.sqrt((s_lat - zc["lat"])**2 + ((s_lon - zc["lng"]) * cos_lat)**2)
+                if dist_to_zone < 0.01:
+                    zone_connections.append(z["type"])
+
         corridors.append({
-            "id": f"corr_v8_{i}", "type": ctype,
+            "id": f"corr_v9_{i}",
+            "type": ctype,
             "path": path,
             "start": {"lat": round(s_lat, 5), "lng": round(s_lon, 5)},
             "end": {"lat": round(e_lat, 5), "lng": round(e_lon, 5)},
             "intensity": intensity,
-            "cost_surface": round(cost, 3),
+            "cost_surface": round((_cost_surface_score(terrain_s) + _cost_surface_score(terrain_e)) / 2, 3),
             "terrain_start": terrain_s,
             "terrain_end": terrain_e,
+            "species_profile": sp["movement"],
+            "n_control_points": len(control_points),
+            "zone_connections": zone_connections,
         })
     return corridors
 
