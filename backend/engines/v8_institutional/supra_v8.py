@@ -148,11 +148,63 @@ async def supra_score(
     }
 
 
+@router.get("/score-global-interne")
+async def supra_score_global_interne(
+    lat: float = Query(...), lon: float = Query(...),
+    species: str = Query("cerf"), month: int = Query(None), hour: int = Query(None),
+    wind_deg: float = Query(225),
+):
+    """SCORE GLOBAL INTERNE — 6 composantes + journalisation ESI-Omega."""
+    start = time.time()
+    now = datetime.now(timezone.utc)
+    m = month or now.month
+    h = hour or now.hour
+
+    # 6 composantes
+    score = compute_score_global(lat, lon, species, m, h)
+    risque = compute_risque(lat, lon, species, m)
+    comport = compute_comportement(lat, lon, species, m, h)
+    intel = compute_intelligence(lat, lon, species, m, wind_deg)
+
+    composantes = {
+        "terrain": score["breakdown"]["terrain"],
+        "thermal": score["breakdown"]["thermal"],
+        "temporal": score["breakdown"]["temporal"],
+        "comportement": round(comport.get("distance_fuite_m", 0) / 5, 1),
+        "risque": risque["risque_score"],
+        "intelligence": intel["site_composite"],
+    }
+
+    coherence_ok = all(isinstance(v, (int, float)) and v >= 0 for v in composantes.values())
+
+    # Journalisation ESI-Omega
+    from engines.v8_institutional.esi_omega import _log_audit
+    _log_audit(
+        "SCORE_GLOBAL_INTERNE_ACTIVATION",
+        f"{lat},{lon},{species}",
+        "CONFORME" if coherence_ok else "NON-CONFORME",
+        f"6 composantes: {composantes}"
+    )
+
+    return {
+        "module": "SCORE-GLOBAL-INTERNE",
+        "mode": "INTERNE",
+        "score_global": score["score_global"],
+        "classification": score["classification"],
+        "composantes_6": composantes,
+        "coherence": "CONFORME" if coherence_ok else "NON-CONFORME",
+        "thermal": score["thermal"],
+        "engine": "V8-SCORE-GLOBAL-INTERNE",
+        "esi_omega_logged": True,
+        "compute_ms": round((time.time() - start) * 1000),
+    }
+
+
 @router.get("/status")
 async def supra_status():
     return {
         "engine": "SUPRA-V8-INSTITUTIONNEL",
-        "modules": ["FICHE", "ANALYSE", "RECOMMANDATION", "PREDICTION", "SCORE-GLOBAL"],
+        "modules": ["FICHE", "ANALYSE", "RECOMMANDATION", "PREDICTION", "SCORE-GLOBAL", "SCORE-GLOBAL-INTERNE"],
         "source": "24 ENGINES INSTITUTIONNELS via TERRITOIRE",
         "validation": "ESI-Omega",
         "status": "ACTIF",

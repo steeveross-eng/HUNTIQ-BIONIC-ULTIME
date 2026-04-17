@@ -1,6 +1,7 @@
 """
 ENGINE 18 — BIO-SIGNES (ADN visuel + chimie visuelle + fraicheur)
 PILIER: SYSTEME SENSORIEL
+SOURCES FUSIONNEES: trace analysis models, chimie visuelle decomposition, species trace profiles
 ENGINE COMPLET — ZERO STUB
 Analyse les indices biologiques visuels: traces, feces, frottages, grattages,
 urine, litiere, marques territoriales. Evalue fraicheur, intensite, espece probable.

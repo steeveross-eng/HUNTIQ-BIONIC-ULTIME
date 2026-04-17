@@ -122,7 +122,7 @@ async def national_score(
                 "dataVersion": "V8", "engine": "V8-GOVERNANCE-LOCKED",
             }
     except Exception:
-        gov_mode = "PREVIEW"
+        gov_mode = "LOCKED"
 
     now = datetime.now(timezone.utc)
     m = month or now.month

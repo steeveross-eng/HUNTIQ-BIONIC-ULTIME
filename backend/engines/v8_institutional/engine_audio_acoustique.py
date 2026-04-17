@@ -1,6 +1,7 @@
 """
 ENGINE 19 — AUDIO-ACOUSTIQUE (sonar passif)
 PILIER: SYSTEME SENSORIEL
+SOURCES FUSIONNEES: acoustique terrain_profile, ambient noise model, species vocalisations database
 ENGINE COMPLET — ZERO STUB
 Analyse l'environnement sonore: bruit ambiant, signature acoustique espece,
 detection vocalisations, masquage sonore, fenetre acoustique optimale.

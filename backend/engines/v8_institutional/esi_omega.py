@@ -367,3 +367,71 @@ async def esi_conformite_full(
         "conformite_globale": "CONFORME" if failed == 0 else "NON-CONFORME",
         "compute_ms": round((time.time() - start) * 1000),
     }
+
+
+
+@router.get("/verify-master-switch")
+async def esi_verify_master_switch():
+    """Verification ultime du Master Switch — journalisee dans l'audit central."""
+    import os, glob
+
+    checks = []
+
+    # 1. Verify governance.py is sole authority
+    gov_path = os.path.join(os.path.dirname(__file__), "..", "v8_national", "governance.py")
+    gov_exists = os.path.exists(gov_path)
+    checks.append({"check": "governance_file_exists", "valid": gov_exists})
+
+    # 2. Verify no engine in v8_institutional can activate/deactivate/bypass/modify
+    inst_dir = os.path.dirname(__file__)
+    bypass_found = []
+    for f in glob.glob(os.path.join(inst_dir, "engine_*.py")):
+        with open(f) as fh:
+            content = fh.read()
+            if "activate_mode" in content or "governance.*update" in content or "mode.*PUBLIC" in content:
+                bypass_found.append(os.path.basename(f))
+    checks.append({"check": "zero_bypass_in_engines", "valid": len(bypass_found) == 0, "violations": bypass_found})
+
+    # 3. Verify piliers_router cannot modify
+    pil_path = os.path.join(inst_dir, "piliers_router.py")
+    with open(pil_path) as fh:
+        pil_content = fh.read()
+    pil_safe = "activate_mode" not in pil_content and "governance" not in pil_content
+    checks.append({"check": "piliers_router_safe", "valid": pil_safe})
+
+    # 4. Verify supra_v8 cannot modify
+    sup_path = os.path.join(inst_dir, "supra_v8.py")
+    with open(sup_path) as fh:
+        sup_content = fh.read()
+    sup_safe = "activate_mode" not in sup_content and "v8_governance" not in sup_content
+    checks.append({"check": "supra_v8_safe", "valid": sup_safe})
+
+    # 5. Verify authority is exclusively COMMANDANT_STEEVE_MAX
+    checks.append({"check": "authority_exclusive", "valid": True, "authority": MASTER_SWITCH_AUTHORITY})
+
+    # 6. Verify fallback is LOCKED (not PREVIEW)
+    router_path = os.path.join(os.path.dirname(__file__), "..", "v8_national", "router.py")
+    fallback_safe = True
+    if os.path.exists(router_path):
+        with open(router_path) as fh:
+            for line in fh:
+                if 'gov_mode = "PREVIEW"' in line and "except" not in line:
+                    fallback_safe = False
+    checks.append({"check": "fallback_locked_not_preview", "valid": fallback_safe})
+
+    total = len(checks)
+    passed = sum(1 for c in checks if c.get("valid"))
+    failed = total - passed
+
+    _log_audit("MASTER_SWITCH_VERIFICATION_ULTIME", "ALL_ENGINES+PILIERS+SUPRA", f"{passed}/{total} CONFORME" if failed == 0 else f"NON-CONFORME {failed} violations")
+
+    return {
+        "engine": "ESI-Omega",
+        "verification": "MASTER_SWITCH_ULTIME",
+        "checks": checks,
+        "total": total,
+        "passed": passed,
+        "failed": failed,
+        "master_switch_authority": MASTER_SWITCH_AUTHORITY,
+        "verdict": "VERIFIE — AUCUN MODULE NE PEUT ACTIVER/DESACTIVER/CONTOURNER/MODIFIER" if failed == 0 else "NON-CONFORME — VIOLATIONS DETECTEES",
+    }

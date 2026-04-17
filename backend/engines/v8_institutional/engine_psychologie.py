@@ -1,6 +1,7 @@
 """
 ENGINE 20 — PSYCHOLOGIE ANIMALE
 PILIER: PREDICTION-INTELLIGENCE
+SOURCES FUSIONNEES: stress models, vigilance patterns, species behavioral psychology database
 ENGINE COMPLET — ZERO STUB
 Modele l'etat psychologique de l'animal: stress, vigilance, dominance,
 motivation alimentaire, motivation reproductive, familiarite territoire.
