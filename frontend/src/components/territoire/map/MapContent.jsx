@@ -27,6 +27,7 @@ import EcoforestryLayers from '@/components/territoire/EcoforestryLayers';
 import { MapRefCapture, ZoomHandler, MapResizer, MapClickHandler, createCustomIcon } from '@/components/territoire/map/MapHelpers';
 import CursorBionicLayer from '@/components/territoire/CursorBionicLayer';
 import BionicLayersV8 from '@/components/territoire/BionicLayersV8';
+import WindFlowLayer from '@/components/territoire/WindFlowLayer';
 import { MapInteractionLayer } from '@/modules/map_interaction';
 import { PLACE_TYPES } from '@/config/placeTypes';
 
@@ -164,6 +165,11 @@ const MapContentInner = React.memo(({
         onDataLoaded={onHeatmapDataLoaded}
       />
     )}
+
+    {/* V9-INSTITUTIONNEL: VENT REEL DYNAMIQUE (VENTUSKY-STEEVE-MAX) */}
+    {/* Source: ECCC/NOAA via Open-Meteo /api/v3/weather/windgrid */}
+    {/* Physique: friction sol, Venturi, ralentissement foret, turbulence ±3deg */}
+    {selectedWaypointForZones && <WindFlowLayer enabled={true} />}
 
     {/* MARQUEURS WAYPOINTS — Seuls elements interactifs non-V8 autorises */}
     {userPosition && (

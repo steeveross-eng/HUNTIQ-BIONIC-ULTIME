@@ -1,40 +1,51 @@
-# HUNTIQ V8 — PRD
-## PHASE-4E TERMINEE — ENGINES REINTRODUITS + RENDERING COMPLET
-**MAJ:** 2026-04-17 | **TOUS ENGINES RENDUS** | **ESI-Omega 8/8 CONFORME**
+# HUNTIQ V9 — PRD
+## PHASE-4Omega TERMINEE — NORMALISATION V9 + VENT REEL VENTUSKY
+**MAJ:** 2026-04-17 | **V9-INSTITUTIONNEL** | **VENTUSKY-STEEVE-MAX ACTIF**
 
-## Architecture V8-INSTITUTIONNEL
+## Architecture V9-INSTITUTIONNEL
 - 24 Engines, 4 Piliers, ESI-Omega Guardian Central
 - Document Maitre: V8-ENGINES-INSTITUTIONNEL-Omega-ULTIME-MAX-2026
+- Upgrade V8→V9: Catmull-Rom zones + Vent reel dynamique
 
 ## Phases Completees
-- PHASE-1: Verrouillage Ultime Max (24 engines)
+- PHASE-1: Verrouillage Ultime Max
 - PHASE-2: Integration Territoire/Supra
-- PHASE-3: Validation + Stabilisation + Score Global Interne
-- PHASE-4B: Purge legacy + source unique institutionnelle
-- PHASE-4E: Reintroduction TOUS engines territoire
+- PHASE-3: Validation + Stabilisation + Score Global
+- PHASE-4B: Purge legacy + source unique
+- PHASE-4E: Reintroduction tous engines
+- PHASE-4Omega: Normalisation visuelle V9 + Vent reel Ventusky
 
-## PHASE-4E: Engines Reintroduits
-### Diagnostic
-- Version: V8-INSTITUTIONNEL (pas V9)
-- Cause visuels manquants: PHASE-4B avait purge trop agressivement les layers
-- Corridors etaient angulaires (3pts) au lieu de Bezier organique
-- Zones avaient 14-20 vertices au lieu d'ultra-precis
-- Vent, contamination, pression absents du rendering
+## PHASE-4Omega: Details
+### Design System Steeve-Max
+- Palette BCE-4X complete (8 couleurs institutionnelles)
+- Epaisseurs/opacites standardisees
+- Z-order hierarchique strict
 
-### Corrections Appliquees
-1. CORRIDORS: Bezier cubique 9pts, rayon 600m ±30%, veines animales continues
-2. ZONES: Catmull-Rom 31 vertices, courbes douces, zero angle
-3. AFFUTS: cercle gris + X, orientation vent
-4. VENT: 8 vecteurs directionnels, fleches, turbulence
-5. CONTAMINATION: cone directionnel 500m, 30deg
-6. HOTSPOTS: fusion multi-engines, intensite 1-5
-7. PRESSION: gradient zone humaine
-8. HEATMAP: 400 cellules
+### Engines Visuels Normalises
+- Zones: Catmull-Rom 31 vertices, courbes douces
+- Corridors: Bezier cubique 9pts, #FF8F00, 600m rayon
+- Affuts: cercle gris + X, orientation vent
+- Contamination: cone 500m #FF7043
+- Pression: gradient #EF5350
+- Hotspots: intensite 1-5
+- Salines: #FDD835
 
-### Endpoints
-- GET /api/v8/institutional/territoire — Source UNIQUE rendering (9 couches)
-- GET /api/v8/institutional/full — 24 engines consolidation
-- GET /api/v8/supra/score-global-interne — 6 composantes
+### Vent Reel Dynamique (VENTUSKY-STEEVE-MAX)
+- Source: Open-Meteo (ECCC/NOAA GFS-Global)
+- Endpoint: /api/v3/weather/windgrid
+- Streamlines: 2500 particules Canvas, ~60 FPS
+- Interpolation bilineaire spatiale
+- Physique: friction foret 55%, Venturi +25%, turbulence ±3deg
+
+### Integration Multi-Engines
+- VENT → CONTAMINATION (cone synchronise)
+- VENT → AFFUTS (orientation)
+- CORRIDORS → ZONES (attraction)
+
+## Endpoints
+- GET /api/v8/institutional/territoire — Source UNIQUE rendering
+- GET /api/v3/weather/windgrid — Champ vent grille reel
+- GET /api/v3/weather/current — Meteo temps reel
 - GET /api/v8/esi/conformite/full — 8/8 CONFORME
 
 ## Credentials

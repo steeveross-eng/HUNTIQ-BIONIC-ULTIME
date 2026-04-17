@@ -52,7 +52,7 @@ const BionicLayersV8 = ({
   showAffuts = true,
   showSalines = true,
   showHotspots = true,
-  showWind = true,
+  showWind = true,       // Delegue a WindFlowLayer
   showContamination = true,
   showPression = true,
   enabled = true,
@@ -167,46 +167,8 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-ORDER 4: VECTEURS VENT (flèches directionnelles) ═══
-    if (showWind && windVectors.length > 0) {
-      windVectors.forEach(wv => {
-        const start = wv.start;
-        const end = wv.end;
-        if (!start || !end) return;
-
-        // Ligne directionnelle
-        const line = L.polyline([[start.lat, start.lng], [end.lat, end.lng]], {
-          color: WIND_COLOR,
-          weight: 1.5,
-          opacity: wv.decay || 0.6,
-          dashArray: '6,3',
-          interactive: true,
-        });
-
-        // Flèche au bout
-        const arrowSize = 0.001;
-        const angle = Math.atan2(end.lng - start.lng, end.lat - start.lat);
-        const a1Lat = end.lat - arrowSize * Math.cos(angle - 0.4);
-        const a1Lng = end.lng - arrowSize * Math.sin(angle - 0.4);
-        const a2Lat = end.lat - arrowSize * Math.cos(angle + 0.4);
-        const a2Lng = end.lng - arrowSize * Math.sin(angle + 0.4);
-        const arrow = L.polygon([[end.lat, end.lng], [a1Lat, a1Lng], [a2Lat, a2Lng]], {
-          color: WIND_COLOR,
-          fillColor: WIND_COLOR,
-          fillOpacity: wv.decay || 0.6,
-          weight: 1,
-          opacity: wv.decay || 0.6,
-          interactive: false,
-        });
-
-        line.bindTooltip(
-          `<b style="color:${WIND_COLOR}">Vent</b> ${wv.direction_deg}deg ${wv.speed_kmh}km/h`,
-          { sticky: true, opacity: 0.95 }
-        );
-        group.addLayer(line);
-        group.addLayer(arrow);
-      });
-    }
+    // Z-ORDER 4: VENT — DELEGUEE A WindFlowLayer (VENTUSKY-STEEVE-MAX dynamique)
+    // Les vecteurs statiques sont remplaces par les streamlines temps reel
 
     // ═══ Z-ORDER 5: CONTAMINATION OLFACTIVE (cône directionnel) ═══
     if (showContamination && contamination && contamination.polygon) {
