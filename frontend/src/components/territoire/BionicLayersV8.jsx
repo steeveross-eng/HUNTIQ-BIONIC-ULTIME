@@ -1,26 +1,33 @@
 /**
- * BionicLayersV8.jsx — RENDERING V8-INSTITUTIONNEL COMPLET
- * ==========================================================
- * PHASE-4E: TOUS ENGINES TERRITOIRE RÉINTRODUITS
+ * BionicLayersV8.jsx — RENDERER V9-PURE INSTITUTIONNEL
+ * =====================================================
+ * PHASE-RENDERER-CORRIDORS-Omega-V9-PURE
  *
- * ZONES:       polygones organiques ultra-précis (24-36 vertices Catmull-Rom)
- *              courbes douces, zéro angle, contours opaques, fill transparent
- * CORRIDORS:   veines animales continues (Bézier cubique, 8-12 pts)
- *              #FF8F00, rayon 600m, extension ±30%
- * AFFUTS:      cercle gris #9E9E9E + X central #424242
- * SALINES:     cercle organique #FDD835
- * HOTSPOTS:    marqueur multi-intensité 1-5 (rouge gradué)
- * VENT:        flèches directionnelles #90CAF9 (direction+intensité+turbulence)
- * CONTAMINATION: cône directionnel décroissant #FF7043→transparent
- * PRESSION:    gradient intensité zone humaine #EF5350
+ * CORRIDORS V9-x20:
+ *   Catmull-Rom directionnel 22-25 pts, ZERO smoothing, ZERO interpolation
+ *   5 niveaux: Critique #FF0000 → Majeur #D32F2F → Fort #FF8F00 → Modere #FFEB3B → Faible #FFFFFF
+ *   Fleches directionnelles sur chaque corridor
+ *   Tooltip: type, intensite, profil espece, cost surface, connexions zones
  *
- * Z-ORDER: pression < zones < corridors < vent < contamination < salines < hotspots < affûts
+ * ZONES V9:
+ *   Catmull-Rom 24-36 vertices, smoothFactor=0, ZERO interpolation Leaflet
+ *   Contours opaques, fill transparent, terrain-aware
+ *
+ * AFFUTS:   cercle gris #9E9E9E + X #424242
+ * SALINES:  #FDD835
+ * HOTSPOTS: intensite 1-5
+ * CONTAMINATION: cone #FF7043
+ * PRESSION: gradient #EF5350
+ * VENT:     delegue a WindFlowLayer (Ventusky-Steeve-Max)
+ *
+ * Z-ORDER: pression < zones < corridors < contamination < salines < hotspots < affuts
+ * VERROUILLE: V9-PURE. ZERO fallback. ZERO override. ZERO smoothing.
  */
 import { useEffect, useRef, useCallback } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 
-// COULEURS EXACTES BCE-4X — DOCUMENT MAITRE
+// ═══ PALETTE BCE-4X V9-INSTITUTIONNEL ═══
 const ZONE_COLORS = {
   rut:          { stroke: '#C62828', weight: 2.5 },
   alimentation: { stroke: '#2E7D32', weight: 2.0 },
@@ -29,27 +36,23 @@ const ZONE_COLORS = {
   affuts:       { stroke: '#C62828', weight: 2.0 },
 };
 
-const CORRIDOR_COLOR = '#FF8F00';
-const CORRIDOR_COLORS = {
-  critique: '#FF0000',
-  majeur: '#D32F2F',
-  fort: '#FF8F00',
-  modere: '#FFEB3B',
-  faible: '#FFFFFF',
+// CORRIDORS V9-x20: 5 niveaux intensite
+const CORRIDOR_STYLES = {
+  critique: { color: '#FF0000', weight: 2.6, opacity: 0.95 },
+  majeur:   { color: '#D32F2F', weight: 2.4, opacity: 0.90 },
+  fort:     { color: '#FF8F00', weight: 2.2, opacity: 0.85 },
+  modere:   { color: '#FFEB3B', weight: 1.8, opacity: 0.75 },
+  faible:   { color: '#FFFFFF', weight: 1.4, opacity: 0.65 },
 };
-const CORRIDOR_WEIGHT = { faible: 1.4, modere: 1.8, fort: 2.2, majeur: 2.4, critique: 2.6 };
-const CORRIDOR_OPACITY = { faible: 0.65, modere: 0.75, fort: 0.85, majeur: 0.90, critique: 0.95 };
 
 const AFFUT_COLOR = '#9E9E9E';
 const AFFUT_X_COLOR = '#424242';
 const AFFUT_SIZE = { optimal: 8, bon: 7, acceptable: 6 };
 
 const SALINE_COLOR = '#FDD835';
-const WIND_COLOR = '#90CAF9';
 const CONTAM_COLOR = '#FF7043';
 const PRESSION_COLOR = '#EF5350';
 
-// Hotspot intensité 1-5
 const HOTSPOT_COLORS = ['#FFCDD2', '#EF9A9A', '#EF5350', '#E53935', '#B71C1C'];
 const HOTSPOT_SIZES = [4, 5, 6, 7, 8];
 
@@ -60,7 +63,7 @@ const BionicLayersV8 = ({
   showAffuts = true,
   showSalines = true,
   showHotspots = true,
-  showWind = true,       // Delegue a WindFlowLayer
+  showWind = true,
   showContamination = true,
   showPression = true,
   enabled = true,
@@ -88,36 +91,31 @@ const BionicLayersV8 = ({
     const affuts = bundleData.affuts || [];
     const salines = bundleData.salines || [];
     const hotspots = bundleData.hotspots || [];
-    const windVectors = bundleData.wind_vectors || [];
     const contamination = bundleData.contamination || null;
     const pression = bundleData.pression || null;
 
-    // ═══ Z-ORDER 1: PRESSION HUMAINE (gradient) ═══
-    if (showPression && pression && pression.pression_score !== undefined) {
+    // ═══ Z-1: PRESSION HUMAINE ═══
+    if (showPression && pression && pression.pression_score > 10) {
       const score = pression.pression_score;
-      if (score > 10) {
-        const center = map.getCenter();
-        const opacity = Math.min(0.35, score / 200);
-        const radius = 300 + score * 3;
-        const circle = L.circle([center.lat, center.lng], {
-          radius: radius,
-          color: PRESSION_COLOR,
-          fillColor: PRESSION_COLOR,
-          fillOpacity: opacity,
-          weight: 1,
-          opacity: 0.4,
-          dashArray: '4,4',
-          interactive: true,
-        });
-        circle.bindTooltip(
-          `<b style="color:${PRESSION_COLOR}">Pression humaine</b> ${score}/100`,
-          { sticky: true, opacity: 0.95 }
-        );
-        group.addLayer(circle);
-      }
+      const center = map.getCenter();
+      const circle = L.circle([center.lat, center.lng], {
+        radius: 300 + score * 3,
+        color: PRESSION_COLOR,
+        fillColor: PRESSION_COLOR,
+        fillOpacity: Math.min(0.35, score / 200),
+        weight: 1,
+        opacity: 0.4,
+        dashArray: '4,4',
+        interactive: true,
+      });
+      circle.bindTooltip(
+        `<b style="color:${PRESSION_COLOR}">Pression humaine</b> ${score}/100`,
+        { sticky: true, opacity: 0.95 }
+      );
+      group.addLayer(circle);
     }
 
-    // ═══ Z-ORDER 2: ZONES (polygones organiques ultra-précis) ═══
+    // ═══ Z-2: ZONES (Catmull-Rom V9, smoothFactor=0, ZERO interpolation) ═══
     if (showZones && zones.length > 0) {
       zones.forEach(z => {
         const cfg = ZONE_COLORS[z.type] || ZONE_COLORS.alimentation;
@@ -131,7 +129,7 @@ const BionicLayersV8 = ({
           fillOpacity: 0,
           lineCap: 'round',
           lineJoin: 'round',
-          smoothFactor: 1,
+          smoothFactor: 0,
           interactive: true,
         });
 
@@ -151,36 +149,77 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-ORDER 3: CORRIDORS (veines animales Catmull-Rom V9-x20) ═══
+    // ═══ Z-3: CORRIDORS V9-x20 (Catmull-Rom, smoothFactor=0, ZERO interpolation) ═══
     if (showCorridors && corridors.length > 0) {
       corridors.forEach(c => {
         const path = c.path || [[c.start.lat, c.start.lng], [c.end.lat, c.end.lng]];
-        const w = CORRIDOR_WEIGHT[c.type] || 2.0;
-        const color = CORRIDOR_COLORS[c.type] || CORRIDOR_COLOR;
-        const opacity = CORRIDOR_OPACITY[c.type] || 0.85;
+        const style = CORRIDOR_STYLES[c.type] || CORRIDOR_STYLES.fort;
 
+        // Polyline principale — Catmull-Rom directionnel, ZERO smoothing
         const line = L.polyline(path, {
-          color: color,
-          weight: w,
-          opacity: opacity,
+          color: style.color,
+          weight: style.weight,
+          opacity: style.opacity,
           lineCap: 'round',
           lineJoin: 'round',
-          smoothFactor: 1,
+          smoothFactor: 0,
           interactive: true,
         });
 
+        // Fleche directionnelle au milieu du corridor
+        if (path.length >= 3) {
+          const midIdx = Math.floor(path.length / 2);
+          const prev = path[midIdx - 1] || path[0];
+          const mid = path[midIdx];
+          const next = path[midIdx + 1] || path[path.length - 1];
+
+          const dx = next[1] - prev[1];
+          const dy = next[0] - prev[0];
+          const len = Math.sqrt(dx * dx + dy * dy);
+          if (len > 0.0001) {
+            const arrowSize = 0.0008;
+            const nx = dx / len;
+            const ny = dy / len;
+            const tipLat = mid[0] + ny * arrowSize;
+            const tipLng = mid[1] + nx * arrowSize;
+            const lLat = mid[0] - ny * arrowSize * 0.5 + nx * arrowSize * 0.4;
+            const lLng = mid[1] - nx * arrowSize * 0.5 - ny * arrowSize * 0.4;
+            const rLat = mid[0] - ny * arrowSize * 0.5 - nx * arrowSize * 0.4;
+            const rLng = mid[1] - nx * arrowSize * 0.5 + ny * arrowSize * 0.4;
+
+            const arrow = L.polygon([[tipLat, tipLng], [lLat, lLng], [rLat, rLng]], {
+              color: style.color,
+              fillColor: style.color,
+              fillOpacity: style.opacity,
+              weight: 1,
+              opacity: style.opacity,
+              smoothFactor: 0,
+              interactive: false,
+            });
+            group.addLayer(arrow);
+          }
+        }
+
+        // Tooltip enrichi V9
+        const connStr = (c.zone_connections && c.zone_connections.length > 0)
+          ? `<br><span style="font-size:9px;color:#FDD835">Zones: ${c.zone_connections.join(', ')}</span>`
+          : '';
+        const costStr = c.cost_surface !== undefined
+          ? ` | cost:${c.cost_surface}`
+          : '';
+        const profileStr = c.species_profile
+          ? ` | ${c.species_profile}`
+          : '';
+
         line.bindTooltip(
-          `<b style="color:${color}">${c.type}</b> int:${c.intensity} | ${c.species_profile || ''}`,
+          `<b style="color:${style.color}">${c.type}</b> int:${Math.round(c.intensity)}${costStr}${profileStr}${connStr}`,
           { sticky: true, opacity: 0.95 }
         );
         group.addLayer(line);
       });
     }
 
-    // Z-ORDER 4: VENT — DELEGUEE A WindFlowLayer (VENTUSKY-STEEVE-MAX dynamique)
-    // Les vecteurs statiques sont remplaces par les streamlines temps reel
-
-    // ═══ Z-ORDER 5: CONTAMINATION OLFACTIVE (cône directionnel) ═══
+    // ═══ Z-4: CONTAMINATION (cone directionnel) ═══
     if (showContamination && contamination && contamination.polygon) {
       const cone = L.polygon(contamination.polygon, {
         color: CONTAM_COLOR,
@@ -189,17 +228,17 @@ const BionicLayersV8 = ({
         fillColor: CONTAM_COLOR,
         fillOpacity: 0.15,
         dashArray: '4,4',
+        smoothFactor: 0,
         interactive: true,
       });
-
       cone.bindTooltip(
-        `<b style="color:${CONTAM_COLOR}">Contamination olfactive</b><br>Direction: ${contamination.direction_deg}deg | Portee: ${contamination.reach_m}m`,
+        `<b style="color:${CONTAM_COLOR}">Contamination olfactive</b><br>Dir: ${contamination.direction_deg}deg | Portee: ${contamination.reach_m}m`,
         { sticky: true, opacity: 0.95 }
       );
       group.addLayer(cone);
     }
 
-    // ═══ Z-ORDER 6: SALINES ═══
+    // ═══ Z-5: SALINES ═══
     if (showSalines && salines.length > 0) {
       salines.forEach(s => {
         const lat = s.lat || s.center?.lat;
@@ -215,7 +254,6 @@ const BionicLayersV8 = ({
           opacity: 1.0,
           interactive: true,
         });
-
         circle.bindTooltip(
           `<b style="color:${SALINE_COLOR}">Saline</b> ${s.score || ''}/100`,
           { sticky: true, opacity: 0.95 }
@@ -224,14 +262,13 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-ORDER 7: HOTSPOTS (intensité 1-5) ═══
+    // ═══ Z-6: HOTSPOTS (intensite 1-5) ═══
     if (showHotspots && hotspots.length > 0) {
       hotspots.forEach(h => {
         const lat = h.lat || h.center?.lat;
         const lon = h.lng || h.lon || h.center?.lng;
         if (!lat || !lon) return;
 
-        // Intensité 1-5 basée sur le score
         const intensity = h.intensity || 50;
         const level = Math.min(4, Math.max(0, Math.floor(intensity / 20)));
         const color = HOTSPOT_COLORS[level];
@@ -246,7 +283,6 @@ const BionicLayersV8 = ({
           opacity: 1.0,
           interactive: true,
         });
-
         circle.bindTooltip(
           `<b style="color:${color}">Hotspot</b> intensite:${level+1}/5 (${Math.round(intensity)})`,
           { sticky: true, opacity: 0.95 }
@@ -255,7 +291,7 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-ORDER 8: AFFUTS (dessus — cercle gris + X) ═══
+    // ═══ Z-7: AFFUTS (cercle gris + X) ═══
     if (showAffuts && affuts.length > 0) {
       affuts.forEach(a => {
         const sz_px = AFFUT_SIZE[a.quality] || 6;
@@ -271,7 +307,7 @@ const BionicLayersV8 = ({
         });
 
         const xIcon = L.divIcon({
-          className: 'affut-x-v8',
+          className: 'affut-x-v9',
           html: `<div style="width:${sz_px*2}px;height:${sz_px*2}px;display:flex;align-items:center;justify-content:center;font-size:${sz_px+2}px;font-weight:900;color:${AFFUT_X_COLOR};line-height:1;">X</div>`,
           iconSize: [sz_px*2, sz_px*2],
           iconAnchor: [sz_px, sz_px],
@@ -297,14 +333,13 @@ const BionicLayersV8 = ({
         affuts_count: affuts.length,
         salines_count: salines.length,
         hotspots_count: hotspots.length,
-        wind_count: windVectors.length,
         contamination: !!contamination,
         pression: !!(pression && pression.pression_score > 0),
-        engine: 'V8-INSTITUTIONNEL-COMPLET',
+        engine: 'V9-PURE-RENDERER',
         esi_omega: bundleData.esi_omega,
       });
     }
-  }, [map, bundleData, enabled, showZones, showCorridors, showAffuts, showSalines, showHotspots, showWind, showContamination, showPression, clearOwnLayers]);
+  }, [map, bundleData, enabled, showZones, showCorridors, showAffuts, showSalines, showHotspots, showContamination, showPression, clearOwnLayers]);
 
   useEffect(() => {
     renderLayers();
