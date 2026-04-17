@@ -800,6 +800,14 @@ try:
 except Exception as e:
     logger.warning(f"ESI-Omega not loaded: {e}")
 
+# SUPRA V8 — Integration TERRITOIRE → SUPRA (institutionnel)
+try:
+    from engines.v8_institutional.supra_v8 import router as supra_v8_router
+    app.include_router(supra_v8_router)
+    logger.info("SUPRA-V8 registered (/api/v8/supra) — Integration Institutionnelle")
+except Exception as e:
+    logger.warning(f"SUPRA V8 not loaded: {e}")
+
 # V13-AUDIT — Public report endpoint
 try:
     from routes.audit_report_route import router as audit_report_router

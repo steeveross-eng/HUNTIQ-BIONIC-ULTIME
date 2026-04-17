@@ -1,20 +1,22 @@
 # HUNTIQ V8 — PRD
-## ESI-Omega INTEGRE — PRET POUR PHASE-2
-**MAJ:** 2026-04-16 | **24/24 ACTIFS** | **ESI-Omega GUARDIAN** | **ZERO STUB**
+## PHASE-2 TERMINEE — PRET POUR PHASE-3
+**MAJ:** 2026-04-16 | **TERRITOIRE+SUPRA INTEGRES** | **ESI-Omega CONFORME**
 
-## ESI-Omega — Engine Securite Institutionnelle
-- Guardian Central V8-PURE
-- 13 lois BCE-4X imposees automatiquement
-- Validators: terrain, geometrie, corridor, visual, species, season, scoring determinism, bundle
-- Audit log 100% tracabilite
-- Master Switch protege (autorite exclusive admin@huntiq.com)
-- Endpoints: /api/v8/esi/status, /validate/terrain, /validate/bundle, /validate/visual, /conformite/full, /laws, /audit
+## TERRITOIRE Integration
+- 24 engines connectes via /api/v8/institutional/full
+- useInstitutionalV8.js hook cree (cache 30s, ESI-Omega validation)
+- BionicLayersV8 rendant le bundle V8 (signatures visuelles institutionnelles)
+- Regles terrain appliquees: pente>45deg, eau<10m, zero smoothing
 
-## Architecture V8-INSTITUTIONNEL Complete
-- 24 engines actifs (ZERO stub)
-- 4 piliers orchestrateurs
-- ESI-Omega guardian central
-- Document Maitre GELE (SSOT)
+## SUPRA V8 Integration
+- 5 modules: /api/v8/supra/fiche, /analyse, /recommandation, /prediction, /score
+- Consomme outputs consolides de TERRITOIRE (24 engines)
+- ESI-Omega validation sur tous outputs
+- Recommandation: verdict + actions + best window + salines
+
+## ESI-Omega
+- 8/8 checks CONFORME
+- Validation automatique TERRITOIRE + SUPRA
 
 ## Credentials
 - Admin: admin@huntiq.com / Saturn5858*
