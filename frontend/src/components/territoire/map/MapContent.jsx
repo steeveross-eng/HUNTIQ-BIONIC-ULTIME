@@ -160,7 +160,6 @@ const MapContentInner = React.memo(({
         showHotspots={true}
         showWind={true}
         showContamination={true}
-        showPression={true}
         enabled={true}
         onDataLoaded={onHeatmapDataLoaded}
       />

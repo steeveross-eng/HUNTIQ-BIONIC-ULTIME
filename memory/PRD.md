@@ -1,28 +1,29 @@
 # HUNTIQ V9 — PRD
-## RENDERER V9-PURE VERROUILLE
-**MAJ:** 2026-04-17 | **RENDERER V9-PURE** | **ZERO SMOOTHING** | **ZERO BEZIER**
+## PRESSION HUMAINE ELIMINEE — BIONIC 100% ANIMAL-CENTRE
+**MAJ:** 2026-04-17 | **V9-PURE** | **ZERO PRESSION HUMAINE** | **ZERO L.circle**
 
 ## Architecture V9-INSTITUTIONNEL
 - 24 Engines, 4 Piliers, ESI-Omega Guardian
 - ENGINE CORRIDORS V9-x20: Catmull-Rom multi-especes
-- RENDERER: V9-PURE verrouille
+- RENDERER: V9-PURE verrouille, 100% animal-centre
 
-## Phases Completees
-- PHASE-1 a PHASE-4Omega: toutes terminees
-- ENGINE CORRIDORS V9-x20: SURCLASSE (6 especes, 20 dimensions)
-- RENDERER V9-PURE: VERROUILLE
+## Couches Actives (7)
+1. Corridors — Catmull-Rom V9-x20, 5 niveaux, fleches directionnelles
+2. Zones — Catmull-Rom 31 vertices, 5 types
+3. Vent — WindFlowLayer Ventusky (ECCC/NOAA reel)
+4. Contamination — Cone directionnel 500m
+5. Hotspots — Points intensite 1-5
+6. Salines — Points #FDD835
+7. Affuts — Gris+X, orientation vent
 
-## RENDERER V9-PURE
-- smoothFactor: 0 (zones + corridors + contamination)
-- ZERO Bezier, ZERO interpolation Leaflet, ZERO fallback
-- Corridors: 5 niveaux (Critique #FF0000 → Faible #FFFFFF)
-- Fleches directionnelles sur chaque corridor
-- Tooltip enrichi: type, intensite, cost, profil espece, connexions zones
-- Zones: Catmull-Rom 31 vertices, smoothFactor=0
-- Synchronise: VENT, CONTAMINATION, PRESSION, HOTSPOTS, AFFUTS
+## Supprime
+- ENGINE PRESSION HUMAINE: supprime du rendu et du bundle /territoire
+- L.circle: ZERO occurrences
+- Buffer radial: ZERO
+- PRESSION_COLOR: SUPPRIME
 
 ## Endpoints
-- GET /api/v8/institutional/territoire — Source UNIQUE rendering
+- GET /api/v8/institutional/territoire — 7 couches (ZERO pression)
 - GET /api/v3/weather/windgrid — Vent reel
 - GET /api/v8/esi/conformite/full — 8/8 CONFORME
 

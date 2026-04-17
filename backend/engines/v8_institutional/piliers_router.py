@@ -180,8 +180,9 @@ async def institutional_territoire(
     from engines.v8_institutional.engine_salines import compute_salines
     from engines.v8_institutional.engine_hotspots import compute_hotspots
     from engines.v8_institutional.engine_vent import compute_wind_vectors, compute_scent_cone
-    from engines.v8_institutional.engine_pression import compute_pression
     from engines.v8_institutional.engine_heatmap import compute_heatmap
+    # ENGINE PRESSION HUMAINE — SUPPRIME (PHASE-ENGINE-PRESSION-HUMAINE-Omega)
+    # BIONIC 100% ANIMAL-CENTRE. ZERO influence humaine.
 
     zones = compute_zones(lat, lon, species, month)
     corridors = compute_corridors(lat, lon, species, month, hour, wind_deg, zones=zones)
@@ -190,8 +191,8 @@ async def institutional_territoire(
     salines = compute_salines(lat, lon, species, month)
     wind = compute_wind_vectors(lat, lon, wind_deg, wind_speed)
     scent_cone = compute_scent_cone(lat, lon, wind_deg, wind_speed)
-    pression = compute_pression(lat, lon)
     heatmap = compute_heatmap(lat, lon)
+    # PRESSION HUMAINE — SUPPRIME
 
     # ESI-Omega validation inline
     from engines.v8_institutional.esi_omega import validate_bundle, _log_audit
@@ -206,7 +207,6 @@ async def institutional_territoire(
         "salines": salines,
         "wind_vectors": wind,
         "contamination": scent_cone,
-        "pression": pression,
         "heatmap": heatmap,
         "esi_omega": bv["conformite"],
         "document_maitre": "V8-ENGINES-INSTITUTIONNEL-Omega-ULTIME-MAX-2026",

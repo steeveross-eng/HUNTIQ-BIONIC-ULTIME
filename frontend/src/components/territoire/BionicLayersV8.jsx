@@ -51,7 +51,8 @@ const AFFUT_SIZE = { optimal: 8, bon: 7, acceptable: 6 };
 
 const SALINE_COLOR = '#FDD835';
 const CONTAM_COLOR = '#FF7043';
-const PRESSION_COLOR = '#EF5350';
+
+// PRESSION_COLOR — SUPPRIME (PHASE-ENGINE-PRESSION-HUMAINE-Omega)
 
 const HOTSPOT_COLORS = ['#FFCDD2', '#EF9A9A', '#EF5350', '#E53935', '#B71C1C'];
 const HOTSPOT_SIZES = [4, 5, 6, 7, 8];
@@ -65,7 +66,7 @@ const BionicLayersV8 = ({
   showHotspots = true,
   showWind = true,
   showContamination = true,
-  showPression = true,
+  showPression = false,   // SUPPRIME — BIONIC 100% ANIMAL-CENTRE
   enabled = true,
   onDataLoaded = null,
 }) => {
@@ -94,26 +95,8 @@ const BionicLayersV8 = ({
     const contamination = bundleData.contamination || null;
     const pression = bundleData.pression || null;
 
-    // ═══ Z-1: PRESSION HUMAINE ═══
-    if (showPression && pression && pression.pression_score > 10) {
-      const score = pression.pression_score;
-      const center = map.getCenter();
-      const circle = L.circle([center.lat, center.lng], {
-        radius: 300 + score * 3,
-        color: PRESSION_COLOR,
-        fillColor: PRESSION_COLOR,
-        fillOpacity: Math.min(0.35, score / 200),
-        weight: 1,
-        opacity: 0.4,
-        dashArray: '4,4',
-        interactive: true,
-      });
-      circle.bindTooltip(
-        `<b style="color:${PRESSION_COLOR}">Pression humaine</b> ${score}/100`,
-        { sticky: true, opacity: 0.95 }
-      );
-      group.addLayer(circle);
-    }
+    // ═══ PRESSION HUMAINE — SUPPRIME (PHASE-ENGINE-PRESSION-HUMAINE-Omega) ═══
+    // ZERO couche pression. ZERO buffer radial. ZERO gradient. BIONIC 100% ANIMAL-CENTRE.
 
     // ═══ Z-2: ZONES (Catmull-Rom V9, smoothFactor=0, ZERO interpolation) ═══
     if (showZones && zones.length > 0) {
