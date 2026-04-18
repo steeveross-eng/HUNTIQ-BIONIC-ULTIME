@@ -31,7 +31,7 @@ _TILE_CACHE: "OrderedDict[str, tuple[float, dict]]" = OrderedDict()
 _TILE_TTL = 86400
 _TILE_MAX = 1024
 
-_LAYERS_SUPPORTED = {"corridors", "zones", "contamination"}
+_LAYERS_SUPPORTED = {"corridors", "zones", "contamination", "salines"}
 _ZOOM_MIN, _ZOOM_MAX = 12, 16
 
 
@@ -214,6 +214,28 @@ async def v20_tile(
                         "affut_source": cone.get("affut_source", {}),
                     },
                 })
+    elif layer == "salines":
+        for s in bundle.get("salines", []):
+            lat_s = s.get("lat") or (s.get("center") or {}).get("lat")
+            lon_s = s.get("lng") or s.get("lon") or (s.get("center") or {}).get("lng")
+            if lat_s is None or lon_s is None:
+                continue
+            if not _bbox_contains_point(bounds, lat_s, lon_s):
+                continue
+            features.append({
+                "type": "Feature",
+                "geometry": {"type": "Point", "coordinates": [lon_s, lat_s]},
+                "properties": {
+                    "layer": "salines",
+                    "status": s.get("status"),
+                    "score": s.get("score"),
+                    "eau_distance_m": s.get("eau_distance_m"),
+                    "eau_conforme": s.get("eau_conforme"),
+                    "corridor_distance_m": s.get("corridor_distance_m"),
+                    "corridor_conforme": s.get("corridor_conforme"),
+                    "suggestion": s.get("suggestion"),
+                },
+            })
 
     payload = {
         "type": "FeatureCollection",

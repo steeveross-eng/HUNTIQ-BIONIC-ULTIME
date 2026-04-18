@@ -794,9 +794,26 @@ except Exception as e:
 
 # V20 PERFORMANCE BUNDLE — cache TTL 24h (<1s loading target)
 try:
-    from engines.v8_institutional.v20_performance_bundle import router as v20_perf_router
+    from engines.v8_institutional.v20_performance_bundle import router as v20_perf_router, v20_startup, v20_shutdown
     app.include_router(v20_perf_router)
-    logger.info("V20-PERFORMANCE registered (/api/v20/territoire/bundle) — cache 24h")
+
+    @app.on_event("startup")
+    async def _v20_startup_hook():
+        logger.info("[V20-STARTUP-HOOK] Firing — calling v20_startup()")
+        try:
+            await v20_startup()
+            logger.info("[V20-STARTUP-HOOK] v20_startup() completed")
+        except Exception as e:
+            logger.warning(f"V20 startup hook failed: {e}", exc_info=True)
+
+    @app.on_event("shutdown")
+    async def _v20_shutdown_hook():
+        try:
+            await v20_shutdown()
+        except Exception as e:
+            logger.warning(f"V20 shutdown hook failed: {e}")
+
+    logger.info("V20-PERFORMANCE registered (/api/v20/territoire/bundle) — cache 10K TTL 24h + disk persist + prechauffage")
 except Exception as e:
     logger.warning(f"V20 Performance bundle not loaded: {e}")
 
