@@ -65,6 +65,12 @@ const MapContentInner = React.memo(({
   showCorridorsLayer,
   showPointsLayer,
   showCorridors,
+  // PHASE-FRONTEND-Omega V2 — toggles institutionnels ON/OFF stricts
+  showIntelLayer = true,
+  showSalinesLayer = true,
+  showContaminationLayer = true,
+  showHeatmapV10 = true,
+  showWindFlow = true,
   // Wapoint center
   waypointCenter,
   // Heatmap callback
@@ -73,7 +79,6 @@ const MapContentInner = React.memo(({
 
   // PROPS LEGACY (acceptes mais IGNORES — PURGE V6/V7)
   showExclusionOverlay,
-  showWindFlow,
   windMode,
   showCorridorsV1,
   bionicZones,
@@ -106,7 +111,6 @@ const MapContentInner = React.memo(({
   onStandClick,
   feedingSitesForStands,
   fixedBlindsForStands,
-  showHeatmapV10,
   onHeatmapDataLoaded: _,
   heatmapIncludeCorridors,
   pointsChaudsMode,
@@ -148,7 +152,8 @@ const MapContentInner = React.memo(({
 
     {/* ══════════════════════════════════════════════════════════════ */}
     {/* V8-INSTITUTIONNEL EXCLUSIF — SOURCE UNIQUE RENDERING         */}
-    {/* ZERO couche legacy. ZERO fallback. ZERO debug.               */}
+    {/* PHASE-FRONTEND-Omega V2 — BOUTONS PRESSEURS STRICT ON/OFF    */}
+    {/* ZERO couche legacy. ZERO fallback. ZERO reactivation auto.   */}
     {/* ══════════════════════════════════════════════════════════════ */}
     {selectedWaypointForZones && waypointCenter && (
       <BionicLayersV8
@@ -157,19 +162,19 @@ const MapContentInner = React.memo(({
         showZones={showZonesLayer !== false}
         showCorridors={showCorridorsLayer !== false}
         showAffuts={showPointsLayer !== false}
-        showSalines={true}
-        showHotspots={true}
-        showWind={true}
-        showContamination={true}
-        enabled={true}
+        showSalines={showSalinesLayer !== false}
+        showHotspots={showHeatmapV10 !== false}
+        showWind={showWindFlow !== false}
+        showContamination={showContaminationLayer !== false}
+        enabled={showIntelLayer !== false}
         onDataLoaded={onHeatmapDataLoaded}
       />
     )}
 
     {/* V9-INSTITUTIONNEL: VENT REEL DYNAMIQUE (VENTUSKY-STEEVE-MAX) */}
     {/* Source: ECCC/NOAA via Open-Meteo /api/v3/weather/windgrid */}
-    {/* Physique: friction sol, Venturi, ralentissement foret, turbulence ±3deg */}
-    {selectedWaypointForZones && <WindFlowLayer enabled={true} />}
+    {/* Physique: friction sol, Venturi, ralentissement foret, turbulence +-3deg */}
+    {selectedWaypointForZones && showWindFlow && showIntelLayer && <WindFlowLayer enabled={true} />}
 
     {/* MARQUEURS WAYPOINTS — Seuls elements interactifs non-V8 autorises */}
     {userPosition && (

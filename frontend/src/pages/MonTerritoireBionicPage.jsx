@@ -42,15 +42,7 @@ import { useUserData } from '@/hooks/useUserData';
 import { useNotifications, useHuntingGroups } from '@/hooks/useSharing';
 import WaypointUnifiedPanel from '@/components/territoire/WaypointUnifiedPanel';
 import { useAuth } from '@/components/GlobalAuth';
-import DiagnosticExclusionsPanel from '@/components/territoire/DiagnosticExclusionsPanel';
-import BionicZoneDiagnosticPanel from '@/components/territoire/BionicZoneDiagnosticPanel';
-import AmenagementPanel from '@/components/territoire/AmenagementPanel';
-import NutritionPointDetailPanel from '@/components/territoire/NutritionPointDetailPanel';
-import StandDetailPanel from '@/components/territoire/StandDetailPanel';
 import PlacesSidePanel from '@/components/territoire/PlacesSidePanel';
-import IntelligenceDashboard from '@/components/territoire/IntelligenceDashboard';
-import PhaseAPanelV8 from '@/components/territoire/PhaseAPanelV8';
-import PhaseCPanelV8 from '@/components/territoire/PhaseCPanelV8';
 import WeatherPanel from '@/components/territoire/ui/WeatherPanel';
 import useSpatialClipping from '@/hooks/useSpatialClipping';
 import useCameraLayer from '@/hooks/useCameraLayer';
@@ -59,7 +51,6 @@ import { BIONIC_MODULES } from '@/core/bionic';
 import { SPECIES_LIST } from '@/core/bionic/speciesConfig';
 import { useZoneOrchestrator } from '@/hooks/useZoneOrchestrator';
 import { useZoneFavorites } from '@/components/territoire/ZoneFavorites';
-import { GroupeTab, useGroupeTracking } from '@/modules/groupe';
 // P2: EcologicalPanel — module gele (FROZEN)
 import { 
   useEcoMapFallback,
@@ -554,15 +545,10 @@ const MonTerritoireBionicPage = () => {
   const [showGroupDashboard, setShowGroupDashboard] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState(null);
   
-  // Session Heatmap - Phase 6 GROUPE Module
-  // Hook pour obtenir les positions GPS des membres du groupe
-  const {
-    membersWithPositions: groupMembersPositions,
-    isTracking: isGroupeTrackingActive
-  } = useGroupeTracking(userId, 'territory_group', {
-    autoStart: false,
-    updateInterval: 30000
-  });
+  // PHASE-FRONTEND-Omega V2: Groupe tracking module purge.
+  // ZERO panneau lateral Groupe. ZERO tracking persistant dans Territoire.
+  const groupMembersPositions = [];
+  const isGroupeTrackingActive = false;
   
   // Panneaux
   const [showLayersPanel, setShowLayersPanel] = useState(true);
@@ -595,17 +581,9 @@ const MonTerritoireBionicPage = () => {
   const [pointsChaudsMode, setPointsChaudsMode] = useState(false);
   const [pointsChaudsFilter, setPointsChaudsFilter] = useState('tous');
 
-  // MAP-LAYERS-Omega HEARTBEAT: Re-force les couches principales toutes les 5s
-  useEffect(() => {
-    const layerHeartbeat = setInterval(() => {
-      setShowZonesLayer(true);
-      setShowCorridorsLayer(true);
-      setShowPointsLayer(true);
-      setShowHeatmapV10(true);
-      setShowWindFlow(true);
-    }, 5000);
-    return () => clearInterval(layerHeartbeat);
-  }, []);
+  // MAP-LAYERS-Omega: PHASE-FRONTEND-Omega V2 — HEARTBEAT PURGE
+  // Les couches respectent l'etat strict ON/OFF des boutons presseurs.
+  // ZERO reactivation automatique. ZERO persistance forcee.
 
   // ALIMENTATION-V2: Points nutritionnels + Recommandations
   const [showAlimentationV2, setShowAlimentationV2] = useState(true);
@@ -666,6 +644,9 @@ const MonTerritoireBionicPage = () => {
   } = usePhaseAV8();
   const [showPhaseA, setShowPhaseA] = useState(false);
   const [showPhaseC, setShowPhaseC] = useState(false);
+  // PHASE-FRONTEND-Omega V2: Couche INTEL-Omega (master institutionnel)
+  // ON = rendu V20-INSTITUTIONNEL complet visible. OFF = carte nue + waypoints seulement.
+  const [showIntelLayer, setShowIntelLayer] = useState(true);
 
   // STEEVE-MAX V3: Sous-éléments granulaires par couche
   const [zoneSubFilters, setZoneSubFilters] = useState({
@@ -1218,6 +1199,7 @@ const MonTerritoireBionicPage = () => {
         privacyMode={privacyMode} setPrivacyMode={setPrivacyMode}
         activeWaypoints={activeWaypoints} savedPlaces={savedPlaces}
         selectedWaypointForZones={selectedWaypointForZones}
+        showIntelLayer={showIntelLayer} setShowIntelLayer={setShowIntelLayer}
         showPhaseA={showPhaseA} setShowPhaseA={setShowPhaseA}
         showPhaseC={showPhaseC} setShowPhaseC={setShowPhaseC}
       />
@@ -1375,6 +1357,9 @@ const MonTerritoireBionicPage = () => {
               trajectories={alphaTrajectories}
               showTrajectoriesLayer={true}
               bundleDataV8={bundleDataV8}
+              showIntelLayer={showIntelLayer}
+              showSalinesLayer={showPhaseA}
+              showContaminationLayer={showPhaseC}
               showPhaseA={showPhaseA}
               phaseARelocalisations={phaseARelocalisations}
               phaseASalines={phaseASalines}
@@ -1495,15 +1480,15 @@ const MonTerritoireBionicPage = () => {
         </div>
 
         {/* ══════════════════════════════════════════════════════════════
-            SECTION 5 — PANNEAUX OPERATIONNELS (Waypoints, Lieux, Groupe, Exclusions)
-            BCE-4X: Aucun panneau analytique lateral. INTELLIGENCE = seule source.
-            Le panneau ne s'affiche QUE pour les onglets operationnels.
+            SECTION 5 — PANNEAUX OPERATIONNELS (Waypoints, Lieux UNIQUEMENT)
+            PHASE-FRONTEND-Omega V2: ZERO panneau analytique lateral.
+            ZERO Intelligence Dashboard. ZERO Groupe. ZERO Exclusions.
             ══════════════════════════════════════════════════════════════ */}
-        {['waypoints', 'lieux', 'groupe', 'exclusions'].includes(activeTab) && (
+        {['waypoints', 'lieux'].includes(activeTab) && (
         <div className="w-80 flex-shrink-0 bg-[#0d0d14] border-l border-[#1a1a2e] overflow-y-auto" data-testid="side-panel">
 
           {/* ── Panneau Waypoints ── */}
-          {activeTab === 'waypoints' && !selectedZone && (
+          {activeTab === 'waypoints' && (
             <WaypointUnifiedPanel
               waypoints={waypoints}
               activeWaypoints={activeWaypoints}
@@ -1532,7 +1517,7 @@ const MonTerritoireBionicPage = () => {
           )}
 
           {/* ── Panneau Lieux ── */}
-          {activeTab === 'lieux' && !selectedZone && (
+          {activeTab === 'lieux' && (
             <PlacesSidePanel
               savedPlaces={savedPlaces}
               PLACE_TYPES={PLACE_TYPES}
@@ -1543,142 +1528,10 @@ const MonTerritoireBionicPage = () => {
               onDeletePlace={(id) => deletePlace(id)}
             />
           )}
-
-          {/* ── Panneau Groupe ── */}
-          {activeTab === 'groupe' && !selectedZone && (
-            <div className="h-full" data-testid="panel-groupe">
-              <GroupeTab groupId="territory_group" userId={userId} compact={true} />
-            </div>
-          )}
-
-          {/* ── Panneau Exclusions ── */}
-          {activeTab === 'exclusions' && !selectedZone && (
-            <DiagnosticExclusionsPanel
-              hoveredZone={hoveredZone}
-              selectedZone={selectedZone}
-              onClearZone={() => { setHoveredZone(null); setSelectedZone(null); }}
-              onClose={() => {}}
-              activeWaypoints={activeWaypoints}
-              visibleZonesCount={visibleZonesCount}
-              isLoadingExclusions={isLoadingExclusions}
-              terrainExclusions={terrainExclusions}
-              currentMapCenter={currentMapCenter}
-              alerts={alerts}
-              unreadAlertCount={unreadAlertCount}
-              markAlertRead={markAlertRead}
-              markAllAlertsRead={markAllAlertsRead}
-              checkOptimalConditions={checkOptimalConditions}
-              favoritesLoading={favoritesLoading}
-              favorites={favorites}
-              removeFavorite={removeFavorite}
-              updateAlertSettings={updateAlertSettings}
-              getZoneConditions={getZoneConditions}
-              displayScore={displayScore}
-              categoryScores={categoryScores}
-              bionicStats={bionicStats}
-            />
-          )}
         </div>
-        )}
-
-        {/* ═══ INTELLIGENCE DASHBOARD — Superposition flottante non-bloquante ═══ */}
-        {/* BCE-4X R3/R7/R11/R18: La carte reste intacte, interactive, jamais supprimée */}
-        {activeTab === 'intelligence' && (
-          <IntelligenceDashboard
-            onClose={() => setActiveTab('carte')}
-            waypointCenter={waypointCenter}
-            selectedSpecies={selectedSpecies}
-            currentMonth={new Date().getMonth() + 1}
-            onNavigateToPosition={(lat, lng) => {
-              if (mapRef.current) {
-                mapRef.current.setView([lat, lng], 15);
-              }
-            }}
-            onHighlightZoneType={(type) => {
-              // Intelligence -> Carte: highlight zones du type selectionne
-              if (type === 'alimentation') { setShowZonesLayer(true); toggleZoneSub('alimentation'); }
-              else if (type === 'repos') { setShowZonesLayer(true); toggleZoneSub('repos'); }
-              else if (type === 'corridors') { setShowCorridorsLayer(true); }
-            }}
-            onShowApproachMarkers={(markers) => {
-              // Intelligence -> Carte: affiche marqueurs d'approche
-              if (mapRef.current && markers?.idealPosition) {
-                const L = window.L;
-                if (L) {
-                  // Nettoyer marqueurs precedents
-                  mapRef.current.eachLayer(l => { if (l._isIntelMarker) mapRef.current.removeLayer(l); });
-                  // Position ideale
-                  const m = L.circleMarker([markers.idealPosition.lat, markers.idealPosition.lng], {
-                    radius: 12, color: '#10b981', fillColor: '#10b981', fillOpacity: 0.3, weight: 2, dashArray: '4,4',
-                  }).addTo(mapRef.current);
-                  m._isIntelMarker = true;
-                  m.bindTooltip('Position ideale', { permanent: true, className: 'intel-tooltip', offset: [0, -15] });
-                  // Recentrer
-                  mapRef.current.setView([markers.idealPosition.lat, markers.idealPosition.lng], 15);
-                }
-              }
-            }}
-          />
         )}
       </div>
 
-      {/* ═══ PHASE A V8 — Panneau lateral Relocalisation + Salines ═══ */}
-      {showPhaseA && (
-        <PhaseAPanelV8
-          relocData={phaseARelocData}
-          salinesData={phaseASalinesData}
-          loading={phaseALoading}
-          error={phaseAError}
-          onClose={() => setShowPhaseA(false)}
-          onNavigateToPosition={(lat, lon) => {
-            if (mapRef.current) {
-              mapRef.current.setView([lat, lon], 15);
-            }
-          }}
-        />
-      )}
-
-      {/* ═══ PHASE C V8 — Panneau Thermal + Scenario + Multi-Engine ═══ */}
-      {showPhaseC && (
-        <PhaseCPanelV8
-          waypointCenter={waypointCenter}
-          selectedSpecies={selectedSpecies}
-          onClose={() => setShowPhaseC(false)}
-        />
-      )}
-
-      {/* ═══ PANNEAU RECOMMANDATIONS NUTRITIONNELLES — ALIMENTATION-V2 (composant extrait) ═══ */}
-      {showNutritionPanel && alimentationV2Data && (
-        <NutritionPanel alimentationV2Data={alimentationV2Data} onClose={() => setShowNutritionPanel(false)} />
-      )}
-
-      {/* PANNEAU AMENAGEMENT (Points nutritionnels/Affuts) — x4520-E PinnablePanel V2 */}
-      {showAmenagementPanel && (
-        <AmenagementPanel
-          report={amenagementReport}
-          isLoading={!amenagementReport && !!selectedWaypointForZones}
-          onClose={() => setShowAmenagementPanel(false)}
-          waypointCenter={waypointCenter}
-        />
-      )}
-
-      {/* ═══ PANNEAU AFFUT DETAIL — x4520-E PinnablePanel V2 ═══ */}
-      {selectedStand && (
-        <StandDetailPanel
-          stand={selectedStand}
-          onClose={() => setSelectedStand(null)}
-        />
-      )}
-
-      {/* PANNEAU POINT NUTRITIONNEL DETAIL — x4600 PinnablePanel V2 */}
-      {selectedNutritionPoint && (
-        <NutritionPointDetailPanel
-          nutritionPoint={selectedNutritionPoint}
-          onClose={() => setSelectedNutritionPoint(null)}
-          selectedSpecies={selectedSpecies}
-        />
-      )}
-      
       {/* ═══ DIALOGUES (composant extrait STEEVE-MAX) ═══ */}
       <TerritoireDialogs
         editingPlace={editingPlace} setEditingPlace={setEditingPlace} handleUpdatePlace={handleUpdatePlace}
@@ -1700,26 +1553,6 @@ const MonTerritoireBionicPage = () => {
         showCompareWidget={showCompareWidget} compareSelection={compareSelection}
         handleCloseCompare={handleCloseCompare} PLACE_TYPES={PLACE_TYPES}
       />
-
-      {/* ══ ZONE DIAGNOSTIC — OVERLAY FLOTTANT (x4515-FIX) ══ */}
-      {selectedZone && (
-        <div className="fixed inset-0 z-[1500] pointer-events-none">
-          <div className="pointer-events-auto absolute top-4 right-4" style={{ width: 380, maxHeight: 'calc(100vh - 32px)' }}>
-            <BionicZoneDiagnosticPanel
-              zone={selectedZone}
-              onClose={() => setSelectedZone(null)}
-              onAddWaypoint={(zone) => {
-                const name = prompt(`Nom pour ce waypoint (zone ${BIONIC_MODULES[zone.layerId]?.label || zone.layerId}) ?`, `Zone ${BIONIC_MODULES[zone.layerId]?.label}`);
-                if (name && zone.positions?.[0]) {
-                  const center = zone.positions.reduce((acc, p) => [acc[0] + p[0] / zone.positions.length, acc[1] + p[1] / zone.positions.length], [0, 0]);
-                  handleMapClickForWaypoint({ latlng: { lat: center[0], lng: center[1] } });
-                }
-                setSelectedZone(null);
-              }}
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 };

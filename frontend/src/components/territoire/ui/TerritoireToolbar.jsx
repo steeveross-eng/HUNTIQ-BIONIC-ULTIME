@@ -64,6 +64,7 @@ export function TerritoireToolbar({
   adminArchitecteMode, setAdminArchitecteMode, privacyMode, setPrivacyMode,
   activeWaypoints, savedPlaces,
   selectedWaypointForZones,
+  showIntelLayer, setShowIntelLayer,
   showPhaseA, setShowPhaseA,
   showPhaseC, setShowPhaseC,
   // Legacy props accepted but ignored
@@ -127,11 +128,12 @@ export function TerritoireToolbar({
         />
         {SEP}
 
-        {/* INTELLIGENCE */}
+        {/* INTELLIGENCE — couche master institutionnelle (ON = rendu V20 complet, OFF = carte nue) */}
         <PressButton
-          active={activeTab === 'intelligence'}
-          onClick={() => setActiveTab(p => p === 'intelligence' ? 'carte' : 'intelligence')}
+          active={!!showIntelLayer}
+          onClick={() => setShowIntelLayer && setShowIntelLayer(v => !v)}
           icon={Brain} label="Intel" activeColor="#4A7A2E" testId="toolbar-intelligence-btn"
+          title="Couche INTEL-Omega master (ON/OFF)"
         />
         {SEP}
 
