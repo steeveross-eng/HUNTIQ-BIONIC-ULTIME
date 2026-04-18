@@ -1,3 +1,49 @@
+## INTERDICTION SALINES-V12-FEEDBACK-AFFUTS — AUTONOMIE BIOLOGIQUE (2026-04-18)
+### Directive institutionnelle
+Toute logique de feedback AFFUT → SALINE est **formellement interdite**. Rationale :
+- Chasse à l'arc/arbalète : distance éthique maximale **40 m**
+- Une pénalité saline à <80 m d'affût serait **contraire à la pratique réelle**
+- Les salines doivent rester un moteur 100% biologique autonome
+
+### Correctif appliqué
+`engine_salines_v11_supra.py:_score_reseau` purgé :
+- Suppression du bloc `min_d_affut` (+12 si 80-300m, -15 si <50m)
+- Suppression de l'alerte "Affut trop proche (Xm)"
+- Paramètre `affuts` conservé dans la signature pour compat, mais **explicitement ignoré** (`_ = affuts`)
+- Commentaire institutionnel documentant l'interdiction
+
+### Inputs effectifs SALINES-V11 post-interdiction
+- ✅ Corridors (via `corridor_distance_m` pré-calculé)
+- ✅ Contamination (alertes cônes)
+- ❌ Affûts — **IGNORÉ**
+
+### Test automatique (`test_salines_no_feedback_affuts.py`)
+Vérifie :
+1. Aucun champ `distance_affut_*` / `affut_penalty` dans output salines
+2. Aucune alerte contenant "affut" dans `alertes_reseau`
+3. `nutrient_target_profile` préservé (autonomie bio)
+4. **INVARIANCE** : `score_reseau` et `score_global_v11` **identiques** avec `affuts=[]` ou affuts artificiels injectés (invariance formelle prouvée par test)
+5. Salines ALWAYS-ON préservé (≥1 par espèce)
+
+### Validation (4/4 suites tests vertes, ZÉRO régression)
+```
+test_salines_no_feedback_affuts.py: ✓ 5 verifs, invariance score_reseau=70, score_global=72
+test_affuts_v12.py:                  ✓ 18/18 affuts 30-80m, zero dep salines
+test_salines_always_on.py:           ✓ 3/3 especes (cerf/orignal/wapiti)
+test_defaults_omega.py:              ✓ 6/6 verifs DEFAULTS-Ω
+```
+
+### Pipeline V12 final stable (non circulaire)
+```
+TERRAIN → CORRIDORS → ZONES → AFFUTS-V12(no-salines) → CONTAMINATION → SALINES-V11(no-affuts) → SALINES-V11-ENRICH → HOTSPOTS → VENT
+```
+**Découplage bidirectionnel :**
+- AFFUTS ne consomme PAS salines (V12 refactor précédent)
+- SALINES ne consomme PAS affuts (V12 interdiction présente)
+- Résultat : deux moteurs **100% autonomes** dans leur scoring, zéro dépendance circulaire
+
+---
+
 ## AFFUTS-Ω-V12 — REFACTOR + REGLE 30-80m + REPOSITIONNEMENT AUTO (2026-04-18)
 ### Refactor complet
 - **Suppression totale dep SALINES** : `compute_affuts_omega` ne reçoit plus `salines_v10`

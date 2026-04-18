@@ -249,10 +249,19 @@ def _analyze_nutrition_600m(saline: dict, terrain_v10: dict, species: str, month
     }
 
 
-# ═══ AXE 4 — RESEAU (corridors/zones/contamination/affuts) ═══
+# ═══ AXE 4 — RESEAU (corridors/zones/contamination) ═══
+# INTERDICTION FORMELLE V12 (Commandant STEEVE-MAX):
+# SALINES-V12-FEEDBACK-AFFUTS est interdit. Les salines restent 100% autonomes
+# du positionnement des affuts. Rationale: chasse a l'arc/arbalete distance ethique 40m,
+# toute penalite saline <80m affut serait contraire a la pratique reelle de chasse.
+# Le parametre `affuts` est conserve pour compatibilite mais IGNORE dans le scoring.
 
 def _score_reseau(saline: dict, corridors: list, affuts: list, contamination: list) -> tuple[int, list[str]]:
-    """Score reseau + alertes."""
+    """Score reseau + alertes. SANS feedback affuts (autonomie biologique stricte).
+
+    Inputs effectivement utilises: corridors (via distance pre-calculee), contamination.
+    Param `affuts` IGNORE par directive institutionnelle.
+    """
     alertes: list[str] = []
     score = 50.0
 
@@ -265,20 +274,14 @@ def _score_reseau(saline: dict, corridors: list, affuts: list, contamination: li
         score -= 10
         alertes.append(f"Corridor distant ({corr_dist}m)")
 
-    # Proximite affut le plus proche
-    lat_s = saline.get("lat"); lon_s = saline.get("lon") or saline.get("lng")
-    if lat_s and lon_s and affuts:
-        min_d_affut = min(
-            (_haversine_m(lat_s, lon_s, a.get("lat"), a.get("lng") or a.get("lon")) for a in affuts if a.get("lat")),
-            default=9999
-        )
-        if 80 <= min_d_affut <= 300:
-            score += 12
-        elif min_d_affut < 50:
-            score -= 15
-            alertes.append(f"Affut trop proche ({int(min_d_affut)}m)")
+    # INTERDICTION SALINES-V12-FEEDBACK-AFFUTS: AUCUNE logique de proximite affut.
+    # Maintien autonomie biologique. Compatibilite chasse arc/arbalete (40m).
+    # Le parametre `affuts` n'est PAS consomme.
+    _ = affuts  # explicit no-op — interdiction formelle documentee
 
-    # Contamination: si dans un cone contamination, alerte
+    lat_s = saline.get("lat"); lon_s = saline.get("lon") or saline.get("lng")
+
+    # Contamination: si dans un cone contamination, alerte (independant des affuts)
     if lat_s and lon_s and contamination:
         cones = contamination if isinstance(contamination, list) else [contamination]
         in_cone_count = 0
