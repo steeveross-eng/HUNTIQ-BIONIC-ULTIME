@@ -792,6 +792,14 @@ try:
 except Exception as e:
     logger.warning(f"V8 Institutional not loaded: {e}")
 
+# V20 PERFORMANCE BUNDLE — cache TTL 24h (<1s loading target)
+try:
+    from engines.v8_institutional.v20_performance_bundle import router as v20_perf_router
+    app.include_router(v20_perf_router)
+    logger.info("V20-PERFORMANCE registered (/api/v20/territoire/bundle) — cache 24h")
+except Exception as e:
+    logger.warning(f"V20 Performance bundle not loaded: {e}")
+
 # ESI-Omega — Engine Securite Institutionnelle (Guardian Central)
 try:
     from engines.v8_institutional.esi_omega import router as esi_router

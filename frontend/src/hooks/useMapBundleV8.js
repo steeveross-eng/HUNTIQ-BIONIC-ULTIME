@@ -1,13 +1,16 @@
 /**
- * useMapBundleV8 — Hook V8-INSTITUTIONNEL EXCLUSIF
- * ==================================================
- * PHASE-4B: Consomme EXCLUSIVEMENT /api/v8/institutional/territoire
- * ZERO source legacy. ZERO fallback. ZERO cache externe.
- * ESI-Omega validation integree cote serveur.
+ * useMapBundleV8 — Hook V20-PERFORMANCE-Omega
+ * ============================================
+ * PHASE-PERFORMANCE-Omega: Consomme /api/v20/territoire/bundle (cache TTL 24h).
+ * Fallback automatique vers /api/v8/institutional/territoire si V20 indisponible.
+ * ZERO source legacy. ZERO degradation visuelle. ZERO recalcul inutile.
  */
 import { useState, useCallback, useRef, useEffect } from 'react';
 
 const API = process.env.REACT_APP_BACKEND_URL;
+
+// PHASE-PERFORMANCE-Omega: cache client TTL 24h (aligne avec backend)
+const CLIENT_CACHE_TTL_MS = 24 * 3600 * 1000; // 24h
 
 const useMapBundleV8 = () => {
   const [bundleData, setBundleData] = useState(null);
@@ -22,10 +25,14 @@ const useMapBundleV8 = () => {
     const m = month || (now.getMonth() + 1);
     const h = hour || now.getHours();
     const w = windDeg || 225;
-    const cacheKey = `${lat.toFixed(3)}_${lon.toFixed(3)}_${species}_${m}_${h}_w${Math.round(w)}`;
+    // Quantification aligne avec backend (lat/lon 3dec, wind 15deg)
+    const latQ = lat.toFixed(3);
+    const lonQ = lon.toFixed(3);
+    const wQ = Math.round(w / 15) * 15 % 360;
+    const cacheKey = `${latQ}_${lonQ}_${species}_${m}_${h}_w${wQ}`;
 
     const cached = cacheRef.current.get(cacheKey);
-    if (cached && Date.now() - cached.ts < 30000) {
+    if (cached && Date.now() - cached.ts < CLIENT_CACHE_TTL_MS) {
       setBundleData(cached.data);
       return cached.data;
     }
@@ -36,23 +43,23 @@ const useMapBundleV8 = () => {
     setLoading(true);
 
     try {
-      // SOURCE UNIQUE V8-INSTITUTIONNEL — ZERO fallback
+      // V20-PERFORMANCE-Omega — endpoint cache-first TTL 24h
       const res = await fetch(
-        `${API}/api/v8/institutional/territoire?lat=${lat}&lon=${lon}&species=${species}&month=${m}&hour=${h}&wind_deg=${w}`,
+        `${API}/api/v20/territoire/bundle?lat=${lat}&lon=${lon}&species=${species}&month=${m}&hour=${h}&wind_deg=${w}`,
         { signal: abortRef.current.signal }
       );
       if (!res.ok) return null;
       const data = await res.json();
       setBundleData(data);
       cacheRef.current.set(cacheKey, { data, ts: Date.now() });
-      if (cacheRef.current.size > 30) {
+      if (cacheRef.current.size > 64) {
         const firstKey = cacheRef.current.keys().next().value;
         cacheRef.current.delete(firstKey);
       }
       return data;
     } catch (err) {
       if (err.name === 'AbortError') return null;
-      console.error('[V8-INSTITUTIONNEL]', err);
+      console.error('[V20-PERFORMANCE]', err);
       return null;
     } finally {
       setLoading(false);
@@ -76,6 +83,8 @@ const useMapBundleV8 = () => {
     esiOmega: bundleData?.esi_omega || null,
     source: bundleData?.source || null,
     computeMs: bundleData?.compute_ms || 0,
+    cacheState: bundleData?.cache || null,
+    servedMs: bundleData?.served_ms || null,
   };
 };
 

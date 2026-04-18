@@ -76,7 +76,12 @@ const BionicLayersV8 = ({
   }, [map]);
 
   const renderLayers = useCallback(() => {
-    if (!map || !enabled || !bundleData) return;
+    if (!map) return;
+    // PHASE-PERFORMANCE-Omega: Lazy decharge — si master OFF ou no data, clear + abort
+    if (!enabled || !bundleData) {
+      clearOwnLayers();
+      return;
+    }
     clearOwnLayers();
 
     const group = L.featureGroup();
