@@ -1,3 +1,44 @@
+## TERRITOIRE-Ω-V11-SUPRA — ALWAYS-ON + STYLE-HIÉRARCHISÉ + DEFAULTS-Ω (2026-04-18)
+### DEFAULTS-Ω — Point de vérité unique
+- Nouveau `frontend/src/config/territoire_defaults.js`
+- `TERRITOIRE_DEFAULTS` (SALINES/CORRIDORS/ZONES/AFFUTS/HOTSPOTS/VENT/CONTAMINATION/CURSEUR/INTEL = true)
+- `ALWAYS_ON_FLAGS` informatif (tous *_ALWAYS_ON = true)
+- `CORRIDOR_STYLE_HIERARCHY` palette V11-SUPRA stricte 5 niveaux
+- `INSTITUTIONAL_COLORS` (SALINE_YELLOW, AFFUT colors, CONTAM 3 niveaux)
+- Object.freeze() → immutable
+
+### ALWAYS-ON Ω applique dans MonTerritoireBionicPage.jsx
+| State | Avant | Après |
+|---|---|---|
+| showZonesLayer | true | **TERRITOIRE_DEFAULTS.ZONES** |
+| showCorridorsLayer | true | **TERRITOIRE_DEFAULTS.CORRIDORS** |
+| showPointsLayer | true | **TERRITOIRE_DEFAULTS.AFFUTS** |
+| showHeatmapV10 | true | **TERRITOIRE_DEFAULTS.HOTSPOTS** |
+| showWindFlow | true | **TERRITOIRE_DEFAULTS.VENT** |
+| showPhaseA (SALINES) | true (prev fix) | **TERRITOIRE_DEFAULTS.SALINES** |
+| showPhaseC (CONTAM) | **false** | **TERRITOIRE_DEFAULTS.CONTAMINATION** (true) |
+| showCursorBionic (CURSEUR) | **false** | **TERRITOIRE_DEFAULTS.CURSEUR** (true) |
+| showIntelLayer | true | **TERRITOIRE_DEFAULTS.INTEL** |
+
+### STYLE-HIÉRARCHISÉ V11-SUPRA (Directive III)
+Appliqué dans `BionicLayersV8.jsx` via import `CORRIDOR_STYLE_HIERARCHY` :
+| Niveau | Backend type | Color | Weight | Opacity |
+|---|---|---|---|---|
+| CRITIQUE | extreme | #FF0000 | 4.0 | 1.0 |
+| MAJEUR | intense | #FF6A00 | 3.2 | 0.85 |
+| FORT | saisonnier | #FFC300 | 2.6 | 0.75 |
+| MODÉRÉ | normal | #00B050 | 2.0 | 0.65 |
+| FAIBLE | faible (réservé) | #00B0F0 | 1.4 | 0.55 |
+- Épaisseur + opacité **strictement croissantes** avec intensité
+- Minimums institutionnels respectés (weight ≥1.4, opacity ≥0.55)
+- Priorité style hiérarchique > backend override (homogénéité forcée)
+
+### Tests automatiques
+- `/app/backend/tests/test_defaults_omega.py` — **6/6 pass** (existence, flags, always-on, hiérarchie stricte, usage BionicLayers, usage Page)
+- `/app/backend/tests/test_salines_always_on.py` — **3/3 pass** (cerf/orignal/wapiti)
+
+---
+
 ## ALWAYS-ON-Ω-ORIGNAL + FIX-PIPELINE (2026-04-18)
 ### Fix frontend (cause racine)
 - `MonTerritoireBionicPage.jsx` : `useState(showPhaseA)` passe de `false` → **`true`** (SALINES_ALWAYS_ON=true par défaut)

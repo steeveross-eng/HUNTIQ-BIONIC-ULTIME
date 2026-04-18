@@ -73,6 +73,7 @@ import { useWaypointActions } from '@/hooks/useWaypointActions';
 import { MapContent } from '@/components/territoire/map/MapContent';
 import BionicLegend from '@/components/territoire/BionicLegend';
 import CacheStateOmega from '@/components/territoire/ui/CacheStateOmega';
+import { TERRITOIRE_DEFAULTS } from '@/config/territoire_defaults';
 // V8.1 — Saisons biologiques
 import { BiologicalSeasonSelector } from '@/components/territoire/ui/BiologicalSeasonSelector';
 import { getCurrentBiologicalSeason } from '@/config/biologicalSeasons';
@@ -237,7 +238,7 @@ const MonTerritoireBionicPage = () => {
   const [hoveredZone, setHoveredZone] = useState(null);
   const [showCorridorsV1, setShowCorridorsV1] = useState(savedShowCorridorsV1 ?? false);
   const [showExclusionOverlay, setShowExclusionOverlay] = useState(savedShowExclusionOverlay ?? false);
-  const [showWindFlow, setShowWindFlow] = useState(true); // BCE-4X Phase 2.6: Vent TOUJOURS actif
+  const [showWindFlow, setShowWindFlow] = useState(TERRITOIRE_DEFAULTS.VENT); // ALWAYS-ON institutionnel
   const [showHydro, setShowHydro] = useState(true); // ORDONNANCE LEVEE: Hydrographie reactivee
   const [windMode, setWindMode] = useState(savedWindMode || 'arrows');
   const [temporalHourMT, setTemporalHourMT] = useState(null);
@@ -553,7 +554,7 @@ const MonTerritoireBionicPage = () => {
   
   // Panneaux
   const [showLayersPanel, setShowLayersPanel] = useState(true);
-  const [showCursorBionic, setShowCursorBionic] = useState(false); // P0 FIX: BBox debug caché par défaut
+  const [showCursorBionic, setShowCursorBionic] = useState(TERRITOIRE_DEFAULTS.CURSEUR);
   
   // ============================================
   // CARTE PREMIUM BIONIC - Sélecteur de type de carte
@@ -576,9 +577,10 @@ const MonTerritoireBionicPage = () => {
   const [minPercentageFilter, setMinPercentageFilter] = useState(30);
   
   // STEEVE-MAX UX: Controles couches et points chauds — MAP-LAYERS-Omega ALWAYS_ON
-  const [showZonesLayer, setShowZonesLayer] = useState(true);
-  const [showCorridorsLayer, setShowCorridorsLayer] = useState(true);
-  const [showPointsLayer, setShowPointsLayer] = useState(true);
+  // DEFAULTS-Omega: single source of truth (frontend/src/config/territoire_defaults.js)
+  const [showZonesLayer, setShowZonesLayer] = useState(TERRITOIRE_DEFAULTS.ZONES);
+  const [showCorridorsLayer, setShowCorridorsLayer] = useState(TERRITOIRE_DEFAULTS.CORRIDORS);
+  const [showPointsLayer, setShowPointsLayer] = useState(TERRITOIRE_DEFAULTS.AFFUTS);
   const [pointsChaudsMode, setPointsChaudsMode] = useState(false);
   const [pointsChaudsFilter, setPointsChaudsFilter] = useState('tous');
 
@@ -613,7 +615,7 @@ const MonTerritoireBionicPage = () => {
   }, [savedPlaces]);
 
   const [adminArchitecteMode, setAdminArchitecteMode] = useState(false);
-  const [showHeatmapV10, setShowHeatmapV10] = useState(true);
+  const [showHeatmapV10, setShowHeatmapV10] = useState(TERRITOIRE_DEFAULTS.HOTSPOTS);
   const [heatmapV10Data, setHeatmapV10Data] = useState(null);
   const [heatmapIncludeCorridors, setHeatmapIncludeCorridors] = useState(true);
 
@@ -644,13 +646,12 @@ const MonTerritoireBionicPage = () => {
     relocalisations: phaseARelocalisations, siteActuel: phaseASiteActuel,
     salines: phaseASalines,
   } = usePhaseAV8();
-  // ALWAYS-ON-Omega: SALINES toujours visibles par defaut (cerf/orignal/wapiti)
-  // Directive SALINES_ALWAYS_ON=true. Le bouton reste toggleable pour override manuel.
-  const [showPhaseA, setShowPhaseA] = useState(true);
-  const [showPhaseC, setShowPhaseC] = useState(false);
+  // ALWAYS-ON-Omega: SALINES + CONTAMINATION toujours visibles par defaut (toutes especes)
+  // Directive SALINES_ALWAYS_ON=true + CONTAM_ALWAYS_ON=true. Boutons toggleables.
+  const [showPhaseA, setShowPhaseA] = useState(TERRITOIRE_DEFAULTS.SALINES);
+  const [showPhaseC, setShowPhaseC] = useState(TERRITOIRE_DEFAULTS.CONTAMINATION);
   // PHASE-FRONTEND-Omega V2: Couche INTEL-Omega (master institutionnel)
-  // ON = rendu V20-INSTITUTIONNEL complet visible. OFF = carte nue + waypoints seulement.
-  const [showIntelLayer, setShowIntelLayer] = useState(true);
+  const [showIntelLayer, setShowIntelLayer] = useState(TERRITOIRE_DEFAULTS.INTEL);
 
   // STEEVE-MAX V3: Sous-éléments granulaires par couche
   const [zoneSubFilters, setZoneSubFilters] = useState({

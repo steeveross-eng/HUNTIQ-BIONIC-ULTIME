@@ -30,11 +30,16 @@ const ZONE_COLORS = {
 };
 
 // CORRIDORS Omega: 4 niveaux
+// STYLE-HIERARCHISE V11-SUPRA (Directive III)
+// Intensite = Epaisseur + Surbrillance strictement croissantes
+// Source: frontend/src/config/territoire_defaults.js CORRIDOR_STYLE_HIERARCHY
+import { CORRIDOR_STYLE_HIERARCHY as HIER } from '@/config/territoire_defaults';
 const CORRIDOR_STYLES = {
-  extreme:    { color: '#D32F2F', weight: 4.2, opacity: 0.95 },
-  intense:    { color: '#FF9800', weight: 3.0, opacity: 0.90 },
-  saisonnier: { color: '#4CAF50', weight: 2.4, opacity: 0.90 },
-  normal:     { color: '#FFFFFF', weight: 1.6, opacity: 0.85 },
+  extreme:    HIER.extreme,     // CRITIQUE #FF0000 4.0px 1.0
+  intense:    HIER.intense,     // MAJEUR   #FF6A00 3.2px 0.85
+  saisonnier: HIER.saisonnier,  // FORT     #FFC300 2.6px 0.75
+  normal:     HIER.normal,      // MODERE   #00B050 2.0px 0.65
+  faible:     HIER.faible,      // FAIBLE   #00B0F0 1.4px 0.55 (reserve)
 };
 
 const AFFUT_COLOR = '#9E9E9E';
@@ -142,14 +147,17 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-2: CORRIDORS-Omega (4 niveaux: NORMAL/INTENSE/EXTREME/SAISONNIER) ═══
+    // ═══ Z-2: CORRIDORS-Omega — STYLE-HIERARCHISE V11-SUPRA (Directive III) ═══
+    // CRITIQUE #FF0000 4.0px / MAJEUR #FF6A00 3.2px / FORT #FFC300 2.6px / MODERE #00B050 2.0px / FAIBLE #00B0F0 1.4px
+    // PRIORITE: defaults hierarchy >> backend-provided style (force homogeneite institutionnelle)
     if (showCorridors && corridors.length > 0) {
       corridors.forEach(c => {
         const path = c.path || [[c.start.lat, c.start.lng], [c.end.lat, c.end.lng]];
         const style = CORRIDOR_STYLES[c.type] || CORRIDOR_STYLES.normal;
-        const color = c.color || style.color;
-        const weight = c.weight || style.weight;
-        const opacity = c.opacity || style.opacity;
+        // Directive III: style hierarchise impose (ignore backend overrides)
+        const color = style.color;
+        const weight = style.weight;
+        const opacity = style.opacity;
 
         const line = L.polyline(path, {
           color: color,
