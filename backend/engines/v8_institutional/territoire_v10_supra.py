@@ -397,8 +397,8 @@ def compute_affuts_v10(lat, lon, species, zones_v10, corridors_v10, wind_deg, te
 # 5. HOTSPOTS V10-SUPRA
 # ═══════════════════════════════════════════════════════
 
-def compute_hotspots_v10(lat, lon, species, zones_v10, corridors_v10, affuts_v10, terrain_v10):
-    """HOTSPOTS V10-SUPRA: fusion multi-engines, intensite 1-5."""
+def compute_hotspots_v10(lat, lon, species, zones_v10, corridors_v10, affuts_v10, terrain_v10, salines_omega=None):
+    """HOTSPOTS V10-SUPRA: fusion multi-engines + boost SALINES-VALIDEES."""
     t = terrain_v10
     cos_lat = max(0.5, math.cos(math.radians(lat)))
     hotspots = []
@@ -433,6 +433,26 @@ def compute_hotspots_v10(lat, lon, species, zones_v10, corridors_v10, affuts_v10
                 })
                 break
 
+    # BOOST: SALINES-VALIDEES augmentent hotspots proches
+    if salines_omega:
+        for sal in salines_omega:
+            if sal.get("status") != "SALINE-VALIDEE-Omega":
+                continue
+            # Boost hotspots dans rayon 200m de la saline validee
+            for h in hotspots:
+                d = _distance_m(sal["lat"], sal["lon"], h["lat"], h.get("lng", h.get("lon", 0)))
+                if d < 200:
+                    h["intensity"] = round(min(100, h["intensity"] + 8), 1)
+                    h["saline_boost"] = True
+
+            # Creer hotspot a la position de la saline validee
+            hotspots.append({
+                "lat": sal["lat"], "lng": sal["lon"],
+                "intensity": round(min(100, sal["score"] * 0.8 + 20), 1),
+                "source_engine": "SALINE_VALIDEE",
+                "source": "V10-SUPRA",
+            })
+
     return hotspots
 
 
@@ -440,19 +460,142 @@ def compute_hotspots_v10(lat, lon, species, zones_v10, corridors_v10, affuts_v10
 # 6. SALINES V10-SUPRA
 # ═══════════════════════════════════════════════════════
 
-def compute_salines_v10(lat, lon, species, month, terrain_v10):
-    """SALINES V10-SUPRA: terrain reel + hydrologie."""
+# ═══════════════════════════════════════════════════════
+# 6. SALINES-Omega — REGLES INSTITUTIONNELLES
+# ═══════════════════════════════════════════════════════
+# REGLE 1: Distance eau [30-100m] (ENGINE HYDRO)
+# REGLE 2: Distance corridor INTENSE/EXTREME [30-100m]
+# CLASSIFICATION: SALINE-VALIDEE-Omega vs SALINE-A-REPOSITIONNER-Omega
+# RECALCUL ANNUEL OBLIGATOIRE
+
+def _distance_m(lat1, lon1, lat2, lon2):
+    """Distance en metres entre deux points."""
+    cos_lat = math.cos(math.radians((lat1 + lat2) / 2))
+    dx = (lon2 - lon1) * 111320 * cos_lat
+    dy = (lat2 - lat1) * 111320
+    return math.sqrt(dx*dx + dy*dy)
+
+
+def _find_nearest_corridor_intense(sal_lat, sal_lon, corridors):
+    """Trouve le corridor INTENSE/EXTREME le plus proche et sa distance."""
+    best_dist = float('inf')
+    best_corr = None
+    for c in corridors:
+        if c["type"] not in ("critique", "majeur"):
+            continue
+        # Distance au start et end du corridor
+        for pt_key in ["start", "end"]:
+            pt = c[pt_key]
+            d = _distance_m(sal_lat, sal_lon, pt["lat"], pt["lng"])
+            if d < best_dist:
+                best_dist = d
+                best_corr = c
+        # Distance aux points du path
+        for p in c.get("path", [])[::3]:  # Echantillonner 1/3
+            d = _distance_m(sal_lat, sal_lon, p[0], p[1])
+            if d < best_dist:
+                best_dist = d
+                best_corr = c
+    return best_dist, best_corr
+
+
+def _suggest_new_position(sal_lat, sal_lon, corridors, terrain_v10, cos_lat):
+    """Genere une SUGGESTION_DE_NOUVELLE_POSITION pour une saline hors normes.
+    Cherche la zone ou: EAU [30-100m] + CORRIDOR_INTENSE [30-100m] + TERRAIN conforme.
+    """
+    t = terrain_v10
+    best_score = -1
+    best_pos = None
+
+    # Scanner 16 directions autour de la position actuelle
+    for angle_idx in range(16):
+        angle = (angle_idx / 16) * 2 * math.pi
+        for dist_m in [40, 60, 80, 120, 160, 200]:
+            new_lat = sal_lat + math.sin(angle) * dist_m / 111320
+            new_lon = sal_lon + math.cos(angle) * dist_m / 111320 / cos_lat
+
+            # Verifier corridor intense [30-100m]
+            corr_dist, corr = _find_nearest_corridor_intense(new_lat, new_lon, corridors)
+            if corr_dist < 30 or corr_dist > 100:
+                continue
+
+            # Verifier eau estimee [30-100m]
+            eau_dist = t.get("distance_eau_m", 200)
+            # Ajuster distance eau relative a la nouvelle position
+            eau_offset = abs(dist_m * math.sin(angle) * 0.3)
+            eau_est = max(10, eau_dist - eau_offset + _seed(new_lat, new_lon, "eau_adj") * 40)
+
+            if eau_est < 30 or eau_est > 100:
+                continue
+
+            # Verifier terrain conforme
+            slope_est = t.get("pente_deg", 10) + _seed(new_lat, new_lon, "slope_adj") * 3
+            if slope_est > 20:
+                continue
+
+            # Score: meilleur si proche du centre des deux intervalles
+            eau_score = 1 - abs(eau_est - 65) / 35  # optimal a 65m
+            corr_score = 1 - abs(corr_dist - 65) / 35
+            terrain_score = 1 - slope_est / 20
+            total = eau_score * 0.4 + corr_score * 0.4 + terrain_score * 0.2
+
+            if total > best_score:
+                best_score = total
+                best_pos = {
+                    "lat": round(new_lat, 6),
+                    "lon": round(new_lon, 6),
+                    "eau_distance_m": round(eau_est),
+                    "corridor_distance_m": round(corr_dist),
+                    "corridor_type": corr["type"] if corr else None,
+                    "score": round(total * 100, 1),
+                }
+
+    return best_pos
+
+
+def compute_salines_omega(lat, lon, species, month, terrain_v10, corridors_v10):
+    """ENGINE SALINES-Omega: regles eau [30-100m] + corridor intense [30-100m].
+    Classification VALIDEE vs A-REPOSITIONNER. Suggestion repositionnement.
+    Genere salines intelligemment pres des corridors intenses ET de l'eau.
+    """
     t = terrain_v10
     cos_lat = max(0.5, math.cos(math.radians(lat)))
+
+    # Corridors intenses/extremes
+    corridors_intenses = [c for c in corridors_v10 if c["type"] in ("critique", "majeur")]
+
     salines = []
-    n = 4
 
-    for i in range(n):
-        angle = _seed(lat, lon, f"sal_a_{i}") * 360
-        dist = 0.002 + _seed(lat, lon, f"sal_d_{i}") * 0.004
-        s_lat = lat + math.sin(math.radians(angle)) * dist
-        s_lon = lon + math.cos(math.radians(angle)) * dist / cos_lat
+    # STRATEGIE: Placer salines pres des corridors intenses
+    # en cherchant des positions conformes (eau + corridor [30-100m])
+    candidates = []
+    for ci, corr in enumerate(corridors_intenses[:6]):
+        path = corr.get("path", [])
+        if len(path) < 3:
+            continue
+        # Milieu du corridor
+        mid_idx = len(path) // 2
+        mid = path[mid_idx]
+        # Offset perpendiculaire (50-80m)
+        if mid_idx > 0:
+            prev = path[mid_idx - 1]
+            dx = mid[1] - prev[1]
+            dy = mid[0] - prev[0]
+        else:
+            dx, dy = 0.001, 0.001
+        norm = math.sqrt(dx*dx + dy*dy)
+        if norm < 1e-8:
+            continue
+        # Perpendiculaire
+        px, py = -dy/norm, dx/norm
+        offset_m = 50 + _seed(mid[0], mid[1], f"sal_off_{ci}") * 30  # 50-80m
+        offset_deg = offset_m / 111320
+        sign = 1 if ci % 2 == 0 else -1
 
+        s_lat = mid[0] + py * offset_deg * sign
+        s_lon = mid[1] + px * offset_deg * sign / cos_lat
+
+        # Score
         score = 30
         score += (t.get("soil_moisture", 0.3) or 0.3) * 25
         score += max(0, 20 - t.get("pente_deg", 10)) * 0.8
@@ -461,14 +604,45 @@ def compute_salines_v10(lat, lon, species, month, terrain_v10):
             score += 8
         score = round(min(100, max(10, score + (_seed(s_lat, s_lon, "sals") - 0.5) * 15)), 1)
 
-        salines.append({
-            "lat": round(s_lat, 6), "lon": round(s_lon, 6),
+        # Distance corridor (devrait etre ~50-80m par construction)
+        corr_dist, nearest_corr = _find_nearest_corridor_intense(s_lat, s_lon, corridors_v10)
+
+        # Distance eau: estimee depuis hydro index + drainage
+        hydro = t.get("hydro_index", 0.5)
+        drainage = t.get("drainage_class", 3)
+        # Plus le drainage est mauvais (classe haute), plus l'eau est proche
+        eau_base = max(10, 150 - drainage * 15 - hydro * 80)
+        eau_jitter = _seed(s_lat, s_lon, "eau_sal") * 30 - 15
+        eau_dist = round(max(5, eau_base + eau_jitter))
+
+        eau_ok = 30 <= eau_dist <= 100
+        corr_ok = 30 <= corr_dist <= 100
+
+        if eau_ok and corr_ok:
+            status = "SALINE-VALIDEE-Omega"
+            suggestion = None
+        else:
+            status = "SALINE-A-REPOSITIONNER-Omega"
+            suggestion = _suggest_new_position(s_lat, s_lon, corridors_v10, t, cos_lat)
+
+        candidates.append({
+            "lat": round(s_lat, 6),
+            "lon": round(s_lon, 6),
             "score": score,
-            "source": "V10-SUPRA-REEL+IA",
+            "status": status,
+            "eau_distance_m": eau_dist,
+            "eau_conforme": eau_ok,
+            "corridor_distance_m": round(corr_dist),
+            "corridor_type": nearest_corr["type"] if nearest_corr else None,
+            "corridor_conforme": corr_ok,
+            "suggestion": suggestion,
+            "source": "SALINES-Omega-INSTITUTIONNEL",
+            "recalcul_annuel": True,
         })
 
-    salines.sort(key=lambda x: x["score"], reverse=True)
-    return salines
+    # Trier: VALIDEES d'abord, puis par score
+    candidates.sort(key=lambda x: (0 if x["status"] == "SALINE-VALIDEE-Omega" else 1, -x["score"]))
+    return candidates[:6]
 
 
 # ═══════════════════════════════════════════════════════
@@ -503,10 +677,12 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
     # CONTAMINATION-Omega: SOURCE = AFFUTS (ZERO waypoint)
     contamination = compute_contamination_omega(affuts, real_wind_deg, real_wind_speed, t)
 
-    # HOTSPOTS: reduction score si dans zone contamination forte
-    hotspots = compute_hotspots_v10(lat, lon, species, zones, corridors, affuts, t)
+    # SALINES-Omega: regles eau [30-100m] + corridor intense [30-100m]
+    salines = compute_salines_omega(lat, lon, species, month, t, corridors)
 
-    salines = compute_salines_v10(lat, lon, species, month, t)
+    # HOTSPOTS: boost par SALINES-VALIDEES
+    hotspots = compute_hotspots_v10(lat, lon, species, zones, corridors, affuts, t, salines)
+
     wind_vectors = compute_wind_vectors(lat, lon, real_wind_deg, real_wind_speed)
 
     return {

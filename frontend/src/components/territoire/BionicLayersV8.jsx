@@ -235,27 +235,67 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-5: SALINES ═══
+    // ═══ Z-5: SALINES-Omega (VALIDEE vs A-REPOSITIONNER) ═══
     if (showSalines && salines.length > 0) {
       salines.forEach(s => {
         const lat = s.lat || s.center?.lat;
         const lon = s.lng || s.lon || s.center?.lng;
         if (!lat || !lon) return;
 
+        const isValidee = s.status === 'SALINE-VALIDEE-Omega';
+        const color = isValidee ? SALINE_COLOR : '#EF5350';
+        const dashArray = isValidee ? null : '3,3';
+
         const circle = L.circleMarker([lat, lon], {
-          radius: 7,
-          color: SALINE_COLOR,
-          fillColor: SALINE_COLOR,
-          fillOpacity: 0.4,
+          radius: isValidee ? 8 : 6,
+          color: color,
+          fillColor: color,
+          fillOpacity: isValidee ? 0.5 : 0.2,
           weight: 2,
           opacity: 1.0,
+          dashArray: dashArray,
           interactive: true,
         });
-        circle.bindTooltip(
-          `<b style="color:${SALINE_COLOR}">Saline</b> ${s.score || ''}/100`,
-          { sticky: true, opacity: 0.95 }
-        );
+
+        let tooltipHtml = `<b style="color:${color}">${isValidee ? 'Saline VALIDEE' : 'Saline A REPOSITIONNER'}</b> ${s.score || ''}/100`;
+        tooltipHtml += `<br><span style="font-size:9px">Eau: ${s.eau_distance_m || '?'}m ${s.eau_conforme ? 'OK' : 'HORS'}`;
+        tooltipHtml += ` | Corridor: ${s.corridor_distance_m || '?'}m ${s.corridor_conforme ? 'OK' : 'HORS'}</span>`;
+        if (s.suggestion) {
+          tooltipHtml += `<br><span style="font-size:9px;color:#4CAF50">Suggestion: lat=${s.suggestion.lat} lon=${s.suggestion.lon} (score ${s.suggestion.score})</span>`;
+        }
+
+        circle.bindTooltip(tooltipHtml, { sticky: true, opacity: 0.95 });
         group.addLayer(circle);
+
+        // Afficher suggestion de repositionnement
+        if (s.suggestion && !isValidee) {
+          const sg = s.suggestion;
+          const sugMarker = L.circleMarker([sg.lat, sg.lon], {
+            radius: 5,
+            color: '#4CAF50',
+            fillColor: '#4CAF50',
+            fillOpacity: 0.4,
+            weight: 1.5,
+            opacity: 0.8,
+            dashArray: '2,2',
+            interactive: true,
+          });
+          sugMarker.bindTooltip(
+            `<b style="color:#4CAF50">Position suggeree</b><br>Eau: ${sg.eau_distance_m}m | Corridor: ${sg.corridor_distance_m}m`,
+            { sticky: true, opacity: 0.95 }
+          );
+          group.addLayer(sugMarker);
+
+          // Ligne pointillee saline → suggestion
+          const line = L.polyline([[lat, lon], [sg.lat, sg.lon]], {
+            color: '#4CAF50',
+            weight: 1,
+            opacity: 0.5,
+            dashArray: '3,5',
+            interactive: false,
+          });
+          group.addLayer(line);
+        }
       });
     }
 
