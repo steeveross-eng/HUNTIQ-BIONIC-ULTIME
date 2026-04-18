@@ -215,7 +215,26 @@ async def institutional_territoire(
     }
 
 
-# ═══ SUPRA-DONNEES ENDPOINT — DONNEES REELLES ENRICHIES ═══
+# ═══ V10-SUPRA TERRAIN — SOURCE ABSOLUE DE VERITE ═══
+@router.get("/terrain-v10")
+async def institutional_terrain_v10(
+    lat: float = Query(...), lon: float = Query(...),
+):
+    """V10-SUPRA: Profil terrain complet REEL+IA.
+    MNT SRTM, meteo complete, IA Vision foret, surfaces derivees.
+    """
+    from engines.v8_institutional.terrain_v10_supra import compute_terrain_v10
+    from engines.v8_institutional.esi_omega import _log_audit
+
+    result = await compute_terrain_v10(lat, lon)
+    t = result.get("terrain", {})
+    _log_audit("TERRAIN_V10_SUPRA", f"{lat},{lon}",
+        f"source={t.get('source')} fiabilite={t.get('fiabilite')} elev={t.get('elevation_m')}m")
+
+    return result
+
+
+# ═══ SUPRA-DONNEES ENDPOINT (legacy V9, delegue a V10) ═══
 @router.get("/supra-donnees")
 async def institutional_supra_donnees(
     lat: float = Query(...), lon: float = Query(...),

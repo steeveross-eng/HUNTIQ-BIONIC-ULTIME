@@ -1,28 +1,39 @@
-# HUNTIQ V9 — PRD
-## ENGINE SUPRA-DONNEES ACTIVE — BIONIC 100% OPTIMISE
-**MAJ:** 2026-04-17 | **DONNEES REELLES** | **SUPRA-DONNEES-Omega**
+# HUNTIQ V10 — PRD
+## TERRAIN V10-SUPRA ACTIF — 100% REEL + IA — BIONIC OS SUPRA
+**MAJ:** 2026-04-17 | **V10-SUPRA** | **FIABILITE 1.0**
 
-## Architecture V9-INSTITUTIONNEL
-- 24 Engines + SUPRA-DONNEES central
-- 4 Piliers, ESI-Omega Guardian
-- Donnees REELLES: Open-Meteo Elevation (SRTM) + Forecast (ECCC/NOAA)
+## Architecture V10-SUPRA-INSTITUTIONNEL
+- ENGINE V10-SUPRA TERRAIN: source absolue de verite
+- 24 Engines + SUPRA-DONNEES, 4 Piliers, ESI-Omega
+- Donnees: REELLES (Open-Meteo SRTM + Forecast ECCC/NOAA) + IA Vision
 
-## ENGINE SUPRA-DONNEES-Omega
-- MNT: Open-Meteo Elevation API (SRTM ~90m, 9 pts grille)
-- Meteo: Open-Meteo Forecast (vent, temp, sol, precipitation)
-- Sol: soil_temperature + soil_moisture reels
-- Fiabilite: 0.85 (REEL) vs 0.30 (ESTIME fallback)
-- Validation: outliers, coherence, bornes
-- Distribution: terrain enrichi pour tous engines
+## ENGINE V10-SUPRA TERRAIN
+### Ingestion Reelle
+- MNT: SRTM 25pts grille (Open-Meteo Elevation)
+- Meteo: 37 parametres (16 current + 21 hourly)
+- Sol: temperature 0/6cm, moisture 0-1/1-3cm
+- Radiation: direct + diffuse W/m2
+- Atmosphere: pression, CAPE, visibilite
+
+### IA Vision
+- Canopy, strate, feuillus: estimes depuis donnees reelles
+- Zones probables: repos, alimentation, thermique, humide
+
+### Surfaces Derivees
+- Cost surface, thermal comfort, olfactive diffusion
+- Hydro index, connectivity
+
+### Fiabilite
+- 1.0 quand toutes sources actives (SRTM + meteo + IA)
+- 0.65 sans elevation
+- 0.45 sans meteo
+- STUB: LiDAR WCS 1m, IRDA pedologie
 
 ## Endpoints
-- GET /api/v8/institutional/supra-donnees — Terrain enrichi reel
-- GET /api/v8/institutional/territoire-reel — Territoire + donnees reelles
+- GET /api/v8/institutional/terrain-v10 — Profil complet V10
+- GET /api/v8/institutional/territoire-reel — Territoire enrichi
 - GET /api/v8/institutional/territoire — Territoire classique
 - GET /api/v3/weather/windgrid — Vent grille reel
-
-## Couches Actives (7)
-corridors, zones, vent, contamination, hotspots, salines, affuts
 
 ## Credentials
 - Admin: admin@huntiq.com / Saturn5858*
