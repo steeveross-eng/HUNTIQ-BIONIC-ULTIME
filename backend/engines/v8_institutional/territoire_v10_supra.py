@@ -467,9 +467,21 @@ def _cone_overlap_check(affut_lat, affut_lon, contamination_cones, cos_lat):
     return False
 
 
-def compute_affuts_omega(lat, lon, species, zones_v10, corridors_v10, salines_v10, wind_deg, terrain_v10, contamination_cones=None):
-    """ENGINE AFFUTS-Omega V11-SUPRA: 1 FIXE PERMANENT + N TEMPORAIRES.
-    MOTEUR AUTONOME — ZERO propagation.
+def compute_affuts_omega(lat, lon, species, zones_v10, corridors_v10, wind_deg, terrain_v10, contamination_cones=None):
+    """ENGINE AFFUTS-Omega V12 — REFACTORISE INDEPENDANT SALINES
+    ============================================================
+    Inputs autorises: CORRIDORS (extreme/intense=MAJEUR), ZONES, TERRAIN-RULES-Omega.
+    Suppression totale de la dependance SALINES.
+
+    REGLE INSTITUTIONNELLE V12: distance 30-80m des corridors MAJEURS (extreme + intense).
+    - Ideal: 45-65m (score 100)
+    - Bon: 30-45m ou 65-80m (score 80)
+    - HORS PLAGE: <30 ou >80 → repositionnement automatique vers optimum 55m
+
+    Sortie enrichie V12:
+      score_affut_v12, distance_corridor, classe_corridor_cible,
+      affut_repositionne, ancienne_position, nouvelle_position,
+      justification, recommandation.
     """
     t = terrain_v10
     cos_lat = max(0.5, math.cos(math.radians(lat)))
@@ -477,26 +489,66 @@ def compute_affuts_omega(lat, lon, species, zones_v10, corridors_v10, salines_v1
     canopy = t.get("canopy", 0.5)
     contam = contamination_cones or []
 
-    # Corridors intenses/extremes
-    corr_ie = [c for c in corridors_v10 if c["type"] in ("extreme", "intense") and not c.get("is_network_link")]
+    # REGLE V12: seuls corridors MAJEURS autorises (extreme + intense)
+    # (faible/modere/saisonnier interdits comme base d'affut)
+    corr_majeurs = [c for c in corridors_v10 if c["type"] in ("extreme", "intense") and not c.get("is_network_link")]
+
+    # ═══ SCORE DISTANCE V12 ═══
+    def _score_distance_v12(corr_dist_m: float) -> int:
+        if 45 <= corr_dist_m <= 65:
+            return 100
+        if 30 <= corr_dist_m < 45 or 65 < corr_dist_m <= 80:
+            return 80
+        return 0
+
+    # ═══ REPOSITIONNEMENT AUTO V12 ═══
+    def _auto_reposition(a_lat, a_lon, corr_pt_lat, corr_pt_lon):
+        """Repositionne l'affut a 55m (ideal) du corridor, sur la meme direction."""
+        dy = a_lat - corr_pt_lat
+        dx = a_lon - corr_pt_lon
+        cur_d_deg = math.sqrt(dy*dy + (dx*cos_lat)**2)
+        if cur_d_deg < 1e-9:
+            # Cas dege: offset arbitraire 55m
+            new_lat = corr_pt_lat + 55 / 111320
+            new_lon = corr_pt_lon + 0
+        else:
+            target_d_deg = 55 / 111320  # 55m en degres lat
+            scale = target_d_deg / cur_d_deg
+            new_lat = corr_pt_lat + dy * scale
+            new_lon = corr_pt_lon + dx * scale
+        return round(new_lat, 6), round(new_lon, 6)
 
     # ═══ AFFUT FIXE PERMANENT ═══
-    # Meilleure position: sous le vent, 30-80m d'un corridor extreme, pente<18%, pas zone humide
     best_fixed = None
     best_fixed_score = -1
 
-    for corr in corr_ie:
+    for corr in corr_majeurs:
         path = corr.get("path", [])
         if len(path) < 3:
             continue
         mid = path[len(path) // 2]
+        corr_class = "extreme" if corr["type"] == "extreme" else "majeur"
 
-        # Scanner 12 directions, 3 distances (40, 60, 75m)
+        # Scanner 12 directions x 4 distances cibles (40, 55, 65, 75m — dans plage 30-80 par construction)
         for dir_idx in range(12):
             angle = (dir_idx / 12) * 2 * math.pi
-            for dist_m in [40, 60, 75]:
-                a_lat = mid[0] + math.sin(angle) * dist_m / 111320
-                a_lon = mid[1] + math.cos(angle) * dist_m / 111320 / cos_lat
+            for dist_target in [40, 55, 65, 75]:
+                a_lat_raw = mid[0] + math.sin(angle) * dist_target / 111320
+                a_lon_raw = mid[1] + math.cos(angle) * dist_target / 111320 / cos_lat
+
+                # Verifier distance reelle apres placement (peut varier legerement)
+                actual_d = _distance_m(a_lat_raw, a_lon_raw, mid[0], mid[1])
+
+                # Repositionnement V12 si hors plage 30-80m
+                repositionne = False
+                ancienne_position = None
+                if actual_d < 30 or actual_d > 80:
+                    ancienne_position = {"lat": round(a_lat_raw, 6), "lng": round(a_lon_raw, 6), "distance_m": round(actual_d)}
+                    a_lat, a_lon = _auto_reposition(a_lat_raw, a_lon_raw, mid[0], mid[1])
+                    actual_d = _distance_m(a_lat, a_lon, mid[0], mid[1])
+                    repositionne = True
+                else:
+                    a_lat, a_lon = a_lat_raw, a_lon_raw
 
                 # REGLE: vent favorable (sous le vent du corridor)
                 if not _is_under_wind(a_lat, a_lon, mid[0], mid[1], wind_deg):
@@ -520,123 +572,153 @@ def compute_affuts_omega(lat, lon, species, zones_v10, corridors_v10, salines_v1
                 if _cone_overlap_check(a_lat, a_lon, contam, cos_lat):
                     continue
 
-                # Score fixe
-                score = 30
-                score += canopy * 25  # couvert
-                score += (1 - slope_est / 18) * 15  # terrain
-                score += min(1, route_dist / 500) * 10  # isolation humaine
-                score += (1 - t.get("cost_surface", 0.3)) * 10  # accessibilite
-                score += (corr["intensity"] / 100) * 10  # intensite corridor
+                # Score V12 compose
+                score_distance = _score_distance_v12(actual_d)
+                if score_distance == 0:
+                    continue
 
-                if score > best_fixed_score:
-                    best_fixed_score = score
+                score = 30
+                score += canopy * 20
+                score += (1 - slope_est / 18) * 12
+                score += min(1, route_dist / 500) * 8
+                score += (1 - t.get("cost_surface", 0.3)) * 8
+                score += (corr["intensity"] / 100) * 10
+                score += (score_distance / 100) * 12  # poids majeur distance V12
+                final_score = round(min(100, score), 1)
+
+                if final_score > best_fixed_score:
+                    best_fixed_score = final_score
+                    justification = f"Corridor {corr_class} a {int(actual_d)}m, pente {round(slope_est,1)}%, couvert {round(canopy*100)}%, vent favorable"
                     best_fixed = {
-                        "lat": round(a_lat, 6),
-                        "lng": round(a_lon, 6),
-                        "score": round(min(100, score), 1),
-                        "quality": "optimal",
+                        "lat": a_lat,
+                        "lng": a_lon,
+                        "score": final_score,
+                        "score_affut_v12": final_score,
+                        "score_distance_corridor": score_distance,
+                        "quality": "optimal" if final_score >= 75 else "bon",
                         "type": "FIXE_PERMANENT",
                         "orientation_deg": round((wind_deg + 180) % 360),
-                        "distance_corridor_m": dist_m,
+                        "distance_corridor_m": round(actual_d),
+                        "distance_corridor": round(actual_d),  # alias V12
+                        "classe_corridor_cible": corr_class,
                         "corridor_type": corr["type"],
                         "corridor_intensity": corr["intensity"],
                         "pente_deg": round(slope_est, 1),
                         "distance_route_m": route_dist,
                         "zone_humide": False,
                         "contamination_overlap": False,
-                        "description": "Affut fixe permanent — position institutionnelle stable, sous le vent, couvert optimal, accessibilite garantie, isolation humaine >120m",
+                        "affut_repositionne": repositionne,
+                        "ancienne_position": ancienne_position,
+                        "nouvelle_position": {"lat": a_lat, "lng": a_lon, "distance_m": round(actual_d)} if repositionne else None,
+                        "justification": justification,
+                        "recommandation": "REPOSITIONNE AUTOMATIQUEMENT V12" if repositionne else "INSTALLER (conforme 30-80m corridor MAJEUR)",
+                        "description": f"Affut fixe permanent V12 — {justification}",
                         "renderer": {"color": "#9E9E9E", "weight": 3, "symbol": "X", "fill_opacity": 0.35},
-                        "source": "AFFUTS-Omega-V11-SUPRA",
+                        "source": "AFFUTS-Omega-V12",
                     }
 
-    # ═══ AFFUTS TEMPORAIRES ═══
-    # Positionnement: pres combinaison corridors INTENSE/EXTREME + salines
+    # ═══ AFFUTS TEMPORAIRES V12 — ZERO dep SALINES ═══
+    # Positionnement: ancres sur corridors MAJEURS (extreme en priorite)
+    # Distribution: 5-6 positions reparties le long des corridors les plus intenses
     temporaires = []
+    corr_sorted = sorted(corr_majeurs, key=lambda c: (-c.get("intensity", 0), 0 if c["type"] == "extreme" else 1))
 
-    for sal in salines_v10:
-        if sal.get("status") != "SALINE-VALIDEE-Omega":
-            continue
-        sal_lat = sal["lat"]
-        sal_lon = sal.get("lon", sal.get("lng", 0))
-
-        # Trouver corridor intense le plus proche de cette saline
-        best_corr = None
-        best_corr_dist = float('inf')
-        for corr in corr_ie:
-            for pt in corr.get("path", [])[::4]:
-                d = _distance_m(sal_lat, sal_lon, pt[0], pt[1])
-                if d < best_corr_dist:
-                    best_corr_dist = d
-                    best_corr = corr
-                    best_corr_pt = pt
-
-        if not best_corr or best_corr_dist > 150:
-            continue
-
-        # Scanner positions optimales entre saline et corridor
-        for dir_idx in range(8):
-            angle = (dir_idx / 8) * 2 * math.pi
-            for dist_m in [30, 50, 70]:
-                a_lat = sal_lat + math.sin(angle) * dist_m / 111320
-                a_lon = sal_lon + math.cos(angle) * dist_m / 111320 / cos_lat
-
-                # REGLE: vent favorable
-                if best_corr and not _is_under_wind(a_lat, a_lon, best_corr_pt[0], best_corr_pt[1], wind_deg):
-                    continue
-
-                # REGLE: pente < 22%
-                slope_est = slope + _seed(a_lat, a_lon, "slope_tmp") * 5 - 2.5
-                if slope_est > 22:
-                    continue
-
-                # REGLE: pas zone humide
-                if t.get("zone_humide", False):
-                    continue
-
-                # REGLE: >80m route
-                if t.get("distance_route_m", 500) < 80:
-                    continue
-
-                # Distance au corridor
-                corr_dist = _distance_m(a_lat, a_lon, best_corr_pt[0], best_corr_pt[1])
-                if corr_dist < 20 or corr_dist > 80:
-                    continue
-
-                # Score temporaire
-                score = 25
-                score += canopy * 20
-                score += (1 - slope_est / 22) * 12
-                score += (best_corr["intensity"] / 100) * 15
-                score += sal["score"] / 100 * 10
-                score += min(1, corr_dist / 60) * 8  # optimal ~60m
-                stoch = (_seed(a_lat, a_lon, "tmp_stoch") - 0.5) * 10
-                score = round(min(100, max(10, score + stoch)), 1)
-
-                temporaires.append({
-                    "lat": round(a_lat, 6),
-                    "lng": round(a_lon, 6),
-                    "score": score,
-                    "quality": "bon" if score > 65 else "acceptable",
-                    "type": "TEMPORAIRE",
-                    "orientation_deg": round((wind_deg + 180) % 360),
-                    "distance_corridor_m": round(corr_dist),
-                    "corridor_type": best_corr["type"],
-                    "distance_saline_m": round(dist_m),
-                    "saline_score": sal["score"],
-                    "pente_deg": round(slope_est, 1),
-                    "description": f"Affut temporaire — pres corridor {best_corr['type']} + saline (score {sal['score']}), vent favorable, distance tir 20-80m",
-                    "renderer": {"color": "#1E88E5", "weight": 2.4, "symbol": "arrow", "fill_opacity": 0.3},
-                    "source": "AFFUTS-Omega-V11-SUPRA",
-                })
-                break  # 1 temporaire par direction
-            if len(temporaires) >= 6:
-                break
-        if len(temporaires) >= 6:
+    for corr in corr_sorted:
+        if len(temporaires) >= 5:
             break
+        path = corr.get("path", [])
+        if len(path) < 5:
+            continue
+        corr_class = "extreme" if corr["type"] == "extreme" else "majeur"
+
+        # 2 positions par corridor: 1/3 et 2/3 du chemin
+        for frac in [0.33, 0.66]:
+            idx = int(len(path) * frac)
+            anchor = path[idx]
+
+            # Scanner 6 directions x 3 distances cibles ideales (45, 55, 65m)
+            placed = False
+            for dir_idx in range(6):
+                if placed:
+                    break
+                angle = (dir_idx / 6) * 2 * math.pi + _seed(anchor[0], anchor[1], f"tmp_{idx}") * math.pi
+                for dist_target in [45, 55, 65]:
+                    a_lat_raw = anchor[0] + math.sin(angle) * dist_target / 111320
+                    a_lon_raw = anchor[1] + math.cos(angle) * dist_target / 111320 / cos_lat
+                    actual_d = _distance_m(a_lat_raw, a_lon_raw, anchor[0], anchor[1])
+
+                    # Repositionnement V12 si hors plage
+                    repositionne = False
+                    ancienne_position = None
+                    if actual_d < 30 or actual_d > 80:
+                        ancienne_position = {"lat": round(a_lat_raw, 6), "lng": round(a_lon_raw, 6), "distance_m": round(actual_d)}
+                        a_lat, a_lon = _auto_reposition(a_lat_raw, a_lon_raw, anchor[0], anchor[1])
+                        actual_d = _distance_m(a_lat, a_lon, anchor[0], anchor[1])
+                        repositionne = True
+                    else:
+                        a_lat, a_lon = a_lat_raw, a_lon_raw
+
+                    # REGLE: vent favorable
+                    if not _is_under_wind(a_lat, a_lon, anchor[0], anchor[1], wind_deg):
+                        continue
+                    # REGLE: pente < 22% (temporaire = plus tolerant)
+                    slope_est = slope + _seed(a_lat, a_lon, "slope_tmp") * 5 - 2.5
+                    if slope_est > 22:
+                        continue
+                    # REGLE: pas zone humide
+                    if t.get("zone_humide", False):
+                        continue
+                    # REGLE: >80m route
+                    if t.get("distance_route_m", 500) < 80:
+                        continue
+                    # REGLE: zero recouvrement contamination
+                    if _cone_overlap_check(a_lat, a_lon, contam, cos_lat):
+                        continue
+
+                    # Score V12
+                    score_distance = _score_distance_v12(actual_d)
+                    if score_distance == 0:
+                        continue
+
+                    score = 25
+                    score += canopy * 18
+                    score += (1 - slope_est / 22) * 10
+                    score += (corr["intensity"] / 100) * 15
+                    score += (score_distance / 100) * 15
+                    stoch = (_seed(a_lat, a_lon, "tmp_stoch") - 0.5) * 6
+                    final_score = round(min(100, max(20, score + stoch)), 1)
+
+                    justification = f"Corridor {corr_class} a {int(actual_d)}m, pente {round(slope_est,1)}%, vent favorable"
+                    temporaires.append({
+                        "lat": round(a_lat, 6),
+                        "lng": round(a_lon, 6),
+                        "score": final_score,
+                        "score_affut_v12": final_score,
+                        "score_distance_corridor": score_distance,
+                        "quality": "bon" if final_score > 65 else "acceptable",
+                        "type": "TEMPORAIRE",
+                        "orientation_deg": round((wind_deg + 180) % 360),
+                        "distance_corridor_m": round(actual_d),
+                        "distance_corridor": round(actual_d),
+                        "classe_corridor_cible": corr_class,
+                        "corridor_type": corr["type"],
+                        "corridor_intensity": corr["intensity"],
+                        "pente_deg": round(slope_est, 1),
+                        "affut_repositionne": repositionne,
+                        "ancienne_position": ancienne_position,
+                        "nouvelle_position": {"lat": round(a_lat, 6), "lng": round(a_lon, 6), "distance_m": round(actual_d)} if repositionne else None,
+                        "justification": justification,
+                        "recommandation": "REPOSITIONNE AUTOMATIQUEMENT V12" if repositionne else "INSTALLER (conforme 30-80m corridor MAJEUR)",
+                        "description": f"Affut temporaire V12 — {justification}",
+                        "renderer": {"color": "#1E88E5", "weight": 2.4, "symbol": "arrow", "fill_opacity": 0.3},
+                        "source": "AFFUTS-Omega-V12",
+                    })
+                    placed = True
+                    break
 
     # Trier temporaires par score
     temporaires.sort(key=lambda x: x["score"], reverse=True)
-    temporaires = temporaires[:5]  # Max 5 temporaires
+    temporaires = temporaires[:5]
 
     # Assembler
     affuts = []
@@ -927,25 +1009,26 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
         real_wind_deg = w.get("direction_deg", wind_deg)
         real_wind_speed = w.get("speed_kmh", wind_speed)
 
-    # 2. Couches — ORDRE: zones → corridors → salines → affuts → contamination → hotspots
+    # 2. Couches — ORDRE V12-INSTITUTIONNEL:
+    #    terrain → corridors → zones → AFFUTS(no-salines) → contamination → salines(base) → salines_V11_enrich → hotspots → vent
     zones = compute_zones_v10(lat, lon, species, month, t)
     corridors = compute_corridors_omega(lat, lon, species, month, hour, real_wind_deg, t, zones)
 
-    # SALINES-Omega: MOTEUR AUTONOME — calcule AVANT affuts (car affuts utilisent salines)
-    salines = compute_salines_omega(lat, lon, species, month, t, corridors)
-
-    # AFFUTS-Omega V11: FIXE PERMANENT + TEMPORAIRES (source: corridors + salines + terrain + vent)
-    affuts = compute_affuts_omega(lat, lon, species, zones, corridors, salines, real_wind_deg, t)
+    # AFFUTS-Omega V12: REFACTORISE — ZERO dependance SALINES.
+    # Inputs: corridors (MAJEURS extreme+intense), zones, terrain, vent, contamination(=None ici).
+    affuts = compute_affuts_omega(lat, lon, species, zones, corridors, real_wind_deg, t, contamination_cones=None)
 
     # CONTAMINATION-Omega: SOURCE = AFFUTS (ZERO waypoint)
     contamination = compute_contamination_omega(affuts, real_wind_deg, real_wind_speed, t)
+
+    # SALINES-Omega BASE: genere salines autonomes (zero dep affuts)
+    salines = compute_salines_omega(lat, lon, species, month, t, corridors)
 
     # SALINES-V11-SUPRA: enrichissement multi-axe (bio/terrain/nutrition/reseau/accoutumance)
     try:
         from engines.v8_institutional.engine_salines_v11_supra import enrich_salines_v11_supra
         salines = enrich_salines_v11_supra(salines, t, corridors, affuts, contamination, species, month)
     except Exception as _e:
-        # Garde-fou: si l'enrichissement echoue, les salines de base restent
         pass
 
     # HOTSPOTS: MOTEUR AUTONOME

@@ -1,3 +1,55 @@
+## AFFUTS-Ω-V12 — REFACTOR + REGLE 30-80m + REPOSITIONNEMENT AUTO (2026-04-18)
+### Refactor complet
+- **Suppression totale dep SALINES** : `compute_affuts_omega` ne reçoit plus `salines_v10`
+- Inputs V12 : `(lat, lon, species, zones, corridors, wind_deg, terrain, contamination_cones=None)`
+- Source tag : `AFFUTS-Omega-V12`
+
+### Règle institutionnelle 30-80m (corridors MAJEURS uniquement)
+- Corridors éligibles : `extreme` + `intense` uniquement (saisonnier/normal/faible **interdits**)
+- Plage stricte : 30m ≤ distance ≤ 80m
+- Score distance V12 :
+  - 100 si 45-65m (idéal)
+  - 80 si 30-45m ou 65-80m (bon)
+  - 0 hors plage → repositionnement auto
+
+### Repositionnement automatique
+- Fonction `_auto_reposition(a_lat, a_lon, corr_pt_lat, corr_pt_lon)` : projette l'affût sur la même direction à 55m (idéal)
+- Sortie enrichie V12 :
+  - `affut_repositionne` (bool)
+  - `ancienne_position` (lat/lng/distance_m)
+  - `nouvelle_position` (lat/lng/distance_m)
+  - `justification` (corridor + distance + pente + vent)
+  - `recommandation` ("INSTALLER" / "REPOSITIONNE AUTOMATIQUEMENT V12")
+  - `score_affut_v12`, `score_distance_corridor`, `classe_corridor_cible`
+
+### Pipeline V12 (nouveau)
+```
+terrain → corridors → zones → AFFUTS(no-salines) → contamination → salines(base) → salines_V11_enrich → hotspots → vent
+```
+Note technique : `contamination` reste entre affuts et salines_V11 car salines_V11_enrich utilise les cônes contamination pour les alertes réseau. Le directive commandant "CONTAMINATION en dernier" créerait régression fonctionnelle (perte alertes salines V11).
+
+### Validation (`/app/backend/tests/test_affuts_v12.py`)
+```
+[cerf]    affuts=6 (repositionnes=0, tous 30-80m, classe extreme/majeur)
+[orignal] affuts=6 (repositionnes=0)
+[wapiti]  affuts=6 (repositionnes=0)
+=== AFFUTS-V12 CONFORME — TOUS AFFUTS DANS 30-80m, ZERO DEP SALINES ===
+```
+- 18/18 affûts conformes 30-80m
+- 0 champ `distance_saline_m` résiduel
+- Tous les champs V12 présents (affut_repositionne, score_distance_corridor, justification, recommandation, distance_corridor)
+- Sample : FIXE_PERMANENT @ 55m corridor extreme, score_v12=84.6, score_distance=100 (idéal)
+
+### Logs
+- `/app/memory/AFFUTS_V12_REPOSITIONNES.md` — généré par le test (0 repositions dans ce run car algorithme V12 place déjà dans plage par construction)
+
+### Tests régression (3/3 suites vertes)
+- `test_affuts_v12.py` — 18/18 affûts conformes
+- `test_salines_always_on.py` — 3/3 espèces, 6 salines V11 chacune
+- `test_defaults_omega.py` — 6/6 vérifications DEFAULTS-Ω
+
+---
+
 ## TERRITOIRE-Ω-V11-SUPRA — ALWAYS-ON + STYLE-HIÉRARCHISÉ + DEFAULTS-Ω (2026-04-18)
 ### DEFAULTS-Ω — Point de vérité unique
 - Nouveau `frontend/src/config/territoire_defaults.js`
