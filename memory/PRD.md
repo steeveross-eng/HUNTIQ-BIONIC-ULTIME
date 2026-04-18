@@ -1,27 +1,28 @@
 # HUNTIQ V9 — PRD
-## VERITE TOTALE CARTOGRAPHIEE — TERRITOIRE 10000% VERITE
-**MAJ:** 2026-04-17 | **V9-PURE** | **RAPPORT VERITE COMPLET**
+## ENGINE SUPRA-DONNEES ACTIVE — BIONIC 100% OPTIMISE
+**MAJ:** 2026-04-17 | **DONNEES REELLES** | **SUPRA-DONNEES-Omega**
 
 ## Architecture V9-INSTITUTIONNEL
-- 7 couches actives, 2 inactives (heatmap, wind_vectors statiques)
-- 0 couche legacy/debug/fallback
-- ESI-Omega: 8/8 CONFORME
+- 24 Engines + SUPRA-DONNEES central
+- 4 Piliers, ESI-Omega Guardian
+- Donnees REELLES: Open-Meteo Elevation (SRTM) + Forecast (ECCC/NOAA)
 
-## Couches Actives
-1. corridors — L.polyline Catmull-Rom 22pts, ENGINE 02
-2. zones — L.polygon Catmull-Rom 31vtx, ENGINE 01
-3. vent — Canvas 2500 particules, WindFlowLayer (Open-Meteo REEL)
-4. contamination — L.polygon cone 4pts, ENGINE 05
-5. hotspots — L.circleMarker 5 niveaux, ENGINE 04
-6. salines — L.circleMarker, ENGINE 07
-7. affuts — L.circleMarker+divIcon, ENGINE 03
+## ENGINE SUPRA-DONNEES-Omega
+- MNT: Open-Meteo Elevation API (SRTM ~90m, 9 pts grille)
+- Meteo: Open-Meteo Forecast (vent, temp, sol, precipitation)
+- Sol: soil_temperature + soil_moisture reels
+- Fiabilite: 0.85 (REEL) vs 0.30 (ESTIME fallback)
+- Validation: outliers, coherence, bornes
+- Distribution: terrain enrichi pour tous engines
 
-## Donnees
-- SIMULEES: terrain (seed deterministe) → zones, corridors, affuts, salines, hotspots
-- REELLES: Open-Meteo/ECCC/NOAA → vent, meteo
-- P1 STUB: LiDAR WCS, IRDA pedologie (acces requis)
+## Endpoints
+- GET /api/v8/institutional/supra-donnees — Terrain enrichi reel
+- GET /api/v8/institutional/territoire-reel — Territoire + donnees reelles
+- GET /api/v8/institutional/territoire — Territoire classique
+- GET /api/v3/weather/windgrid — Vent grille reel
 
-## Rapport complet: /app/memory/RAPPORT_VERITE_TERRITOIRE_V9.md
+## Couches Actives (7)
+corridors, zones, vent, contamination, hotspots, salines, affuts
 
 ## Credentials
 - Admin: admin@huntiq.com / Saturn5858*

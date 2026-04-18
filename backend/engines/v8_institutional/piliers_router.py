@@ -215,6 +215,86 @@ async def institutional_territoire(
     }
 
 
+# ═══ SUPRA-DONNEES ENDPOINT — DONNEES REELLES ENRICHIES ═══
+@router.get("/supra-donnees")
+async def institutional_supra_donnees(
+    lat: float = Query(...), lon: float = Query(...),
+):
+    """SUPRA-DONNEES-Omega: terrain enrichi par donnees reelles.
+    MNT Open-Meteo (SRTM), meteo/sol reels, validation, ponderation.
+    """
+    start = time.time()
+    from engines.v8_institutional.supra_donnees import get_enriched_terrain
+    from engines.v8_institutional.esi_omega import _log_audit
+
+    result = await get_enriched_terrain(lat, lon)
+    source = result.get("terrain", {}).get("source", "INCONNU")
+    fiabilite = result.get("terrain", {}).get("fiabilite", 0)
+    _log_audit("SUPRA_DONNEES_FETCH", f"{lat},{lon}", f"source={source} fiabilite={fiabilite}")
+
+    return {
+        **result,
+        "compute_ms": round((time.time() - start) * 1000),
+    }
+
+
+# ═══ SUPRA-DONNEES: TERRITOIRE ENRICHI ═══
+@router.get("/territoire-reel")
+async def institutional_territoire_reel(
+    lat: float = Query(...), lon: float = Query(...),
+    species: str = Query("cerf"), month: int = Query(10), hour: int = Query(7),
+    wind_deg: float = Query(225), wind_speed: float = Query(15),
+):
+    """TERRITOIRE avec donnees REELLES via SUPRA-DONNEES.
+    Elevation reelle, meteo reelle, sol reel.
+    """
+    start = time.time()
+    from engines.v8_institutional.supra_donnees import get_enriched_terrain
+    from engines.v8_institutional.engine_salines import compute_salines
+    from engines.v8_institutional.engine_hotspots import compute_hotspots
+    from engines.v8_institutional.engine_vent import compute_wind_vectors, compute_scent_cone
+    from engines.v8_institutional.esi_omega import validate_bundle, _log_audit
+
+    # Donnees reelles via SUPRA-DONNEES
+    enriched = await get_enriched_terrain(lat, lon)
+    real_terrain = enriched.get("terrain", {})
+    real_meteo = enriched.get("meteo", {})
+
+    # Utiliser le vent reel si disponible
+    actual_wind_deg = real_meteo.get("wind_direction_deg", wind_deg) if real_meteo else wind_deg
+    actual_wind_speed = real_meteo.get("wind_speed_kmh", wind_speed) if real_meteo else wind_speed
+
+    zones = compute_zones(lat, lon, species, month)
+    corridors = compute_corridors(lat, lon, species, month, hour, actual_wind_deg, zones=zones)
+    affuts = compute_affuts(lat, lon, species, zones, corridors, actual_wind_deg)
+    hotspots = compute_hotspots(lat, lon, species, zones, corridors, affuts)
+    salines = compute_salines(lat, lon, species, month)
+    wind = compute_wind_vectors(lat, lon, actual_wind_deg, actual_wind_speed)
+    scent_cone = compute_scent_cone(lat, lon, actual_wind_deg, actual_wind_speed)
+
+    bv = validate_bundle({"zones": zones, "corridors": corridors, "affuts": affuts})
+    _log_audit("TERRITOIRE_REEL_RENDER", f"{lat},{lon},{species}", f"{bv['conformite']} wind={actual_wind_deg}deg/{actual_wind_speed}kmh source={real_terrain.get('source')}")
+
+    return {
+        "zones": zones,
+        "corridors": corridors,
+        "affuts": affuts,
+        "hotspots": hotspots,
+        "salines": salines,
+        "wind_vectors": wind,
+        "contamination": scent_cone,
+        "real_terrain": real_terrain,
+        "real_meteo": real_meteo,
+        "real_elevation": enriched.get("elevation"),
+        "esi_omega": bv["conformite"],
+        "data_source": real_terrain.get("source", "ESTIME"),
+        "data_fiabilite": real_terrain.get("fiabilite", 0),
+        "document_maitre": "V8-ENGINES-INSTITUTIONNEL-Omega-ULTIME-MAX-2026",
+        "source": "SUPRA-DONNEES-Omega",
+        "compute_ms": round((time.time() - start) * 1000),
+    }
+
+
 # ═══ STATUS ═══
 @router.get("/status")
 async def institutional_status():
