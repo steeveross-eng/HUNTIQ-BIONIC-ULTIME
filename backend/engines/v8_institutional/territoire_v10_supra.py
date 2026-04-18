@@ -397,13 +397,12 @@ def compute_affuts_v10(lat, lon, species, zones_v10, corridors_v10, wind_deg, te
 # 5. HOTSPOTS V10-SUPRA
 # ═══════════════════════════════════════════════════════
 
-def compute_hotspots_v10(lat, lon, species, zones_v10, corridors_v10, affuts_v10, terrain_v10, salines_omega=None):
-    """HOTSPOTS V10-SUPRA: fusion multi-engines + boost SALINES-VALIDEES."""
+def compute_hotspots_v10(lat, lon, species, zones_v10, corridors_v10, affuts_v10, terrain_v10):
+    """HOTSPOTS V10-SUPRA: fusion multi-engines. ZERO interaction SALINES (moteur autonome)."""
     t = terrain_v10
     cos_lat = max(0.5, math.cos(math.radians(lat)))
     hotspots = []
 
-    # Hotspots depuis affuts forts
     for a in affuts_v10:
         if a["score"] > 60:
             intensity = a["score"] * 0.7 + t.get("connectivity", 0.5) * 30
@@ -414,7 +413,6 @@ def compute_hotspots_v10(lat, lon, species, zones_v10, corridors_v10, affuts_v10
                 "source": "V10-SUPRA",
             })
 
-    # Hotspots depuis intersections corridors-zones
     for z in zones_v10:
         if z.get("excluded"):
             continue
@@ -432,26 +430,6 @@ def compute_hotspots_v10(lat, lon, species, zones_v10, corridors_v10, affuts_v10
                     "source": "V10-SUPRA",
                 })
                 break
-
-    # BOOST: SALINES-VALIDEES augmentent hotspots proches
-    if salines_omega:
-        for sal in salines_omega:
-            if sal.get("status") != "SALINE-VALIDEE-Omega":
-                continue
-            # Boost hotspots dans rayon 200m de la saline validee
-            for h in hotspots:
-                d = _distance_m(sal["lat"], sal["lon"], h["lat"], h.get("lng", h.get("lon", 0)))
-                if d < 200:
-                    h["intensity"] = round(min(100, h["intensity"] + 8), 1)
-                    h["saline_boost"] = True
-
-            # Creer hotspot a la position de la saline validee
-            hotspots.append({
-                "lat": sal["lat"], "lng": sal["lon"],
-                "intensity": round(min(100, sal["score"] * 0.8 + 20), 1),
-                "source_engine": "SALINE_VALIDEE",
-                "source": "V10-SUPRA",
-            })
 
     return hotspots
 
@@ -637,7 +615,7 @@ def compute_salines_omega(lat, lon, species, month, terrain_v10, corridors_v10):
             "corridor_conforme": corr_ok,
             "suggestion": suggestion,
             "source": "SALINES-Omega-INSTITUTIONNEL",
-            "recalcul_annuel": True,
+            "recalcul_annuel": False,
         })
 
     # Trier: VALIDEES d'abord, puis par score
@@ -677,11 +655,11 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
     # CONTAMINATION-Omega: SOURCE = AFFUTS (ZERO waypoint)
     contamination = compute_contamination_omega(affuts, real_wind_deg, real_wind_speed, t)
 
-    # SALINES-Omega: regles eau [30-100m] + corridor intense [30-100m]
+    # SALINES-Omega: MOTEUR AUTONOME — ZERO propagation
     salines = compute_salines_omega(lat, lon, species, month, t, corridors)
 
-    # HOTSPOTS: boost par SALINES-VALIDEES
-    hotspots = compute_hotspots_v10(lat, lon, species, zones, corridors, affuts, t, salines)
+    # HOTSPOTS: SANS boost salines (moteur autonome)
+    hotspots = compute_hotspots_v10(lat, lon, species, zones, corridors, affuts, t)
 
     wind_vectors = compute_wind_vectors(lat, lon, real_wind_deg, real_wind_speed)
 

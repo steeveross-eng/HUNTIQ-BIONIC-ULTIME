@@ -57,8 +57,12 @@ const CONTAM_COLOR = '#FF7043';
 const HOTSPOT_COLORS = ['#FFCDD2', '#EF9A9A', '#EF5350', '#E53935', '#B71C1C'];
 const HOTSPOT_SIZES = [4, 5, 6, 7, 8];
 
+// CONTOUR-TERRITOIRE 600m
+const CONTOUR_COLOR = '#9E9E9E';
+
 const BionicLayersV8 = ({
   bundleData,
+  waypointCenter = null,
   showZones = true,
   showCorridors = true,
   showAffuts = true,
@@ -66,7 +70,6 @@ const BionicLayersV8 = ({
   showHotspots = true,
   showWind = true,
   showContamination = true,
-  showPression = false,   // SUPPRIME — BIONIC 100% ANIMAL-CENTRE
   enabled = true,
   onDataLoaded = null,
 }) => {
@@ -93,10 +96,22 @@ const BionicLayersV8 = ({
     const salines = bundleData.salines || [];
     const hotspots = bundleData.hotspots || [];
     const contamination = bundleData.contamination || null;
-    const pression = bundleData.pression || null;
 
-    // ═══ PRESSION HUMAINE — SUPPRIME (PHASE-ENGINE-PRESSION-HUMAINE-Omega) ═══
-    // ZERO couche pression. ZERO buffer radial. ZERO gradient. BIONIC 100% ANIMAL-CENTRE.
+    // ═══ Z-0: CONTOUR-TERRITOIRE-Omega 600m ═══
+    // Cercle institutionnel centre sur waypoint. Rayon 600m exact.
+    // Element visuel AUTONOME. ZERO interaction avec aucun engine.
+    if (waypointCenter) {
+      const contour = L.circle([waypointCenter.lat, waypointCenter.lng], {
+        radius: 600,
+        color: CONTOUR_COLOR,
+        weight: 2.2,
+        opacity: 0.85,
+        fillOpacity: 0,
+        dashArray: '4,4',
+        interactive: false,
+      });
+      group.addLayer(contour);
+    }
 
     // ═══ Z-2: ZONES (Catmull-Rom V9, smoothFactor=0, ZERO interpolation) ═══
     if (showZones && zones.length > 0) {
@@ -376,7 +391,7 @@ const BionicLayersV8 = ({
         esi_omega: bundleData.esi_omega,
       });
     }
-  }, [map, bundleData, enabled, showZones, showCorridors, showAffuts, showSalines, showHotspots, showContamination, showPression, clearOwnLayers]);
+  }, [map, bundleData, waypointCenter, enabled, showZones, showCorridors, showAffuts, showSalines, showHotspots, showContamination, clearOwnLayers]);
 
   useEffect(() => {
     renderLayers();

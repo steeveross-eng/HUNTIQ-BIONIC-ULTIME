@@ -1,24 +1,21 @@
 # HUNTIQ V11-SUPRA — PRD
-## ENGINE SALINES-Omega — REGLES INSTITUTIONNELLES APPLIQUEES
-**MAJ:** 2026-04-17 | **SALINES-Omega** | **6/6 VALIDEES** | **RECALCUL ANNUEL**
+## SALINES-Omega CONSOLIDE — MOTEUR AUTONOME — CONTOUR 600m
+**MAJ:** 2026-04-17
 
-## Architecture V11-SUPRA
-- LiDAR 121pts + IRDA drainage + Meteo 37p + IA Vision
-- CONTAMINATION-Omega: source = AFFUTS (15 cones)
-- SALINES-Omega: regles eau [30-100m] + corridor intense [30-100m]
+## SALINES-Omega
+- 6/6 VALIDEES (eau 53-55m, corridor 56-73m)
+- MOTEUR AUTONOME: ZERO propagation vers hotspots/contamination/zones/corridors
+- recalcul_annuel: false
+- Renderer: validee=jaune, a-repositionner=rouge+suggestion verte
 
-## ENGINE SALINES-Omega
-- Regle 1: eau [30-100m] — 6/6 conformes (68-69m)
-- Regle 2: corridor intense [30-100m] — 6/6 conformes (52-78m)
-- Classification: SALINE-VALIDEE-Omega (6) / SALINE-A-REPOSITIONNER-Omega (0)
-- Placement: perpendiculaire au milieu des corridors intenses
-- Suggestion repositionnement: generee automatiquement si hors normes
-- Recalcul annuel: verrouille (1x/an minimum)
-- Impact: +6 hotspots depuis salines validees, boost rayon 200m
+## CONTOUR-TERRITOIRE 600m
+- Cercle 600m centre waypoint, #9E9E9E, 2.2px pointilles, 0.85 opacite
+- Visuel AUTONOME, ZERO interaction engines
 
-## Couches V11 (7 actives)
-1. Zones 5 types 29vtx | 2. Corridors 12 28pts | 3. Contamination 15 cones
-4. Vent Ventusky | 5. Hotspots 16 | 6. Salines 6 validees | 7. Affuts 5
+## Couches (8)
+0. Contour 600m | 1. Zones 5 29vtx | 2. Corridors 12 28pts
+3. Contamination 15 cones | 4. Vent Ventusky | 5. Hotspots 9
+6. Salines 6 | 7. Affuts 5
 
 ## Credentials
 - Admin: admin@huntiq.com / Saturn5858*

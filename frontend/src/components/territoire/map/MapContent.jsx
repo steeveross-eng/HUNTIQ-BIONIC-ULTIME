@@ -153,6 +153,7 @@ const MapContentInner = React.memo(({
     {selectedWaypointForZones && waypointCenter && (
       <BionicLayersV8
         bundleData={bundleDataV8}
+        waypointCenter={waypointCenter}
         showZones={showZonesLayer !== false}
         showCorridors={showCorridorsLayer !== false}
         showAffuts={showPointsLayer !== false}
