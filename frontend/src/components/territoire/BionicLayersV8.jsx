@@ -36,13 +36,12 @@ const ZONE_COLORS = {
   affuts:       { stroke: '#C62828', weight: 2.0 },
 };
 
-// CORRIDORS V9-x20: 5 niveaux intensite
+// CORRIDORS Omega: 4 niveaux
 const CORRIDOR_STYLES = {
-  critique: { color: '#FF0000', weight: 2.6, opacity: 0.95 },
-  majeur:   { color: '#D32F2F', weight: 2.4, opacity: 0.90 },
-  fort:     { color: '#FF8F00', weight: 2.2, opacity: 0.85 },
-  modere:   { color: '#FFEB3B', weight: 1.8, opacity: 0.75 },
-  faible:   { color: '#FFFFFF', weight: 1.4, opacity: 0.65 },
+  extreme:    { color: '#D32F2F', weight: 4.2, opacity: 0.95 },
+  intense:    { color: '#FF9800', weight: 3.0, opacity: 0.90 },
+  saisonnier: { color: '#4CAF50', weight: 2.4, opacity: 0.90 },
+  normal:     { color: '#FFFFFF', weight: 1.6, opacity: 0.85 },
 };
 
 const AFFUT_COLOR = '#9E9E9E';
@@ -147,30 +146,31 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-3: CORRIDORS V9-x20 (Catmull-Rom, smoothFactor=0, ZERO interpolation) ═══
+    // ═══ Z-2: CORRIDORS-Omega (4 niveaux: NORMAL/INTENSE/EXTREME/SAISONNIER) ═══
     if (showCorridors && corridors.length > 0) {
       corridors.forEach(c => {
         const path = c.path || [[c.start.lat, c.start.lng], [c.end.lat, c.end.lng]];
-        const style = CORRIDOR_STYLES[c.type] || CORRIDOR_STYLES.fort;
+        const style = CORRIDOR_STYLES[c.type] || CORRIDOR_STYLES.normal;
+        const color = c.color || style.color;
+        const weight = c.weight || style.weight;
+        const opacity = c.opacity || style.opacity;
 
-        // Polyline principale — Catmull-Rom directionnel, ZERO smoothing
         const line = L.polyline(path, {
-          color: style.color,
-          weight: style.weight,
-          opacity: style.opacity,
+          color: color,
+          weight: weight,
+          opacity: opacity,
           lineCap: 'round',
           lineJoin: 'round',
           smoothFactor: 0,
           interactive: true,
         });
 
-        // Fleche directionnelle au milieu du corridor
+        // Fleche directionnelle
         if (path.length >= 3) {
           const midIdx = Math.floor(path.length / 2);
           const prev = path[midIdx - 1] || path[0];
           const mid = path[midIdx];
           const next = path[midIdx + 1] || path[path.length - 1];
-
           const dx = next[1] - prev[1];
           const dy = next[0] - prev[0];
           const len = Math.sqrt(dx * dx + dy * dy);
@@ -178,39 +178,19 @@ const BionicLayersV8 = ({
             const arrowSize = 0.0008;
             const nx = dx / len;
             const ny = dy / len;
-            const tipLat = mid[0] + ny * arrowSize;
-            const tipLng = mid[1] + nx * arrowSize;
-            const lLat = mid[0] - ny * arrowSize * 0.5 + nx * arrowSize * 0.4;
-            const lLng = mid[1] - nx * arrowSize * 0.5 - ny * arrowSize * 0.4;
-            const rLat = mid[0] - ny * arrowSize * 0.5 - nx * arrowSize * 0.4;
-            const rLng = mid[1] - nx * arrowSize * 0.5 + ny * arrowSize * 0.4;
-
-            const arrow = L.polygon([[tipLat, tipLng], [lLat, lLng], [rLat, rLng]], {
-              color: style.color,
-              fillColor: style.color,
-              fillOpacity: style.opacity,
-              weight: 1,
-              opacity: style.opacity,
-              smoothFactor: 0,
-              interactive: false,
-            });
+            const arrow = L.polygon([
+              [mid[0] + ny * arrowSize, mid[1] + nx * arrowSize],
+              [mid[0] - ny * arrowSize * 0.5 + nx * arrowSize * 0.4, mid[1] - nx * arrowSize * 0.5 - ny * arrowSize * 0.4],
+              [mid[0] - ny * arrowSize * 0.5 - nx * arrowSize * 0.4, mid[1] - nx * arrowSize * 0.5 + ny * arrowSize * 0.4],
+            ], { color, fillColor: color, fillOpacity: opacity, weight: 1, opacity, smoothFactor: 0, interactive: false });
             group.addLayer(arrow);
           }
         }
 
-        // Tooltip enrichi V9
-        const connStr = (c.zone_connections && c.zone_connections.length > 0)
-          ? `<br><span style="font-size:9px;color:#FDD835">Zones: ${c.zone_connections.join(', ')}</span>`
-          : '';
-        const costStr = c.cost_surface !== undefined
-          ? ` | cost:${c.cost_surface}`
-          : '';
-        const profileStr = c.species_profile
-          ? ` | ${c.species_profile}`
-          : '';
-
+        const costStr = c.cost_surface !== undefined ? ` | cost:${c.cost_surface}` : '';
+        const netStr = c.is_network_link ? ' [RESEAU]' : '';
         line.bindTooltip(
-          `<b style="color:${style.color}">${c.type}</b> int:${Math.round(c.intensity)}${costStr}${profileStr}${connStr}`,
+          `<b style="color:${color}">${c.type.toUpperCase()}</b> int:${Math.round(c.intensity)}${costStr} | ${c.species_profile || ''}${netStr}`,
           { sticky: true, opacity: 0.95 }
         );
         group.addLayer(line);

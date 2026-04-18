@@ -144,20 +144,57 @@ def compute_zones_v10(lat, lon, species, month, terrain_v10):
 
 
 # ═══════════════════════════════════════════════════════
-# 2. CORRIDORS V10-SUPRA
+# 2. ENGINE CORRIDOR-Omega — 4 NIVEAUX + RESEAU CONTINU
 # ═══════════════════════════════════════════════════════
+# CLASSIFICATION: NORMAL, INTENSE, EXTREME, SAISONNIER
+# RENDERER: couleurs/epaisseurs distinctes
+# GEOMETRIE: Catmull-Rom directionnel, smoothFactor=0, ZERO Bezier
+# RESEAU: segments < 40m fusionnes en reseau continu
+# ISOLATION: ZERO interaction vers SALINES/HOTSPOTS/ZONES/CONTAMINATION
 
 SPECIES_PROFILES = {
-    "cerf": {"sinuosity": 0.35, "cover_pref": 0.7, "slope_tol": 25, "n": 12},
-    "orignal": {"sinuosity": 0.20, "cover_pref": 0.4, "slope_tol": 35, "n": 10},
-    "wapiti": {"sinuosity": 0.15, "cover_pref": 0.3, "slope_tol": 30, "n": 10},
-    "ours": {"sinuosity": 0.45, "cover_pref": 0.9, "slope_tol": 35, "n": 8},
-    "chevreuil": {"sinuosity": 0.40, "cover_pref": 0.8, "slope_tol": 20, "n": 12},
-    "dindon": {"sinuosity": 0.25, "cover_pref": 0.5, "slope_tol": 15, "n": 8},
+    "cerf": {"sinuosity": 0.35, "cover_pref": 0.7, "slope_tol": 25, "n": 14},
+    "orignal": {"sinuosity": 0.20, "cover_pref": 0.4, "slope_tol": 35, "n": 12},
+    "wapiti": {"sinuosity": 0.15, "cover_pref": 0.3, "slope_tol": 30, "n": 12},
+    "ours": {"sinuosity": 0.45, "cover_pref": 0.9, "slope_tol": 35, "n": 10},
+    "chevreuil": {"sinuosity": 0.40, "cover_pref": 0.8, "slope_tol": 20, "n": 14},
+    "dindon": {"sinuosity": 0.25, "cover_pref": 0.5, "slope_tol": 15, "n": 10},
 }
 
-def compute_corridors_v10(lat, lon, species, month, hour, wind_deg, terrain_v10, zones_v10):
-    """CORRIDORS V10-SUPRA: Catmull-Rom 25-35pts, terrain reel + IA + multi-especes."""
+# 4 niveaux corridor
+CORRIDOR_LEVELS = {
+    "extreme":    {"min_intensity": 85, "color": "#D32F2F", "weight": 4.2, "opacity": 0.95},
+    "intense":    {"min_intensity": 65, "color": "#FF9800", "weight": 3.0, "opacity": 0.90},
+    "saisonnier": {"min_intensity": -1, "color": "#4CAF50", "weight": 2.4, "opacity": 0.90},  # special
+    "normal":     {"min_intensity": 0,  "color": "#FFFFFF", "weight": 1.6, "opacity": 0.85},
+}
+
+
+def _classify_corridor(intensity, month, species):
+    """Classifie un corridor en 4 niveaux: EXTREME, INTENSE, SAISONNIER, NORMAL."""
+    # Saisonnier: rut (sept-nov cerf/orignal/wapiti) ou sortie hibernation (avr-mai ours)
+    is_seasonal = False
+    if month in [9, 10, 11] and species in ["cerf", "orignal", "wapiti"]:
+        is_seasonal = True
+    elif month in [4, 5] and species == "ours":
+        is_seasonal = True
+    elif month in [3, 4] and species == "dindon":
+        is_seasonal = True
+
+    if intensity >= 85:
+        return "extreme"
+    elif intensity >= 65:
+        return "intense"
+    elif is_seasonal and intensity >= 40:
+        return "saisonnier"
+    else:
+        return "normal"
+
+
+def compute_corridors_omega(lat, lon, species, month, hour, wind_deg, terrain_v10, zones_v10):
+    """ENGINE CORRIDOR-Omega: 4 niveaux, Catmull-Rom, reseau continu.
+    MOTEUR AUTONOME — ZERO interaction vers SALINES/HOTSPOTS/ZONES/CONTAMINATION.
+    """
     sp = SPECIES_PROFILES.get(species, SPECIES_PROFILES["cerf"])
     cos_lat = max(0.5, math.cos(math.radians(lat)))
     corridors = []
@@ -182,7 +219,6 @@ def compute_corridors_v10(lat, lon, species, month, hour, wind_deg, terrain_v10,
         if t.get("distance_eau_m", 999) < 10:
             continue
 
-        # Intensite V10 multi-facteur
         base = (1 - t.get("cost_surface", 0.3)) * 40 + 15
         season_mult = 1.1 if month in [9,10,11] and species in ["cerf","orignal","wapiti"] else 1.0
         time_mult = 1.15 if (5 <= hour <= 8 or 16 <= hour <= 19) else 0.7 if (10 <= hour <= 14) else 1.0
@@ -190,13 +226,11 @@ def compute_corridors_v10(lat, lon, species, month, hour, wind_deg, terrain_v10,
         stoch = (_seed(s_lat, s_lon, f"c10s_{i}") - 0.5) * 30
         intensity = round(min(100, max(5, (base + connect_bonus + stoch) * season_mult * time_mult)), 1)
 
-        if intensity > 80: ctype = "critique"
-        elif intensity > 65: ctype = "majeur"
-        elif intensity > 50: ctype = "fort"
-        elif intensity > 30: ctype = "modere"
-        else: ctype = "faible"
+        # 4 NIVEAUX
+        ctype = _classify_corridor(intensity, month, species)
+        level = CORRIDOR_LEVELS[ctype]
 
-        # Catmull-Rom 7-11 control → 25-35 final
+        # Catmull-Rom directionnel
         n_ctrl = 7 + int(intensity / 25)
         ctrl = [(s_lat, s_lon)]
         for j in range(1, n_ctrl - 1):
@@ -210,16 +244,8 @@ def compute_corridors_v10(lat, lon, species, month, hour, wind_deg, terrain_v10,
         ctrl.append((e_lat, e_lon))
         path = _catmull_rom(ctrl, subs=3)
 
-        # Zone connections
-        zc = []
-        for z in zones_v10:
-            zcc = z["center"]
-            d2 = math.sqrt((s_lat - zcc["lat"])**2 + ((s_lon - zcc["lng"]) * cos_lat)**2)
-            if d2 < 0.005:
-                zc.append(z["type"])
-
         corridors.append({
-            "id": f"corr_v10_{i}",
+            "id": f"corr_omega_{i}",
             "type": ctype,
             "path": path,
             "start": {"lat": round(s_lat, 5), "lng": round(s_lon, 5)},
@@ -228,9 +254,76 @@ def compute_corridors_v10(lat, lon, species, month, hour, wind_deg, terrain_v10,
             "cost_surface": round(t.get("cost_surface", 0.3), 3),
             "species_profile": species,
             "n_control_points": len(ctrl),
-            "zone_connections": zc,
-            "source": "V10-SUPRA-REEL+IA",
+            "color": level["color"],
+            "weight": level["weight"],
+            "opacity": level["opacity"],
+            "source": "CORRIDOR-Omega-AUTONOME",
         })
+
+    # CORRIDOR-NETWORK-Omega: fusionner segments < 40m
+    corridors = _build_corridor_network(corridors, cos_lat)
+
+    return corridors
+
+
+def _build_corridor_network(corridors, cos_lat):
+    """CORRIDOR-NETWORK-Omega: connecter segments distants < 40m en reseau continu.
+    Lisser jonctions via Catmull-Rom. Conserver intensite locale.
+    """
+    if len(corridors) < 2:
+        return corridors
+
+    connections = []
+    threshold_deg = 40 / 111320  # 40m en degres
+
+    # Limiter aux meilleures connexions uniques
+    for i, c1 in enumerate(corridors):
+        best_j = -1
+        best_d = float('inf')
+        for j, c2 in enumerate(corridors):
+            if j <= i:
+                continue
+            dx = (c1["end"]["lng"] - c2["start"]["lng"]) * cos_lat
+            dy = c1["end"]["lat"] - c2["start"]["lat"]
+            d = math.sqrt(dx*dx + dy*dy)
+            if d < threshold_deg and d < best_d:
+                best_d = d
+                best_j = j
+
+        if best_j >= 0:
+            connections.append({
+                "from_id": c1["id"], "to_id": corridors[best_j]["id"],
+                "from_pt": c1["end"], "to_pt": corridors[best_j]["start"],
+                "distance_deg": best_d,
+            })
+
+    # Ajouter segments de connexion comme corridors mineurs
+    for conn in connections:
+        fp = conn["from_pt"]
+        tp = conn["to_pt"]
+        mid_lat = (fp["lat"] + tp["lat"]) / 2
+        mid_lon = (fp["lng"] + tp["lng"]) / 2
+        # Catmull-Rom jonction lisse
+        ctrl = [(fp["lat"], fp["lng"]), (mid_lat, mid_lon), (tp["lat"], tp["lng"])]
+        path = _catmull_rom(ctrl, subs=2)
+
+        corridors.append({
+            "id": f"net_{conn['from_id']}_{conn['to_id']}",
+            "type": "normal",
+            "path": path,
+            "start": fp,
+            "end": tp,
+            "intensity": 25,
+            "cost_surface": 0,
+            "species_profile": "network",
+            "n_control_points": 3,
+            "color": "#FFFFFF",
+            "weight": 1.2,
+            "opacity": 0.6,
+            "is_network_link": True,
+            "source": "CORRIDOR-NETWORK-Omega",
+        })
+
     return corridors
 
 
@@ -459,7 +552,7 @@ def _find_nearest_corridor_intense(sal_lat, sal_lon, corridors):
     best_dist = float('inf')
     best_corr = None
     for c in corridors:
-        if c["type"] not in ("critique", "majeur"):
+        if c["type"] not in ("critique", "majeur", "extreme", "intense"):
             continue
         # Distance au start et end du corridor
         for pt_key in ["start", "end"]:
@@ -540,7 +633,7 @@ def compute_salines_omega(lat, lon, species, month, terrain_v10, corridors_v10):
     cos_lat = max(0.5, math.cos(math.radians(lat)))
 
     # Corridors intenses/extremes
-    corridors_intenses = [c for c in corridors_v10 if c["type"] in ("critique", "majeur")]
+    corridors_intenses = [c for c in corridors_v10 if c["type"] in ("extreme", "intense")]
 
     salines = []
 
@@ -649,7 +742,7 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
 
     # 2. Couches V10 — ORDRE: zones → corridors → affuts → contamination → hotspots
     zones = compute_zones_v10(lat, lon, species, month, t)
-    corridors = compute_corridors_v10(lat, lon, species, month, hour, real_wind_deg, t, zones)
+    corridors = compute_corridors_omega(lat, lon, species, month, hour, real_wind_deg, t, zones)
     affuts = compute_affuts_v10(lat, lon, species, zones, corridors, real_wind_deg, t)
 
     # CONTAMINATION-Omega: SOURCE = AFFUTS (ZERO waypoint)
