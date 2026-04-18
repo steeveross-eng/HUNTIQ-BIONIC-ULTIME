@@ -72,6 +72,7 @@ import { TerritoireHeader } from '@/components/territoire/ui/TerritoireHeader';
 import { useWaypointActions } from '@/hooks/useWaypointActions';
 import { MapContent } from '@/components/territoire/map/MapContent';
 import BionicLegend from '@/components/territoire/BionicLegend';
+import CacheStateOmega from '@/components/territoire/ui/CacheStateOmega';
 // V8.1 — Saisons biologiques
 import { BiologicalSeasonSelector } from '@/components/territoire/ui/BiologicalSeasonSelector';
 import { getCurrentBiologicalSeason } from '@/config/biologicalSeasons';
@@ -633,6 +634,7 @@ const MonTerritoireBionicPage = () => {
   // ═══ UI-V8-FORCE-Omega: Bundle V8 unique (zones+corridors+heatmap) ═══
   const {
     bundleData: bundleDataV8, loading: bundleV8Loading, fetchBundle: fetchBundleV8,
+    cacheState: bundleCacheState, servedMs: bundleServedMs, computeMs: bundleComputeMs,
   } = useMapBundleV8();
 
   // ═══ V8-FRONTEND-PHASE-A-Omega: Relocalisation + Salines ═══
@@ -1375,6 +1377,14 @@ const MonTerritoireBionicPage = () => {
             windDeg={windInfo?.direction || 225}
             selectedSpecies={selectedSpecies}
             showCorridors={classificationToggles?.corridors}
+          />
+
+          {/* CACHE-STATE-Omega — overlay bas-droite, ADMIN uniquement */}
+          <CacheStateOmega
+            visible={!!adminArchitecteMode}
+            cacheState={bundleCacheState}
+            servedMs={bundleServedMs}
+            computeMs={bundleComputeMs}
           />
 
           {/* ── Indicateur Zone d'Analyse — ADMIN PREMIUM uniquement ── */}

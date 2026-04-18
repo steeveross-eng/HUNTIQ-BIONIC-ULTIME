@@ -161,7 +161,9 @@ const BionicLayersV8 = ({
           interactive: true,
         });
 
-        // Fleche directionnelle
+        // ANTI-LEGACY-Omega V11-SUPRA: PURGE fleche polygone pleine
+        // (triangle blanc opaque identifie comme couche fantome par DIAGNOSTIC-Omega)
+        // Remplace par fleche-ligne stroke-only (2 segments courts, ZERO fill)
         if (path.length >= 3) {
           const midIdx = Math.floor(path.length / 2);
           const prev = path[midIdx - 1] || path[0];
@@ -171,15 +173,21 @@ const BionicLayersV8 = ({
           const dy = next[0] - prev[0];
           const len = Math.sqrt(dx * dx + dy * dy);
           if (len > 0.0001) {
-            const arrowSize = 0.0008;
+            const arrowSize = 0.00025; // 3x plus petit, zero impact visuel
             const nx = dx / len;
             const ny = dy / len;
-            const arrow = L.polygon([
-              [mid[0] + ny * arrowSize, mid[1] + nx * arrowSize],
-              [mid[0] - ny * arrowSize * 0.5 + nx * arrowSize * 0.4, mid[1] - nx * arrowSize * 0.5 - ny * arrowSize * 0.4],
-              [mid[0] - ny * arrowSize * 0.5 - nx * arrowSize * 0.4, mid[1] - nx * arrowSize * 0.5 + ny * arrowSize * 0.4],
-            ], { color, fillColor: color, fillOpacity: opacity, weight: 1, opacity, smoothFactor: 0, interactive: false });
-            group.addLayer(arrow);
+            // Tete de fleche en 2 segments V-shape (polyline stroke-only, ZERO fill)
+            const tipLat = mid[0] + ny * arrowSize;
+            const tipLng = mid[1] + nx * arrowSize;
+            const leftLat = mid[0] - ny * arrowSize * 0.6 + nx * arrowSize * 0.5;
+            const leftLng = mid[1] - nx * arrowSize * 0.6 - ny * arrowSize * 0.5;
+            const rightLat = mid[0] - ny * arrowSize * 0.6 - nx * arrowSize * 0.5;
+            const rightLng = mid[1] - nx * arrowSize * 0.6 + ny * arrowSize * 0.5;
+            const chev = L.polyline(
+              [[leftLat, leftLng], [tipLat, tipLng], [rightLat, rightLng]],
+              { color, weight, opacity, lineCap: 'round', lineJoin: 'round', smoothFactor: 0, interactive: false, fill: false }
+            );
+            group.addLayer(chev);
           }
         }
 

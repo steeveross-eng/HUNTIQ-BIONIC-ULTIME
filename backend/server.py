@@ -800,6 +800,14 @@ try:
 except Exception as e:
     logger.warning(f"V20 Performance bundle not loaded: {e}")
 
+# V20 MVT TILES — tile-filtered GeoJSON pour corridors/zones/contamination (CDN scalable 5000+)
+try:
+    from engines.v8_institutional.v20_mvt_tiles import router as v20_mvt_router
+    app.include_router(v20_mvt_router)
+    logger.info("V20-MVT-TILES registered (/api/v20/territoire/tiles) — zoom 12-16, TTL 24h")
+except Exception as e:
+    logger.warning(f"V20 MVT tiles not loaded: {e}")
+
 # ESI-Omega — Engine Securite Institutionnelle (Guardian Central)
 try:
     from engines.v8_institutional.esi_omega import router as esi_router
