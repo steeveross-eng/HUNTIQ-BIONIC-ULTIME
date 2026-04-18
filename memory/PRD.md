@@ -1,23 +1,18 @@
 # HUNTIQ V20 — PRD
-## V20 CONSOLIDE — SECURITE TOTALE — CORRECTION PRESSION INTEGREE
+## ENGINE AFFUTS-Omega V11-SUPRA — FIXE + TEMPORAIRES
 **MAJ:** 2026-04-17
 
-## V20 Corrections
-- PRESSION: 3 references orphelines supprimees (MonTerritoireBionicPage L.699+L.1603, BionicLayersV8 L.369)
-- ZERO reference pression active dans frontend/backend
-- Docstring et engine label mis a jour V20-INSTITUTIONNEL
+## ENGINE AFFUTS-Omega (AUTONOME)
+- 1 FIXE PERMANENT: #9E9E9E, X central, 3px, score 88.4
+  - 30-80m corridor extreme, sous le vent, pente<18%, >120m route
+- 5 TEMPORAIRES: #1E88E5, fleche directionnelle, 2.4px, scores 69-74
+  - Pres corridors INTENSE + salines VALIDEES, vent favorable, pente<22%, >80m route
+- 18 cones contamination (3 intensites x 6 affuts)
 
 ## Architecture V20
-- CONTOUR-TERRITOIRE 600m (visuel autonome)
-- SALINES-Omega: 6/6 VALIDEES, autonome, recalcul=false
-- CORRIDOR-Omega: 4 niveaux + 13 reseau links, autonome
-- SECURITE-Omega V19: 5/5 shields, BCE-4X 6/6, STEEVE-MAX 4/4
-- ESI-Omega: 8/8 CONFORME
-
-## Endpoints
-- GET /api/v8/institutional/territoire — V10-SUPRA (source unique)
-- GET /api/v8/institutional/securite-v19 — Audit securite
-- GET /api/v8/institutional/terrain-v10 — Profil terrain
+- CONTOUR 600m | SALINES 6 | CORRIDORS 27 | CONTAMINATION 18
+- AFFUTS 6 (1 fixe + 5 temp) | HOTSPOTS 10 | ZONES 5
+- SECURITE 5/5 | ESI 8/8 | BCE-4X 6/6
 
 ## Credentials
 - Admin: admin@huntiq.com / Saturn5858*

@@ -314,34 +314,57 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-7: AFFUTS (cercle gris + X) ═══
+    // ═══ Z-7: AFFUTS-Omega (FIXE PERMANENT + TEMPORAIRES) ═══
     if (showAffuts && affuts.length > 0) {
       affuts.forEach(a => {
-        const sz_px = AFFUT_SIZE[a.quality] || 6;
+        const isFixed = a.type === 'FIXE_PERMANENT';
+        const rend = a.renderer || {};
+        const color = rend.color || (isFixed ? AFFUT_COLOR : '#1E88E5');
+        const weight = rend.weight || (isFixed ? 3 : 2.4);
+        const fillOpacity = rend.fill_opacity || (isFixed ? 0.35 : 0.3);
+        const sz_px = isFixed ? 10 : 7;
 
         const circle = L.circleMarker([a.lat, a.lng], {
           radius: sz_px,
-          color: AFFUT_COLOR,
-          fillColor: AFFUT_COLOR,
-          fillOpacity: 0.3,
-          weight: 2,
+          color: color,
+          fillColor: color,
+          fillOpacity: fillOpacity,
+          weight: weight,
           opacity: 1.0,
           interactive: true,
         });
 
-        const xIcon = L.divIcon({
-          className: 'affut-x-v9',
-          html: `<div style="width:${sz_px*2}px;height:${sz_px*2}px;display:flex;align-items:center;justify-content:center;font-size:${sz_px+2}px;font-weight:900;color:${AFFUT_X_COLOR};line-height:1;">X</div>`,
-          iconSize: [sz_px*2, sz_px*2],
-          iconAnchor: [sz_px, sz_px],
-        });
-        L.marker([a.lat, a.lng], { icon: xIcon, interactive: false }).addTo(group);
+        // Symbole central: X pour fixe, fleche pour temporaire
+        if (isFixed) {
+          const xIcon = L.divIcon({
+            className: 'affut-fixe-omega',
+            html: `<div style="width:${sz_px*2}px;height:${sz_px*2}px;display:flex;align-items:center;justify-content:center;font-size:${sz_px+4}px;font-weight:900;color:${AFFUT_X_COLOR};line-height:1;">X</div>`,
+            iconSize: [sz_px*2, sz_px*2],
+            iconAnchor: [sz_px, sz_px],
+          });
+          L.marker([a.lat, a.lng], { icon: xIcon, interactive: false }).addTo(group);
+        } else {
+          // Fleche directionnelle pour temporaire
+          const arrowRad = Math.PI * a.orientation_deg / 180;
+          const arrowLen = 0.0006;
+          const tipLat = a.lat + Math.cos(arrowRad) * arrowLen;
+          const tipLng = a.lng + Math.sin(arrowRad) * arrowLen / Math.cos(a.lat * Math.PI / 180);
+          const arrowLine = L.polyline([[a.lat, a.lng], [tipLat, tipLng]], {
+            color: color, weight: 2, opacity: 0.8, interactive: false,
+          });
+          group.addLayer(arrowLine);
+        }
 
-        const score = a.score !== undefined ? a.score : a.zone_score;
-        circle.bindTooltip(
-          `<b style="color:${AFFUT_COLOR}">Affut</b> ${a.quality} ${score}/100 ${a.orientation_deg}deg`,
-          { sticky: true, opacity: 0.95 }
-        );
+        // Tooltip enrichi
+        const typeLabel = isFixed ? 'FIXE PERMANENT' : 'TEMPORAIRE';
+        let tooltip = `<b style="color:${color}">Affut ${typeLabel}</b> ${a.score}/100`;
+        tooltip += `<br><span style="font-size:9px">${a.description || ''}</span>`;
+        tooltip += `<br><span style="font-size:9px">Corridor: ${a.corridor_type || '?'} a ${a.distance_corridor_m || '?'}m | Orient: ${a.orientation_deg}deg</span>`;
+        if (a.distance_saline_m) {
+          tooltip += `<br><span style="font-size:9px">Saline: ${a.distance_saline_m}m (score ${a.saline_score || '?'})</span>`;
+        }
+
+        circle.bindTooltip(tooltip, { sticky: true, opacity: 0.95 });
         group.addLayer(circle);
       });
     }

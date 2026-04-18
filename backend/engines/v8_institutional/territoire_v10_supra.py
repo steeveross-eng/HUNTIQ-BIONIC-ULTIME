@@ -437,52 +437,213 @@ def compute_contamination_omega(affuts_v10, wind_deg, wind_speed, terrain_v10):
 
 
 # ═══════════════════════════════════════════════════════
-# 4. AFFUTS V10-SUPRA
+# 4. ENGINE AFFUTS-Omega V11-SUPRA — FIXE + TEMPORAIRES
 # ═══════════════════════════════════════════════════════
+# MOTEUR AUTONOME — ZERO propagation
+# 1 AFFUT FIXE PERMANENT + N AFFUTS TEMPORAIRES
+# Distance tir: 20-100m
+# Source: corridors, salines, zones, terrain, vent, contamination
 
-def compute_affuts_v10(lat, lon, species, zones_v10, corridors_v10, wind_deg, terrain_v10):
-    """AFFUTS V10-SUPRA: terrain reel + vent reel + visibilite."""
-    t = terrain_v10
-    affuts = []
-    cos_lat = max(0.5, math.cos(math.radians(lat)))
+def _is_under_wind(affut_lat, affut_lon, corridor_lat, corridor_lon, wind_deg):
+    """Verifie que l'affut est sous le vent par rapport au corridor."""
+    dx = affut_lon - corridor_lon
+    dy = affut_lat - corridor_lat
+    bearing = math.degrees(math.atan2(dx, dy)) % 360
+    # L'affut doit etre dans la direction opposee au vent
+    wind_from = (wind_deg + 180) % 360
+    diff = abs(((bearing - wind_from + 180) % 360) - 180)
+    return diff < 90  # dans le demi-cercle sous le vent
 
-    for z in zones_v10:
-        if z.get("excluded"):
+
+def _cone_overlap_check(affut_lat, affut_lon, contamination_cones, cos_lat):
+    """Verifie si un affut est dans un cone de contamination."""
+    for cone in contamination_cones:
+        src = cone.get("affut_source", {})
+        if not src:
             continue
-        zc = z["center"]
-        # Orientation opposee au vent
-        orient = (wind_deg + 180) % 360
-        offset_rad = math.radians(orient + _seed(zc["lat"], zc["lng"], "ao") * 30 - 15)
-        dist = 0.001 + _seed(zc["lat"], zc["lng"], "ad") * 0.002
-        a_lat = zc["lat"] + math.cos(offset_rad) * dist
-        a_lon = zc["lng"] + math.sin(offset_rad) * dist / cos_lat
+        d = math.sqrt((affut_lat - src.get("lat", 0))**2 + ((affut_lon - src.get("lng", 0)) * cos_lat)**2) * 111320
+        if d < cone.get("reach_m", 200):
+            return True
+    return False
 
-        # Score V10
-        score = 40
-        score += t.get("canopy", 0.5) * 20  # couvert
-        score += (1 - t.get("cost_surface", 0.3)) * 15  # accessibilite
-        score += t.get("connectivity", 0.5) * 10  # connectivite
-        # Bonus corridor proximal
-        for c in corridors_v10:
-            cs = c["start"]
-            d2 = math.sqrt((a_lat - cs["lat"])**2 + ((a_lon - cs["lng"]) * cos_lat)**2)
-            if d2 < 0.003:
-                score += 10
+
+def compute_affuts_omega(lat, lon, species, zones_v10, corridors_v10, salines_v10, wind_deg, terrain_v10, contamination_cones=None):
+    """ENGINE AFFUTS-Omega V11-SUPRA: 1 FIXE PERMANENT + N TEMPORAIRES.
+    MOTEUR AUTONOME — ZERO propagation.
+    """
+    t = terrain_v10
+    cos_lat = max(0.5, math.cos(math.radians(lat)))
+    slope = t.get("pente_deg", 10)
+    canopy = t.get("canopy", 0.5)
+    contam = contamination_cones or []
+
+    # Corridors intenses/extremes
+    corr_ie = [c for c in corridors_v10 if c["type"] in ("extreme", "intense") and not c.get("is_network_link")]
+
+    # ═══ AFFUT FIXE PERMANENT ═══
+    # Meilleure position: sous le vent, 30-80m d'un corridor extreme, pente<18%, pas zone humide
+    best_fixed = None
+    best_fixed_score = -1
+
+    for corr in corr_ie:
+        path = corr.get("path", [])
+        if len(path) < 3:
+            continue
+        mid = path[len(path) // 2]
+
+        # Scanner 12 directions, 3 distances (40, 60, 75m)
+        for dir_idx in range(12):
+            angle = (dir_idx / 12) * 2 * math.pi
+            for dist_m in [40, 60, 75]:
+                a_lat = mid[0] + math.sin(angle) * dist_m / 111320
+                a_lon = mid[1] + math.cos(angle) * dist_m / 111320 / cos_lat
+
+                # REGLE: vent favorable (sous le vent du corridor)
+                if not _is_under_wind(a_lat, a_lon, mid[0], mid[1], wind_deg):
+                    continue
+
+                # REGLE: pente < 18%
+                slope_est = slope + _seed(a_lat, a_lon, "slope_af") * 4 - 2
+                if slope_est > 18:
+                    continue
+
+                # REGLE: pas zone humide
+                if t.get("zone_humide", False):
+                    continue
+
+                # REGLE: >120m route/sentier
+                route_dist = t.get("distance_route_m", 500)
+                if route_dist < 120:
+                    continue
+
+                # REGLE: zero recouvrement contamination
+                if _cone_overlap_check(a_lat, a_lon, contam, cos_lat):
+                    continue
+
+                # Score fixe
+                score = 30
+                score += canopy * 25  # couvert
+                score += (1 - slope_est / 18) * 15  # terrain
+                score += min(1, route_dist / 500) * 10  # isolation humaine
+                score += (1 - t.get("cost_surface", 0.3)) * 10  # accessibilite
+                score += (corr["intensity"] / 100) * 10  # intensite corridor
+
+                if score > best_fixed_score:
+                    best_fixed_score = score
+                    best_fixed = {
+                        "lat": round(a_lat, 6),
+                        "lng": round(a_lon, 6),
+                        "score": round(min(100, score), 1),
+                        "quality": "optimal",
+                        "type": "FIXE_PERMANENT",
+                        "orientation_deg": round((wind_deg + 180) % 360),
+                        "distance_corridor_m": dist_m,
+                        "corridor_type": corr["type"],
+                        "corridor_intensity": corr["intensity"],
+                        "pente_deg": round(slope_est, 1),
+                        "distance_route_m": route_dist,
+                        "zone_humide": False,
+                        "contamination_overlap": False,
+                        "description": "Affut fixe permanent — position institutionnelle stable, sous le vent, couvert optimal, accessibilite garantie, isolation humaine >120m",
+                        "renderer": {"color": "#9E9E9E", "weight": 3, "symbol": "X", "fill_opacity": 0.35},
+                        "source": "AFFUTS-Omega-V11-SUPRA",
+                    }
+
+    # ═══ AFFUTS TEMPORAIRES ═══
+    # Positionnement: pres combinaison corridors INTENSE/EXTREME + salines
+    temporaires = []
+
+    for sal in salines_v10:
+        if sal.get("status") != "SALINE-VALIDEE-Omega":
+            continue
+        sal_lat = sal["lat"]
+        sal_lon = sal.get("lon", sal.get("lng", 0))
+
+        # Trouver corridor intense le plus proche de cette saline
+        best_corr = None
+        best_corr_dist = float('inf')
+        for corr in corr_ie:
+            for pt in corr.get("path", [])[::4]:
+                d = _distance_m(sal_lat, sal_lon, pt[0], pt[1])
+                if d < best_corr_dist:
+                    best_corr_dist = d
+                    best_corr = corr
+                    best_corr_pt = pt
+
+        if not best_corr or best_corr_dist > 150:
+            continue
+
+        # Scanner positions optimales entre saline et corridor
+        for dir_idx in range(8):
+            angle = (dir_idx / 8) * 2 * math.pi
+            for dist_m in [30, 50, 70]:
+                a_lat = sal_lat + math.sin(angle) * dist_m / 111320
+                a_lon = sal_lon + math.cos(angle) * dist_m / 111320 / cos_lat
+
+                # REGLE: vent favorable
+                if best_corr and not _is_under_wind(a_lat, a_lon, best_corr_pt[0], best_corr_pt[1], wind_deg):
+                    continue
+
+                # REGLE: pente < 22%
+                slope_est = slope + _seed(a_lat, a_lon, "slope_tmp") * 5 - 2.5
+                if slope_est > 22:
+                    continue
+
+                # REGLE: pas zone humide
+                if t.get("zone_humide", False):
+                    continue
+
+                # REGLE: >80m route
+                if t.get("distance_route_m", 500) < 80:
+                    continue
+
+                # Distance au corridor
+                corr_dist = _distance_m(a_lat, a_lon, best_corr_pt[0], best_corr_pt[1])
+                if corr_dist < 20 or corr_dist > 80:
+                    continue
+
+                # Score temporaire
+                score = 25
+                score += canopy * 20
+                score += (1 - slope_est / 22) * 12
+                score += (best_corr["intensity"] / 100) * 15
+                score += sal["score"] / 100 * 10
+                score += min(1, corr_dist / 60) * 8  # optimal ~60m
+                stoch = (_seed(a_lat, a_lon, "tmp_stoch") - 0.5) * 10
+                score = round(min(100, max(10, score + stoch)), 1)
+
+                temporaires.append({
+                    "lat": round(a_lat, 6),
+                    "lng": round(a_lon, 6),
+                    "score": score,
+                    "quality": "bon" if score > 65 else "acceptable",
+                    "type": "TEMPORAIRE",
+                    "orientation_deg": round((wind_deg + 180) % 360),
+                    "distance_corridor_m": round(corr_dist),
+                    "corridor_type": best_corr["type"],
+                    "distance_saline_m": round(dist_m),
+                    "saline_score": sal["score"],
+                    "pente_deg": round(slope_est, 1),
+                    "description": f"Affut temporaire — pres corridor {best_corr['type']} + saline (score {sal['score']}), vent favorable, distance tir 20-80m",
+                    "renderer": {"color": "#1E88E5", "weight": 2.4, "symbol": "arrow", "fill_opacity": 0.3},
+                    "source": "AFFUTS-Omega-V11-SUPRA",
+                })
+                break  # 1 temporaire par direction
+            if len(temporaires) >= 6:
                 break
-        score = round(min(100, max(10, score)), 1)
+        if len(temporaires) >= 6:
+            break
 
-        quality = "optimal" if score > 75 else "bon" if score > 55 else "acceptable"
+    # Trier temporaires par score
+    temporaires.sort(key=lambda x: x["score"], reverse=True)
+    temporaires = temporaires[:5]  # Max 5 temporaires
 
-        affuts.append({
-            "lat": round(a_lat, 5),
-            "lng": round(a_lon, 5),
-            "score": score,
-            "quality": quality,
-            "orientation_deg": round(orient),
-            "zone_type": z["type"],
-            "zone_score": z["score"],
-            "source": "V10-SUPRA-REEL+IA",
-        })
+    # Assembler
+    affuts = []
+    if best_fixed:
+        affuts.append(best_fixed)
+    affuts.extend(temporaires)
+
     return affuts
 
 
@@ -740,18 +901,20 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
         real_wind_deg = w.get("direction_deg", wind_deg)
         real_wind_speed = w.get("speed_kmh", wind_speed)
 
-    # 2. Couches V10 — ORDRE: zones → corridors → affuts → contamination → hotspots
+    # 2. Couches — ORDRE: zones → corridors → salines → affuts → contamination → hotspots
     zones = compute_zones_v10(lat, lon, species, month, t)
     corridors = compute_corridors_omega(lat, lon, species, month, hour, real_wind_deg, t, zones)
-    affuts = compute_affuts_v10(lat, lon, species, zones, corridors, real_wind_deg, t)
+
+    # SALINES-Omega: MOTEUR AUTONOME — calcule AVANT affuts (car affuts utilisent salines)
+    salines = compute_salines_omega(lat, lon, species, month, t, corridors)
+
+    # AFFUTS-Omega V11: FIXE PERMANENT + TEMPORAIRES (source: corridors + salines + terrain + vent)
+    affuts = compute_affuts_omega(lat, lon, species, zones, corridors, salines, real_wind_deg, t)
 
     # CONTAMINATION-Omega: SOURCE = AFFUTS (ZERO waypoint)
     contamination = compute_contamination_omega(affuts, real_wind_deg, real_wind_speed, t)
 
-    # SALINES-Omega: MOTEUR AUTONOME — ZERO propagation
-    salines = compute_salines_omega(lat, lon, species, month, t, corridors)
-
-    # HOTSPOTS: SANS boost salines (moteur autonome)
+    # HOTSPOTS: MOTEUR AUTONOME
     hotspots = compute_hotspots_v10(lat, lon, species, zones, corridors, affuts, t)
 
     wind_vectors = compute_wind_vectors(lat, lon, real_wind_deg, real_wind_speed)
