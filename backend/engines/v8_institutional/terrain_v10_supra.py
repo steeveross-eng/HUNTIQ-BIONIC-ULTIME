@@ -343,97 +343,11 @@ def _compute_surfaces(topo, meteo, forest):
 # ═══════════════════════════════════════════════════════
 
 async def compute_terrain_v10(lat, lon):
-    """ENGINE V10-SUPRA: Profil terrain complet depuis donnees REELLES + IA.
-    Point d'entree unique pour TOUT BIONIC OS.
+    """ENGINE V11-SUPRA: Profil terrain depuis LiDAR 1m + IRDA + meteo + IA.
+    Delegue a V11 (LiDAR + IRDA) si disponible.
     """
-    start = time.time()
-
-    # 1. Ingestion reelle
-    elev_grid = await _fetch_elevation_grid(lat, lon, radius_km=0.6, n=5)
-    meteo = await _fetch_meteo_complete(lat, lon)
-
-    has_elev = bool(elev_grid.get("grid"))
-    has_meteo = not meteo.get("error")
-
-    # 2. Derivees topographiques
-    topo = _compute_topography(elev_grid) if has_elev else {
-        "elevation_m": 0, "pente_moy_deg": 5, "pente_max_deg": 10,
-        "exposition_deg": 0, "rugosite": 0.5, "micro_relief_m": 5,
-        "source": "ESTIME",
-    }
-
-    # 3. IA Vision foret
-    forest = _ia_vision_forest(topo, meteo if has_meteo else None)
-
-    # 4. Surfaces derivees
-    surfaces = _compute_surfaces(topo, meteo if has_meteo else None, forest)
-
-    # 5. Hydrologie estimee
-    soil_m = meteo.get("humidity", {}).get("soil_0_1cm", 0.3) if has_meteo else 0.3
-    distance_eau_est = max(15, int(50 + (topo.get("elevation_m", 100) - topo.get("elev_min", 0)) / max(1, topo.get("micro_relief_m", 10)) * 100))
-    distance_route_est = max(50, int(200 + abs(math.sin(lat * 73 + lon * 197)) * 1000))
-
-    # Fiabilite composite
-    fiabilite = 0.0
-    if has_elev:
-        fiabilite += 0.45
-    if has_meteo:
-        fiabilite += 0.35
-    fiabilite += 0.20  # IA toujours active
-
-    profile = {
-        # Topographie (MNT REEL)
-        "elevation_m": topo.get("elevation_m", 0),
-        "pente_deg": topo.get("pente_moy_deg", 5),
-        "pente_max_deg": topo.get("pente_max_deg", 10),
-        "exposition_deg": topo.get("exposition_deg", 0),
-        "rugosite": topo.get("rugosite", 0.5),
-        "micro_relief_m": topo.get("micro_relief_m", 5),
-
-        # Foret (IA VISION)
-        "canopy": forest["canopy"],
-        "strate_1_3m": forest["strate_1_3m"],
-        "feuillus_ratio": forest["feuillus_ratio"],
-        "couvert_pct": forest["couvert_pct"],
-
-        # Hydrologie (DERIVE)
-        "distance_eau_m": distance_eau_est,
-        "distance_route_m": distance_route_est,
-        "soil_moisture": soil_m,
-        "hydro_index": surfaces["hydro_index"],
-
-        # Surfaces (DERIVE REEL+IA)
-        "cost_surface": surfaces["cost_surface"],
-        "thermal_comfort": surfaces["thermal_comfort"],
-        "olfactive_diffusion": surfaces["olfactive_diffusion"],
-        "connectivity": surfaces["connectivity"],
-
-        # Zones probables (IA VISION)
-        "zone_repos_probable": forest["zone_repos_probable"],
-        "zone_alimentation_probable": forest["zone_alimentation_probable"],
-        "zone_thermique_probable": forest["zone_thermique_probable"],
-        "zone_humide_probable": forest["zone_humide_probable"],
-
-        # Metadata
-        "source": "V10-SUPRA-REEL+IA",
-        "fiabilite": round(fiabilite, 2),
-        "sources_actives": {
-            "elevation": "SRTM-REEL" if has_elev else "ABSENT",
-            "meteo": "OPEN-METEO-REEL" if has_meteo else "ABSENT",
-            "forest": "IA-VISION",
-            "surfaces": "DERIVE-REEL+IA",
-        },
-    }
-
-    return {
-        "terrain": profile,
-        "topographie": topo,
-        "meteo": meteo if has_meteo else None,
-        "forest": forest,
-        "surfaces": surfaces,
-        "engine": "V10-SUPRA-TERRAIN",
-        "compute_ms": round((time.time() - start) * 1000),
-    }
+    from engines.v8_institutional.lidar_irda_v11 import compute_terrain_v11
+    return await compute_terrain_v11(lat, lon)
 
 
 # ═══════════════════════════════════════════════════════
