@@ -696,7 +696,6 @@ const MonTerritoireBionicPage = () => {
       dominantes: true,
       corridorsReels: true,
       meteo: true,
-      pression: true,
       corridorsEstimes: true,
       scoreHabitat: true,
       curseurBionic: true,
@@ -1600,7 +1599,6 @@ const MonTerritoireBionicPage = () => {
               if (type === 'alimentation') { setShowZonesLayer(true); toggleZoneSub('alimentation'); }
               else if (type === 'repos') { setShowZonesLayer(true); toggleZoneSub('repos'); }
               else if (type === 'corridors') { setShowCorridorsLayer(true); }
-              else if (type === 'pression') { setShowHeatmapV10(true); }
             }}
             onShowApproachMarkers={(markers) => {
               // Intelligence -> Carte: affiche marqueurs d'approche

@@ -1,29 +1,22 @@
-# HUNTIQ V19 — PRD
-## V19 CONSOLIDE — SECURITE TOTALE — BCE-4X — STEEVE-MAX
+# HUNTIQ V20 — PRD
+## V20 CONSOLIDE — SECURITE TOTALE — CORRECTION PRESSION INTEGREE
 **MAJ:** 2026-04-17
 
-## SECURITE-Omega V19 (5/5 SHIELDS)
-- ENGINE-SHIELD: 24+ engines proteges
-- ANTI-LEGACY: 0 import V6/V7
-- RULES-LOCK: regles immutables (pente, eau, saline, corridor, smoothFactor)
-- PIPELINE-GUARD: 7 etapes validees
-- DATA-INTEGRITY: zones+corridors+salines coherents
-- BCE-4X: 6/6 | STEEVE-MAX: 4/4
+## V20 Corrections
+- PRESSION: 3 references orphelines supprimees (MonTerritoireBionicPage L.699+L.1603, BionicLayersV8 L.369)
+- ZERO reference pression active dans frontend/backend
+- Docstring et engine label mis a jour V20-INSTITUTIONNEL
 
-## SALINES-Omega (AUTONOME)
-- 6/6 VALIDEES | recalcul_annuel=false | ZERO propagation
-
-## CORRIDOR-Omega (AUTONOME)
-- 4 niveaux: EXTREME INTENSE SAISONNIER NORMAL
-- CORRIDOR-NETWORK: 13 links < 40m
-- Total: 27 corridors
-
-## CONTOUR-TERRITOIRE 600m
-- Visuel AUTONOME
+## Architecture V20
+- CONTOUR-TERRITOIRE 600m (visuel autonome)
+- SALINES-Omega: 6/6 VALIDEES, autonome, recalcul=false
+- CORRIDOR-Omega: 4 niveaux + 13 reseau links, autonome
+- SECURITE-Omega V19: 5/5 shields, BCE-4X 6/6, STEEVE-MAX 4/4
+- ESI-Omega: 8/8 CONFORME
 
 ## Endpoints
-- GET /api/v8/institutional/securite-v19 — Audit securite complet
-- GET /api/v8/institutional/territoire — V10-SUPRA
+- GET /api/v8/institutional/territoire — V10-SUPRA (source unique)
+- GET /api/v8/institutional/securite-v19 — Audit securite
 - GET /api/v8/institutional/terrain-v10 — Profil terrain
 
 ## Credentials

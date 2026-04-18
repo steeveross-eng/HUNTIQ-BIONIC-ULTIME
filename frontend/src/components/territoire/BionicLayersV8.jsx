@@ -1,27 +1,20 @@
 /**
- * BionicLayersV8.jsx — RENDERER V9-PURE INSTITUTIONNEL
- * =====================================================
- * PHASE-RENDERER-CORRIDORS-Omega-V9-PURE
+ * BionicLayersV8.jsx — RENDERER V20-INSTITUTIONNEL
+ * ==================================================
+ * PHASE-INSTITUTIONNELLE-Omega V20
  *
- * CORRIDORS V9-x20:
- *   Catmull-Rom directionnel 22-25 pts, ZERO smoothing, ZERO interpolation
- *   5 niveaux: Critique #FF0000 → Majeur #D32F2F → Fort #FF8F00 → Modere #FFEB3B → Faible #FFFFFF
- *   Fleches directionnelles sur chaque corridor
- *   Tooltip: type, intensite, profil espece, cost surface, connexions zones
+ * CONTOUR:     L.circle 600m, #9E9E9E, 2.2px, pointilles, 0.85
+ * CORRIDORS:   4 niveaux (EXTREME/INTENSE/SAISONNIER/NORMAL) + RESEAU
+ *              Catmull-Rom, smoothFactor=0
+ * ZONES:       Catmull-Rom 22-40 vertices, terrain reel + IA
+ * CONTAMINATION: Multi-cones SOURCE=AFFUTS, 3 intensites
+ * SALINES:     VALIDEE jaune / A-REPOSITIONNER rouge + suggestion
+ * HOTSPOTS:    intensite 1-5
+ * AFFUTS:      cercle gris #9E9E9E + X #424242
+ * VENT:        delegue a WindFlowLayer (Ventusky)
  *
- * ZONES V9:
- *   Catmull-Rom 24-36 vertices, smoothFactor=0, ZERO interpolation Leaflet
- *   Contours opaques, fill transparent, terrain-aware
- *
- * AFFUTS:   cercle gris #9E9E9E + X #424242
- * SALINES:  #FDD835
- * HOTSPOTS: intensite 1-5
- * CONTAMINATION: cone #FF7043
- * PRESSION: gradient #EF5350
- * VENT:     delegue a WindFlowLayer (Ventusky-Steeve-Max)
- *
- * Z-ORDER: pression < zones < corridors < contamination < salines < hotspots < affuts
- * VERROUILLE: V9-PURE. ZERO fallback. ZERO override. ZERO smoothing.
+ * Z-ORDER: contour < zones < corridors < contamination < salines < hotspots < affuts
+ * ZERO pression. ZERO buffer. ZERO Bezier. ZERO smoothing. ZERO fallback.
  */
 import { useEffect, useRef, useCallback } from 'react';
 import { useMap } from 'react-leaflet';
@@ -50,8 +43,6 @@ const AFFUT_SIZE = { optimal: 8, bon: 7, acceptable: 6 };
 
 const SALINE_COLOR = '#FDD835';
 const CONTAM_COLOR = '#FF7043';
-
-// PRESSION_COLOR — SUPPRIME (PHASE-ENGINE-PRESSION-HUMAINE-Omega)
 
 const HOTSPOT_COLORS = ['#FFCDD2', '#EF9A9A', '#EF5350', '#E53935', '#B71C1C'];
 const HOTSPOT_SIZES = [4, 5, 6, 7, 8];
@@ -365,9 +356,8 @@ const BionicLayersV8 = ({
         affuts_count: affuts.length,
         salines_count: salines.length,
         hotspots_count: hotspots.length,
-        contamination: !!contamination,
-        pression: !!(pression && pression.pression_score > 0),
-        engine: 'V9-PURE-RENDERER',
+        contamination: Array.isArray(contamination) ? contamination.length : 0,
+        engine: 'V20-INSTITUTIONNEL',
         esi_omega: bundleData.esi_omega,
       });
     }
