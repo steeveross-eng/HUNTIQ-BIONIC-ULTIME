@@ -741,3 +741,16 @@
 .golden-scroll::-webkit-scrollbar { width: 14px; }
 .golden-scroll::-webkit-scrollbar-track { background: #0a0a14; }
 .golden-scroll::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #FF9800, #E65100); border-radius: 7px; border: 2px solid #0a0a14; }
+
+
+/* --- SALINE-A-REPOSITIONNER-Omega: halo pulse jaune institutionnel --- */
+@keyframes saline-halo-pulse-anim {
+  0%   { opacity: 0.45; transform: scale(1); }
+  50%  { opacity: 0.22; transform: scale(1.35); }
+  100% { opacity: 0.45; transform: scale(1); }
+}
+.saline-halo-pulse {
+  animation: saline-halo-pulse-anim 2.2s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}

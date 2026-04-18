@@ -234,6 +234,22 @@ async def v20_tile(
                     "corridor_distance_m": s.get("corridor_distance_m"),
                     "corridor_conforme": s.get("corridor_conforme"),
                     "suggestion": s.get("suggestion"),
+                    # V11-SUPRA multi-axe scoring
+                    "score_bio_global": s.get("score_bio_global"),
+                    "score_bio_species": s.get("score_bio_species"),
+                    "score_terrain": s.get("score_terrain"),
+                    "score_reseau": s.get("score_reseau"),
+                    "score_nutrition": s.get("score_nutrition"),
+                    "score_accoutumance": s.get("score_accoutumance"),
+                    "score_global_v11": s.get("score_global_v11"),
+                    "interdit": s.get("interdit"),
+                    "motif_interdiction": s.get("motif_interdiction"),
+                    "nutrient_target_profile": s.get("nutrient_target_profile"),
+                    "nutrition_analysis_600m": s.get("nutrition_analysis_600m"),
+                    "alertes_reseau": s.get("alertes_reseau"),
+                    "statut_institutionnel": s.get("statut_institutionnel"),
+                    "recommandations": s.get("recommandations"),
+                    "source_v11": s.get("source_v11"),
                 },
             })
 

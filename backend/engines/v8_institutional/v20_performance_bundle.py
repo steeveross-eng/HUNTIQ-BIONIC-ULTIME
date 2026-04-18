@@ -47,15 +47,31 @@ def _cache_key(lat: float, lon: float, species: str, month: int, hour: int, wind
 
 
 def _cache_get(key: str):
+    # L2 local LRU
     entry = _CACHE.get(key)
-    if not entry:
-        return None
-    ts, payload = entry
-    if time.time() - ts > _CACHE_TTL_SEC:
-        _CACHE.pop(key, None)
-        return None
-    _CACHE.move_to_end(key)
-    return payload
+    if entry:
+        ts, payload = entry
+        if time.time() - ts > _CACHE_TTL_SEC:
+            _CACHE.pop(key, None)
+        else:
+            _CACHE.move_to_end(key)
+            return payload
+    # L1 Redis partage multi-pod (si disponible)
+    try:
+        from engines.v8_institutional.redis_omega import redis_get, is_redis_enabled
+        if is_redis_enabled():
+            val = redis_get(key)
+            if val is not None:
+                # Warm local LRU avec la valeur Redis
+                _CACHE[key] = (time.time(), val)
+                _CACHE.move_to_end(key)
+                while len(_CACHE) > _CACHE_MAX:
+                    _CACHE.popitem(last=False)
+                    _STATS["evictions"] += 1
+                return val
+    except Exception:
+        pass
+    return None
 
 
 def _cache_set(key: str, payload: dict):
@@ -64,6 +80,13 @@ def _cache_set(key: str, payload: dict):
     while len(_CACHE) > _CACHE_MAX:
         _CACHE.popitem(last=False)
         _STATS["evictions"] += 1
+    # Propagate to Redis (fire-and-forget)
+    try:
+        from engines.v8_institutional.redis_omega import redis_set, is_redis_enabled
+        if is_redis_enabled():
+            redis_set(key, payload, ttl=_CACHE_TTL_SEC)
+    except Exception:
+        pass
 
 
 # ═══ DISK PERSISTENCE ═══
@@ -303,6 +326,7 @@ async def v20_territoire_bundle(
 @router.get("/bundle/stats")
 async def v20_bundle_stats():
     await _ensure_lazy_init()
+    from engines.v8_institutional.redis_omega import redis_stats
     total = _STATS["hits"] + _STATS["misses"]
     hit_ratio = (_STATS["hits"] / total * 100) if total > 0 else 0.0
     return {
@@ -322,11 +346,13 @@ async def v20_bundle_stats():
         "warmup_last_count": _STATS["warmup_last_count"],
         "warmup_last_ms": _STATS["warmup_last_ms"],
         "warmup_semaphore_max": 8,
+        "redis_omega": redis_stats(),
     }
 
 
 @router.post("/bundle/purge")
 async def v20_bundle_purge():
+    from engines.v8_institutional.redis_omega import redis_purge
     n = len(_CACHE)
     _CACHE.clear()
     try:
@@ -334,7 +360,8 @@ async def v20_bundle_purge():
             _CACHE_DISK_FILE.unlink()
     except Exception:
         pass
-    return {"purged": n, "disk_cleared": True, "ok": True}
+    redis_deleted = redis_purge()
+    return {"purged_lru": n, "disk_cleared": True, "redis_deleted": redis_deleted, "ok": True}
 
 
 @router.post("/bundle/warmup")

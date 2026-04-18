@@ -234,7 +234,9 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-5: SALINES-Omega (VALIDEE vs A-REPOSITIONNER) ═══
+    // ═══ Z-5: SALINES-V11-SUPRA — JAUNE INSTITUTIONNEL UNIFORME ═══
+    // Directive III: toutes salines (VALIDEE + A-REPOSITIONNER) rendues JAUNE #FDD835
+    // A-REPOSITIONNER: halo pulse leger opacity 0.45
     if (showSalines && salines.length > 0) {
       salines.forEach(s => {
         const lat = s.lat || s.center?.lat;
@@ -242,23 +244,47 @@ const BionicLayersV8 = ({
         if (!lat || !lon) return;
 
         const isValidee = s.status === 'SALINE-VALIDEE-Omega';
-        const color = isValidee ? SALINE_COLOR : '#EF5350';
-        const dashArray = isValidee ? null : '3,3';
+        const YELLOW_INST = SALINE_COLOR; // #FDD835
+
+        // Halo pulse pour A-REPOSITIONNER (derriere le cercle principal)
+        if (!isValidee) {
+          const halo = L.circleMarker([lat, lon], {
+            radius: 13,
+            color: YELLOW_INST,
+            fillColor: YELLOW_INST,
+            fillOpacity: 0.45,
+            weight: 0,
+            opacity: 0.7,
+            className: 'saline-halo-pulse',
+            interactive: false,
+          });
+          group.addLayer(halo);
+        }
 
         const circle = L.circleMarker([lat, lon], {
-          radius: isValidee ? 8 : 6,
-          color: color,
-          fillColor: color,
-          fillOpacity: isValidee ? 0.5 : 0.2,
-          weight: 2,
+          radius: isValidee ? 8 : 7,
+          color: YELLOW_INST,
+          fillColor: YELLOW_INST,
+          fillOpacity: 1.0,
+          weight: 2.2,
           opacity: 1.0,
-          dashArray: dashArray,
           interactive: true,
         });
 
-        let tooltipHtml = `<b style="color:${color}">${isValidee ? 'Saline VALIDEE' : 'Saline A REPOSITIONNER'}</b> ${s.score || ''}/100`;
+        const statusLabel = isValidee ? 'SALINE-VALIDEE-Omega' : 'SALINE-A-REPOSITIONNER-Omega';
+        let tooltipHtml = `<b style="color:${YELLOW_INST}">${statusLabel}</b> ${s.score || ''}/100`;
         tooltipHtml += `<br><span style="font-size:9px">Eau: ${s.eau_distance_m || '?'}m ${s.eau_conforme ? 'OK' : 'HORS'}`;
         tooltipHtml += ` | Corridor: ${s.corridor_distance_m || '?'}m ${s.corridor_conforme ? 'OK' : 'HORS'}</span>`;
+        // V11-SUPRA: axes scoring si presents
+        if (s.score_bio_global != null) {
+          tooltipHtml += `<br><span style="font-size:9px;color:#90CAF9">Bio:${s.score_bio_global} Terrain:${s.score_terrain} Reseau:${s.score_reseau} Nutri:${s.score_nutrition} Acc:${s.score_accoutumance}</span>`;
+        }
+        if (s.statut_institutionnel) {
+          tooltipHtml += `<br><span style="font-size:9px;color:#FDD835">Statut: ${s.statut_institutionnel}</span>`;
+        }
+        if (s.recommandations && s.recommandations.length) {
+          tooltipHtml += `<br><span style="font-size:9px;color:#CE93D8">Reco: ${s.recommandations.slice(0, 2).join('; ')}</span>`;
+        }
         if (s.suggestion) {
           tooltipHtml += `<br><span style="font-size:9px;color:#4CAF50">Suggestion: lat=${s.suggestion.lat} lon=${s.suggestion.lon} (score ${s.suggestion.score})</span>`;
         }
@@ -266,7 +292,7 @@ const BionicLayersV8 = ({
         circle.bindTooltip(tooltipHtml, { sticky: true, opacity: 0.95 });
         group.addLayer(circle);
 
-        // Afficher suggestion de repositionnement
+        // Suggestion de repositionnement (visible seulement si repositionnee)
         if (s.suggestion && !isValidee) {
           const sg = s.suggestion;
           const sugMarker = L.circleMarker([sg.lat, sg.lon], {

@@ -914,6 +914,14 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
     # CONTAMINATION-Omega: SOURCE = AFFUTS (ZERO waypoint)
     contamination = compute_contamination_omega(affuts, real_wind_deg, real_wind_speed, t)
 
+    # SALINES-V11-SUPRA: enrichissement multi-axe (bio/terrain/nutrition/reseau/accoutumance)
+    try:
+        from engines.v8_institutional.engine_salines_v11_supra import enrich_salines_v11_supra
+        salines = enrich_salines_v11_supra(salines, t, corridors, affuts, contamination, species, month)
+    except Exception as _e:
+        # Garde-fou: si l'enrichissement echoue, les salines de base restent
+        pass
+
     # HOTSPOTS: MOTEUR AUTONOME
     hotspots = compute_hotspots_v10(lat, lon, species, zones, corridors, affuts, t)
 
