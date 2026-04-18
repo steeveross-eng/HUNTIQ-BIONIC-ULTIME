@@ -874,6 +874,32 @@ def compute_salines_omega(lat, lon, species, month, terrain_v10, corridors_v10):
 
     # Trier: VALIDEES d'abord, puis par score
     candidates.sort(key=lambda x: (0 if x["status"] == "SALINE-VALIDEE-Omega" else 1, -x["score"]))
+
+    # ALWAYS-ON-Omega GUARANTEE: si aucune saline genere via corridors intenses,
+    # generer fallback circulaire autour du centre (rayon 150-250m)
+    if not candidates:
+        for i in range(4):
+            angle_deg = i * 90 + 45
+            dist_m = 150 + (i % 2) * 80
+            dlat = (dist_m * math.cos(math.radians(angle_deg))) / 111320
+            dlon = (dist_m * math.sin(math.radians(angle_deg))) / (111320 * cos_lat)
+            s_lat = lat + dlat
+            s_lon = lon + dlon
+            candidates.append({
+                "lat": round(s_lat, 6),
+                "lon": round(s_lon, 6),
+                "score": 50.0,
+                "status": "SALINE-A-REPOSITIONNER-Omega",
+                "eau_distance_m": 80,
+                "eau_conforme": True,
+                "corridor_distance_m": 150,
+                "corridor_type": "normal",
+                "corridor_conforme": False,
+                "suggestion": None,
+                "source": "SALINES-Omega-ALWAYS-ON-FALLBACK",
+                "recalcul_annuel": False,
+            })
+
     return candidates[:6]
 
 

@@ -644,7 +644,9 @@ const MonTerritoireBionicPage = () => {
     relocalisations: phaseARelocalisations, siteActuel: phaseASiteActuel,
     salines: phaseASalines,
   } = usePhaseAV8();
-  const [showPhaseA, setShowPhaseA] = useState(false);
+  // ALWAYS-ON-Omega: SALINES toujours visibles par defaut (cerf/orignal/wapiti)
+  // Directive SALINES_ALWAYS_ON=true. Le bouton reste toggleable pour override manuel.
+  const [showPhaseA, setShowPhaseA] = useState(true);
   const [showPhaseC, setShowPhaseC] = useState(false);
   // PHASE-FRONTEND-Omega V2: Couche INTEL-Omega (master institutionnel)
   // ON = rendu V20-INSTITUTIONNEL complet visible. OFF = carte nue + waypoints seulement.

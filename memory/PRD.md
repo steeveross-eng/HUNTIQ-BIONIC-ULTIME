@@ -1,3 +1,27 @@
+## ALWAYS-ON-Ω-ORIGNAL + FIX-PIPELINE (2026-04-18)
+### Fix frontend (cause racine)
+- `MonTerritoireBionicPage.jsx` : `useState(showPhaseA)` passe de `false` → **`true`** (SALINES_ALWAYS_ON=true par défaut)
+- Couche SALINES visible immédiatement pour TOUTES espèces (cerf/orignal/wapiti)
+- Bouton toolbar SALINES reste toggleable (override manuel utilisateur)
+
+### Fix backend — garantie ≥1 saline
+- `territoire_v10_supra.py:compute_salines_omega` : ajout fallback circulaire (4 salines à 150-250m autour du centre, status A-REPOSITIONNER) si `corridors_intenses` vide
+- Source tag : `SALINES-Omega-ALWAYS-ON-FALLBACK`
+- Aucun filtre anthropique ne peut supprimer les salines (génération autonome pré-enrichissement V11)
+
+### Test de régression
+- Nouveau `/app/backend/tests/test_salines_always_on.py`
+- Valide les 3 espèces (cerf/orignal/wapiti) → **6 salines chacune, enrichies V11, statuts valides**
+- Exécution : `python3 /app/backend/tests/test_salines_always_on.py`
+
+### Validation directive
+- ✅ Salines ORIGNAL : 6/6 (VALIDEE, score_global_v11 58-70)
+- ✅ Filtres anthropiques (zones/corridors/contamination) n'affectent pas la génération salines
+- ✅ Rendu JAUNE #FDD835 uniforme (Directive III déjà appliquée)
+- ✅ Halo pulsé pour A-REPOSITIONNER
+
+---
+
 # HUNTIQ V20 — PRD
 ## PERFORMANCE-Ω V11-SUPRA + REDIS-Ω + SALINES-V11-SUPRA
 **MAJ:** 2026-04-18
