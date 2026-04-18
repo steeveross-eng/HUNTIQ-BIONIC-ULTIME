@@ -286,6 +286,24 @@ async def institutional_territoire_reel(
     }
 
 
+# ═══ SECURITE-Omega V19 — AUDIT COMPLET ═══
+@router.get("/securite-v19")
+async def institutional_securite_v19(
+    lat: float = Query(46.8), lon: float = Query(-71.2),
+    species: str = Query("cerf"), month: int = Query(10), hour: int = Query(7),
+):
+    """Audit securite V19 complet: shields + guards + validators + BCE-4X."""
+    from engines.v8_institutional.securite_omega_v19 import run_security_audit_v19
+    from engines.v8_institutional.territoire_v10_supra import compute_territoire_v10
+    from engines.v8_institutional.esi_omega import _log_audit
+
+    territoire = await compute_territoire_v10(lat, lon, species, month, hour)
+    audit = run_security_audit_v19(territoire)
+    _log_audit("SECURITE_V19_AUDIT", "ALL_ENGINES", audit["verdict"])
+
+    return audit
+
+
 # ═══ STATUS ═══
 @router.get("/status")
 async def institutional_status():

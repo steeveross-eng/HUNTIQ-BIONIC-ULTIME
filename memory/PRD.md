@@ -1,25 +1,30 @@
-# HUNTIQ V11-SUPRA — PRD
-## V18 CONSOLIDE — SALINES PERMANENTES + CORRIDORS 4 NIVEAUX + RESEAU
+# HUNTIQ V19 — PRD
+## V19 CONSOLIDE — SECURITE TOTALE — BCE-4X — STEEVE-MAX
 **MAJ:** 2026-04-17
 
+## SECURITE-Omega V19 (5/5 SHIELDS)
+- ENGINE-SHIELD: 24+ engines proteges
+- ANTI-LEGACY: 0 import V6/V7
+- RULES-LOCK: regles immutables (pente, eau, saline, corridor, smoothFactor)
+- PIPELINE-GUARD: 7 etapes validees
+- DATA-INTEGRITY: zones+corridors+salines coherents
+- BCE-4X: 6/6 | STEEVE-MAX: 4/4
+
+## SALINES-Omega (AUTONOME)
+- 6/6 VALIDEES | recalcul_annuel=false | ZERO propagation
+
+## CORRIDOR-Omega (AUTONOME)
+- 4 niveaux: EXTREME INTENSE SAISONNIER NORMAL
+- CORRIDOR-NETWORK: 13 links < 40m
+- Total: 27 corridors
+
 ## CONTOUR-TERRITOIRE 600m
-- L.circle 600m centre waypoint, #9E9E9E, 2.2px pointilles, 0.85
 - Visuel AUTONOME
 
-## ENGINE SALINES-Omega (AUTONOME)
-- 6/6 VALIDEES (eau 62m, corridor 67-77m)
-- recalcul_annuel: false (structure permanente)
-- ZERO propagation vers hotspots/contamination/zones/corridors
-
-## ENGINE CORRIDOR-Omega (AUTONOME)
-- 4 niveaux: EXTREME(#D32F2F 4.2px) INTENSE(#FF9800 3.0px) SAISONNIER(#4CAF50 2.4px) NORMAL(#FFFFFF 1.6px)
-- CORRIDOR-NETWORK: segments < 40m fusionnes en reseau continu
-- 14 principaux + 13 links = 27 total
-- ZERO interaction vers SALINES/HOTSPOTS/ZONES
-
-## Couches (8)
-0. Contour 600m | 1. Zones 5 | 2. Corridors 27 | 3. Contamination 15
-4. Vent Ventusky | 5. Hotspots 9 | 6. Salines 6 | 7. Affuts 5
+## Endpoints
+- GET /api/v8/institutional/securite-v19 — Audit securite complet
+- GET /api/v8/institutional/territoire — V10-SUPRA
+- GET /api/v8/institutional/terrain-v10 — Profil terrain
 
 ## Credentials
 - Admin: admin@huntiq.com / Saturn5858*
