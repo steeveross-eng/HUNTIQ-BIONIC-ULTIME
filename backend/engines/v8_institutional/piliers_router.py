@@ -163,56 +163,28 @@ async def institutional_full(
     }
 
 
-# ═══ TERRITOIRE ENDPOINT — SOURCE UNIQUE RENDERING V8 ═══
+# ═══ TERRITOIRE ENDPOINT — V10-SUPRA SOURCE UNIQUE RENDERING ═══
 @router.get("/territoire")
 async def institutional_territoire(
     lat: float = Query(...), lon: float = Query(...),
     species: str = Query("cerf"), month: int = Query(10), hour: int = Query(7),
     wind_deg: float = Query(225), wind_speed: float = Query(15),
 ):
-    """TERRITOIRE V8-INSTITUTIONNEL — Source UNIQUE de rendering.
-    Retourne TOUTES couches: zones, corridors, affuts, hotspots, salines,
-    vent, contamination, pression.
-    ESI-Omega validation integree.
-    ZERO source legacy. ZERO fallback. ZERO cache externe.
+    """TERRITOIRE V10-SUPRA — Source UNIQUE de rendering.
+    TOUTES couches recalculees depuis ENGINE-TERRAIN-V10-SUPRA (donnees reelles + IA).
+    ZERO donnees simulees. ZERO fallback. ZERO legacy.
     """
-    start = time.time()
-    from engines.v8_institutional.engine_salines import compute_salines
-    from engines.v8_institutional.engine_hotspots import compute_hotspots
-    from engines.v8_institutional.engine_vent import compute_wind_vectors, compute_scent_cone
-    from engines.v8_institutional.engine_heatmap import compute_heatmap
-    # ENGINE PRESSION HUMAINE — SUPPRIME (PHASE-ENGINE-PRESSION-HUMAINE-Omega)
-    # BIONIC 100% ANIMAL-CENTRE. ZERO influence humaine.
-
-    zones = compute_zones(lat, lon, species, month)
-    corridors = compute_corridors(lat, lon, species, month, hour, wind_deg, zones=zones)
-    affuts = compute_affuts(lat, lon, species, zones, corridors, wind_deg)
-    hotspots = compute_hotspots(lat, lon, species, zones, corridors, affuts)
-    salines = compute_salines(lat, lon, species, month)
-    wind = compute_wind_vectors(lat, lon, wind_deg, wind_speed)
-    scent_cone = compute_scent_cone(lat, lon, wind_deg, wind_speed)
-    heatmap = compute_heatmap(lat, lon)
-    # PRESSION HUMAINE — SUPPRIME
-
-    # ESI-Omega validation inline
+    from engines.v8_institutional.territoire_v10_supra import compute_territoire_v10
     from engines.v8_institutional.esi_omega import validate_bundle, _log_audit
-    bv = validate_bundle({"zones": zones, "corridors": corridors, "affuts": affuts})
-    _log_audit("TERRITOIRE_RENDER", f"{lat},{lon},{species}", bv["conformite"])
 
-    return {
-        "zones": zones,
-        "corridors": corridors,
-        "affuts": affuts,
-        "hotspots": hotspots,
-        "salines": salines,
-        "wind_vectors": wind,
-        "contamination": scent_cone,
-        "heatmap": heatmap,
-        "esi_omega": bv["conformite"],
-        "document_maitre": "V8-ENGINES-INSTITUTIONNEL-Omega-ULTIME-MAX-2026",
-        "source": "V8-INSTITUTIONNEL-EXCLUSIF",
-        "compute_ms": round((time.time() - start) * 1000),
-    }
+    result = await compute_territoire_v10(lat, lon, species, month, hour, wind_deg, wind_speed)
+
+    bv = validate_bundle({"zones": result["zones"], "corridors": result["corridors"], "affuts": result["affuts"]})
+    _log_audit("TERRITOIRE_V10_RENDER", f"{lat},{lon},{species}",
+        f"{bv['conformite']} source={result.get('data_source')} fiabilite={result.get('data_fiabilite')}")
+    result["esi_omega"] = bv["conformite"]
+
+    return result
 
 
 # ═══ V10-SUPRA TERRAIN — SOURCE ABSOLUE DE VERITE ═══
