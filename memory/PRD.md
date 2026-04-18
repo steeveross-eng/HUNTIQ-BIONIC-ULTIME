@@ -1,29 +1,26 @@
 # HUNTIQ V11-SUPRA — PRD
-## DONNEES 1m ACTIVEES — TERRITOIRE 100% INSTITUTIONNEL
-**MAJ:** 2026-04-17 | **V11-LIDAR-IRDA-SUPRA** | **FIABILITE 1.0**
+## ENGINE CONTAMINATION-Omega OPTIMISE — SOURCE = AFFUTS
+**MAJ:** 2026-04-17 | **CONTAMINATION-Omega** | **15 CONES** | **ZERO WAYPOINT**
 
-## Architecture V11-SUPRA-INSTITUTIONNEL
-- LiDAR WCS 1m: 121pts grille (11x11), pente gradient 3x3
-- IRDA pedologie: drainage 7 classes, sol reel, hydrologie
-- Meteo: 37 params ECCC/NOAA
-- IA Vision: canopy, strate, feuillus, zones probables
+## Architecture V11-SUPRA
+- LiDAR 121pts + IRDA drainage + Meteo 37p + IA Vision
+- CONTAMINATION-Omega: source = AFFUTS OPTIMAUX exclusivement
 
-## Pipeline
-LiDAR 121pts + IRDA drainage + Meteo 37p + IA → terrain V11 → toutes couches
+## ENGINE CONTAMINATION-Omega
+- 5 affuts x 3 intensites = 15 cones Catmull-Rom
+- FORT: #D32F2F, portee longue, opacity 0.25
+- MOYEN: #FF7043, portee moyenne, opacity 0.20
+- FAIBLE: #FFAB91, portee courte, opacity 0.15
+- Vent reel (ECCC/NOAA), terrain-aware (canopy, rugosite, soil_moisture)
+- ZERO waypoint, ZERO smoothing
 
 ## Couches V11 (7 actives)
-1. Zones — 5 types, 29vtx Catmull-Rom, terrain LiDAR + IRDA
-2. Corridors — 12/espece, 28pts, 6 profils, cost_surface V11
-3. Contamination — cone 18pts Catmull-Rom, vent reel
-4. Vent — WindFlowLayer Ventusky (ECCC/NOAA)
-5. Hotspots — 10, fusion multi-engines
-6. Salines — 4, soil moisture reel
-7. Affuts — 5, terrain LiDAR + vent reel
+1. Zones 5 types 29vtx | 2. Corridors 12 28pts | 3. Contamination 15 cones
+4. Vent Ventusky | 5. Hotspots 10 | 6. Salines 4 | 7. Affuts 5
 
 ## Endpoints
-- GET /api/v8/institutional/territoire — V11-SUPRA (source unique)
-- GET /api/v8/institutional/terrain-v10 — Profil terrain V11 complet
-- GET /api/v3/weather/windgrid — Vent grille reel
+- GET /api/v8/institutional/territoire — V11-SUPRA
+- GET /api/v8/institutional/terrain-v10 — Profil V11
 
 ## Credentials
 - Admin: admin@huntiq.com / Saturn5858*

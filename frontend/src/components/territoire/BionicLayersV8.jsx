@@ -202,23 +202,37 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-4: CONTAMINATION (cone directionnel) ═══
-    if (showContamination && contamination && contamination.polygon) {
-      const cone = L.polygon(contamination.polygon, {
-        color: CONTAM_COLOR,
-        weight: 1.5,
-        opacity: 0.7,
-        fillColor: CONTAM_COLOR,
-        fillOpacity: 0.15,
-        dashArray: '4,4',
-        smoothFactor: 0,
-        interactive: true,
+    // ═══ Z-4: CONTAMINATION-Omega (multi-cones depuis AFFUTS) ═══
+    // SOURCE = AFFUTS OPTIMAUX. ZERO waypoint. 3 intensites par affut.
+    if (showContamination && contamination) {
+      const cones = Array.isArray(contamination) ? contamination : [contamination];
+      cones.forEach(cone => {
+        if (!cone.polygon || cone.polygon.length < 3) return;
+
+        const color = cone.color || '#FF7043';
+        const opacity = cone.opacity || 0.2;
+        const fillOpacity = cone.fill_opacity || 0.1;
+
+        const poly = L.polygon(cone.polygon, {
+          color: color,
+          weight: 1.2,
+          opacity: opacity,
+          fillColor: color,
+          fillOpacity: fillOpacity,
+          dashArray: cone.intensity === 'faible' ? '3,3' : cone.intensity === 'moyen' ? '5,3' : null,
+          smoothFactor: 0,
+          interactive: true,
+        });
+
+        const src = cone.affut_source || {};
+        poly.bindTooltip(
+          `<b style="color:${color}">Contamination ${cone.intensity}</b><br>` +
+          `Portee: ${cone.reach_m}m | Angle: ${cone.cone_angle_deg}deg<br>` +
+          `<span style="font-size:9px">Source: Affut ${src.quality || ''} (${src.score || ''})</span>`,
+          { sticky: true, opacity: 0.95 }
+        );
+        group.addLayer(poly);
       });
-      cone.bindTooltip(
-        `<b style="color:${CONTAM_COLOR}">Contamination olfactive</b><br>Dir: ${contamination.direction_deg}deg | Portee: ${contamination.reach_m}m`,
-        { sticky: true, opacity: 0.95 }
-      );
-      group.addLayer(cone);
     }
 
     // ═══ Z-5: SALINES ═══

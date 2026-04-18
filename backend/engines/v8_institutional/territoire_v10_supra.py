@@ -235,70 +235,112 @@ def compute_corridors_v10(lat, lon, species, month, hour, wind_deg, terrain_v10,
 
 
 # ═══════════════════════════════════════════════════════
-# 3. CONTAMINATION V10-SUPRA
+# 3. CONTAMINATION-Omega — SOURCE = AFFUTS OPTIMAUX
 # ═══════════════════════════════════════════════════════
+# ZERO waypoint manuel. SOURCE UNIQUE = affuts generes par ENGINE AFFUTS.
+# 1 cone par affut. 3 intensites (fort/moyen/faible). 3 portees.
 
-def compute_contamination_v10(lat, lon, wind_deg, wind_speed, terrain_v10):
-    """CONTAMINATION V10-SUPRA: Cone Catmull-Rom 6-12pts, vent reel + turbulence terrain."""
+CONTAM_INTENSITIES = {
+    "fort":   {"color": "#D32F2F", "reach_mult": 1.0,  "opacity": 0.25, "fill_opacity": 0.12},
+    "moyen":  {"color": "#FF7043", "reach_mult": 0.65, "opacity": 0.20, "fill_opacity": 0.08},
+    "faible": {"color": "#FFAB91", "reach_mult": 0.35, "opacity": 0.15, "fill_opacity": 0.05},
+}
+
+
+def _generate_cone(origin_lat, origin_lon, wind_deg, wind_speed, reach_m, terrain_v10, intensity_key):
+    """Genere un cone Catmull-Rom depuis un affut (source unique)."""
     t = terrain_v10
     canopy = t.get("canopy", 0.5)
     slope = t.get("pente_deg", 10)
-    humidity = 50  # from meteo if available
-    cos_lat = max(0.5, math.cos(math.radians(lat)))
+    rugosite = t.get("rugosite", 0.5)
+    cos_lat = max(0.5, math.cos(math.radians(origin_lat)))
 
-    # Portee ajustee terrain: foret reduit, ouvert augmente
-    base_reach = 400 + wind_speed * 10
-    reach = base_reach * (0.5 + (1 - canopy) * 0.7)  # foret reduit portee
-    reach = min(800, max(100, reach))
+    cfg = CONTAM_INTENSITIES[intensity_key]
+    actual_reach = reach_m * cfg["reach_mult"]
 
-    # Angle ajuste turbulence terrain
-    base_angle = 25 + wind_speed * 0.3
-    turb_angle = base_angle + slope * 0.5 + t.get("rugosite", 0.5) * 10
-    turb_angle = min(60, max(15, turb_angle))
+    # Canopy reduit la portee (foret dense = dispersion rapide)
+    actual_reach *= (0.4 + (1 - canopy) * 0.6)
+    actual_reach = max(30, min(600, actual_reach))
 
-    # Diffusion laterale humidite
-    diff_lat = 1.0 + (humidity / 100) * 0.3
+    # Angle du cone: plus large si rugosite + pente
+    base_angle = 20 + wind_speed * 0.25
+    turb_angle = base_angle + slope * 0.4 + rugosite * 8
+    turb_angle = min(55, max(12, turb_angle))
+
+    # Diffusion laterale humidite (sol mouille = odeur persiste plus)
+    soil_m = t.get("soil_moisture", 0.3) or 0.3
+    diff_lat = 1.0 + soil_m * 0.25
 
     half_cone = math.radians(turb_angle / 2 * diff_lat)
     wind_rad = math.radians(wind_deg)
-    reach_deg = reach / 111320
+    reach_deg = actual_reach / 111320
 
-    # Cone Catmull-Rom: 4 control points → 10-12 final
-    n_side = 3
-    ctrl_left = []
-    ctrl_right = []
+    # Cone Catmull-Rom: 4-5 pts par cote pour courbes organiques
+    n_side = 4
+    ctrl_left, ctrl_right = [], []
     for k in range(n_side + 1):
         frac = k / n_side
         r = reach_deg * frac
-        decay = 1.0 - frac * 0.3  # intensite decroissante
-        # Micro-turbulence terrain
-        turb = _seed(lat + k * 0.001, lon, "turb") * 0.1 * t.get("rugosite", 0.5)
-        l_lat = lat + math.cos(wind_rad + half_cone + turb) * r
-        l_lon = lon + math.sin(wind_rad + half_cone + turb) * r / cos_lat
-        r_lat = lat + math.cos(wind_rad - half_cone - turb) * r
-        r_lon = lon + math.sin(wind_rad - half_cone - turb) * r / cos_lat
+        turb = _seed(origin_lat + k * 0.0005, origin_lon, f"turb_{intensity_key}") * 0.08 * rugosite
+        l_lat = origin_lat + math.cos(wind_rad + half_cone + turb) * r
+        l_lon = origin_lon + math.sin(wind_rad + half_cone + turb) * r / cos_lat
+        r_lat = origin_lat + math.cos(wind_rad - half_cone - turb) * r
+        r_lon = origin_lon + math.sin(wind_rad - half_cone - turb) * r / cos_lat
         ctrl_left.append((l_lat, l_lon))
         ctrl_right.append((r_lat, r_lon))
 
-    # Assembler: origin → left → tip → right (reversed) → origin
-    ctrl = [(lat, lon)] + ctrl_left + list(reversed(ctrl_right))
+    ctrl = [(origin_lat, origin_lon)] + ctrl_left + list(reversed(ctrl_right))
     polygon = _catmull_rom(ctrl, subs=2)
     polygon.append(polygon[0])
 
     return {
         "polygon": polygon,
-        "direction_deg": wind_deg,
-        "reach_m": round(reach),
-        "cone_angle": round(turb_angle, 1),
-        "wind_speed_kmh": wind_speed,
-        "terrain_influence": {
-            "canopy_reduction": round(canopy * 0.7, 2),
-            "slope_turbulence": round(slope * 0.5, 1),
-            "rugosite": t.get("rugosite", 0.5),
-        },
         "n_vertices": len(polygon),
-        "source": "V10-SUPRA-REEL+IA",
+        "intensity": intensity_key,
+        "reach_m": round(actual_reach),
+        "cone_angle_deg": round(turb_angle, 1),
+        "color": cfg["color"],
+        "opacity": cfg["opacity"],
+        "fill_opacity": cfg["fill_opacity"],
     }
+
+
+def compute_contamination_omega(affuts_v10, wind_deg, wind_speed, terrain_v10):
+    """ENGINE CONTAMINATION-Omega: 1 cone MULTI-INTENSITE par affut.
+    SOURCE = AFFUTS OPTIMAUX exclusivement. ZERO waypoint.
+    3 couches par affut: fort (portee longue), moyen, faible (courte).
+    """
+    t = terrain_v10
+    cones = []
+
+    # Portee base depuis vent
+    base_reach = 250 + wind_speed * 12
+
+    for affut in affuts_v10:
+        a_lat = affut["lat"]
+        a_lng = affut["lng"]
+        a_orient = affut["orientation_deg"]
+        a_score = affut.get("score", 50)
+
+        # Direction contamination = direction du vent (pas l'orientation de l'affut)
+        # Le chasseur est a l'affut, son odeur part dans le sens du vent
+        contam_dir = wind_deg
+
+        # Portee modulee par qualite affut (meilleur affut = mieux positionne)
+        score_mult = 0.7 + (a_score / 100) * 0.3
+
+        for intensity_key in ["fort", "moyen", "faible"]:
+            cone = _generate_cone(
+                a_lat, a_lng, contam_dir, wind_speed,
+                base_reach * score_mult, t, intensity_key
+            )
+            cone["affut_source"] = {"lat": a_lat, "lng": a_lng, "score": a_score, "quality": affut.get("quality")}
+            cone["wind_deg"] = wind_deg
+            cone["wind_speed_kmh"] = wind_speed
+            cone["source"] = "CONTAMINATION-Omega-AFFUT"
+            cones.append(cone)
+
+    return cones
 
 
 # ═══════════════════════════════════════════════════════
@@ -453,12 +495,17 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
         real_wind_deg = w.get("direction_deg", wind_deg)
         real_wind_speed = w.get("speed_kmh", wind_speed)
 
-    # 2. Couches V10
+    # 2. Couches V10 — ORDRE: zones → corridors → affuts → contamination → hotspots
     zones = compute_zones_v10(lat, lon, species, month, t)
     corridors = compute_corridors_v10(lat, lon, species, month, hour, real_wind_deg, t, zones)
-    contamination = compute_contamination_v10(lat, lon, real_wind_deg, real_wind_speed, t)
     affuts = compute_affuts_v10(lat, lon, species, zones, corridors, real_wind_deg, t)
+
+    # CONTAMINATION-Omega: SOURCE = AFFUTS (ZERO waypoint)
+    contamination = compute_contamination_omega(affuts, real_wind_deg, real_wind_speed, t)
+
+    # HOTSPOTS: reduction score si dans zone contamination forte
     hotspots = compute_hotspots_v10(lat, lon, species, zones, corridors, affuts, t)
+
     salines = compute_salines_v10(lat, lon, species, month, t)
     wind_vectors = compute_wind_vectors(lat, lon, real_wind_deg, real_wind_speed)
 
