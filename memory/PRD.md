@@ -1,3 +1,65 @@
+## TERRITOIRE-Ω-V12-SUPRA — SELF-AUDIT + MVT 7 LAYERS + FORCAGE RENDU (2026-04-19)
+### SELF-AUDIT-Ω
+- Nouveau `engines/v8_institutional/self_audit_omega.py`
+- `GET /api/v20/territoire/self-audit` — exécute les 4 suites live (subprocess parallèle)
+- `GET /api/v20/territoire/self-audit/last` — dernier résultat sans re-exécuter
+- Hook startup async — audit automatique au démarrage du pod
+- Logs persistés `/app/memory/SELF_AUDIT_OMEGA_LOGS.md` (append avec timestamp/pod_id/résultat)
+- Subprocess utilise `sys.executable` (venv) + `PYTHONPATH=/app/backend` (garantit imports httpx/motor)
+- Mesure : 4 suites en ~3.7s total (subprocess parallèle via `loop.run_in_executor`)
+
+### Résultat audit courant
+```
+conforme=True pod=agent-env-ffc8a3b4-f69b-4057-9ea0-...
+  [OK] test_defaults_omega (36ms)
+  [OK] test_affuts_v12 (3717ms)
+  [OK] test_salines_no_feedback_affuts (3711ms)
+  [OK] test_salines_always_on (3707ms)
+```
+
+### DIAGNOSTIC MVT — 7 LAYERS TOUS OPÉRATIONNELS
+`GET /api/v20/territoire/tiles/{layer}/14/4951/5775.json`
+| Layer | Count | Status |
+|---|---|---|
+| corridors | 27 | ✓ |
+| zones | 5 | ✓ |
+| **affuts** | 6 | ✓ (ajouté V12) |
+| salines | 6 | ✓ |
+| contamination | 18 | ✓ |
+| **hotspots** | 10 | ✓ (ajouté V12) |
+| **vent** | 8 | ✓ (ajouté V12, LineString start→end) |
+
+**Aucun moteur silencieux**. `_LAYERS_SUPPORTED = {corridors, zones, contamination, salines, affuts, hotspots, vent}`.
+
+### FORCAGE RENDU FRONTEND (déjà en place via DEFAULTS-Ω)
+Toutes les couches initialisées `true` via `TERRITOIRE_DEFAULTS` :
+- showCorridorsLayer, showZonesLayer, showPointsLayer (AFFUTS), showPhaseA (SALINES),
+  showPhaseC (CONTAMINATION), showWindFlow, showHeatmapV10 (HOTSPOTS), showCursorBionic, showIntelLayer
+- Aucun mode bypass : pas de mode navigation/debug/waypoint-only qui désactive les engines
+
+### Pipeline TERRITOIRE-V12 stable
+```
+TERRAIN → CORRIDORS → ZONES → AFFUTS-V12(no-salines) → CONTAMINATION → SALINES-V11(no-affuts) → SALINES-V11-ENRICH → HOTSPOTS → VENT
+```
+
+### Validation totale (5 garde-fous actifs)
+```
+SELF-AUDIT-Ω endpoint:   ✓ CONFORME (4/4 suites OK)
+MVT 7 layers:            ✓ Tous retournent features
+Frontend DEFAULTS-Ω:     ✓ 9 layers ALWAYS-ON par défaut
+Pipeline V12:            ✓ non circulaire, découplé bidirectionnel
+Logs institutionnels:    ✓ /app/memory/SELF_AUDIT_OMEGA_LOGS.md
+```
+
+### Fichiers modifiés/créés
+- `backend/engines/v8_institutional/self_audit_omega.py` (nouveau)
+- `backend/engines/v8_institutional/v20_mvt_tiles.py` (+ affuts/hotspots/vent handlers)
+- `backend/server.py` (registration SELF-AUDIT + startup hook)
+- `memory/SELF_AUDIT_OMEGA_LOGS.md` (généré automatiquement)
+- `memory/PRD.md` (consolidation V12-SUPRA)
+
+---
+
 ## INTERDICTION SALINES-V12-FEEDBACK-AFFUTS — AUTONOMIE BIOLOGIQUE (2026-04-18)
 ### Directive institutionnelle
 Toute logique de feedback AFFUT → SALINE est **formellement interdite**. Rationale :

@@ -825,6 +825,20 @@ try:
 except Exception as e:
     logger.warning(f"V20 MVT tiles not loaded: {e}")
 
+# SELF-AUDIT-Omega — validation institutionnelle TERRITOIRE-V12 au demarrage
+try:
+    from engines.v8_institutional.self_audit_omega import router as self_audit_router, v20_self_audit_on_startup
+    app.include_router(self_audit_router)
+
+    @app.on_event("startup")
+    async def _self_audit_startup_hook():
+        import asyncio as _asyncio
+        _asyncio.create_task(v20_self_audit_on_startup())
+
+    logger.info("SELF-AUDIT-Omega registered (/api/v20/territoire/self-audit) — audit startup async")
+except Exception as e:
+    logger.warning(f"SELF-AUDIT-Omega not loaded: {e}")
+
 # ESI-Omega — Engine Securite Institutionnelle (Guardian Central)
 try:
     from engines.v8_institutional.esi_omega import router as esi_router

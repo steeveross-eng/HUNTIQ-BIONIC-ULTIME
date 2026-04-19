@@ -31,7 +31,7 @@ _TILE_CACHE: "OrderedDict[str, tuple[float, dict]]" = OrderedDict()
 _TILE_TTL = 86400
 _TILE_MAX = 1024
 
-_LAYERS_SUPPORTED = {"corridors", "zones", "contamination", "salines"}
+_LAYERS_SUPPORTED = {"corridors", "zones", "contamination", "salines", "affuts", "hotspots", "vent"}
 _ZOOM_MIN, _ZOOM_MAX = 12, 16
 
 
@@ -250,6 +250,86 @@ async def v20_tile(
                     "statut_institutionnel": s.get("statut_institutionnel"),
                     "recommandations": s.get("recommandations"),
                     "source_v11": s.get("source_v11"),
+                },
+            })
+    elif layer == "affuts":
+        for a in bundle.get("affuts", []):
+            lat_a = a.get("lat")
+            lon_a = a.get("lng") or a.get("lon")
+            if lat_a is None or lon_a is None:
+                continue
+            if not _bbox_contains_point(bounds, lat_a, lon_a):
+                continue
+            features.append({
+                "type": "Feature",
+                "geometry": {"type": "Point", "coordinates": [lon_a, lat_a]},
+                "properties": {
+                    "layer": "affuts",
+                    "type": a.get("type"),
+                    "score": a.get("score"),
+                    "score_affut_v12": a.get("score_affut_v12"),
+                    "score_distance_corridor": a.get("score_distance_corridor"),
+                    "distance_corridor_m": a.get("distance_corridor_m"),
+                    "classe_corridor_cible": a.get("classe_corridor_cible"),
+                    "corridor_type": a.get("corridor_type"),
+                    "orientation_deg": a.get("orientation_deg"),
+                    "pente_deg": a.get("pente_deg"),
+                    "affut_repositionne": a.get("affut_repositionne"),
+                    "ancienne_position": a.get("ancienne_position"),
+                    "nouvelle_position": a.get("nouvelle_position"),
+                    "justification": a.get("justification"),
+                    "recommandation": a.get("recommandation"),
+                    "quality": a.get("quality"),
+                    "source": a.get("source"),
+                },
+            })
+    elif layer == "hotspots":
+        for h in bundle.get("hotspots", []):
+            lat_h = h.get("lat")
+            lon_h = h.get("lng") or h.get("lon")
+            if lat_h is None or lon_h is None:
+                continue
+            if not _bbox_contains_point(bounds, lat_h, lon_h):
+                continue
+            features.append({
+                "type": "Feature",
+                "geometry": {"type": "Point", "coordinates": [lon_h, lat_h]},
+                "properties": {
+                    "layer": "hotspots",
+                    "intensity": h.get("intensity"),
+                    "source_engine": h.get("source_engine"),
+                    "source": h.get("source"),
+                },
+            })
+    elif layer == "vent":
+        # Vent = segments directionnels (start/end) depuis engine_vent
+        for v in bundle.get("wind_vectors", []):
+            start = v.get("start") or {}
+            end = v.get("end") or {}
+            lat_v = start.get("lat")
+            lon_v = start.get("lng") or start.get("lon")
+            if lat_v is None or lon_v is None:
+                continue
+            if not _bbox_contains_point(bounds, lat_v, lon_v):
+                continue
+            lat_e = end.get("lat")
+            lon_e = end.get("lng") or end.get("lon")
+            if lat_e is not None and lon_e is not None:
+                geom = {
+                    "type": "LineString",
+                    "coordinates": [[lon_v, lat_v], [lon_e, lat_e]],
+                }
+            else:
+                geom = {"type": "Point", "coordinates": [lon_v, lat_v]}
+            features.append({
+                "type": "Feature",
+                "geometry": geom,
+                "properties": {
+                    "layer": "vent",
+                    "id": v.get("id"),
+                    "speed_kmh": v.get("speed_kmh"),
+                    "direction_deg": v.get("direction_deg"),
+                    "decay": v.get("decay"),
                 },
             })
 
