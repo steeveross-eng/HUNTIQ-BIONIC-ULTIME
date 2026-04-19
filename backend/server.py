@@ -855,6 +855,14 @@ try:
 except Exception as e:
     logger.warning(f"ENGINES-CATALOG not loaded: {e}")
 
+# MONITORING-Ω + ALERTE-ANOMALIES-Ω
+try:
+    from engines.v8_institutional.monitoring_alerte_omega import router as monitoring_router
+    app.include_router(monitoring_router)
+    logger.info("MONITORING-Ω + ALERTE-ANOMALIES-Ω registered (/monitoring, /alertes)")
+except Exception as e:
+    logger.warning(f"MONITORING-Ω not loaded: {e}")
+
 # ESI-Omega — Engine Securite Institutionnelle (Guardian Central)
 try:
     from engines.v8_institutional.esi_omega import router as esi_router

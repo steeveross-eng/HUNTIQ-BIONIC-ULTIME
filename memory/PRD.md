@@ -1,3 +1,66 @@
+## SUPRA P1 + SCIENCE-Ω + MONITORING-Ω + FICHE-DESCRIPTIVE-Ω (2026-04-19 soir+)
+
+### SUPRA P1 — 6 engines créés ✅
+| Engine | Score QC ref | Pillar |
+|---|---|---|
+| ENGINE-ESPECE-Ω | 100 (profil cerf complet) | BIO-SYSTEME |
+| ENGINE-COMPORTEMENT-BIOLOGIQUE-Ω | 48.0 (7h, automne) | COMPORTEMENT-HUMAIN |
+| ENGINE-CONNECTIVITE-ECOLOGIQUE-Ω | 85.3 (27 corridors) | BIO-SYSTEME |
+| ENGINE-THERMIQUE-MICROCLIMAT-Ω | 86.5 (canopy + comfort) | BIO-SYSTEME |
+| ENGINE-SENSORIEL-VENT-ODEURS-Ω | 53.9 (vent 15 km/h) | SYSTEME-SENSORIEL |
+| ENGINE-IA-VISION-ECOLOGIQUE-Ω | 62.5 (zones probables + fiabilite) | BIO-SYSTEME |
+
+### SCIENCE-Ω V2 — Catalog scientifique complet ✅
+- 5 espèces profilées (orignal/chevreuil/wapiti/ours noir/dindon sauvage) depuis les rapports BCE-4X
+- 5 études + 9 datasets + 11 engine_links + 6 gaps explicites
+- API Python : `get_species_profile()`, `get_studies()`, `get_datasets()`, `get_engine_links()`, `get_science_gaps()`, `get_catalog_summary()`
+- Fichier : `/app/backend/data/science_omega_catalog.json`
+- Docs : `ENGINE_SCIENCE_OMEGA_SPEC.md`, `ENGINE_SCIENCE_OMEGA_CATALOG.md`, `ENGINE_SCIENCE_OMEGA_SOURCES.md`, `ENGINE_SCIENCE_OMEGA_GAPS.md`
+
+### MONITORING-Ω + ALERTE-ANOMALIES-Ω ✅
+- Routes : `GET /api/v20/territoire/monitoring`, `GET /api/v20/territoire/alertes`
+- Fusion SELF-AUDIT + PERF-GUARD + engines catalog + SLA baseline
+- Détection anomalies : NO_AUDIT / SUITE_FAIL / PERF_REGRESSION / ENGINE_SILENT
+- `global_status` ∈ {ok, warning, fail}
+
+### FICHE-DESCRIPTIVE-Ω — Popups uniformes (Phase VII) ✅
+- `InstitutionalPopup.js` étendu avec helpers `FichePopup.{zone, corridor, affut, saline, hotspot, contamination}`
+- Palette type-aware (TYPE_PALETTE)
+- `data-testid` unique par type
+- À intégrer dans BionicLayersV8.jsx par couche (import déjà en place)
+
+### SELF-AUDIT étendu 16 → **17 suites CONFORME** (17/17 OK, PERF-GUARD=ok) ✅
+Nouvelle suite `test_supra_p1.py` (6 imports + SCIENCE-Ω catalog + monitoring + alertes + bundle keys).
+
+### Engines catalog : **14 engines actifs**
+3 GOUVERNANCE (SCIENCE-Ω, MONITORING-Ω, ALERTE-ANOMALIES-Ω) + 11 SUPRA/Ω.
+
+### SLA-BASELINE-Ω re-seedée post-SUPRA-P1
+- In-process : bundle cold 507 ms, warm 0 ms ; MVT cold 0 ms, warm 0 ms
+- HTTP : bundle cold 531 ms, warm 54 ms ; MVT cold 48 ms, warm 48 ms
+- Fichiers : `SLA_BASELINE_OMEGA_POST_RSE.{json,md}` (à jour)
+
+### Fichiers créés/modifiés
+- ✨ `engine_science_omega.py` (V2 avec catalog loader)
+- ✨ `engine_espece_omega.py`
+- ✨ `engine_comportement_biologique_omega.py`
+- ✨ `engine_connectivite_ecologique_omega.py`
+- ✨ `engine_thermique_microclimat_omega.py`
+- ✨ `engine_sensoriel_vent_odeurs_omega.py`
+- ✨ `engine_ia_vision_ecologique_omega.py`
+- ✨ `monitoring_alerte_omega.py`
+- ✨ `backend/data/science_omega_catalog.json`
+- ✨ `backend/tests/test_supra_p1.py`
+- ✨ 4 docs `ENGINE_SCIENCE_OMEGA_*.md`
+- ✏️ `territoire_v10_supra.py` (+ 6 P1 engines dans bundle)
+- ✏️ `self_audit_omega.py` (+1 suite → 17)
+- ✏️ `server.py` (register monitoring router)
+- ✏️ `InstitutionalPopup.js` (+ FichePopup helpers 6 couches)
+- ✏️ `BionicLayersV8.jsx` (import FichePopup)
+
+---
+
+
 ## ACTIVATION RSE-Ω + OUVERTURE P0 SUPRA (2026-04-19 soir)
 
 ### RSE-Ω — 6 phases exécutées ✅

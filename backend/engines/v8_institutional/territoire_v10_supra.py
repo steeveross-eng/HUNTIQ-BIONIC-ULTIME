@@ -1041,18 +1041,37 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
     hydrologie_supra = None
     sol_supra = None
     stress_anthropique = None
+    # P1 SUPRA engines
+    espece_profile = None
+    comportement_biologique = None
+    connectivite_ecologique = None
+    thermique_microclimat = None
+    sensoriel_vent_odeurs = None
+    ia_vision_ecologique = None
     try:
         from engines.v8_institutional.engine_habitat_supra import compute_habitat_supra
         from engines.v8_institutional.engine_hydrologie_supra import compute_hydrologie_supra
         from engines.v8_institutional.engine_sol_supra import compute_sol_supra
         from engines.v8_institutional.engine_stress_anthropique_omega import compute_stress_anthropique
+        from engines.v8_institutional.engine_espece_omega import compute_especes
+        from engines.v8_institutional.engine_comportement_biologique_omega import compute_comportement_biologique
+        from engines.v8_institutional.engine_connectivite_ecologique_omega import compute_connectivite_ecologique
+        from engines.v8_institutional.engine_thermique_microclimat_omega import compute_thermique_microclimat
+        from engines.v8_institutional.engine_sensoriel_vent_odeurs_omega import compute_sensoriel_vent_odeurs
+        from engines.v8_institutional.engine_ia_vision_ecologique_omega import compute_ia_vision_ecologique
         habitat_supra = compute_habitat_supra(terrain_result)
         hydrologie_supra = compute_hydrologie_supra(terrain_result)
         sol_supra = compute_sol_supra(terrain_result)
         stress_anthropique = compute_stress_anthropique(terrain_result, hour=hour)
+        espece_profile = compute_especes(species)
+        comportement_biologique = compute_comportement_biologique(species, month, hour=hour)
+        connectivite_ecologique = compute_connectivite_ecologique(terrain_result, corridors)
+        thermique_microclimat = compute_thermique_microclimat(terrain_result, species=species)
+        sensoriel_vent_odeurs = compute_sensoriel_vent_odeurs(terrain_result, real_wind_deg, real_wind_speed)
+        ia_vision_ecologique = compute_ia_vision_ecologique(terrain_result)
     except Exception as _e:
         import logging as _lg
-        _lg.getLogger("bionic.territoire").warning(f"SUPRA P0 skipped: {_e}")
+        _lg.getLogger("bionic.territoire").warning(f"SUPRA P0+P1 skipped: {_e}")
 
     # NUTRITION-V12-SUPRA: moteur biologique central (score + cartes + influences)
     nutrition = None
@@ -1111,6 +1130,12 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
         "hydrologie_supra": hydrologie_supra,
         "sol_supra": sol_supra,
         "stress_anthropique": stress_anthropique,
+        "espece_profile": espece_profile,
+        "comportement_biologique": comportement_biologique,
+        "connectivite_ecologique": connectivite_ecologique,
+        "thermique_microclimat": thermique_microclimat,
+        "sensoriel_vent_odeurs": sensoriel_vent_odeurs,
+        "ia_vision_ecologique": ia_vision_ecologique,
         "terrain_v10": t,
         "meteo": meteo,
         "esi_omega": "CONFORME",

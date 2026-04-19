@@ -120,3 +120,23 @@
 - [OK] test_stress_anthropique (3026ms)
 - PERF-GUARD-Ω: status=evaluated severity_max=ok
 
+## 2026-04-19T21:24:07.459778+00:00 — pod=agent-env-ffc8a3b4-f69b-4057-9ea0-cbb108eeebdb — **CONFORME**
+- [OK] test_defaults_omega (118ms)
+- [OK] test_affuts_v12 (3196ms)
+- [OK] test_salines_no_feedback_affuts (3244ms)
+- [OK] test_salines_always_on (3205ms)
+- [OK] test_mvt_7_layers (4041ms)
+- [OK] test_render_guard_layers (4043ms)
+- [OK] test_render_guard_styles (105ms)
+- [OK] test_render_guard_visibility (4497ms)
+- [OK] test_render_guard_preview (87ms)
+- [OK] test_render_guard_performance (5045ms)
+- [OK] test_nutrition_v12 (3950ms)
+- [OK] test_rse_omega (3793ms)
+- [OK] test_habitat_supra (3812ms)
+- [OK] test_hydrologie_supra (3776ms)
+- [OK] test_sol_supra (3831ms)
+- [OK] test_stress_anthropique (809ms)
+- [OK] test_supra_p1 (887ms)
+- PERF-GUARD-Ω: status=evaluated severity_max=ok
+

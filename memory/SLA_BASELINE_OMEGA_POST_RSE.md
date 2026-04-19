@@ -1,6 +1,6 @@
 # SLA-BASELINE-Ω — Baseline institutionnelle TERRITOIRE-V12
 
-**Derniere mise a jour:** 2026-04-19T20:57:12.208441+00:00
+**Derniere mise a jour:** 2026-04-19T21:24:08.723454+00:00
 **Pod:** `agent-env-ffc8a3b4-f69b-4057-9ea0-cbb108eeebdb`
 **Point reference:** lat=46.8139 lon=-71.208 species=cerf month=10 hour=7
 
@@ -8,11 +8,11 @@
 
 | Metrique | In-Process | HTTP Loopback |
 |---|---|---|
-| Bundle cold MISS | 507.86 ms | 508.41 ms |
-| Bundle warm HIT | 0.0 ms | 54.61 ms |
+| Bundle cold MISS | 506.88 ms | 531.27 ms |
+| Bundle warm HIT | 0.0 ms | 54.22 ms |
 | MVT cold (corridors) | 0.03 ms | 47.88 ms |
-| MVT warm (corridors) | 0.0 ms | 47.02 ms |
-| Pipeline compute | 508.0 ms | 494.0 ms |
+| MVT warm (corridors) | 0.0 ms | 48.0 ms |
+| Pipeline compute | 507.0 ms | 516.0 ms |
 
 ## Tolerance PERF-GUARD-Ω (hybride)
 

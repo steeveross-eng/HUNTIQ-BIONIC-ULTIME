@@ -39,6 +39,7 @@ _TEST_SUITES = [
     ("test_hydrologie_supra", "/app/backend/tests/test_hydrologie_supra.py"),
     ("test_sol_supra", "/app/backend/tests/test_sol_supra.py"),
     ("test_stress_anthropique", "/app/backend/tests/test_stress_anthropique.py"),
+    ("test_supra_p1", "/app/backend/tests/test_supra_p1.py"),
 ]
 
 _LOG_FILE = Path("/app/memory/SELF_AUDIT_OMEGA_LOGS.md")

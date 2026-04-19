@@ -1,0 +1,175 @@
+{
+  "meta": {
+    "version": "V1-SUPRA-2026-04",
+    "source_docs": [
+      "RAPPORT SCIENTIFIQUE STRUCTURÉ — ORIGNAL (MOOSE).docx",
+      "RAPPORT SCIENTIFIQUE STRUCTURÉ — CHEVREUIL (WHITE-TAILED DEER).docx",
+      "RAPPORT SCIENTIFIQUE STRUCTURÉ — WAPITI (ELK).docx",
+      "RAPPORT SCIENTIFIQUE STRUCTURÉ — OURS NOIR (BLACK BEAR).docx",
+      "RAPPORT SCIENTIFIQUE STRUCTURÉ — DINDON SAUVAGE (WILD TURKEY).docx"
+    ]
+  },
+  "species_profiles": {
+    "orignal": {
+      "common_name_fr": "Orignal",
+      "common_name_en": "Moose",
+      "scientific_name": "Alces alces",
+      "habitat": {
+        "zones": "Forêts mixtes boréales, zones humides (été), forêts matures conifériennes (hiver)",
+        "selection": ["couvert forestier dense", "zones humides", "mosaïques feuillus/conifères", "faible densité humaine", "corridors continus"],
+        "sites_critiques": {"mise_bas": "couvert dense zones isolées", "rut": "mosaïques feuillus/conifères", "souilles_frottis": "zones de rut", "repos": "forêts matures"}
+      },
+      "nutrition": {
+        "saisons": {"printemps": "végétation riche protéines", "ete": "alimentation aquatique", "automne": "hyperphagie", "hiver": "dépendance couvert thermique"},
+        "mineraux": ["Na", "K", "Ca", "Mg"]
+      },
+      "behavior": {
+        "comportements_saisonniers": {"printemps": "protéines", "ete": "thermique", "automne": "rut déplacements accrus", "hiver": "ravages"},
+        "corridors": "stables, connectivité essentielle, évitement routes",
+        "activite": "déplacements nocturnes sous pression humaine"
+      },
+      "climate": {
+        "stress_thermique_c": [14, 17],
+        "tolerance_neige_cm": 70,
+        "tendance": "climat facteur majeur (neige, chaleur)"
+      },
+      "diseases": ["tique d'hiver (associée étés chauds + prédation)", "interactions cerf de Virginie (transmission parasites)"]
+    },
+    "chevreuil": {
+      "common_name_fr": "Chevreuil (cerf de Virginie)",
+      "common_name_en": "White-tailed deer",
+      "scientific_name": "Odocoileus virginianus",
+      "habitat": {
+        "zones": "Forêts mixtes, lisières agricoles-forestières, mosaïques ouvertes",
+        "selection": ["lisières", "zones thermiques", "couvert conifèrien hiver", "ravages"],
+        "sites_critiques": {"repos": "cèdrières, sapinières", "alimentation": "lisières/regen", "rut": "zones de grattis/frottis"}
+      },
+      "nutrition": {
+        "saisons": {"printemps": "pousses riches", "ete": "herbacées diversifiées", "automne": "glands/fruits hyperphagie", "hiver": "rameaux ligneux + cèdre thermique"},
+        "mineraux": ["Na", "Ca", "Mg"]
+      },
+      "behavior": {
+        "home_range_km2": [1.5, 5.0],
+        "dispersion_juv_km": [5, 35],
+        "activite": "crépusculaire, nocturne sous pression",
+        "corridors": "suivent lisières et vallons"
+      },
+      "climate": {
+        "stress_thermique_c": [20, 25],
+        "tolerance_neige_cm": 40,
+        "tendance": "expansion nord avec climat"
+      },
+      "diseases": ["EHD (Epizootic Hemorrhagic Disease)", "MDC (Chronic Wasting Disease)", "tiques"]
+    },
+    "wapiti": {
+      "common_name_fr": "Wapiti",
+      "common_name_en": "Elk",
+      "scientific_name": "Cervus canadensis",
+      "habitat": {
+        "zones": "Prairies, forêts ouvertes, bordures de clairières",
+        "selection": ["mosaïque ouvert/couvert", "altitude modérée", "migration saisonnière"],
+        "sites_critiques": {"rut": "clairières de brame", "hivernage": "versants sud bas", "calage": "zones mixtes"}
+      },
+      "nutrition": {
+        "saisons": {"printemps": "herbacées post-neige", "ete": "graminées prairies", "automne": "hyperphagie rut", "hiver": "écorces/rameaux"},
+        "mineraux": ["Na", "Ca", "P", "Mg"]
+      },
+      "behavior": {
+        "home_range_km2": [10, 50],
+        "migration_km": [20, 100],
+        "activite": "grégaire harde"
+      },
+      "climate": {
+        "stress_thermique_c": [20, 25],
+        "tolerance_neige_cm": 60
+      },
+      "diseases": ["MDC", "brucellose", "parasites"]
+    },
+    "ours_noir": {
+      "common_name_fr": "Ours noir",
+      "common_name_en": "Black bear",
+      "scientific_name": "Ursus americanus",
+      "habitat": {
+        "zones": "Forêts mixtes + lisières, zones fruitières sauvages",
+        "selection": ["tanière rocheuse/racinaire", "bleuetières", "chablis alimentation"],
+        "sites_critiques": {"tanière": "racines/grottes", "alimentation": "lisières fruitières"}
+      },
+      "nutrition": {
+        "saisons": {"printemps": "herbacées frais post-hibernation", "ete": "bleuets/framboises", "automne": "glands/hêtre hyperphagie", "hiver": "hibernation"},
+        "mineraux": ["Na (moindre)", "K"]
+      },
+      "behavior": {
+        "home_range_km2": [20, 100],
+        "hibernation": "nov-avril",
+        "activite": "diurne-crépusculaire"
+      },
+      "climate": {
+        "stress_thermique_c": [25, 30]
+      },
+      "diseases": ["trichinelle", "parasites digestifs"]
+    },
+    "dindon_sauvage": {
+      "common_name_fr": "Dindon sauvage",
+      "common_name_en": "Wild turkey",
+      "scientific_name": "Meleagris gallopavo",
+      "habitat": {
+        "zones": "Forêts décidues matures + lisières agricoles",
+        "selection": ["perchoirs grands arbres", "mast glands/hêtre", "pelouses insectes"],
+        "sites_critiques": {"perchoir": "canopée haute", "nid": "sous-bois couvert", "alimentation": "lisières"}
+      },
+      "nutrition": {
+        "saisons": {"printemps": "insectes + pousses", "ete": "insectes + baies", "automne": "glands/hêtre", "hiver": "glands résiduels + mais agricoles"},
+        "mineraux": ["Ca (coquille)", "P"]
+      },
+      "behavior": {
+        "home_range_km2": [1, 4],
+        "activite": "diurne, perche nocturne",
+        "bandes": "harems/bandes selon saison"
+      },
+      "climate": {
+        "stress_neige_cm": 30,
+        "tendance": "expansion nord"
+      },
+      "diseases": ["histomonose", "virus aviaire", "parasites"]
+    }
+  },
+  "studies": [
+    {"id": "johnson-rea-2020", "authors": ["Johnson", "Rea"], "year": 2020, "org": "Canadian Science Publishing", "doi": "10.1139/cjfr-2020-XXXX", "topic": "moose-forest"},
+    {"id": "gagnon-2024", "authors": ["Gagnon et al."], "year": 2024, "org": "Wiley Online Library", "doi": "10.1002/ece3.10909", "topic": "moose-ecology"},
+    {"id": "isle-royale-2021", "authors": ["Isle Royale Wolf-Moose Project"], "year": 2021, "org": "Frontiers in Ecology and Evolution", "doi": "10.3389/fevo.2021.758374", "topic": "moose-predator"},
+    {"id": "iucn-moose", "authors": ["IUCN"], "org": "IUCN Red List", "topic": "species-status"},
+    {"id": "alces-journal", "org": "ALCES Journal", "topic": "moose-applied"}
+  ],
+  "datasets": [
+    {"id": "usgs-movement", "agency": "USGS", "name": "Animal movement / telemetry", "url": "https://www.usgs.gov"},
+    {"id": "noaa-climate", "agency": "NOAA", "name": "Climat (neige, température)", "url": "https://www.noaa.gov"},
+    {"id": "nasa-earthdata", "agency": "NASA", "name": "EarthData NDVI + thermiques", "url": "https://earthdata.nasa.gov"},
+    {"id": "mffp-qc", "agency": "MFFP", "name": "Inventaires QC (orignal, cerf, etc.)", "url": "https://mffp.gouv.qc.ca"},
+    {"id": "ontario-geohub", "agency": "Ontario GeoHub", "name": "Moose Management Reports", "url": "https://www.ontario.ca/page/ministry-natural-resources-and-forestry"},
+    {"id": "nb-geoatlas", "agency": "NB GeoAtlas", "name": "Moose Population & Harvest", "url": "https://www2.gnb.ca"},
+    {"id": "usfws", "agency": "USFWS", "name": "Habitat & population assessments", "url": "https://www.fws.gov"},
+    {"id": "parcs-canada", "agency": "Parcs Canada", "name": "Monitoring faune", "url": "https://parcs.canada.ca"},
+    {"id": "maine-ifw", "agency": "Maine IFW", "name": "Moose GPS Collar Dataset", "url": "https://www.maine.gov/ifw"}
+  ],
+  "engine_links": {
+    "ENGINE-HABITAT-SUPRA": ["species_profiles.*.habitat", "datasets.mffp-qc", "datasets.ontario-geohub"],
+    "ENGINE-HYDROLOGIE-SUPRA": ["datasets.noaa-climate", "datasets.mffp-qc"],
+    "ENGINE-SOL-SUPRA": ["datasets.usgs-movement", "datasets.nasa-earthdata"],
+    "ENGINE-STRESS-ANTHROPIQUE-Ω": ["species_profiles.*.behavior.activite", "species_profiles.*.behavior.corridors"],
+    "ENGINE-NUTRITION-V12-SUPRA": ["species_profiles.*.nutrition", "datasets.mffp-qc"],
+    "ENGINE-ESPECE-Ω": ["species_profiles.*"],
+    "ENGINE-COMPORTEMENT-BIOLOGIQUE-Ω": ["species_profiles.*.behavior", "studies.johnson-rea-2020"],
+    "ENGINE-CONNECTIVITE-ECOLOGIQUE-Ω": ["species_profiles.*.behavior.corridors"],
+    "ENGINE-THERMIQUE-MICROCLIMAT-Ω": ["species_profiles.*.climate", "datasets.noaa-climate", "datasets.nasa-earthdata"],
+    "ENGINE-SENSORIEL-VENT-ODEURS-Ω": ["species_profiles.*.behavior.activite"],
+    "ENGINE-IA-VISION-ECOLOGIQUE-Ω": ["datasets.nasa-earthdata"]
+  },
+  "gaps": [
+    "Home ranges numériques précis absents pour orignal/ours",
+    "Données CWD/MDC par région non intégrées (QC vs US)",
+    "Inventaire forestier par essence national non lié (limite HABITAT-SUPRA)",
+    "Pression chasse historique non croisée avec STRESS-ANTHROPIQUE-Ω",
+    "Pas d'API temps réel MFFP/USFWS (ingestion manuelle actuellement)",
+    "Indicateurs climatiques futurs (CMIP6) absents"
+  ]
+}

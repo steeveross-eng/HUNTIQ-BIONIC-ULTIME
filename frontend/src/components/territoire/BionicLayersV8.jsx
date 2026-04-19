@@ -21,7 +21,7 @@ import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { NUTRITION_SEVERITY_COLORS } from '@/config/territoire_defaults';
 import { validateElement, logRenderCycle } from './RenderGuardOmega';
-import { buildInstitutionalPopup } from './InstitutionalPopup';
+import { buildInstitutionalPopup, FichePopup } from './InstitutionalPopup';
 
 // ═══ PALETTE BCE-4X V9-INSTITUTIONNEL ═══
 const ZONE_COLORS = {
