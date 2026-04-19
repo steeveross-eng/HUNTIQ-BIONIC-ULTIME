@@ -757,10 +757,10 @@
 
 /* ═══ ENGINE UX-Ω-V12 — BionicButtonOmega classes ═══ */
 .btn-omega-active {
-  background: rgba(253, 216, 53, 0.85) !important;
+  background: rgba(255, 152, 0, 0.4) !important;
   color: #FFFFFF !important;
-  border: 2.0px solid #FFFFFF !important;
-  box-shadow: 0 0 6px #FDD835, inset 0 0 0 1px rgba(255,255,255,0.25) !important;
+  border: 2px solid #FFFFFF !important;
+  box-shadow: 0 0 4px #FF9800 !important;
   transform: scale(0.96);
 }
 .btn-omega-inactive {

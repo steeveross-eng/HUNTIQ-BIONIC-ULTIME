@@ -37,3 +37,14 @@
 - [OK] test_salines_always_on (3805ms)
 - [OK] test_mvt_7_layers (316ms)
 
+## 2026-04-19T13:05:43.972302+00:00 — pod=agent-env-ffc8a3b4-f69b-4057-9ea0-cbb108eeebdb — **CONFORME**
+- [OK] test_defaults_omega (68ms)
+- [OK] test_affuts_v12 (3853ms)
+- [OK] test_salines_no_feedback_affuts (3847ms)
+- [OK] test_salines_always_on (3850ms)
+- [OK] test_mvt_7_layers (418ms)
+- [OK] test_render_guard_layers (415ms)
+- [OK] test_render_guard_styles (67ms)
+- [OK] test_render_guard_visibility (383ms)
+- [OK] test_render_guard_preview (65ms)
+

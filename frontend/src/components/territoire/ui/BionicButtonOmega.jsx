@@ -51,10 +51,11 @@ export default function BionicButtonOmega({
         transition: 'background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, transform 0.08s ease',
         ...(isActive
           ? {
-              background: 'rgba(253, 216, 53, 0.85)',
+              // UX-Omega-V12-R5 Directive V: palette ORANGE intensite reduite
+              background: 'rgba(255, 152, 0, 0.4)',
               color: '#FFFFFF',
-              border: '2.0px solid #FFFFFF',
-              boxShadow: '0 0 6px #FDD835, inset 0 0 0 1px rgba(255,255,255,0.25)',
+              border: '2px solid #FFFFFF',
+              boxShadow: '0 0 4px #FF9800',
               transform: 'scale(0.96)',
               textShadow: '0 0 4px rgba(0,0,0,0.4)',
             }

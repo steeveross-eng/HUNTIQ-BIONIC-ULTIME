@@ -28,6 +28,10 @@ _TEST_SUITES = [
     ("test_salines_no_feedback_affuts", "/app/backend/tests/test_salines_no_feedback_affuts.py"),
     ("test_salines_always_on", "/app/backend/tests/test_salines_always_on.py"),
     ("test_mvt_7_layers", "/app/backend/tests/test_mvt_7_layers.py"),
+    ("test_render_guard_layers", "/app/backend/tests/test_render_guard_layers.py"),
+    ("test_render_guard_styles", "/app/backend/tests/test_render_guard_styles.py"),
+    ("test_render_guard_visibility", "/app/backend/tests/test_render_guard_visibility.py"),
+    ("test_render_guard_preview", "/app/backend/tests/test_render_guard_preview.py"),
 ]
 
 _LOG_FILE = Path("/app/memory/SELF_AUDIT_OMEGA_LOGS.md")

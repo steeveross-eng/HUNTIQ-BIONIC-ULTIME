@@ -147,17 +147,18 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-2: CORRIDORS-Omega — STYLE-HIERARCHISE V11-SUPRA (Directive III) ═══
-    // CRITIQUE #FF0000 4.0px / MAJEUR #FF6A00 3.2px / FORT #FFC300 2.6px / MODERE #00B050 2.0px / FAIBLE #00B0F0 1.4px
-    // PRIORITE: defaults hierarchy >> backend-provided style (force homogeneite institutionnelle)
+    // ═══ Z-2: CORRIDORS-Omega — STYLE-HIERARCHISE V12-R5 (Directive I) ═══
+    // Directive I: epaisseur 2.0-4.0px, opacite >=0.75, couleurs V11-SUPRA
+    // Min weight 2.0 et min opacity 0.75 imposes institutionnellement (jamais en dessous)
     if (showCorridors && corridors.length > 0) {
       corridors.forEach(c => {
         const path = c.path || [[c.start.lat, c.start.lng], [c.end.lat, c.end.lng]];
         const style = CORRIDOR_STYLES[c.type] || CORRIDOR_STYLES.normal;
-        // Directive III: style hierarchise impose (ignore backend overrides)
         const color = style.color;
-        const weight = style.weight;
-        const opacity = style.opacity;
+        // Directive I R5: weight clampe [2.0, 4.0]
+        const weight = Math.max(2.0, Math.min(4.0, style.weight));
+        // Directive I R5: opacity >= 0.75
+        const opacity = Math.max(0.75, style.opacity);
 
         const line = L.polyline(path, {
           color: color,
@@ -209,31 +210,31 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-4: CONTAMINATION-Omega (multi-cones depuis AFFUTS) ═══
-    // SOURCE = AFFUTS OPTIMAUX. ZERO waypoint. 3 intensites par affut.
+    // ═══ Z-4: CONTAMINATION-Omega — STYLE CONTAM-Ω V12-R5 ═══
+    // Directive IV: fill #FF0000 opacity 0.35-0.40, stroke #FF6A00 2.5px dash "6 4"
     if (showContamination && contamination) {
       const cones = Array.isArray(contamination) ? contamination : [contamination];
       cones.forEach(cone => {
         if (!cone.polygon || cone.polygon.length < 3) return;
 
-        const color = cone.color || '#FF7043';
-        const opacity = cone.opacity || 0.2;
-        const fillOpacity = cone.fill_opacity || 0.1;
+        // Moduler fillOpacity selon intensite dans la plage stricte 0.35-0.40
+        const intensityMap = { faible: 0.35, moyen: 0.37, fort: 0.40 };
+        const fillOpacity = intensityMap[cone.intensity] || 0.37;
 
         const poly = L.polygon(cone.polygon, {
-          color: color,
-          weight: 1.2,
-          opacity: opacity,
-          fillColor: color,
+          color: '#FF6A00',           // stroke Directive IV
+          weight: 2.5,                // Directive IV
+          opacity: 1.0,
+          fillColor: '#FF0000',       // fill Directive IV
           fillOpacity: fillOpacity,
-          dashArray: cone.intensity === 'faible' ? '3,3' : cone.intensity === 'moyen' ? '5,3' : null,
+          dashArray: '6 4',           // Directive IV
           smoothFactor: 0,
           interactive: true,
         });
 
         const src = cone.affut_source || {};
         poly.bindTooltip(
-          `<b style="color:${color}">Contamination ${cone.intensity}</b><br>` +
+          `<b style="color:#FF6A00">CONTAM-Ω ${cone.intensity}</b><br>` +
           `Portee: ${cone.reach_m}m | Angle: ${cone.cone_angle_deg}deg<br>` +
           `<span style="font-size:9px">Source: Affut ${src.quality || ''} (${src.score || ''})</span>`,
           { sticky: true, opacity: 0.95 }
@@ -242,13 +243,39 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-5: SALINES-V11-SUPRA — JAUNE INSTITUTIONNEL UNIFORME ═══
-    // Directive III: toutes salines (VALIDEE + A-REPOSITIONNER) rendues JAUNE #FDD835
-    // A-REPOSITIONNER: halo pulse leger opacity 0.45
+    // ═══ Z-5: SALINES-V11-SUPRA — JAUNE INSTITUTIONNEL UNIFORME + ANTI-GRAPPES ═══
+    // Directive III: SALINES rendues JAUNE #FDD835
+    // Directive R5-III: distance_min_salines = 120m (filtre anti-grappes frontend)
     if (showSalines && salines.length > 0) {
-      salines.forEach(s => {
+      // Haversine rapide
+      const _dist_m = (la1, lo1, la2, lo2) => {
+        const R = 6371000;
+        const dL = (la2 - la1) * Math.PI / 180;
+        const dG = (lo2 - lo1) * Math.PI / 180;
+        const a = Math.sin(dL/2)**2 + Math.cos(la1*Math.PI/180) * Math.cos(la2*Math.PI/180) * Math.sin(dG/2)**2;
+        return 2 * R * Math.asin(Math.sqrt(a));
+      };
+      // ANTI-GRAPPES: conserver VALIDEE > A-REPOSITIONNER, plus haut score d'abord
+      const sorted = [...salines].sort((a, b) => {
+        const pa = a.status === 'SALINE-VALIDEE-Omega' ? 0 : 1;
+        const pb = b.status === 'SALINE-VALIDEE-Omega' ? 0 : 1;
+        if (pa !== pb) return pa - pb;
+        return (b.score || 0) - (a.score || 0);
+      });
+      const kept = [];
+      const MIN_DIST = 120;
+      for (const s of sorted) {
         const lat = s.lat || s.center?.lat;
         const lon = s.lng || s.lon || s.center?.lng;
+        if (!lat || !lon) continue;
+        const conflict = kept.some(k => _dist_m(lat, lon, k._lat, k._lon) < MIN_DIST);
+        if (!conflict) {
+          kept.push({ ...s, _lat: lat, _lon: lon });
+        }
+      }
+      kept.forEach(s => {
+        const lat = s._lat;
+        const lon = s._lon;
         if (!lat || !lon) return;
 
         const isValidee = s.status === 'SALINE-VALIDEE-Omega';
@@ -361,54 +388,53 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-7: AFFUTS-Omega (FIXE PERMANENT + TEMPORAIRES) ═══
+    // ═══ Z-7: AFFUTS-Omega V12-R5 (Directive II) — Orange BIONIC + contour blanc ═══
+    // icone 18-22px, z-index top, orange #FF9800 + contour blanc 2px
     if (showAffuts && affuts.length > 0) {
+      const AFFUT_BIONIC_ORANGE = '#FF9800';
+      const AFFUT_WHITE_STROKE = '#FFFFFF';
       affuts.forEach(a => {
         const isFixed = a.type === 'FIXE_PERMANENT';
-        const rend = a.renderer || {};
-        const color = rend.color || (isFixed ? AFFUT_COLOR : '#1E88E5');
-        const weight = rend.weight || (isFixed ? 3 : 2.4);
-        const fillOpacity = rend.fill_opacity || (isFixed ? 0.35 : 0.3);
-        const sz_px = isFixed ? 10 : 7;
+        const sz_px = isFixed ? 11 : 9;  // Directive II: 18-22px diametre (radius 9-11)
 
         const circle = L.circleMarker([a.lat, a.lng], {
           radius: sz_px,
-          color: color,
-          fillColor: color,
-          fillOpacity: fillOpacity,
-          weight: weight,
+          color: AFFUT_WHITE_STROKE,         // contour blanc 2px Directive II
+          fillColor: AFFUT_BIONIC_ORANGE,    // orange BIONIC Directive II
+          fillOpacity: 0.9,                  // opacite >= 0.55
+          weight: 2,
           opacity: 1.0,
           interactive: true,
+          pane: 'markerPane',                // z-index top (au-dessus shadow/overlay)
         });
 
         // Symbole central: X pour fixe, fleche pour temporaire
         if (isFixed) {
           const xIcon = L.divIcon({
             className: 'affut-fixe-omega',
-            html: `<div style="width:${sz_px*2}px;height:${sz_px*2}px;display:flex;align-items:center;justify-content:center;font-size:${sz_px+4}px;font-weight:900;color:${AFFUT_X_COLOR};line-height:1;">X</div>`,
+            html: `<div style="width:${sz_px*2}px;height:${sz_px*2}px;display:flex;align-items:center;justify-content:center;font-size:${sz_px+4}px;font-weight:900;color:${AFFUT_WHITE_STROKE};line-height:1;text-shadow:0 0 3px rgba(0,0,0,0.6);">X</div>`,
             iconSize: [sz_px*2, sz_px*2],
             iconAnchor: [sz_px, sz_px],
           });
-          L.marker([a.lat, a.lng], { icon: xIcon, interactive: false }).addTo(group);
+          L.marker([a.lat, a.lng], { icon: xIcon, interactive: false, pane: 'markerPane' }).addTo(group);
         } else {
-          // Fleche directionnelle pour temporaire
           const arrowRad = Math.PI * a.orientation_deg / 180;
           const arrowLen = 0.0006;
           const tipLat = a.lat + Math.cos(arrowRad) * arrowLen;
           const tipLng = a.lng + Math.sin(arrowRad) * arrowLen / Math.cos(a.lat * Math.PI / 180);
           const arrowLine = L.polyline([[a.lat, a.lng], [tipLat, tipLng]], {
-            color: color, weight: 2, opacity: 0.8, interactive: false,
+            color: AFFUT_WHITE_STROKE, weight: 2.5, opacity: 0.95, interactive: false, pane: 'markerPane',
           });
           group.addLayer(arrowLine);
         }
 
-        // Tooltip enrichi
-        const typeLabel = isFixed ? 'FIXE PERMANENT' : 'TEMPORAIRE';
-        let tooltip = `<b style="color:${color}">Affut ${typeLabel}</b> ${a.score}/100`;
-        tooltip += `<br><span style="font-size:9px">${a.description || ''}</span>`;
-        tooltip += `<br><span style="font-size:9px">Corridor: ${a.corridor_type || '?'} a ${a.distance_corridor_m || '?'}m | Orient: ${a.orientation_deg}deg</span>`;
-        if (a.distance_saline_m) {
-          tooltip += `<br><span style="font-size:9px">Saline: ${a.distance_saline_m}m (score ${a.saline_score || '?'})</span>`;
+        // Tooltip enrichi V12
+        const typeLabel = isFixed ? 'FIXE PERMANENT V12' : 'TEMPORAIRE V12';
+        let tooltip = `<b style="color:${AFFUT_BIONIC_ORANGE}">Affut ${typeLabel}</b> ${a.score_affut_v12 || a.score}/100`;
+        tooltip += `<br><span style="font-size:9px">${a.justification || a.description || ''}</span>`;
+        tooltip += `<br><span style="font-size:9px">Corridor ${a.classe_corridor_cible || a.corridor_type} a ${a.distance_corridor_m}m (score dist: ${a.score_distance_corridor || '?'})</span>`;
+        if (a.affut_repositionne) {
+          tooltip += `<br><span style="font-size:9px;color:#4CAF50">REPOSITIONNE AUTO V12</span>`;
         }
 
         circle.bindTooltip(tooltip, { sticky: true, opacity: 0.95 });

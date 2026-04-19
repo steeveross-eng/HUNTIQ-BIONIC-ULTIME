@@ -1,3 +1,69 @@
+## TERRITOIRE-Ω-V12-SUPRA-R5 — RENDER-GUARD-Ω + VISIBILITE + PREVIEW (2026-04-19)
+### I. Corridors visibilité forcée
+- `BionicLayersV8.jsx` : weight clampé `Math.max(2.0, Math.min(4.0, style.weight))`, opacity `Math.max(0.75, style.opacity)`
+- Minimums institutionnels 2.0px / 0.75 respectés même si backend envoie valeurs inférieures
+
+### II. Affûts V12 visibilité obligatoire
+- Icône 18-22px (radius 9-11), couleur orange BIONIC `#FF9800`, contour blanc `#FFFFFF` 2px
+- `pane: 'markerPane'` → z-index top automatique (au-dessus de tout)
+- Tooltip V12 enrichi : score_affut_v12, score_distance_corridor, classe_corridor_cible, affut_repositionne
+
+### III. Salines anti-grappes
+- Filtre frontend `MIN_DIST = 120m` appliqué dans BionicLayersV8
+- Priorité VALIDEE > A-REPOSITIONNER, score décroissant
+- Conservation de 2/6 salines en moyenne par espèce après filtre
+
+### IV. Contamination CONTAM-Ω
+- fillColor `#FF0000`, fillOpacity 0.35-0.40 (modulée par intensité faible/moyen/fort)
+- Stroke `#FF6A00` 2.5px, dashArray `'6 4'`
+- Tooltip CONTAM-Ω enrichi
+
+### V. ENGINE UX-Ω-V12 palette orange
+- `BionicButtonOmega.jsx` + `App.css` + `TerritoireToolbar PressButton` synchronisés
+- ACTIF : `rgba(255,152,0,0.4)` + halo `0 0 4px #FF9800` + contour blanc 2px
+- INACTIF : `#2A2A2A` + `#BDBDBD` + contour `#444444`
+
+### VI. RENDER-GUARD-Ω — 4 tests automatiques
+- `test_render_guard_layers.py` — 7/7 layers MVT visibles
+- `test_render_guard_styles.py` — 14/14 directives V12-R5 conformes (inspection source code)
+- `test_render_guard_visibility.py` — affûts ≥6, salines ≥1 anti-grappes, corridors max_len ≥150m par espèce
+- `test_render_guard_preview.py` — PREVIEW = RENDU FINAL (5/5 validations)
+- Tous intégrés dans SELF-AUDIT (9/9 suites)
+
+### VII. Réponse PREVIEW-Ω
+Document technique complet : `/app/memory/PREVIEW_OMEGA_ANALYSIS.md`
+- **PREVIEW = RENDU FINAL** : même backend, même bundle V20, même renderer BionicLayersV8
+- Écart éventuel = cache navigateur stale (résolution : Ctrl+Shift+R + `/bundle/purge`)
+- Zéro pipeline legacy dans Territoire
+
+### VIII. Validation (9/9 SUITES SELF-AUDIT OK)
+```
+[OK] test_defaults_omega (68ms)
+[OK] test_affuts_v12 (3853ms)
+[OK] test_salines_no_feedback_affuts (3847ms)
+[OK] test_salines_always_on (3850ms)
+[OK] test_mvt_7_layers (418ms)
+[OK] test_render_guard_layers (415ms)
+[OK] test_render_guard_styles (67ms)
+[OK] test_render_guard_visibility (383ms)
+[OK] test_render_guard_preview (65ms)
+```
+
+### Fichiers modifiés/créés cette itération
+- `frontend/src/components/territoire/BionicLayersV8.jsx` (corridors clamp + affuts V12-R5 + salines anti-grappes + contam CONTAM-Ω)
+- `frontend/src/components/territoire/ui/BionicButtonOmega.jsx` (palette orange)
+- `frontend/src/components/territoire/ui/TerritoireToolbar.jsx` (PressButton orange)
+- `frontend/src/App.css` (.btn-omega-active orange)
+- `backend/tests/test_render_guard_layers.py` (nouveau)
+- `backend/tests/test_render_guard_styles.py` (nouveau)
+- `backend/tests/test_render_guard_visibility.py` (nouveau)
+- `backend/tests/test_render_guard_preview.py` (nouveau)
+- `backend/engines/v8_institutional/self_audit_omega.py` (9 suites)
+- `memory/RENDER_GUARD_OMEGA_LOGS.md` (nouveau)
+- `memory/PREVIEW_OMEGA_ANALYSIS.md` (nouveau)
+
+---
+
 ## TERRITOIRE-Ω-V12-SUPRA — SELF-AUDIT + MVT 7 LAYERS + RENDU + UX-Ω (2026-04-19)
 ### I. SELF-AUDIT-Ω institutionnalisé (5 suites)
 - `GET /api/v20/territoire/self-audit` + `/self-audit/last`
