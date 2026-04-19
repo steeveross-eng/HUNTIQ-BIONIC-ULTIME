@@ -1,3 +1,59 @@
+## ACTIVATION RSE-Ω + OUVERTURE P0 SUPRA (2026-04-19 soir)
+
+### RSE-Ω — 6 phases exécutées ✅
+- Phase 1 : `RSE_LAYERS_CONFIG` (8 couches) + `NUTRITION_SEVERITY_COLORS` dans `territoire_defaults.js`
+- Phase 2 : **GAP #1 résolu** — couche nutrition rendue frontend (grille 6×6, palette sévérité, popup institutionnel)
+- Phase 3 : `RenderGuardOmega.js` (validator + logs `[RSE-Ω]`)
+- Phase 4 : `InstitutionalPopup.js` (ENGINE-FICHE-DESCRIPTIVE-Ω placeholder)
+- Phase 5 : 12e suite SELF-AUDIT `test_rse_omega.py` (5 checks)
+- Phase 6 : RESEED SLA-BASELINE post-RSE (✅ exécuté, `SLA_BASELINE_OMEGA_POST_RSE.{json,md}`)
+
+### P0 SUPRA — 4 engines créés + SCIENCE-Ω registry ✅
+| Engine | Pillar | Score point ref QC |
+|---|---|---|
+| ENGINE-SCIENCE-Ω (registry gouvernance) | GOUVERNANCE | — |
+| ENGINE-HABITAT-SUPRA | BIO-SYSTEME | 64.2 |
+| ENGINE-HYDROLOGIE-SUPRA | BIO-SYSTEME | 75.6 |
+| ENGINE-SOL-SUPRA | BIO-SYSTEME | 76.6 |
+| ENGINE-STRESS-ANTHROPIQUE-Ω | COMPORTEMENT-HUMAIN | 22.8 (disturbance tres-forte) |
+| ENGINE-NUTRITION-V12-SUPRA (pré-existant) | BIO-SYSTEME | 66.4 |
+
+Chaque P0 SUPRA : intégration pipeline `compute_territoire_v10` + test SELF-AUDIT dédié.
+
+### SELF-AUDIT étendu 11 → **16 suites** (CONFORME)
+```
+conforme=true, 16/16 OK, PERF-GUARD severity_max=ok
+```
+Détails : `/app/memory/SELF_AUDIT_16_SUITES.md`
+
+### Endpoint gouvernance `GET /api/v20/territoire/engines-catalog` ✅
+Expose 6 engines + 3 data_sources + last_audit summary.
+
+### Livrables produits
+- `/app/memory/RSE_OMEGA_IMPLEMENTATION_REPORT.md`
+- `/app/memory/RSE_RENDER_GAPS_RESOLVED.md`
+- `/app/memory/SELF_AUDIT_16_SUITES.md`
+- `/app/memory/SLA_BASELINE_OMEGA_POST_RSE.{json,md}`
+
+### Fichiers créés/modifiés
+- ✨ `engine_science_omega.py` (registry central)
+- ✨ `engine_habitat_supra.py`
+- ✨ `engine_hydrologie_supra.py`
+- ✨ `engine_sol_supra.py`
+- ✨ `engine_stress_anthropique_omega.py`
+- ✨ `engines_catalog.py` (router FastAPI)
+- ✨ `tests/test_{rse_omega,habitat_supra,hydrologie_supra,sol_supra,stress_anthropique}.py`
+- ✨ `frontend/src/components/territoire/{RenderGuardOmega,InstitutionalPopup}.js`
+- ✏️ `territoire_v10_supra.py` (+ 4 engines P0 SUPRA dans bundle)
+- ✏️ `engine_nutrition_v12_supra.py` (+ auto-register SCIENCE-Ω)
+- ✏️ `self_audit_omega.py` (+ 5 suites → 16 total)
+- ✏️ `server.py` (register engines_catalog router)
+- ✏️ `territoire_defaults.js` (+ RSE_LAYERS_CONFIG + NUTRITION_SEVERITY_COLORS)
+- ✏️ `BionicLayersV8.jsx` (+ showNutrition render block + RenderGuard + logRenderCycle)
+
+---
+
+
 ## INVENTAIRE ENGINES + RESEED SLA + PRÉPARATION RSE-Ω (2026-04-19)
 
 ### Phase II — Inventaire anti-duplication

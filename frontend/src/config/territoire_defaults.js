@@ -91,4 +91,50 @@ export const INSTITUTIONAL_COLORS = Object.freeze({
   CONTAM_FORT: '#D84315',
 });
 
+// ═══ RSE-Ω — RENDER-SPEC-OMEGA SUPRA-EXTENDED ═══
+// Config centralisee par couche (minZoom/maxZoom/zIndex/halo/palette/espacement).
+// Source unique pour BionicLayersV8 + RenderGuardOmega + tests.
+export const RSE_LAYERS_CONFIG = Object.freeze({
+  contamination: {
+    minZoom: 12, maxZoom: 16, zIndex: 400,
+    halo: '#FF7043', espacementMin: 0, geometry: 'polygon',
+  },
+  zones: {
+    minZoom: 12, maxZoom: 16, zIndex: 500,
+    halo: '#29B6F6', espacementMin: 0, geometry: 'polygon-organic',
+  },
+  corridors: {
+    minZoom: 12, maxZoom: 16, zIndex: 600,
+    halo: '#FFC300', espacementMin: 0, geometry: 'polyline-catmull',
+  },
+  nutrition: {
+    minZoom: 13, maxZoom: 16, zIndex: 450,
+    halo: '#4CAF50', espacementMin: 200, geometry: 'point-grid',
+  },
+  salines: {
+    minZoom: 13, maxZoom: 16, zIndex: 700,
+    halo: '#FDD835', espacementMin: 300, geometry: 'point-halo',
+  },
+  hotspots: {
+    minZoom: 13, maxZoom: 16, zIndex: 750,
+    halo: '#B84D9C', espacementMin: 200, geometry: 'point-halo',
+  },
+  affuts: {
+    minZoom: 13, maxZoom: 16, zIndex: 800,
+    halo: '#FF9800', espacementMin: 300, geometry: 'point-marker',
+  },
+  vent: {
+    minZoom: 14, maxZoom: 16, zIndex: 850,
+    halo: '#00E5FF', espacementMin: 0, geometry: 'line-flow',
+  },
+});
+
+// ═══ NUTRITION-V12-SUPRA palette par severite carence ═══
+export const NUTRITION_SEVERITY_COLORS = Object.freeze({
+  aucune:  { fill: '#808080', stroke: '#555555' },
+  legere:  { fill: '#22C55E', stroke: '#15803D' },
+  moderee: { fill: '#F59E0B', stroke: '#B45309' },
+  forte:   { fill: '#EF4444', stroke: '#991B1B' },
+});
+
 export default TERRITOIRE_DEFAULTS;

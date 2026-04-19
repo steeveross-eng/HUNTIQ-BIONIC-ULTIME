@@ -1036,6 +1036,24 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
 
     wind_vectors = compute_wind_vectors(lat, lon, real_wind_deg, real_wind_speed)
 
+    # ═══ P0 SUPRA engines (HABITAT + HYDROLOGIE + SOL + STRESS-ANTHROPIQUE) ═══
+    habitat_supra = None
+    hydrologie_supra = None
+    sol_supra = None
+    stress_anthropique = None
+    try:
+        from engines.v8_institutional.engine_habitat_supra import compute_habitat_supra
+        from engines.v8_institutional.engine_hydrologie_supra import compute_hydrologie_supra
+        from engines.v8_institutional.engine_sol_supra import compute_sol_supra
+        from engines.v8_institutional.engine_stress_anthropique_omega import compute_stress_anthropique
+        habitat_supra = compute_habitat_supra(terrain_result)
+        hydrologie_supra = compute_hydrologie_supra(terrain_result)
+        sol_supra = compute_sol_supra(terrain_result)
+        stress_anthropique = compute_stress_anthropique(terrain_result, hour=hour)
+    except Exception as _e:
+        import logging as _lg
+        _lg.getLogger("bionic.territoire").warning(f"SUPRA P0 skipped: {_e}")
+
     # NUTRITION-V12-SUPRA: moteur biologique central (score + cartes + influences)
     nutrition = None
     try:
@@ -1089,6 +1107,10 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
         "wind_vectors": wind_vectors,
         "contamination": contamination,
         "nutrition": nutrition,
+        "habitat_supra": habitat_supra,
+        "hydrologie_supra": hydrologie_supra,
+        "sol_supra": sol_supra,
+        "stress_anthropique": stress_anthropique,
         "terrain_v10": t,
         "meteo": meteo,
         "esi_omega": "CONFORME",

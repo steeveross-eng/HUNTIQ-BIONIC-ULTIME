@@ -36,6 +36,19 @@ from typing import Any
 ENGINE_NAME = "ENGINE-NUTRITION-V12-SUPRA"
 ENGINE_VERSION = "V12-SUPRA-2026-04"
 
+# Auto-register dans le registry institutionnel
+try:
+    from engines.v8_institutional.engine_science_omega import register_engine as _reg, mark_call as _mark
+    _reg(
+        name=ENGINE_NAME,
+        version=ENGINE_VERSION,
+        description="Moteur biologique central nutrition (6 modules, 7 outputs)",
+        pillar="BIO-SYSTEME",
+        dependencies=["LIDAR_WCS_1M", "IRDA_PEDOLOGIE", "OPEN_METEO"],
+    )
+except Exception:
+    _mark = lambda _name: None  # noqa: E731
+
 # Grille carences/besoins: 6x6 sur ±0.012° (~1.3km x 1.3km)
 _GRID_N = 6
 _GRID_SPAN_DEG = 0.012
@@ -575,6 +588,8 @@ def compute_nutrition_v12(
 
     terrain_v10 = resultat de lidar_irda_v11 (contient clef 'terrain' + 'meteo').
     """
+    terrain_v10 = terrain_v10 if isinstance(terrain_v10, dict) else {}
+    _mark(ENGINE_NAME)
     # Normaliser terrain (peut etre {'terrain':..., 'meteo':...} ou directement le dict terrain)
     terrain = terrain_v10.get("terrain", terrain_v10) if isinstance(terrain_v10, dict) else {}
     # Attacher meteo pour disponibilite (neige)

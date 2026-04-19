@@ -34,6 +34,11 @@ _TEST_SUITES = [
     ("test_render_guard_preview", "/app/backend/tests/test_render_guard_preview.py"),
     ("test_render_guard_performance", "/app/backend/tests/test_render_guard_performance.py"),
     ("test_nutrition_v12", "/app/backend/tests/test_nutrition_v12.py"),
+    ("test_rse_omega", "/app/backend/tests/test_rse_omega.py"),
+    ("test_habitat_supra", "/app/backend/tests/test_habitat_supra.py"),
+    ("test_hydrologie_supra", "/app/backend/tests/test_hydrologie_supra.py"),
+    ("test_sol_supra", "/app/backend/tests/test_sol_supra.py"),
+    ("test_stress_anthropique", "/app/backend/tests/test_stress_anthropique.py"),
 ]
 
 _LOG_FILE = Path("/app/memory/SELF_AUDIT_OMEGA_LOGS.md")

@@ -847,6 +847,14 @@ try:
 except Exception as e:
     logger.warning(f"SLA-BASELINE-Omega not loaded: {e}")
 
+# ENGINES-CATALOG — governance registry endpoint
+try:
+    from engines.v8_institutional.engines_catalog import router as engines_catalog_router
+    app.include_router(engines_catalog_router)
+    logger.info("ENGINES-CATALOG registered (/api/v20/territoire/engines-catalog) — SCIENCE-Ω registry")
+except Exception as e:
+    logger.warning(f"ENGINES-CATALOG not loaded: {e}")
+
 # ESI-Omega — Engine Securite Institutionnelle (Guardian Central)
 try:
     from engines.v8_institutional.esi_omega import router as esi_router

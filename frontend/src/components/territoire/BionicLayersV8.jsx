@@ -19,6 +19,9 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
+import { NUTRITION_SEVERITY_COLORS } from '@/config/territoire_defaults';
+import { validateElement, logRenderCycle } from './RenderGuardOmega';
+import { buildInstitutionalPopup } from './InstitutionalPopup';
 
 // ═══ PALETTE BCE-4X V9-INSTITUTIONNEL ═══
 const ZONE_COLORS = {
@@ -65,6 +68,7 @@ const BionicLayersV8 = ({
   showHotspots = true,
   showWind = true,
   showContamination = true,
+  showNutrition = true,
   enabled = true,
   onDataLoaded = null,
 }) => {
@@ -476,6 +480,66 @@ const BionicLayersV8 = ({
     group.addTo(map);
     groupRef.current = group;
 
+    // ═══ RSE-Ω: NUTRITION layer (grille carences + besoins) ═══
+    const nutri = bundleData.nutrition || null;
+    let nutriRendered = 0;
+    let nutriRejected = 0;
+    if (showNutrition && nutri && Array.isArray(nutri.carte_carences)) {
+      const besoinsMap = new Map();
+      (nutri.carte_besoins || []).forEach(b => {
+        besoinsMap.set(`${(b.lat||0).toFixed(5)}_${(b.lng||0).toFixed(5)}`, b);
+      });
+      nutri.carte_carences.forEach(p => {
+        const lat = p.lat;
+        const lng = p.lng;
+        if (typeof lat !== 'number' || typeof lng !== 'number') { nutriRejected++; return; }
+        const vr = validateElement('nutrition', currentZoom, 'point-grid', [lat, lng]);
+        if (!vr.ok) { nutriRejected++; return; }
+        const sev = p.severite_tag || 'aucune';
+        const palette = NUTRITION_SEVERITY_COLORS[sev] || NUTRITION_SEVERITY_COLORS.aucune;
+        const besoin = besoinsMap.get(`${lat.toFixed(5)}_${lng.toFixed(5)}`) || {};
+        const marker = L.circleMarker([lat, lng], {
+          radius: 8,
+          fillColor: palette.fill,
+          color: palette.stroke,
+          fillOpacity: 0.5,
+          opacity: 0.85,
+          weight: 2,
+          interactive: true,
+        });
+        const popupHtml = buildInstitutionalPopup({
+          type: 'Nutrition',
+          name: sev.toUpperCase(),
+          score: nutri.score_nutritionnel,
+          justification: `Carence dominante: ${p.carence_dominante} (deficit ${p.severite})`,
+          source: nutri.engine,
+          conformite: nutri.saison,
+          actions: [`Besoin: ${besoin.besoin_dominant || '-'} (${besoin.intensite || '-'})`],
+          color: palette.fill,
+        });
+        marker.bindPopup(popupHtml, { maxWidth: 260 });
+        marker.bindTooltip(
+          `<b style="color:${palette.fill}">Nutrition ${sev}</b> — ${p.carence_dominante} ${p.severite}`,
+          { sticky: true, opacity: 0.95 }
+        );
+        marker.addTo(group);
+        nutriRendered++;
+      });
+    }
+
+    // ═══ RSE-Ω: emit render cycle log ═══
+    logRenderCycle({
+      zoom: currentZoom,
+      zones: zones.length,
+      corridors: corridors.length,
+      affuts: affuts.length,
+      salines: salines.length,
+      hotspots: hotspots.length,
+      contamination: Array.isArray(contamination) ? contamination.length : 0,
+      nutrition: { rendered: nutriRendered, rejected: nutriRejected, total: nutri ? (nutri.carte_carences || []).length : 0 },
+      engine: 'RSE-Ω',
+    });
+
     if (onDataLoadedRef.current) {
       onDataLoadedRef.current({
         zones_count: zones.length,
@@ -488,7 +552,7 @@ const BionicLayersV8 = ({
         esi_omega: bundleData.esi_omega,
       });
     }
-  }, [map, bundleData, waypointCenter, enabled, showZones, showCorridors, showAffuts, showSalines, showHotspots, showContamination, corridorWeightFactor, affutRadiusFactor, salineHaloFactor, clearOwnLayers]);
+  }, [map, bundleData, waypointCenter, enabled, showZones, showCorridors, showAffuts, showSalines, showHotspots, showContamination, showNutrition, corridorWeightFactor, affutRadiusFactor, salineHaloFactor, currentZoom, clearOwnLayers]);
 
   useEffect(() => {
     renderLayers();
