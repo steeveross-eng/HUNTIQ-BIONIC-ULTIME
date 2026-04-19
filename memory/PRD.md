@@ -1,3 +1,49 @@
+## TERRITOIRE-Ω-V12-SUPRA — SELF-AUDIT + MVT 7 LAYERS + RENDU + UX-Ω (2026-04-19)
+### I. SELF-AUDIT-Ω institutionnalisé (5 suites)
+- `GET /api/v20/territoire/self-audit` + `/self-audit/last`
+- 5 suites : test_defaults_omega, test_affuts_v12, test_salines_no_feedback_affuts, test_salines_always_on, **test_mvt_7_layers**
+- **CONFORME=True** sur pod actif
+- Logs `/app/memory/SELF_AUDIT_OMEGA_LOGS.md` auto-persistés
+- Readiness probe Kubernetes ready (P1 déploiement)
+
+### II. MVT 7 LAYERS — Contrôle permanent (nouveau test)
+`backend/tests/test_mvt_7_layers.py` — test automatique vérifiant chaque layer retourne >0 features.
+Résultat sur tile réf (z=14 x=4951 y=5775, centre 46.8139,-71.208) :
+```
+[OK] corridors: 27 | zones: 5 | affuts: 6 | salines: 6
+[OK] contamination: 18 | hotspots: 11 | vent: 8
+=== MVT-7-LAYERS CONFORME — 7/7 engines produisent des features ===
+```
+
+### III. Rendu TERRITOIRE — BionicLayersV8
+- 7 engines consommés via bundle V20 (non via tiles côté frontend, mais tiles MVT opérationnels pour future migration VectorGrid.slicer)
+- z-index institutionnel : corridors au-dessus fond, zones base, affûts+salines top, contamination+vent non masquants
+- Opacité minimale respectée (CORRIDOR_STYLE_HIERARCHY weight≥1.4 / opacity≥0.55)
+- Zéro overlay legacy (Phase C, Nutrition, Amenagement, StandDetail purgés)
+
+### IV. ENGINE UX-Ω-V12 — Rétro-éclairage institutionnel
+- Composant `frontend/src/components/territoire/ui/BionicButtonOmega.jsx`
+- Classes CSS `.btn-omega-active` / `.btn-omega-inactive` dans App.css
+- **État ACTIF** : fond #FDD835 85%, contour 2.0px #FFFFFF, halo 0 0 6px #FDD835, icône blanche, transform scale(0.96)
+- **État INACTIF** : fond #2A2A2A, icône #BDBDBD, contour 1px #444444, aucun halo
+- `PressButton` migré pour homogénéité (rétro-éclairage sur TOUS les boutons toolbar Territoire)
+- attribut `data-ux-state="active|inactive"` pour validation DOM
+
+### V. Validation visuelle (screenshot post-fix)
+- 9 boutons actifs en jaune institutionnel illuminé : INTEL, ZONES, CORRIDORS, AFFUTS, SALINES, HOTSPOTS, VENT, CONTAM, CURSEUR
+- Boutons ACTIFS en état presseur (enfoncés, halo lumineux)
+- Boutons INACTIFS (WAYPOINTS, LIEUX) en gris foncé
+- Fond carte satellite nu, zéro overlay legacy
+
+### Fichiers modifiés/créés cette itération
+- `backend/tests/test_mvt_7_layers.py` (nouveau)
+- `backend/engines/v8_institutional/self_audit_omega.py` (+ test mvt dans _TEST_SUITES)
+- `frontend/src/components/territoire/ui/BionicButtonOmega.jsx` (nouveau composant UX-Ω)
+- `frontend/src/components/territoire/ui/TerritoireToolbar.jsx` (PressButton migré vers UX-Ω)
+- `frontend/src/App.css` (+ classes .btn-omega-*)
+
+---
+
 ## TERRITOIRE-Ω-V12-SUPRA — SELF-AUDIT + MVT 7 LAYERS + FORCAGE RENDU (2026-04-19)
 ### SELF-AUDIT-Ω
 - Nouveau `engines/v8_institutional/self_audit_omega.py`

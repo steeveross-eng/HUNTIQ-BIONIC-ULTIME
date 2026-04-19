@@ -30,3 +30,10 @@
 - [OK] test_salines_no_feedback_affuts (3711ms)
 - [OK] test_salines_always_on (3707ms)
 
+## 2026-04-19T12:05:07.684792+00:00 — pod=agent-env-ffc8a3b4-f69b-4057-9ea0-cbb108eeebdb — **CONFORME**
+- [OK] test_defaults_omega (36ms)
+- [OK] test_affuts_v12 (3809ms)
+- [OK] test_salines_no_feedback_affuts (3797ms)
+- [OK] test_salines_always_on (3805ms)
+- [OK] test_mvt_7_layers (316ms)
+

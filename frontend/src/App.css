@@ -754,3 +754,21 @@
   transform-origin: center;
   transform-box: fill-box;
 }
+
+/* ═══ ENGINE UX-Ω-V12 — BionicButtonOmega classes ═══ */
+.btn-omega-active {
+  background: rgba(253, 216, 53, 0.85) !important;
+  color: #FFFFFF !important;
+  border: 2.0px solid #FFFFFF !important;
+  box-shadow: 0 0 6px #FDD835, inset 0 0 0 1px rgba(255,255,255,0.25) !important;
+  transform: scale(0.96);
+}
+.btn-omega-inactive {
+  background: #2A2A2A !important;
+  color: #BDBDBD !important;
+  border: 1px solid #444444 !important;
+  box-shadow: none !important;
+}
+.btn-omega-active:hover { filter: brightness(1.08); }
+.btn-omega-inactive:hover { background: #333333 !important; border-color: #555555 !important; }
+

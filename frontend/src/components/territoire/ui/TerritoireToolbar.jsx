@@ -26,23 +26,50 @@ import { SPECIES_LIST } from '@/core/bionic/speciesConfig';
 
 // ═══ BOUTON PRESSEUR UNIVERSEL ═══
 function PressButton({ active, onClick, icon: Icon, label, color = '#9E9E9E', activeColor, testId, title }) {
-  const ac = activeColor || color;
-  const isOn = !!active;
+  // ENGINE UX-Omega-V12: PressButton delegue a BionicButtonOmega
+  // (retro-eclairage complet actif/inactif institutionnel).
+  // Signature preservee pour compat.
+  const state = active ? 'active' : 'inactive';
   return (
     <button
       onClick={onClick}
-      className={`h-8 px-2 flex items-center gap-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all flex-shrink-0 ${
-        isOn
-          ? 'shadow-[0_0_8px_rgba(255,255,255,0.15)]'
-          : 'hover:bg-white/5'
-      }`}
-      style={{
-        backgroundColor: isOn ? `${ac}20` : 'transparent',
-        color: isOn ? ac : '#6b7280',
-        boxShadow: isOn ? `0 0 6px ${ac}30, inset 0 1px 0 ${ac}15` : 'none',
-      }}
       data-testid={testId}
       title={title || label}
+      className={active ? 'btn-omega-active' : 'btn-omega-inactive'}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 6,
+        padding: '0 10px',
+        height: 32,
+        minWidth: 36,
+        borderRadius: 6,
+        fontSize: 10,
+        fontWeight: 800,
+        letterSpacing: '0.5px',
+        textTransform: 'uppercase',
+        cursor: 'pointer',
+        flexShrink: 0,
+        fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+        transition: 'background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, transform 0.08s ease',
+        ...(active
+          ? {
+              background: 'rgba(253, 216, 53, 0.85)',
+              color: '#FFFFFF',
+              border: '2.0px solid #FFFFFF',
+              boxShadow: '0 0 6px #FDD835, inset 0 0 0 1px rgba(255,255,255,0.25)',
+              transform: 'scale(0.96)',
+              textShadow: '0 0 4px rgba(0,0,0,0.4)',
+            }
+          : {
+              background: '#2A2A2A',
+              color: '#BDBDBD',
+              border: '1px solid #444444',
+              boxShadow: 'none',
+            }),
+      }}
+      data-ux-state={state}
     >
       {Icon && <Icon className="h-3.5 w-3.5" />}
       <span className="hidden sm:inline">{label}</span>

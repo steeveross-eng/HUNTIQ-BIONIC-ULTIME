@@ -27,6 +27,7 @@ _TEST_SUITES = [
     ("test_affuts_v12", "/app/backend/tests/test_affuts_v12.py"),
     ("test_salines_no_feedback_affuts", "/app/backend/tests/test_salines_no_feedback_affuts.py"),
     ("test_salines_always_on", "/app/backend/tests/test_salines_always_on.py"),
+    ("test_mvt_7_layers", "/app/backend/tests/test_mvt_7_layers.py"),
 ]
 
 _LOG_FILE = Path("/app/memory/SELF_AUDIT_OMEGA_LOGS.md")
