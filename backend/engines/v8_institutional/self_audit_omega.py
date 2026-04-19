@@ -33,6 +33,7 @@ _TEST_SUITES = [
     ("test_render_guard_visibility", "/app/backend/tests/test_render_guard_visibility.py"),
     ("test_render_guard_preview", "/app/backend/tests/test_render_guard_preview.py"),
     ("test_render_guard_performance", "/app/backend/tests/test_render_guard_performance.py"),
+    ("test_nutrition_v12", "/app/backend/tests/test_nutrition_v12.py"),
 ]
 
 _LOG_FILE = Path("/app/memory/SELF_AUDIT_OMEGA_LOGS.md")

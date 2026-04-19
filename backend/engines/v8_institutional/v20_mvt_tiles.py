@@ -31,7 +31,7 @@ _TILE_CACHE: "OrderedDict[str, tuple[float, dict]]" = OrderedDict()
 _TILE_TTL = 86400
 _TILE_MAX = 1024
 
-_LAYERS_SUPPORTED = {"corridors", "zones", "contamination", "salines", "affuts", "hotspots", "vent"}
+_LAYERS_SUPPORTED = {"corridors", "zones", "contamination", "salines", "affuts", "hotspots", "vent", "nutrition"}
 _ZOOM_MIN, _ZOOM_MAX = 12, 16
 
 
@@ -330,6 +330,36 @@ async def v20_tile(
                     "speed_kmh": v.get("speed_kmh"),
                     "direction_deg": v.get("direction_deg"),
                     "decay": v.get("decay"),
+                },
+            })
+    elif layer == "nutrition":
+        # Nutrition-V12-SUPRA: grille carences + besoins comme points GeoJSON
+        nutri = bundle.get("nutrition") or {}
+        carences = nutri.get("carte_carences") or []
+        besoins_map = {}
+        for b in (nutri.get("carte_besoins") or []):
+            besoins_map[(round(b.get("lat", 0), 5), round(b.get("lng", 0), 5))] = b
+        for p in carences:
+            la, lo = p.get("lat"), p.get("lng")
+            if la is None or lo is None:
+                continue
+            if not _bbox_contains_point(bounds, la, lo):
+                continue
+            besoin = besoins_map.get((round(la, 5), round(lo, 5))) or {}
+            features.append({
+                "type": "Feature",
+                "geometry": {"type": "Point", "coordinates": [lo, la]},
+                "properties": {
+                    "layer": "nutrition",
+                    "carence_dominante": p.get("carence_dominante"),
+                    "severite": p.get("severite"),
+                    "severite_tag": p.get("severite_tag"),
+                    "deficits": p.get("deficits"),
+                    "besoin_dominant": besoin.get("besoin_dominant"),
+                    "besoin_intensite": besoin.get("intensite"),
+                    "score_nutritionnel_global": nutri.get("score_nutritionnel"),
+                    "saison": nutri.get("saison"),
+                    "engine": nutri.get("engine"),
                 },
             })
 

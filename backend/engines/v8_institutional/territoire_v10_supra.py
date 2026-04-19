@@ -1036,6 +1036,50 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
 
     wind_vectors = compute_wind_vectors(lat, lon, real_wind_deg, real_wind_speed)
 
+    # NUTRITION-V12-SUPRA: moteur biologique central (score + cartes + influences)
+    nutrition = None
+    try:
+        from engines.v8_institutional.engine_nutrition_v12_supra import compute_nutrition_v12
+        nutrition = compute_nutrition_v12(
+            lat, lon, species, month, hour,
+            terrain_v10=terrain_result,
+            zones=zones,
+            corridors=corridors,
+            affuts=affuts,
+            hotspots=hotspots,
+            salines=salines,
+            profil="moyenne",
+        )
+        # Apply non-invasive boost: corridors + hotspots + salines (champs additifs)
+        if nutrition:
+            _bmap = {i["corridor_id"]: i["boost_delta"] for i in nutrition.get("influence_corridors", []) if i.get("corridor_id") is not None}
+            for c in corridors:
+                delta = _bmap.get(c.get("id"))
+                if delta:
+                    c["nutrition_boost"] = delta
+                    if isinstance(c.get("score"), (int, float)):
+                        c["score_with_nutrition"] = min(100, round(c["score"] + delta, 1))
+            _hmap = {i["hotspot_id"]: i["boost_delta"] for i in nutrition.get("influence_hotspots", []) if i.get("hotspot_id") is not None}
+            for h in hotspots:
+                hid = h.get("id") or (f"hs_{h.get('lat'):.5f}_{h.get('lng'):.5f}" if h.get("lat") is not None and h.get("lng") is not None else None)
+                delta = _hmap.get(hid)
+                if delta:
+                    h["nutrition_boost"] = delta
+                    if isinstance(h.get("intensity"), (int, float)):
+                        h["intensity_with_nutrition"] = min(100, round(h["intensity"] + delta, 1))
+            _smap = nutrition.get("attractivite_salines", {})
+            for s in salines:
+                sid = s.get("id") or s.get("site_id") or s.get("name")
+                if sid is None and s.get("lat") is not None:
+                    lon_s = s.get("lon") or s.get("lng")
+                    if lon_s is not None:
+                        sid = f"sal_{s['lat']:.5f}_{lon_s:.5f}"
+                if sid is not None and str(sid) in _smap:
+                    s["nutrition_attractivite_mult"] = _smap[str(sid)]
+    except Exception as _e:
+        import logging as _lg
+        _lg.getLogger("bionic.territoire").warning(f"nutrition v12 skipped: {_e}")
+
     return {
         "zones": zones,
         "corridors": corridors,
@@ -1044,6 +1088,7 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
         "salines": salines,
         "wind_vectors": wind_vectors,
         "contamination": contamination,
+        "nutrition": nutrition,
         "terrain_v10": t,
         "meteo": meteo,
         "esi_omega": "CONFORME",

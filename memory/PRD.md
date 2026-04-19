@@ -1,3 +1,68 @@
+## ENGINE-NUTRITION-V12-SUPRA (2026-04-19)
+
+### Contexte
+Ancien `engine_nutrition.py` = stub 24 lignes non intégré. **INSUFFISANT** → migration V12-SUPRA validée par Commandant (choix hybride c, axe a, MVP sans mock a, reseed manuel b).
+
+### Nouveau moteur `engine_nutrition_v12_supra.py` (~600 lignes)
+6 modules internes : SAISON (matrice besoins 4 saisons × 7 axes), PHYSIOLOGIE (mâle/femelle/juvénile), HABITAT (score 0-100 sur 7 facteurs terrain), DISPONIBILITÉ (pipeline Sol→Nutriments→Fourrage→Gibier), COMPORTEMENT (zones alim + influences), SALINES (multiplicateur 1.0-1.6).
+
+### 7 outputs obligatoires (tous produits ✓)
+- `score_nutritionnel` 0-100
+- `carte_carences` grille 6×6
+- `carte_besoins` grille 6×6
+- `zones_alimentation` scorées nutrition
+- `attractivite_salines` dict multiplicateurs
+- `influence_corridors` boost par path_hits
+- `influence_hotspots` boost par présence zone
+
+### Intégrations
+- `compute_territoire_v10` : appel après salines/hotspots, bundle enrichi (champ `nutrition`)
+- Propagation non-invasive : `nutrition_boost` + `score_with_nutrition` / `intensity_with_nutrition` / `nutrition_attractivite_mult`
+- `compute_intelligence(..., nutrition_score=None)` — axe additif (breakdown)
+- `compute_score_global(..., nutrition_score=None)` — axe additif (breakdown)
+- `v20_mvt_tiles` : 8ème layer `nutrition` (GeoJSON Points grille carences+besoins fusionnés)
+
+### Validation manuelle (curl) — directive Commandant (PAS de testing_agent_v3_fork)
+| Check | Résultat |
+|---|---|
+| `GET /bundle` → `nutrition.engine` | `ENGINE-NUTRITION-V12-SUPRA` ✓ |
+| `score_nutritionnel` in [0,100] | 56.7 ✓ |
+| `carte_carences` / `carte_besoins` | 36 pts chacune ✓ |
+| Propagation corridors | 27 corridors boostés (+1 à +16 pts) ✓ |
+| Propagation hotspots | 11 hotspots boostés ✓ |
+| Propagation salines | 6 salines multipliers ✓ |
+| `GET /tiles/nutrition/14/4951/5775.json` | count=15 features ✓ |
+| `GET /self-audit` | conforme=true, **11/11 suites OK** ✓ |
+| PERF-GUARD-Ω | severity_max=ok (pas de régression) ✓ |
+| Data sources | LiDAR + IRDA + Open-Meteo RÉELS (fiabilité 1.0) ✓ |
+
+### SELF-AUDIT étendu 10 → **11 suites**
+Nouvelle suite `test_nutrition_v12.py` ajoutée à `_TEST_SUITES`.
+
+### SLA-BASELINE-Ω reseed
+**EN ATTENTE** ordre explicite Commandant (choix b).
+Endpoint prêt : `POST /api/v20/territoire/sla-baseline/seed?mode=both`.
+
+### Limitations documentées (pas de mock — directive a)
+- Essences forestières : `feuillus_ratio` seul (pas d'inventaire MFFP)
+- Pédologie minérale : indices Ca/Na/K/Mg = proxies `drainage_class + canopy`
+- Pression de broutage : absente
+- Eau gelée : non modélisée (snow_depth utilisé seulement)
+
+### Fichiers créés/modifiés
+- ✨ `backend/engines/v8_institutional/engine_nutrition_v12_supra.py` (NEW ~620 lignes)
+- ✨ `backend/tests/test_nutrition_v12.py` (NEW, 11e suite SELF-AUDIT)
+- ✨ `memory/ENGINE_NUTRITION_STATUS.md` (diagnostic Phase II)
+- ✨ `memory/ENGINE_NUTRITION_V12_SUPRA.md` (doc complète Phase V)
+- ✏️ `backend/engines/v8_institutional/territoire_v10_supra.py` (+ appel + propagation)
+- ✏️ `backend/engines/v8_institutional/engine_intelligence.py` (axe nutrition_score)
+- ✏️ `backend/engines/v8_institutional/engine_score_global.py` (axe nutrition_score)
+- ✏️ `backend/engines/v8_institutional/v20_mvt_tiles.py` (layer nutrition)
+- ✏️ `backend/engines/v8_institutional/self_audit_omega.py` (+1 suite)
+
+---
+
+
 ## SLA-BASELINE-Ω + PERF-GUARD-Ω HYBRIDE (2026-04-19)
 
 ### Nouveau module `engines/v8_institutional/sla_baseline_omega.py`
