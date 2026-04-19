@@ -1,3 +1,41 @@
+## INVENTAIRE ENGINES + RESEED SLA + PRÉPARATION RSE-Ω (2026-04-19)
+
+### Phase II — Inventaire anti-duplication
+- **17 engines confirmés** dans pipeline V20 (source de vérité : `compute_territoire_v10`)
+- **21 engines SUPRA-Ω demandés : TOUS ABSENTS** (ou état stub/partiel)
+- Chevauchements NUTRITION (7 fichiers) + SALINES (5 fichiers) identifiés **hors pipeline V20** (legacy API V6, scoring v2/v4, modules P0) — non bloquants
+- **Verdict : AUCUN CHEVAUCHEMENT BLOQUANT — AUTORISATION Phase SUPRA accordée**
+- Rapport : `/app/memory/ENGINE_OVERLAP_REPORT.md`
+
+### Phase III — RESEED SLA-BASELINE-Ω exécuté
+```
+curl -X POST /api/v20/territoire/sla-baseline/seed?mode=both
+```
+Nouvelle baseline figée 2026-04-19T20:43:45Z :
+| Metric | In-process | HTTP |
+|---|---|---|
+| Bundle cold | 2507 ms | 516 ms |
+| Bundle warm | 0 ms | 54 ms |
+| MVT cold | 0 ms | 71 ms |
+| MVT warm | 0 ms | 47 ms |
+
+- `SLA_BASELINE_OMEGA.md` + `.json` régénérés
+- SELF-AUDIT post-reseed : **conforme=true, 11/11 suites OK, PERF-GUARD severity_max=ok**
+
+### Phase IV — Spec RSE-Ω produite
+- `/app/memory/RSE_OMEGA_RENDER_SPEC.md` — 10 principes directeurs, config 8 couches (minZoom/maxZoom/z-index/halo/espacement/geometry), amplification zoom, RENDER-GUARD-Ω validator, pédagogie double-clic, logs enrichis, plan d'implémentation 6 phases
+- `/app/memory/RSE_RENDER_GAPS.md` — **1 gap P0** (couche nutrition calculée mais non rendue frontend), 2 gaps P2 (vent fallback offline, data_source badge)
+
+### Recommandation ordonnancement P0 SUPRA-Ω post-RSE
+1. HABITAT-SUPRA (extraire score_habitat de V12-SUPRA)
+2. HYDROLOGIE-SUPRA (étendre IRDA)
+3. SOL-SUPRA (pédologie Ca/Na/K/Mg — comble limitation V12-SUPRA)
+4. STRESS-ANTHROPIQUE-Ω (pression humaine axe manquant)
+5. MONITORING-Ω + ALERTE-ANOMALIES-Ω (fusion SELF-AUDIT/PERF-GUARD)
+
+---
+
+
 ## ENGINE-NUTRITION-V12-SUPRA (2026-04-19)
 
 ### Contexte

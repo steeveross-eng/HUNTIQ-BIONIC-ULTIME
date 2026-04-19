@@ -87,3 +87,17 @@
 - [OK] test_nutrition_v12 (525ms)
 - PERF-GUARD-Ω: status=evaluated severity_max=ok
 
+## 2026-04-19T20:44:24.473267+00:00 — pod=agent-env-ffc8a3b4-f69b-4057-9ea0-cbb108eeebdb — **CONFORME**
+- [OK] test_defaults_omega (128ms)
+- [OK] test_affuts_v12 (4071ms)
+- [OK] test_salines_no_feedback_affuts (4062ms)
+- [OK] test_salines_always_on (4086ms)
+- [OK] test_mvt_7_layers (2262ms)
+- [OK] test_render_guard_layers (2220ms)
+- [OK] test_render_guard_styles (99ms)
+- [OK] test_render_guard_visibility (1647ms)
+- [OK] test_render_guard_preview (128ms)
+- [OK] test_render_guard_performance (3752ms)
+- [OK] test_nutrition_v12 (1069ms)
+- PERF-GUARD-Ω: status=evaluated severity_max=ok
+
