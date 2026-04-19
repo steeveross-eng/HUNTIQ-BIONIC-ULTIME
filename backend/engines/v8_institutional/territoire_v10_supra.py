@@ -1053,6 +1053,11 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
     incertitude = None
     calibration = None
     population_dynamics = None
+    # P3 SUPRA engines (environnement + gouvernance)
+    climat_futur = None
+    influence_lunaire = None
+    pression_atmospherique = None
+    score_global_reality = None
     try:
         from engines.v8_institutional.engine_habitat_supra import compute_habitat_supra
         from engines.v8_institutional.engine_hydrologie_supra import compute_hydrologie_supra
@@ -1082,9 +1087,16 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
         incertitude = compute_incertitude(terrain_result, species=species)
         calibration = compute_calibration(terrain_result)
         population_dynamics = compute_population_dynamics(species)
+        # P3
+        from engines.v8_institutional.engine_climat_futur_omega import compute_climat_futur
+        from engines.v8_institutional.engine_influence_lunaire_omega import compute_influence_lunaire
+        from engines.v8_institutional.engine_pression_atmospherique_omega import compute_pression_atmospherique
+        climat_futur = compute_climat_futur(terrain_result)
+        influence_lunaire = compute_influence_lunaire(hour=hour)
+        pression_atmospherique = compute_pression_atmospherique(terrain_result)
     except Exception as _e:
         import logging as _lg
-        _lg.getLogger("bionic.territoire").warning(f"SUPRA P0+P1+P2 skipped: {_e}")
+        _lg.getLogger("bionic.territoire").warning(f"SUPRA P0+P1+P2+P3 skipped: {_e}")
 
     # NUTRITION-V12-SUPRA: moteur biologique central (score + cartes + influences)
     nutrition = None
@@ -1130,6 +1142,27 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
         import logging as _lg
         _lg.getLogger("bionic.territoire").warning(f"nutrition v12 skipped: {_e}")
 
+    # SCORE GLOBAL REALITY (Phase IX) - calcul apres tous les engines
+    score_global_reality = None
+    try:
+        from engines.v8_institutional.engine_score_global import compute_score_global_reality
+        partial_bundle = {
+            "zones": zones, "corridors": corridors, "affuts": affuts, "hotspots": hotspots,
+            "salines": salines, "wind_vectors": wind_vectors, "contamination": contamination,
+            "nutrition": nutrition, "habitat_supra": habitat_supra, "hydrologie_supra": hydrologie_supra,
+            "sol_supra": sol_supra, "stress_anthropique": stress_anthropique,
+            "comportement_biologique": comportement_biologique, "connectivite_ecologique": connectivite_ecologique,
+            "thermique_microclimat": thermique_microclimat, "sensoriel_vent_odeurs": sensoriel_vent_odeurs,
+            "ia_vision_ecologique": ia_vision_ecologique, "quality_data": quality_data,
+            "incertitude": incertitude, "calibration": calibration, "population_dynamics": population_dynamics,
+            "climat_futur": climat_futur, "influence_lunaire": influence_lunaire,
+            "pression_atmospherique": pression_atmospherique,
+        }
+        score_global_reality = compute_score_global_reality(partial_bundle)
+    except Exception as _e:
+        import logging as _lg
+        _lg.getLogger("bionic.territoire").warning(f"SCORE-GLOBAL-REALITY skipped: {_e}")
+
     return {
         "zones": zones,
         "corridors": corridors,
@@ -1153,6 +1186,10 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
         "incertitude": incertitude,
         "calibration": calibration,
         "population_dynamics": population_dynamics,
+        "climat_futur": climat_futur,
+        "influence_lunaire": influence_lunaire,
+        "pression_atmospherique": pression_atmospherique,
+        "score_global_reality": score_global_reality,
         "terrain_v10": t,
         "meteo": meteo,
         "esi_omega": "CONFORME",

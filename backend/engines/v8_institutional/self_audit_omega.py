@@ -44,6 +44,11 @@ _TEST_SUITES = [
     ("test_uncertainty", "/app/backend/tests/test_uncertainty.py"),
     ("test_calibration", "/app/backend/tests/test_calibration.py"),
     ("test_population_dynamics", "/app/backend/tests/test_population_dynamics.py"),
+    ("test_climat_futur", "/app/backend/tests/test_climat_futur.py"),
+    ("test_influence_lunaire", "/app/backend/tests/test_influence_lunaire.py"),
+    ("test_pression_atmospherique", "/app/backend/tests/test_pression_atmospherique.py"),
+    ("test_gouvernance", "/app/backend/tests/test_gouvernance.py"),
+    ("test_score_global_reality", "/app/backend/tests/test_score_global_reality.py"),
 ]
 
 _LOG_FILE = Path("/app/memory/SELF_AUDIT_OMEGA_LOGS.md")

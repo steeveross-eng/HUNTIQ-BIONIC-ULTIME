@@ -239,3 +239,32 @@
 - [OK] test_population_dynamics (159ms)
 - PERF-GUARD-Ω: status=evaluated severity_max=ok
 
+## 2026-04-19T22:07:01.240668+00:00 — pod=agent-env-ffc8a3b4-f69b-4057-9ea0-cbb108eeebdb — **CONFORME**
+- [OK] test_defaults_omega (76ms)
+- [OK] test_affuts_v12 (3397ms)
+- [OK] test_salines_no_feedback_affuts (3395ms)
+- [OK] test_salines_always_on (3561ms)
+- [OK] test_mvt_7_layers (433ms)
+- [OK] test_render_guard_layers (459ms)
+- [OK] test_render_guard_styles (67ms)
+- [OK] test_render_guard_visibility (1438ms)
+- [OK] test_render_guard_preview (41ms)
+- [OK] test_render_guard_performance (2005ms)
+- [OK] test_nutrition_v12 (643ms)
+- [OK] test_rse_omega (122ms)
+- [OK] test_habitat_supra (120ms)
+- [OK] test_hydrologie_supra (121ms)
+- [OK] test_sol_supra (122ms)
+- [OK] test_stress_anthropique (123ms)
+- [OK] test_supra_p1 (125ms)
+- [OK] test_quality_data (111ms)
+- [OK] test_uncertainty (115ms)
+- [OK] test_calibration (113ms)
+- [OK] test_population_dynamics (214ms)
+- [OK] test_climat_futur (291ms)
+- [OK] test_influence_lunaire (332ms)
+- [OK] test_pression_atmospherique (274ms)
+- [OK] test_gouvernance (143ms)
+- [OK] test_score_global_reality (356ms)
+- PERF-GUARD-Ω: status=evaluated severity_max=ok
+

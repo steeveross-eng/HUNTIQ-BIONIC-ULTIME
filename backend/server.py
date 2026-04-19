@@ -863,6 +863,14 @@ try:
 except Exception as e:
     logger.warning(f"MONITORING-Ω not loaded: {e}")
 
+# ENGINE-GOUVERNANCE-Ω — fusion gouvernance unifiee
+try:
+    from engines.v8_institutional.engine_gouvernance_omega import router as gouv_router
+    app.include_router(gouv_router)
+    logger.info("ENGINE-GOUVERNANCE-Ω registered (/gouvernance)")
+except Exception as e:
+    logger.warning(f"GOUVERNANCE-Ω not loaded: {e}")
+
 # ESI-Omega — Engine Securite Institutionnelle (Guardian Central)
 try:
     from engines.v8_institutional.esi_omega import router as esi_router

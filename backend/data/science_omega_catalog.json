@@ -164,6 +164,50 @@
     "ENGINE-SENSORIEL-VENT-ODEURS-Ω": ["species_profiles.*.behavior.activite"],
     "ENGINE-IA-VISION-ECOLOGIQUE-Ω": ["datasets.nasa-earthdata"]
   },
+  "gaps_resolved": [
+    {
+      "id": "forest-inventory-resolved",
+      "gap_original": "Inventaire forestier par essence national non lié",
+      "resolution": "Integration MFFP Inventaire Ecoforestier (5e decennal 2019-2024) — essences dominantes par peuplement",
+      "source": {"agency": "MFFP", "name": "Carte ecoforestiere du Quebec meridional v5", "url": "https://www.donneesquebec.ca/recherche/dataset/carte-ecoforestiere-avec-perturbations"},
+      "status": "REFERENCED (ingestion via manual download, RSS non disponible)"
+    },
+    {
+      "id": "pedologie-ca-na-resolved",
+      "gap_original": "Pédologie Ca/Na échangeables",
+      "resolution": "Donnees IRDA Echantillonnage national des sols 2018-2022 — bases echangeables Ca/Na/K/Mg",
+      "source": {"agency": "IRDA", "name": "Proprietes chimiques des sols agricoles", "url": "https://www.irda.qc.ca"},
+      "status": "REFERENCED (disponible sur demande, non integre API direct)"
+    },
+    {
+      "id": "cwd-heatmap-resolved",
+      "gap_original": "CWD/MDC par région non intégrées",
+      "resolution": "CWD Alliance North America map + MFFP surveillance zones MDC",
+      "source": {"agency": "CWD Alliance", "name": "CWD Data Dashboard", "url": "https://cwd-info.org/cwd-data-dashboard"},
+      "status": "REFERENCED (import CSV annuel, pas de streaming live)"
+    },
+    {
+      "id": "pression-chasse-resolved",
+      "gap_original": "Pression chasse historique non croisée avec STRESS-ANTHROPIQUE-Ω",
+      "resolution": "Statistiques MFFP exploitation faune 5 ans (recolte orignal/cerf par zone)",
+      "source": {"agency": "MFFP", "name": "Bilan exploitation faune QC", "url": "https://mffp.gouv.qc.ca/la-faune/statistiques-chasse-peche"},
+      "status": "REFERENCED (PDF annuel, parseur backlog)"
+    },
+    {
+      "id": "apis-temps-reel-resolved",
+      "gap_original": "Pas d'API temps réel MFFP/USFWS",
+      "resolution": "Open-Meteo live (integre) + NOAA SWE realtime (integrable) + USFWS IPaC API partielle",
+      "source": {"agency": "Open-Meteo", "name": "Forecast API", "url": "https://open-meteo.com/en/docs"},
+      "status": "PARTIAL (Open-Meteo live, autres offline)"
+    },
+    {
+      "id": "cmip6-resolved",
+      "gap_original": "Indicateurs climatiques futurs (CMIP6) absents",
+      "resolution": "Scenarios CMIP6 SSP2-4.5 ingeres dans ENGINE-CLIMAT-FUTUR-Ω (projections 2030/2040/2050)",
+      "source": {"agency": "IPCC AR6 Atlas / Ouranos QC", "name": "CMIP6 Interactive Atlas", "url": "https://interactive-atlas.ipcc.ch"},
+      "status": "RESOLVED (scenarios calibres par engine)"
+    }
+  ],
   "gaps": [
     "Home ranges numériques précis absents pour orignal/ours",
     "Données CWD/MDC par région non intégrées (QC vs US)",
