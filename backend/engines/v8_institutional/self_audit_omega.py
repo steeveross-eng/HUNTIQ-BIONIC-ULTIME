@@ -40,6 +40,10 @@ _TEST_SUITES = [
     ("test_sol_supra", "/app/backend/tests/test_sol_supra.py"),
     ("test_stress_anthropique", "/app/backend/tests/test_stress_anthropique.py"),
     ("test_supra_p1", "/app/backend/tests/test_supra_p1.py"),
+    ("test_quality_data", "/app/backend/tests/test_quality_data.py"),
+    ("test_uncertainty", "/app/backend/tests/test_uncertainty.py"),
+    ("test_calibration", "/app/backend/tests/test_calibration.py"),
+    ("test_population_dynamics", "/app/backend/tests/test_population_dynamics.py"),
 ]
 
 _LOG_FILE = Path("/app/memory/SELF_AUDIT_OMEGA_LOGS.md")
@@ -137,10 +141,18 @@ async def _run_perf_guard() -> dict:
 
 
 async def run_self_audit() -> dict:
-    """Execute les 10 suites + PERF-GUARD-Ω (SLA-BASELINE-Ω hook)."""
+    """Execute les N suites + PERF-GUARD-Ω (SLA-BASELINE-Ω hook).
+
+    Semaphore 6 suites simultanees pour ne pas saturer Uvicorn.
+    """
     loop = asyncio.get_event_loop()
-    tasks = [loop.run_in_executor(None, _run_suite, name, path) for name, path in _TEST_SUITES]
-    suites = await asyncio.gather(*tasks)
+    semaphore = asyncio.Semaphore(6)
+
+    async def _run_guarded(name, path):
+        async with semaphore:
+            return await loop.run_in_executor(None, _run_suite, name, path)
+
+    suites = await asyncio.gather(*[_run_guarded(name, path) for name, path in _TEST_SUITES])
 
     perf_guard = await _run_perf_guard()
 

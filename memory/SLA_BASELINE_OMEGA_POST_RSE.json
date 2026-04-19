@@ -1,19 +1,19 @@
 {
   "mode": "both",
   "inprocess": {
-    "bundle_cold_ms": 506.88,
+    "bundle_cold_ms": 1510.94,
     "bundle_warm_ms": 0.0,
-    "mvt_cold_ms": 0.03,
+    "mvt_cold_ms": 0.04,
     "mvt_warm_ms": 0.0,
-    "pipeline_compute_ms": 507.0
+    "pipeline_compute_ms": 1511.0
   },
   "http": {
-    "bundle_cold_ms": 531.27,
-    "bundle_warm_ms": 54.22,
-    "mvt_cold_ms": 47.88,
-    "mvt_warm_ms": 48.0,
-    "pipeline_compute_ms": 516.0
+    "bundle_cold_ms": 514.28,
+    "bundle_warm_ms": 72.63,
+    "mvt_cold_ms": 44.57,
+    "mvt_warm_ms": 46.19,
+    "pipeline_compute_ms": 498.0
   },
-  "timestamp": "2026-04-19T21:24:08.723454+00:00",
+  "timestamp": "2026-04-19T21:46:25.144349+00:00",
   "pod_id": "agent-env-ffc8a3b4-f69b-4057-9ea0-cbb108eeebdb"
 }

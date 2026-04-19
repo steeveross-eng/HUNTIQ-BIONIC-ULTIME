@@ -1048,6 +1048,11 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
     thermique_microclimat = None
     sensoriel_vent_odeurs = None
     ia_vision_ecologique = None
+    # P2 SUPRA engines (gouvernance + demographie)
+    quality_data = None
+    incertitude = None
+    calibration = None
+    population_dynamics = None
     try:
         from engines.v8_institutional.engine_habitat_supra import compute_habitat_supra
         from engines.v8_institutional.engine_hydrologie_supra import compute_hydrologie_supra
@@ -1059,6 +1064,10 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
         from engines.v8_institutional.engine_thermique_microclimat_omega import compute_thermique_microclimat
         from engines.v8_institutional.engine_sensoriel_vent_odeurs_omega import compute_sensoriel_vent_odeurs
         from engines.v8_institutional.engine_ia_vision_ecologique_omega import compute_ia_vision_ecologique
+        from engines.v8_institutional.engine_qualite_donnees_omega import compute_quality_data
+        from engines.v8_institutional.engine_incertitude_omega import compute_incertitude
+        from engines.v8_institutional.engine_calibration_omega import compute_calibration
+        from engines.v8_institutional.engine_population_dynamics_omega import compute_population_dynamics
         habitat_supra = compute_habitat_supra(terrain_result)
         hydrologie_supra = compute_hydrologie_supra(terrain_result)
         sol_supra = compute_sol_supra(terrain_result)
@@ -1069,9 +1078,13 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
         thermique_microclimat = compute_thermique_microclimat(terrain_result, species=species)
         sensoriel_vent_odeurs = compute_sensoriel_vent_odeurs(terrain_result, real_wind_deg, real_wind_speed)
         ia_vision_ecologique = compute_ia_vision_ecologique(terrain_result)
+        quality_data = compute_quality_data()
+        incertitude = compute_incertitude(terrain_result, species=species)
+        calibration = compute_calibration(terrain_result)
+        population_dynamics = compute_population_dynamics(species)
     except Exception as _e:
         import logging as _lg
-        _lg.getLogger("bionic.territoire").warning(f"SUPRA P0+P1 skipped: {_e}")
+        _lg.getLogger("bionic.territoire").warning(f"SUPRA P0+P1+P2 skipped: {_e}")
 
     # NUTRITION-V12-SUPRA: moteur biologique central (score + cartes + influences)
     nutrition = None
@@ -1136,6 +1149,10 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
         "thermique_microclimat": thermique_microclimat,
         "sensoriel_vent_odeurs": sensoriel_vent_odeurs,
         "ia_vision_ecologique": ia_vision_ecologique,
+        "quality_data": quality_data,
+        "incertitude": incertitude,
+        "calibration": calibration,
+        "population_dynamics": population_dynamics,
         "terrain_v10": t,
         "meteo": meteo,
         "esi_omega": "CONFORME",
