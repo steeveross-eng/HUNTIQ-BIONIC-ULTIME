@@ -60,3 +60,16 @@
 - [OK] test_render_guard_preview (167ms)
 - [OK] test_render_guard_performance (1331ms)
 
+## 2026-04-19T18:43:47.026652+00:00 — pod=agent-env-ffc8a3b4-f69b-4057-9ea0-cbb108eeebdb — **CONFORME**
+- [OK] test_defaults_omega (92ms)
+- [OK] test_affuts_v12 (4030ms)
+- [OK] test_salines_no_feedback_affuts (3532ms)
+- [OK] test_salines_always_on (3506ms)
+- [OK] test_mvt_7_layers (1118ms)
+- [OK] test_render_guard_layers (1114ms)
+- [OK] test_render_guard_styles (95ms)
+- [OK] test_render_guard_visibility (2090ms)
+- [OK] test_render_guard_preview (89ms)
+- [OK] test_render_guard_performance (2589ms)
+- PERF-GUARD-Ω: status=evaluated severity_max=ok
+

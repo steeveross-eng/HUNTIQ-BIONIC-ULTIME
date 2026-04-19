@@ -1,3 +1,59 @@
+## SLA-BASELINE-Ω + PERF-GUARD-Ω HYBRIDE (2026-04-19)
+
+### Nouveau module `engines/v8_institutional/sla_baseline_omega.py`
+Baseline institutionnelle figeable + hook de régression dans SELF-AUDIT-Ω.
+
+**Collecte deux voies (directive Commandant) :**
+- `inprocess` — appel direct `compute_territoire_v10` + `_get_bundle` / `_path_intersects_bbox` (pas d'overhead HTTP/FastAPI)
+- `http` — `httpx.AsyncClient` loopback `127.0.0.1:8001` (end-to-end, FastAPI inclus)
+- `both` — les deux, conservés séparément dans la baseline
+
+**Seuils hybrides :**
+| Classe | Warning > | FAIL > |
+|---|---|---|
+| Warm (bundle/mvt) | 1.20× baseline | 2.40× baseline (2× tolérance) |
+| Cold (bundle/mvt) | 1.30× baseline | 2.60× baseline (2× tolérance) |
+
+- `severity_max="warning"` → audit reste **CONFORME** (signalisation seulement)
+- `severity_max="fail"` → audit **NON CONFORME** (bloque conformité)
+
+### Endpoints
+| Méthode | Route | Rôle |
+|---|---|---|
+| POST | `/api/v20/territoire/sla-baseline/seed?mode=both` | Fige baseline (purge caches local, mesure, persiste) |
+| GET | `/api/v20/territoire/sla-baseline` | Baseline + mesure courante + évaluation régression |
+| DELETE | `/api/v20/territoire/sla-baseline` | Purge baseline pour reseed |
+
+### Hook SELF-AUDIT-Ω
+`self_audit_omega.py::run_self_audit()` exécute désormais `_run_perf_guard()` **après** les 10 suites pytest.
+- Si aucune baseline : `status="no_baseline"`, n'impacte pas `conforme`
+- Sinon : collecte in-process (pas de purge, health-check rapide), compare vs baseline
+- `conforme = suites_ok AND perf_guard.severity_max != "fail"`
+- Log enrichi dans `/app/memory/SELF_AUDIT_OMEGA_LOGS.md` (ligne PERF-GUARD + détail issues)
+
+### Artefacts persistés
+- `/app/memory/SLA_BASELINE_OMEGA.json` (machine-readable, autoritaire)
+- `/app/memory/SLA_BASELINE_OMEGA.md` (rapport humain)
+
+### Validation manuelle (curl)
+```
+POST /sla-baseline/seed?mode=both → HTTP 200, baseline seedée
+GET /sla-baseline → severity_max=ok, 0 issues
+GET /self-audit → conforme=true, 10/10 suites OK, perf_guard.status=evaluated severity_max=ok
+```
+
+### Point de référence mesures
+`lat=46.8139 lon=-71.208 species=cerf month=10 hour=7 wind_deg=225 wind_speed=15 tile=14/4951/5775`
+
+### Fichiers modifiés/créés
+- `backend/engines/v8_institutional/sla_baseline_omega.py` (NEW, ~330 lignes)
+- `backend/engines/v8_institutional/self_audit_omega.py` (ajout `_run_perf_guard`, hook dans `run_self_audit`, log enrichi)
+- `backend/server.py` (register `sla_baseline_router`)
+- `memory/SLA_BASELINE_OMEGA.json` + `SLA_BASELINE_OMEGA.md` (seed initial)
+
+---
+
+
 ## AUTO-ZOOM-Ω-V13 + AMPLIFICATION-Ω-V13 + PERF-GUARD-Ω (2026-04-19)
 ### AUTO-ZOOM-Ω-V13 — Centrage automatique sur waypoint
 - `BionicLayersV8.jsx` : au premier chargement d'un waypoint cible, `map.setView([lat, lng], 14, {animate: true, duration: 0.5})`

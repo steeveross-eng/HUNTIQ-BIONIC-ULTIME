@@ -839,6 +839,14 @@ try:
 except Exception as e:
     logger.warning(f"SELF-AUDIT-Omega not loaded: {e}")
 
+# SLA-BASELINE-Ω — baseline institutionnelle + PERF-GUARD-Ω
+try:
+    from engines.v8_institutional.sla_baseline_omega import router as sla_baseline_router
+    app.include_router(sla_baseline_router)
+    logger.info("SLA-BASELINE-Omega registered (/api/v20/territoire/sla-baseline) — PERF-GUARD hybride")
+except Exception as e:
+    logger.warning(f"SLA-BASELINE-Omega not loaded: {e}")
+
 # ESI-Omega — Engine Securite Institutionnelle (Guardian Central)
 try:
     from engines.v8_institutional.esi_omega import router as esi_router

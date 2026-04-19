@@ -85,22 +85,66 @@ def _append_log(result: dict):
                     err = s.get("error") or " | ".join(s.get("stderr_tail", []))
                     if err:
                         f.write(f"  - error: `{err[:200]}`\n")
+            pg = result.get("perf_guard") or {}
+            if pg:
+                f.write(f"- PERF-GUARD-Ω: status={pg.get('status')} severity_max={pg.get('severity_max')}\n")
+                for issue in pg.get("issues", []):
+                    f.write(
+                        f"  - [{issue['severity'].upper()}] {issue['channel']}.{issue['metric']} "
+                        f"{issue['current_ms']}ms vs baseline {issue['baseline_ms']}ms "
+                        f"(ratio {issue['ratio']} > tol {issue['tolerance']})\n"
+                    )
             f.write("\n")
     except Exception:
         pass
 
 
+async def _run_perf_guard() -> dict:
+    """PERF-GUARD-Ω: collecte metrics courantes in-process + compare vs baseline SLA.
+
+    Hybride:
+      - severity_max=ok      -> pas de regression
+      - severity_max=warning -> regression detectee mais toleree (audit reste CONFORME)
+      - severity_max=fail    -> regression > 2x tolerance (audit NON CONFORME)
+
+    Si aucune baseline => status "no_baseline", n'impacte pas conforme.
+    """
+    try:
+        from engines.v8_institutional.sla_baseline_omega import (
+            collect_current_metrics, evaluate_regression, load_baseline,
+        )
+        if load_baseline() is None:
+            return {"status": "no_baseline", "severity_max": "ok", "issues": []}
+        # In-process seulement (health-check, pas benchmark) — pas de purge caches
+        from engines.v8_institutional.sla_baseline_omega import collect_metrics_inprocess
+        metrics = {"inprocess": await collect_metrics_inprocess()}
+        evaluation = evaluate_regression(metrics)
+        return {
+            "status": "evaluated",
+            "severity_max": evaluation["severity_max"],
+            "issues": evaluation["issues"],
+            "current": metrics,
+        }
+    except Exception as e:
+        return {"status": "error", "severity_max": "ok", "error": str(e), "issues": []}
+
+
 async def run_self_audit() -> dict:
-    """Execute les 4 suites de tests en parallele (subprocess)."""
+    """Execute les 10 suites + PERF-GUARD-Ω (SLA-BASELINE-Ω hook)."""
     loop = asyncio.get_event_loop()
-    # Run subprocess calls in thread pool (non-bloquant asyncio)
     tasks = [loop.run_in_executor(None, _run_suite, name, path) for name, path in _TEST_SUITES]
     suites = await asyncio.gather(*tasks)
 
-    conforme = all(s["statut"] == "OK" for s in suites)
+    perf_guard = await _run_perf_guard()
+
+    suites_ok = all(s["statut"] == "OK" for s in suites)
+    perf_ok = perf_guard.get("severity_max") != "fail"
+    conforme = suites_ok and perf_ok
+
     result = {
         "conforme": conforme,
         "suites": suites,
+        "perf_guard": perf_guard,
         "ran_at": datetime.now(timezone.utc).isoformat(),
         "pod_id": socket.gethostname(),
         "hostname": socket.gethostname(),
