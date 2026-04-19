@@ -48,3 +48,15 @@
 - [OK] test_render_guard_visibility (383ms)
 - [OK] test_render_guard_preview (65ms)
 
+## 2026-04-19T18:19:41.357866+00:00 — pod=agent-env-ffc8a3b4-f69b-4057-9ea0-cbb108eeebdb — **CONFORME**
+- [OK] test_defaults_omega (72ms)
+- [OK] test_affuts_v12 (3694ms)
+- [OK] test_salines_no_feedback_affuts (3655ms)
+- [OK] test_salines_always_on (3551ms)
+- [OK] test_mvt_7_layers (1334ms)
+- [OK] test_render_guard_layers (1327ms)
+- [OK] test_render_guard_styles (154ms)
+- [OK] test_render_guard_visibility (2250ms)
+- [OK] test_render_guard_preview (167ms)
+- [OK] test_render_guard_performance (1331ms)
+

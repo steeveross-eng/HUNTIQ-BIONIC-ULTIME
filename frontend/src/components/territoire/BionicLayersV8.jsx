@@ -16,7 +16,7 @@
  * Z-ORDER: contour < zones < corridors < contamination < salines < hotspots < affuts
  * ZERO pression. ZERO buffer. ZERO Bezier. ZERO smoothing. ZERO fallback.
  */
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 
@@ -70,8 +70,35 @@ const BionicLayersV8 = ({
 }) => {
   const map = useMap();
   const groupRef = useRef(null);
+  const autoZoomAppliedRef = useRef(null);
+  const [currentZoom, setCurrentZoom] = useState(() => (map ? map.getZoom() : 14));
   const onDataLoadedRef = useRef(onDataLoaded);
   onDataLoadedRef.current = onDataLoaded;
+
+  // AUTO-ZOOM-Ω-V13: centrer + zoom 14 au premier chargement d'un waypoint cible
+  useEffect(() => {
+    if (!map || !waypointCenter || !enabled) return;
+    const key = `${waypointCenter.lat?.toFixed(5)}_${waypointCenter.lng?.toFixed(5)}`;
+    if (autoZoomAppliedRef.current === key) return;
+    autoZoomAppliedRef.current = key;
+    try {
+      map.setView([waypointCenter.lat, waypointCenter.lng], 14, { animate: true, duration: 0.5 });
+    } catch (e) { /* noop */ }
+  }, [map, waypointCenter, enabled]);
+
+  // AMPLIFICATION-Ω-V13: suivre le zoom courant pour scaler styles a zoom < 14
+  useEffect(() => {
+    if (!map) return;
+    const onZoom = () => setCurrentZoom(map.getZoom());
+    map.on('zoomend', onZoom);
+    setCurrentZoom(map.getZoom());
+    return () => { map.off('zoomend', onZoom); };
+  }, [map]);
+
+  // AMPLIFICATION-Ω-V13: helpers de scaling
+  const corridorWeightFactor = currentZoom < 14 ? (1 + (15 - currentZoom) * 0.3) : 1;
+  const affutRadiusFactor = currentZoom < 14 ? 1.5 : 1;
+  const salineHaloFactor = currentZoom < 14 ? 1.3 : 1;
 
   const clearOwnLayers = useCallback(() => {
     if (groupRef.current && map) {
@@ -155,8 +182,9 @@ const BionicLayersV8 = ({
         const path = c.path || [[c.start.lat, c.start.lng], [c.end.lat, c.end.lng]];
         const style = CORRIDOR_STYLES[c.type] || CORRIDOR_STYLES.normal;
         const color = style.color;
-        // Directive I R5: weight clampe [2.0, 4.0]
-        const weight = Math.max(2.0, Math.min(4.0, style.weight));
+        // Directive I R5: weight clampe [2.0, 4.0] + AMPLIFICATION-Ω-V13 scaling si zoom<14
+        const baseWeight = Math.max(2.0, Math.min(4.0, style.weight));
+        const weight = baseWeight * corridorWeightFactor;
         // Directive I R5: opacity >= 0.75
         const opacity = Math.max(0.75, style.opacity);
 
@@ -282,9 +310,10 @@ const BionicLayersV8 = ({
         const YELLOW_INST = SALINE_COLOR; // #FDD835
 
         // Halo pulse pour A-REPOSITIONNER (derriere le cercle principal)
+        // AMPLIFICATION-Ω-V13: halo x1.3 si zoom<14
         if (!isValidee) {
           const halo = L.circleMarker([lat, lon], {
-            radius: 13,
+            radius: Math.round(13 * salineHaloFactor),
             color: YELLOW_INST,
             fillColor: YELLOW_INST,
             fillOpacity: 0.45,
@@ -395,7 +424,9 @@ const BionicLayersV8 = ({
       const AFFUT_WHITE_STROKE = '#FFFFFF';
       affuts.forEach(a => {
         const isFixed = a.type === 'FIXE_PERMANENT';
-        const sz_px = isFixed ? 11 : 9;  // Directive II: 18-22px diametre (radius 9-11)
+        // AMPLIFICATION-Ω-V13: radius x1.5 si zoom<14
+        const baseSz = isFixed ? 11 : 9;
+        const sz_px = Math.round(baseSz * affutRadiusFactor);
 
         const circle = L.circleMarker([a.lat, a.lng], {
           radius: sz_px,
@@ -457,7 +488,7 @@ const BionicLayersV8 = ({
         esi_omega: bundleData.esi_omega,
       });
     }
-  }, [map, bundleData, waypointCenter, enabled, showZones, showCorridors, showAffuts, showSalines, showHotspots, showContamination, clearOwnLayers]);
+  }, [map, bundleData, waypointCenter, enabled, showZones, showCorridors, showAffuts, showSalines, showHotspots, showContamination, corridorWeightFactor, affutRadiusFactor, salineHaloFactor, clearOwnLayers]);
 
   useEffect(() => {
     renderLayers();
