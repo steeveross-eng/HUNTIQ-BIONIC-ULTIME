@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-04-20T15:33:06.787349+00:00",
+  "generated_at": "2026-04-20T16:10:37.714583+00:00",
   "engine_render_version": "V1-PHASE-XI-SUPRA-2026-04",
   "engine_visual_proof_live_version": "V1-PHASE-XI-SUPRA-C-2026-04",
   "bundle_version": "TERRITOIRE-V10-SUPRA",
   "frontend_version": "BionicLayersV8 + Phase XI-SUPRA extensions",
   "capture_user": "steeve-max-capture@huntiq.com",
-  "registry_sha256": "f7d848d85d00193cac63b0b357422d9d4df008b0d6e048cf57afc2cb20fafdf1",
+  "registry_sha256": "0675cbe335c89c8a57771bb168053faaecc2b66d7aacef2e4db4535a6998fddc",
   "document_maitre_sha256": "6aff169f73531a46a38f5caff9defc7cadac6745029fa15d73c0174a1dfc2672",
   "captures": [
     {

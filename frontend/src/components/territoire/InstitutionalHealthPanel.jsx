@@ -318,14 +318,11 @@ export default function InstitutionalHealthPanel({ visible = true, onClose }) {
 
           <Section title="LEP-INGESTION-Ω">
             <Row label="Statut" data-testid="health-panel-lep-status">
-              <StatusDot ok={lep?.status === 'INGESTED'} />
-              {lep?.status ?? '–'}
+              <StatusDot ok={null} />
+              EXCLUDED (OFFICIAL)
             </Row>
-            <Row label="Couches GeoJSON">
-              {(lep?.geojson || []).length}
-            </Row>
-            <Row label="Signature ESI-Ω">
-              <code style={{ fontSize: 10 }}>{lep?.esi_signature?.slice(0, 16) ?? '–'}</code>
+            <Row label="Directive">
+              STEEVE-MAX 2026-04-20
             </Row>
           </Section>
 

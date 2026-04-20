@@ -74,3 +74,22 @@
 - **ZERO REGRESSION** : 57/57 SELF-AUDIT-Ω ✅
 - **Archive institutionnelle** : `/app/memory/ARCHIVE_BIONIC_V20_SUPRA.tar.gz` (34.6 MB, SHA-256 `3fe9b6e321b13682…` consigné dans registry_lock_omega.py)
 - **Rapports produits** : `PHASE_XI_SUPRA_D_TERRITOIRE_CAPTURE_STABLE_REPORT.md`, `HEALTH_PANEL_SLA30J_INTEGRATION.md`, `HEALTH_PANEL_WS_ALERTS_INTEGRATION.md`, `LEP_ECCC_INTEGRATION_REPORT.md`, `ENGINES_OMEGA_AUDIT_R1.md`, `SECURITY_RELOCK_V20_SUPRA_REPORT.md`, `ZERO_REGRESSION_SELF_AUDIT_REPORT.md`, `ARCHIVE_BIONIC_V20_SUPRA_STRUCTURE.md`
+
+## 2026-04-20T16:00Z — EXCLUSION OFFICIELLE LEP_CRITICAL_HABITAT_NATIONAL
+
+> **Directive STEEVE-MAX :** `EXCLUDE_LAYER LEP_CRITICAL_HABITAT NATIONAL / REASON "Dataset trop lourd, non essentiel, impact nul sur les engines" / STATUS OFFICIAL`
+
+### Actions exécutées
+- `LEP-INGESTION-Ω` retiré de `ENGINES_LOCKED` → registre = **35 engines**
+- Router `/api/v20/territoire/lep/*` désactivé (server.py commenté) → 404 confirmé sur tous les endpoints LEP
+- `test_lep_ingestion_omega` retiré de la liste SELF-AUDIT-Ω
+- Section LEP du Health Panel → statut `EXCLUDED (OFFICIAL)` avec référence directive
+- Version registre bump : `V20-SUPRA-LOCKED-PHASE-XI-SUPRA-E-2026-04`
+- Nouveau SHA-256 scellé : `0675cbe335c89c8a57771bb168053faaecc2b66d7aacef2e4db4535a6998fddc`
+- Archive régénérée : `/app/memory/ARCHIVE_BIONIC_V20_SUPRA.tar.gz` (33 664 783 o — SHA-256 `f07d2c25687db5c5c08c367f95a7a514494ee71f6fec20e2de756731ffbc2509`)
+- Code source `lep_ingestion_omega.py` conservé pour réactivation future ultérieure (inerte)
+
+### Conformité post-exclusion
+- SELF-AUDIT-Ω : **56/56 ✅ CONFORME**
+- ZERO REGRESSION : aucune autre suite impactée
+- Rapport officiel : `LEP_LAYER_EXCLUDED_OFFICIAL_REPORT.md`

@@ -1,9 +1,14 @@
-# LEP ECCC — RAPPORT D'INTÉGRATION (Phase XI-SUPRA-D / Annexe 4)
+# LEP ECCC — RAPPORT D'INTÉGRATION (ARCHIVÉ)
 
-> **COMMANDANT :** STEEVE-MAX  
-> **DIRECTIVE :** BIONIC — INGESTION-FGDB+GEOJSON-Ω-V1.0  
-> **STATUT INFRASTRUCTURE :** ✅ CONFORME  
-> **STATUT DONNÉES :** ⏳ EN ATTENTE D'UPLOAD FGDB OFFICIELLE ECCC
+> **⚠️ STATUT MIS À JOUR — 2026-04-20T16:00:00Z : LAYER OFFICIALLY EXCLUDED**
+>
+> Par directive `EXCLUDE_LAYER LEP_CRITICAL_HABITAT NATIONAL / STATUS OFFICIAL`,
+> cette intégration a été **officiellement exclue** (voir
+> `LEP_LAYER_EXCLUDED_OFFICIAL_REPORT.md`). Le présent rapport est conservé
+> pour traçabilité institutionnelle mais n'est plus actif. L'engine
+> `LEP-INGESTION-Ω` a été retiré du registry_lock et le router désactivé.
+>
+> **Raison officielle :** *Dataset trop lourd, non essentiel, impact nul sur les engines.*
 
 ---
 

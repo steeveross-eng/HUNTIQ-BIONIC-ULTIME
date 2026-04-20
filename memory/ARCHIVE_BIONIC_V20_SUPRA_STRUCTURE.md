@@ -1,11 +1,12 @@
 # ARCHIVE BIONIC V20-SUPRA — STRUCTURE (Phase XI-SUPRA-E / §V)
 
 > **COMMANDANT :** STEEVE-MAX  
-> **DATE :** 2026-04-20  
+> **DATE :** 2026-04-20T16:00:00Z  
 > **FORMAT :** tar.gz  
 > **CHEMIN :** `/app/memory/ARCHIVE_BIONIC_V20_SUPRA.tar.gz`  
-> **TAILLE :** 34599371 octets (~32 MB)  
-> **SHA-256 :** `3fe9b6e321b13682eafb3477952a022901e3925497636c5d296c60a57782f7fd`
+> **TAILLE :** 33 664 783 octets (~32 MB)  
+> **SHA-256 :** `f07d2c25687db5c5c08c367f95a7a514494ee71f6fec20e2de756731ffbc2509`
+> **ÉTAT :** Post-exclusion LEP_CRITICAL_HABITAT_NATIONAL — 35 engines, 56/56 SELF-AUDIT-Ω
 
 ## Contenu de l'archive
 

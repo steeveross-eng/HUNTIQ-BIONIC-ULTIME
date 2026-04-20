@@ -1,8 +1,8 @@
-# ENGINE_REGISTRY_LOCKED — Phase XI-SUPRA-D
+# ENGINE_REGISTRY_LOCKED — Phase XI-SUPRA-E
 
 > **STATUT : SCELLÉ — SEALED — VERROUILLÉ**
-> **Version registre :** V20-SUPRA-LOCKED-PHASE-XI-SUPRA-D-2026-04
-> **Date de scellement :** 2026-04-20
+> **Version registre :** V20-SUPRA-LOCKED-PHASE-XI-SUPRA-E-2026-04
+> **Date de scellement :** 2026-04-20T16:00:00Z
 > **Commandant :** STEEVE-MAX
 
 ---
@@ -10,7 +10,7 @@
 ## Hash SHA-256 officiel
 
 ```
-fe9b90f69093de22c3d75807ce74475a96d19d202ec38627d76a7d6010dfe6c8
+0675cbe335c89c8a57771bb168053faaecc2b66d7aacef2e4db4535a6998fddc
 ```
 
 Toute altération de la liste des engines (`ENGINES_LOCKED` dans
@@ -20,12 +20,16 @@ invalide ce hash et fait échouer `test_engine_registry_locked`.
 > **Évolution Phase XI-SUPRA-C :** registre étendu à 33 engines avec l'ajout de
 > `VISUAL-PROOF-LIVE-Ω` (capture DOM Playwright Leaflet réelle sous auth).
 >
-> **Évolution Phase XI-SUPRA-D :** registre étendu à **36 engines** avec
-> l'ajout de `LEP-INGESTION-Ω` (INGESTION-FGDB+GEOJSON-Ω-V1.0 — Critical
-> Habitat ECCC, pilier GOUVERNANCE), et l'alignement du lock avec les
-> engines réellement enregistrés en live (`ENGINE-MONITORING-Ω`,
-> `ENGINE-ALERTE-ANOMALIES-Ω`, `ENGINE-NUTRITION-V12-SUPRA`). Source primaire
-> FGDB, secondaire GeoJSON, signature ESI-Ω, registry.json persistant.
+> **Évolution Phase XI-SUPRA-D :** registre étendu à 36 engines avec
+> `LEP-INGESTION-Ω` + alignement live (`ENGINE-MONITORING-Ω`,
+> `ENGINE-ALERTE-ANOMALIES-Ω`, `ENGINE-NUTRITION-V12-SUPRA`).
+>
+> **Évolution Phase XI-SUPRA-E :** registre ramené à **35 engines** par
+> directive officielle STEEVE-MAX 2026-04-20 — `EXCLUDE_LAYER
+> LEP_CRITICAL_HABITAT_NATIONAL / REASON "Dataset trop lourd, non essentiel,
+> impact nul sur les engines" / STATUS OFFICIAL`. `LEP-INGESTION-Ω` retiré
+> du lock + route backend désactivée + test suite retirée de SELF-AUDIT-Ω.
+> Code source conservé pour réactivation future ultérieure.
 
 ## 22 Engines SUPRA-Ω — répartition par pilier
 

@@ -83,11 +83,12 @@ _TEST_SUITES = [
     ("test_visual_live_macro", "/app/backend/tests/test_visual_live_macro.py"),
     ("test_visual_live_mid", "/app/backend/tests/test_visual_live_mid.py"),
     ("test_visual_live_detail", "/app/backend/tests/test_visual_live_detail.py"),
-    # Phase XI-SUPRA-D — Route stable /territoire-capture-mode + LEP-INGESTION-Ω
+    # Phase XI-SUPRA-D — Route stable /territoire-capture-mode
+    # (test_lep_ingestion_omega retiré : EXCLUDE_LAYER LEP_CRITICAL_HABITAT_NATIONAL
+    #  — directive STEEVE-MAX 2026-04-20 STATUS OFFICIAL)
     ("test_visual_live_macro_stable", "/app/backend/tests/test_visual_live_macro_stable.py"),
     ("test_visual_live_mid_stable", "/app/backend/tests/test_visual_live_mid_stable.py"),
     ("test_visual_live_detail_stable", "/app/backend/tests/test_visual_live_detail_stable.py"),
-    ("test_lep_ingestion_omega", "/app/backend/tests/test_lep_ingestion_omega.py"),
 ]
 
 _LOG_FILE = Path("/app/memory/SELF_AUDIT_OMEGA_LOGS.md")

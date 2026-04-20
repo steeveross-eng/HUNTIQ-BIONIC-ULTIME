@@ -68,19 +68,21 @@ ENGINES_LOCKED = [
     {"name": "VISUAL-PROOF-Ω", "pillar": "GOUVERNANCE", "phase": "XI-SUPRA-B"},
     # Phase XI-SUPRA-C (capture DOM Playwright live)
     {"name": "VISUAL-PROOF-LIVE-Ω", "pillar": "GOUVERNANCE", "phase": "XI-SUPRA-C"},
-    # Phase XI-SUPRA-D (ingestion LEP ECCC FGDB+GeoJSON officielle)
-    {"name": "LEP-INGESTION-Ω", "pillar": "GOUVERNANCE", "phase": "XI-SUPRA-D"},
+    # Phase XI-SUPRA-D : LEP-INGESTION-Ω retiré du lock
+    # Directive STEEVE-MAX 2026-04-20 — EXCLUDE_LAYER LEP_CRITICAL_HABITAT_NATIONAL
+    # REASON "Dataset trop lourd, non essentiel, impact nul sur les engines"
+    # STATUS OFFICIAL — engine source conservé mais non enregistré.
 ]
 
-REGISTRY_VERSION = "V20-SUPRA-LOCKED-PHASE-XI-SUPRA-D-2026-04"
-REGISTRY_SEALED_AT = "2026-04-20T00:00:00Z"
+REGISTRY_VERSION = "V20-SUPRA-LOCKED-PHASE-XI-SUPRA-E-2026-04"
+REGISTRY_SEALED_AT = "2026-04-20T16:00:00Z"
 
 # Phase XI-SUPRA-E §V : Archive reconstructible — hash consigné dans le lock
 # Ce hash doit correspondre au fichier /app/memory/ARCHIVE_BIONIC_V20_SUPRA.tar.gz
 # Toute reconstruction doit vérifier cet invariant avant déploiement.
-ARCHIVE_BIONIC_V20_SUPRA_SHA256 = "3fe9b6e321b13682eafb3477952a022901e3925497636c5d296c60a57782f7fd"
+ARCHIVE_BIONIC_V20_SUPRA_SHA256 = "f07d2c25687db5c5c08c367f95a7a514494ee71f6fec20e2de756731ffbc2509"
 ARCHIVE_BIONIC_V20_SUPRA_PATH = "/app/memory/ARCHIVE_BIONIC_V20_SUPRA.tar.gz"
-ARCHIVE_BIONIC_V20_SUPRA_SIZE = 34599371
+ARCHIVE_BIONIC_V20_SUPRA_SIZE = 33664783
 
 DOCUMENT_MAITRE_PATH = Path("/app/memory/DOCUMENT_MAITRE_ULTIME_MAX.md")
 DOCUMENT_MAITRE_LOCKED_PATH = Path("/app/memory/DOCUMENT_MAITRE_LOCKED.md")

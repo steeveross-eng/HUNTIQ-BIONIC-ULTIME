@@ -1,3 +1,17 @@
+## EXCLUSION OFFICIELLE LEP_CRITICAL_HABITAT_NATIONAL (2026-04-20T16:00Z) ✅
+
+**Directive STEEVE-MAX :** EXCLUDE_LAYER LEP_CRITICAL_HABITAT NATIONAL / STATUS OFFICIAL
+
+- `LEP-INGESTION-Ω` retiré du lock — registre = **35 engines**
+- Router `/api/v20/territoire/lep/*` désactivé → 404 confirmé
+- `test_lep_ingestion_omega` retiré de SELF-AUDIT-Ω
+- SELF-AUDIT-Ω : **56/56 ✅ CONFORME**
+- Registry SHA-256 : `0675cbe335c89c8a57771bb168053faaecc2b66d7aacef2e4db4535a6998fddc`
+- Archive régénérée : SHA-256 `f07d2c25687db5c5c08c367f95a7a514494ee71f6fec20e2de756731ffbc2509` (32 MB)
+- Rapport : `LEP_LAYER_EXCLUDED_OFFICIAL_REPORT.md`
+
+---
+
 ## PHASE XI-SUPRA-D + E — STABILISATION CAPTURE + VERROUILLAGE + ARCHIVE (2026-04-20) ✅
 
 **Statut :** CONFORME — 57/57 SELF-AUDIT-Ω — 36 engines scellés
