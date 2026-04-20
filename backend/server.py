@@ -954,6 +954,14 @@ try:
 except Exception as e:
     logger.warning(f"VISUAL-PROOF-LIVE-Ω not loaded: {e}")
 
+# LEP-INGESTION-Ω — Phase XI-SUPRA-D (BIONIC INGESTION-FGDB+GEOJSON-Ω-V1.0)
+try:
+    from engines.v8_institutional.lep_ingestion_omega import router as lep_ingest_router
+    app.include_router(lep_ingest_router)
+    logger.info("LEP-INGESTION-Ω registered (/api/v20/territoire/lep)")
+except Exception as e:
+    logger.warning(f"LEP-INGESTION-Ω not loaded: {e}")
+
 # MONITORING-Ω + ALERTE-ANOMALIES-Ω
 try:
     from engines.v8_institutional.monitoring_alerte_omega import router as monitoring_router

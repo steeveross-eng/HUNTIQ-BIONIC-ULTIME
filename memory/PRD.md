@@ -1,3 +1,27 @@
+## PHASE XI-SUPRA-D + E — STABILISATION CAPTURE + VERROUILLAGE + ARCHIVE (2026-04-20) ✅
+
+**Statut :** CONFORME — 57/57 SELF-AUDIT-Ω — 36 engines scellés
+**Registry SHA-256 :** `fe9b90f69093de22c3d75807ce74475a96d19d202ec38627d76a7d6010dfe6c8`
+**Archive SHA-256 :** `3fe9b6e321b13682eafb3477952a022901e3925497636c5d296c60a57782f7fd`
+
+### Livrables Phase D
+- Route stable `/territoire-capture-mode` (bypass StrictMode/Nav/Cookie scopé)
+- Script Playwright + 3 captures DOM live ≥ 30 KB (macro/mid/detail ≈ 3.1 MB chacune)
+- Health Panel : sparklines SLA 30j + client WS `/ws/self-audit-alert` + toast + historique + section LEP
+- Engine `LEP-INGESTION-Ω` + 7 endpoints + stockage persistent + geopandas/pyogrio/OpenFileGDB
+- 4 nouvelles suites SELF-AUDIT-Ω
+
+### Livrables Phase E
+- Security Relock (ESI-Ω + BCE + AuthGuard réactivés)
+- Archive `/app/memory/ARCHIVE_BIONIC_V20_SUPRA.tar.gz` (34.6 MB)
+- 8 rapports Markdown institutionnels
+
+### Bloqueur documenté (hors pod)
+- LEP ECCC : réseau fédéral bloqué depuis K8s — statut `NOT_INGESTED` strict (aucune donnée simulée, directive respectée). Upload manuel ready.
+
+---
+
+
 ## SUPRA P3 + SCORE GLOBAL REALITE + GAPS RESOLVED + GOUVERNANCE-Ω (2026-04-19 22:25Z) ✅
 
 ### 4 engines P3 créés

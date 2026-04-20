@@ -47,3 +47,30 @@
 - Audit causes profondes TNE: 7 defaillances structurelles documentees
 - Section C trajets humains: HUMAN_TRAJET_COSTS implemente
 - IndentationError zone_engine_core_v2.py: corrige
+
+---
+
+## 2026-04-20 — PHASE XI-SUPRA-D (Stabilisation Capture + Annexes Finales)
+
+### Livrables
+- **Route stable `/territoire-capture-mode`** (StrictMode + Navigation + CookieConsent bypass scoped)
+- **Auto-contained Leaflet + BionicLayersV8** rendu 14 couches institutionnelles
+- **Flag `window.__bionicReady`** + méta-diag pour wait_for_function Playwright
+- **Script Playwright réécrit** (`visual_proof_live_playwright.py`) — warm-up + retry 3× + HMR block
+- **3 captures DOM ≥ 30 KB** : macro 3.1 MB / mid 3.1 MB / detail 3.1 MB (directive STEEVE-MAX)
+- **Health Panel Admin** étendu : sparkline SLA 30j (cold/warm/drift) + client WS `/ws/self-audit-alert` + toast + historique + section LEP
+- **Engine `LEP-INGESTION-Ω`** (INGESTION-FGDB+GEOJSON-Ω-V1.0) : pyogrio + geopandas + OpenFileGDB driver + 7 endpoints + stockage persistent + SHA-256 + signature ESI-Ω
+- **4 nouvelles suites SELF-AUDIT-Ω** : `test_visual_live_macro_stable`, `_mid_stable`, `_detail_stable`, `test_lep_ingestion_omega` → 57/57 ✅
+- **Registry Lock** : 36 engines scellés, SHA-256 `fe9b90f69093de22…`
+
+### Blocage institutionnel documenté
+- LEP ECCC : source officielle inaccessible depuis pod K8s (TCP timeout sur `maps-cartes.ec.gc.ca`, `data-donnees.az.ec.gc.ca`, `egisp.dfo-mpo.gc.ca`)
+- Statut `NOT_INGESTED` tenu — aucune donnée simulée/interpolée (directive STEEVE-MAX)
+- Infrastructure prête à activation immédiate post-upload manuel
+
+## 2026-04-20 — PHASE XI-SUPRA-E (Verrouillage Sécurité + Sauvegarde)
+
+- **SECURITY RELOCK** : ESI-Ω + BCE + AuthGuard + StrictMode réactivés (exception scopée `/territoire-capture-mode`)
+- **ZERO REGRESSION** : 57/57 SELF-AUDIT-Ω ✅
+- **Archive institutionnelle** : `/app/memory/ARCHIVE_BIONIC_V20_SUPRA.tar.gz` (34.6 MB, SHA-256 `3fe9b6e321b13682…` consigné dans registry_lock_omega.py)
+- **Rapports produits** : `PHASE_XI_SUPRA_D_TERRITOIRE_CAPTURE_STABLE_REPORT.md`, `HEALTH_PANEL_SLA30J_INTEGRATION.md`, `HEALTH_PANEL_WS_ALERTS_INTEGRATION.md`, `LEP_ECCC_INTEGRATION_REPORT.md`, `ENGINES_OMEGA_AUDIT_R1.md`, `SECURITY_RELOCK_V20_SUPRA_REPORT.md`, `ZERO_REGRESSION_SELF_AUDIT_REPORT.md`, `ARCHIVE_BIONIC_V20_SUPRA_STRUCTURE.md`

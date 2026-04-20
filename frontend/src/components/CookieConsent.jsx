@@ -22,6 +22,11 @@ const CookieConsent = () => {
     marketing: false
   });
 
+  // Phase XI-SUPRA-D : masquer CookieConsent sur la route de capture
+  // institutionnelle pour éviter l'overlay plein écran sur les captures Playwright.
+  const isCaptureMode = typeof window !== 'undefined'
+    && window.location.pathname.startsWith('/territoire-capture-mode');
+
   useEffect(() => {
     // Vérifier si le consentement a déjà été donné
     const consent = localStorage.getItem(CONSENT_KEY);
@@ -67,6 +72,7 @@ const CookieConsent = () => {
     saveConsent(false);
   };
 
+  if (isCaptureMode) return null;
   if (!showBanner) return null;
 
   return (

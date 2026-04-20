@@ -36,11 +36,22 @@ import { initSSRConfig } from "@/utils/ssrConfig";
 import { preloadCriticalRoutes } from "@/utils/routePreloader";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-);
+
+// Phase XI-SUPRA-D : Route de capture institutionnelle — DOIT être rendue
+// hors de React.StrictMode pour éliminer les remounts (sinon Playwright
+// capture une carte à moitié montée, screenshots < 30 KB).
+const IS_CAPTURE_MODE = typeof window !== 'undefined'
+  && window.location.pathname.startsWith('/territoire-capture-mode');
+
+if (IS_CAPTURE_MODE) {
+  root.render(<App />);
+} else {
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>,
+  );
+}
 
 // BRANCHE 2: Remove Critical CSS after main styles load
 removeCriticalCSS();

@@ -49,7 +49,9 @@ ENGINES_LOCKED = [
     {"name": "ENGINE-HYDROLOGIE-SUPRA", "pillar": "ENVIRONNEMENT", "phase": "SUPRA"},
     {"name": "ENGINE-SOL-SUPRA", "pillar": "ENVIRONNEMENT", "phase": "SUPRA"},
     # MONITORING (1)
-    {"name": "MONITORING-ALERTE-ANOMALIES-Ω", "pillar": "GOUVERNANCE", "phase": "P0"},
+    {"name": "ENGINE-MONITORING-Ω", "pillar": "GOUVERNANCE", "phase": "P0"},
+    {"name": "ENGINE-ALERTE-ANOMALIES-Ω", "pillar": "GOUVERNANCE", "phase": "P0"},
+    {"name": "ENGINE-NUTRITION-V12-SUPRA", "pillar": "BIO-SYSTEME", "phase": "XI-SUPRA"},
     # Phase X-B additions
     {"name": "SCIENCE-GAPS-DATASETS-Ω", "pillar": "GOUVERNANCE", "phase": "X"},
     {"name": "ENGINE-CANADA-Ω", "pillar": "GOUVERNANCE", "phase": "X-B"},
@@ -66,10 +68,19 @@ ENGINES_LOCKED = [
     {"name": "VISUAL-PROOF-Ω", "pillar": "GOUVERNANCE", "phase": "XI-SUPRA-B"},
     # Phase XI-SUPRA-C (capture DOM Playwright live)
     {"name": "VISUAL-PROOF-LIVE-Ω", "pillar": "GOUVERNANCE", "phase": "XI-SUPRA-C"},
+    # Phase XI-SUPRA-D (ingestion LEP ECCC FGDB+GeoJSON officielle)
+    {"name": "LEP-INGESTION-Ω", "pillar": "GOUVERNANCE", "phase": "XI-SUPRA-D"},
 ]
 
-REGISTRY_VERSION = "V20-SUPRA-LOCKED-PHASE-XI-2026-04"
-REGISTRY_SEALED_AT = "2026-04-19T00:00:00Z"
+REGISTRY_VERSION = "V20-SUPRA-LOCKED-PHASE-XI-SUPRA-D-2026-04"
+REGISTRY_SEALED_AT = "2026-04-20T00:00:00Z"
+
+# Phase XI-SUPRA-E §V : Archive reconstructible — hash consigné dans le lock
+# Ce hash doit correspondre au fichier /app/memory/ARCHIVE_BIONIC_V20_SUPRA.tar.gz
+# Toute reconstruction doit vérifier cet invariant avant déploiement.
+ARCHIVE_BIONIC_V20_SUPRA_SHA256 = "3fe9b6e321b13682eafb3477952a022901e3925497636c5d296c60a57782f7fd"
+ARCHIVE_BIONIC_V20_SUPRA_PATH = "/app/memory/ARCHIVE_BIONIC_V20_SUPRA.tar.gz"
+ARCHIVE_BIONIC_V20_SUPRA_SIZE = 34599371
 
 DOCUMENT_MAITRE_PATH = Path("/app/memory/DOCUMENT_MAITRE_ULTIME_MAX.md")
 DOCUMENT_MAITRE_LOCKED_PATH = Path("/app/memory/DOCUMENT_MAITRE_LOCKED.md")

@@ -85,6 +85,9 @@ const GestionnairePage = lazy(() => import("@/pages/GestionnairePage"));
 // CAM-Omega: Module Cameras de chasse
 const CameraModule = lazy(() => import("@/components/CameraModule"));
 const Carte2027Page = lazy(() => import("@/pages/Carte2027Page"));
+// Phase XI-SUPRA-D : Route stable pour captures Playwright institutionnelles
+// Import statique (pas lazy) pour éviter tout remount/suspense sur capture-mode
+import TerritoireCaptureModePage from "@/pages/TerritoireCaptureModePage";
 // VIS-E: Vision Notifications Panel
 import VisionNotificationsPanel from '@/components/VisionNotificationsPanel';
 // V7.2: AdminHotspotsPage standalone SUPPRIME — Source de verite = Admin Premium (directive x7200)
@@ -400,7 +403,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
 };
 
 // Footer Component - Hidden on full-viewport pages
-const FULL_VIEWPORT_ROUTES = ['/mon-territoire-bionic', '/mon-territoire', '/analyse-territoire', '/forecast', '/admin-geo', '/admin-premium', '/carte-2027'];
+const FULL_VIEWPORT_ROUTES = ['/mon-territoire-bionic', '/mon-territoire', '/analyse-territoire', '/forecast', '/admin-geo', '/admin-premium', '/carte-2027', '/territoire-capture-mode'];
 
 const Footer = () => {
   const location = useLocation();
@@ -887,6 +890,14 @@ const VisionNotificationsToggle = () => {
 };
 
 
+// Phase XI-SUPRA-D : Navigation conditionnelle — masquée sur la route /territoire-capture-mode
+// pour garantir un viewport 1920×1080 100% carte institutionnelle.
+const CaptureModeAwareChrome = ({ cartCount, onCartOpen }) => {
+  const location = useLocation();
+  if (location.pathname.startsWith('/territoire-capture-mode')) return null;
+  return <Navigation cartCount={cartCount} onCartOpen={onCartOpen} />;
+};
+
 // Main App Component
 function App() {
   const [products, setProducts] = useState([]);
@@ -1009,7 +1020,7 @@ function App() {
             <SEOHead />
             {/* Logo BIONIC Global - Visible sur toutes les pages (desktop) */}
             <BionicLogoGlobal />
-            <Navigation cartCount={cartCount} onCartOpen={() => setIsCartOpen(true)} />
+            <CaptureModeAwareChrome cartCount={cartCount} onCartOpen={() => setIsCartOpen(true)} />
             {/* P5-OPTIMIZATION V2: CartPanel remplace CartSheet */}
             <CartPanel
               isOpen={isCartOpen}
@@ -1097,6 +1108,10 @@ function App() {
                 {/* GESTIONNAIRE — Phase F BCE-4X BDRE-FIRST */}
                 <Route path="/gestionnaire" element={<GestionnairePage />} />
                 <Route path="/cameras" element={<CameraModule />} />
+                {/* Phase XI-SUPRA-D : Route stable pour captures Playwright institutionnelles.
+                    StrictMode désactivé via index.js quand pathname.startsWith('/territoire-capture-mode').
+                    Aucun AuthGuard niveau route. MonTerritoireBionicPage rendu sans remount. */}
+                <Route path="/territoire-capture-mode" element={<TerritoireCaptureModePage />} />
               </Routes>
             </Suspense>
             <Footer />

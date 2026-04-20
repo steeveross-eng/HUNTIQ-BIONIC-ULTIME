@@ -1,13 +1,12 @@
-## Test Credentials — HUNTIQ V8
+# Test Credentials — BIONIC OS V20-SUPRA
 
-### Admin Account
-- Email: admin@huntiq.com
-- Password: Saturn5858*
-- Role: admin (can activate GOVERNANCE PREVIEW mode)
+## Admin institutionnel (captures Playwright)
+- Email : `steeve-max-capture@huntiq.com`
+- Password : `CaptureOps2026#`
+- Role : `admin`
+- Usage : Phase XI-SUPRA-C / D Playwright captures, Health Panel access, LEP ingestion admin
 
-### Phase XI-SUPRA-C — Compte institutionnel capture Playwright
-- Email: steeve-max-capture@huntiq.com
-- Password: CaptureOps2026#
-- Role: admin (is_admin=true)
-- Privilèges : accès TERRITOIRE, admin, 14 couches obligatoires, endpoints internes capture
-- Créé : 2026-04-19 via POST /api/auth/register + promotion MongoDB directe
+## Endpoints de capture
+- Frontend capture mode : `{BASE}/territoire-capture-mode?lat=..&lon=..&species=..&zoom=..`
+- Backend LEP ingest : POST `{API}/api/v20/territoire/lep/ingest`
+- WebSocket alerts : `ws(s)://{BASE}/ws/self-audit-alert`
