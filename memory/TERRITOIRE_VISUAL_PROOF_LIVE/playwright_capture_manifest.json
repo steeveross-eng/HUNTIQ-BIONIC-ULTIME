@@ -4,7 +4,7 @@
       "level": "macro",
       "zoom": 12,
       "filename": "TERRITOIRE_macro_live.png",
-      "size_bytes": 3066360,
+      "size_bytes": 3124317,
       "conforme_30kb": true,
       "ready": true,
       "diag": {
@@ -25,7 +25,7 @@
       "level": "mid",
       "zoom": 15,
       "filename": "TERRITOIRE_mid_live.png",
-      "size_bytes": 3128801,
+      "size_bytes": 3128352,
       "conforme_30kb": true,
       "ready": true,
       "diag": {
@@ -33,15 +33,15 @@
         "meta": {
           "source": "full-criteria",
           "hasMap": true,
-          "tiles": 6,
-          "overlays": 142,
-          "layers": 157,
+          "tiles": 17,
+          "overlays": 134,
+          "layers": 149,
           "elapsed_ms": 400
         },
-        "tiles": 39,
-        "overlays": 140,
+        "tiles": 36,
+        "overlays": 132,
         "markers": 2,
-        "layers_count": 157,
+        "layers_count": 149,
         "viewport": {
           "w": 1920,
           "h": 1080
@@ -53,7 +53,7 @@
       "level": "detail",
       "zoom": 17,
       "filename": "TERRITOIRE_detail_live.png",
-      "size_bytes": 3057029,
+      "size_bytes": 3033076,
       "conforme_30kb": true,
       "ready": true,
       "diag": {
@@ -62,14 +62,14 @@
           "source": "full-criteria",
           "hasMap": true,
           "tiles": 6,
-          "overlays": 142,
-          "layers": 157,
-          "elapsed_ms": 400
+          "overlays": 134,
+          "layers": 149,
+          "elapsed_ms": 1600
         },
         "tiles": 45,
-        "overlays": 140,
+        "overlays": 132,
         "markers": 2,
-        "layers_count": 157,
+        "layers_count": 149,
         "viewport": {
           "w": 1920,
           "h": 1080

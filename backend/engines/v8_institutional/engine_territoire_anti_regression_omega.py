@@ -61,6 +61,13 @@ RULES = {
     "hotspots_min_count": 1,
     "nutrition_max_empty_grid_rendered_pct": 0.0,  # aucune pollution tolérée
     "contamination_required_if_affuts": True,       # si affûts présents → contamination présente
+    # Phase XI-SUPRA-H — ENGINE CORRIDORS VERSION Ω
+    "corridor_segment_max_m": 20.0,
+    "corridor_angle_max_deg": 45.0,
+    "corridor_functional_radius_min_m": 420.0,
+    "corridor_functional_radius_max_m": 780.0,
+    "corridor_single_species": True,
+    "corridor_forbid_affut_ref": True,
 }
 
 

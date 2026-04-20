@@ -962,6 +962,14 @@ try:
 except Exception as e:
     logger.warning(f"ENGINE-TERRITOIRE-ANTI-REGRESSION-Ω not loaded: {e}")
 
+# ENGINE-IA-CORRIDORS-Ω — Phase XI-SUPRA-H (ENGINE CORRIDORS VERSION Ω)
+try:
+    from engines.v8_institutional.engine_ia_corridors_omega import router as ia_corridors_router
+    app.include_router(ia_corridors_router)
+    logger.info("ENGINE-IA-CORRIDORS-Ω registered (/api/v20/territoire/ia-corridors)")
+except Exception as e:
+    logger.warning(f"ENGINE-IA-CORRIDORS-Ω not loaded: {e}")
+
 # LEP-INGESTION-Ω — Phase XI-SUPRA-D (BIONIC INGESTION-FGDB+GEOJSON-Ω-V1.0)
 # EXCLUDE_LAYER LEP_CRITICAL_HABITAT_NATIONAL — Directive STEEVE-MAX 2026-04-20
 # STATUS OFFICIAL — router désactivé, module source conservé pour réactivation future.

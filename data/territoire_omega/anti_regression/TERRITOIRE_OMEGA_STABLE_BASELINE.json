@@ -1,5 +1,5 @@
 {
-  "sealed_at": "2026-04-20T17:08:22.497410+00:00",
+  "sealed_at": "2026-04-20T19:09:28.704457+00:00",
   "sealed_by": "ENGINE-TERRITOIRE-ANTI-REGRESSION-Ω",
   "seed": {
     "lat": 45.1,
@@ -14,21 +14,27 @@
     "zones_min_count": 1,
     "hotspots_min_count": 1,
     "nutrition_max_empty_grid_rendered_pct": 0.0,
-    "contamination_required_if_affuts": true
+    "contamination_required_if_affuts": true,
+    "corridor_segment_max_m": 20.0,
+    "corridor_angle_max_deg": 45.0,
+    "corridor_functional_radius_min_m": 420.0,
+    "corridor_functional_radius_max_m": 780.0,
+    "corridor_single_species": true,
+    "corridor_forbid_affut_ref": true
   },
   "metrics": {
     "nutrition_grid_total": 36,
     "nutrition_grid_empty": 36,
     "nutrition_empty_pct": 1.0,
-    "corridors_count": 14,
-    "corridors_min_length_m": 299.8,
-    "corridors_max_length_m": 730.1,
-    "corridors_avg_length_m": 461.1,
+    "corridors_count": 11,
+    "corridors_min_length_m": 429.8,
+    "corridors_max_length_m": 727.2,
+    "corridors_avg_length_m": 545.4,
     "affuts_count": 6,
     "zones_count": 5,
     "hotspots_count": 11,
     "contamination_count": 18
   },
-  "hash_input": "736cb5b2810e68169a3f27dbde1821345750ff339bec650f11eac29ed2daed8b",
+  "hash_input": "b1e4ac555a83a1f9730c50817f83dffc859f42dc6bb2c6e58d5111520e641b13",
   "directive": "ORDRE_TERRITOIRE_PROTECT_Ω STEEVE-MAX 2026-04-20"
 }

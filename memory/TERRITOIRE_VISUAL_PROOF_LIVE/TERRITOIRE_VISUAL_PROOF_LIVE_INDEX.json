@@ -1,10 +1,11 @@
 {
-  "generated_at": "2026-04-20T16:49:43.042030+00:00",
-  "engine_visual_proof_live_version": "V1-PHASE-XI-SUPRA-F-OMEGA-2026-04",
-  "bundle_version": "TERRITOIRE-V10-SUPRA",
-  "frontend_version": "BionicLayersV8 + Phase XI-SUPRA-F fix corridors + nutrition purge",
+  "generated_at": "2026-04-20T19:08:04.518502+00:00",
+  "engine_render_version": "V1-PHASE-XI-SUPRA-2026-04",
+  "engine_visual_proof_live_version": "V1-PHASE-XI-SUPRA-H-OMEGA-2026-04",
+  "bundle_version": "TERRITOIRE-V10-SUPRA-CORRIDORS-Ω",
+  "frontend_version": "BionicLayersV8 + VERSION Ω corridors",
   "capture_user": "steeve-max-capture@huntiq.com",
-  "registry_sha256": "0675cbe335c89c8a57771bb168053faaecc2b66d7aacef2e4db4535a6998fddc",
+  "registry_sha256": "806c014489712364541326be1b12d112b60a30a7e4c84723b0f3bc5d042fd159",
   "document_maitre_sha256": "6aff169f73531a46a38f5caff9defc7cadac6745029fa15d73c0174a1dfc2672",
   "captures": [
     {
@@ -13,9 +14,9 @@
       "filename": "TERRITOIRE_macro_live.png",
       "path": "/app/memory/TERRITOIRE_VISUAL_PROOF_LIVE/TERRITOIRE_macro_live.png",
       "exists": true,
-      "size_bytes": 3066360,
-      "sha256": "b7d9344a99505d09ad88c9d6c1946d7444be46d4636f069264fa835676d2844a",
-      "hmac_sha256": "36b329995efbf481993700a6e3e8a3ec6a3ce8f9fccddf9ead5bdbc587be393c",
+      "size_bytes": 3124317,
+      "sha256": "f4b0aa8dba5795be9604a81bce4707756bb836615ce80fcd8a285cec4ed80ba7",
+      "hmac_sha256": "c301af426858e194a3ec4068386c4b7a04c9adef32deff9d38ba04c294d201c9",
       "layers_visible": [
         "corridors",
         "zones_fauniques_canada",
@@ -32,9 +33,9 @@
       "filename": "TERRITOIRE_mid_live.png",
       "path": "/app/memory/TERRITOIRE_VISUAL_PROOF_LIVE/TERRITOIRE_mid_live.png",
       "exists": true,
-      "size_bytes": 3128801,
-      "sha256": "24d8fca43dba7d399575d2919f1837a1cdf2f11d9a625bdc1ef456383c9081e7",
-      "hmac_sha256": "0185173cfb3d7129a01cb6481d00e770abf39a1124cf363691c1f9628ba4db8b",
+      "size_bytes": 3128352,
+      "sha256": "3318278cb74dc5b6264f596d80950174749ecf956fe33d5c7085ebfd6af35c8f",
+      "hmac_sha256": "a08c73b03a90b914f64b6eafb1a8ae4915832a2b719c625d7ac6444a65e667af",
       "layers_visible": [
         "corridors",
         "zones_ecologiques",
@@ -56,9 +57,9 @@
       "filename": "TERRITOIRE_detail_live.png",
       "path": "/app/memory/TERRITOIRE_VISUAL_PROOF_LIVE/TERRITOIRE_detail_live.png",
       "exists": true,
-      "size_bytes": 3057029,
-      "sha256": "bfd30941a8b6da0e291f6dda5580cf2e55de972a5ccea02b088f06dbbae311ea",
-      "hmac_sha256": "5d9e844df05498e77372203e2d91368c7f8de4345c91bab44a9824819f510e9e",
+      "size_bytes": 3033076,
+      "sha256": "145b8911aab19ff22c02597328651cc57c79037d29e6cf3ea7996bf11f997806",
+      "hmac_sha256": "215d03cea906a60863d9e34743160c8bce8d6966a30c20973d89ef1424569c9e",
       "layers_visible": [
         "corridors",
         "zones_ecologiques",
@@ -80,6 +81,5 @@
   ],
   "total_captures": 3,
   "all_present": true,
-  "algorithm": "HMAC-SHA256",
-  "engine_render_version": "V1-PHASE-XI-SUPRA-2026-04"
+  "algorithm": "HMAC-SHA256"
 }
