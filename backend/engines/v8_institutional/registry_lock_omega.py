@@ -62,6 +62,8 @@ ENGINES_LOCKED = [
     {"name": "EXPORT-INSTITUTIONNEL-V20-Ω", "pillar": "GOUVERNANCE", "phase": "X-D"},
     # Phase XI-SUPRA (rendu institutionnel)
     {"name": "ENGINE-RENDER-Ω", "pillar": "GOUVERNANCE", "phase": "XI-SUPRA"},
+    # Phase XI-SUPRA-B (preuve visuelle)
+    {"name": "VISUAL-PROOF-Ω", "pillar": "GOUVERNANCE", "phase": "XI-SUPRA-B"},
 ]
 
 REGISTRY_VERSION = "V20-SUPRA-LOCKED-PHASE-XI-2026-04"

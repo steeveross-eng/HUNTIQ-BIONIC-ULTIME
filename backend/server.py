@@ -938,6 +938,14 @@ try:
 except Exception as e:
     logger.warning(f"ENGINE-RENDER-Ω not loaded: {e}")
 
+# VISUAL-PROOF-Ω — Phase XI-SUPRA-B preuve visuelle institutionnelle
+try:
+    from engines.v8_institutional.visual_proof_omega import router as visual_proof_router
+    app.include_router(visual_proof_router)
+    logger.info("VISUAL-PROOF-Ω registered (/visual-proof/generate, /visual-proof/index)")
+except Exception as e:
+    logger.warning(f"VISUAL-PROOF-Ω not loaded: {e}")
+
 # MONITORING-Ω + ALERTE-ANOMALIES-Ω
 try:
     from engines.v8_institutional.monitoring_alerte_omega import router as monitoring_router

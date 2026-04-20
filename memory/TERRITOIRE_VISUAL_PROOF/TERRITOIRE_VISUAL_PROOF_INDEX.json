@@ -1,0 +1,78 @@
+{
+  "generated_at": "2026-04-20T01:18:12.849324+00:00",
+  "engine_render_version": "V1-PHASE-XI-SUPRA-2026-04",
+  "bundle_version": "TERRITOIRE-V10-SUPRA",
+  "registry_sha256": "274c96135459f57d0d9f3321087dda17888a33e8a0f5136d582e14da0ae609ef",
+  "document_maitre_sha256": "6aff169f73531a46a38f5caff9defc7cadac6745029fa15d73c0174a1dfc2672",
+  "captures": [
+    {
+      "level": "macro",
+      "zoom_range": "z < 14",
+      "filename": "TERRITOIRE_macro.png",
+      "path": "/app/memory/TERRITOIRE_VISUAL_PROOF/TERRITOIRE_macro.png",
+      "size_bytes": 61924,
+      "sha256": "2999a8257b8f1267f97d15f5be364c538a90d113863a838663ed49f6c3bc853d",
+      "hmac_sha256": "c4051362cd1a3834107df8c3bb00c49797325e232cdd7779727cf8eaac6c5f8a",
+      "layers_visible": [
+        "corridors",
+        "zones_fauniques_canada",
+        "contamination_v2",
+        "habitats_lep",
+        "zones_risque",
+        "score_local"
+      ],
+      "layers_visible_count": 6
+    },
+    {
+      "level": "mid",
+      "zoom_range": "14 ≤ z < 16",
+      "filename": "TERRITOIRE_mid.png",
+      "path": "/app/memory/TERRITOIRE_VISUAL_PROOF/TERRITOIRE_mid.png",
+      "size_bytes": 63405,
+      "sha256": "0446496dee470a3bab0c61281c4fafbe9655a369009aba6fda8eb6ec8fcf222c",
+      "hmac_sha256": "f8fac3f209b8ebd5ad010a8dec973d8f48503ff9c0bcb6f348fe5c149797e277",
+      "layers_visible": [
+        "corridors",
+        "zones_ecologiques",
+        "zones_fauniques_canada",
+        "contamination_v2",
+        "habitats_lep",
+        "zones_risque",
+        "salines",
+        "hotspots",
+        "stations_hydat",
+        "habitats_critiques",
+        "score_local"
+      ],
+      "layers_visible_count": 11
+    },
+    {
+      "level": "detail",
+      "zoom_range": "z ≥ 16",
+      "filename": "TERRITOIRE_detail.png",
+      "path": "/app/memory/TERRITOIRE_VISUAL_PROOF/TERRITOIRE_detail.png",
+      "size_bytes": 65351,
+      "sha256": "568a2dda533bb17488bbb47dcf3d0ea5c2260e40cf3e6bef1a8045d6af7246ea",
+      "hmac_sha256": "b1632b667620d423952a92ad352ca402b418c27aa0e08ce4de0b406c9d0894c4",
+      "layers_visible": [
+        "corridors",
+        "zones_ecologiques",
+        "zones_fauniques_canada",
+        "contamination_v2",
+        "habitats_lep",
+        "zones_risque",
+        "salines",
+        "hotspots",
+        "stations_hydat",
+        "habitats_critiques",
+        "deplacements_ia",
+        "affuts",
+        "points_observation",
+        "score_local"
+      ],
+      "layers_visible_count": 14
+    }
+  ],
+  "total_captures": 3,
+  "algorithm": "HMAC-SHA256"
+}

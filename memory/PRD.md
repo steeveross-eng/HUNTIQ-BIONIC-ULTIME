@@ -995,3 +995,15 @@ Appliqué dans `BionicLayersV8.jsx` via import `CORRIDOR_STYLE_HIERARCHY` :
 - **Livrable** : PHASE_XI_SUPRA_TERRITOIRE_VALIDATION_REPORT.md
 
 ## Section VII validation : 14/14 couches présentes + rendues (100 %)
+
+## Phase XI-SUPRA-B — Preuve visuelle institutionnelle (2026-04-19)
+
+- **VISUAL-PROOF-Ω** créé : génération PIL de 3 captures TERRITOIRE (macro/mid/detail) signées HMAC-SHA256
+- **Archivage** : `/app/memory/TERRITOIRE_VISUAL_PROOF/` avec INDEX.json + SIGNATURES.md
+- **Idempotence** : cache 5 min évite les conditions de course en SELF-AUDIT parallèle
+- **2 nouveaux endpoints** : `POST /visual-proof/generate`, `GET /visual-proof/index`
+- **Registry lock étendu** : 31 → **32 engines**, nouveau hash `274c96135459f57d…09ef`
+- **3 nouvelles suites SELF-AUDIT** : visual_macro (6 couches), visual_mid (11 couches), visual_detail (14/14 couches)
+- **SELF-AUDIT** : **50/50 OK**, perf=ok, conforme=true
+- **Livrable** : PHASE_XI_SUPRA_B_VISUAL_VALIDATION_REPORT.md
+- **NOTE** : Playwright Python indisponible dans pod → rendu PIL pur fidèle à ENGINE-RENDER-Ω (backlog : intégration Chromium headless avec Playwright SDK)

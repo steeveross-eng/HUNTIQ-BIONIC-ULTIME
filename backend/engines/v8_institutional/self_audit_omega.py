@@ -75,6 +75,10 @@ _TEST_SUITES = [
     ("test_render_canada", "/app/backend/tests/test_render_canada.py"),
     ("test_render_lep", "/app/backend/tests/test_render_lep.py"),
     ("test_render_hydat", "/app/backend/tests/test_render_hydat.py"),
+    # Phase XI-SUPRA-B — Preuves visuelles institutionnelles (3 captures signées)
+    ("test_visual_macro", "/app/backend/tests/test_visual_macro.py"),
+    ("test_visual_mid", "/app/backend/tests/test_visual_mid.py"),
+    ("test_visual_detail", "/app/backend/tests/test_visual_detail.py"),
 ]
 
 _LOG_FILE = Path("/app/memory/SELF_AUDIT_OMEGA_LOGS.md")
