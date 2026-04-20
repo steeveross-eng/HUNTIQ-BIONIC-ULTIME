@@ -1,0 +1,22 @@
+{
+  "type": "FeatureCollection",
+  "name": "CANADA_LAYER_V1",
+  "source": "ENGINE-CANADA-Ω (ECCC + RNCan + provincial agencies)",
+  "generated_at": "2026-04-19",
+  "phase": "X-B",
+  "features": [
+    {"type": "Feature", "properties": {"code": "QC", "name": "Québec", "zones_faune": 29, "lep_habitats": 47}, "geometry": {"type": "Point", "coordinates": [-71.3, 52.0]}},
+    {"type": "Feature", "properties": {"code": "ON", "name": "Ontario", "zones_faune": 95, "lep_habitats": 63}, "geometry": {"type": "Point", "coordinates": [-85.0, 51.0]}},
+    {"type": "Feature", "properties": {"code": "BC", "name": "Colombie-Britannique", "zones_faune": 220, "lep_habitats": 112}, "geometry": {"type": "Point", "coordinates": [-125.0, 54.0]}},
+    {"type": "Feature", "properties": {"code": "AB", "name": "Alberta", "zones_faune": 28, "lep_habitats": 38}, "geometry": {"type": "Point", "coordinates": [-115.0, 55.0]}},
+    {"type": "Feature", "properties": {"code": "SK", "name": "Saskatchewan", "zones_faune": 84, "lep_habitats": 22}, "geometry": {"type": "Point", "coordinates": [-106.0, 55.0]}},
+    {"type": "Feature", "properties": {"code": "MB", "name": "Manitoba", "zones_faune": 62, "lep_habitats": 29}, "geometry": {"type": "Point", "coordinates": [-98.0, 55.0]}},
+    {"type": "Feature", "properties": {"code": "NB", "name": "Nouveau-Brunswick", "zones_faune": 27, "lep_habitats": 18}, "geometry": {"type": "Point", "coordinates": [-66.3, 46.6]}},
+    {"type": "Feature", "properties": {"code": "NS", "name": "Nouvelle-Écosse", "zones_faune": 14, "lep_habitats": 21}, "geometry": {"type": "Point", "coordinates": [-63.0, 45.0]}},
+    {"type": "Feature", "properties": {"code": "PE", "name": "Île-du-Prince-Édouard", "zones_faune": 3, "lep_habitats": 6}, "geometry": {"type": "Point", "coordinates": [-63.1, 46.5]}},
+    {"type": "Feature", "properties": {"code": "NL", "name": "Terre-Neuve-et-Labrador", "zones_faune": 78, "lep_habitats": 17}, "geometry": {"type": "Point", "coordinates": [-57.0, 54.0]}},
+    {"type": "Feature", "properties": {"code": "YT", "name": "Yukon", "zones_faune": 22, "lep_habitats": 14}, "geometry": {"type": "Point", "coordinates": [-135.0, 63.5]}},
+    {"type": "Feature", "properties": {"code": "NT", "name": "Territoires du Nord-Ouest", "zones_faune": 20, "lep_habitats": 16}, "geometry": {"type": "Point", "coordinates": [-120.0, 64.5]}},
+    {"type": "Feature", "properties": {"code": "NU", "name": "Nunavut", "zones_faune": 8, "lep_habitats": 11}, "geometry": {"type": "Point", "coordinates": [-90.0, 70.0]}}
+  ]
+}

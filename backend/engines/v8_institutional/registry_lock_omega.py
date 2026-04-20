@@ -50,6 +50,9 @@ ENGINES_LOCKED = [
     {"name": "ENGINE-SOL-SUPRA", "pillar": "ENVIRONNEMENT", "phase": "SUPRA"},
     # MONITORING (1)
     {"name": "MONITORING-ALERTE-ANOMALIES-Ω", "pillar": "GOUVERNANCE", "phase": "P0"},
+    # Phase X-B additions
+    {"name": "SCIENCE-GAPS-DATASETS-Ω", "pillar": "GOUVERNANCE", "phase": "X"},
+    {"name": "ENGINE-CANADA-Ω", "pillar": "GOUVERNANCE", "phase": "X-B"},
 ]
 
 REGISTRY_VERSION = "V20-SUPRA-LOCKED-PHASE-XI-2026-04"

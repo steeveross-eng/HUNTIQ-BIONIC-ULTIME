@@ -1021,6 +1021,15 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
     # CONTAMINATION-Omega: SOURCE = AFFUTS (ZERO waypoint)
     contamination = compute_contamination_omega(affuts, real_wind_deg, real_wind_speed, t)
 
+    # CONTAMINATION-Ω V2 (Phase X-B) : CWD/maladies + heatmap + propagation
+    contamination_v2 = None
+    try:
+        from engines.v8_institutional.engine_contamination_v2_omega import compute_contamination_v2
+        contamination_v2 = compute_contamination_v2(contamination, lat, lon, species)
+    except Exception as _e:
+        import logging as _lg
+        _lg.getLogger("bionic.territoire").warning(f"contamination V2 skipped: {_e}")
+
     # SALINES-Omega BASE: genere salines autonomes (zero dep affuts)
     salines = compute_salines_omega(lat, lon, species, month, t, corridors)
 
@@ -1157,6 +1166,8 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
             "incertitude": incertitude, "calibration": calibration, "population_dynamics": population_dynamics,
             "climat_futur": climat_futur, "influence_lunaire": influence_lunaire,
             "pression_atmospherique": pression_atmospherique,
+            "contamination_v2": contamination_v2,
+            "_species_key": species,
         }
         score_global_reality = compute_score_global_reality(partial_bundle)
     except Exception as _e:
@@ -1171,6 +1182,7 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
         "salines": salines,
         "wind_vectors": wind_vectors,
         "contamination": contamination,
+        "contamination_v2": contamination_v2,
         "nutrition": nutrition,
         "habitat_supra": habitat_supra,
         "hydrologie_supra": hydrologie_supra,

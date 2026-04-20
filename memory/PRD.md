@@ -945,3 +945,19 @@ Appliqué dans `BionicLayersV8.jsx` via import `CORRIDOR_STYLE_HIERARCHY` :
 - **Livrables** : LEGACY_PURGE_REPORT.md, DOCUMENT_MAITRE_LOCKED.md, ENGINE_REGISTRY_LOCKED.md, PHASE_XI_VALIDATION_REPORT.md
 - **ENGINE-CANADA-Ω** : NON ACTIVÉ (optionnel — aucune directive explicite)
 
+
+## Phase X-B — Pipeline complet + CONTAMINATION V2 + ENGINE-CANADA-Ω (2026-04-19)
+
+- **Câblages backend** : calibration_dynamique, contamination V2, species_weighting, gaps ingestion, ENGINE-CANADA-Ω
+- **SCORE-GLOBAL-REALITY-Ω V3-DYNAMIC-2026-04** : pondérations 3 niveaux (base → species → dynamic ML)
+- **7 nouveaux endpoints** : /observations (POST/GET), /calibration-dynamique, /science-gaps, /canada, /canada/province/{code}
+- **Frontend** : InstitutionalHealthPanel.jsx (branché /gouvernance + /engines-catalog + /registry-lock)
+- **Registry lock étendu** : 23 → **25 engines** — hash `c1967264973562f2…a1af`
+- **4 nouvelles suites SELF-AUDIT** : test_calibration_dynamique, test_species_weighting_profiles, test_science_gaps_ingested, test_healthpanel
+- **SELF-AUDIT** : **33/33 OK, perf=ok, conforme=true**
+- **8 livrables MD + 2 GeoJSON**
+
+## Phase X-B — Backlog technique
+- Intégration profonde V2 dans engine_habitat_supra / population_dynamics / stress_anthropique (aujourd'hui consommation via bundle partagé)
+- Montage InstitutionalHealthPanel.jsx dans layout admin
+- Import shapefile LEP + HYDAT live

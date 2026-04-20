@@ -863,6 +863,30 @@ try:
 except Exception as e:
     logger.warning(f"REGISTRY-LOCK-Ω not loaded: {e}")
 
+# CALIBRATION-DYNAMIQUE-Ω — Phase X ingestion observations + recalibration
+try:
+    from engines.v8_institutional.engine_calibration_dynamique_omega import router as calib_dyn_router
+    app.include_router(calib_dyn_router)
+    logger.info("CALIBRATION-DYNAMIQUE-Ω registered (/observations, /calibration-dynamique)")
+except Exception as e:
+    logger.warning(f"CALIBRATION-DYNAMIQUE-Ω not loaded: {e}")
+
+# SCIENCE-GAPS-DATASETS-Ω — Phase X ingestion 4 gaps MFFP/IRDA/CWD
+try:
+    from engines.v8_institutional.science_gaps_datasets import router as gaps_router
+    app.include_router(gaps_router)
+    logger.info("SCIENCE-GAPS-DATASETS-Ω registered (/science-gaps) — 4 gaps ingested")
+except Exception as e:
+    logger.warning(f"SCIENCE-GAPS-DATASETS-Ω not loaded: {e}")
+
+# ENGINE-CANADA-Ω — Phase X-B souveraineté pancanadienne
+try:
+    from engines.v8_institutional.engine_canada_omega import router as canada_router
+    app.include_router(canada_router)
+    logger.info("ENGINE-CANADA-Ω registered (/canada, /canada/province/{code}) — 13 provinces")
+except Exception as e:
+    logger.warning(f"ENGINE-CANADA-Ω not loaded: {e}")
+
 # MONITORING-Ω + ALERTE-ANOMALIES-Ω
 try:
     from engines.v8_institutional.monitoring_alerte_omega import router as monitoring_router

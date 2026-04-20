@@ -10,12 +10,15 @@
 ## Hash SHA-256 officiel
 
 ```
-517b7c2e770ec442675fbf9f7fa543a13af1636bbfd101dc1238b20ff7a68fa0
+c1967264973562f2b5d16d6fa884b0010b6ceeae3637ff3b3ca9f16dd0faa1af
 ```
 
 Toute altération de la liste des engines (`ENGINES_LOCKED` dans
 `/app/backend/engines/v8_institutional/registry_lock_omega.py`)
 invalide ce hash et fait échouer `test_engine_registry_locked`.
+
+> **Évolution Phase X-B :** registre étendu de 23 → 25 engines avec l'ajout de
+> `SCIENCE-GAPS-DATASETS-Ω` et `ENGINE-CANADA-Ω` (souveraineté pancanadienne).
 
 ## 22 Engines SUPRA-Ω — répartition par pilier
 
@@ -66,7 +69,13 @@ invalide ce hash et fait échouer `test_engine_registry_locked`.
 |---|--------|-------|
 | 23 | `MONITORING-ALERTE-ANOMALIES-Ω` | P0 |
 
-**TOTAL SCELLÉ : 23 engines** (22 obligatoires + 1 monitoring transverse).
+### Phase X / X-B (souveraineté + gaps)
+| # | Engine | Phase |
+|---|--------|-------|
+| 24 | `SCIENCE-GAPS-DATASETS-Ω` | X |
+| 25 | `ENGINE-CANADA-Ω` | X-B |
+
+**TOTAL SCELLÉ : 25 engines** (22 obligatoires SUPRA-Ω + 3 gouvernance étendue).
 
 ## Endpoints de vérification
 
@@ -92,7 +101,7 @@ Toute modification de ce registre exige :
 ## Signature
 
 ```
-SEALED  — Phase XI — 2026-04-19
-SHA-256 — 517b7c2e770e…8fa0
+SEALED  — Phase XI / X-B — 2026-04-19
+SHA-256 — c1967264973562f2…a1af
 STATUS  — VERROUILLÉ IRRÉVOCABLEMENT
 ```

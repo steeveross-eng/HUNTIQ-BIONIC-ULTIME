@@ -53,6 +53,11 @@ _TEST_SUITES = [
     ("test_purge_legacy", "/app/backend/tests/test_purge_legacy.py"),
     ("test_document_maitre_locked", "/app/backend/tests/test_document_maitre_locked.py"),
     ("test_engine_registry_locked", "/app/backend/tests/test_engine_registry_locked.py"),
+    # Phase X / X-B — Calibration dynamique, species weighting, gaps, health panel
+    ("test_calibration_dynamique", "/app/backend/tests/test_calibration_dynamique.py"),
+    ("test_species_weighting_profiles", "/app/backend/tests/test_species_weighting_profiles.py"),
+    ("test_science_gaps_ingested", "/app/backend/tests/test_science_gaps_ingested.py"),
+    ("test_healthpanel", "/app/backend/tests/test_healthpanel.py"),
 ]
 
 _LOG_FILE = Path("/app/memory/SELF_AUDIT_OMEGA_LOGS.md")

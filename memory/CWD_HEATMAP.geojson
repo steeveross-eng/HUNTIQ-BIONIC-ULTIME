@@ -1,0 +1,45 @@
+{
+  "type": "FeatureCollection",
+  "name": "CWD_HEATMAP_QC_2024",
+  "source": "CWD Alliance Dashboard + MFFP Surveillance MDC",
+  "generated_at": "2026-04-19",
+  "phase": "X-B",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "zone": "Estrie-Sud (Frelighsburg)",
+        "cases_2024": 3,
+        "cases_cumul": 11,
+        "surveillance": "INTENSIVE",
+        "radius_km": 40,
+        "risk_level": "ELEVE"
+      },
+      "geometry": {"type": "Point", "coordinates": [-72.85, 45.05]}
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zone": "Monteregie-Est",
+        "cases_2024": 5,
+        "cases_cumul": 18,
+        "surveillance": "ACTIVE",
+        "radius_km": 55,
+        "risk_level": "ELEVE"
+      },
+      "geometry": {"type": "Point", "coordinates": [-72.55, 45.30]}
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zone": "Estrie-Nord (Granby)",
+        "cases_2024": 0,
+        "cases_cumul": 2,
+        "surveillance": "PREVENTIVE",
+        "radius_km": 30,
+        "risk_level": "MODERE"
+      },
+      "geometry": {"type": "Point", "coordinates": [-72.73, 45.40]}
+    }
+  ]
+}

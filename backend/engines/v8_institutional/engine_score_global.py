@@ -46,7 +46,34 @@ def compute_score_global_reality(bundle: dict) -> dict:
     """Compute SCORE GLOBAL mode realite from full V20 bundle.
 
     Uses 20 axes SUPRA-Ω depuis le bundle.
+    Phase X-B : species_weighting + dynamic calibration + contamination V2.
     """
+    # Phase X-B : ponderations adaptatives (species > dynamic > base)
+    species_key = (bundle.get("_species_key") or "").lower()
+    weights = dict(_WEIGHTS)
+    species_weights = None
+    dynamic_adjustments = {}
+    try:
+        from engines.v8_institutional.species_weighting_profiles import get_species_weights
+        sw = get_species_weights(species_key) if species_key else None
+        if sw:
+            weights = sw
+            species_weights = sw
+    except Exception:
+        pass
+    try:
+        from engines.v8_institutional.engine_calibration_dynamique_omega import (
+            get_dynamic_weights, get_calibration_status,
+        )
+        weights = get_dynamic_weights(weights)
+        dynamic_adjustments = get_calibration_status().get("weight_adjustments", {})
+    except Exception:
+        pass
+
+    # Phase X-B : malus contamination_v2 (ecrase contamination v1 si present)
+    contam_v2 = bundle.get("contamination_v2") or {}
+    contam_v2_score = contam_v2.get("score")  # 100=clean, 0=heavy
+
     # Extract scores
     s = {
         "nutrition":          _safe_score((bundle.get("nutrition") or {}).get("score_nutritionnel")),
@@ -69,10 +96,14 @@ def compute_score_global_reality(bundle: dict) -> dict:
         "ia_vision":          _safe_score((bundle.get("ia_vision_ecologique") or {}).get("score")),
         "vent":               _vent_score(bundle.get("wind_vectors") or []),
         "incertitude_inv":    _safe_score((bundle.get("incertitude") or {}).get("certainty_score")),
-        "contamination_malus": _contam_malus(bundle.get("contamination") or []),
+        "contamination_malus": _contam_malus(bundle.get("contamination") or []) if contam_v2_score is None else float(contam_v2_score),
     }
 
-    composite = round(sum(_WEIGHTS[k] * s[k] for k in _WEIGHTS), 2)
+    # Phase X-B : axes manquants du profil species — completer avec 0 (ignoré)
+    for k in weights:
+        s.setdefault(k, 50.0)
+
+    composite = round(sum(weights.get(k, 0.0) * s[k] for k in weights), 2)
 
     if composite > 75:
         classification = "EXCELLENT"
@@ -87,14 +118,18 @@ def compute_score_global_reality(bundle: dict) -> dict:
 
     return {
         "engine": "SCORE-GLOBAL-REALITY-Ω",
-        "version": "V2-REALITY-2026-04",
+        "version": "V3-DYNAMIC-2026-04",
         "mode": "REALITE",
         "score_global": composite,
         "classification": classification,
         "axes_scores": s,
-        "weights": _WEIGHTS,
-        "axes_count": len(_WEIGHTS),
-        "note": "Recalibrage 20 axes SUPRA-Ω. Pondérations calibrées via ENGINE-SCIENCE-Ω.",
+        "weights": weights,
+        "weights_base": _WEIGHTS,
+        "weights_species_applied": species_weights is not None,
+        "weights_dynamic_adjustments": dynamic_adjustments,
+        "contamination_v2_applied": contam_v2_score is not None,
+        "axes_count": len(weights),
+        "note": "Phase X-B — pondérations dynamiques (species + calibration ML) + contamination V2.",
     }
 
 
