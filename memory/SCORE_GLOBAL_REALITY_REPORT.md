@@ -77,3 +77,29 @@ Top 5 axes:
 - Calibration des pondérations par machine learning sur observations terrain (caméras Reconyx, GPS collar)
 - Variante par espèce (pondérations spécifiques cerf vs orignal vs ours)
 - Intégration feedback ENGINE-CALIBRATION-Ω pour ajuster pondérations dynamiquement
+
+---
+
+## Phase X-C — Section CONTAMINATION V2 (intégration profonde)
+
+À partir de la Phase X-C, `contamination_v2` n'est plus seulement un signal
+terminal pour `contamination_malus` dans le composite : il est **paramètre
+direct** des engines biologiques consommés par le SCORE GLOBAL.
+
+| Engine consommateur | Champ d'impact | Malus max (ELEVE) |
+|---------------------|----------------|-------------------|
+| `ENGINE-HABITAT-SUPRA` | `breakdown.composite` | –12 pts |
+| `ENGINE-POPULATION-DYNAMICS-Ω` | `mortalité` / `tendance_10ans` | +0.08 / –0.10 |
+| `ENGINE-STRESS-ANTHROPIQUE-Ω` | `tranquillité` | –15 pts |
+| `SCORE-GLOBAL-REALITY-Ω` | `contamination_malus` écrasé par `contamination_v2.score` | 0-100 |
+
+Conséquence : une même coordonnée dans zone CWD `ELEVE` (ex. Frelighsburg)
+propage simultanément le malus sanitaire à travers les 3 axes biologiques
+avant agrégation finale. Les impacts sont observables via les champs
+`*.contamination_v2_impact` du bundle `/api/v20/territoire/bundle`.
+
+Validé par `test_contamination_propagation.py` (SELF-AUDIT #34).
+
+```
+SEALED  — Phase X-C — 2026-04-19 — BCE-4X ULTIME ABSOLU
+```

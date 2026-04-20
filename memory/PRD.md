@@ -961,3 +961,14 @@ Appliqué dans `BionicLayersV8.jsx` via import `CORRIDOR_STYLE_HIERARCHY` :
 - Intégration profonde V2 dans engine_habitat_supra / population_dynamics / stress_anthropique (aujourd'hui consommation via bundle partagé)
 - Montage InstitutionalHealthPanel.jsx dans layout admin
 - Import shapefile LEP + HYDAT live
+
+## Phase X-C — Intégration profonde V2 + Health Panel admin + LEP/HYDAT (2026-04-19)
+
+- **Signatures mises à jour** : `compute_habitat_supra(terrain, contamination_v2)`, `compute_population_dynamics(species, contamination_v2)`, `compute_stress_anthropique(terrain, hour, contamination_v2)` — propagation directe par argument
+- **Nouveaux engines** : `FEDERAL-DATASETS-Ω` (414 LEP + 2800 HYDAT), `ENGINE-RISQUES-HYDRO-Ω` (inondation/étiage/qualité)
+- **6 nouveaux endpoints** : `/federal/lep`, `/federal/lep/province/{code}`, `/federal/hydat`, `/federal/hydat/province/{code}`, `/risques-hydro`, `/canada` (enrichi)
+- **Frontend** : `InstitutionalHealthPanel` monté dans `AdminPremiumPage` (nav `health-panel-v20`)
+- **Registry lock étendu** : 25 → **27 engines**, nouveau hash `072ca8dd3480b978…5648`
+- **4 nouvelles suites SELF-AUDIT** : propagation, healthpanel_admin, lep, hydat
+- **SELF-AUDIT** : **37/37 OK**, perf=ok, conforme=true
+- **5 livrables MD** : CONTAMINATION_PROPAGATION_REPORT, HEALTH_PANEL_ADMIN_INTEGRATION, LEP_INTEGRATION_REPORT, HYDAT_INTEGRATION_REPORT, PHASE_X_C_VALIDATION_REPORT

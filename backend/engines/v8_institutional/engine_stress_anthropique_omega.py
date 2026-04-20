@@ -18,7 +18,7 @@ register_engine(
 )
 
 
-def compute_stress_anthropique(terrain_v10: dict, hour: int = 7) -> dict:
+def compute_stress_anthropique(terrain_v10: dict, hour: int = 7, contamination_v2: dict | None = None) -> dict:
     """Score 0-100 : 100 = territoire tranquille, 0 = fort stress anthropique.
 
     Proxies utilises (donnees reelles terrain_v10):
@@ -26,6 +26,9 @@ def compute_stress_anthropique(terrain_v10: dict, hour: int = 7) -> dict:
       - connectivity: bas = zone isolee = tranquille
       - canopy: haut = couvert = moins visible humain = tranquille
       - heure: peak 6-9h + 16-19h = stress piegage amateur
+
+    Phase X-C: contamination_v2 ajoute un stress sanitaire (perturbation
+    institutionnelle MFFP) pénalisant la tranquillité.
     """
     mark_call(ENGINE_NAME)
     terrain = terrain_v10.get("terrain", terrain_v10) if isinstance(terrain_v10, dict) else {}
@@ -56,6 +59,26 @@ def compute_stress_anthropique(terrain_v10: dict, hour: int = 7) -> dict:
     tranquillite = (s_inaccess * 0.40 + s_isolement * 0.30 + s_cover * 0.30) * horaire_mult
     tranquillite = round(min(100, max(0, tranquillite)), 1)
 
+    # Phase X-C : stress sanitaire additionnel selon contamination_v2
+    cwd_impact = {}
+    if contamination_v2:
+        risk = (contamination_v2.get("cwd_risk") or "").upper()
+        dist = contamination_v2.get("distance_nearest_cwd_km")
+        sanitary_malus = 0.0
+        if risk == "ELEVE":
+            sanitary_malus = 15.0
+        elif risk == "MODERE":
+            sanitary_malus = 8.0
+        elif risk == "FAIBLE":
+            sanitary_malus = 3.0
+        if sanitary_malus > 0:
+            tranquillite = round(max(0.0, tranquillite - sanitary_malus), 1)
+        cwd_impact = {
+            "cwd_risk": risk or None,
+            "distance_km": dist,
+            "sanitary_malus": sanitary_malus,
+        }
+
     # Disturbance level inverse
     if tranquillite > 75:
         disturbance = "faible"
@@ -76,6 +99,7 @@ def compute_stress_anthropique(terrain_v10: dict, hour: int = 7) -> dict:
         "isolation_score": round(s_isolement, 1),
         "cover_score": round(s_cover, 1),
         "hour_modifier": horaire_mult,
+        "contamination_v2_impact": cwd_impact or None,
         "data_sources": ["LIDAR_WCS_1M", "OPEN_METEO"],
         "limites": [
             "Routes/batiments reels absents (pas d'OSM integration) — proxies cost_surface + connectivity",

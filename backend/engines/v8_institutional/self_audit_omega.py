@@ -58,6 +58,11 @@ _TEST_SUITES = [
     ("test_species_weighting_profiles", "/app/backend/tests/test_species_weighting_profiles.py"),
     ("test_science_gaps_ingested", "/app/backend/tests/test_science_gaps_ingested.py"),
     ("test_healthpanel", "/app/backend/tests/test_healthpanel.py"),
+    # Phase X-C — Intégration profonde V2 + LEP/HYDAT + Health Panel admin
+    ("test_contamination_propagation", "/app/backend/tests/test_contamination_propagation.py"),
+    ("test_healthpanel_admin", "/app/backend/tests/test_healthpanel_admin.py"),
+    ("test_lep_integration", "/app/backend/tests/test_lep_integration.py"),
+    ("test_hydat_integration", "/app/backend/tests/test_hydat_integration.py"),
 ]
 
 _LOG_FILE = Path("/app/memory/SELF_AUDIT_OMEGA_LOGS.md")

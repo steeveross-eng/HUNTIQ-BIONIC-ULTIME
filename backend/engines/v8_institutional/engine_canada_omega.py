@@ -62,6 +62,14 @@ def get_canada_overview() -> dict:
     mark_call("ENGINE-CANADA-Ω")
     total_zones = sum(p["zones_faune"] for p in PROVINCES.values())
     total_lep = sum(p["habitats_critiques_lep"] for p in PROVINCES.values())
+    # Phase X-C : intégration FEDERAL-DATASETS-Ω (LEP + HYDAT seeds)
+    federal = {"lep": None, "hydat": None}
+    try:
+        from engines.v8_institutional.federal_datasets_omega import get_lep_overview, get_hydat_overview
+        federal["lep"] = {"total": get_lep_overview()["total"], "status": "INGESTED"}
+        federal["hydat"] = {"total": get_hydat_overview()["total"], "status": "INGESTED"}
+    except Exception:
+        pass
     return {
         "engine": "ENGINE-CANADA-Ω",
         "version": "V1-PHASE-X-B-2026-04",
@@ -73,6 +81,7 @@ def get_canada_overview() -> dict:
         "provinces": PROVINCES,
         "corridors": CORRIDORS_INTERPROVINCIAUX,
         "couches_detail": COUCHES_FEDERALES,
+        "federal_datasets": federal,
     }
 
 

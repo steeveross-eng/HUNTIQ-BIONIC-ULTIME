@@ -887,6 +887,22 @@ try:
 except Exception as e:
     logger.warning(f"ENGINE-CANADA-Ω not loaded: {e}")
 
+# FEDERAL-DATASETS-Ω — Phase X-C LEP + HYDAT seeds
+try:
+    from engines.v8_institutional.federal_datasets_omega import router as federal_router
+    app.include_router(federal_router)
+    logger.info("FEDERAL-DATASETS-Ω registered (/federal/lep, /federal/hydat) — seed LEP+HYDAT")
+except Exception as e:
+    logger.warning(f"FEDERAL-DATASETS-Ω not loaded: {e}")
+
+# ENGINE-RISQUES-HYDRO-Ω — Phase X-C risques hydrologiques
+try:
+    from engines.v8_institutional.engine_risques_hydro_omega import router as risques_hydro_router
+    app.include_router(risques_hydro_router)
+    logger.info("ENGINE-RISQUES-HYDRO-Ω registered (/risques-hydro)")
+except Exception as e:
+    logger.warning(f"ENGINE-RISQUES-HYDRO-Ω not loaded: {e}")
+
 # MONITORING-Ω + ALERTE-ANOMALIES-Ω
 try:
     from engines.v8_institutional.monitoring_alerte_omega import router as monitoring_router

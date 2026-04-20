@@ -67,8 +67,13 @@ import { AdminMessaging } from '@/ui/administration/admin_messaging';
 import AdminAlphaAnalysis from '@/components/admin/AdminAlphaAnalysis';
 import AdminTerritoryValue from '@/components/admin/AdminTerritoryValue';
 
+// Phase X-C: Institutional Health Panel (V20-SUPRA governance)
+import InstitutionalHealthPanel from '@/components/territoire/InstitutionalHealthPanel';
+
 const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  // --- Phase X-C : Health Panel institutionnel V20-SUPRA ---
+  { id: 'health-panel-v20', label: 'Health Panel V20', icon: Activity, highlight: true },
   // --- ALPHA Analysis ---
   { id: 'alpha-analysis', label: 'Analyse ALPHA', icon: Crown, highlight: true },
   { id: 'territory-value', label: 'Valeur Territoires', icon: TrendingUp, highlight: true },
@@ -180,6 +185,7 @@ const AdminPremiumPage = () => {
   const renderContent = () => {
     switch (activeSection) {
       case 'dashboard': return <AdminDashboard onNavigate={setActiveSection} />;
+      case 'health-panel-v20': return <InstitutionalHealthPanel visible={true} />;
       case 'alpha-analysis': return <AdminAlphaAnalysis />;
       case 'territory-value': return <AdminTerritoryValue />;
       case 'bdre': return <AdminBDREMonitor />;

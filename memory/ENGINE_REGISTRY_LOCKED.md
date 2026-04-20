@@ -10,15 +10,15 @@
 ## Hash SHA-256 officiel
 
 ```
-c1967264973562f2b5d16d6fa884b0010b6ceeae3637ff3b3ca9f16dd0faa1af
+072ca8dd3480b978a604418ba4358603d4b6c69a09caea5b84893d1916785648
 ```
 
 Toute altération de la liste des engines (`ENGINES_LOCKED` dans
 `/app/backend/engines/v8_institutional/registry_lock_omega.py`)
 invalide ce hash et fait échouer `test_engine_registry_locked`.
 
-> **Évolution Phase X-B :** registre étendu de 23 → 25 engines avec l'ajout de
-> `SCIENCE-GAPS-DATASETS-Ω` et `ENGINE-CANADA-Ω` (souveraineté pancanadienne).
+> **Évolution Phase X-C :** registre étendu de 25 → 27 engines avec l'ajout de
+> `FEDERAL-DATASETS-Ω` (LEP + HYDAT) et `ENGINE-RISQUES-HYDRO-Ω`.
 
 ## 22 Engines SUPRA-Ω — répartition par pilier
 
@@ -75,7 +75,13 @@ invalide ce hash et fait échouer `test_engine_registry_locked`.
 | 24 | `SCIENCE-GAPS-DATASETS-Ω` | X |
 | 25 | `ENGINE-CANADA-Ω` | X-B |
 
-**TOTAL SCELLÉ : 25 engines** (22 obligatoires SUPRA-Ω + 3 gouvernance étendue).
+### Phase X-C (LEP + HYDAT + risques hydro)
+| # | Engine | Phase |
+|---|--------|-------|
+| 26 | `FEDERAL-DATASETS-Ω` | X-C |
+| 27 | `ENGINE-RISQUES-HYDRO-Ω` | X-C |
+
+**TOTAL SCELLÉ : 27 engines** (22 obligatoires SUPRA-Ω + 5 gouvernance/environnement étendue).
 
 ## Endpoints de vérification
 
@@ -101,7 +107,7 @@ Toute modification de ce registre exige :
 ## Signature
 
 ```
-SEALED  — Phase XI / X-B — 2026-04-19
-SHA-256 — c1967264973562f2…a1af
+SEALED  — Phase XI / X-B / X-C — 2026-04-19
+SHA-256 — 072ca8dd3480b978…5648
 STATUS  — VERROUILLÉ IRRÉVOCABLEMENT
 ```

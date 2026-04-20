@@ -53,6 +53,9 @@ ENGINES_LOCKED = [
     # Phase X-B additions
     {"name": "SCIENCE-GAPS-DATASETS-Ω", "pillar": "GOUVERNANCE", "phase": "X"},
     {"name": "ENGINE-CANADA-Ω", "pillar": "GOUVERNANCE", "phase": "X-B"},
+    # Phase X-C additions
+    {"name": "FEDERAL-DATASETS-Ω", "pillar": "GOUVERNANCE", "phase": "X-C"},
+    {"name": "ENGINE-RISQUES-HYDRO-Ω", "pillar": "ENVIRONNEMENT", "phase": "X-C"},
 ]
 
 REGISTRY_VERSION = "V20-SUPRA-LOCKED-PHASE-XI-2026-04"

@@ -1082,10 +1082,10 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
         from engines.v8_institutional.engine_incertitude_omega import compute_incertitude
         from engines.v8_institutional.engine_calibration_omega import compute_calibration
         from engines.v8_institutional.engine_population_dynamics_omega import compute_population_dynamics
-        habitat_supra = compute_habitat_supra(terrain_result)
+        habitat_supra = compute_habitat_supra(terrain_result, contamination_v2=contamination_v2)
         hydrologie_supra = compute_hydrologie_supra(terrain_result)
         sol_supra = compute_sol_supra(terrain_result)
-        stress_anthropique = compute_stress_anthropique(terrain_result, hour=hour)
+        stress_anthropique = compute_stress_anthropique(terrain_result, hour=hour, contamination_v2=contamination_v2)
         espece_profile = compute_especes(species)
         comportement_biologique = compute_comportement_biologique(species, month, hour=hour)
         connectivite_ecologique = compute_connectivite_ecologique(terrain_result, corridors)
@@ -1095,7 +1095,7 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
         quality_data = compute_quality_data()
         incertitude = compute_incertitude(terrain_result, species=species)
         calibration = compute_calibration(terrain_result)
-        population_dynamics = compute_population_dynamics(species)
+        population_dynamics = compute_population_dynamics(species, contamination_v2=contamination_v2)
         # P3
         from engines.v8_institutional.engine_climat_futur_omega import compute_climat_futur
         from engines.v8_institutional.engine_influence_lunaire_omega import compute_influence_lunaire

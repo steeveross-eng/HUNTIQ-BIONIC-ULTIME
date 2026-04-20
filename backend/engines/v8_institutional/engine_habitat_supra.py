@@ -46,8 +46,12 @@ def _mosaicite(terrain: dict) -> float:
     return round(max(0.0, min(1.0, val)), 3)
 
 
-def compute_habitat_supra(terrain_v10: dict) -> dict:
-    """Retourne habitat score + breakdown + type + mosaicite."""
+def compute_habitat_supra(terrain_v10: dict, contamination_v2: dict | None = None) -> dict:
+    """Retourne habitat score + breakdown + type + mosaicite.
+
+    Phase X-C: intégration profonde contamination_v2 (CWD/MDC) comme paramètre
+    direct. Pénalise composite selon cwd_risk et distance zone MDC.
+    """
     mark_call(ENGINE_NAME)
     terrain = terrain_v10.get("terrain", terrain_v10) if isinstance(terrain_v10, dict) else {}
 
@@ -89,6 +93,21 @@ def compute_habitat_supra(terrain_v10: dict) -> dict:
         1,
     )
 
+    # Phase X-C : malus contamination_v2 (CWD/MDC)
+    cwd_malus = 0.0
+    cwd_info = {}
+    if contamination_v2:
+        risk = (contamination_v2.get("cwd_risk") or "").upper()
+        dist = contamination_v2.get("distance_nearest_cwd_km")
+        if risk == "ELEVE":
+            cwd_malus = 12.0
+        elif risk == "MODERE":
+            cwd_malus = 6.0
+        elif risk == "FAIBLE":
+            cwd_malus = 2.0
+        composite = round(max(0.0, composite - cwd_malus), 1)
+        cwd_info = {"cwd_risk": risk or None, "distance_km": dist, "malus_applied": cwd_malus}
+
     return {
         "engine": ENGINE_NAME,
         "version": ENGINE_VERSION,
@@ -105,5 +124,6 @@ def compute_habitat_supra(terrain_v10: dict) -> dict:
             "pente": round(s_pente, 1),
             "exposition": round(s_expo, 1),
         },
+        "contamination_v2_impact": cwd_info or None,
         "data_sources": ["LIDAR_WCS_1M", "IRDA_PEDOLOGIE", "OPEN_METEO"],
     }
