@@ -82,8 +82,8 @@ ENGINES_LOCKED = [
     # STATUS OFFICIAL — engine source conservé mais non enregistré.
 ]
 
-REGISTRY_VERSION = "V23-SUPRA-LOCKED-PHASE-XI-SUPRA-K-2026-04"
-REGISTRY_SEALED_AT = "2026-04-20T20:30:00Z"
+REGISTRY_VERSION = "V24-SUPRA-LOCKED-PHASE-XI-SUPRA-L-2026-04"
+REGISTRY_SEALED_AT = "2026-04-20T21:00:00Z"
 
 # Phase XI-SUPRA-E §V : Archive reconstructible — hash consigné dans le lock
 # Ce hash doit correspondre au fichier /app/memory/ARCHIVE_BIONIC_V20_SUPRA.tar.gz

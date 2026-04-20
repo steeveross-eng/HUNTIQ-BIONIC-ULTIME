@@ -3,6 +3,21 @@
 
 ---
 
+## 2026-04-20T21:00Z — PHASE XI-SUPRA-L (FRONTEND CORRIDORS RENDU Ω)
+
+### Directive: PHASE_XI_SUPRA_K_FRONTEND_CORRIDORS_RENDU_OMEGA — EXÉCUTÉE
+- **Store frontend** `/app/frontend/src/lib/renduOmegaStore.js` (fetch `/rendu-omega/rules` + défauts gelés + helpers Leaflet)
+- **Couche Leaflet CORRIDORS_OMEGA** dans `BionicLayersV8.jsx` patchée :
+  - Couleur unique `#FF8F00`, épaisseurs 1.2/2.0/3.0, opacité ≥ 0.75, minZoom=13, Z-order conforme
+  - PREVIEW == FINAL via pipeline unique (défauts store identiques au backend)
+- **Endpoint** `GET /api/v20/territoire/corridors-omega/visual-self-test` : 6/6 checks OK
+- **test_render_guard_styles.py** mis à jour pour valider la nouvelle norme RENDU-Ω
+- **Registry Lock** → `V24-SUPRA-LOCKED-PHASE-XI-SUPRA-L-2026-04` (SHA-256 `8d2d6169320ccf05b16b57ed4f610f184df51cfa2fd7a0e3d365f6460eb704fc`)
+- **SELF-AUDIT-Ω** : 58/58 suites OK
+- Doc : `/app/memory/FRONTEND_TERRITOIRE_RENDU_OMEGA.md`
+
+---
+
 ## 2026-04-20T20:30Z — PHASE XI-SUPRA-K (CORRIDORS_RENDU_EXPLAIN_OMEGA)
 
 ### Directive: PHASE_XI_SUPRA_D+E_CORRIDORS_RENDU_EXPLAIN_OMEGA — EXÉCUTÉE

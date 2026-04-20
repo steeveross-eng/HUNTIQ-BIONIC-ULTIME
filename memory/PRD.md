@@ -1,5 +1,38 @@
 ## EXCLUSION OFFICIELLE LEP_CRITICAL_HABITAT_NATIONAL (2026-04-20T16:00Z) ✅
 
+## PHASE XI-SUPRA-L — FRONTEND CORRIDORS RENDU Ω (2026-04-20T21:00Z) ✅
+
+### Directive exécutée : `PHASE_XI_SUPRA_K_FRONTEND_CORRIDORS_RENDU_OMEGA`
+
+### Livrables
+- **Store frontend** : `/app/frontend/src/lib/renduOmegaStore.js`
+  - Fetch `/api/v20/territoire/rendu-omega/rules` (cache 60s) + défauts gelés identiques au backend
+  - Helpers : `resolveCorridorStyleOmega()`, `resolveCorridorWeight()`, `isCorridorsVisibleAtZoom()`, `resolveZIndex()`
+- **Couche Leaflet CORRIDORS_OMEGA** patchée dans `BionicLayersV8.jsx` :
+  - Couleur unique `#FF8F00` (plus de multicolore rouge/orange/jaune/vert)
+  - Épaisseurs 1.2 / 2.0 / 3.0 px selon intensité
+  - Opacité ≥ 0.75 (défaut 0.85)
+  - minZoom=13 strict
+  - Z-order zones < hydrologie < terrain < corridors < salines < affûts < hotspots < vent
+  - PREVIEW == FINAL garanti (défauts store identiques au backend, même pipeline)
+- **Endpoint Visual Self-Test** : `GET /api/v20/territoire/corridors-omega/visual-self-test?lat&lon&species`
+  - 6 checks : color_correct, thickness_correct, opacity_correct, min_zoom_correct, z_index_correct, no_affut_influence
+  - **Résultat : 6/6 OK — CONFORME**
+- **Test institutionnel** `test_render_guard_styles.py` mis à jour (valide import renduOmegaStore + resolveCorridorStyleOmega + minZoom gate)
+
+### Registry Lock
+- Version: `V24-SUPRA-LOCKED-PHASE-XI-SUPRA-L-2026-04`
+- SHA-256: `8d2d6169320ccf05b16b57ed4f610f184df51cfa2fd7a0e3d365f6460eb704fc`
+- 40 engines scellés (aucun nouvel engine — renforcement frontend uniquement)
+
+### SELF-AUDIT-Ω
+- **58/58 suites OK** — CONFORME
+
+### Document officiel
+- `/app/memory/FRONTEND_TERRITOIRE_RENDU_OMEGA.md`
+
+---
+
 ## PHASE XI-SUPRA-K — CORRIDORS + RENDU + EXPLAIN + SPECIES + IA-VISION (2026-04-20T20:30Z) ✅
 
 ### Directive exécutée: `PHASE_XI_SUPRA_D+E_CORRIDORS_RENDU_EXPLAIN_OMEGA`

@@ -1,8 +1,8 @@
-# ENGINE_REGISTRY_LOCKED — Phase XI-SUPRA-K
+# ENGINE_REGISTRY_LOCKED — Phase XI-SUPRA-L
 
 > **STATUT : SCELLÉ — SEALED — VERROUILLÉ**
-> **Version registre :** V23-SUPRA-LOCKED-PHASE-XI-SUPRA-K-2026-04
-> **Date de scellement :** 2026-04-20T20:30:00Z
+> **Version registre :** V24-SUPRA-LOCKED-PHASE-XI-SUPRA-L-2026-04
+> **Date de scellement :** 2026-04-20T21:00:00Z
 > **Commandant :** STEEVE-MAX
 
 ---
@@ -10,7 +10,7 @@
 ## Hash SHA-256 officiel
 
 ```
-cd13eb29e6ac556eb2748ed5388a01e6e83f2a6d8ae843e93d701ceb5a5f685a
+8d2d6169320ccf05b16b57ed4f610f184df51cfa2fd7a0e3d365f6460eb704fc
 ```
 
 Toute altération de la liste des engines (`ENGINES_LOCKED` dans
@@ -33,12 +33,16 @@ invalide ce hash et fait échouer `test_engine_registry_locked`.
 > **Évolution Phase XI-SUPRA-H :** registre étendu à **37 engines** par ajout de
 > `ENGINE-IA-CORRIDORS-Ω` (corridors biomimétiques).
 >
-> **Évolution Phase XI-SUPRA-K (présente directive) :** registre étendu à
-> **40 engines** par ajout de `ENGINE-RENDU-Ω`, `ENGINE-SPECIES-PROFILES-Ω`,
-> `ENGINE-IA-VISION-REGISTRY-Ω`. Rendu institutionnel des corridors verrouillé
-> (`#FF8F00`, épaisseurs 1.2/2.0/3.0 px, opacité ≥ 0.75, Catmull-Rom 25–30 pts,
-> segment ≤ 20 m, angle ≤ 45°, minZoom=13, zéro interaction affûts,
-> PREVIEW=FINAL).
+> **Évolution Phase XI-SUPRA-K :** registre étendu à **40 engines** par ajout de
+> `ENGINE-RENDU-Ω`, `ENGINE-SPECIES-PROFILES-Ω`, `ENGINE-IA-VISION-REGISTRY-Ω`.
+> Rendu institutionnel des corridors verrouillé.
+>
+> **Évolution Phase XI-SUPRA-L (présente directive) :** application côté frontend
+> des règles RENDU-Ω sur la couche Leaflet `CORRIDORS_OMEGA` (couleur unique
+> `#FF8F00`, épaisseurs 1.2/2.0/3.0 px, opacité ≥ 0.75, minZoom=13, Z-order
+> strict, PREVIEW==FINAL). Ajout endpoint visuel self-test
+> `/api/v20/territoire/corridors-omega/visual-self-test` (6/6 checks OK).
+> Aucun nouvel engine ajouté — renforcement frontend uniquement.
 
 ---
 
@@ -94,8 +98,8 @@ Toute modification de ce registre exige :
 
 ```
 SEALED  — Phase XI / X-B / X-C / X-D / XI-SUPRA / XI-SUPRA-B / XI-SUPRA-C /
-         XI-SUPRA-G / XI-SUPRA-H / XI-SUPRA-K — 2026-04-20
-SHA-256 — cd13eb29e6ac556eb2748ed5388a01e6e83f2a6d8ae843e93d701ceb5a5f685a
+         XI-SUPRA-G / XI-SUPRA-H / XI-SUPRA-K / XI-SUPRA-L — 2026-04-20
+SHA-256 — 8d2d6169320ccf05b16b57ed4f610f184df51cfa2fd7a0e3d365f6460eb704fc
 TOTAL   — 40 engines scellés
 STATUS  — VERROUILLÉ IRRÉVOCABLEMENT
 ```

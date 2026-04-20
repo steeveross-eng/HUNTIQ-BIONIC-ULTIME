@@ -1,9 +1,9 @@
 """
-RENDER-GUARD-Ω — Validation styles BionicLayersV8 vs directives V12-R5
-=======================================================================
-Verifie par inspection du code source que les styles respectent strictement
-les directives V12-R5:
-  - corridors: weight clamp [2.0, 4.0], opacity >= 0.75
+RENDER-GUARD-Ω — Validation styles BionicLayersV8 vs directives V12-R5 & RENDU-Ω (Phase XI-SUPRA-L)
+====================================================================================================
+Verifie par inspection du code source que les styles respectent strictement:
+  - corridors RENDU-Ω: couleur #FF8F00 unique, epaisseurs 1.2/2.0/3.0 via resolveCorridorStyleOmega,
+                      opacite >= RENDU_OMEGA.opacityMin (0.75), minZoom=13 via isCorridorsVisibleAtZoom
   - contamination: fillColor #FF0000, fillOpacity 0.35-0.40, stroke #FF6A00 2.5px dashArray '6 4'
   - affuts: couleur orange #FF9800, contour blanc #FFFFFF 2px, pane 'markerPane'
   - salines: jaune #FDD835, distance_min_salines 120m
@@ -29,9 +29,11 @@ def must_contain(text, needle, label):
 
 failures = []
 
-# CORRIDORS V12-R5
-failures.append(must_contain(BL, "Math.max(2.0, Math.min(4.0, style.weight))", "corridors weight clampe [2.0, 4.0]"))
-failures.append(must_contain(BL, "Math.max(0.75, style.opacity)", "corridors opacity >= 0.75"))
+# CORRIDORS RENDU-Ω (Phase XI-SUPRA-L)
+failures.append(must_contain(BL, "resolveCorridorStyleOmega(c)", "corridors style RENDU-Ω (resolveCorridorStyleOmega)"))
+failures.append(must_contain(BL, "RENDU_OMEGA.opacityMin", "corridors opacity >= RENDU_OMEGA.opacityMin"))
+failures.append(must_contain(BL, "isCorridorsVisibleAtZoom(currentZoom)", "corridors minZoom gate (isCorridorsVisibleAtZoom)"))
+failures.append(must_contain(BL, "@/lib/renduOmegaStore", "import renduOmegaStore"))
 
 # CONTAMINATION V12-R5 (Directive IV stricte)
 failures.append(must_contain(BL, "'#FF0000'", "contamination fillColor #FF0000"))

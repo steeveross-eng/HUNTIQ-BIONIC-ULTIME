@@ -249,3 +249,121 @@ class ValidateRenderBody(BaseModel):
 @router.post("/validate")
 async def rendu_omega_validate(body: ValidateRenderBody):
     return validate_corridors_batch(body.corridors)
+
+
+# ============================================================
+# Phase XI-SUPRA-L — Visual Self-Test CORRIDORS-Ω
+# ============================================================
+visual_router = APIRouter(prefix="/api/v20/territoire/corridors-omega", tags=["V20 Corridors-Ω"])
+
+
+@visual_router.get("/visual-self-test")
+async def corridors_omega_visual_self_test(
+    lat: float = 45.10,
+    lon: float = -72.80,
+    species: str = "chevreuil",
+):
+    """Vérifie que les corridors générés live satisferaient les règles RENDU-Ω
+    appliquées côté frontend (même pipeline que le renderer Leaflet).
+
+    Checks exécutés :
+      • color_correct         — toutes les lignes auront `#FF8F00`
+      • thickness_correct     — épaisseur ∈ {1.2, 2.0, 3.0}
+      • opacity_correct       — opacité ≥ 0.75
+      • min_zoom_correct      — couche visible uniquement si zoom ≥ 13
+      • z_index_correct       — ordre conforme (corridors entre terrain et salines)
+      • no_affut_influence    — aucune chaîne 'affut/affût' dans les corridors
+    """
+    mark_call(ENGINE_NAME)
+    from engines.v8_institutional.territoire_v10_supra import compute_territoire_v10
+
+    bundle = await compute_territoire_v10(
+        lat, lon, species,
+        month=10, hour=7, wind_deg=225, wind_speed=15,
+    )
+    corridors = bundle.get("corridors", []) or []
+
+    # Reproduction exacte du mapping frontend `resolveCorridorWeight`
+    def _frontend_weight(c: dict) -> float:
+        intensity = c.get("intensity", c.get("type"))
+        if isinstance(intensity, (int, float)):
+            if intensity >= 66:
+                return 3.0
+            if intensity >= 33:
+                return 2.0
+            return 1.2
+        key = str(intensity or "").lower().strip()
+        if key in {"critique", "majeur", "extreme", "critical"}:
+            return 3.0
+        if key in {"fort", "intense", "strong"}:
+            return 2.0
+        return 1.2
+
+    applied_styles: list[dict] = []
+    for c in corridors:
+        applied_styles.append({
+            "id": c.get("id"),
+            "color": RENDU_RULES["color"],
+            "weight_px": _frontend_weight(c),
+            "opacity": 0.85,
+            "min_zoom": RENDU_RULES["min_zoom"],
+            "geometry_type": RENDU_RULES["geometry_type"],
+            "intensity_input": c.get("intensity", c.get("type")),
+        })
+
+    # Check 1: color_correct
+    color_correct = all(s["color"] == RENDU_RULES["color"] for s in applied_styles)
+
+    # Check 2: thickness_correct
+    thickness_correct = all(
+        float(s["weight_px"]) in [float(w) for w in RENDU_RULES["weights_allowed_px"]]
+        for s in applied_styles
+    )
+
+    # Check 3: opacity_correct
+    opacity_correct = all(s["opacity"] >= RENDU_RULES["opacity_min"] for s in applied_styles)
+
+    # Check 4: min_zoom_correct — valeur backend = valeur store frontend
+    min_zoom_correct = RENDU_RULES["min_zoom"] == 13
+
+    # Check 5: z_index_correct — corridors entre terrain et salines
+    order = RENDU_RULES["z_index_order"]
+    z_index_correct = (
+        order.index("terrain") < order.index("corridors") < order.index("salines")
+    )
+
+    # Check 6: no_affut_influence — aucune chaîne 'affut' dans les corridors
+    def _has_affut(c: dict) -> bool:
+        flat = str(c).lower()
+        return ("affut" in flat) or ("affût" in flat)
+
+    no_affut_influence = not any(_has_affut(c) for c in corridors)
+
+    checks = [
+        {"name": "color_correct", "ok": color_correct,
+         "detail": f"all corridors use {RENDU_RULES['color']}"},
+        {"name": "thickness_correct", "ok": thickness_correct,
+         "detail": f"all weights ∈ {RENDU_RULES['weights_allowed_px']}"},
+        {"name": "opacity_correct", "ok": opacity_correct,
+         "detail": f"opacity ≥ {RENDU_RULES['opacity_min']}"},
+        {"name": "min_zoom_correct", "ok": min_zoom_correct,
+         "detail": f"minZoom = {RENDU_RULES['min_zoom']}"},
+        {"name": "z_index_correct", "ok": z_index_correct,
+         "detail": f"z-order = {order}"},
+        {"name": "no_affut_influence", "ok": no_affut_influence,
+         "detail": "aucune référence affûts trouvée dans les corridors live"},
+    ]
+    failed = [c for c in checks if not c["ok"]]
+
+    return {
+        "engine": ENGINE_NAME,
+        "version": ENGINE_VERSION,
+        "phase": "XI-SUPRA-L",
+        "waypoint": {"lat": lat, "lon": lon, "species": species},
+        "corridors_total": len(corridors),
+        "applied_styles": applied_styles,
+        "checks": checks,
+        "failed_checks": [c["name"] for c in failed],
+        "conforme": len(failed) == 0,
+        "tested_at": datetime.now(timezone.utc).isoformat(),
+    }

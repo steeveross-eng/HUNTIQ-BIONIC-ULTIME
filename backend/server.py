@@ -972,9 +972,10 @@ except Exception as e:
 
 # ENGINE-RENDU-Ω — Phase XI-SUPRA-K (rendu institutionnel corridors)
 try:
-    from engines.v8_institutional.engine_rendu_omega import router as rendu_omega_router
+    from engines.v8_institutional.engine_rendu_omega import router as rendu_omega_router, visual_router as rendu_visual_router
     app.include_router(rendu_omega_router)
-    logger.info("ENGINE-RENDU-Ω registered (/api/v20/territoire/rendu-omega)")
+    app.include_router(rendu_visual_router)
+    logger.info("ENGINE-RENDU-Ω registered (/api/v20/territoire/rendu-omega + /corridors-omega/visual-self-test)")
 except Exception as e:
     logger.warning(f"ENGINE-RENDU-Ω not loaded: {e}")
 

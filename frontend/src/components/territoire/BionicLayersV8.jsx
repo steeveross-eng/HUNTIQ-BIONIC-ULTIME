@@ -22,6 +22,7 @@ import L from 'leaflet';
 import { NUTRITION_SEVERITY_COLORS } from '@/config/territoire_defaults';
 import { validateElement, logRenderCycle } from './RenderGuardOmega';
 import { buildInstitutionalPopup, FichePopup } from './InstitutionalPopup';
+import { RENDU_OMEGA, resolveCorridorStyleOmega, isCorridorsVisibleAtZoom, getRenduRules } from '@/lib/renduOmegaStore';
 
 // ═══ PALETTE BCE-4X V9-INSTITUTIONNEL ═══
 const ZONE_COLORS = {
@@ -105,6 +106,10 @@ const BionicLayersV8 = ({
     setCurrentZoom(map.getZoom());
     return () => { map.off('zoomend', onZoom); };
   }, [map]);
+
+  // RENDU-Ω V1 (Phase XI-SUPRA-L): pré-fetch des règles visuelles officielles
+  // (PREVIEW == FINAL garanti: défauts store identiques au backend).
+  useEffect(() => { getRenduRules().catch(() => {}); }, []);
 
   // AMPLIFICATION-Ω-V13: helpers de scaling
   const corridorWeightFactor = currentZoom < 14 ? (1 + (15 - currentZoom) * 0.3) : 1;
@@ -196,33 +201,39 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-2: CORRIDORS-Omega — STYLE-HIERARCHISE V12-R5 (Directive I) ═══
-    // Directive I: epaisseur 2.0-4.0px, opacite >=0.75, couleurs V11-SUPRA
-    // Min weight 2.0 et min opacity 0.75 imposes institutionnellement (jamais en dessous)
-    if (showCorridors && corridors.length > 0) {
+    // ═══ Z-3: CORRIDORS-Ω — PHASE XI-SUPRA-L (RENDU-Ω INSTITUTIONNEL) ═══
+    // Règles verrouillées (RENDUS_CORRIDORS_OMEGA.md) :
+    //   • Couleur unique        #FF8F00 (orange ambre institutionnel)
+    //   • Épaisseurs autorisées 1.2 / 2.0 / 3.0 px (selon intensité)
+    //   • Opacité minimale      0.75 (défaut 0.85)
+    //   • Géométrie              Catmull-Rom, smoothFactor=0 (path déjà lissé côté IA)
+    //   • minZoom                13 (couche masquée à zoom<13)
+    //   • Zéro interaction affûts, PREVIEW==FINAL
+    const corridorsVisibleAtZoom = isCorridorsVisibleAtZoom(currentZoom);
+    if (showCorridors && corridors.length > 0 && corridorsVisibleAtZoom) {
       corridors.forEach(c => {
         const path = c.path || [[c.start.lat, c.start.lng], [c.end.lat, c.end.lng]];
-        const style = CORRIDOR_STYLES[c.type] || CORRIDOR_STYLES.normal;
-        const color = style.color;
-        // Directive I R5: weight clampe [2.0, 4.0] + AMPLIFICATION-Ω-V13 scaling si zoom<14
-        const baseWeight = Math.max(2.0, Math.min(4.0, style.weight));
-        const weight = baseWeight * corridorWeightFactor;
-        // Directive I R5: opacity >= 0.75
-        const opacity = Math.max(0.75, style.opacity);
+        // Style strict RENDU-Ω — couleur, épaisseur, opacité, smoothing
+        const styleOmega = resolveCorridorStyleOmega(c);
+        const color = styleOmega.color;           // #FF8F00
+        const weight = styleOmega.weight * corridorWeightFactor; // 1.2/2.0/3.0 éventuellement amplifié
+        const opacity = Math.max(RENDU_OMEGA.opacityMin, styleOmega.opacity); // >=0.75
 
         const line = L.polyline(path, {
-          color: color,
-          weight: weight,
-          opacity: opacity,
+          color,
+          weight,
+          opacity,
           lineCap: 'round',
           lineJoin: 'round',
           smoothFactor: 0,
           interactive: true,
         });
+        line.options._renduOmega = {
+          version: 'V1.0-PHASE-XI-SUPRA-L-2026-04',
+          color, weight, opacity, min_zoom: RENDU_OMEGA.minZoom,
+        };
 
-        // ANTI-LEGACY-Omega V11-SUPRA: PURGE fleche polygone pleine
-        // (triangle blanc opaque identifie comme couche fantome par DIAGNOSTIC-Omega)
-        // Remplace par fleche-ligne stroke-only (2 segments courts, ZERO fill)
+        // Chevron directionnel (même couleur RENDU-Ω, stroke-only)
         if (path.length >= 3) {
           const midIdx = Math.floor(path.length / 2);
           const prev = path[midIdx - 1] || path[0];
@@ -232,10 +243,9 @@ const BionicLayersV8 = ({
           const dy = next[0] - prev[0];
           const len = Math.sqrt(dx * dx + dy * dy);
           if (len > 0.0001) {
-            const arrowSize = 0.00025; // 3x plus petit, zero impact visuel
+            const arrowSize = 0.00025;
             const nx = dx / len;
             const ny = dy / len;
-            // Tete de fleche en 2 segments V-shape (polyline stroke-only, ZERO fill)
             const tipLat = mid[0] + ny * arrowSize;
             const tipLng = mid[1] + nx * arrowSize;
             const leftLat = mid[0] - ny * arrowSize * 0.6 + nx * arrowSize * 0.5;
@@ -251,9 +261,12 @@ const BionicLayersV8 = ({
         }
 
         const costStr = c.cost_surface !== undefined ? ` | cost:${c.cost_surface}` : '';
-        const netStr = c.is_network_link ? ' [RESEAU]' : '';
+        const netStr = c.is_network_link ? ' [RÉSEAU]' : '';
+        const intensityLabel = (typeof c.intensity === 'number')
+          ? `int:${Math.round(c.intensity)}`
+          : `int:${c.type || c.intensity || 'normal'}`;
         line.bindTooltip(
-          `<b style="color:${color}">${c.type.toUpperCase()}</b> int:${Math.round(c.intensity)}${costStr} | ${c.species_profile || ''}${netStr}`,
+          `<b style="color:${color}">CORRIDOR-Ω</b> ${intensityLabel}${costStr} | ${c.species_profile || ''}${netStr}`,
           { sticky: true, opacity: 0.95 }
         );
         group.addLayer(line);
