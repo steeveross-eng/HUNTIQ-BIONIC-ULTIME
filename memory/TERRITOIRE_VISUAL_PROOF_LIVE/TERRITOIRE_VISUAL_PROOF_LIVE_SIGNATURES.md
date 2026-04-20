@@ -1,10 +1,10 @@
 # TERRITOIRE_VISUAL_PROOF_LIVE_SIGNATURES
 
 > **Statut :** SEALED · Phase XI-SUPRA-C
-> **Horodatage UTC :** 2026-04-20T20:30:42.747271+00:00
+> **Horodatage UTC :** 2026-04-20T22:23:53.928221+00:00
 > **Capture user :** steeve-max-capture@huntiq.com
 > **Algorithme :** HMAC-SHA256
-> **Registry SHA-256 :** `cd13eb29e6ac556eb2748ed5388a01e6e83f2a6d8ae843e93d701ceb5a5f685a`
+> **Registry SHA-256 :** `8d2d6169320ccf05b16b57ed4f610f184df51cfa2fd7a0e3d365f6460eb704fc`
 > **Document Maître SHA-256 :** `6aff169f73531a46a38f5caff9defc7cadac6745029fa15d73c0174a1dfc2672`
 > **Playwright returncode :** 1
 
@@ -17,6 +17,6 @@
 | detail | 17 | `TERRITOIRE_detail_live.png` | 3033076 B | `145b8911aab19ff22c02597328651cc5…` | `215d03cea906a60863d9e34743160c8b…` |
 
 ```
-SEALED  — Phase XI-SUPRA-C — 2026-04-20T20:30:42.747271+00:00
+SEALED  — Phase XI-SUPRA-C — 2026-04-20T22:23:53.928221+00:00
 ALL_PRESENT = True
 ```
