@@ -932,3 +932,16 @@ Appliqué dans `BionicLayersV8.jsx` via import `CORRIDOR_STYLE_HIERARCHY` :
 - P2: Migration MVT PBF natif via `vector_tile_base` (sans conflit protobuf) si volume >10K entités/tuile
 - P3: Frontend `Leaflet.VectorGrid.slicer` consommant `/tiles/` (aujourd'hui bundle seul consommé)
 - P4: Redis cache partagé multi-instance si scale >50K utilisateurs (actuellement cache local-pod)
+
+## Phase XI — Purge Legacy + Verrouillage Document Maître (2026-04-19)
+
+- **Module scellement** : `registry_lock_omega.py` — 23 engines SUPRA-Ω gelés
+- **Hash officiels** :
+  - Registry : `517b7c2e770ec442675fbf9f7fa543a13af1636bbfd101dc1238b20ff7a68fa0`
+  - Doc Maître : `6aff169f73531a46a38f5caff9defc7cadac6745029fa15d73c0174a1dfc2672`
+- **Endpoints** : `/registry-lock`, `/document-maitre-lock`
+- **3 nouvelles suites SELF-AUDIT-Ω** : test_purge_legacy, test_document_maitre_locked, test_engine_registry_locked
+- **SELF-AUDIT** : 29/29 OK, perf_guard=ok
+- **Livrables** : LEGACY_PURGE_REPORT.md, DOCUMENT_MAITRE_LOCKED.md, ENGINE_REGISTRY_LOCKED.md, PHASE_XI_VALIDATION_REPORT.md
+- **ENGINE-CANADA-Ω** : NON ACTIVÉ (optionnel — aucune directive explicite)
+

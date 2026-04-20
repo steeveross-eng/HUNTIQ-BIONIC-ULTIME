@@ -1,0 +1,141 @@
+"""
+REGISTRY-LOCK-Ω — Verrouillage institutionnel Phase XI
+=======================================================
+Gèle les 22 engines SUPRA-Ω comme architecture officielle.
+Calcule + expose le hash SHA-256 du Document Maître.
+Interdit toute dérive non validée (GOUVERNANCE + SELF-AUDIT + SCIENCE-GUARD + PERF-GUARD).
+
+Endpoints (admin):
+  GET /api/v20/territoire/registry-lock
+  GET /api/v20/territoire/document-maitre-lock
+"""
+import hashlib
+import json
+from pathlib import Path
+from fastapi import APIRouter
+
+router = APIRouter(prefix="/api/v20/territoire", tags=["V20 Registry Lock"])
+
+# ============================================================
+# REGISTRE OFFICIEL — 22 ENGINES SUPRA-Ω (Phase I → X)
+# GEL INSTITUTIONNEL — modification = VIOLATION BCE-4X
+# ============================================================
+ENGINES_LOCKED = [
+    # GOUVERNANCE (7)
+    {"name": "ENGINE-SCIENCE-Ω", "pillar": "GOUVERNANCE", "phase": "VIII"},
+    {"name": "ENGINE-GOUVERNANCE-Ω", "pillar": "GOUVERNANCE", "phase": "VIII"},
+    {"name": "ENGINE-QUALITE-DONNEES-Ω", "pillar": "GOUVERNANCE", "phase": "P2"},
+    {"name": "ENGINE-INCERTITUDE-Ω", "pillar": "GOUVERNANCE", "phase": "P2"},
+    {"name": "ENGINE-CALIBRATION-Ω", "pillar": "GOUVERNANCE", "phase": "P2"},
+    {"name": "ENGINE-CALIBRATION-DYNAMIQUE-Ω", "pillar": "GOUVERNANCE", "phase": "X"},
+    {"name": "ANTI-CONTAMINATION-INSTITUTIONNEL-Ω", "pillar": "GOUVERNANCE", "phase": "X"},
+    # BIO-SYSTEME (6)
+    {"name": "ENGINE-ESPECE-Ω", "pillar": "BIO-SYSTEME", "phase": "P1"},
+    {"name": "ENGINE-CONNECTIVITE-ECOLOGIQUE-Ω", "pillar": "BIO-SYSTEME", "phase": "P1"},
+    {"name": "ENGINE-IA-VISION-ECOLOGIQUE-Ω", "pillar": "BIO-SYSTEME", "phase": "P1"},
+    {"name": "ENGINE-POPULATION-DYNAMICS-Ω", "pillar": "BIO-SYSTEME", "phase": "P2"},
+    {"name": "ENGINE-CONTAMINATION-Ω-V2", "pillar": "BIO-SYSTEME", "phase": "X"},
+    {"name": "ENGINE-HABITAT-SUPRA", "pillar": "BIO-SYSTEME", "phase": "SUPRA"},
+    # COMPORTEMENT-HUMAIN (2)
+    {"name": "ENGINE-COMPORTEMENT-BIOLOGIQUE-Ω", "pillar": "COMPORTEMENT-HUMAIN", "phase": "P1"},
+    {"name": "ENGINE-STRESS-ANTHROPIQUE-Ω", "pillar": "COMPORTEMENT-HUMAIN", "phase": "SUPRA"},
+    # SYSTEME-SENSORIEL (1)
+    {"name": "ENGINE-SENSORIEL-VENT-ODEURS-Ω", "pillar": "SYSTEME-SENSORIEL", "phase": "P1"},
+    # ENVIRONNEMENT (6)
+    {"name": "ENGINE-THERMIQUE-MICROCLIMAT-Ω", "pillar": "ENVIRONNEMENT", "phase": "P1"},
+    {"name": "ENGINE-CLIMAT-FUTUR-Ω", "pillar": "ENVIRONNEMENT", "phase": "P3"},
+    {"name": "ENGINE-INFLUENCE-LUNAIRE-Ω", "pillar": "ENVIRONNEMENT", "phase": "P3"},
+    {"name": "ENGINE-PRESSION-ATMOSPHERIQUE-Ω", "pillar": "ENVIRONNEMENT", "phase": "P3"},
+    {"name": "ENGINE-HYDROLOGIE-SUPRA", "pillar": "ENVIRONNEMENT", "phase": "SUPRA"},
+    {"name": "ENGINE-SOL-SUPRA", "pillar": "ENVIRONNEMENT", "phase": "SUPRA"},
+    # MONITORING (1)
+    {"name": "MONITORING-ALERTE-ANOMALIES-Ω", "pillar": "GOUVERNANCE", "phase": "P0"},
+]
+
+REGISTRY_VERSION = "V20-SUPRA-LOCKED-PHASE-XI-2026-04"
+REGISTRY_SEALED_AT = "2026-04-19T00:00:00Z"
+
+DOCUMENT_MAITRE_PATH = Path("/app/memory/DOCUMENT_MAITRE_ULTIME_MAX.md")
+DOCUMENT_MAITRE_LOCKED_PATH = Path("/app/memory/DOCUMENT_MAITRE_LOCKED.md")
+
+
+def _registry_hash() -> str:
+    payload = json.dumps(
+        {"version": REGISTRY_VERSION, "sealed_at": REGISTRY_SEALED_AT, "engines": ENGINES_LOCKED},
+        sort_keys=True,
+        ensure_ascii=False,
+    ).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def _document_maitre_hash() -> str:
+    """SHA-256 du Document Maître si présent."""
+    if not DOCUMENT_MAITRE_PATH.exists():
+        return "MISSING"
+    return hashlib.sha256(DOCUMENT_MAITRE_PATH.read_bytes()).hexdigest()
+
+
+def assert_registry_locked(live_catalog_names: list) -> dict:
+    """Vérifie conformité du catalog live vs registry scellé.
+    Retourne violations. Appelé par SELF-AUDIT-Ω.
+    """
+    locked_set = {e["name"] for e in ENGINES_LOCKED}
+    live_set = set(live_catalog_names)
+    missing = sorted(locked_set - live_set)
+    # extras tolerés (auxiliaires non-scellés) mais loggés
+    extras = sorted(live_set - locked_set)
+    return {
+        "conforme": len(missing) == 0,
+        "locked_total": len(locked_set),
+        "live_total": len(live_set),
+        "missing": missing,
+        "extras_non_locked": extras,
+    }
+
+
+def get_registry_lock_status() -> dict:
+    return {
+        "version": REGISTRY_VERSION,
+        "sealed_at": REGISTRY_SEALED_AT,
+        "engines_count": len(ENGINES_LOCKED),
+        "engines": ENGINES_LOCKED,
+        "sha256": _registry_hash(),
+        "document_maitre": {
+            "path": str(DOCUMENT_MAITRE_PATH),
+            "exists": DOCUMENT_MAITRE_PATH.exists(),
+            "sha256": _document_maitre_hash(),
+        },
+        "validators": [
+            "ENGINE-GOUVERNANCE-Ω",
+            "SELF-AUDIT-Ω",
+            "SCIENCE-GUARD (ENGINE-SCIENCE-Ω)",
+            "PERF-GUARD-Ω",
+        ],
+    }
+
+
+@router.get("/registry-lock")
+async def v20_registry_lock():
+    """REGISTRY-LOCK-Ω: registre scellé des 22 engines SUPRA-Ω + hash."""
+    return get_registry_lock_status()
+
+
+@router.get("/document-maitre-lock")
+async def v20_document_maitre_lock():
+    """DOCUMENT-MAITRE-LOCKED: hash + métadonnées Document Maître institutionnel."""
+    exists = DOCUMENT_MAITRE_PATH.exists()
+    size = DOCUMENT_MAITRE_PATH.stat().st_size if exists else 0
+    return {
+        "path": str(DOCUMENT_MAITRE_PATH),
+        "exists": exists,
+        "size_bytes": size,
+        "sha256": _document_maitre_hash(),
+        "locked_report": str(DOCUMENT_MAITRE_LOCKED_PATH),
+        "validators": [
+            "ENGINE-GOUVERNANCE-Ω",
+            "SELF-AUDIT-Ω",
+            "SCIENCE-GUARD",
+            "PERF-GUARD-Ω",
+        ],
+        "sealed_at": REGISTRY_SEALED_AT,
+    }

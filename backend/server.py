@@ -855,6 +855,14 @@ try:
 except Exception as e:
     logger.warning(f"ENGINES-CATALOG not loaded: {e}")
 
+# REGISTRY-LOCK-Ω — Phase XI scellé 22 engines SUPRA-Ω + hash Document Maître
+try:
+    from engines.v8_institutional.registry_lock_omega import router as registry_lock_router
+    app.include_router(registry_lock_router)
+    logger.info("REGISTRY-LOCK-Ω registered (/api/v20/territoire/registry-lock, /document-maitre-lock) — Phase XI sealed")
+except Exception as e:
+    logger.warning(f"REGISTRY-LOCK-Ω not loaded: {e}")
+
 # MONITORING-Ω + ALERTE-ANOMALIES-Ω
 try:
     from engines.v8_institutional.monitoring_alerte_omega import router as monitoring_router

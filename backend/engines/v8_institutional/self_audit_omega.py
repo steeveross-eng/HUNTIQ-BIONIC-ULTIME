@@ -49,6 +49,10 @@ _TEST_SUITES = [
     ("test_pression_atmospherique", "/app/backend/tests/test_pression_atmospherique.py"),
     ("test_gouvernance", "/app/backend/tests/test_gouvernance.py"),
     ("test_score_global_reality", "/app/backend/tests/test_score_global_reality.py"),
+    # Phase XI — Verrouillage institutionnel
+    ("test_purge_legacy", "/app/backend/tests/test_purge_legacy.py"),
+    ("test_document_maitre_locked", "/app/backend/tests/test_document_maitre_locked.py"),
+    ("test_engine_registry_locked", "/app/backend/tests/test_engine_registry_locked.py"),
 ]
 
 _LOG_FILE = Path("/app/memory/SELF_AUDIT_OMEGA_LOGS.md")
