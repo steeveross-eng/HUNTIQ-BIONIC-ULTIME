@@ -3,6 +3,23 @@
 
 ---
 
+## 2026-04-20T20:30Z — PHASE XI-SUPRA-K (CORRIDORS_RENDU_EXPLAIN_OMEGA)
+
+### Directive: PHASE_XI_SUPRA_D+E_CORRIDORS_RENDU_EXPLAIN_OMEGA — EXÉCUTÉE
+- **Documents officiels** rédigés mot-pour-mot depuis les .docx fournis :
+  - `/app/memory/ENGINE_CORRIDORS_OMEGA_OFFICIAL_FINAL.md` (VERSION Ω canonique)
+  - `/app/memory/RENDUS/RENDUS_CORRIDORS_OMEGA.md` (RENDU Ω canonique)
+- **3 nouveaux engines scellés** (registre 37 → 40) :
+  - `ENGINE-RENDU-Ω` : règles visuelles strictes corridors (#FF8F00, 1.2/2.0/3.0 px, opacité ≥ 0.75, Catmull-Rom 25-30, minZoom 13, zéro affût, PREVIEW=FINAL, blocage automatique)
+  - `ENGINE-SPECIES-PROFILES-Ω` : extraction dynamique profils 5 espèces depuis `/app/registry/species_profiles_v1.json` (plus aucun codage en dur)
+  - `ENGINE-IA-VISION-REGISTRY-Ω` : registre préparatoire NASA EarthData + LIDAR WCS 1m (`/app/registry/ia_vision/ia_vision_registry_v1.json`)
+- **Explicabilité IA** : endpoints `GET /api/v20/territoire/ia-corridors/explain/{corridor_id}` + `POST /explain` (features topo/hydro/éco/comportement, profil espèce, validation géométrique, justification biologique)
+- **Registry Lock** → `V23-SUPRA-LOCKED-PHASE-XI-SUPRA-K-2026-04` (SHA-256 `cd13eb29e6ac556eb2748ed5388a01e6e83f2a6d8ae843e93d701ceb5a5f685a`)
+- **SELF-AUDIT-Ω** : 58/58 suites OK (validation bash/curl uniquement, aucun subagent)
+- Rapport : `/app/memory/PHASE_XI_SUPRA_K_REPORT.md`
+
+---
+
 ## 2026-04-06 — BDRE Implementation Complete (Phases 1-4)
 
 ### Phase 4 — Institutionnalisation (VALIDE)

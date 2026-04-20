@@ -1,5 +1,44 @@
 ## EXCLUSION OFFICIELLE LEP_CRITICAL_HABITAT_NATIONAL (2026-04-20T16:00Z) ✅
 
+## PHASE XI-SUPRA-K — CORRIDORS + RENDU + EXPLAIN + SPECIES + IA-VISION (2026-04-20T20:30Z) ✅
+
+### Directive exécutée: `PHASE_XI_SUPRA_D+E_CORRIDORS_RENDU_EXPLAIN_OMEGA`
+
+### Documents officiels (mot-pour-mot)
+- `/app/memory/ENGINE_CORRIDORS_OMEGA_OFFICIAL_FINAL.md` — VERSION Ω canonique
+- `/app/memory/RENDUS/RENDUS_CORRIDORS_OMEGA.md` — RENDU Ω canonique
+
+### 3 nouveaux engines scellés (registre 37 → 40)
+- **ENGINE-RENDU-Ω** (GOUVERNANCE) — règles visuelles strictes #FF8F00, 1.2/2.0/3.0 px, opacité ≥ 0.75, Catmull-Rom 25-30 pts, minZoom=13, zéro affût, blocage automatique
+- **ENGINE-SPECIES-PROFILES-Ω** (BIO-SYSTEME) — `/app/registry/species_profiles_v1.json` (5 espèces: chevreuil/orignal/wapiti/ours_noir/dindon_sauvage)
+- **ENGINE-IA-VISION-REGISTRY-Ω** (BIO-SYSTEME) — `/app/registry/ia_vision/ia_vision_registry_v1.json` (NASA EarthData + LIDAR WCS 1 m)
+
+### Explicabilité IA corridors (NOUVEAU)
+- `GET /api/v20/territoire/ia-corridors/explain/{corridor_id}?lat&lon&species`
+- `POST /api/v20/territoire/ia-corridors/explain` (payload custom)
+
+### Endpoints Phase K (8 nouveaux — tous 200 OK)
+- `/rendu-omega/{status,rules,validate}`
+- `/species-profiles/{status,validate,{species_key}}`
+- `/ia-vision/{status,validate}`
+- `/ia-corridors/explain[/{id}]`
+
+### Registry Lock
+- Version: `V23-SUPRA-LOCKED-PHASE-XI-SUPRA-K-2026-04`
+- SHA-256: `cd13eb29e6ac556eb2748ed5388a01e6e83f2a6d8ae843e93d701ceb5a5f685a`
+- 40 engines scellés
+- Consigné dans `/app/memory/ENGINE_REGISTRY_LOCKED.md`
+
+### SELF-AUDIT-Ω
+- **58/58 suites OK** (bash/curl/python — aucun subagent conformément au protocole BCE-4X)
+
+### Rapport officiel
+- `/app/memory/PHASE_XI_SUPRA_K_REPORT.md`
+
+---
+
+## EXCLUSION OFFICIELLE LEP_CRITICAL_HABITAT_NATIONAL (2026-04-20T16:00Z) ✅
+
 **Directive STEEVE-MAX :** EXCLUDE_LAYER LEP_CRITICAL_HABITAT NATIONAL / STATUS OFFICIAL
 
 - `LEP-INGESTION-Ω` retiré du lock — registre = **35 engines**

@@ -1,190 +1,200 @@
-# ENGINE CORRIDORS — DESCRIPTION OFFICIELLE & FINALE — VERSION Ω
+DESCRIPTION OFFICIELLE & FINALE — ENGINE CORRIDORS — VERSION Ω
+(Norme institutionnelle — version générique, complète, IA assistée)
 
-> **COMMANDANT :** STEEVE-MAX
-> **DATE :** 2026-04-20T18:00:00Z
-> **PHASE :** XI-SUPRA-H
-> **STATUT :** 🔒 **NORME INSTITUTIONNELLE UNIQUE ET OBLIGATOIRE**
-> **AUTORITÉ :** Directive Commandement — toute autre description de corridors est ARCHIVE NON ACTIVE
+Les corridors de déplacement sont les veines animales du territoire.
+Ils représentent les chemins naturels, préférentiels, répétés et biologiquement cohérents empruntés par les espèces couvertes par BIONIC.
+Ils sont : terrain aware multi facteurs multi engines multi espèces écologiques comportementaux nutritionnels hydrologiques topologiques
+IA assistés jamais géométriques jamais simplifiés jamais artificiels
 
----
+Ils doivent refléter exactement :
+la réalité du terrain
+la réalité écologique
+la réalité comportementale
+la réalité biologique
+la réalité des besoins/carences
+la réalité des zones vitales
+la réalité des déplacements naturels
+la réalité des habitats préférés
+la réalité des transitions écologiques
+la réalité des contraintes naturelles
 
-## §0. IDENTITÉ FONDAMENTALE — IA-ASSISTÉE
+🟧 1. IDENTITÉ FONDAMENTALE DU CORRIDOR
 
-`ENGINE CORRIDORS-Ω` est le moteur autonome de génération, validation et
-publication des corridors animaliers dans BIONIC OS V20-SUPRA. Il est
-**strictement IA-assisté** : sa logique géométrique, écologique, hydrologique
-et comportementale est contrôlée par le moteur interne `ENGINE IA-CORRIDORS`
-(§3), qui orchestre l'analyse topologique, les données de vision, les
-observations terrain et les modèles comportementaux propres à chaque espèce.
+Un corridor BIONIC est :
+une structure organique, jamais droite
+une veine animale, avec courbure naturelle
+un flux de déplacement, pas un tracé
+une réaction au terrain, pas une géométrie imposée
+une probabilité spatiale, pas une ligne
+une intégration multi engines (zones, salines, terrain, météo, IA Vision)
+une structure spécifique à l’espèce, jamais générique
 
-**Portée :** génération d'un réseau continu, organique, spécifique à
-l'espèce, cohérent avec le terrain réel et le comportement animal, dans un
-rayon fonctionnel autour du waypoint utilisateur.
+Un corridor n’est jamais :
+un segment droit
+un trait simplifié
+un artefact visuel
+un fallback
 
-**Totale indépendance :** aucun corridor n'est lié à un affût, un abri, une
-trace humaine ou une infrastructure de chasse. L'engine matérialise
-uniquement le flux animal réel (§4).
+🟦 2. SPÉCIFICITÉ PAR ESPÈCE
 
-## §1. SPÉCIFICITÉ PAR ESPÈCE — INTÉGRATION IA VISION ET IA-CORRIDORS
+(Norme biologique, comportementale, écologique, topologique et hydrologique)
 
-Règle d'or institutionnelle : **« un corridor = une espèce = une logique ».**
+Les corridors doivent être biologiquement cohérents et entièrement spécifiques :
+aux comportements
+aux besoins
+aux limites physiologiques
+aux carences alimentaires
+aux préférences d’habitat
+aux stratégies de déplacement
+aux réactions au vent/météo
+aux pressions humaines
+aux patterns IA Vision
+aux données terrain (pins, traces, photos)
+aux zones de transition recherchées
+au type de couvert forestier
+à la densité forestière
+au type d’essence d’arbres
+à la hauteur du canopée préférée
+aux besoins naturels : boire, manger, dormir, se reproduire, se thermoréguler
+aux préférences hydrologiques (distance à l’eau, humidité, zones humides)
+aux préférences topologiques (pentes, plateaux, vallons, crêtes)
 
-Aucune génération multi-espèces n'est permise dans un même corridor. Pour
-chaque espèce ciblée (`cerf`, `orignal`, `wapiti`, `chevreuil`, `ours`,
-`coyote`, etc.), un profil comportemental dédié est injecté par
-`IA-CORRIDORS` à partir de :
+🦌 Chevreuil
+lisières fines, bûchers 3–10 ans, fourrés
+zones semi ouvertes
+transitions couvert ↔ ouvert ↔ humide
+canopée basse à moyenne
+évite pentes fortes
+corridors courts, sinueux, prudents
 
-- `IA VISION` : détections cartographiques automatisées (sentes, gagnages,
-  abris visibles, rivières franchissables, ponts à castor, etc.)
-- **Données terrain** : relevés locaux, observations consignées, données
-  hydrologiques et forestières officielles
-- **Modèles comportementaux par espèce** : sensibilité à la pente, besoin
-  d'abri, préférence hydrique, motif journalier, saisonnalité
+🫎 Orignal
+vasières , zones humides, savanes résineuses
+vallons , plateaux humides
+dépendance forte à l’eau (30–100 m)
+canopée haute, forêt mature
+corridors larges, stables
 
-Le profil produit une **signature comportementale unique** utilisée comme
-contrat de génération.
+🦌 Wapiti
+routes migratoires naturelles
+mosaïques prairie ↔ forêt ↔ humide
+pentes douces, vallées larges
+vigilance → besoin d’ouverture
+corridors longs, continus
 
-## §2. CE QUE LE CORRIDOR MATÉRIALISE — FLUX ANIMAL RÉEL IA
+🐻 Ours noir
+zones de nourriture : baies, coupes, humides
+évitement humain extrême
+refuge : fourrés, pentes abruptes
+corridors larges, irréguliers
 
-Le corridor N'EST PAS :
-- un itinéraire optimal de chasse
-- une ligne de tir
-- une connexion vers un poste d'observation
-- une route planifiée
+🦃 Dindon sauvage
+lisières , clairières, zones ouvertes
+évite pentes fortes
+zones thermiques matinales
+corridors courts, rapides, sinueux
 
-Le corridor **EST** :
-- la matérialisation spatiale du **flux animal réel** tel qu'inféré par
-  `IA-CORRIDORS` à partir de la topologie, de l'hydrologie, de l'écologie
-  et du comportement spécifique à l'espèce
-- une **probabilité de passage** traduite en polyline organique Catmull-Rom
-- un vecteur IA-assisté de **flux biologique**, indépendant de toute
-  activité humaine
+RÈGLE ULTIME
 
-## §3. ENGINE IA-CORRIDORS — SECTION OBLIGATOIRE
+Un corridor = une espèce = une logique.
+Aucun corridor générique n’est acceptable.
 
-`ENGINE IA-CORRIDORS` est une section interne scellée de l'engine CORRIDORS-Ω.
-Elle est seule responsable de :
+🟩 3. CE QUE LE CORRIDOR MATÉRIALISE
 
-### 3.1 Analyse multi-couches
-- **Topologie** : pentes, crêtes, combes, exutoires naturels
-- **Hydrologie** : cours d'eau, points de franchissement, distance à l'eau
-- **Écologie** : couverture forestière, gagnages, lisières, abris
-- **Comportement** : motifs journaliers, sensibilité vent, rayon vital
-- **Besoins naturels** : nourriture, eau, repos, reproduction
+Flux animal réel
+direction dominante
+fréquence
+intensité
+saison
+espèce
+patterns IA Vision
+traces GPS historiques
 
-### 3.2 Fusion IA Vision + terrain
-Injection et réconciliation des :
-- détections `IA VISION` (sentes, abris, franchissements)
-- observations terrain locales
-- données officielles (hydro/forêt/relief)
+Contraintes écologiques
+éviter zones humaines
+éviter pentes extrêmes
+éviter surfaces ouvertes exposées
 
-### 3.3 Cartes produites
-- **Carte de coût** (cost_surface par pixel, 0-1)
-- **Carte de probabilité comportementale** (P_passage par cellule)
-- **Carte de flux animal réel** (vecteurs directionnels)
-- **Carte d'attractivité biologique** (multiplicateur écologique)
+Attracteurs biologiques
+salines
+zones d’alimentation
+zones de repos
+zones de rut
+zones thermiques
+zones humides
+transitions écologiques
+zones de refuge
+zones de haute valeur nutritionnelle
 
-### 3.4 Génération & optimisation du réseau
-- Sélection des corridors candidats
-- Fusion des segments courts (< 40 m) en réseau continu
-- Lissage Catmull-Rom par cellule IA
-- Application du **rayon fonctionnel 600 m ± 30 %** autour du waypoint
-  (soit **420 m à 780 m**)
+🟥 4. INTÉGRATION DES STRUCTURES NATURELLES DU TERRAIN
 
-### 3.5 Validation biologique/écologique/terrain-aware
-Toute sortie d'`IA-CORRIDORS` DOIT passer les 6 contraintes obligatoires :
+plateaux entre coulée et haut de butte
+vallons , dépressions, zones fraîches
+ruisseaux et rivières (en parallèle)
+contours de lacs et étangs (sans toucher)
+transitions écologiques
+lignes de moindre coût terrain
+microreliefs favorables
+mosaïques forestières
+zones de canopée préférée
+zones d’essences d’arbres recherchées
+zones de densité forestière optimale
 
-| Contrainte | Seuil |
-|---|---|
-| Segments droits | **≤ 20 m** |
-| Angle entre deux segments consécutifs | **≤ 45°** |
-| Isolement (orphelin du réseau) | **INTERDIT** |
-| Spécificité espèce (profil assigné) | **OBLIGATOIRE** |
-| Rayon fonctionnel autour waypoint | **420 m ≤ d ≤ 780 m** |
-| Validation IA-CORRIDORS | **OBLIGATOIRE avant publication** |
+🟪 5. ENGINE IA CORRIDORS
 
-Un corridor qui échoue à UNE seule de ces contraintes est **rejeté
-automatiquement** par `ENGINE-TERRITOIRE-ANTI-REGRESSION-Ω`.
+(IA obligatoire pour la construction du réseau)
 
-## §4. STRUCTURES NATURELLES — ANALYSÉES PAR IA-CORRIDORS
+L’IA doit analyser :
+topologie , hydrologie, écologie, comportements, besoins naturels, carences , transitions, IA Vision, données terrain, zones vitales, pression humaine
 
-Les structures naturelles utilisées par `IA-CORRIDORS` comme substrats
-d'inférence :
+L’IA doit produire :
+carte de coût terrain
+carte de probabilité comportementale
+carte de flux animal réel
+carte d’attractivité biologique
+carte d’exclusion
+réseau optimal de corridors
 
-- **Topologie** : crêtes, combes, plateaux, vallées
-- **Hydrologie** : ruisseaux, étangs, marais, zones humides
-- **Écologie** : lisières forestières, clairières, régénérations, ravins
-- **Comportementaux** : reposées, gagnages, traces, passages récents
+RÈGLE
 
-Aucun élément anthropique (chemin forestier, affût, route, cabane) n'entre
-dans cette analyse.
+Aucun corridor ne peut être généré sans l’assistance de l’IA CORRIDORS.
 
-## §5. GÉOMÉTRIE — GÉNÉRÉE/OPTIMISÉE PAR IA-CORRIDORS
+🟧 6. RÉSEAU CONTINU — RELIANCE DES ZONES VITALES
 
-### 5.1 Structure organique
-- **Polyline Catmull-Rom** avec 5 à 35 points de contrôle
-- **Aucune ligne droite** > 20 m (rejet anti-regression)
-- **Courbure continue** par interpolation cubique
-- **Sinuosité espèce-dépendante** (0.2 à 0.7 selon profil)
+alimentation , repos, rut, thermiques, humides, salines
 
-### 5.2 Rayon fonctionnel
-- Rayon : **600 m ± 30 %** autour du waypoint
-- Borne basse : **420 m** (corridor minimum)
-- Borne haute : **780 m** (corridor maximum)
-- Tout corridor avec `start-to-end distance < 420 m` OU `> 780 m` est rejeté
+RÈGLE : un corridor ne peut jamais être isolé.
 
-### 5.3 Largeur écologique
-- Largeur du corridor : **2 m à 10 m** (zone de passage physique)
-- Représentée visuellement par `weight` Leaflet (échelle linéaire)
-- Dépendante de la taille de l'espèce et de la topologie locale
+🟦 7. RAYON FONCTIONNEL — 600 m ± 30 %
+minimum : 420 m
+maximum : 780 m
 
-### 5.4 Cardinalité
-- Nombre de corridors par waypoint : déterminé par `IA-CORRIDORS` en
-  fonction du profil espèce (5 à 12 typiquement)
-- Pas de minimum/maximum imposé au-delà de l'interdiction d'isolement
+🟥 8. GÉOMÉTRIE DU CORRIDOR
 
-## §6. CONTRAINTES OFFICIELLES — VALIDÉES PAR IA-CORRIDORS
+spline Catmull Rom
+25–30 points
+amplitude variable
+courbure progressive
+largeur écologique : 2–10 m
+largeur visuelle : 1.2 / 2.0 / 3.0 px selon intensité
+couleur : orange ambre (#FF8F00)
 
-| Dimension | Contrainte | Sanction si violation |
-|---|---|---|
-| **Topologique** | Pente ≤ `slope_tol` espèce | Corridor rejeté |
-| **Hydrologique** | Distance eau ≥ 10 m (sauf franchissement) | Corridor rejeté |
-| **Écologique** | Cover index ≥ 0.3 | Corridor rejeté |
-| **Comportementale** | Profil espèce respecté | Corridor rejeté |
-| **Géométrique** | Segments droits ≤ 20 m | Corridor rejeté |
-| **Géométrique** | Angles ≤ 45° entre segments | Corridor rejeté |
-| **Spatiale** | Longueur `start-to-end` ∈ [420, 780] m | Corridor rejeté |
-| **Réseau** | Connecté au réseau (non isolé) | Corridor rejeté |
-| **Spécificité** | Un corridor = une espèce = une logique | Corridor rejeté |
-| **IA-CORRIDORS** | Validation obligatoire avant publication | Corridor rejeté |
+🟩 9. CONTRAINTES OBLIGATOIRES
 
-## §7. SYNTHÈSE ULTIME — IA-ASSISTÉE
+longueur ≥ 100 m (idéal 300–800 m)
+≥ 5 points de contrôle (idéal 25–30)
+jamais de segment droit > 20 m
+jamais d’angle > 45°
+éviter eau < 20 m
+éviter pente > 35°
+éviter zones humaines
+attraction vers salines, zones d’alimentation, zones de repos, vallons
 
-`ENGINE CORRIDORS-Ω` est **entièrement piloté par IA-CORRIDORS**.
+🟦 10. RENDU INSTITUTIONNEL
 
-Sa signature institutionnelle :
-- **Autonome** : aucune dépendance aux affûts, abris, infrastructure humaine
-- **Multi-espèces strictes** : profil unique par corridor
-- **Organique** : Catmull-Rom, pas de droite > 20 m, pas d'angle > 45°
-- **Fonctionnel** : rayon 600 m ± 30 % (420–780 m)
-- **Écologique** : largeur 2–10 m
-- **Validée IA-CORRIDORS** avant publication
+organique , cohérent, plausible, riche, intégré, sans artefacts, sans simplification
 
-Toute génération qui dévie de cette norme est automatiquement rejetée par
-`ENGINE-TERRITOIRE-ANTI-REGRESSION-Ω` et journalisée. La baseline
-`TERRITOIRE_Ω_STABLE` exige la conformité stricte à ce document.
+🟩 11. SYNTHÈSE ULTIME
 
----
-
-## §8. VERROUILLAGE INSTITUTIONNEL
-
-Document scellé par directive STEEVE-MAX 2026-04-20.
-
-- **Version :** Ω-V1.0-2026-04-20
-- **Statut :** NORME UNIQUE ET OBLIGATOIRE
-- **Archives remplacées :** `/app/memory/_ARCHIVE_NON_ACTIVE/AFFUTS_CORRIDOR_*.md`,
-  `AUDIT_CORRIDORS_EAU_*.md` (non actifs)
-- **Anti-regression :** `ENGINE-IA-CORRIDORS-Ω` + `ENGINE-TERRITOIRE-ANTI-REGRESSION-Ω`
-- **Test suite :** `test_ia_corridors_omega.py` (SELF-AUDIT-Ω)
-
-**Toute référence aux affûts dans l'engine CORRIDORS a été définitivement supprimée.**
+Un corridor BIONIC est une veine animale organique, terrain aware , multi engines, multi espèces, IA assistée, intégrant topographie, écologie, hydrologie, comportement, attracteurs , contraintes, IA Vision et données terrain.
+Il suit les plateaux, vallons, ruisseaux, contours de lacs, transitions écologiques, et relie en ligne continue les zones vitales.
+Il est spécifique à chaque espèce et respecte toutes les contraintes écologiques, comportementales , hydrologiques et terrain aware définies par BIONIC.

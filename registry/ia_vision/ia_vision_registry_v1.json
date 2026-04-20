@@ -1,0 +1,57 @@
+{
+  "registry": "IA-VISION-Ω",
+  "version": "V1.0-PHASE-XI-SUPRA-K-2026-04",
+  "sealed_at": "2026-04-20T20:00:00Z",
+  "status": "READY",
+  "engine_backing": "ENGINE-IA-VISION-ECOLOGIQUE-Ω",
+  "data_sources": [
+    {
+      "id": "NASA_EARTHDATA",
+      "type": "satellite_imagery",
+      "layers": ["canopy_cover", "vegetation_index_ndvi", "land_surface_temp"],
+      "resolution_m": 30,
+      "refresh": "monthly"
+    },
+    {
+      "id": "LIDAR_WCS_1M",
+      "type": "lidar_raster",
+      "layers": ["canopy_height", "terrain_ruggedness", "strate_1_3m", "feuillus_ratio"],
+      "resolution_m": 1,
+      "refresh": "annual"
+    }
+  ],
+  "outputs": {
+    "zones_probables": [
+      "repos",
+      "alimentation",
+      "thermique",
+      "humide"
+    ],
+    "features_extracted": [
+      "canopy",
+      "strate_1_3m",
+      "feuillus_ratio",
+      "mosaique_forestiere",
+      "transition_ecologique",
+      "fiabilite"
+    ]
+  },
+  "validation_rules": {
+    "fiabilite_min": 0.4,
+    "canopy_range": [0.0, 1.0],
+    "strate_1_3m_range": [0.0, 1.0],
+    "feuillus_ratio_range": [0.0, 1.0],
+    "zones_probables_required_keys": ["repos", "alimentation", "thermique", "humide"]
+  },
+  "integration_points": [
+    "ENGINE-IA-CORRIDORS-Ω",
+    "ENGINE-CONNECTIVITE-ECOLOGIQUE-Ω",
+    "ENGINE-ESPECE-Ω"
+  ],
+  "preparation_status": {
+    "schema_ready": true,
+    "endpoints_ready": true,
+    "model_deployed": false,
+    "awaiting_model_assets": true
+  }
+}

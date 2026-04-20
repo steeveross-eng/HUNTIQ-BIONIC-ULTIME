@@ -970,6 +970,30 @@ try:
 except Exception as e:
     logger.warning(f"ENGINE-IA-CORRIDORS-Ω not loaded: {e}")
 
+# ENGINE-RENDU-Ω — Phase XI-SUPRA-K (rendu institutionnel corridors)
+try:
+    from engines.v8_institutional.engine_rendu_omega import router as rendu_omega_router
+    app.include_router(rendu_omega_router)
+    logger.info("ENGINE-RENDU-Ω registered (/api/v20/territoire/rendu-omega)")
+except Exception as e:
+    logger.warning(f"ENGINE-RENDU-Ω not loaded: {e}")
+
+# ENGINE-SPECIES-PROFILES-Ω — Phase XI-SUPRA-K (registre dynamique espèces)
+try:
+    from engines.v8_institutional.engine_species_profiles_omega import router as species_profiles_router
+    app.include_router(species_profiles_router)
+    logger.info("ENGINE-SPECIES-PROFILES-Ω registered (/api/v20/territoire/species-profiles)")
+except Exception as e:
+    logger.warning(f"ENGINE-SPECIES-PROFILES-Ω not loaded: {e}")
+
+# ENGINE-IA-VISION-REGISTRY-Ω — Phase XI-SUPRA-K (registre IA Vision)
+try:
+    from engines.v8_institutional.engine_ia_vision_registry_omega import router as ia_vision_reg_router
+    app.include_router(ia_vision_reg_router)
+    logger.info("ENGINE-IA-VISION-REGISTRY-Ω registered (/api/v20/territoire/ia-vision)")
+except Exception as e:
+    logger.warning(f"ENGINE-IA-VISION-REGISTRY-Ω not loaded: {e}")
+
 # LEP-INGESTION-Ω — Phase XI-SUPRA-D (BIONIC INGESTION-FGDB+GEOJSON-Ω-V1.0)
 # EXCLUDE_LAYER LEP_CRITICAL_HABITAT_NATIONAL — Directive STEEVE-MAX 2026-04-20
 # STATUS OFFICIAL — router désactivé, module source conservé pour réactivation future.

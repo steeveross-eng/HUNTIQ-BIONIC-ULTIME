@@ -72,14 +72,18 @@ ENGINES_LOCKED = [
     {"name": "ENGINE-TERRITOIRE-ANTI-REGRESSION-Ω", "pillar": "GOUVERNANCE", "phase": "XI-SUPRA-G"},
     # Phase XI-SUPRA-H (ENGINE CORRIDORS VERSION Ω — IA-CORRIDORS)
     {"name": "ENGINE-IA-CORRIDORS-Ω", "pillar": "GOUVERNANCE", "phase": "XI-SUPRA-H"},
+    # Phase XI-SUPRA-K (RENDU + EXPLAIN + SPECIES + IA-VISION registry)
+    {"name": "ENGINE-RENDU-Ω", "pillar": "GOUVERNANCE", "phase": "XI-SUPRA-K"},
+    {"name": "ENGINE-SPECIES-PROFILES-Ω", "pillar": "BIO-SYSTEME", "phase": "XI-SUPRA-K"},
+    {"name": "ENGINE-IA-VISION-REGISTRY-Ω", "pillar": "BIO-SYSTEME", "phase": "XI-SUPRA-K"},
     # Phase XI-SUPRA-D : LEP-INGESTION-Ω retiré du lock
     # Directive STEEVE-MAX 2026-04-20 — EXCLUDE_LAYER LEP_CRITICAL_HABITAT_NATIONAL
     # REASON "Dataset trop lourd, non essentiel, impact nul sur les engines"
     # STATUS OFFICIAL — engine source conservé mais non enregistré.
 ]
 
-REGISTRY_VERSION = "V20-SUPRA-LOCKED-PHASE-XI-SUPRA-H-2026-04"
-REGISTRY_SEALED_AT = "2026-04-20T18:00:00Z"
+REGISTRY_VERSION = "V23-SUPRA-LOCKED-PHASE-XI-SUPRA-K-2026-04"
+REGISTRY_SEALED_AT = "2026-04-20T20:30:00Z"
 
 # Phase XI-SUPRA-E §V : Archive reconstructible — hash consigné dans le lock
 # Ce hash doit correspondre au fichier /app/memory/ARCHIVE_BIONIC_V20_SUPRA.tar.gz

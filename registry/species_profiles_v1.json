@@ -1,0 +1,139 @@
+{
+  "registry": "SPECIES-PROFILES-Ω",
+  "version": "V1.0-PHASE-XI-SUPRA-K-2026-04",
+  "sealed_at": "2026-04-20T20:00:00Z",
+  "source_of_truth": "/app/memory/ENGINE_CORRIDORS_OMEGA_OFFICIAL_FINAL.md",
+  "rule": "Un corridor = une espèce = une logique",
+  "species": {
+    "chevreuil": {
+      "common_name": "Chevreuil de Virginie",
+      "scientific_name": "Odocoileus virginianus",
+      "emoji": "🦌",
+      "habitat": {
+        "preferred": ["lisieres_fines", "buchers_3_10_ans", "fourres", "zones_semi_ouvertes"],
+        "transitions": ["couvert_ouvert_humide"],
+        "canopy_preference": "basse_moyenne",
+        "canopy_range_m": [5, 15],
+        "slope_avoid_deg": 25,
+        "forest_density": "medium"
+      },
+      "movement": {
+        "corridor_style": "courts_sinueux_prudents",
+        "typical_length_m": [200, 500],
+        "amplitude": "faible",
+        "vigilance": "elevee"
+      },
+      "hydrology": {
+        "water_dist_min_m": 30,
+        "water_dist_max_m": 500,
+        "humid_zones_required": false
+      },
+      "nutrition": ["bourgeons", "jeunes_pousses", "graminees", "herbacees"],
+      "corridor_weight_factor": 1.0
+    },
+    "orignal": {
+      "common_name": "Orignal",
+      "scientific_name": "Alces alces",
+      "emoji": "🫎",
+      "habitat": {
+        "preferred": ["vasieres", "zones_humides", "savanes_resineuses", "plateaux_humides"],
+        "transitions": ["resineux_humide"],
+        "canopy_preference": "haute",
+        "canopy_range_m": [15, 25],
+        "slope_avoid_deg": 30,
+        "forest_density": "high"
+      },
+      "movement": {
+        "corridor_style": "larges_stables",
+        "typical_length_m": [400, 900],
+        "amplitude": "moyenne",
+        "vigilance": "moderee"
+      },
+      "hydrology": {
+        "water_dist_min_m": 0,
+        "water_dist_max_m": 100,
+        "humid_zones_required": true
+      },
+      "nutrition": ["plantes_aquatiques", "feuillus_jeunes", "saules", "aulnes"],
+      "corridor_weight_factor": 1.2
+    },
+    "wapiti": {
+      "common_name": "Wapiti",
+      "scientific_name": "Cervus canadensis",
+      "emoji": "🦌",
+      "habitat": {
+        "preferred": ["mosaiques_prairie_foret_humide", "vallees_larges", "pentes_douces"],
+        "transitions": ["prairie_foret"],
+        "canopy_preference": "mixte",
+        "canopy_range_m": [10, 25],
+        "slope_avoid_deg": 20,
+        "forest_density": "medium"
+      },
+      "movement": {
+        "corridor_style": "longs_continus",
+        "typical_length_m": [600, 1500],
+        "amplitude": "moyenne",
+        "vigilance": "elevee"
+      },
+      "hydrology": {
+        "water_dist_min_m": 50,
+        "water_dist_max_m": 800,
+        "humid_zones_required": false
+      },
+      "nutrition": ["graminees", "herbacees", "arbustes"],
+      "corridor_weight_factor": 1.1
+    },
+    "ours_noir": {
+      "common_name": "Ours noir",
+      "scientific_name": "Ursus americanus",
+      "emoji": "🐻",
+      "habitat": {
+        "preferred": ["zones_fruitieres", "coupes_recentes", "zones_humides", "fourres"],
+        "transitions": ["foret_coupe"],
+        "canopy_preference": "variable",
+        "canopy_range_m": [5, 30],
+        "slope_avoid_deg": 45,
+        "forest_density": "high"
+      },
+      "movement": {
+        "corridor_style": "larges_irreguliers",
+        "typical_length_m": [500, 1200],
+        "amplitude": "forte",
+        "vigilance": "extreme_vs_humain"
+      },
+      "hydrology": {
+        "water_dist_min_m": 0,
+        "water_dist_max_m": 500,
+        "humid_zones_required": false
+      },
+      "nutrition": ["baies", "fruits", "insectes", "carcasses", "coupes"],
+      "corridor_weight_factor": 1.3
+    },
+    "dindon_sauvage": {
+      "common_name": "Dindon sauvage",
+      "scientific_name": "Meleagris gallopavo",
+      "emoji": "🦃",
+      "habitat": {
+        "preferred": ["lisieres", "clairieres", "zones_ouvertes", "zones_thermiques_matinales"],
+        "transitions": ["foret_ouverture"],
+        "canopy_preference": "mixte_ouvert",
+        "canopy_range_m": [8, 20],
+        "slope_avoid_deg": 20,
+        "forest_density": "low_medium"
+      },
+      "movement": {
+        "corridor_style": "courts_rapides_sinueux",
+        "typical_length_m": [100, 400],
+        "amplitude": "faible",
+        "vigilance": "elevee"
+      },
+      "hydrology": {
+        "water_dist_min_m": 50,
+        "water_dist_max_m": 800,
+        "humid_zones_required": false
+      },
+      "nutrition": ["glands", "graines", "insectes", "baies"],
+      "corridor_weight_factor": 0.9
+    }
+  }
+}
