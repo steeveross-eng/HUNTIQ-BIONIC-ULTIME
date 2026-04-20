@@ -1,8 +1,8 @@
-# ENGINE_REGISTRY_LOCKED — Phase XI-SUPRA-E
+# ENGINE_REGISTRY_LOCKED — Phase XI-SUPRA-G
 
 > **STATUT : SCELLÉ — SEALED — VERROUILLÉ**
-> **Version registre :** V20-SUPRA-LOCKED-PHASE-XI-SUPRA-E-2026-04
-> **Date de scellement :** 2026-04-20T16:00:00Z
+> **Version registre :** V20-SUPRA-LOCKED-PHASE-XI-SUPRA-G-2026-04
+> **Date de scellement :** 2026-04-20T17:00:00Z
 > **Commandant :** STEEVE-MAX
 
 ---
@@ -10,7 +10,7 @@
 ## Hash SHA-256 officiel
 
 ```
-0675cbe335c89c8a57771bb168053faaecc2b66d7aacef2e4db4535a6998fddc
+faeefa1339b88f8c6f7aa87e764944416d681321a8411c0601d7c6b40921cd1a
 ```
 
 Toute altération de la liste des engines (`ENGINES_LOCKED` dans

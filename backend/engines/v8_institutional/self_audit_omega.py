@@ -89,6 +89,8 @@ _TEST_SUITES = [
     ("test_visual_live_macro_stable", "/app/backend/tests/test_visual_live_macro_stable.py"),
     ("test_visual_live_mid_stable", "/app/backend/tests/test_visual_live_mid_stable.py"),
     ("test_visual_live_detail_stable", "/app/backend/tests/test_visual_live_detail_stable.py"),
+    # Phase XI-SUPRA-G — ORDRE_TERRITOIRE_PROTECT_Ω
+    ("test_territoire_anti_regression_omega", "/app/backend/tests/test_territoire_anti_regression_omega.py"),
 ]
 
 _LOG_FILE = Path("/app/memory/SELF_AUDIT_OMEGA_LOGS.md")

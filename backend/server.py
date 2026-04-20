@@ -954,6 +954,14 @@ try:
 except Exception as e:
     logger.warning(f"VISUAL-PROOF-LIVE-Ω not loaded: {e}")
 
+# ENGINE-TERRITOIRE-ANTI-REGRESSION-Ω — Phase XI-SUPRA-G (ORDRE_TERRITOIRE_PROTECT_Ω)
+try:
+    from engines.v8_institutional.engine_territoire_anti_regression_omega import router as antireg_router
+    app.include_router(antireg_router)
+    logger.info("ENGINE-TERRITOIRE-ANTI-REGRESSION-Ω registered (/api/v20/territoire/anti-regression)")
+except Exception as e:
+    logger.warning(f"ENGINE-TERRITOIRE-ANTI-REGRESSION-Ω not loaded: {e}")
+
 # LEP-INGESTION-Ω — Phase XI-SUPRA-D (BIONIC INGESTION-FGDB+GEOJSON-Ω-V1.0)
 # EXCLUDE_LAYER LEP_CRITICAL_HABITAT_NATIONAL — Directive STEEVE-MAX 2026-04-20
 # STATUS OFFICIAL — router désactivé, module source conservé pour réactivation future.

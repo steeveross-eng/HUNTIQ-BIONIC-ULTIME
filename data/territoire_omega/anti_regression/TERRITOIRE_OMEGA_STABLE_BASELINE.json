@@ -1,0 +1,34 @@
+{
+  "sealed_at": "2026-04-20T17:08:22.497410+00:00",
+  "sealed_by": "ENGINE-TERRITOIRE-ANTI-REGRESSION-Ω",
+  "seed": {
+    "lat": 45.1,
+    "lon": -72.8,
+    "species": "chevreuil"
+  },
+  "rules_frozen": {
+    "corridor_min_length_m": 100,
+    "corridor_min_control_points": 5,
+    "corridors_min_count": 3,
+    "affuts_min_count": 1,
+    "zones_min_count": 1,
+    "hotspots_min_count": 1,
+    "nutrition_max_empty_grid_rendered_pct": 0.0,
+    "contamination_required_if_affuts": true
+  },
+  "metrics": {
+    "nutrition_grid_total": 36,
+    "nutrition_grid_empty": 36,
+    "nutrition_empty_pct": 1.0,
+    "corridors_count": 14,
+    "corridors_min_length_m": 299.8,
+    "corridors_max_length_m": 730.1,
+    "corridors_avg_length_m": 461.1,
+    "affuts_count": 6,
+    "zones_count": 5,
+    "hotspots_count": 11,
+    "contamination_count": 18
+  },
+  "hash_input": "736cb5b2810e68169a3f27dbde1821345750ff339bec650f11eac29ed2daed8b",
+  "directive": "ORDRE_TERRITOIRE_PROTECT_Ω STEEVE-MAX 2026-04-20"
+}
