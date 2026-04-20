@@ -4,7 +4,7 @@
       "level": "macro",
       "zoom": 12,
       "filename": "TERRITOIRE_macro_live.png",
-      "size_bytes": 3101099,
+      "size_bytes": 3066360,
       "conforme_30kb": true,
       "ready": true,
       "diag": {
@@ -13,7 +13,7 @@
         "tiles": 0,
         "overlays": 0,
         "markers": 0,
-        "layers_count": 0,
+        "layers_count": 1,
         "viewport": {
           "w": 1920,
           "h": 1080
@@ -25,7 +25,7 @@
       "level": "mid",
       "zoom": 15,
       "filename": "TERRITOIRE_mid_live.png",
-      "size_bytes": 3124012,
+      "size_bytes": 3128801,
       "conforme_30kb": true,
       "ready": true,
       "diag": {
@@ -33,15 +33,15 @@
         "meta": {
           "source": "full-criteria",
           "hasMap": true,
-          "tiles": 36,
-          "overlays": 184,
-          "layers": 199,
-          "elapsed_ms": 403
+          "tiles": 6,
+          "overlays": 142,
+          "layers": 157,
+          "elapsed_ms": 400
         },
-        "tiles": 40,
-        "overlays": 182,
+        "tiles": 39,
+        "overlays": 140,
         "markers": 2,
-        "layers_count": 199,
+        "layers_count": 157,
         "viewport": {
           "w": 1920,
           "h": 1080
@@ -53,7 +53,7 @@
       "level": "detail",
       "zoom": 17,
       "filename": "TERRITOIRE_detail_live.png",
-      "size_bytes": 3124254,
+      "size_bytes": 3057029,
       "conforme_30kb": true,
       "ready": true,
       "diag": {
@@ -61,15 +61,15 @@
         "meta": {
           "source": "full-criteria",
           "hasMap": true,
-          "tiles": 8,
-          "overlays": 184,
-          "layers": 199,
-          "elapsed_ms": 402
+          "tiles": 6,
+          "overlays": 142,
+          "layers": 157,
+          "elapsed_ms": 400
         },
-        "tiles": 25,
-        "overlays": 182,
+        "tiles": 45,
+        "overlays": 140,
         "markers": 2,
-        "layers_count": 199,
+        "layers_count": 157,
         "viewport": {
           "w": 1920,
           "h": 1080

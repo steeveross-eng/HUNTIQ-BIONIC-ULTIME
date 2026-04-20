@@ -203,7 +203,11 @@ def compute_corridors_omega(lat, lon, species, month, hour, wind_deg, terrain_v1
     for i in range(sp["n"]):
         angle = i * (360 / sp["n"]) + _seed(lat, lon, f"c10a_{i}") * 25
         rad = math.radians(angle)
-        dist = (0.003 + _seed(lat, lon, f"c10d_{i}") * 0.004) / 111.0 * 111.0 * 0.003
+        # Phase XI-SUPRA-F / ORDRE OMEGA (2026-04-20) — Fix corridor length
+        # Bug historique : `/ 111.0 * 111.0 * 0.003` réduisait dist à 1-2 m (lignes droites
+        # invisibles → rendu "fallback"). Formule corrigée : dist en degrés WGS84 direct.
+        # Range : 0.003° à 0.007° = 333 m à 777 m (corridors visibles et organiques).
+        dist = 0.003 + _seed(lat, lon, f"c10d_{i}") * 0.004
 
         s_lat = lat + math.sin(rad) * dist * 0.3
         s_lon = lon + math.cos(rad) * dist * 0.3 / cos_lat

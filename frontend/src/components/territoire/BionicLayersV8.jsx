@@ -499,6 +499,10 @@ const BionicLayersV8 = ({
     groupRef.current = group;
 
     // ═══ RSE-Ω: NUTRITION layer (grille carences + besoins) ═══
+    // Phase XI-SUPRA-F / ORDRE OMEGA 2026-04-20 : Élimination pollution visuelle
+    // ne rendre QUE les points avec carence réelle (severite >= 1 OU tag != 'aucune').
+    // Les 36 points de la grille qui ont severite=0/aucune étaient rendus comme
+    // "points verts en quadrillage" — pure pollution masquant affuts + contamination.
     const nutri = bundleData.nutrition || null;
     let nutriRendered = 0;
     let nutriRejected = 0;
@@ -511,9 +515,12 @@ const BionicLayersV8 = ({
         const lat = p.lat;
         const lng = p.lng;
         if (typeof lat !== 'number' || typeof lng !== 'number') { nutriRejected++; return; }
+        // PURGE quadrillage : skip les points sans carence réelle
+        const sev = p.severite_tag || 'aucune';
+        const severityNum = typeof p.severite === 'number' ? p.severite : 0;
+        if (sev === 'aucune' || severityNum < 1) { nutriRejected++; return; }
         const vr = validateElement('nutrition', currentZoom, 'point-grid', [lat, lng]);
         if (!vr.ok) { nutriRejected++; return; }
-        const sev = p.severite_tag || 'aucune';
         const palette = NUTRITION_SEVERITY_COLORS[sev] || NUTRITION_SEVERITY_COLORS.aucune;
         const besoin = besoinsMap.get(`${lat.toFixed(5)}_${lng.toFixed(5)}`) || {};
         const marker = L.circleMarker([lat, lng], {

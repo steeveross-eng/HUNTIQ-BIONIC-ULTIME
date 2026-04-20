@@ -237,13 +237,13 @@ def run(base_url: str, output_dir: Path):
                 })
                 captured = True
 
-        if not captured:
-            # Consigne la dernière tentative pour manifest
-            results.append({
-                "level": level, "zoom": zoom, "filename": filename,
-                "size_bytes": size, "conforme_30kb": False, "ready": ready,
-                "diag": diag, "attempts": attempts,
-            })
+            if not captured and attempts >= 3:
+                # Consigne la dernière tentative (échec final après 3 retries)
+                results.append({
+                    "level": level, "zoom": zoom, "filename": filename,
+                    "size_bytes": size, "conforme_30kb": False, "ready": ready,
+                    "diag": diag, "attempts": attempts,
+                })
 
         browser.close()
 
