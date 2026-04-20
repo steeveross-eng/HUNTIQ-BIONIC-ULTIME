@@ -903,6 +903,33 @@ try:
 except Exception as e:
     logger.warning(f"ENGINE-RISQUES-HYDRO-Ω not loaded: {e}")
 
+# SLA-BASELINE-30J-Ω — Phase X-D graphe 30 jours
+try:
+    from engines.v8_institutional.sla_baseline_30j_omega import router as sla_30j_router
+    app.include_router(sla_30j_router)
+    logger.info("SLA-BASELINE-30J-Ω registered (/sla-baseline-30j)")
+except Exception as e:
+    logger.warning(f"SLA-BASELINE-30J-Ω not loaded: {e}")
+
+# SELF-AUDIT-ALERTS-Ω — Phase X-D WebSocket + REST
+try:
+    from engines.v8_institutional.self_audit_alerts_omega import (
+        router as alerts_ws_router, rest_router as alerts_rest_router,
+    )
+    app.include_router(alerts_ws_router)
+    app.include_router(alerts_rest_router)
+    logger.info("SELF-AUDIT-ALERTS-Ω registered (/ws/self-audit-alert, /self-audit-alert/*)")
+except Exception as e:
+    logger.warning(f"SELF-AUDIT-ALERTS-Ω not loaded: {e}")
+
+# EXPORT-INSTITUTIONNEL-V20-Ω — Phase X-D PDF signé
+try:
+    from engines.v8_institutional.export_institutionnel_v20_omega import router as export_v20_router
+    app.include_router(export_v20_router)
+    logger.info("EXPORT-INSTITUTIONNEL-V20-Ω registered (/export/institutionnel/v20)")
+except Exception as e:
+    logger.warning(f"EXPORT-INSTITUTIONNEL-V20-Ω not loaded: {e}")
+
 # MONITORING-Ω + ALERTE-ANOMALIES-Ω
 try:
     from engines.v8_institutional.monitoring_alerte_omega import router as monitoring_router

@@ -972,3 +972,13 @@ Appliqué dans `BionicLayersV8.jsx` via import `CORRIDOR_STYLE_HIERARCHY` :
 - **4 nouvelles suites SELF-AUDIT** : propagation, healthpanel_admin, lep, hydat
 - **SELF-AUDIT** : **37/37 OK**, perf=ok, conforme=true
 - **5 livrables MD** : CONTAMINATION_PROPAGATION_REPORT, HEALTH_PANEL_ADMIN_INTEGRATION, LEP_INTEGRATION_REPORT, HYDAT_INTEGRATION_REPORT, PHASE_X_C_VALIDATION_REPORT
+
+## Phase X-D — Observabilité institutionnelle (2026-04-19)
+
+- **Nouveaux engines** : `SLA-BASELINE-30J-Ω`, `SELF-AUDIT-ALERTS-Ω` (WebSocket), `EXPORT-INSTITUTIONNEL-V20-Ω` (PDF signé HMAC-SHA256)
+- **6 nouveaux endpoints** : `/sla-baseline-30j`, `/ws/self-audit-alert`, `/self-audit-alert/trigger`, `/self-audit-alert/last`, `/export/institutionnel/v20`, metadata_only=true
+- **Hook auto-broadcast** : `run_self_audit()` émet alertes (self-audit / perf-guard / registry-lock) post-audit
+- **Registry lock étendu** : 27 → **30 engines**, nouveau hash `df555aa5a8dc8dde…e93e`
+- **3 nouvelles suites SELF-AUDIT** : sla_baseline_30j, selfaudit_alerts, export_institutionnel
+- **SELF-AUDIT** : **40/40 OK**, perf=ok, conforme=true
+- **4 livrables MD** : SLA_BASELINE_30J_REPORT, SELF_AUDIT_ALERT_SPEC, EXPORT_INSTITUTIONNEL_V20_SPEC, PHASE_X_D_VALIDATION_REPORT

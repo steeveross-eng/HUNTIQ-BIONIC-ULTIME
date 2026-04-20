@@ -63,6 +63,10 @@ _TEST_SUITES = [
     ("test_healthpanel_admin", "/app/backend/tests/test_healthpanel_admin.py"),
     ("test_lep_integration", "/app/backend/tests/test_lep_integration.py"),
     ("test_hydat_integration", "/app/backend/tests/test_hydat_integration.py"),
+    # Phase X-D — Observabilité institutionnelle (SLA 30j, alertes WS, export PDF)
+    ("test_sla_baseline_30j", "/app/backend/tests/test_sla_baseline_30j.py"),
+    ("test_selfaudit_alerts", "/app/backend/tests/test_selfaudit_alerts.py"),
+    ("test_export_institutionnel", "/app/backend/tests/test_export_institutionnel.py"),
 ]
 
 _LOG_FILE = Path("/app/memory/SELF_AUDIT_OMEGA_LOGS.md")
@@ -191,6 +195,12 @@ async def run_self_audit() -> dict:
     global _LAST_AUDIT
     _LAST_AUDIT = result
     _append_log(result)
+    # Phase X-D : émission alertes automatique
+    try:
+        from engines.v8_institutional.self_audit_alerts_omega import check_and_emit_from_audit
+        check_and_emit_from_audit(result)
+    except Exception:
+        pass
     return result
 
 

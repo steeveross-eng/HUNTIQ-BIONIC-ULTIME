@@ -10,15 +10,16 @@
 ## Hash SHA-256 officiel
 
 ```
-072ca8dd3480b978a604418ba4358603d4b6c69a09caea5b84893d1916785648
+df555aa5a8dc8dde76c8ed9e216daf9623752615653f8e142718613daec0e93e
 ```
 
 Toute altération de la liste des engines (`ENGINES_LOCKED` dans
 `/app/backend/engines/v8_institutional/registry_lock_omega.py`)
 invalide ce hash et fait échouer `test_engine_registry_locked`.
 
-> **Évolution Phase X-C :** registre étendu de 25 → 27 engines avec l'ajout de
-> `FEDERAL-DATASETS-Ω` (LEP + HYDAT) et `ENGINE-RISQUES-HYDRO-Ω`.
+> **Évolution Phase X-D :** registre étendu de 27 → 30 engines avec l'ajout de
+> `SLA-BASELINE-30J-Ω`, `SELF-AUDIT-ALERTS-Ω` et `EXPORT-INSTITUTIONNEL-V20-Ω`
+> (observabilité institutionnelle complète).
 
 ## 22 Engines SUPRA-Ω — répartition par pilier
 
@@ -81,7 +82,14 @@ invalide ce hash et fait échouer `test_engine_registry_locked`.
 | 26 | `FEDERAL-DATASETS-Ω` | X-C |
 | 27 | `ENGINE-RISQUES-HYDRO-Ω` | X-C |
 
-**TOTAL SCELLÉ : 27 engines** (22 obligatoires SUPRA-Ω + 5 gouvernance/environnement étendue).
+### Phase X-D (observabilité institutionnelle)
+| # | Engine | Phase |
+|---|--------|-------|
+| 28 | `SLA-BASELINE-30J-Ω` | X-D |
+| 29 | `SELF-AUDIT-ALERTS-Ω` | X-D |
+| 30 | `EXPORT-INSTITUTIONNEL-V20-Ω` | X-D |
+
+**TOTAL SCELLÉ : 30 engines** (22 obligatoires SUPRA-Ω + 8 gouvernance/environnement/observabilité étendues).
 
 ## Endpoints de vérification
 
@@ -107,7 +115,7 @@ Toute modification de ce registre exige :
 ## Signature
 
 ```
-SEALED  — Phase XI / X-B / X-C — 2026-04-19
-SHA-256 — 072ca8dd3480b978…5648
+SEALED  — Phase XI / X-B / X-C / X-D — 2026-04-19
+SHA-256 — df555aa5a8dc8dde…e93e
 STATUS  — VERROUILLÉ IRRÉVOCABLEMENT
 ```

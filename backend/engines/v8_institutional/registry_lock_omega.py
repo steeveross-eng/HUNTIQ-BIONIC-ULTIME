@@ -56,6 +56,10 @@ ENGINES_LOCKED = [
     # Phase X-C additions
     {"name": "FEDERAL-DATASETS-Ω", "pillar": "GOUVERNANCE", "phase": "X-C"},
     {"name": "ENGINE-RISQUES-HYDRO-Ω", "pillar": "ENVIRONNEMENT", "phase": "X-C"},
+    # Phase X-D additions (observabilité)
+    {"name": "SLA-BASELINE-30J-Ω", "pillar": "GOUVERNANCE", "phase": "X-D"},
+    {"name": "SELF-AUDIT-ALERTS-Ω", "pillar": "GOUVERNANCE", "phase": "X-D"},
+    {"name": "EXPORT-INSTITUTIONNEL-V20-Ω", "pillar": "GOUVERNANCE", "phase": "X-D"},
 ]
 
 REGISTRY_VERSION = "V20-SUPRA-LOCKED-PHASE-XI-2026-04"
