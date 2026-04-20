@@ -93,6 +93,8 @@ _TEST_SUITES = [
     ("test_territoire_anti_regression_omega", "/app/backend/tests/test_territoire_anti_regression_omega.py"),
     # Phase XI-SUPRA-H — ENGINE CORRIDORS VERSION Ω / IA-CORRIDORS
     ("test_ia_corridors_omega", "/app/backend/tests/test_ia_corridors_omega.py"),
+    # Phase XI-SUPRA-M — CORRIDORS ORGANIC (IA multi-échelles, réseau hiérarchique)
+    ("test_ia_corridors_organic", "/app/backend/tests/test_ia_corridors_organic.py"),
 ]
 
 _LOG_FILE = Path("/app/memory/SELF_AUDIT_OMEGA_LOGS.md")

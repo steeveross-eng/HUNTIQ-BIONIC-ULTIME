@@ -3,6 +3,24 @@
 
 ---
 
+## 2026-04-20T22:00Z — PHASE XI-SUPRA-M (CORRIDORS ORGANIC Ω)
+
+### Directive: PHASE_XI_SUPRA_L_CORRIDORS_ORGANIC_OMEGA — EXÉCUTÉE
+- **Legacy archivé** : `engine_corridors.py` → `_ARCHIVE_NON_ACTIVE/engine_corridors_legacy_pre_L.py`
+- **Nouvel engine** `ENGINE-IA-CORRIDORS-ORGANIC-Ω` (41ᵉ engine scellé) :
+  - IA multi-échelles (terrain_multiscale_costmap_v3 + vision_behavioral_map_v2 + fused_behavioral_probability_v4)
+  - Géométrie Catmull-Rom organic v3, 60-120 pts, micro-oscillations biomimétiques, fractal light, smart deviation, auto-interconnexion 50m, variable thickness 1.2-3.0px, hiérarchie 3 niveaux
+  - 3 modes rendu (density/heat/veine_animale), gradient `#FF8F00→#FF9F00`
+  - 5 espèces × 8 paramètres behavior, attraction/répulsion dynamique
+  - IA prédictive/générative/adaptative : schémas prêts (actifs en attente)
+- **7 endpoints** `/corridors-organic/*` opérationnels
+- **Baseline** `TERRITOIRE_OMEGA_STABLE` scellée (SHA `0cc7701648af3317…`)
+- **Registry Lock** → `V25-SUPRA-LOCKED-PHASE-XI-SUPRA-M-2026-04` (SHA `e8c6ee62a3f0c189…`)
+- **SELF-AUDIT-Ω** : 59/59 suites OK (+1 test ajouté)
+- Rapport : `/app/memory/PHASE_XI_SUPRA_M_REPORT.md`
+
+---
+
 ## 2026-04-20T21:30Z — PHASE XI-SUPRA-L PRECHECK (READY_FOR_PHASE_L)
 
 ### Directive: PHASE_XI_SUPRA_L_PRECHECK_ENGINES_OMEGA — EXÉCUTÉE

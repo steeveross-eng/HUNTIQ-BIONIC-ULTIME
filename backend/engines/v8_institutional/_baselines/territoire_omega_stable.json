@@ -1,0 +1,76 @@
+{
+  "engine": "ENGINE-IA-CORRIDORS-ORGANIC-Ω",
+  "version": "V1.0-PHASE-XI-SUPRA-M-2026-04",
+  "waypoint": {
+    "lat": 45.1,
+    "lon": -72.8,
+    "species": "chevreuil"
+  },
+  "corridors_count": 1,
+  "hierarchy_counts": {
+    "veine_principale": 1,
+    "veine_secondaire": 0,
+    "capillaire": 0,
+    "connector": 0
+  },
+  "fused_behavioral_probability": {
+    "fused_score": 0.5
+  },
+  "organic_config": {
+    "points_per_corridor_min": 60,
+    "points_per_corridor_max": 120,
+    "curvature_model": "catmull_rom_organic_v3",
+    "micro_oscillations": "biomimetic_low_frequency",
+    "fractal_variation": "light",
+    "slope_adaptation": true,
+    "forest_density_adaptation": true,
+    "functional_radius_min_m": 420.0,
+    "functional_radius_max_m": 780.0,
+    "segment_max_m": 20.0,
+    "angle_max_deg": 45.0,
+    "slope_reroute_deg": 35.0,
+    "water_min_dist_m": 20.0,
+    "interconnect_threshold_m": 50.0,
+    "dead_end_extend_m": 120.0,
+    "loop_if_zone_vitale": true,
+    "thickness_min_px": 1.2,
+    "thickness_max_px": 3.0,
+    "thickness_mode": "along_path",
+    "hierarchy": {
+      "veine_principale": {
+        "min_intensity": 70,
+        "min_attractors": 2
+      },
+      "veine_secondaire": {
+        "min_intensity": 40,
+        "min_attractors": 1
+      },
+      "capillaire": {
+        "min_intensity": 0,
+        "min_attractors": 0
+      }
+    },
+    "render_modes_enabled": [
+      "density_mode",
+      "heat_mode",
+      "veine_animale_mode"
+    ],
+    "gradient_colors": [
+      "#FF8F00",
+      "#FF9F00"
+    ],
+    "halo_size_px": 0.2,
+    "chevron_frequency": "high",
+    "cumulative_thickness_multiplier": 1.5,
+    "species_supported": [
+      "chevreuil",
+      "orignal",
+      "wapiti",
+      "ours_noir",
+      "dindon_sauvage"
+    ]
+  },
+  "baseline_name": "TERRITOIRE_OMEGA_STABLE",
+  "sealed_at": "2026-04-20T22:53:06.941960+00:00",
+  "sha256": "2c9b172f5a4fa3a8815aa6e10b9657f33845453494623006b2fbfe9c0f1dde27"
+}

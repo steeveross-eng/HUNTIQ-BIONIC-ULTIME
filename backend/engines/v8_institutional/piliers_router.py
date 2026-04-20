@@ -12,7 +12,17 @@ router = APIRouter(prefix="/api/v8/institutional", tags=["V8 Institutional — 2
 
 # ═══ IMPORTS 24 ENGINES ═══
 from engines.v8_institutional.engine_zones import compute_zones
-from engines.v8_institutional.engine_corridors import compute_corridors
+from engines.v8_national.phase_b_engines import generate_corridors_ta as compute_corridors_legacy
+
+
+def compute_corridors(lat, lon, species, month, hour, wind_deg=225, zones=None):
+    """Shim legacy (pre-Phase-L) — redirige vers phase_b_engines.
+    Le module `engine_corridors.py` a été archivé dans
+    `_ARCHIVE_NON_ACTIVE/engine_corridors_legacy_pre_L.py` (Phase XI-SUPRA-M 2026-04-20).
+    Cette fonction reste disponible uniquement pour compatibilité `piliers_router`.
+    Les consommateurs modernes doivent utiliser `ENGINE-IA-CORRIDORS-ORGANIC-Ω`.
+    """
+    return compute_corridors_legacy(lat, lon, species, month, hour, wind_deg=wind_deg, zones=zones)
 from engines.v8_institutional.engine_affuts import compute_affuts
 from engines.v8_institutional.engine_hotspots import compute_hotspots
 from engines.v8_institutional.engine_vent import compute_wind_vectors, compute_scent_cone

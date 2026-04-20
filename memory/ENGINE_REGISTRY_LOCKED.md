@@ -1,8 +1,8 @@
-# ENGINE_REGISTRY_LOCKED — Phase XI-SUPRA-L
+# ENGINE_REGISTRY_LOCKED — Phase XI-SUPRA-M
 
 > **STATUT : SCELLÉ — SEALED — VERROUILLÉ**
-> **Version registre :** V24-SUPRA-LOCKED-PHASE-XI-SUPRA-L-2026-04
-> **Date de scellement :** 2026-04-20T21:00:00Z
+> **Version registre :** V25-SUPRA-LOCKED-PHASE-XI-SUPRA-M-2026-04
+> **Date de scellement :** 2026-04-20T22:00:00Z
 > **Commandant :** STEEVE-MAX
 
 ---
@@ -10,7 +10,7 @@
 ## Hash SHA-256 officiel
 
 ```
-8d2d6169320ccf05b16b57ed4f610f184df51cfa2fd7a0e3d365f6460eb704fc
+e8c6ee62a3f0c1894313dee30355b711230ede629e208df4622de99cee2ba2b8
 ```
 
 Toute altération de la liste des engines (`ENGINES_LOCKED` dans
@@ -37,12 +37,23 @@ invalide ce hash et fait échouer `test_engine_registry_locked`.
 > `ENGINE-RENDU-Ω`, `ENGINE-SPECIES-PROFILES-Ω`, `ENGINE-IA-VISION-REGISTRY-Ω`.
 > Rendu institutionnel des corridors verrouillé.
 >
-> **Évolution Phase XI-SUPRA-L (présente directive) :** application côté frontend
+> **Évolution Phase XI-SUPRA-L :** application côté frontend
 > des règles RENDU-Ω sur la couche Leaflet `CORRIDORS_OMEGA` (couleur unique
 > `#FF8F00`, épaisseurs 1.2/2.0/3.0 px, opacité ≥ 0.75, minZoom=13, Z-order
 > strict, PREVIEW==FINAL). Ajout endpoint visuel self-test
 > `/api/v20/territoire/corridors-omega/visual-self-test` (6/6 checks OK).
 > Aucun nouvel engine ajouté — renforcement frontend uniquement.
+>
+> **Évolution Phase XI-SUPRA-M (présente directive) :** registre étendu à
+> **41 engines** par ajout de `ENGINE-IA-CORRIDORS-ORGANIC-Ω`. Legacy
+> `engine_corridors.py` archivé en `_ARCHIVE_NON_ACTIVE/`. Nouvelles
+> capacités : IA multi-échelles (macro vallées / micro coulées / drainage /
+> slope breaks / shadow relief), géométrie organique 60–120 points,
+> micro-oscillations biomimétiques, smart deviation, auto-interconnexion
+> (seuil 50 m), variable thickness le long du path, hiérarchie réseau
+> (veine_principale / veine_secondaire / capillaire), attraction/répulsion
+> dynamique, 3 modes rendu (density / heat / veine_animale). Baseline
+> `TERRITOIRE_OMEGA_STABLE` scellable via endpoint dédié.
 
 ---
 
@@ -98,8 +109,8 @@ Toute modification de ce registre exige :
 
 ```
 SEALED  — Phase XI / X-B / X-C / X-D / XI-SUPRA / XI-SUPRA-B / XI-SUPRA-C /
-         XI-SUPRA-G / XI-SUPRA-H / XI-SUPRA-K / XI-SUPRA-L — 2026-04-20
-SHA-256 — 8d2d6169320ccf05b16b57ed4f610f184df51cfa2fd7a0e3d365f6460eb704fc
-TOTAL   — 40 engines scellés
+         XI-SUPRA-G / XI-SUPRA-H / XI-SUPRA-K / XI-SUPRA-L / XI-SUPRA-M — 2026-04-20
+SHA-256 — e8c6ee62a3f0c1894313dee30355b711230ede629e208df4622de99cee2ba2b8
+TOTAL   — 41 engines scellés
 STATUS  — VERROUILLÉ IRRÉVOCABLEMENT
 ```

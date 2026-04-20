@@ -8,3 +8,4 @@ from engines.v8_national.phase_b_engines import generate_corridors_ta, _cost_sur
 
 def compute_corridors(lat, lon, species, month, hour, wind_deg=225, zones=None):
     return generate_corridors_ta(lat, lon, species, month, hour, wind_deg=wind_deg, zones=zones)
+# ARCHIVE_CORRIDORS_LEGACY_PRE_PHASE_L — 2026-04-20T22:44:23Z

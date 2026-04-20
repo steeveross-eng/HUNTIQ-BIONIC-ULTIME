@@ -1,5 +1,35 @@
 ## EXCLUSION OFFICIELLE LEP_CRITICAL_HABITAT_NATIONAL (2026-04-20T16:00Z) ✅
 
+## PHASE XI-SUPRA-M — CORRIDORS ORGANIC Ω (2026-04-20T22:00Z) ✅
+
+### Directive exécutée : `PHASE_XI_SUPRA_L_CORRIDORS_ORGANIC_OMEGA`
+
+### Livrables
+- **Legacy archivé** : `engine_corridors.py` → `_ARCHIVE_NON_ACTIVE/engine_corridors_legacy_pre_L.py` (shim compat dans `piliers_router.py`)
+- **Nouvel engine** : `ENGINE-IA-CORRIDORS-ORGANIC-Ω` (`/app/backend/engines/v8_institutional/engine_ia_corridors_organic_omega.py`)
+  - IA multi-échelles : macro_valleys, micro_coulees, drainage_lines, slope_breaks, shadow_relief
+  - Géométrie Catmull-Rom organic v3, 60-120 points, micro-oscillations biomimétiques bi-fréquences
+  - Smart deviation (pente 35°, eau 20m, humain, contamination), auto-interconnexion 50m
+  - Variable thickness 1.2-3.0 px le long du path
+  - Hiérarchie 3 niveaux (veine_principale / veine_secondaire / capillaire)
+  - Attraction/répulsion dynamique (salines, zones vitales, humains, contamination)
+  - 3 modes rendu : density_mode, heat_mode, veine_animale_mode (gradient `#FF8F00→#FF9F00`, halo, chevrons, cumulative thickness ×1.5)
+  - 5 espèces × 8 paramètres comportementaux
+- **7 endpoints** `/corridors-organic/{status,modes,species-behavior,generate,validate,network-hierarchy,seal-baseline}` tous 200 OK
+- **Test** `test_ia_corridors_organic.py` ajouté au SELF-AUDIT runner
+- **Baseline** `TERRITOIRE_OMEGA_STABLE` scellée (SHA `0cc7701648af3317…`)
+
+### Registry Lock
+- Version : `V25-SUPRA-LOCKED-PHASE-XI-SUPRA-M-2026-04`
+- SHA-256 : `e8c6ee62a3f0c1894313dee30355b711230ede629e208df4622de99cee2ba2b8`
+- **41 engines scellés** (+1 vs Phase L)
+
+### SELF-AUDIT-Ω : 59/59 suites OK
+
+### Rapport : `/app/memory/PHASE_XI_SUPRA_M_REPORT.md`
+
+---
+
 ## PHASE XI-SUPRA-L — FRONTEND CORRIDORS RENDU Ω (2026-04-20T21:00Z) ✅
 
 ### Directive exécutée : `PHASE_XI_SUPRA_K_FRONTEND_CORRIDORS_RENDU_OMEGA`

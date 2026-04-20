@@ -970,6 +970,14 @@ try:
 except Exception as e:
     logger.warning(f"ENGINE-IA-CORRIDORS-Ω not loaded: {e}")
 
+# ENGINE-IA-CORRIDORS-ORGANIC-Ω — Phase XI-SUPRA-M (CORRIDORS ORGANIC VERSION Ω-M)
+try:
+    from engines.v8_institutional.engine_ia_corridors_organic_omega import router as organic_corridors_router
+    app.include_router(organic_corridors_router)
+    logger.info("ENGINE-IA-CORRIDORS-ORGANIC-Ω registered (/api/v20/territoire/corridors-organic)")
+except Exception as e:
+    logger.warning(f"ENGINE-IA-CORRIDORS-ORGANIC-Ω not loaded: {e}")
+
 # ENGINE-RENDU-Ω — Phase XI-SUPRA-K (rendu institutionnel corridors)
 try:
     from engines.v8_institutional.engine_rendu_omega import router as rendu_omega_router, visual_router as rendu_visual_router
