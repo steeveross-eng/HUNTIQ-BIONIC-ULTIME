@@ -1,5 +1,38 @@
 ## EXCLUSION OFFICIELLE LEP_CRITICAL_HABITAT_NATIONAL (2026-04-20T16:00Z) ✅
 
+## PHASE XI-L+1-M PREP — FRONTEND ORGANIC + IA HOOKS + OPTIMIZATION x1000 PREP (2026-04-20T23:00Z) ✅
+
+### Directive exécutée : `PHASE_XI_SUPRA_L+1_M_PREP_ORGANIC_FRONTEND_IA_AND_OPTIMIZATION_X1000`
+
+### Frontend CORRIDORS_ORGANIC activé
+- Store `renduOmegaStore.js` enrichi : `getOrganicCorridors(lat, lon, species)` avec cache 60s, `resolveCorridorStyleOrganic` (gradient `#FF8F00→#FF9F00`, halo 0.2px, thickness moyen snap sur 1.2/2.0/3.0)
+- `BionicLayersV8.jsx` : props `useOrganicCorridors=true` + `species`, fetch async, rendu ORGANIC avec halo sub-polyline + chevrons triples (30/60/85%), tooltip `CORRIDOR-ORGANIC-Ω [VEINE_PRINCIPALE]`
+- Fallback automatique sur corridors legacy si fetch KO
+
+### 3 Hooks IA (tous 200 OK — status `awaiting_upload`)
+- `POST /corridors-organic/predict` (ia_predictive_v1) → seasonal_movements, pressure_humaine, hydrological_changes
+- `POST /corridors-organic/generate-alt` (ia_generative_v1) → alternative/scenario/predictive corridors
+- `POST /corridors-organic/adapt` (ia_adaptive_v1) → auto_refine/correct/learn
+
+### Extractions legacy + Analyse x1000
+- `/app/memory/ZONES_DESCRIPTION_LEGACY.md`, `SALINES_DESCRIPTION_LEGACY.md`, `HOTSPOTS_DESCRIPTION_LEGACY.md` (9 sections chacun)
+- `/app/memory/PHASE_M_OPTIMIZATION_AXES_X1000.md` — matrice d'écart, gaps (HOTSPOTS ×1200, ZONES ×800, SALINES ×150)
+
+### Stubs + Templates (non-Ω)
+- `/app/backend/engines/v8_institutional/{zones,salines,hotspots}_organic_v1.py` — statut `READY_FOR_OPTIMIZATION`
+- `/app/memory/{ZONES,SALINES,HOTSPOTS}_X1000_TEMPLATE.md` — 12 sections prêtes à remplir
+
+### Registry Lock
+- Version : `V27-SUPRA-LOCKED-PHASE-XI-L+1-M-PREP-2026-04`
+- SHA-256 : `7b8dadf3e574cc5e5cada1bcb232f7c24597ea9be840985fd04770235c3c81fe`
+- 41 engines scellés (inchangé — aucune institutionnalisation, directive explicite)
+
+### SELF-AUDIT-Ω : 59/59 suites OK
+
+### Rapport : `/app/memory/PHASE_XI_L+1_M_PREP_REPORT.md`
+
+---
+
 ## PHASE XI-SUPRA-M — CORRIDORS ORGANIC Ω (2026-04-20T22:00Z) ✅
 
 ### Directive exécutée : `PHASE_XI_SUPRA_L_CORRIDORS_ORGANIC_OMEGA`

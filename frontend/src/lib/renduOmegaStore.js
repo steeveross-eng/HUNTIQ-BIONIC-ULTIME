@@ -13,6 +13,7 @@
 
 const API_BASE = process.env.REACT_APP_BACKEND_URL || '';
 const RULES_URL = `${API_BASE}/api/v20/territoire/rendu-omega/rules`;
+const ORGANIC_GENERATE_URL = `${API_BASE}/api/v20/territoire/corridors-organic/generate`;
 
 // Défauts immuables — doivent matcher engine_rendu_omega.py:RENDU_RULES
 export const RENDU_OMEGA = Object.freeze({
@@ -119,4 +120,71 @@ export function resolveZIndex(layerKey) {
  */
 export function isCorridorsVisibleAtZoom(zoom) {
   return Number(zoom) >= RENDU_OMEGA.minZoom;
+}
+
+/* =========================================================================
+ * Phase XI-SUPRA-L+1-M PREP — CORRIDORS ORGANIC (120 pts, gradient, halo)
+ * ========================================================================= */
+
+const ORGANIC_CACHE_TTL_MS = 60_000;
+const _organicCache = new Map(); // key = `${lat}|${lon}|${species}` → {data, ts}
+
+/**
+ * Fetch les corridors ORGANIC depuis /corridors-organic/generate avec cache 60s.
+ * Retourne null si l'endpoint échoue (le consommateur peut fallback sur le
+ * bundle legacy `corridors`).
+ */
+export async function getOrganicCorridors(lat, lon, species = 'chevreuil') {
+  const key = `${Number(lat).toFixed(4)}|${Number(lon).toFixed(4)}|${species}`;
+  const now = Date.now();
+  const cached = _organicCache.get(key);
+  if (cached && (now - cached.ts) < ORGANIC_CACHE_TTL_MS) {
+    return cached.data;
+  }
+  try {
+    const resp = await fetch(ORGANIC_GENERATE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'omit',
+      body: JSON.stringify({ lat, lon, species, month: 10, hour: 7, wind_deg: 225, wind_speed: 15 }),
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    _organicCache.set(key, { data, ts: now });
+    return data;
+  } catch (e) {
+    return null;
+  }
+}
+
+/**
+ * Résout le style Leaflet ORGANIC (veine animale) pour un corridor avec
+ * thickness_profile variable. Utilise l'épaisseur moyenne du path.
+ * Gradient & halo sont délégués au rendu via options supplémentaires.
+ */
+export function resolveCorridorStyleOrganic(corridor) {
+  const tp = corridor?.thickness_profile;
+  let weight = 2.0;
+  if (Array.isArray(tp) && tp.length > 0) {
+    weight = tp.reduce((a, b) => a + b, 0) / tp.length;
+  } else {
+    weight = resolveCorridorWeight(corridor?.intensity);
+  }
+  // Clamp dans les valeurs RENDU-Ω (1.2 / 2.0 / 3.0 via arrondi au plus proche)
+  const allowed = RENDU_OMEGA.weightsAllowedPx;
+  const snapped = allowed.reduce((prev, curr) =>
+    Math.abs(curr - weight) < Math.abs(prev - weight) ? curr : prev, allowed[0]);
+  return {
+    color: RENDU_OMEGA.color,
+    gradientTo: '#FF9F00', // §3 RENDU-Ω-M gradient
+    weight: snapped,
+    opacity: RENDU_OMEGA.opacityDefault,
+    lineCap: 'round',
+    lineJoin: 'round',
+    smoothFactor: 0,
+    interactive: true,
+    // Halo
+    haloEnabled: true,
+    haloSizePx: 0.2,
+  };
 }

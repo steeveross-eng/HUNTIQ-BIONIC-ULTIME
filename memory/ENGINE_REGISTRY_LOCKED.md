@@ -54,6 +54,20 @@ invalide ce hash et fait échouer `test_engine_registry_locked`.
 > (veine_principale / veine_secondaire / capillaire), attraction/répulsion
 > dynamique, 3 modes rendu (density / heat / veine_animale). Baseline
 > `TERRITOIRE_OMEGA_STABLE` scellable via endpoint dédié.
+>
+> **Évolution Phase XI-SUPRA-L+1-M PREP (présente directive) :**
+> - Aucun nouvel engine scellé (registre inchangé à 41 engines).
+> - **Frontend** : activation couche `CORRIDORS_ORGANIC` dans `BionicLayersV8.jsx`
+>   (consomme `/corridors-organic/generate`, cache 60 s, halo + gradient + chevrons triples).
+> - **IA hooks** : 3 endpoints `/corridors-organic/{predict,generate-alt,adapt}`
+>   exposant le contrat IA predictive / generative / adaptative (`awaiting_upload`).
+> - **Descriptions legacy** extraites : `ZONES_DESCRIPTION_LEGACY.md`,
+>   `SALINES_DESCRIPTION_LEGACY.md`, `HOTSPOTS_DESCRIPTION_LEGACY.md`.
+> - **Axes d'optimisation x1000** : `PHASE_M_OPTIMIZATION_AXES_X1000.md`.
+> - **Stubs prêts à optimiser** (non-Ω) : `zones_organic_v1.py`, `salines_organic_v1.py`,
+>   `hotspots_organic_v1.py` avec status `READY_FOR_OPTIMIZATION`.
+> - **Templates X1000** : `ZONES_X1000_TEMPLATE.md`, `SALINES_X1000_TEMPLATE.md`,
+>   `HOTSPOTS_X1000_TEMPLATE.md`.
 
 ---
 
@@ -109,8 +123,9 @@ Toute modification de ce registre exige :
 
 ```
 SEALED  — Phase XI / X-B / X-C / X-D / XI-SUPRA / XI-SUPRA-B / XI-SUPRA-C /
-         XI-SUPRA-G / XI-SUPRA-H / XI-SUPRA-K / XI-SUPRA-L / XI-SUPRA-M — 2026-04-20
-SHA-256 — e8c6ee62a3f0c1894313dee30355b711230ede629e208df4622de99cee2ba2b8
+         XI-SUPRA-G / XI-SUPRA-H / XI-SUPRA-K / XI-SUPRA-L / XI-SUPRA-M /
+         XI-L+1-M-PREP — 2026-04-20
+SHA-256 — 7b8dadf3e574cc5e5cada1bcb232f7c24597ea9be840985fd04770235c3c81fe
 TOTAL   — 41 engines scellés
 STATUS  — VERROUILLÉ IRRÉVOCABLEMENT
 ```

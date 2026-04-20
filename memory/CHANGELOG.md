@@ -3,6 +3,21 @@
 
 ---
 
+## 2026-04-20T23:00Z — PHASE XI-L+1-M PREP (FRONTEND ORGANIC + IA HOOKS + X1000 PREP)
+
+### Directive: PHASE_XI_SUPRA_L+1_M_PREP_ORGANIC_FRONTEND_IA_AND_OPTIMIZATION_X1000 — EXÉCUTÉE
+- **Frontend** : couche Leaflet `CORRIDORS_ORGANIC` activée dans `BionicLayersV8.jsx`, consomme `/corridors-organic/generate` (cache 60s), halo + gradient `#FF8F00→#FF9F00` + chevrons triples
+- **3 IA hooks** : `/corridors-organic/{predict,generate-alt,adapt}` avec contrats d'E/S explicites, statut `awaiting_upload` tant que modèles non téléversés
+- **Extractions legacy** : `ZONES_DESCRIPTION_LEGACY.md`, `SALINES_DESCRIPTION_LEGACY.md`, `HOTSPOTS_DESCRIPTION_LEGACY.md` (9 sections chacun)
+- **Analyse x1000** : `PHASE_M_OPTIMIZATION_AXES_X1000.md` (gaps HOTSPOTS ×1200, ZONES ×800, SALINES ×150)
+- **Stubs non-Ω** : `zones_organic_v1.py`, `salines_organic_v1.py`, `hotspots_organic_v1.py` (statut `READY_FOR_OPTIMIZATION`, compute_*_organic_v1 lève NotImplementedError)
+- **Templates X1000** : `ZONES_X1000_TEMPLATE.md`, `SALINES_X1000_TEMPLATE.md`, `HOTSPOTS_X1000_TEMPLATE.md` (12 sections chacun)
+- **Registry Lock** → `V27-SUPRA-LOCKED-PHASE-XI-L+1-M-PREP-2026-04` (SHA `7b8dadf3e574cc5e…`) — 41 engines (inchangé)
+- **SELF-AUDIT-Ω** : 59/59 suites OK
+- Rapport : `/app/memory/PHASE_XI_L+1_M_PREP_REPORT.md`
+
+---
+
 ## 2026-04-20T22:00Z — PHASE XI-SUPRA-M (CORRIDORS ORGANIC Ω)
 
 ### Directive: PHASE_XI_SUPRA_L_CORRIDORS_ORGANIC_OMEGA — EXÉCUTÉE

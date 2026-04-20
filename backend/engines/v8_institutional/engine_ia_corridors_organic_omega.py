@@ -846,3 +846,96 @@ async def organic_seal_baseline(body: SealBaselineBody):
         }
     sealed = seal_baseline_stable(bundle)
     return {"sealed": True, **sealed}
+
+
+# ============================================================
+# Phase XI-SUPRA-L+1-M PREP — HOOKS IA (PREDICTIVE / GENERATIVE / ADAPTATIVE)
+# ============================================================
+class IAPredictBody(BaseModel):
+    lat: float = 45.10
+    lon: float = -72.80
+    species: str = "chevreuil"
+    horizon_days: int = 90
+
+
+@router.post("/predict")
+async def ia_corridors_predict(body: IAPredictBody):
+    """HOOK IA PREDICTIVE — awaiting_upload.
+
+    Contrat :
+      - Input : waypoint + espèce + horizon temporel (jours)
+      - Output (prévu) : évolution des corridors saisonniers, pression humaine, hydrologie
+      - Statut actuel : schéma prêt, modèle non déployé (renvoie contrat vide + flag)
+    """
+    mark_call(ENGINE_NAME)
+    return {
+        "engine": ENGINE_NAME,
+        "hook": "ia_corridors_predictive_hook",
+        "model": "ia_predictive_v1",
+        "status": "awaiting_upload",
+        "model_deployed": False,
+        "input": body.model_dump(),
+        "contract_outputs": IA_ADVANCED_STATUS["ia_predictive"]["outputs"],
+        "prediction": None,
+        "note": "Modèle IA prédictif non déployé — actif en attente de téléversement.",
+    }
+
+
+class IAGenerateAltBody(BaseModel):
+    lat: float = 45.10
+    lon: float = -72.80
+    species: str = "chevreuil"
+    n_alternatives: int = 3
+
+
+@router.post("/generate-alt")
+async def ia_corridors_generate_alt(body: IAGenerateAltBody):
+    """HOOK IA GENERATIVE — awaiting_upload.
+
+    Contrat :
+      - Input : waypoint + espèce + nombre d'alternatives souhaitées
+      - Output (prévu) : corridors alternatifs, scénarios prospectifs, corridors prédictifs
+      - Statut actuel : schéma prêt, modèle non déployé
+    """
+    mark_call(ENGINE_NAME)
+    return {
+        "engine": ENGINE_NAME,
+        "hook": "ia_corridors_generative_hook",
+        "model": "ia_generative_v1",
+        "status": "awaiting_upload",
+        "model_deployed": False,
+        "input": body.model_dump(),
+        "contract_outputs": IA_ADVANCED_STATUS["ia_generative"]["outputs"],
+        "alternatives": None,
+        "note": "Modèle IA générative non déployé — actif en attente de téléversement.",
+    }
+
+
+class IAAdaptBody(BaseModel):
+    lat: float = 45.10
+    lon: float = -72.80
+    species: str = "chevreuil"
+    feedback: dict = {}
+
+
+@router.post("/adapt")
+async def ia_corridors_adapt(body: IAAdaptBody):
+    """HOOK IA ADAPTATIVE — awaiting_upload.
+
+    Contrat :
+      - Input : waypoint + espèce + feedback (traces GPS, photos terrain, corrections)
+      - Output (prévu) : auto_refine, auto_correct, auto_learn
+      - Statut actuel : schéma prêt, modèle non déployé
+    """
+    mark_call(ENGINE_NAME)
+    return {
+        "engine": ENGINE_NAME,
+        "hook": "ia_corridors_adaptive_hook",
+        "model": "ia_adaptive_v1",
+        "status": "awaiting_upload",
+        "model_deployed": False,
+        "input": body.model_dump(),
+        "contract_capabilities": IA_ADVANCED_STATUS["ia_adaptative"]["capabilities"],
+        "adaptation": None,
+        "note": "Modèle IA adaptative non déployé — actif en attente de téléversement.",
+    }

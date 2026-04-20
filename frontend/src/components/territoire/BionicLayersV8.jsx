@@ -22,7 +22,7 @@ import L from 'leaflet';
 import { NUTRITION_SEVERITY_COLORS } from '@/config/territoire_defaults';
 import { validateElement, logRenderCycle } from './RenderGuardOmega';
 import { buildInstitutionalPopup, FichePopup } from './InstitutionalPopup';
-import { RENDU_OMEGA, resolveCorridorStyleOmega, isCorridorsVisibleAtZoom, getRenduRules } from '@/lib/renduOmegaStore';
+import { RENDU_OMEGA, resolveCorridorStyleOmega, isCorridorsVisibleAtZoom, getRenduRules, getOrganicCorridors, resolveCorridorStyleOrganic } from '@/lib/renduOmegaStore';
 
 // ═══ PALETTE BCE-4X V9-INSTITUTIONNEL ═══
 const ZONE_COLORS = {
@@ -62,6 +62,7 @@ const CONTOUR_COLOR = '#9E9E9E';
 const BionicLayersV8 = ({
   bundleData,
   waypointCenter = null,
+  species = 'chevreuil',
   showZones = true,
   showCorridors = true,
   showAffuts = true,
@@ -70,6 +71,7 @@ const BionicLayersV8 = ({
   showWind = true,
   showContamination = true,
   showNutrition = true,
+  useOrganicCorridors = true, // Phase XI-SUPRA-L+1-M : activation frontend ORGANIC
   enabled = true,
   onDataLoaded = null,
 }) => {
@@ -77,6 +79,7 @@ const BionicLayersV8 = ({
   const groupRef = useRef(null);
   const autoZoomAppliedRef = useRef(null);
   const [currentZoom, setCurrentZoom] = useState(() => (map ? map.getZoom() : 14));
+  const [organicBundle, setOrganicBundle] = useState(null); // Phase M : cache local corridors organiques
   const onDataLoadedRef = useRef(onDataLoaded);
   onDataLoadedRef.current = onDataLoaded;
 
@@ -110,6 +113,17 @@ const BionicLayersV8 = ({
   // RENDU-Ω V1 (Phase XI-SUPRA-L): pré-fetch des règles visuelles officielles
   // (PREVIEW == FINAL garanti: défauts store identiques au backend).
   useEffect(() => { getRenduRules().catch(() => {}); }, []);
+
+  // CORRIDORS_ORGANIC (Phase XI-SUPRA-L+1-M) : fetch des corridors organiques
+  // 120 points + thickness variable + hiérarchie, cache 60s.
+  useEffect(() => {
+    if (!useOrganicCorridors || !waypointCenter || !enabled) return;
+    let cancelled = false;
+    getOrganicCorridors(waypointCenter.lat, waypointCenter.lng, species)
+      .then((data) => { if (!cancelled && data) setOrganicBundle(data); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [waypointCenter, species, useOrganicCorridors, enabled]);
 
   // AMPLIFICATION-Ω-V13: helpers de scaling
   const corridorWeightFactor = currentZoom < 14 ? (1 + (15 - currentZoom) * 0.3) : 1;
@@ -201,23 +215,43 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-3: CORRIDORS-Ω — PHASE XI-SUPRA-L (RENDU-Ω INSTITUTIONNEL) ═══
-    // Règles verrouillées (RENDUS_CORRIDORS_OMEGA.md) :
-    //   • Couleur unique        #FF8F00 (orange ambre institutionnel)
-    //   • Épaisseurs autorisées 1.2 / 2.0 / 3.0 px (selon intensité)
+    // ═══ Z-3: CORRIDORS-Ω — PHASE XI-SUPRA-L+1-M (RENDU-Ω + ORGANIC) ═══
+    // Règles verrouillées (RENDUS_CORRIDORS_OMEGA.md) + enrichissement Phase M :
+    //   • Couleur unique        #FF8F00 + gradient sub-layer #FF9F00
+    //   • Épaisseurs autorisées 1.2 / 2.0 / 3.0 px (thickness_profile si ORGANIC)
     //   • Opacité minimale      0.75 (défaut 0.85)
-    //   • Géométrie              Catmull-Rom, smoothFactor=0 (path déjà lissé côté IA)
+    //   • Géométrie              Catmull-Rom (60-120 pts si ORGANIC, path legacy sinon)
     //   • minZoom                13 (couche masquée à zoom<13)
-    //   • Zéro interaction affûts, PREVIEW==FINAL
+    //   • Halo Phase M           sub-polyline weight+2, opacity 0.18
     const corridorsVisibleAtZoom = isCorridorsVisibleAtZoom(currentZoom);
-    if (showCorridors && corridors.length > 0 && corridorsVisibleAtZoom) {
-      corridors.forEach(c => {
-        const path = c.path || [[c.start.lat, c.start.lng], [c.end.lat, c.end.lng]];
-        // Style strict RENDU-Ω — couleur, épaisseur, opacité, smoothing
-        const styleOmega = resolveCorridorStyleOmega(c);
+    // Source corridors : ORGANIC si disponible & activé, sinon bundle legacy
+    const useOrganic = useOrganicCorridors && organicBundle?.corridors?.length > 0;
+    const corridorsToRender = useOrganic ? organicBundle.corridors : corridors;
+    if (showCorridors && corridorsToRender.length > 0 && corridorsVisibleAtZoom) {
+      corridorsToRender.forEach(c => {
+        const path = c.path || [[c.start?.lat, c.start?.lng], [c.end?.lat, c.end?.lng]];
+        // Style strict RENDU-Ω — avec résolution ORGANIC si applicable
+        const styleOmega = useOrganic
+          ? resolveCorridorStyleOrganic(c)
+          : resolveCorridorStyleOmega(c);
         const color = styleOmega.color;           // #FF8F00
         const weight = styleOmega.weight * corridorWeightFactor; // 1.2/2.0/3.0 éventuellement amplifié
         const opacity = Math.max(RENDU_OMEGA.opacityMin, styleOmega.opacity); // >=0.75
+
+        // Halo Phase M — sub-polyline plus large, opacité basse (§3 directive)
+        if (useOrganic && styleOmega.haloEnabled) {
+          const halo = L.polyline(path, {
+            color: styleOmega.gradientTo || color,
+            weight: weight + 2.2,
+            opacity: 0.18,
+            lineCap: 'round',
+            lineJoin: 'round',
+            smoothFactor: 0,
+            interactive: false,
+          });
+          halo.options._renduOmega = { layer: 'halo', weight: weight + 2.2 };
+          group.addLayer(halo);
+        }
 
         const line = L.polyline(path, {
           color,
@@ -229,44 +263,52 @@ const BionicLayersV8 = ({
           interactive: true,
         });
         line.options._renduOmega = {
-          version: 'V1.0-PHASE-XI-SUPRA-L-2026-04',
+          version: useOrganic ? 'V1.0-PHASE-XI-SUPRA-M-2026-04' : 'V1.0-PHASE-XI-SUPRA-L-2026-04',
+          source: useOrganic ? 'ORGANIC' : 'RENDU_OMEGA',
           color, weight, opacity, min_zoom: RENDU_OMEGA.minZoom,
+          hierarchy: c.hierarchy || 'legacy',
         };
 
-        // Chevron directionnel (même couleur RENDU-Ω, stroke-only)
+        // Chevron directionnel (fréquence high si ORGANIC — §3 directive)
         if (path.length >= 3) {
-          const midIdx = Math.floor(path.length / 2);
-          const prev = path[midIdx - 1] || path[0];
-          const mid = path[midIdx];
-          const next = path[midIdx + 1] || path[path.length - 1];
-          const dx = next[1] - prev[1];
-          const dy = next[0] - prev[0];
-          const len = Math.sqrt(dx * dx + dy * dy);
-          if (len > 0.0001) {
-            const arrowSize = 0.00025;
-            const nx = dx / len;
-            const ny = dy / len;
-            const tipLat = mid[0] + ny * arrowSize;
-            const tipLng = mid[1] + nx * arrowSize;
-            const leftLat = mid[0] - ny * arrowSize * 0.6 + nx * arrowSize * 0.5;
-            const leftLng = mid[1] - nx * arrowSize * 0.6 - ny * arrowSize * 0.5;
-            const rightLat = mid[0] - ny * arrowSize * 0.6 - nx * arrowSize * 0.5;
-            const rightLng = mid[1] - nx * arrowSize * 0.6 + ny * arrowSize * 0.5;
-            const chev = L.polyline(
-              [[leftLat, leftLng], [tipLat, tipLng], [rightLat, rightLng]],
-              { color, weight, opacity, lineCap: 'round', lineJoin: 'round', smoothFactor: 0, interactive: false, fill: false }
-            );
-            group.addLayer(chev);
-          }
+          const chevronPositions = useOrganic
+            ? [Math.floor(path.length * 0.3), Math.floor(path.length * 0.6), Math.floor(path.length * 0.85)]
+            : [Math.floor(path.length / 2)];
+          chevronPositions.forEach((midIdx) => {
+            const prev = path[Math.max(0, midIdx - 1)] || path[0];
+            const mid = path[midIdx];
+            const next = path[Math.min(path.length - 1, midIdx + 1)] || path[path.length - 1];
+            const dx = next[1] - prev[1];
+            const dy = next[0] - prev[0];
+            const len = Math.sqrt(dx * dx + dy * dy);
+            if (len > 0.0001) {
+              const arrowSize = 0.00022;
+              const nx = dx / len;
+              const ny = dy / len;
+              const tipLat = mid[0] + ny * arrowSize;
+              const tipLng = mid[1] + nx * arrowSize;
+              const leftLat = mid[0] - ny * arrowSize * 0.6 + nx * arrowSize * 0.5;
+              const leftLng = mid[1] - nx * arrowSize * 0.6 - ny * arrowSize * 0.5;
+              const rightLat = mid[0] - ny * arrowSize * 0.6 - nx * arrowSize * 0.5;
+              const rightLng = mid[1] - nx * arrowSize * 0.6 + ny * arrowSize * 0.5;
+              const chev = L.polyline(
+                [[leftLat, leftLng], [tipLat, tipLng], [rightLat, rightLng]],
+                { color, weight, opacity, lineCap: 'round', lineJoin: 'round', smoothFactor: 0, interactive: false, fill: false }
+              );
+              group.addLayer(chev);
+            }
+          });
         }
 
         const costStr = c.cost_surface !== undefined ? ` | cost:${c.cost_surface}` : '';
+        const hierarchyStr = c.hierarchy ? ` [${c.hierarchy.toUpperCase()}]` : '';
         const netStr = c.is_network_link ? ' [RÉSEAU]' : '';
         const intensityLabel = (typeof c.intensity === 'number')
           ? `int:${Math.round(c.intensity)}`
           : `int:${c.type || c.intensity || 'normal'}`;
+        const tagLabel = useOrganic ? 'CORRIDOR-ORGANIC-Ω' : 'CORRIDOR-Ω';
         line.bindTooltip(
-          `<b style="color:${color}">CORRIDOR-Ω</b> ${intensityLabel}${costStr} | ${c.species_profile || ''}${netStr}`,
+          `<b style="color:${color}">${tagLabel}</b>${hierarchyStr} ${intensityLabel}${costStr} | ${c.species_profile || ''}${netStr}`,
           { sticky: true, opacity: 0.95 }
         );
         group.addLayer(line);
@@ -743,7 +785,7 @@ const BionicLayersV8 = ({
         esi_omega: bundleData.esi_omega,
       });
     }
-  }, [map, bundleData, waypointCenter, enabled, showZones, showCorridors, showAffuts, showSalines, showHotspots, showContamination, showNutrition, corridorWeightFactor, affutRadiusFactor, salineHaloFactor, currentZoom, clearOwnLayers]);
+  }, [map, bundleData, waypointCenter, enabled, showZones, showCorridors, showAffuts, showSalines, showHotspots, showContamination, showNutrition, corridorWeightFactor, affutRadiusFactor, salineHaloFactor, currentZoom, clearOwnLayers, useOrganicCorridors, organicBundle]);
 
   useEffect(() => {
     renderLayers();
