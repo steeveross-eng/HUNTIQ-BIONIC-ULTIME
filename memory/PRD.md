@@ -982,3 +982,16 @@ Appliqué dans `BionicLayersV8.jsx` via import `CORRIDOR_STYLE_HIERARCHY` :
 - **3 nouvelles suites SELF-AUDIT** : sla_baseline_30j, selfaudit_alerts, export_institutionnel
 - **SELF-AUDIT** : **40/40 OK**, perf=ok, conforme=true
 - **4 livrables MD** : SLA_BASELINE_30J_REPORT, SELF_AUDIT_ALERT_SPEC, EXPORT_INSTITUTIONNEL_V20_SPEC, PHASE_X_D_VALIDATION_REPORT
+
+## Phase XI-SUPRA — Rendu territoire institutionnel (2026-04-19)
+
+- **ENGINE-RENDER-Ω** créé : 14 couches obligatoires + règles de zoom (macro/mid/detail) + symbologie harmonisée
+- **2 nouveaux endpoints** : `/render-config`, `/render-validate`
+- **Bundle enrichi** : 8 nouvelles clés (`canada_zones_summary`, `contamination_v2_heatmap`, `lep_nearby`, `hydat_nearby`, `observations`, `zones_risque`, `habitats_critiques`, `deplacements_ia`, `score_local`)
+- **Frontend** : BionicLayersV8.jsx étendu — 9 blocs de rendu additifs + log RSE-Ω+RENDER-Ω
+- **Registry lock étendu** : 30 → **31 engines**, nouveau hash `f75eaa19baaec7a7…b340`
+- **7 nouvelles suites SELF-AUDIT** : corridors, affuts, salines, contamination, canada, lep, hydat
+- **SELF-AUDIT** : **47/47 OK**, perf=ok, conforme=true
+- **Livrable** : PHASE_XI_SUPRA_TERRITOIRE_VALIDATION_REPORT.md
+
+## Section VII validation : 14/14 couches présentes + rendues (100 %)

@@ -1174,6 +1174,99 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
         import logging as _lg
         _lg.getLogger("bionic.territoire").warning(f"SCORE-GLOBAL-REALITY skipped: {_e}")
 
+    # Phase XI-SUPRA : enrichissement couches rendu obligatoires
+    canada_zones_summary = None
+    contamination_v2_heatmap = None
+    lep_nearby = None
+    hydat_nearby = None
+    observations_nearby = None
+    zones_risque = None
+    habitats_critiques = None
+    deplacements_ia = None
+    score_local = None
+    try:
+        from engines.v8_institutional.engine_canada_omega import CORRIDORS_INTERPROVINCIAUX, PROVINCES
+        from engines.v8_institutional.science_gaps_datasets import CWD_HEATMAP
+        from engines.v8_institutional.federal_datasets_omega import LEP_HABITATS, HYDAT_STATIONS
+        from engines.v8_institutional.engine_calibration_dynamique_omega import _OBSERVATIONS
+
+        # Zones fauniques Canada (agrégé provincial)
+        canada_zones_summary = [
+            {"code": c, "name": p["name"], "zones_faune": p["zones_faune"],
+             "habitats_critiques_lep": p["habitats_critiques_lep"]}
+            for c, p in PROVINCES.items()
+        ]
+
+        # CWD heatmap (3 zones institutionnelles + cone vent contamination local)
+        contamination_v2_heatmap = {
+            "zones": CWD_HEATMAP["zones"],
+            "local_v2": contamination_v2 or {},
+        }
+
+        # LEP proches (rayon ~200 km lat/lon approximatif)
+        def _close(p, maxd=3.5):
+            return abs(p["lat"] - lat) + abs(p["lon"] - lon) < maxd
+        lep_nearby = [h for h in LEP_HABITATS if _close(h, 3.5)][:50]
+
+        # HYDAT proches (rayon ~200 km)
+        hydat_nearby = [s for s in HYDAT_STATIONS if _close(s, 3.5)][:50]
+
+        # Observations chasseurs proches (last 100)
+        observations_nearby = [
+            o for o in _OBSERVATIONS[-100:]
+            if _close({"lat": o["lat"], "lon": o["lon"]}, 5.0)
+        ]
+
+        # Zones de risque (agrégé hydro + feu + CWD)
+        zones_risque = []
+        if contamination_v2 and contamination_v2.get("cwd_risk") in ("ELEVE", "MODERE"):
+            zones_risque.append({
+                "type": "CWD",
+                "severity": contamination_v2["cwd_risk"],
+                "lat": contamination_v2.get("nearest_cwd_zone", {}).get("lat"),
+                "lon": contamination_v2.get("nearest_cwd_zone", {}).get("lon"),
+                "radius_km": contamination_v2.get("nearest_cwd_zone", {}).get("radius_km", 40),
+            })
+        # Feu (proxy saisonnier juin-septembre)
+        if 6 <= month <= 9:
+            zones_risque.append({"type": "FEU", "severity": "MODERE",
+                                  "lat": lat, "lon": lon, "radius_km": 25,
+                                  "source": "CWFIS proxy"})
+        # Hydro (proxy étiage si débit < 5% sur HYDAT local)
+        if hydat_nearby:
+            avg_debit = sum(s.get("debit_m3s", 0) for s in hydat_nearby) / len(hydat_nearby)
+            if avg_debit < 20:
+                zones_risque.append({"type": "ETIAGE", "severity": "FAIBLE",
+                                      "lat": lat, "lon": lon, "radius_km": 15,
+                                      "source": "HYDAT local"})
+
+        # Habitats critiques (synthèse LEP + LEP_nearby)
+        habitats_critiques = [h for h in lep_nearby if h.get("categorie") in ("EN_VOIE_DISPARITION", "MENACEE")]
+
+        # Déplacements IA (extrait comportement_biologique + corridors MAJEURS)
+        deplacements_ia = []
+        if corridors:
+            for c in (corridors or [])[:20]:
+                if c.get("priority") in ("EXTREME", "INTENSE") and c.get("coords"):
+                    deplacements_ia.append({
+                        "corridor_id": c.get("id"),
+                        "priority": c.get("priority"),
+                        "coords": c.get("coords"),
+                        "source": "IA-COMPORTEMENT",
+                    })
+
+        # Score local (extrait de score_global_reality)
+        if score_global_reality:
+            score_local = {
+                "value": score_global_reality.get("score_global"),
+                "classification": score_global_reality.get("classification"),
+                "mode": score_global_reality.get("mode"),
+                "contamination_v2_applied": score_global_reality.get("contamination_v2_applied"),
+            }
+    except Exception as _e:
+        import logging as _lg
+        _lg.getLogger("bionic.territoire").warning(f"Phase XI-SUPRA enrichment skipped: {_e}")
+
     return {
         "zones": zones,
         "corridors": corridors,
@@ -1183,6 +1276,7 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
         "wind_vectors": wind_vectors,
         "contamination": contamination,
         "contamination_v2": contamination_v2,
+        "contamination_v2_heatmap": contamination_v2_heatmap,
         "nutrition": nutrition,
         "habitat_supra": habitat_supra,
         "hydrologie_supra": hydrologie_supra,
@@ -1202,6 +1296,15 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
         "influence_lunaire": influence_lunaire,
         "pression_atmospherique": pression_atmospherique,
         "score_global_reality": score_global_reality,
+        # Phase XI-SUPRA : 14 couches obligatoires
+        "canada_zones_summary": canada_zones_summary,
+        "lep_nearby": lep_nearby,
+        "hydat_nearby": hydat_nearby,
+        "observations": observations_nearby,
+        "zones_risque": zones_risque,
+        "habitats_critiques": habitats_critiques,
+        "deplacements_ia": deplacements_ia,
+        "score_local": score_local,
         "terrain_v10": t,
         "meteo": meteo,
         "esi_omega": "CONFORME",

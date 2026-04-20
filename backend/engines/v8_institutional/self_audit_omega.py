@@ -67,6 +67,14 @@ _TEST_SUITES = [
     ("test_sla_baseline_30j", "/app/backend/tests/test_sla_baseline_30j.py"),
     ("test_selfaudit_alerts", "/app/backend/tests/test_selfaudit_alerts.py"),
     ("test_export_institutionnel", "/app/backend/tests/test_export_institutionnel.py"),
+    # Phase XI-SUPRA — Rendu territoire institutionnel (14 couches)
+    ("test_render_corridors", "/app/backend/tests/test_render_corridors.py"),
+    ("test_render_affuts", "/app/backend/tests/test_render_affuts.py"),
+    ("test_render_salines", "/app/backend/tests/test_render_salines.py"),
+    ("test_render_contamination", "/app/backend/tests/test_render_contamination.py"),
+    ("test_render_canada", "/app/backend/tests/test_render_canada.py"),
+    ("test_render_lep", "/app/backend/tests/test_render_lep.py"),
+    ("test_render_hydat", "/app/backend/tests/test_render_hydat.py"),
 ]
 
 _LOG_FILE = Path("/app/memory/SELF_AUDIT_OMEGA_LOGS.md")

@@ -930,6 +930,14 @@ try:
 except Exception as e:
     logger.warning(f"EXPORT-INSTITUTIONNEL-V20-Ω not loaded: {e}")
 
+# ENGINE-RENDER-Ω — Phase XI-SUPRA rendu territoire institutionnel
+try:
+    from engines.v8_institutional.engine_render_omega import router as render_omega_router
+    app.include_router(render_omega_router)
+    logger.info("ENGINE-RENDER-Ω registered (/render-config, /render-validate) — 14 couches")
+except Exception as e:
+    logger.warning(f"ENGINE-RENDER-Ω not loaded: {e}")
+
 # MONITORING-Ω + ALERTE-ANOMALIES-Ω
 try:
     from engines.v8_institutional.monitoring_alerte_omega import router as monitoring_router

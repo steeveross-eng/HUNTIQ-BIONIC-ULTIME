@@ -10,16 +10,15 @@
 ## Hash SHA-256 officiel
 
 ```
-df555aa5a8dc8dde76c8ed9e216daf9623752615653f8e142718613daec0e93e
+f75eaa19baaec7a7a0a1fddebe8d7363b389b65108bfbca7b4468f8a058bb340
 ```
 
 Toute altération de la liste des engines (`ENGINES_LOCKED` dans
 `/app/backend/engines/v8_institutional/registry_lock_omega.py`)
 invalide ce hash et fait échouer `test_engine_registry_locked`.
 
-> **Évolution Phase X-D :** registre étendu de 27 → 30 engines avec l'ajout de
-> `SLA-BASELINE-30J-Ω`, `SELF-AUDIT-ALERTS-Ω` et `EXPORT-INSTITUTIONNEL-V20-Ω`
-> (observabilité institutionnelle complète).
+> **Évolution Phase XI-SUPRA :** registre étendu à 31 engines avec l'ajout de
+> `ENGINE-RENDER-Ω` (moteur central de rendu — 14 couches obligatoires).
 
 ## 22 Engines SUPRA-Ω — répartition par pilier
 
@@ -89,7 +88,12 @@ invalide ce hash et fait échouer `test_engine_registry_locked`.
 | 29 | `SELF-AUDIT-ALERTS-Ω` | X-D |
 | 30 | `EXPORT-INSTITUTIONNEL-V20-Ω` | X-D |
 
-**TOTAL SCELLÉ : 30 engines** (22 obligatoires SUPRA-Ω + 8 gouvernance/environnement/observabilité étendues).
+### Phase XI-SUPRA (rendu institutionnel)
+| # | Engine | Phase |
+|---|--------|-------|
+| 31 | `ENGINE-RENDER-Ω` | XI-SUPRA |
+
+**TOTAL SCELLÉ : 31 engines** (22 obligatoires SUPRA-Ω + 9 étendus gouvernance/environnement/observabilité/rendu).
 
 ## Endpoints de vérification
 
@@ -115,7 +119,7 @@ Toute modification de ce registre exige :
 ## Signature
 
 ```
-SEALED  — Phase XI / X-B / X-C / X-D — 2026-04-19
-SHA-256 — df555aa5a8dc8dde…e93e
+SEALED  — Phase XI / X-B / X-C / X-D / XI-SUPRA — 2026-04-19
+SHA-256 — f75eaa19baaec7a7…b340
 STATUS  — VERROUILLÉ IRRÉVOCABLEMENT
 ```

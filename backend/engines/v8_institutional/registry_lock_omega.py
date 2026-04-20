@@ -60,6 +60,8 @@ ENGINES_LOCKED = [
     {"name": "SLA-BASELINE-30J-Ω", "pillar": "GOUVERNANCE", "phase": "X-D"},
     {"name": "SELF-AUDIT-ALERTS-Ω", "pillar": "GOUVERNANCE", "phase": "X-D"},
     {"name": "EXPORT-INSTITUTIONNEL-V20-Ω", "pillar": "GOUVERNANCE", "phase": "X-D"},
+    # Phase XI-SUPRA (rendu institutionnel)
+    {"name": "ENGINE-RENDER-Ω", "pillar": "GOUVERNANCE", "phase": "XI-SUPRA"},
 ]
 
 REGISTRY_VERSION = "V20-SUPRA-LOCKED-PHASE-XI-2026-04"
