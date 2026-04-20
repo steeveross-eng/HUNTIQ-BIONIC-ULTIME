@@ -10,15 +10,15 @@
 ## Hash SHA-256 officiel
 
 ```
-274c96135459f57d0d9f3321087dda17888a33e8a0f5136d582e14da0ae609ef
+1811daf28a32839fb9be8fc6f7111863364ee15a54946d2f6980c9b93b548e6f
 ```
 
 Toute altération de la liste des engines (`ENGINES_LOCKED` dans
 `/app/backend/engines/v8_institutional/registry_lock_omega.py`)
 invalide ce hash et fait échouer `test_engine_registry_locked`.
 
-> **Évolution Phase XI-SUPRA-B :** registre étendu à 32 engines avec l'ajout de
-> `VISUAL-PROOF-Ω` (preuve visuelle institutionnelle signée HMAC-SHA256).
+> **Évolution Phase XI-SUPRA-C :** registre étendu à 33 engines avec l'ajout de
+> `VISUAL-PROOF-LIVE-Ω` (capture DOM Playwright Leaflet réelle sous auth).
 
 ## 22 Engines SUPRA-Ω — répartition par pilier
 
@@ -98,7 +98,18 @@ invalide ce hash et fait échouer `test_engine_registry_locked`.
 |---|--------|-------|
 | 32 | `VISUAL-PROOF-Ω` | XI-SUPRA-B |
 
-**TOTAL SCELLÉ : 32 engines** (22 obligatoires SUPRA-Ω + 10 étendus gouvernance/environnement/observabilité/rendu/preuve).
+### Phase XI-SUPRA-C (capture DOM live Playwright)
+| # | Engine | Phase |
+|---|--------|-------|
+| 33 | `VISUAL-PROOF-LIVE-Ω` | XI-SUPRA-C |
+
+**TOTAL SCELLÉ : 33 engines** (22 obligatoires SUPRA-Ω + 11 étendus).
+
+```
+SEALED  — Phase XI-SUPRA-C — 2026-04-19
+SHA-256 — 1811daf28a32839f…8e6f
+STATUS  — VERROUILLÉ IRRÉVOCABLEMENT
+```
 
 ## Endpoints de vérification
 
@@ -124,7 +135,7 @@ Toute modification de ce registre exige :
 ## Signature
 
 ```
-SEALED  — Phase XI / X-B / X-C / X-D / XI-SUPRA / XI-SUPRA-B — 2026-04-19
-SHA-256 — 274c96135459f57d…09ef
+SEALED  — Phase XI / X-B / X-C / X-D / XI-SUPRA / XI-SUPRA-B / XI-SUPRA-C — 2026-04-19
+SHA-256 — 1811daf28a32839f…8e6f
 STATUS  — VERROUILLÉ IRRÉVOCABLEMENT
 ```

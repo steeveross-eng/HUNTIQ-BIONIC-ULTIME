@@ -234,7 +234,7 @@ def generate_visual_proofs(force: bool = False) -> dict:
             cached = json.loads(INDEX_PATH.read_text())
             gen_at = datetime.fromisoformat(cached["generated_at"].replace("Z", "+00:00"))
             age = (datetime.now(timezone.utc) - gen_at).total_seconds()
-            if age < 300 and all(Path(c["path"]).exists() for c in cached["captures"]):
+            if age < 1800 and all(Path(c["path"]).exists() for c in cached["captures"]):
                 return cached
         except Exception:
             pass

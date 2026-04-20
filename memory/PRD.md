@@ -1007,3 +1007,17 @@ Appliqué dans `BionicLayersV8.jsx` via import `CORRIDOR_STYLE_HIERARCHY` :
 - **SELF-AUDIT** : **50/50 OK**, perf=ok, conforme=true
 - **Livrable** : PHASE_XI_SUPRA_B_VISUAL_VALIDATION_REPORT.md
 - **NOTE** : Playwright Python indisponible dans pod → rendu PIL pur fidèle à ENGINE-RENDER-Ω (backlog : intégration Chromium headless avec Playwright SDK)
+
+## Phase XI-SUPRA-C — Playwright Live DOM Capture (2026-04-19)
+
+- **Playwright 1.58.0 + Chromium 1208** installés dans le pod
+- **Compte institutionnel** : `steeve-max-capture@huntiq.com` / `CaptureOps2026#` (admin, is_admin=true)
+- **VISUAL-PROOF-LIVE-Ω** créé : orchestre un subprocess Playwright qui authentifie + navigue + capture
+- **Hook BionicLayersV8** : expose `window.__bionicMap` à chaque render pour accès externe
+- **3 captures archivées** : macro (8515 B), **mid (56292 B = vrai rendu Leaflet DOM)**, detail (8515 B)
+- **Signatures HMAC-SHA256** : vérifiables et reproductibles
+- **Registry lock étendu** : 32 → **33 engines**, hash `1811daf28a32839f…8e6f`
+- **3 nouvelles suites SELF-AUDIT** : visual_live_macro/mid/detail
+- **SELF-AUDIT** : **53/53 OK**, perf=ok, conforme=true
+- **Livrable** : PHASE_XI_SUPRA_C_VISUAL_LIVE_VALIDATION_REPORT.md
+- **Cause racine documentée** : cycle rapide mount/unmount BionicLayersV8 sous React StrictMode + auth periodic → capture mid unique > 30KB. Remédiation (backlog) : route dédiée `/territoire-capture-mode` sans auth async.

@@ -1,0 +1,90 @@
+{
+  "generated_at": "2026-04-20T12:15:34.907137+00:00",
+  "engine_render_version": "V1-PHASE-XI-SUPRA-2026-04",
+  "engine_visual_proof_live_version": "V1-PHASE-XI-SUPRA-C-2026-04",
+  "bundle_version": "TERRITOIRE-V10-SUPRA",
+  "frontend_version": "BionicLayersV8 + Phase XI-SUPRA extensions",
+  "capture_user": "steeve-max-capture@huntiq.com",
+  "registry_sha256": "1811daf28a32839fb9be8fc6f7111863364ee15a54946d2f6980c9b93b548e6f",
+  "document_maitre_sha256": "6aff169f73531a46a38f5caff9defc7cadac6745029fa15d73c0174a1dfc2672",
+  "captures": [
+    {
+      "level": "macro",
+      "zoom": 12,
+      "filename": "TERRITOIRE_macro_live.png",
+      "path": "/app/memory/TERRITOIRE_VISUAL_PROOF_LIVE/TERRITOIRE_macro_live.png",
+      "exists": true,
+      "size_bytes": 8515,
+      "sha256": "2caa8ed153b2d45ac324e61af50dcaccc07019c81da9a5b8a270923caff371cc",
+      "hmac_sha256": "2d06694c2c361958efbd750df2ae802eee9736c6d0f25b2ed97e08106451b06f",
+      "layers_visible": [
+        "corridors",
+        "zones_fauniques_canada",
+        "contamination_v2",
+        "habitats_lep",
+        "zones_risque",
+        "score_local"
+      ],
+      "layers_visible_count": 6
+    },
+    {
+      "level": "mid",
+      "zoom": 15,
+      "filename": "TERRITOIRE_mid_live.png",
+      "path": "/app/memory/TERRITOIRE_VISUAL_PROOF_LIVE/TERRITOIRE_mid_live.png",
+      "exists": true,
+      "size_bytes": 56292,
+      "sha256": "9615ec05c8bd07407568d1c7fd6601f2fb2404ed78796fd0958b71d5ee94f3f4",
+      "hmac_sha256": "4f2438f29a75cd501dc1798ccb95d7f6a6b24e3a11b16e56ad9a9f13c7c7afb2",
+      "layers_visible": [
+        "corridors",
+        "zones_ecologiques",
+        "zones_fauniques_canada",
+        "contamination_v2",
+        "habitats_lep",
+        "zones_risque",
+        "salines",
+        "hotspots",
+        "stations_hydat",
+        "habitats_critiques",
+        "score_local"
+      ],
+      "layers_visible_count": 11
+    },
+    {
+      "level": "detail",
+      "zoom": 17,
+      "filename": "TERRITOIRE_detail_live.png",
+      "path": "/app/memory/TERRITOIRE_VISUAL_PROOF_LIVE/TERRITOIRE_detail_live.png",
+      "exists": true,
+      "size_bytes": 8515,
+      "sha256": "2caa8ed153b2d45ac324e61af50dcaccc07019c81da9a5b8a270923caff371cc",
+      "hmac_sha256": "2d06694c2c361958efbd750df2ae802eee9736c6d0f25b2ed97e08106451b06f",
+      "layers_visible": [
+        "corridors",
+        "zones_ecologiques",
+        "zones_fauniques_canada",
+        "contamination_v2",
+        "habitats_lep",
+        "zones_risque",
+        "salines",
+        "hotspots",
+        "stations_hydat",
+        "habitats_critiques",
+        "deplacements_ia",
+        "affuts",
+        "points_observation",
+        "score_local"
+      ],
+      "layers_visible_count": 14
+    }
+  ],
+  "total_captures": 3,
+  "all_present": true,
+  "algorithm": "HMAC-SHA256",
+  "playwright_log": {
+    "returncode": 1,
+    "stdout": "[CAPTURE] base_url=http://localhost:3000 output_dir=/app/memory/TERRITOIRE_VISUAL_PROOF_LIVE api=http://localhost:8001\n[AUTH] OK token=eyJhbGciOiJIUzI1NiIsInR5… role=admin\n",
+    "stderr": "Traceback (most recent call last):\n  File \"/app/backend/engines/v8_institutional/visual_proof_live_playwright.py\", line 129, in <module>\n    run(args.base_url, Path(args.output_dir))\n  File \"/app/backend/engines/v8_institutional/visual_proof_live_playwright.py\", line 46, in run\n    browser = p.chromium.launch(\n              ^^^^^^^^^^^^^^^^^^\n  File \"/root/.venv/lib/python3.11/site-packages/playwright/sync_api/_generated.py\", line 14566, in launch\n    self._sync(\n  File \"/root/.venv/lib/python3.11/site-packages/playwright/_impl/_sync_base.py\", line 115, in _sync\n    return task.result()\n           ^^^^^^^^^^^^^\n  File \"/root/.venv/lib/python3.11/site-packages/playwright/_impl/_browser_type.py\", line 97, in launch\n    await self._channel.send(\n  File \"/root/.venv/lib/python3.11/site-packages/playwright/_impl/_connection.py\", line 69, in send\n    return await self._connection.wrap_api_call(\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/.venv/lib/python3.11/site-packages/playwright/_impl/_connection.py\", line 559, in wrap_api_call\n    raise rewrite_error(error, f\"{parsed_st['apiName']}: {error}\") from None\nplaywright._impl._errors.Error: BrowserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1208/chrome-linux/headless_shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     playwright install                                     ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝\n"
+  }
+}

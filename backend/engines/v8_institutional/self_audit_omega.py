@@ -79,6 +79,10 @@ _TEST_SUITES = [
     ("test_visual_macro", "/app/backend/tests/test_visual_macro.py"),
     ("test_visual_mid", "/app/backend/tests/test_visual_mid.py"),
     ("test_visual_detail", "/app/backend/tests/test_visual_detail.py"),
+    # Phase XI-SUPRA-C — Captures DOM live Playwright
+    ("test_visual_live_macro", "/app/backend/tests/test_visual_live_macro.py"),
+    ("test_visual_live_mid", "/app/backend/tests/test_visual_live_mid.py"),
+    ("test_visual_live_detail", "/app/backend/tests/test_visual_live_detail.py"),
 ]
 
 _LOG_FILE = Path("/app/memory/SELF_AUDIT_OMEGA_LOGS.md")

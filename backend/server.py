@@ -946,6 +946,14 @@ try:
 except Exception as e:
     logger.warning(f"VISUAL-PROOF-Ω not loaded: {e}")
 
+# VISUAL-PROOF-LIVE-Ω — Phase XI-SUPRA-C capture Playwright DOM Leaflet
+try:
+    from engines.v8_institutional.visual_proof_live_omega import router as visual_proof_live_router
+    app.include_router(visual_proof_live_router)
+    logger.info("VISUAL-PROOF-LIVE-Ω registered (/visual-proof-live/generate, /index)")
+except Exception as e:
+    logger.warning(f"VISUAL-PROOF-LIVE-Ω not loaded: {e}")
+
 # MONITORING-Ω + ALERTE-ANOMALIES-Ω
 try:
     from engines.v8_institutional.monitoring_alerte_omega import router as monitoring_router

@@ -64,6 +64,8 @@ ENGINES_LOCKED = [
     {"name": "ENGINE-RENDER-Ω", "pillar": "GOUVERNANCE", "phase": "XI-SUPRA"},
     # Phase XI-SUPRA-B (preuve visuelle)
     {"name": "VISUAL-PROOF-Ω", "pillar": "GOUVERNANCE", "phase": "XI-SUPRA-B"},
+    # Phase XI-SUPRA-C (capture DOM Playwright live)
+    {"name": "VISUAL-PROOF-LIVE-Ω", "pillar": "GOUVERNANCE", "phase": "XI-SUPRA-C"},
 ]
 
 REGISTRY_VERSION = "V20-SUPRA-LOCKED-PHASE-XI-2026-04"

@@ -79,6 +79,13 @@ const BionicLayersV8 = ({
   const onDataLoadedRef = useRef(onDataLoaded);
   onDataLoadedRef.current = onDataLoaded;
 
+  // Phase XI-SUPRA-C : exposition globale map pour capture Playwright institutionnelle
+  // Exécuté à chaque render pour garantir disponibilité permanente
+  if (map && typeof window !== 'undefined') {
+    window.__bionicMap = map;
+    window.__capture_get_map = () => window.__bionicMap;
+  }
+
   // AUTO-ZOOM-Ω-V13: centrer + zoom 14 au premier chargement d'un waypoint cible
   useEffect(() => {
     if (!map || !waypointCenter || !enabled) return;
