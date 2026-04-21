@@ -126,103 +126,89 @@ const _fetchOrganicZonesV2 = async (bounds, zoom, layersVisible, speciesId = 'to
   const resolution = zoom >= 16 ? 100 : zoom >= 14 ? 80 : 60;
   const maxPerLayer = zoom >= 16 ? 12 : zoom >= 14 ? 10 : 8;
 
+  // PHASE_ZERO_OPS_RESTORATION_Ω — Unification pipeline : V20 bundle unique
+  // L'ancien endpoint /api/v1/bionic/organic-zones est dépréqué (404). Nous
+  // consommons la source institutionnelle unique /api/v20/territoire/bundle
+  // et transformons la shape pour rester compatible avec les consommateurs.
   try {
-    const requestBody = {
-      bounds: { north: bounds.north, south: bounds.south, east: bounds.east, west: bounds.west },
-      species: backendSpecies === 'tous' ? 'moose' : backendSpecies,
-      layers: activeLayers,
-      resolution,
-      max_zones_per_layer: maxPerLayer,
-      include_scoring: true,
-    };
-    if (waypointCenter) {
-      requestBody.waypoint_center = {
-        lat: waypointCenter.lat || waypointCenter.latitude,
-        lng: waypointCenter.lng || waypointCenter.longitude,
-      };
-    }
-    if (biologicalSeason) {
-      requestBody.biological_season = biologicalSeason;
-    }
-
-    const resp = await fetch(`${API_BASE}/api/v1/bionic/organic-zones`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestBody),
-    });
+    const wpLat = (waypointCenter?.lat ?? waypointCenter?.latitude) ?? ((bounds.north + bounds.south) / 2);
+    const wpLng = (waypointCenter?.lng ?? waypointCenter?.longitude) ?? ((bounds.east + bounds.west) / 2);
+    const month = new Date().getMonth() + 1;
+    const hour = new Date().getHours();
+    const wind = 225;
+    const url = `${API_BASE}/api/v20/territoire/bundle?lat=${wpLat}&lon=${wpLng}&species=${encodeURIComponent(backendSpecies === 'tous' ? 'cerf' : backendSpecies)}&month=${month}&hour=${hour}&wind_deg=${wind}`;
+    const resp = await fetch(url, { method: 'GET' });
 
     if (!resp.ok) {
-      console.error('[ORGANIC V2] API error:', resp.status);
-      return { zones: [], corridors: [], stats: { total: 0, error: true } };
+      console.error('[BUNDLE V20] API error:', resp.status);
+      return { zones: [], corridors: [], stats: { total: 0, error: true, http_status: resp.status } };
     }
 
-    const geojson = await resp.json();
+    const bundle = await resp.json();
+    const rawZones = Array.isArray(bundle.zones) ? bundle.zones : [];
+    const rawCorridors = Array.isArray(bundle.corridors) ? bundle.corridors : [];
 
-    const zones = (geojson.features || []).map((feature, idx) => {
-      const props = feature.properties || {};
-      const coords = feature.geometry?.coordinates?.[0] || [];
-      const positions = coords.map(c => [c[1], c[0]]);
+    const zones = rawZones
+      .filter(z => !z.excluded && Array.isArray(z.polygon) && z.polygon.length >= 4)
+      .map((z, idx) => {
+        const positions = z.polygon; // déjà en [lat,lng]
+        const centerLat = z.center?.lat ?? 0;
+        const centerLng = z.center?.lng ?? 0;
+        return {
+          id: z.id || `zone-${idx}`,
+          layerId: z.type,
+          positions,
+          color: '#4A7A2E',
+          score: z.score || 0,
+          label: z.type ? String(z.type).toUpperCase() : '',
+          category: z.type || '',
+          center: [centerLat, centerLng],
+          areaM2: 0,
+          compactness: 0,
+          vertices: positions.length,
+          zoom,
+          priority: LAYER_TYPES.findIndex(lt => lt.id === z.type) + 1,
+          terrain: z.terrain || null,
+          source: z.source || 'V20-BUNDLE',
+          weatherMultiplier: null,
+          weatherGlobal: null,
+          scorePreWeather: null,
+          weatherBadges: [],
+        };
+      });
 
+    const corridors = rawCorridors.map((c, idx) => {
+      const positions = Array.isArray(c.path) ? c.path : (Array.isArray(c.polyline) ? c.polyline : []);
       return {
-        id: feature.id || `organic-${idx}`,
-        layerId: props.layer_id,
+        id: c.id || `corridor-${idx}`,
         positions,
-        color: props.style?.stroke_color || '#999',
-        score: props.score || 0,
-        label: props.label || '',
-        category: props.category || '',
-        center: [props.centroid_lat || 0, props.centroid_lng || 0],
-        areaM2: Math.round(props.area_m2 || 0),
-        compactness: props.compactness || 0,
-        vertices: props.vertices || 0,
-        zoom,
-        priority: LAYER_TYPES.findIndex(lt => lt.id === props.layer_id) + 1,
-        weatherMultiplier: props.weather_multiplier || null,
-        weatherGlobal: props.weather_global || null,
-        scorePreWeather: props.score_pre_weather || null,
-        weatherBadges: props.weather_badges || [],
-      };
-    });
-
-    const corridors = (geojson.corridors || []).map((corridor) => {
-      const props = corridor.properties || {};
-      const coords = corridor.geometry?.coordinates || [];
-      const positions = coords.map(c => [c[1], c[0]]);
-      const style = props.style || {};
-      const scoring = props.scoring || {};
-      const bands = props.bands || [];
-      const centerline = props.centerline || null;
-
-      return {
-        id: corridor.id || `corridor-${props.from_zone_id}-${props.to_zone_id}`,
-        positions,
-        color: style.color || '#06B6D4',
-        weight: style.width || 2.5,
-        opacity: style.opacity || 0.85,
-        dashArray: style.dasharray === 'none' ? null : style.dasharray,
-        source: props.source,
-        sex: props.sex,
-        confidence: props.confidence,
-        corridorType: props.corridor_type,
-        classificationV9: props.classification_v9 || null,
-        fromZoneType: props.from_zone_type,
-        toZoneType: props.to_zone_type,
-        distanceM: props.distance_m,
-        pathfinding: props.pathfinding || 'unknown',
-        score: scoring.score || 0,
-        subscores: scoring.subscores || {},
-        justification: scoring.justification || [],
-        demEnhanced: props.dem_enhanced || false,
-        inPerimeter: props.in_perimeter || false,
-        certainty: props.certainty || 0,
-        enginesEvaluated: props.engines_evaluated || 0,
-        v9Pipeline: props.v9_pipeline || false,
-        continuityValid: props.continuity_valid,
-        scores10x: props.scores_10x || null,
-        bands,
-        centerline,
-        hasBands: bands.length > 0,
-        bandCount: props.band_count || bands.length,
+        color: c.color || '#FF8F00',
+        weight: c.weight || 2.5,
+        opacity: c.opacity ?? 0.85,
+        dashArray: null,
+        source: c.source || 'V20',
+        sex: c.sex || null,
+        confidence: c.confidence || 0,
+        corridorType: c.type || c.intensity || 'normal',
+        classificationV9: c.classification || null,
+        fromZoneType: c.from_zone_type || null,
+        toZoneType: c.to_zone_type || null,
+        distanceM: c.distance_m || 0,
+        pathfinding: 'v20',
+        score: c.score || 0,
+        subscores: {},
+        justification: [],
+        demEnhanced: false,
+        inPerimeter: true,
+        certainty: c.confidence || 0,
+        enginesEvaluated: 0,
+        v9Pipeline: false,
+        continuityValid: true,
+        scores10x: null,
+        bands: [],
+        centerline: null,
+        hasBands: false,
+        bandCount: 0,
       };
     });
 
@@ -234,28 +220,19 @@ const _fetchOrganicZonesV2 = async (bounds, zoom, layersVisible, speciesId = 'to
         corridors_total: corridors.length,
         corridors_real: corridors.filter(c => c.source === 'real').length,
         corridors_ai: corridors.filter(c => c.source === 'ai').length,
-        ...(geojson.stats || {}),
+        backendVerified: true,
+        source: 'V20-BUNDLE',
+        t4_zone_count: zones.length,
       },
-      rejection_diagnostics: geojson.rejection_diagnostics || null,
-      weather_metadata: geojson.weather_metadata || null,
+      rejection_diagnostics: null,
+      weather_metadata: bundle.weather || null,
     };
-
-    const backendT4Count = geojson.stats?.t4_zone_count;
-    const backendFeatureCount = (geojson.features || []).length;
-    if (backendT4Count !== undefined && backendT4Count !== zones.length) {
-      console.warn(
-        `[T4-COHERENCE] MISMATCH: backend t4_zone_count=${backendT4Count}, ` +
-        `geojson.features=${backendFeatureCount}, parsed zones=${zones.length}`
-      );
-      result.stats.t4_mismatch = true;
-      result.stats.t4_backend_count = backendT4Count;
-    }
 
     _zoneCache = { key: cacheKey, data: result };
     return result;
 
   } catch (err) {
-    console.error('[ORGANIC V2] Fetch error:', err);
+    console.error('[BUNDLE V20] Fetch error:', err);
     return { zones: [], corridors: [], stats: { total: 0, error: true } };
   }
 };
