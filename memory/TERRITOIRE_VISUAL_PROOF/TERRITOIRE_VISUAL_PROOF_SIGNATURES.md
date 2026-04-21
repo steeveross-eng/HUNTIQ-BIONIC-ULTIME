@@ -1,19 +1,19 @@
 # TERRITOIRE_VISUAL_PROOF_SIGNATURES
 
 > **Statut :** SEALED · Phase XI-SUPRA-B
-> **Horodatage UTC :** 2026-04-20T23:40:14.049080+00:00
+> **Horodatage UTC :** 2026-04-21T00:27:17.799263+00:00
 > **Algorithme :** HMAC-SHA256
-> **Registry SHA-256 :** `7b8dadf3e574cc5e5cada1bcb232f7c24597ea9be840985fd04770235c3c81fe`
+> **Registry SHA-256 :** `476c650a28d1f25ffa93e4caf30f8c6fc13223d9e0a87bfbfb5d994bee8c393c`
 > **Document Maître SHA-256 :** `6aff169f73531a46a38f5caff9defc7cadac6745029fa15d73c0174a1dfc2672`
 
 ## Captures signées
 
 | Niveau | Fichier | Taille | SHA-256 | HMAC-SHA256 |
 |--------|---------|--------|---------|-------------|
-| macro | `TERRITOIRE_macro.png` | 61937 B | `feea3181bf03b67824a669d2ee56b05c…` | `1e04bb53c890df7ff7455766b0ddc6e8…` |
-| mid | `TERRITOIRE_mid.png` | 63369 B | `ffde31103422863677e18f51d73e61bf…` | `d47fd342111ac55cbe046071fd30b430…` |
-| detail | `TERRITOIRE_detail.png` | 65484 B | `c69694ecb5e573d6ad6b62593b00b6c8…` | `88d48fdcaa1340a6f78cf5e80ed03724…` |
+| macro | `TERRITOIRE_macro.png` | 61875 B | `1517316c5d0a385c1320e9466394b658…` | `e63d912f3d9ac7f520c46188a5100d9a…` |
+| mid | `TERRITOIRE_mid.png` | 63264 B | `5c204e101dae326979e4aa98b5b16bd3…` | `86516e0ed10be0adf4d4a9d3f6704030…` |
+| detail | `TERRITOIRE_detail.png` | 65267 B | `173ae0c46e2c2635a988014df21cf5b7…` | `f8e6706e289fe9f6dc0ec17758572119…` |
 
 ```
-SEALED  — Phase XI-SUPRA-B — 2026-04-20T23:40:14.049080+00:00
+SEALED  — Phase XI-SUPRA-B — 2026-04-21T00:27:17.799263+00:00
 ```

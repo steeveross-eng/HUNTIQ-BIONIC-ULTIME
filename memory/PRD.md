@@ -1,5 +1,62 @@
 ## EXCLUSION OFFICIELLE LEP_CRITICAL_HABITAT_NATIONAL (2026-04-20T16:00Z) ✅
 
+## PHASE XI-SUPRA-N — CORRIDORS_NETWORK_REFACTOR_Ω (2026-04-20T23:30Z) ✅
+
+### Directive exécutée : `PHASE_XI_SUPRA_N — CORRIDORS_NETWORK_REFACTOR_Ω`
+
+### BLOC 1 — Abolition générateur radial
+- Suppression de `angle = i * (360 / n)` + start/end depuis waypoint
+- Test anti-régression `ERREUR_RADIAL_GENERATOR` (détecte origines identiques)
+
+### BLOC 2 — Pipeline réseau zones↔zones
+- `_collect_vital_nodes(bundle)` → zones (alimentation/repos/rut/humide/thermique/refuge) + salines + hotspots
+- `_compatible_pairs(nodes, species)` via matrice `BIOLOGICAL_PAIR_COMPATIBILITY`
+- `_generate_corridor_between(node_a, node_b)` avec Catmull-Rom 12 ctrl × subs 12
+- `_corridor_crosses_rayon(path, wp, 420, 780)` filtre d'observation
+
+### BLOC 3 — Attracteurs obligatoires
+- `_compute_attractivity_score()` : poids par type (saline 25, alimentation 22, hotspot 20, etc.)
+- Rejet si `attractivity_score < 10`
+
+### BLOC 4 — Smart deviation HARD-BLOCKING
+- Rejet si pente > 45° / couvert < 30% (forestière) / zone humaine < 80m
+- Offset perpendiculaire 50m pour pente 35-45° / eau < 20m
+
+### BLOC 5 — Hiérarchie recalibrée
+- `veine_principale` : intensity ≥ 75 + attractors ≥ 2
+- `veine_secondaire` : intensity ≥ 50 + attractors ≥ 1
+- `capillaire` : fallback
+- Live : 11 principales + 13 secondaires (waypoint test)
+
+### BLOC 6 — Différentiation espèce renforcée
+- chevreuil sinuosity 1.30 → 1.80
+- orignal hydro_dep 0.90 → 0.95
+- ours_noir sinuosity 1.50 → 1.70, n_corridors 8 → 12
+- wapiti amplitude 0.85 → 0.95
+
+### BLOC 7 — Rendu ORGANIC 120 pts
+- Déjà actif depuis Phase L+1-M (frontend `BionicLayersV8.jsx`)
+
+### BLOC 8 — Anti-régression
+- 16 motifs de rejet dans `validate_organic()`
+- Invariant segment ≤ 20 m garanti par `_enforce_segment_max()`
+- Test `test_corridors_network_refactor_omega.py` intégré au SELF-AUDIT
+
+### BLOC 9 — Document maître
+- ENGINE_CORRIDORS_VERSION = `Ω-NETWORK_LOCKED`
+- Engine version : `V2.0-PHASE-XI-SUPRA-N-Ω-NETWORK_LOCKED-2026-04`
+
+### Registry Lock
+- Version : `V28-SUPRA-LOCKED-PHASE-XI-SUPRA-N-Ω-NETWORK_LOCKED-2026-04`
+- SHA-256 : `476c650a28d1f25ffa93e4caf30f8c6fc13223d9e0a87bfbfb5d994bee8c393c`
+- 41 engines scellés (inchangé)
+
+### SELF-AUDIT-Ω : 60/60 suites OK (+1 test Phase N)
+
+### Rapport : `/app/memory/PHASE_XI_SUPRA_N_NETWORK_REFACTOR_REPORT.md`
+
+---
+
 ## PHASE XI-L+1-M PREP — FRONTEND ORGANIC + IA HOOKS + OPTIMIZATION x1000 PREP (2026-04-20T23:00Z) ✅
 
 ### Directive exécutée : `PHASE_XI_SUPRA_L+1_M_PREP_ORGANIC_FRONTEND_IA_AND_OPTIMIZATION_X1000`

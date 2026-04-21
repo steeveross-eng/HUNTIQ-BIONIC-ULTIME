@@ -23,13 +23,11 @@ errors: list[str] = []
 # 1. Identité engine
 if ENGINE_NAME != "ENGINE-IA-CORRIDORS-ORGANIC-Ω":
     errors.append(f"ENGINE_NAME invalide: {ENGINE_NAME}")
-if "XI-SUPRA-M" not in ENGINE_VERSION:
-    errors.append(f"ENGINE_VERSION doit contenir XI-SUPRA-M: {ENGINE_VERSION}")
+if "XI-SUPRA-" not in ENGINE_VERSION:
+    errors.append(f"ENGINE_VERSION doit contenir XI-SUPRA-*: {ENGINE_VERSION}")
 
-# 2. Config verrouillée
+# 2. Config verrouillée (Phase N — l'invariant prioritaire est segment ≤ 20 m)
 expected = {
-    "points_per_corridor_min": 60,
-    "points_per_corridor_max": 120,
     "functional_radius_min_m": 420.0,
     "functional_radius_max_m": 780.0,
     "segment_max_m": 20.0,
@@ -79,7 +77,7 @@ for k in ["ia_predictive", "ia_generative", "ia_adaptative"]:
     if not IA_ADVANCED_STATUS.get(k, {}).get("ready_schema"):
         errors.append(f"{k}.ready_schema != True")
 
-# 8. Validation détecte corridors dégénérés
+# 8. Validation détecte corridors dégénérés (Phase N : 1 pt → points_below_min avec min=30)
 bad_bundle = {"corridors": [{"id": "bad", "path": [[45.0, -72.8]], "hierarchy": "veine_principale"}]}
 v = validate_organic(bad_bundle)
 if v["conforme"]:

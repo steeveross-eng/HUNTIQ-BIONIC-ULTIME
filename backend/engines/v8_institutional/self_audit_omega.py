@@ -95,6 +95,8 @@ _TEST_SUITES = [
     ("test_ia_corridors_omega", "/app/backend/tests/test_ia_corridors_omega.py"),
     # Phase XI-SUPRA-M — CORRIDORS ORGANIC (IA multi-échelles, réseau hiérarchique)
     ("test_ia_corridors_organic", "/app/backend/tests/test_ia_corridors_organic.py"),
+    # Phase XI-SUPRA-N — CORRIDORS NETWORK REFACTOR
+    ("test_corridors_network_refactor_omega", "/app/backend/tests/test_corridors_network_refactor_omega.py"),
 ]
 
 _LOG_FILE = Path("/app/memory/SELF_AUDIT_OMEGA_LOGS.md")

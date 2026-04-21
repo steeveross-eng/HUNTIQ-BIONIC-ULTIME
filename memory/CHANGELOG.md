@@ -3,6 +3,24 @@
 
 ---
 
+## 2026-04-20T23:30Z — PHASE XI-SUPRA-N (CORRIDORS NETWORK REFACTOR Ω)
+
+### Directive: PHASE_XI_SUPRA_N — CORRIDORS_NETWORK_REFACTOR_Ω — EXÉCUTÉE
+- **BLOC 1** : Abolition du générateur radial `angle = i * (360/n)` + détection anti-régression `ERREUR_RADIAL_GENERATOR`
+- **BLOC 2** : Pipeline réseau zones↔zones (matrice `BIOLOGICAL_PAIR_COMPATIBILITY` par espèce, Catmull-Rom entre nodes biologiques, filtre d'observation 420-780m)
+- **BLOC 3** : Score d'attractivité obligatoire (rejet si < 10)
+- **BLOC 4** : Smart deviation HARD-BLOCKING (pente 45°, couvert 30%, humain 80m)
+- **BLOC 5** : Hiérarchie recalibrée 75/50/0 → 11 principales + 13 secondaires live
+- **BLOC 6** : Différentiation espèce renforcée (chevreuil sinuosity 1.80, ours_noir sinuosity 1.70 + n_corridors 12, etc.)
+- **BLOC 7** : Rendu ORGANIC 120 pts confirmé actif (depuis L+1-M)
+- **BLOC 8** : 16 motifs de rejet anti-régression + invariant segment ≤ 20m via `_enforce_segment_max()`
+- **BLOC 9** : ENGINE_CORRIDORS_VERSION = `Ω-NETWORK_LOCKED`
+- **Registry** → V28-SUPRA-LOCKED-PHASE-XI-SUPRA-N-Ω-NETWORK_LOCKED-2026-04 (SHA `476c650a28d1f25f…`)
+- **SELF-AUDIT-Ω** : 60/60 suites OK (+1 test `test_corridors_network_refactor_omega.py`)
+- Rapport : `/app/memory/PHASE_XI_SUPRA_N_NETWORK_REFACTOR_REPORT.md`
+
+---
+
 ## 2026-04-20T23:00Z — PHASE XI-L+1-M PREP (FRONTEND ORGANIC + IA HOOKS + X1000 PREP)
 
 ### Directive: PHASE_XI_SUPRA_L+1_M_PREP_ORGANIC_FRONTEND_IA_AND_OPTIMIZATION_X1000 — EXÉCUTÉE

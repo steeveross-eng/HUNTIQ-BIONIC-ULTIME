@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-04-20T23:40:14.049080+00:00",
+  "generated_at": "2026-04-21T00:27:17.799263+00:00",
   "engine_render_version": "V1-PHASE-XI-SUPRA-2026-04",
   "bundle_version": "TERRITOIRE-V10-SUPRA",
-  "registry_sha256": "7b8dadf3e574cc5e5cada1bcb232f7c24597ea9be840985fd04770235c3c81fe",
+  "registry_sha256": "476c650a28d1f25ffa93e4caf30f8c6fc13223d9e0a87bfbfb5d994bee8c393c",
   "document_maitre_sha256": "6aff169f73531a46a38f5caff9defc7cadac6745029fa15d73c0174a1dfc2672",
   "captures": [
     {
@@ -10,9 +10,9 @@
       "zoom_range": "z < 14",
       "filename": "TERRITOIRE_macro.png",
       "path": "/app/memory/TERRITOIRE_VISUAL_PROOF/TERRITOIRE_macro.png",
-      "size_bytes": 61937,
-      "sha256": "feea3181bf03b67824a669d2ee56b05c7988d654e1516a3e9ab6381797a1b2b7",
-      "hmac_sha256": "1e04bb53c890df7ff7455766b0ddc6e883bdad1764ebd890d79184aceb4b952a",
+      "size_bytes": 61875,
+      "sha256": "1517316c5d0a385c1320e9466394b658394b6844640e425e6bc7b52ccbbc7fa3",
+      "hmac_sha256": "e63d912f3d9ac7f520c46188a5100d9aca3e383b57d3054929b1b86fbf5f3d33",
       "layers_visible": [
         "corridors",
         "zones_fauniques_canada",
@@ -28,9 +28,9 @@
       "zoom_range": "14 ≤ z < 16",
       "filename": "TERRITOIRE_mid.png",
       "path": "/app/memory/TERRITOIRE_VISUAL_PROOF/TERRITOIRE_mid.png",
-      "size_bytes": 63369,
-      "sha256": "ffde31103422863677e18f51d73e61bf1cfc2278ab0092798a8c69846bf2f66e",
-      "hmac_sha256": "d47fd342111ac55cbe046071fd30b4301f874466a541e3b86954b3b1087a4754",
+      "size_bytes": 63264,
+      "sha256": "5c204e101dae326979e4aa98b5b16bd37fc665124d0717dbe00ef8817c0fe1f1",
+      "hmac_sha256": "86516e0ed10be0adf4d4a9d3f6704030febd88899589e02253be66ef06bc8287",
       "layers_visible": [
         "corridors",
         "zones_ecologiques",
@@ -51,9 +51,9 @@
       "zoom_range": "z ≥ 16",
       "filename": "TERRITOIRE_detail.png",
       "path": "/app/memory/TERRITOIRE_VISUAL_PROOF/TERRITOIRE_detail.png",
-      "size_bytes": 65484,
-      "sha256": "c69694ecb5e573d6ad6b62593b00b6c82f353a52d08cc728ed43ca2083af9fa4",
-      "hmac_sha256": "88d48fdcaa1340a6f78cf5e80ed03724880c366e9c90e892c15942806b59dcc6",
+      "size_bytes": 65267,
+      "sha256": "173ae0c46e2c2635a988014df21cf5b77135e7606bf49508805bf7b77766be3b",
+      "hmac_sha256": "f8e6706e289fe9f6dc0ec17758572119f3902874004cc5d50c81cc1072cad40b",
       "layers_visible": [
         "corridors",
         "zones_ecologiques",

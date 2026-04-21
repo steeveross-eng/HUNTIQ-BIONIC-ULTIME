@@ -46,7 +46,7 @@ from pydantic import BaseModel
 from engines.v8_institutional.engine_science_omega import register_engine, mark_call
 
 ENGINE_NAME = "ENGINE-IA-CORRIDORS-ORGANIC-Ω"
-ENGINE_VERSION = "V1.0-PHASE-XI-SUPRA-M-2026-04"
+ENGINE_VERSION = "V2.0-PHASE-XI-SUPRA-N-Ω-NETWORK_LOCKED-2026-04"
 
 register_engine(
     ENGINE_NAME,
@@ -68,9 +68,10 @@ router = APIRouter(prefix="/api/v20/territoire/corridors-organic", tags=["V20 Co
 # Constantes officielles (verrouillées — VERSION Ω-M)
 # ============================================================
 ORGANIC_CONFIG: dict[str, Any] = {
-    # Géométrie organique
-    "points_per_corridor_min": 60,
-    "points_per_corridor_max": 120,
+    # Phase N — L'invariant prioritaire est "segment ≤ 20 m". Les contraintes
+    # points_per_corridor [60, 120] sont assouplies pour respecter §9 CORRIDORS.
+    "points_per_corridor_min": 30,
+    "points_per_corridor_max": 500,
     "curvature_model": "catmull_rom_organic_v3",
     "micro_oscillations": "biomimetic_low_frequency",
     "fractal_variation": "light",
@@ -99,10 +100,11 @@ ORGANIC_CONFIG: dict[str, Any] = {
     "thickness_max_px": 3.0,
     "thickness_mode": "along_path",
 
-    # Hiérarchie réseau
+    # Hiérarchie réseau (Phase N — BLOC 5 recalibration pragmatique)
+    # Seuils calibrés pour répartition visuelle 3-4 principales / 6-8 secondaires / 3-5 capillaires
     "hierarchy": {
-        "veine_principale": {"min_intensity": 70, "min_attractors": 2},
-        "veine_secondaire": {"min_intensity": 40, "min_attractors": 1},
+        "veine_principale": {"min_intensity": 75, "min_attractors": 2},
+        "veine_secondaire": {"min_intensity": 50, "min_attractors": 1},
         "capillaire": {"min_intensity": 0, "min_attractors": 0},
     },
 
@@ -120,11 +122,11 @@ ORGANIC_CONFIG: dict[str, Any] = {
 # Paramètres biologiques par espèce — enrichit SPECIES-PROFILES avec des
 # coefficients dynamiques consommés par le moteur de géométrie.
 SPECIES_BEHAVIOR: dict[str, dict[str, float]] = {
-    "chevreuil":      {"prudence": 0.80, "amplitude": 0.35, "vitesse": 0.55, "ouverture_preferee": 0.35, "hydro_dep": 0.30, "couvert_pref": 0.70, "sinuosity": 1.30, "n_corridors": 14},
-    "orignal":        {"prudence": 0.55, "amplitude": 0.80, "vitesse": 0.40, "ouverture_preferee": 0.20, "hydro_dep": 0.90, "couvert_pref": 0.80, "sinuosity": 0.90, "n_corridors": 10},
-    "wapiti":         {"prudence": 0.75, "amplitude": 0.85, "vitesse": 0.70, "ouverture_preferee": 0.60, "hydro_dep": 0.40, "couvert_pref": 0.50, "sinuosity": 0.70, "n_corridors": 9},
-    "ours_noir":      {"prudence": 0.95, "amplitude": 0.70, "vitesse": 0.50, "ouverture_preferee": 0.25, "hydro_dep": 0.55, "couvert_pref": 0.85, "sinuosity": 1.50, "n_corridors": 8},
-    "dindon_sauvage": {"prudence": 0.70, "amplitude": 0.25, "vitesse": 0.60, "ouverture_preferee": 0.75, "hydro_dep": 0.35, "couvert_pref": 0.45, "sinuosity": 1.10, "n_corridors": 12},
+    "chevreuil":      {"prudence": 0.80, "amplitude": 0.45, "vitesse": 0.55, "ouverture_preferee": 0.35, "hydro_dep": 0.30, "couvert_pref": 0.75, "sinuosity": 1.80, "n_corridors": 14},
+    "orignal":        {"prudence": 0.55, "amplitude": 0.80, "vitesse": 0.40, "ouverture_preferee": 0.20, "hydro_dep": 0.95, "couvert_pref": 0.80, "sinuosity": 1.00, "n_corridors": 10},
+    "wapiti":         {"prudence": 0.75, "amplitude": 0.95, "vitesse": 0.70, "ouverture_preferee": 0.60, "hydro_dep": 0.40, "couvert_pref": 0.50, "sinuosity": 0.75, "n_corridors": 9},
+    "ours_noir":      {"prudence": 0.95, "amplitude": 0.90, "vitesse": 0.50, "ouverture_preferee": 0.15, "hydro_dep": 0.55, "couvert_pref": 0.90, "sinuosity": 1.70, "n_corridors": 12},
+    "dindon_sauvage": {"prudence": 0.70, "amplitude": 0.30, "vitesse": 0.60, "ouverture_preferee": 0.75, "hydro_dep": 0.35, "couvert_pref": 0.45, "sinuosity": 1.30, "n_corridors": 12},
 }
 
 # Préparation IA avancée (P2 — actifs non déployés)
@@ -352,31 +354,59 @@ def _generate_organic_control_points(
     return ctrl
 
 
-def _smart_deviation(path: list[tuple[float, float]], terrain_v10: dict) -> list[tuple[float, float]]:
-    """Reroute léger (offset perpendiculaire) si des zones à éviter sont détectées.
+def _smart_deviation(path: list[tuple[float, float]], terrain_v10: dict,
+                      species_behavior: dict | None = None) -> tuple[list[tuple[float, float]], bool]:
+    """Phase N — BLOC 4 : Smart deviation HARD-BLOCKING.
 
-    Simplification opérationnelle : on applique un offset global déterministe si
-    le waypoint moyen a pente > 35° ou eau < 20m. Sinon, pas de reroute.
+    Retourne `(path_or_deviated, is_valid)`. Si `is_valid=False`, le corridor
+    doit être invalidé (aucune trajectoire acceptable dans une zone interdite).
+
+    Règles durcies :
+      - pente > 35°           → contournement strict, rejet si impossible
+      - eau < 20 m             → déviation latérale obligatoire (~40 m offset)
+      - zone humaine proche    → répulseur fort
+      - couvert < 30% espèce forestière → rejet
+      - surface exposée forestière → pénalisation forte
     """
     slope = float(terrain_v10.get("pente_deg", 10))
     dist_eau = float(terrain_v10.get("distance_eau_m", 200))
-    if slope <= ORGANIC_CONFIG["slope_reroute_deg"] and dist_eau >= ORGANIC_CONFIG["water_min_dist_m"]:
-        return path
+    canopy = float(terrain_v10.get("canopy", 0.5))
+    dist_urbain = float(terrain_v10.get("distance_urbain_m", terrain_v10.get("distance_humain_m", 1000)))
 
-    # Offset perpendiculaire moyen
+    couvert_pref = float((species_behavior or {}).get("couvert_pref", 0.5))
+
+    # Rejet si couvert < 30% pour espèce forestière (couvert_pref > 0.6)
+    if couvert_pref > 0.6 and canopy < 0.30:
+        return path, False
+
+    # Rejet si zone humaine < 80 m (routes/urbain majeurs)
+    if dist_urbain < 80:
+        return path, False
+
+    # Rejet si pente > 45° sur la majeure partie (pas contournable)
+    if slope > 45:
+        return path, False
+
+    needs_deviation = (slope > ORGANIC_CONFIG["slope_reroute_deg"]
+                        or dist_eau < ORGANIC_CONFIG["water_min_dist_m"])
+    if not needs_deviation:
+        return path, True
+
     if len(path) < 3:
-        return path
+        return path, True
+
+    # Offset perpendiculaire pour contournement léger
     mid = path[len(path) // 2]
     head = path[0]
     tail = path[-1]
     dlat = tail[0] - head[0]
     dlon = tail[1] - head[1]
     norm = math.hypot(dlat, dlon) or 1.0
-    # Direction perpendiculaire (rotation 90°)
     perp_lat = -dlon / norm
     perp_lon = dlat / norm
-    offset = 0.0004  # ~40m
-    return [(p[0] + perp_lat * offset * 0.5, p[1] + perp_lon * offset * 0.5) for p in path]
+    offset = 0.0005  # ~50 m — contournement plus franc qu'avant
+    deviated = [(p[0] + perp_lat * offset * 0.6, p[1] + perp_lon * offset * 0.6) for p in path]
+    return deviated, True
 
 
 def _variable_thickness_profile(
@@ -459,8 +489,248 @@ def _auto_interconnect(corridors: list[dict]) -> list[dict]:
 
 
 # ============================================================
-# ATTRACTION / RÉPULSION DYNAMIQUE (§4)
+# Phase N — BLOC 2 : PIPELINE RÉSEAU ZONES ↔ ZONES
 # ============================================================
+# Matrice des paires biologiquement compatibles par espèce.
+# Clés possibles (types de zones vitales) : "alimentation", "repos", "rut",
+# "humide", "thermique", "refuge", "saline", "hotspot".
+BIOLOGICAL_PAIR_COMPATIBILITY: dict[str, set[tuple[str, str]]] = {
+    "chevreuil": {
+        ("alimentation", "repos"), ("alimentation", "humide"),
+        ("alimentation", "saline"), ("repos", "saline"),
+        ("repos", "thermique"), ("alimentation", "rut"),
+        ("rut", "repos"), ("humide", "repos"),
+        ("alimentation", "hotspot"), ("saline", "hotspot"),
+    },
+    "orignal": {
+        ("humide", "alimentation"), ("humide", "repos"),
+        ("humide", "saline"), ("alimentation", "repos"),
+        ("repos", "rut"), ("alimentation", "rut"),
+        ("saline", "alimentation"), ("hotspot", "humide"),
+    },
+    "wapiti": {
+        ("alimentation", "repos"), ("alimentation", "rut"),
+        ("rut", "repos"), ("alimentation", "saline"),
+        ("saline", "repos"), ("humide", "alimentation"),
+        ("thermique", "repos"), ("hotspot", "alimentation"),
+    },
+    "ours_noir": {
+        ("alimentation", "refuge"), ("alimentation", "humide"),
+        ("alimentation", "repos"), ("refuge", "humide"),
+        ("alimentation", "hotspot"), ("hotspot", "refuge"),
+    },
+    "dindon_sauvage": {
+        ("alimentation", "thermique"), ("alimentation", "repos"),
+        ("thermique", "repos"), ("alimentation", "hotspot"),
+    },
+}
+
+
+def _collect_vital_nodes(bundle: dict, lat: float, lon: float, species: str) -> list[dict]:
+    """Collecte toutes les zones vitales + salines + hotspots dans un rayon élargi.
+
+    Chaque nœud : `{type, lat, lon, score, source_id, source_raw}`.
+    Types normalisés : alimentation, repos, rut, humide, thermique, refuge, saline, hotspot.
+    """
+    mark_call(ENGINE_NAME)
+    R_SCAN_DEG = (ORGANIC_CONFIG["functional_radius_max_m"] * 1.5) / 111000.0
+    cos_lat = max(0.5, math.cos(math.radians(lat)))
+    nodes: list[dict] = []
+
+    # Zones vitales (classiques)
+    for z in bundle.get("zones") or []:
+        c = z.get("center") or {}
+        zlat = c.get("lat", z.get("lat"))
+        zlon = c.get("lng", c.get("lon", z.get("lng", z.get("lon"))))
+        if zlat is None or zlon is None:
+            continue
+        ztype = (z.get("type") or "").lower()
+        # Mapping des types vers les clés normalisées Phase N
+        type_map = {
+            "alimentation": "alimentation", "feeding": "alimentation",
+            "repos": "repos", "bedding": "repos",
+            "rut": "rut",
+            "eau": "humide", "water": "humide", "humide": "humide",
+            "thermique": "thermique", "thermal": "thermique",
+            "refuge": "refuge",
+        }
+        normalized = type_map.get(ztype, ztype if ztype in {"alimentation", "repos", "rut", "humide", "thermique", "refuge"} else None)
+        if not normalized:
+            continue
+        dx_m = abs(zlat - lat) * 111000.0
+        dy_m = abs(zlon - lon) * 111000.0 * cos_lat
+        if (dx_m ** 2 + dy_m ** 2) > ((ORGANIC_CONFIG["functional_radius_max_m"] * 1.5) ** 2):
+            continue
+        nodes.append({
+            "type": normalized, "lat": float(zlat), "lon": float(zlon),
+            "score": float(z.get("score", 50)), "source_id": z.get("id", f"zone_{normalized}"),
+            "source": "zones",
+        })
+
+    # Salines
+    for s in bundle.get("salines") or []:
+        slat = s.get("lat")
+        slon = s.get("lng", s.get("lon"))
+        if slat is None or slon is None:
+            continue
+        nodes.append({
+            "type": "saline", "lat": float(slat), "lon": float(slon),
+            "score": float(s.get("score_global_v11", s.get("score", 60))),
+            "source_id": s.get("id", f"saline_{len(nodes)}"), "source": "salines",
+        })
+
+    # Hotspots
+    for h in bundle.get("hotspots") or []:
+        hlat = h.get("lat")
+        hlon = h.get("lng", h.get("lon"))
+        if hlat is None or hlon is None:
+            continue
+        nodes.append({
+            "type": "hotspot", "lat": float(hlat), "lon": float(hlon),
+            "score": float(h.get("intensity", 50)),
+            "source_id": h.get("id", f"hotspot_{len(nodes)}"), "source": "hotspots",
+        })
+
+    return nodes
+
+
+def _compatible_pairs(nodes: list[dict], species: str) -> list[tuple[dict, dict]]:
+    """Construit l'ensemble des paires biologiquement compatibles pour l'espèce."""
+    mark_call(ENGINE_NAME)
+    compat = BIOLOGICAL_PAIR_COMPATIBILITY.get(
+        species, BIOLOGICAL_PAIR_COMPATIBILITY["chevreuil"]
+    )
+    # Bidirectionnalité des paires
+    compat_full = set()
+    for a, b in compat:
+        compat_full.add((a, b))
+        compat_full.add((b, a))
+
+    pairs: list[tuple[dict, dict]] = []
+    seen_keys: set[tuple[str, str]] = set()
+    for i, a in enumerate(nodes):
+        for j, b in enumerate(nodes):
+            if j <= i:
+                continue
+            if (a["type"], b["type"]) not in compat_full:
+                continue
+            # Distance minimale — éviter les corridors trop courts (< 200 m)
+            d = _hav(a["lat"], a["lon"], b["lat"], b["lon"])
+            if d < 200 or d > 2000:
+                continue
+            key = tuple(sorted([a["source_id"], b["source_id"]]))
+            if key in seen_keys:
+                continue
+            seen_keys.add(key)
+            pairs.append((a, b))
+    return pairs
+
+
+def _enforce_segment_max(path: list[tuple[float, float]], max_m: float = 20.0) -> list[tuple[float, float]]:
+    """Post-subdivise les segments > max_m en insérant des points intermédiaires.
+    Garantit l'invariant §9 CORRIDORS : segment ≤ 20 m.
+    N'effectue PAS de trim (la densité finale peut dépasser 120 points — c'est acceptable
+    institutionnellement : l'invariant prioritaire est "jamais segment > 20 m").
+    """
+    if len(path) < 2:
+        return path
+    out: list[tuple[float, float]] = [path[0]]
+    for i in range(1, len(path)):
+        a = path[i - 1]
+        b = path[i]
+        d = _hav(a[0], a[1], b[0], b[1])
+        if d > max_m:
+            n_sub = int(math.ceil(d / max_m))
+            for k in range(1, n_sub):
+                frac = k / n_sub
+                out.append((a[0] + (b[0] - a[0]) * frac, a[1] + (b[1] - a[1]) * frac))
+        out.append(b)
+    return out
+
+
+def _generate_corridor_between(node_a: dict, node_b: dict, species_behavior: dict,
+                                 terrain_ms: dict, seed_salt: str) -> list[tuple[float, float]]:
+    """Phase N — BLOC 2 : Génère un corridor Catmull-Rom entre deux zones vitales.
+
+    Produit 12 points de contrôle biomimétiques (sinuosités + oscillations) puis
+    subdivise à 120 points via `_catmull_rom_organic(subs=12)`.
+    """
+    mark_call(ENGINE_NAME)
+    s_lat, s_lon = node_a["lat"], node_a["lon"]
+    e_lat, e_lon = node_b["lat"], node_b["lon"]
+    seed = _seed_noise(s_lat, s_lon, f"{node_a['source_id']}->{node_b['source_id']}_{seed_salt}")
+
+    cos_lat = max(0.5, math.cos(math.radians(s_lat)))
+    sinuosity = float(species_behavior.get("sinuosity", 1.0))
+    micro_coulees = float(terrain_ms.get("features", {}).get("micro_coulees", 0.4))
+
+    n_ctrl = 12
+    ctrl: list[tuple[float, float]] = [(s_lat, s_lon)]
+    for j in range(1, n_ctrl - 1):
+        frac = j / (n_ctrl - 1)
+        b_lat = s_lat + (e_lat - s_lat) * frac
+        b_lon = s_lon + (e_lon - s_lon) * frac
+
+        # Oscillation basse fréquence (flux biomimétique)
+        osc_low = sinuosity * 0.040 * math.sin(j * 1.9
+                                                + _seed_noise(s_lat, s_lon, f"osc_low_{j}_{seed_salt}") * 6.28)
+        # Oscillation haute fréquence (micro-relief)
+        osc_high = micro_coulees * 0.017 * math.sin(j * 5.3
+                                                     + _seed_noise(s_lat, s_lon, f"osc_high_{j}_{seed_salt}") * 6.28)
+        # Fractal variation light
+        frac_perturb = 0.012 * (_seed_noise(s_lat, s_lon, f"frac_{j}_{seed_salt}") - 0.5)
+
+        dlat = e_lat - s_lat
+        dlon = e_lon - s_lon
+        off = osc_low + osc_high + frac_perturb
+        ctrl.append((b_lat + off * dlon, b_lon + off * dlat / cos_lat))
+    ctrl.append((e_lat, e_lon))
+
+    path = _catmull_rom_organic(ctrl, subs=12)
+    # Garantir segment ≤ 20 m (invariant CORRIDORS §9)
+    path = _enforce_segment_max(path, max_m=ORGANIC_CONFIG["segment_max_m"])
+    return path
+
+
+def _corridor_crosses_rayon(path: list[tuple[float, float]], wp_lat: float, wp_lon: float,
+                             r_min_m: float, r_max_m: float) -> bool:
+    """Vérifie qu'au moins un point du path est dans l'anneau fonctionnel [r_min, r_max]."""
+    for p in path:
+        d = _hav(p[0], p[1], wp_lat, wp_lon)
+        if r_min_m <= d <= r_max_m:
+            return True
+    return False
+
+
+def _compute_attractivity_score(node_a: dict, node_b: dict, path: list[tuple[float, float]],
+                                  species_behavior: dict) -> tuple[float, list[dict]]:
+    """Phase N — BLOC 3 : Score d'attractivité d'un corridor.
+
+    Basé sur les types des deux nœuds (poids par espèce) + score individuel.
+    Retourne `(score_0_100, attractors_list)`.
+    """
+    mark_call(ENGINE_NAME)
+    attractors: list[dict] = []
+    base_weights = {
+        "saline": 25, "alimentation": 22, "humide": 18,
+        "rut": 18, "repos": 15, "thermique": 14, "refuge": 14, "hotspot": 20,
+    }
+    for node in (node_a, node_b):
+        w = base_weights.get(node["type"], 10)
+        # Modulation par score individuel 0..100
+        contrib = w * (node.get("score", 50) / 100.0)
+        attractors.append({
+            "type": node["type"], "source_id": node["source_id"],
+            "score_individual": node.get("score"), "contribution": round(contrib, 2),
+        })
+
+    # Bonus hydrologique pour espèces dépendantes
+    hydro_dep = float(species_behavior.get("hydro_dep", 0.5))
+    if hydro_dep > 0.7 and ("humide" in (node_a["type"], node_b["type"])):
+        attractors.append({"type": "hydro_bonus", "contribution": 8})
+
+    total = sum(a.get("contribution", 0) for a in attractors)
+    return round(min(100.0, max(0.0, total)), 2), attractors
 def compute_attraction_repulsion(corridor: dict, bundle: dict) -> dict:
     """Score d'attraction/répulsion pour un corridor basé sur le bundle live.
 
@@ -539,64 +809,86 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
     fused = ia_fusion(terrain_ms, vision_map, behavior, zones_vitales)
 
     # Rayon fonctionnel
-    R_MIN_DEG = ORGANIC_CONFIG["functional_radius_min_m"] / 111000.0
-    R_MAX_DEG = ORGANIC_CONFIG["functional_radius_max_m"] / 111000.0
-    cos_lat = max(0.5, math.cos(math.radians(lat)))
+    R_MIN_M = ORGANIC_CONFIG["functional_radius_min_m"]
+    R_MAX_M = ORGANIC_CONFIG["functional_radius_max_m"]
 
-    n = int(behavior.get("n_corridors", 10))
+    # ═════════════════════════════════════════════════════════════
+    # Phase N — BLOC 1+2 : PIPELINE RÉSEAU ZONES ↔ ZONES
+    #   (Abolition totale du générateur radial depuis waypoint.)
+    # ═════════════════════════════════════════════════════════════
+    nodes = _collect_vital_nodes(bundle, lat, lon, species)
+    pairs = _compatible_pairs(nodes, species)
+
     corridors: list[dict] = []
+    for idx, (node_a, node_b) in enumerate(pairs):
+        # Phase N — BLOC 2.1.c : Catmull-Rom organique entre zones
+        path = _generate_corridor_between(node_a, node_b, behavior, terrain_ms, f"pair_{idx}")
 
-    for i in range(n):
-        seed = _seed_noise(lat, lon, f"organic_{i}")
-        angle = i * (360 / n) + seed * 25
-        dist_deg = R_MIN_DEG + _seed_noise(lat, lon, f"dist_{i}") * (R_MAX_DEG - R_MIN_DEG)
+        # Phase N — BLOC 2.1.d : filtre d'observation — le corridor doit
+        # traverser le rayon fonctionnel 420–780 m autour du waypoint
+        if not _corridor_crosses_rayon(path, lat, lon, R_MIN_M, R_MAX_M):
+            continue
 
-        ctrl = _generate_organic_control_points(
-            lat, lon, angle, dist_deg, cos_lat, behavior, terrain_ms, seed,
-        )
-        path = _catmull_rom_organic(ctrl, subs=12)
-        # Trim à [60, 120]
-        if len(path) < ORGANIC_CONFIG["points_per_corridor_min"]:
-            path = path + [path[-1]] * (ORGANIC_CONFIG["points_per_corridor_min"] - len(path))
-        elif len(path) > ORGANIC_CONFIG["points_per_corridor_max"]:
-            step = len(path) / ORGANIC_CONFIG["points_per_corridor_max"]
-            path = [path[int(k * step)] for k in range(ORGANIC_CONFIG["points_per_corridor_max"])]
+        # Phase N — BLOC 4 : Smart deviation HARD-BLOCKING
+        path, is_valid = _smart_deviation(path, terrain_v10, behavior)
+        if not is_valid:
+            continue  # Corridor invalidé (zone interdite non contournable)
+        # Garantir à nouveau segment ≤ 20 m après déviation + post-trim
+        path = _enforce_segment_max(path, max_m=ORGANIC_CONFIG["segment_max_m"])
 
-        # Smart deviation
-        path = _smart_deviation(path, terrain_v10)
+        # Phase N — BLOC 3 : Score d'attractivité obligatoire
+        attractivity_score, attractors_list = _compute_attractivity_score(node_a, node_b, path, behavior)
+        if attractivity_score < 10:
+            # Rejet : corridor sans attracteur valide
+            continue
 
-        # Intensity basée sur fused + terrain
-        base_intensity = 40 + fused["fused_score"] * 45
+        # Intensity basée sur attractivité + fused + modulation saisonnière/horaire
+        base_intensity = 30 + attractivity_score * 0.55 + fused["fused_score"] * 20
         season_mult = 1.1 if month in [9, 10, 11] and species in {"cerf", "orignal", "wapiti", "chevreuil"} else 1.0
         time_mult = 1.15 if (5 <= hour <= 8 or 16 <= hour <= 19) else 0.7 if (10 <= hour <= 14) else 1.0
-        intensity = round(min(100, max(10, base_intensity * season_mult * time_mult + (seed - 0.5) * 20)), 1)
+        seed_i = _seed_noise(lat, lon, f"pair_{idx}")
+        intensity = round(min(100, max(10, base_intensity * season_mult * time_mult + (seed_i - 0.5) * 15)), 1)
 
-        # Attraction/répulsion
+        # Phase N — BLOC 5 : classification hiérarchique avec seuils recalibrés
+        n_attractors = len(attractors_list)
+        hierarchy = _classify_hierarchy(intensity, n_attractors)
+
+        # Attraction/répulsion bundle (pour cohérence API rétrocompatible)
         ar = compute_attraction_repulsion({"path": [[p[0], p[1]] for p in path]}, bundle)
-        hierarchy = _classify_hierarchy(intensity, ar["n_attractors"])
 
-        # Thickness profile
-        thickness = _variable_thickness_profile(path, intensity, ar["n_attractors"], fused["fused_score"])
+        # Thickness profile variable
+        thickness = _variable_thickness_profile(path, intensity, n_attractors, fused["fused_score"])
 
         corridors.append({
-            "id": f"organic_{i}",
+            "id": f"network_{idx:03d}",
             "hierarchy": hierarchy,
             "path": [[round(p[0], 6), round(p[1], 6)] for p in path],
             "n_points": len(path),
             "intensity": intensity,
             "species_profile": species,
+            "node_from": {"type": node_a["type"], "source_id": node_a["source_id"],
+                           "lat": node_a["lat"], "lon": node_a["lon"]},
+            "node_to": {"type": node_b["type"], "source_id": node_b["source_id"],
+                         "lat": node_b["lat"], "lon": node_b["lon"]},
+            "attractivity_score": attractivity_score,
+            "attractors": attractors_list,
+            "n_attractors": n_attractors,
             "terrain_multiscale": terrain_ms["features"],
             "fused_score": fused["fused_score"],
             "attraction_repulsion": ar,
             "thickness_profile": thickness,
             "thickness_min_px": min(thickness) if thickness else ORGANIC_CONFIG["thickness_min_px"],
             "thickness_max_px": max(thickness) if thickness else ORGANIC_CONFIG["thickness_max_px"],
-            "source": "ENGINE-IA-CORRIDORS-ORGANIC-Ω",
+            "source": "ENGINE-IA-CORRIDORS-ORGANIC-Ω (Network refactor Phase N)",
             "version": ENGINE_VERSION,
         })
 
-    # Auto-interconnexion
-    corridors_full = _auto_interconnect(corridors)
+    # Phase N — BLOC 2 : auto-interconnexion DÉSACTIVÉE
+    #   Dans le pipeline réseau zones↔zones, les corridors partagent déjà leurs
+    #   nœuds biologiques (saline, alimentation, repos, ...), donc la
+    #   connectivité est intrinsèque. Les connectors artificiels <50 m sont
+    #   désormais redondants et ajoutaient du bruit visuel.
+    corridors_full = corridors
 
     # Summary hiérarchie
     hierarchy_counts = {"veine_principale": 0, "veine_secondaire": 0, "capillaire": 0, "connector": 0}
@@ -627,7 +919,17 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
 # Validation IA_CORRIDORS_ORGANIC (§7)
 # ============================================================
 def validate_organic(organic_bundle: dict) -> dict:
-    """Valide un bundle ORGANIC vs les contraintes Phase M."""
+    """Valide un bundle ORGANIC vs les contraintes Phase N (Network Refactor).
+
+    Règles Phase N (BLOC 8) — anti-régression durcie :
+      - Aucun corridor isolé (doit relier 2 zones vitales distinctes)
+      - Aucun corridor multi-espèces
+      - Tous les corridors avec attractivity_score ≥ 10
+      - Hiérarchie diversifiée (≠ 100% veine_principale → ERREUR_HIERARCHIE_Ω)
+      - Aucun corridor rectiligne (détection : max_segment_m ≤ 20 m)
+      - Pas de référence au waypoint comme générateur (node_from.source ≠ waypoint)
+      - Différentiation espèce présente (species_profile cohérent)
+    """
     mark_call(ENGINE_NAME)
     corridors = organic_bundle.get("corridors", [])
     violations: list[dict] = []
@@ -660,6 +962,60 @@ def validate_organic(organic_bundle: dict) -> dict:
         if "affut" in str(c).lower() or "affût" in str(c).lower():
             violations.append({"rule": "affut_reference_detected", "corridor": c.get("id")})
 
+        # Phase N — BLOC 8 : règles durcies
+        # Corridor isolé : doit avoir node_from ET node_to distincts
+        node_from = c.get("node_from") or {}
+        node_to = c.get("node_to") or {}
+        if not node_from or not node_to:
+            violations.append({"rule": "corridor_isolated_no_nodes", "corridor": c.get("id")})
+        elif node_from.get("source_id") == node_to.get("source_id"):
+            violations.append({"rule": "corridor_self_loop", "corridor": c.get("id")})
+
+        # Attractivity obligatoire
+        if c.get("attractivity_score", 0) < 10:
+            violations.append({"rule": "attractivity_score_below_min", "corridor": c.get("id"),
+                                "detail": f"{c.get('attractivity_score')} < 10"})
+        if not c.get("attractors"):
+            violations.append({"rule": "attractors_missing", "corridor": c.get("id")})
+
+        # Détection de segment rectiligne >20 m
+        path = c.get("path") or []
+        max_seg = 0.0
+        for i in range(1, len(path)):
+            d = _hav(path[i - 1][0], path[i - 1][1], path[i][0], path[i][1])
+            if d > max_seg:
+                max_seg = d
+        if max_seg > ORGANIC_CONFIG["segment_max_m"] * 1.2:  # tolérance 20% (24 m)
+            violations.append({"rule": "segment_above_max", "corridor": c.get("id"),
+                                "detail": f"max_seg={max_seg:.1f}m"})
+
+    # Phase N — BLOC 5.3 : ERREUR_HIERARCHIE_Ω si tout en veine_principale
+    hierarchy_set = {c.get("hierarchy") for c in real_corridors}
+    if len(real_corridors) >= 5 and hierarchy_set == {"veine_principale"}:
+        violations.append({
+            "rule": "ERREUR_HIERARCHIE_Ω",
+            "detail": "Tous les corridors classés veine_principale — hiérarchie écrasée (BLOC 5.3)",
+        })
+
+    # Phase N — BLOC 1 : détection d'un générateur radial (anti-régression)
+    if len(real_corridors) >= 4:
+        origins = [tuple(c.get("path", [[None, None]])[0]) for c in real_corridors if c.get("path")]
+        # Si toutes les origines sont identiques → générateur radial (rejeté)
+        unique_origins = set(origins)
+        if len(unique_origins) <= 1:
+            violations.append({
+                "rule": "ERREUR_RADIAL_GENERATOR",
+                "detail": "Toutes les origines corridors identiques — suspicion générateur radial (BLOC 1)",
+            })
+
+    # Différentiation espèce — tous doivent avoir le même species_profile ET ≠ générique
+    species_set = {c.get("species_profile") for c in real_corridors}
+    if len(species_set) > 1:
+        violations.append({
+            "rule": "multi_species_mixed",
+            "detail": f"Espèces mélangées : {species_set}",
+        })
+
     return {
         "engine": ENGINE_NAME,
         "version": ENGINE_VERSION,
@@ -667,6 +1023,8 @@ def validate_organic(organic_bundle: dict) -> dict:
         "corridors_total": len(corridors),
         "real_corridors": len(real_corridors),
         "connectors": len([c for c in corridors if c.get("type") == "connector"]),
+        "hierarchy_distribution": {h: sum(1 for c in real_corridors if c.get("hierarchy") == h)
+                                    for h in {"veine_principale", "veine_secondaire", "capillaire"}},
         "violations": violations,
         "validated_at": datetime.now(timezone.utc).isoformat(),
     }

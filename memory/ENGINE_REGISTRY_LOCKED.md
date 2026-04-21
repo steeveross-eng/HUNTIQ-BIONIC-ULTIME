@@ -68,6 +68,26 @@ invalide ce hash et fait échouer `test_engine_registry_locked`.
 >   `hotspots_organic_v1.py` avec status `READY_FOR_OPTIMIZATION`.
 > - **Templates X1000** : `ZONES_X1000_TEMPLATE.md`, `SALINES_X1000_TEMPLATE.md`,
 >   `HOTSPOTS_X1000_TEMPLATE.md`.
+>
+> **Évolution Phase XI-SUPRA-N Ω-NETWORK_LOCKED (présente directive) :**
+> - Aucun nouvel engine scellé (registre inchangé à 41 engines).
+> - **Refactor architectural total** de `ENGINE-IA-CORRIDORS-ORGANIC-Ω` (v2.0).
+> - **ABOLITION** du générateur radial `angle = i * (360/n)` depuis le waypoint.
+> - **Pipeline zones↔zones obligatoire** : collecte des zones vitales, construction
+>   des paires biologiquement compatibles par espèce, génération Catmull-Rom entre
+>   nœuds, filtre d'observation par le rayon fonctionnel 420–780 m.
+> - **Attracteurs biologiques** obligatoires (`attractivity_score` ≥ 10, rejet sinon).
+> - **Smart deviation HARD-BLOCKING** : rejet si couvert < 30% (forestière),
+>   zone humaine < 80 m, pente > 45° ; offset perpendiculaire sinon.
+> - **Hiérarchie recalibrée** : veine_principale 75/2, secondaire 50/1, capillaire 0/0.
+> - **Différentiation espèce renforcée** : chevreuil sinuosity 1.80, ours_noir
+>   sinuosity 1.70 + n_corridors 12, orignal hydro_dep 0.95, etc.
+> - **Segment max 20 m** garanti par `_enforce_segment_max` post-pipeline.
+> - **Anti-régression institutionnalisée** : `ERREUR_HIERARCHIE_Ω`,
+>   `ERREUR_RADIAL_GENERATOR`, `corridor_isolated_no_nodes`, `attractors_missing`,
+>   `segment_above_max`, `multi_species_mixed`.
+> - **Test** `test_corridors_network_refactor_omega.py` ajouté au SELF-AUDIT runner.
+> - **Version engine** : `V2.0-PHASE-XI-SUPRA-N-Ω-NETWORK_LOCKED-2026-04`.
 
 ---
 
@@ -124,8 +144,8 @@ Toute modification de ce registre exige :
 ```
 SEALED  — Phase XI / X-B / X-C / X-D / XI-SUPRA / XI-SUPRA-B / XI-SUPRA-C /
          XI-SUPRA-G / XI-SUPRA-H / XI-SUPRA-K / XI-SUPRA-L / XI-SUPRA-M /
-         XI-L+1-M-PREP — 2026-04-20
-SHA-256 — 7b8dadf3e574cc5e5cada1bcb232f7c24597ea9be840985fd04770235c3c81fe
+         XI-L+1-M-PREP / XI-SUPRA-N-Ω-NETWORK_LOCKED — 2026-04-20
+SHA-256 — 476c650a28d1f25ffa93e4caf30f8c6fc13223d9e0a87bfbfb5d994bee8c393c
 TOTAL   — 41 engines scellés
 STATUS  — VERROUILLÉ IRRÉVOCABLEMENT
 ```
