@@ -299,6 +299,17 @@ const BionicLayersV8 = ({
           `<b style="color:${cfg.stroke}">${z.type}</b> ${z.score}/100${terrain}${excl}`,
           { sticky: true, opacity: 0.95 }
         );
+        // PHASE_ZERO_OPS_REFUS_VALIDATION_Ω (X50) — listener click → popup descriptif
+        poly.bindPopup(
+          `<div data-testid="zone-popup-${z.id}" style="min-width:220px">
+            <div style="font-weight:700;color:${cfg.stroke};font-size:13px;text-transform:uppercase">Zone ${z.type}</div>
+            <div style="margin-top:4px;font-size:12px"><b>Score</b> : ${z.score}/100</div>
+            ${t.canopy!==undefined?`<div style="font-size:11px;color:#555">Canopée ${Math.round(t.canopy*100)}% · Pente ${t.pente_deg}° · Eau ${t.distance_eau_m}m · Conf. therm. ${Math.round((t.thermal_comfort||0)*100)}%</div>`:''}
+            ${z.excluded?`<div style="font-size:11px;color:#EF4444;font-weight:600;margin-top:4px">EXCLUSION : ${z.exclusion_reason}</div>`:''}
+            <div style="margin-top:6px;font-size:10px;color:#888">Source : ${z.source||'V20-BUNDLE'}</div>
+          </div>`,
+          { maxWidth: 320, className: 'bionic-zone-popup-omega' }
+        );
         group.addLayer(poly);
       });
     }
@@ -747,6 +758,16 @@ const BionicLayersV8 = ({
           `<b style="color:${color}">Hotspot</b> intensite:${level+1}/5 (${Math.round(intensity)})`,
           { sticky: true, opacity: 0.95 }
         );
+        // X50 P0-3 — click listener → popup descriptif institutionnel
+        circle.bindPopup(
+          `<div data-testid="hotspot-popup-${h.id||''}" style="min-width:200px">
+            <div style="font-weight:700;color:${color};font-size:13px">Hotspot ${h.type||'activité'}</div>
+            <div style="margin-top:4px;font-size:12px"><b>Intensité</b> : ${level+1}/5 (${Math.round(intensity)})</div>
+            ${h.justification?`<div style="font-size:11px;color:#555">${h.justification}</div>`:''}
+            ${h.source?`<div style="font-size:10px;color:#888;margin-top:4px">Source : ${h.source}</div>`:''}
+          </div>`,
+          { maxWidth: 300 }
+        );
         group.addLayer(circle);
       });
     }
@@ -917,8 +938,75 @@ const BionicLayersV8 = ({
         }
 
         circle.bindTooltip(tooltip, { sticky: true, opacity: 0.95 });
+        // X50 P0-3 — click listener → popup descriptif institutionnel
+        circle.bindPopup(
+          `<div data-testid="affut-popup-${a.id||''}" style="min-width:220px">
+            <div style="font-weight:700;color:${AFFUT_BIONIC_ORANGE};font-size:13px">Affût ${typeLabel}</div>
+            <div style="margin-top:4px;font-size:12px"><b>Score</b> : ${a.score_affut_v12 || a.score}/100</div>
+            <div style="font-size:11px;color:#555">${a.justification || a.description || ''}</div>
+            <div style="font-size:11px;color:#555">Corridor ${a.classe_corridor_cible || a.corridor_type} à ${a.distance_corridor_m}m</div>
+            ${a.affut_repositionne?`<div style="font-size:11px;color:#4CAF50;font-weight:600">REPOSITIONNÉ AUTO V12</div>`:''}
+          </div>`,
+          { maxWidth: 320 }
+        );
         group.addLayer(circle);
       });
+    }
+
+    // ═══ Z-9: WIND_VECTORS-Omega V20 (PHASE_ZERO_OPS_REFUS_VALIDATION_Ω X50 P0-1) ═══
+    // Pipeline unifié : rendu direct depuis bundleData.wind_vectors (8 vecteurs
+    // institutionnels centrés waypoint). Élimine la dépendance Open-Meteo
+    // (429 Too Many Requests) et garantit la visibilité VENT en toutes conditions.
+    const windVectors = Array.isArray(bundleData.wind_vectors) ? bundleData.wind_vectors : [];
+    let windRendered = 0;
+    if (showWind && windVectors.length > 0) {
+      windVectors.forEach((wv, idx) => {
+        const s = wv.start;
+        const e = wv.end;
+        if (!s || !e || typeof s.lat !== 'number' || typeof e.lat !== 'number') return;
+        const speed = wv.speed_kmh || 0;
+        const decay = typeof wv.decay === 'number' ? wv.decay : 1;
+        // Couleur graduée par intensité
+        const windColor = speed < 5 ? '#4FC3F7' : speed < 15 ? '#00B0F0' : speed < 25 ? '#FFC300' : '#FF6A00';
+        const weight = Math.max(1.5, Math.min(4, 1 + speed / 10));
+        const opacity = Math.max(0.5, Math.min(1, decay));
+        const line = L.polyline([[s.lat, s.lng], [e.lat, e.lng]], {
+          color: windColor,
+          weight,
+          opacity,
+          lineCap: 'round',
+          interactive: true,
+          pane: 'markerPane',
+        });
+        // Flèche directionnelle au bout (petit triangle en divIcon)
+        const bearingRad = Math.atan2(e.lng - s.lng, e.lat - s.lat);
+        const arrowDeg = (bearingRad * 180 / Math.PI + 360) % 360;
+        const arrowIcon = L.divIcon({
+          className: 'wind-arrow-omega',
+          html: `<div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:10px solid ${windColor};transform:rotate(${arrowDeg}deg);transform-origin:50% 50%;"></div>`,
+          iconSize: [10, 10],
+          iconAnchor: [5, 5],
+        });
+        const arrowMarker = L.marker([e.lat, e.lng], { icon: arrowIcon, interactive: false, pane: 'markerPane' });
+        const tooltip = `<b style="color:${windColor}">Vent</b> ${wv.direction_deg}° · ${speed} km/h`;
+        line.bindTooltip(tooltip, { sticky: true, opacity: 0.95 });
+        line.bindPopup(
+          `<div data-testid="wind-popup-${wv.id || idx}" style="min-width:200px">
+            <div style="font-weight:700;color:${windColor};font-size:13px">Vecteur vent V20</div>
+            <div style="margin-top:4px;font-size:12px"><b>Direction</b> : ${wv.direction_deg}°</div>
+            <div style="font-size:12px"><b>Vitesse</b> : ${speed} km/h</div>
+            <div style="font-size:11px;color:#555">Décroissance : ${Math.round(decay * 100)}%</div>
+            <div style="font-size:10px;color:#888;margin-top:4px">Source : V20-BUNDLE (wind_vectors)</div>
+          </div>`,
+          { maxWidth: 260 }
+        );
+        group.addLayer(line);
+        group.addLayer(arrowMarker);
+        windRendered++;
+      });
+    }
+    if (typeof window !== 'undefined') {
+      window.__OMEGA_WIND_VECTORS_RENDERED__ = windRendered;
     }
 
     group.addTo(map);
@@ -932,7 +1020,11 @@ const BionicLayersV8 = ({
     const nutri = bundleData.nutrition || null;
     let nutriRendered = 0;
     let nutriRejected = 0;
-    if (showNutrition && nutri && Array.isArray(nutri.carte_carences)) {
+    // PHASE_ZERO_OPS_REFUS_VALIDATION_Ω (X50) — Réactivation stricte de
+    // PHASE_NUTRITION_SALINES_BINDING_Ω : aucun point nutritionnel autonome
+    // ne peut être rendu tant que NUTRITION_BY_SALINE_ONLY=true. La nutrition
+    // s'affiche UNIQUEMENT via double-clic sur une saline (cf. onSaline...).
+    if (showNutrition && !NUTRITION_SALINES_SPEC.NUTRITION_BY_SALINE_ONLY && nutri && Array.isArray(nutri.carte_carences)) {
       const besoinsMap = new Map();
       (nutri.carte_besoins || []).forEach(b => {
         besoinsMap.set(`${(b.lat||0).toFixed(5)}_${(b.lng||0).toFixed(5)}`, b);

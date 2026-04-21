@@ -36,6 +36,7 @@ import useSharedWeather from '@/hooks/useSharedWeather';
 import useBionicScoring from '@/hooks/useBionicScoring';
 import useBionicScoringV8 from '@/hooks/useBionicScoringV8';
 import useMapBundleV8 from '@/hooks/useMapBundleV8';
+import useCIStatusBeacon from '@/hooks/useCIStatusBeacon';
 import usePhaseAV8 from '@/hooks/usePhaseAV8';
 import useBionicStore from '@/stores/useBionicStore';
 import { enforceOverlayCompliance, enforcePositionLock, enforceRenderGuard, enforceLayoutFreeze } from '@/components/territoire/map/BCE4X_UIShield';
@@ -726,7 +727,14 @@ const MonTerritoireBionicPage = () => {
       fetchBundleV8(lat, lng, sp, undefined, undefined, windDeg);
     }
   }, [waypointCenter?.lat, waypointCenter?.lng, currentMapCenter?.lat, currentMapCenter?.lng, selectedSpecies, fetchScoreV8, fetchBundleV8]);
-  
+
+  // PHASE_ZERO_OPS_REFUS_VALIDATION_Ω (X50) — Heartbeat CI_STATUS_Ω runtime beacon
+  useCIStatusBeacon({
+    showWindFlow,
+    bundleDataV8,
+    waypoint: waypointCenter,
+  });
+
   // Les exclusions sont gérées 100% backend. Ces variables sont gardées pour compatibilité UI.
   const terrainExclusions = [];
   const isLoadingExclusions = false;

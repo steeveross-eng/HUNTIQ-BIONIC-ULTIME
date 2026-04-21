@@ -43,6 +43,8 @@ et conforme au registre SHA-256 `registry_lock_omega.py` (V30).
 - **2026-04** `PHASE_XV_CONTAMINATION_PARITY_CI_LOCK_Ω` — hook `pre-commit` CI
 - **2026-04-21** `PHASE_XVI_ENFORCE_SINGLE_PIPELINE_Ω` — pipeline unique + 20 sentinelles X20 — **57/57 Jest PASS**
 - **2026-04-21** `PHASE_ZERO_PLUS_CONSOLIDATION_GOUVERNANCE_Ω` (X30) — freeze + audit + 4 plans gouvernance + CI_STATUS_Ω dashboard + PHASE_LOCK_GATE
+- **2026-04-21** `PHASE_ZERO_OPS_RESTORATION_Ω` (X40) — unification pipeline zones V20 bundle (redirection `_fetchOrganicZonesV2`)
+- **2026-04-21** `PHASE_ZERO_OPS_REFUS_VALIDATION_Ω` (X50) — 4 correctifs P0 : VENT rendu V20 · nutrition-saline strict · listeners click (zones/affûts/hotspots/vent) · CI_STATUS runtime beacon
 
 ## Statut testing
 - Jest sentinelles : **5 suites / 57 tests / 57 PASS**

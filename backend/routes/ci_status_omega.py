@@ -21,6 +21,21 @@ from fastapi.responses import JSONResponse, PlainTextResponse
 
 router = APIRouter(prefix="/api/omega", tags=["CI_STATUS_Ω"])
 
+# PHASE_ZERO_OPS_REFUS_VALIDATION_Ω (X50) — mémoire in-process pour beacon runtime
+# Zéro dépendance externe : lecture/écriture atomique via dict. Persistance volontairement
+# non requise (rafraîchi à chaque redémarrage par le heartbeat frontend).
+_RUNTIME_BEACON: dict = {
+    "received_at": None,
+    "wind_vectors_rendered": 0,
+    "nutrition_saline_bound": True,
+    "listener_count": 0,
+    "salines_present": 0,
+    "showWindFlow": False,
+    "raw_render_attempts": 0,
+    "anthropic_failures": 0,
+    "waypoint": None,
+}
+
 REPO_ROOT = Path("/app")
 FRONTEND_DIR = REPO_ROOT / "frontend"
 MEMORY_DIR = REPO_ROOT / "memory"
@@ -129,34 +144,64 @@ def _fallback_scan() -> dict:
     }
 
 
+def _runtime_beacon_status() -> dict:
+    """Lecture du beacon runtime envoyé par le frontend. Évalue la cohérence."""
+    b = dict(_RUNTIME_BEACON)
+    violations = []
+    # Règle 1 : si showWindFlow True alors wind_vectors_rendered > 0
+    if b.get("showWindFlow") and (b.get("wind_vectors_rendered", 0) == 0):
+        violations.append("wind_vectors_rendered=0 alors que showWindFlow=true")
+    # Règle 2 : si salines_present > 0 alors nutrition_saline_bound doit être true
+    if b.get("salines_present", 0) > 0 and not b.get("nutrition_saline_bound", True):
+        violations.append("nutrition_saline_bound=false alors qu'une saline est présente")
+    # Règle 3 : listener_count doit être >= 4 (zones + corridors + affuts + hotspots)
+    if b.get("listener_count", 0) < 4:
+        violations.append(f"listener_count={b.get('listener_count',0)} < 4 (seuil minimal)")
+    # Règle 4 : zéro raw render attempt
+    if b.get("raw_render_attempts", 0) > 0:
+        violations.append(f"raw_render_attempts={b['raw_render_attempts']}")
+    # Règle 5 : zéro anthropic failure
+    if b.get("anthropic_failures", 0) > 0:
+        violations.append(f"anthropic_failures={b['anthropic_failures']}")
+    return {
+        "beacon_received": b.get("received_at") is not None,
+        "beacon": b,
+        "violations": violations,
+        "conforming": len(violations) == 0 and b.get("received_at") is not None,
+    }
+
+
 def _build_status() -> dict:
     sentinels = _count_sentinels()
     hook = _hook_status()
     v30 = _v30_status()
     freeze = _freeze_status()
     fallbacks = _fallback_scan()
+    runtime = _runtime_beacon_status()
 
     all_green = (
         sentinels["tests_declared_total"] >= EXPECTED_SENTINEL_COUNT
         and hook["active"]
         and v30["intact"]
         and fallbacks["status"] == "CLEAN"
+        and runtime["conforming"]
     )
 
     return {
-        "version": "CI_STATUS_Ω_X30",
+        "version": "CI_STATUS_Ω_X50",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "overall_status": "OK" if all_green else "ATTENTION",
         "overall_conforming": all_green,
         "pipeline": {
             "single_pipeline_enforced": True,
-            "protocol": "VERSION_INSTITUTIONNELLE_RENFORCÉE_X30",
+            "protocol": "VERSION_INSTITUTIONNELLE_RENFORCÉE_X50",
         },
         "sentinels_jest": sentinels,
         "pre_commit_hook": hook,
         "registry_lock_v30": v30,
         "freeze_state": freeze,
         "fallback_scan": fallbacks,
+        "runtime_beacon": runtime,
         "zero_tolerance": {
             "raw_render_attempts": "monitored via window.__RAW_RENDER_ATTEMPTS__",
             "anthropic_render_failures": "monitored via window.__ANTHROPIC_RENDER_FAILURES__",
@@ -222,4 +267,38 @@ async def ci_status_gate():
         "gate": "GREEN" if s["overall_conforming"] else "RED",
         "status": s["overall_status"],
         "generated_at": s["generated_at"],
+        "runtime_violations": s["runtime_beacon"].get("violations", []),
+    })
+
+
+@router.post("/ci-status/runtime-beacon")
+async def ci_status_runtime_beacon(payload: dict):
+    """PHASE_ZERO_OPS_REFUS_VALIDATION_Ω (X50) — Beacon runtime frontend.
+
+    Le frontend POST toutes les ~15s l'état réel observé côté utilisateur :
+    - wind_vectors_rendered : nombre de vecteurs VENT effectivement rendus
+    - nutrition_saline_bound : True si aucun point nutritionnel autonome rendu
+    - listener_count : nombre d'écouteurs UI actifs (zones+corridors+affuts+hotspots)
+    - salines_present : nombre de salines sur la carte
+    - showWindFlow : état du toggle VENT
+    - raw_render_attempts : window.__RAW_RENDER_ATTEMPTS__.count
+    - anthropic_failures : window.__ANTHROPIC_RENDER_FAILURES__.length
+    - waypoint : {lat, lng}
+    """
+    global _RUNTIME_BEACON
+    _RUNTIME_BEACON = {
+        "received_at": datetime.now(timezone.utc).isoformat(),
+        "wind_vectors_rendered": int(payload.get("wind_vectors_rendered") or 0),
+        "nutrition_saline_bound": bool(payload.get("nutrition_saline_bound", True)),
+        "listener_count": int(payload.get("listener_count") or 0),
+        "salines_present": int(payload.get("salines_present") or 0),
+        "showWindFlow": bool(payload.get("showWindFlow", False)),
+        "raw_render_attempts": int(payload.get("raw_render_attempts") or 0),
+        "anthropic_failures": int(payload.get("anthropic_failures") or 0),
+        "waypoint": payload.get("waypoint"),
+    }
+    return JSONResponse({
+        "received": True,
+        "stored_at": _RUNTIME_BEACON["received_at"],
+        "violations": _runtime_beacon_status()["violations"],
     })

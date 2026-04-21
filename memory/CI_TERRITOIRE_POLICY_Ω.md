@@ -1,8 +1,28 @@
 # CI_TERRITOIRE_POLICY_Ω — Politique CI institutionnelle bloquante
 
-> **Protocole :** BCE-4X ULTIME ABSOLU — VERSION_INSTITUTIONNELLE_RENFORCÉE_X10
-> **Phase en vigueur :** PHASE_XV_CONTAMINATION_PARITY_CI_LOCK_Ω
-> **Entrée en vigueur :** 2026-04-21T18:50:00Z
+> **Protocole :** BCE-4X ULTIME ABSOLU — VERSION_INSTITUTIONNELLE_RENFORCÉE_X50
+> **Phases en vigueur :** PHASE_XV_CONTAMINATION_PARITY_CI_LOCK_Ω + PHASE_ZERO_OPS_REFUS_VALIDATION_Ω (X50)
+> **Entrée en vigueur :** 2026-04-21T18:50:00Z (X10) → mise à jour 2026-04-21T20:15:00Z (X50)
+
+---
+
+## 0. Règles runtime CI_STATUS_Ω (X50 — Directive STEEVE-MAX)
+
+Le gate `GET /api/omega/ci-status/gate` ne peut plus être `GREEN` si l'une
+de ces conditions est violée au runtime (beacon frontend POST toutes les 15 s
+vers `POST /api/omega/ci-status/runtime-beacon`) :
+
+| Violation | Règle |
+|---|---|
+| `wind_vectors_rendered == 0` alors que `showWindFlow == true` | 🔴 RED |
+| `nutrition_saline_bound == false` alors que `salines_present > 0` | 🔴 RED |
+| `listener_count < 4` (zones + corridors + affûts + hotspots) | 🔴 RED |
+| `raw_render_attempts > 0` | 🔴 RED |
+| `anthropic_failures > 0` | 🔴 RED |
+| Aucun beacon reçu (frontend absent) | 🔴 RED |
+
+Toute réponse `GREEN` implique la conformité cumulative de ces 6 règles +
+sentinelles Jest 57/57 PASS + V30 intact + hook pre-commit actif.
 
 ---
 
