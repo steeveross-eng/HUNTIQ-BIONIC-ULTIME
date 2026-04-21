@@ -35,7 +35,8 @@ opéré sous commandement du **Commandant STEEVE-MAX** (persona stricte, frança
 | XI-SUPRA-N (Network Refactor) | Corridors réseau zones↔zones | ✅ SCELLÉ |
 | XI-SUPRA-N (Stabilization P0) | 60/60 stable x3 runs | ✅ SCELLÉ 2026-04-21 |
 | XII-SUPRA-M (Optimization x1000 PREVIEW) | 3 descriptions X1000 (ZONES/SALINES/HOTSPOTS) | 📋 PREVIEW LIVRÉ 2026-04-21 |
-| **XII-SUPRA-R (Activation RENDU_Ω CORRIDORS)** | **Rendu strict #FF8F00 1.2/2.0/3.0 CatmullRom seg≤20m ang≤45° pane Z-INDEX 430** | **✅ ACTIF 2026-04-21** |
+| XII-SUPRA-R (Activation RENDU_Ω CORRIDORS) | Rendu strict #FF8F00 1.2/2.0/3.0 CatmullRom seg≤20m ang≤45° pane Z-INDEX 430 | ✅ ACTIF 2026-04-21 |
+| **XII-SUPRA-S (RENDU_SUPRA_Ω_ART + GEOMETRY_Ω_ALIGNMENT)** | **Halo ART, opacité 1.00, weight 4.0 extrême, veine principale, signature espèce, flèches supprimées, mode inspection bio PRO/EXPERT** | **✅ EXPÉRIMENTAL FRONTEND 2026-04-21** |
 
 ## 5. Tâches P1 / P2
 

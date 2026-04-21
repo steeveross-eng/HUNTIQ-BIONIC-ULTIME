@@ -22,7 +22,7 @@ import L from 'leaflet';
 import { NUTRITION_SEVERITY_COLORS } from '@/config/territoire_defaults';
 import { validateElement, logRenderCycle } from './RenderGuardOmega';
 import { buildInstitutionalPopup, FichePopup } from './InstitutionalPopup';
-import { RENDU_OMEGA, resolveCorridorStyleOmega, isCorridorsVisibleAtZoom, getRenduRules, getOrganicCorridors, resolveCorridorStyleOrganic, clampCorridorWeight, validateCorridorGeometry, renduOmegaPaneName } from '@/lib/renduOmegaStore';
+import { RENDU_OMEGA, resolveCorridorStyleOmega, isCorridorsVisibleAtZoom, getRenduRules, getOrganicCorridors, resolveCorridorStyleOrganic, clampCorridorWeight, validateCorridorGeometry, renduOmegaPaneName, prepareDisplayPath, detectConvergenceMainVein, computeSupraArtHaloSpec, isInspectionBiologiqueActive, computeDirectionalLuminosityGradient } from '@/lib/renduOmegaStore';
 
 // ═══ PALETTE BCE-4X V9-INSTITUTIONNEL ═══
 const ZONE_COLORS = {
@@ -234,128 +234,162 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-3: CORRIDORS-Ω — PHASE XII-SUPRA-R (RENDU-Ω STRICT) ═══
-    // Règles verrouillées (RENDUS_CORRIDORS_OMEGA.md) — PHASE XII-SUPRA-R :
-    //   • Couleur unique        #FF8F00 strict (aucune variation)
-    //   • Épaisseurs STRICTES   1.2 / 2.0 / 3.0 px — clamp obligatoire post-zoom
-    //   • Opacité minimale      ≥ 0.75 (défaut 0.85)
-    //   • Géométrie              Catmull-Rom, 25-30 pts legacy / 60-120 pts organic
-    //   • Segment ≤ 20 m         validation frontend — path non-conforme rejeté
-    //   • Angle ≤ 45°            validation frontend — path non-conforme rejeté
-    //   • Continuité              aucune rupture autorisée (points null filtrés)
-    //   • minZoom                13 (couche masquée à zoom<13)
-    //   • Z-index strict          pane dédié via renduOmegaPaneName('corridors')
+    // ═══ Z-3: CORRIDORS-Ω — PHASE XII-SUPRA-S (RENDU_SUPRA_Ω_ART + GEOMETRY_Ω_ALIGNMENT) ═══
+    // Règles SUPRA_S strictes (PHASE_XII_SUPRA_S_RENDU_SUPRA_Ω_ART.md) :
+    //   • Couleur unique        #FF8F00 (aucune variation)
+    //   • Épaisseurs STRICTES   1.2 / 2.0 / 3.0 / 4.0 (extrême=4.0)
+    //   • Opacité                1.00 OBLIGATOIRE (< 1.00 = ERREUR)
+    //   • Géométrie              Catmull-Rom 25-30 pts (legacy) / 60-120 (organic)
+    //   • Segment ≤ 20 m         enforceSegmentMax
+    //   • Angle ≤ 45°            despikePath
+    //   • Rayon fonctionnel      420-780 m masqué au rendu
+    //   • AUCUNE FLÈCHE          suppression définitive des chevrons directionnels
+    //   • Veine principale       ≥ 2 corridors convergent → boost halo externe
+    //   • Halo intelligent       interne (#FFD380) + externe adaptatif fond
+    //   • Signature espèce       micro-oscillations 0.3-0.7 %
+    //   • Mode inspection bio    pulsation lente (PRO/EXPERT, désactivé par défaut)
     const corridorsVisibleAtZoom = isCorridorsVisibleAtZoom(currentZoom);
     // Source corridors : ORGANIC si disponible & activé, sinon bundle legacy
     const useOrganic = useOrganicCorridors && organicBundle?.corridors?.length > 0;
     const corridorsToRender = useOrganic ? organicBundle.corridors : corridors;
     const corridorsPaneName = renduOmegaPaneName('corridors');
     const rejectedCorridors = [];
+    // SUPRA_S — Détection convergence pour promotion veine principale
+    const mainVeinIdxs = detectConvergenceMainVein(corridorsToRender);
+    const inspectionBioOn = isInspectionBiologiqueActive();
+    // Centre d'analyse pour rayon fonctionnel = waypoint courant
+    const waypointCenter_latlng = waypointCenter
+      ? [waypointCenter.lat, waypointCenter.lng]
+      : null;
+
     if (showCorridors && corridorsToRender.length > 0 && corridorsVisibleAtZoom) {
-      corridorsToRender.forEach(c => {
+      corridorsToRender.forEach((c, corridorIdx) => {
         const rawPath = c.path || [[c.start?.lat, c.start?.lng], [c.end?.lat, c.end?.lng]];
-        // Filtrage des points invalides — garantit continuité (§ RENDU-Ω)
-        const path = (Array.isArray(rawPath) ? rawPath : []).filter(
-          p => p && p[0] != null && p[1] != null && Number.isFinite(p[0]) && Number.isFinite(p[1])
-        );
+        const speciesForSig = c.species_profile || species;
 
-        // Validation géométrique stricte RENDU-Ω (segment ≤ 20m, angle ≤ 45°, continuité)
-        // Mode non-strict sur le nombre de points pour ne pas masquer les corridors legacy
-        // valides ; les violations segment/angle sont bloquantes.
-        const geom = validateCorridorGeometry(path, { isOrganic: useOrganic, strictMinPoints: false });
-        const hasBlockingViolation = geom.violations.some(v =>
-          v.rule === 'segment_over_max' || v.rule === 'angle_over_max' || v.rule === 'discontinuity'
-        );
-        if (hasBlockingViolation || path.length < 2) {
-          rejectedCorridors.push({ id: c.id, violations: geom.violations, metrics: geom.metrics });
-          return; // corridor écarté du rendu (garde-fou RENDU-Ω, n'affecte pas la logique)
-        }
+        // ═══ GEOMETRY_Ω_ALIGNMENT (BLOC B) ═══
+        // Pipeline : déspike → segment≤20m → resample CatmullRom 25-30 →
+        // signature espèce → clip rayon fonctionnel.
+        // Retourne une LISTE de sous-paths (clip peut diviser en plusieurs).
+        const displaySubpaths = prepareDisplayPath(rawPath, {
+          species: speciesForSig,
+          isOrganic: useOrganic,
+          center: waypointCenter_latlng,
+          clip: true,
+        });
 
-        // Style strict RENDU-Ω — clamp OBLIGATOIRE aux 3 valeurs autorisées
+        // Validation RENDU-Ω stricte sur chaque sous-path
         const styleOmega = useOrganic
           ? resolveCorridorStyleOrganic(c)
           : resolveCorridorStyleOmega(c);
-        const color = RENDU_OMEGA.color;           // #FF8F00 strict
-        const weight = clampCorridorWeight(styleOmega.weight); // 1.2 / 2.0 / 3.0 strict (ignore corridorWeightFactor)
-        const opacity = Math.max(RENDU_OMEGA.opacityMin, styleOmega.opacity); // ≥ 0.75
+        const color = RENDU_OMEGA.color;                         // #FF8F00 strict
+        const weight = clampCorridorWeight(styleOmega.weight);   // 1.2/2.0/3.0/4.0
+        const opacity = 1.0;                                     // SUPRA_S : opacity = 1.00 strict
+        const isMainVein = mainVeinIdxs.has(corridorIdx);
 
-        // Halo Phase M — sub-polyline plus large, opacité basse (§3 directive)
-        if (useOrganic && styleOmega.haloEnabled) {
-          const halo = L.polyline(path, {
-            color: styleOmega.gradientTo || color,
-            weight: weight + 2.2,
-            opacity: 0.18,
+        // Halo spec SUPRA_ART — adaptatif fond "forest" (par défaut)
+        const halo = computeSupraArtHaloSpec(weight, { background: 'forest', isMainVein });
+
+        displaySubpaths.forEach((path) => {
+          if (!Array.isArray(path) || path.length < 2) return;
+
+          // Validation finale géométrique (garde-fou — rejet si non conforme)
+          const geom = validateCorridorGeometry(path, { isOrganic: useOrganic, strictMinPoints: false });
+          const blocking = geom.violations.some(v =>
+            v.rule === 'segment_over_max' || v.rule === 'angle_over_max' || v.rule === 'discontinuity'
+          );
+          if (blocking) {
+            rejectedCorridors.push({ id: c.id, violations: geom.violations, metrics: geom.metrics });
+            return;
+          }
+
+          // ═══ RENDU SUPRA_ART (BLOC A) — 3 couches superposées ═══
+          // 1. Halo EXTERNE adaptatif (fond / veine principale)
+          const extHalo = L.polyline(path, {
+            color: halo.external.color,
+            weight: halo.external.weight,
+            opacity: halo.external.opacity,
             lineCap: 'round',
             lineJoin: 'round',
             smoothFactor: 0,
             interactive: false,
             pane: corridorsPaneName,
           });
-          halo.options._renduOmega = { layer: 'halo', weight: weight + 2.2 };
-          group.addLayer(halo);
-        }
+          extHalo.options._renduOmega = { layer: 'halo_external', mainVein: isMainVein };
+          group.addLayer(extHalo);
 
-        const line = L.polyline(path, {
-          color,
-          weight,
-          opacity,
-          lineCap: 'round',
-          lineJoin: 'round',
-          smoothFactor: 0,  // aucune simplification Leaflet (§ RENDU-Ω)
-          interactive: true,
-          pane: corridorsPaneName,
-        });
-        line.options._renduOmega = {
-          version: 'V1.1-PHASE-XII-SUPRA-R-RENDU-STRICT-2026-04',
-          source: useOrganic ? 'ORGANIC' : 'RENDU_OMEGA',
-          color, weight, opacity, min_zoom: RENDU_OMEGA.minZoom,
-          hierarchy: c.hierarchy || 'legacy',
-          geom_metrics: geom.metrics,
-        };
-
-        // Chevron directionnel (fréquence high si ORGANIC — §3 directive)
-        if (path.length >= 3) {
-          const chevronPositions = useOrganic
-            ? [Math.floor(path.length * 0.3), Math.floor(path.length * 0.6), Math.floor(path.length * 0.85)]
-            : [Math.floor(path.length / 2)];
-          chevronPositions.forEach((midIdx) => {
-            const prev = path[Math.max(0, midIdx - 1)] || path[0];
-            const mid = path[midIdx];
-            const next = path[Math.min(path.length - 1, midIdx + 1)] || path[path.length - 1];
-            const dx = next[1] - prev[1];
-            const dy = next[0] - prev[0];
-            const len = Math.sqrt(dx * dx + dy * dy);
-            if (len > 0.0001) {
-              const arrowSize = 0.00022;
-              const nx = dx / len;
-              const ny = dy / len;
-              const tipLat = mid[0] + ny * arrowSize;
-              const tipLng = mid[1] + nx * arrowSize;
-              const leftLat = mid[0] - ny * arrowSize * 0.6 + nx * arrowSize * 0.5;
-              const leftLng = mid[1] - nx * arrowSize * 0.6 - ny * arrowSize * 0.5;
-              const rightLat = mid[0] - ny * arrowSize * 0.6 - nx * arrowSize * 0.5;
-              const rightLng = mid[1] - nx * arrowSize * 0.6 + ny * arrowSize * 0.5;
-              const chev = L.polyline(
-                [[leftLat, leftLng], [tipLat, tipLng], [rightLat, rightLng]],
-                { color, weight, opacity, lineCap: 'round', lineJoin: 'round', smoothFactor: 0, interactive: false, fill: false, pane: corridorsPaneName }
-              );
-              group.addLayer(chev);
-            }
+          // 2. Halo INTERNE ultra-léger (glow chaud)
+          const intHalo = L.polyline(path, {
+            color: halo.inner.color,
+            weight: halo.inner.weight,
+            opacity: halo.inner.opacity,
+            lineCap: 'round',
+            lineJoin: 'round',
+            smoothFactor: 0,
+            interactive: false,
+            pane: corridorsPaneName,
           });
-        }
+          intHalo.options._renduOmega = { layer: 'halo_internal' };
+          group.addLayer(intHalo);
 
-        const costStr = c.cost_surface !== undefined ? ` | cost:${c.cost_surface}` : '';
-        const hierarchyStr = c.hierarchy ? ` [${c.hierarchy.toUpperCase()}]` : '';
-        const netStr = c.is_network_link ? ' [RÉSEAU]' : '';
-        const intensityLabel = (typeof c.intensity === 'number')
-          ? `int:${Math.round(c.intensity)}`
-          : `int:${c.type || c.intensity || 'normal'}`;
-        const tagLabel = useOrganic ? 'CORRIDOR-ORGANIC-Ω' : 'CORRIDOR-Ω';
-        line.bindTooltip(
-          `<b style="color:${color}">${tagLabel}</b>${hierarchyStr} ${intensityLabel}${costStr} | ${c.species_profile || ''}${netStr}`,
-          { sticky: true, opacity: 0.95 }
-        );
-        group.addLayer(line);
+          // 3. Ligne PRINCIPALE corridor (#FF8F00, opacity=1.00, weight strict)
+          const line = L.polyline(path, {
+            color,
+            weight,
+            opacity,
+            lineCap: 'round',
+            lineJoin: 'round',
+            smoothFactor: 0,
+            interactive: true,
+            pane: corridorsPaneName,
+          });
+          line.options._renduOmega = {
+            version: 'V1.2-PHASE-XII-SUPRA-S-ART-2026-04',
+            source: useOrganic ? 'ORGANIC' : 'RENDU_SUPRA_OMEGA',
+            color, weight, opacity, min_zoom: RENDU_OMEGA.minZoom,
+            hierarchy: isMainVein ? 'veine_principale' : (c.hierarchy || 'legacy'),
+            geom_metrics: geom.metrics,
+            no_directional_arrow: true,  // SUPRA_S §1 : flèches supprimées définitivement
+            species_signature: speciesForSig,
+            main_vein: isMainVein,
+          };
+
+          // ═══ MODE INSPECTION BIOLOGIQUE (BLOC C) ═══
+          // PRO/EXPERT uniquement — désactivé par défaut.
+          // Pulsation 0.3-0.5 % : surbrillance directionnelle en sous-segments.
+          if (inspectionBioOn && path.length >= 6) {
+            const gradSteps = computeDirectionalLuminosityGradient(path, 6);
+            gradSteps.forEach((g) => {
+              const subLine = L.polyline(g.sub, {
+                color: '#FFB347', // ambre clair, pulsation flux
+                weight: weight * 0.6,
+                opacity: Math.min(1.0, 0.55 * g.luminosityBoost),
+                lineCap: 'round',
+                lineJoin: 'round',
+                smoothFactor: 0,
+                interactive: false,
+                pane: corridorsPaneName,
+              });
+              subLine.options._renduOmega = { layer: 'inspection_bio_flux' };
+              group.addLayer(subLine);
+            });
+          }
+
+          const costStr = c.cost_surface !== undefined ? ` | cost:${c.cost_surface}` : '';
+          const hierarchyStr = isMainVein
+            ? ' [VEINE PRINCIPALE]'
+            : (c.hierarchy ? ` [${c.hierarchy.toUpperCase()}]` : '');
+          const netStr = c.is_network_link ? ' [RÉSEAU]' : '';
+          const intensityLabel = (typeof c.intensity === 'number')
+            ? `int:${Math.round(c.intensity)}`
+            : `int:${c.type || c.intensity || 'normal'}`;
+          const tagLabel = useOrganic ? 'CORRIDOR-ORGANIC-Ω' : 'CORRIDOR-SUPRA-Ω-ART';
+          line.bindTooltip(
+            `<b style="color:${color}">${tagLabel}</b>${hierarchyStr} ${intensityLabel}${costStr} | ${speciesForSig || ''}${netStr}`,
+            { sticky: true, opacity: 0.95 }
+          );
+          group.addLayer(line);
+        });
       });
     }
 
