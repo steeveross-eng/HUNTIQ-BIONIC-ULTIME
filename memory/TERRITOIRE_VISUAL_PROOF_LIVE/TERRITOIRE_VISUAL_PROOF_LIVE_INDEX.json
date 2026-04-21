@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-04-21T00:27:35.931750+00:00",
+  "generated_at": "2026-04-21T01:29:29.815498+00:00",
   "engine_render_version": "V1-PHASE-XI-SUPRA-2026-04",
   "engine_visual_proof_live_version": "V1-PHASE-XI-SUPRA-C-2026-04",
   "bundle_version": "TERRITOIRE-V10-SUPRA",
   "frontend_version": "BionicLayersV8 + Phase XI-SUPRA extensions",
   "capture_user": "steeve-max-capture@huntiq.com",
-  "registry_sha256": "476c650a28d1f25ffa93e4caf30f8c6fc13223d9e0a87bfbfb5d994bee8c393c",
+  "registry_sha256": "29e1ee187e429bdd9a055dacea7770a921ed5f57d49cf838c733557f442b2add",
   "document_maitre_sha256": "6aff169f73531a46a38f5caff9defc7cadac6745029fa15d73c0174a1dfc2672",
   "captures": [
     {
@@ -14,9 +14,9 @@
       "filename": "TERRITOIRE_macro_live.png",
       "path": "/app/memory/TERRITOIRE_VISUAL_PROOF_LIVE/TERRITOIRE_macro_live.png",
       "exists": true,
-      "size_bytes": 3124317,
-      "sha256": "f4b0aa8dba5795be9604a81bce4707756bb836615ce80fcd8a285cec4ed80ba7",
-      "hmac_sha256": "c301af426858e194a3ec4068386c4b7a04c9adef32deff9d38ba04c294d201c9",
+      "size_bytes": 3129646,
+      "sha256": "23cda341542a8bccc895563a0a827f98c988dadf8b389139f929c7b74df178bf",
+      "hmac_sha256": "a99ed19dae52dce562202a2e12d9bdedd2a15b81920357a0ebc0fe4528e1c476",
       "layers_visible": [
         "corridors",
         "zones_fauniques_canada",
@@ -33,9 +33,9 @@
       "filename": "TERRITOIRE_mid_live.png",
       "path": "/app/memory/TERRITOIRE_VISUAL_PROOF_LIVE/TERRITOIRE_mid_live.png",
       "exists": true,
-      "size_bytes": 3128352,
-      "sha256": "3318278cb74dc5b6264f596d80950174749ecf956fe33d5c7085ebfd6af35c8f",
-      "hmac_sha256": "a08c73b03a90b914f64b6eafb1a8ae4915832a2b719c625d7ac6444a65e667af",
+      "size_bytes": 3120910,
+      "sha256": "8efd7423de90af1bd8f741e8cfa1bd0e715e53fd1bcbda8e9b9bcf534d694d4d",
+      "hmac_sha256": "7d0a6ffc23c0e119ba8342733afbecf995ddac878230ce575bfb9f549876a650",
       "layers_visible": [
         "corridors",
         "zones_ecologiques",
@@ -83,8 +83,8 @@
   "all_present": true,
   "algorithm": "HMAC-SHA256",
   "playwright_log": {
-    "returncode": 1,
-    "stdout": "[CAPTURE-D] base_url=http://localhost:3000 output_dir=/app/memory/TERRITOIRE_VISUAL_PROOF_LIVE api=http://localhost:8001\n[AUTH] OK token=eyJhbGciOiJIUzI1NiIsInR5… role=admin\n",
-    "stderr": "Traceback (most recent call last):\n  File \"/app/backend/engines/v8_institutional/visual_proof_live_playwright.py\", line 263, in <module>\n    raise SystemExit(run(args.base_url, Path(args.output_dir)))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/app/backend/engines/v8_institutional/visual_proof_live_playwright.py\", line 57, in run\n    browser = p.chromium.launch(\n              ^^^^^^^^^^^^^^^^^^\n  File \"/root/.venv/lib/python3.11/site-packages/playwright/sync_api/_generated.py\", line 14566, in launch\n    self._sync(\n  File \"/root/.venv/lib/python3.11/site-packages/playwright/_impl/_sync_base.py\", line 115, in _sync\n    return task.result()\n           ^^^^^^^^^^^^^\n  File \"/root/.venv/lib/python3.11/site-packages/playwright/_impl/_browser_type.py\", line 97, in launch\n    await self._channel.send(\n  File \"/root/.venv/lib/python3.11/site-packages/playwright/_impl/_connection.py\", line 69, in send\n    return await self._connection.wrap_api_call(\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/.venv/lib/python3.11/site-packages/playwright/_impl/_connection.py\", line 559, in wrap_api_call\n    raise rewrite_error(error, f\"{parsed_st['apiName']}: {error}\") from None\nplaywright._impl._errors.Error: BrowserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1208/chrome-linux/headless_shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     playwright install                                     ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝\n"
+    "returncode": -1,
+    "stdout": "",
+    "stderr": "TIMEOUT 240s"
   }
 }

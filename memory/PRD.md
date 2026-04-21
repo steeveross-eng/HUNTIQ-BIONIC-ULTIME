@@ -33,18 +33,28 @@ opéré sous commandement du **Commandant STEEVE-MAX** (persona stricte, frança
 | XI-SUPRA-L (organic) | Moteur IA-CORRIDORS-ORGANIC-Ω | ✅ SCELLÉ |
 | XI-L+1-M-PREP | Frontend organique 120 pts + templates | ✅ SCELLÉ |
 | XI-SUPRA-N (Network Refactor) | Corridors réseau zones↔zones | ✅ SCELLÉ |
-| **XI-SUPRA-N (Stabilization P0)** | **60/60 stable x3 runs** | **✅ SCELLÉ 2026-04-21** |
+| XI-SUPRA-N (Stabilization P0) | 60/60 stable x3 runs | ✅ SCELLÉ 2026-04-21 |
+| **XII-SUPRA-M (Optimization x1000 PREVIEW)** | **3 descriptions X1000 (ZONES/SALINES/HOTSPOTS)** | **📋 PREVIEW LIVRÉ 2026-04-21** |
 
 ## 5. Tâches P1 / P2
 
-### P1 — PHASE M OPÉRATIONNELLE (next)
-Optimisation x1000 des engines **ZONES / SALINES / HOTSPOTS** en utilisant
-les templates Phase M_PREP :
-- `/app/memory/ZONES_X1000_TEMPLATE.md`
-- `/app/memory/SALINES_X1000_TEMPLATE.md` (à confirmer)
-- `/app/memory/HOTSPOTS_X1000_TEMPLATE.md` (à confirmer)
-- Fichiers cibles : `engines/v8_institutional/zones_organic_v1.py` +
-  `engine_salines_v11_supra.py` + `engine_hotspots.py`
+### P1 — PHASE XII-SUPRA-M OPTIMIZATION x1000 (PREVIEW LIVRÉ 2026-04-21)
+
+📋 **PREVIEW EN ATTENTE DE VALIDATION COMMANDANT**
+
+Fichiers livrés :
+- `/app/memory/PHASE_M_PREVIEW/ZONES_X1000_DESCRIPTION.md` (15 sections)
+- `/app/memory/PHASE_M_PREVIEW/SALINES_X1000_DESCRIPTION.md` (15 sections)
+- `/app/memory/PHASE_M_PREVIEW/HOTSPOTS_X1000_DESCRIPTION.md` (15 sections)
+- `/app/memory/PHASE_XII_SUPRA_M_OPTIMIZATION_REPORT_PREVIEW.md`
+
+**Aucune modification d'engine effectuée.** Attente de l'ordre explicite :
+`"VALIDÉ — PROCÉDER À L'IMPLANTATION"` pour :
+1. Implanter `hotspots_organic_v1.py` (gap ×1200)
+2. Implanter `zones_organic_v1.py` (gap ×800)
+3. Implanter `salines_organic_v1.py` (gap ×150)
+4. Exécuter SELF-AUDIT-Ω 60/60 x3 + bump Registry V30
+5. Institutionnaliser : 41 → 44 engines
 
 ### P2 — Upload manuel `CriticalHabitat.zip`
 Contournement pare-feu (action Commandant requise).
