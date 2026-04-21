@@ -521,6 +521,19 @@ const BionicLayersV8 = ({
             `<b style="color:${color}">${tagLabel}</b>${hierarchyStr} ${intensityLabel}${costStr}${salineStr} | ${speciesForSig || ''}${netStr}`,
             { sticky: true, opacity: 0.95 }
           );
+          // X80-ABSOLU-Ω — popup corridor descriptif (click listener)
+          line.bindPopup(
+            `<div data-testid="corridor-popup-${c.id || corridorIdx}" style="min-width:240px">
+              <div style="font-weight:700;color:${color};font-size:13px">Corridor ${c.type || c.intensity || 'normal'}</div>
+              <div style="margin-top:4px;font-size:12px"><b>Hiérarchie</b> : ${hierarchyStr || 'n/a'}</div>
+              <div style="font-size:12px"><b>Intensité</b> : ${intensityLabel}</div>
+              ${c.distance_m ? `<div style="font-size:11px;color:#555">Distance : ${Math.round(c.distance_m)} m</div>` : ''}
+              ${c.score ? `<div style="font-size:11px;color:#555">Score : ${c.score}/100</div>` : ''}
+              <div style="font-size:10px;color:#888;margin-top:4px">Source : ${useOrganic ? 'ENGINE-IA-CORRIDORS-ORGANIC-Ω (XI-SUPRA-M)' : 'CORRIDOR-SUPRA-Ω-ART-v2'} · style ${tagLabel}</div>
+              <div style="font-size:10px;color:#888">Style : Catmull-Rom 28 pts · couleur ${color}</div>
+            </div>`,
+            { maxWidth: 320 }
+          );
           group.addLayer(line);
         });
 
@@ -555,6 +568,10 @@ const BionicLayersV8 = ({
         }
       } catch (_e) { /* noop */ }
     }
+    // X80-ABSOLU-Ω — signal conformité style corridors (RENDU-Ω orange ambre + Catmull-Rom 28 pts)
+    if (typeof window !== 'undefined') {
+      window.__OMEGA_CORRIDORS_STYLE_CONFORME__ = showCorridors && corridorsToRender.length > 0;
+    }
 
     // ═══ Z-4: CONTAMINATION-Omega — STYLE CONTAM-Ω V12-R5 ═══
     // Directive IV: fill #FF0000 opacity 0.35-0.40, stroke #FF6A00 2.5px dash "6 4"
@@ -587,6 +604,11 @@ const BionicLayersV8 = ({
         );
         group.addLayer(poly);
       });
+    }
+    // X80-ABSOLU-Ω — signal contamination layers visible
+    if (typeof window !== 'undefined') {
+      const contaminationList = Array.isArray(contamination) ? contamination : (contamination ? [contamination] : []);
+      window.__OMEGA_CONTAMINATION_LAYERS_VISIBLE__ = showContamination && contaminationList.length > 0;
     }
 
     // ═══ Z-5: SALINES-V11-SUPRA — JAUNE INSTITUTIONNEL UNIFORME + ANTI-GRAPPES ═══
@@ -953,60 +975,88 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-9: WIND_VECTORS-Omega V20 (PHASE_ZERO_OPS_REFUS_VALIDATION_Ω X50 P0-1) ═══
-    // Pipeline unifié : rendu direct depuis bundleData.wind_vectors (8 vecteurs
-    // institutionnels centrés waypoint). Élimine la dépendance Open-Meteo
-    // (429 Too Many Requests) et garantit la visibilité VENT en toutes conditions.
+    // ═══ Z-9: VENT V20 Ω — X80-ABSOLU (cône olfactif + particules Ventusky) ═══
+    // Directive X80-ABSOLU-Ω : remplacement du rendu radial (banni X70) par
+    // (a) un cône olfactif unique blanc translucide, (b) des particules flottantes
+    // blanches/grises sans concurrence visuelle avec les corridors orange.
+    // Le widget COMPASS est rendu hors carte (cf. <CompassOmegaWidget/>).
     const windVectors = Array.isArray(bundleData.wind_vectors) ? bundleData.wind_vectors : [];
     let windRendered = 0;
-    if (showWind && windVectors.length > 0) {
-      windVectors.forEach((wv, idx) => {
-        const s = wv.start;
-        const e = wv.end;
-        if (!s || !e || typeof s.lat !== 'number' || typeof e.lat !== 'number') return;
-        const speed = wv.speed_kmh || 0;
-        const decay = typeof wv.decay === 'number' ? wv.decay : 1;
-        // Couleur graduée par intensité
-        const windColor = speed < 5 ? '#4FC3F7' : speed < 15 ? '#00B0F0' : speed < 25 ? '#FFC300' : '#FF6A00';
-        const weight = Math.max(1.5, Math.min(4, 1 + speed / 10));
-        const opacity = Math.max(0.5, Math.min(1, decay));
-        const line = L.polyline([[s.lat, s.lng], [e.lat, e.lng]], {
-          color: windColor,
-          weight,
-          opacity,
-          lineCap: 'round',
-          interactive: true,
+    if (showWind && windVectors.length > 0 && waypointCenter) {
+      // Vent dominant = moyenne des 8 vecteurs V8 (direction médiane + vitesse moyenne)
+      const validVec = windVectors.filter(v => v.start && v.end && typeof v.direction_deg === 'number');
+      const meanDir = validVec.reduce((a, v) => a + (v.direction_deg || 0), 0) / Math.max(1, validVec.length);
+      const meanSpeed = validVec.reduce((a, v) => a + (v.speed_kmh || 0), 0) / Math.max(1, validVec.length);
+      // (a) CÔNE OLFACTIF — 30°, portée 500 m, blanc translucide pointillé
+      const coneAngle = 30;
+      const reachM = 500;
+      const reachDeg = reachM / 111320;
+      const cosLat = Math.max(0.5, Math.cos(waypointCenter.lat * Math.PI / 180));
+      const leftRad = (meanDir - coneAngle / 2) * Math.PI / 180;
+      const rightRad = (meanDir + coneAngle / 2) * Math.PI / 180;
+      const conePolygon = [
+        [waypointCenter.lat, waypointCenter.lng],
+        [waypointCenter.lat + Math.cos(leftRad) * reachDeg, waypointCenter.lng + Math.sin(leftRad) * reachDeg / cosLat],
+        [waypointCenter.lat + Math.cos(rightRad) * reachDeg, waypointCenter.lng + Math.sin(rightRad) * reachDeg / cosLat],
+        [waypointCenter.lat, waypointCenter.lng],
+      ];
+      const cone = L.polygon(conePolygon, {
+        color: '#E0E0E0',
+        weight: 1.5,
+        opacity: 0.7,
+        fillColor: '#FFFFFF',
+        fillOpacity: 0.14,
+        dashArray: '5,4',
+        interactive: true,
+        pane: 'markerPane',
+      });
+      cone.bindTooltip(
+        `<b style="color:#FFFFFF">Cône olfactif</b> · ${Math.round(meanDir)}° · ${meanSpeed.toFixed(1)} km/h`,
+        { sticky: true, opacity: 0.95 }
+      );
+      cone.bindPopup(
+        `<div data-testid="wind-cone-popup" style="min-width:220px">
+          <div style="font-weight:700;color:#424242;font-size:13px">Cône olfactif V20-Ω</div>
+          <div style="margin-top:4px;font-size:12px"><b>Direction</b> : ${Math.round(meanDir)}°</div>
+          <div style="font-size:12px"><b>Vitesse</b> : ${meanSpeed.toFixed(1)} km/h</div>
+          <div style="font-size:11px;color:#555">Ouverture : 30° · Portée : 500 m</div>
+          <div style="font-size:10px;color:#888;margin-top:4px">Source : engine_vent.compute_scent_cone (V30-LOCKED)</div>
+        </div>`,
+        { maxWidth: 280 }
+      );
+      group.addLayer(cone);
+      windRendered = 1;
+      // (b) PARTICULES VENTUSKY — petits tirets blancs le long de la direction
+      // dominante dans un rayon de 700m (minimalistes, zéro concurrence corridors)
+      const particleCount = 14;
+      const particleReach = 0.0055; // ~600 m
+      for (let p = 0; p < particleCount; p++) {
+        const rho = (p / particleCount) * particleReach;
+        const sideOffset = ((p % 3) - 1) * 0.0015;
+        const baseRad = meanDir * Math.PI / 180;
+        const perpRad = baseRad + Math.PI / 2;
+        const startLat = waypointCenter.lat + Math.cos(baseRad) * rho + Math.cos(perpRad) * sideOffset;
+        const startLng = waypointCenter.lng + (Math.sin(baseRad) * rho + Math.sin(perpRad) * sideOffset) / cosLat;
+        const tickLen = 0.0009;
+        const endLat = startLat + Math.cos(baseRad) * tickLen;
+        const endLng = startLng + Math.sin(baseRad) * tickLen / cosLat;
+        const particle = L.polyline([[startLat, startLng], [endLat, endLng]], {
+          color: '#F5F5F5',
+          weight: 1.4,
+          opacity: 0.55,
+          dashArray: '3,3',
+          interactive: false,
           pane: 'markerPane',
         });
-        // Flèche directionnelle au bout (petit triangle en divIcon)
-        const bearingRad = Math.atan2(e.lng - s.lng, e.lat - s.lat);
-        const arrowDeg = (bearingRad * 180 / Math.PI + 360) % 360;
-        const arrowIcon = L.divIcon({
-          className: 'wind-arrow-omega',
-          html: `<div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:10px solid ${windColor};transform:rotate(${arrowDeg}deg);transform-origin:50% 50%;"></div>`,
-          iconSize: [10, 10],
-          iconAnchor: [5, 5],
-        });
-        const arrowMarker = L.marker([e.lat, e.lng], { icon: arrowIcon, interactive: false, pane: 'markerPane' });
-        const tooltip = `<b style="color:${windColor}">Vent</b> ${wv.direction_deg}° · ${speed} km/h`;
-        line.bindTooltip(tooltip, { sticky: true, opacity: 0.95 });
-        line.bindPopup(
-          `<div data-testid="wind-popup-${wv.id || idx}" style="min-width:200px">
-            <div style="font-weight:700;color:${windColor};font-size:13px">Vecteur vent V20</div>
-            <div style="margin-top:4px;font-size:12px"><b>Direction</b> : ${wv.direction_deg}°</div>
-            <div style="font-size:12px"><b>Vitesse</b> : ${speed} km/h</div>
-            <div style="font-size:11px;color:#555">Décroissance : ${Math.round(decay * 100)}%</div>
-            <div style="font-size:10px;color:#888;margin-top:4px">Source : V20-BUNDLE (wind_vectors)</div>
-          </div>`,
-          { maxWidth: 260 }
-        );
-        group.addLayer(line);
-        group.addLayer(arrowMarker);
-        windRendered++;
-      });
+        group.addLayer(particle);
+      }
+      windRendered += particleCount;
     }
     if (typeof window !== 'undefined') {
       window.__OMEGA_WIND_VECTORS_RENDERED__ = windRendered;
+      window.__OMEGA_VENTUSKY_PARTICLES_ACTIVE__ = showWind && windVectors.length > 0 ? 14 : 0;
+      window.__OMEGA_VENT_STYLE_CONFORME__ = true;
+      window.__OMEGA_VENT_CONFUSION_CORRIDORS__ = false;
     }
 
     group.addTo(map);

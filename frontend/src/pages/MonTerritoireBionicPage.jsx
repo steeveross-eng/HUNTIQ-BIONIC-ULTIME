@@ -74,6 +74,7 @@ import { TerritoireHeader } from '@/components/territoire/ui/TerritoireHeader';
 import { useWaypointActions } from '@/hooks/useWaypointActions';
 import { MapContent } from '@/components/territoire/map/MapContent';
 import BionicLegend from '@/components/territoire/BionicLegend';
+import CompassOmegaWidget from '@/components/territoire/CompassOmegaWidget';
 import CacheStateOmega from '@/components/territoire/ui/CacheStateOmega';
 import { TERRITOIRE_DEFAULTS } from '@/config/territoire_defaults';
 // V8.1 — Saisons biologiques
@@ -1398,6 +1399,9 @@ const MonTerritoireBionicPage = () => {
               phaseASiteActuel={phaseASiteActuel}
             />
           </MapContainer>
+
+          {/* X80-ABSOLU-Ω — COMPASS_Ω_VENT widget hors-carte (palette blanche/grise) */}
+          <CompassOmegaWidget bundleDataV8={bundleDataV8} showWind={showWindFlow} />
 
           {/* BCE-4X LEGENDE ULTIME: BionicLegend PERSISTANTE (ORDONNANCE STEEVE-MAX P0-K++) */}
           <BionicLegend

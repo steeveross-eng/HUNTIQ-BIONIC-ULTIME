@@ -28,6 +28,7 @@ import { MapRefCapture, ZoomHandler, MapResizer, MapClickHandler, createCustomIc
 import CursorBionicLayer from '@/components/territoire/CursorBionicLayer';
 import BionicLayersV8 from '@/components/territoire/BionicLayersV8';
 import WindFlowLayer from '@/components/territoire/WindFlowLayer';
+import CompassOmegaWidget from '@/components/territoire/CompassOmegaWidget';
 import { MapInteractionLayer } from '@/modules/map_interaction';
 import { PLACE_TYPES } from '@/config/placeTypes';
 

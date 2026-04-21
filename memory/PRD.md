@@ -45,6 +45,7 @@ et conforme au registre SHA-256 `registry_lock_omega.py` (V30).
 - **2026-04-21** `PHASE_ZERO_PLUS_CONSOLIDATION_GOUVERNANCE_Ω` (X30) — freeze + audit + 4 plans gouvernance + CI_STATUS_Ω dashboard + PHASE_LOCK_GATE
 - **2026-04-21** `PHASE_ZERO_OPS_RESTORATION_Ω` (X40) — unification pipeline zones V20 bundle (redirection `_fetchOrganicZonesV2`)
 - **2026-04-21** `PHASE_ZERO_OPS_REFUS_VALIDATION_Ω` (X50) — 4 correctifs P0 : VENT rendu V20 · nutrition-saline strict · listeners click (zones/affûts/hotspots/vent) · CI_STATUS runtime beacon
+- **2026-04-21** `PHASE_XI_SUPRA_VERITE_TERRAIN_Ω` (X80-ABSOLU-Ω) — VENT refondu (COMPASS hors-carte + cône olfactif blanc + particules Ventusky gris), corridors popup, 9 probes runtime multi-couches (waypoint officiel 48.206657/-68.382422 vérifié côté backend)
 
 ## Statut testing
 - Jest sentinelles : **5 suites / 57 tests / 57 PASS**

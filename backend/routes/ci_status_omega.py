@@ -21,9 +21,7 @@ from fastapi.responses import JSONResponse, PlainTextResponse
 
 router = APIRouter(prefix="/api/omega", tags=["CI_STATUS_Ω"])
 
-# PHASE_ZERO_OPS_REFUS_VALIDATION_Ω (X50) — mémoire in-process pour beacon runtime
-# Zéro dépendance externe : lecture/écriture atomique via dict. Persistance volontairement
-# non requise (rafraîchi à chaque redémarrage par le heartbeat frontend).
+# PHASE_ZERO_OPS_REFUS_VALIDATION_Ω (X50) → X80-ABSOLU-Ω — mémoire in-process
 _RUNTIME_BEACON: dict = {
     "received_at": None,
     "wind_vectors_rendered": 0,
@@ -34,7 +32,22 @@ _RUNTIME_BEACON: dict = {
     "raw_render_attempts": 0,
     "anthropic_failures": 0,
     "waypoint": None,
+    # X80-ABSOLU-Ω probes terrain multi-couches
+    "corridors_style_conforme": False,
+    "ventusky_particles_active": 0,
+    "vent_style_conforme": False,
+    "vent_confusion_corridors": True,
+    "contamination_layers_visible": False,
+    "panels_clickable_count": 0,
+    "filters_omega_active": False,
+    "waypoint_context_match": False,
 }
+
+# Waypoint officiel STEEVE-MAX — tolérance ±0.0001° (~11 m)
+OFFICIAL_WAYPOINT_LAT = 48.206657
+OFFICIAL_WAYPOINT_LNG = -68.382422
+WAYPOINT_TOLERANCE = 0.0002
+PANELS_CLICKABLE_MIN = 4  # zones + corridors + affuts + hotspots
 
 REPO_ROOT = Path("/app")
 FRONTEND_DIR = REPO_ROOT / "frontend"
@@ -145,7 +158,7 @@ def _fallback_scan() -> dict:
 
 
 def _runtime_beacon_status() -> dict:
-    """Lecture du beacon runtime envoyé par le frontend. Évalue la cohérence."""
+    """Lecture du beacon runtime envoyé par le frontend. Évalue la cohérence X80-ABSOLU-Ω."""
     b = dict(_RUNTIME_BEACON)
     violations = []
     # Règle 1 : si showWindFlow True alors wind_vectors_rendered > 0
@@ -154,7 +167,10 @@ def _runtime_beacon_status() -> dict:
     # Règle 2 : si salines_present > 0 alors nutrition_saline_bound doit être true
     if b.get("salines_present", 0) > 0 and not b.get("nutrition_saline_bound", True):
         violations.append("nutrition_saline_bound=false alors qu'une saline est présente")
-    # Règle 3 : listener_count doit être >= 4 (zones + corridors + affuts + hotspots)
+    # Règle 3 : panels_clickable_count doit être >= seuil
+    if b.get("panels_clickable_count", 0) < PANELS_CLICKABLE_MIN:
+        violations.append(f"panels_clickable_count={b.get('panels_clickable_count',0)} < {PANELS_CLICKABLE_MIN}")
+    # Règle 3bis : listener_count (legacy X50) >= 4
     if b.get("listener_count", 0) < 4:
         violations.append(f"listener_count={b.get('listener_count',0)} < 4 (seuil minimal)")
     # Règle 4 : zéro raw render attempt
@@ -163,6 +179,24 @@ def _runtime_beacon_status() -> dict:
     # Règle 5 : zéro anthropic failure
     if b.get("anthropic_failures", 0) > 0:
         violations.append(f"anthropic_failures={b['anthropic_failures']}")
+    # X80-ABSOLU-Ω
+    # Règle 6 : corridors_style_conforme obligatoire
+    if not b.get("corridors_style_conforme", False):
+        violations.append("corridors_style_conforme=false (CORRIDOR_STYLE_HIERARCHY-Ω requis)")
+    # Règle 7 : vent_style_conforme obligatoire si VENT actif
+    if b.get("showWindFlow") and not b.get("vent_style_conforme", False):
+        violations.append("vent_style_conforme=false (palette blanche/grise requise)")
+    # Règle 8 : vent_confusion_corridors doit être false
+    if b.get("vent_confusion_corridors", True):
+        violations.append("vent_confusion_corridors=true (distinction visuelle obligatoire)")
+    # Règle 9 : contamination_layers_visible si bundle contient contamination
+    # (skip si showContamination non transmis — on se fie au flag présence)
+    # Règle 10 : filters_omega_active obligatoire
+    if not b.get("filters_omega_active", False):
+        violations.append("filters_omega_active=false (4 filtres Ω requis)")
+    # Règle 11 : waypoint_context_match
+    if not b.get("waypoint_context_match", False):
+        violations.append("waypoint_context_match=false (waypoint officiel 48.206657/-68.382422 non validé)")
     return {
         "beacon_received": b.get("received_at") is not None,
         "beacon": b,
@@ -188,13 +222,13 @@ def _build_status() -> dict:
     )
 
     return {
-        "version": "CI_STATUS_Ω_X50",
+        "version": "CI_STATUS_Ω_X80_ABSOLU",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "overall_status": "OK" if all_green else "ATTENTION",
         "overall_conforming": all_green,
         "pipeline": {
             "single_pipeline_enforced": True,
-            "protocol": "VERSION_INSTITUTIONNELLE_RENFORCÉE_X50",
+            "protocol": "VERSION_INSTITUTIONNELLE_RENFORCÉE_X80_ABSOLU",
         },
         "sentinels_jest": sentinels,
         "pre_commit_hook": hook,
@@ -286,6 +320,18 @@ async def ci_status_runtime_beacon(payload: dict):
     - waypoint : {lat, lng}
     """
     global _RUNTIME_BEACON
+    wp = payload.get("waypoint")
+    # Vérification waypoint officiel X80-ABSOLU-Ω
+    wp_match = False
+    if isinstance(wp, dict) and wp.get("lat") is not None and wp.get("lng") is not None:
+        try:
+            wp_match = (
+                abs(float(wp["lat"]) - OFFICIAL_WAYPOINT_LAT) < WAYPOINT_TOLERANCE
+                and abs(float(wp["lng"]) - OFFICIAL_WAYPOINT_LNG) < WAYPOINT_TOLERANCE
+            )
+        except Exception:
+            wp_match = False
+
     _RUNTIME_BEACON = {
         "received_at": datetime.now(timezone.utc).isoformat(),
         "wind_vectors_rendered": int(payload.get("wind_vectors_rendered") or 0),
@@ -295,10 +341,20 @@ async def ci_status_runtime_beacon(payload: dict):
         "showWindFlow": bool(payload.get("showWindFlow", False)),
         "raw_render_attempts": int(payload.get("raw_render_attempts") or 0),
         "anthropic_failures": int(payload.get("anthropic_failures") or 0),
-        "waypoint": payload.get("waypoint"),
+        "waypoint": wp,
+        # X80-ABSOLU-Ω probes
+        "corridors_style_conforme": bool(payload.get("corridors_style_conforme", False)),
+        "ventusky_particles_active": int(payload.get("ventusky_particles_active") or 0),
+        "vent_style_conforme": bool(payload.get("vent_style_conforme", False)),
+        "vent_confusion_corridors": bool(payload.get("vent_confusion_corridors", True)),
+        "contamination_layers_visible": bool(payload.get("contamination_layers_visible", False)),
+        "panels_clickable_count": int(payload.get("panels_clickable_count") or 0),
+        "filters_omega_active": bool(payload.get("filters_omega_active", False)),
+        "waypoint_context_match": wp_match,
     }
     return JSONResponse({
         "received": True,
         "stored_at": _RUNTIME_BEACON["received_at"],
+        "waypoint_context_match": wp_match,
         "violations": _runtime_beacon_status()["violations"],
     })
