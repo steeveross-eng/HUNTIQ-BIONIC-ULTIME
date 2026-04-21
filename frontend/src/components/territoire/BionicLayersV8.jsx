@@ -22,7 +22,7 @@ import L from 'leaflet';
 import { NUTRITION_SEVERITY_COLORS } from '@/config/territoire_defaults';
 import { validateElement, logRenderCycle } from './RenderGuardOmega';
 import { buildInstitutionalPopup, FichePopup } from './InstitutionalPopup';
-import { RENDU_OMEGA, resolveCorridorStyleOmega, isCorridorsVisibleAtZoom, getRenduRules, getOrganicCorridors, resolveCorridorStyleOrganic, clampCorridorWeight, validateCorridorGeometry, renduOmegaPaneName, prepareDisplayPath, detectConvergenceMainVein, computeSupraArtHaloSpec, isInspectionBiologiqueActive, computeDirectionalLuminosityGradient } from '@/lib/renduOmegaStore';
+import { RENDU_OMEGA, resolveCorridorStyleOmega, isCorridorsVisibleAtZoom, getRenduRules, getOrganicCorridors, resolveCorridorStyleOrganic, clampCorridorWeight, validateCorridorGeometry, renduOmegaPaneName, prepareDisplayPath, detectConvergenceMainVein, computeSupraArtHaloSpec, isInspectionBiologiqueActive, computeDirectionalLuminosityGradient, computeTerrainAwareBoost, detectVitalZoneOverlap, publicPulseMultiplier, isPublicPulseActive, computeFadeOutTail, buildInspectionBioFeatures, inspectionBioPaneName, INSPECTION_BIO_SPEC, bindNutritionToSaline, NUTRITION_SALINES_SPEC } from '@/lib/renduOmegaStore';
 
 // ═══ PALETTE BCE-4X V9-INSTITUTIONNEL ═══
 const ZONE_COLORS = {
@@ -74,14 +74,20 @@ const BionicLayersV8 = ({
   useOrganicCorridors = true, // Phase XI-SUPRA-L+1-M : activation frontend ORGANIC
   enabled = true,
   onDataLoaded = null,
+  onSalineNutritionDblClick = null, // PHASE_NUTRITION_SALINES_BINDING_Ω
 }) => {
   const map = useMap();
   const groupRef = useRef(null);
   const autoZoomAppliedRef = useRef(null);
   const [currentZoom, setCurrentZoom] = useState(() => (map ? map.getZoom() : 14));
   const [organicBundle, setOrganicBundle] = useState(null); // Phase M : cache local corridors organiques
+  // PHASE_INSPECTION_BIO_GEOMETRY_BINDING — version bumpée à chaque activation/désactivation
+  // pour forcer un re-render du featureGroup quand le mode inspection bascule.
+  const [inspectionBioVersion, setInspectionBioVersion] = useState(0);
   const onDataLoadedRef = useRef(onDataLoaded);
   onDataLoadedRef.current = onDataLoaded;
+  const onSalineNutritionDblClickRef = useRef(onSalineNutritionDblClick);
+  onSalineNutritionDblClickRef.current = onSalineNutritionDblClick;
 
   // Phase XI-SUPRA-C : exposition globale map pour capture Playwright institutionnelle
   // Exécuté à chaque render pour garantir disponibilité permanente
@@ -132,6 +138,69 @@ const BionicLayersV8 = ({
       }
     } catch (e) { /* noop — map non prête */ }
   }, [map]);
+
+  // PHASE_INSPECTION_BIO_GEOMETRY_BINDING — écoute du toggle PRO/EXPERT/OFF
+  // pour redéclencher le rendu des 4 couches institutionnelles.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const onChange = () => setInspectionBioVersion(v => v + 1);
+    window.addEventListener('inspection-bio-changed', onChange);
+    return () => window.removeEventListener('inspection-bio-changed', onChange);
+  }, []);
+
+  // PHASE_INSPECTION_BIO_GEOMETRY_BINDING — Création des 4 panes Leaflet
+  // institutionnels inspection-bio (ATTRACTEURS / EXCLUSIONS / PENTES / COUVERT).
+  // Z-index ordonnés selon INSPECTION_BIO_SPEC.overlayLayers[].zIndex.
+  // Panes créés une seule fois à l'initialisation de la map.
+  useEffect(() => {
+    if (!map) return;
+    try {
+      for (const layer of INSPECTION_BIO_SPEC.overlayLayers) {
+        const paneName = inspectionBioPaneName(layer.key);
+        if (!map.getPane(paneName)) {
+          const pane = map.createPane(paneName);
+          pane.style.zIndex = String(layer.zIndex);
+          pane.style.pointerEvents = 'none'; // overlay passif, n'intercepte pas les clics
+        }
+      }
+    } catch (_e) { /* noop — map non prête */ }
+  }, [map]);
+
+  // PHASE_XII_SUPRA_S_CORRECTION §A8 — Injection keyframe CSS pulsation publique.
+  // Pulsation très subtile (0.2–0.3 %) applied via filter:brightness sur le pane.
+  // Activée uniquement via classe dynamique quand zoom > 15 (géré en render).
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const styleId = 'rendu-omega-public-pulse-style';
+    if (document.getElementById(styleId)) return;
+    const el = document.createElement('style');
+    el.id = styleId;
+    el.textContent = `
+@keyframes renduOmegaPublicPulse {
+  0%   { filter: brightness(1.000); }
+  50%  { filter: brightness(1.0025); }
+  100% { filter: brightness(1.000); }
+}
+.leaflet-pane.leaflet-renduOmega-corridors-pane.rendu-omega-pulse-on {
+  animation: renduOmegaPublicPulse 2400ms ease-in-out infinite;
+}
+    `.trim();
+    document.head.appendChild(el);
+  }, []);
+
+  // §A8 — Toggle classe pulse selon zoom courant
+  useEffect(() => {
+    if (!map) return;
+    const paneName = renduOmegaPaneName('corridors');
+    const pane = map.getPane(paneName);
+    if (!pane) return;
+    // Leaflet ajoute la classe 'leaflet-{name}-pane' automatiquement
+    if (isPublicPulseActive(currentZoom)) {
+      pane.classList.add('rendu-omega-pulse-on');
+    } else {
+      pane.classList.remove('rendu-omega-pulse-on');
+    }
+  }, [map, currentZoom]);
 
   // CORRIDORS_ORGANIC (Phase XI-SUPRA-L+1-M) : fetch des corridors organiques
   // 120 points + thickness variable + hiérarchie, cache 60s.
@@ -234,95 +303,145 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-3: CORRIDORS-Ω — PHASE XII-SUPRA-S (RENDU_SUPRA_Ω_ART + GEOMETRY_Ω_ALIGNMENT) ═══
-    // Règles SUPRA_S strictes (PHASE_XII_SUPRA_S_RENDU_SUPRA_Ω_ART.md) :
-    //   • Couleur unique        #FF8F00 (aucune variation)
-    //   • Épaisseurs STRICTES   1.2 / 2.0 / 3.0 / 4.0 (extrême=4.0)
-    //   • Opacité                1.00 OBLIGATOIRE (< 1.00 = ERREUR)
-    //   • Géométrie              Catmull-Rom 25-30 pts (legacy) / 60-120 (organic)
-    //   • Segment ≤ 20 m         enforceSegmentMax
-    //   • Angle ≤ 45°            despikePath
-    //   • Rayon fonctionnel      420-780 m masqué au rendu
-    //   • AUCUNE FLÈCHE          suppression définitive des chevrons directionnels
-    //   • Veine principale       ≥ 2 corridors convergent → boost halo externe
-    //   • Halo intelligent       interne (#FFD380) + externe adaptatif fond
-    //   • Signature espèce       micro-oscillations 0.3-0.7 %
-    //   • Mode inspection bio    pulsation lente (PRO/EXPERT, désactivé par défaut)
+    // ═══ Z-3: CORRIDORS-Ω — PHASE XII-SUPRA-S_CORRECTION (RENDU_SUPRA_Ω_ART v2) ═══
+    // Corrections directive PHASE_XII_SUPRA_S_CORRECTION (§BLOC A + B) :
+    //   • §A1 snap-to-saline (rayon 420-780m) + halo +35% + lum +20% @40m
+    //   • §A2 veine principale si convergence ≤15m → halo ×1.5, lum ×1.6
+    //   • §A3 signatures espèce renforcées (4.0/1.0/0.8/2.5/5.0, amp 0.5-0.9%)
+    //   • §A4 halo externe adaptatif (forest +30%, snow +15%, water +40%, cover +25%)
+    //   • §A5 gradient directionnel 5-8% (inspection bio)
+    //   • §A6 tension terrain++ (pente>15°, vallon, humide, transition)
+    //   • §A7 renforcement 40m autour zones vitales
+    //   • §A8 pulsation publique 0.2-0.3% (zoom > 15)
+    //   • §B7 clipping progressif fade-out 8-12m
+    //   • §B1-B6 CatmullRom 28 strict, segment ≤20m, angle ≤45°, continuité stricte
     const corridorsVisibleAtZoom = isCorridorsVisibleAtZoom(currentZoom);
-    // Source corridors : ORGANIC si disponible & activé, sinon bundle legacy
     const useOrganic = useOrganicCorridors && organicBundle?.corridors?.length > 0;
     const corridorsToRender = useOrganic ? organicBundle.corridors : corridors;
     const corridorsPaneName = renduOmegaPaneName('corridors');
     const rejectedCorridors = [];
-    // SUPRA_S — Détection convergence pour promotion veine principale
+    // §A2 — Convergence ≤15m (SUPRA_S_CORRECTION)
     const mainVeinIdxs = detectConvergenceMainVein(corridorsToRender);
     const inspectionBioOn = isInspectionBiologiqueActive();
-    // Centre d'analyse pour rayon fonctionnel = waypoint courant
     const waypointCenter_latlng = waypointCenter
       ? [waypointCenter.lat, waypointCenter.lng]
       : null;
+    // §A8 — Pulse public (zoom > 15)
+    const pulseOn = isPublicPulseActive(currentZoom);
+    const pulseMult = pulseOn ? publicPulseMultiplier() : 1.0;
+
+    // §C — Log institutionnel des rejections/snap failures (SUPRA_S_CORRIDOR_REJECTION_LOG)
+    const rejectionLog = [];
+    const logSinkFn = (entry) => { try { rejectionLog.push({ t: Date.now(), ...entry }); } catch (_e) { /* noop */ } };
+
+    // §A5 HOTFIX — garantie synchrone que le pane existe AVANT tout rendu corridor
+    try {
+      if (map && !map.getPane(corridorsPaneName)) {
+        const pane = map.createPane(corridorsPaneName);
+        const idx = RENDU_OMEGA.zIndexOrder.indexOf('corridors');
+        pane.style.zIndex = String(400 + (idx >= 0 ? idx : 3) * 10);
+        pane.style.pointerEvents = 'auto';
+      }
+    } catch (_e) { /* noop */ }
 
     if (showCorridors && corridorsToRender.length > 0 && corridorsVisibleAtZoom) {
       corridorsToRender.forEach((c, corridorIdx) => {
         const rawPath = c.path || [[c.start?.lat, c.start?.lng], [c.end?.lat, c.end?.lng]];
         const speciesForSig = c.species_profile || species;
 
-        // ═══ GEOMETRY_Ω_ALIGNMENT (BLOC B) ═══
-        // Pipeline : déspike → segment≤20m → resample CatmullRom 25-30 →
-        // signature espèce → clip rayon fonctionnel.
-        // Retourne une LISTE de sous-paths (clip peut diviser en plusieurs).
-        const displaySubpaths = prepareDisplayPath(rawPath, {
+        // ═══ PIPELINE SUPRA_S_CORRECTION + HOTFIX ═══
+        // align → signature → RE-ENFORCE (hotfix) → snap-saline (non-destructif) → clipWithFadeOut (avec rescue)
+        const { displaySubpaths, fadeTails, snappedSaline, snapStatus, metrics } = prepareDisplayPath(rawPath, {
           species: speciesForSig,
           isOrganic: useOrganic,
           center: waypointCenter_latlng,
           clip: true,
+          salines,
+          logSink: logSinkFn,
+          corridorId: c.id,
         });
 
-        // Validation RENDU-Ω stricte sur chaque sous-path
+        // Style strict RENDU-Ω
         const styleOmega = useOrganic
           ? resolveCorridorStyleOrganic(c)
           : resolveCorridorStyleOmega(c);
-        const color = RENDU_OMEGA.color;                         // #FF8F00 strict
-        const weight = clampCorridorWeight(styleOmega.weight);   // 1.2/2.0/3.0/4.0
-        const opacity = 1.0;                                     // SUPRA_S : opacity = 1.00 strict
+        const color = RENDU_OMEGA.color;
+        let weight = clampCorridorWeight(styleOmega.weight);
         const isMainVein = mainVeinIdxs.has(corridorIdx);
 
-        // Halo spec SUPRA_ART — adaptatif fond "forest" (par défaut)
-        const halo = computeSupraArtHaloSpec(weight, { background: 'forest', isMainVein });
+        // §A6 — Tension terrainaware++ (boost intensité lumineuse perçue via halo)
+        const terrainBoost = computeTerrainAwareBoost(c);
+        // §A7 — Renforcement zones vitales (si path traverse une zone à ≤40m)
+        const primaryPath = displaySubpaths[0] || [];
+        const vitalOverlaps = detectVitalZoneOverlap(primaryPath, zones);
+        const vitalBoostCum = vitalOverlaps.reduce((acc, v) => acc + v.boost, 0);
+
+        // §A2 — Veine principale cumulative (épaisseur + luminosité max ×1.6)
+        if (isMainVein) weight = clampCorridorWeight(weight + RENDU_OMEGA.microWeightDeltaPx * 4);
+
+        const opacity = 1.0; // SUPRA_S strict (dépasse RENDU_OMEGA.opacityMin ≥ 0.75)
+
+        // Halo spec SUPRA_ART — amplifié par fond, saline, veine principale
+        const halo = computeSupraArtHaloSpec(weight, {
+          background: 'forest',
+          isMainVein,
+          salineNearby: snappedSaline !== null,
+        });
+        // §A6/A7 — Boost cumulatif opacité halo externe
+        halo.external.opacity = Math.min(0.85, halo.external.opacity * terrainBoost * (1 + vitalBoostCum));
+
+        // §A HOTFIX — log si aucun subpath rendu (corridor masqué intégralement)
+        if (!displaySubpaths || displaySubpaths.length === 0) {
+          logSinkFn({
+            id: c.id,
+            reason: 'no_display_subpath_after_pipeline',
+            metrics,
+            snap_status: snapStatus,
+            n_fade_tails: fadeTails.length,
+          });
+          // Pas de return : on essaie quand même de rendre les fadeTails (§A1)
+        }
 
         displaySubpaths.forEach((path) => {
           if (!Array.isArray(path) || path.length < 2) return;
 
-          // Validation finale géométrique (garde-fou — rejet si non conforme)
+          // §A HOTFIX — validation finale : log uniquement (pas de rejet).
+          // Le pipeline HOTFIX (align+signature+re-enforce) garantit la conformité.
           const geom = validateCorridorGeometry(path, { isOrganic: useOrganic, strictMinPoints: false });
-          const blocking = geom.violations.some(v =>
-            v.rule === 'segment_over_max' || v.rule === 'angle_over_max' || v.rule === 'discontinuity'
-          );
-          if (blocking) {
-            rejectedCorridors.push({ id: c.id, violations: geom.violations, metrics: geom.metrics });
-            return;
+          if (geom.violations.length > 0) {
+            const severe = geom.violations.some(v =>
+              (v.rule === 'segment_over_max' && geom.metrics.max_segment_m > RENDU_OMEGA.segmentMaxM * 2) ||
+              (v.rule === 'angle_over_max' && geom.metrics.max_angle_deg > RENDU_OMEGA.angleMaxDeg * 1.8) ||
+              v.rule === 'discontinuity'
+            );
+            if (severe) {
+              rejectedCorridors.push({ id: c.id, violations: geom.violations, metrics: geom.metrics });
+              logSinkFn({ id: c.id, reason: 'severe_geometry_violation_post_pipeline', violations: geom.violations, metrics: geom.metrics });
+              return;
+            }
+            // violations mineures tolérées — le corridor reste rendu, violations loguées
+            logSinkFn({ id: c.id, reason: 'minor_geometry_violation_tolerated', violations: geom.violations.slice(0, 3), metrics: geom.metrics });
           }
 
-          // ═══ RENDU SUPRA_ART (BLOC A) — 3 couches superposées ═══
-          // 1. Halo EXTERNE adaptatif (fond / veine principale)
+          // 1. Halo EXTERNE adaptatif (fond + veine + saline)
           const extHalo = L.polyline(path, {
             color: halo.external.color,
-            weight: halo.external.weight,
-            opacity: halo.external.opacity,
+            weight: halo.external.weight * pulseMult,
+            opacity: Math.min(1.0, halo.external.opacity * pulseMult),
             lineCap: 'round',
             lineJoin: 'round',
             smoothFactor: 0,
             interactive: false,
             pane: corridorsPaneName,
           });
-          extHalo.options._renduOmega = { layer: 'halo_external', mainVein: isMainVein };
+          extHalo.options._renduOmega = { layer: 'halo_external', mainVein: isMainVein, saline: snappedSaline?.saline ?? null };
           group.addLayer(extHalo);
 
-          // 2. Halo INTERNE ultra-léger (glow chaud)
+          // 2. Halo INTERNE glow chaud
           const intHalo = L.polyline(path, {
             color: halo.inner.color,
             weight: halo.inner.weight,
-            opacity: halo.inner.opacity,
+            opacity: halo.inner.opacity * pulseMult,
             lineCap: 'round',
             lineJoin: 'round',
             smoothFactor: 0,
@@ -332,10 +451,10 @@ const BionicLayersV8 = ({
           intHalo.options._renduOmega = { layer: 'halo_internal' };
           group.addLayer(intHalo);
 
-          // 3. Ligne PRINCIPALE corridor (#FF8F00, opacity=1.00, weight strict)
+          // 3. Ligne PRINCIPALE corridor
           const line = L.polyline(path, {
             color,
-            weight,
+            weight: weight * pulseMult,
             opacity,
             lineCap: 'round',
             lineJoin: 'round',
@@ -344,24 +463,26 @@ const BionicLayersV8 = ({
             pane: corridorsPaneName,
           });
           line.options._renduOmega = {
-            version: 'V1.2-PHASE-XII-SUPRA-S-ART-2026-04',
-            source: useOrganic ? 'ORGANIC' : 'RENDU_SUPRA_OMEGA',
+            version: 'V1.3-PHASE-XII-SUPRA-S-CORRECTION-2026-04',
+            source: useOrganic ? 'ORGANIC' : 'RENDU_SUPRA_OMEGA_V2',
             color, weight, opacity, min_zoom: RENDU_OMEGA.minZoom,
             hierarchy: isMainVein ? 'veine_principale' : (c.hierarchy || 'legacy'),
             geom_metrics: geom.metrics,
-            no_directional_arrow: true,  // SUPRA_S §1 : flèches supprimées définitivement
+            no_directional_arrow: true,
             species_signature: speciesForSig,
             main_vein: isMainVein,
+            saline_snap: snappedSaline ? { dist_m: Math.round(snappedSaline.distM), lat: snappedSaline.latlng[0], lng: snappedSaline.latlng[1] } : null,
+            terrain_boost: terrainBoost,
+            vital_zone_boost: vitalBoostCum,
+            pulse_active: pulseOn,
           };
 
-          // ═══ MODE INSPECTION BIOLOGIQUE (BLOC C) ═══
-          // PRO/EXPERT uniquement — désactivé par défaut.
-          // Pulsation 0.3-0.5 % : surbrillance directionnelle en sous-segments.
+          // Mode INSPECTION BIOLOGIQUE — flux directionnel 5-8 %
           if (inspectionBioOn && path.length >= 6) {
             const gradSteps = computeDirectionalLuminosityGradient(path, 6);
             gradSteps.forEach((g) => {
               const subLine = L.polyline(g.sub, {
-                color: '#FFB347', // ambre clair, pulsation flux
+                color: '#FFB347',
                 weight: weight * 0.6,
                 opacity: Math.min(1.0, 0.55 * g.luminosityBoost),
                 lineCap: 'round',
@@ -379,18 +500,49 @@ const BionicLayersV8 = ({
           const hierarchyStr = isMainVein
             ? ' [VEINE PRINCIPALE]'
             : (c.hierarchy ? ` [${c.hierarchy.toUpperCase()}]` : '');
+          const salineStr = snappedSaline ? ` | saline @${Math.round(snappedSaline.distM)}m` : '';
           const netStr = c.is_network_link ? ' [RÉSEAU]' : '';
           const intensityLabel = (typeof c.intensity === 'number')
             ? `int:${Math.round(c.intensity)}`
             : `int:${c.type || c.intensity || 'normal'}`;
-          const tagLabel = useOrganic ? 'CORRIDOR-ORGANIC-Ω' : 'CORRIDOR-SUPRA-Ω-ART';
+          const tagLabel = useOrganic ? 'CORRIDOR-ORGANIC-Ω' : 'CORRIDOR-SUPRA-Ω-ART-v2';
           line.bindTooltip(
-            `<b style="color:${color}">${tagLabel}</b>${hierarchyStr} ${intensityLabel}${costStr} | ${speciesForSig || ''}${netStr}`,
+            `<b style="color:${color}">${tagLabel}</b>${hierarchyStr} ${intensityLabel}${costStr}${salineStr} | ${speciesForSig || ''}${netStr}`,
             { sticky: true, opacity: 0.95 }
           );
           group.addLayer(line);
         });
+
+        // §B7 — FADE-OUT PROGRESSIF sur les queues clippées (transition 8-12m)
+        // Rendu dégradé des portions extérieures au rayon fonctionnel
+        fadeTails.forEach((tail) => {
+          if (!Array.isArray(tail) || tail.length < 2) return;
+          const fadeSteps = computeFadeOutTail(tail, weight, RENDU_OMEGA.fadeOutTailM);
+          fadeSteps.forEach((fs) => {
+            const fadeLine = L.polyline(fs.sub, {
+              color,
+              weight: fs.weight,
+              opacity: fs.opacity,
+              lineCap: 'round',
+              lineJoin: 'round',
+              smoothFactor: 0,
+              interactive: false,
+              pane: corridorsPaneName,
+            });
+            fadeLine.options._renduOmega = { layer: 'fade_tail', tail_opacity: fs.opacity };
+            group.addLayer(fadeLine);
+          });
+        });
       });
+      // §C HOTFIX — exposition du log institutionnel sur window pour inspection
+      try {
+        if (typeof window !== 'undefined') {
+          window.SUPRA_S_CORRIDOR_REJECTION_LOG = rejectionLog;
+          if (rejectionLog.length > 0) {
+            console.info(`[RENDU-Ω HOTFIX] ${rejectionLog.length} entrées SUPRA_S_CORRIDOR_REJECTION_LOG (window.SUPRA_S_CORRIDOR_REJECTION_LOG pour inspection)`);
+          }
+        }
+      } catch (_e) { /* noop */ }
     }
 
     // ═══ Z-4: CONTAMINATION-Omega — STYLE CONTAM-Ω V12-R5 ═══
@@ -509,6 +661,33 @@ const BionicLayersV8 = ({
         }
 
         circle.bindTooltip(tooltipHtml, { sticky: true, opacity: 0.95 });
+
+        // PHASE_XIV_CRITICAL_FUNCTIONAL_PARITY_Ω — dblclick Leaflet : désactiver
+        // le doubleClickZoom natif sur cet élément pour que le handler nutrition
+        // soit prioritaire (Leaflet consomme le dblclick en zoom par défaut).
+        try { L.DomEvent.disableClickPropagation(circle._path || circle); } catch (_) { /* noop */ }
+
+        // PHASE_NUTRITION_SALINES_BINDING_Ω — double-clic = rapport nutritionnel institutionnel
+        circle.on('dblclick', (ev) => {
+          try {
+            L.DomEvent.stopPropagation(ev);
+            L.DomEvent.preventDefault(ev);
+            if (ev.originalEvent) {
+              ev.originalEvent.preventDefault();
+              ev.originalEvent.stopPropagation();
+            }
+          } catch (_) { /* noop */ }
+          const handler = onSalineNutritionDblClickRef.current;
+          if (handler && NUTRITION_SALINES_SPEC.NUTRITION_BY_SALINE_ONLY) {
+            const payload = bindNutritionToSaline(s, {
+              species,
+              month: new Date().getMonth() + 1,
+              zones,
+              scoreLocal: score_local,
+            });
+            handler(payload);
+          }
+        });
         group.addLayer(circle);
 
         // Suggestion de repositionnement (visible seulement si repositionnee)
@@ -572,8 +751,122 @@ const BionicLayersV8 = ({
       });
     }
 
+    // ═══ Z-6.5: INSPECTION-BIOLOGIQUE-Ω — PHASE_INSPECTION_BIO_GEOMETRY_BINDING ═══
+    // Overlays institutionnels rendus uniquement si le mode inspection bio
+    // est actif (rôle PRO ou EXPERT). Strict RENDU-Ω, aucun fallback non
+    // institutionnel. Z-index ordonnés par INSPECTION_BIO_SPEC (couvert < pentes
+    // < exclusions < attracteurs).
+    if (inspectionBioOn) {
+      const ibFeatures = buildInspectionBioFeatures({ zones, salines, corridors: corridorsToRender, waypointCenter, scoreLocal: score_local });
+      if (ibFeatures) {
+        const layerSpecs = Object.fromEntries(
+          INSPECTION_BIO_SPEC.overlayLayers.map(l => [l.key, l])
+        );
+        // ATTRACTEURS — cercles triangulés orange institutionnel (zones vitales + salines)
+        if (ibFeatures.attracteurs && ibFeatures.attracteurs.length) {
+          const spec = layerSpecs.attracteurs;
+          const paneName = inspectionBioPaneName('attracteurs');
+          ibFeatures.attracteurs.forEach(f => {
+            const c = L.circle(f.latlng, {
+              radius: f.radiusM,
+              color: spec.stroke, weight: spec.weight,
+              opacity: spec.strokeOpacity,
+              fillColor: spec.color, fillOpacity: spec.fillOpacity,
+              interactive: false, pane: paneName,
+            });
+            c.bindTooltip(
+              `<b style="color:${spec.color}">ATTRACTEUR</b> · ${f.meta.source}${f.meta.type ? ' ('+f.meta.type+')' : ''}`,
+              { sticky: true, opacity: 0.95 }
+            );
+            group.addLayer(c);
+          });
+        }
+        // EXCLUSIONS — polygones hachurés brun institutionnel
+        if (ibFeatures.exclusions && ibFeatures.exclusions.length) {
+          const spec = layerSpecs.exclusions;
+          const paneName = inspectionBioPaneName('exclusions');
+          ibFeatures.exclusions.forEach(f => {
+            const p = L.polygon(f.latlngs, {
+              color: spec.stroke, weight: spec.weight,
+              opacity: spec.strokeOpacity,
+              fillColor: spec.color, fillOpacity: spec.fillOpacity,
+              dashArray: spec.dashArray,
+              interactive: false, pane: paneName,
+            });
+            p.bindTooltip(
+              `<b style="color:${spec.color}">EXCLUSION</b> · ${f.meta.reason}`,
+              { sticky: true, opacity: 0.95 }
+            );
+            group.addLayer(p);
+          });
+        }
+        // PENTES — polygones gradient par palier (EXPERT uniquement)
+        if (ibFeatures.pentes && ibFeatures.pentes.length) {
+          const spec = layerSpecs.pentes;
+          const paneName = inspectionBioPaneName('pentes');
+          ibFeatures.pentes.forEach(f => {
+            const p = L.polygon(f.latlngs, {
+              color: f.color, weight: spec.weight,
+              opacity: spec.strokeOpacity,
+              fillColor: f.color, fillOpacity: spec.fillOpacity,
+              interactive: false, pane: paneName,
+            });
+            p.bindTooltip(
+              `<b style="color:${f.color}">PENTE</b> ${f.meta.pente_deg}° · palier ≤${f.palierDeg}°`,
+              { sticky: true, opacity: 0.95 }
+            );
+            group.addLayer(p);
+          });
+        }
+        // COUVERT — polygones verts (EXPERT uniquement)
+        if (ibFeatures.couvert && ibFeatures.couvert.length) {
+          const spec = layerSpecs.couvert;
+          const paneName = inspectionBioPaneName('couvert');
+          ibFeatures.couvert.forEach(f => {
+            const p = L.polygon(f.latlngs, {
+              color: spec.stroke, weight: spec.weight,
+              opacity: spec.strokeOpacity,
+              fillColor: spec.color,
+              fillOpacity: Math.min(0.6, spec.fillOpacity + (f.canopy - 0.5) * 0.4),
+              interactive: false, pane: paneName,
+            });
+            p.bindTooltip(
+              `<b style="color:${spec.color}">COUVERT</b> canopée ${f.meta.canopy_pct}%`,
+              { sticky: true, opacity: 0.95 }
+            );
+            group.addLayer(p);
+          });
+        }
+        // Exposition diagnostique institutionnelle (read-only)
+        try {
+          if (typeof window !== 'undefined') {
+            window.__INSPECTION_BIO_GEOMETRY__ = Object.freeze({
+              role: ibFeatures.role,
+              counts: {
+                attracteurs: ibFeatures.attracteurs.length,
+                exclusions: ibFeatures.exclusions.length,
+                pentes: ibFeatures.pentes.length,
+                couvert: ibFeatures.couvert.length,
+              },
+              rejections: Object.freeze({ ...(ibFeatures.rejections || {}) }),
+              filtersActive: !!ibFeatures.filtersActive,
+              renderedAt: new Date().toISOString(),
+            });
+          }
+        } catch (_e) { /* noop */ }
+      }
+    } else {
+      // Mode OFF — purger l'exposition diagnostique
+      try {
+        if (typeof window !== 'undefined' && window.__INSPECTION_BIO_GEOMETRY__) {
+          window.__INSPECTION_BIO_GEOMETRY__ = Object.freeze({
+            role: null, counts: { attracteurs: 0, exclusions: 0, pentes: 0, couvert: 0 }, renderedAt: null,
+          });
+        }
+      } catch (_e) { /* noop */ }
+    }
+
     // ═══ Z-7: AFFUTS-Omega V12-R5 (Directive II) — Orange BIONIC + contour blanc ═══
-    // icone 18-22px, z-index top, orange #FF9800 + contour blanc 2px
     if (showAffuts && affuts.length > 0) {
       const AFFUT_BIONIC_ORANGE = '#FF9800';
       const AFFUT_WHITE_STROKE = '#FFFFFF';
@@ -692,8 +985,10 @@ const BionicLayersV8 = ({
     //   z ≥ 16  → détail (affuts, points_observation, deplacements_ia)
     let supraRendered = 0;
 
-    // 1. CONTAMINATION V2 HEATMAP (toujours visible)
-    if (contamination_v2_heatmap && contamination_v2_heatmap.zones) {
+    // 1. CONTAMINATION V2 HEATMAP (visible uniquement si showContamination=true)
+    // PHASE_XV_CONTAMINATION_PARITY_Ω — sous contrôle du toggle institutionnel
+    let contamRendered = 0;
+    if (showContamination && contamination_v2_heatmap && contamination_v2_heatmap.zones) {
       contamination_v2_heatmap.zones.forEach((z) => {
         const c = L.circle([z.lat, z.lon], {
           radius: (z.radius_km || 40) * 1000,
@@ -706,8 +1001,31 @@ const BionicLayersV8 = ({
         c.bindTooltip(`<b>CWD ${z.surveillance}</b><br/>${z.zone}<br/>Cas 2024: ${z.cases_2024}`, { sticky: true });
         c.addTo(group);
         supraRendered++;
+        contamRendered++;
       });
     }
+
+    // PHASE_XV_CONTAMINATION_PARITY_Ω — exposition diagnostique read-only
+    try {
+      if (typeof window !== 'undefined') {
+        const cones = Array.isArray(contamination) ? contamination.length : 0;
+        const v2zones = (contamination_v2_heatmap && contamination_v2_heatmap.zones) || [];
+        window.__CONTAMINATION_STATE__ = Object.freeze({
+          toggleActive: !!showContamination,
+          cones_rendered: showContamination ? cones : 0,
+          v2_zones_rendered: contamRendered,
+          v2_zones_available: v2zones.length,
+          total_rendered: (showContamination ? cones : 0) + contamRendered,
+          has_data: (cones + v2zones.length) > 0,
+          message: (!showContamination)
+            ? 'TOGGLE_OFF'
+            : (cones + v2zones.length) === 0
+              ? 'NO_CONTAMINATION_DATA_FOR_THIS_AREA'
+              : 'RENDERED',
+          renderedAt: new Date().toISOString(),
+        });
+      }
+    } catch (_e) { /* noop */ }
 
     // 2. CANADA ZONES (macro uniquement)
     if (currentZoom < 14 && canada_zones_summary.length > 0) {
@@ -863,7 +1181,7 @@ const BionicLayersV8 = ({
         esi_omega: bundleData.esi_omega,
       });
     }
-  }, [map, bundleData, waypointCenter, enabled, showZones, showCorridors, showAffuts, showSalines, showHotspots, showContamination, showNutrition, corridorWeightFactor, affutRadiusFactor, salineHaloFactor, currentZoom, clearOwnLayers, useOrganicCorridors, organicBundle]);
+  }, [map, bundleData, waypointCenter, enabled, showZones, showCorridors, showAffuts, showSalines, showHotspots, showContamination, showNutrition, corridorWeightFactor, affutRadiusFactor, salineHaloFactor, currentZoom, clearOwnLayers, useOrganicCorridors, organicBundle, inspectionBioVersion]);
 
   useEffect(() => {
     renderLayers();

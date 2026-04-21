@@ -185,3 +185,52 @@ Un corridor conforme RENDU Ω est :
 * exempt de contamination affûts
 
 Il représente la veine animale réelle , rendue avec exactitude institutionnelle .
+
+---
+
+## Annexe SUPRA-Ω-ART + GEOMETRY_Ω_ALIGNMENT — ACTIVATION PRODUCTION (2026-04-21)
+
+**Version :** `V1.3.1-PHASE-XII-SUPRA-S-HOTFIX-2026-04`
+**Registry :** V30 / SHA-256 `27516c9633853974...`
+**Commandant :** STEEVE-MAX — `VALIDÉ — SUPRA_S_ACTIVATION_EN_PRODUCTION`
+
+### Styles institutionnels NON NÉGOCIABLES (observés live DOM)
+
+| Couche | Weight px | Opacité | Couleur | Pane |
+|--------|:---------:|:-------:|:-------:|------|
+| Halo externe adaptatif | ~5.94 | ~0.405 | #FF8F00 | renduOmega-corridors |
+| Halo interne glow chaud | 2.4 | 0.55 | #FFD380 | renduOmega-corridors |
+| Ligne institutionnelle | 2.0 | **1.00** | **#FF8F00** | renduOmega-corridors |
+
+Les valeurs halo externe résultent du produit `(weight+2.4) × mainVeinBoost × salineBoost`
+et de l'opacité de base (forest=0.30) × terrain_boost × (1+vital_zone_boost).
+
+### Z-INDEX institutionnel strict
+
+```
+400 = zones
+410 = hydrologie
+420 = terrain
+430 = CORRIDORS (renduOmega-corridors-pane)
+440 = salines
+450 = affuts
+460 = hotspots
+470 = vent
+```
+
+### GEOMETRY_Ω_ALIGNMENT
+
+- **CatmullRom 28 pts** (legacy, `controlPointsTarget: 28`)
+- **60–120 pts** (organic, pipeline `engine_ia_corridors_organic_omega`)
+- Segments ≤ 20 m strict
+- Angles ≤ 45° strict
+- Continuité stricte (aucune rupture `NaN` / `null`)
+- Signature espèce **APRÈS** resample + re-enforce géométrique post-signature (HOTFIX)
+- Rayon fonctionnel 420-780 m avec tolerance rescue 830 m
+
+### Modes
+
+- `SUPRA_S_MODE` : **ACTIF** (seul mode autorisé)
+- Modes antérieurs (V1.0, V1.1, V1.2) : désactivés, versions marqueurs conservés dans logs
+- Mode `INSPECTION_BIOLOGIQUE` PRO/EXPERT : implémenté, non actif publiquement (attente ordre)
+

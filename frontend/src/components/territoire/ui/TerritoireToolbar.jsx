@@ -18,6 +18,7 @@ import {
   Map, Binoculars, Layers, Brain,
   Shield, SplitSquareHorizontal,
   Wind, Crosshair, Flame, Droplets, Eye, Navigation, BookMarked,
+  Microscope,
 } from 'lucide-react';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import BionicMapSelector from '@/components/maps/BionicMapSelector';
@@ -93,6 +94,7 @@ export function TerritoireToolbar({
   activeWaypoints, savedPlaces,
   selectedWaypointForZones,
   showIntelLayer, setShowIntelLayer,
+  showInspectionBioPanel, setShowInspectionBioPanel,
   showPhaseA, setShowPhaseA,
   showPhaseC, setShowPhaseC,
   // Legacy props accepted but ignored
@@ -191,6 +193,14 @@ export function TerritoireToolbar({
 
         {/* CURSEUR BIONIC */}
         <PressButton active={showCursorBionic} onClick={() => setShowCursorBionic(v => !v)} icon={Binoculars} label="Curseur" activeColor="#4A7A2E" testId="toggle-curseur-bionic" />
+
+        {/* INSPECTION BIOLOGIQUE PRO/EXPERT — panneau dédié */}
+        <PressButton
+          active={!!showInspectionBioPanel}
+          onClick={() => setShowInspectionBioPanel && setShowInspectionBioPanel(v => !v)}
+          icon={Microscope} label="Inspec" activeColor="#FF8F00" testId="toolbar-inspection-bio-btn"
+          title="Mode inspection biologique PRO/EXPERT"
+        />
 
         {/* SCORE BADGE */}
         {SEP}

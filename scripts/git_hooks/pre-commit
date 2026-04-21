@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# =========================================================================
+# PHASE_XV_CONTAMINATION_PARITY_CI_LOCK_Ω — CI GATE PRE-COMMIT HOOK
+# BCE-4X ULTIME ABSOLU — VERSION_INSTITUTIONNELLE_RENFORCÉE_X10
+#
+# Rôle :
+#   Bloquer physiquement tout commit qui casserait les tests sentinelles
+#   institutionnels des phases XIV + XV sur le pipeline TERRITOIRE.
+#
+# Installation :
+#   cp /app/scripts/git_hooks/pre-commit /app/.git/hooks/pre-commit
+#   chmod +x /app/.git/hooks/pre-commit
+#
+# Désinstallation (INTERDITE sauf ordre explicite du Commandant) :
+#   rm /app/.git/hooks/pre-commit
+# =========================================================================
+
+set -e
+
+# Couleurs institutionnelles (rouge/orange BCE-4X)
+RED='\033[0;31m'
+ORANGE='\033[0;33m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+echo -e "${ORANGE}═══════════════════════════════════════════════════════════${NC}"
+echo -e "${ORANGE}  BCE-4X CI GATE — PHASE_XV_CONTAMINATION_PARITY_CI_LOCK_Ω ${NC}"
+echo -e "${ORANGE}═══════════════════════════════════════════════════════════${NC}"
+
+# Ne lancer la sentinelle que si des fichiers TERRITOIRE sont modifiés
+TERRITOIRE_CHANGES=$(git diff --cached --name-only | grep -E '^(frontend/src/components/territoire/|frontend/src/lib/renduOmegaStore\.js|frontend/src/lib/__tests__/|frontend/src/pages/MonTerritoireBionicPage\.jsx|frontend/src/components/territoire/map/MapContent\.jsx|backend/engines/)' || true)
+
+if [ -z "$TERRITOIRE_CHANGES" ]; then
+  echo -e "${GREEN}✓ Aucune modification TERRITOIRE — commit autorisé.${NC}"
+  exit 0
+fi
+
+echo -e "${ORANGE}▸ Modifications TERRITOIRE détectées :${NC}"
+echo "$TERRITOIRE_CHANGES" | sed 's/^/    /'
+echo ""
+echo -e "${ORANGE}▸ Exécution des tests sentinelles BLOQUANTS...${NC}"
+echo ""
+
+cd /app/frontend
+
+# Sentinelles XIV + XV (parité fonctionnelle + contamination)
+if CI=true yarn test --testPathPattern="phase_xiv_functional_parity|phase_xv_contamination_parity|nutritionSalinesBinding|inspectionBioFiltering" --watchAll=false --silent 2>&1 | tail -20; then
+  echo ""
+  echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
+  echo -e "${GREEN}  ✓ TOUS LES TESTS SENTINELLES PASSÉS — COMMIT AUTORISÉ    ${NC}"
+  echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
+  exit 0
+else
+  echo ""
+  echo -e "${RED}═══════════════════════════════════════════════════════════${NC}"
+  echo -e "${RED}  ✗ SENTINELLE CASSÉE — COMMIT REFUSÉ PAR BCE-4X CI GATE    ${NC}"
+  echo -e "${RED}═══════════════════════════════════════════════════════════${NC}"
+  echo ""
+  echo -e "${ORANGE}Pour contourner temporairement (NON RECOMMANDÉ) :${NC}"
+  echo "  git commit --no-verify"
+  echo ""
+  echo -e "${ORANGE}Pour exécuter les tests localement :${NC}"
+  echo "  cd /app/frontend && yarn test --testPathPattern=\"phase_xiv|phase_xv\" --watchAll=false"
+  exit 1
+fi

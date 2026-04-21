@@ -162,7 +162,18 @@ def _generate_affuts_inline(lat, lon, species, zones, wind_deg=180):
 
 
 def _generate_heatmap_inline(lat, lon, species, month, hour, grid_size=12, radius_km=1.5):
-    """Generate heatmap inline."""
+    """Generate heatmap inline.
+
+    PHASE_XIII_RECALCUL_ORGANIC_Ω — pondération par terrain densifié :
+    hotspots rejetés en zone urbaine/industrielle/portuaire, probabilité
+    boostée par canopée dense, atténuée par impervious_pct élevé.
+    """
+    # Import deferred to avoid circular dependency (phase_b_engines loads this module indirectly)
+    try:
+        from engines.v8_national.phase_b_engines import _terrain_profile  # noqa: E501
+    except Exception:
+        _terrain_profile = None
+
     doy = (month - 1) * 30 + 15
     crep = species in ["cerf","orignal","wapiti","caribou","chevreuil"]
     t_mult = 1.3 if (5<=hour<=8 or 16<=hour<=19) and crep else 0.7 if 10<=hour<=14 else 1.0
@@ -177,10 +188,24 @@ def _generate_heatmap_inline(lat, lon, species, month, hour, grid_size=12, radiu
             p_lon = lon + gx * step_lon
             raw = abs(math.sin(p_lat * 11.3 + p_lon * 7.7 + doy * 0.15))
             prob = min(1.0, max(0.05, raw * t_mult / 1.3))
+
+            # PHASE_XIII — EXCLUSION_AWARE_Ω + biologie pondérée
+            if _terrain_profile is not None:
+                ter = _terrain_profile(p_lat, p_lon)
+                if ter.get("urban") or ter.get("industrial") or ter.get("port"):
+                    continue
+                if ter.get("impervious_pct", 0) > 60:
+                    continue
+                # Bonus canopée dense, malus impervious progressif
+                prob = min(1.0, prob + max(0, (ter["canopy"] - 0.5) * 0.25))
+                prob = max(0.05, prob - min(0.2, ter.get("impervious_pct", 0) * 0.003))
+
             if prob > 0.15:
                 points.append({
                     "lat": round(p_lat, 5), "lng": round(p_lon, 5),
                     "probability": round(prob, 3),
+                    # PHASE_XIII — marqueur institutionnel
+                    "recalcul_organic_omega": True,
                 })
     return points
 

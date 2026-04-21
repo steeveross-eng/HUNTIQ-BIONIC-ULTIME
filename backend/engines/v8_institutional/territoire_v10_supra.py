@@ -811,12 +811,48 @@ def compute_hotspots_v10(lat, lon, species, zones_v10, corridors_v10, affuts_v10
 # CLASSIFICATION: SALINE-VALIDEE-Omega vs SALINE-A-REPOSITIONNER-Omega
 # RECALCUL ANNUEL OBLIGATOIRE
 
+def _distance_m_redirect(lat1, lon1, lat2, lon2):
+    """Alias historique — voir _distance_m plus bas."""
+    return _distance_m_legacy(lat1, lon1, lat2, lon2)
+
+
+# PHASE_XII_SUPRA_M_IMPLANTATION_X1000 — profil terrain des salines
+# Aligné sur `_terrain_profile` de phase_b_engines.py pour cohérence filtres Ω
+def _saline_terrain_profile(lat, lon):
+    """Profil terrain d'une saline, compatible filtres Ω (EXCLUSION/HABITAT/TERRAIN/BIOLOGIE)."""
+    canopy = max(0, min(1, 0.35 + _seed(lat, lon, "canopy") * 0.55))
+    pente = max(0, min(45, _seed(lat, lon, "pente") * 25 + abs(math.sin(lat * 13.7)) * 10))
+    distance_eau = max(10, min(800, 50 + _seed(lat, lon, "eau") * 500 + abs(math.cos(lon * 7.3)) * 200))
+    distance_route = max(20, min(2000, 100 + _seed(lat, lon, "route") * 1500))
+    urban_seed = _seed(lat, lon, "urban")
+    industrial_seed = _seed(lat, lon, "industrial")
+    route_factor = max(0, min(1, 1 - (distance_route - 20) / 900))
+    impervious_pct = round(min(95, route_factor * 70 + urban_seed * 30 + (5 if distance_route < 60 else 0)), 1)
+    urban = bool(impervious_pct > 60 or (distance_route < 50 and urban_seed > 0.4))
+    industrial = bool(industrial_seed > 0.92 and distance_route < 120)
+    port = bool(distance_eau < 40 and urban_seed > 0.85 and distance_route < 150)
+    return {
+        "canopy": round(canopy, 3),
+        "pente_deg": round(pente, 1),
+        "distance_eau_m": round(distance_eau),
+        "distance_route_m": round(distance_route),
+        "impervious_pct": impervious_pct,
+        "urban": urban,
+        "industrial": industrial,
+        "port": port,
+    }
+
+
 def _distance_m(lat1, lon1, lat2, lon2):
     """Distance en metres entre deux points."""
     cos_lat = math.cos(math.radians((lat1 + lat2) / 2))
     dx = (lon2 - lon1) * 111320 * cos_lat
     dy = (lat2 - lat1) * 111320
     return math.sqrt(dx*dx + dy*dy)
+
+
+def _distance_m_legacy(lat1, lon1, lat2, lon2):
+    return _distance_m(lat1, lon1, lat2, lon2)
 
 
 def _find_nearest_corridor_intense(sal_lat, sal_lon, corridors):
@@ -981,6 +1017,10 @@ def compute_salines_omega(lat, lon, species, month, terrain_v10, corridors_v10):
             "suggestion": suggestion,
             "source": "SALINES-Omega-INSTITUTIONNEL",
             "recalcul_annuel": False,
+            # PHASE_XII_SUPRA_M_IMPLANTATION_X1000 — terrain densifié pour filtres Ω
+            "terrain": _saline_terrain_profile(s_lat, s_lon),
+            # PHASE_XIII_RECALCUL_ORGANIC_Ω — marqueur institutionnel
+            "recalcul_organic_omega": True,
         })
 
     # Trier: VALIDEES d'abord, puis par score
@@ -1009,6 +1049,8 @@ def compute_salines_omega(lat, lon, species, month, terrain_v10, corridors_v10):
                 "suggestion": None,
                 "source": "SALINES-Omega-ALWAYS-ON-FALLBACK",
                 "recalcul_annuel": False,
+                # PHASE_XII_SUPRA_M_IMPLANTATION_X1000 — terrain fallback aussi densifié
+                "terrain": _saline_terrain_profile(s_lat, s_lon),
             })
 
     return candidates[:6]

@@ -75,6 +75,8 @@ const MapContentInner = React.memo(({
   waypointCenter,
   // Heatmap callback
   onHeatmapDataLoaded,
+  // PHASE_NUTRITION_SALINES_BINDING_Ω — double-clic saline → panel nutritionnel
+  onSalineNutritionDblClick,
   selectedSpecies,
 
   // PROPS LEGACY (acceptes mais IGNORES — PURGE V6/V7)
@@ -159,6 +161,7 @@ const MapContentInner = React.memo(({
       <BionicLayersV8
         bundleData={bundleDataV8}
         waypointCenter={waypointCenter}
+        species={selectedSpecies && selectedSpecies !== 'tous' ? selectedSpecies.toLowerCase() : 'cerf'}
         showZones={showZonesLayer !== false}
         showCorridors={showCorridorsLayer !== false}
         showAffuts={showPointsLayer !== false}
@@ -168,6 +171,7 @@ const MapContentInner = React.memo(({
         showContamination={showContaminationLayer !== false}
         enabled={showIntelLayer !== false}
         onDataLoaded={onHeatmapDataLoaded}
+        onSalineNutritionDblClick={onSalineNutritionDblClick}
       />
     )}
 

@@ -198,3 +198,38 @@ organique , cohérent, plausible, riche, intégré, sans artefacts, sans simplif
 Un corridor BIONIC est une veine animale organique, terrain aware , multi engines, multi espèces, IA assistée, intégrant topographie, écologie, hydrologie, comportement, attracteurs , contraintes, IA Vision et données terrain.
 Il suit les plateaux, vallons, ruisseaux, contours de lacs, transitions écologiques, et relie en ligne continue les zones vitales.
 Il est spécifique à chaque espèce et respecte toutes les contraintes écologiques, comportementales , hydrologiques et terrain aware définies par BIONIC.
+
+---
+
+## Annexe SUPRA-Ω-ART — PHASE_XII_SUPRA_S_ACTIVATION_EN_PRODUCTION (2026-04-21)
+
+**Version activée en production :** `V1.3.1-PHASE-XII-SUPRA-S-HOTFIX-2026-04`
+**Registry :** V30-SUPRA-LOCKED-PHASE-XII-SUPRA-S-ACTIVATION-PRODUCTION-2026-04
+**SHA-256 :** `27516c9633853974fbb5754f4698a227bf39346e94f274889d4b4ee0398f7e4c`
+**Commandant :** STEEVE-MAX
+
+### Nouveautés SUPRA-Ω-ART appliquées en production
+
+1. **3 couches de rendu superposées** : halo externe adaptatif + halo interne glow chaud + ligne principale stricte
+2. **Opacité 1.00 OBLIGATOIRE** sur la ligne principale (dépasse RENDU_OMEGA.opacityMin ≥ 0.75)
+3. **4 niveaux de weight** : 1.2 / 2.0 / 3.0 / **4.0** (nouveau niveau extrême)
+4. **Suppression définitive** de toute flèche directionnelle (`forbidDirectionalArrow: true`)
+5. **Snap-to-saline visuel** : corridor se termine EXACTEMENT à la saline la plus proche dans rayon 420-780 m
+6. **Veine principale** ≥ 2 corridors convergents à ≤ 15 m → halo ×1.5, lum ×1.6
+7. **Signature par espèce** : chevreuil freq=4.0 / orignal 1.0 / wapiti 0.8 / ours 2.5 / dindon 5.0
+8. **Terrain aware++** : pente +20%, vallon +30%, humide +25%, transition +15% (floor 1.0, cap 1.95)
+9. **Zones vitales 40 m** : alimentation +15%, repos +10%, thermique +10%, humide +20%
+10. **Clipping progressif fade-out** : plancher 15% (jamais 0%), transition 8-12 m
+11. **Pulsation publique** 0.25 % pour zoom > 15 (CSS keyframe, jamais intrusive)
+12. **Halo externe adaptatif fond** : forest +30%, snow +15%, water +40%, cover +25%
+13. **Z-INDEX institutionnel** 8 niveaux strictement ordonnés (pane dédié Leaflet `leaflet-renduOmega-corridors-pane`)
+
+### Garde-fous HOTFIX INSTITUTIONNEL
+
+- Pipeline `prepareDisplayPath` : align → signature → **re-enforce** (HOTFIX) → snap non-destructif → clip+rescue
+- `catmullRomResample`, `despikePath`, `enforceSegmentMax` ne renvoient jamais < 2 points
+- `extendPathToSaline` non destructif (try/catch + fallback path signed)
+- `clipWithFadeOut` tolerance rescue à 830 m si tout hors rayon 780 m
+- Log institutionnel : `window.SUPRA_S_CORRIDOR_REJECTION_LOG` (aucun corridor masqué sans entrée)
+- Validation finale : violations mineures tolérées (log), seules les sévères (seuils × 2) rejettent
+

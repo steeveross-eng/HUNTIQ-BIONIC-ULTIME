@@ -28,7 +28,8 @@ import { Switch } from '@/components/ui/switch';
 import useBionicSession from '@/hooks/useBionicSession';
 import useBionicLayers from '@/hooks/useBionicLayers';
 import { TerritoireToolbar } from '@/components/territoire/ui/TerritoireToolbar';
-import { NutritionPanel } from '@/components/territoire/ui/NutritionPanel';
+import { InspectionBiologiquePanel } from '@/components/territoire/InspectionBiologiquePanel';
+import { NutritionPanelOmega } from '@/components/territoire/NutritionPanelOmega';import { NutritionPanel } from '@/components/territoire/ui/NutritionPanel';
 import { TerritoireDialogs } from '@/components/territoire/ui/TerritoireDialogs';
 import useBionicWeather from '@/hooks/useBionicWeather';
 import useSharedWeather from '@/hooks/useSharedWeather';
@@ -590,7 +591,9 @@ const MonTerritoireBionicPage = () => {
 
   // ALIMENTATION-V2: Points nutritionnels + Recommandations
   const [showAlimentationV2, setShowAlimentationV2] = useState(true);
-  const [showNutritionPoints, setShowNutritionPoints] = useState(true);
+  // NUTRITION_BY_SALINE_ONLY actif — la directive interdit toute couche nutrition autonome.
+  // PHASE_NUTRITION_SALINES_BINDING_Ω : le rendu se fait uniquement via dblclick saline.
+  const [showNutritionPoints, setShowNutritionPoints] = useState(false);
   const [showNutritionPanel, setShowNutritionPanel] = useState(false);
   const [showAmenagementPanel, setShowAmenagementPanel] = useState(false);
   const [selectedStand, setSelectedStand] = useState(null);
@@ -652,6 +655,10 @@ const MonTerritoireBionicPage = () => {
   const [showPhaseC, setShowPhaseC] = useState(TERRITOIRE_DEFAULTS.CONTAMINATION);
   // PHASE-FRONTEND-Omega V2: Couche INTEL-Omega (master institutionnel)
   const [showIntelLayer, setShowIntelLayer] = useState(TERRITOIRE_DEFAULTS.INTEL);
+  // MODE INSPECTION BIOLOGIQUE PRO/EXPERT — panneau institutionnel flottant
+  const [showInspectionBioPanel, setShowInspectionBioPanel] = useState(false);
+  // PHASE_NUTRITION_SALINES_BINDING_Ω — panneau nutritionnel au dblclick saline
+  const [nutritionPanelPayload, setNutritionPanelPayload] = useState(null);
 
   // STEEVE-MAX V3: Sous-éléments granulaires par couche
   const [zoneSubFilters, setZoneSubFilters] = useState({
@@ -1205,6 +1212,7 @@ const MonTerritoireBionicPage = () => {
         activeWaypoints={activeWaypoints} savedPlaces={savedPlaces}
         selectedWaypointForZones={selectedWaypointForZones}
         showIntelLayer={showIntelLayer} setShowIntelLayer={setShowIntelLayer}
+        showInspectionBioPanel={showInspectionBioPanel} setShowInspectionBioPanel={setShowInspectionBioPanel}
         showPhaseA={showPhaseA} setShowPhaseA={setShowPhaseA}
         showPhaseC={showPhaseC} setShowPhaseC={setShowPhaseC}
       />
@@ -1218,6 +1226,16 @@ const MonTerritoireBionicPage = () => {
       <div className="flex-1 flex overflow-hidden min-h-0 relative">
         {/* ── CARTE BIONIC — ZONE DOMINANTE (80%+ de l'écran) ── */}
         <div className="flex-1 relative">
+          {/* MODE INSPECTION BIOLOGIQUE PRO/EXPERT — panneau flottant institutionnel */}
+          <InspectionBiologiquePanel
+            open={showInspectionBioPanel}
+            onClose={() => setShowInspectionBioPanel(false)}
+          />
+          {/* NUTRITION_PANEL_Ω — rapport nutritionnel au double-clic saline */}
+          <NutritionPanelOmega
+            payload={nutritionPanelPayload}
+            onClose={() => setNutritionPanelPayload(null)}
+          />
           {/* Indicateur du mode création de waypoint */}
           {mapClickMode && (
             <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-[1000] bg-green-500 text-black px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 animate-pulse">
@@ -1353,6 +1371,7 @@ const MonTerritoireBionicPage = () => {
               onNutritionPointClick={setSelectedNutritionPoint}
               showHeatmapV10={showHeatmapV10}
               onHeatmapDataLoaded={setHeatmapV10Data}
+              onSalineNutritionDblClick={setNutritionPanelPayload}
               heatmapIncludeCorridors={heatmapIncludeCorridors}
               showHydro={effectiveShowHydro}
               userCameras={positionedCameras}

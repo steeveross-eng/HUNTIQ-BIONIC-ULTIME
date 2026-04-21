@@ -41,6 +41,19 @@ def _terrain_profile(lat, lon):
     distance_eau = max(10, min(800, 50 + _seed(lat, lon, "eau") * 500 + abs(math.cos(lon * 7.3)) * 200))
     distance_route = max(20, min(2000, 100 + _seed(lat, lon, "route") * 1500))
     couvert_pct = canopy * 80 + strate_1_3m * 20
+
+    # PHASE_XII_SUPRA_M_IMPLANTATION_X1000 — métadonnées densifiées Ω
+    # impervious_pct : corrélé inversement à distance_route + bruit deterministic
+    # urban/industrial : flags dérivés pour les 4 filtres Ω (EXCLUSION_AWARE_Ω)
+    urban_seed = _seed(lat, lon, "urban")
+    industrial_seed = _seed(lat, lon, "industrial")
+    # Plus on est proche d'une route, plus impervious est élevé (80 m -> ~70 %, 1500 m -> ~5 %)
+    route_factor = max(0, min(1, 1 - (distance_route - 20) / 900))
+    impervious_pct = round(min(95, route_factor * 70 + urban_seed * 30 + (5 if distance_route < 60 else 0)), 1)
+    urban = bool(impervious_pct > 60 or (distance_route < 50 and urban_seed > 0.4))
+    industrial = bool(industrial_seed > 0.92 and distance_route < 120)
+    port = bool(distance_eau < 40 and urban_seed > 0.85 and distance_route < 150)
+
     return {
         "canopy": round(canopy, 3),
         "pente_deg": round(pente, 1),
@@ -49,6 +62,11 @@ def _terrain_profile(lat, lon):
         "distance_eau_m": round(distance_eau),
         "distance_route_m": round(distance_route),
         "couvert_pct": round(couvert_pct, 1),
+        # PHASE_XII_SUPRA_M — nouveaux champs institutionnels
+        "impervious_pct": impervious_pct,
+        "urban": urban,
+        "industrial": industrial,
+        "port": port,
     }
 
 
@@ -153,13 +171,20 @@ def _bezier_curve(start, end, n_points=8, curvature_seed=0):
 # ═══════════════════════════════════════════════════════
 
 def _score_zone_terrain(terrain, zone_type, month):
-    """Score une zone en fonction du terrain et du type."""
+    """Score une zone en fonction du terrain et du type.
+
+    PHASE_XIII_RECALCUL_ORGANIC_Ω — pondération par les métadonnées densifiées
+    (canopy, impervious, urban, pente). Toute zone anthropique reçoit un
+    malus drastique (-70) ; toute zone couverte > 0.5 reçoit un bonus habitat.
+    """
     canopy = terrain["canopy"]
     pente = terrain["pente_deg"]
     eau = terrain["distance_eau_m"]
     route = terrain["distance_route_m"]
     strate = terrain["strate_1_3m"]
     feuillus = terrain["feuillus_ratio"]
+    impervious = terrain.get("impervious_pct", 0)
+    urban = terrain.get("urban", False)
 
     if zone_type == "alimentation":
         # Alimentation: strate arbustive haute, feuillus, pente faible
@@ -189,6 +214,17 @@ def _score_zone_terrain(terrain, zone_type, month):
                  min(1, route / 500) * 20 + feuillus * 10 + min(1, eau / 300) * 10)
     else:
         score = 50
+
+    # PHASE_XIII_RECALCUL_ORGANIC_Ω — modulation institutionnelle post-scoring
+    # Bonus habitat canopée dense
+    if canopy >= 0.5:
+        score += 6
+    # Malus impervious progressif
+    if impervious > 0:
+        score -= min(30, impervious * 0.35)
+    # Malus urbain drastique (applicable avant exclusion pour marquer la donnée)
+    if urban:
+        score -= 40
 
     return round(min(100, max(0, score)), 1)
 
@@ -250,6 +286,7 @@ def generate_zones_ta(lat, lon, species, month, radius_km=1):
 
         # EXCLUSION: zones sur eau directe ou pente extreme
         # DOCUMENT MAITRE: eau < 10m, pente > 45deg
+        # PHASE_XII_SUPRA_M_IMPLANTATION_X1000 : EXCLUSION_AWARE_Ω densifiée
         excluded = False
         exclusion_reason = None
         if terrain["distance_eau_m"] < 10:
@@ -258,6 +295,18 @@ def generate_zones_ta(lat, lon, species, month, radius_km=1):
         elif terrain["pente_deg"] > 45:
             excluded = True
             exclusion_reason = "pente_extreme"
+        elif terrain.get("port"):
+            excluded = True
+            exclusion_reason = "zone_portuaire_anthropique"
+        elif terrain.get("industrial"):
+            excluded = True
+            exclusion_reason = "zone_industrielle_anthropique"
+        elif terrain.get("urban"):
+            excluded = True
+            exclusion_reason = "zone_urbaine_anthropique"
+        elif terrain.get("impervious_pct", 0) > 60:
+            excluded = True
+            exclusion_reason = "infrastructure_anthropique"
 
         # V6-CONFORME: taille variable par type (rut=large, eau=petit)
         type_radius = {"alimentation": 0.003, "repos": 0.0035, "rut": 0.004, "affuts": 0.0025, "eau": 0.002}
@@ -275,6 +324,8 @@ def generate_zones_ta(lat, lon, species, month, radius_km=1):
             "terrain": terrain,
             "excluded": excluded,
             "exclusion_reason": exclusion_reason,
+            # PHASE_XIII_RECALCUL_ORGANIC_Ω — marqueur institutionnel post-recalcul
+            "recalcul_organic_omega": True,
         })
     return zones
 
@@ -566,12 +617,20 @@ def generate_corridors_ta(lat, lon, species, month, hour, radius_km=0.6, wind_de
 
 
 def generate_affuts_ta(lat, lon, species, zones, corridors, wind_deg=180):
-    """Affuts terrain-aware: coherence zones+corridors, terrain, vent."""
+    """Affuts terrain-aware: coherence zones+corridors, terrain, vent.
+
+    PHASE_XIII_RECALCUL_ORGANIC_Ω — EXCLUSION_AWARE_Ω appliquée en amont :
+    aucun affût ne peut être placé sur zone urbaine/industrielle/portuaire
+    ou à impervious_pct > 60. Scoring pondéré par canopy et habitat.
+    """
     affuts = []
     cos_lat = max(0.5, math.cos(math.radians(lat)))
 
     for i, z in enumerate(zones):
         if z["type"] not in ("alimentation", "rut", "repos"):
+            continue
+        # PHASE_XIII — si la zone source est anthropique, on n'y plante pas d'affût
+        if z.get("excluded"):
             continue
 
         zc = z["center"]
@@ -582,10 +641,20 @@ def generate_affuts_ta(lat, lon, species, zones, corridors, wind_deg=180):
 
         terrain = _terrain_profile(a_lat, a_lon)
 
-        # Score affut terrain-aware
+        # PHASE_XIII — EXCLUSION_AWARE_Ω : rejet affût anthropique
+        if terrain.get("urban") or terrain.get("industrial") or terrain.get("port"):
+            continue
+        if terrain.get("impervious_pct", 0) > 60:
+            continue
+
+        # Score affut terrain-aware (pondération enrichie)
         couvert_s = 80 if terrain["couvert_pct"] >= 50 else 50
         vent_s = abs(math.sin(math.radians(wind_deg + a_lat * 3.7))) * 40 + 40
         transition_s = min(100, _seed(a_lat, a_lon, "trans") * 60 + 30)
+
+        # PHASE_XIII — bonus habitat canopée + malus impervious résiduel
+        canopy_bonus = max(0, (terrain["canopy"] - 0.35) * 30)  # 0 à 16.5 pts
+        impervious_malus = min(10, terrain.get("impervious_pct", 0) * 0.15)
 
         # Proximite corridor bonus
         corridor_prox_bonus = 0
@@ -598,7 +667,8 @@ def generate_affuts_ta(lat, lon, species, zones, corridors, wind_deg=180):
             if dist_deg < 0.01:
                 corridor_prox_bonus = max(corridor_prox_bonus, (1 - dist_deg / 0.01) * 20)
 
-        total = couvert_s * 0.30 + vent_s * 0.25 + transition_s * 0.20 + corridor_prox_bonus * 0.25
+        total = (couvert_s * 0.30 + vent_s * 0.25 + transition_s * 0.20 + corridor_prox_bonus * 0.25
+                 + canopy_bonus - impervious_malus)
         quality = "optimal" if total > 65 else "bon" if total > 45 else "acceptable"
 
         affuts.append({
@@ -612,6 +682,10 @@ def generate_affuts_ta(lat, lon, species, zones, corridors, wind_deg=180):
             "score": round(min(100, max(0, total)), 1),
             "terrain": terrain,
             "corridor_proximity_bonus": round(corridor_prox_bonus, 1),
+            # PHASE_XIII_RECALCUL_ORGANIC_Ω — marqueur institutionnel
+            "recalcul_organic_omega": True,
+            "canopy_bonus": round(canopy_bonus, 2),
+            "impervious_malus": round(impervious_malus, 2),
         })
     return affuts
 

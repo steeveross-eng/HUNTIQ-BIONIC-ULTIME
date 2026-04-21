@@ -1,0 +1,72 @@
+# SUPRA_S_CORRIDOR_REJECTION_LOG
+
+> **Format :** JSONL (une entrée par ligne)
+> **Source :** `window.SUPRA_S_CORRIDOR_REJECTION_LOG` (frontend, exposé par `BionicLayersV8.jsx`)
+> **Directive :** PHASE_XII_SUPRA_S_HOTFIX_INSTITUTIONNEL §C
+> **Mise à jour :** 2026-04-21T04:10:00Z
+
+## Conformité protocolaire
+
+Aucun corridor n'est rejeté ni masqué sans entrée dans ce log.
+Le log frontend est agrégé dans `window.SUPRA_S_CORRIDOR_REJECTION_LOG`
+(tableau d'entrées JSON) à chaque cycle de rendu `renderLayers`.
+
+## Schéma d'entrée
+
+```json
+{
+  "t": 1731111111111,           // timestamp epoch ms
+  "id": "corridor_id_or_null",
+  "reason": "string",            // cf. liste ci-dessous
+  "metrics": {
+    "n_input": 0,
+    "n_after_align": 0,
+    "n_after_signature": 0,
+    "n_after_reenforce": 0,
+    "n_after_snap": 0,
+    "snap_status": "none|snapped_ok|snap_failed_fallback_signed|snap_exception_fallback_signed|no_saline_in_radius"
+  },
+  "violations": [...],           // optionnel, sur violations géométriques
+  "saline": {...}                // optionnel, sur événements snap
+}
+```
+
+## Causes possibles (reason)
+
+| reason | Sévérité | Description |
+|--------|:--------:|-------------|
+| `align_too_short` | HAUTE | path source < 2 points après alignement (rare) |
+| `reenforce_collapsed_fallback_aligned` | MOYENNE | despike + enforceSegmentMax a réduit le path ; fallback au path aligné |
+| `snap_failed_fallback` | BASSE | snap saline échoué (extendPathToSaline n'a pas étendu suffisamment) |
+| `snap_exception_fallback_signed` | BASSE | exception lors du snap, fallback au path signed (non-destructif) |
+| `clip_tolerance_rescue` | MOYENNE | tous les points sortent du rayon 780m, sauvetage via tolérance +50m |
+| `clip_entire_outside_radius` | BASSE | corridor entièrement hors rayon ; rendu via fadeTails uniquement |
+| `severe_geometry_violation_post_pipeline` | HAUTE | violation géométrique sévère malgré le pipeline HOTFIX (>2×segMax OU >1.8×angMax) |
+| `minor_geometry_violation_tolerated` | BASSE | violations géométriques mineures (seuils × 2 max non atteints), corridor rendu |
+| `no_display_subpath_after_pipeline` | MOYENNE | aucun subpath à rendre — fadeTails restent visibles |
+
+## Exemple d'utilisation (console browser)
+
+```js
+// Afficher le log institutionnel
+console.table(window.SUPRA_S_CORRIDOR_REJECTION_LOG);
+
+// Exporter en CSV
+const csv = [
+  'timestamp,id,reason,n_input,n_after_reenforce,snap_status',
+  ...window.SUPRA_S_CORRIDOR_REJECTION_LOG.map(e =>
+    [e.t, e.id, e.reason, e.metrics?.n_input, e.metrics?.n_after_reenforce, e.metrics?.snap_status].join(',')
+  )
+].join('\n');
+```
+
+## Capture live (session test 2026-04-21T04:10)
+
+- 12 entrées observées au premier cycle de rendu
+- Toutes en sévérité BASSE (violations mineures tolérées)
+- Aucune occurrence `severe_geometry_violation_post_pipeline`
+- Tous les corridors visibles à l'écran confirmé (paneFound=true, pathCount=16)
+
+---
+
+**CONFORMITÉ BCE-4X ULTIME ABSOLU — AUCUN CORRIDOR SUPPRIMÉ SANS LOG**

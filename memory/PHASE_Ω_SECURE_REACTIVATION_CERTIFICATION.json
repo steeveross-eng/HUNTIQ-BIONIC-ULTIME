@@ -1,0 +1,198 @@
+{
+  "protocole": "BCE-4X ULTIME ABSOLU",
+  "phase": "PHASE_\u03a9_SECURE_REACTIVATION \u2014 FULL_STACK_LOCKDOWN_V12 \u2014 CORRIDORS_\u03a9_CERTIFICATION",
+  "commandant": "STEEVE-MAX",
+  "timestamp": "2026-04-21T14:43:32.537595+00:00",
+  "system_state": "CERTIFICATION_INCOMPLETE",
+  "blocs": [
+    {
+      "bloc": "BLOC_1_PROTECTIONS_STRUCTURELLES",
+      "required_modules": [
+        "securite_omega_v19.py",
+        "esi_omega.py",
+        "self_audit_omega.py",
+        "registry_lock_omega.py"
+      ],
+      "missing": [],
+      "conforme": true,
+      "activations": [
+        "BCE-4X-V6.2",
+        "BCE-4X-V7-ULTIME",
+        "BCE-4X-V8-PURE",
+        "STEEVE-MAX-AUTHORITY",
+        "SHIELD-\u03a9",
+        "WATCHDOG-\u03a9",
+        "ZERO-FALLBACK"
+      ]
+    },
+    {
+      "bloc": "BLOC_2_ANTI_REGRESSION",
+      "required_suites": [
+        "test_mvt_7_layers.py",
+        "test_render_guard_layers.py",
+        "test_ia_corridors_organic.py",
+        "test_purge_legacy.py",
+        "test_render_guard_performance.py"
+      ],
+      "found": [
+        "test_mvt_7_layers.py",
+        "test_render_guard_layers.py",
+        "test_ia_corridors_organic.py",
+        "test_purge_legacy.py",
+        "test_render_guard_performance.py"
+      ],
+      "missing": [],
+      "conforme": true,
+      "activations": [
+        "ANTI-REGRESSION-\u03a9",
+        "ANTI-REGRESSION-TERRAIN",
+        "ANTI-REGRESSION-RENDU",
+        "ANTI-REGRESSION-IA",
+        "ANTI-REGRESSION-BIOLOGIE",
+        "ROLLBACK_AUTOMATIQUE"
+      ]
+    },
+    {
+      "bloc": "BLOC_3_ANTI_LEGACY",
+      "legacy_violations_active": [],
+      "archive_legacy_present": true,
+      "archive_contents": [
+        "engine_corridors_legacy_pre_L.py"
+      ],
+      "conforme": true,
+      "activations": [
+        "SUPPRIMER_LOGIQUE_V6_V7_ACTIVE",
+        "BLOQUER_INTERPOLATION_ARTIFICIELLE",
+        "BLOQUER_GEOMETRIE_SIMPLIFIEE",
+        "BLOQUER_CONTAMINATION_VISUELLE",
+        "BLOQUER_CODE_NON_CERTIFIE",
+        "PURGER_FALLBACKS_NON_INSTITUTIONNELS"
+      ]
+    },
+    {
+      "bloc": "BLOC_4_MODULARITE",
+      "engines_count": 85,
+      "isolated": true,
+      "conforme": true,
+      "activations": [
+        "MODULARITE_100%",
+        "VALIDATION_CROISEE",
+        "ISOLATION_MODULES",
+        "CERTIFICATION_\u03a9"
+      ]
+    },
+    {
+      "bloc": "BLOC_5_TERRAIN_BIO_IA",
+      "checks": {
+        "TERRAIN_AWARE_\u03a9": true,
+        "BIOLOGIE_AWARE_\u03a9": true,
+        "IA_VISION_AWARE_\u03a9": true,
+        "IA_CORRIDORS_\u03a9": true,
+        "IA_SALINES_\u03a9": true,
+        "IA_ZONES_\u03a9": true
+      },
+      "conforme": true
+    },
+    {
+      "bloc": "BLOC_6_RENDU_OMEGA",
+      "checks": {
+        "color_FF8F00": true,
+        "opacity_min_1_00": true,
+        "opacity_default_1_00": true,
+        "weights_4_levels": true,
+        "minZoom_13": true,
+        "segment_max_20": true,
+        "angle_max_45": true,
+        "forbid_arrow": true,
+        "preview_equals_final": true,
+        "zindex_order_institutional": true,
+        "catmull_rom_target_28": true,
+        "functional_radius_780": true,
+        "fade_out_min_015": true,
+        "organic_120pts_supported": true
+      },
+      "conforme": true,
+      "activations": [
+        "RENDU_\u03a9_V1.3.1_HOTFIX",
+        "ZINDEX_INSTITUTIONNEL_8_NIVEAUX",
+        "OPACITE_SUPRA_S_1.00_STRICT (\u2265 0.75 requis, d\u00e9pass\u00e9)",
+        "COULEUR_INSTITUTIONNELLE_FF8F00",
+        "GEOMETRIE_CATMULLROM_28_LEGACY_60_120_ORGANIC",
+        "PREVIEW_EQUALS_FINAL"
+      ]
+    },
+    {
+      "bloc": "BLOC_7_TRACE_AUDIT",
+      "markers": {
+        "self_audit_omega_present": true,
+        "registry_lock_present": true,
+        "corridor_rejection_log_doc": true,
+        "frontend_hotfix_log_exposed": true
+      },
+      "conforme": true,
+      "activations": [
+        "TRACE_LOG_\u03a9_DEEP",
+        "AUDIT_CONTINU",
+        "CERTIFICATION_\u03a9",
+        "AUTO_SIGNATURE"
+      ]
+    },
+    {
+      "bloc": "BLOC_8_LOCK_STATE",
+      "system_state": "SECURE_\u03a9",
+      "engine_corridors_version": "\u03a9 (V1.3.1-PHASE-XII-SUPRA-S-HOTFIX-2026-04)",
+      "engine_salines_version": "\u03a9 (V11-SUPRA)",
+      "engine_zones_version": "\u03a9 (stub + legacy active, X1000 PREVIEW en attente)",
+      "engine_rendu_version": "\u03a9 (V1.3.1 SUPRA-S HOTFIX)",
+      "territoire_version": "V20-SUPRA-CERTIFIED",
+      "registry_version": "V29-SUPRA-LOCKED-PHASE-XI-SUPRA-N-\u03a9-STABILIZED-2026-04",
+      "registry_sha256": null,
+      "engines_hashes_actual": {
+        "engine_zones.py": {
+          "actual": "8229ca7c0d16e5f6",
+          "expected": "8229ca7c0d16e5f6",
+          "match": true
+        },
+        "engine_salines_v11_supra.py": {
+          "actual": "220ff36a3d7b67b6",
+          "expected": "220ff36a3d7b67b6",
+          "match": true
+        },
+        "engine_hotspots.py": {
+          "actual": "8a268fa092a0499c",
+          "expected": "8a268fa092a0499c",
+          "match": true
+        },
+        "engine_ia_corridors_organic_omega.py": {
+          "actual": "027712696407882f",
+          "expected": "027712696407882f",
+          "match": true
+        },
+        "engine_rendu_omega.py": {
+          "actual": "96af50ad96bb7b6b",
+          "expected": "96af50ad96bb7b6b",
+          "match": true
+        },
+        "registry_lock_omega.py": {
+          "actual": "438c58198c8b4586",
+          "expected": "438c58198c8b4586",
+          "match": true
+        },
+        "self_audit_omega.py": {
+          "actual": "449b6d0fe48c53a8",
+          "expected": "449b6d0fe48c53a8",
+          "match": true
+        }
+      },
+      "hashes_conforme": true,
+      "conforme": true
+    }
+  ],
+  "self_audit_omega": {
+    "conforme": false,
+    "suites_ok": 57,
+    "suites_total": 60,
+    "perf_guard_severity": "fail"
+  },
+  "certification_conforme": false
+}

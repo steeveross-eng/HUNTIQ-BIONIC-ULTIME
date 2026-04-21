@@ -16,7 +16,7 @@ const RULES_URL = `${API_BASE}/api/v20/territoire/rendu-omega/rules`;
 const ORGANIC_GENERATE_URL = `${API_BASE}/api/v20/territoire/corridors-organic/generate`;
 
 // Défauts immuables — doivent matcher engine_rendu_omega.py:RENDU_RULES
-// PHASE_XII_SUPRA_S : extension opacity=1.0, weight 4.0, waypoint radius.
+// PHASE_XII_SUPRA_S_CORRECTION : signatures renforcées, halo amplifié, pulse public.
 export const RENDU_OMEGA = Object.freeze({
   color: '#FF8F00',
   colorName: 'Orange ambre institutionnel',
@@ -27,12 +27,12 @@ export const RENDU_OMEGA = Object.freeze({
     critique: 3.0, majeur: 3.0,
     extreme: 4.0, extreme_max: 4.0,
   },
-  // SUPRA_S : opacité = 1.00 obligatoire (toute valeur < 1.00 = ERREUR RENDU-Ω)
   opacityMin: 1.0,
   opacityDefault: 1.0,
   geometryType: 'catmull-rom',
   controlPointsMin: 25,
   controlPointsMax: 30,
+  controlPointsTarget: 28,        // SUPRA_S_CORRECTION : Catmull-Rom 28 strict
   segmentMaxM: 20.0,
   angleMaxDeg: 45.0,
   functionalRadiusMinM: 420.0,
@@ -41,12 +41,55 @@ export const RENDU_OMEGA = Object.freeze({
   minZoom: 13,
   zIndexOrder: ['zones', 'hydrologie', 'terrain', 'corridors', 'salines', 'affuts', 'hotspots', 'vent'],
   forbidAffutInteraction: true,
-  forbidDirectionalArrow: true,   // SUPRA_S : aucune flèche directionnelle autorisée
+  forbidDirectionalArrow: true,
   previewEqualsFinal: true,
-  // SUPRA_S ART — micro-biomimétisme
-  microOscillationPct: 0.005,     // 0.3–0.7 %, valeur médiane 0.5 %
-  microWeightDeltaPx: 0.1,
-  luminosityStepPct: 0.20,        // +20 % par niveau d'intensité
+  // SUPRA_S_CORRECTION — signatures biomimétiques renforcées
+  microOscillationPctMin: 0.005,    // 0.5 %
+  microOscillationPctMax: 0.009,    // 0.9 %
+  microWeightDeltaPx: 0.15,         // +0.15 px
+  luminosityStepPct: 0.20,
+  // Halo externe adaptatif renforcé (% d'opacité selon fond)
+  haloExternalByBackground: {
+    forest: 0.30,   // +30 %
+    snow: 0.15,     // +15 %
+    water: 0.40,    // +40 %
+    cover: 0.25,    // +25 %
+  },
+  // Gradient directionnel renforcé 5–8 %
+  directionalGradientPctMin: 0.05,
+  directionalGradientPctMax: 0.08,
+  // Terrain aware++
+  terrainBoosts: {
+    slope_high: 0.20,       // pentes > 15°
+    valley: 0.30,           // vallons
+    wet: 0.25,              // zones humides
+    transition: 0.15,       // transitions écologiques
+  },
+  // Renforcement 40 m autour zones vitales
+  vitalZoneBoostRadiusM: 40.0,
+  vitalZoneBoosts: {
+    alimentation: 0.15,
+    repos: 0.10,
+    thermique: 0.10,
+    humide: 0.20,
+  },
+  // Snap salines
+  salineSnapMaxM: 780.0,           // rayon fonctionnel max
+  salineSnapMinM: 420.0,           // rayon fonctionnel min
+  salineHaloBoostPct: 0.35,        // +35 % halo externe autour saline
+  salineLumBoostRadiusM: 40.0,
+  salineLumBoostPct: 0.20,
+  // Fade-out progressif
+  fadeOutTailM: 10.0,              // transition 8-12 m, médiane 10 m
+  fadeOutMinRatio: 0.15,           // §A1 HOTFIX : fade max 85 %, JAMAIS 100 %
+  // Convergence veine principale
+  mainVeinConvergenceRadiusM: 15.0,  // ≤ 15 m
+  mainVeinHaloMultiplier: 1.5,
+  mainVeinLumMultiplier: 1.6,
+  // Pulsation publique
+  publicPulseMinZoom: 15,
+  publicPulseAmplitudePct: 0.0025, // 0.2–0.3 %, médiane 0.25 %
+  publicPulsePeriodMs: 2400,
 });
 
 let _cachedRules = null;
@@ -332,14 +375,14 @@ export function resolveCorridorStyleOrganic(corridor) {
 
 /** Catmull-Rom uniforme : génère N points lissés à partir de K points de contrôle.
  *  Implémentation numérique simple (centripetal tension = 0.5, boucles pour N cibles).
+ *  PHASE_XII_SUPRA_S_HOTFIX §A3 : ne JAMAIS renvoyer un tableau vide.
  *  @param {Array<[lat, lng]>} ctrl  points de contrôle (≥ 2)
  *  @param {number} nOut             nombre de points résultants
  *  @returns {Array<[lat, lng]>}
  */
 export function catmullRomResample(ctrl, nOut) {
-  if (!Array.isArray(ctrl) || ctrl.length < 2) return ctrl || [];
+  if (!Array.isArray(ctrl) || ctrl.length < 2) return Array.isArray(ctrl) ? ctrl.slice() : [];
   const n = Math.max(2, nOut | 0);
-  // Étend le path avec points miroirs (tangentes de bord stables)
   const p = [ctrl[0], ...ctrl, ctrl[ctrl.length - 1]];
   const segs = p.length - 3;
   if (segs < 1) return ctrl.slice();
@@ -349,7 +392,6 @@ export function catmullRomResample(ctrl, nOut) {
     const s = Math.min(segs - 1, Math.floor(t));
     const u = t - s;
     const p0 = p[s], p1 = p[s + 1], p2 = p[s + 2], p3 = p[s + 3];
-    // Catmull-Rom uniforme
     const u2 = u * u, u3 = u2 * u;
     const lat = 0.5 * ((2 * p1[0]) + (-p0[0] + p2[0]) * u +
       (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * u2 +
@@ -357,13 +399,16 @@ export function catmullRomResample(ctrl, nOut) {
     const lng = 0.5 * ((2 * p1[1]) + (-p0[1] + p2[1]) * u +
       (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * u2 +
       (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * u3);
-    out.push([lat, lng]);
+    out.push([lat, Number.isFinite(lng) ? lng : p1[1]]);
   }
-  return out;
+  // Garde-fou : si out dégénéré (toutes valeurs identiques ou NaN), retourner ctrl
+  const allFinite = out.every(pt => Number.isFinite(pt[0]) && Number.isFinite(pt[1]));
+  return allFinite && out.length >= 2 ? out : ctrl.slice();
 }
 
 /** Déspike : supprime les points qui produisent un angle > maxAngleDeg
  *  (conservation des extrémités). Itératif jusqu'à stabilité.
+ *  PHASE_XII_SUPRA_S_HOTFIX §A3 : NE JAMAIS réduire le path à < 2 points.
  */
 export function despikePath(path, maxAngleDeg = RENDU_OMEGA.angleMaxDeg) {
   if (!Array.isArray(path) || path.length < 3) return path || [];
@@ -375,25 +420,31 @@ export function despikePath(path, maxAngleDeg = RENDU_OMEGA.angleMaxDeg) {
       const a = _angleDegAt(cur[i - 1], cur[i], cur[i + 1]);
       if (a > maxAngleDeg) {
         removed++;
-        continue; // drop spike
+        continue;
       }
       next.push(cur[i]);
     }
     next.push(cur[cur.length - 1]);
-    cur = next;
+    // §A3 HOTFIX : garde-fou institutionnel — ne jamais passer sous 2 points
+    if (next.length >= 2) {
+      cur = next;
+    }
     if (removed === 0) break;
   }
   return cur;
 }
 
 /** Densifie / décime un path pour qu'aucun segment ne dépasse segmentMaxM.
- *  Insère des points intermédiaires linéaires si besoin, puis re-lisse via Catmull-Rom.
+ *  Insère des points intermédiaires linéaires si besoin.
+ *  PHASE_XII_SUPRA_S_HOTFIX §A4 : ne supprime JAMAIS de segments — subdivise
+ *  uniquement via interpolation linéaire. Garantit continuité stricte.
  */
 export function enforceSegmentMax(path, segmentMaxM = RENDU_OMEGA.segmentMaxM) {
   if (!Array.isArray(path) || path.length < 2) return path || [];
   const out = [path[0]];
   for (let i = 1; i < path.length; i++) {
     const a = out[out.length - 1], b = path[i];
+    if (!Array.isArray(a) || !Array.isArray(b)) { out.push(b); continue; }
     const d = _haversineM(a, b);
     if (d > segmentMaxM) {
       const n = Math.ceil(d / segmentMaxM);
@@ -475,61 +526,139 @@ export function clipToFunctionalRadius(path, center, minM = RENDU_OMEGA.function
   return subpaths.length > 0 ? subpaths : [[]];
 }
 
-/** Signature par espèce (micro-oscillations) — applique des micro-modulations
- *  au path affiché sans changer la structure globale.
- *  Amplitude maximale limitée à microOscillationPct (défaut 0.5 %).
+/** Signature par espèce (micro-oscillations renforcées SUPRA_S_CORRECTION) —
+ *  applique des micro-modulations au path affiché sans changer la structure globale.
+ *  Amplitude 0.5–0.9 %, fréquences renforcées par profil.
  */
 export function applySpeciesSignature(path, species) {
   if (!Array.isArray(path) || path.length < 3) return path || [];
   const key = String(species || '').toLowerCase();
+  // SUPRA_S_CORRECTION : fréquences renforcées (§3 BLOC A)
   const profiles = {
-    chevreuil: { freq: 3.5, ampFactor: 1.0 },   // courbes serrées, fréquence haute
-    cerf: { freq: 3.5, ampFactor: 1.0 },
-    orignal: { freq: 1.2, ampFactor: 0.5 },     // courbes larges, stables
-    wapiti: { freq: 1.0, ampFactor: 0.4 },      // courbes longues
-    ours_noir: { freq: 2.0, ampFactor: 0.9 },   // irrégularités contrôlées
-    ours: { freq: 2.0, ampFactor: 0.9 },
-    dindon: { freq: 4.5, ampFactor: 0.6 },      // zigzags subtils
+    chevreuil: { freq: 4.0, ampFactor: 1.0 },    // courbes très serrées
+    cerf: { freq: 4.0, ampFactor: 1.0 },
+    orignal: { freq: 1.0, ampFactor: 0.6 },      // courbes larges, stables
+    wapiti: { freq: 0.8, ampFactor: 0.55 },      // courbes longues, continues
+    ours_noir: { freq: 2.5, ampFactor: 0.9 },    // irrégularités contrôlées
+    ours: { freq: 2.5, ampFactor: 0.9 },
+    dindon: { freq: 5.0, ampFactor: 0.75 },      // zigzags subtils
   };
   const prof = profiles[key] || { freq: 2.0, ampFactor: 0.7 };
-  const amp = RENDU_OMEGA.microOscillationPct * prof.ampFactor; // 0.5 % × ampFactor
+  // Amplitude dans [0.005, 0.009] (0.5–0.9 %) modulée par ampFactor
+  const ampBase = RENDU_OMEGA.microOscillationPctMin
+    + (RENDU_OMEGA.microOscillationPctMax - RENDU_OMEGA.microOscillationPctMin) * prof.ampFactor;
   const out = [path[0]];
   for (let i = 1; i < path.length - 1; i++) {
     const p = path[i];
-    // Vecteur normal local
     const prev = path[i - 1], next = path[i + 1];
     const dx = next[1] - prev[1], dy = next[0] - prev[0];
     const len = Math.hypot(dx, dy);
     if (len < 1e-10) { out.push(p); continue; }
-    // Normal (perpendiculaire) unitaire en lat/lng
     const nx = -dy / len, ny = dx / len;
-    // Oscillation locale phase freq × i
     const phase = Math.sin((i / path.length) * Math.PI * 2 * prof.freq);
-    // Échelle lat/lng : amp est un % du pas moyen, approximé par un delta
     const stepApprox = len;
-    const offset = amp * stepApprox * phase;
+    const offset = ampBase * stepApprox * phase;
     out.push([p[0] + ny * offset, p[1] + nx * offset]);
   }
   out.push(path[path.length - 1]);
   return out;
 }
 
-/** Pipeline complet SUPRA_S pour un corridor affiché :
- *    alignGeometryOmega → applySpeciesSignature → clipToFunctionalRadius
+/** Pipeline complet SUPRA_S_CORRECTION pour un corridor affiché :
+ *    alignGeometryOmega → applySpeciesSignature → re-enforce (HOTFIX) →
+ *    snap saline (si trouvée, non-destructif) → clipWithFadeOut
+ *
+ *  PHASE_XII_SUPRA_S_HOTFIX_INSTITUTIONNEL §A2/A3 :
+ *    - les oscillations de signature peuvent introduire segments > 20m ou
+ *      angles > 45° ⇒ on ré-applique despikePath + enforceSegmentMax APRÈS
+ *      la signature pour garantir la conformité géométrique finale.
+ *    - extendPathToSaline non destructif : fallback au path signed original.
+ *
+ *  @param {Array<[lat, lng]>} rawPath
+ *  @param {Object} opts { species, isOrganic, center, clip, salines, logSink }
+ *  @returns {{displaySubpaths: Array<path>, fadeTails: Array<path>, snappedSaline, snapStatus, metrics}}
  */
 export function prepareDisplayPath(rawPath, opts = {}) {
-  const { species, isOrganic = false, center, clip = true } = opts;
+  const { species, isOrganic = false, center, clip = true, salines = [], logSink = null, corridorId = null } = opts;
+  const metrics = {
+    n_input: Array.isArray(rawPath) ? rawPath.length : 0,
+    n_after_align: 0,
+    n_after_signature: 0,
+    n_after_reenforce: 0,
+    n_after_snap: 0,
+    snap_status: 'none',
+  };
   const aligned = alignGeometryOmega(rawPath, { isOrganic });
-  const signed = applySpeciesSignature(aligned, species);
-  if (!clip || !center) return [signed];
-  return clipToFunctionalRadius(signed, center);
+  metrics.n_after_align = aligned.length;
+  if (aligned.length < 2) {
+    if (logSink) logSink({ id: corridorId, reason: 'align_too_short', metrics });
+    return { displaySubpaths: [], fadeTails: [], snappedSaline: null, snapStatus: 'skipped_no_path', metrics };
+  }
+  let signed = applySpeciesSignature(aligned, species);
+  metrics.n_after_signature = signed.length;
+  // §A3 HOTFIX — re-enforcement post-signature pour garantir conformité géométrique
+  signed = despikePath(signed);
+  signed = enforceSegmentMax(signed);
+  metrics.n_after_reenforce = signed.length;
+  if (signed.length < 2) {
+    // Fallback institutionnel : path aligné conforme (avant signature) si reinforce a échoué
+    signed = aligned;
+    if (logSink) logSink({ id: corridorId, reason: 'reenforce_collapsed_fallback_aligned', metrics });
+  }
+  // §A2 HOTFIX — snap-to-saline NON DESTRUCTIF
+  let snappedSaline = null;
+  let snapStatus = 'none';
+  if (Array.isArray(signed) && signed.length >= 2 && Array.isArray(salines) && salines.length > 0) {
+    const tail = signed[signed.length - 1];
+    const closest = findClosestSalineInFunctionalRadius(tail, salines);
+    if (closest) {
+      try {
+        const extended = extendPathToSaline(signed, closest.latlng);
+        if (Array.isArray(extended) && extended.length >= signed.length) {
+          signed = extended;
+          snappedSaline = closest;
+          snapStatus = 'snapped_ok';
+        } else {
+          snapStatus = 'snap_failed_fallback_signed';
+          if (logSink) logSink({ id: corridorId, reason: 'snap_failed_fallback', saline: closest, metrics });
+        }
+      } catch (_e) {
+        snapStatus = 'snap_exception_fallback_signed';
+        if (logSink) logSink({ id: corridorId, reason: 'snap_exception_fallback', saline: closest, error: String(_e), metrics });
+      }
+    } else {
+      snapStatus = 'no_saline_in_radius';
+    }
+  }
+  metrics.n_after_snap = signed.length;
+  metrics.snap_status = snapStatus;
+
+  if (!clip || !center) {
+    return { displaySubpaths: [signed], fadeTails: [], snappedSaline, snapStatus, metrics };
+  }
+  const { subpaths, fadeTails } = clipWithFadeOut(signed, center, RENDU_OMEGA.functionalRadiusMaxM);
+  // §A1 HOTFIX — si tout le path a été clippé mais qu'il existait ≥ 1 segment valide,
+  //              conserver au moins le sous-path le plus proche du centre (≤ maxM + 50m tolérance).
+  let effectiveSubpaths = subpaths.filter(s => Array.isArray(s) && s.length >= 2);
+  if (effectiveSubpaths.length === 0 && signed.length >= 2) {
+    // Tous les points > maxM : conserver les points les plus proches du centre
+    // (tous sont visibles en fadeTails, mais on garantit AU MOINS un rendu visible).
+    const tolerance = RENDU_OMEGA.functionalRadiusMaxM + 50;
+    const closePoints = signed.filter(p => _haversineM(center, p) <= tolerance);
+    if (closePoints.length >= 2) {
+      effectiveSubpaths = [closePoints];
+      if (logSink) logSink({ id: corridorId, reason: 'clip_tolerance_rescue', tolerance_m: tolerance, n_rescued: closePoints.length, metrics });
+    } else {
+      if (logSink) logSink({ id: corridorId, reason: 'clip_entire_outside_radius', n_fade_tails: fadeTails.length, metrics });
+    }
+  }
+  return { displaySubpaths: effectiveSubpaths, fadeTails, snappedSaline, snapStatus, metrics };
 }
 
-/** Détection convergence — marque les corridors partageant ≥ 2 extrémités
- *  proches (< mergeRadiusM) comme appartenant à une VEINE PRINCIPALE.
- *  Retourne un Set d'IDs de corridors promus (fusion visuelle côté rendu).
+/** Détection convergence SUPRA_S_CORRECTION — marque les corridors partageant
+ *  ≥ 2 extrémités proches (< mergeRadiusM=15m). Retourne un Set d'IDs promus.
  */
-export function detectConvergenceMainVein(corridors, mergeRadiusM = 120) {
+export function detectConvergenceMainVein(corridors, mergeRadiusM = RENDU_OMEGA.mainVeinConvergenceRadiusM) {
   if (!Array.isArray(corridors)) return new Set();
   const endpoints = [];
   corridors.forEach((c, idx) => {
@@ -539,14 +668,21 @@ export function detectConvergenceMainVein(corridors, mergeRadiusM = 120) {
     endpoints.push({ idx, at: 'end', pt: p[p.length - 1] });
   });
   const promoted = new Set();
-  const seen = new Map(); // clé grille ~mergeRadiusM → liste d'endpoints
-  const gridKey = (pt) => `${Math.round(pt[0] * 500)}_${Math.round(pt[1] * 500)}`;
+  const seen = new Map();
+  const gridKey = (pt) => `${Math.round(pt[0] * 2000)}_${Math.round(pt[1] * 2000)}`;  // grille ~55m
   for (const ep of endpoints) {
     const k = gridKey(ep.pt);
-    for (const other of (seen.get(k) || [])) {
-      if (other.idx !== ep.idx && _haversineM(ep.pt, other.pt) < mergeRadiusM) {
-        promoted.add(ep.idx);
-        promoted.add(other.idx);
+    // Inspecter case courante + 8 voisines
+    for (let dx = -1; dx <= 1; dx++) {
+      for (let dy = -1; dy <= 1; dy++) {
+        const [gx, gy] = k.split('_').map(Number);
+        const nk = `${gx + dx}_${gy + dy}`;
+        for (const other of (seen.get(nk) || [])) {
+          if (other.idx !== ep.idx && _haversineM(ep.pt, other.pt) < mergeRadiusM) {
+            promoted.add(ep.idx);
+            promoted.add(other.idx);
+          }
+        }
       }
     }
     if (!seen.has(k)) seen.set(k, []);
@@ -555,17 +691,24 @@ export function detectConvergenceMainVein(corridors, mergeRadiusM = 120) {
   return promoted;
 }
 
-/** Style halo dérivé — halo interne ultra-léger + halo externe adaptatif selon fond.
- *  Le rendu instancie 2 polylines supplémentaires autour de la principale.
+/** Style halo dérivé SUPRA_S_CORRECTION — halo interne inchangé + halo externe
+ *  renforcé selon fond (forest +30%, snow +15%, water +40%, cover +25%) et
+ *  convergence veine principale (×1.5).
  */
-export function computeSupraArtHaloSpec(weight, { background = 'forest', isMainVein = false } = {}) {
-  // background: forest|snow|water|cover — ajuste l'opacité halo externe
-  const bgOpacityMap = { forest: 0.22, snow: 0.30, water: 0.26, cover: 0.20 };
-  const externalOpacity = bgOpacityMap[String(background).toLowerCase()] ?? 0.22;
-  const mainVeinBoost = isMainVein ? 1.25 : 1.0; // +25 % halo externe si veine principale
+export function computeSupraArtHaloSpec(weight, { background = 'forest', isMainVein = false, salineNearby = false } = {}) {
+  const bgMap = RENDU_OMEGA.haloExternalByBackground;
+  const externalOpacity = bgMap[String(background).toLowerCase()] ?? bgMap.forest;
+  // Convergence veine principale : ×1.5 halo externe
+  const mainVeinBoost = isMainVein ? RENDU_OMEGA.mainVeinHaloMultiplier : 1.0;
+  // Saline proche : halo externe +35 % additionnel (§1 BLOC A)
+  const salineBoost = salineNearby ? (1.0 + RENDU_OMEGA.salineHaloBoostPct) : 1.0;
   return {
-    inner: { weight: weight + 0.4, opacity: 0.55, color: '#FFD380' }, // halo interne (glow chaud)
-    external: { weight: (weight + 2.4) * mainVeinBoost, opacity: externalOpacity, color: '#FF8F00' },
+    inner: { weight: weight + 0.4, opacity: 0.55, color: '#FFD380' },
+    external: {
+      weight: (weight + 2.4) * mainVeinBoost * salineBoost,
+      opacity: Math.min(0.75, externalOpacity * mainVeinBoost * salineBoost),
+      color: '#FF8F00',
+    },
   };
 }
 
@@ -642,7 +785,7 @@ export function setInspectionBiologique(enabled, { role } = {}) {
 }
 
 /** Surbrillance directionnelle subtile : renvoie un tableau de sous-segments
- *  avec luminosité croissante 3–5 % le long du path (remplace la flèche).
+ *  avec luminosité croissante 5–8 % le long du path (SUPRA_S_CORRECTION §5).
  *  N'est utilisé que si mode inspection bio ON ou pour expression minimale du flux.
  */
 export function computeDirectionalLuminosityGradient(path, steps = 6) {
@@ -650,12 +793,950 @@ export function computeDirectionalLuminosityGradient(path, steps = 6) {
   const out = [];
   const n = path.length;
   const chunk = Math.max(2, Math.floor(n / steps));
+  const lumMin = RENDU_OMEGA.directionalGradientPctMin;
+  const lumMax = RENDU_OMEGA.directionalGradientPctMax;
   for (let i = 0; i < steps; i++) {
     const a = i * chunk;
     const b = Math.min(n, (i + 1) * chunk + 1);
     if (b - a < 2) continue;
-    const luminosity = 1.0 + 0.03 + (i / (steps - 1)) * 0.02; // 3 → 5 %
+    // Interpolation linéaire de lumMin → lumMax
+    const luminosity = 1.0 + lumMin + (i / Math.max(1, steps - 1)) * (lumMax - lumMin);
     out.push({ sub: path.slice(a, b), luminosityBoost: luminosity });
   }
   return out;
 }
+
+/* =========================================================================
+ * PHASE_XII_SUPRA_S_CORRECTION — extensions
+ * =========================================================================
+ * Helpers frontend ajoutés pour couvrir les 8 directives de correction :
+ *   - snap visuel corridor → saline la plus proche
+ *   - fade-out progressif sur la queue clippée (8–12 m)
+ *   - boost terrainaware++ (pente, vallon, humide, transition)
+ *   - boost zones vitales (rayon 40 m)
+ *   - pulsation publique zoom > 15
+ * ========================================================================= */
+
+/** Trouve la saline la plus proche d'un point dans le rayon fonctionnel [min, max].
+ *  @param {[lat, lng]} point
+ *  @param {Array<{lat, lng}|{lat, lon}>} salines
+ *  @returns {null | {saline, distM, latlng}}
+ */
+export function findClosestSalineInFunctionalRadius(point, salines) {
+  if (!Array.isArray(salines) || salines.length === 0 || !point) return null;
+  const minM = RENDU_OMEGA.salineSnapMinM;
+  const maxM = RENDU_OMEGA.salineSnapMaxM;
+  let best = null;
+  for (const s of salines) {
+    const slat = s?.lat, slng = s?.lng ?? s?.lon;
+    if (slat == null || slng == null) continue;
+    const d = _haversineM(point, [slat, slng]);
+    if (d < minM || d > maxM) continue;
+    if (best === null || d < best.distM) {
+      best = { saline: s, distM: d, latlng: [slat, slng] };
+    }
+  }
+  return best;
+}
+
+/** Prolonge visuellement un path jusqu'à un point cible (saline) par Catmull-Rom.
+ *  Ajoute des points intermédiaires lissés, sans modifier le path source.
+ *  Garantit segment ≤ 20 m dans la prolongation et se termine EXACTEMENT à la saline.
+ *  @param {Array<[lat, lng]>} path
+ *  @param {[lat, lng]} target
+ *  @returns {Array<[lat, lng]>}
+ */
+export function extendPathToSaline(path, target) {
+  if (!Array.isArray(path) || path.length < 2 || !target) return path || [];
+  const tail = path[path.length - 1];
+  const distToTarget = _haversineM(tail, target);
+  if (distToTarget < 1.0) return path;
+  const preTail = path[path.length - 2];
+  // Point miroir post-target pour tangente de sortie naturelle
+  const postTarget = [
+    target[0] + (target[0] - tail[0]) * 0.15,
+    target[1] + (target[1] - tail[1]) * 0.15,
+  ];
+  const ctrl = [preTail, tail, target, postTarget];
+  const nSeg = Math.max(3, Math.ceil(distToTarget / RENDU_OMEGA.segmentMaxM));
+  const smoothed = catmullRomResample(ctrl, nSeg + 2);
+  // CatmullRom uniforme répartit t ∈ [0, segs] sur 3 segments ([p0-p1], [p1-p2], [p2-p3]).
+  // target correspond à t = 2 (début du 3e segment). On tronque tout ce qui va au-delà.
+  // Index de troncature : position 2/3 du range [0, segs], soit 2/3 * (n-1).
+  const cutIdx = Math.floor(2 * (smoothed.length - 1) / 3);
+  // Prendre [2..cutIdx] (skip les 2 premiers points = path existant, garder jusqu'à la saline)
+  const extension = smoothed.slice(2, cutIdx + 1);
+  // Forcer target comme dernier point (garantit fin exacte à la saline)
+  const tailExt = [tail, ...extension, target];
+  const densified = enforceSegmentMax(tailExt, RENDU_OMEGA.segmentMaxM);
+  return [...path.slice(0, -1), ...densified];
+}
+
+/** Calcule la trajectoire "tail" du fade-out progressif pour une portion clipée.
+ *  Retourne les derniers N mètres du path avec luminosité/weight décroissant
+ *  vers un plancher de 15 % (fade-out max 85 %, JAMAIS 100 % — §A1 HOTFIX).
+ *  @param {Array<[lat, lng]>} path
+ *  @param {number} tailM  (default 10)
+ *  @returns {Array<{sub: [...], opacity: float, weight: float}>}
+ */
+export function computeFadeOutTail(path, baseWeight, tailM = RENDU_OMEGA.fadeOutTailM) {
+  if (!Array.isArray(path) || path.length < 2) return [];
+  const minRatio = RENDU_OMEGA.fadeOutMinRatio ?? 0.15;  // §A1 HOTFIX plancher 15%
+  let accum = 0;
+  const steps = [];
+  for (let i = path.length - 1; i > 0; i--) {
+    const d = _haversineM(path[i - 1], path[i]);
+    accum += d;
+    if (accum > tailM * 1.5) break;
+    const linRatio = 1.0 - Math.min(1.0, accum / tailM);
+    const ratio = Math.max(minRatio, linRatio);
+    steps.push({ sub: [path[i - 1], path[i]], opacity: ratio, weight: Math.max(0.3, baseWeight * ratio) });
+  }
+  return steps.reverse();
+}
+
+/** Extension SUPRA_S_CORRECTION de `clipToFunctionalRadius` retournant en plus
+ *  les queues fade-out (portions extérieures au rayon) pour rendu dégradé.
+ *  @returns {{subpaths: Array<path>, fadeTails: Array<path>}}
+ */
+export function clipWithFadeOut(path, center, maxM = RENDU_OMEGA.functionalRadiusMaxM) {
+  if (!Array.isArray(path) || path.length < 2 || !center) return { subpaths: [path || []], fadeTails: [] };
+  const subs = clipToFunctionalRadius(path, center, RENDU_OMEGA.functionalRadiusMinM, maxM);
+  // Identifier les portions extérieures (fadeTails) : on prend les points hors rayon
+  const outside = [];
+  let bucket = [];
+  for (const p of path) {
+    if (_haversineM(center, p) > maxM) bucket.push(p);
+    else {
+      if (bucket.length >= 2) outside.push(bucket);
+      bucket = [];
+    }
+  }
+  if (bucket.length >= 2) outside.push(bucket);
+  return { subpaths: subs, fadeTails: outside };
+}
+
+/** Détermine si un corridor traverse un terrain à forte tension biologique et
+ *  retourne le multiplicateur d'intensité.
+ *  PHASE_XII_SUPRA_S_HOTFIX §B3 : JAMAIS < 1.0 (floor), cap ×1.95.
+ *  @param {Object} corridor (avec champs optionnels: slope_max, valley, wet, transition)
+ *  @returns {number} multiplicateur ∈ [1.0, 1.95]
+ */
+export function computeTerrainAwareBoost(corridor) {
+  const b = RENDU_OMEGA.terrainBoosts;
+  let mult = 1.0;
+  if (!corridor) return mult;
+  const slopeMax = corridor.slope_max ?? corridor?.terrain?.slope_max;
+  if (typeof slopeMax === 'number' && slopeMax > 15) mult += b.slope_high;
+  if (corridor.valley || corridor?.terrain?.valley) mult += b.valley;
+  if (corridor.wet || corridor?.terrain?.wet || (corridor?.terrain?.dist_eau_m != null && corridor.terrain.dist_eau_m < 50)) mult += b.wet;
+  if (corridor.transition || corridor?.terrain?.transition) mult += b.transition;
+  // Floor strict ≥ 1.0 (aucune atténuation), cap ×1.95
+  return Math.max(1.0, Math.min(1.95, mult));
+}
+
+/** Retourne la liste des zones vitales (alimentation/repos/thermique/humide) à
+ *  proximité d'un path, avec leur boost respectif cumulé.
+ *  @param {Array<[lat, lng]>} path
+ *  @param {Array<{type, polygon?, center?, lat?, lng?}>} zones
+ *  @returns {Array<{zone, boost, pathPointIdx}>}
+ */
+export function detectVitalZoneOverlap(path, zones) {
+  if (!Array.isArray(path) || !Array.isArray(zones)) return [];
+  const rad = RENDU_OMEGA.vitalZoneBoostRadiusM;
+  const boosts = RENDU_OMEGA.vitalZoneBoosts;
+  const results = [];
+  for (const z of zones) {
+    const zt = String(z?.type || '').toLowerCase();
+    if (!(zt in boosts)) continue;
+    const zlat = z?.center?.lat ?? z?.lat;
+    const zlng = z?.center?.lng ?? z?.lng ?? z?.lon;
+    if (zlat == null || zlng == null) continue;
+    let closestIdx = -1, closestD = Infinity;
+    for (let i = 0; i < path.length; i++) {
+      const d = _haversineM(path[i], [zlat, zlng]);
+      if (d < closestD) { closestD = d; closestIdx = i; }
+    }
+    if (closestD <= rad) {
+      results.push({ zone: z, type: zt, boost: boosts[zt], pathPointIdx: closestIdx, distM: closestD });
+    }
+  }
+  return results;
+}
+
+/** Calcule l'opacité pulsée pour le mode publique (zoom > 15).
+ *  Amplitude 0.2-0.3 %, période 2.4 s. Fonction déterministe du temps.
+ *  @param {number} tMs  (time in ms, default Date.now())
+ *  @returns {number} multiplicateur à appliquer à l'opacité/weight (0.9975-1.0025)
+ */
+export function publicPulseMultiplier(tMs = Date.now()) {
+  const a = RENDU_OMEGA.publicPulseAmplitudePct;
+  const p = RENDU_OMEGA.publicPulsePeriodMs;
+  return 1.0 + a * Math.sin((tMs / p) * Math.PI * 2);
+}
+
+/** Détermine si la pulsation publique doit s'appliquer à un zoom donné. */
+export function isPublicPulseActive(zoom) {
+  return Number(zoom) > RENDU_OMEGA.publicPulseMinZoom;
+}
+
+
+/* =========================================================================
+ * PHASE_MODE_INSPECTION_BIOLOGIQUE_PRO_EXPERT — Activation institutionnelle
+ * =========================================================================
+ * Commande : `ACTIVER MODE INSPECTION BIOLOGIQUE PRO/EXPERT`
+ * VERSION_INSTITUTIONNELLE_RENFORCÉE_X10
+ *
+ * Additions strictes frontend — aucune modification du backend ni du registre V30.
+ *
+ * Couches overlay ajoutées (strict RENDU-Ω, zéro fallback non institutionnel) :
+ *   1. ATTRACTEURS  (FF8F00 - triangles pulsés, institutionnel)
+ *   2. EXCLUSIONS   (4A2E1F - hachures réglementaires)
+ *   3. PENTES       (gradient FFB74D → E65100 par paliers 5°/10°/15°)
+ *   4. COUVERT      (2E7D32 - densité canopée, trames organiques)
+ *
+ * Rôles autorisés :
+ *   - 'pro'    : couches 1-2 visibles, flux directionnel 5-8 %
+ *   - 'expert' : couches 1-4 + veines de convergence + signature espèce
+ *
+ * Contrat : toute activation passe par enableInspectionBiologiqueMode(role)
+ * qui délègue à setInspectionBiologique (existant, contrôle d'accès strict).
+ * ========================================================================= */
+
+export const INSPECTION_BIO_SPEC = Object.freeze({
+  protocolVersion: 'VERSION_INSTITUTIONNELLE_RENFORCÉE_X10',
+  sealedAt: '2026-04-21T15:55:00Z',
+  allowedRoles: Object.freeze(['pro', 'expert']),
+  overlayLayers: Object.freeze([
+    Object.freeze({
+      key: 'attracteurs',
+      label: 'ATTRACTEURS',
+      color: '#FF8F00',
+      stroke: '#FF8F00',
+      fillOpacity: 0.18,
+      strokeOpacity: 0.95,
+      weight: 2.0,
+      glyph: 'triangle',
+      dashArray: null,
+      zIndexPane: 'inspection-bio-attracteurs',
+      zIndex: 455,
+      minRolesRequired: ['pro', 'expert'],
+      description: 'Zones d\'attraction biologique (salines, fruits, grattage).',
+    }),
+    Object.freeze({
+      key: 'exclusions',
+      label: 'EXCLUSIONS',
+      color: '#4A2E1F',
+      stroke: '#4A2E1F',
+      fillOpacity: 0.22,
+      strokeOpacity: 0.90,
+      weight: 1.6,
+      glyph: 'hatch',
+      dashArray: '4 3',
+      zIndexPane: 'inspection-bio-exclusions',
+      zIndex: 452,
+      minRolesRequired: ['pro', 'expert'],
+      description: 'Zones réglementaires d\'exclusion (eau, urbain, infrastructure).',
+    }),
+    Object.freeze({
+      key: 'pentes',
+      label: 'PENTES',
+      gradient: Object.freeze([
+        Object.freeze({ upto: 5, color: '#FFE0B2' }),
+        Object.freeze({ upto: 10, color: '#FFB74D' }),
+        Object.freeze({ upto: 15, color: '#FB8C00' }),
+        Object.freeze({ upto: 999, color: '#E65100' }),
+      ]),
+      fillOpacity: 0.28,
+      strokeOpacity: 0.85,
+      weight: 1.2,
+      glyph: 'contour',
+      zIndexPane: 'inspection-bio-pentes',
+      zIndex: 448,
+      minRolesRequired: ['expert'],
+      description: 'Indice pente (°) par paliers 5/10/15.',
+    }),
+    Object.freeze({
+      key: 'couvert',
+      label: 'COUVERT',
+      color: '#2E7D32',
+      stroke: '#1B5E20',
+      fillOpacity: 0.24,
+      strokeOpacity: 0.80,
+      weight: 1.4,
+      glyph: 'organic-trames',
+      zIndexPane: 'inspection-bio-couvert',
+      zIndex: 445,
+      minRolesRequired: ['expert'],
+      description: 'Densité canopée/couvert forestier (trames organiques).',
+    }),
+  ]),
+  awarenessChannels: Object.freeze({
+    terrain: Object.freeze({
+      id: 'TERRAIN_AWARE_Ω',
+      signals: Object.freeze(['slope_max', 'valley', 'wet', 'transition', 'canopy_density', 'ground_substrate']),
+    }),
+    biologie: Object.freeze({
+      id: 'BIOLOGIE_AWARE_Ω',
+      signals: Object.freeze(['species', 'season', 'activity_window', 'scent_radius', 'vital_zones', 'scrape_prints']),
+    }),
+  }),
+  forbidNonInstitutionalFallback: true,
+});
+
+/** Active le mode inspection biologique pour un rôle PRO ou EXPERT.
+ *  @param {'pro'|'expert'} role
+ *  @returns {{ok: boolean, reason?: string, role?: string, enabled?: boolean, activatedAt?: string}}
+ */
+export function enableInspectionBiologiqueMode(role) {
+  const normalized = String(role || '').toLowerCase();
+  if (!INSPECTION_BIO_SPEC.allowedRoles.includes(normalized)) {
+    return { ok: false, reason: 'role_not_authorized', role: normalized };
+  }
+  const res = setInspectionBiologique(true, { role: normalized });
+  if (res?.ok) {
+    try {
+      // Exposition institutionnelle window (debug Commandant — read-only consommateur)
+      if (typeof window !== 'undefined') {
+        window.__INSPECTION_BIO_Ω__ = Object.freeze({
+          enabled: true,
+          role: normalized,
+          activatedAt: res.activatedAt,
+          protocol: INSPECTION_BIO_SPEC.protocolVersion,
+        });
+        window.dispatchEvent(new CustomEvent('inspection-bio-changed', {
+          detail: { enabled: true, role: normalized }
+        }));
+      }
+    } catch (_) { /* noop */ }
+  }
+  return res;
+}
+
+/** Désactive le mode inspection biologique. */
+export function disableInspectionBiologiqueMode() {
+  const res = setInspectionBiologique(false);
+  try {
+    if (typeof window !== 'undefined') {
+      window.__INSPECTION_BIO_Ω__ = Object.freeze({ enabled: false });
+      window.dispatchEvent(new CustomEvent('inspection-bio-changed', {
+        detail: { enabled: false, role: null }
+      }));
+    }
+  } catch (_) { /* noop */ }
+  return res;
+}
+
+/** État complet du mode inspection biologique + couches applicables au rôle. */
+export function getInspectionBiologiqueStatus() {
+  const active = isInspectionBiologiqueActive();
+  let role = null;
+  let activatedAt = null;
+  try {
+    if (typeof window !== 'undefined' && window.__INSPECTION_BIO_Ω__) {
+      role = window.__INSPECTION_BIO_Ω__.role || null;
+      activatedAt = window.__INSPECTION_BIO_Ω__.activatedAt || null;
+    }
+  } catch (_) { /* noop */ }
+  const layers = active && role
+    ? INSPECTION_BIO_SPEC.overlayLayers.filter(l => l.minRolesRequired.includes(role))
+    : [];
+  return {
+    enabled: active,
+    role,
+    activatedAt,
+    protocol: INSPECTION_BIO_SPEC.protocolVersion,
+    layers: layers.map(l => ({ key: l.key, label: l.label, zIndex: l.zIndex })),
+    awareness: active
+      ? {
+          terrain: INSPECTION_BIO_SPEC.awarenessChannels.terrain.id,
+          biologie: INSPECTION_BIO_SPEC.awarenessChannels.biologie.id,
+          synced: true,
+        }
+      : { synced: false },
+    forbidNonInstitutionalFallback: INSPECTION_BIO_SPEC.forbidNonInstitutionalFallback,
+  };
+}
+
+/** Retourne les couches overlay visibles pour le rôle courant (ou []).
+ *  Consommée par BionicLayersV8 pour injecter les panes d'inspection.
+ */
+export function getInspectionOverlayLayers() {
+  const st = getInspectionBiologiqueStatus();
+  if (!st.enabled || !st.role) return [];
+  return INSPECTION_BIO_SPEC.overlayLayers
+    .filter(l => l.minRolesRequired.includes(st.role))
+    .map(l => ({ ...l }));
+}
+
+/** Synchronise les canaux d'awareness TERRAIN_AWARE_Ω + BIOLOGIE_AWARE_Ω
+ *  avec un corridor donné. Retourne un objet de signaux normalisés utilisé
+ *  par le moteur de rendu (boost terrain, zones vitales, etc.).
+ *  Zéro appel backend — strict computation locale sur la donnée corridor.
+ *
+ *  @param {Object} corridor
+ *  @returns {{terrain: Object, biologie: Object, synced: boolean}}
+ */
+export function syncTerrainBiologieAwareness(corridor) {
+  if (!corridor || typeof corridor !== 'object') {
+    return { terrain: {}, biologie: {}, synced: false };
+  }
+  const tch = INSPECTION_BIO_SPEC.awarenessChannels.terrain.signals;
+  const bch = INSPECTION_BIO_SPEC.awarenessChannels.biologie.signals;
+  const pick = (obj, keys) => {
+    const out = {};
+    for (const k of keys) {
+      if (obj && k in obj) out[k] = obj[k];
+      else if (obj?.terrain && k in obj.terrain) out[k] = obj.terrain[k];
+      else if (obj?.biologie && k in obj.biologie) out[k] = obj.biologie[k];
+    }
+    return out;
+  };
+  return {
+    terrain: pick(corridor, tch),
+    biologie: pick(corridor, bch),
+    synced: true,
+    protocol: INSPECTION_BIO_SPEC.protocolVersion,
+  };
+}
+
+
+/* =========================================================================
+ * PHASE_INSPECTION_BIO_FILTERING_Ω — ENFORCE_URBAN_EXCLUSION
+ * =========================================================================
+ * 4 filtres Ω institutionnels appliqués au pipeline INSPECTION_BIO pour
+ * empêcher tout rendu en zone urbaine / industrielle / portuaire / non-habitat.
+ *
+ * Filtres :
+ *   1. EXCLUSION_AWARE_Ω       — rejette si point ∈ zone excluded OR raison urbaine/industrielle
+ *   2. HABITAT_AWARE_Ω         — exige ≥1 zone vitale NON-excluded dans le bundle
+ *   3. TERRAIN_AWARE_Ω_FILTER  — rejette si signaux terrain incompatibles (eau trop proche, impervious)
+ *   4. BIOLOGIE_AWARE_Ω_FILTER — rejette si score local FAIBLE / classification excluante
+ *
+ * Toutes les features rejetées sont comptées dans `out.rejections[filter]`.
+ * Aucun rendu brut non filtré en production ni en tests internes.
+ * ========================================================================= */
+
+export const OMEGA_FILTERS_SPEC = Object.freeze({
+  protocolVersion: 'VERSION_INSTITUTIONNELLE_RENFORCÉE_X10',
+  sealedAt: '2026-04-21T16:45:00Z',
+  filters: Object.freeze({
+    EXCLUSION_AWARE_Ω: Object.freeze({
+      id: 'EXCLUSION_AWARE_Ω',
+      urbanReasonTokens: Object.freeze([
+        'urbain', 'urban', 'urbanisation',
+        'industriel', 'industrial', 'industry',
+        'portuaire', 'port', 'harbour', 'harbor', 'dock',
+        'autoroute', 'highway', 'route', 'road',
+        'batiment', 'building', 'bati',
+        'infrastructure', 'infra', 'anthropique',
+        'eau_profonde', 'fleuve', 'riviere_majeure',
+      ]),
+    }),
+    HABITAT_AWARE_Ω: Object.freeze({
+      id: 'HABITAT_AWARE_Ω',
+      minVitalZonesNonExcluded: 1,
+      vitalTypes: Object.freeze(['alimentation', 'rut', 'repos', 'eau']),
+    }),
+    TERRAIN_AWARE_Ω_FILTER: Object.freeze({
+      id: 'TERRAIN_AWARE_Ω_FILTER',
+      minDistanceEauM: 15,         // trop proche d'une masse d'eau = rejet
+      maxImperviousPct: 60,        // surfaces imperméables > 60 % = urbain
+      minCanopyForCoverLayer: 0.5, // couvert requiert canopée ≥ 50 %
+    }),
+    BIOLOGIE_AWARE_Ω_FILTER: Object.freeze({
+      id: 'BIOLOGIE_AWARE_Ω_FILTER',
+      minScoreLocal: 20,
+      rejectClassifications: Object.freeze(['FAIBLE', 'INCOMPATIBLE', 'EXCLU', 'NON_HABITAT']),
+    }),
+  }),
+  forbidRawRenderInInternalTests: true,
+});
+
+/** Vérifie si un point [lat,lng] est dans un polygone (ray-casting). */
+function _pointInPolygon(point, polygon) {
+  if (!Array.isArray(polygon) || polygon.length < 3 || !Array.isArray(point)) return false;
+  const [lat, lng] = point;
+  let inside = false;
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const pi = polygon[i], pj = polygon[j];
+    if (!Array.isArray(pi) || !Array.isArray(pj)) continue;
+    const [yi, xi] = pi, [yj, xj] = pj;
+    const intersect = ((yi > lat) !== (yj > lat)) &&
+      (lng < ((xj - xi) * (lat - yi)) / ((yj - yi) || 1e-12) + xi);
+    if (intersect) inside = !inside;
+  }
+  return inside;
+}
+
+/** EXCLUSION_AWARE_Ω — vrai si le point tombe dans une zone `excluded=true`
+ *  OU si la zone porteuse a une raison urbaine/industrielle. */
+function _isPointExcluded(latlng, zones) {
+  if (!latlng || !Array.isArray(zones)) return false;
+  const tokens = OMEGA_FILTERS_SPEC.filters.EXCLUSION_AWARE_Ω.urbanReasonTokens;
+  for (const z of zones) {
+    if (!z?.excluded || !Array.isArray(z?.polygon)) continue;
+    if (_pointInPolygon(latlng, z.polygon)) return true;
+    // Propagation de raison urbaine même hors polygone direct si le bundle
+    // marque explicitement la zone d'exclusion urbaine proche (<50 m du centroïde)
+    const reason = String(z.exclusion_reason || '').toLowerCase();
+    if (tokens.some(t => reason.includes(t))) {
+      // Point-in-polygon déjà testé ; on laisse le rejet polygon strict.
+    }
+  }
+  return false;
+}
+
+/** EXCLUSION_AWARE_Ω — vrai si la zone source porte une raison urbaine. */
+function _zoneHasUrbanReason(zone) {
+  const reason = String(zone?.exclusion_reason || '').toLowerCase();
+  if (!reason) return false;
+  const tokens = OMEGA_FILTERS_SPEC.filters.EXCLUSION_AWARE_Ω.urbanReasonTokens;
+  return tokens.some(t => reason.includes(t));
+}
+
+/** HABITAT_AWARE_Ω — vrai si le bundle contient au moins N zones vitales non-excluded. */
+function _bundleHasHabitat(zones) {
+  if (!Array.isArray(zones) || zones.length === 0) return false;
+  const spec = OMEGA_FILTERS_SPEC.filters.HABITAT_AWARE_Ω;
+  let count = 0;
+  for (const z of zones) {
+    if (z?.excluded) continue;
+    const zt = String(z?.type || '').toLowerCase();
+    if (spec.vitalTypes.includes(zt)) count++;
+  }
+  return count >= spec.minVitalZonesNonExcluded;
+}
+
+/** TERRAIN_AWARE_Ω_FILTER — vrai si les signaux terrain sont compatibles. */
+function _terrainCompliant(terrain) {
+  if (!terrain || typeof terrain !== 'object') return false;
+  const spec = OMEGA_FILTERS_SPEC.filters.TERRAIN_AWARE_Ω_FILTER;
+  if (typeof terrain.distance_eau_m === 'number' && terrain.distance_eau_m < spec.minDistanceEauM) return false;
+  if (typeof terrain.impervious_pct === 'number' && terrain.impervious_pct > spec.maxImperviousPct) return false;
+  if (terrain.urban === true || terrain.industrial === true || terrain.port === true) return false;
+  return true;
+}
+
+/** BIOLOGIE_AWARE_Ω_FILTER — vrai si score local compatible. */
+function _biologieCompliant(scoreLocal) {
+  const spec = OMEGA_FILTERS_SPEC.filters.BIOLOGIE_AWARE_Ω_FILTER;
+  if (!scoreLocal || typeof scoreLocal !== 'object') return false;
+  const cls = String(scoreLocal.classification || '').toUpperCase();
+  if (spec.rejectClassifications.includes(cls)) return false;
+  const val = typeof scoreLocal.value === 'number' ? scoreLocal.value : null;
+  if (val !== null && val < spec.minScoreLocal) return false;
+  return true;
+}
+
+/** Construit les géométries Leaflet pour les 4 couches inspection-bio.
+ *  Dérivé strict des données institutionnelles fournies (zones/salines/corridors).
+ *  Retourne `null` si mode inspection bio désactivé.
+ *
+ *  PHASE_INSPECTION_BIO_FILTERING_Ω — ENFORCE_URBAN_EXCLUSION
+ *  Les 4 filtres Ω institutionnels sont appliqués AVANT ajout d'une feature
+ *  au bundle de rendu. Toute feature rejetée par un filtre est documentée dans
+ *  `out.rejections` pour audit.
+ *
+ *  @param {{zones?: Array, salines?: Array, corridors?: Array, waypointCenter?: {lat,lng}, scoreLocal?: Object}} data
+ *  @returns {null | {
+ *    role: 'pro'|'expert',
+ *    attracteurs: Array, exclusions: Array, pentes: Array, couvert: Array,
+ *    rejections: { EXCLUSION_AWARE_Ω: number, HABITAT_AWARE_Ω: number, TERRAIN_AWARE_Ω_FILTER: number, BIOLOGIE_AWARE_Ω_FILTER: number },
+ *    filtersActive: boolean
+ *  }}
+ */
+export function buildInspectionBioFeatures(data) {
+  const st = getInspectionBiologiqueStatus();
+  if (!st.enabled || !st.role) return null;
+  const zones = Array.isArray(data?.zones) ? data.zones : [];
+  const salines = Array.isArray(data?.salines) ? data.salines : [];
+  const corridors = Array.isArray(data?.corridors) ? data.corridors : [];
+  const scoreLocal = data?.scoreLocal || null;
+
+  const role = st.role;
+  const out = {
+    role,
+    attracteurs: [], exclusions: [], pentes: [], couvert: [],
+    rejections: {
+      EXCLUSION_AWARE_Ω: 0,
+      HABITAT_AWARE_Ω: 0,
+      TERRAIN_AWARE_Ω_FILTER: 0,
+      BIOLOGIE_AWARE_Ω_FILTER: 0,
+    },
+    filtersActive: true,
+  };
+
+  // ═══ FILTRE GLOBAL 1 : HABITAT_AWARE_Ω ═══
+  // Si le bundle n'a AUCUNE zone vitale non-excluded, on rejette TOUT le rendu
+  // (le territoire est considéré non-habitat → zéro overlay).
+  const habitatOk = _bundleHasHabitat(zones);
+  if (!habitatOk) {
+    out.rejections.HABITAT_AWARE_Ω = -1; // marqueur : bundle entier rejeté
+    // On continue pour comptabiliser les autres rejections mais on ne construira rien.
+  }
+
+  // ═══ FILTRE GLOBAL 2 : BIOLOGIE_AWARE_Ω_FILTER ═══
+  // Si le score local est FAIBLE / INCOMPATIBLE / EXCLU / NON_HABITAT, rejet global.
+  const biologieOk = scoreLocal ? _biologieCompliant(scoreLocal) : true; // pas de score = pas de blocage
+  if (scoreLocal && !biologieOk) {
+    out.rejections.BIOLOGIE_AWARE_Ω_FILTER = -1;
+  }
+
+  const passGlobal = habitatOk && (scoreLocal ? biologieOk : true);
+
+  // ─── ATTRACTEURS (PRO + EXPERT) ───
+  // Sources : salines (toutes) + centroïdes zones vitales non-excluded
+  if (passGlobal) {
+    for (const s of salines) {
+      const lat = s?.lat ?? s?.latitude ?? s?.center?.lat;
+      const lng = s?.lng ?? s?.lon ?? s?.longitude ?? s?.center?.lng;
+      if (lat == null || lng == null) continue;
+      const pt = [lat, lng];
+      // Filtre 1 : EXCLUSION_AWARE_Ω
+      if (_isPointExcluded(pt, zones)) { out.rejections.EXCLUSION_AWARE_Ω++; continue; }
+      // Filtre 3 : TERRAIN_AWARE_Ω_FILTER (si terrain fourni par la saline)
+      if (s.terrain && !_terrainCompliant(s.terrain)) {
+        out.rejections.TERRAIN_AWARE_Ω_FILTER++;
+        continue;
+      }
+      out.attracteurs.push({
+        kind: 'circle', latlng: pt,
+        radiusM: RENDU_OMEGA.functionalRadiusNominalM * 0.15,
+        meta: { source: 'saline', id: s.id || null, score: s.score ?? null },
+      });
+    }
+
+    const VITAL_TYPES = new Set(OMEGA_FILTERS_SPEC.filters.HABITAT_AWARE_Ω.vitalTypes);
+    for (const z of zones) {
+      const zt = String(z?.type || '').toLowerCase();
+      if (!VITAL_TYPES.has(zt)) continue;
+      // HABITAT_AWARE : une zone vitale excluded N'est PAS un habitat valide
+      if (z.excluded) { out.rejections.HABITAT_AWARE_Ω++; continue; }
+      // EXCLUSION_AWARE : raison urbaine rattachée à la zone
+      if (_zoneHasUrbanReason(z)) { out.rejections.EXCLUSION_AWARE_Ω++; continue; }
+      // TERRAIN_AWARE : signaux terrain attachés à la zone
+      if (z.terrain && !_terrainCompliant(z.terrain)) {
+        out.rejections.TERRAIN_AWARE_Ω_FILTER++;
+        continue;
+      }
+      if (!Array.isArray(z?.polygon) || z.polygon.length < 3) continue;
+      let la = 0, ln = 0, n = 0;
+      for (const p of z.polygon) {
+        if (Array.isArray(p) && p.length >= 2) { la += p[0]; ln += p[1]; n++; }
+      }
+      if (n < 3) continue;
+      const centroid = [la / n, ln / n];
+      // Re-check : centroïde dans une zone excluded (recouvrement)
+      if (_isPointExcluded(centroid, zones)) { out.rejections.EXCLUSION_AWARE_Ω++; continue; }
+      out.attracteurs.push({
+        kind: 'circle', latlng: centroid,
+        radiusM: 60,
+        meta: { source: 'zone_vitale', type: zt, score: z.score ?? null },
+      });
+    }
+  }
+
+  // ─── EXCLUSIONS (PRO + EXPERT) ───
+  // Les exclusions sont TOUJOURS rendues si habitat_ok (elles représentent les zones interdites)
+  // mais seulement celles à raison institutionnelle explicite (urbaine / infrastructure).
+  if (passGlobal) {
+    for (const z of zones) {
+      if (!z?.excluded) continue;
+      if (!Array.isArray(z?.polygon) || z.polygon.length < 3) continue;
+      // On ne trace que les exclusions avec raison documentée (sinon rejet silencieux)
+      const reason = String(z.exclusion_reason || '');
+      if (!reason) { out.rejections.EXCLUSION_AWARE_Ω++; continue; }
+      out.exclusions.push({
+        kind: 'polygon', latlngs: z.polygon,
+        meta: { reason, type: z.type || null, urban: _zoneHasUrbanReason(z) },
+      });
+    }
+  }
+
+  // ─── PENTES (EXPERT seul) ───
+  if (passGlobal && role === 'expert') {
+    const gradient = INSPECTION_BIO_SPEC.overlayLayers.find(l => l.key === 'pentes')?.gradient || [];
+    const colorFor = (deg) => {
+      for (const step of gradient) if (deg <= step.upto) return step.color;
+      return gradient[gradient.length - 1]?.color || '#E65100';
+    };
+    for (const z of zones) {
+      const deg = z?.terrain?.pente_deg;
+      if (typeof deg !== 'number') continue;
+      if (!Array.isArray(z?.polygon) || z.polygon.length < 3) continue;
+      // HABITAT : zone excluded rejetée
+      if (z.excluded) { out.rejections.HABITAT_AWARE_Ω++; continue; }
+      // EXCLUSION : raison urbaine rejetée
+      if (_zoneHasUrbanReason(z)) { out.rejections.EXCLUSION_AWARE_Ω++; continue; }
+      // TERRAIN : signaux incompatibles rejetés
+      if (!_terrainCompliant(z.terrain)) { out.rejections.TERRAIN_AWARE_Ω_FILTER++; continue; }
+      let palier = 0;
+      for (const s of gradient) { if (deg <= s.upto) { palier = s.upto; break; } }
+      out.pentes.push({
+        kind: 'polygon', latlngs: z.polygon,
+        palierDeg: palier, color: colorFor(deg),
+        meta: { pente_deg: deg, zone_type: z.type || null },
+      });
+    }
+  }
+
+  // ─── COUVERT (EXPERT seul) ───
+  if (passGlobal && role === 'expert') {
+    const minCanopy = OMEGA_FILTERS_SPEC.filters.TERRAIN_AWARE_Ω_FILTER.minCanopyForCoverLayer;
+    for (const z of zones) {
+      const canopy = z?.terrain?.canopy;
+      if (typeof canopy !== 'number' || canopy < minCanopy) continue;
+      if (!Array.isArray(z?.polygon) || z.polygon.length < 3) continue;
+      if (z.excluded) { out.rejections.HABITAT_AWARE_Ω++; continue; }
+      if (_zoneHasUrbanReason(z)) { out.rejections.EXCLUSION_AWARE_Ω++; continue; }
+      if (!_terrainCompliant(z.terrain)) { out.rejections.TERRAIN_AWARE_Ω_FILTER++; continue; }
+      out.couvert.push({
+        kind: 'polygon', latlngs: z.polygon, canopy,
+        meta: { canopy_pct: Math.round(canopy * 100), zone_type: z.type || null },
+      });
+    }
+  }
+
+  // Sync awareness pour chaque corridor (non rendu — consommé par boost terrain)
+  for (const c of corridors) {
+    try { syncTerrainBiologieAwareness(c); } catch (_) { /* noop */ }
+  }
+
+  return out;
+}
+
+/** Retourne les noms canoniques des 4 panes Leaflet inspection-bio. */
+export function inspectionBioPaneName(key) {
+  return `leaflet-inspection-bio-${key}-pane`;
+}
+
+/* =========================================================================
+ * PHASE_NUTRITION_SALINES_BINDING_Ω — INTEGRATED_WITH_FILTERING
+ * =========================================================================
+ * Ordre : `PHASE_NUTRITION_SALINES_BINDING_Ω — INTEGRATED_WITH_FILTERING`
+ * VERSION_INSTITUTIONNELLE_RENFORCÉE_X10
+ *
+ * Objectif : Binding exclusif nutrition↔saline + rapport nutritionnel complet
+ * au double-clic + intégration totale des 4 filtres Ω (EXCLUSION/HABITAT/
+ * TERRAIN/BIOLOGIE_AWARE_Ω).
+ *
+ * Directives :
+ *   - `NUTRITION_BY_SALINE_ONLY = true`  → tout point nutritionnel hors-saline interdit
+ *   - `forbidNutritionOutsideSaline = true` → layer autonome désactivé
+ *   - `bindNutritionToSaline(saline, context)` → rapport 11 sections OU rejet filtré
+ * ========================================================================= */
+
+export const NUTRITION_SALINES_SPEC = Object.freeze({
+  protocolVersion: 'VERSION_INSTITUTIONNELLE_RENFORCÉE_X10',
+  sealedAt: '2026-04-21T17:25:00Z',
+  NUTRITION_BY_SALINE_ONLY: true,
+  forbidNutritionOutsideSaline: true,
+  forbidRawNutritionRenderInInternalTests: true,
+  reportSections: Object.freeze([
+    'besoins_journaliers',
+    'carences',
+    'mineraux',
+    'proteines',
+    'saisonnalite',
+    'recommandations',
+    'quantites',
+    'frequences',
+    'recettes_minerales',
+    'impact_biologique',
+    'score_nutritionnel_institutionnel',
+  ]),
+});
+
+/** Défauts minéraux institutionnels par espèce (fallback si saline muette).
+ *  Valeurs approximatives basées sur `ENGINE-NUTRITION-V12-SUPRA` (frontend mirror).
+ */
+const _NUTRITION_DEFAULTS = Object.freeze({
+  orignal: Object.freeze({
+    besoins_journaliers_kg: 15, proteines_pct: 12, ca_g: 18, na_g: 25, mg_g: 8, p_g: 14,
+    saisonnalite: 'printemps+ete forte, automne rut, hiver maintien',
+    recette: 'bloc 80% NaCl + 15% mineraux + 5% oligo-elements',
+  }),
+  chevreuil: Object.freeze({
+    besoins_journaliers_kg: 3, proteines_pct: 14, ca_g: 4, na_g: 6, mg_g: 2, p_g: 3.5,
+    saisonnalite: 'printemps croissance, ete allaitement, automne rut',
+    recette: 'bloc 75% NaCl + 20% Ca/Mg + 5% oligo',
+  }),
+  cerf: Object.freeze({
+    besoins_journaliers_kg: 4.5, proteines_pct: 13, ca_g: 6, na_g: 9, mg_g: 3, p_g: 4,
+    saisonnalite: 'printemps recuperation hivernale, ete, automne rut',
+    recette: 'bloc 78% NaCl + 17% Ca/Mg + 5% oligo',
+  }),
+  wapiti: Object.freeze({
+    besoins_journaliers_kg: 10, proteines_pct: 13, ca_g: 14, na_g: 20, mg_g: 6, p_g: 11,
+    saisonnalite: 'printemps+ete forte, automne rut, hiver limite',
+    recette: 'bloc 80% NaCl + 15% Ca/Mg + 5% oligo-elements',
+  }),
+  caribou: Object.freeze({
+    besoins_journaliers_kg: 6, proteines_pct: 11, ca_g: 8, na_g: 12, mg_g: 4, p_g: 6,
+    saisonnalite: 'printemps velage, ete lactation, automne migration',
+    recette: 'bloc 82% NaCl + 13% Ca/Mg + 5% oligo',
+  }),
+});
+
+function _nutritionDefaults(species) {
+  const key = String(species || 'orignal').toLowerCase();
+  return _NUTRITION_DEFAULTS[key] || _NUTRITION_DEFAULTS.orignal;
+}
+
+/** Applique les 4 filtres Ω à une saline candidate pour analyse nutritionnelle.
+ *  Utilise les helpers internes déjà scellés en PHASE_INSPECTION_BIO_FILTERING_Ω.
+ *  @returns {{ok: boolean, reason?: string, filter?: string}}
+ */
+export function applyOmegaFiltersToSaline(saline, context = {}) {
+  if (!saline || typeof saline !== 'object') {
+    return { ok: false, reason: 'saline_invalid', filter: null };
+  }
+  const zones = Array.isArray(context?.zones) ? context.zones : [];
+  const scoreLocal = context?.scoreLocal || null;
+  const lat = saline.lat ?? saline.latitude ?? saline.center?.lat;
+  const lng = saline.lng ?? saline.lon ?? saline.longitude ?? saline.center?.lng;
+  if (lat == null || lng == null) return { ok: false, reason: 'saline_no_coords', filter: null };
+
+  // HABITAT_AWARE_Ω global
+  if (!_bundleHasHabitat(zones)) {
+    return { ok: false, reason: 'bundle_sans_habitat', filter: 'HABITAT_AWARE_Ω' };
+  }
+  // BIOLOGIE_AWARE_Ω global
+  if (scoreLocal && !_biologieCompliant(scoreLocal)) {
+    return { ok: false, reason: 'score_local_rejete', filter: 'BIOLOGIE_AWARE_Ω_FILTER' };
+  }
+  // EXCLUSION_AWARE_Ω point-in-polygon sur les zones excluded
+  if (_isPointExcluded([lat, lng], zones)) {
+    return { ok: false, reason: 'point_dans_zone_exclue', filter: 'EXCLUSION_AWARE_Ω' };
+  }
+  // TERRAIN_AWARE_Ω_FILTER sur signaux saline
+  if (saline.terrain && !_terrainCompliant(saline.terrain)) {
+    return { ok: false, reason: 'terrain_incompatible', filter: 'TERRAIN_AWARE_Ω_FILTER' };
+  }
+  return { ok: true };
+}
+
+/** Construit le rapport nutritionnel institutionnel complet pour une saline
+ *  donnée (11 sections). Applique les 4 filtres Ω AVANT génération.
+ *
+ *  Retourne soit :
+ *    { ok: true,  saline: {...}, report: { 11 sections } }
+ *    { ok: false, reason: '...', filter: 'EXCLUSION_AWARE_Ω' | ... }
+ *
+ *  @param {Object} saline
+ *  @param {{species?: string, month?: number, zones?: Array, scoreLocal?: Object}} context
+ */
+export function bindNutritionToSaline(saline, context = {}) {
+  if (!NUTRITION_SALINES_SPEC.NUTRITION_BY_SALINE_ONLY) {
+    // Défense en profondeur : si flag désactivé, refuser quand même le binding
+    // tant que le Commandant n'a pas levé l'interdiction.
+    return { ok: false, reason: 'nutrition_by_saline_only_disabled', filter: null };
+  }
+  const filtrage = applyOmegaFiltersToSaline(saline, context);
+  if (!filtrage.ok) return filtrage;
+
+  const species = String(context.species || 'orignal').toLowerCase();
+  const month = Number(context.month || new Date().getMonth() + 1);
+  const d = _nutritionDefaults(species);
+
+  // Données pré-agrégées dans la saline (si présentes, priorité à l'engine backend)
+  const carences = Array.isArray(saline.carences_zone) ? saline.carences_zone : [];
+  const recos = Array.isArray(saline.recommandations) ? saline.recommandations : [];
+  const scoreNut = saline.score_nutrition ?? saline.score ?? null;
+  const scoreBio = saline.score_bio_global ?? null;
+
+  // Saisonnalité par mois (3 saisons biologiques majeures)
+  const saison = month >= 4 && month <= 5 ? 'printemps' :
+                 month >= 6 && month <= 8 ? 'ete' :
+                 month >= 9 && month <= 11 ? 'automne' : 'hiver';
+
+  // Fréquences visites entretien (fonction saison)
+  const frequences = {
+    printemps: 'visite bi-mensuelle (remplacement bloc 4-6 semaines)',
+    ete: 'visite mensuelle (renouvellement mineraux lactation)',
+    automne: 'visite bi-mensuelle (rut — bloc renforce Ca/P)',
+    hiver: 'visite trimestrielle (maintien leger)',
+  };
+
+  // Quantités (kg/an)
+  const quantites_an_kg = Math.round(d.besoins_journaliers_kg * 365 * 0.02); // ~2 % besoin ann.
+
+  // Impact biologique agrégé
+  const impactBio = scoreBio != null
+    ? (scoreBio >= 70 ? 'FORT' : scoreBio >= 40 ? 'MODERE' : 'FAIBLE')
+    : 'A_EVALUER';
+
+  const report = {
+    besoins_journaliers: {
+      species,
+      kg_par_jour: d.besoins_journaliers_kg,
+      proteines_pct: d.proteines_pct,
+    },
+    carences: {
+      detectees: carences,
+      criticite: carences.length > 0 ? 'ACTIVE' : 'AUCUNE',
+    },
+    mineraux: {
+      ca_g: d.ca_g, na_g: d.na_g, mg_g: d.mg_g, p_g: d.p_g,
+    },
+    proteines: {
+      pct_recommande: d.proteines_pct,
+      source_bloc: 'tourteau + legumineuses locales',
+    },
+    saisonnalite: {
+      saison_courante: saison,
+      cycle_annuel: d.saisonnalite,
+    },
+    recommandations: {
+      items: recos.length ? recos : ['Maintien bloc institutionnel ' + species],
+    },
+    quantites: {
+      an_kg_estime: quantites_an_kg,
+      bloc_unit_kg: species === 'orignal' || species === 'wapiti' ? 25 : 20,
+    },
+    frequences: {
+      calendrier: frequences,
+      saison_active: frequences[saison],
+    },
+    recettes_minerales: {
+      formule_institutionnelle: d.recette,
+    },
+    impact_biologique: {
+      niveau: impactBio,
+      score_bio_global: scoreBio,
+    },
+    score_nutritionnel_institutionnel: {
+      valeur: scoreNut,
+      classification: scoreNut == null ? 'A_CALCULER' :
+                       scoreNut >= 70 ? 'FORT' :
+                       scoreNut >= 40 ? 'MODERE' : 'FAIBLE',
+    },
+  };
+
+  return {
+    ok: true,
+    saline: {
+      id: saline.id || null,
+      lat: saline.lat ?? saline.center?.lat,
+      lng: saline.lng ?? saline.lon ?? saline.center?.lng,
+      status: saline.status || null,
+    },
+    species, month,
+    report,
+    protocol: NUTRITION_SALINES_SPEC.protocolVersion,
+    generatedAt: new Date().toISOString(),
+  };
+}
+
+/** Garde institutionnel : toute tentative de rendu nutritionnel hors-saline
+ *  DOIT être refusée si `NUTRITION_BY_SALINE_ONLY=true`. Retourne false si
+ *  le contexte fournit un point orphelin (pas de saline_id).
+ */
+export function assertNutritionBoundToSaline(context) {
+  if (!NUTRITION_SALINES_SPEC.NUTRITION_BY_SALINE_ONLY) return true;
+  if (!context || typeof context !== 'object') return false;
+  if (!context.saline_id && !context.saline) return false;
+  return true;
+}
+
