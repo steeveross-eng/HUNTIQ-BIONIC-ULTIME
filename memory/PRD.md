@@ -47,6 +47,7 @@ et conforme au registre SHA-256 `registry_lock_omega.py` (V30).
 - **2026-04-21** `PHASE_ZERO_OPS_REFUS_VALIDATION_Ω` (X50) — 4 correctifs P0 : VENT rendu V20 · nutrition-saline strict · listeners click (zones/affûts/hotspots/vent) · CI_STATUS runtime beacon
 - **2026-04-21** `PHASE_XI_SUPRA_VERITE_TERRAIN_Ω` (X80-ABSOLU-Ω) — VENT refondu (COMPASS hors-carte + cône olfactif blanc + particules Ventusky gris), corridors popup, 9 probes runtime multi-couches (waypoint officiel 48.206657/-68.382422 vérifié côté backend)
 - **2026-04-21** `PHASE_XI_SUPRA_RENDU_TERRITOIRE_Ω` (X120-SUPRA-CANONIQUE-Ω) — Canon suprême : contamination_v2 double-contour opacité 0.18, popups enrichis (force/faiblesse/optim/source) pour zones/corridors/affûts/hotspots/cône vent/contamination, capture unique signée SHA-256 archivée `/app/memory/captures/`
+- **2026-04-21** `PHASE_XI_SUPRA_CORRIDORS_RENDUΩ` (X150-SUPRA-ARCHITECTONIQUE-Ω) — Ingestion des 13 normes RENDU Ω CORRIDORS (document Commandant), compilation en 12 probes runtime, correction `weightsAllowedPx` strict [1.2,2.0,3.0], gate RED auto si X150 violé, capture signée `9b4c25df1ea314...ddd4c2ec`
 
 ## Statut testing
 - Jest sentinelles : **5 suites / 57 tests / 57 PASS**

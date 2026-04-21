@@ -17,15 +17,17 @@ const ORGANIC_GENERATE_URL = `${API_BASE}/api/v20/territoire/corridors-organic/g
 
 // Défauts immuables — doivent matcher engine_rendu_omega.py:RENDU_RULES
 // PHASE_XII_SUPRA_S_CORRECTION : signatures renforcées, halo amplifié, pulse public.
+// PHASE_X150-SUPRA-ARCHITECTONIQUE-Ω : norme DESCRIPTIONS_RENDU_OMEGA_CORRIDORS strictement appliquée.
 export const RENDU_OMEGA = Object.freeze({
   color: '#FF8F00',
   colorName: 'Orange ambre institutionnel',
-  weightsAllowedPx: [1.2, 2.0, 3.0, 4.0],
+  // X150 Norme 3 — UNIQUEMENT 1.2 / 2.0 / 3.0 (aucune autre valeur permise)
+  weightsAllowedPx: [1.2, 2.0, 3.0],
   weightMapping: {
     faible: 1.2, modere: 1.2,
     fort: 2.0,
     critique: 3.0, majeur: 3.0,
-    extreme: 4.0, extreme_max: 4.0,
+    extreme: 3.0, extreme_max: 3.0,
   },
   opacityMin: 1.0,
   opacityDefault: 1.0,

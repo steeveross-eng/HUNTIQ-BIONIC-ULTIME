@@ -614,9 +614,27 @@ const BionicLayersV8 = ({
         }
       } catch (_e) { /* noop */ }
     }
-    // X80-ABSOLU-Ω — signal conformité style corridors (RENDU-Ω orange ambre + Catmull-Rom 28 pts)
+    // X80-ABSOLU-Ω → X150-SUPRA-ARCHITECTONIQUE — signaux conformité RENDU-Ω corridors
     if (typeof window !== 'undefined') {
       window.__OMEGA_CORRIDORS_STYLE_CONFORME__ = showCorridors && corridorsToRender.length > 0;
+      // X150 — 7 probes détaillées des 13 normes (document DESCRIPTIONS_RENDU_OMEGA_CORRIDORS)
+      const x150Probes = {
+        color_strict_FF8F00: RENDU_OMEGA.color === '#FF8F00',
+        weights_allowed: JSON.stringify(RENDU_OMEGA.weightsAllowedPx) === JSON.stringify([1.2, 2.0, 3.0]),
+        opacity_min_075: RENDU_OMEGA.opacityMin >= 0.75,
+        catmull_rom_points_25_30: RENDU_OMEGA.controlPointsMin === 25 && RENDU_OMEGA.controlPointsMax === 30,
+        segment_max_20m: RENDU_OMEGA.segmentMaxM === 20.0,
+        angle_max_45: RENDU_OMEGA.angleMaxDeg === 45.0,
+        functional_radius_420_780: RENDU_OMEGA.functionalRadiusMinM === 420 && RENDU_OMEGA.functionalRadiusMaxM === 780,
+        min_zoom_13: RENDU_OMEGA.minZoom === 13,
+        zindex_order_conforme: JSON.stringify(RENDU_OMEGA.zIndexOrder) === JSON.stringify(['zones','hydrologie','terrain','corridors','salines','affuts','hotspots','vent']),
+        forbid_affut_interaction: RENDU_OMEGA.forbidAffutInteraction === true,
+        forbid_directional_arrow: RENDU_OMEGA.forbidDirectionalArrow === true,
+        preview_equals_final: RENDU_OMEGA.previewEqualsFinal === true,
+      };
+      const x150ConformeTotal = Object.values(x150Probes).every(Boolean);
+      window.__OMEGA_CORRIDORS_X150_PROBES__ = x150Probes;
+      window.__OMEGA_CORRIDORS_X150_CONFORME__ = x150ConformeTotal;
     }
 
     // ═══ Z-4: CONTAMINATION-Omega — CANON SUPRÊME X120 ═══

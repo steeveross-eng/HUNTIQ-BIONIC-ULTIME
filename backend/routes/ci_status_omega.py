@@ -41,6 +41,9 @@ _RUNTIME_BEACON: dict = {
     "panels_clickable_count": 0,
     "filters_omega_active": False,
     "waypoint_context_match": False,
+    # X150-SUPRA-ARCHITECTONIQUE-Ω
+    "corridors_x150_conforme": False,
+    "corridors_x150_probes": {},
 }
 
 # Waypoint officiel STEEVE-MAX — tolérance ±0.0001° (~11 m)
@@ -197,6 +200,14 @@ def _runtime_beacon_status() -> dict:
     # Règle 11 : waypoint_context_match
     if not b.get("waypoint_context_match", False):
         violations.append("waypoint_context_match=false (waypoint officiel 48.206657/-68.382422 non validé)")
+    # X150-SUPRA-ARCHITECTONIQUE-Ω — 12 sous-normes RENDU Ω CORRIDORS
+    if not b.get("corridors_x150_conforme", False):
+        probes = b.get("corridors_x150_probes") or {}
+        failed = [k for k, v in probes.items() if not v]
+        if failed:
+            violations.append(f"corridors_x150_conforme=false (violations: {', '.join(failed)})")
+        else:
+            violations.append("corridors_x150_conforme=false (document DESCRIPTIONS_RENDU_OMEGA_CORRIDORS non validé)")
     return {
         "beacon_received": b.get("received_at") is not None,
         "beacon": b,
@@ -222,13 +233,13 @@ def _build_status() -> dict:
     )
 
     return {
-        "version": "CI_STATUS_Ω_X80_ABSOLU",
+        "version": "CI_STATUS_Ω_X150_SUPRA_ARCHITECTONIQUE",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "overall_status": "OK" if all_green else "ATTENTION",
         "overall_conforming": all_green,
         "pipeline": {
             "single_pipeline_enforced": True,
-            "protocol": "VERSION_INSTITUTIONNELLE_RENFORCÉE_X80_ABSOLU",
+            "protocol": "VERSION_X150_SUPRA_ARCHITECTONIQUE_Ω",
         },
         "sentinels_jest": sentinels,
         "pre_commit_hook": hook,
@@ -351,6 +362,9 @@ async def ci_status_runtime_beacon(payload: dict):
         "panels_clickable_count": int(payload.get("panels_clickable_count") or 0),
         "filters_omega_active": bool(payload.get("filters_omega_active", False)),
         "waypoint_context_match": wp_match,
+        # X150-SUPRA-ARCHITECTONIQUE-Ω
+        "corridors_x150_conforme": bool(payload.get("corridors_x150_conforme", False)),
+        "corridors_x150_probes": payload.get("corridors_x150_probes") or {},
     }
     return JSONResponse({
         "received": True,

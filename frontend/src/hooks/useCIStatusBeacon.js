@@ -51,6 +51,9 @@ export function useCIStatusBeacon({
         }
         const rawAttempts = (w.__RAW_RENDER_ATTEMPTS__ || {}).count || 0;
         const anthropic = (w.__ANTHROPIC_RENDER_FAILURES__ || []).length || 0;
+        // X150-SUPRA-ARCHITECTONIQUE-Ω
+        const x150Conforme = !!w.__OMEGA_CORRIDORS_X150_CONFORME__;
+        const x150Probes = w.__OMEGA_CORRIDORS_X150_PROBES__ || {};
 
         await fetch(`${API}/api/omega/ci-status/runtime-beacon`, {
           method: 'POST',
@@ -72,6 +75,9 @@ export function useCIStatusBeacon({
             contamination_layers_visible: contamVisible,
             panels_clickable_count: panelsClickable,
             filters_omega_active: true, // 4 filtres Ω enforced (ENFORCE_PIPELINE_SPEC_V20)
+            // X150-SUPRA-ARCHITECTONIQUE-Ω — conformité stricte corridors
+            corridors_x150_conforme: x150Conforme,
+            corridors_x150_probes: x150Probes,
           }),
         });
       } catch (_e) { /* silencieux : beacon non bloquant */ }
