@@ -123,6 +123,128 @@ export function isCorridorsVisibleAtZoom(zoom) {
 }
 
 /* =========================================================================
+ * PHASE_XII_SUPRA_R — VALIDATION GÉOMÉTRIQUE RENDU-Ω (frontend strict)
+ * =========================================================================
+ * Ajoutée sans modifier la logique IA-CORRIDORS : applique au RENDU uniquement :
+ *   • clamp épaisseur aux 3 valeurs autorisées (1.2 / 2.0 / 3.0)
+ *   • validation continuité (aucune rupture [null, null])
+ *   • validation segment ≤ 20 m (Haversine)
+ *   • validation angle ≤ 45°
+ *   • validation nb points (≥ controlPointsMin pour corridors non-organic)
+ * ========================================================================= */
+
+/** Force l'épaisseur aux valeurs autorisées 1.2/2.0/3.0 (snap au plus proche). */
+export function clampCorridorWeight(weight) {
+  const allowed = RENDU_OMEGA.weightsAllowedPx;
+  const n = Number(weight);
+  if (!Number.isFinite(n)) return allowed[0];
+  return allowed.reduce((prev, curr) =>
+    Math.abs(curr - n) < Math.abs(prev - n) ? curr : prev, allowed[0]);
+}
+
+/** Distance Haversine en mètres entre deux [lat, lng]. */
+function _haversineM(a, b) {
+  if (!a || !b || a[0] == null || a[1] == null || b[0] == null || b[1] == null) return Infinity;
+  const R = 6371000.0;
+  const toRad = (x) => (Number(x) * Math.PI) / 180.0;
+  const dLat = toRad(b[0] - a[0]);
+  const dLon = toRad(b[1] - a[1]);
+  const la1 = toRad(a[0]);
+  const la2 = toRad(b[0]);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(la1) * Math.cos(la2) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+/** Angle en degrés au point central entre trois points consécutifs. */
+function _angleDegAt(prev, curr, next) {
+  if (!prev || !curr || !next) return 0;
+  const v1x = curr[1] - prev[1], v1y = curr[0] - prev[0];
+  const v2x = next[1] - curr[1], v2y = next[0] - curr[0];
+  const n1 = Math.hypot(v1x, v1y), n2 = Math.hypot(v2x, v2y);
+  if (n1 < 1e-12 || n2 < 1e-12) return 0;
+  let cos = (v1x * v2x + v1y * v2y) / (n1 * n2);
+  cos = Math.max(-1, Math.min(1, cos));
+  // Déviation de la continuité — 0° = aligné, 180° = demi-tour
+  return (Math.acos(cos) * 180) / Math.PI;
+}
+
+/**
+ * Valide un path corridor contre les règles géométriques RENDU-Ω.
+ * Retourne { ok, violations, metrics }.
+ * N'effectue PAS de modification de path (immutable).
+ *
+ * @param {Array<[lat, lng]>} path
+ * @param {Object} opts — { isOrganic, strictMinPoints }
+ */
+export function validateCorridorGeometry(path, opts = {}) {
+  const { isOrganic = false, strictMinPoints = true } = opts;
+  const violations = [];
+  const metrics = {
+    n_points: 0,
+    max_segment_m: 0,
+    max_angle_deg: 0,
+    discontinuities: 0,
+  };
+  if (!Array.isArray(path) || path.length < 2) {
+    violations.push({ rule: 'discontinuity', detail: 'path vide ou trop court' });
+    return { ok: false, violations, metrics };
+  }
+  metrics.n_points = path.length;
+
+  // Nb de points — organic: 60-120, legacy conforme RENDU-Ω: 25-30 min
+  if (strictMinPoints) {
+    const minPts = isOrganic ? 60 : RENDU_OMEGA.controlPointsMin;
+    if (metrics.n_points < minPts) {
+      violations.push({
+        rule: 'geometry_simplified',
+        detail: `${metrics.n_points} points < ${minPts} (isOrganic=${isOrganic})`,
+      });
+    }
+  }
+
+  // Continuité + segment max + angle max
+  for (let i = 0; i < path.length; i++) {
+    const p = path[i];
+    if (!p || p[0] == null || p[1] == null || !Number.isFinite(p[0]) || !Number.isFinite(p[1])) {
+      metrics.discontinuities += 1;
+      violations.push({ rule: 'discontinuity', detail: `point index ${i} invalide` });
+      continue;
+    }
+    if (i > 0) {
+      const segM = _haversineM(path[i - 1], p);
+      if (segM > metrics.max_segment_m) metrics.max_segment_m = segM;
+      if (segM > RENDU_OMEGA.segmentMaxM) {
+        violations.push({
+          rule: 'segment_over_max',
+          detail: `segment #${i} = ${segM.toFixed(1)}m > ${RENDU_OMEGA.segmentMaxM}m`,
+        });
+      }
+    }
+    if (i > 0 && i < path.length - 1) {
+      const ang = _angleDegAt(path[i - 1], p, path[i + 1]);
+      if (ang > metrics.max_angle_deg) metrics.max_angle_deg = ang;
+      if (ang > RENDU_OMEGA.angleMaxDeg) {
+        violations.push({
+          rule: 'angle_over_max',
+          detail: `angle #${i} = ${ang.toFixed(1)}° > ${RENDU_OMEGA.angleMaxDeg}°`,
+        });
+      }
+    }
+  }
+
+  return { ok: violations.length === 0, violations, metrics };
+}
+
+/**
+ * Retourne le nom du pane Leaflet conforme Z-INDEX institutionnel pour une
+ * couche. L'appelant doit `map.createPane(name)` et fixer son zIndex via
+ * `resolveZIndex(layerKey)` au montage.
+ */
+export function renduOmegaPaneName(layerKey) {
+  return `renduOmega-${String(layerKey).toLowerCase()}`;
+}
+
+/* =========================================================================
  * Phase XI-SUPRA-L+1-M PREP — CORRIDORS ORGANIC (120 pts, gradient, halo)
  * ========================================================================= */
 

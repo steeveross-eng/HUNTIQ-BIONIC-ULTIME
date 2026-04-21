@@ -22,7 +22,7 @@ import L from 'leaflet';
 import { NUTRITION_SEVERITY_COLORS } from '@/config/territoire_defaults';
 import { validateElement, logRenderCycle } from './RenderGuardOmega';
 import { buildInstitutionalPopup, FichePopup } from './InstitutionalPopup';
-import { RENDU_OMEGA, resolveCorridorStyleOmega, isCorridorsVisibleAtZoom, getRenduRules, getOrganicCorridors, resolveCorridorStyleOrganic } from '@/lib/renduOmegaStore';
+import { RENDU_OMEGA, resolveCorridorStyleOmega, isCorridorsVisibleAtZoom, getRenduRules, getOrganicCorridors, resolveCorridorStyleOrganic, clampCorridorWeight, validateCorridorGeometry, renduOmegaPaneName } from '@/lib/renduOmegaStore';
 
 // ═══ PALETTE BCE-4X V9-INSTITUTIONNEL ═══
 const ZONE_COLORS = {
@@ -113,6 +113,25 @@ const BionicLayersV8 = ({
   // RENDU-Ω V1 (Phase XI-SUPRA-L): pré-fetch des règles visuelles officielles
   // (PREVIEW == FINAL garanti: défauts store identiques au backend).
   useEffect(() => { getRenduRules().catch(() => {}); }, []);
+
+  // PHASE_XII_SUPRA_R — Création du pane Leaflet CORRIDORS avec Z-INDEX institutionnel.
+  // Ordre strict : zones < hydrologie < terrain < corridors < salines < affuts < hotspots < vent
+  // Seul le pane 'corridors' est créé ici : les autres couches conservent leur pane
+  // par défaut (préservation de l'interactivité existante, aucun impact sur salines/
+  // affuts/hotspots/zones). Le z-index corridors = 400 + idx_in_zOrder * 10.
+  useEffect(() => {
+    if (!map) return;
+    try {
+      const corridorsKey = 'corridors';
+      const paneName = renduOmegaPaneName(corridorsKey);
+      if (!map.getPane(paneName)) {
+        const pane = map.createPane(paneName);
+        const idx = RENDU_OMEGA.zIndexOrder.indexOf(corridorsKey);
+        pane.style.zIndex = String(400 + (idx >= 0 ? idx : 3) * 10);
+        pane.style.pointerEvents = 'auto';
+      }
+    } catch (e) { /* noop — map non prête */ }
+  }, [map]);
 
   // CORRIDORS_ORGANIC (Phase XI-SUPRA-L+1-M) : fetch des corridors organiques
   // 120 points + thickness variable + hiérarchie, cache 60s.
@@ -215,28 +234,50 @@ const BionicLayersV8 = ({
       });
     }
 
-    // ═══ Z-3: CORRIDORS-Ω — PHASE XI-SUPRA-L+1-M (RENDU-Ω + ORGANIC) ═══
-    // Règles verrouillées (RENDUS_CORRIDORS_OMEGA.md) + enrichissement Phase M :
-    //   • Couleur unique        #FF8F00 + gradient sub-layer #FF9F00
-    //   • Épaisseurs autorisées 1.2 / 2.0 / 3.0 px (thickness_profile si ORGANIC)
-    //   • Opacité minimale      0.75 (défaut 0.85)
-    //   • Géométrie              Catmull-Rom (60-120 pts si ORGANIC, path legacy sinon)
+    // ═══ Z-3: CORRIDORS-Ω — PHASE XII-SUPRA-R (RENDU-Ω STRICT) ═══
+    // Règles verrouillées (RENDUS_CORRIDORS_OMEGA.md) — PHASE XII-SUPRA-R :
+    //   • Couleur unique        #FF8F00 strict (aucune variation)
+    //   • Épaisseurs STRICTES   1.2 / 2.0 / 3.0 px — clamp obligatoire post-zoom
+    //   • Opacité minimale      ≥ 0.75 (défaut 0.85)
+    //   • Géométrie              Catmull-Rom, 25-30 pts legacy / 60-120 pts organic
+    //   • Segment ≤ 20 m         validation frontend — path non-conforme rejeté
+    //   • Angle ≤ 45°            validation frontend — path non-conforme rejeté
+    //   • Continuité              aucune rupture autorisée (points null filtrés)
     //   • minZoom                13 (couche masquée à zoom<13)
-    //   • Halo Phase M           sub-polyline weight+2, opacity 0.18
+    //   • Z-index strict          pane dédié via renduOmegaPaneName('corridors')
     const corridorsVisibleAtZoom = isCorridorsVisibleAtZoom(currentZoom);
     // Source corridors : ORGANIC si disponible & activé, sinon bundle legacy
     const useOrganic = useOrganicCorridors && organicBundle?.corridors?.length > 0;
     const corridorsToRender = useOrganic ? organicBundle.corridors : corridors;
+    const corridorsPaneName = renduOmegaPaneName('corridors');
+    const rejectedCorridors = [];
     if (showCorridors && corridorsToRender.length > 0 && corridorsVisibleAtZoom) {
       corridorsToRender.forEach(c => {
-        const path = c.path || [[c.start?.lat, c.start?.lng], [c.end?.lat, c.end?.lng]];
-        // Style strict RENDU-Ω — avec résolution ORGANIC si applicable
+        const rawPath = c.path || [[c.start?.lat, c.start?.lng], [c.end?.lat, c.end?.lng]];
+        // Filtrage des points invalides — garantit continuité (§ RENDU-Ω)
+        const path = (Array.isArray(rawPath) ? rawPath : []).filter(
+          p => p && p[0] != null && p[1] != null && Number.isFinite(p[0]) && Number.isFinite(p[1])
+        );
+
+        // Validation géométrique stricte RENDU-Ω (segment ≤ 20m, angle ≤ 45°, continuité)
+        // Mode non-strict sur le nombre de points pour ne pas masquer les corridors legacy
+        // valides ; les violations segment/angle sont bloquantes.
+        const geom = validateCorridorGeometry(path, { isOrganic: useOrganic, strictMinPoints: false });
+        const hasBlockingViolation = geom.violations.some(v =>
+          v.rule === 'segment_over_max' || v.rule === 'angle_over_max' || v.rule === 'discontinuity'
+        );
+        if (hasBlockingViolation || path.length < 2) {
+          rejectedCorridors.push({ id: c.id, violations: geom.violations, metrics: geom.metrics });
+          return; // corridor écarté du rendu (garde-fou RENDU-Ω, n'affecte pas la logique)
+        }
+
+        // Style strict RENDU-Ω — clamp OBLIGATOIRE aux 3 valeurs autorisées
         const styleOmega = useOrganic
           ? resolveCorridorStyleOrganic(c)
           : resolveCorridorStyleOmega(c);
-        const color = styleOmega.color;           // #FF8F00
-        const weight = styleOmega.weight * corridorWeightFactor; // 1.2/2.0/3.0 éventuellement amplifié
-        const opacity = Math.max(RENDU_OMEGA.opacityMin, styleOmega.opacity); // >=0.75
+        const color = RENDU_OMEGA.color;           // #FF8F00 strict
+        const weight = clampCorridorWeight(styleOmega.weight); // 1.2 / 2.0 / 3.0 strict (ignore corridorWeightFactor)
+        const opacity = Math.max(RENDU_OMEGA.opacityMin, styleOmega.opacity); // ≥ 0.75
 
         // Halo Phase M — sub-polyline plus large, opacité basse (§3 directive)
         if (useOrganic && styleOmega.haloEnabled) {
@@ -248,6 +289,7 @@ const BionicLayersV8 = ({
             lineJoin: 'round',
             smoothFactor: 0,
             interactive: false,
+            pane: corridorsPaneName,
           });
           halo.options._renduOmega = { layer: 'halo', weight: weight + 2.2 };
           group.addLayer(halo);
@@ -259,14 +301,16 @@ const BionicLayersV8 = ({
           opacity,
           lineCap: 'round',
           lineJoin: 'round',
-          smoothFactor: 0,
+          smoothFactor: 0,  // aucune simplification Leaflet (§ RENDU-Ω)
           interactive: true,
+          pane: corridorsPaneName,
         });
         line.options._renduOmega = {
-          version: useOrganic ? 'V1.0-PHASE-XI-SUPRA-M-2026-04' : 'V1.0-PHASE-XI-SUPRA-L-2026-04',
+          version: 'V1.1-PHASE-XII-SUPRA-R-RENDU-STRICT-2026-04',
           source: useOrganic ? 'ORGANIC' : 'RENDU_OMEGA',
           color, weight, opacity, min_zoom: RENDU_OMEGA.minZoom,
           hierarchy: c.hierarchy || 'legacy',
+          geom_metrics: geom.metrics,
         };
 
         // Chevron directionnel (fréquence high si ORGANIC — §3 directive)
@@ -293,7 +337,7 @@ const BionicLayersV8 = ({
               const rightLng = mid[1] - nx * arrowSize * 0.6 + ny * arrowSize * 0.5;
               const chev = L.polyline(
                 [[leftLat, leftLng], [tipLat, tipLng], [rightLat, rightLng]],
-                { color, weight, opacity, lineCap: 'round', lineJoin: 'round', smoothFactor: 0, interactive: false, fill: false }
+                { color, weight, opacity, lineCap: 'round', lineJoin: 'round', smoothFactor: 0, interactive: false, fill: false, pane: corridorsPaneName }
               );
               group.addLayer(chev);
             }
