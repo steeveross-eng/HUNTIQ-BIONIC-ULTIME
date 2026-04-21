@@ -1052,6 +1052,14 @@ try:
 except Exception as e:
     logger.warning(f"Audit report route not loaded: {e}")
 
+# PHASE_ZERO_PLUS_X30 — CI_STATUS_Ω dashboard (lecture seule)
+try:
+    from routes.ci_status_omega import router as ci_status_omega_router
+    app.include_router(ci_status_omega_router)
+    logger.info("✓ CI_STATUS_Ω dashboard active (/api/omega/ci-status)")
+except Exception as e:
+    logger.warning(f"CI_STATUS_Ω route not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

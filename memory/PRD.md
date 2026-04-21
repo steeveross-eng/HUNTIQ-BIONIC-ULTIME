@@ -20,15 +20,15 @@ et conforme au registre SHA-256 `registry_lock_omega.py` (V30).
 /app
 ├── backend/
 │   ├── engines/v8_institutional/ (V30 — figé)
-│   └── engines/v8_national/ (phase_b/c — métadonnées canopy/impervious)
+│   ├── engines/v8_national/ (phase_b/c — métadonnées canopy/impervious)
+│   └── routes/ci_status_omega.py (CI_STATUS_Ω — lecture seule)
 ├── frontend/
 │   └── src/
-│       ├── components/territoire/BionicLayersV8.jsx
-│       ├── components/territoire/NutritionPanelOmega.jsx
+│       ├── components/territoire/ (40+ composants)
 │       ├── lib/renduOmegaStore.js (pipeline unique + guards)
 │       └── lib/__tests__/*.test.js (57 sentinelles Jest)
 ├── scripts/git_hooks/pre-commit (Jest sentinels obligatoires)
-└── memory/ (rapports + état de verrouillage)
+└── memory/ (rapports + état de verrouillage + plans gouvernance)
 ```
 
 ## Phases livrées (Changelog)
@@ -42,14 +42,27 @@ et conforme au registre SHA-256 `registry_lock_omega.py` (V30).
 - **2026-04** `PHASE_XIV_CRITICAL_FUNCTIONAL_PARITY_Ω` — UI bindings + sentinelles
 - **2026-04** `PHASE_XV_CONTAMINATION_PARITY_CI_LOCK_Ω` — hook `pre-commit` CI
 - **2026-04-21** `PHASE_XVI_ENFORCE_SINGLE_PIPELINE_Ω` — pipeline unique + 20 sentinelles X20 — **57/57 Jest PASS**
+- **2026-04-21** `PHASE_ZERO_PLUS_CONSOLIDATION_GOUVERNANCE_Ω` (X30) — freeze + audit + 4 plans gouvernance + CI_STATUS_Ω dashboard + PHASE_LOCK_GATE
 
 ## Statut testing
 - Jest sentinelles : **5 suites / 57 tests / 57 PASS**
 - Hook `pre-commit` : ACTIF (Jest obligatoires avant commit TERRITOIRE)
 - Self-audit Ω : 56/60 (4 flakinesses Playwright visual_live — acceptées)
+- CI_STATUS_Ω : **GREEN** (`/api/omega/ci-status/gate`)
+
+## Gouvernance consolidée (livrables X30)
+- `/app/memory/FREEZE_TERRITOIRE_Ω.md` — freeze actif
+- `/app/memory/PHASE_ZERO_AUDIT_REPORT_Ω.md` — audit signé
+- `/app/memory/PLAN_STABILISATION_Ω.md`
+- `/app/memory/PLAN_MAINTENANCE_Ω.md`
+- `/app/memory/PLAN_PREVENTION_REGRESSION_Ω.md`
+- `/app/memory/PLAN_GOUVERNANCE_TECHNIQUE_Ω.md`
+- `/app/memory/SECURITIES_RELOCK_PHASE_ZERO_Ω.md`
+- `/app/memory/PHASE_LOCK_GATE_Ω.md` (barrière FERMÉE)
+- `/app/backend/routes/ci_status_omega.py` (dashboard live)
 
 ## Backlog
-- **P0** : Attente directive suivante du Commandant
+- **P0** : En attente — ordre explicite du Commandant pour lever `PHASE_LOCK_GATE_Ω`
 - **P2** : Upload manuel `CriticalHabitat.zip` (contournement pare-feu)
 
 ## Persona
@@ -59,3 +72,9 @@ Ouverture obligatoire :
 
 ## Credentials
 - Admin : `steeve-max-capture@huntiq.com` / `Saturn5858*`
+
+## Endpoints institutionnels clés
+- `GET /api/omega/ci-status` — JSON complet
+- `GET /api/omega/ci-status/summary` — texte institutionnel
+- `GET /api/omega/ci-status/gate` — GREEN/RED
+- `GET /api/v8/audit/engines-report` — rapport audit
