@@ -412,10 +412,47 @@ export function catmullRomResample(ctrl, nOut) {
  *  (conservation des extrémités). Itératif jusqu'à stabilité.
  *  PHASE_XII_SUPRA_S_HOTFIX §A3 : NE JAMAIS réduire le path à < 2 points.
  */
-export function despikePath(path, maxAngleDeg = RENDU_OMEGA.angleMaxDeg) {
+/**
+ * X170-SUPRA-BIOLOGIE-GÉOMÉTRIE — smoothAngleViolations
+ * ======================================================
+ * Lissage local par moyenne pondérée des points voisins pour éliminer
+ * les pics angulaires > maxAngleDeg dans le corps du path (pas seulement
+ * aux extrémités). Répété jusqu'à convergence ou `maxPasses`.
+ *
+ * Principe : remplace chaque point cur[i] par le barycentre pondéré
+ * de cur[i-1], cur[i], cur[i+1] tant que l'angle en i dépasse le seuil.
+ * Préserve les extrémités. Conserve la longueur du path.
+ */
+export function smoothAngleViolations(path, maxAngleDeg = RENDU_OMEGA.angleMaxDeg, maxPasses = 12) {
   if (!Array.isArray(path) || path.length < 3) return path || [];
   let cur = path.slice();
-  for (let pass = 0; pass < 3; pass++) {
+  for (let pass = 0; pass < maxPasses; pass++) {
+    let smoothed = 0;
+    const next = cur.slice();
+    for (let i = 1; i < next.length - 1; i++) {
+      const a = _angleDegAt(cur[i - 1], cur[i], cur[i + 1]);
+      if (a > maxAngleDeg) {
+        // Barycentre 0.25 / 0.5 / 0.25 → lissage doux
+        const p0 = cur[i - 1], p1 = cur[i], p2 = cur[i + 1];
+        if (Array.isArray(p0) && Array.isArray(p1) && Array.isArray(p2)) {
+          next[i] = [
+            0.25 * p0[0] + 0.5 * p1[0] + 0.25 * p2[0],
+            0.25 * p0[1] + 0.5 * p1[1] + 0.25 * p2[1],
+          ];
+          smoothed++;
+        }
+      }
+    }
+    cur = next;
+    if (smoothed === 0) break;
+  }
+  return cur;
+}
+
+export function despikePath(path, maxAngleDeg = RENDU_OMEGA.angleMaxDeg, maxPasses = 8) {
+  if (!Array.isArray(path) || path.length < 3) return path || [];
+  let cur = path.slice();
+  for (let pass = 0; pass < maxPasses; pass++) {
     const next = [cur[0]];
     let removed = 0;
     for (let i = 1; i < cur.length - 1; i++) {
@@ -432,6 +469,51 @@ export function despikePath(path, maxAngleDeg = RENDU_OMEGA.angleMaxDeg) {
       cur = next;
     }
     if (removed === 0) break;
+  }
+  return cur;
+}
+
+/**
+ * X170-SUPRA-BIOLOGIE-GÉOMÉTRIE — trimProblematicTail
+ * ======================================================
+ * Supprime agressivement les points d'extrémité (début + fin) tant qu'ils
+ * génèrent un angle > maxAngleDeg. Les paths organiques ENGINE-IA-CORRIDORS-
+ * ORGANIC-Ω produisent régulièrement des artéfacts de fermeture aux nœuds
+ * d'arrivée (saline, zone) avec des demi-tours 150°-180° qui ne peuvent
+ * être supprimés par despikePath (point médian, pas extrémité).
+ *
+ * - Conserve un minimum de `minKeep` points (défaut 10) pour préserver
+ *   l'entité biologique du corridor.
+ * - Supprime les 2 dernières extrémités (start ou end) en priorité sur celle
+ *   qui présente l'angle le plus élevé.
+ * - Retourne le path trimé (toujours ≥ minKeep si input ≥ minKeep).
+ */
+export function trimProblematicTail(path, maxAngleDeg = RENDU_OMEGA.angleMaxDeg, minKeep = 10) {
+  if (!Array.isArray(path) || path.length <= minKeep) return path || [];
+  let cur = path.slice();
+  // Trim fin : supprimer cur[n-2] tant que angle(cur[n-3], cur[n-2], cur[n-1]) > seuil
+  let guardEnd = 0;
+  while (cur.length > minKeep && guardEnd < 60) {
+    const n = cur.length;
+    const aEnd = _angleDegAt(cur[n - 3], cur[n - 2], cur[n - 1]);
+    if (aEnd > maxAngleDeg) {
+      // Supprime le dernier point (source de l'artéfact)
+      cur.splice(n - 1, 1);
+      guardEnd++;
+      continue;
+    }
+    break;
+  }
+  // Trim début
+  let guardStart = 0;
+  while (cur.length > minKeep && guardStart < 60) {
+    const aStart = _angleDegAt(cur[0], cur[1], cur[2]);
+    if (aStart > maxAngleDeg) {
+      cur.shift();
+      guardStart++;
+      continue;
+    }
+    break;
   }
   return cur;
 }
@@ -601,6 +683,17 @@ export function prepareDisplayPath(rawPath, opts = {}) {
   // §A3 HOTFIX — re-enforcement post-signature pour garantir conformité géométrique
   signed = despikePath(signed);
   signed = enforceSegmentMax(signed);
+  // X170-SUPRA-BIOLOGIE-GÉOMÉTRIE — trim + smoothing agressif pour paths organic
+  // Les paths ENGINE-IA-CORRIDORS-ORGANIC-Ω contiennent des artéfacts médians
+  // (demi-tours à l'arrivée sur saline/zone). Stratégie en 3 couches :
+  //   1) trim des extrémités (queues > 45°)
+  //   2) smoothing local par barycentre sur les pics angulaires médians
+  //   3) despike final pour absorber les résidus
+  if (isOrganic) {
+    signed = trimProblematicTail(signed, RENDU_OMEGA.angleMaxDeg, 10);
+    signed = smoothAngleViolations(signed, RENDU_OMEGA.angleMaxDeg, 15);
+    signed = despikePath(signed, RENDU_OMEGA.angleMaxDeg, 15);
+  }
   metrics.n_after_reenforce = signed.length;
   if (signed.length < 2) {
     // Fallback institutionnel : path aligné conforme (avant signature) si reinforce a échoué
@@ -635,6 +728,15 @@ export function prepareDisplayPath(rawPath, opts = {}) {
   metrics.n_after_snap = signed.length;
   metrics.snap_status = snapStatus;
 
+  // X170-SUPRA-BIOLOGIE-GÉOMÉTRIE — smoothing final POST-snap-saline
+  // extendPathToSaline peut réinjecter des angles aberrants à la jonction
+  // path+saline. On re-lisse le signed complet avant découpe subpaths.
+  if (isOrganic && signed.length > 5) {
+    signed = smoothAngleViolations(signed, RENDU_OMEGA.angleMaxDeg, 20);
+    signed = despikePath(signed, RENDU_OMEGA.angleMaxDeg, 20);
+    metrics.n_after_final_smooth = signed.length;
+  }
+
   if (!clip || !center) {
     return { displaySubpaths: [signed], fadeTails: [], snappedSaline, snapStatus, metrics };
   }
@@ -653,6 +755,17 @@ export function prepareDisplayPath(rawPath, opts = {}) {
     } else {
       if (logSink) logSink({ id: corridorId, reason: 'clip_entire_outside_radius', n_fade_tails: fadeTails.length, metrics });
     }
+  }
+  // X170-SUPRA-BIOLOGIE-GÉOMÉTRIE — lissage final par subpath
+  // Le clipping peut couper à un angle aberrant. On applique un despike +
+  // smoothing sur chaque subpath avant retour à BionicLayersV8.
+  if (isOrganic) {
+    effectiveSubpaths = effectiveSubpaths.map(sp => {
+      if (!Array.isArray(sp) || sp.length < 3) return sp;
+      let s = smoothAngleViolations(sp, RENDU_OMEGA.angleMaxDeg, 15);
+      s = despikePath(s, RENDU_OMEGA.angleMaxDeg, 15);
+      return s.length >= 2 ? s : sp;
+    });
   }
   return { displaySubpaths: effectiveSubpaths, fadeTails, snappedSaline, snapStatus, metrics };
 }
