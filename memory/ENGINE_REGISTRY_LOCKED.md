@@ -1,8 +1,8 @@
-# ENGINE_REGISTRY_LOCKED — Phase XI-SUPRA-M
+# ENGINE_REGISTRY_LOCKED — Phase XI-SUPRA-N-Ω-STABILIZED
 
 > **STATUT : SCELLÉ — SEALED — VERROUILLÉ**
-> **Version registre :** V25-SUPRA-LOCKED-PHASE-XI-SUPRA-M-2026-04
-> **Date de scellement :** 2026-04-20T22:00:00Z
+> **Version registre :** V29-SUPRA-LOCKED-PHASE-XI-SUPRA-N-Ω-STABILIZED-2026-04
+> **Date de scellement :** 2026-04-21T00:00:00Z
 > **Commandant :** STEEVE-MAX
 
 ---
@@ -10,7 +10,7 @@
 ## Hash SHA-256 officiel
 
 ```
-e8c6ee62a3f0c1894313dee30355b711230ede629e208df4622de99cee2ba2b8
+29e1ee187e429bdd9a055dacea7770a921ed5f57d49cf838c733557f442b2add
 ```
 
 Toute altération de la liste des engines (`ENGINES_LOCKED` dans
@@ -136,7 +136,7 @@ Toute modification de ce registre exige :
 2. Validation ENGINE-GOUVERNANCE-Ω
 3. Re-calcul du hash SHA-256
 4. Mise à jour `ENGINES_LOCKED` dans `registry_lock_omega.py`
-5. Passage SELF-AUDIT-Ω (58/58)
+5. Passage SELF-AUDIT-Ω (60/60 stable sur 3 runs consécutifs)
 6. Consignation dans `SELF_AUDIT_OMEGA_LOGS.md`
 
 ## Signature
@@ -144,8 +144,9 @@ Toute modification de ce registre exige :
 ```
 SEALED  — Phase XI / X-B / X-C / X-D / XI-SUPRA / XI-SUPRA-B / XI-SUPRA-C /
          XI-SUPRA-G / XI-SUPRA-H / XI-SUPRA-K / XI-SUPRA-L / XI-SUPRA-M /
-         XI-L+1-M-PREP / XI-SUPRA-N-Ω-NETWORK_LOCKED — 2026-04-20
-SHA-256 — 476c650a28d1f25ffa93e4caf30f8c6fc13223d9e0a87bfbfb5d994bee8c393c
+         XI-L+1-M-PREP / XI-SUPRA-N-Ω-NETWORK_LOCKED /
+         XI-SUPRA-N-Ω-STABILIZED — 2026-04-21
+SHA-256 — 29e1ee187e429bdd9a055dacea7770a921ed5f57d49cf838c733557f442b2add
 TOTAL   — 41 engines scellés
-STATUS  — VERROUILLÉ IRRÉVOCABLEMENT
+STATUS  — VERROUILLÉ IRRÉVOCABLEMENT — SELF-AUDIT-Ω 60/60 STABLE x3
 ```

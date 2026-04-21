@@ -1,12 +1,11 @@
 # Test Credentials — BIONIC OS V20-SUPRA
 
-## Admin institutionnel (captures Playwright)
-- Email : `steeve-max-capture@huntiq.com`
-- Password : `CaptureOps2026#`
-- Role : `admin`
-- Usage : Phase XI-SUPRA-C / D Playwright captures, Health Panel access, LEP ingestion admin
+## Admin (Commandant STEEVE-MAX)
+- **Email** : `steeve-max-capture@huntiq.com`
+- **Password** : `Saturn5858*`
+- **Rôle** : Admin institutionnel (accès self-audit, registry-lock, captures)
 
-## Endpoints de capture
-- Frontend capture mode : `{BASE}/territoire-capture-mode?lat=..&lon=..&species=..&zoom=..`
-- Backend LEP ingest : POST `{API}/api/v20/territoire/lep/ingest`
-- WebSocket alerts : `ws(s)://{BASE}/ws/self-audit-alert`
+## Endpoints d'audit (sans auth)
+- `GET /api/v20/territoire/self-audit` — exécute les 60 suites
+- `GET /api/v20/territoire/self-audit/last` — dernier résultat
+- `GET /api/v20/territoire/registry-lock` — registry scellé V29
