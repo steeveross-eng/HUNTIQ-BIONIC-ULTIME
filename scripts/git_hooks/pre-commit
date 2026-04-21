@@ -43,8 +43,8 @@ echo ""
 
 cd /app/frontend
 
-# Sentinelles XIV + XV (parité fonctionnelle + contamination)
-if CI=true yarn test --testPathPattern="phase_xiv_functional_parity|phase_xv_contamination_parity|nutritionSalinesBinding|inspectionBioFiltering" --watchAll=false --silent 2>&1 | tail -20; then
+# Sentinelles XIV + XV + XVI (parité + contamination + pipeline unique X20)
+if CI=true yarn test --testPathPattern="phase_xiv_functional_parity|phase_xv_contamination_parity|phase_xvi_enforce_single_pipeline|nutritionSalinesBinding|inspectionBioFiltering" --watchAll=false --silent 2>&1 | tail -20; then
   echo ""
   echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
   echo -e "${GREEN}  ✓ TOUS LES TESTS SENTINELLES PASSÉS — COMMIT AUTORISÉ    ${NC}"

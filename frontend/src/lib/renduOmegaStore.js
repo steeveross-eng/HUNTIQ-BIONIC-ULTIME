@@ -1740,3 +1740,143 @@ export function assertNutritionBoundToSaline(context) {
   return true;
 }
 
+
+/* =========================================================================
+ * PHASE_XVI_ENFORCE_SINGLE_PIPELINE_Ω
+ * =========================================================================
+ * Ordre : PHASE_XVI_ENFORCE_SINGLE_PIPELINE_Ω — BCE-4X ULTIME ABSOLU
+ * VERSION_INSTITUTIONNELLE_RENFORCÉE_X20
+ *
+ * Objectif : Éliminer physiquement toute tentative de rendu "raw mode"
+ * non filtré et forcer l'usage exclusif du pipeline TERRITOIRE institutionnel
+ * (filtres Ω obligatoires). Les sécurités sont DOUBLÉES (X20 = 2×X10).
+ * ========================================================================= */
+
+export const ENFORCE_PIPELINE_SPEC_V20 = Object.freeze({
+  protocolVersion: 'VERSION_INSTITUTIONNELLE_RENFORCÉE_X20',
+  supersedesVersion: 'VERSION_INSTITUTIONNELLE_RENFORCÉE_X10',
+  sealedAt: '2026-04-21T19:05:00Z',
+  // ── Double verrouillage BCE4X ──
+  BCE4X_FULL_LOCK_DOUBLED: true,
+  STEEVE_MAX_SECURITY_SUITE_DOUBLED: true,
+  ZERO_REGRESSION_DOUBLED: true,
+  ZERO_PERTE_DOUBLED: true,
+  MODULARITE_100_DOUBLED: true,
+  ANTI_DUPLICATION_DOUBLED: true,
+  ANTI_FALLBACK_DOUBLED: true,
+  ENGINE_REGISTRY_LOCK_DOUBLED: true,
+  // ── Pipeline unique ──
+  singlePipelineEnforced: true,
+  forbidRawRenderMode: true,
+  forbidInternalNonFilteredEndpoints: true,
+  mandatoryOmegaFiltersEnvironments: Object.freeze(['preview', 'capture', 'validation', 'audit']),
+  // ── Détection zone anthropique bloquante ──
+  urbanRenderIsBlockingFailure: true,
+  urbanTokens: Object.freeze([
+    'urbain', 'urban', 'industriel', 'industrial',
+    'portuaire', 'port', 'infrastructure', 'anthropique',
+  ]),
+});
+
+/** Garde runtime : appelé par les chemins de rendu pour détecter toute
+ *  tentative "raw mode". Incrémente `window.__RAW_RENDER_ATTEMPTS__` et
+ *  retourne false pour signaler au caller qu'il doit refuser le rendu.
+ *
+ *  @param {string} caller - Identifiant du chemin de rendu (ex: 'BionicLayersV8.contamination')
+ *  @param {{bypassOmega?: boolean, filtered?: boolean}} context
+ *  @returns {boolean} true si pipeline conforme, false si raw mode détecté
+ */
+export function enforceInstitutionalPipeline(caller, context = {}) {
+  const bypass = !!context.bypassOmega;
+  const filtered = context.filtered !== false;
+  const conforming = !bypass && filtered;
+  if (!conforming) {
+    try {
+      if (typeof window !== 'undefined') {
+        const prev = window.__RAW_RENDER_ATTEMPTS__ || { count: 0, entries: [] };
+        const entry = Object.freeze({
+          caller: String(caller || 'unknown'),
+          at: new Date().toISOString(),
+          reason: bypass ? 'bypassOmega_true' : 'filtered_false',
+        });
+        const entries = [...(prev.entries || []), entry].slice(-50);
+        window.__RAW_RENDER_ATTEMPTS__ = Object.freeze({
+          count: (prev.count || 0) + 1,
+          entries: Object.freeze(entries),
+          lastAttempt: entry,
+        });
+        if (typeof console !== 'undefined' && console.error) {
+          console.error(
+            '[BCE-4X X20] RAW_RENDER_ATTEMPT BLOQUÉ —',
+            entry.caller, entry.reason, entry.at
+          );
+        }
+      }
+    } catch (_e) { /* noop */ }
+  }
+  return conforming;
+}
+
+/** Audit : retourne l'état du pipeline enforcement pour diagnostic Commandant. */
+export function getPipelineEnforcementStatus() {
+  let rawAttempts = { count: 0, entries: [], lastAttempt: null };
+  try {
+    if (typeof window !== 'undefined' && window.__RAW_RENDER_ATTEMPTS__) {
+      rawAttempts = window.__RAW_RENDER_ATTEMPTS__;
+    }
+  } catch (_e) { /* noop */ }
+  return {
+    protocolVersion: ENFORCE_PIPELINE_SPEC_V20.protocolVersion,
+    singlePipelineEnforced: ENFORCE_PIPELINE_SPEC_V20.singlePipelineEnforced,
+    rawRenderAttempts: rawAttempts.count,
+    lastAttempt: rawAttempts.lastAttempt,
+    conforming: rawAttempts.count === 0,
+    sealedAt: ENFORCE_PIPELINE_SPEC_V20.sealedAt,
+  };
+}
+
+/** Détecte si une feature rendue provient d'une zone anthropique urbaine/industrielle/portuaire.
+ *  Utilisée par les tests sentinelles anthropiques bloquants.
+ *
+ *  @param {{terrain?: Object, exclusion_reason?: string}} feature
+ *  @returns {{anthropic: boolean, reason?: string, token?: string}}
+ */
+export function detectAnthropicRender(feature) {
+  if (!feature || typeof feature !== 'object') return { anthropic: false };
+  const t = feature.terrain || {};
+  if (t.urban === true) return { anthropic: true, reason: 'terrain.urban=true' };
+  if (t.industrial === true) return { anthropic: true, reason: 'terrain.industrial=true' };
+  if (t.port === true) return { anthropic: true, reason: 'terrain.port=true' };
+  if (typeof t.impervious_pct === 'number' && t.impervious_pct > 60) {
+    return { anthropic: true, reason: `impervious_pct=${t.impervious_pct}>60` };
+  }
+  const reason = String(feature.exclusion_reason || '').toLowerCase();
+  if (reason) {
+    const tokens = ENFORCE_PIPELINE_SPEC_V20.urbanTokens;
+    const tok = tokens.find(t => reason.includes(t));
+    if (tok) return { anthropic: true, reason: feature.exclusion_reason, token: tok };
+  }
+  return { anthropic: false };
+}
+
+/** Sentinelle bloquante : lève une erreur si une feature anthropique est détectée.
+ *  Appelée en dernière ligne de défense par les tests sentinelles.
+ *
+ *  @throws {Error} si feature anthropique rendue
+ */
+export function assertNoAnthropicRender(feature, caller = 'unknown') {
+  const d = detectAnthropicRender(feature);
+  if (d.anthropic) {
+    const msg = `[BCE-4X X20] ANTHROPIC_RENDER_BLOCKING_FAILURE — ${caller}: ${d.reason}`;
+    try {
+      if (typeof window !== 'undefined') {
+        const prev = window.__ANTHROPIC_RENDER_FAILURES__ || [];
+        const entry = Object.freeze({ caller, feature_id: feature.id || null, ...d, at: new Date().toISOString() });
+        window.__ANTHROPIC_RENDER_FAILURES__ = Object.freeze([...prev, entry].slice(-50));
+      }
+    } catch (_e) { /* noop */ }
+    throw new Error(msg);
+  }
+  return true;
+}
+
