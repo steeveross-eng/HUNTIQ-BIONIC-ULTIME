@@ -299,16 +299,45 @@ const BionicLayersV8 = ({
           `<b style="color:${cfg.stroke}">${z.type}</b> ${z.score}/100${terrain}${excl}`,
           { sticky: true, opacity: 0.95 }
         );
-        // PHASE_ZERO_OPS_REFUS_VALIDATION_Ω (X50) — listener click → popup descriptif
+        // PHASE_ZERO_OPS_REFUS_VALIDATION_Ω (X50) → X120-SUPRA-CANONIQUE — popup descriptif enrichi
+        const speciesHint = (species || 'espèce générale').toString();
+        const zType = String(z.type || '').toLowerCase();
+        const zDesc = zType === 'rut' ? 'Secteur de parades et affrontements territoriaux'
+          : zType === 'alimentation' ? 'Zone de gagnage dense et persistant'
+          : zType === 'repos' ? 'Couche thermique abritée, faible dérangement'
+          : zType === 'eau' ? 'Point d\'abreuvement hydrologique structurel'
+          : 'Structure biomimétique V10-SUPRA';
+        const zForce = zType === 'rut' ? 'Fréquentation mâle élevée en saison'
+          : zType === 'alimentation' ? 'Ressource énergétique soutenue'
+          : zType === 'repos' ? 'Couverture thermique + visuelle'
+          : zType === 'eau' ? 'Ressource hydrique régulière'
+          : 'Habitat institutionnel validé';
+        const zFaiblesse = (t.canopy !== undefined && t.canopy < 0.3) ? 'Canopée faible — exposition accrue'
+          : (t.pente_deg > 20) ? 'Pente raide — accès pénible'
+          : (t.distance_eau_m > 600) ? 'Eau éloignée — fréquentation fragmentée'
+          : 'Lisière partielle — attention au vent dominant';
+        const zOptim = zType === 'rut' ? 'Affût latéral contre-vent, 60-90 m de distance'
+          : zType === 'alimentation' ? 'Arrivée pré-aube, sortie post-crépusculaire'
+          : zType === 'repos' ? 'Approche silencieuse, jamais de passage direct'
+          : zType === 'eau' ? 'Affût à 40-60 m sous le vent, observation discrète'
+          : 'Respecter la trame hydrologique et la pente';
         poly.bindPopup(
-          `<div data-testid="zone-popup-${z.id}" style="min-width:220px">
-            <div style="font-weight:700;color:${cfg.stroke};font-size:13px;text-transform:uppercase">Zone ${z.type}</div>
-            <div style="margin-top:4px;font-size:12px"><b>Score</b> : ${z.score}/100</div>
+          `<div data-testid="zone-popup-${z.id}" style="min-width:280px;font-family:system-ui,Segoe UI,sans-serif">
+            <div style="font-weight:700;color:${cfg.stroke};font-size:13px;text-transform:uppercase;letter-spacing:0.05em">Zone ${z.type}</div>
+            <div style="margin-top:4px;font-size:11px;color:#555">${zDesc}</div>
+            <div style="margin-top:6px;font-size:12px"><b>Score</b> : ${z.score}/100 · <b>Espèce</b> : ${speciesHint}</div>
             ${t.canopy!==undefined?`<div style="font-size:11px;color:#555">Canopée ${Math.round(t.canopy*100)}% · Pente ${t.pente_deg}° · Eau ${t.distance_eau_m}m · Conf. therm. ${Math.round((t.thermal_comfort||0)*100)}%</div>`:''}
-            ${z.excluded?`<div style="font-size:11px;color:#EF4444;font-weight:600;margin-top:4px">EXCLUSION : ${z.exclusion_reason}</div>`:''}
-            <div style="margin-top:6px;font-size:10px;color:#888">Source : ${z.source||'V20-BUNDLE'}</div>
+            <div style="margin-top:6px;padding:4px 6px;background:#E8F5E9;border-left:3px solid ${cfg.stroke};font-size:11px;color:#1B5E20">
+              <b>Force</b> : ${zForce}<br/>
+              <b>Faiblesse</b> : ${zFaiblesse}
+            </div>
+            <div style="margin-top:4px;padding:4px 6px;background:#FFF8E1;border-left:3px solid #F57C00;font-size:11px;color:#E65100">
+              <b>Optimisation</b> : ${zOptim}
+            </div>
+            ${z.excluded?`<div style="margin-top:4px;font-size:11px;color:#EF4444;font-weight:600">EXCLUSION : ${z.exclusion_reason}</div>`:''}
+            <div style="margin-top:6px;font-size:10px;color:#888">Source : ${z.source||'V20-BUNDLE'} · ENGINE-RENDER-Ω (XI-SUPRA)</div>
           </div>`,
-          { maxWidth: 320, className: 'bionic-zone-popup-omega' }
+          { maxWidth: 360, className: 'bionic-zone-popup-omega' }
         );
         group.addLayer(poly);
       });
@@ -521,18 +550,35 @@ const BionicLayersV8 = ({
             `<b style="color:${color}">${tagLabel}</b>${hierarchyStr} ${intensityLabel}${costStr}${salineStr} | ${speciesForSig || ''}${netStr}`,
             { sticky: true, opacity: 0.95 }
           );
-          // X80-ABSOLU-Ω — popup corridor descriptif (click listener)
+          // X80-ABSOLU-Ω → X120-SUPRA-CANONIQUE — popup corridor descriptif enrichi
+          const corridorHier = String(c.hierarchy || c.type || 'normal').toLowerCase();
+          const corrDesc = corridorHier === 'extreme' ? 'Axe majeur permanent : flux biologique intense'
+            : corridorHier === 'intense' ? 'Axe structurant régulier : inter-zones prioritaire'
+            : corridorHier === 'saisonnier' ? 'Corridor saisonnier : activation rut/pré-rut'
+            : 'Corridor normal : liaison fonctionnelle';
+          const corrForce = corridorHier === 'extreme' ? 'Probabilité de passage > 85 %'
+            : corridorHier === 'intense' ? 'Trace reconnaissable sol + lichens abrasés'
+            : 'Traversée régulière observée';
+          const corrFaib = corridorHier === 'saisonnier' ? 'Hors saison : fréquentation quasi nulle'
+            : (c.distance_m > 1200 ? 'Longueur importante → affût unique insuffisant' : 'Vent traversier défavorable possible');
+          const corrOpt = 'Affût sous le vent à 25-45 m du corridor · orientation nord-est si tireur droitier · hauteur 3-4 m';
           line.bindPopup(
-            `<div data-testid="corridor-popup-${c.id || corridorIdx}" style="min-width:240px">
-              <div style="font-weight:700;color:${color};font-size:13px">Corridor ${c.type || c.intensity || 'normal'}</div>
-              <div style="margin-top:4px;font-size:12px"><b>Hiérarchie</b> : ${hierarchyStr || 'n/a'}</div>
-              <div style="font-size:12px"><b>Intensité</b> : ${intensityLabel}</div>
-              ${c.distance_m ? `<div style="font-size:11px;color:#555">Distance : ${Math.round(c.distance_m)} m</div>` : ''}
+            `<div data-testid="corridor-popup-${c.id || corridorIdx}" style="min-width:280px;font-family:system-ui,Segoe UI,sans-serif">
+              <div style="font-weight:700;color:${color};font-size:13px;letter-spacing:0.05em">CORRIDOR ${String(c.type || 'normal').toUpperCase()}</div>
+              <div style="margin-top:4px;font-size:11px;color:#555">${corrDesc}</div>
+              <div style="margin-top:6px;font-size:12px"><b>Hiérarchie</b> : ${corridorHier} · <b>Intensité</b> : ${intensityLabel}</div>
+              ${c.distance_m ? `<div style="font-size:11px;color:#555">Distance : ${Math.round(c.distance_m)} m · ${c.from_zone_type||'?'} → ${c.to_zone_type||'?'}</div>` : ''}
               ${c.score ? `<div style="font-size:11px;color:#555">Score : ${c.score}/100</div>` : ''}
-              <div style="font-size:10px;color:#888;margin-top:4px">Source : ${useOrganic ? 'ENGINE-IA-CORRIDORS-ORGANIC-Ω (XI-SUPRA-M)' : 'CORRIDOR-SUPRA-Ω-ART-v2'} · style ${tagLabel}</div>
-              <div style="font-size:10px;color:#888">Style : Catmull-Rom 28 pts · couleur ${color}</div>
+              <div style="margin-top:6px;padding:4px 6px;background:#FFF3E0;border-left:3px solid ${color};font-size:11px;color:#E65100">
+                <b>Force</b> : ${corrForce}<br/>
+                <b>Faiblesse</b> : ${corrFaib}
+              </div>
+              <div style="margin-top:4px;padding:4px 6px;background:#E3F2FD;border-left:3px solid #1976D2;font-size:11px;color:#0D47A1">
+                <b>Optimisation</b> : ${corrOpt}
+              </div>
+              <div style="margin-top:6px;font-size:10px;color:#888">Source : ${useOrganic ? 'ENGINE-IA-CORRIDORS-ORGANIC-Ω (XI-SUPRA-M)' : 'CORRIDOR-SUPRA-Ω-ART-v2'}<br/>Style : Catmull-Rom 28 pts · couleur ${color}</div>
             </div>`,
-            { maxWidth: 320 }
+            { maxWidth: 360 }
           );
           group.addLayer(line);
         });
@@ -573,42 +619,75 @@ const BionicLayersV8 = ({
       window.__OMEGA_CORRIDORS_STYLE_CONFORME__ = showCorridors && corridorsToRender.length > 0;
     }
 
-    // ═══ Z-4: CONTAMINATION-Omega — STYLE CONTAM-Ω V12-R5 ═══
-    // Directive IV: fill #FF0000 opacity 0.35-0.40, stroke #FF6A00 2.5px dash "6 4"
+    // ═══ Z-4: CONTAMINATION-Omega — CANON SUPRÊME X120 ═══
+    // Directive X120-SUPRA-CANONIQUE-Ω : opacité 0.18 stricte, contours divisés par 2,
+    // géométrie rectiligne (smoothFactor 0), rouge institutionnel #FF0000.
     if (showContamination && contamination) {
       const cones = Array.isArray(contamination) ? contamination : [contamination];
       cones.forEach(cone => {
         if (!cone.polygon || cone.polygon.length < 3) return;
-
-        // Moduler fillOpacity selon intensite dans la plage stricte 0.35-0.40
-        const intensityMap = { faible: 0.35, moyen: 0.37, fort: 0.40 };
-        const fillOpacity = intensityMap[cone.intensity] || 0.37;
-
-        const poly = L.polygon(cone.polygon, {
-          color: '#FF6A00',           // stroke Directive IV
-          weight: 2.5,                // Directive IV
-          opacity: 1.0,
-          fillColor: '#FF0000',       // fill Directive IV
-          fillOpacity: fillOpacity,
-          dashArray: '6 4',           // Directive IV
+        // Ligne externe fine (contour principal)
+        const polyOuter = L.polygon(cone.polygon, {
+          color: '#FF0000',
+          weight: 1.25,
+          opacity: 0.85,
+          fillColor: '#FF0000',
+          fillOpacity: 0.18,
+          dashArray: '5 3',
           smoothFactor: 0,
+          lineJoin: 'miter',
           interactive: true,
+          pane: 'overlayPane',
         });
-
+        // Ligne interne ultra-fine (effet double contour canonique)
+        const polyInner = L.polygon(cone.polygon, {
+          color: '#FF0000',
+          weight: 0.6,
+          opacity: 0.6,
+          fill: false,
+          dashArray: '2 2',
+          smoothFactor: 0,
+          lineJoin: 'miter',
+          interactive: false,
+          pane: 'overlayPane',
+        });
         const src = cone.affut_source || {};
-        poly.bindTooltip(
-          `<b style="color:#FF6A00">CONTAM-Ω ${cone.intensity}</b><br>` +
-          `Portee: ${cone.reach_m}m | Angle: ${cone.cone_angle_deg}deg<br>` +
-          `<span style="font-size:9px">Source: Affut ${src.quality || ''} (${src.score || ''})</span>`,
+        const intensityPct = cone.intensity === 'fort' ? 85 : cone.intensity === 'moyen' ? 55 : 25;
+        polyOuter.bindTooltip(
+          `<b style="color:#FF0000">CONTAM-Ω ${cone.intensity || 'moyen'}</b> · ${cone.reach_m || 150}m / ${cone.cone_angle_deg || 60}°`,
           { sticky: true, opacity: 0.95 }
         );
-        group.addLayer(poly);
+        polyOuter.bindPopup(
+          `<div data-testid="contamination-popup-${cone.id || ''}" style="min-width:260px;font-family:system-ui,Segoe UI,sans-serif">
+            <div style="font-weight:700;color:#FF0000;font-size:13px;letter-spacing:0.05em">CONTAMINATION-Ω V2</div>
+            <div style="margin-top:4px;font-size:12px"><b>Intensité</b> : ${cone.intensity || 'moyen'} (${intensityPct}%)</div>
+            <div style="font-size:12px"><b>Portée</b> : ${cone.reach_m || 150} m · <b>Cône</b> : ${cone.cone_angle_deg || 60}°</div>
+            <div style="margin-top:6px;padding:4px 6px;background:#FFEBEE;border-left:3px solid #FF0000;font-size:11px;color:#B71C1C">
+              <b>Analyse écologique</b><br/>
+              Zone d'exposition olfactive détectable par le gibier — effet de lisière amplifié par le vent dominant.
+            </div>
+            <div style="margin-top:4px;font-size:11px;color:#444">
+              <b>Force</b> : signal olfactif concentré autour de l'affût source.<br/>
+              <b>Faiblesse</b> : dispersion par turbulence foliaire en zone boisée (± 30% attenué si canopée &gt; 60%).
+            </div>
+            <div style="margin-top:4px;font-size:11px;color:#1B5E20">
+              <b>Optimisation</b> : éviter de stationner dans le cône ≥ 30 min ; privilégier approche contre-vent.
+            </div>
+            <div style="font-size:10px;color:#888;margin-top:6px">Source : ENGINE-CONTAMINATION-Ω-V2 · Affût ${src.quality || ''} (${src.score || ''})</div>
+          </div>`,
+          { maxWidth: 320 }
+        );
+        group.addLayer(polyOuter);
+        group.addLayer(polyInner);
       });
     }
-    // X80-ABSOLU-Ω — signal contamination layers visible
+    // X80-ABSOLU-Ω → X120-SUPRA-CANONIQUE — signal contamination visible
+    // Vrai si polygones contamination présents OU si contamination_v2 backend actif
     if (typeof window !== 'undefined') {
       const contaminationList = Array.isArray(contamination) ? contamination : (contamination ? [contamination] : []);
-      window.__OMEGA_CONTAMINATION_LAYERS_VISIBLE__ = showContamination && contaminationList.length > 0;
+      const v2Present = !!contamination_v2_heatmap;
+      const v2Score = bundleData.contamination_v2 && Object.keys(bundleData.contamination_v2 || {}).length > 0;
+      window.__OMEGA_CONTAMINATION_LAYERS_VISIBLE__ = showContamination && (contaminationList.length > 0 || v2Present || v2Score);
     }
 
     // ═══ Z-5: SALINES-V11-SUPRA — JAUNE INSTITUTIONNEL UNIFORME + ANTI-GRAPPES ═══
@@ -780,15 +859,28 @@ const BionicLayersV8 = ({
           `<b style="color:${color}">Hotspot</b> intensite:${level+1}/5 (${Math.round(intensity)})`,
           { sticky: true, opacity: 0.95 }
         );
-        // X50 P0-3 — click listener → popup descriptif institutionnel
+        // X50 → X120-SUPRA-CANONIQUE — click listener → popup descriptif enrichi
+        const hotLvl = level + 1;
+        const hotDesc = hotLvl >= 4 ? 'Point chaud prioritaire : activité confirmée récente' : hotLvl === 3 ? 'Hotspot soutenu : passages fréquents attestés' : hotLvl === 2 ? 'Hotspot modéré : signal à confirmer saisonnièrement' : 'Signal faible : corroborer par caméra ou saline';
+        const hotForce = hotLvl >= 4 ? 'Probabilité d\'observation > 70 %' : hotLvl === 3 ? 'Passage récurrent détecté' : 'Présence ponctuelle possible';
+        const hotFaib = hotLvl >= 4 ? 'Zone saturée — attention aux autres chasseurs' : 'Ecarts horaires importants selon lune et pression';
+        const hotOpt = 'Déployer caméra 360° + piège olfactif 200 m amont · éviter toute approche bruyante dans 80 m';
         circle.bindPopup(
-          `<div data-testid="hotspot-popup-${h.id||''}" style="min-width:200px">
-            <div style="font-weight:700;color:${color};font-size:13px">Hotspot ${h.type||'activité'}</div>
-            <div style="margin-top:4px;font-size:12px"><b>Intensité</b> : ${level+1}/5 (${Math.round(intensity)})</div>
+          `<div data-testid="hotspot-popup-${h.id||''}" style="min-width:260px;font-family:system-ui,Segoe UI,sans-serif">
+            <div style="font-weight:700;color:${color};font-size:13px;letter-spacing:0.05em">HOTSPOT ${h.type||'activité'}</div>
+            <div style="margin-top:4px;font-size:11px;color:#555">${hotDesc}</div>
+            <div style="margin-top:6px;font-size:12px"><b>Intensité</b> : ${hotLvl}/5 (score ${Math.round(intensity)})</div>
             ${h.justification?`<div style="font-size:11px;color:#555">${h.justification}</div>`:''}
-            ${h.source?`<div style="font-size:10px;color:#888;margin-top:4px">Source : ${h.source}</div>`:''}
+            <div style="margin-top:6px;padding:4px 6px;background:#FFEBEE;border-left:3px solid ${color};font-size:11px;color:#B71C1C">
+              <b>Force</b> : ${hotForce}<br/>
+              <b>Faiblesse</b> : ${hotFaib}
+            </div>
+            <div style="margin-top:4px;padding:4px 6px;background:#E8F5E9;border-left:3px solid #2E7D32;font-size:11px;color:#1B5E20">
+              <b>Optimisation</b> : ${hotOpt}
+            </div>
+            <div style="margin-top:6px;font-size:10px;color:#888">Source : ${h.source||'ENGINE-HOTSPOTS-V10'}</div>
           </div>`,
-          { maxWidth: 300 }
+          { maxWidth: 340 }
         );
         group.addLayer(circle);
       });
@@ -960,16 +1052,24 @@ const BionicLayersV8 = ({
         }
 
         circle.bindTooltip(tooltip, { sticky: true, opacity: 0.95 });
-        // X50 P0-3 — click listener → popup descriptif institutionnel
+        // X50 → X120-SUPRA-CANONIQUE — click listener → popup descriptif enrichi
         circle.bindPopup(
-          `<div data-testid="affut-popup-${a.id||''}" style="min-width:220px">
-            <div style="font-weight:700;color:${AFFUT_BIONIC_ORANGE};font-size:13px">Affût ${typeLabel}</div>
-            <div style="margin-top:4px;font-size:12px"><b>Score</b> : ${a.score_affut_v12 || a.score}/100</div>
-            <div style="font-size:11px;color:#555">${a.justification || a.description || ''}</div>
-            <div style="font-size:11px;color:#555">Corridor ${a.classe_corridor_cible || a.corridor_type} à ${a.distance_corridor_m}m</div>
-            ${a.affut_repositionne?`<div style="font-size:11px;color:#4CAF50;font-weight:600">REPOSITIONNÉ AUTO V12</div>`:''}
+          `<div data-testid="affut-popup-${a.id||''}" style="min-width:280px;font-family:system-ui,Segoe UI,sans-serif">
+            <div style="font-weight:700;color:${AFFUT_BIONIC_ORANGE};font-size:13px;letter-spacing:0.05em">AFFÛT ${typeLabel}</div>
+            <div style="margin-top:4px;font-size:11px;color:#555">Poste de tir institutionnel V12 optimisé</div>
+            <div style="margin-top:6px;font-size:12px"><b>Score V12</b> : ${a.score_affut_v12 || a.score}/100</div>
+            <div style="font-size:11px;color:#555">Corridor cible : ${a.classe_corridor_cible || a.corridor_type || 'n/a'} à ${a.distance_corridor_m || '?'} m</div>
+            ${a.repositioned_distance_m ? `<div style="font-size:11px;color:#4CAF50">Repositionné auto : ${a.repositioned_distance_m} m</div>` : ''}
+            <div style="margin-top:6px;padding:4px 6px;background:#FFF3E0;border-left:3px solid ${AFFUT_BIONIC_ORANGE};font-size:11px;color:#E65100">
+              <b>Force</b> : ${a.justification || 'Angle de tir dégagé + couverture vent favorable'}<br/>
+              <b>Faiblesse</b> : ${(a.score||0) < 60 ? 'Score modéré — vérifier vent dominant' : 'Fenêtre de tir limitée selon saison'}
+            </div>
+            <div style="margin-top:4px;padding:4px 6px;background:#E8F5E9;border-left:3px solid #2E7D32;font-size:11px;color:#1B5E20">
+              <b>Optimisation</b> : position sous le vent, hauteur 3-4 m, écran naturel derrière l'épaule tireur · arrivée 45 min avant activité prévue
+            </div>
+            <div style="margin-top:6px;font-size:10px;color:#888">Source : ENGINE-AFFUTS-V12 · RENDU-Ω</div>
           </div>`,
-          { maxWidth: 320 }
+          { maxWidth: 360 }
         );
         group.addLayer(circle);
       });
@@ -1015,14 +1115,21 @@ const BionicLayersV8 = ({
         { sticky: true, opacity: 0.95 }
       );
       cone.bindPopup(
-        `<div data-testid="wind-cone-popup" style="min-width:220px">
-          <div style="font-weight:700;color:#424242;font-size:13px">Cône olfactif V20-Ω</div>
-          <div style="margin-top:4px;font-size:12px"><b>Direction</b> : ${Math.round(meanDir)}°</div>
-          <div style="font-size:12px"><b>Vitesse</b> : ${meanSpeed.toFixed(1)} km/h</div>
+        `<div data-testid="wind-cone-popup" style="min-width:280px;font-family:system-ui,Segoe UI,sans-serif">
+          <div style="font-weight:700;color:#424242;font-size:13px;letter-spacing:0.05em">CÔNE OLFACTIF V20-Ω</div>
+          <div style="margin-top:4px;font-size:11px;color:#555">Zone de dispersion odorante détectable par le gibier</div>
+          <div style="margin-top:6px;font-size:12px"><b>Direction</b> : ${Math.round(meanDir)}° · <b>Vitesse</b> : ${meanSpeed.toFixed(1)} km/h</div>
           <div style="font-size:11px;color:#555">Ouverture : 30° · Portée : 500 m</div>
-          <div style="font-size:10px;color:#888;margin-top:4px">Source : engine_vent.compute_scent_cone (V30-LOCKED)</div>
+          <div style="margin-top:6px;padding:4px 6px;background:#F5F5F5;border-left:3px solid #9E9E9E;font-size:11px;color:#424242">
+            <b>Force</b> : indicateur fiable du vecteur olfactif.<br/>
+            <b>Faiblesse</b> : turbulence foliaire si canopée &gt; 60 % → dispersion chaotique (+30 %).
+          </div>
+          <div style="margin-top:4px;padding:4px 6px;background:#E1F5FE;border-left:3px solid #0288D1;font-size:11px;color:#01579B">
+            <b>Optimisation</b> : approcher contre-vent (vers ${(Math.round(meanDir)+180)%360}°) · éviter tout stationnement dans le cône.
+          </div>
+          <div style="margin-top:6px;font-size:10px;color:#888">Source : ENGINE-SENSORIEL-VENT-ODEURS-Ω · engine_vent.compute_scent_cone (V30-LOCKED)</div>
         </div>`,
-        { maxWidth: 280 }
+        { maxWidth: 340 }
       );
       group.addLayer(cone);
       windRendered = 1;
