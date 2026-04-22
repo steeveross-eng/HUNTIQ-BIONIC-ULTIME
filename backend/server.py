@@ -1069,6 +1069,14 @@ try:
 except Exception as e:
     logger.warning(f"CI_STATUS_Ω route not loaded: {e}")
 
+# PHASE_XI_SUPRA_RAPATRIEMENT_TERRITOIRE_V7_ULTIME_Ω — X195 export HTTPS
+try:
+    from routes.v7_ultime_export_router import router as v7_ultime_export_router
+    app.include_router(v7_ultime_export_router)
+    logger.info("✓ V7_ULTIME_EXPORT_X195 active (/api/v7-ultime-export/*)")
+except Exception as e:
+    logger.warning(f"V7_ULTIME_EXPORT router not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

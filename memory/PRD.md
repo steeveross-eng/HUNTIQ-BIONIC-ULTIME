@@ -23,7 +23,22 @@ Registre V30 SHA-256 verrouillé : `27516c9633853974fbb5754f4698a227bf39346e94f2
 | X80 SUPRA_VERITE_TERRAIN (waypoint officiel + probes) | DONE |
 | X120 SUPRA_RENDU_TERRITOIRE (contamination #FF0000 0.18, popups) | DONE |
 | X150 / X170 CORRIDORS_RENDU + REPAIR frontend | DONE |
-| **X180 CORRIDORS_REPAIR AMENDEMENT-FINAL** | **DONE (2026-04-22)** |
+| X180 CORRIDORS_REPAIR AMENDEMENT-FINAL | DONE (2026-04-22) |
+| **X195 RAPATRIEMENT_TERRITOIRE_V7_ULTIME AMENDEMENT-ABSOLU** | **DONE (2026-04-22)** |
+
+## X195 livrables
+- Archive V7 ULTIME rapatriée : `/app/memory/V7_ULTIME_EXPORT/V7_ULTIME_FULL.tar.gz` (156 entrées, 2.06 MB)
+- SHA-256 : `c8c2f6a3339b3fb5624d3cc640174ed6fc07e10d4c519bb9f2341a788d1dc29f`
+- Endpoints HTTPS : `/api/v7-ultime-export/{status,download,manifest,list,sha256}`
+- Rapport comparatif V7 vs V20-X180 : `/app/memory/V7_vs_V20_X180_COMPARATIF_Ω.md` (SHA-256 `c748513bddf5b085e7ed3df5ffac1846f24f611b9edc6c0a4ba57fa94db3b0f4`)
+- Verrou Pytest smoother 9 passes : `/app/backend/tests/test_smoother_x180_verrou.py` → **24/24 PASS**
+- Contenu rapatrié (aucune simplification) : spatial_engine_v7, supra_engine_v7, nutrition_engine_v7, access_clarity_engine_v7, corridors_v10, alimentation_v1/v2, repos_v1, carte2027_engine, salines_ultime_engine, canada_v72, LEGACY_ACCESS_AFFUTS, composants frontend V7
+
+## Interdictions X195 respectées
+- Engine V30 non modifié
+- Panneau DIAGNOSTIC-CORRIDORS-Ω NON activé
+- Données V7 ULTIME non transformées
+- Aucun filtrage / simplification
 
 ## X180 livrables
 - Test Jest `phase_x170_corridors_biologie.test.js` : **8/8 PASS** (triple pipeline + constantes RENDU-Ω)

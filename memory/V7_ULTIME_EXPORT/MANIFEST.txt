@@ -1,0 +1,85 @@
+═══════════════════════════════════════════════════════════════════════
+MANIFEST V7 ULTIME — RAPATRIEMENT INTÉGRAL X195-SUPRA-EXTRACTION-Ω
+COMMANDANT STEEVE-MAX — AMENDEMENT-ABSOLU
+═══════════════════════════════════════════════════════════════════════
+
+CONTENU BRUT — AUCUNE TRANSFORMATION, AUCUNE SIMPLIFICATION
+Date d'extraction : 2026-04-22
+Waypoint canonique de référence : 48.206657 / -68.382422
+
+───────────────────────────────────────────────────────────────────────
+MODULES BACKEND V7 ULTIME
+───────────────────────────────────────────────────────────────────────
+1. SPATIAL-ENGINE-V7
+   Chemin : /app/backend/engines/spatial_engine_v7/
+   Rôle : Moteur géospatial central — corridors, zones, heatmap,
+          scoring, aménagement. Racine du réseau veineux organique.
+
+2. SUPRA-ENGINE-V7
+   Chemin : /app/backend/engines/supra_engine_v7/
+   Rôle : Moteur décisionnel — analyse, fiche, compare, recommande,
+          commande.
+
+3. NUTRITION-ENGINE-V7
+   Chemin : /app/backend/modules/nutrition_engine_v7/
+   Rôle : Pipeline Sol → Nutriments → Fourrage → Gibier.
+          Pondérations biologiques source.
+
+4. ACCESS-CLARITY-V7
+   Chemin : /app/backend/modules/access_clarity_engine_v7/
+   Rôle : Guidance optimale BCE-4X — clarté d'accès aux affûts.
+
+5. CORRIDORS-V10 (dépend V7)
+   Chemin : /app/backend/core/scoring_pipeline/corridors_v10/
+   Rôle : Pipeline corridors scientifique (DEPRECATED PURGE-V6 mais
+          conservé comme source historique).
+
+6. CARTE-2027-ENGINE
+   Chemin : /app/backend/modules/carte2027_engine/
+   Rôle : Engine cartographique terrain V7 — premier rendu institutionnel.
+
+7. SALINES-ULTIME-ENGINE
+   Chemin : /app/backend/modules/salines_ultime_engine/
+   Rôle : 5 scores + 20 sources — attracteurs salines V7.
+
+8. ALIMENTATION-V1 / V2 / REPOS-V1
+   Chemin : /app/backend/core/scoring_pipeline/{alimentation_v1,
+            alimentation_v2, repos_v1}/
+   Rôle : Pondérations biologiques alimentation + repos par espèce.
+
+9. CANADA-V7.2
+   Chemin : /app/backend/modules/canada_v72/
+   Rôle : Module national pancanadien — 13 provinces, 16 écozones.
+
+───────────────────────────────────────────────────────────────────────
+ARCHIVES HISTORIQUES LIÉES
+───────────────────────────────────────────────────────────────────────
+- /app/LEGACY_ACCESS_AFFUTS/ — archives ACCESS_AFFUTS non-régression
+- /app/HUNTIQ-V6-import/backend/core/scoring_pipeline/ — import V6 complet
+- /app/audit_historical/ — audits V2/V4 historiques
+- /app/legacy/ — moteurs fantômes pré-core
+- /app/V7-SUBLAYERS-AUDIT-REPORT.md — audit sub-layers V7
+
+───────────────────────────────────────────────────────────────────────
+COMPOSANTS FRONTEND V7 ULTIME (couches de rendu d'origine)
+───────────────────────────────────────────────────────────────────────
+- /app/frontend/src/components/territoire/BionicCorridorsV6Layer.jsx
+- /app/frontend/src/components/territoire/ConsolidatedHeatmapLayer.jsx
+- /app/frontend/src/components/territoire/BionicScoreBadge.jsx
+- /app/frontend/src/components/territoire/NutritionPointDetailPanel.jsx
+- /app/frontend/src/components/territoire/supra/AnalyseTab.jsx
+- /app/frontend/src/components/territoire/supra/FicheTab.jsx
+- /app/frontend/src/hooks/useBionicScoring.js
+- /app/frontend/src/pages/Carte2027Page.jsx
+
+───────────────────────────────────────────────────────────────────────
+GARANTIES D'INTÉGRITÉ
+───────────────────────────────────────────────────────────────────────
+- Aucun fichier n'a été filtré, simplifié ou résumé.
+- Le contenu est BRUT, tel que présent dans le codebase au moment
+  de l'extraction.
+- Tous les sous-dossiers, __pycache__, logs, docstrings, JSON,
+  YAML, markdown sont inclus.
+- Archive signée SHA-256 dans : V7_ULTIME_FULL.tar.gz.sha256
+
+FIN MANIFEST
