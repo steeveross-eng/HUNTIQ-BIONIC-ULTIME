@@ -552,3 +552,122 @@ engines_mapping:
 # ═══════════════════════════════════════════════════════════════════════
 # FIN engines_mapping
 # ═══════════════════════════════════════════════════════════════════════
+
+# ═══════════════════════════════════════════════════════════════════════
+# Ajouté par X199-SUPRA-VALIDATION-DES-ENGINES-ÉTENDUS-Ω
+# ═══════════════════════════════════════════════════════════════════════
+validation_x199:
+  phase: PHASE_XI_SUPRA_VALIDATION_ENGINES_Ω
+  version: X199-SUPRA-VALIDATION-DES-ENGINES-ÉTENDUS-Ω-AMENDEMENT-ABSOLU
+  engines_canoniques_count: 4
+  engines_etendus_count: 6
+  engines_total: 10
+  feature_flags_all_off: true
+  v30_mirror_validated: true
+  v30_sha256_invariant: "027712696407882fb41e34b0325e1f2b8dacb9082a860146659dc7650e6c8fc3"
+  pytest_scaffold: 37/37 PASS
+  pytest_verrou_smoother_x180: 24/24 PASS
+  jest_sentinelles: 65/65 PASS
+
+engines_canoniques_x198:
+  - id: ENGINE_RESEAU_VEINEUX_Ω
+    slug: reseau_veineux_omega
+    scaffolded: true
+    feature_flag_active: false
+  - id: ENGINE_ECO_ZONES_Ω
+    slug: eco_zones_omega
+    scaffolded: true
+    feature_flag_active: false
+  - id: ENGINE_BIO_SCORING_Ω
+    slug: bio_scoring_omega
+    scaffolded: true
+    feature_flag_active: false
+    v30_mirror: present
+  - id: ENGINE_HYDRO_TOPO_Ω
+    slug: hydro_topo_omega
+    scaffolded: true
+    feature_flag_active: false
+
+engines_etendus_x199:
+  - id: ENGINE_ECOFORESTRY_Ω
+    slug: ecoforestry_omega
+    role: "Essences, canopy, stades successionnels, lisières, mosaïques forestières"
+    scaffolded: true
+    feature_flag_active: false
+  - id: ENGINE_3D_TERRAIN_Ω
+    slug: terrain_3d_omega
+    role: "DEM 1m/5m/10m, relief 3D, exposition, microrelief vectoriel"
+    scaffolded: true
+    feature_flag_active: false
+  - id: ENGINE_WILDLIFE_BEHAVIOR_Ω
+    slug: wildlife_behavior_omega
+    role: "Comportements saisonniers, locomotion (cerf, orignal, wapiti, ours, dindon)"
+    scaffolded: true
+    feature_flag_active: false
+  - id: ENGINE_LEGAL_TIME_Ω
+    slug: legal_time_omega
+    role: "Fenêtres légales, saisons, exclusions temporelles"
+    scaffolded: true
+    feature_flag_active: false
+  - id: ENGINE_PREDICTIVE_Ω
+    slug: predictive_omega
+    role: "Prédictions comportementales, flux animaliers, tendance saisonnière"
+    scaffolded: true
+    feature_flag_active: false
+  - id: ENGINE_ADVANCED_GEOSPATIAL_Ω
+    slug: advanced_geospatial_omega
+    role: "Projections, reprojection, raster ops, multi-source fusion"
+    scaffolded: true
+    feature_flag_active: false
+
+zero_doublon_omega:
+  corridors_desactives_historiquement:
+    - corridor_unified (PURGE-V6-PHASE-B)
+    - movement_corridors (PURGE-V6-PHASE-B)
+    - corridors_v10 (PURGE-V6-PHASE-B — conservé comme source CONTRAT)
+    - organic_zones_v2 (PURGE-V6-PHASE-B)
+  salines_desactives_historiquement:
+    - salines_ultime (PURGE-V6-PHASE-B — conservé comme source CONTRAT)
+  relocation_desactives:
+    - relocation (PURGE-V6-ANTI-DUPLICATION-A-Omega)
+  source_unique_par_domaine:
+    corridors: engine_ia_corridors_organic_omega (V30 LOCKED) + smoother X180 + futur RESEAU_VEINEUX_Ω
+    salines: v8_institutional.engine_salines (V30) + futur ECO_ZONES_Ω (consomme salines_ultime_engine archivé)
+    nutrition: v8_institutional.engine_nutrition (V30) + futur ECO_ZONES_Ω (consomme nutrition_engine_v7 archivé)
+    corridors_frontend: renduOmegaStore.js (source unique frontend)
+  interdictions_doublons_futurs:
+    - "Aucun nouveau router corridors en dehors de smoother/RESEAU_VEINEUX_Ω"
+    - "Aucun nouveau moteur salines en dehors de ECO_ZONES_Ω"
+    - "Aucun re-scoring biologique en dehors de BIO_SCORING_Ω"
+    - "Aucun signal hydro/topo produit en dehors de HYDRO_TOPO_Ω"
+
+priorisation_12_critiques_x199:
+  ordre_execution_x200:
+    P0_bloquants:
+      - {rank: 1, critique: locomotion_cerf_profil, engine: ENGINE_WILDLIFE_BEHAVIOR_Ω, justification: "Espèce absente — régression fonctionnelle directe"}
+      - {rank: 2, critique: salines_hierarchie_20_sources, engine: ENGINE_ECO_ZONES_Ω, justification: "20 sources V7 inutilisées — attractivité sous-exploitée"}
+      - {rank: 3, critique: inversion_semantique_hydro, engine: ENGINE_HYDRO_TOPO_Ω, justification: "Inversion sémantique bloque fidélité V7"}
+    P1_majeurs:
+      - {rank: 4, critique: scoring_8_facteurs, engine: ENGINE_BIO_SCORING_Ω, justification: "Traçabilité 0-100 non restaurée"}
+      - {rank: 5, critique: densite_niveaux_5, engine: ENGINE_RESEAU_VEINEUX_Ω, justification: "Hiérarchie 5→3 = dégradation cartographique"}
+      - {rank: 6, critique: nutrition_engine_non_branche, engine: ENGINE_ECO_ZONES_Ω, justification: "Pipeline Sol→Gibier absent post-smoother"}
+      - {rank: 7, critique: reseau_veineux_backend_non_enforce, engine: ENGINE_RESEAU_VEINEUX_Ω, justification: "Règle ≥2 zones non imposée"}
+    P2_techniques:
+      - {rank: 8, critique: cost_surface_v30, engine: ENGINE_BIO_SCORING_Ω, justification: "Via façade-miroir (prêt X199)"}
+      - {rank: 9, critique: ecl_expose, engine: ENGINE_BIO_SCORING_Ω, justification: "Via façade-miroir"}
+      - {rank: 10, critique: canopy_density_expose, engine: ENGINE_BIO_SCORING_Ω, justification: "Via façade-miroir"}
+      - {rank: 11, critique: multi_echelles_fusion, engine: ENGINE_HYDRO_TOPO_Ω, justification: "Fusion cross-scale DEM 1/5/10m"}
+      - {rank: 12, critique: terrain_aware_backend, engine: ENGINE_HYDRO_TOPO_Ω, justification: "Port terrainBoosts frontend → backend"}
+  strategie_execution:
+    - "X200 traite P0 en premier (bloquants)"
+    - "Activation engine par engine, feature flag ON un à la fois"
+    - "Tests Pytest verrou obligatoires entre chaque activation"
+    - "Aucune modification V30"
+    - "Aucune activation rendu / panneau DIAGNOSTIC"
+
+garde_fous_x199:
+  engine_v30_modifie: false
+  diagnostic_corridors_omega_active: false
+  rendu_visuel_produit: false
+  x200_lance: false
+  feature_flags_all_off: true

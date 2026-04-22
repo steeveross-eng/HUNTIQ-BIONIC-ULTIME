@@ -26,7 +26,26 @@ Registre V30 SHA-256 verrouillé : `27516c9633853974fbb5754f4698a227bf39346e94f2
 | X180 CORRIDORS_REPAIR AMENDEMENT-FINAL | DONE (2026-04-22) |
 | X195 RAPATRIEMENT_TERRITOIRE_V7_ULTIME AMENDEMENT-ABSOLU | DONE (2026-04-22) |
 | X197 COMPARATIF_TERRITOIRE_Ω AMENDEMENT-ABSOLU | DONE (2026-04-22) |
-| **X198 ENGINES_OPTIMISATION_Ω AMENDEMENT-ABSOLU** | **DONE (2026-04-22)** |
+| X198 ENGINES_OPTIMISATION_Ω AMENDEMENT-ABSOLU | DONE (2026-04-22) |
+| **X199 VALIDATION_ENGINES_Ω AMENDEMENT-ABSOLU** | **DONE (2026-04-22)** |
+
+## X199 livrables
+- **Scaffolder** : `/app/backend/tools/scaffold_engines_cibles.py` (idempotent, dry-run supporté)
+- **10 engines scaffoldés** (feature flags OFF) : 4 canoniques (reseau_veineux/eco_zones/bio_scoring/hydro_topo) + 6 étendus (ecoforestry/terrain_3d/wildlife_behavior/legal_time/predictive/advanced_geospatial)
+- **Façade V30 miroir** : `/app/backend/engines/bio_scoring_omega/v30_mirror_read_only.py` — SHA-256 V30 vérifié pré/post, cache TTL 60s, champs autorisés `cost_surface`/`ecl`/`canopy_density`
+- **YAML enrichi** : sections `validation_x199`, `engines_canoniques_x198`, `engines_etendus_x199`, `zero_doublon_omega`, `priorisation_12_critiques_x199`, `garde_fous_x199` (nouveau SHA-256 `5f25fe4c…`)
+- **Rapport validation** : `/app/memory/VALIDATION_ENGINES_X199_Ω.md` (SHA-256 `a98790d59cb749f4…`)
+- **Priorisation 12 critiques** : P0 (cerf, 20 salines, inversion hydro) / P1 (scoring 8-facteurs, 5 niveaux, nutrition, réseau enforce) / P2 (cost_surface, ecl, canopy, multi-échelles, terrain-aware)
+- **Tests** : Pytest **61/61 PASS** (37 X199 scaffold + 24 X180 verrou), Jest **65/65 PASS**
+- **ZERO-DOUBLON-Ω** : 10 routers legacy déjà désactivés historiquement (PURGE-V6-PHASE-B / ANTI-DUPLICATION-A-Omega), règles explicites encodées dans `zero_doublon_omega.interdictions_doublons_futurs`
+
+## Garde-fous X199 respectés
+- Engine V30 intact (SHA-256 `027712696407…` mesuré/vérifié par façade)
+- Feature flags OFF : tous les 10 engines inertes, endpoints `/compute` retournent HTTP 503
+- Routers non inclus dans `server.py` (aucune activation involontaire)
+- DIAGNOSTIC-CORRIDORS-Ω toujours non activé
+- Aucun rendu visuel modifié
+- X200 non lancé (validation uniquement)
 
 ## X198 livrables
 - **Cartographie** : `/app/memory/ENGINES_ACTUELS_CARTOGRAPHIE_Ω.md` (SHA-256 `abfa7047fa3a60cb0a2c7dc9f28a36cb88f0b27b2edafa568aa70cb6045d4ac3`) — ~5 660 KB totaux, ~522 .py, analyse redondances (corridors×3, salines×3, nutrition×3, alimentation v1/v2/v4)
