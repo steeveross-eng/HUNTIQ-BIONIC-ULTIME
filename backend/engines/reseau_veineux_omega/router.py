@@ -74,6 +74,84 @@ def enforce_vital_zone_rule(connections: List[Dict]) -> Dict[str, Any]:
 router = APIRouter(prefix="/api/v7-ultime/reseau-veineux", tags=["ENGINE_RESEAU_VEINEUX_Ω_X200_P0"])
 
 
+# ═══════════════════════════════════════════════════════════════════════
+# X200-P1-EXTERNAL-INFLOW_Ω — endpoints lecture seule
+# ═══════════════════════════════════════════════════════════════════════
+from engines.reseau_veineux_omega.external_inflow import (
+    external_inflow_status,
+    generate_entry_nodes,
+    trace_organic_path,
+    find_nearest_vital_zone,
+    fuse_external_internal,
+    classify_corridor_commandant,
+    HIERARCHY_5_LEVELS_COMMANDANT,
+)
+
+
+@router.get("/external-inflow/status")
+async def external_inflow_endpoint_status():
+    return JSONResponse(external_inflow_status())
+
+
+@router.post("/external-inflow/preview")
+async def external_inflow_preview(payload: dict = None):
+    """Génère un preview complet : entry_nodes + tracés + fusion (READ_ONLY)."""
+    p = payload or {}
+    lat = float(p.get("lat", 48.206657))
+    lon = float(p.get("lon", -68.382422))
+    count = int(p.get("entry_nodes_count", 16))
+    vital_zones = p.get("vital_zones") or []
+    internal_paths = p.get("internal_paths") or []
+    signals = {
+        "water_points": p.get("water_points", []),
+        "steep_slope_points": p.get("steep_slope_points", []),
+        "forest_cover": p.get("forest_cover", 0.6),
+        "vital_zones": vital_zones,
+    }
+
+    entry_nodes = generate_entry_nodes(lat, lon, count=count, terrain_signals=signals)
+
+    external_paths = []
+    for node in entry_nodes:
+        target = find_nearest_vital_zone(node, vital_zones)
+        if target is None:
+            continue
+        path = trace_organic_path(node, target)
+        # Score heuristique = weight_node * 100 pour classification
+        score = node["weight"] * 100
+        cls = classify_corridor_commandant(score)
+        external_paths.append({
+            "id": f"ext_{node['index']:02d}",
+            "entry_node_id": node["id"],
+            "target_type": target.get("type"),
+            "path": path,
+            "level": cls["level"],
+            "color": cls["color"],
+            "largeur_m": cls["largeur_m"],
+            "weight_render": cls["weight"],
+            "score": round(score, 2),
+        })
+
+    fusion_diag = fuse_external_internal(external_paths, internal_paths)
+
+    return JSONResponse({
+        "phase": "PHASE_X200_P1_EXTERNAL_INFLOW_Ω",
+        "mode": "READ_ONLY",
+        "waypoint": {"lat": lat, "lon": lon},
+        "entry_nodes": entry_nodes,
+        "entry_nodes_count": len(entry_nodes),
+        "external_paths": external_paths,
+        "external_paths_count": len(external_paths),
+        "fusion": fusion_diag,
+        "hierarchy_commandant": HIERARCHY_5_LEVELS_COMMANDANT,
+        "contract": {
+            "smoother_touched": False,
+            "rendu_modified": False,
+            "v30_read_write": False,
+        },
+    })
+
+
 @router.get("/status")
 async def status():
     return JSONResponse({

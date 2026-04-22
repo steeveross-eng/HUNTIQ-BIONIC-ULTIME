@@ -29,7 +29,22 @@ Registre V30 SHA-256 verrouillé : `27516c9633853974fbb5754f4698a227bf39346e94f2
 | X198 ENGINES_OPTIMISATION_Ω AMENDEMENT-ABSOLU | DONE (2026-04-22) |
 | X199 VALIDATION_ENGINES_Ω AMENDEMENT-ABSOLU | DONE (2026-04-22) |
 | X200-P0 ACTIVATION V31_CORE_PREPARATOIRE_Ω | DONE (2026-04-22) |
-| **X200-P1-PREVIEW_ET_PREPARATION_Ω** | **DONE (2026-04-22)** |
+| X200-P1-PREVIEW_ET_PREPARATION_Ω | DONE (2026-04-22) |
+| **X200-P1-EXTERNAL-INFLOW_Ω** | **DONE (2026-04-22)** |
+
+## X200-P1-EXTERNAL-INFLOW livrables
+- **Module** : `/app/backend/engines/reseau_veineux_omega/external_inflow.py` (350+ lignes, entièrement testé)
+- **12-24 ENTRY_NODES** générés sur couronne externe 700-800 m, distribution angulaire uniforme (step 360/count)
+- **Pondération directionnelle** §5.2 : hydro 40% / slope 25% / forest 20% / vital_zones 15% (somme = 1.0)
+- **Traçage organique** : spline Bézier cubique 28 points, courbure progressive (path > distance directe)
+- **Fusion externe ↔ interne** : seuil 75 m, élargissement ×1.5 sur segments superposés
+- **Hiérarchie 5 niveaux VERSION COMMANDANT §5.5** : CRITIQUE #CC0000/6m/6, MAJEUR #FF0000/4m/5, FORT #FF8C00/3m/4, MODÉRÉ #FFD700/2m/3, FAIBLE #BFBFBF/1m/2
+- **Double-verrou d'autorisation** : `EXTERNAL_INFLOW_ENABLED` OFF par défaut + env `P1_ACTIVATION_AUTHORIZED_BY_COMMANDANT=true` + token `STEEVE-MAX-P1-EXTERNAL-INFLOW`
+- **Endpoints HTTPS** (READ_ONLY) : `GET /external-inflow/status`, `POST /external-inflow/preview`
+- **Rapport** : `/app/memory/RAPPORT_X200_P1_EXTERNAL_INFLOW_Ω.md` (SHA-256 `cb06a229e4620de60c21c238e9c8f1abd453e6ca173922063273b885a562e37a`)
+- **Tests** : 23/23 Pytest nouveaux → **88/88 Pytest backend** + **65/65 Jest** = **153 verts**
+- **Audit CI** : overall_ok=True (V30 / flags / zero_doublon)
+- **Smoother X180, V30, rendu** : **intacts**
 
 ## X200-P1 livrables
 - **Endpoint preview** `/api/v7-ultime/corridor-pipeline-preview` (POST/GET status) — READ_ONLY strict (smoother/rendu/v30 non touchés)
