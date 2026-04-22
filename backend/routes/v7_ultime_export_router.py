@@ -99,7 +99,7 @@ async def v7_export_download():
         headers={
             "Content-Disposition": f'attachment; filename="{ARCHIVE_FILE.name}"',
             "X-V7-Ultime-SHA256": _read_sha256(),
-            "X-Phase": "X195-SUPRA-EXTRACTION-INTÉGRALE-Ω",
+            "X-Phase": "X195-SUPRA-EXTRACTION-INTEGRALE-OMEGA",
         },
     )
 
