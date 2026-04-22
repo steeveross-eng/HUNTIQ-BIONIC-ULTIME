@@ -453,3 +453,102 @@ garde_fous_X197:
 # ═══════════════════════════════════════════════════════════════════════
 # FIN — base du CONTRAT RENDUΩ-RÉSEAU VEINEUX
 # ═══════════════════════════════════════════════════════════════════════
+
+# ═══════════════════════════════════════════════════════════════════════
+# engines_mapping — Ajouté par X198-SUPRA-PLAN_ENGINES-Ω
+# Mappe les 12 divergences CRITIQUES sur les 4 ENGINES cibles.
+# ═══════════════════════════════════════════════════════════════════════
+engines_mapping:
+  phase: PHASE_XI_SUPRA_ENGINES_OPTIMISATION_Ω
+  version: X198-SUPRA-PLAN_ENGINES-Ω-AMENDEMENT-ABSOLU
+  constitution: CONTRAT_RENDUΩ_RESEAU_VEINEUX
+  engines_cibles:
+    - id: ENGINE_RESEAU_VEINEUX_Ω
+      path: /app/backend/engines/reseau_veineux_omega/
+      endpoint: /api/v7-ultime/reseau-veineux/compute
+    - id: ENGINE_ECO_ZONES_Ω
+      path: /app/backend/engines/eco_zones_omega/
+      endpoint: /api/v7-ultime/eco-zones/compute
+    - id: ENGINE_BIO_SCORING_Ω
+      path: /app/backend/engines/bio_scoring_omega/
+      endpoint: /api/v7-ultime/bio-scoring/compute
+    - id: ENGINE_HYDRO_TOPO_Ω
+      path: /app/backend/engines/hydro_topo_omega/
+      endpoint: /api/v7-ultime/hydro-topo/compute
+
+  critiques_12:
+    - critique: locomotion_cerf_profil
+      engine_responsable: ENGINE_RESEAU_VEINEUX_Ω
+      params_v7_a_reinjecter: {profil_cerf: {pente_optimale: 5, pente_max: 15, sensibilite_pression: 0.75, style: sinueux, route_evitement: 150, largeur: 100, affinite_hydro: 0.60}}
+      params_actuels_a_corriger: {SPECIES_LOCOMOTION: "ajouter clé 'cerf' distincte de 'chevreuil'"}
+      action_x200: Ajouter profil CERF canonique (Odocoileus virginianus) dans SPECIES_LOCOMOTION + transfert saisonnalité
+
+    - critique: salines_hierarchie_20_sources
+      engine_responsable: ENGINE_ECO_ZONES_Ω
+      params_v7_a_reinjecter: {moteur_source: salines_ultime_engine, scores: 5, sources: 20}
+      params_actuels_a_corriger: {smoother.smooth_bundle: "remplacer injection plate par liste hiérarchisée 5 scores × 20 sources"}
+      action_x200: Consommer salines_ultime_engine dans ECO_ZONES puis fournir vital_zones triées à smoother
+
+    - critique: inversion_semantique_hydro
+      engine_responsable: ENGINE_HYDRO_TOPO_Ω
+      params_v7_a_reinjecter: {affinite_hydro: {cerf: 0.60, orignal: 0.85}, bonus_seuil_m: 150}
+      params_actuels_a_corriger: {smoother.apply_ecological_alignment: "convertir nudge répulsif (< water_tolerance_m) en attraction graduée selon affinite_hydro"}
+      action_x200: Réécrire passe 5 avec ENGINE_HYDRO_TOPO_Ω fournissant raster hydro_attract[species]
+
+    - critique: scoring_8_facteurs
+      engine_responsable: ENGINE_BIO_SCORING_Ω
+      params_v7_a_reinjecter: {poids: {ECL: 25, canopy: 20, dist_route: 15, nourriture_refuge: 15, topo_hydro: 10, regen: 5, cost: 10, bonus_diversite: 1.05}}
+      params_actuels_a_corriger: {smoother: "exposer subscores et weights dans ia_signals.attractors/exclusions"}
+      action_x200: Activer score_single_corridor V7 comme service pur stateless (façade read-only sur V30)
+
+    - critique: densite_niveaux_5
+      engine_responsable: ENGINE_RESEAU_VEINEUX_Ω
+      params_v7_a_reinjecter: {niveaux: [CRITIQUE, MAJEUR, FORT, MODERE, FAIBLE], seuils: [85, 70, 50, 30, 0], couleurs: ["#CC0000", "#FF0000", "#FF8C00", "#FFD700", "#BFBFBF"], largeurs_m: [4, 6, 11, 17, 26], weights_render: [6, 5, 4, 3, 2]}
+      params_actuels_a_corriger: {RENDU_OMEGA.weightMapping: "étendre de 3 à 5 niveaux + couleurs dédiées"}
+      action_x200: Étendre RENDU_OMEGA via ENGINE_RESEAU_VEINEUX_Ω ; frontend consomme field:level + field:color_hex
+
+    - critique: cost_surface_v30
+      engine_responsable: ENGINE_BIO_SCORING_Ω
+      params_v7_a_reinjecter: {seuils_cost_per_cell: [0.3, 0.8, 1.5]}
+      params_actuels_a_corriger: {v8_institutional: "V30 scellé — aucune modif"}
+      action_x200: Façade-miroir lecture seule v30_mirror_read_only.py (voir ENGINES_CIBLES_PLAN §7)
+
+    - critique: ecl_expose
+      engine_responsable: ENGINE_BIO_SCORING_Ω
+      params_v7_a_reinjecter: {facteur_1_ECL: {max_pts: 25, seuils: [0.7, 0.5, 0.3]}}
+      params_actuels_a_corriger: {v30_mirror: "exposer ECL en lecture seule"}
+      action_x200: Idem cost_surface — via façade-miroir
+
+    - critique: canopy_density_expose
+      engine_responsable: ENGINE_BIO_SCORING_Ω
+      params_v7_a_reinjecter: {facteur_2_canopy: {max_pts: 20, seuils: [0.7, 0.4]}}
+      params_actuels_a_corriger: {v30_mirror: "exposer canopy_density en lecture seule"}
+      action_x200: Idem cost_surface — via façade-miroir
+
+    - critique: nutrition_engine_non_branche
+      engine_responsable: ENGINE_ECO_ZONES_Ω
+      params_v7_a_reinjecter: {pipeline: "Sol→Nutriments→Fourrage→Gibier (nutrition_engine_v7)"}
+      params_actuels_a_corriger: {smoother: "type alimentation plat → pipeline V7 consommé"}
+      action_x200: Fusionner nutrition_engine_v7 + nutrition_intelligence sous ECO_ZONES
+
+    - critique: reseau_veineux_backend_non_enforce
+      engine_responsable: ENGINE_RESEAU_VEINEUX_Ω
+      params_v7_a_reinjecter: {min_zones_vitales: 2, rayon_fonctionnel_tolerance_pct: 30}
+      params_actuels_a_corriger: {smoother.detect_vital_zone_connections: "marqueur descriptif → contrainte bloquante"}
+      action_x200: "Ajouter passe 10 dans smoother : rejet si < 2 zones vitales (orchestré par RESEAU_VEINEUX)"
+
+    - critique: multi_echelles_fusion
+      engine_responsable: ENGINE_HYDRO_TOPO_Ω
+      params_v7_a_reinjecter: {echelles: [1m, 5m, 10m], fusion_cross_scale: true}
+      params_actuels_a_corriger: {smoother: "terrain_multiscale conservé mais non exploité"}
+      action_x200: ENGINE_HYDRO_TOPO consomme terrain_multiscale et produit raster slope/hydro fusionné
+
+    - critique: terrain_aware_backend
+      engine_responsable: ENGINE_HYDRO_TOPO_Ω
+      params_v7_a_reinjecter: {boosts: {slope_high: 0.20, valley: 0.30, wet: 0.25, transition: 0.15}, cap: 1.95, floor: 1.0}
+      params_actuels_a_corriger: {smoother: "terrainBoosts frontend à porter vers backend"}
+      action_x200: Implémenter computeTerrainAwareBoost côté smoother via ENGINE_HYDRO_TOPO_Ω
+
+# ═══════════════════════════════════════════════════════════════════════
+# FIN engines_mapping
+# ═══════════════════════════════════════════════════════════════════════

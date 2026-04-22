@@ -1077,6 +1077,14 @@ try:
 except Exception as e:
     logger.warning(f"V7_ULTIME_EXPORT router not loaded: {e}")
 
+# PHASE_XI_SUPRA_ENGINES_OPTIMISATION_Ω — X198 DIFF_MATRIX lecture seule PRO/EXPERT
+try:
+    from routes.diff_matrix_router import router as diff_matrix_router
+    app.include_router(diff_matrix_router)
+    logger.info("✓ DIFF_MATRIX_X198_READONLY active (/api/v7-vs-actuel/diff-matrix*)")
+except Exception as e:
+    logger.warning(f"DIFF_MATRIX router not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

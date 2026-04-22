@@ -25,7 +25,17 @@ Registre V30 SHA-256 verrouillé : `27516c9633853974fbb5754f4698a227bf39346e94f2
 | X150 / X170 CORRIDORS_RENDU + REPAIR frontend | DONE |
 | X180 CORRIDORS_REPAIR AMENDEMENT-FINAL | DONE (2026-04-22) |
 | X195 RAPATRIEMENT_TERRITOIRE_V7_ULTIME AMENDEMENT-ABSOLU | DONE (2026-04-22) |
-| **X197 COMPARATIF_TERRITOIRE_Ω AMENDEMENT-ABSOLU** | **DONE (2026-04-22)** |
+| X197 COMPARATIF_TERRITOIRE_Ω AMENDEMENT-ABSOLU | DONE (2026-04-22) |
+| **X198 ENGINES_OPTIMISATION_Ω AMENDEMENT-ABSOLU** | **DONE (2026-04-22)** |
+
+## X198 livrables
+- **Cartographie** : `/app/memory/ENGINES_ACTUELS_CARTOGRAPHIE_Ω.md` (SHA-256 `abfa7047fa3a60cb0a2c7dc9f28a36cb88f0b27b2edafa568aa70cb6045d4ac3`) — ~5 660 KB totaux, ~522 .py, analyse redondances (corridors×3, salines×3, nutrition×3, alimentation v1/v2/v4)
+- **Plan architecture cible** : `/app/memory/ENGINES_CIBLES_PLAN_Ω.md` (SHA-256 `37754f6dcfb8d3978a61b83c3a443aa1cd2062ef2a237e99c20b98b5a78eac6d`) — 4 engines cibles : ENGINE_RÉSEAU_VEINEUX_Ω (≤40KB), ENGINE_ECO_ZONES_Ω (≤120KB), ENGINE_BIO_SCORING_Ω (≤60KB), ENGINE_HYDRO_TOPO_Ω (≤80KB)
+- **YAML engines_mapping** : section ajoutée à `V7_vs_TERRITOIRE_ACTUEL_DIFF_MATRIX.yaml` (nouveau SHA-256 `d11bbfb1cdb28c384f294c1391bba40e4a81176b4e92344b71e648fab2a6482d`) — 12 critiques mappées sur 4 engines avec params V7 à réinjecter + actions X200
+- **Endpoint HTTPS DIFF_MATRIX** PRO/EXPERT-only : `/api/v7-vs-actuel/diff-matrix` (YAML), `.json`, `/status`. Accès sans rôle → HTTP 403
+- **Recommandation V30** : Façade-miroir lecture seule `v30_mirror_read_only.py` avec vérification SHA-256 V30 invariant (décrite §7 du plan)
+- **Économie visée** : ~867 KB bruts / ~567 KB net après ajout des 4 engines cibles (−10 %)
+- **Non-régression** : Pytest 24/24, Jest 65/65
 
 ## X197 livrables
 - Rapport : `/app/memory/TERRITOIRE_V7_vs_TERRITOIRE_ACTUEL_Ω.md` (SHA-256 `94974bc3cf505a23809206fe51aa99952f2348a97d167aafc36c94a219c68a62`)
