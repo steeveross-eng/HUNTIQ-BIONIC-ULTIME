@@ -970,6 +970,15 @@ try:
 except Exception as e:
     logger.warning(f"ENGINE-IA-CORRIDORS-Ω not loaded: {e}")
 
+# POST-SMOOTHER X180 — lissage biologique externe (hors V30)
+# Enregistré AVANT l'engine V30 pour intercepter /generate (priorité FastAPI first-match)
+try:
+    from engines.post_smoothing.organic_corridor_smoother import router as corridor_smoother_router
+    app.include_router(corridor_smoother_router)
+    logger.info("✓ ORGANIC_SMOOTHER_Ω_X180 active (intercepts /api/v20/territoire/corridors-organic/generate)")
+except Exception as e:
+    logger.warning(f"ORGANIC_SMOOTHER_Ω_X180 not loaded: {e}")
+
 # ENGINE-IA-CORRIDORS-ORGANIC-Ω — Phase XI-SUPRA-M (CORRIDORS ORGANIC VERSION Ω-M)
 try:
     from engines.v8_institutional.engine_ia_corridors_organic_omega import router as organic_corridors_router
