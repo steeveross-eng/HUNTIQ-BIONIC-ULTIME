@@ -1,0 +1,455 @@
+# ═══════════════════════════════════════════════════════════════════════
+# V7_vs_TERRITOIRE_ACTUEL_DIFF_MATRIX.yaml
+# PHASE_XI_SUPRA_COMPARATIF_TERRITOIRE_Ω — X197-AMENDEMENT-ABSOLU
+# Base du CONTRAT RENDUΩ — RÉSEAU VEINEUX (X200-PREP)
+# Commandant : STEEVE-MAX
+# ═══════════════════════════════════════════════════════════════════════
+# Format strict par entrée :
+#   key:                         identifiant canonique
+#   category:                    domaine (zones, attracteurs, corridors, ...)
+#   v7_ultime:                   valeur telle qu'extraite des sources V7
+#   territoire_actuel:           valeur TERRITOIRE V20-X180 en production
+#   impact:                      PERTE | DEGRADATION | SIMPLIFICATION | INVERSION |
+#                                PARITE | PARITE_FRONTEND | PARITE_PARTIELLE |
+#                                AJOUT | RENOMMAGE
+#   severity:                    CRITIQUE | MAJEURE | MODEREE | MINEURE
+#   source_v7:                   chemin du fichier source V7
+#   source_actuel:               chemin du fichier source actuel
+#   action_x200_recommandee:     note pour la phase de réinjection
+# ═══════════════════════════════════════════════════════════════════════
+
+metadata:
+  phase: PHASE_XI_SUPRA_COMPARATIF_TERRITOIRE_Ω
+  version: X197-SUPRA-V7_vs_TERRITOIRE_ACTUEL-Ω-AMENDEMENT-ABSOLU
+  commandant: STEEVE-MAX
+  date: "2026-04-22"
+  waypoint_canonique: [48.206657, -68.382422]
+  archive_v7_sha256: c8c2f6a3339b3fb5624d3cc640174ed6fc07e10d4c519bb9f2341a788d1dc29f
+  engine_v30_sha256: 27516c9633853974fbb5754f4698a227bf39346e94f274889d4b4ee0398f7e4c
+  contrat_base: CONTRAT_RENDUΩ_RESEAU_VEINEUX
+  panneau_diagnostic_active: false
+  rendu_experimental_autorise: false
+
+divergences:
+
+  # ───── ZONES ÉCOLOGIQUES ─────
+  - key: habitat_classification
+    category: zones_ecologiques
+    v7_ultime: {niveaux: 4, seuils: {OPTIMAL: 75, FONCTIONNEL: 50, DEGRADE: 25, INUTILISABLE: 0}}
+    territoire_actuel: {niveaux: 2, logique: binaire_habitat_ou_non_via_HABITAT_AWARE_Ω}
+    impact: PERTE
+    severity: MAJEURE
+    source_v7: backend/core/scoring_pipeline/corridors_v10/classifier.py::CLASSIFICATION_THRESHOLDS
+    source_actuel: frontend/src/lib/renduOmegaStore.js::OMEGA_FILTERS_SPEC.HABITAT_AWARE_Ω
+    action_x200_recommandee: Réinjecter 4 niveaux via smoother post-V30 sur signaux existants
+
+  - key: zones_repos
+    category: zones_ecologiques
+    v7_ultime: {moteur: repos_v1, endpoint: /api/v1/repos, scoring_par_espece: true}
+    territoire_actuel: {type_plat: repos, scoring_post_smoother: false}
+    impact: SIMPLIFICATION
+    severity: MAJEURE
+    source_v7: backend/core/scoring_pipeline/repos_v1/
+    source_actuel: backend/engines/post_smoothing/organic_corridor_smoother.py::VITAL_ZONE_TYPES
+    action_x200_recommandee: Brancher repos_v1 comme signal d'attractivité dans apply_ia_attractors
+
+  - key: zones_alimentation
+    category: zones_ecologiques
+    v7_ultime: {moteurs: [alimentation_v1, alimentation_v2], pipeline: Sol→Nutriments→Fourrage→Gibier}
+    territoire_actuel: {type_plat: alimentation, pipeline_post_smoother: false}
+    impact: PERTE
+    severity: CRITIQUE
+    source_v7: backend/modules/nutrition_engine_v7/pipeline.py
+    source_actuel: backend/engines/post_smoothing/organic_corridor_smoother.py::VITAL_ZONE_TYPES
+    action_x200_recommandee: Exposer nutrition_engine_v7 comme source attractive via weights IA
+
+  - key: zones_rut_saisonnalite
+    category: zones_ecologiques
+    v7_ultime: {modulation: saisonniere, automne_mobilite: {cerf: 0.95, orignal: 0.95}}
+    territoire_actuel: {type_plat: rut, modulation_saisonniere: false}
+    impact: PERTE
+    severity: MODEREE
+    source_v7: backend/core/scoring_pipeline/corridors_v10/species_profiles.py::saisonnalite
+    source_actuel: null
+    action_x200_recommandee: Injecter saisonnalite dans terrain_signals/ia_signals
+
+  - key: zones_humides
+    category: zones_ecologiques
+    v7_ultime: {role: attractif, affinite_hydro: {cerf: 0.60, orignal: 0.85}}
+    territoire_actuel: {role: toleré_orignal_seul, water_tolerance_m: {chevreuil: 30, orignal: "0/30-100", wapiti: 40, ours: 30, dindon: 25}}
+    impact: INVERSION
+    severity: CRITIQUE
+    source_v7: backend/core/scoring_pipeline/corridors_v10/species_profiles.py::affinite_hydro
+    source_actuel: backend/engines/post_smoothing/organic_corridor_smoother.py::SPECIES_LOCOMOTION
+    action_x200_recommandee: "Remplacer nudge répulsif par attraction graduée selon affinite_hydro"
+
+  - key: forets_matures
+    category: zones_ecologiques
+    v7_ultime: {preference_forestiere: {cerf: 0.85, orignal: 0.75}, scoring_canopy: 0-20pts}
+    territoire_actuel: {signal_expose: false}
+    impact: PERTE
+    severity: CRITIQUE
+    source_v7: backend/core/scoring_pipeline/corridors_v10/scoring.py (facteur 2)
+    source_actuel: null
+    action_x200_recommandee: Expose canopy_density dans ia_signals.attractors
+
+  # ───── ATTRACTEURS ─────
+  - key: salines_hierarchie
+    category: attracteurs
+    v7_ultime: {scores: 5, sources: 20, moteur: salines_ultime_engine}
+    territoire_actuel: {liste_plate: true, injection_auto_bundle: true}
+    impact: PERTE
+    severity: CRITIQUE
+    source_v7: backend/modules/salines_ultime_engine/
+    source_actuel: backend/engines/post_smoothing/organic_corridor_smoother.py::smooth_bundle
+    action_x200_recommandee: Consommer salines_ultime_engine comme source hiérarchisée d'attractivité
+
+  - key: attracteurs_semantique_eau
+    category: attracteurs
+    v7_ultime: {nature: attractive, seuil_bonus: "<150m"}
+    territoire_actuel: {nature: repulsive, seuil: "<water_tolerance_m"}
+    impact: INVERSION
+    severity: CRITIQUE
+    source_v7: backend/core/scoring_pipeline/corridors_v10/scoring.py::hydro_near
+    source_actuel: backend/engines/post_smoothing/organic_corridor_smoother.py::apply_ecological_alignment
+    action_x200_recommandee: Refondre passe 5 pour réintroduire attraction hydro par espèce
+
+  # ───── CORRIDORS ─────
+  - key: corridors_classification_niveaux
+    category: corridors
+    v7_ultime: {niveaux: [CRITIQUE, MAJEUR, FORT, MODERE, FAIBLE], scores: [85-100, 70-84, 50-69, 30-49, 0-29]}
+    territoire_actuel: {niveaux: [faible, fort, critique], epaisseurs_px: [1.2, 2.0, 3.0]}
+    impact: DEGRADATION
+    severity: CRITIQUE
+    source_v7: backend/core/scoring_pipeline/corridors_v10/classifier.py::CORRIDOR_LEVELS
+    source_actuel: frontend/src/lib/renduOmegaStore.js::RENDU_OMEGA.weightMapping
+    action_x200_recommandee: Ajouter 2 niveaux (MAJEUR, MODERE) + couleurs dédiées
+
+  - key: corridors_couleurs_par_niveau
+    category: corridors
+    v7_ultime:
+      CRITIQUE: "#CC0000"
+      MAJEUR: "#FF0000"
+      FORT: "#FF8C00"
+      MODERE: "#FFD700"
+      FAIBLE: "#BFBFBF"
+    territoire_actuel: {unique: "#FF8F00"}
+    impact: PERTE
+    severity: MAJEURE
+    source_v7: backend/core/scoring_pipeline/corridors_v10/classifier.py
+    source_actuel: frontend/src/lib/renduOmegaStore.js::RENDU_OMEGA.color
+    action_x200_recommandee: Restaurer gradient couleur 5 niveaux
+
+  - key: corridors_largeur_m
+    category: corridors
+    v7_ultime: {CRITIQUE: 4, MAJEUR: 6, FORT: 11, MODERE: 17, FAIBLE: 26}
+    territoire_actuel: {segment_max_m: 20}
+    impact: PERTE
+    severity: MODEREE
+    source_v7: backend/core/scoring_pipeline/corridors_v10/classifier.py::largeur_m
+    source_actuel: backend/engines/post_smoothing/organic_corridor_smoother.py::SEGMENT_MAX_M
+    action_x200_recommandee: Distinguer largeur_fonctionnelle (biologie) vs segment_max (géométrie)
+
+  - key: corridors_pattern
+    category: corridors
+    v7_ultime: {CRITIQUE: striped_10_4}
+    territoire_actuel: {aucun_pattern: true}
+    impact: PERTE
+    severity: MINEURE
+    source_v7: backend/core/scoring_pipeline/corridors_v10/classifier.py::dash_array
+    source_actuel: null
+    action_x200_recommandee: Optionnel — réactivation pattern CRITIQUE seulement
+
+  # ───── RÉSEAU VEINEUX ─────
+  - key: reseau_rayon_fonctionnel_nominal
+    category: reseau_veineux
+    v7_ultime: 600
+    territoire_actuel: 600
+    impact: PARITE
+    severity: null
+    source_v7: documentation V7
+    source_actuel: frontend/src/lib/renduOmegaStore.js::functionalRadiusNominalM
+
+  - key: reseau_tolerance_rayon_fonctionnel
+    category: reseau_veineux
+    v7_ultime: {min_m: 420, max_m: 780, pct: "±30%"}
+    territoire_actuel: {min_m: 420, max_m: 780, verif_backend: false}
+    impact: PARITE_FRONTEND
+    severity: MODEREE
+    source_v7: documentation V7
+    source_actuel: frontend/src/lib/renduOmegaStore.js::functionalRadius{Min,Max}M
+    action_x200_recommandee: Ajouter vérification ±30% au smoother backend
+
+  - key: reseau_convergence_veine
+    category: reseau_veineux
+    v7_ultime: {merge_radius_m: 15, halo_mult: 1.5, lum_mult: 1.6}
+    territoire_actuel: {merge_radius_m: 15, halo_mult: 1.5, lum_mult: 1.6}
+    impact: PARITE_FRONTEND
+    severity: null
+    source_v7: documentation V7
+    source_actuel: frontend/src/lib/renduOmegaStore.js::mainVein*
+
+  - key: reseau_continu_min_zones_vitales
+    category: reseau_veineux
+    v7_ultime: {min_vital_zones: 2}
+    territoire_actuel: {detect_only_sans_forcage: true, marqueur: vital_zone_conforme}
+    impact: SIMPLIFICATION
+    severity: MAJEURE
+    source_v7: documentation V7 (règle réseau continu)
+    source_actuel: backend/engines/post_smoothing/organic_corridor_smoother.py::detect_vital_zone_connections
+    action_x200_recommandee: Forcer corridor rejet si < 2 zones vitales (après réinjection sources)
+
+  # ───── PONDÉRATIONS BIOLOGIQUES 8-FACTEURS ─────
+  - key: scoring_facteur_1_ECL
+    category: scoring_biologique
+    v7_ultime: {poids_max: 25, seuils: [0.7, 0.5, 0.3]}
+    territoire_actuel: {expose_post_smoother: false}
+    impact: PERTE
+    severity: CRITIQUE
+    source_v7: backend/core/scoring_pipeline/corridors_v10/scoring.py::facteur_1
+    source_actuel: null
+    action_x200_recommandee: Exposer ECL via V30 bundle et consommer côté smoother
+
+  - key: scoring_facteur_2_canopy
+    category: scoring_biologique
+    v7_ultime: {poids_max: 20, seuils: [0.7, 0.4]}
+    territoire_actuel: {expose_post_smoother: false}
+    impact: PERTE
+    severity: CRITIQUE
+    source_v7: backend/core/scoring_pipeline/corridors_v10/scoring.py::facteur_2
+    source_actuel: null
+    action_x200_recommandee: Injecter canopy_density dans ia_signals.attractors weight
+
+  - key: scoring_facteur_3_pression_humaine
+    category: scoring_biologique
+    v7_ultime: {poids_max: 15, seuils_m: [400, 200, 80]}
+    territoire_actuel: {human_avoidance_m: {ours: 120, autre: 50}}
+    impact: SIMPLIFICATION
+    severity: MAJEURE
+    source_v7: backend/core/scoring_pipeline/corridors_v10/scoring.py::facteur_3
+    source_actuel: backend/engines/post_smoothing/organic_corridor_smoother.py::SPECIES_LOCOMOTION
+    action_x200_recommandee: Convertir en gradient humain_boost(dist_route)
+
+  - key: scoring_facteur_4_nourriture_refuge
+    category: scoring_biologique
+    v7_ultime: {poids_max: 15}
+    territoire_actuel: {expose_post_smoother: false}
+    impact: PERTE
+    severity: MAJEURE
+    source_v7: backend/core/scoring_pipeline/corridors_v10/scoring.py::facteur_4
+    source_actuel: null
+
+  - key: scoring_facteur_5_topo_hydro
+    category: scoring_biologique
+    v7_ultime: {poids_max: 10, mix: "vallon*0.5 + hydro*0.3 + tampon*0.2"}
+    territoire_actuel: {frontend_terrainBoosts: {slope_high: 0.20, valley: 0.30, wet: 0.25, transition: 0.15}}
+    impact: PARITE_PARTIELLE
+    severity: MODEREE
+    source_v7: backend/core/scoring_pipeline/corridors_v10/scoring.py::facteur_5
+    source_actuel: frontend/src/lib/renduOmegaStore.js::computeTerrainAwareBoost
+    action_x200_recommandee: Transcrire boosts frontend dans smoother backend
+
+  - key: scoring_facteur_6_regeneration
+    category: scoring_biologique
+    v7_ultime: {poids_max: 5}
+    territoire_actuel: {expose_post_smoother: false}
+    impact: PERTE
+    severity: MINEURE
+
+  - key: scoring_facteur_7_cost
+    category: scoring_biologique
+    v7_ultime: {poids_max: 10, seuils_cost_per_cell: [0.3, 0.8, 1.5]}
+    territoire_actuel: {cost_surface_V30_scelle: true, expose_post_smoother: false}
+    impact: PERTE
+    severity: CRITIQUE
+    source_v7: backend/core/scoring_pipeline/corridors_v10/scoring.py::facteur_7
+    source_actuel: V30 LOCKED
+    action_x200_recommandee: Demander à V30 d'exposer cost_surface en lecture seule
+
+  - key: scoring_facteur_8_bonus_diversite
+    category: scoring_biologique
+    v7_ultime: {mult: 1.05, condition: "from_type != to_type"}
+    territoire_actuel: null
+    impact: PERTE
+    severity: MINEURE
+
+  - key: scoring_modif_court_long
+    category: scoring_biologique
+    v7_ultime: {corridor_court_lt_8: 1.10, corridor_long_gt_40: 0.85}
+    territoire_actuel: null
+    impact: PERTE
+    severity: MINEURE
+
+  # ───── IA VISION ─────
+  - key: ia_vision_endpoint_scoring
+    category: ia_vision
+    v7_ultime: {endpoint: /api/v7/spatial/vision-scoring, ponderation_pins_role: true}
+    territoire_actuel: {registre_only: true, endpoint: /api/v20/territoire/ia-vision}
+    impact: PERTE
+    severity: MAJEURE
+    source_v7: backend/engines/spatial_engine_v7/router.py::spatial_vision_scoring
+    source_actuel: backend/engines/v8_institutional/engine_ia_vision_registry_omega.py
+    action_x200_recommandee: Réactiver scoring dynamique côté smoother
+
+  - key: ia_vision_patterns
+    category: ia_vision
+    v7_ultime: {classes: [traces, grattage, frottoir], bonus_saison: true}
+    territoire_actuel: {preservees_bundle_V30: true, re_scoring_smoother: false}
+    impact: PARITE_PARTIELLE
+    severity: MODEREE
+
+  # ───── MULTI-ÉCHELLES ─────
+  - key: multi_echelles_terrain
+    category: multi_echelles
+    v7_ultime: {echelles: [1m, 5m, 10m], fusion: true}
+    territoire_actuel: {terrain_multiscale: preserve_bundle_v30, fusion_post: false}
+    impact: PARITE_PARTIELLE
+    severity: MODEREE
+
+  - key: representation_corridor
+    category: multi_echelles
+    v7_ultime: {type: grille_row_col}
+    territoire_actuel: {type: latlng_continu}
+    impact: RENOMMAGE
+    severity: null
+    action_x200_recommandee: Aucune — changement non destructif
+
+  # ───── DENSITÉ / FUSION / CONTINUITÉ ─────
+  - key: densite_niveaux
+    category: densite
+    v7_ultime: {niveaux: 5, weights_render: [6, 5, 4, 3, 2]}
+    territoire_actuel: {epaisseurs_px: [1.2, 2.0, 3.0]}
+    impact: DEGRADATION
+    severity: CRITIQUE
+    action_x200_recommandee: Ajouter 2 niveaux supplémentaires + couleurs
+
+  - key: subdivision_max
+    category: continuite
+    v7_ultime: 26
+    territoire_actuel: 20
+    impact: DIVERGENCE
+    severity: MODEREE
+    source_v7: largeur_m FAIBLE
+    source_actuel: SEGMENT_MAX_M
+
+  - key: angle_max
+    category: continuite
+    v7_ultime: {implicite: "non scoré directement"}
+    territoire_actuel: {universel: 45, par_espece: {chevreuil: 40, orignal: 45, wapiti: 35, ours: 50, dindon: 45}}
+    impact: AJOUT
+    severity: null
+    action_x200_recommandee: Conserver règle X180 (amélioration géométrique)
+
+  # ───── LOCOMOTION PAR ESPÈCE ─────
+  - key: locomotion_cerf_profil
+    category: locomotion
+    v7_ultime: {present: true, pente_optimale: 5, pente_max: 15, sensibilite: 0.75, affinite_hydro: 0.60, largeur: 100, route_evitement: 150}
+    territoire_actuel: {present: false}
+    impact: PERTE
+    severity: CRITIQUE
+    source_v7: backend/core/scoring_pipeline/corridors_v10/species_profiles.py::CERF
+    source_actuel: null
+    action_x200_recommandee: Ajouter profil CERF à SPECIES_LOCOMOTION (≠ chevreuil)
+
+  - key: locomotion_orignal_pente_max
+    category: locomotion
+    v7_ultime: 25
+    territoire_actuel: 30
+    impact: DIVERGENCE
+    severity: MINEURE
+
+  - key: locomotion_route_evitement_orignal
+    category: locomotion
+    v7_ultime: 300
+    territoire_actuel: 50
+    impact: SIMPLIFICATION
+    severity: MAJEURE
+    action_x200_recommandee: Restaurer 300m orignal / 150m cerf / 400m bâtiment
+
+  - key: locomotion_largeur_corridor
+    category: locomotion
+    v7_ultime: {cerf: 100, orignal: 150}
+    territoire_actuel: null
+    impact: PERTE
+    severity: MODEREE
+
+  - key: locomotion_affinite_hydro
+    category: locomotion
+    v7_ultime: {cerf: 0.60, orignal: 0.85}
+    territoire_actuel: {water_tolerance_m_repulsif: true}
+    impact: INVERSION
+    severity: CRITIQUE
+
+  - key: locomotion_preference_forestiere
+    category: locomotion
+    v7_ultime: {cerf: 0.85, orignal: 0.75}
+    territoire_actuel: null
+    impact: PERTE
+    severity: MAJEURE
+
+  - key: locomotion_sensibilite_pression
+    category: locomotion
+    v7_ultime: {cerf: 0.75, orignal: 0.80}
+    territoire_actuel: null
+    impact: PERTE
+    severity: MAJEURE
+
+  - key: locomotion_vitesse_deplacement
+    category: locomotion
+    v7_ultime: {cerf: modere, orignal: modere}
+    territoire_actuel: null
+    impact: PERTE
+    severity: MINEURE
+
+  - key: locomotion_saisonnalite_mobilite
+    category: locomotion
+    v7_ultime: {cerf: {automne: 0.95, hiver: 0.50}, orignal: {automne: 0.95, hiver: 0.40}}
+    territoire_actuel: null
+    impact: PERTE
+    severity: MAJEURE
+
+  - key: locomotion_style_deplacement
+    category: locomotion
+    v7_ultime: {cerf: sinueux, orignal: lineaire}
+    territoire_actuel: {chevreuil: sinueux_court, orignal: large_stable, wapiti: long_continu, ours: irregulier, dindon: court_rapide}
+    impact: RENOMMAGE
+    severity: null
+
+  # ───── TERRAIN-AWARE ─────
+  - key: terrain_aware_cap_mult
+    category: terrain_aware
+    v7_ultime: {cap: null}
+    territoire_actuel: {cap: 1.95, floor: 1.0}
+    impact: AJOUT
+    severity: null
+    action_x200_recommandee: Conserver bornes protectrices
+
+  - key: terrain_aware_backend_active
+    category: terrain_aware
+    v7_ultime: {actif_scoring_backend: true}
+    territoire_actuel: {actif_frontend_only: true}
+    impact: PERTE
+    severity: MAJEURE
+    action_x200_recommandee: Porter terrainBoosts frontend vers smoother backend
+
+  # ───── CONTRAT RENDUΩ ─────
+  - key: contrat_renduΩ_reseau_veineux
+    category: contrat
+    v7_ultime: {implicite: true, source: "cohérence moteurs V7 multiples"}
+    territoire_actuel: {explicite_partiel: "RENDU_OMEGA frontend + smoother X180"}
+    impact: PARITE_PARTIELLE
+    severity: MAJEURE
+    action_x200_recommandee: Formaliser CONTRAT_RENDUΩ_RESEAU_VEINEUX unique basé sur ce YAML
+
+garde_fous_X197:
+  engine_v30_modifie: false
+  donnees_v7_transformees: false
+  filtrage_ou_simplification: false
+  panneau_diagnostic_active: false
+  corridors_actuels_valides: false
+  publication_hors_pro_expert: false
+  rendu_experimental_produit: false
+
+# ═══════════════════════════════════════════════════════════════════════
+# FIN — base du CONTRAT RENDUΩ-RÉSEAU VEINEUX
+# ═══════════════════════════════════════════════════════════════════════
