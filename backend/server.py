@@ -1110,6 +1110,14 @@ for _slug, _label in [
     except Exception as e:
         logger.warning(f"X200-P0 {_slug} not loaded: {e}")
 
+# ═══ X200-P1-PREVIEW — Corridor pipeline preview (lecture seule) ═══
+try:
+    from routes.corridor_pipeline_preview_router import router as pipeline_preview_router
+    app.include_router(pipeline_preview_router)
+    logger.info("✓ X200-P1-PREVIEW active (/api/v7-ultime/corridor-pipeline-preview/*)")
+except Exception as e:
+    logger.warning(f"Pipeline preview router not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

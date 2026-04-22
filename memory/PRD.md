@@ -28,7 +28,18 @@ Registre V30 SHA-256 verrouillé : `27516c9633853974fbb5754f4698a227bf39346e94f2
 | X197 COMPARATIF_TERRITOIRE_Ω AMENDEMENT-ABSOLU | DONE (2026-04-22) |
 | X198 ENGINES_OPTIMISATION_Ω AMENDEMENT-ABSOLU | DONE (2026-04-22) |
 | X199 VALIDATION_ENGINES_Ω AMENDEMENT-ABSOLU | DONE (2026-04-22) |
-| **X200-P0 ACTIVATION V31_CORE_PREPARATOIRE_Ω** | **DONE (2026-04-22)** |
+| X200-P0 ACTIVATION V31_CORE_PREPARATOIRE_Ω | DONE (2026-04-22) |
+| **X200-P1-PREVIEW_ET_PREPARATION_Ω** | **DONE (2026-04-22)** |
+
+## X200-P1 livrables
+- **Endpoint preview** `/api/v7-ultime/corridor-pipeline-preview` (POST/GET status) — READ_ONLY strict (smoother/rendu/v30 non touchés)
+- **5 waypoints testés** : waypoint officiel, Québec, Saguenay, Montréal, 49N70W — tous conformes
+- **Preview enrichi** vérifié : bio_score 93.99, CRITIQUE (#CC0000), hydro_bonus +0.2541, terrain_boost 1.70, habitat FONCTIONNEL
+- **P1 préparation brouillon** : `/app/backend/engines/post_smoothing/p1_preparation.py` (3 flags OFF + double-verrou env+token)
+- **Audit continu intégré CI_STATUS_Ω** : champ `engines_audit_x199_x200` avec 3 gates (V30 / flags / zero_doublon)
+- **Plan X199 étendus** : ordre d'activation recommandé (ecoforestry → advanced_geospatial → terrain_3d → legal_time → wildlife_extended → predictive) avec rôle/dépendances/risques/tests/impact
+- **Rapport institutionnel** : `/app/memory/RAPPORT_X200_P1_PREVIEW_Ω.md` (SHA-256 `a83ecf22f00c0d39c854cdda12f04ef53aa67494ecfb7c0a15d3356108d2389a`)
+- **Tests** : 65/65 Pytest + 65/65 Jest = 130/130 verts ; audit CI overall_ok=True
 
 ## X200-P0 livrables
 - **5 engines activés** (feature flag ON) : WILDLIFE_BEHAVIOR (CERF restauré), ECO_ZONES (20 salines hiérarchisées), HYDRO_TOPO (inversion hydro corrigée) + supports RESEAU_VEINEUX (5 niveaux V7) + BIO_SCORING (8-facteurs V7)

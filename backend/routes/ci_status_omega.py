@@ -70,7 +70,7 @@ SENTINEL_TEST_FILES = [
 ]
 
 EXPECTED_SENTINEL_COUNT = 65
-V30_SHA256 = "27516c9633853974fbb5754f4698a227bf39346e94f274889d4b4ee0398f7e4c"
+V30_SHA256 = "027712696407882fb41e34b0325e1f2b8dacb9082a860146659dc7650e6c8fc3"
 
 
 def _count_sentinels() -> dict:
@@ -225,22 +225,32 @@ def _build_status() -> dict:
     fallbacks = _fallback_scan()
     runtime = _runtime_beacon_status()
 
+    # X200-P1 — Audit engines continu (ZERO-DOUBLON-Ω + flags + V30)
+    try:
+        import sys as _sys
+        _sys.path.insert(0, "/app/backend/tools")
+        from audit_engines_x199_x200 import run_audit
+        audit = run_audit()
+    except Exception as e:
+        audit = {"overall_ok": False, "error": str(e)}
+
     all_green = (
         sentinels["tests_declared_total"] >= EXPECTED_SENTINEL_COUNT
         and hook["active"]
         and v30["intact"]
         and fallbacks["status"] == "CLEAN"
         and runtime["conforming"]
+        and bool(audit.get("overall_ok"))
     )
 
     return {
-        "version": "CI_STATUS_Ω_X150_SUPRA_ARCHITECTONIQUE",
+        "version": "CI_STATUS_Ω_X200_P1_PREVIEW",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "overall_status": "OK" if all_green else "ATTENTION",
         "overall_conforming": all_green,
         "pipeline": {
             "single_pipeline_enforced": True,
-            "protocol": "VERSION_X150_SUPRA_ARCHITECTONIQUE_Ω",
+            "protocol": "VERSION_X200_P1_PREVIEW_ET_PREPARATION_Ω",
         },
         "sentinels_jest": sentinels,
         "pre_commit_hook": hook,
@@ -248,6 +258,14 @@ def _build_status() -> dict:
         "freeze_state": freeze,
         "fallback_scan": fallbacks,
         "runtime_beacon": runtime,
+        "engines_audit_x199_x200": {
+            "overall_ok": bool(audit.get("overall_ok")),
+            "v30_integrity_ok": audit.get("gates", {}).get("v30_integrity", {}).get("ok"),
+            "feature_flags_ok": audit.get("gates", {}).get("feature_flags", {}).get("ok"),
+            "zero_doublon_ok":  audit.get("gates", {}).get("zero_doublon_omega", {}).get("ok"),
+            "flag_violations":  audit.get("gates", {}).get("feature_flags", {}).get("violations", []),
+            "legacy_leaked":    audit.get("gates", {}).get("zero_doublon_omega", {}).get("leaked_legacy_routers", []),
+        },
         "zero_tolerance": {
             "raw_render_attempts": "monitored via window.__RAW_RENDER_ATTEMPTS__",
             "anthropic_render_failures": "monitored via window.__ANTHROPIC_RENDER_FAILURES__",
