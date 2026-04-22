@@ -1085,6 +1085,14 @@ try:
 except Exception as e:
     logger.warning(f"DIFF_MATRIX router not loaded: {e}")
 
+# CATALOGUE_ENGINES_BIONIC — téléchargement HTTPS public
+try:
+    from routes.catalogue_engines_router import router as catalogue_engines_router
+    app.include_router(catalogue_engines_router)
+    logger.info("✓ CATALOGUE_ENGINES_BIONIC active (/api/catalogue-engines/*)")
+except Exception as e:
+    logger.warning(f"CATALOGUE_ENGINES router not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")
