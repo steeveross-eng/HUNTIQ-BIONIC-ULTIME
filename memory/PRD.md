@@ -1,86 +1,52 @@
-# PRD — BIONIC OS V20-SUPRA (Protocole BCE-4X ULTIME ABSOLU)
+# PRD — BIONIC OS V20-SUPRA / TERRITOIRE
+## Last updated : 2026-04-22 — PHASE_XI_SUPRA_CORRIDORS_REPAIR_Ω (X180-AMENDEMENT-FINAL) CLOS
 
-## Problème initial
-Le COMMANDANT STEEVE-MAX a ordonné l'exécution séquentielle de directives
-militaires visant à verrouiller l'architecture BIONIC OS V20-SUPRA
-(41 moteurs institutionnels, 5 piliers, carte Leaflet biomimétique).
-Toute modification doit être tracée, testée via Jest/bash/python
-et conforme au registre SHA-256 `registry_lock_omega.py` (V30).
+## Protocol
+BCE-4X ULTIME ABSOLU — COMMANDANT STEEVE-MAX
+Language : FR. Persona : formel, martial, institutionnel.
+Aucun testing subagent autorisé.
+Waypoint canonique exclusif : **48.206657 / -68.382422**
+Registre V30 SHA-256 verrouillé : `27516c9633853974fbb5754f4698a227bf39346e94f274889d4b4ee0398f7e4c`
 
-## Contraintes absolues
-- ❌ Aucun sous-agent de test (`testing_agent_v3_fork` strictement interdit)
-- ❌ Aucune modification de `registry_lock_omega.py` ni `self_audit_omega.py`
-- ❌ Aucune modification des 41 moteurs verrouillés
-- ✅ Persona militaire française (TOP-ABSOLU) obligatoire
-- ✅ Tests Jest sentinelles + hook Git `pre-commit` obligatoires
-- ✅ Pipeline de rendu UNIQUE (Ω filtré) — rendus bruts bloqués
+## Architecture canonique
+- Backend FastAPI (V30 LOCKED) + post_smoothing externe `organic_corridor_smoother.py`
+- Frontend React + Leaflet (`BionicLayersV8.jsx`, `renduOmegaStore.js`)
+- CI_STATUS_Ω runtime dashboard (`routes/ci_status_omega.py`, 6 suites / 65 tests sentinelles)
 
-## Architecture clé
-```
-/app
-├── backend/
-│   ├── engines/v8_institutional/ (V30 — figé)
-│   ├── engines/v8_national/ (phase_b/c — métadonnées canopy/impervious)
-│   └── routes/ci_status_omega.py (CI_STATUS_Ω — lecture seule)
-├── frontend/
-│   └── src/
-│       ├── components/territoire/ (40+ composants)
-│       ├── lib/renduOmegaStore.js (pipeline unique + guards)
-│       └── lib/__tests__/*.test.js (57 sentinelles Jest)
-├── scripts/git_hooks/pre-commit (Jest sentinels obligatoires)
-└── memory/ (rapports + état de verrouillage + plans gouvernance)
-```
+## Phases complétées
+| Phase | Statut |
+| --- | --- |
+| X20 / X30 PIPELINE_AUDIT | DONE |
+| X40 OPS_RESTORATION (zones 404) | DONE |
+| X50 OPS_REFUS_VALIDATION (wind, nutrition, popups) | DONE |
+| X70 SUPRA_VENT_VISUEL (compass + cone) | DONE |
+| X80 SUPRA_VERITE_TERRAIN (waypoint officiel + probes) | DONE |
+| X120 SUPRA_RENDU_TERRITOIRE (contamination #FF0000 0.18, popups) | DONE |
+| X150 / X170 CORRIDORS_RENDU + REPAIR frontend | DONE |
+| **X180 CORRIDORS_REPAIR AMENDEMENT-FINAL** | **DONE (2026-04-22)** |
 
-## Phases livrées (Changelog)
-- **2026-04** `PHASE_XII_SUPRA_S_ACTIVATION_EN_PRODUCTION` — V30 scellé
-- **2026-04** `MODE INSPECTION BIOLOGIQUE PRO/EXPERT` — UI panneaux bio
-- **2026-04** `PHASE_INSPECTION_BIO_GEOMETRY_BINDING` — Panes Leaflet
-- **2026-04** `PHASE_INSPECTION_BIO_FILTERING_Ω` — 4 filtres Ω stricts
-- **2026-04** `PHASE_NUTRITION_SALINES_BINDING_Ω` — dblclick `NutritionPanelOmega`
-- **2026-04** `PHASE_XII_SUPRA_M — IMPLANTATION_X1000` — densification metadata
-- **2026-04** `PHASE_XIII_RECALCUL_ORGANIC_Ω` — recalcul zones/corridors
-- **2026-04** `PHASE_XIV_CRITICAL_FUNCTIONAL_PARITY_Ω` — UI bindings + sentinelles
-- **2026-04** `PHASE_XV_CONTAMINATION_PARITY_CI_LOCK_Ω` — hook `pre-commit` CI
-- **2026-04-21** `PHASE_XVI_ENFORCE_SINGLE_PIPELINE_Ω` — pipeline unique + 20 sentinelles X20 — **57/57 Jest PASS**
-- **2026-04-21** `PHASE_ZERO_PLUS_CONSOLIDATION_GOUVERNANCE_Ω` (X30) — freeze + audit + 4 plans gouvernance + CI_STATUS_Ω dashboard + PHASE_LOCK_GATE
-- **2026-04-21** `PHASE_ZERO_OPS_RESTORATION_Ω` (X40) — unification pipeline zones V20 bundle (redirection `_fetchOrganicZonesV2`)
-- **2026-04-21** `PHASE_ZERO_OPS_REFUS_VALIDATION_Ω` (X50) — 4 correctifs P0 : VENT rendu V20 · nutrition-saline strict · listeners click (zones/affûts/hotspots/vent) · CI_STATUS runtime beacon
-- **2026-04-21** `PHASE_XI_SUPRA_VERITE_TERRAIN_Ω` (X80-ABSOLU-Ω) — VENT refondu (COMPASS hors-carte + cône olfactif blanc + particules Ventusky gris), corridors popup, 9 probes runtime multi-couches (waypoint officiel 48.206657/-68.382422 vérifié côté backend)
-- **2026-04-21** `PHASE_XI_SUPRA_RENDU_TERRITOIRE_Ω` (X120-SUPRA-CANONIQUE-Ω) — Canon suprême : contamination_v2 double-contour opacité 0.18, popups enrichis (force/faiblesse/optim/source) pour zones/corridors/affûts/hotspots/cône vent/contamination, capture unique signée SHA-256 archivée `/app/memory/captures/`
-- **2026-04-21** `PHASE_XI_SUPRA_CORRIDORS_RENDUΩ` (X150-SUPRA-ARCHITECTONIQUE-Ω) — Ingestion des 13 normes RENDU Ω CORRIDORS (document Commandant), compilation en 12 probes runtime, correction `weightsAllowedPx` strict [1.2,2.0,3.0], gate RED auto si X150 violé, capture signée `9b4c25df1ea314...ddd4c2ec`
-- **2026-04-21** `PHASE_XI_SUPRA_CORRIDORS_REPAIR_Ω` (X170-SUPRA-BIOLOGIE-GÉOMÉTRIE-Ω) — Correction chirurgicale frontend : `trimProblematicTail` + `smoothAngleViolations` + passes `despikePath` 3→8→20, élimine artéfacts organic (angles 172°→<45°). 38 corridors `#FF8F00` rendus vs 0. Backend V30 intact. Capture `268852a9ba8...223c52d7`
+## X180 livrables
+- Test Jest `phase_x170_corridors_biologie.test.js` : **8/8 PASS** (triple pipeline + constantes RENDU-Ω)
+- Suite sentinelle globale : **65/65 PASS**, 6 suites
+- `organic_corridor_smoother.py` AMENDEMENT-FINAL :
+  - 9 passes (trim / smooth / despike / eliminate_fuite / segment_max / eco_alignment / ia_attractors / re-smooth / re-densify)
+  - 5 profils espèces (chevreuil/orignal/wapiti/ours/dindon) avec angle_max, segment_max, water_tolerance, slope_max, human_avoidance
+  - 6 types zones vitales (salines, alimentation, repos, rut, thermique, humide)
+  - Endpoint `/smoother-status` institutionnel
+- Conformité mesurée waypoint officiel : angle **27.04°** / segment **8.95 m** / zéro demi-tour
+- CI_STATUS_Ω mis à jour (6 suites, 65 tests)
+- Rapport PEDIGREE `/app/memory/PEDIGREE_DONNEES_X180.md` (DEM LiDAR, EarthData Hydro, ForestDensity, MicroRelief, IA Vision, species_profile, cartes coût/probabilité/attractivité)
 
-## Statut testing
-- Jest sentinelles : **5 suites / 57 tests / 57 PASS**
-- Hook `pre-commit` : ACTIF (Jest obligatoires avant commit TERRITOIRE)
-- Self-audit Ω : 56/60 (4 flakinesses Playwright visual_live — acceptées)
-- CI_STATUS_Ω : **GREEN** (`/api/omega/ci-status/gate`)
+## Backlog (attente directive)
+- P1 : validation utilisateur visuelle corridors avec couche CORRIDORS active à zoom ≥ 13 sur waypoint officiel
+- P2 : tests Pytest backend dédiés au smoother (passes 1-8) pour verrou institutionnel
 
-## Gouvernance consolidée (livrables X30)
-- `/app/memory/FREEZE_TERRITOIRE_Ω.md` — freeze actif
-- `/app/memory/PHASE_ZERO_AUDIT_REPORT_Ω.md` — audit signé
-- `/app/memory/PLAN_STABILISATION_Ω.md`
-- `/app/memory/PLAN_MAINTENANCE_Ω.md`
-- `/app/memory/PLAN_PREVENTION_REGRESSION_Ω.md`
-- `/app/memory/PLAN_GOUVERNANCE_TECHNIQUE_Ω.md`
-- `/app/memory/SECURITIES_RELOCK_PHASE_ZERO_Ω.md`
-- `/app/memory/PHASE_LOCK_GATE_Ω.md` (barrière FERMÉE)
-- `/app/backend/routes/ci_status_omega.py` (dashboard live)
+## Tests
+- Jest via `craco test` : 6/6 suites, 65/65 tests verts
+- Backend `curl /api/v20/territoire/corridors-organic/generate` → HTTP 200, smoother_applied OK
+- `curl /api/omega/ci-status` → 6 suites détectées, sentinelles alignées
 
-## Backlog
-- **P0** : En attente — ordre explicite du Commandant pour lever `PHASE_LOCK_GATE_Ω`
-- **P2** : Upload manuel `CriticalHabitat.zip` (contournement pare-feu)
-
-## Persona
-Tous échanges en français militaire, formel, procédural.
-Ouverture obligatoire :
-`PROTOCOLE BCE-4X ULTIME ABSOLU — TOP-ABSOLU — DIRECTIVE REÇUE, COMMANDANT STEEVE-MAX.`
-
-## Credentials
-- Admin : `steeve-max-capture@huntiq.com` / `Saturn5858*`
-
-## Endpoints institutionnels clés
-- `GET /api/omega/ci-status` — JSON complet
-- `GET /api/omega/ci-status/summary` — texte institutionnel
-- `GET /api/omega/ci-status/gate` — GREEN/RED
-- `GET /api/v8/audit/engines-report` — rapport audit
+## Contrats verrouillés
+- Engine V30 : aucune mutation
+- Post-processeur externe : registration AVANT `engine_ia_corridors_organic_omega.router` (priorité FastAPI first-match)
+- Non-régression : en l'absence de signaux terrain/IA, path inchangé hors géométrie RENDU-Ω

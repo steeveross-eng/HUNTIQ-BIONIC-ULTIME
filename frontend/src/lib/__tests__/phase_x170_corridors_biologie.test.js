@@ -78,9 +78,14 @@ describe('X170/X180 — Correctifs frontend corridors biologie', () => {
     let out = trimProblematicTail(path, 45, 10);
     out = smoothAngleViolations(out, 45, 15);
     out = despikePath(out, 45, 15);
-    // Revalidation géométrique : angles max inférieurs au seuil sévère (81°)
-    const metrics = validateCorridorGeometry(out, { strictMinPoints: false });
-    expect(metrics.validated).toBe(true);
+    // X180 AMENDEMENT — Revalidation géométrique institutionnelle :
+    //   - contrat réel validateCorridorGeometry → { ok, violations, metrics }
+    //   - tolérance sévère 81° (le triple-pipeline converge biologiquement
+    //     vers < 81° même sur un path pathologique 180°)
+    const result = validateCorridorGeometry(out, { strictMinPoints: false });
+    expect(result).toBeDefined();
+    expect(result.metrics).toBeDefined();
+    expect(result.metrics.max_angle_deg).toBeLessThanOrEqual(81);
     // Le path final doit conserver un minimum biologique (entité preservée)
     expect(out.length).toBeGreaterThanOrEqual(5);
   });

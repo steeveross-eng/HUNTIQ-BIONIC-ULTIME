@@ -66,9 +66,10 @@ SENTINEL_TEST_FILES = [
     "phase_xiv_functional_parity.test.js",
     "phase_xv_contamination_parity.test.js",
     "phase_xvi_enforce_single_pipeline.test.js",
+    "phase_x170_corridors_biologie.test.js",
 ]
 
-EXPECTED_SENTINEL_COUNT = 57
+EXPECTED_SENTINEL_COUNT = 65
 V30_SHA256 = "27516c9633853974fbb5754f4698a227bf39346e94f274889d4b4ee0398f7e4c"
 
 
