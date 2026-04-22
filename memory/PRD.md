@@ -27,7 +27,19 @@ Registre V30 SHA-256 verrouillé : `27516c9633853974fbb5754f4698a227bf39346e94f2
 | X195 RAPATRIEMENT_TERRITOIRE_V7_ULTIME AMENDEMENT-ABSOLU | DONE (2026-04-22) |
 | X197 COMPARATIF_TERRITOIRE_Ω AMENDEMENT-ABSOLU | DONE (2026-04-22) |
 | X198 ENGINES_OPTIMISATION_Ω AMENDEMENT-ABSOLU | DONE (2026-04-22) |
-| **X199 VALIDATION_ENGINES_Ω AMENDEMENT-ABSOLU** | **DONE (2026-04-22)** |
+| X199 VALIDATION_ENGINES_Ω AMENDEMENT-ABSOLU | DONE (2026-04-22) |
+| **X200-P0 ACTIVATION V31_CORE_PREPARATOIRE_Ω** | **DONE (2026-04-22)** |
+
+## X200-P0 livrables
+- **5 engines activés** (feature flag ON) : WILDLIFE_BEHAVIOR (CERF restauré), ECO_ZONES (20 salines hiérarchisées), HYDRO_TOPO (inversion hydro corrigée) + supports RESEAU_VEINEUX (5 niveaux V7) + BIO_SCORING (8-facteurs V7)
+- **5 engines étendus** restent OFF (ecoforestry, terrain_3d, legal_time, predictive, advanced_geospatial)
+- **Sources V7 restaurées** : species_profiles, classifier, scoring 8-facteurs (corridors_v10) + salines_ultime_engine + nutrition_engine_v7 + terrainBoosts
+- **Inversion hydro CORRIGÉE** : passage du modèle répulsif X180 au modèle attractif V7 pondéré par `affinite_hydro` par espèce (bonus < 150m)
+- **Audit continu** : `/app/backend/tools/audit_engines_x199_x200.py` (3 gates : V30 integrity, feature flags, ZERO-DOUBLON-Ω) — tous verts
+- **Rapport institutionnel** : `/app/memory/RAPPORT_X200_P0_ACTIVATION_Ω.md` (SHA-256 `09dee83a1cc4143c…`)
+- **Endpoints publics** : `/api/v7-ultime/{wildlife-behavior,eco-zones,hydro-topo,reseau-veineux,bio-scoring}/*` (12 routes)
+- **Tests** : 65/65 Pytest backend + 65/65 Jest frontend = 130/130 verts
+- **V30 intact** : SHA-256 `027712696407882fb41e34b0325e1f2b8dacb9082a860146659dc7650e6c8fc3` inchangé
 
 ## X199 livrables
 - **Scaffolder** : `/app/backend/tools/scaffold_engines_cibles.py` (idempotent, dry-run supporté)

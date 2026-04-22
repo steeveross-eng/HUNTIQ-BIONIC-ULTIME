@@ -1093,6 +1093,23 @@ try:
 except Exception as e:
     logger.warning(f"CATALOGUE_ENGINES router not loaded: {e}")
 
+# ═══ X200 P0 ACTIVATION — V31_CORE_PREPARATOIRE_Ω ═══
+# Ordre COMMANDANT STEEVE-MAX : activation des 5 engines P0
+# (wildlife_behavior, eco_zones, hydro_topo + support reseau_veineux, bio_scoring)
+for _slug, _label in [
+    ("wildlife_behavior_omega", "ENGINE_WILDLIFE_BEHAVIOR_Ω (P0 #1 — CERF restauré)"),
+    ("eco_zones_omega",         "ENGINE_ECO_ZONES_Ω (P0 #2 — 20 salines hiérarchisées)"),
+    ("hydro_topo_omega",        "ENGINE_HYDRO_TOPO_Ω (P0 #3 — inversion hydro corrigée)"),
+    ("reseau_veineux_omega",    "ENGINE_RÉSEAU_VEINEUX_Ω (support — 5 niveaux V7)"),
+    ("bio_scoring_omega",       "ENGINE_BIO_SCORING_Ω (support — scoring 8-facteurs V7)"),
+]:
+    try:
+        _mod = __import__(f"engines.{_slug}", fromlist=["router"])
+        app.include_router(_mod.router)
+        logger.info(f"✓ X200-P0 active : {_label}")
+    except Exception as e:
+        logger.warning(f"X200-P0 {_slug} not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")
