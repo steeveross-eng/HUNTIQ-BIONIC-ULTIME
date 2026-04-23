@@ -210,17 +210,18 @@ def test_smooth_bundle_applies_x180_chain_to_externals(monkeypatch):
 
 
 # ─────────────────────────────────────────────────────────────────────
-# 8 — FLAGS P1 HISTORIQUES TOUJOURS OFF
+# 8 — FLAGS P1 HISTORIQUES — état post-X200-P1-ACTIVATION Ω
 # ─────────────────────────────────────────────────────────────────────
-def test_p1_historical_flags_remain_off():
+def test_p1_historical_flags_all_on():
+    """Post X200-P1-ACTIVATION : les 3 flags P1 (a/b/c) sont ON par directive."""
     from engines.post_smoothing.p1_preparation import (
         P1_FLAG_DENSITY_5_LEVELS_TO_SMOOTHER,
         P1_FLAG_ENFORCE_MIN_2_VITAL_ZONES,
         P1_FLAG_POST_V30_SCORING_8_FACTORS,
     )
-    assert P1_FLAG_DENSITY_5_LEVELS_TO_SMOOTHER is False
-    assert P1_FLAG_ENFORCE_MIN_2_VITAL_ZONES is False
-    assert P1_FLAG_POST_V30_SCORING_8_FACTORS is False
+    assert P1_FLAG_DENSITY_5_LEVELS_TO_SMOOTHER is True
+    assert P1_FLAG_ENFORCE_MIN_2_VITAL_ZONES is True
+    assert P1_FLAG_POST_V30_SCORING_8_FACTORS is True
 
 
 def test_p1_status_reports_p1_2_active(monkeypatch):
@@ -229,7 +230,8 @@ def test_p1_status_reports_p1_2_active(monkeypatch):
     st = p1_preparation_status()
     assert st["mode_p1_2"] == "ACTIVE"
     assert st["flag_p1_2_on"] is True
-    assert st["flags_p1_all_off"] is True
+    # P1 historique désormais ACTIF aussi (tous les flags ON)
+    assert st["flags_p1_all_on"] is True
     assert st["authorization_p1_2"]["authorized"] is True
     assert st["smoother_touched"] is True
     assert st["v30_engine_touched"] is False

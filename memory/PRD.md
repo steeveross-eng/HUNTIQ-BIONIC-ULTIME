@@ -52,15 +52,15 @@ BCE-4X ULTIME ABSOLU :
 
 ## Prioritized Backlog
 ### P0 — Aucun (phase actuelle scellée)
-### P1 — Sur ordre du Commandant
-- **PHASE X200-P1 (density / vital / scoring)** : activation séquencée des
-  3 flags historiques (token dédié `STEEVE-MAX-P1-EXPLICIT`).
-    a) `P1_FLAG_DENSITY_5_LEVELS_TO_SMOOTHER`
-    b) `P1_FLAG_ENFORCE_MIN_2_VITAL_ZONES`
-    c) `P1_FLAG_POST_V30_SCORING_8_FACTORS`
-- **PHASE X199-ACTIVATION** : Plan d'activation engine-par-engine des 5
-  engines étendus (`ecoforestry_omega`, `terrain_3d_omega`,
-  `legal_time_omega`, `predictive_omega`, `advanced_geospatial_omega`).
+### P1 — Phase P1 COMPLÈTE (activation terminée ✅)
+### P2 — Sur ordre du Commandant
+- **PHASE X199-ACTIVATION** : activation engine-par-engine des 5 moteurs
+  OFF selon l'ordre institutionnel optimal :
+    1. `ecoforestry_omega` (racine, sans dépendance)
+    2. `advanced_geospatial_omega` (dépend #1)
+    3. `terrain_3d_omega` (dépend #2)
+    4. `legal_time_omega` (racine, sans dépendance)
+    5. `predictive_omega` (dépend #1, #2, #3, #4)
 
 ### P2 — Backlog institutionnel
 - Extension `runtime_beacon.conforming` live frontend (nécessite directive
@@ -86,6 +86,25 @@ BCE-4X ULTIME ABSOLU :
 
 ## Endpoints clés (read-only Ω)
 - `GET /api/v7-ultime-export/download`
+- `GET /api/v7-vs-actuel/diff-matrix`
+- `GET /api/catalogue-engines/download`
+- `GET /api/v7-ultime/corridor-pipeline-preview`
+- `GET /api/v7-ultime/reseau-veineux/external-inflow/geojson`
+- `GET /api/omega/ci-status` (dashboard Ω)
+
+## Testing Policy
+- Aucun `testing_agent_v3_fork`.
+- Pytest ciblé : `backend/tests/test_external_inflow_x200_p1.py`,
+  `backend/tests/test_engines_x199_scaffold.py`.
+- Jest : 65/65 attendu (suite historique verte).
+- Curl vers `REACT_APP_BACKEND_URL` pour validation E2E.
+
+## Garde-fous
+- V30 LOCKED immuable.
+- DIAGNOSTIC-CORRIDORS-Ω interdit.
+- Aucun refactoring non sanctionné.
+- Toute activation nouvelle exige ORDRE DIRECT du COMMANDANT.
+-ultime-export/download`
 - `GET /api/v7-vs-actuel/diff-matrix`
 - `GET /api/catalogue-engines/download`
 - `GET /api/v7-ultime/corridor-pipeline-preview`

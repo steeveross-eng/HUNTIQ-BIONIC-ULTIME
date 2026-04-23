@@ -589,6 +589,22 @@ def smooth_bundle(bundle: Dict[str, Any]) -> Dict[str, Any]:
     bundle["smoother_p1_2_external_inflow_integrated"] = (
         bundle.get("external_inflow_integration", {}).get("status") == "APPLIED"
     )
+
+    # ═══════════════════════════════════════════════════════════════════
+    # HOOK P1-ACTIVATION — SÉQUENCE a/b/c POST-LISSAGE (ORDRE COMMANDANT)
+    # ═══════════════════════════════════════════════════════════════════
+    # No-op si les 3 flags P1 ou le token historique ne sont pas OK.
+    # Enrichit chaque corridor avec : post_v30_bio_score_0_100 (c),
+    # level_v7 / weight_px_v7 / color_hex_v7 / largeur_m_v7 (a),
+    # rejected_by_p1 / p1_rejection_reason (b).
+    try:
+        from engines.post_smoothing.p1_preparation import apply_p1_suite_to_bundle
+        bundle = apply_p1_suite_to_bundle(bundle)
+    except Exception as _e:  # pragma: no cover — sécurité institutionnelle
+        bundle.setdefault("p1_activation", {"status": "ERROR", "error": str(_e)})
+    bundle["smoother_p1_activation_applied"] = (
+        bundle.get("p1_activation", {}).get("status") == "APPLIED"
+    )
     bundle["smoother_rendu_omega"] = {
         "color": COLOR_INSTITUTIONAL,
         "weights_allowed_px": [WEIGHT_FAIBLE_PX, WEIGHT_FORT_PX, WEIGHT_CRITIQUE_PX],

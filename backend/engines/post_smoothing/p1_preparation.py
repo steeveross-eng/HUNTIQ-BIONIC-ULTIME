@@ -30,11 +30,11 @@ import os
 from typing import Any, Dict, List, Optional
 
 # ═══════════════════════════════════════════════════════════════════════
-# FEATURE FLAGS P1 — STRICTEMENT OFF
+# FEATURE FLAGS P1 — ACTIVÉS (X200-P1-ACTIVATION Ω — a/b/c)
 # ═══════════════════════════════════════════════════════════════════════
-P1_FLAG_DENSITY_5_LEVELS_TO_SMOOTHER: bool = False
-P1_FLAG_ENFORCE_MIN_2_VITAL_ZONES:    bool = False
-P1_FLAG_POST_V30_SCORING_8_FACTORS:   bool = False
+P1_FLAG_DENSITY_5_LEVELS_TO_SMOOTHER: bool = True
+P1_FLAG_ENFORCE_MIN_2_VITAL_ZONES:    bool = True
+P1_FLAG_POST_V30_SCORING_8_FACTORS:   bool = True
 
 # ═══════════════════════════════════════════════════════════════════════
 # FLAG P1.2 — EXTERNAL INFLOW → SMOOTHER X180 — ACTIVÉ (X200-P1.2)
@@ -48,13 +48,22 @@ EXPECTED_TOKEN_P1_2 = "STEEVE-MAX-P1-EXTERNAL-INFLOW"
 def is_p1_activation_authorized() -> Dict[str, Any]:
     """Autorisation pour les 3 flags P1 historiques (density / vital / scoring).
 
-    Nécessite token distinct `STEEVE-MAX-P1-EXPLICIT` afin d'empêcher toute
-    promotion silencieuse par la chaîne EXTERNAL_INFLOW.
+    Triple verrou :
+      1. Au moins un des 3 flags P1 à True
+      2. env `P1_ACTIVATION_AUTHORIZED_BY_COMMANDANT=true`
+      3. token `STEEVE-MAX-P1-EXPLICIT` lu depuis
+         - `P1_HISTORICAL_COMMANDANT_TOKEN` (canonique, coexiste avec P1.2)
+         - ou rétrocompat : `P1_COMMANDANT_TOKEN` si ce dernier vaut `EXPECTED_TOKEN_P1`
     """
     env_authorized = os.environ.get(
         "P1_ACTIVATION_AUTHORIZED_BY_COMMANDANT", ""
     ).strip().lower() == "true"
-    token_ok = os.environ.get("P1_COMMANDANT_TOKEN", "") == EXPECTED_TOKEN_P1
+    token_hist = os.environ.get("P1_HISTORICAL_COMMANDANT_TOKEN", "")
+    token_legacy = os.environ.get("P1_COMMANDANT_TOKEN", "")
+    token_ok = (
+        token_hist == EXPECTED_TOKEN_P1
+        or token_legacy == EXPECTED_TOKEN_P1
+    )
     return {
         "authorized": env_authorized and token_ok,
         "env_authorized": env_authorized,
@@ -141,6 +150,127 @@ def draft_apply_post_v30_scoring(corridor: Dict[str, Any],
     out["post_v30_bio_score_0_100"] = res["score_0_100"]
     out["post_v30_scoring_applied"] = True
     return out
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# SECTION P1-ACTIVATION — APPLICATION SÉQUENCÉE a/b/c SUR UN BUNDLE
+# ═══════════════════════════════════════════════════════════════════════
+def _derive_subscores_from_corridor(corridor: Dict[str, Any]) -> Dict[str, float]:
+    """Dérive des subscores 8-facteurs depuis les métadonnées smoother X180.
+
+    Heuristique institutionnelle (read-only) :
+      - canopy : déduit `forest_cover` si présent, sinon 0.6 par défaut
+      - food_refuge : nombre de vital zones connectées (normalisé)
+      - topo_hydro : 1 - (max_segment_m / 40) — lissage implicite
+      - pressure_human : 0.8 par défaut (zone hors route)
+      - ecl : weight (poids directionnel) si issu de EXTERNAL_INFLOW
+      - cost : 0.7 par défaut (post-densification)
+      - regeneration : 0.5 par défaut
+      - n_cells : longueur path
+    """
+    vzc = len(corridor.get("vital_zone_connections") or [])
+    metrics = corridor.get("smoothing_metrics") or {}
+    path = corridor.get("path") or corridor.get("polyline") or []
+    return {
+        "ecl":            float(corridor.get("entry_node_weight", corridor.get("weight", 0.6))) if isinstance(corridor.get("entry_node_weight", corridor.get("weight", 0.6)), (int, float)) else 0.6,
+        "canopy":         float(corridor.get("forest_cover", 0.65)),
+        "pressure_human": float(corridor.get("pressure_human", 0.8)),
+        "food_refuge":    min(1.0, vzc / 3.0) if vzc else 0.4,
+        "topo_hydro":     max(0.0, min(1.0, 1.0 - (metrics.get("max_segment_m", 20.0) / 40.0))),
+        "regeneration":   float(corridor.get("regeneration", 0.5)),
+        "cost":           float(corridor.get("cost", 0.7)),
+        "from_type":      corridor.get("target_id") or "unknown",
+        "to_type":        corridor.get("source") or "internal",
+        "n_cells":        len(path),
+    }
+
+
+def apply_p1_suite_to_corridor(corridor: Dict[str, Any]) -> Dict[str, Any]:
+    """Applique les 3 flags P1 (c → a → b) à un unique corridor lissé.
+
+    Ordre institutionnel Ω :
+      1. (c) post_v30_scoring_8_factors → produit `post_v30_bio_score_0_100`
+      2. (a) density_5_levels_to_smoother → classe par score V7 5 niveaux
+      3. (b) enforce_min_2_vital_zones    → marque `rejected_by_p1` si < 2
+    """
+    out = dict(corridor)
+
+    # (c) Scoring post-V30 — nécessaire en premier pour alimenter (a)
+    if P1_FLAG_POST_V30_SCORING_8_FACTORS and is_p1_activation_authorized()["authorized"]:
+        subs = out.get("subscores") or _derive_subscores_from_corridor(out)
+        out = draft_apply_post_v30_scoring(out, subs)
+
+    # (a) Densité 5 niveaux V7 — classe le corridor selon score obtenu
+    bio_score = out.get("post_v30_bio_score_0_100")
+    if bio_score is None:
+        # Fallback : utiliser `score` du niveau COMMANDANT si issu EXTERNAL_INFLOW
+        bio_score = float(out.get("score", 0))
+    out = draft_enrich_corridor_with_hierarchy(out, float(bio_score))
+
+    # (b) Enforce ≥ 2 zones vitales
+    out = draft_enforce_min_2_vital_zones(out)
+
+    return out
+
+
+def apply_p1_suite_to_bundle(bundle: Dict[str, Any]) -> Dict[str, Any]:
+    """Applique la séquence P1 a/b/c sur tous les corridors post-smoother.
+
+    Non destructif : no-op complet si P1 non autorisé.
+    Produit un diagnostic `p1_activation` dans le bundle.
+    """
+    if not isinstance(bundle, dict):
+        return bundle
+    auth = is_p1_activation_authorized()
+    if not auth["authorized"]:
+        bundle["p1_activation"] = {
+            "status": "BYPASSED",
+            "reason": "P1_NOT_AUTHORIZED",
+            "authorization": auth,
+        }
+        return bundle
+
+    total = 0
+    rejected = 0
+    scored = 0
+    classified = 0
+    by_level: Dict[str, int] = {}
+
+    for key in ("corridors", "main_veins", "corridors_organic", "veines_principales"):
+        arr = bundle.get(key)
+        if not isinstance(arr, list):
+            continue
+        new_arr = []
+        for c in arr:
+            total += 1
+            cc = apply_p1_suite_to_corridor(c)
+            if cc.get("post_v30_scoring_applied"):
+                scored += 1
+            lvl = cc.get("level_v7")
+            if lvl:
+                classified += 1
+                by_level[lvl] = by_level.get(lvl, 0) + 1
+            if cc.get("rejected_by_p1"):
+                rejected += 1
+            new_arr.append(cc)
+        bundle[key] = new_arr
+
+    bundle["p1_activation"] = {
+        "status": "APPLIED",
+        "phase": "X200_P1_ACTIVATION_Ω",
+        "authorization": auth,
+        "sequence": ["c_post_v30_scoring", "a_density_5_levels", "b_enforce_min_2_vital"],
+        "totals": {
+            "corridors_processed": total,
+            "post_v30_scored":     scored,
+            "v7_classified":       classified,
+            "rejected_min_2_vital": rejected,
+        },
+        "density_5_levels_distribution": by_level,
+        "v30_engine_touched": False,
+        "smoother_touched_only": True,
+    }
+    return bundle
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -346,24 +476,29 @@ def draft_external_inflow_to_smoother(bundle: Dict[str, Any],
 # ═══════════════════════════════════════════════════════════════════════
 def p1_preparation_status() -> Dict[str, Any]:
     return {
-        "phase": "X200-P1.2-SMOOTHER-INTEGRATION-Ω",
-        "mode_p1": "BROUILLON",
+        "phase": "X200-P1-ACTIVATION-Ω",
+        "mode_p1":   "ACTIVE" if (
+            P1_FLAG_DENSITY_5_LEVELS_TO_SMOOTHER
+            and P1_FLAG_ENFORCE_MIN_2_VITAL_ZONES
+            and P1_FLAG_POST_V30_SCORING_8_FACTORS
+        ) else "PARTIAL/OFF",
         "mode_p1_2": "ACTIVE" if P1_2_FLAG_EXTERNAL_INFLOW_TO_SMOOTHER else "OFF",
-        "flags_p1_all_off": (
-            not P1_FLAG_DENSITY_5_LEVELS_TO_SMOOTHER
-            and not P1_FLAG_ENFORCE_MIN_2_VITAL_ZONES
-            and not P1_FLAG_POST_V30_SCORING_8_FACTORS
+        "flags_p1_all_on": (
+            P1_FLAG_DENSITY_5_LEVELS_TO_SMOOTHER
+            and P1_FLAG_ENFORCE_MIN_2_VITAL_ZONES
+            and P1_FLAG_POST_V30_SCORING_8_FACTORS
         ),
         "flag_p1_2_on": P1_2_FLAG_EXTERNAL_INFLOW_TO_SMOOTHER,
         "authorization_p1":   is_p1_activation_authorized(),
         "authorization_p1_2": is_p1_2_activation_authorized(),
-        "behaviors_documented": [
-            "density_5_levels_to_smoother",      # P1 — OFF
-            "enforce_min_2_vital_zones",         # P1 — OFF
-            "post_v30_scoring_8_factors",        # P1 — OFF
+        "sequence_activated": ["a_density_5_levels", "b_enforce_min_2_vital", "c_post_v30_scoring"],
+        "behaviors_active": [
+            "density_5_levels_to_smoother",      # P1 — ACTIVE (a)
+            "enforce_min_2_vital_zones",         # P1 — ACTIVE (b)
+            "post_v30_scoring_8_factors",        # P1 — ACTIVE (c)
             "external_inflow_to_smoother_x180",  # P1.2 — ACTIVE
         ],
-        "smoother_touched": True,                # P1.2 branché
-        "v30_engine_touched": False,             # V30 INTANGIBLE
-        "rendu_out_of_smoother_modified": False, # zones/salines non modifiées
+        "smoother_touched": True,
+        "v30_engine_touched": False,
+        "rendu_out_of_smoother_modified": False,
     }
