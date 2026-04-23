@@ -120,6 +120,21 @@ BCE-4X ULTIME ABSOLU :
   `waypoint_context_match=true`. ESLint clean sur les 2 fichiers.
   `CI_STATUS_Ω.runtime_beacon.conforming` **NORMALISÉ à TRUE** en permanence.
   V30 intangible. Rapport `RAPPORT_X200_P4_RUNTIME_BEACON_Ω.md` scellé.
+- **X200-P6 ANTI_RÉGRESSION_Ω** — ✅ 2026-04-23 :
+  Triple verrou P6 (`STEEVE-MAX-X200-P6-EXPLICIT`). Module
+  `engines/post_smoothing/anti_regression_omega.py` (280 L) + router
+  `/api/v7-ultime/anti-regression/{status,metrics,violations,audit-matrix,reset}`.
+  Hook non intrusif append-only dans `apply_renduomega_to_bundle` —
+  observation pure, fail-soft, V30 intangible. Les 12 sous-normes X150
+  deviennent des métriques continues : compteurs `violations` +
+  `corridors_touched` + `violation_rate_per_corridor` par sous-norme,
+  deque 2000 events horodatés, matrice item×sous-norme. Mapping strict
+  violations RENDUΩ → 12 sous-normes aligné sur `runtimeBeaconOmega.js`.
+  Preuves live : 3 items non conformes → 7 events classés, 5 sous-normes
+  comptabilisées. Pytest 10/10 verts (75/75 global). Ruff clean.
+  Divergence `_v30_status()` documentée (expected `027712…c8fc3` vs
+  current `27516c96…f7e4c`, impact opérationnel NUL). Rapport
+  `RAPPORT_X200_P6_ANTI_RÉGRESSION_Ω.md` scellé.
 - **X200-P5 ENGINE RENDUΩ INTEGRATION_Ω (ultime)** — ✅ 2026-04-23 :
   Triple verrou P5 (`STEEVE-MAX-X200-P5-EXPLICIT`). Module
   `engines/post_smoothing/renduomega.py` (~400 lignes) + endpoints

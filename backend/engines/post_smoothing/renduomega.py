@@ -555,6 +555,15 @@ def apply_renduomega_to_bundle(bundle: Dict[str, Any]) -> Dict[str, Any]:
         )
         c_out = dict(c_in)
         c_out["renduomega"] = verdict
+        # PHASE_X200_P6_ANTI_RÉGRESSION_Ω — observation non intrusive
+        try:
+            from engines.post_smoothing import anti_regression_omega as _ar
+            _ar.record_corridor_verdict(
+                c_in, verdict,
+                bundle_context={"lat": c_lat, "lng": c_lng},
+            )
+        except Exception:
+            pass
         if verdict["accepted"]:
             # Application des attributs de rendu normalisés au niveau corridor
             r = verdict["render"]
@@ -595,4 +604,10 @@ def apply_renduomega_to_bundle(bundle: Dict[str, Any]) -> Dict[str, Any]:
         "zones_or_salines_modified": False,
     }
     bundle["smoother_p5_renduomega_applied"] = True
+    # PHASE_X200_P6 — snapshot bundle (fail-soft)
+    try:
+        from engines.post_smoothing import anti_regression_omega as _ar
+        _ar.record_bundle_summary(bundle)
+    except Exception:
+        pass
     return bundle

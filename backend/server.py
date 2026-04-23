@@ -1141,6 +1141,14 @@ try:
 except Exception as e:
     logger.warning(f"X200-P5 RENDUΩ router not loaded: {e}")
 
+# ═══ PHASE X200-P6 — ANTI_REGRESSION_Ω (observation continue 12 sous-normes X150) ═══
+try:
+    from routes.anti_regression_omega_router import router as anti_regression_router
+    app.include_router(anti_regression_router)
+    logger.info("✓ X200-P6 active : ANTI_REGRESSION_Ω (/api/v7-ultime/anti-regression/*)")
+except Exception as e:
+    logger.warning(f"X200-P6 ANTI_REGRESSION_Ω router not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")
