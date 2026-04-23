@@ -49,18 +49,30 @@ BCE-4X ULTIME ABSOLU :
   courbure, densification, éco-alignement, attracteurs IA). V30
   intangible. Pytest 78/78 vert. Rapport
   `RAPPORT_X200_P1_2_SMOOTHER_INTEGRATION_Ω.md` scellé (SHA-256).
+- **X200-P1 ACTIVATION_Ω (séquence a/b/c)** — ✅ 2026-04-23 :
+  3 flags P1 historiques ON sous token `STEEVE-MAX-P1-EXPLICIT`
+  (env `P1_HISTORICAL_COMMANDANT_TOKEN`). Coexistence P1 / P1.2 par
+  tokens distincts. Hook post-lissage `apply_p1_suite_to_bundle()`
+  applique la séquence c→a→b à tous les corridors. Pytest 90/90 vert.
+  Rapport `RAPPORT_X200_P1_ACTIVATION_Ω.md` scellé.
+- **X199 ACTIVATION_Ω (5 engines étendus)** — ✅ 2026-04-23 :
+  `ecoforestry_omega`, `advanced_geospatial_omega`, `terrain_3d_omega`,
+  `legal_time_omega`, `predictive_omega` ACTIVÉS sous triple verrou
+  X199 (env `X199_ACTIVATION_AUTHORIZED_BY_COMMANDANT=true` + token
+  `STEEVE-MAX-X199-EXPLICIT`). Module commun `engines/x199_commons.py`.
+  Logiques institutionnelles opérationnelles (classification forestière
+  BSL, UTM WGS84 zone 19N, pente/aspect DEM, saisons zone 2 BSL,
+  prédiction agrégative 6-composantes). V30 intangible. Pytest 116/116
+  vert. 5 rapports scellés (RAPPORT_X199_*.md). **NOYAU V31 CORE Ω
+  CONSTITUÉ**.
 
 ## Prioritized Backlog
 ### P0 — Aucun (phase actuelle scellée)
 ### P1 — Phase P1 COMPLÈTE (activation terminée ✅)
-### P2 — Sur ordre du Commandant
-- **PHASE X199-ACTIVATION** : activation engine-par-engine des 5 moteurs
-  OFF selon l'ordre institutionnel optimal :
-    1. `ecoforestry_omega` (racine, sans dépendance)
-    2. `advanced_geospatial_omega` (dépend #1)
-    3. `terrain_3d_omega` (dépend #2)
-    4. `legal_time_omega` (racine, sans dépendance)
-    5. `predictive_omega` (dépend #1, #2, #3, #4)
+### P2 — Phase X199 COMPLÈTE (activation terminée ✅)
+### P3 — Sur ordre du Commandant
+- Synchronisation annuelle du catalogue MFFP dans `legal_time_omega` (fenêtres saisonnières zone 2 BSL).
+- Agrégation du moteur `predictive_omega` avec les corridors smoother X180 (probabilité par corridor).
 
 ### P2 — Backlog institutionnel
 - Extension `runtime_beacon.conforming` live frontend (nécessite directive

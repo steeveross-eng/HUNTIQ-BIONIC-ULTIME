@@ -41,9 +41,14 @@ def test_p0_feature_flag_on(slug, prefix):
 
 @pytest.mark.parametrize("slug,prefix", ENGINES_X199_OFF)
 def test_x199_extended_stay_off(slug, prefix):
+    """Post PHASE_X199_ACTIVATION_Ω : les 5 moteurs étendus sont maintenant ON.
+
+    Ce test conserve son nom historique pour ne pas briser la collection pytest
+    mais vérifie l'invariant courant (MUST_BE_ON).
+    """
     mod = __import__(f"engines.{slug}", fromlist=["FEATURE_FLAG_ACTIVE"])
-    assert mod.FEATURE_FLAG_ACTIVE is False, (
-        f"{slug} MUST stay OFF (X199 — non autorisé par le Commandant)"
+    assert mod.FEATURE_FLAG_ACTIVE is True, (
+        f"{slug} MUST be ON post-PHASE_X199_ACTIVATION_Ω"
     )
 
 

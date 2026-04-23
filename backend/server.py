@@ -1118,6 +1118,23 @@ try:
 except Exception as e:
     logger.warning(f"Pipeline preview router not loaded: {e}")
 
+# ═══ PHASE X199 ACTIVATION — 5 engines étendus (ordre institutionnel) ═══
+# Ordre COMMANDANT STEEVE-MAX : activation séquencée 1→5
+# Triple verrou X199 : feature_flag + env X199_ACTIVATION_AUTHORIZED_BY_COMMANDANT + token STEEVE-MAX-X199-EXPLICIT
+for _slug, _label in [
+    ("ecoforestry_omega",         "ENGINE_ECOFORESTRY_Ω (X199 #1 — racine)"),
+    ("advanced_geospatial_omega", "ENGINE_ADVANCED_GEOSPATIAL_Ω (X199 #2)"),
+    ("terrain_3d_omega",          "ENGINE_3D_TERRAIN_Ω (X199 #3)"),
+    ("legal_time_omega",          "ENGINE_LEGAL_TIME_Ω (X199 #4 — racine)"),
+    ("predictive_omega",          "ENGINE_PREDICTIVE_Ω (X199 #5 — dépendant de 1-4)"),
+]:
+    try:
+        _mod = __import__(f"engines.{_slug}.router", fromlist=["router"])
+        app.include_router(_mod.router)
+        logger.info(f"✓ X199 active : {_label}")
+    except Exception as e:
+        logger.warning(f"X199 {_slug} not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

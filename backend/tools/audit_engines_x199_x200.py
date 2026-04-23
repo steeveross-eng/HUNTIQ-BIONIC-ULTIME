@@ -36,14 +36,16 @@ P0_ACTIVE_ALLOWED = {
     "reseau_veineux_omega",
     "bio_scoring_omega",
 }
-# Engines X199 qui doivent rester OFF
-X199_MUST_STAY_OFF = {
+# Engines X199 — post PHASE_X199_ACTIVATION_Ω : MUST_BE_ON sous triple verrou
+X199_MUST_BE_ON = {
     "ecoforestry_omega",
     "terrain_3d_omega",
     "legal_time_omega",
     "predictive_omega",
     "advanced_geospatial_omega",
 }
+# Alias historique (compat test_engines_x199_scaffold)
+X199_MUST_STAY_OFF: set = set()
 
 
 def check_v30_integrity() -> Dict[str, Any]:
@@ -63,13 +65,13 @@ def check_v30_integrity() -> Dict[str, Any]:
 def check_feature_flags() -> Dict[str, Any]:
     violations: List[str] = []
     statuses: Dict[str, bool] = {}
-    for slug in P0_ACTIVE_ALLOWED | X199_MUST_STAY_OFF:
+    for slug in P0_ACTIVE_ALLOWED | X199_MUST_BE_ON:
         try:
             mod = __import__(f"engines.{slug}", fromlist=["FEATURE_FLAG_ACTIVE"])
             active = bool(getattr(mod, "FEATURE_FLAG_ACTIVE", False))
             statuses[slug] = active
-            if slug in X199_MUST_STAY_OFF and active:
-                violations.append(f"{slug}: MUST_BE_OFF but is ON")
+            if slug in X199_MUST_BE_ON and not active:
+                violations.append(f"{slug}: MUST_BE_ON (X199 ACTIVATED) but is OFF")
             if slug in P0_ACTIVE_ALLOWED and not active:
                 violations.append(f"{slug}: MUST_BE_ON but is OFF")
         except Exception as e:
@@ -78,7 +80,7 @@ def check_feature_flags() -> Dict[str, Any]:
         "ok": len(violations) == 0,
         "violations": violations,
         "p0_active_allowed": sorted(P0_ACTIVE_ALLOWED),
-        "x199_must_stay_off": sorted(X199_MUST_STAY_OFF),
+        "x199_must_be_on": sorted(X199_MUST_BE_ON),
         "statuses": statuses,
     }
 
