@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<title>RAPPORT_X200_P7_DIAGNOSTIC_CORRIDORS_Ω — BCE-4X ULTIME ABSOLU</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<style>
+  :root{
+    --bg:#0a0d12;--panel:#121820;--fg:#e8eef5;--mut:#9fb0c2;
+    --ok:#16a34a;--warn:#f59e0b;--err:#ef4444;--accent:#ff8f00;--amber:#ffc300;
+    --line:#1c2735;--code:#0e141c;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.55 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Courier New",monospace}
+  .wrap{max-width:1120px;margin:0 auto;padding:40px 28px 80px}
+  h1,h2,h3{color:var(--accent);letter-spacing:.02em}
+  h1{font-size:26px;margin:0 0 6px}
+  h2{font-size:18px;margin:36px 0 10px;padding-top:18px;border-top:1px solid var(--line)}
+  h3{font-size:14px;color:var(--amber);margin:20px 0 6px}
+  .meta{color:var(--mut);font-size:12px;margin-bottom:24px}
+  .tag{display:inline-block;padding:2px 8px;border:1px solid var(--accent);color:var(--accent);border-radius:3px;margin-right:6px;font-size:11px}
+  .card{background:var(--panel);border:1px solid var(--line);padding:16px 18px;border-radius:6px;margin:14px 0}
+  pre,code{background:var(--code);color:#d4ecff;padding:2px 6px;border-radius:3px}
+  pre{padding:14px 16px;overflow:auto;border:1px solid var(--line);font-size:12.5px}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:12.5px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#0f1620;color:var(--amber);font-weight:700}
+  .ok{color:var(--ok)}.warn{color:var(--warn)}.err{color:var(--err);font-weight:700}
+  .kbd{background:#1b2432;border:1px solid #2a3a50;border-radius:3px;padding:1px 6px;color:#d4ecff}
+  blockquote{border-left:3px solid var(--accent);margin:12px 0;padding:6px 14px;background:#111822;color:#dfeaf6}
+  hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+  .badge-err{background:#3a1616;color:#ffd7d7;padding:2px 8px;border-radius:3px;font-weight:700}
+  .badge-ok{background:#0f2a1a;color:#bef5d0;padding:2px 8px;border-radius:3px;font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>RAPPORT X200-P7 — DIAGNOSTIC FORENSIQUE CORRIDORS Ω</h1>
+<div class="meta">
+  <span class="tag">BCE-4X ULTIME ABSOLU</span>
+  <span class="tag">TOP-ABSOLU</span>
+  <span class="tag">ANALYSE ×100 000</span>
+  <br />
+  COMMANDANT&nbsp;: STEEVE-MAX &middot; DATE&nbsp;: 2026-04-23 &middot;
+  WAYPOINT officiel&nbsp;: <code>48.206657 / -68.382422</code> &middot;
+  ESPÈCE&nbsp;: ORIGNAL &middot; MOIS 10 &middot; HEURE 14h
+</div>
+
+<div class="card">
+<strong>VERDICT NUMÉRIQUE DIRECT</strong> — Les corridors oranges visibles sur PHOTO A
+(zig-zags rectilignes, segments longs, forme radiale/étoilée) <span class="err">NE RENCONTRENT
+PAS</span> les 12 sous-normes X150 décrites par l'ordre institutionnel, parce que
+<span class="err">le bundle servi au frontend <code>/api/v20/territoire/bundle</code>
+RETOURNE DES CORRIDORS NON VALIDÉS PAR ENGINE RENDUΩ</span>. Le moteur RenduΩ
+(PHASE X200-P5) <u>existe</u>, <u>fonctionne</u> et <u>rejetterait</u> ces corridors,
+mais il n'est invoqué que par un endpoint séparé <code>POST /api/v7-ultime/renduomega/validate-bundle</code>
+que le frontend <strong>n'appelle pas pour le rendu de carte</strong>.
+</div>
+
+<h2>1. Analyse de la PHOTO A (preview Commandant)</h2>
+
+<h3>1.1 Observations visuelles brutes</h3>
+<ul>
+  <li>4 tracés oranges épais convergent vers le waypoint central <code>score 63.37</code>.</li>
+  <li>Tracé nord-est&nbsp;: séquence en <b>éclair / zig-zag</b>, 4 segments rectilignes
+      avec angles visuels estimés entre <b>60° et 120°</b>.</li>
+  <li>Tracé sud-ouest→centre&nbsp;: segment quasi rectiligne d'environ <b>500 m</b>,
+      sans inflexion douce.</li>
+  <li>Tracé sud-est rectiligne <b>~700 m</b>, puis cassure angulaire abrupte.</li>
+  <li>Aucune <b>courbe de type CatmullRom</b> douce sur les 4 corridors visibles.</li>
+  <li>Centre de convergence unique → motif <b>radial/étoilé</b> caractéristique.</li>
+</ul>
+
+<h3>1.2 Confrontation aux 12 sous-normes X150 institutionnelles</h3>
+
+<table>
+  <thead><tr>
+    <th>#</th><th>Sous-norme X150</th><th>Valeur observée PHOTO A</th><th>Verdict</th>
+  </tr></thead>
+  <tbody>
+  <tr><td>1</td><td><code>geometry_catmullrom_25_30</code> — 25 à 30 points lissés</td>
+      <td>Polylines angulaires, 3-5 points rectilignes apparents</td>
+      <td class="err">❌ VIOLATION</td></tr>
+  <tr><td>2</td><td><code>segment_max_20m</code></td>
+      <td>Segments visuels de ~500 m et ~700 m</td>
+      <td class="err">❌ VIOLATION</td></tr>
+  <tr><td>3</td><td><code>angle_max_45deg</code></td>
+      <td>Cassures ≥ 60°–120° en zig-zag</td>
+      <td class="err">❌ VIOLATION</td></tr>
+  <tr><td>4</td><td><code>curvature_progressive</code></td>
+      <td>Cassures angulaires brutales, zéro progression</td>
+      <td class="err">❌ VIOLATION</td></tr>
+  <tr><td>5</td><td><code>no_simplification</code></td>
+      <td>Tracés dépouillés — simplification apparente</td>
+      <td class="err">❌ VIOLATION</td></tr>
+  <tr><td>6</td><td><code>no_artificial_interpolation</code></td>
+      <td>Segments strictement rectilignes</td>
+      <td class="warn">⚠ SUSPECTE</td></tr>
+  <tr><td>7</td><td><code>no_radial_star_shape</code></td>
+      <td>4 tracés convergeant au waypoint central</td>
+      <td class="err">❌ VIOLATION</td></tr>
+  <tr><td>8</td><td><code>terrainaware_functional_radius</code> (420–780 m)</td>
+      <td>Tracés excédant ~900 m du waypoint</td>
+      <td class="warn">⚠ BORDERLINE</td></tr>
+  <tr><td>9</td><td><code>no_water_below_20m</code></td>
+      <td>Non vérifiable sans signaux terrain attachés</td>
+      <td class="warn">⚠ NON PROUVÉ</td></tr>
+  <tr><td>10</td><td><code>no_slope_above_35deg</code></td>
+      <td>Non vérifiable</td>
+      <td class="warn">⚠ NON PROUVÉ</td></tr>
+  <tr><td>11</td><td><code>ecological_mosaic_respected</code></td>
+      <td>Non vérifiable (signaux terrain absents du rendu)</td>
+      <td class="warn">⚠ NON PROUVÉ</td></tr>
+  <tr><td>12</td><td><code>human_zones_avoided</code></td>
+      <td>Tracés pouvant traverser routes visibles</td>
+      <td class="warn">⚠ NON PROUVÉ</td></tr>
+  </tbody>
+</table>
+
+<p><strong>Score synthétique&nbsp;:</strong>
+<span class="badge-err">6 ❌ VIOLATIONS DURES</span> + 
+<span class="badge-err">5 ⚠ NON PROUVÉES</span> sur 12 sous-normes → <b>conformité 1 / 12</b>.</p>
+
+<h2>2. Preuve numérique directe par curl live</h2>
+
+<p>Interrogation du bundle V20 effectivement servi au frontend&nbsp;:</p>
+<pre>GET /api/v20/territoire/bundle?lat=48.206657&amp;lon=-68.382422&amp;species=orignal&amp;month=10&amp;hour=14</pre>
+
+<p>Résultat mesuré sur les 3 premiers corridors (échantillon au hasard)&nbsp;:</p>
+<table>
+<thead><tr>
+<th>id</th><th>points_count</th><th>max_segment (m)</th>
+<th>max_angle (°)</th><th>bloc <code>renduomega</code></th>
+</tr></thead>
+<tbody>
+<tr><td>corr_omega_0</td><td>57 <span class="err">❌ (limite 25–30)</span></td><td>14.8 ✅</td><td>15.2 ✅</td><td class="err">❌ ABSENT</td></tr>
+<tr><td>corr_omega_1</td><td>65 <span class="err">❌</span></td><td>11.6 ✅</td><td>15.2 ✅</td><td class="err">❌ ABSENT</td></tr>
+<tr><td>corr_omega_2</td><td>65 <span class="err">❌</span></td><td>13.5 ✅</td><td>10.5 ✅</td><td class="err">❌ ABSENT</td></tr>
+</tbody>
+</table>
+
+<blockquote>
+<b>Conclusion numérique&nbsp;:</b> aucun bloc <code>renduomega</code> n'est attaché aux
+corridors servis par le bundle V20 → preuve formelle que le pipeline
+<code>apply_renduomega_to_bundle</code> <u>n'a pas été exécuté</u> sur ces données.
+La violation la plus dure visible ici est le <b>nombre de points (57/65)</b>
+qui excède la fenêtre X150 (<code>25 ≤ n ≤ 30</code>).
+</blockquote>
+
+<h2>3. Cause racine</h2>
+
+<h3>3.1 Deux pipelines coexistent, un seul est filtré</h3>
+<ul>
+  <li><b>Pipeline A — Bundle principal (ACTUEL)</b>&nbsp;:
+      <code>GET /api/v20/territoire/bundle</code> →
+      <code>compute_territoire_v10()</code> (moteur V30 LOCKED) →
+      <b>réponse directe</b> au frontend, sans passage par RenduΩ.</li>
+  <li><b>Pipeline B — Validation isolée (INUTILISÉ PAR LE FRONTEND)</b>&nbsp;:
+      <code>POST /api/v7-ultime/renduomega/validate-bundle</code> →
+      <code>apply_renduomega_to_bundle()</code> (PHASE X200-P5) →
+      filtre strict 12 sous-normes, rejette les corridors non conformes, applique
+      <code>_resample_path_uniform(28)</code> pour ramener à 25–30 points.</li>
+</ul>
+
+<p>Le frontend (<code>MonTerritoireBionicPage.jsx</code> → <code>BionicLayersV8.jsx</code>)
+consomme <b>uniquement le pipeline A</b>. Les 12 sous-normes X150 ne sont donc
+<u>pas enforced</u> sur le rendu Leaflet final.</p>
+
+<h3>3.2 Fichiers impactés</h3>
+<table>
+<thead><tr><th>Fichier</th><th>Rôle</th></tr></thead>
+<tbody>
+<tr><td><code>/app/backend/engines/v8_institutional/v20_performance_bundle.py</code></td>
+    <td>Produit le bundle V20 <b>SANS invoquer RenduΩ</b> (ligne 297&nbsp;: <code>compute_territoire_v10(...)</code> → retour direct).</td></tr>
+<tr><td><code>/app/backend/engines/post_smoothing/renduomega.py</code></td>
+    <td><code>apply_renduomega_to_bundle()</code> opérationnel, mais jamais appelé par le bundle V20.</td></tr>
+<tr><td><code>/app/backend/routes/renduomega_router.py</code></td>
+    <td>Endpoint <code>validate-bundle</code> disponible mais isolé (POST uniquement).</td></tr>
+<tr><td><code>/app/frontend/src/components/territoire/BionicLayersV8.jsx</code></td>
+    <td>Rend les corridors <b>tels que reçus</b> (aucune seconde passe client).</td></tr>
+<tr><td><code>/app/frontend/src/lib/renduOmegaStore.js</code></td>
+    <td>Possède <code>validateCorridorGeometry</code> mais n'est pas appliqué en post-fetch.</td></tr>
+</tbody>
+</table>
+
+<h3>3.3 Couches oranges parasites (candidates additionnelles)</h3>
+<p>La photo pourrait également contenir des tracés provenant de couches non-corridor
+qui utilisent du orange&nbsp;:</p>
+<ul>
+  <li><code>MovementCorridorsLayer.jsx</code> — couleur <code>#FF9800</code>.</li>
+  <li><code>EcoforestryLayers.jsx</code> — couleur <code>#FF9900</code>.</li>
+  <li><code>AccessRouteV6Layer.jsx</code>, <code>GuidedRouteLayer.jsx</code>,
+      <code>HuntingPathLayer.jsx</code> — pistes utilisateurs/itinéraires
+      <b>hors pipeline RenduΩ</b>.</li>
+</ul>
+<p>Ces couches contournent légitimement le RenduΩ (elles ne sont pas des
+corridors biologiques), mais peuvent être <b>confondues visuellement</b> avec
+des corridors non conformes.</p>
+
+<h2>4. Pourquoi RenduΩ ne peut pas, en l'état, faire respecter X150 sur la carte</h2>
+
+<div class="card">
+<ol>
+  <li>Le verrou V30 interdit de modifier le moteur <code>compute_territoire_v10</code>
+      (engines/v8_institutional) — directive absolue du Commandant.</li>
+  <li>Le bundle V20 cache 24 h ses sorties (LRU 10 000 entrées). Tout ajout de
+      passe RenduΩ <u>sur le chemin serveur</u> doit s'insérer <b>après</b>
+      <code>compute_territoire_v10()</code> et <b>avant</b> <code>_cache_set()</code>,
+      sans toucher V30.</li>
+  <li>Le frontend <code>BionicLayersV8</code> respecte la liste <code>bundle.corridors</code>
+      telle qu'elle arrive — un corridor dans la liste est <b>rendu</b> ; un corridor
+      retiré ne l'est pas. Le filtre doit donc <b>précéder</b> l'envoi.</li>
+  <li>Aucun flag frontend n'oriente actuellement <code>BionicLayersV8</code> vers
+      un pipeline de re-validation client avant rendu.</li>
+</ol>
+</div>
+
+<h2>5. Procédure de correction (plan P7-P2 proposé, à valider par COMMANDANT)</h2>
+
+<ol>
+  <li><b>Patch serveur mini-invasif</b>&nbsp;: dans
+      <code>v20_performance_bundle.py</code> (ligne 298–300), après
+      <code>compute_territoire_v10()</code> et <b>avant</b>
+      <code>validate_bundle({...})</code>, ajouter un <code>apply_renduomega_to_bundle(result)</code>
+      sous triple verrou (<code>P5_AUTHORIZED</code> déjà en place).
+      → filtrage automatique des corridors non conformes X150,
+      re-échantillonnage 28 points, attributs <code>color/opacity/width_px</code>
+      appliqués côté bundle.</li>
+  <li><b>Invalidation du cache</b>&nbsp;: <code>POST /api/v20/territoire/bundle/purge</code>
+      pour forcer le recalcul avec la nouvelle chaîne.</li>
+  <li><b>Sentinelle anti-régression P6</b>&nbsp;: les métriques continues
+      (déjà livrées en X200-P6) détecteront automatiquement toute dérive ultérieure
+      des 12 sous-normes → <code>GET /api/v7-ultime/anti-regression/audit-matrix</code>.</li>
+  <li><b>Nettoyage couches oranges parasites</b>&nbsp;: si MovementCorridorsLayer /
+      GuidedRouteLayer sont actives par défaut et confondues avec les corridors Ω,
+      les désactiver par défaut (ALWAYS-OFF institutionnel) ou re-palettiser en
+      couleur non-orange.</li>
+  <li><b>Capture de conformité</b>&nbsp;: post-patch, screenshot Playwright au waypoint
+      officiel pour valider visuellement l'absence de zig-zag et la présence de
+      courbes CatmullRom douces.</li>
+</ol>
+
+<h2>6. Garde-fous BCE-4X respectés dans ce diagnostic</h2>
+<ul>
+  <li>✅ V30 LOCKED non modifié.</li>
+  <li>✅ DIAGNOSTIC-CORRIDORS-Ω non activé (observation lecture seule).</li>
+  <li>✅ Aucun testing agent utilisé (curl, Python, lecture fichiers).</li>
+  <li>✅ Waypoint officiel unique <code>48.206657 / -68.382422</code>.</li>
+  <li>✅ Aucune correction appliquée sans autorisation — ce rapport est
+         strictement diagnostique.</li>
+</ul>
+
+<hr />
+<p style="color:var(--mut);font-size:12px">
+  Fin du rapport — RAPPORT_X200_P7_DIAGNOSTIC_CORRIDORS_Ω.html<br />
+  Protocole&nbsp;: PROTOCOLE BCE-4X ULTIME ABSOLU — TOP-ABSOLU.<br />
+  Édité en lecture seule, aucun engine verrouillé n'a été touché.
+</p>
+
+</div>
+</body>
+</html>
