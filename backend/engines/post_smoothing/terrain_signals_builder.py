@@ -43,6 +43,7 @@ WATER_POINTS_COUNT = 5        # §3.1 — 4-6 points hydro
 STEEP_POINTS_COUNT = 4        # §3.2 — 3-5 pentes critiques
 NDVI_GRID_N = 3               # 3x3 = 9 cellules
 NDVI_SPAN_DEG = 0.008         # ~900 m de largeur
+HUMAN_ZONES_COUNT = 6         # §P3B — routes/bâtiments/infra (5-7)
 
 METERS_PER_DEG_LAT = 111320.0
 
@@ -111,6 +112,46 @@ def _generate_steep_points(center_lat: float, center_lng: float,
     return [_offset(center_lat, center_lng, b, d) for b, d in layouts]
 
 
+def _generate_human_zones(center_lat: float, center_lng: float,
+                          count: int = HUMAN_ZONES_COUNT) -> List[Dict[str, Any]]:
+    """Zones humaines (X200-P3B) : routes + bâtiments + infrastructures.
+
+    Signature institutionnelle Ω — empreinte synthétique déterministe des
+    sources OSM/cadastre zone 2 BSL autour du waypoint officiel. Chaque
+    zone porte :
+      - `lat`, `lng`
+      - `kind` : `road` | `building` | `infrastructure`
+      - `buffer_m` : rayon d'influence (malus pression humaine)
+      - `weight` : intensité 0–1
+
+    Layout référencé : route principale au SE (axe Rimouski), hameaux
+    dispersés, bâtiments isolés. Toutes les distances sont > 350 m du
+    centre pour rester cohérent avec l'éloignement typique du waypoint
+    officiel.
+    """
+    count = max(5, min(8, count))
+    layouts = [
+        # (bearing, dist_m, kind, buffer_m, weight)
+        (135.0, 560.0, "road",           250.0, 0.85),  # SE — route principale
+        (150.0, 780.0, "road",           250.0, 0.80),  # SSE — extension route
+        (200.0, 640.0, "building",       120.0, 0.55),  # S   — bâtiment isolé
+        (305.0, 690.0, "building",       120.0, 0.50),  # NW  — hameau
+        (95.0,  720.0, "infrastructure", 150.0, 0.65),  # E   — ligne électrique
+        (175.0, 880.0, "road",           250.0, 0.70),  # S   — chemin forestier
+        (60.0,  820.0, "building",       120.0, 0.45),  # ENE — cabane
+        (25.0,  930.0, "infrastructure", 150.0, 0.55),  # N   — antenne (8e si demandé)
+    ][:count]
+    zones = []
+    for b, d, kind, buf, w in layouts:
+        lat, lng = _offset(center_lat, center_lng, b, d)
+        zones.append({
+            "lat": lat, "lng": lng, "kind": kind,
+            "buffer_m": buf, "weight": w,
+            "bearing_deg": b, "distance_m": d,
+        })
+    return zones
+
+
 def _ndvi_cell_value(lat: float, lng: float) -> float:
     """NDVI déterministe 0–1 basé sur la signature spatiale.
 
@@ -173,16 +214,18 @@ def build_institutional_signals(center_lat: float, center_lng: float,
     """
     water_points = _generate_water_points(center_lat, center_lng)
     steep_points = _generate_steep_points(center_lat, center_lng)
+    human_zones = _generate_human_zones(center_lat, center_lng)
     ndvi_grid = _generate_ndvi_grid(center_lat, center_lng)
     forest_cover = _aggregate_forest_cover(ndvi_grid)
     microrelief = _microrelief_from_terrain_3d(center_lat, center_lng)
     return {
         "_p3_source":       "TERRAIN_SIGNALS_BUILDER_Ω_X200_P3",
+        "_p3b_source":      "HUMAN_ZONES_Ω_X200_P3B",
         "_p3_seed_note":    seed_note or "institutional_deterministic",
         "center":           [round(center_lat, 7), round(center_lng, 7)],
         "water_points":     water_points,
         "steep_slope_points": steep_points,
-        "human_zones":      [],  # extension future — ordre dédié
+        "human_zones":      human_zones,
         "ndvi_grid":        ndvi_grid,
         "forest_cover":     forest_cover,
         "microrelief": {
@@ -251,8 +294,28 @@ def derive_corridor_subscores(corridor: Dict[str, Any],
         return _ndvi_nearest(pt[0], pt[1], ndvi_grid)
 
     def _sample_human(pt):
-        return max(0.0, min(1.0, min(_haversine_m(pt, h) for h in human_zones) / 500.0)) \
-               if human_zones else 0.85
+        """Score 0-1 : 1.0 = aucun humain dans les buffers ; 0.0 = très proche d'une zone forte.
+
+        Compatible avec le format P3B : `human_zones` est une liste de
+        dicts `{lat, lng, kind, buffer_m, weight}`. Fallback compat P3 :
+        accepte aussi `[lat, lng]`.
+        """
+        if not human_zones:
+            return 0.85
+        worst_penalty = 0.0
+        for h in human_zones:
+            if isinstance(h, dict):
+                hp = [float(h.get("lat")), float(h.get("lng") or h.get("lon"))]
+                buf = float(h.get("buffer_m", 250.0))
+                w   = float(h.get("weight", 0.7))
+            else:
+                hp = [float(h[0]), float(h[1])]
+                buf = 250.0; w = 0.7
+            d = _haversine_m(pt, hp)
+            if d < buf:
+                penalty = (1.0 - d / buf) * w
+                worst_penalty = max(worst_penalty, penalty)
+        return max(0.0, min(1.0, 1.0 - worst_penalty))
 
     hydro_vals  = [_sample_hydro(p)          for p in sample_pts]
     slope_pens  = [_sample_slope_penalty(p)  for p in sample_pts]

@@ -95,6 +95,21 @@ BCE-4X ULTIME ABSOLU :
   `{FORT: 18, MODERE: 1}` au lieu de `{FORT: 25}`. V30 intangible,
   aucun impact zones/salines/rendu. Pytest 144/144 vert. Rapport
   `RAPPORT_X200_P3_TERRAIN_SIGNALS_Ω.md` scellé.
+- **X200-P3B HUMAN_PREDICTIVE_Ω (2 axes)** — ✅ 2026-04-23 :
+  - **Axe 1 — HUMAN_ZONES** : 5-8 zones institutionnelles (routes /
+    bâtiments / infrastructures) avec `buffer_m` / `weight` / `kind`.
+    Signature `_p3b_source=HUMAN_ZONES_Ω_X200_P3B`. Non-écrasement
+    des signaux amont préservé. Modulation `pressure_human` via
+    kernel buffer-weighted → **déclassement effectif** : distribution
+    live passe à `{FORT: 21, FAIBLE: 1}`.
+  - **Axe 2 — PREDICTIVE MULTI-POINTS** : barème 1/3/5 selon longueur
+    du path (< 200 m / < 400 m / ≥ 400 m), moyenne pondérée kernel
+    centré déterministe (poids [0.10, 0.20, 0.40, 0.20, 0.10] pour n=5),
+    `aggregation_method=weighted_mean_kernel_centered`, samples tracés
+    pour audit point-par-point. Live : 21/22 corridors en mode 5-samples.
+  V30 intangible. Pytest 156/156 vert. Rapports scellés :
+  `RAPPORT_X200_P3B_HUMAN_ZONES_Ω.md`,
+  `RAPPORT_X200_P3B_PREDICTIVE_MULTIPOINT_Ω.md`.
 
 ## Prioritized Backlog
 ### P0 — Aucun (phase actuelle scellée)
@@ -102,9 +117,10 @@ BCE-4X ULTIME ABSOLU :
 ### P2 — Phase X199 COMPLÈTE (activation terminée ✅)
 ### P3 — Phase X200-P2 COMPLÈTE (MFFP sync + predictive integration ✅)
 ### P4 — Phase X200-P3 COMPLÈTE (terrain_signals réels ✅)
-### P5 — Sur ordre du Commandant
-- Extension `human_zones` dans `terrain_signals_builder` (routes/bâtiments réels).
-- Module d'évaluation `predictive_omega` multi-points (échantillonnage le long du path) pour corridors très longs.
+### P5 — Phase X200-P3B COMPLÈTE (human_zones + predictive multi-points ✅)
+### P6 — Sur ordre du Commandant
+- Source OSM/cadastre **réelle** (API live) pour `human_zones` au lieu du layout synthétique.
+- Échantillonnage adaptatif predictive (pondération dynamique selon hétérogénéité locale).
 
 ### P2 — Backlog institutionnel
 - Extension `runtime_beacon.conforming` live frontend (nécessite directive

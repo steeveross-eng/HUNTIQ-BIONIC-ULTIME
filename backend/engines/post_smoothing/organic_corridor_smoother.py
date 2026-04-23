@@ -289,7 +289,13 @@ def apply_ecological_alignment(
         return path
     water_pts = terrain_signals.get("water_points") or []    # [[lat,lng], ...]
     steep_pts = terrain_signals.get("steep_slope_points") or []
-    human_pts = terrain_signals.get("human_zones") or []
+    _human_raw = terrain_signals.get("human_zones") or []
+    # Normalisation P3B : human_zones peut être [[lat,lng]] OU [{lat,lng,...}]
+    human_pts = [
+        [float(h["lat"]), float(h.get("lng") or h.get("lon"))]
+        if isinstance(h, dict) else [float(h[0]), float(h[1])]
+        for h in _human_raw
+    ]
     water_tol = float(species_profile.get("water_tolerance_m") or WATER_MIN_DIST_M)
     slope_max = float(species_profile.get("slope_max_deg") or SLOPE_MAX_DEG)
     human_av = float(species_profile.get("human_avoidance_m") or HUMAN_EXCLUSION_BUFFER_M)

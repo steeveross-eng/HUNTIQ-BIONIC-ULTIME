@@ -58,6 +58,74 @@ def is_p2_authorized() -> Dict[str, Any]:
     }
 
 
+# ═══════════════════════════════════════════════════════════════════════
+# ÉCHANTILLONNAGE MULTI-POINTS (X200-P3B)
+# ═══════════════════════════════════════════════════════════════════════
+# Reproductibilité : positions fractionnaires déterministes (pas de RNG).
+MULTIPOINT_MIN_SAMPLES = 1
+MULTIPOINT_MAX_SAMPLES = 5
+MULTIPOINT_LENGTH_THRESHOLD_M = 200.0  # au-delà, on passe de 1→3→5
+
+
+def _path_length_m(path: List[List[float]]) -> float:
+    if not path or len(path) < 2:
+        return 0.0
+    import math
+    R = 6371000.0
+    total = 0.0
+    for i in range(len(path) - 1):
+        lat1 = math.radians(float(path[i][0]))
+        lat2 = math.radians(float(path[i + 1][0]))
+        dlat = lat2 - lat1
+        dlon = math.radians(float(path[i + 1][1]) - float(path[i][1]))
+        h = math.sin(dlat/2)**2 + math.cos(lat1)*math.cos(lat2)*math.sin(dlon/2)**2
+        total += 2 * R * math.asin(math.sqrt(h))
+    return total
+
+
+def _sample_indices(n_points_in_path: int, n_samples: int) -> List[int]:
+    """Indices DÉTERMINISTES à positions fractionnaires k/(n_samples+1).
+
+    Exemples :
+      n_samples=1 → [mid]
+      n_samples=3 → [1/4, 2/4, 3/4]
+      n_samples=5 → [1/6, 2/6, 3/6, 4/6, 5/6]
+    """
+    if n_points_in_path <= 1:
+        return [0]
+    return [
+        max(0, min(n_points_in_path - 1, int(n_points_in_path * k / (n_samples + 1))))
+        for k in range(1, n_samples + 1)
+    ]
+
+
+def _choose_n_samples(path: List[List[float]]) -> int:
+    """Barème institutionnel X200-P3B — borné 1..5 selon longueur."""
+    L = _path_length_m(path)
+    if L < MULTIPOINT_LENGTH_THRESHOLD_M:
+        return 1
+    if L < 2 * MULTIPOINT_LENGTH_THRESHOLD_M:
+        return 3
+    return MULTIPOINT_MAX_SAMPLES
+
+
+# Poids d'agrégation (moyenne pondérée "kernel centré")
+MULTIPOINT_WEIGHTS = {
+    1: [1.0],
+    3: [0.25, 0.50, 0.25],
+    5: [0.10, 0.20, 0.40, 0.20, 0.10],
+}
+
+
+def _weighted_mean(values: List[float], weights: List[float]) -> float:
+    if not values:
+        return 0.0
+    if len(values) != len(weights):
+        return sum(values) / len(values)
+    wsum = sum(weights) or 1.0
+    return sum(v * w for v, w in zip(values, weights)) / wsum
+
+
 def _midpoint(path: List[List[float]]) -> Optional[List[float]]:
     if not path or len(path) < 1:
         return None
@@ -73,22 +141,53 @@ def _hierarchical_factor(corridor: Dict[str, Any]) -> float:
 
 def _corridor_probability(path: List[List[float]], species: str,
                           hour: int, iso_date: Optional[str]) -> Dict[str, Any]:
-    """Appelle predictive_omega sur le point médian. No-op gracieux si
-    le path est invalide (retourne 0)."""
-    mid = _midpoint(path)
-    if not mid:
-        return {"probability_0_1": 0.0, "components": {}, "evaluated_at": None}
-    # Import différé pour éviter cycle d'imports
+    """Échantillonnage multi-points DÉTERMINISTE le long du path (X200-P3B).
+
+    Retourne la probabilité agrégée + les échantillons individuels pour
+    traçabilité institutionnelle.
+    """
+    if not path:
+        return {"probability_0_1": 0.0, "components": {}, "evaluated_at": None,
+                "samples": [], "n_samples": 0, "path_length_m": 0.0}
     from engines.predictive_omega.router import compute_predictive
-    pred = compute_predictive(
-        lat=float(mid[0]), lng=float(mid[1]),
-        species=species, iso_date=iso_date, hour=hour,
-    )
+
+    n_samples = _choose_n_samples(path)
+    idxs = _sample_indices(len(path), n_samples)
+    weights = MULTIPOINT_WEIGHTS.get(n_samples, [1.0 / n_samples] * n_samples)
+
+    samples = []
+    probabilities = []
+    last_components = {}
+    last_legal_mult = 1.0
+    for order, i in enumerate(idxs):
+        pt = [float(path[i][0]), float(path[i][1])]
+        pred = compute_predictive(
+            lat=pt[0], lng=pt[1],
+            species=species, iso_date=iso_date, hour=hour,
+        )
+        probabilities.append(float(pred["probability_0_1"]))
+        last_components = pred["components"]
+        last_legal_mult = pred.get("legal_multiplier", 1.0)
+        samples.append({
+            "order": order, "path_index": i,
+            "lat": pt[0], "lng": pt[1],
+            "probability_0_1": pred["probability_0_1"],
+            "weight": weights[order] if order < len(weights) else 0.0,
+        })
+
+    aggregated = _weighted_mean(probabilities, weights)
+    midpoint_fallback = samples[len(samples)//2] if samples else None
+
     return {
-        "probability_0_1": pred["probability_0_1"],
-        "components": pred["components"],
-        "legal_multiplier": pred.get("legal_multiplier", 1.0),
-        "evaluated_at": {"lat": mid[0], "lng": mid[1]},
+        "probability_0_1": round(aggregated, 4),
+        "components": last_components,
+        "legal_multiplier": last_legal_mult,
+        "evaluated_at": {"lat": midpoint_fallback["lat"], "lng": midpoint_fallback["lng"]}
+                        if midpoint_fallback else None,
+        "samples": samples,
+        "n_samples": len(samples),
+        "path_length_m": round(_path_length_m(path), 2),
+        "aggregation_method": "weighted_mean_kernel_centered",
     }
 
 
@@ -121,6 +220,11 @@ def apply_predictive_to_corridor(corridor: Dict[str, Any],
         "evaluated_at":          pred["evaluated_at"],
         "legal_multiplier":      pred.get("legal_multiplier", 1.0),
         "components_predictive": pred["components"],
+        # X200-P3B — multi-points
+        "n_samples":             pred.get("n_samples", 1),
+        "path_length_m":         pred.get("path_length_m", 0.0),
+        "aggregation_method":    pred.get("aggregation_method", "single_point"),
+        "samples":               pred.get("samples", []),
     }
     return out
 
