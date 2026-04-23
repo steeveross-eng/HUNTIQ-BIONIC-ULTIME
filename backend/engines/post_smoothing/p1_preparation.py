@@ -185,8 +185,14 @@ def _derive_subscores_from_corridor(corridor: Dict[str, Any]) -> Dict[str, float
     }
 
 
-def apply_p1_suite_to_corridor(corridor: Dict[str, Any]) -> Dict[str, Any]:
+def apply_p1_suite_to_corridor(corridor: Dict[str, Any],
+                               terrain_signals: Optional[Dict[str, Any]] = None
+                               ) -> Dict[str, Any]:
     """Applique les 3 flags P1 (c → a → b) à un unique corridor lissé.
+
+    Si `terrain_signals` est fourni (X200-P3 auto-injecté ou fourni amont),
+    les subscores sont dérivés spatialement par corridor — ce qui étale
+    naturellement la distribution level_v7 sur les 5 niveaux.
 
     Ordre institutionnel Ω :
       1. (c) post_v30_scoring_8_factors → produit `post_v30_bio_score_0_100`
@@ -195,15 +201,23 @@ def apply_p1_suite_to_corridor(corridor: Dict[str, Any]) -> Dict[str, Any]:
     """
     out = dict(corridor)
 
-    # (c) Scoring post-V30 — nécessaire en premier pour alimenter (a)
+    # (c) Scoring post-V30
     if P1_FLAG_POST_V30_SCORING_8_FACTORS and is_p1_activation_authorized()["authorized"]:
-        subs = out.get("subscores") or _derive_subscores_from_corridor(out)
+        if out.get("subscores"):
+            subs = out["subscores"]
+        elif terrain_signals:
+            # Dérivation spatiale X200-P3 — varie par corridor
+            from engines.post_smoothing.terrain_signals_builder import (
+                derive_corridor_subscores,
+            )
+            subs = derive_corridor_subscores(out, terrain_signals)
+        else:
+            subs = _derive_subscores_from_corridor(out)
         out = draft_apply_post_v30_scoring(out, subs)
 
-    # (a) Densité 5 niveaux V7 — classe le corridor selon score obtenu
+    # (a) Densité 5 niveaux V7
     bio_score = out.get("post_v30_bio_score_0_100")
     if bio_score is None:
-        # Fallback : utiliser `score` du niveau COMMANDANT si issu EXTERNAL_INFLOW
         bio_score = float(out.get("score", 0))
     out = draft_enrich_corridor_with_hierarchy(out, float(bio_score))
 
@@ -218,6 +232,8 @@ def apply_p1_suite_to_bundle(bundle: Dict[str, Any]) -> Dict[str, Any]:
 
     Non destructif : no-op complet si P1 non autorisé.
     Produit un diagnostic `p1_activation` dans le bundle.
+    Consomme `bundle["terrain_signals"]` si présent (X200-P3) pour dériver
+    des subscores spatialement variés par corridor.
     """
     if not isinstance(bundle, dict):
         return bundle
@@ -229,6 +245,8 @@ def apply_p1_suite_to_bundle(bundle: Dict[str, Any]) -> Dict[str, Any]:
             "authorization": auth,
         }
         return bundle
+
+    terrain_signals = bundle.get("terrain_signals") or bundle.get("terrain")
 
     total = 0
     rejected = 0
@@ -243,7 +261,7 @@ def apply_p1_suite_to_bundle(bundle: Dict[str, Any]) -> Dict[str, Any]:
         new_arr = []
         for c in arr:
             total += 1
-            cc = apply_p1_suite_to_corridor(c)
+            cc = apply_p1_suite_to_corridor(c, terrain_signals=terrain_signals)
             if cc.get("post_v30_scoring_applied"):
                 scored += 1
             lvl = cc.get("level_v7")
@@ -260,6 +278,9 @@ def apply_p1_suite_to_bundle(bundle: Dict[str, Any]) -> Dict[str, Any]:
         "phase": "X200_P1_ACTIVATION_Ω",
         "authorization": auth,
         "sequence": ["c_post_v30_scoring", "a_density_5_levels", "b_enforce_min_2_vital"],
+        "terrain_signals_source": (
+            terrain_signals.get("_p3_source") if isinstance(terrain_signals, dict) else None
+        ),
         "totals": {
             "corridors_processed": total,
             "post_v30_scored":     scored,

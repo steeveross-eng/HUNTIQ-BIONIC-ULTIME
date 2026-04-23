@@ -81,15 +81,30 @@ BCE-4X ULTIME ABSOLU :
   Pytest 134/134 vert. Rapports scellés :
   `RAPPORT_X200_P2_LEGAL_TIME_SYNC_Ω.md`,
   `RAPPORT_X200_P2_PREDICTIVE_INTEGRATION_Ω.md`.
+- **X200-P3 OPTIMISATION_Ω (terrain_signals)** — ✅ 2026-04-23 :
+  triple verrou P3 dédié (token `STEEVE-MAX-X200-P3-EXPLICIT`). Module
+  `engines/post_smoothing/terrain_signals_builder.py` génère
+  déterministiquement `water_points` (4-6), `steep_slope_points` (3-5),
+  `ndvi_grid` (3×3), `forest_cover`, `microrelief` (via
+  `terrain_3d_omega`). Auto-injection dans `smooth_bundle()` si
+  l'amont ne fournit rien ; préservation stricte sinon.
+  `p1_preparation.derive_corridor_subscores` échantillonne 3 points
+  (1/4, 1/2, 3/4) le long de chaque path pour produire des subscores
+  spatialement variés. **Convergence uniforme vers FORT éliminée** :
+  19 scores distincts live (47.9→65.4), distribution
+  `{FORT: 18, MODERE: 1}` au lieu de `{FORT: 25}`. V30 intangible,
+  aucun impact zones/salines/rendu. Pytest 144/144 vert. Rapport
+  `RAPPORT_X200_P3_TERRAIN_SIGNALS_Ω.md` scellé.
 
 ## Prioritized Backlog
 ### P0 — Aucun (phase actuelle scellée)
 ### P1 — Phase P1 COMPLÈTE (activation terminée ✅)
 ### P2 — Phase X199 COMPLÈTE (activation terminée ✅)
 ### P3 — Phase X200-P2 COMPLÈTE (MFFP sync + predictive integration ✅)
-### P4 — Sur ordre du Commandant
-- Enrichissement des bundles avec `terrain_signals` réels (water/slope/NDVI)
-  pour étaler distribution hiérarchique des corridors externes sur 5 niveaux.
+### P4 — Phase X200-P3 COMPLÈTE (terrain_signals réels ✅)
+### P5 — Sur ordre du Commandant
+- Extension `human_zones` dans `terrain_signals_builder` (routes/bâtiments réels).
+- Module d'évaluation `predictive_omega` multi-points (échantillonnage le long du path) pour corridors très longs.
 
 ### P2 — Backlog institutionnel
 - Extension `runtime_beacon.conforming` live frontend (nécessite directive

@@ -532,6 +532,46 @@ def smooth_bundle(bundle: Dict[str, Any]) -> Dict[str, Any]:
     if not isinstance(bundle, dict):
         return bundle
     species = bundle.get("species") or bundle.get("species_profile") or "orignal"
+
+    # ═══════════════════════════════════════════════════════════════════
+    # HOOK X200-P3 — GÉNÉRATION DE TERRAIN_SIGNALS INSTITUTIONNELS
+    # ═══════════════════════════════════════════════════════════════════
+    # Si aucun terrain_signals n'est fourni par l'amont (engine V30 /
+    # proxy frontend), on les construit déterministiquement autour du
+    # centre du bundle. Sous triple verrou P3 — no-op sinon.
+    _p3_applied = False
+    if not (bundle.get("terrain_signals") or bundle.get("terrain")):
+        try:
+            from engines.post_smoothing.terrain_signals_builder import (
+                is_p3_authorized, build_institutional_signals,
+            )
+            if is_p3_authorized()["authorized"]:
+                # Détection du centre — compatible X200-P1.2
+                c_lat = c_lng = None
+                c = bundle.get("center") or bundle.get("waypoint")
+                if isinstance(c, dict):
+                    c_lat = c.get("lat"); c_lng = c.get("lng") or c.get("lon")
+                elif isinstance(c, (list, tuple)) and len(c) >= 2:
+                    c_lat, c_lng = c[0], c[1]
+                if c_lat is None:
+                    c_lat = bundle.get("lat"); c_lng = bundle.get("lng") or bundle.get("lon")
+                if c_lat is None:
+                    for _k in ("corridors", "main_veins", "corridors_organic", "veines_principales"):
+                        _arr = bundle.get(_k)
+                        if isinstance(_arr, list) and _arr:
+                            _p = _arr[0].get("path") or _arr[0].get("polyline") or []
+                            if _p:
+                                c_lat, c_lng = _p[0][0], _p[0][1]; break
+                if c_lat is not None:
+                    bundle["terrain_signals"] = build_institutional_signals(
+                        float(c_lat), float(c_lng),
+                        seed_note="auto_injected_by_smoother_x180_p3",
+                    )
+                    _p3_applied = True
+        except Exception as _e_p3:  # pragma: no cover
+            bundle.setdefault("p3_terrain_signals_error", str(_e_p3))
+    bundle["smoother_p3_terrain_signals_injected"] = _p3_applied
+
     terrain_signals = bundle.get("terrain_signals") or bundle.get("terrain") or None
     ia_signals = bundle.get("ia_signals") or bundle.get("ia_corridors") or None
     vital_zones = []
