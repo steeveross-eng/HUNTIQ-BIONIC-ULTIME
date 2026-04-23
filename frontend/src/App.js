@@ -90,6 +90,8 @@ const Carte2027Page = lazy(() => import("@/pages/Carte2027Page"));
 import TerritoireCaptureModePage from "@/pages/TerritoireCaptureModePage";
 // VIS-E: Vision Notifications Panel
 import VisionNotificationsPanel from '@/components/VisionNotificationsPanel';
+// PHASE_X200_P4_RUNTIME_BEACON_Ω — attestation runtime institutionnelle (LAT 48.206657 / LNG -68.382422)
+import { startRuntimeBeaconOmega } from '@/services/runtimeBeaconOmega';
 // V7.2: AdminHotspotsPage standalone SUPPRIME — Source de verite = Admin Premium (directive x7200)
 import { 
   ShoppingCart, FlaskConical, GitCompare, Star, DollarSign, ThumbsUp, Heart, Eye,
@@ -998,6 +1000,14 @@ function App() {
     fetchCart();
     fetchCartV2Count();
   }, [fetchProducts, fetchCart, fetchCartV2Count]);
+
+  // PHASE_X200_P4_RUNTIME_BEACON_Ω — démarrage idempotent du beacon institutionnel
+  // Émet POST /api/omega/ci-status/runtime-beacon toutes les 15 s avec payload conforme
+  // (waypoint officiel, panels_clickable_count>=4, corridors_x150_conforme, etc.)
+  useEffect(() => {
+    const stop = startRuntimeBeaconOmega();
+    return () => { try { stop && stop(); } catch (_e) { /* no-op */ } };
+  }, []);
 
   if (loading) {
     return (

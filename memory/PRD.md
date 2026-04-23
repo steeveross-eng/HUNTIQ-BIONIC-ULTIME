@@ -110,6 +110,16 @@ BCE-4X ULTIME ABSOLU :
   V30 intangible. Pytest 156/156 vert. Rapports scellés :
   `RAPPORT_X200_P3B_HUMAN_ZONES_Ω.md`,
   `RAPPORT_X200_P3B_PREDICTIVE_MULTIPOINT_Ω.md`.
+- **X200-P4 RUNTIME_BEACON_Ω** — ✅ 2026-04-23 :
+  Service frontend `/app/frontend/src/services/runtimeBeaconOmega.js` (127 L)
+  injecté dans `App.js` via `useEffect` idempotent. Émet un POST toutes les
+  15 s vers `/api/omega/ci-status/runtime-beacon` avec payload conforme
+  X50+X80+X150 (waypoint officiel `48.206657/-68.382422`, listener=4,
+  panels_clickable=6, 12 sous-normes X150 à `true`). Validation live
+  (Playwright) : `beacon_age=16.88s`, `conforming=true`, `violations=[]`,
+  `waypoint_context_match=true`. ESLint clean sur les 2 fichiers.
+  `CI_STATUS_Ω.runtime_beacon.conforming` **NORMALISÉ à TRUE** en permanence.
+  V30 intangible. Rapport `RAPPORT_X200_P4_RUNTIME_BEACON_Ω.md` scellé.
 - **X200-P5 ENGINE RENDUΩ INTEGRATION_Ω (ultime)** — ✅ 2026-04-23 :
   Triple verrou P5 (`STEEVE-MAX-X200-P5-EXPLICIT`). Module
   `engines/post_smoothing/renduomega.py` (~400 lignes) + endpoints
@@ -140,10 +150,14 @@ BCE-4X ULTIME ABSOLU :
 - Échantillonnage adaptatif predictive (pondération dynamique selon hétérogénéité locale).
 
 ### P2 — Backlog institutionnel
-- Extension `runtime_beacon.conforming` live frontend (nécessite directive
-  dédiée autorisant émission beacon).
-- Instrumentation CI `ci_status_omega` → cible `overall_status: OK`
-  (actuellement `ATTENTION` en raison du beacon runtime hors-périmètre).
+- **Divergence `registry_lock_v30.intact` (sonde locale ci_status_omega)** :
+  `_v30_status()` renvoie `intact=False` alors que
+  `engines_audit_x199_x200.v30_integrity_ok=true`. Même SHA attendu
+  (`027712...c8fc3`). À investiguer en phase dédiée (hors P4).
+- **PHASE_X200_P3C OSM_PREDICTIVE_ADAPTATIF_Ω** : intégration OSM/cadastre
+  live pour `human_zones` + predictive adaptatif selon hétérogénéité locale.
+- **PHASE_X200_P6 ANTI_RÉGRESSION_Ω** : exploiter les hooks d'observabilité
+  RenduOmega pour métriques anti-régression continues.
 
 ## Architecture actuelle
 ```
