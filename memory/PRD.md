@@ -40,16 +40,24 @@ BCE-4X ULTIME ABSOLU :
   (`GET /api/v7-ultime/reseau-veineux/external-inflow/geojson`),
   tests Pytest 65/65 vert, rapport
   `RAPPORT_X200_P1_EXTERNAL_INFLOW_ACTIVATION_Ω.md` scellé (SHA-256).
+- **X200-P1.2 SMOOTHER_INTEGRATION_Ω** — ✅ 2026-04-23 :
+  `P1_2_FLAG_EXTERNAL_INFLOW_TO_SMOOTHER=True` (triple verrou Ω dédié
+  `STEEVE-MAX-P1-EXTERNAL-INFLOW`). Hook non intrusif dans
+  `smooth_bundle()` injectant 16 entry_nodes + 16 corridors externes
+  classés selon la hiérarchie COMMANDANT 5 niveaux ; fusion ×1.5 (40
+  points détectés) ; chaîne X180 appliquée aux externes (despike,
+  courbure, densification, éco-alignement, attracteurs IA). V30
+  intangible. Pytest 78/78 vert. Rapport
+  `RAPPORT_X200_P1_2_SMOOTHER_INTEGRATION_Ω.md` scellé (SHA-256).
 
 ## Prioritized Backlog
 ### P0 — Aucun (phase actuelle scellée)
 ### P1 — Sur ordre du Commandant
-- **PHASE X200-P1.2** : Branchement EXTERNAL_INFLOW → smoother X180
-  (flag `P1_2_FLAG_EXTERNAL_INFLOW_TO_SMOOTHER` OFF).
-  Sous-séquence :
-    a) `density_5_levels_to_smoother`
-    b) `enforce_min_2_vital_zones`
-    c) `post_v30_scoring_8_factors`
+- **PHASE X200-P1 (density / vital / scoring)** : activation séquencée des
+  3 flags historiques (token dédié `STEEVE-MAX-P1-EXPLICIT`).
+    a) `P1_FLAG_DENSITY_5_LEVELS_TO_SMOOTHER`
+    b) `P1_FLAG_ENFORCE_MIN_2_VITAL_ZONES`
+    c) `P1_FLAG_POST_V30_SCORING_8_FACTORS`
 - **PHASE X199-ACTIVATION** : Plan d'activation engine-par-engine des 5
   engines étendus (`ecoforestry_omega`, `terrain_3d_omega`,
   `legal_time_omega`, `predictive_omega`, `advanced_geospatial_omega`).

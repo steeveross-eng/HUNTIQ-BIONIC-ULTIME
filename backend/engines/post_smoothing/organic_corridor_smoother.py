@@ -546,6 +546,24 @@ def smooth_bundle(bundle: Dict[str, Any]) -> Dict[str, Any]:
                     "lat": s.get("lat"), "lng": s.get("lng") or s.get("lon"),
                 })
 
+    # ═══════════════════════════════════════════════════════════════════
+    # HOOK P1.2 — EXTERNAL INFLOW → SMOOTHER X180 (ORDRE COMMANDANT)
+    # ═══════════════════════════════════════════════════════════════════
+    # No-op si triple verrou P1.2 non satisfait. Injecte sinon les corridors
+    # externes (entry nodes 12-24 sur couronne 700-800 m) DANS `bundle["corridors"]`
+    # AVANT lissage, afin que la chaîne X180 leur applique exactement le même
+    # traitement (despike, courbure, densification, éco-alignement, attracteurs).
+    try:
+        from engines.post_smoothing.p1_preparation import (
+            draft_external_inflow_to_smoother,
+        )
+        bundle = draft_external_inflow_to_smoother(bundle, terrain_signals)
+    except Exception as _e:  # pragma: no cover — sécurité institutionnelle
+        bundle.setdefault("external_inflow_integration", {
+            "status": "ERROR",
+            "error": str(_e),
+        })
+
     total_smoothed = 0
     total_vital_ok = 0
     for key in ("corridors", "main_veins", "corridors_organic", "veines_principales"):
@@ -568,6 +586,9 @@ def smooth_bundle(bundle: Dict[str, Any]) -> Dict[str, Any]:
     bundle["smoother_locomotion_species"] = str(species).lower()
     bundle["smoother_total_corridors"] = total_smoothed
     bundle["smoother_vital_zone_conforme_count"] = total_vital_ok
+    bundle["smoother_p1_2_external_inflow_integrated"] = (
+        bundle.get("external_inflow_integration", {}).get("status") == "APPLIED"
+    )
     bundle["smoother_rendu_omega"] = {
         "color": COLOR_INSTITUTIONAL,
         "weights_allowed_px": [WEIGHT_FAIBLE_PX, WEIGHT_FORT_PX, WEIGHT_CRITIQUE_PX],
