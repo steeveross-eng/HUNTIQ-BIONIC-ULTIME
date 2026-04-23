@@ -25,7 +25,7 @@ from typing import Any, Dict, List, Optional, Tuple
 # ═══════════════════════════════════════════════════════════════════════
 # FEATURE FLAG + DOUBLE-VERROU D'AUTORISATION
 # ═══════════════════════════════════════════════════════════════════════
-EXTERNAL_INFLOW_ENABLED: bool = False
+EXTERNAL_INFLOW_ENABLED: bool = True
 EXPECTED_TOKEN = "STEEVE-MAX-P1-EXTERNAL-INFLOW"
 
 

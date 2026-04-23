@@ -29,6 +29,9 @@ P1_FLAG_DENSITY_5_LEVELS_TO_SMOOTHER: bool = False
 P1_FLAG_ENFORCE_MIN_2_VITAL_ZONES:    bool = False
 P1_FLAG_POST_V30_SCORING_8_FACTORS:   bool = False
 
+# X200-P1.2 — Branchement EXTERNAL INFLOW → smoother X180 (préparation, OFF par défaut)
+P1_2_FLAG_EXTERNAL_INFLOW_TO_SMOOTHER: bool = False
+
 
 def is_p1_activation_authorized() -> Dict[str, Any]:
     """Double-vérification : aucun flag ON par défaut + env var + token."""

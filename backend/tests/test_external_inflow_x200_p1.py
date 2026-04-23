@@ -28,16 +28,28 @@ from engines.reseau_veineux_omega.external_inflow import (
 
 
 # ═══════════════════════════════════════════════════════════════════════
-# DOUBLE-VERROU AUTORISATION
+# X200-P1-ACTIVATION — FLAG ON + DOUBLE-VERROU
 # ═══════════════════════════════════════════════════════════════════════
-def test_flag_off_by_default():
-    assert EXTERNAL_INFLOW_ENABLED is False
+def test_flag_on_after_activation():
+    """X200-P1-ACTIVATION : flag activé par ordre du Commandant."""
+    assert EXTERNAL_INFLOW_ENABLED is True
 
 
-def test_authorization_false_by_default():
+def test_authorization_granted_with_env_and_token(monkeypatch):
+    monkeypatch.setenv("P1_ACTIVATION_AUTHORIZED_BY_COMMANDANT", "true")
+    monkeypatch.setenv("P1_COMMANDANT_TOKEN", "STEEVE-MAX-P1-EXTERNAL-INFLOW")
+    a = is_external_inflow_authorized()
+    assert a["authorized"] is True
+    assert a["env_ok"] is True
+    assert a["token_ok"] is True
+
+
+def test_authorization_denied_wrong_token(monkeypatch):
+    monkeypatch.setenv("P1_ACTIVATION_AUTHORIZED_BY_COMMANDANT", "true")
+    monkeypatch.setenv("P1_COMMANDANT_TOKEN", "WRONG")
     a = is_external_inflow_authorized()
     assert a["authorized"] is False
-    assert a["expected_token"] == EXPECTED_TOKEN
+    assert a["token_ok"] is False
 
 
 def test_token_required():
@@ -214,7 +226,9 @@ def test_status_contract_read_only():
     s = external_inflow_status()
     assert s["smoother_touched"] is False
     assert s["rendu_modified"] is False
-    assert s["authorization"]["authorized"] is False  # default
+    # authorized dépend des env vars runtime ; on vérifie seulement la structure
+    assert "authorization" in s
+    assert "diagram_spec" in s
 
 
 # ═══════════════════════════════════════════════════════════════════════

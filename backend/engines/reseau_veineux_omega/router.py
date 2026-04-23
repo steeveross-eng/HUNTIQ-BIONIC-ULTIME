@@ -152,6 +152,147 @@ async def external_inflow_preview(payload: dict = None):
     })
 
 
+# ═══════════════════════════════════════════════════════════════════════
+# GEOJSON ENDPOINT (X200-P1-ACTIVATION — READ_ONLY)
+# ═══════════════════════════════════════════════════════════════════════
+def _build_geojson(lat: float, lon: float, entry_nodes, external_paths,
+                   internal_paths, fusion_diag) -> dict:
+    features = []
+    # Centre
+    features.append({
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [lon, lat]},
+        "properties": {"role": "center", "symbol": "+"},
+    })
+    # Entry nodes (Points)
+    for n in entry_nodes:
+        features.append({
+            "type": "Feature",
+            "geometry": {"type": "Point", "coordinates": [n["lng"], n["lat"]]},
+            "properties": {
+                "role": "entry_node", "id": n["id"],
+                "bearing_deg": n["bearing_deg"], "radius_m": n["radius_m"],
+                "weight": n["weight"], "components": n.get("components", {}),
+            },
+        })
+    # External paths (LineStrings)
+    for ep in external_paths:
+        coords = [[p[1], p[0]] for p in ep["path"]]  # lng,lat pour GeoJSON
+        features.append({
+            "type": "Feature",
+            "geometry": {"type": "LineString", "coordinates": coords},
+            "properties": {
+                "role": "external_path", "id": ep["id"],
+                "entry_node_id": ep["entry_node_id"], "target_type": ep["target_type"],
+                "level": ep["level"], "color": ep["color"],
+                "largeur_m": ep["largeur_m"], "weight_render": ep["weight_render"],
+                "score": ep["score"],
+            },
+        })
+    # Internal paths (LineStrings — si fournis)
+    for ip in (internal_paths or []):
+        coords = [[p[1], p[0]] for p in ip.get("path", [])]
+        features.append({
+            "type": "Feature",
+            "geometry": {"type": "LineString", "coordinates": coords},
+            "properties": {
+                "role": "internal_path", "id": ip.get("id"),
+                "largeur_m": ip.get("largeur_m"),
+            },
+        })
+    # Fusion points (Points)
+    for f in fusion_diag.get("fusion_points", []):
+        # Récupérer le point de contact à partir des indices
+        ext_id = f["external_id"]; int_id = f["internal_id"]
+        ext = next((e for e in external_paths if e["id"] == ext_id), None)
+        inte = next((i for i in (internal_paths or []) if i.get("id") == int_id), None)
+        if ext and inte and f["contact_point_external_idx"] < len(ext["path"]):
+            pt = ext["path"][f["contact_point_external_idx"]]
+            features.append({
+                "type": "Feature",
+                "geometry": {"type": "Point", "coordinates": [pt[1], pt[0]]},
+                "properties": {
+                    "role": "fusion_point",
+                    "external_id": ext_id, "internal_id": int_id,
+                    "distance_m": f["distance_m"],
+                    "width_multiplier": f["width_multiplier"],
+                    "new_width_m": f["new_width_m"],
+                },
+            })
+    return {
+        "type": "FeatureCollection",
+        "features": features,
+        "properties": {
+            "phase": "PHASE_X200_P1_EXTERNAL_INFLOW_ACTIVATION_Ω",
+            "waypoint": {"lat": lat, "lon": lon},
+            "entry_nodes_count": len(entry_nodes),
+            "external_paths_count": len(external_paths),
+            "internal_paths_count": len(internal_paths or []),
+            "fusions_detected": fusion_diag.get("fusions_detected", 0),
+            "hierarchy_commandant": HIERARCHY_5_LEVELS_COMMANDANT,
+            "contract": {
+                "smoother_touched": False,
+                "rendu_modified": False,
+                "v30_read_write": False,
+            },
+        },
+    }
+
+
+@router.post("/external-inflow/geojson")
+async def external_inflow_geojson(payload: dict = None):
+    """Sérialisation GeoJSON FeatureCollection (READ_ONLY)."""
+    p = payload or {}
+    lat = float(p.get("lat", 48.206657))
+    lon = float(p.get("lon", -68.382422))
+    count = int(p.get("entry_nodes_count", 16))
+    vital_zones = p.get("vital_zones") or []
+    internal_paths = p.get("internal_paths") or []
+    signals = {
+        "water_points": p.get("water_points", []),
+        "steep_slope_points": p.get("steep_slope_points", []),
+        "forest_cover": p.get("forest_cover", 0.6),
+        "vital_zones": vital_zones,
+    }
+    entry_nodes = generate_entry_nodes(lat, lon, count=count, terrain_signals=signals)
+    external_paths = []
+    for node in entry_nodes:
+        target = find_nearest_vital_zone(node, vital_zones)
+        if target is None:
+            continue
+        path = trace_organic_path(node, target)
+        score = node["weight"] * 100
+        cls = classify_corridor_commandant(score)
+        external_paths.append({
+            "id": f"ext_{node['index']:02d}",
+            "entry_node_id": node["id"],
+            "target_type": target.get("type"),
+            "path": path,
+            "level": cls["level"], "color": cls["color"],
+            "largeur_m": cls["largeur_m"], "weight_render": cls["weight"],
+            "score": round(score, 2),
+        })
+    fusion_diag = fuse_external_internal(external_paths, internal_paths)
+    return JSONResponse(_build_geojson(lat, lon, entry_nodes, external_paths,
+                                       internal_paths, fusion_diag))
+
+
+@router.get("/external-inflow/geojson")
+async def external_inflow_geojson_get(
+    lat: float = 48.206657, lon: float = -68.382422, entry_nodes_count: int = 16,
+):
+    """Variante GET avec waypoint par défaut et aucune zone vitale/internal (démo)."""
+    # Zones vitales démo par défaut pour que le GeoJSON soit non vide
+    demo_vital = [
+        {"type": "salines", "lat": lat + 0.0005, "lng": lon + 0.0005, "score": 90},
+        {"type": "repos",   "lat": lat + 0.0003, "lng": lon - 0.0004, "score": 70},
+    ]
+    return await external_inflow_geojson({
+        "lat": lat, "lon": lon, "entry_nodes_count": entry_nodes_count,
+        "vital_zones": demo_vital,
+    })
+
+
 @router.get("/status")
 async def status():
     return JSONResponse({
