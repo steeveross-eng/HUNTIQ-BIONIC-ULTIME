@@ -1119,8 +1119,6 @@ except Exception as e:
     logger.warning(f"Pipeline preview router not loaded: {e}")
 
 # ═══ PHASE X199 ACTIVATION — 5 engines étendus (ordre institutionnel) ═══
-# Ordre COMMANDANT STEEVE-MAX : activation séquencée 1→5
-# Triple verrou X199 : feature_flag + env X199_ACTIVATION_AUTHORIZED_BY_COMMANDANT + token STEEVE-MAX-X199-EXPLICIT
 for _slug, _label in [
     ("ecoforestry_omega",         "ENGINE_ECOFORESTRY_Ω (X199 #1 — racine)"),
     ("advanced_geospatial_omega", "ENGINE_ADVANCED_GEOSPATIAL_Ω (X199 #2)"),
@@ -1134,6 +1132,14 @@ for _slug, _label in [
         logger.info(f"✓ X199 active : {_label}")
     except Exception as e:
         logger.warning(f"X199 {_slug} not loaded: {e}")
+
+# ═══ PHASE X200-P5 — ENGINE RENDUΩ (validation ultime + blocage rendu) ═══
+try:
+    from routes.renduomega_router import router as renduomega_router
+    app.include_router(renduomega_router)
+    logger.info("✓ X200-P5 active : ENGINE_RENDUΩ (/api/v7-ultime/renduomega/*)")
+except Exception as e:
+    logger.warning(f"X200-P5 RENDUΩ router not loaded: {e}")
 
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")

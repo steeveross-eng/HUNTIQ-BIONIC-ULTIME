@@ -110,6 +110,23 @@ BCE-4X ULTIME ABSOLU :
   V30 intangible. Pytest 156/156 vert. Rapports scellés :
   `RAPPORT_X200_P3B_HUMAN_ZONES_Ω.md`,
   `RAPPORT_X200_P3B_PREDICTIVE_MULTIPOINT_Ω.md`.
+- **X200-P5 ENGINE RENDUΩ INTEGRATION_Ω (ultime)** — ✅ 2026-04-23 :
+  Triple verrou P5 (`STEEVE-MAX-X200-P5-EXPLICIT`). Module
+  `engines/post_smoothing/renduomega.py` (~400 lignes) + endpoints
+  dédiés `/api/v7-ultime/renduomega/{status,validate,validate-bundle}`.
+  Constantes institutionnelles : `base_color=#FF8F00`, opacity_min
+  0.75, min_zoom 13, épaisseurs {1.2, 2.0, 3.0} selon probabilité
+  agrégée, zindex institutionnel strict (zones<hydro<terrain<corridors
+  <salines<affuts<hotspots<vent). Validation §2 (25-30 pts, ≤20 m/seg,
+  ≤45°/ang, anti-radial), §3 (rayon 420-780 m, eau < 20 m, pente > 35°,
+  human buffer-weighted, contamination, cône affût 80°), §4 (1 espèce
+  par corridor, métadonnées obligatoires), §5 (rendu adaptatif).
+  Pré-étape : ré-échantillonnage uniforme 25-30 pts préservant la forme.
+  **Blocage §1.2 en production** : live waypoint officiel → 24 corridors
+  en entrée, 2 acceptés, 22 rejetés avec motifs consignés (angles > 45°,
+  segments > 20 m, formes radiales, buffer humain, etc.). V30 intangible.
+  Pytest 180/180 vert. Rapport `RAPPORT_X200_P5_RENDUΩ_INTEGRATION_ULTIME_Ω.md`
+  scellé.
 
 ## Prioritized Backlog
 ### P0 — Aucun (phase actuelle scellée)

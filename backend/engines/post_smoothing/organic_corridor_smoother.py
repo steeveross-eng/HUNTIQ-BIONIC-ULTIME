@@ -665,6 +665,19 @@ def smooth_bundle(bundle: Dict[str, Any]) -> Dict[str, Any]:
     bundle["smoother_p2_predictive_integrated"] = (
         bundle.get("p2_predictive_integration", {}).get("status") == "APPLIED"
     )
+
+    # ═══════════════════════════════════════════════════════════════════
+    # HOOK X200-P5 — ENGINE RENDUΩ (validation ultime + blocage strict)
+    # ═══════════════════════════════════════════════════════════════════
+    # Exécuté EN DERNIER : filtre dur des corridors non conformes aux
+    # règles institutionnelles §1.2/§2/§3/§4/§5. Les corridors rejetés
+    # sont retirés de `bundle["corridors"]` et consignés dans
+    # `corridors_rejected_by_renduomega` + `errors_log`.
+    try:
+        from engines.post_smoothing.renduomega import apply_renduomega_to_bundle
+        bundle = apply_renduomega_to_bundle(bundle)
+    except Exception as _e:  # pragma: no cover
+        bundle.setdefault("renduomega_integration", {"status": "ERROR", "error": str(_e)})
     bundle["smoother_rendu_omega"] = {
         "color": COLOR_INSTITUTIONAL,
         "weights_allowed_px": [WEIGHT_FAIBLE_PX, WEIGHT_FORT_PX, WEIGHT_CRITIQUE_PX],
