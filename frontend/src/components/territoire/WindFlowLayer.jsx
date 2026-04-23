@@ -19,15 +19,15 @@ import { useMap } from 'react-leaflet';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
-// V9-INSTITUTIONNEL PARAMETERS
+// V9-INSTITUTIONNEL PARAMETERS — P7-P0 VISIBILITY UPGRADE (BCE-4X)
 const PARTICLE_COUNT = 2500;
-const MAX_OPACITY = 0.85;
+const MAX_OPACITY = 0.90;
 const TRAIL_COLOR = '144, 202, 249'; // #90CAF9
 const HEAD_COLOR = '220, 240, 255';
-const ARROW_LENGTH = 4;
-const ARROW_WIDTH = 2;
-const TRAIL_LENGTH = 8;
-const LINE_WIDTH = 1.2;
+const ARROW_LENGTH = 6;          // P7-P0 : 4 → 6
+const ARROW_WIDTH = 3;           // P7-P0 : 2 → 3
+const TRAIL_LENGTH = 10;         // P7-P0 : 8 → 10
+const LINE_WIDTH = 1.8;          // P7-P0 : 1.2 → 1.8 (conformité Ventusky)
 const METERS_PER_DEG_LAT = 111320;
 const MIN_RELOAD_INTERVAL = 30000;
 

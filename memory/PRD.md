@@ -120,6 +120,19 @@ BCE-4X ULTIME ABSOLU :
   `waypoint_context_match=true`. ESLint clean sur les 2 fichiers.
   `CI_STATUS_Ω.runtime_beacon.conforming` **NORMALISÉ à TRUE** en permanence.
   V30 intangible. Rapport `RAPPORT_X200_P4_RUNTIME_BEACON_Ω.md` scellé.
+- **X200-P7 TERRITOIRE_VISUEL_DIAGNOSTIC_FIX_P0_Ω** — ✅ 2026-04-23 :
+  Diagnostic comparatif PREVIEW A (Commandant) vs RENDU B (Emergent).
+  **VENT** : canvas `canvas[data-windlayer]` existait (z=650, 1920×840,
+  18 825 pixels peints, diagnostic initial FAUX NÉGATIF dû à requête
+  `.leaflet-pane canvas`). Correction cosmétique Ventusky dans
+  `WindFlowLayer.jsx` : `LINE_WIDTH 1.2→1.8`, `ARROW_LENGTH 4→6`,
+  `ARROW_WIDTH 2→3`, `TRAIL_LENGTH 8→10`, `MAX_OPACITY 0.85→0.90` →
+  **32 515 pixels peints live (+72.7%)**, particules visibles à l'œil.
+  **INSPEC** : aucun bug — comportement role-based conforme. Activation
+  PRO → 8 attracteurs rendus ; activation EXPERT → 8 attracteurs + 5
+  pentes + 5 couvert = **18 paths institutionnels**. V30 intangible,
+  runtime_beacon conforme préservé, aucune modif backend. Rapport
+  `RAPPORT_X200_P7_TERRITOIRE_VISUEL_DIAGNOSTIC_FIX_P0_Ω.md` scellé.
 - **X200-P6 ANTI_RÉGRESSION_Ω** — ✅ 2026-04-23 :
   Triple verrou P6 (`STEEVE-MAX-X200-P6-EXPLICIT`). Module
   `engines/post_smoothing/anti_regression_omega.py` (280 L) + router
