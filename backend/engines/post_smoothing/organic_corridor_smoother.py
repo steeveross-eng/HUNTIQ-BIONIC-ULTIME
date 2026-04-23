@@ -605,6 +605,20 @@ def smooth_bundle(bundle: Dict[str, Any]) -> Dict[str, Any]:
     bundle["smoother_p1_activation_applied"] = (
         bundle.get("p1_activation", {}).get("status") == "APPLIED"
     )
+
+    # ═══════════════════════════════════════════════════════════════════
+    # HOOK X200-P2 — PREDICTIVE → corridor_probability_omega
+    # ═══════════════════════════════════════════════════════════════════
+    # No-op si triple verrou P2 non satisfait. Enrichit chaque corridor
+    # avec une probabilité pondérée par la hiérarchie COMMANDANT (6/4/3/2/1).
+    try:
+        from engines.post_smoothing.predictive_integration import apply_predictive_to_bundle
+        bundle = apply_predictive_to_bundle(bundle)
+    except Exception as _e:  # pragma: no cover
+        bundle.setdefault("p2_predictive_integration", {"status": "ERROR", "error": str(_e)})
+    bundle["smoother_p2_predictive_integrated"] = (
+        bundle.get("p2_predictive_integration", {}).get("status") == "APPLIED"
+    )
     bundle["smoother_rendu_omega"] = {
         "color": COLOR_INSTITUTIONAL,
         "weights_allowed_px": [WEIGHT_FAIBLE_PX, WEIGHT_FORT_PX, WEIGHT_CRITIQUE_PX],

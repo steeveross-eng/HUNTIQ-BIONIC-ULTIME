@@ -65,14 +65,31 @@ BCE-4X ULTIME ABSOLU :
   prédiction agrégative 6-composantes). V30 intangible. Pytest 116/116
   vert. 5 rapports scellés (RAPPORT_X199_*.md). **NOYAU V31 CORE Ω
   CONSTITUÉ**.
+- **X200-P2 INTEGRATION_Ω (2 axes)** — ✅ 2026-04-23 :
+  - **Axe 1 — MFFP 2026 SYNC** : catalogue zone 2 BSL étendu sous-zones
+    2A/2B + armes (carabine/arc/arbalète), signature
+    `MFFP_CATALOGUE_VERSION=MFFP_2026_ZONE_2_BSL_X200_P2_SYNC_Ω`.
+    `is_legal(species, date, weapon, subzone)` ; wapiti confirmé
+    non admissible en zone 2.
+  - **Axe 2 — PREDICTIVE → SMOOTHER X180** : triple verrou P2 dédié
+    (token `STEEVE-MAX-X200-P2-EXPLICIT`). Module
+    `engines/post_smoothing/predictive_integration.py` agrège
+    `predictive_omega` sur chaque corridor (point médian) pondéré par
+    la hiérarchie COMMANDANT **6/4/3/2/1**. Nouvel attribut
+    `corridor_probability_omega` sur chaque corridor. V30 intangible,
+    zones/salines non modifiées.
+  Pytest 134/134 vert. Rapports scellés :
+  `RAPPORT_X200_P2_LEGAL_TIME_SYNC_Ω.md`,
+  `RAPPORT_X200_P2_PREDICTIVE_INTEGRATION_Ω.md`.
 
 ## Prioritized Backlog
 ### P0 — Aucun (phase actuelle scellée)
 ### P1 — Phase P1 COMPLÈTE (activation terminée ✅)
 ### P2 — Phase X199 COMPLÈTE (activation terminée ✅)
-### P3 — Sur ordre du Commandant
-- Synchronisation annuelle du catalogue MFFP dans `legal_time_omega` (fenêtres saisonnières zone 2 BSL).
-- Agrégation du moteur `predictive_omega` avec les corridors smoother X180 (probabilité par corridor).
+### P3 — Phase X200-P2 COMPLÈTE (MFFP sync + predictive integration ✅)
+### P4 — Sur ordre du Commandant
+- Enrichissement des bundles avec `terrain_signals` réels (water/slope/NDVI)
+  pour étaler distribution hiérarchique des corridors externes sur 5 niveaux.
 
 ### P2 — Backlog institutionnel
 - Extension `runtime_beacon.conforming` live frontend (nécessite directive
