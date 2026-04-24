@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="fr"><head>
+<meta charset="utf-8"/><title>RAPPORT_XII_SUPRA_PURGE_RELIQUES_Ω — BCE-4X ULTIME ABSOLU</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<style>
+:root{--bg:#0a0d12;--panel:#121820;--fg:#e8eef5;--mut:#9fb0c2;--ok:#16a34a;--warn:#f59e0b;--err:#ef4444;--accent:#ff8f00;--amber:#ffc300;--line:#1c2735;--code:#0e141c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.55 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Courier New",monospace}
+.wrap{max-width:1120px;margin:0 auto;padding:40px 28px 80px}h1,h2,h3{color:var(--accent);letter-spacing:.02em}
+h1{font-size:24px;margin:0 0 6px}h2{font-size:17px;margin:30px 0 10px;padding-top:16px;border-top:1px solid var(--line)}
+h3{font-size:13px;color:var(--amber);margin:16px 0 6px}.meta{color:var(--mut);font-size:12px;margin-bottom:20px}
+.tag{display:inline-block;padding:2px 8px;border:1px solid var(--accent);color:var(--accent);border-radius:3px;margin-right:6px;font-size:11px}
+.card{background:var(--panel);border:1px solid var(--line);padding:14px 16px;border-radius:6px;margin:12px 0}
+pre,code{background:var(--code);color:#d4ecff;padding:2px 6px;border-radius:3px}pre{padding:12px 14px;overflow:auto;border:1px solid var(--line);font-size:12.5px}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:12.5px}th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#0f1620;color:var(--amber);font-weight:700}.ok{color:var(--ok);font-weight:700}.warn{color:var(--warn)}.err{color:var(--err);font-weight:700}
+.badge-ok{background:#0f2a1a;color:#bef5d0;padding:2px 8px;border-radius:3px;font-weight:700}
+.badge-na{background:#2a2010;color:#ffe3a8;padding:2px 8px;border-radius:3px;font-weight:700}
+hr{border:0;border-top:1px solid var(--line);margin:22px 0}
+</style></head><body><div class="wrap">
+<h1>RAPPORT — PHASE_XII_SUPRA_PURGE_RELIQUES_Ω</h1>
+<div class="meta">
+  <span class="tag">BCE-4X ULTIME ABSOLU</span><span class="tag">TOP-ABSOLU</span><span class="tag">DESTRUCTION LEGACY</span><br/>
+  COMMANDANT : STEEVE-MAX · DATE : 2026-04-24 · WAYPOINT : <code>48.206657 / -68.382422</code>
+</div>
+
+<div class="card"><strong>VERDICT —</strong> <span class="badge-ok">PURGE INSTITUTIONNELLE IRRÉVERSIBLE CONFIRMÉE</span>.
+3 fichiers legacy orphelins <u>physiquement supprimés</u> du pipeline TERRITOIRE Ω.
+Verrou <code>_PURGED_LEGACY_LAYERS_OMEGA.js</code> scellé. Bundles + MVT purgés et
+régénérés sous RenduΩ. Anti-régression P6 active et observante (123 corridors observés).</div>
+
+<h2>1. SECTION 1 — Purge des couches legacy</h2>
+
+<h3>1.1 Fichiers PHYSIQUEMENT supprimés (pipeline TERRITOIRE Ω)</h3>
+<table><thead><tr><th>Fichier</th><th>Taille</th><th>Imports externes</th><th>Statut</th></tr></thead><tbody>
+<tr><td><code>/components/territoire/BionicCorridorsV6Layer.jsx</code></td><td>27 819 B</td><td class="ok">0</td><td class="ok">🗑 PURGÉ</td></tr>
+<tr><td><code>/components/territoire/AccessRouteV6Layer.jsx</code></td><td>5 566 B</td><td class="ok">0</td><td class="ok">🗑 PURGÉ</td></tr>
+<tr><td><code>/components/territoire/MovementCorridorsLayer.jsx</code></td><td>8 065 B</td><td class="ok">0</td><td class="ok">🗑 PURGÉ</td></tr>
+</tbody></table>
+<p>Archives d'audit conservées : <code>/app/memory/legacy_purged_xii/</code> (3 fichiers, 41 450 B total).</p>
+
+<h3>1.2 Verrou anti-réimportation scellé</h3>
+<p>Nouveau fichier <code>/components/territoire/_PURGED_LEGACY_LAYERS_OMEGA.js</code>
+exporte un objet <code>Object.freeze</code>&nbsp;:</p>
+<pre>PURGED_LEGACY_LAYERS_OMEGA = {
+  purged_at: '2026-04-24',
+  phase: 'PHASE_XII_SUPRA_PURGE_RELIQUES_Ω',
+  commandant: 'STEEVE-MAX',
+  removed_files: ['BionicCorridorsV6Layer.jsx', 'AccessRouteV6Layer.jsx', 'MovementCorridorsLayer.jsx'],
+  reimport_forbidden: true,
+  allowed_territoire_layers: [
+    'BionicLayersV8', 'WindFlowLayer', 'CursorBionicLayer',
+    'EcoforestryLayers', 'CompassOmegaWidget', 'MapInteractionLayer'
+  ]
+}</pre>
+
+<h3>1.3 Reliques conservées (hors scope Ω — pipeline secondaire)</h3>
+<table><thead><tr><th>Fichier</th><th>Raison de conservation</th></tr></thead><tbody>
+<tr><td><code>/components/territoire/GuidedRouteLayer.jsx</code></td>
+    <td>Couleur <code>#22c55e</code> verte — pas orange. Non importé dans <code>MapContent.jsx</code>. Hors scope « couches oranges non institutionnelles ».</td></tr>
+<tr><td><code>/components/territoire/GuidedRoutePanel.jsx</code></td>
+    <td>Panneau latéral de routes guidées, indépendant du pipeline corridors Ω.</td></tr>
+<tr><td><code>/components/territoire/RoutePlannerLayer.jsx</code></td>
+    <td>Importé uniquement par <code>/modules/territory/components/WaypointMap.jsx</code> (pipeline SECONDAIRE, pas TERRITOIRE Ω).</td></tr>
+<tr><td><code>/components/territoire/RouteReplayLayer.jsx</code></td>
+    <td>Idem WaypointMap secondaire.</td></tr>
+<tr><td><code>/components/territory/GuidedRouteLayer.jsx</code></td>
+    <td>Chemin <code>/territory/</code> (≠ <code>/territoire/</code>) — module indépendant.</td></tr>
+<tr><td><code>/components/TerritoryMap.jsx</code></td>
+    <td>Page distincte de <code>MonTerritoireBionicPage</code>.</td></tr>
+</tbody></table>
+<p class="warn">⚠ Si vous souhaitez étendre la purge à ces fichiers, ordre explicite requis (risque de casse des pages secondaires).</p>
+
+<h2>2. SECTION 2 — Purge des MVT et bundles historiques</h2>
+<pre>POST /api/v20/territoire/bundle/purge  → {"purged_lru": 9, "disk_cleared": true, "ok": true}
+POST /api/v20/territoire/tiles/purge   → {"tiles_cache_cleared": 0, "layers_supported": 8, "ok": true}
+/app/backend/cache/                    → VIDE (0 fichiers)</pre>
+<p>✅ <b>2.1/2.2/2.3</b> Aucun bundle V20 historique, aucun MVT tile antérieur à RenduΩ ne subsiste.</p>
+<p>✅ <b>2.4</b> Aucun fallback possible&nbsp;: tout MISS cache passe par <code>apply_renduomega_to_bundle()</code>
+dans <code>v20_performance_bundle.py</code> ET <code>v20_mvt_tiles.py:_get_bundle()</code>.</p>
+
+<h2>3. SECTION 3 — Reconstruction pure Ω</h2>
+<table><thead><tr><th>Espèce</th><th>Bundle acceptés</th><th>Bundle rejetés</th><th>status</th></tr></thead><tbody>
+<tr><td>orignal</td><td class="ok">1</td><td>10</td><td>APPLIED</td></tr>
+<tr><td>cerf</td><td class="ok">2</td><td>11</td><td>APPLIED</td></tr>
+<tr><td>ours</td><td class="ok">1</td><td>8</td><td>APPLIED</td></tr>
+</tbody></table>
+<p><b>MVT tile corridors @ waypoint officiel (zoom 13 / x=2539 / y=2840 / orignal)</b> :</p>
+<pre>features: 1
+properties: {
+  color: "#FF8F00",   width_px: 1.2,   opacity: 0.75,
+  renduomega_accepted: true,   min_zoom: 13,   zindex: 4
+}</pre>
+
+<h2>4. SECTION 4 — Verrouillage anti-régression</h2>
+<ul>
+<li>✅ <b>4.1</b> Seul pipeline autorisé : <code>BionicLayersV8</code> sous RenduΩ.</li>
+<li>✅ <b>4.2</b> <b>ANTI_RÉGRESSION_Ω (P6) ACTIVE</b> — observation continue des 12 sous-normes X150 :
+    <code>GET /api/v7-ultime/anti-regression/metrics</code> → <code>observed=123, accepted=11, rejected=112</code>.</li>
+<li>✅ <b>4.3</b> Rejet automatique + stockage dans <code>corridors_rejected_by_renduomega</code>
+    + trace horodatée dans matrice P6 <code>audit-matrix</code>.</li>
+</ul>
+
+<h2>5. SECTION 5 — Synchronisation finale</h2>
+<ul>
+<li>✅ <b>5.1</b> SW <code>v7→v8</code>, caches <code>v7.2→v8.0</code> (fait en phase précédente XII MVT).</li>
+<li>✅ <b>5.2</b> <code>supervisorctl restart frontend</code> exécuté — assets purgés recompilés.</li>
+<li>✅ <b>5.3</b> Invalidation forcée au prochain chargement client (mécanisme <code>controllerchange</code> codé).</li>
+</ul>
+
+<h2>6. SECTION 6 — Synthèse</h2>
+<div class="card">
+À l'issue de PHASE_XII_SUPRA_PURGE_RELIQUES_Ω&nbsp;:
+<ul>
+<li>TERRITOIRE Ω est <u>100&nbsp;% pur ENGINE CORRIDORS Ω + RENDUΩ</u>.</li>
+<li>Zéro relique legacy V6/V7 dans le pipeline <code>MapContent.jsx → BionicLayersV8</code>.</li>
+<li>Zéro fichier orange non institutionnel actif.</li>
+<li>Verrou anti-réimportation scellé (<code>_PURGED_LEGACY_LAYERS_OMEGA.js</code>).</li>
+<li>Sentinelle anti-régression P6 observante.</li>
+<li>Rendu institutionnel conforme aux 2 documents officiels (.docx) — parfait, irréversible.</li>
+</ul>
+</div>
+
+<h2>7. Garde-fous BCE-4X</h2>
+<ul>
+<li>✅ V30 LOCKED intact.</li>
+<li>✅ DIAGNOSTIC-CORRIDORS-Ω non activé.</li>
+<li>✅ Aucun testing agent utilisé (curl, Python, pytest 75/75).</li>
+<li>✅ Waypoint officiel unique.</li>
+<li>✅ Archives d'audit conservées dans <code>/app/memory/legacy_purged_xii/</code>.</li>
+</ul>
+
+<hr/>
+<p style="color:var(--mut);font-size:12px">Fin du rapport — RAPPORT_XII_SUPRA_PURGE_RELIQUES_Ω.html<br/>
+Protocole BCE-4X ULTIME ABSOLU — TOP-ABSOLU. V30 inchangé. Aucun testing agent utilisé.</p>
+</div></body></html>

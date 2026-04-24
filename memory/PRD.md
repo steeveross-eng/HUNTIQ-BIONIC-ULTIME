@@ -120,6 +120,21 @@ BCE-4X ULTIME ABSOLU :
   `waypoint_context_match=true`. ESLint clean sur les 2 fichiers.
   `CI_STATUS_Ω.runtime_beacon.conforming` **NORMALISÉ à TRUE** en permanence.
   V30 intangible. Rapport `RAPPORT_X200_P4_RUNTIME_BEACON_Ω.md` scellé.
+- **PHASE_XII_SUPRA_PURGE_RELIQUES_Ω** — ✅ 2026-04-24 :
+  **3 fichiers legacy orphelins PHYSIQUEMENT supprimés** du pipeline
+  TERRITOIRE Ω (0 import externe) : `BionicCorridorsV6Layer.jsx`
+  (27.8 kB), `AccessRouteV6Layer.jsx` (5.6 kB), `MovementCorridorsLayer.jsx`
+  (8.1 kB). Archivage audit `/app/memory/legacy_purged_xii/`. Verrou
+  anti-réimportation scellé : `_PURGED_LEGACY_LAYERS_OMEGA.js`
+  (Object.freeze, 6 couches autorisées déclarées). Bundles V20 + MVT
+  tiles purgés (`purged_lru=9, tiles_cache_cleared=0, disk_cleared=true`).
+  Reconstruction pure Ω : orignal=1/10, cerf=2/11, ours=1/8
+  (acceptés/rejetés, APPLIED). MVT @ waypoint officiel : 1 feature
+  `#FF8F00/1.2px/0.75opacity/accepted=true`. Anti-régression P6 : 123
+  observés, 112 rejetés (taux filtrage 91%). Reliques **conservées**
+  (hors scope Ω, pipelines secondaires) : GuidedRouteLayer (vert),
+  RoutePlannerLayer/RouteReplayLayer (WaypointMap), TerritoryMap.jsx.
+  V30 intact. Rapport HTTPS `/reports/RAPPORT_XII_SUPRA_PURGE_RELIQUES.html`.
 - **PHASE_XII_SUPRA_PURGE_TERRITOIRE_MVT_Ω** — ✅ 2026-04-24 :
   4 étapes activées simultanément. **Bypass RenduΩ critique découvert et
   corrigé** dans `v20_mvt_tiles.py:_get_bundle()` (fallback cold
