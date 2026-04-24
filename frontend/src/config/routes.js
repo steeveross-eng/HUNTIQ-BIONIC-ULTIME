@@ -21,7 +21,7 @@ const DashboardPage = lazy(() => import('@/pages/DashboardPage'));
 const AnalyticsPage = lazy(() => import('@/pages/intelligence/AnalyticsPage'));
 const ForecastPage = lazy(() => import('@/pages/intelligence/ForecastPage'));
 const PlanMaitrePage = lazy(() => import('@/pages/intelligence/PlanMaitrePage'));
-const MapPage = lazy(() => import('@/pages/MapPage'));
+// PHASE_XII_SUPRA_PURGE_PIPELINES_SECONDAIRES_Ω — MapPage purgé (route /map disabled + Navigate redirect)
 const MonTerritoireBionicPage = lazy(() => import('@/pages/MonTerritoireBionicPage'));
 const TripsPage = lazy(() => import('@/pages/TripsPage'));
 const ShopPage = lazy(() => import('@/pages/ShopPage'));

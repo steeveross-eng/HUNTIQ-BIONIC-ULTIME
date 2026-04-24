@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="fr"><head>
+<meta charset="utf-8"/><title>RAPPORT_XII_SUPRA_PURGE_PIPELINES_SECONDAIRES_Ω — BCE-4X ULTIME ABSOLU</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<style>
+:root{--bg:#0a0d12;--panel:#121820;--fg:#e8eef5;--mut:#9fb0c2;--ok:#16a34a;--warn:#f59e0b;--err:#ef4444;--accent:#ff8f00;--amber:#ffc300;--line:#1c2735;--code:#0e141c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.55 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Courier New",monospace}
+.wrap{max-width:1120px;margin:0 auto;padding:40px 28px 80px}h1,h2,h3{color:var(--accent);letter-spacing:.02em}
+h1{font-size:24px;margin:0 0 6px}h2{font-size:17px;margin:30px 0 10px;padding-top:16px;border-top:1px solid var(--line)}
+h3{font-size:13px;color:var(--amber);margin:16px 0 6px}.meta{color:var(--mut);font-size:12px;margin-bottom:20px}
+.tag{display:inline-block;padding:2px 8px;border:1px solid var(--accent);color:var(--accent);border-radius:3px;margin-right:6px;font-size:11px}
+.card{background:var(--panel);border:1px solid var(--line);padding:14px 16px;border-radius:6px;margin:12px 0}
+pre,code{background:var(--code);color:#d4ecff;padding:2px 6px;border-radius:3px}pre{padding:12px 14px;overflow:auto;border:1px solid var(--line);font-size:12.5px}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:12.5px}th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#0f1620;color:var(--amber);font-weight:700}.ok{color:var(--ok);font-weight:700}.warn{color:var(--warn)}.err{color:var(--err);font-weight:700}
+.badge-ok{background:#0f2a1a;color:#bef5d0;padding:2px 8px;border-radius:3px;font-weight:700}
+.badge-na{background:#2a2010;color:#ffe3a8;padding:2px 8px;border-radius:3px;font-weight:700}
+hr{border:0;border-top:1px solid var(--line);margin:22px 0}
+</style></head><body><div class="wrap">
+<h1>RAPPORT — PHASE_XII_SUPRA_PURGE_PIPELINES_SECONDAIRES_Ω</h1>
+<div class="meta">
+  <span class="tag">BCE-4X ULTIME ABSOLU</span><span class="tag">TOP-ABSOLU</span><span class="tag">PIPELINES_SECONDAIRES</span><br/>
+  COMMANDANT : STEEVE-MAX · DATE : 2026-04-24 · WAYPOINT : <code>48.206657 / -68.382422</code>
+</div>
+
+<div class="card"><strong>VERDICT —</strong> <span class="badge-ok">PURGE INSTITUTIONNELLE EXÉCUTÉE AU MAXIMUM CONFORME</span>.
+2 fichiers orphelins supplémentaires supprimés, exports cassés nettoyés, routes.js
+assaini. Tous les fichiers restants mentionnés dans la directive sont <b>ACTIVEMENT
+utilisés</b> par des pages productives (PlanMaitre, TerritoryShell) et ne peuvent
+être supprimés sans casse fonctionnelle majeure — voir Section 7.</div>
+
+<h2>1. SECTION 1 — Identification exhaustive des pipelines secondaires</h2>
+
+<h3>1.1 Fichiers Legacy* explicites cités par la directive</h3>
+<table><thead><tr><th>Fichier cité</th><th>Présence disque</th><th>Statut</th></tr></thead><tbody>
+<tr><td><code>LegacyZonesLayer.jsx</code></td><td>❌ absent</td><td>N'a jamais existé dans ce codebase</td></tr>
+<tr><td><code>LegacyAffutsLayer.jsx</code></td><td>❌ absent</td><td>N'a jamais existé dans ce codebase</td></tr>
+<tr><td><code>LegacyHotspotsLayer.jsx</code></td><td>❌ absent</td><td>N'a jamais existé dans ce codebase</td></tr>
+<tr><td><code>LegacyRoutesLayer.jsx</code></td><td>❌ absent</td><td>N'a jamais existé dans ce codebase</td></tr>
+<tr><td><code>LegacyNutritionLayer.jsx</code></td><td>❌ absent</td><td>N'a jamais existé dans ce codebase</td></tr>
+</tbody></table>
+<p><b>Résultat</b> : les 5 fichiers nominativement ciblés n'existent pas. Aucune purge à effectuer (déjà purs).</p>
+
+<h3>1.2 /modules/territory/* — arbre réel et usages</h3>
+<table><thead><tr><th>Fichier</th><th>Usages externes</th><th>Décision</th></tr></thead><tbody>
+<tr><td><code>/modules/territory/TerritoryService.js</code></td><td>utilisé par TerritoryList/TerritoryCard</td><td>CONSERVÉ (chaîne active)</td></tr>
+<tr><td><code>/modules/territory/components/TerritoryCard.jsx</code></td><td>utilisé par TerritoryList</td><td>CONSERVÉ</td></tr>
+<tr><td><code>/modules/territory/components/TerritoryList.jsx</code></td><td><b>PlanMaitreDashboard</b> (page active <code>/plan-maitre</code>)</td><td class="warn">CONSERVÉ — casse /plan-maitre si supprimé</td></tr>
+<tr><td><code>/modules/territory/components/WaypointManager.jsx</code></td><td><b>PlanMaitreDashboard</b></td><td class="warn">CONSERVÉ — casse /plan-maitre si supprimé</td></tr>
+<tr><td><code>/modules/territory/components/WaypointMap.jsx</code></td><td><b>TerritoryShell.jsx</b> (pipeline TERRITOIRE ACTIF !)</td><td class="warn">CONSERVÉ — casse TERRITOIRE si supprimé</td></tr>
+</tbody></table>
+
+<h3>1.3 TerritoryMap.jsx (166 KB)</h3>
+<table><thead><tr><th>Usages externes</th><th>Décision</th></tr></thead><tbody>
+<tr><td><b>22</b> usages (<code>BionicPrecisionZonesLayer.jsx</code>, <code>TerritoryAdvanced.jsx</code>, etc.)</td>
+    <td class="warn">CONSERVÉ — fichier central pour couches de précision</td></tr>
+</tbody></table>
+
+<h2>2. SECTION 2 — Purge physique (cibles réelles identifiées)</h2>
+<table><thead><tr><th>Fichier</th><th>Taille</th><th>Usages externes</th><th>Action</th></tr></thead><tbody>
+<tr><td><code>/pages/MapPage.jsx</code></td><td>19 348 B</td><td class="ok">0 (route <code>/map</code> disabled + Navigate redirect)</td><td class="ok">🗑 PURGÉ</td></tr>
+<tr><td><code>/components/TerritoryAdvanced.jsx</code></td><td>38 768 B</td><td class="ok">0 (export cassé dans index.js)</td><td class="ok">🗑 PURGÉ</td></tr>
+</tbody></table>
+
+<p><b>Nettoyages complémentaires</b>&nbsp;:</p>
+<ul>
+<li><code>/config/routes.js:24</code> — <code>lazy(() =&gt; import('@/pages/MapPage'))</code> supprimé (référence invalide).</li>
+<li><code>/modules/territory/components/index.js</code> réécrit — 4 exports cassés retirés (<code>TerritoryAdvanced</code>, <code>TerritoryAnalysisModule</code>, <code>TerritoryInventory</code>, <code>TerritoryRankings</code>). Seul <code>TerritoryMap</code> conservé (22 usages).</li>
+<li>Archivage complet dans <code>/app/memory/legacy_purged_xii/</code> (6 fichiers, 116 978 B total).</li>
+</ul>
+
+<h2>3. SECTION 3 — Purge des MVT et bundles secondaires</h2>
+<pre>POST /api/v20/territoire/bundle/purge  → {"purged_lru": 3, "disk_cleared": true, "ok": true}
+POST /api/v20/territoire/tiles/purge   → {"ok": true, "layers_supported": 8}</pre>
+<p>✅ 8 layers MVT purgés : <code>affuts, contamination, corridors, hotspots, nutrition, salines, vent, zones</code>.</p>
+
+<h2>4. SECTION 4 — Reconstruction pure Ω</h2>
+<table><thead><tr><th>Espèce</th><th>corridors ✓/✗</th><th>zones</th><th>salines</th><th>hotspots</th><th>affuts</th><th>status</th></tr></thead><tbody>
+<tr><td>orignal</td><td class="ok">1/10</td><td>5</td><td>4</td><td>5</td><td>0</td><td>APPLIED</td></tr>
+<tr><td>cerf</td><td class="ok">2/11</td><td>5</td><td>4</td><td>5</td><td>0</td><td>APPLIED</td></tr>
+<tr><td>ours</td><td class="ok">1/8</td><td>5</td><td>4</td><td>5</td><td>0</td><td>APPLIED</td></tr>
+</tbody></table>
+
+<h2>5. SECTION 5 — Verrouillage anti-régression</h2>
+<ul>
+<li>✅ <b>5.1</b> ANTI_RÉGRESSION_Ω (P6) active en continu — 12 sous-normes X150 observées à chaque corridor.</li>
+<li>✅ <b>5.2</b> Rejet automatique des corridors non-conformes + <code>corridors_rejected_by_renduomega</code> + audit-matrix P6.</li>
+</ul>
+
+<h2>6. Health check post-purge</h2>
+<pre>GET /                                  → HTTP 200
+GET /mon-territoire-bionic            → HTTP 200
+GET /plan-maitre                      → HTTP 200  (TerritoryList/WaypointManager actifs)
+GET /map                              → HTTP 200  (redirect Navigate → /mon-territoire-bionic)
+Frontend stderr (compile errors)     → 0 error</pre>
+
+<h2>7. Limites institutionnelles de la purge</h2>
+
+<div class="card">
+<p class="warn">⚠ <b>NOTE HONNÊTE AU COMMANDANT</b> — La directive demandait de supprimer
+<u>tout</u> <code>/modules/territory/*</code> et <code>TerritoryMap.jsx</code>. Cette purge
+totale <b>CASSERAIT</b> :</p>
+<ul>
+<li>La page <code>/plan-maitre</code> (dépend de <code>TerritoryList</code> + <code>WaypointManager</code>).</li>
+<li>La page <code>TerritoryShell.jsx</code> (pipeline TERRITOIRE ACTIF dépend de <code>WaypointMap</code>).</li>
+<li>22 usages de <code>TerritoryMap.jsx</code> dans les couches de précision
+    (<code>BionicPrecisionZonesLayer</code>).</li>
+</ul>
+<p>J'ai donc appliqué la purge au <b>maximum chirurgical possible</b> sans casser
+l'application. Pour aller plus loin, ordre explicite requis avec <u>quelle page
+sacrifier</u> ou <u>quel remplaçant fournir</u>.</p>
+</div>
+
+<h2>8. Garde-fous BCE-4X</h2>
+<ul>
+<li>✅ V30 LOCKED intact.</li>
+<li>✅ DIAGNOSTIC-CORRIDORS-Ω non activé.</li>
+<li>✅ Aucun testing agent utilisé.</li>
+<li>✅ Archives d'audit (6 fichiers) conservées dans <code>/app/memory/legacy_purged_xii/</code>.</li>
+<li>✅ Waypoint officiel unique <code>48.206657 / -68.382422</code>.</li>
+</ul>
+
+<hr/>
+<p style="color:var(--mut);font-size:12px">
+Fin du rapport — RAPPORT_XII_SUPRA_PURGE_PIPELINES_SECONDAIRES_Ω.html<br/>
+Protocole BCE-4X ULTIME ABSOLU — TOP-ABSOLU. V30 inchangé. Aucun testing agent utilisé.</p>
+</div></body></html>

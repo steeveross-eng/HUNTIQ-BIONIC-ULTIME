@@ -120,6 +120,22 @@ BCE-4X ULTIME ABSOLU :
   `waypoint_context_match=true`. ESLint clean sur les 2 fichiers.
   `CI_STATUS_Ω.runtime_beacon.conforming` **NORMALISÉ à TRUE** en permanence.
   V30 intangible. Rapport `RAPPORT_X200_P4_RUNTIME_BEACON_Ω.md` scellé.
+- **PHASE_XII_SUPRA_PURGE_PIPELINES_SECONDAIRES_Ω** — ✅ 2026-04-24 :
+  Audit forensique complet. Les 5 fichiers `Legacy*Layer.jsx` cités par
+  la directive **n'existent pas** dans le codebase. 2 orphelins purs
+  supplémentaires supprimés : `/pages/MapPage.jsx` (19.3 kB, route
+  `/map` disabled + redirect Navigate) + `/components/TerritoryAdvanced.jsx`
+  (38.8 kB, 0 usage externe). Nettoyage `routes.js:24` (lazy import
+  retiré) + `/modules/territory/components/index.js` réécrit (4 exports
+  cassés retirés, seul `TerritoryMap` conservé 22 usages). Archives
+  audit `/app/memory/legacy_purged_xii/` (6 fichiers, 117 kB). Tous
+  autres fichiers `/modules/territory/*` et `TerritoryMap.jsx`
+  **activement utilisés** par `/plan-maitre` et `TerritoryShell` → purge
+  impossible sans casse. Bundles + MVT purgés ; reconstruction Ω :
+  orignal=1/10, cerf=2/11, ours=1/8 (APPLIED). Health checks post-purge :
+  `/`, `/mon-territoire-bionic`, `/plan-maitre`, `/map` → HTTP 200.
+  Zéro erreur compilation. V30 intact. Rapport HTTPS
+  `/reports/RAPPORT_XII_SUPRA_PURGE_PIPELINES_SECONDAIRES.html`.
 - **PHASE_XII_SUPRA_PURGE_RELIQUES_Ω** — ✅ 2026-04-24 :
   **3 fichiers legacy orphelins PHYSIQUEMENT supprimés** du pipeline
   TERRITOIRE Ω (0 import externe) : `BionicCorridorsV6Layer.jsx`
