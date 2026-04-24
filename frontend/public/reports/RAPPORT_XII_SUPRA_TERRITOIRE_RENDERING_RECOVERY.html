@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8">
+<title>RAPPORT — PHASE_XII_SUPRA_TERRITOIRE_RENDERING_RECOVERY_Ω</title>
+<style>
+  body { font: 13px/1.55 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+         background: #0b1220; color: #e8eef5; padding: 24px; max-width: 1080px; margin: 0 auto; }
+  h1 { color: #ff8f00; border-bottom: 2px solid #ff8f00; padding-bottom: 8px; letter-spacing: 0.04em; }
+  h2 { color: #f59e0b; margin-top: 28px; border-left: 4px solid #ff8f00; padding-left: 10px; }
+  .ok { color: #16a34a; font-weight: 700; }
+  .err { color: #ef4444; font-weight: 700; }
+  .box { background: #121c2b; border: 1px solid #1c2735; border-radius: 6px; padding: 14px 18px; margin: 10px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 12px; }
+  th, td { border: 1px solid #1c2735; padding: 6px 10px; text-align: left; }
+  th { background: #1c2735; color: #ff8f00; }
+  code { background: #1c2735; color: #ffd54f; padding: 1px 6px; border-radius: 3px; }
+</style></head><body>
+<h1>PROTOCOLE BCE-4X ULTIME ABSOLU — TOP-ABSOLU<br>
+RAPPORT PHASE_XII_SUPRA_TERRITOIRE_RENDERING_RECOVERY_Ω</h1>
+
+<div class="box">
+  <strong>Commandant :</strong> STEEVE-MAX · <strong>Waypoint :</strong> 48.206657 / −68.382422 ·
+  <strong>V30 :</strong> <span class="ok">LOCKED</span> · <strong>DIAGNOSTIC-Ω :</strong> <span class="ok">désactivé</span>
+</div>
+
+<h2>§ SECTION 1 — RÉACTIVATION BACKEND</h2>
+<div class="box">
+<table>
+<tr><th>Service supervisor</th><th>État</th><th>PID</th></tr>
+<tr><td>backend</td><td class="ok">RUNNING</td><td>46</td></tr>
+<tr><td>frontend</td><td class="ok">RUNNING</td><td>48</td></tr>
+<tr><td>mongodb</td><td class="ok">RUNNING</td><td>51</td></tr>
+<tr><td>nginx-code-proxy</td><td class="ok">RUNNING</td><td>45</td></tr>
+</table>
+<table>
+<tr><th>Endpoint</th><th>HTTP</th></tr>
+<tr><td>GET /api/v30/corridors/status</td><td class="ok">200 · 94.12 CONFORME_Ω · 64/68</td></tr>
+<tr><td>GET /api/v30/corridors/cache-diagnostic</td><td class="ok">200</td></tr>
+<tr><td>GET /api/v30/corridors/baseline</td><td class="ok">200 · SHA 915288a4…86018</td></tr>
+<tr><td>GET /api/v30/corridors/enforcement-status</td><td class="ok">200</td></tr>
+<tr><td>GET /api/v20/territoire/bundle</td><td class="ok">200</td></tr>
+<tr><td>POST /api/v20/territoire/bundle/purge</td><td class="ok">200 · purged_lru=8</td></tr>
+</table>
+<p><strong>Aucune réponse 404 ou 503 détectée.</strong></p>
+</div>
+
+<h2>§ SECTION 2 — PURGE SERVICE WORKER</h2>
+<div class="box">
+  <ul>
+    <li><code>CACHE_NAME</code> : <span class="ok">bionic-hunt-cache-v9.0-enforcement-p0</span></li>
+    <li><code>TILE_CACHE_NAME</code> : <span class="ok">bionic-tiles-v9.0-enforcement-p0</span></li>
+    <li>SW sha256_head : <span class="ok">d4c4198f9d6f1c88</span> (mtime 2026-04-24)</li>
+    <li>Liste <code>OBSOLETE_CACHES</code> ajoutée : 20 entrées (v2 → v8.1)</li>
+    <li>Handler <code>activate</code> renforcé : supprime tout cache ≠ courant</li>
+    <li>Handler <code>message</code> <code>PURGE_ALL_CACHES_OMEGA</code> : purge totale client sur demande</li>
+    <li>index.js envoie <code>PURGE_ALL_CACHES_OMEGA</code> à chaque boot + écoute <code>SW_RECOVERY_ACTIVATED</code></li>
+    <li>Bypass SW : <code>/api/v30/corridors/*</code> + <code>/api/v20/territoire/bundle*</code></li>
+  </ul>
+  <p>Mode "Frontend Preview Only" : <span class="ok">impossible</span> — tous les SW obsolètes sont invalidés à l'activation.</p>
+</div>
+
+<h2>§ SECTION 3 — RÉINITIALISATION DES COUCHES TERRITOIRE</h2>
+<div class="box">
+  <table>
+    <tr><th>Couche</th><th>Source backend</th><th>Statut</th></tr>
+    <tr><td>Zones (alim, repos, rut, eau, refuge, thermique)</td><td>territoire bundle</td><td class="ok">OK · 5+ zones</td></tr>
+    <tr><td>Corridors V30</td><td>engine_ia_corridors_omega</td><td class="ok">OK · 46 natifs</td></tr>
+    <tr><td>Corridors INTERZONE</td><td>interzone_omega.py</td><td class="ok">OK · ~18</td></tr>
+    <tr><td>Corridors ENTRANTS (migration)</td><td>interzone_omega.py</td><td class="ok">OK · 4 (orignal+cerf)</td></tr>
+    <tr><td>Salines</td><td>engine_salines_omega</td><td class="ok">OK</td></tr>
+    <tr><td>Hotspots</td><td>engine_hotspots_omega</td><td class="ok">OK</td></tr>
+    <tr><td>Affûts</td><td>engine_affuts_omega</td><td class="ok">OK · sans interaction corridors §6.8</td></tr>
+    <tr><td>Vent</td><td>WindSystemV8</td><td class="ok">OK</td></tr>
+    <tr><td>Contamination</td><td>contam_roms / v20 bundle</td><td class="ok">OK · exclusion stricte active</td></tr>
+  </table>
+  <p>zIndex institutionnel respecté : <code>zones → hydrologie → terrain → corridors → salines → affûts → hotspots → vent</code>.<br>
+  minZoom corridors : <span class="ok">13</span> (RENDU_OMEGA.minZoomCorridors).</p>
+</div>
+
+<h2>§ SECTION 4 — VALIDATION VISUELLE</h2>
+<div class="box">
+  <ul>
+    <li>Page <code>/mon-territoire-bionic?lat=48.206657&lng=-68.382422</code> : <span class="ok">chargée</span></li>
+    <li>Waypoint officiel visible au centre avec cercle de rayon fonctionnel</li>
+    <li>Tabs INTEL · ZONES · CORRIDORS · AFFUTS · SALINES · HOTSPOTS · VENT · CONTAM · CURSEUR · INSPEC : <span class="ok">toutes présentes</span></li>
+    <li>Panneau STATUT CORRIDORS Ω : <span class="ok">visible (chargement normal)</span></li>
+    <li>Aucune erreur HTTP 404 observée</li>
+    <li>Aucune bannière "Frontend Preview Only"</li>
+  </ul>
+</div>
+
+<h2>§ SECTION 5 — SYNTHÈSE</h2>
+<div class="box" style="border-color:#16a34a">
+  <p><strong>TERRITOIRE restauré en mode opérationnel complet.</strong></p>
+  <ul>
+    <li>Backend : 6/6 endpoints à HTTP 200</li>
+    <li>Pipeline live : V30 → INTERZONE → VEINEUX → RENDUΩ · score 94.12 · CONFORME_Ω</li>
+    <li>SW v9.0-enforcement-p0 actif · 20 caches obsolètes listés pour purge</li>
+    <li>Message <code>PURGE_ALL_CACHES_OMEGA</code> déclenché automatiquement au boot client</li>
+    <li>Aucune 404 · aucun mode preview · toutes les couches TERRITOIRE restaurées</li>
+  </ul>
+  <p><strong>À vos ordres, Commandant STEEVE-MAX.</strong></p>
+</div>
+
+</body></html>

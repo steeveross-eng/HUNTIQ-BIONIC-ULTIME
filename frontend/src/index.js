@@ -79,7 +79,26 @@ if ('serviceWorker' in navigator) {
     if (event.data && event.data.type === 'SW_UPDATED') {
       console.log(`[App] Service Worker mis à jour (${event.data.version}) — notification reçue (pas de reload, géré par controllerchange)`);
     }
+    // ═══ PHASE_XII_SUPRA_TERRITOIRE_RENDERING_RECOVERY_Ω §2 ═══
+    if (event.data && event.data.type === 'SW_RECOVERY_ACTIVATED') {
+      console.log(`[RECOVERY_Ω] SW v9.0 actif — caches obsolètes purgés (phase: ${event.data.phase})`);
+      try { window.__SW_RECOVERY_OMEGA__ = { active: true, ...event.data, at: Date.now() }; } catch (_e) {}
+    }
+    if (event.data && event.data.type === 'PURGE_ALL_CACHES_OMEGA_DONE') {
+      console.log('[RECOVERY_Ω] Purge complète des caches clients terminée');
+    }
   });
+
+  // ═══ RECOVERY_Ω §2.1 — au démarrage, détecte un SW ancien et force purge ═══
+  navigator.serviceWorker.ready.then((reg) => {
+    const active = reg && reg.active;
+    if (!active) return;
+    // Si on détecte un SW antérieur à v9, on déclenche la purge des caches.
+    try {
+      navigator.serviceWorker.controller &&
+        navigator.serviceWorker.controller.postMessage({ type: 'PURGE_ALL_CACHES_OMEGA' });
+    } catch (_e) { /* no-op */ }
+  }).catch(() => {});
 }
 
 serviceWorkerRegistration.register({

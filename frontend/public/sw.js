@@ -26,7 +26,19 @@ const API_CACHE_ROUTES = [
 ];
 
 // V7.2 Tile layers to cache for offline heatmaps
-const TILE_CACHE_NAME = 'bionic-tiles-v8.1';
+const TILE_CACHE_NAME = 'bionic-tiles-v9.0-enforcement-p0';
+// ═══ PHASE_XII_SUPRA_TERRITOIRE_RENDERING_RECOVERY_Ω §2.2 ═══
+// Toutes les versions antérieures DOIVENT être invalidées à l'activation.
+const OBSOLETE_CACHES = [
+  'bionic-hunt-cache-v2', 'bionic-hunt-cache-v3', 'bionic-hunt-cache-v4',
+  'bionic-hunt-cache-v5', 'bionic-hunt-cache-v6', 'bionic-hunt-cache-v7',
+  'bionic-hunt-cache-v7.2', 'bionic-hunt-cache-v8', 'bionic-hunt-cache-v8.0',
+  'bionic-hunt-cache-v8.1',
+  'bionic-tiles-v2', 'bionic-tiles-v3', 'bionic-tiles-v4',
+  'bionic-tiles-v5', 'bionic-tiles-v6', 'bionic-tiles-v7',
+  'bionic-tiles-v7.2', 'bionic-tiles-v8', 'bionic-tiles-v8.0',
+  'bionic-tiles-v8.1',
+];
 const TILE_PATTERNS = [
   'basemaps.cartocdn.com',
   'server.arcgisonline.com',
@@ -55,19 +67,52 @@ self.addEventListener('install', (event) => {
 
 // Activate event - clean old caches
 self.addEventListener('activate', (event) => {
-  console.log('[SW] Activating Service Worker v2...');
+  console.log('[SW] Activating Service Worker v9.0-enforcement-p0 (RECOVERY_Ω)');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames
-          .filter((name) => name !== CACHE_NAME)
+          // §2.2 : supprime TOUT cache qui n'est ni le courant ni le tile courant
+          .filter((name) => name !== CACHE_NAME && name !== TILE_CACHE_NAME)
           .map((name) => {
-            console.log('[SW] Deleting old cache:', name);
+            console.log('[SW] RECOVERY_Ω — deleting obsolete cache:', name);
             return caches.delete(name);
           })
       );
+    }).then(() => {
+      // Notifier tous les clients de la purge effectuée (pour UI)
+      return self.clients.matchAll({ includeUncontrolled: true }).then((clients) => {
+        clients.forEach((c) => {
+          try {
+            c.postMessage({
+              type: 'SW_RECOVERY_ACTIVATED',
+              cacheName: CACHE_NAME,
+              tileCacheName: TILE_CACHE_NAME,
+              phase: 'PHASE_XII_SUPRA_TERRITOIRE_RENDERING_RECOVERY_Ω',
+            });
+          } catch (_e) { /* no-op */ }
+        });
+      });
     }).then(() => self.clients.claim())
   );
+});
+
+// ═══ §2.1 PURGE-FORCE — message client pour déclencher purge manuelle ═══
+self.addEventListener('message', (event) => {
+  if (!event.data || typeof event.data !== 'object') return;
+  if (event.data.type === 'PURGE_ALL_CACHES_OMEGA') {
+    event.waitUntil(
+      caches.keys().then((names) => Promise.all(names.map((n) => caches.delete(n))))
+        .then(() => {
+          try {
+            event.source && event.source.postMessage({
+              type: 'PURGE_ALL_CACHES_OMEGA_DONE',
+              phase: 'PHASE_XII_SUPRA_TERRITOIRE_RENDERING_RECOVERY_Ω',
+            });
+          } catch (_e) { /* no-op */ }
+        })
+    );
+  }
 });
 
 // Fetch event - handle requests
