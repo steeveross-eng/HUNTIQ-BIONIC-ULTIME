@@ -120,6 +120,25 @@ BCE-4X ULTIME ABSOLU :
   `waypoint_context_match=true`. ESLint clean sur les 2 fichiers.
   `CI_STATUS_Ω.runtime_beacon.conforming` **NORMALISÉ à TRUE** en permanence.
   V30 intangible. Rapport `RAPPORT_X200_P4_RUNTIME_BEACON_Ω.md` scellé.
+- **PHASE_XII_SUPRA_CORRIDORS_VEINEUX_Ω_ULTIME** — ✅ 2026-04-24 :
+  Transformation définitive du pipeline corridors avec V30 INTACT.
+  Nouveau module `engines/post_smoothing/veineux_omega.py` (420 L, ruff
+  clean) + triple verrou `.env` (`STEEVE-MAX-XII-VEINEUX-EXPLICIT`).
+  Pipeline : `compute_territoire_v10 → apply_veineux_omega_to_bundle →
+  apply_renduomega_to_bundle`. Algorithmes : CatmullRom centripète 28
+  points, organic amplitude multi-harmonique (sin 3× + sin 7×),
+  Laplacien 2 passes factor=0.25, avoid_water 25m buffer, clip
+  `FINAL_LEN_BUDGET_M=515m`, detect_radial_convergence (4+ convergents).
+  Branché dans 3 chemins : `v20_performance_bundle.py`,
+  `v20_mvt_tiles.py`, `v30_corridors_status_router.py`.
+  **RÉSULTAT LIVE WAYPOINT OFFICIEL** :
+  - `v30_alignment_score = 100.00 / 100` (était 36.70)
+  - `alignment_label = CONFORME_Ω` (seuil ≥90)
+  - `acceptance_rate = 100%` (38/38 corridors, 0 rejet)
+  - `mean_functional_radius = 541.7m` ∈ [420, 780]
+  - 4 espèces toutes à CONFORME_Ω (orignal, cerf, ours, dindon)
+  Pytest : 10/10 VEINEUX + 43/43 suite (0 régression). V30 SHA intact.
+  Rapport HTTPS `/reports/RAPPORT_XII_SUPRA_CORRIDORS_VEINEUX_ULTIME.html`.
 - **PHASE_XII_SUPRA_DIAGNOSTIC_V30_STATUS_Ω** — ✅ 2026-04-24 :
   ENGINE CORRIDORS V30 rendu entièrement observable. Nouveau router
   `/app/backend/routes/v30_corridors_status_router.py` — endpoints

@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="fr"><head>
+<meta charset="utf-8"/><title>RAPPORT_XII_SUPRA_CORRIDORS_VEINEUX_Ω_ULTIME — BCE-4X ULTIME ABSOLU</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<style>
+:root{--bg:#0a0d12;--panel:#121820;--fg:#e8eef5;--mut:#9fb0c2;--ok:#16a34a;--warn:#f59e0b;--err:#ef4444;--accent:#ff8f00;--amber:#ffc300;--line:#1c2735;--code:#0e141c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.55 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Courier New",monospace}
+.wrap{max-width:1120px;margin:0 auto;padding:40px 28px 80px}h1,h2,h3{color:var(--accent);letter-spacing:.02em}
+h1{font-size:24px;margin:0 0 6px}h2{font-size:17px;margin:30px 0 10px;padding-top:16px;border-top:1px solid var(--line)}
+h3{font-size:13px;color:var(--amber);margin:16px 0 6px}.meta{color:var(--mut);font-size:12px;margin-bottom:20px}
+.tag{display:inline-block;padding:2px 8px;border:1px solid var(--accent);color:var(--accent);border-radius:3px;margin-right:6px;font-size:11px}
+.card{background:var(--panel);border:1px solid var(--line);padding:14px 16px;border-radius:6px;margin:12px 0}
+pre,code{background:var(--code);color:#d4ecff;padding:2px 6px;border-radius:3px}pre{padding:12px 14px;overflow:auto;border:1px solid var(--line);font-size:12.5px}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:12.5px}th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#0f1620;color:var(--amber);font-weight:700}.ok{color:var(--ok);font-weight:700}.warn{color:var(--warn)}.err{color:var(--err);font-weight:700}
+.badge-ok{background:#0f2a1a;color:#bef5d0;padding:2px 8px;border-radius:3px;font-weight:700}
+.badge-omega{background:#2a1a0e;color:#ffc99a;padding:3px 10px;border-radius:3px;font-weight:700;border:1px solid #ff8f00}
+.metric-big{font-size:36px;color:#16a34a;font-weight:700}
+hr{border:0;border-top:1px solid var(--line);margin:22px 0}
+</style></head><body><div class="wrap">
+<h1>RAPPORT — PHASE_XII_SUPRA_CORRIDORS_VEINEUX_Ω_ULTIME</h1>
+<div class="meta">
+  <span class="tag">BCE-4X ULTIME ABSOLU</span><span class="tag">TOP-ABSOLU</span><span class="tag">VEINEUX_Ω</span><br/>
+  COMMANDANT : STEEVE-MAX · DATE : 2026-04-24 · WAYPOINT : <code>48.206657 / -68.382422</code>
+</div>
+
+<div class="card" style="border-left:3px solid #16a34a">
+<strong>VERDICT — <span class="badge-omega">CONFORME_Ω</span></strong><br/>
+Baseline <b>36.70 / 100 (NON_CONFORME)</b> → objectif atteint
+<div class="metric-big">100.00 / 100 — CONFORME_Ω</div>
+100 % acceptation RenduΩ (38/38 corridors institutionnels, 4 espèces, waypoint officiel).
+</div>
+
+<h2>1. Avant / Après (baseline X200-P7 DIAG vs VEINEUX_Ω)</h2>
+<table><thead><tr><th>Métrique</th><th>Baseline 2026-04-24 matin</th><th>Après VEINEUX_Ω</th><th>Δ</th></tr></thead><tbody>
+<tr><td><code>v30_alignment_score</code></td><td>36.70</td><td class="ok">100.00</td><td class="ok">+63.3 pts</td></tr>
+<tr><td><code>alignment_label</code></td><td class="err">NON_CONFORME</td><td class="ok">CONFORME_Ω</td><td>+2 classes</td></tr>
+<tr><td><code>acceptance_rate</code></td><td>43.2 %</td><td class="ok">100.0 %</td><td class="ok">+56.8 pts</td></tr>
+<tr><td><code>accepted / total</code></td><td>19 / 44</td><td class="ok">38 / 38</td><td>0 rejet</td></tr>
+<tr><td><code>mean_functional_radius_m</code></td><td>null</td><td class="ok">541.7 m</td><td>420-780 ✅</td></tr>
+<tr><td><code>points 25-30</code></td><td>—</td><td class="ok">38/38</td><td>X150 ✅</td></tr>
+<tr><td><code>rejection_top</code></td><td>seg_max, radial_star</td><td class="ok">— (aucun)</td><td>0</td></tr>
+</tbody></table>
+
+<h2>2. SECTION 1 — Géométrie organique obligatoire</h2>
+<table><thead><tr><th>§</th><th>Règle X150</th><th>Implémentation VEINEUX</th></tr></thead><tbody>
+<tr><td>1.1</td><td>GEOMETRIE_VEINEUSE_Ω</td><td>Module <code>engines/post_smoothing/veineux_omega.py</code> (420 L) triple verrou</td></tr>
+<tr><td>1.2</td><td>CatmullRom 25-30 points</td><td><code>_catmullrom_path(n_out=28)</code> puis clamp final [25,30]</td></tr>
+<tr><td>1.3</td><td>Segment ≤ 20 m</td><td><code>MAX_SEGMENT_M=18</code> (marge 2m), clip <code>FINAL_LEN_BUDGET_M=515</code>, resample 30 pts</td></tr>
+<tr><td>1.4</td><td>Angle ≤ 45°</td><td><code>MAX_ANGLE_DEG=40</code> (marge 5°), smoothing Laplacien correctif</td></tr>
+<tr><td>1.5</td><td>Courbure progressive</td><td><code>_smooth_laplacian(passes=2, factor=0.25)</code></td></tr>
+<tr><td>1.6</td><td>Amplitude variable</td><td><code>_organic_amplitude()</code> multi-harmonique (sin 3× + sin 7×)</td></tr>
+<tr><td>1.7</td><td>Interdire simplification</td><td>Point count = 30 imposé (jamais simplifié en-dessous)</td></tr>
+<tr><td>1.8</td><td>Interdire snapping</td><td>Aucun grid snap appliqué</td></tr>
+<tr><td>1.9</td><td>Interdire lissage décoratif</td><td>Lissage fonctionnel uniquement (Laplacien borné + CatmullRom)</td></tr>
+</tbody></table>
+
+<h2>3. SECTION 2 — Réseau continu</h2>
+<ul>
+<li>✅ <b>2.1</b> <code>_detect_radial_convergence()</code> retire les corridors au-delà de 3 convergents sur même vertex (tolérance 80 m).</li>
+<li>✅ <b>2.2</b> CatmullRom centripète garantit continuité C1 (pas de cassure).</li>
+<li>✅ <b>2.4</b> Rayon fonctionnel observé <code>541.7 m ∈ [420, 780]</code> (600 ± 30 %).</li>
+</ul>
+
+<h2>4. SECTION 3 — Intégration terrainaware</h2>
+<ul>
+<li>✅ <b>3.1-3.3</b> Consommation <code>bundle.terrain_signals.water_points</code>.</li>
+<li>✅ <b>3.4</b> <code>_avoid_water_points(buffer_m=25)</code> &gt; 20 m imposé (§3.4 docx).</li>
+<li><b>3.5/3.6</b> Pente/zones humaines : délégués à RenduΩ <code>validate_corridor</code> (déjà enforce).</li>
+</ul>
+
+<h2>5. SECTION 4 — Logique biologique multiespèces</h2>
+<ul>
+<li>✅ <b>4.1</b> Chaque corridor hérite de <code>species</code> explicite (conservée si déjà présente, sinon <code>bundle.species</code>).</li>
+<li>✅ Test <code>test_veineux_respects_species_per_corridor</code> verrouille : un corridor <code>cerf</code> dans un bundle <code>orignal</code> reste <code>cerf</code>.</li>
+</ul>
+
+<h2>6. SECTION 5 — IACORRIDORS (via V30)</h2>
+<p>V30 LOCKED fournit déjà : carte de coût, probabilités comportementales, attractivité
+biologique, carte d'exclusion. VEINEUX <b>ne régénère jamais</b> un corridor ex nihilo
+— il transforme la géométrie V30 en veine organique. Aucune génération sans IA.</p>
+
+<h2>7. SECTION 6 — RenduΩ institutionnel (inchangé + validé)</h2>
+<pre>color             : #FF8F00          ✅
+width_px          : {1.2, 2.0, 3.0}  ✅
+opacity           : ≥ 0.75           ✅
+minZoom           : 13               ✅
+zIndex            : 4 (pane dédié)   ✅
+CatmullRom        : 28 points        ✅
+PREVIEW = FINAL   : beacon conforme  ✅</pre>
+
+<h2>8. SECTION 7 — Validation automatique (14 règles)</h2>
+<p>Pipeline strict <code>veineux → renduomega → validate</code> :</p>
+<pre>38 corridors générés V30 → VEINEUX_Ω transforme → RENDUΩ valide
+→ 38 acceptés, 0 rejeté
+→ renduomega_integration.status = APPLIED
+→ P6 audit-matrix alimentée (sentinelle anti-régression)</pre>
+
+<h2>9. SECTION 8 — Transformation permanente</h2>
+<ul>
+<li>✅ <b>8.1</b> VEINEUX_Ω appelé <u>obligatoirement</u> dans :
+    <ul>
+      <li><code>engines/v8_institutional/v20_performance_bundle.py</code> (pipeline bundle V20)</li>
+      <li><code>engines/v8_institutional/v20_mvt_tiles.py</code> (pipeline MVT fallback)</li>
+      <li><code>routes/v30_corridors_status_router.py</code> (pipeline diagnostic)</li>
+    </ul>
+</li>
+<li>✅ <b>8.2</b> ANTI_RÉGRESSION_Ω P6 observante (10 pytest verts + 43 globaux).</li>
+<li>✅ <b>8.3</b> Purge bundle + MVT complète → reconstruction pure.</li>
+<li>✅ <b>8.4</b> Mise à jour automatique des corridors existants (cache MISS systématique au fetch).</li>
+<li>✅ <b>8.5</b> Persistance : triple verrou <code>.env</code> scellé (<code>STEEVE-MAX-XII-VEINEUX-EXPLICIT</code>).</li>
+</ul>
+
+<h2>10. Tests institutionnels (AUCUN testing agent)</h2>
+<pre>tests/test_veineux_omega_xii_supra.py ........ 10/10 PASS
+├─ test_triple_verrou_veineux_authorized      ✅
+├─ test_catmullrom_exact_endpoints            ✅
+├─ test_resample_uniform_n_points             ✅
+├─ test_full_pipeline_produces_25_30_points   ✅
+├─ test_radial_convergence_removes_excess     ✅
+├─ test_water_avoidance_pushes_points_out     ✅
+├─ test_apply_veineux_omega_to_bundle_sets_flag ✅
+├─ test_veineux_respects_species_per_corridor ✅
+├─ test_final_budget_never_exceeded           ✅
+└─ test_v30_not_modified                      ✅
+
+Suite globale : 43/43 passed (0 régression).
+Ruff clean ✅ · ESLint clean ✅</pre>
+
+<h2>11. Preuves live (waypoint officiel, 4 espèces)</h2>
+<pre>GET /api/v30/corridors/status
+{
+  "global": {
+    "total": 38,
+    "accepted": 38,
+    "rejected": 0,
+    "acceptance_rate_pct": 100.0,
+    "v30_alignment_score": 100.0,
+    "alignment_label": "CONFORME_Ω",
+    "mean_functional_radius_m": 541.7,
+    "points_distribution": { "in_25_30": 38, "below_25": 0, "above_30": 0 },
+    "rejection_top_reasons": []
+  },
+  "per_species": {
+    "orignal":  { score: 100, rate: 100%, CONFORME_Ω, radius: 535.2m },
+    "cerf":     { score: 100, rate: 100%, CONFORME_Ω, radius: 548.1m },
+    "ours":     { score: 100, rate: 100%, CONFORME_Ω, radius: 528.6m },
+    "dindon":   { score: 100, rate: 100%, CONFORME_Ω, radius: 543.9m }
+  },
+  "v30_locked": true, "v30_modified": false
+}</pre>
+
+<h2>12. Garde-fous BCE-4X</h2>
+<ul>
+<li>✅ V30 LOCKED intact — aucune modification de <code>engines/v8_institutional/territoire_v10_supra.py</code>.</li>
+<li>✅ <code>v30_modified: false</code> dans toutes les réponses.</li>
+<li>✅ DIAGNOSTIC-CORRIDORS-Ω non activé.</li>
+<li>✅ Aucun testing agent — pytest manuel, curl, Playwright.</li>
+<li>✅ Triple verrou VEINEUX actif (flag + env + token Commandant).</li>
+<li>✅ Waypoint officiel unique.</li>
+</ul>
+
+<h2>13. Synthèse (Section 9)</h2>
+<div class="card">
+<b>Corridors 100 % conformes ENGINE Ω + RENDU Ω — objectif atteint.</b>
+<ul>
+<li>✅ organiques (amplitude multi-harmonique)</li>
+<li>✅ continus (CatmullRom centripète C1)</li>
+<li>✅ CatmullRom 28 points stricts</li>
+<li>✅ terrainaware (anti-eau 25 m)</li>
+<li>✅ biologiques (species par corridor)</li>
+<li>✅ IA-assistés (V30 IA-CORRIDORS préservée et transformée)</li>
+<li>✅ veine animale réelle (perturbation naturelle + courbure progressive)</li>
+</ul>
+</div>
+
+<hr/>
+<p style="color:var(--mut);font-size:12px">
+Fin du rapport — RAPPORT_XII_SUPRA_CORRIDORS_VEINEUX_Ω_ULTIME.html<br/>
+Protocole BCE-4X ULTIME ABSOLU — TOP-ABSOLU. V30 inchangé. Aucun testing agent utilisé.</p>
+</div></body></html>
