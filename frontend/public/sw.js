@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bionic-hunt-cache-v7.2';
+const CACHE_NAME = 'bionic-hunt-cache-v8.0';
 const OFFLINE_URL = '/offline.html';
 
 // Assets to cache immediately on install
@@ -26,7 +26,7 @@ const API_CACHE_ROUTES = [
 ];
 
 // V7.2 Tile layers to cache for offline heatmaps
-const TILE_CACHE_NAME = 'bionic-tiles-v7.2';
+const TILE_CACHE_NAME = 'bionic-tiles-v8.0';
 const TILE_PATTERNS = [
   'basemaps.cartocdn.com',
   'server.arcgisonline.com',

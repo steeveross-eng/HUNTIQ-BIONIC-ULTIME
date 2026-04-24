@@ -15,6 +15,25 @@ import L from 'leaflet';
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 export default function MovementCorridorsLayer({ species = 'moose', showReal = true, showEstimated = true, timeOfDay = null }) {
+  // ═══════════════════════════════════════════════════════════════════════
+  // PHASE_XII_SUPRA_PURGE_TERRITOIRE_MVT_Ω — SECTION 4.1
+  // DÉSACTIVATION DÉFINITIVE — BCE-4X ULTIME ABSOLU
+  // Source de rendu antérieure orange (#FF9800) pouvant être confondue
+  // avec les corridors institutionnels RenduΩ (#FF8F00). Désactivée par
+  // ordre du COMMANDANT STEEVE-MAX. Pour rétablir, exiger directive
+  // explicite REACTIVATION_MOVEMENT_CORRIDORS_LEGACY_Ω.
+  // ═══════════════════════════════════════════════════════════════════════
+  // eslint-disable-next-line no-unused-vars
+  const _purged_params = { species, showReal, showEstimated, timeOfDay };
+  if (typeof window !== 'undefined' && !window.__LEGACY_MOVEMENT_CORRIDORS_ALERTED__) {
+    window.__LEGACY_MOVEMENT_CORRIDORS_ALERTED__ = true;
+    // eslint-disable-next-line no-console
+    console.warn('[BCE-4X-XII] MovementCorridorsLayer DISABLED by institutional order — use RenduΩ corridors only.');
+  }
+  return null;
+  // eslint-disable-next-line no-unreachable
+  // ↓↓↓ Code historique préservé pour audit — inatteignable ↓↓↓
+  // eslint-disable-next-line no-unreachable
   const map = useMap();
   const layerGroupRef = useRef(null);
   const [data, setData] = useState(null);

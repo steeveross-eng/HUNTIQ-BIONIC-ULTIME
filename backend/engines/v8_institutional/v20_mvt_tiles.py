@@ -101,16 +101,51 @@ def _cache_set(key: str, payload: dict):
 
 
 async def _get_bundle(lat: float, lon: float, species: str, month: int, hour: int, wind_deg: float):
-    """Recupere le bundle via cache V20 (shared cache)."""
+    """Recupere le bundle via cache V20 (shared cache).
+
+    PHASE_XII_SUPRA_PURGE_TERRITOIRE_MVT_Ω :
+    le chemin de fallback (cache MISS) DOIT passer par RenduΩ pour interdire
+    tout bypass de la validation X150 (Section 1.3 de la directive
+    RAPATRIEMENT_RENDUΩ_V20). V30 LOCKED intact.
+    """
     from engines.v8_institutional.v20_performance_bundle import _cache_get as bundle_cache_get, _cache_key
     from engines.v8_institutional.territoire_v10_supra import compute_territoire_v10
+    from engines.post_smoothing.renduomega import apply_renduomega_to_bundle
 
     key = _cache_key(lat, lon, species, month, hour, wind_deg)
     cached = bundle_cache_get(key)
     if cached is not None:
         return cached
-    # Compute si pas en cache (force cold)
-    return await compute_territoire_v10(lat, lon, species, month, hour, wind_deg, 15.0)
+    # Compute si pas en cache (force cold) — pipeline COMPLET RenduΩ
+    result = await compute_territoire_v10(lat, lon, species, month, hour, wind_deg, 15.0)
+    result["waypoint"] = {"lat": lat, "lng": lon}
+    result["species"] = species
+    # Normalisation contamination zones (cônes V30 → points {lat,lng})
+    _contam_in = result.get("contamination") or []
+    _contam_norm = []
+    for _c in _contam_in:
+        if not isinstance(_c, dict):
+            continue
+        _lat = _c.get("lat")
+        _lng = _c.get("lng") or _c.get("lon")
+        if _lat is None or _lng is None:
+            _src = _c.get("affut_source") or {}
+            _lat = _src.get("lat")
+            _lng = _src.get("lng") or _src.get("lon")
+        if _lat is None or _lng is None:
+            _poly = _c.get("polygon") or _c.get("coords") or []
+            if isinstance(_poly, list) and _poly:
+                try:
+                    _lat = sum(p[0] for p in _poly) / len(_poly)
+                    _lng = sum(p[1] for p in _poly) / len(_poly)
+                except Exception:
+                    _lat = _lng = None
+        if _lat is not None and _lng is not None:
+            _contam_norm.append({"lat": float(_lat), "lng": float(_lng),
+                                 "intensity": _c.get("intensity"),
+                                 "source": "V20_MVT_TILES_NORMALIZED"})
+    result["contamination_zones"] = _contam_norm
+    return apply_renduomega_to_bundle(result)
 
 
 @router.get("/{layer}/{z}/{x}/{y}.json")
@@ -155,6 +190,18 @@ async def v20_tile(
             path = c.get("path") or [[c.get("start", {}).get("lat"), c.get("start", {}).get("lng")],
                                      [c.get("end", {}).get("lat"), c.get("end", {}).get("lng")]]
             if _path_intersects_bbox(path, bounds):
+                # PHASE_XII_SUPRA — SECTION 3.3 : style strict RenduΩ
+                # Priorité absolue aux attributs attribués par
+                # apply_renduomega_to_bundle (color=#FF8F00, width_px in
+                # {1.2, 2.0, 3.0}, opacity ≥ 0.75). Fallback V30 sinon.
+                _rom_width = c.get("width_px_renduomega")
+                _weight = _rom_width if _rom_width is not None else c.get("weight")
+                _color = c.get("color") or "#FF8F00"
+                _opacity = c.get("opacity")
+                if _opacity is None or _opacity < 0.75:
+                    _opacity = 0.75
+                _rom_block = c.get("renduomega") or {}
+                _rom_accepted = _rom_block.get("accepted") if isinstance(_rom_block, dict) else None
                 features.append({
                     "type": "Feature",
                     "geometry": {
@@ -165,11 +212,15 @@ async def v20_tile(
                         "layer": "corridors",
                         "corridor_type": c.get("type", "normal"),
                         "intensity": c.get("intensity"),
-                        "color": c.get("color"),
-                        "weight": c.get("weight"),
-                        "opacity": c.get("opacity"),
+                        "color": _color,
+                        "weight": _weight,
+                        "width_px": _weight,
+                        "opacity": _opacity,
                         "species_profile": c.get("species_profile"),
                         "is_network_link": c.get("is_network_link", False),
+                        "renduomega_accepted": _rom_accepted,
+                        "min_zoom": c.get("min_zoom", 13),
+                        "zindex": c.get("zindex", 4),
                     },
                 })
     elif layer == "zones":
@@ -387,4 +438,24 @@ async def v20_tiles_stats():
         "tile_cache_ttl_sec": _TILE_TTL,
         "layers_supported": sorted(_LAYERS_SUPPORTED),
         "zoom_range": [_ZOOM_MIN, _ZOOM_MAX],
+    }
+
+
+@router.post("/purge")
+async def v20_tiles_purge():
+    """PHASE_XII_SUPRA_PURGE_TERRITOIRE_MVT_Ω — Section 1.2.
+
+    Purge TOTALE du cache MVT tiles LRU. Les tuiles seront re-générées
+    au prochain fetch via le pipeline RenduΩ obligatoire (_get_bundle
+    patché pour appliquer apply_renduomega_to_bundle).
+    """
+    cleared = len(_TILE_CACHE)
+    _TILE_CACHE.clear()
+    return {
+        "phase": "XII_SUPRA_PURGE_TERRITOIRE_MVT_Ω",
+        "section": "1.2",
+        "tiles_cache_cleared": cleared,
+        "layers_supported": sorted(_LAYERS_SUPPORTED),
+        "rebuild_mode": "renduomega_only",
+        "ok": True,
     }

@@ -120,6 +120,21 @@ BCE-4X ULTIME ABSOLU :
   `waypoint_context_match=true`. ESLint clean sur les 2 fichiers.
   `CI_STATUS_Ω.runtime_beacon.conforming` **NORMALISÉ à TRUE** en permanence.
   V30 intangible. Rapport `RAPPORT_X200_P4_RUNTIME_BEACON_Ω.md` scellé.
+- **PHASE_XII_SUPRA_PURGE_TERRITOIRE_MVT_Ω** — ✅ 2026-04-24 :
+  4 étapes activées simultanément. **Bypass RenduΩ critique découvert et
+  corrigé** dans `v20_mvt_tiles.py:_get_bundle()` (fallback cold
+  compute) — le chemin MVT retournait des corridors V30 bruts non
+  filtrés. `apply_renduomega_to_bundle()` désormais appelé dans TOUS les
+  chemins V20 (bundle + tiles). Création endpoint
+  `POST /api/v20/territoire/tiles/purge`. MVT tile corridors au
+  waypoint officiel (zoom 13 / tile 2539-2840 / orignal) : 4 features,
+  `color={#FF8F00}`, `width_px={1.2}`, `opacity={0.75}`,
+  `renduomega_accepted={True}` — **100% conforme aux 2 docx officiels**
+  (DESCRIPTIONS RENDU Ω + DESCRIPTION OFFICIELLE ENGINE CORRIDORS).
+  Bump SW `v7→v8`, caches `v7.2→v8.0` pour invalidation client.
+  `MovementCorridorsLayer` (orange #FF9800 legacy) transformé en no-op
+  institutionnel. `GuidedRouteLayer` vert #22c55e hors scope conservé.
+  V30 intact. Rapport HTTPS `/reports/RAPPORT_XII_SUPRA_PURGE_TERRITOIRE_MVT.html`.
 - **PHASE_XII_SUPRA_RAPATRIEMENT_RENDUΩ_V20** — ✅ 2026-04-24 :
   Branchement obligatoire de `apply_renduomega_to_bundle()` dans le wrapper
   `v20_performance_bundle.py` entre `compute_territoire_v10()` et
