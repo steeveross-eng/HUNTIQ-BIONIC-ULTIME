@@ -54,7 +54,10 @@ const GEOLOCATION_CONFIG = {
 
 // Install event - cache static assets
 self.addEventListener('install', (event) => {
-  console.log('[SW] Installing Service Worker v2...');
+  console.log('[SW] Installing Service Worker v9.0-enforcement-p0...');
+  // PHASE η — skipWaiting immédiat : le nouveau SW prend le pouvoir dès
+  // la 1re visite, sans attendre la fermeture de tous les onglets.
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
