@@ -45,6 +45,8 @@ import { useNotifications, useHuntingGroups } from '@/hooks/useSharing';
 import WaypointUnifiedPanel from '@/components/territoire/WaypointUnifiedPanel';
 import { useAuth } from '@/components/GlobalAuth';
 import PlacesSidePanel from '@/components/territoire/PlacesSidePanel';
+// PHASE_XII_SUPRA_DIAGNOSTIC_V30_STATUS_Ω — panel institutionnel lecture seule
+import StatutCorridorsOmegaPanel from '@/components/territoire/StatutCorridorsOmegaPanel';
 import WeatherPanel from '@/components/territoire/ui/WeatherPanel';
 import useSpatialClipping from '@/hooks/useSpatialClipping';
 import useCameraLayer from '@/hooks/useCameraLayer';
@@ -1597,6 +1599,17 @@ const MonTerritoireBionicPage = () => {
         showCompareWidget={showCompareWidget} compareSelection={compareSelection}
         handleCloseCompare={handleCloseCompare} PLACE_TYPES={PLACE_TYPES}
       />
+
+      {/* PHASE_XII_SUPRA_DIAGNOSTIC_V30_STATUS_Ω — overlay bas-gauche discret */}
+      <div
+        data-testid="v30-status-overlay"
+        style={{
+          position: 'fixed', left: 12, bottom: 12, zIndex: 900,
+          pointerEvents: 'auto',
+        }}
+      >
+        <StatutCorridorsOmegaPanel />
+      </div>
     </div>
   );
 };

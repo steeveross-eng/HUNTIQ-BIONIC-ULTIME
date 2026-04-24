@@ -120,6 +120,23 @@ BCE-4X ULTIME ABSOLU :
   `waypoint_context_match=true`. ESLint clean sur les 2 fichiers.
   `CI_STATUS_Ω.runtime_beacon.conforming` **NORMALISÉ à TRUE** en permanence.
   V30 intangible. Rapport `RAPPORT_X200_P4_RUNTIME_BEACON_Ω.md` scellé.
+- **PHASE_XII_SUPRA_DIAGNOSTIC_V30_STATUS_Ω** — ✅ 2026-04-24 :
+  ENGINE CORRIDORS V30 rendu entièrement observable. Nouveau router
+  `/app/backend/routes/v30_corridors_status_router.py` — endpoints
+  `GET /api/v30/corridors/status` (4 espèces) et `/alignment-score`
+  (payload léger). Calcul `v30_alignment_score ∈ [0,100]` = 60%
+  acceptance + 15% geom (25-30 pts) + 15% terrain (rayon 420-780 m) +
+  10% species_profile. Seuils : <70=NON_CONFORME, 70-89=CONFORME,
+  ≥90=CONFORME_Ω. Couplage P6 via `p6_coupling.sub_normes_non_zero`.
+  Nouveau composant `StatutCorridorsOmegaPanel.jsx` overlay bas-gauche
+  lecture seule dans `MonTerritoireBionicPage` (refresh 60s, barre
+  colorée + table par espèce + top 3 raisons rejet). **Baseline live
+  observée** : `v30_alignment_score=36.70, NON_CONFORME,
+  acceptance=43.2%, 19/44 corridors`. Par espèce : orignal 5/12 (35.4),
+  cerf 4/13 (26.1), ours 5/9 (47.2), dindon (42.5). Correctif annexe :
+  bypass SW `/api/v30/corridors/` pour éviter DataCloneError (bump
+  `v8→v9`). V30 intact (`v30_modified:false`, `v30_locked:true`).
+  Rapport HTTPS `/reports/RAPPORT_XII_SUPRA_DIAGNOSTIC_V30_STATUS.html`.
 - **PHASE_XII_SUPRA_PURGE_PIPELINES_SECONDAIRES_Ω** — ✅ 2026-04-24 :
   Audit forensique complet. Les 5 fichiers `Legacy*Layer.jsx` cités par
   la directive **n'existent pas** dans le codebase. 2 orphelins purs

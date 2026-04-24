@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bionic-hunt-cache-v8.0';
+const CACHE_NAME = 'bionic-hunt-cache-v8.1';
 const OFFLINE_URL = '/offline.html';
 
 // Assets to cache immediately on install
@@ -26,7 +26,7 @@ const API_CACHE_ROUTES = [
 ];
 
 // V7.2 Tile layers to cache for offline heatmaps
-const TILE_CACHE_NAME = 'bionic-tiles-v8.0';
+const TILE_CACHE_NAME = 'bionic-tiles-v8.1';
 const TILE_PATTERNS = [
   'basemaps.cartocdn.com',
   'server.arcgisonline.com',
@@ -83,6 +83,15 @@ self.addEventListener('fetch', (event) => {
 
   // API requests - Network first, cache fallback
   if (url.pathname.startsWith('/api/')) {
+    // PHASE_XII_SUPRA_DIAGNOSTIC_V30_STATUS_Ω — bypass SW cache pour status diagnostique
+    // (lecture seule, données live, aucun intérêt à cacher + évite DataCloneError)
+    if (url.pathname.startsWith('/api/v30/corridors/')) {
+      event.respondWith(fetch(request).catch(() => new Response(
+        JSON.stringify({ offline: true, error: 'network' }),
+        { status: 503, headers: { 'Content-Type': 'application/json' } }
+      )));
+      return;
+    }
     event.respondWith(networkFirstStrategy(request));
     return;
   }

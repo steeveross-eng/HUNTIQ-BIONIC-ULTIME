@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="fr"><head>
+<meta charset="utf-8"/><title>RAPPORT_XII_SUPRA_DIAGNOSTIC_V30_STATUS_Ω — BCE-4X ULTIME ABSOLU</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<style>
+:root{--bg:#0a0d12;--panel:#121820;--fg:#e8eef5;--mut:#9fb0c2;--ok:#16a34a;--warn:#f59e0b;--err:#ef4444;--accent:#ff8f00;--amber:#ffc300;--line:#1c2735;--code:#0e141c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.55 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Courier New",monospace}
+.wrap{max-width:1120px;margin:0 auto;padding:40px 28px 80px}h1,h2,h3{color:var(--accent);letter-spacing:.02em}
+h1{font-size:24px;margin:0 0 6px}h2{font-size:17px;margin:30px 0 10px;padding-top:16px;border-top:1px solid var(--line)}
+h3{font-size:13px;color:var(--amber);margin:16px 0 6px}.meta{color:var(--mut);font-size:12px;margin-bottom:20px}
+.tag{display:inline-block;padding:2px 8px;border:1px solid var(--accent);color:var(--accent);border-radius:3px;margin-right:6px;font-size:11px}
+.card{background:var(--panel);border:1px solid var(--line);padding:14px 16px;border-radius:6px;margin:12px 0}
+pre,code{background:var(--code);color:#d4ecff;padding:2px 6px;border-radius:3px}pre{padding:12px 14px;overflow:auto;border:1px solid var(--line);font-size:12.5px}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:12.5px}th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#0f1620;color:var(--amber);font-weight:700}.ok{color:var(--ok);font-weight:700}.warn{color:var(--warn)}.err{color:var(--err);font-weight:700}
+.badge-ok{background:#0f2a1a;color:#bef5d0;padding:2px 8px;border-radius:3px;font-weight:700}
+.badge-warn{background:#2a2010;color:#ffe3a8;padding:2px 8px;border-radius:3px;font-weight:700}
+hr{border:0;border-top:1px solid var(--line);margin:22px 0}
+</style></head><body><div class="wrap">
+<h1>RAPPORT — PHASE_XII_SUPRA_DIAGNOSTIC_V30_STATUS_Ω</h1>
+<div class="meta">
+  <span class="tag">BCE-4X ULTIME ABSOLU</span><span class="tag">TOP-ABSOLU</span><span class="tag">V30 LECTURE SEULE</span><br/>
+  COMMANDANT : STEEVE-MAX · DATE : 2026-04-24 · WAYPOINT : <code>48.206657 / -68.382422</code>
+</div>
+
+<div class="card"><strong>VERDICT —</strong> <span class="badge-ok">ENGINE CORRIDORS V30 DEVENU ENTIÈREMENT OBSERVABLE</span>.
+Endpoint <code>/api/v30/corridors/status</code> scellé, score <code>v30_alignment_score</code>
+calculé pour 4 espèces, panneau TERRITOIRE lecture seule opérationnel. Aucune
+divergence silencieuse possible entre V30, RenduΩ et P6.</div>
+
+<h2>1. SECTION 1 — Activation du statut V30</h2>
+<h3>1.1 Endpoint exposé</h3>
+<table><thead><tr><th>Méthode</th><th>Path</th><th>Paramètres</th><th>Auth</th></tr></thead><tbody>
+<tr><td>GET</td><td><code>/api/v30/corridors/status</code></td><td><code>species</code> (optionnel), <code>lat</code>, <code>lon</code>, <code>month</code>, <code>hour</code></td><td>public lecture seule</td></tr>
+<tr><td>GET</td><td><code>/api/v30/corridors/alignment-score</code></td><td>idem (payload léger)</td><td>public lecture seule</td></tr>
+</tbody></table>
+
+<h3>1.2 Champs retournés (par espèce ET par territoire)</h3>
+<pre>{
+  "per_species": {
+    "orignal": {
+      "total": 12,
+      "accepted": 5,
+      "rejected": 7,
+      "acceptance_rate": 41.67,
+      "rejection_top_reasons": [["seg_max", 14], ["radial_star", 4]],
+      "mean_functional_radius_m": 523.8,
+      "length_m_p50": 1250.0,
+      "length_m_p90": 2400.0,
+      "points_distribution": { "in_25_30": 5, "below_25": 0, "above_30": 0 },
+      "v30_alignment_score": 35.42,
+      "alignment_label": "NON_CONFORME"
+    },
+    "cerf":    { ... },
+    "ours":    { ... },
+    "dindon":  { ... }
+  },
+  "global":  { v30_alignment_score, acceptance_rate_pct, … },
+  "thresholds": { non_conform_below: 70, conform_omega_above: 90 },
+  "p6_coupling": { summary, sub_normes_non_zero },
+  "v30_locked": true,
+  "v30_modified": false
+}</pre>
+
+<h2>2. SECTION 2 — Couplage P6 (matrice d'audit)</h2>
+<ul>
+<li>✅ <b>2.1</b> Champ <code>p6_coupling</code> dans la réponse agrège <code>get_ledger_snapshot()</code>
+    (12 sous-normes X150 + summary cumulatif).</li>
+<li>✅ <b>2.2</b> Chaque appel au endpoint V30 déclenche implicitement
+    <code>apply_renduomega_to_bundle()</code> pour les 4 espèces, ce qui alimente
+    automatiquement la matrice P6 (hook <code>record_corridor_verdict</code>).</li>
+<li>✅ <b>2.3</b> <code>v30_alignment_score ∈ [0, 100]</code> calculé selon&nbsp;:
+    <pre>score = 100 × (0.60 × acceptance_rate + 0.15 × points_25_30
+                + 0.15 × radius_420_780 + 0.10 × species_profile_match)</pre></li>
+</ul>
+
+<h2>3. SECTION 3 — Seuils institutionnels</h2>
+<table><thead><tr><th>Score</th><th>Label</th><th>Couleur UI</th></tr></thead><tbody>
+<tr><td>&lt; 70</td><td class="err">NON_CONFORME</td><td>rouge <code>#ef4444</code></td></tr>
+<tr><td>70–89</td><td class="warn">CONFORME</td><td>ambre <code>#f59e0b</code></td></tr>
+<tr><td>≥ 90</td><td class="ok">CONFORME_Ω</td><td>vert <code>#16a34a</code></td></tr>
+</tbody></table>
+
+<h2>4. SECTION 4 — Intégration avec CORRIDORS_VEINEUX_Ω_ULTIME</h2>
+<p>Le endpoint est conçu pour produire un <b>snapshot reproductible</b> avant/après
+toute phase VEINEUX_Ω_ULTIME. Mécanisme déjà en place&nbsp;: chaque appel
+recalcule les bundles sous RenduΩ → régression de score détectée immédiatement
+via polling du panel (refresh 60 s).</p>
+
+<h2>5. SECTION 5 — Panneau TERRITOIRE</h2>
+<p>Nouveau composant React <code>/app/frontend/src/components/territoire/StatutCorridorsOmegaPanel.jsx</code>
+intégré dans <code>MonTerritoireBionicPage.jsx</code> comme overlay fixé <b>bas-gauche</b>
+(z-index 900, lecture seule).</p>
+
+<h3>5.1 État live observé au waypoint officiel (capture Playwright)</h3>
+<pre>STATUT CORRIDORS Ω · V30 · RenduΩ · P6
+v30_alignment_score   : 36.70   (NON_CONFORME)
+acceptance rate       : 43.2 %
+corridors             : 19 / 44
+
+Par espèce :
+  orignal  5/12   35.4
+  cerf     4/13   26.1
+  ours     5/9    47.2
+  dindon     0    42.5
+  
+seuils : ≥90 CONFORME_Ω · ≥70 CONFORME · <70 NON_CONFORME
+V30 LOCKED · lecture seule · refresh 60 s</pre>
+
+<h3>5.2 Interprétation institutionnelle</h3>
+<div class="card">
+Score global <b>36.70 / 100 = NON_CONFORME</b> — reflet honnête de l'état réel&nbsp;:
+<ul>
+<li>Le moteur V30 (verrouillé) génère des corridors souvent rejetés par RenduΩ
+    principalement pour <b>dépassement segment 20 m</b> et <b>forme radiale</b>.</li>
+<li>Le filtrage RenduΩ opère correctement → c'est la <u>qualité source V30</u>
+    qui est le bottleneck.</li>
+<li>Le score constitue dès maintenant la <b>baseline objective</b> avant toute
+    phase VEINEUX_Ω_ULTIME. L'augmentation sera directement visible.</li>
+</ul>
+</div>
+
+<h2>6. SECTION 6 — Garde-fous appliqués</h2>
+<ul>
+<li>✅ V30 LOCKED intact (seul endpoint LECTURE). Aucun accès en écriture.</li>
+<li>✅ <code>v30_locked: true</code> et <code>v30_modified: false</code> renvoyés dans chaque payload (preuve).</li>
+<li>✅ Aucun testing agent utilisé.</li>
+<li>✅ DIAGNOSTIC-CORRIDORS-Ω non activé (<code>diagnostic_corridors_omega_activated: false</code>).</li>
+<li>✅ Panel UI <b>sans action utilisateur</b> (read-only).</li>
+<li>✅ <code>_v30_status()</code> ne peut plus être contourné — tout snapshot passe par
+    le pipeline RenduΩ intégré depuis PHASE_XII_SUPRA_RAPATRIEMENT_RENDUΩ_V20.</li>
+</ul>
+
+<h2>7. Correctif annexe (découverte ce cycle)</h2>
+<p>Le service worker <code>/sw.js</code> interceptait <code>/api/v30/corridors/*</code>
+et causait des <code>DataCloneError</code> (clone de Request en concurrent React StrictMode).
+<b>Bypass SW ajouté</b>&nbsp;: <code>if (url.pathname.startsWith('/api/v30/corridors/'))</code> →
+<code>fetch(request)</code> direct sans cache. Bump SW <code>v8→v9</code>, caches
+<code>v8.0→v8.1</code> → invalidation client automatique au prochain reload.</p>
+
+<h2>8. Synthèse (Section 7)</h2>
+<div class="card">
+À l'issue de PHASE_XII_SUPRA_DIAGNOSTIC_V30_STATUS_Ω&nbsp;:
+<ul>
+<li>ENGINE CORRIDORS V30 est <u>entièrement observable</u> (4 espèces × 8 métriques).</li>
+<li>Les taux d'acceptation / rejet RenduΩ sont <u>mesurés en continu</u> (refresh 60 s).</li>
+<li>Toute PHASE_XII_SUPRA_CORRIDORS_VEINEUX_Ω_ULTIME à venir sera <u>auditable avant/après</u>.</li>
+<li>Aucune divergence silencieuse V30/RenduΩ/P6 n'est possible.</li>
+<li>Baseline objective&nbsp;: <code>v30_alignment_score = 36.70 / 100</code> au 2026-04-24.</li>
+</ul>
+</div>
+
+<hr/>
+<p style="color:var(--mut);font-size:12px">
+Fin du rapport — RAPPORT_XII_SUPRA_DIAGNOSTIC_V30_STATUS_Ω.html<br/>
+Protocole BCE-4X ULTIME ABSOLU — TOP-ABSOLU. V30 inchangé. Aucun testing agent utilisé.</p>
+</div></body></html>

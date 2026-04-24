@@ -1149,6 +1149,14 @@ try:
 except Exception as e:
     logger.warning(f"X200-P6 ANTI_REGRESSION_Ω router not loaded: {e}")
 
+# ═══ PHASE XII-SUPRA — DIAGNOSTIC V30 CORRIDORS STATUS Ω (lecture seule) ═══
+try:
+    from routes.v30_corridors_status_router import router as v30_corridors_status_router
+    app.include_router(v30_corridors_status_router)
+    logger.info("✓ XII-SUPRA active : V30_CORRIDORS_STATUS_Ω (/api/v30/corridors/*)")
+except Exception as e:
+    logger.warning(f"XII-SUPRA V30_CORRIDORS_STATUS_Ω router not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")
