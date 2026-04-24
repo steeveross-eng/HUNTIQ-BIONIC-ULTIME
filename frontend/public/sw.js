@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bionic-hunt-cache-v8.1';
+const CACHE_NAME = 'bionic-hunt-cache-v9.0-enforcement-p0';
 const OFFLINE_URL = '/offline.html';
 
 // Assets to cache immediately on install
@@ -86,6 +86,15 @@ self.addEventListener('fetch', (event) => {
     // PHASE_XII_SUPRA_DIAGNOSTIC_V30_STATUS_Ω — bypass SW cache pour status diagnostique
     // (lecture seule, données live, aucun intérêt à cacher + évite DataCloneError)
     if (url.pathname.startsWith('/api/v30/corridors/')) {
+      event.respondWith(fetch(request).catch(() => new Response(
+        JSON.stringify({ offline: true, error: 'network' }),
+        { status: 503, headers: { 'Content-Type': 'application/json' } }
+      )));
+      return;
+    }
+    // PHASE_XII_SUPRA_CORRIDORS_VEINEUX_Ω_INTERZONE_GENERATION — bypass SW cache
+    // pour bundle territoire (corridors inter-zones LIVE obligatoire)
+    if (url.pathname.startsWith('/api/v20/territoire/bundle')) {
       event.respondWith(fetch(request).catch(() => new Response(
         JSON.stringify({ offline: true, error: 'network' }),
         { status: 503, headers: { 'Content-Type': 'application/json' } }

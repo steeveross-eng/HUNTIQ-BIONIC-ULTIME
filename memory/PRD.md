@@ -27,6 +27,28 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **XII-SUPRA-INTERZONE-GENERATION (2026-02)** — Correction définitive §2.3 :
+  - Nouveau module `interzone_omega.py` : générateur de corridors
+    INTER-ZONES + ENTRANTS post-V30, avec matrice d'affinité biologique
+    multi-espèces (orignal, cerf, ours, dindon), détour veineux
+    automatique pour respecter rayon fonctionnel [420, 780] m.
+  - Activation triple verrou : `INTERZONE_OMEGA_AUTHORIZED_BY_COMMANDANT`
+    + token `STEEVE-MAX-XII-INTERZONE-EXPLICIT`.
+  - Pipeline V20 bundle : V30 → INTERZONE → VEINEUX → RENDUΩ (ordre strict).
+  - Corridors entrants (migration) : 4 bearings NSEO depuis 540-720 m
+    vers zones vitales, activés pour orignal + cerf uniquement.
+  - SW bump cache v8.1 → v9.0-enforcement-p0 + bypass `/api/v20/territoire/bundle*`.
+  - Nouvel endpoint `GET /api/v30/corridors/cache-diagnostic` exposant
+    CACHE_NAME, SHA-256 fichier SW, stats bundle, instructions bust client.
+  - Veineux_omega : skip `_organic_amplitude` pour corridors
+    `interzone_generated` ou `entering_corridor` (anti-résonance angulaire).
+  - Tests : `test_interzone_omega.py` (16 cas). Total 51 tests : 44 passed,
+    7 skipped (par design env-isolé), 0 failed.
+  - **Score live : v30_alignment_score = 94.20 · CONFORME_Ω ·
+    65/69 corridors acceptés · 23 corridors ajoutés (19 interzone + 4 entering)**.
+  - Ours & dindon à 100 % · orignal & cerf à 90 % · tous CONFORME_Ω.
+  - Δ vs baseline 36.70 : **+57.50 points**, rollback_required=False.
+  - Rapport : `/reports/RAPPORT_XII_SUPRA_CORRIDORS_VEINEUX_INTERZONE_GENERATION.html`.
 - **XII-SUPRA-ENFORCEMENT-P0 (2026-02)** — Correction des 8 violations critiques :
   - `baseline_registry_omega.py` : baseline FIGÉE 36.70 NON_CONFORME + SHA-256
     `915288a4…86018`, grille institutionnelle PARTIEL / CONFORME / CONFORME_Ω,

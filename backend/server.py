@@ -1157,6 +1157,14 @@ try:
 except Exception as e:
     logger.warning(f"XII-SUPRA V30_CORRIDORS_STATUS_Ω router not loaded: {e}")
 
+# ═══ PHASE XII-SUPRA — CACHE DIAGNOSTIC Ω (lecture seule, ENFORCEMENT_P0) ═══
+try:
+    from routes.cache_diagnostic_router import router as cache_diagnostic_router
+    app.include_router(cache_diagnostic_router)
+    logger.info("✓ XII-SUPRA active : CACHE_DIAGNOSTIC_Ω (/api/v30/corridors/cache-diagnostic)")
+except Exception as e:
+    logger.warning(f"XII-SUPRA CACHE_DIAGNOSTIC_Ω router not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

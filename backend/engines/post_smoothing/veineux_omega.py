@@ -368,8 +368,13 @@ def _process_single_corridor(corridor: Dict[str, Any],
     veined = _catmullrom_path(path, n_out=TARGET_POINTS)
 
     # 3. Amplitude organique (multi-harmonique)
-    seed = abs(hash(str(corridor.get("id") or "corr"))) % 997
-    veined = _organic_amplitude(veined, seed=seed)
+    #    SKIP pour corridors INTERZONE/ENTERING : ils sont DÉJÀ construits
+    #    avec une courbure biologique veineuse (_add_biological_curvature).
+    #    Une double perturbation créerait des angles aigus > 45°.
+    is_interzone = bool(corridor.get("interzone_generated")) or bool(corridor.get("entering_corridor"))
+    if not is_interzone:
+        seed = abs(hash(str(corridor.get("id") or "corr"))) % 997
+        veined = _organic_amplitude(veined, seed=seed)
 
     # 4. Lissage Laplacien (courbure progressive)
     veined = _smooth_laplacian(veined, passes=2, factor=0.25)
@@ -380,7 +385,9 @@ def _process_single_corridor(corridor: Dict[str, Any],
     # 5bis. ENFORCEMENT_P0 §4.1 — exclusion stricte CONTAM
     veined = _avoid_contamination_zones(veined, contam_zones, buffer_m=CONTAM_AVOIDANCE_BUFFER_M)
 
-    # 6. Clip final strict — garantir L <= budget pour que 30 pts → seg <= 18m
+    # 6. Clip final strict — garantir L <= budget pour que 30 pts → seg <= 18m.
+    #    Applique uniformément à tous les corridors (V30 + interzone + entering)
+    #    pour respecter la contrainte X150 : 30 pts × 20 m seg_max = 600 m max.
     veined = _clip_max_length(veined, FINAL_LEN_BUDGET_M)
 
     # 7. Resample final à exactement 30 points (seg ≈ L/29 ≤ 17.8 m)
@@ -429,7 +436,11 @@ def apply_veineux_omega_to_bundle(bundle: Dict[str, Any]) -> Dict[str, Any]:
     contam_zones = bundle.get("contamination_zones") or []
     species = bundle.get("species")
 
-    # 1. Détection corridors radiaux (Section 2 — réseau continu anti-radial)
+    # 1. Détection corridors radiaux (Section 2 — réseau continu anti-radial).
+    #    S'applique à TOUS les corridors (V30 + interzone) pour éliminer les
+    #    convergences radiales pathologiques. Les corridors interzone ayant
+    #    des endpoints DISTINCTS (zones vitales différentes) ne sont pas
+    #    détectés comme radiaux par la logique grid cell du détecteur.
     radial_ids = set(_detect_radial_convergence(corridors_in))
     filtered_in = [c for c in corridors_in if str(c.get("id")) not in radial_ids]
 

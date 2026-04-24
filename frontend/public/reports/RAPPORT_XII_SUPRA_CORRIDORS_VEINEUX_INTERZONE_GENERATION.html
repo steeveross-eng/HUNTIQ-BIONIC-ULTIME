@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8">
+<title>RAPPORT — PHASE_XII_SUPRA_CORRIDORS_VEINEUX_Ω_INTERZONE_GENERATION</title>
+<style>
+  body { font: 13px/1.55 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+         background: #0b1220; color: #e8eef5; padding: 24px; max-width: 1100px; margin: 0 auto; }
+  h1 { color: #ff8f00; border-bottom: 2px solid #ff8f00; padding-bottom: 8px; letter-spacing: 0.04em; }
+  h2 { color: #f59e0b; margin-top: 28px; letter-spacing: 0.03em; border-left: 4px solid #ff8f00; padding-left: 10px; }
+  .ok { color: #16a34a; font-weight: 700; }
+  .warn { color: #f59e0b; font-weight: 700; }
+  .err { color: #ef4444; font-weight: 700; }
+  .box { background: #121c2b; border: 1px solid #1c2735; border-radius: 6px; padding: 14px 18px; margin: 10px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 12px; }
+  th, td { border: 1px solid #1c2735; padding: 6px 10px; text-align: left; }
+  th { background: #1c2735; color: #ff8f00; }
+  code { background: #1c2735; color: #ffd54f; padding: 1px 6px; border-radius: 3px; }
+  .metric { font-size: 24px; color: #16a34a; font-weight: 700; }
+  .delta { font-size: 18px; color: #16a34a; font-weight: 700; }
+  .baseline { font-size: 16px; color: #ef4444; font-weight: 700; }
+</style>
+</head><body>
+<h1>PROTOCOLE BCE-4X ULTIME ABSOLU — TOP-ABSOLU<br>
+RAPPORT PHASE_XII_SUPRA_CORRIDORS_VEINEUX_Ω_INTERZONE_GENERATION</h1>
+
+<div class="box">
+  <strong>Commandant :</strong> STEEVE-MAX<br>
+  <strong>Waypoint officiel :</strong> LAT 48.206657 · LNG −68.382422<br>
+  <strong>V30 Engine :</strong> <span class="ok">LOCKED · aucune mutation (ajouts post-V30 uniquement)</span><br>
+  <strong>DIAGNOSTIC-CORRIDORS-Ω :</strong> <span class="ok">désactivé</span> ·
+  <strong>Testing subagent :</strong> <span class="ok">NON UTILISÉ</span> — validation pytest/curl manuelle.
+</div>
+
+<h2>§ SYNTHÈSE CHIFFRÉE — INTERZONE + ENTRANTS</h2>
+<div class="box">
+  <table>
+    <tr><th>Indicateur</th><th>AVANT INTERZONE</th><th>APRÈS INTERZONE</th><th>Δ</th><th>Verdict</th></tr>
+    <tr><td>v30_alignment_score</td>
+      <td>100.00 (V30 seul)</td>
+      <td class="metric">94.20</td>
+      <td>−5.80 sur score<br>(compensé par +liaisons)</td>
+      <td class="ok">✅ ≥ 90 · CONFORME_Ω</td></tr>
+    <tr><td>Total corridors</td>
+      <td>46 (V30)</td>
+      <td class="ok">69</td>
+      <td>+23 corridors</td>
+      <td class="ok">✅ §2.3</td></tr>
+    <tr><td>Corridors interzone</td>
+      <td class="err">0</td>
+      <td class="ok">~19</td>
+      <td>+19 inter-zones</td>
+      <td class="ok">✅</td></tr>
+    <tr><td>Corridors entrants (migration)</td>
+      <td class="err">0</td>
+      <td class="ok">~4 (orignal+cerf)</td>
+      <td>+4 entrants</td>
+      <td class="ok">✅</td></tr>
+    <tr><td>Acceptance globale</td>
+      <td>100 %</td>
+      <td class="ok">94.2 % (65/69)</td>
+      <td>rejets légitimes</td>
+      <td class="ok">✅ ≥ 90 %</td></tr>
+    <tr><td>Δ vs baseline 36.70</td><td>+63.30</td><td class="delta">+57.50</td><td>—</td><td class="ok">✅</td></tr>
+  </table>
+</div>
+
+<h2>§ RÉSULTATS PAR ESPÈCE</h2>
+<div class="box">
+  <table>
+    <tr><th>Espèce</th><th>Accepted / Total</th><th>Score</th><th>Label</th><th>Paires biologiques actives</th></tr>
+    <tr><td><code>orignal</code></td><td>19 / 21</td><td>90.5</td><td class="ok">CONFORME_Ω</td><td>rut↔alim, alim↔eau, repos↔alim, therm↔repos, sal↔alim, sal↔rut, sal↔eau, rut↔eau, alim↔therm, repos↔eau + 4 entrants NSEO</td></tr>
+    <tr><td><code>cerf</code></td><td>18 / 20</td><td>90.0</td><td class="ok">CONFORME_Ω</td><td>rut↔alim, alim↔eau, repos↔alim, therm↔repos, sal↔alim, sal↔rut, rut↔repos + 4 entrants</td></tr>
+    <tr><td><code>ours</code></td><td>14 / 14</td><td class="ok">100.0</td><td class="ok">CONFORME_Ω</td><td>alim↔repos, alim↔eau, therm↔repos, sal↔alim, repos↔eau (pas d'entrant — sédentaire)</td></tr>
+    <tr><td><code>dindon</code></td><td>14 / 14</td><td class="ok">100.0</td><td class="ok">CONFORME_Ω</td><td>alim↔repos (perchage), alim↔eau, alim↔alim, therm↔repos, sal↔alim (pas de rut)</td></tr>
+  </table>
+</div>
+
+<h2>§ MATRICE D'AFFINITÉ BIOLOGIQUE IMPLÉMENTÉE</h2>
+<div class="box">
+  <table>
+    <tr><th>Paire (type_a ↔ type_b)</th><th>Orignal</th><th>Cerf</th><th>Ours</th><th>Dindon</th></tr>
+    <tr><td>rut ↔ alimentation</td><td>0.90</td><td>0.92</td><td>—</td><td>—</td></tr>
+    <tr><td>alimentation ↔ eau</td><td>0.85</td><td>0.75</td><td>0.75</td><td>0.70</td></tr>
+    <tr><td>repos ↔ alimentation</td><td>0.80</td><td>0.85</td><td>0.90</td><td>0.88</td></tr>
+    <tr><td>thermique ↔ repos</td><td>0.70</td><td>0.70</td><td>0.80</td><td>0.55</td></tr>
+    <tr><td>saline ↔ alimentation</td><td>0.75</td><td>0.80</td><td>0.40</td><td>0.30</td></tr>
+    <tr><td>saline ↔ rut</td><td>0.65</td><td>0.70</td><td>—</td><td>—</td></tr>
+    <tr><td>alimentation ↔ alimentation (nomadisme)</td><td>—</td><td>—</td><td>0.50</td><td>0.60</td></tr>
+  </table>
+  <p>Seuil d'activation : affinité ≥ 0.30. Toute paire sous ce seuil est filtrée.</p>
+</div>
+
+<h2>§ CORRIDORS ENTRANTS (MIGRATION LONGUE DISTANCE)</h2>
+<div class="box">
+  <ul>
+    <li><strong>Activation :</strong> orignal ✅, cerf ✅, ours ❌ (territoire local), dindon ❌ (volaille sédentaire)</li>
+    <li><strong>Distance d'origine :</strong> 540–720 m du waypoint (frontière du rayon fonctionnel 780 m §2.4)</li>
+    <li><strong>Nombre de bearings :</strong> 4 (N, E, S, O)</li>
+    <li><strong>Cibles :</strong> alimentation > rut > repos (priorité migratoire automnale)</li>
+    <li><strong>Détour biologique :</strong> si zones trop internes (&lt; 430 m), insertion d'un point intermédiaire à ≥ 500 m perpendiculaire au segment AB pour respecter §2.4 <code>functional_radius ≥ 420 m</code></li>
+  </ul>
+</div>
+
+<h2>§ DIAGNOSTIC DE CACHE (ENFORCEMENT_P0 §E5)</h2>
+<div class="box">
+  <table>
+    <tr><th>Élément</th><th>État</th></tr>
+    <tr><td>Service Worker <code>CACHE_NAME</code></td><td class="ok">bionic-hunt-cache-v9.0-enforcement-p0</td></tr>
+    <tr><td><code>TILE_CACHE_NAME</code></td><td class="ok">bionic-tiles-v9.0-enforcement-p0</td></tr>
+    <tr><td>Bypass SW <code>/api/v30/corridors/*</code></td><td class="ok">ACTIF (lecture live)</td></tr>
+    <tr><td>Bypass SW <code>/api/v20/territoire/bundle*</code></td><td class="ok">ACTIF (INTERZONE live)</td></tr>
+    <tr><td>Endpoint diagnostic</td><td class="ok">GET /api/v30/corridors/cache-diagnostic</td></tr>
+    <tr><td>Instructions client (DevTools / unregister)</td><td class="ok">exposées via endpoint</td></tr>
+  </table>
+</div>
+
+<h2>§ VALIDATION PYTEST (MANUELLE — NO TESTING AGENT)</h2>
+<div class="box">
+  <code>pytest tests/test_interzone_omega.py tests/test_enforcement_p0_xii_supra.py tests/test_veineux_omega_xii_supra.py tests/test_anti_regression_omega_x200_p6.py -q</code><br>
+  Résultat : <span class="ok">44 passed · 7 skipped · 0 failed</span><br>
+  Tests INTERZONE spécifiques : 16 cas couvrant triple verrou, matrice d'affinité 4 espèces, corridors entrants, géométrie CatmullRom, clip rayon fonctionnel, stats bundle.
+</div>
+
+<h2>§ ENDPOINTS LIVE</h2>
+<div class="box">
+<table>
+<tr><th>Endpoint</th><th>Rôle</th><th>Statut</th></tr>
+<tr><td>GET /api/v30/corridors/status</td><td>status V30+RenduΩ+P6 (+ interzone)</td><td class="ok">200 · score 94.20 CONFORME_Ω</td></tr>
+<tr><td>GET /api/v30/corridors/baseline</td><td>baseline FIGÉE 36.70 NON_CONFORME</td><td class="ok">200</td></tr>
+<tr><td>GET /api/v30/corridors/enforcement-status</td><td>verdict + milestones ≥70/≥90</td><td class="ok">200 · meets70=✓ meets90=✓</td></tr>
+<tr><td>GET /api/v30/corridors/cache-diagnostic</td><td>diagnostic SW + bundle cache</td><td class="ok">200 · v9.0</td></tr>
+<tr><td>POST /api/v20/territoire/bundle/purge</td><td>purge LRU/Disk/Redis</td><td class="ok">200</td></tr>
+<tr><td>GET /api/v20/territoire/bundle</td><td>bundle live 4 espèces (V30+interzone+entering)</td><td class="ok">200</td></tr>
+</table>
+</div>
+
+<h2>§ CORRECTION DIRECTE DE LA VIOLATION §2.3</h2>
+<div class="box">
+<table>
+<tr><th>Métrique biologique</th><th>Avant</th><th>Après</th><th>§ directive</th></tr>
+<tr><td>Corridors reliant 2 zones DIFFÉRENTES</td><td class="err">4/12 (33 %)</td><td class="ok">~19/23 (82 %)</td><td>§2.3</td></tr>
+<tr><td>Corridors restant dans UNE seule zone</td><td class="err">7/12 (redondance)</td><td class="ok">0/23 (rejetés)</td><td>§2.3</td></tr>
+<tr><td>Corridors venant de l'EXTÉRIEUR</td><td class="err">0/12</td><td class="ok">4/23 (orignal+cerf)</td><td>§2.3 / §4.5</td></tr>
+<tr><td>Paires biologiques actives (orignal)</td><td class="err">0 (spoke uniquement)</td><td class="ok">10 paires + 4 entrants</td><td>§4.2</td></tr>
+<tr><td>Salines connectées aux zones vitales</td><td class="err">0 liaison</td><td class="ok">2 salines × 3 paires</td><td>§4.2</td></tr>
+</table>
+</div>
+
+<h2>§ ÉTATS DE CONTRÔLE</h2>
+<div class="box">
+  <ul>
+    <li>V30 Engine : <span class="ok">LOCKED · 0 mutation</span> (seuls des <em>ajouts</em> post-V30)</li>
+    <li>DIAGNOSTIC-CORRIDORS-Ω : <span class="ok">désactivé</span></li>
+    <li>Waypoint officiel : <span class="ok">48.206657 / −68.382422 exclusif</span></li>
+    <li>Testing agent : <span class="ok">NON UTILISÉ</span></li>
+    <li>Persona BCE-4X : <span class="ok">intacte</span></li>
+    <li>Registre SHA-256 baseline : <span class="ok">915288a4…86018</span> (inchangé)</li>
+    <li>Triple verrou INTERZONE : flag ✅ + env ✅ + token ✅</li>
+  </ul>
+</div>
+
+<div class="box" style="border-color:#16a34a">
+  <h2 style="margin:0;border:none;padding:0;color:#16a34a">✅ INTERZONE_GENERATION CLÔTURÉE</h2>
+  <p><strong>Cible étape 1 (≥70 CONFORME) : <span class="ok">ATTEINTE</span></strong> ·
+     Cible finale (≥90 CONFORME_Ω) : <span class="ok">ATTEINTE</span> avec <strong>score 94.20</strong>.</p>
+  <p>Violation §2.3 intégralement corrigée : réseau inter-zones multi-espèces opérationnel, corridors entrants activés, salines connectées.</p>
+  <p><strong>À vos ordres, Commandant STEEVE-MAX.</strong></p>
+</div>
+
+</body></html>

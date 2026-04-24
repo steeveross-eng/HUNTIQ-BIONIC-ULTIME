@@ -166,6 +166,7 @@ async def v30_corridors_status(
     from engines.v8_institutional.territoire_v10_supra import compute_territoire_v10
     from engines.post_smoothing.renduomega import apply_renduomega_to_bundle
     from engines.post_smoothing.veineux_omega import apply_veineux_omega_to_bundle
+    from engines.post_smoothing.interzone_omega import apply_interzone_omega_to_bundle
 
     species_list = [species] if species else ["orignal", "cerf", "ours", "dindon"]
 
@@ -199,6 +200,8 @@ async def v30_corridors_status(
                     if _lat is not None and _lng is not None:
                         contam_norm.append({"lat": float(_lat), "lng": float(_lng)})
                 raw["contamination_zones"] = contam_norm
+                # PHASE_XII_SUPRA_CORRIDORS_VEINEUX_Ω_INTERZONE_GENERATION
+                raw = apply_interzone_omega_to_bundle(raw)
                 # PHASE_XII_SUPRA_CORRIDORS_VEINEUX_Ω_ULTIME
                 raw = apply_veineux_omega_to_bundle(raw)
                 bundle = apply_renduomega_to_bundle(raw)
