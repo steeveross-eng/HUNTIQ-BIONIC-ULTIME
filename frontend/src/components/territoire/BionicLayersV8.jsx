@@ -1103,7 +1103,21 @@ const BionicLayersV8 = ({
     // Le widget COMPASS est rendu hors carte (cf. <CompassOmegaWidget/>).
     const windVectors = Array.isArray(bundleData.wind_vectors) ? bundleData.wind_vectors : [];
     let windRendered = 0;
-    if (showWind && windVectors.length > 0 && waypointCenter) {
+    // PHASE_XII_SUPRA_TERRITOIRE_RERENDER_Ω_ULTIME §4 — lifecycle cône olfactif.
+    // Le cône est STRICTEMENT conditionné à :
+    //   (1) la présence d'un waypoint actif (waypointCenter non null)
+    //   (2) le flag `showWind` = true (tab VENT activé)
+    //   (3) au moins 1 wind vector valide
+    // Si l'une des 3 conditions tombe, le cône n'est pas re-créé et l'appel
+    // clearOwnLayers() au prochain render supprime le layer existant.
+    const _coneLifecycleOk = Boolean(
+      showWind
+      && waypointCenter
+      && typeof waypointCenter.lat === 'number'
+      && typeof waypointCenter.lng === 'number'
+      && windVectors.length > 0
+    );
+    if (_coneLifecycleOk) {
       // Vent dominant = moyenne des 8 vecteurs V8 (direction médiane + vitesse moyenne)
       const validVec = windVectors.filter(v => v.start && v.end && typeof v.direction_deg === 'number');
       const meanDir = validVec.reduce((a, v) => a + (v.direction_deg || 0), 0) / Math.max(1, validVec.length);
@@ -1401,11 +1415,18 @@ const BionicLayersV8 = ({
     }
 
     // 9. SCORE LOCAL (overlay pill macro — toujours)
+    // PHASE_XII_SUPRA_TERRITOIRE_RERENDER_Ω_ULTIME §1 — Grille institutionnelle
+    // stricte. Jamais 'BON' (interdit §6.2).
     if (score_local && score_local.value != null && waypointCenter) {
+      // Import runtime (CommonJS safe)
+      const { scoreLabelOmega, scoreColorOmega } = require('@/lib/scoreLabelOmega');
+      const _scoreVal = Number(score_local.value) || 0;
+      const _labelInstit = scoreLabelOmega(_scoreVal);
+      const _colorInstit = scoreColorOmega(_labelInstit);
       const pill = L.marker([waypointCenter.lat, waypointCenter.lng], {
         icon: L.divIcon({
           className: 'score-local-pill-v20',
-          html: `<div data-testid="score-local-pill" style="background:rgba(14,17,23,0.88);color:#F3F4F6;padding:4px 10px;border-radius:999px;font-size:13px;font-weight:600;border:1px solid rgba(255,255,255,0.15);white-space:nowrap">SCORE ${score_local.value} · ${score_local.classification}</div>`,
+          html: `<div data-testid="score-local-pill" data-label-instit="${_labelInstit}" style="background:rgba(14,17,23,0.92);color:${_colorInstit};padding:4px 10px;border-radius:999px;font-size:13px;font-weight:700;border:1px solid ${_colorInstit};white-space:nowrap;letter-spacing:0.03em">SCORE ${_scoreVal.toFixed(2)} · ${_labelInstit}</div>`,
           iconSize: [null, 22],
           iconAnchor: [0, -30],
         }),

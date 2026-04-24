@@ -233,9 +233,18 @@ async def layer_diagnostic(
     entering_count = sum(1 for c in corridors if c.get("entering_corridor"))
     v30_count = len(corridors) - interzone_count - entering_count
 
+    # PHASE_XII_SUPRA_TERRITOIRE_RERENDER_Ω_ULTIME §3 — détection vent robuste.
+    # Le bundle expose la télémétrie vent via plusieurs canaux : `sensoriel_vent_odeurs`
+    # (engine_vent), `wind_vectors` (V8 particles) ou les clefs legacy `vent`/`wind`.
+    _sens = bundle.get("sensoriel_vent_odeurs") or {}
+    _wind_vecs = bundle.get("wind_vectors") or []
     vent = bundle.get("vent") or bundle.get("wind") or {}
-    has_vent = bool(vent and (vent.get("speed_kmh") is not None
-                               or vent.get("direction_deg") is not None))
+    has_vent = bool(
+        (vent and (vent.get("speed_kmh") is not None or vent.get("direction_deg") is not None))
+        or (isinstance(_sens, dict) and (_sens.get("wind_speed_kmh") is not None
+                                          or _sens.get("wind_deg") is not None))
+        or (isinstance(_wind_vecs, list) and len(_wind_vecs) > 0)
+    )
 
     layers = {
         "zones": _count("zones"),
