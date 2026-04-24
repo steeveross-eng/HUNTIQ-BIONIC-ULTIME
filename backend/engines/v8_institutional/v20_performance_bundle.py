@@ -295,6 +295,8 @@ async def v20_territoire_bundle(
     from engines.v8_institutional.esi_omega import validate_bundle, _log_audit
     # PHASE_XII_SUPRA_RAPATRIEMENT_RENDUΩ_V20 — branchement obligatoire RenduΩ
     from engines.post_smoothing.renduomega import apply_renduomega_to_bundle
+    # PHASE_XII_SUPRA_CORRIDORS_VEINEUX_Ω_ULTIME — post-processor amont RenduΩ
+    from engines.post_smoothing.veineux_omega import apply_veineux_omega_to_bundle
 
     result = await compute_territoire_v10(lat, lon, species, month, hour, wind_deg, wind_speed)
 
@@ -335,6 +337,8 @@ async def v20_territoire_bundle(
                                     "intensity": _c.get("intensity"),
                                     "source": "V20_RAPATRIEMENT_NORMALIZED"})
     result["contamination_zones"] = _contam_for_rom
+    # ═══ VEINEUX_Ω — transformation géométrique amont (V30 intact) ═══
+    result = apply_veineux_omega_to_bundle(result)
     result = apply_renduomega_to_bundle(result)
 
     bv = validate_bundle({

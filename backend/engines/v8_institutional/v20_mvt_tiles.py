@@ -111,6 +111,8 @@ async def _get_bundle(lat: float, lon: float, species: str, month: int, hour: in
     from engines.v8_institutional.v20_performance_bundle import _cache_get as bundle_cache_get, _cache_key
     from engines.v8_institutional.territoire_v10_supra import compute_territoire_v10
     from engines.post_smoothing.renduomega import apply_renduomega_to_bundle
+    # PHASE_XII_SUPRA_CORRIDORS_VEINEUX_Ω_ULTIME
+    from engines.post_smoothing.veineux_omega import apply_veineux_omega_to_bundle
 
     key = _cache_key(lat, lon, species, month, hour, wind_deg)
     cached = bundle_cache_get(key)
@@ -145,6 +147,7 @@ async def _get_bundle(lat: float, lon: float, species: str, month: int, hour: in
                                  "intensity": _c.get("intensity"),
                                  "source": "V20_MVT_TILES_NORMALIZED"})
     result["contamination_zones"] = _contam_norm
+    result = apply_veineux_omega_to_bundle(result)
     return apply_renduomega_to_bundle(result)
 
 

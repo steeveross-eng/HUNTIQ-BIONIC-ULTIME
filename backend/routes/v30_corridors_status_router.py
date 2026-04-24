@@ -59,6 +59,7 @@ def _compute_corridor_metrics(corridor: Dict[str, Any]) -> Dict[str, Any]:
     rom = corridor.get("renduomega") or {}
     geom = rom.get("geometry") or {}
     terr = rom.get("terrain") or {}
+    terr_details = terr.get("details") or {}
     return {
         "id": corridor.get("id"),
         "points_count": len(path),
@@ -66,7 +67,11 @@ def _compute_corridor_metrics(corridor: Dict[str, Any]) -> Dict[str, Any]:
         "accepted": bool(rom.get("accepted")),
         "max_segment_m": geom.get("max_segment_m"),
         "max_angle_deg": geom.get("max_angle_deg"),
-        "functional_radius_m": terr.get("functional_radius_m"),
+        "functional_radius_m": (
+            terr.get("functional_radius_m")
+            or terr_details.get("max_radius_from_center_m")
+            or terr_details.get("functional_radius_m")
+        ),
     }
 
 
@@ -162,6 +167,7 @@ async def v30_corridors_status(
     )
     from engines.v8_institutional.territoire_v10_supra import compute_territoire_v10
     from engines.post_smoothing.renduomega import apply_renduomega_to_bundle
+    from engines.post_smoothing.veineux_omega import apply_veineux_omega_to_bundle
 
     species_list = [species] if species else ["orignal", "cerf", "ours", "dindon"]
 
@@ -195,6 +201,8 @@ async def v30_corridors_status(
                     if _lat is not None and _lng is not None:
                         contam_norm.append({"lat": float(_lat), "lng": float(_lng)})
                 raw["contamination_zones"] = contam_norm
+                # PHASE_XII_SUPRA_CORRIDORS_VEINEUX_Ω_ULTIME
+                raw = apply_veineux_omega_to_bundle(raw)
                 bundle = apply_renduomega_to_bundle(raw)
             except Exception as e:
                 per_species_stats[sp] = {"error": str(e), "total": 0}
