@@ -55,6 +55,8 @@ TERRAIN_AVOIDANCE_BUFFER_M = 25.0  # > 20 m (eau) + marge
 RADIAL_CONVERGENCE_TOL_M = 80.0   # tolérance détection radiale
 MAX_PATH_LEN_M = 1500.0           # longueur max corridor (V30 peut en émettre de 2-3 km)
 FINAL_LEN_BUDGET_M = 515.0        # budget longueur après tout traitement (29*18-mini marge)
+# ENFORCEMENT_P0 §4.1 — exclusion stricte CONTAM
+CONTAM_AVOIDANCE_BUFFER_M = 60.0  # éloignement minimal de toute zone de contamination
 
 
 def _meters_to_latlng(lat: float, d_lat_m: float, d_lng_m: float) -> Tuple[float, float]:
@@ -311,11 +313,44 @@ def _avoid_water_points(path: List[List[float]],
     return out
 
 
-# ═══════════════════════════════════════════════════════════════════════
-# Cœur VEINEUX
+def _avoid_contamination_zones(path: List[List[float]],
+                                contam_zones: List[Dict[str, Any]],
+                                buffer_m: float = CONTAM_AVOIDANCE_BUFFER_M
+                                ) -> List[List[float]]:
+    """ENFORCEMENT_P0 §4.1 — exclusion stricte CONTAM.
+
+    Décale latéralement tout point du corridor qui entre dans la sphère
+    d'exclusion d'une zone de contamination. Aucun corridor ne doit
+    traverser une zone hostile (§4.2).
+    """
+    if not contam_zones or len(path) < 3:
+        return path
+    out: List[List[float]] = []
+    for pt in path:
+        moved = list(pt)
+        for z in contam_zones:
+            zlat = z.get("lat")
+            zlng = z.get("lng") or z.get("lon")
+            if zlat is None or zlng is None:
+                continue
+            d = _distance_m(pt, [zlat, zlng])
+            if d < buffer_m and d > 1e-6:
+                vx = pt[0] - zlat
+                vy = pt[1] - zlng
+                norm = math.hypot(vx, vy)
+                if norm > 1e-9:
+                    push_m = (buffer_m - d) * 1.1
+                    push_lat, push_lng = _meters_to_latlng(
+                        pt[0], (vx / norm) * push_m, (vy / norm) * push_m,
+                    )
+                    moved[0] += push_lat
+                    moved[1] += push_lng
+        out.append(moved)
+    return out
 # ═══════════════════════════════════════════════════════════════════════
 def _process_single_corridor(corridor: Dict[str, Any],
                               water_points: List[Dict[str, Any]],
+                              contam_zones: List[Dict[str, Any]],
                               bundle_species: Optional[str]) -> Optional[Dict[str, Any]]:
     """Transforme un corridor brut V30 en corridor veineux Ω ou retourne None si rejet."""
     path = corridor.get("path") or corridor.get("polyline") or []
@@ -341,6 +376,9 @@ def _process_single_corridor(corridor: Dict[str, Any],
 
     # 5. Terrain-aware : évitement eau
     veined = _avoid_water_points(veined, water_points, buffer_m=TERRAIN_AVOIDANCE_BUFFER_M)
+
+    # 5bis. ENFORCEMENT_P0 §4.1 — exclusion stricte CONTAM
+    veined = _avoid_contamination_zones(veined, contam_zones, buffer_m=CONTAM_AVOIDANCE_BUFFER_M)
 
     # 6. Clip final strict — garantir L <= budget pour que 30 pts → seg <= 18m
     veined = _clip_max_length(veined, FINAL_LEN_BUDGET_M)
@@ -387,6 +425,8 @@ def apply_veineux_omega_to_bundle(bundle: Dict[str, Any]) -> Dict[str, Any]:
     # Terrain signals pour terrain-aware
     signals = bundle.get("terrain_signals") or {}
     water_points = signals.get("water_points") or []
+    # ENFORCEMENT_P0 §4.1 — ingérer les zones de contamination du bundle
+    contam_zones = bundle.get("contamination_zones") or []
     species = bundle.get("species")
 
     # 1. Détection corridors radiaux (Section 2 — réseau continu anti-radial)
@@ -397,7 +437,7 @@ def apply_veineux_omega_to_bundle(bundle: Dict[str, Any]) -> Dict[str, Any]:
     out: List[Dict[str, Any]] = []
     for c in filtered_in:
         try:
-            veined = _process_single_corridor(c, water_points, species)
+            veined = _process_single_corridor(c, water_points, contam_zones, species)
         except Exception:
             veined = None
         if veined is not None:
@@ -412,5 +452,7 @@ def apply_veineux_omega_to_bundle(bundle: Dict[str, Any]) -> Dict[str, Any]:
         "target_points": TARGET_POINTS,
         "max_segment_m_target": MAX_SEGMENT_M,
         "max_angle_deg_target": MAX_ANGLE_DEG,
+        "contam_avoidance_buffer_m": CONTAM_AVOIDANCE_BUFFER_M,
+        "contam_zones_considered": len(contam_zones),
     }
     return bundle

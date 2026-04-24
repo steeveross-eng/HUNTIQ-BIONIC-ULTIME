@@ -53,20 +53,35 @@ export default function StatutCorridorsOmegaPanel({ lat = OFFICIAL_LAT, lng = OF
     let mounted = true;
     let initialTimer = null;
     async function fetchStatus() {
-      try {
-        const r = await fetch(
-          `${API}/api/v30/corridors/status?lat=${lat}&lon=${lng}`,
-          { cache: 'no-store' }
-        );
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        const j = await r.json();
-        if (mounted) { setData(j); setError(null); }
-      } catch (e) {
-        const msg = String(e.message || e);
-        if (mounted && !msg.includes('DataCloneError') && !msg.includes('postMessage') && !msg.includes('abort')) {
-          setError(msg);
+      // ENFORCEMENT_P0 §1.1/§1.2 — bypass SW + cache + auth, lecture live
+      const attemptFetch = async (attempt = 0) => {
+        try {
+          const bust = Date.now();
+          const r = await fetch(
+            `${API}/api/v30/corridors/status?lat=${lat}&lon=${lng}&_t=${bust}`,
+            {
+              cache: 'no-store',
+              credentials: 'omit',
+              headers: { 'Accept': 'application/json', 'Cache-Control': 'no-cache' },
+            }
+          );
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          const j = await r.json();
+          if (mounted) { setData(j); setError(null); }
+        } catch (e) {
+          const msg = String(e.message || e);
+          if (msg.includes('DataCloneError') || msg.includes('postMessage') || msg.includes('abort')) {
+            return;
+          }
+          // ENFORCEMENT_P0 §1.1 — retry exponentiel (2 tentatives) avant report
+          if (attempt < 2) {
+            setTimeout(() => attemptFetch(attempt + 1), 600 * (attempt + 1));
+            return;
+          }
+          if (mounted) setError(msg);
         }
-      }
+      };
+      await attemptFetch(0);
     }
     // Retarder pour éviter StrictMode double-mount qui ABORT le 1er fetch
     initialTimer = setTimeout(fetchStatus, 800);

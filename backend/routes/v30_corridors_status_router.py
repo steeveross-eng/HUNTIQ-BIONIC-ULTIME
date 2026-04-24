@@ -137,11 +137,9 @@ def _compute_alignment_score(total: int, accepted: int,
 
 
 def _alignment_label(score: float) -> str:
-    if score >= THRESHOLD_CONFORM_OMEGA:
-        return "CONFORME_Ω"
-    if score >= THRESHOLD_NON_CONFORM:
-        return "CONFORME"
-    return "NON_CONFORME"
+    # ENFORCEMENT_P0 §6.1/§6.2 — grille institutionnelle (délégation baseline_registry_omega)
+    from engines.post_smoothing.baseline_registry_omega import alignment_label_institutional
+    return alignment_label_institutional(score)
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -357,4 +355,50 @@ async def v30_alignment_score_only(
         "alignment_label": d["global"]["alignment_label"],
         "acceptance_rate_pct": d["global"]["acceptance_rate_pct"],
         "thresholds": d["thresholds"],
+    })
+
+
+@router.get("/baseline")
+async def v30_baseline():
+    """ENFORCEMENT_P0 §1.1/§1.3/§7.2 — baseline institutionnelle FIGÉE lecture seule.
+
+    Expose le registre immuable `baseline_registry_omega` : score 36.70,
+    label NON_CONFORME, SHA-256 du payload. Utilisé par les clients pour
+    comparer tout score courant et déclencher rollback (§7.2) si
+    dégradation sous baseline.
+    """
+    from engines.post_smoothing.baseline_registry_omega import get_baseline
+    return JSONResponse(get_baseline())
+
+
+@router.get("/enforcement-status")
+async def v30_enforcement_status(
+    lat: float = Query(OFFICIAL_LAT),
+    lon: float = Query(OFFICIAL_LNG),
+):
+    """ENFORCEMENT_P0 §3/§7 — compare score courant à la baseline et
+    détermine s'il faut rollback. Expose verdict institutionnel complet.
+    """
+    from engines.post_smoothing.baseline_registry_omega import (
+        compare_to_baseline, get_baseline,
+    )
+    resp = await v30_corridors_status(
+        species=None, lat=lat, lon=lon, month=10, hour=14,
+    )
+    import json
+    d = json.loads(bytes(resp.body).decode("utf-8"))
+    current = d["global"]["v30_alignment_score"]
+    verdict = compare_to_baseline(current)
+    return JSONResponse({
+        "phase": "PHASE_XII_SUPRA_CORRIDORS_VEINEUX_Ω_ULTIME_ENFORCEMENT_P0",
+        "waypoint_official": {"lat": OFFICIAL_LAT, "lng": OFFICIAL_LNG},
+        "verdict": verdict,
+        "baseline": get_baseline(),
+        "current_global": d["global"],
+        "milestones": {
+            "target_conforme": 70.0,
+            "target_conforme_omega": 90.0,
+            "current_meets_conforme": current >= 70.0,
+            "current_meets_conforme_omega": current >= 90.0,
+        },
     })

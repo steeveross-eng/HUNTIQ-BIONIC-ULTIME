@@ -49,7 +49,7 @@ def test_full_pipeline_produces_25_30_points_and_low_seg():
         [48.208, -68.378],  # 200m
     ]
     out = vo._process_single_corridor(
-        _mk_corridor("c1", path), water_points=[], bundle_species="orignal"
+        _mk_corridor("c1", path), water_points=[], contam_zones=[], bundle_species="orignal"
     )
     assert out is not None
     assert 25 <= len(out["path"]) <= 30
@@ -114,7 +114,7 @@ def test_final_budget_never_exceeded():
     """Même avec un corridor de 3 km, la longueur finale ≤ FINAL_LEN_BUDGET + marge."""
     long_path = [[48.200 + i * 0.002, -68.380] for i in range(15)]  # ~3.3 km
     out = vo._process_single_corridor(
-        _mk_corridor("long", long_path), water_points=[], bundle_species="orignal"
+        _mk_corridor("long", long_path), water_points=[], contam_zones=[], bundle_species="orignal"
     )
     assert out is not None
     assert out["veineux_metrics"]["length_m"] <= vo.FINAL_LEN_BUDGET_M + 2.0

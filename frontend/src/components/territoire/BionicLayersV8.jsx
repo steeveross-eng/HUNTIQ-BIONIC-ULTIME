@@ -35,16 +35,19 @@ const ZONE_COLORS = {
 
 // CORRIDORS Omega: 4 niveaux
 // STYLE-HIERARCHISE V11-SUPRA (Directive III)
-// Intensite = Epaisseur + Surbrillance strictement croissantes
-// Source: frontend/src/config/territoire_defaults.js CORRIDOR_STYLE_HIERARCHY
-import { CORRIDOR_STYLE_HIERARCHY as HIER } from '@/config/territoire_defaults';
-const CORRIDOR_STYLES = {
-  extreme:    HIER.extreme,     // CRITIQUE #FF0000 4.0px 1.0
-  intense:    HIER.intense,     // MAJEUR   #FF6A00 3.2px 0.85
-  saisonnier: HIER.saisonnier,  // FORT     #FFC300 2.6px 0.75
-  normal:     HIER.normal,      // MODERE   #00B050 2.0px 0.65
-  faible:     HIER.faible,      // FAIBLE   #00B0F0 1.4px 0.55 (reserve)
-};
+// ENFORCEMENT_P0 §2.3/§7.1 — RELIQUE PURGÉE : RENDUΩ impose couleur UNIQUE #FF8F00,
+// épaisseurs 1.2/2.0/3.0 px, opacité ≥0.75. Le mapping multicolor historique
+// (HIER.extreme=#FF0000, HIER.intense=#FF6A00, HIER.saisonnier=#FFC300,
+//  HIER.normal=#00B050, HIER.faible=#00B0F0) est DORMANT et INTERDIT.
+// Toute résolution de style DOIT passer par `resolveCorridorStyleOmega` →
+// `RENDU_OMEGA.color = '#FF8F00'` unique. Conservé uniquement à titre de
+// référence institutionnelle pour la traçabilité de la purge.
+const CORRIDOR_STYLES_RELIQUE_PURGED = Object.freeze({
+  _purged_by: 'PHASE_XII_SUPRA_CORRIDORS_VEINEUX_Ω_ULTIME_ENFORCEMENT_P0',
+  _do_not_use: true,
+  _resolver_canon: 'resolveCorridorStyleOmega',
+  _rendu_color_canon: '#FF8F00',
+});
 
 const AFFUT_COLOR = '#9E9E9E';
 const AFFUT_X_COLOR = '#424242';

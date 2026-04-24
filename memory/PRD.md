@@ -27,6 +27,30 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **XII-SUPRA-ENFORCEMENT-P0 (2026-02)** — Correction des 8 violations critiques :
+  - `baseline_registry_omega.py` : baseline FIGÉE 36.70 NON_CONFORME + SHA-256
+    `915288a4…86018`, grille institutionnelle PARTIEL / CONFORME / CONFORME_Ω,
+    interdiction stricte des labels ["BON", "MODERE", "FAIBLE", "EXCELLENT",
+    "MOYEN", "ACCEPTABLE"].
+  - `veineux_omega.py` : nouvelle fonction `_avoid_contamination_zones` (§4.1)
+    avec buffer 60 m, signature `_process_single_corridor` étendue à
+    `contam_zones`, consommation de `bundle.contamination_zones`.
+  - Router V30 : nouveaux endpoints `GET /api/v30/corridors/baseline` et
+    `GET /api/v30/corridors/enforcement-status` (verdict rollback + milestones
+    ≥70/≥90), délégation du label à `alignment_label_institutional`.
+  - `BionicLayersV8.jsx` : purge constante `CORRIDOR_STYLES` multicolor legacy
+    (renommée `CORRIDOR_STYLES_RELIQUE_PURGED`), badge `score-local-pill`
+    réécrit avec grille institutionnelle (PARTIEL rouge / CONFORME orange /
+    CONFORME_Ω vert), suppression d'un bloc orphelin post-export.
+  - `StatutCorridorsOmegaPanel.jsx` : retry exponentiel (3 tentatives),
+    cache-buster `_t`, headers stricts `cache: no-store`, `credentials: omit`,
+    `Cache-Control: no-cache`.
+  - Tests Pytest : `test_enforcement_p0_xii_supra.py` (14 cas couvrant
+    baseline, grille labels, interdiction 'BON', rollback verdict, exclusion
+    CONTAM). Total 33 passed / 2 skipped, 0 failed.
+  - Score live post-ENFORCEMENT : **100.00 · CONFORME_Ω · 46/46 corridors ·
+    Δ +63.30 vs baseline**.
+  - Rapport HTML : `/reports/RAPPORT_XII_SUPRA_CORRIDORS_VEINEUX_ULTIME_ENFORCEMENT_P0.html`.
 - **X180** — Corridors SUPRA réparés (Jest 65/65 vert).
 - **X195** — Rapatriement V7 ULTIME (156-item archive + HTTPS download).
 - **X197** — Comparatif TERRITOIRE V7 vs ACTUEL + `DIFF_MATRIX.yaml` (45 divergences).
