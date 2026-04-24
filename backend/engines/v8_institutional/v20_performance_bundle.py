@@ -293,8 +293,49 @@ async def v20_territoire_bundle(
     _STATS["misses"] += 1
     from engines.v8_institutional.territoire_v10_supra import compute_territoire_v10
     from engines.v8_institutional.esi_omega import validate_bundle, _log_audit
+    # PHASE_XII_SUPRA_RAPATRIEMENT_RENDUΩ_V20 — branchement obligatoire RenduΩ
+    from engines.post_smoothing.renduomega import apply_renduomega_to_bundle
 
     result = await compute_territoire_v10(lat, lon, species, month, hour, wind_deg, wind_speed)
+
+    # ═══════════════════════════════════════════════════════════════════════
+    # RAPATRIEMENT_RENDUΩ_V20 — SECTION 1.1 / 1.2 / 1.3
+    # Validation et filtrage ABSOLUS des corridors avant cache & envoi client.
+    # Même moteur que POST /api/v7-ultime/renduomega/validate-bundle.
+    # V30 LOCKED intact — seules les sorties de compute_territoire_v10 sont
+    # filtrées ici ; le moteur institutionnel reste inchangé.
+    # ═══════════════════════════════════════════════════════════════════════
+    result["waypoint"] = {"lat": lat, "lng": lon}
+    result["species"] = species
+    # Normalisation `contamination_zones` pour RenduΩ :
+    # V30 émet des cônes (polygones) sans lat/lng direct. RenduΩ attend des
+    # points {lat,lng}. On dérive ici un point représentatif depuis
+    # `affut_source` ou le centroïde du polygone — sans modifier V30.
+    _contam_in = result.get("contamination") or []
+    _contam_for_rom = []
+    for _c in _contam_in:
+        if not isinstance(_c, dict):
+            continue
+        _lat = _c.get("lat")
+        _lng = _c.get("lng") or _c.get("lon")
+        if _lat is None or _lng is None:
+            _src = _c.get("affut_source") or {}
+            _lat = _src.get("lat")
+            _lng = _src.get("lng") or _src.get("lon")
+        if _lat is None or _lng is None:
+            _poly = _c.get("polygon") or _c.get("coords") or []
+            if isinstance(_poly, list) and _poly:
+                try:
+                    _lat = sum(p[0] for p in _poly) / len(_poly)
+                    _lng = sum(p[1] for p in _poly) / len(_poly)
+                except Exception:
+                    _lat = _lng = None
+        if _lat is not None and _lng is not None:
+            _contam_for_rom.append({"lat": float(_lat), "lng": float(_lng),
+                                    "intensity": _c.get("intensity"),
+                                    "source": "V20_RAPATRIEMENT_NORMALIZED"})
+    result["contamination_zones"] = _contam_for_rom
+    result = apply_renduomega_to_bundle(result)
 
     bv = validate_bundle({
         "zones": result["zones"],

@@ -120,6 +120,22 @@ BCE-4X ULTIME ABSOLU :
   `waypoint_context_match=true`. ESLint clean sur les 2 fichiers.
   `CI_STATUS_Ω.runtime_beacon.conforming` **NORMALISÉ à TRUE** en permanence.
   V30 intangible. Rapport `RAPPORT_X200_P4_RUNTIME_BEACON_Ω.md` scellé.
+- **PHASE_XII_SUPRA_RAPATRIEMENT_RENDUΩ_V20** — ✅ 2026-04-24 :
+  Branchement obligatoire de `apply_renduomega_to_bundle()` dans le wrapper
+  `v20_performance_bundle.py` entre `compute_territoire_v10()` et
+  `_cache_set()`. V30 LOCKED intact (`territoire_v10_supra` non modifié).
+  Normalisation des cônes de contamination V30 (polygones) en points
+  {lat,lng} pour l'API RenduΩ. Purge cache V20 (8 LRU + disque).
+  Résultats live (waypoint officiel) :
+  - cerf    : 6 acceptés / 8 rejetés (APPLIED)
+  - orignal : 5 acceptés / 7 rejetés (APPLIED)
+  - ours    : 4 acceptés / 6 rejetés (APPLIED)
+  Corridors acceptés conformes : points=28 (25-30 ✅), seg_max ≤18.1 m,
+  ang_max ≤31.7°. Matrice P6 alimentée : 36 observations, 11 corridors
+  distincts rejetés, sous-norme bloquante principale `segment_max_20m`
+  (rate 0.750). Hygiène visuelle : `MovementCorridorsLayer` +
+  `GuidedRouteLayer` confirmés **non importés** dans `MapContent.jsx`.
+  Rapport HTTPS : `/reports/RAPPORT_XII_RAPATRIEMENT_RENDUOMEGA_V20.html`.
 - **X200-P7 TERRITOIRE_VISUEL_DIAGNOSTIC_FIX_P0_Ω** — ✅ 2026-04-23 :
   Diagnostic comparatif PREVIEW A (Commandant) vs RENDU B (Emergent).
   **VENT** : canvas `canvas[data-windlayer]` existait (z=650, 1920×840,
