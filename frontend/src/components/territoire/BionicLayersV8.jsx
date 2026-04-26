@@ -478,7 +478,7 @@ const BionicLayersV8 = ({
 
           // §A HOTFIX — validation finale : log uniquement (pas de rejet).
           // Le pipeline HOTFIX (align+signature+re-enforce) garantit la conformité.
-          const geom = validateCorridorGeometry(path, { isOrganic: useOrganic, strictMinPoints: false });
+          const geom = validateCorridorGeometry(path, { isOrganic: organicReady, strictMinPoints: false });
           if (geom.violations.length > 0) {
             const severe = geom.violations.some(v =>
               (v.rule === 'segment_over_max' && geom.metrics.max_segment_m > RENDU_OMEGA.segmentMaxM * 2) ||
