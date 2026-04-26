@@ -727,7 +727,7 @@ const BionicLayersV8 = ({
           weight: 1.25,
           opacity: 0.85,
           fillColor: '#FF0000',
-          fillOpacity: 0.18,
+          fillOpacity: 0,                       // §2 contour seul, intérieur transparent
           dashArray: '5 3',
           smoothFactor: 0,
           lineJoin: 'miter',
@@ -1214,7 +1214,7 @@ const BionicLayersV8 = ({
         weight: 1.5,
         opacity: 0.7,
         fillColor: '#FFFFFF',
-        fillOpacity: 0.14,
+        fillOpacity: 0,                          // §1 contour seul (cône olfactif)
         dashArray: '5,4',
         interactive: true,
         pane: 'markerPane',
@@ -1353,7 +1353,7 @@ const BionicLayersV8 = ({
           color: '#880e4f',
           weight: 1.2,
           fillColor: '#f4511e',
-          fillOpacity: 0.18,
+          fillOpacity: 0,                       // §2 CONTAM contour seul, intérieur transparent
           interactive: true,
         });
         c.bindTooltip(`<b>CWD ${z.surveillance}</b><br/>${z.zone}<br/>Cas 2024: ${z.cases_2024}`, { sticky: true });
@@ -1449,7 +1449,7 @@ const BionicLayersV8 = ({
         weight: 1.5,
         dashArray: '4 4',
         fillColor: '#FFE082',
-        fillOpacity: 0.18,
+        fillOpacity: 0,                          // §3 RISQUES contour seul
       });
       c.bindTooltip(`<b>Risque ${r.type}</b> ${r.severity}`, { sticky: true });
       c.addTo(group);

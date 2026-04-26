@@ -22,12 +22,12 @@ export const RENDU_OMEGA = Object.freeze({
   color: '#FF8F00',
   colorName: 'Orange ambre institutionnel',
   // X150 Norme 3 — UNIQUEMENT 1.2 / 2.0 / 3.0 (aucune autre valeur permise)
-  weightsAllowedPx: [2.0, 3.0, 4.0],
+  weightsAllowedPx: [3.0, 4.0, 6.0],
   weightMapping: {
-    faible: 2.0, modere: 2.0,
-    fort: 3.0,
-    critique: 4.0, majeur: 4.0,
-    extreme: 4.0, extreme_max: 4.0,
+    faible: 3.0, modere: 3.0,
+    fort: 4.0,
+    critique: 6.0, majeur: 6.0,
+    extreme: 6.0, extreme_max: 6.0,
   },
   opacityMin: 1.0,
   opacityDefault: 1.0,
@@ -52,10 +52,10 @@ export const RENDU_OMEGA = Object.freeze({
   luminosityStepPct: 0.20,
   // Halo externe adaptatif renforcé (% d'opacité selon fond)
   haloExternalByBackground: {
-    forest: 0.55,   // +55 % (renforcement Commandant)
-    snow: 0.15,     // +15 %
-    water: 0.40,    // +40 %
-    cover: 0.25,    // +25 %
+    forest: 0.75,   // +75 % (visibilité absolue Commandant §4)
+    snow: 0.30,
+    water: 0.55,
+    cover: 0.40,
   },
   // Gradient directionnel renforcé 5–8 %
   directionalGradientPctMin: 0.05,
@@ -86,7 +86,7 @@ export const RENDU_OMEGA = Object.freeze({
   fadeOutMinRatio: 0.15,           // §A1 HOTFIX : fade max 85 %, JAMAIS 100 %
   // Convergence veine principale
   mainVeinConvergenceRadiusM: 15.0,  // ≤ 15 m
-  mainVeinHaloMultiplier: 1.5,
+  mainVeinHaloMultiplier: 1.8,
   mainVeinLumMultiplier: 2.2,
   // Pulsation publique
   publicPulseMinZoom: 15,
