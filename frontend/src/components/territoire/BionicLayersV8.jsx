@@ -420,6 +420,9 @@ const BionicLayersV8 = ({
     } catch (_e) { /* noop */ }
 
     if (showCorridors && corridorsToRender.length > 0 && corridorsVisibleAtZoom) {
+      // Compteur institutionnel : nombre de polylines réellement ajoutées au map.
+      // Si 0 à la fin → fallback RAW est déclenché (cf. plus bas).
+      let renderedPolylineCount = 0;
       corridorsToRender.forEach((c, corridorIdx) => {
         const rawPath = c.path || [[c.start?.lat, c.start?.lng], [c.end?.lat, c.end?.lng]];
         const speciesForSig = c.species_profile || species;
@@ -616,6 +619,7 @@ const BionicLayersV8 = ({
             { maxWidth: 360 }
           );
           group.addLayer(line);
+          renderedPolylineCount++;
         });
 
         // §B7 — FADE-OUT PROGRESSIF sur les queues clippées (transition 8-12m)
@@ -636,9 +640,47 @@ const BionicLayersV8 = ({
             });
             fadeLine.options._renduOmega = { layer: 'fade_tail', tail_opacity: fs.opacity };
             group.addLayer(fadeLine);
+            renderedPolylineCount++;
           });
         });
       });
+
+      // ═══ COMMANDE STEEVE-MAX — FALLBACK ABSOLU RENDUΩ ═══
+      // Si le pipeline align→signature→snap→clip aboutit à 0 polyline visible,
+      // on garantit AU MINIMUM le rendu du path RAW de chaque corridor pour
+      // assurer la visibilité institutionnelle exigée par le Commandant.
+      if (renderedPolylineCount === 0 && corridorsToRender.length > 0) {
+        try {
+          // eslint-disable-next-line no-console
+          console.warn(`[RENDUΩ-FALLBACK] pipeline a filtré tous les corridors (${corridorsToRender.length} en entrée → 0 polyline). Rendu RAW d'urgence.`);
+        } catch (_e) { /* noop */ }
+        corridorsToRender.forEach((c, idx) => {
+          const rawPath = c.path;
+          if (!Array.isArray(rawPath) || rawPath.length < 2) return;
+          const fallbackLine = L.polyline(rawPath, {
+            color: RENDU_OMEGA.color,            // #FF8F00 institutionnel
+            weight: 3.0,                          // visibilité maximale
+            opacity: 0.95,
+            lineCap: 'round',
+            lineJoin: 'round',
+            smoothFactor: 0,
+            interactive: true,
+            pane: corridorsPaneName,
+          });
+          fallbackLine.options._renduOmega = {
+            layer: 'corridor_raw_fallback',
+            id: c.id || `raw_${idx}`,
+            type: c.entering_corridor ? 'ENTERING'
+                : (c.interzone_generated ? 'INTERZONE' : 'V30'),
+          };
+          fallbackLine.bindTooltip(
+            `<b style="color:#FF8F00">CORRIDOR-Ω-RAW</b> · ${c.id || `id_${idx}`} · type=${fallbackLine.options._renduOmega.type}`,
+            { sticky: true, opacity: 0.92 },
+          );
+          group.addLayer(fallbackLine);
+          renderedPolylineCount++;
+        });
+      }
       // §C HOTFIX — exposition du log institutionnel sur window pour inspection
       try {
         if (typeof window !== 'undefined') {
