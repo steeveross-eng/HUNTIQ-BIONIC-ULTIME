@@ -87,6 +87,12 @@ export const RENDU_OMEGA = Object.freeze({
   // Convergence veine principale
   mainVeinConvergenceRadiusM: 15.0,  // ≤ 15 m
   mainVeinHaloMultiplier: 1.8,
+  // ═══ COMMANDE STEEVE-MAX §3+§4 — MODE RAW_ABSOLUTE ═══
+  // Quand activé (par défaut TRUE), prepareDisplayPath retourne le path RAW
+  // intégral sans aucun clipping/despike/trim/smoothing. Cela garantit le
+  // rendu de 100 % du corridor (origines + intermédiaire + waypoint) sans
+  // troncature. Désactiver pour repasser au pipeline strict CatmullRom V30.
+  renduOmegaRawAbsolute: true,
   mainVeinLumMultiplier: 2.2,
   // Pulsation publique
   publicPulseMinZoom: 15,
@@ -668,7 +674,8 @@ export function applySpeciesSignature(path, species) {
  *  @returns {{displaySubpaths: Array<path>, fadeTails: Array<path>, snappedSaline, snapStatus, metrics}}
  */
 export function prepareDisplayPath(rawPath, opts = {}) {
-  const { species, isOrganic = false, center, clip = true, salines = [], logSink = null, corridorId = null } = opts;
+  const { species, isOrganic = false, center, clip = true, salines = [], logSink = null, corridorId = null,
+          renduOmegaRawAbsolute = RENDU_OMEGA.renduOmegaRawAbsolute } = opts;
   const metrics = {
     n_input: Array.isArray(rawPath) ? rawPath.length : 0,
     n_after_align: 0,
@@ -677,6 +684,21 @@ export function prepareDisplayPath(rawPath, opts = {}) {
     n_after_snap: 0,
     snap_status: 'none',
   };
+
+  // ═══ COMMANDE STEEVE-MAX §3+§4 — MODE RAW_ABSOLUTE ═══
+  // Si activé, on retourne le path RAW intégral SANS aucun clipping,
+  // découpe, despike, smoothing ou trim. Garantit l'affichage 100 % du
+  // chemin corridor de l'origine (≈30 % extérieur) jusqu'au waypoint.
+  if (renduOmegaRawAbsolute && Array.isArray(rawPath) && rawPath.length >= 2) {
+    return {
+      displaySubpaths: [rawPath.map(p => [Number(p[0]), Number(p[1])])],
+      fadeTails: [],
+      snappedSaline: null,
+      snapStatus: 'raw_absolute_skipped',
+      metrics: { ...metrics, n_after_align: rawPath.length, raw_absolute: true },
+    };
+  }
+
   const aligned = alignGeometryOmega(rawPath, { isOrganic });
   metrics.n_after_align = aligned.length;
   if (aligned.length < 2) {
