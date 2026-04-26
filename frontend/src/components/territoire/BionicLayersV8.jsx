@@ -127,18 +127,22 @@ const BionicLayersV8 = ({
   // Ordre strict : zones < hydrologie < terrain < corridors < salines < affuts < hotspots < vent
   // Seul le pane 'corridors' est créé ici : les autres couches conservent leur pane
   // par défaut (préservation de l'interactivité existante, aucun impact sur salines/
-  // affuts/hotspots/zones). Le z-index corridors = 400 + idx_in_zOrder * 10.
+  // affuts/hotspots/zones). Le z-index corridors = 500 + idx_in_zOrder * 15.
+  // COMMANDE STEEVE-MAX — création explicite des 8 panes RENDUΩ pour garantir
+  // l'ordre institutionnel strict : zones < hydrologie < terrain < corridors
+  // < salines < hotspots < affuts < vent.
   useEffect(() => {
     if (!map) return;
     try {
-      const corridorsKey = 'corridors';
-      const paneName = renduOmegaPaneName(corridorsKey);
-      if (!map.getPane(paneName)) {
-        const pane = map.createPane(paneName);
-        const idx = RENDU_OMEGA.zIndexOrder.indexOf(corridorsKey);
-        pane.style.zIndex = String(400 + (idx >= 0 ? idx : 3) * 10);
-        pane.style.pointerEvents = 'auto';
-      }
+      // Création explicite de TOUS les panes RENDUΩ pour garantir l'ordre strict
+      RENDU_OMEGA.zIndexOrder.forEach((layerKey, idx) => {
+        const paneName = renduOmegaPaneName(layerKey);
+        if (!map.getPane(paneName)) {
+          const pane = map.createPane(paneName);
+          pane.style.zIndex = String(500 + idx * 15);
+          pane.style.pointerEvents = layerKey === 'corridors' ? 'auto' : 'none';
+        }
+      });
     } catch (e) { /* noop — map non prête */ }
   }, [map]);
 

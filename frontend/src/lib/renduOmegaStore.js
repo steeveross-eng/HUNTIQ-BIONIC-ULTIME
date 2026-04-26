@@ -41,7 +41,7 @@ export const RENDU_OMEGA = Object.freeze({
   functionalRadiusMaxM: 780.0,
   functionalRadiusNominalM: 600.0,
   minZoom: 13,
-  zIndexOrder: ['zones', 'hydrologie', 'terrain', 'corridors', 'salines', 'affuts', 'hotspots', 'vent'],
+  zIndexOrder: ['zones', 'hydrologie', 'terrain', 'corridors', 'salines', 'hotspots', 'affuts', 'vent'],
   forbidAffutInteraction: true,
   forbidDirectionalArrow: true,
   previewEqualsFinal: true,
@@ -165,11 +165,16 @@ export function resolveCorridorStyleOmega(corridor) {
 /**
  * Retourne le z-index CSS/Leaflet pour une couche.
  * Plus la clé est tardive dans `zIndexOrder`, plus le pane est élevé.
+ *
+ * COMMANDE STEEVE-MAX — corridors ELEVATED zIndex 600 pour garantir
+ * visibilité au-dessus des polygones zones (400 default Leaflet) et de
+ * toute autre couche analytique de fond.
  */
 export function resolveZIndex(layerKey) {
   const idx = RENDU_OMEGA.zIndexOrder.indexOf(String(layerKey).toLowerCase());
   if (idx < 0) return 400;
-  return 400 + idx * 10;
+  // Base 500 + idx*15 → corridors à 545, salines 560, hotspots 575, affuts 590, vent 605
+  return 500 + idx * 15;
 }
 
 /**
