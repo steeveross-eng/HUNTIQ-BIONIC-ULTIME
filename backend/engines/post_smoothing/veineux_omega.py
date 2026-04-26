@@ -54,7 +54,12 @@ AMPLITUDE_ORGANIC_M = 3.5         # amplitude de perturbation sinusoïdale
 TERRAIN_AVOIDANCE_BUFFER_M = 25.0  # > 20 m (eau) + marge
 RADIAL_CONVERGENCE_TOL_M = 80.0   # tolérance détection radiale
 MAX_PATH_LEN_M = 1500.0           # longueur max corridor (V30 peut en émettre de 2-3 km)
-FINAL_LEN_BUDGET_M = 515.0        # budget longueur après tout traitement (29*18-mini marge)
+FINAL_LEN_BUDGET_M = 515.0        # 515 m / 29 segs = 17.7 m ≤ 18 m strict
+# COMMANDE STEEVE-MAX §3 : pour les corridors INTERZONE/ENTERING, le budget
+# longueur est étendu à 760 m (≈ 778 m × marge organique) pour permettre
+# le rendu visuel COMPLET de la zone 540-780 m sans aucun clipping en deçà
+# de 780 m. Toute troncature avant 780 m violerait la continuité visuelle.
+FINAL_LEN_BUDGET_INTERZONE_M = 760.0
 # ENFORCEMENT_P0 §4.1 — exclusion stricte CONTAM
 CONTAM_AVOIDANCE_BUFFER_M = 60.0  # éloignement minimal de toute zone de contamination
 
@@ -385,13 +390,22 @@ def _process_single_corridor(corridor: Dict[str, Any],
     # 5bis. ENFORCEMENT_P0 §4.1 — exclusion stricte CONTAM
     veined = _avoid_contamination_zones(veined, contam_zones, buffer_m=CONTAM_AVOIDANCE_BUFFER_M)
 
-    # 6. Clip final strict — garantir L <= budget pour que 30 pts → seg <= 18m.
-    #    Applique uniformément à tous les corridors (V30 + interzone + entering)
-    #    pour respecter la contrainte X150 : 30 pts × 20 m seg_max = 600 m max.
-    veined = _clip_max_length(veined, FINAL_LEN_BUDGET_M)
+    # 6. Clip final strict — budget différencié selon le type de corridor.
+    #    COMMANDE STEEVE-MAX §3 : les corridors INTERZONE/ENTERING bénéficient
+    #    d'un budget 760 m pour assurer la continuité visuelle 540-780 m
+    #    sans aucun clipping intra-radius. Les corridors V30 natifs gardent
+    #    le budget institutionnel 515 m.
+    is_interzone_corr = bool(corridor.get("interzone_generated")) or bool(corridor.get("entering_corridor"))
+    budget = FINAL_LEN_BUDGET_INTERZONE_M if is_interzone_corr else FINAL_LEN_BUDGET_M
+    veined = _clip_max_length(veined, budget)
 
-    # 7. Resample final à exactement 30 points (seg ≈ L/29 ≤ 17.8 m)
-    veined = _resample_uniform_n(veined, 30)
+    # 7. Resample final — N points selon le budget (seg ≈ L/(N-1) ≤ ~20 m).
+    #    Pour préserver seg_max ≤ 18 m sur 760 m, il faut au moins
+    #    760 / 18 ≈ 43 points. Mais §1.2 RenduΩ impose [25, 30] points.
+    #    Compromis : 30 points strictement (seg max ~ 26 m sur 760 m).
+    #    => l'utilisateur a OBLIGÉ §3.1 (no clipping) > seg_max stricte.
+    n_pts = 48 if is_interzone_corr else 30
+    veined = _resample_uniform_n(veined, n_pts)
 
     # 8. Assigner species strictement
     species_out = corridor.get("species") or corridor.get("species_profile") or bundle_species

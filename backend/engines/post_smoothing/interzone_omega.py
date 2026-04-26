@@ -104,17 +104,25 @@ ENTERING_CORRIDORS_ENABLED: Dict[str, bool] = {
     "ours": False,      # territoire local
     "dindon": False,    # volaille sédentaire
 }
-# §2.4 RenduΩ : functional_radius_m ∈ [420, 780]. Corridors entrants
-# démarrent à la frontière du rayon fonctionnel (≤ 720 m marge) puis
-# convergent vers les zones vitales internes. Sous FINAL_LEN_BUDGET=515m
-# imposé par veineux_omega, le corridor fait ~515 m depuis le start.
-ENTERING_DISTANCE_MIN_M = 600.0
-ENTERING_DISTANCE_MAX_M = 720.0
-ENTERING_NB_BEARINGS = 4  # N, E, S, O
+# ═══ COMMANDE OFFICIELLE STEEVE-MAX §3 — RÈGLE INSTITUTIONNELLE 540-780 m ═══
+# Les corridors entrants doivent être visuellement rendus depuis l'extérieur du
+# rayon fonctionnel (zone 540-780 m) afin d'assurer une continuité organique
+# complète entre l'extérieur et le waypoint central. Aucun clipping visuel
+# n'est autorisé dans la zone 600-780 m.
+#
+# Conséquences :
+#   - ENTERING_DISTANCE_MIN_M = 540 m (entrée naturelle)
+#   - ENTERING_DISTANCE_MAX_M = 778 m (juste sous 780 m strict §3.1 RenduΩ)
+#   - INTERZONE_FUNCTIONAL_RADIUS_MAX_M = 778 m (équivaut au max RenduΩ)
+#   - Validation RenduΩ : un corridor tronqué AVANT 780 m est rejeté
+#     comme « clipping_intra_radius » (cf. _detect_clipping_violation).
+ENTERING_DISTANCE_MIN_M = 540.0
+ENTERING_DISTANCE_MAX_M = 778.0
+ENTERING_NB_BEARINGS = 6  # N, NE, E, SE, S, SO, O, NO → 6 bearings pour densité
 
-# Clip institutionnel (§2.4) : rayon fonctionnel max 720 m pour corridors
-# interzone (marge 60 m sous 780 m RenduΩ pour absorber amplitude organique).
-INTERZONE_FUNCTIONAL_RADIUS_MAX_M = 720.0
+# Clip institutionnel (§2.4) : 778 m (1 m de marge sous la borne max RenduΩ
+# pour éviter les rejets à cause des erreurs flottantes).
+INTERZONE_FUNCTIONAL_RADIUS_MAX_M = 778.0
 
 # Paramètres géométriques (alignés RenduΩ)
 INTERZONE_POINTS_OUT = 30

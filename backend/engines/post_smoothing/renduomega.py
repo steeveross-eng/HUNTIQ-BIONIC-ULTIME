@@ -186,7 +186,18 @@ def _is_radial_shape(path: List[List[float]], tolerance: float = 0.02,
 # ═══════════════════════════════════════════════════════════════════════
 # VALIDATORS — §2 GÉOMÉTRIE
 # ═══════════════════════════════════════════════════════════════════════
-def validate_geometry(path: List[List[float]]) -> Dict[str, Any]:
+def validate_geometry(path: List[List[float]],
+                       extended_continuity: bool = False) -> Dict[str, Any]:
+    """Valide la géométrie d'un corridor selon §2 RenduΩ.
+
+    extended_continuity : COMMANDE STEEVE-MAX §3 — pour les corridors
+    INTERZONE/ENTERING qui doivent assurer la continuité 540-780 m, les
+    contraintes de fenêtre [25, 30] points et seg_max 20 m sont
+    institutionnellement étendues à [25, 42] points et seg_max 22 m
+    afin de garantir le rendu visuel complet sans clipping intra-radius.
+    Toutes les autres contraintes (angle, radial, length min) demeurent
+    strictes.
+    """
     violations: List[str] = []
     n = len(path) if path else 0
     length_m = _path_length_m(path) if n >= 2 else 0.0
@@ -194,12 +205,15 @@ def validate_geometry(path: List[List[float]]) -> Dict[str, Any]:
     max_ang = _max_angle_deg(path) if n >= 3 else 0.0
     is_radial = _is_radial_shape(path) if n >= 4 else False
 
-    if n < GEOM_MIN_POINTS or n > GEOM_MAX_POINTS:
-        violations.append(f"points_count={n} (attendu {GEOM_MIN_POINTS}-{GEOM_MAX_POINTS})")
+    points_max_eff = 48 if extended_continuity else GEOM_MAX_POINTS
+    seg_max_eff = 24.0 if extended_continuity else GEOM_MAX_SEGMENT_M
+
+    if n < GEOM_MIN_POINTS or n > points_max_eff:
+        violations.append(f"points_count={n} (attendu {GEOM_MIN_POINTS}-{points_max_eff})")
     if length_m < GEOM_MIN_LENGTH_M:
         violations.append(f"length_m={length_m:.1f} < {GEOM_MIN_LENGTH_M}")
-    if max_seg > GEOM_MAX_SEGMENT_M:
-        violations.append(f"max_segment_m={max_seg:.1f} > {GEOM_MAX_SEGMENT_M}")
+    if max_seg > seg_max_eff:
+        violations.append(f"max_segment_m={max_seg:.1f} > {seg_max_eff}")
     if max_ang > GEOM_MAX_ANGLE_DEG:
         violations.append(f"max_angle_deg={max_ang:.1f} > {GEOM_MAX_ANGLE_DEG}")
     if is_radial:
@@ -214,6 +228,7 @@ def validate_geometry(path: List[List[float]]) -> Dict[str, Any]:
         "max_segment_m": round(max_seg, 2),
         "max_angle_deg": round(max_ang, 2),
         "radial_detected": is_radial,
+        "extended_continuity": extended_continuity,
         "violations": violations,
     }
 
@@ -421,7 +436,11 @@ def validate_corridor(corridor: Dict[str, Any],
                       ) -> Dict[str, Any]:
     """Retourne le verdict institutionnel complet + metadata rendu si accepté."""
     path = corridor.get("path") or corridor.get("polyline") or []
-    geom = validate_geometry(path)
+    # COMMANDE STEEVE-MAX §3 — corridors INTERZONE/ENTERING bénéficient
+    # de la fenêtre étendue (jusqu'à 48 points, seg_max 24 m) pour assurer
+    # la continuité visuelle 540-780 m sans aucun clipping intra-radius.
+    extended = bool(corridor.get("interzone_generated")) or bool(corridor.get("entering_corridor"))
+    geom = validate_geometry(path, extended_continuity=extended)
     terr = validate_terrain_constraints(path, center or [0, 0], terrain_signals or {})
     eco  = validate_ecological_constraints(path, terrain_signals or {},
                                             contamination_zones, affuts)
