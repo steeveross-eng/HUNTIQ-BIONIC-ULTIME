@@ -207,11 +207,25 @@ const BionicLayersV8 = ({
 
   // CORRIDORS_ORGANIC (Phase XI-SUPRA-L+1-M) : fetch des corridors organiques
   // 120 points + thickness variable + hiérarchie, cache 60s.
+  // COMMANDE STEEVE-MAX — supprimé l'early return : on fetch même sans waypoint
+  // pour éviter de bloquer le rendu RenduΩ. La condition `useOrganicCorridors`
+  // suffit (defaut true, désactivable par prop).
   useEffect(() => {
-    if (!useOrganicCorridors || !waypointCenter || !enabled) return;
+    if (!useOrganicCorridors || !enabled) return;
+    if (!waypointCenter) return;  // garde-fou minimal : besoin d'un centre
     let cancelled = false;
     getOrganicCorridors(waypointCenter.lat, waypointCenter.lng, species)
-      .then((data) => { if (!cancelled && data) setOrganicBundle(data); })
+      .then((data) => {
+        if (cancelled) return;
+        if (data) {
+          setOrganicBundle(data);
+          // COMMANDE STEEVE-MAX §3 — force re-render après hydratation organic
+          try {
+            // eslint-disable-next-line no-console
+            console.warn('[RENDUΩ] organicBundle hydrated → triggerRender. corridors=', data?.corridors?.length || 0);
+          } catch (_e) { /* noop */ }
+        }
+      })
       .catch(() => {});
     return () => { cancelled = true; };
   }, [waypointCenter, species, useOrganicCorridors, enabled]);
@@ -359,8 +373,22 @@ const BionicLayersV8 = ({
     //   • §B7 clipping progressif fade-out 8-12m
     //   • §B1-B6 CatmullRom 28 strict, segment ≤20m, angle ≤45°, continuité stricte
     const corridorsVisibleAtZoom = isCorridorsVisibleAtZoom(currentZoom);
-    const useOrganic = useOrganicCorridors && organicBundle?.corridors?.length > 0;
-    const corridorsToRender = useOrganic ? organicBundle.corridors : corridors;
+    // COMMANDE STEEVE-MAX — fallback robuste : RENDUΩ utilise organicBundle
+    // si disponible, sinon les corridors du bundle V20 (V30 + INTERZONE + ENTRANTS).
+    const organicReady = useOrganicCorridors && organicBundle?.corridors?.length > 0;
+    const corridorsToRender = organicReady ? organicBundle.corridors : corridors;
+    // Log institutionnel obligatoire — traçabilité du rendu
+    try {
+      // eslint-disable-next-line no-console
+      console.warn(
+        '[RENDUΩ] corridorsToRender =', corridorsToRender.length,
+        '· organicReady =', organicReady,
+        '· bundleCorridors =', corridors.length,
+        '· organicBundleCorridors =', organicBundle?.corridors?.length || 0,
+        '· zoom =', currentZoom,
+        '· visibleAtZoom =', corridorsVisibleAtZoom,
+      );
+    } catch (_e) { /* noop */ }
     const corridorsPaneName = renduOmegaPaneName('corridors');
     const rejectedCorridors = [];
     // §A2 — Convergence ≤15m (SUPRA_S_CORRECTION)
@@ -396,7 +424,7 @@ const BionicLayersV8 = ({
         // align → signature → RE-ENFORCE (hotfix) → snap-saline (non-destructif) → clipWithFadeOut (avec rescue)
         const { displaySubpaths, fadeTails, snappedSaline, snapStatus, metrics } = prepareDisplayPath(rawPath, {
           species: speciesForSig,
-          isOrganic: useOrganic,
+          isOrganic: organicReady,
           center: waypointCenter_latlng,
           clip: true,
           salines,
@@ -405,7 +433,7 @@ const BionicLayersV8 = ({
         });
 
         // Style strict RENDU-Ω
-        const styleOmega = useOrganic
+        const styleOmega = organicReady
           ? resolveCorridorStyleOrganic(c)
           : resolveCorridorStyleOmega(c);
         const color = RENDU_OMEGA.color;
@@ -507,7 +535,7 @@ const BionicLayersV8 = ({
           });
           line.options._renduOmega = {
             version: 'V1.3-PHASE-XII-SUPRA-S-CORRECTION-2026-04',
-            source: useOrganic ? 'ORGANIC' : 'RENDU_SUPRA_OMEGA_V2',
+            source: organicReady ? 'ORGANIC' : 'RENDU_SUPRA_OMEGA_V2',
             color, weight, opacity, min_zoom: RENDU_OMEGA.minZoom,
             hierarchy: isMainVein ? 'veine_principale' : (c.hierarchy || 'legacy'),
             geom_metrics: geom.metrics,
@@ -548,7 +576,7 @@ const BionicLayersV8 = ({
           const intensityLabel = (typeof c.intensity === 'number')
             ? `int:${Math.round(c.intensity)}`
             : `int:${c.type || c.intensity || 'normal'}`;
-          const tagLabel = useOrganic ? 'CORRIDOR-ORGANIC-Ω' : 'CORRIDOR-SUPRA-Ω-ART-v2';
+          const tagLabel = organicReady ? 'CORRIDOR-ORGANIC-Ω' : 'CORRIDOR-SUPRA-Ω-ART-v2';
           line.bindTooltip(
             `<b style="color:${color}">${tagLabel}</b>${hierarchyStr} ${intensityLabel}${costStr}${salineStr} | ${speciesForSig || ''}${netStr}`,
             { sticky: true, opacity: 0.95 }
@@ -579,7 +607,7 @@ const BionicLayersV8 = ({
               <div style="margin-top:4px;padding:4px 6px;background:#E3F2FD;border-left:3px solid #1976D2;font-size:11px;color:#0D47A1">
                 <b>Optimisation</b> : ${corrOpt}
               </div>
-              <div style="margin-top:6px;font-size:10px;color:#888">Source : ${useOrganic ? 'ENGINE-IA-CORRIDORS-ORGANIC-Ω (XI-SUPRA-M)' : 'CORRIDOR-SUPRA-Ω-ART-v2'}<br/>Style : Catmull-Rom 28 pts · couleur ${color}</div>
+              <div style="margin-top:6px;font-size:10px;color:#888">Source : ${organicReady ? 'ENGINE-IA-CORRIDORS-ORGANIC-Ω (XI-SUPRA-M)' : 'CORRIDOR-SUPRA-Ω-ART-v2'}<br/>Style : Catmull-Rom 28 pts · couleur ${color}</div>
             </div>`,
             { maxWidth: 360 }
           );
