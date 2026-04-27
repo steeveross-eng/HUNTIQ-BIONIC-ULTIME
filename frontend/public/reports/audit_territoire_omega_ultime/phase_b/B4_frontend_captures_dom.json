@@ -1,0 +1,62 @@
+[
+  {
+    "species": "orignal",
+    "expected": "PRESENT",
+    "paths": {
+      "orange_corridor": 0,
+      "red_corridor": 0,
+      "blue": 0,
+      "green": 0,
+      "total": 124
+    },
+    "markers": 2
+  },
+  {
+    "species": "chevreuil",
+    "expected": "PRESENT",
+    "paths": {
+      "orange_corridor": 0,
+      "red_corridor": 0,
+      "blue": 0,
+      "green": 0,
+      "total": 126
+    },
+    "markers": 2
+  },
+  {
+    "species": "ours_noir",
+    "expected": "PRESENT",
+    "paths": {
+      "orange_corridor": 0,
+      "red_corridor": 0,
+      "blue": 0,
+      "green": 0,
+      "total": 125
+    },
+    "markers": 2
+  },
+  {
+    "species": "dindon_sauvage",
+    "expected": "ABSENT",
+    "paths": {
+      "orange_corridor": 0,
+      "red_corridor": 0,
+      "blue": 0,
+      "green": 0,
+      "total": 125
+    },
+    "markers": 1
+  },
+  {
+    "species": "wapiti",
+    "expected": "ABSENT",
+    "paths": {
+      "orange_corridor": 0,
+      "red_corridor": 0,
+      "blue": 0,
+      "green": 0,
+      "total": 125
+    },
+    "markers": 1
+  }
+]

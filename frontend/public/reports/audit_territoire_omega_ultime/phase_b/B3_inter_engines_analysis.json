@@ -1,0 +1,566 @@
+{
+  "phase": "PHASE_B_INTER_ENGINES_ANALYSIS",
+  "chains": {
+    "vent_contam_son": {
+      "chain": "vent → contamination → son",
+      "per_species": {
+        "orignal": {
+          "wind_deg": null,
+          "wind_speed_kmh": null,
+          "contamination_count": 18,
+          "contamination_mean_axis_deg": null,
+          "son_cone_axis_deg": null,
+          "delta_wind_to_contamination_deg": null,
+          "delta_wind_to_son_deg": null
+        },
+        "cerf": {
+          "wind_deg": null,
+          "wind_speed_kmh": null,
+          "contamination_count": 18,
+          "contamination_mean_axis_deg": null,
+          "son_cone_axis_deg": null,
+          "delta_wind_to_contamination_deg": null,
+          "delta_wind_to_son_deg": null
+        },
+        "ours": {
+          "wind_deg": null,
+          "wind_speed_kmh": null,
+          "contamination_count": 18,
+          "contamination_mean_axis_deg": null,
+          "son_cone_axis_deg": null,
+          "delta_wind_to_contamination_deg": null,
+          "delta_wind_to_son_deg": null
+        },
+        "dindon": {
+          "wind_deg": null,
+          "wind_speed_kmh": null,
+          "contamination_count": 18,
+          "contamination_mean_axis_deg": null,
+          "son_cone_axis_deg": null,
+          "delta_wind_to_contamination_deg": null,
+          "delta_wind_to_son_deg": null
+        },
+        "wapiti": {
+          "wind_deg": null,
+          "wind_speed_kmh": null,
+          "contamination_count": 18,
+          "contamination_mean_axis_deg": null,
+          "son_cone_axis_deg": null,
+          "delta_wind_to_contamination_deg": null,
+          "delta_wind_to_son_deg": null
+        }
+      }
+    },
+    "corridors_zones_affuts_salines_hotspots": {
+      "chain": "corridors → zones → affûts → salines → hotspots",
+      "per_species": {
+        "orignal": {
+          "corridors_count": 0,
+          "zones_count": 5,
+          "affuts_count": 6,
+          "salines_count": 6,
+          "hotspots_count": 11,
+          "interzone_count": null,
+          "veineux_count": null,
+          "bio_presence_mask_halt": false,
+          "expected_status": "PRESENT"
+        },
+        "cerf": {
+          "corridors_count": 0,
+          "zones_count": 5,
+          "affuts_count": 6,
+          "salines_count": 6,
+          "hotspots_count": 11,
+          "interzone_count": null,
+          "veineux_count": null,
+          "bio_presence_mask_halt": false,
+          "expected_status": "PRESENT"
+        },
+        "ours": {
+          "corridors_count": 0,
+          "zones_count": 5,
+          "affuts_count": 6,
+          "salines_count": 6,
+          "hotspots_count": 11,
+          "interzone_count": null,
+          "veineux_count": null,
+          "bio_presence_mask_halt": false,
+          "expected_status": "PRESENT"
+        },
+        "dindon": {
+          "corridors_count": 0,
+          "zones_count": 5,
+          "affuts_count": 0,
+          "salines_count": 6,
+          "hotspots_count": 11,
+          "interzone_count": null,
+          "veineux_count": null,
+          "bio_presence_mask_halt": true,
+          "expected_status": "ABSENT"
+        },
+        "wapiti": {
+          "corridors_count": 0,
+          "zones_count": 5,
+          "affuts_count": 0,
+          "salines_count": 6,
+          "hotspots_count": 11,
+          "interzone_count": null,
+          "veineux_count": null,
+          "bio_presence_mask_halt": true,
+          "expected_status": "ABSENT"
+        }
+      }
+    },
+    "bio_vitaux_rendu": {
+      "chain": "BIO-MASK → VITAUX → RENDUΩ",
+      "per_species": {
+        "orignal": {
+          "bio_presence_mask_applied_v20": true,
+          "bio_presence_mask_halt_v20": false,
+          "bio_presence_mask_applied_organic": true,
+          "bio_presence_mask_halt_organic": false,
+          "vitaux_omega_applied": true,
+          "vitaux_omega_total_input": 0,
+          "vitaux_omega_total_kept": 0,
+          "renduomega_applied": false,
+          "v30_locked": null
+        },
+        "cerf": {
+          "bio_presence_mask_applied_v20": true,
+          "bio_presence_mask_halt_v20": false,
+          "bio_presence_mask_applied_organic": true,
+          "bio_presence_mask_halt_organic": false,
+          "vitaux_omega_applied": true,
+          "vitaux_omega_total_input": 0,
+          "vitaux_omega_total_kept": 0,
+          "renduomega_applied": false,
+          "v30_locked": null
+        },
+        "ours": {
+          "bio_presence_mask_applied_v20": true,
+          "bio_presence_mask_halt_v20": false,
+          "bio_presence_mask_applied_organic": true,
+          "bio_presence_mask_halt_organic": false,
+          "vitaux_omega_applied": true,
+          "vitaux_omega_total_input": 0,
+          "vitaux_omega_total_kept": 0,
+          "renduomega_applied": false,
+          "v30_locked": null
+        },
+        "dindon": {
+          "bio_presence_mask_applied_v20": true,
+          "bio_presence_mask_halt_v20": true,
+          "bio_presence_mask_applied_organic": true,
+          "bio_presence_mask_halt_organic": true,
+          "vitaux_omega_applied": null,
+          "vitaux_omega_total_input": null,
+          "vitaux_omega_total_kept": null,
+          "renduomega_applied": false,
+          "v30_locked": null
+        },
+        "wapiti": {
+          "bio_presence_mask_applied_v20": true,
+          "bio_presence_mask_halt_v20": true,
+          "bio_presence_mask_applied_organic": true,
+          "bio_presence_mask_halt_organic": true,
+          "vitaux_omega_applied": null,
+          "vitaux_omega_total_input": null,
+          "vitaux_omega_total_kept": null,
+          "renduomega_applied": false,
+          "v30_locked": null
+        }
+      }
+    }
+  },
+  "per_species": {
+    "orignal": {
+      "v20_bundle": {
+        "corridors_count": 0,
+        "intensity_distribution": {},
+        "type_distribution": {},
+        "affuts_count": 6,
+        "salines_count": 6,
+        "hotspots_count": 11,
+        "zones_count": 5,
+        "wind": {},
+        "bio_presence_mask_stats": {
+          "phase": "PHASE_XVIII_BIO_PRESENCE_MASK_Ω",
+          "subphase": "PHASE_XVIII_BIO_PRESENCE_MASK",
+          "enforce_mode": true,
+          "species_input": "orignal",
+          "canonical": "orignal",
+          "common_name": "Alces alces",
+          "territoire_lat_lng": [
+            48.206657,
+            -68.382422
+          ],
+          "presence_status": "PRESENT",
+          "presence_source": "MFFP 2024 — Inventaires aériens ZEC + Plans de gestion",
+          "presence_reason": "in_natural_range",
+          "corridors_v30_count_avant_filtre_presence": 11,
+          "corridors_v30_count_apres_filtre_presence": 11,
+          "rectangles_tested": 1
+        }
+      },
+      "layer_diagnostic": {
+        "layers": {
+          "zones": 5,
+          "corridors_total": 0,
+          "corridors_v30": 0,
+          "corridors_interzone": 0,
+          "corridors_entering": 0,
+          "salines": 4,
+          "hotspots": 5,
+          "affuts": 0,
+          "contamination_zones": 0,
+          "vent_ok": true,
+          "waypoint_ok": true
+        },
+        "missing_critical_layers": [
+          "corridors_total",
+          "corridors_v30",
+          "affuts",
+          "contamination_zones"
+        ],
+        "all_layers_ok": false
+      },
+      "v30_status_filter_species": {
+        "total": 0,
+        "accepted": 0,
+        "rejected": 0,
+        "acceptance_rate": 0.0,
+        "rejection_top_reasons": [],
+        "mean_functional_radius_m": null,
+        "length_m_p50": null,
+        "length_m_p90": null,
+        "points_distribution": {
+          "in_25_30": 0,
+          "below_25": 0,
+          "above_30": 0
+        },
+        "v30_alignment_score": 0.0,
+        "alignment_label": "PARTIEL",
+        "bio_presence_status": "PRESENT",
+        "bio_presence_canonical": "orignal",
+        "bio_presence_source": "MFFP 2024 — Inventaires aériens ZEC + Plans de gestion",
+        "bio_presence_mask_halt": false
+      }
+    },
+    "cerf": {
+      "v20_bundle": {
+        "corridors_count": 0,
+        "intensity_distribution": {},
+        "type_distribution": {},
+        "affuts_count": 6,
+        "salines_count": 6,
+        "hotspots_count": 11,
+        "zones_count": 5,
+        "wind": {},
+        "bio_presence_mask_stats": {
+          "phase": "PHASE_XVIII_BIO_PRESENCE_MASK_Ω",
+          "subphase": "PHASE_XVIII_BIO_PRESENCE_MASK",
+          "enforce_mode": true,
+          "species_input": "chevreuil",
+          "canonical": "chevreuil",
+          "common_name": "Odocoileus virginianus",
+          "territoire_lat_lng": [
+            48.206657,
+            -68.382422
+          ],
+          "presence_status": "PRESENT",
+          "presence_source": "MFFP 2024 — Réseau Cerf sud du Québec + colonisation nord",
+          "presence_reason": "in_natural_range",
+          "corridors_v30_count_avant_filtre_presence": 13,
+          "corridors_v30_count_apres_filtre_presence": 13,
+          "rectangles_tested": 1
+        }
+      },
+      "layer_diagnostic": {
+        "layers": {
+          "zones": 5,
+          "corridors_total": 0,
+          "corridors_v30": 0,
+          "corridors_interzone": 0,
+          "corridors_entering": 0,
+          "salines": 4,
+          "hotspots": 5,
+          "affuts": 0,
+          "contamination_zones": 0,
+          "vent_ok": true,
+          "waypoint_ok": true
+        },
+        "missing_critical_layers": [
+          "corridors_total",
+          "corridors_v30",
+          "affuts",
+          "contamination_zones"
+        ],
+        "all_layers_ok": false
+      },
+      "v30_status_filter_species": {
+        "total": 0,
+        "accepted": 0,
+        "rejected": 0,
+        "acceptance_rate": 0.0,
+        "rejection_top_reasons": [],
+        "mean_functional_radius_m": null,
+        "length_m_p50": null,
+        "length_m_p90": null,
+        "points_distribution": {
+          "in_25_30": 0,
+          "below_25": 0,
+          "above_30": 0
+        },
+        "v30_alignment_score": 0.0,
+        "alignment_label": "PARTIEL",
+        "bio_presence_status": "PRESENT",
+        "bio_presence_canonical": "chevreuil",
+        "bio_presence_source": "MFFP 2024 — Réseau Cerf sud du Québec + colonisation nord",
+        "bio_presence_mask_halt": false
+      }
+    },
+    "ours": {
+      "v20_bundle": {
+        "corridors_count": 0,
+        "intensity_distribution": {},
+        "type_distribution": {},
+        "affuts_count": 6,
+        "salines_count": 6,
+        "hotspots_count": 11,
+        "zones_count": 5,
+        "wind": {},
+        "bio_presence_mask_stats": {
+          "phase": "PHASE_XVIII_BIO_PRESENCE_MASK_Ω",
+          "subphase": "PHASE_XVIII_BIO_PRESENCE_MASK",
+          "enforce_mode": true,
+          "species_input": "ours_noir",
+          "canonical": "ours_noir",
+          "common_name": "Ursus americanus",
+          "territoire_lat_lng": [
+            48.206657,
+            -68.382422
+          ],
+          "presence_status": "PRESENT",
+          "presence_source": "MFFP 2024 — Plan de gestion ours noir",
+          "presence_reason": "in_natural_range",
+          "corridors_v30_count_avant_filtre_presence": 13,
+          "corridors_v30_count_apres_filtre_presence": 13,
+          "rectangles_tested": 1
+        }
+      },
+      "layer_diagnostic": {
+        "layers": {
+          "zones": 5,
+          "corridors_total": 1,
+          "corridors_v30": 1,
+          "corridors_interzone": 0,
+          "corridors_entering": 0,
+          "salines": 4,
+          "hotspots": 5,
+          "affuts": 0,
+          "contamination_zones": 0,
+          "vent_ok": true,
+          "waypoint_ok": true
+        },
+        "missing_critical_layers": [
+          "affuts",
+          "contamination_zones"
+        ],
+        "all_layers_ok": false
+      },
+      "v30_status_filter_species": {
+        "total": 1,
+        "accepted": 1,
+        "rejected": 0,
+        "acceptance_rate": 100.0,
+        "rejection_top_reasons": [],
+        "mean_functional_radius_m": 604.9,
+        "length_m_p50": 514.3,
+        "length_m_p90": 514.3,
+        "points_distribution": {
+          "in_25_30": 1,
+          "below_25": 0,
+          "above_30": 0
+        },
+        "v30_alignment_score": 100.0,
+        "alignment_label": "CONFORME_Ω",
+        "bio_presence_status": "PRESENT",
+        "bio_presence_canonical": "ours_noir",
+        "bio_presence_source": "MFFP 2024 — Plan de gestion ours noir",
+        "bio_presence_mask_halt": false
+      }
+    },
+    "dindon": {
+      "v20_bundle": {
+        "corridors_count": 0,
+        "intensity_distribution": {},
+        "type_distribution": {},
+        "affuts_count": 0,
+        "salines_count": 6,
+        "hotspots_count": 11,
+        "zones_count": 5,
+        "wind": {},
+        "bio_presence_mask_stats": {
+          "phase": "PHASE_XVIII_BIO_PRESENCE_MASK_Ω",
+          "subphase": "PHASE_XVIII_BIO_PRESENCE_MASK",
+          "enforce_mode": true,
+          "species_input": "dindon_sauvage",
+          "canonical": "dindon_sauvage",
+          "common_name": "Meleagris gallopavo",
+          "territoire_lat_lng": [
+            48.206657,
+            -68.382422
+          ],
+          "presence_status": "ABSENT",
+          "presence_source": "MFFP 2024 — Programme Dindon + colonisation nord 2020-2024",
+          "presence_reason": "outside_natural_range",
+          "corridors_v30_count_avant_filtre_presence": 13,
+          "corridors_v30_count_apres_filtre_presence": 0,
+          "rectangles_tested": 1
+        }
+      },
+      "layer_diagnostic": {
+        "layers": {
+          "zones": 5,
+          "corridors_total": 0,
+          "corridors_v30": 0,
+          "corridors_interzone": 0,
+          "corridors_entering": 0,
+          "salines": 4,
+          "hotspots": 5,
+          "affuts": 0,
+          "contamination_zones": 0,
+          "vent_ok": true,
+          "waypoint_ok": true
+        },
+        "missing_critical_layers": [
+          "corridors_total",
+          "corridors_v30",
+          "affuts",
+          "contamination_zones"
+        ],
+        "all_layers_ok": false
+      },
+      "v30_status_filter_species": {
+        "total": 0,
+        "accepted": 0,
+        "rejected": 0,
+        "acceptance_rate": 0.0,
+        "rejection_top_reasons": [],
+        "mean_functional_radius_m": null,
+        "length_m_p50": null,
+        "length_m_p90": null,
+        "points_distribution": {
+          "in_25_30": 0,
+          "below_25": 0,
+          "above_30": 0
+        },
+        "v30_alignment_score": 0.0,
+        "alignment_label": "ABSENT",
+        "bio_presence_status": "ABSENT",
+        "bio_presence_canonical": "dindon_sauvage",
+        "bio_presence_source": "MFFP 2024 — Programme Dindon + colonisation nord 2020-2024",
+        "bio_presence_mask_halt": true
+      }
+    },
+    "wapiti": {
+      "v20_bundle": {
+        "corridors_count": 0,
+        "intensity_distribution": {},
+        "type_distribution": {},
+        "affuts_count": 0,
+        "salines_count": 6,
+        "hotspots_count": 11,
+        "zones_count": 5,
+        "wind": {},
+        "bio_presence_mask_stats": {
+          "phase": "PHASE_XVIII_BIO_PRESENCE_MASK_Ω",
+          "subphase": "PHASE_XVIII_BIO_PRESENCE_MASK",
+          "enforce_mode": true,
+          "species_input": "wapiti",
+          "canonical": "wapiti",
+          "common_name": "Cervus canadensis",
+          "territoire_lat_lng": [
+            48.206657,
+            -68.382422
+          ],
+          "presence_status": "ABSENT",
+          "presence_source": "MFFP 2024 — Programme Wapiti Québec, zones introduites uniquement",
+          "presence_reason": "outside_natural_range",
+          "corridors_v30_count_avant_filtre_presence": 11,
+          "corridors_v30_count_apres_filtre_presence": 0,
+          "rectangles_tested": 3
+        }
+      },
+      "layer_diagnostic": {
+        "layers": {
+          "zones": 5,
+          "corridors_total": 0,
+          "corridors_v30": 0,
+          "corridors_interzone": 0,
+          "corridors_entering": 0,
+          "salines": 4,
+          "hotspots": 5,
+          "affuts": 0,
+          "contamination_zones": 0,
+          "vent_ok": true,
+          "waypoint_ok": true
+        },
+        "missing_critical_layers": [
+          "corridors_total",
+          "corridors_v30",
+          "affuts",
+          "contamination_zones"
+        ],
+        "all_layers_ok": false
+      },
+      "v30_status_filter_species": {
+        "total": 0,
+        "accepted": 0,
+        "rejected": 0,
+        "acceptance_rate": 0.0,
+        "rejection_top_reasons": [],
+        "mean_functional_radius_m": null,
+        "length_m_p50": null,
+        "length_m_p90": null,
+        "points_distribution": {
+          "in_25_30": 0,
+          "below_25": 0,
+          "above_30": 0
+        },
+        "v30_alignment_score": 0.0,
+        "alignment_label": "ABSENT",
+        "bio_presence_status": "ABSENT",
+        "bio_presence_canonical": "wapiti",
+        "bio_presence_source": "MFFP 2024 — Programme Wapiti Québec, zones introduites uniquement",
+        "bio_presence_mask_halt": true
+      }
+    }
+  },
+  "sha256_inventory": {
+    "GLOBAL_layer_diag_orignal.json": "40d6a37a7b1b6f0d385530f4ddc0c7943acd4bad137bedc9c7a40533e8e933a1",
+    "GLOBAL_presence_mask.json": "ab2e9ed3755c5a5cef4b3f40f2f752467b94569e6eeaee77000ffa5051f719dc",
+    "GLOBAL_purge.json": "062f31910b1a0d050719053559b5e8744fbaacaba25ac24419fa22708235d823",
+    "GLOBAL_v30_status.json": "335f44a1946ec5ea0f14e4866a9165c7af4a32dca5d6b3a05e458fc557b01f2b",
+    "cerf_bundle_v20.json": "80064d972361df803ea0c1387522301918989f286247fba5d2e19ba208845e49",
+    "cerf_layer_diagnostic.json": "56b8c56836ca8f7670aea3c447aa902183d1e7037d4615bdb5f0cbd38a406698",
+    "cerf_organic.json": "eab52aafea2805ff122b9fc89da495f80ddaa432bfd86570215858f4d3bd68eb",
+    "cerf_v30_status.json": "ce90af1c6e2b6a71782b97f1e346c1485c5a17e74ad978cbbc05806c0b5c5216",
+    "dindon_bundle_v20.json": "966799ec14c1d80964e203a9388fb2bdf39d2cef30960b334d3ae324ded432de",
+    "dindon_layer_diagnostic.json": "bc9bbe0959a9970b1c898a2db357c8dc5095a6500c5faf1ca94f6f88b1ff7905",
+    "dindon_organic.json": "6e90b873c20213b86d7e97c3d01c4be99af693aa084ffb0c7b4881a0fa44d364",
+    "dindon_v30_status.json": "624af26aa2e47351e2db3282ca6aa85a6e3a9c7f9d946cd9159554e33e7992d8",
+    "orignal_bundle_v20.json": "93123c7063b77fc8b1ccc3f98653ec60733645b72697d4d083b92329ee4e09de",
+    "orignal_layer_diagnostic.json": "40d6a37a7b1b6f0d385530f4ddc0c7943acd4bad137bedc9c7a40533e8e933a1",
+    "orignal_organic.json": "5999941dd8876aa3f542e7c079891f90d95b00b75731154384d9f6aef7ee1a57",
+    "orignal_v30_status.json": "51a49ae6cd56ec7ad69d71b60af52176ad55c18ff761fe0b6880627b25ae4b73",
+    "ours_bundle_v20.json": "79bbcb0c316d33eb86b80fd23693c2f612f6d2ec7a902a2a8febfbfb01e99a6b",
+    "ours_layer_diagnostic.json": "7183ae30029568501b9f89f3ec9e81cbe3193c76661c447f5cb8fb224a0a3dbc",
+    "ours_organic.json": "9e9ed1b6ce07e66903e54fd64f92f30fd578183d159d1260eef2bce3c955b6a2",
+    "ours_v30_status.json": "d598ec0cc2194ae912a9a79bec7e303d1c5e60c2907c5a10f3a4aff8f4c807d0",
+    "wapiti_bundle_v20.json": "9420d503489c6b12c6cff609c488694d45a3a61e6e5c9886c8455203e0db8f43",
+    "wapiti_layer_diagnostic.json": "1b3cb0484c679034802e18f551c439d9e4d5a575efa7a3d18c70331230d8dceb",
+    "wapiti_organic.json": "e10b3046f9554a39ca9e197523900dac50aeb9b8dd9140016c452a7cb76c1f22",
+    "wapiti_v30_status.json": "ddcceb834271fab23eecc5f3c572ff642ca1c96eaf9aa45fc4b3b0404718d0e3"
+  }
+}

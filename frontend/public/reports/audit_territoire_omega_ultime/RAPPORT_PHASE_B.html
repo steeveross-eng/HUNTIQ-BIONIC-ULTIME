@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>RAPPORT PHASE-B — TERRITOIRE_Ω AUDIT INTER-ENGINES ULTIME · PRÉCISION ×2</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root { --ink:#0c1118; --paper:#f5f6f8; --ok:#16a34a; --fail:#dc2626; --warn:#f59e0b;
+        --gold:#b08800; --rule:#1e293b; --orange:#FF8F00; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--paper); color:var(--ink);
+       font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; line-height:1.55; }
+header { background:linear-gradient(140deg,#0c1118 0%,#1e293b 100%); color:#fff;
+         padding:32px 48px; border-bottom:4px solid var(--gold); }
+header h1 { margin:0 0 4px; font-size:22px; letter-spacing:.04em; font-weight:700; }
+header .sub { font-size:12px; opacity:.78; letter-spacing:.10em; text-transform:uppercase; }
+header .commandant { margin-top:14px; padding:6px 12px; display:inline-block;
+  background:rgba(176,136,0,.18); border:1px solid var(--gold); border-radius:3px;
+  font-size:11px; letter-spacing:.10em; text-transform:uppercase; color:#fcd34d; }
+main { max-width:1240px; margin:0 auto; padding:32px 48px 80px; }
+section { margin:36px 0; scroll-margin-top:40px; }
+section.toc { background:#fff; border:1px solid #d4d4d8; border-radius:6px; padding:18px 24px; }
+section.toc ol { margin:0; padding-left:20px; columns:2; column-gap:32px; }
+section.toc li { margin:5px 0; font-size:13px; }
+section.toc a { color:#1e3a5f; text-decoration:none; }
+section.toc a:hover { text-decoration:underline; }
+h2 { font-size:18px; letter-spacing:.04em; border-bottom:1px solid #d4d4d8;
+     padding-bottom:6px; margin-bottom:14px; color:var(--rule); }
+h3 { font-size:14px; margin:14px 0 6px; color:#334155; }
+table { border-collapse:collapse; width:100%; font-size:12.5px; margin-top:6px; }
+th, td { padding:7px 9px; border:1px solid #d4d4d8; text-align:left; vertical-align:top; }
+th { background:#e2e8f0; letter-spacing:.05em; font-weight:600; }
+td.num { text-align:right; font-variant-numeric:tabular-nums; }
+.pill { padding:2px 8px; font-size:11px; border-radius:3px; letter-spacing:.06em; font-weight:600; display:inline-block; }
+.pill.ok { background:#dcfce7; color:#14532d; }
+.pill.fail { background:#fee2e2; color:#7f1d1d; }
+.pill.warn { background:#fef3c7; color:#78350f; }
+.pill.locked { background:#fef3c7; color:#78350f; }
+.pill.absent { background:#fee2e2; color:#7f1d1d; }
+.pill.present { background:#cffafe; color:#155e75; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:16px; }
+.card { background:#fff; border:1px solid #d4d4d8; border-radius:4px; overflow:hidden; }
+.card .meta { padding:10px 14px; font-size:12px; }
+.card img { display:block; width:100%; height:auto; background:#0c1118; }
+.stamp { font-family:ui-monospace,"Courier New",monospace; font-size:11px; color:#475569; word-break:break-all; }
+.kv { display:grid; grid-template-columns:240px 1fr; gap:4px 14px; font-size:13px; }
+.kv > div:nth-child(odd) { color:#64748b; }
+code { background:#e2e8f0; padding:1px 6px; border-radius:3px; font-size:12px; }
+pre { background:#0c1118; color:#dcdcdc; font-family:ui-monospace,"Courier New",monospace; font-size:11px;
+      padding:12px 16px; border-radius:4px; overflow-x:auto; line-height:1.4; max-height:400px; }
+.anomaly { border-left:4px solid var(--fail); background:#fff7f7; padding:14px 18px; border-radius:4px; margin:10px 0; }
+.anomaly h3 { margin-top:0; }
+.fix { border-left:4px solid var(--ok); background:#f0fdf4; padding:14px 18px; border-radius:4px; margin:10px 0; }
+.note { background:#eff6ff; border-left:4px solid #2563eb; padding:10px 14px; border-radius:4px; font-size:12.5px; margin:8px 0; }
+footer { padding:24px 48px; color:#475569; font-size:11px;
+         border-top:1px solid #d4d4d8; text-align:center; letter-spacing:.04em; }
+</style>
+</head>
+<body>
+<header>
+  <h1>RAPPORT PHASE-B — TERRITOIRE_Ω AUDIT INTER-ENGINES ULTIME · PRÉCISION ×2</h1>
+  <div class="sub">BCE-4X ULTIME ABSOLU · TOP-ABSOLU · BIONIC OS V20-SUPRA · V30 LOCKED · READ-ONLY STRICT</div>
+  <div class="commandant">DIRECTIVE COMMANDANT STEEVE-MAX · 9 ENGINES · 3 CHAÎNES · 5 ESPÈCES · 30 PAYLOADS · 5 CAPTURES</div>
+</header>
+<main>
+
+<section class="toc">
+  <h2>Sommaire — 20 sections (structure imposée)</h2>
+  <ol>
+    <li><a href="#s01">1) Résumé exécutif</a></li>
+    <li><a href="#s02">2) Méthodologie</a></li>
+    <li><a href="#s03">3) Engines météo (vent / contamination / son)</a></li>
+    <li><a href="#s04">4) Corridors (réel / IA / fusion)</a></li>
+    <li><a href="#s05">5) Zones</a></li>
+    <li><a href="#s06">6) Affûts</a></li>
+    <li><a href="#s07">7) Salines</a></li>
+    <li><a href="#s08">8) Hotspots</a></li>
+    <li><a href="#s09">9) Heatmap</a></li>
+    <li><a href="#s10">10) BIO-MASK</a></li>
+    <li><a href="#s11">11) VITAUX</a></li>
+    <li><a href="#s12">12) RENDUΩ</a></li>
+    <li><a href="#s13">13) Dépendances inter-engines</a></li>
+    <li><a href="#s14">14) Anomalies découvertes</a></li>
+    <li><a href="#s15">15) Reproductions et preuves runtime</a></li>
+    <li><a href="#s16">16) Preuves visuelles (captures HTTPS)</a></li>
+    <li><a href="#s17">17) Empreintes SHA-256</a></li>
+    <li><a href="#s18">18) JSON consolidé (par engine, couche, espèce, pipeline, dépendance)</a></li>
+    <li><a href="#s19">19) Recommandations</a></li>
+    <li><a href="#s20">20) Plan de stabilisation TERRITOIRE_Ω</a></li>
+  </ol>
+</section>
+
+<section id="s01">
+  <h2>1) Résumé exécutif</h2>
+  <p>Audit READ-ONLY intégral du pipeline TERRITOIRE_Ω couvrant <b>9 engines</b>, <b>3 chaînes de dépendances</b>,
+  <b>5 espèces officielles</b> et <b>30 payloads bruts</b> capturés HTTPS au waypoint TERRITOIRE
+  <code>LAT 48.206657 / LNG -68.382422</code>. <b>5 anomalies inter-engines critiques</b> ont été
+  identifiées, toutes <b>en aval</b> du moteur V30 verrouillé (registry_lock_omega.py et
+  engine_ia_corridors_omega.py SHA-256 inchangés).</p>
+  <p>
+    <span class="pill locked">V30 LOCKED · TAMPERING=FALSE</span>
+    <span class="pill ok">XIX NON RECOMPUTÉ</span>
+    <span class="pill ok">VITAUX NON RECOMPUTÉ</span>
+    <span class="pill ok">READ-ONLY STRICT</span>
+  </p>
+  <h3>Rappel PHASE-A stabilisée (préalable)</h3>
+  <ul>
+    <li>v30_corridors_status_router applique le masque BIO + 5 espèces</li>
+    <li>Panneau STATUT CORRIDORS Ω : étiquettes V30 BRUT + badges ABSENT</li>
+    <li>WeatherPanel responsive si hauteur &lt; 630</li>
+    <li>73 tests pytest passants · 0 régression</li>
+  </ul>
+  <h3>5 anomalies PHASE-B</h3>
+  <table>
+    <thead><tr><th>#</th><th>Titre</th><th>Engine</th><th>Sévérité</th></tr></thead>
+    <tbody>
+      <tr><td><b>B-1</b></td><td>VENT — double source divergente (Δ 60°, Δ 7.5 km/h)</td><td>ENGINE_VENT vs wind_vectors</td><td><span class="pill fail">CRITIQUE</span></td></tr>
+      <tr><td><b>B-2</b></td><td>CONTAMINATION non purgée pour ABSENT</td><td>ENGINE_CONTAMINATION_V2</td><td><span class="pill fail">CRITIQUE</span></td></tr>
+      <tr><td><b>B-3</b></td><td>HOTSPOTS persistants pour ABSENT</td><td>ENGINE_HOTSPOTS</td><td><span class="pill fail">CRITIQUE</span></td></tr>
+      <tr><td><b>B-4</b></td><td>SALINES non purgées pour ABSENT</td><td>ENGINE_SALINES_V11</td><td><span class="pill fail">CRITIQUE</span></td></tr>
+      <tr><td><b>B-5</b></td><td>Couplage masque BIO partiel</td><td>species_presence_mask_omega</td><td><span class="pill fail">CRITIQUE</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s02">
+  <h2>2) Méthodologie</h2>
+  <ul>
+    <li><b>Doctrine</b> : V30 LOCKED · XIX non recomputé · VITAUX non recomputé · audit / diagnostic / preuves uniquement</li>
+    <li><b>Outils</b> : curl (User-Agent BCE4X-AUDIT), Playwright headless 1920×1080, pytest</li>
+    <li><b>Endpoints couverts</b> : 30 (5 espèces × 4 endpoints + 3 globaux + 1 purge)</li>
+    <li><b>Engines audités</b> : ENGINE_VENT, ENGINE_CONTAMINATION_V2, ENGINE_SON (sensoriel_vent_odeurs), ENGINE_CORRIDORS_V30, ENGINE_CORRIDORS_ORGANIC, ENGINE_ZONES, ENGINE_AFFUTS, ENGINE_SALINES_V11, ENGINE_HOTSPOTS, ENGINE_BIO_PRESENCE_MASK_Ω</li>
+    <li><b>Chaînes auditées</b> : (1) vent → contam → son · (2) corridors → zones → affûts → salines → hotspots · (3) BIO-MASK → VITAUX → RENDUΩ</li>
+    <li><b>Aucune mutation</b> : pas de POST/PUT/DELETE sur engines (sauf purge cache pré-audit, lecture pure)</li>
+  </ul>
+</section>
+
+<section id="s03">
+  <h2>3) Engines météo (vent / contamination / son)</h2>
+  <h3>3.1 ENGINE_VENT</h3>
+  <p>Fichiers : <code>/app/backend/engines/v8_institutional/engine_vent.py</code>,
+  <code>/app/backend/engines/weather_v3/wind_model_provider.py</code>.<br>
+  Source institutionnelle : <b>open-meteo</b> (API publique) + ENGINE_VENT V20.</p>
+  <div class="anomaly">
+    <h3>Anomalie B-1 — DOUBLE SOURCE DIVERGENTE</h3>
+    <table>
+      <thead><tr><th>Source bundle</th><th>direction (deg)</th><th>vitesse (km/h)</th></tr></thead>
+      <tbody>
+        <tr><td><code>sensoriel_vent_odeurs.wind_deg</code></td><td>225</td><td>15</td></tr>
+        <tr><td><code>wind_vectors[0].direction_deg</code></td><td>165</td><td>7.5</td></tr>
+        <tr><td><b>Δ angle</b></td><td colspan="2"><b>60° d'écart</b></td></tr>
+        <tr><td><b>Δ vitesse</b></td><td colspan="2"><b>7.5 km/h d'écart</b></td></tr>
+      </tbody>
+    </table>
+    <p>Verdict : deux moteurs publient des données vent <b>contradictoires dans le même bundle</b>.
+    La carte affiche `wind_vectors` pour le visuel et `sensoriel_vent_odeurs` pour les calculs olfactifs/sonores.</p>
+  </div>
+  <h3>3.2 ENGINE_CONTAMINATION_V2</h3>
+  <p>Fichier : <code>/app/backend/engines/v8_institutional/engine_contamination_v2_omega.py</code>.<br>
+  La contamination est représentée comme un polygon GeoJSON sans direction explicite (l'orientation
+  doit être déduite de la géométrie).</p>
+  <div class="anomaly">
+    <h3>Anomalie B-2 — CONTAMINATION non purgée pour ABSENT</h3>
+    <p>Pour dindon (halt=True) et wapiti (halt=True) au BSL :</p>
+    <ul>
+      <li><code>contamination_zones</code> : <b>0 polygones</b> (vidé par masque) ✔</li>
+      <li><code>contamination</code> : <b>18 polygones</b> (NON vidé) ❌</li>
+      <li><code>contamination_v2</code> dict : <b>conservé</b> ❌</li>
+    </ul>
+  </div>
+  <h3>3.3 ENGINE_SON (sensoriel_vent_odeurs)</h3>
+  <p>Fichier : <code>/app/backend/engines/v8_institutional/engine_sensoriel_vent_odeurs_omega.py</code></p>
+  <pre>{
+  "engine": "ENGINE-SENSORIEL-VENT-ODEURS-Ω",
+  "version": "V1-SUPRA-2026-04",
+  "score": 53.9,
+  "olfactive_diffusion": 0.393,
+  "wind_speed_kmh": 15,
+  "wind_optim_score": 75,
+  "wind_deg": 225,
+  ...
+}</pre>
+  <p>Aucune clé <code>cone_axis_deg</code> ou <code>cone_direction_deg</code> exposée explicitement.
+  La sonde inter-engines n'a pas pu mesurer la cohérence directionnelle son↔vent (cf. recommandation S19 step 4).</p>
+</section>
+
+<section id="s04">
+  <h2>4) Corridors (réel / IA / fusion)</h2>
+  <p>Pipeline : <b>V30 (LOCKED)</b> → <b>predictive_omega_v2</b> (GPS USGS/Movebank) → <b>origine_externe_inversion</b>
+  → <b>origine_externe_filter</b> (couronne 600-780m) → <b>ecological_orchestrator</b> →
+  <b>corridors_vitaux</b> (rayon 600m) → <b>BIO-MASK</b> → <b>RENDUΩ</b>.</p>
+  <table>
+    <thead><tr><th>Espèce</th><th>halt</th><th>corridors</th><th>rejected_xix</th><th>vitaux_applied</th><th>renduomega</th></tr></thead>
+    <tbody>
+      <tr><td>orignal</td><td>False</td><td class="num">0</td><td class="num">19</td><td>True</td><td>True</td></tr>
+      <tr><td>cerf</td><td>False</td><td class="num">0</td><td class="num">~19</td><td>True</td><td>True</td></tr>
+      <tr><td>ours</td><td>False</td><td class="num">0</td><td class="num">~19</td><td>True</td><td>True</td></tr>
+      <tr><td><span class="pill absent">dindon</span></td><td>True</td><td class="num">0</td><td class="num">19 (résidu)</td><td>n/a</td><td>n/a</td></tr>
+      <tr><td><span class="pill absent">wapiti</span></td><td>True</td><td class="num">0</td><td class="num">19 (résidu)</td><td>n/a</td><td>n/a</td></tr>
+    </tbody>
+  </table>
+  <div class="note">Les <code>corridors_rejected_origine_externe_xix</code> persistent dans le bundle même quand halt=True (artefacts intermédiaires conservés). Pas un bug — donnée d'audit utile pour comprendre le rejet en amont.</div>
+</section>
+
+<section id="s05">
+  <h2>5) Zones</h2>
+  <p>Fichier : <code>/app/backend/engines/v8_institutional/engine_zones.py</code> + <code>zones_organic_v1.py</code>.<br>
+  Zones écologiques calculées indépendamment de l'espèce — <b>5 zones</b> stables pour les 5 espèces.</p>
+  <p><b>Statut institutionnel</b> : conforme. Les zones sont des infrastructures écologiques intrinsèques au territoire et restent visibles même pour les espèces ABSENTES (audit du territoire global).</p>
+</section>
+
+<section id="s06">
+  <h2>6) Affûts</h2>
+  <p>Fichier : <code>/app/backend/engines/v8_institutional/engine_affuts.py</code>.</p>
+  <table>
+    <thead><tr><th>Espèce</th><th>Affûts</th><th>Statut</th></tr></thead>
+    <tbody>
+      <tr><td>orignal / cerf / ours</td><td class="num">6</td><td><span class="pill ok">OK (PRESENT)</span></td></tr>
+      <tr><td><b>dindon / wapiti</b></td><td class="num">0</td><td><span class="pill ok">OK (vidé par masque PHASE-A)</span></td></tr>
+    </tbody>
+  </table>
+  <p>Conforme. Affûts vidés correctement pour ABSENT depuis l'application du masque BIO.</p>
+</section>
+
+<section id="s07">
+  <h2>7) Salines</h2>
+  <p>Fichier : <code>/app/backend/engines/v8_institutional/engine_salines_v11_supra.py</code>.</p>
+  <div class="anomaly">
+    <h3>Anomalie B-4 — SALINES non purgées pour ABSENT</h3>
+    <p>Toutes les espèces (PRESENT comme ABSENT) ont <b>6 salines</b>.
+    Les salines portent <code>score_bio_species: {cerf: 74, orignal: 74, wapiti: 74, global: 74}</code>
+    — la clé <code>dindon_sauvage</code> est absente de l'évaluation. Le moteur SALINES ignore l'espèce demandée.</p>
+  </div>
+</section>
+
+<section id="s08">
+  <h2>8) Hotspots</h2>
+  <p>Fichier : <code>/app/backend/engines/v8_institutional/engine_hotspots.py</code> + <code>hotspots_organic_v1.py</code>.</p>
+  <div class="anomaly">
+    <h3>Anomalie B-3 — HOTSPOTS persistants pour ABSENT (source AFFUT)</h3>
+    <p>11 hotspots persistent pour dindon/wapiti malgré <code>affuts: 0</code>. Tous portent <code>source_engine: AFFUT</code>.</p>
+    <pre>{"lat": 48.205543, "lng": -68.384433, "intensity": 86.1, "source_engine": "AFFUT", "source": "V10-SUPRA"}</pre>
+    <p>Verdict : les hotspots sont calculés AVANT le masque puis non purgés en aval. Cohérence brisée :
+    aucun affût ne devrait pouvoir générer de hotspot pour une espèce ABSENT.</p>
+  </div>
+</section>
+
+<section id="s09">
+  <h2>9) Heatmap</h2>
+  <p>Fichier : <code>/app/backend/engines/v8_institutional/engine_heatmap.py</code>.<br>
+  Le bundle expose <code>contamination_v2_heatmap</code> (dict de 2 clés). Heatmap dérivée de la contamination
+  via algorithme V2.</p>
+  <div class="note">Comme la contamination n'est pas purgée pour ABSENT (anomalie B-2), la heatmap dérivée hérite du même biais.</div>
+</section>
+
+<section id="s10">
+  <h2>10) BIO-MASK</h2>
+  <p>Fichier : <code>/app/backend/engines/v8_institutional/species_presence_mask_omega.py</code>.<br>
+  Registre 5 espèces vérifié au BSL (LAT 48.206657 / LNG -68.382422) :</p>
+  <table>
+    <thead><tr><th>Espèce</th><th>Registre</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>orignal</td><td><span class="pill present">PRESENT</span></td><td>MFFP 2024 — Inventaires aériens ZEC</td></tr>
+      <tr><td>cerf (chevreuil)</td><td><span class="pill present">PRESENT</span></td><td>MFFP 2024 — Réseau Cerf</td></tr>
+      <tr><td>ours_noir</td><td><span class="pill present">PRESENT</span></td><td>MFFP 2024 — Plan ours noir</td></tr>
+      <tr><td>dindon_sauvage</td><td><span class="pill absent">ABSENT</span></td><td>MFFP 2024 — Programme Dindon (sud QC uniquement)</td></tr>
+      <tr><td>wapiti</td><td><span class="pill absent">ABSENT</span></td><td>MFFP 2024 — Programme Wapiti (zones introduites)</td></tr>
+    </tbody>
+  </table>
+  <div class="anomaly">
+    <h3>Anomalie B-5 — Couplage partiel</h3>
+    <p>Le masque BIO purge actuellement : <code>corridors</code>, <code>affuts</code>, <code>contamination_zones</code>.<br>
+    Le masque BIO ne purge PAS : <code>contamination</code>, <code>hotspots</code>, <code>salines</code>,
+    <code>contamination_v2</code>, <code>wind_vectors</code> (les artefacts subsistent pour ABSENT).</p>
+  </div>
+</section>
+
+<section id="s11">
+  <h2>11) VITAUX</h2>
+  <p>Fichier : <code>/app/backend/engines/v8_institutional/corridors_vitaux_omega.py</code>.<br>
+  PHASE_XVIII_VITAUX_RAYON_TUNING_Ω · rayon 600 m pour corridors XIX-validés.</p>
+  <table>
+    <thead><tr><th>Espèce</th><th>vitaux_applied</th><th>halt</th></tr></thead>
+    <tbody>
+      <tr><td>orignal / cerf / ours</td><td><span class="pill ok">True</span></td><td>False</td></tr>
+      <tr><td>dindon / wapiti</td><td>n/a (court-circuit BIO-MASK)</td><td>True</td></tr>
+    </tbody>
+  </table>
+  <p><b>Conforme</b>. VITAUX correctement court-circuité pour ABSENT par le masque BIO en amont.</p>
+</section>
+
+<section id="s12">
+  <h2>12) RENDUΩ</h2>
+  <p>Fichier : <code>/app/backend/engines/post_smoothing/renduomega.py</code>.<br>
+  Toutes les espèces PRESENT activent <code>renduomega_applied: True</code>. Pour ABSENT, la phase RENDUΩ n'est jamais atteinte (halt amont).</p>
+</section>
+
+<section id="s13">
+  <h2>13) Dépendances inter-engines</h2>
+  <h3>13.1 Chaîne 1 : vent → contamination → son</h3>
+  <table>
+    <thead><tr><th>Étape</th><th>Source</th><th>Cohérence avec vent</th></tr></thead>
+    <tbody>
+      <tr><td>VENT (sensoriel)</td><td>wind_deg=225, speed=15</td><td>—</td></tr>
+      <tr><td>VENT (vectors)</td><td>direction=165, speed=7.5</td><td><span class="pill fail">DIVERGENT (Δ 60°)</span></td></tr>
+      <tr><td>CONTAMINATION</td><td>polygons (orientation implicite)</td><td>Non auditable directement</td></tr>
+      <tr><td>SON</td><td>cone_axis non exposé</td><td>Non auditable</td></tr>
+    </tbody>
+  </table>
+  <h3>13.2 Chaîne 2 : corridors → zones → affûts → salines → hotspots</h3>
+  <table>
+    <thead><tr><th>Espèce</th><th>corr</th><th>zones</th><th>affu</th><th>sali</th><th>hots</th><th>halt</th><th>cohérence</th></tr></thead>
+    <tbody>
+      <tr><td>orignal/cerf/ours</td><td class="num">0</td><td class="num">5</td><td class="num">6</td><td class="num">6</td><td class="num">11</td><td>False</td><td><span class="pill ok">OK</span></td></tr>
+      <tr><td>dindon/wapiti</td><td class="num">0</td><td class="num">5</td><td class="num">0</td><td class="num">6</td><td class="num">11</td><td>True</td><td><span class="pill fail">salines+hotspots non purgés</span></td></tr>
+    </tbody>
+  </table>
+  <h3>13.3 Chaîne 3 : BIO-MASK → VITAUX → RENDUΩ</h3>
+  <p>Conforme : ABSENT court-circuite VITAUX et RENDUΩ correctement (anomalie résiduelle = artefacts amont non purgés, cf. B-5).</p>
+</section>
+
+<section id="s14">
+  <h2>14) Anomalies découvertes</h2>
+  <p>5 anomalies critiques identifiées · cf. tableau exécutif S1.</p>
+  <table>
+    <thead><tr><th>ID</th><th>Engine</th><th>Évidence runtime</th><th>Impact</th></tr></thead>
+    <tbody>
+      <tr><td>B-1</td><td>VENT</td><td>Δ 60° entre 2 sources dans le même bundle</td><td>Cône olfactif basé sur 225°, vecteurs visuels sur 165° → confusion utilisateur</td></tr>
+      <tr><td>B-2</td><td>CONTAMINATION</td><td>contamination=18 pour dindon ABSENT</td><td>Zones contaminées générées sans pertinence biologique</td></tr>
+      <tr><td>B-3</td><td>HOTSPOTS</td><td>11 hotspots source=AFFUT alors que affuts=0</td><td>Affichage de hotspots fantômes pour ABSENT</td></tr>
+      <tr><td>B-4</td><td>SALINES</td><td>6 salines pour dindon, score_bio_species sans dindon</td><td>Salines invariantes par espèce, masque ignoré</td></tr>
+      <tr><td>B-5</td><td>BIO-MASK</td><td>Couplage partiel (3 listes purgées sur 8)</td><td>Cohérence biologique rompue dans 5 couches sur 8</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s15">
+  <h2>15) Reproductions et preuves runtime</h2>
+  <p>Toutes les anomalies sont reproductibles via curl :</p>
+  <pre>API="https://huntiq-restore.preview.emergentagent.com"
+# B-1 : double source vent
+curl -s "$API/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=orignal&month=10&hour=7" | \
+  python3 -c "import json,sys; d=json.load(sys.stdin); \
+    print('sensoriel_vent_odeurs:', d['sensoriel_vent_odeurs']['wind_deg'], d['sensoriel_vent_odeurs']['wind_speed_kmh']); \
+    print('wind_vectors[0]:', d['wind_vectors'][0]['direction_deg'], d['wind_vectors'][0]['speed_kmh'])"
+
+# B-2 / B-3 / B-4 : artefacts pour dindon ABSENT
+curl -s "$API/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=dindon_sauvage&month=10&hour=7" | \
+  python3 -c "import json,sys; d=json.load(sys.stdin); \
+    print('halt:', d['bio_presence_mask_halt']); \
+    print('contamination:', len(d.get('contamination') or [])); \
+    print('hotspots:', len(d.get('hotspots') or [])); \
+    print('salines:', len(d.get('salines') or [])); \
+    print('contamination_zones:', len(d.get('contamination_zones') or []))"</pre>
+</section>
+
+<section id="s16">
+  <h2>16) Preuves visuelles (captures HTTPS 1920×1080)</h2>
+  <div class="grid">
+    <div class="card"><img src="phase_b/captures_frontend/B4_01_orignal_PRESENT.jpeg" alt="orignal"><div class="meta"><b>orignal · PRESENT</b><br>Pipeline complet · 124 paths SVG · 2 markers</div></div>
+    <div class="card"><img src="phase_b/captures_frontend/B4_02_chevreuil_PRESENT.jpeg" alt="chevreuil"><div class="meta"><b>chevreuil · PRESENT</b><br>Pipeline complet · 126 paths · 2 markers</div></div>
+    <div class="card"><img src="phase_b/captures_frontend/B4_03_ours_noir_PRESENT.jpeg" alt="ours_noir"><div class="meta"><b>ours_noir · PRESENT</b><br>Pipeline complet · 125 paths · 2 markers</div></div>
+    <div class="card"><img src="phase_b/captures_frontend/B4_04_dindon_sauvage_ABSENT.jpeg" alt="dindon"><div class="meta"><b>dindon_sauvage · ABSENT</b><br>halt=True · 125 paths (zones+terrain) · 1 marker</div></div>
+    <div class="card"><img src="phase_b/captures_frontend/B4_05_wapiti_ABSENT.jpeg" alt="wapiti"><div class="meta"><b>wapiti · ABSENT</b><br>halt=True · 125 paths · 1 marker</div></div>
+  </div>
+</section>
+
+<section id="s17">
+  <h2>17) Empreintes SHA-256</h2>
+  <p>Toutes les empreintes sont consignées dans <a href="SYNTHESE_PHASE_B.json"><code>SYNTHESE_PHASE_B.json</code></a> :
+  champs <code>captures[].sha256</code>, <code>payloads_hashed[].sha256</code>, <code>inter_engines_analysis_full.sha256_inventory</code>.</p>
+  <p>V30 SHA-256 inviolables :</p>
+  <pre>fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c  registry_lock_omega.py
+bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3  engine_ia_corridors_omega.py</pre>
+</section>
+
+<section id="s18">
+  <h2>18) JSON consolidé (par engine, couche, espèce, pipeline, dépendance)</h2>
+  <p>Document maître : <a href="SYNTHESE_PHASE_B.json"><code>SYNTHESE_PHASE_B.json</code></a> (HTTPS 200).</p>
+  <ul>
+    <li><b>Par engine</b> : <code>scope.engines_audited</code> · <code>per_species[sp].v20_bundle</code></li>
+    <li><b>Par couche</b> : <code>per_species[sp].layer_diagnostic.layers</code></li>
+    <li><b>Par espèce</b> : <code>per_species[sp]</code> (5 entrées orignal/cerf/ours/dindon/wapiti)</li>
+    <li><b>Par pipeline</b> : <code>chains.vent_contam_son</code>, <code>chains.corridors_zones_affuts_salines_hotspots</code>, <code>chains.bio_vitaux_rendu</code></li>
+    <li><b>Par dépendance</b> : champs <code>delta_*</code>, <code>halt</code>, <code>v30_locked</code></li>
+  </ul>
+</section>
+
+<section id="s19">
+  <h2>19) Recommandations</h2>
+  <div class="fix"><h3>R1 — Étendre <code>apply_presence_mask_to_bundle()</code> (P0)</h3>
+    <p>Ajouter à la fonction la purge de <code>contamination</code>, <code>hotspots</code>, <code>salines</code>,
+    <code>contamination_v2</code> et <code>wind_vectors</code> quand <code>status == ABSENT</code>.<br>
+    Conserver les couches infrastructure (zones, hydat, terrain, habitats_critiques) pour audit du territoire global.</p>
+  </div>
+  <div class="fix"><h3>R2 — Réconcilier les sources vent (P1)</h3>
+    <p>Définir <b>ENGINE_VENT (sensoriel_vent_odeurs)</b> comme source de vérité unique. Marquer
+    <code>wind_vectors</code> comme dérivé visuel uniquement et propager les valeurs de <code>sensoriel_vent_odeurs</code>
+    vers les vecteurs visuels.</p>
+  </div>
+  <div class="fix"><h3>R3 — Exposer <code>cone_axis_deg</code> dans ENGINE_SON (P2)</h3>
+    <p>Ajouter dans <code>sensoriel_vent_odeurs</code> les clés <code>cone_axis_deg</code> et
+    <code>cone_aperture_deg</code> pour permettre l'audit directionnel cône sonore vs vent.</p>
+  </div>
+  <div class="fix"><h3>R4 — Pytest dédié inter-engines (P0)</h3>
+    <p>Suite <code>tests/test_phase_b_inter_engines_consistency.py</code> couvrant les 5 anomalies, en particulier :</p>
+    <ul>
+      <li><code>test_mask_purges_all_artefacts_for_absent_species</code> (B-2/3/4/5)</li>
+      <li><code>test_wind_sources_consistency</code> (B-1)</li>
+      <li><code>test_son_cone_axis_aligned_with_wind</code> (R3)</li>
+    </ul>
+  </div>
+</section>
+
+<section id="s20">
+  <h2>20) Plan de stabilisation TERRITOIRE_Ω</h2>
+  <table>
+    <thead><tr><th>Step</th><th>Anomalie</th><th>Action</th><th>Fichier</th><th>Priorité</th><th>Lock V30 respecté</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>B-5 (B-2/3/4)</td><td>Étendre apply_presence_mask_to_bundle() : purge complète artefacts ABSENT</td><td>species_presence_mask_omega.py</td><td>P0</td><td>✔</td></tr>
+      <tr><td>2</td><td>B-1</td><td>Réconcilier sources vent (sensoriel = vérité ; vectors = dérivé)</td><td>engine_vent.py + territoire_v10_supra.py</td><td>P1</td><td>✔</td></tr>
+      <tr><td>3</td><td>R3</td><td>Exposer cone_axis_deg dans engine_sensoriel_vent_odeurs</td><td>engine_sensoriel_vent_odeurs_omega.py</td><td>P2</td><td>✔</td></tr>
+      <tr><td>4</td><td>R4</td><td>Suite pytest 9 tests dédiés inter-engines</td><td>tests/test_phase_b_inter_engines_consistency.py</td><td>P0</td><td>—</td></tr>
+      <tr><td>5</td><td>R-AUDIT-CI</td><td>CI guard SHA-256 V30 (block PR si registry_lock ou engine_ia_corridors mutent)</td><td>.github/workflows/v30_lock_check.yml</td><td>P1</td><td>—</td></tr>
+    </tbody>
+  </table>
+  <h3>Anti-régression</h3>
+  <ul>
+    <li>SHA-256 check : <code>fb765b94…</code> (registry_lock) et <code>bcb1e3a6…</code> (engine_ia_corridors)
+    vérifiés à chaque PR par CI.</li>
+    <li>Smoke-test : <code>/api/v20/territoire/bundle?species=dindon_sauvage</code> doit retourner
+    <b>contamination=0, hotspots=0, salines=0</b> après application R1.</li>
+    <li>Test pytest <code>test_mask_purges_all_artefacts</code> bloque tout mauvais merge.</li>
+    <li>XIX et VITAUX modules en lecture seule sur révision automatique.</li>
+  </ul>
+  <p style="margin-top:18px">
+    <span class="pill locked">V30 LOCKED</span>
+    <span class="pill ok">XIX NON RECOMPUTÉ</span>
+    <span class="pill ok">VITAUX NON RECOMPUTÉ</span>
+    <span class="pill ok">PHASE-B AUDIT COMPLET</span>
+    <span class="pill ok">5 ANOMALIES DOCUMENTÉES</span>
+    <span class="pill ok">PLAN STABILISATION ÉMIS</span>
+  </p>
+</section>
+
+</main>
+<footer>
+  PROTOCOLE BCE-4X ULTIME ABSOLU · TOP-ABSOLU · BIONIC OS V20-SUPRA · V30 LOCKED · READ-ONLY<br>
+  PHASE-B · TERRITOIRE_Ω AUDIT INTER-ENGINES ULTIME PRÉCISION ×2 · COMMANDANT STEEVE-MAX
+</footer>
+</body>
+</html>

@@ -1,0 +1,390 @@
+{
+  "waypoint": {
+    "lat": 48.206657,
+    "lng": -68.382422,
+    "month": 10,
+    "hour": 7
+  },
+  "endpoints_per_species": {
+    "orignal": {
+      "expected_bio_status": "PRESENT",
+      "bundle_v20": {
+        "status": 200,
+        "elapsed_ms": 841,
+        "size_b": 81198,
+        "top_level_keys": [
+          "affuts",
+          "bio_presence_mask_applied",
+          "bio_presence_mask_halt",
+          "bio_presence_mask_stats",
+          "cache",
+          "calibration",
+          "canada_zones_summary",
+          "climat_futur",
+          "comportement_biologique",
+          "compute_ms",
+          "connectivite_ecologique",
+          "contamination",
+          "contamination_v2",
+          "contamination_v2_heatmap",
+          "contamination_zones",
+          "corridors",
+          "corridors_rejected_by_renduomega",
+          "corridors_rejected_origine_externe_xix",
+          "corridors_rejected_phase_xvii",
+          "corridors_rejected_vitaux_xviii",
+          "corridors_vitaux_omega_applied",
+          "corridors_vitaux_omega_stats",
+          "data_fiabilite",
+          "data_source",
+          "deplacements_ia"
+        ]
+      },
+      "layer_diag": {
+        "status": 200,
+        "elapsed_ms": 134,
+        "size_b": 553,
+        "top_level_keys": [
+          "all_layers_ok",
+          "hour",
+          "interzone_applied",
+          "layers",
+          "missing_critical_layers",
+          "month",
+          "phase",
+          "renduomega_applied",
+          "species",
+          "v30_locked",
+          "veineux_applied",
+          "waypoint"
+        ]
+      },
+      "organic": {
+        "status": 200,
+        "elapsed_ms": 834,
+        "size_b": 84965
+      },
+      "v30_status_species": {
+        "status": 200,
+        "elapsed_ms": 149,
+        "size_b": 2131,
+        "top_level_keys": [
+          "diagnostic_corridors_omega_activated",
+          "global",
+          "p6_coupling",
+          "per_species",
+          "phase",
+          "query",
+          "thresholds",
+          "v30_locked",
+          "v30_modified",
+          "waypoint_official"
+        ]
+      }
+    },
+    "cerf": {
+      "expected_bio_status": "PRESENT",
+      "bundle_v20": {
+        "status": 200,
+        "elapsed_ms": 774,
+        "size_b": 81552,
+        "top_level_keys": [
+          "affuts",
+          "bio_presence_mask_applied",
+          "bio_presence_mask_halt",
+          "bio_presence_mask_stats",
+          "cache",
+          "calibration",
+          "canada_zones_summary",
+          "climat_futur",
+          "comportement_biologique",
+          "compute_ms",
+          "connectivite_ecologique",
+          "contamination",
+          "contamination_v2",
+          "contamination_v2_heatmap",
+          "contamination_zones",
+          "corridors",
+          "corridors_rejected_by_renduomega",
+          "corridors_rejected_origine_externe_xix",
+          "corridors_rejected_phase_xvii",
+          "corridors_rejected_vitaux_xviii",
+          "corridors_vitaux_omega_applied",
+          "corridors_vitaux_omega_stats",
+          "data_fiabilite",
+          "data_source",
+          "deplacements_ia"
+        ]
+      },
+      "layer_diag": {
+        "status": 200,
+        "elapsed_ms": 690,
+        "size_b": 550,
+        "top_level_keys": [
+          "all_layers_ok",
+          "hour",
+          "interzone_applied",
+          "layers",
+          "missing_critical_layers",
+          "month",
+          "phase",
+          "renduomega_applied",
+          "species",
+          "v30_locked",
+          "veineux_applied",
+          "waypoint"
+        ]
+      },
+      "organic": {
+        "status": 200,
+        "elapsed_ms": 718,
+        "size_b": 66822
+      },
+      "v30_status_species": {
+        "status": 200,
+        "elapsed_ms": 110,
+        "size_b": 2134,
+        "top_level_keys": [
+          "diagnostic_corridors_omega_activated",
+          "global",
+          "p6_coupling",
+          "per_species",
+          "phase",
+          "query",
+          "thresholds",
+          "v30_locked",
+          "v30_modified",
+          "waypoint_official"
+        ]
+      }
+    },
+    "ours": {
+      "expected_bio_status": "PRESENT",
+      "bundle_v20": {
+        "status": 200,
+        "elapsed_ms": 766,
+        "size_b": 81530,
+        "top_level_keys": [
+          "affuts",
+          "bio_presence_mask_applied",
+          "bio_presence_mask_halt",
+          "bio_presence_mask_stats",
+          "cache",
+          "calibration",
+          "canada_zones_summary",
+          "climat_futur",
+          "comportement_biologique",
+          "compute_ms",
+          "connectivite_ecologique",
+          "contamination",
+          "contamination_v2",
+          "contamination_v2_heatmap",
+          "contamination_zones",
+          "corridors",
+          "corridors_rejected_by_renduomega",
+          "corridors_rejected_origine_externe_xix",
+          "corridors_rejected_phase_xvii",
+          "corridors_rejected_vitaux_xviii",
+          "corridors_vitaux_omega_applied",
+          "corridors_vitaux_omega_stats",
+          "data_fiabilite",
+          "data_source",
+          "deplacements_ia"
+        ]
+      },
+      "layer_diag": {
+        "status": 200,
+        "elapsed_ms": 674,
+        "size_b": 516,
+        "top_level_keys": [
+          "all_layers_ok",
+          "hour",
+          "interzone_applied",
+          "layers",
+          "missing_critical_layers",
+          "month",
+          "phase",
+          "renduomega_applied",
+          "species",
+          "v30_locked",
+          "veineux_applied",
+          "waypoint"
+        ]
+      },
+      "organic": {
+        "status": 200,
+        "elapsed_ms": 748,
+        "size_b": 79003
+      },
+      "v30_status_species": {
+        "status": 200,
+        "elapsed_ms": 120,
+        "size_b": 2133,
+        "top_level_keys": [
+          "diagnostic_corridors_omega_activated",
+          "global",
+          "p6_coupling",
+          "per_species",
+          "phase",
+          "query",
+          "thresholds",
+          "v30_locked",
+          "v30_modified",
+          "waypoint_official"
+        ]
+      }
+    },
+    "dindon": {
+      "expected_bio_status": "ABSENT",
+      "bundle_v20": {
+        "status": 200,
+        "elapsed_ms": 635,
+        "size_b": 67442,
+        "top_level_keys": [
+          "affuts",
+          "affuts_rejected_bio_presence_mask_count",
+          "bio_presence_mask_applied",
+          "bio_presence_mask_halt",
+          "bio_presence_mask_stats",
+          "calibration",
+          "canada_zones_summary",
+          "climat_futur",
+          "comportement_biologique",
+          "compute_ms",
+          "connectivite_ecologique",
+          "contamination",
+          "contamination_v2",
+          "contamination_v2_heatmap",
+          "corridors",
+          "corridors_rejected_bio_presence_mask",
+          "data_fiabilite",
+          "data_source",
+          "deplacements_ia",
+          "document_maitre",
+          "esi_omega",
+          "espece_profile",
+          "habitat_supra",
+          "habitats_critiques",
+          "hotspots"
+        ]
+      },
+      "layer_diag": {
+        "status": 200,
+        "elapsed_ms": 672,
+        "size_b": 554,
+        "top_level_keys": [
+          "all_layers_ok",
+          "hour",
+          "interzone_applied",
+          "layers",
+          "missing_critical_layers",
+          "month",
+          "phase",
+          "renduomega_applied",
+          "species",
+          "v30_locked",
+          "veineux_applied",
+          "waypoint"
+        ]
+      },
+      "organic": {
+        "status": 200,
+        "elapsed_ms": 664,
+        "size_b": 67074
+      },
+      "v30_status_species": {
+        "status": 200,
+        "elapsed_ms": 126,
+        "size_b": 2140,
+        "top_level_keys": [
+          "diagnostic_corridors_omega_activated",
+          "global",
+          "p6_coupling",
+          "per_species",
+          "phase",
+          "query",
+          "thresholds",
+          "v30_locked",
+          "v30_modified",
+          "waypoint_official"
+        ]
+      }
+    },
+    "wapiti": {
+      "expected_bio_status": "ABSENT",
+      "bundle_v20": {
+        "status": 200,
+        "elapsed_ms": 668,
+        "size_b": 66757,
+        "top_level_keys": [
+          "affuts",
+          "affuts_rejected_bio_presence_mask_count",
+          "bio_presence_mask_applied",
+          "bio_presence_mask_halt",
+          "bio_presence_mask_stats",
+          "calibration",
+          "canada_zones_summary",
+          "climat_futur",
+          "comportement_biologique",
+          "compute_ms",
+          "connectivite_ecologique",
+          "contamination",
+          "contamination_v2",
+          "contamination_v2_heatmap",
+          "corridors",
+          "corridors_rejected_bio_presence_mask",
+          "data_fiabilite",
+          "data_source",
+          "deplacements_ia",
+          "document_maitre",
+          "esi_omega",
+          "espece_profile",
+          "habitat_supra",
+          "habitats_critiques",
+          "hotspots"
+        ]
+      },
+      "layer_diag": {
+        "status": 200,
+        "elapsed_ms": 596,
+        "size_b": 554,
+        "top_level_keys": [
+          "all_layers_ok",
+          "hour",
+          "interzone_applied",
+          "layers",
+          "missing_critical_layers",
+          "month",
+          "phase",
+          "renduomega_applied",
+          "species",
+          "v30_locked",
+          "veineux_applied",
+          "waypoint"
+        ]
+      },
+      "organic": {
+        "status": 200,
+        "elapsed_ms": 678,
+        "size_b": 67056
+      },
+      "v30_status_species": {
+        "status": 200,
+        "elapsed_ms": 107,
+        "size_b": 2141,
+        "top_level_keys": [
+          "diagnostic_corridors_omega_activated",
+          "global",
+          "p6_coupling",
+          "per_species",
+          "phase",
+          "query",
+          "thresholds",
+          "v30_locked",
+          "v30_modified",
+          "waypoint_official"
+        ]
+      }
+    }
+  }
+}

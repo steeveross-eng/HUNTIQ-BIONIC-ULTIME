@@ -27,6 +27,33 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE-TERRITOIRE-Ω-AUDIT_INTER-ENGINES_ULTIME / PHASE-B AUDIT INTÉGRAL READ-ONLY (2026-04-27)**
+  Audit massif inter-engines précision ×2, READ-ONLY strict, conforme directive
+  Commandant STEEVE-MAX. 9 engines audités · 3 chaînes de dépendances ·
+  5 espèces officielles · 30 payloads HTTPS bruts · 5 captures frontend 1920×1080.
+  - **5 anomalies inter-engines critiques découvertes (toutes en aval V30)** :
+    - **B-1** : ENGINE_VENT — double source divergente (sensoriel_vent_odeurs.wind_deg=225
+      vs wind_vectors[0].direction_deg=165 ; Δ 60°, Δ 7.5 km/h).
+    - **B-2** : ENGINE_CONTAMINATION_V2 — 18 polygones contamination persistent pour
+      espèce ABSENT (alors que contamination_zones=0).
+    - **B-3** : ENGINE_HOTSPOTS — 11 hotspots `source_engine=AFFUT` persistent
+      pour espèce ABSENT alors que `affuts=0`.
+    - **B-4** : ENGINE_SALINES — 6 salines persistent pour ABSENT, score_bio_species
+      ne contient pas dindon_sauvage.
+    - **B-5** : species_presence_mask_omega — couplage partiel : purge corridors+affuts
+      +contamination_zones mais pas contamination, hotspots, salines, contamination_v2.
+  - **V30 SHA-256 inviolés** : `fb765b94…` (registry_lock) + `bcb1e3a6…` (engine_ia_corridors).
+  - **XIX et VITAUX non recomputés** durant tout l'audit.
+  - **Plan stabilisation TERRITOIRE_Ω 5 étapes** émis (cf RAPPORT_PHASE_B.html section 20) :
+    R1 (P0) — étendre apply_presence_mask_to_bundle(); R2 (P1) — réconcilier vent;
+    R3 (P2) — exposer cone_axis_deg; R4 (P0) — pytest dédié; R5 (P1) — CI lock V30.
+  - Livrables HTTPS publiés :
+    - `RAPPORT_PHASE_B.html` (28.9 KB · 20 sections imposées · SHA-256 32ad5ab…)
+    - `SYNTHESE_PHASE_B.json` (49.2 KB · par engine/couche/espèce/pipeline/dépendance · SHA-256 fe76f9b8…)
+    - `phase_b/api_payloads/` (30 × payloads bruts · 5 espèces × 4 endpoints + 3 globaux + purge)
+    - `phase_b/captures_frontend/` (5 × captures 1920×1080)
+    - `phase_b/B2_api_audit_summary.json`, `B3_inter_engines_analysis.json`, `B4_frontend_captures_dom.json`
+
 - **PHASE-TERRITOIRE-Ω-AUDIT_INTER-ENGINES_ULTIME / PHASE-A STABILISATION (2026-04-27)**
   Audit READ-ONLY exhaustif du pipeline TERRITOIRE_Ω + correctifs en aval V30
   (V30 verrouillé, XIX/VITAUX non recomputés). 4 ruptures critiques diagnostiquées
