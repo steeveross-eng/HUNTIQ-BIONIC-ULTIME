@@ -1,0 +1,27 @@
+{
+  "palette": {
+    "primary_00A676": 0,
+    "haloInner_4CC99A": 0,
+    "haloOuter_B2F2D9": 0,
+    "legacy_FF8F00": 0,
+    "other": 125,
+    "total": 125,
+    "samples": [
+      "#9E9E9E",
+      "#C62828",
+      "#2E7D32",
+      "#1565C0",
+      "#29B6F6",
+      "#2E7D32",
+      "#FF0000",
+      "#FF0000",
+      "#FF0000",
+      "#FF0000",
+      "#FF0000",
+      "#FF0000"
+    ]
+  },
+  "bundle_corridors_count": 0,
+  "x150_conforme": false,
+  "visible": false
+}

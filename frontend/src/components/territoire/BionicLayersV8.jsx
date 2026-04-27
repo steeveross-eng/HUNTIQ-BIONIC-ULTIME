@@ -35,18 +35,27 @@ const ZONE_COLORS = {
 
 // CORRIDORS Omega: 4 niveaux
 // STYLE-HIERARCHISE V11-SUPRA (Directive III)
-// ENFORCEMENT_P0 §2.3/§7.1 — RELIQUE PURGÉE : RENDUΩ impose couleur UNIQUE #FF8F00,
-// épaisseurs 1.2/2.0/3.0 px, opacité ≥0.75. Le mapping multicolor historique
-// (HIER.extreme=#FF0000, HIER.intense=#FF6A00, HIER.saisonnier=#FFC300,
-//  HIER.normal=#00B050, HIER.faible=#00B0F0) est DORMANT et INTERDIT.
-// Toute résolution de style DOIT passer par `resolveCorridorStyleOmega` →
-// `RENDU_OMEGA.color = '#FF8F00'` unique. Conservé uniquement à titre de
-// référence institutionnelle pour la traçabilité de la purge.
+// ENFORCEMENT_P0 §2.3/§7.1 — RELIQUE PURGÉE : RENDUΩ impose une palette UNIQUE
+// épaisseurs 1.2/2.0/3.0 px (puis 3.0/4.0/6.0 px §X150), opacité ≥0.75.
+// Le mapping multicolor historique (HIER.extreme=#FF0000, etc.) est DORMANT
+// et INTERDIT.
+// PHASE-D VERROUILLAGE RENDUΩ (BCE-4X · STEEVE-MAX · 2026-04-27) :
+//   - Palette institutionnelle VERTE verrouillée :
+//       primary    = #00A676  (axe principal corridor)
+//       haloInner  = #4CC99A  (lumière saturée organique)
+//       haloOuter  = #B2F2D9  (diffusion ambiante)
+//   - Texture organique : oscillation contrôlée sur épaisseur, halos amplifiés
+//   - Multi-espèces (5) · multi-saisons (1-12) via coefs RENDU_OMEGA
+//   - La couleur historique #FF8F00 est conservée comme legacy_orange dans
+//     paletteOmegaPhaseD pour la traçabilité institutionnelle.
 const CORRIDOR_STYLES_RELIQUE_PURGED = Object.freeze({
   _purged_by: 'PHASE_XII_SUPRA_CORRIDORS_VEINEUX_Ω_ULTIME_ENFORCEMENT_P0',
+  _phase_d_lock: 'PHASE_D_VERROUILLAGE_RENDUOMEGA_BCE4X_STEEVEMAX',
   _do_not_use: true,
   _resolver_canon: 'resolveCorridorStyleOmega',
-  _rendu_color_canon: '#FF8F00',
+  _resolver_phase_d: 'resolveCorridorStylePhaseD',
+  _rendu_color_canon_phase_d: '#00A676',
+  _rendu_legacy_orange: '#FF8F00',
 });
 
 const AFFUT_COLOR = '#9E9E9E';
@@ -696,7 +705,12 @@ const BionicLayersV8 = ({
       window.__OMEGA_CORRIDORS_STYLE_CONFORME__ = showCorridors && corridorsToRender.length > 0;
       // X150 — 7 probes détaillées des 13 normes (document DESCRIPTIONS_RENDU_OMEGA_CORRIDORS)
       const x150Probes = {
-        color_strict_FF8F00: RENDU_OMEGA.color === '#FF8F00',
+        // PHASE-D VERROUILLAGE RENDUΩ — palette verte institutionnelle BCE-4X
+        color_strict_phase_d_green: RENDU_OMEGA.color === '#00A676',
+        palette_phase_d_complete:
+          RENDU_OMEGA.paletteOmegaPhaseD?.primary === '#00A676' &&
+          RENDU_OMEGA.paletteOmegaPhaseD?.haloInner === '#4CC99A' &&
+          RENDU_OMEGA.paletteOmegaPhaseD?.haloOuter === '#B2F2D9',
         weights_allowed: JSON.stringify(RENDU_OMEGA.weightsAllowedPx) === JSON.stringify([1.2, 2.0, 3.0]),
         opacity_min_075: RENDU_OMEGA.opacityMin >= 0.75,
         catmull_rom_points_25_30: RENDU_OMEGA.controlPointsMin === 25 && RENDU_OMEGA.controlPointsMax === 30,
@@ -708,6 +722,9 @@ const BionicLayersV8 = ({
         forbid_affut_interaction: RENDU_OMEGA.forbidAffutInteraction === true,
         forbid_directional_arrow: RENDU_OMEGA.forbidDirectionalArrow === true,
         preview_equals_final: RENDU_OMEGA.previewEqualsFinal === true,
+        organic_texture_enabled: RENDU_OMEGA.organicTexture?.enabled === true,
+        species_coefs_complete: typeof RENDU_OMEGA.speciesWeightCoefficient?.orignal === 'number',
+        season_coefs_complete: typeof RENDU_OMEGA.seasonWeightCoefficient?.[10] === 'number',
       };
       const x150ConformeTotal = Object.values(x150Probes).every(Boolean);
       window.__OMEGA_CORRIDORS_X150_PROBES__ = x150Probes;

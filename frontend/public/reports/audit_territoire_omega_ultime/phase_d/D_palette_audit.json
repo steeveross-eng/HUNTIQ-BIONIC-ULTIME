@@ -1,0 +1,212 @@
+[
+  {
+    "species": "orignal",
+    "expected": "PRESENT",
+    "palette": {
+      "primary_00A676": 0,
+      "haloInner_4CC99A": 0,
+      "haloOuter_B2F2D9": 0,
+      "legacy_FF8F00": 0,
+      "other": 124,
+      "total": 124,
+      "samples": [
+        "#9E9E9E",
+        "#C62828",
+        "#2E7D32",
+        "#1565C0",
+        "#29B6F6",
+        "#2E7D32",
+        "#FF0000",
+        "#FF0000"
+      ]
+    },
+    "x150": {
+      "color_strict_phase_d_green": true,
+      "palette_phase_d_complete": true,
+      "weights_allowed": false,
+      "opacity_min_075": true,
+      "catmull_rom_points_25_30": true,
+      "segment_max_20m": true,
+      "angle_max_45": true,
+      "functional_radius_420_780": true,
+      "min_zoom_13": true,
+      "zindex_order_conforme": false,
+      "forbid_affut_interaction": true,
+      "forbid_directional_arrow": true,
+      "preview_equals_final": true,
+      "organic_texture_enabled": true,
+      "species_coefs_complete": true,
+      "season_coefs_complete": true
+    },
+    "x150_conforme": false,
+    "corridors_visible": false
+  },
+  {
+    "species": "chevreuil",
+    "expected": "PRESENT",
+    "palette": {
+      "primary_00A676": 0,
+      "haloInner_4CC99A": 0,
+      "haloOuter_B2F2D9": 0,
+      "legacy_FF8F00": 0,
+      "other": 126,
+      "total": 126,
+      "samples": [
+        "#9E9E9E",
+        "#C62828",
+        "#2E7D32",
+        "#1565C0",
+        "#29B6F6",
+        "#2E7D32",
+        "#FF0000",
+        "#FF0000"
+      ]
+    },
+    "x150": {
+      "color_strict_phase_d_green": true,
+      "palette_phase_d_complete": true,
+      "weights_allowed": false,
+      "opacity_min_075": true,
+      "catmull_rom_points_25_30": true,
+      "segment_max_20m": true,
+      "angle_max_45": true,
+      "functional_radius_420_780": true,
+      "min_zoom_13": true,
+      "zindex_order_conforme": false,
+      "forbid_affut_interaction": true,
+      "forbid_directional_arrow": true,
+      "preview_equals_final": true,
+      "organic_texture_enabled": true,
+      "species_coefs_complete": true,
+      "season_coefs_complete": true
+    },
+    "x150_conforme": false,
+    "corridors_visible": false
+  },
+  {
+    "species": "ours_noir",
+    "expected": "PRESENT",
+    "palette": {
+      "primary_00A676": 0,
+      "haloInner_4CC99A": 0,
+      "haloOuter_B2F2D9": 0,
+      "legacy_FF8F00": 0,
+      "other": 124,
+      "total": 124,
+      "samples": [
+        "#9E9E9E",
+        "#C62828",
+        "#2E7D32",
+        "#1565C0",
+        "#29B6F6",
+        "#2E7D32",
+        "#FF0000",
+        "#FF0000"
+      ]
+    },
+    "x150": {
+      "color_strict_phase_d_green": true,
+      "palette_phase_d_complete": true,
+      "weights_allowed": false,
+      "opacity_min_075": true,
+      "catmull_rom_points_25_30": true,
+      "segment_max_20m": true,
+      "angle_max_45": true,
+      "functional_radius_420_780": true,
+      "min_zoom_13": true,
+      "zindex_order_conforme": false,
+      "forbid_affut_interaction": true,
+      "forbid_directional_arrow": true,
+      "preview_equals_final": true,
+      "organic_texture_enabled": true,
+      "species_coefs_complete": true,
+      "season_coefs_complete": true
+    },
+    "x150_conforme": false,
+    "corridors_visible": false
+  },
+  {
+    "species": "dindon_sauvage",
+    "expected": "ABSENT",
+    "palette": {
+      "primary_00A676": 0,
+      "haloInner_4CC99A": 0,
+      "haloOuter_B2F2D9": 0,
+      "legacy_FF8F00": 0,
+      "other": 72,
+      "total": 72,
+      "samples": [
+        "#9E9E9E",
+        "#C62828",
+        "#2E7D32",
+        "#1565C0",
+        "#29B6F6",
+        "#2E7D32",
+        "#880E4F",
+        "#880E4F"
+      ]
+    },
+    "x150": {
+      "color_strict_phase_d_green": true,
+      "palette_phase_d_complete": true,
+      "weights_allowed": false,
+      "opacity_min_075": true,
+      "catmull_rom_points_25_30": true,
+      "segment_max_20m": true,
+      "angle_max_45": true,
+      "functional_radius_420_780": true,
+      "min_zoom_13": true,
+      "zindex_order_conforme": false,
+      "forbid_affut_interaction": true,
+      "forbid_directional_arrow": true,
+      "preview_equals_final": true,
+      "organic_texture_enabled": true,
+      "species_coefs_complete": true,
+      "season_coefs_complete": true
+    },
+    "x150_conforme": false,
+    "corridors_visible": false
+  },
+  {
+    "species": "wapiti",
+    "expected": "ABSENT",
+    "palette": {
+      "primary_00A676": 0,
+      "haloInner_4CC99A": 0,
+      "haloOuter_B2F2D9": 0,
+      "legacy_FF8F00": 0,
+      "other": 72,
+      "total": 72,
+      "samples": [
+        "#9E9E9E",
+        "#C62828",
+        "#2E7D32",
+        "#1565C0",
+        "#29B6F6",
+        "#2E7D32",
+        "#880E4F",
+        "#880E4F"
+      ]
+    },
+    "x150": {
+      "color_strict_phase_d_green": true,
+      "palette_phase_d_complete": true,
+      "weights_allowed": false,
+      "opacity_min_075": true,
+      "catmull_rom_points_25_30": true,
+      "segment_max_20m": true,
+      "angle_max_45": true,
+      "functional_radius_420_780": true,
+      "min_zoom_13": true,
+      "zindex_order_conforme": false,
+      "forbid_affut_interaction": true,
+      "forbid_directional_arrow": true,
+      "preview_equals_final": true,
+      "organic_texture_enabled": true,
+      "species_coefs_complete": true,
+      "season_coefs_complete": true
+    },
+    "x150_conforme": false,
+    "corridors_visible": false
+  }
+]

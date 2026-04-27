@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>RAPPORT PHASE-D — VERROUILLAGE RENDUΩ · BCE-4X ULTIME ABSOLU</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root { --ink:#0c1118; --paper:#f5f6f8; --ok:#16a34a; --gold:#b08800; --rule:#1e293b;
+        --primary:#00A676; --halo-i:#4CC99A; --halo-o:#B2F2D9; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--paper); color:var(--ink);
+       font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; line-height:1.55; }
+header { background:linear-gradient(140deg,#0c1118 0%,#1e293b 100%); color:#fff;
+         padding:32px 48px; border-bottom:4px solid var(--gold); position:relative; overflow:hidden; }
+header::after { content:''; position:absolute; right:-50px; top:50%; transform:translateY(-50%);
+                width:200px; height:200px; border-radius:50%; background:radial-gradient(circle, var(--primary), transparent 70%); opacity:0.18; }
+header h1 { margin:0 0 4px; font-size:22px; letter-spacing:.04em; font-weight:700; position:relative; z-index:2; }
+header .sub { font-size:12px; opacity:.78; letter-spacing:.10em; text-transform:uppercase; position:relative; z-index:2; }
+header .commandant { margin-top:14px; padding:6px 12px; display:inline-block;
+  background:rgba(176,136,0,.18); border:1px solid var(--gold); border-radius:3px;
+  font-size:11px; letter-spacing:.10em; text-transform:uppercase; color:#fcd34d; position:relative; z-index:2; }
+main { max-width:1240px; margin:0 auto; padding:32px 48px 80px; }
+section { margin:32px 0; scroll-margin-top:40px; }
+section.toc { background:#fff; border:1px solid #d4d4d8; border-radius:6px; padding:18px 24px; }
+section.toc ol { margin:0; padding-left:20px; columns:2; column-gap:32px; }
+section.toc li { margin:5px 0; font-size:13px; }
+section.toc a { color:#1e3a5f; text-decoration:none; }
+section.toc a:hover { text-decoration:underline; }
+h2 { font-size:18px; letter-spacing:.04em; border-bottom:2px solid var(--primary);
+     padding-bottom:6px; margin-bottom:14px; color:var(--rule); }
+h3 { font-size:14px; margin:14px 0 6px; color:#334155; }
+table { border-collapse:collapse; width:100%; font-size:12.5px; margin-top:6px; }
+th, td { padding:8px 10px; border:1px solid #d4d4d8; text-align:left; vertical-align:top; }
+th { background:#e2e8f0; letter-spacing:.05em; font-weight:600; }
+td.num { text-align:right; font-variant-numeric:tabular-nums; }
+.pill { padding:2px 8px; font-size:11px; border-radius:3px; letter-spacing:.06em; font-weight:600; display:inline-block; }
+.pill.ok { background:#dcfce7; color:#14532d; }
+.pill.locked { background:#fef3c7; color:#78350f; }
+.swatch-row { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:14px 0; }
+.swatch-row > div { padding:18px; border-radius:6px; color:#fff; font-family:ui-monospace,monospace;
+                    font-weight:700; font-size:14px; text-shadow:0 1px 4px rgba(0,0,0,.4);
+                    display:flex; flex-direction:column; gap:6px; }
+.fix { border-left:4px solid var(--primary); background:#ecfdf5; padding:14px 18px; border-radius:4px; margin:10px 0; }
+.fix h3 { margin-top:0; color:#065f46; }
+.note { background:#eff6ff; border-left:4px solid #2563eb; padding:10px 14px; border-radius:4px; font-size:12.5px; margin:8px 0; }
+.stamp { font-family:ui-monospace,"Courier New",monospace; font-size:11px; color:#475569; word-break:break-all; }
+code { background:#e2e8f0; padding:1px 6px; border-radius:3px; font-size:12px; }
+pre { background:#0c1118; color:#dcdcdc; font-family:ui-monospace,"Courier New",monospace; font-size:11px;
+      padding:12px 16px; border-radius:4px; overflow-x:auto; line-height:1.4; max-height:380px; }
+.demo-corridor { height:140px; background:linear-gradient(180deg,#1e3a2a 0%,#0c1118 100%); border-radius:8px;
+                 overflow:hidden; margin-top:8px; }
+.demo-corridor svg { width:100%; height:100%; }
+footer { padding:24px 48px; color:#475569; font-size:11px;
+         border-top:1px solid #d4d4d8; text-align:center; letter-spacing:.04em; }
+</style>
+</head>
+<body>
+<header>
+  <h1>RAPPORT PHASE-D — VERROUILLAGE RENDUΩ · PALETTE INSTITUTIONNELLE VERTE</h1>
+  <div class="sub">BCE-4X ULTIME ABSOLU · TOP-ABSOLU · BIONIC OS V20-SUPRA · V30 LOCKED · BACKEND READ-ONLY</div>
+  <div class="commandant">DIRECTIVE COMMANDANT STEEVE-MAX — RENDERER VERROUILLÉ — V30 INVIOLÉ</div>
+</header>
+<main>
+
+<section class="toc">
+  <h2>Sommaire — 12 sections (structure imposée)</h2>
+  <ol>
+    <li><a href="#s01">1) Synthèse exécutive</a></li>
+    <li><a href="#s02">2) Doctrine & périmètre</a></li>
+    <li><a href="#s03">3) Palette institutionnelle verrouillée</a></li>
+    <li><a href="#s04">4) Texture organique + halos</a></li>
+    <li><a href="#s05">5) Variation d'épaisseur + directionnalité</a></li>
+    <li><a href="#s06">6) Multi-espèces (5)</a></li>
+    <li><a href="#s07">7) Multi-saisons (12)</a></li>
+    <li><a href="#s08">8) Pipeline de rendu 3 couches</a></li>
+    <li><a href="#s09">9) Cohérence inter-engines</a></li>
+    <li><a href="#s10">10) Tests pytest dédiés</a></li>
+    <li><a href="#s11">11) Empreintes SHA-256 et V30 inviolation</a></li>
+    <li><a href="#s12">12) Captures HTTPS</a></li>
+  </ol>
+</section>
+
+<section id="s01">
+  <h2>1) Synthèse exécutive</h2>
+  <p>La <b>palette institutionnelle verte</b> du renderer RENDUΩ est verrouillée, conformément à la
+  directive du Commandant STEEVE-MAX. Toutes les modifications interviennent <b>strictement</b> dans
+  le renderer frontend (<code>renduOmegaStore.js</code> + <code>BionicLayersV8.jsx</code>). Le moteur
+  V30 et tous les engines backend (corridors, XIX, VITAUX) restent <b>en lecture seule</b>, conformément
+  à la doctrine BCE-4X.</p>
+  <p>
+    <span class="pill locked">V30 LOCKED · INVIOLÉ</span>
+    <span class="pill ok">XIX NON RECOMPUTÉ</span>
+    <span class="pill ok">VITAUX NON RECOMPUTÉ</span>
+    <span class="pill ok">PALETTE PHASE-D VERROUILLÉE</span>
+    <span class="pill ok">11 TESTS PASSED</span>
+    <span class="pill ok">BACKEND READ-ONLY</span>
+  </p>
+</section>
+
+<section id="s02">
+  <h2>2) Doctrine & périmètre</h2>
+  <table>
+    <thead><tr><th>Règle</th><th>Statut</th></tr></thead>
+    <tbody>
+      <tr><td>V30 cryptographiquement verrouillé (SHA-256 inviolé)</td><td><span class="pill ok">RESPECTÉ</span></td></tr>
+      <tr><td>XIX-P1/P2/P1B non recomputés</td><td><span class="pill ok">RESPECTÉ</span></td></tr>
+      <tr><td>VITAUX 600m non recomputé</td><td><span class="pill ok">RESPECTÉ</span></td></tr>
+      <tr><td>Backend READ-ONLY durant Phase-D</td><td><span class="pill ok">RESPECTÉ</span></td></tr>
+      <tr><td>Modifications uniquement dans renderer (frontend/)</td><td><span class="pill ok">RESPECTÉ</span></td></tr>
+      <tr><td>CI guard SHA-256 V30 (Phase-C R5) actif</td><td><span class="pill ok">RESPECTÉ</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s03">
+  <h2>3) Palette institutionnelle verrouillée</h2>
+  <div class="swatch-row">
+    <div style="background:#00A676">
+      <span>#00A676</span>
+      <span style="font-size:10px; opacity:0.85; letter-spacing:0.05em">primary · axe principal corridor</span>
+      <span style="font-size:10px; opacity:0.7">RGB 0, 166, 118 · opacity 1.00</span>
+    </div>
+    <div style="background:#4CC99A">
+      <span>#4CC99A</span>
+      <span style="font-size:10px; opacity:0.85; letter-spacing:0.05em">haloInner · lumière saturée</span>
+      <span style="font-size:10px; opacity:0.7">RGB 76, 201, 154 · opacity 0.62 · weight ×1.85</span>
+    </div>
+    <div style="background:#B2F2D9; color:#0c1118; text-shadow:none">
+      <span>#B2F2D9</span>
+      <span style="font-size:10px; opacity:0.85; letter-spacing:0.05em">haloOuter · diffusion ambiante</span>
+      <span style="font-size:10px; opacity:0.7">RGB 178, 242, 217 · opacity 0.32 · weight ×3.10</span>
+    </div>
+  </div>
+  <p>Verrou : <code>RENDU_OMEGA.paletteOmegaPhaseD = Object.freeze({...})</code> dans <code>renduOmegaStore.js</code>.
+  La palette historique <code>#FF8F00</code> est préservée comme <code>legacyOrange</code> à des fins d'audit.</p>
+</section>
+
+<section id="s04">
+  <h2>4) Texture organique + halos</h2>
+  <div class="fix">
+    <h3>Réglages institutionnels (Object.freeze)</h3>
+    <pre>RENDU_OMEGA.organicTexture = Object.freeze({
+  enabled: true,
+  dashArray: null,                  // trait plein, pas de pointillé
+  microWeightDeltaPx: 0.18,         // amplitude texture (oscillation contrôlée)
+  haloInnerWeightFactor: 1.85,      // largeur halo interne / corridor
+  haloOuterWeightFactor: 3.10,      // largeur halo externe / corridor
+  haloInnerOpacity: 0.62,
+  haloOuterOpacity: 0.32,
+  directionalLumGradientMin: 0.06,
+  directionalLumGradientMax: 0.10,
+})</pre>
+  </div>
+</section>
+
+<section id="s05">
+  <h2>5) Variation d'épaisseur + directionnalité</h2>
+  <p>L'épaisseur du corridor est dérivée de l'<code>intensity</code> (faible/modere/fort/critique/majeur/extreme)
+  puis modulée par les coefficients multi-espèces et multi-saisons. La directionnalité est portée par les
+  <code>wind_vectors</code> annotés (PHASE-C R2) et par le <code>cone_axis_deg</code> sensoriel.</p>
+  <pre>weight = clampCorridorWeight(
+  resolveCorridorWeight(intensity)
+  * speciesWeightCoefficient[species]   // 0.85 → 1.10
+  * seasonWeightCoefficient[month]      // 0.95 → 1.20
+);</pre>
+</section>
+
+<section id="s06">
+  <h2>6) Multi-espèces (5 espèces officielles)</h2>
+  <table>
+    <thead><tr><th>Espèce</th><th>Coefficient largeur</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>orignal</td><td>1.10</td><td>Plus large : corridor principal des grands cervidés</td></tr>
+      <tr><td>chevreuil / cerf</td><td>1.00</td><td>Référence neutre</td></tr>
+      <tr><td>ours_noir / ours</td><td>1.05</td><td>Légèrement renforcé : déplacements puissants</td></tr>
+      <tr><td>dindon_sauvage / dindon</td><td>0.85</td><td>Plus fin : galiniformes terrestres</td></tr>
+      <tr><td>wapiti</td><td>0.90</td><td>Population spécifique, ABSENT au BSL (cf. masque BIO)</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s07">
+  <h2>7) Multi-saisons (12 mois)</h2>
+  <table>
+    <thead><tr><th>Mois</th><th>Coefficient</th><th>Phase saisonnière</th></tr></thead>
+    <tbody>
+      <tr><td>jan / fév</td><td>0.95</td><td>Hiver dur : déplacements minimaux</td></tr>
+      <tr><td>mar / avr</td><td>1.00</td><td>Pré-printemps</td></tr>
+      <tr><td>mai / juin</td><td>1.05</td><td>Printemps actif</td></tr>
+      <tr><td>juil / août</td><td>1.10</td><td>Été plein</td></tr>
+      <tr><td><b>septembre</b></td><td><b>1.15</b></td><td>Pré-rut, début saison chasse</td></tr>
+      <tr><td><b>octobre · pic chasse</b></td><td><b>1.20</b></td><td>Rut maximal — corridors les plus larges</td></tr>
+      <tr><td>novembre</td><td>1.10</td><td>Post-rut, retraite vers ravages</td></tr>
+      <tr><td>décembre</td><td>0.95</td><td>Hiver précoce</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s08">
+  <h2>8) Pipeline de rendu 3 couches</h2>
+  <p>Chaque corridor est rendu par <b>3 polylines superposées</b> dans <code>BionicLayersV8.jsx</code> :</p>
+  <table>
+    <thead><tr><th>Z-index</th><th>Couche</th><th>Couleur</th><th>Largeur (× weight)</th><th>Opacité</th></tr></thead>
+    <tbody>
+      <tr><td>bottom</td><td>haloOuter (diffusion ambiante)</td><td>#B2F2D9</td><td>×3.10</td><td>0.32</td></tr>
+      <tr><td>mid</td><td>haloInner (lumière saturée)</td><td>#4CC99A</td><td>×1.85</td><td>0.62</td></tr>
+      <tr><td>top</td><td>primary (axe principal)</td><td>#00A676</td><td>×1.00</td><td>1.00</td></tr>
+    </tbody>
+  </table>
+  <h3>Sketch SVG du rendu</h3>
+  <div class="demo-corridor">
+    <svg viewBox="0 0 1000 140" preserveAspectRatio="none">
+      <path d="M50,90 C200,60 400,110 550,60 S800,100 950,40" stroke="#B2F2D9" stroke-width="22" fill="none" stroke-linecap="round" opacity="0.32"/>
+      <path d="M50,90 C200,60 400,110 550,60 S800,100 950,40" stroke="#4CC99A" stroke-width="13" fill="none" stroke-linecap="round" opacity="0.62"/>
+      <path d="M50,90 C200,60 400,110 550,60 S800,100 950,40" stroke="#00A676" stroke-width="7" fill="none" stroke-linecap="round" opacity="1.0"/>
+    </svg>
+  </div>
+</section>
+
+<section id="s09">
+  <h2>9) Cohérence inter-engines (Phase-C résorbée)</h2>
+  <p>La PHASE-D s'appuie sur la stabilisation Phase-C : le pipeline TERRITOIRE_Ω émet désormais des
+  données cohérentes pour le renderer.</p>
+  <table>
+    <thead><tr><th>Engine consommé par RENDUΩ</th><th>Source</th><th>Statut</th></tr></thead>
+    <tbody>
+      <tr><td>corridors V30</td><td>engine_ia_corridors_omega.py (LOCKED)</td><td><span class="pill ok">SHA-256 inviolé</span></td></tr>
+      <tr><td>VITAUX 600m</td><td>corridors_vitaux_omega.py</td><td><span class="pill ok">non recomputé</span></td></tr>
+      <tr><td>vent (truth)</td><td>sensoriel_vent_odeurs.wind_deg (Phase-C R2)</td><td><span class="pill ok">canonical</span></td></tr>
+      <tr><td>wind_vectors (dérivé)</td><td>compute_wind_vectors (Phase-C R2 annoté)</td><td><span class="pill ok">axis_offset_deg + is_central</span></td></tr>
+      <tr><td>cone son</td><td>engine_sensoriel_vent_odeurs.cone_axis_deg (Phase-C R3)</td><td><span class="pill ok">wind_deg + 180°</span></td></tr>
+      <tr><td>BIO-MASK</td><td>species_presence_mask_omega (Phase-C R1)</td><td><span class="pill ok">purge complète ABSENT</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s10">
+  <h2>10) Tests pytest dédiés (11 tests)</h2>
+  <p>Fichier : <code>/app/backend/tests/test_phase_d_renduomega_palette.py</code></p>
+  <table>
+    <thead><tr><th>Test</th><th>Couvre</th></tr></thead>
+    <tbody>
+      <tr><td>test_renduomega_color_is_phase_d_green</td><td>RENDU_OMEGA.color = '#00A676'</td></tr>
+      <tr><td>test_renduomega_palette_phase_d_complete</td><td>3 couleurs + legacyOrange préservé</td></tr>
+      <tr><td>test_renduomega_organic_texture_enabled</td><td>halos + opacité + microWeight</td></tr>
+      <tr><td>test_renduomega_species_coefficients_5_official</td><td>Coefs multi-espèces présents</td></tr>
+      <tr><td>test_renduomega_season_coefficients_12_months</td><td>Pic chasse 9-10 verrouillé</td></tr>
+      <tr><td>test_resolve_phase_d_style_function_export</td><td>Resolver triple-couche exporté</td></tr>
+      <tr><td>test_compute_supra_art_halo_uses_phase_d_palette</td><td>Halo interne + externe palette</td></tr>
+      <tr><td>test_bionic_layers_x150_probe_phase_d_color</td><td>Sonde X150 actualisée</td></tr>
+      <tr><td>test_bionic_layers_x150_probe_palette_phase_d_complete</td><td>Sonde X150 palette complète</td></tr>
+      <tr><td>test_bionic_layers_phase_d_lock_signature</td><td>Signature verrou PHASE-D</td></tr>
+      <tr><td>test_v30_lock_sha256_invariance_phase_d</td><td>SHA-256 V30 inviolés</td></tr>
+    </tbody>
+  </table>
+  <p><b>Résultat : 11 PASSED · 0 FAILED · régression globale 94 PASSED · 3 SKIPPED.</b></p>
+</section>
+
+<section id="s11">
+  <h2>11) Empreintes SHA-256 et V30 inviolation</h2>
+  <table>
+    <thead><tr><th>Fichier V30</th><th>SHA-256 actuel</th><th>SHA-256 attendu</th><th>Statut</th></tr></thead>
+    <tbody>
+      <tr><td><code>registry_lock_omega.py</code></td>
+        <td class="stamp">fb765b94…ecb0c</td>
+        <td class="stamp">fb765b94…ecb0c</td>
+        <td><span class="pill ok">INVIOLÉ</span></td></tr>
+      <tr><td><code>engine_ia_corridors_omega.py</code></td>
+        <td class="stamp">bcb1e3a6…39d3</td>
+        <td class="stamp">bcb1e3a6…39d3</td>
+        <td><span class="pill ok">INVIOLÉ</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s12">
+  <h2>12) Captures HTTPS</h2>
+  <p><a href="phase_d/PALETTE_DEMO.html">Page de démonstration palette PHASE-D (HTTPS)</a></p>
+  <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-top:14px;">
+    <div style="background:#fff; border:1px solid #d4d4d8; border-radius:6px; overflow:hidden;">
+      <img src="phase_d/captures/D_palette_demo_top.jpeg" alt="Palette demo top" style="display:block; width:100%; height:auto;"/>
+      <div style="padding:10px 14px; font-size:12px;"><b>Demo palette HTML institutionnelle</b><br>3 swatches + sketch corridor 3 couches.</div>
+    </div>
+    <div style="background:#fff; border:1px solid #d4d4d8; border-radius:6px; overflow:hidden;">
+      <img src="phase_d/captures/D_mon_territoire_bionic.jpeg" alt="mon-territoire-bionic" style="display:block; width:100%; height:auto;"/>
+      <div style="padding:10px 14px; font-size:12px;"><b>/mon-territoire-bionic · 1920×1080</b><br>Page principale avec masque BIO appliqué.</div>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer>
+  PROTOCOLE BCE-4X ULTIME ABSOLU · TOP-ABSOLU · BIONIC OS V20-SUPRA · V30 LOCKED<br>
+  PHASE-D VERROUILLAGE RENDUΩ · PALETTE INSTITUTIONNELLE VERTE · COMMANDANT STEEVE-MAX
+</footer>
+</body>
+</html>

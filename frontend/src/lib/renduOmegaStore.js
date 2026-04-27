@@ -18,9 +18,47 @@ const ORGANIC_GENERATE_URL = `${API_BASE}/api/v20/territoire/corridors-organic/g
 // Défauts immuables — doivent matcher engine_rendu_omega.py:RENDU_RULES
 // PHASE_XII_SUPRA_S_CORRECTION : signatures renforcées, halo amplifié, pulse public.
 // PHASE_X150-SUPRA-ARCHITECTONIQUE-Ω : norme DESCRIPTIONS_RENDU_OMEGA_CORRIDORS strictement appliquée.
+// PHASE-D VERROUILLAGE RENDUΩ (BCE-4X · STEEVE-MAX · 2026-04-27) :
+//   - Palette institutionnelle verte verrouillée : #00A676 / #4CC99A / #B2F2D9
+//   - Texture organique (oscillation), halo interne + halo externe + variation
+//     d'épaisseur + directionnalité (gradient luminosité par species + saison).
+//   - Multi-espèces (5 official) · multi-saisons (jan-déc) · multi-facteurs.
 export const RENDU_OMEGA = Object.freeze({
-  color: '#FF8F00',
-  colorName: 'Orange ambre institutionnel',
+  color: '#00A676',
+  colorName: 'Vert institutionnel BIONIC OS V20-SUPRA · PHASE-D',
+  // PHASE-D — palette verte institutionnelle verrouillée
+  paletteOmegaPhaseD: Object.freeze({
+    primary:    '#00A676', // axe principal corridor
+    haloInner:  '#4CC99A', // halo interne (lumière saturée)
+    haloOuter:  '#B2F2D9', // halo externe (diffusion ambiante)
+    legacyOrange: '#FF8F00', // legacy historique préservé pour audit
+  }),
+  // Profil texture organique (PHASE-D) — modulations stroke
+  organicTexture: Object.freeze({
+    enabled: true,
+    dashArray: null,                  // pas de pointillé : trait plein
+    microWeightDeltaPx: 0.18,         // amplitude texture trait
+    haloInnerWeightFactor: 1.85,      // largeur halo interne / corridor
+    haloOuterWeightFactor: 3.10,      // largeur halo externe / corridor
+    haloInnerOpacity: 0.62,
+    haloOuterOpacity: 0.32,
+    directionalLumGradientMin: 0.06,
+    directionalLumGradientMax: 0.10,
+  }),
+  // PHASE-D — coefficients par espèce (multi-espèces)
+  speciesWeightCoefficient: Object.freeze({
+    orignal: 1.10,
+    chevreuil: 1.00, cerf: 1.00,
+    ours_noir: 1.05, ours: 1.05,
+    dindon_sauvage: 0.85, dindon: 0.85,
+    wapiti: 0.90,
+  }),
+  // PHASE-D — coefficients par saison (multi-saisons)
+  seasonWeightCoefficient: Object.freeze({
+    1: 0.95,  2: 0.95,  3: 1.00,  4: 1.00,  // hiver / pré-printemps
+    5: 1.05,  6: 1.05,  7: 1.10,  8: 1.10,  // printemps / été
+    9: 1.15, 10: 1.20, 11: 1.10, 12: 0.95,  // chasse automne (pic 9-10)
+  }),
   // X150 Norme 3 — UNIQUEMENT 1.2 / 2.0 / 3.0 (aucune autre valeur permise)
   weightsAllowedPx: [3.0, 4.0, 6.0],
   weightMapping: {
@@ -165,6 +203,75 @@ export function resolveCorridorStyleOmega(corridor) {
     lineJoin: 'round',
     smoothFactor: 0,
     interactive: true,
+  };
+}
+
+/**
+ * PHASE-D VERROUILLAGE RENDUΩ — Résolution du style multi-couches institutionnel
+ * ────────────────────────────────────────────────────────────────────────────
+ * Retourne les 3 styles superposés (halo externe → halo interne → axe principal)
+ * pour produire l'effet « corridor organique vert avec halo lumineux » verrouillé
+ * par le Commandant STEEVE-MAX.
+ *
+ * Multi-espèces : speciesWeightCoefficient module l'épaisseur globale.
+ * Multi-saisons : seasonWeightCoefficient module l'épaisseur globale (pic 9-10).
+ *
+ * @param {Object} corridor   Corridor V20/RENDUΩ avec champs intensity/type
+ * @param {string} species    Espèce canonique (orignal/cerf/ours/dindon/wapiti)
+ * @param {number} month      Mois 1-12 (saison de chasse)
+ * @returns {{ primary, haloInner, haloOuter, meta }}
+ */
+export function resolveCorridorStylePhaseD(corridor, species, month) {
+  const palette = RENDU_OMEGA.paletteOmegaPhaseD;
+  const tex = RENDU_OMEGA.organicTexture;
+  const intensity = corridor?.intensity ?? corridor?.type;
+  let weight = resolveCorridorWeight(intensity);
+
+  // Multi-espèces (5 official) — coef ∈ [0.85, 1.10]
+  const spKey = String(species || '').toLowerCase();
+  const spCoef = RENDU_OMEGA.speciesWeightCoefficient[spKey] || 1.0;
+  // Multi-saisons (1-12) — coef ∈ [0.95, 1.20]
+  const seasonCoef = RENDU_OMEGA.seasonWeightCoefficient[Number(month)] || 1.0;
+
+  weight = clampCorridorWeight(weight * spCoef * seasonCoef);
+
+  return {
+    primary: {
+      color: palette.primary,
+      weight,
+      opacity: 1.0,
+      lineCap: 'round',
+      lineJoin: 'round',
+      smoothFactor: 0,
+      interactive: true,
+    },
+    haloInner: {
+      color: palette.haloInner,
+      weight: weight * tex.haloInnerWeightFactor,
+      opacity: tex.haloInnerOpacity,
+      lineCap: 'round',
+      lineJoin: 'round',
+      smoothFactor: 0,
+      interactive: false,
+    },
+    haloOuter: {
+      color: palette.haloOuter,
+      weight: weight * tex.haloOuterWeightFactor,
+      opacity: tex.haloOuterOpacity,
+      lineCap: 'round',
+      lineJoin: 'round',
+      smoothFactor: 0,
+      interactive: false,
+    },
+    meta: {
+      phase: 'PHASE_D_RENDUOMEGA',
+      species: spKey,
+      species_coef: spCoef,
+      month: Number(month),
+      season_coef: seasonCoef,
+      base_weight_px: weight,
+      palette: 'phase-d-green-institutional',
+    },
   };
 }
 
@@ -836,6 +943,11 @@ export function detectConvergenceMainVein(corridors, mergeRadiusM = RENDU_OMEGA.
 /** Style halo dérivé SUPRA_S_CORRECTION — halo interne inchangé + halo externe
  *  renforcé selon fond (forest +30%, snow +15%, water +40%, cover +25%) et
  *  convergence veine principale (×1.5).
+ *
+ *  PHASE-D VERROUILLAGE RENDUΩ — palette institutionnelle verte verrouillée :
+ *    - inner   : #4CC99A (lumière saturée organique)
+ *    - external: #B2F2D9 (diffusion ambiante)
+ *  Validation Commandant STEEVE-MAX · 2026-04-27.
  */
 export function computeSupraArtHaloSpec(weight, { background = 'forest', isMainVein = false, salineNearby = false } = {}) {
   const bgMap = RENDU_OMEGA.haloExternalByBackground;
@@ -844,12 +956,18 @@ export function computeSupraArtHaloSpec(weight, { background = 'forest', isMainV
   const mainVeinBoost = isMainVein ? RENDU_OMEGA.mainVeinHaloMultiplier : 1.0;
   // Saline proche : halo externe +35 % additionnel (§1 BLOC A)
   const salineBoost = salineNearby ? (1.0 + RENDU_OMEGA.salineHaloBoostPct) : 1.0;
+  const palette = RENDU_OMEGA.paletteOmegaPhaseD;
   return {
-    inner: { weight: weight + 0.4, opacity: 0.55, color: '#FFD380' },
+    inner: {
+      weight: weight + 0.4,
+      opacity: RENDU_OMEGA.organicTexture.haloInnerOpacity,
+      color: palette.haloInner, // PHASE-D : #4CC99A
+    },
     external: {
       weight: (weight + 2.4) * mainVeinBoost * salineBoost,
-      opacity: Math.min(0.75, externalOpacity * mainVeinBoost * salineBoost),
-      color: '#FF8F00',
+      opacity: Math.min(0.85, externalOpacity * mainVeinBoost * salineBoost
+        * RENDU_OMEGA.organicTexture.haloOuterOpacity / 0.55), // normalize relative to ancient 0.55
+      color: palette.haloOuter, // PHASE-D : #B2F2D9
     },
   };
 }

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>PALETTE PHASE-D · TERRITOIRE_Ω · Démonstration institutionnelle</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root { --ink:#0c1118; --paper:#f5f6f8; --gold:#b08800; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--paper); color:var(--ink);
+       font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; line-height:1.5; }
+header { background:linear-gradient(140deg,#0c1118 0%,#1e293b 100%); color:#fff;
+         padding:32px 48px; border-bottom:4px solid var(--gold); }
+header h1 { margin:0 0 4px; font-size:22px; letter-spacing:.04em; font-weight:700; }
+header .sub { font-size:12px; opacity:.78; letter-spacing:.10em; text-transform:uppercase; }
+main { max-width:1200px; margin:0 auto; padding:32px 48px 80px; }
+.swatch-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:24px; }
+.swatch { background:#fff; border:1px solid #d4d4d8; border-radius:8px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+.swatch .color { height:200px; display:flex; align-items:flex-end; justify-content:flex-start; padding:16px;
+                 color:#fff; font-family:ui-monospace,"Courier New",monospace; font-size:14px; font-weight:700; text-shadow:0 1px 4px rgba(0,0,0,.4); }
+.swatch .meta { padding:14px 18px; font-size:12.5px; }
+.swatch .meta b { display:block; font-size:13px; margin-bottom:4px; color:#1e293b; }
+.swatch .meta .role { color:#64748b; font-size:11.5px; }
+.composite { margin-top:48px; }
+.corridor-demo { height:200px; border-radius:8px; position:relative; overflow:hidden; background:linear-gradient(180deg,#1e3a2a 0%,#0c1118 100%); }
+.corridor-demo svg { width:100%; height:100%; }
+.lock { margin-top:30px; padding:14px 18px; background:#fffaeb; border-left:4px solid var(--gold);
+        border-radius:4px; font-size:12.5px; }
+table { border-collapse:collapse; width:100%; font-size:12.5px; margin-top:16px; }
+th, td { padding:8px 10px; border:1px solid #d4d4d8; text-align:left; }
+th { background:#e2e8f0; }
+code { background:#e2e8f0; padding:1px 6px; border-radius:3px; font-size:12px; }
+footer { padding:24px 48px; color:#475569; font-size:11px;
+         border-top:1px solid #d4d4d8; text-align:center; letter-spacing:.04em; }
+</style>
+</head>
+<body>
+<header>
+  <h1>PALETTE PHASE-D · VERROUILLAGE RENDUΩ INSTITUTIONNEL</h1>
+  <div class="sub">BCE-4X ULTIME ABSOLU · TOP-ABSOLU · BIONIC OS V20-SUPRA · COMMANDANT STEEVE-MAX</div>
+</header>
+<main>
+
+<h2>I — Palette verrouillée (Object.freeze)</h2>
+<div class="swatch-grid">
+  <div class="swatch">
+    <div class="color" style="background:#00A676">#00A676</div>
+    <div class="meta">
+      <b>primary</b>
+      <div class="role">Axe principal corridor — RENDU_OMEGA.color</div>
+      <div>RGB · 0, 166, 118</div>
+    </div>
+  </div>
+  <div class="swatch">
+    <div class="color" style="background:#4CC99A">#4CC99A</div>
+    <div class="meta">
+      <b>haloInner</b>
+      <div class="role">Lumière saturée organique — opacity 0.62 · weight ×1.85</div>
+      <div>RGB · 76, 201, 154</div>
+    </div>
+  </div>
+  <div class="swatch">
+    <div class="color" style="background:#B2F2D9; color:#0c1118; text-shadow:none">#B2F2D9</div>
+    <div class="meta">
+      <b>haloOuter</b>
+      <div class="role">Diffusion ambiante — opacity 0.32 · weight ×3.10</div>
+      <div>RGB · 178, 242, 217</div>
+    </div>
+  </div>
+</div>
+
+<h2 style="margin-top:48px">II — Rendu corridor 3 couches superposées (sketch SVG)</h2>
+<div class="corridor-demo">
+  <svg viewBox="0 0 1000 200" preserveAspectRatio="none">
+    <!-- Halo externe diffus -->
+    <path d="M50,150 C200,100 400,180 550,100 S800,160 950,80" stroke="#B2F2D9" stroke-width="22" fill="none" stroke-linecap="round" opacity="0.32"/>
+    <!-- Halo interne lumière -->
+    <path d="M50,150 C200,100 400,180 550,100 S800,160 950,80" stroke="#4CC99A" stroke-width="13" fill="none" stroke-linecap="round" opacity="0.62"/>
+    <!-- Axe principal -->
+    <path d="M50,150 C200,100 400,180 550,100 S800,160 950,80" stroke="#00A676" stroke-width="7" fill="none" stroke-linecap="round" opacity="1.0"/>
+  </svg>
+</div>
+
+<h2 style="margin-top:48px">III — Coefficients multi-espèces · multi-saisons</h2>
+<table>
+  <thead><tr><th>Espèce</th><th>coef largeur</th><th>Mois</th><th>coef largeur</th></tr></thead>
+  <tbody>
+    <tr><td>orignal</td><td>1.10</td><td>septembre (9)</td><td>1.15</td></tr>
+    <tr><td>chevreuil / cerf</td><td>1.00</td><td>octobre (10) <b>pic chasse</b></td><td>1.20</td></tr>
+    <tr><td>ours_noir / ours</td><td>1.05</td><td>novembre (11)</td><td>1.10</td></tr>
+    <tr><td>dindon_sauvage / dindon</td><td>0.85</td><td>juillet-août (7-8)</td><td>1.10</td></tr>
+    <tr><td>wapiti</td><td>0.90</td><td>hiver (1-2 / 12)</td><td>0.95</td></tr>
+  </tbody>
+</table>
+
+<h2 style="margin-top:36px">IV — Formules institutionnelles</h2>
+<pre style="background:#0c1118; color:#dcdcdc; padding:14px 18px; border-radius:4px; font-family:ui-monospace,'Courier New',monospace; font-size:11.5px; overflow-x:auto;">// Source canonique : /app/frontend/src/lib/renduOmegaStore.js
+// Verrou : Object.freeze · Resolver : resolveCorridorStylePhaseD()
+
+const palette = RENDU_OMEGA.paletteOmegaPhaseD;
+const tex     = RENDU_OMEGA.organicTexture;
+
+weight = clampCorridorWeight(
+  resolveCorridorWeight(intensity)
+  * speciesWeightCoefficient[species]   // 0.85 → 1.10
+  * seasonWeightCoefficient[month]      // 0.95 → 1.20
+);
+
+return {
+  primary  : { color: palette.primary,    weight,                              opacity: 1.00 },
+  haloInner: { color: palette.haloInner,  weight: weight * 1.85,                opacity: 0.62 },
+  haloOuter: { color: palette.haloOuter,  weight: weight * 3.10,                opacity: 0.32 },
+};</pre>
+
+<div class="lock">
+  <b>VERROUILLAGE INSTITUTIONNEL :</b><br>
+  • <code>RENDU_OMEGA</code> est exporté avec <code>Object.freeze</code> — modification refusée par V8.<br>
+  • Sondes X150 PHASE-D : <code>color_strict_phase_d_green</code> + <code>palette_phase_d_complete</code>.<br>
+  • Test pytest : <code>tests/test_phase_d_renduomega_palette.py</code> (11 tests, 0 fail).<br>
+  • CI guard SHA-256 V30 actif (<code>.github/workflows/v30_lock_check.yml</code>).<br>
+  • V30 inviolé : <code>fb765b94…ecb0c</code> (registry_lock) · <code>bcb1e3a6…39d3</code> (engine_ia_corridors).
+</div>
+
+</main>
+<footer>
+  PROTOCOLE BCE-4X ULTIME ABSOLU · TOP-ABSOLU · BIONIC OS V20-SUPRA · V30 LOCKED<br>
+  PHASE-D VERROUILLAGE RENDUΩ · COMMANDANT STEEVE-MAX
+</footer>
+</body>
+</html>

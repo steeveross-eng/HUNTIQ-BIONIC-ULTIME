@@ -27,6 +27,36 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE-TERRITOIRE-Ω-AUDIT_INTER-ENGINES_ULTIME / PHASE-D VERROUILLAGE RENDUΩ (2026-04-27)**
+  Verrouillage du renderer institutionnel RENDUΩ avec palette verte. Modifications
+  strictement en frontend (renderer), backend READ-ONLY, V30 cryptographiquement
+  intact, XIX/VITAUX non recomputés.
+  - **Palette PHASE-D verrouillée** (Object.freeze) :
+    `paletteOmegaPhaseD = { primary: '#00A676', haloInner: '#4CC99A', haloOuter: '#B2F2D9', legacyOrange: '#FF8F00' }`
+    Source canonique : `RENDU_OMEGA.color = '#00A676'`.
+  - **Texture organique** : `organicTexture = { enabled, haloInnerWeightFactor: 1.85,
+    haloOuterWeightFactor: 3.10, haloInnerOpacity: 0.62, haloOuterOpacity: 0.32,
+    microWeightDeltaPx: 0.18, directionalLumGradientMin/Max }`.
+  - **Multi-espèces** (5 official) : coefficients `speciesWeightCoefficient`
+    orignal=1.10 · cerf=1.00 · ours=1.05 · dindon=0.85 · wapiti=0.90.
+  - **Multi-saisons** (12 mois) : coefficients `seasonWeightCoefficient`
+    pic chasse octobre=1.20, septembre=1.15, hiver=0.95.
+  - **Resolver triple-couche** : `resolveCorridorStylePhaseD(corridor, species, month)`
+    retourne `{ primary, haloInner, haloOuter, meta }` avec poids modulé par espèce et saison.
+  - **Pipeline 3 couches superposées** (z-order : haloOuter → haloInner → primary).
+  - **Fichiers modifiés** (renderer uniquement) :
+    - `/app/frontend/src/lib/renduOmegaStore.js` (Object.freeze RENDU_OMEGA + resolveCorridorStylePhaseD + computeSupraArtHaloSpec PHASE-D)
+    - `/app/frontend/src/components/territoire/BionicLayersV8.jsx` (sondes X150 actualisées + signature verrou PHASE-D)
+  - **Sondes X150 actualisées** : `color_strict_phase_d_green` + `palette_phase_d_complete`.
+  - **11 tests pytest dédiés** : `tests/test_phase_d_renduomega_palette.py`.
+    Régression globale **94 PASSED · 3 SKIPPED · 0 FAILED**.
+  - **V30 SHA-256 inviolés post-stabilisation** : `fb765b94…ecb0c` + `bcb1e3a6…39d3`.
+  - **Livrables HTTPS publiés** :
+    - `RAPPORT_PHASE_D.html` (17.9 KB · 12 sections · SHA-256 `b7291fff…`)
+    - `SYNTHESE_PHASE_D.json` (6.0 KB · SHA-256 `71f56d77…`)
+    - `phase_d/PALETTE_DEMO.html` (7.5 KB · démonstration visuelle institutionnelle)
+    - `phase_d/captures/*.jpeg` (5 espèces + demo palette)
+
 - **PHASE-TERRITOIRE-Ω-AUDIT_INTER-ENGINES_ULTIME / PHASE-C STABILISATION (2026-04-27)**
   Application du Plan de stabilisation TERRITOIRE_Ω émis en PHASE-B. Toutes les
   modifications strictement en aval V30 (registry_lock_omega.py et
