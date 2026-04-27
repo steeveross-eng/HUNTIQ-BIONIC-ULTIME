@@ -358,6 +358,17 @@ async def v20_territoire_bundle(
     except Exception as _e_xviii_2:
         result["predictive_omega_v2_post_veineux_applied"] = False
         result["predictive_omega_v2_post_veineux_error"] = str(_e_xviii_2)
+    # ═══ PHASE_XIX-P1 — ORIGINE_EXTERNE_FILTER_Ω : couronne 30 % + GPS ═══
+    # Filtre INSTITUTIONNEL : POINT_ORIGINE doit être dans [600 m ; 780 m]
+    # ET appuyé par densité GPS suffisante (predictive_omega_v2.metrics).
+    try:
+        from engines.v8_institutional.origine_externe_filter_omega import (
+            apply_origine_externe_filter_to_bundle,
+        )
+        result = apply_origine_externe_filter_to_bundle(result)
+    except Exception as _e_xix:
+        result["origine_externe_filter_applied"] = False
+        result["origine_externe_filter_error"] = str(_e_xix)
     # ═══ PHASE_XVII — ÉCOLOGIQUE_Ω : annotation consensus écologique ═══
     try:
         from engines.v8_institutional.ecological_orchestrator_omega import orchestrate_bundle

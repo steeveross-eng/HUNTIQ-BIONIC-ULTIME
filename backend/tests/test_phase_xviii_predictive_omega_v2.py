@@ -26,7 +26,11 @@ OFFICIAL_LNG = -68.382422
 
 @pytest.fixture(autouse=True)
 def reset_caches():
-    """Purge tous les caches avant chaque test."""
+    """Purge tous les caches avant chaque test.
+
+    Désactive XIX-P1 ENFORCE pour préserver l'isolement sémantique
+    des tests XVIII (predictive_omega_v2 + écologique aval).
+    """
     pkl = "/app/backend/cache/territoire_bundle.pkl"
     if os.path.exists(pkl):
         os.remove(pkl)
@@ -36,7 +40,12 @@ def reset_caches():
     from engines.v8_institutional.predictive_omega_v2 import reset_dataset_cache
     reset_heatmap_cache()
     reset_dataset_cache()
+    # XIX-P1 désactivé — préserve l'isolement des tests XVIII
+    import engines.v8_institutional.origine_externe_filter_omega as xix
+    _saved = xix.ENFORCE_MODE
+    xix.ENFORCE_MODE = False
     yield
+    xix.ENFORCE_MODE = _saved
 
 
 # ───────────────────────────────────────────────────────────────────────

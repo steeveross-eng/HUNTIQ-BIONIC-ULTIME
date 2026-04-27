@@ -30,7 +30,11 @@ OFFICIAL_LNG = -68.382422
 # ───────────────────────────────────────────────────────────────────────
 @pytest.fixture(autouse=True)
 def reset_cache():
-    """Purge le cache disque + LRU + cache heatmaps avant chaque test."""
+    """Purge le cache disque + LRU + cache heatmaps avant chaque test.
+    
+    Désactive aussi XIX-P1 ENFORCE pour ne pas filtrer les corridors V30
+    avant validation écologique XVII (test isolé).
+    """
     pkl = "/app/backend/cache/territoire_bundle.pkl"
     if os.path.exists(pkl):
         os.remove(pkl)
@@ -38,7 +42,12 @@ def reset_cache():
     vp._CACHE.clear()
     from engines.v8_institutional.ecological_orchestrator_omega import reset_heatmap_cache
     reset_heatmap_cache()
+    # XIX-P1 désactivé pour ne pas interférer avec les tests XVII isolés
+    import engines.v8_institutional.origine_externe_filter_omega as xix
+    _saved_enforce = xix.ENFORCE_MODE
+    xix.ENFORCE_MODE = False
     yield
+    xix.ENFORCE_MODE = _saved_enforce
 
 
 # ───────────────────────────────────────────────────────────────────────

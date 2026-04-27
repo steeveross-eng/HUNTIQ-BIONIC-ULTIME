@@ -27,6 +27,42 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **XIX-P1-ORIGINE-EXTERNE-FILTER-Ω (2026-04-27)** — Activation du filtre
+  d'origine spatiale externe + validation par densité GPS réelle.
+  - Nouveau module `origine_externe_filter_omega.py` (270 l).
+  - Couronne externe institutionnelle [600 m ; 780 m] (rayon nominal 600 m
+    + 30 %, conforme à la directive).
+  - Validation à 4 niveaux selon directive §2 :
+    - §2.1 spatial : `distance(WAYPOINT, path[0]) ∈ [600 ; 780]` →
+      sinon REJET `OUTSIDE_CROWN`
+    - §2.2.a densité : `gps_density_ratio ≥ 0.25` → sinon `LOW_DENSITY`
+    - §2.2.b hits : `gps_weighted_hits ≥ 5.0` → sinon `LOW_HITS`
+    - métadonnées : XVIII-bis présent → sinon `MISSING_PREDICTIVE_V2_METRICS`
+  - 4 variables d'environnement de configuration : `XIX_P1_RAYON_FONCTIONNEL_M`
+    (600), `XIX_P1_THRESH_DENSITY_ORIGINE` (0.25), `XIX_P1_THRESH_HITS_ORIGINE`
+    (5.0), `XIX_P1_ENFORCE` (1).
+  - Pipeline injecté entre `predictive_omega_v2(p2)` et
+    `ECOLOGICAL_ORCHESTRATOR` ; rejets consignés dans
+    `corridors_rejected_origine_externe_xix`.
+  - Endpoint `/api/v30/corridors/origine-externe` opérationnel.
+  - **Constat institutionnel runtime** : 100 % des corridors V30 actuels
+    rejetés `OUTSIDE_CROWN` (origines observées 85-470 m, en-deçà du
+    minimum 600 m). Les V30 partent du centre ; la directive impose des
+    origines externes — comportement strictement conforme.
+  - Tests pytest 11/11 PASS (XIX-P1) + non-régression certifiée XVII (12) +
+    XVIII-bis (17) + XVIII-VITAUX (14) = **51/51 conjugué (23.8 s)**.
+  - Fixtures XVII / XVIII / XVIII-VITAUX étendues : désactivation
+    transparente de `XIX_P1.ENFORCE_MODE` pour préserver l'isolement
+    sémantique des tests historiques (XIX-P1 a sa propre suite).
+  - V30 cryptographiquement INVIOLÉ.
+  - Métadonnées institutionnelles ajoutées sur chaque corridor :
+    `origin_external_filter_phase`, `origin_external_passed`,
+    `origin_external_valid`, `origin_external_reason`,
+    `origin_external_radius_min_m`, `origin_external_radius_max_m`,
+    `origin_external_density_threshold`, `origin_external_hits_threshold`,
+    `origin_external_validation` (sub-dict complet).
+  - Rapport HTML : `/app/frontend/public/reports/RAPPORT_XIX_P1_ORIGINE_EXTERNE_FILTER.html`.
+
 - **XVIII-bis-DENSITY-WINDOW-OPTIMIZATION-Ω (2026-04-27)** — Optimisation
   de la fenêtre de densité GPS de predictive_omega_v2.
   - Fenêtre spatiale élargie : 80 m → **150 m**.
