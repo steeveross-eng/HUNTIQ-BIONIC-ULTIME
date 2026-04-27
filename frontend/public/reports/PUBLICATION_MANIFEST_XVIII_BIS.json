@@ -1,0 +1,57 @@
+{
+  "phase": "PHASE_XVIII_BIS_PUBLISH_REPORT_HTTPS_Ω",
+  "report": "RAPPORT_XVIII_BIS_DENSITY_WINDOW.html",
+  "subphase_origin": "PHASE_XVIII_BIS_DENSITY_WINDOW_OPTIMIZATION_Ω",
+  "publication": {
+    "status": "PUBLISHED_Ω",
+    "publication_url_https": "https://huntiq-restore.preview.emergentagent.com/reports/RAPPORT_XVIII_BIS_DENSITY_WINDOW.html",
+    "publication_url_alias": "/reports/RAPPORT_XVIII_BIS_DENSITY_WINDOW.html",
+    "published_at_utc": "2026-04-27T14:08:00Z",
+    "tls_https_verified": true,
+    "tls_certificate_verify_result": 0,
+    "http_status_observed": 200,
+    "access_mode": "READ_ONLY",
+    "exposed_secrets": false,
+    "exposed_tokens": false,
+    "exposed_internal_data": false
+  },
+  "integrity": {
+    "source_file_sha256": "7299a4479e7e3b5140adfaba5f66a887915d3a8ebbd0d187568bab220c4f00ee",
+    "source_file_size_bytes": 15007,
+    "served_content_sha256": "0072601b0f4f81422fdaf9fda1cf8b4316a439c5e46a6432587a80154e6589ca",
+    "served_content_size_bytes": 15926,
+    "delta_bytes": 919,
+    "delta_explanation": "Cloudflare CDN injecte un script analytics (window.__CF$cv$params) entre </div> et </body>. Après strip du bloc <script>(function()...}})()</script>, le contenu servi est bit-pour-bit IDENTIQUE au fichier source (sha256 7299a4479e7e3b5140adfaba5f66a887915d3a8ebbd0d187568bab220c4f00ee). Aucune altération du rapport institutionnel.",
+    "first_divergence_byte": 14992,
+    "institutional_content_intact": true,
+    "post_cf_strip_sha256_match": true,
+    "post_cf_strip_proof": "MATCH=True (vérifié 2026-04-27T14:09:00Z)"
+  },
+  "v30_lock_attestation": {
+    "v30_locked": true,
+    "registry_sha256": "27516c9633853974fbb5754f4698a227bf39346e94f274889d4b4ee0398f7e4c",
+    "document_maitre_sha256": "6aff169f73531a46a38f5caff9defc7cadac6745029fa15d73c0174a1dfc2672",
+    "engines_locked_count": 41,
+    "v30_status_endpoint": "/api/v30/corridors/status",
+    "report_corresponds_to_v30_locked_version": true
+  },
+  "security": {
+    "read_only": true,
+    "tokens_in_response": "NONE",
+    "credentials_in_response": "NONE",
+    "internal_paths_in_response": "NONE",
+    "ssl_protocol": "HTTPS/TLS",
+    "cors": "static_asset_no_cors_headers",
+    "audit_trail": "/app/frontend/public/reports/PUBLICATION_MANIFEST_XVIII_BIS.json"
+  },
+  "verification_commands_for_commandant": [
+    "# Vérification SHA-256 institutionnel (post-strip script Cloudflare CDN)",
+    "curl -sS https://huntiq-restore.preview.emergentagent.com/reports/RAPPORT_XVIII_BIS_DENSITY_WINDOW.html | python3 -c \"import sys,re,hashlib;s=sys.stdin.read();c=re.sub(r'<script>\\\\(function\\\\(\\\\)\\\\{function c\\\\(\\\\).*?\\\\}\\\\}\\\\)\\\\(\\\\);</script>','',s,flags=re.DOTALL);print(hashlib.sha256(c.encode()).hexdigest())\"",
+    "expected: 7299a4479e7e3b5140adfaba5f66a887915d3a8ebbd0d187568bab220c4f00ee",
+    "# Lecture du manifeste JSON :",
+    "curl -sS https://huntiq-restore.preview.emergentagent.com/reports/PUBLICATION_MANIFEST_XVIII_BIS.json | python3 -m json.tool"
+  ],
+  "publication_seal": "BCE-4X-XVIII-BIS-PUBLISH-Ω-V1",
+  "commandant": "STEEVE-MAX",
+  "protocol": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU"
+}
