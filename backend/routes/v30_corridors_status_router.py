@@ -167,8 +167,15 @@ async def v30_corridors_status(
     from engines.post_smoothing.renduomega import apply_renduomega_to_bundle
     from engines.post_smoothing.veineux_omega import apply_veineux_omega_to_bundle
     from engines.post_smoothing.interzone_omega import apply_interzone_omega_to_bundle
+    # PHASE_TERRITOIRE_Ω_AUDIT_PHASE_A_C — injection du masque biologique aval
+    from engines.v8_institutional.species_presence_mask_omega import (
+        apply_presence_mask_to_bundle,
+        get_species_presence,
+        ABSENT,
+    )
 
-    species_list = [species] if species else ["orignal", "cerf", "ours", "dindon"]
+    # PHASE_TERRITOIRE_Ω_AUDIT_PHASE_A_C — extension liste à 5 espèces officielles
+    species_list = [species] if species else ["orignal", "cerf", "ours", "dindon", "wapiti"]
 
     per_species_stats: Dict[str, Any] = {}
     global_total = 0
@@ -183,6 +190,34 @@ async def v30_corridors_status(
     global_points_samples: List[int] = []
 
     for sp in species_list:
+        # PHASE_TERRITOIRE_Ω_AUDIT_PHASE_A_C — court-circuit espèces ABSENT
+        # Si l'espèce n'est pas biologiquement présente sur le territoire,
+        # le masque XVIII-BIO-PRESENCE_MASK_Ω émet un statut ABSENT explicite
+        # et on n'engage pas le pipeline V30 (économie + cohérence registre).
+        try:
+            presence = get_species_presence(lat, lon, sp)
+        except Exception:
+            presence = {"status": None, "canonical": sp, "source": None}
+        if presence.get("status") == ABSENT:
+            per_species_stats[sp] = {
+                "total": 0,
+                "accepted": 0,
+                "rejected": 0,
+                "acceptance_rate": 0.0,
+                "rejection_top_reasons": [],
+                "mean_functional_radius_m": None,
+                "length_m_p50": None,
+                "length_m_p90": None,
+                "points_distribution": {"in_25_30": 0, "below_25": 0, "above_30": 0},
+                "v30_alignment_score": 0.0,
+                "alignment_label": "ABSENT",
+                "bio_presence_status": "ABSENT",
+                "bio_presence_canonical": presence.get("canonical"),
+                "bio_presence_source": presence.get("source"),
+                "bio_presence_mask_halt": True,
+            }
+            continue
+
         # 1) cache HIT ?
         key = _cache_key(lat, lon, sp, month, hour, 225.0)
         bundle = bundle_cache_get(key)
@@ -192,6 +227,9 @@ async def v30_corridors_status(
                 raw = await compute_territoire_v10(lat, lon, sp, month, hour, 225.0, 15.0)
                 raw["waypoint"] = {"lat": lat, "lng": lon}
                 raw["species"] = sp
+                # PHASE_TERRITOIRE_Ω_AUDIT_PHASE_A_C — application masque BIO en amont
+                # du pipeline aval (interzone/veineux/renduomega) — V30 inchangé.
+                raw = apply_presence_mask_to_bundle(raw, species=sp, lat=lat, lng=lon)
                 # normaliser contamination pour RenduΩ
                 contam_norm: List[Dict[str, Any]] = []
                 for c in raw.get("contamination") or []:
@@ -280,6 +318,11 @@ async def v30_corridors_status(
             },
             "v30_alignment_score": score,
             "alignment_label": _alignment_label(score),
+            # PHASE_TERRITOIRE_Ω_AUDIT_PHASE_A_C — visibilité institutionnelle
+            "bio_presence_status": "PRESENT",
+            "bio_presence_canonical": presence.get("canonical"),
+            "bio_presence_source": presence.get("source"),
+            "bio_presence_mask_halt": False,
         }
 
     # global score

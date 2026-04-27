@@ -27,6 +27,28 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE-TERRITOIRE-Ω-AUDIT_INTER-ENGINES_ULTIME / PHASE-A STABILISATION (2026-04-27)**
+  Audit READ-ONLY exhaustif du pipeline TERRITOIRE_Ω + correctifs en aval V30
+  (V30 verrouillé, XIX/VITAUX non recomputés). 4 ruptures critiques diagnostiquées
+  et stabilisées :
+  - **C** — `routes/v30_corridors_status_router.py` : injection
+    `apply_presence_mask_to_bundle()` + extension liste 5 espèces
+    `[orignal, cerf, ours, dindon, wapiti]`. dindon/wapiti @BSL retournent
+    `bio_presence_mask_halt=True`, `alignment_label=ABSENT`, `score=0.0`.
+  - **D** — `StatutCorridorsOmegaPanel.jsx` : étiquette `V30 BRUT` +
+    note de réconciliation avec V20 pipeline + HUD V8.
+  - **B** — alerte renommée « couches V30 brutes absentes » + table
+    espèces avec badge `ABSENT` rouge pour halt biologique.
+  - **A** — `WeatherPanel.jsx` : layout responsive avec
+    `data-bce4x-repositioned-top` si `window.innerHeight < 630`.
+  - 8 tests pytest dédiés `tests/test_phase_a_audit_corrections.py`.
+  - **Régression globale 73 PASSED · 0 FAILED** sur les phases critiques.
+  - Livrables HTTPS : `RAPPORT_PHASE_A.html` (audit initial · 23.6 KB),
+    `RAPPORT_PHASE_A_STABILISEE.html` (post-fix · 11.7 KB),
+    `SYNTHESE_PHASE_A.json`, `SYNTHESE_PHASE_A_STABILISEE.json`,
+    captures HTTPS 1920×1080 dans `/reports/audit_territoire_omega_ultime/phase_a/`.
+  - V30 SHA-256 inchangés (`fb765b94…` registry_lock, `bcb1e3a6…` engine_ia_corridors).
+
 - **XVIII-BIO-PRESENCE_MASK_Ω (2026-04-27)** — Filtre amont biologique
   par espèce / par territoire, conforme registre MFFP+SEPAQ+Atlas.
   - Nouveau module `engines/v8_institutional/species_presence_mask_omega.py` :

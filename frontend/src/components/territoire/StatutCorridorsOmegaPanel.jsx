@@ -249,6 +249,9 @@ export default function StatutCorridorsOmegaPanel({ lat = OFFICIAL_LAT, lng = OF
         }}>
           <div style={{ color: '#ff8f00', fontWeight: 700, marginBottom: 4 }}>
             COUCHES TERRITOIRE
+            <span style={{ color: '#6b7a8c', fontWeight: 400, marginLeft: 6 }}>
+              · V30 BRUT
+            </span>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px 8px' }}>
             <span>zones :</span>
@@ -280,9 +283,17 @@ export default function StatutCorridorsOmegaPanel({ lat = OFFICIAL_LAT, lng = OF
           </div>
           {hasCriticalMissing && (
             <div style={{ marginTop: 4, color: '#fca5a5', fontSize: 9 }}>
-              ⚠ couches critiques absentes : {layers.missing_critical_layers.join(', ')}
+              ⚠ couches V30 brutes absentes : {layers.missing_critical_layers.join(', ')}
             </div>
           )}
+          {/* PHASE_TERRITOIRE_Ω_AUDIT_PHASE_A_BD — réconciliation sources de vérité */}
+          <div data-testid="v30-source-of-truth-note" style={{
+            marginTop: 6, paddingTop: 4, borderTop: '1px dashed #1c2735',
+            color: '#9fb0c2', fontSize: 8.5, lineHeight: 1.3,
+          }}>
+            ℹ Compteurs <b>V30 brut</b> (avant XIX-P1/P2 · VITAUX 600 m · RENDUΩ).<br/>
+            Le rendu carte intègre les filtres aval — voir score V8 dans le HUD.
+          </div>
         </div>
       )}
 
@@ -291,15 +302,32 @@ export default function StatutCorridorsOmegaPanel({ lat = OFFICIAL_LAT, lng = OF
         width: '100%', marginTop: 2, borderCollapse: 'collapse', fontSize: 10,
       }}>
         <tbody>
-          {Object.entries(ps).map(([sp, s]) => (
-            <tr key={sp} data-testid={`v30-species-row-${sp}`}>
-              <td style={{ color: '#ffc300', width: '30%' }}>{sp}</td>
-              <td style={{ color: '#e8eef5', width: '30%' }}>{s.accepted}/{s.total}</td>
-              <td style={{ color: labelColor(s.alignment_label), textAlign: 'right' }}>
-                {s.v30_alignment_score?.toFixed(1)}
-              </td>
-            </tr>
-          ))}
+          {Object.entries(ps).map(([sp, s]) => {
+            const isAbsent = s?.bio_presence_status === 'ABSENT' || s?.bio_presence_mask_halt === true;
+            return (
+              <tr key={sp} data-testid={`v30-species-row-${sp}`}>
+                <td style={{ color: '#ffc300', width: '30%' }}>{sp}</td>
+                <td style={{ color: isAbsent ? '#9fb0c2' : '#e8eef5', width: '30%' }}>
+                  {isAbsent ? '—' : `${s.accepted}/${s.total}`}
+                </td>
+                <td style={{
+                  color: isAbsent ? '#7f1d1d' : labelColor(s.alignment_label),
+                  textAlign: 'right',
+                  fontWeight: isAbsent ? 700 : 500,
+                }} data-testid={`v30-species-status-${sp}`}>
+                  {isAbsent
+                    ? <span title={s?.bio_presence_source || 'absent du registre biologique'}
+                            style={{
+                              padding: '1px 5px', borderRadius: 2,
+                              background: 'rgba(239,68,68,0.15)',
+                              border: '1px solid rgba(239,68,68,0.45)',
+                              fontSize: 9, letterSpacing: 0.6,
+                            }}>ABSENT</span>
+                    : s.v30_alignment_score?.toFixed(1)}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
 

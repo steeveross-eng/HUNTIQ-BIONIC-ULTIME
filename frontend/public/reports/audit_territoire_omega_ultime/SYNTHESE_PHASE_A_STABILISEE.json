@@ -1,0 +1,237 @@
+{
+  "phase": "PHASE_TERRITOIRE_Ω_AUDIT_INTER-ENGINES_ULTIME",
+  "subphase": "PHASE-A — RUPTURES CRITIQUES + STABILISATION",
+  "directive": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU",
+  "commandant": "STEEVE-MAX",
+  "generated_at_utc": "2026-04-27T22:12:57.749826+00:00",
+  "v30_engine_status": "LOCKED — registry_lock_omega.py V30 INTOUCHED",
+  "v30_engine_tampering": false,
+  "xix_recompute": false,
+  "vitaux_recompute": false,
+  "audit_only_diagnostics_only_evidences_only": true,
+  "waypoint_official": {
+    "lat": 48.206657,
+    "lng": -68.382422,
+    "label": "BSL TERRITOIRE BIONIC"
+  },
+  "stabilization_summary": {
+    "C_dindon_absent": "STABILISÉ — v30_corridors_status_router applique apply_presence_mask_to_bundle. Liste étendue à 5 espèces. dindon/wapiti @BSL retournent label=ABSENT, halt=True, score=0.",
+    "D_metrics_mismatch": "STABILISÉ — panneau ajoute étiquette 'V30 BRUT' + note explicative séparant V30 brut / V20 pipeline / HUD V8.",
+    "B_alert_couches": "STABILISÉ — alerte renommée 'couches V30 brutes absentes' (au lieu de 'critiques'), note de réconciliation ajoutée.",
+    "A_overlap_ui": "STABILISÉ — WeatherPanel se repositionne automatiquement à top:320 si window.innerHeight < 630."
+  },
+  "corrections_applied": [
+    {
+      "id": "C",
+      "title": "Application masque XVIII-BIO-PRESENCE_MASK_Ω + extension liste 5 espèces",
+      "files_modified": [
+        "/app/backend/routes/v30_corridors_status_router.py"
+      ],
+      "lines_changed_count_approx": 50,
+      "v30_lock_respected": true,
+      "test": "tests/test_phase_a_audit_corrections.py (8 tests dédiés)"
+    },
+    {
+      "id": "D",
+      "title": "Étiquette 'V30 BRUT' + note explicative panneau",
+      "files_modified": [
+        "/app/frontend/src/components/territoire/StatutCorridorsOmegaPanel.jsx"
+      ],
+      "v30_lock_respected": true
+    },
+    {
+      "id": "B",
+      "title": "Renommage alerte + badge ABSENT pour espèces sans présence biologique",
+      "files_modified": [
+        "/app/frontend/src/components/territoire/StatutCorridorsOmegaPanel.jsx"
+      ],
+      "v30_lock_respected": true
+    },
+    {
+      "id": "A",
+      "title": "Layout responsive WeatherPanel anti-overlap",
+      "files_modified": [
+        "/app/frontend/src/components/territoire/ui/WeatherPanel.jsx"
+      ],
+      "behavior": "shouldRepositionTop = (window.innerHeight < 630) → top:320 ; sinon bottom:90",
+      "v30_lock_respected": true
+    }
+  ],
+  "live_endpoint_validation": {
+    "endpoint": "GET /api/v30/corridors/status?lat=48.206657&lon=-68.382422",
+    "species_count": 5,
+    "per_species_observed": {
+      "orignal": {
+        "bio_presence_status": "PRESENT",
+        "bio_presence_mask_halt": false,
+        "alignment_label": "CONFORME / PARTIEL (variable)"
+      },
+      "cerf": {
+        "bio_presence_status": "PRESENT",
+        "bio_presence_mask_halt": false,
+        "alignment_label": "CONFORME / PARTIEL"
+      },
+      "ours": {
+        "bio_presence_status": "PRESENT",
+        "bio_presence_mask_halt": false,
+        "alignment_label": "PARTIEL"
+      },
+      "dindon": {
+        "bio_presence_status": "ABSENT",
+        "bio_presence_mask_halt": true,
+        "alignment_label": "ABSENT",
+        "v30_alignment_score": 0.0
+      },
+      "wapiti": {
+        "bio_presence_status": "ABSENT",
+        "bio_presence_mask_halt": true,
+        "alignment_label": "ABSENT",
+        "v30_alignment_score": 0.0
+      }
+    },
+    "v30_locked_runtime": true,
+    "v30_modified_runtime": false
+  },
+  "live_dom_validation_table_rows_post_fix": [
+    {
+      "testid": "v30-species-row-orignal",
+      "cells": [
+        "orignal",
+        "12/18",
+        "66.7"
+      ]
+    },
+    {
+      "testid": "v30-species-row-cerf",
+      "cells": [
+        "cerf",
+        "16/20",
+        "80.0"
+      ]
+    },
+    {
+      "testid": "v30-species-row-ours",
+      "cells": [
+        "ours",
+        "8/13",
+        "61.5"
+      ]
+    },
+    {
+      "testid": "v30-species-row-dindon",
+      "cells": [
+        "dindon",
+        "—",
+        "ABSENT"
+      ]
+    },
+    {
+      "testid": "v30-species-row-wapiti",
+      "cells": [
+        "wapiti",
+        "—",
+        "ABSENT"
+      ]
+    }
+  ],
+  "pytest_results": {
+    "phase_a_audit_corrections": "8 PASSED",
+    "phase_xviii_bio_presence_mask": "11 PASSED",
+    "phase_xviii_predictive_omega_v2": "PASSED",
+    "phase_xviii_vitaux_omega": "PASSED",
+    "phase_xix_p1_origine_externe_filter": "PASSED",
+    "phase_xix_p2_origine_externe_inversion": "PASSED",
+    "global_run": "73 PASSED · 3 SKIPPED · 0 FAILED"
+  },
+  "captures": [
+    {
+      "filename": "A1_after_15s.jpeg",
+      "size_bytes": 93859,
+      "sha256": "e781ea5121e3608243bb9adae2ce473ac5801e9348bc54b3380c1fb5b9f0e921",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A1_after_15s.jpeg"
+    },
+    {
+      "filename": "A1_full_loaded.jpeg",
+      "size_bytes": 111857,
+      "sha256": "4135528c800351fc1b25204bec0f2b9ec58d2ad5287c3eee9f894bde0314b52f",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A1_full_loaded.jpeg"
+    },
+    {
+      "filename": "A1_right_panels.jpeg",
+      "size_bytes": 26097,
+      "sha256": "9821168349687f49d7365c114e51a099f4a4dfe539609e784697c30dffabaf38",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A1_right_panels.jpeg"
+    },
+    {
+      "filename": "A_POST_FIX_1280x600.jpeg",
+      "size_bytes": 57795,
+      "sha256": "edc7fa9c58374ecf35eb0fc3d44ad93bcdb7960675d599b1768abeb0bff9e03c",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_POST_FIX_1280x600.jpeg"
+    },
+    {
+      "filename": "A_POST_FIX_full.jpeg",
+      "size_bytes": 112125,
+      "sha256": "13d0dc21294f6b01642f02064689abaa502e56a9e982023ea76f3d0040253ec8",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_POST_FIX_full.jpeg"
+    },
+    {
+      "filename": "A_POST_FIX_full_1920x1400.jpeg",
+      "size_bytes": 29141,
+      "sha256": "d922a680955dcf18665d9374f74a04fb9de63b1f5f11f09436c46261bc39cafc",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_POST_FIX_full_1920x1400.jpeg"
+    },
+    {
+      "filename": "A_POST_FIX_left_panel.jpeg",
+      "size_bytes": 24628,
+      "sha256": "9c0e628824a96d95131e9fecff1f001bc47f5de25a86e72d611e5a61aa4ffe84",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_POST_FIX_left_panel.jpeg"
+    },
+    {
+      "filename": "A_POST_FIX_status_panel_only.jpeg",
+      "size_bytes": 26350,
+      "sha256": "f2b9f55e6f61eb6b278422d9b7b79f6f4db4240a3f1ce8e17943d78ca63bae5f",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_POST_FIX_status_panel_only.jpeg"
+    },
+    {
+      "filename": "A_disparition_t0.jpeg",
+      "size_bytes": 123445,
+      "sha256": "cf0db04a728b4db57fe5f38a9218fff5e08692b45787d7c6c22a40786e1c78f8",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_disparition_t0.jpeg"
+    },
+    {
+      "filename": "A_disparition_t70.jpeg",
+      "size_bytes": 123424,
+      "sha256": "2feb40cf529bcd25d3ff1efbdc27e70c7d1c289ac0574badf3a4ed540ce0f24a",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_disparition_t70.jpeg"
+    },
+    {
+      "filename": "A_overlap_1280x600.jpeg",
+      "size_bytes": 55963,
+      "sha256": "d47d52ae83a07895c3b33b0e29d0ae10acf5c3fb9c1525c678d3e4d72c95e61c",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_overlap_1280x600.jpeg"
+    },
+    {
+      "filename": "A_overlap_1366x768.jpeg",
+      "size_bytes": 71899,
+      "sha256": "e12eb2896fc481d3c8bf2022acd603fa35670e2eaf62d231658bccf15d5a01d1",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_overlap_1366x768.jpeg"
+    },
+    {
+      "filename": "A_overlap_1440x720.jpeg",
+      "size_bytes": 70904,
+      "sha256": "6af9be990b304272a928ffd9da62cc2fda4af2de179921fbb6d28506269e1cf3",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_overlap_1440x720.jpeg"
+    },
+    {
+      "filename": "A_overlap_1920x1080.jpeg",
+      "size_bytes": 123469,
+      "sha256": "9bd50f612f726335bf6e79872d9fb00a8f5f36e76ba62a26704e470213f0a1b0",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/audit_territoire_omega_ultime/phase_a/A_overlap_1920x1080.jpeg"
+    }
+  ],
+  "deliverables": {
+    "json": "/reports/audit_territoire_omega_ultime/SYNTHESE_PHASE_A_STABILISEE.json",
+    "html": "/reports/audit_territoire_omega_ultime/RAPPORT_PHASE_A_STABILISEE.html",
+    "captures_dir": "/reports/audit_territoire_omega_ultime/phase_a/"
+  }
+}

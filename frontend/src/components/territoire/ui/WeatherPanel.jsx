@@ -5,7 +5,7 @@
  * Position: au-dessus du Score badge, a droite de la carte.
  * Protection: BCE-4X-UI PositionLock, ZIndexGuard, RenderGuard.
  */
-import React, { memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { Wind, Thermometer, Droplets, Gauge, Cloud, ArrowUp, Eye, Sun } from 'lucide-react';
 
 const WIND_DIRECTIONS = [
@@ -36,6 +36,26 @@ const getWindScoreLabel = (score) => {
 };
 
 const WeatherPanel = memo(({ wind, weather, loading, huntingScore, scoreV8 }) => {
+  // PHASE_TERRITOIRE_Ω_AUDIT_PHASE_A_A — layout responsive anti-superposition
+  // Si la fenêtre est trop courte (≤ 600 px), CompassOmegaWidget (top:120, h:163)
+  // et WeatherPanel (bottom:90, h:~250) overlap. On replace WeatherPanel à
+  // top:320 dans ce cas pour préserver la lisibilité.
+  const [shouldRepositionTop, setShouldRepositionTop] = useState(false);
+  useEffect(() => {
+    const computeOverlapRisk = () => {
+      try {
+        const h = window.innerHeight || 0;
+        // CompassOmega occupe top: 120 → 283 (height ≈ 163)
+        // WeatherPanel monte du bas avec hauteur ≈ 250 + bottom: 90 → top ≈ h - 340
+        // Overlap si (h - 340) < 290 → h < 630
+        setShouldRepositionTop(h > 0 && h < 630);
+      } catch (_e) { setShouldRepositionTop(false); }
+    };
+    computeOverlapRisk();
+    window.addEventListener('resize', computeOverlapRisk);
+    return () => window.removeEventListener('resize', computeOverlapRisk);
+  }, []);
+
   if (!wind && !weather) return null;
 
   const windSpeed = wind?.speed;
@@ -63,9 +83,12 @@ const WeatherPanel = memo(({ wind, weather, loading, huntingScore, scoreV8 }) =>
     <div
       data-testid="bce4x-weather-panel"
       data-bce4x-locked="true"
+      data-bce4x-repositioned-top={shouldRepositionTop ? 'true' : 'false'}
       style={{
         position: 'absolute',
-        bottom: '90px',
+        ...(shouldRepositionTop
+          ? { top: '320px', bottom: 'auto' }
+          : { bottom: '90px', top: 'auto' }),
         right: '12px',
         zIndex: 1000,
         background: 'rgba(8, 12, 22, 0.92)',
