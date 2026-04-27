@@ -145,42 +145,70 @@ def _circular_diff_deg(a: float, b: float) -> float:
 
 
 # ═══════════════════════════════════════════════════════════════════════
-# 4. Densité GPS le long du path
+# 4. Densité GPS le long du path — PHASE XVIII-bis (fenêtre élargie + pondérée)
 # ═══════════════════════════════════════════════════════════════════════
+# Constantes institutionnelles (PHASE XVIII-bis — directive Commandant)
+DENSITY_WINDOW_RADIUS_M = 150.0   # 80 → 150 m (×1.875)
+DENSITY_WINDOW_DAYS = 28          # saison ±4 semaines
+DENSITY_WINDOW_HOURS = 3          # heure locale ±3 h
+DENSITY_TIME_SIGMA_DAYS = 14.0    # gaussienne décroissance temporelle
+
+
+def _month_to_day_of_year(month: int) -> int:
+    """Retourne le jour central du mois (15, 45, 75, 106, ...)."""
+    centers = [15, 45, 75, 106, 136, 167, 197, 228, 259, 289, 320, 350]
+    return centers[max(1, min(12, month)) - 1]
+
+
 def _path_gps_density(dataset: Dict[str, Any], path: List[List[float]],
-                       season: str, hour: int, radius_m: float = 80.0) -> Dict[str, Any]:
-    """Compte les fixes GPS proches du path (filtrés saison + heure ±2 h)."""
+                       target_day: int, hour: int,
+                       radius_m: float = DENSITY_WINDOW_RADIUS_M,
+                       day_window: int = DENSITY_WINDOW_DAYS,
+                       hour_window: int = DENSITY_WINDOW_HOURS) -> Dict[str, Any]:
+    """Densité GPS PONDÉRÉE le long du path (PHASE XVIII-bis).
+
+    Pondérations :
+      - inverse-distance : w_dist = max(0, 1 − d / radius_m)  (linéaire 1→0)
+      - décroissance temporelle : w_time = exp(−(Δday / 14)²) (gaussienne)
+      - poids final = w_dist × w_time
+
+    Le ratio retourné est la somme pondérée normalisée par le nombre de
+    fixes dans la fenêtre temporelle (saison ±4 sem · heure ±3 h).
+    """
     if not dataset or not path:
-        return {"hits": 0, "ratio": 0.0, "active_hits": 0}
-    R = 6371000.0
+        return {"hits": 0, "weighted_hits": 0.0, "active_weighted_hits": 0.0,
+                "ratio": 0.0, "fixes_in_window": 0}
     cos_anchor = math.cos(math.radians(path[0][0]))
-    # Approx mètres par degré
     deg_per_m_lat = 1.0 / 111000.0
     deg_per_m_lng = 1.0 / (111000.0 * cos_anchor)
     margin_lat = radius_m * deg_per_m_lat * 1.2
     margin_lng = radius_m * deg_per_m_lng * 1.2
 
-    # Bounding box du path
     lats = [p[0] for p in path]
     lngs = [p[1] for p in path]
     bb_lat_min, bb_lat_max = min(lats) - margin_lat, max(lats) + margin_lat
     bb_lng_min, bb_lng_max = min(lngs) - margin_lng, max(lngs) + margin_lng
 
-    hours_window = {(hour + dh) % 24 for dh in (-2, -1, 0, 1, 2)}
-    hits = 0
-    active_hits = 0
-    total_in_season_hour = 0
+    hours_window = {(hour + dh) % 24 for dh in range(-hour_window, hour_window + 1)}
+
+    weighted_hits = 0.0
+    raw_hits = 0
+    active_weighted = 0.0
+    total_in_window = 0
     for track in dataset.get("tracks", []):
         for fix in track.get("fixes", []):
-            if fix.get("season") != season:
+            day = fix.get("day", 1)
+            # Fenêtre jour cyclique (365 jours)
+            delta_day = abs(day - target_day)
+            delta_day = min(delta_day, 365 - delta_day)
+            if delta_day > day_window:
                 continue
             if fix.get("hour") not in hours_window:
                 continue
-            total_in_season_hour += 1
+            total_in_window += 1
             la, ln = fix["lat"], fix["lng"]
             if not (bb_lat_min <= la <= bb_lat_max and bb_lng_min <= ln <= bb_lng_max):
                 continue
-            # Distance au point le plus proche du path (échantillonnage)
             n_samples = min(8, len(path))
             min_d = float("inf")
             for k in range(n_samples):
@@ -191,14 +219,24 @@ def _path_gps_density(dataset: Dict[str, Any], path: List[List[float]],
                 d = math.hypot(dla, dln)
                 if d < min_d:
                     min_d = d
-            if min_d <= radius_m:
-                hits += 1
-                if fix.get("active"):
-                    active_hits += 1
-    ratio = hits / max(1, total_in_season_hour)
-    return {"hits": hits, "active_hits": active_hits,
-            "ratio": round(ratio, 4),
-            "fixes_in_season_hour": total_in_season_hour}
+            if min_d > radius_m:
+                continue
+            w_dist = max(0.0, 1.0 - min_d / radius_m)
+            w_time = math.exp(-(delta_day / DENSITY_TIME_SIGMA_DAYS) ** 2)
+            w = w_dist * w_time
+            weighted_hits += w
+            raw_hits += 1
+            if fix.get("active"):
+                active_weighted += w
+
+    ratio = weighted_hits / max(1, total_in_window)
+    return {
+        "hits": raw_hits,
+        "weighted_hits": round(weighted_hits, 3),
+        "active_weighted_hits": round(active_weighted, 3),
+        "ratio": round(ratio, 4),
+        "fixes_in_window": total_in_window,
+    }
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -256,11 +294,13 @@ def score_corridor_with_gps_real(
         else:
             speed_score = 5.0
 
-    # ─── density_score
-    density = _path_gps_density(dataset, path, season=season, hour=hour, radius_m=80.0)
+    # ─── density_score (PHASE XVIII-bis : fenêtre élargie + pondérée)
+    target_day = _month_to_day_of_year(month)
+    density = _path_gps_density(dataset, path, target_day=target_day, hour=hour)
     density_ratio = density["ratio"]
-    # 0% → 0 pts, 5% → 35 pts (saturé). Plus la densité GPS est forte, plus le
-    # corridor est traversé par des animaux réels.
+    # Score linéaire saturé à 35 pts. Le ratio est désormais une moyenne
+    # pondérée (inverse-distance × décroissance temporelle) — il reflète
+    # réellement la concentration GPS observée le long du path.
     density_score = min(35.0, density_ratio * 700.0)
 
     # ─── diurnal_score (cohérence heure)
@@ -287,11 +327,17 @@ def score_corridor_with_gps_real(
             "path_length_m": round(L, 1),
             "target_amplitude_m": target_amp,
             "gps_hits": density["hits"],
-            "gps_active_hits": density["active_hits"],
+            "gps_weighted_hits": density["weighted_hits"],
+            "gps_active_weighted_hits": density["active_weighted_hits"],
             "gps_density_ratio": density["ratio"],
+            "gps_fixes_in_window": density["fixes_in_window"],
+            "gps_window_radius_m": DENSITY_WINDOW_RADIUS_M,
+            "gps_window_days": DENSITY_WINDOW_DAYS,
+            "gps_window_hours": DENSITY_WINDOW_HOURS,
             "diurnal_activity": round(activity_at_hour, 3),
         },
         "phase": "PHASE_XVIII_ENGINE_PREDICTIVE_OMEGA_GPS_USGS_Ω",
+        "subphase": "PHASE_XVIII_BIS_DENSITY_WINDOW_OPTIMIZATION_Ω",
     }
 
 

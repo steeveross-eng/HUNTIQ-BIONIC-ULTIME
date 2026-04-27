@@ -135,6 +135,78 @@ def test_diurnal_score_dindon_zero_at_night():
 
 
 # ───────────────────────────────────────────────────────────────────────
+# 4 bis. PHASE XVIII-bis — fenêtre densité élargie + pondérée
+# ───────────────────────────────────────────────────────────────────────
+def test_density_window_constants_xviii_bis():
+    from engines.v8_institutional.predictive_omega_v2 import (
+        DENSITY_WINDOW_RADIUS_M, DENSITY_WINDOW_DAYS, DENSITY_WINDOW_HOURS,
+    )
+    assert DENSITY_WINDOW_RADIUS_M == 150.0
+    assert DENSITY_WINDOW_DAYS == 28
+    assert DENSITY_WINDOW_HOURS == 3
+
+
+def test_density_score_nonzero_for_realistic_path():
+    """Path biologiquement plausible (NE 100→500 m) doit produire density > 0."""
+    from engines.v8_institutional.predictive_omega_v2 import score_corridor_with_gps_real
+    import math
+    WP = (OFFICIAL_LAT, OFFICIAL_LNG)
+    path = []
+    for f in (0, 0.5, 1.0):
+        L = 100 + f * 400
+        br = math.radians(45)
+        dlat = (L * math.cos(br)) / 111000.0
+        dlng = (L * math.sin(br)) / (111000.0 * math.cos(math.radians(WP[0])))
+        path.append([WP[0] + dlat, WP[1] + dlng])
+    total = sum(
+        score_corridor_with_gps_real({"path": path}, species=sp, month=10, hour=18)
+        ["components"]["density"]
+        for sp in ("orignal", "chevreuil", "wapiti", "ours", "dindon")
+    )
+    assert total > 30.0, f"density_score total trop bas après XVIII-bis: {total}"
+
+
+def test_density_inverse_distance_weighting_applied():
+    """Path centré sur centroïde fixes orignal d'octobre 18h doit produire weighted_hits > 0."""
+    from engines.v8_institutional.predictive_omega_v2 import (
+        _load_dataset, _path_gps_density, _month_to_day_of_year,
+    )
+    ds = _load_dataset("orignal")
+    if not ds:
+        return
+    fixes_oct = [f for t in ds["tracks"] for f in t["fixes"]
+                 if 260 <= f.get("day", 0) <= 320 and f.get("hour", -1) == 16]
+    assert len(fixes_oct) >= 50
+    cx = sum(f["lat"] for f in fixes_oct) / len(fixes_oct)
+    cy = sum(f["lng"] for f in fixes_oct) / len(fixes_oct)
+    path_close = [[cx, cy], [cx + 0.0001, cy + 0.0001]]
+    target_day = _month_to_day_of_year(10)
+    r = _path_gps_density(ds, path_close, target_day=target_day, hour=16)
+    assert r["weighted_hits"] > 0.0, r
+    # weighted_hits / hits doit être strictement < 1 (poids ne sont pas tous 1.0)
+    if r["hits"] > 5:
+        avg_weight = r["weighted_hits"] / r["hits"]
+        assert 0.0 < avg_weight < 1.0, f"weight moyenne hors [0..1[ : {avg_weight}"
+
+
+def test_density_weighted_hits_metric_present():
+    """Le retour score doit exposer les nouvelles métadonnées XVIII-bis."""
+    from engines.v8_institutional.predictive_omega_v2 import score_corridor_with_gps_real
+    path = [[OFFICIAL_LAT, OFFICIAL_LNG],
+            [OFFICIAL_LAT + 0.002, OFFICIAL_LNG + 0.002]]
+    out = score_corridor_with_gps_real({"path": path}, species="orignal", month=10, hour=18)
+    assert out["valid"] is True
+    m = out["metrics"]
+    assert m["gps_window_radius_m"] == 150.0
+    assert m["gps_window_days"] == 28
+    assert m["gps_window_hours"] == 3
+    assert "gps_weighted_hits" in m
+    assert "gps_active_weighted_hits" in m
+    assert "gps_fixes_in_window" in m
+    assert out.get("subphase") == "PHASE_XVIII_BIS_DENSITY_WINDOW_OPTIMIZATION_Ω"
+
+
+# ───────────────────────────────────────────────────────────────────────
 # 5. Pipeline XVIII complet — toutes espèces
 # ───────────────────────────────────────────────────────────────────────
 @pytest.mark.parametrize("species,month,hour", [

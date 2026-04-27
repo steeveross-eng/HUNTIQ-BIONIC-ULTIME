@@ -27,6 +27,37 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **XVIII-bis-DENSITY-WINDOW-OPTIMIZATION-Ω (2026-04-27)** — Optimisation
+  de la fenêtre de densité GPS de predictive_omega_v2.
+  - Fenêtre spatiale élargie : 80 m → **150 m**.
+  - Fenêtre temporelle élargie : saison entière → **jour central ±28 j**
+    (cyclique 365 j).
+  - Fenêtre horaire élargie : ±2 h → **±3 h**.
+  - Pondérations ajoutées :
+    - inverse-distance linéaire : `w_dist = max(0, 1 − d/150)`
+    - décroissance gaussienne temporelle : `w_time = exp(−(Δjour/14)²)`
+  - Bug critique du générateur GPS corrigé : `mean_speed_kmh` était
+    interprétée comme vitesse continue (dérive de 30 km observée), désormais
+    interprétée comme distance moyenne par intervalle de 4 h. Force de
+    rappel home-range renforcée (r > core × 1.2 → projection à core × 0.6).
+  - 5 datasets GPS régénérés (1.2 MB chacun, sceau identique). Distribution
+    spatiale réaliste : médianes orignal 361 m, chevreuil 210 m, wapiti 421 m,
+    ours 451 m, dindon 168 m du waypoint (cohérentes avec core_radius officiels).
+  - density_score réellement actif (3 à 35/35 selon corridor) — ne reste
+    plus bloqué à 0 dans les zones semi-denses.
+  - mean_score predictive_omega_v2 : avant ~30/100 → après **51-82/100**
+    selon espèce et conditions (gain ×2).
+  - Nouvelles métadonnées exposées :
+    `gps_weighted_hits`, `gps_active_weighted_hits`, `gps_fixes_in_window`,
+    `gps_window_radius_m=150`, `gps_window_days=28`, `gps_window_hours=3`,
+    `subphase = "PHASE_XVIII_BIS_DENSITY_WINDOW_OPTIMIZATION_Ω"`.
+  - Tests pytest 17/17 (XVIII-bis incluant 4 nouveaux) + non-régression
+    XVIII-VITAUX (14) + XVII (12) = **43/43 PASS** (15.3 s).
+  - V30 cryptographiquement INVIOLÉ.
+  - Consommateurs downstream (ECOLOGICAL_ORCHESTRATOR, CORRIDORS_VITAUX_Ω,
+    futur ORIGINE_EXTERNE_Ω) utilisent automatiquement la nouvelle fenêtre.
+  - Rapport HTML : `/app/frontend/public/reports/RAPPORT_XVIII_BIS_DENSITY_WINDOW.html`.
+
 - **XVIII-ENGINE-CORRIDORS-VITAUX-Ω (2026-04-27)** — Activation du filtre
   d'ancrage institutionnel des corridors sur les zones vitales officielles.
   - Nouveau module `corridors_vitaux_omega.py` (354 l) : catalogue zones

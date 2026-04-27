@@ -1,39 +1,717 @@
 [
  {
-  "timestamp": "2026-04-27T12:56:15.499271+00:00",
+  "timestamp": "2026-04-27T14:03:46.319918+00:00",
   "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
-  "species": "orignal",
+  "species": "chevreuil",
   "waypoint": {
    "lat": 48.206657,
    "lng": -68.382422
   },
-  "rejected_count": 1,
+  "rejected_count": 7,
   "rejected": [
    {
-    "id": "corr_omega_5",
-    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "id": "interzone_chevreuil_rut_zone_v10_rut__alimentation_zone_v10_ali",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
     "anchors_summary": {
-     "major_zones_count": 0,
+     "major_zones_count": 2,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 0,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 0
+    },
+    "path_first": [
+     48.2103684857143,
+     -68.37901814285712
+    ],
+    "path_last": [
+     48.20961626086956,
+     -68.38528213043477
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_alimentation_zone_v10_ali__eau_zone_v10_eau",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.20961626086956,
+     -68.38528213043477
+    ],
+    "path_last": [
+     48.20359301835906,
+     -68.38844728556296
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_repos_zone_v10_rep__alimentation_zone_v10_ali",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.20532582857143,
+     -68.38412771428574
+    ],
+    "path_last": [
+     48.207661542688754,
+     -68.38874906400389
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_thermique_zone_v10_the__repos_zone_v10_rep",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 1,
+     "transitions_count": 0,
+     "salines": 0,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.20353665517241,
+     -68.38038327586204
+    ],
+    "path_last": [
+     48.20329775644338,
+     -68.38445481935867
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_saline_saline_0__rut_zone_v10_rut",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.20761,
+     -68.380992
+    ],
+    "path_last": [
+     48.2103684857143,
+     -68.37901814285712
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_saline_saline_1__rut_zone_v10_rut",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 2,
      "secondary_zones_count": 0,
      "transitions_count": 0,
      "salines": 2,
-     "hotspots_major": 3,
+     "hotspots_major": 0,
      "zones_humides": 0,
-     "strong_attractor_count": 5
+     "strong_attractor_count": 3
     },
     "path_first": [
-     48.207006,
-     -68.383831
+     48.205196,
+     -68.38023
     ],
     "path_last": [
-     48.203882,
-     -68.38868
+     48.2103684857143,
+     -68.37901814285712
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_saline_saline_2__eau_zone_v10_eau",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.205704,
+     -68.383852
+    ],
+    "path_last": [
+     48.20224635859684,
+     -68.38364191745096
     ]
    }
   ]
  },
  {
-  "timestamp": "2026-04-27T12:56:16.232229+00:00",
+  "timestamp": "2026-04-27T14:03:48.319224+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "dindon",
+  "waypoint": {
+   "lat": 48.206657,
+   "lng": -68.382422
+  },
+  "rejected_count": 3,
+  "rejected": [
+   {
+    "id": "interzone_dindon_alimentation_zone_v10_ali__eau_zone_v10_eau",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.20961626086956,
+     -68.38528213043477
+    ],
+    "path_last": [
+     48.20359301835906,
+     -68.38844728556296
+    ]
+   },
+   {
+    "id": "interzone_dindon_thermique_zone_v10_the__repos_zone_v10_rep",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 1,
+     "transitions_count": 0,
+     "salines": 0,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.20353665517241,
+     -68.38038327586204
+    ],
+    "path_last": [
+     48.203317526535486,
+     -68.38445127024448
+    ]
+   },
+   {
+    "id": "interzone_dindon_saline_saline_0__alimentation_zone_v10_ali",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.20761,
+     -68.380992
+    ],
+    "path_last": [
+     48.21151378360992,
+     -68.38236262565317
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-04-27T14:04:09.166011+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "chevreuil",
+  "waypoint": {
+   "lat": 48.206657,
+   "lng": -68.382422
+  },
+  "rejected_count": 7,
+  "rejected": [
+   {
+    "id": "interzone_chevreuil_rut_zone_v10_rut__alimentation_zone_v10_ali",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 2,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 0,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 0
+    },
+    "path_first": [
+     48.2103684857143,
+     -68.37901814285712
+    ],
+    "path_last": [
+     48.20961626086956,
+     -68.38528213043477
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_alimentation_zone_v10_ali__eau_zone_v10_eau",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.20961626086956,
+     -68.38528213043477
+    ],
+    "path_last": [
+     48.20359301835906,
+     -68.38844728556296
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_repos_zone_v10_rep__alimentation_zone_v10_ali",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.20532582857143,
+     -68.38412771428574
+    ],
+    "path_last": [
+     48.207661542688754,
+     -68.38874906400389
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_thermique_zone_v10_the__repos_zone_v10_rep",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 1,
+     "transitions_count": 0,
+     "salines": 0,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.20353665517241,
+     -68.38038327586204
+    ],
+    "path_last": [
+     48.20329775644338,
+     -68.38445481935867
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_saline_saline_0__rut_zone_v10_rut",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.20761,
+     -68.380992
+    ],
+    "path_last": [
+     48.2103684857143,
+     -68.37901814285712
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_saline_saline_1__rut_zone_v10_rut",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 2,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 3
+    },
+    "path_first": [
+     48.205196,
+     -68.38023
+    ],
+    "path_last": [
+     48.2103684857143,
+     -68.37901814285712
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_saline_saline_2__eau_zone_v10_eau",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.205704,
+     -68.383852
+    ],
+    "path_last": [
+     48.20224635859684,
+     -68.38364191745096
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-04-27T14:04:09.790325+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "chevreuil",
+  "waypoint": {
+   "lat": 48.206657,
+   "lng": -68.382422
+  },
+  "rejected_count": 7,
+  "rejected": [
+   {
+    "id": "interzone_chevreuil_rut_zone_v10_rut__alimentation_zone_v10_ali",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 2,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 0,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 0
+    },
+    "path_first": [
+     48.2103684857143,
+     -68.37901814285712
+    ],
+    "path_last": [
+     48.20961626086956,
+     -68.38528213043477
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_alimentation_zone_v10_ali__eau_zone_v10_eau",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.20961626086956,
+     -68.38528213043477
+    ],
+    "path_last": [
+     48.20359301835906,
+     -68.38844728556296
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_repos_zone_v10_rep__alimentation_zone_v10_ali",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.20532582857143,
+     -68.38412771428574
+    ],
+    "path_last": [
+     48.207661542688754,
+     -68.38874906400389
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_thermique_zone_v10_the__repos_zone_v10_rep",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 1,
+     "transitions_count": 0,
+     "salines": 0,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.20353665517241,
+     -68.38038327586204
+    ],
+    "path_last": [
+     48.20329775644338,
+     -68.38445481935867
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_saline_saline_0__rut_zone_v10_rut",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.20761,
+     -68.380992
+    ],
+    "path_last": [
+     48.2103684857143,
+     -68.37901814285712
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_saline_saline_1__rut_zone_v10_rut",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 2,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 3
+    },
+    "path_first": [
+     48.205196,
+     -68.38023
+    ],
+    "path_last": [
+     48.2103684857143,
+     -68.37901814285712
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_saline_saline_2__eau_zone_v10_eau",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.205704,
+     -68.383852
+    ],
+    "path_last": [
+     48.20224635859684,
+     -68.38364191745096
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-04-27T14:04:10.435857+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "chevreuil",
+  "waypoint": {
+   "lat": 48.206657,
+   "lng": -68.382422
+  },
+  "rejected_count": 7,
+  "rejected": [
+   {
+    "id": "interzone_chevreuil_rut_zone_v10_rut__alimentation_zone_v10_ali",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 2,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 0,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 0
+    },
+    "path_first": [
+     48.2103684857143,
+     -68.37901814285712
+    ],
+    "path_last": [
+     48.20961626086956,
+     -68.38528213043477
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_alimentation_zone_v10_ali__eau_zone_v10_eau",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.20961626086956,
+     -68.38528213043477
+    ],
+    "path_last": [
+     48.20359301835906,
+     -68.38844728556296
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_repos_zone_v10_rep__alimentation_zone_v10_ali",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.20532582857143,
+     -68.38412771428574
+    ],
+    "path_last": [
+     48.207661542688754,
+     -68.38874906400389
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_thermique_zone_v10_the__repos_zone_v10_rep",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 1,
+     "transitions_count": 0,
+     "salines": 0,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.20353665517241,
+     -68.38038327586204
+    ],
+    "path_last": [
+     48.20329775644338,
+     -68.38445481935867
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_saline_saline_0__rut_zone_v10_rut",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.20761,
+     -68.380992
+    ],
+    "path_last": [
+     48.2103684857143,
+     -68.37901814285712
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_saline_saline_1__rut_zone_v10_rut",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 2,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 3
+    },
+    "path_first": [
+     48.205196,
+     -68.38023
+    ],
+    "path_last": [
+     48.2103684857143,
+     -68.37901814285712
+    ]
+   },
+   {
+    "id": "interzone_chevreuil_saline_saline_2__eau_zone_v10_eau",
+    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "anchors_summary": {
+     "major_zones_count": 1,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 0,
+     "zones_humides": 0,
+     "strong_attractor_count": 1
+    },
+    "path_first": [
+     48.205704,
+     -68.383852
+    ],
+    "path_last": [
+     48.20224635859684,
+     -68.38364191745096
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-04-27T14:04:27.300338+00:00",
   "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
   "species": "chevreuil",
   "waypoint": {
@@ -43,51 +721,105 @@
   "rejected_count": 2,
   "rejected": [
    {
-    "id": "interzone_chevreuil_repos_zone_v10_rep__alimentation_zone_v10_ali",
-    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "id": "corr_omega_3",
+    "reason": "fail_petits_mammiferes(missing=zone_vitale)",
     "anchors_summary": {
-     "major_zones_count": 2,
+     "major_zones_count": 0,
      "secondary_zones_count": 0,
      "transitions_count": 0,
-     "salines": 3,
-     "hotspots_major": 0,
+     "salines": 4,
+     "hotspots_major": 2,
      "zones_humides": 0,
-     "strong_attractor_count": 3
+     "strong_attractor_count": 6
     },
     "path_first": [
-     48.20711697142857,
-     -68.38726862857143
+     48.207537,
+     -68.382703
     ],
     "path_last": [
-     48.21058030769231,
-     -68.38450303846153
+     48.20888,
+     -68.38829
     ]
    },
    {
-    "id": "interzone_chevreuil_saline_saline_0__rut_zone_v10_rut",
-    "reason": "fail_petits_mammiferes(missing=transition_pertinente)",
+    "id": "corr_omega_4",
+    "reason": "fail_petits_mammiferes(missing=zone_vitale)",
     "anchors_summary": {
-     "major_zones_count": 2,
+     "major_zones_count": 0,
      "secondary_zones_count": 0,
      "transitions_count": 0,
-     "salines": 3,
-     "hotspots_major": 0,
+     "salines": 4,
+     "hotspots_major": 3,
      "zones_humides": 0,
-     "strong_attractor_count": 3
+     "strong_attractor_count": 7
     },
     "path_first": [
-     48.206446,
-     -68.386428
+     48.207317,
+     -68.383174
     ],
     "path_last": [
-     48.2109029382233,
-     -68.38568227100392
+     48.208386,
+     -68.388072
     ]
    }
   ]
  },
  {
-  "timestamp": "2026-04-27T12:56:16.937880+00:00",
+  "timestamp": "2026-04-27T14:05:01.670523+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "orignal",
+  "waypoint": {
+   "lat": 48.206657,
+   "lng": -68.382422
+  },
+  "rejected_count": 2,
+  "rejected": [
+   {
+    "id": "corr_omega_3",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 2,
+     "zones_humides": 0,
+     "strong_attractor_count": 4
+    },
+    "path_first": [
+     48.207698,
+     -68.382844
+    ],
+    "path_last": [
+     48.210779,
+     -68.387636
+    ]
+   },
+   {
+    "id": "corr_omega_4",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 1,
+     "zones_humides": 0,
+     "strong_attractor_count": 3
+    },
+    "path_first": [
+     48.207675,
+     -68.383666
+    ],
+    "path_last": [
+     48.209559,
+     -68.391259
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-04-27T14:05:02.915003+00:00",
   "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
   "species": "wapiti",
   "waypoint": {
@@ -97,7 +829,7 @@
   "rejected_count": 2,
   "rejected": [
    {
-    "id": "corr_omega_6",
+    "id": "corr_omega_3",
     "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
     "anchors_summary": {
      "major_zones_count": 0,
@@ -109,66 +841,87 @@
      "strong_attractor_count": 4
     },
     "path_first": [
-     48.205964,
-     -68.384252
+     48.207832,
+     -68.383026
     ],
     "path_last": [
-     48.20220742609926,
-     -68.38828930867444
+     48.211138,
+     -68.388872
     ]
    },
    {
-    "id": "interzone_wapiti_thermique_zone_v10_the__repos_zone_v10_rep",
+    "id": "corr_omega_4",
     "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
     "anchors_summary": {
      "major_zones_count": 0,
-     "secondary_zones_count": 1,
+     "secondary_zones_count": 0,
      "transitions_count": 0,
      "salines": 2,
-     "hotspots_major": 2,
+     "hotspots_major": 1,
      "zones_humides": 0,
-     "strong_attractor_count": 4
+     "strong_attractor_count": 3
     },
     "path_first": [
-     48.20666765384616,
-     -68.37693161538459
+     48.207676,
+     -68.383772
     ],
     "path_last": [
-     48.21166085292764,
-     -68.38263489200521
+     48.209427,
+     -68.391735
     ]
    }
   ]
  },
  {
-  "timestamp": "2026-04-27T12:56:18.304430+00:00",
+  "timestamp": "2026-04-27T14:05:04.117525+00:00",
   "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
   "species": "dindon",
   "waypoint": {
    "lat": 48.206657,
    "lng": -68.382422
   },
-  "rejected_count": 1,
+  "rejected_count": 2,
   "rejected": [
    {
-    "id": "corr_omega_4",
+    "id": "corr_omega_2",
+    "reason": "fail_petits_mammiferes(missing=zone_vitale)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 3,
+     "hotspots_major": 2,
+     "zones_humides": 0,
+     "strong_attractor_count": 5
+    },
+    "path_first": [
+     48.207513,
+     -68.382709
+    ],
+    "path_last": [
+     48.209605,
+     -68.38729
+    ]
+   },
+   {
+    "id": "corr_omega_3",
     "reason": "fail_petits_mammiferes(missing=zone_vitale)",
     "anchors_summary": {
      "major_zones_count": 0,
      "secondary_zones_count": 0,
      "transitions_count": 0,
      "salines": 2,
-     "hotspots_major": 3,
+     "hotspots_major": 1,
      "zones_humides": 0,
-     "strong_attractor_count": 5
+     "strong_attractor_count": 3
     },
     "path_first": [
-     48.206743,
-     -68.383819
+     48.207334,
+     -68.383184
     ],
     "path_last": [
-     48.20332653788145,
-     -68.3842416695748
+     48.208587,
+     -68.38807
     ]
    }
   ]

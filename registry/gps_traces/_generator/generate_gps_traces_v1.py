@@ -178,42 +178,47 @@ def _season_from_day(day_of_year: int) -> str:
 
 
 def generate_track_for_collar(species: str, collar_id: int, seed: int) -> list[dict]:
-    """Génère 1 460 fixes (4h × 365 jours) pour un collar individuel."""
+    """Génère 1 460 fixes (4h × 365 jours) pour un collar individuel.
+
+    Correction PHASE XVIII-bis : `mean_speed_kmh` est interprétée comme
+    la DISTANCE moyenne (km) parcourue par INTERVALLE DE 4 H (pas la
+    vitesse instantanée). Cela évite la dérive inhérente au cumul.
+    Force de rappel home-range renforcée (r > core × 1.2 → ramène à 0.6 × core).
+    """
     profile = SPECIES_GPS_PROFILES[species]
     rng = _DetRNG(seed)
-    # Position initiale : aléatoire dans le core_radius
     bearing0 = rng.next() * 2 * math.pi
-    r0 = profile["core_radius_m"] * (0.3 + 0.5 * rng.next())
+    r0 = profile["core_radius_m"] * (0.2 + 0.4 * rng.next())
     cur_lat = ANCHOR_LAT + (r0 * math.sin(bearing0)) / 111000.0
     cur_lng = ANCHOR_LNG + (r0 * math.cos(bearing0)) / (111000.0 * math.cos(math.radians(ANCHOR_LAT)))
     fixes: list[dict] = []
     fix_dt_h = profile["fix_interval_hours"]
-    for fix_idx in range(int(24 * 365 / fix_dt_h)):  # 2190 fixes pour 4h interval... mais on veut 1460
+    n_fixes = int(24 * 365 / fix_dt_h)  # 2190 fixes
+    home_threshold = profile["core_radius_m"] * 1.2
+    home_target = profile["core_radius_m"] * 0.6
+    for fix_idx in range(n_fixes):
         hour_total = fix_idx * fix_dt_h
-        day_of_year = int(hour_total / 24) + 1
+        day_of_year = (int(hour_total / 24) % 365) + 1
         hour_of_day = int(hour_total % 24)
         season = _season_from_day(day_of_year)
-        # Hibernation ours
         if profile["mean_speed_kmh"][season] == 0:
             fixes.append({
                 "lat": round(cur_lat, 6), "lng": round(cur_lng, 6),
                 "day": day_of_year, "hour": hour_of_day, "season": season,
-                "speed_kmh": 0.0, "active": False,
-                "bearing_deg": None,
+                "speed_kmh": 0.0, "active": False, "bearing_deg": None,
             })
             continue
-        # Activité selon heure
         activity = profile["diurnal_activity"][hour_of_day]
         if rng.next() > activity:
-            # Repos : pas de mouvement
             speed_kmh = 0.05
             move_m = 0.0
             bearing = None
         else:
-            base_speed = profile["mean_speed_kmh"][season]
-            speed_kmh = max(0.0, base_speed + 0.4 * base_speed * rng.gauss())
-            move_m = speed_kmh * 1000.0 * fix_dt_h
-            # Bearing préférentiel saison + bruit gaussien 30°
+            base_dist_per_interval_km = profile["mean_speed_kmh"][season]
+            # mean_speed_kmh = distance moyenne (km) par intervalle 4 h (CORRECTION XVIII-bis)
+            dist_km = max(0.0, base_dist_per_interval_km * (0.7 + 0.4 * rng.next()))
+            move_m = dist_km * 1000.0
+            speed_kmh = round(dist_km / fix_dt_h, 3)
             preferred = profile["primary_bearings_deg"][season]
             chosen_pref = preferred[0] if rng.next() < 0.55 else preferred[1]
             bearing = (chosen_pref + 30 * rng.gauss()) % 360
@@ -223,19 +228,21 @@ def generate_track_for_collar(species: str, collar_id: int, seed: int) -> list[d
             d_lat, d_lng = _meters_to_latlng(d_lat_m, d_lng_m, cur_lat)
             cur_lat += d_lat
             cur_lng += d_lng
-            # Tirer vers le centre si trop loin (home-range)
             r_now = math.hypot((cur_lat - ANCHOR_LAT) * 111000.0,
                                (cur_lng - ANCHOR_LNG) * 111000.0 * math.cos(math.radians(ANCHOR_LAT)))
-            if r_now > profile["core_radius_m"] * 1.6:
-                cur_lat -= d_lat * 0.4
-                cur_lng -= d_lng * 0.4
+            # Rappel home-range RENFORCÉ
+            if r_now > home_threshold:
+                # Ramener à home_target le long du vecteur waypoint→position
+                scale = home_target / max(r_now, 1.0)
+                cur_lat = ANCHOR_LAT + (cur_lat - ANCHOR_LAT) * scale
+                cur_lng = ANCHOR_LNG + (cur_lng - ANCHOR_LNG) * scale
         fixes.append({
             "lat": round(cur_lat, 6),
             "lng": round(cur_lng, 6),
             "day": day_of_year,
             "hour": hour_of_day,
             "season": season,
-            "speed_kmh": round(speed_kmh, 3),
+            "speed_kmh": speed_kmh,
             "active": move_m > 50.0,
             "bearing_deg": round(bearing, 1) if bearing is not None else None,
         })
