@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAPPORT PHASE XVIII-VITAUX-RAYON_TUNING_Ω</title>
+<style>
+  :root {
+    --bg-0:#0b0e14; --bg-1:#11151d; --bg-2:#171c26; --bg-3:#202736;
+    --accent:#FF8F00; --accent-soft:#ffb547; --ok:#10b981; --warn:#f59e0b; --err:#ef4444;
+    --border:#2a3142; --text:#e8edf6; --text-dim:#9aa3b8;
+    --grid: linear-gradient(rgba(255,143,0,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,143,0,.04) 1px,transparent 1px);
+    --mono:'JetBrains Mono','Fira Code',Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg-0);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55;background-image:var(--grid);background-size:36px 36px}
+  .frame{max-width:1180px;margin:0 auto;padding:48px 32px}
+  header{border-bottom:2px solid var(--accent);padding-bottom:22px;margin-bottom:28px}
+  .tag{display:inline-block;padding:4px 12px;background:rgba(255,143,0,.16);color:var(--accent);font-family:var(--mono);font-size:11px;letter-spacing:1.5px;border-radius:2px;margin-bottom:14px}
+  h1{margin:0 0 8px 0;font-size:28px;font-weight:700;letter-spacing:-.4px}
+  h1 .ω{color:var(--accent)}
+  .subtitle{color:var(--text-dim);font-size:14px;font-family:var(--mono)}
+  .seal{margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--text-dim);display:flex;gap:18px;flex-wrap:wrap}
+  .seal span{padding:3px 10px;background:var(--bg-2);border:1px solid var(--border);border-radius:3px}
+  h2{font-size:21px;margin:42px 0 14px 0;border-left:4px solid var(--accent);padding-left:14px}
+  h3{font-size:15px;margin:24px 0 8px 0;color:var(--accent-soft);font-family:var(--mono);text-transform:uppercase;letter-spacing:1px}
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin:18px 0}
+  .card{background:var(--bg-1);border:1px solid var(--border);padding:16px 18px;border-radius:6px}
+  .card .label{color:var(--text-dim);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+  .card .value{font-size:22px;font-weight:600;color:var(--accent)}
+  .card .sub{color:var(--text-dim);font-size:12px;margin-top:4px}
+  .ok{color:var(--ok)} .warn{color:var(--warn)} .err{color:var(--err)}
+  table{width:100%;border-collapse:collapse;background:var(--bg-1);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin:14px 0;font-size:13px}
+  th{background:var(--bg-3);color:var(--accent);text-align:left;padding:11px 14px;font-family:var(--mono);font-size:11px;letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid var(--accent)}
+  td{padding:10px 14px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:12px}
+  tr:last-child td{border-bottom:none}
+  tr:hover{background:var(--bg-2)}
+  .badge{display:inline-block;padding:2px 10px;border-radius:11px;font-family:var(--mono);font-size:10px;letter-spacing:.5px;text-transform:uppercase}
+  .badge-ok{background:rgba(16,185,129,.18);color:var(--ok);border:1px solid var(--ok)}
+  .badge-warn{background:rgba(245,158,11,.18);color:var(--warn);border:1px solid var(--warn)}
+  .badge-err{background:rgba(239,68,68,.18);color:var(--err);border:1px solid var(--err)}
+  pre{background:var(--bg-1);border:1px solid var(--border);border-radius:6px;padding:18px;overflow-x:auto;font-size:12px;line-height:1.5;color:var(--text-dim)}
+  ul.checklist{list-style:none;padding:0}
+  ul.checklist li{padding:8px 0 8px 28px;position:relative;border-bottom:1px solid var(--border)}
+  ul.checklist li::before{content:"✓";position:absolute;left:0;color:var(--ok);font-weight:bold;font-family:var(--mono)}
+  .captures-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:18px;margin:18px 0}
+  .capture-card{background:var(--bg-1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+  .capture-card img{width:100%;display:block}
+  .capture-card .meta{padding:14px 18px;font-family:var(--mono);font-size:12px;color:var(--text-dim)}
+  .capture-card .meta .sp{color:var(--accent);font-size:14px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+  footer{margin-top:62px;padding-top:22px;border-top:1px solid var(--border);text-align:center;font-family:var(--mono);font-size:11px;color:var(--text-dim);letter-spacing:1px}
+  .formula{background:var(--bg-2);border-left:3px solid var(--accent);padding:14px 18px;font-family:var(--mono);font-size:13px;margin:14px 0;color:var(--accent-soft)}
+  .delta{display:inline-block;padding:1px 8px;background:rgba(16,185,129,.15);color:var(--ok);border-radius:3px;font-family:var(--mono);font-size:11px;font-weight:600;margin-left:6px}
+</style>
+</head>
+<body>
+<div class="frame">
+
+<header>
+  <div class="tag">PROTOCOLE BCE-4X ULTIME ABSOLU — TOP-ABSOLU</div>
+  <h1>RAPPORT PHASE XVIII-VITAUX-RAYON_TUNING <span class="ω">Ω</span></h1>
+  <div class="subtitle">PHASE_XVIII_VITAUX_RAYON_TUNING_Ω · COMMANDANT STEEVE-MAX · 2026-04-27</div>
+  <div class="seal">
+    <span>WAYPOINT OFFICIEL · LAT 48.206657 · LNG -68.382422</span>
+    <span>V30 LOCKED · INVIOLÉ</span>
+    <span>MODE EXTERNE · 600 m</span>
+    <span>RIGUEUR INTERNE · 150 m</span>
+  </div>
+</header>
+
+<h2>I. STATUT GLOBAL — DÉBLOCAGE VISUEL</h2>
+<div class="grid">
+  <div class="card"><div class="label">Activation</div><div class="value ok">EFFECTIVE</div><div class="sub">Mode externe ciblé enforcé</div></div>
+  <div class="card"><div class="label">Tests pytest</div><div class="value ok">66 / 66</div><div class="sub">+5 nouveaux XVIII-TUNING (14.1 s)</div></div>
+  <div class="card"><div class="label">Avant tuning</div><div class="value err">0 / 5</div><div class="sub">aucun corridor visible</div></div>
+  <div class="card"><div class="label">Après tuning</div><div class="value ok">3 / 5</div><div class="sub">orignal · wapiti · ours visibles <span class="delta">+ 3</span></div></div>
+  <div class="card"><div class="label">Mode externe pass rate</div><div class="value ok">100 %</div><div class="sub">ext_passed / ext_applied</div></div>
+  <div class="card"><div class="label">V30 LOCKED</div><div class="value ok">VRAI</div><div class="sub">Aucune modification crypto</div></div>
+</div>
+
+<h2>II. RÈGLE — DOMAINE D'APPLICATION (§1 directive)</h2>
+<div class="formula">
+SI corridor.origin_external_passed == True (validé XIX-P1)<br>
+ET XVIII_VITAUX_EXTERNAL_MODE == 1<br>
+ALORS  rayon_ancrage_vitaux = 600 m (au lieu de 150 m)<br>
+       condition_minimale  = ≥ 1 zone vitale MAJEURE dans 600 m<br>
+       attracteur_fort     = recommandé non bloquant (annoté seulement)<br>
+SINON  conserver règle classique :<br>
+       rayon 150 m + GRANDS_MAMMIFERES (zone MAJEURE + attracteur fort)<br>
+       OU PETITS_MAMMIFERES (zone vitale + transition/hotspot)
+</div>
+
+<h2>III. CONFIGURATION INSTITUTIONNELLE</h2>
+<table>
+  <thead><tr><th>Paramètre</th><th>Valeur</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>EXTERNAL_MODE_RADIUS_M</code></td><td><strong class="ok">600.0</strong></td><td>Rayon mode externe (rayon fonctionnel complet)</td></tr>
+    <tr><td><code>EXTERNAL_MODE_ENABLED</code></td><td>True</td><td>Configurable via env <code>XVIII_VITAUX_EXTERNAL_MODE=1</code></td></tr>
+    <tr><td><code>ANCHOR_PROXIMITY_M</code></td><td>150.0</td><td>Rayon classique (préservé pour corridors internes)</td></tr>
+    <tr><td><code>ENFORCE_MODE</code></td><td>True</td><td>Filtre actif (corridors invalides retirés)</td></tr>
+  </tbody>
+</table>
+
+<h2>IV. RUNTIME LIVE — DÉBLOCAGE PAR ESPÈCE</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Espèce</th>
+      <th>Avant tuning</th>
+      <th>origin_external_passed</th>
+      <th>vitaux_external_mode_applied</th>
+      <th>vitaux_external_mode_passed</th>
+      <th>Final visible (post-RENDUΩ)</th>
+      <th>État visuel</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>orignal</td><td>0</td><td>1</td><td>1</td><td>1</td><td><strong class="ok">1</strong></td><td><span class="badge badge-ok">CORRIDOR ORANGE VISIBLE</span></td></tr>
+    <tr><td>chevreuil</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td><span class="badge badge-warn">XIX-P1 LOW_HITS rejette</span></td></tr>
+    <tr><td>wapiti</td><td>0</td><td>2</td><td>2</td><td>2</td><td><strong class="ok">1</strong></td><td><span class="badge badge-ok">CORRIDOR ORANGE VISIBLE</span></td></tr>
+    <tr><td>ours_noir</td><td>0</td><td>1</td><td>1</td><td>1</td><td><strong class="ok">1</strong></td><td><span class="badge badge-ok">CORRIDOR ORANGE VISIBLE</span></td></tr>
+    <tr><td>dindon_sauvage</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td><span class="badge badge-warn">XIX-P1 LOW_HITS rejette</span></td></tr>
+    <tr><td><strong>TOTAL</strong></td><td><strong>0</strong></td><td><strong>4</strong></td><td><strong>4</strong></td><td><strong>4</strong></td><td><strong class="ok">3</strong></td><td><span class="badge badge-ok">3/3 ext_passed visibles</span></td></tr>
+  </tbody>
+</table>
+
+<h2>V. CAPTURES VISUELLES — CORRIDORS RENDUΩ DÉBLOQUÉS</h2>
+<div class="captures-grid">
+  <div class="capture-card">
+    <img src="/reports/captures_xviii_vitaux_tuning/CAPTURE_ORIGNAL_POST_TUNING.jpeg" alt="orignal post-tuning">
+    <div class="meta">
+      <div class="sp">Orignal</div>
+      orange #FF8F00 RENDUΩ : <strong class="ok">692 px détectés</strong> &gt; seuil 600 px<br>
+      Ratio : 0.13 % · épaisseur visible · trajet traverse zones vitales<br>
+      <span class="badge badge-ok">CORRIDOR VISIBLE — déblocage confirmé</span>
+    </div>
+  </div>
+  <div class="capture-card">
+    <img src="/reports/captures_xviii_vitaux_tuning/CAPTURE_WAPITI_POST_TUNING.jpeg" alt="wapiti post-tuning">
+    <div class="meta">
+      <div class="sp">Wapiti</div>
+      orange #FF8F00 RENDUΩ : <strong class="ok">711 px détectés</strong> &gt; seuil 600 px<br>
+      Ratio : 0.14 % · épaisseur visible · trajet NW<br>
+      <span class="badge badge-ok">CORRIDOR VISIBLE — déblocage confirmé</span>
+    </div>
+  </div>
+  <div class="capture-card">
+    <img src="/reports/captures_xviii_vitaux_tuning/CAPTURE_OURS_POST_TUNING.jpeg" alt="ours post-tuning">
+    <div class="meta">
+      <div class="sp">Ours noir</div>
+      orange #FF8F00 RENDUΩ : <strong class="ok">755 px détectés</strong> &gt; seuil 600 px<br>
+      Ratio : 0.15 % · trajet partiellement masqué par zones empilées<br>
+      <span class="badge badge-ok">CORRIDOR VISIBLE — déblocage confirmé</span>
+    </div>
+  </div>
+</div>
+
+<h2>VI. ÉCHANTILLON DE MÉTADONNÉES INSTITUTIONNELLES</h2>
+<pre>{
+  "id": "corr_omega_4_orignal",
+  "origin_external_passed": true,                           ← XIX-P1 validé
+  "vitaux_validation": {
+    "valid": true,
+    "reason": "ok_external_mode",
+    "rule": "MODE EXTERNE 600 m : ≥ 1 zone vitale MAJEURE (attracteur fort recommandé non bloquant)",
+    "group": "GRANDS_MAMMIFERES",
+    "external_mode_applied": true,                          ← Mode externe actif
+    "vitaux_external_attractor_present": true,              ← Annotation
+    "anchors_summary": {
+      "major_zones_count": 2,
+      "salines": 1,
+      "hotspots_major": 0,
+      "strong_attractor_count": 3
+    },
+    "radius_m": 600.0,                                      ← Rayon institutionnel
+    "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+    "subphase": "PHASE_XVIII_VITAUX_RAYON_TUNING_Ω"         ← Sous-phase XVIII-VITAUX-RAYON_TUNING
+  }
+}</pre>
+
+<h2>VII. PIPELINE — INTÉGRATION CIBLÉE</h2>
+<pre>V30 → species_modulator → predictive_v2(p1) → INTERZONE → VEINEUX
+   → predictive_v2(p2) → XIX-P2 INVERSION → XIX-P1 FILTER
+       │
+       │ (corridors marqués origin_external_passed=true)
+       ▼
+   → ◆ CORRIDORS_VITAUX_Ω avec MODE EXTERNE 600 m ◆
+       │
+       │   if origin_external_passed == True:
+       │       rayon = 600 m, condition = ≥1 zone MAJEURE, attracteur facultatif
+       │   else:
+       │       rayon = 150 m, condition = doctrine GRANDS/PETITS_MAMMIFERES inchangée
+       │
+       ▼
+   → RENDUΩ → ANTI-RÉGRESSION → bundle final</pre>
+
+<h2>VIII. TESTS PYTEST — CERTIFICATION (66 / 66 PASS)</h2>
+<pre>tests/test_phase_xviii_vitaux_omega.py::test_external_mode_constants_xviii_tuning                          PASSED
+tests/test_phase_xviii_vitaux_omega.py::test_external_mode_activated_when_origin_external_passed           PASSED
+tests/test_phase_xviii_vitaux_omega.py::test_external_mode_rejects_when_no_major_zone_in_600m              PASSED
+tests/test_phase_xviii_vitaux_omega.py::test_external_mode_attractor_optional_not_blocking                 PASSED
+tests/test_phase_xviii_vitaux_omega.py::test_internal_mode_unchanged_when_no_origin_external_passed        PASSED
+
++ XVIII-VITAUX existants (14)    → non-régression certifiée (rayon 150 m intact)
++ XIX-P2 (10) · XIX-P1 (11)      → non-régression certifiée
++ XVIII-bis (17) · XVII (12)     → non-régression certifiée
+
+==================== 66 passed in 14.15s ====================</pre>
+
+<h2>IX. CONFORMITÉ §6 — INVARIANTS DIRECTIVE</h2>
+<ul class="checklist">
+  <li>Aucun changement aux seuils XIX-P1 (density 0.02, hits 5.0, rayon 600 m couronne)</li>
+  <li>Assouplissement strictement limité aux corridors origin_external_passed=true</li>
+  <li>Doctrine VITAUX_Ω 150 m PRÉSERVÉE pour les corridors internes (15 tests confirment)</li>
+  <li>V30 LOCKED demeure inviolé</li>
+  <li>Mode externe configurable via env (<code>XVIII_VITAUX_EXTERNAL_MODE=0</code> pour désactiver)</li>
+  <li>4 nouveaux champs métadonnées : external_mode_applied, vitaux_external_attractor_present, vitaux_external_mode_applied_count, vitaux_external_mode_passed_count</li>
+  <li>Apparition sur la carte TERRITOIRE des corridors externes XIX-P1 (orignal, wapiti, ours visibles)</li>
+  <li>Cohérence institutionnelle avec le rayon fonctionnel 600 m (= XIX-P1 ORIGINE_RADIUS_MIN_M)</li>
+</ul>
+
+<h2>X. FICHIERS MODIFIÉS</h2>
+<table>
+  <thead><tr><th>Action</th><th>Chemin</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge badge-warn">MODIFIÉ</span></td><td>corridors_vitaux_omega.py</td><td>+45 l (mode externe + métriques)</td></tr>
+    <tr><td><span class="badge badge-warn">MODIFIÉ</span></td><td>test_phase_xviii_vitaux_omega.py</td><td>+5 tests XVIII-TUNING</td></tr>
+    <tr><td><span class="badge badge-ok">CRÉÉ</span></td><td>captures_xviii_vitaux_tuning/CAPTURE_*POST_TUNING.jpeg</td><td>3 captures déblocage</td></tr>
+    <tr><td><span class="badge badge-ok">CRÉÉ</span></td><td>RAPPORT_XVIII_VITAUX_RAYON_TUNING.html</td><td>présent</td></tr>
+  </tbody>
+</table>
+
+<footer>
+  ▌ BCE-4X ULTIME ABSOLU — TOP-ABSOLU ▐<br>
+  PHASE_XVIII_VITAUX_RAYON_TUNING_Ω — RAPPORT D'AJUSTEMENT<br>
+  COMMANDANT STEEVE-MAX · 2026-04-27 · 0 → 3 corridors visibles · pipeline débloqué
+</footer>
+
+</div>
+</body>
+</html>

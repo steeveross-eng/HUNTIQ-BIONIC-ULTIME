@@ -1,17 +1,38 @@
 [
  {
-  "timestamp": "2026-04-27T17:38:53.812205+00:00",
+  "timestamp": "2026-04-27T18:18:35.008832+00:00",
   "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
-  "species": "orignal",
+  "species": "chevreuil",
   "waypoint": {
    "lat": 48.206657,
    "lng": -68.382422
   },
-  "rejected_count": 1,
+  "rejected_count": 2,
   "rejected": [
    {
-    "id": "corr_omega_2",
-    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "id": "corr_omega_4",
+    "reason": "fail_petits_mammiferes(missing=zone_vitale)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 3,
+     "zones_humides": 0,
+     "strong_attractor_count": 5
+    },
+    "path_first": [
+     48.207518,
+     -68.382818
+    ],
+    "path_last": [
+     48.2068,
+     -68.389175
+    ]
+   },
+   {
+    "id": "corr_omega_5",
+    "reason": "fail_petits_mammiferes(missing=zone_vitale)",
     "anchors_summary": {
      "major_zones_count": 0,
      "secondary_zones_count": 0,
@@ -22,20 +43,20 @@
      "strong_attractor_count": 5
     },
     "path_first": [
-     48.212253,
-     -68.388269
+     48.207155,
+     -68.383443
     ],
     "path_last": [
-     48.207963,
-     -68.381832
+     48.206418,
+     -68.388738
     ]
    }
   ]
  },
  {
-  "timestamp": "2026-04-27T17:39:35.512709+00:00",
+  "timestamp": "2026-04-27T18:18:36.101384+00:00",
   "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
-  "species": "wapiti",
+  "species": "ours",
   "waypoint": {
    "lat": 48.206657,
    "lng": -68.382422
@@ -43,41 +64,74 @@
   "rejected_count": 1,
   "rejected": [
    {
-    "id": "corr_omega_5",
+    "id": "corr_omega_9",
     "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
     "anchors_summary": {
      "major_zones_count": 0,
-     "secondary_zones_count": 0,
+     "secondary_zones_count": 1,
      "transitions_count": 0,
      "salines": 2,
-     "hotspots_major": 4,
+     "hotspots_major": 2,
      "zones_humides": 0,
-     "strong_attractor_count": 6
+     "strong_attractor_count": 4
     },
     "path_first": [
-     48.201887,
-     -68.387815
+     48.20638,
+     -68.380848
     ],
     "path_last": [
-     48.206853,
-     -68.38419
+     48.209735,
+     -68.37572
     ]
    }
   ]
  },
  {
-  "timestamp": "2026-04-27T17:39:36.080663+00:00",
+  "timestamp": "2026-04-27T18:18:37.844712+00:00",
   "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
-  "species": "ours",
+  "species": "orignal",
   "waypoint": {
    "lat": 48.206657,
    "lng": -68.382422
   },
-  "rejected_count": 2,
+  "rejected_count": 1,
   "rejected": [
    {
-    "id": "corr_omega_1",
+    "id": "corr_omega_10",
     "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 1,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 3,
+     "zones_humides": 0,
+     "strong_attractor_count": 4
+    },
+    "path_first": [
+     48.205962,
+     -68.38113
+    ],
+    "path_last": [
+     48.207139,
+     -68.37415
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-04-27T18:18:38.425152+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "chevreuil",
+  "waypoint": {
+   "lat": 48.206657,
+   "lng": -68.382422
+  },
+  "rejected_count": 1,
+  "rejected": [
+   {
+    "id": "corr_omega_9",
+    "reason": "fail_petits_mammiferes(missing=zone_vitale)",
     "anchors_summary": {
      "major_zones_count": 0,
      "secondary_zones_count": 0,
@@ -88,33 +142,132 @@
      "strong_attractor_count": 4
     },
     "path_first": [
-     48.212344,
-     -68.388301
+     48.205866,
+     -68.382675
     ],
     "path_last": [
-     48.207771,
-     -68.381197
+     48.203489,
+     -68.378643
     ]
-   },
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-04-27T18:18:38.959550+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "wapiti",
+  "waypoint": {
+   "lat": 48.206657,
+   "lng": -68.382422
+  },
+  "rejected_count": 2,
+  "rejected": [
    {
-    "id": "corr_omega_6",
+    "id": "corr_omega_10",
     "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
     "anchors_summary": {
      "major_zones_count": 0,
-     "secondary_zones_count": 0,
+     "secondary_zones_count": 1,
      "transitions_count": 0,
-     "salines": 3,
-     "hotspots_major": 3,
+     "salines": 1,
+     "hotspots_major": 2,
      "zones_humides": 0,
-     "strong_attractor_count": 6
+     "strong_attractor_count": 3
     },
     "path_first": [
-     48.199968,
-     -68.381833
+     48.205961,
+     -68.380853
     ],
     "path_last": [
-     48.205506,
-     -68.383453
+     48.207744,
+     -68.373141
+    ]
+   },
+   {
+    "id": "corr_omega_11",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 1,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 2,
+     "zones_humides": 0,
+     "strong_attractor_count": 4
+    },
+    "path_first": [
+     48.206169,
+     -68.380812
+    ],
+    "path_last": [
+     48.209328,
+     -68.374539
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-04-27T18:18:39.479986+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "ours",
+  "waypoint": {
+   "lat": 48.206657,
+   "lng": -68.382422
+  },
+  "rejected_count": 1,
+  "rejected": [
+   {
+    "id": "corr_omega_9",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 1,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 2,
+     "zones_humides": 0,
+     "strong_attractor_count": 4
+    },
+    "path_first": [
+     48.20638,
+     -68.380848
+    ],
+    "path_last": [
+     48.209735,
+     -68.37572
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-04-27T18:18:40.564177+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "orignal",
+  "waypoint": {
+   "lat": 48.206657,
+   "lng": -68.382422
+  },
+  "rejected_count": 1,
+  "rejected": [
+   {
+    "id": "corr_omega_10",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 1,
+     "transitions_count": 0,
+     "salines": 1,
+     "hotspots_major": 3,
+     "zones_humides": 0,
+     "strong_attractor_count": 4
+    },
+    "path_first": [
+     48.205962,
+     -68.38113
+    ],
+    "path_last": [
+     48.207139,
+     -68.37415
     ]
    }
   ]

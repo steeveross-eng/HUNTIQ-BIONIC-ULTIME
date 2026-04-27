@@ -27,6 +27,40 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **XVIII-VITAUX-RAYON_TUNING_Ω (2026-04-27)** — Mode externe 600 m ciblé
+  pour les corridors origin_external_passed=true (déblocage visuel pipeline).
+  - Modification chirurgicale de `corridors_vitaux_omega.py` (+45 l) :
+    - Constante `EXTERNAL_MODE_RADIUS_M = 600.0`
+    - Constante `EXTERNAL_MODE_ENABLED` (env `XVIII_VITAUX_EXTERNAL_MODE`)
+    - Branche conditionnelle dans `validate_corridor_vital_anchor` :
+      si `corridor.origin_external_passed == True` → mode externe :
+        - rayon 600 m (au lieu de 150 m)
+        - règle = ≥ 1 zone vitale MAJEURE dans 600 m
+        - attracteur fort = recommandé non bloquant (annoté)
+      sinon → doctrine 150 m classique inchangée.
+  - 4 nouveaux champs métadonnées par corridor :
+    `external_mode_applied`, `vitaux_external_attractor_present`,
+    `subphase = "PHASE_XVIII_VITAUX_RAYON_TUNING_Ω"`,
+    `radius_m` (600 ou 150 selon mode).
+  - 4 nouvelles métriques dans `corridors_vitaux_omega_stats` :
+    `corridors_v30_count`, `origin_external_passed_count`,
+    `vitaux_external_mode_applied_count`, `vitaux_external_mode_passed_count`.
+  - **Déblocage visuel runtime confirmé** (oct 16h) : 0/5 → **3/5 espèces**
+    avec corridor visible (orignal, wapiti, ours_noir). Validation pixel
+    institutionnelle PIL JPEG-aware : 692-755 px orange #FF8F00 par
+    capture > seuil 600 px. Chevreuil/dindon restent à 0 (XIX-P1
+    LOW_HITS rejette en amont).
+  - Tests pytest **66/66 PASS** (5 nouveaux XVIII-TUNING + 14 XVIII-VITAUX
+    + 10 XIX-P2 + 11 XIX-P1 + 17 XVIII-bis + 12 XVII, 14.1 s).
+  - Doctrine VITAUX_Ω 150 m PRÉSERVÉE pour les corridors internes (test
+    `test_internal_mode_unchanged_when_no_origin_external_passed` certifie
+    la non-régression sur le rayon classique).
+  - Conformité directive §6 : aucun changement aux seuils XIX-P1, V30
+    LOCKED inviolé, assouplissement strictement ciblé.
+  - Captures déblocage : `/app/frontend/public/reports/captures_xviii_vitaux_tuning/`
+    (orignal, wapiti, ours_noir).
+  - Rapport HTML : `/app/frontend/public/reports/RAPPORT_XVIII_VITAUX_RAYON_TUNING.html`.
+
 - **XIX-P1B-TUNING-Ω (2026-04-27)** — Ajustement chirurgical du seuil
   density GPS sur ordre Commandant.
   - `XIX_P1_THRESH_DENSITY_ORIGINE` : **0.25 → 0.02** (−92 %).

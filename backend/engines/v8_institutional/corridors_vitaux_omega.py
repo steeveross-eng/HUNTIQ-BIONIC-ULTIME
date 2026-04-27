@@ -65,6 +65,12 @@ from typing import Any, Dict, List, Optional, Tuple
 # ═══════════════════════════════════════════════════════════════════════
 ANCHOR_PROXIMITY_M = 150.0  # Rayon institutionnel par directive Commandant
 
+# PHASE XVIII-VITAUX-RAYON_TUNING_Ω — mode externe 600 m
+# Pour les corridors `origin_external_passed = True` UNIQUEMENT, le rayon
+# d'ancrage est étendu au rayon fonctionnel complet du territoire.
+EXTERNAL_MODE_RADIUS_M = 600.0
+EXTERNAL_MODE_ENABLED = os.environ.get("XVIII_VITAUX_EXTERNAL_MODE", "1") == "1"
+
 VITAL_ZONES_MAJOR = {"alimentation", "rut", "repos", "eau"}
 VITAL_ZONES_SECONDARY = {"thermique", "thermal", "refuge"}
 TRANSITION_ZONES = {"transition", "lisiere", "lisière", "mosaique", "mosaïque",
@@ -222,8 +228,19 @@ def validate_corridor_vital_anchor(corridor: Dict[str, Any],
 
     canon = (species or "").lower().strip()
     group = SPECIES_GROUP.get(canon, "PETITS_MAMMIFERES")
+
+    # ─── PHASE XVIII-VITAUX-RAYON_TUNING_Ω : détection du mode externe
+    is_origin_external = bool(corridor.get("origin_external_passed"))
+    if EXTERNAL_MODE_ENABLED and is_origin_external:
+        effective_radius = EXTERNAL_MODE_RADIUS_M
+        external_mode_applied = True
+    else:
+        effective_radius = radius_m
+        external_mode_applied = False
+
     anchors = detect_vital_anchors(path, zones or [], salines or [],
-                                    hotspots or [], zones_humides or [], radius_m=radius_m)
+                                    hotspots or [], zones_humides or [],
+                                    radius_m=effective_radius)
 
     has_major_zone = len(anchors["major_zones"]) >= 1
     has_secondary_zone = len(anchors["secondary_zones"]) >= 1
@@ -238,7 +255,16 @@ def validate_corridor_vital_anchor(corridor: Dict[str, Any],
     # Pour petits mammifères, transition compte ; lisière hotspot aussi
     has_any_vital = has_major_zone or has_secondary_zone
 
-    if group == "GRANDS_MAMMIFERES":
+    # ─── BRANCHE MODE EXTERNE (PHASE XVIII-VITAUX-RAYON_TUNING_Ω)
+    if external_mode_applied:
+        rule = (f"MODE EXTERNE {EXTERNAL_MODE_RADIUS_M:.0f} m : ≥ 1 zone vitale "
+                f"MAJEURE (attracteur fort recommandé non bloquant)")
+        valid = has_major_zone
+        if not valid:
+            reason = "fail_external_mode_no_major_zone"
+        else:
+            reason = "ok_external_mode"
+    elif group == "GRANDS_MAMMIFERES":
         rule = ("≥ 1 zone vitale MAJEURE + ≥ 1 attracteur écologique fort "
                 "(saline / hotspot majeur / zone humide / eau fluviale) dans 150 m")
         valid = has_major_zone and has_strong_attractor
@@ -272,6 +298,10 @@ def validate_corridor_vital_anchor(corridor: Dict[str, Any],
         "reason": reason,
         "rule": rule,
         "group": group,
+        "external_mode_applied": external_mode_applied,
+        "vitaux_external_attractor_present": (
+            has_strong_attractor if external_mode_applied else None
+        ),
         "anchors": anchors,
         "anchors_summary": {
             "major_zones_count": len(anchors["major_zones"]),
@@ -282,8 +312,11 @@ def validate_corridor_vital_anchor(corridor: Dict[str, Any],
             "zones_humides": anchors["zones_humides"],
             "strong_attractor_count": strong_attractor_count,
         },
-        "radius_m": radius_m,
+        "radius_m": effective_radius,
         "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+        "subphase": (
+            "PHASE_XVIII_VITAUX_RAYON_TUNING_Ω" if external_mode_applied else None
+        ),
     }
 
 
@@ -343,16 +376,26 @@ def apply_corridors_vitaux_to_bundle(bundle: Dict[str, Any],
     rejected_audit: List[Dict[str, Any]] = []
     rejected_reasons: Dict[str, int] = {}
     anchor_types_used: Dict[str, int] = {}
+    # PHASE XVIII-VITAUX-RAYON_TUNING_Ω — métriques mode externe
+    vitaux_external_mode_applied_count = 0
+    vitaux_external_mode_passed_count = 0
+    origin_external_passed_count = 0
 
     canon = (species or "").lower().strip()
     group = SPECIES_GROUP.get(canon, "PETITS_MAMMIFERES")
 
     for c in corridors:
+        if c.get("origin_external_passed") is True:
+            origin_external_passed_count += 1
         out = validate_corridor_vital_anchor(
             c, species=species, zones=zones, salines=salines,
             hotspots=hotspots, zones_humides=zones_humides,
         )
         c["vitaux_validation"] = out
+        if out.get("external_mode_applied"):
+            vitaux_external_mode_applied_count += 1
+            if out.get("valid"):
+                vitaux_external_mode_passed_count += 1
         if out["valid"]:
             kept.append(c)
             # Inventaire des types d'ancrages utilisés
@@ -392,18 +435,30 @@ def apply_corridors_vitaux_to_bundle(bundle: Dict[str, Any],
     bundle["corridors_vitaux_omega_applied"] = True
     bundle["corridors_vitaux_omega_stats"] = {
         "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+        "subphase_applied": "PHASE_XVIII_VITAUX_RAYON_TUNING_Ω",
         "species": species,
         "species_group": group,
         "rule_applied": (
             "≥ 1 zone MAJEURE + ≥ 1 attracteur fort dans 150 m" if group == "GRANDS_MAMMIFERES"
             else "≥ 1 zone vitale + ≥ 1 transition dans 150 m"
         ),
+        "external_mode_rule": (
+            f"MODE EXTERNE {EXTERNAL_MODE_RADIUS_M:.0f} m : ≥ 1 zone MAJEURE "
+            f"(attracteur fort recommandé non bloquant) si origin_external_passed=true"
+        ),
         "anchor_proximity_m": ANCHOR_PROXIMITY_M,
+        "external_mode_radius_m": EXTERNAL_MODE_RADIUS_M,
+        "external_mode_enabled": EXTERNAL_MODE_ENABLED,
         "enforce_mode": ENFORCE_MODE,
         "total_input": len(corridors),
         "total_kept": len(kept),
         "total_rejected": len(rejected),
         "rate_pct": round(100.0 * len(kept) / max(1, len(corridors)), 1),
+        # PHASE XVIII-VITAUX-RAYON_TUNING_Ω — directive §4
+        "corridors_v30_count": len(corridors),
+        "origin_external_passed_count": origin_external_passed_count,
+        "vitaux_external_mode_applied_count": vitaux_external_mode_applied_count,
+        "vitaux_external_mode_passed_count": vitaux_external_mode_passed_count,
         "rejected_reasons": rejected_reasons,
         "anchor_types_used": anchor_types_used,
         "audit_log_path": str(AUDIT_LOG_PATH),
