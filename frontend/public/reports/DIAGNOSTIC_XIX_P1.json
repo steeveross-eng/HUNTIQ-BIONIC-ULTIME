@@ -1,0 +1,284 @@
+{
+  "phase": "PHASE_XIX_P1_DIAGNOSTIC_Ω",
+  "tag": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU",
+  "commandant": "STEEVE-MAX",
+  "started_at_utc": "2026-04-27T17:39:58.443955+00:00",
+  "waypoint": {
+    "lat": 48.206657,
+    "lng": -68.382422
+  },
+  "config_xix_p1_effective": {
+    "thresh_density_origine": 0.02,
+    "thresh_hits_origine": 5.0,
+    "rayon_fonctionnel_nominal_m": 600.0,
+    "origin_radius_min_m": 600.0,
+    "origin_radius_max_m": 780.0
+  },
+  "per_species": {
+    "chevreuil": {
+      "species_canonical": "chevreuil",
+      "species_api": "chevreuil",
+      "month": 10,
+      "hour": 16,
+      "total_corridors_v30": 12,
+      "origin_external_passed_count": 0,
+      "origin_external_failed_count": 12,
+      "origin_external_failed_outside_crown": 12,
+      "origin_external_failed_low_density": 0,
+      "origin_external_failed_low_hits": 0,
+      "origin_external_failed_missing_predictive": 0,
+      "origin_external_inversion_applied_count": 0,
+      "origin_external_inversion_skipped_count": 12,
+      "rate_pct_xix_p1": 0.0,
+      "rate_pct_xix_p2_inversion": 0.0,
+      "config_xix_p1": {
+        "rayon_fonctionnel_nominal_m": 600.0,
+        "origine_externe_fraction": 0.3,
+        "origin_radius_min_m": 600.0,
+        "origin_radius_max_m": 780.0,
+        "thresh_density_origine": 0.02,
+        "thresh_hits_origine": 5.0
+      },
+      "gps_density_ratio_distribution": {
+        "min": null,
+        "q1": null,
+        "median": null,
+        "q3": null,
+        "max": null,
+        "n": 0
+      },
+      "gps_weighted_hits_distribution": {
+        "min": null,
+        "q1": null,
+        "median": null,
+        "q3": null,
+        "max": null,
+        "n": 0
+      },
+      "downstream_eco_input_after_xix_p1": 0,
+      "downstream_eco_kept": 0,
+      "downstream_vitaux_input": 0,
+      "downstream_vitaux_kept": 0,
+      "final_corridors_visible_count": 0
+    },
+    "orignal": {
+      "species_canonical": "orignal",
+      "species_api": "orignal",
+      "month": 10,
+      "hour": 16,
+      "total_corridors_v30": 10,
+      "origin_external_passed_count": 4,
+      "origin_external_failed_count": 6,
+      "origin_external_failed_outside_crown": 2,
+      "origin_external_failed_low_density": 3,
+      "origin_external_failed_low_hits": 1,
+      "origin_external_failed_missing_predictive": 0,
+      "origin_external_inversion_applied_count": 8,
+      "origin_external_inversion_skipped_count": 2,
+      "rate_pct_xix_p1": 40.0,
+      "rate_pct_xix_p2_inversion": 80.0,
+      "config_xix_p1": {
+        "rayon_fonctionnel_nominal_m": 600.0,
+        "origine_externe_fraction": 0.3,
+        "origin_radius_min_m": 600.0,
+        "origin_radius_max_m": 780.0,
+        "thresh_density_origine": 0.02,
+        "thresh_hits_origine": 5.0
+      },
+      "gps_density_ratio_distribution": {
+        "min": 0.0135,
+        "q1": 0.0169,
+        "median": 0.0284,
+        "q3": 0.0516,
+        "max": 0.0574,
+        "n": 8
+      },
+      "gps_weighted_hits_distribution": {
+        "min": 3.079,
+        "q1": 3.864,
+        "median": 6.485,
+        "q3": 11.768,
+        "max": 13.078,
+        "n": 8
+      },
+      "downstream_eco_input_after_xix_p1": 4,
+      "downstream_eco_kept": 4,
+      "downstream_vitaux_input": 4,
+      "downstream_vitaux_kept": 4,
+      "final_corridors_visible_count": 4
+    },
+    "wapiti": {
+      "species_canonical": "wapiti",
+      "species_api": "wapiti",
+      "month": 10,
+      "hour": 16,
+      "total_corridors_v30": 8,
+      "origin_external_passed_count": 5,
+      "origin_external_failed_count": 3,
+      "origin_external_failed_outside_crown": 0,
+      "origin_external_failed_low_density": 3,
+      "origin_external_failed_low_hits": 0,
+      "origin_external_failed_missing_predictive": 0,
+      "origin_external_inversion_applied_count": 8,
+      "origin_external_inversion_skipped_count": 0,
+      "rate_pct_xix_p1": 62.5,
+      "rate_pct_xix_p2_inversion": 100.0,
+      "config_xix_p1": {
+        "rayon_fonctionnel_nominal_m": 600.0,
+        "origine_externe_fraction": 0.3,
+        "origin_radius_min_m": 600.0,
+        "origin_radius_max_m": 780.0,
+        "thresh_density_origine": 0.02,
+        "thresh_hits_origine": 5.0
+      },
+      "gps_density_ratio_distribution": {
+        "min": 0.0126,
+        "q1": 0.0129,
+        "median": 0.0176,
+        "q3": 0.0344,
+        "max": 0.0381,
+        "n": 5
+      },
+      "gps_weighted_hits_distribution": {
+        "min": 2.876,
+        "q1": 2.941,
+        "median": 4.014,
+        "q3": 7.841,
+        "max": 8.68,
+        "n": 5
+      },
+      "downstream_eco_input_after_xix_p1": 5,
+      "downstream_eco_kept": 2,
+      "downstream_vitaux_input": 2,
+      "downstream_vitaux_kept": 2,
+      "final_corridors_visible_count": 2
+    },
+    "ours_noir": {
+      "species_canonical": "ours_noir",
+      "species_api": "ours",
+      "month": 10,
+      "hour": 16,
+      "total_corridors_v30": 8,
+      "origin_external_passed_count": 3,
+      "origin_external_failed_count": 5,
+      "origin_external_failed_outside_crown": 1,
+      "origin_external_failed_low_density": 3,
+      "origin_external_failed_low_hits": 1,
+      "origin_external_failed_missing_predictive": 0,
+      "origin_external_inversion_applied_count": 7,
+      "origin_external_inversion_skipped_count": 1,
+      "rate_pct_xix_p1": 37.5,
+      "rate_pct_xix_p2_inversion": 87.5,
+      "config_xix_p1": {
+        "rayon_fonctionnel_nominal_m": 600.0,
+        "origine_externe_fraction": 0.3,
+        "origin_radius_min_m": 600.0,
+        "origin_radius_max_m": 780.0,
+        "thresh_density_origine": 0.02,
+        "thresh_hits_origine": 5.0
+      },
+      "gps_density_ratio_distribution": {
+        "min": 0.0027,
+        "q1": 0.0199,
+        "median": 0.0208,
+        "q3": 0.0387,
+        "max": 0.0424,
+        "n": 7
+      },
+      "gps_weighted_hits_distribution": {
+        "min": 0.626,
+        "q1": 4.53,
+        "median": 4.744,
+        "q3": 8.83,
+        "max": 9.656,
+        "n": 7
+      },
+      "downstream_eco_input_after_xix_p1": 3,
+      "downstream_eco_kept": 3,
+      "downstream_vitaux_input": 3,
+      "downstream_vitaux_kept": 3,
+      "final_corridors_visible_count": 3
+    },
+    "dindon_sauvage": {
+      "species_canonical": "dindon_sauvage",
+      "species_api": "dindon",
+      "month": 10,
+      "hour": 16,
+      "total_corridors_v30": 10,
+      "origin_external_passed_count": 0,
+      "origin_external_failed_count": 10,
+      "origin_external_failed_outside_crown": 10,
+      "origin_external_failed_low_density": 0,
+      "origin_external_failed_low_hits": 0,
+      "origin_external_failed_missing_predictive": 0,
+      "origin_external_inversion_applied_count": 0,
+      "origin_external_inversion_skipped_count": 10,
+      "rate_pct_xix_p1": 0.0,
+      "rate_pct_xix_p2_inversion": 0.0,
+      "config_xix_p1": {
+        "rayon_fonctionnel_nominal_m": 600.0,
+        "origine_externe_fraction": 0.3,
+        "origin_radius_min_m": 600.0,
+        "origin_radius_max_m": 780.0,
+        "thresh_density_origine": 0.02,
+        "thresh_hits_origine": 5.0
+      },
+      "gps_density_ratio_distribution": {
+        "min": null,
+        "q1": null,
+        "median": null,
+        "q3": null,
+        "max": null,
+        "n": 0
+      },
+      "gps_weighted_hits_distribution": {
+        "min": null,
+        "q1": null,
+        "median": null,
+        "q3": null,
+        "max": null,
+        "n": 0
+      },
+      "downstream_eco_input_after_xix_p1": 0,
+      "downstream_eco_kept": 0,
+      "downstream_vitaux_input": 0,
+      "downstream_vitaux_kept": 0,
+      "final_corridors_visible_count": 0
+    }
+  },
+  "global": {
+    "total_corridors_v30": 48,
+    "origin_external_passed_count": 12,
+    "origin_external_failed_count": 36,
+    "origin_external_failed_outside_crown": 25,
+    "origin_external_failed_low_density": 9,
+    "origin_external_failed_low_hits": 2,
+    "origin_external_inversion_applied_count": 23,
+    "global_pass_rate_pct": 25.0,
+    "global_inversion_rate_pct": 47.92
+  },
+  "api_status_territoire_corridors": {
+    "endpoint": "https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=orignal&month=10&hour=16",
+    "http_status": 200,
+    "payload_size_bytes": 85090,
+    "latency_ms": 1876.1,
+    "corridors_in_response": 0,
+    "origin_external_passed_in_response": 0,
+    "xix_p1_stats_observed_via_api": {
+      "total_input": 20,
+      "total_kept": 2,
+      "total_rejected": 18,
+      "rejected_reasons": {
+        "OUTSIDE_CROWN": 18
+      }
+    },
+    "downstream_after_xix_p1": {
+      "ecological_input": 2,
+      "ecological_kept": 1,
+      "vitaux_input": 1,
+      "vitaux_kept": 1,
+      "vitaux_rejected_reasons": {}
+    },
+    "error_message": null
+  }
+}

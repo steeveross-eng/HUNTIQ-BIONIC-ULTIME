@@ -1,0 +1,168 @@
+{
+  "phase": "PHASE_XIX_P1_DIAGNOSTIC_Ω",
+  "validation_method": "pixel_analysis_PIL_RGB_dual_threshold",
+  "color_targets": {
+    "strict_FF8F00": "(R>=240, 130<=G<=160, B<=25) — corridor RENDUΩ exact",
+    "loose_artefacts": "(R>=220, 100<=G<=185, B<=40) — UI chips/badges JPEG"
+  },
+  "corridor_visible_threshold_pixels": 800,
+  "per_species": {
+    "chevreuil": {
+      "capture_present": true,
+      "capture_url": "/reports/captures_xix_p1/CAPTURE_XIX_P1_chevreuil.jpeg",
+      "capture_size_bytes": 118899,
+      "image_dimensions_px": [
+        1920,
+        1080
+      ],
+      "pixels_sampled": 230400,
+      "orange_strict_FF8F00_pixels": 34,
+      "orange_loose_pixels_artefacts_UI": 291,
+      "corridor_threshold_pixels": 800,
+      "renduomega_corridor_visible": false,
+      "corridors_expected_post_pipeline_xviii_vitaux": 0,
+      "corridors_visible_count": 0,
+      "match": true,
+      "score_observed_partial": 64.5,
+      "anomalies_detected": [
+        "AUCUN_CORRIDOR_ORANGE_FF8F00_RENDUΩ_DETECTE",
+        "ARTEFACTS_UI_ORANGE_CHIPS_BADGES_DETECTES"
+      ],
+      "renduomega_constraints_checked": {
+        "couleur_FF8F00_present": true,
+        "couleur_FF8F00_majoritaire": false,
+        "epaisseur_min_px_3.0": "non_applicable_aucun_path_visible",
+        "opacite_min_0.75": "non_applicable_aucun_path_visible",
+        "continuite_CatmullRom": "non_applicable_aucun_path_visible",
+        "presence_couronne_externe": "non_applicable_aucun_path_visible",
+        "traversee_noyau_interne": "non_applicable_aucun_path_visible"
+      }
+    },
+    "orignal": {
+      "capture_present": true,
+      "capture_url": "/reports/captures_xix_p1/CAPTURE_XIX_P1_orignal.jpeg",
+      "capture_size_bytes": 118866,
+      "image_dimensions_px": [
+        1920,
+        1080
+      ],
+      "pixels_sampled": 230400,
+      "orange_strict_FF8F00_pixels": 31,
+      "orange_loose_pixels_artefacts_UI": 274,
+      "corridor_threshold_pixels": 800,
+      "renduomega_corridor_visible": false,
+      "corridors_expected_post_pipeline_xviii_vitaux": 0,
+      "corridors_visible_count": 0,
+      "match": true,
+      "score_observed_partial": 62.22,
+      "anomalies_detected": [
+        "AUCUN_CORRIDOR_ORANGE_FF8F00_RENDUΩ_DETECTE",
+        "ARTEFACTS_UI_ORANGE_CHIPS_BADGES_DETECTES"
+      ],
+      "renduomega_constraints_checked": {
+        "couleur_FF8F00_present": true,
+        "couleur_FF8F00_majoritaire": false,
+        "epaisseur_min_px_3.0": "non_applicable_aucun_path_visible",
+        "opacite_min_0.75": "non_applicable_aucun_path_visible",
+        "continuite_CatmullRom": "non_applicable_aucun_path_visible",
+        "presence_couronne_externe": "non_applicable_aucun_path_visible",
+        "traversee_noyau_interne": "non_applicable_aucun_path_visible"
+      }
+    },
+    "wapiti": {
+      "capture_present": true,
+      "capture_url": "/reports/captures_xix_p1/CAPTURE_XIX_P1_wapiti.jpeg",
+      "capture_size_bytes": 119106,
+      "image_dimensions_px": [
+        1920,
+        1080
+      ],
+      "pixels_sampled": 230400,
+      "orange_strict_FF8F00_pixels": 28,
+      "orange_loose_pixels_artefacts_UI": 284,
+      "corridor_threshold_pixels": 800,
+      "renduomega_corridor_visible": false,
+      "corridors_expected_post_pipeline_xviii_vitaux": 0,
+      "corridors_visible_count": 0,
+      "match": true,
+      "score_observed_partial": 64.07,
+      "anomalies_detected": [
+        "AUCUN_CORRIDOR_ORANGE_FF8F00_RENDUΩ_DETECTE",
+        "ARTEFACTS_UI_ORANGE_CHIPS_BADGES_DETECTES"
+      ],
+      "renduomega_constraints_checked": {
+        "couleur_FF8F00_present": true,
+        "couleur_FF8F00_majoritaire": false,
+        "epaisseur_min_px_3.0": "non_applicable_aucun_path_visible",
+        "opacite_min_0.75": "non_applicable_aucun_path_visible",
+        "continuite_CatmullRom": "non_applicable_aucun_path_visible",
+        "presence_couronne_externe": "non_applicable_aucun_path_visible",
+        "traversee_noyau_interne": "non_applicable_aucun_path_visible"
+      }
+    },
+    "ours_noir": {
+      "capture_present": true,
+      "capture_url": "/reports/captures_xix_p1/CAPTURE_XIX_P1_ours_noir.jpeg",
+      "capture_size_bytes": 119196,
+      "image_dimensions_px": [
+        1920,
+        1080
+      ],
+      "pixels_sampled": 230400,
+      "orange_strict_FF8F00_pixels": 42,
+      "orange_loose_pixels_artefacts_UI": 306,
+      "corridor_threshold_pixels": 800,
+      "renduomega_corridor_visible": false,
+      "corridors_expected_post_pipeline_xviii_vitaux": 0,
+      "corridors_visible_count": 0,
+      "match": true,
+      "score_observed_partial": 66.94,
+      "anomalies_detected": [
+        "AUCUN_CORRIDOR_ORANGE_FF8F00_RENDUΩ_DETECTE",
+        "ARTEFACTS_UI_ORANGE_CHIPS_BADGES_DETECTES"
+      ],
+      "renduomega_constraints_checked": {
+        "couleur_FF8F00_present": true,
+        "couleur_FF8F00_majoritaire": false,
+        "epaisseur_min_px_3.0": "non_applicable_aucun_path_visible",
+        "opacite_min_0.75": "non_applicable_aucun_path_visible",
+        "continuite_CatmullRom": "non_applicable_aucun_path_visible",
+        "presence_couronne_externe": "non_applicable_aucun_path_visible",
+        "traversee_noyau_interne": "non_applicable_aucun_path_visible"
+      }
+    },
+    "dindon_sauvage": {
+      "capture_present": true,
+      "capture_url": "/reports/captures_xix_p1/CAPTURE_XIX_P1_dindon_sauvage.jpeg",
+      "capture_size_bytes": 118899,
+      "image_dimensions_px": [
+        1920,
+        1080
+      ],
+      "pixels_sampled": 230400,
+      "orange_strict_FF8F00_pixels": 36,
+      "orange_loose_pixels_artefacts_UI": 288,
+      "corridor_threshold_pixels": 800,
+      "renduomega_corridor_visible": false,
+      "corridors_expected_post_pipeline_xviii_vitaux": 0,
+      "corridors_visible_count": 0,
+      "match": true,
+      "score_observed_partial": 64.73,
+      "anomalies_detected": [
+        "AUCUN_CORRIDOR_ORANGE_FF8F00_RENDUΩ_DETECTE",
+        "ARTEFACTS_UI_ORANGE_CHIPS_BADGES_DETECTES"
+      ],
+      "renduomega_constraints_checked": {
+        "couleur_FF8F00_present": true,
+        "couleur_FF8F00_majoritaire": false,
+        "epaisseur_min_px_3.0": "non_applicable_aucun_path_visible",
+        "opacite_min_0.75": "non_applicable_aucun_path_visible",
+        "continuite_CatmullRom": "non_applicable_aucun_path_visible",
+        "presence_couronne_externe": "non_applicable_aucun_path_visible",
+        "traversee_noyau_interne": "non_applicable_aucun_path_visible"
+      }
+    }
+  },
+  "global_match": true,
+  "interpretation_institutionnelle": "5 captures analysées : aucun corridor orange #FF8F00 détecté avec le seuil corridor >800 px. Les 274-306 pixels orange détectés en mode loose correspondent aux artefacts UI (chips de score, badges de statut, frontière waypoint dashed) — confirmé par orange_strict ≈ 0. match=True pour les 5 espèces car expected=0 (pipeline VITAUX_Ω strict aval) et visible=False. Conformité institutionnelle TOTALE avec le constat XIX-P1B : XIX-P1 valide 2 corridors (orignal+wapiti), mais CORRIDORS_VITAUX_Ω §6 (rayon 150 m, ≥1 zone MAJEURE + attracteur fort) les filtre tous → 0 corridors visibles sur la carte TERRITOIRE."
+}

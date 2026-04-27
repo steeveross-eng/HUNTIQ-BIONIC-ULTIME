@@ -1,0 +1,122 @@
+[
+ {
+  "timestamp": "2026-04-27T17:38:53.812205+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "orignal",
+  "waypoint": {
+   "lat": 48.206657,
+   "lng": -68.382422
+  },
+  "rejected_count": 1,
+  "rejected": [
+   {
+    "id": "corr_omega_2",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 3,
+     "hotspots_major": 2,
+     "zones_humides": 0,
+     "strong_attractor_count": 5
+    },
+    "path_first": [
+     48.212253,
+     -68.388269
+    ],
+    "path_last": [
+     48.207963,
+     -68.381832
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-04-27T17:39:35.512709+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "wapiti",
+  "waypoint": {
+   "lat": 48.206657,
+   "lng": -68.382422
+  },
+  "rejected_count": 1,
+  "rejected": [
+   {
+    "id": "corr_omega_5",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 4,
+     "zones_humides": 0,
+     "strong_attractor_count": 6
+    },
+    "path_first": [
+     48.201887,
+     -68.387815
+    ],
+    "path_last": [
+     48.206853,
+     -68.38419
+    ]
+   }
+  ]
+ },
+ {
+  "timestamp": "2026-04-27T17:39:36.080663+00:00",
+  "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+  "species": "ours",
+  "waypoint": {
+   "lat": 48.206657,
+   "lng": -68.382422
+  },
+  "rejected_count": 2,
+  "rejected": [
+   {
+    "id": "corr_omega_1",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 2,
+     "hotspots_major": 2,
+     "zones_humides": 0,
+     "strong_attractor_count": 4
+    },
+    "path_first": [
+     48.212344,
+     -68.388301
+    ],
+    "path_last": [
+     48.207771,
+     -68.381197
+    ]
+   },
+   {
+    "id": "corr_omega_6",
+    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
+    "anchors_summary": {
+     "major_zones_count": 0,
+     "secondary_zones_count": 0,
+     "transitions_count": 0,
+     "salines": 3,
+     "hotspots_major": 3,
+     "zones_humides": 0,
+     "strong_attractor_count": 6
+    },
+    "path_first": [
+     48.199968,
+     -68.381833
+    ],
+    "path_last": [
+     48.205506,
+     -68.383453
+    ]
+   }
+  ]
+ }
+]

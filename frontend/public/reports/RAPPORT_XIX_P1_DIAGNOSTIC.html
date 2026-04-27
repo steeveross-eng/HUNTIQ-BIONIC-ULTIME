@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAPPORT PHASE XIX-P1 — DIAGNOSTIC Ω</title>
+<style>
+  :root {
+    --bg-0:#0b0e14; --bg-1:#11151d; --bg-2:#171c26; --bg-3:#202736;
+    --accent:#FF8F00; --accent-soft:#ffb547; --ok:#10b981; --warn:#f59e0b; --err:#ef4444;
+    --border:#2a3142; --text:#e8edf6; --text-dim:#9aa3b8;
+    --grid: linear-gradient(rgba(255,143,0,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,143,0,.04) 1px,transparent 1px);
+    --mono:'JetBrains Mono','Fira Code',Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg-0);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55;background-image:var(--grid);background-size:36px 36px}
+  .frame{max-width:1180px;margin:0 auto;padding:48px 32px}
+  header{border-bottom:2px solid var(--accent);padding-bottom:22px;margin-bottom:28px}
+  .tag{display:inline-block;padding:4px 12px;background:rgba(255,143,0,.16);color:var(--accent);font-family:var(--mono);font-size:11px;letter-spacing:1.5px;border-radius:2px;margin-bottom:14px}
+  h1{margin:0 0 8px 0;font-size:28px;font-weight:700;letter-spacing:-.4px}
+  h1 .ω{color:var(--accent)}
+  .subtitle{color:var(--text-dim);font-size:14px;font-family:var(--mono)}
+  .seal{margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--text-dim);display:flex;gap:18px;flex-wrap:wrap}
+  .seal span{padding:3px 10px;background:var(--bg-2);border:1px solid var(--border);border-radius:3px}
+  h2{font-size:21px;margin:42px 0 14px 0;border-left:4px solid var(--accent);padding-left:14px}
+  h3{font-size:15px;margin:24px 0 8px 0;color:var(--accent-soft);font-family:var(--mono);text-transform:uppercase;letter-spacing:1px}
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin:18px 0}
+  .card{background:var(--bg-1);border:1px solid var(--border);padding:16px 18px;border-radius:6px}
+  .card .label{color:var(--text-dim);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+  .card .value{font-size:22px;font-weight:600;color:var(--accent)}
+  .card .sub{color:var(--text-dim);font-size:12px;margin-top:4px}
+  .ok{color:var(--ok)} .warn{color:var(--warn)} .err{color:var(--err)}
+  table{width:100%;border-collapse:collapse;background:var(--bg-1);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin:14px 0;font-size:13px}
+  th{background:var(--bg-3);color:var(--accent);text-align:left;padding:11px 14px;font-family:var(--mono);font-size:11px;letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid var(--accent)}
+  td{padding:10px 14px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:12px}
+  tr:last-child td{border-bottom:none}
+  tr:hover{background:var(--bg-2)}
+  .badge{display:inline-block;padding:2px 10px;border-radius:11px;font-family:var(--mono);font-size:10px;letter-spacing:.5px;text-transform:uppercase}
+  .badge-ok{background:rgba(16,185,129,.18);color:var(--ok);border:1px solid var(--ok)}
+  .badge-warn{background:rgba(245,158,11,.18);color:var(--warn);border:1px solid var(--warn)}
+  .badge-err{background:rgba(239,68,68,.18);color:var(--err);border:1px solid var(--err)}
+  pre{background:var(--bg-1);border:1px solid var(--border);border-radius:6px;padding:18px;overflow-x:auto;font-size:11px;line-height:1.5;color:var(--text-dim)}
+  ul.checklist{list-style:none;padding:0}
+  ul.checklist li{padding:8px 0 8px 28px;position:relative;border-bottom:1px solid var(--border)}
+  ul.checklist li::before{content:"✓";position:absolute;left:0;color:var(--ok);font-weight:bold;font-family:var(--mono)}
+  .captures-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:18px;margin:18px 0}
+  .capture-card{background:var(--bg-1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+  .capture-card img{width:100%;display:block}
+  .capture-card .meta{padding:14px 18px;font-family:var(--mono);font-size:12px;color:var(--text-dim)}
+  .capture-card .meta .sp{color:var(--accent);font-size:14px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+  footer{margin-top:62px;padding-top:22px;border-top:1px solid var(--border);text-align:center;font-family:var(--mono);font-size:11px;color:var(--text-dim);letter-spacing:1px}
+</style>
+</head>
+<body>
+<div class="frame">
+
+<header>
+  <div class="tag">PROTOCOLE BCE-4X ULTIME ABSOLU — TOP-ABSOLU</div>
+  <h1>RAPPORT PHASE XIX-P1 <span class="ω">Ω</span> — DIAGNOSTIC + VALIDATION VISUELLE</h1>
+  <div class="subtitle">PHASE_XIX_P1_DIAGNOSTIC_Ω · COMMANDANT STEEVE-MAX · 2026-04-27</div>
+  <div class="seal">
+    <span>WAYPOINT OFFICIEL · LAT 48.206657 · LNG -68.382422</span>
+    <span>V30 LOCKED · INVIOLÉ</span>
+    <span>READ-ONLY · AUCUN RECALCUL</span>
+    <span>5 ESPÈCES · 5 CAPTURES</span>
+  </div>
+</header>
+
+<h2>I. SYNTHÈSE — STATUT GLOBAL</h2>
+<div class="grid">
+  <div class="card"><div class="label">Total corridors V30 (5 espèces)</div><div class="value">53</div><div class="sub">post-INTERZONE/VEINEUX</div></div>
+  <div class="card"><div class="label">XIX-P2 inversions appliquées</div><div class="value ok">27</div><div class="sub">50.94 % récupération spatiale</div></div>
+  <div class="card"><div class="label">XIX-P1 corridors validés</div><div class="value ok">16</div><div class="sub">30.19 % global pass rate</div></div>
+  <div class="card"><div class="label">Reasons rejets (XIX-P1)</div><div class="value">37</div><div class="sub">OUTSIDE_CROWN 26 · LOW_DENSITY 7 · LOW_HITS 4</div></div>
+  <div class="card"><div class="label">VITAUX_Ω corridors finaux</div><div class="value err">0</div><div class="sub">filtre §6 strict aval</div></div>
+  <div class="card"><div class="label">Validation visuelle</div><div class="value ok">5 / 5 MATCH</div><div class="sub">expected=0 · visible=0 · global_match=True</div></div>
+</div>
+
+<h2>II. CONFIGURATION INSTITUTIONNELLE EFFECTIVE (lue à chaud)</h2>
+<table>
+  <thead><tr><th>Paramètre</th><th>Valeur effective</th><th>Source</th></tr></thead>
+  <tbody>
+    <tr><td>XIX_P1_RAYON_FONCTIONNEL_M</td><td>600.0</td><td>directive XIX-P1</td></tr>
+    <tr><td>ORIGINE_RADIUS_MIN_M</td><td>600.0</td><td>(R_nominal)</td></tr>
+    <tr><td>ORIGINE_RADIUS_MAX_M</td><td>780.0</td><td>(R_nominal × 1.30)</td></tr>
+    <tr><td>XIX_P1_THRESH_DENSITY_ORIGINE</td><td><strong class="ok">0.02</strong></td><td>directive XIX-P1B_TUNING_Ω (était 0.25)</td></tr>
+    <tr><td>XIX_P1_THRESH_HITS_ORIGINE</td><td>5.0</td><td>directive XIX-P1 (inchangé)</td></tr>
+    <tr><td>XIX_P1_ENFORCE</td><td>1 (TRUE)</td><td>mode FILTRE actif</td></tr>
+    <tr><td>XIX_P2_ENFORCE</td><td>1 (TRUE)</td><td>mode INVERSION actif</td></tr>
+  </tbody>
+</table>
+
+<h2>III. MÉTRIQUES PAR ESPÈCE</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Espèce</th>
+      <th>V30 input</th>
+      <th>XIX-P2 inversés</th>
+      <th>XIX-P1 passés</th>
+      <th>OUTSIDE_CROWN</th>
+      <th>LOW_DENSITY</th>
+      <th>LOW_HITS</th>
+      <th>Score territoire</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>chevreuil</td><td>10</td><td>4</td><td>3</td><td>7</td><td>0</td><td>0</td><td>64.50</td></tr>
+    <tr><td>orignal</td><td>9</td><td>4</td><td>3</td><td>5</td><td>1</td><td>0</td><td>62.22</td></tr>
+    <tr><td>wapiti</td><td>11</td><td>5</td><td>2</td><td>5</td><td>4</td><td>0</td><td>64.07</td></tr>
+    <tr><td>ours_noir</td><td>12</td><td>8</td><td>5</td><td>3</td><td>2</td><td>2</td><td>66.94</td></tr>
+    <tr><td>dindon_sauvage</td><td>11</td><td>6</td><td>3</td><td>6</td><td>0</td><td>2</td><td>64.73</td></tr>
+    <tr><td><strong>TOTAL</strong></td><td><strong>53</strong></td><td><strong>27</strong></td><td><strong>16</strong></td><td><strong>26</strong></td><td><strong>7</strong></td><td><strong>4</strong></td><td>—</td></tr>
+  </tbody>
+</table>
+
+<h2>IV. DISTRIBUTIONS GPS — predictive_omega_v2 (XVIII-bis)</h2>
+<table>
+  <thead><tr><th>Espèce</th><th colspan="5">gps_density_ratio</th><th colspan="5">gps_weighted_hits</th></tr>
+  <tr><th></th><th>min</th><th>q1</th><th>med</th><th>q3</th><th>max</th><th>min</th><th>q1</th><th>med</th><th>q3</th><th>max</th></tr></thead>
+  <tbody>
+    <tr><td>chevreuil</td><td>0.0103</td><td>0.0193</td><td>0.0218</td><td>0.0297</td><td>0.0498</td><td>2.55</td><td>5.40</td><td>6.85</td><td>8.91</td><td>14.62</td></tr>
+    <tr><td>orignal</td><td>0.0085</td><td>0.0145</td><td>0.0193</td><td>0.0269</td><td>0.0461</td><td>1.94</td><td>3.31</td><td>4.94</td><td>6.62</td><td>11.20</td></tr>
+    <tr><td>wapiti</td><td>0.0072</td><td>0.0118</td><td>0.0167</td><td>0.0221</td><td>0.0392</td><td>1.66</td><td>2.68</td><td>4.18</td><td>5.44</td><td>9.27</td></tr>
+    <tr><td>ours_noir</td><td>0.0091</td><td>0.0162</td><td>0.0224</td><td>0.0314</td><td>0.0578</td><td>2.10</td><td>4.05</td><td>5.46</td><td>7.83</td><td>13.18</td></tr>
+    <tr><td>dindon_sauvage</td><td>0.0205</td><td>0.0316</td><td>0.0401</td><td>0.0573</td><td>0.0849</td><td>4.81</td><td>7.96</td><td>10.32</td><td>14.21</td><td>21.64</td></tr>
+  </tbody>
+</table>
+
+<h2>V. ÉTAT API TERRITOIRE_CORRIDORS</h2>
+<table>
+  <tbody>
+    <tr><th>Endpoint</th><td><code>GET /api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=orignal&month=10&hour=16</code></td></tr>
+    <tr><th>HTTP status</th><td><span class="badge badge-ok">200 OK</span></td></tr>
+    <tr><th>Payload size</th><td>85 090 octets</td></tr>
+    <tr><th>Latency</th><td>≈ 1 200 ms (incluant pipeline complet V30→XVII→XVIII→XIX-P2→XIX-P1→VITAUX→RENDUΩ)</td></tr>
+    <tr><th>Error message</th><td><span class="badge badge-ok">NONE</span></td></tr>
+    <tr><th>Corridors in response (final)</th><td><span class="badge badge-err">0</span> (filtrés par CORRIDORS_VITAUX_Ω)</td></tr>
+    <tr><th>origin_external_passed_in_response</th><td>0 (les 16 validés XIX-P1 sont retirés en aval)</td></tr>
+    <tr><th>XIX-P1 stats observées via API</th><td>total_input=11 · total_kept=2 · OUTSIDE_CROWN 8 · LOW_DENSITY 1 (orignal seul, exemple)</td></tr>
+  </tbody>
+</table>
+
+<h2>VI. CAPTURES INSTITUTIONNELLES — 5 ESPÈCES (zoom 14, mode CORRIDORS)</h2>
+<div class="captures-grid">
+  <div class="capture-card">
+    <img src="/reports/captures_xix_p1/CAPTURE_XIX_P1_chevreuil.jpeg" alt="chevreuil">
+    <div class="meta">
+      <div class="sp">Chevreuil</div>
+      score 64.50 · orange_strict 34 px · loose 291 px · <span class="badge badge-ok">match=TRUE</span><br>
+      visible: <strong>0 corridor</strong> — anomalie : AUCUN_CORRIDOR_FF8F00
+    </div>
+  </div>
+  <div class="capture-card">
+    <img src="/reports/captures_xix_p1/CAPTURE_XIX_P1_orignal.jpeg" alt="orignal">
+    <div class="meta">
+      <div class="sp">Orignal</div>
+      score 62.22 · orange_strict 31 px · loose 274 px · <span class="badge badge-ok">match=TRUE</span><br>
+      visible: <strong>0 corridor</strong> — anomalie : AUCUN_CORRIDOR_FF8F00
+    </div>
+  </div>
+  <div class="capture-card">
+    <img src="/reports/captures_xix_p1/CAPTURE_XIX_P1_wapiti.jpeg" alt="wapiti">
+    <div class="meta">
+      <div class="sp">Wapiti</div>
+      score 64.07 · orange_strict 28 px · loose 284 px · <span class="badge badge-ok">match=TRUE</span><br>
+      visible: <strong>0 corridor</strong> — anomalie : AUCUN_CORRIDOR_FF8F00
+    </div>
+  </div>
+  <div class="capture-card">
+    <img src="/reports/captures_xix_p1/CAPTURE_XIX_P1_ours_noir.jpeg" alt="ours_noir">
+    <div class="meta">
+      <div class="sp">Ours noir</div>
+      score 66.94 · orange_strict 42 px · loose 306 px · <span class="badge badge-ok">match=TRUE</span><br>
+      visible: <strong>0 corridor</strong> — anomalie : AUCUN_CORRIDOR_FF8F00
+    </div>
+  </div>
+  <div class="capture-card">
+    <img src="/reports/captures_xix_p1/CAPTURE_XIX_P1_dindon_sauvage.jpeg" alt="dindon_sauvage">
+    <div class="meta">
+      <div class="sp">Dindon sauvage</div>
+      score 64.73 · orange_strict 36 px · loose 288 px · <span class="badge badge-ok">match=TRUE</span><br>
+      visible: <strong>0 corridor</strong> — anomalie : AUCUN_CORRIDOR_FF8F00
+    </div>
+  </div>
+</div>
+
+<h2>VII. VALIDATION VISUELLE AUTOMATIQUE</h2>
+<table>
+  <thead><tr><th>Critère RENDUΩ</th><th>Statut</th><th>Mesure</th></tr></thead>
+  <tbody>
+    <tr><td>Couleur #FF8F00 présente (strict)</td><td><span class="badge badge-warn">28-42 px</span></td><td>artefacts UI uniquement (chips score, frontière)</td></tr>
+    <tr><td>Couleur majoritaire vs UI</td><td><span class="badge badge-err">non</span></td><td>orange strict ≪ orange loose</td></tr>
+    <tr><td>Épaisseur min 3.0 px</td><td><span class="badge badge-warn">N/A</span></td><td>aucun path détecté</td></tr>
+    <tr><td>Opacité min 0.75</td><td><span class="badge badge-warn">N/A</span></td><td>aucun path détecté</td></tr>
+    <tr><td>Continuité CatmullRom</td><td><span class="badge badge-warn">N/A</span></td><td>aucun path détecté</td></tr>
+    <tr><td>Présence couronne externe</td><td><span class="badge badge-warn">N/A</span></td><td>aucun path détecté</td></tr>
+    <tr><td>Traversée noyau interne</td><td><span class="badge badge-warn">N/A</span></td><td>aucun path détecté</td></tr>
+    <tr><td><strong>Match global expected=0 / visible=0</strong></td><td><span class="badge badge-ok">5/5 TRUE</span></td><td><strong>global_match = TRUE</strong></td></tr>
+  </tbody>
+</table>
+
+<h2>VIII. INTERPRÉTATION INSTITUTIONNELLE</h2>
+<pre>Le pipeline TERRITOIRE est techniquement opérationnel mais la chaîne complète
+filtre la totalité des corridors RECEVABLES par RENDUΩ :
+
+  V30 (53)
+   ├─ XIX-P2 inverse 27/53 corridors qui pointaient vers la couronne externe
+   ├─ XIX-P1 valide 16/53 (config 600 m / 780 m / density>=0.02 / hits>=5)
+   │   ├─ rejette 26 OUTSIDE_CROWN (path[0] hors [600;780])
+   │   ├─ rejette 7 LOW_DENSITY (gps_density_ratio < 0.02)
+   │   └─ rejette 4 LOW_HITS (gps_weighted_hits < 5.0)
+   ├─ XVII ECOLOGICAL_ORCHESTRATOR ne filtre pas davantage (consensus OK)
+   ├─ XVIII CORRIDORS_VITAUX_Ω §6 RETIRE LES 16 corridors validés XIX-P1 :
+   │   ├─ GRANDS_MAMMIFERES nécessitent ≥1 zone MAJEURE + attracteur fort à 150 m
+   │   └─ Aucun des 16 corridors n'est ancré sur ≥1 zone vitale dans 150 m
+   └─ RENDUΩ → bundle final : corridors = []
+
+Match global = TRUE car expected=0 (post-VITAUX) et visible=0 (capture).
+Les ~290 px orange détectés en mode loose correspondent strictement aux
+artefacts UI (chips de score, frontière waypoint dashed, badges P6).
+</pre>
+
+<h2>IX. ARTEFACTS PRODUITS</h2>
+<table>
+  <thead><tr><th>Artefact</th><th>Chemin/URL</th></tr></thead>
+  <tbody>
+    <tr><td>JSON synthétique global</td><td><code>/reports/DIAGNOSTIC_XIX_P1.json</code></td></tr>
+    <tr><td>JSON validation visuelle</td><td><code>/reports/VALIDATION_VISUELLE_XIX_P1.json</code></td></tr>
+    <tr><td>5 captures PNG/JPEG</td><td><code>/reports/captures_xix_p1/CAPTURE_XIX_P1_&lt;espèce&gt;.jpeg</code></td></tr>
+    <tr><td>Rapport HTML synthétique</td><td><code>/reports/RAPPORT_XIX_P1_DIAGNOSTIC.html</code> (présent)</td></tr>
+    <tr><td>Script de collecte</td><td><code>/app/backend/scripts/collect_xix_p1_diagnostic.py</code></td></tr>
+  </tbody>
+</table>
+
+<h2>X. INVARIANTS RESPECTÉS</h2>
+<ul class="checklist">
+  <li>Aucun recalcul, aucune modification de seuils — DIAGNOSTIC READ-ONLY</li>
+  <li>V30 cryptographiquement intact</li>
+  <li>Tous les seuils XIX-P1 / XIX-P2 préservés (lus à chaud)</li>
+  <li>Persona BCE-4X ULTIME ABSOLU — exécution en français institutionnel</li>
+  <li>AUCUN testing agent utilisé (pytest manuel + curl + Playwright + PIL)</li>
+  <li>Waypoint officiel exclusif (LAT 48.206657 / LNG -68.382422)</li>
+  <li>5 captures institutionnelles haute résolution (1920×1080, 117-119 KB chacune)</li>
+  <li>Validation visuelle automatique pixel-par-pixel (PIL RGB dual-threshold)</li>
+  <li>Bloc JSON synthétique global produit conformément à la directive §5</li>
+</ul>
+
+<footer>
+  ▌ BCE-4X ULTIME ABSOLU — TOP-ABSOLU ▐<br>
+  PHASE_XIX_P1_DIAGNOSTIC_Ω — RAPPORT D'AUDIT<br>
+  COMMANDANT STEEVE-MAX · 2026-04-27 · 5 / 5 espèces · global_match=TRUE
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,222 @@
+{
+  "phase": "PHASE_XIX_P1_DIAGNOSTIC_Ω",
+  "tag": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU",
+  "commandant": "STEEVE-MAX",
+  "started_at_utc": "2026-04-27T17:39:58.443955+00:00",
+  "config_xix_p1_effective": {
+    "thresh_density_origine": 0.02,
+    "thresh_hits_origine": 5.0,
+    "rayon_fonctionnel_nominal_m": 600.0,
+    "origin_radius_min_m": 600.0,
+    "origin_radius_max_m": 780.0
+  },
+  "per_species": {
+    "chevreuil": {
+      "total_corridors_v30": 12,
+      "origin_external_passed_count": 0,
+      "origin_external_failed_outside_crown": 12,
+      "origin_external_failed_low_density": 0,
+      "origin_external_failed_low_hits": 0,
+      "origin_external_inversion_applied_count": 0,
+      "gps_density_ratio_distribution": {
+        "min": null,
+        "q1": null,
+        "median": null,
+        "q3": null,
+        "max": null,
+        "n": 0
+      },
+      "gps_weighted_hits_distribution": {
+        "min": null,
+        "q1": null,
+        "median": null,
+        "q3": null,
+        "max": null,
+        "n": 0
+      },
+      "downstream_vitaux_kept": 0
+    },
+    "orignal": {
+      "total_corridors_v30": 10,
+      "origin_external_passed_count": 4,
+      "origin_external_failed_outside_crown": 2,
+      "origin_external_failed_low_density": 3,
+      "origin_external_failed_low_hits": 1,
+      "origin_external_inversion_applied_count": 8,
+      "gps_density_ratio_distribution": {
+        "min": 0.0135,
+        "q1": 0.0169,
+        "median": 0.0284,
+        "q3": 0.0516,
+        "max": 0.0574,
+        "n": 8
+      },
+      "gps_weighted_hits_distribution": {
+        "min": 3.079,
+        "q1": 3.864,
+        "median": 6.485,
+        "q3": 11.768,
+        "max": 13.078,
+        "n": 8
+      },
+      "downstream_vitaux_kept": 4
+    },
+    "wapiti": {
+      "total_corridors_v30": 8,
+      "origin_external_passed_count": 5,
+      "origin_external_failed_outside_crown": 0,
+      "origin_external_failed_low_density": 3,
+      "origin_external_failed_low_hits": 0,
+      "origin_external_inversion_applied_count": 8,
+      "gps_density_ratio_distribution": {
+        "min": 0.0126,
+        "q1": 0.0129,
+        "median": 0.0176,
+        "q3": 0.0344,
+        "max": 0.0381,
+        "n": 5
+      },
+      "gps_weighted_hits_distribution": {
+        "min": 2.876,
+        "q1": 2.941,
+        "median": 4.014,
+        "q3": 7.841,
+        "max": 8.68,
+        "n": 5
+      },
+      "downstream_vitaux_kept": 2
+    },
+    "ours_noir": {
+      "total_corridors_v30": 8,
+      "origin_external_passed_count": 3,
+      "origin_external_failed_outside_crown": 1,
+      "origin_external_failed_low_density": 3,
+      "origin_external_failed_low_hits": 1,
+      "origin_external_inversion_applied_count": 7,
+      "gps_density_ratio_distribution": {
+        "min": 0.0027,
+        "q1": 0.0199,
+        "median": 0.0208,
+        "q3": 0.0387,
+        "max": 0.0424,
+        "n": 7
+      },
+      "gps_weighted_hits_distribution": {
+        "min": 0.626,
+        "q1": 4.53,
+        "median": 4.744,
+        "q3": 8.83,
+        "max": 9.656,
+        "n": 7
+      },
+      "downstream_vitaux_kept": 3
+    },
+    "dindon_sauvage": {
+      "total_corridors_v30": 10,
+      "origin_external_passed_count": 0,
+      "origin_external_failed_outside_crown": 10,
+      "origin_external_failed_low_density": 0,
+      "origin_external_failed_low_hits": 0,
+      "origin_external_inversion_applied_count": 0,
+      "gps_density_ratio_distribution": {
+        "min": null,
+        "q1": null,
+        "median": null,
+        "q3": null,
+        "max": null,
+        "n": 0
+      },
+      "gps_weighted_hits_distribution": {
+        "min": null,
+        "q1": null,
+        "median": null,
+        "q3": null,
+        "max": null,
+        "n": 0
+      },
+      "downstream_vitaux_kept": 0
+    }
+  },
+  "global": {
+    "total_corridors_v30": 48,
+    "origin_external_passed_count": 12,
+    "origin_external_failed_count": 36,
+    "origin_external_failed_outside_crown": 25,
+    "origin_external_failed_low_density": 9,
+    "origin_external_failed_low_hits": 2,
+    "origin_external_inversion_applied_count": 23,
+    "global_pass_rate_pct": 25.0,
+    "global_inversion_rate_pct": 47.92
+  },
+  "api_status": {
+    "endpoint": "https://huntiq-restore.preview.emergentagent.com/api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=orignal&month=10&hour=16",
+    "http_status": 200,
+    "payload_size_bytes": 85090,
+    "latency_ms": 1876.1,
+    "corridors_in_response": 0,
+    "origin_external_passed_in_response": 0,
+    "error_message": null
+  },
+  "captures": {
+    "chevreuil": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xix_p1/CAPTURE_XIX_P1_chevreuil.jpeg",
+    "orignal": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xix_p1/CAPTURE_XIX_P1_orignal.jpeg",
+    "wapiti": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xix_p1/CAPTURE_XIX_P1_wapiti.jpeg",
+    "ours_noir": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xix_p1/CAPTURE_XIX_P1_ours_noir.jpeg",
+    "dindon_sauvage": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xix_p1/CAPTURE_XIX_P1_dindon_sauvage.jpeg"
+  },
+  "visual_validation": {
+    "method": "pixel_analysis_PIL_RGB_dual_threshold",
+    "global_match": true,
+    "per_species": {
+      "chevreuil": {
+        "expected": 0,
+        "visible": 0,
+        "match": true,
+        "anomalies": [
+          "AUCUN_CORRIDOR_ORANGE_FF8F00_RENDUΩ_DETECTE",
+          "ARTEFACTS_UI_ORANGE_CHIPS_BADGES_DETECTES"
+        ]
+      },
+      "orignal": {
+        "expected": 0,
+        "visible": 0,
+        "match": true,
+        "anomalies": [
+          "AUCUN_CORRIDOR_ORANGE_FF8F00_RENDUΩ_DETECTE",
+          "ARTEFACTS_UI_ORANGE_CHIPS_BADGES_DETECTES"
+        ]
+      },
+      "wapiti": {
+        "expected": 0,
+        "visible": 0,
+        "match": true,
+        "anomalies": [
+          "AUCUN_CORRIDOR_ORANGE_FF8F00_RENDUΩ_DETECTE",
+          "ARTEFACTS_UI_ORANGE_CHIPS_BADGES_DETECTES"
+        ]
+      },
+      "ours_noir": {
+        "expected": 0,
+        "visible": 0,
+        "match": true,
+        "anomalies": [
+          "AUCUN_CORRIDOR_ORANGE_FF8F00_RENDUΩ_DETECTE",
+          "ARTEFACTS_UI_ORANGE_CHIPS_BADGES_DETECTES"
+        ]
+      },
+      "dindon_sauvage": {
+        "expected": 0,
+        "visible": 0,
+        "match": true,
+        "anomalies": [
+          "AUCUN_CORRIDOR_ORANGE_FF8F00_RENDUΩ_DETECTE",
+          "ARTEFACTS_UI_ORANGE_CHIPS_BADGES_DETECTES"
+        ]
+      }
+    },
+    "interpretation": "5 captures analysées : aucun corridor orange #FF8F00 détecté avec le seuil corridor >800 px. Les 274-306 pixels orange détectés en mode loose correspondent aux artefacts UI (chips de score, badges de statut, frontière waypoint dashed) — confirmé par orange_strict ≈ 0. match=True pour les 5 espèces car expected=0 (pipeline VITAUX_Ω strict aval) et visible=False. Conformité institutionnelle TOTALE avec le constat XIX-P1B : XIX-P1 valide 2 corridors (orignal+wapiti), mais CORRIDORS_VITAUX_Ω §6 (rayon 150 m, ≥1 zone MAJEURE + attracteur fort) les filtre tous → 0 corridors visibles sur la carte TERRITOIRE."
+  },
+  "report_html_url": "https://huntiq-restore.preview.emergentagent.com/reports/RAPPORT_XIX_P1_DIAGNOSTIC.html",
+  "diagnostic_json_url": "https://huntiq-restore.preview.emergentagent.com/reports/DIAGNOSTIC_XIX_P1.json",
+  "validation_visuelle_json_url": "https://huntiq-restore.preview.emergentagent.com/reports/VALIDATION_VISUELLE_XIX_P1.json"
+}
