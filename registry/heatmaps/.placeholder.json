@@ -1,0 +1,9 @@
+{
+  "registry": "HEATMAPS-Ω",
+  "version": "V0.1-PHASE-XVII",
+  "license": "DETERMINISTIC_FALLBACK",
+  "description": "Heatmaps placeholder — données réelles MFFP/SEPAQ/USGS/NOAA/NASA à intégrer ultérieurement",
+  "ndvi_zone_default": 0.62,
+  "snow_depth_cm_default": 18,
+  "thermal_anomaly_default": 0.0
+}

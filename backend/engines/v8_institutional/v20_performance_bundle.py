@@ -346,6 +346,15 @@ async def v20_territoire_bundle(
     # ═══ VEINEUX_Ω — transformation géométrique amont (V30 intact) ═══
     result = apply_veineux_omega_to_bundle(result)
     result = apply_renduomega_to_bundle(result)
+    # ═══ PHASE_XVII — ÉCOLOGIQUE_Ω : annotation consensus écologique ═══
+    try:
+        from engines.v8_institutional.ecological_orchestrator_omega import orchestrate_bundle
+        result = orchestrate_bundle(result, species=species)
+    except Exception as _e:
+        # Tolérance institutionnelle : annotation est best-effort,
+        # ne doit pas bloquer le bundle si l'orchestrateur n'est pas dispo
+        result["ecological_orchestrator_applied"] = False
+        result["ecological_orchestrator_error"] = str(_e)
 
     bv = validate_bundle({
         "zones": result["zones"],

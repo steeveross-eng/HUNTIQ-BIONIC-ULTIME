@@ -1165,6 +1165,14 @@ try:
 except Exception as e:
     logger.warning(f"XII-SUPRA CACHE_DIAGNOSTIC_Ω router not loaded: {e}")
 
+# ═══ PHASE XVII-SUPRA — ECOLOGICAL ORCHESTRATOR Ω ═══
+try:
+    from routes.ecological_orchestrator_router import router as ecological_orchestrator_router
+    app.include_router(ecological_orchestrator_router)
+    logger.info("✓ XVII-SUPRA active : ECOLOGICAL_ORCHESTRATOR_Ω (/api/v30/corridors/ecological-orchestrator)")
+except Exception as e:
+    logger.warning(f"XVII-SUPRA ECOLOGICAL_ORCHESTRATOR_Ω router not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")
