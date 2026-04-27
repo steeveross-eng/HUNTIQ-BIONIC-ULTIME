@@ -185,8 +185,11 @@ def _smooth_laplacian(path: List[List[float]], passes: int = 2, factor: float = 
     return p
 
 
-def _organic_amplitude(path: List[List[float]], seed: int = 0) -> List[List[float]]:
-    """Perturbation latérale sinusoïdale faible amplitude (organicité)."""
+def _organic_amplitude(path: List[List[float]], seed: int = 0,
+                        amplitude_m: float = AMPLITUDE_ORGANIC_M) -> List[List[float]]:
+    """Perturbation latérale sinusoïdale faible amplitude (organicité).
+    PHASE_XVI : `amplitude_m` modulable par profil biologique d'espèce.
+    """
     if len(path) < 4:
         return list(path)
     out: List[List[float]] = [list(path[0])]
@@ -208,7 +211,7 @@ def _organic_amplitude(path: List[List[float]], seed: int = 0) -> List[List[floa
         phase = (i / N) * math.pi * 2
         h1 = math.sin(phase * 3 + seed * 0.3)
         h2 = math.sin(phase * 7 + seed * 0.71) * 0.5
-        amp_m = AMPLITUDE_ORGANIC_M * (h1 + h2) * 0.6
+        amp_m = amplitude_m * (h1 + h2) * 0.6
         d_lat, d_lng = _meters_to_latlng(p_curr[0], nx * amp_m, ny * amp_m)
         out.append([p_curr[0] + d_lat, p_curr[1] + d_lng])
     out.append(list(path[-1]))
@@ -376,10 +379,23 @@ def _process_single_corridor(corridor: Dict[str, Any],
     #    SKIP pour corridors INTERZONE/ENTERING : ils sont DÉJÀ construits
     #    avec une courbure biologique veineuse (_add_biological_curvature).
     #    Une double perturbation créerait des angles aigus > 45°.
+    #
+    #    PHASE_XVI : amplitude modulée par profil biologique d'espèce
+    #    (faible=0.6 / moyenne=1.0 / elevee=1.5 / tres_elevee=2.0).
     is_interzone = bool(corridor.get("interzone_generated")) or bool(corridor.get("entering_corridor"))
     if not is_interzone:
         seed = abs(hash(str(corridor.get("id") or "corr"))) % 997
-        veined = _organic_amplitude(veined, seed=seed)
+        # Amplitude factor par espèce
+        amp_factor = 1.0
+        try:
+            from engines.v8_institutional.species_modulator_omega import compute_amplitude_factor
+            sp_key = corridor.get("species") or corridor.get("species_profile")
+            if sp_key:
+                amp_factor = float(compute_amplitude_factor(sp_key))
+        except Exception:
+            amp_factor = 1.0
+        veined = _organic_amplitude(veined, seed=seed,
+                                     amplitude_m=AMPLITUDE_ORGANIC_M * amp_factor)
 
     # 4. Lissage Laplacien (courbure progressive)
     veined = _smooth_laplacian(veined, passes=2, factor=0.25)

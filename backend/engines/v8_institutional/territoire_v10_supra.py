@@ -195,41 +195,66 @@ def compute_corridors_omega(lat, lon, species, month, hour, wind_deg, terrain_v1
     """ENGINE CORRIDOR-Omega: 4 niveaux, Catmull-Rom, reseau continu.
     MOTEUR AUTONOME — ZERO interaction vers SALINES/HOTSPOTS/ZONES/CONTAMINATION.
 
-    Phase XI-SUPRA-H (ENGINE CORRIDORS VERSION Ω — IA-CORRIDORS) :
+    PHASE_XVI_ENGINE_CORRIDORS_UNIFIÉ_Ω (2026-04-26) :
+      - Branchement OBLIGATOIRE au registre `species_profiles_v1.json`
+        via `species_modulator_omega.get_modulation_summary()`.
+      - R_MIN/R_MAX dynamiques par espèce (typical_length_m du registry).
+      - Amplitude organique modulée par profil biologique (faible/moyenne/elevee).
+      - Vigilance → tortuosité (sinuosity multiplier).
+      - Style corridor_style → modulation du nombre de corridors.
+      - Slope tolerance et water buffer issus du registry.
+
+    Phase XI-SUPRA-H (héritage) :
       - Rayon fonctionnel 600 m ± 30 % (420–780 m) autour du waypoint
       - Aucune référence aux affûts (directive STEEVE-MAX 2026-04-20)
       - Spécificité stricte : un corridor = une espèce
       - Validation géométrique (segment ≤ 20 m, angle ≤ 45°) appliquée par IA-CORRIDORS
     """
+    # PHASE_XVI — modulation par espèce via registry officiel
+    try:
+        from engines.v8_institutional.species_modulator_omega import get_modulation_summary
+        mod = get_modulation_summary(species)
+    except Exception:
+        mod = {
+            "radius_action": {"r_min_deg": 420.0/111000.0, "r_max_deg": 780.0/111000.0,
+                               "r_min_m": 420.0, "r_max_m": 780.0},
+            "amplitude_factor": 1.0, "tortuosity_factor": 1.0,
+            "slope_tolerance_deg": 25.0, "water_buffer": {"water_dist_min_m": 30.0},
+        }
+
     sp = SPECIES_PROFILES.get(species, SPECIES_PROFILES["cerf"])
     cos_lat = max(0.5, math.cos(math.radians(lat)))
     corridors = []
     t = terrain_v10
 
-    # Phase XI-SUPRA-H : rayon fonctionnel 600 m ± 30 % (directive VERSION Ω)
-    # 420 m → 0.00379° ; 780 m → 0.00703°
-    R_MIN_DEG = 420.0 / 111000.0   # ≈ 0.00379°
-    R_MAX_DEG = 780.0 / 111000.0   # ≈ 0.00703°
+    # PHASE_XVI : R_MIN/R_MAX dynamiques par espèce (clippés [420, 780])
+    R_MIN_DEG = mod["radius_action"]["r_min_deg"]
+    R_MAX_DEG = mod["radius_action"]["r_max_deg"]
+    AMP_FACTOR = float(mod.get("amplitude_factor", 1.0))
+    TORT_FACTOR = float(mod.get("tortuosity_factor", 1.0))
+    SLOPE_TOL_DYN = float(mod.get("slope_tolerance_deg") or sp["slope_tol"])
+    WATER_BUF_MIN = float((mod.get("water_buffer") or {}).get("water_dist_min_m") or 10.0)
 
     for i in range(sp["n"]):
-        angle = i * (360 / sp["n"]) + _seed(lat, lon, f"c10a_{i}") * 25
+        angle = i * (360 / sp["n"]) + _seed(lat, lon, f"c10a_{i}") * 25 * TORT_FACTOR
         rad = math.radians(angle)
-        # Longueur dans la plage [R_MIN_DEG, R_MAX_DEG] pour rester dans le rayon fonctionnel Ω.
+        # Longueur dans la plage dynamique [R_MIN_DEG, R_MAX_DEG] selon profil espèce.
         dist = R_MIN_DEG + _seed(lat, lon, f"c10d_{i}") * (R_MAX_DEG - R_MIN_DEG)
 
         # Start au voisinage du waypoint (dans le rayon min) ; End à distance fonctionnelle.
         s_lat = lat + math.sin(rad) * dist * 0.2
         s_lon = lon + math.cos(rad) * dist * 0.2 / cos_lat
-        e_angle = angle + 15 + _seed(lat, lon, f"c10ea_{i}") * 40 * (1 + sp["sinuosity"])
+        # Sinuosité finale = profil INLINE × tortuosity_factor du registry
+        e_angle = angle + 15 + _seed(lat, lon, f"c10ea_{i}") * 40 * (1 + sp["sinuosity"] * TORT_FACTOR)
         e_rad = math.radians(e_angle)
         # End total offset from waypoint: entre R_MIN et R_MAX
         e_lat = lat + math.sin(e_rad) * dist
         e_lon = lon + math.cos(e_rad) * dist / cos_lat
 
         slope = t.get("pente_deg", 10)
-        if slope > sp["slope_tol"]:
+        if slope > SLOPE_TOL_DYN:    # PHASE_XVI : tolérance pente dynamique
             continue
-        if t.get("distance_eau_m", 999) < 10:
+        if t.get("distance_eau_m", 999) < WATER_BUF_MIN:   # PHASE_XVI : buffer eau dynamique
             continue
 
         base = (1 - t.get("cost_surface", 0.3)) * 40 + 15
