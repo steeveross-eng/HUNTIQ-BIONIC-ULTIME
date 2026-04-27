@@ -1370,6 +1370,23 @@ async def compute_territoire_v10(lat, lon, species, month, hour, wind_deg=225, w
         "hotspots": hotspots,
         "salines": salines,
         "wind_vectors": wind_vectors,
+        # PHASE-C R2 — réconciliation institutionnelle vent (audit Phase-B B-1)
+        "wind_truth": {
+            "wind_deg": round(real_wind_deg, 1),
+            "wind_speed_kmh": round(real_wind_speed, 1),
+            "source": "open-meteo via terrain_v10.meteo (with param fallback)",
+            "canonical_engine": "ENGINE_VENT (engine_sensoriel_vent_odeurs)",
+            "wind_vectors_role": "DERIVED_VISUAL_FAN (centered on wind_truth.wind_deg)",
+        },
+        "wind_vectors_meta": {
+            "source": "engine_vent.compute_wind_vectors",
+            "parent_truth": "wind_truth.wind_deg",
+            "n_vectors": 8,
+            "step_deg": 15,
+            "spread_deg": 7 * 15,
+            "central_index": 4,
+            "phase_c_r2_applied": True,
+        },
         "contamination": contamination,
         "contamination_v2": contamination_v2,
         "contamination_v2_heatmap": contamination_v2_heatmap,

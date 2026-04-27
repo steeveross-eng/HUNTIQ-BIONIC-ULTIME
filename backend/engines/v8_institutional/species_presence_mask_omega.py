@@ -200,22 +200,78 @@ def apply_presence_mask_to_bundle(bundle: Dict[str, Any],
     corridors_before = len(bundle.get("corridors") or [])
 
     if ENFORCE_MODE and presence["status"] == ABSENT:
-        # Court-circuit : corridors vidés + traçabilité institutionnelle
+        # ═══════════════════════════════════════════════════════════════════
+        # PHASE-C R1 — PURGE COMPLÈTE INSTITUTIONNELLE DES ARTEFACTS ABSENT
+        # ═══════════════════════════════════════════════════════════════════
+        # Doctrine BCE-4X : si l'espèce n'est pas présente sur le territoire
+        # (registre MFFP+SEPAQ+Atlas), AUCUN artefact dépendant de l'espèce
+        # ne doit être émis : ni corridors, ni affuts, ni hotspots (qui sont
+        # dérivés des affuts), ni salines (calculées par bio_species), ni
+        # contamination/contamination_v2 (zones de pression d'odeur), ni
+        # données sensorielles vent/odeurs/son spécifiques à l'espèce.
+        # Les couches d'infrastructure écologique du territoire (zones,
+        # hydat, terrain, habitats_critiques) sont préservées pour l'audit
+        # global du territoire (visibilité opérationnelle).
+        # ═══════════════════════════════════════════════════════════════════
+        purge_counts = {
+            "corridors": corridors_before,
+            "affuts": len(bundle.get("affuts") or []),
+            "hotspots": len(bundle.get("hotspots") or []),
+            "salines": len(bundle.get("salines") or []),
+            "contamination": len(bundle.get("contamination") or []),
+            "contamination_zones": len(bundle.get("contamination_zones") or []),
+            "wind_vectors": len(bundle.get("wind_vectors") or []),
+        }
         bundle["corridors"] = []
         bundle["corridors_rejected_bio_presence_mask"] = [
             {"reason": "species_absent_from_territory",
              "canonical": presence["canonical"],
              "source": presence.get("source")}
         ]
-        # Les affuts sont calculés par espèce (poste de tir sur corridor-cible) :
-        # sans corridor, aucun affut n'a de pertinence biologique → vidage.
-        # Les salines / hotspots / habitats_critiques / zones vitales sont des
-        # infrastructures écologiques intrinsèques au territoire, préservées
-        # à des fins d'audit et de visibilité globale (conforme BCE-4X).
-        affuts_before = len(bundle.get("affuts") or [])
         bundle["affuts"] = []
-        bundle["affuts_rejected_bio_presence_mask_count"] = affuts_before
+        bundle["affuts_rejected_bio_presence_mask_count"] = purge_counts["affuts"]
+        # PHASE-C R1 (P0) — purge des artefacts dépendants de l'espèce
+        bundle["hotspots"] = []
+        bundle["hotspots_rejected_bio_presence_mask_count"] = purge_counts["hotspots"]
+        bundle["salines"] = []
+        bundle["salines_rejected_bio_presence_mask_count"] = purge_counts["salines"]
+        bundle["contamination"] = []
+        bundle["contamination_zones"] = []
+        bundle["contamination_rejected_bio_presence_mask_count"] = purge_counts["contamination"]
+        # contamination_v2 (dict) : neutralisation institutionnelle (préserve la
+        # forme du dict pour les consommateurs UI mais vide les zones).
+        cv2 = bundle.get("contamination_v2")
+        if isinstance(cv2, dict):
+            bundle["contamination_v2"] = {
+                **cv2,
+                "polygons": [],
+                "zones": [],
+                "active": False,
+                "bio_presence_mask_purged": True,
+            }
+        cv2_heatmap = bundle.get("contamination_v2_heatmap")
+        if isinstance(cv2_heatmap, dict):
+            bundle["contamination_v2_heatmap"] = {
+                **cv2_heatmap,
+                "points": [],
+                "bio_presence_mask_purged": True,
+            }
+        # wind_vectors : neutralisation des vecteurs visuels (le vent météo
+        # reste consultable via sensoriel_vent_odeurs comme source de vérité).
+        bundle["wind_vectors"] = []
+        bundle["wind_vectors_rejected_bio_presence_mask_count"] = purge_counts["wind_vectors"]
+        # ENGINE_SON / sensoriel_vent_odeurs : marquer comme inactif (le score
+        # olfactif/sonore n'a pas de sens pour une espèce ABSENT).
+        svo = bundle.get("sensoriel_vent_odeurs")
+        if isinstance(svo, dict):
+            bundle["sensoriel_vent_odeurs"] = {
+                **svo,
+                "active": False,
+                "bio_presence_mask_purged": True,
+                "score": 0.0,
+            }
         bundle["bio_presence_mask_halt"] = True
+        bundle["bio_presence_mask_purge_counts"] = purge_counts
     else:
         bundle["bio_presence_mask_halt"] = False
 

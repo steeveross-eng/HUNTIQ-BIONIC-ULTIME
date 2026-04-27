@@ -18,11 +18,21 @@ def compute_sensoriel_vent_odeurs(terrain_v10: dict, wind_deg: float, wind_speed
     score = round(olfactive * 50 + wind_optim * 0.25 + canopy * 25, 1)
     score = min(100, max(0, score))
 
+    # PHASE-C R3 — exposer cone_axis_deg + cone_aperture_deg
+    # Cône olfactif/sonore : centré sur wind_deg + 180° (sous-vent : où l'odeur
+    # se propage). Aperture par défaut 30° (cohérent avec compute_scent_cone).
+    cone_axis = (wind_deg + 180.0) % 360.0
+    cone_aperture = 30.0
+
     return {
         "engine": ENGINE_NAME, "version": ENGINE_VERSION, "score": score,
         "olfactive_diffusion": olfactive,
         "wind_speed_kmh": wind_speed,
         "wind_optim_score": round(wind_optim, 1),
         "wind_deg": wind_deg,
+        # PHASE-C R3 — cohérence vent → cône directionnel
+        "cone_axis_deg": round(cone_axis, 1),
+        "cone_aperture_deg": cone_aperture,
+        "cone_axis_source": "wind_deg + 180° (downwind propagation)",
         "data_sources": ["OPEN_METEO"],
     }

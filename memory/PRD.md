@@ -27,6 +27,37 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE-TERRITOIRE-Ω-AUDIT_INTER-ENGINES_ULTIME / PHASE-C STABILISATION (2026-04-27)**
+  Application du Plan de stabilisation TERRITOIRE_Ω émis en PHASE-B. Toutes les
+  modifications strictement en aval V30 (registry_lock_omega.py et
+  engine_ia_corridors_omega.py SHA-256 inchangés).
+  - **R1 (P0)** — `species_presence_mask_omega.apply_presence_mask_to_bundle()`
+    étendue : pour ABSENT, purge complète de corridors+affuts+hotspots+salines+
+    contamination+contamination_zones+wind_vectors et neutralisation de
+    contamination_v2+contamination_v2_heatmap+sensoriel_vent_odeurs (active=false,
+    score=0). Préservation zones+hydat+terrain+habitats_critiques pour audit
+    territoire global. Trace : `bio_presence_mask_purge_counts`.
+  - **R2 (P1)** — Réconciliation des sources vent dans `engine_vent.py` +
+    `territoire_v10_supra.py`. Ajout des champs institutionnels :
+    `bundle.wind_truth` (source canonique) + `bundle.wind_vectors_meta`
+    (méta-données du dérivé visuel) + annotations `wind_vectors[i].axis_offset_deg`,
+    `is_central`, `parent_truth_deg`, `parent_truth_speed_kmh`, `source`.
+  - **R3 (P2)** — `engine_sensoriel_vent_odeurs_omega` expose désormais
+    `cone_axis_deg = (wind_deg + 180°) % 360` et `cone_aperture_deg = 30°`.
+    Validation : 45° pour wind_deg=225° sur les 5 espèces.
+  - **R4 (P0)** — Suite pytest dédiée `tests/test_phase_c_inter_engines_consistency.py`
+    avec 10 tests couvrant R1+R2+R3+V30 SHA-256 invariance.
+    Régression globale : **83 PASSED · 3 SKIPPED · 0 FAILED**.
+  - **R5 (P1)** — CI guard SHA-256 V30 dans `.github/workflows/v30_lock_check.yml` :
+    bloque toute PR mutant les modules V30 verrouillés.
+  - Anti-régression smoke : 4/4 PASS (purge dindon, conservation orignal, wind_truth
+    cross-species, cone_axis cross-species).
+  - Livrables HTTPS publiés :
+    - `RAPPORT_PHASE_C.html` (14.5 KB · SHA-256 `32592c3e…`)
+    - `SYNTHESE_PHASE_C.json` (10.1 KB · SHA-256 `c7c87711…`)
+    - `phase_c/runtime_<species>.json` × 5 (87.9 KB orignal · 42.7 KB dindon · etc.)
+    - `.github/workflows/v30_lock_check.yml` (CI guard)
+
 - **PHASE-TERRITOIRE-Ω-AUDIT_INTER-ENGINES_ULTIME / PHASE-B AUDIT INTÉGRAL READ-ONLY (2026-04-27)**
   Audit massif inter-engines précision ×2, READ-ONLY strict, conforme directive
   Commandant STEEVE-MAX. 9 engines audités · 3 chaînes de dépendances ·

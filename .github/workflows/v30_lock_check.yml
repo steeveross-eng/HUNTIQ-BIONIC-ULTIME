@@ -1,0 +1,66 @@
+name: V30 LOCK · SHA-256 GUARD · BCE-4X ULTIME ABSOLU
+
+# ───────────────────────────────────────────────────────────────────────────────
+# PHASE-C R5 (P1) — CI GUARD V30
+#
+# Garantie cryptographique institutionnelle : tout PR qui mute le moteur V30
+# verrouillé (registry_lock_omega.py ou engine_ia_corridors_omega.py) est
+# automatiquement BLOQUÉ par cette pipeline.
+#
+# Empreintes verrouillées (SHA-256) :
+#   - registry_lock_omega.py        : fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c
+#   - engine_ia_corridors_omega.py  : bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3
+#
+# Doctrine BCE-4X : V30 LOCKED · XIX non recomputé · VITAUX non recomputé.
+# Toute modification de ces fichiers exige une dérogation institutionnelle
+# explicite et une mise à jour de ce workflow par le commandant (STEEVE-MAX).
+# ───────────────────────────────────────────────────────────────────────────────
+
+on:
+  pull_request:
+    paths:
+      - 'backend/engines/v8_institutional/registry_lock_omega.py'
+      - 'backend/engines/v8_institutional/engine_ia_corridors_omega.py'
+      - '.github/workflows/v30_lock_check.yml'
+  push:
+    branches: [main, master]
+    paths:
+      - 'backend/engines/v8_institutional/registry_lock_omega.py'
+      - 'backend/engines/v8_institutional/engine_ia_corridors_omega.py'
+
+jobs:
+  v30-sha256-guard:
+    name: V30 SHA-256 immutability guard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify V30 SHA-256 invariance
+        run: |
+          set -e
+          REGISTRY_EXPECTED="fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c"
+          ENGINE_EXPECTED="bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3"
+          REGISTRY_ACTUAL=$(sha256sum backend/engines/v8_institutional/registry_lock_omega.py | awk '{print $1}')
+          ENGINE_ACTUAL=$(sha256sum backend/engines/v8_institutional/engine_ia_corridors_omega.py | awk '{print $1}')
+          echo "registry_lock_omega.py    actual : $REGISTRY_ACTUAL"
+          echo "registry_lock_omega.py    expected: $REGISTRY_EXPECTED"
+          echo "engine_ia_corridors_omega actual : $ENGINE_ACTUAL"
+          echo "engine_ia_corridors_omega expected: $ENGINE_EXPECTED"
+          if [ "$REGISTRY_ACTUAL" != "$REGISTRY_EXPECTED" ]; then
+            echo "::error::V30 LOCK VIOLATED · registry_lock_omega.py SHA-256 changed"
+            echo "::error::Expected $REGISTRY_EXPECTED · got $REGISTRY_ACTUAL"
+            exit 1
+          fi
+          if [ "$ENGINE_ACTUAL" != "$ENGINE_EXPECTED" ]; then
+            echo "::error::V30 LOCK VIOLATED · engine_ia_corridors_omega.py SHA-256 changed"
+            echo "::error::Expected $ENGINE_EXPECTED · got $ENGINE_ACTUAL"
+            exit 1
+          fi
+          echo "✅ V30 LOCK INTACT · registry_lock_omega.py + engine_ia_corridors_omega.py SHA-256 confirmés"
+
+      - name: Run pytest V30 lock invariance test
+        run: |
+          cd backend
+          pip install -q -r requirements.txt
+          python -m pytest tests/test_phase_c_inter_engines_consistency.py::test_v30_lock_sha256_invariance -v
