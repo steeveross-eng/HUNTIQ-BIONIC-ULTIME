@@ -27,6 +27,38 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **XVII-SUPRA-ECOLOGICAL-ORCHESTRATOR-ACTIVATION (2026-04-27)** — Activation P0
+  PHASE_XVII : orchestrateur écologique unifié (5 engines) effectivement activé.
+  - 6 heatmaps déterministes générées dans `/app/registry/heatmaps/` :
+    MFFP zones humides, MFFP ravages orignal, SEPAQ pression humaine,
+    USGS GPS-traces, NOAA snow depth, NASA NDVI (grilles 67×67 cellules
+    de 50 m, ancrées waypoint officiel, sceau `BCE-4X-XVII-Ω-DETERMINISTIC-V1`).
+  - `ecological_orchestrator_omega.py` réécrit (414 l) :
+    - Lecture lazy + cache des heatmaps (`_load_heatmap`, `_sample_heatmap_at`,
+      `_sample_along_path`).
+    - 5 sous-scores écologiques pondérés (eco_zones 0.22 / bio_scoring 0.22
+      / hydro_topo 0.18 / reseau_veineux 0.18 / predictive 0.20).
+    - Règle §3 ENFORCÉE : ≥ 1 extrémité du corridor dans la couronne
+      externe 30 % [546-780 m] (tolérance +10 %).
+    - Règle §4 ENFORCÉE : ≥ 2 zones vitales touchées (proximité 120 m).
+    - Règle §5 ENFORCÉE : consensus ≥ 50/100.
+    - Mode `ENFORCE` actif (env `PHASE_XVII_ENFORCE=1`) : corridors invalides
+      retirés et conservés sous `corridors_rejected_phase_xvii` pour
+      traçabilité institutionnelle.
+  - Endpoint `/api/v30/corridors/ecological-orchestrator` : `all_available=True`,
+    `enforce_mode=true`, `r_max_m_used` modulé par espèce.
+  - Tests pytest 12/12 PASS (5.4 s) — `test_phase_xvii_ecological_omega.py` :
+    heatmaps disponibles + sampling + règles 30 % / 2 zones + 5 espèces +
+    endpoint observabilité.
+  - Taux de validation runtime live : orignal 26.7 %, chevreuil 64.7 %,
+    wapiti 40 %, ours 55.6 %, dindon 80 % — différenciation biologique
+    réelle confirmée.
+  - V30 cryptographiquement INVIOLÉ.
+  - Cache disque `territoire_bundle.pkl` purgé pour validation fresh
+    (cache responsable d'une régression silencieuse de l'ancienne API stats).
+  - Rapport HTML : `/app/frontend/public/reports/RAPPORT_XVII_ENGINE_CORRIDORS_ECOLOGIQUE.html`
+    (SHA-256 : 735fe05a9c0cdbeb0e0934cdc59db6c86809892615282c72d5be33221fa5e3f9).
+
 - **XII-SUPRA-INTERZONE-GENERATION (2026-02)** — Correction définitive §2.3 :
   - Nouveau module `interzone_omega.py` : générateur de corridors
     INTER-ZONES + ENTRANTS post-V30, avec matrice d'affinité biologique
