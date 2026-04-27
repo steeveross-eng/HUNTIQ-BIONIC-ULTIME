@@ -39,7 +39,12 @@ def reset_caches():
     from engines.v8_institutional.ecological_orchestrator_omega import reset_heatmap_cache
     reset_dataset_cache()
     reset_heatmap_cache()
+    # XIX-P2 désactivé — préserve l'isolement des tests XIX-P1
+    import engines.v8_institutional.origine_externe_inversion_omega as xix2
+    _saved = xix2.ENFORCE_MODE
+    xix2.ENFORCE_MODE = False
     yield
+    xix2.ENFORCE_MODE = _saved
 
 
 # ───────────────────────────────────────────────────────────────────────

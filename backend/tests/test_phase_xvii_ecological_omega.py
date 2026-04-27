@@ -46,8 +46,13 @@ def reset_cache():
     import engines.v8_institutional.origine_externe_filter_omega as xix
     _saved_enforce = xix.ENFORCE_MODE
     xix.ENFORCE_MODE = False
+    # XIX-P2 désactivé — pas de modification du path en isolation XVII
+    import engines.v8_institutional.origine_externe_inversion_omega as xix2
+    _saved_xix2 = xix2.ENFORCE_MODE
+    xix2.ENFORCE_MODE = False
     yield
     xix.ENFORCE_MODE = _saved_enforce
+    xix2.ENFORCE_MODE = _saved_xix2
 
 
 # ───────────────────────────────────────────────────────────────────────

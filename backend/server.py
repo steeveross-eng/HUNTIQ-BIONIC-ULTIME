@@ -1197,6 +1197,14 @@ try:
 except Exception as e:
     logger.warning(f"XIX-P1 ORIGINE_EXTERNE_FILTER_Ω router not loaded: {e}")
 
+# ═══ PHASE XIX-P2 — ORIGINE_EXTERNE_INVERSION_Ω ═══
+try:
+    from routes.origine_externe_inversion_router import router as origine_externe_inversion_router
+    app.include_router(origine_externe_inversion_router)
+    logger.info("✓ XIX-P2 active : ORIGINE_EXTERNE_INVERSION_Ω (/api/v30/corridors/origine-inversion)")
+except Exception as e:
+    logger.warning(f"XIX-P2 ORIGINE_EXTERNE_INVERSION_Ω router not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

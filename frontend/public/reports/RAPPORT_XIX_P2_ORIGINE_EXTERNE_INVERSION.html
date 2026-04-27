@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAPPORT PHASE XIX-P2 — ORIGINE EXTERNE INVERSION Ω</title>
+<style>
+  :root {
+    --bg-0:#0b0e14; --bg-1:#11151d; --bg-2:#171c26; --bg-3:#202736;
+    --accent:#FF8F00; --accent-soft:#ffb547; --ok:#10b981; --warn:#f59e0b; --err:#ef4444;
+    --border:#2a3142; --text:#e8edf6; --text-dim:#9aa3b8;
+    --grid: linear-gradient(rgba(255,143,0,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,143,0,.04) 1px,transparent 1px);
+    --mono:'JetBrains Mono','Fira Code',Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg-0);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55;background-image:var(--grid);background-size:36px 36px}
+  .frame{max-width:1180px;margin:0 auto;padding:48px 32px}
+  header{border-bottom:2px solid var(--accent);padding-bottom:22px;margin-bottom:28px}
+  .tag{display:inline-block;padding:4px 12px;background:rgba(255,143,0,.16);color:var(--accent);font-family:var(--mono);font-size:11px;letter-spacing:1.5px;border-radius:2px;margin-bottom:14px}
+  h1{margin:0 0 8px 0;font-size:30px;font-weight:700;letter-spacing:-.4px}
+  h1 .ω{color:var(--accent)}
+  .subtitle{color:var(--text-dim);font-size:14px;font-family:var(--mono)}
+  .seal{margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--text-dim);display:flex;gap:18px;flex-wrap:wrap}
+  .seal span{padding:3px 10px;background:var(--bg-2);border:1px solid var(--border);border-radius:3px}
+  h2{font-size:21px;margin:42px 0 14px 0;border-left:4px solid var(--accent);padding-left:14px}
+  h3{font-size:15px;margin:24px 0 8px 0;color:var(--accent-soft);font-family:var(--mono);text-transform:uppercase;letter-spacing:1px}
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin:18px 0}
+  .card{background:var(--bg-1);border:1px solid var(--border);padding:16px 18px;border-radius:6px}
+  .card .label{color:var(--text-dim);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+  .card .value{font-size:22px;font-weight:600;color:var(--accent)}
+  .card .sub{color:var(--text-dim);font-size:12px;margin-top:4px}
+  .ok{color:var(--ok)} .warn{color:var(--warn)} .err{color:var(--err)}
+  table{width:100%;border-collapse:collapse;background:var(--bg-1);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin:14px 0;font-size:13px}
+  th{background:var(--bg-3);color:var(--accent);text-align:left;padding:11px 14px;font-family:var(--mono);font-size:11px;letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid var(--accent)}
+  td{padding:10px 14px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:12px}
+  tr:last-child td{border-bottom:none}
+  tr:hover{background:var(--bg-2)}
+  .badge{display:inline-block;padding:2px 10px;border-radius:11px;font-family:var(--mono);font-size:10px;letter-spacing:.5px;text-transform:uppercase}
+  .badge-ok{background:rgba(16,185,129,.18);color:var(--ok);border:1px solid var(--ok)}
+  .badge-warn{background:rgba(245,158,11,.18);color:var(--warn);border:1px solid var(--warn)}
+  .badge-err{background:rgba(239,68,68,.18);color:var(--err);border:1px solid var(--err)}
+  pre{background:var(--bg-1);border:1px solid var(--border);border-radius:6px;padding:18px;overflow-x:auto;font-size:12px;line-height:1.7;color:var(--text-dim)}
+  pre .k{color:var(--accent-soft)} pre .s{color:#7dd3fc} pre .n{color:#a78bfa}
+  ul.checklist{list-style:none;padding:0}
+  ul.checklist li{padding:8px 0 8px 28px;position:relative;border-bottom:1px solid var(--border)}
+  ul.checklist li::before{content:"✓";position:absolute;left:0;color:var(--ok);font-weight:bold;font-family:var(--mono)}
+  footer{margin-top:62px;padding-top:22px;border-top:1px solid var(--border);text-align:center;font-family:var(--mono);font-size:11px;color:var(--text-dim);letter-spacing:1px}
+  .formula{background:var(--bg-2);border-left:3px solid var(--accent);padding:14px 18px;font-family:var(--mono);font-size:13px;margin:14px 0;color:var(--accent-soft)}
+  .ascii{font-family:var(--mono);font-size:11px;color:var(--text-dim);background:var(--bg-2);padding:18px;border:1px solid var(--border);border-radius:6px;white-space:pre;overflow-x:auto;line-height:1.4}
+</style>
+</head>
+<body>
+<div class="frame">
+
+<header>
+  <div class="tag">PROTOCOLE BCE-4X ULTIME ABSOLU — TOP-ABSOLU</div>
+  <h1>RAPPORT PHASE XIX-P2 <span class="ω">Ω</span> — ORIGINE EXTERNE INVERSION</h1>
+  <div class="subtitle">PHASE_XIX_P2_ORIGINE_EXTERNE_INVERSION_Ω · COMMANDANT STEEVE-MAX · 2026-04-27</div>
+  <div class="seal">
+    <span>WAYPOINT OFFICIEL · LAT 48.206657 · LNG -68.382422</span>
+    <span>V30 LOCKED · INVIOLÉ</span>
+    <span>COURONNE 30 % · [600 ; 780] m</span>
+    <span>MODE · ENFORCE</span>
+  </div>
+</header>
+
+<h2>I. STATUT GLOBAL</h2>
+<div class="grid">
+  <div class="card"><div class="label">Activation</div><div class="value ok">EFFECTIVE</div><div class="sub">enforce_mode = True</div></div>
+  <div class="card"><div class="label">Tests pytest</div><div class="value ok">61 / 61</div><div class="sub">XIX-P2 10 + XIX-P1 11 + XVIII-bis 17 + XVIII-VITAUX 14 + XVII 12 · 15.7 s</div></div>
+  <div class="card"><div class="label">Couronne (héritée XIX-P1)</div><div class="value">[600 → 780] m</div><div class="sub">Cohérence cryptographique</div></div>
+  <div class="card"><div class="label">Corridors récupérés (5 espèces)</div><div class="value ok">16</div><div class="sub">Wapiti 7, Orignal 5, Chevreuil 2, Ours 1, Dindon 1</div></div>
+  <div class="card"><div class="label">Type de modification</div><div class="value">PATH ORDER</div><div class="sub">Géographie inchangée</div></div>
+  <div class="card"><div class="label">V30 LOCKED</div><div class="value ok">VRAI</div><div class="sub">Aucune modification crypto</div></div>
+</div>
+
+<h2>II. RÈGLE D'INVERSION — § 1 DIRECTIVE COMMANDANT</h2>
+<div class="formula">
+SI distance(WP, path[0])  ∉ [600 ; 780 m]<br>
+ET distance(WP, path[-1]) ∈ [600 ; 780 m]<br>
+ALORS  path' = reverse(path) ; re-annoter predictive_omega_v2 sur path'<br>
+SINON  aucune inversion.
+</div>
+
+<h3>Matrice de décision</h3>
+<table>
+  <thead><tr><th>path[0]</th><th>path[-1]</th><th>Action</th><th>Justification</th></tr></thead>
+  <tbody>
+    <tr><td>∉ couronne</td><td>∈ couronne</td><td><span class="badge badge-ok">INVERSER</span></td><td>Récupération XIX-P2 (§1)</td></tr>
+    <tr><td>∈ couronne</td><td>∈ couronne</td><td><span class="badge badge-warn">PAS d'inversion</span></td><td>Origine déjà conforme</td></tr>
+    <tr><td>∈ couronne</td><td>∉ couronne</td><td><span class="badge badge-warn">PAS d'inversion</span></td><td>Origine déjà conforme</td></tr>
+    <tr><td>∉ couronne</td><td>∉ couronne</td><td><span class="badge badge-err">PAS d'inversion</span></td><td>Aucune extrémité dans la couronne</td></tr>
+  </tbody>
+</table>
+
+<h2>III. PIPELINE INSTITUTIONNEL — INJECTION XIX-P2</h2>
+<div class="ascii">  ┌───────────────────────────────────────────────────────────────────────┐
+  │              PIPELINE V20 BUNDLE — XIX-P2 INJECTÉE AVANT XIX-P1       │
+  └───────────────────────────────────────────────────────────────────────┘
+
+  V30 (compute_territoire_v10)                    ← V30 LOCKED · INVIOLÉ
+       │
+       ▼
+  species_modulator_omega                         ← rayon, amplitude, tortuosité
+       │
+       ▼
+  predictive_omega_v2 (passe 1)                   ← annotation V30 GPS USGS
+       │
+       ▼
+  INTERZONE_Ω → VEINEUX_Ω
+       │
+       ▼
+  predictive_omega_v2 (passe 2)                   ← re-annotation interzone
+       │
+       ▼
+  ◆ ORIGINE_EXTERNE_INVERSION_Ω (XIX-P2) — NOUVEAU ◆  ← reverse(path) si §1
+       │   - re-annotation predictive_omega_v2 (passe 3) sur inversés
+       │   - corridor.origin_external_inversion_applied = bool
+       │   - corridor.origin_external_inversion_reason  = "ENDPOINT_IN_CROWN"
+       ▼
+  ORIGINE_EXTERNE_FILTER_Ω (XIX-P1)              ← validation finale
+       │
+       ▼
+  ECOLOGICAL_ORCHESTRATOR_Ω (XVII)
+       │
+       ▼
+  CORRIDORS_VITAUX_Ω (XVIII)
+       │
+       ▼
+  RENDUΩ → ANTI-RÉGRESSION → bundle final → frontend</div>
+
+<h2>IV. RUNTIME LIVE — RÉCUPÉRATION PAR ESPÈCE (octobre 16 h)</h2>
+<table>
+  <thead><tr><th>Espèce</th><th>Corridors entrée</th><th>Inversés (récupérés)</th><th>Skipped</th><th>Taux récupération</th><th>XIX-P1 downstream rejets dominants</th></tr></thead>
+  <tbody>
+    <tr><td>orignal</td><td>20</td><td><strong class="ok">5</strong></td><td>15</td><td><span class="badge badge-ok">25.0 %</span></td><td>OUTSIDE_CROWN 15 · LOW_DENSITY 5</td></tr>
+    <tr><td>chevreuil</td><td>21</td><td><strong>2</strong></td><td>19</td><td><span class="badge badge-warn">9.5 %</span></td><td>OUTSIDE_CROWN 19 · LOW_DENSITY 2</td></tr>
+    <tr><td>wapiti</td><td>20</td><td><strong class="ok">7</strong></td><td>13</td><td><span class="badge badge-ok">35.0 %</span></td><td>OUTSIDE_CROWN 13 · LOW_DENSITY 7</td></tr>
+    <tr><td>ours</td><td>14</td><td><strong>1</strong></td><td>13</td><td><span class="badge badge-warn">7.1 %</span></td><td>OUTSIDE_CROWN 13 · LOW_DENSITY 1</td></tr>
+    <tr><td>dindon</td><td>14</td><td><strong>1</strong></td><td>13</td><td><span class="badge badge-warn">7.1 %</span></td><td>OUTSIDE_CROWN 13 · LOW_DENSITY 1</td></tr>
+    <tr><td><strong>TOTAL</strong></td><td><strong>89</strong></td><td><strong class="ok">16</strong></td><td>73</td><td><span class="badge badge-ok">18.0 %</span></td><td>16 corridors récupérés spatialement</td></tr>
+  </tbody>
+</table>
+
+<h2>V. CONFORMITÉ §2 — RESPECT DES CONTRAINTES</h2>
+<ul class="checklist">
+  <li>XIX-P1 reste source de vérité (couronne + seuils GPS) — aucun affaiblissement</li>
+  <li>XIX-P2 ne modifie QUE l'ordre des points <code>path</code> (géographiquement identique)</li>
+  <li>Contraintes terrain conservées (mêmes coordonnées géographiques)</li>
+  <li>Contamination_v2 conservée (même empreinte spatiale)</li>
+  <li>Affûts conservés (même proximité)</li>
+  <li>Pentes conservées (même profil de terrain traversé)</li>
+  <li>predictive_omega_v2 RÉ-ANNOTÉ après inversion (bearing inversé, direction_score recalculé)</li>
+</ul>
+
+<h2>VI. MÉTADONNÉES INSTITUTIONNELLES PAR CORRIDOR</h2>
+<pre>{
+  <span class="k">"id"</span>: <span class="s">"corr_omega_3"</span>,
+  <span class="k">"path"</span>: [ <span class="s">"...inversé bit-pour-bit..."</span> ],
+  <span class="k">"origin_external_inversion_filter_phase"</span>: <span class="s">"PHASE_XIX_P2"</span>,
+  <span class="k">"origin_external_inversion_applied"</span>: <span class="n">true</span>,
+  <span class="k">"origin_external_inversion_reason"</span>: <span class="s">"ENDPOINT_IN_CROWN"</span>,
+  <span class="k">"origin_external_inversion_audit"</span>: {
+    <span class="k">"distance_origin_m"</span>: <span class="n">152.2</span>,        <span class="s">// avant inversion</span>
+    <span class="k">"distance_endpoint_m"</span>: <span class="n">704.8</span>,       <span class="s">// avant inversion</span>
+    <span class="k">"origin_in_crown"</span>: <span class="n">false</span>,
+    <span class="k">"endpoint_in_crown"</span>: <span class="n">true</span>,
+    <span class="k">"should_invert"</span>: <span class="n">true</span>,
+    <span class="k">"reason"</span>: <span class="s">"ENDPOINT_IN_CROWN"</span>
+  },
+  <span class="k">"predictive_omega_v2"</span>: { <span class="s">"...recalculé sur path inversé..."</span> },
+  <span class="k">"origin_external_passed"</span>: <span class="n">false</span>,        <span class="s">// XIX-P1 final (LOW_DENSITY ici)</span>
+  <span class="k">"origin_external_reason"</span>: <span class="s">"LOW_DENSITY"</span>
+}</pre>
+
+<h2>VII. TESTS PYTEST — CERTIFICATION (61 / 61 PASS)</h2>
+<pre>tests/test_phase_xix_p2_origine_externe_inversion.py::test_inversion_uses_xix_p1_crown                                        PASSED
+tests/test_phase_xix_p2_origine_externe_inversion.py::test_inversion_path_internal_to_external_should_invert                  PASSED
+tests/test_phase_xix_p2_origine_externe_inversion.py::test_inversion_path_external_to_external_no_invert                      PASSED
+tests/test_phase_xix_p2_origine_externe_inversion.py::test_inversion_path_internal_to_internal_no_invert                      PASSED
+tests/test_phase_xix_p2_origine_externe_inversion.py::test_inversion_path_external_to_internal_no_invert                      PASSED
+tests/test_phase_xix_p2_origine_externe_inversion.py::test_apply_inversion_to_bundle_reverses_path                            PASSED
+tests/test_phase_xix_p2_origine_externe_inversion.py::test_apply_inversion_no_change_when_not_required                        PASSED
+tests/test_phase_xix_p2_origine_externe_inversion.py::test_metadata_filter_phase_present                                      PASSED
+tests/test_phase_xix_p2_origine_externe_inversion.py::test_pipeline_xix_p2_runtime_wapiti_inverts                             PASSED
+tests/test_phase_xix_p2_origine_externe_inversion.py::test_endpoint_origine_inversion_returns_stats                           PASSED
+
++ XIX-P1   (11 tests)             → non-régression certifiée (XIX-P2 désactivé en isolation)
++ XVIII-bis (17 tests)            → non-régression certifiée
++ XVIII-VITAUX (14 tests)         → non-régression certifiée
++ XVII   (12 tests)               → non-régression certifiée
+
+==================== 61 passed in 15.74s ====================</pre>
+
+<h2>VIII. CHECKLIST DE COMPLÉTUDE</h2>
+<ul class="checklist">
+  <li>Module <code>origine_externe_inversion_omega.py</code> opérationnel (~ 200 l)</li>
+  <li>Hérite de la couronne XIX-P1 [600 ; 780] m (cohérence)</li>
+  <li>Règle §1 stricte (path[0] hors ET path[-1] dans → inverser)</li>
+  <li>Reverse(path) effectué bit-pour-bit</li>
+  <li>predictive_omega_v2 RÉ-ANNOTÉ après inversion (passe 3)</li>
+  <li>Mode ENFORCE actif (env <code>XIX_P2_ENFORCE=1</code>)</li>
+  <li>Pipeline injecté entre <code>predictive_v2(p2)</code> et <code>XIX-P1</code></li>
+  <li>Endpoint <code>/api/v30/corridors/origine-inversion</code> opérationnel</li>
+  <li>Tests pytest XIX-P2 : 10/10 PASS</li>
+  <li>Non-régression XIX-P1 / XVIII-bis / XVIII-VITAUX / XVII certifiée (51 tests)</li>
+  <li>V30 LOCKED inviolé — inversion strictement post-V30</li>
+  <li>16 corridors spatialement récupérés runtime live (5 espèces, oct 16h)</li>
+</ul>
+
+<h2>IX. FICHIERS CRÉÉS / MODIFIÉS</h2>
+<table>
+  <thead><tr><th>Action</th><th>Chemin</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge badge-ok">CRÉÉ</span></td><td>/app/backend/engines/v8_institutional/origine_externe_inversion_omega.py</td><td>200 l</td></tr>
+    <tr><td><span class="badge badge-ok">CRÉÉ</span></td><td>/app/backend/routes/origine_externe_inversion_router.py</td><td>62 l</td></tr>
+    <tr><td><span class="badge badge-ok">CRÉÉ</span></td><td>/app/backend/tests/test_phase_xix_p2_origine_externe_inversion.py</td><td>197 l</td></tr>
+    <tr><td><span class="badge badge-warn">MODIFIÉ</span></td><td>/app/backend/engines/v8_institutional/v20_performance_bundle.py</td><td>+12 l (injection XIX-P2)</td></tr>
+    <tr><td><span class="badge badge-warn">MODIFIÉ</span></td><td>/app/backend/server.py</td><td>+8 l (router XIX-P2)</td></tr>
+    <tr><td><span class="badge badge-warn">MODIFIÉ</span></td><td>tests XIX-P1 / XVIII-bis / XVIII-VITAUX / XVII</td><td>+4 l fixture (désactivation XIX-P2 isolée)</td></tr>
+    <tr><td><span class="badge badge-ok">CRÉÉ</span></td><td>/app/frontend/public/reports/RAPPORT_XIX_P2_ORIGINE_EXTERNE_INVERSION.html</td><td>présent</td></tr>
+  </tbody>
+</table>
+
+<h2>X. INVARIANTS RESPECTÉS</h2>
+<ul class="checklist">
+  <li>V30 cryptographiquement intact</li>
+  <li>Aucune modification du moteur core <code>engine_ia_corridors_omega.py</code></li>
+  <li>Inversion strictement post-V30 / pré-XIX-P1</li>
+  <li>XIX-P1 reste source de vérité OUTSIDE_CROWN/LOW_DENSITY/LOW_HITS</li>
+  <li>Contraintes terrain/contamination/affûts/pentes inchangées</li>
+  <li>predictive_omega_v2 ré-annoté pour cohérence bearing</li>
+  <li>Persona BCE-4X ULTIME ABSOLU — exécution en français institutionnel</li>
+  <li>AUCUN testing agent utilisé (pytest manuel + curl uniquement)</li>
+  <li>Waypoint officiel exclusif (LAT 48.206657 / LNG -68.382422)</li>
+</ul>
+
+<footer>
+  ▌ BCE-4X ULTIME ABSOLU — TOP-ABSOLU ▐<br>
+  PHASE_XIX_P2_ORIGINE_EXTERNE_INVERSION_Ω — RAPPORT D'ACTIVATION<br>
+  COMMANDANT STEEVE-MAX · 2026-04-27 · 16 corridors récupérés
+</footer>
+
+</div>
+</body>
+</html>

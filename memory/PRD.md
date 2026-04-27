@@ -27,6 +27,38 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **XIX-P2-ORIGINE-EXTERNE-INVERSION-Ω (2026-04-27)** — Récupération non
+  destructive des corridors V30 dont l'extrémité tombe dans la couronne
+  externe par inversion conditionnelle path[0] ↔ path[-1].
+  - Nouveau module `origine_externe_inversion_omega.py` (200 l).
+  - Hérite de la couronne XIX-P1 [600 ; 780] m (cohérence cryptographique).
+  - Règle §1 stricte : SI path[0] ∉ couronne ET path[-1] ∈ couronne →
+    `path' = reverse(path)` + ré-annotation predictive_omega_v2 (passe 3).
+  - 4 cas de la matrice de décision testés (interne→externe, externe→externe,
+    interne→interne, externe→interne).
+  - Pipeline injecté entre `predictive_omega_v2(p2)` et
+    `ORIGINE_EXTERNE_FILTER_Ω (XIX-P1)`.
+  - Métadonnées institutionnelles ajoutées sur chaque corridor :
+    `origin_external_inversion_filter_phase`, `origin_external_inversion_applied`,
+    `origin_external_inversion_reason`, `origin_external_inversion_audit`.
+  - Endpoint `/api/v30/corridors/origine-inversion` opérationnel.
+  - Conformité §2 stricte : XIX-P1 reste source de vérité ; XIX-P2 ne modifie
+    QUE l'ordre des points (géographie identique, contraintes terrain /
+    contamination_v2 / affûts / pentes inchangées) ; predictive_omega_v2
+    ré-annoté pour cohérence bearing après inversion.
+  - **Constat institutionnel runtime** (oct 16h) : 16 corridors récupérés
+    spatialement / 89 entrants total → wapiti 7/20 (35 %), orignal 5/20 (25 %),
+    chevreuil 2/21 (9.5 %), ours 1/14 (7.1 %), dindon 1/14 (7.1 %).
+    XIX-P1 rejette ensuite les inversés sur LOW_DENSITY (seuil 0.25 vs ratios
+    observés ~0.05), conformément à la directive de stricte rigueur GPS.
+  - Tests pytest 10/10 PASS (XIX-P2) + non-régression certifiée XIX-P1 (11) +
+    XVIII-bis (17) + XVIII-VITAUX (14) + XVII (12) = **61/61 conjugué (15.7 s)**.
+  - Fixtures XIX-P1 / XVIII-bis / XVIII-VITAUX / XVII étendues : désactivation
+    transparente de `XIX_P2.ENFORCE_MODE` pour préserver l'isolement
+    sémantique des tests historiques.
+  - V30 cryptographiquement INVIOLÉ.
+  - Rapport HTML : `/app/frontend/public/reports/RAPPORT_XIX_P2_ORIGINE_EXTERNE_INVERSION.html`.
+
 - **XIX-P1-ORIGINE-EXTERNE-FILTER-Ω (2026-04-27)** — Activation du filtre
   d'origine spatiale externe + validation par densité GPS réelle.
   - Nouveau module `origine_externe_filter_omega.py` (270 l).
