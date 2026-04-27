@@ -242,6 +242,14 @@ def test_pipeline_xviii_annotates_all_species(species, month, hour):
         )
 
     bundle = asyncio.run(go())
+    # PHASE_XVIII_BIO_PRESENCE_MASK_Ω : si l'espèce est ABSENTE du territoire
+    # (wapiti/dindon au BSL), le pipeline est court-circuité en amont.
+    # Aucun corridor → aucune annotation predictive_omega_v2 possible.
+    if bundle.get("bio_presence_mask_halt") is True:
+        assert (bundle.get("corridors") or []) == []
+        stats_mask = bundle.get("bio_presence_mask_stats") or {}
+        assert stats_mask.get("presence_status") == "ABSENT"
+        return
     assert bundle.get("predictive_omega_v2_applied") is True
     pv2_stats = bundle.get("predictive_omega_v2_stats") or {}
     assert pv2_stats["corridors_scored"] >= 1

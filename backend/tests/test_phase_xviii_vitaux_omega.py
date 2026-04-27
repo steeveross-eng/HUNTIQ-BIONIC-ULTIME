@@ -272,6 +272,13 @@ def test_pipeline_vitaux_filter_per_species(species, month, hour):
         )
 
     bundle = asyncio.run(go())
+    # PHASE_XVIII_BIO_PRESENCE_MASK_Ω : halt amont pour espèces ABSENTES au
+    # territoire (wapiti/dindon au BSL). Aucune validation vitaux-aval possible.
+    if bundle.get("bio_presence_mask_halt") is True:
+        assert (bundle.get("corridors") or []) == []
+        stats_mask = bundle.get("bio_presence_mask_stats") or {}
+        assert stats_mask.get("presence_status") == "ABSENT"
+        return
     assert bundle.get("corridors_vitaux_omega_applied") is True
     stats = bundle.get("corridors_vitaux_omega_stats") or {}
     assert "total_input" in stats

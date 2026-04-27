@@ -187,6 +187,14 @@ def test_pipeline_xix_p2_runtime_wapiti_inverts():
         )
 
     bundle = asyncio.run(go())
+    # PHASE_XVIII_BIO_PRESENCE_MASK_Ω : wapiti ABSENT au BSL → halt amont,
+    # le filtre XIX-P2 n'est jamais exécuté. Vérification de l'halt à la place.
+    if bundle.get("bio_presence_mask_halt") is True:
+        assert (bundle.get("corridors") or []) == []
+        stats_mask = bundle.get("bio_presence_mask_stats") or {}
+        assert stats_mask.get("presence_status") == "ABSENT"
+        assert stats_mask.get("canonical") == "wapiti"
+        return
     assert bundle.get("origine_externe_inversion_applied") is True
     stats = bundle.get("origine_externe_inversion_stats") or {}
     assert "inverted_count" in stats

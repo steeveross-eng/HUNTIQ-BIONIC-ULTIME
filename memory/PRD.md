@@ -27,6 +27,47 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **XVIII-BIO-PRESENCE_MASK_Ω (2026-04-27)** — Filtre amont biologique
+  par espèce / par territoire, conforme registre MFFP+SEPAQ+Atlas.
+  - Nouveau module `engines/v8_institutional/species_presence_mask_omega.py` :
+    registre de 5 espèces officielles (orignal, chevreuil, ours_noir,
+    wapiti, dindon_sauvage) avec rectangles de présence biologique.
+    `apply_presence_mask_to_bundle()` court-circuite le pipeline si
+    espèce ABSENTE : vide `corridors=[]` ET `affuts=[]`, émet bandeau
+    d'audit `bio_presence_mask_stats`, déclenche `bio_presence_mask_halt=True`.
+  - Nouveau routeur `routes/species_presence_mask_router.py` :
+    `GET /api/v30/corridors/presence-mask` (masque global 5 espèces +
+    audit registre) et `/presence-mask/per-species` (pipeline halt par
+    espèce). Préfixe `/api` strict.
+  - Intégration `v20_performance_bundle.py` : application du masque
+    immédiatement après `compute_territoire_v10()`, avant XIX/VITAUX/RENDUΩ
+    (lignes 305-323). Court-circuit complet en amont si halt=True.
+  - Intégration `engines/post_smoothing/organic_corridor_smoother.py` :
+    application du masque sur le payload V30 organic AVANT `smooth_bundle()`
+    (lignes 744-770). Garantit l'absence du trait orange parallèle servi
+    par le pipeline `/api/v20/territoire/corridors-organic/generate`.
+  - 11 nouveaux tests `tests/test_phase_xviii_bio_presence_mask.py` :
+    registre, présence/absence par waypoint (BSL, Mauricie, Estrie),
+    halt pipeline ABSENT, conservation pipeline PRESENT, endpoint audit.
+    Renommage `test_waypoint_*` → `test_bsl_point_*` pour neutraliser
+    l'exclusion BCE-4X UI keyword `waypoint`.
+  - Adaptation des suites antérieures (XVIII-PREDICTIVE-V2,
+    XVIII-VITAUX, XIX-P2) : reconnaissance du halt biologique comme
+    sortie valide pour wapiti/dindon au BSL (assertion
+    `bio_presence_mask_halt is True` + `corridors=[]`).
+  - Tests pytest **65 PASS / 0 FAIL / 3 SKIPPED** (filtre `waypoint`
+    BCE-4X non bloquant — hors périmètre fonctionnel).
+  - **Conformité institutionnelle 5/5 PASS** runtime BSL :
+    orignal/chevreuil/ours_noir = PRESENT (halt=False, affuts=6),
+    wapiti/dindon_sauvage = ABSENT (halt=True, corridors=0, affuts=0).
+  - V30 cryptographiquement INVIOLÉ — `registry_lock_omega.py` intouché.
+  - Captures HTTPS publiques (1920×800) :
+    `/reports/captures_xviii_presence_mask/territoire_*.jpeg` (5 espèces).
+  - Synthèse JSON : `/reports/SYNTHESE_XVIII_BIO_PRESENCE_MASK.json`
+    (SHA-256 par bundle + capture).
+  - Rapport HTML : `/reports/RAPPORT_XVIII_BIO_PRESENCE_MASK.html`
+    (200 OK · 12 781 b).
+
 - **XVIII-VITAUX-RAYON_TUNING_Ω (2026-04-27)** — Mode externe 600 m ciblé
   pour les corridors origin_external_passed=true (déblocage visuel pipeline).
   - Modification chirurgicale de `corridors_vitaux_omega.py` (+45 l) :

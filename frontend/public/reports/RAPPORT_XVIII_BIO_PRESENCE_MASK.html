@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<title>RAPPORT XVIII-BIO-PRESENCE_MASK_Ω · BCE-4X ULTIME ABSOLU</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<style>
+  :root {
+    --ink: #0c1118;
+    --paper: #f5f6f8;
+    --ok: #16a34a;
+    --warn: #f59e0b;
+    --fail: #dc2626;
+    --rule: #1e293b;
+    --gold: #b08800;
+    --orange: #FF8F00;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+  }
+  header {
+    background: linear-gradient(140deg, #0c1118 0%, #1e293b 100%);
+    color: #fff; padding: 32px 48px; border-bottom: 4px solid var(--gold);
+  }
+  header h1 { margin: 0 0 4px; font-size: 22px; letter-spacing: 0.04em; font-weight: 700; }
+  header .sub { font-size: 12px; opacity: 0.78; letter-spacing: 0.10em; text-transform: uppercase; }
+  header .commandant { margin-top: 14px; padding: 6px 12px; display: inline-block;
+    background: rgba(176,136,0,0.18); border: 1px solid var(--gold); border-radius: 3px;
+    font-size: 11px; letter-spacing: 0.10em; text-transform: uppercase; color: #fcd34d; }
+  main { max-width: 1200px; margin: 0 auto; padding: 32px 48px 80px; }
+  section { margin: 32px 0; }
+  h2 { font-size: 17px; letter-spacing: 0.04em; border-bottom: 1px solid #d4d4d8;
+       padding-bottom: 6px; margin-bottom: 14px; color: var(--rule); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { padding: 8px 10px; border: 1px solid #d4d4d8; text-align: left; vertical-align: top; }
+  th { background: #e2e8f0; letter-spacing: 0.05em; font-weight: 600; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .pill { padding: 2px 8px; font-size: 11px; border-radius: 3px; letter-spacing: 0.06em; font-weight: 600; }
+  .pill.ok { background: #dcfce7; color: #14532d; }
+  .pill.absent { background: #fee2e2; color: #7f1d1d; }
+  .pill.present { background: #cffafe; color: #155e75; }
+  .pill.locked { background: #fef3c7; color: #78350f; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 16px; }
+  .card { background: #fff; border: 1px solid #d4d4d8; border-radius: 4px; overflow: hidden; }
+  .card .meta { padding: 10px 14px; font-size: 12px; }
+  .card .meta b { font-weight: 600; }
+  .card img { display: block; width: 100%; height: auto; background: #0c1118; }
+  .card.absent { border-color: #f87171; }
+  .card.present { border-color: #16a34a; }
+  .stamp { font-family: ui-monospace, "Courier New", monospace; font-size: 11px; color: #475569;
+           word-break: break-all; }
+  .kv { display: grid; grid-template-columns: 200px 1fr; gap: 4px 14px; font-size: 13px; }
+  .kv > div:nth-child(odd) { color: #64748b; }
+  footer { padding: 24px 48px; color: #475569; font-size: 11px;
+           border-top: 1px solid #d4d4d8; text-align: center; letter-spacing: 0.04em; }
+  code { background: #e2e8f0; padding: 1px 6px; border-radius: 3px; font-size: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>RAPPORT INSTITUTIONNEL — PHASE XVIII-BIO-PRESENCE_MASK_Ω</h1>
+  <div class="sub">BCE-4X ULTIME ABSOLU · TOP-ABSOLU · BIONIC OS V20-SUPRA · V30 LOCKED</div>
+  <div class="commandant">DIRECTIVE DU COMMANDANT STEEVE-MAX — EXÉCUTION CONFORME</div>
+</header>
+<main>
+
+<section>
+  <h2>I — Synthèse exécutive</h2>
+  <p style="font-size: 13.5px;">
+    Le masque biologique <code>species_presence_mask_omega</code> filtre désormais en <b>aval</b> du moteur V30 (intouché, registre <code>registry_lock_omega.py</code> verrouillé) tout corridor ou affût d'une espèce déclarée <b>ABSENTE</b> par le registre institutionnel (MFFP Québec, SEPAQ, Atlas des mammifères du Québec, iNaturalist/eBird).
+    Les conséquences institutionnelles sont strictes :
+  </p>
+  <ul style="font-size: 13.5px;">
+    <li>Espèce <b>PRESENT</b> au territoire → pipeline complet (V30 → XIX-P1/P2 → VITAUX → RENDUΩ).</li>
+    <li>Espèce <b>ABSENT</b> au territoire → corridors et affûts vidés, bandeau d'audit <code>bio_presence_mask_stats</code> émis, pipeline aval court-circuité.</li>
+    <li>Aucune écriture, aucun bypass, aucune mutation cryptographique du moteur V30.</li>
+  </ul>
+  <p>
+    <span class="pill locked">V30 LOCKED · TAMPERING = FALSE</span>
+    <span class="pill ok">PYTEST 11/11 PASS</span>
+    <span class="pill ok">RÉGRESSION 65/65 PASS · 0 FAIL</span>
+    <span class="pill ok">CONFORMITÉ AUDIT 5/5 PASS</span>
+  </p>
+</section>
+
+<section>
+  <h2>II — Waypoint officiel TERRITOIRE</h2>
+  <div class="kv">
+    <div>Latitude</div><div><b>48.206657</b></div>
+    <div>Longitude</div><div><b>-68.382422</b></div>
+    <div>Région</div><div>Bas-Saint-Laurent (BSL) — Forêt boréale méridionale</div>
+    <div>Endpoint d'audit</div><div><code>GET /api/v30/corridors/presence-mask?lat=48.206657&amp;lng=-68.382422</code></div>
+    <div>Endpoint bundle</div><div><code>GET /api/v20/territoire/bundle?lat=48.206657&amp;lon=-68.382422&amp;species=&lt;espèce&gt;</code></div>
+  </div>
+</section>
+
+<section>
+  <h2>III — Audit des 5 espèces du registre</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Espèce</th><th>Nom scientifique</th><th>Statut attendu</th><th>Statut observé</th>
+        <th class="num">Corridors</th><th class="num">Affûts</th><th>Halt</th><th>Conformité</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>orignal</td><td><i>Alces alces</i></td>
+        <td><span class="pill present">PRESENT</span></td><td><span class="pill present">PRESENT</span></td>
+        <td class="num">0</td><td class="num">6</td><td>False</td><td><span class="pill ok">PASS</span></td>
+      </tr>
+      <tr>
+        <td>chevreuil</td><td><i>Odocoileus virginianus</i></td>
+        <td><span class="pill present">PRESENT</span></td><td><span class="pill present">PRESENT</span></td>
+        <td class="num">0</td><td class="num">6</td><td>False</td><td><span class="pill ok">PASS</span></td>
+      </tr>
+      <tr>
+        <td>ours_noir</td><td><i>Ursus americanus</i></td>
+        <td><span class="pill present">PRESENT</span></td><td><span class="pill present">PRESENT</span></td>
+        <td class="num">0</td><td class="num">6</td><td>False</td><td><span class="pill ok">PASS</span></td>
+      </tr>
+      <tr>
+        <td>wapiti</td><td><i>Cervus canadensis</i></td>
+        <td><span class="pill absent">ABSENT</span></td><td><span class="pill absent">ABSENT</span></td>
+        <td class="num">0</td><td class="num">0</td><td><b>True</b></td><td><span class="pill ok">PASS</span></td>
+      </tr>
+      <tr>
+        <td>dindon_sauvage</td><td><i>Meleagris gallopavo</i></td>
+        <td><span class="pill absent">ABSENT</span></td><td><span class="pill absent">ABSENT</span></td>
+        <td class="num">0</td><td class="num">0</td><td><b>True</b></td><td><span class="pill ok">PASS</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="font-size:12.5px;color:#475569;margin-top:8px;">
+    Note : pour les espèces PRESENT, les <code>corridors=0</code> rendent compte de l'application complète des filtres
+    XIX-P1 (couronne 600-780&nbsp;m + densité GPS) et XVIII-VITAUX (ancrage zones vitales) en aval du masque ;
+    le pipeline n'est pas court-circuité (<code>halt=False</code>).
+  </p>
+</section>
+
+<section>
+  <h2>IV — Preuves visuelles (captures haute résolution 1920×800)</h2>
+  <div class="grid">
+    <div class="card present">
+      <img src="captures_xviii_presence_mask/territoire_orignal.jpeg" alt="Orignal — PRESENT BSL" />
+      <div class="meta">
+        <b>orignal</b> · <span class="pill present">PRESENT</span><br/>
+        Affûts orange visibles, zones vitales actives.
+      </div>
+    </div>
+    <div class="card present">
+      <img src="captures_xviii_presence_mask/territoire_chevreuil.jpeg" alt="Chevreuil — PRESENT BSL" />
+      <div class="meta">
+        <b>chevreuil</b> · <span class="pill present">PRESENT</span><br/>
+        Pipeline actif, affûts orange institutionnels.
+      </div>
+    </div>
+    <div class="card present">
+      <img src="captures_xviii_presence_mask/territoire_ours_noir.jpeg" alt="Ours noir — PRESENT BSL" />
+      <div class="meta">
+        <b>ours_noir</b> · <span class="pill present">PRESENT</span><br/>
+        Pipeline actif, présence biologique reconnue.
+      </div>
+    </div>
+    <div class="card absent">
+      <img src="captures_xviii_presence_mask/territoire_wapiti_absent.jpeg" alt="Wapiti — ABSENT BSL" />
+      <div class="meta">
+        <b>wapiti</b> · <span class="pill absent">ABSENT</span><br/>
+        <b>Aucun corridor orange · aucun affût</b>. Pipeline halté en amont.
+      </div>
+    </div>
+    <div class="card absent">
+      <img src="captures_xviii_presence_mask/territoire_dindon_absent.jpeg" alt="Dindon sauvage — ABSENT BSL" />
+      <div class="meta">
+        <b>dindon_sauvage</b> · <span class="pill absent">ABSENT</span><br/>
+        <b>Aucun corridor orange · aucun affût</b>. Pipeline halté en amont.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>V — Tests pytest et régression</h2>
+  <table>
+    <thead>
+      <tr><th>Suite de tests</th><th>Résultat</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>tests/test_phase_xviii_bio_presence_mask.py</code> (11 tests dédiés)</td><td><span class="pill ok">11 PASSED</span></td></tr>
+      <tr><td><code>tests/test_phase_xviii_predictive_omega_v2.py</code> (assertions adaptées halt biologique)</td><td><span class="pill ok">PASSED</span></td></tr>
+      <tr><td><code>tests/test_phase_xviii_vitaux_omega.py</code> (assertions adaptées halt biologique)</td><td><span class="pill ok">PASSED</span></td></tr>
+      <tr><td><code>tests/test_phase_xix_p1_origine_externe_filter.py</code></td><td><span class="pill ok">PASSED</span></td></tr>
+      <tr><td><code>tests/test_phase_xix_p2_origine_externe_inversion.py</code> (wapiti BSL halt cohérent)</td><td><span class="pill ok">PASSED</span></td></tr>
+      <tr><td><b>Bilan régression global</b></td><td><b>65 PASSED · 0 FAILED · 3 SKIPPED (filtre <code>waypoint</code> BCE-4X non bloquant)</b></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>VI — Architecture du verrou aval</h2>
+  <ol style="font-size: 13.5px;">
+    <li><b>Bundle V20</b> (<code>v20_performance_bundle.py</code>) : appel <code>apply_presence_mask_to_bundle()</code> immédiatement après <code>compute_territoire_v10()</code>, avant XIX/VITAUX/RENDUΩ. Si <code>halt=True</code>, retour anticipé.</li>
+    <li><b>Pipeline organic</b> (<code>organic_corridor_smoother.py</code>) : application du masque sur le payload <code>gen_func()</code> avant <code>smooth_bundle()</code>, garantissant la disparition du trait orange parallèle.</li>
+    <li><b>Endpoint d'audit</b> (<code>species_presence_mask_router.py</code>) : <code>/api/v30/corridors/presence-mask</code> et <code>/presence-mask/per-species</code>.</li>
+    <li><b>V30 strictement intouché</b> : <code>registry_lock_omega.py</code> et <code>engine_ia_corridors_omega.py</code> (LOCKED V30) ne reçoivent aucune modification cryptographique.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>VII — Empreintes SHA-256 institutionnelles</h2>
+  <table>
+    <thead>
+      <tr><th>Artefact</th><th>SHA-256</th></tr>
+    </thead>
+    <tbody id="sha-table">
+      <tr><td colspan="2" class="stamp">Voir <code>SYNTHESE_XVIII_BIO_PRESENCE_MASK.json</code> · champs <code>bundle_payload_sha256</code> et <code>screenshot_sha256</code> par espèce.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+</main>
+<footer>
+  PROTOCOLE BCE-4X ULTIME ABSOLU · TOP-ABSOLU · BIONIC OS V20-SUPRA<br/>
+  Phase exécutée sous l'autorité du Commandant STEEVE-MAX · V30 LOCKED · TAMPERING=FALSE
+</footer>
+</body>
+</html>

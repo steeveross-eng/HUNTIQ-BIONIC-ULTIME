@@ -1,0 +1,213 @@
+{
+  "phase": "PHASE_XVIII_BIO_PRESENCE_MASK_Ω",
+  "subphase_tag": "PHASE_XVIII_BIO_PRESENCE_MASK",
+  "directive": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU",
+  "commandant": "STEEVE-MAX",
+  "generated_at_utc": "2026-04-27T20:35:11.774931+00:00",
+  "v30_engine_status": "LOCKED — registry_lock_omega.py V30 INTOUCHED",
+  "v30_engine_tampering": false,
+  "filter_position": "AVAL — application après V30, avant rendu (pipeline V20 + pipeline organic)",
+  "waypoint_official": {
+    "lat": 48.206657,
+    "lng": -68.382422,
+    "label": "BAS-SAINT-LAURENT — TERRITOIRE BIONIC OS V20-SUPRA"
+  },
+  "registry_audit": {
+    "endpoint": "GET /api/v30/corridors/presence-mask?lat=48.206657&lng=-68.382422",
+    "species_count": 5,
+    "biological_sources": [
+      "MFFP Québec — Cartes de répartition officielles 2023-2024",
+      "SEPAQ — Plans directeurs par région faunique",
+      "Atlas des mammifères du Québec (Prescott, Richard 2013)",
+      "iNaturalist / eBird observations vérifiées",
+      "BIONIC OS — Registre territorial V30"
+    ]
+  },
+  "species_audit": [
+    {
+      "canonical": "orignal",
+      "common_name": "Alces alces",
+      "expected_status": "PRESENT",
+      "registry_source": "MFFP 2024 — Inventaires aériens ZEC + Plans de gestion",
+      "bundle_endpoint": "GET /api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=orignal&month=10&hour=7",
+      "bundle_payload_sha256": "c87adea06c07e3df16c34e659fc879a5950903be3826a947780a6f0ee074048b",
+      "bundle_corridors_count": 0,
+      "bundle_affuts_count": 6,
+      "bio_presence_mask_applied": true,
+      "bio_presence_mask_halt": false,
+      "presence_status_observed": "PRESENT",
+      "corridors_v30_avant_filtre": 11,
+      "corridors_v30_apres_filtre": 11,
+      "affuts_rejected_count": null,
+      "rectangles_tested": 1,
+      "screenshot_filename": "territoire_orignal.jpeg",
+      "screenshot_url_https": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xviii_presence_mask/territoire_orignal.jpeg",
+      "screenshot_sha256": "685179fe3bfadeb24fa3d9644e4e4b45db30900a5c178a89101602c617523a39",
+      "screenshot_size_bytes": 87160,
+      "conformity": "PASS"
+    },
+    {
+      "canonical": "chevreuil",
+      "common_name": "Odocoileus virginianus",
+      "expected_status": "PRESENT",
+      "registry_source": "MFFP 2024 — Réseau Cerf sud du Québec + colonisation nord",
+      "bundle_endpoint": "GET /api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=chevreuil&month=10&hour=7",
+      "bundle_payload_sha256": "86d0ea48c7e9fb8f09c61f02af04b7d0d126aa1b9800df2d96f7b0a9c5de8153",
+      "bundle_corridors_count": 0,
+      "bundle_affuts_count": 6,
+      "bio_presence_mask_applied": true,
+      "bio_presence_mask_halt": false,
+      "presence_status_observed": "PRESENT",
+      "corridors_v30_avant_filtre": 14,
+      "corridors_v30_apres_filtre": 14,
+      "affuts_rejected_count": null,
+      "rectangles_tested": 1,
+      "screenshot_filename": "territoire_chevreuil.jpeg",
+      "screenshot_url_https": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xviii_presence_mask/territoire_chevreuil.jpeg",
+      "screenshot_sha256": "4c0726a0b1c24e9a59b060c6e13819475eb71e502b99844a01863f7c8b1907e8",
+      "screenshot_size_bytes": 86875,
+      "conformity": "PASS"
+    },
+    {
+      "canonical": "ours_noir",
+      "common_name": "Ursus americanus",
+      "expected_status": "PRESENT",
+      "registry_source": "MFFP 2024 — Plan de gestion ours noir",
+      "bundle_endpoint": "GET /api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=ours_noir&month=10&hour=7",
+      "bundle_payload_sha256": "82cc82f50bbeabcf26efa7bdf47dfe0d69aa83219dce89dca362e2e7b829b241",
+      "bundle_corridors_count": 0,
+      "bundle_affuts_count": 6,
+      "bio_presence_mask_applied": true,
+      "bio_presence_mask_halt": false,
+      "presence_status_observed": "PRESENT",
+      "corridors_v30_avant_filtre": 13,
+      "corridors_v30_apres_filtre": 13,
+      "affuts_rejected_count": null,
+      "rectangles_tested": 1,
+      "screenshot_filename": "territoire_ours_noir.jpeg",
+      "screenshot_url_https": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xviii_presence_mask/territoire_ours_noir.jpeg",
+      "screenshot_sha256": "474122437a4936502b237940144f2a80e76f51a46e5d3a3a6b1a727f225ff934",
+      "screenshot_size_bytes": 87064,
+      "conformity": "PASS"
+    },
+    {
+      "canonical": "wapiti",
+      "common_name": "Cervus canadensis",
+      "expected_status": "ABSENT",
+      "registry_source": "MFFP 2024 — Programme Wapiti Québec, zones introduites uniquement",
+      "bundle_endpoint": "GET /api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=wapiti&month=10&hour=7",
+      "bundle_payload_sha256": "bd996bb02230f0fa75f53f3e782d1a07ffc07601e98c511d9a3974b379a42eb6",
+      "bundle_corridors_count": 0,
+      "bundle_affuts_count": 0,
+      "bio_presence_mask_applied": true,
+      "bio_presence_mask_halt": true,
+      "presence_status_observed": "ABSENT",
+      "corridors_v30_avant_filtre": 11,
+      "corridors_v30_apres_filtre": 0,
+      "affuts_rejected_count": 6,
+      "rectangles_tested": 3,
+      "screenshot_filename": "territoire_wapiti_absent.jpeg",
+      "screenshot_url_https": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xviii_presence_mask/territoire_wapiti_absent.jpeg",
+      "screenshot_sha256": "ed1cf903e464f0190f267ec05bd368aa43f101b30a917c20fdb994adc2d121dd",
+      "screenshot_size_bytes": 108092,
+      "conformity": "PASS"
+    },
+    {
+      "canonical": "dindon_sauvage",
+      "common_name": "Meleagris gallopavo",
+      "expected_status": "ABSENT",
+      "registry_source": "MFFP 2024 — Programme Dindon + colonisation nord 2020-2024",
+      "bundle_endpoint": "GET /api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=dindon_sauvage&month=10&hour=7",
+      "bundle_payload_sha256": "041f069797243e6c3d52c65623aaa637bcf19f46154daa2903fa7fb51320629d",
+      "bundle_corridors_count": 0,
+      "bundle_affuts_count": 0,
+      "bio_presence_mask_applied": true,
+      "bio_presence_mask_halt": true,
+      "presence_status_observed": "ABSENT",
+      "corridors_v30_avant_filtre": 14,
+      "corridors_v30_apres_filtre": 0,
+      "affuts_rejected_count": 6,
+      "rectangles_tested": 1,
+      "screenshot_filename": "territoire_dindon_absent.jpeg",
+      "screenshot_url_https": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xviii_presence_mask/territoire_dindon_absent.jpeg",
+      "screenshot_sha256": "532a17a53749c6608d0fb93c7171e07b4bbe6fdda5a1e17b5d734ee17d6db36a",
+      "screenshot_size_bytes": 86448,
+      "conformity": "PASS"
+    }
+  ],
+  "summary": {
+    "PRESENT_at_BSL": [
+      "orignal",
+      "chevreuil",
+      "ours_noir"
+    ],
+    "ABSENT_at_BSL": [
+      "wapiti",
+      "dindon_sauvage"
+    ],
+    "all_conformity_PASS": true
+  },
+  "pytest": {
+    "test_file": "/app/backend/tests/test_phase_xviii_bio_presence_mask.py",
+    "results": "11 PASSED / 0 FAILED",
+    "regression_global": "65 PASSED / 3 SKIPPED (BCE-4X UI-keyword filter, hors périmètre) / 0 FAILED",
+    "tests_actifs": [
+      "test_presence_registry_has_5_species",
+      "test_bsl_point_orignal_chevreuil_ours_present",
+      "test_bsl_point_wapiti_absent",
+      "test_bsl_point_dindon_absent",
+      "test_get_mask_summary_bsl",
+      "test_wapiti_present_seigneurie_triton_mauricie",
+      "test_dindon_present_estrie",
+      "test_pipeline_halted_when_species_absent_bsl[wapiti]",
+      "test_pipeline_halted_when_species_absent_bsl[dindon]",
+      "test_pipeline_unchanged_when_species_present_bsl",
+      "test_endpoint_presence_mask_returns_5_species"
+    ]
+  },
+  "files_modified": [
+    [
+      "/app/backend/engines/v8_institutional/species_presence_mask_omega.py",
+      "CRÉÉ — Registre + apply_presence_mask_to_bundle (vide affuts si ABSENT)"
+    ],
+    [
+      "/app/backend/routes/species_presence_mask_router.py",
+      "CRÉÉ — 2 endpoints d'audit /api/v30/corridors/presence-mask*"
+    ],
+    [
+      "/app/backend/tests/test_phase_xviii_bio_presence_mask.py",
+      "CRÉÉ — 11 tests pytest"
+    ],
+    [
+      "/app/backend/engines/v8_institutional/v20_performance_bundle.py",
+      "MODIFIÉ — court-circuit XVIII en amont (lignes 305-323)"
+    ],
+    [
+      "/app/backend/engines/post_smoothing/organic_corridor_smoother.py",
+      "MODIFIÉ — application masque AVAL pipeline organic (lignes 744-770)"
+    ],
+    [
+      "/app/backend/server.py",
+      "MODIFIÉ — enregistrement species_presence_mask_router"
+    ],
+    [
+      "/app/backend/tests/test_phase_xviii_predictive_omega_v2.py",
+      "ADAPTÉ — assertion halt biologique ABSENT cohérente"
+    ],
+    [
+      "/app/backend/tests/test_phase_xviii_vitaux_omega.py",
+      "ADAPTÉ — assertion halt biologique ABSENT cohérente"
+    ],
+    [
+      "/app/backend/tests/test_phase_xix_p2_origine_externe_inversion.py",
+      "ADAPTÉ — wapiti BSL halt cohérent"
+    ]
+  ],
+  "rule_institutionnelle": "Si le registre biologique (MFFP/SEPAQ/Atlas) classe une espèce ABSENT pour les coordonnées du territoire interrogé, le bundle V20 ET le pipeline organic vident automatiquement {corridors, affuts} et bloquent les phases aval (XIX, VITAUX, RENDUΩ). Les autres couches écologiques (zones, salines, hotspots, habitats critiques) restent préservées pour l'audit du territoire.",
+  "deliverables": {
+    "json": "/app/frontend/public/reports/SYNTHESE_XVIII_BIO_PRESENCE_MASK.json",
+    "html_report": "/app/frontend/public/reports/RAPPORT_XVIII_BIO_PRESENCE_MASK.html",
+    "screenshots_dir": "/app/frontend/public/reports/captures_xviii_presence_mask/",
+    "public_https_base": "https://huntiq-restore.preview.emergentagent.com/reports/captures_xviii_presence_mask"
+  }
+}

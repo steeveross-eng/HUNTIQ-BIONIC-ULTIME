@@ -53,21 +53,21 @@ def test_presence_registry_has_5_species():
 # ───────────────────────────────────────────────────────────────────────
 # 2. Waypoint officiel Bas-Saint-Laurent (48.21, -68.38)
 # ───────────────────────────────────────────────────────────────────────
-def test_waypoint_bsl_orignal_chevreuil_ours_present():
+def test_bsl_point_orignal_chevreuil_ours_present():
     from engines.v8_institutional.species_presence_mask_omega import get_species_presence, PRESENT
     for sp in ("orignal", "chevreuil", "ours_noir"):
         res = get_species_presence(OFFICIAL_LAT, OFFICIAL_LNG, sp)
         assert res["status"] == PRESENT, (sp, res)
 
 
-def test_waypoint_bsl_wapiti_absent():
+def test_bsl_point_wapiti_absent():
     from engines.v8_institutional.species_presence_mask_omega import get_species_presence, ABSENT
     res = get_species_presence(OFFICIAL_LAT, OFFICIAL_LNG, "wapiti")
     assert res["status"] == ABSENT, res
     assert res["reason"] == "outside_natural_range"
 
 
-def test_waypoint_bsl_dindon_absent():
+def test_bsl_point_dindon_absent():
     """Dindon limité au sud du Québec (~47°N) — 48.2° au BSL = ABSENT."""
     from engines.v8_institutional.species_presence_mask_omega import get_species_presence, ABSENT
     res = get_species_presence(OFFICIAL_LAT, OFFICIAL_LNG, "dindon_sauvage")

@@ -746,6 +746,29 @@ async def generate_smoothed(request: Request):
     if _inspect.iscoroutine(payload):
         payload = await payload
 
+    # ═══════════════════════════════════════════════════════════════════════
+    # PHASE_XVIII_BIO_PRESENCE_MASK_Ω — COURT-CIRCUIT AVAL (pipeline organic)
+    # Application du masque de présence sur ce pipeline parallèle afin de
+    # garantir l'absence visuelle totale de corridors pour espèce ABSENTE.
+    # V30 reste verrouillé : le filtre agit UNIQUEMENT en aval du générateur.
+    # ═══════════════════════════════════════════════════════════════════════
+    if isinstance(payload, dict):
+        try:
+            from engines.v8_institutional.species_presence_mask_omega import (
+                apply_presence_mask_to_bundle,
+            )
+            payload.setdefault("waypoint", {"lat": body.get("lat"), "lng": body.get("lon")})
+            payload = apply_presence_mask_to_bundle(
+                payload,
+                species=body.get("species", "orignal"),
+                lat=body.get("lat"),
+                lng=body.get("lon"),
+            )
+        except Exception as _e_mask:
+            payload["bio_presence_mask_applied"] = False
+            payload["bio_presence_mask_error"] = str(_e_mask)
+        # Si halt → corridors=[] → smooth_bundle opère sur bundle vide (no-op)
+
     if isinstance(payload, dict):
         payload = smooth_bundle(payload)
 

@@ -207,6 +207,14 @@ def apply_presence_mask_to_bundle(bundle: Dict[str, Any],
              "canonical": presence["canonical"],
              "source": presence.get("source")}
         ]
+        # Les affuts sont calculés par espèce (poste de tir sur corridor-cible) :
+        # sans corridor, aucun affut n'a de pertinence biologique → vidage.
+        # Les salines / hotspots / habitats_critiques / zones vitales sont des
+        # infrastructures écologiques intrinsèques au territoire, préservées
+        # à des fins d'audit et de visibilité globale (conforme BCE-4X).
+        affuts_before = len(bundle.get("affuts") or [])
+        bundle["affuts"] = []
+        bundle["affuts_rejected_bio_presence_mask_count"] = affuts_before
         bundle["bio_presence_mask_halt"] = True
     else:
         bundle["bio_presence_mask_halt"] = False
