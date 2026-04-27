@@ -60,7 +60,8 @@ def test_couronne_externe_constants_xix_p1():
     assert ORIGINE_EXTERNE_FRACTION == 0.30
     assert ORIGINE_RADIUS_MIN_M == 600.0
     assert ORIGINE_RADIUS_MAX_M == 780.0
-    assert THRESH_DENSITY_ORIGINE == 0.25
+    # PHASE XIX-P1B_TUNING_Ω : seuil density abaissé à 0.02 (ratios runtime 0.02-0.06)
+    assert THRESH_DENSITY_ORIGINE == 0.02
     assert THRESH_HITS_ORIGINE == 5.0
 
 
@@ -149,8 +150,8 @@ def test_origin_in_crown_with_low_density_rejected():
         "predictive_omega_v2": {
             "valid": True,
             "metrics": {
-                "gps_density_ratio": 0.05,  # < 0.25
-                "gps_weighted_hits": 12.0,  # > 5
+                "gps_density_ratio": 0.005,  # < 0.02 (seuil XIX-P1B)
+                "gps_weighted_hits": 12.0,   # > 5
             },
         },
     }
@@ -196,7 +197,8 @@ def test_metadata_fields_present():
     assert res["origin_external_filter_phase"] == "PHASE_XIX_P1"
     assert res["origin_external_radius_min_m"] == 600.0
     assert res["origin_external_radius_max_m"] == 780.0
-    assert res["origin_external_density_threshold"] == 0.25
+    # PHASE XIX-P1B_TUNING_Ω : seuil density abaissé à 0.02
+    assert res["origin_external_density_threshold"] == 0.02
     assert res["origin_external_hits_threshold"] == 5.0
     assert res["phase"] == "PHASE_XIX_P1_ORIGINE_EXTERNE_FILTER_Ω"
 
@@ -258,7 +260,8 @@ def test_endpoint_origine_externe_returns_stats():
     fs = data["filter_status"]
     assert fs["origin_radius_min_m"] == 600.0
     assert fs["origin_radius_max_m"] == 780.0
-    assert fs["thresh_density_origine"] == 0.25
+    # PHASE XIX-P1B_TUNING_Ω : seuil density abaissé à 0.02
+    assert fs["thresh_density_origine"] == 0.02
     assert fs["thresh_hits_origine"] == 5.0
     assert "OUTSIDE_CROWN" in fs["rejection_reasons_catalog"]
     assert "stats" in data

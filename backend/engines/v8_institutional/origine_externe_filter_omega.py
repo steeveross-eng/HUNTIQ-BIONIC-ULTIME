@@ -68,9 +68,10 @@ ORIGINE_EXTERNE_FRACTION = 0.30  # 30 % au-dessus du rayon nominal
 ORIGINE_RADIUS_MIN_M = RAYON_FONCTIONNEL_NOMINAL_M
 ORIGINE_RADIUS_MAX_M = RAYON_FONCTIONNEL_NOMINAL_M * (1.0 + ORIGINE_EXTERNE_FRACTION)
 
-# Seuils GPS (configurables via env, valeurs par défaut directive)
+# Seuils GPS (configurables via env, valeurs par défaut directive XIX-P1B_TUNING_Ω)
+# Calibrés sur les densités GPS observées runtime (ratios 0.02-0.06 observés).
 THRESH_DENSITY_ORIGINE = float(
-    os.environ.get("XIX_P1_THRESH_DENSITY_ORIGINE", "0.25")
+    os.environ.get("XIX_P1_THRESH_DENSITY_ORIGINE", "0.02")
 )
 THRESH_HITS_ORIGINE = float(
     os.environ.get("XIX_P1_THRESH_HITS_ORIGINE", "5.0")

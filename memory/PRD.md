@@ -27,6 +27,29 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **XIX-P1B-TUNING-Ω (2026-04-27)** — Ajustement chirurgical du seuil
+  density GPS sur ordre Commandant.
+  - `XIX_P1_THRESH_DENSITY_ORIGINE` : **0.25 → 0.02** (−92 %).
+  - `XIX_P1_THRESH_HITS_ORIGINE` : 5.0 (inchangé).
+  - `XIX_P1_RAYON_FONCTIONNEL_M` : 600 (inchangé).
+  - Justification : ratios runtime observés 0.020-0.080 selon espèce ;
+    seuil 0.25 inatteignable de la distribution réelle. Choix 0.02 = limite
+    basse de la distribution → rigueur stricte mais réaliste.
+  - 4 tests XIX-P1 mis à jour pour refléter le nouveau seuil.
+  - Tests pytest **61/61 PASS** (non-régression XIX-P2 + XVIII-bis +
+    XVIII-VITAUX + XVII certifiée, 15.6 s).
+  - **Constat institutionnel runtime** (oct 16 h) : 2 corridors débloqués
+    XIX-P1 (orignal 1 + wapiti 1) là où 0 passaient avant. Pipeline TERRITOIRE
+    ouvert sur l'aval (consensus écologique + filtre VITAUX).
+  - Constat secondaire : VITAUX_Ω (rayon 150 m) reste strict et filtre les
+    2 corridors restants car non ancrés sur ≥ 1 zone vitale + attracteur.
+    Pour faire apparaître des corridors visibles sur la carte → assouplir
+    VITAUX (rayon 200 m) OU ordonner XIX-P3 (régénération couronne externe).
+  - Variable d'environnement `XIX_P1_THRESH_DENSITY_ORIGINE` reste
+    configurable runtime.
+  - V30 cryptographiquement INVIOLÉ.
+  - Rapport HTML : `/app/frontend/public/reports/RAPPORT_XIX_P1B_TUNING_DENSITY.html`.
+
 - **XIX-P2-ORIGINE-EXTERNE-INVERSION-Ω (2026-04-27)** — Récupération non
   destructive des corridors V30 dont l'extrémité tombe dans la couronne
   externe par inversion conditionnelle path[0] ↔ path[-1].

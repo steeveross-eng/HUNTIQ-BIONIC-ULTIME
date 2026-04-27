@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAPPORT PHASE XIX-P1B — TUNING DENSITY THRESHOLD Ω</title>
+<style>
+  :root {
+    --bg-0:#0b0e14; --bg-1:#11151d; --bg-2:#171c26; --bg-3:#202736;
+    --accent:#FF8F00; --accent-soft:#ffb547; --ok:#10b981; --warn:#f59e0b; --err:#ef4444;
+    --border:#2a3142; --text:#e8edf6; --text-dim:#9aa3b8;
+    --grid: linear-gradient(rgba(255,143,0,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,143,0,.04) 1px,transparent 1px);
+    --mono:'JetBrains Mono','Fira Code',Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg-0);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55;background-image:var(--grid);background-size:36px 36px}
+  .frame{max-width:1180px;margin:0 auto;padding:48px 32px}
+  header{border-bottom:2px solid var(--accent);padding-bottom:22px;margin-bottom:28px}
+  .tag{display:inline-block;padding:4px 12px;background:rgba(255,143,0,.16);color:var(--accent);font-family:var(--mono);font-size:11px;letter-spacing:1.5px;border-radius:2px;margin-bottom:14px}
+  h1{margin:0 0 8px 0;font-size:30px;font-weight:700;letter-spacing:-.4px}
+  h1 .ω{color:var(--accent)}
+  .subtitle{color:var(--text-dim);font-size:14px;font-family:var(--mono)}
+  .seal{margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--text-dim);display:flex;gap:18px;flex-wrap:wrap}
+  .seal span{padding:3px 10px;background:var(--bg-2);border:1px solid var(--border);border-radius:3px}
+  h2{font-size:21px;margin:42px 0 14px 0;border-left:4px solid var(--accent);padding-left:14px}
+  h3{font-size:15px;margin:24px 0 8px 0;color:var(--accent-soft);font-family:var(--mono);text-transform:uppercase;letter-spacing:1px}
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin:18px 0}
+  .card{background:var(--bg-1);border:1px solid var(--border);padding:16px 18px;border-radius:6px}
+  .card .label{color:var(--text-dim);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+  .card .value{font-size:22px;font-weight:600;color:var(--accent)}
+  .card .sub{color:var(--text-dim);font-size:12px;margin-top:4px}
+  .ok{color:var(--ok)} .warn{color:var(--warn)} .err{color:var(--err)}
+  table{width:100%;border-collapse:collapse;background:var(--bg-1);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin:14px 0;font-size:13px}
+  th{background:var(--bg-3);color:var(--accent);text-align:left;padding:11px 14px;font-family:var(--mono);font-size:11px;letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid var(--accent)}
+  td{padding:10px 14px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:12px}
+  tr:last-child td{border-bottom:none}
+  tr:hover{background:var(--bg-2)}
+  .badge{display:inline-block;padding:2px 10px;border-radius:11px;font-family:var(--mono);font-size:10px;letter-spacing:.5px;text-transform:uppercase}
+  .badge-ok{background:rgba(16,185,129,.18);color:var(--ok);border:1px solid var(--ok)}
+  .badge-warn{background:rgba(245,158,11,.18);color:var(--warn);border:1px solid var(--warn)}
+  .badge-err{background:rgba(239,68,68,.18);color:var(--err);border:1px solid var(--err)}
+  pre{background:var(--bg-1);border:1px solid var(--border);border-radius:6px;padding:18px;overflow-x:auto;font-size:12px;line-height:1.7;color:var(--text-dim)}
+  ul.checklist{list-style:none;padding:0}
+  ul.checklist li{padding:8px 0 8px 28px;position:relative;border-bottom:1px solid var(--border)}
+  ul.checklist li::before{content:"✓";position:absolute;left:0;color:var(--ok);font-weight:bold;font-family:var(--mono)}
+  footer{margin-top:62px;padding-top:22px;border-top:1px solid var(--border);text-align:center;font-family:var(--mono);font-size:11px;color:var(--text-dim);letter-spacing:1px}
+  .formula{background:var(--bg-2);border-left:3px solid var(--accent);padding:14px 18px;font-family:var(--mono);font-size:13px;margin:14px 0;color:var(--accent-soft)}
+  .delta{display:inline-block;padding:1px 8px;background:rgba(16,185,129,.15);color:var(--ok);border-radius:3px;font-family:var(--mono);font-size:11px;font-weight:600;margin-left:6px}
+</style>
+</head>
+<body>
+<div class="frame">
+
+<header>
+  <div class="tag">PROTOCOLE BCE-4X ULTIME ABSOLU — TOP-ABSOLU</div>
+  <h1>RAPPORT PHASE XIX-P1B <span class="ω">Ω</span> — TUNING DENSITY THRESHOLD</h1>
+  <div class="subtitle">PHASE_XIX_P1B_TUNING_Ω · COMMANDANT STEEVE-MAX · 2026-04-27</div>
+  <div class="seal">
+    <span>WAYPOINT OFFICIEL · LAT 48.206657 · LNG -68.382422</span>
+    <span>V30 LOCKED · INVIOLÉ</span>
+    <span>density 0.25 → 0.02</span>
+    <span>hits 5.0 (inchangé)</span>
+  </div>
+</header>
+
+<h2>I. STATUT GLOBAL</h2>
+<div class="grid">
+  <div class="card"><div class="label">Activation</div><div class="value ok">EFFECTIVE</div><div class="sub">tuning chirurgical appliqué</div></div>
+  <div class="card"><div class="label">Tests pytest</div><div class="value ok">61 / 61</div><div class="sub">XIX-P2 10 + XIX-P1 11 + XVIII-bis 17 + XVIII-VITAUX 14 + XVII 12 · 15.6 s</div></div>
+  <div class="card"><div class="label">Seuil density (avant)</div><div class="value">0.25</div><div class="sub">trop strict vs runtime ~0.05</div></div>
+  <div class="card"><div class="label">Seuil density (après)</div><div class="value ok">0.02</div><div class="sub">aligné densités observées <span class="delta">−92 %</span></div></div>
+  <div class="card"><div class="label">Corridors validés runtime</div><div class="value ok">2 / 90</div><div class="sub">2 nouveaux passages (était 0/90)</div></div>
+  <div class="card"><div class="label">V30 LOCKED</div><div class="value ok">VRAI</div><div class="sub">Aucune modification crypto</div></div>
+</div>
+
+<h2>II. PARAMÈTRES — AVANT vs APRÈS</h2>
+<table>
+  <thead><tr><th>Paramètre</th><th>AVANT (XIX-P1)</th><th>APRÈS (XIX-P1B)</th><th>Δ</th></tr></thead>
+  <tbody>
+    <tr><td>XIX_P1_RAYON_FONCTIONNEL_M</td><td>600.0</td><td>600.0</td><td><span class="badge badge-warn">INCHANGÉ</span></td></tr>
+    <tr><td>ORIGINE_RADIUS_MIN_M</td><td>600.0</td><td>600.0</td><td><span class="badge badge-warn">INCHANGÉ</span></td></tr>
+    <tr><td>ORIGINE_RADIUS_MAX_M</td><td>780.0</td><td>780.0</td><td><span class="badge badge-warn">INCHANGÉ</span></td></tr>
+    <tr><td><strong>XIX_P1_THRESH_DENSITY_ORIGINE</strong></td><td>0.25</td><td><strong class="ok">0.02</strong></td><td><span class="delta">−92 %</span></td></tr>
+    <tr><td>XIX_P1_THRESH_HITS_ORIGINE</td><td>5.0</td><td>5.0</td><td><span class="badge badge-warn">INCHANGÉ</span></td></tr>
+    <tr><td>XIX_P1_ENFORCE</td><td>1</td><td>1</td><td><span class="badge badge-warn">INCHANGÉ</span></td></tr>
+  </tbody>
+</table>
+
+<h2>III. JUSTIFICATION INSTITUTIONNELLE</h2>
+<div class="formula">
+Ratios runtime observés sur les corridors V30 (XVIII-bis fenêtre élargie) :<br>
+&nbsp;&nbsp;orignal      0.020 → 0.040<br>
+&nbsp;&nbsp;chevreuil    0.030 → 0.065<br>
+&nbsp;&nbsp;wapiti       0.025 → 0.045<br>
+&nbsp;&nbsp;ours         0.018 → 0.060<br>
+&nbsp;&nbsp;dindon       0.040 → 0.080<br><br>
+Seuil 0.25 : aucun corridor de la distribution réelle ne le franchit (rate 0 %).<br>
+Seuil 0.02 : 2 corridors franchissent à octobre 16 h (orignal + wapiti).<br>
+Seuil 0.05 (référence p75) : ~30 % de la distribution franchirait — réservé pour XIX-P2-AUTO-TUNE.<br>
+Choix institutionnel 0.02 = limite basse de la distribution observée → rigueur stricte mais réaliste.
+</div>
+
+<h2>IV. RUNTIME LIVE — POST-TUNING (octobre 16 h)</h2>
+<table>
+  <thead><tr><th>Espèce</th><th>Corridors entrée XIX-P1</th><th>Validés</th><th>Rejetés</th><th>Taux</th><th>Reasons dominantes</th></tr></thead>
+  <tbody>
+    <tr><td>orignal</td><td>20</td><td><strong class="ok">1</strong></td><td>19</td><td><span class="badge badge-ok">5.0 %</span></td><td>OUTSIDE_CROWN 19</td></tr>
+    <tr><td>chevreuil</td><td>22</td><td>0</td><td>22</td><td><span class="badge badge-warn">0.0 %</span></td><td>OUTSIDE_CROWN 22</td></tr>
+    <tr><td>wapiti</td><td>19</td><td><strong class="ok">1</strong></td><td>18</td><td><span class="badge badge-ok">5.3 %</span></td><td>OUTSIDE_CROWN 17 · LOW_DENSITY 1</td></tr>
+    <tr><td>ours</td><td>15</td><td>0</td><td>15</td><td><span class="badge badge-warn">0.0 %</span></td><td>OUTSIDE_CROWN 13 · LOW_DENSITY 2</td></tr>
+    <tr><td>dindon</td><td>14</td><td>0</td><td>14</td><td><span class="badge badge-warn">0.0 %</span></td><td>OUTSIDE_CROWN 14</td></tr>
+    <tr><td><strong>TOTAL</strong></td><td><strong>90</strong></td><td><strong class="ok">2</strong></td><td>88</td><td><span class="badge badge-ok">2.2 %</span></td><td>OUTSIDE_CROWN 85 · LOW_DENSITY 3</td></tr>
+  </tbody>
+</table>
+
+<h2>V. ÉVOLUTION DU PIPELINE — AVANT vs APRÈS TUNING</h2>
+<table>
+  <thead><tr><th>Étape pipeline</th><th>AVANT (seuil 0.25)</th><th>APRÈS (seuil 0.02)</th></tr></thead>
+  <tbody>
+    <tr><td>XIX-P2 corridors récupérés (inversés)</td><td>16 / 89</td><td>16 / 89 (inchangé)</td></tr>
+    <tr><td>XIX-P1 corridors validés</td><td><span class="badge badge-err">0 / 89</span></td><td><span class="badge badge-ok">2 / 90</span></td></tr>
+    <tr><td>ECOLOGICAL_ORCHESTRATOR (consensus)</td><td>0 entrants</td><td>2 entrants → analyse en cours</td></tr>
+    <tr><td>CORRIDORS_VITAUX_Ω (ancrage)</td><td>0 entrants</td><td>0 (pas dans 150 m d'une zone vitale)</td></tr>
+    <tr><td>RENDUΩ (export frontend)</td><td>0 corridors visibles</td><td>0 corridors visibles (filtre VITAUX strict)</td></tr>
+  </tbody>
+</table>
+
+<h3>Constat institutionnel</h3>
+<p>Le tuning a effectivement débloqué XIX-P1 (0 → 2 corridors validés). Le pipeline aval
+<code>CORRIDORS_VITAUX_Ω</code> reste cependant strict (rayon 150 m, ≥ 1 zone MAJEURE
++ attracteur fort pour grands mammifères) et filtre les 2 corridors restants.
+Pour faire apparaître des corridors sur la carte TERRITOIRE, le Commandant peut :</p>
+<ul>
+  <li>Ordonner <strong>PHASE XIX-P3</strong> : régénération directe depuis la couronne externe (V30-EXT generator)</li>
+  <li>Ordonner <strong>PHASE XIX-P2-AUTO-TUNE</strong> : seuil density adaptatif au quantile p75 par espèce/saison</li>
+  <li>Ordonner un assouplissement <strong>VITAUX_Ω</strong> : rayon 200 m au lieu de 150 m pour les corridors origine externe</li>
+</ul>
+
+<h2>VI. TESTS PYTEST — CERTIFICATION (61 / 61 PASS)</h2>
+<pre>tests/test_phase_xix_p1_origine_externe_filter.py::test_couronne_externe_constants_xix_p1
+   ▸ THRESH_DENSITY_ORIGINE == 0.02   ✓ MIS À JOUR
+   ▸ THRESH_HITS_ORIGINE == 5.0       ✓ INCHANGÉ
+tests/test_phase_xix_p1_origine_externe_filter.py::test_origin_in_crown_with_low_density_rejected
+   ▸ density_ratio = 0.005 < 0.02 → LOW_DENSITY  ✓ ADAPTÉ
+tests/test_phase_xix_p1_origine_externe_filter.py::test_metadata_fields_present
+   ▸ origin_external_density_threshold == 0.02   ✓ MIS À JOUR
+tests/test_phase_xix_p1_origine_externe_filter.py::test_endpoint_origine_externe_returns_stats
+   ▸ filter_status.thresh_density_origine == 0.02 ✓ MIS À JOUR
+
++ 7 autres tests XIX-P1 inchangés (path interne / au-delà / sufficient / low_hits / pipeline / etc.)
++ XIX-P2 (10) · XVIII-bis (17) · XVIII-VITAUX (14) · XVII (12) → non-régression certifiée
+
+==================== 61 passed in 15.56s ====================</pre>
+
+<h2>VII. CHECKLIST DE COMPLÉTUDE</h2>
+<ul class="checklist">
+  <li>Seuil <code>XIX_P1_THRESH_DENSITY_ORIGINE</code> abaissé 0.25 → 0.02</li>
+  <li>Hits seuil 5.0 conservé (rigueur GPS maintenue)</li>
+  <li>Couronne [600 ; 780] m conservée (cohérence XIX-P1 / XIX-P2)</li>
+  <li>4 tests XIX-P1 mis à jour pour refléter le nouveau seuil</li>
+  <li>Non-régression certifiée XIX-P2 + XVIII-bis + XVIII-VITAUX + XVII (54 tests)</li>
+  <li>Endpoint <code>/api/v30/corridors/origine-externe</code> remonte le nouveau seuil dans <code>filter_status</code></li>
+  <li>Métadonnées corridor <code>origin_external_density_threshold</code> = 0.02 (traçabilité runtime)</li>
+  <li>Variable d'environnement <code>XIX_P1_THRESH_DENSITY_ORIGINE</code> reste configurable</li>
+  <li>V30 LOCKED inviolé — aucune modification cryptographique</li>
+  <li>2 corridors débloqués post-tuning runtime live (orignal + wapiti)</li>
+</ul>
+
+<h2>VIII. FICHIERS MODIFIÉS</h2>
+<table>
+  <thead><tr><th>Action</th><th>Chemin</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge badge-warn">MODIFIÉ</span></td><td>origine_externe_filter_omega.py</td><td>seuil 0.25 → 0.02 (1 ligne)</td></tr>
+    <tr><td><span class="badge badge-warn">MODIFIÉ</span></td><td>test_phase_xix_p1_origine_externe_filter.py</td><td>4 assertions adaptées</td></tr>
+    <tr><td><span class="badge badge-ok">CRÉÉ</span></td><td>RAPPORT_XIX_P1B_TUNING_DENSITY.html</td><td>présent</td></tr>
+  </tbody>
+</table>
+
+<h2>IX. INVARIANTS RESPECTÉS</h2>
+<ul class="checklist">
+  <li>V30 cryptographiquement intact</li>
+  <li>Aucune modification du moteur core</li>
+  <li>Tuning chirurgical d'un paramètre institutionnel (1 valeur)</li>
+  <li>Configurabilité environnementale conservée</li>
+  <li>Persona BCE-4X ULTIME ABSOLU — exécution en français institutionnel</li>
+  <li>AUCUN testing agent utilisé (pytest manuel + curl uniquement)</li>
+  <li>Waypoint officiel exclusif (LAT 48.206657 / LNG -68.382422)</li>
+</ul>
+
+<footer>
+  ▌ BCE-4X ULTIME ABSOLU — TOP-ABSOLU ▐<br>
+  PHASE_XIX_P1B_TUNING_Ω — RAPPORT D'AJUSTEMENT<br>
+  COMMANDANT STEEVE-MAX · 2026-04-27 · density 0.25 → 0.02
+</footer>
+
+</div>
+</body>
+</html>
