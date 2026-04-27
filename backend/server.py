@@ -1181,6 +1181,14 @@ try:
 except Exception as e:
     logger.warning(f"XVIII PREDICTIVE_OMEGA_V2_Ω router not loaded: {e}")
 
+# ═══ PHASE XVIII — ENGINE CORRIDORS VITAUX Ω ═══
+try:
+    from routes.corridors_vitaux_router import router as corridors_vitaux_router
+    app.include_router(corridors_vitaux_router)
+    logger.info("✓ XVIII active : CORRIDORS_VITAUX_Ω (/api/v30/corridors/vitaux-omega)")
+except Exception as e:
+    logger.warning(f"XVIII CORRIDORS_VITAUX_Ω router not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

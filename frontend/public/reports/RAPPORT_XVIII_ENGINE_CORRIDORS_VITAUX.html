@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAPPORT PHASE XVIII — ENGINE CORRIDORS VITAUX Ω</title>
+<style>
+  :root {
+    --bg-0:#0b0e14; --bg-1:#11151d; --bg-2:#171c26; --bg-3:#202736;
+    --accent:#FF8F00; --accent-soft:#ffb547; --ok:#10b981; --warn:#f59e0b; --err:#ef4444;
+    --border:#2a3142; --text:#e8edf6; --text-dim:#9aa3b8;
+    --grid: linear-gradient(rgba(255,143,0,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,143,0,.04) 1px,transparent 1px);
+    --mono:'JetBrains Mono','Fira Code',Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg-0);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55;background-image:var(--grid);background-size:36px 36px}
+  .frame{max-width:1180px;margin:0 auto;padding:48px 32px}
+  header{border-bottom:2px solid var(--accent);padding-bottom:22px;margin-bottom:28px}
+  .tag{display:inline-block;padding:4px 12px;background:rgba(255,143,0,.16);color:var(--accent);font-family:var(--mono);font-size:11px;letter-spacing:1.5px;border-radius:2px;margin-bottom:14px}
+  h1{margin:0 0 8px 0;font-size:32px;font-weight:700;letter-spacing:-.4px}
+  h1 .ω{color:var(--accent)}
+  .subtitle{color:var(--text-dim);font-size:14px;font-family:var(--mono)}
+  .seal{margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--text-dim);display:flex;gap:18px;flex-wrap:wrap}
+  .seal span{padding:3px 10px;background:var(--bg-2);border:1px solid var(--border);border-radius:3px}
+  h2{font-size:21px;margin:42px 0 14px 0;border-left:4px solid var(--accent);padding-left:14px}
+  h3{font-size:16px;margin:24px 0 8px 0;color:var(--accent-soft);font-family:var(--mono);text-transform:uppercase;letter-spacing:1px}
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin:18px 0}
+  .card{background:var(--bg-1);border:1px solid var(--border);padding:16px 18px;border-radius:6px}
+  .card .label{color:var(--text-dim);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+  .card .value{font-size:22px;font-weight:600;color:var(--accent)}
+  .card .sub{color:var(--text-dim);font-size:12px;margin-top:4px}
+  .ok{color:var(--ok)} .warn{color:var(--warn)} .err{color:var(--err)}
+  table{width:100%;border-collapse:collapse;background:var(--bg-1);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin:14px 0;font-size:13px}
+  th{background:var(--bg-3);color:var(--accent);text-align:left;padding:11px 14px;font-family:var(--mono);font-size:11px;letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid var(--accent)}
+  td{padding:10px 14px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:12px}
+  tr:last-child td{border-bottom:none}
+  tr:hover{background:var(--bg-2)}
+  .badge{display:inline-block;padding:2px 10px;border-radius:11px;font-family:var(--mono);font-size:10px;letter-spacing:.5px;text-transform:uppercase}
+  .badge-ok{background:rgba(16,185,129,.18);color:var(--ok);border:1px solid var(--ok)}
+  .badge-warn{background:rgba(245,158,11,.18);color:var(--warn);border:1px solid var(--warn)}
+  .badge-err{background:rgba(239,68,68,.18);color:var(--err);border:1px solid var(--err)}
+  pre{background:var(--bg-1);border:1px solid var(--border);border-radius:6px;padding:18px;overflow-x:auto;font-size:12px;line-height:1.7;color:var(--text-dim)}
+  pre .k{color:var(--accent-soft)} pre .s{color:#7dd3fc} pre .n{color:#a78bfa}
+  ul.checklist{list-style:none;padding:0}
+  ul.checklist li{padding:8px 0 8px 28px;position:relative;border-bottom:1px solid var(--border)}
+  ul.checklist li::before{content:"✓";position:absolute;left:0;color:var(--ok);font-weight:bold;font-family:var(--mono)}
+  ul.checklist li.fail::before{content:"✗";color:var(--err)}
+  footer{margin-top:62px;padding-top:22px;border-top:1px solid var(--border);text-align:center;font-family:var(--mono);font-size:11px;color:var(--text-dim);letter-spacing:1px}
+  .formula{background:var(--bg-2);border-left:3px solid var(--accent);padding:14px 18px;font-family:var(--mono);font-size:13px;margin:14px 0;color:var(--accent-soft)}
+  .ascii{font-family:var(--mono);font-size:11px;color:var(--text-dim);background:var(--bg-2);padding:18px;border:1px solid var(--border);border-radius:6px;white-space:pre;overflow-x:auto;line-height:1.4}
+</style>
+</head>
+<body>
+<div class="frame">
+
+<header>
+  <div class="tag">PROTOCOLE BCE-4X ULTIME ABSOLU — TOP-ABSOLU</div>
+  <h1>RAPPORT PHASE XVIII <span class="ω">Ω</span> — ENGINE CORRIDORS VITAUX Ω</h1>
+  <div class="subtitle">PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω · COMMANDANT STEEVE-MAX · 2026-04-27</div>
+  <div class="seal">
+    <span>WAYPOINT OFFICIEL · LAT 48.206657 · LNG -68.382422</span>
+    <span>V30 LOCKED · INVIOLÉ</span>
+    <span>RAYON D'ANCRAGE · 150 m</span>
+    <span>MODE · ENFORCE</span>
+  </div>
+</header>
+
+<h2>I. STATUT GLOBAL</h2>
+<div class="grid">
+  <div class="card"><div class="label">État du filtre</div><div class="value ok">ACTIF</div><div class="sub">enforce_mode = True</div></div>
+  <div class="card"><div class="label">Tests pytest</div><div class="value ok">39 / 39</div><div class="sub">XVIII-VITAUX 14 + XVII 12 + XVIII-GPS 13 · 12.8 s</div></div>
+  <div class="card"><div class="label">Espèces certifiées</div><div class="value ok">5 / 5</div><div class="sub">2 groupes biologiques</div></div>
+  <div class="card"><div class="label">Audit log JSON</div><div class="value ok">PERSISTANT</div><div class="sub">corridors_rejected_vitaux_xviii.json</div></div>
+  <div class="card"><div class="label">V30 LOCKED</div><div class="value ok">VRAI</div><div class="sub">Aucune modification crypto</div></div>
+  <div class="card"><div class="label">Rayon institutionnel</div><div class="value">150 m</div><div class="sub">Centroid zone ↔ tout point du path</div></div>
+</div>
+
+<h2>II. RÈGLES INSTITUTIONNELLES PAR GROUPE D'ESPÈCES</h2>
+<table>
+  <thead><tr><th>Groupe</th><th>Espèces</th><th>Règle de validation (rayon 150 m)</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><span class="badge badge-warn">GRANDS_MAMMIFERES</span></td>
+      <td>orignal · wapiti · ours_noir</td>
+      <td>≥ 1 zone vitale <strong>MAJEURE</strong><br>+ ≥ 1 <strong>attracteur écologique fort</strong></td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-ok">PETITS_MAMMIFERES</span></td>
+      <td>chevreuil · dindon_sauvage</td>
+      <td>≥ 1 <strong>zone vitale</strong> (majeure ou secondaire)<br>+ ≥ 1 <strong>transition pertinente</strong> (lisière / mosaïque / clairière / hotspot)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Catalogue des zones vitales officielles</h3>
+<table>
+  <thead><tr><th>Catégorie</th><th>Types</th><th>Rôle dans la règle</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge badge-err">MAJEURE</span></td><td><code>alimentation · rut · repos · eau</code></td><td>Obligatoire pour grands mammifères</td></tr>
+    <tr><td><span class="badge badge-warn">SECONDAIRE</span></td><td><code>thermique · refuge</code></td><td>Compte pour petits mammifères</td></tr>
+    <tr><td><span class="badge badge-ok">TRANSITION</span></td><td><code>lisière · mosaïque · clairière · écotone</code></td><td>Obligatoire pour petits mammifères</td></tr>
+    <tr><td><span class="badge badge-ok">ATTRACTEURS FORTS</span></td><td><code>salines · ravages · zones_humides · hotspots-MAJEURS · eau-fluviale</code></td><td>Obligatoires pour grands mammifères</td></tr>
+  </tbody>
+</table>
+
+<h2>III. PIPELINE INSTITUTIONNEL — INJECTION POST-ÉCOLOGIQUE</h2>
+<div class="ascii">  ┌───────────────────────────────────────────────────────────────────────┐
+  │              PIPELINE V20 BUNDLE — DIRECTIVE COMMANDANT XVIII         │
+  └───────────────────────────────────────────────────────────────────────┘
+
+  V30 (compute_territoire_v10)                  ← V30 LOCKED · INVIOLÉ
+       │
+       ▼
+  species_modulator_omega                       ← rayon, amplitude, tortuosité
+       │
+       ▼
+  predictive_omega_v2 (passe 1)                 ← annotation V30 GPS USGS
+       │
+       ▼
+  INTERZONE_Ω                                   ← corridors inter-zones / entrants
+       │
+       ▼
+  VEINEUX_Ω                                     ← réseau veineux
+       │
+       ▼
+  predictive_omega_v2 (passe 2)                 ← re-annotation interzone
+       │
+       ▼
+  ECOLOGICAL_ORCHESTRATOR_Ω (XVII)              ← consensus écologique 5 engines
+       │                                          (heatmaps + GPS V2)
+       ▼
+  ◆ CORRIDORS_VITAUX_Ω (XVIII) — FILTRE NEUF ◆  ← ancrage zones vitales 150 m
+       │   - audit log corridors_rejected_vitaux_xviii.json
+       │   - règles différenciées par groupe espèces
+       ▼
+  RENDUΩ                                        ← validation géométrique stricte
+       │
+       ▼
+  ANTI-RÉGRESSION (validate_bundle / esi_omega) ← SCellement institutionnel
+       │
+       ▼
+  bundle final → frontend</div>
+
+<h2>IV. RUNTIME LIVE — 5 ESPÈCES (octobre, 18h)</h2>
+<table>
+  <thead><tr><th>Espèce</th><th>Groupe</th><th>Corridors entrée</th><th>Validés</th><th>Rejetés</th><th>Taux</th><th>Motif rejet dominant</th></tr></thead>
+  <tbody>
+    <tr><td>orignal</td><td>GRANDS</td><td>2</td><td>1</td><td>1</td><td><span class="badge badge-warn">50.0 %</span></td><td>fail_grands_mammiferes</td></tr>
+    <tr><td>chevreuil</td><td>PETITS</td><td>13</td><td>11</td><td>2</td><td><span class="badge badge-ok">84.6 %</span></td><td>fail_petits_mammiferes</td></tr>
+    <tr><td>wapiti</td><td>GRANDS</td><td>4</td><td>2</td><td>2</td><td><span class="badge badge-warn">50.0 %</span></td><td>fail_grands_mammiferes</td></tr>
+    <tr><td>ours_noir</td><td>GRANDS</td><td>1</td><td>1</td><td>0</td><td><span class="badge badge-ok">100.0 %</span></td><td>—</td></tr>
+    <tr><td>dindon_sauvage</td><td>PETITS</td><td>9</td><td>8</td><td>1</td><td><span class="badge badge-ok">88.9 %</span></td><td>fail_petits_mammiferes</td></tr>
+  </tbody>
+</table>
+
+<h3>Distribution des types d'ancrages utilisés (toutes espèces)</h3>
+<table>
+  <thead><tr><th>Type d'ancrage</th><th>Catégorie</th><th>Occurrences (somme 5 espèces)</th></tr></thead>
+  <tbody>
+    <tr><td>salines</td><td>ATTRACTEUR FORT</td><td>21</td></tr>
+    <tr><td>hotspots_major</td><td>ATTRACTEUR / TRANSITION</td><td>23</td></tr>
+    <tr><td>alimentation</td><td>MAJEURE</td><td>11</td></tr>
+    <tr><td>repos</td><td>MAJEURE</td><td>7</td></tr>
+    <tr><td>eau</td><td>MAJEURE</td><td>7</td></tr>
+    <tr><td>rut</td><td>MAJEURE</td><td>7</td></tr>
+    <tr><td>thermique</td><td>SECONDAIRE</td><td>4</td></tr>
+  </tbody>
+</table>
+
+<h2>V. AUDIT — corridors_rejected_vitaux_xviii.json</h2>
+<p>Chaque corridor rejeté est consigné dans un log JSON cumulatif persistant
+pour audit institutionnel. Capacité : 500 dernières exécutions, 30 rejets max
+par run, accessible via :</p>
+<pre>GET /api/v30/corridors/vitaux-omega/audit-log    ← lecture log cumulatif
+GET /api/v30/corridors/vitaux-omega?species=...  ← rejets de l'exécution courante</pre>
+
+<h3>Schéma d'une entrée d'audit</h3>
+<pre>{
+  <span class="k">"timestamp"</span>: <span class="s">"2026-04-27T11:50:33.842Z"</span>,
+  <span class="k">"phase"</span>: <span class="s">"PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω"</span>,
+  <span class="k">"species"</span>: <span class="s">"orignal"</span>,
+  <span class="k">"waypoint"</span>: { <span class="k">"lat"</span>: <span class="n">48.206657</span>, <span class="k">"lng"</span>: <span class="n">-68.382422</span> },
+  <span class="k">"rejected_count"</span>: <span class="n">2</span>,
+  <span class="k">"rejected"</span>: [
+    {
+      <span class="k">"id"</span>: <span class="s">"corr_omega_3"</span>,
+      <span class="k">"reason"</span>: <span class="s">"fail_grands_mammiferes(missing=attracteur_ecologique_fort)"</span>,
+      <span class="k">"anchors_summary"</span>: {
+        <span class="k">"major_zones_count"</span>: <span class="n">1</span>,
+        <span class="k">"strong_attractor_count"</span>: <span class="n">0</span>,
+        <span class="k">"salines"</span>: <span class="n">0</span>,
+        <span class="k">"hotspots_major"</span>: <span class="n">0</span>,
+        <span class="k">"zones_humides"</span>: <span class="n">0</span>
+      }
+    }
+  ]
+}</pre>
+
+<h2>VI. TESTS PYTEST — CERTIFICATION (39 / 39 PASS)</h2>
+<pre>tests/test_phase_xviii_vitaux_omega.py::test_detect_anchors_within_150m                                  PASSED
+tests/test_phase_xviii_vitaux_omega.py::test_anchor_outside_radius_not_detected                          PASSED
+tests/test_phase_xviii_vitaux_omega.py::test_grands_mammiferes_valid_with_major_and_attractor            PASSED
+tests/test_phase_xviii_vitaux_omega.py::test_grands_mammiferes_rejected_without_attractor                PASSED
+tests/test_phase_xviii_vitaux_omega.py::test_grands_mammiferes_rejected_without_major                    PASSED
+tests/test_phase_xviii_vitaux_omega.py::test_petits_mammiferes_valid_with_zone_and_transition            PASSED
+tests/test_phase_xviii_vitaux_omega.py::test_petits_mammiferes_valid_with_zone_and_hotspot               PASSED
+tests/test_phase_xviii_vitaux_omega.py::test_pipeline_vitaux_filter_per_species[orignal-10-18]           PASSED
+tests/test_phase_xviii_vitaux_omega.py::test_pipeline_vitaux_filter_per_species[chevreuil-10-7]          PASSED
+tests/test_phase_xviii_vitaux_omega.py::test_pipeline_vitaux_filter_per_species[wapiti-10-16]            PASSED
+tests/test_phase_xviii_vitaux_omega.py::test_pipeline_vitaux_filter_per_species[ours-9-12]               PASSED
+tests/test_phase_xviii_vitaux_omega.py::test_pipeline_vitaux_filter_per_species[dindon-5-9]              PASSED
+tests/test_phase_xviii_vitaux_omega.py::test_audit_log_created_on_rejection                              PASSED
+tests/test_phase_xviii_vitaux_omega.py::test_endpoint_vitaux_omega_returns_stats                         PASSED
+
++ XVII (12 tests) → non-régression certifiée
++ XVIII GPS (13 tests) → non-régression certifiée
+
+==================== 39 passed in 12.78s ====================</pre>
+
+<h2>VII. CHECKLIST DE COMPLÉTUDE</h2>
+<ul class="checklist">
+  <li>Module <code>corridors_vitaux_omega.py</code> opérationnel (354 l)</li>
+  <li>Catalogue zones MAJEURES / SECONDAIRES / TRANSITIONS / ATTRACTEURS</li>
+  <li>Règle GRANDS_MAMMIFERES — orignal, wapiti, ours_noir</li>
+  <li>Règle PETITS_MAMMIFERES — chevreuil, dindon_sauvage</li>
+  <li>Rayon d'ancrage institutionnel = 150 m (directive Commandant)</li>
+  <li>Mode ENFORCE actif (env <code>PHASE_XVIII_VITAUX_ENFORCE=1</code>)</li>
+  <li>Audit log persistant <code>corridors_rejected_vitaux_xviii.json</code></li>
+  <li>Pipeline réorganisé : ECOLOGICAL → VITAUX → RENDUΩ → ANTI-RÉGRESSION</li>
+  <li>Endpoints observabilité <code>/api/v30/corridors/vitaux-omega(/audit-log)</code></li>
+  <li>Tests pytest XVIII-VITAUX : 14/14 PASS</li>
+  <li>Non-régression XVII (12) + XVIII-GPS (13) certifiée</li>
+  <li>V30 LOCKED inviolé — modulation strictement post-V30</li>
+</ul>
+
+<h2>VIII. FICHIERS CRÉÉS / MODIFIÉS</h2>
+<table>
+  <thead><tr><th>Action</th><th>Chemin</th><th>Lignes / Description</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge badge-ok">CRÉÉ</span></td><td>/app/backend/engines/v8_institutional/corridors_vitaux_omega.py</td><td>354</td></tr>
+    <tr><td><span class="badge badge-ok">CRÉÉ</span></td><td>/app/backend/routes/corridors_vitaux_router.py</td><td>108</td></tr>
+    <tr><td><span class="badge badge-ok">CRÉÉ</span></td><td>/app/backend/tests/test_phase_xviii_vitaux_omega.py</td><td>219</td></tr>
+    <tr><td><span class="badge badge-warn">MODIFIÉ</span></td><td>/app/backend/engines/v8_institutional/v20_performance_bundle.py</td><td>+22 l (réorg pipeline)</td></tr>
+    <tr><td><span class="badge badge-warn">MODIFIÉ</span></td><td>/app/backend/server.py</td><td>+8 l (router)</td></tr>
+    <tr><td><span class="badge badge-warn">PERSISTANT</span></td><td>/app/backend/cache/corridors_rejected_vitaux_xviii.json</td><td>audit log JSON cumulatif</td></tr>
+    <tr><td><span class="badge badge-ok">CRÉÉ</span></td><td>/app/frontend/public/reports/RAPPORT_XVIII_ENGINE_CORRIDORS_VITAUX.html</td><td>présent</td></tr>
+  </tbody>
+</table>
+
+<h2>IX. INVARIANTS RESPECTÉS</h2>
+<ul class="checklist">
+  <li>V30 cryptographiquement intact (registry_lock_omega.py inviolé)</li>
+  <li>Aucune modification du moteur core engine_ia_corridors_omega.py</li>
+  <li>Filtre strictement POST-V30 / POST-ÉCOLOGIQUE</li>
+  <li>Persona BCE-4X ULTIME ABSOLU — exécution en français institutionnel</li>
+  <li>AUCUN testing agent utilisé (pytest manuel + curl + python uniquement)</li>
+  <li>Waypoint officiel exclusif (LAT 48.206657 / LNG -68.382422)</li>
+  <li>Non-régression PHASE XVII + PHASE XVIII (GPS) certifiée</li>
+</ul>
+
+<footer>
+  ▌ BCE-4X ULTIME ABSOLU — TOP-ABSOLU ▐<br>
+  PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω — RAPPORT D'ACTIVATION<br>
+  COMMANDANT STEEVE-MAX · 2026-04-27 · MODE ENFORCE · RAYON 150 m
+</footer>
+
+</div>
+</body>
+</html>

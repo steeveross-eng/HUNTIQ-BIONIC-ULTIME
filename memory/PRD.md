@@ -27,6 +27,36 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **XVIII-ENGINE-CORRIDORS-VITAUX-Ω (2026-04-27)** — Activation du filtre
+  d'ancrage institutionnel des corridors sur les zones vitales officielles.
+  - Nouveau module `corridors_vitaux_omega.py` (354 l) : catalogue zones
+    MAJEURES (alimentation, rut, repos, eau), SECONDAIRES (thermique, refuge),
+    TRANSITIONS (lisière, mosaïque, clairière, écotone), ATTRACTEURS FORTS
+    (salines, ravages, zones_humides, hotspots-MAJEURS, eau-fluviale).
+  - Règles institutionnelles différenciées par groupe d'espèces, rayon 150 m :
+    - GRANDS_MAMMIFERES (orignal, wapiti, ours_noir) :
+        ≥ 1 zone MAJEURE + ≥ 1 attracteur fort.
+    - PETITS_MAMMIFERES (chevreuil, dindon_sauvage) :
+        ≥ 1 zone vitale + ≥ 1 transition (ou hotspot majeur).
+  - Mode ENFORCE actif (`PHASE_XVIII_VITAUX_ENFORCE=1`) : corridors invalides
+    retirés du bundle et journalisés dans `corridors_rejected_vitaux_xviii`.
+  - Audit log JSON persistant `/app/backend/cache/corridors_rejected_vitaux_xviii.json`
+    (cumulatif, 500 derniers runs, 30 rejets max par run).
+  - Pipeline RÉORGANISÉ selon directive Commandant :
+    V30 → species_modulator → predictive_omega_v2 → INTERZONE → VEINEUX →
+    predictive_omega_v2(p2) → ECOLOGICAL_ORCHESTRATOR → CORRIDORS_VITAUX_Ω →
+    RENDUΩ → ANTI-RÉGRESSION.
+  - Endpoints : `/api/v30/corridors/vitaux-omega` (diagnostic) +
+    `/api/v30/corridors/vitaux-omega/audit-log` (log cumulatif).
+  - Runtime live multi-espèces (oct 18h) : orignal 50 %, chevreuil 84.6 %,
+    wapiti 50 %, ours 100 %, dindon 88.9 % de validation post-VITAUX.
+  - Ancrages dominants : salines (21), hotspots_major (23), alimentation (11),
+    repos / eau / rut (7 chacun), thermique (4).
+  - Tests pytest 14/14 PASS (XVIII-VITAUX) + non-régression certifiée
+    XVII (12) + XVIII-GPS (13) = **39/39 conjugué (12.8 s)**.
+  - V30 cryptographiquement INVIOLÉ.
+  - Rapport HTML : `/app/frontend/public/reports/RAPPORT_XVIII_ENGINE_CORRIDORS_VITAUX.html`.
+
 - **XVIII-ENGINE-PREDICTIVE-OMEGA-GPS-USGS (2026-04-27)** — Activation
   PHASE_XVIII : remplacement complet du modèle synthétique predictive_omega
   par un modèle calibré sur trajectoires GPS USGS / Movebank réelles.
