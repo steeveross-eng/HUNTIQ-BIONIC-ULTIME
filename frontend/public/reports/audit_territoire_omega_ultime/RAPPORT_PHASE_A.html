@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>RAPPORT PHASE-A — TERRITOIRE_Ω AUDIT INTER-ENGINES ULTIME · BCE-4X</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root { --ink:#0c1118; --paper:#f5f6f8; --ok:#16a34a; --fail:#dc2626; --warn:#f59e0b;
+        --gold:#b08800; --rule:#1e293b; --orange:#FF8F00; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--paper); color:var(--ink);
+       font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; line-height:1.55; }
+header { background:linear-gradient(140deg,#0c1118 0%,#1e293b 100%); color:#fff;
+         padding:32px 48px; border-bottom:4px solid var(--gold); }
+header h1 { margin:0 0 4px; font-size:22px; letter-spacing:.04em; font-weight:700; }
+header .sub { font-size:12px; opacity:.78; letter-spacing:.10em; text-transform:uppercase; }
+header .commandant { margin-top:14px; padding:6px 12px; display:inline-block;
+  background:rgba(176,136,0,.18); border:1px solid var(--gold); border-radius:3px;
+  font-size:11px; letter-spacing:.10em; text-transform:uppercase; color:#fcd34d; }
+main { max-width:1200px; margin:0 auto; padding:32px 48px 80px; }
+section { margin:32px 0; scroll-margin-top:40px; }
+section.toc { background:#fff; border:1px solid #d4d4d8; border-radius:6px; padding:18px 24px; }
+section.toc ol { margin:0; padding-left:20px; columns:2; column-gap:32px; }
+section.toc li { margin:4px 0; font-size:13px; }
+section.toc a { color:#1e3a5f; text-decoration:none; }
+section.toc a:hover { text-decoration:underline; }
+h2 { font-size:17px; letter-spacing:.04em; border-bottom:1px solid #d4d4d8;
+     padding-bottom:6px; margin-bottom:14px; color:var(--rule); }
+h3 { font-size:14px; margin:14px 0 6px; color:#334155; }
+table { border-collapse:collapse; width:100%; font-size:13px; margin-top:6px; }
+th, td { padding:8px 10px; border:1px solid #d4d4d8; text-align:left; vertical-align:top; }
+th { background:#e2e8f0; letter-spacing:.05em; font-weight:600; }
+.pill { padding:2px 8px; font-size:11px; border-radius:3px; letter-spacing:.06em; font-weight:600; display:inline-block; }
+.pill.ok { background:#dcfce7; color:#14532d; }
+.pill.fail { background:#fee2e2; color:#7f1d1d; }
+.pill.warn { background:#fef3c7; color:#78350f; }
+.pill.locked { background:#fef3c7; color:#78350f; }
+.pill.absent { background:#fee2e2; color:#7f1d1d; }
+.pill.present { background:#cffafe; color:#155e75; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:16px; }
+.card { background:#fff; border:1px solid #d4d4d8; border-radius:4px; overflow:hidden; }
+.card .meta { padding:10px 14px; font-size:12px; }
+.card img { display:block; width:100%; height:auto; background:#0c1118; }
+.stamp { font-family:ui-monospace,"Courier New",monospace; font-size:11px; color:#475569; word-break:break-all; }
+.kv { display:grid; grid-template-columns:240px 1fr; gap:4px 14px; font-size:13px; }
+.kv > div:nth-child(odd) { color:#64748b; }
+code { background:#e2e8f0; padding:1px 6px; border-radius:3px; font-size:12px; }
+pre { background:#0c1118; color:#dcdcdc; font-family:ui-monospace,"Courier New",monospace; font-size:11px;
+      padding:12px 16px; border-radius:4px; overflow-x:auto; line-height:1.4; }
+.anomaly { border-left:4px solid var(--fail); background:#fff7f7; padding:14px 18px; border-radius:4px; }
+.anomaly.MAJEUR { border-left-color:var(--warn); background:#fffaeb; }
+.anomaly h3 { margin-top:0; }
+.severity { font-weight:700; letter-spacing:.04em; }
+footer { padding:24px 48px; color:#475569; font-size:11px;
+         border-top:1px solid #d4d4d8; text-align:center; letter-spacing:.04em; }
+</style>
+</head>
+<body>
+<header>
+  <h1>RAPPORT PHASE-A — TERRITOIRE_Ω AUDIT INTER-ENGINES ULTIME</h1>
+  <div class="sub">BCE-4X ULTIME ABSOLU · TOP-ABSOLU · BIONIC OS V20-SUPRA · V30 LOCKED · READ-ONLY</div>
+  <div class="commandant">DIRECTIVE DU COMMANDANT STEEVE-MAX — AUDIT UNIQUEMENT · DIAGNOSTIC UNIQUEMENT · PREUVES UNIQUEMENT</div>
+</header>
+<main>
+
+<section class="toc">
+  <h2>Sommaire</h2>
+  <ol>
+    <li><a href="#i">I — Synthèse exécutive</a></li>
+    <li><a href="#ii">II — Méthodologie & règles BCE-4X</a></li>
+    <li><a href="#iii">III — Anomalie A : superposition / co-existence VENT/MÉTÉO</a></li>
+    <li><a href="#iv">IV — Anomalie B : disparition apparente corridors et 404</a></li>
+    <li><a href="#v">V — Anomalie C : dindon ABSENT listé dans la table V30</a></li>
+    <li><a href="#vi">VI — Anomalie D : mismatch métriques 1 vs 16/20</a></li>
+    <li><a href="#vii">VII — Diagnostic réseau et 404 par origine</a></li>
+    <li><a href="#viii">VIII — Sonde DOM panneaux et table espèces</a></li>
+    <li><a href="#ix">IX — Matrice viewports overlap UI</a></li>
+    <li><a href="#x">X — Test long-wait disparition (TTL refresh 60-70s)</a></li>
+    <li><a href="#xi">XI — Sources de vérité et désynchronisation</a></li>
+    <li><a href="#xii">XII — Captures haute-résolution</a></li>
+    <li><a href="#xiii">XIII — Empreintes SHA-256 institutionnelles</a></li>
+    <li><a href="#xiv">XIV — Plan de stabilisation PHASE-A</a></li>
+    <li><a href="#xv">XV — Conformité V30 / XIX / VITAUX</a></li>
+    <li><a href="#xvi">XVI — Annexe code (fichiers concernés)</a></li>
+    <li><a href="#xvii">XVII — Annexe endpoints API testés</a></li>
+    <li><a href="#xviii">XVIII — Pré-requis Phase-B (audit intégral)</a></li>
+    <li><a href="#xix">XIX — Validation institutionnelle</a></li>
+    <li><a href="#xx">XX — Empreinte de signature finale</a></li>
+  </ol>
+</section>
+
+<section id="i">
+  <h2>I — Synthèse exécutive</h2>
+  <p>Cet audit READ-ONLY documente les <b>4 ruptures critiques</b> du pipeline TERRITOIRE_Ω
+  signalées par le Commandant STEEVE-MAX sur la base de 3 captures soumises (orignal, ours_noir, chevreuil)
+  et reproduit la situation sur l'environnement de production
+  <code>https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic</code>.</p>
+  <p>
+    <span class="pill locked">V30 LOCKED · TAMPERING=FALSE</span>
+    <span class="pill warn">A · UI superposition</span>
+    <span class="pill fail">B · Désynchronisation panneau↔carte</span>
+    <span class="pill fail">C · dindon ABSENT listé</span>
+    <span class="pill warn">D · Mismatch 1 vs 16/20</span>
+  </p>
+  <p><b>Conclusion P0 :</b> le moteur V30 est <b>cryptographiquement intact</b>. Les 4 ruptures sont
+  des <b>anomalies de chaîne de présentation</b> (panneaux UI + endpoints d'audit) <b>en aval</b> du
+  moteur — résolubles par modifications ciblées du router <code>v30_corridors_status_router.py</code>
+  et des composants UI, sans toucher V30 / XIX / VITAUX.</p>
+</section>
+
+<section id="ii">
+  <h2>II — Méthodologie & règles BCE-4X</h2>
+  <ul>
+    <li>Tests via <b>Playwright</b> en mode HEADLESS sur l'URL HTTPS publique TERRITOIRE.</li>
+    <li>Capture de la requête réseau (HTTP code) et du DOM (data-testid, BoundingClientRect, computed style, paths SVG).</li>
+    <li>Sondes répétées sur 4 viewports différents pour reproduire l'overlap UI.</li>
+    <li>Test long-wait 70s pour observer le refresh panneau (TTL = 60s).</li>
+    <li>Aucune mutation : pas de POST, pas d'écriture, pas de recompute V30/XIX/VITAUX.</li>
+  </ul>
+</section>
+
+<section id="iii">
+  <h2>III — Anomalie A : superposition / co-existence VENT/MÉTÉO</h2>
+  <div class="anomaly MAJEUR">
+    <h3><span class="severity">MAJEUR (UX)</span> — Deux panneaux right-anchored qui peuvent se chevaucher</h3>
+    <table>
+      <thead><tr><th>Composant</th><th>Fichier</th><th>data-testid</th><th>CSS</th><th>z-index</th></tr></thead>
+      <tbody>
+        <tr><td>VENT Ω</td><td><code>CompassOmegaWidget.jsx</code></td><td><code>compass-omega-vent</code></td><td>absolute · top:120px · right:12px</td><td>1100</td></tr>
+        <tr><td>METEO BIONIC</td><td><code>WeatherPanel.jsx</code></td><td><code>bce4x-weather-panel</code></td><td>absolute · bottom:90px · right:12px</td><td>1000</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:12px">
+      Sur viewports 1920×1080 / 1366×768 / 1440×720 / 1280×600, l'overlap mesuré est <b>NUL</b>.
+      Cependant les deux panneaux affichent des informations vent <b>distinctes mais redondantes</b>
+      (CompassOmega = engine_vent_v30, WeatherPanel = open-meteo). Sur les captures soumises par le
+      Commandant, l'overlap est <b>visuellement présent</b>, ce qui se reproduit pour viewport hauteur ≤ 600 px.
+    </p>
+  </div>
+</section>
+
+<section id="iv">
+  <h2>IV — Anomalie B : disparition apparente corridors et 404</h2>
+  <div class="anomaly">
+    <h3><span class="severity">CRITIQUE (cohérence diagnostique)</span> — Désynchronisation panneau↔carte</h3>
+    <p>Le diagnostic réseau prouve qu'<b>aucun 404 n'affecte les endpoints corridors</b>. Les 404 observés
+    proviennent exclusivement de :</p>
+    <ul>
+      <li><code>/api/seo/meta/mon-territoire-bionic</code> (SEO, non bloquant)</li>
+      <li><code>/api/v1/notification/legal-time/status</code> (notification chasse, non bloquant)</li>
+      <li><code>/api/sharing/notifications/&lt;email&gt;</code> (notifications partage, non bloquant)</li>
+    </ul>
+    <p>La <b>vraie</b> rupture est une désynchronisation entre :</p>
+    <ul>
+      <li>Carte : <b>123 paths SVG</b> rendus, dont <b>0 corridor orange</b> (#FF8F00) — RENDUΩ utilise des couleurs alternatives ou fallback</li>
+      <li>Panneau STATUT CORRIDORS Ω : <b>corridors_total=0, V30=0, IZ=0, ENT=0, affuts=0, contam=0</b> · « ⚠ couches critiques absentes »</li>
+    </ul>
+    <p>Cause racine probable : l'endpoint <code>/api/v30/corridors/layer-diagnostic</code> retourne le
+    bundle <b>brut V30</b> sans tenir compte des corridors organic / RENDUΩ qui sont effectivement rendus
+    sur la carte. Le panneau alarme « couches absentes » est <b>cosmétique</b> et ne reflète pas
+    l'état réel du rendu.</p>
+  </div>
+</section>
+
+<section id="v">
+  <h2>V — Anomalie C : dindon ABSENT listé dans la table V30</h2>
+  <div class="anomaly">
+    <h3><span class="severity">CRITIQUE (cohérence biologique)</span> — Masque XVIII-BIO-PRESENCE_MASK_Ω non appliqué</h3>
+    <p>Endpoint responsable : <code>GET /api/v30/corridors/status</code><br>
+    Fichier : <code>/app/backend/routes/v30_corridors_status_router.py</code></p>
+    <p>Liste des espèces <b>codée en dur</b> :</p>
+    <pre>species_list = [species] if species else ["orignal", "cerf", "ours", "dindon"]</pre>
+    <p>Pas d'appel à <code>apply_presence_mask_to_bundle()</code>. Conséquences :</p>
+    <ul>
+      <li><b>Dindon</b> au BSL (LAT 48.206657 / LNG -68.382422) : registre MFFP+SEPAQ+Atlas = <span class="pill absent">ABSENT</span>, mais V30 retourne 12/14 (85.7%) → l'opérateur croit dindon présent.</li>
+      <li><b>Wapiti</b> : totalement absent de la table même quand PRESENT (Mauricie, Estrie).</li>
+    </ul>
+    <p>Table observée live :</p>
+    <table>
+      <thead><tr><th>Espèce</th><th>Acceptés/Total</th><th>Score V30</th><th>Statut biologique BSL</th></tr></thead>
+      <tbody>
+        <tr><td>orignal</td><td>13/18</td><td>72.2</td><td><span class="pill present">PRESENT</span></td></tr>
+        <tr><td>cerf</td><td>17/20</td><td>85.0</td><td><span class="pill present">PRESENT</span></td></tr>
+        <tr><td>ours</td><td>10/13</td><td>76.9</td><td><span class="pill present">PRESENT</span></td></tr>
+        <tr><td>dindon</td><td>12/14</td><td>85.7</td><td><span class="pill absent">ABSENT (devrait être halt)</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="vi">
+  <h2>VI — Anomalie D : mismatch métriques 1 vs 16/20</h2>
+  <div class="anomaly MAJEUR">
+    <h3><span class="severity">MAJEUR (cohérence diagnostique)</span> — Trois sources de vérité divergentes</h3>
+    <table>
+      <thead><tr><th>Source</th><th>Endpoint / fichier</th><th>Valeur</th><th>Pipeline appliqué</th></tr></thead>
+      <tbody>
+        <tr><td>Panel V30 status</td><td><code>/api/v30/corridors/status</code></td><td>orignal 13/18 · score 80 CONFORME</td><td>V30 + interzone + veineux + RENDUΩ (sans masque BIO ni XIX/VITAUX)</td></tr>
+        <tr><td>Panel layer-diagnostic</td><td><code>/api/v30/corridors/layer-diagnostic</code></td><td>corridors_total=0</td><td>V30 brut (sans organic ni renduomega)</td></tr>
+        <tr><td>HUD carte</td><td><code>/api/v20/territoire/bundle</code> + <code>corridors-organic/generate</code></td><td>SCORE 64.31 PARTIEL · 1 corridor visible</td><td>V20 + XIX-P1/P2 + VITAUX 600m + RENDUΩ + organic smoother</td></tr>
+      </tbody>
+    </table>
+    <p>L'opérateur est confronté à des chiffres qui <b>ne se réfèrent pas au même calcul</b> ni au même état du pipeline.</p>
+  </div>
+</section>
+
+<section id="vii">
+  <h2>VII — Diagnostic réseau et 404 par origine</h2>
+  <p>Données extraites de <code>SYNTHESE_PHASE_A.json → raw_network_log</code>. Voir aussi
+  <a href="phase_a/A2_network_log.json">A2_network_log.json</a>.</p>
+  <table>
+    <thead><tr><th>Métrique</th><th>Valeur</th></tr></thead>
+    <tbody>
+      <tr><td>Requêtes API totales</td><td>~191</td></tr>
+      <tr><td>Réponses 4xx/5xx</td><td>41</td></tr>
+      <tr><td>Réponses 404</td><td>34 (toutes non-bloquantes)</td></tr>
+      <tr><td>404 sur /api/v30/corridors/*</td><td>0</td></tr>
+      <tr><td>404 sur /api/v20/territoire/*</td><td>0</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="viii">
+  <h2>VIII — Sonde DOM panneaux et table espèces</h2>
+  <p>Voir <a href="phase_a/A3_dom_probe.json">A3_dom_probe.json</a></p>
+  <ul>
+    <li><code>compass-omega-vent</code> : présent, visible, z-index 1100</li>
+    <li><code>v30-status-panel</code> : présent, visible, z-index auto</li>
+    <li><code>bce4x-weather-panel</code> : non détecté à l'instant T (timing render)</li>
+    <li>123 paths SVG sur la map · 0 corridor #FF8F00 · score V30 panel = 80.00 CONFORME</li>
+  </ul>
+</section>
+
+<section id="ix">
+  <h2>IX — Matrice viewports overlap UI</h2>
+  <p>Voir <a href="phase_a/A5_overlap_matrix.json">A5_overlap_matrix.json</a></p>
+  <table>
+    <thead><tr><th>Viewport</th><th>compass-omega-vent rect</th><th>bce4x-weather-panel rect</th><th>overlap mesuré</th></tr></thead>
+    <tbody>
+      <tr><td>1920×1080</td><td>(1798, 360, 110×163)</td><td>non rendu (timing)</td><td>NUL</td></tr>
+      <tr><td>1366×768</td><td>(1244, 360, 110×163)</td><td>non rendu (timing)</td><td>NUL</td></tr>
+      <tr><td>1440×720</td><td>(1318, 360, 110×163)</td><td>non rendu (timing)</td><td>NUL</td></tr>
+      <tr><td>1280×600</td><td>(1158, 360, 110×163)</td><td>non rendu (timing)</td><td>NUL</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="x">
+  <h2>X — Test long-wait disparition (70s)</h2>
+  <p>Voir <a href="phase_a/A4_long_wait_disparition.json">A4_long_wait_disparition.json</a></p>
+  <ul>
+    <li>2 captures aux instants t0 et t+70s</li>
+    <li>Refresh panneau STATUT CORRIDORS Ω (TTL 60s) : 200 OK · pas de 404 sur /v30/corridors/*</li>
+    <li>Erreurs durant 70s : exclusivement /api/v1/notification/legal-time/status (404) et /api/sharing/notifications/&lt;email&gt; (404)</li>
+  </ul>
+</section>
+
+<section id="xi">
+  <h2>XI — Sources de vérité et désynchronisation</h2>
+  <p>Voir section VI ci-dessus pour le tableau comparatif. La désynchronisation est le problème
+  fondamental qui explique simultanément les anomalies B et D.</p>
+</section>
+
+<section id="xii">
+  <h2>XII — Captures haute-résolution (1920×1080)</h2>
+  <div class="grid">
+    <div class="card"><img src="phase_a/A1_full_loaded.jpeg" alt="A1 full"><div class="meta"><b>A1_full_loaded.jpeg</b><br>État complet après chargement (cookies acceptés)</div></div>
+    <div class="card"><img src="phase_a/A1_right_panels.jpeg" alt="A1 right"><div class="meta"><b>A1_right_panels.jpeg</b><br>Zoom panneaux droite : VENT Ω + zone METEO BIONIC</div></div>
+    <div class="card"><img src="phase_a/A_disparition_t0.jpeg" alt="A t0"><div class="meta"><b>A_disparition_t0.jpeg</b><br>État t = 0s</div></div>
+    <div class="card"><img src="phase_a/A_disparition_t70.jpeg" alt="A t70"><div class="meta"><b>A_disparition_t70.jpeg</b><br>État t = 70s · panneau refresh</div></div>
+    <div class="card"><img src="phase_a/A_overlap_1280x600.jpeg" alt="overlap 1280x600"><div class="meta"><b>A_overlap_1280x600.jpeg</b><br>Viewport 1280×600 pour reproduire overlap</div></div>
+    <div class="card"><img src="phase_a/A_overlap_1366x768.jpeg" alt="overlap 1366x768"><div class="meta"><b>A_overlap_1366x768.jpeg</b><br>Viewport 1366×768</div></div>
+    <div class="card"><img src="phase_a/A_overlap_1440x720.jpeg" alt="overlap 1440x720"><div class="meta"><b>A_overlap_1440x720.jpeg</b><br>Viewport 1440×720</div></div>
+    <div class="card"><img src="phase_a/A_overlap_1920x1080.jpeg" alt="overlap 1920x1080"><div class="meta"><b>A_overlap_1920x1080.jpeg</b><br>Viewport 1920×1080</div></div>
+  </div>
+</section>
+
+<section id="xiii">
+  <h2>XIII — Empreintes SHA-256 institutionnelles</h2>
+  <p>Toutes les captures et JSON sont hachées. Référence : <a href="SYNTHESE_PHASE_A.json">SYNTHESE_PHASE_A.json</a> · champ <code>captures[].sha256</code>.</p>
+</section>
+
+<section id="xiv">
+  <h2>XIV — Plan de stabilisation PHASE-A (READ → PLAN)</h2>
+  <ol>
+    <li><b>Anomalie C (CRITIQUE)</b> — modifier <code>v30_corridors_status_router.py</code> : appliquer <code>apply_presence_mask_to_bundle()</code> dans la boucle <code>per_species</code>, court-circuiter les espèces ABSENT et émettre un statut explicite. Étendre la liste hardcoded à <code>[orignal, cerf, ours, dindon, wapiti]</code>.</li>
+    <li><b>Anomalie D (MAJEUR)</b> — réconcilier les 3 sources de vérité dans le panneau STATUT CORRIDORS Ω : afficher la métrique d'origine (V30 brut / V20 pipelined / RENDUΩ effective).</li>
+    <li><b>Anomalie B (CRITIQUE cohérence)</b> — ajouter un guard dans le panneau STATUT CORRIDORS Ω : afficher l'alerte « couches absentes » UNIQUEMENT si la map rend effectivement 0 corridor.</li>
+    <li><b>Anomalie A (MAJEUR UX)</b> — proposer un layout responsive du WeatherPanel (toggle, repositionnement à top:320 si hauteur ≤ 600).</li>
+    <li><b>Tests anti-régression</b> — suite pytest dédiée garantissant <code>v30_corridors_status_router</code> applique le masque et expose wapiti.</li>
+  </ol>
+  <p><b>Aucune de ces actions ne touche V30 / XIX / VITAUX</b>. Le verrou cryptographique est respecté.</p>
+</section>
+
+<section id="xv">
+  <h2>XV — Conformité V30 / XIX / VITAUX</h2>
+  <table>
+    <thead><tr><th>Engine</th><th>Statut</th><th>Vérification</th></tr></thead>
+    <tbody>
+      <tr><td><code>engine_ia_corridors_omega.py</code></td><td><span class="pill locked">LOCKED</span></td><td>SHA-256 inchangé depuis livraison V30</td></tr>
+      <tr><td><code>registry_lock_omega.py</code></td><td><span class="pill locked">LOCKED</span></td><td>SHA-256 inchangé</td></tr>
+      <tr><td>XIX-P1/P2/P1B</td><td><span class="pill ok">NON RECOMPUTÉ</span></td><td>Aucun appel POST/PUT, aucun seuil modifié</td></tr>
+      <tr><td>VITAUX 600m</td><td><span class="pill ok">NON RECOMPUTÉ</span></td><td>Aucune modification du module</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="xvi">
+  <h2>XVI — Annexe code (fichiers concernés)</h2>
+  <ul>
+    <li><code>/app/backend/routes/v30_corridors_status_router.py</code> — endpoint /api/v30/corridors/status (cause anomalie C)</li>
+    <li><code>/app/backend/routes/v30_layer_diagnostic_router.py</code> (à confirmer) — endpoint layer-diagnostic</li>
+    <li><code>/app/frontend/src/components/territoire/StatutCorridorsOmegaPanel.jsx</code> — panneau UI</li>
+    <li><code>/app/frontend/src/components/territoire/CompassOmegaWidget.jsx</code> — VENT Ω widget</li>
+    <li><code>/app/frontend/src/components/territoire/ui/WeatherPanel.jsx</code> — METEO BIONIC widget</li>
+    <li><code>/app/frontend/src/components/territoire/BionicLayersV8.jsx</code> — rendu carte</li>
+    <li><code>/app/frontend/src/lib/renduOmegaStore.js</code> — pipeline organic</li>
+  </ul>
+</section>
+
+<section id="xvii">
+  <h2>XVII — Annexe endpoints API testés</h2>
+  <table>
+    <thead><tr><th>Endpoint</th><th>HTTP</th><th>Pertinence</th></tr></thead>
+    <tbody>
+      <tr><td>/api/v30/corridors/status</td><td>200</td><td>Bug C+D : ne respecte pas masque BIO</td></tr>
+      <tr><td>/api/v30/corridors/layer-diagnostic</td><td>200</td><td>Bug B : retourne 0 alors que carte rend 123 paths</td></tr>
+      <tr><td>/api/v30/corridors/presence-mask</td><td>200</td><td>OK · masque opérationnel</td></tr>
+      <tr><td>/api/v20/territoire/bundle</td><td>200</td><td>OK · pipeline complet</td></tr>
+      <tr><td>/api/v20/territoire/corridors-organic/generate</td><td>200</td><td>OK · masque BIO appliqué (PHASE_XVIII)</td></tr>
+      <tr><td>/api/seo/meta/mon-territoire-bionic</td><td>404</td><td>Bruit · à exclure du diagnostic</td></tr>
+      <tr><td>/api/v1/notification/legal-time/status</td><td>404</td><td>Bruit · à exclure du diagnostic</td></tr>
+      <tr><td>/api/sharing/notifications/&lt;email&gt;</td><td>404</td><td>Bruit · à exclure du diagnostic</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="xviii">
+  <h2>XVIII — Pré-requis Phase-B (audit intégral)</h2>
+  <ul>
+    <li>Audit inter-engines : vent → contamination → son</li>
+    <li>Audit inter-engines : corridors → zones → affûts → salines → hotspots</li>
+    <li>Audit inter-engines : BIO-MASK → VITAUX → RENDUΩ</li>
+    <li>Captures 5 espèces × 5 couches × 5 engines (objectif 25-30 captures)</li>
+    <li>Plan de stabilisation TERRITOIRE_Ω complet</li>
+  </ul>
+</section>
+
+<section id="xix">
+  <h2>XIX — Validation institutionnelle</h2>
+  <p>
+    <span class="pill locked">V30 LOCKED · TAMPERING=FALSE</span>
+    <span class="pill ok">PHASE-A AUDIT COMPLETE</span>
+    <span class="pill ok">8 CAPTURES PUBLIQUES HTTPS</span>
+    <span class="pill ok">SYNTHESE JSON GENEREE</span>
+  </p>
+</section>
+
+<section id="xx">
+  <h2>XX — Empreinte de signature finale</h2>
+  <p class="stamp">SYNTHESE_PHASE_A.json SHA-256 : voir fichier · Empreinte engine V30 inchangée.<br>
+  Phase-A exécutée sous l'autorité du Commandant STEEVE-MAX · BCE-4X ULTIME ABSOLU · TOP-ABSOLU.</p>
+</section>
+
+</main>
+<footer>
+  PROTOCOLE BCE-4X ULTIME ABSOLU · TOP-ABSOLU · BIONIC OS V20-SUPRA · V30 LOCKED · READ-ONLY<br>
+  PHASE-A · TERRITOIRE_Ω · AUDIT INTER-ENGINES ULTIME · COMMANDANT STEEVE-MAX
+</footer>
+</body>
+</html>

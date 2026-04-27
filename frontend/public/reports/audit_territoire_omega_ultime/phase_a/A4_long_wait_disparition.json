@@ -1,0 +1,27 @@
+{
+  "duration_s": 70,
+  "errors_during_disparition": [
+    {
+      "url": "https://huntiq-restore.preview.emergentagent.com/api/v1/notification/legal-time/status?lat=46.8139&lng=-71.208",
+      "status": 404
+    },
+    {
+      "url": "https://huntiq-restore.preview.emergentagent.com/api/sharing/notifications/admin@huntiq.com",
+      "status": 404
+    },
+    {
+      "url": "https://huntiq-restore.preview.emergentagent.com/api/sharing/notifications/admin@huntiq.com",
+      "status": 404
+    }
+  ],
+  "v30_refresh_calls": [
+    {
+      "url": "https://huntiq-restore.preview.emergentagent.com/api/v30/corridors/status?lat=48.206657&lon=-68.382422&_t=1777326821416",
+      "status": 200
+    },
+    {
+      "url": "https://huntiq-restore.preview.emergentagent.com/api/v30/corridors/layer-diagnostic?lat=48.206657&lon=-68.382422&species=orignal&_t=1777326839230",
+      "status": 200
+    }
+  ]
+}

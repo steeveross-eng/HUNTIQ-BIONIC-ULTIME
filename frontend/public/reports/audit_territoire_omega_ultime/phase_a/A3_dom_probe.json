@@ -1,0 +1,80 @@
+{
+  "panels": [
+    {
+      "testid": "compass-omega-vent",
+      "present": true,
+      "visible": true,
+      "rect": {
+        "x": 1798,
+        "y": 360,
+        "w": 110,
+        "h": 163
+      },
+      "zIndex": "1100",
+      "position": "absolute",
+      "top": "120px",
+      "right": "12px",
+      "bottom": "557.5px"
+    },
+    {
+      "testid": "bce4x-weather-panel",
+      "present": false
+    },
+    {
+      "testid": "v30-status-panel",
+      "present": true,
+      "visible": true,
+      "rect": {
+        "x": 12,
+        "y": 584,
+        "w": 340,
+        "h": 484
+      },
+      "zIndex": "auto",
+      "position": "static",
+      "top": "auto",
+      "right": "auto",
+      "bottom": "auto"
+    }
+  ],
+  "overlap": null,
+  "tableRows": [
+    {
+      "testid": "v30-species-row-orignal",
+      "cells": [
+        "orignal",
+        "13/18",
+        "72.2"
+      ]
+    },
+    {
+      "testid": "v30-species-row-cerf",
+      "cells": [
+        "cerf",
+        "17/20",
+        "85.0"
+      ]
+    },
+    {
+      "testid": "v30-species-row-ours",
+      "cells": [
+        "ours",
+        "10/13",
+        "76.9"
+      ]
+    },
+    {
+      "testid": "v30-species-row-dindon",
+      "cells": [
+        "dindon",
+        "12/14",
+        "85.7"
+      ]
+    }
+  ],
+  "layersText": "COUCHES TERRITOIREzones :5corridors :0 (V30 0 / IZ 0 / ENT 0)salines :4hotspots :4affûts :0contam :0vent :OKwaypoint :OK⚠ couches critiques absentes : corridors_total, corridors_v30, affuts, contamination_zones",
+  "corridorsCountSvg": 123,
+  "orangeOnMap": 0,
+  "v30_score": "80.00",
+  "v30_label": "CONFORME"
+}

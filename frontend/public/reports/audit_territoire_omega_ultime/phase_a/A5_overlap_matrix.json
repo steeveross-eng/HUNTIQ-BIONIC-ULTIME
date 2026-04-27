@@ -1,0 +1,170 @@
+{
+  "1920x1080": {
+    "viewport": [
+      1920,
+      1080
+    ],
+    "label": "1920x1080",
+    "dom": {
+      "panels": [
+        {
+          "testid": "compass-omega-vent",
+          "present": true,
+          "visible": true,
+          "rect": {
+            "x": 1798,
+            "y": 360,
+            "w": 110,
+            "h": 163
+          },
+          "zIndex": "1100"
+        },
+        {
+          "testid": "bce4x-weather-panel",
+          "present": false
+        },
+        {
+          "testid": "v30-status-panel",
+          "present": true,
+          "visible": true,
+          "rect": {
+            "x": 12,
+            "y": 597,
+            "w": 306,
+            "h": 471
+          },
+          "zIndex": "auto"
+        }
+      ],
+      "overlap": null
+    },
+    "err_404": 25,
+    "err_4xx_5xx": 31
+  },
+  "1366x768": {
+    "viewport": [
+      1366,
+      768
+    ],
+    "label": "1366x768",
+    "dom": {
+      "panels": [
+        {
+          "testid": "compass-omega-vent",
+          "present": true,
+          "visible": true,
+          "rect": {
+            "x": 1244,
+            "y": 360,
+            "w": 110,
+            "h": 163
+          },
+          "zIndex": "1100"
+        },
+        {
+          "testid": "bce4x-weather-panel",
+          "present": false
+        },
+        {
+          "testid": "v30-status-panel",
+          "present": true,
+          "visible": true,
+          "rect": {
+            "x": 12,
+            "y": 285,
+            "w": 306,
+            "h": 471
+          },
+          "zIndex": "auto"
+        }
+      ],
+      "overlap": null
+    },
+    "err_404": 24,
+    "err_4xx_5xx": 30
+  },
+  "1440x720": {
+    "viewport": [
+      1440,
+      720
+    ],
+    "label": "1440x720",
+    "dom": {
+      "panels": [
+        {
+          "testid": "compass-omega-vent",
+          "present": true,
+          "visible": true,
+          "rect": {
+            "x": 1318,
+            "y": 360,
+            "w": 110,
+            "h": 163
+          },
+          "zIndex": "1100"
+        },
+        {
+          "testid": "bce4x-weather-panel",
+          "present": false
+        },
+        {
+          "testid": "v30-status-panel",
+          "present": true,
+          "visible": true,
+          "rect": {
+            "x": 12,
+            "y": 237,
+            "w": 306,
+            "h": 471
+          },
+          "zIndex": "auto"
+        }
+      ],
+      "overlap": null
+    },
+    "err_404": 23,
+    "err_4xx_5xx": 29
+  },
+  "1280x600": {
+    "viewport": [
+      1280,
+      600
+    ],
+    "label": "1280x600",
+    "dom": {
+      "panels": [
+        {
+          "testid": "compass-omega-vent",
+          "present": true,
+          "visible": true,
+          "rect": {
+            "x": 1158,
+            "y": 360,
+            "w": 110,
+            "h": 163
+          },
+          "zIndex": "1100"
+        },
+        {
+          "testid": "bce4x-weather-panel",
+          "present": false
+        },
+        {
+          "testid": "v30-status-panel",
+          "present": true,
+          "visible": true,
+          "rect": {
+            "x": 12,
+            "y": 117,
+            "w": 306,
+            "h": 471
+          },
+          "zIndex": "auto"
+        }
+      ],
+      "overlap": null
+    },
+    "err_404": 23,
+    "err_4xx_5xx": 29
+  }
+}
