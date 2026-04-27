@@ -1205,6 +1205,14 @@ try:
 except Exception as e:
     logger.warning(f"XIX-P2 ORIGINE_EXTERNE_INVERSION_Ω router not loaded: {e}")
 
+# ═══ PHASE XVIII-BIO — SPECIES_PRESENCE_MASK_Ω ═══
+try:
+    from routes.species_presence_mask_router import router as species_presence_mask_router
+    app.include_router(species_presence_mask_router)
+    logger.info("✓ XVIII-BIO active : SPECIES_PRESENCE_MASK_Ω (/api/v30/corridors/presence-mask)")
+except Exception as e:
+    logger.warning(f"XVIII-BIO SPECIES_PRESENCE_MASK_Ω router not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

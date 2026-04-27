@@ -303,14 +303,32 @@ async def v20_territoire_bundle(
     result = await compute_territoire_v10(lat, lon, species, month, hour, wind_deg, wind_speed)
 
     # ═══════════════════════════════════════════════════════════════════════
+    # PHASE_XVIII_BIO_PRESENCE_MASK_Ω — COURT-CIRCUIT en amont
+    # Si l'espèce est ABSENTE du territoire (registre MFFP + SEPAQ + Atlas),
+    # on vide les corridors avant tout le pipeline XIX / VITAUX / RENDUΩ.
+    # ═══════════════════════════════════════════════════════════════════════
+    result["waypoint"] = {"lat": lat, "lng": lon}
+    result["species"] = species
+    try:
+        from engines.v8_institutional.species_presence_mask_omega import (
+            apply_presence_mask_to_bundle,
+        )
+        result = apply_presence_mask_to_bundle(result, species=species, lat=lat, lng=lon)
+    except Exception as _e_pres:
+        result["bio_presence_mask_applied"] = False
+        result["bio_presence_mask_error"] = str(_e_pres)
+    if result.get("bio_presence_mask_halt") is True:
+        # Pipeline court-circuité : corridors vides, on renvoie le bundle tel quel
+        # (zones vitales, salines, hotspots restent affichés pour audit écologique).
+        return result
+
+    # ═══════════════════════════════════════════════════════════════════════
     # RAPATRIEMENT_RENDUΩ_V20 — SECTION 1.1 / 1.2 / 1.3
     # Validation et filtrage ABSOLUS des corridors avant cache & envoi client.
     # Même moteur que POST /api/v7-ultime/renduomega/validate-bundle.
     # V30 LOCKED intact — seules les sorties de compute_territoire_v10 sont
     # filtrées ici ; le moteur institutionnel reste inchangé.
-    # ═══════════════════════════════════════════════════════════════════════
-    result["waypoint"] = {"lat": lat, "lng": lon}
-    result["species"] = species    # Normalisation `contamination_zones` pour RenduΩ :
+    # ═══════════════════════════════════════════════════════════════════════    # Normalisation `contamination_zones` pour RenduΩ :
     # V30 émet des cônes (polygones) sans lat/lng direct. RenduΩ attend des
     # points {lat,lng}. On dérive ici un point représentatif depuis
     # `affut_source` ou le centroïde du polygone — sans modifier V30.
