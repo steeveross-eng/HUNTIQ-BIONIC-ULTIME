@@ -279,17 +279,28 @@ def synthesize_ecological_layers_for_corridor(
         else 65.0
     )
 
-    # ─── predictive — bonus GPS USGS + ravages MFFP (orignal)
-    hm_gps = _load_heatmap("usgs_gps_traces")
-    avg_gps = _sample_along_path(hm_gps, path) or 0.1
-    hm_ravages = _load_heatmap("mffp_ravages_orignal")
-    avg_ravages = _sample_along_path(hm_ravages, path) or 0.0
-    pred_base = 70.0 + min(20.0, 5.0 * zones_touched_count)
-    pred_bonus = 25.0 * avg_gps
-    if species_canon == "orignal":
-        pred_bonus += min(15.0, 0.25 * avg_ravages)
-    pred_bonus -= 15.0 * avg_press  # pénalité pression humaine
-    predictive_score = max(0.0, min(100.0, pred_base + pred_bonus))
+    # ─── predictive — UTILISE predictive_omega_v2 (Phase XVIII) si présent
+    pv2 = corridor.get("predictive_omega_v2") or {}
+    if pv2.get("valid"):
+        # Le score V2 (0..100) issu des trajectoires GPS USGS RÉELLES
+        # remplace intégralement le score synthétique uniforme.
+        predictive_score = float(pv2.get("score") or 0.0)
+        predictive_source = "PHASE_XVIII_GPS_USGS"
+        avg_gps = (pv2.get("metrics") or {}).get("gps_density_ratio") or 0.0
+        avg_ravages = avg_ravages = _sample_along_path(_load_heatmap("mffp_ravages_orignal"), path) or 0.0
+    else:
+        # Fallback : score synthétique d'origine si dataset GPS absent
+        hm_gps = _load_heatmap("usgs_gps_traces")
+        avg_gps = _sample_along_path(hm_gps, path) or 0.1
+        hm_ravages = _load_heatmap("mffp_ravages_orignal")
+        avg_ravages = _sample_along_path(hm_ravages, path) or 0.0
+        pred_base = 70.0 + min(20.0, 5.0 * zones_touched_count)
+        pred_bonus = 25.0 * avg_gps
+        if species_canon == "orignal":
+            pred_bonus += min(15.0, 0.25 * avg_ravages)
+        pred_bonus -= 15.0 * avg_press
+        predictive_score = max(0.0, min(100.0, pred_base + pred_bonus))
+        predictive_source = "PHASE_XVII_FALLBACK_SYNTHETIC"
 
     consensus = compute_consensus_score(
         eco_score, bio_score, hydro_score, veineux_score, predictive_score,
@@ -348,6 +359,7 @@ def synthesize_ecological_layers_for_corridor(
                 "usgs_gps_avg": round(avg_gps, 3),
                 "mffp_ravages_orignal_avg": round(avg_ravages, 1),
             },
+            "predictive_source": predictive_source,
         },
         "phase": "PHASE_XVII_SUPRA_ENGINE_CORRIDORS_ECOLOGIQUE_Ω",
     }

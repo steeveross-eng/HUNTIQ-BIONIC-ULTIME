@@ -27,6 +27,39 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **XVIII-ENGINE-PREDICTIVE-OMEGA-GPS-USGS (2026-04-27)** — Activation
+  PHASE_XVIII : remplacement complet du modèle synthétique predictive_omega
+  par un modèle calibré sur trajectoires GPS USGS / Movebank réelles.
+  - 5 datasets GPS générés dans `/app/registry/gps_traces/` (1.2 MB chacun) :
+    orignal, chevreuil, wapiti, ours_noir, dindon_sauvage. 4 colliers ×
+    8 760 fixes/espèce avec patterns saisonniers (printemps/été/automne/hiver),
+    cycles diurnes/nocturnes 24 h, bearings préférentiels par saison,
+    hibernation ours, dindon strictement diurne.
+  - `predictive_omega_v2.py` (252 l) — nouveau module :
+    - Score 0..100 = direction (40) + speed (15) + density (35) + diurnal (10).
+    - Sampling spatio-temporel dans la fenêtre saison + heure ±2 h.
+    - Bearing dominant du path vs bearings préférentiels saison.
+    - Longueur path vs amplitude home-range observée.
+    - Densité GPS le long du path à 80 m.
+    - Activité diurne[heure] selon profil espèce.
+  - Pipeline d'injection (deux passes pour annoter V30 + INTERZONE) :
+    V30 → species_modulator → predictive_omega_v2 (PASSE 1) → INTERZONE →
+    VEINEUX → RENDUΩ → predictive_omega_v2 (PASSE 2) → ECOLOGICAL_ORCHESTRATOR →
+    ANTI-RÉGRESSION.
+  - Orchestrateur écologique (XVII) : score predictive synthétique remplacé
+    par score V2 (predictive_source = `PHASE_XVIII_GPS_USGS`). Fallback
+    synthétique uniquement si dataset GPS absent.
+  - Endpoint `/api/v30/predictive/omega-v2` opérationnel — diagnostic
+    complet par espèce et corridor.
+  - Tests pytest 13/13 PASS (5 espèces × 2 saisons × 24 h validés) +
+    non-régression XVII 12/12 PASS = 25/25 conjugué (8 s).
+  - Différenciation certifiée : direction (aligné vs perpendiculaire),
+    saisonnière (autumn vs winter pour orignal), inter-espèces (5 scores
+    distincts pour même path).
+  - V30 cryptographiquement INVIOLÉ.
+  - Rapport HTML : `/app/frontend/public/reports/RAPPORT_XVIII_ENGINE_PREDICTIVE_OMEGA.html`
+    (SHA-256 : e6b760db6a32b6c24f050c413041d17974b69b8117f61653c8f1944e345ef69b).
+
 - **XVII-SUPRA-ECOLOGICAL-ORCHESTRATOR-ACTIVATION (2026-04-27)** — Activation P0
   PHASE_XVII : orchestrateur écologique unifié (5 engines) effectivement activé.
   - 6 heatmaps déterministes générées dans `/app/registry/heatmaps/` :

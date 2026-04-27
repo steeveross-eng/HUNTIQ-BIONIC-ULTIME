@@ -1173,6 +1173,14 @@ try:
 except Exception as e:
     logger.warning(f"XVII-SUPRA ECOLOGICAL_ORCHESTRATOR_Ω router not loaded: {e}")
 
+# ═══ PHASE XVIII — ENGINE PREDICTIVE_OMEGA V2 GPS USGS Ω ═══
+try:
+    from routes.predictive_omega_v2_router import router as predictive_omega_v2_router
+    app.include_router(predictive_omega_v2_router)
+    logger.info("✓ XVIII active : PREDICTIVE_OMEGA_V2_Ω (/api/v30/predictive/omega-v2)")
+except Exception as e:
+    logger.warning(f"XVIII PREDICTIVE_OMEGA_V2_Ω router not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

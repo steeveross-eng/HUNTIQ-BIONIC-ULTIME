@@ -310,8 +310,7 @@ async def v20_territoire_bundle(
     # filtrées ici ; le moteur institutionnel reste inchangé.
     # ═══════════════════════════════════════════════════════════════════════
     result["waypoint"] = {"lat": lat, "lng": lon}
-    result["species"] = species
-    # Normalisation `contamination_zones` pour RenduΩ :
+    result["species"] = species    # Normalisation `contamination_zones` pour RenduΩ :
     # V30 émet des cônes (polygones) sans lat/lng direct. RenduΩ attend des
     # points {lat,lng}. On dérive ici un point représentatif depuis
     # `affut_source` ou le centroïde du polygone — sans modifier V30.
@@ -339,6 +338,17 @@ async def v20_territoire_bundle(
                                     "intensity": _c.get("intensity"),
                                     "source": "V20_RAPATRIEMENT_NORMALIZED"})
     result["contamination_zones"] = _contam_for_rom
+    # ═══ PHASE_XVIII — PREDICTIVE_OMEGA_V2 GPS USGS ═══
+    # Annotation des corridors V30 avec scoring comportemental issu des
+    # trajectoires GPS Movebank/USGS réelles. AVANT INTERZONE pour que les
+    # générateurs aval puissent consulter `predictive_omega_v2` sur les
+    # corridors d'origine.
+    try:
+        from engines.v8_institutional.predictive_omega_v2 import apply_predictive_omega_v2_to_bundle
+        result = apply_predictive_omega_v2_to_bundle(result, species=species, month=month, hour=hour)
+    except Exception as _e_xviii:
+        result["predictive_omega_v2_applied"] = False
+        result["predictive_omega_v2_error"] = str(_e_xviii)
     # ═══ INTERZONE_Ω — AJOUT des corridors inter-zones + entrants (V30 intact) ═══
     # Génère les corridors manquants (§2.3 liaison zones vitales) AVANT
     # le post-processing géométrique veineux.
@@ -346,6 +356,16 @@ async def v20_territoire_bundle(
     # ═══ VEINEUX_Ω — transformation géométrique amont (V30 intact) ═══
     result = apply_veineux_omega_to_bundle(result)
     result = apply_renduomega_to_bundle(result)
+    # ═══ PHASE_XVIII — PREDICTIVE_OMEGA_V2 (2e passe) ═══
+    # Re-annotation après INTERZONE/VEINEUX/RENDUΩ pour couvrir les corridors
+    # ajoutés (entrants, inter-zones). L'orchestrateur écologique aval lit
+    # ces scores comme remplaçant du score synthétique.
+    try:
+        from engines.v8_institutional.predictive_omega_v2 import apply_predictive_omega_v2_to_bundle
+        result = apply_predictive_omega_v2_to_bundle(result, species=species, month=month, hour=hour)
+    except Exception as _e_xviii_2:
+        result["predictive_omega_v2_post_renduomega_applied"] = False
+        result["predictive_omega_v2_post_renduomega_error"] = str(_e_xviii_2)
     # ═══ PHASE_XVII — ÉCOLOGIQUE_Ω : annotation consensus écologique ═══
     try:
         from engines.v8_institutional.ecological_orchestrator_omega import orchestrate_bundle
