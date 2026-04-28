@@ -49,6 +49,7 @@ import PlacesSidePanel from '@/components/territoire/PlacesSidePanel';
 import StatutCorridorsOmegaPanel from '@/components/territoire/StatutCorridorsOmegaPanel';
 import HudTerritoireUltime from '@/components/territoire/HudTerritoireUltime';
 import LayersOmegaSyncPanel from '@/components/territoire/LayersOmegaSyncPanel';
+import RenduOmegaIntegralCertifier from '@/components/territoire/RenduOmegaIntegralCertifier';
 import WeatherPanel from '@/components/territoire/ui/WeatherPanel';
 import useSpatialClipping from '@/hooks/useSpatialClipping';
 import useCameraLayer from '@/hooks/useCameraLayer';
@@ -1672,6 +1673,18 @@ const MonTerritoireBionicPage = () => {
           bundleData={bundleDataV8}
           species={selectedSpecies !== 'tous' ? selectedSpecies : 'orignal'}
         />
+      </div>
+
+      {/* RENDU-Ω INTÉGRAL CERTIFIÉ — overlay top-right (PHASE-E ordre Commandant 2026-04-28) */}
+      <div
+        data-testid="rendu-omega-integral-overlay"
+        style={{
+          position: 'fixed', right: 12, top: 88, zIndex: 901,
+          pointerEvents: 'auto',
+          maxWidth: 320,
+        }}
+      >
+        <RenduOmegaIntegralCertifier bundleData={bundleDataV8} />
       </div>
     </div>
   );

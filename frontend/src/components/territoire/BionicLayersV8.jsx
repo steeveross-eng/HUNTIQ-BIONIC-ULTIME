@@ -734,16 +734,18 @@ const BionicLayersV8 = ({
     // ═══ Z-4: CONTAMINATION-Omega — CANON SUPRÊME X120 ═══
     // Directive X120-SUPRA-CANONIQUE-Ω : opacité 0.18 stricte, contours divisés par 2,
     // géométrie rectiligne (smoothFactor 0), rouge institutionnel #FF0000.
+    // RENDU-Ω INTÉGRAL (PHASE-E ordre Commandant 2026-04-28) : opacités atténuées
+    // pour libérer la lisibilité des couches Ω sans suppression de la couche.
     if (showContamination && contamination) {
       const cones = Array.isArray(contamination) ? contamination : [contamination];
       cones.forEach(cone => {
         if (!cone.polygon || cone.polygon.length < 3) return;
         // Ligne externe fine (contour principal)
         const polyOuter = L.polygon(cone.polygon, {
-          color: '#FF0000',
+          color: '#DC2626',                     // RENDU-Ω : palette officielle bande PROSCRIT
           weight: 1.25,
-          opacity: 0.85,
-          fillColor: '#FF0000',
+          opacity: 0.45,                        // PURGE Ω : 0.85 → 0.45 (atténuation conformité)
+          fillColor: '#DC2626',
           fillOpacity: 0,                       // §2 contour seul, intérieur transparent
           dashArray: '5 3',
           smoothFactor: 0,
@@ -753,9 +755,9 @@ const BionicLayersV8 = ({
         });
         // Ligne interne ultra-fine (effet double contour canonique)
         const polyInner = L.polygon(cone.polygon, {
-          color: '#FF0000',
+          color: '#DC2626',
           weight: 0.6,
-          opacity: 0.6,
+          opacity: 0.30,                        // PURGE Ω : 0.6 → 0.30
           fill: false,
           dashArray: '2 2',
           smoothFactor: 0,
@@ -1113,9 +1115,10 @@ const BionicLayersV8 = ({
       } catch (_e) { /* noop */ }
     }
 
-    // ═══ Z-7: AFFUTS-Omega V12-R5 (Directive II) — Orange BIONIC + contour blanc ═══
+    // ═══ Z-7: AFFUTS-Omega V12-R5 (Directive II) — RENDU-Ω INTÉGRAL (PHASE-E ordre Commandant 2026-04-28)
+    // PURGE LEGACY : opacité réduite, palette institutionnelle Ω canonique #00A676.
     if (showAffuts && affuts.length > 0) {
-      const AFFUT_BIONIC_ORANGE = '#FF9800';
+      const AFFUT_BIONIC_ORANGE = '#00A676';
       const AFFUT_WHITE_STROKE = '#FFFFFF';
       affuts.forEach(a => {
         const isFixed = a.type === 'FIXE_PERMANENT';
@@ -1126,8 +1129,8 @@ const BionicLayersV8 = ({
         const circle = L.circleMarker([a.lat, a.lng], {
           radius: sz_px,
           color: AFFUT_WHITE_STROKE,         // contour blanc 2px Directive II
-          fillColor: AFFUT_BIONIC_ORANGE,    // orange BIONIC Directive II
-          fillOpacity: 0.9,                  // opacite >= 0.55
+          fillColor: AFFUT_BIONIC_ORANGE,    // RENDU-Ω : palette institutionnelle Ω
+          fillOpacity: 0.55,                 // PURGE Ω : 0.9 → 0.55 (atténuation conformité)
           weight: 2,
           opacity: 1.0,
           interactive: true,

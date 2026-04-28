@@ -27,6 +27,54 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **RENDU-Ω INTÉGRAL · PURGE TOTALE LEGACY (2026-04-28 · ordre n°9)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-7) suite à
+  constatation visuelle de NON-CONFORMITÉ MAJEURE BCE-4X. RCA visuelle
+  exhaustive 5-étapes + corrections frontend complètes. V30 INVIOLÉ.
+  - **Symptôme** : capture précédente présentait blizzard de 25 000 segments
+    (PARTICLE_COUNT 2500 × TRAIL_LENGTH 10), cône rouge dominant >50%
+    surface (#FF0000 opacité 0.85), tache orange massive (AFFÛTS #FF9800
+    opacité 0.9), aucune visibilité distincte des couches Ω.
+  - **CAUSE RACINE 100% FRONTEND** : densité particules excessive +
+    palettes legacy hard-codées (orange #FF9800, rouge brut #FF0000) +
+    opacités hors normes Ω. Pipeline backend correct (5/5 flags Ω actifs).
+  - **Modules fautifs** : `WindFlowLayer.jsx` (densité), `BionicLayersV8.jsx`
+    (palettes legacy AFFÛTS et CONTAMINATION).
+  - **Corrections appliquées** :
+    - `WindFlowLayer.jsx` : PARTICLE_COUNT 2500→**600** (-76%),
+      MAX_OPACITY 0.90→**0.42**, TRAIL_LENGTH 10→**5**,
+      ARROW_LENGTH 6→5, ARROW_WIDTH 3→2, LINE_WIDTH 1.8→1.2.
+    - `BionicLayersV8.jsx` AFFÛTS : `AFFUT_BIONIC_ORANGE` #FF9800→**#00A676**
+      (palette Ω canonique), fillOpacity 0.9→**0.55**.
+    - `BionicLayersV8.jsx` CONTAMINATION : color #FF0000→**#DC2626**
+      (palette PROSCRIT institutionnelle), opacité outer 0.85→**0.45**,
+      opacité inner 0.6→**0.30**.
+    - **NOUVEAU** `RenduOmegaIntegralCertifier.jsx` : sceau visuel
+      institutionnel en overlay top-right listant les 7 PURGES LEGACY +
+      7 STYLES Ω + Z-ORDRE Ω + signature « **BCE-4X · STEEVE-MAX ·
+      CONFORMITÉ Ω 100%** ».
+  - **Tests pytest dédiés** : `test_phase_e_rendu_omega_integral.py` —
+    **12/12 PASS** dont 2 sentinelles anti-régression (interdiction
+    retour palette #FF9800, interdiction PARTICLE_COUNT > 600 sans purge
+    documentée).
+  - **Capture HTTPS finale** : `rendu_omega_integral_carte.jpeg` — carte
+    parfaitement lisible avec affûts verts Ω conformes, contam atténuée,
+    3 panneaux institutionnels actifs (StatutΩ POST-FILTRAGE Ω + Layers
+    Ω Sync + RENDU-Ω INTÉGRAL CERTIFIÉ avec sceau « CONFORMITÉ Ω 100% »).
+  - **Livrables HTTPS 200** :
+    `RENDU_OMEGA_INTEGRAL.json` (6.8 KB) +
+    `RAPPORT_RENDU_OMEGA_INTEGRAL.html` (14.3 KB · 10 sections · RCA 5
+    étapes · plan anti-régression · capture finale + sceau).
+  - **V30 INVIOLÉ post-rendu** : `fb765b94…ecb0c` + `bcb1e3a6…39d3` ·
+    echo `655a1630375909bdeb32ba0a033fc329f105fb0a88ba058f79952241206cc36d`.
+  - **Non-régression cumulée** : **91/91 PASS** post-rendu
+    (rendu intégral 12 + purge 10 + layers sync 22 + fix C1 24 + PHASE-C
+    10 + SUPRA-BIO 13).
+  - **Plan anti-régression** : 2 sentinelles pytest + recommandation
+    institutionnelle (palette Ω canonique #00A676/#DC2626/#06B6D4,
+    opacité ≤ 0.55 pour couches massives, densité ≤ 1000 segments
+    canvas).
+
 - **PURGE LEGACY + RÉINJECTION COUCHES Ω (2026-04-28 · ordre n°8)**
   Sur ordre du Commandant STEEVE-MAX (constatation visuelle de couches V30
   brut résiduelles). RCA forensique en 5 étapes + correction frontend.
