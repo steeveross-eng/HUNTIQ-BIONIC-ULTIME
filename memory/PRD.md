@@ -27,6 +27,61 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XII_ESPECES_Ω · 5 ENGINES ESPÈCES (2026-04-28 · ordre n°20 · MEGA-COMMANDE)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (MEGA_COMMANDE_PHASE_XII_ESPECES_Ω) —
+  création + connexion + activation + verrouillage de 5 engines espèces Ω.
+  V30 INVIOLÉ. Aucun moteur scellé V30 modifié.
+  - **5 engines créés** :
+    - `ENGINE_ESPECE_CHEVREUIL_Ω` (Odocoileus virginianus, 8 sources GOV+UNI+PR, 1 DOI)
+    - `ENGINE_ESPECE_ORIGNAL_Ω` (Alces alces, 11 sources, 3 DOI : 10.3389/fevo.2021.758374, 10.1002/ece3.10909, 10.1139/cjfr-2020)
+    - `ENGINE_ESPECE_OURS_NOIR_Ω` (Ursus americanus, 11 sources, 3 DOI : 10.1002/jwmg.1032, 10.1111/1365-2664.12279, 10.1002/jwmg.890)
+    - `ENGINE_ESPECE_WAPITI_Ω` (Cervus canadensis, 8 sources, 3 DOI : 10.1002/jwmg.1030, 10.1002/eap.1923, 10.7589/2015-07-178)
+    - `ENGINE_ESPECE_DINDON_Ω` (Meleagris gallopavo, 11 sources, 4 DOI : 10.1002/jwmg.703, jwmg.1034, jwmg.21234, 10.7589/2014-05-123)
+  - **Architecture** :
+    - Module commun `engines/v8_institutional/especes/__init__.py` : dataclass
+      `EspeceProfile`, `SourceRef`, `SeuilScientifique` + 4 fonctions de scoring
+      institutionnels (pression humaine, fragmentation, thermique, neige)
+      + `normalize_engine_output()`.
+    - 5 fichiers engine_*_omega.py avec PROFILE_*_Ω et compute(env).
+    - Orchestrateur `engine_especes_omega.py` : `ENGINES_ESPECES_Ω`,
+      `Z_ORDRE_Ω_ESPECES`, `list_especes()`, `execute_pipeline_stage()`,
+      `get_lock_signature()`.
+    - Router FastAPI `routes/especes_omega_router.py` (4 endpoints).
+    - Inscription dans `server.py` (PHASE_XII_ESPECES_Ω).
+    - Composant React `EspecesOmegaPanel.jsx` (HUD overlay z-index 902).
+    - Tests pytest `test_phase_xii_especes_omega.py` (7/7 passing).
+  - **4 endpoints actifs (HTTP 200)** :
+    - `GET /api/v30/especes/list` — 5 espèces metadata BCE-4X.
+    - `GET /api/v30/especes/lock-signature` — SHA-256 institutionnel.
+    - `POST /api/v30/especes/compute` — pipeline stage exécution.
+    - `GET /api/v30/especes/{species_id}` — profil + compute par défaut.
+  - **Z-ORDRE Ω mis à jour** : nouvelles couches insérées après "zones" :
+    `habitat_especes_omega`, `corridors_especes_omega`, `zones_critiques_especes_omega`.
+  - **Verrouillage institutionnel** :
+    - `SHA_REGISTRY_LOCK_ESPECES_Ω` =
+      `e69d87e31b22b85712f4a9245aef8efac4df0c7f0ac66e859fb17be578394993`
+    - `VERSION_ESPECES_Ω` = LOCKED · `CONFORMITE_BCE4X_ESPECES_Ω` = 100.
+  - **Tests pytest 7/7 passing** :
+    - test_5_engines_loaded
+    - test_bce4x_compliance_all_species (GOV+UNI+PR + DOI)
+    - test_no_vulgarisation_no_opinion
+    - test_pipeline_stage_executes
+    - test_thermal_threshold_orignal_strictest (ORIGNAL 15.5°C < WAPITI 22.5°C < CHEVREUIL 27°C)
+    - test_lock_signature_stable
+    - test_palette_styles_distinct
+  - **Capture HUD frontend confirmée** : panneau "ENGINES ESPÈCES Ω · PHASE XII"
+    affiche les 5 espèces avec ✓ BCE-4X vert, sources/DOI/dimensions/couches,
+    tags GOV/PR/UNI, mini palettes institutionnelles distinctes.
+  - **V30 LOCKED · INTÉGRITÉ INTACTE** :
+    - registry_lock_omega.py SHA-256 :
+      `fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c`
+    - engine_ia_corridors_omega.py SHA-256 :
+      `bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3`
+  - **Livrables (servis HTTPS 200 OK)** :
+    - `/reports/audit_territoire_omega_ultime/RAPPORT_PHASE_XII_ESPECES_OMEGA.html` (10 048 octets, capture embarquée).
+    - `/reports/audit_territoire_omega_ultime/PHASE_XII_ESPECES_OMEGA.json` (4 731 octets).
+    - `/reports/audit_territoire_omega_ultime/SCREENSHOT_PHASE_XII_ESPECES_OMEGA_2026-04-28.png` (1 812 837 octets).
+
 - **RAPPORT_EXHAUSTIF_ENGINES_Ω · 4 FORMATS TÉLÉCHARGEABLES (2026-04-28 · ordre n°19)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-5) — documentation
   complète de chaque engine pour évaluation avant PHASE 4. V30 INVIOLÉ.

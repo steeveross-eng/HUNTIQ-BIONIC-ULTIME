@@ -93,6 +93,9 @@ import { useSplitViewZones } from '@/hooks/useSplitViewZones';
 import TerritoireWarmupSplash from '@/components/territoire/TerritoireWarmupSplash';
 import useTerritoireWatchdog from '@/hooks/useTerritoireWatchdog';
 
+// PHASE_XII_ESPECES_Ω (2026-04-28 · STEEVE-MAX) — 5 engines espèces Ω
+import EspecesOmegaPanel from '@/components/territoire/EspecesOmegaPanel';
+
 // Cle localStorage pour le dernier waypoint actif (legacy fallback)
 const LAST_WAYPOINT_KEY = 'bionic_last_active_waypoint_id';
 
@@ -1697,6 +1700,7 @@ const MonTerritoireBionicPage = () => {
         }}
       >
         <RenduOmegaIntegralCertifier bundleData={bundleDataV8} />
+        <EspecesOmegaPanel />
       </div>
 
       {/* PHASE 2 STABILISATION TERRITOIRE Ω — Splash screen warmup 3-5s */}

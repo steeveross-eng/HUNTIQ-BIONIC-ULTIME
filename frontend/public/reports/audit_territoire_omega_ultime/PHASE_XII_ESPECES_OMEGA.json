@@ -1,0 +1,132 @@
+{
+  "phase": "PHASE_XII_ESPECES_Ω",
+  "protocole": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU",
+  "commandant": "STEEVE-MAX",
+  "directive": "MEGA_COMMANDE_PHASE_XII_ESPECES_Ω — 5 ENGINES CRÉÉS, CONNECTÉS, ACTIVÉS, VERROUILLÉS",
+  "executed_at_utc": "2026-04-28T23:03:22.676368+00:00",
+  "url_audit": "https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic",
+  "engines_crees": [
+    {
+      "id": "CHEVREUIL",
+      "marker": "ENGINE_ESPECE_CHEVREUIL_Ω",
+      "nom": "Odocoileus virginianus",
+      "tableau": "TABLEAU_MAITRE_CHEVREUIL_BCE4X",
+      "file": "engine_chevreuil_omega.py"
+    },
+    {
+      "id": "ORIGNAL",
+      "marker": "ENGINE_ESPECE_ORIGNAL_Ω",
+      "nom": "Alces alces / Alces americanus",
+      "tableau": "TABLEAU_MAITRE_ORIGNAL_BCE4X",
+      "file": "engine_orignal_omega.py"
+    },
+    {
+      "id": "OURS_NOIR",
+      "marker": "ENGINE_ESPECE_OURS_NOIR_Ω",
+      "nom": "Ursus americanus",
+      "tableau": "TABLEAU_MAITRE_OURS_NOIR_BCE4X",
+      "file": "engine_ours_noir_omega.py"
+    },
+    {
+      "id": "WAPITI",
+      "marker": "ENGINE_ESPECE_WAPITI_Ω",
+      "nom": "Cervus canadensis",
+      "tableau": "TABLEAU_MAITRE_WAPITI_BCE4X",
+      "file": "engine_wapiti_omega.py"
+    },
+    {
+      "id": "DINDON_SAUVAGE",
+      "marker": "ENGINE_ESPECE_DINDON_Ω",
+      "nom": "Meleagris gallopavo",
+      "tableau": "TABLEAU_MAITRE_DINDON_BCE4X",
+      "file": "engine_dindon_omega.py"
+    }
+  ],
+  "fichiers_crees": [
+    "/app/backend/engines/v8_institutional/especes/__init__.py",
+    "/app/backend/engines/v8_institutional/especes/engine_chevreuil_omega.py",
+    "/app/backend/engines/v8_institutional/especes/engine_orignal_omega.py",
+    "/app/backend/engines/v8_institutional/especes/engine_ours_noir_omega.py",
+    "/app/backend/engines/v8_institutional/especes/engine_wapiti_omega.py",
+    "/app/backend/engines/v8_institutional/especes/engine_dindon_omega.py",
+    "/app/backend/engines/v8_institutional/especes/engine_especes_omega.py",
+    "/app/backend/routes/especes_omega_router.py",
+    "/app/backend/tests/test_phase_xii_especes_omega.py",
+    "/app/frontend/src/components/territoire/EspecesOmegaPanel.jsx"
+  ],
+  "endpoints_actifs": {
+    "GET /api/v30/especes/list": "5 espèces metadata BCE-4X",
+    "GET /api/v30/especes/lock-signature": "SHA-256 institutionnel",
+    "POST /api/v30/especes/compute": "Pipeline stage exécution",
+    "GET /api/v30/especes/{species_id}": "Profil + compute par défaut"
+  },
+  "z_ordre_omega_mis_a_jour": {
+    "insert_after": "zones",
+    "new_layers": [
+      "habitat_especes_omega",
+      "corridors_especes_omega",
+      "zones_critiques_especes_omega"
+    ]
+  },
+  "tests_pytest": {
+    "fichier": "tests/test_phase_xii_especes_omega.py",
+    "tests_passing": "7/7",
+    "tests": [
+      "test_5_engines_loaded",
+      "test_bce4x_compliance_all_species",
+      "test_no_vulgarisation_no_opinion",
+      "test_pipeline_stage_executes",
+      "test_thermal_threshold_orignal_strictest",
+      "test_lock_signature_stable",
+      "test_palette_styles_distinct"
+    ]
+  },
+  "validation_https": {
+    "panel_visible": true,
+    "items": [
+      {
+        "id": "chevreuil",
+        "present": true,
+        "bce4x": "1"
+      },
+      {
+        "id": "orignal",
+        "present": true,
+        "bce4x": "1"
+      },
+      {
+        "id": "ours_noir",
+        "present": true,
+        "bce4x": "1"
+      },
+      {
+        "id": "wapiti",
+        "present": true,
+        "bce4x": "1"
+      },
+      {
+        "id": "dindon_sauvage",
+        "present": true,
+        "bce4x": "1"
+      }
+    ],
+    "signature_text": "SHA-256 · e69d87e31b22b857…\nLOCKED · CONFORMITÉ BCE-4X 100%",
+    "api_list_status": 200,
+    "api_lock_status": 200,
+    "lock_signature_sha": "e69d87e31b22b85712f4a9245aef8efac4df0c7f0ac66e859fb17be578394993",
+    "lock_version": "LOCKED",
+    "lock_conformite": 100
+  },
+  "v30_locked": {
+    "registry_lock_omega.py": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+    "engine_ia_corridors_omega.py": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3"
+  },
+  "lock_signature_engines_especes": "e69d87e31b22b85712f4a9245aef8efac4df0c7f0ac66e859fb17be578394993",
+  "screenshot": {
+    "path": "/reports/audit_territoire_omega_ultime/SCREENSHOT_PHASE_XII_ESPECES_OMEGA_2026-04-28.png",
+    "absolute_path": "/app/frontend/public/reports/audit_territoire_omega_ultime/SCREENSHOT_PHASE_XII_ESPECES_OMEGA_2026-04-28.png",
+    "sha256": "feaec0331e7835548cc6fb5a426e37b53faf8557216fae56347fe000de1fc5ff",
+    "size_bytes": 1812837
+  },
+  "statut_final": "5 ENGINES CRÉÉS · CONNECTÉS · ACTIVÉS · VERROUILLÉS · CONFORMITÉ BCE-4X 100% · V30 INVIOLÉ"
+}

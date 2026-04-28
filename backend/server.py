@@ -1221,6 +1221,15 @@ try:
 except Exception as e:
     logger.warning(f"PHASE-E FUSION_TERRITOIRE_Ω router not loaded: {e}")
 
+# ═══ PHASE_XII_ESPECES_Ω — 5 ENGINES ESPÈCES (Commandant STEEVE-MAX · 2026-04-28) ═══
+try:
+    from routes.especes_omega_router import router as especes_omega_router
+    app.include_router(especes_omega_router)
+    logger.info("✓ PHASE_XII_ESPECES_Ω active : 5 engines (chevreuil/orignal/ours/wapiti/dindon) — /api/v30/especes/*")
+except Exception as e:
+    logger.warning(f"PHASE_XII_ESPECES_Ω router not loaded: {e}")
+
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")
