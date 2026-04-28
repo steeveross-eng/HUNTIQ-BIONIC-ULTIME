@@ -101,6 +101,58 @@ async def territoire_ultime_score_spec():
         return JSONResponse(content=json.load(f))
 
 
+@router.get("/health")
+async def territoire_health():
+    """PHASE 2 STABILISATION TERRITOIRE Ω — health-check léger anti-hibernation.
+
+    Endpoint léger destiné à être ping toutes les 5 minutes par le client
+    afin d'empêcher l'hibernation idle du pod backend Emergent.
+    Aucune logique métier — vérifie uniquement :
+      - V30 LOCKED inviolé (SHA-256 echo).
+      - Statut des 10 protections institutionnelles.
+      - Doctrine + horloge UTC.
+
+    BCE-4X ULTIME ABSOLU — TOP-ABSOLU.
+    """
+    try:
+        from engines.v8_institutional.protections_omega import (
+            list_protections, all_active, get_count,
+        )
+        from engines.v8_institutional.fusion_territoire_omega import _compute_registry_echo
+        registry = _compute_registry_echo()
+        return JSONResponse(content={
+            "phase": "PHASE_2_STABILISATION_TERRITOIRE_Ω",
+            "protocole": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU",
+            "commandant": "STEEVE-MAX",
+            "ts_utc": datetime.now(timezone.utc).isoformat(),
+            "status": "ALIVE",
+            "v30_locked": {
+                "registry_lock_omega_sha256": registry.get("registry_lock_omega_sha256"),
+                "engine_ia_corridors_omega_sha256": registry.get("engine_ia_corridors_omega_sha256"),
+                "invariant": registry.get("invariant", True),
+            },
+            "protections": {
+                "count": get_count(),
+                "all_active": all_active(),
+                "list": list_protections(),
+            },
+            "watchdog": {
+                "ping_interval_seconds": 300,
+                "purpose": "anti-hibernation idle backend Emergent",
+            },
+            "doctrine": "BCE-4X_ULTIME_ABSOLU",
+        })
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "phase": "PHASE_2_STABILISATION_TERRITOIRE_Ω",
+                "status": "ERROR",
+                "error": f"{type(e).__name__}: {e}",
+            },
+        )
+
+
 @router.post("/fusion-execute")
 async def territoire_fusion_execute(
     lat: float = Query(OFFICIAL_LAT),

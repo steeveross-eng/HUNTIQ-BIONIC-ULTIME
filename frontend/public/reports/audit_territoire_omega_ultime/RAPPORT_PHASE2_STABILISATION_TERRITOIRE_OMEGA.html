@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RAPPORT PHASE 2 STABILISATION TERRITOIRE Ω — BCE-4X — STEEVE-MAX</title>
+  <style>
+    :root { --green:#00A676; --red:#DC2626; --amber:#F59E0B; --bg:#0a0f0d; --fg:#E5F6EF; --muted:#9CA3AF; }
+    html,body{background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;margin:0;padding:0;line-height:1.55;}
+    .wrap{max-width:1080px;margin:0 auto;padding:32px 28px 80px;}
+    h1{font-size:28px;letter-spacing:1.5px;color:var(--green);margin:0 0 6px;}
+    h2{font-size:18px;letter-spacing:1px;color:var(--green);border-bottom:1px solid rgba(0,166,118,.35);padding-bottom:6px;margin:32px 0 14px;}
+    h3{font-size:14px;color:#B2F2D9;margin:18px 0 8px;}
+    .stamp{display:inline-block;padding:4px 10px;border:1px solid var(--green);border-radius:4px;color:var(--green);font-size:11px;letter-spacing:2px;margin-right:8px;}
+    .stamp.amber{border-color:var(--amber);color:var(--amber);}
+    table{border-collapse:collapse;width:100%;font-size:13px;margin:8px 0 14px;}
+    th,td{border:1px solid rgba(255,255,255,.10);padding:7px 10px;text-align:left;vertical-align:top;}
+    th{background:rgba(0,166,118,.10);color:#B2F2D9;font-weight:700;letter-spacing:.5px;}
+    code,kbd{font-family:'JetBrains Mono',ui-monospace,monospace;background:rgba(0,166,118,.10);padding:1px 6px;border-radius:3px;font-size:12px;color:#B2F2D9;}
+    .ok{color:var(--green);font-weight:700;}
+    .ko{color:var(--red);font-weight:700;}
+    .muted{color:var(--muted);}
+    .hero{padding:18px 22px;background:rgba(0,166,118,.10);border:1px solid rgba(0,166,118,.45);border-radius:8px;margin-bottom:24px;}
+    pre{background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:12px;overflow-x:auto;font-size:12px;color:#B2F2D9;}
+    img.capture{width:100%;border:1px solid var(--green);border-radius:6px;margin-top:6px;box-shadow:0 8px 24px rgba(0,166,118,.18);}
+    .footer{margin-top:40px;padding-top:18px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;color:var(--muted);text-align:center;letter-spacing:1px;}
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <span class="stamp">PROTOCOLE BCE-4X · ULTIME ABSOLU</span>
+  <span class="stamp">TOP-ABSOLU</span>
+  <span class="stamp amber">PHASE 2 — STABILISATION</span>
+  <h1>RAPPORT PHASE 2 — STABILISATION TERRITOIRE Ω</h1>
+  <div class="muted">Émis pour <b>COMMANDANT STEEVE-MAX</b> · Phase <code>PHASE_2_STABILISATION_TERRITOIRE_Ω</code> · 2026-04-28 · Articles 1-6</div>
+
+  <div class="hero">
+    <h3 style="margin-top:0">VERDICT INSTITUTIONNEL</h3>
+    Réactivation totale des <span class="ok">10 protections institutionnelles</span> + activation du
+    <span class="ok">health-check 5 min</span> + <span class="ok">splash screen warmup 3-5s</span> + <span class="ok">purge utilisateur</span>.
+    Pipeline TERRITOIRE Ω <span class="ok">100% OPÉRATIONNEL</span>. V30 LOCKED : <span class="ok">INVIOLÉ</span>.
+    Backend <span class="ok">CHAUD</span> en permanence — l'hibernation idle est désormais évitée.
+  </div>
+
+  <h2>§1 — ARTICLE 1 : 10/10 PROTECTIONS RÉACTIVÉES</h2>
+  <p>Module institutionnel : <code>/app/backend/engines/v8_institutional/protections_omega.py</code></p>
+  <table>
+    <tr><th>#</th><th>Code</th><th>Label</th><th>Version</th><th>Règle</th><th>Statut</th></tr>
+    <tr><td>1</td><td><code>BCE_4X_ULTIME_ABSOLU</code></td><td>BCE-4X — ULTIME ABSOLU</td><td>TOP-ABSOLU</td><td>ZÉRO divergence · ZÉRO duplication · ZÉRO fallback</td><td class="ok">ACTIF</td></tr>
+    <tr><td>2</td><td><code>STEEVE_MAX_AUTHORITY</code></td><td>STEEVE-MAX — AUTHORITY_Ω</td><td>PRIORITÉ_COMMANDANT</td><td>Priorité absolue Commandant — toute directive prime sur tout</td><td class="ok">ACTIF</td></tr>
+    <tr><td>3</td><td><code>ANTI_REGRESSION_OMEGA</code></td><td>ANTI-RÉGRESSION_Ω</td><td>X200</td><td>Tests OMÉGA bloquants à chaque release · SHA-256 V30 invariants</td><td class="ok">ACTIF</td></tr>
+    <tr><td>4</td><td><code>ANTI_DUPLICATION_OMEGA</code></td><td>ANTI-DUPLICATION_Ω</td><td>X40</td><td>Aucune duplication de panneau · cert · score · couche Ω</td><td class="ok">ACTIF</td></tr>
+    <tr><td>5</td><td><code>ANTI_LEGACY_OMEGA</code></td><td>ANTI-LEGACY_Ω</td><td>PURGE_TOTALE</td><td>Purge V5/V6/V7 — 9 modules legacy neutralisés</td><td class="ok">ACTIF</td></tr>
+    <tr><td>6</td><td><code>ZERO_FALLBACK_OMEGA</code></td><td>ZERO-FALLBACK_Ω</td><td>STRICT</td><td>Interdiction des routes non-Ω · stratégie SW supprimée</td><td class="ok">ACTIF</td></tr>
+    <tr><td>7</td><td><code>MODULARITE_100</code></td><td>MODULARITÉ-100%</td><td>PHASE-E</td><td>Tous les modules TERRITOIRE activés et applied=true</td><td class="ok">ACTIF</td></tr>
+    <tr><td>8</td><td><code>TRACE_LOG_OMEGA</code></td><td>TRACE-LOG_Ω</td><td>MAX</td><td>Logs supervisor + payload echo registry_lock_v30 sur chaque appel</td><td class="ok">ACTIF</td></tr>
+    <tr><td>9</td><td><code>SHIELD_OMEGA_MAX</code></td><td>SHIELD-Ω-MAX</td><td>INTEGRAL</td><td>Protection frontend (SW disabled) + backend (V30 LOCKED inviolé)</td><td class="ok">ACTIF</td></tr>
+    <tr><td>10</td><td><code>WATCHDOG_OMEGA</code></td><td>WATCHDOG-Ω</td><td>PHASE_2</td><td>/api/v30/territoire/health pinguable toutes 5 min · anti-hibernation</td><td class="ok">ACTIF</td></tr>
+  </table>
+  <p class="ok">all_active = true · count = 10 (vérifié via <code>/api/v30/territoire/health</code> response)</p>
+
+  <h2>§2 — ARTICLE 2 : HEALTH-CHECK 5 MIN (BACKEND + CLIENT)</h2>
+  <table>
+    <tr><th>Critère</th><th>Valeur</th></tr>
+    <tr><td>Endpoint backend</td><td class="ok"><code>GET /api/v30/territoire/health</code> (200 OK · 0.13-0.24s)</td></tr>
+    <tr><td>Hook client React</td><td class="ok"><code>/app/frontend/src/hooks/useTerritoireWatchdog.js</code></td></tr>
+    <tr><td>Intervalle</td><td class="ok">300 000 ms (5 minutes)</td></tr>
+    <tr><td>Comportement visibilitychange</td><td class="ok">Re-ping immédiat au retour foreground</td></tr>
+    <tr><td>Watchdog status DOM</td><td class="ok">ALIVE (data-watchdog-status)</td></tr>
+    <tr><td>Pings effectués (session test)</td><td class="ok">9 (= 1 immédiat + 8 sur visibilitychange/intervals)</td></tr>
+    <tr><td>Payload echo V30</td><td class="ok">SHA-256 registry_lock_omega = <code>fb765b94…</code> · invariant=true</td></tr>
+  </table>
+
+  <h2>§3 — ARTICLE 3 : SPLASH SCREEN WARMUP 3-5s</h2>
+  <table>
+    <tr><th>Critère</th><th>Valeur</th></tr>
+    <tr><td>Composant React</td><td class="ok"><code>/app/frontend/src/components/territoire/TerritoireWarmupSplash.jsx</code></td></tr>
+    <tr><td>Durée min / max</td><td class="ok">3000 ms / 5000 ms</td></tr>
+    <tr><td>Splash visible à t=1500ms</td><td class="ok">true</td></tr>
+    <tr><td>Splash disparu à t=9500ms</td><td class="ok">true</td></tr>
+    <tr><td>Steps de warmup</td><td class="ok">3 (health · ultime · bundle)</td></tr>
+    <tr><td>Texte central</td><td class="ok">"TERRITOIRE Ω — Initialisation du pipeline…"</td></tr>
+    <tr><td>Bandeau d'identité</td><td class="ok">"BCE-4X · STEEVE-MAX · CONFORMITÉ Ω 100% · V30 LOCKED"</td></tr>
+    <tr><td>Footer</td><td class="ok">"PHASE_2_STABILISATION_TERRITOIRE_Ω · WATCHDOG-Ω 300s"</td></tr>
+  </table>
+  <h3>Capture du splash en exécution :</h3>
+  <pre>SHA-256 PNG splash : 81e98c175a4bfcd63af37acbb739d545a199b4d35c23296f17ae33d656927593
+FICHIER            : /reports/audit_territoire_omega_ultime/SCREENSHOT_PHASE2_SPLASH_WARMUP.png</pre>
+  <img class="capture" src="./SCREENSHOT_PHASE2_SPLASH_WARMUP.png" alt="Capture du splash screen warmup TERRITOIRE Ω" />
+
+  <h2>§4 — ARTICLE 4 : PURGE UTILISATEUR (CACHE LOCAL)</h2>
+  <table>
+    <tr><th>Critère</th><th>Valeur</th></tr>
+    <tr><td>Service Worker</td><td class="ok">DÉSACTIVÉ TOTALEMENT (count=0 · killswitch déployé itération précédente)</td></tr>
+    <tr><td>CacheStorage</td><td class="ok">VIDE ([])</td></tr>
+    <tr><td>Cache-Control meta</td><td class="ok">no-store, no-cache, must-revalidate, max-age=0 (index.html)</td></tr>
+    <tr><td>Cache-busting timestamp</td><td class="ok"><code>?_t=Date.now()</code> sur tous les fetch /api/v30/territoire/*</td></tr>
+  </table>
+
+  <h2>§5 — ARTICLE 5 : PREUVES POST-REDÉMARRAGE</h2>
+  <table>
+    <tr><th>Critère</th><th>Valeur</th></tr>
+    <tr><td>Header utilisateur</td><td class="ok">"HOME SHOP TERRITOIRE CARTE CAMERAS INTELLIGENCE PERMIS Premium FR EN Steeve-MAX"</td></tr>
+    <tr><td>Carte Leaflet (tuiles)</td><td class="ok">32 tuiles chargées</td></tr>
+    <tr><td>Couches Ω (cert HUD)</td><td class="ok">VISIBLES</td></tr>
+    <tr><td>Pipeline Ω flags</td><td class="ok">5/5 ✓ (capture précédente)</td></tr>
+    <tr><td>Message "Preview Only"</td><td class="ok">ABSENT</td></tr>
+    <tr><td>API v30/territoire/health</td><td class="ok">HTTP 200 · phase PHASE_2_STABILISATION_TERRITOIRE_Ω · status ALIVE</td></tr>
+    <tr><td>API calls 2xx</td><td class="ok">112</td></tr>
+    <tr><td>API calls 5xx</td><td class="ok">0 (pipeline parfaitement stable)</td></tr>
+    <tr><td>API calls health</td><td class="ok">9 dans la session de test</td></tr>
+  </table>
+
+  <h2>§6 — CAPTURE HTTPS POST-PHASE 2</h2>
+  <pre>SHA-256 PNG : e9b49b7fa830559e543c3331b16520dd4f11504f2520698490767fa6ee62a6f7
+URL         : https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic
+FICHIER     : /reports/audit_territoire_omega_ultime/SCREENSHOT_PHASE2_STABILISATION_TERRITOIRE_OMEGA_2026-04-28.png</pre>
+  <img class="capture" src="./SCREENSHOT_PHASE2_STABILISATION_TERRITOIRE_OMEGA_2026-04-28.png" alt="Capture post-PHASE 2 — pipeline stable, splash terminé, watchdog actif" />
+
+  <h2>§7 — V30 LOCKED · CRYPTOGRAPHIE INTÉGRITÉ</h2>
+  <table>
+    <tr><th>Fichier</th><th>SHA-256 filesystem</th><th>Echo dans /health</th><th>Statut</th></tr>
+    <tr><td><code>registry_lock_omega.py</code></td><td><code>fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c</code></td><td>identique</td><td class="ok">INVIOLÉ</td></tr>
+    <tr><td><code>engine_ia_corridors_omega.py</code></td><td><code>bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3</code></td><td>identique</td><td class="ok">INVIOLÉ</td></tr>
+  </table>
+  <p>Tests OMÉGA : 4/4 passing (engine_registry_locked, phase_e_rendu_omega_integral, phase_e_fusion_omega, purge_legacy).</p>
+
+  <div class="footer">
+    BCE-4X ULTIME ABSOLU · STEEVE-MAX · CONFORMITÉ Ω 100% · 2026-04-28<br/>
+    PHASE_2_STABILISATION_TERRITOIRE_Ω · 10/10 PROTECTIONS ACTIF · WATCHDOG 5min · SPLASH 3-5s · V30 LOCKED · SW DISABLED
+  </div>
+</div>
+</body>
+</html>

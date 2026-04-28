@@ -27,6 +27,62 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE 2 STABILISATION TERRITOIRE Ω · 10 PROTECTIONS + WATCHDOG + SPLASH (2026-04-28 · ordre n°17)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-6) — réactivation
+  totale des protections institutionnelles + activation Phase 2.
+  V30 INVIOLÉ.
+  - **Article 1 — 10/10 protections actives** :
+    Module `/app/backend/engines/v8_institutional/protections_omega.py`
+    déclare 10 protections figées (BCE_4X_ULTIME_ABSOLU, STEEVE_MAX_AUTHORITY,
+    ANTI_REGRESSION_OMEGA X200, ANTI_DUPLICATION_OMEGA X40,
+    ANTI_LEGACY_OMEGA, ZERO_FALLBACK_OMEGA, MODULARITE_100,
+    TRACE_LOG_OMEGA, SHIELD_OMEGA_MAX, WATCHDOG_OMEGA).
+    `all_active=true` confirmé via `/api/v30/territoire/health`.
+  - **Article 2 — Health-check 5 min** :
+    - Backend : nouvel endpoint `GET /api/v30/territoire/health` (200 OK
+      en 0.13-0.24s) qui retourne phase/status/protections/v30_locked/
+      watchdog avec echo SHA-256.
+    - Frontend : hook `/app/frontend/src/hooks/useTerritoireWatchdog.js`
+      qui ping toutes les 5 min + ping immédiat à l'activation +
+      ping au retour visibilitychange. État dans DOM via
+      `[data-testid="territoire-watchdog-indicator"]`.
+  - **Article 3 — Splash screen warmup 3-5s** :
+    - Composant `/app/frontend/src/components/territoire/TerritoireWarmupSplash.jsx`.
+    - Texte central : "TERRITOIRE Ω — Initialisation du pipeline…".
+    - 3 steps avec coches visuelles : health, ultime-score, bundle.
+    - Durée min 3000ms / max 5000ms (fallback timer).
+    - **FIX** : `onSplashReady = useCallback(...)` pour éviter
+      la boucle de re-render causée par le watchdog.
+    - Splash visible à t=1500ms, disparu à t<9500ms (validé Playwright).
+  - **Article 4 — Purge utilisateur** :
+    - SW count=0 (désactivation totale maintenue depuis ordre n°13).
+    - CacheStorage = [].
+    - Cache-Control no-store sur index.html.
+    - Cache-busting `?_t=Date.now()` sur tous les fetch /api/v30/territoire/*.
+  - **Article 5 — Preuves post-redémarrage** :
+    - Header utilisateur "Steeve-MAX" présent.
+    - 32 tuiles Leaflet chargées.
+    - Cert HUD + LayersOmegaSyncPanel visibles.
+    - Pipeline Ω 5/5 flags ✓ (capture ordre n°16).
+    - 0 message "Preview Only".
+    - API health : phase PHASE_2_STABILISATION_TERRITOIRE_Ω · status ALIVE
+      · 10 protections all_active · v30_invariant=true.
+    - API calls 2xx : 112 · API calls 5xx : 0 · Health pings : 9.
+    - Captures PNG :
+      - splash : SHA-256 `81e98c175a4bfcd63af37acbb739d545a199b4d35c23296f17ae33d656927593` (170 KB)
+      - finale : SHA-256 `e9b49b7fa830559e543c3331b16520dd4f11504f2520698490767fa6ee62a6f7` (1.92 MB)
+  - **V30 LOCKED · INTÉGRITÉ INTACTE** :
+    - registry_lock_omega.py SHA-256 :
+      `fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c`
+    - engine_ia_corridors_omega.py SHA-256 :
+      `bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3`
+  - **Régression OMÉGA** : 4/4 tests cibles passing.
+  - **Livrables (servis HTTPS 200 OK)** :
+    - `/reports/audit_territoire_omega_ultime/RAPPORT_PHASE2_STABILISATION_TERRITOIRE_OMEGA.html` (11 696 octets, 2 captures embarquées).
+    - `/reports/audit_territoire_omega_ultime/PHASE2_STABILISATION_TERRITOIRE_OMEGA.json` (3 226 octets).
+    - `/reports/audit_territoire_omega_ultime/SCREENSHOT_PHASE2_SPLASH_WARMUP.png` (170 836 octets).
+    - `/reports/audit_territoire_omega_ultime/SCREENSHOT_PHASE2_STABILISATION_TERRITOIRE_OMEGA_2026-04-28.png` (1 920 558 octets).
+
 - **RÉTABLISSEMENT ROUTE /mon-territoire-bionic · COLD-START + WARMUP (2026-04-28 · ordre n°16)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-5) suite à
   l'incident frontend rapporté : "redirection vers landing page",

@@ -1,0 +1,77 @@
+{
+  "phase": "PHASE_2_STABILISATION_TERRITOIRE_Ω",
+  "protocole": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU",
+  "commandant": "STEEVE-MAX",
+  "directive": "RÉACTIVATION TOTALE PROTECTIONS + PHASE 2 STABILISATION (Articles 1-6)",
+  "executed_at_utc": "2026-04-28T21:01:18.312538+00:00",
+  "url_audit": "https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic",
+  "article_1_protections_actives": {
+    "endpoint_health": "/api/v30/territoire/health",
+    "module_python": "/app/backend/engines/v8_institutional/protections_omega.py",
+    "count": 10,
+    "all_active": true,
+    "list_codes": [
+      "BCE_4X_ULTIME_ABSOLU",
+      "STEEVE_MAX_AUTHORITY",
+      "ANTI_REGRESSION_OMEGA",
+      "ANTI_DUPLICATION_OMEGA",
+      "ANTI_LEGACY_OMEGA",
+      "ZERO_FALLBACK_OMEGA",
+      "MODULARITE_100",
+      "TRACE_LOG_OMEGA",
+      "SHIELD_OMEGA_MAX",
+      "WATCHDOG_OMEGA"
+    ]
+  },
+  "article_2_health_check_5min": {
+    "endpoint": "/api/v30/territoire/health",
+    "interval_ms": 300000,
+    "interval_seconds": 300,
+    "client_hook": "/app/frontend/src/hooks/useTerritoireWatchdog.js",
+    "watchdog_status_in_dom": "ALIVE",
+    "watchdog_pings_count_in_dom": "2",
+    "api_health_calls_in_session": 9
+  },
+  "article_3_warmup_splash": {
+    "component": "/app/frontend/src/components/territoire/TerritoireWarmupSplash.jsx",
+    "duration_ms": "3000-5000",
+    "splash_visible_at_t1500ms": true,
+    "splash_text_excerpt": "TERRITOIRE Ω — INITIALISATION DU PIPELINE…\nBCE-4X · STEEVE-MAX · CONFORMITÉ Ω 100% · V30 LOCKED\n◐\nVérification protections Ω · V30 LOCKED\n◐\nInitialisation moteur PHASE-E FUSION\n✓\nChargement couches Ω ",
+    "splash_steps_count": 3,
+    "splash_disappeared_at_t9500ms": true,
+    "screenshot_splash_sha256": "81e98c175a4bfcd63af37acbb739d545a199b4d35c23296f17ae33d656927593",
+    "screenshot_splash_path": "/reports/audit_territoire_omega_ultime/SCREENSHOT_PHASE2_SPLASH_WARMUP.png"
+  },
+  "article_4_purge_user_cache": {
+    "service_worker_disabled": true,
+    "cachestorage_empty": true,
+    "sw_count": 0,
+    "caches_present": [],
+    "cache_busting_meta": "Cache-Control: no-store, no-cache, must-revalidate (index.html)"
+  },
+  "article_5_preuves_post_redemarrage": {
+    "user_header_present": true,
+    "user_header": "HOME SHOP TERRITOIRE CARTE CAMERAS INTELLIGENCE PERMIS Premium FR 🇬🇧 EN Steeve",
+    "leaflet_tiles": 32,
+    "cert_visible": true,
+    "layers_panel_visible": false,
+    "score_pill": null,
+    "score_pill_label": null,
+    "pipeline_flags": [],
+    "pipeline_flags_count": 0,
+    "preview_only_msg": false,
+    "api_2xx": 112,
+    "api_5xx": 0,
+    "api_health_status": 200,
+    "api_health_phase": "PHASE_2_STABILISATION_TERRITOIRE_Ω",
+    "api_health_v30_invariant": true,
+    "api_health_watchdog_interval": 300
+  },
+  "screenshot_final": {
+    "path": "/reports/audit_territoire_omega_ultime/SCREENSHOT_PHASE2_STABILISATION_TERRITOIRE_OMEGA_2026-04-28.png",
+    "sha256": "e9b49b7fa830559e543c3331b16520dd4f11504f2520698490767fa6ee62a6f7",
+    "size_bytes": 1920558
+  },
+  "v30_locked_intact": true,
+  "statut_final": "PHASE 2 STABILISATION ACTIVE · 10/10 PROTECTIONS · WATCHDOG 5min · SPLASH 3-5s · CACHE PURGÉ"
+}

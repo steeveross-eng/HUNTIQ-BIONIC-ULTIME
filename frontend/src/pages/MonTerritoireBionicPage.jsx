@@ -89,6 +89,10 @@ import { getCurrentBiologicalSeason } from '@/config/biologicalSeasons';
 import { SplitViewContainer } from '@/components/territoire/map/SplitViewContainer';
 import { useSplitViewZones } from '@/hooks/useSplitViewZones';
 
+// PHASE 2 STABILISATION TERRITOIRE Ω (2026-04-28 · ordre Commandant STEEVE-MAX)
+import TerritoireWarmupSplash from '@/components/territoire/TerritoireWarmupSplash';
+import useTerritoireWatchdog from '@/hooks/useTerritoireWatchdog';
+
 // Cle localStorage pour le dernier waypoint actif (legacy fallback)
 const LAST_WAYPOINT_KEY = 'bionic_last_active_waypoint_id';
 
@@ -157,6 +161,14 @@ const MonTerritoireBionicPage = () => {
   
   // BIONIC V6 GOLDEN — Ref directe vers l'instance Leaflet map
   const mapRef = useRef(null);
+
+  // PHASE 2 STABILISATION TERRITOIRE Ω (2026-04-28 · STEEVE-MAX) — Watchdog 5 min
+  const territoireWatchdog = useTerritoireWatchdog();
+  // Splash screen warmup (3-5s) — flag de visibilité
+  const [warmupReady, setWarmupReady] = useState(false);
+  // FIX RE-RENDER LOOP : onReady stable (sinon le watchdog re-render
+  // recrée onReady → useEffect du splash relance pingAll en boucle).
+  const onSplashReady = useCallback(() => setWarmupReady(true), []);
 
   // ═══ HOTSPOT DEEP LINK — état du highlight ═══
   const [hotspotHighlight, setHotspotHighlight] = useState(null);
@@ -1686,6 +1698,17 @@ const MonTerritoireBionicPage = () => {
       >
         <RenduOmegaIntegralCertifier bundleData={bundleDataV8} />
       </div>
+
+      {/* PHASE 2 STABILISATION TERRITOIRE Ω — Splash screen warmup 3-5s */}
+      {!warmupReady && <TerritoireWarmupSplash onReady={onSplashReady} />}
+
+      {/* PHASE 2 — Indicateur Watchdog discret */}
+      <div
+        data-testid="territoire-watchdog-indicator"
+        data-watchdog-status={territoireWatchdog.lastPingStatus || 'PENDING'}
+        data-watchdog-pings={territoireWatchdog.pingCount}
+        style={{ display: 'none' }}
+      />
     </div>
   );
 };
