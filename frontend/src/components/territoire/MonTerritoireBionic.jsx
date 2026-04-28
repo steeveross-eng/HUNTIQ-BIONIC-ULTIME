@@ -16,6 +16,7 @@ import useBionicWeather from '@/hooks/useBionicWeather';
 import { BIONIC_LAYERS, getScoresForWaypoint, adaptWaypointData } from '@/core/bionic';
 import { MapInteractionLayer } from '@/modules/map_interaction';
 import L from 'leaflet';
+import HudTerritoireUltime from './HudTerritoireUltime';
 
 // Fix for default markers
 delete L.Icon.Default.prototype._getIconUrl;
@@ -452,6 +453,26 @@ const MonTerritoireBionic = ({ onNavigateToTerritory }) => {
           
           {/* Panneau latéral */}
           <div className="space-y-4">
+            {/* PHASE-E ACTIVATION : HUD TERRITOIRE ULTIME (production) */}
+            <div data-testid="hud-ultime-prod-wrapper" className="bg-gray-900/50 rounded-2xl border border-[#00A676]/30 p-3 backdrop-blur-sm">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <span className="inline-block w-2 h-2 bg-[#00A676] rounded-full animate-pulse"></span>
+                  <span className="text-[#00A676] font-bold text-xs tracking-widest">TERRITOIRE Ω · ACTIF</span>
+                </div>
+                <Badge className="bg-[#00A676]/20 text-[#00A676] text-[9px] border-[#00A676]/40">
+                  PHASE-E LIVE
+                </Badge>
+              </div>
+              <HudTerritoireUltime
+                lat={48.206657}
+                lng={-68.382422}
+                defaultSpecies="orignal"
+                month={10}
+                hour={14}
+              />
+            </div>
+
             {/* Score Breakdown */}
             <div className="bg-gray-900/50 rounded-2xl border border-[#f5a623]/20 p-4 backdrop-blur-sm">
               <div className="flex items-center gap-2 mb-4">

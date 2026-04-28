@@ -27,6 +27,47 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **ACTIVATION PRODUCTION TERRITOIRE_Ω_ULTIME (2026-04-28 · ordre n°5)**
+  Sur ordre du Commandant STEEVE-MAX, intégration en production de la fusion
+  TERRITOIRE_Ω validée. V30 cryptographiquement INVIOLÉ post-activation.
+  - **Article 1 — Activation** : `HudTerritoireUltime.jsx` intégré comme
+    overlay live dans `MonTerritoireBionicPage.jsx` (carte vivante,
+    `position:fixed bottom-right`, z-index 900) avec bandeau
+    « TERRITOIRE Ω · ACTIF · PHASE-E LIVE » et pulse vert.
+    Chaînes C1..C6 consommées en temps réel via
+    `GET /api/v30/territoire/ultime-score`.
+  - **Runtime live BSL post-activation** :
+    orignal 73.41% **FAVORABLE** · cerf 73.04% FAVORABLE · ours 71.21%
+    FAVORABLE · dindon 0.0% PROSCRIT (BIO halt naturel) · wapiti idem.
+    Avec dérogation Article 2 : **5/5 fusionnables** (60.4% à 73.4%).
+    V30 alignement **CONFORME 71.70/100**.
+  - **Article 2 — Livrables post-activation** :
+    `TERRITOIRE_Ω_ULTIME_ACTIF.json` (4.6 KB) +
+    `RAPPORT_TERRITOIRE_Ω_ULTIME_ACTIVATION.html` (11.6 KB · 9 sections,
+    KPIs, intégrations prod, runtime 5 espèces, snapshot fusion-execute,
+    SHA-256 V30, livrables attestés) + 2 captures HTTPS
+    (`activation_prod_carte_vivante.jpeg` 112 KB · overlay HUD
+    `activation_prod_hud_overlay.jpeg` 33 KB).
+  - **Tests pytest** : `test_phase_e_activation_omega_ultime.py` —
+    **22/22 PASS** (endpoint actif, fusion-execute opérationnel, pipeline
+    48 engines consommé, 6 chaînes Σ=1.0, 5 espèces actives + dérogation,
+    doctrine 50% appliquée, V30 inchangé, HUD intégré, livrables publiés).
+  - **V30 SHA INVIOLÉ post-activation** : `fb765b94…ecb0c` + `bcb1e3a6…39d3`
+    · echo `655a1630375909bdeb32ba0a033fc329f105fb0a88ba058f79952241206cc36d`.
+  - **Doctrine** : V30 LOCKED · XIX/VITAUX non recomputés · Backend
+    READ-ONLY · Aucun `testing_agent_v3_fork` · Modifications uniquement
+    aval (overlay HUD + tests).
+  - Fichiers modifiés : `MonTerritoireBionicPage.jsx` (overlay HUD ajouté).
+    Fichiers créés : `test_phase_e_activation_omega_ultime.py`,
+    `TERRITOIRE_Ω_ULTIME_ACTIF.json`,
+    `RAPPORT_TERRITOIRE_Ω_ULTIME_ACTIVATION.html`.
+
+- **ACTE DE VALIDATION INSTITUTIONNELLE TERRITOIRE_Ω (2026-04-28 · ordre n°4 bis)**
+  Sceau institutionnel formel acté par le Commandant. Livrables :
+  `ACTE_VALIDATION_INSTITUTIONNELLE_TERRITOIRE_OMEGA.json` + certificat HTML
+  (signature institutionnelle, sceau circulaire, serial
+  `ACTE-VALIDATION-INSTITUTIONNELLE-2026-04-28-001`).
+
 - **AUDIT C1 VENT → CONTAMINATION → SENSORIEL (2026-04-28 · ordre n°4 · LECTURE SEULE)**
   Sur ordre du Commandant STEEVE-MAX, audit forensique ciblé de l'alignement
   vent/cônes dans la chaîne C1. **Aucune modification d'engine** — Article 5

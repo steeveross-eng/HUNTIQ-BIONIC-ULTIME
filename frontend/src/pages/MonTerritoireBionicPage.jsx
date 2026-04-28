@@ -47,6 +47,7 @@ import { useAuth } from '@/components/GlobalAuth';
 import PlacesSidePanel from '@/components/territoire/PlacesSidePanel';
 // PHASE_XII_SUPRA_DIAGNOSTIC_V30_STATUS_Ω — panel institutionnel lecture seule
 import StatutCorridorsOmegaPanel from '@/components/territoire/StatutCorridorsOmegaPanel';
+import HudTerritoireUltime from '@/components/territoire/HudTerritoireUltime';
 import WeatherPanel from '@/components/territoire/ui/WeatherPanel';
 import useSpatialClipping from '@/hooks/useSpatialClipping';
 import useCameraLayer from '@/hooks/useCameraLayer';
@@ -1609,6 +1610,52 @@ const MonTerritoireBionicPage = () => {
         }}
       >
         <StatutCorridorsOmegaPanel />
+      </div>
+
+      {/* PHASE-E ACTIVATION TERRITOIRE_Ω_ULTIME — HUD overlay (lecture seule, V30 LOCKED) */}
+      <div
+        data-testid="hud-ultime-prod-overlay"
+        style={{
+          position: 'fixed', right: 12, bottom: 12, zIndex: 900,
+          pointerEvents: 'auto',
+          maxWidth: 360,
+        }}
+      >
+        <div style={{
+          background: 'rgba(13,13,20,0.92)',
+          border: '1px solid rgba(0,166,118,0.45)',
+          borderRadius: 10,
+          padding: 8,
+          backdropFilter: 'blur(8px)',
+          boxShadow: '0 8px 24px rgba(0,166,118,0.18)',
+        }}>
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            marginBottom: 6, gap: 8,
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{
+                width: 8, height: 8, borderRadius: '50%', background: '#00A676',
+                boxShadow: '0 0 6px #00A676',
+              }}></span>
+              <span style={{ color: '#00A676', fontWeight: 800, fontSize: 10, letterSpacing: 2 }}>
+                TERRITOIRE Ω · ACTIF
+              </span>
+            </div>
+            <span style={{
+              background: 'rgba(0,166,118,0.18)', color: '#00A676',
+              padding: '1px 6px', borderRadius: 4, fontSize: 9, fontWeight: 700,
+              border: '1px solid rgba(0,166,118,0.35)',
+            }}>PHASE-E LIVE</span>
+          </div>
+          <HudTerritoireUltime
+            lat={48.206657}
+            lng={-68.382422}
+            defaultSpecies="orignal"
+            month={10}
+            hour={14}
+          />
+        </div>
       </div>
     </div>
   );
