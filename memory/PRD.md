@@ -27,6 +27,37 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **FIX C1 — VENT/CONTAM/SENSORIEL · ALIGNEMENT OMM "FROM" (2026-04-28 · ordre n°6)**
+  Sur ordre du Commandant STEEVE-MAX, correction de l'incohérence 180°
+  identifiée par AUDIT_C1. Aligné `engine_vent` sur la convention OMM
+  "FROM" (downwind = wind_deg + 180°). V30 INVIOLÉ post-fix.
+  - **Modifications** : `engine_vent.py` (le seul fichier modifié) :
+    constante `WIND_DOWNWIND_OFFSET_DEG=180.0`, helper `_downwind_deg()`,
+    `compute_scent_cone` axe = downwind, `compute_wind_vectors` central =
+    downwind ; `parent_truth_deg` conserve OMM "FROM" pour traçabilité ;
+    payload enrichi (`convention="downwind_TO"`, `parent_truth_from_deg`).
+  - **Tests pytest dédiés** : `test_phase_e_c1_fix_omm_alignment.py` —
+    **24/24 PASS** (helper, 8×scent_cone, 8×wind_vectors, 3 sites,
+    géométrie polygones, idempotence, V30 inchangé).
+  - **Non-régression** : 65/65 PASS combinés (PHASE-C 10 + SUPRA-BIO 13 +
+    PHASE-E pré-fusion 18 + FIX C1 24) + PHASE-E doctrine 19 PASS isolation.
+    **Cumul global : 84 PASS**.
+  - **Runtime live BSL post-fix** : orignal **80.33% FAVORABLE** (était
+    73.41% NEUTRE) · cerf 67.12% NEUTRE · ours 66.38% NEUTRE.
+    Δ score orignal : **+6.92%** post-fix.
+  - **Capture HTTPS** : `fix_c1_post_carte_vivante.jpeg` montre
+    rosace VENT Ω 305° (downwind) avec brut 132° (FROM) ·
+    V30 CONFORME 72.22/100 · ACTION `PRÉPARER_FUSION_SOUS_VALIDATION_P6`.
+  - **Livrables HTTPS 200** :
+    `FIX_C1_OMM_ALIGNMENT.json` (3.5 KB · SHA `45bbac…`)
+    + `RAPPORT_FIX_C1_OMM_ALIGNMENT.html` (10.3 KB · 9 sections,
+    KPIs, code corrigé, runtime live, non-régression, V30, capture).
+  - **V30 SHA INVIOLÉ post-fix** : `fb765b94…ecb0c` + `bcb1e3a6…39d3` ·
+    echo `655a1630375909bdeb32ba0a033fc329f105fb0a88ba058f79952241206cc36d`.
+  - **Doctrine** : V30 LOCKED · XIX/VITAUX non recomputés · Backend
+    READ-ONLY · Aucun `testing_agent_v3_fork` · Modification d'engine
+    non-cryptographique uniquement (engine_vent ≠ V30 LOCKED registry).
+
 - **ACTIVATION PRODUCTION TERRITOIRE_Ω_ULTIME (2026-04-28 · ordre n°5)**
   Sur ordre du Commandant STEEVE-MAX, intégration en production de la fusion
   TERRITOIRE_Ω validée. V30 cryptographiquement INVIOLÉ post-activation.
