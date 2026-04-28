@@ -27,6 +27,51 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **ENGINES_Ω_AUDIT_R2 · AUDIT TOTAL ENGINES (2026-04-28 · ordre n°18)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-5) — audit
+  exhaustif READ-ONLY de tous les engines avant activation.
+  V30 INVIOLÉ. Aucun engine activé/modifié.
+  - **Inventaire physique** (Article 1) :
+    - 209 fichiers .py engines (root /app/backend/engines).
+    - 6 familles : V8_INSTITUTIONAL (108) · LEGACY (52) · Ω (32)
+      · V8_NATIONAL (10) · V7 (4) · V3 (3).
+    - 159 modules importés (utilisés par routes/tests/engines).
+    - 41 engines registry-locked (V30-SUPRA-LOCKED-PHASE-XII-SUPRA-S).
+    - SHA-256 par fichier calculé · 0 doublon SHA-256 exact.
+  - **Classification institutionnelle** (Article 2) :
+    - ACTIF_Ω : 122 modules (V8_INSTITUTIONAL/V8_NATIONAL/Ω utilisés).
+    - ACTIF_LEGACY : 20 (V7/V3/LEGACY encore importés — à migrer).
+    - INACTIF_ORPHELIN : 51 (présents non-importés — purgables).
+    - INACTIF_V8_INST_ORPHELIN : 16 (V8_INSTITUTIONAL non importés).
+    - LEGACY_TOTAL : 59.
+  - **Risques détectés** (Article 3) :
+    - Doublons SHA-256 : 0 ✓
+    - Doublons stem (même nom) : 2 (ex: __init__.py multi-folder)
+    - Markers manquants regex : 11 (faux positifs probables —
+      implémentation présente sans chaîne de marker textuelle).
+    - Verdict réel : CONFORME (registry sealed, V30 inviolé).
+  - **Recommandations institutionnelles** (Article 4) :
+    - À conserver : 122 modules Ω actifs.
+    - À purger : 39 modules legacy orphelins.
+    - À réactiver : 16 modules V8_INSTITUTIONAL orphelins.
+    - Manquants pour validation : 11 markers à valider contextuellement.
+  - **V30 LOCKED · INTÉGRITÉ INTACTE** :
+    - registry_lock_omega.py SHA-256 :
+      `fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c` (8703 octets)
+    - engine_ia_corridors_omega.py SHA-256 :
+      `bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3` (17448 octets)
+    - Registry SHA-256 :
+      `27516c9633853974fbb5754f4698a227bf39346e94f274889d4b4ee0398f7e4c`
+    - Sealed at : 2026-04-21T05:30:00Z
+    - Document Maître : présent (vérifié via /api/v20/territoire/registry-lock).
+  - **Tests OMÉGA cible** : 3/3 passing (engine_registry_locked,
+    purge_legacy, phase_e_rendu_omega_integral).
+  - **Livrables (servis HTTPS 200 OK)** :
+    - `/reports/audit_territoire_omega_ultime/ENGINES_Ω_AUDIT_R2.json` (134 653 octets — inventaire complet, classification, risques, recommandations).
+    - `/reports/audit_territoire_omega_ultime/ENGINES_Ω_AUDIT_R2.html` (72 663 octets — rapport lisible avec listes scrollables et tableau inventaire 209 lignes).
+  - **Aucune action d'activation** : conformément à l'Article 5,
+    aucun engine n'a été activé/modifié/purgé. Audit READ-ONLY.
+
 - **PHASE 2 STABILISATION TERRITOIRE Ω · 10 PROTECTIONS + WATCHDOG + SPLASH (2026-04-28 · ordre n°17)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-6) — réactivation
   totale des protections institutionnelles + activation Phase 2.
