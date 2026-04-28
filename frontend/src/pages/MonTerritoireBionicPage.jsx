@@ -48,6 +48,7 @@ import PlacesSidePanel from '@/components/territoire/PlacesSidePanel';
 // PHASE_XII_SUPRA_DIAGNOSTIC_V30_STATUS_Ω — panel institutionnel lecture seule
 import StatutCorridorsOmegaPanel from '@/components/territoire/StatutCorridorsOmegaPanel';
 import HudTerritoireUltime from '@/components/territoire/HudTerritoireUltime';
+import LayersOmegaSyncPanel from '@/components/territoire/LayersOmegaSyncPanel';
 import WeatherPanel from '@/components/territoire/ui/WeatherPanel';
 import useSpatialClipping from '@/hooks/useSpatialClipping';
 import useCameraLayer from '@/hooks/useCameraLayer';
@@ -1651,11 +1652,26 @@ const MonTerritoireBionicPage = () => {
           <HudTerritoireUltime
             lat={48.206657}
             lng={-68.382422}
-            defaultSpecies="orignal"
+            defaultSpecies={selectedSpecies !== 'tous' ? selectedSpecies : 'orignal'}
             month={10}
             hour={14}
           />
         </div>
+      </div>
+
+      {/* SYNCHRONISATION COUCHES Ω — overlay top-left (CORRIDORS Ω · ZONES Ω · AFFÛTS Ω · SALINES Ω · HOTSPOTS Ω) */}
+      <div
+        data-testid="layers-omega-sync-overlay"
+        style={{
+          position: 'fixed', left: 12, top: 88, zIndex: 900,
+          pointerEvents: 'auto',
+          maxWidth: 300,
+        }}
+      >
+        <LayersOmegaSyncPanel
+          bundleData={bundleDataV8}
+          species={selectedSpecies !== 'tous' ? selectedSpecies : 'orignal'}
+        />
       </div>
     </div>
   );

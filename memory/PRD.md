@@ -27,6 +27,38 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **SYNCHRONISATION COUCHES Ω · CARTE VIVANTE (2026-04-28 · ordre n°7)**
+  Sur ordre du Commandant STEEVE-MAX, synchronisation institutionnelle de la
+  carte avec les 5 couches Ω (CORRIDORS Ω · ZONES Ω · AFFÛTS Ω · SALINES Ω ·
+  HOTSPOTS Ω). V30 INVIOLÉ post-sync.
+  - **Composant overlay** : `LayersOmegaSyncPanel.jsx` créé · monté en
+    overlay top-left de `MonTerritoireBionicPage.jsx` (z-index 900).
+    Affiche : compteurs des 5 couches, V30 BRUT REJETÉ détaillé (XIX/XVII/
+    VITAUX/RENDU-Ω), 5 flags Ω avec badges ✓/✗, RENDU-Ω status, ESI-Ω,
+    règle d'application espèce.
+  - **Espèce dynamique** : HUD bottom-right ET panneau overlay top-left
+    consomment `selectedSpecies` depuis le panneau gauche (synchronisation
+    bi-directionnelle).
+  - **Tests pytest** : `test_phase_e_layers_omega_sync.py` — **22/22 PASS**
+    (5 couches présentes, 5 flags Ω actifs, RENDU-Ω/ESI-Ω, frontend importé,
+    V30 inchangé, idempotence bundle).
+  - **Snapshot runtime live BSL** : flags Ω **5/5 ACTIFS** ·
+    ESI-Ω **CONFORME** · RENDU-Ω **APPLIED** ·
+    8 corridors V30 brut purgés par XIX (filtrage Ω institutionnel actif).
+  - **Capture HTTPS** : `layers_omega_sync_carte.jpeg` montre les deux
+    overlays simultanés (panneau Couches Ω à gauche · HUD TerritoireΩ
+    à droite) + carte vivante avec corridors/zones/salines/hotspots.
+  - **Livrables HTTPS 200** :
+    `LAYERS_OMEGA_SYNC.json` (3.8 KB) +
+    `RAPPORT_LAYERS_OMEGA_SYNC.html` (8.6 KB · 9 sections).
+  - **V30 SHA INVIOLÉ post-sync** : `fb765b94…ecb0c` + `bcb1e3a6…39d3` ·
+    echo `655a1630375909bdeb32ba0a033fc329f105fb0a88ba058f79952241206cc36d`.
+  - **Cumul tests post-sync** : **87/87 PASS** (LAYERS_SYNC 22 + FIX_C1 24
+    + PHASE-C 10 + SUPRA-BIO 13 + PHASE-E pré-fusion 18).
+  - **Doctrine** : V30 LOCKED · XIX/VITAUX non recomputés · Backend
+    READ-ONLY · Aucun `testing_agent_v3_fork` · Modifications uniquement
+    aval (panneau overlay + tests + propagation `species` à HUD).
+
 - **FIX C1 — VENT/CONTAM/SENSORIEL · ALIGNEMENT OMM "FROM" (2026-04-28 · ordre n°6)**
   Sur ordre du Commandant STEEVE-MAX, correction de l'incohérence 180°
   identifiée par AUDIT_C1. Aligné `engine_vent` sur la convention OMM

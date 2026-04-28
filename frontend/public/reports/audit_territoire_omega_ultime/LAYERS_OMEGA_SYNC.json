@@ -1,0 +1,93 @@
+{
+  "document": "SYNCHRONISATION COUCHES Ω · CARTE VIVANTE — TERRITOIRE_Ω_ULTIME",
+  "serial": "LAYERS-OMEGA-SYNC-2026-04-28-001",
+  "commandant": "STEEVE-MAX",
+  "protocole": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU",
+  "sealed_at_utc": "2026-04-28T15:16:18.805609Z",
+  "doctrine_version": "PHASE-E_DOCTRINE_PERMANENTE_50PCT_2026-04-28",
+  "declaration": "La carte vivante MonTerritoireBionic affiche désormais EXCLUSIVEMENT les couches Ω institutionnelles validées (post-XIX, XVII, VITAUX, RENDU-Ω, VEINEUX). Les couches V30 brutes sont systématiquement filtrées en amont par le pipeline Ω. Le panneau LayersOmegaSyncPanel atteste visuellement de cette synchronisation.",
+  "couches_omega_actives": [
+    "CORRIDORS Ω",
+    "ZONES Ω",
+    "AFFÛTS Ω",
+    "SALINES Ω",
+    "HOTSPOTS Ω"
+  ],
+  "snapshot_runtime_live_bsl": {
+    "corridors_count": 0,
+    "zones_count": 5,
+    "affuts_count": 0,
+    "salines_count": 4,
+    "hotspots_count": 0,
+    "rejected_xix": 8,
+    "rejected_xvii": 0,
+    "rejected_vitaux_xviii": 0,
+    "rejected_renduomega": 0,
+    "flags_omega": {
+      "corridors_vitaux_omega_applied": true,
+      "interzone_omega_applied": true,
+      "predictive_omega_v2_applied": true,
+      "veineux_omega_applied_at_bundle": true,
+      "smoother_p5_renduomega_applied": true
+    },
+    "esi_omega": "CONFORME",
+    "renduomega_status": "APPLIED",
+    "renduomega_phase": "X200_P5_RENDUΩ_INTEGRATION_ULTIME_Ω",
+    "corridors_vitaux_omega_stats": {
+      "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
+      "subphase_applied": "PHASE_XVIII_VITAUX_RAYON_TUNING_Ω",
+      "species": "orignal",
+      "species_group": "GRANDS_MAMMIFERES",
+      "rule_applied": "≥ 1 zone MAJEURE + ≥ 1 attracteur fort dans 150 m",
+      "external_mode_rule": "MODE EXTERNE 600 m : ≥ 1 zone MAJEURE (attracteur fort recommandé non bloquant) si origin_external_passed=true",
+      "anchor_proximity_m": 150.0,
+      "external_mode_radius_m": 600.0,
+      "external_mode_enabled": true,
+      "enforce_mode": true,
+      "total_input": 0,
+      "total_kept": 0,
+      "total_rejected": 0,
+      "rate_pct": 0.0,
+      "corridors_v30_count": 0,
+      "origin_external_passed_count": 0,
+      "vitaux_external_mode_applied_count": 0,
+      "vitaux_external_mode_passed_count": 0,
+      "rejected_reasons": {},
+      "anchor_types_used": {},
+      "audit_log_path": "/app/backend/cache/corridors_rejected_vitaux_xviii.json"
+    }
+  },
+  "evolution_v30_brut_vers_omega": {
+    "corridors_v30_brut_total_estime": 8,
+    "corridors_omega_valides": 0,
+    "corridors_v30_brut_purges": 8,
+    "pourcentage_purge": 100.0
+  },
+  "integrations_frontend": {
+    "composant_overlay": "/app/frontend/src/components/territoire/LayersOmegaSyncPanel.jsx",
+    "page_hote": "/app/frontend/src/pages/MonTerritoireBionicPage.jsx (overlay top-left, z-index 900)",
+    "data_testid_principal": "layers-omega-sync-panel"
+  },
+  "tests_pytest": {
+    "fichier": "/app/backend/tests/test_phase_e_layers_omega_sync.py",
+    "tests_count": 22,
+    "tests_pass": 22
+  },
+  "doctrine_appliquee": {
+    "v30_locked": true,
+    "xix_recomputed": false,
+    "vitaux_recomputed": false,
+    "backend_read_only": true,
+    "no_testing_agent_v3_fork": true,
+    "aucun_engine_modifie": true
+  },
+  "v30_invariance_post_sync": {
+    "registry_lock_omega_sha256": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+    "engine_ia_corridors_omega_sha256": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3",
+    "sha256_registry_echo": "655a1630375909bdeb32ba0a033fc329f105fb0a88ba058f79952241206cc36d",
+    "invariant": true
+  },
+  "preuves_visuelles": [
+    "/reports/audit_territoire_omega_ultime/phase_e/captures/layers_omega_sync_carte.jpeg"
+  ]
+}
