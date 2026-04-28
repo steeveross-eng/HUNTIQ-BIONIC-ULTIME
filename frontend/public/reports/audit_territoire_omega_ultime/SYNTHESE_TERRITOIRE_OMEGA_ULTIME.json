@@ -1,0 +1,3314 @@
+{
+  "phase": "PHASE_TERRITOIRE_Ω_ULTIME",
+  "sub_phases": [
+    "PHASE_SUPRA_BIO_NUTRITION_Ω",
+    "PHASE_TERRITOIRE_Ω_ULTIME"
+  ],
+  "directive": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU",
+  "commandant": "STEEVE-MAX",
+  "generated_at_utc": "2026-04-28T01:46:02.506428+00:00",
+  "doctrine": {
+    "v30_locked": true,
+    "xix_recompute": false,
+    "vitaux_recompute": false,
+    "backend_read_only": true,
+    "modifications_only_in_orchestration_and_fusion": true
+  },
+  "engines_count_total": 48,
+  "engines_count_existing": 36,
+  "engines_count_supra_bio_nutrition": 12,
+  "engines": [
+    {
+      "id": "E01",
+      "name": "ENGINE_REGISTRY_LOCK_Ω",
+      "file": "engines/v8_institutional/registry_lock_omega.py",
+      "level": "VERROU",
+      "role": "PRINCIPAL",
+      "priority": "CRITIQUE",
+      "fonction": "Gardien cryptographique V30. Verrouille les empreintes SHA-256 du registre territorial et du moteur IA corridors.",
+      "inputs": [],
+      "outputs": [
+        "sha256_registry_lock",
+        "v30_locked: True",
+        "tampering_detection"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [],
+      "layers_interdit": [
+        "TOUS — module read-only par essence"
+      ],
+      "depends_on": [],
+      "consumed_by": [
+        "ALL"
+      ],
+      "interdictions": [
+        "Toute modification cryptographique invalide V30",
+        "Aucun import circulaire avec le moteur IA",
+        "Aucune écriture base de données"
+      ]
+    },
+    {
+      "id": "E02",
+      "name": "ENGINE_IA_CORRIDORS_Ω",
+      "file": "engines/v8_institutional/engine_ia_corridors_omega.py",
+      "level": "VERROU",
+      "role": "PRINCIPAL",
+      "priority": "CRITIQUE",
+      "fonction": "Moteur V30 de génération des corridors fauniques (LOCKED). Source canonique des corridors bruts du territoire.",
+      "inputs": [
+        "lat",
+        "lon",
+        "species",
+        "month",
+        "hour",
+        "wind_deg",
+        "wind_speed_kmh"
+      ],
+      "outputs": [
+        "corridors[]",
+        "corridor.path[]",
+        "corridor.intensity",
+        "corridor.functional_radius_m"
+      ],
+      "layers_primaire": [
+        "corridors_v30"
+      ],
+      "layers_secondaire": [],
+      "layers_interdit": [
+        "affuts (déléguée à E07)",
+        "salines (déléguée à E08)",
+        "rendu (délégué à E36)"
+      ],
+      "depends_on": [
+        "E01"
+      ],
+      "consumed_by": [
+        "E03",
+        "E04",
+        "E05",
+        "E06",
+        "E10"
+      ],
+      "interdictions": [
+        "Aucune modification post-V30",
+        "Aucune injection de filtrage aval (XIX/VITAUX gérés par E03/E06)",
+        "Aucune dépendance aux engines comportementaux (eux dépendent de lui)"
+      ]
+    },
+    {
+      "id": "E03",
+      "name": "ENGINE_PREDICTIVE_OMEGA_V2",
+      "file": "engines/v8_institutional/predictive_omega_v2.py",
+      "level": "FUSION",
+      "role": "PRINCIPAL",
+      "priority": "CRITIQUE",
+      "fonction": "PHASE-XVIII : annote les corridors V30 avec un score prédictif basé sur traces GPS USGS/Movebank.",
+      "inputs": [
+        "corridors[]",
+        "gps_dataset_status"
+      ],
+      "outputs": [
+        "corridor.predictive_omega_v2",
+        "predictive_omega_v2_stats"
+      ],
+      "layers_primaire": [
+        "corridors_v30 (annotation)"
+      ],
+      "layers_secondaire": [],
+      "layers_interdit": [
+        "affuts",
+        "rendu"
+      ],
+      "depends_on": [
+        "E02"
+      ],
+      "consumed_by": [
+        "E04",
+        "E05",
+        "E06"
+      ],
+      "interdictions": [
+        "Ne jamais générer de corridor : annotation seulement",
+        "Ne jamais modifier path[] : lecture seule"
+      ]
+    },
+    {
+      "id": "E04",
+      "name": "ENGINE_ORIGINE_EXTERNE_INVERSION_Ω",
+      "file": "engines/v8_institutional/origine_externe_inversion_omega.py",
+      "level": "FUSION",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "fonction": "PHASE-XIX-P2 : inverse intelligemment path[0] ↔ path[-1] selon l'origine externe documentée.",
+      "inputs": [
+        "corridors[]",
+        "crown 600-780 m"
+      ],
+      "outputs": [
+        "corridors[] (inversés sur place)",
+        "origine_externe_inversion_stats"
+      ],
+      "layers_primaire": [
+        "corridors_v30 (path direction)"
+      ],
+      "layers_secondaire": [],
+      "layers_interdit": [
+        "affuts",
+        "salines"
+      ],
+      "depends_on": [
+        "E02",
+        "E03"
+      ],
+      "consumed_by": [
+        "E05"
+      ],
+      "interdictions": [
+        "Ne jamais ajouter ou supprimer de corridor",
+        "Ne jamais recomputer XIX-P1 (filtre aval)"
+      ]
+    },
+    {
+      "id": "E05",
+      "name": "ENGINE_ORIGINE_EXTERNE_FILTER_Ω",
+      "file": "engines/v8_institutional/origine_externe_filter_omega.py",
+      "level": "FUSION",
+      "role": "PRINCIPAL",
+      "priority": "CRITIQUE",
+      "fonction": "PHASE-XIX-P1 : exige que l'origine du corridor soit dans la couronne externe (600-780 m) avec densité GPS valide.",
+      "inputs": [
+        "corridors[]",
+        "GPS density grid"
+      ],
+      "outputs": [
+        "corridors[] filtrés",
+        "corridors_rejected_origine_externe_xix"
+      ],
+      "layers_primaire": [
+        "corridors_v30 (filtrage)"
+      ],
+      "layers_secondaire": [],
+      "layers_interdit": [
+        "zones",
+        "affuts",
+        "salines"
+      ],
+      "depends_on": [
+        "E02",
+        "E03",
+        "E04"
+      ],
+      "consumed_by": [
+        "E06",
+        "E10"
+      ],
+      "interdictions": [
+        "Aucun seuil modifié post-locking (densité 0.02 verrouillée)",
+        "Aucune compensation pour absence de GPS"
+      ]
+    },
+    {
+      "id": "E06",
+      "name": "ENGINE_CORRIDORS_VITAUX_Ω",
+      "file": "engines/v8_institutional/corridors_vitaux_omega.py",
+      "level": "FUSION",
+      "role": "PRINCIPAL",
+      "priority": "CRITIQUE",
+      "fonction": "PHASE-XVIII-VITAUX : ancre les corridors validés sur des zones vitales avec rayon 600 m.",
+      "inputs": [
+        "corridors[] (post XIX)",
+        "zones[]"
+      ],
+      "outputs": [
+        "corridors[] ancrés",
+        "corridor.vitaux_validation"
+      ],
+      "layers_primaire": [
+        "corridors_v30 (filtrage final)"
+      ],
+      "layers_secondaire": [
+        "zones (lecture)"
+      ],
+      "layers_interdit": [
+        "affuts",
+        "salines",
+        "rendu"
+      ],
+      "depends_on": [
+        "E02",
+        "E03",
+        "E04",
+        "E05",
+        "E11"
+      ],
+      "consumed_by": [
+        "E10",
+        "E36"
+      ],
+      "interdictions": [
+        "Aucun recompute des zones vitales (E11)",
+        "Aucune mutation du rayon (600 m verrouillé)"
+      ]
+    },
+    {
+      "id": "E07",
+      "name": "ENGINE_BIO_PRESENCE_MASK_Ω",
+      "file": "engines/v8_institutional/species_presence_mask_omega.py",
+      "level": "BIOLOGIE",
+      "role": "PRINCIPAL",
+      "priority": "CRITIQUE",
+      "fonction": "Filtre amont/aval institutionnel : si l'espèce est ABSENT du registre MFFP+SEPAQ+Atlas, vide tous les artefacts liés.",
+      "inputs": [
+        "species",
+        "lat",
+        "lon",
+        "bundle"
+      ],
+      "outputs": [
+        "bundle (purgé si ABSENT)",
+        "bio_presence_mask_purge_counts"
+      ],
+      "layers_primaire": [
+        "corridors",
+        "affuts",
+        "hotspots",
+        "salines",
+        "contamination",
+        "wind_vectors"
+      ],
+      "layers_secondaire": [
+        "sensoriel_vent_odeurs (neutralisation)"
+      ],
+      "layers_interdit": [
+        "zones (préservées audit territoire)",
+        "habitats_critiques"
+      ],
+      "depends_on": [],
+      "consumed_by": [
+        "E10",
+        "E36"
+      ],
+      "interdictions": [
+        "Ne jamais altérer les couches d'infrastructure écologique",
+        "Ne jamais permettre de bypass via paramètre URL"
+      ]
+    },
+    {
+      "id": "E08",
+      "name": "ENGINE_SPECIES_PROFILES_Ω",
+      "file": "engines/v8_institutional/engine_species_profiles_omega.py",
+      "level": "BIOLOGIE",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "fonction": "Profils biologiques détaillés des 5 espèces (régime, phénologie, déplacements, sociabilité).",
+      "inputs": [
+        "species"
+      ],
+      "outputs": [
+        "species_profile_full"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [
+        "corridors (paramétrage)",
+        "affuts (paramétrage)"
+      ],
+      "layers_interdit": [
+        "rendu"
+      ],
+      "depends_on": [
+        "E07"
+      ],
+      "consumed_by": [
+        "E02",
+        "E12",
+        "E18"
+      ],
+      "interdictions": [
+        "Aucune base de données externe non-MFFP/SEPAQ"
+      ]
+    },
+    {
+      "id": "E09",
+      "name": "ENGINE_ESPECE_Ω",
+      "file": "engines/v8_institutional/engine_espece_omega.py",
+      "level": "BIOLOGIE",
+      "role": "SECONDAIRE",
+      "priority": "SECONDAIRE",
+      "fonction": "Métadonnées canoniques par espèce (poids, taille, comportement de chasse, périodes de pression).",
+      "inputs": [
+        "species"
+      ],
+      "outputs": [
+        "species_metadata"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [
+        "affuts"
+      ],
+      "layers_interdit": [],
+      "depends_on": [
+        "E07"
+      ],
+      "consumed_by": [
+        "E18",
+        "E20"
+      ],
+      "interdictions": [
+        "Aucune divergence avec E08"
+      ]
+    },
+    {
+      "id": "E10",
+      "name": "ENGINE_ECOLOGICAL_ORCHESTRATOR_Ω",
+      "file": "engines/v8_institutional/ecological_orchestrator_omega.py",
+      "level": "FUSION",
+      "role": "PRINCIPAL",
+      "priority": "CRITIQUE",
+      "fonction": "Chef d'orchestre du pipeline ecological. Coordonne XIX → VITAUX → BIO-MASK → connectivité.",
+      "inputs": [
+        "corridors[] (post XIX)",
+        "zones[]",
+        "habitats_critiques[]"
+      ],
+      "outputs": [
+        "bundle.ecological_orchestrator_omega_applied",
+        "bundle.ecological_orchestrator_omega_stats"
+      ],
+      "layers_primaire": [
+        "corridors",
+        "zones",
+        "habitats_critiques (audit)"
+      ],
+      "layers_secondaire": [],
+      "layers_interdit": [
+        "rendu",
+        "affuts (générés ailleurs)"
+      ],
+      "depends_on": [
+        "E02",
+        "E03",
+        "E04",
+        "E05",
+        "E06",
+        "E07",
+        "E11",
+        "E27"
+      ],
+      "consumed_by": [
+        "E36"
+      ],
+      "interdictions": [
+        "Aucune écriture dans les engines amont",
+        "Aucune génération de corridors propre"
+      ]
+    },
+    {
+      "id": "E11",
+      "name": "ENGINE_ZONES",
+      "file": "engines/v8_institutional/engine_zones.py",
+      "level": "FONDATION",
+      "role": "PRINCIPAL",
+      "priority": "CRITIQUE",
+      "fonction": "Génération des zones écologiques (alimentation, repos, thermiques, humides, refuges).",
+      "inputs": [
+        "lat",
+        "lon",
+        "terrain_v10"
+      ],
+      "outputs": [
+        "zones[]"
+      ],
+      "layers_primaire": [
+        "zones"
+      ],
+      "layers_secondaire": [],
+      "layers_interdit": [
+        "corridors",
+        "rendu"
+      ],
+      "depends_on": [
+        "E13",
+        "E15",
+        "E16"
+      ],
+      "consumed_by": [
+        "E06",
+        "E07",
+        "E10",
+        "E18",
+        "E27"
+      ],
+      "interdictions": [
+        "Ne jamais filtrer par espèce (territoire-global)"
+      ]
+    },
+    {
+      "id": "E12",
+      "name": "ENGINE_ZONES_ORGANIC_V1",
+      "file": "engines/v8_institutional/zones_organic_v1.py",
+      "level": "FONDATION",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "fonction": "Variante organique des zones (formes naturelles, courbes Catmull-Rom, polygones lissés).",
+      "inputs": [
+        "zones[]"
+      ],
+      "outputs": [
+        "zones_organic[]"
+      ],
+      "layers_primaire": [
+        "zones (rendu)"
+      ],
+      "layers_secondaire": [],
+      "layers_interdit": [],
+      "depends_on": [
+        "E11"
+      ],
+      "consumed_by": [
+        "E36"
+      ],
+      "interdictions": [
+        "Aucune modification de la sémantique zones (formes seulement)"
+      ]
+    },
+    {
+      "id": "E13",
+      "name": "ENGINE_TERRAIN_COST",
+      "file": "engines/v8_institutional/engine_terrain_cost.py",
+      "level": "FONDATION",
+      "role": "PRINCIPAL",
+      "priority": "CRITIQUE",
+      "fonction": "Calcule la matrice de coût du terrain (pente, élévation, obstacles).",
+      "inputs": [
+        "lat",
+        "lon",
+        "DEM"
+      ],
+      "outputs": [
+        "terrain_cost_grid"
+      ],
+      "layers_primaire": [
+        "terrain"
+      ],
+      "layers_secondaire": [],
+      "layers_interdit": [
+        "rendu",
+        "biologie"
+      ],
+      "depends_on": [],
+      "consumed_by": [
+        "E02",
+        "E11",
+        "E14"
+      ],
+      "interdictions": [
+        "Aucune dépendance aux engines biologiques"
+      ]
+    },
+    {
+      "id": "E14",
+      "name": "ENGINE_HABITAT_SUPRA",
+      "file": "engines/v8_institutional/engine_habitat_supra.py",
+      "level": "FONDATION",
+      "role": "PRINCIPAL",
+      "priority": "MAJEUR",
+      "fonction": "Caractérise les habitats critiques (forêt mature, milieux humides, transition).",
+      "inputs": [
+        "terrain_v10",
+        "couches MFFP"
+      ],
+      "outputs": [
+        "habitats_critiques[]"
+      ],
+      "layers_primaire": [
+        "habitats_critiques"
+      ],
+      "layers_secondaire": [],
+      "layers_interdit": [],
+      "depends_on": [
+        "E13",
+        "E15"
+      ],
+      "consumed_by": [
+        "E10",
+        "E11"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E15",
+      "name": "ENGINE_HYDROLOGIE_SUPRA",
+      "file": "engines/v8_institutional/engine_hydrologie_supra.py",
+      "level": "FONDATION",
+      "role": "PRINCIPAL",
+      "priority": "MAJEUR",
+      "fonction": "Cartographie hydrologique (ruisseaux, étangs, zones humides).",
+      "inputs": [
+        "lat",
+        "lon",
+        "OpenStreetMap waterways"
+      ],
+      "outputs": [
+        "hydat_nearby[]"
+      ],
+      "layers_primaire": [
+        "hydrologie"
+      ],
+      "layers_secondaire": [],
+      "layers_interdit": [
+        "rendu corridors"
+      ],
+      "depends_on": [],
+      "consumed_by": [
+        "E11",
+        "E14",
+        "E17"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E16",
+      "name": "ENGINE_SOL_SUPRA",
+      "file": "engines/v8_institutional/engine_sol_supra.py",
+      "level": "FONDATION",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "fonction": "Caractérisation du sol (drainage, granulométrie, fertilité).",
+      "inputs": [
+        "lat",
+        "lon"
+      ],
+      "outputs": [
+        "sol_meta"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [
+        "zones (paramétrage)"
+      ],
+      "layers_interdit": [],
+      "depends_on": [],
+      "consumed_by": [
+        "E11",
+        "E14"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E17",
+      "name": "ENGINE_RISQUES_HYDRO_Ω",
+      "file": "engines/v8_institutional/engine_risques_hydro_omega.py",
+      "level": "FONDATION",
+      "role": "SECONDAIRE",
+      "priority": "SECONDAIRE",
+      "fonction": "Identifie les risques hydrologiques (crues, débit critique).",
+      "inputs": [
+        "hydat_nearby[]"
+      ],
+      "outputs": [
+        "risques_hydro[]"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [
+        "hydrologie"
+      ],
+      "layers_interdit": [],
+      "depends_on": [
+        "E15"
+      ],
+      "consumed_by": [
+        "E10"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E18",
+      "name": "ENGINE_VENT",
+      "file": "engines/v8_institutional/engine_vent.py",
+      "level": "FONDATION",
+      "role": "PRINCIPAL",
+      "priority": "CRITIQUE",
+      "fonction": "PHASE-C R2 : génère le champ vent dérivé (8 vecteurs en éventail) à partir de la source canonique sensoriel_vent_odeurs.",
+      "inputs": [
+        "lat",
+        "lon",
+        "wind_deg (canonical)",
+        "wind_speed_kmh (canonical)"
+      ],
+      "outputs": [
+        "wind_vectors[]",
+        "wind_truth",
+        "wind_vectors_meta"
+      ],
+      "layers_primaire": [
+        "wind_vectors"
+      ],
+      "layers_secondaire": [],
+      "layers_interdit": [
+        "corridors",
+        "affuts directionnels"
+      ],
+      "depends_on": [
+        "E19"
+      ],
+      "consumed_by": [
+        "E21",
+        "E22",
+        "E36"
+      ],
+      "interdictions": [
+        "Ne jamais publier un wind_deg différent de la vérité (E19)",
+        "Annoter chaque vecteur avec axis_offset_deg + is_central (PHASE-C R2)"
+      ]
+    },
+    {
+      "id": "E19",
+      "name": "ENGINE_SENSORIEL_VENT_ODEURS_Ω",
+      "file": "engines/v8_institutional/engine_sensoriel_vent_odeurs_omega.py",
+      "level": "FONDATION",
+      "role": "PRINCIPAL",
+      "priority": "CRITIQUE",
+      "fonction": "Source canonique de vérité du vent (open-meteo) + score olfactif/sonore. Expose cone_axis_deg (PHASE-C R3).",
+      "inputs": [
+        "terrain_v10",
+        "wind_deg",
+        "wind_speed_kmh"
+      ],
+      "outputs": [
+        "sensoriel_vent_odeurs",
+        "cone_axis_deg",
+        "cone_aperture_deg"
+      ],
+      "layers_primaire": [
+        "wind_truth",
+        "son_cone"
+      ],
+      "layers_secondaire": [],
+      "layers_interdit": [
+        "corridors"
+      ],
+      "depends_on": [],
+      "consumed_by": [
+        "E18",
+        "E21",
+        "E22"
+      ],
+      "interdictions": [
+        "Ne jamais utiliser une source autre que open-meteo en runtime",
+        "Cone_axis_deg = (wind_deg + 180) % 360 obligatoire"
+      ]
+    },
+    {
+      "id": "E20",
+      "name": "ENGINE_PRESSION_ATMOSPHERIQUE_Ω",
+      "file": "engines/v8_institutional/engine_pression_atmospherique_omega.py",
+      "level": "FONDATION",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "fonction": "Mesure pression atmosphérique + tendance (open-meteo).",
+      "inputs": [
+        "lat",
+        "lon"
+      ],
+      "outputs": [
+        "pression",
+        "tendance_pression"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [],
+      "layers_interdit": [],
+      "depends_on": [],
+      "consumed_by": [
+        "E29",
+        "E32"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E21",
+      "name": "ENGINE_CONTAMINATION_V2_Ω",
+      "file": "engines/v8_institutional/engine_contamination_v2_omega.py",
+      "level": "FONDATION",
+      "role": "PRINCIPAL",
+      "priority": "MAJEUR",
+      "fonction": "Génère les zones de contamination olfactive (sous-vent, polygons).",
+      "inputs": [
+        "wind_truth",
+        "affuts",
+        "thermique"
+      ],
+      "outputs": [
+        "contamination[]",
+        "contamination_zones[]",
+        "contamination_v2 (dict)"
+      ],
+      "layers_primaire": [
+        "contamination",
+        "contamination_zones"
+      ],
+      "layers_secondaire": [],
+      "layers_interdit": [
+        "corridors"
+      ],
+      "depends_on": [
+        "E19",
+        "E07"
+      ],
+      "consumed_by": [
+        "E27",
+        "E36"
+      ],
+      "interdictions": [
+        "Vidé automatiquement par E07 (BIO-MASK) si espèce ABSENT",
+        "Orientation polygon = wind + 180° obligatoire"
+      ]
+    },
+    {
+      "id": "E22",
+      "name": "ENGINE_AUDIO_ACOUSTIQUE",
+      "file": "engines/v8_institutional/engine_audio_acoustique.py",
+      "level": "FONDATION",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "fonction": "Modélise la transmission sonore avec atténuation par terrain et vent.",
+      "inputs": [
+        "wind_truth",
+        "terrain_cost"
+      ],
+      "outputs": [
+        "acoustic_field"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [
+        "son_cone (paramétrage)"
+      ],
+      "layers_interdit": [
+        "corridors"
+      ],
+      "depends_on": [
+        "E13",
+        "E19"
+      ],
+      "consumed_by": [
+        "E36"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E23",
+      "name": "ENGINE_THERMIQUE_MICROCLIMAT_Ω",
+      "file": "engines/v8_institutional/engine_thermique_microclimat_omega.py",
+      "level": "FONDATION",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "fonction": "Calcule les courants thermiques locaux (sun-induced uplifts, vallées froides).",
+      "inputs": [
+        "terrain_v10",
+        "hour",
+        "month"
+      ],
+      "outputs": [
+        "thermique[]"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [
+        "zones (paramétrage)"
+      ],
+      "layers_interdit": [],
+      "depends_on": [
+        "E13"
+      ],
+      "consumed_by": [
+        "E11",
+        "E21"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E24",
+      "name": "ENGINE_INFLUENCE_LUNAIRE_Ω",
+      "file": "engines/v8_institutional/engine_influence_lunaire_omega.py",
+      "level": "FONDATION",
+      "role": "SECONDAIRE",
+      "priority": "SECONDAIRE",
+      "fonction": "Influence lunaire sur l'activité faunique (phases, marées biologiques).",
+      "inputs": [
+        "date",
+        "hour"
+      ],
+      "outputs": [
+        "lunar_factor"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [],
+      "layers_interdit": [],
+      "depends_on": [],
+      "consumed_by": [
+        "E29"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E25",
+      "name": "ENGINE_CLIMAT_FUTUR_Ω",
+      "file": "engines/v8_institutional/engine_climat_futur_omega.py",
+      "level": "FONDATION",
+      "role": "SECONDAIRE",
+      "priority": "SECONDAIRE",
+      "fonction": "Projection climat futur (5-15 ans) sur tendances habitat.",
+      "inputs": [
+        "lat",
+        "lon"
+      ],
+      "outputs": [
+        "climat_futur_meta"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [],
+      "layers_interdit": [
+        "rendu"
+      ],
+      "depends_on": [],
+      "consumed_by": [
+        "E26"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E26",
+      "name": "ENGINE_POPULATION_DYNAMICS_Ω",
+      "file": "engines/v8_institutional/engine_population_dynamics_omega.py",
+      "level": "BIOLOGIE",
+      "role": "PRINCIPAL",
+      "priority": "MAJEUR",
+      "fonction": "Dynamiques de population (densité, recrutement, mortalité).",
+      "inputs": [
+        "species",
+        "habitats_critiques"
+      ],
+      "outputs": [
+        "population_density"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [],
+      "layers_interdit": [],
+      "depends_on": [
+        "E07",
+        "E14"
+      ],
+      "consumed_by": [
+        "E18 (densité affecte coefs)",
+        "E29"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E27",
+      "name": "ENGINE_CONNECTIVITE_ECOLOGIQUE_Ω",
+      "file": "engines/v8_institutional/engine_connectivite_ecologique_omega.py",
+      "level": "FUSION",
+      "role": "PRINCIPAL",
+      "priority": "MAJEUR",
+      "fonction": "Mesure la connectivité écologique inter-zones (matrice de transition).",
+      "inputs": [
+        "zones[]",
+        "corridors[]"
+      ],
+      "outputs": [
+        "connectivity_matrix"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [
+        "corridors (annotation)"
+      ],
+      "layers_interdit": [],
+      "depends_on": [
+        "E11",
+        "E02"
+      ],
+      "consumed_by": [
+        "E10"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E28",
+      "name": "ENGINE_STRESS_ANTHROPIQUE_Ω",
+      "file": "engines/v8_institutional/engine_stress_anthropique_omega.py",
+      "level": "BIOLOGIE",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "fonction": "Quantifie le stress anthropique (routes, occupation humaine, pression de chasse).",
+      "inputs": [
+        "lat",
+        "lon",
+        "OSM"
+      ],
+      "outputs": [
+        "stress_anthropique_score"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [
+        "zones (paramétrage)"
+      ],
+      "layers_interdit": [],
+      "depends_on": [],
+      "consumed_by": [
+        "E29",
+        "E10"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E29",
+      "name": "ENGINE_AFFUTS",
+      "file": "engines/v8_institutional/engine_affuts.py",
+      "level": "FUSION",
+      "role": "PRINCIPAL",
+      "priority": "CRITIQUE",
+      "fonction": "Génère les postes de tir (affûts) à proximité des corridors validés.",
+      "inputs": [
+        "corridors[]",
+        "zones[]",
+        "wind_truth",
+        "stress_anthropique"
+      ],
+      "outputs": [
+        "affuts[]"
+      ],
+      "layers_primaire": [
+        "affuts"
+      ],
+      "layers_secondaire": [],
+      "layers_interdit": [
+        "corridors (consume seulement)"
+      ],
+      "depends_on": [
+        "E02",
+        "E06",
+        "E11",
+        "E18",
+        "E20",
+        "E24",
+        "E26",
+        "E28"
+      ],
+      "consumed_by": [
+        "E10",
+        "E30",
+        "E36"
+      ],
+      "interdictions": [
+        "Vidé par E07 (BIO-MASK) si espèce ABSENT",
+        "Aucune saline ou hotspot ne doit être généré ici"
+      ]
+    },
+    {
+      "id": "E30",
+      "name": "ENGINE_HOTSPOTS",
+      "file": "engines/v8_institutional/engine_hotspots.py",
+      "level": "FUSION",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "fonction": "Identifie les hotspots d'activité (dérivés des affûts + corridors).",
+      "inputs": [
+        "affuts[]",
+        "corridors[]"
+      ],
+      "outputs": [
+        "hotspots[]"
+      ],
+      "layers_primaire": [
+        "hotspots"
+      ],
+      "layers_secondaire": [],
+      "layers_interdit": [],
+      "depends_on": [
+        "E29",
+        "E02"
+      ],
+      "consumed_by": [
+        "E10",
+        "E36"
+      ],
+      "interdictions": [
+        "Vidé par E07 (BIO-MASK) si espèce ABSENT (PHASE-C R1)",
+        "Doit porter source_engine: AFFUT pour traçabilité"
+      ]
+    },
+    {
+      "id": "E31",
+      "name": "ENGINE_SALINES_V11_SUPRA",
+      "file": "engines/v8_institutional/engine_salines_v11_supra.py",
+      "level": "FUSION",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "fonction": "Génère les salines biologiques (zones d'attraction minéral).",
+      "inputs": [
+        "zones[]",
+        "habitats_critiques",
+        "species_profile"
+      ],
+      "outputs": [
+        "salines[]"
+      ],
+      "layers_primaire": [
+        "salines"
+      ],
+      "layers_secondaire": [],
+      "layers_interdit": [
+        "corridors",
+        "affuts"
+      ],
+      "depends_on": [
+        "E08",
+        "E11",
+        "E14"
+      ],
+      "consumed_by": [
+        "E10",
+        "E36"
+      ],
+      "interdictions": [
+        "Vidé par E07 (BIO-MASK) si espèce ABSENT (PHASE-C R1)",
+        "Score bio_species doit inclure l'espèce demandée"
+      ]
+    },
+    {
+      "id": "E32",
+      "name": "ENGINE_HEATMAP",
+      "file": "engines/v8_institutional/engine_heatmap.py",
+      "level": "FUSION",
+      "role": "SECONDAIRE",
+      "priority": "SECONDAIRE",
+      "fonction": "Heatmap dérivée de contamination + affûts pour visualisation densité.",
+      "inputs": [
+        "contamination_v2",
+        "affuts[]",
+        "hotspots[]"
+      ],
+      "outputs": [
+        "contamination_v2_heatmap"
+      ],
+      "layers_primaire": [
+        "heatmap"
+      ],
+      "layers_secondaire": [],
+      "layers_interdit": [
+        "corridors",
+        "affuts (consume seulement)"
+      ],
+      "depends_on": [
+        "E21",
+        "E29"
+      ],
+      "consumed_by": [
+        "E36"
+      ],
+      "interdictions": [
+        "Vidé par E07 (BIO-MASK) si espèce ABSENT"
+      ]
+    },
+    {
+      "id": "E33",
+      "name": "ENGINE_IA_VISION_ECOLOGIQUE_Ω",
+      "file": "engines/v8_institutional/engine_ia_vision_ecologique_omega.py",
+      "level": "BIOLOGIE",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "fonction": "Vision IA pour reconnaissance écologique (textures imagery satellite/aérien).",
+      "inputs": [
+        "lat",
+        "lon",
+        "imagery"
+      ],
+      "outputs": [
+        "ia_vision_segmentation"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [
+        "zones (paramétrage)",
+        "habitats_critiques"
+      ],
+      "layers_interdit": [],
+      "depends_on": [],
+      "consumed_by": [
+        "E11",
+        "E14"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E34",
+      "name": "ENGINE_GOUVERNANCE_Ω",
+      "file": "engines/v8_institutional/engine_gouvernance_omega.py",
+      "level": "GOUVERNANCE",
+      "role": "PRINCIPAL",
+      "priority": "MAJEUR",
+      "fonction": "Coordination institutionnelle (audit, conformité, traçabilité).",
+      "inputs": [
+        "bundle complet"
+      ],
+      "outputs": [
+        "gouvernance_audit"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [],
+      "layers_interdit": [
+        "TOUS — read-only"
+      ],
+      "depends_on": [
+        "ALL"
+      ],
+      "consumed_by": [
+        "E36"
+      ],
+      "interdictions": [
+        "Aucune modification de couche"
+      ]
+    },
+    {
+      "id": "E35",
+      "name": "TERRITOIRE_V10_SUPRA",
+      "file": "engines/v8_institutional/territoire_v10_supra.py",
+      "level": "GOUVERNANCE",
+      "role": "PRINCIPAL",
+      "priority": "CRITIQUE",
+      "fonction": "Pipeline orchestrateur SUPRA : compose et coordonne tous les engines pour un waypoint donné.",
+      "inputs": [
+        "lat",
+        "lon",
+        "species",
+        "month",
+        "hour",
+        "wind_deg",
+        "wind_speed_kmh"
+      ],
+      "outputs": [
+        "bundle complet TERRITOIRE_Ω"
+      ],
+      "layers_primaire": [
+        "bundle complet"
+      ],
+      "layers_secondaire": [],
+      "layers_interdit": [
+        "registry_lock_omega (V30)"
+      ],
+      "depends_on": [
+        "E11",
+        "E13",
+        "E14",
+        "E15",
+        "E16",
+        "E18",
+        "E19",
+        "E20",
+        "E21",
+        "E22",
+        "E23",
+        "E24",
+        "E26",
+        "E27",
+        "E28",
+        "E29",
+        "E30",
+        "E31",
+        "E32",
+        "E33"
+      ],
+      "consumed_by": [
+        "E36",
+        "v20_performance_bundle"
+      ],
+      "interdictions": [
+        "Aucune modification cryptographique des engines amont"
+      ]
+    },
+    {
+      "id": "E36",
+      "name": "ENGINE_RENDU_Ω (PHASE-D)",
+      "file": "engines/post_smoothing/renduomega.py + frontend renduOmegaStore.js",
+      "level": "RENDU",
+      "role": "PRINCIPAL",
+      "priority": "CRITIQUE",
+      "fonction": "PHASE-D verrouillage : applique la palette institutionnelle verte (#00A676/#4CC99A/#B2F2D9) avec halos + texture organique.",
+      "inputs": [
+        "bundle complet (post BIO-MASK)"
+      ],
+      "outputs": [
+        "rendered map (3 polylines superposées par corridor)"
+      ],
+      "layers_primaire": [
+        "rendu corridors",
+        "rendu affuts",
+        "rendu zones",
+        "rendu salines",
+        "rendu hotspots"
+      ],
+      "layers_secondaire": [
+        "rendu wind_vectors",
+        "rendu contamination"
+      ],
+      "layers_interdit": [
+        "calcul biologique",
+        "modification bundle"
+      ],
+      "depends_on": [
+        "E35",
+        "E07",
+        "E10"
+      ],
+      "consumed_by": [],
+      "interdictions": [
+        "Aucune mutation des données du bundle",
+        "Palette verrouillée Object.freeze (palette PHASE-D obligatoire)",
+        "Pas d'affichage de corridors si halt=True (E07)"
+      ]
+    },
+    {
+      "id": "E37",
+      "name": "ENGINE_SOL_NUTRIMENTS_Ω",
+      "file": "engines/v8_institutional/engine_sol_nutriments_omega.py",
+      "level": "BIOLOGIE",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "category": "NUTRITION",
+      "fonction": "Nutriments minéraux+organiques du sol (N/P/K/Ca/Mg/OM) par texture.",
+      "inputs": [
+        "sol_meta (E16)"
+      ],
+      "outputs": [
+        "nutrients_ratio",
+        "organic_matter_ratio",
+        "fertility_index"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [
+        "zones (paramétrage)"
+      ],
+      "layers_interdit": [],
+      "depends_on": [
+        "E16"
+      ],
+      "consumed_by": [
+        "E39",
+        "E47"
+      ],
+      "interdictions": [
+        "Aucune dépendance aux engines V30",
+        "Lecture seule du sol"
+      ]
+    },
+    {
+      "id": "E38",
+      "name": "ENGINE_FORAGE_QUALITÉ_Ω",
+      "file": "engines/v8_institutional/engine_forage_qualite_omega.py",
+      "level": "BIOLOGIE",
+      "role": "PRINCIPAL",
+      "priority": "MAJEUR",
+      "category": "NUTRITION",
+      "fonction": "Qualité nutritionnelle des végétaux par habitat × saison.",
+      "inputs": [
+        "habitats_critiques (E14)",
+        "month"
+      ],
+      "outputs": [
+        "forage_quality_index",
+        "per_habitat"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [
+        "habitats_critiques (annotation)"
+      ],
+      "layers_interdit": [],
+      "depends_on": [
+        "E14"
+      ],
+      "consumed_by": [
+        "E39",
+        "E44",
+        "E46",
+        "E47"
+      ],
+      "interdictions": [
+        "Jamais modifier habitats_critiques source"
+      ]
+    },
+    {
+      "id": "E39",
+      "name": "ENGINE_CARENCE_NUTRITIONNELLE_Ω",
+      "file": "engines/v8_institutional/engine_carence_nutritionnelle_omega.py",
+      "level": "BIOLOGIE",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "category": "NUTRITION",
+      "fonction": "Détection carences par espèce (besoins Na/Ca/P/Mg/K vs disponibilité).",
+      "inputs": [
+        "species",
+        "sol_nutriments (E37)",
+        "forage_quality (E38)"
+      ],
+      "outputs": [
+        "deficits_vs_needs",
+        "total_deficit_score",
+        "carence_risk"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [],
+      "layers_interdit": [],
+      "depends_on": [
+        "E37",
+        "E38",
+        "E07",
+        "E08"
+      ],
+      "consumed_by": [
+        "E40",
+        "E46",
+        "E47"
+      ],
+      "interdictions": [
+        "Aucune présomption sans E37/E38"
+      ]
+    },
+    {
+      "id": "E40",
+      "name": "ENGINE_RECETTES_SALINES_Ω",
+      "file": "engines/v8_institutional/engine_recettes_salines_omega.py",
+      "level": "FUSION",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "category": "NUTRITION",
+      "fonction": "Formulations salines adaptées espèce + carence.",
+      "inputs": [
+        "species",
+        "carence (E39)"
+      ],
+      "outputs": [
+        "recipes[]",
+        "priority_boost"
+      ],
+      "layers_primaire": [
+        "salines (paramétrage)"
+      ],
+      "layers_secondaire": [],
+      "layers_interdit": [],
+      "depends_on": [
+        "E39",
+        "E31"
+      ],
+      "consumed_by": [
+        "E47"
+      ],
+      "interdictions": [
+        "Aucune génération de salines physiques (E31 seul)"
+      ]
+    },
+    {
+      "id": "E41",
+      "name": "ENGINE_CHAMPS_NOURRICIERS_Ω",
+      "file": "engines/v8_institutional/engine_champs_nourriciers_omega.py",
+      "level": "BIOLOGIE",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "category": "NUTRITION",
+      "fonction": "Détection des champs agricoles + attractivité par espèce/culture/saison.",
+      "inputs": [
+        "zones (E11)",
+        "species",
+        "month"
+      ],
+      "outputs": [
+        "fields[]",
+        "mean_attractiveness"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [
+        "zones (annotation)"
+      ],
+      "layers_interdit": [],
+      "depends_on": [
+        "E11"
+      ],
+      "consumed_by": [
+        "E44",
+        "E47"
+      ],
+      "interdictions": [
+        "Ne jamais générer de zones physiques"
+      ]
+    },
+    {
+      "id": "E42",
+      "name": "ENGINE_CANOPÉE_THERMIQUE_Ω",
+      "file": "engines/v8_institutional/engine_canopee_thermique_omega.py",
+      "level": "FONDATION",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "category": "THERMIQUE",
+      "fonction": "Effet thermique canopée (buffer ombre jour / perte nocturne).",
+      "inputs": [
+        "terrain_v10 (E13)",
+        "hour"
+      ],
+      "outputs": [
+        "thermal_buffer_c",
+        "shade_buffer_c_day",
+        "nocturnal_loss_c_night"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [],
+      "layers_interdit": [],
+      "depends_on": [
+        "E13"
+      ],
+      "consumed_by": [
+        "E43",
+        "E48"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E43",
+      "name": "ENGINE_MICROCLIMAT_Ω_ADVANCED",
+      "file": "engines/v8_institutional/engine_microclimat_advanced_omega.py",
+      "level": "FONDATION",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "category": "THERMIQUE",
+      "fonction": "Agrège terrain + canopée + pression + hydro → microclimat local.",
+      "inputs": [
+        "terrain_v10",
+        "canopee (E42)",
+        "pression (E20)",
+        "hydro (E15)"
+      ],
+      "outputs": [
+        "local_temperature_c",
+        "local_stability_index"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [],
+      "layers_interdit": [],
+      "depends_on": [
+        "E13",
+        "E42",
+        "E20",
+        "E15",
+        "E23"
+      ],
+      "consumed_by": [
+        "E46",
+        "E48"
+      ],
+      "interdictions": [
+        "Complète E23, ne le remplace pas"
+      ]
+    },
+    {
+      "id": "E44",
+      "name": "ENGINE_TROPHIC_BEHAVIOR_Ω",
+      "file": "engines/v8_institutional/engine_trophic_behavior_omega.py",
+      "level": "BIOLOGIE",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "category": "COMPORTEMENT",
+      "fonction": "Comportement trophique : type + fenêtre d'activité + pression fourragère.",
+      "inputs": [
+        "species",
+        "hour",
+        "forage_quality (E38)",
+        "champs (E41)"
+      ],
+      "outputs": [
+        "trophic_type",
+        "activity_window",
+        "activity_score",
+        "foraging_pressure_index"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [],
+      "layers_interdit": [],
+      "depends_on": [
+        "E08",
+        "E38",
+        "E41"
+      ],
+      "consumed_by": [
+        "E48"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E45",
+      "name": "ENGINE_SOCIAL_STRUCTURE_Ω",
+      "file": "engines/v8_institutional/engine_social_structure_omega.py",
+      "level": "BIOLOGIE",
+      "role": "SECONDAIRE",
+      "priority": "SECONDAIRE",
+      "category": "COMPORTEMENT",
+      "fonction": "Structure sociale espèce : grégaire/solitaire + période de rut.",
+      "inputs": [
+        "species",
+        "month"
+      ],
+      "outputs": [
+        "social_type",
+        "group_avg_size",
+        "in_rut_period"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [],
+      "layers_interdit": [],
+      "depends_on": [
+        "E08"
+      ],
+      "consumed_by": [
+        "E48"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E46",
+      "name": "ENGINE_SANTÉ_PHYSIO_Ω",
+      "file": "engines/v8_institutional/engine_sante_physio_omega.py",
+      "level": "BIOLOGIE",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "category": "PHYSIOLOGIE",
+      "fonction": "Santé physiologique estimée : forage + carence + stress + microclimat.",
+      "inputs": [
+        "species",
+        "forage (E38)",
+        "carence (E39)",
+        "stress (E28)",
+        "microclimat (E43)"
+      ],
+      "outputs": [
+        "health_index_0_1",
+        "health_band",
+        "components"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [],
+      "layers_interdit": [],
+      "depends_on": [
+        "E38",
+        "E39",
+        "E28",
+        "E43"
+      ],
+      "consumed_by": [
+        "E47",
+        "E48"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E47",
+      "name": "ENGINE_NUTRITIONAL_ATTRACTIVENESS_Ω",
+      "file": "engines/v8_institutional/engine_nutritional_attractiveness_omega.py",
+      "level": "FUSION",
+      "role": "PRINCIPAL",
+      "priority": "CRITIQUE",
+      "category": "SYNTHÈSE",
+      "fonction": "Score synthèse attractivité nutritionnelle 0-1 avec 4 bandes (FAIBLE → ULTIME).",
+      "inputs": [
+        "species",
+        "forage (E38)",
+        "champs (E41)",
+        "sol (E37)",
+        "recettes (E40)",
+        "sante (E46)"
+      ],
+      "outputs": [
+        "attractiveness_score_0_1",
+        "attractiveness_band",
+        "components"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [
+        "salines (paramétrage)",
+        "hotspots (paramétrage)"
+      ],
+      "layers_interdit": [],
+      "depends_on": [
+        "E37",
+        "E38",
+        "E40",
+        "E41",
+        "E46"
+      ],
+      "consumed_by": [
+        "E48"
+      ],
+      "interdictions": [
+        "Lecture seule"
+      ]
+    },
+    {
+      "id": "E48",
+      "name": "ENGINE_OPTIMISATION_HABITAT_Ω",
+      "file": "engines/v8_institutional/engine_optimisation_habitat_omega.py",
+      "level": "FUSION",
+      "role": "PRINCIPAL",
+      "priority": "CRITIQUE",
+      "category": "SYNTHÈSE",
+      "fonction": "Score ULTIME habitat optimisé 0-1 : synthèse finale TERRITOIRE_Ω.",
+      "inputs": [
+        "species",
+        "attractiveness (E47)",
+        "trophic (E44)",
+        "social (E45)",
+        "sante (E46)",
+        "microclimat (E43)",
+        "connectivity (E27)"
+      ],
+      "outputs": [
+        "habitat_optimisation_score_0_1",
+        "habitat_band",
+        "recommendation"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [
+        "rendu (sur-couche RENDUΩ)"
+      ],
+      "layers_interdit": [
+        "rendu brut"
+      ],
+      "depends_on": [
+        "E47",
+        "E44",
+        "E45",
+        "E46",
+        "E43",
+        "E27"
+      ],
+      "consumed_by": [
+        "E36"
+      ],
+      "interdictions": [
+        "Aucune modification du bundle V20"
+      ]
+    }
+  ],
+  "supra_bio_nutrition_only": [
+    {
+      "id": "E37",
+      "name": "ENGINE_SOL_NUTRIMENTS_Ω",
+      "file": "engines/v8_institutional/engine_sol_nutriments_omega.py",
+      "level": "BIOLOGIE",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "category": "NUTRITION",
+      "fonction": "Nutriments minéraux+organiques du sol (N/P/K/Ca/Mg/OM) par texture.",
+      "inputs": [
+        "sol_meta (E16)"
+      ],
+      "outputs": [
+        "nutrients_ratio",
+        "organic_matter_ratio",
+        "fertility_index"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [
+        "zones (paramétrage)"
+      ],
+      "layers_interdit": [],
+      "depends_on": [
+        "E16"
+      ],
+      "consumed_by": [
+        "E39",
+        "E47"
+      ],
+      "interdictions": [
+        "Aucune dépendance aux engines V30",
+        "Lecture seule du sol"
+      ]
+    },
+    {
+      "id": "E38",
+      "name": "ENGINE_FORAGE_QUALITÉ_Ω",
+      "file": "engines/v8_institutional/engine_forage_qualite_omega.py",
+      "level": "BIOLOGIE",
+      "role": "PRINCIPAL",
+      "priority": "MAJEUR",
+      "category": "NUTRITION",
+      "fonction": "Qualité nutritionnelle des végétaux par habitat × saison.",
+      "inputs": [
+        "habitats_critiques (E14)",
+        "month"
+      ],
+      "outputs": [
+        "forage_quality_index",
+        "per_habitat"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [
+        "habitats_critiques (annotation)"
+      ],
+      "layers_interdit": [],
+      "depends_on": [
+        "E14"
+      ],
+      "consumed_by": [
+        "E39",
+        "E44",
+        "E46",
+        "E47"
+      ],
+      "interdictions": [
+        "Jamais modifier habitats_critiques source"
+      ]
+    },
+    {
+      "id": "E39",
+      "name": "ENGINE_CARENCE_NUTRITIONNELLE_Ω",
+      "file": "engines/v8_institutional/engine_carence_nutritionnelle_omega.py",
+      "level": "BIOLOGIE",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "category": "NUTRITION",
+      "fonction": "Détection carences par espèce (besoins Na/Ca/P/Mg/K vs disponibilité).",
+      "inputs": [
+        "species",
+        "sol_nutriments (E37)",
+        "forage_quality (E38)"
+      ],
+      "outputs": [
+        "deficits_vs_needs",
+        "total_deficit_score",
+        "carence_risk"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [],
+      "layers_interdit": [],
+      "depends_on": [
+        "E37",
+        "E38",
+        "E07",
+        "E08"
+      ],
+      "consumed_by": [
+        "E40",
+        "E46",
+        "E47"
+      ],
+      "interdictions": [
+        "Aucune présomption sans E37/E38"
+      ]
+    },
+    {
+      "id": "E40",
+      "name": "ENGINE_RECETTES_SALINES_Ω",
+      "file": "engines/v8_institutional/engine_recettes_salines_omega.py",
+      "level": "FUSION",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "category": "NUTRITION",
+      "fonction": "Formulations salines adaptées espèce + carence.",
+      "inputs": [
+        "species",
+        "carence (E39)"
+      ],
+      "outputs": [
+        "recipes[]",
+        "priority_boost"
+      ],
+      "layers_primaire": [
+        "salines (paramétrage)"
+      ],
+      "layers_secondaire": [],
+      "layers_interdit": [],
+      "depends_on": [
+        "E39",
+        "E31"
+      ],
+      "consumed_by": [
+        "E47"
+      ],
+      "interdictions": [
+        "Aucune génération de salines physiques (E31 seul)"
+      ]
+    },
+    {
+      "id": "E41",
+      "name": "ENGINE_CHAMPS_NOURRICIERS_Ω",
+      "file": "engines/v8_institutional/engine_champs_nourriciers_omega.py",
+      "level": "BIOLOGIE",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "category": "NUTRITION",
+      "fonction": "Détection des champs agricoles + attractivité par espèce/culture/saison.",
+      "inputs": [
+        "zones (E11)",
+        "species",
+        "month"
+      ],
+      "outputs": [
+        "fields[]",
+        "mean_attractiveness"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [
+        "zones (annotation)"
+      ],
+      "layers_interdit": [],
+      "depends_on": [
+        "E11"
+      ],
+      "consumed_by": [
+        "E44",
+        "E47"
+      ],
+      "interdictions": [
+        "Ne jamais générer de zones physiques"
+      ]
+    },
+    {
+      "id": "E42",
+      "name": "ENGINE_CANOPÉE_THERMIQUE_Ω",
+      "file": "engines/v8_institutional/engine_canopee_thermique_omega.py",
+      "level": "FONDATION",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "category": "THERMIQUE",
+      "fonction": "Effet thermique canopée (buffer ombre jour / perte nocturne).",
+      "inputs": [
+        "terrain_v10 (E13)",
+        "hour"
+      ],
+      "outputs": [
+        "thermal_buffer_c",
+        "shade_buffer_c_day",
+        "nocturnal_loss_c_night"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [],
+      "layers_interdit": [],
+      "depends_on": [
+        "E13"
+      ],
+      "consumed_by": [
+        "E43",
+        "E48"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E43",
+      "name": "ENGINE_MICROCLIMAT_Ω_ADVANCED",
+      "file": "engines/v8_institutional/engine_microclimat_advanced_omega.py",
+      "level": "FONDATION",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "category": "THERMIQUE",
+      "fonction": "Agrège terrain + canopée + pression + hydro → microclimat local.",
+      "inputs": [
+        "terrain_v10",
+        "canopee (E42)",
+        "pression (E20)",
+        "hydro (E15)"
+      ],
+      "outputs": [
+        "local_temperature_c",
+        "local_stability_index"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [],
+      "layers_interdit": [],
+      "depends_on": [
+        "E13",
+        "E42",
+        "E20",
+        "E15",
+        "E23"
+      ],
+      "consumed_by": [
+        "E46",
+        "E48"
+      ],
+      "interdictions": [
+        "Complète E23, ne le remplace pas"
+      ]
+    },
+    {
+      "id": "E44",
+      "name": "ENGINE_TROPHIC_BEHAVIOR_Ω",
+      "file": "engines/v8_institutional/engine_trophic_behavior_omega.py",
+      "level": "BIOLOGIE",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "category": "COMPORTEMENT",
+      "fonction": "Comportement trophique : type + fenêtre d'activité + pression fourragère.",
+      "inputs": [
+        "species",
+        "hour",
+        "forage_quality (E38)",
+        "champs (E41)"
+      ],
+      "outputs": [
+        "trophic_type",
+        "activity_window",
+        "activity_score",
+        "foraging_pressure_index"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [],
+      "layers_interdit": [],
+      "depends_on": [
+        "E08",
+        "E38",
+        "E41"
+      ],
+      "consumed_by": [
+        "E48"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E45",
+      "name": "ENGINE_SOCIAL_STRUCTURE_Ω",
+      "file": "engines/v8_institutional/engine_social_structure_omega.py",
+      "level": "BIOLOGIE",
+      "role": "SECONDAIRE",
+      "priority": "SECONDAIRE",
+      "category": "COMPORTEMENT",
+      "fonction": "Structure sociale espèce : grégaire/solitaire + période de rut.",
+      "inputs": [
+        "species",
+        "month"
+      ],
+      "outputs": [
+        "social_type",
+        "group_avg_size",
+        "in_rut_period"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [],
+      "layers_interdit": [],
+      "depends_on": [
+        "E08"
+      ],
+      "consumed_by": [
+        "E48"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E46",
+      "name": "ENGINE_SANTÉ_PHYSIO_Ω",
+      "file": "engines/v8_institutional/engine_sante_physio_omega.py",
+      "level": "BIOLOGIE",
+      "role": "SECONDAIRE",
+      "priority": "MAJEUR",
+      "category": "PHYSIOLOGIE",
+      "fonction": "Santé physiologique estimée : forage + carence + stress + microclimat.",
+      "inputs": [
+        "species",
+        "forage (E38)",
+        "carence (E39)",
+        "stress (E28)",
+        "microclimat (E43)"
+      ],
+      "outputs": [
+        "health_index_0_1",
+        "health_band",
+        "components"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [],
+      "layers_interdit": [],
+      "depends_on": [
+        "E38",
+        "E39",
+        "E28",
+        "E43"
+      ],
+      "consumed_by": [
+        "E47",
+        "E48"
+      ],
+      "interdictions": []
+    },
+    {
+      "id": "E47",
+      "name": "ENGINE_NUTRITIONAL_ATTRACTIVENESS_Ω",
+      "file": "engines/v8_institutional/engine_nutritional_attractiveness_omega.py",
+      "level": "FUSION",
+      "role": "PRINCIPAL",
+      "priority": "CRITIQUE",
+      "category": "SYNTHÈSE",
+      "fonction": "Score synthèse attractivité nutritionnelle 0-1 avec 4 bandes (FAIBLE → ULTIME).",
+      "inputs": [
+        "species",
+        "forage (E38)",
+        "champs (E41)",
+        "sol (E37)",
+        "recettes (E40)",
+        "sante (E46)"
+      ],
+      "outputs": [
+        "attractiveness_score_0_1",
+        "attractiveness_band",
+        "components"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [
+        "salines (paramétrage)",
+        "hotspots (paramétrage)"
+      ],
+      "layers_interdit": [],
+      "depends_on": [
+        "E37",
+        "E38",
+        "E40",
+        "E41",
+        "E46"
+      ],
+      "consumed_by": [
+        "E48"
+      ],
+      "interdictions": [
+        "Lecture seule"
+      ]
+    },
+    {
+      "id": "E48",
+      "name": "ENGINE_OPTIMISATION_HABITAT_Ω",
+      "file": "engines/v8_institutional/engine_optimisation_habitat_omega.py",
+      "level": "FUSION",
+      "role": "PRINCIPAL",
+      "priority": "CRITIQUE",
+      "category": "SYNTHÈSE",
+      "fonction": "Score ULTIME habitat optimisé 0-1 : synthèse finale TERRITOIRE_Ω.",
+      "inputs": [
+        "species",
+        "attractiveness (E47)",
+        "trophic (E44)",
+        "social (E45)",
+        "sante (E46)",
+        "microclimat (E43)",
+        "connectivity (E27)"
+      ],
+      "outputs": [
+        "habitat_optimisation_score_0_1",
+        "habitat_band",
+        "recommendation"
+      ],
+      "layers_primaire": [],
+      "layers_secondaire": [
+        "rendu (sur-couche RENDUΩ)"
+      ],
+      "layers_interdit": [
+        "rendu brut"
+      ],
+      "depends_on": [
+        "E47",
+        "E44",
+        "E45",
+        "E46",
+        "E43",
+        "E27"
+      ],
+      "consumed_by": [
+        "E36"
+      ],
+      "interdictions": [
+        "Aucune modification du bundle V20"
+      ]
+    }
+  ],
+  "tables": {
+    "by_level": {
+      "VERROU": 2,
+      "FUSION": 13,
+      "BIOLOGIE": 13,
+      "FONDATION": 17,
+      "GOUVERNANCE": 2,
+      "RENDU": 1
+    },
+    "by_priority": {
+      "CRITIQUE": 16,
+      "MAJEUR": 26,
+      "SECONDAIRE": 6
+    },
+    "by_role": {
+      "PRINCIPAL": 23,
+      "SECONDAIRE": 25
+    },
+    "by_category_supra_bio": {
+      "NUTRITION": [
+        "E37",
+        "E38",
+        "E39",
+        "E40",
+        "E41"
+      ],
+      "THERMIQUE": [
+        "E42",
+        "E43"
+      ],
+      "COMPORTEMENT": [
+        "E44",
+        "E45"
+      ],
+      "PHYSIOLOGIE": [
+        "E46"
+      ],
+      "SYNTHÈSE": [
+        "E47",
+        "E48"
+      ]
+    },
+    "engine_to_level": {
+      "E01": "VERROU",
+      "E02": "VERROU",
+      "E03": "FUSION",
+      "E04": "FUSION",
+      "E05": "FUSION",
+      "E06": "FUSION",
+      "E07": "BIOLOGIE",
+      "E08": "BIOLOGIE",
+      "E09": "BIOLOGIE",
+      "E10": "FUSION",
+      "E11": "FONDATION",
+      "E12": "FONDATION",
+      "E13": "FONDATION",
+      "E14": "FONDATION",
+      "E15": "FONDATION",
+      "E16": "FONDATION",
+      "E17": "FONDATION",
+      "E18": "FONDATION",
+      "E19": "FONDATION",
+      "E20": "FONDATION",
+      "E21": "FONDATION",
+      "E22": "FONDATION",
+      "E23": "FONDATION",
+      "E24": "FONDATION",
+      "E25": "FONDATION",
+      "E26": "BIOLOGIE",
+      "E27": "FUSION",
+      "E28": "BIOLOGIE",
+      "E29": "FUSION",
+      "E30": "FUSION",
+      "E31": "FUSION",
+      "E32": "FUSION",
+      "E33": "BIOLOGIE",
+      "E34": "GOUVERNANCE",
+      "E35": "GOUVERNANCE",
+      "E36": "RENDU",
+      "E37": "BIOLOGIE",
+      "E38": "BIOLOGIE",
+      "E39": "BIOLOGIE",
+      "E40": "FUSION",
+      "E41": "BIOLOGIE",
+      "E42": "FONDATION",
+      "E43": "FONDATION",
+      "E44": "BIOLOGIE",
+      "E45": "BIOLOGIE",
+      "E46": "BIOLOGIE",
+      "E47": "FUSION",
+      "E48": "FUSION"
+    },
+    "engine_to_priority": {
+      "E01": "CRITIQUE",
+      "E02": "CRITIQUE",
+      "E03": "CRITIQUE",
+      "E04": "MAJEUR",
+      "E05": "CRITIQUE",
+      "E06": "CRITIQUE",
+      "E07": "CRITIQUE",
+      "E08": "MAJEUR",
+      "E09": "SECONDAIRE",
+      "E10": "CRITIQUE",
+      "E11": "CRITIQUE",
+      "E12": "MAJEUR",
+      "E13": "CRITIQUE",
+      "E14": "MAJEUR",
+      "E15": "MAJEUR",
+      "E16": "MAJEUR",
+      "E17": "SECONDAIRE",
+      "E18": "CRITIQUE",
+      "E19": "CRITIQUE",
+      "E20": "MAJEUR",
+      "E21": "MAJEUR",
+      "E22": "MAJEUR",
+      "E23": "MAJEUR",
+      "E24": "SECONDAIRE",
+      "E25": "SECONDAIRE",
+      "E26": "MAJEUR",
+      "E27": "MAJEUR",
+      "E28": "MAJEUR",
+      "E29": "CRITIQUE",
+      "E30": "MAJEUR",
+      "E31": "MAJEUR",
+      "E32": "SECONDAIRE",
+      "E33": "MAJEUR",
+      "E34": "MAJEUR",
+      "E35": "CRITIQUE",
+      "E36": "CRITIQUE",
+      "E37": "MAJEUR",
+      "E38": "MAJEUR",
+      "E39": "MAJEUR",
+      "E40": "MAJEUR",
+      "E41": "MAJEUR",
+      "E42": "MAJEUR",
+      "E43": "MAJEUR",
+      "E44": "MAJEUR",
+      "E45": "SECONDAIRE",
+      "E46": "MAJEUR",
+      "E47": "CRITIQUE",
+      "E48": "CRITIQUE"
+    },
+    "engine_to_category": {
+      "E01": "CORE",
+      "E02": "CORE",
+      "E03": "CORE",
+      "E04": "CORE",
+      "E05": "CORE",
+      "E06": "CORE",
+      "E07": "CORE",
+      "E08": "CORE",
+      "E09": "CORE",
+      "E10": "CORE",
+      "E11": "CORE",
+      "E12": "CORE",
+      "E13": "CORE",
+      "E14": "CORE",
+      "E15": "CORE",
+      "E16": "CORE",
+      "E17": "CORE",
+      "E18": "CORE",
+      "E19": "CORE",
+      "E20": "CORE",
+      "E21": "CORE",
+      "E22": "CORE",
+      "E23": "CORE",
+      "E24": "CORE",
+      "E25": "CORE",
+      "E26": "CORE",
+      "E27": "CORE",
+      "E28": "CORE",
+      "E29": "CORE",
+      "E30": "CORE",
+      "E31": "CORE",
+      "E32": "CORE",
+      "E33": "CORE",
+      "E34": "CORE",
+      "E35": "CORE",
+      "E36": "CORE",
+      "E37": "NUTRITION",
+      "E38": "NUTRITION",
+      "E39": "NUTRITION",
+      "E40": "NUTRITION",
+      "E41": "NUTRITION",
+      "E42": "THERMIQUE",
+      "E43": "THERMIQUE",
+      "E44": "COMPORTEMENT",
+      "E45": "COMPORTEMENT",
+      "E46": "PHYSIOLOGIE",
+      "E47": "SYNTHÈSE",
+      "E48": "SYNTHÈSE"
+    }
+  },
+  "graphs": {
+    "dependencies_upstream": {
+      "E01": [],
+      "E02": [
+        "E01"
+      ],
+      "E03": [
+        "E02"
+      ],
+      "E04": [
+        "E02",
+        "E03"
+      ],
+      "E05": [
+        "E02",
+        "E03",
+        "E04"
+      ],
+      "E06": [
+        "E02",
+        "E03",
+        "E04",
+        "E05",
+        "E11"
+      ],
+      "E07": [],
+      "E08": [
+        "E07"
+      ],
+      "E09": [
+        "E07"
+      ],
+      "E10": [
+        "E02",
+        "E03",
+        "E04",
+        "E05",
+        "E06",
+        "E07",
+        "E11",
+        "E27"
+      ],
+      "E11": [
+        "E13",
+        "E15",
+        "E16"
+      ],
+      "E12": [
+        "E11"
+      ],
+      "E13": [],
+      "E14": [
+        "E13",
+        "E15"
+      ],
+      "E15": [],
+      "E16": [],
+      "E17": [
+        "E15"
+      ],
+      "E18": [
+        "E19"
+      ],
+      "E19": [],
+      "E20": [],
+      "E21": [
+        "E19",
+        "E07"
+      ],
+      "E22": [
+        "E13",
+        "E19"
+      ],
+      "E23": [
+        "E13"
+      ],
+      "E24": [],
+      "E25": [],
+      "E26": [
+        "E07",
+        "E14"
+      ],
+      "E27": [
+        "E11",
+        "E02"
+      ],
+      "E28": [],
+      "E29": [
+        "E02",
+        "E06",
+        "E11",
+        "E18",
+        "E20",
+        "E24",
+        "E26",
+        "E28"
+      ],
+      "E30": [
+        "E29",
+        "E02"
+      ],
+      "E31": [
+        "E08",
+        "E11",
+        "E14"
+      ],
+      "E32": [
+        "E21",
+        "E29"
+      ],
+      "E33": [],
+      "E34": [
+        "ALL"
+      ],
+      "E35": [
+        "E11",
+        "E13",
+        "E14",
+        "E15",
+        "E16",
+        "E18",
+        "E19",
+        "E20",
+        "E21",
+        "E22",
+        "E23",
+        "E24",
+        "E26",
+        "E27",
+        "E28",
+        "E29",
+        "E30",
+        "E31",
+        "E32",
+        "E33"
+      ],
+      "E36": [
+        "E35",
+        "E07",
+        "E10"
+      ],
+      "E37": [
+        "E16"
+      ],
+      "E38": [
+        "E14"
+      ],
+      "E39": [
+        "E37",
+        "E38",
+        "E07",
+        "E08"
+      ],
+      "E40": [
+        "E39",
+        "E31"
+      ],
+      "E41": [
+        "E11"
+      ],
+      "E42": [
+        "E13"
+      ],
+      "E43": [
+        "E13",
+        "E42",
+        "E20",
+        "E15",
+        "E23"
+      ],
+      "E44": [
+        "E08",
+        "E38",
+        "E41"
+      ],
+      "E45": [
+        "E08"
+      ],
+      "E46": [
+        "E38",
+        "E39",
+        "E28",
+        "E43"
+      ],
+      "E47": [
+        "E37",
+        "E38",
+        "E40",
+        "E41",
+        "E46"
+      ],
+      "E48": [
+        "E47",
+        "E44",
+        "E45",
+        "E46",
+        "E43",
+        "E27"
+      ]
+    },
+    "dependencies_downstream": {
+      "E01": [
+        "E02"
+      ],
+      "E02": [
+        "E03",
+        "E04",
+        "E05",
+        "E06",
+        "E10",
+        "E27",
+        "E29",
+        "E30"
+      ],
+      "E03": [
+        "E04",
+        "E05",
+        "E06",
+        "E10"
+      ],
+      "E04": [
+        "E05",
+        "E06",
+        "E10"
+      ],
+      "E05": [
+        "E06",
+        "E10"
+      ],
+      "E11": [
+        "E06",
+        "E10",
+        "E12",
+        "E27",
+        "E29",
+        "E31",
+        "E35",
+        "E41"
+      ],
+      "E07": [
+        "E08",
+        "E09",
+        "E10",
+        "E21",
+        "E26",
+        "E36",
+        "E39"
+      ],
+      "E06": [
+        "E10",
+        "E29"
+      ],
+      "E27": [
+        "E10",
+        "E35",
+        "E48"
+      ],
+      "E13": [
+        "E11",
+        "E14",
+        "E22",
+        "E23",
+        "E35",
+        "E42",
+        "E43"
+      ],
+      "E15": [
+        "E11",
+        "E14",
+        "E17",
+        "E35",
+        "E43"
+      ],
+      "E16": [
+        "E11",
+        "E35",
+        "E37"
+      ],
+      "E19": [
+        "E18",
+        "E21",
+        "E22",
+        "E35"
+      ],
+      "E14": [
+        "E26",
+        "E31",
+        "E35",
+        "E38"
+      ],
+      "E18": [
+        "E29",
+        "E35"
+      ],
+      "E20": [
+        "E29",
+        "E35",
+        "E43"
+      ],
+      "E24": [
+        "E29",
+        "E35"
+      ],
+      "E26": [
+        "E29",
+        "E35"
+      ],
+      "E28": [
+        "E29",
+        "E35",
+        "E46"
+      ],
+      "E29": [
+        "E30",
+        "E32",
+        "E35"
+      ],
+      "E08": [
+        "E31",
+        "E39",
+        "E44",
+        "E45"
+      ],
+      "E21": [
+        "E32",
+        "E35"
+      ],
+      "E22": [
+        "E35"
+      ],
+      "E23": [
+        "E35",
+        "E43"
+      ],
+      "E30": [
+        "E35"
+      ],
+      "E31": [
+        "E35",
+        "E40"
+      ],
+      "E32": [
+        "E35"
+      ],
+      "E33": [
+        "E35"
+      ],
+      "E35": [
+        "E36"
+      ],
+      "E10": [
+        "E36"
+      ],
+      "E37": [
+        "E39",
+        "E47"
+      ],
+      "E38": [
+        "E39",
+        "E44",
+        "E46",
+        "E47"
+      ],
+      "E39": [
+        "E40",
+        "E46"
+      ],
+      "E42": [
+        "E43"
+      ],
+      "E41": [
+        "E44",
+        "E47"
+      ],
+      "E43": [
+        "E46",
+        "E48"
+      ],
+      "E40": [
+        "E47"
+      ],
+      "E46": [
+        "E47",
+        "E48"
+      ],
+      "E47": [
+        "E48"
+      ],
+      "E44": [
+        "E48"
+      ],
+      "E45": [
+        "E48"
+      ]
+    },
+    "layers_map": {
+      "TOUS — module read-only par essence": {
+        "primary": [],
+        "secondary": [],
+        "interdit": [
+          "E01"
+        ]
+      },
+      "corridors_v30": {
+        "primary": [
+          "E02"
+        ],
+        "secondary": [],
+        "interdit": []
+      },
+      "affuts (déléguée à E07)": {
+        "primary": [],
+        "secondary": [],
+        "interdit": [
+          "E02"
+        ]
+      },
+      "salines (déléguée à E08)": {
+        "primary": [],
+        "secondary": [],
+        "interdit": [
+          "E02"
+        ]
+      },
+      "rendu (délégué à E36)": {
+        "primary": [],
+        "secondary": [],
+        "interdit": [
+          "E02"
+        ]
+      },
+      "corridors_v30 (annotation)": {
+        "primary": [
+          "E03"
+        ],
+        "secondary": [],
+        "interdit": []
+      },
+      "affuts": {
+        "primary": [
+          "E07",
+          "E29"
+        ],
+        "secondary": [
+          "E09"
+        ],
+        "interdit": [
+          "E03",
+          "E04",
+          "E05",
+          "E06",
+          "E31"
+        ]
+      },
+      "rendu": {
+        "primary": [],
+        "secondary": [],
+        "interdit": [
+          "E03",
+          "E06",
+          "E08",
+          "E10",
+          "E11",
+          "E13",
+          "E25"
+        ]
+      },
+      "corridors_v30 (path direction)": {
+        "primary": [
+          "E04"
+        ],
+        "secondary": [],
+        "interdit": []
+      },
+      "salines": {
+        "primary": [
+          "E07",
+          "E31"
+        ],
+        "secondary": [],
+        "interdit": [
+          "E04",
+          "E05",
+          "E06"
+        ]
+      },
+      "corridors_v30 (filtrage)": {
+        "primary": [
+          "E05"
+        ],
+        "secondary": [],
+        "interdit": []
+      },
+      "zones": {
+        "primary": [
+          "E10",
+          "E11"
+        ],
+        "secondary": [],
+        "interdit": [
+          "E05"
+        ]
+      },
+      "corridors_v30 (filtrage final)": {
+        "primary": [
+          "E06"
+        ],
+        "secondary": [],
+        "interdit": []
+      },
+      "zones (lecture)": {
+        "primary": [],
+        "secondary": [
+          "E06"
+        ],
+        "interdit": []
+      },
+      "corridors": {
+        "primary": [
+          "E07",
+          "E10"
+        ],
+        "secondary": [],
+        "interdit": [
+          "E11",
+          "E18",
+          "E19",
+          "E21",
+          "E22",
+          "E31",
+          "E32"
+        ]
+      },
+      "hotspots": {
+        "primary": [
+          "E07",
+          "E30"
+        ],
+        "secondary": [],
+        "interdit": []
+      },
+      "contamination": {
+        "primary": [
+          "E07",
+          "E21"
+        ],
+        "secondary": [],
+        "interdit": []
+      },
+      "wind_vectors": {
+        "primary": [
+          "E07",
+          "E18"
+        ],
+        "secondary": [],
+        "interdit": []
+      },
+      "sensoriel_vent_odeurs (neutralisation)": {
+        "primary": [],
+        "secondary": [
+          "E07"
+        ],
+        "interdit": []
+      },
+      "zones (préservées audit territoire)": {
+        "primary": [],
+        "secondary": [],
+        "interdit": [
+          "E07"
+        ]
+      },
+      "habitats_critiques": {
+        "primary": [
+          "E14"
+        ],
+        "secondary": [
+          "E33"
+        ],
+        "interdit": [
+          "E07"
+        ]
+      },
+      "corridors (paramétrage)": {
+        "primary": [],
+        "secondary": [
+          "E08"
+        ],
+        "interdit": []
+      },
+      "affuts (paramétrage)": {
+        "primary": [],
+        "secondary": [
+          "E08"
+        ],
+        "interdit": []
+      },
+      "habitats_critiques (audit)": {
+        "primary": [
+          "E10"
+        ],
+        "secondary": [],
+        "interdit": []
+      },
+      "affuts (générés ailleurs)": {
+        "primary": [],
+        "secondary": [],
+        "interdit": [
+          "E10"
+        ]
+      },
+      "zones (rendu)": {
+        "primary": [
+          "E12"
+        ],
+        "secondary": [],
+        "interdit": []
+      },
+      "terrain": {
+        "primary": [
+          "E13"
+        ],
+        "secondary": [],
+        "interdit": []
+      },
+      "biologie": {
+        "primary": [],
+        "secondary": [],
+        "interdit": [
+          "E13"
+        ]
+      },
+      "hydrologie": {
+        "primary": [
+          "E15"
+        ],
+        "secondary": [
+          "E17"
+        ],
+        "interdit": []
+      },
+      "rendu corridors": {
+        "primary": [
+          "E36"
+        ],
+        "secondary": [],
+        "interdit": [
+          "E15"
+        ]
+      },
+      "zones (paramétrage)": {
+        "primary": [],
+        "secondary": [
+          "E16",
+          "E23",
+          "E28",
+          "E33",
+          "E37"
+        ],
+        "interdit": []
+      },
+      "affuts directionnels": {
+        "primary": [],
+        "secondary": [],
+        "interdit": [
+          "E18"
+        ]
+      },
+      "wind_truth": {
+        "primary": [
+          "E19"
+        ],
+        "secondary": [],
+        "interdit": []
+      },
+      "son_cone": {
+        "primary": [
+          "E19"
+        ],
+        "secondary": [],
+        "interdit": []
+      },
+      "contamination_zones": {
+        "primary": [
+          "E21"
+        ],
+        "secondary": [],
+        "interdit": []
+      },
+      "son_cone (paramétrage)": {
+        "primary": [],
+        "secondary": [
+          "E22"
+        ],
+        "interdit": []
+      },
+      "corridors (annotation)": {
+        "primary": [],
+        "secondary": [
+          "E27"
+        ],
+        "interdit": []
+      },
+      "corridors (consume seulement)": {
+        "primary": [],
+        "secondary": [],
+        "interdit": [
+          "E29"
+        ]
+      },
+      "heatmap": {
+        "primary": [
+          "E32"
+        ],
+        "secondary": [],
+        "interdit": []
+      },
+      "affuts (consume seulement)": {
+        "primary": [],
+        "secondary": [],
+        "interdit": [
+          "E32"
+        ]
+      },
+      "TOUS — read-only": {
+        "primary": [],
+        "secondary": [],
+        "interdit": [
+          "E34"
+        ]
+      },
+      "bundle complet": {
+        "primary": [
+          "E35"
+        ],
+        "secondary": [],
+        "interdit": []
+      },
+      "registry_lock_omega (V30)": {
+        "primary": [],
+        "secondary": [],
+        "interdit": [
+          "E35"
+        ]
+      },
+      "rendu affuts": {
+        "primary": [
+          "E36"
+        ],
+        "secondary": [],
+        "interdit": []
+      },
+      "rendu zones": {
+        "primary": [
+          "E36"
+        ],
+        "secondary": [],
+        "interdit": []
+      },
+      "rendu salines": {
+        "primary": [
+          "E36"
+        ],
+        "secondary": [],
+        "interdit": []
+      },
+      "rendu hotspots": {
+        "primary": [
+          "E36"
+        ],
+        "secondary": [],
+        "interdit": []
+      },
+      "rendu wind_vectors": {
+        "primary": [],
+        "secondary": [
+          "E36"
+        ],
+        "interdit": []
+      },
+      "rendu contamination": {
+        "primary": [],
+        "secondary": [
+          "E36"
+        ],
+        "interdit": []
+      },
+      "calcul biologique": {
+        "primary": [],
+        "secondary": [],
+        "interdit": [
+          "E36"
+        ]
+      },
+      "modification bundle": {
+        "primary": [],
+        "secondary": [],
+        "interdit": [
+          "E36"
+        ]
+      },
+      "habitats_critiques (annotation)": {
+        "primary": [],
+        "secondary": [
+          "E38"
+        ],
+        "interdit": []
+      },
+      "salines (paramétrage)": {
+        "primary": [
+          "E40"
+        ],
+        "secondary": [
+          "E47"
+        ],
+        "interdit": []
+      },
+      "zones (annotation)": {
+        "primary": [],
+        "secondary": [
+          "E41"
+        ],
+        "interdit": []
+      },
+      "hotspots (paramétrage)": {
+        "primary": [],
+        "secondary": [
+          "E47"
+        ],
+        "interdit": []
+      },
+      "rendu (sur-couche RENDUΩ)": {
+        "primary": [],
+        "secondary": [
+          "E48"
+        ],
+        "interdit": []
+      },
+      "rendu brut": {
+        "primary": [],
+        "secondary": [],
+        "interdit": [
+          "E48"
+        ]
+      }
+    }
+  },
+  "pipeline_territoire_omega_ultime": [
+    {
+      "step": 1,
+      "level": "VERROU",
+      "purpose": "Garantie cryptographique V30",
+      "engines": [
+        "E01",
+        "E02"
+      ]
+    },
+    {
+      "step": 2,
+      "level": "FONDATION",
+      "purpose": "Couches socle terrain / hydro / sol / climat / vent / canopée thermique",
+      "engines": [
+        "E11",
+        "E12",
+        "E13",
+        "E14",
+        "E15",
+        "E16",
+        "E17",
+        "E18",
+        "E19",
+        "E20",
+        "E21",
+        "E22",
+        "E23",
+        "E24",
+        "E25",
+        "E42",
+        "E43"
+      ]
+    },
+    {
+      "step": 3,
+      "level": "BIOLOGIE",
+      "purpose": "Profils espèces + masque BIO + population + NUTRITION + COMPORTEMENT + PHYSIOLOGIE",
+      "engines": [
+        "E07",
+        "E08",
+        "E09",
+        "E26",
+        "E28",
+        "E33",
+        "E37",
+        "E38",
+        "E39",
+        "E41",
+        "E44",
+        "E45",
+        "E46"
+      ]
+    },
+    {
+      "step": 4,
+      "level": "FUSION",
+      "purpose": "XIX-P1/P2 · VITAUX · affuts/salines/hotspots · SYNTHÈSE (attractivité + habitat ULTIME)",
+      "engines": [
+        "E03",
+        "E04",
+        "E05",
+        "E06",
+        "E10",
+        "E27",
+        "E29",
+        "E30",
+        "E31",
+        "E32",
+        "E40",
+        "E47",
+        "E48"
+      ]
+    },
+    {
+      "step": 5,
+      "level": "RENDU",
+      "purpose": "Renderer institutionnel PHASE-D (palette verte Object.freeze)",
+      "engines": [
+        "E36"
+      ]
+    },
+    {
+      "step": 6,
+      "level": "GOUVERNANCE",
+      "purpose": "Audit / conformité / traçabilité (read-only)",
+      "engines": [
+        "E34",
+        "E35"
+      ]
+    }
+  ],
+  "chaines_institutionnelles_ultime": {
+    "C1_vent_contam_son": [
+      "E19",
+      "E18",
+      "E21",
+      "E22"
+    ],
+    "C2_corridors_zones_affuts_salines_hotspots": [
+      "E02",
+      "E03",
+      "E04",
+      "E05",
+      "E06",
+      "E11",
+      "E29",
+      "E30",
+      "E31"
+    ],
+    "C3_bio_vitaux_rendu": [
+      "E07",
+      "E06",
+      "E36"
+    ],
+    "C4_nutrition_synthese_habitat_ultime": [
+      "E37",
+      "E38",
+      "E39",
+      "E40",
+      "E41",
+      "E46",
+      "E47",
+      "E48"
+    ],
+    "C5_terrain_microclimat_canopee_habitat": [
+      "E13",
+      "E14",
+      "E15",
+      "E16",
+      "E23",
+      "E42",
+      "E43"
+    ],
+    "C6_comportement_social": [
+      "E08",
+      "E44",
+      "E45"
+    ]
+  },
+  "v30_sha256_inviolated": {
+    "registry_lock_omega.py": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+    "engine_ia_corridors_omega.py": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3"
+  },
+  "pytest": {
+    "file_new": "/app/backend/tests/test_phase_supra_bio_nutrition.py",
+    "tests_count": 13,
+    "result": "13 PASSED"
+  },
+  "deliverables": {
+    "json": "/reports/audit_territoire_omega_ultime/SYNTHESE_TERRITOIRE_OMEGA_ULTIME.json",
+    "html": "/reports/audit_territoire_omega_ultime/RAPPORT_TERRITOIRE_OMEGA_ULTIME.html"
+  }
+}

@@ -27,6 +27,42 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE-SUPRA-BIO-NUTRITION_Ω + PHASE-TERRITOIRE_Ω_ULTIME (2026-04-27)**
+  Extension biologique suprême de TERRITOIRE_Ω : **12 nouveaux engines** ajoutés
+  strictement en aval du moteur V30 verrouillé. Orchestration des 48 engines
+  totaux. Backend READ-ONLY respecté, V30/XIX/VITAUX non modifiés.
+  - **NUTRITION (5 engines)** :
+    - E37 `ENGINE_SOL_NUTRIMENTS_Ω` (N/P/K/Ca/Mg/OM par texture)
+    - E38 `ENGINE_FORAGE_QUALITÉ_Ω` (habitat × saison)
+    - E39 `ENGINE_CARENCE_NUTRITIONNELLE_Ω` (besoins espèce vs disponibilité)
+    - E40 `ENGINE_RECETTES_SALINES_Ω` (formulations adaptées)
+    - E41 `ENGINE_CHAMPS_NOURRICIERS_Ω` (agricole × attractivité × saison)
+  - **THERMIQUE (2)** :
+    - E42 `ENGINE_CANOPÉE_THERMIQUE_Ω` (buffer ombre / perte nocturne)
+    - E43 `ENGINE_MICROCLIMAT_Ω_ADVANCED` (agrégation 4 sources)
+  - **COMPORTEMENT (2)** :
+    - E44 `ENGINE_TROPHIC_BEHAVIOR_Ω` (dawn/day/dusk/night + pression fourragère)
+    - E45 `ENGINE_SOCIAL_STRUCTURE_Ω` (grégaire/solitaire + rut)
+  - **PHYSIOLOGIE (1)** :
+    - E46 `ENGINE_SANTÉ_PHYSIO_Ω` (index 0-1, bands EXCELLENT→CRITIQUE)
+  - **SYNTHÈSE (2)** :
+    - E47 `ENGINE_NUTRITIONAL_ATTRACTIVENESS_Ω` (score synthèse + bandes)
+    - E48 `ENGINE_OPTIMISATION_HABITAT_Ω` (score ULTIME habitat + recommandation)
+  - **48 engines orchestrés** (36 canoniques + 12 SUPRA-BIO-NUTRITION).
+  - **6 chaînes institutionnelles** :
+    C1 vent→contam→son · C2 corridors→zones→affûts→salines→hotspots ·
+    C3 BIO-MASK→VITAUX→RENDUΩ · C4 nutrition→synthèse→habitat ULTIME ·
+    C5 terrain→microclimat→canopée→habitat · C6 comportement→social.
+  - **Pipeline TERRITOIRE_Ω_ULTIME** en 6 étapes :
+    VERROU → FONDATION → BIOLOGIE → FUSION → RENDU → GOUVERNANCE.
+  - **13 nouveaux tests pytest** dédiés : `tests/test_phase_supra_bio_nutrition.py`.
+    Régression globale : **107 PASSED · 3 SKIPPED · 0 FAILED**.
+  - **V30 SHA-256 INVIOLÉS** : `fb765b94…ecb0c` + `bcb1e3a6…39d3`.
+  - **Livrables HTTPS** :
+    - `RAPPORT_TERRITOIRE_OMEGA_ULTIME.html` (21.6 KB · 20 sections · rendu dynamique JS)
+    - `SYNTHESE_TERRITOIRE_OMEGA_ULTIME.json` (74.4 KB · 48 engines + 6 chaînes + pipeline + tables)
+    - `phase_territoire_ultime_preview.jpeg` (capture HD 1920×1080)
+
 - **PHASE-TERRITOIRE-Ω-AUDIT_INTER-ENGINES_ULTIME / PHASE-ENGINE_CANONIQUE_Ω (2026-04-27)**
   Constitution institutionnelle des **36 engines** de TERRITOIRE_Ω. Documentation
   READ-ONLY — aucun moteur cryptographique modifié. Préparation FUSION TERRITOIRE_Ω.

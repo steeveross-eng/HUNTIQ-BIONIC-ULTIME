@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>RAPPORT TERRITOIRE_Ω_ULTIME — Orchestration suprême 48 engines · BCE-4X</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root { --ink:#0c1118; --paper:#f5f6f8; --ok:#16a34a; --gold:#b08800; --rule:#1e293b;
+        --primary:#00A676; --halo-i:#4CC99A; --halo-o:#B2F2D9;
+        --crit:#dc2626; --maj:#f59e0b; --sec:#64748b; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--paper); color:var(--ink);
+       font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; line-height:1.55; }
+header { background:linear-gradient(140deg,#0c1118 0%,#1e293b 100%); color:#fff;
+         padding:32px 48px; border-bottom:4px solid var(--gold); position:relative; overflow:hidden; }
+header::after { content:''; position:absolute; right:-80px; top:50%; transform:translateY(-50%);
+                width:260px; height:260px; border-radius:50%;
+                background:radial-gradient(circle, var(--primary), transparent 70%); opacity:0.22; }
+header h1 { margin:0 0 4px; font-size:22px; letter-spacing:.04em; font-weight:700; position:relative; z-index:2; }
+header .sub { font-size:12px; opacity:.78; letter-spacing:.10em; text-transform:uppercase; position:relative; z-index:2; }
+header .commandant { margin-top:14px; padding:6px 12px; display:inline-block;
+  background:rgba(176,136,0,.18); border:1px solid var(--gold); border-radius:3px;
+  font-size:11px; letter-spacing:.10em; text-transform:uppercase; color:#fcd34d; position:relative; z-index:2; }
+main { max-width:1320px; margin:0 auto; padding:32px 48px 80px; }
+section { margin:32px 0; scroll-margin-top:40px; }
+section.toc { background:#fff; border:1px solid #d4d4d8; border-radius:6px; padding:18px 24px; }
+section.toc ol { margin:0; padding-left:20px; columns:2; column-gap:32px; }
+section.toc li { margin:5px 0; font-size:13px; }
+section.toc a { color:#1e3a5f; text-decoration:none; }
+h2 { font-size:18px; letter-spacing:.04em; border-bottom:2px solid var(--primary);
+     padding-bottom:6px; margin-bottom:14px; color:var(--rule); }
+h3 { font-size:14px; margin:14px 0 6px; color:#334155; }
+table { border-collapse:collapse; width:100%; font-size:11.5px; margin-top:6px; }
+th, td { padding:7px 9px; border:1px solid #d4d4d8; text-align:left; vertical-align:top; }
+th { background:#e2e8f0; letter-spacing:.05em; font-weight:600; font-size:11px; }
+td.id { font-family:ui-monospace,monospace; font-weight:700; color:var(--rule); white-space:nowrap; }
+.pill { padding:1px 7px; font-size:10px; border-radius:3px; letter-spacing:.04em; font-weight:600; display:inline-block; }
+.pill.ok { background:#dcfce7; color:#14532d; }
+.pill.crit { background:#fee2e2; color:#7f1d1d; }
+.pill.maj  { background:#fef3c7; color:#78350f; }
+.pill.sec  { background:#e2e8f0; color:#334155; }
+.pill.locked{ background:#fef3c7; color:#78350f; }
+.pill.new  { background:#dcfce7; color:#065f46; font-weight:700; }
+.lvl-VERROU     { background:#fef3c7; color:#78350f; }
+.lvl-FONDATION  { background:#cffafe; color:#155e75; }
+.lvl-BIOLOGIE   { background:#dcfce7; color:#14532d; }
+.lvl-FUSION     { background:#ddd6fe; color:#5b21b6; }
+.lvl-RENDU      { background:#e0f2e9; color:#065f46; }
+.lvl-GOUVERNANCE{ background:#f3e8ff; color:#581c87; }
+.cat-NUTRITION  { background:#fff7ed; color:#9a3412; }
+.cat-THERMIQUE  { background:#fef2f2; color:#7f1d1d; }
+.cat-COMPORTEMENT{ background:#eff6ff; color:#1e40af; }
+.cat-PHYSIOLOGIE{ background:#f0fdf4; color:#14532d; }
+.cat-SYNTHÈSE   { background:#faf5ff; color:#581c87; }
+.cat-CORE       { background:#f1f5f9; color:#334155; }
+.kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:16px 0; }
+.kpi { background:#fff; border:1px solid #d4d4d8; border-radius:6px; padding:14px 18px; text-align:center; }
+.kpi b { display:block; font-size:24px; color:var(--primary); font-family:ui-monospace,monospace; }
+.kpi span { font-size:11px; color:#64748b; letter-spacing:.06em; text-transform:uppercase; }
+.flow-step { background:#fff; border-left:4px solid var(--primary); padding:10px 14px;
+             margin:8px 0; border-radius:4px; font-size:13px; }
+.flow-step b { color:var(--primary); }
+.flow-step .engines { font-family:ui-monospace,monospace; font-size:11px; color:#475569; margin-top:4px; }
+.chain-card { background:#fff; border:1px solid #d4d4d8; border-radius:6px; padding:12px 16px; margin:8px 0; }
+.chain-card h3 { margin:0 0 4px; color:#1e293b; font-size:13px; }
+.chain-card .flow { font-family:ui-monospace,monospace; font-size:11.5px; color:var(--primary); font-weight:600; }
+code { background:#e2e8f0; padding:1px 5px; border-radius:3px; font-size:11px; }
+footer { padding:24px 48px; color:#475569; font-size:11px;
+         border-top:1px solid #d4d4d8; text-align:center; letter-spacing:.04em; }
+</style>
+</head>
+<body>
+<header>
+  <h1>RAPPORT TERRITOIRE_Ω_ULTIME — Orchestration suprême des 48 engines</h1>
+  <div class="sub">BCE-4X ULTIME ABSOLU · TOP-ABSOLU · BIONIC OS V20-SUPRA · V30 LOCKED · READ-ONLY</div>
+  <div class="commandant">DIRECTIVE COMMANDANT STEEVE-MAX — PHASE-SUPRA-BIO-NUTRITION_Ω + PHASE-TERRITOIRE_Ω_ULTIME · PRÉ-PHASE-E FUSION</div>
+</header>
+<main>
+
+<section class="toc">
+  <h2>Sommaire — 20 sections</h2>
+  <ol>
+    <li><a href="#s01">1) Synthèse exécutive</a></li>
+    <li><a href="#s02">2) Doctrine & règles</a></li>
+    <li><a href="#s03">3) KPI globaux (48 engines)</a></li>
+    <li><a href="#s04">4) 12 nouveaux engines SUPRA-BIO-NUTRITION_Ω</a></li>
+    <li><a href="#s05">5) Catégorie NUTRITION (5 engines)</a></li>
+    <li><a href="#s06">6) Catégorie THERMIQUE (2 engines)</a></li>
+    <li><a href="#s07">7) Catégorie COMPORTEMENT (2 engines)</a></li>
+    <li><a href="#s08">8) Catégorie PHYSIOLOGIE (1 engine)</a></li>
+    <li><a href="#s09">9) Catégorie SYNTHÈSE (2 engines)</a></li>
+    <li><a href="#s10">10) Pipeline TERRITOIRE_Ω_ULTIME</a></li>
+    <li><a href="#s11">11) 6 chaînes institutionnelles</a></li>
+    <li><a href="#s12">12) Matrice ENGINE → LAYER (primaire/secondaire)</a></li>
+    <li><a href="#s13">13) Graphe dépendances 48 engines</a></li>
+    <li><a href="#s14">14) Tableau maître ENGINE × NIVEAU × PRIORITÉ × CATÉGORIE</a></li>
+    <li><a href="#s15">15) Score ULTIME habitat (E47 + E48)</a></li>
+    <li><a href="#s16">16) Tests pytest</a></li>
+    <li><a href="#s17">17) V30 cryptographique inviolé</a></li>
+    <li><a href="#s18">18) Interdictions structurelles globales</a></li>
+    <li><a href="#s19">19) Pré-requis PHASE-E FUSION</a></li>
+    <li><a href="#s20">20) Conclusion institutionnelle</a></li>
+  </ol>
+</section>
+
+<section id="s01">
+  <h2>1) Synthèse exécutive</h2>
+  <p>TERRITOIRE_Ω_ULTIME orchestre désormais <b>48 engines</b> : 36 engines canoniques existants (Phase-Engine_Canonique) + 12 nouveaux engines <b>SUPRA-BIO-NUTRITION_Ω</b> ajoutés strictement en aval du moteur V30 verrouillé. 5 catégories fonctionnelles (NUTRITION, THERMIQUE, COMPORTEMENT, PHYSIOLOGIE, SYNTHÈSE) structurent l'extension biologique. Le pipeline final comprend 6 chaînes institutionnelles. La doctrine BCE-4X est intégralement respectée.</p>
+  <p>
+    <span class="pill locked">V30 LOCKED · INVIOLÉ</span>
+    <span class="pill ok">48 ENGINES ORCHESTRÉS</span>
+    <span class="pill ok">12 NOUVEAUX SUPRA-BIO-NUTRITION</span>
+    <span class="pill ok">6 CHAÎNES INSTITUTIONNELLES</span>
+    <span class="pill ok">13/13 TESTS PASSED</span>
+    <span class="pill ok">PRÉ-PHASE-E PRÊT</span>
+  </p>
+</section>
+
+<section id="s02">
+  <h2>2) Doctrine & règles</h2>
+  <table>
+    <thead><tr><th>Règle</th><th>Statut</th></tr></thead>
+    <tbody>
+      <tr><td>V30 cryptographiquement verrouillé (E01 + E02)</td><td><span class="pill ok">RESPECTÉ</span></td></tr>
+      <tr><td>XIX-P1/P2/P1B (E04, E05) non recomputés</td><td><span class="pill ok">RESPECTÉ</span></td></tr>
+      <tr><td>VITAUX 600m (E06) non recomputé</td><td><span class="pill ok">RESPECTÉ</span></td></tr>
+      <tr><td>Backend READ-ONLY</td><td><span class="pill ok">RESPECTÉ</span></td></tr>
+      <tr><td>Nouveaux engines ajoutés UNIQUEMENT en aval</td><td><span class="pill ok">RESPECTÉ</span></td></tr>
+      <tr><td>Aucune modification des 36 engines canoniques</td><td><span class="pill ok">RESPECTÉ</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s03">
+  <h2>3) KPI globaux (48 engines)</h2>
+  <div class="kpi-grid" id="kpi-grid"></div>
+</section>
+
+<section id="s04">
+  <h2>4) 12 nouveaux engines SUPRA-BIO-NUTRITION_Ω</h2>
+  <table>
+    <thead><tr><th>ID</th><th>Engine</th><th>Catégorie</th><th>Niveau</th><th>Priorité</th><th>Fonction</th></tr></thead>
+    <tbody id="supra-rows"></tbody>
+  </table>
+</section>
+
+<section id="s05">
+  <h2>5) Catégorie NUTRITION (5 engines)</h2>
+  <div id="cat-NUTRITION"></div>
+</section>
+<section id="s06">
+  <h2>6) Catégorie THERMIQUE (2 engines)</h2>
+  <div id="cat-THERMIQUE"></div>
+</section>
+<section id="s07">
+  <h2>7) Catégorie COMPORTEMENT (2 engines)</h2>
+  <div id="cat-COMPORTEMENT"></div>
+</section>
+<section id="s08">
+  <h2>8) Catégorie PHYSIOLOGIE (1 engine)</h2>
+  <div id="cat-PHYSIOLOGIE"></div>
+</section>
+<section id="s09">
+  <h2>9) Catégorie SYNTHÈSE (2 engines)</h2>
+  <div id="cat-SYNTHÈSE"></div>
+</section>
+
+<section id="s10">
+  <h2>10) Pipeline TERRITOIRE_Ω_ULTIME (6 étapes)</h2>
+  <div id="pipeline-flow"></div>
+</section>
+
+<section id="s11">
+  <h2>11) 6 chaînes institutionnelles</h2>
+  <div id="chains"></div>
+</section>
+
+<section id="s12">
+  <h2>12) Matrice ENGINE → LAYER (primaire / secondaire / interdit)</h2>
+  <table>
+    <thead><tr><th>ID</th><th>Engine</th><th>Layers PRIMAIRES</th><th>Layers SECONDAIRES</th><th>Layers INTERDITS</th></tr></thead>
+    <tbody id="layer-matrix"></tbody>
+  </table>
+</section>
+
+<section id="s13">
+  <h2>13) Graphe dépendances 48 engines</h2>
+  <table>
+    <thead><tr><th>ID</th><th>depends_on (amont)</th><th>consumed_by (aval)</th></tr></thead>
+    <tbody id="dep-graph"></tbody>
+  </table>
+</section>
+
+<section id="s14">
+  <h2>14) Tableau maître ENGINE × NIVEAU × PRIORITÉ × CATÉGORIE</h2>
+  <table>
+    <thead><tr><th>ID</th><th>Engine</th><th>Niveau</th><th>Rôle</th><th>Priorité</th><th>Catégorie</th></tr></thead>
+    <tbody id="master-grid"></tbody>
+  </table>
+</section>
+
+<section id="s15">
+  <h2>15) Score ULTIME habitat (E47 + E48)</h2>
+  <p>Les deux engines de synthèse finale produisent le score habitat ULTIME du territoire, pour chaque waypoint et chaque espèce PRESENT.</p>
+  <table>
+    <thead><tr><th>Composante</th><th>Source</th><th>Poids</th></tr></thead>
+    <tbody>
+      <tr><td>E47 — Nutritional Attractiveness</td><td>Forage + Champs + Sol + Recettes + Santé</td><td>30 %</td></tr>
+      <tr><td>E44 — Trophic Pressure</td><td>Activité + fourrage</td><td>20 %</td></tr>
+      <tr><td>E46 — Santé physiologique</td><td>Carence + stress + microclimat</td><td>20 %</td></tr>
+      <tr><td>E27 — Connectivité écologique</td><td>Matrice transitions</td><td>15 %</td></tr>
+      <tr><td>E43 — Microclimat stability</td><td>Terrain + canopée + pression + hydro</td><td>10 %</td></tr>
+      <tr><td>E45 — Group index + rut bonus</td><td>Structure sociale</td><td>5 %</td></tr>
+    </tbody>
+  </table>
+  <p><b>Bandes</b> : ULTIME ≥ 0.85 · HAUT ≥ 0.70 · STANDARD ≥ 0.50 · LIMITÉ &lt; 0.50.</p>
+</section>
+
+<section id="s16">
+  <h2>16) Tests pytest</h2>
+  <table>
+    <thead><tr><th>Suite</th><th>Résultat</th></tr></thead>
+    <tbody>
+      <tr><td><code>tests/test_phase_supra_bio_nutrition.py</code> (NOUVEAU · 13 tests)</td><td><span class="pill ok">13 PASSED</span></td></tr>
+      <tr><td><code>tests/test_phase_d_renduomega_palette.py</code></td><td><span class="pill ok">11 PASSED</span></td></tr>
+      <tr><td><code>tests/test_phase_c_inter_engines_consistency.py</code></td><td><span class="pill ok">10 PASSED</span></td></tr>
+      <tr><td><code>tests/test_phase_a_audit_corrections.py</code></td><td><span class="pill ok">8 PASSED</span></td></tr>
+      <tr><td><code>tests/test_phase_xviii_bio_presence_mask.py</code></td><td><span class="pill ok">11 PASSED</span></td></tr>
+      <tr><td><b>Bilan</b></td><td><b>107+ PASSED · 0 FAILED</b></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s17">
+  <h2>17) V30 cryptographique inviolé</h2>
+  <table>
+    <thead><tr><th>Module V30</th><th>SHA-256</th><th>Statut</th></tr></thead>
+    <tbody>
+      <tr><td><code>registry_lock_omega.py</code></td><td><code>fb765b94…ecb0c</code></td><td><span class="pill ok">INVIOLÉ</span></td></tr>
+      <tr><td><code>engine_ia_corridors_omega.py</code></td><td><code>bcb1e3a6…39d3</code></td><td><span class="pill ok">INVIOLÉ</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s18">
+  <h2>18) Interdictions structurelles globales</h2>
+  <ul>
+    <li>Aucun des 12 nouveaux engines ne consomme directement V30 (E01/E02)</li>
+    <li>Aucun des 12 nouveaux engines ne modifie corridors/affûts/salines/hotspots/zones</li>
+    <li>Les synthèses E47/E48 sont en LECTURE SEULE (pas d'effet sur bundle V20)</li>
+    <li>Les engines NUTRITION consomment des couches écologiques existantes (E11, E14, E16) sans les altérer</li>
+    <li>Les engines SANTÉ/COMPORTEMENT/SOCIAL ne génèrent aucune couche géographique</li>
+  </ul>
+</section>
+
+<section id="s19">
+  <h2>19) Pré-requis PHASE-E FUSION TERRITOIRE_Ω</h2>
+  <ul>
+    <li>✅ 48 engines orchestrés et documentés</li>
+    <li>✅ 6 chaînes institutionnelles cartographiées (3 originales + 3 SUPRA-BIO-NUTRITION)</li>
+    <li>✅ Interdictions structurelles formalisées (48 × 8 critères)</li>
+    <li>✅ Score ULTIME habitat (E47 + E48) disponible</li>
+    <li>✅ V30 SHA-256 inviolés</li>
+    <li>✅ Renderer PHASE-D verrouillé (palette verte institutionnelle)</li>
+    <li>✅ Masque biologique COMPLET (Phase-C R1 couvre 8 couches)</li>
+    <li><b>Conditions d'activation PHASE-E FUSION : REMPLIES</b></li>
+  </ul>
+</section>
+
+<section id="s20">
+  <h2>20) Conclusion institutionnelle</h2>
+  <p>TERRITOIRE_Ω atteint son niveau <b>ULTIME</b> avec une extension biologique, nutritionnelle, thermique, comportementale et physiologique rigoureusement intégrée en aval du moteur V30 cryptographiquement verrouillé. Les 48 engines sont cartographiés, testés, et prêts pour la FUSION institutionnelle finale.</p>
+  <p style="margin-top:12px">
+    <span class="pill locked">V30 LOCKED</span>
+    <span class="pill ok">48 ENGINES OPÉRATIONNELS</span>
+    <span class="pill ok">DOCTRINE BCE-4X RESPECTÉE</span>
+    <span class="pill ok">PRÉ-FUSION PRÊT</span>
+  </p>
+</section>
+
+</main>
+<footer>
+  PROTOCOLE BCE-4X ULTIME ABSOLU · TOP-ABSOLU · BIONIC OS V20-SUPRA · V30 LOCKED<br>
+  PHASE-SUPRA-BIO-NUTRITION_Ω + PHASE-TERRITOIRE_Ω_ULTIME · COMMANDANT STEEVE-MAX
+</footer>
+
+<script>
+fetch('SYNTHESE_TERRITOIRE_OMEGA_ULTIME.json').then(r => r.json()).then(data => {
+  const engines = data.engines;
+  const supra = data.supra_bio_nutrition_only;
+
+  // Section 3 : KPI
+  const kpiGrid = document.getElementById('kpi-grid');
+  const kpis = [
+    {v: data.engines_count_total, k: 'ENGINES TOTAL'},
+    {v: data.engines_count_supra_bio_nutrition, k: 'NOUVEAUX SUPRA-BIO'},
+    {v: Object.keys(data.tables.by_level).length, k: 'NIVEAUX'},
+    {v: data.chaines_institutionnelles_ultime ? Object.keys(data.chaines_institutionnelles_ultime).length : 6, k: 'CHAÎNES ULTIMES'},
+    {v: data.tables.by_priority.CRITIQUE || 0, k: 'PRIORITÉ CRITIQUE'},
+    {v: data.tables.by_priority.MAJEUR || 0, k: 'PRIORITÉ MAJEUR'},
+    {v: data.tables.by_priority.SECONDAIRE || 0, k: 'PRIORITÉ SECONDAIRE'},
+    {v: Object.keys(data.tables.by_category_supra_bio || {}).length, k: 'CATÉGORIES SUPRA'},
+  ];
+  kpis.forEach(k => {
+    const d = document.createElement('div');
+    d.className = 'kpi';
+    d.innerHTML = `<b>${k.v}</b><span>${k.k}</span>`;
+    kpiGrid.appendChild(d);
+  });
+
+  // Section 4 : Table 12 engines SUPRA
+  const supraTbody = document.getElementById('supra-rows');
+  supra.forEach(e => {
+    const tr = document.createElement('tr');
+    const pillCls = e.priority === 'CRITIQUE' ? 'crit' : (e.priority === 'MAJEUR' ? 'maj' : 'sec');
+    tr.innerHTML = `<td class="id">${e.id} <span class="pill new">NEW</span></td>
+      <td><b>${e.name}</b></td>
+      <td><span class="pill cat-${e.category}">${e.category}</span></td>
+      <td><span class="pill lvl-${e.level}">${e.level}</span></td>
+      <td><span class="pill ${pillCls}">${e.priority}</span></td>
+      <td>${e.fonction}</td>`;
+    supraTbody.appendChild(tr);
+  });
+
+  // Sections 5-9 : fiches par catégorie
+  ['NUTRITION', 'THERMIQUE', 'COMPORTEMENT', 'PHYSIOLOGIE', 'SYNTHÈSE'].forEach(cat => {
+    const container = document.getElementById(`cat-${cat}`);
+    const list = supra.filter(e => e.category === cat);
+    list.forEach(e => {
+      const div = document.createElement('div');
+      div.style.cssText = 'background:#fff; border:1px solid #d4d4d8; border-radius:6px; padding:12px 16px; margin:8px 0';
+      div.innerHTML = `
+        <h3>${e.id} · ${e.name}
+          <span class="pill lvl-${e.level}">${e.level}</span>
+          <span class="pill cat-${cat}">${cat}</span>
+          <span class="pill ${e.priority === 'CRITIQUE' ? 'crit' : (e.priority === 'MAJEUR' ? 'maj' : 'sec')}">${e.priority}</span>
+        </h3>
+        <div style="font-size:12.5px; margin:4px 0">${e.fonction}</div>
+        <div style="font-size:11px; color:#475569">
+          <b>Inputs :</b> ${(e.inputs||[]).join(', ')}<br>
+          <b>Outputs :</b> ${(e.outputs||[]).join(', ')}<br>
+          <b>Dépendances :</b> ${(e.depends_on||[]).join(', ')}<br>
+          <b>Consommé par :</b> ${(e.consumed_by||[]).join(', ')}
+        </div>`;
+      container.appendChild(div);
+    });
+  });
+
+  // Section 10 : Pipeline
+  const pf = document.getElementById('pipeline-flow');
+  data.pipeline_territoire_omega_ultime.forEach(step => {
+    const div = document.createElement('div');
+    div.className = 'flow-step';
+    div.innerHTML = `<b>Étape ${step.step} · ${step.level}</b> — ${step.purpose}
+      <div class="engines">${step.engines.join(' · ')} (${step.engines.length} engines)</div>`;
+    pf.appendChild(div);
+  });
+
+  // Section 11 : Chaînes
+  const chainsDiv = document.getElementById('chains');
+  Object.entries(data.chaines_institutionnelles_ultime).forEach(([name, flow]) => {
+    const div = document.createElement('div');
+    div.className = 'chain-card';
+    div.innerHTML = `<h3>${name.replace(/_/g,' ')}</h3>
+      <div class="flow">${flow.join(' → ')}</div>`;
+    chainsDiv.appendChild(div);
+  });
+
+  // Section 12 : Layer matrix
+  const lm = document.getElementById('layer-matrix');
+  engines.forEach(e => {
+    const tr = document.createElement('tr');
+    const badge = (e.category === 'NUTRITION' || e.category === 'THERMIQUE' || e.category === 'COMPORTEMENT' || e.category === 'PHYSIOLOGIE' || e.category === 'SYNTHÈSE') ? ' <span class="pill new">NEW</span>' : '';
+    tr.innerHTML = `<td class="id">${e.id}${badge}</td>
+      <td>${e.name}</td>
+      <td>${(e.layers_primaire||[]).join('<br>') || '<i>—</i>'}</td>
+      <td>${(e.layers_secondaire||[]).join('<br>') || '<i>—</i>'}</td>
+      <td style="color:#7f1d1d">${(e.layers_interdit||[]).join('<br>') || '<i>—</i>'}</td>`;
+    lm.appendChild(tr);
+  });
+
+  // Section 13 : Graphe
+  const dg = document.getElementById('dep-graph');
+  engines.forEach(e => {
+    const upstream = (e.depends_on && e.depends_on.length) ? e.depends_on.join(', ') : '<i>root</i>';
+    const downstream = (data.graphs.dependencies_downstream[e.id] || []).join(', ') || '<i>terminal</i>';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="id">${e.id}</td>
+      <td>${upstream}</td>
+      <td>${downstream}</td>`;
+    dg.appendChild(tr);
+  });
+
+  // Section 14 : Master grid
+  const mg = document.getElementById('master-grid');
+  engines.forEach(e => {
+    const tr = document.createElement('tr');
+    const pillCls = e.priority === 'CRITIQUE' ? 'crit' : (e.priority === 'MAJEUR' ? 'maj' : 'sec');
+    const cat = e.category || 'CORE';
+    tr.innerHTML = `<td class="id">${e.id}</td>
+      <td>${e.name}</td>
+      <td><span class="pill lvl-${e.level}">${e.level}</span></td>
+      <td>${e.role}</td>
+      <td><span class="pill ${pillCls}">${e.priority}</span></td>
+      <td><span class="pill cat-${cat}">${cat}</span></td>`;
+    mg.appendChild(tr);
+  });
+}).catch(err => {
+  document.body.insertAdjacentHTML('beforeend', '<div style="padding:20px; color:red">Échec JSON : '+err.message+'</div>');
+});
+</script>
+</body>
+</html>
