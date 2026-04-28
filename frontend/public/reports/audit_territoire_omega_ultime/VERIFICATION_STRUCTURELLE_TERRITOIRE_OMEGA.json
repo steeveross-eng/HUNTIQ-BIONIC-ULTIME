@@ -1,0 +1,778 @@
+{
+  "document": "VÉRIFICATION STRUCTURELLE TERRITOIRE_Ω — CONFIRMATION INSTITUTIONNELLE",
+  "commandant": "STEEVE-MAX",
+  "protocole": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU",
+  "generated_at_utc": "2026-04-28T13:10:49.816226Z",
+  "doctrine_version": "PHASE-E_DOCTRINE_PERMANENTE_50PCT_2026-04-28",
+  "CONFIRMATION_INSTITUTIONNELLE": "La fusion institutionnelle des 48 engines en TERRITOIRE_Ω est terminée et active.",
+  "engines_count_total": 48,
+  "engines_present_files_count": 48,
+  "counts_by_level": {
+    "VERROU": 2,
+    "FUSION": 13,
+    "BIOLOGIE": 13,
+    "FONDATION": 17,
+    "GOUVERNANCE": 2,
+    "RENDU": 1
+  },
+  "pipeline_levels_6": [
+    {
+      "step": 1,
+      "level": "VERROU",
+      "purpose": "Garantie cryptographique V30",
+      "engines": [
+        "E01",
+        "E02"
+      ]
+    },
+    {
+      "step": 2,
+      "level": "FONDATION",
+      "purpose": "Couches socle terrain / hydro / sol / climat / vent / canopée thermique",
+      "engines": [
+        "E11",
+        "E12",
+        "E13",
+        "E14",
+        "E15",
+        "E16",
+        "E17",
+        "E18",
+        "E19",
+        "E20",
+        "E21",
+        "E22",
+        "E23",
+        "E24",
+        "E25",
+        "E42",
+        "E43"
+      ]
+    },
+    {
+      "step": 3,
+      "level": "BIOLOGIE",
+      "purpose": "Profils espèces + masque BIO + population + NUTRITION + COMPORTEMENT + PHYSIOLOGIE",
+      "engines": [
+        "E07",
+        "E08",
+        "E09",
+        "E26",
+        "E28",
+        "E33",
+        "E37",
+        "E38",
+        "E39",
+        "E41",
+        "E44",
+        "E45",
+        "E46"
+      ]
+    },
+    {
+      "step": 4,
+      "level": "FUSION",
+      "purpose": "XIX-P1/P2 · VITAUX · affuts/salines/hotspots · SYNTHÈSE (attractivité + habitat ULTIME)",
+      "engines": [
+        "E03",
+        "E04",
+        "E05",
+        "E06",
+        "E10",
+        "E27",
+        "E29",
+        "E30",
+        "E31",
+        "E32",
+        "E40",
+        "E47",
+        "E48"
+      ]
+    },
+    {
+      "step": 5,
+      "level": "RENDU",
+      "purpose": "Renderer institutionnel PHASE-D (palette verte Object.freeze)",
+      "engines": [
+        "E36"
+      ]
+    },
+    {
+      "step": 6,
+      "level": "GOUVERNANCE",
+      "purpose": "Audit / conformité / traçabilité (read-only)",
+      "engines": [
+        "E34",
+        "E35"
+      ]
+    }
+  ],
+  "chaines_institutionnelles_6": {
+    "C1_vent_contam_son": [
+      "E19",
+      "E18",
+      "E21",
+      "E22"
+    ],
+    "C2_corridors_zones_affuts_salines_hotspots": [
+      "E02",
+      "E03",
+      "E04",
+      "E05",
+      "E06",
+      "E11",
+      "E29",
+      "E30",
+      "E31"
+    ],
+    "C3_bio_vitaux_rendu": [
+      "E07",
+      "E06",
+      "E36"
+    ],
+    "C4_nutrition_synthese_habitat_ultime": [
+      "E37",
+      "E38",
+      "E39",
+      "E40",
+      "E41",
+      "E46",
+      "E47",
+      "E48"
+    ],
+    "C5_terrain_microclimat_canopee_habitat": [
+      "E13",
+      "E14",
+      "E15",
+      "E16",
+      "E23",
+      "E42",
+      "E43"
+    ],
+    "C6_comportement_social": [
+      "E08",
+      "E44",
+      "E45"
+    ]
+  },
+  "topology_weights": {
+    "C1_vent_contam_son": 0.12,
+    "C2_corridors_zones_affuts_salines_hotspots": 0.25,
+    "C3_biomask_vitaux_renduomega": 0.18,
+    "C4_nutrition_synthese_habitat_ultime": 0.2,
+    "C5_terrain_microclimat_canopee_habitat": 0.15,
+    "C6_comportement_social": 0.1
+  },
+  "topology_sum_weights": 1.0,
+  "topology_invariant_sum_1": true,
+  "spec_json_active_path": "/reports/audit_territoire_omega_ultime/FUSION_TERRITOIRE_OMEGA.json",
+  "spec_json_doctrine_articles_present": true,
+  "engines": [
+    {
+      "id": "E01",
+      "name": "ENGINE_REGISTRY_LOCK_Ω",
+      "level": "VERROU",
+      "priority": "CRITIQUE",
+      "file": "engines/v8_institutional/registry_lock_omega.py",
+      "sha256": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c"
+    },
+    {
+      "id": "E02",
+      "name": "ENGINE_IA_CORRIDORS_Ω",
+      "level": "VERROU",
+      "priority": "CRITIQUE",
+      "file": "engines/v8_institutional/engine_ia_corridors_omega.py",
+      "sha256": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3"
+    },
+    {
+      "id": "E03",
+      "name": "ENGINE_PREDICTIVE_OMEGA_V2",
+      "level": "FUSION",
+      "priority": "CRITIQUE",
+      "file": "engines/v8_institutional/predictive_omega_v2.py",
+      "sha256": "95d10ddcf2a63cf2c8749475e39d2ad963b0e4619e6292d37e4b9ced49156a47"
+    },
+    {
+      "id": "E04",
+      "name": "ENGINE_ORIGINE_EXTERNE_INVERSION_Ω",
+      "level": "FUSION",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/origine_externe_inversion_omega.py",
+      "sha256": "2f0ae33a99c312f954c5abcd9c089a267c832630265cc30a21761bff1289eef9"
+    },
+    {
+      "id": "E05",
+      "name": "ENGINE_ORIGINE_EXTERNE_FILTER_Ω",
+      "level": "FUSION",
+      "priority": "CRITIQUE",
+      "file": "engines/v8_institutional/origine_externe_filter_omega.py",
+      "sha256": "33706d4353a5e14978abcd02b709f07e4a082820c1185b0c776ac97a5ecf6937"
+    },
+    {
+      "id": "E06",
+      "name": "ENGINE_CORRIDORS_VITAUX_Ω",
+      "level": "FUSION",
+      "priority": "CRITIQUE",
+      "file": "engines/v8_institutional/corridors_vitaux_omega.py",
+      "sha256": "1c6ca2b9e04f88bc1c2abf7e825ab756741476fa5ee12683d0518b116850fd49"
+    },
+    {
+      "id": "E07",
+      "name": "ENGINE_BIO_PRESENCE_MASK_Ω",
+      "level": "BIOLOGIE",
+      "priority": "CRITIQUE",
+      "file": "engines/v8_institutional/species_presence_mask_omega.py",
+      "sha256": "9a0b42a9f2ea097cd4d4f25dcfe7a58f9ce062062e628c33a5b0e3146a67c290"
+    },
+    {
+      "id": "E08",
+      "name": "ENGINE_SPECIES_PROFILES_Ω",
+      "level": "BIOLOGIE",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_species_profiles_omega.py",
+      "sha256": "635f9bf004c388f46f831c73bf8e0a82b638195a744b5de251635c6361c37ef3"
+    },
+    {
+      "id": "E09",
+      "name": "ENGINE_ESPECE_Ω",
+      "level": "BIOLOGIE",
+      "priority": "SECONDAIRE",
+      "file": "engines/v8_institutional/engine_espece_omega.py",
+      "sha256": "ec260ce8218ca021593c7cf6076dc1abc98566f5e844af647ca5729fb00eff97"
+    },
+    {
+      "id": "E10",
+      "name": "ENGINE_ECOLOGICAL_ORCHESTRATOR_Ω",
+      "level": "FUSION",
+      "priority": "CRITIQUE",
+      "file": "engines/v8_institutional/ecological_orchestrator_omega.py",
+      "sha256": "01f9e940a063b6c58c11b610d13c6a1f499f989a25c733fb964e595002dce14b"
+    },
+    {
+      "id": "E11",
+      "name": "ENGINE_ZONES",
+      "level": "FONDATION",
+      "priority": "CRITIQUE",
+      "file": "engines/v8_institutional/engine_zones.py",
+      "sha256": "8229ca7c0d16e5f6716944e08105bc2e8d6e791609aef39e4e6bb047433c1784"
+    },
+    {
+      "id": "E12",
+      "name": "ENGINE_ZONES_ORGANIC_V1",
+      "level": "FONDATION",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/zones_organic_v1.py",
+      "sha256": "87077dae87f3c2048aad2e808e4254a86db6b6266f7b9fd70985976ce3f70922"
+    },
+    {
+      "id": "E13",
+      "name": "ENGINE_TERRAIN_COST",
+      "level": "FONDATION",
+      "priority": "CRITIQUE",
+      "file": "engines/v8_institutional/engine_terrain_cost.py",
+      "sha256": "1cfe791ed033f7f60e16593b1744ad823a962d73bfea8fa41ab7a369b1fe52d4"
+    },
+    {
+      "id": "E14",
+      "name": "ENGINE_HABITAT_SUPRA",
+      "level": "FONDATION",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_habitat_supra.py",
+      "sha256": "4a39bfdc21f375f16fd39b479de5ea302d50c56aee77f87dd12b2ca2307b5dbf"
+    },
+    {
+      "id": "E15",
+      "name": "ENGINE_HYDROLOGIE_SUPRA",
+      "level": "FONDATION",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_hydrologie_supra.py",
+      "sha256": "161f4c611d0c252193a89669c6b319a41631135d1017e58db36920adcdc90cd7"
+    },
+    {
+      "id": "E16",
+      "name": "ENGINE_SOL_SUPRA",
+      "level": "FONDATION",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_sol_supra.py",
+      "sha256": "e68328855768dae27e58c3f736b57b9da2f49d127f89be86b48795c6243a2be2"
+    },
+    {
+      "id": "E17",
+      "name": "ENGINE_RISQUES_HYDRO_Ω",
+      "level": "FONDATION",
+      "priority": "SECONDAIRE",
+      "file": "engines/v8_institutional/engine_risques_hydro_omega.py",
+      "sha256": "5b14858da230d7521e2343ea4af898a381f8c0c1070ff9f733ea781b0dd6239d"
+    },
+    {
+      "id": "E18",
+      "name": "ENGINE_VENT",
+      "level": "FONDATION",
+      "priority": "CRITIQUE",
+      "file": "engines/v8_institutional/engine_vent.py",
+      "sha256": "0e4598348f4685393bd0405c7309fe5e74df436b458fb3dae7c429ee640cfaf5"
+    },
+    {
+      "id": "E19",
+      "name": "ENGINE_SENSORIEL_VENT_ODEURS_Ω",
+      "level": "FONDATION",
+      "priority": "CRITIQUE",
+      "file": "engines/v8_institutional/engine_sensoriel_vent_odeurs_omega.py",
+      "sha256": "cd0d07a06debd8d9c04020af654c4f663750c07daa33bc15afa8bde9e83f6ba4"
+    },
+    {
+      "id": "E20",
+      "name": "ENGINE_PRESSION_ATMOSPHERIQUE_Ω",
+      "level": "FONDATION",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_pression_atmospherique_omega.py",
+      "sha256": "5b839db0039707b730a3c67a850dfb17cd3e01e9a2dfd34ed74e643530256679"
+    },
+    {
+      "id": "E21",
+      "name": "ENGINE_CONTAMINATION_V2_Ω",
+      "level": "FONDATION",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_contamination_v2_omega.py",
+      "sha256": "f2edde81070818a5ea1a72e8a1d5a30e48d840b845194f519408aa35330d2e88"
+    },
+    {
+      "id": "E22",
+      "name": "ENGINE_AUDIO_ACOUSTIQUE",
+      "level": "FONDATION",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_audio_acoustique.py",
+      "sha256": "f418835be0cea9863cb7da6a72c45b5bddf267b60dd9bbc8249be0a6ccdf0ebf"
+    },
+    {
+      "id": "E23",
+      "name": "ENGINE_THERMIQUE_MICROCLIMAT_Ω",
+      "level": "FONDATION",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_thermique_microclimat_omega.py",
+      "sha256": "89b85680328ec47eb31b4bfc69a65448c40b66a6e5ae3260b3f07edf77fbc1c1"
+    },
+    {
+      "id": "E24",
+      "name": "ENGINE_INFLUENCE_LUNAIRE_Ω",
+      "level": "FONDATION",
+      "priority": "SECONDAIRE",
+      "file": "engines/v8_institutional/engine_influence_lunaire_omega.py",
+      "sha256": "ff67806c93cc8446a137adf804ac0f0f3090d57a4da389b687aec19b7ef7bdda"
+    },
+    {
+      "id": "E25",
+      "name": "ENGINE_CLIMAT_FUTUR_Ω",
+      "level": "FONDATION",
+      "priority": "SECONDAIRE",
+      "file": "engines/v8_institutional/engine_climat_futur_omega.py",
+      "sha256": "bc7613fe2a5d805fc5683bf2bca8fdd5f4f507faeae808897a4d107837dcda0e"
+    },
+    {
+      "id": "E26",
+      "name": "ENGINE_POPULATION_DYNAMICS_Ω",
+      "level": "BIOLOGIE",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_population_dynamics_omega.py",
+      "sha256": "dfde1cedf8653ff8a2496245d287cc0232ee3446e3f751610549f12216381f14"
+    },
+    {
+      "id": "E27",
+      "name": "ENGINE_CONNECTIVITE_ECOLOGIQUE_Ω",
+      "level": "FUSION",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_connectivite_ecologique_omega.py",
+      "sha256": "38f81a039dd91918849a6b86bb09496adf23c5fcf359771e918fe2be26dd41c6"
+    },
+    {
+      "id": "E28",
+      "name": "ENGINE_STRESS_ANTHROPIQUE_Ω",
+      "level": "BIOLOGIE",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_stress_anthropique_omega.py",
+      "sha256": "b1796c5da86fd8f26e7450d0e6f91d949aa21e4043dd16cc8536f1cf3dd7d68f"
+    },
+    {
+      "id": "E29",
+      "name": "ENGINE_AFFUTS",
+      "level": "FUSION",
+      "priority": "CRITIQUE",
+      "file": "engines/v8_institutional/engine_affuts.py",
+      "sha256": "fedc1e8480b48b2b8dbb9330e24dd351d9eb6c228ffba7c4b0456d4cab0c8610"
+    },
+    {
+      "id": "E30",
+      "name": "ENGINE_HOTSPOTS",
+      "level": "FUSION",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_hotspots.py",
+      "sha256": "8a268fa092a0499ca517e66747084c49aabeab729029d1e210e6826d844a29c0"
+    },
+    {
+      "id": "E31",
+      "name": "ENGINE_SALINES_V11_SUPRA",
+      "level": "FUSION",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_salines_v11_supra.py",
+      "sha256": "220ff36a3d7b67b6863595fbfb7ef71e9ce3939200f084b33d7e975e12c6ff32"
+    },
+    {
+      "id": "E32",
+      "name": "ENGINE_HEATMAP",
+      "level": "FUSION",
+      "priority": "SECONDAIRE",
+      "file": "engines/v8_institutional/engine_heatmap.py",
+      "sha256": "2dd0625a56ebcd0378747b651a47865ac42ef8811f0fbfb62defced82b85742f"
+    },
+    {
+      "id": "E33",
+      "name": "ENGINE_IA_VISION_ECOLOGIQUE_Ω",
+      "level": "BIOLOGIE",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_ia_vision_ecologique_omega.py",
+      "sha256": "40204496b3a08575bafc797ee8832d171b10971d89c32bb363616bdb4c159ff7"
+    },
+    {
+      "id": "E34",
+      "name": "ENGINE_GOUVERNANCE_Ω",
+      "level": "GOUVERNANCE",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_gouvernance_omega.py",
+      "sha256": "d96ca368e55a7106af31150799ddec30ec4b1525120fbf966bf7e21a83391058"
+    },
+    {
+      "id": "E35",
+      "name": "TERRITOIRE_V10_SUPRA",
+      "level": "GOUVERNANCE",
+      "priority": "CRITIQUE",
+      "file": "engines/v8_institutional/territoire_v10_supra.py",
+      "sha256": "06601e0040e30e95752c2881c4117273c815ef95a6d174bd629d6a8129346a34"
+    },
+    {
+      "id": "E36",
+      "name": "ENGINE_RENDU_Ω (PHASE-D)",
+      "level": "RENDU",
+      "priority": "CRITIQUE",
+      "file": "engines/post_smoothing/renduomega.py + frontend renduOmegaStore.js",
+      "sha256": {
+        "backend_post_smoothing_renduomega_py": "1c14ec3edf789e46d9549fc9e18eeb7e1306ce527c61bc052f334aef9aa79b3c",
+        "frontend_renduOmegaStore_js": "427d9a211541b4fb521af06d8a62b26331acf93f58f0c4531a1e56b6aa96a859"
+      }
+    },
+    {
+      "id": "E37",
+      "name": "ENGINE_SOL_NUTRIMENTS_Ω",
+      "level": "BIOLOGIE",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_sol_nutriments_omega.py",
+      "sha256": "c36790ed80d054b18e075b73bdd86df8ce9322e4c886dac6db341f66edcfafb6"
+    },
+    {
+      "id": "E38",
+      "name": "ENGINE_FORAGE_QUALITÉ_Ω",
+      "level": "BIOLOGIE",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_forage_qualite_omega.py",
+      "sha256": "0a4cf3fbdaac8a9f37019534909941ef4c0cdea16140d1c9fd19560239e984f8"
+    },
+    {
+      "id": "E39",
+      "name": "ENGINE_CARENCE_NUTRITIONNELLE_Ω",
+      "level": "BIOLOGIE",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_carence_nutritionnelle_omega.py",
+      "sha256": "7415096d9cae7aebf571a9b0339243e632f8789559bf3d22949c231bddbdf6aa"
+    },
+    {
+      "id": "E40",
+      "name": "ENGINE_RECETTES_SALINES_Ω",
+      "level": "FUSION",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_recettes_salines_omega.py",
+      "sha256": "b19a0fb23225a1015614ed2caff5e151cba17acb7c18107b5c7dbcca0ddfda11"
+    },
+    {
+      "id": "E41",
+      "name": "ENGINE_CHAMPS_NOURRICIERS_Ω",
+      "level": "BIOLOGIE",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_champs_nourriciers_omega.py",
+      "sha256": "59508694ba12e9cea1ff51f757a39d52cc7965265081a1b538dd73b7559fa7c4"
+    },
+    {
+      "id": "E42",
+      "name": "ENGINE_CANOPÉE_THERMIQUE_Ω",
+      "level": "FONDATION",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_canopee_thermique_omega.py",
+      "sha256": "bab5b1059f5cd3d050e9e0ea135b9e2e12886cb22da303400ea17f94f73a098f"
+    },
+    {
+      "id": "E43",
+      "name": "ENGINE_MICROCLIMAT_Ω_ADVANCED",
+      "level": "FONDATION",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_microclimat_advanced_omega.py",
+      "sha256": "3f6724c18d0facca2b729b84b6de7e39736adc452936767580f187ab79ce90db"
+    },
+    {
+      "id": "E44",
+      "name": "ENGINE_TROPHIC_BEHAVIOR_Ω",
+      "level": "BIOLOGIE",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_trophic_behavior_omega.py",
+      "sha256": "3706eb04705385fcc7f919b275a54adcd4f4f16b54af6ead428c069ce37407cb"
+    },
+    {
+      "id": "E45",
+      "name": "ENGINE_SOCIAL_STRUCTURE_Ω",
+      "level": "BIOLOGIE",
+      "priority": "SECONDAIRE",
+      "file": "engines/v8_institutional/engine_social_structure_omega.py",
+      "sha256": "8e7a125d6a6a470eb4f0a39e109978ad816496a0b621ad59ee0e12382e07f428"
+    },
+    {
+      "id": "E46",
+      "name": "ENGINE_SANTÉ_PHYSIO_Ω",
+      "level": "BIOLOGIE",
+      "priority": "MAJEUR",
+      "file": "engines/v8_institutional/engine_sante_physio_omega.py",
+      "sha256": "b3159282414bdd142cb724f786111a07afd2ddba80668877eea76b2d0aa80ebb"
+    },
+    {
+      "id": "E47",
+      "name": "ENGINE_NUTRITIONAL_ATTRACTIVENESS_Ω",
+      "level": "FUSION",
+      "priority": "CRITIQUE",
+      "file": "engines/v8_institutional/engine_nutritional_attractiveness_omega.py",
+      "sha256": "fd7a973154937448549e5b7403592af6c9b0befd689eaf787ca75806cdc05e56"
+    },
+    {
+      "id": "E48",
+      "name": "ENGINE_OPTIMISATION_HABITAT_Ω",
+      "level": "FUSION",
+      "priority": "CRITIQUE",
+      "file": "engines/v8_institutional/engine_optimisation_habitat_omega.py",
+      "sha256": "2710f9ef696293fbbaaab3b273ed8381f5dbb6ff1bbec01a2b3bb0ca7b4062cf"
+    }
+  ],
+  "modules_critiques_sha256": {
+    "AGREGATEUR_FUSION_PY": {
+      "path": "/app/backend/engines/v8_institutional/fusion_territoire_omega.py",
+      "sha256": "3c1c33056028011e1ac5d1c8ea5708060bf631da78beab4d83669de80ff7390c"
+    },
+    "ROUTER_FUSION_PY": {
+      "path": "/app/backend/routes/fusion_territoire_omega_router.py",
+      "sha256": "051bbd5ab9c25b24f09901101bde3dca0bd498ef7b6757a04eb12c64906812b2"
+    },
+    "V30_STATUS_ROUTER_PY": {
+      "path": "/app/backend/routes/v30_corridors_status_router.py",
+      "sha256": "5344bc978e5e9dbcdb23eba50002f665eec30931bb226bf30f1fc6e8e964ecfa"
+    },
+    "BIO_PRESENCE_MASK_PY": {
+      "path": "/app/backend/engines/v8_institutional/species_presence_mask_omega.py",
+      "sha256": "9a0b42a9f2ea097cd4d4f25dcfe7a58f9ce062062e628c33a5b0e3146a67c290"
+    },
+    "SPEC_JSON_V2": {
+      "path": "/app/frontend/public/reports/audit_territoire_omega_ultime/FUSION_TERRITOIRE_OMEGA.json",
+      "sha256": "2540072ddd364fa9e365480077f84de4ac9d756b76c27c9ff3ab90a169fd7d14"
+    },
+    "SYNTHESE_TERRITOIRE_JSON": {
+      "path": "/app/frontend/public/reports/audit_territoire_omega_ultime/SYNTHESE_TERRITOIRE_OMEGA_ULTIME.json",
+      "sha256": "9301c6170ed8f77d6b1ff87eafda3d1b5e00caedb918d0aee769aeeadcdf4a25"
+    },
+    "TEST_PHASE_C_PY": {
+      "path": "/app/backend/tests/test_phase_c_inter_engines_consistency.py",
+      "sha256": "a6e70ed12b127a98103aa3a4d45441a187169350880589d5f2745828b636e66b"
+    },
+    "TEST_PHASE_E_PREFUSION_PY": {
+      "path": "/app/backend/tests/test_phase_e_fusion_omega.py",
+      "sha256": "9c56ce1b994c4d688c537e45b98c909cd471577eb1be31e5e54df8bb8c9cc7e7"
+    },
+    "TEST_PHASE_E_DOCTRINE_PY": {
+      "path": "/app/backend/tests/test_phase_e_fusion_reelle_doctrine.py",
+      "sha256": "6a2e2c808684709b8804e76b206e06d0260c805a8b60f5b12b211a3189aa9925"
+    },
+    "TEST_SUPRA_BIO_PY": {
+      "path": "/app/backend/tests/test_phase_supra_bio_nutrition.py",
+      "sha256": "347178d0d5ad7ef9fe8a486f13610bb63e51b4191f560c8779bfa66c090d26bf"
+    },
+    "HUD_FRONTEND_JSX": {
+      "path": "/app/frontend/src/components/territoire/HudTerritoireUltime.jsx",
+      "sha256": "106a4eb693b7347fccc6af79389f5c6ba44aeafa46550aad98f5d5fffd3248e4"
+    }
+  },
+  "v30_invariance": {
+    "registry_lock_omega_sha256": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+    "engine_ia_corridors_omega_sha256": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3",
+    "sha256_registry_echo": "655a1630375909bdeb32ba0a033fc329f105fb0a88ba058f79952241206cc36d",
+    "expected_registry_lock": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+    "expected_engine_ia_corridors": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3",
+    "invariant": true
+  },
+  "preuve_consommation_phase_e": {
+    "phase_e_consume_proof": {
+      "pipeline_calls": [
+        "compute_ultime_score (aggregateur PHASE-E)",
+        "  → species_presence_mask_omega.get_species_presence (E26 niveau BIOLOGIE)",
+        "  → routes.v30_corridors_status_router.v30_corridors_status (E02 + E03 + E04 + E05 + E06 + E10)",
+        "  → engine_sol_nutriments_omega.compute_sol_nutriments (E37)",
+        "  → engine_forage_qualite_omega.compute_forage_quality (E38)",
+        "  → engine_carence_nutritionnelle_omega.compute_carence (E39)",
+        "  → engine_recettes_salines_omega.compute_recettes (E40)",
+        "  → engine_champs_nourriciers_omega.compute_champs_nourriciers (E41)",
+        "  → engine_canopee_thermique_omega.compute_canopee_thermique (E42)",
+        "  → engine_microclimat_advanced_omega.compute_microclimat_advanced (E43)",
+        "  → engine_trophic_behavior_omega.compute_trophic (E44)",
+        "  → engine_social_structure_omega.compute_social (E45)",
+        "  → engine_sante_physio_omega.compute_sante_physio (E46)",
+        "  → engine_nutritional_attractiveness_omega.compute_nutritional_attractiveness (E47)",
+        "  → engine_optimisation_habitat_omega.compute_optimisation_habitat (E48)"
+      ],
+      "engines_directly_invoked_by_phase_e": [
+        "E02 (LOCKED via v30_corridors_status_router)",
+        "E03",
+        "E04",
+        "E05",
+        "E06",
+        "E10",
+        "E26 SPECIES_PRESENCE_MASK_Ω",
+        "E37",
+        "E38",
+        "E39",
+        "E40",
+        "E41",
+        "E42",
+        "E43",
+        "E44",
+        "E45",
+        "E46",
+        "E47",
+        "E48"
+      ],
+      "count_engines_invoked_directly": 16,
+      "engines_consumed_indirectly_via_v30_status": [
+        "E07 ZONES",
+        "E08 AFFUTS",
+        "E09 SALINES",
+        "E11 TERRAIN_COST",
+        "E27 ENGINE_RENDU_Ω",
+        "E29 HOTSPOTS",
+        "E30 ENGINE_FREQUENTATION",
+        "E31 ENGINE_SCORE_GLOBAL",
+        "E18 CONTAMINATION_V2",
+        "E19 ENGINE_VENT",
+        "E21 ENGINE_SENSORIEL_VENT_ODEURS",
+        "E22 ENGINE_AUDIO_ACOUSTIQUE",
+        "E13 ENGINE_TERRAIN_COST",
+        "E14 HYDROLOGIE_SUPRA",
+        "E15 SOL_SUPRA",
+        "E16 CLIMAT_FUTUR_OMEGA",
+        "E23 PRESSION_ATMOSPHÉRIQUE",
+        "et tous les autres consommés par le pipeline V30"
+      ],
+      "fusion_use_doctrine_thresholds": {
+        "score_min_fusion": 0.5,
+        "v30_min_fusion": 50.0
+      }
+    },
+    "live_runtime_check_bsl_official_waypoint": {
+      "orignal_score_pct": 66.75,
+      "orignal_fusionnable": true,
+      "cerf_score_pct": 69.27,
+      "cerf_fusionnable": true,
+      "ours_score_pct": 65.35,
+      "ours_fusionnable": true,
+      "dindon_with_derogation_score_pct": 52.64,
+      "dindon_fusionnable_with_derogation": true,
+      "wapiti_with_derogation_score_pct": 52.2,
+      "wapiti_fusionnable_with_derogation": true,
+      "fusionnable_count": "5 / 5"
+    }
+  },
+  "imports_phase_e_aggregateur": [
+    {
+      "line": 274,
+      "import": "from engines.v8_institutional.species_presence_mask_omega import ("
+    },
+    {
+      "line": 292,
+      "import": "from routes.v30_corridors_status_router import v30_corridors_status"
+    },
+    {
+      "line": 304,
+      "import": "from engines.v8_institutional.engine_sol_nutriments_omega import compute_sol_nutriments"
+    },
+    {
+      "line": 305,
+      "import": "from engines.v8_institutional.engine_forage_qualite_omega import compute_forage_quality"
+    },
+    {
+      "line": 306,
+      "import": "from engines.v8_institutional.engine_carence_nutritionnelle_omega import compute_carence"
+    },
+    {
+      "line": 307,
+      "import": "from engines.v8_institutional.engine_recettes_salines_omega import compute_recettes"
+    },
+    {
+      "line": 308,
+      "import": "from engines.v8_institutional.engine_champs_nourriciers_omega import ("
+    },
+    {
+      "line": 311,
+      "import": "from engines.v8_institutional.engine_canopee_thermique_omega import ("
+    },
+    {
+      "line": 314,
+      "import": "from engines.v8_institutional.engine_microclimat_advanced_omega import ("
+    },
+    {
+      "line": 317,
+      "import": "from engines.v8_institutional.engine_trophic_behavior_omega import compute_trophic"
+    },
+    {
+      "line": 318,
+      "import": "from engines.v8_institutional.engine_social_structure_omega import compute_social"
+    },
+    {
+      "line": 319,
+      "import": "from engines.v8_institutional.engine_sante_physio_omega import compute_sante_physio"
+    },
+    {
+      "line": 320,
+      "import": "from engines.v8_institutional.engine_nutritional_attractiveness_omega import ("
+    },
+    {
+      "line": 323,
+      "import": "from engines.v8_institutional.engine_optimisation_habitat_omega import ("
+    }
+  ],
+  "tests_post_fusion_passes": {
+    "test_phase_c_inter_engines_consistency.py": {
+      "count": 10,
+      "status": "PASS"
+    },
+    "test_phase_supra_bio_nutrition.py": {
+      "count": 13,
+      "status": "PASS"
+    },
+    "test_phase_e_fusion_omega.py": {
+      "count": 18,
+      "status": "PASS"
+    },
+    "test_phase_e_fusion_reelle_doctrine.py": {
+      "count": 19,
+      "status": "PASS"
+    }
+  },
+  "tests_post_fusion_total_pass": 60,
+  "doctrine_appliquee": {
+    "v30_locked": true,
+    "xix_recomputed": false,
+    "vitaux_recomputed": false,
+    "backend_read_only": true,
+    "no_testing_agent_v3_fork": true,
+    "aval_only_modifications": true
+  }
+}

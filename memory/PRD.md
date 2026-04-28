@@ -27,6 +27,40 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **VÉRIFICATION STRUCTURELLE TERRITOIRE_Ω (2026-04-28 · ordre n°3)**
+  Sur demande explicite du Commandant STEEVE-MAX, audit forensique complet
+  attestant que la fusion institutionnelle des 48 engines en TERRITOIRE_Ω
+  est terminée et active. V30 cryptographiquement INVIOLÉ.
+  - **Confirmation institutionnelle** : « La fusion institutionnelle des 48
+    engines en TERRITOIRE_Ω est terminée et active. »
+  - **Inventaire complet** : 48 engines, SHA-256 par fichier · 47 fichiers
+    présents + 1 engine bicéphale (E36 RENDU_Ω = backend
+    `post_smoothing/renduomega.py` + frontend `renduOmegaStore.js`).
+  - **Pipeline 6 niveaux** : VERROU(2) → FONDATION(17) → BIOLOGIE(13) →
+    FUSION(13) → RENDU(1) → GOUVERNANCE(2) — total = 48.
+  - **6 chaînes institutionnelles** Σ poids = **1.000000** (C1 0.12 + C2 0.25
+    + C3 0.18 + C4 0.20 + C5 0.15 + C6 0.10).
+  - **Preuve consommation PHASE-E** : 16 engines invoqués DIRECTEMENT par
+    `fusion_territoire_omega.py` (E02, E03-E06, E10, E26, E37-E48) + tous les
+    autres consommés indirectement via `v30_corridors_status_router`.
+  - **Runtime live BSL** : orignal 66.75% / cerf 69.27% / ours 65.35% (sans
+    dérogation) · dindon 52.64% / wapiti 52.20% (avec dérogation Article 2)
+    → **5/5 espèces FUSIONNABLES**.
+  - **Non-régression post-fusion** : `test_phase_c_inter_engines_consistency`
+    (10) + `test_phase_supra_bio_nutrition` (13) + `test_phase_e_fusion_omega`
+    (18) + `test_phase_e_fusion_reelle_doctrine` (19) = **60/60 PASS**.
+  - **V30 SHA-256 INVIOLÉS** : registry_lock `fb765b94…ecb0c` ·
+    engine_ia_corridors `bcb1e3a6…39d3` · echo
+    `655a1630375909bdeb32ba0a033fc329f105fb0a88ba058f79952241206cc36d`.
+  - **Livrables** :
+    `VERIFICATION_STRUCTURELLE_TERRITOIRE_OMEGA.json` (25.8 KB · SHA
+    `61f0270a30259d14…`) +
+    `RAPPORT_VÉRIFICATION_STRUCTURELLE_TERRITOIRE_Ω.html` (33 KB · 12
+    sections · SHA `0f07333907933ae3…`) +
+    captures HTTPS top/fullpage/conclusion.
+  - **Doctrine appliquée** : V30 LOCKED · XIX/VITAUX non recomputés · Backend
+    READ-ONLY · Aucun `testing_agent_v3_fork` · Modifications uniquement aval.
+
 - **PHASE-E DOCTRINE PERMANENTE 50% + FUSION RÉELLE (2026-04-28 · ordre n°2)**
   Sur ordre direct du Commandant STEEVE-MAX (Articles 1 à 5), élévation de la
   PRÉ-FUSION en FUSION RÉELLE avec doctrine permanente assouplie 50%, dérogation
