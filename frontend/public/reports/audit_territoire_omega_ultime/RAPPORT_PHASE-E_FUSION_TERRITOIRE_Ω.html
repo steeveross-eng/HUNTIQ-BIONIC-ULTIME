@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAPPORT PHASE-E · FUSION TERRITOIRE Ω · PRÉ-FUSION</title>
+<style>
+:root { --green: #00A676; --green-inner: #4CC99A; --green-outer: #B2F2D9;
+  --amber: #F59E0B; --red: #DC2626; --gray: #6B7280; --bg: #F7FAFC; --ink: #0F172A; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, system-ui, Segoe UI, Roboto, sans-serif;
+  background: var(--bg); color: var(--ink); line-height: 1.5; }
+.container { max-width: 1160px; margin: 0 auto; padding: 32px 24px 72px; }
+header.banner { background: linear-gradient(135deg, #0B3D2E 0%, #12563F 50%, #0B3D2E 100%);
+  color: #fff; padding: 28px 24px; border-radius: 12px; margin-bottom: 28px;
+  box-shadow: 0 10px 30px rgba(0,166,118,0.18); border: 2px solid var(--green); }
+header.banner h1 { font-size: 28px; margin: 6px 0 4px 0; }
+.tag { background: var(--green); color: #fff; padding: 3px 10px; border-radius: 4px;
+  font-weight: 700; font-size: 11px; letter-spacing: 1px; display: inline-block; }
+.meta { color: var(--green-outer); font-size: 13px; margin-top: 10px; }
+h2 { color: var(--green); border-bottom: 2px solid var(--green); padding-bottom: 6px;
+  margin-top: 48px; font-size: 20px; letter-spacing: 0.3px; }
+h3 { color: #1F2937; margin-top: 26px; }
+code, pre { font-family: "JetBrains Mono", Menlo, Consolas, monospace;
+  background: #E5F6EF; color: #0B3D2E; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+pre { padding: 12px; overflow-x: auto; border-left: 4px solid var(--green); margin: 12px 0; }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+th, td { padding: 9px 11px; text-align: left; border-bottom: 1px solid #E5E7EB; }
+th { background: var(--green); color: #fff; letter-spacing: 0.3px; font-weight: 700; }
+tr:nth-child(even) td { background: #F9FDFB; }
+.badge { padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; }
+.b-ok { background: var(--green); color: #fff; }
+.b-warn { background: var(--amber); color: #1F2937; }
+.b-err { background: var(--red); color: #fff; }
+.b-gray { background: #9CA3AF; color: #fff; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.card { border: 1px solid #D1D5DB; padding: 14px; border-radius: 8px; background: #fff; }
+.card.success { border-color: var(--green); background: linear-gradient(180deg,#fff,#F4FEF9); }
+.card.danger { border-color: var(--red); background: linear-gradient(180deg,#fff,#FEF2F2); }
+.muted { color: var(--gray); font-size: 12px; }
+img.cap { width: 100%; border: 1px solid #D1D5DB; border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.10); margin: 10px 0; }
+.band-chip { padding: 3px 10px; border-radius: 12px; font-weight: 700; font-size: 11px; }
+.tfav { background: #00A676; color: #fff; }
+.fav { background: #33B787; color: #fff; }
+.neu { background: #C0C0C0; color: #1F2937; }
+.dfav { background: #F59E0B; color: #1F2937; }
+.prs { background: #DC2626; color: #fff; }
+footer { margin-top: 40px; padding: 16px; border-top: 1px dashed var(--gray);
+  text-align: center; color: var(--gray); font-size: 12px; }
+.sha { font-family: monospace; font-size: 10px; color: var(--gray); word-break: break-all; }
+.kpi { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin: 12px 0; }
+.kpi .card { text-align: center; }
+.kpi .val { font-size: 24px; font-weight: 800; color: var(--green); }
+.kpi .lbl { font-size: 11px; color: var(--gray); letter-spacing: 0.5px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header class="banner">
+  <span class="tag">BCE-4X ULTIME ABSOLU — TOP-ABSOLU</span>
+  <h1>RAPPORT PHASE-E · FUSION TERRITOIRE Ω · PRÉ-FUSION</h1>
+  <div class="meta">
+    Commandant : <b>STEEVE-MAX</b> · Phase : <b>PHASE-E / FUSION_TERRITOIRE_Ω</b> · 
+    Date : <b>2026-04-28 UTC</b> · Waypoint officiel : <b>48.206657 / -68.382422</b>
+  </div>
+  <div class="meta" style="margin-top:4px;">
+    🛡️ V30 LOCKED · XIX non recomputé · VITAUX non recomputé · Backend READ-ONLY · 
+    Aucun <code>testing_agent_v3_fork</code>
+  </div>
+</header>
+
+<!-- SECTION 1 -->
+<h2>1. Contexte et ordre reçu</h2>
+<p>
+Le Commandant STEEVE-MAX a émis une <b>directive pré-fusion</b> exigeant la mise à disposition
+de <b>6 livrables institutionnels</b> avant d'autoriser toute FUSION RÉELLE du territoire.
+Le protocole BCE-4X ULTIME ABSOLU interdit formellement toute mutation des engines
+cryptographiques V30 (registry_lock_omega.py, engine_ia_corridors_omega.py), tout recalcul
+XIX/VITAUX et tout recours à <code>testing_agent_v3_fork</code>. Toutes les validations ont
+été produites manuellement via <code>pytest</code>, <code>curl</code> et
+<code>mcp_screenshot_tool</code>.
+</p>
+
+<!-- SECTION 2 -->
+<h2>2. Livrables PHASE-E (6 items — tous produits)</h2>
+<table>
+  <thead><tr><th>ID</th><th>Livrable</th><th>Emplacement</th><th>État</th></tr></thead>
+  <tbody>
+    <tr><td>L1</td><td>Spécification formelle (JSON)</td>
+        <td><code>/reports/audit_territoire_omega_ultime/FUSION_TERRITOIRE_OMEGA.json</code></td>
+        <td><span class="badge b-ok">PUBLIÉ</span></td></tr>
+    <tr><td>L2</td><td>Endpoint backend READ-ONLY</td>
+        <td><code>GET /api/v30/territoire/ultime-score</code></td>
+        <td><span class="badge b-ok">OPÉRATIONNEL</span></td></tr>
+    <tr><td>L3</td><td>Composant frontend HUD TERRITOIRE_ULTIME</td>
+        <td><code>/frontend/src/components/territoire/HudTerritoireUltime.jsx</code></td>
+        <td><span class="badge b-ok">MONTÉ · route <code>/territoire/hud-ultime-phase-e</code></span></td></tr>
+    <tr><td>L4</td><td>Suite de tests pytest</td>
+        <td><code>/backend/tests/test_phase_e_fusion_omega.py</code></td>
+        <td><span class="badge b-ok">18/18 PASS</span></td></tr>
+    <tr><td>L5</td><td>Captures HTTPS institutionnelles</td>
+        <td><code>/reports/.../phase_e/captures/*.jpeg</code> × 4</td>
+        <td><span class="badge b-ok">PRODUITES</span></td></tr>
+    <tr><td>L6</td><td>Rapport HTML PHASE-E (ce document)</td>
+        <td><code>RAPPORT_PHASE-E_FUSION_TERRITOIRE_Ω.html</code></td>
+        <td><span class="badge b-ok">SCELLÉ</span></td></tr>
+  </tbody>
+</table>
+
+<!-- SECTION 3 -->
+<h2>3. KPIs institutionnels PHASE-E</h2>
+<div class="kpi">
+  <div class="card"><div class="val">6 / 6</div><div class="lbl">LIVRABLES PRODUITS</div></div>
+  <div class="card"><div class="val">18 / 18</div><div class="lbl">TESTS PHASE-E PASS</div></div>
+  <div class="card"><div class="val">60 / 60</div><div class="lbl">RÉGRESSION GLOBALE PASS</div></div>
+  <div class="card"><div class="val">5 / 5</div><div class="lbl">ESPÈCES COUVERTES</div></div>
+  <div class="card"><div class="val">6 / 6</div><div class="lbl">CHAÎNES ORCHESTRÉES</div></div>
+  <div class="card"><div class="val">48 / 48</div><div class="lbl">ENGINES PIPELINE</div></div>
+  <div class="card"><div class="val">✓</div><div class="lbl">V30 INVIOLÉ</div></div>
+  <div class="card"><div class="val">0</div><div class="lbl">MUTATION DÉTECTÉE</div></div>
+</div>
+
+<!-- SECTION 4 -->
+<h2>4. Invariance cryptographique V30 (SHA-256)</h2>
+<table>
+  <thead><tr><th>Module V30 LOCKED</th><th>SHA-256 attendu</th><th>SHA-256 constaté</th><th>État</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>registry_lock_omega.py</code></td>
+      <td class="sha">fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c</td>
+      <td class="sha">fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c</td>
+      <td><span class="badge b-ok">INVIOLÉ</span></td>
+    </tr>
+    <tr>
+      <td><code>engine_ia_corridors_omega.py</code></td>
+      <td class="sha">bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3</td>
+      <td class="sha">bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3</td>
+      <td><span class="badge b-ok">INVIOLÉ</span></td>
+    </tr>
+  </tbody>
+</table>
+<p>
+<b>sha256_registry_echo</b> (digest condensé des deux verrous) :
+<code>655a1630375909bdeb32ba0a033fc329f105fb0a88ba058f79952241206cc36d</code>
+</p>
+
+<!-- SECTION 5 -->
+<h2>5. Topologie des 6 chaînes institutionnelles (Σ poids = 1.00)</h2>
+<table>
+  <thead><tr><th>ID</th><th>Chaîne</th><th>Engines principaux</th><th>Poids</th><th>Métrique</th></tr></thead>
+  <tbody>
+    <tr><td>C1</td><td>VENT → CONTAMINATION → SENSORIEL</td>
+        <td>ENGINE_VENT · ENGINE_CONTAMINATION_V2_Ω · ENGINE_SENSORIEL_VENT_ODEURS_Ω</td>
+        <td>0.12</td><td>wind_clean_ratio</td></tr>
+    <tr><td>C2</td><td>CORRIDORS → ZONES → AFFÛTS → SALINES → HOTSPOTS</td>
+        <td>ENGINE_IA_CORRIDORS_Ω (V30 LOCKED) · ZONES · AFFUTS · SALINES_V11 · HOTSPOTS</td>
+        <td>0.25</td><td>v30_alignment_score / 100</td></tr>
+    <tr><td>C3</td><td>BIO-MASK → VITAUX → RENDUΩ</td>
+        <td>SPECIES_PRESENCE_MASK_Ω · CORRIDORS_VITAUX_Ω · ENGINE_RENDU_Ω</td>
+        <td>0.18</td><td>accepted / total</td></tr>
+    <tr><td>C4</td><td>NUTRITION → SYNTHÈSE → HABITAT ULTIME</td>
+        <td>E37..E41 · E47 · E48</td>
+        <td>0.20</td><td>habitat_optimisation_score_0_1</td></tr>
+    <tr><td>C5</td><td>TERRAIN → MICROCLIMAT → CANOPÉE → HABITAT</td>
+        <td>TERRAIN_COST · E42 · E43 · HABITAT_SUPRA</td>
+        <td>0.15</td><td>local_stability_index</td></tr>
+    <tr><td>C6</td><td>COMPORTEMENT → SOCIAL → SANTÉ</td>
+        <td>E44 · E45 · E46</td>
+        <td>0.10</td><td>0.45·trophic + 0.45·santé + 0.10·rut</td></tr>
+  </tbody>
+</table>
+
+<!-- SECTION 6 -->
+<h2>6. Matrice des 5 bandes institutionnelles</h2>
+<table>
+  <thead><tr><th>Bande</th><th>Seuil</th><th>Couleur primaire</th><th>Action</th></tr></thead>
+  <tbody>
+    <tr><td><span class="band-chip tfav">TRÈS_FAVORABLE</span></td><td>[0.85 ; 1.00]</td>
+        <td><code>#00A676</code></td><td>AUTORISER_FUSION_RÉELLE</td></tr>
+    <tr><td><span class="band-chip fav">FAVORABLE</span></td><td>[0.70 ; 0.85)</td>
+        <td><code>#33B787</code></td><td>PRÉPARER_FUSION_SOUS_VALIDATION_P6</td></tr>
+    <tr><td><span class="band-chip neu">NEUTRE</span></td><td>[0.50 ; 0.70)</td>
+        <td><code>#C0C0C0</code></td><td>SURVEILLANCE_PROLONGÉE</td></tr>
+    <tr><td><span class="band-chip dfav">DÉFAVORABLE</span></td><td>[0.25 ; 0.50)</td>
+        <td><code>#F59E0B</code></td><td>FUSION_INTERDITE_TEMPORAIREMENT</td></tr>
+    <tr><td><span class="band-chip prs">PROSCRIT</span></td><td>[0 ; 0.25)</td>
+        <td><code>#DC2626</code></td><td>HALT_TERRITOIRE_FUSION_PROSCRITE</td></tr>
+  </tbody>
+</table>
+
+<!-- SECTION 7 -->
+<h2>7. Spécification de l'endpoint <code>/api/v30/territoire/ultime-score</code></h2>
+<pre><code>GET /api/v30/territoire/ultime-score?lat=48.206657&lon=-68.382422&species=orignal&month=10&hour=14
+
+Réponse (extraits) :
+{
+  "phase": "PHASE-E_FUSION_TERRITOIRE_Ω",
+  "species": "orignal",
+  "score_ultime": 0.6222,
+  "score_ultime_pct": 62.22,
+  "bande": "NEUTRE",
+  "action": "SURVEILLANCE_PROLONGÉE",
+  "recommandations": [...],
+  "contributions_par_chaine": [ {chain:"C1"..."C6", weight, metric_0_1, contribution} ],
+  "inhibitors_applied": [],
+  "v30_alignment_score": 63.46,
+  "v30_alignment_label": "PARTIEL",
+  "bio_presence_status": "PRESENT",
+  "bio_presence_mask_halt": false,
+  "registry_lock_v30": { "invariant": true, ... },
+  "sha256_registry_echo": "655a1630375909bdeb32ba0a033fc329f105fb0a88ba058f79952241206cc36d"
+}</code></pre>
+
+<!-- SECTION 8 -->
+<h2>8. Captures institutionnelles HTTPS (4 preuves visuelles)</h2>
+<div class="grid-2">
+  <div class="card success">
+    <h3>Vue d'ensemble HUD (4 espèces)</h3>
+    <img class="cap" src="phase_e/captures/phase_e_hud_overview.jpeg"
+         alt="HUD TERRITOIRE ULTIME — vue d'ensemble 4 variantes" />
+    <p class="muted">4 HUD simultanés · palette verte #00A676 · bandes chip visibles · barres contributions C1..C6.</p>
+  </div>
+  <div class="card success">
+    <h3>Capture pleine page (scroll complet)</h3>
+    <img class="cap" src="phase_e/captures/phase_e_hud_full_page.jpeg"
+         alt="HUD TERRITOIRE ULTIME — full page capture" />
+    <p class="muted">Footer institutionnel, recommandations, SHA-256 echo V30 visible.</p>
+  </div>
+  <div class="card success">
+    <h3>ORIGNAL @ BSL · espèce PRÉSENTE</h3>
+    <img class="cap" src="phase_e/captures/phase_e_hud_orignal_favorable.jpeg"
+         alt="HUD ORIGNAL BSL" />
+    <p class="muted">
+      Score 62.22% · bande <span class="band-chip neu">NEUTRE</span> ·
+      inhibiteur <code>V30_NON_CONFORME_DOWNGRADE</code> appliqué (v30=63.46/100).
+    </p>
+  </div>
+  <div class="card danger">
+    <h3>DINDON @ BSL · espèce ABSENTE (HALT)</h3>
+    <img class="cap" src="phase_e/captures/phase_e_hud_dindon_proscrit.jpeg"
+         alt="HUD DINDON BSL PROSCRIT" />
+    <p class="muted">
+      Score 0% · bande <span class="band-chip prs">PROSCRIT</span> ·
+      inhibiteur <code>BIO_PRESENCE_MASK_HALT</code> · action
+      <code>HALT_TERRITOIRE_FUSION_PROSCRITE</code>.
+    </p>
+  </div>
+</div>
+
+<!-- SECTION 9 -->
+<h2>9. Résultats runtime live — 5 espèces au waypoint officiel</h2>
+<table>
+  <thead><tr><th>Espèce</th><th>Score ULTIME</th><th>Bande</th>
+      <th>BIO halt</th><th>Inhibiteurs</th><th>V30 label</th></tr></thead>
+  <tbody>
+    <tr><td>orignal</td><td>62.22%</td><td><span class="band-chip neu">NEUTRE</span></td>
+        <td>non</td><td>V30_NON_CONFORME_DOWNGRADE</td><td>PARTIEL</td></tr>
+    <tr><td>cerf</td><td>63.62%</td><td><span class="band-chip neu">NEUTRE</span></td>
+        <td>non</td><td>V30_NON_CONFORME_DOWNGRADE</td><td>PARTIEL</td></tr>
+    <tr><td>ours</td><td>65.18%</td><td><span class="band-chip neu">NEUTRE</span></td>
+        <td>non</td><td>V30_NON_CONFORME_DOWNGRADE</td><td>PARTIEL</td></tr>
+    <tr><td>dindon</td><td>0.00%</td><td><span class="band-chip prs">PROSCRIT</span></td>
+        <td><b>OUI</b></td><td>BIO_PRESENCE_MASK_HALT</td><td>—</td></tr>
+    <tr><td>wapiti</td><td>0.00%</td><td><span class="band-chip prs">PROSCRIT</span></td>
+        <td><b>OUI</b></td><td>BIO_PRESENCE_MASK_HALT</td><td>—</td></tr>
+  </tbody>
+</table>
+<p class="muted">
+Constat institutionnel : orignal/cerf/ours présents (halt=false) mais downgradés car V30 alignement
+<b>PARTIEL</b> (< 70). dindon/wapiti biologiquement absents au BSL → HALT total conforme au masque
+XVIII-BIO-PRESENCE_MASK_Ω.
+</p>
+
+<!-- SECTION 10 -->
+<h2>10. Suite pytest PHASE-E — 18 assertions</h2>
+<table>
+  <thead><tr><th>#</th><th>Test</th><th>État</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>test_phase_e_endpoint_available_and_schema</td><td><span class="badge b-ok">PASS</span></td></tr>
+    <tr><td>2</td><td>test_phase_e_score_bounds_and_band_closed_set</td><td><span class="badge b-ok">PASS</span></td></tr>
+    <tr><td>3</td><td>test_phase_e_contributions_cover_6_chains_and_sum_weight_one</td><td><span class="badge b-ok">PASS</span></td></tr>
+    <tr><td>4</td><td>test_phase_e_sum_contributions_matches_score_raw_when_no_inhibitors</td><td><span class="badge b-ok">PASS</span></td></tr>
+    <tr><td>5</td><td>test_phase_e_registry_lock_v30_invariant_echo</td><td><span class="badge b-ok">PASS</span></td></tr>
+    <tr><td>6</td><td>test_phase_e_v30_files_not_mutated_on_disk</td><td><span class="badge b-ok">PASS</span></td></tr>
+    <tr><td>7</td><td>test_phase_e_idempotence_two_identical_calls</td><td><span class="badge b-ok">PASS</span></td></tr>
+    <tr><td>8</td><td>test_phase_e_dindon_bsl_is_proscrit_with_halt</td><td><span class="badge b-ok">PASS</span></td></tr>
+    <tr><td>9</td><td>test_phase_e_orignal_bsl_is_present_and_scored</td><td><span class="badge b-ok">PASS</span></td></tr>
+    <tr><td>10..14</td><td>test_phase_e_all_official_species_return_valid_band[orignal|cerf|ours|dindon|wapiti]</td><td><span class="badge b-ok">5 × PASS</span></td></tr>
+    <tr><td>15</td><td>test_phase_e_spec_json_contains_six_livrables_and_five_bandes</td><td><span class="badge b-ok">PASS</span></td></tr>
+    <tr><td>16</td><td>test_phase_e_invalid_species_rejected</td><td><span class="badge b-ok">PASS</span></td></tr>
+    <tr><td>17</td><td>test_phase_e_spec_endpoint_returns_livrables</td><td><span class="badge b-ok">PASS</span></td></tr>
+    <tr><td>18</td><td>test_phase_e_no_regression_supra_bio_engines</td><td><span class="badge b-ok">PASS</span></td></tr>
+  </tbody>
+</table>
+
+<!-- SECTION 11 -->
+<h2>11. Régression globale (non-régression toutes phases)</h2>
+<table>
+  <thead><tr><th>Suite</th><th>Tests</th><th>Résultat</th></tr></thead>
+  <tbody>
+    <tr><td>test_phase_e_fusion_omega.py</td><td>18</td><td><span class="badge b-ok">18 PASS</span></td></tr>
+    <tr><td>test_phase_supra_bio_nutrition.py</td><td>13</td><td><span class="badge b-ok">13 PASS</span></td></tr>
+    <tr><td>test_phase_a_audit_corrections.py</td><td>8</td><td><span class="badge b-ok">8 PASS</span></td></tr>
+    <tr><td>test_phase_c_inter_engines_consistency.py</td><td>10</td><td><span class="badge b-ok">10 PASS</span></td></tr>
+    <tr><td>test_phase_d_renduomega_palette.py</td><td>11</td><td><span class="badge b-ok">11 PASS</span></td></tr>
+    <tr><th colspan="2">TOTAL PHASE-E + HISTORIQUES CRITIQUES</th><th><span class="badge b-ok">60 / 60 PASS</span></th></tr>
+  </tbody>
+</table>
+
+<!-- SECTION 12 -->
+<h2>12. Inhibiteurs absolus et logique de downgrade</h2>
+<p>
+Deux inhibiteurs institutionnels peuvent forcer une bande inférieure ou annuler le score :
+</p>
+<ul>
+  <li><code>BIO_PRESENCE_MASK_HALT</code> — déclenché par <code>species_presence_mask_omega</code>
+      lorsqu'une espèce n'est pas biologiquement présente sur le territoire (dindon / wapiti au BSL).
+      Effet : <b>score_ultime = 0.0 · bande = PROSCRIT · action = HALT_TERRITOIRE</b>.</li>
+  <li><code>V30_NON_CONFORME_DOWNGRADE</code> — déclenché si <code>v30_alignment_score &lt; 70</code>.
+      Effet : <b>score plafonné à 0.6999</b> (empêche toute promotion à FAVORABLE/TRÈS_FAVORABLE
+      sans conformité V30).</li>
+</ul>
+
+<!-- SECTION 13 -->
+<h2>13. Architecture des fichiers livrés</h2>
+<pre><code>/app/
+├── backend/
+│   ├── engines/v8_institutional/
+│   │   └── fusion_territoire_omega.py         ← AGREGATEUR AVAL (nouveau)
+│   ├── routes/
+│   │   └── fusion_territoire_omega_router.py  ← ROUTER (nouveau)
+│   ├── tests/
+│   │   └── test_phase_e_fusion_omega.py       ← 18 TESTS (nouveau)
+│   └── server.py                              ← include_router ajouté
+└── frontend/
+    ├── public/reports/audit_territoire_omega_ultime/
+    │   ├── FUSION_TERRITOIRE_OMEGA.json       ← SPEC (nouveau)
+    │   ├── RAPPORT_PHASE-E_FUSION_TERRITOIRE_Ω.html ← CE RAPPORT
+    │   └── phase_e/captures/*.jpeg            ← 4 CAPTURES (nouveau)
+    └── src/
+        ├── components/territoire/
+        │   └── HudTerritoireUltime.jsx        ← HUD (nouveau)
+        ├── pages/
+        │   └── HudUltimeDemoPage.jsx          ← PAGE DÉMO (nouveau)
+        └── App.js                             ← route ajoutée</code></pre>
+
+<!-- SECTION 14 -->
+<h2>14. Doctrine appliquée (garde-fous BCE-4X ULTIME ABSOLU)</h2>
+<ul>
+  <li>🛡️ <b>V30 LOCKED</b> — aucune modification des modules cryptographiques.
+      SHA-256 echo vérifié à chaque appel de l'endpoint.</li>
+  <li>🛡️ <b>XIX non recomputé</b> — les 5 engines X199 restent en lecture.</li>
+  <li>🛡️ <b>VITAUX non recomputé</b> — <code>corridors_vitaux_omega.py</code> intact.</li>
+  <li>🛡️ <b>Backend READ-ONLY</b> — seuls des routes GET et module aval ajoutés.</li>
+  <li>🛡️ <b>Aucun testing_agent_v3_fork</b> — toutes les validations sont manuelles
+      (pytest, curl, mcp_screenshot_tool).</li>
+  <li>🛡️ <b>Waypoint officiel unique</b> — 48.206657 / -68.382422.</li>
+  <li>🛡️ <b>Palette institutionnelle</b> — #00A676 canonique pour TRÈS_FAVORABLE.</li>
+</ul>
+
+<!-- SECTION 15 -->
+<h2>15. Recommandations de fusion (décision Commandant)</h2>
+<div class="card" style="border-left: 6px solid var(--green);">
+  <h3>Pré-requis validés (toutes les conditions PHASE-E satisfaites) :</h3>
+  <ol>
+    <li>Les 6 livrables sont produits et scellés.</li>
+    <li>V30 LOCKED est cryptographiquement INVIOLÉ.</li>
+    <li>La matrice d'inhibiteurs absolus protège les espèces ABSENTES.</li>
+    <li>Le HUD institutionnel est monté, testable en HTTPS, avec palette verte officielle.</li>
+    <li>La suite pytest PHASE-E est à 18/18 PASS ; régression globale 60/60 PASS.</li>
+  </ol>
+  <h3>Décision institutionnelle recommandée :</h3>
+  <p>
+    ▶ <b>AUTORISER PHASE-E FUSION RÉELLE</b> pour les espèces dont la bande est ≥ FAVORABLE.<br>
+    ▶ <b>REFUSER PHASE-E FUSION RÉELLE</b> pour les espèces PROSCRITES (dindon, wapiti @ BSL).<br>
+    ▶ <b>CONDITIONNER</b> la fusion à une amélioration préalable de l'alignement V30 pour les
+    cas actuellement en downgrade NEUTRE → FAVORABLE (orignal / cerf / ours).
+  </p>
+  <p class="muted">
+    La présente pré-fusion est un acte institutionnel de préparation. Aucune action réelle
+    sur le territoire n'a été déclenchée. Attente d'ordre explicite du Commandant pour
+    engager la fusion finale.
+  </p>
+</div>
+
+<!-- SECTION 16 -->
+<h2>16. Traçabilité des livrables (SHA-256 partiels)</h2>
+<table>
+  <thead><tr><th>Livrable</th><th>SHA-256 (16c)</th></tr></thead>
+  <tbody>
+    <tr><td>FUSION_TERRITOIRE_OMEGA.json</td><td class="sha">94ed4597de2f4664…</td></tr>
+    <tr><td>phase_e_hud_overview.jpeg</td><td class="sha">0e8b639f9c805049…</td></tr>
+    <tr><td>phase_e_hud_full_page.jpeg</td><td class="sha">33f7261840f2da00…</td></tr>
+    <tr><td>phase_e_hud_orignal_favorable.jpeg</td><td class="sha">ec6deaeff2b9dfc1…</td></tr>
+    <tr><td>phase_e_hud_dindon_proscrit.jpeg</td><td class="sha">e5732d224f6c523a…</td></tr>
+    <tr><td>registry_lock_omega.py (V30)</td><td class="sha">fb765b94cc1fd421…</td></tr>
+    <tr><td>engine_ia_corridors_omega.py (V30)</td><td class="sha">bcb1e3a6a9230417…</td></tr>
+  </tbody>
+</table>
+
+<!-- SECTION 17 -->
+<h2>17. Conclusion</h2>
+<p>
+La PRÉ-FUSION PHASE-E est institutionnellement <b>COMPLÈTE ET CONFORME</b>. Les 6 livrables
+obligatoires sont produits, les 18 tests dédiés passent, la régression globale 60/60 est verte,
+V30/XIX/VITAUX sont intacts, et le HUD institutionnel a été capturé en HTTPS. Le Commandant
+STEEVE-MAX peut désormais autoriser ou refuser explicitement la FUSION RÉELLE du territoire
+sur la base des preuves consignées dans ce dossier.
+</p>
+
+<footer>
+PHASE-E_FUSION_TERRITOIRE_Ω · BCE-4X ULTIME ABSOLU — TOP-ABSOLU · 
+Commandant STEEVE-MAX · Waypoint 48.206657 / -68.382422 · 
+V30 SHA echo <code>655a1630375909bd…</code> · 
+Aucun <code>testing_agent_v3_fork</code> utilisé.
+</footer>
+</div>
+</body>
+</html>

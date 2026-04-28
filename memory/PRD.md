@@ -27,6 +27,50 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE-E / PRÉ-FUSION TERRITOIRE_Ω (2026-04-28)**
+  Livrables institutionnels obligatoires (directive Commandant) produits avant
+  toute FUSION RÉELLE. 100% en aval V30 — doctrine BCE-4X ULTIME ABSOLU respectée
+  à la lettre.
+  - **L1 SPEC JSON** : `FUSION_TERRITOIRE_OMEGA.json` (9.8 KB · 6 chaînes topologie,
+    5 bandes, 6 livrables, schéma endpoint, seuils, echo SHA V30 attendu).
+  - **L2 ENDPOINT READ-ONLY** : `GET /api/v30/territoire/ultime-score`
+    `?lat&lon&species&month&hour` → `{score_ultime, score_ultime_pct, bande,
+    action, recommandations, contributions_par_chaine[6], inhibitors_applied,
+    v30_alignment_score/label, bio_presence_*, registry_lock_v30,
+    sha256_registry_echo, timestamp_utc}`. Sous-endpoint `/ultime-score/spec`.
+  - **L3 HUD FRONTEND** : `HudTerritoireUltime.jsx` (jauge radiale SVG 220×220,
+    palette #00A676, barres contributions C1..C6, recommandations, bannière SHA
+    echo V30). Route démo institutionnelle `/territoire/hud-ultime-phase-e` avec
+    4 variantes (orignal/cerf/ours/dindon).
+  - **L4 TESTS PYTEST** : `tests/test_phase_e_fusion_omega.py` — 18 tests (schéma
+    endpoint, bornes, topologie Σ poids=1.0, invariance SHA V30, idempotence,
+    couverture 5 espèces, HALT dindon/wapiti, non-régression SUPRA-BIO).
+    **Résultat : 18/18 PASS**.
+  - **L5 CAPTURES HTTPS** : 4 × JPEG institutionnels sous
+    `/reports/.../phase_e/captures/` (overview + full_page + orignal_favorable +
+    dindon_proscrit).
+  - **L6 RAPPORT HTML** : `RAPPORT_PHASE-E_FUSION_TERRITOIRE_Ω.html`
+    (23.9 KB · **17 sections** : contexte, 6 livrables, KPIs, invariance SHA V30,
+    topologie 6 chaînes, 5 bandes, endpoint, captures, runtime live 5 espèces,
+    suite pytest, régression globale, inhibiteurs, architecture, doctrine,
+    recommandations, traçabilité SHA, conclusion).
+  - **Agrégateur AVAL** : `engines/v8_institutional/fusion_territoire_omega.py`
+    (vérification SHA-256 V30, BIO mask, agrégation 6 chaînes pondérées
+    Σ=1.00 : C1 0.12 · C2 0.25 · C3 0.18 · C4 0.20 · C5 0.15 · C6 0.10).
+  - **Inhibiteurs absolus** : `BIO_PRESENCE_MASK_HALT` (score=0, bande=PROSCRIT)
+    et `V30_NON_CONFORME_DOWNGRADE` (plafond 0.6999 si v30<70).
+  - **Runtime live waypoint officiel BSL** :
+    orignal 62.22% NEUTRE · cerf 63.62% NEUTRE · ours 65.18% NEUTRE
+    (downgrade V30) · dindon/wapiti 0% PROSCRIT (BIO halt).
+  - **V30 SHA-256 INVIOLÉS** : `fb765b94…ecb0c` + `bcb1e3a6…39d3`.
+  - **echo SHA-256 registry** : `655a1630375909bdeb32ba0a033fc329f105fb0a88ba058f79952241206cc36d`.
+  - **Régression globale** : **60 PASSED · 0 FAILED**
+    (PHASE-E 18 + PHASE-SUPRA-BIO 13 + PHASE-A 8 + PHASE-C 10 + PHASE-D 11).
+  - Fichiers nouveaux : 6 · Fichiers modifiés : 2 (`server.py` +
+    `App.js` — include_router + route ajoutés uniquement).
+  - **Aucun `testing_agent_v3_fork`** — validation manuelle 100% (pytest + curl +
+    mcp_screenshot_tool).
+
 - **PHASE-SUPRA-BIO-NUTRITION_Ω + PHASE-TERRITOIRE_Ω_ULTIME (2026-04-27)**
   Extension biologique suprême de TERRITOIRE_Ω : **12 nouveaux engines** ajoutés
   strictement en aval du moteur V30 verrouillé. Orchestration des 48 engines

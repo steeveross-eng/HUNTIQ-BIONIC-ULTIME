@@ -1213,6 +1213,14 @@ try:
 except Exception as e:
     logger.warning(f"XVIII-BIO SPECIES_PRESENCE_MASK_Ω router not loaded: {e}")
 
+# ═══ PHASE-E — FUSION_TERRITOIRE_Ω (PRÉ-FUSION · LECTURE SEULE · AVAL V30) ═══
+try:
+    from routes.fusion_territoire_omega_router import router as fusion_territoire_router
+    app.include_router(fusion_territoire_router)
+    logger.info("✓ PHASE-E active : FUSION_TERRITOIRE_Ω (/api/v30/territoire/ultime-score)")
+except Exception as e:
+    logger.warning(f"PHASE-E FUSION_TERRITOIRE_Ω router not loaded: {e}")
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

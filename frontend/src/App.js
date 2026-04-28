@@ -88,6 +88,7 @@ const Carte2027Page = lazy(() => import("@/pages/Carte2027Page"));
 // Phase XI-SUPRA-D : Route stable pour captures Playwright institutionnelles
 // Import statique (pas lazy) pour éviter tout remount/suspense sur capture-mode
 import TerritoireCaptureModePage from "@/pages/TerritoireCaptureModePage";
+import HudUltimeDemoPage from "@/pages/HudUltimeDemoPage";
 // VIS-E: Vision Notifications Panel
 import VisionNotificationsPanel from '@/components/VisionNotificationsPanel';
 // PHASE_X200_P4_RUNTIME_BEACON_Ω — attestation runtime institutionnelle (LAT 48.206657 / LNG -68.382422)
@@ -1064,6 +1065,8 @@ function App() {
                 <Route path="/analytics" element={<AnalyticsPage />} />
                 {/* CARTE-RETRAIT-Omega: /map redirige vers territoire */}
                 <Route path="/map" element={<Navigate to="/mon-territoire-bionic" replace />} />
+                {/* PHASE-E PRÉ-FUSION : HUD TERRITOIRE ULTIME (page démo institutionnelle) */}
+                <Route path="/territoire/hud-ultime-phase-e" element={<HudUltimeDemoPage />} />
                 {/* CARTE-2027-REBUILD: Nouvelle carte terrain V7 */}
                 <Route path="/carte-2027" element={<Carte2027Page />} />
                 <Route path="/forecast" element={<ForecastPage />} />
