@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>RAPPORT AUDIT C1 — VENT → CONTAMINATION → SENSORIEL</title>
+<style>
+:root{--green:#00A676;--green-deep:#0B3D2E;--bg:#F7FAFC;--ink:#0F172A;--gray:#6B7280;--red:#DC2626;--amber:#F59E0B;}
+*{box-sizing:border-box;}body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.5;}
+.container{max-width:1240px;margin:0 auto;padding:32px 24px 72px;}
+header.banner{background:linear-gradient(135deg,#0B3D2E,#12563F 50%,#0B3D2E);
+  color:#fff;padding:28px 24px;border-radius:12px;margin-bottom:28px;
+  box-shadow:0 10px 30px rgba(0,166,118,0.18);border:2px solid var(--green);}
+header.banner h1{font-size:28px;margin:6px 0;}
+.tag{background:var(--green);color:#fff;padding:3px 10px;border-radius:4px;
+  font-weight:700;font-size:11px;letter-spacing:1px;display:inline-block;}
+.tag.danger{background:var(--red);}
+.meta{color:#B2F2D9;font-size:13px;margin-top:10px;}
+h2{color:var(--green);border-bottom:2px solid var(--green);padding-bottom:6px;
+  margin-top:48px;font-size:20px;letter-spacing:0.3px;}
+h3{color:#1F2937;margin-top:22px;}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;}
+th,td{padding:9px 11px;text-align:left;border-bottom:1px solid #E5E7EB;}
+th{background:var(--green);color:#fff;letter-spacing:0.3px;font-weight:700;}
+tr:nth-child(even) td{background:#F9FDFB;}
+.badge{padding:2px 9px;border-radius:10px;font-size:11px;font-weight:700;}
+.b-ok{background:var(--green);color:#fff;}
+.b-err{background:var(--red);color:#fff;}
+.b-warn{background:var(--amber);color:#1F2937;}
+code{font-family:JetBrains Mono,Menlo,Consolas,monospace;background:#E5F6EF;
+  color:#0B3D2E;padding:2px 6px;border-radius:4px;font-size:11px;}
+pre{background:#0B3D2E;color:#B2F2D9;padding:12px;border-radius:6px;overflow-x:auto;font-size:11px;}
+.muted{color:var(--gray);font-size:11px;}
+.sha{font-family:monospace;font-size:10px;color:var(--gray);word-break:break-all;}
+.callout{padding:18px;border-left:6px solid var(--red);background:linear-gradient(180deg,#FEF2F2,#FEE2E2);
+  border-radius:6px;font-size:14px;}
+.callout.success{border-left-color:var(--green);background:linear-gradient(180deg,#F4FEF9,#E5F6EF);}
+footer{margin-top:40px;padding:16px;border-top:1px dashed var(--gray);
+  text-align:center;color:var(--gray);font-size:12px;}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:12px 0;}
+.card{text-align:center;border:1px solid #D1D5DB;padding:14px;border-radius:8px;background:#fff;}
+.val{font-size:22px;font-weight:800;color:var(--green);}
+.val.danger{color:var(--red);}
+.lbl{font-size:10px;color:var(--gray);letter-spacing:0.5px;margin-top:4px;}
+</style></head><body><div class="container">
+
+<header class="banner">
+<span class="tag danger">AUDIT C1 · LECTURE SEULE</span>
+<h1>RAPPORT AUDIT C1 — VENT → CONTAMINATION → SENSORIEL</h1>
+<div class="meta">Commandant : <b>STEEVE-MAX</b> · Protocole : <b>BCE-4X ULTIME ABSOLU — TOP-ABSOLU</b></div>
+<div class="meta">Émis : <b>2026-04-28T14:06:52.721490Z</b> · Type : <b>LECTURE_SEULE</b></div>
+<div class="meta">🛡️ V30 LOCKED · XIX/VITAUX non recomputés · Aucun engine modifié · Aucun <code>testing_agent_v3_fork</code></div>
+</header>
+
+<h2>1. CONCLUSION INSTITUTIONNELLE — VERDICT GLOBAL</h2>
+<div class="callout">
+<b>NON_ALIGNÉ — CAUSE IDENTIFIÉE : H2 (inversion convention from/to) + H3 (projection cône non inversée)</b><br>
+<span class="muted">Δ mesuré = 180° EXACTEMENT ·
+reproductibilité 100% (3/3 waypoints, 5/5 wind_deg testés) ·
+fichier principal anomal : <code>backend/engines/v8_institutional/engine_vent.py</code></span>
+</div>
+
+<h2>2. PÉRIMÈTRE D'AUDIT (Article 1)</h2>
+<table>
+<thead><tr><th>Engine / Module</th><th>Chemin</th></tr></thead>
+<tbody>
+<tr><td><b>E19 ENGINE_VENT</b></td><td><code>backend/engines/v8_institutional/engine_vent.py</code></td></tr>
+<tr><td><b>E18 ENGINE_CONTAMINATION_V2_Ω</b></td><td><code>backend/engines/v8_institutional/engine_contamination_v2_omega.py</code></td></tr>
+<tr><td><b>E21 ENGINE_SENSORIEL_VENT_ODEURS_Ω</b></td><td><code>backend/engines/v8_institutional/engine_sensoriel_vent_odeurs_omega.py</code></td></tr>
+<tr><td>FRONTEND HUD COMPASS_Ω</td><td><code>frontend/src/components/territoire/CompassOmegaWidget.jsx</code></td></tr>
+<tr><td>FRONTEND BionicLayersV8 (couches VENT/CONTAM/SENSORIEL)</td><td><code>frontend/src/components/territoire/BionicLayersV8.jsx</code></td></tr>
+</tbody></table>
+
+<h2>3. CONVENTION D'ANGLE — SOURCE & CIBLES</h2>
+<div class="callout success">
+<b>Convention Open-Meteo / OMM (norme officielle) :</b><br>
+<code>wind_direction_10m</code> = <b>FROM</b> — direction <b>DEPUIS</b> laquelle le vent souffle (0° = Nord, 90° = Est).<br>
+Référence : <code>OMM / WMO Manual on Codes No.306 — wind direction = direction FROM which the wind is blowing</code>
+</div>
+<h3>Engines traitant comme "FROM" (corrects)</h3>
+<ul><li><code>engine_sensoriel_vent_odeurs_omega.py (cone_axis = wind_deg + 180°)</code></li><li><code>engines/hunt_orchestrator/vent_odeurs.py (scent_bearing = wind_direction_deg + 180°)</code></li><li><code>engines/hunt_orchestrator/access_engine.py:815 ("Le vent vient de cette direction")</code></li></ul>
+<h3>Engines traitant comme "TO" (incorrects · cause de l'anomalie)</h3>
+<ul><li><code>engine_vent.py:compute_scent_cone (utilise wind_deg directement)</code></li><li><code>engine_vent.py:compute_wind_vectors (direction_deg = wind_deg + offset)</code></li></ul>
+
+<h2>4. KPIs DE L'AUDIT</h2>
+<div class="kpi">
+<div class="card"><div class="val danger">180.0°</div><div class="lbl">Δ MESURÉ</div></div>
+<div class="card"><div class="val">3 / 3</div><div class="lbl">WAYPOINTS INCOHÉRENTS</div></div>
+<div class="card"><div class="val">2 / 4</div><div class="lbl">HYPOTHÈSES CONFIRMÉES</div></div>
+<div class="card"><div class="val">1</div><div class="lbl">FICHIER ANOMAL</div></div>
+<div class="card"><div class="val">✓</div><div class="lbl">V30 INVIOLÉ</div></div>
+<div class="card"><div class="val">✓</div><div class="lbl">FUSION CORRECTE</div></div>
+</div>
+
+<h2>5. TESTS EMPIRIQUES — 3 WAYPOINTS (Article 2 démonstration graphique)</h2>
+<div style="text-align:center;background:#F4FEF9;padding:14px;border-radius:8px;">
+<div style="margin:6px;display:inline-block;text-align:center;">
+<svg viewBox="0 0 220 220" width="220" height="220" style="background:#0B3D2E;border-radius:8px;">
+  <circle cx="110" cy="110" r="90" fill="rgba(255,255,255,0.04)" stroke="rgba(245,245,245,0.35)" stroke-width="1"/>
+  <text x="110" y="14" text-anchor="middle" fill="#F5F5F5" font-size="11" font-weight="700">N</text>
+  <text x="110" y="214" text-anchor="middle" fill="#BDBDBD" font-size="10">S</text>
+  <text x="214" y="114" text-anchor="end" fill="#BDBDBD" font-size="10">E</text>
+  <text x="6" y="114" text-anchor="start" fill="#BDBDBD" font-size="10">O</text>
+  <!-- Cône scent_cone (engine_vent — INCOHÉRENT) -->
+  <path d="M 110 110 L 187.3 89.3 A 80 80 0 0 1 187.3 130.7 Z" fill="rgba(220,38,38,0.35)" stroke="#DC2626" stroke-width="1"/>
+  <!-- Cône sensoriel (engine_sensoriel — CORRECT downwind) -->
+  <path d="M 110 110 L 32.7 130.7 A 80 80 0 0 1 32.7 89.3 Z" fill="rgba(0,166,118,0.35)" stroke="#00A676" stroke-width="1"/>
+  <!-- Flèche centrale wind_vectors -->
+  <line x1="100.0" y1="110.0" x2="180.0" y2="110.0" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/><polygon points="180.0,110.0 172.0,115.0 172.0,105.0" fill="#FFFFFF"/>
+  <text x="110" y="208" text-anchor="middle" fill="#B2F2D9" font-size="9">BSL_OFFICIEL</text>
+</svg>
+<div class="muted" style="font-size:10px;color:#374151;">scent_cone (rouge) 90° vs sensoriel (vert) 270°</div></div><div style="margin:6px;display:inline-block;text-align:center;">
+<svg viewBox="0 0 220 220" width="220" height="220" style="background:#0B3D2E;border-radius:8px;">
+  <circle cx="110" cy="110" r="90" fill="rgba(255,255,255,0.04)" stroke="rgba(245,245,245,0.35)" stroke-width="1"/>
+  <text x="110" y="14" text-anchor="middle" fill="#F5F5F5" font-size="11" font-weight="700">N</text>
+  <text x="110" y="214" text-anchor="middle" fill="#BDBDBD" font-size="10">S</text>
+  <text x="214" y="114" text-anchor="end" fill="#BDBDBD" font-size="10">E</text>
+  <text x="6" y="114" text-anchor="start" fill="#BDBDBD" font-size="10">O</text>
+  <!-- Cône scent_cone (engine_vent — INCOHÉRENT) -->
+  <path d="M 110 110 L 187.3 89.3 A 80 80 0 0 1 187.3 130.7 Z" fill="rgba(220,38,38,0.35)" stroke="#DC2626" stroke-width="1"/>
+  <!-- Cône sensoriel (engine_sensoriel — CORRECT downwind) -->
+  <path d="M 110 110 L 32.7 130.7 A 80 80 0 0 1 32.7 89.3 Z" fill="rgba(0,166,118,0.35)" stroke="#00A676" stroke-width="1"/>
+  <!-- Flèche centrale wind_vectors -->
+  <line x1="100.0" y1="110.0" x2="180.0" y2="110.0" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/><polygon points="180.0,110.0 172.0,115.0 172.0,105.0" fill="#FFFFFF"/>
+  <text x="110" y="208" text-anchor="middle" fill="#B2F2D9" font-size="9">ESTRIE_FRELIGHSBURG</text>
+</svg>
+<div class="muted" style="font-size:10px;color:#374151;">scent_cone (rouge) 90° vs sensoriel (vert) 270°</div></div><div style="margin:6px;display:inline-block;text-align:center;">
+<svg viewBox="0 0 220 220" width="220" height="220" style="background:#0B3D2E;border-radius:8px;">
+  <circle cx="110" cy="110" r="90" fill="rgba(255,255,255,0.04)" stroke="rgba(245,245,245,0.35)" stroke-width="1"/>
+  <text x="110" y="14" text-anchor="middle" fill="#F5F5F5" font-size="11" font-weight="700">N</text>
+  <text x="110" y="214" text-anchor="middle" fill="#BDBDBD" font-size="10">S</text>
+  <text x="214" y="114" text-anchor="end" fill="#BDBDBD" font-size="10">E</text>
+  <text x="6" y="114" text-anchor="start" fill="#BDBDBD" font-size="10">O</text>
+  <!-- Cône scent_cone (engine_vent — INCOHÉRENT) -->
+  <path d="M 110 110 L 187.3 89.3 A 80 80 0 0 1 187.3 130.7 Z" fill="rgba(220,38,38,0.35)" stroke="#DC2626" stroke-width="1"/>
+  <!-- Cône sensoriel (engine_sensoriel — CORRECT downwind) -->
+  <path d="M 110 110 L 32.7 130.7 A 80 80 0 0 1 32.7 89.3 Z" fill="rgba(0,166,118,0.35)" stroke="#00A676" stroke-width="1"/>
+  <!-- Flèche centrale wind_vectors -->
+  <line x1="100.0" y1="110.0" x2="180.0" y2="110.0" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/><polygon points="180.0,110.0 172.0,115.0 172.0,105.0" fill="#FFFFFF"/>
+  <text x="110" y="208" text-anchor="middle" fill="#B2F2D9" font-size="9">MONTREAL_NORD</text>
+</svg>
+<div class="muted" style="font-size:10px;color:#374151;">scent_cone (rouge) 90° vs sensoriel (vert) 270°</div></div>
+<p class="muted">Légende : <span style="color:#DC2626;">■</span> cône <code>engine_vent.scent_cone</code> (incohérent)
+· <span style="color:#00A676;">■</span> cône <code>engine_sensoriel.cone_axis_deg</code> (correct downwind)
+· <span style="color:#0F172A;">→</span> flèche <code>wind_vectors[central].direction_deg</code></p>
+</div>
+
+<h3>Tests unitaires synthétiques (wind_deg=90°)</h3>
+<table>
+<thead><tr><th>Waypoint</th><th>lat</th><th>lon</th><th>wind_deg input</th>
+<th>scent_cone.direction</th><th>wind_vectors[central].dir</th><th>sensoriel.cone_axis</th><th>Δ</th><th>Verdict</th></tr></thead>
+<tbody><tr><td><b>BSL_OFFICIEL</b></td><td>48.206657</td><td>-68.382422</td><td>90.0°</td><td>90.0°</td><td>90.0°</td><td>270.0°</td><td><b>180.0°</b></td><td><span class='badge b-err'>INCOHÉRENT_180_DEG</span></td></tr><tr><td><b>ESTRIE_FRELIGHSBURG</b></td><td>45.0</td><td>-72.8</td><td>90.0°</td><td>90.0°</td><td>90.0°</td><td>270.0°</td><td><b>180.0°</b></td><td><span class='badge b-err'>INCOHÉRENT_180_DEG</span></td></tr><tr><td><b>MONTREAL_NORD</b></td><td>45.7</td><td>-73.6</td><td>90.0°</td><td>90.0°</td><td>90.0°</td><td>270.0°</td><td><b>180.0°</b></td><td><span class='badge b-err'>INCOHÉRENT_180_DEG</span></td></tr></tbody></table>
+
+<h3>Tests runtime live (Open-Meteo réel via /api/v20/territoire/bundle)</h3>
+<table>
+<thead><tr><th>Waypoint</th><th>OM wind_deg</th><th>wind_vectors[central].dir</th>
+<th>sensoriel.cone_axis</th><th>Δ</th><th>Verdict</th>
+<th>contam cones</th><th>contam_v2.score</th><th>contam_v2_heatmap.zones</th></tr></thead>
+<tbody><tr><td><b>BSL_OFFICIEL</b></td><td>141°</td><td>141°</td><td>321.0°</td><td><b>180.0°</b></td><td><span class='badge b-err'>INCOHÉRENT_180_DEG</span></td><td>0</td><td>100</td><td>3</td></tr><tr><td><b>ESTRIE_FRELIGHSBURG</b></td><td>155°</td><td>155°</td><td>335.0°</td><td><b>180.0°</b></td><td><span class='badge b-err'>INCOHÉRENT_180_DEG</span></td><td>0</td><td>70</td><td>3</td></tr><tr><td><b>MONTREAL_NORD</b></td><td>156°</td><td>156°</td><td>336.0°</td><td><b>180.0°</b></td><td><span class='badge b-err'>INCOHÉRENT_180_DEG</span></td><td>0</td><td>100</td><td>3</td></tr></tbody></table>
+
+<h2>6. HYPOTHÈSES H1–H4 (Article 3)</h2>
+<table>
+<thead><tr><th>Hypothèse</th><th>Verdict</th><th>Preuve</th></tr></thead>
+<tbody><tr><td><b>H1_vent_HUD_neq_engines_source_or_timestamp</b></td><td><span class='badge b-ok'>INFIRMÉE</span></td><td>Tous les engines C1 reçoivent wind_deg de la même source Open-Meteo via le même bundle V20 (cf. v20_performance_bundle._build_bundle / hunt_orchestrator/orchestrator.py:340 "real_open_meteo_v3"). Pas de désynchronisation source/timestamp détectée.</td></tr><tr><td><b>H2_inversion_from_to_dans_la_direction</b></td><td><span class='badge b-err'>CONFIRMÉE</span></td><td>engine_sensoriel_vent_odeurs_omega.py:24 calcule cone_axis_deg = (wind_deg + 180) % 360 (traite wind_deg comme convention météo "FROM" — origine). engine_vent.py:46-47 (compute_scent_cone) et engine_vent.py:21 (compute_wind_vectors) utilisent wind_deg sans inversion (traitent wind_deg comme convention vectorielle "TO"). Open-Meteo retourne wind_direction_10m en convention "FROM" (norme OMM/WMO). Δ mesuré = 180° EXACTEMENT sur 3 waypoints (BSL, ESTRIE, MONTREAL) en runtime live.</td></tr><tr><td><b>H3_pivot_ou_projection_incorrecte_des_cones</b></td><td><span class='badge b-warn'>CONFIRMÉE_PARTIELLEMENT</span></td><td>compute_scent_cone (engine_vent.py:43-59) projette le cône sur l'axe wind_deg directement. Cela rend le pivot correct (origine = waypoint) MAIS la projection (left/right) est inversée de 180° par rapport à engine_sensoriel_vent_odeurs.cone_axis_deg. Aucune erreur de cosinus(lat) — cos_lat est correctement appliqué. Le problème est uniquement la convention angulaire, pas la géométrie de projection.</td></tr><tr><td><b>H4_couche_CONTAM_legacy_non_recalee</b></td><td><span class='badge b-ok'>INFIRMÉE</span></td><td>En production, BionicLayersV8.jsx ligne 1366 rend la couche contamination via bundleData.contamination_v2_heatmap.zones (zones MFFP statiques CWD), non pas via les cônes scent_cone d'engine_vent. La couche bundleData.contamination (legacy/dynamique) est vide en runtime live. Donc visuellement, l'utilisateur ne voit PAS le décalage 180° dans la couche CONTAM. Mais si bundle.contamination était activé (legacy), il afficherait des cônes inversés.</td></tr></tbody></table>
+
+<h2>7. SHA-256 DES MODULES AUDITÉS</h2>
+<table>
+<thead><tr><th>Module</th><th>Chemin</th><th>SHA-256</th></tr></thead>
+<tbody><tr><td><code>engine_vent.py</code></td><td>backend/engines/v8_institutional/engine_vent.py</td><td class='sha'>0e4598348f4685393bd0405c7309fe5e74df436b458fb3da…</td></tr><tr><td><code>engine_contamination_v2_omega.py</code></td><td>backend/engines/v8_institutional/engine_contamination_v2_omega.py</td><td class='sha'>f2edde81070818a5ea1a72e8a1d5a30e48d840b845194f51…</td></tr><tr><td><code>engine_sensoriel_vent_odeurs_omega.py</code></td><td>backend/engines/v8_institutional/engine_sensoriel_vent_odeurs_omega.py</td><td class='sha'>cd0d07a06debd8d9c04020af654c4f663750c07daa33bc15…</td></tr><tr><td><code>CompassOmegaWidget.jsx</code></td><td>frontend/src/components/territoire/CompassOmegaWidget.jsx</td><td class='sha'>1737bdf5948cf647ba7e3e981d478d59dd62cd89833dc734…</td></tr><tr><td><code>BionicLayersV8.jsx</code></td><td>frontend/src/components/territoire/BionicLayersV8.jsx</td><td class='sha'>cdffb9e700b60ab36a954036fc52ab0830d2d482d091eb5c…</td></tr><tr><td><code>registry_lock_omega.py</code></td><td>backend/engines/v8_institutional/registry_lock_omega.py</td><td class='sha'>fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955d…</td></tr><tr><td><code>engine_ia_corridors_omega.py</code></td><td>backend/engines/v8_institutional/engine_ia_corridors_omega.py</td><td class='sha'>bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc169…</td></tr></tbody></table>
+
+<h2>8. INVARIANCE V30 (read-only check)</h2>
+<table>
+<tr><th>Module V30 LOCKED</th><th>SHA-256</th><th>État</th></tr>
+<tr><td><code>registry_lock_omega.py</code></td>
+    <td class="sha">fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c</td><td><span class='badge b-ok'>INVIOLÉ ✓</span></td></tr>
+<tr><td><code>engine_ia_corridors_omega.py</code></td>
+    <td class="sha">bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3</td><td><span class='badge b-ok'>INVIOLÉ ✓</span></td></tr>
+<tr><td><b>echo</b></td>
+    <td class="sha">655a1630375909bdeb32ba0a033fc329f105fb0a88ba058f79952241206cc36d</td><td><span class='badge b-ok'>INVIOLÉ ✓</span></td></tr>
+</table>
+
+<h2>9. LIEN AVEC LA FUSION TERRITOIRE_Ω (Article 4)</h2>
+<div class="callout success">
+<h3 style="margin-top:0;">Fusion TERRITOIRE_Ω : <span class='badge b-ok'>CORRECTE & INDÉPENDANTE</span></h3>
+<p>La fusion des 48 engines via fusion_territoire_omega.py est CORRECTE et INDÉPENDANTE de l'anomalie C1. L'agrégateur PHASE-E utilise _c1_wind_contam_metric() qui mesure les rejets contamination (comptage acceptance/total) sans manipuler d'angles. V30 LOCKED + invariance SHA-256 confirmée (verifyrun précédent : 60/60 PASS).</p>
+<h3>Périmètre du problème :</h3>
+<p>L'incohérence 180° est strictement locale à la chaîne C1 (E19 ENGINE_VENT vs E21 ENGINE_SENSORIEL_VENT_ODEURS). Aucune autre chaîne (C2-C6) n'est affectée. Le score ULTIME PHASE-E reste fiable car il dépend du score sensoriel global, pas des angles directs.</p>
+<h3>Impact visuel sur le HUD :</h3>
+<p>Le HUD COMPASS_Ω (CompassOmegaWidget.jsx:25) calcule meanDir à partir de wind_vectors[].direction_deg : la flèche pointe à 141° (SE) en runtime live — interprétée comme direction DEPUIS LAQUELLE vient le vent. Si le rendu inclut simultanément le cône d'engine_sensoriel (cone_axis=321° NW), l'observateur perçoit une opposition visuelle de 180°.</p>
+</div>
+
+<h2>10. RÉSUMÉ DU CODE INCRIMINÉ (extraits)</h2>
+<pre><code># engine_vent.py:43-47 (TRAITEMENT "TO" — INCOHÉRENT avec OMM)
+def compute_scent_cone(lat, lon, wind_deg, wind_speed_kmh, cone_angle=30, reach_m=500):
+    cos_lat = max(0.5, math.cos(math.radians(lat)))
+    reach_deg = reach_m / 111320
+    left_rad = math.radians(wind_deg - cone_angle / 2)
+    right_rad = math.radians(wind_deg + cone_angle / 2)
+
+# engine_sensoriel_vent_odeurs_omega.py:21-26 (TRAITEMENT "FROM" — CONFORME OMM)
+# Cône olfactif/sonore : centré sur wind_deg + 180° (sous-vent)
+cone_axis = (wind_deg + 180.0) % 360.0
+cone_aperture = 30.0
+</code></pre>
+
+<h2>11. RECOMMANDATIONS (Article 5 — LECTURE SEULE)</h2>
+<ul><li>Aligner engine_vent.compute_scent_cone et compute_wind_vectors sur la convention "FROM" (Open-Meteo / OMM)</li><li>Soit en inversant wind_deg de 180° dans engine_vent (conforme à engine_sensoriel)</li><li>Soit en documentant explicitement la convention "TO" attendue par engine_vent et en convertissant en amont</li><li>Aucune modification ne doit être appliquée tant que le Commandant ne donne pas un ordre explicite (Article 5)</li></ul>
+<p class="muted"><b>Aucune modification n'a été appliquée à ce jour</b>. Conformément à l'Article 5,
+l'audit reste strictement en lecture seule. Toute correction ultérieure exigera un ordre explicite
+du Commandant STEEVE-MAX.</p>
+
+<h2>12. CONCLUSION FINALE</h2>
+<div class="callout">
+La chaîne C1 est <b>NON_ALIGNÉE</b> avec un décalage angulaire de exactement <b>180°</b> entre
+<code>engine_vent.compute_scent_cone</code> / <code>compute_wind_vectors</code> (convention "TO" implicite)
+et <code>engine_sensoriel_vent_odeurs_omega.cone_axis_deg</code> (convention "FROM" + 180° downwind).
+La cause racine est l'absence d'inversion <code>+180°</code> dans <code>engine_vent.py</code>, alors que
+la source Open-Meteo/OMM impose la convention <b>FROM</b>.<br><br>
+<b>La FUSION TERRITOIRE_Ω (48 engines) reste structurellement CORRECTE</b> et indépendante de cette
+anomalie locale C1. Aucune régression observée sur le score ULTIME PHASE-E ni sur les invariants V30.
+</div>
+
+<footer>
+AUDIT_C1_VENT_CONTAM_SENSORIEL · BCE-4X ULTIME ABSOLU — TOP-ABSOLU ·
+Commandant STEEVE-MAX · Émis 2026-04-28T14:06:52.721490Z · echo SHA <code>655a1630375909bdeb32ba0a033fc329…</code>
+</footer>
+</div></body></html>

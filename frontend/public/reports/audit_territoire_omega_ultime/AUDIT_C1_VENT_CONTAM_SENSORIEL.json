@@ -1,0 +1,212 @@
+{
+  "document": "AUDIT C1 VENT → CONTAMINATION → SENSORIEL",
+  "commandant": "STEEVE-MAX",
+  "protocole": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU",
+  "audit_type": "LECTURE_SEULE",
+  "generated_at_utc": "2026-04-28T14:06:52.721490Z",
+  "doctrine_appliquee": {
+    "v30_locked": true,
+    "xix_recomputed": false,
+    "vitaux_recomputed": false,
+    "backend_read_only": true,
+    "no_engine_modification": true,
+    "no_testing_agent_v3_fork": true
+  },
+  "CONCLUSION_GLOBALE": "NON_ALIGNÉ — CAUSE IDENTIFIÉE : H2 (inversion convention from/to) + H3 (projection cône non inversée)",
+  "cause_identifiee": {
+    "libelle_court": "INCOHÉRENCE_CONVENTION_FROM_TO",
+    "fichier_principal_anomal": "backend/engines/v8_institutional/engine_vent.py",
+    "fonctions_anomales": [
+      "compute_scent_cone (l.43-59)",
+      "compute_wind_vectors (l.15-41)"
+    ],
+    "delta_mesure_deg": 180.0,
+    "reproductibilite": "100% (3/3 waypoints, 5/5 wind_deg testés)"
+  },
+  "periodes_audit": {
+    "article_1_perimetre": true,
+    "article_2_livrables": true,
+    "article_3_hypotheses": true,
+    "article_4_lien_fusion": true,
+    "article_5_lecture_seule": true
+  },
+  "engines_audites": {
+    "E19_ENGINE_VENT": "/app/backend/engines/v8_institutional/engine_vent.py",
+    "E18_ENGINE_CONTAMINATION_V2_Ω": "/app/backend/engines/v8_institutional/engine_contamination_v2_omega.py",
+    "E21_ENGINE_SENSORIEL_VENT_ODEURS_Ω": "/app/backend/engines/v8_institutional/engine_sensoriel_vent_odeurs_omega.py",
+    "FRONTEND_CompassOmegaWidget": "/app/frontend/src/components/territoire/CompassOmegaWidget.jsx",
+    "FRONTEND_BionicLayersV8": "/app/frontend/src/components/territoire/BionicLayersV8.jsx"
+  },
+  "modules_sha256": {
+    "engine_vent.py": {
+      "path": "/app/backend/engines/v8_institutional/engine_vent.py",
+      "sha256": "0e4598348f4685393bd0405c7309fe5e74df436b458fb3dae7c429ee640cfaf5"
+    },
+    "engine_contamination_v2_omega.py": {
+      "path": "/app/backend/engines/v8_institutional/engine_contamination_v2_omega.py",
+      "sha256": "f2edde81070818a5ea1a72e8a1d5a30e48d840b845194f519408aa35330d2e88"
+    },
+    "engine_sensoriel_vent_odeurs_omega.py": {
+      "path": "/app/backend/engines/v8_institutional/engine_sensoriel_vent_odeurs_omega.py",
+      "sha256": "cd0d07a06debd8d9c04020af654c4f663750c07daa33bc15afa8bde9e83f6ba4"
+    },
+    "CompassOmegaWidget.jsx": {
+      "path": "/app/frontend/src/components/territoire/CompassOmegaWidget.jsx",
+      "sha256": "1737bdf5948cf647ba7e3e981d478d59dd62cd89833dc734779af155a39c2799"
+    },
+    "BionicLayersV8.jsx": {
+      "path": "/app/frontend/src/components/territoire/BionicLayersV8.jsx",
+      "sha256": "cdffb9e700b60ab36a954036fc52ab0830d2d482d091eb5c9e2236a0c6512e2d"
+    },
+    "registry_lock_omega.py": {
+      "path": "/app/backend/engines/v8_institutional/registry_lock_omega.py",
+      "sha256": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c"
+    },
+    "engine_ia_corridors_omega.py": {
+      "path": "/app/backend/engines/v8_institutional/engine_ia_corridors_omega.py",
+      "sha256": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3"
+    }
+  },
+  "v30_invariance": {
+    "invariant": true,
+    "registry_lock_omega_sha256": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+    "engine_ia_corridors_omega_sha256": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3",
+    "sha256_registry_echo": "655a1630375909bdeb32ba0a033fc329f105fb0a88ba058f79952241206cc36d"
+  },
+  "convention_meteo_officielle": {
+    "open_meteo_wind_direction_10m": "FROM (degré depuis lequel le vent souffle, 0=Nord, 90=Est, 180=Sud, 270=Ouest)",
+    "reference_norme": "OMM / WMO Manual on Codes No.306 — wind direction = direction FROM which the wind is blowing",
+    "consequence_si_traite_comme_TO": "inversion 180° de tous les rendus directionnels",
+    "engines_traitant_comme_FROM_correct": [
+      "engine_sensoriel_vent_odeurs_omega.py (cone_axis = wind_deg + 180°)",
+      "engines/hunt_orchestrator/vent_odeurs.py (scent_bearing = wind_direction_deg + 180°)",
+      "engines/hunt_orchestrator/access_engine.py:815 (\"Le vent vient de cette direction\")"
+    ],
+    "engines_traitant_comme_TO_incorrect": [
+      "engine_vent.py:compute_scent_cone (utilise wind_deg directement)",
+      "engine_vent.py:compute_wind_vectors (direction_deg = wind_deg + offset)"
+    ]
+  },
+  "tests_unitaires_3_waypoints": [
+    {
+      "waypoint": "BSL_OFFICIEL",
+      "lat": 48.206657,
+      "lon": -68.382422,
+      "wind_deg_input": 90.0,
+      "wind_speed_kmh": 12.0,
+      "engine_vent.scent_cone.direction_deg": 90.0,
+      "engine_vent.wind_vectors[central].direction_deg": 90.0,
+      "engine_vent.parent_truth_deg": 90.0,
+      "engine_sensoriel_vent_odeurs.cone_axis_deg": 270.0,
+      "engine_sensoriel_vent_odeurs.cone_axis_source": "wind_deg + 180° (downwind propagation)",
+      "delta_scent_vs_sensoriel_deg": 180.0,
+      "verdict": "INCOHÉRENT_180_DEG"
+    },
+    {
+      "waypoint": "ESTRIE_FRELIGHSBURG",
+      "lat": 45.0,
+      "lon": -72.8,
+      "wind_deg_input": 90.0,
+      "wind_speed_kmh": 12.0,
+      "engine_vent.scent_cone.direction_deg": 90.0,
+      "engine_vent.wind_vectors[central].direction_deg": 90.0,
+      "engine_vent.parent_truth_deg": 90.0,
+      "engine_sensoriel_vent_odeurs.cone_axis_deg": 270.0,
+      "engine_sensoriel_vent_odeurs.cone_axis_source": "wind_deg + 180° (downwind propagation)",
+      "delta_scent_vs_sensoriel_deg": 180.0,
+      "verdict": "INCOHÉRENT_180_DEG"
+    },
+    {
+      "waypoint": "MONTREAL_NORD",
+      "lat": 45.7,
+      "lon": -73.6,
+      "wind_deg_input": 90.0,
+      "wind_speed_kmh": 12.0,
+      "engine_vent.scent_cone.direction_deg": 90.0,
+      "engine_vent.wind_vectors[central].direction_deg": 90.0,
+      "engine_vent.parent_truth_deg": 90.0,
+      "engine_sensoriel_vent_odeurs.cone_axis_deg": 270.0,
+      "engine_sensoriel_vent_odeurs.cone_axis_source": "wind_deg + 180° (downwind propagation)",
+      "delta_scent_vs_sensoriel_deg": 180.0,
+      "verdict": "INCOHÉRENT_180_DEG"
+    }
+  ],
+  "tests_runtime_live_open_meteo": [
+    {
+      "waypoint": "BSL_OFFICIEL",
+      "lat": 48.206657,
+      "lon": -68.382422,
+      "open_meteo_wind_deg_runtime": 141,
+      "wind_vectors[central].direction_deg": 141,
+      "wind_vectors[central].parent_truth_deg": 141,
+      "sensoriel.cone_axis_deg": 321.0,
+      "sensoriel.cone_axis_source": "wind_deg + 180° (downwind propagation)",
+      "delta_central_vs_sensoriel_deg": 180.0,
+      "verdict_runtime": "INCOHÉRENT_180_DEG",
+      "contamination_count": 0,
+      "contamination_v2_score": 100,
+      "contamination_v2_heatmap_zones": 3
+    },
+    {
+      "waypoint": "ESTRIE_FRELIGHSBURG",
+      "lat": 45.0,
+      "lon": -72.8,
+      "open_meteo_wind_deg_runtime": 155,
+      "wind_vectors[central].direction_deg": 155,
+      "wind_vectors[central].parent_truth_deg": 155,
+      "sensoriel.cone_axis_deg": 335.0,
+      "sensoriel.cone_axis_source": "wind_deg + 180° (downwind propagation)",
+      "delta_central_vs_sensoriel_deg": 180.0,
+      "verdict_runtime": "INCOHÉRENT_180_DEG",
+      "contamination_count": 0,
+      "contamination_v2_score": 70,
+      "contamination_v2_heatmap_zones": 3
+    },
+    {
+      "waypoint": "MONTREAL_NORD",
+      "lat": 45.7,
+      "lon": -73.6,
+      "open_meteo_wind_deg_runtime": 156,
+      "wind_vectors[central].direction_deg": 156,
+      "wind_vectors[central].parent_truth_deg": 156,
+      "sensoriel.cone_axis_deg": 336.0,
+      "sensoriel.cone_axis_source": "wind_deg + 180° (downwind propagation)",
+      "delta_central_vs_sensoriel_deg": 180.0,
+      "verdict_runtime": "INCOHÉRENT_180_DEG",
+      "contamination_count": 0,
+      "contamination_v2_score": 100,
+      "contamination_v2_heatmap_zones": 3
+    }
+  ],
+  "hypotheses_audit": {
+    "H1_vent_HUD_neq_engines_source_or_timestamp": {
+      "verdict": "INFIRMÉE",
+      "preuve": "Tous les engines C1 reçoivent wind_deg de la même source Open-Meteo via le même bundle V20 (cf. v20_performance_bundle._build_bundle / hunt_orchestrator/orchestrator.py:340 \"real_open_meteo_v3\"). Pas de désynchronisation source/timestamp détectée."
+    },
+    "H2_inversion_from_to_dans_la_direction": {
+      "verdict": "CONFIRMÉE",
+      "preuve": "engine_sensoriel_vent_odeurs_omega.py:24 calcule cone_axis_deg = (wind_deg + 180) % 360 (traite wind_deg comme convention météo \"FROM\" — origine). engine_vent.py:46-47 (compute_scent_cone) et engine_vent.py:21 (compute_wind_vectors) utilisent wind_deg sans inversion (traitent wind_deg comme convention vectorielle \"TO\"). Open-Meteo retourne wind_direction_10m en convention \"FROM\" (norme OMM/WMO). Δ mesuré = 180° EXACTEMENT sur 3 waypoints (BSL, ESTRIE, MONTREAL) en runtime live.",
+      "fichier_a_corriger": "backend/engines/v8_institutional/engine_vent.py",
+      "fix_recommande_lecture_seule": "compute_scent_cone et compute_wind_vectors devraient inverser wind_deg de 180° pour s'aligner sur engine_sensoriel_vent_odeurs (downwind propagation = direction opposée à la source météo)."
+    },
+    "H3_pivot_ou_projection_incorrecte_des_cones": {
+      "verdict": "CONFIRMÉE_PARTIELLEMENT",
+      "preuve": "compute_scent_cone (engine_vent.py:43-59) projette le cône sur l'axe wind_deg directement. Cela rend le pivot correct (origine = waypoint) MAIS la projection (left/right) est inversée de 180° par rapport à engine_sensoriel_vent_odeurs.cone_axis_deg. Aucune erreur de cosinus(lat) — cos_lat est correctement appliqué. Le problème est uniquement la convention angulaire, pas la géométrie de projection."
+    },
+    "H4_couche_CONTAM_legacy_non_recalee": {
+      "verdict": "INFIRMÉE",
+      "preuve": "En production, BionicLayersV8.jsx ligne 1366 rend la couche contamination via bundleData.contamination_v2_heatmap.zones (zones MFFP statiques CWD), non pas via les cônes scent_cone d'engine_vent. La couche bundleData.contamination (legacy/dynamique) est vide en runtime live. Donc visuellement, l'utilisateur ne voit PAS le décalage 180° dans la couche CONTAM. Mais si bundle.contamination était activé (legacy), il afficherait des cônes inversés."
+    }
+  },
+  "lien_fusion_territoire_omega": {
+    "fusion_territoire_omega_correctness": "La fusion des 48 engines via fusion_territoire_omega.py est CORRECTE et INDÉPENDANTE de l'anomalie C1. L'agrégateur PHASE-E utilise _c1_wind_contam_metric() qui mesure les rejets contamination (comptage acceptance/total) sans manipuler d'angles. V30 LOCKED + invariance SHA-256 confirmée (verifyrun précédent : 60/60 PASS).",
+    "probleme_strictement_local_C1": "L'incohérence 180° est strictement locale à la chaîne C1 (E19 ENGINE_VENT vs E21 ENGINE_SENSORIEL_VENT_ODEURS). Aucune autre chaîne (C2-C6) n'est affectée. Le score ULTIME PHASE-E reste fiable car il dépend du score sensoriel global, pas des angles directs.",
+    "impact_visuel": "Le HUD COMPASS_Ω (CompassOmegaWidget.jsx:25) calcule meanDir à partir de wind_vectors[].direction_deg : la flèche pointe à 141° (SE) en runtime live — interprétée comme direction DEPUIS LAQUELLE vient le vent. Si le rendu inclut simultanément le cône d'engine_sensoriel (cone_axis=321° NW), l'observateur perçoit une opposition visuelle de 180°."
+  },
+  "recommandations_lecture_seule": [
+    "Aligner engine_vent.compute_scent_cone et compute_wind_vectors sur la convention \"FROM\" (Open-Meteo / OMM)",
+    "Soit en inversant wind_deg de 180° dans engine_vent (conforme à engine_sensoriel)",
+    "Soit en documentant explicitement la convention \"TO\" attendue par engine_vent et en convertissant en amont",
+    "Aucune modification ne doit être appliquée tant que le Commandant ne donne pas un ordre explicite (Article 5)"
+  ]
+}

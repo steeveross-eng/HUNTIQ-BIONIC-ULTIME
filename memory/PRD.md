@@ -27,6 +27,41 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **AUDIT C1 VENT → CONTAMINATION → SENSORIEL (2026-04-28 · ordre n°4 · LECTURE SEULE)**
+  Sur ordre du Commandant STEEVE-MAX, audit forensique ciblé de l'alignement
+  vent/cônes dans la chaîne C1. **Aucune modification d'engine** — Article 5
+  respecté. V30 cryptographiquement INVIOLÉ post-audit.
+  - **Verdict global** : `NON_ALIGNÉ — CAUSE IDENTIFIÉE : H2 (inversion
+    convention from/to) + H3 (projection cône non inversée)`.
+  - **Δ mesuré** : exactement **180.0°** sur 3 waypoints (BSL 141°/321°,
+    Estrie 155°/335°, Montréal 156°/336°) en runtime live Open-Meteo.
+  - **Cause racine** : `engine_vent.py` (lignes 21-47) traite `wind_deg`
+    comme convention **"TO"** (vectorielle), alors que Open-Meteo retourne
+    `wind_direction_10m` en convention **"FROM"** (norme OMM/WMO).
+    `engine_sensoriel_vent_odeurs_omega.py:24` applique correctement
+    `cone_axis = (wind_deg + 180) % 360` (downwind propagation).
+  - **Hypothèses** : H1 INFIRMÉE (même source/timestamp) · H2 **CONFIRMÉE**
+    (inversion from/to) · H3 CONFIRMÉE PARTIELLEMENT (projection inversée
+    sans erreur de pivot/cosinus) · H4 INFIRMÉE (couche CONTAM affichée =
+    `contamination_v2_heatmap.zones` MFFP statique, indépendante de
+    `compute_scent_cone`).
+  - **Indépendance fusion TERRITOIRE_Ω** : Article 4 — la fusion des 48
+    engines via `fusion_territoire_omega.py` reste **CORRECTE** et
+    indépendante. L'agrégateur PHASE-E utilise `_c1_wind_contam_metric()`
+    qui mesure les rejets contamination (compteurs accept/total) sans
+    manipuler d'angles. Score ULTIME PHASE-E inchangé · 60/60 tests pytest
+    PASS.
+  - **Livrables** :
+    `AUDIT_C1_VENT_CONTAM_SENSORIEL.json` (11.8 KB · SHA `10178c0a…99f4`)
+    + `RAPPORT_AUDIT_C1_VENT_CONTAM_SENSORIEL.html` (22 KB · 12 sections,
+    démo SVG 3 waypoints, SHA `5d340dbf…2efe9`)
+    + 3 captures HTTPS (top, fullpage, demo SVG).
+  - **V30 SHA INVIOLÉ** : `fb765b94…ecb0c` + `bcb1e3a6…39d3` post-audit.
+  - **Recommandations (lecture seule, à exécuter sur ordre)** :
+    aligner `compute_scent_cone` et `compute_wind_vectors` sur la convention
+    **FROM** (inversion +180° comme `engine_sensoriel_vent_odeurs_omega`),
+    OU documenter explicitement la convention TO et convertir en amont.
+
 - **VÉRIFICATION STRUCTURELLE TERRITOIRE_Ω (2026-04-28 · ordre n°3)**
   Sur demande explicite du Commandant STEEVE-MAX, audit forensique complet
   attestant que la fusion institutionnelle des 48 engines en TERRITOIRE_Ω
