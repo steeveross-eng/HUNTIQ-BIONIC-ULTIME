@@ -27,6 +27,53 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **RAPPORT_EXHAUSTIF_ENGINES_Ω · 4 FORMATS TÉLÉCHARGEABLES (2026-04-28 · ordre n°19)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-5) — documentation
+  complète de chaque engine pour évaluation avant PHASE 4. V30 INVIOLÉ.
+  Aucun engine activé/modifié.
+  - **Article 1 — Liste exhaustive** : 209 engines documentés avec
+    nom, version, famille, statut, chemin, SHA-256, imports, dépendances.
+  - **Article 2 — Description fonctionnelle** : extraction des
+    docstrings, summary, marker, imports locaux, APIs exposées
+    (regex `@router.get/post`), couches Ω émises (corridors, zones,
+    affuts, salines, hotspots, contamination, sensoriel, score_ultime).
+  - **Article 3 — Recommandations structurées** :
+    - À conserver : 122 engines actifs Ω.
+    - À purger : 39 engines inactifs legacy.
+    - À réactiver : 16 engines V8_INSTITUTIONAL inactifs.
+    - Manquants validation : 11 markers registry sans correspondance regex.
+    - Conflits potentiels : 2 stems (faux positifs `__init__.py`).
+    - Orphelins : 12 engines non-importés.
+  - **Article 4 — 4 livrables téléchargeables (servis HTTPS 200 OK)** :
+    - PDF (A3 paysage) : 360 532 octets · SHA-256
+      `59f6a2513446365d51c0be59e6812daeb439285c0c234367ed9474d39573ded4`
+    - HTML : 159 010 octets · SHA-256
+      `2c8bcb3dbad8f2aa22b3d46e0c07bf41d9042eab281855770cba0dfc3114bb58`
+    - JSON exhaustif : 274 501 octets · SHA-256
+      `6d69677070ab52ce4a6ae368eef6df433b4c60e538096d70772fd9f0c0a75146`
+    - CSV triable : 82 492 octets · SHA-256
+      `b5a1aba242d9a36055e23953bcb92f2eae6790ddeebd291faf844b3635f86dac`
+    - MANIFEST.json (intégrité) : 2 263 octets · SHA-256
+      `732f292e75aa656d7ba198d3e8bb888706007b01f649432dac016b0bb16e1cf1`
+    - INDEX.html (page d'accueil téléchargements) : 4 940 octets.
+  - **Génération PDF** : Playwright Chromium HTML→PDF (A3 paysage, marges
+    institutionnelles, print_background=true).
+  - **Distribution par pilier** :
+    - GOUVERNANCE : 95 modules.
+    - LEGACY : 65 modules.
+    - BIO-SYSTEME : 24 modules.
+    - ENVIRONNEMENT : 20 modules.
+    - COMPORTEMENT-HUMAIN : 4 modules.
+    - SYSTEME-SENSORIEL : 1 module.
+  - **V30 LOCKED · INTÉGRITÉ INTACTE** :
+    - registry_lock_omega.py SHA-256 :
+      `fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c`
+    - engine_ia_corridors_omega.py SHA-256 :
+      `bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3`
+  - **Tests OMÉGA** : 2/2 cibles passing.
+  - **Aucune action d'activation** : conformément à l'Article 5,
+    aucun engine n'a été activé/modifié/purgé.
+
 - **ENGINES_Ω_AUDIT_R2 · AUDIT TOTAL ENGINES (2026-04-28 · ordre n°18)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-5) — audit
   exhaustif READ-ONLY de tous les engines avant activation.
