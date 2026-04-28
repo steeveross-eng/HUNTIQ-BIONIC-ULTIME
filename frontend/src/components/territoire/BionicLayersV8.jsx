@@ -1509,13 +1509,13 @@ const BionicLayersV8 = ({
     }
 
     // 9. SCORE LOCAL (overlay pill macro — toujours)
-    // PHASE_XII_SUPRA_TERRITOIRE_RERENDER_Ω_ULTIME §1 — Grille institutionnelle
-    // stricte. Jamais 'BON' (interdit §6.2).
+    // PHASE_RECAPTURE_OMEGA (2026-04-28 · ordre Commandant STEEVE-MAX) :
+    // grille Ω institutionnelle (FAVORABLE/NEUTRE/RÉSERVE) — JAMAIS PARTIEL.
     if (score_local && score_local.value != null && waypointCenter) {
       // Import runtime (CommonJS safe)
-      const { scoreLabelOmega, scoreColorOmega } = require('@/lib/scoreLabelOmega');
+      const { scoreLabelOmegaBande, scoreColorOmega } = require('@/lib/scoreLabelOmega');
       const _scoreVal = Number(score_local.value) || 0;
-      const _labelInstit = scoreLabelOmega(_scoreVal);
+      const _labelInstit = scoreLabelOmegaBande(_scoreVal);
       const _colorInstit = scoreColorOmega(_labelInstit);
       const pill = L.marker([waypointCenter.lat, waypointCenter.lng], {
         icon: L.divIcon({

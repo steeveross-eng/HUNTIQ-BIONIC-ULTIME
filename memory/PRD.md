@@ -27,6 +27,76 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **RECAPTURE Ω INSTITUTIONNELLE · GRILLE FAVORABLE/NEUTRE/RÉSERVE (2026-04-28 · ordre n°15)**
+  Sur INVALIDATION FORMELLE du Commandant STEEVE-MAX (Articles 1-5) suite
+  au constat "SCORE = PARTIEL (statut interdit en mode Ω)" + sémantique
+  inversée du panneau "V30 BRUT REJETÉ" (rouge alors que la purge = conformité).
+  V30 INVIOLÉ.
+  - **Constats institutionnellement repris** :
+    - Pastille SCORE LOCAL au centre de la carte affichait
+      "SCORE 64.03 · PARTIEL" (rouge) car la grille legacy
+      `scoreLabelOmega(<70)='PARTIEL'` était utilisée par
+      `BionicLayersV8.jsx` ligne 1518.
+    - Panneau "V30 BRUT REJETÉ" en rouge (rgba(220,38,38,...)) avec
+      étiquette négative — sémantique inverse de la doctrine (purge
+      pipeline Ω = conformité 100%, pas erreur).
+    - StatutCorridorsOmegaPanel affichait `v30_alignment_score=64.03 → PARTIEL`
+      comme score principal en haut, alors que la doctrine Ω veut le
+      score ULTIME (FAVORABLE/NEUTRE) en priorité.
+  - **Correctifs appliqués** :
+    - `scoreLabelOmega.js` : ajout `scoreLabelOmegaBande(score)` qui
+      retourne `RÉSERVE` (<50) / `NEUTRE` (50-70) / `FAVORABLE` (70-85)
+      / `TRÈS_FAVORABLE` (≥85) — alignée backend `fusion_territoire_omega.py`.
+      JAMAIS PARTIEL.
+    - `scoreColorOmega` étendu pour gérer toutes les bandes Ω.
+    - `BionicLayersV8.jsx` ligne 1516 : la pastille SCORE LOCAL utilise
+      désormais `scoreLabelOmegaBande` au lieu de `scoreLabelOmega`.
+    - `StatutCorridorsOmegaPanel.jsx` : SCORE ULTIME (`/api/v30/territoire/ultime-score`)
+      affiché en haut avec bande FAVORABLE/NEUTRE — V30 alignement
+      relégué en métrique secondaire neutre.
+    - `LayersOmegaSyncPanel.jsx` : panneau "V30 BRUT REJETÉ (purgé par Ω)"
+      → "V30 BRUT → Ω · PURGE INSTITUTIONNELLE" en VERT (rgba(0,166,118,0.45))
+      avec libellé "Conformité Ω 100% — corridors non-Ω filtrés par
+      pipeline V30 (lecture seule)".
+    - `labelColor()` étendu pour FAVORABLE/NEUTRE/RÉSERVE (alignement
+      bandes Ω).
+    - Restart supervisor frontend (PID 1101).
+  - **Validation post-correctif** :
+    - Pastille SCORE LOCAL : `data-label-instit="NEUTRE"`,
+      texte "SCORE 64.03 · NEUTRE" (orange institutionnel, plus rouge
+      PARTIEL).
+    - HUD Ultime : `score_ultime_pct=80.33%`, `BANDE: FAVORABLE` (vert).
+    - StatutCorridorsOmegaPanel : score ULTIME 80.33% FAVORABLE en haut,
+      V30 alignement 76.47/100 CONFORME en métrique secondaire.
+    - Panneau "V30 BRUT → Ω · PURGE INSTITUTIONNELLE" en VERT,
+      `border: rgba(0,166,118,0.45)`, libellé "Conformité Ω 100%".
+    - Compteurs cohérents : ZONES=5, AFFÛTS=6, SALINES=6, HOTSPOTS=11,
+      CONTAMINATION=3, SENSORIEL=ACTIF.
+    - Pipeline Ω : tous les flags `applied=true`,
+      `renduomega_integration.status=APPLIED`,
+      `esi_omega=CONFORME`,
+      `authorized=true` avec token `STEEVE-MAX-X200-P5-EXPLICIT`.
+    - SW count=0, caches=[] (désactivation totale maintenue).
+    - Capture PNG 1920×1080 scellée : SHA-256
+      `d74628cd7c6e8d75625363d350da2351b42b7c24f786fc879945d92d497f302b`
+      (1.78 MB).
+  - **V30 LOCKED · INTÉGRITÉ INTACTE** :
+    - registry_lock_omega.py SHA-256 :
+      `fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c`
+    - engine_ia_corridors_omega.py SHA-256 :
+      `bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3`
+  - **Régression OMÉGA** : 4/4 tests cibles passing.
+  - **Livrables (servis HTTPS 200 OK)** :
+    - `/reports/audit_territoire_omega_ultime/RAPPORT_RECAPTURE_OMEGA.html` (12 769 octets, capture embarquée).
+    - `/reports/audit_territoire_omega_ultime/RECAPTURE_OMEGA.json` (3 224 octets).
+    - `/reports/audit_territoire_omega_ultime/SCREENSHOT_RECAPTURE_OMEGA_2026-04-28.png` (1 778 155 octets).
+  - **Grille Ω institutionnelle normalisée** (alignée backend) :
+    - ≥ 85 → TRÈS_FAVORABLE (#00A676)
+    - 70-85 → FAVORABLE (#16a34a)
+    - 50-70 → NEUTRE (#f59e0b)
+    - < 50 → RÉSERVE (#ef4444)
+    - PARTIEL : interdit en mode Ω.
+
 - **RÉVEIL BACKEND TERRITOIRE_Ω · COLD-START + WARMUP MULTI-ESPÈCES (2026-04-28 · ordre n°14)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-4) suite à l'apparition
   du message "Frontend Preview Only. Please wake servers to enable backend

@@ -1,0 +1,96 @@
+{
+  "phase": "PHASE_RECAPTURE_OMEGA_INSTITUTIONNELLE",
+  "protocole": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU",
+  "commandant": "STEEVE-MAX",
+  "directive": "INVALIDATION FORMELLE + REPRISE CONTRÔLÉE DU RENDU Ω (Articles 1-5)",
+  "executed_at_utc": "2026-04-28T19:15:29.769100+00:00",
+  "url_audit": "https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic",
+  "non_conformites_corrigees": [
+    "SCORE PARTIEL → SCORE ULTIME (FAVORABLE/NEUTRE) en place du score V30 alignement",
+    "V30 BRUT REJETÉ rouge → V30 BRUT → Ω · PURGE INSTITUTIONNELLE en VERT (conformité, pas erreur)",
+    "labelColor étendu pour bandes FAVORABLE/NEUTRE/RÉSERVE"
+  ],
+  "diag_dom": {
+    "url": "https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic",
+    "ts": "2026-04-28T19:15:29.283Z",
+    "ultime_block_present": true,
+    "ultime_score_value": "80.33%",
+    "ultime_bande_chip": "BANDE : FAVORABLE",
+    "v30_score": "73.53 / 100",
+    "v30_label": "CONFORME",
+    "left_counts": [
+      {
+        "tid": "layers-omega-sync-corridors",
+        "text": "CORRIDORS Ω 0"
+      },
+      {
+        "tid": "layers-omega-sync-zones",
+        "text": "ZONES Ω 5"
+      },
+      {
+        "tid": "layers-omega-sync-affuts",
+        "text": "AFFÛTS Ω 6"
+      },
+      {
+        "tid": "layers-omega-sync-salines",
+        "text": "SALINES Ω 6"
+      },
+      {
+        "tid": "layers-omega-sync-hotspots",
+        "text": "HOTSPOTS Ω 11"
+      },
+      {
+        "tid": "layers-omega-derived-contamination-v2-heatmap-zones",
+        "text": "CONTAMINATION Ω 3"
+      },
+      {
+        "tid": "layers-omega-derived-sensoriel-vent-odeurs",
+        "text": "SENSORIEL Ω ACTIF"
+      }
+    ],
+    "rejects_text": "V30 BRUT → Ω · PURGE INSTITUTIONNELLE 19 XIX:19 · XVII:0 · XVIII:0 · RENDU-Ω:0 ✓ Conformité Ω 100% — corridors non-Ω filtrés par pipeline V30 (lecture seule).",
+    "rejects_border": "rgba(0, 166, 118, 0.45)",
+    "rejects_bg": "rgba(0, 166, 118, 0.1)",
+    "cert_present": true,
+    "cert_styles": [
+      {
+        "tid": "corridors",
+        "text": "CORRIDORS Ω· veineux 3px halo 0"
+      },
+      {
+        "tid": "zones",
+        "text": "ZONES Ω· polygones semi-transp. 5"
+      },
+      {
+        "tid": "affuts",
+        "text": "AFFÛTS Ω· circle Ω atténué 6"
+      },
+      {
+        "tid": "salines",
+        "text": "SALINES Ω· icône carrée 6"
+      },
+      {
+        "tid": "hotspots",
+        "text": "HOTSPOTS Ω· cercles concentriques 11"
+      },
+      {
+        "tid": "contamination",
+        "text": "CONTAMINATION Ω· cône dyn. atténué 3"
+      },
+      {
+        "tid": "sensoriel",
+        "text": "SENSORIEL Ω· overlay aligné C1 OMM ACTIF"
+      }
+    ],
+    "sw_count": 0,
+    "caches_present": [],
+    "scroll_orange_visible": false
+  },
+  "screenshot": {
+    "path": "/reports/audit_territoire_omega_ultime/SCREENSHOT_RECAPTURE_OMEGA_2026-04-28.png",
+    "absolute_path": "/app/frontend/public/reports/audit_territoire_omega_ultime/SCREENSHOT_RECAPTURE_OMEGA_2026-04-28.png",
+    "sha256": "d74628cd7c6e8d75625363d350da2351b42b7c24f786fc879945d92d497f302b",
+    "size_bytes": 1778155
+  },
+  "v30_locked_intact": true
+}

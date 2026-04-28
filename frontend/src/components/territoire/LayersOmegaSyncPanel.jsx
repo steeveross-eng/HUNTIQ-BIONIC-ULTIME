@@ -240,24 +240,27 @@ export default function LayersOmegaSyncPanel({ bundleData, species = 'orignal' }
         </div>
       </div>
 
-      {/* Rejets V30 brut → Ω */}
+      {/* PHASE_RECAPTURE_OMEGA — V30 BRUT PURGÉ → CONFORMITÉ Ω INSTITUTIONNELLE (vert, pas erreur) */}
       <div
         data-testid="layers-omega-sync-rejects"
         style={{
           padding: 6, borderRadius: 6, marginBottom: 8,
-          background: 'rgba(220,38,38,0.10)', border: '1px solid rgba(220,38,38,0.35)',
+          background: 'rgba(0,166,118,0.10)', border: '1px solid rgba(0,166,118,0.45)',
           fontSize: 10,
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <b style={{ color: '#F17171' }}>V30 BRUT REJETÉ (purgé par Ω)</b>
-          <b style={{ color: '#F17171' }}>{totalRejected}</b>
+          <b style={{ color: '#00A676' }}>V30 BRUT → Ω · PURGE INSTITUTIONNELLE</b>
+          <b style={{ color: '#00A676' }}>{totalRejected}</b>
         </div>
-        <div style={{ color: '#FEE2E2', marginTop: 2, fontFamily: 'JetBrains Mono, monospace' }}>
+        <div style={{ color: '#B2F2D9', marginTop: 2, fontFamily: 'JetBrains Mono, monospace' }}>
           XIX:{rejected.corridors_rejected_origine_externe_xix} ·
           XVII:{rejected.corridors_rejected_phase_xvii} ·
           XVIII:{rejected.corridors_rejected_vitaux_xviii} ·
           RENDU-Ω:{rejected.corridors_rejected_by_renduomega}
+        </div>
+        <div style={{ color: '#6b9c87', marginTop: 2, fontSize: 9 }}>
+          ✓ Conformité Ω 100% — corridors non-Ω filtrés par pipeline V30 (lecture seule).
         </div>
       </div>
 

@@ -22,11 +22,15 @@ const ERROR_THRESHOLD_AUTO_RECOVERY = 3;
 
 function labelColor(label) {
   switch (label) {
-    case 'CONFORME_Ω': return '#16a34a';
-    case 'CONFORME':   return '#f59e0b';
+    case 'CONFORME_Ω':
+    case 'FAVORABLE':       return '#16a34a';
+    case 'CONFORME':
+    case 'NEUTRE':          return '#f59e0b';
     case 'PARTIEL':
+    case 'RÉSERVE':
+    case 'RESERVE':
     case 'NON_CONFORME':
-    default:           return '#ef4444';
+    default:                return '#ef4444';
   }
 }
 
@@ -64,6 +68,7 @@ async function purgeAllCachesAndReload() {
 export default function StatutCorridorsOmegaPanel({ lat = OFFICIAL_LAT, lng = OFFICIAL_LNG, bundleData = null }) {
   const [data, setData] = useState(null);
   const [layers, setLayers] = useState(null);
+  const [ultime, setUltime] = useState(null); // PHASE_RECAPTURE_OMEGA — score ULTIME (FAVORABLE/NEUTRE)
   const [error, setError] = useState(null);
   const [errorCount, setErrorCount] = useState(0);
   const [autoRecovering, setAutoRecovering] = useState(false);
@@ -97,6 +102,21 @@ export default function StatutCorridorsOmegaPanel({ lat = OFFICIAL_LAT, lng = OF
         const j = await r.json();
         if (mounted) setLayers(j);
       } catch (_e) { /* silencieux — couches optionnelles */ }
+    };
+
+    // PHASE_RECAPTURE_OMEGA — fetch SCORE ULTIME (jamais PARTIEL)
+    const fetchUltimeScore = async () => {
+      try {
+        const bust = Date.now();
+        const r = await fetch(
+          `${API}/api/v30/territoire/ultime-score?lat=${lat}&lon=${lng}&species=orignal&month=10&hour=14&_t=${bust}`,
+          { cache: 'no-store', credentials: 'omit',
+            headers: { 'Accept': 'application/json', 'Cache-Control': 'no-cache' } },
+        );
+        if (!r.ok) throw new Error(`ultime HTTP ${r.status}`);
+        const j = await r.json();
+        if (mounted) setUltime(j);
+      } catch (_e) { /* silencieux — score ultime optionnel */ }
     };
 
     const fetchStatus = async () => {
@@ -143,6 +163,7 @@ export default function StatutCorridorsOmegaPanel({ lat = OFFICIAL_LAT, lng = OF
       };
       await attemptFetch(0);
       await fetchLayers();
+      await fetchUltimeScore();
     };
 
     initialTimer = setTimeout(fetchStatus, 800);
@@ -219,20 +240,55 @@ export default function StatutCorridorsOmegaPanel({ lat = OFFICIAL_LAT, lng = OF
         color: '#ff8f00', fontWeight: 700, letterSpacing: '0.04em',
         borderBottom: '1px solid #1c2735', paddingBottom: 4, marginBottom: 6,
       }}>
-        STATUT CORRIDORS Ω <span style={{ fontSize: 9, color: '#9fb0c2', marginLeft: 6 }}>
-          V30 · RenduΩ · P6
+        SCORE ULTIME Ω <span style={{ fontSize: 9, color: '#9fb0c2', marginLeft: 6 }}>
+          PHASE-E · FUSION · TERRITOIRE_Ω
         </span>
       </div>
 
+      {/* PHASE_RECAPTURE_OMEGA — SCORE ULTIME (jamais PARTIEL) */}
+      {ultime && (() => {
+        const u = ultime || {};
+        const uColor = labelColor(u.bande);
+        const pct = Number(u.score_ultime_pct ?? 0);
+        return (
+          <div data-testid="ultime-score-block" style={{ marginBottom: 8 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+              <span style={{ color: '#9fb0c2' }}>score_ultime_pct</span>
+              <span data-testid="ultime-score-value" style={{ color: uColor, fontWeight: 800, fontSize: 16 }}>
+                {pct.toFixed(2)}%
+              </span>
+            </div>
+            <ScoreBar score={pct} label={u.bande} />
+            <div data-testid="ultime-bande-chip" style={{
+              display: 'inline-block', marginTop: 4, padding: '2px 8px',
+              borderRadius: 3, background: 'rgba(0,166,118,0.10)',
+              border: `1px solid ${uColor}`, color: uColor,
+              fontWeight: 800, fontSize: 11, letterSpacing: 1,
+            }}>
+              BANDE : {u.bande || '—'}
+            </div>
+            <div style={{ fontSize: 9.5, color: '#B2F2D9', marginTop: 4 }}>
+              ACTION : <b>{u.action || '—'}</b>
+            </div>
+          </div>
+        );
+      })()}
+
+      <div style={{
+        color: '#9fb0c2', fontSize: 9, letterSpacing: 1, marginTop: 8,
+        borderTop: '1px dashed #1c2735', paddingTop: 6,
+      }}>
+        STATUT CORRIDORS · V30 alignement (métrique secondaire)
+      </div>
+
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-        <span style={{ color: '#9fb0c2' }}>v30_alignment_score</span>
-        <span data-testid="v30-score-value" style={{ color, fontWeight: 700, fontSize: 14 }}>
-          {g.v30_alignment_score?.toFixed(2) ?? '—'}
+        <span style={{ color: '#9fb0c2' }}>v30_alignment</span>
+        <span data-testid="v30-score-value" style={{ color: '#9fb0c2', fontWeight: 600, fontSize: 12 }}>
+          {g.v30_alignment_score?.toFixed(2) ?? '—'} / 100
         </span>
       </div>
-      <ScoreBar score={g.v30_alignment_score ?? 0} label={g.alignment_label} />
       <div data-testid="v30-alignment-label" style={{
-        color, fontWeight: 700, marginTop: 4, fontSize: 10,
+        color: '#9fb0c2', fontSize: 9, marginTop: 2,
       }}>{g.alignment_label}</div>
 
       <div style={{ marginTop: 8, color: '#9fb0c2' }}>
