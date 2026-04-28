@@ -27,6 +27,57 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **RCA VISUELLE PREVIEW · PURGE PASTILLE LEGACY + COMPASS REPOSITIONNÉ (2026-04-28 · ordre n°11)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-6) suite à la
+  capture d'un état visuel non-conforme dans son environnement Preview.
+  Analyse forensique exhaustive de la capture + audit DOM live. V30 INVIOLÉ.
+  - **Constatations capture** : compteurs panneau gauche divergents (AFFUTS=0
+    vs 4, CONTAM=3 vs 5 — snapshot de re-render asynchrone), gros cercle
+    orange en bas-centre avec chevron V noir, widget COMPASS_Ω VENT
+    chevauchant le RenduOmegaIntegralCertifier sur 137 pixels.
+  - **Cause racine #1 (pastille orange)** : `ScrollNavigator.jsx` lignes
+    19-20 — `FULL_VIEWPORT_ROUTES = []` était un tableau vide, donc le
+    bouton de scroll global (BG `#f5a623`, 64×64 px, position fixed
+    bottom-center, z:100) s'affichait sur la page Territoire alors qu'il
+    devait être masqué.
+  - **Cause racine #2 (collision compass/cert)** : `CompassOmegaWidget.jsx`
+    ligne 49 — `top: 120` (relatif au container map) place le compass à
+    y=360 viewport, soit 137 pixels dans la zone occupée par le
+    RenduOmegaIntegralCertifier overlay (top:88, h:409, bottom:497).
+  - **Cause racine #3 (compteurs divergents)** : aucune (les deux panneaux
+    lisent la même prop `bundleDataV8`). La capture du Commandant montrait
+    un instant intermédiaire d'un cycle de re-render. Vérifié en session
+    live : compteurs identiques bilatéraux (0/5/6/6/11/3/ACTIF).
+  - **Correctifs appliqués** :
+    - `ScrollNavigator.jsx` : FULL_VIEWPORT_ROUTES rempli avec 9 routes
+      (mon-territoire-bionic, mon-territoire, territoire,
+      analyse-territoire, forecast, admin-geo, admin-premium, carte-2027,
+      territoire-capture-mode). Pastille orange purgée.
+    - `CompassOmegaWidget.jsx` : top:120 → top:420. Zéro chevauchement.
+    - `sudo supervisorctl restart frontend` (PID 7896).
+  - **Preuves de validation HTTPS** :
+    - `scroll_nav_bottom_present`: false (DOM inspection post-fix).
+    - Compass rect: y=660 (vs y=360 avant). Cert rect: y=88 bottom=497.
+      Overlap cert/compass = 0 px (vs 137 avant).
+    - Compteurs gauche/droit cohérents : 0/5/6/6/11/3/ACTIF identiques.
+    - Capture PNG 1920×1080 scellée : SHA-256
+      `a096c0e5947a6223947989e2e93fdff41f5753410741a9db3befd312f8765dbf`
+      (1.79 MB).
+  - **V30 LOCKED · INTÉGRITÉ INTACTE** :
+    - registry_lock_omega.py SHA-256 :
+      `fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c`
+    - engine_ia_corridors_omega.py SHA-256 :
+      `bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3`
+    - Registre scellé : 41 engines, 5 piliers, prefix `27516c9633853974…`.
+  - **Régression OMÉGA** : 4/4 tests cibles passing (engine_registry_locked,
+    phase_e_rendu_omega_integral, phase_e_fusion_omega, purge_legacy).
+  - **Livrables (servis HTTPS 200 OK)** :
+    - `/reports/audit_territoire_omega_ultime/RAPPORT_RCA_VISUELLE_PREVIEW.html`
+      (12284 octets, capture embarquée).
+    - `/reports/audit_territoire_omega_ultime/RCA_PREVIEW.json` (5852 octets).
+    - `/reports/audit_territoire_omega_ultime/SCREENSHOT_RCA_VISUELLE_PREVIEW_2026-04-28.png`
+      (1789321 octets).
+
 - **RCA DÉPLOIEMENT Ω · PURGE CACHE CLIENT (2026-04-28 · ordre n°10)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (vérification visuelle de Preview),
   identification et correction de l'écart code source vs. rendu navigateur

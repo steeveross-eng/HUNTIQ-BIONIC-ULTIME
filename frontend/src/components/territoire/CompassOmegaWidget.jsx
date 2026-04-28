@@ -46,7 +46,11 @@ export const CompassOmegaWidget = ({ bundleDataV8, showWind }) => {
       data-testid="compass-omega-vent"
       style={{
         position: 'absolute',
-        top: 120,
+        // PHASE_RCA_VISUELLE_PREVIEW (2026-04-28) — ordre Commandant STEEVE-MAX :
+        // top:120 → top:420 pour passer SOUS le RenduOmegaIntegralCertifier
+        // (cert occupe ~88..497 viewport, soit ~0..257 relatif map à top:88).
+        // top:420 garantit zéro chevauchement (compass 420..580).
+        top: 420,
         right: 12,
         width: size,
         background: 'rgba(20,20,24,0.78)',

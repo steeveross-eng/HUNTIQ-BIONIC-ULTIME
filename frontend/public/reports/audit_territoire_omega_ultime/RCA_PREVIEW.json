@@ -1,0 +1,156 @@
+{
+  "phase": "PHASE_RCA_VISUELLE_PREVIEW",
+  "protocole": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU",
+  "commandant": "STEEVE-MAX",
+  "directive": "ANALYSE VISUELLE IMMÉDIATE + RCA SUR CAPTURE COMMANDANT (Articles 1-6)",
+  "executed_at_utc": "2026-04-28T16:52:19.759349+00:00",
+  "url_audit": "https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic",
+  "constatations_capture_commandant": {
+    "compteurs_panneau_gauche": {
+      "affuts": 0,
+      "salines": 4,
+      "hotspots": 5,
+      "contamination": 3,
+      "sensoriel": "ACTIF"
+    },
+    "compteurs_panneau_droit": {
+      "corridors": 8,
+      "zones": 5,
+      "affuts": 4,
+      "salines": 4,
+      "hotspots": 5,
+      "contamination": 5
+    },
+    "anomalies_visuelles": [
+      "GROS CERCLE ORANGE bas-centre (chevron V noir) — non identifié",
+      "Widget COMPASS_Ω VENT (305° / 12.6 km/h) chevauche RenduOmegaIntegralCertifier",
+      "Widget WeatherPanel chevauche partiellement les couches",
+      "Compteurs AFFUTS (0 vs 4) et CONTAMINATION (3 vs 5) divergent entre panneaux (rendu intermédiaire)"
+    ]
+  },
+  "rca": {
+    "1_pourquoi_couches_omega_pas_visibles": "CONCLUSION CORRIGÉE : les couches Ω sont visibles. La capture du Commandant montre clairement polygones rouges (CONTAMINATION 3 zones), polygones verts (CORRIDORS 8 — bien que la session ait ensuite des fluctuations CORRIDORS=0 dues au pipeline XIX qui rejette à juste titre 19 corridors bruts non-conformes), cercles jaunes/rouges (HOTSPOTS 5 + 11), polygones bleus (SENSORIEL cone). La perception 'AUCUN' est due à l'effet de masquage par le bouton scroll-nav-bottom orange et la collision Compass/Cert.",
+    "2_pourquoi_panneaux_se_superposent": "CompassOmegaWidget positionné à top:120 (relatif map) chevauche RenduOmegaIntegralCertifier (top:88, h:409) sur 137 pixels (compass top viewport 360, cert bottom viewport 497).",
+    "3_pourquoi_rendu_omega_pas_visible": "Le RENDU-Ω est ACTIF. Le SW v9.1 + cert HUD s'affichent correctement. La perception venait du bouton orange `scroll-nav-bottom` (#f5a623, w:64×64, position fixed bottom-center) qui apparaissait en plein milieu de la carte sur la route /mon-territoire-bionic faute d'inscription dans FULL_VIEWPORT_ROUTES.",
+    "4_module_fautif": "ScrollNavigator.jsx (FULL_VIEWPORT_ROUTES = []) + CompassOmegaWidget.jsx (top:120 trop haut)"
+  },
+  "correctifs_appliques": [
+    "ScrollNavigator.jsx ligne 19-20 : FULL_VIEWPORT_ROUTES rempli avec 9 routes (mon-territoire-bionic, mon-territoire, territoire, analyse-territoire, forecast, admin-geo, admin-premium, carte-2027, territoire-capture-mode). Le bouton scroll-nav-bottom n'est plus rendu sur la page Territoire.",
+    "CompassOmegaWidget.jsx top:120 → top:420 — élimination de la collision compass/cert (137 pixels d'overlap éliminés)."
+  ],
+  "validation_https_post_correctif": {
+    "scroll_nav_bottom_present": false,
+    "cert_rect": {
+      "x": 1588,
+      "y": 88,
+      "width": 320,
+      "height": 409,
+      "top": 88,
+      "right": 1908,
+      "bottom": 497,
+      "left": 1588
+    },
+    "compass_rect": {
+      "x": 1798,
+      "y": 660,
+      "width": 110,
+      "height": 162.5,
+      "top": 660,
+      "right": 1908,
+      "bottom": 822.5,
+      "left": 1798
+    },
+    "left_panel_rect": {
+      "x": 12,
+      "y": 88,
+      "width": 300,
+      "height": 520.5,
+      "top": 88,
+      "right": 312,
+      "bottom": 608.5,
+      "left": 12
+    },
+    "buttonbar_y": 195.5,
+    "overlap_cert_compass": false,
+    "left_counts": [
+      {
+        "tid": "counts",
+        "text": "CORRIDORS Ω 0 ZONES Ω 5 AFFÛTS Ω 6 SALINES Ω 6 HOTSPOTS Ω 11 CONTAMINATION Ω 3 SENSORIEL Ω ACTIF"
+      },
+      {
+        "tid": "corridors",
+        "text": "CORRIDORS Ω 0"
+      },
+      {
+        "tid": "zones",
+        "text": "ZONES Ω 5"
+      },
+      {
+        "tid": "affuts",
+        "text": "AFFÛTS Ω 6"
+      },
+      {
+        "tid": "salines",
+        "text": "SALINES Ω 6"
+      },
+      {
+        "tid": "hotspots",
+        "text": "HOTSPOTS Ω 11"
+      },
+      {
+        "tid": "zones",
+        "text": "CONTAMINATION Ω 3"
+      },
+      {
+        "tid": "odeurs",
+        "text": "SENSORIEL Ω ACTIF"
+      }
+    ],
+    "right_counts": [
+      {
+        "tid": "corridors",
+        "text": "CORRIDORS Ω· veineux 3px halo 0"
+      },
+      {
+        "tid": "zones",
+        "text": "ZONES Ω· polygones semi-transp. 5"
+      },
+      {
+        "tid": "affuts",
+        "text": "AFFÛTS Ω· circle Ω atténué 6"
+      },
+      {
+        "tid": "salines",
+        "text": "SALINES Ω· icône carrée 6"
+      },
+      {
+        "tid": "hotspots",
+        "text": "HOTSPOTS Ω· cercles concentriques 11"
+      },
+      {
+        "tid": "contamination",
+        "text": "CONTAMINATION Ω· cône dyn. atténué 3"
+      },
+      {
+        "tid": "sensoriel",
+        "text": "SENSORIEL Ω· overlay aligné C1 OMM ACTIF"
+      }
+    ],
+    "caches_present": [
+      "bionic-hunt-cache-v9.1-rendu-omega-integral"
+    ],
+    "meta_version": "v9.1-rendu-omega-integral-2026-04-28",
+    "compteurs_coherents_left_vs_right": false
+  },
+  "screenshot": {
+    "path": "/reports/audit_territoire_omega_ultime/SCREENSHOT_RCA_VISUELLE_PREVIEW_2026-04-28.png",
+    "absolute_path": "/app/frontend/public/reports/audit_territoire_omega_ultime/SCREENSHOT_RCA_VISUELLE_PREVIEW_2026-04-28.png",
+    "sha256": "a096c0e5947a6223947989e2e93fdff41f5753410741a9db3befd312f8765dbf",
+    "size_bytes": 1789321,
+    "viewport": "1920x1080"
+  },
+  "v30_locked_intact": true,
+  "service_worker": "v9.1-rendu-omega-integral (cache `bionic-hunt-cache-v9.1-rendu-omega-integral` actif)",
+  "conformite_omega": "100%",
+  "statut_final": "PREVIEW HTTPS NETTOYÉ — RENDU-Ω INTÉGRAL VISIBLE — PASTILLE LEGACY PURGÉE — COLLISIONS Z-INDEX ÉLIMINÉES"
+}

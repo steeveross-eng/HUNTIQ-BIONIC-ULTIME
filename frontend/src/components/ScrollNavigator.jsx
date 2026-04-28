@@ -16,7 +16,19 @@ import { ChevronUp, ChevronDown } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 // Routes where ScrollNavigator should be hidden (full-viewport pages)
+// PHASE_RCA_VISUELLE_PREVIEW (2026-04-28) — ordre Commandant STEEVE-MAX :
+// la pastille orange scroll-nav-bottom doit DISPARAÎTRE des pages plein-écran
+// (carte Leaflet, audit territoire, capture institutionnelle, etc.).
 const FULL_VIEWPORT_ROUTES = [
+  '/mon-territoire-bionic',
+  '/mon-territoire',
+  '/territoire',
+  '/analyse-territoire',
+  '/forecast',
+  '/admin-geo',
+  '/admin-premium',
+  '/carte-2027',
+  '/territoire-capture-mode',
 ];
 
 const ScrollNavigator = () => {
