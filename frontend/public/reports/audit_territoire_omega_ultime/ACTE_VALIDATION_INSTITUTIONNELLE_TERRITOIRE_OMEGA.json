@@ -1,0 +1,83 @@
+{
+  "document": "ACTE DE VALIDATION INSTITUTIONNELLE — FUSION STRUCTURELLE TERRITOIRE_Ω",
+  "serial": "ACTE-VALIDATION-INSTITUTIONNELLE-2026-04-28-001",
+  "commandant": "STEEVE-MAX",
+  "protocole": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU",
+  "sealed_at_utc": "2026-04-28T14:15:05.926985Z",
+  "doctrine_version": "PHASE-E_DOCTRINE_PERMANENTE_50PCT_2026-04-28",
+  "declaration_du_commandant": "Je VALIDE institutionnellement la fusion structurelle TERRITOIRE_Ω.",
+  "prises_d_acte_du_commandant": [
+    "La fusion institutionnelle des 48 engines en TERRITOIRE_Ω est terminée et active.",
+    "Le livrable VERIFICATION_STRUCTURELLE_TERRITOIRE_OMEGA.json est complet.",
+    "Le RAPPORT_VÉRIFICATION_STRUCTURELLE_TERRITOIRE_Ω.html est scellé et valide.",
+    "Le pipeline 6 niveaux (VERROU→FONDATION→BIOLOGIE→FUSION→RENDU→GOUVERNANCE) est opérationnel.",
+    "Les 48 engines sont inventoriés avec SHA-256 vérifiés.",
+    "La topologie des 6 chaînes Σ=1.000000 est conforme.",
+    "V30 LOCKED est cryptographiquement inviolé.",
+    "60/60 tests post-fusion PASS."
+  ],
+  "invariants_constates_au_sceau": {
+    "engines_total": 48,
+    "pipeline_levels": 6,
+    "chaines_institutionnelles": 6,
+    "somme_poids_chaines": 1.0,
+    "tests_post_fusion_pass": "60/60",
+    "v30_lock_invariant": true,
+    "xix_recomputed": false,
+    "vitaux_recomputed": false,
+    "backend_read_only": true,
+    "no_testing_agent_v3_fork": true
+  },
+  "v30_invariance_au_sceau": {
+    "registry_lock_omega_sha256": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+    "engine_ia_corridors_omega_sha256": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3",
+    "sha256_registry_echo": "655a1630375909bdeb32ba0a033fc329f105fb0a88ba058f79952241206cc36d",
+    "invariant": true
+  },
+  "livrables_attestes_au_sceau": {
+    "VERIFICATION_STRUCTURELLE_JSON": {
+      "path": "/frontend/public/reports/audit_territoire_omega_ultime/VERIFICATION_STRUCTURELLE_TERRITOIRE_OMEGA.json",
+      "sha256": "61f0270a30259d14dac2381d000f78c4970873269223e7514f0981812282c6f4",
+      "size": 25840
+    },
+    "RAPPORT_VERIFICATION_STRUCTURELLE_HTML": {
+      "path": "/frontend/public/reports/audit_territoire_omega_ultime/RAPPORT_VÉRIFICATION_STRUCTURELLE_TERRITOIRE_Ω.html",
+      "sha256": "0f07333907933ae3aad64626c77a47f248507ec8ae0bc5246930f73526bf6755",
+      "size": 32988
+    },
+    "SYNTHESE_TERRITOIRE_OMEGA_ULTIME_JSON": {
+      "path": "/frontend/public/reports/audit_territoire_omega_ultime/SYNTHESE_TERRITOIRE_OMEGA_ULTIME.json",
+      "sha256": "9301c6170ed8f77d6b1ff87eafda3d1b5e00caedb918d0aee769aeeadcdf4a25",
+      "size": 74386
+    },
+    "FUSION_TERRITOIRE_OMEGA_JSON_V2": {
+      "path": "/frontend/public/reports/audit_territoire_omega_ultime/FUSION_TERRITOIRE_OMEGA.json",
+      "sha256": "2540072ddd364fa9e365480077f84de4ac9d756b76c27c9ff3ab90a169fd7d14",
+      "size": 10766
+    },
+    "RAPPORT_PHASE_E_FUSION_REELLE_HTML": {
+      "path": "/frontend/public/reports/audit_territoire_omega_ultime/RAPPORT_PHASE-E_FUSION_TERRITOIRE_Ω_RÉELLE.html",
+      "sha256": null,
+      "size": 0
+    }
+  },
+  "effets_juridiques_institutionnels": [
+    "La fusion structurelle TERRITOIRE_Ω passe au statut OFFICIELLEMENT_VALIDÉE.",
+    "Tout audit ultérieur s'appuiera sur cette base institutionnelle scellée.",
+    "Toute modification structurelle ultérieure exigera un ordre explicite du Commandant.",
+    "Les artefacts (JSON + HTML) constituent la mémoire institutionnelle de référence."
+  ],
+  "doctrine_reaffirmee": {
+    "v30_locked": true,
+    "xix_recomputed": false,
+    "vitaux_recomputed": false,
+    "backend_read_only": true,
+    "aucun_engine_modifie_post_validation": true,
+    "no_testing_agent_v3_fork": true
+  },
+  "autorisation_d_execution": {
+    "donnee": true,
+    "cible": "EN_ATTENTE_DE_DIRECTIVE_DU_COMMANDANT",
+    "note": "L'autorisation est enregistrée. La cible (fix C1, audit C2, cockpit exécutif, activation HUD production, etc.) reste à préciser par le Commandant."
+  }
+}
