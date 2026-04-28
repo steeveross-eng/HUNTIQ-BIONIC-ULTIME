@@ -1,0 +1,2555 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"/><title>RAPPORT_EXHAUSTIF_ENGINES_Ω — STEEVE-MAX</title>
+<style>
+  :root { --green:#00A676; --red:#DC2626; --amber:#F59E0B; --bg:#0a0f0d; --fg:#E5F6EF; --muted:#9CA3AF; }
+  html,body{background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;margin:0;padding:0;line-height:1.55;}
+  .wrap{max-width:1400px;margin:0 auto;padding:32px 28px 80px;}
+  h1{font-size:28px;letter-spacing:1.5px;color:var(--green);margin:0 0 6px;}
+  h2{font-size:18px;letter-spacing:1px;color:var(--green);border-bottom:1px solid rgba(0,166,118,.35);padding-bottom:6px;margin:32px 0 14px;}
+  h3{font-size:14px;color:#B2F2D9;margin:18px 0 8px;}
+  .stamp{display:inline-block;padding:4px 10px;border:1px solid var(--green);border-radius:4px;color:var(--green);font-size:11px;letter-spacing:2px;margin-right:8px;}
+  .stamp.amber{border-color:var(--amber);color:var(--amber);}
+  table{border-collapse:collapse;width:100%;font-size:11px;margin:8px 0 14px;}
+  th,td{border:1px solid rgba(255,255,255,.10);padding:5px 7px;text-align:left;vertical-align:top;}
+  th{background:rgba(0,166,118,.10);color:#B2F2D9;font-weight:700;letter-spacing:.5px;position:sticky;top:0;}
+  code{font-family:'JetBrains Mono',ui-monospace,monospace;background:rgba(0,166,118,.10);padding:1px 4px;border-radius:3px;font-size:11px;color:#B2F2D9;}
+  .ok{color:var(--green);font-weight:700;} .ko{color:var(--red);font-weight:700;}
+  .amber{color:var(--amber);font-weight:700;} .muted{color:var(--muted);}
+  .hero{padding:18px 22px;background:rgba(0,166,118,.10);border:1px solid rgba(0,166,118,.45);border-radius:8px;margin-bottom:24px;}
+  .grid3{display:grid;grid-template-columns:repeat(3, 1fr);gap:14px;}
+  .grid5{display:grid;grid-template-columns:repeat(5, 1fr);gap:10px;}
+  .box{background:rgba(0,0,0,.30);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:12px 14px;}
+  .stat{font-size:22px;color:var(--green);font-weight:800;}
+  .scroll{max-height:600px;overflow-y:auto;border:1px solid rgba(255,255,255,.08);border-radius:6px;}
+  ul{margin:6px 0 12px 22px;font-size:12px;} li{margin:2px 0;}
+  .footer{margin-top:40px;padding-top:18px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;color:var(--muted);text-align:center;letter-spacing:1px;}
+  @media print{body{font-size:9px} h1{font-size:18px} h2{font-size:13px} table{font-size:8px} .scroll{max-height:none;overflow:visible}}
+</style></head><body><div class="wrap">
+
+<span class="stamp">PROTOCOLE BCE-4X · ULTIME ABSOLU</span>
+<span class="stamp">TOP-ABSOLU</span>
+<span class="stamp amber">RAPPORT EXHAUSTIF ENGINES Ω</span>
+<h1>RAPPORT_EXHAUSTIF_ENGINES_Ω — DOCUMENTATION COMPLÈTE</h1>
+<div class="muted">Émis pour <b>COMMANDANT STEEVE-MAX</b> · 2026-04-28T21:25:55.005625+00:00 · 209 engines · BIONIC OS · Articles 1-5</div>
+
+<div class="hero">
+  <h3 style="margin-top:0">VERDICT INSTITUTIONNEL</h3>
+  Documentation exhaustive de <b>209 engines</b> sur <b>5 piliers institutionnels</b>.
+  <b>V30 LOCKED INVIOLÉ</b> · Registry V30 sealed (41 engines, SHA <code>27516c9633853974fbb5754f4698a227…</code>).
+  <b>122 engines actifs Ω</b> recommandés à la conservation.
+  Recommandations détaillées pour PHASE 4 (à conserver / purger / réactiver / valider).
+</div>
+
+<h2>§1 — STATISTIQUES GLOBALES (Article 1)</h2>
+<div class="grid3">
+  <div class="box"><div class="muted">Total engines</div><div class="stat">209</div></div>
+  <div class="box"><div class="muted">Actif Ω</div><div class="stat ok">122</div></div>
+  <div class="box"><div class="muted">Actif legacy</div><div class="stat amber">20</div></div>
+  <div class="box"><div class="muted">Inactif legacy (à purger)</div><div class="stat ko">39</div></div>
+  <div class="box"><div class="muted">Inactif V8_INST (à valider)</div><div class="stat amber">16</div></div>
+  <div class="box"><div class="muted">Inactif orphelin</div><div class="stat muted">12</div></div>
+</div>
+
+<h3>Distribution par pilier institutionnel</h3>
+<div class="grid5">
+  <div class="box"><div class="muted">GOUVERNANCE</div><div class="stat">95</div></div><div class="box"><div class="muted">LEGACY</div><div class="stat">65</div></div><div class="box"><div class="muted">BIO-SYSTEME</div><div class="stat">24</div></div><div class="box"><div class="muted">ENVIRONNEMENT</div><div class="stat">20</div></div><div class="box"><div class="muted">COMPORTEMENT-HUMAIN</div><div class="stat">4</div></div><div class="box"><div class="muted">SYSTEME-SENSORIEL</div><div class="stat">1</div></div>
+</div>
+
+<h2>§2 — V30 LOCKED · CRYPTOGRAPHIE INTÉGRITÉ</h2>
+<table>
+  <tr><th>Fichier</th><th>SHA-256</th><th>Taille</th><th>Statut</th></tr>
+  <tr><td><code>registry_lock_omega.py</code></td><td><code>fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c</code></td><td>8703 octets</td><td class="ok">INVIOLÉ</td></tr>
+  <tr><td><code>engine_ia_corridors_omega.py</code></td><td><code>bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3</code></td><td>17448 octets</td><td class="ok">INVIOLÉ</td></tr>
+  <tr><td>Registry V30 sealed</td><td><code>27516c9633853974fbb5754f4698a227bf39346e94f274889d4b4ee0398f7e4c</code></td><td>41 engines</td><td class="ok">SCELLÉ 2026-04-21T05:30:00Z</td></tr>
+</table>
+
+<h2>§3 — RECOMMANDATIONS STRUCTURÉES (Article 3)</h2>
+
+<h3 class="ok">A. À CONSERVER (122 modules — actif Ω)</h3>
+<div class="scroll"><ul><li><code>engines.advanced_geospatial_omega.router</code></li>
+<li><code>engines.bio_scoring_omega.router</code></li>
+<li><code>engines.bio_scoring_omega.v30_mirror_read_only</code></li>
+<li><code>engines.eco_zones_omega.router</code></li>
+<li><code>engines.ecoforestry_omega.router</code></li>
+<li><code>engines.hydro_topo_omega.router</code></li>
+<li><code>engines.legal_time_omega.router</code></li>
+<li><code>engines.post_smoothing.anti_regression_omega</code></li>
+<li><code>engines.post_smoothing.baseline_registry_omega</code></li>
+<li><code>engines.post_smoothing.interzone_omega</code></li>
+<li><code>engines.post_smoothing.organic_corridor_smoother</code></li>
+<li><code>engines.post_smoothing.p1_preparation</code></li>
+<li><code>engines.post_smoothing.predictive_integration</code></li>
+<li><code>engines.post_smoothing.renduomega</code></li>
+<li><code>engines.post_smoothing.terrain_signals_builder</code></li>
+<li><code>engines.post_smoothing.veineux_omega</code></li>
+<li><code>engines.predictive_omega.router</code></li>
+<li><code>engines.reseau_veineux_omega.external_inflow</code></li>
+<li><code>engines.reseau_veineux_omega.router</code></li>
+<li><code>engines.terrain_3d_omega.router</code></li>
+<li><code>engines.v8_institutional.corridors_vitaux_omega</code></li>
+<li><code>engines.v8_institutional.ecological_orchestrator_omega</code></li>
+<li><code>engines.v8_institutional.engine_affuts</code></li>
+<li><code>engines.v8_institutional.engine_audio_acoustique</code></li>
+<li><code>engines.v8_institutional.engine_bio_signes</code></li>
+<li><code>engines.v8_institutional.engine_calibration_dynamique_omega</code></li>
+<li><code>engines.v8_institutional.engine_calibration_omega</code></li>
+<li><code>engines.v8_institutional.engine_canada_omega</code></li>
+<li><code>engines.v8_institutional.engine_canopee_thermique_omega</code></li>
+<li><code>engines.v8_institutional.engine_carence_nutritionnelle_omega</code></li>
+<li><code>engines.v8_institutional.engine_champs_nourriciers_omega</code></li>
+<li><code>engines.v8_institutional.engine_climat_futur_omega</code></li>
+<li><code>engines.v8_institutional.engine_comportement</code></li>
+<li><code>engines.v8_institutional.engine_comportement_avance</code></li>
+<li><code>engines.v8_institutional.engine_comportement_biologique_omega</code></li>
+<li><code>engines.v8_institutional.engine_connectivite</code></li>
+<li><code>engines.v8_institutional.engine_connectivite_ecologique_omega</code></li>
+<li><code>engines.v8_institutional.engine_contamination_v2_omega</code></li>
+<li><code>engines.v8_institutional.engine_espece_omega</code></li>
+<li><code>engines.v8_institutional.engine_forage_qualite_omega</code></li>
+<li><code>engines.v8_institutional.engine_frequentation</code></li>
+<li><code>engines.v8_institutional.engine_gouvernance_omega</code></li>
+<li><code>engines.v8_institutional.engine_habitat_supra</code></li>
+<li><code>engines.v8_institutional.engine_heatmap</code></li>
+<li><code>engines.v8_institutional.engine_hotspots</code></li>
+<li><code>engines.v8_institutional.engine_hydrologie_supra</code></li>
+<li><code>engines.v8_institutional.engine_ia_corridors_omega</code></li>
+<li><code>engines.v8_institutional.engine_ia_corridors_organic_omega</code></li>
+<li><code>engines.v8_institutional.engine_ia_vision_ecologique_omega</code></li>
+<li><code>engines.v8_institutional.engine_incertitude_omega</code></li>
+<li><code>engines.v8_institutional.engine_influence_lunaire_omega</code></li>
+<li><code>engines.v8_institutional.engine_intelligence</code></li>
+<li><code>engines.v8_institutional.engine_microclimat_advanced_omega</code></li>
+<li><code>engines.v8_institutional.engine_nutrition_v12_supra</code></li>
+<li><code>engines.v8_institutional.engine_nutritional_attractiveness_omega</code></li>
+<li><code>engines.v8_institutional.engine_optimisation_habitat_omega</code></li>
+<li><code>engines.v8_institutional.engine_population_dynamics_omega</code></li>
+<li><code>engines.v8_institutional.engine_prediction</code></li>
+<li><code>engines.v8_institutional.engine_pression</code></li>
+<li><code>engines.v8_institutional.engine_pression_atmospherique_omega</code></li>
+<li><code>engines.v8_institutional.engine_psychologie</code></li>
+<li><code>engines.v8_institutional.engine_qualite_donnees_omega</code></li>
+<li><code>engines.v8_institutional.engine_recettes_salines_omega</code></li>
+<li><code>engines.v8_institutional.engine_render_omega</code></li>
+<li><code>engines.v8_institutional.engine_risque</code></li>
+<li><code>engines.v8_institutional.engine_risques_hydro_omega</code></li>
+<li><code>engines.v8_institutional.engine_saisonnalite</code></li>
+<li><code>engines.v8_institutional.engine_salines</code></li>
+<li><code>engines.v8_institutional.engine_salines_v11_supra</code></li>
+<li><code>engines.v8_institutional.engine_sante_physio_omega</code></li>
+<li><code>engines.v8_institutional.engine_science_omega</code></li>
+<li><code>engines.v8_institutional.engine_score_global</code></li>
+<li><code>engines.v8_institutional.engine_sensoriel_vent_odeurs_omega</code></li>
+<li><code>engines.v8_institutional.engine_social_structure_omega</code></li>
+<li><code>engines.v8_institutional.engine_sol_nutriments_omega</code></li>
+<li><code>engines.v8_institutional.engine_sol_supra</code></li>
+<li><code>engines.v8_institutional.engine_species_profiles_omega</code></li>
+<li><code>engines.v8_institutional.engine_stress_anthropique_omega</code></li>
+<li><code>engines.v8_institutional.engine_terrain_cost</code></li>
+<li><code>engines.v8_institutional.engine_thermique_microclimat_omega</code></li></ul></div>
+
+<h3 class="ko">B. À PURGER (39 modules — inactif legacy)</h3>
+<ul><li><code>engines.bdre.__init__</code></li>
+<li><code>engines.bdre.audit_logger</code></li>
+<li><code>engines.bdre.fallback_chain</code></li>
+<li><code>engines.bdre.quality_scorer</code></li>
+<li><code>engines.bdre.router</code></li>
+<li><code>engines.bdre.source_registry</code></li>
+<li><code>engines.bdre.source_selector</code></li>
+<li><code>engines.bdre.waterway_classifier</code></li>
+<li><code>engines.corridor_unified.__init__</code></li>
+<li><code>engines.corridor_unified.router</code></li>
+<li><code>engines.hunt_orchestrator.__init__</code></li>
+<li><code>engines.hunt_orchestrator.router</code></li>
+<li><code>engines.nutrition_intelligence.__init__</code></li>
+<li><code>engines.nutrition_intelligence.router</code></li>
+<li><code>engines.nutrition_intelligence.x5100_mineral_score</code></li>
+<li><code>engines.nutrition_intelligence.x5200_mineral_recommendation</code></li>
+<li><code>engines.nutrition_intelligence.x5300_order_engine</code></li>
+<li><code>engines.nutrition_intelligence.x5500_energy_protein</code></li>
+<li><code>engines.nutrition_intelligence.x5600_site_guide</code></li>
+<li><code>engines.nutrition_intelligence.x5700_cost_engine</code></li>
+<li><code>engines.nutrition_intelligence.x5800_recipe_engine</code></li>
+<li><code>engines.nutrition_intelligence.x5900_evidence_engine</code></li>
+<li><code>engines.nutrition_intelligence.x6010_product_quality_analyzer</code></li>
+<li><code>engines.nutrition_intelligence.x6011_market_availability_engine</code></li>
+<li><code>engines.nutrition_intelligence.x6012_regulatory_compliance_engine</code></li>
+<li><code>engines.nutrition_intelligence.x6020_terrain_solutions</code></li>
+<li><code>engines.nutrition_intelligence.x6030_product_ecosystem</code></li>
+<li><code>engines.nutrition_intelligence.x7000_supplier_product_engine</code></li>
+<li><code>engines.post_smoothing.__init__</code></li>
+<li><code>engines.relocation.__init__</code></li>
+<li><code>engines.relocation.router</code></li>
+<li><code>engines.spatial_engine_v7.__init__</code></li>
+<li><code>engines.spatial_engine_v7.router</code></li>
+<li><code>engines.supra_advanced.__init__</code></li>
+<li><code>engines.supra_advanced.router</code></li>
+<li><code>engines.supra_engine_v7.__init__</code></li>
+<li><code>engines.supra_engine_v7.router</code></li>
+<li><code>engines.terrain_nav.__init__</code></li>
+<li><code>engines.weather_v3.__init__</code></li></ul>
+
+<h3 class="amber">C. À RÉACTIVER (16 modules — V8_INSTITUTIONAL inactif)</h3>
+<ul><li><code>engines.v8_institutional._ARCHIVE_NON_ACTIVE.engine_corridors_legacy_pre_L</code></li>
+<li><code>engines.v8_institutional.__init__</code></li>
+<li><code>engines.v8_institutional.engine_cameras</code></li>
+<li><code>engines.v8_institutional.engine_ia_vision_registry_omega</code></li>
+<li><code>engines.v8_institutional.engine_nutrition</code></li>
+<li><code>engines.v8_institutional.engine_rendu_omega</code></li>
+<li><code>engines.v8_institutional.engine_territoire_anti_regression_omega</code></li>
+<li><code>engines.v8_institutional.engines_catalog</code></li>
+<li><code>engines.v8_institutional.hotspots_organic_v1</code></li>
+<li><code>engines.v8_institutional.phase_omega_secure_lockdown</code></li>
+<li><code>engines.v8_institutional.piliers_router</code></li>
+<li><code>engines.v8_institutional.salines_organic_v1</code></li>
+<li><code>engines.v8_institutional.supra_v8</code></li>
+<li><code>engines.v8_institutional.v20_mvt_tiles</code></li>
+<li><code>engines.v8_institutional.visual_proof_live_playwright</code></li>
+<li><code>engines.v8_institutional.zones_organic_v1</code></li></ul>
+
+<h3 class="muted">D. ORPHELINS (12 modules — non-importés)</h3>
+<div class="scroll"><ul><li><code>engines.advanced_geospatial_omega.__init__</code></li>
+<li><code>engines.bio_scoring_omega.__init__</code></li>
+<li><code>engines.eco_zones_omega.__init__</code></li>
+<li><code>engines.ecoforestry_omega.__init__</code></li>
+<li><code>engines.hydro_topo_omega.__init__</code></li>
+<li><code>engines.legal_time_omega.__init__</code></li>
+<li><code>engines.predictive_omega.__init__</code></li>
+<li><code>engines.reseau_veineux_omega.__init__</code></li>
+<li><code>engines.terrain_3d_omega.__init__</code></li>
+<li><code>engines.v8_national.__init__</code></li>
+<li><code>engines.v8_national.router</code></li>
+<li><code>engines.wildlife_behavior_omega.__init__</code></li></ul></div>
+
+<h3 class="amber">E. MANQUANTS POUR VALIDATION (11 engines registry sans marker en code)</h3>
+<ul><li><code>ANTI-CONTAMINATION-INSTITUTIONNEL-Ω</code></li>
+<li><code>ENGINE-ALERTE-ANOMALIES-Ω</code></li>
+<li><code>ENGINE-CONTAMINATION-Ω-V2</code></li>
+<li><code>ENGINE-QUALITE-DONNEES-Ω</code></li>
+<li><code>EXPORT-INSTITUTIONNEL-V20-Ω</code></li>
+<li><code>FEDERAL-DATASETS-Ω</code></li>
+<li><code>SCIENCE-GAPS-DATASETS-Ω</code></li>
+<li><code>SELF-AUDIT-ALERTS-Ω</code></li>
+<li><code>SLA-BASELINE-30J-Ω</code></li>
+<li><code>VISUAL-PROOF-LIVE-Ω</code></li>
+<li><code>VISUAL-PROOF-Ω</code></li></ul>
+
+<h3 class="amber">F. CONFLITS POTENTIELS — doublons par stem (2)</h3>
+<ul><li><code>router → engines/legal_time_omega/router.py · engines/v8_national/router.py · engines/bio_scoring_omega/router.py · engines/predictive_omega/router.py · engines/reseau_veineux_omega/router.py · engines/wildlife_behavior_omega/router.py · engines/advanced_geospatial_omega/router.py · engines/eco_zones_omega/router.py · engines/ecoforestry_omega/router.py · engines/hydro_topo_omega/router.py · engines/terrain_3d_omega/router.py · engines/weather_v3/router.py · engines/bdre/router.py · engines/corridor_unified/router.py · engines/hunt_orchestrator/router.py · engines/nutrition_intelligence/router.py · engines/relocation/router.py · engines/spatial_engine_v7/router.py · engines/supra_advanced/router.py · engines/supra_engine_v7/router.py</code></li>
+<li><code>__init__ → engines/v8_institutional/__init__.py · engines/legal_time_omega/__init__.py · engines/v8_national/__init__.py · engines/bio_scoring_omega/__init__.py · engines/predictive_omega/__init__.py · engines/reseau_veineux_omega/__init__.py · engines/wildlife_behavior_omega/__init__.py · engines/advanced_geospatial_omega/__init__.py · engines/eco_zones_omega/__init__.py · engines/ecoforestry_omega/__init__.py · engines/hydro_topo_omega/__init__.py · engines/terrain_3d_omega/__init__.py · engines/bdre/__init__.py · engines/corridor_unified/__init__.py · engines/hunt_orchestrator/__init__.py · engines/nutrition_intelligence/__init__.py · engines/post_smoothing/__init__.py · engines/relocation/__init__.py · engines/spatial_engine_v7/__init__.py · engines/supra_advanced/__init__.py · engines/supra_engine_v7/__init__.py · engines/terrain_nav/__init__.py · engines/weather_v3/__init__.py</code></li></ul>
+
+<h2>§4 — INVENTAIRE DÉTAILLÉ DES 209 ENGINES (Articles 1-2)</h2>
+<div class="scroll" style="max-height:1200px">
+<table>
+  <thead><tr>
+    <th>ENGINE_NAME</th><th>PILIER · PHASE</th><th>STATUT</th>
+    <th>PATH</th><th>SHA / SIZE</th><th>DESCRIPTION FONCTIONNELLE</th>
+    <th>COUCHES Ω ÉMISES</th><th>APIs EXPOSÉES</th><th>RISQUES</th>
+  </tr></thead>
+  <tbody>
+      <tr>
+        <td><code>router</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω-X</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/legal_time_omega/router.py</code></td>
+        <td><code style="font-size:9px">3212acc450f2667a…</code><br><span class="muted">8210o</span></td>
+        <td style="max-width:340px">ENGINE_LEGAL_TIME_Ω — Router FastAPI — X199 ACTIVÉ</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">POST /<br>GET /status</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>anti_regression_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/post_smoothing/anti_regression_omega.py</code></td>
+        <td><code style="font-size:9px">c644223b4c90fd36…</code><br><span class="muted">13837o</span></td>
+        <td style="max-width:340px">anti_regression_omega.py — PHASE_X200_P6_ANTI_RÉGRESSION_Ω</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>baseline_registry_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/post_smoothing/baseline_registry_omega.py</code></td>
+        <td><code style="font-size:9px">6712bc21dd619fef…</code><br><span class="muted">4451o</span></td>
+        <td style="max-width:340px">baseline_registry_omega.py — PHASE_XII_SUPRA_CORRIDORS_VEINEUX_Ω_ULTIME_ENFORCEMENT_P0</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>interzone_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/post_smoothing/interzone_omega.py</code></td>
+        <td><code style="font-size:9px">c612b36046314f68…</code><br><span class="muted">25719o</span></td>
+        <td style="max-width:340px">interzone_omega.py — PHASE_XII_SUPRA_CORRIDORS_VEINEUX_Ω_INTERZONE_GENERATION</td>
+        <td style="font-size:10px">corridors, zones, salines</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>veineux_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/post_smoothing/veineux_omega.py</code></td>
+        <td><code style="font-size:9px">180b65c30dccb7c6…</code><br><span class="muted">21073o</span></td>
+        <td style="max-width:340px">veineux_omega.py — PHASE_XII_SUPRA_CORRIDORS_VEINEUX_Ω_ULTIME</td>
+        <td style="font-size:10px">corridors</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>corridors_vitaux_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/corridors_vitaux_omega.py</code></td>
+        <td><code style="font-size:9px">1c6ca2b9e04f88bc…</code><br><span class="muted">22028o</span></td>
+        <td style="max-width:340px">corridors_vitaux_omega.py — PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω</td>
+        <td style="font-size:10px">corridors, zones, salines, hotspots</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ecological_orchestrator_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/ecological_orchestrator_omega.py</code></td>
+        <td><code style="font-size:9px">01f9e940a063b6c5…</code><br><span class="muted">20638o</span></td>
+        <td style="max-width:340px">ecological_orchestrator_omega.py — PHASE_XVII_SUPRA_ENGINE_CORRIDORS_ECOLOGIQUE_Ω</td>
+        <td style="font-size:10px">corridors, zones, salines</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_affuts</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_affuts.py</code></td>
+        <td><code style="font-size:9px">fedc1e8480b48b2b…</code><br><span class="muted">466o</span></td>
+        <td style="max-width:340px">ENGINE 03 — AFFUTS</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_audio_acoustique</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_audio_acoustique.py</code></td>
+        <td><code style="font-size:9px">f418835be0cea986…</code><br><span class="muted">4222o</span></td>
+        <td style="max-width:340px">ENGINE 19 — AUDIO-ACOUSTIQUE (sonar passif)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_bio_signes</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_bio_signes.py</code></td>
+        <td><code style="font-size:9px">734dd78460281c81…</code><br><span class="muted">4562o</span></td>
+        <td style="max-width:340px">ENGINE 18 — BIO-SIGNES (ADN visuel + chimie visuelle + fraicheur)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-CALIBRATION-DYNAMIQUE-Ω</code></td>
+        <td>GOUVERNANCE<br><span class="muted">VIII-X</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_calibration_dynamique_omega.py</code></td>
+        <td><code style="font-size:9px">e58e46a2b971d286…</code><br><span class="muted">4720o</span></td>
+        <td style="max-width:340px">ENGINE-CALIBRATION-DYNAMIQUE-Ω — ML ajustement pondérations (Phase X)</td>
+        <td style="font-size:10px">zones, hotspots</td>
+        <td style="font-size:10px">GET /calibration-dynamique<br>GET /observations<br>POST /observations</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-CALIBRATION-Ω</code></td>
+        <td>GOUVERNANCE<br><span class="muted">VIII-X</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_calibration_omega.py</code></td>
+        <td><code style="font-size:9px">472f4fedd7880fbd…</code><br><span class="muted">2259o</span></td>
+        <td style="max-width:340px">ENGINE-CALIBRATION-Ω — Calibration non-invasive modeles.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-CANADA-Ω</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_canada_omega.py</code></td>
+        <td><code style="font-size:9px">f8357129a759066a…</code><br><span class="muted">6004o</span></td>
+        <td style="max-width:340px">ENGINE-CANADA-Ω — Souveraineté pancanadienne (Phase X-B)</td>
+        <td style="font-size:10px">corridors</td>
+        <td style="font-size:10px">GET /canada<br>GET /canada/province/{code}</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_carence_nutritionnelle_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_carence_nutritionnelle_omega.py</code></td>
+        <td><code style="font-size:9px">7415096d9cae7aeb…</code><br><span class="muted">2222o</span></td>
+        <td style="max-width:340px">ENGINE_CARENCE_NUTRITIONNELLE_Ω — Détection de carences par espèce.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_champs_nourriciers_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_champs_nourriciers_omega.py</code></td>
+        <td><code style="font-size:9px">59508694ba12e9ce…</code><br><span class="muted">2186o</span></td>
+        <td style="max-width:340px">ENGINE_CHAMPS_NOURRICIERS_Ω — Détection et scoring des champs nourriciers.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_forage_qualite_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_forage_qualite_omega.py</code></td>
+        <td><code style="font-size:9px">0a4cf3fbdaac8a9f…</code><br><span class="muted">2326o</span></td>
+        <td style="max-width:340px">ENGINE_FORAGE_QUALITÉ_Ω — Qualité nutritionnelle des végétaux disponibles.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_frequentation</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_frequentation.py</code></td>
+        <td><code style="font-size:9px">9b6540714ea346c3…</code><br><span class="muted">841o</span></td>
+        <td style="max-width:340px">ENGINE 11 — FREQUENTATION (FAUNE + HUMAIN)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-GOUVERNANCE-Ω</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_gouvernance_omega.py</code></td>
+        <td><code style="font-size:9px">d96ca368e55a7106…</code><br><span class="muted">3196o</span></td>
+        <td style="max-width:340px">ENGINE-GOUVERNANCE-Ω — Fusion MONITORING + ALERTE + SCIENCE + REGISTRY.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /gouvernance</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_heatmap</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_heatmap.py</code></td>
+        <td><code style="font-size:9px">2dd0625a56ebcd03…</code><br><span class="muted">846o</span></td>
+        <td style="max-width:340px">ENGINE 06 — HEATMAP</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_hotspots</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_hotspots.py</code></td>
+        <td><code style="font-size:9px">8a268fa092a0499c…</code><br><span class="muted">1099o</span></td>
+        <td style="max-width:340px">ENGINE 04 — HOTSPOTS</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-INCERTITUDE-Ω</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_incertitude_omega.py</code></td>
+        <td><code style="font-size:9px">e0210bc0a5f9289a…</code><br><span class="muted">2866o</span></td>
+        <td style="max-width:340px">ENGINE-INCERTITUDE-Ω — Quantification incertitude par couche/engine/espece.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_intelligence</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_intelligence.py</code></td>
+        <td><code style="font-size:9px">7bfce8b9f82359be…</code><br><span class="muted">1685o</span></td>
+        <td style="max-width:340px">ENGINE 23 — INTELLIGENCE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-NUTRITION-V12-SUPRA</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_nutrition_v12_supra.py</code></td>
+        <td><code style="font-size:9px">36fae4fa3e958625…</code><br><span class="muted">27813o</span></td>
+        <td style="max-width:340px">ENGINE-NUTRITION-V12-SUPRA — Moteur biologique central</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_nutritional_attractiveness_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_nutritional_attractiveness_omega.py</code></td>
+        <td><code style="font-size:9px">fd7a973154937448…</code><br><span class="muted">2432o</span></td>
+        <td style="max-width:340px">ENGINE_NUTRITIONAL_ATTRACTIVENESS_Ω — Synthèse attractivité nutritionnelle du territoire.</td>
+        <td style="font-size:10px">fusion</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_prediction</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_prediction.py</code></td>
+        <td><code style="font-size:9px">7bc14ab5afd386ed…</code><br><span class="muted">3494o</span></td>
+        <td style="max-width:340px">ENGINE 21 — PREDICTION 48H</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_psychologie</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_psychologie.py</code></td>
+        <td><code style="font-size:9px">74d0d92a1c34b650…</code><br><span class="muted">4262o</span></td>
+        <td style="max-width:340px">ENGINE 20 — PSYCHOLOGIE ANIMALE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-QUALIT</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_qualite_donnees_omega.py</code></td>
+        <td><code style="font-size:9px">8de74c2a82f4b868…</code><br><span class="muted">2916o</span></td>
+        <td style="max-width:340px">ENGINE-QUALITÉ-DONNÉES-Ω — Audit complétude/cohérence/fraicheur.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_recettes_salines_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_recettes_salines_omega.py</code></td>
+        <td><code style="font-size:9px">b19a0fb23225a101…</code><br><span class="muted">2112o</span></td>
+        <td style="max-width:340px">ENGINE_RECETTES_SALINES_Ω — Formulations de salines adaptées espèce+carence.</td>
+        <td style="font-size:10px">fusion</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-RENDER-Ω</code></td>
+        <td>GOUVERNANCE<br><span class="muted">P0-XI-SUPRA</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_render_omega.py</code></td>
+        <td><code style="font-size:9px">67d7b15a0d6fbe09…</code><br><span class="muted">6161o</span></td>
+        <td style="max-width:340px">ENGINE-RENDER-Ω — Moteur central de rendu TERRITOIRE (Phase XI-SUPRA)</td>
+        <td style="font-size:10px">corridors, zones, affuts, salines, hotspots</td>
+        <td style="font-size:10px">POST /render-validate<br>GET /render-config</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_risque</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_risque.py</code></td>
+        <td><code style="font-size:9px">135e6312bd018256…</code><br><span class="muted">822o</span></td>
+        <td style="max-width:340px">ENGINE 10 — RISQUE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_saisonnalite</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_saisonnalite.py</code></td>
+        <td><code style="font-size:9px">07246c83824ef900…</code><br><span class="muted">1180o</span></td>
+        <td style="max-width:340px">ENGINE 12 — SAISONNALITE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_salines</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_salines.py</code></td>
+        <td><code style="font-size:9px">d35f94286f246922…</code><br><span class="muted">1316o</span></td>
+        <td style="max-width:340px">ENGINE 07 — SALINES</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_salines_v11_supra</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_salines_v11_supra.py</code></td>
+        <td><code style="font-size:9px">220ff36a3d7b67b6…</code><br><span class="muted">16176o</span></td>
+        <td style="max-width:340px">ENGINE SALINES-V11-SUPRA — ACTIVATION TOTALE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_sante_physio_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_sante_physio_omega.py</code></td>
+        <td><code style="font-size:9px">b3159282414bdd14…</code><br><span class="muted">1834o</span></td>
+        <td style="max-width:340px">ENGINE_SANTÉ_PHYSIO_Ω — Indicateur de santé physiologique estimée.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-SCIENCE-Ω</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_science_omega.py</code></td>
+        <td><code style="font-size:9px">57c4f676eb78e8d8…</code><br><span class="muted">5272o</span></td>
+        <td style="max-width:340px">ENGINE-SCIENCE-Ω — Registry institutionnel + catalog scientifique</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_score_global</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_score_global.py</code></td>
+        <td><code style="font-size:9px">92c1bdec76f4888d…</code><br><span class="muted">8326o</span></td>
+        <td style="max-width:340px">ENGINE 24 — SCORE GLOBAL — MODE REALITE (Phase IX)</td>
+        <td style="font-size:10px">zones, hotspots, contamination, sensoriel</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_social_structure_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_social_structure_omega.py</code></td>
+        <td><code style="font-size:9px">8e7a125d6a6a470e…</code><br><span class="muted">1755o</span></td>
+        <td style="max-width:340px">ENGINE_SOCIAL_STRUCTURE_Ω — Structure sociale (grégaire, solitaire, groupe).</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_sol_nutriments_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_sol_nutriments_omega.py</code></td>
+        <td><code style="font-size:9px">c36790ed80d054b1…</code><br><span class="muted">2472o</span></td>
+        <td style="max-width:340px">ENGINE_SOL_NUTRIMENTS_Ω — Nutriments minéraux et organiques du sol.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_terrain_cost</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_terrain_cost.py</code></td>
+        <td><code style="font-size:9px">1cfe791ed033f7f6…</code><br><span class="muted">585o</span></td>
+        <td style="max-width:340px">ENGINE 15 — TERRAIN-COST</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_trophic_behavior_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_trophic_behavior_omega.py</code></td>
+        <td><code style="font-size:9px">3706eb04705385fc…</code><br><span class="muted">2555o</span></td>
+        <td style="max-width:340px">ENGINE_TROPHIC_BEHAVIOR_Ω — Comportement trophique par espèce et contexte.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_vent</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_vent.py</code></td>
+        <td><code style="font-size:9px">6802864d1f82c1dd…</code><br><span class="muted">5181o</span></td>
+        <td style="max-width:340px">ENGINE 05 — VENT</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_visibilite</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_visibilite.py</code></td>
+        <td><code style="font-size:9px">03b87375a10dac2d…</code><br><span class="muted">791o</span></td>
+        <td style="max-width:340px">ENGINE 16 — VISIBILITE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_zones</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_zones.py</code></td>
+        <td><code style="font-size:9px">8229ca7c0d16e5f6…</code><br><span class="muted">503o</span></td>
+        <td style="max-width:340px">ENGINE 01 — ZONES</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>esi_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/esi_omega.py</code></td>
+        <td><code style="font-size:9px">bed38dd357709e35…</code><br><span class="muted">18261o</span></td>
+        <td style="max-width:340px">ENGINE SECURITE-INSTITUTIONNELLE-Omega (ESI-Omega)</td>
+        <td style="font-size:10px">corridors, zones, affuts, salines, hotspots</td>
+        <td style="font-size:10px">GET /laws<br>GET /conformite/full<br>GET /status</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>export_institutionnel_v20_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">P0-XI-SUPRA</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/export_institutionnel_v20_omega.py</code></td>
+        <td><code style="font-size:9px">7f6442074fb0ed12…</code><br><span class="muted">6954o</span></td>
+        <td style="max-width:340px">EXPORT-INSTITUTIONNEL-V20-Ω — PDF signé (Phase X-D)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /export/institutionnel/v20</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>federal_datasets_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/federal_datasets_omega.py</code></td>
+        <td><code style="font-size:9px">a33be806485a4cce…</code><br><span class="muted">6974o</span></td>
+        <td style="max-width:340px">FEDERAL-DATASETS-Ω — LEP + HYDAT (Phase X-C)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /federal/hydat/province/{code}<br>GET /federal/lep<br>GET /federal/hydat</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>fusion_territoire_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/fusion_territoire_omega.py</code></td>
+        <td><code style="font-size:9px">3c1c33056028011e…</code><br><span class="muted">20106o</span></td>
+        <td style="max-width:340px">fusion_territoire_omega.py — PHASE-E DOCTRINE PERMANENTE 50% + DÉROGATION BIO</td>
+        <td style="font-size:10px">contamination, score_ultime</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>lep_ingestion_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/lep_ingestion_omega.py</code></td>
+        <td><code style="font-size:9px">67549a5350b52264…</code><br><span class="muted">13152o</span></td>
+        <td style="max-width:340px">LEP-INGESTION-Ω — BIONIC INGESTION-FGDB+GEOJSON-Ω-V1.0 (Phase XI-SUPRA-D)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">POST /ingest<br>GET /registry<br>GET /geojson/{layer}</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>lidar_irda_v11</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/lidar_irda_v11.py</code></td>
+        <td><code style="font-size:9px">a8d9b85c636530b5…</code><br><span class="muted">18041o</span></td>
+        <td style="max-width:340px">ENGINE LIDAR-IRDA V11 — INGESTION DONNÉES INSTITUTIONNELLES 1m</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-MONITORING-Ω</code></td>
+        <td>GOUVERNANCE<br><span class="muted">P0-XI-SUPRA</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/monitoring_alerte_omega.py</code></td>
+        <td><code style="font-size:9px">c8ad5dd19e9d9184…</code><br><span class="muted">4424o</span></td>
+        <td style="max-width:340px">ENGINE-MONITORING-Ω + ENGINE-ALERTE-ANOMALIES-Ω</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /monitoring<br>GET /alertes</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>origine_externe_filter_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/origine_externe_filter_omega.py</code></td>
+        <td><code style="font-size:9px">33706d4353a5e149…</code><br><span class="muted">13388o</span></td>
+        <td style="max-width:340px">origine_externe_filter_omega.py — PHASE_XIX_P1_ORIGINE_EXTERNE_FILTER_Ω</td>
+        <td style="font-size:10px">corridors</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>origine_externe_inversion_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/origine_externe_inversion_omega.py</code></td>
+        <td><code style="font-size:9px">2f0ae33a99c312f9…</code><br><span class="muted">9079o</span></td>
+        <td style="max-width:340px">origine_externe_inversion_omega.py — PHASE_XIX_P2_ORIGINE_EXTERNE_INVERSION_Ω</td>
+        <td style="font-size:10px">corridors</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>predictive_omega_v2</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/predictive_omega_v2.py</code></td>
+        <td><code style="font-size:9px">95d10ddcf2a63cf2…</code><br><span class="muted">16715o</span></td>
+        <td style="max-width:340px">predictive_omega_v2.py — PHASE_XVIII_ENGINE_PREDICTIVE_OMEGA_GPS_USGS_Ω</td>
+        <td style="font-size:10px">corridors</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>protections_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/protections_omega.py</code></td>
+        <td><code style="font-size:9px">51fc00d06405fcb4…</code><br><span class="muted">3772o</span></td>
+        <td style="max-width:340px">protections_omega.py — PHASE 2 STABILISATION TERRITOIRE Ω</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>redis_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/redis_omega.py</code></td>
+        <td><code style="font-size:9px">f8b2ea439ca40fcc…</code><br><span class="muted">4717o</span></td>
+        <td style="max-width:340px">REDIS-Ω — Backend cache partage multi-pod</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-SCIENCE-Ω</code></td>
+        <td>GOUVERNANCE<br><span class="muted">VIII-X</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/registry_lock_omega.py</code></td>
+        <td><code style="font-size:9px">fb765b94cc1fd421…</code><br><span class="muted">8703o</span></td>
+        <td style="max-width:340px">REGISTRY-LOCK-Ω — Verrouillage institutionnel Phase XI</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /document-maitre-lock<br>GET /registry-lock</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>science_gaps_datasets</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/science_gaps_datasets.py</code></td>
+        <td><code style="font-size:9px">3df60c3f518cf122…</code><br><span class="muted">5475o</span></td>
+        <td style="max-width:340px">SCIENCE-Ω GAPS DATASETS — Seed institutionnels QC (Phase X)</td>
+        <td style="font-size:10px">zones</td>
+        <td style="font-size:10px">GET /science-gaps</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-SHIELD-O</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/securite_omega_v19.py</code></td>
+        <td><code style="font-size:9px">4efb2907b1444fe3…</code><br><span class="muted">10811o</span></td>
+        <td style="max-width:340px">SECURITE-Omega V19 — SHIELDS + GUARDS + VALIDATORS</td>
+        <td style="font-size:10px">corridors, zones, salines, contamination</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>self_audit_alerts_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">VIII-X</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/self_audit_alerts_omega.py</code></td>
+        <td><code style="font-size:9px">090df97bbe9011d1…</code><br><span class="muted">4968o</span></td>
+        <td style="max-width:340px">SELF-AUDIT-ALERTS-Ω — Canal WebSocket institutionnel (Phase X-D)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>self_audit_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">VIII-X</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/self_audit_omega.py</code></td>
+        <td><code style="font-size:9px">449b6d0fe48c53a8…</code><br><span class="muted">14550o</span></td>
+        <td style="max-width:340px">SELF-AUDIT-Ω — Validation institutionnelle TERRITOIRE-V12</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /self-audit<br>GET /self-audit/last</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>sla_baseline_30j_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">P0-XI-SUPRA</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/sla_baseline_30j_omega.py</code></td>
+        <td><code style="font-size:9px">dcc4621c4400cdb5…</code><br><span class="muted">3700o</span></td>
+        <td style="max-width:340px">SLA-BASELINE-30J-Ω — Série temporelle 30 jours (Phase X-D)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /sla-baseline-30j</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>sla_baseline_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">P0-XI-SUPRA</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/sla_baseline_omega.py</code></td>
+        <td><code style="font-size:9px">c3033785bc40c2a8…</code><br><span class="muted">16829o</span></td>
+        <td style="max-width:340px">SLA-BASELINE-Ω — Baseline institutionnelle + PERF-GUARD-Ω</td>
+        <td style="font-size:10px">corridors</td>
+        <td style="font-size:10px">GET /sla-baseline<br>POST /sla-baseline/seed<br>DELETE /sla-baseline</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-SUPRA-DONNEES-O</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/supra_donnees.py</code></td>
+        <td><code style="font-size:9px">04a81ec1369718b8…</code><br><span class="muted">14396o</span></td>
+        <td style="max-width:340px">ENGINE SUPRA-DONNEES-Omega — CENTRAL DATA INTELLIGENCE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>terrain_v10_supra</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/terrain_v10_supra.py</code></td>
+        <td><code style="font-size:9px">61e38e5a8f813dad…</code><br><span class="muted">15619o</span></td>
+        <td style="max-width:340px">ENGINE DONNEES-REELLES-TERRAIN V10-SUPRA-INSTITUTIONNEL</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-TERRAIN-V10-SUPRA</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/territoire_v10_supra.py</code></td>
+        <td><code style="font-size:9px">06601e0040e30e95…</code><br><span class="muted">66444o</span></td>
+        <td style="max-width:340px">TERRITOIRE V10-SUPRA — FUSION TOTALE REEL + IA</td>
+        <td style="font-size:10px">corridors, zones, affuts, salines, hotspots, contamination</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>v20_performance_bundle</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/v20_performance_bundle.py</code></td>
+        <td><code style="font-size:9px">5b55efb17b53fa9b…</code><br><span class="muted">21920o</span></td>
+        <td style="max-width:340px">V20 PERFORMANCE BUNDLE — V11-SUPRA SCALABILITE 10K</td>
+        <td style="font-size:10px">corridors, zones, affuts, contamination</td>
+        <td style="font-size:10px">POST /bundle/purge<br>GET /bundle/stats<br>POST /bundle/warmup</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>visual_proof_live_omega</code></td>
+        <td>GOUVERNANCE<br><span class="muted">P0-XI-SUPRA</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/visual_proof_live_omega.py</code></td>
+        <td><code style="font-size:9px">6ef5047c7efe5099…</code><br><span class="muted">7182o</span></td>
+        <td style="max-width:340px">VISUAL-PROOF-LIVE-Ω — Capture DOM Leaflet réelle (Phase XI-SUPRA-C)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /visual-proof-live/index<br>POST /visual-proof-live/generate</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-RENDER-Ω</code></td>
+        <td>GOUVERNANCE<br><span class="muted">P0-XI-SUPRA</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/visual_proof_omega.py</code></td>
+        <td><code style="font-size:9px">c14cdcd5a94d0caa…</code><br><span class="muted">13671o</span></td>
+        <td style="max-width:340px">VISUAL-PROOF-Ω — Preuve visuelle institutionnelle (Phase XI-SUPRA-B)</td>
+        <td style="font-size:10px">corridors, affuts, salines, hotspots</td>
+        <td style="font-size:10px">GET /visual-proof/index<br>POST /visual-proof/generate</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-V8</code></td>
+        <td>GOUVERNANCE<br><span class="muted">X-B</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_national/exclusion_engine.py</code></td>
+        <td><code style="font-size:9px">42cbed5d1c99066b…</code><br><span class="muted">21373o</span></td>
+        <td style="max-width:340px">EXCLUSION-ENGINE-V8 — Moteur centralise d&#x27;exclusion BCE-4X</td>
+        <td style="font-size:10px">contamination</td>
+        <td style="font-size:10px">GET /decision<br>GET /status<br>GET /referential</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>governance</code></td>
+        <td>GOUVERNANCE<br><span class="muted">X-B</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_national/governance.py</code></td>
+        <td><code style="font-size:9px">690ff6835b7eea1b…</code><br><span class="muted">7661o</span></td>
+        <td style="max-width:340px">V8-GOVERNANCE — Master Switch Admin Premium SUPREMACY</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /audit<br>POST /activate<br>GET /state</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>map_bundle</code></td>
+        <td>GOUVERNANCE<br><span class="muted">X-B</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_national/map_bundle.py</code></td>
+        <td><code style="font-size:9px">05329cc8c3d2d219…</code><br><span class="muted">13480o</span></td>
+        <td style="max-width:340px">V8-MAP-BUNDLE — Endpoint unique toutes couches territoire</td>
+        <td style="font-size:10px">corridors, zones, affuts</td>
+        <td style="font-size:10px">GET /bundle<br>GET /bundle/status</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-V7</code></td>
+        <td>GOUVERNANCE<br><span class="muted">X-B</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_national/p1_pipelines.py</code></td>
+        <td><code style="font-size:9px">ba2d682e255481db…</code><br><span class="muted">10454o</span></td>
+        <td style="max-width:340px">V8-P1 — Pipelines donnees reelles (LiDAR WCS + IRDA Pedologie)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /lidar<br>GET /status<br>GET /pedology</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>phase_a_engines</code></td>
+        <td>GOUVERNANCE<br><span class="muted">X-B</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_national/phase_a_engines.py</code></td>
+        <td><code style="font-size:9px">32f454152ef7dea2…</code><br><span class="muted">16232o</span></td>
+        <td style="max-width:340px">V8-REINTEGRATION-PHASE-A — RELOCALISATION + SALINES</td>
+        <td style="font-size:10px">salines, contamination</td>
+        <td style="font-size:10px">GET /relocalisation<br>GET /salines<br>GET /phase-a/status</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>phase_b_engines</code></td>
+        <td>GOUVERNANCE<br><span class="muted">X-B</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_national/phase_b_engines.py</code></td>
+        <td><code style="font-size:9px">ede994e06f35459e…</code><br><span class="muted">33451o</span></td>
+        <td style="max-width:340px">V8-REINTEGRATION-PHASE-B — ZONES + CORRIDORS + AFFUTS TERRAIN-AWARE</td>
+        <td style="font-size:10px">corridors, zones, affuts</td>
+        <td style="font-size:10px">GET /affuts-ta<br>GET /zones-ta<br>GET /corridors-ta</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>phase_c_engines</code></td>
+        <td>GOUVERNANCE<br><span class="muted">X-B</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_national/phase_c_engines.py</code></td>
+        <td><code style="font-size:9px">51746ac46e3b629a…</code><br><span class="muted">15424o</span></td>
+        <td style="max-width:340px">V8-PHASE-C — SCENARIO + THERMAL + MULTI-ENGINE SCORING</td>
+        <td style="font-size:10px">corridors, zones, affuts</td>
+        <td style="font-size:10px">GET /scenario/presets<br>GET /multi-score<br>GET /phase-c/status</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>referentials</code></td>
+        <td>GOUVERNANCE<br><span class="muted">X-B</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_national/referentials.py</code></td>
+        <td><code style="font-size:9px">0c610c3466b853a6…</code><br><span class="muted">13401o</span></td>
+        <td style="max-width:340px">V8-NATIONAL — Referentiels nationaux pancanadiens</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_corridors_legacy_pre_L</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">INACTIF_V8_INST</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/_ARCHIVE_NON_ACTIVE/engine_corridors_legacy_pre_L.py</code></td>
+        <td><code style="font-size:9px">db78bb0e1bdd5ada…</code><br><span class="muted">640o</span></td>
+        <td style="max-width:340px">ENGINE 02 — CORRIDORS V9-x20</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">Orphelin V8_INST — validation contextuelle</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">INACTIF_V8_INST</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/__init__.py</code></td>
+        <td><code style="font-size:9px">560692b53e3ee83b…</code><br><span class="muted">305o</span></td>
+        <td style="max-width:340px">BIONIC OS — V8-ENGINES-INSTITUTIONNEL-Ω-ULTIME-MAX</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">Orphelin V8_INST — validation contextuelle</td>
+      </tr>
+      <tr>
+        <td><code>engine_cameras</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">INACTIF_V8_INST</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_cameras.py</code></td>
+        <td><code style="font-size:9px">4c2a75ffa1c8b5ee…</code><br><span class="muted">362o</span></td>
+        <td style="max-width:340px">ENGINE 17 — CAMERAS</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">Orphelin V8_INST — validation contextuelle</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-IA-VISION-REGISTRY-Ω</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">INACTIF_V8_INST</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_ia_vision_registry_omega.py</code></td>
+        <td><code style="font-size:9px">7abd72004637d8bb…</code><br><span class="muted">3482o</span></td>
+        <td style="max-width:340px">ENGINE-IA-VISION-REGISTRY-Ω — Registre préparatoire IA Vision</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /validate<br>GET /status</td>
+        <td style="font-size:10px">Orphelin V8_INST — validation contextuelle</td>
+      </tr>
+      <tr>
+        <td><code>engine_nutrition</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">INACTIF_V8_INST</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_nutrition.py</code></td>
+        <td><code style="font-size:9px">04110915819d435e…</code><br><span class="muted">905o</span></td>
+        <td style="max-width:340px">ENGINE 08 — NUTRITION-MINERAUX</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">Orphelin V8_INST — validation contextuelle</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-RENDU-Ω</code></td>
+        <td>GOUVERNANCE<br><span class="muted">P0-XI-SUPRA</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">INACTIF_V8_INST</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_rendu_omega.py</code></td>
+        <td><code style="font-size:9px">96af50ad96bb7b6b…</code><br><span class="muted">13029o</span></td>
+        <td style="max-width:340px">ENGINE-RENDU-Ω — Moteur de rendu institutionnel des corridors (Phase XI-SUPRA-K)</td>
+        <td style="font-size:10px">corridors, zones, affuts, salines, hotspots</td>
+        <td style="font-size:10px">POST /validate<br>GET /status<br>GET /rules</td>
+        <td style="font-size:10px">Orphelin V8_INST — validation contextuelle</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-TERRITOIRE-ANTI-REGRESSION-Ω</code></td>
+        <td>GOUVERNANCE<br><span class="muted">P0-XI-SUPRA</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">INACTIF_V8_INST</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_territoire_anti_regression_omega.py</code></td>
+        <td><code style="font-size:9px">b7ddafc36500ca6d…</code><br><span class="muted">14013o</span></td>
+        <td style="max-width:340px">ENGINE_TERRITOIRE_ANTI_REGRESSION_Ω — Phase XI-SUPRA-G (ORDRE PROTECT-Ω)</td>
+        <td style="font-size:10px">corridors, zones, affuts, hotspots, contamination</td>
+        <td style="font-size:10px">POST /validate<br>POST /seal-baseline<br>GET /status</td>
+        <td style="font-size:10px">Orphelin V8_INST — validation contextuelle</td>
+      </tr>
+      <tr>
+        <td><code>engines_catalog</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">INACTIF_V8_INST</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engines_catalog.py</code></td>
+        <td><code style="font-size:9px">5687cf6bb94815ed…</code><br><span class="muted">1358o</span></td>
+        <td style="max-width:340px">ENGINES-CATALOG-Ω — Endpoint gouvernance</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /engines-catalog</td>
+        <td style="font-size:10px">Orphelin V8_INST — validation contextuelle</td>
+      </tr>
+      <tr>
+        <td><code>hotspots_organic_v1</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">INACTIF_V8_INST</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/hotspots_organic_v1.py</code></td>
+        <td><code style="font-size:9px">1b8b074690089365…</code><br><span class="muted">2152o</span></td>
+        <td style="max-width:340px">STUB — hotspots_organic_v1 (Phase XI-SUPRA-M PREP — NON-Ω)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">Orphelin V8_INST — validation contextuelle</td>
+      </tr>
+      <tr>
+        <td><code>phase_omega_secure_lockdown</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">INACTIF_V8_INST</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/phase_omega_secure_lockdown.py</code></td>
+        <td><code style="font-size:9px">198dd8a9ff5dd97a…</code><br><span class="muted">18370o</span></td>
+        <td style="max-width:340px">PHASE_Ω_SECURE_REACTIVATION — FULL_STACK_LOCKDOWN_V12 — CORRIDORS_Ω_CERTIFICATION</td>
+        <td style="font-size:10px">corridors, zones, affuts, salines, hotspots</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">Orphelin V8_INST — validation contextuelle</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-IA-CORRIDORS-ORGANIC-Ω</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">INACTIF_V8_INST</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/piliers_router.py</code></td>
+        <td><code style="font-size:9px">c9f6da743d51a3ec…</code><br><span class="muted">15666o</span></td>
+        <td style="max-width:340px">4 PILIERS STRUCTURELS — ORCHESTRATEURS MAITRES</td>
+        <td style="font-size:10px">corridors, zones, affuts, salines, hotspots, contamination</td>
+        <td style="font-size:10px">GET /pilier/prediction-intelligence<br>GET /pilier/systeme-sensoriel<br>GET /pilier/comportement-humain</td>
+        <td style="font-size:10px">Orphelin V8_INST — validation contextuelle</td>
+      </tr>
+      <tr>
+        <td><code>salines_organic_v1</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">INACTIF_V8_INST</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/salines_organic_v1.py</code></td>
+        <td><code style="font-size:9px">2956ed8ba048e22e…</code><br><span class="muted">2182o</span></td>
+        <td style="max-width:340px">STUB — salines_organic_v1 (Phase XI-SUPRA-M PREP — NON-Ω)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">Orphelin V8_INST — validation contextuelle</td>
+      </tr>
+      <tr>
+        <td><code>supra_v8</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">INACTIF_V8_INST</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/supra_v8.py</code></td>
+        <td><code style="font-size:9px">519a9b3fc5a4ee4d…</code><br><span class="muted">7974o</span></td>
+        <td style="max-width:340px">SUPRA V8 — Integration TERRITOIRE → SUPRA</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /recommandation<br>GET /score<br>GET /analyse</td>
+        <td style="font-size:10px">Orphelin V8_INST — validation contextuelle</td>
+      </tr>
+      <tr>
+        <td><code>v20_mvt_tiles</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">INACTIF_V8_INST</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/v20_mvt_tiles.py</code></td>
+        <td><code style="font-size:9px">57deb24e20a17fd5…</code><br><span class="muted">20093o</span></td>
+        <td style="max-width:340px">V20 MVT TILES — PHASE-PERFORMANCE-Omega V11-SUPRA</td>
+        <td style="font-size:10px">corridors, zones, affuts, salines, hotspots, contamination</td>
+        <td style="font-size:10px">GET /stats<br>POST /purge<br>GET /{layer}/{z}/{x}/{y}.json</td>
+        <td style="font-size:10px">Orphelin V8_INST — validation contextuelle</td>
+      </tr>
+      <tr>
+        <td><code>visual_proof_live_playwright</code></td>
+        <td>GOUVERNANCE<br><span class="muted">P0-XI-SUPRA</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">INACTIF_V8_INST</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/visual_proof_live_playwright.py</code></td>
+        <td><code style="font-size:9px">491138c341391a36…</code><br><span class="muted">10881o</span></td>
+        <td style="max-width:340px">Playwright capture script — Phase XI-SUPRA-D</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">Orphelin V8_INST — validation contextuelle</td>
+      </tr>
+      <tr>
+        <td><code>zones_organic_v1</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">INACTIF_V8_INST</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/zones_organic_v1.py</code></td>
+        <td><code style="font-size:9px">87077dae87f3c204…</code><br><span class="muted">2201o</span></td>
+        <td style="max-width:340px">STUB — zones_organic_v1 (Phase XI-SUPRA-M PREP — NON-Ω)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">Orphelin V8_INST — validation contextuelle</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>GOUVERNANCE<br><span class="muted">Ω-X</span></td>
+        <td><span style="color:#9CA3AF;font-weight:700">INACTIF_ORPHELIN</span></td>
+        <td><code style="font-size:10px">engines/legal_time_omega/__init__.py</code></td>
+        <td><code style="font-size:9px">5724b7d5ed8e894a…</code><br><span class="muted">532o</span></td>
+        <td style="max-width:340px">ENGINE_LEGAL_TIME_Ω — Package squelette X199-PREPARATOIRE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>GOUVERNANCE<br><span class="muted">X-B</span></td>
+        <td><span style="color:#9CA3AF;font-weight:700">INACTIF_ORPHELIN</span></td>
+        <td><code style="font-size:10px">engines/v8_national/__init__.py</code></td>
+        <td><code style="font-size:9px">345acca0100309a5…</code><br><span class="muted">52o</span></td>
+        <td style="max-width:340px"></td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-V8</code></td>
+        <td>GOUVERNANCE<br><span class="muted">X-B</span></td>
+        <td><span style="color:#9CA3AF;font-weight:700">INACTIF_ORPHELIN</span></td>
+        <td><code style="font-size:10px">engines/v8_national/router.py</code></td>
+        <td><code style="font-size:9px">f18a2e5b35a832da…</code><br><span class="muted">13203o</span></td>
+        <td style="max-width:340px">V8-NATIONAL — Router API moteurs nationaux</td>
+        <td style="font-size:10px">corridors, zones, affuts</td>
+        <td style="font-size:10px">GET /species-profile<br>GET /score<br>GET /status</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>router</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">Ω-P1</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/bio_scoring_omega/router.py</code></td>
+        <td><code style="font-size:9px">690b9b8d90286b85…</code><br><span class="muted">3768o</span></td>
+        <td style="max-width:340px">ENGINE_BIO_SCORING_Ω — Implémentation X200 P0 (support)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /status<br>POST /compute</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>v30_mirror_read_only</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">Ω-P1</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/bio_scoring_omega/v30_mirror_read_only.py</code></td>
+        <td><code style="font-size:9px">45d7d0ceebad90bf…</code><br><span class="muted">5222o</span></td>
+        <td style="max-width:340px">v30_mirror_read_only.py — Façade-miroir lecture seule V30</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>router</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">Ω-P3</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/predictive_omega/router.py</code></td>
+        <td><code style="font-size:9px">09b15150fc1ba4e3…</code><br><span class="muted">6275o</span></td>
+        <td style="max-width:340px">ENGINE_PREDICTIVE_Ω — Router FastAPI — X199 ACTIVÉ</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">POST /<br>GET /status</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>external_inflow</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">Ω-XII</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/reseau_veineux_omega/external_inflow.py</code></td>
+        <td><code style="font-size:9px">bfd70e6944aae817…</code><br><span class="muted">16534o</span></td>
+        <td style="max-width:340px">external_inflow.py — Logique EXTERNAL INFLOW pour ENGINE_RÉSEAU_VEINEUX_Ω</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>router</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">Ω-XII</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/reseau_veineux_omega/router.py</code></td>
+        <td><code style="font-size:9px">0e2eb7cbed7eec7a…</code><br><span class="muted">13401o</span></td>
+        <td style="max-width:340px">ENGINE_RESEAU_VEINEUX_Ω — Implémentation X200 P0 (support)</td>
+        <td style="font-size:10px">salines, fusion</td>
+        <td style="font-size:10px">POST /external-inflow/preview<br>GET /external-inflow/status<br>GET /status</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_connectivite</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">P1-XI</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_connectivite.py</code></td>
+        <td><code style="font-size:9px">a36987bcbdef1771…</code><br><span class="muted">737o</span></td>
+        <td style="max-width:340px">ENGINE 22 — CONNECTIVITE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-CONNECTIVITE-ECOLOGIQUE-Ω</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">P1-XI</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_connectivite_ecologique_omega.py</code></td>
+        <td><code style="font-size:9px">38f81a039dd91918…</code><br><span class="muted">1248o</span></td>
+        <td style="max-width:340px">ENGINE-CONNECTIVITE-ECOLOGIQUE-Ω — Connectivité corridors + evitement routes.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-CONTAMINATION-Ω</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">P1-XI</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_contamination_v2_omega.py</code></td>
+        <td><code style="font-size:9px">f2edde81070818a5…</code><br><span class="muted">4313o</span></td>
+        <td style="max-width:340px">ENGINE-CONTAMINATION-Ω V2 + MODULE ANTI-CONTAMINATION-INSTITUTIONNEL-Ω</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-ESPECE-Ω</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">P1-XI</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_espece_omega.py</code></td>
+        <td><code style="font-size:9px">ec260ce8218ca021…</code><br><span class="muted">975o</span></td>
+        <td style="max-width:340px">ENGINE-ESPECE-Ω — Profils espèces depuis catalog SCIENCE-Ω.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-HABITAT-SUPRA</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">P1-XI</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_habitat_supra.py</code></td>
+        <td><code style="font-size:9px">4a39bfdc21f375f1…</code><br><span class="muted">4631o</span></td>
+        <td style="max-width:340px">ENGINE-HABITAT-SUPRA — Moteur habitat institutionnel</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-IA-CORRIDORS-Ω</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">P1-XI</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_ia_corridors_omega.py</code></td>
+        <td><code style="font-size:9px">bcb1e3a6a92304a1…</code><br><span class="muted">17448o</span></td>
+        <td style="max-width:340px">ENGINE IA-CORRIDORS-Ω — Phase XI-SUPRA-H</td>
+        <td style="font-size:10px">corridors, salines</td>
+        <td style="font-size:10px">POST /validate<br>POST /validate-live<br>GET /status</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-IA-CORRIDORS-ORGANIC-Ω</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">P1-XI</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_ia_corridors_organic_omega.py</code></td>
+        <td><code style="font-size:9px">027712696407882f…</code><br><span class="muted">55197o</span></td>
+        <td style="max-width:340px">ENGINE-IA-CORRIDORS-ORGANIC-Ω — Phase XI-SUPRA-M (CORRIDORS_ORGANIC_OMEGA)</td>
+        <td style="font-size:10px">corridors, zones, salines, hotspots, contamination</td>
+        <td style="font-size:10px">POST /validate<br>POST /seal-baseline<br>POST /generate-alt</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-IA-VISION-ECOLOGIQUE-Ω</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">P1-XI</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_ia_vision_ecologique_omega.py</code></td>
+        <td><code style="font-size:9px">40204496b3a08575…</code><br><span class="muted">1584o</span></td>
+        <td style="max-width:340px">ENGINE-IA-VISION-ECOLOGIQUE-Ω — IA Vision structure foret + zones probables.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_optimisation_habitat_omega</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">P1-XI</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_optimisation_habitat_omega.py</code></td>
+        <td><code style="font-size:9px">2710f9ef696293fb…</code><br><span class="muted">3143o</span></td>
+        <td style="max-width:340px">ENGINE_OPTIMISATION_HABITAT_Ω — Synthèse habitat optimisé (territoire ULTIME).</td>
+        <td style="font-size:10px">fusion</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-POPULATION-DYNAMICS-Ω</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">P1-XI</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_population_dynamics_omega.py</code></td>
+        <td><code style="font-size:9px">dfde1cedf8653ff8…</code><br><span class="muted">4463o</span></td>
+        <td style="max-width:340px">ENGINE-POPULATION-DYNAMICS-Ω — Demographie multi-especes.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-SPECIES-PROFILES-Ω</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">P1-XI</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_species_profiles_omega.py</code></td>
+        <td><code style="font-size:9px">635f9bf004c388f4…</code><br><span class="muted">4755o</span></td>
+        <td style="max-width:340px">ENGINE-SPECIES-PROFILES-Ω — Registre dynamique des profils d&#x27;espèces</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /validate<br>GET /status<br>GET /{species_key}</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>species_modulator_omega</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">P1-XI</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/species_modulator_omega.py</code></td>
+        <td><code style="font-size:9px">694ec91834184c57…</code><br><span class="muted">9233o</span></td>
+        <td style="max-width:340px">species_modulator_omega.py — PHASE_XVI_ENGINE_CORRIDORS_UNIFIÉ_Ω</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>species_presence_mask_omega</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">P1-XI</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/species_presence_mask_omega.py</code></td>
+        <td><code style="font-size:9px">9a0b42a9f2ea097c…</code><br><span class="muted">15218o</span></td>
+        <td style="max-width:340px">species_presence_mask_omega.py — PHASE_XVIII_BIO_PRESENCE_MASK_Ω</td>
+        <td style="font-size:10px">corridors, zones, affuts, salines, hotspots, contamination</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>species_weighting_profiles</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">P1-XI</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/species_weighting_profiles.py</code></td>
+        <td><code style="font-size:9px">fd291adaccaa3a07…</code><br><span class="muted">3460o</span></td>
+        <td style="max-width:340px">SPECIES WEIGHTING PROFILES — variantes pondérations par espèce (Phase X).</td>
+        <td style="font-size:10px">zones, hotspots, sensoriel</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>router</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">Ω-P1</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/wildlife_behavior_omega/router.py</code></td>
+        <td><code style="font-size:9px">bf35ea0b0e59ca28…</code><br><span class="muted">4910o</span></td>
+        <td style="max-width:340px">ENGINE_WILDLIFE_BEHAVIOR_Ω — Implémentation X200 P0</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /status<br>POST /compute</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">Ω-P1</span></td>
+        <td><span style="color:#9CA3AF;font-weight:700">INACTIF_ORPHELIN</span></td>
+        <td><code style="font-size:10px">engines/bio_scoring_omega/__init__.py</code></td>
+        <td><code style="font-size:9px">941fa23447776dbf…</code><br><span class="muted">520o</span></td>
+        <td style="max-width:340px">ENGINE_BIO_SCORING_Ω — Package squelette X199-PREPARATOIRE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">Ω-P3</span></td>
+        <td><span style="color:#9CA3AF;font-weight:700">INACTIF_ORPHELIN</span></td>
+        <td><code style="font-size:10px">engines/predictive_omega/__init__.py</code></td>
+        <td><code style="font-size:9px">95c1a1fbf60c81c3…</code><br><span class="muted">542o</span></td>
+        <td style="max-width:340px">ENGINE_PREDICTIVE_Ω — Package squelette X199-PREPARATOIRE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">Ω-XII</span></td>
+        <td><span style="color:#9CA3AF;font-weight:700">INACTIF_ORPHELIN</span></td>
+        <td><code style="font-size:10px">engines/reseau_veineux_omega/__init__.py</code></td>
+        <td><code style="font-size:9px">17954cdf7161b634…</code><br><span class="muted">537o</span></td>
+        <td style="max-width:340px">ENGINE_RESEAU_VEINEUX_Ω — Package squelette X199-PREPARATOIRE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>BIO-SYSTEME<br><span class="muted">Ω-P1</span></td>
+        <td><span style="color:#9CA3AF;font-weight:700">INACTIF_ORPHELIN</span></td>
+        <td><code style="font-size:10px">engines/wildlife_behavior_omega/__init__.py</code></td>
+        <td><code style="font-size:9px">8424303e2ced6375…</code><br><span class="muted">551o</span></td>
+        <td style="max-width:340px">ENGINE_WILDLIFE_BEHAVIOR_Ω — Package squelette X199-PREPARATOIRE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_comportement</code></td>
+        <td>COMPORTEMENT-HUMAIN<br><span class="muted">P1-SUPRA</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_comportement.py</code></td>
+        <td><code style="font-size:9px">7b17df3676ccb1f4…</code><br><span class="muted">1195o</span></td>
+        <td style="max-width:340px">ENGINE 13 — COMPORTEMENT</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_comportement_avance</code></td>
+        <td>COMPORTEMENT-HUMAIN<br><span class="muted">P1-SUPRA</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_comportement_avance.py</code></td>
+        <td><code style="font-size:9px">6bed1da8553ed6d5…</code><br><span class="muted">681o</span></td>
+        <td style="max-width:340px">ENGINE 14 — COMPORTEMENT-AVANCE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-COMPORTEMENT-BIOLOGIQUE-Ω</code></td>
+        <td>COMPORTEMENT-HUMAIN<br><span class="muted">P1-SUPRA</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_comportement_biologique_omega.py</code></td>
+        <td><code style="font-size:9px">7278489084cbbc28…</code><br><span class="muted">1922o</span></td>
+        <td style="max-width:340px">ENGINE-COMPORTEMENT-BIOLOGIQUE-Ω — Patterns comportementaux saisonniers.</td>
+        <td style="font-size:10px">corridors</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-STRESS-ANTHROPIQUE-Ω</code></td>
+        <td>COMPORTEMENT-HUMAIN<br><span class="muted">P1-SUPRA</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_stress_anthropique_omega.py</code></td>
+        <td><code style="font-size:9px">b1796c5da86fd8f2…</code><br><span class="muted">4102o</span></td>
+        <td style="max-width:340px">ENGINE-STRESS-ANTHROPIQUE-Ω — Moteur pression humaine institutionnel</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-SENSORIEL-VENT-ODEURS-Ω</code></td>
+        <td>SYSTEME-SENSORIEL<br><span class="muted">P1</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_sensoriel_vent_odeurs_omega.py</code></td>
+        <td><code style="font-size:9px">cd0d07a06debd8d9…</code><br><span class="muted">1768o</span></td>
+        <td style="max-width:340px">ENGINE-SENSORIEL-VENT-ODEURS-Ω — Dispersion olfactive + detection vent.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>router</code></td>
+        <td>ENVIRONNEMENT<br><span class="muted">Ω-SUPRA</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/advanced_geospatial_omega/router.py</code></td>
+        <td><code style="font-size:9px">1ba26c9c0c7874a4…</code><br><span class="muted">6344o</span></td>
+        <td style="max-width:340px">ENGINE_ADVANCED_GEOSPATIAL_Ω — Router FastAPI — X199 ACTIVÉ</td>
+        <td style="font-size:10px">fusion</td>
+        <td style="font-size:10px">POST /<br>GET /status</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>router</code></td>
+        <td>ENVIRONNEMENT<br><span class="muted">Ω-SUPRA</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/eco_zones_omega/router.py</code></td>
+        <td><code style="font-size:9px">edc97f665dd230c4…</code><br><span class="muted">6403o</span></td>
+        <td style="max-width:340px">ENGINE_ECO_ZONES_Ω — Implémentation X200 P0</td>
+        <td style="font-size:10px">zones, salines</td>
+        <td style="font-size:10px">GET /status<br>POST /compute<br>GET /saline-sources</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>router</code></td>
+        <td>ENVIRONNEMENT<br><span class="muted">Ω-SUPRA</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/ecoforestry_omega/router.py</code></td>
+        <td><code style="font-size:9px">37f26422cd92d62a…</code><br><span class="muted">5765o</span></td>
+        <td style="max-width:340px">ENGINE_ECOFORESTRY_Ω — Router FastAPI — X199 ACTIVÉ</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">POST /<br>GET /status</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>router</code></td>
+        <td>ENVIRONNEMENT<br><span class="muted">Ω-SUPRA</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/hydro_topo_omega/router.py</code></td>
+        <td><code style="font-size:9px">64d5f7f4eb8b0619…</code><br><span class="muted">4611o</span></td>
+        <td style="max-width:340px">ENGINE_HYDRO_TOPO_Ω — Implémentation X200 P0</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /status<br>POST /compute</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>router</code></td>
+        <td>ENVIRONNEMENT<br><span class="muted">Ω-SUPRA</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/terrain_3d_omega/router.py</code></td>
+        <td><code style="font-size:9px">1e25c08a5fb6c5af…</code><br><span class="muted">5267o</span></td>
+        <td style="max-width:340px">ENGINE_3D_TERRAIN_Ω — Router FastAPI — X199 ACTIVÉ</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">POST /<br>GET /status</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_canopee_thermique_omega</code></td>
+        <td>ENVIRONNEMENT<br><span class="muted">P1-X-C</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_canopee_thermique_omega.py</code></td>
+        <td><code style="font-size:9px">bab5b1059f5cd3d0…</code><br><span class="muted">1352o</span></td>
+        <td style="max-width:340px">ENGINE_CANOPÉE_THERMIQUE_Ω — Effet thermique canopée (ombre/refuge).</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-CLIMAT-FUTUR-Ω</code></td>
+        <td>ENVIRONNEMENT<br><span class="muted">P1-X-C</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_climat_futur_omega.py</code></td>
+        <td><code style="font-size:9px">bc7613fe2a5d805f…</code><br><span class="muted">2679o</span></td>
+        <td style="max-width:340px">ENGINE-CLIMAT-FUTUR-Ω — Projections CMIP6 calibrees.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-HYDROLOGIE-SUPRA</code></td>
+        <td>ENVIRONNEMENT<br><span class="muted">P1-X-C</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_hydrologie_supra.py</code></td>
+        <td><code style="font-size:9px">161f4c611d0c2521…</code><br><span class="muted">2771o</span></td>
+        <td style="max-width:340px">ENGINE-HYDROLOGIE-SUPRA — Moteur hydrologie institutionnel</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-INFLUENCE-LUNAIRE-Ω</code></td>
+        <td>ENVIRONNEMENT<br><span class="muted">P1-X-C</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_influence_lunaire_omega.py</code></td>
+        <td><code style="font-size:9px">ff67806c93cc8446…</code><br><span class="muted">2716o</span></td>
+        <td style="max-width:340px">ENGINE-INFLUENCE-LUNAIRE-Ω — Phase lunaire + activite faunique.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_microclimat_advanced_omega</code></td>
+        <td>ENVIRONNEMENT<br><span class="muted">P1-X-C</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_microclimat_advanced_omega.py</code></td>
+        <td><code style="font-size:9px">3f6724c18d0facca…</code><br><span class="muted">2113o</span></td>
+        <td style="max-width:340px">ENGINE_MICROCLIMAT_Ω_ADVANCED — Version avancée microclimat locale.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>engine_pression</code></td>
+        <td>ENVIRONNEMENT<br><span class="muted">P1-X-C</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_pression.py</code></td>
+        <td><code style="font-size:9px">db4c96b85fd3c844…</code><br><span class="muted">763o</span></td>
+        <td style="max-width:340px">ENGINE 09 — PRESSION HUMAINE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-PRESSION-ATMOSPHERIQUE-Ω</code></td>
+        <td>ENVIRONNEMENT<br><span class="muted">P1-X-C</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_pression_atmospherique_omega.py</code></td>
+        <td><code style="font-size:9px">5b839db0039707b7…</code><br><span class="muted">2446o</span></td>
+        <td style="max-width:340px">ENGINE-PRESSION-ATMOSPHERIQUE-Ω — Pression + tendance + impact faunique.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-RISQUES-HYDRO-Ω</code></td>
+        <td>ENVIRONNEMENT<br><span class="muted">P1-X-C</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_risques_hydro_omega.py</code></td>
+        <td><code style="font-size:9px">5b14858da230d752…</code><br><span class="muted">1799o</span></td>
+        <td style="max-width:340px">ENGINE-RISQUES-HYDRO-Ω — Risques hydrologiques pancanadiens (Phase X-C)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /risques-hydro</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-SOL-SUPRA</code></td>
+        <td>ENVIRONNEMENT<br><span class="muted">P1-X-C</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_sol_supra.py</code></td>
+        <td><code style="font-size:9px">e68328855768dae2…</code><br><span class="muted">2884o</span></td>
+        <td style="max-width:340px">ENGINE-SOL-SUPRA — Moteur pédologie institutionnel</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-THERMIQUE-MICROCLIMAT-Ω</code></td>
+        <td>ENVIRONNEMENT<br><span class="muted">P1-X-C</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/v8_institutional/engine_thermique_microclimat_omega.py</code></td>
+        <td><code style="font-size:9px">89b85680328ec47e…</code><br><span class="muted">1570o</span></td>
+        <td style="max-width:340px">ENGINE-THERMIQUE-MICROCLIMAT-Ω — Stress thermique + microclimat.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>ENVIRONNEMENT<br><span class="muted">Ω-SUPRA</span></td>
+        <td><span style="color:#9CA3AF;font-weight:700">INACTIF_ORPHELIN</span></td>
+        <td><code style="font-size:10px">engines/advanced_geospatial_omega/__init__.py</code></td>
+        <td><code style="font-size:9px">c9d83e77b014e5dc…</code><br><span class="muted">538o</span></td>
+        <td style="max-width:340px">ENGINE_ADVANCED_GEOSPATIAL_Ω — Package squelette X199-PREPARATOIRE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>ENVIRONNEMENT<br><span class="muted">Ω-SUPRA</span></td>
+        <td><span style="color:#9CA3AF;font-weight:700">INACTIF_ORPHELIN</span></td>
+        <td><code style="font-size:10px">engines/eco_zones_omega/__init__.py</code></td>
+        <td><code style="font-size:9px">f5e350081f453163…</code><br><span class="muted">522o</span></td>
+        <td style="max-width:340px">ENGINE_ECO_ZONES_Ω — Package squelette X199-PREPARATOIRE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>ENVIRONNEMENT<br><span class="muted">Ω-SUPRA</span></td>
+        <td><span style="color:#9CA3AF;font-weight:700">INACTIF_ORPHELIN</span></td>
+        <td><code style="font-size:10px">engines/ecoforestry_omega/__init__.py</code></td>
+        <td><code style="font-size:9px">4f3ab419d74e3f11…</code><br><span class="muted">525o</span></td>
+        <td style="max-width:340px">ENGINE_ECOFORESTRY_Ω — Package squelette X199-PREPARATOIRE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>ENVIRONNEMENT<br><span class="muted">Ω-SUPRA</span></td>
+        <td><span style="color:#9CA3AF;font-weight:700">INACTIF_ORPHELIN</span></td>
+        <td><code style="font-size:10px">engines/hydro_topo_omega/__init__.py</code></td>
+        <td><code style="font-size:9px">bdeef00259211b32…</code><br><span class="muted">529o</span></td>
+        <td style="max-width:340px">ENGINE_HYDRO_TOPO_Ω — Package squelette X199-PREPARATOIRE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>ENVIRONNEMENT<br><span class="muted">Ω-SUPRA</span></td>
+        <td><span style="color:#9CA3AF;font-weight:700">INACTIF_ORPHELIN</span></td>
+        <td><code style="font-size:10px">engines/terrain_3d_omega/__init__.py</code></td>
+        <td><code style="font-size:9px">5f25b11a7171ecb8…</code><br><span class="muted">508o</span></td>
+        <td style="max-width:340px">ENGINE_3D_TERRAIN_Ω — Package squelette X199-PREPARATOIRE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-IA-CORRIDORS-ORGANIC-Ω</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/post_smoothing/organic_corridor_smoother.py</code></td>
+        <td><code style="font-size:9px">7cf53689fb7f42b7…</code><br><span class="muted">40519o</span></td>
+        <td style="max-width:340px">organic_corridor_smoother.py — Post-processeur RENDU Ω externe</td>
+        <td style="font-size:10px">corridors, salines</td>
+        <td style="font-size:10px">GET /smoother-status<br>POST /generate</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>p1_preparation</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/post_smoothing/p1_preparation.py</code></td>
+        <td><code style="font-size:9px">0144ca6155b784cb…</code><br><span class="muted">24504o</span></td>
+        <td style="max-width:340px">p1_preparation.py — Préparation P1 &amp; Branchement P1.2 EXTERNAL INFLOW → SMOOTHER X180</td>
+        <td style="font-size:10px">corridors, salines, fusion</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>predictive_integration</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/post_smoothing/predictive_integration.py</code></td>
+        <td><code style="font-size:9px">47dfb202ea545ea4…</code><br><span class="muted">11632o</span></td>
+        <td style="max-width:340px">predictive_integration.py — Intégration ENGINE_PREDICTIVE_Ω dans smoother X180</td>
+        <td style="font-size:10px">corridors</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>renduomega</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/post_smoothing/renduomega.py</code></td>
+        <td><code style="font-size:9px">1c14ec3edf789e46…</code><br><span class="muted">28821o</span></td>
+        <td style="max-width:340px">ENGINE_RENDUΩ — Validation stricte des corridors avant publication</td>
+        <td style="font-size:10px">corridors, zones, affuts, salines, hotspots, contamination</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>terrain_signals_builder</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/post_smoothing/terrain_signals_builder.py</code></td>
+        <td><code style="font-size:9px">a110fc3d36e9b053…</code><br><span class="muted">15360o</span></td>
+        <td style="max-width:340px">terrain_signals_builder.py — Générateur de terrain_signals institutionnels Ω</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>x199_commons</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#00A676;font-weight:700">ACTIF_Ω</span></td>
+        <td><code style="font-size:10px">engines/x199_commons.py</code></td>
+        <td><code style="font-size:9px">e916dbc9527b6f19…</code><br><span class="muted">2017o</span></td>
+        <td style="max-width:340px">x199_commons.py — Triple verrou Ω commun aux 5 engines X199</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>anomaly_detector</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">ACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/bdre/anomaly_detector.py</code></td>
+        <td><code style="font-size:9px">396741ae948b2e5e…</code><br><span class="muted">5367o</span></td>
+        <td style="max-width:340px">BDRE — Anomaly Detector (F3)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>corridor_optimizer_v2</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">ACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/bdre/corridor_optimizer_v2.py</code></td>
+        <td><code style="font-size:9px">f8dedd4109df8cc5…</code><br><span class="muted">23822o</span></td>
+        <td style="max-width:340px">corridor_optimizer_v2.py — CORRIDOR-FIRST X1 000 000%</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>health_monitor</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">ACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/bdre/health_monitor.py</code></td>
+        <td><code style="font-size:9px">b0ef40b124744c08…</code><br><span class="muted">2836o</span></td>
+        <td style="max-width:340px">BDRE — Health Monitor (F1)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>institutional_cache</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">ACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/bdre/institutional_cache.py</code></td>
+        <td><code style="font-size:9px">af61b52c7cec6261…</code><br><span class="muted">15430o</span></td>
+        <td style="max-width:340px">BCE-4X — CACHE INSTITUTIONNEL PERMANENT</td>
+        <td style="font-size:10px">affuts</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>corridor_builder</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">ACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/corridor_unified/corridor_builder.py</code></td>
+        <td><code style="font-size:9px">f4e4f98d4e5b483c…</code><br><span class="muted">9557o</span></td>
+        <td style="max-width:340px">BCE-4X BLOC 1 — CORRIDOR_UNIFIED BUILDER</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>corridor_model</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">ACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/corridor_unified/corridor_model.py</code></td>
+        <td><code style="font-size:9px">bd85c47997f3a690…</code><br><span class="muted">9254o</span></td>
+        <td style="max-width:340px">BCE-4X BLOC 1 — CORRIDOR_UNIFIED MODEL</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>access_engine</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">ACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/hunt_orchestrator/access_engine.py</code></td>
+        <td><code style="font-size:9px">1f6d82167783d9ca…</code><br><span class="muted">35599o</span></td>
+        <td style="max-width:340px">BCE-4X P0 — ENGINE ACCES DYNAMIQUE v2</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>choix_affuts</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">ACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/hunt_orchestrator/choix_affuts.py</code></td>
+        <td><code style="font-size:9px">846af306006ce60a…</code><br><span class="muted">16874o</span></td>
+        <td style="max-width:340px">BCE-4X P0-C — ENGINE CHOIX DES AFFUTS v2</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>orchestrator</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">ACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/hunt_orchestrator/orchestrator.py</code></td>
+        <td><code style="font-size:9px">2f78a3f0129eaa56…</code><br><span class="muted">17823o</span></td>
+        <td style="max-width:340px">BCE-4X P0 — ORCHESTRATEUR DE CHASSE v1</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>vent_odeurs</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">ACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/hunt_orchestrator/vent_odeurs.py</code></td>
+        <td><code style="font-size:9px">99c387b05625177f…</code><br><span class="muted">11395o</span></td>
+        <td style="max-width:340px">BCE-4X P0 — ENGINE VENT &amp; ODEURS v1</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>x6000_product_score</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">ACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/nutrition_intelligence/x6000_product_score.py</code></td>
+        <td><code style="font-size:9px">07bfea2885850076…</code><br><span class="muted">11015o</span></td>
+        <td style="max-width:340px">x6000 — PRODUCT_SCORE_ENGINE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>candidate_generator</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">ACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/relocation/candidate_generator.py</code></td>
+        <td><code style="font-size:9px">d49a6f3ae5f9ad54…</code><br><span class="muted">5885o</span></td>
+        <td style="max-width:340px">BCE-4X BLOC 3 — CANDIDATE GENERATOR</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>relocation_engine</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">ACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/relocation/relocation_engine.py</code></td>
+        <td><code style="font-size:9px">fb04a55c18191a89…</code><br><span class="muted">10885o</span></td>
+        <td style="max-width:340px">BCE-4X BLOC 3 — RELOCATION ENGINE</td>
+        <td style="font-size:10px">affuts</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>territory_bridge</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">ACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/supra_advanced/territory_bridge.py</code></td>
+        <td><code style="font-size:9px">01638845bee9333b…</code><br><span class="muted">5471o</span></td>
+        <td style="max-width:340px">SUPRA-REACT-Omega: Territory IA Data Provider for SUPRA v2</td>
+        <td style="font-size:10px">hotspots</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>terrain_costs</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">ACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/terrain_nav/terrain_costs.py</code></td>
+        <td><code style="font-size:9px">992ce471479217ba…</code><br><span class="muted">11719o</span></td>
+        <td style="max-width:340px">BCE-4X Phase 2.5 — TERRAIN NAV ENGINE (TNE)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>terrain_graph</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">ACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/terrain_nav/terrain_graph.py</code></td>
+        <td><code style="font-size:9px">039f120f296a4661…</code><br><span class="muted">11787o</span></td>
+        <td style="max-width:340px">BCE-4X Phase 2.5 — TERRAIN NAV ENGINE (TNE)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>terrain_router</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">ACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/terrain_nav/terrain_router.py</code></td>
+        <td><code style="font-size:9px">7b7e1ea91844b06d…</code><br><span class="muted">20568o</span></td>
+        <td style="max-width:340px">BCE-4X Phase 2.5 — TERRAIN NAV ENGINE (TNE)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>terrain_sources</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">ACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/terrain_nav/terrain_sources.py</code></td>
+        <td><code style="font-size:9px">6f1e4d22bfa19c5f…</code><br><span class="muted">17054o</span></td>
+        <td style="max-width:340px">BCE-4X Phase 2.5 — TERRAIN NAV ENGINE (TNE)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>router</code></td>
+        <td>LEGACY<br><span class="muted">V3</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">ACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/weather_v3/router.py</code></td>
+        <td><code style="font-size:9px">636db94adbdd9cbd…</code><br><span class="muted">13020o</span></td>
+        <td style="max-width:340px">Weather Engine v3 — BCE-4X / STEEVE-MAX</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /windgrid<br>GET /hunting-score<br>GET /current</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>wind_model_provider</code></td>
+        <td>LEGACY<br><span class="muted">V3</span></td>
+        <td><span style="color:#f59e0b;font-weight:700">ACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/weather_v3/wind_model_provider.py</code></td>
+        <td><code style="font-size:9px">2ff795863f7ef971…</code><br><span class="muted">6889o</span></td>
+        <td style="max-width:340px">BCE-4X — Wind Model Provider Abstraction Layer</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/bdre/__init__.py</code></td>
+        <td><code style="font-size:9px">b2412b738ac1b8ef…</code><br><span class="muted">3431o</span></td>
+        <td style="max-width:340px">BDRE — BIONIC Data Reliability Engine</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>audit_logger</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/bdre/audit_logger.py</code></td>
+        <td><code style="font-size:9px">0cf0aeaee2481bfd…</code><br><span class="muted">3292o</span></td>
+        <td style="max-width:340px">BDRE — Audit Logger (F6)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>fallback_chain</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/bdre/fallback_chain.py</code></td>
+        <td><code style="font-size:9px">21ef92978293ee38…</code><br><span class="muted">22722o</span></td>
+        <td style="max-width:340px">BDRE — Fallback Chain (F5)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>quality_scorer</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/bdre/quality_scorer.py</code></td>
+        <td><code style="font-size:9px">20d8f43df0751516…</code><br><span class="muted">7294o</span></td>
+        <td style="max-width:340px">BDRE — Quality Scorer (F2)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>router</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/bdre/router.py</code></td>
+        <td><code style="font-size:9px">c3daf59360e065ab…</code><br><span class="muted">19282o</span></td>
+        <td style="max-width:340px">BDRE — Router (8 endpoints)</td>
+        <td style="font-size:10px">corridors, affuts</td>
+        <td style="font-size:10px">GET /fallbacks/recent<br>GET /quality/report<br>GET /anomalies/recent</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>source_registry</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/bdre/source_registry.py</code></td>
+        <td><code style="font-size:9px">8179d2621f63b089…</code><br><span class="muted">8120o</span></td>
+        <td style="max-width:340px">BDRE — Source Registry (F1/F2)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>source_selector</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/bdre/source_selector.py</code></td>
+        <td><code style="font-size:9px">9b2cc4a065fb9693…</code><br><span class="muted">2399o</span></td>
+        <td style="max-width:340px">BDRE — Source Selector (F4)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>waterway_classifier</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/bdre/waterway_classifier.py</code></td>
+        <td><code style="font-size:9px">e6c7ded32715ca4d…</code><br><span class="muted">4520o</span></td>
+        <td style="max-width:340px">BDRE — Waterway Classifier (DS-8 Resolution)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/corridor_unified/__init__.py</code></td>
+        <td><code style="font-size:9px">0b90008baa28d92c…</code><br><span class="muted">111o</span></td>
+        <td style="max-width:340px"></td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>router</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/corridor_unified/router.py</code></td>
+        <td><code style="font-size:9px">a91ba0bbfab7c6b5…</code><br><span class="muted">7024o</span></td>
+        <td style="max-width:340px">BCE-4X BLOC 1 — CORRIDOR_UNIFIED API</td>
+        <td style="font-size:10px">corridors, contamination</td>
+        <td style="font-size:10px">POST /build<br>GET /status<br>POST /audit-exclusions</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/hunt_orchestrator/__init__.py</code></td>
+        <td><code style="font-size:9px">3374506dd2048070…</code><br><span class="muted">456o</span></td>
+        <td style="max-width:340px">BCE-4X P0 — HUNT ORCHESTRATOR ENGINE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>router</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/hunt_orchestrator/router.py</code></td>
+        <td><code style="font-size:9px">fc3d4bd8f45f5e41…</code><br><span class="muted">16253o</span></td>
+        <td style="max-width:340px">BCE-4X P0 — HUNT ORCHESTRATOR API</td>
+        <td style="font-size:10px">zones</td>
+        <td style="font-size:10px">GET /terrain-cache/stats<br>GET /status<br>POST /scent-zone</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/nutrition_intelligence/__init__.py</code></td>
+        <td><code style="font-size:9px">27d3d1e9d6942326…</code><br><span class="muted">1361o</span></td>
+        <td style="max-width:340px">Nutrition Intelligence Engine Package — x5000 SUPRA + x6000 + x6010-x6012</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-V7</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/nutrition_intelligence/router.py</code></td>
+        <td><code style="font-size:9px">f75762f4e9344fc9…</code><br><span class="muted">35742o</span></td>
+        <td style="max-width:340px">API Router — Nutrition Intelligence x5000 SUPRA + x6000 + x6010-x6012</td>
+        <td style="font-size:10px">corridors, hotspots</td>
+        <td style="font-size:10px">POST /products/compliance<br>POST /products/ecosystem<br>GET /evidence</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>x5100_mineral_score</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/nutrition_intelligence/x5100_mineral_score.py</code></td>
+        <td><code style="font-size:9px">612120c19bf068b0…</code><br><span class="muted">5904o</span></td>
+        <td style="max-width:340px">×5100 — MINERAL_SCORE_ENGINE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>x5200_mineral_recommendation</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/nutrition_intelligence/x5200_mineral_recommendation.py</code></td>
+        <td><code style="font-size:9px">61acbd99f2fff019…</code><br><span class="muted">4286o</span></td>
+        <td style="max-width:340px">×5200 — MINERAL_RECOMMENDATION_ENGINE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>x5300_order_engine</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/nutrition_intelligence/x5300_order_engine.py</code></td>
+        <td><code style="font-size:9px">a3342f2e149abab3…</code><br><span class="muted">2175o</span></td>
+        <td style="max-width:340px">×5300 — ORDER_ENGINE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>x5500_energy_protein</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/nutrition_intelligence/x5500_energy_protein.py</code></td>
+        <td><code style="font-size:9px">a1aa53f156bdaf9b…</code><br><span class="muted">15685o</span></td>
+        <td style="max-width:340px">×5500 — ENERGY_PROTEIN_ENGINE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>x5600_site_guide</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/nutrition_intelligence/x5600_site_guide.py</code></td>
+        <td><code style="font-size:9px">85e93f9bcd60568e…</code><br><span class="muted">9037o</span></td>
+        <td style="max-width:340px">×5600 — SITE_GUIDE_ENGINE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>x5700_cost_engine</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/nutrition_intelligence/x5700_cost_engine.py</code></td>
+        <td><code style="font-size:9px">62e1dc0008af9719…</code><br><span class="muted">3287o</span></td>
+        <td style="max-width:340px">×5700 — COST_ENGINE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>x5800_recipe_engine</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/nutrition_intelligence/x5800_recipe_engine.py</code></td>
+        <td><code style="font-size:9px">1d1593ad02541aec…</code><br><span class="muted">3496o</span></td>
+        <td style="max-width:340px">×5800 — RECIPE_ENGINE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>x5900_evidence_engine</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/nutrition_intelligence/x5900_evidence_engine.py</code></td>
+        <td><code style="font-size:9px">7759654fb7669203…</code><br><span class="muted">10974o</span></td>
+        <td style="max-width:340px">x5900 — EVIDENCE_ENGINE V2</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>x6010_product_quality_analyzer</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/nutrition_intelligence/x6010_product_quality_analyzer.py</code></td>
+        <td><code style="font-size:9px">7ad548cf41c319d9…</code><br><span class="muted">7727o</span></td>
+        <td style="max-width:340px">x6010 — PRODUCT_QUALITY_ANALYZER</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>x6011_market_availability_engine</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/nutrition_intelligence/x6011_market_availability_engine.py</code></td>
+        <td><code style="font-size:9px">544433ede26ba8a0…</code><br><span class="muted">12560o</span></td>
+        <td style="max-width:340px">x6011 — MARKET_AVAILABILITY_ENGINE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>x6012_regulatory_compliance_engine</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/nutrition_intelligence/x6012_regulatory_compliance_engine.py</code></td>
+        <td><code style="font-size:9px">e07d6a282633551e…</code><br><span class="muted">11499o</span></td>
+        <td style="max-width:340px">x6012 — REGULATORY_COMPLIANCE_ENGINE</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>x6020_terrain_solutions</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/nutrition_intelligence/x6020_terrain_solutions.py</code></td>
+        <td><code style="font-size:9px">966c41a5c0b3cdd9…</code><br><span class="muted">14668o</span></td>
+        <td style="max-width:340px">x6020 — TERRAIN_SOLUTIONS_ENGINE</td>
+        <td style="font-size:10px">salines</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>x6030_product_ecosystem</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/nutrition_intelligence/x6030_product_ecosystem.py</code></td>
+        <td><code style="font-size:9px">3e633d24b3a265be…</code><br><span class="muted">12177o</span></td>
+        <td style="max-width:340px">x6030 — PRODUCT_ECOSYSTEM_CONNECTOR</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>x7000_supplier_product_engine</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/nutrition_intelligence/x7000_supplier_product_engine.py</code></td>
+        <td><code style="font-size:9px">515002deb9cfa2b7…</code><br><span class="muted">9953o</span></td>
+        <td style="max-width:340px">x7000 — SUPPLIER_PRODUCT_ENGINE (MongoDB)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/post_smoothing/__init__.py</code></td>
+        <td><code style="font-size:9px">d8bea42c1665da90…</code><br><span class="muted">283o</span></td>
+        <td style="max-width:340px">post_smoothing — Module institutionnel HORS registre V30.</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/relocation/__init__.py</code></td>
+        <td><code style="font-size:9px">70a5257b66fa238a…</code><br><span class="muted">121o</span></td>
+        <td style="max-width:340px"></td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>router</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/relocation/router.py</code></td>
+        <td><code style="font-size:9px">3f826f109d86425f…</code><br><span class="muted">4688o</span></td>
+        <td style="max-width:340px">BCE-4X BLOC 3 — RELOCALISATION AUTOMATIQUE API</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /status<br>POST /evaluate</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-V7</code></td>
+        <td>LEGACY<br><span class="muted">V7</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/spatial_engine_v7/__init__.py</code></td>
+        <td><code style="font-size:9px">5776153084c2e9b0…</code><br><span class="muted">53o</span></td>
+        <td style="max-width:340px"></td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-V7</code></td>
+        <td>LEGACY<br><span class="muted">V7</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/spatial_engine_v7/router.py</code></td>
+        <td><code style="font-size:9px">adcd1b22918466eb…</code><br><span class="muted">30360o</span></td>
+        <td style="max-width:340px">SPATIAL-ENGINE-V7 — Moteur geospatial central</td>
+        <td style="font-size:10px">corridors, zones, salines, hotspots</td>
+        <td style="font-size:10px">GET /scoring<br>GET /vision-scoring<br>GET /zones</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/supra_advanced/__init__.py</code></td>
+        <td><code style="font-size:9px">06bbb37510fa098d…</code><br><span class="muted">36o</span></td>
+        <td style="max-width:340px"></td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>router</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/supra_advanced/router.py</code></td>
+        <td><code style="font-size:9px">e59bb9491b2c35b9…</code><br><span class="muted">11568o</span></td>
+        <td style="max-width:340px">SUPRA Advanced Engines — BCE-4X / STEEVE-MAX</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">GET /recommendations<br>GET /weather-terrain-correlation<br>GET /risk-assessment</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-V7</code></td>
+        <td>LEGACY<br><span class="muted">V7</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/supra_engine_v7/__init__.py</code></td>
+        <td><code style="font-size:9px">f22160ec40507249…</code><br><span class="muted">52o</span></td>
+        <td style="max-width:340px"></td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>ENGINE-V7</code></td>
+        <td>LEGACY<br><span class="muted">V7</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/supra_engine_v7/router.py</code></td>
+        <td><code style="font-size:9px">853c38ba273a9840…</code><br><span class="muted">13823o</span></td>
+        <td style="max-width:340px">SUPRA-ENGINE-V7 — Moteur decisionnel central</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">POST /fiche<br>GET /status<br>GET /compare</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>LEGACY<br><span class="muted">?</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/terrain_nav/__init__.py</code></td>
+        <td><code style="font-size:9px">ed8a4f58a9e3a795…</code><br><span class="muted">7041o</span></td>
+        <td style="max-width:340px">BCE-4X Phase 2.5 — TERRAIN NAV ENGINE (TNE)</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr>
+      <tr>
+        <td><code>__init__</code></td>
+        <td>LEGACY<br><span class="muted">V3</span></td>
+        <td><span style="color:#ef4444;font-weight:700">INACTIF_LEGACY</span></td>
+        <td><code style="font-size:10px">engines/weather_v3/__init__.py</code></td>
+        <td><code style="font-size:9px">07356eb74fd40746…</code><br><span class="muted">31o</span></td>
+        <td style="max-width:340px"></td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">—</td>
+        <td style="font-size:10px">LEGACY non-conforme à BCE-4X</td>
+      </tr></tbody>
+</table>
+</div>
+
+<div class="footer">
+  BCE-4X ULTIME ABSOLU · STEEVE-MAX · CONFORMITÉ Ω 100% · 2026-04-28<br/>
+  RAPPORT_EXHAUSTIF_ENGINES_Ω · 209 engines · 5 piliers · V30 LOCKED INVIOLÉ · LECTURE SEULE
+</div>
+</div></body></html>
