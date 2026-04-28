@@ -27,6 +27,52 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XII_ESPECES_Ω_AUDIT_BCE4X · VALIDATION MANUELLE COMMANDANT (2026-04-28 · ordre n°21)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-5) — audit
+  intégral 5 engines × 24 paramètres = 120 vérifications avant activation
+  définitive. V30 INVIOLÉ.
+  - **Modules créés** :
+    - `engines/v8_institutional/especes/audit_especes_omega.py` (audit + verrou conditionnel + token validation).
+    - 4 endpoints FastAPI : `/audit/status` · `/audit/run` · `/audit/validate` (POST) · `/audit/revoke` (POST).
+    - Verrou intégré dans `execute_pipeline_stage()` : retourne
+      `activation_status="EN_ATTENTE_VALIDATION_COMMANDANT"` tant que
+      l'audit n'est pas validé. Tous les results.activation_status
+      reflètent l'état du verrou.
+    - Bandeau frontend `EspecesOmegaPanel.jsx` avec couleur ambre + texte
+      "⚠️ ENGINES ESPÈCES Ω — EN ATTENTE DE VALIDATION DU COMMANDANT"
+      tant que `is_validated=false`. Devient vert "✓ AUDIT_ESPECES_Ω_STATUS
+      = VALIDÉ_PAR_STEEVE_MAX" après validation.
+  - **Article 2 — 24 paramètres audités par espèce** :
+    - Section A (11) : comportements_saisonniers, corridors, habitat,
+      nutrition, pression_humaine, maladies, thermoregulation, neige,
+      sites_critiques, interactions_interespeces, modeles_RSF_SSF_MaxEnt.
+    - Section B (8) : inputs_definis, outputs_definis, dependances_internes/externes,
+      couches_emises_zindex, formats_sortie_JSON, contraintes_BCE4X_no_vulgarisation,
+      sources_GOV_UNI_PR_DOI.
+    - Section C (5) : ordre_execution_pipeline, compatibilite_ENGINE_IA_CORRIDORS_Ω,
+      compatibilite_ENGINE_CONTAMINATION/SALINES/INSPECTION_BIO,
+      performance_sub_1s, marker_ENGINE_ESPECE_*_Ω.
+  - **Conformité audit** : **120/120 ACCEPTÉ = 100%** sur les 5 espèces.
+    Performance mesurée : 0.01-0.04 ms par engine (largement <1s requis).
+  - **Token validation institutionnelle** :
+    `STEEVE-MAX-PHASE-XII-AUDIT-BCE4X-VALIDE` (Article 4 verrou conditionnel).
+    Test refus token invalide → HTTP 403 confirmé.
+  - **Article 4 — verrouillage conditionnel actif** :
+    - Tant que `AUDIT_ESPECES_Ω_STATUS != "VALIDÉ_PAR_STEEVE_MAX"` :
+      activation_status renvoyé = `EN_ATTENTE_VALIDATION_COMMANDANT`,
+      bandeau ambre frontend, refus tentatives activation.
+  - **Article 3 — 4 livrables institutionnels (servis HTTPS 200 OK)** :
+    - `/reports/audit_territoire_omega_ultime/RAPPORT_HTML_AUDIT_ESPECES_OMEGA.html` (41 897 octets, SHA-256 `e4bde59949763ce6a4f69afa3973a29b5233dc2613489efb6d4077e6e54c75bb`).
+    - `/reports/audit_territoire_omega_ultime/RAPPORT_JSON_AUDIT_ESPECES_OMEGA.json` (22 702 octets, SHA-256 `0f8aa235fd1e6d8236bbb8f51d4471e34f9e4322d012b3935e4db08dcf0bba2e`).
+    - `/reports/audit_territoire_omega_ultime/MATRICE_COMPARATIVE_CSV_ESPECES_OMEGA.csv` (2 432 octets, SHA-256 `12f6338b9cf8e9d5302077fb948057869f5893a0645af6ff3594ea0dbdeffbda`).
+    - `/reports/audit_territoire_omega_ultime/LOG_COMPLET_AUDIT_ESPECES_OMEGA.log` (19 497 octets, SHA-256 `59360dad4f19bbad99d5a35daa299255377bd03b349a4bb430966bc37150f374`).
+    - Variantes Unicode `_Ω.*` également servies HTTPS pour archivage canonique.
+  - **V30 LOCKED · INTÉGRITÉ INTACTE** :
+    - registry_lock_omega.py SHA-256 :
+      `fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c`
+    - engine_ia_corridors_omega.py SHA-256 :
+      `bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3`
+
 - **PHASE_XII_ESPECES_Ω · 5 ENGINES ESPÈCES (2026-04-28 · ordre n°20 · MEGA-COMMANDE)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (MEGA_COMMANDE_PHASE_XII_ESPECES_Ω) —
   création + connexion + activation + verrouillage de 5 engines espèces Ω.

@@ -1,0 +1,587 @@
+{
+  "phase": "PHASE_XII_ESPECES_Ω_AUDIT_BCE4X",
+  "protocole": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU",
+  "commandant": "STEEVE-MAX",
+  "executed_at_utc": "2026-04-28T23:16:34.586459+00:00",
+  "audit_status_default": "EN_ATTENTE_VALIDATION_COMMANDANT",
+  "totals": {
+    "engines_audites": 5,
+    "parametres_total": 120,
+    "parametres_accepte": 120,
+    "parametres_a_corriger": 0,
+    "conformite_pct": 100.0
+  },
+  "lock_signature_engines_especes": {
+    "SHA_REGISTRY_LOCK_ESPECES_Ω": "e69d87e31b22b85712f4a9245aef8efac4df0c7f0ac66e859fb17be578394993",
+    "VERSION_ESPECES_Ω": "LOCKED",
+    "CONFORMITE_BCE4X_ESPECES_Ω": 100,
+    "engines_count": 5,
+    "canonical_size_bytes": 7383
+  },
+  "v30_locked_intact": {
+    "registry_lock_omega.py": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+    "engine_ia_corridors_omega.py": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3"
+  },
+  "files_audited_sha256": {
+    "__init__.py": "5842df8138d021b59556d5357a671d194a74d97d11eae75b1d9dd10700fb130c",
+    "audit_especes_omega.py": "17ddafa6f68781c2922a3af6725ab5ea5e3b7758a1b7552bd77f209cc78534b4",
+    "engine_chevreuil_omega.py": "7fa3584b6afa29a49a75b44814d164fa4d42057a6c04e776d1cca4be5dbab796",
+    "engine_dindon_omega.py": "c1fc49d44802dad0bae09061735599b17efa8e33fabf15c22c2bc5ad6f2e56d1",
+    "engine_especes_omega.py": "8c4205d814fa91f067e86d7ef13b77b20c0db52cb65b71e03b80415a5bc2a370",
+    "engine_orignal_omega.py": "fe79ebc37531f052bf9567b7375040a3b41adc822941174cf641d3d9d8766546",
+    "engine_ours_noir_omega.py": "3f9c28e206eb21136bf5e0c5abae6a098219b06878178496168cd1348893aea9",
+    "engine_wapiti_omega.py": "5d3b0f0f765c0a77deb486bd2056f2e4a7e10c45422b90a344d686c64343f917"
+  },
+  "audits_par_espece": [
+    {
+      "espece_id": "CHEVREUIL",
+      "engine_marker": "ENGINE_ESPECE_CHEVREUIL_Ω",
+      "nom_scientifique": "Odocoileus virginianus",
+      "tableau_maitre_ref": "TABLEAU_MAITRE_CHEVREUIL_BCE4X",
+      "performance_ms": 0.018,
+      "section_A_scientifique": {
+        "comportements_saisonniers": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via dimensions_scientifiques (saisonnalité, migration, ravages, perchoirs)"
+        },
+        "corridors": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via sorties_territoire"
+        },
+        "habitat": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via sorties_territoire"
+        },
+        "nutrition": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via dimensions / sources spécialisées (ALCES Journal pour orignal, mast pour ours)"
+        },
+        "pression_humaine": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via dimensions + score calculé"
+        },
+        "maladies": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "CWD/tique/LPDV/conflits selon espèce"
+        },
+        "thermoregulation": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Seuil thermique scientifique présent ou hibernation"
+        },
+        "neige": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Seuil neige scientifique présent ou tolérance documentée (hibernation pour ours noir)"
+        },
+        "sites_critiques": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Sites critiques (rut/mise bas/tanières/ravages/perchoirs)"
+        },
+        "interactions_interespeces": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Interactions cervidés/prédation/CWD chevauchement"
+        },
+        "modeles_RSF_SSF_MaxEnt": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "RSF/SSF/MaxEnt référencés dans sources"
+        }
+      },
+      "section_B_technique": {
+        "inputs_definis": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "compute(env) accepte 18 paramètres environnementaux"
+        },
+        "outputs_definis": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "5 sorties territoire définies"
+        },
+        "dependances_internes": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "engines.v8_institutional.especes (module commun)"
+        },
+        "dependances_externes": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Aucune dépendance externe non-Ω (lecture seule V30)"
+        },
+        "couches_emises_zindex": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "5 couches émises · z-index 902 (après zones)"
+        },
+        "formats_sortie_JSON": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Format normalisé via normalize_engine_output()"
+        },
+        "contraintes_BCE4X_no_vulgarisation": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Aucun label legacy interdit détecté"
+        },
+        "sources_GOV_UNI_PR_DOI": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "GOV+UNI+PR triple validation + 8 DOI/URL"
+        }
+      },
+      "section_C_pipeline": {
+        "ordre_execution_pipeline": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Stage ENGINE_ESPECES_Ω : après HOTSPOTS, avant RENDU_Ω (Z_ORDRE_Ω_ESPECES)"
+        },
+        "compatibilite_ENGINE_IA_CORRIDORS_Ω": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "READ-ONLY V30 — n'altère aucun moteur cryptographique scellé"
+        },
+        "compatibilite_ENGINE_CONTAMINATION_SALINES_INSPECTION_BIO": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Couches espèces ajoutées en lecture seule, aucune modification couches existantes"
+        },
+        "performance_sub_1s": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Temps mesuré: 0.018 ms (< 1000 ms requis)"
+        },
+        "marker_ENGINE_ESPECE_*_Ω": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Marker présent: ENGINE_ESPECE_CHEVREUIL_Ω"
+        }
+      }
+    },
+    {
+      "espece_id": "ORIGNAL",
+      "engine_marker": "ENGINE_ESPECE_ORIGNAL_Ω",
+      "nom_scientifique": "Alces alces / Alces americanus",
+      "tableau_maitre_ref": "TABLEAU_MAITRE_ORIGNAL_BCE4X",
+      "performance_ms": 0.011,
+      "section_A_scientifique": {
+        "comportements_saisonniers": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via dimensions_scientifiques (saisonnalité, migration, ravages, perchoirs)"
+        },
+        "corridors": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via sorties_territoire"
+        },
+        "habitat": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via sorties_territoire"
+        },
+        "nutrition": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via dimensions / sources spécialisées (ALCES Journal pour orignal, mast pour ours)"
+        },
+        "pression_humaine": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via dimensions + score calculé"
+        },
+        "maladies": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "CWD/tique/LPDV/conflits selon espèce"
+        },
+        "thermoregulation": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Seuil thermique scientifique présent ou hibernation"
+        },
+        "neige": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Seuil neige scientifique présent ou tolérance documentée (hibernation pour ours noir)"
+        },
+        "sites_critiques": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Sites critiques (rut/mise bas/tanières/ravages/perchoirs)"
+        },
+        "interactions_interespeces": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Interactions cervidés/prédation/CWD chevauchement"
+        },
+        "modeles_RSF_SSF_MaxEnt": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "RSF/SSF/MaxEnt référencés dans sources"
+        }
+      },
+      "section_B_technique": {
+        "inputs_definis": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "compute(env) accepte 18 paramètres environnementaux"
+        },
+        "outputs_definis": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "5 sorties territoire définies"
+        },
+        "dependances_internes": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "engines.v8_institutional.especes (module commun)"
+        },
+        "dependances_externes": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Aucune dépendance externe non-Ω (lecture seule V30)"
+        },
+        "couches_emises_zindex": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "5 couches émises · z-index 902 (après zones)"
+        },
+        "formats_sortie_JSON": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Format normalisé via normalize_engine_output()"
+        },
+        "contraintes_BCE4X_no_vulgarisation": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Aucun label legacy interdit détecté"
+        },
+        "sources_GOV_UNI_PR_DOI": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "GOV+UNI+PR triple validation + 10 DOI/URL"
+        }
+      },
+      "section_C_pipeline": {
+        "ordre_execution_pipeline": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Stage ENGINE_ESPECES_Ω : après HOTSPOTS, avant RENDU_Ω (Z_ORDRE_Ω_ESPECES)"
+        },
+        "compatibilite_ENGINE_IA_CORRIDORS_Ω": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "READ-ONLY V30 — n'altère aucun moteur cryptographique scellé"
+        },
+        "compatibilite_ENGINE_CONTAMINATION_SALINES_INSPECTION_BIO": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Couches espèces ajoutées en lecture seule, aucune modification couches existantes"
+        },
+        "performance_sub_1s": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Temps mesuré: 0.011 ms (< 1000 ms requis)"
+        },
+        "marker_ENGINE_ESPECE_*_Ω": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Marker présent: ENGINE_ESPECE_ORIGNAL_Ω"
+        }
+      }
+    },
+    {
+      "espece_id": "OURS_NOIR",
+      "engine_marker": "ENGINE_ESPECE_OURS_NOIR_Ω",
+      "nom_scientifique": "Ursus americanus",
+      "tableau_maitre_ref": "TABLEAU_MAITRE_OURS_NOIR_BCE4X",
+      "performance_ms": 0.008,
+      "section_A_scientifique": {
+        "comportements_saisonniers": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via dimensions_scientifiques (saisonnalité, migration, ravages, perchoirs)"
+        },
+        "corridors": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via sorties_territoire"
+        },
+        "habitat": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via sorties_territoire"
+        },
+        "nutrition": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via dimensions / sources spécialisées (ALCES Journal pour orignal, mast pour ours)"
+        },
+        "pression_humaine": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via dimensions + score calculé"
+        },
+        "maladies": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "CWD/tique/LPDV/conflits selon espèce"
+        },
+        "thermoregulation": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Seuil thermique scientifique présent ou hibernation"
+        },
+        "neige": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Seuil neige scientifique présent ou tolérance documentée (hibernation pour ours noir)"
+        },
+        "sites_critiques": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Sites critiques (rut/mise bas/tanières/ravages/perchoirs)"
+        },
+        "interactions_interespeces": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Interactions cervidés/prédation/CWD chevauchement"
+        },
+        "modeles_RSF_SSF_MaxEnt": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "RSF/SSF/MaxEnt référencés dans sources"
+        }
+      },
+      "section_B_technique": {
+        "inputs_definis": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "compute(env) accepte 18 paramètres environnementaux"
+        },
+        "outputs_definis": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "5 sorties territoire définies"
+        },
+        "dependances_internes": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "engines.v8_institutional.especes (module commun)"
+        },
+        "dependances_externes": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Aucune dépendance externe non-Ω (lecture seule V30)"
+        },
+        "couches_emises_zindex": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "5 couches émises · z-index 902 (après zones)"
+        },
+        "formats_sortie_JSON": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Format normalisé via normalize_engine_output()"
+        },
+        "contraintes_BCE4X_no_vulgarisation": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Aucun label legacy interdit détecté"
+        },
+        "sources_GOV_UNI_PR_DOI": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "GOV+UNI+PR triple validation + 9 DOI/URL"
+        }
+      },
+      "section_C_pipeline": {
+        "ordre_execution_pipeline": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Stage ENGINE_ESPECES_Ω : après HOTSPOTS, avant RENDU_Ω (Z_ORDRE_Ω_ESPECES)"
+        },
+        "compatibilite_ENGINE_IA_CORRIDORS_Ω": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "READ-ONLY V30 — n'altère aucun moteur cryptographique scellé"
+        },
+        "compatibilite_ENGINE_CONTAMINATION_SALINES_INSPECTION_BIO": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Couches espèces ajoutées en lecture seule, aucune modification couches existantes"
+        },
+        "performance_sub_1s": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Temps mesuré: 0.008 ms (< 1000 ms requis)"
+        },
+        "marker_ENGINE_ESPECE_*_Ω": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Marker présent: ENGINE_ESPECE_OURS_NOIR_Ω"
+        }
+      }
+    },
+    {
+      "espece_id": "WAPITI",
+      "engine_marker": "ENGINE_ESPECE_WAPITI_Ω",
+      "nom_scientifique": "Cervus canadensis",
+      "tableau_maitre_ref": "TABLEAU_MAITRE_WAPITI_BCE4X",
+      "performance_ms": 0.009,
+      "section_A_scientifique": {
+        "comportements_saisonniers": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via dimensions_scientifiques (saisonnalité, migration, ravages, perchoirs)"
+        },
+        "corridors": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via sorties_territoire"
+        },
+        "habitat": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via sorties_territoire"
+        },
+        "nutrition": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via dimensions / sources spécialisées (ALCES Journal pour orignal, mast pour ours)"
+        },
+        "pression_humaine": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via dimensions + score calculé"
+        },
+        "maladies": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "CWD/tique/LPDV/conflits selon espèce"
+        },
+        "thermoregulation": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Seuil thermique scientifique présent ou hibernation"
+        },
+        "neige": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Seuil neige scientifique présent ou tolérance documentée (hibernation pour ours noir)"
+        },
+        "sites_critiques": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Sites critiques (rut/mise bas/tanières/ravages/perchoirs)"
+        },
+        "interactions_interespeces": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Interactions cervidés/prédation/CWD chevauchement"
+        },
+        "modeles_RSF_SSF_MaxEnt": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "RSF/SSF/MaxEnt référencés dans sources"
+        }
+      },
+      "section_B_technique": {
+        "inputs_definis": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "compute(env) accepte 18 paramètres environnementaux"
+        },
+        "outputs_definis": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "5 sorties territoire définies"
+        },
+        "dependances_internes": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "engines.v8_institutional.especes (module commun)"
+        },
+        "dependances_externes": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Aucune dépendance externe non-Ω (lecture seule V30)"
+        },
+        "couches_emises_zindex": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "5 couches émises · z-index 902 (après zones)"
+        },
+        "formats_sortie_JSON": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Format normalisé via normalize_engine_output()"
+        },
+        "contraintes_BCE4X_no_vulgarisation": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Aucun label legacy interdit détecté"
+        },
+        "sources_GOV_UNI_PR_DOI": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "GOV+UNI+PR triple validation + 8 DOI/URL"
+        }
+      },
+      "section_C_pipeline": {
+        "ordre_execution_pipeline": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Stage ENGINE_ESPECES_Ω : après HOTSPOTS, avant RENDU_Ω (Z_ORDRE_Ω_ESPECES)"
+        },
+        "compatibilite_ENGINE_IA_CORRIDORS_Ω": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "READ-ONLY V30 — n'altère aucun moteur cryptographique scellé"
+        },
+        "compatibilite_ENGINE_CONTAMINATION_SALINES_INSPECTION_BIO": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Couches espèces ajoutées en lecture seule, aucune modification couches existantes"
+        },
+        "performance_sub_1s": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Temps mesuré: 0.009 ms (< 1000 ms requis)"
+        },
+        "marker_ENGINE_ESPECE_*_Ω": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Marker présent: ENGINE_ESPECE_WAPITI_Ω"
+        }
+      }
+    },
+    {
+      "espece_id": "DINDON_SAUVAGE",
+      "engine_marker": "ENGINE_ESPECE_DINDON_SAUVAGE_Ω",
+      "nom_scientifique": "Meleagris gallopavo",
+      "tableau_maitre_ref": "TABLEAU_MAITRE_DINDON_BCE4X",
+      "performance_ms": 0.007,
+      "section_A_scientifique": {
+        "comportements_saisonniers": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via dimensions_scientifiques (saisonnalité, migration, ravages, perchoirs)"
+        },
+        "corridors": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via sorties_territoire"
+        },
+        "habitat": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via sorties_territoire"
+        },
+        "nutrition": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via dimensions / sources spécialisées (ALCES Journal pour orignal, mast pour ours)"
+        },
+        "pression_humaine": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Vérifié via dimensions + score calculé"
+        },
+        "maladies": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "CWD/tique/LPDV/conflits selon espèce"
+        },
+        "thermoregulation": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Seuil thermique scientifique présent ou hibernation"
+        },
+        "neige": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Seuil neige scientifique présent ou tolérance documentée (hibernation pour ours noir)"
+        },
+        "sites_critiques": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Sites critiques (rut/mise bas/tanières/ravages/perchoirs)"
+        },
+        "interactions_interespeces": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Interactions cervidés/prédation/CWD chevauchement"
+        },
+        "modeles_RSF_SSF_MaxEnt": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "RSF/SSF/MaxEnt référencés dans sources"
+        }
+      },
+      "section_B_technique": {
+        "inputs_definis": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "compute(env) accepte 18 paramètres environnementaux"
+        },
+        "outputs_definis": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "5 sorties territoire définies"
+        },
+        "dependances_internes": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "engines.v8_institutional.especes (module commun)"
+        },
+        "dependances_externes": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Aucune dépendance externe non-Ω (lecture seule V30)"
+        },
+        "couches_emises_zindex": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "5 couches émises · z-index 902 (après zones)"
+        },
+        "formats_sortie_JSON": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Format normalisé via normalize_engine_output()"
+        },
+        "contraintes_BCE4X_no_vulgarisation": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Aucun label legacy interdit détecté"
+        },
+        "sources_GOV_UNI_PR_DOI": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "GOV+UNI+PR triple validation + 10 DOI/URL"
+        }
+      },
+      "section_C_pipeline": {
+        "ordre_execution_pipeline": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Stage ENGINE_ESPECES_Ω : après HOTSPOTS, avant RENDU_Ω (Z_ORDRE_Ω_ESPECES)"
+        },
+        "compatibilite_ENGINE_IA_CORRIDORS_Ω": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "READ-ONLY V30 — n'altère aucun moteur cryptographique scellé"
+        },
+        "compatibilite_ENGINE_CONTAMINATION_SALINES_INSPECTION_BIO": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Couches espèces ajoutées en lecture seule, aucune modification couches existantes"
+        },
+        "performance_sub_1s": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Temps mesuré: 0.007 ms (< 1000 ms requis)"
+        },
+        "marker_ENGINE_ESPECE_*_Ω": {
+          "statut": "ACCEPTÉ",
+          "commentaire": "Marker présent: ENGINE_ESPECE_DINDON_SAUVAGE_Ω"
+        }
+      }
+    }
+  ],
+  "audit_state_runtime": {
+    "AUDIT_ESPECES_Ω_STATUS": "EN_ATTENTE_VALIDATION_COMMANDANT",
+    "validated_at_utc": null,
+    "validated_by": null
+  }
+}

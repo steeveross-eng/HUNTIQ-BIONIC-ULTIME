@@ -22,25 +22,31 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 export default function EspecesOmegaPanel() {
   const [data, setData] = useState(null);
   const [signature, setSignature] = useState(null);
+  const [auditStatus, setAuditStatus] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
     const fetchAll = async () => {
       try {
-        const [r1, r2] = await Promise.all([
+        const [r1, r2, r3] = await Promise.all([
           fetch(`${BACKEND_URL}/api/v30/especes/list?_t=${Date.now()}`,
                 { credentials: 'omit', cache: 'no-store' }),
           fetch(`${BACKEND_URL}/api/v30/especes/lock-signature?_t=${Date.now()}`,
                 { credentials: 'omit', cache: 'no-store' }),
+          fetch(`${BACKEND_URL}/api/v30/especes/audit/status?_t=${Date.now()}`,
+                { credentials: 'omit', cache: 'no-store' }),
         ]);
         if (!r1.ok) throw new Error(`list HTTP ${r1.status}`);
         if (!r2.ok) throw new Error(`lock HTTP ${r2.status}`);
+        if (!r3.ok) throw new Error(`audit HTTP ${r3.status}`);
         const j1 = await r1.json();
         const j2 = await r2.json();
+        const j3 = await r3.json();
         if (!cancelled) {
           setData(j1);
           setSignature(j2);
+          setAuditStatus(j3);
         }
       } catch (e) {
         if (!cancelled) setError(String(e && e.message ? e.message : e));
@@ -87,6 +93,41 @@ export default function EspecesOmegaPanel() {
           {data.engines_count}/5
         </span>
       </div>
+
+      {/* PHASE_XII_AUDIT (Article 4) — Bandeau verrou conditionnel */}
+      {auditStatus && !auditStatus.is_validated && (
+        <div
+          data-testid="especes-omega-validation-banner"
+          style={{
+            padding: '8px 10px', marginBottom: 8, borderRadius: 6,
+            background: 'rgba(245,158,11,0.10)',
+            border: '1px solid #f59e0b', color: '#fbbf24',
+            fontSize: 10, lineHeight: 1.4, fontWeight: 700, letterSpacing: 0.5,
+          }}
+        >
+          ⚠️ ENGINES ESPÈCES Ω — EN ATTENTE DE VALIDATION DU COMMANDANT<br />
+          <span style={{ fontWeight: 400, color: '#fde68a', fontSize: 9 }}>
+            Audit BCE-4X exécuté · 120/120 paramètres ACCEPTÉ · activation_status :
+            <code style={{ marginLeft: 4 }}>{auditStatus['AUDIT_ESPECES_Ω_STATUS']}</code>
+          </span>
+        </div>
+      )}
+      {auditStatus && auditStatus.is_validated && (
+        <div
+          data-testid="especes-omega-validation-banner"
+          style={{
+            padding: '6px 10px', marginBottom: 8, borderRadius: 6,
+            background: 'rgba(0,166,118,0.10)',
+            border: '1px solid #00A676', color: '#00A676',
+            fontSize: 10, fontWeight: 700, letterSpacing: 0.5,
+          }}
+        >
+          ✓ AUDIT_ESPECES_Ω_STATUS = VALIDÉ_PAR_STEEVE_MAX<br />
+          <span style={{ fontWeight: 400, color: '#B2F2D9', fontSize: 9 }}>
+            Engines ACTIF_Ω_DÉFINITIF · {auditStatus.validated_at_utc?.slice(0, 19)}
+          </span>
+        </div>
+      )}
 
       {data.engines.map((e) => {
         const pal = e.style_palette || {};

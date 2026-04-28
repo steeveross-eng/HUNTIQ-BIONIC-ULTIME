@@ -75,9 +75,22 @@ def list_especes() -> List[Dict[str, Any]]:
 def execute_pipeline_stage(env: Dict[str, Any], filter_especes: Optional[List[str]] = None) -> Dict[str, Any]:
     """Exécute le stage ENGINE_ESPECES_Ω pour toutes les espèces (ou filtre).
 
-    env : Dict environnemental partagé (rasters / couches / climat).
-    filter_especes : liste d'espece_id à calculer. None = toutes.
+    PHASE_XII_AUDIT (Article 4) : si l'audit n'est pas VALIDÉ_PAR_STEEVE_MAX,
+    le résultat est marqué `activation_status="EN_ATTENTE_VALIDATION_COMMANDANT"`.
+    Les calculs sont produits (mode preview) mais aucun engine n'est marqué
+    `ACTIF_Ω_DÉFINITIF`.
     """
+    # Verrou conditionnel — vérifié dynamiquement (lecture seule)
+    try:
+        from engines.v8_institutional.especes.audit_especes_omega import (
+            get_audit_status, is_validated,
+        )
+        audit_state = get_audit_status()
+        validated = is_validated()
+    except Exception:
+        audit_state = {"AUDIT_ESPECES_Ω_STATUS": "UNKNOWN"}
+        validated = False
+
     results: Dict[str, Any] = {}
     target = filter_especes or list(ENGINES_ESPECES_Ω.keys())
     for esp_id in target:
@@ -85,13 +98,21 @@ def execute_pipeline_stage(env: Dict[str, Any], filter_especes: Optional[List[st
             continue
         _profile, compute = ENGINES_ESPECES_Ω[esp_id]
         try:
-            results[esp_id] = compute(env)
+            r = compute(env)
+            r["activation_status"] = (
+                "ACTIF_Ω_DÉFINITIF" if validated else "EN_ATTENTE_VALIDATION_COMMANDANT"
+            )
+            results[esp_id] = r
         except Exception as e:
             results[esp_id] = {"error": f"{type(e).__name__}: {e}"}
     return {
         "stage": "ENGINE_ESPECES_Ω",
         "phase": "PHASE_XII_ESPECES_Ω",
         "doctrine": "BCE-4X_ULTIME_ABSOLU",
+        "audit_status": audit_state,
+        "activation_status_global": (
+            "ACTIF_Ω_DÉFINITIF" if validated else "EN_ATTENTE_VALIDATION_COMMANDANT"
+        ),
         "z_ordre": Z_ORDRE_Ω_ESPECES,
         "results_per_species": results,
         "species_processed": len(results),

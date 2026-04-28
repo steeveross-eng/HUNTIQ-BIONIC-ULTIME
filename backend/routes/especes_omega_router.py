@@ -18,6 +18,10 @@ from engines.v8_institutional.especes.engine_especes_omega import (
     ENGINES_ESPECES_Ω, Z_ORDRE_Ω_ESPECES,
     list_especes, execute_pipeline_stage, get_lock_signature,
 )
+from engines.v8_institutional.especes.audit_especes_omega import (
+    run_full_audit, get_audit_status, is_validated,
+    request_validation, revoke_validation,
+)
 
 
 router = APIRouter(prefix="/api/v30/especes", tags=["especes_omega"])
@@ -64,6 +68,60 @@ async def especes_lock_signature():
         "phase": "PHASE_XII_ESPECES_Ω",
         "doctrine": "BCE-4X_ULTIME_ABSOLU",
         **sig,
+    })
+
+
+@router.get("/audit/status")
+async def especes_audit_status():
+    """Statut courant de validation de l'audit BCE-4X."""
+    return JSONResponse(content={
+        "phase": "PHASE_XII_ESPECES_Ω_AUDIT_BCE4X",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU",
+        **get_audit_status(),
+        "is_validated": is_validated(),
+    })
+
+
+@router.get("/audit/run")
+async def especes_audit_run():
+    """Exécute l'audit BCE-4X complet (lecture seule) sur les 5 engines."""
+    return JSONResponse(content=run_full_audit())
+
+
+@router.post("/audit/validate")
+async def especes_audit_validate(body: Dict[str, Any] = Body(...)):
+    """Valide l'audit BCE-4X (Article 4 — verrouillage conditionnel).
+
+    Body : {"token": "STEEVE-MAX-PHASE-XII-AUDIT-BCE4X-VALIDE", "signataire": "STEEVE-MAX"}
+    """
+    token = body.get("token", "")
+    signataire = body.get("signataire", "STEEVE-MAX")
+    ok, msg = request_validation(token, signataire)
+    if not ok:
+        return JSONResponse(
+            status_code=403,
+            content={
+                "phase": "PHASE_XII_ESPECES_Ω_AUDIT_BCE4X",
+                "validated": False, "message": msg,
+                "audit_status": get_audit_status(),
+            },
+        )
+    return JSONResponse(content={
+        "phase": "PHASE_XII_ESPECES_Ω_AUDIT_BCE4X",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU",
+        "validated": True, "message": msg,
+        "audit_status": get_audit_status(),
+    })
+
+
+@router.post("/audit/revoke")
+async def especes_audit_revoke():
+    """Révoque la validation (retour EN_ATTENTE)."""
+    revoke_validation()
+    return JSONResponse(content={
+        "phase": "PHASE_XII_ESPECES_Ω_AUDIT_BCE4X",
+        "revoked": True,
+        "audit_status": get_audit_status(),
     })
 
 
