@@ -180,8 +180,15 @@ export default function HudTerritoireUltime({
     setLoading(true);
     setError(null);
     try {
-      const url = `${BACKEND_URL}/api/v30/territoire/ultime-score?lat=${lat}&lon=${lng}&species=${species}&month=${month}&hour=${hour}`;
-      const r = await fetch(url, { credentials: "omit", cache: "no-store" });
+      // PHASE_AUDIT_RACINE_TERRITOIRE_Ω (2026-04-28) — cache-busting timestamp
+      // pour garantir un appel LIVE et bypasser tout intermédiaire (SW, CDN, proxy).
+      const _ts = Date.now();
+      const url = `${BACKEND_URL}/api/v30/territoire/ultime-score?lat=${lat}&lon=${lng}&species=${species}&month=${month}&hour=${hour}&_t=${_ts}`;
+      const r = await fetch(url, {
+        credentials: "omit",
+        cache: "no-store",
+        headers: { "Cache-Control": "no-cache", "Pragma": "no-cache" },
+      });
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const json = await r.json();
       setPayload(json);

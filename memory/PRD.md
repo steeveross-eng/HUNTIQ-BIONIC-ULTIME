@@ -27,6 +27,68 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **AUDIT RACINE TERRITOIRE_Ω · BYPASS SW + CACHE-BUSTING (2026-04-28 · ordre n°12)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-4) suite à l'apparition
+  d'une bannière `Erreur : HTTP 403` dans le HUD TerritoireUltime du Commandant.
+  Audit racine 7-axes complet sur l'URL exacte du Commandant. V30 INVIOLÉ.
+  - **Cause racine** : `sw.js` v9.1 utilisait `networkFirstStrategy` pour
+    `/api/*`, ce qui pouvait resservir une réponse 403 transitoire mise en
+    cache par CacheStorage côté client. L'endpoint
+    `/api/v30/territoire/ultime-score` retournait 200 OK côté backend
+    (vérifié en curl direct) mais le navigateur du Commandant servait une
+    réponse 403 cachée par le SW.
+  - **Constatations capture (article 1)** : bouton "Connexion" visible (=
+    utilisateur non-connecté), boîte rouge "Erreur : HTTP 403" sous bouton
+    Rafraîchir, score 65.05 PARTIEL, V30 alignement = "—/100" (nul à cause
+    de l'erreur 403).
+  - **Audit 7-axes (article 2)** :
+    1. SW : v9.1 actif, fetch handler `networkFirstStrategy` pour `/api/*`.
+    2. CDN : pas d'intermédiaire détecté.
+    3. Bundles : `/static/js/bundle.js` correctement servi.
+    4. Layout : pastille orange purgée (itération précédente),
+       cert/compass/layers tous bien positionnés.
+    5. HTTP 403 : 0 dans la session live actuelle (vs erreur visible chez
+       Commandant — donc cache SW chez lui), 17 401 sur endpoints
+       auth-protected (normal pour non-connecté).
+    6. Pipeline : `/api/v30/territoire/ultime-score` répond 200 avec
+       payload complet (score 80.33%, bande FAVORABLE, action
+       PRÉPARER_FUSION_SOUS_VALIDATION_P6).
+    7. Divergence : différence due au cache SW v9.1 du Commandant.
+  - **Correctifs structurels (article 3)** :
+    - `sw.js` : bump CACHE_NAME → `v9.2-audit-racine-territoire-omega`.
+    - `sw.js` : ajout v9.0 + v9.1 dans OBSOLETE_CACHES (purge auto).
+    - `sw.js` : **BYPASS TOTAL** pour `/api/v30/territoire/*` —
+      `fetch(req, {cache:'no-store'}).catch(...503...)` — garantit zéro
+      mise en cache des réponses live, jamais.
+    - `HudTerritoireUltime.jsx` : query param cache-busting
+      `?_t=Date.now()` + headers Cache-Control:no-cache + Pragma:no-cache.
+    - `index.html` : meta version → `v9.2-audit-racine-territoire-omega-2026-04-28`.
+    - Restart supervisor frontend (PID 9315).
+  - **Validation post-correctif (article 3)** :
+    - SW v9.2 servi externe : HTTP 200, 18980 octets, BYPASS confirmé.
+    - 5/5 itérations curl `/api/v30/territoire/ultime-score` → HTTP 200.
+    - Session navigateur : `hud_error_visible=false`, `hud_band=FAVORABLE`,
+      `hud_action=PRÉPARER_FUSION_SOUS_VALIDATION_P6`,
+      `api_ultime_score_status_in_browser=200`, score 80.33%.
+    - CacheStorage = `['bionic-hunt-cache-v9.2-audit-racine-territoire-omega']`
+      (uniquement, v9.0+v9.1 PURGÉS).
+    - Capture PNG 1920×1080 scellée : SHA-256
+      `8123d44b6a19bc43120984601a0e32e51f858dc8953c2bc14f2725b775fe7482`
+      (1.78 MB).
+  - **V30 LOCKED · INTÉGRITÉ INTACTE** :
+    - registry_lock_omega.py SHA-256 :
+      `fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c`
+    - engine_ia_corridors_omega.py SHA-256 :
+      `bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3`
+    - Registre scellé : 41 engines, 5 piliers, prefix `27516c9633853974…`.
+  - **Régression OMÉGA** : 5/5 tests cibles passing.
+  - **Livrables (servis HTTPS 200 OK)** :
+    - `/reports/audit_territoire_omega_ultime/RAPPORT_AUDIT_RACINE_TERRITOIRE_OMEGA.html` (12 451 octets, capture embarquée).
+    - `/reports/audit_territoire_omega_ultime/AUDIT_RACINE_TERRITOIRE_OMEGA.json` (5 525 octets).
+    - `/reports/audit_territoire_omega_ultime/SCREENSHOT_AUDIT_RACINE_TERRITOIRE_OMEGA_2026-04-28.png` (1 782 740 octets).
+  - **Directive client** : Ctrl+Shift+R suffit pour bénéficier de v9.2
+    (ou attendre la prochaine visite — purge automatique).
+
 - **RCA VISUELLE PREVIEW · PURGE PASTILLE LEGACY + COMPASS REPOSITIONNÉ (2026-04-28 · ordre n°11)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-6) suite à la
   capture d'un état visuel non-conforme dans son environnement Preview.

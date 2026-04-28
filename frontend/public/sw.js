@@ -1,5 +1,7 @@
 // PHASE_RCA_DEPLOIEMENT_OMEGA — bump version pour forcer purge cache client (RENDU-Ω INTÉGRAL)
-const CACHE_NAME = 'bionic-hunt-cache-v9.1-rendu-omega-integral';
+// PHASE_AUDIT_RACINE_TERRITOIRE_Ω (2026-04-28) — bump v9.1 → v9.2 pour purger
+// les anciennes réponses /api/v30/territoire/* potentiellement cachées en 4xx.
+const CACHE_NAME = 'bionic-hunt-cache-v9.2-audit-racine-territoire-omega';
 const OFFLINE_URL = '/offline.html';
 
 // Assets to cache immediately on install
@@ -27,7 +29,7 @@ const API_CACHE_ROUTES = [
 ];
 
 // V7.2 Tile layers to cache for offline heatmaps
-const TILE_CACHE_NAME = 'bionic-tiles-v9.1-rendu-omega-integral';
+const TILE_CACHE_NAME = 'bionic-tiles-v9.2-audit-racine-territoire-omega';
 // ═══ PHASE_XII_SUPRA_TERRITOIRE_RENDERING_RECOVERY_Ω §2.2 ═══
 // Toutes les versions antérieures DOIVENT être invalidées à l'activation.
 const OBSOLETE_CACHES = [
@@ -36,11 +38,13 @@ const OBSOLETE_CACHES = [
   'bionic-hunt-cache-v7.2', 'bionic-hunt-cache-v8', 'bionic-hunt-cache-v8.0',
   'bionic-hunt-cache-v8.1',
   'bionic-hunt-cache-v9.0-enforcement-p0',
+  'bionic-hunt-cache-v9.1-rendu-omega-integral',
   'bionic-tiles-v2', 'bionic-tiles-v3', 'bionic-tiles-v4',
   'bionic-tiles-v5', 'bionic-tiles-v6', 'bionic-tiles-v7',
   'bionic-tiles-v7.2', 'bionic-tiles-v8', 'bionic-tiles-v8.0',
   'bionic-tiles-v8.1',
   'bionic-tiles-v9.0-enforcement-p0',
+  'bionic-tiles-v9.1-rendu-omega-integral',
 ];
 const TILE_PATTERNS = [
   'basemaps.cartocdn.com',
@@ -57,7 +61,7 @@ const GEOLOCATION_CONFIG = {
 
 // Install event - cache static assets
 self.addEventListener('install', (event) => {
-  console.log('[SW] Installing Service Worker v9.1-rendu-omega-integral...');
+  console.log('[SW] Installing Service Worker v9.2-audit-racine-territoire-omega...');
   // PHASE η — skipWaiting immédiat : le nouveau SW prend le pouvoir dès
   // la 1re visite, sans attendre la fermeture de tous les onglets.
   self.skipWaiting();
@@ -73,7 +77,7 @@ self.addEventListener('install', (event) => {
 
 // Activate event - clean old caches
 self.addEventListener('activate', (event) => {
-  console.log('[SW] Activating Service Worker v9.1-rendu-omega-integral (RECOVERY_Ω + PURGE FORCÉE V9.0)');
+  console.log('[SW] Activating Service Worker v9.2-audit-racine-territoire-omega (RECOVERY_Ω + PURGE FORCÉE V9.0/V9.1)');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
@@ -147,6 +151,17 @@ self.addEventListener('fetch', (event) => {
     // pour bundle territoire (corridors inter-zones LIVE obligatoire)
     if (url.pathname.startsWith('/api/v20/territoire/bundle')) {
       event.respondWith(fetch(request).catch(() => new Response(
+        JSON.stringify({ offline: true, error: 'network' }),
+        { status: 503, headers: { 'Content-Type': 'application/json' } }
+      )));
+      return;
+    }
+    // PHASE_AUDIT_RACINE_TERRITOIRE_Ω (2026-04-28) — ordre Commandant STEEVE-MAX :
+    // BYPASS TOTAL pour /api/v30/territoire/* (ultime-score, fusion-execute, etc.).
+    // Évite que le SW resserve une réponse 4xx/5xx mise en cache par erreur,
+    // garantissant le rendu LIVE de l'HUD TERRITOIRE_Ω chez TOUS les clients.
+    if (url.pathname.startsWith('/api/v30/territoire/')) {
+      event.respondWith(fetch(request, { cache: 'no-store' }).catch(() => new Response(
         JSON.stringify({ offline: true, error: 'network' }),
         { status: 503, headers: { 'Content-Type': 'application/json' } }
       )));
