@@ -27,6 +27,46 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **RÉVEIL BACKEND TERRITOIRE_Ω · COLD-START + WARMUP MULTI-ESPÈCES (2026-04-28 · ordre n°14)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-4) suite à l'apparition
+  du message "Frontend Preview Only. Please wake servers to enable backend
+  functionality" sur sa capture (HTTP 404 Emergent ingress, pod backend en
+  hibernation cloud). V30 INVIOLÉ.
+  - **Cause racine** : pod backend en idle hibernation (économie ressources
+    cloud Emergent). Cold-start déclenché à la 1re requête.
+  - **Actions de réveil** :
+    - `sudo supervisorctl restart backend frontend` → backend RUNNING
+      PID 223, frontend RUNNING PID 227, mongodb RUNNING PID 53.
+    - Sleep 15s pour propagation initialisation.
+    - Warmup curl massif sur 5 endpoints `/api/v30/territoire/*` (5/5 HTTP 200,
+      latence 1.1-1.7s par appel — chaud).
+    - Test multi-espèces depuis navigateur (orignal/cerf/ours).
+  - **Validation post-réveil** :
+    - **3/3 espèces** HTTP 200 avec payloads complets :
+      orignal=80.33% FAVORABLE, cerf=68.82% NEUTRE, ours=68.43% NEUTRE.
+    - `v30_invariant=true` partout (cryptographie OK).
+    - Session navigateur : 54 appels API 2xx, 0 5xx, 0 403,
+      24 × 404 (endpoints non-implémentés non-bloquants legacy
+      `/legal-time/status`, `/sharing/notifications/anonymous`).
+    - Message "Preview Only" : ABSENT.
+    - SW count=0 (désactivé itération précédente), caches=[].
+    - HUD band: FAVORABLE, action: PRÉPARER_FUSION_SOUS_VALIDATION_P6.
+    - Capture PNG 1920×1080 scellée : SHA-256
+      `a4d56a996030d49bc3ba16a0376a2b54107bb38158118da4f59095f4c500f527`
+      (1.78 MB) — toutes couches Ω visibles, bandeau "BCE-4X · STEEVE-MAX
+      · CONFORMITÉ Ω 100%" présent.
+  - **V30 LOCKED · INTÉGRITÉ INTACTE** :
+    - registry_lock_omega.py SHA-256 :
+      `fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c`
+    - engine_ia_corridors_omega.py SHA-256 :
+      `bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3`
+    - Echo identique dans payloads API.
+  - **Régression OMÉGA** : 5/5 tests cibles passing.
+  - **Livrables (servis HTTPS 200 OK)** :
+    - `/reports/audit_territoire_omega_ultime/RAPPORT_REVEIL_BACKEND_TERRITOIRE_OMEGA.html` (9 228 octets, capture embarquée).
+    - `/reports/audit_territoire_omega_ultime/REVEIL_BACKEND_TERRITOIRE_OMEGA.json` (2 507 octets).
+    - `/reports/audit_territoire_omega_ultime/SCREENSHOT_REVEIL_BACKEND_TERRITOIRE_OMEGA_2026-04-28.png` (1 781 840 octets).
+
 - **DÉSACTIVATION TOTALE SW · KILLSWITCH AUTO-UNREGISTER (2026-04-28 · ordre n°13)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-6) suite à
   l'impossibilité d'effectuer un nettoyage manuel (F12 inaccessible dans

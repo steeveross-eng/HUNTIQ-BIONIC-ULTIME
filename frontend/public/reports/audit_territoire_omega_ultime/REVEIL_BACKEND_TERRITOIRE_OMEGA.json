@@ -1,0 +1,71 @@
+{
+  "phase": "PHASE_REVEIL_BACKEND_TERRITOIRE_OMEGA",
+  "protocole": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU",
+  "commandant": "STEEVE-MAX",
+  "directive": "RÉVEIL IMMÉDIAT BACKEND TERRITOIRE_Ω (Articles 1-4)",
+  "executed_at_utc": "2026-04-28T18:39:10.508500+00:00",
+  "url_audit": "https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic",
+  "constat_initial": {
+    "message_capture_commandant": "Frontend Preview Only. Please wake servers to enable backend functionality",
+    "diagnostic": "Pod backend en hibernation — réveil cold-start nécessaire"
+  },
+  "actions_reveil": [
+    "sudo supervisorctl restart backend frontend",
+    "sleep 15s pour propagation",
+    "Warmup massif des endpoints /api/v30/territoire/* via curl",
+    "Test multi-espèces (orignal, cerf, ours) via fetch navigateur"
+  ],
+  "validation_post_reveil": {
+    "supervisor_status": {
+      "backend": "RUNNING",
+      "frontend": "RUNNING",
+      "mongodb": "RUNNING"
+    },
+    "preview_only_msg_present": false,
+    "sw_count": 0,
+    "caches_present": [],
+    "meta_version": "v9.3-sw-disabled-2026-04-28",
+    "cert_visible": true,
+    "layers_panel_visible": true,
+    "scroll_orange_visible": false,
+    "hud_error_visible": false,
+    "hud_band": "FAVORABLE",
+    "hud_action": "ACTION : PRÉPARER_FUSION_SOUS_VALIDATION_P6",
+    "api_v30_territoire_calls": 5,
+    "api_2xx_total": 54,
+    "api_4xx_total": 47,
+    "api_404_total": 24,
+    "api_5xx_total": 0,
+    "api_results_multi_species": [
+      {
+        "species": "orignal",
+        "status": 200,
+        "band": "FAVORABLE",
+        "pct": 80.33,
+        "v30_invariant": true
+      },
+      {
+        "species": "cerf",
+        "status": 200,
+        "band": "NEUTRE",
+        "pct": 68.82,
+        "v30_invariant": true
+      },
+      {
+        "species": "ours",
+        "status": 200,
+        "band": "NEUTRE",
+        "pct": 68.43,
+        "v30_invariant": true
+      }
+    ]
+  },
+  "screenshot": {
+    "path": "/reports/audit_territoire_omega_ultime/SCREENSHOT_REVEIL_BACKEND_TERRITOIRE_OMEGA_2026-04-28.png",
+    "absolute_path": "/app/frontend/public/reports/audit_territoire_omega_ultime/SCREENSHOT_REVEIL_BACKEND_TERRITOIRE_OMEGA_2026-04-28.png",
+    "sha256": "a4d56a996030d49bc3ba16a0376a2b54107bb38158118da4f59095f4c500f527",
+    "size_bytes": 1781840
+  },
+  "v30_locked_intact": true,
+  "statut_final": "BACKEND TERRITOIRE_Ω RÉVEILLÉ · ENDPOINTS v30/TERRITOIRE LIVE 200 · PIPELINE Ω OPÉRATIONNEL · COUCHES Ω ACTIVES"
+}
