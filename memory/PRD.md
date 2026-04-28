@@ -27,6 +27,50 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **RCA DÉPLOIEMENT Ω · PURGE CACHE CLIENT (2026-04-28 · ordre n°10)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (vérification visuelle de Preview),
+  identification et correction de l'écart code source vs. rendu navigateur
+  client. V30 INVIOLÉ.
+  - **Symptôme** : Preview HTTPS du Commandant continuait d'afficher l'UI
+    pré-RENDU-Ω (blizzard 25k segments, cône rouge dominant) malgré code
+    source frontend conforme.
+  - **Cause racine** : Service Worker `/app/frontend/public/sw.js` —
+    `CACHE_NAME='bionic-hunt-cache-v9.0-enforcement-p0'` non bumpé après
+    application du RENDU-Ω. À l'activation, l'OBSOLETE_CACHES ne purgeait
+    que les versions ≤ v8.1, donc CacheStorage continuait de servir les
+    bundles JS/CSS antérieurs au RENDU-Ω. Le déploiement source était bon ;
+    le canal de propagation client était bouché.
+  - **Correctifs appliqués** :
+    - `sw.js` : CACHE_NAME → `bionic-hunt-cache-v9.1-rendu-omega-integral`
+    - `sw.js` : TILE_CACHE_NAME → `bionic-tiles-v9.1-rendu-omega-integral`
+    - `sw.js` : ajout v9.0-enforcement-p0 dans OBSOLETE_CACHES (purge auto)
+    - `index.html` : meta `Cache-Control: no-store, no-cache, must-revalidate`
+    - `index.html` : meta `bionic-rendu-omega-version=v9.1-rendu-omega-integral-2026-04-28`
+    - `sudo supervisorctl restart frontend` (PID 6469).
+  - **Preuves de validation** :
+    - HTTPS GET `/sw.js` → CACHE_NAME v9.1 servi externe (200 OK, 18980 octets).
+    - HTTPS GET `/` → meta version v9.1 + Cache-Control no-store présents.
+    - DOM via Playwright : `RenduOmegaIntegralCertifier` monté (1×),
+      7/7 styles Ω data-testid rendus, CacheStorage = ['v9.1'] uniquement
+      (v9.0 PURGÉ), WindFlowLayer canvas atténué présent.
+    - Capture PNG 1920×1080 scellée : SHA-256
+      `9a9970ac984f141a430d18e3c013d50791d0069a1861314214c4a3735271ac45`
+      (1.79 MB).
+  - **V30 LOCKED · INTÉGRITÉ INTACTE** :
+    - registry_lock_omega.py SHA-256 :
+      `fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c`
+    - engine_ia_corridors_omega.py SHA-256 :
+      `bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3`
+    - Registre scellé : 41 engines, 5 piliers, prefix `27516c9633853974…`.
+  - **Régression P2** : 9/9 tests OMÉGA passing (engine_registry_locked,
+    phase_e_activation/c1_fix/fusion_omega/fusion_reelle/layers_sync/
+    purge_legacy_reinjection/rendu_omega_integral, purge_legacy).
+    `0 violation legacy · 9 modules neutralisés`.
+  - **Livrables** :
+    - `/reports/audit_territoire_omega_ultime/RAPPORT_RCA_DEPLOIEMENT_OMEGA.html`
+    - `/reports/audit_territoire_omega_ultime/RCA_DEPLOIEMENT_OMEGA.json`
+    - `/reports/audit_territoire_omega_ultime/SCREENSHOT_RCA_RENDU_OMEGA_2026-04-28.png`
+
 - **RENDU-Ω INTÉGRAL · PURGE TOTALE LEGACY (2026-04-28 · ordre n°9)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-7) suite à
   constatation visuelle de NON-CONFORMITÉ MAJEURE BCE-4X. RCA visuelle

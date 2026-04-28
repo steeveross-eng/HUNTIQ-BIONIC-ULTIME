@@ -1,4 +1,5 @@
-const CACHE_NAME = 'bionic-hunt-cache-v9.0-enforcement-p0';
+// PHASE_RCA_DEPLOIEMENT_OMEGA — bump version pour forcer purge cache client (RENDU-Ω INTÉGRAL)
+const CACHE_NAME = 'bionic-hunt-cache-v9.1-rendu-omega-integral';
 const OFFLINE_URL = '/offline.html';
 
 // Assets to cache immediately on install
@@ -26,7 +27,7 @@ const API_CACHE_ROUTES = [
 ];
 
 // V7.2 Tile layers to cache for offline heatmaps
-const TILE_CACHE_NAME = 'bionic-tiles-v9.0-enforcement-p0';
+const TILE_CACHE_NAME = 'bionic-tiles-v9.1-rendu-omega-integral';
 // ═══ PHASE_XII_SUPRA_TERRITOIRE_RENDERING_RECOVERY_Ω §2.2 ═══
 // Toutes les versions antérieures DOIVENT être invalidées à l'activation.
 const OBSOLETE_CACHES = [
@@ -34,10 +35,12 @@ const OBSOLETE_CACHES = [
   'bionic-hunt-cache-v5', 'bionic-hunt-cache-v6', 'bionic-hunt-cache-v7',
   'bionic-hunt-cache-v7.2', 'bionic-hunt-cache-v8', 'bionic-hunt-cache-v8.0',
   'bionic-hunt-cache-v8.1',
+  'bionic-hunt-cache-v9.0-enforcement-p0',
   'bionic-tiles-v2', 'bionic-tiles-v3', 'bionic-tiles-v4',
   'bionic-tiles-v5', 'bionic-tiles-v6', 'bionic-tiles-v7',
   'bionic-tiles-v7.2', 'bionic-tiles-v8', 'bionic-tiles-v8.0',
   'bionic-tiles-v8.1',
+  'bionic-tiles-v9.0-enforcement-p0',
 ];
 const TILE_PATTERNS = [
   'basemaps.cartocdn.com',
@@ -54,7 +57,7 @@ const GEOLOCATION_CONFIG = {
 
 // Install event - cache static assets
 self.addEventListener('install', (event) => {
-  console.log('[SW] Installing Service Worker v9.0-enforcement-p0...');
+  console.log('[SW] Installing Service Worker v9.1-rendu-omega-integral...');
   // PHASE η — skipWaiting immédiat : le nouveau SW prend le pouvoir dès
   // la 1re visite, sans attendre la fermeture de tous les onglets.
   self.skipWaiting();
@@ -70,7 +73,7 @@ self.addEventListener('install', (event) => {
 
 // Activate event - clean old caches
 self.addEventListener('activate', (event) => {
-  console.log('[SW] Activating Service Worker v9.0-enforcement-p0 (RECOVERY_Ω)');
+  console.log('[SW] Activating Service Worker v9.1-rendu-omega-integral (RECOVERY_Ω + PURGE FORCÉE V9.0)');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
