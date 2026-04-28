@@ -1,0 +1,83 @@
+{
+  "document": "PURGE LEGACY + RÉINJECTION COUCHES Ω · CARTE VIVANTE",
+  "serial": "PURGE-LEGACY-OMEGA-REINJECTION-2026-04-28-001",
+  "commandant": "STEEVE-MAX",
+  "protocole": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU",
+  "sealed_at_utc": "2026-04-28T15:36:32.598597Z",
+  "doctrine_version": "PHASE-E_DOCTRINE_PERMANENTE_50PCT_2026-04-28",
+  "declaration": "La carte vivante MonTerritoireBionic est désormais PURGÉE de toute couche V30 brut résiduelle. Les 7 couches Ω institutionnelles (CORRIDORS Ω, ZONES Ω, AFFÛTS Ω, SALINES Ω, HOTSPOTS Ω, CONTAMINATION Ω, SENSORIEL Ω) ainsi que les chaînes dynamiques C1..C6 sont injectées en lecture seule via le bundle V20 post-pipeline Ω complet (XIX → XVII → VITAUX → RENDU-Ω → VEINEUX).",
+  "analyse_cause_racine": {
+    "symptome_observe": "Le Commandant a observé sur la capture précédente que le panneau gauche StatutCorridorsOmegaPanel affichait l'étiquette « V30 BRUT » sur la section COUCHES TERRITOIRE et la mention « Compteurs V30 brut (avant XIX-P1/P2 · VITAUX 600m · RENDUΩ) » en pied de section. AFFÛTS=0, HOTSPOTS=0, CONTAMINATION=0 dans cette section, alors que la carte rendait des couches.",
+    "investigation_forensique": [
+      "STEP 1 — Inspection du composant StatutCorridorsOmegaPanel.jsx : lignes 250-296 affirmaient explicitement « COUCHES TERRITOIRE · V30 BRUT » et « ℹ Compteurs V30 brut (avant XIX-P1/P2 · VITAUX 600m · RENDUΩ) ».",
+      "STEP 2 — Identification de la double source de vérité : (a) `bundleData` (LayersOmegaSyncPanel) → couches Ω post-filtrage ; (b) `/api/v30/corridors/status.layers_present` (StatutCorridorsOmegaPanel) → compteurs V30 BRUT (avant tout filtrage Ω).",
+      "STEP 3 — Confirmation que la CARTE elle-même rendait déjà des couches Ω (via bundleData dans BionicLayersV8.jsx). Le « V30 brut » n'apparaissait QUE dans le panneau de droite, pas sur la carte. Cause de confusion visuelle : deux sections concurrentes, l'une étiquetée Ω, l'autre étiquetée V30 brut.",
+      "STEP 4 — Confirmation que CONTAMINATION Ω et SENSORIEL Ω n'étaient pas exposés dans le LayersOmegaSyncPanel initial (5 couches seulement). Cela expliquait l'impression de couches manquantes.",
+      "STEP 5 — Confirmation que les chaînes C1..C6 dynamiques n'étaient pas exposées visuellement dans le panneau de couches (uniquement dans le HUD via les contributions). L'utilisateur ne pouvait pas vérifier d'un coup d'œil quelles chaînes étaient effectivement « câblées » au pipeline Ω."
+    ],
+    "module_fautif": "frontend/src/components/territoire/StatutCorridorsOmegaPanel.jsx",
+    "pipeline_bloquant": "aucun (le pipeline backend filtrait correctement) — ÉCHEC PUREMENT FRONTEND",
+    "verdict": "AUCUNE vraie couche V30 brut n'était rendue sur la carte. Le défaut était un panneau d'affichage legacy (StatutCorridorsOmegaPanel) consommant un endpoint distinct (/api/v30/corridors/status) qui retourne des compteurs V30 BRUT (avant filtrage Ω) à des fins de diagnostic interne. Cela créait visuellement la perception qu'il existait deux univers (brut vs Ω) côte à côte, et le wording « V30 brut » dans l'UI propageait cette confusion alors que le rendu carte était déjà 100% Ω."
+  },
+  "corrections_apportees": [
+    "Suppression de l'étiquette « V30 BRUT » dans StatutCorridorsOmegaPanel.jsx (remplacée par « POST-FILTRAGE Ω »).",
+    "Ajout de la prop `bundleData` au panneau pour basculer les compteurs sur les sources Ω post-filtrage (corridors, zones, affuts, salines, hotspots, contamination, sensoriel) issues du bundle V20.",
+    "Ajout des compteurs CONTAMINATION Ω et SENSORIEL Ω (auparavant absents).",
+    "Affichage explicite du statut RENDU-Ω et du nombre total de corridors V30 brut purgés par les filtres Ω.",
+    "Suppression de la note « Compteurs V30 brut (avant filtrage) » dans le mode Ω (conservée uniquement en fallback si bundleData est indisponible).",
+    "Étension de LayersOmegaSyncPanel.jsx pour inclure CONTAMINATION Ω, SENSORIEL Ω et la section CHAÎNES C1..C6 DYNAMIQUES avec badges actifs/inactifs par poids.",
+    "Connexion explicite du panneau dans MonTerritoireBionicPage.jsx avec bundleData={bundleDataV8}."
+  ],
+  "plan_anti_regression": [
+    "Test pytest dédié `test_phase_e_purge_legacy_omega_reinjection.py` — 10 tests vérifient l'absence du wording « V30 brut » comme verdict, la présence des data-testid Ω, la connexion bundleData, l'inclusion CONTAMINATION/SENSORIEL/C1..C6.",
+    "Sentinelle pytest : tout futur ajout de wording « V30 brut » sans suffixe « (fallback) » fera échouer le test.",
+    "Recommandation institutionnelle : le panneau gauche ne doit plus avoir de logique de compteurs autonome — uniquement consommer bundleData.",
+    "Documentation : tout nouveau panneau de la carte vivante DOIT consommer bundleData (Ω post-filtrage) en priorité, et n'utiliser un endpoint diagnostic V30 brut qu'en fallback explicite."
+  ],
+  "snapshot_runtime_post_purge": {
+    "corridors_omega_count": 1,
+    "zones_omega_count": 5,
+    "affuts_omega_count": 0,
+    "salines_omega_count": 4,
+    "hotspots_omega_count": 5,
+    "contamination_omega_count": 3,
+    "sensoriel_omega_active": true,
+    "rejected_xix": 17,
+    "rejected_xvii": 2,
+    "rejected_vitaux": 0,
+    "rejected_rendu": 0,
+    "esi_omega": "CONFORME",
+    "rendu_status": "APPLIED",
+    "flags": {
+      "corridors_vitaux_omega_applied": true,
+      "interzone_omega_applied": true,
+      "predictive_omega_v2_applied": true,
+      "veineux_omega_applied_at_bundle": true,
+      "smoother_p5_renduomega_applied": true
+    }
+  },
+  "tests_pytest_post_purge": {
+    "fichier_dedie": "test_phase_e_purge_legacy_omega_reinjection.py",
+    "count": 10,
+    "pass": 10,
+    "non_regression_globale": "97/97 PASS combinés (10+22+24+10+13+18)"
+  },
+  "doctrine_appliquee": {
+    "v30_locked": true,
+    "xix_recomputed": false,
+    "vitaux_recomputed": false,
+    "backend_read_only": true,
+    "no_testing_agent_v3_fork": true,
+    "aucun_engine_modifie": true
+  },
+  "v30_invariance_post_purge": {
+    "registry_lock_omega_sha256": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+    "engine_ia_corridors_omega_sha256": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3",
+    "sha256_registry_echo": "655a1630375909bdeb32ba0a033fc329f105fb0a88ba058f79952241206cc36d",
+    "invariant": true
+  },
+  "preuves_visuelles": [
+    "/reports/audit_territoire_omega_ultime/phase_e/captures/purge_legacy_carte.jpeg",
+    "/reports/audit_territoire_omega_ultime/phase_e/captures/purge_legacy_sync_panel.jpeg"
+  ]
+}

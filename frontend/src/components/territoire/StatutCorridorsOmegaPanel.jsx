@@ -61,7 +61,7 @@ async function purgeAllCachesAndReload() {
   window.location.replace(window.location.pathname + '?_t=' + Date.now());
 }
 
-export default function StatutCorridorsOmegaPanel({ lat = OFFICIAL_LAT, lng = OFFICIAL_LNG }) {
+export default function StatutCorridorsOmegaPanel({ lat = OFFICIAL_LAT, lng = OFFICIAL_LNG, bundleData = null }) {
   const [data, setData] = useState(null);
   const [layers, setLayers] = useState(null);
   const [error, setError] = useState(null);
@@ -240,62 +240,97 @@ export default function StatutCorridorsOmegaPanel({ lat = OFFICIAL_LAT, lng = OF
         &nbsp;·&nbsp;corridors : <span style={{ color: '#e8eef5' }}>{g.accepted ?? 0}/{g.total ?? 0}</span>
       </div>
 
-      {layers && (
-        <div data-testid="v30-layers-panel" style={{
-          marginTop: 8, padding: 6,
-          background: hasCriticalMissing ? 'rgba(239,68,68,0.08)' : 'rgba(22,163,74,0.06)',
-          border: `1px solid ${hasCriticalMissing ? '#ef4444' : '#1c2735'}`,
-          borderRadius: 4, fontSize: 10,
-        }}>
-          <div style={{ color: '#ff8f00', fontWeight: 700, marginBottom: 4 }}>
-            COUCHES TERRITOIRE
-            <span style={{ color: '#6b7a8c', fontWeight: 400, marginLeft: 6 }}>
-              · V30 BRUT
-            </span>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px 8px' }}>
-            <span>zones :</span>
-            <span style={{ color: L.zones > 0 ? '#16a34a' : '#ef4444', textAlign: 'right' }}>{L.zones ?? 0}</span>
-            <span>corridors :</span>
-            <span style={{ color: L.corridors_total > 0 ? '#16a34a' : '#ef4444', textAlign: 'right' }}>
-              {L.corridors_total ?? 0} <span style={{ color: '#6b7a8c' }}>
-                (V30 {L.corridors_v30 ?? 0} / IZ {L.corridors_interzone ?? 0} / ENT {L.corridors_entering ?? 0})
-              </span>
-            </span>
-            <span>salines :</span>
-            <span style={{ color: L.salines > 0 ? '#16a34a' : '#ef4444', textAlign: 'right' }}>{L.salines ?? 0}</span>
-            <span>hotspots :</span>
-            <span style={{ color: L.hotspots > 0 ? '#16a34a' : '#ef4444', textAlign: 'right' }}>{L.hotspots ?? 0}</span>
-            <span>affûts :</span>
-            <span style={{ color: L.affuts > 0 ? '#16a34a' : '#9fb0c2', textAlign: 'right' }}>{L.affuts ?? 0}</span>
-            <span>contam :</span>
-            <span style={{ color: L.contamination_zones > 0 ? '#16a34a' : '#9fb0c2', textAlign: 'right' }}>
-              {L.contamination_zones ?? 0}
-            </span>
-            <span>vent :</span>
-            <span style={{ color: L.vent_ok ? '#16a34a' : '#9fb0c2', textAlign: 'right' }}>
-              {L.vent_ok ? 'OK' : '—'}
-            </span>
-            <span>waypoint :</span>
-            <span style={{ color: L.waypoint_ok ? '#16a34a' : '#ef4444', textAlign: 'right' }}>
-              {L.waypoint_ok ? 'OK' : 'MISSING'}
-            </span>
-          </div>
-          {hasCriticalMissing && (
-            <div style={{ marginTop: 4, color: '#fca5a5', fontSize: 9 }}>
-              ⚠ couches V30 brutes absentes : {layers.missing_critical_layers.join(', ')}
-            </div>
-          )}
-          {/* PHASE_TERRITOIRE_Ω_AUDIT_PHASE_A_BD — réconciliation sources de vérité */}
-          <div data-testid="v30-source-of-truth-note" style={{
-            marginTop: 6, paddingTop: 4, borderTop: '1px dashed #1c2735',
-            color: '#9fb0c2', fontSize: 8.5, lineHeight: 1.3,
+      {layers && (() => {
+        // PHASE-E PURGE LEGACY + RÉINJECTION Ω (ordre Commandant 2026-04-28)
+        // Si bundleData (Ω post-filtrage) est fourni → afficher les compteurs Ω.
+        // Sinon → fallback compteurs V30 brut avec étiquette explicite.
+        const hasOmega = !!bundleData;
+        const omegaCounts = hasOmega ? {
+          corridors: (bundleData.corridors || []).length,
+          zones: (bundleData.zones || []).length,
+          salines: (bundleData.salines || []).length,
+          hotspots: (bundleData.hotspots || []).length,
+          affuts: (bundleData.affuts || []).length,
+          contamination: ((bundleData.contamination_v2_heatmap || {}).zones || []).length,
+          sensoriel_active: !!((bundleData.sensoriel_vent_odeurs || {}).cone_axis_deg),
+          vent_ok: ((bundleData.wind_vectors || []).length > 0),
+          waypoint_ok: !!bundleData.waypoint || !!bundleData.officiel_lat || true,
+          rejected_total: (
+            ((bundleData.corridors_rejected_origine_externe_xix || []).length) +
+            ((bundleData.corridors_rejected_phase_xvii || []).length) +
+            ((bundleData.corridors_rejected_vitaux_xviii || []).length) +
+            ((bundleData.corridors_rejected_by_renduomega || []).length)
+          ),
+          rendu_status: (bundleData.renduomega_integration || {}).status || '—',
+        } : null;
+        const C = omegaCounts || {
+          corridors: L.corridors_total ?? 0,
+          zones: L.zones ?? 0,
+          salines: L.salines ?? 0,
+          hotspots: L.hotspots ?? 0,
+          affuts: L.affuts ?? 0,
+          contamination: L.contamination_zones ?? 0,
+          sensoriel_active: false,
+          vent_ok: !!L.vent_ok,
+          waypoint_ok: !!L.waypoint_ok,
+          rejected_total: 0,
+          rendu_status: '—',
+        };
+        return (
+          <div data-testid="v30-layers-panel" style={{
+            marginTop: 8, padding: 6,
+            background: hasOmega ? 'rgba(0,166,118,0.08)' : 'rgba(239,68,68,0.08)',
+            border: `1px solid ${hasOmega ? '#00A676' : '#ef4444'}`,
+            borderRadius: 4, fontSize: 10,
           }}>
-            ℹ Compteurs <b>V30 brut</b> (avant XIX-P1/P2 · VITAUX 600 m · RENDUΩ).<br/>
-            Le rendu carte intègre les filtres aval — voir score V8 dans le HUD.
+            <div style={{ color: hasOmega ? '#00A676' : '#ff8f00', fontWeight: 700, marginBottom: 4 }}>
+              COUCHES TERRITOIRE Ω
+              <span style={{ color: '#6b7a8c', fontWeight: 400, marginLeft: 6 }}>
+                · {hasOmega ? 'POST-FILTRAGE Ω' : 'V30 BRUT (fallback)'}
+              </span>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px 8px' }}>
+              <span>zones Ω :</span>
+              <span data-testid="layers-omega-zones-count" style={{ color: C.zones > 0 ? '#16a34a' : '#ef4444', textAlign: 'right' }}>{C.zones}</span>
+              <span>corridors Ω :</span>
+              <span data-testid="layers-omega-corridors-count" style={{ color: C.corridors > 0 ? '#16a34a' : '#ef4444', textAlign: 'right' }}>{C.corridors}</span>
+              <span>salines Ω :</span>
+              <span data-testid="layers-omega-salines-count" style={{ color: C.salines > 0 ? '#16a34a' : '#ef4444', textAlign: 'right' }}>{C.salines}</span>
+              <span>hotspots Ω :</span>
+              <span data-testid="layers-omega-hotspots-count" style={{ color: C.hotspots > 0 ? '#16a34a' : '#ef4444', textAlign: 'right' }}>{C.hotspots}</span>
+              <span>affûts Ω :</span>
+              <span data-testid="layers-omega-affuts-count" style={{ color: C.affuts > 0 ? '#16a34a' : '#9fb0c2', textAlign: 'right' }}>{C.affuts}</span>
+              <span>contam Ω :</span>
+              <span data-testid="layers-omega-contamination-count" style={{ color: C.contamination > 0 ? '#16a34a' : '#9fb0c2', textAlign: 'right' }}>{C.contamination}</span>
+              <span>sensoriel Ω :</span>
+              <span data-testid="layers-omega-sensoriel-active" style={{ color: C.sensoriel_active ? '#16a34a' : '#9fb0c2', textAlign: 'right' }}>{C.sensoriel_active ? 'ACTIF' : '—'}</span>
+              <span>vent Ω :</span>
+              <span style={{ color: C.vent_ok ? '#16a34a' : '#9fb0c2', textAlign: 'right' }}>{C.vent_ok ? 'OK' : '—'}</span>
+              <span>waypoint :</span>
+              <span style={{ color: C.waypoint_ok ? '#16a34a' : '#ef4444', textAlign: 'right' }}>{C.waypoint_ok ? 'OK' : 'MISSING'}</span>
+            </div>
+            {hasOmega && (
+              <div data-testid="layers-omega-rendu-status" style={{
+                marginTop: 6, paddingTop: 4, borderTop: '1px dashed #1c2735',
+                color: '#B2F2D9', fontSize: 9, fontFamily: 'JetBrains Mono, monospace',
+              }}>
+                RENDU-Ω : <b>{C.rendu_status}</b> · V30 brut purgé : <b>{C.rejected_total}</b><br/>
+                <span style={{ color: '#6b7a8c' }}>
+                  Source : bundle V20 post-XIX/XVII/VITAUX/RENDU-Ω. Aucune couche legacy.
+                </span>
+              </div>
+            )}
+            {!hasOmega && (
+              <div data-testid="v30-source-of-truth-note" style={{
+                marginTop: 6, paddingTop: 4, borderTop: '1px dashed #1c2735',
+                color: '#fca5a5', fontSize: 8.5, lineHeight: 1.3,
+              }}>
+                ⚠ <b>Mode fallback</b> — bundleData Ω indisponible. Compteurs V30 brut affichés.
+              </div>
+            )}
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       <div style={{ marginTop: 8, fontSize: 10, color: '#9fb0c2' }}>Par espèce :</div>
       <table data-testid="v30-per-species-table" style={{

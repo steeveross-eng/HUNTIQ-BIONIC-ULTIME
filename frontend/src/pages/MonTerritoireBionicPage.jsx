@@ -1610,7 +1610,7 @@ const MonTerritoireBionicPage = () => {
           pointerEvents: 'auto',
         }}
       >
-        <StatutCorridorsOmegaPanel />
+        <StatutCorridorsOmegaPanel bundleData={bundleDataV8} />
       </div>
 
       {/* PHASE-E ACTIVATION TERRITOIRE_Ω_ULTIME — HUD overlay (lecture seule, V30 LOCKED) */}

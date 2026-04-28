@@ -32,6 +32,31 @@ const SPEC = [
   { key: 'hotspots', label: 'HOTSPOTS Ω', color: '#F59E0B' },
 ];
 
+// PHASE-E PURGE LEGACY + RÉINJECTION (ordre Commandant 2026-04-28)
+// Couches additionnelles : CONTAMINATION Ω + SENSORIEL Ω
+const SPEC_DERIVED = [
+  { key: 'contamination_v2_heatmap.zones', label: 'CONTAMINATION Ω', color: '#DC2626',
+    extractor: (b) => ((b?.contamination_v2_heatmap || {}).zones || []).length },
+  { key: 'sensoriel_vent_odeurs', label: 'SENSORIEL Ω', color: '#06B6D4',
+    extractor: (b) => (b?.sensoriel_vent_odeurs?.cone_axis_deg !== undefined ? 1 : 0) },
+];
+
+// Chaînes dynamiques C1..C6 — disponibilité institutionnelle
+const CHAINS_C1_C6 = [
+  { id: 'C1', label: 'VENT/CONTAM/SENSORIEL', weight: 0.12,
+    flags: ['wind_vectors', 'sensoriel_vent_odeurs'] },
+  { id: 'C2', label: 'CORRIDORS/ZONES/AFFUT/SALINES/HOTSPOTS', weight: 0.25,
+    flags: ['corridors_vitaux_omega_applied', 'predictive_omega_v2_applied'] },
+  { id: 'C3', label: 'BIO-MASK/VITAUX/RENDU-Ω', weight: 0.18,
+    flags: ['veineux_omega_applied_at_bundle', 'smoother_p5_renduomega_applied'] },
+  { id: 'C4', label: 'NUTRITION/HABITAT', weight: 0.20,
+    flags: ['interzone_omega_applied'] },
+  { id: 'C5', label: 'TERRAIN/MICROCLIMAT', weight: 0.15,
+    flags: ['terrain_p1_applied'] },
+  { id: 'C6', label: 'COMPORTEMENT/SOCIAL/SANTÉ', weight: 0.10,
+    flags: ['corridors_vitaux_omega_applied'] },
+];
+
 function flagsRow(bundleData) {
   return [
     ['corridors_vitaux_omega_applied', 'CORRIDORS_VITAUX_Ω'],
@@ -122,7 +147,7 @@ export default function LayersOmegaSyncPanel({ bundleData, species = 'orignal' }
         </span>
       </div>
 
-      {/* 5 couches Ω */}
+      {/* 7 couches Ω (5 principales + CONTAMINATION + SENSORIEL) */}
       <div data-testid="layers-omega-sync-counts" style={{ marginBottom: 8 }}>
         {SPEC.map((s) => (
           <div
@@ -149,6 +174,70 @@ export default function LayersOmegaSyncPanel({ bundleData, species = 'orignal' }
             </span>
           </div>
         ))}
+        {/* Couches dérivées : CONTAMINATION Ω · SENSORIEL Ω (PHASE-E réinjection) */}
+        {SPEC_DERIVED.map((s) => {
+          const v = s.extractor(bundleData);
+          const isActive = v > 0;
+          return (
+            <div
+              key={s.key}
+              data-testid={`layers-omega-derived-${s.key.replace(/[^a-z0-9]+/gi, '-')}`}
+              style={{
+                display: 'flex', justifyContent: 'space-between',
+                alignItems: 'center', padding: '4px 0',
+                borderBottom: '1px dashed rgba(255,255,255,0.06)',
+                fontSize: 11,
+              }}
+            >
+              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span
+                  style={{
+                    width: 7, height: 7, borderRadius: '50%', background: s.color,
+                    boxShadow: `0 0 4px ${s.color}`,
+                  }}
+                />
+                <b>{s.label}</b>
+              </span>
+              <span style={{
+                fontFamily: 'JetBrains Mono, monospace',
+                color: isActive ? '#B2F2D9' : '#9CA3AF',
+              }}>
+                {s.label === 'SENSORIEL Ω'
+                  ? (isActive ? 'ACTIF' : '—')
+                  : v}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Chaînes dynamiques C1..C6 (PHASE-E activation) */}
+      <div data-testid="layers-omega-chains-c1c6" style={{ marginBottom: 8 }}>
+        <div style={{ fontSize: 9, color: '#9CA3AF', letterSpacing: 1, marginBottom: 4 }}>
+          CHAÎNES C1..C6 DYNAMIQUES
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 3 }}>
+          {CHAINS_C1_C6.map((c) => {
+            const active = c.flags.every((f) => !!bundleData?.[f]);
+            return (
+              <div
+                key={c.id}
+                data-testid={`layers-omega-chain-${c.id.toLowerCase()}`}
+                title={`${c.label} (poids ${c.weight})`}
+                style={{
+                  padding: '3px 5px', borderRadius: 4,
+                  background: active ? 'rgba(0,166,118,0.18)' : 'rgba(156,163,175,0.10)',
+                  border: `1px solid ${active ? 'rgba(0,166,118,0.45)' : 'rgba(156,163,175,0.25)'}`,
+                  textAlign: 'center', fontSize: 9, fontWeight: 700,
+                  color: active ? '#B2F2D9' : '#9CA3AF',
+                  fontFamily: 'JetBrains Mono, monospace',
+                }}
+              >
+                {active ? '✓' : '·'} {c.id} <span style={{ opacity: 0.6 }}>{c.weight}</span>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Rejets V30 brut → Ω */}

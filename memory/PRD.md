@@ -27,6 +27,55 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PURGE LEGACY + RÉINJECTION COUCHES Ω (2026-04-28 · ordre n°8)**
+  Sur ordre du Commandant STEEVE-MAX (constatation visuelle de couches V30
+  brut résiduelles). RCA forensique en 5 étapes + correction frontend.
+  V30 INVIOLÉ post-purge.
+  - **CAUSE RACINE identifiée** : le panneau legacy `StatutCorridorsOmegaPanel.jsx`
+    (lignes 250-296) consommait l'endpoint diagnostic `/api/v30/corridors/status`
+    qui retourne des **compteurs V30 BRUT** (avant filtrage Ω), avec le
+    wording explicite « COUCHES TERRITOIRE · V30 BRUT » et la note
+    « Compteurs V30 brut (avant XIX-P1/P2 · VITAUX 600m · RENDUΩ) ».
+    **Aucune vraie couche V30 brut n'était rendue sur la carte** — le
+    pipeline backend filtrait déjà correctement (5/5 flags Ω actifs). Le
+    défaut était purement un affichage UI legacy à double source de vérité.
+  - **Module fautif** : `frontend/src/components/territoire/StatutCorridorsOmegaPanel.jsx`.
+  - **Pipeline bloquant** : aucun (échec 100% frontend).
+  - **Corrections frontend** :
+    - `StatutCorridorsOmegaPanel.jsx` : étiquette « V30 BRUT » → **« POST-FILTRAGE Ω »**.
+      Nouveau prop `bundleData` qui bascule les compteurs sur le bundle V20
+      Ω (corridors, zones, salines, hotspots, affuts, contamination, sensoriel).
+      Note de pied basculée sur « Source : bundle V20 post-XIX/XVII/VITAUX/
+      RENDU-Ω. Aucune couche legacy. »
+    - `LayersOmegaSyncPanel.jsx` étendu : ajout **CONTAMINATION Ω** +
+      **SENSORIEL Ω** + section **CHAÎNES C1..C6 DYNAMIQUES** (badges
+      actifs/inactifs avec poids).
+    - `MonTerritoireBionicPage.jsx` : connexion `<StatutCorridorsOmegaPanel
+      bundleData={bundleDataV8} />`.
+  - **Tests pytest dédiés** : `test_phase_e_purge_legacy_omega_reinjection.py`
+    — **10/10 PASS** (sentinel anti-wording « V30 brut », data-testid Ω,
+    inclusion CONTAMINATION/SENSORIEL/C1..C6, V30 inchangé).
+  - **Snapshot runtime live BSL post-purge** :
+    7 couches Ω rendues (corridors, zones, affuts 6, salines 4, hotspots 11,
+    contamination 3, sensoriel ACTIF) · V30 BRUT PURGÉ : 20 (XIX:19+XVII:1) ·
+    RENDU-Ω APPLIED · ESI-Ω CONFORME · 5/5 flags Ω · V30 alignement
+    **CONFORME 75.93/100** (était PARTIEL 67.74).
+  - **Capture HTTPS** : `purge_legacy_carte.jpeg` montre l'overlay enrichi
+    (7 couches Ω + 6 badges chaînes C1..C6 dont 5/6 actifs) et le panneau
+    central « COUCHES TERRITOIRE Ω · POST-FILTRAGE Ω ».
+  - **Livrables HTTPS 200** :
+    `PURGE_LEGACY_OMEGA_REINJECTION.json` (6.7 KB) +
+    `RAPPORT_PURGE_LEGACY_OMEGA_REINJECTION.html` (14.4 KB · 10 sections,
+    RCA 5 étapes, plan anti-régression, snapshot, capture, V30 SHA).
+  - **V30 INVIOLÉ post-purge** : `fb765b94…ecb0c` + `bcb1e3a6…39d3` ·
+    echo `655a1630375909bdeb32ba0a033fc329f105fb0a88ba058f79952241206cc36d`.
+  - **Non-régression cumulée** : **79/79 PASS** post-purge
+    (purge 10 + sync 22 + fix C1 24 + PHASE-C 10 + SUPRA-BIO 13).
+  - **Plan anti-régression** : sentinelle pytest contre tout retour du
+    wording « V30 brut » sans suffixe « (fallback) ». Tout futur panneau de
+    la carte vivante DOIT consommer `bundleData` (Ω post-filtrage) en
+    priorité, fallback V30 brut explicite uniquement.
+
 - **SYNCHRONISATION COUCHES Ω · CARTE VIVANTE (2026-04-28 · ordre n°7)**
   Sur ordre du Commandant STEEVE-MAX, synchronisation institutionnelle de la
   carte avec les 5 couches Ω (CORRIDORS Ω · ZONES Ω · AFFÛTS Ω · SALINES Ω ·
