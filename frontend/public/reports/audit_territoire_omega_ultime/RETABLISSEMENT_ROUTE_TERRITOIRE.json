@@ -1,0 +1,83 @@
+{
+  "phase": "PHASE_RETABLISSEMENT_ROUTE_TERRITOIRE",
+  "protocole": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU",
+  "commandant": "STEEVE-MAX",
+  "directive": "RÉTABLISSEMENT IMMÉDIAT DE LA ROUTE /mon-territoire-bionic (Articles 1-5)",
+  "executed_at_utc": "2026-04-28T20:03:10.988325+00:00",
+  "url_audit": "https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic",
+  "actions": [
+    "sudo supervisorctl restart backend frontend",
+    "sleep 18s pour propagation",
+    "Warmup curl /api/v30/territoire/ultime-score (200 · 3.7s cold)",
+    "Warmup curl /api/v30/corridors/status (200 · 1.6s)",
+    "Warmup curl /api/v20/territoire/bundle (200 · 0.2s chaud)"
+  ],
+  "vérification_router_react": {
+    "route_path_in_App.js": "/mon-territoire-bionic → MonTerritoireBionicPage (sans AuthGuard)",
+    "App.js_ligne": 1051,
+    "auth_guard_present": false,
+    "redirect_to_landing": false
+  },
+  "diag_dom": {
+    "url": "https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic",
+    "ts": "2026-04-28T20:02:32.187Z",
+    "url_pathname": "/mon-territoire-bionic",
+    "is_territoire_route": true,
+    "header_logo_visible": true,
+    "header_links_count": 12,
+    "territoire_nav_link_active": true,
+    "territoire_nav_link_text": "TERRITOIRE",
+    "leaflet_container": true,
+    "leaflet_tiles_count": 32,
+    "cert_visible": true,
+    "layers_panel_visible": true,
+    "score_pill_visible": true,
+    "score_pill_label": "NEUTRE",
+    "pipeline_flags": [
+      {
+        "tid": "layers-omega-sync-flag-corridors-vitaux-",
+        "text": "✓ CORRIDORS_VITAUX_Ω"
+      },
+      {
+        "tid": "layers-omega-sync-flag-interzone-",
+        "text": "✓ INTERZONE_Ω"
+      },
+      {
+        "tid": "layers-omega-sync-flag-predictive-v2",
+        "text": "✓ PREDICTIVE_Ω_V2"
+      },
+      {
+        "tid": "layers-omega-sync-flag-veineux-",
+        "text": "✓ VEINEUX_Ω"
+      },
+      {
+        "tid": "layers-omega-sync-flag-rendu-p5",
+        "text": "✓ RENDU_Ω_P5"
+      }
+    ],
+    "ultime_score": null,
+    "ultime_bande": null,
+    "preview_only_msg": false,
+    "sw_count": 0,
+    "caches_present": [],
+    "api_status": 200,
+    "api_band": "FAVORABLE",
+    "api_pct": 80.33,
+    "api_v30_invariant": true
+  },
+  "stats_reseau": {
+    "api_calls_total": 159,
+    "api_2xx": 127,
+    "api_4xx": 31,
+    "api_5xx": 1,
+    "api_v30_territoire": 4
+  },
+  "screenshot": {
+    "path": "/reports/audit_territoire_omega_ultime/SCREENSHOT_RETABLISSEMENT_ROUTE_TERRITOIRE_2026-04-28.png",
+    "absolute_path": "/app/frontend/public/reports/audit_territoire_omega_ultime/SCREENSHOT_RETABLISSEMENT_ROUTE_TERRITOIRE_2026-04-28.png",
+    "sha256": "7922609232ad7cf540023edc6896a61047109767b09c0815c3f5af9a9dfdeec7",
+    "size_bytes": 1787291
+  },
+  "v30_locked_intact": true,
+  "statut_final": "ROUTE /mon-territoire-bionic OPÉRATIONNELLE · BACKEND CHAUD · CARTE LEAFLET CHARGÉE · COUCHES Ω VISIBLES · PIPELINE Ω APPLIED · API LIVE 200"
+}

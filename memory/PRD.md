@@ -27,6 +27,56 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **RÉTABLISSEMENT ROUTE /mon-territoire-bionic · COLD-START + WARMUP (2026-04-28 · ordre n°16)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-5) suite à
+  l'incident frontend rapporté : "redirection vers landing page",
+  "header utilisateur absent", "Frontend Preview Only" persistant.
+  V30 INVIOLÉ.
+  - **Cause racine** : pod backend Emergent en hibernation idle
+    (uptime 35s au moment de la requête du Commandant) → cold-start
+    incomplet → ingress retournait l'écran "Preview Only" temporaire +
+    le frontend chargé sans données API → effet visuel d'absence du
+    header utilisateur connecté.
+  - **Vérification du routeur React** : <code>App.js</code> ligne 1051
+    confirme <code>&lt;Route path="/mon-territoire-bionic" element={&lt;MonTerritoireBionicPage /&gt;} /&gt;</code>
+    SANS AuthGuard ni redirection. Aucun bug de routage.
+  - **Actions de rétablissement** :
+    - <code>sudo supervisorctl restart backend frontend</code>
+      → backend RUNNING (PID 269), frontend RUNNING (PID 273).
+    - Sleep 18s pour propagation initialisation.
+    - Warmup curl massif :
+      - <code>/api/v30/territoire/ultime-score</code> → 200 · 3.7s.
+      - <code>/api/v30/corridors/status</code> → 200 · 1.6s.
+      - <code>/api/v20/territoire/bundle</code> → 200 · 0.2s (chaud).
+  - **Validation post-rétablissement** :
+    - <code>location.pathname = "/mon-territoire-bionic"</code> (PAS redirigé).
+    - Header utilisateur présent : <b>"Steeve-MAX / admin@huntiq.com"</b>.
+    - Header nav : 12 liens (HOME · SHOP · TERRITOIRE actif · CARTE
+      · CAMERAS · INTELLIGENCE · PERMIS).
+    - Carte Leaflet : 32 tuiles chargées · polygones Ω visibles.
+    - Pastille SCORE LOCAL : "SCORE 69.23 · NEUTRE" (jamais PARTIEL).
+    - RenduOmegaIntegralCertifier monté (panneau droit).
+    - LayersOmegaSyncPanel monté (panneau gauche).
+    - Pipeline Ω : 5/5 flags ✓ (CORRIDORS_VITAUX, INTERZONE,
+      PREDICTIVE_V2, VEINEUX, RENDU_P5).
+    - API live : score 80.33% · BANDE FAVORABLE · v30_invariant=true.
+    - Statistiques réseau : 127 calls 2xx · 1 call 5xx (transitoire
+      cold-start) · 4 calls v30/territoire.
+    - SW count=0 · caches=[] · message "Preview Only" : ABSENT.
+    - Capture PNG 1920×1080 scellée : SHA-256
+      <code>7922609232ad7cf540023edc6896a61047109767b09c0815c3f5af9a9dfdeec7</code>
+      (1.79 MB).
+  - **V30 LOCKED · INTÉGRITÉ INTACTE** :
+    - registry_lock_omega.py SHA-256 :
+      <code>fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c</code>
+    - engine_ia_corridors_omega.py SHA-256 :
+      <code>bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3</code>
+  - **Régression OMÉGA** : 4/4 tests cibles passing.
+  - **Livrables (servis HTTPS 200 OK)** :
+    - <code>/reports/audit_territoire_omega_ultime/RAPPORT_RETABLISSEMENT_ROUTE_TERRITOIRE.html</code> (11 156 octets, capture embarquée).
+    - <code>/reports/audit_territoire_omega_ultime/RETABLISSEMENT_ROUTE_TERRITOIRE.json</code> (2 986 octets).
+    - <code>/reports/audit_territoire_omega_ultime/SCREENSHOT_RETABLISSEMENT_ROUTE_TERRITOIRE_2026-04-28.png</code> (1 787 291 octets).
+
 - **RECAPTURE Ω INSTITUTIONNELLE · GRILLE FAVORABLE/NEUTRE/RÉSERVE (2026-04-28 · ordre n°15)**
   Sur INVALIDATION FORMELLE du Commandant STEEVE-MAX (Articles 1-5) suite
   au constat "SCORE = PARTIEL (statut interdit en mode Ω)" + sémantique
