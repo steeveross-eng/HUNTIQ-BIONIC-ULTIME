@@ -27,6 +27,30 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE-TERRITOIRE-Ω-AUDIT_INTER-ENGINES_ULTIME / PHASE-ENGINE_CANONIQUE_Ω (2026-04-27)**
+  Constitution institutionnelle des **36 engines** de TERRITOIRE_Ω. Documentation
+  READ-ONLY — aucun moteur cryptographique modifié. Préparation FUSION TERRITOIRE_Ω.
+  - **6 niveaux** : VERROU (E01,E02) · FONDATION (10) · BIOLOGIE (5) · FUSION (8) ·
+    GOUVERNANCE (2) · RENDU (1).
+  - **3 rôles** : PRINCIPAL (22) · SECONDAIRE (14) · INTERDIT (0).
+  - **3 priorités** : CRITIQUE (14) · MAJEUR (17) · SECONDAIRE (5).
+  - **Pour chaque engine** : fonction canonique, inputs, outputs, layers
+    primaires/secondaires/interdits, dépendances amont/aval, interdictions
+    structurelles, priorité institutionnelle.
+  - **Tables relationnelles** : ENGINE→RÔLE, ENGINE→INPUTS, ENGINE→OUTPUTS,
+    ENGINE→LAYERS, dépendances upstream/downstream, layers map.
+  - **Carte des flux naturels** : VERROU → FONDATION → BIOLOGIE → FUSION → RENDU
+    → GOUVERNANCE.
+  - **Carte des interdictions** : par engine + globales doctrinales.
+  - **V30 SHA-256 inviolés** post-Phase-Engine_Canonique : `fb765b94…ecb0c` +
+    `bcb1e3a6…39d3`.
+  - **Tests Phase-C robustifiés** : assouplissement des assertions wind sur
+    valeurs runtime open-meteo (wind_deg n'est plus codé en dur 225°).
+  - **Régression globale** : **94 PASSED · 3 SKIPPED · 0 FAILED**.
+  - Livrables HTTPS publiés :
+    - `RAPPORT_PHASE_ENGINE_CANONIQUE.html` (15.7 KB · SHA-256 `2022c467…`)
+    - `SYNTHESE_PHASE_ENGINE_CANONIQUE.json` (65.2 KB · SHA-256 `78fdc99e…`)
+
 - **PHASE-TERRITOIRE-Ω-AUDIT_INTER-ENGINES_ULTIME / PHASE-D VERROUILLAGE RENDUΩ (2026-04-27)**
   Verrouillage du renderer institutionnel RENDUΩ avec palette verte. Modifications
   strictement en frontend (renderer), backend READ-ONLY, V30 cryptographiquement

@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>RAPPORT PHASE-ENGINE_CANONIQUE_Ω · Constitution institutionnelle des 36 engines TERRITOIRE_Ω</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root { --ink:#0c1118; --paper:#f5f6f8; --ok:#16a34a; --gold:#b08800; --rule:#1e293b;
+        --primary:#00A676; --halo-i:#4CC99A; --halo-o:#B2F2D9;
+        --crit:#dc2626; --maj:#f59e0b; --sec:#64748b; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--paper); color:var(--ink);
+       font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; line-height:1.55; }
+header { background:linear-gradient(140deg,#0c1118 0%,#1e293b 100%); color:#fff;
+         padding:32px 48px; border-bottom:4px solid var(--gold); }
+header h1 { margin:0 0 4px; font-size:22px; letter-spacing:.04em; font-weight:700; }
+header .sub { font-size:12px; opacity:.78; letter-spacing:.10em; text-transform:uppercase; }
+header .commandant { margin-top:14px; padding:6px 12px; display:inline-block;
+  background:rgba(176,136,0,.18); border:1px solid var(--gold); border-radius:3px;
+  font-size:11px; letter-spacing:.10em; text-transform:uppercase; color:#fcd34d; }
+main { max-width:1320px; margin:0 auto; padding:32px 48px 80px; }
+section { margin:32px 0; scroll-margin-top:40px; }
+section.toc { background:#fff; border:1px solid #d4d4d8; border-radius:6px; padding:18px 24px; }
+section.toc ol { margin:0; padding-left:20px; columns:2; column-gap:32px; }
+section.toc li { margin:5px 0; font-size:13px; }
+section.toc a { color:#1e3a5f; text-decoration:none; }
+h2 { font-size:18px; letter-spacing:.04em; border-bottom:2px solid var(--primary);
+     padding-bottom:6px; margin-bottom:14px; color:var(--rule); }
+h3 { font-size:14px; margin:14px 0 6px; color:#334155; }
+table { border-collapse:collapse; width:100%; font-size:11.5px; margin-top:6px; }
+th, td { padding:6px 8px; border:1px solid #d4d4d8; text-align:left; vertical-align:top; }
+th { background:#e2e8f0; letter-spacing:.05em; font-weight:600; font-size:11px; }
+td.id { font-family:ui-monospace,monospace; font-weight:700; color:var(--rule); white-space:nowrap; }
+.pill { padding:1px 7px; font-size:10px; border-radius:3px; letter-spacing:.04em; font-weight:600; display:inline-block; }
+.pill.crit { background:#fee2e2; color:#7f1d1d; }
+.pill.maj  { background:#fef3c7; color:#78350f; }
+.pill.sec  { background:#e2e8f0; color:#334155; }
+.pill.ok   { background:#dcfce7; color:#14532d; }
+.pill.locked{ background:#fef3c7; color:#78350f; }
+.lvl-VERROU     { background:#fef3c7; color:#78350f; }
+.lvl-FONDATION  { background:#cffafe; color:#155e75; }
+.lvl-BIOLOGIE   { background:#dcfce7; color:#14532d; }
+.lvl-FUSION     { background:#ddd6fe; color:#5b21b6; }
+.lvl-RENDU      { background:#e0f2e9; color:#065f46; }
+.lvl-GOUVERNANCE{ background:#f3e8ff; color:#581c87; }
+.role-PRINCIPAL { color:#065f46; font-weight:700; }
+.role-SECONDAIRE{ color:#475569; }
+code { background:#e2e8f0; padding:1px 5px; border-radius:3px; font-size:11px; }
+.engine-card { background:#fff; border:1px solid #d4d4d8; border-radius:6px;
+               padding:14px 18px; margin:10px 0; box-shadow:0 1px 2px rgba(0,0,0,.03); }
+.engine-card h3 { margin:0 0 4px; display:flex; align-items:center; gap:10px; }
+.engine-card h3 .id { font-family:ui-monospace,monospace; font-size:13px; }
+.engine-card .pills { display:flex; gap:6px; flex-wrap:wrap; margin:4px 0 10px; }
+.engine-card .field { font-size:12px; margin:6px 0; }
+.engine-card .field b { display:inline-block; min-width:130px; color:#475569; font-weight:500; font-size:11px; }
+.engine-card .field .val { color:var(--rule); }
+.engine-card .field ul { margin:2px 0 0 18px; padding:0; font-size:11.5px; }
+.engine-card .field li { margin:1px 0; }
+.flow-step { background:#fff; border-left:4px solid var(--primary); padding:10px 14px;
+             margin:8px 0; border-radius:4px; font-size:13px; }
+.flow-step b { color:var(--primary); }
+.flow-step .engines { font-family:ui-monospace,monospace; font-size:11px; color:#475569; margin-top:4px; }
+.warn { background:#fff7f7; border-left:4px solid var(--crit); padding:10px 14px;
+        border-radius:4px; font-size:12.5px; margin:6px 0; }
+footer { padding:24px 48px; color:#475569; font-size:11px;
+         border-top:1px solid #d4d4d8; text-align:center; letter-spacing:.04em; }
+</style>
+</head>
+<body>
+<header>
+  <h1>RAPPORT PHASE-ENGINE_CANONIQUE_Ω · Constitution institutionnelle des 36 engines</h1>
+  <div class="sub">BCE-4X ULTIME ABSOLU · TOP-ABSOLU · BIONIC OS V20-SUPRA · V30 LOCKED · DOCTRINE READ-ONLY</div>
+  <div class="commandant">DIRECTIVE COMMANDANT STEEVE-MAX — DOCUMENTATION INSTITUTIONNELLE PRÉ-PHASE-E</div>
+</header>
+<main>
+
+<section class="toc">
+  <h2>Sommaire</h2>
+  <ol>
+    <li><a href="#s1">1) Synthèse exécutive</a></li>
+    <li><a href="#s2">2) Doctrine BCE-4X & périmètre</a></li>
+    <li><a href="#s3">3) Table maîtresse ENGINE → RÔLE → NIVEAU → PRIORITÉ</a></li>
+    <li><a href="#s4">4) Carte des flux naturels (FONDATION → BIOLOGIE → FUSION → RENDU)</a></li>
+    <li><a href="#s5">5) Carte des dépendances inter-engines</a></li>
+    <li><a href="#s6">6) Carte des LAYERS (primaire / secondaire / interdit)</a></li>
+    <li><a href="#s7">7) Fiches institutionnelles des 36 engines</a></li>
+    <li><a href="#s8">8) Carte des interdictions structurelles</a></li>
+    <li><a href="#s9">9) V30 inviolation cryptographique</a></li>
+    <li><a href="#s10">10) Pré-requis PHASE-TERRITOIRE_Ω_ULTIME et PHASE-E FUSION</a></li>
+  </ol>
+</section>
+
+<section id="s1">
+  <h2>1) Synthèse exécutive</h2>
+  <p>La PHASE-ENGINE_CANONIQUE_Ω établit la <b>constitution institutionnelle</b> des
+  <b>36 engines</b> de TERRITOIRE_Ω. Pour chaque engine sont définis : rôle canonique,
+  niveau d'orchestration, inputs/outputs obligatoires, layers alimentés, dépendances
+  amont/aval, interdictions structurelles et priorité institutionnelle. Cette doctrine
+  prépare la PHASE-TERRITOIRE_Ω_ULTIME et la PHASE-E FUSION.</p>
+  <p>
+    <span class="pill locked">V30 LOCKED · INVIOLÉ</span>
+    <span class="pill ok">36 ENGINES CONSTITUÉS</span>
+    <span class="pill ok">14 CRITIQUES · 17 MAJEURS · 5 SECONDAIRES</span>
+    <span class="pill ok">6 NIVEAUX · 3 RÔLES</span>
+    <span class="pill ok">DOCTRINE READ-ONLY</span>
+  </p>
+</section>
+
+<section id="s2">
+  <h2>2) Doctrine BCE-4X & périmètre</h2>
+  <table>
+    <thead><tr><th>Règle</th><th>Statut</th></tr></thead>
+    <tbody>
+      <tr><td>V30 cryptographiquement verrouillé (E01 + E02)</td><td><span class="pill ok">RESPECTÉ</span></td></tr>
+      <tr><td>XIX-P1/P2/P1B (E04, E05) non recomputés</td><td><span class="pill ok">RESPECTÉ</span></td></tr>
+      <tr><td>VITAUX 600m (E06) non recomputé</td><td><span class="pill ok">RESPECTÉ</span></td></tr>
+      <tr><td>Backend READ-ONLY durant Phase-Engine_Canonique</td><td><span class="pill ok">RESPECTÉ</span></td></tr>
+      <tr><td>Modifications limitées à : documentation, orchestration, interconnexions</td><td><span class="pill ok">RESPECTÉ</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s3">
+  <h2>3) Table maîtresse ENGINE → RÔLE → NIVEAU → PRIORITÉ</h2>
+  <table>
+    <thead><tr><th>ID</th><th>Engine</th><th>Niveau</th><th>Rôle</th><th>Priorité</th><th>Fonction canonique</th></tr></thead>
+    <tbody id="master-rows"><!-- INJECT --></tbody>
+  </table>
+</section>
+
+<section id="s4">
+  <h2>4) Carte des flux naturels (FONDATION → BIOLOGIE → FUSION → RENDU)</h2>
+  <div id="flows-container"><!-- INJECT --></div>
+</section>
+
+<section id="s5">
+  <h2>5) Carte des dépendances inter-engines</h2>
+  <p>Chaque engine consomme certains amonts et alimente des aval. Voir la table complète :</p>
+  <table>
+    <thead><tr><th>ID</th><th>depends_on (amont)</th><th>consumed_by (aval)</th></tr></thead>
+    <tbody id="dep-rows"><!-- INJECT --></tbody>
+  </table>
+</section>
+
+<section id="s6">
+  <h2>6) Carte des LAYERS (primaire / secondaire / interdit)</h2>
+  <table>
+    <thead><tr><th>ID</th><th>Layers PRIMAIRES (génère)</th><th>Layers SECONDAIRES (annote/utilise)</th><th>Layers INTERDITS (jamais alimente)</th></tr></thead>
+    <tbody id="layer-rows"><!-- INJECT --></tbody>
+  </table>
+</section>
+
+<section id="s7">
+  <h2>7) Fiches institutionnelles des 36 engines</h2>
+  <div id="engines-cards"><!-- INJECT --></div>
+</section>
+
+<section id="s8">
+  <h2>8) Carte des interdictions structurelles</h2>
+  <table>
+    <thead><tr><th>ID</th><th>Engine</th><th>Interdictions</th></tr></thead>
+    <tbody id="ban-rows"><!-- INJECT --></tbody>
+  </table>
+</section>
+
+<section id="s9">
+  <h2>9) V30 inviolation cryptographique</h2>
+  <table>
+    <thead><tr><th>Module V30</th><th>SHA-256 actuel</th><th>SHA-256 attendu</th><th>Statut</th></tr></thead>
+    <tbody>
+      <tr><td><code>registry_lock_omega.py</code></td>
+        <td><code>fb765b94…ecb0c</code></td>
+        <td><code>fb765b94…ecb0c</code></td>
+        <td><span class="pill ok">INVIOLÉ</span></td></tr>
+      <tr><td><code>engine_ia_corridors_omega.py</code></td>
+        <td><code>bcb1e3a6…39d3</code></td>
+        <td><code>bcb1e3a6…39d3</code></td>
+        <td><span class="pill ok">INVIOLÉ</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s10">
+  <h2>10) Pré-requis PHASE-TERRITOIRE_Ω_ULTIME et PHASE-E FUSION</h2>
+  <ul>
+    <li>Constitution exhaustive des 36 engines acquise</li>
+    <li>3 chaînes de dépendances cartographiées (vent→contam→son · corridors→zones→affûts→salines→hotspots · BIO-MASK→VITAUX→RENDUΩ)</li>
+    <li>Interdictions structurelles formalisées par engine</li>
+    <li>Verrou cryptographique V30 confirmé</li>
+    <li>Renderer PHASE-D verrouillé (palette verte institutionnelle)</li>
+    <li><b>Conditions d'activation FUSION TERRITOIRE_Ω : REMPLIES</b></li>
+  </ul>
+</section>
+
+</main>
+<footer>
+  PROTOCOLE BCE-4X ULTIME ABSOLU · TOP-ABSOLU · BIONIC OS V20-SUPRA · V30 LOCKED<br>
+  PHASE-ENGINE_CANONIQUE_Ω · CONSTITUTION INSTITUTIONNELLE · COMMANDANT STEEVE-MAX
+</footer>
+
+<script>
+fetch('SYNTHESE_PHASE_ENGINE_CANONIQUE.json').then(r => r.json()).then(data => {
+  const engines = data.engines;
+
+  // Section 3 : Table maîtresse
+  const masterTbody = document.getElementById('master-rows');
+  engines.forEach(e => {
+    const tr = document.createElement('tr');
+    const pillCls = e.priority === 'CRITIQUE' ? 'crit' : (e.priority === 'MAJEUR' ? 'maj' : 'sec');
+    tr.innerHTML = `<td class="id">${e.id}</td>
+      <td><b>${e.name}</b><br><code style="font-size:10px;color:#64748b">${e.file}</code></td>
+      <td><span class="pill lvl-${e.level}">${e.level}</span></td>
+      <td><span class="role-${e.role}">${e.role}</span></td>
+      <td><span class="pill ${pillCls}">${e.priority}</span></td>
+      <td>${e.fonction}</td>`;
+    masterTbody.appendChild(tr);
+  });
+
+  // Section 4 : Flux naturels
+  const flowsContainer = document.getElementById('flows-container');
+  data.natural_flow.forEach(f => {
+    const div = document.createElement('div');
+    div.className = 'flow-step';
+    div.innerHTML = `<b>Étape ${f.step} · ${f.level}</b> — ${f.purpose}
+      <div class="engines">${f.engines.join(' · ')}</div>`;
+    flowsContainer.appendChild(div);
+  });
+
+  // Section 5 : Dépendances
+  const depTbody = document.getElementById('dep-rows');
+  engines.forEach(e => {
+    const upstream = (e.depends_on && e.depends_on.length) ? e.depends_on.join(', ') : '<i>aucune (root)</i>';
+    const downstream = (data.graphs.dependencies_downstream[e.id] || []).join(', ') || '<i>terminal</i>';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="id">${e.id} · ${e.name.replace('ENGINE_', '')}</td>
+      <td>${upstream}</td>
+      <td>${downstream}</td>`;
+    depTbody.appendChild(tr);
+  });
+
+  // Section 6 : Layers
+  const layerTbody = document.getElementById('layer-rows');
+  engines.forEach(e => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="id">${e.id}</td>
+      <td>${(e.layers_primaire || []).join('<br>') || '<i>—</i>'}</td>
+      <td>${(e.layers_secondaire || []).join('<br>') || '<i>—</i>'}</td>
+      <td style="color:#7f1d1d">${(e.layers_interdit || []).join('<br>') || '<i>—</i>'}</td>`;
+    layerTbody.appendChild(tr);
+  });
+
+  // Section 7 : Fiches détaillées
+  const enginesCards = document.getElementById('engines-cards');
+  engines.forEach(e => {
+    const pillCls = e.priority === 'CRITIQUE' ? 'crit' : (e.priority === 'MAJEUR' ? 'maj' : 'sec');
+    const div = document.createElement('div');
+    div.className = 'engine-card';
+    div.innerHTML = `
+      <h3><span class="id">${e.id}</span> · ${e.name}</h3>
+      <div class="pills">
+        <span class="pill lvl-${e.level}">${e.level}</span>
+        <span class="role-${e.role}">${e.role}</span>
+        <span class="pill ${pillCls}">${e.priority}</span>
+      </div>
+      <div class="field"><b>Fichier :</b> <span class="val"><code>${e.file}</code></span></div>
+      <div class="field"><b>Fonction :</b> <span class="val">${e.fonction}</span></div>
+      <div class="field"><b>Inputs :</b> <span class="val">${(e.inputs||[]).join(', ') || '<i>none</i>'}</span></div>
+      <div class="field"><b>Outputs :</b> <span class="val">${(e.outputs||[]).join(', ') || '<i>none</i>'}</span></div>
+      <div class="field"><b>Layers PRIMAIRES :</b> <span class="val">${(e.layers_primaire||[]).join(', ') || '<i>—</i>'}</span></div>
+      <div class="field"><b>Layers SECONDAIRES :</b> <span class="val">${(e.layers_secondaire||[]).join(', ') || '<i>—</i>'}</span></div>
+      <div class="field"><b>Layers INTERDITS :</b> <span class="val" style="color:#7f1d1d">${(e.layers_interdit||[]).join(', ') || '<i>—</i>'}</span></div>
+      <div class="field"><b>Dépend de :</b> <span class="val">${(e.depends_on||[]).join(', ') || '<i>aucune (root)</i>'}</span></div>
+      <div class="field"><b>Consommé par :</b> <span class="val">${(e.consumed_by||[]).join(', ') || '<i>terminal</i>'}</span></div>
+      <div class="field"><b>Interdictions :</b><ul>${(e.interdictions||[]).map(x => `<li>${x}</li>`).join('') || '<li><i>aucune</i></li>'}</ul></div>
+    `;
+    enginesCards.appendChild(div);
+  });
+
+  // Section 8 : Interdictions
+  const banTbody = document.getElementById('ban-rows');
+  engines.forEach(e => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="id">${e.id}</td>
+      <td><b>${e.name}</b></td>
+      <td>${(e.interdictions || []).map(x => `• ${x}`).join('<br>') || '<i>aucune</i>'}</td>`;
+    banTbody.appendChild(tr);
+  });
+}).catch(err => {
+  document.body.insertAdjacentHTML('beforeend', '<div class="warn">Échec chargement JSON : '+err.message+'</div>');
+});
+</script>
+</body>
+</html>
