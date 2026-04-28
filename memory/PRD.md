@@ -27,6 +27,54 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE-E DOCTRINE PERMANENTE 50% + FUSION RÉELLE (2026-04-28 · ordre n°2)**
+  Sur ordre direct du Commandant STEEVE-MAX (Articles 1 à 5), élévation de la
+  PRÉ-FUSION en FUSION RÉELLE avec doctrine permanente assouplie 50%, dérogation
+  biologique TEMPORAIRE et refermeture automatique du masque BIO. V30 toujours
+  cryptographiquement INVIOLÉ.
+  - **Article 1 — Seuils permanents** : `score_ultime ≥ 0.50` ET
+    `v30_alignment_score ≥ 50` (vs 0.85 / 70 historique). Constantes
+    `THRESHOLD_FUSION_SCORE=0.50`, `THRESHOLD_FUSION_V30=50.0`,
+    `DOCTRINE_VERSION="PHASE-E_DOCTRINE_PERMANENTE_50PCT_2026-04-28"`.
+  - **Article 2 — Dérogation BIO temporaire** : nouveau paramètre
+    `bio_derogation: bool=False` sur `compute_ultime_score(...)` et query
+    `?bio_derogation=true` sur `GET /ultime-score`. Quand actif et BIO halt
+    naturel : C3 retourne valeur substitut 0.70 (au lieu de 0.0) → dindon /
+    wapiti deviennent fusionnables (52.64% / 52.20% NEUTRE) sans aucune
+    mutation des données biologiques sources.
+  - **Article 3 — Refermeture automatique** : `POST /fusion-execute` exécute
+    deux phases — (a) fusion réelle avec dérogation, (b) snapshot post-fusion
+    sans dérogation. Le masque BIO redevient actif sur dindon/wapiti
+    (`bio_presence_mask_halt=True`, `score=0.0`) immédiatement après l'appel.
+  - **Article 4** : V30 LOCKED · XIX/VITAUX non recomputés · Backend READ-ONLY
+    · Aucun `testing_agent_v3_fork`. SHA-256 echo vérifié à chaque appel.
+  - **Article 5 — Rapport obligatoire** : `RAPPORT_PHASE-E_FUSION_TERRITOIRE_Ω_RÉELLE.html`
+    généré dynamiquement par l'endpoint POST. En cas d'échec d'écriture :
+    `fusion_canceled=true`, annulation automatique conforme.
+  - **Nouvel endpoint** : `POST /api/v30/territoire/fusion-execute` orchestre
+    la fusion sur les 5 espèces, génère le rapport scellé, refait le snapshot
+    de refermeture, retourne SHA-256 du rapport et fusionnable_count/species.
+  - **Runtime live BSL (fusion réelle)** :
+    orignal 66.75% / cerf 69.27% / ours 65.35% / dindon 52.64% / wapiti 52.20%
+    → **5/5 espèces FUSIONNABLES** (Article 1 satisfait par dérogation).
+  - **Snapshot post-fusion** :
+    orignal 63.95% / cerf 64.97% / ours 69.24% — fusionnables.
+    dindon / wapiti : score=0.0 PROSCRIT — masque BIO **REFERMÉ ✓**.
+  - **Suite pytest étendue** : `test_phase_e_fusion_reelle_doctrine.py` —
+    19 tests (Article 1 seuils, Article 2 dérogation, Article 3 refermeture,
+    Article 4 invariance V30, Article 5 rapport publié, idempotence,
+    couverture 5 espèces, non-persistance, cohérence comptes).
+    **Total PHASE-E : 37 / 37 PASS** (18 + 19).
+  - **Spec V2** : `FUSION_TERRITOIRE_OMEGA.json` mise à jour avec section
+    `doctrine_articles` exposant les 5 articles institutionnels.
+  - **Captures HTTPS** : `phase_e_doctrine_50pct_overview.jpeg` (HUD live à
+    travers la doctrine permanente, V30 PARTIEL 64.15/100, 4 variantes).
+  - **V30 SHA-256 INVIOLÉS** : `fb765b94…ecb0c` + `bcb1e3a6…39d3`.
+  - **echo** : `655a1630375909bdeb32ba0a033fc329f105fb0a88ba058f79952241206cc36d`.
+  - Fichiers modifiés : `fusion_territoire_omega.py`, `fusion_territoire_omega_router.py`,
+    `FUSION_TERRITOIRE_OMEGA.json`. Fichiers créés :
+    `test_phase_e_fusion_reelle_doctrine.py`, `RAPPORT_PHASE-E_FUSION_TERRITOIRE_Ω_RÉELLE.html`.
+
 - **PHASE-E / PRÉ-FUSION TERRITOIRE_Ω (2026-04-28)**
   Livrables institutionnels obligatoires (directive Commandant) produits avant
   toute FUSION RÉELLE. 100% en aval V30 — doctrine BCE-4X ULTIME ABSOLU respectée

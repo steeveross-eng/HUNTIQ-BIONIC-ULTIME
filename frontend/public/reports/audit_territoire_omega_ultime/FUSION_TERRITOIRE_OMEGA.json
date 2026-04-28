@@ -1,19 +1,40 @@
 {
   "document": "SPÉCIFICATION FORMELLE — FUSION TERRITOIRE Ω ULTIME",
-  "phase": "PHASE-E / PRÉ-FUSION (LIVRABLES VISUELS OBLIGATOIRES)",
-  "version": "V1-PRÉ-FUSION-2026-04",
+  "phase": "PHASE-E / FUSION_TERRITOIRE_Ω (DOCTRINE PERMANENTE 50%)",
+  "version": "V2-DOCTRINE-PERMANENTE-2026-04-28",
+  "doctrine_version": "PHASE-E_DOCTRINE_PERMANENTE_50PCT_2026-04-28",
   "commandant": "STEEVE-MAX",
   "protocole": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU",
   "issued_at_utc": "2026-04-28T00:00:00Z",
-  "doctrine": {
-    "v30_locked": true,
-    "xix_recomputed": false,
-    "vitaux_recomputed": false,
-    "backend_read_only": true,
-    "upstream_modified": false,
-    "modifications_scope": ["AVAL/UI/HUD/ORCHESTRATION agrégative uniquement"],
-    "no_testing_agent": true,
-    "waypoint_institutionnel": {"lat": 48.206657, "lng": -68.382422}
+  "doctrine_articles": {
+    "article_1_seuils_permanents": {
+      "score_min_fusion": 0.50,
+      "v30_min_fusion": 50.0,
+      "inhibiteurs_maintenus_sauf": ["BIO_PRESENCE_MASK_HALT (sous Article 2)"]
+    },
+    "article_2_derogation_bio_temporaire": {
+      "scope": "FUSION RÉELLE uniquement",
+      "effet": "BIO_PRESENCE_MASK_HALT désactivé temporairement → dindon/wapiti fusionnables",
+      "persistance": "AUCUNE — paramètre `bio_derogation=True` éphémère, par appel",
+      "mutation_donnees_bio": false
+    },
+    "article_3_refermeture_automatique": {
+      "trigger": "fin de POST /fusion-execute",
+      "effet": "snapshot post-fusion sans dérogation, masque BIO actif réinstauré",
+      "etat_persistant": "AUCUN"
+    },
+    "article_4_doctrine_technique": {
+      "v30_locked": true,
+      "xix_recomputed": false,
+      "vitaux_recomputed": false,
+      "backend_read_only": true,
+      "no_testing_agent": true,
+      "waypoint_institutionnel": {"lat": 48.206657, "lng": -68.382422}
+    },
+    "article_5_rapport_obligatoire": {
+      "filename": "RAPPORT_PHASE-E_FUSION_TERRITOIRE_Ω_RÉELLE.html",
+      "consequence_si_absent": "fusion_canceled=true · annulation automatique"
+    }
   },
   "registry_echo_attendu": {
     "registry_lock_omega_sha256": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",

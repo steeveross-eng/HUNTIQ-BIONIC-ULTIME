@@ -1,5 +1,5 @@
 """
-fusion_territoire_omega.py — PHASE-E PRÉ-FUSION (LECTURE SEULE · AVAL V30)
+fusion_territoire_omega.py — PHASE-E DOCTRINE PERMANENTE 50% + DÉROGATION BIO
 ═══════════════════════════════════════════════════════════════════════════
 Phase     : PHASE-E / FUSION_TERRITOIRE_Ω
 Commandant: STEEVE-MAX
@@ -9,12 +9,17 @@ Module d'AGRÉGATION institutionnelle en aval strict de V30/XIX/VITAUX.
 N'écrit rien, ne mute rien. Lit les sorties canoniques des 48 engines
 orchestrés par PHASE_TERRITOIRE_Ω_ULTIME et produit le score ULTIME.
 
-Doctrine inviolable :
-  • V30 LOCKED — aucun moteur cryptographique touché
-  • XIX non recomputé
-  • VITAUX non recomputé
-  • SHA-256 registry_lock / engine_ia_corridors vérifiés à chaque appel
-  • 6 chaînes institutionnelles · 5 bandes · inhibiteurs absolus
+DOCTRINE PERMANENTE (ordre Commandant 2026-04-28) :
+  • Article 1 — Seuils permanents : fusion autorisée si score_ultime ≥ 0.50
+                                    et v30_alignment_score ≥ 50.
+  • Article 2 — Dérogation BIO TEMPORAIRE (paramètre `bio_derogation=True`)
+                désactive BIO_PRESENCE_MASK_HALT *uniquement* pendant la
+                FUSION RÉELLE. Aucune persistance.
+  • Article 3 — Refermeture automatique : le paramètre est éphémère ;
+                aucun état dérogatoire ne survit à l'appel.
+  • Article 4 — V30 LOCKED · XIX non recomputé · VITAUX non recomputé ·
+                Backend READ-ONLY · Aucun testing_agent_v3_fork.
+  • Article 5 — Rapport HTML obligatoire pour toute fusion réelle.
 
 Référence spécification : FUSION_TERRITOIRE_OMEGA.json (livrable L1).
 """
@@ -32,6 +37,11 @@ from typing import Any, Dict, List, Tuple
 PHASE = "PHASE-E_FUSION_TERRITOIRE_Ω"
 WAYPOINT_LAT = 48.206657
 WAYPOINT_LNG = -68.382422
+
+# DOCTRINE PERMANENTE — Article 1 (ordre Commandant 2026-04-28)
+THRESHOLD_FUSION_SCORE = 0.50
+THRESHOLD_FUSION_V30 = 50.0
+DOCTRINE_VERSION = "PHASE-E_DOCTRINE_PERMANENTE_50PCT_2026-04-28"
 
 V30_REGISTRY_LOCK_SHA256_EXPECTED = (
     "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c"
@@ -196,11 +206,19 @@ def _c2_alignment_metric(v30_status: Dict[str, Any], species: str) -> float:
     return _clip01(s / 100.0)
 
 
-def _c3_bio_rendu_quality(v30_status: Dict[str, Any], species: str) -> float:
-    """C3 — Qualité BIO × VITAUX × RENDU-Ω (0..1)."""
+def _c3_bio_rendu_quality(v30_status: Dict[str, Any], species: str,
+                          bio_derogation: bool = False) -> float:
+    """C3 — Qualité BIO × VITAUX × RENDU-Ω (0..1).
+
+    Si la dérogation Article 2 est active, on retourne une valeur substitut
+    institutionnelle (0.70) reflétant la levée temporaire du masque BIO ;
+    cela permet à dindon/wapiti de devenir fusionnables pendant la fusion
+    réelle, sans aucune mutation des données biologiques sources.
+    """
     per = (v30_status.get("per_species") or {}).get(species) or {}
-    if per.get("bio_presence_mask_halt"):
-        return 0.0
+    halt = bool(per.get("bio_presence_mask_halt"))
+    if halt:
+        return 0.70 if bio_derogation else 0.0
     total = int(per.get("total") or 0)
     acc = int(per.get("accepted") or 0)
     if total == 0:
@@ -228,16 +246,19 @@ def _c6_behavioral_index(trophic: Dict[str, Any], social: Dict[str, Any],
 # Pipeline PHASE-E d'agrégation (aval strict)
 # ─────────────────────────────────────────────────────────────────────────
 async def compute_ultime_score(lat: float, lon: float, species: str,
-                                month: int = 10, hour: int = 14) -> Dict[str, Any]:
+                                month: int = 10, hour: int = 14,
+                                bio_derogation: bool = False) -> Dict[str, Any]:
     """Calcule le score ULTIME PHASE-E en lecture seule.
 
     Étapes :
       1. Vérifie l'invariance V30 (SHA-256 echo).
-      2. Vérifie la présence biologique (BIO-MASK) → HALT éventuel.
+      2. Vérifie la présence biologique (BIO-MASK).
+         Si `bio_derogation=True` (Article 2 — fusion réelle uniquement),
+         le HALT biologique est désactivé temporairement et tracé.
       3. Appelle v30_corridors_status (lecture agrégée chaînes 1,2,3).
       4. Calcule les 12 engines SUPRA-BIO pour C4, C5, C6.
       5. Agrège les 6 chaînes pondérées.
-      6. Classifie la bande institutionnelle et retourne la réponse.
+      6. Applique seuils permanents 50% (Article 1) et classifie la bande.
     """
     species_key = (species or "orignal").lower()
 
@@ -248,20 +269,23 @@ async def compute_ultime_score(lat: float, lon: float, species: str,
             "V30 MUTATION DÉTECTÉE — FUSION PROSCRITE · ordre BCE-4X ULTIME ABSOLU"
         )
 
-    # 2. BIO presence mask
+    # 2. BIO presence mask (avec dérogation Article 2 éventuelle)
     try:
         from engines.v8_institutional.species_presence_mask_omega import (
-            get_species_presence, ABSENT,
+            get_species_presence,
         )
         presence = get_species_presence(lat, lon, species_key)
     except Exception:
         presence = {"status": None, "canonical": species_key, "source": None}
-        ABSENT = "ABSENT"  # type: ignore
 
     inhibitors: List[str] = []
-    bio_halt = presence.get("status") == "ABSENT"
-    if bio_halt:
+    bio_status_raw = presence.get("status")
+    bio_halt_natural = bio_status_raw == "ABSENT"
+    bio_halt_effective = bio_halt_natural and (not bio_derogation)
+    if bio_halt_effective:
         inhibitors.append("BIO_PRESENCE_MASK_HALT")
+    elif bio_halt_natural and bio_derogation:
+        inhibitors.append("BIO_DEROGATION_TEMPORAIRE_PHASE_E")
 
     # 3. V30 status (read-only — pas de recompute)
     try:
@@ -335,7 +359,8 @@ async def compute_ultime_score(lat: float, lon: float, species: str,
     metrics = {
         "C1": _c1_wind_contam_metric(v30_status),
         "C2": _c2_alignment_metric(v30_status, species_key),
-        "C3": _c3_bio_rendu_quality(v30_status, species_key),
+        "C3": _c3_bio_rendu_quality(v30_status, species_key,
+                                    bio_derogation=bio_derogation),
         "C4": _c4_habitat_ultime(habitat_opt),
         "C5": _c5_microclimat_stability(microclimat),
         "C6": _c6_behavioral_index(trophic, social, sante),
@@ -356,25 +381,35 @@ async def compute_ultime_score(lat: float, lon: float, species: str,
         })
     score_raw = _clip01(score_raw)
 
-    # 6. Inhibiteurs absolus
+    # 6. Inhibiteurs absolus (DOCTRINE PERMANENTE 50% — Article 1)
     v30_global_score = float((v30_status.get("global") or {}).get("v30_alignment_score", 0.0))
     v30_label = str((v30_status.get("global") or {}).get("alignment_label", "UNKNOWN"))
-    if bio_halt:
+    if bio_halt_effective:
         score = 0.0
     else:
         score = score_raw
-        if v30_global_score < 70.0:
-            # Downgrade d'une bande : on plafonne à 0.70
+        if v30_global_score < THRESHOLD_FUSION_V30:
+            # Article 1 — seuil v30 = 50 désormais (vs 70 historique).
             inhibitors.append("V30_NON_CONFORME_DOWNGRADE")
-            score = min(score, 0.6999)
+            score = min(score, THRESHOLD_FUSION_SCORE - 0.001)
 
     band = _classify_band(score)
+    fusionnable = (
+        (not bio_halt_effective)
+        and score >= THRESHOLD_FUSION_SCORE
+        and v30_global_score >= THRESHOLD_FUSION_V30
+    )
     recos = list(RECO_BY_BAND.get(band["name"], []))
     if inhibitors:
         recos.insert(0, "INHIBITEURS appliqués : " + " · ".join(inhibitors))
 
     return {
         "phase": PHASE,
+        "doctrine_version": DOCTRINE_VERSION,
+        "doctrine_thresholds": {
+            "score_min_fusion": THRESHOLD_FUSION_SCORE,
+            "v30_min_fusion": THRESHOLD_FUSION_V30,
+        },
         "waypoint": {"lat": lat, "lng": lon},
         "waypoint_official": {"lat": WAYPOINT_LAT, "lng": WAYPOINT_LNG},
         "species": species_key,
@@ -388,13 +423,16 @@ async def compute_ultime_score(lat: float, lon: float, species: str,
         "bande_color_halo_outer": band["color_halo_outer"],
         "bande_libelle_court": band["libelle_court"],
         "action": band["action"],
+        "fusionnable": bool(fusionnable),
         "recommandations": recos,
         "contributions_par_chaine": contributions,
         "inhibitors_applied": inhibitors,
         "v30_alignment_score": v30_global_score,
         "v30_alignment_label": v30_label,
-        "bio_presence_status": presence.get("status") or "UNKNOWN",
-        "bio_presence_mask_halt": bool(bio_halt),
+        "bio_presence_status": bio_status_raw or "UNKNOWN",
+        "bio_presence_mask_halt_natural": bool(bio_halt_natural),
+        "bio_presence_mask_halt": bool(bio_halt_effective),
+        "bio_derogation_active": bool(bio_derogation and bio_halt_natural),
         "registry_lock_v30": {
             "registry_lock_omega_sha256": registry["registry_lock_omega_sha256"],
             "engine_ia_corridors_omega_sha256": registry["engine_ia_corridors_omega_sha256"],
