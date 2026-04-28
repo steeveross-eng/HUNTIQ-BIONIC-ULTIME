@@ -1,0 +1,50 @@
+{
+  "phase": "PHASE_DESACTIVATION_TOTALE_SW",
+  "protocole": "BCE-4X ULTIME ABSOLU — TOP-ABSOLU",
+  "commandant": "STEEVE-MAX",
+  "directive": "DÉSACTIVATION TOTALE DU SERVICE WORKER (Articles 1-6)",
+  "executed_at_utc": "2026-04-28T17:39:45.485038+00:00",
+  "url_audit": "https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic",
+  "diag_initial": {
+    "url": "https://huntiq-restore.preview.emergentagent.com/mon-territoire-bionic",
+    "ts": "2026-04-28T17:39:35.413Z",
+    "sw_registrations": [],
+    "sw_count": 0,
+    "caches_present": [],
+    "meta_version": "v9.3-sw-disabled-2026-04-28",
+    "cert_visible": true,
+    "layers_panel_visible": true,
+    "scroll_orange_visible": false,
+    "hud_error_visible": false,
+    "hud_band": "FAVORABLE",
+    "hud_action": "ACTION : PRÉPARER_FUSION_SOUS_VALIDATION_P6",
+    "api_status": 200,
+    "api_band": "FAVORABLE",
+    "api_pct": 80.33,
+    "api_v30_invariant": true
+  },
+  "diag_post_reload": {
+    "sw_count": 0,
+    "sw_registrations": [],
+    "caches_present": []
+  },
+  "screenshot": {
+    "path": "/reports/audit_territoire_omega_ultime/SCREENSHOT_DESACTIVATION_SW_2026-04-28.png",
+    "absolute_path": "/app/frontend/public/reports/audit_territoire_omega_ultime/SCREENSHOT_DESACTIVATION_SW_2026-04-28.png",
+    "sha256": "77dbce3be0e42343fb781d679a87fa7ceb19020bbb2e02205dc253cc8d7b02eb",
+    "size_bytes": 1781968
+  },
+  "killswitch_files": {
+    "/sw.js": "KILLSWITCH AUTO-UNREGISTER (purge caches + registration.unregister + clients.navigate)",
+    "/sw-v2.js": "alias killswitch",
+    "/sw-push.js": "alias killswitch"
+  },
+  "frontend_modifications": [
+    "/app/frontend/src/index.js : remplacé register() par unregister() + purge inline caches",
+    "/app/frontend/src/components/AlertNotificationCenter.jsx : registerServiceWorker() neutralisé (push désactivé)",
+    "/app/frontend/public/index.html : script inline ULTIME au top du <head> qui désinscrit tous les SW + purge caches AVANT tout autre JS",
+    "/app/frontend/public/index.html : meta version v9.3-sw-disabled-2026-04-28"
+  ],
+  "v30_locked_intact": true,
+  "statut_final": "SW TOTALEMENT DÉSACTIVÉ — KILLSWITCH AUTO-UNREGISTER DÉPLOYÉ — CLIENTS RÉSIDUELS SE NETTOYENT AUTOMATIQUEMENT À LA PROCHAINE VISITE"
+}

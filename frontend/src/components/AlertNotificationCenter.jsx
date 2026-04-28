@@ -105,28 +105,11 @@ const AlertNotificationCenter = ({ position = 'bottom-right' }) => {
   // ==========================================================================
 
   const registerServiceWorker = useCallback(async () => {
-    if (!('serviceWorker' in navigator)) {
-      console.warn('Service Worker not supported');
-      return null;
-    }
-
-    try {
-      const registration = await navigator.serviceWorker.register('/sw-push.js');
-      console.log('Service Worker registered:', registration.scope);
-      setSwRegistration(registration);
-      
-      // Vérifier si déjà abonné
-      const subscription = await registration.pushManager.getSubscription();
-      if (subscription) {
-        setIsSubscribed(true);
-        console.log('Already subscribed to push');
-      }
-      
-      return registration;
-    } catch (error) {
-      console.error('Service Worker registration failed:', error);
-      return null;
-    }
+    // PHASE_DESACTIVATION_TOTALE_SW (2026-04-28 · ordre Commandant STEEVE-MAX)
+    // L'enregistrement de sw-push.js est désactivé. Toute notification push
+    // future devra passer par un canal alternatif (WebSocket / polling).
+    console.log('[SW-OFF] registerServiceWorker (push) désactivé par directive STEEVE-MAX');
+    return null;
   }, []);
 
   // ==========================================================================

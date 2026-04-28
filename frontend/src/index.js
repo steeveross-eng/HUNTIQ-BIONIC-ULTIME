@@ -71,41 +71,23 @@ initHTTP3Optimization();
 initSSRConfig();
 preloadCriticalRoutes();
 
-// BRANCHE 3: Register Service Worker V2 for advanced caching
-// BIONIC V6 GOLDEN FIX: Un seul mécanisme de reload (controllerchange dans serviceWorkerRegistration.js)
-// Le message SW_UPDATED n'est plus utilisé pour recharger car il créait une boucle infinie
+// PHASE_DESACTIVATION_TOTALE_SW (2026-04-28 · ordre Commandant STEEVE-MAX)
+// Toutes les requêtes vont au réseau. Aucun SW. Aucun cache client.
+// L'enregistrement n'est PLUS effectué. À la place, on appelle unregister()
+// pour désinscrire tout SW résiduel chez les clients existants.
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.addEventListener('message', (event) => {
-    if (event.data && event.data.type === 'SW_UPDATED') {
-      console.log(`[App] Service Worker mis à jour (${event.data.version}) — notification reçue (pas de reload, géré par controllerchange)`);
-    }
-    // ═══ PHASE_XII_SUPRA_TERRITOIRE_RENDERING_RECOVERY_Ω §2 ═══
-    if (event.data && event.data.type === 'SW_RECOVERY_ACTIVATED') {
-      console.log(`[RECOVERY_Ω] SW v9.0 actif — caches obsolètes purgés (phase: ${event.data.phase})`);
-      try { window.__SW_RECOVERY_OMEGA__ = { active: true, ...event.data, at: Date.now() }; } catch (_e) {}
-    }
-    if (event.data && event.data.type === 'PURGE_ALL_CACHES_OMEGA_DONE') {
-      console.log('[RECOVERY_Ω] Purge complète des caches clients terminée');
-    }
-  });
-
-  // ═══ RECOVERY_Ω §2.1 — au démarrage, détecte un SW ancien et force purge ═══
-  navigator.serviceWorker.ready.then((reg) => {
-    const active = reg && reg.active;
-    if (!active) return;
-    // Si on détecte un SW antérieur à v9, on déclenche la purge des caches.
-    try {
-      navigator.serviceWorker.controller &&
-        navigator.serviceWorker.controller.postMessage({ type: 'PURGE_ALL_CACHES_OMEGA' });
-    } catch (_e) { /* no-op */ }
-  }).catch(() => {});
+  navigator.serviceWorker.getRegistrations()
+    .then((regs) => Promise.all(regs.map((r) => r.unregister().catch(() => false))))
+    .then(() => {
+      console.log('[SW-OFF] tous les SW résiduels ont été désinscrits');
+    })
+    .catch(() => {});
+  if ('caches' in window) {
+    caches.keys()
+      .then((keys) => Promise.all(keys.map((k) => caches.delete(k).catch(() => false))))
+      .then(() => console.log('[SW-OFF] CacheStorage purgé'))
+      .catch(() => {});
+  }
 }
 
-serviceWorkerRegistration.register({
-  onUpdate: (registration) => {
-    console.log('[App] Nouvelle version détectée — activation en cours...');
-  },
-  onSuccess: (registration) => {
-    console.log('[App] Contenu mis en cache pour utilisation hors-ligne.');
-  }
-});
+serviceWorkerRegistration.unregister();

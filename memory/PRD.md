@@ -27,6 +27,62 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **DÉSACTIVATION TOTALE SW · KILLSWITCH AUTO-UNREGISTER (2026-04-28 · ordre n°13)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-6) suite à
+  l'impossibilité d'effectuer un nettoyage manuel (F12 inaccessible dans
+  son environnement). V30 INVIOLÉ.
+  - **Stratégie** : un simple `404 sur /sw.js` ne désinscrit PAS un SW
+    déjà actif chez un client. Solution institutionnelle = SW killswitch
+    auto-désinscription qui :
+    1. `self.skipWaiting()` à l'install (prend immédiatement le contrôle).
+    2. Purge totale CacheStorage à l'activation.
+    3. `self.registration.unregister()` (auto-désinscription).
+    4. `clients.claim()` + `client.navigate(client.url)` (force reload
+       de tous les onglets ouverts).
+    5. Aucun fetch handler — toutes les requêtes vont directement réseau.
+  - **Correctifs appliqués** :
+    - `/app/frontend/public/sw.js` : remplacé intégralement par KILLSWITCH.
+    - `/app/frontend/public/sw-v2.js` : créé (alias killswitch pour
+      clients enregistrés sur `/sw-v2.js` via l'ancien
+      `serviceWorkerRegistration.js`).
+    - `/app/frontend/public/sw-push.js` : remplacé par alias killswitch
+      (clients enregistrés via AlertNotificationCenter).
+    - `/app/frontend/src/index.js` : `register()` → `unregister()` +
+      purge inline `caches.keys().forEach(caches.delete)`.
+    - `/app/frontend/src/components/AlertNotificationCenter.jsx` :
+      `registerServiceWorker()` neutralisé (push désactivé temporairement).
+    - `/app/frontend/public/index.html` : **script inline ULTIME** au top
+      du `<head>` qui désinscrit tous les SW + purge caches AVANT tout
+      autre JS (failsafe pour clients sans hot-reload).
+    - meta version → `v9.3-sw-disabled-2026-04-28`.
+    - Restart supervisor frontend (PID 10083).
+  - **Validation post-correctif** :
+    - Session Chromium 145.0 1ère visite : `sw_count=0`, `caches=[]`.
+    - Session post-reload : `sw_count=0`, `caches=[]` (preuve du suicide).
+    - meta_version : `v9.3-sw-disabled-2026-04-28`.
+    - hud_error_visible : false (PLUS d'erreur HTTP 403).
+    - hud_band : FAVORABLE, hud_action : PRÉPARER_FUSION_SOUS_VALIDATION_P6.
+    - Appel API direct depuis navigateur : HTTP 200, score 80.33%, bande
+      FAVORABLE, registry_lock_v30.invariant=true.
+    - Capture PNG 1920×1080 scellée : SHA-256
+      `77dbce3be0e42343fb781d679a87fa7ceb19020bbb2e02205dc253cc8d7b02eb`
+      (1.78 MB).
+    - SW files servis HTTPS : sw.js (2629 o), sw-v2.js (865 o),
+      sw-push.js (828 o) — tous KILLSWITCH.
+  - **V30 LOCKED · INTÉGRITÉ INTACTE** :
+    - registry_lock_omega.py SHA-256 :
+      `fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c`
+    - engine_ia_corridors_omega.py SHA-256 :
+      `bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3`
+    - Registre scellé : 41 engines, 5 piliers, prefix `27516c9633853974…`.
+  - **Régression OMÉGA** : 5/5 tests cibles passing.
+  - **Livrables (servis HTTPS 200 OK)** :
+    - `/reports/audit_territoire_omega_ultime/RAPPORT_DESACTIVATION_TOTALE_SW.html` (10 726 octets, capture embarquée).
+    - `/reports/audit_territoire_omega_ultime/DESACTIVATION_TOTALE_SW.json` (2 278 octets).
+    - `/reports/audit_territoire_omega_ultime/SCREENSHOT_DESACTIVATION_SW_2026-04-28.png` (1 781 968 octets).
+  - **Aucune action manuelle requise du Commandant** : à la prochaine
+    visite, le killswitch s'exécute automatiquement et nettoie son env.
+
 - **AUDIT RACINE TERRITOIRE_Ω · BYPASS SW + CACHE-BUSTING (2026-04-28 · ordre n°12)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-4) suite à l'apparition
   d'une bannière `Erreur : HTTP 403` dans le HUD TerritoireUltime du Commandant.

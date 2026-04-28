@@ -1,7 +1,7 @@
 /**
- * SERVICE WORKER KILLSWITCH (sw-push alias) — PHASE_DESACTIVATION_TOTALE_SW.
- * Désinscrit également les clients qui se sont enregistrés sur sw-push.js
- * via AlertNotificationCenter.jsx.
+ * SERVICE WORKER KILLSWITCH (sw-v2 alias) — PHASE_DESACTIVATION_TOTALE_SW.
+ * Identique à /sw.js — assure que les clients enregistrés sur /sw-v2.js
+ * (via l'ancien serviceWorkerRegistration.js) se désinscrivent eux aussi.
  */
 self.addEventListener('install', (event) => { self.skipWaiting(); });
 self.addEventListener('activate', (event) => {
