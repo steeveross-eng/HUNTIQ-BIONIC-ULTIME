@@ -1,0 +1,81 @@
+{
+  "manifest_id": "MANIFEST_MIGRATION_LEGACY_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "phase": "PHASE_XV_BLOC_3_MIGRATION_INSTITUTIONNELLE",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-29T15:40:53+00:00",
+  "principe": "Migration des PÉRIMÈTRES fonctionnels uniquement. AUCUNE copie de code legacy. AUCUNE logique réutilisée. AUCUN fallback. Strictement BIO_PROFILE_Ω → BIO_REACTEURS_Ω → MATRICE_Ω.",
+  "migration_per_super_engine": {
+    "ENGINE_CORRIDORS_MASTER_Ω": {
+      "perimetres_legacy_couverts": [
+        "V10",
+        "V11",
+        "SUPRA"
+      ],
+      "description": "Corridors écologiques inter-espèces, fragmentation, connectivité optimale.",
+      "anti_contamination": [
+        "Aucune logique legacy réutilisée",
+        "Aucune ligne de code legacy copiée",
+        "BIO_REACTEURS_Ω strictement obligatoires"
+      ]
+    },
+    "ENGINE_NUTRITION_MASTER_Ω": {
+      "perimetres_legacy_couverts": [
+        "V9",
+        "V10"
+      ],
+      "description": "Disponibilité nutritionnelle territoriale, minéraux, saisonnalité.",
+      "anti_contamination": [
+        "Aucune logique legacy réutilisée",
+        "BIO_REACTEURS_Ω strictement obligatoires"
+      ]
+    },
+    "ENGINE_SENSORIEL_MASTER_Ω": {
+      "perimetres_legacy_couverts": [
+        "V7",
+        "V8"
+      ],
+      "description": "Contraintes sensorielles & climatiques, seuils thermiques/neige.",
+      "anti_contamination": [
+        "Aucune logique legacy réutilisée",
+        "BIO_REACTEURS_Ω strictement obligatoires"
+      ]
+    },
+    "ENGINE_COMPORTEMENT_MASTER_Ω": {
+      "perimetres_legacy_couverts": [
+        "V8",
+        "V9"
+      ],
+      "description": "Fusion saisonnière des comportements documentés.",
+      "anti_contamination": [
+        "Aucune logique legacy réutilisée",
+        "BIO_REACTEURS_Ω strictement obligatoires"
+      ]
+    },
+    "ENGINE_GOUVERNANCE_MASTER_Ω": {
+      "perimetres_legacy_couverts": [],
+      "description": "Gouvernance institutionnelle BCE-4X (pression humaine, maladies, dynamique 20 ans).",
+      "anti_contamination": [
+        "Aucun équivalent legacy direct (création institutionnelle Phase XIV)"
+      ]
+    },
+    "ENGINE_TERRITOIRE_MASTER_Ω": {
+      "perimetres_legacy_couverts": [],
+      "description": "Maître territorial — fusion des 5 SUPER ENGINES.",
+      "anti_contamination": [
+        "Création institutionnelle Phase XIV (consume les 5 autres MASTERS)"
+      ]
+    }
+  },
+  "anti_contamination_globale": [
+    "BIO_REACTEURS_Ω = source unique d'alimentation",
+    "Anti-générique strict (pass 5/5 vérifié runtime)",
+    "Fallback INTERDIT",
+    "Interpolation INTERDITE",
+    "Default INTERDIT",
+    "Todo/Placeholder INTERDIT"
+  ],
+  "v30_locked": true,
+  "v30_registry_lock_sha256": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+  "v30_engine_ia_corridors_sha256": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3"
+}

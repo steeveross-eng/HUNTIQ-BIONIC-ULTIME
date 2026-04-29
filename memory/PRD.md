@@ -27,6 +27,72 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XV — 5 ENGINES SCIENTIFIQUES_Ω + ENGINE_IA_Ω + MIGRATION + LISTE NOIRE LEGACY (2026-04-29 · ordre n°28)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PROCEED_TO_PHASE_XV` ·
+  `ACTIVATION_OFFICIELLE_PHASExv_Ω`). 4 BLOCS exécutés. V30 INVIOLÉ.
+  Chaîne EXCLUSIVE : `RAPPORT_DOCX → BIO_PROFILE_Ω → BIO_REACTEUR_Ω → ENGINE_SCIENTIFIQUE_Ω`.
+  - **BLOC 1 — 5 ENGINES SCIENTIFIQUES_Ω** (alimentés EXCLUSIVEMENT par
+    BIO_REACTEURS_Ω) :
+    - `engine_vision_omega.py` — habitats préférentiels, zones critiques,
+      thermiques, fragmentation, connectivité (18 BR inputs).
+    - `engine_odeur_omega.py` — sources naturelles/animales/humaines,
+      attracteurs/répulseurs olfactifs (14 BR inputs).
+    - `engine_patterns_omega.py` — déplacements, climat, reproduction,
+      nutrition saisonnière (11 BR inputs).
+    - `engine_comportement_omega.py` — alimentaires, déplacement,
+      reproduction, repos, évitement humain, prédateurs, thermiques (8 BR inputs).
+    - `engine_sensoriel_omega.py` — vision, odorat, ouïe, thermosensibilité,
+      neige (9 BR inputs).
+    - Module `__init__.py` exposant `ENGINES_SCIENTIFIQUES_Ω` (registre).
+  - **BLOC 2 — ENGINE_IA_Ω** (analyse uniquement, AUCUN pouvoir décisionnel) :
+    - `engine_ia_omega.py` — exécute les 5 engines × 5 espèces = **25 engines
+      executions** par appel ; corrélations : corridors_overlaps, anomalies
+      thermiques (3 détectées : ORIGNAL, OURS_NOIR, DINDON_SAUVAGE),
+      anomalies neige, patterns saisonniers (5/5 rut concurrent, OURS_NOIR
+      hyperphagie), pression humaine concentration.
+    - `decision_authority=False`, `analyse_only=True`.
+  - **BLOC 3 — MIGRATION_INSTITUTIONNELLE_LEGACY → SUPER_ENGINES_Ω** :
+    - `MANIFEST_MIGRATION_LEGACY_Ω.json` (3 005 o · sha256 `c10ad1230c7c5268…`)
+    - Périmètres documentés (PAS de copie code) :
+      - V10/V11/SUPRA → ENGINE_CORRIDORS_MASTER_Ω
+      - V9/V10 → ENGINE_NUTRITION_MASTER_Ω
+      - V7/V8 → ENGINE_SENSORIEL_MASTER_Ω
+      - V8/V9 → ENGINE_COMPORTEMENT_MASTER_Ω
+      - GOUVERNANCE_MASTER + TERRITOIRE_MASTER : créations institutionnelles
+        Phase XIV (pas d'équivalent legacy direct).
+    - Anti-contamination stricte : aucune ligne legacy réutilisée.
+  - **BLOC 4 — LISTE NOIRE LEGACY** (mode déclaratif avant suppression
+    physique programmée Phase XV.b sur ordre formel) :
+    - `LISTE_NOIRE_LEGACY_Ω.json` (2 396 o · sha256 `95757915b0a10047…`)
+    - **228 fichiers Python scannés** dans `/app/backend/engines/`.
+    - **5 sentinelles détectées** (fallback/todo/placeholder) — listées
+      dans le rapport pour purge ultérieure.
+    - **SHA-256 cumulatif post-Phase XV du répertoire engines/** :
+      `5dc47caad52f9cb2bac9ff443a12184c08823c709a1f3fb082b35e07d1028b68`.
+    - Mode : `BLACKLIST_DECLARATIVE_AVANT_SUPPRESSION_PHYSIQUE`.
+    - Suppression physique programmée Phase XV.b (préserve l'app actuelle).
+  - **Router FastAPI** `routes/phase_xv_router_omega.py` — **6 endpoints** :
+    - `GET /api/v30/scientifique/list`
+    - `GET /api/v30/scientifique/spec/{engine_name}`
+    - `GET /api/v30/scientifique/all/{species_id}` (les 5 sur 1 espèce)
+    - `GET /api/v30/scientifique/{engine_name}/{species_id}`
+    - `POST /api/v30/scientifique/ia/run`
+    - **18/18 HTTP 200 OK** (incluant 5 specs + 5 all + 5 individuel + IA + list).
+  - **Index HTML cliquable** : `INDEX_PHASE_XV_Ω.html` (9 531 o) avec
+    téléchargement direct des 6 specs + manifest migration + liste noire.
+  - **9 rapports HTTPS** sous `/reports/scientifique_omega/` → 9/9 HTTP 200.
+  - **Tests pytest** : `/app/backend/tests/test_phase_xv_omega.py` —
+    **35 tests** (BLOC 1 × 25 paramétrés + 1 unknown raises + 1 specs immutables
+    + BLOC 2 × 3 + BLOC 3 × 1 + BLOC 4 × 3 + V30 lock × 1).
+    - **Cumul Phase XIII+XIV+XV : 62/62 PASSED** en 0.18s.
+  - **CI hook sceau Phase XIII** : toujours `ALLOW` (sceau inchangé).
+  - **V30 LOCKED INVIOLÉ** :
+    - registry_lock_omega.py : `fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c`
+    - engine_ia_corridors_omega.py : `bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3`
+  - **Tests** : pytest manuel + bash + curl. Aucun testing subagent.
+  - **Note** : suppression physique des engines legacy (BLOC 4 phase 2)
+    attendra ordre formel Phase XV.b — préserve les imports actifs résiduels.
+
 - **PHASE_XIV — VISUALISATION + CI HOOK + AUDIT LONGITUDINAL + PRÉ-ACTIVATION SUPER ENGINES_Ω (2026-04-29 · ordre n°27)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PROCEED_TO_PHASE_XIV` ·
   `PASSAGE_OFFICIEL_EN_PHASE_XIV`). 4 BLOCS exécutés. V30 INVIOLÉ.

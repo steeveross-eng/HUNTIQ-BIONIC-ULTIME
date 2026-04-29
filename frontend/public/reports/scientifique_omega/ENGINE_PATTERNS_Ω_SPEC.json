@@ -1,0 +1,30 @@
+{
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "phase": "PHASE_XV_ENGINES_SCIENTIFIQUES_Ω",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-29T15:40:53+00:00",
+  "spec": {
+    "engine_id": "ENGINE_PATTERNS_Ω",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+    "phase": "PHASE_XV_ENGINES_SCIENTIFIQUES_Ω",
+    "objectif_institutionnel": "Patterns saisonniers et comportementaux : déplacements, pression humaine, climat, reproduction, nutrition. Issus exclusivement des BIO_REACTEURS_Ω.",
+    "bio_reacteur_inputs_required": [
+      "comportements_saisonniers.printemps",
+      "comportements_saisonniers.ete",
+      "comportements_saisonniers.automne",
+      "comportements_saisonniers.hiver",
+      "corridors.distances_typiques",
+      "corridors.connectivite_optimum",
+      "thermoregulation.seuil_stress",
+      "neige.seuil_mobilite",
+      "neige.seuil_mortalite",
+      "nutrition.besoins_proteines",
+      "nutrition.besoins_energetiques"
+    ],
+    "exclusivement_bio_reacteur": true,
+    "fallback_active": false,
+    "interpolation_active": false,
+    "anti_generique_strict": true,
+    "version": "v1.0-PHASE_XV_Ω"
+  }
+}

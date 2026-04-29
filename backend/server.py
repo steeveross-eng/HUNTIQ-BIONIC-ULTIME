@@ -1245,6 +1245,14 @@ try:
 except Exception as e:
     logger.warning(f"PHASE_XIV_Ω router not loaded: {e}")
 
+# ═══ PHASE_XV_OMEGA — 5 ENGINES SCIENTIFIQUES + ENGINE_IA + migration legacy (Commandant STEEVE-MAX · 2026-04-29) ═══
+try:
+    from routes.phase_xv_router_omega import router as phase_xv_router
+    app.include_router(phase_xv_router)
+    logger.info("✓ PHASE_XV_Ω active : 5 ENGINES SCIENTIFIQUES + ENGINE_IA — /api/v30/scientifique/*")
+except Exception as e:
+    logger.warning(f"PHASE_XV_Ω router not loaded: {e}")
+
 
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")

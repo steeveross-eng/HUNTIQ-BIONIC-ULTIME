@@ -1,0 +1,77 @@
+{
+  "manifest_id": "LISTE_NOIRE_LEGACY_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "phase": "PHASE_XV_BLOC_4_PURGE_INSTITUTIONNELLE",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-29T15:40:53+00:00",
+  "mode": "BLACKLIST_DECLARATIVE_AVANT_SUPPRESSION_PHYSIQUE",
+  "note_institutionnelle": "PHASE XV / BLOC 4 — Purge institutionnelle en deux temps : (1) déclaration de la liste noire et détection des sentinelles fallback/todo/placeholder ; (2) suppression physique des engines legacy programmée pour PHASE XV.b sur ordre formel ultérieur du Commandant (afin de ne pas briser des imports actifs résiduels).",
+  "patterns_recherches_filename": [
+    "engine_legacy_v7",
+    "engine_legacy_v8",
+    "engine_legacy_v9",
+    "engine_legacy_v10",
+    "engine_legacy_v11",
+    "engine_legacy_supra"
+  ],
+  "patterns_recherches_contenu": [
+    "fallback (assignment/keyword)",
+    "# TODO",
+    "placeholder"
+  ],
+  "files_scanned_count": 228,
+  "files_with_sentinels_count": 5,
+  "files_with_sentinels": [
+    {
+      "path": "bdre/audit_logger.py",
+      "flags": [
+        "fallback_assignment"
+      ]
+    },
+    {
+      "path": "bdre/quality_scorer.py",
+      "flags": [
+        "fallback_assignment"
+      ]
+    },
+    {
+      "path": "bdre/router.py",
+      "flags": [
+        "fallback_assignment"
+      ]
+    },
+    {
+      "path": "spatial_engine_v7/router.py",
+      "flags": [
+        "placeholder_keyword"
+      ]
+    },
+    {
+      "path": "v8_institutional/species_presence_mask_omega.py",
+      "flags": [
+        "fallback_assignment"
+      ]
+    }
+  ],
+  "engines_scientifiques_omega_actifs": [
+    "ENGINE_VISION_Ω",
+    "ENGINE_ODEUR_Ω",
+    "ENGINE_PATTERNS_Ω",
+    "ENGINE_COMPORTEMENT_Ω",
+    "ENGINE_SENSORIEL_Ω",
+    "ENGINE_IA_Ω"
+  ],
+  "super_engines_omega_pre_actives": [
+    "ENGINE_CORRIDORS_MASTER_Ω",
+    "ENGINE_NUTRITION_MASTER_Ω",
+    "ENGINE_SENSORIEL_MASTER_Ω",
+    "ENGINE_COMPORTEMENT_MASTER_Ω",
+    "ENGINE_GOUVERNANCE_MASTER_Ω",
+    "ENGINE_TERRITOIRE_MASTER_Ω"
+  ],
+  "engines_dir_cumulative_sha256_post_phase_xv": "5dc47caad52f9cb2bac9ff443a12184c08823c709a1f3fb082b35e07d1028b68",
+  "v30_locked_sha256": {
+    "registry_lock_omega.py": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+    "engine_ia_corridors_omega.py": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3"
+  }
+}

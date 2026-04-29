@@ -1,0 +1,33 @@
+{
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "phase": "PHASE_XV_ENGINES_SCIENTIFIQUES_Ω",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-29T15:40:53+00:00",
+  "spec": {
+    "engine_id": "ENGINE_ODEUR_Ω",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+    "phase": "PHASE_XV_ENGINES_SCIENTIFIQUES_Ω",
+    "objectif_institutionnel": "Représentation institutionnelle des attracteurs et répulseurs olfactifs issus exclusivement des BIO_REACTEURS_Ω.",
+    "bio_reacteur_inputs_required": [
+      "nutrition.alimentation_saisonniere.printemps",
+      "nutrition.alimentation_saisonniere.ete",
+      "nutrition.alimentation_saisonniere.automne",
+      "nutrition.alimentation_saisonniere.hiver",
+      "nutrition.besoins_mineraux.sodium",
+      "nutrition.besoins_mineraux.calcium",
+      "nutrition.besoins_mineraux.magnesium",
+      "interactions.predation",
+      "interactions.competition",
+      "pression_humaine.attractifs_anthropiques",
+      "pression_humaine.agriculture",
+      "pression_humaine.urbanisation",
+      "pression_humaine.routes",
+      "habitat.zones_humides"
+    ],
+    "exclusivement_bio_reacteur": true,
+    "fallback_active": false,
+    "interpolation_active": false,
+    "anti_generique_strict": true,
+    "version": "v1.0-PHASE_XV_Ω"
+  }
+}
