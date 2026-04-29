@@ -1,0 +1,136 @@
+{
+  "manifest_id": "VALIDATION_FUSION_SUPER_ENGINES_Ω_ULTIME_ABSOLUE_X3",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°37",
+  "validated_at_utc": "2026-04-29T22:25:02+00:00",
+  "pytest": {
+    "passed": 117,
+    "exit_code": 0,
+    "all_pass": true
+  },
+  "v30_intact": true,
+  "freeze_intact": true,
+  "backend_endpoints": [
+    {
+      "endpoint": "/api/v30/especes/audit/status",
+      "code": 200
+    },
+    {
+      "endpoint": "/api/v30/especes/bio-reacteur/list",
+      "code": 200
+    },
+    {
+      "endpoint": "/api/v30/scientifique/list",
+      "code": 200
+    },
+    {
+      "endpoint": "/api/v30/sceau-phase-xiii/verify",
+      "code": 200
+    }
+  ],
+  "backend_ok": true,
+  "livrables_https": [
+    {
+      "filename": "DATASETS_NUTRITION_HABITAT_Ω_OPTIMISÉS.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/DATASETS_NUTRITION_HABITAT_%CE%A9_OPTIMIS%C3%89S.json",
+      "http_code": 200,
+      "size_bytes": 89828,
+      "sha256": "24b315595aaa728f7d5c64597efa0f16dd484950f00a860a895e1c5cd790cb45"
+    },
+    {
+      "filename": "DATASETS_NUTRITION_HABITAT_Ω_OPTIMISÉS.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/DATASETS_NUTRITION_HABITAT_%CE%A9_OPTIMIS%C3%89S.html",
+      "http_code": 200,
+      "size_bytes": 5048,
+      "sha256": "ab7c2f4f01e0a73677baaeadfb6c1dc87e8a0ae79bb4a912473be5fe73f8214b"
+    },
+    {
+      "filename": "BIO_PROFILE_Ω_REGEN_FUSION.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/BIO_PROFILE_%CE%A9_REGEN_FUSION.json",
+      "http_code": 200,
+      "size_bytes": 10803,
+      "sha256": "cdeae39f9ca4c535750ce467d693b96dd3def996ebcc5af971b013b1b6698a65"
+    },
+    {
+      "filename": "BIO_PROFILE_Ω_REGEN_FUSION.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/BIO_PROFILE_%CE%A9_REGEN_FUSION.html",
+      "http_code": 200,
+      "size_bytes": 4708,
+      "sha256": "9923276d0f6d56218355a21d686c5e0e1ae017198b03d2eeb3b8066da609e267"
+    },
+    {
+      "filename": "ENGINES_SCIENTIFIQUES_Ω_SPEC.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/ENGINES_SCIENTIFIQUES_%CE%A9_SPEC.json",
+      "http_code": 200,
+      "size_bytes": 23006,
+      "sha256": "dbe4eba83320736a05a6462115691517efcd16dd6eed0a5d9f347158b7a3fcda"
+    },
+    {
+      "filename": "ENGINES_SCIENTIFIQUES_Ω_SPEC.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/ENGINES_SCIENTIFIQUES_%CE%A9_SPEC.html",
+      "http_code": 200,
+      "size_bytes": 4654,
+      "sha256": "7acc14045ac80c7663af00efcad428f46243e9e396f943330c0f113b95a61612"
+    },
+    {
+      "filename": "CHAINES_Ω_ACTIVATION.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/CHAINES_%CE%A9_ACTIVATION.json",
+      "http_code": 200,
+      "size_bytes": 1735,
+      "sha256": "aec1db9d486501a6073682703db0fe386999cca4c56b813afd7fb7374ec4b130"
+    },
+    {
+      "filename": "CHAINES_Ω_ACTIVATION.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/CHAINES_%CE%A9_ACTIVATION.html",
+      "http_code": 200,
+      "size_bytes": 4734,
+      "sha256": "e2367b02d62226ee86ec5575d49e26f7428f604491c4d5d562b60a155e6ba230"
+    },
+    {
+      "filename": "SUPER_ENGINES_Ω_FUSION_POST_REGEN.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/SUPER_ENGINES_%CE%A9_FUSION_POST_REGEN.json",
+      "http_code": 200,
+      "size_bytes": 899,
+      "sha256": "559504fddc1371327f71cf35c98150871c89731f33e9f3d0f284bb61bf2aa637"
+    },
+    {
+      "filename": "SUPER_ENGINES_Ω_FUSION_POST_REGEN.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/SUPER_ENGINES_%CE%A9_FUSION_POST_REGEN.html",
+      "http_code": 200,
+      "size_bytes": 4283,
+      "sha256": "0275f9f30326d4b369b83675c9453e7265d287c94cd9632db5d47d5118626672"
+    },
+    {
+      "filename": "TERRITOIRE_MASTER_Ω_FUSION.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/TERRITOIRE_MASTER_%CE%A9_FUSION.json",
+      "http_code": 200,
+      "size_bytes": 3014,
+      "sha256": "27e18e1822b5b78763acffd3e3fec404476f1d860e1c7c54653693253fb41214"
+    },
+    {
+      "filename": "TERRITOIRE_MASTER_Ω_FUSION.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/TERRITOIRE_MASTER_%CE%A9_FUSION.html",
+      "http_code": 200,
+      "size_bytes": 5008,
+      "sha256": "c2a7db0c999277ac230a8df36d64633a6a7de9670277f5562ea91f2a6ff356cd"
+    }
+  ],
+  "all_https_ok": true,
+  "anti_regression": true,
+  "anti_contamination": true,
+  "all_validations_pass": true,
+  "synthese": {
+    "territoire_master_fusion": 56.33,
+    "decision_globale": "MARGINAL",
+    "evolution_vs_n36": {
+      "score_apres_phase_xvi": 48.21,
+      "score_apres_fusion_xvii": 56.33,
+      "delta": 8.12
+    },
+    "engines_scientifiques": {
+      "habitat_master": 83.42,
+      "vegetation_master": 69.91,
+      "phenologie_master": 69.0
+    }
+  }
+}

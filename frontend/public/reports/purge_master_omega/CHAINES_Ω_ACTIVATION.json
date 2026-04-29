@@ -1,0 +1,70 @@
+{
+  "manifest_id": "CHAINES_Ω_ACTIVATION",
+  "doctrine": [
+    "Chaque chaîne définit un DAG acyclique de propagation.",
+    "Les 3 nouveaux ENGINES scientifiques sont injectés en amont des 6 SUPER ENGINES.",
+    "Aucun cycle. Aucun fallback."
+  ],
+  "ordre": "n°37",
+  "generated_at_utc": "2026-04-29T22:25:02+00:00",
+  "chaines_count": 6,
+  "chaines": [
+    {
+      "id": 1,
+      "nom": "CHAÎNE_Ω_1 → TERRITOIRE_MASTER_Ω",
+      "dag": [
+        "ENGINE_HABITAT_Ω",
+        "ENGINE_VÉGÉTATION_Ω",
+        "ENGINE_PHÉNOLOGIE_Ω",
+        "ENGINE_CORRIDORS_MASTER_Ω",
+        "ENGINE_NUTRITION_MASTER_Ω",
+        "ENGINE_SENSORIEL_MASTER_Ω",
+        "ENGINE_COMPORTEMENT_MASTER_Ω",
+        "ENGINE_GOUVERNANCE_MASTER_Ω",
+        "ENGINE_TERRITOIRE_MASTER_Ω"
+      ]
+    },
+    {
+      "id": 2,
+      "nom": "CHAÎNE_Ω_2 → NUTRITION_MASTER_Ω",
+      "dag": [
+        "ENGINE_VÉGÉTATION_Ω",
+        "ENGINE_PHÉNOLOGIE_Ω",
+        "ENGINE_NUTRITION_MASTER_Ω"
+      ]
+    },
+    {
+      "id": 3,
+      "nom": "CHAÎNE_Ω_3 → SENSORIEL_MASTER_Ω",
+      "dag": [
+        "ENGINE_HABITAT_Ω",
+        "ENGINE_SENSORIEL_MASTER_Ω"
+      ]
+    },
+    {
+      "id": 4,
+      "nom": "CHAÎNE_Ω_4 → COMPORTEMENT_MASTER_Ω",
+      "dag": [
+        "ENGINE_PHÉNOLOGIE_Ω",
+        "ENGINE_COMPORTEMENT_MASTER_Ω"
+      ]
+    },
+    {
+      "id": 5,
+      "nom": "CHAÎNE_Ω_5 → CORRIDORS_MASTER_Ω",
+      "dag": [
+        "ENGINE_HABITAT_Ω",
+        "ENGINE_CORRIDORS_MASTER_Ω"
+      ]
+    },
+    {
+      "id": 6,
+      "nom": "CHAÎNE_Ω_6 → GOUVERNANCE_MASTER_Ω",
+      "dag": [
+        "ENGINE_HABITAT_Ω",
+        "ENGINE_VÉGÉTATION_Ω",
+        "ENGINE_GOUVERNANCE_MASTER_Ω"
+      ]
+    }
+  ]
+}

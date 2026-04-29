@@ -27,6 +27,43 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XVII · FUSION_POST_REGEN_SUPER_ENGINES_Ω_ULTIME_ABSOLUE_X3 (2026-04-29 · ordre n°37)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX. Ingestion de 2 datasets scientifiques (20 études nutrition + 50 études habitat) → régénération BIO_PROFILE + 3 ENGINES scientifiques autonomes + 6 chaînes Ω + recalcul TERRITOIRE_MASTER. **V30 INVIOLÉ · FREEZE INTACT · pytest 117/117 · 14/14 HTTPS 200.**
+  - **BLOC 0 — DATASETS_NUTRITION_HABITAT_Ω_OPTIMISÉS** :
+    - Harmonisation taxonomique (5 espèces canoniques) + saisons + classification TYPE_DE_PREUVE (GOV/UNI/PR).
+    - **70 études totales** · **44 biomes distincts** · 2 conflits taxo détectés (caribou/cerf mulet) · 0 doublon inter-datasets.
+    - Référentiel SCI_Ω unifié indexé par espèce.
+  - **BLOC 1 — PRE-FLIGHT_Ω** : 3 protocoles n°36 scellés (NUTRITION/CORRIDORS/SENSORIEL) HTTPS 200 ✓.
+  - **BLOC 2 — BIO_PROFILE_Ω_REGEN_FUSION** :
+    - Stratégie 2.a : 135 cibles numériques n°36 conservées + signatures enrichies avec 70 études SCI_Ω.
+    - Références croisées par espèce (nut + hab).
+  - **BLOC 3 — 3 ENGINES SCIENTIFIQUES AUTONOMES** :
+    - **ENGINE_HABITAT_Ω** (6 axes pondérés) · master **83.42** · SHA-256 lock unique.
+    - **ENGINE_VÉGÉTATION_Ω** (6 axes : saisonnalité, fiabilité, consumables) · master **69.91**.
+    - **ENGINE_PHÉNOLOGIE_Ω** (6 axes : événements rut/hyperphagie/migration…) · master **69.00**.
+    - Nouveau module `datasets_science_omega.py` (690 LOC) portant les 2 datasets harmonisés.
+    - 3 modules Python hors-FREEZE : `engine_{habitat|vegetation|phenologie}_omega.py` (~280 LOC chacun).
+  - **BLOC 4 — CHAÎNES_Ω_ACTIVATION** : 6 DAG acycliques de propagation (TERRITOIRE/NUTRITION/SENSORIEL/COMPORTEMENT/CORRIDORS/GOUVERNANCE).
+  - **BLOC 5 — SUPER_ENGINES_Ω_FUSION_POST_REGEN** : composite 9 engines = **57.62**.
+  - **BLOC 6 — TERRITOIRE_MASTER_Ω_FUSION** :
+    - Pondération : 70% SUPER ENGINES + 30% ENGINES scientifiques.
+    - **TERRITOIRE_MASTER_Ω_FUSION = 56.33 (MARGINAL)** · Δ vs n°36 : +8.12.
+    - Décisions par espèce : tous MARGINAL (54.91 à 57.55) — évolution positive mais en-dessous du seuil APTE=70.
+  - **BLOC 7 — VALIDATION_Ω** :
+    - **pytest 117/117 PASSED** (62 baseline + 23 SUPER ENGINES + 32 PHASE XVII).
+    - V30 INVIOLÉ · FREEZE_MASTER INTACT · backend 4/4 HTTP 200 · **14/14 livrables HTTPS 200 OK**.
+  - **14 livrables institutionnels** publiés dans `/reports/purge_master_omega/` :
+    - DATASETS_NUTRITION_HABITAT_Ω_OPTIMISÉS.{json,html}
+    - BIO_PROFILE_Ω_REGEN_FUSION.{json,html}
+    - ENGINES_SCIENTIFIQUES_Ω_SPEC.{json,html}
+    - CHAINES_Ω_ACTIVATION.{json,html}
+    - SUPER_ENGINES_Ω_FUSION_POST_REGEN.{json,html}
+    - TERRITOIRE_MASTER_Ω_FUSION.{json,html}
+    - VALIDATION_FUSION_SUPER_ENGINES_Ω_ULTIME_ABSOLUE_X3.{json,html}
+  - **V30 INVIOLÉ** : `fb765b94…ecb0c` + `bcb1e3a6…39d3` · **FREEZE_MASTER** : `31c18388…ccf27`.
+  - **Scripts institutionnels scellés** : `/app/scripts/phase_xvii_fusion_omega.py` + 4 modules Python dans `/app/backend/engines/v8_institutional/especes/` (datasets_science + 3 engines).
+  - **Tests** : pytest 117/117 + curl batch 14/14 HTTPS 200 + bash + python3. Aucun testing subagent.
+
 - **PHASE_XVI · 3 PROTOCOLES SCIENTIFIQUES_Ω (NUTRITION/CORRIDORS/SENSORIEL) (2026-04-29 · ordre n°36)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`DEMANDER_3_PROTOCOLES_SCIENTIFIQUES_Ω`).
   Documents institutionnels strictement déclaratifs identifiant TOUT ce qui manque pour porter à >90 les scores des 3 SUPER ENGINES bas. **V30 INVIOLÉ. FREEZE INTACT. pytest 85/85. 8/8 livrables HTTPS 200.**

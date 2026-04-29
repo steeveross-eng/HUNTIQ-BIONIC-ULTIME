@@ -1,0 +1,732 @@
+{
+  "manifest_id": "ENGINES_SCIENTIFIQUES_Ω_SPEC",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°37",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-29T22:25:02+00:00",
+  "engines_count": 3,
+  "engine_habitat": {
+    "spec": {
+      "id": "ENGINE_HABITAT_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+      "input_sources": [
+        "SCI_Ω.habitat_studies",
+        "BIO_REACTEURS_Ω.ENGINE_HABITAT"
+      ],
+      "weights": {
+        "diversite_biomes": 0.25,
+        "fiabilite_etudes": 0.2,
+        "couverture_temporelle": 0.15,
+        "qualite_preuve": 0.15,
+        "anthropisation_tolerance": 0.1,
+        "profondeur_biome_pivot": 0.15
+      },
+      "output_signature": [
+        "habitat_score_omega",
+        "biome_pivot",
+        "biomes_covered",
+        "studies_count",
+        "avg_confidence",
+        "peer_reviewed_ratio",
+        "temporal_coverage_years",
+        "anti_generique_violations"
+      ]
+    },
+    "lock_sha256": "d4aab652ec08070bbf09b86f8933d442631bf82ffd2fd17194864ccc522f59c9",
+    "master_score": 83.42,
+    "results_par_espece": {
+      "CHEVREUIL": {
+        "super_engine_id": "ENGINE_HABITAT_Ω",
+        "espece": "CHEVREUIL",
+        "computed_at_utc": "2026-04-29T22:25:02+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "habitat_score_omega": 84.7,
+        "biome_pivot": "FORET_MIXTE",
+        "biomes_covered": [
+          "FORET_AMENAGEE_MULTI_STADES",
+          "FORET_BOREAL",
+          "FORET_MIXTE",
+          "FORET_MIXTE_AMENAGEE",
+          "FORET_MIXTE_ENNEIGEE",
+          "FORET_TEMPEREE",
+          "FORET_TEMPEREE_FEUILLUE",
+          "MILIEUX_AGRICOLES",
+          "MILIEUX_OUVERTS",
+          "MOSAIQUE_AGRICOLE_FORESTIERE",
+          "MOSAIQUE_FORESTIERE_AGRICOLE",
+          "PERIURBAIN",
+          "URBAIN"
+        ],
+        "biomes_count": 13,
+        "studies_count": 10,
+        "avg_confidence": 100.0,
+        "peer_reviewed_ratio": 100.0,
+        "temporal_coverage_years": 39,
+        "annees_min": 1984,
+        "annees_max": 2023,
+        "scores_axes": {
+          "diversite_biomes": 100.0,
+          "fiabilite_etudes": 100.0,
+          "couverture_temporelle": 78.0,
+          "qualite_preuve": 100.0,
+          "anthropisation_tolerance": 100.0,
+          "profondeur_biome_pivot": 20.0
+        },
+        "bio_reacteur_params_count": 7,
+        "anti_generique_violations": [],
+        "anti_generique_pass": true,
+        "fallback_active": false,
+        "interpolation_active": false
+      },
+      "ORIGNAL": {
+        "super_engine_id": "ENGINE_HABITAT_Ω",
+        "espece": "ORIGNAL",
+        "computed_at_utc": "2026-04-29T22:25:02+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "habitat_score_omega": 87.0,
+        "biome_pivot": "FORET_BOREAL",
+        "biomes_covered": [
+          "FORET_BOREAL",
+          "FORET_BOREAL_AMENAGEE",
+          "FORET_MIXTE",
+          "FORET_MONTAGNARDE",
+          "FORET_SUBBOREAL",
+          "FORET_TEMPEREE_FROIDE",
+          "LIERES_BOREALES_AGRICOLES",
+          "MOSAIQUE_BOREAL_AGRICOLE",
+          "MOSAIQUE_BOREAL_PRAIRIES",
+          "TAIGA"
+        ],
+        "biomes_count": 10,
+        "studies_count": 10,
+        "avg_confidence": 100.0,
+        "peer_reviewed_ratio": 90.0,
+        "temporal_coverage_years": 50,
+        "annees_min": 1974,
+        "annees_max": 2024,
+        "scores_axes": {
+          "diversite_biomes": 100.0,
+          "fiabilite_etudes": 100.0,
+          "couverture_temporelle": 100.0,
+          "qualite_preuve": 90.0,
+          "anthropisation_tolerance": 60.0,
+          "profondeur_biome_pivot": 50.0
+        },
+        "bio_reacteur_params_count": 7,
+        "anti_generique_violations": [],
+        "anti_generique_pass": true,
+        "fallback_active": false,
+        "interpolation_active": false
+      },
+      "OURS_NOIR": {
+        "super_engine_id": "ENGINE_HABITAT_Ω",
+        "espece": "OURS_NOIR",
+        "computed_at_utc": "2026-04-29T22:25:02+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "habitat_score_omega": 78.9,
+        "biome_pivot": "FORET_BOREAL",
+        "biomes_covered": [
+          "FORET_BOREAL",
+          "FORET_DE_CHENES",
+          "FORET_FEUILLUE",
+          "FORET_MONTAGNARDE",
+          "FORET_TEMPEREE",
+          "FORET_TEMPEREE_AMENAGEE",
+          "FORET_TEMPEREE_FEUILLUE",
+          "MONTAGNE",
+          "MOSAIQUE_FORESTIERE_AGRICOLE_URBAINE",
+          "PERIURBAIN",
+          "ROUTES_FORESTIERES",
+          "URBAIN"
+        ],
+        "biomes_count": 12,
+        "studies_count": 10,
+        "avg_confidence": 100.0,
+        "peer_reviewed_ratio": 90.0,
+        "temporal_coverage_years": 28,
+        "annees_min": 1995,
+        "annees_max": 2023,
+        "scores_axes": {
+          "diversite_biomes": 100.0,
+          "fiabilite_etudes": 100.0,
+          "couverture_temporelle": 56.0,
+          "qualite_preuve": 90.0,
+          "anthropisation_tolerance": 60.0,
+          "profondeur_biome_pivot": 40.0
+        },
+        "bio_reacteur_params_count": 7,
+        "anti_generique_violations": [],
+        "anti_generique_pass": true,
+        "fallback_active": false,
+        "interpolation_active": false
+      },
+      "WAPITI": {
+        "super_engine_id": "ENGINE_HABITAT_Ω",
+        "espece": "WAPITI",
+        "computed_at_utc": "2026-04-29T22:25:02+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "habitat_score_omega": 81.5,
+        "biome_pivot": "MONTAGNE",
+        "biomes_covered": [
+          "CLAIRIERES",
+          "FORET_MIXTE",
+          "FORET_MONTAGNARDE",
+          "FORET_TEMPEREE",
+          "MONTAGNE",
+          "MOSAIQUE_AGRICOLE_FORESTIERE",
+          "PRAIRIE_MONTAGNARDE",
+          "RIPISYLVE_MONTAGNARDE",
+          "ROCHEUSES",
+          "ROCHEUSES_CANADIENNES",
+          "ROUTES_FORESTIERES",
+          "VALLEES_FLUVIALES",
+          "VALLEE_FLUVIALE"
+        ],
+        "biomes_count": 13,
+        "studies_count": 10,
+        "avg_confidence": 100.0,
+        "peer_reviewed_ratio": 90.0,
+        "temporal_coverage_years": 51,
+        "annees_min": 1973,
+        "annees_max": 2024,
+        "scores_axes": {
+          "diversite_biomes": 100.0,
+          "fiabilite_etudes": 100.0,
+          "couverture_temporelle": 100.0,
+          "qualite_preuve": 90.0,
+          "anthropisation_tolerance": 20.0,
+          "profondeur_biome_pivot": 40.0
+        },
+        "bio_reacteur_params_count": 7,
+        "anti_generique_violations": [],
+        "anti_generique_pass": true,
+        "fallback_active": false,
+        "interpolation_active": false
+      },
+      "DINDON_SAUVAGE": {
+        "super_engine_id": "ENGINE_HABITAT_Ω",
+        "espece": "DINDON_SAUVAGE",
+        "computed_at_utc": "2026-04-29T22:25:02+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "habitat_score_omega": 85.0,
+        "biome_pivot": "FORET_DE_CHENES",
+        "biomes_covered": [
+          "CHAMPS_AGRICOLES",
+          "FORET",
+          "FORET_AMENAGEE",
+          "FORET_DE_CHENES",
+          "FORET_FEUILLUE",
+          "FORET_TEMPEREE",
+          "MILIEUX_AGRICOLES",
+          "MOSAIQUE_AGRICOLE",
+          "MOSAIQUE_AGROFORESTIERE",
+          "MOSAIQUE_FORESTIERE_AGRICOLE",
+          "PINEDE",
+          "PINEDE_BRULEE",
+          "RIPISYLVE",
+          "ZONES_FRAGMENTEES",
+          "ZONES_OUVERTES"
+        ],
+        "biomes_count": 15,
+        "studies_count": 10,
+        "avg_confidence": 100.0,
+        "peer_reviewed_ratio": 80.0,
+        "temporal_coverage_years": 81,
+        "annees_min": 1942,
+        "annees_max": 2023,
+        "scores_axes": {
+          "diversite_biomes": 100.0,
+          "fiabilite_etudes": 100.0,
+          "couverture_temporelle": 100.0,
+          "qualite_preuve": 80.0,
+          "anthropisation_tolerance": 100.0,
+          "profondeur_biome_pivot": 20.0
+        },
+        "bio_reacteur_params_count": 7,
+        "anti_generique_violations": [],
+        "anti_generique_pass": true,
+        "fallback_active": false,
+        "interpolation_active": false
+      }
+    },
+    "anti_generique_pass": true
+  },
+  "engine_vegetation": {
+    "spec": {
+      "id": "ENGINE_VÉGÉTATION_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+      "input_sources": [
+        "SCI_Ω.nutrition_studies",
+        "BIO_REACTEURS_Ω.ENGINE_NUTRITION",
+        "BIO_REACTEURS_Ω.ENGINE_MINERAUX"
+      ],
+      "weights": {
+        "coverage_studies_count": 0.2,
+        "saisonnalite_complete": 0.25,
+        "fiabilite_etudes": 0.2,
+        "qualite_preuve_pr": 0.15,
+        "variabilite_taxonomique": 0.1,
+        "consumables_diversite": 0.1
+      },
+      "output_signature": [
+        "vegetation_availability_omega",
+        "seasonal_coverage",
+        "studies_count",
+        "avg_confidence",
+        "consumables_detected",
+        "consumables_expected_match_ratio",
+        "anti_generique_violations"
+      ]
+    },
+    "lock_sha256": "cae248405132aabe06bc40bcde1114a883e77ced7dda82d152d0433f29791d21",
+    "master_score": 69.91,
+    "results_par_espece": {
+      "CHEVREUIL": {
+        "super_engine_id": "ENGINE_VÉGÉTATION_Ω",
+        "espece": "CHEVREUIL",
+        "computed_at_utc": "2026-04-29T22:25:02+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "vegetation_availability_omega": 70.5,
+        "seasonal_coverage": [
+          "AUTOMNE",
+          "ETE",
+          "HIVER",
+          "PRINTEMPS"
+        ],
+        "seasonal_coverage_ratio": 100.0,
+        "studies_count": 4,
+        "avg_confidence": 100.0,
+        "peer_reviewed_ratio": 100.0,
+        "consumables_expected": [
+          "bourgeons",
+          "brout_feuillus",
+          "brout_resineux",
+          "glands_mast",
+          "herbacees",
+          "ronces"
+        ],
+        "consumables_detected": [],
+        "consumables_expected_match_ratio": 0.0,
+        "scores_axes": {
+          "coverage_studies_count": 40.0,
+          "saisonnalite_complete": 100.0,
+          "fiabilite_etudes": 100.0,
+          "qualite_preuve_pr": 100.0,
+          "variabilite_taxonomique": 25.0,
+          "consumables_diversite": 0.0
+        },
+        "bio_reacteur_params_count": 6,
+        "anti_generique_violations": [],
+        "anti_generique_pass": true,
+        "fallback_active": false,
+        "interpolation_active": false
+      },
+      "ORIGNAL": {
+        "super_engine_id": "ENGINE_VÉGÉTATION_Ω",
+        "espece": "ORIGNAL",
+        "computed_at_utc": "2026-04-29T22:25:02+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "vegetation_availability_omega": 76.71,
+        "seasonal_coverage": [
+          "AUTOMNE",
+          "ETE",
+          "HIVER",
+          "PRINTEMPS"
+        ],
+        "seasonal_coverage_ratio": 100.0,
+        "studies_count": 7,
+        "avg_confidence": 94.29,
+        "peer_reviewed_ratio": 57.14,
+        "consumables_expected": [
+          "aquatiques_macrophytes",
+          "brout_bouleau",
+          "brout_sapin",
+          "brout_saule",
+          "ramilles_hivernales"
+        ],
+        "consumables_detected": [
+          "brout_bouleau",
+          "brout_feuillus",
+          "brout_resineux",
+          "brout_sapin",
+          "brout_saule"
+        ],
+        "consumables_expected_match_ratio": 60.0,
+        "scores_axes": {
+          "coverage_studies_count": 70.0,
+          "saisonnalite_complete": 100.0,
+          "fiabilite_etudes": 94.29,
+          "qualite_preuve_pr": 57.14,
+          "variabilite_taxonomique": 42.86,
+          "consumables_diversite": 60.0
+        },
+        "bio_reacteur_params_count": 6,
+        "anti_generique_violations": [],
+        "anti_generique_pass": true,
+        "fallback_active": false,
+        "interpolation_active": false
+      },
+      "OURS_NOIR": {
+        "super_engine_id": "ENGINE_VÉGÉTATION_Ω",
+        "espece": "OURS_NOIR",
+        "computed_at_utc": "2026-04-29T22:25:02+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "vegetation_availability_omega": 66.0,
+        "seasonal_coverage": [
+          "AUTOMNE",
+          "ETE",
+          "HIVER",
+          "PRINTEMPS"
+        ],
+        "seasonal_coverage_ratio": 100.0,
+        "studies_count": 3,
+        "avg_confidence": 100.0,
+        "peer_reviewed_ratio": 66.67,
+        "consumables_expected": [
+          "charognes",
+          "glands_mast",
+          "herbacees_printanieres",
+          "insectes",
+          "noix",
+          "petits_fruits"
+        ],
+        "consumables_detected": [
+          "charognes",
+          "insectes",
+          "petits_fruits"
+        ],
+        "consumables_expected_match_ratio": 50.0,
+        "scores_axes": {
+          "coverage_studies_count": 30.0,
+          "saisonnalite_complete": 100.0,
+          "fiabilite_etudes": 100.0,
+          "qualite_preuve_pr": 66.67,
+          "variabilite_taxonomique": 0.0,
+          "consumables_diversite": 50.0
+        },
+        "bio_reacteur_params_count": 6,
+        "anti_generique_violations": [],
+        "anti_generique_pass": true,
+        "fallback_active": false,
+        "interpolation_active": false
+      },
+      "WAPITI": {
+        "super_engine_id": "ENGINE_VÉGÉTATION_Ω",
+        "espece": "WAPITI",
+        "computed_at_utc": "2026-04-29T22:25:02+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "vegetation_availability_omega": 72.0,
+        "seasonal_coverage": [
+          "AUTOMNE",
+          "ETE",
+          "HIVER",
+          "PRINTEMPS"
+        ],
+        "seasonal_coverage_ratio": 100.0,
+        "studies_count": 6,
+        "avg_confidence": 100.0,
+        "peer_reviewed_ratio": 66.67,
+        "consumables_expected": [
+          "arbustes",
+          "branchages_hivernaux",
+          "graminees",
+          "graminees_montagnardes",
+          "herbacees"
+        ],
+        "consumables_detected": [
+          "brout_saule"
+        ],
+        "consumables_expected_match_ratio": 0.0,
+        "scores_axes": {
+          "coverage_studies_count": 60.0,
+          "saisonnalite_complete": 100.0,
+          "fiabilite_etudes": 100.0,
+          "qualite_preuve_pr": 66.67,
+          "variabilite_taxonomique": 50.0,
+          "consumables_diversite": 0.0
+        },
+        "bio_reacteur_params_count": 6,
+        "anti_generique_violations": [],
+        "anti_generique_pass": true,
+        "fallback_active": false,
+        "interpolation_active": false
+      },
+      "DINDON_SAUVAGE": {
+        "super_engine_id": "ENGINE_VÉGÉTATION_Ω",
+        "espece": "DINDON_SAUVAGE",
+        "computed_at_utc": "2026-04-29T22:25:02+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "vegetation_availability_omega": 64.33,
+        "seasonal_coverage": [
+          "AUTOMNE",
+          "ETE",
+          "HIVER",
+          "PRINTEMPS"
+        ],
+        "seasonal_coverage_ratio": 100.0,
+        "studies_count": 3,
+        "avg_confidence": 86.67,
+        "peer_reviewed_ratio": 66.67,
+        "consumables_expected": [
+          "bourgeons",
+          "glands_mast",
+          "graines",
+          "insectes_invertebres",
+          "residus_culture_mais"
+        ],
+        "consumables_detected": [
+          "glands_mast",
+          "graines",
+          "insectes_invertebres"
+        ],
+        "consumables_expected_match_ratio": 60.0,
+        "scores_axes": {
+          "coverage_studies_count": 30.0,
+          "saisonnalite_complete": 100.0,
+          "fiabilite_etudes": 86.67,
+          "qualite_preuve_pr": 66.67,
+          "variabilite_taxonomique": 0.0,
+          "consumables_diversite": 60.0
+        },
+        "bio_reacteur_params_count": 6,
+        "anti_generique_violations": [],
+        "anti_generique_pass": true,
+        "fallback_active": false,
+        "interpolation_active": false
+      }
+    },
+    "anti_generique_pass": true
+  },
+  "engine_phenologie": {
+    "spec": {
+      "id": "ENGINE_PHÉNOLOGIE_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+      "input_sources": [
+        "SCI_Ω.nutrition_studies",
+        "SCI_Ω.habitat_studies",
+        "BIO_REACTEURS_Ω.ENGINE_COMPORTEMENT"
+      ],
+      "weights": {
+        "saisonnalite_full": 0.3,
+        "documented_events_count": 0.2,
+        "fiabilite_etudes": 0.15,
+        "behavior_signals": 0.15,
+        "saisons_critiques_couvertes": 0.1,
+        "convergence_datasets": 0.1
+      },
+      "output_signature": [
+        "phenology_seasonal_index_omega",
+        "seasonal_coverage_full",
+        "phenological_events_detected",
+        "critical_seasons_covered",
+        "nut_hab_convergence_ratio",
+        "anti_generique_violations"
+      ]
+    },
+    "lock_sha256": "9c09c5b3b1af9f22a9da550cf9fa5f5ca54b4621d85c49b5aa3a4c3605da9628",
+    "master_score": 69.0,
+    "results_par_espece": {
+      "CHEVREUIL": {
+        "super_engine_id": "ENGINE_PHÉNOLOGIE_Ω",
+        "espece": "CHEVREUIL",
+        "computed_at_utc": "2026-04-29T22:25:02+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "phenology_seasonal_index_omega": 65.0,
+        "seasonal_coverage_full": [
+          "AUTOMNE",
+          "ETE",
+          "HIVER",
+          "PRINTEMPS"
+        ],
+        "seasonal_coverage_ratio": 100.0,
+        "phenological_events_detected": {},
+        "critical_seasons_expected": [
+          "HIVER"
+        ],
+        "critical_seasons_covered": [
+          "HIVER"
+        ],
+        "nut_hab_convergence_ratio": 100.0,
+        "studies_nut_count": 4,
+        "studies_hab_count": 10,
+        "scores_axes": {
+          "saisonnalite_full": 100.0,
+          "documented_events_count": 0.0,
+          "fiabilite_etudes": 100.0,
+          "behavior_signals": 0.0,
+          "saisons_critiques_couvertes": 100.0,
+          "convergence_datasets": 100.0
+        },
+        "bio_reacteur_params_count": 4,
+        "anti_generique_violations": [],
+        "anti_generique_pass": true,
+        "fallback_active": false,
+        "interpolation_active": false
+      },
+      "ORIGNAL": {
+        "super_engine_id": "ENGINE_PHÉNOLOGIE_Ω",
+        "espece": "ORIGNAL",
+        "computed_at_utc": "2026-04-29T22:25:02+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "phenology_seasonal_index_omega": 67.98,
+        "seasonal_coverage_full": [
+          "AUTOMNE",
+          "ETE",
+          "HIVER",
+          "PRINTEMPS"
+        ],
+        "seasonal_coverage_ratio": 100.0,
+        "phenological_events_detected": {
+          "migration": 2
+        },
+        "critical_seasons_expected": [
+          "AUTOMNE",
+          "HIVER"
+        ],
+        "critical_seasons_covered": [
+          "AUTOMNE",
+          "HIVER"
+        ],
+        "nut_hab_convergence_ratio": 100.0,
+        "studies_nut_count": 7,
+        "studies_hab_count": 10,
+        "scores_axes": {
+          "saisonnalite_full": 100.0,
+          "documented_events_count": 16.67,
+          "fiabilite_etudes": 97.65,
+          "behavior_signals": 0.0,
+          "saisons_critiques_couvertes": 100.0,
+          "convergence_datasets": 100.0
+        },
+        "bio_reacteur_params_count": 4,
+        "anti_generique_violations": [],
+        "anti_generique_pass": true,
+        "fallback_active": false,
+        "interpolation_active": false
+      },
+      "OURS_NOIR": {
+        "super_engine_id": "ENGINE_PHÉNOLOGIE_Ω",
+        "espece": "OURS_NOIR",
+        "computed_at_utc": "2026-04-29T22:25:02+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "phenology_seasonal_index_omega": 75.42,
+        "seasonal_coverage_full": [
+          "AUTOMNE",
+          "ETE",
+          "HIVER",
+          "PRINTEMPS"
+        ],
+        "seasonal_coverage_ratio": 100.0,
+        "phenological_events_detected": {
+          "hyperphagie": 1,
+          "migration": 1
+        },
+        "critical_seasons_expected": [
+          "AUTOMNE",
+          "HIVER"
+        ],
+        "critical_seasons_covered": [
+          "AUTOMNE",
+          "HIVER"
+        ],
+        "nut_hab_convergence_ratio": 100.0,
+        "studies_nut_count": 3,
+        "studies_hab_count": 10,
+        "scores_axes": {
+          "saisonnalite_full": 100.0,
+          "documented_events_count": 33.33,
+          "fiabilite_etudes": 100.0,
+          "behavior_signals": 25.0,
+          "saisons_critiques_couvertes": 100.0,
+          "convergence_datasets": 100.0
+        },
+        "bio_reacteur_params_count": 4,
+        "anti_generique_violations": [],
+        "anti_generique_pass": true,
+        "fallback_active": false,
+        "interpolation_active": false
+      },
+      "WAPITI": {
+        "super_engine_id": "ENGINE_PHÉNOLOGIE_Ω",
+        "espece": "WAPITI",
+        "computed_at_utc": "2026-04-29T22:25:02+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "phenology_seasonal_index_omega": 65.0,
+        "seasonal_coverage_full": [
+          "AUTOMNE",
+          "ETE",
+          "HIVER",
+          "PRINTEMPS"
+        ],
+        "seasonal_coverage_ratio": 100.0,
+        "phenological_events_detected": {},
+        "critical_seasons_expected": [
+          "AUTOMNE",
+          "HIVER"
+        ],
+        "critical_seasons_covered": [
+          "AUTOMNE",
+          "HIVER"
+        ],
+        "nut_hab_convergence_ratio": 100.0,
+        "studies_nut_count": 6,
+        "studies_hab_count": 10,
+        "scores_axes": {
+          "saisonnalite_full": 100.0,
+          "documented_events_count": 0.0,
+          "fiabilite_etudes": 100.0,
+          "behavior_signals": 0.0,
+          "saisons_critiques_couvertes": 100.0,
+          "convergence_datasets": 100.0
+        },
+        "bio_reacteur_params_count": 4,
+        "anti_generique_violations": [],
+        "anti_generique_pass": true,
+        "fallback_active": false,
+        "interpolation_active": false
+      },
+      "DINDON_SAUVAGE": {
+        "super_engine_id": "ENGINE_PHÉNOLOGIE_Ω",
+        "espece": "DINDON_SAUVAGE",
+        "computed_at_utc": "2026-04-29T22:25:02+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "phenology_seasonal_index_omega": 71.62,
+        "seasonal_coverage_full": [
+          "AUTOMNE",
+          "ETE",
+          "HIVER",
+          "PRINTEMPS"
+        ],
+        "seasonal_coverage_ratio": 100.0,
+        "phenological_events_detected": {
+          "nidification": 2
+        },
+        "critical_seasons_expected": [
+          "HIVER",
+          "PRINTEMPS"
+        ],
+        "critical_seasons_covered": [
+          "HIVER",
+          "PRINTEMPS"
+        ],
+        "nut_hab_convergence_ratio": 100.0,
+        "studies_nut_count": 3,
+        "studies_hab_count": 10,
+        "scores_axes": {
+          "saisonnalite_full": 100.0,
+          "documented_events_count": 16.67,
+          "fiabilite_etudes": 96.92,
+          "behavior_signals": 25.0,
+          "saisons_critiques_couvertes": 100.0,
+          "convergence_datasets": 100.0
+        },
+        "bio_reacteur_params_count": 4,
+        "anti_generique_violations": [],
+        "anti_generique_pass": true,
+        "fallback_active": false,
+        "interpolation_active": false
+      }
+    },
+    "anti_generique_pass": true
+  }
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang='fr'><head><meta charset='utf-8'/>
+<title>ENGINES_SCIENTIFIQUES_Ω_SPEC</title><style>
+:root{--bg:#0a1018;--panel:#111c2e;--panel2:#162032;--txt:#e2e8f0;--mute:#94a3b8;--accent:#06b6d4;--accent2:#22d3ee;--ok:#16a34a;--gold:#f59e0b;--dang:#dc2626;--bord:#1e293b;}
+*{box-sizing:border-box;}
+body{font-family:'Inter','Segoe UI',sans-serif;background:linear-gradient(180deg,#0a1018 0%,#0b1320 100%);color:var(--txt);margin:0;padding:32px 20px;}
+.wrap{max-width:1320px;margin:0 auto;}
+header.title{border-left:5px solid var(--gold);padding:6px 0 6px 18px;margin-bottom:22px;}
+header.title h1{margin:0;font-size:24px;color:#fef3c7;letter-spacing:0.6px;}
+header.title .sub{color:var(--mute);font-size:13px;margin-top:6px;}
+.b-ok{background:linear-gradient(135deg,#14532d 0%,#15803d 100%);border:1px solid var(--ok);color:#dcfce7;padding:12px 22px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:18px;}
+.b-gold{background:linear-gradient(135deg,#78350f 0%,#92400e 100%);border:1px solid var(--gold);color:#fef3c7;padding:12px 22px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:18px;}
+h2{color:var(--gold);font-size:18px;margin:32px 0 12px;border-left:4px solid var(--gold);padding-left:12px;}
+h3{color:var(--accent2);font-size:15px;margin:22px 0 10px;}
+.card{background:var(--panel);border:1px solid var(--bord);border-radius:10px;padding:18px 22px;margin-bottom:18px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px;}
+.kpi{padding:14px 18px;background:var(--panel2);border:1px solid var(--bord);border-radius:8px;}
+.kpi .num{color:var(--accent2);font-weight:700;font-size:22px;}
+.kpi .lbl{color:var(--mute);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;}
+table{width:100%;border-collapse:collapse;font-size:11.5px;}
+th,td{padding:8px 10px;border-bottom:1px solid var(--bord);text-align:left;vertical-align:top;}
+th{background:var(--panel2);color:#fff;text-transform:uppercase;font-size:10.5px;letter-spacing:0.5px;}
+.scroll{max-height:520px;overflow-y:auto;border:1px solid var(--bord);border-radius:6px;}
+.dl{color:var(--accent2);text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid rgba(6,182,212,0.35);border-radius:5px;}
+.mono{font-family:'JetBrains Mono','Courier New',monospace;font-size:10px;color:var(--mute);word-break:break-all;}
+.foot{margin-top:30px;padding:18px 22px;background:var(--panel);border:1px solid var(--bord);border-radius:10px;font-size:12px;color:var(--mute);}
+.lbl-foot{color:var(--accent2);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:0.5px;}
+.v30-lock{margin-top:14px;padding:10px 14px;background:rgba(22,163,74,0.10);border:1px solid rgba(22,163,74,0.45);border-radius:6px;color:#4ade80;font-weight:700;text-align:center;letter-spacing:0.6px;}
+</style></head><body>
+<div class='wrap' data-testid='engines-scientifiques'>
+<header class='title'><h1>ENGINES_SCIENTIFIQUES_Ω_SPEC · 3 engines autonomes</h1>
+<div class='sub'>BCE-4X ULTIME ABSOLU x3 · Ordre n°37 · 2026-04-29T22:25:02+00:00</div></header>
+<div class='b-ok'>★ 3 ENGINES opérationnels · HABITAT=83.42 · VÉGÉTATION=69.91 · PHÉNOLOGIE=69.0 ★</div>
+
+<h2>1. Engines et locks</h2>
+<div class='card'><table><thead><tr><th>Engine</th><th>Master Score</th><th>Violations</th><th>SHA-256 Lock</th></tr></thead>
+<tbody><tr><td><b>ENGINE_HABITAT_Ω</b></td><td>83.42</td><td>0</td><td class='mono'>d4aab652ec08070bbf09b86f8933d442631bf82ffd2fd171…</td></tr><tr><td><b>ENGINE_VÉGÉTATION_Ω</b></td><td>69.91</td><td>0</td><td class='mono'>cae248405132aabe06bc40bcde1114a883e77ced7dda82d1…</td></tr><tr><td><b>ENGINE_PHÉNOLOGIE_Ω</b></td><td>69.0</td><td>0</td><td class='mono'>9c09c5b3b1af9f22a9da550cf9fa5f5ca54b4621d85c49b5…</td></tr></tbody></table></div>
+
+<h2>2. Scores par espèce</h2>
+<div class='card'><table><thead><tr><th>Espèce</th><th>Habitat</th><th>Végétation</th><th>Phénologie</th></tr></thead>
+<tbody><tr><td><b>CHEVREUIL</b></td><td>84.7</td><td>70.5</td><td>65.0</td></tr><tr><td><b>ORIGNAL</b></td><td>87.0</td><td>76.71</td><td>67.98</td></tr><tr><td><b>OURS_NOIR</b></td><td>78.9</td><td>66.0</td><td>75.42</td></tr><tr><td><b>WAPITI</b></td><td>81.5</td><td>72.0</td><td>65.0</td></tr><tr><td><b>DINDON_SAUVAGE</b></td><td>85.0</td><td>64.33</td><td>71.62</td></tr></tbody></table></div>
+
+<footer class='foot'><div><span class='lbl-foot'>Émis :</span> COMMANDANT STEEVE-MAX</div>
+<div class='v30-lock'>✓ 3 ENGINES scientifiques scellés · 32 tests pytest PASSED</div></footer>
+</div></body></html>

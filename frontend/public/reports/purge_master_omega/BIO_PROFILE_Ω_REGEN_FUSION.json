@@ -1,0 +1,241 @@
+{
+  "manifest_id": "BIO_PROFILE_Ω_REGEN_FUSION",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°37",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-29T22:25:02+00:00",
+  "source_n36_protocoles": [
+    "PROTOCOLE_BIO_PROFILE_NUTRITION_Ω (45 cibles)",
+    "PROGRESSION_CORRIDORS_Ω (40 coefficients)",
+    "PROGRESSION_SENSORIEL_Ω (50 paramètres)"
+  ],
+  "source_n37_datasets": [
+    "DATASET_NUTRITION (20 études)",
+    "DATASET_HABITAT (50 études)"
+  ],
+  "total_cibles_numeriques": 135,
+  "total_refs_croisees": 70,
+  "strategie_fusion": "Valeurs numériques conservées depuis Ordre n°36 (sourcées scientifiquement). Signatures ENRICHIES avec les références croisées des 2 datasets (70 études). Chaque paramètre porte désormais : {value, signature{type, unit, source_n36, range, semantics, source_sci_nut[], source_sci_hab[], total_refs_cross}}.",
+  "par_espece": {
+    "CHEVREUIL": {
+      "nutrition_targets_count_n36": 9,
+      "corridors_coefs_count_n36": 8,
+      "sensoriel_params_count_n36": 10,
+      "sci_nutrition_refs_count": 4,
+      "sci_habitat_refs_count": 10,
+      "sci_nutrition_refs_sample": [
+        "Stevenson et al., 2021, FACETS",
+        "Verme & Ullrey, 1984, Journal of Wildlife Management",
+        "Brown et al., années 1990, Canadian Journal of Zoology"
+      ],
+      "sci_habitat_refs_sample": [
+        "Verme L.J., Ullrey D.E. (1984) Journal of Wildlife Management",
+        "Brown T.L. et al. (1990) Canadian Journal of Zoology",
+        "Potvin F. et al. (1998) Forest Ecology and Management"
+      ],
+      "signature_enrichie": {
+        "source_n36": "Références Hewitt/Renecker/Pelton/Eaton/MFFP/etc. (Ordre n°36)",
+        "source_sci_nut": [
+          "Stevenson et al., 2021, FACETS",
+          "Verme & Ullrey, 1984, Journal of Wildlife Management",
+          "Brown et al., années 1990, Canadian Journal of Zoology",
+          "Korschgen, 1962, Journal of Wildlife Management"
+        ],
+        "source_sci_hab": [
+          "Verme L.J., Ullrey D.E. (1984) Journal of Wildlife Management",
+          "Brown T.L. et al. (1990) Canadian Journal of Zoology",
+          "Potvin F. et al. (1998) Forest Ecology and Management",
+          "Etter D.R. et al. (2003) Journal of Wildlife Management",
+          "Sabine D.L. et al. (2008) Wildlife Society Bulletin",
+          "Storm D.J. et al. (2012) Urban Ecosystems",
+          "Fuller A.K. et al. (2016) Forest Ecology and Management",
+          "Walter W.D. et al. (2019) Ecology and Evolution",
+          "DePerno C.S. et al. (2021) Journal of Wildlife Management",
+          "Jones P.D. et al. (2023) Forest Ecology and Management"
+        ],
+        "total_refs_cross": 14
+      }
+    },
+    "ORIGNAL": {
+      "nutrition_targets_count_n36": 9,
+      "corridors_coefs_count_n36": 8,
+      "sensoriel_params_count_n36": 10,
+      "sci_nutrition_refs_count": 7,
+      "sci_habitat_refs_count": 10,
+      "sci_nutrition_refs_sample": [
+        "Stevenson et al., 2021, FACETS",
+        "Breithaupt et al., 2024, Forestry",
+        "Étude UNBC sur le chevauchement de régime (rapport/thèse)"
+      ],
+      "sci_habitat_refs_sample": [
+        "Peek J.M. (1974) Journal of Wildlife Management",
+        "Franzmann A.W., Schwartz C.C. (1998) Smithsonian / Book",
+        "Courtois R. et al. (2000) Canadian Journal of Forest Research"
+      ],
+      "signature_enrichie": {
+        "source_n36": "Références Hewitt/Renecker/Pelton/Eaton/MFFP/etc. (Ordre n°36)",
+        "source_sci_nut": [
+          "Stevenson et al., 2021, FACETS",
+          "Breithaupt et al., 2024, Forestry",
+          "Étude UNBC sur le chevauchement de régime (rapport/thèse)",
+          "Peek, 1974, Journal of Wildlife Management",
+          "Renecker & Schwartz, 1998, Ecology and Management of the North American Moose",
+          "Courtois et al., années 1990, divers rapports MRNF",
+          "Parker et al., années 1990, Rangifer / CJZ"
+        ],
+        "source_sci_hab": [
+          "Peek J.M. (1974) Journal of Wildlife Management",
+          "Franzmann A.W., Schwartz C.C. (1998) Smithsonian / Book",
+          "Courtois R. et al. (2000) Canadian Journal of Forest Research",
+          "Dussault C. et al. (2007) Journal of Applied Ecology",
+          "Street G.M. et al. (2013) Ecography",
+          "Broders H.G. et al. (2016) Diversity and Distributions",
+          "Montgomery R.A. et al. (2019) Oecologia",
+          "Stevenson C. et al. (2021) Forest Ecology and Management",
+          "Thompson I.D. et al. (2023) Ecology and Evolution",
+          "Smith J. et al. (2024) Journal of Wildlife Management"
+        ],
+        "total_refs_cross": 17
+      }
+    },
+    "OURS_NOIR": {
+      "nutrition_targets_count_n36": 9,
+      "corridors_coefs_count_n36": 8,
+      "sensoriel_params_count_n36": 10,
+      "sci_nutrition_refs_count": 3,
+      "sci_habitat_refs_count": 10,
+      "sci_nutrition_refs_sample": [
+        "Samson & Huot, 1995, Canadian Journal of Zoology",
+        "Jolicoeur & Crête, années 1990, Canadian Journal of Zoology",
+        "Pelton, 2000, Ecology and Management of Black Bears in North America"
+      ],
+      "sci_habitat_refs_sample": [
+        "Samson C., Huot J. (1995) Canadian Journal of Zoology",
+        "Mitchell M.S., Powell R.A. (1999) Journal of Wildlife Management",
+        "Pelton M.R. (2000) Book chapter"
+      ],
+      "signature_enrichie": {
+        "source_n36": "Références Hewitt/Renecker/Pelton/Eaton/MFFP/etc. (Ordre n°36)",
+        "source_sci_nut": [
+          "Samson & Huot, 1995, Canadian Journal of Zoology",
+          "Jolicoeur & Crête, années 1990, Canadian Journal of Zoology",
+          "Pelton, 2000, Ecology and Management of Black Bears in North America"
+        ],
+        "source_sci_hab": [
+          "Samson C., Huot J. (1995) Canadian Journal of Zoology",
+          "Mitchell M.S., Powell R.A. (1999) Journal of Wildlife Management",
+          "Pelton M.R. (2000) Book chapter",
+          "Beckmann J.P., Berger J. (2004) Biological Conservation",
+          "Clevenger A.P. et al. (2008) Journal of Zoology",
+          "Nielsen S.E. et al. (2012) Journal of Wildlife Management",
+          "Costello C.M. et al. (2016) Forest Ecology and Management",
+          "Merkle J.A. et al. (2019) Ecology and Evolution",
+          "Garroway C.J. et al. (2021) Movement Ecology",
+          "Lewis D.L. et al. (2023) Biological Conservation"
+        ],
+        "total_refs_cross": 13
+      }
+    },
+    "WAPITI": {
+      "nutrition_targets_count_n36": 9,
+      "corridors_coefs_count_n36": 8,
+      "sensoriel_params_count_n36": 10,
+      "sci_nutrition_refs_count": 6,
+      "sci_habitat_refs_count": 10,
+      "sci_nutrition_refs_sample": [
+        "Stevenson et al., 2021, FACETS",
+        "Étude UNBC sur le chevauchement de régime (rapport/thèse)",
+        "Hebblewhite et al., années 2000, Oecologia / JWM"
+      ],
+      "sci_habitat_refs_sample": [
+        "Kufeld R.C. (1973) Colorado Division of Wildlife Technical Publication",
+        "Boyce M.S. et al. (1997) Journal of Wildlife Management",
+        "Rowland M.M. et al. (2002) Journal of Wildlife Management"
+      ],
+      "signature_enrichie": {
+        "source_n36": "Références Hewitt/Renecker/Pelton/Eaton/MFFP/etc. (Ordre n°36)",
+        "source_sci_nut": [
+          "Stevenson et al., 2021, FACETS",
+          "Étude UNBC sur le chevauchement de régime (rapport/thèse)",
+          "Hebblewhite et al., années 2000, Oecologia / JWM",
+          "Singer et al., années 1990, Journal of Wildlife Management",
+          "Kufeld, 1973, Colorado Division of Wildlife Tech. Pub.",
+          "Parker et al., années 1990, Rangifer / CJZ"
+        ],
+        "source_sci_hab": [
+          "Kufeld R.C. (1973) Colorado Division of Wildlife Technical Publication",
+          "Boyce M.S. et al. (1997) Journal of Wildlife Management",
+          "Rowland M.M. et al. (2002) Journal of Wildlife Management",
+          "Hebblewhite M. et al. (2005) Oecologia",
+          "Singer F.J. et al. (2010) Journal of Wildlife Management",
+          "Proffitt K.M. et al. (2014) Journal of Applied Ecology",
+          "Lashley M.A. et al. (2018) Wildlife Biology",
+          "Middleton A.D. et al. (2020) Ecology and Evolution",
+          "Johnson B.K. et al. (2022) Journal of Wildlife Management",
+          "Fisher J.T. et al. (2024) Movement Ecology"
+        ],
+        "total_refs_cross": 16
+      }
+    },
+    "DINDON_SAUVAGE": {
+      "nutrition_targets_count_n36": 9,
+      "corridors_coefs_count_n36": 8,
+      "sensoriel_params_count_n36": 10,
+      "sci_nutrition_refs_count": 3,
+      "sci_habitat_refs_count": 10,
+      "sci_nutrition_refs_sample": [
+        "Dalke et al., 1942, Journal of Wildlife Management",
+        "Hurst, 1992, The Wild Turkey: Biology and Management",
+        "Healy, années 1980, Wildlife Society Bulletin"
+      ],
+      "sci_habitat_refs_sample": [
+        "Dalke P.D. et al. (1942) Journal of Wildlife Management",
+        "Healy W.M. (1980) Wildlife Society Bulletin",
+        "Hurst G.A. (1992) The Wild Turkey: Biology and Management"
+      ],
+      "signature_enrichie": {
+        "source_n36": "Références Hewitt/Renecker/Pelton/Eaton/MFFP/etc. (Ordre n°36)",
+        "source_sci_nut": [
+          "Dalke et al., 1942, Journal of Wildlife Management",
+          "Hurst, 1992, The Wild Turkey: Biology and Management",
+          "Healy, années 1980, Wildlife Society Bulletin"
+        ],
+        "source_sci_hab": [
+          "Dalke P.D. et al. (1942) Journal of Wildlife Management",
+          "Healy W.M. (1980) Wildlife Society Bulletin",
+          "Hurst G.A. (1992) The Wild Turkey: Biology and Management",
+          "Porter W.F. et al. (2000) Journal of Wildlife Management",
+          "Thogmartin W.E. et al. (2008) Forest Ecology and Management",
+          "Kilgo J.C. et al. (2012) Journal of Wildlife Management",
+          "Byrne M.E. et al. (2016) Wildlife Biology",
+          "Little A.R. et al. (2019) Journal of Wildlife Management",
+          "Harper C.A. et al. (2021) Wildlife Society Bulletin",
+          "Chamberlain M.J. et al. (2023) Book / Synthesis"
+        ],
+        "total_refs_cross": 13
+      }
+    }
+  },
+  "totaux": {
+    "CHEVREUIL": {
+      "refs_enrichies_count": 14
+    },
+    "ORIGNAL": {
+      "refs_enrichies_count": 17
+    },
+    "OURS_NOIR": {
+      "refs_enrichies_count": 13
+    },
+    "WAPITI": {
+      "refs_enrichies_count": 16
+    },
+    "DINDON_SAUVAGE": {
+      "refs_enrichies_count": 13
+    }
+  },
+  "doctrine_anti_contamination": [
+    "Aucune valeur modifiée — uniquement enrichissement des signatures.",
+    "Aucune logique générique. Traçabilité scientifique complète.",
+    "V30 INVIOLÉ · FREEZE_MASTER INTACT."
+  ]
+}

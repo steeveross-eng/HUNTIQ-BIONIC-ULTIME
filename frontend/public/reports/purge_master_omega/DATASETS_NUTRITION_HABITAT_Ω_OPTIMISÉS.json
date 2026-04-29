@@ -1,0 +1,2631 @@
+{
+  "manifest_id": "DATASETS_NUTRITION_HABITAT_Ω_OPTIMISÉS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°37",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-29T22:25:02+00:00",
+  "optimisations_appliquees": [
+    "Harmonisation taxonomique (ORIGNAL/CHEVREUIL/OURS_NOIR/WAPITI/DINDON_SAUVAGE canoniques)",
+    "Normalisation saisons (PRINTEMPS/ETE/AUTOMNE/HIVER canoniques)",
+    "Classification TYPE_DE_PREUVE (GOV/UNI/PR)",
+    "Détection conflits taxonomiques (caribou, cerf mulet hors Ω5)",
+    "Détection doublons inter-datasets (ref nut × ref hab)",
+    "Indexation par espèce canonique avec stats globales"
+  ],
+  "sci_referentiel": {
+    "manifest_id": "SCI_Ω_REFERENTIEL_UNIFIE",
+    "nutrition_studies": [
+      {
+        "dataset_id": "NUTRITION",
+        "study_id": 1,
+        "reference_complete": "Stevenson et al., 2021, FACETS",
+        "annee": 2021,
+        "type_etude": "ADN fécal",
+        "region": "Alberta, Canada",
+        "focus": "Composition hivernale fine, chevauchement de niche alimentaire",
+        "especes_canoniques": [
+          "ORIGNAL",
+          "CHEVREUIL",
+          "WAPITI"
+        ],
+        "especes_raw": "Orignal, chevreuil, wapiti, caribou",
+        "saisons_canoniques": [
+          "HIVER"
+        ],
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR",
+        "bloc_id": "ALIMENTATION_HIVERNALE_ONGULES"
+      },
+      {
+        "dataset_id": "NUTRITION",
+        "study_id": 2,
+        "reference_complete": "Breithaupt et al., 2024, Forestry",
+        "annee": 2024,
+        "type_etude": "Microhistologie",
+        "region": "C.-B., Canada",
+        "focus": "Sélection de brout (sapin subalpin, saule, bouleau, tremble)",
+        "especes_canoniques": [
+          "ORIGNAL"
+        ],
+        "especes_raw": "Orignal",
+        "saisons_canoniques": [
+          "HIVER"
+        ],
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR",
+        "bloc_id": "BROUT_HIVERNAL_ORIGNAL"
+      },
+      {
+        "dataset_id": "NUTRITION",
+        "study_id": 3,
+        "reference_complete": "Étude UNBC sur le chevauchement de régime (rapport/thèse)",
+        "annee": null,
+        "type_etude": "Analyse ruminal/fécal",
+        "region": "C.-B., Canada",
+        "focus": "Chevauchement de régime hivernage cerf mulet",
+        "especes_canoniques": [
+          "ORIGNAL",
+          "WAPITI"
+        ],
+        "especes_raw": "Orignal, wapiti, cerf mulet",
+        "saisons_canoniques": [
+          "HIVER"
+        ],
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "UNKNOWN",
+        "bloc_id": "CHEVAUCHEMENT_REGIME_HIVERNAL_ONGULES"
+      },
+      {
+        "dataset_id": "NUTRITION",
+        "study_id": 4,
+        "reference_complete": "Peek, 1974, Journal of Wildlife Management",
+        "annee": 1974,
+        "type_etude": "Synthèse",
+        "region": "Alaska, USA",
+        "focus": "Écologie alimentaire saisonnière orignal boréal",
+        "especes_canoniques": [
+          "ORIGNAL"
+        ],
+        "especes_raw": "Orignal",
+        "saisons_canoniques": [
+          "PRINTEMPS",
+          "ETE",
+          "AUTOMNE",
+          "HIVER"
+        ],
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR",
+        "bloc_id": "ECOLOGIE_ALIMENTAIRE_SAISONNIERE_ORIGNAL"
+      },
+      {
+        "dataset_id": "NUTRITION",
+        "study_id": 5,
+        "reference_complete": "Renecker & Schwartz, 1998, Ecology and Management of the North American Moose",
+        "annee": 1998,
+        "type_etude": "Revue",
+        "region": "Amérique du Nord boréale",
+        "focus": "Nutrition, besoins énergétiques, qualité du fourrage",
+        "especes_canoniques": [
+          "ORIGNAL"
+        ],
+        "especes_raw": "Orignal",
+        "saisons_canoniques": [
+          "PRINTEMPS",
+          "ETE",
+          "AUTOMNE",
+          "HIVER"
+        ],
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "UNI",
+        "bloc_id": "NUTRITION_BESOINS_ENERGETIQUES_ORIGNAL"
+      },
+      {
+        "dataset_id": "NUTRITION",
+        "study_id": 6,
+        "reference_complete": "Courtois et al., années 1990, divers rapports MRNF",
+        "annee": 1995,
+        "type_etude": "Contenu ruminal saisonnier",
+        "region": "Québec, Canada",
+        "focus": "Variation saisonnière brout feuillus vs résineux",
+        "especes_canoniques": [
+          "ORIGNAL"
+        ],
+        "especes_raw": "Orignal",
+        "saisons_canoniques": [
+          "PRINTEMPS",
+          "ETE",
+          "AUTOMNE",
+          "HIVER"
+        ],
+        "niveau_confiance": "MOYEN",
+        "type_preuve": "GOV",
+        "bloc_id": "VARIATION_SAISONNIERE_BROUT_ORIGNAL"
+      },
+      {
+        "dataset_id": "NUTRITION",
+        "study_id": 7,
+        "reference_complete": "Verme & Ullrey, 1984, Journal of Wildlife Management",
+        "annee": 1984,
+        "type_etude": "Revue",
+        "region": "Est du Canada / NE USA",
+        "focus": "Métabolisme, besoins nutritionnels, habitat hivernal",
+        "especes_canoniques": [
+          "CHEVREUIL"
+        ],
+        "especes_raw": "Chevreuil (cerf de Virginie)",
+        "saisons_canoniques": [
+          "HIVER"
+        ],
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR",
+        "bloc_id": "METABOLISME_BESOINS_HIVERNAL_CHEVREUIL"
+      },
+      {
+        "dataset_id": "NUTRITION",
+        "study_id": 8,
+        "reference_complete": "Brown et al., années 1990, Canadian Journal of Zoology",
+        "annee": 1995,
+        "type_etude": "Fèces + disponibilité brout",
+        "region": "Ontario, Canada",
+        "focus": "Sélection brout forêt mixte + coupes forestières",
+        "especes_canoniques": [
+          "CHEVREUIL"
+        ],
+        "especes_raw": "Chevreuil",
+        "saisons_canoniques": [
+          "PRINTEMPS",
+          "ETE",
+          "AUTOMNE",
+          "HIVER"
+        ],
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR",
+        "bloc_id": "SELECTION_BROUT_CHEVREUIL_COUPES"
+      },
+      {
+        "dataset_id": "NUTRITION",
+        "study_id": 9,
+        "reference_complete": "Korschgen, 1962, Journal of Wildlife Management",
+        "annee": 1962,
+        "type_etude": "Contenu ruminal long terme",
+        "region": "Midwest & NE USA",
+        "focus": "Composition régime saisonnier historique",
+        "especes_canoniques": [
+          "CHEVREUIL"
+        ],
+        "especes_raw": "Chevreuil",
+        "saisons_canoniques": [
+          "PRINTEMPS",
+          "ETE",
+          "AUTOMNE",
+          "HIVER"
+        ],
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR",
+        "bloc_id": "REGIME_SAISONNIER_HISTORIQUE_CHEVREUIL"
+      },
+      {
+        "dataset_id": "NUTRITION",
+        "study_id": 10,
+        "reference_complete": "Hebblewhite et al., années 2000, Oecologia / JWM",
+        "annee": 2005,
+        "type_etude": "Fèces + télémétrie",
+        "region": "Rocheuses canadiennes",
+        "focus": "Régime, sélection habitat, prédation loups",
+        "especes_canoniques": [
+          "WAPITI"
+        ],
+        "especes_raw": "Wapiti",
+        "saisons_canoniques": [
+          "PRINTEMPS",
+          "ETE",
+          "AUTOMNE",
+          "HIVER"
+        ],
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR",
+        "bloc_id": "REGIME_HABITAT_PREDATION_WAPITI"
+      },
+      {
+        "dataset_id": "NUTRITION",
+        "study_id": 11,
+        "reference_complete": "Singer et al., années 1990, Journal of Wildlife Management",
+        "annee": 1995,
+        "type_etude": "Long terme multi-saisons",
+        "region": "Yellowstone, USA",
+        "focus": "Pression brout végétation riveraine (saules, peupliers)",
+        "especes_canoniques": [
+          "WAPITI"
+        ],
+        "especes_raw": "Wapiti",
+        "saisons_canoniques": [
+          "PRINTEMPS",
+          "ETE"
+        ],
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR",
+        "bloc_id": "PRESSION_BROUT_VEGETATION_RIVERINE_WAPITI"
+      },
+      {
+        "dataset_id": "NUTRITION",
+        "study_id": 12,
+        "reference_complete": "Kufeld, 1973, Colorado Division of Wildlife Tech. Pub.",
+        "annee": 1973,
+        "type_etude": "Contenu ruminal",
+        "region": "Oregon/Idaho, USA",
+        "focus": "Catalogue plantes consommées par saison",
+        "especes_canoniques": [
+          "WAPITI"
+        ],
+        "especes_raw": "Wapiti",
+        "saisons_canoniques": [
+          "PRINTEMPS",
+          "ETE",
+          "AUTOMNE",
+          "HIVER"
+        ],
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "GOV",
+        "bloc_id": "CATALOGUE_PLANTES_CONSOMMEES_WAPITI"
+      },
+      {
+        "dataset_id": "NUTRITION",
+        "study_id": 13,
+        "reference_complete": "Samson & Huot, 1995, Canadian Journal of Zoology",
+        "annee": 1995,
+        "type_etude": "Fèces saisons",
+        "region": "Est du Canada",
+        "focus": "Variation saisonnière : végétaux, petits fruits, insectes, charognes",
+        "especes_canoniques": [
+          "OURS_NOIR"
+        ],
+        "especes_raw": "Ours noir",
+        "saisons_canoniques": [
+          "PRINTEMPS",
+          "ETE",
+          "AUTOMNE"
+        ],
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR",
+        "bloc_id": "REGIME_SAISONNIER_OURS_NOIR"
+      },
+      {
+        "dataset_id": "NUTRITION",
+        "study_id": 14,
+        "reference_complete": "Jolicoeur & Crête, années 1990, Canadian Journal of Zoology",
+        "annee": 1995,
+        "type_etude": "Fèces + disponibilité fruits",
+        "region": "Québec, Canada",
+        "focus": "Rôle petits fruits dans engraissement pré-hivernal",
+        "especes_canoniques": [
+          "OURS_NOIR"
+        ],
+        "especes_raw": "Ours noir",
+        "saisons_canoniques": [
+          "ETE",
+          "AUTOMNE"
+        ],
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR",
+        "bloc_id": "ROLE_PETITS_FRUITS_ENGRAISSEMENT_OURS_NOIR"
+      },
+      {
+        "dataset_id": "NUTRITION",
+        "study_id": 15,
+        "reference_complete": "Pelton, 2000, Ecology and Management of Black Bears in North America",
+        "annee": 2000,
+        "type_etude": "Synthèse long terme",
+        "region": "Appalaches, USA",
+        "focus": "Diète, plasticité alimentaire, conflits humain",
+        "especes_canoniques": [
+          "OURS_NOIR"
+        ],
+        "especes_raw": "Ours noir",
+        "saisons_canoniques": [
+          "PRINTEMPS",
+          "ETE",
+          "AUTOMNE",
+          "HIVER"
+        ],
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "UNI",
+        "bloc_id": "DIETE_PLASTICITE_CONFLITS_OURS_NOIR"
+      },
+      {
+        "dataset_id": "NUTRITION",
+        "study_id": 16,
+        "reference_complete": "Dalke et al., 1942, Journal of Wildlife Management",
+        "annee": 1942,
+        "type_etude": "Gésiers + contenus digestifs",
+        "region": "Est des USA",
+        "focus": "Aliments saisonniers (glands, graines, invertébrés)",
+        "especes_canoniques": [
+          "DINDON_SAUVAGE"
+        ],
+        "especes_raw": "Dindon sauvage",
+        "saisons_canoniques": [
+          "PRINTEMPS",
+          "ETE",
+          "AUTOMNE",
+          "HIVER"
+        ],
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR",
+        "bloc_id": "ALIMENTS_SAISONNIERS_DINDON_SAUVAGE"
+      },
+      {
+        "dataset_id": "NUTRITION",
+        "study_id": 17,
+        "reference_complete": "Hurst, 1992, The Wild Turkey: Biology and Management",
+        "annee": 1992,
+        "type_etude": "Gésiers classes d'âge",
+        "region": "Sud-Est USA",
+        "focus": "Différences régime jeunes/adultes, invertébrés printemps",
+        "especes_canoniques": [
+          "DINDON_SAUVAGE"
+        ],
+        "especes_raw": "Dindon sauvage",
+        "saisons_canoniques": [
+          "PRINTEMPS",
+          "ETE"
+        ],
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "UNI",
+        "bloc_id": "REGIME_JEUNES_ADULTES_DINDON_SAUVAGE"
+      },
+      {
+        "dataset_id": "NUTRITION",
+        "study_id": 18,
+        "reference_complete": "Healy, années 1980, Wildlife Society Bulletin",
+        "annee": 1985,
+        "type_etude": "Hiver disponibilité nourriture",
+        "region": "NE USA",
+        "focus": "Utilisation champs agricoles, forêts de chênes",
+        "especes_canoniques": [
+          "DINDON_SAUVAGE"
+        ],
+        "especes_raw": "Dindon sauvage",
+        "saisons_canoniques": [
+          "HIVER"
+        ],
+        "niveau_confiance": "MOYEN",
+        "type_preuve": "PR",
+        "bloc_id": "UTILISATION_RESSOURCES_HIVERNALES_DINDON_SAUVAGE"
+      },
+      {
+        "dataset_id": "NUTRITION",
+        "study_id": 19,
+        "reference_complete": "Parker et al., années 1990, Rangifer / CJZ",
+        "annee": 1995,
+        "type_etude": "Revue",
+        "region": "Ouest canadien",
+        "focus": "Comparaison besoins énergétiques et qualité fourrage hiver",
+        "especes_canoniques": [
+          "ORIGNAL",
+          "WAPITI"
+        ],
+        "especes_raw": "Multi-ongulés (orignal, cerf, wapiti)",
+        "saisons_canoniques": [
+          "HIVER"
+        ],
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR",
+        "bloc_id": "BESOINS_ENERGETIQUES_QUALITE_FOURRAGE_HIVER_MULTIONGULES"
+      },
+      {
+        "dataset_id": "NUTRITION",
+        "study_id": 20,
+        "reference_complete": "Robbins, 1993, Wildlife Feeding and Nutrition",
+        "annee": 1993,
+        "type_etude": "Revue synthèse",
+        "region": "Amérique du Nord",
+        "focus": "Physiologie nutritionnelle, valeur plantes fourragères",
+        "especes_canoniques": [],
+        "especes_raw": "Multi-espèces grands gibiers",
+        "saisons_canoniques": [
+          "PRINTEMPS",
+          "ETE",
+          "AUTOMNE",
+          "HIVER"
+        ],
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "UNI",
+        "bloc_id": "PHYSIOLOGIE_NUTRITIONNELLE_VALEUR_PLANTES_GRAND_GIBIER"
+      }
+    ],
+    "habitat_studies": [
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 1,
+        "espece_canonique": "ORIGNAL",
+        "annee": 1974,
+        "auteurs": "Peek J.M.",
+        "titre": "Habitat use and ecology of moose in north-central North America",
+        "biome_libelle": "Forêt boréale / subboréale",
+        "biome_types": [
+          "FORET_BOREAL",
+          "FORET_SUBBOREAL"
+        ],
+        "source": "Journal of Wildlife Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 2,
+        "espece_canonique": "ORIGNAL",
+        "annee": 1998,
+        "auteurs": "Franzmann A.W., Schwartz C.C.",
+        "titre": "Ecology and Management of the North American Moose – Habitat chapter",
+        "biome_libelle": "Forêt boréale, taïga, forêt mixte",
+        "biome_types": [
+          "FORET_BOREAL",
+          "TAIGA",
+          "FORET_MIXTE"
+        ],
+        "source": "Smithsonian / Book",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "UNI"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 3,
+        "espece_canonique": "ORIGNAL",
+        "annee": 2000,
+        "auteurs": "Courtois R. et al.",
+        "titre": "Moose winter habitat selection in logged boreal forests",
+        "biome_libelle": "Forêt boréale aménagée",
+        "biome_types": [
+          "FORET_BOREAL_AMENAGEE"
+        ],
+        "source": "Canadian Journal of Forest Research",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 4,
+        "espece_canonique": "ORIGNAL",
+        "annee": 2007,
+        "auteurs": "Dussault C. et al.",
+        "titre": "Effects of forestry practices on moose habitat in eastern Canada",
+        "biome_libelle": "Forêt boréale / mixte",
+        "biome_types": [
+          "FORET_BOREAL",
+          "FORET_MIXTE"
+        ],
+        "source": "Journal of Applied Ecology",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 5,
+        "espece_canonique": "ORIGNAL",
+        "annee": 2013,
+        "auteurs": "Street G.M. et al.",
+        "titre": "Thermal refugia and habitat selection by moose in a warming climate",
+        "biome_libelle": "Forêt boréale / tempérée froide",
+        "biome_types": [
+          "FORET_BOREAL",
+          "FORET_TEMPEREE_FROIDE"
+        ],
+        "source": "Ecography",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 6,
+        "espece_canonique": "ORIGNAL",
+        "annee": 2016,
+        "auteurs": "Broders H.G. et al.",
+        "titre": "Landscape-scale drivers of moose distribution",
+        "biome_libelle": "Mosaïque boréale / agricole",
+        "biome_types": [
+          "MOSAIQUE_BOREAL_AGRICOLE"
+        ],
+        "source": "Diversity and Distributions",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 7,
+        "espece_canonique": "ORIGNAL",
+        "annee": 2019,
+        "auteurs": "Montgomery R.A. et al.",
+        "titre": "Moose habitat selection in multi-predator landscapes",
+        "biome_libelle": "Forêt boréale / montagnarde",
+        "biome_types": [
+          "FORET_BOREAL",
+          "FORET_MONTAGNARDE"
+        ],
+        "source": "Oecologia",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 8,
+        "espece_canonique": "ORIGNAL",
+        "annee": 2021,
+        "auteurs": "Stevenson C. et al.",
+        "titre": "Fine-scale habitat selection by moose at the forest cutblock interface",
+        "biome_libelle": "Forêt boréale aménagée",
+        "biome_types": [
+          "FORET_BOREAL_AMENAGEE"
+        ],
+        "source": "Forest Ecology and Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 9,
+        "espece_canonique": "ORIGNAL",
+        "annee": 2023,
+        "auteurs": "Thompson I.D. et al.",
+        "titre": "Edge population dynamics and habitat selection of moose",
+        "biome_libelle": "Lisières boréales / agricoles",
+        "biome_types": [
+          "LIERES_BOREALES_AGRICOLES"
+        ],
+        "source": "Ecology and Evolution",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 10,
+        "espece_canonique": "ORIGNAL",
+        "annee": 2024,
+        "auteurs": "Smith J. et al.",
+        "titre": "Habitat selection by moose in an emergent low-density edge population",
+        "biome_libelle": "Mosaïque boréale / prairies",
+        "biome_types": [
+          "MOSAIQUE_BOREAL_PRAIRIES"
+        ],
+        "source": "Journal of Wildlife Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 11,
+        "espece_canonique": "CHEVREUIL",
+        "annee": 1984,
+        "auteurs": "Verme L.J., Ullrey D.E.",
+        "titre": "Habitat, nutrition and population dynamics of white-tailed deer",
+        "biome_libelle": "Forêt mixte, agricole, milieux ouverts",
+        "biome_types": [
+          "FORET_MIXTE",
+          "MILIEUX_AGRICOLES",
+          "MILIEUX_OUVERTS"
+        ],
+        "source": "Journal of Wildlife Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 12,
+        "espece_canonique": "CHEVREUIL",
+        "annee": 1990,
+        "auteurs": "Brown T.L. et al.",
+        "titre": "Winter habitat use by white-tailed deer in mixed forests",
+        "biome_libelle": "Forêt mixte enneigée",
+        "biome_types": [
+          "FORET_MIXTE_ENNEIGEE"
+        ],
+        "source": "Canadian Journal of Zoology",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 13,
+        "espece_canonique": "CHEVREUIL",
+        "annee": 1998,
+        "auteurs": "Potvin F. et al.",
+        "titre": "Effects of forest management on deer wintering areas",
+        "biome_libelle": "Forêt mixte aménagée",
+        "biome_types": [
+          "FORET_MIXTE_AMENAGEE"
+        ],
+        "source": "Forest Ecology and Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 14,
+        "espece_canonique": "CHEVREUIL",
+        "annee": 2003,
+        "auteurs": "Etter D.R. et al.",
+        "titre": "Landscape composition and white-tailed deer habitat use",
+        "biome_libelle": "Mosaïque agricole / forestière",
+        "biome_types": [
+          "MOSAIQUE_AGRICOLE_FORESTIERE"
+        ],
+        "source": "Journal of Wildlife Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 15,
+        "espece_canonique": "CHEVREUIL",
+        "annee": 2008,
+        "auteurs": "Sabine D.L. et al.",
+        "titre": "Influence of snow depth on deer habitat selection",
+        "biome_libelle": "Forêt boréale / mixte",
+        "biome_types": [
+          "FORET_BOREAL",
+          "FORET_MIXTE"
+        ],
+        "source": "Wildlife Society Bulletin",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 16,
+        "espece_canonique": "CHEVREUIL",
+        "annee": 2012,
+        "auteurs": "Storm D.J. et al.",
+        "titre": "Urban and suburban habitat use by white-tailed deer",
+        "biome_libelle": "Urbain / périurbain",
+        "biome_types": [
+          "URBAIN",
+          "PERIURBAIN"
+        ],
+        "source": "Urban Ecosystems",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 17,
+        "espece_canonique": "CHEVREUIL",
+        "annee": 2016,
+        "auteurs": "Fuller A.K. et al.",
+        "titre": "Forest stand structure and deer habitat quality",
+        "biome_libelle": "Forêt tempérée feuillue",
+        "biome_types": [
+          "FORET_TEMPEREE_FEUILLUE"
+        ],
+        "source": "Forest Ecology and Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 18,
+        "espece_canonique": "CHEVREUIL",
+        "annee": 2019,
+        "auteurs": "Walter W.D. et al.",
+        "titre": "Multi-scale habitat selection by white-tailed deer",
+        "biome_libelle": "Mosaïque forestière / agricole",
+        "biome_types": [
+          "MOSAIQUE_FORESTIERE_AGRICOLE"
+        ],
+        "source": "Ecology and Evolution",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 19,
+        "espece_canonique": "CHEVREUIL",
+        "annee": 2021,
+        "auteurs": "DePerno C.S. et al.",
+        "titre": "Landscape change mechanisms affecting deer distribution",
+        "biome_libelle": "Forêt tempérée / agricole",
+        "biome_types": [
+          "FORET_TEMPEREE",
+          "MILIEUX_AGRICOLES"
+        ],
+        "source": "Journal of Wildlife Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 20,
+        "espece_canonique": "CHEVREUIL",
+        "annee": 2023,
+        "auteurs": "Jones P.D. et al.",
+        "titre": "Habitat-use patterns across forest stand ages by white-tailed deer",
+        "biome_libelle": "Forêt aménagée multi-stades",
+        "biome_types": [
+          "FORET_AMENAGEE_MULTI_STADES"
+        ],
+        "source": "Forest Ecology and Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 21,
+        "espece_canonique": "WAPITI",
+        "annee": 1973,
+        "auteurs": "Kufeld R.C.",
+        "titre": "Food habits and habitat use of Rocky Mountain elk",
+        "biome_libelle": "Montagne, prairies montagnardes",
+        "biome_types": [
+          "MONTAGNE",
+          "PRAIRIE_MONTAGNARDE"
+        ],
+        "source": "Colorado Division of Wildlife Technical Publication",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "GOV"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 22,
+        "espece_canonique": "WAPITI",
+        "annee": 1997,
+        "auteurs": "Boyce M.S. et al.",
+        "titre": "Elk habitat selection and wolf reintroduction in Yellowstone",
+        "biome_libelle": "Montagne, vallée fluviale",
+        "biome_types": [
+          "MONTAGNE",
+          "VALLEE_FLUVIALE"
+        ],
+        "source": "Journal of Wildlife Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 23,
+        "espece_canonique": "WAPITI",
+        "annee": 2002,
+        "auteurs": "Rowland M.M. et al.",
+        "titre": "Habitat use by elk in relation to roads and human disturbance",
+        "biome_libelle": "Forêt montagnarde / routes forestières",
+        "biome_types": [
+          "FORET_MONTAGNARDE",
+          "ROUTES_FORESTIERES"
+        ],
+        "source": "Journal of Wildlife Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 24,
+        "espece_canonique": "WAPITI",
+        "annee": 2005,
+        "auteurs": "Hebblewhite M. et al.",
+        "titre": "Elk habitat selection in a multi-predator system",
+        "biome_libelle": "Rocheuses canadiennes",
+        "biome_types": [
+          "ROCHEUSES_CANADIENNES"
+        ],
+        "source": "Oecologia",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 25,
+        "espece_canonique": "WAPITI",
+        "annee": 2010,
+        "auteurs": "Singer F.J. et al.",
+        "titre": "Riparian habitat use by elk and impacts on woody vegetation",
+        "biome_libelle": "Ripisylve montagnarde",
+        "biome_types": [
+          "RIPISYLVE_MONTAGNARDE"
+        ],
+        "source": "Journal of Wildlife Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 26,
+        "espece_canonique": "WAPITI",
+        "annee": 2014,
+        "auteurs": "Proffitt K.M. et al.",
+        "titre": "Seasonal habitat selection by elk in human-dominated landscapes",
+        "biome_libelle": "Mosaïque agricole / forestière",
+        "biome_types": [
+          "MOSAIQUE_AGRICOLE_FORESTIERE"
+        ],
+        "source": "Journal of Applied Ecology",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 27,
+        "espece_canonique": "WAPITI",
+        "annee": 2018,
+        "auteurs": "Lashley M.A. et al.",
+        "titre": "Drivers of habitat quality for a reintroduced elk herd",
+        "biome_libelle": "Forêt tempérée / clairières",
+        "biome_types": [
+          "FORET_TEMPEREE",
+          "CLAIRIERES"
+        ],
+        "source": "Wildlife Biology",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 28,
+        "espece_canonique": "WAPITI",
+        "annee": 2020,
+        "auteurs": "Middleton A.D. et al.",
+        "titre": "Elk habitat selection under varying predation risk and hunting pressure",
+        "biome_libelle": "Montagne, forêts mixtes",
+        "biome_types": [
+          "MONTAGNE",
+          "FORET_MIXTE"
+        ],
+        "source": "Ecology and Evolution",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 29,
+        "espece_canonique": "WAPITI",
+        "annee": 2022,
+        "auteurs": "Johnson B.K. et al.",
+        "titre": "Scale-dependence in elk habitat selection",
+        "biome_libelle": "Montagne, prairies montagnardes",
+        "biome_types": [
+          "MONTAGNE",
+          "PRAIRIE_MONTAGNARDE"
+        ],
+        "source": "Journal of Wildlife Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 30,
+        "espece_canonique": "WAPITI",
+        "annee": 2024,
+        "auteurs": "Fisher J.T. et al.",
+        "titre": "Habitat quality and movement corridors for elk in western Canada",
+        "biome_libelle": "Rocheuses, vallées fluviales",
+        "biome_types": [
+          "ROCHEUSES",
+          "VALLEES_FLUVIALES"
+        ],
+        "source": "Movement Ecology",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 31,
+        "espece_canonique": "OURS_NOIR",
+        "annee": 1995,
+        "auteurs": "Samson C., Huot J.",
+        "titre": "Summer and autumn habitat use by black bears in boreal forests",
+        "biome_libelle": "Forêt boréale",
+        "biome_types": [
+          "FORET_BOREAL"
+        ],
+        "source": "Canadian Journal of Zoology",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 32,
+        "espece_canonique": "OURS_NOIR",
+        "annee": 1999,
+        "auteurs": "Mitchell M.S., Powell R.A.",
+        "titre": "Black bear habitat use in relation to forest management",
+        "biome_libelle": "Forêt tempérée aménagée",
+        "biome_types": [
+          "FORET_TEMPEREE_AMENAGEE"
+        ],
+        "source": "Journal of Wildlife Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 33,
+        "espece_canonique": "OURS_NOIR",
+        "annee": 2000,
+        "auteurs": "Pelton M.R.",
+        "titre": "Ecology and Management of Black Bears in North America – Habitat chapter",
+        "biome_libelle": "Forêt boréale, tempérée, montagnarde",
+        "biome_types": [
+          "FORET_BOREAL",
+          "FORET_TEMPEREE",
+          "FORET_MONTAGNARDE"
+        ],
+        "source": "Book chapter",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "UNI"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 34,
+        "espece_canonique": "OURS_NOIR",
+        "annee": 2004,
+        "auteurs": "Beckmann J.P., Berger J.",
+        "titre": "Black bear habitat use along an urban–wildland gradient",
+        "biome_libelle": "Urbain / périurbain / montagnard",
+        "biome_types": [
+          "URBAIN",
+          "PERIURBAIN",
+          "MONTAGNE"
+        ],
+        "source": "Biological Conservation",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 35,
+        "espece_canonique": "OURS_NOIR",
+        "annee": 2008,
+        "auteurs": "Clevenger A.P. et al.",
+        "titre": "Influence of mast production on black bear habitat selection",
+        "biome_libelle": "Forêt de chênes / feuillue",
+        "biome_types": [
+          "FORET_DE_CHENES",
+          "FORET_FEUILLUE"
+        ],
+        "source": "Journal of Zoology",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 36,
+        "espece_canonique": "OURS_NOIR",
+        "annee": 2012,
+        "auteurs": "Nielsen S.E. et al.",
+        "titre": "Black bear habitat use in relation to roads and human activity",
+        "biome_libelle": "Forêt boréale / routes forestières",
+        "biome_types": [
+          "FORET_BOREAL",
+          "ROUTES_FORESTIERES"
+        ],
+        "source": "Journal of Wildlife Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 37,
+        "espece_canonique": "OURS_NOIR",
+        "annee": 2016,
+        "auteurs": "Costello C.M. et al.",
+        "titre": "Prescribed fire and black bear habitat quality",
+        "biome_libelle": "Forêt tempérée feuillue",
+        "biome_types": [
+          "FORET_TEMPEREE_FEUILLUE"
+        ],
+        "source": "Forest Ecology and Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 38,
+        "espece_canonique": "OURS_NOIR",
+        "annee": 2019,
+        "auteurs": "Merkle J.A. et al.",
+        "titre": "Habitat selection by black bears in multi-use landscapes",
+        "biome_libelle": "Mosaïque forestière / agricole / urbaine",
+        "biome_types": [
+          "MOSAIQUE_FORESTIERE_AGRICOLE_URBAINE"
+        ],
+        "source": "Ecology and Evolution",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 39,
+        "espece_canonique": "OURS_NOIR",
+        "annee": 2021,
+        "auteurs": "Garroway C.J. et al.",
+        "titre": "Seasonal habitat use and movement corridors of black bears",
+        "biome_libelle": "Forêt boréale / montagnarde",
+        "biome_types": [
+          "FORET_BOREAL",
+          "FORET_MONTAGNARDE"
+        ],
+        "source": "Movement Ecology",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 40,
+        "espece_canonique": "OURS_NOIR",
+        "annee": 2023,
+        "auteurs": "Lewis D.L. et al.",
+        "titre": "Black bear habitat use along an urban–wildland gradient revisited",
+        "biome_libelle": "Urbain / périurbain",
+        "biome_types": [
+          "URBAIN",
+          "PERIURBAIN"
+        ],
+        "source": "Biological Conservation",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 41,
+        "espece_canonique": "DINDON_SAUVAGE",
+        "annee": 1942,
+        "auteurs": "Dalke P.D. et al.",
+        "titre": "The ecology and management of the wild turkey",
+        "biome_libelle": "Forêt de chênes, milieux agricoles",
+        "biome_types": [
+          "FORET_DE_CHENES",
+          "MILIEUX_AGRICOLES"
+        ],
+        "source": "Journal of Wildlife Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 42,
+        "espece_canonique": "DINDON_SAUVAGE",
+        "annee": 1980,
+        "auteurs": "Healy W.M.",
+        "titre": "Winter habitat use by eastern wild turkeys",
+        "biome_libelle": "Forêt feuillue / champs agricoles",
+        "biome_types": [
+          "FORET_FEUILLUE",
+          "CHAMPS_AGRICOLES"
+        ],
+        "source": "Wildlife Society Bulletin",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 43,
+        "espece_canonique": "DINDON_SAUVAGE",
+        "annee": 1992,
+        "auteurs": "Hurst G.A.",
+        "titre": "Habitat requirements and management of wild turkeys",
+        "biome_libelle": "Forêt de chênes, pinèdes, mosaïque agricole",
+        "biome_types": [
+          "FORET_DE_CHENES",
+          "PINEDE",
+          "MOSAIQUE_AGRICOLE"
+        ],
+        "source": "The Wild Turkey: Biology and Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "UNI"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 44,
+        "espece_canonique": "DINDON_SAUVAGE",
+        "annee": 2000,
+        "auteurs": "Porter W.F. et al.",
+        "titre": "Landscape composition and wild turkey habitat use",
+        "biome_libelle": "Mosaïque forestière / agricole",
+        "biome_types": [
+          "MOSAIQUE_FORESTIERE_AGRICOLE"
+        ],
+        "source": "Journal of Wildlife Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 45,
+        "espece_canonique": "DINDON_SAUVAGE",
+        "annee": 2008,
+        "auteurs": "Thogmartin W.E. et al.",
+        "titre": "Nesting habitat selection by wild turkeys in managed forests",
+        "biome_libelle": "Forêt aménagée",
+        "biome_types": [
+          "FORET_AMENAGEE"
+        ],
+        "source": "Forest Ecology and Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 46,
+        "espece_canonique": "DINDON_SAUVAGE",
+        "annee": 2012,
+        "auteurs": "Kilgo J.C. et al.",
+        "titre": "Wild turkey habitat use in relation to prescribed fire",
+        "biome_libelle": "Forêt feuillue / pinède brûlée",
+        "biome_types": [
+          "FORET_FEUILLUE",
+          "PINEDE_BRULEE"
+        ],
+        "source": "Journal of Wildlife Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 47,
+        "espece_canonique": "DINDON_SAUVAGE",
+        "annee": 2016,
+        "auteurs": "Byrne M.E. et al.",
+        "titre": "Habitat selection by wild turkeys in mixed-use landscapes",
+        "biome_libelle": "Forêt, agriculture, zones ouvertes",
+        "biome_types": [
+          "FORET",
+          "MILIEUX_AGRICOLES",
+          "ZONES_OUVERTES"
+        ],
+        "source": "Wildlife Biology",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 48,
+        "espece_canonique": "DINDON_SAUVAGE",
+        "annee": 2019,
+        "auteurs": "Little A.R. et al.",
+        "titre": "Roosting habitat characteristics of eastern wild turkeys",
+        "biome_libelle": "Forêt feuillue / ripisylve",
+        "biome_types": [
+          "FORET_FEUILLUE",
+          "RIPISYLVE"
+        ],
+        "source": "Journal of Wildlife Management",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 49,
+        "espece_canonique": "DINDON_SAUVAGE",
+        "annee": 2021,
+        "auteurs": "Harper C.A. et al.",
+        "titre": "Habitat associations of wild turkeys across contrasting landscapes",
+        "biome_libelle": "Forêt, agriculture, zones fragmentées",
+        "biome_types": [
+          "FORET",
+          "MILIEUX_AGRICOLES",
+          "ZONES_FRAGMENTEES"
+        ],
+        "source": "Wildlife Society Bulletin",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "PR"
+      },
+      {
+        "dataset_id": "HABITAT",
+        "study_id": 50,
+        "espece_canonique": "DINDON_SAUVAGE",
+        "annee": 2023,
+        "auteurs": "Chamberlain M.J. et al.",
+        "titre": "Habitat ecology and conservation of wild turkeys: a synthesis",
+        "biome_libelle": "Forêts tempérées, mosaïques agro-forestières",
+        "biome_types": [
+          "FORET_TEMPEREE",
+          "MOSAIQUE_AGROFORESTIERE"
+        ],
+        "source": "Book / Synthesis",
+        "niveau_confiance": "ÉLEVÉ",
+        "type_preuve": "UNI"
+      }
+    ],
+    "totaux": {
+      "nutrition_count": 20,
+      "habitat_count": 50,
+      "total_studies": 70,
+      "especes_canoniques_count": 5,
+      "biomes_distincts": 44,
+      "biomes_list": [
+        "CHAMPS_AGRICOLES",
+        "CLAIRIERES",
+        "FORET",
+        "FORET_AMENAGEE",
+        "FORET_AMENAGEE_MULTI_STADES",
+        "FORET_BOREAL",
+        "FORET_BOREAL_AMENAGEE",
+        "FORET_DE_CHENES",
+        "FORET_FEUILLUE",
+        "FORET_MIXTE",
+        "FORET_MIXTE_AMENAGEE",
+        "FORET_MIXTE_ENNEIGEE",
+        "FORET_MONTAGNARDE",
+        "FORET_SUBBOREAL",
+        "FORET_TEMPEREE",
+        "FORET_TEMPEREE_AMENAGEE",
+        "FORET_TEMPEREE_FEUILLUE",
+        "FORET_TEMPEREE_FROIDE",
+        "LIERES_BOREALES_AGRICOLES",
+        "MILIEUX_AGRICOLES",
+        "MILIEUX_OUVERTS",
+        "MONTAGNE",
+        "MOSAIQUE_AGRICOLE",
+        "MOSAIQUE_AGRICOLE_FORESTIERE",
+        "MOSAIQUE_AGROFORESTIERE",
+        "MOSAIQUE_BOREAL_AGRICOLE",
+        "MOSAIQUE_BOREAL_PRAIRIES",
+        "MOSAIQUE_FORESTIERE_AGRICOLE",
+        "MOSAIQUE_FORESTIERE_AGRICOLE_URBAINE",
+        "PERIURBAIN",
+        "PINEDE",
+        "PINEDE_BRULEE",
+        "PRAIRIE_MONTAGNARDE",
+        "RIPISYLVE",
+        "RIPISYLVE_MONTAGNARDE",
+        "ROCHEUSES",
+        "ROCHEUSES_CANADIENNES",
+        "ROUTES_FORESTIERES",
+        "TAIGA",
+        "URBAIN",
+        "VALLEES_FLUVIALES",
+        "VALLEE_FLUVIALE",
+        "ZONES_FRAGMENTEES",
+        "ZONES_OUVERTES"
+      ]
+    },
+    "by_espece": {
+      "CHEVREUIL": {
+        "nutrition_count": 4,
+        "habitat_count": 10,
+        "total_refs": 14
+      },
+      "ORIGNAL": {
+        "nutrition_count": 7,
+        "habitat_count": 10,
+        "total_refs": 17
+      },
+      "OURS_NOIR": {
+        "nutrition_count": 3,
+        "habitat_count": 10,
+        "total_refs": 13
+      },
+      "WAPITI": {
+        "nutrition_count": 6,
+        "habitat_count": 10,
+        "total_refs": 16
+      },
+      "DINDON_SAUVAGE": {
+        "nutrition_count": 3,
+        "habitat_count": 10,
+        "total_refs": 13
+      }
+    },
+    "by_espece_details": {
+      "CHEVREUIL": {
+        "nutrition": [
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 1,
+            "reference_complete": "Stevenson et al., 2021, FACETS",
+            "annee": 2021,
+            "type_etude": "ADN fécal",
+            "region": "Alberta, Canada",
+            "focus": "Composition hivernale fine, chevauchement de niche alimentaire",
+            "especes_canoniques": [
+              "ORIGNAL",
+              "CHEVREUIL",
+              "WAPITI"
+            ],
+            "especes_raw": "Orignal, chevreuil, wapiti, caribou",
+            "saisons_canoniques": [
+              "HIVER"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR",
+            "bloc_id": "ALIMENTATION_HIVERNALE_ONGULES"
+          },
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 7,
+            "reference_complete": "Verme & Ullrey, 1984, Journal of Wildlife Management",
+            "annee": 1984,
+            "type_etude": "Revue",
+            "region": "Est du Canada / NE USA",
+            "focus": "Métabolisme, besoins nutritionnels, habitat hivernal",
+            "especes_canoniques": [
+              "CHEVREUIL"
+            ],
+            "especes_raw": "Chevreuil (cerf de Virginie)",
+            "saisons_canoniques": [
+              "HIVER"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR",
+            "bloc_id": "METABOLISME_BESOINS_HIVERNAL_CHEVREUIL"
+          },
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 8,
+            "reference_complete": "Brown et al., années 1990, Canadian Journal of Zoology",
+            "annee": 1995,
+            "type_etude": "Fèces + disponibilité brout",
+            "region": "Ontario, Canada",
+            "focus": "Sélection brout forêt mixte + coupes forestières",
+            "especes_canoniques": [
+              "CHEVREUIL"
+            ],
+            "especes_raw": "Chevreuil",
+            "saisons_canoniques": [
+              "PRINTEMPS",
+              "ETE",
+              "AUTOMNE",
+              "HIVER"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR",
+            "bloc_id": "SELECTION_BROUT_CHEVREUIL_COUPES"
+          },
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 9,
+            "reference_complete": "Korschgen, 1962, Journal of Wildlife Management",
+            "annee": 1962,
+            "type_etude": "Contenu ruminal long terme",
+            "region": "Midwest & NE USA",
+            "focus": "Composition régime saisonnier historique",
+            "especes_canoniques": [
+              "CHEVREUIL"
+            ],
+            "especes_raw": "Chevreuil",
+            "saisons_canoniques": [
+              "PRINTEMPS",
+              "ETE",
+              "AUTOMNE",
+              "HIVER"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR",
+            "bloc_id": "REGIME_SAISONNIER_HISTORIQUE_CHEVREUIL"
+          }
+        ],
+        "habitat": [
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 11,
+            "espece_canonique": "CHEVREUIL",
+            "annee": 1984,
+            "auteurs": "Verme L.J., Ullrey D.E.",
+            "titre": "Habitat, nutrition and population dynamics of white-tailed deer",
+            "biome_libelle": "Forêt mixte, agricole, milieux ouverts",
+            "biome_types": [
+              "FORET_MIXTE",
+              "MILIEUX_AGRICOLES",
+              "MILIEUX_OUVERTS"
+            ],
+            "source": "Journal of Wildlife Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 12,
+            "espece_canonique": "CHEVREUIL",
+            "annee": 1990,
+            "auteurs": "Brown T.L. et al.",
+            "titre": "Winter habitat use by white-tailed deer in mixed forests",
+            "biome_libelle": "Forêt mixte enneigée",
+            "biome_types": [
+              "FORET_MIXTE_ENNEIGEE"
+            ],
+            "source": "Canadian Journal of Zoology",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 13,
+            "espece_canonique": "CHEVREUIL",
+            "annee": 1998,
+            "auteurs": "Potvin F. et al.",
+            "titre": "Effects of forest management on deer wintering areas",
+            "biome_libelle": "Forêt mixte aménagée",
+            "biome_types": [
+              "FORET_MIXTE_AMENAGEE"
+            ],
+            "source": "Forest Ecology and Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 14,
+            "espece_canonique": "CHEVREUIL",
+            "annee": 2003,
+            "auteurs": "Etter D.R. et al.",
+            "titre": "Landscape composition and white-tailed deer habitat use",
+            "biome_libelle": "Mosaïque agricole / forestière",
+            "biome_types": [
+              "MOSAIQUE_AGRICOLE_FORESTIERE"
+            ],
+            "source": "Journal of Wildlife Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 15,
+            "espece_canonique": "CHEVREUIL",
+            "annee": 2008,
+            "auteurs": "Sabine D.L. et al.",
+            "titre": "Influence of snow depth on deer habitat selection",
+            "biome_libelle": "Forêt boréale / mixte",
+            "biome_types": [
+              "FORET_BOREAL",
+              "FORET_MIXTE"
+            ],
+            "source": "Wildlife Society Bulletin",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 16,
+            "espece_canonique": "CHEVREUIL",
+            "annee": 2012,
+            "auteurs": "Storm D.J. et al.",
+            "titre": "Urban and suburban habitat use by white-tailed deer",
+            "biome_libelle": "Urbain / périurbain",
+            "biome_types": [
+              "URBAIN",
+              "PERIURBAIN"
+            ],
+            "source": "Urban Ecosystems",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 17,
+            "espece_canonique": "CHEVREUIL",
+            "annee": 2016,
+            "auteurs": "Fuller A.K. et al.",
+            "titre": "Forest stand structure and deer habitat quality",
+            "biome_libelle": "Forêt tempérée feuillue",
+            "biome_types": [
+              "FORET_TEMPEREE_FEUILLUE"
+            ],
+            "source": "Forest Ecology and Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 18,
+            "espece_canonique": "CHEVREUIL",
+            "annee": 2019,
+            "auteurs": "Walter W.D. et al.",
+            "titre": "Multi-scale habitat selection by white-tailed deer",
+            "biome_libelle": "Mosaïque forestière / agricole",
+            "biome_types": [
+              "MOSAIQUE_FORESTIERE_AGRICOLE"
+            ],
+            "source": "Ecology and Evolution",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 19,
+            "espece_canonique": "CHEVREUIL",
+            "annee": 2021,
+            "auteurs": "DePerno C.S. et al.",
+            "titre": "Landscape change mechanisms affecting deer distribution",
+            "biome_libelle": "Forêt tempérée / agricole",
+            "biome_types": [
+              "FORET_TEMPEREE",
+              "MILIEUX_AGRICOLES"
+            ],
+            "source": "Journal of Wildlife Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 20,
+            "espece_canonique": "CHEVREUIL",
+            "annee": 2023,
+            "auteurs": "Jones P.D. et al.",
+            "titre": "Habitat-use patterns across forest stand ages by white-tailed deer",
+            "biome_libelle": "Forêt aménagée multi-stades",
+            "biome_types": [
+              "FORET_AMENAGEE_MULTI_STADES"
+            ],
+            "source": "Forest Ecology and Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          }
+        ]
+      },
+      "ORIGNAL": {
+        "nutrition": [
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 1,
+            "reference_complete": "Stevenson et al., 2021, FACETS",
+            "annee": 2021,
+            "type_etude": "ADN fécal",
+            "region": "Alberta, Canada",
+            "focus": "Composition hivernale fine, chevauchement de niche alimentaire",
+            "especes_canoniques": [
+              "ORIGNAL",
+              "CHEVREUIL",
+              "WAPITI"
+            ],
+            "especes_raw": "Orignal, chevreuil, wapiti, caribou",
+            "saisons_canoniques": [
+              "HIVER"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR",
+            "bloc_id": "ALIMENTATION_HIVERNALE_ONGULES"
+          },
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 2,
+            "reference_complete": "Breithaupt et al., 2024, Forestry",
+            "annee": 2024,
+            "type_etude": "Microhistologie",
+            "region": "C.-B., Canada",
+            "focus": "Sélection de brout (sapin subalpin, saule, bouleau, tremble)",
+            "especes_canoniques": [
+              "ORIGNAL"
+            ],
+            "especes_raw": "Orignal",
+            "saisons_canoniques": [
+              "HIVER"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR",
+            "bloc_id": "BROUT_HIVERNAL_ORIGNAL"
+          },
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 3,
+            "reference_complete": "Étude UNBC sur le chevauchement de régime (rapport/thèse)",
+            "annee": null,
+            "type_etude": "Analyse ruminal/fécal",
+            "region": "C.-B., Canada",
+            "focus": "Chevauchement de régime hivernage cerf mulet",
+            "especes_canoniques": [
+              "ORIGNAL",
+              "WAPITI"
+            ],
+            "especes_raw": "Orignal, wapiti, cerf mulet",
+            "saisons_canoniques": [
+              "HIVER"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "UNKNOWN",
+            "bloc_id": "CHEVAUCHEMENT_REGIME_HIVERNAL_ONGULES"
+          },
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 4,
+            "reference_complete": "Peek, 1974, Journal of Wildlife Management",
+            "annee": 1974,
+            "type_etude": "Synthèse",
+            "region": "Alaska, USA",
+            "focus": "Écologie alimentaire saisonnière orignal boréal",
+            "especes_canoniques": [
+              "ORIGNAL"
+            ],
+            "especes_raw": "Orignal",
+            "saisons_canoniques": [
+              "PRINTEMPS",
+              "ETE",
+              "AUTOMNE",
+              "HIVER"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR",
+            "bloc_id": "ECOLOGIE_ALIMENTAIRE_SAISONNIERE_ORIGNAL"
+          },
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 5,
+            "reference_complete": "Renecker & Schwartz, 1998, Ecology and Management of the North American Moose",
+            "annee": 1998,
+            "type_etude": "Revue",
+            "region": "Amérique du Nord boréale",
+            "focus": "Nutrition, besoins énergétiques, qualité du fourrage",
+            "especes_canoniques": [
+              "ORIGNAL"
+            ],
+            "especes_raw": "Orignal",
+            "saisons_canoniques": [
+              "PRINTEMPS",
+              "ETE",
+              "AUTOMNE",
+              "HIVER"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "UNI",
+            "bloc_id": "NUTRITION_BESOINS_ENERGETIQUES_ORIGNAL"
+          },
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 6,
+            "reference_complete": "Courtois et al., années 1990, divers rapports MRNF",
+            "annee": 1995,
+            "type_etude": "Contenu ruminal saisonnier",
+            "region": "Québec, Canada",
+            "focus": "Variation saisonnière brout feuillus vs résineux",
+            "especes_canoniques": [
+              "ORIGNAL"
+            ],
+            "especes_raw": "Orignal",
+            "saisons_canoniques": [
+              "PRINTEMPS",
+              "ETE",
+              "AUTOMNE",
+              "HIVER"
+            ],
+            "niveau_confiance": "MOYEN",
+            "type_preuve": "GOV",
+            "bloc_id": "VARIATION_SAISONNIERE_BROUT_ORIGNAL"
+          },
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 19,
+            "reference_complete": "Parker et al., années 1990, Rangifer / CJZ",
+            "annee": 1995,
+            "type_etude": "Revue",
+            "region": "Ouest canadien",
+            "focus": "Comparaison besoins énergétiques et qualité fourrage hiver",
+            "especes_canoniques": [
+              "ORIGNAL",
+              "WAPITI"
+            ],
+            "especes_raw": "Multi-ongulés (orignal, cerf, wapiti)",
+            "saisons_canoniques": [
+              "HIVER"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR",
+            "bloc_id": "BESOINS_ENERGETIQUES_QUALITE_FOURRAGE_HIVER_MULTIONGULES"
+          }
+        ],
+        "habitat": [
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 1,
+            "espece_canonique": "ORIGNAL",
+            "annee": 1974,
+            "auteurs": "Peek J.M.",
+            "titre": "Habitat use and ecology of moose in north-central North America",
+            "biome_libelle": "Forêt boréale / subboréale",
+            "biome_types": [
+              "FORET_BOREAL",
+              "FORET_SUBBOREAL"
+            ],
+            "source": "Journal of Wildlife Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 2,
+            "espece_canonique": "ORIGNAL",
+            "annee": 1998,
+            "auteurs": "Franzmann A.W., Schwartz C.C.",
+            "titre": "Ecology and Management of the North American Moose – Habitat chapter",
+            "biome_libelle": "Forêt boréale, taïga, forêt mixte",
+            "biome_types": [
+              "FORET_BOREAL",
+              "TAIGA",
+              "FORET_MIXTE"
+            ],
+            "source": "Smithsonian / Book",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "UNI"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 3,
+            "espece_canonique": "ORIGNAL",
+            "annee": 2000,
+            "auteurs": "Courtois R. et al.",
+            "titre": "Moose winter habitat selection in logged boreal forests",
+            "biome_libelle": "Forêt boréale aménagée",
+            "biome_types": [
+              "FORET_BOREAL_AMENAGEE"
+            ],
+            "source": "Canadian Journal of Forest Research",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 4,
+            "espece_canonique": "ORIGNAL",
+            "annee": 2007,
+            "auteurs": "Dussault C. et al.",
+            "titre": "Effects of forestry practices on moose habitat in eastern Canada",
+            "biome_libelle": "Forêt boréale / mixte",
+            "biome_types": [
+              "FORET_BOREAL",
+              "FORET_MIXTE"
+            ],
+            "source": "Journal of Applied Ecology",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 5,
+            "espece_canonique": "ORIGNAL",
+            "annee": 2013,
+            "auteurs": "Street G.M. et al.",
+            "titre": "Thermal refugia and habitat selection by moose in a warming climate",
+            "biome_libelle": "Forêt boréale / tempérée froide",
+            "biome_types": [
+              "FORET_BOREAL",
+              "FORET_TEMPEREE_FROIDE"
+            ],
+            "source": "Ecography",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 6,
+            "espece_canonique": "ORIGNAL",
+            "annee": 2016,
+            "auteurs": "Broders H.G. et al.",
+            "titre": "Landscape-scale drivers of moose distribution",
+            "biome_libelle": "Mosaïque boréale / agricole",
+            "biome_types": [
+              "MOSAIQUE_BOREAL_AGRICOLE"
+            ],
+            "source": "Diversity and Distributions",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 7,
+            "espece_canonique": "ORIGNAL",
+            "annee": 2019,
+            "auteurs": "Montgomery R.A. et al.",
+            "titre": "Moose habitat selection in multi-predator landscapes",
+            "biome_libelle": "Forêt boréale / montagnarde",
+            "biome_types": [
+              "FORET_BOREAL",
+              "FORET_MONTAGNARDE"
+            ],
+            "source": "Oecologia",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 8,
+            "espece_canonique": "ORIGNAL",
+            "annee": 2021,
+            "auteurs": "Stevenson C. et al.",
+            "titre": "Fine-scale habitat selection by moose at the forest cutblock interface",
+            "biome_libelle": "Forêt boréale aménagée",
+            "biome_types": [
+              "FORET_BOREAL_AMENAGEE"
+            ],
+            "source": "Forest Ecology and Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 9,
+            "espece_canonique": "ORIGNAL",
+            "annee": 2023,
+            "auteurs": "Thompson I.D. et al.",
+            "titre": "Edge population dynamics and habitat selection of moose",
+            "biome_libelle": "Lisières boréales / agricoles",
+            "biome_types": [
+              "LIERES_BOREALES_AGRICOLES"
+            ],
+            "source": "Ecology and Evolution",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 10,
+            "espece_canonique": "ORIGNAL",
+            "annee": 2024,
+            "auteurs": "Smith J. et al.",
+            "titre": "Habitat selection by moose in an emergent low-density edge population",
+            "biome_libelle": "Mosaïque boréale / prairies",
+            "biome_types": [
+              "MOSAIQUE_BOREAL_PRAIRIES"
+            ],
+            "source": "Journal of Wildlife Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          }
+        ]
+      },
+      "OURS_NOIR": {
+        "nutrition": [
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 13,
+            "reference_complete": "Samson & Huot, 1995, Canadian Journal of Zoology",
+            "annee": 1995,
+            "type_etude": "Fèces saisons",
+            "region": "Est du Canada",
+            "focus": "Variation saisonnière : végétaux, petits fruits, insectes, charognes",
+            "especes_canoniques": [
+              "OURS_NOIR"
+            ],
+            "especes_raw": "Ours noir",
+            "saisons_canoniques": [
+              "PRINTEMPS",
+              "ETE",
+              "AUTOMNE"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR",
+            "bloc_id": "REGIME_SAISONNIER_OURS_NOIR"
+          },
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 14,
+            "reference_complete": "Jolicoeur & Crête, années 1990, Canadian Journal of Zoology",
+            "annee": 1995,
+            "type_etude": "Fèces + disponibilité fruits",
+            "region": "Québec, Canada",
+            "focus": "Rôle petits fruits dans engraissement pré-hivernal",
+            "especes_canoniques": [
+              "OURS_NOIR"
+            ],
+            "especes_raw": "Ours noir",
+            "saisons_canoniques": [
+              "ETE",
+              "AUTOMNE"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR",
+            "bloc_id": "ROLE_PETITS_FRUITS_ENGRAISSEMENT_OURS_NOIR"
+          },
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 15,
+            "reference_complete": "Pelton, 2000, Ecology and Management of Black Bears in North America",
+            "annee": 2000,
+            "type_etude": "Synthèse long terme",
+            "region": "Appalaches, USA",
+            "focus": "Diète, plasticité alimentaire, conflits humain",
+            "especes_canoniques": [
+              "OURS_NOIR"
+            ],
+            "especes_raw": "Ours noir",
+            "saisons_canoniques": [
+              "PRINTEMPS",
+              "ETE",
+              "AUTOMNE",
+              "HIVER"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "UNI",
+            "bloc_id": "DIETE_PLASTICITE_CONFLITS_OURS_NOIR"
+          }
+        ],
+        "habitat": [
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 31,
+            "espece_canonique": "OURS_NOIR",
+            "annee": 1995,
+            "auteurs": "Samson C., Huot J.",
+            "titre": "Summer and autumn habitat use by black bears in boreal forests",
+            "biome_libelle": "Forêt boréale",
+            "biome_types": [
+              "FORET_BOREAL"
+            ],
+            "source": "Canadian Journal of Zoology",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 32,
+            "espece_canonique": "OURS_NOIR",
+            "annee": 1999,
+            "auteurs": "Mitchell M.S., Powell R.A.",
+            "titre": "Black bear habitat use in relation to forest management",
+            "biome_libelle": "Forêt tempérée aménagée",
+            "biome_types": [
+              "FORET_TEMPEREE_AMENAGEE"
+            ],
+            "source": "Journal of Wildlife Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 33,
+            "espece_canonique": "OURS_NOIR",
+            "annee": 2000,
+            "auteurs": "Pelton M.R.",
+            "titre": "Ecology and Management of Black Bears in North America – Habitat chapter",
+            "biome_libelle": "Forêt boréale, tempérée, montagnarde",
+            "biome_types": [
+              "FORET_BOREAL",
+              "FORET_TEMPEREE",
+              "FORET_MONTAGNARDE"
+            ],
+            "source": "Book chapter",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "UNI"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 34,
+            "espece_canonique": "OURS_NOIR",
+            "annee": 2004,
+            "auteurs": "Beckmann J.P., Berger J.",
+            "titre": "Black bear habitat use along an urban–wildland gradient",
+            "biome_libelle": "Urbain / périurbain / montagnard",
+            "biome_types": [
+              "URBAIN",
+              "PERIURBAIN",
+              "MONTAGNE"
+            ],
+            "source": "Biological Conservation",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 35,
+            "espece_canonique": "OURS_NOIR",
+            "annee": 2008,
+            "auteurs": "Clevenger A.P. et al.",
+            "titre": "Influence of mast production on black bear habitat selection",
+            "biome_libelle": "Forêt de chênes / feuillue",
+            "biome_types": [
+              "FORET_DE_CHENES",
+              "FORET_FEUILLUE"
+            ],
+            "source": "Journal of Zoology",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 36,
+            "espece_canonique": "OURS_NOIR",
+            "annee": 2012,
+            "auteurs": "Nielsen S.E. et al.",
+            "titre": "Black bear habitat use in relation to roads and human activity",
+            "biome_libelle": "Forêt boréale / routes forestières",
+            "biome_types": [
+              "FORET_BOREAL",
+              "ROUTES_FORESTIERES"
+            ],
+            "source": "Journal of Wildlife Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 37,
+            "espece_canonique": "OURS_NOIR",
+            "annee": 2016,
+            "auteurs": "Costello C.M. et al.",
+            "titre": "Prescribed fire and black bear habitat quality",
+            "biome_libelle": "Forêt tempérée feuillue",
+            "biome_types": [
+              "FORET_TEMPEREE_FEUILLUE"
+            ],
+            "source": "Forest Ecology and Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 38,
+            "espece_canonique": "OURS_NOIR",
+            "annee": 2019,
+            "auteurs": "Merkle J.A. et al.",
+            "titre": "Habitat selection by black bears in multi-use landscapes",
+            "biome_libelle": "Mosaïque forestière / agricole / urbaine",
+            "biome_types": [
+              "MOSAIQUE_FORESTIERE_AGRICOLE_URBAINE"
+            ],
+            "source": "Ecology and Evolution",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 39,
+            "espece_canonique": "OURS_NOIR",
+            "annee": 2021,
+            "auteurs": "Garroway C.J. et al.",
+            "titre": "Seasonal habitat use and movement corridors of black bears",
+            "biome_libelle": "Forêt boréale / montagnarde",
+            "biome_types": [
+              "FORET_BOREAL",
+              "FORET_MONTAGNARDE"
+            ],
+            "source": "Movement Ecology",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 40,
+            "espece_canonique": "OURS_NOIR",
+            "annee": 2023,
+            "auteurs": "Lewis D.L. et al.",
+            "titre": "Black bear habitat use along an urban–wildland gradient revisited",
+            "biome_libelle": "Urbain / périurbain",
+            "biome_types": [
+              "URBAIN",
+              "PERIURBAIN"
+            ],
+            "source": "Biological Conservation",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          }
+        ]
+      },
+      "WAPITI": {
+        "nutrition": [
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 1,
+            "reference_complete": "Stevenson et al., 2021, FACETS",
+            "annee": 2021,
+            "type_etude": "ADN fécal",
+            "region": "Alberta, Canada",
+            "focus": "Composition hivernale fine, chevauchement de niche alimentaire",
+            "especes_canoniques": [
+              "ORIGNAL",
+              "CHEVREUIL",
+              "WAPITI"
+            ],
+            "especes_raw": "Orignal, chevreuil, wapiti, caribou",
+            "saisons_canoniques": [
+              "HIVER"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR",
+            "bloc_id": "ALIMENTATION_HIVERNALE_ONGULES"
+          },
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 3,
+            "reference_complete": "Étude UNBC sur le chevauchement de régime (rapport/thèse)",
+            "annee": null,
+            "type_etude": "Analyse ruminal/fécal",
+            "region": "C.-B., Canada",
+            "focus": "Chevauchement de régime hivernage cerf mulet",
+            "especes_canoniques": [
+              "ORIGNAL",
+              "WAPITI"
+            ],
+            "especes_raw": "Orignal, wapiti, cerf mulet",
+            "saisons_canoniques": [
+              "HIVER"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "UNKNOWN",
+            "bloc_id": "CHEVAUCHEMENT_REGIME_HIVERNAL_ONGULES"
+          },
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 10,
+            "reference_complete": "Hebblewhite et al., années 2000, Oecologia / JWM",
+            "annee": 2005,
+            "type_etude": "Fèces + télémétrie",
+            "region": "Rocheuses canadiennes",
+            "focus": "Régime, sélection habitat, prédation loups",
+            "especes_canoniques": [
+              "WAPITI"
+            ],
+            "especes_raw": "Wapiti",
+            "saisons_canoniques": [
+              "PRINTEMPS",
+              "ETE",
+              "AUTOMNE",
+              "HIVER"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR",
+            "bloc_id": "REGIME_HABITAT_PREDATION_WAPITI"
+          },
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 11,
+            "reference_complete": "Singer et al., années 1990, Journal of Wildlife Management",
+            "annee": 1995,
+            "type_etude": "Long terme multi-saisons",
+            "region": "Yellowstone, USA",
+            "focus": "Pression brout végétation riveraine (saules, peupliers)",
+            "especes_canoniques": [
+              "WAPITI"
+            ],
+            "especes_raw": "Wapiti",
+            "saisons_canoniques": [
+              "PRINTEMPS",
+              "ETE"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR",
+            "bloc_id": "PRESSION_BROUT_VEGETATION_RIVERINE_WAPITI"
+          },
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 12,
+            "reference_complete": "Kufeld, 1973, Colorado Division of Wildlife Tech. Pub.",
+            "annee": 1973,
+            "type_etude": "Contenu ruminal",
+            "region": "Oregon/Idaho, USA",
+            "focus": "Catalogue plantes consommées par saison",
+            "especes_canoniques": [
+              "WAPITI"
+            ],
+            "especes_raw": "Wapiti",
+            "saisons_canoniques": [
+              "PRINTEMPS",
+              "ETE",
+              "AUTOMNE",
+              "HIVER"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "GOV",
+            "bloc_id": "CATALOGUE_PLANTES_CONSOMMEES_WAPITI"
+          },
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 19,
+            "reference_complete": "Parker et al., années 1990, Rangifer / CJZ",
+            "annee": 1995,
+            "type_etude": "Revue",
+            "region": "Ouest canadien",
+            "focus": "Comparaison besoins énergétiques et qualité fourrage hiver",
+            "especes_canoniques": [
+              "ORIGNAL",
+              "WAPITI"
+            ],
+            "especes_raw": "Multi-ongulés (orignal, cerf, wapiti)",
+            "saisons_canoniques": [
+              "HIVER"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR",
+            "bloc_id": "BESOINS_ENERGETIQUES_QUALITE_FOURRAGE_HIVER_MULTIONGULES"
+          }
+        ],
+        "habitat": [
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 21,
+            "espece_canonique": "WAPITI",
+            "annee": 1973,
+            "auteurs": "Kufeld R.C.",
+            "titre": "Food habits and habitat use of Rocky Mountain elk",
+            "biome_libelle": "Montagne, prairies montagnardes",
+            "biome_types": [
+              "MONTAGNE",
+              "PRAIRIE_MONTAGNARDE"
+            ],
+            "source": "Colorado Division of Wildlife Technical Publication",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "GOV"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 22,
+            "espece_canonique": "WAPITI",
+            "annee": 1997,
+            "auteurs": "Boyce M.S. et al.",
+            "titre": "Elk habitat selection and wolf reintroduction in Yellowstone",
+            "biome_libelle": "Montagne, vallée fluviale",
+            "biome_types": [
+              "MONTAGNE",
+              "VALLEE_FLUVIALE"
+            ],
+            "source": "Journal of Wildlife Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 23,
+            "espece_canonique": "WAPITI",
+            "annee": 2002,
+            "auteurs": "Rowland M.M. et al.",
+            "titre": "Habitat use by elk in relation to roads and human disturbance",
+            "biome_libelle": "Forêt montagnarde / routes forestières",
+            "biome_types": [
+              "FORET_MONTAGNARDE",
+              "ROUTES_FORESTIERES"
+            ],
+            "source": "Journal of Wildlife Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 24,
+            "espece_canonique": "WAPITI",
+            "annee": 2005,
+            "auteurs": "Hebblewhite M. et al.",
+            "titre": "Elk habitat selection in a multi-predator system",
+            "biome_libelle": "Rocheuses canadiennes",
+            "biome_types": [
+              "ROCHEUSES_CANADIENNES"
+            ],
+            "source": "Oecologia",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 25,
+            "espece_canonique": "WAPITI",
+            "annee": 2010,
+            "auteurs": "Singer F.J. et al.",
+            "titre": "Riparian habitat use by elk and impacts on woody vegetation",
+            "biome_libelle": "Ripisylve montagnarde",
+            "biome_types": [
+              "RIPISYLVE_MONTAGNARDE"
+            ],
+            "source": "Journal of Wildlife Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 26,
+            "espece_canonique": "WAPITI",
+            "annee": 2014,
+            "auteurs": "Proffitt K.M. et al.",
+            "titre": "Seasonal habitat selection by elk in human-dominated landscapes",
+            "biome_libelle": "Mosaïque agricole / forestière",
+            "biome_types": [
+              "MOSAIQUE_AGRICOLE_FORESTIERE"
+            ],
+            "source": "Journal of Applied Ecology",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 27,
+            "espece_canonique": "WAPITI",
+            "annee": 2018,
+            "auteurs": "Lashley M.A. et al.",
+            "titre": "Drivers of habitat quality for a reintroduced elk herd",
+            "biome_libelle": "Forêt tempérée / clairières",
+            "biome_types": [
+              "FORET_TEMPEREE",
+              "CLAIRIERES"
+            ],
+            "source": "Wildlife Biology",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 28,
+            "espece_canonique": "WAPITI",
+            "annee": 2020,
+            "auteurs": "Middleton A.D. et al.",
+            "titre": "Elk habitat selection under varying predation risk and hunting pressure",
+            "biome_libelle": "Montagne, forêts mixtes",
+            "biome_types": [
+              "MONTAGNE",
+              "FORET_MIXTE"
+            ],
+            "source": "Ecology and Evolution",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 29,
+            "espece_canonique": "WAPITI",
+            "annee": 2022,
+            "auteurs": "Johnson B.K. et al.",
+            "titre": "Scale-dependence in elk habitat selection",
+            "biome_libelle": "Montagne, prairies montagnardes",
+            "biome_types": [
+              "MONTAGNE",
+              "PRAIRIE_MONTAGNARDE"
+            ],
+            "source": "Journal of Wildlife Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 30,
+            "espece_canonique": "WAPITI",
+            "annee": 2024,
+            "auteurs": "Fisher J.T. et al.",
+            "titre": "Habitat quality and movement corridors for elk in western Canada",
+            "biome_libelle": "Rocheuses, vallées fluviales",
+            "biome_types": [
+              "ROCHEUSES",
+              "VALLEES_FLUVIALES"
+            ],
+            "source": "Movement Ecology",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          }
+        ]
+      },
+      "DINDON_SAUVAGE": {
+        "nutrition": [
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 16,
+            "reference_complete": "Dalke et al., 1942, Journal of Wildlife Management",
+            "annee": 1942,
+            "type_etude": "Gésiers + contenus digestifs",
+            "region": "Est des USA",
+            "focus": "Aliments saisonniers (glands, graines, invertébrés)",
+            "especes_canoniques": [
+              "DINDON_SAUVAGE"
+            ],
+            "especes_raw": "Dindon sauvage",
+            "saisons_canoniques": [
+              "PRINTEMPS",
+              "ETE",
+              "AUTOMNE",
+              "HIVER"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR",
+            "bloc_id": "ALIMENTS_SAISONNIERS_DINDON_SAUVAGE"
+          },
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 17,
+            "reference_complete": "Hurst, 1992, The Wild Turkey: Biology and Management",
+            "annee": 1992,
+            "type_etude": "Gésiers classes d'âge",
+            "region": "Sud-Est USA",
+            "focus": "Différences régime jeunes/adultes, invertébrés printemps",
+            "especes_canoniques": [
+              "DINDON_SAUVAGE"
+            ],
+            "especes_raw": "Dindon sauvage",
+            "saisons_canoniques": [
+              "PRINTEMPS",
+              "ETE"
+            ],
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "UNI",
+            "bloc_id": "REGIME_JEUNES_ADULTES_DINDON_SAUVAGE"
+          },
+          {
+            "dataset_id": "NUTRITION",
+            "study_id": 18,
+            "reference_complete": "Healy, années 1980, Wildlife Society Bulletin",
+            "annee": 1985,
+            "type_etude": "Hiver disponibilité nourriture",
+            "region": "NE USA",
+            "focus": "Utilisation champs agricoles, forêts de chênes",
+            "especes_canoniques": [
+              "DINDON_SAUVAGE"
+            ],
+            "especes_raw": "Dindon sauvage",
+            "saisons_canoniques": [
+              "HIVER"
+            ],
+            "niveau_confiance": "MOYEN",
+            "type_preuve": "PR",
+            "bloc_id": "UTILISATION_RESSOURCES_HIVERNALES_DINDON_SAUVAGE"
+          }
+        ],
+        "habitat": [
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 41,
+            "espece_canonique": "DINDON_SAUVAGE",
+            "annee": 1942,
+            "auteurs": "Dalke P.D. et al.",
+            "titre": "The ecology and management of the wild turkey",
+            "biome_libelle": "Forêt de chênes, milieux agricoles",
+            "biome_types": [
+              "FORET_DE_CHENES",
+              "MILIEUX_AGRICOLES"
+            ],
+            "source": "Journal of Wildlife Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 42,
+            "espece_canonique": "DINDON_SAUVAGE",
+            "annee": 1980,
+            "auteurs": "Healy W.M.",
+            "titre": "Winter habitat use by eastern wild turkeys",
+            "biome_libelle": "Forêt feuillue / champs agricoles",
+            "biome_types": [
+              "FORET_FEUILLUE",
+              "CHAMPS_AGRICOLES"
+            ],
+            "source": "Wildlife Society Bulletin",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 43,
+            "espece_canonique": "DINDON_SAUVAGE",
+            "annee": 1992,
+            "auteurs": "Hurst G.A.",
+            "titre": "Habitat requirements and management of wild turkeys",
+            "biome_libelle": "Forêt de chênes, pinèdes, mosaïque agricole",
+            "biome_types": [
+              "FORET_DE_CHENES",
+              "PINEDE",
+              "MOSAIQUE_AGRICOLE"
+            ],
+            "source": "The Wild Turkey: Biology and Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "UNI"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 44,
+            "espece_canonique": "DINDON_SAUVAGE",
+            "annee": 2000,
+            "auteurs": "Porter W.F. et al.",
+            "titre": "Landscape composition and wild turkey habitat use",
+            "biome_libelle": "Mosaïque forestière / agricole",
+            "biome_types": [
+              "MOSAIQUE_FORESTIERE_AGRICOLE"
+            ],
+            "source": "Journal of Wildlife Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 45,
+            "espece_canonique": "DINDON_SAUVAGE",
+            "annee": 2008,
+            "auteurs": "Thogmartin W.E. et al.",
+            "titre": "Nesting habitat selection by wild turkeys in managed forests",
+            "biome_libelle": "Forêt aménagée",
+            "biome_types": [
+              "FORET_AMENAGEE"
+            ],
+            "source": "Forest Ecology and Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 46,
+            "espece_canonique": "DINDON_SAUVAGE",
+            "annee": 2012,
+            "auteurs": "Kilgo J.C. et al.",
+            "titre": "Wild turkey habitat use in relation to prescribed fire",
+            "biome_libelle": "Forêt feuillue / pinède brûlée",
+            "biome_types": [
+              "FORET_FEUILLUE",
+              "PINEDE_BRULEE"
+            ],
+            "source": "Journal of Wildlife Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 47,
+            "espece_canonique": "DINDON_SAUVAGE",
+            "annee": 2016,
+            "auteurs": "Byrne M.E. et al.",
+            "titre": "Habitat selection by wild turkeys in mixed-use landscapes",
+            "biome_libelle": "Forêt, agriculture, zones ouvertes",
+            "biome_types": [
+              "FORET",
+              "MILIEUX_AGRICOLES",
+              "ZONES_OUVERTES"
+            ],
+            "source": "Wildlife Biology",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 48,
+            "espece_canonique": "DINDON_SAUVAGE",
+            "annee": 2019,
+            "auteurs": "Little A.R. et al.",
+            "titre": "Roosting habitat characteristics of eastern wild turkeys",
+            "biome_libelle": "Forêt feuillue / ripisylve",
+            "biome_types": [
+              "FORET_FEUILLUE",
+              "RIPISYLVE"
+            ],
+            "source": "Journal of Wildlife Management",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 49,
+            "espece_canonique": "DINDON_SAUVAGE",
+            "annee": 2021,
+            "auteurs": "Harper C.A. et al.",
+            "titre": "Habitat associations of wild turkeys across contrasting landscapes",
+            "biome_libelle": "Forêt, agriculture, zones fragmentées",
+            "biome_types": [
+              "FORET",
+              "MILIEUX_AGRICOLES",
+              "ZONES_FRAGMENTEES"
+            ],
+            "source": "Wildlife Society Bulletin",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "PR"
+          },
+          {
+            "dataset_id": "HABITAT",
+            "study_id": 50,
+            "espece_canonique": "DINDON_SAUVAGE",
+            "annee": 2023,
+            "auteurs": "Chamberlain M.J. et al.",
+            "titre": "Habitat ecology and conservation of wild turkeys: a synthesis",
+            "biome_libelle": "Forêts tempérées, mosaïques agro-forestières",
+            "biome_types": [
+              "FORET_TEMPEREE",
+              "MOSAIQUE_AGROFORESTIERE"
+            ],
+            "source": "Book / Synthesis",
+            "niveau_confiance": "ÉLEVÉ",
+            "type_preuve": "UNI"
+          }
+        ]
+      }
+    },
+    "type_preuve_stats": {
+      "GOV": 3,
+      "UNI": 8,
+      "PR": 58,
+      "UNKNOWN": 1
+    },
+    "conflits_et_doublons": {
+      "conflits_taxonomiques_count": 2,
+      "conflits_taxonomiques": [
+        {
+          "dataset": "NUTRITION",
+          "study_id": 1,
+          "type": "ESPECE_NON_CANONIQUE_PARTIELLE",
+          "especes_raw": "Orignal, chevreuil, wapiti, caribou",
+          "rationale": "Contient caribou ou cerf mulet hors périmètre Ω5."
+        },
+        {
+          "dataset": "NUTRITION",
+          "study_id": 3,
+          "type": "ESPECE_NON_CANONIQUE_PARTIELLE",
+          "especes_raw": "Orignal, wapiti, cerf mulet",
+          "rationale": "Contient caribou ou cerf mulet hors périmètre Ω5."
+        }
+      ],
+      "doublons_references_count": 0,
+      "doublons_references": []
+    }
+  }
+}

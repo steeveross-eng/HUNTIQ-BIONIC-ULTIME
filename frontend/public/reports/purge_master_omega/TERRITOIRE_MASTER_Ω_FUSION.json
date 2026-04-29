@@ -1,0 +1,122 @@
+{
+  "manifest_id": "TERRITOIRE_MASTER_Ω_FUSION",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°37",
+  "generated_at_utc": "2026-04-29T22:25:02+00:00",
+  "ponderation": {
+    "super_engines_Ω": 0.7,
+    "engines_scientifiques_Ω": 0.3,
+    "detail": "corridors=20%, nutrition=15%, sensoriel=10%, comportement=15%, gouvernance=10%, habitat=12%, vegetation=10%, phenologie=8%"
+  },
+  "inputs": {
+    "engines_6_super": {
+      "ENGINE_CORRIDORS_MASTER_Ω": {
+        "espece_scores": {
+          "CHEVREUIL": 40.0,
+          "ORIGNAL": 40.0,
+          "OURS_NOIR": 40.0,
+          "WAPITI": 40.0,
+          "DINDON_SAUVAGE": 40.0
+        }
+      },
+      "ENGINE_NUTRITION_MASTER_Ω": {
+        "espece_scores": {
+          "CHEVREUIL": 0.0,
+          "ORIGNAL": 0.0,
+          "OURS_NOIR": 0.0,
+          "WAPITI": 0.0,
+          "DINDON_SAUVAGE": 0.0
+        }
+      },
+      "ENGINE_SENSORIEL_MASTER_Ω": {
+        "espece_scores": {
+          "CHEVREUIL": 43.85,
+          "ORIGNAL": 35.0,
+          "OURS_NOIR": 23.08,
+          "WAPITI": 40.38,
+          "DINDON_SAUVAGE": 23.08
+        }
+      },
+      "ENGINE_COMPORTEMENT_MASTER_Ω": {
+        "espece_scores": {
+          "CHEVREUIL": 100.0,
+          "ORIGNAL": 100.0,
+          "OURS_NOIR": 100.0,
+          "WAPITI": 100.0,
+          "DINDON_SAUVAGE": 100.0
+        }
+      },
+      "ENGINE_GOUVERNANCE_MASTER_Ω": {
+        "espece_scores": {
+          "CHEVREUIL": 75.0,
+          "ORIGNAL": 75.0,
+          "OURS_NOIR": 75.0,
+          "WAPITI": 75.0,
+          "DINDON_SAUVAGE": 75.0
+        }
+      }
+    },
+    "engines_3_scientifiques": {
+      "habitat": {
+        "CHEVREUIL": 84.7,
+        "ORIGNAL": 87.0,
+        "OURS_NOIR": 78.9,
+        "WAPITI": 81.5,
+        "DINDON_SAUVAGE": 85.0
+      },
+      "vegetation": {
+        "CHEVREUIL": 70.5,
+        "ORIGNAL": 76.71,
+        "OURS_NOIR": 66.0,
+        "WAPITI": 72.0,
+        "DINDON_SAUVAGE": 64.33
+      },
+      "phenologie": {
+        "CHEVREUIL": 65.0,
+        "ORIGNAL": 67.98,
+        "OURS_NOIR": 75.42,
+        "WAPITI": 65.0,
+        "DINDON_SAUVAGE": 71.62
+      }
+    }
+  },
+  "score_par_espece": {
+    "CHEVREUIL": {
+      "score_composite": 57.3,
+      "se_part": 34.89,
+      "sci_part": 22.41,
+      "decision": "MARGINAL"
+    },
+    "ORIGNAL": {
+      "score_composite": 57.55,
+      "se_part": 34.0,
+      "sci_part": 23.55,
+      "decision": "MARGINAL"
+    },
+    "OURS_NOIR": {
+      "score_composite": 54.91,
+      "se_part": 32.81,
+      "sci_part": 22.1,
+      "decision": "MARGINAL"
+    },
+    "WAPITI": {
+      "score_composite": 56.72,
+      "se_part": 34.54,
+      "sci_part": 22.18,
+      "decision": "MARGINAL"
+    },
+    "DINDON_SAUVAGE": {
+      "score_composite": 55.17,
+      "se_part": 32.81,
+      "sci_part": 22.36,
+      "decision": "MARGINAL"
+    }
+  },
+  "territoire_master_score": 56.33,
+  "decision_globale": "MARGINAL",
+  "evolution": {
+    "score_apres_phase_xvi": 48.21,
+    "score_apres_fusion_xvii": 56.33,
+    "delta": 8.12
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "manifest_id": "SUPER_ENGINES_Ω_FUSION_POST_REGEN",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°37",
+  "generated_at_utc": "2026-04-29T22:25:02+00:00",
+  "super_engines_6": {
+    "ENGINE_CORRIDORS_MASTER_Ω": {
+      "score": 40.0,
+      "violations": 0
+    },
+    "ENGINE_NUTRITION_MASTER_Ω": {
+      "score": 0.0,
+      "violations": 0
+    },
+    "ENGINE_SENSORIEL_MASTER_Ω": {
+      "score": 33.08,
+      "violations": 8
+    },
+    "ENGINE_COMPORTEMENT_MASTER_Ω": {
+      "score": 100.0,
+      "violations": 0
+    },
+    "ENGINE_GOUVERNANCE_MASTER_Ω": {
+      "score": 75.0,
+      "violations": 55
+    },
+    "ENGINE_TERRITOIRE_MASTER_Ω": {
+      "score": 48.21,
+      "violations": 63
+    }
+  },
+  "engines_scientifiques_3": {
+    "ENGINE_HABITAT_Ω": 83.42,
+    "ENGINE_VÉGÉTATION_Ω": 69.91,
+    "ENGINE_PHÉNOLOGIE_Ω": 69.0
+  },
+  "composite_total_9_engines": 57.62
+}
