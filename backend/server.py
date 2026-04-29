@@ -1237,6 +1237,14 @@ try:
 except Exception as e:
     logger.warning(f"PHASE_XIII_BIO_REACTEURS_Ω router not loaded: {e}")
 
+# ═══ PHASE_XIV_OMEGA — CI hook sceau + audit longitudinal + SUPER ENGINES specs (Commandant STEEVE-MAX · 2026-04-29) ═══
+try:
+    from routes.phase_xiv_router_omega import router as phase_xiv_router
+    app.include_router(phase_xiv_router)
+    logger.info("✓ PHASE_XIV_Ω active : sceau-verify + audit-longitudinal + super-engines (interfaces) — /api/v30/{sceau,audit,super-engines}/*")
+except Exception as e:
+    logger.warning(f"PHASE_XIV_Ω router not loaded: {e}")
+
 
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")

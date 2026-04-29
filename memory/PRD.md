@@ -27,6 +27,69 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XIV — VISUALISATION + CI HOOK + AUDIT LONGITUDINAL + PRÉ-ACTIVATION SUPER ENGINES_Ω (2026-04-29 · ordre n°27)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PROCEED_TO_PHASE_XIV` ·
+  `PASSAGE_OFFICIEL_EN_PHASE_XIV`). 4 BLOCS exécutés. V30 INVIOLÉ.
+  - **BLOC 1 — Visualisation frontend BIO-REACTEURS_Ω (OBLIGATOIRE)** :
+    - Nouveau composant `/app/frontend/src/components/territoire/BioReacteursOmegaPanel.jsx`
+      monté dans `MonTerritoireBionicPage.jsx` (à côté d'EspecesOmegaPanel).
+    - Affichage runtime : 5 BIO-REACTEURS · 13 outputs/espèce expansibles ·
+      SHA-256 BIO_PROFILE + BIO_REACTEUR alignés · 275 paths résolus ·
+      statut anti-générique runtime (5/5 pass) · KPIs · footer V30 SHA.
+    - Source données : `GET /api/v30/especes/bio-reacteur/list` +
+      `/integrity` + `/{species}` (lecture seule).
+    - data-testid complets (`bio-reacteurs-omega-panel`,
+      `bio-reacteur-{espece}-{engine}` × 65).
+  - **BLOC 2 — CI hook validation sceau Ω (OBLIGATOIRE)** :
+    - Nouveau module `bio_reacteur_loader_omega/sceau_phase_xiii_validator_omega.py` :
+      `recompute_sceau_cumulatif()`, `verify_sceau()`, `log_validation()`
+      (JSONL append-only).
+    - Endpoints `GET /api/v30/sceau-phase-xiii/{verify,reference,log}`.
+    - Script CLI `/app/scripts/ci_hook_sceau_validation.sh` :
+      exit 0 = ALLOW · exit 1 = BLOCK déploiement.
+    - **Vérification live = référence** :
+      `7259e67bd6d0c65a6c3d53503036113e3a109bd56f23bf19a70bd801bb58ae4e`
+      → `verified=true` · `deployment_action=ALLOW`.
+    - Journal : `/app/frontend/public/reports/audit_longitudinal_omega/ci_hook_sceau_validation_log.jsonl`.
+  - **BLOC 3 — Audit longitudinal Ω (OBLIGATOIRE)** :
+    - Nouveau module `audit_longitudinal_omega.py` :
+      `take_snapshot()`, `diff_against_baseline()`, `list_paths_propagation()`,
+      `pipeline_continuity_check()`, `full_longitudinal_report()`.
+    - Endpoints `GET /api/v30/audit-longitudinal/{snapshot,diff,history,paths,pipeline-continuity,full}`.
+    - Snapshots horodatés (JSONL append-only) dans
+      `/app/frontend/public/reports/audit_longitudinal_omega/history_snapshots_omega.jsonl`.
+    - Diffs SHA-256 inter-phases (added/removed/modified).
+    - **275/275 paths propagés conformes**, pipeline_continuity all_ok=True.
+  - **BLOC 4 — Pré-activation SUPER ENGINES_Ω (OBLIGATOIRE)** :
+    - Nouveau module `super_engines_omega_specs.py` — **6 SUPER ENGINES_Ω**
+      verrouillés (interfaces uniquement, AUCUNE LOGIQUE) :
+      - `ENGINE_CORRIDORS_MASTER_Ω` (6 BR inputs · consume CORRIDORS+INTERACTIONS)
+      - `ENGINE_NUTRITION_MASTER_Ω` (9 BR inputs · NUTRITION+MINERAUX)
+      - `ENGINE_SENSORIEL_MASTER_Ω` (4 BR inputs · SENSORIEL+CLIMAT)
+      - `ENGINE_COMPORTEMENT_MASTER_Ω` (4 BR inputs · COMPORTEMENT+RUT+NIDIFICATION+HABITAT)
+      - `ENGINE_GOUVERNANCE_MASTER_Ω` (14 BR inputs · INTERACTIONS+MALADIES+DYNAMIQUE)
+      - `ENGINE_TERRITOIRE_MASTER_Ω` (14 BR inputs · consume les 5 autres MASTERS)
+    - Spec dataclass `frozen=True` immuable (FrozenInstanceError).
+    - **SUPER_ENGINE_LOCK_SHA256** :
+      `39efe34425c06a41225a2fe126e3612e99ef5c40a09f7a92c633d9cf32007a4c`.
+    - Statut : `PRE_ACTIVATED_AWAITING_PHASE_XV_LOGIC`.
+    - Anti-générique strict, fallback/interpolation INTERDITS.
+    - Endpoints `GET /api/v30/super-engines/{list,{super_engine_id}}`.
+  - **Tests pytest étendus** :
+    - `/app/backend/tests/test_phase_xiv_omega.py` — **14 tests**
+      (BLOC 2 × 4 + BLOC 3 × 5 + BLOC 4 × 5).
+    - **Cumul Phase XIII + XIV : 27/27 PASSED** en 0.11s.
+  - **12 endpoints HTTPS** (3 sceau · 6 audit · 3 super-engines) → 12/12 HTTP 200.
+  - **CI script bash** : `bash /app/scripts/ci_hook_sceau_validation.sh`
+    → exit 0 (ALLOW). Sceau vérifié.
+  - **Verrou cryptographique préservé** :
+    - V30 LOCKED : `fb765b94…ecb0c` + `bcb1e3a6…39d3` (intacts).
+    - Sceau Phase XIII : SHA cumulatif = référence.
+    - 5 engines espèces SHA-256 intacts.
+  - **Tests** : pytest manuel + bash + curl. Aucun testing subagent.
+  - **Note Phase XV** : implémentation logique des 6 SUPER ENGINES_Ω
+    attendue exclusivement sur ordre formel ultérieur du Commandant.
+
 - **PHASE_XIII — RUNTIME LOADER + SCEAU + TESTS PYTEST (2026-04-29 · ordre n°26)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PROCEED_TO_PHASE_XIII` ·
   `PASSAGE_OFFICIEL_EN_PHASE_XIII`). Promotion des 3 items Future/Backlog en
