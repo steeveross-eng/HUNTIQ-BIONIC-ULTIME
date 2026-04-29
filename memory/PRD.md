@@ -27,6 +27,39 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **AUDIT_MASTER_Ω · RAPPORT_MASTER_Ω (2026-04-29 · ordre n°29)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PROCEED_TO_AUDIT_MASTER_Ω`).
+  4 BLOCS exécutés. V30 INVIOLÉ. Audit exhaustif + bundle ZIP 1-click.
+  - **BLOC 1 — Extraction complète** : scan récursif `/app/backend/engines/`,
+    **228 fichiers Python** audités (AST imports + SHA-256 + lignes + sentinelles).
+  - **BLOC 2 — Consolidation institutionnelle** : **16 catégories Ω** :
+    - V30_LOCKED (2) · ENGINE_IA_Ω (1) · SCIENTIFIQUE_Ω (6) ·
+      ENGINE_ESPECE_Ω (6) · BIO_REACTEUR_RUNTIME_Ω (1) ·
+      SUPER_ENGINES_INTERFACES_Ω (1) · AUDIT_BCE4X_Ω (1) ·
+      CI_HOOK_SCEAU_Ω (1) · AUDIT_LONGITUDINAL_Ω (1) ·
+      V8_INSTITUTIONAL_Ω (106) · ESPECES_SUPPORT (1) · IA_LEGACY (1) ·
+      LEGACY_V7 (2) · LEGACY_V8 (10) · LEGACY_SUPRA (5) · ORPHAN (83).
+    - Conformité BCE-4X : **130 engines_omega · 17 legacy · 83 orphelins**.
+    - Total LOC : 37 713 lignes de code.
+  - **BLOC 3 — Export HTTPS** : 5 livrables sous `/reports/audit_master_omega/` :
+    - `RAPPORT_MASTER_Ω.html` (79 011 o · sha `cf3bc7b7e61b80fc…`) — interactif cliquable, sections expansibles, badges.
+    - `RAPPORT_MASTER_Ω.json` (232 287 o · sha `39a3e354c0be2f26…`) — données structurées exhaustives.
+    - `RAPPORT_MASTER_Ω.csv` (52 691 o · sha `93690fbe0b4a797f…`) — tableau plat 1 ligne/engine.
+    - `INDEX_MASTER_Ω.html` (8 561 o) — page d'entrée téléchargements.
+    - `RAPPORT_MASTER_Ω.zip` (61 569 o · sha `1aa7e813569b0990…`) — **bundle 1-click** (HTML + JSON + CSV + INDEX + README institutionnel).
+    - Tous les liens HTTPS publics (Ω → %CE%A9). 5/5 HTTP 200 OK.
+  - **BLOC 4 — Validation** :
+    - V30 LOCKED intact ✓ (registry_lock + engine_ia_corridors SHA-256 vérifiés).
+    - Anti-contamination : 5 sentinelles (4 fallback + 1 placeholder) ⇒ purge programmée Phase XV.b.
+    - Sceau Phase XIII : `verified=true · ALLOW`.
+    - **SHA-256 cumulatif RAPPORT_MASTER_Ω** : `5dc47caad52f9cb2bac9ff443a12184c08823c709a1f3fb082b35e07d1028b68`.
+    - Tests pytest cumulés (Phase XIII+XIV+XV) : **62/62 PASSED**.
+  - **5 recommandations automatiques** émises :
+    - HIGH : auditer 4 fichiers fallback (purge Phase XV.b).
+    - MEDIUM : cataloguer 83 orphelins · programmer suppression 17 legacy.
+    - INFO : V30 INVIOLÉ ✓ · avancer vers PHASE XVI (SUPER ENGINES logique).
+  - **Tests** : Bash + curl + python3 + pytest. Aucun testing subagent.
+
 - **PHASE_XV — 5 ENGINES SCIENTIFIQUES_Ω + ENGINE_IA_Ω + MIGRATION + LISTE NOIRE LEGACY (2026-04-29 · ordre n°28)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PROCEED_TO_PHASE_XV` ·
   `ACTIVATION_OFFICIELLE_PHASExv_Ω`). 4 BLOCS exécutés. V30 INVIOLÉ.
