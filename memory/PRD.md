@@ -27,6 +27,56 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **EXTRACTION_COMPLÈTE_ENGINES_ESPECES_Ω_V2 · 15 + 1 LIVRABLES (2026-04-29 · ordre n°22)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-3 — COMMANDE_INSTITUTIONNELLE_Ω
+  EXTRACTION_COMPLÈTE_ENGINES_ESPECES_Ω_V2_CONFIRMER_EXECUTION). Aucune modification du
+  statut d'activation. V30 INVIOLÉ.
+  - **Pipeline d'extraction** : `/tmp/generate_engines_especes_specs.py` —
+    lecture seule des 5 engines existants (`engine_chevreuil_omega.py`,
+    `engine_orignal_omega.py`, `engine_ours_noir_omega.py`,
+    `engine_wapiti_omega.py`, `engine_dindon_omega.py`), introspection des
+    dataclasses `PROFILE_*_Ω` (sources GOV/UNI/PR + DOI, seuils, dimensions,
+    sorties_territoire, style_palette) + extraction des `env.get(...)` du
+    code source de `compute()` pour inférer les inputs.
+  - **Article 1 — 15 fiches techniques individuelles (3 par espèce × 5)** :
+    - JSON : `ENGINE_<ESPECE>_Ω_SPEC.json` — Bloc Scientifique + Bloc
+      Technique + Bloc Métadonnées + Matrice 24 paramètres BCE-4X.
+    - HTML : `ENGINE_<ESPECE>_Ω_SPEC.html` — fiche institutionnelle
+      structurée (4 sections, palette colorée Ω, tableaux sources/seuils/
+      inputs/outputs/scores, badge statut ambre).
+    - CSV : `ENGINE_<ESPECE>_Ω_PARAMS.csv` — 24 paramètres BCE-4X
+      tabulés (UTF-8 BOM, quoted, lineterminator LF).
+  - **Article 2 — INDEX global** :
+    `INDEX_ESPECES_Ω_SPEC.json` (9 049 octets, self_sha256
+    `ccc2e5fe2f047fe7ae2672c39fbc5ec88b2b392ea2b33c4fc5b1a65564ef7378`) —
+    manifest des 15 fichiers (filename, espece_id, format, type, size_bytes,
+    sha256, https_url_relative, activation_status). Token requis pour
+    activation : `STEEVE-MAX-PHASE-XII-AUDIT-BCE4X-VALIDE`.
+  - **SHA-256 par fichier (16 attestations)** :
+    - CHEVREUIL JSON 16 269 o · `fd2f92fa43dbb492…` · HTML 17 902 o ·
+      `d9fb34eaf8803ff2…` · CSV 8 110 o · `c89f0b1a65846bde…`
+    - ORIGNAL JSON 17 049 o · `2c850a4d693f3250…` · HTML 18 502 o ·
+      `64fd6d745845110e…` · CSV 8 023 o · `5a7105477cb437d5…`
+    - OURS_NOIR JSON 16 981 o · `81d329ee79a8cda0…` · HTML 18 322 o ·
+      `0b47576dc410eba2…` · CSV 8 150 o · `770bfd52356912c2…`
+    - WAPITI JSON 16 751 o · `4cf16ad157e5d709…` · HTML 18 198 o ·
+      `f26be93634b58f38…` · CSV 8 023 o · `c4e487b58778a583…`
+    - DINDON_SAUVAGE JSON 18 001 o · `393f08b6beb752d3…` · HTML 19 161 o ·
+      `70fd0a6335d42ac7…` · CSV 8 445 o · `8f86e63e73b226dc…`
+  - **Article 3 — HTTPS 200 OK · 16/16 fichiers servis** :
+    Endpoint d'accès `/reports/especes_omega/<filename>` (Ω → URL-encode
+    `%CE%A9`). Tous les fichiers retournent 200 sur ingress public.
+  - **Statut activation INCHANGÉ** :
+    - API `/api/v30/especes/audit/status` retourne toujours
+      `AUDIT_ESPECES_Ω_STATUS = EN_ATTENTE_VALIDATION_COMMANDANT`,
+      `is_validated = false`.
+    - Bandeau frontend ambre `EspecesOmegaPanel.jsx` : préservé.
+  - **V30 LOCKED · INTÉGRITÉ INTACTE** :
+    - registry_lock_omega.py SHA-256 : `fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c`
+    - engine_ia_corridors_omega.py SHA-256 : `bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3`
+  - **Tests effectués** : Bash + curl + python3 (aucun testing subagent —
+    Article 4 du protocole BCE-4X respecté).
+
 - **PHASE_XII_ESPECES_Ω_AUDIT_BCE4X · VALIDATION MANUELLE COMMANDANT (2026-04-28 · ordre n°21)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-5) — audit
   intégral 5 engines × 24 paramètres = 120 vérifications avant activation

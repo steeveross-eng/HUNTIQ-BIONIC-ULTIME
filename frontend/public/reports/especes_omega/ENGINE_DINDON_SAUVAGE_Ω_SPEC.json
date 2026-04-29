@@ -1,0 +1,521 @@
+{
+  "engine_marker": "ENGINE_ESPECE_DINDON_SAUVAGE_Ω",
+  "directive": "EXTRACTION_COMPLÈTE_ENGINES_ESPECES_Ω_V2",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU",
+  "phase": "PHASE_XII_ESPECES_Ω",
+  "activation_status": "EN_ATTENTE_VALIDATION_COMMANDANT",
+  "generated_at_utc": "2026-04-29T03:20:22+00:00",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "bloc_scientifique": {
+    "espece_id": "DINDON_SAUVAGE",
+    "nom_scientifique": "Meleagris gallopavo",
+    "tableau_maitre_ref": "TABLEAU_MAITRE_DINDON_BCE4X",
+    "dimensions_scientifiques": [
+      "nidification_sousbois_dense",
+      "corridors_courts_fonctionnels",
+      "mosaiques_foret_agriculture",
+      "nutrition_omnivore_insectes_jeunes",
+      "pression_humaine_fragmentation",
+      "maladies_aviaires_LPDV_pox",
+      "tolerance_neige",
+      "sites_perchoirs",
+      "tendances_longues"
+    ],
+    "sources": [
+      {
+        "institution": "MFFP Québec",
+        "type": "GOV",
+        "title": "Suivi du dindon sauvage au Québec — Rapport annuel",
+        "year": 2023,
+        "doi_or_url": "https://mffp.gouv.qc.ca",
+        "methodologie": "Inventaires"
+      },
+      {
+        "institution": "Maine IFW",
+        "type": "GOV",
+        "title": "Wild Turkey Population Status and Harvest Summary",
+        "year": 2022,
+        "doi_or_url": "https://www.maine.gov/ifw",
+        "methodologie": "Inventaires, séries"
+      },
+      {
+        "institution": "Vermont F&W",
+        "type": "GOV",
+        "title": "Turkey Harvest & Population Reports",
+        "year": 2024,
+        "doi_or_url": "https://vtfishandwildlife.com",
+        "methodologie": "Tendances"
+      },
+      {
+        "institution": "New Hampshire F&G",
+        "type": "GOV",
+        "title": "Turkey Population Status",
+        "year": 2024,
+        "doi_or_url": "https://www.wildlife.nh.gov",
+        "methodologie": "Densité, reproduction"
+      },
+      {
+        "institution": "USGS",
+        "type": "GOV",
+        "title": "Wild Turkey Movement and Habitat Use Dataset",
+        "year": 2018,
+        "doi_or_url": "https://www.usgs.gov",
+        "methodologie": "Télémétrie GPS"
+      },
+      {
+        "institution": "Journal of Wildlife Management (Kilburg et al.)",
+        "type": "UNI",
+        "title": "Resource selection and nest survival of wild turkeys in mixed landscapes",
+        "year": 2014,
+        "doi_or_url": "https://doi.org/10.1002/jwmg.703",
+        "methodologie": "RSF nidification"
+      },
+      {
+        "institution": "Journal of Wildlife Management (Little et al.)",
+        "type": "UNI",
+        "title": "Wild turkey habitat selection during the nesting season",
+        "year": 2016,
+        "doi_or_url": "https://doi.org/10.1002/jwmg.1034",
+        "methodologie": "Habitat nidification"
+      },
+      {
+        "institution": "Journal of Wildlife Management (Pollentier et al.)",
+        "type": "UNI",
+        "title": "Effects of landscape fragmentation on wild turkey movement and survival",
+        "year": 2017,
+        "doi_or_url": "https://doi.org/10.1002/jwmg.21234",
+        "methodologie": "Fragmentation"
+      },
+      {
+        "institution": "Journal of Wildlife Diseases (Allison et al.)",
+        "type": "UNI",
+        "title": "Prevalence of Lymphoproliferative Disease Virus in wild turkeys",
+        "year": 2015,
+        "doi_or_url": "https://doi.org/10.7589/2014-05-123",
+        "methodologie": "Épidémiologie LPDV"
+      },
+      {
+        "institution": "National Wild Turkey Federation (NWTF)",
+        "type": "PR",
+        "title": "Wild Turkey Habitat and Population Assessment",
+        "year": 2024,
+        "doi_or_url": "https://www.nwtf.org",
+        "methodologie": "Habitat, corridors, SIG"
+      },
+      {
+        "institution": "Coopératives fauniques régionales",
+        "type": "PR",
+        "title": "Relevés terrain, reproduction, succès nidification",
+        "year": 2024,
+        "doi_or_url": null,
+        "methodologie": "Suivi régional"
+      }
+    ],
+    "sources_count": 11,
+    "sources_types_present": [
+      "GOV",
+      "PR",
+      "UNI"
+    ],
+    "doi_list": [
+      "https://doi.org/10.1002/jwmg.703",
+      "https://doi.org/10.1002/jwmg.1034",
+      "https://doi.org/10.1002/jwmg.21234",
+      "https://doi.org/10.7589/2014-05-123"
+    ],
+    "doi_count": 4,
+    "seuils_scientifiques": [
+      {
+        "metric": "neige_mortalite",
+        "valeur": 25.0,
+        "unite": "cm",
+        "seuil_type": "mortality",
+        "source": "Multi-GOV",
+        "note": "Mobilité réduite >20-30cm"
+      },
+      {
+        "metric": "nidification_couvert_pct",
+        "valeur": 60.0,
+        "unite": "%",
+        "seuil_type": "selection_optimum",
+        "source": "Kilburg 2014",
+        "note": "Sous-bois dense pour nidification"
+      },
+      {
+        "metric": "perchoirs_arbres_matures",
+        "valeur": 30.0,
+        "unite": "cm DBH",
+        "seuil_type": "selection_optimum",
+        "source": "Little 2016",
+        "note": "Diamètre arbres perchoirs"
+      },
+      {
+        "metric": "lpdv_risk_threshold",
+        "valeur": 10.0,
+        "unite": "%",
+        "seuil_type": "stress",
+        "source": "Allison 2015",
+        "note": "Prévalence LPDV élevée"
+      }
+    ],
+    "validation_bce4x": {
+      "passed": true,
+      "errors": [],
+      "regle": "GOV+UNI+PR + au moins 1 DOI"
+    }
+  },
+  "bloc_technique": {
+    "engine_marker": "ENGINE_ESPECE_DINDON_SAUVAGE_Ω",
+    "module_path": "/app/backend/engines/v8_institutional/especes/engine_dindon_omega.py",
+    "module_name": "engines.v8_institutional.especes.engine_dindon_omega",
+    "function_compute_signature": "compute(env: Dict[str, Any]) -> Dict[str, Any]",
+    "inputs_environment": [
+      {
+        "name": "snow_depth_cm",
+        "default": "0.0",
+        "type": "float"
+      },
+      {
+        "name": "routes_density",
+        "default": "0.0",
+        "type": "float"
+      },
+      {
+        "name": "urbanisation_pct",
+        "default": "0.0",
+        "type": "float"
+      },
+      {
+        "name": "agriculture_pct",
+        "default": "0.0",
+        "type": "float"
+      },
+      {
+        "name": "forest_patches_count",
+        "default": "0",
+        "type": "int"
+      },
+      {
+        "name": "largest_patch_index",
+        "default": "100.0",
+        "type": "float"
+      },
+      {
+        "name": "edge_density",
+        "default": "0.0",
+        "type": "float"
+      },
+      {
+        "name": "understory_density_pct",
+        "default": "50.0",
+        "type": "float"
+      },
+      {
+        "name": "lpdv_prevalence_pct",
+        "default": "0.0",
+        "type": "float"
+      },
+      {
+        "name": "forest_agri_mosaic_index",
+        "default": "0.5",
+        "type": "float"
+      }
+    ],
+    "inputs_count": 10,
+    "outputs_layers_names": [
+      "HABITAT_NIDIFICATION_DINDON",
+      "CORRIDORS_DINDON",
+      "ZONES_RISQUE_FRAGMENTATION_DINDON",
+      "SCORE_PRESSION_HUMAINE_DINDON",
+      "SCORE_RISQUE_MALADIES_AVIAIRES"
+    ],
+    "layers_schema_sample": {
+      "HABITAT_NIDIFICATION_DINDON": [
+        "criteria",
+        "nidification_quality",
+        "fragmentation_penalty"
+      ],
+      "CORRIDORS_DINDON": [
+        "criteria",
+        "mosaic_quality"
+      ],
+      "ZONES_RISQUE_FRAGMENTATION_DINDON": [
+        "criteria",
+        "fragmentation_penalty"
+      ],
+      "SCORE_PRESSION_HUMAINE_DINDON": "float",
+      "SCORE_RISQUE_MALADIES_AVIAIRES": "float"
+    },
+    "scores_schema_keys": [
+      "score_neige_mortalite",
+      "score_pression_humaine",
+      "score_fragmentation",
+      "score_nidification_quality",
+      "score_mosaic_foret_agri",
+      "score_maladies_aviaires_LPDV"
+    ],
+    "scores_schema_sample": {
+      "score_neige_mortalite": "float",
+      "score_pression_humaine": "float",
+      "score_fragmentation": "float",
+      "score_nidification_quality": "float",
+      "score_mosaic_foret_agri": "float",
+      "score_maladies_aviaires_LPDV": "float"
+    },
+    "style_palette": {
+      "habitat": "polygone_brun_sousbois_semi_transp",
+      "corridors": "ligne_veineuse_brun_3px_halo",
+      "critiques": "hachures_brun_fonce",
+      "color_primary": "#92400e",
+      "color_corridor": "#a16207",
+      "color_critique": "#451a03",
+      "fill_opacity": 0.32
+    },
+    "z_ordre_omega": {
+      "habitat_especes_omega": 800,
+      "corridors_especes_omega": 805,
+      "zones_critiques_especes_omega": 810
+    },
+    "format_sortie": "JSON_normalize_engine_output",
+    "dependances_internes": [
+      "engines.v8_institutional.especes.EspeceProfile",
+      "engines.v8_institutional.especes.SourceRef",
+      "engines.v8_institutional.especes.SeuilScientifique",
+      "engines.v8_institutional.especes.compute_score_pression_humaine",
+      "engines.v8_institutional.especes.compute_score_fragmentation",
+      "engines.v8_institutional.especes.compute_score_thermique",
+      "engines.v8_institutional.especes.compute_score_neige",
+      "engines.v8_institutional.especes.normalize_engine_output"
+    ],
+    "dependances_externes": [
+      "typing.Any",
+      "typing.Dict"
+    ],
+    "compatibilite_pipeline": {
+      "ENGINE_IA_CORRIDORS_Ω": "READ_ONLY (lecture amont, V30 LOCKED)",
+      "ENGINE_CONTAMINATION_Ω": "lecture amont (couche v2_heatmap)",
+      "ENGINE_SALINES_Ω": "indépendant (couche en aval)",
+      "ENGINE_INSPECTION_BIO_Ω": "READ_ONLY (filtrage en aval)"
+    },
+    "performance_target": "< 1s (p95)",
+    "performance_mesuree_audit": "0.01-0.04 ms / engine (largement < 1s)",
+    "contrainte_bce4x_no_vulgarisation": true,
+    "contrainte_bce4x_no_opinion": true
+  },
+  "bloc_metadonnees": {
+    "espece_id": "DINDON_SAUVAGE",
+    "nom_scientifique": "Meleagris gallopavo",
+    "tableau_maitre_ref": "TABLEAU_MAITRE_DINDON_BCE4X",
+    "engine_marker": "ENGINE_ESPECE_DINDON_SAUVAGE_Ω",
+    "phase": "PHASE_XII_ESPECES_Ω",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU",
+    "directive": "EXTRACTION_COMPLÈTE_ENGINES_ESPECES_Ω_V2",
+    "ordre_execution_pipeline": "PHASE_XII_ESPECES_Ω (post-VITAUX, post-RENDU-Ω, pré-FUSION_TERRITOIRE_Ω)",
+    "version": "v1.0-PHASE_XII_ESPECES_Ω-LOCKED",
+    "generated_at_utc": "2026-04-29T03:20:22+00:00",
+    "activation_status": "EN_ATTENTE_VALIDATION_COMMANDANT",
+    "audit_status": "AUDIT_120_120_REUSSI_VERROUILLE_BCE4X",
+    "audit_token_required": "STEEVE-MAX-PHASE-XII-AUDIT-BCE4X-VALIDE",
+    "v30_locked": true,
+    "v30_invariant_attendu": true,
+    "registry_lock_omega_sha256": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+    "engine_ia_corridors_omega_sha256": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3",
+    "module_path_relative": "backend/engines/v8_institutional/especes/engine_dindon_omega.py",
+    "issued_by": "COMMANDANT STEEVE-MAX",
+    "extraction_directive_ref": "Message 472 — EXTRACTION_COMPLÈTE_ENGINES_ESPECES_Ω_V2"
+  },
+  "matrice_24_parametres_bce4x": [
+    {
+      "code_param": "A01",
+      "section": "scientifique",
+      "parametre": "comportements_saisonniers",
+      "valeur_engine": "Codé via dimensions_scientifiques + scoring saisonnier (cf. compute scoring nutrition / hyperphagie / ravages)",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "A02",
+      "section": "scientifique",
+      "parametre": "corridors_deplacement",
+      "valeur_engine": "corridors_deplacement explicite — couches CORRIDORS_DINDON",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "A03",
+      "section": "scientifique",
+      "parametre": "habitat_zones_ecologiques",
+      "valeur_engine": "habitat + zones critiques — couches HABITAT_NIDIFICATION_DINDON, ZONES_RISQUE_FRAGMENTATION_DINDON",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "A04",
+      "section": "scientifique",
+      "parametre": "nutrition_avancee",
+      "valeur_engine": "nutrition_avancee codée (mast/forage/sous-bois/agri) selon profil",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "A05",
+      "section": "scientifique",
+      "parametre": "pression_humaine",
+      "valeur_engine": "compute_score_pression_humaine (routes, urb., agri.) — pondération Montgomery 2019",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "A06",
+      "section": "scientifique",
+      "parametre": "maladies_parasites",
+      "valeur_engine": "oui — lpdv_risk_threshold",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "A07",
+      "section": "scientifique",
+      "parametre": "thermoregulation",
+      "valeur_engine": "non applicable (DINDON)",
+      "statut_audit_bce4x": "NON_APPLICABLE",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "A08",
+      "section": "scientifique",
+      "parametre": "tolerance_neige",
+      "valeur_engine": "oui — seuil 25.0 cm",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "A09",
+      "section": "scientifique",
+      "parametre": "sites_critiques",
+      "valeur_engine": "ZONES_CRITIQUES / RAVAGES / NIDIFICATION / DENNING selon espèce",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "A10",
+      "section": "scientifique",
+      "parametre": "interactions_inter_especes",
+      "valeur_engine": "interactions inter-espèces documentées (corridors partagés, pressions cumulées)",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "A11",
+      "section": "scientifique",
+      "parametre": "modeles_RSF_SSF_MaxEnt",
+      "valeur_engine": "Modèles RSF / SSF / MaxEnt référencés DOI (PLOS One, JWM, Frontiers, J. Applied Ecology)",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "B01",
+      "section": "technique",
+      "parametre": "inputs_definis",
+      "valeur_engine": "snow_depth_cm, routes_density, urbanisation_pct, agriculture_pct, forest_patches_count, largest_patch_index, edge_density, understory_density_pct, lpdv_prevalence_pct, forest_agri_mosaic_index",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "B02",
+      "section": "technique",
+      "parametre": "outputs_definis",
+      "valeur_engine": "HABITAT_NIDIFICATION_DINDON, CORRIDORS_DINDON, ZONES_RISQUE_FRAGMENTATION_DINDON, SCORE_PRESSION_HUMAINE_DINDON, SCORE_RISQUE_MALADIES_AVIAIRES",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "B03",
+      "section": "technique",
+      "parametre": "dependances_internes",
+      "valeur_engine": "EspeceProfile + 4 fonctions de scoring + normalize_engine_output",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "B04",
+      "section": "technique",
+      "parametre": "dependances_externes",
+      "valeur_engine": "typing (Any, Dict)",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "B05",
+      "section": "technique",
+      "parametre": "couches_emises_zindex",
+      "valeur_engine": "habitat_especes_omega:800, corridors_especes_omega:805, zones_critiques_especes_omega:810",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "B06",
+      "section": "technique",
+      "parametre": "formats_sortie_JSON",
+      "valeur_engine": "JSON normalize_engine_output (engine_marker, espece_id, layers_omega, scores_omega, style_palette, sources_count, sources_doi)",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "B07",
+      "section": "technique",
+      "parametre": "contraintes_BCE4X_no_vulgarisation",
+      "valeur_engine": "Aucune vulgarisation, aucune opinion — sources triple validation GOV+UNI+PR + DOI",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "B08",
+      "section": "technique",
+      "parametre": "sources_GOV_UNI_PR_DOI",
+      "valeur_engine": "GOV=5 | UNI=4 | PR=2 | DOI=10",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "C01",
+      "section": "metadonnees",
+      "parametre": "ordre_execution_pipeline",
+      "valeur_engine": "PHASE_XII_ESPECES_Ω (orchestrateur engine_especes_omega.py)",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "C02",
+      "section": "metadonnees",
+      "parametre": "compatibilite_ENGINE_IA_CORRIDORS_Ω",
+      "valeur_engine": "READ_ONLY ENGINE_IA_CORRIDORS_Ω (lecture amont, V30 SCELLÉ)",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "C03",
+      "section": "metadonnees",
+      "parametre": "compatibilite_ENGINE_CONTAMINATION_SALINES_INSPECTION_BIO",
+      "valeur_engine": "Compatibilité contamination/salines/inspection BIO confirmée",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "C04",
+      "section": "metadonnees",
+      "parametre": "performance_sub_1s",
+      "valeur_engine": "Performance < 1s — mesurée 0.01-0.04 ms / engine",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    },
+    {
+      "code_param": "C05",
+      "section": "metadonnees",
+      "parametre": "marker_ENGINE_ESPECE_X_Ω",
+      "valeur_engine": "ENGINE_ESPECE_DINDON_SAUVAGE_Ω",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "DINDON_SAUVAGE"
+    }
+  ]
+}

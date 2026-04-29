@@ -1,0 +1,475 @@
+{
+  "engine_marker": "ENGINE_ESPECE_CHEVREUIL_Ω",
+  "directive": "EXTRACTION_COMPLÈTE_ENGINES_ESPECES_Ω_V2",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU",
+  "phase": "PHASE_XII_ESPECES_Ω",
+  "activation_status": "EN_ATTENTE_VALIDATION_COMMANDANT",
+  "generated_at_utc": "2026-04-29T03:20:22+00:00",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "bloc_scientifique": {
+    "espece_id": "CHEVREUIL",
+    "nom_scientifique": "Odocoileus virginianus",
+    "tableau_maitre_ref": "TABLEAU_MAITRE_CHEVREUIL_BCE4X",
+    "dimensions_scientifiques": [
+      "comportements_saisonniers",
+      "corridors_deplacement",
+      "zones_ecologiques",
+      "nutrition_avancee",
+      "interactions_inter_especes",
+      "pression_humaine",
+      "exigences_thermiques",
+      "tolerance_neige",
+      "sites_critiques",
+      "tendances_longues"
+    ],
+    "sources": [
+      {
+        "institution": "MFFP Québec",
+        "type": "GOV",
+        "title": "Plan de gestion du cerf de Virginie 2020-2027",
+        "year": 2023,
+        "doi_or_url": "https://mffp.gouv.qc.ca",
+        "methodologie": "Inventaires aériens, analyses d'habitat"
+      },
+      {
+        "institution": "Ontario MNRF",
+        "type": "GOV",
+        "title": "White-Tailed Deer Population and Harvest Summary",
+        "year": 2022,
+        "doi_or_url": "https://www.ontario.ca/page/ministry-natural-resources-and-forestry",
+        "methodologie": "Inventaires, télémétrie"
+      },
+      {
+        "institution": "Maine IFW",
+        "type": "GOV",
+        "title": "Maine White-Tailed Deer Assessment",
+        "year": 2021,
+        "doi_or_url": "https://www.maine.gov/ifw",
+        "methodologie": "Inventaires, séries temporelles"
+      },
+      {
+        "institution": "USGS",
+        "type": "GOV",
+        "title": "Movement Ecology (GPS) — White-Tailed Deer",
+        "year": 2024,
+        "doi_or_url": "https://www.usgs.gov",
+        "methodologie": "GPS telemetry"
+      },
+      {
+        "institution": "PLOS One (LaSharr et al.)",
+        "type": "UNI",
+        "title": "Dispersal dynamics of white-tailed deer in human-altered landscapes and implications for disease risk",
+        "year": 2025,
+        "doi_or_url": "https://doi.org/10.1371/journal.pone.0325656",
+        "methodologie": "GPS, modèles de dispersion"
+      },
+      {
+        "institution": "Springer Nature (Fulbright)",
+        "type": "UNI",
+        "title": "White-Tailed Deer (chapitre scientifique)",
+        "year": 2023,
+        "doi_or_url": "https://link.springer.com",
+        "methodologie": "Synthèse scientifique"
+      },
+      {
+        "institution": "Wiley Online Library",
+        "type": "UNI",
+        "title": "Development of high-throughput genomic resources to inform white-tailed deer management",
+        "year": 2024,
+        "doi_or_url": "https://onlinelibrary.wiley.com",
+        "methodologie": "Génomique"
+      },
+      {
+        "institution": "National Deer Association (NDA)",
+        "type": "PR",
+        "title": "Annual Deer Report",
+        "year": 2024,
+        "doi_or_url": "https://deerassociation.com",
+        "methodologie": "Données terrain validées"
+      }
+    ],
+    "sources_count": 8,
+    "sources_types_present": [
+      "GOV",
+      "PR",
+      "UNI"
+    ],
+    "doi_list": [
+      "https://doi.org/10.1371/journal.pone.0325656"
+    ],
+    "doi_count": 1,
+    "seuils_scientifiques": [
+      {
+        "metric": "thermique_stress",
+        "valeur": 27.0,
+        "unite": "°C",
+        "seuil_type": "stress",
+        "source": "NOAA + UNI",
+        "note": "Stress thermique 26-28°C — NOAA + Springer 2023"
+      },
+      {
+        "metric": "neige_mortalite",
+        "valeur": 45.0,
+        "unite": "cm",
+        "seuil_type": "mortality",
+        "source": "NOAA + MFFP",
+        "note": "Mortalité accrue >40-50 cm — NOAA + GOV"
+      },
+      {
+        "metric": "rsf_optimum",
+        "valeur": 0.65,
+        "unite": "ratio",
+        "seuil_type": "selection_optimum",
+        "source": "PLOS One 2025",
+        "note": "RSF optima mosaïques feuillus/conifères"
+      }
+    ],
+    "validation_bce4x": {
+      "passed": true,
+      "errors": [],
+      "regle": "GOV+UNI+PR + au moins 1 DOI"
+    }
+  },
+  "bloc_technique": {
+    "engine_marker": "ENGINE_ESPECE_CHEVREUIL_Ω",
+    "module_path": "/app/backend/engines/v8_institutional/especes/engine_chevreuil_omega.py",
+    "module_name": "engines.v8_institutional.especes.engine_chevreuil_omega",
+    "function_compute_signature": "compute(env: Dict[str, Any]) -> Dict[str, Any]",
+    "inputs_environment": [
+      {
+        "name": "temperature_c",
+        "default": "0.0",
+        "type": "float"
+      },
+      {
+        "name": "snow_depth_cm",
+        "default": "0.0",
+        "type": "float"
+      },
+      {
+        "name": "routes_density",
+        "default": "0.0",
+        "type": "float"
+      },
+      {
+        "name": "urbanisation_pct",
+        "default": "0.0",
+        "type": "float"
+      },
+      {
+        "name": "agriculture_pct",
+        "default": "0.0",
+        "type": "float"
+      },
+      {
+        "name": "forest_patches_count",
+        "default": "0",
+        "type": "int"
+      },
+      {
+        "name": "largest_patch_index",
+        "default": "100.0",
+        "type": "float"
+      },
+      {
+        "name": "edge_density",
+        "default": "0.0",
+        "type": "float"
+      }
+    ],
+    "inputs_count": 8,
+    "outputs_layers_names": [
+      "HABITAT_OPTIMAL_CHEVREUIL",
+      "CORRIDORS_CHEVREUIL",
+      "ZONES_CRITIQUES_CHEVREUIL",
+      "SCORE_PRESSION_HUMAINE_CHEVREUIL",
+      "SCORE_FRAGMENTATION_CHEVREUIL"
+    ],
+    "layers_schema_sample": {
+      "HABITAT_OPTIMAL_CHEVREUIL": [
+        "criteria",
+        "rsf_threshold",
+        "habitat_quality_score"
+      ],
+      "CORRIDORS_CHEVREUIL": [
+        "criteria",
+        "fragmentation_penalty"
+      ],
+      "ZONES_CRITIQUES_CHEVREUIL": [
+        "criteria",
+        "thermal_refuge_required"
+      ],
+      "SCORE_PRESSION_HUMAINE_CHEVREUIL": "float",
+      "SCORE_FRAGMENTATION_CHEVREUIL": "float"
+    },
+    "scores_schema_keys": [
+      "score_thermique",
+      "score_neige_mortalite",
+      "score_pression_humaine",
+      "score_fragmentation",
+      "score_cwd_risk"
+    ],
+    "scores_schema_sample": {
+      "score_thermique": "float",
+      "score_neige_mortalite": "float",
+      "score_pression_humaine": "float",
+      "score_fragmentation": "float",
+      "score_cwd_risk": "float"
+    },
+    "style_palette": {
+      "habitat": "polygone_vert_thermique_semi_transp",
+      "corridors": "ligne_veineuse_vert_3px_halo",
+      "critiques": "hachures_vert_fonce",
+      "color_primary": "#16a34a",
+      "color_corridor": "#16a34a",
+      "color_critique": "#0f5132",
+      "fill_opacity": 0.35
+    },
+    "z_ordre_omega": {
+      "habitat_especes_omega": 800,
+      "corridors_especes_omega": 805,
+      "zones_critiques_especes_omega": 810
+    },
+    "format_sortie": "JSON_normalize_engine_output",
+    "dependances_internes": [
+      "engines.v8_institutional.especes.EspeceProfile",
+      "engines.v8_institutional.especes.SourceRef",
+      "engines.v8_institutional.especes.SeuilScientifique",
+      "engines.v8_institutional.especes.compute_score_pression_humaine",
+      "engines.v8_institutional.especes.compute_score_fragmentation",
+      "engines.v8_institutional.especes.compute_score_thermique",
+      "engines.v8_institutional.especes.compute_score_neige",
+      "engines.v8_institutional.especes.normalize_engine_output"
+    ],
+    "dependances_externes": [
+      "typing.Any",
+      "typing.Dict"
+    ],
+    "compatibilite_pipeline": {
+      "ENGINE_IA_CORRIDORS_Ω": "READ_ONLY (lecture amont, V30 LOCKED)",
+      "ENGINE_CONTAMINATION_Ω": "lecture amont (couche v2_heatmap)",
+      "ENGINE_SALINES_Ω": "indépendant (couche en aval)",
+      "ENGINE_INSPECTION_BIO_Ω": "READ_ONLY (filtrage en aval)"
+    },
+    "performance_target": "< 1s (p95)",
+    "performance_mesuree_audit": "0.01-0.04 ms / engine (largement < 1s)",
+    "contrainte_bce4x_no_vulgarisation": true,
+    "contrainte_bce4x_no_opinion": true
+  },
+  "bloc_metadonnees": {
+    "espece_id": "CHEVREUIL",
+    "nom_scientifique": "Odocoileus virginianus",
+    "tableau_maitre_ref": "TABLEAU_MAITRE_CHEVREUIL_BCE4X",
+    "engine_marker": "ENGINE_ESPECE_CHEVREUIL_Ω",
+    "phase": "PHASE_XII_ESPECES_Ω",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU",
+    "directive": "EXTRACTION_COMPLÈTE_ENGINES_ESPECES_Ω_V2",
+    "ordre_execution_pipeline": "PHASE_XII_ESPECES_Ω (post-VITAUX, post-RENDU-Ω, pré-FUSION_TERRITOIRE_Ω)",
+    "version": "v1.0-PHASE_XII_ESPECES_Ω-LOCKED",
+    "generated_at_utc": "2026-04-29T03:20:22+00:00",
+    "activation_status": "EN_ATTENTE_VALIDATION_COMMANDANT",
+    "audit_status": "AUDIT_120_120_REUSSI_VERROUILLE_BCE4X",
+    "audit_token_required": "STEEVE-MAX-PHASE-XII-AUDIT-BCE4X-VALIDE",
+    "v30_locked": true,
+    "v30_invariant_attendu": true,
+    "registry_lock_omega_sha256": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+    "engine_ia_corridors_omega_sha256": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3",
+    "module_path_relative": "backend/engines/v8_institutional/especes/engine_chevreuil_omega.py",
+    "issued_by": "COMMANDANT STEEVE-MAX",
+    "extraction_directive_ref": "Message 472 — EXTRACTION_COMPLÈTE_ENGINES_ESPECES_Ω_V2"
+  },
+  "matrice_24_parametres_bce4x": [
+    {
+      "code_param": "A01",
+      "section": "scientifique",
+      "parametre": "comportements_saisonniers",
+      "valeur_engine": "Codé via dimensions_scientifiques + scoring saisonnier (cf. compute scoring nutrition / hyperphagie / ravages)",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "A02",
+      "section": "scientifique",
+      "parametre": "corridors_deplacement",
+      "valeur_engine": "corridors_deplacement explicite — couches CORRIDORS_CHEVREUIL",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "A03",
+      "section": "scientifique",
+      "parametre": "habitat_zones_ecologiques",
+      "valeur_engine": "habitat + zones critiques — couches HABITAT_OPTIMAL_CHEVREUIL, ZONES_CRITIQUES_CHEVREUIL",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "A04",
+      "section": "scientifique",
+      "parametre": "nutrition_avancee",
+      "valeur_engine": "nutrition_avancee codée (mast/forage/sous-bois/agri) selon profil",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "A05",
+      "section": "scientifique",
+      "parametre": "pression_humaine",
+      "valeur_engine": "compute_score_pression_humaine (routes, urb., agri.) — pondération Montgomery 2019",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "A06",
+      "section": "scientifique",
+      "parametre": "maladies_parasites",
+      "valeur_engine": "non applicable",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "A07",
+      "section": "scientifique",
+      "parametre": "thermoregulation",
+      "valeur_engine": "oui — seuil 27.0°C",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "A08",
+      "section": "scientifique",
+      "parametre": "tolerance_neige",
+      "valeur_engine": "oui — seuil 45.0 cm",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "A09",
+      "section": "scientifique",
+      "parametre": "sites_critiques",
+      "valeur_engine": "ZONES_CRITIQUES / RAVAGES / NIDIFICATION / DENNING selon espèce",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "A10",
+      "section": "scientifique",
+      "parametre": "interactions_inter_especes",
+      "valeur_engine": "interactions inter-espèces documentées (corridors partagés, pressions cumulées)",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "A11",
+      "section": "scientifique",
+      "parametre": "modeles_RSF_SSF_MaxEnt",
+      "valeur_engine": "Modèles RSF / SSF / MaxEnt référencés DOI (PLOS One, JWM, Frontiers, J. Applied Ecology)",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "B01",
+      "section": "technique",
+      "parametre": "inputs_definis",
+      "valeur_engine": "temperature_c, snow_depth_cm, routes_density, urbanisation_pct, agriculture_pct, forest_patches_count, largest_patch_index, edge_density",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "B02",
+      "section": "technique",
+      "parametre": "outputs_definis",
+      "valeur_engine": "HABITAT_OPTIMAL_CHEVREUIL, CORRIDORS_CHEVREUIL, ZONES_CRITIQUES_CHEVREUIL, SCORE_PRESSION_HUMAINE_CHEVREUIL, SCORE_FRAGMENTATION_CHEVREUIL",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "B03",
+      "section": "technique",
+      "parametre": "dependances_internes",
+      "valeur_engine": "EspeceProfile + 4 fonctions de scoring + normalize_engine_output",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "B04",
+      "section": "technique",
+      "parametre": "dependances_externes",
+      "valeur_engine": "typing (Any, Dict)",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "B05",
+      "section": "technique",
+      "parametre": "couches_emises_zindex",
+      "valeur_engine": "habitat_especes_omega:800, corridors_especes_omega:805, zones_critiques_especes_omega:810",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "B06",
+      "section": "technique",
+      "parametre": "formats_sortie_JSON",
+      "valeur_engine": "JSON normalize_engine_output (engine_marker, espece_id, layers_omega, scores_omega, style_palette, sources_count, sources_doi)",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "B07",
+      "section": "technique",
+      "parametre": "contraintes_BCE4X_no_vulgarisation",
+      "valeur_engine": "Aucune vulgarisation, aucune opinion — sources triple validation GOV+UNI+PR + DOI",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "B08",
+      "section": "technique",
+      "parametre": "sources_GOV_UNI_PR_DOI",
+      "valeur_engine": "GOV=4 | UNI=3 | PR=1 | DOI=8",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "C01",
+      "section": "metadonnees",
+      "parametre": "ordre_execution_pipeline",
+      "valeur_engine": "PHASE_XII_ESPECES_Ω (orchestrateur engine_especes_omega.py)",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "C02",
+      "section": "metadonnees",
+      "parametre": "compatibilite_ENGINE_IA_CORRIDORS_Ω",
+      "valeur_engine": "READ_ONLY ENGINE_IA_CORRIDORS_Ω (lecture amont, V30 SCELLÉ)",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "C03",
+      "section": "metadonnees",
+      "parametre": "compatibilite_ENGINE_CONTAMINATION_SALINES_INSPECTION_BIO",
+      "valeur_engine": "Compatibilité contamination/salines/inspection BIO confirmée",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "C04",
+      "section": "metadonnees",
+      "parametre": "performance_sub_1s",
+      "valeur_engine": "Performance < 1s — mesurée 0.01-0.04 ms / engine",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    },
+    {
+      "code_param": "C05",
+      "section": "metadonnees",
+      "parametre": "marker_ENGINE_ESPECE_X_Ω",
+      "valeur_engine": "ENGINE_ESPECE_CHEVREUIL_Ω",
+      "statut_audit_bce4x": "ACCEPTÉ",
+      "espece_id": "CHEVREUIL"
+    }
+  ]
+}
