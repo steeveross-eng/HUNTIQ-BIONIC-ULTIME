@@ -1,0 +1,5757 @@
+{
+  "manifest_id": "AUDIT_KEPT_FOR_INTEGRITY_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°34",
+  "audited_at_utc": "2026-04-29T18:18:22+00:00",
+  "audit_strategy": "2.c — Forensique : imports + dépendances + AST + LOC + complexité cyclomatique McCabe",
+  "stats": {
+    "total_audited": 60,
+    "ast_parse_ok": 60,
+    "ast_parse_failed": 0,
+    "with_legacy_imports": 11,
+    "with_omega_imports": 7,
+    "candidate_purge_xvii": 6,
+    "total_lines_code": 11922,
+    "total_classes": 24,
+    "total_functions": 420,
+    "max_cyclomatic_complexity_global": 55,
+    "by_target_migration": {
+      "SUPER_ENGINES_Ω (à classifier)": 58,
+      "BIO_REACTEUR_Ω (corridors)": 2
+    },
+    "by_risk_level": {
+      "HIGH": 27,
+      "MEDIUM": 11,
+      "LOW": 22
+    },
+    "by_priority": {
+      "P0": 11,
+      "P1": 49,
+      "P2": 0
+    },
+    "by_wave": {
+      "1": 6,
+      "2": 1,
+      "3": 53
+    },
+    "total_eta_hours": 461.2
+  },
+  "records": [
+    {
+      "abs_path": "/app/backend/engines/post_smoothing/terrain_signals_builder.py",
+      "rel_path": "post_smoothing/terrain_signals_builder.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.post_smoothing.terrain_signals_builder"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 15360,
+      "sha256_now": "a110fc3d36e9b053b5687d534fc8e5ab70d8cdf245e442d4287e06ab78726f44",
+      "sha256_match_pre_purge": true,
+      "lines_total": 352,
+      "lines_code": 286,
+      "lines_blank": 56,
+      "lines_comment": 10,
+      "imports_count": 5,
+      "imports_list": [
+        "__future__",
+        "engines.terrain_3d_omega.router",
+        "math",
+        "os",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [
+        "engines.terrain_3d_omega.router"
+      ],
+      "omega_imports_count": 1,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 18,
+      "classes": [],
+      "functions": [
+        {
+          "name": "is_p3_authorized",
+          "lineno": 51,
+          "args_count": 0,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "_meters_per_deg_lng",
+          "lineno": 65,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_offset",
+          "lineno": 69,
+          "args_count": 4,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_generate_water_points",
+          "lineno": 76,
+          "args_count": 3,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "_generate_steep_points",
+          "lineno": 97,
+          "args_count": 3,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "_generate_human_zones",
+          "lineno": 115,
+          "args_count": 3,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "_ndvi_cell_value",
+          "lineno": 155,
+          "args_count": 2,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_generate_ndvi_grid",
+          "lineno": 166,
+          "args_count": 4,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "_aggregate_forest_cover",
+          "lineno": 183,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "_microrelief_from_terrain_3d",
+          "lineno": 189,
+          "args_count": 2,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "build_institutional_signals",
+          "lineno": 204,
+          "args_count": 3,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "_haversine_m",
+          "lineno": 241,
+          "args_count": 2,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_ndvi_nearest",
+          "lineno": 250,
+          "args_count": 3,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "derive_corridor_subscores",
+          "lineno": 261,
+          "args_count": 2,
+          "cyclomatic_complexity": 27,
+          "is_async": false
+        },
+        {
+          "name": "_sample_hydro",
+          "lineno": 285,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "_sample_slope_penalty",
+          "lineno": 289,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "_sample_ndvi",
+          "lineno": 293,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_sample_human",
+          "lineno": 296,
+          "args_count": 1,
+          "cyclomatic_complexity": 6,
+          "is_async": false
+        }
+      ],
+      "max_cyclomatic_complexity": 27,
+      "avg_cyclomatic_complexity": 3.61,
+      "total_decision_points": 47,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": true,
+      "risk_level": "HIGH",
+      "priority": "P1",
+      "eta_hours_estimate": 12.0,
+      "wave": 1
+    },
+    {
+      "abs_path": "/app/backend/engines/post_smoothing/p1_preparation.py",
+      "rel_path": "post_smoothing/p1_preparation.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.post_smoothing.p1_preparation"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 24504,
+      "sha256_now": "0144ca6155b784cb326a72bcbc162a69647e369db6ddd3fd3ca70815c181922c",
+      "sha256_match_pre_purge": true,
+      "lines_total": 525,
+      "lines_code": 424,
+      "lines_blank": 60,
+      "lines_comment": 41,
+      "imports_count": 7,
+      "imports_list": [
+        "__future__",
+        "engines.bio_scoring_omega.router",
+        "engines.post_smoothing.terrain_signals_builder",
+        "engines.reseau_veineux_omega.external_inflow",
+        "engines.reseau_veineux_omega.router",
+        "os",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [
+        "engines.bio_scoring_omega.router",
+        "engines.reseau_veineux_omega.external_inflow",
+        "engines.reseau_veineux_omega.router"
+      ],
+      "omega_imports_count": 3,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 13,
+      "classes": [],
+      "functions": [
+        {
+          "name": "is_p1_activation_authorized",
+          "lineno": 48,
+          "args_count": 0,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "is_p1_2_activation_authorized",
+          "lineno": 80,
+          "args_count": 0,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "draft_enrich_corridor_with_hierarchy",
+          "lineno": 104,
+          "args_count": 2,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "draft_enforce_min_2_vital_zones",
+          "lineno": 122,
+          "args_count": 1,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        },
+        {
+          "name": "draft_apply_post_v30_scoring",
+          "lineno": 141,
+          "args_count": 2,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "_derive_subscores_from_corridor",
+          "lineno": 158,
+          "args_count": 1,
+          "cyclomatic_complexity": 8,
+          "is_async": false
+        },
+        {
+          "name": "apply_p1_suite_to_corridor",
+          "lineno": 188,
+          "args_count": 2,
+          "cyclomatic_complexity": 6,
+          "is_async": false
+        },
+        {
+          "name": "apply_p1_suite_to_bundle",
+          "lineno": 230,
+          "args_count": 1,
+          "cyclomatic_complexity": 11,
+          "is_async": false
+        },
+        {
+          "name": "_classify_commandant_by_weight",
+          "lineno": 300,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_external_path_to_corridor",
+          "lineno": 312,
+          "args_count": 4,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_extract_center_and_vitals",
+          "lineno": 335,
+          "args_count": 1,
+          "cyclomatic_complexity": 22,
+          "is_async": false
+        },
+        {
+          "name": "draft_external_inflow_to_smoother",
+          "lineno": 379,
+          "args_count": 3,
+          "cyclomatic_complexity": 14,
+          "is_async": false
+        },
+        {
+          "name": "p1_preparation_status",
+          "lineno": 498,
+          "args_count": 0,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        }
+      ],
+      "max_cyclomatic_complexity": 22,
+      "avg_cyclomatic_complexity": 6.54,
+      "total_decision_points": 72,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": true,
+      "risk_level": "HIGH",
+      "priority": "P1",
+      "eta_hours_estimate": 12.0,
+      "wave": 1
+    },
+    {
+      "abs_path": "/app/backend/engines/reseau_veineux_omega/router.py",
+      "rel_path": "reseau_veineux_omega/router.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.reseau_veineux_omega.router"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 13401,
+      "sha256_now": "0e2eb7cbed7eec7a2691c5c786797c1e89017f4c154261dfd51f3324af2fc389",
+      "sha256_match_pre_purge": true,
+      "lines_total": 325,
+      "lines_code": 274,
+      "lines_blank": 35,
+      "lines_comment": 16,
+      "imports_count": 5,
+      "imports_list": [
+        "__future__",
+        "engines.reseau_veineux_omega.external_inflow",
+        "fastapi",
+        "fastapi.responses",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [
+        "engines.reseau_veineux_omega.external_inflow"
+      ],
+      "omega_imports_count": 1,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 11,
+      "classes": [],
+      "functions": [
+        {
+          "name": "classify_corridor",
+          "lineno": 43,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "validate_functional_radius",
+          "lineno": 51,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "enforce_vital_zone_rule",
+          "lineno": 63,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "external_inflow_endpoint_status",
+          "lineno": 92,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "external_inflow_preview",
+          "lineno": 97,
+          "args_count": 1,
+          "cyclomatic_complexity": 6,
+          "is_async": true
+        },
+        {
+          "name": "_build_geojson",
+          "lineno": 158,
+          "args_count": 6,
+          "cyclomatic_complexity": 14,
+          "is_async": false
+        },
+        {
+          "name": "external_inflow_geojson",
+          "lineno": 243,
+          "args_count": 1,
+          "cyclomatic_complexity": 6,
+          "is_async": true
+        },
+        {
+          "name": "external_inflow_geojson_get",
+          "lineno": 281,
+          "args_count": 3,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "status",
+          "lineno": 297,
+          "args_count": 0,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        },
+        {
+          "name": "levels",
+          "lineno": 310,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "compute",
+          "lineno": 315,
+          "args_count": 1,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 14,
+      "avg_cyclomatic_complexity": 3.64,
+      "total_decision_points": 29,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": true,
+      "risk_level": "HIGH",
+      "priority": "P1",
+      "eta_hours_estimate": 12.0,
+      "wave": 1
+    },
+    {
+      "abs_path": "/app/backend/engines/bio_scoring_omega/router.py",
+      "rel_path": "bio_scoring_omega/router.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.bio_scoring_omega.router"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 3768,
+      "sha256_now": "690b9b8d90286b85744442715b88b58b8c02f12baf948692794c06927a20cc2e",
+      "sha256_match_pre_purge": true,
+      "lines_total": 115,
+      "lines_code": 90,
+      "lines_blank": 13,
+      "lines_comment": 12,
+      "imports_count": 5,
+      "imports_list": [
+        "__future__",
+        "engines.bio_scoring_omega.v30_mirror_read_only",
+        "fastapi",
+        "fastapi.responses",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [
+        "engines.bio_scoring_omega.v30_mirror_read_only"
+      ],
+      "omega_imports_count": 1,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 3,
+      "classes": [],
+      "functions": [
+        {
+          "name": "score_8_factors",
+          "lineno": 35,
+          "args_count": 1,
+          "cyclomatic_complexity": 10,
+          "is_async": false
+        },
+        {
+          "name": "status",
+          "lineno": 92,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "compute",
+          "lineno": 110,
+          "args_count": 1,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 10,
+      "avg_cyclomatic_complexity": 4.33,
+      "total_decision_points": 10,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": true,
+      "risk_level": "HIGH",
+      "priority": "P1",
+      "eta_hours_estimate": 6.0,
+      "wave": 1
+    },
+    {
+      "abs_path": "/app/backend/engines/post_smoothing/predictive_integration.py",
+      "rel_path": "post_smoothing/predictive_integration.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.post_smoothing.predictive_integration"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 11632,
+      "sha256_now": "47dfb202ea545ea46ef36d1862b62b77a70b1f20ae7cabfb59f3805553e17ad5",
+      "sha256_match_pre_purge": true,
+      "lines_total": 284,
+      "lines_code": 230,
+      "lines_blank": 42,
+      "lines_comment": 12,
+      "imports_count": 6,
+      "imports_list": [
+        "__future__",
+        "datetime",
+        "engines.predictive_omega.router",
+        "math",
+        "os",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [
+        "engines.predictive_omega.router"
+      ],
+      "omega_imports_count": 1,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 10,
+      "classes": [],
+      "functions": [
+        {
+          "name": "is_p2_authorized",
+          "lineno": 47,
+          "args_count": 0,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "_path_length_m",
+          "lineno": 70,
+          "args_count": 1,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "_sample_indices",
+          "lineno": 86,
+          "args_count": 2,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "_choose_n_samples",
+          "lineno": 102,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "_weighted_mean",
+          "lineno": 120,
+          "args_count": 2,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        },
+        {
+          "name": "_midpoint",
+          "lineno": 129,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "_hierarchical_factor",
+          "lineno": 135,
+          "args_count": 1,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "_corridor_probability",
+          "lineno": 142,
+          "args_count": 4,
+          "cyclomatic_complexity": 6,
+          "is_async": false
+        },
+        {
+          "name": "apply_predictive_to_corridor",
+          "lineno": 194,
+          "args_count": 4,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "apply_predictive_to_bundle",
+          "lineno": 232,
+          "args_count": 1,
+          "cyclomatic_complexity": 8,
+          "is_async": false
+        }
+      ],
+      "max_cyclomatic_complexity": 8,
+      "avg_cyclomatic_complexity": 4.0,
+      "total_decision_points": 30,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": true,
+      "risk_level": "MEDIUM",
+      "priority": "P1",
+      "eta_hours_estimate": 8.4,
+      "wave": 1
+    },
+    {
+      "abs_path": "/app/backend/engines/predictive_omega/router.py",
+      "rel_path": "predictive_omega/router.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.predictive_omega.router"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 6275,
+      "sha256_now": "09b15150fc1ba4e3297d8c781b0c2c1fee918704083567daa6bfc40a35fab12d",
+      "sha256_match_pre_purge": true,
+      "lines_total": 180,
+      "lines_code": 147,
+      "lines_blank": 29,
+      "lines_comment": 4,
+      "imports_count": 9,
+      "imports_list": [
+        "__future__",
+        "datetime",
+        "engines.ecoforestry_omega.router",
+        "engines.legal_time_omega.router",
+        "engines.terrain_3d_omega.router",
+        "engines.x199_commons",
+        "fastapi",
+        "fastapi.responses",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [
+        "engines.ecoforestry_omega.router",
+        "engines.legal_time_omega.router",
+        "engines.terrain_3d_omega.router"
+      ],
+      "omega_imports_count": 3,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 7,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_canopy_score_species",
+          "lineno": 54,
+          "args_count": 2,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_slope_score",
+          "lineno": 64,
+          "args_count": 1,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "_aspect_score",
+          "lineno": 71,
+          "args_count": 2,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "_activity_score",
+          "lineno": 83,
+          "args_count": 2,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "compute_predictive",
+          "lineno": 91,
+          "args_count": 6,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        },
+        {
+          "name": "engine_status",
+          "lineno": 148,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "engine_compute",
+          "lineno": 169,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 5,
+      "avg_cyclomatic_complexity": 2.43,
+      "total_decision_points": 10,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": true,
+      "risk_level": "MEDIUM",
+      "priority": "P1",
+      "eta_hours_estimate": 4.2,
+      "wave": 1
+    },
+    {
+      "abs_path": "/app/backend/engines/post_smoothing/organic_corridor_smoother.py",
+      "rel_path": "post_smoothing/organic_corridor_smoother.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.post_smoothing.organic_corridor_smoother"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 40519,
+      "sha256_now": "7cf53689fb7f42b77ab134d3bed87ad7ed1da9572283a87e07e38b889a127619",
+      "sha256_match_pre_purge": true,
+      "lines_total": 813,
+      "lines_code": 636,
+      "lines_blank": 73,
+      "lines_comment": 104,
+      "imports_count": 12,
+      "imports_list": [
+        "__future__",
+        "engines.post_smoothing.p1_preparation",
+        "engines.post_smoothing.predictive_integration",
+        "engines.post_smoothing.renduomega",
+        "engines.post_smoothing.terrain_signals_builder",
+        "engines.v8_institutional",
+        "engines.v8_institutional.species_presence_mask_omega",
+        "fastapi",
+        "fastapi.responses",
+        "inspect",
+        "math",
+        "typing"
+      ],
+      "legacy_imports": [
+        "engines.v8_institutional"
+      ],
+      "legacy_imports_count": 1,
+      "omega_imports": [
+        "engines.v8_institutional.species_presence_mask_omega"
+      ],
+      "omega_imports_count": 1,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 16,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_angle_deg_at",
+          "lineno": 134,
+          "args_count": 3,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        },
+        {
+          "name": "_segment_m",
+          "lineno": 150,
+          "args_count": 2,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_haversine_m",
+          "lineno": 157,
+          "args_count": 2,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "trim_problematic_tail",
+          "lineno": 172,
+          "args_count": 3,
+          "cyclomatic_complexity": 9,
+          "is_async": false
+        },
+        {
+          "name": "smooth_angle_violations",
+          "lineno": 197,
+          "args_count": 3,
+          "cyclomatic_complexity": 9,
+          "is_async": false
+        },
+        {
+          "name": "despike_path",
+          "lineno": 222,
+          "args_count": 3,
+          "cyclomatic_complexity": 8,
+          "is_async": false
+        },
+        {
+          "name": "eliminate_fuite_angles",
+          "lineno": 242,
+          "args_count": 2,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "enforce_segment_max",
+          "lineno": 250,
+          "args_count": 2,
+          "cyclomatic_complexity": 6,
+          "is_async": false
+        },
+        {
+          "name": "apply_ecological_alignment",
+          "lineno": 272,
+          "args_count": 3,
+          "cyclomatic_complexity": 21,
+          "is_async": false
+        },
+        {
+          "name": "apply_ia_attractors",
+          "lineno": 345,
+          "args_count": 2,
+          "cyclomatic_complexity": 17,
+          "is_async": false
+        },
+        {
+          "name": "detect_vital_zone_connections",
+          "lineno": 394,
+          "args_count": 3,
+          "cyclomatic_complexity": 17,
+          "is_async": false
+        },
+        {
+          "name": "validate_metrics",
+          "lineno": 441,
+          "args_count": 1,
+          "cyclomatic_complexity": 8,
+          "is_async": false
+        },
+        {
+          "name": "smooth_corridor",
+          "lineno": 472,
+          "args_count": 5,
+          "cyclomatic_complexity": 12,
+          "is_async": false
+        },
+        {
+          "name": "smooth_bundle",
+          "lineno": 536,
+          "args_count": 1,
+          "cyclomatic_complexity": 41,
+          "is_async": false
+        },
+        {
+          "name": "generate_smoothed",
+          "lineno": 704,
+          "args_count": 1,
+          "cyclomatic_complexity": 14,
+          "is_async": true
+        },
+        {
+          "name": "smoother_status",
+          "lineno": 779,
+          "args_count": 0,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 41,
+      "avg_cyclomatic_complexity": 10.88,
+      "total_decision_points": 158,
+      "target_migration": "BIO_REACTEUR_Ω (corridors)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P0",
+      "eta_hours_estimate": 24.0,
+      "wave": 2
+    },
+    {
+      "abs_path": "/app/backend/engines/v8_national/exclusion_engine.py",
+      "rel_path": "v8_national/exclusion_engine.py",
+      "reason": "legacy:LEGACY_V8",
+      "modules_active_imports": [
+        "engines.v8_national.exclusion_engine"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 21373,
+      "sha256_now": "42cbed5d1c99066b45baa424e1a5819ab7286b57e6c54bb665277571dbd4cfec",
+      "sha256_match_pre_purge": true,
+      "lines_total": 489,
+      "lines_code": 389,
+      "lines_blank": 54,
+      "lines_comment": 46,
+      "imports_count": 7,
+      "imports_list": [
+        "datetime",
+        "fastapi",
+        "logging",
+        "math",
+        "modules.canada_v72.data",
+        "time",
+        "typing"
+      ],
+      "legacy_imports": [
+        "modules.canada_v72.data"
+      ],
+      "legacy_imports_count": 1,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 5,
+      "classes": [],
+      "functions": [
+        {
+          "name": "evaluate_exclusion",
+          "lineno": 138,
+          "args_count": 16,
+          "cyclomatic_complexity": 55,
+          "is_async": false
+        },
+        {
+          "name": "exclusion_decision",
+          "lineno": 377,
+          "args_count": 9,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "exclusion_status",
+          "lineno": 411,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "exclusion_referential",
+          "lineno": 441,
+          "args_count": 0,
+          "cyclomatic_complexity": 6,
+          "is_async": true
+        },
+        {
+          "name": "_hard_exclude",
+          "lineno": 178,
+          "args_count": 3,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        }
+      ],
+      "max_cyclomatic_complexity": 55,
+      "avg_cyclomatic_complexity": 12.8,
+      "total_decision_points": 59,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P0",
+      "eta_hours_estimate": 12.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/hunt_orchestrator/orchestrator.py",
+      "rel_path": "hunt_orchestrator/orchestrator.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.hunt_orchestrator.orchestrator"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 17823,
+      "sha256_now": "2f78a3f0129eaa56c59a2abbad03ca774e7631e42a3904d84d47eb9502a2b992",
+      "sha256_match_pre_purge": true,
+      "lines_total": 454,
+      "lines_code": 366,
+      "lines_blank": 49,
+      "lines_comment": 39,
+      "imports_count": 12,
+      "imports_list": [
+        "datetime",
+        "engines.bdre",
+        "engines.bdre.corridor_optimizer_v2",
+        "engines.bdre.institutional_cache",
+        "engines.hunt_orchestrator.access_engine",
+        "engines.hunt_orchestrator.choix_affuts",
+        "engines.hunt_orchestrator.vent_odeurs",
+        "engines.terrain_nav",
+        "logging",
+        "math",
+        "time",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 5,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_haversine",
+          "lineno": 40,
+          "args_count": 4,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_check_institutional_cache",
+          "lineno": 50,
+          "args_count": 4,
+          "cyclomatic_complexity": 8,
+          "is_async": false
+        },
+        {
+          "name": "orchestrate_hunt_session",
+          "lineno": 99,
+          "args_count": 13,
+          "cyclomatic_complexity": 39,
+          "is_async": false
+        },
+        {
+          "name": "_generate_justification",
+          "lineno": 386,
+          "args_count": 7,
+          "cyclomatic_complexity": 9,
+          "is_async": false
+        },
+        {
+          "name": "_deg_to_cardinal",
+          "lineno": 451,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        }
+      ],
+      "max_cyclomatic_complexity": 39,
+      "avg_cyclomatic_complexity": 11.6,
+      "total_decision_points": 53,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P1",
+      "eta_hours_estimate": 12.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/terrain_nav/terrain_graph.py",
+      "rel_path": "terrain_nav/terrain_graph.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.terrain_nav.terrain_graph"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 11787,
+      "sha256_now": "039f120f296a4661cb2b873d02eaa816a19ae6fb18e0e75d39d24aeace996398",
+      "sha256_match_pre_purge": true,
+      "lines_total": 321,
+      "lines_code": 252,
+      "lines_blank": 48,
+      "lines_comment": 21,
+      "imports_count": 3,
+      "imports_list": [
+        "logging",
+        "math",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 1,
+      "functions_count": 6,
+      "classes": [
+        {
+          "name": "TerrainGraph",
+          "lineno": 40,
+          "methods_count": 4
+        }
+      ],
+      "functions": [
+        {
+          "name": "_haversine",
+          "lineno": 29,
+          "args_count": 4,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "build_terrain_graph",
+          "lineno": 142,
+          "args_count": 1,
+          "cyclomatic_complexity": 38,
+          "is_async": false
+        },
+        {
+          "name": "__init__",
+          "lineno": 48,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "add_way",
+          "lineno": 62,
+          "args_count": 4,
+          "cyclomatic_complexity": 11,
+          "is_async": false
+        },
+        {
+          "name": "nearest_node",
+          "lineno": 105,
+          "args_count": 4,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "finalize_stats",
+          "lineno": 123,
+          "args_count": 1,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        }
+      ],
+      "max_cyclomatic_complexity": 38,
+      "avg_cyclomatic_complexity": 9.5,
+      "total_decision_points": 51,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P1",
+      "eta_hours_estimate": 12.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/v8_national/router.py",
+      "rel_path": "v8_national/router.py",
+      "reason": "legacy:LEGACY_V8",
+      "modules_active_imports": [
+        "engines.v8_national.router"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 13203,
+      "sha256_now": "f18a2e5b35a832da9d9bb1345f43222412ab4b5fe02d8037ff507648765b66ed",
+      "sha256_match_pre_purge": true,
+      "lines_total": 305,
+      "lines_code": 259,
+      "lines_blank": 33,
+      "lines_comment": 13,
+      "imports_count": 14,
+      "imports_list": [
+        "asyncio",
+        "datetime",
+        "engines.v8_national.exclusion_engine",
+        "engines.v8_national.governance",
+        "fastapi",
+        "httpx",
+        "logging",
+        "math",
+        "modules.camera_engine.dependencies",
+        "modules.canada_v72.data",
+        "modules.roles_engine.v1.dependencies",
+        "modules.roles_engine.v1.models",
+        "motor.motor_asyncio",
+        "time"
+      ],
+      "legacy_imports": [
+        "engines.v8_national.exclusion_engine",
+        "engines.v8_national.governance",
+        "modules.canada_v72.data"
+      ],
+      "legacy_imports_count": 3,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 9,
+      "classes": [],
+      "functions": [
+        {
+          "name": "biome_profile",
+          "lineno": 36,
+          "args_count": 3,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        },
+        {
+          "name": "species_profile",
+          "lineno": 72,
+          "args_count": 1,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        },
+        {
+          "name": "national_score",
+          "lineno": 92,
+          "args_count": 7,
+          "cyclomatic_complexity": 37,
+          "is_async": true
+        },
+        {
+          "name": "referentials",
+          "lineno": 261,
+          "args_count": 0,
+          "cyclomatic_complexity": 6,
+          "is_async": true
+        },
+        {
+          "name": "v8_status",
+          "lineno": 280,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "_fetch_meteo",
+          "lineno": 165,
+          "args_count": 0,
+          "cyclomatic_complexity": 8,
+          "is_async": true
+        },
+        {
+          "name": "_fetch_nutrition",
+          "lineno": 190,
+          "args_count": 0,
+          "cyclomatic_complexity": 5,
+          "is_async": true
+        },
+        {
+          "name": "_fetch_vision",
+          "lineno": 200,
+          "args_count": 0,
+          "cyclomatic_complexity": 3,
+          "is_async": true
+        },
+        {
+          "name": "_fetch_habitat",
+          "lineno": 208,
+          "args_count": 0,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 37,
+      "avg_cyclomatic_complexity": 7.33,
+      "total_decision_points": 57,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P0",
+      "eta_hours_estimate": 12.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/nutrition_intelligence/router.py",
+      "rel_path": "nutrition_intelligence/router.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.nutrition_intelligence.router"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 35742,
+      "sha256_now": "f75762f4e9344fc9ecd6f696bbe616c18c6a317c9e3de09d6c1d5136f57bd6e7",
+      "sha256_match_pre_purge": true,
+      "lines_total": 910,
+      "lines_code": 672,
+      "lines_blank": 159,
+      "lines_comment": 79,
+      "imports_count": 17,
+      "imports_list": [
+        "datetime",
+        "engines.nutrition_intelligence",
+        "engines.supra_advanced.territory_bridge",
+        "fastapi",
+        "fastapi.responses",
+        "fpdf",
+        "io",
+        "math",
+        "modules.bionic_knowledge_engine.knowledge_provider",
+        "modules.nutrition_engine_v7.pipeline",
+        "modules.saline_engine.models",
+        "modules.saline_engine.router",
+        "modules.salines_ultime_engine.router",
+        "modules.soil_engine.router",
+        "modules.species_engine.scientific_overlay",
+        "pydantic",
+        "typing"
+      ],
+      "legacy_imports": [
+        "engines.supra_advanced.territory_bridge",
+        "modules.nutrition_engine_v7.pipeline"
+      ],
+      "legacy_imports_count": 2,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 15,
+      "functions_count": 41,
+      "classes": [
+        {
+          "name": "NutritionRequest",
+          "lineno": 51,
+          "methods_count": 0
+        },
+        {
+          "name": "OrderRequest",
+          "lineno": 58,
+          "methods_count": 0
+        },
+        {
+          "name": "RecipeRequest",
+          "lineno": 66,
+          "methods_count": 0
+        },
+        {
+          "name": "CostRequest",
+          "lineno": 77,
+          "methods_count": 0
+        },
+        {
+          "name": "ProductScoreRequest",
+          "lineno": 161,
+          "methods_count": 0
+        },
+        {
+          "name": "ProductCompareRequest",
+          "lineno": 168,
+          "methods_count": 0
+        },
+        {
+          "name": "ShopRequest",
+          "lineno": 175,
+          "methods_count": 0
+        },
+        {
+          "name": "SupraBatchRequest",
+          "lineno": 303,
+          "methods_count": 0
+        },
+        {
+          "name": "QualityRequest",
+          "lineno": 743,
+          "methods_count": 0
+        },
+        {
+          "name": "AvailabilityRequest",
+          "lineno": 761,
+          "methods_count": 0
+        },
+        {
+          "name": "ComplianceRequest",
+          "lineno": 786,
+          "methods_count": 0
+        },
+        {
+          "name": "EcosystemRequest",
+          "lineno": 830,
+          "methods_count": 0
+        },
+        {
+          "name": "SupplierProductSubmission",
+          "lineno": 854,
+          "methods_count": 0
+        },
+        {
+          "name": "ReviewRequest",
+          "lineno": 867,
+          "methods_count": 0
+        },
+        {
+          "name": "ActivateRequest",
+          "lineno": 873,
+          "methods_count": 0
+        }
+      ],
+      "functions": [
+        {
+          "name": "mineral_score",
+          "lineno": 87,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "mineral_recommendations",
+          "lineno": 93,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "order",
+          "lineno": 99,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "energy_protein",
+          "lineno": 105,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "site_guide",
+          "lineno": 111,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "costs",
+          "lineno": 117,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "costs_compare",
+          "lineno": 123,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "recipe",
+          "lineno": 129,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "evidence",
+          "lineno": 138,
+          "args_count": 2,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "full_analysis",
+          "lineno": 144,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "product_score",
+          "lineno": 185,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "products_all",
+          "lineno": 191,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "products_compare",
+          "lineno": 197,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "products_shop",
+          "lineno": 203,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "ecozones",
+          "lineno": 209,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "supra_panel",
+          "lineno": 215,
+          "args_count": 1,
+          "cyclomatic_complexity": 11,
+          "is_async": true
+        },
+        {
+          "name": "_compute_nutrition_v7_block",
+          "lineno": 317,
+          "args_count": 5,
+          "cyclomatic_complexity": 8,
+          "is_async": false
+        },
+        {
+          "name": "supra_batch",
+          "lineno": 358,
+          "args_count": 1,
+          "cyclomatic_complexity": 34,
+          "is_async": true
+        },
+        {
+          "name": "get_knowledge",
+          "lineno": 584,
+          "args_count": 2,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        },
+        {
+          "name": "export_pdf",
+          "lineno": 615,
+          "args_count": 1,
+          "cyclomatic_complexity": 13,
+          "is_async": true
+        },
+        {
+          "name": "product_quality",
+          "lineno": 749,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "products_quality_all",
+          "lineno": 755,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "product_availability",
+          "lineno": 768,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "products_availability_all",
+          "lineno": 774,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "province_restrictions",
+          "lineno": 780,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "product_compliance",
+          "lineno": 792,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "products_compliance_all",
+          "lineno": 798,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "compliance_by_organism",
+          "lineno": 804,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "terrain_solutions_catalog",
+          "lineno": 812,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "terrain_solutions_compute",
+          "lineno": 818,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "product_ecosystem",
+          "lineno": 836,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "products_ecosystem_all",
+          "lineno": 842,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "product_tracability",
+          "lineno": 848,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "supplier_submit",
+          "lineno": 879,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "supplier_review",
+          "lineno": 885,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "supplier_activate",
+          "lineno": 891,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "supplier_get_submission",
+          "lineno": 897,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "supplier_list_submissions",
+          "lineno": 903,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "supplier_pipeline_stats",
+          "lineno": 909,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "_build_meta",
+          "lineno": 440,
+          "args_count": 4,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_s",
+          "lineno": 634,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        }
+      ],
+      "max_cyclomatic_complexity": 34,
+      "avg_cyclomatic_complexity": 2.54,
+      "total_decision_points": 63,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P0",
+      "eta_hours_estimate": 24.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/post_smoothing/renduomega.py",
+      "rel_path": "post_smoothing/renduomega.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.post_smoothing.renduomega"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 28821,
+      "sha256_now": "1c14ec3edf789e46d9549fc9e18eeb7e1306ce527c61bc052f334aef9aa79b3c",
+      "sha256_match_pre_purge": true,
+      "lines_total": 632,
+      "lines_code": 501,
+      "lines_blank": 71,
+      "lines_comment": 60,
+      "imports_count": 5,
+      "imports_list": [
+        "__future__",
+        "engines.post_smoothing",
+        "math",
+        "os",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 16,
+      "classes": [],
+      "functions": [
+        {
+          "name": "is_p5_authorized",
+          "lineno": 105,
+          "args_count": 0,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "_haversine_m",
+          "lineno": 122,
+          "args_count": 2,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_path_length_m",
+          "lineno": 130,
+          "args_count": 1,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "_max_segment_m",
+          "lineno": 136,
+          "args_count": 1,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "_max_angle_deg",
+          "lineno": 142,
+          "args_count": 1,
+          "cyclomatic_complexity": 7,
+          "is_async": false
+        },
+        {
+          "name": "_is_radial_shape",
+          "lineno": 160,
+          "args_count": 3,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        },
+        {
+          "name": "validate_geometry",
+          "lineno": 189,
+          "args_count": 2,
+          "cyclomatic_complexity": 14,
+          "is_async": false
+        },
+        {
+          "name": "validate_terrain_constraints",
+          "lineno": 239,
+          "args_count": 3,
+          "cyclomatic_complexity": 16,
+          "is_async": false
+        },
+        {
+          "name": "validate_ecological_constraints",
+          "lineno": 280,
+          "args_count": 4,
+          "cyclomatic_complexity": 28,
+          "is_async": false
+        },
+        {
+          "name": "validate_species_and_source",
+          "lineno": 364,
+          "args_count": 2,
+          "cyclomatic_complexity": 6,
+          "is_async": false
+        },
+        {
+          "name": "_width_from_probability",
+          "lineno": 394,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "_color_for_species",
+          "lineno": 403,
+          "args_count": 1,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "build_render_metadata",
+          "lineno": 407,
+          "args_count": 1,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "validate_corridor",
+          "lineno": 430,
+          "args_count": 6,
+          "cyclomatic_complexity": 12,
+          "is_async": false
+        },
+        {
+          "name": "_resample_path_uniform",
+          "lineno": 475,
+          "args_count": 2,
+          "cyclomatic_complexity": 10,
+          "is_async": false
+        },
+        {
+          "name": "apply_renduomega_to_bundle",
+          "lineno": 513,
+          "args_count": 1,
+          "cyclomatic_complexity": 29,
+          "is_async": false
+        }
+      ],
+      "max_cyclomatic_complexity": 29,
+      "avg_cyclomatic_complexity": 9.06,
+      "total_decision_points": 129,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P1",
+      "eta_hours_estimate": 24.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/v8_institutional/species_presence_mask_omega.py",
+      "rel_path": "v8_institutional/species_presence_mask_omega.py",
+      "reason": "sentinel:fallback_assignment",
+      "modules_active_imports": [
+        "engines.v8_institutional.species_presence_mask_omega"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 15218,
+      "sha256_now": "9a0b42a9f2ea097cd4d4f25dcfe7a58f9ce062062e628c33a5b0e3146a67c290",
+      "sha256_match_pre_purge": true,
+      "lines_total": 315,
+      "lines_code": 247,
+      "lines_blank": 29,
+      "lines_comment": 39,
+      "imports_count": 4,
+      "imports_list": [
+        "__future__",
+        "math",
+        "os",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 6,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_canonical",
+          "lineno": 118,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "_in_rectangle",
+          "lineno": 122,
+          "args_count": 3,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "get_species_presence",
+          "lineno": 127,
+          "args_count": 3,
+          "cyclomatic_complexity": 6,
+          "is_async": false
+        },
+        {
+          "name": "get_species_presence_mask",
+          "lineno": 155,
+          "args_count": 2,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "apply_presence_mask_to_bundle",
+          "lineno": 176,
+          "args_count": 4,
+          "cyclomatic_complexity": 23,
+          "is_async": false
+        },
+        {
+          "name": "get_registry_audit",
+          "lineno": 297,
+          "args_count": 0,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        }
+      ],
+      "max_cyclomatic_complexity": 23,
+      "avg_cyclomatic_complexity": 6.83,
+      "total_decision_points": 35,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P1",
+      "eta_hours_estimate": 12.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/bdre/corridor_optimizer_v2.py",
+      "rel_path": "bdre/corridor_optimizer_v2.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.bdre.corridor_optimizer_v2"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 23822,
+      "sha256_now": "f8dedd4109df8cc5a10e279980249973b2e9ae9121b82a90b2747ce4037a4f47",
+      "sha256_match_pre_purge": true,
+      "lines_total": 596,
+      "lines_code": 480,
+      "lines_blank": 78,
+      "lines_comment": 38,
+      "imports_count": 4,
+      "imports_list": [
+        "bce.exclusion_layer_bce4x",
+        "logging",
+        "math",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 8,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_haversine",
+          "lineno": 39,
+          "args_count": 4,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_is_segment_on_corridor",
+          "lineno": 49,
+          "args_count": 6,
+          "cyclomatic_complexity": 8,
+          "is_async": false
+        },
+        {
+          "name": "analyze_corridor_ratio",
+          "lineno": 91,
+          "args_count": 2,
+          "cyclomatic_complexity": 11,
+          "is_async": false
+        },
+        {
+          "name": "score_route_bdre",
+          "lineno": 176,
+          "args_count": 2,
+          "cyclomatic_complexity": 10,
+          "is_async": false
+        },
+        {
+          "name": "enforce_corridor_lock",
+          "lineno": 259,
+          "args_count": 4,
+          "cyclomatic_complexity": 15,
+          "is_async": false
+        },
+        {
+          "name": "_analyze_corridor_ratio_guidance",
+          "lineno": 358,
+          "args_count": 3,
+          "cyclomatic_complexity": 13,
+          "is_async": false
+        },
+        {
+          "name": "_analyze_corridor_ratio_terrain_aware",
+          "lineno": 436,
+          "args_count": 1,
+          "cyclomatic_complexity": 14,
+          "is_async": false
+        },
+        {
+          "name": "select_shortest_corridor",
+          "lineno": 535,
+          "args_count": 2,
+          "cyclomatic_complexity": 20,
+          "is_async": false
+        }
+      ],
+      "max_cyclomatic_complexity": 20,
+      "avg_cyclomatic_complexity": 11.5,
+      "total_decision_points": 84,
+      "target_migration": "BIO_REACTEUR_Ω (corridors)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P1",
+      "eta_hours_estimate": 12.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/weather_v3/router.py",
+      "rel_path": "weather_v3/router.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.weather_v3.router"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 13020,
+      "sha256_now": "636db94adbdd9cbd1ef38108a4a7bc276faaa600566ddf5f86475297ab9b4c55",
+      "sha256_match_pre_purge": true,
+      "lines_total": 398,
+      "lines_code": 326,
+      "lines_blank": 58,
+      "lines_comment": 14,
+      "imports_count": 8,
+      "imports_list": [
+        "datetime",
+        "engines.bdre",
+        "engines.weather_v3.wind_model_provider",
+        "fastapi",
+        "httpx",
+        "logging",
+        "math",
+        "time"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 12,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_dew_point",
+          "lineno": 39,
+          "args_count": 2,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "_score_wind",
+          "lineno": 48,
+          "args_count": 2,
+          "cyclomatic_complexity": 8,
+          "is_async": false
+        },
+        {
+          "name": "_score_pressure",
+          "lineno": 64,
+          "args_count": 1,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        },
+        {
+          "name": "_score_temperature",
+          "lineno": 77,
+          "args_count": 2,
+          "cyclomatic_complexity": 6,
+          "is_async": false
+        },
+        {
+          "name": "_score_humidity",
+          "lineno": 94,
+          "args_count": 1,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "_score_cloud_cover",
+          "lineno": 105,
+          "args_count": 1,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "_score_precipitation",
+          "lineno": 116,
+          "args_count": 1,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        },
+        {
+          "name": "_compute_hunting_score",
+          "lineno": 129,
+          "args_count": 2,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        },
+        {
+          "name": "get_current_weather",
+          "lineno": 168,
+          "args_count": 2,
+          "cyclomatic_complexity": 8,
+          "is_async": true
+        },
+        {
+          "name": "get_nowcast",
+          "lineno": 250,
+          "args_count": 2,
+          "cyclomatic_complexity": 20,
+          "is_async": true
+        },
+        {
+          "name": "get_hunting_score",
+          "lineno": 300,
+          "args_count": 2,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        },
+        {
+          "name": "get_wind_grid",
+          "lineno": 332,
+          "args_count": 6,
+          "cyclomatic_complexity": 7,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 20,
+      "avg_cyclomatic_complexity": 6.42,
+      "total_decision_points": 65,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P1",
+      "eta_hours_estimate": 12.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/v8_national/phase_a_engines.py",
+      "rel_path": "v8_national/phase_a_engines.py",
+      "reason": "legacy:LEGACY_V8",
+      "modules_active_imports": [
+        "engines.v8_national.phase_a_engines"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 16232,
+      "sha256_now": "32f454152ef7dea2f1ee55d394bc9d3d9d2b51154f293a43dcb2b00c0146877b",
+      "sha256_match_pre_purge": true,
+      "lines_total": 360,
+      "lines_code": 277,
+      "lines_blank": 57,
+      "lines_comment": 26,
+      "imports_count": 6,
+      "imports_list": [
+        "datetime",
+        "engines.v8_national.exclusion_engine",
+        "fastapi",
+        "logging",
+        "math",
+        "time"
+      ],
+      "legacy_imports": [
+        "engines.v8_national.exclusion_engine"
+      ],
+      "legacy_imports_count": 1,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 11,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_seed",
+          "lineno": 39,
+          "args_count": 3,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_terrain_profile",
+          "lineno": 45,
+          "args_count": 2,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_haversine_m",
+          "lineno": 65,
+          "args_count": 4,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_offset_m",
+          "lineno": 73,
+          "args_count": 4,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_score_saline",
+          "lineno": 83,
+          "args_count": 4,
+          "cyclomatic_complexity": 9,
+          "is_async": false
+        },
+        {
+          "name": "_score_affut",
+          "lineno": 105,
+          "args_count": 4,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "_score_composite",
+          "lineno": 118,
+          "args_count": 4,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        },
+        {
+          "name": "_generate_explanation",
+          "lineno": 134,
+          "args_count": 5,
+          "cyclomatic_complexity": 13,
+          "is_async": false
+        },
+        {
+          "name": "relocalisation_v8",
+          "lineno": 186,
+          "args_count": 7,
+          "cyclomatic_complexity": 8,
+          "is_async": true
+        },
+        {
+          "name": "salines_v8",
+          "lineno": 264,
+          "args_count": 6,
+          "cyclomatic_complexity": 20,
+          "is_async": true
+        },
+        {
+          "name": "phase_a_status",
+          "lineno": 342,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 20,
+      "avg_cyclomatic_complexity": 5.64,
+      "total_decision_points": 51,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P0",
+      "eta_hours_estimate": 12.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/spatial_engine_v7/router.py",
+      "rel_path": "spatial_engine_v7/router.py",
+      "reason": "sentinel:placeholder_keyword|legacy:LEGACY_V7",
+      "modules_active_imports": [
+        "engines.spatial_engine_v7.router"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 30360,
+      "sha256_now": "adcd1b22918466eb3f05e0d40618feae49d087c4a010eb28c3c28b8e1f817968",
+      "sha256_match_pre_purge": true,
+      "lines_total": 735,
+      "lines_code": 571,
+      "lines_blank": 105,
+      "lines_comment": 59,
+      "imports_count": 11,
+      "imports_list": [
+        "datetime",
+        "fastapi",
+        "logging",
+        "math",
+        "modules.camera_engine.dependencies",
+        "modules.nutrition_engine_v7.pipeline",
+        "modules.roles_engine.v1.dependencies",
+        "modules.roles_engine.v1.models",
+        "motor.motor_asyncio",
+        "time",
+        "typing"
+      ],
+      "legacy_imports": [
+        "modules.nutrition_engine_v7.pipeline"
+      ],
+      "legacy_imports_count": 1,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 13,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_check_bce4x_exclusions",
+          "lineno": 74,
+          "args_count": 2,
+          "cyclomatic_complexity": 18,
+          "is_async": false
+        },
+        {
+          "name": "_moon_phase",
+          "lineno": 136,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_v7_temporal_mults",
+          "lineno": 140,
+          "args_count": 4,
+          "cyclomatic_complexity": 9,
+          "is_async": false
+        },
+        {
+          "name": "_nutrition_score",
+          "lineno": 152,
+          "args_count": 4,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "spatial_corridors",
+          "lineno": 166,
+          "args_count": 8,
+          "cyclomatic_complexity": 10,
+          "is_async": true
+        },
+        {
+          "name": "spatial_zones",
+          "lineno": 239,
+          "args_count": 6,
+          "cyclomatic_complexity": 7,
+          "is_async": true
+        },
+        {
+          "name": "spatial_heatmap",
+          "lineno": 301,
+          "args_count": 9,
+          "cyclomatic_complexity": 9,
+          "is_async": true
+        },
+        {
+          "name": "spatial_scoring",
+          "lineno": 374,
+          "args_count": 7,
+          "cyclomatic_complexity": 8,
+          "is_async": true
+        },
+        {
+          "name": "spatial_amenagement",
+          "lineno": 435,
+          "args_count": 6,
+          "cyclomatic_complexity": 4,
+          "is_async": true
+        },
+        {
+          "name": "spatial_analyze_full",
+          "lineno": 492,
+          "args_count": 2,
+          "cyclomatic_complexity": 13,
+          "is_async": true
+        },
+        {
+          "name": "spatial_vision_scoring",
+          "lineno": 632,
+          "args_count": 5,
+          "cyclomatic_complexity": 3,
+          "is_async": true
+        },
+        {
+          "name": "spatial_status",
+          "lineno": 707,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "spatial_exclusion_check",
+          "lineno": 731,
+          "args_count": 2,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 18,
+      "avg_cyclomatic_complexity": 6.69,
+      "total_decision_points": 74,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P0",
+      "eta_hours_estimate": 24.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/v8_national/phase_b_engines.py",
+      "rel_path": "v8_national/phase_b_engines.py",
+      "reason": "legacy:LEGACY_V8",
+      "modules_active_imports": [
+        "engines.v8_national.phase_b_engines"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 33451,
+      "sha256_now": "ede994e06f35459e0286acbe32c490c10f3deeec9c19086e2e0df7924cca351f",
+      "sha256_match_pre_purge": true,
+      "lines_total": 770,
+      "lines_code": 571,
+      "lines_blank": 115,
+      "lines_comment": 84,
+      "imports_count": 5,
+      "imports_list": [
+        "datetime",
+        "fastapi",
+        "logging",
+        "math",
+        "time"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 18,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_seed",
+          "lineno": 31,
+          "args_count": 3,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_terrain_profile",
+          "lineno": 36,
+          "args_count": 2,
+          "cyclomatic_complexity": 6,
+          "is_async": false
+        },
+        {
+          "name": "_offset_m",
+          "lineno": 73,
+          "args_count": 4,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_organic_polygon",
+          "lineno": 83,
+          "args_count": 5,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "_bezier_curve",
+          "lineno": 123,
+          "args_count": 4,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        },
+        {
+          "name": "_score_zone_terrain",
+          "lineno": 173,
+          "args_count": 3,
+          "cyclomatic_complexity": 13,
+          "is_async": false
+        },
+        {
+          "name": "_cost_surface_score",
+          "lineno": 236,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "_corridor_intensity",
+          "lineno": 248,
+          "args_count": 5,
+          "cyclomatic_complexity": 6,
+          "is_async": false
+        },
+        {
+          "name": "generate_zones_ta",
+          "lineno": 274,
+          "args_count": 5,
+          "cyclomatic_complexity": 9,
+          "is_async": false
+        },
+        {
+          "name": "_catmull_rom_path",
+          "lineno": 378,
+          "args_count": 2,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        },
+        {
+          "name": "_corridor_cost_at",
+          "lineno": 407,
+          "args_count": 5,
+          "cyclomatic_complexity": 7,
+          "is_async": false
+        },
+        {
+          "name": "_corridor_intensity_x20",
+          "lineno": 453,
+          "args_count": 6,
+          "cyclomatic_complexity": 13,
+          "is_async": false
+        },
+        {
+          "name": "generate_corridors_ta",
+          "lineno": 505,
+          "args_count": 8,
+          "cyclomatic_complexity": 18,
+          "is_async": false
+        },
+        {
+          "name": "generate_affuts_ta",
+          "lineno": 619,
+          "args_count": 6,
+          "cyclomatic_complexity": 12,
+          "is_async": false
+        },
+        {
+          "name": "zones_terrain_aware",
+          "lineno": 698,
+          "args_count": 4,
+          "cyclomatic_complexity": 3,
+          "is_async": true
+        },
+        {
+          "name": "corridors_terrain_aware",
+          "lineno": 715,
+          "args_count": 5,
+          "cyclomatic_complexity": 4,
+          "is_async": true
+        },
+        {
+          "name": "affuts_terrain_aware",
+          "lineno": 734,
+          "args_count": 6,
+          "cyclomatic_complexity": 4,
+          "is_async": true
+        },
+        {
+          "name": "phase_b_status",
+          "lineno": 756,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 18,
+      "avg_cyclomatic_complexity": 6.39,
+      "total_decision_points": 97,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P1",
+      "eta_hours_estimate": 24.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/supra_advanced/router.py",
+      "rel_path": "supra_advanced/router.py",
+      "reason": "legacy:LEGACY_SUPRA",
+      "modules_active_imports": [
+        "engines.supra_advanced.router"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 11568,
+      "sha256_now": "e59bb9491b2c35b9de146bf86697f4bd0f5a8eca599a4161296abedbb7f3e8df",
+      "sha256_match_pre_purge": true,
+      "lines_total": 311,
+      "lines_code": 237,
+      "lines_blank": 46,
+      "lines_comment": 28,
+      "imports_count": 6,
+      "imports_list": [
+        "datetime",
+        "engines.weather_v3.router",
+        "fastapi",
+        "httpx",
+        "logging",
+        "math"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 5,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_compute_terrain_relevance",
+          "lineno": 29,
+          "args_count": 5,
+          "cyclomatic_complexity": 9,
+          "is_async": false
+        },
+        {
+          "name": "terrain_relevance",
+          "lineno": 62,
+          "args_count": 3,
+          "cyclomatic_complexity": 8,
+          "is_async": true
+        },
+        {
+          "name": "risk_assessment",
+          "lineno": 100,
+          "args_count": 2,
+          "cyclomatic_complexity": 17,
+          "is_async": true
+        },
+        {
+          "name": "smart_recommendations",
+          "lineno": 163,
+          "args_count": 4,
+          "cyclomatic_complexity": 14,
+          "is_async": true
+        },
+        {
+          "name": "weather_terrain_correlation",
+          "lineno": 264,
+          "args_count": 3,
+          "cyclomatic_complexity": 8,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 17,
+      "avg_cyclomatic_complexity": 11.2,
+      "total_decision_points": 51,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P1",
+      "eta_hours_estimate": 12.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/v8_national/map_bundle.py",
+      "rel_path": "v8_national/map_bundle.py",
+      "reason": "legacy:LEGACY_V8",
+      "modules_active_imports": [
+        "engines.v8_national.map_bundle"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 13480,
+      "sha256_now": "05329cc8c3d2d21945ea4efe146e294d3ee044198e54161f94867dd8455253b7",
+      "sha256_match_pre_purge": true,
+      "lines_total": 313,
+      "lines_code": 261,
+      "lines_blank": 39,
+      "lines_comment": 13,
+      "imports_count": 15,
+      "imports_list": [
+        "asyncio",
+        "datetime",
+        "engines.v8_national.exclusion_engine",
+        "engines.v8_national.governance",
+        "engines.v8_national.p1_pipelines",
+        "engines.v8_national.phase_b_engines",
+        "engines.v8_national.phase_c_engines",
+        "engines.v8_national.referentials",
+        "fastapi",
+        "logging",
+        "math",
+        "modules.camera_engine.dependencies",
+        "modules.canada_v72.data",
+        "motor.motor_asyncio",
+        "time"
+      ],
+      "legacy_imports": [
+        "engines.v8_national.exclusion_engine",
+        "engines.v8_national.governance",
+        "engines.v8_national.p1_pipelines",
+        "engines.v8_national.phase_b_engines",
+        "engines.v8_national.phase_c_engines",
+        "engines.v8_national.referentials",
+        "modules.canada_v72.data"
+      ],
+      "legacy_imports_count": 7,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 9,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_cache_key",
+          "lineno": 25,
+          "args_count": 4,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_organic_polygon",
+          "lineno": 29,
+          "args_count": 5,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "_generate_zones_inline",
+          "lineno": 45,
+          "args_count": 5,
+          "cyclomatic_complexity": 6,
+          "is_async": false
+        },
+        {
+          "name": "_bezier_curve",
+          "lineno": 74,
+          "args_count": 4,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        },
+        {
+          "name": "_generate_corridors_inline",
+          "lineno": 100,
+          "args_count": 6,
+          "cyclomatic_complexity": 10,
+          "is_async": false
+        },
+        {
+          "name": "_generate_affuts_inline",
+          "lineno": 140,
+          "args_count": 5,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        },
+        {
+          "name": "_generate_heatmap_inline",
+          "lineno": 164,
+          "args_count": 7,
+          "cyclomatic_complexity": 15,
+          "is_async": false
+        },
+        {
+          "name": "map_bundle",
+          "lineno": 214,
+          "args_count": 8,
+          "cyclomatic_complexity": 13,
+          "is_async": true
+        },
+        {
+          "name": "bundle_status",
+          "lineno": 305,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 15,
+      "avg_cyclomatic_complexity": 6.44,
+      "total_decision_points": 49,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P0",
+      "eta_hours_estimate": 12.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/terrain_nav/__init__.py",
+      "rel_path": "terrain_nav/__init__.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.terrain_nav"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 7041,
+      "sha256_now": "ed8a4f58a9e3a795ba23de3bf7a46d646778bb79efa4bdccd85d22b7574377af",
+      "sha256_match_pre_purge": true,
+      "lines_total": 192,
+      "lines_code": 148,
+      "lines_blank": 33,
+      "lines_comment": 11,
+      "imports_count": 6,
+      "imports_list": [
+        "engines.bdre",
+        "engines.bdre.anomaly_detector",
+        "engines.bdre.health_monitor",
+        "logging",
+        "time",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 6,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_cache_key",
+          "lineno": 32,
+          "args_count": 2,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_bdre_available",
+          "lineno": 37,
+          "args_count": 0,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "get_terrain_nav",
+          "lineno": 46,
+          "args_count": 3,
+          "cyclomatic_complexity": 14,
+          "is_async": false
+        },
+        {
+          "name": "get_raw_terrain_data",
+          "lineno": 152,
+          "args_count": 2,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "navigate_terrain",
+          "lineno": 161,
+          "args_count": 5,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "get_terrain_stats",
+          "lineno": 182,
+          "args_count": 2,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        }
+      ],
+      "max_cyclomatic_complexity": 14,
+      "avg_cyclomatic_complexity": 3.67,
+      "total_decision_points": 16,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P1",
+      "eta_hours_estimate": 6.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/bdre/institutional_cache.py",
+      "rel_path": "bdre/institutional_cache.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.bdre.institutional_cache"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 15430,
+      "sha256_now": "af61b52c7cec62615885e04b21ea590ccc27b3f4f04eb6cd87217814733bd31f",
+      "sha256_match_pre_purge": true,
+      "lines_total": 439,
+      "lines_code": 342,
+      "lines_blank": 71,
+      "lines_comment": 26,
+      "imports_count": 11,
+      "imports_list": [
+        "datetime",
+        "engines.bdre.corridor_optimizer_v2",
+        "engines.terrain_nav",
+        "engines.terrain_nav.terrain_graph",
+        "engines.terrain_nav.terrain_sources",
+        "json",
+        "logging",
+        "os",
+        "sys",
+        "time",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 11,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_load_json",
+          "lineno": 37,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "_save_json",
+          "lineno": 45,
+          "args_count": 2,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "certify_route",
+          "lineno": 55,
+          "args_count": 7,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "get_certified_route",
+          "lineno": 101,
+          "args_count": 4,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "list_certified_routes",
+          "lineno": 127,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "register_virtual_corridor",
+          "lineno": 138,
+          "args_count": 7,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "get_virtual_corridors",
+          "lineno": 173,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "register_institutional_object",
+          "lineno": 186,
+          "args_count": 4,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "get_institutional_objects",
+          "lineno": 219,
+          "args_count": 2,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "audit_non_regression",
+          "lineno": 243,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "certify_territory_full",
+          "lineno": 314,
+          "args_count": 5,
+          "cyclomatic_complexity": 12,
+          "is_async": false
+        }
+      ],
+      "max_cyclomatic_complexity": 12,
+      "avg_cyclomatic_complexity": 3.27,
+      "total_decision_points": 25,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P1",
+      "eta_hours_estimate": 12.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/v8_national/phase_c_engines.py",
+      "rel_path": "v8_national/phase_c_engines.py",
+      "reason": "legacy:LEGACY_V8",
+      "modules_active_imports": [
+        "engines.v8_national.phase_c_engines"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 15424,
+      "sha256_now": "51746ac46e3b629a7cd1b631ddd90ab14ab4a0c447e333e41c80112898289faa",
+      "sha256_match_pre_purge": true,
+      "lines_total": 364,
+      "lines_code": 282,
+      "lines_blank": 52,
+      "lines_comment": 30,
+      "imports_count": 7,
+      "imports_list": [
+        "datetime",
+        "engines.v8_national.phase_a_engines",
+        "engines.v8_national.phase_b_engines",
+        "fastapi",
+        "logging",
+        "math",
+        "time"
+      ],
+      "legacy_imports": [
+        "engines.v8_national.phase_a_engines",
+        "engines.v8_national.phase_b_engines"
+      ],
+      "legacy_imports_count": 2,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 11,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_seed",
+          "lineno": 30,
+          "args_count": 3,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_terrain_profile",
+          "lineno": 35,
+          "args_count": 2,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_thermal_model",
+          "lineno": 55,
+          "args_count": 6,
+          "cyclomatic_complexity": 12,
+          "is_async": false
+        },
+        {
+          "name": "_run_scenario",
+          "lineno": 133,
+          "args_count": 6,
+          "cyclomatic_complexity": 9,
+          "is_async": false
+        },
+        {
+          "name": "_multi_engine_score",
+          "lineno": 209,
+          "args_count": 6,
+          "cyclomatic_complexity": 8,
+          "is_async": false
+        },
+        {
+          "name": "thermal_endpoint",
+          "lineno": 274,
+          "args_count": 6,
+          "cyclomatic_complexity": 5,
+          "is_async": true
+        },
+        {
+          "name": "scenario_endpoint",
+          "lineno": 296,
+          "args_count": 6,
+          "cyclomatic_complexity": 4,
+          "is_async": true
+        },
+        {
+          "name": "scenario_presets",
+          "lineno": 319,
+          "args_count": 0,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        },
+        {
+          "name": "multi_engine_score_endpoint",
+          "lineno": 328,
+          "args_count": 6,
+          "cyclomatic_complexity": 4,
+          "is_async": true
+        },
+        {
+          "name": "phase_c_status",
+          "lineno": 351,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "_avg_score",
+          "lineno": 159,
+          "args_count": 2,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        }
+      ],
+      "max_cyclomatic_complexity": 12,
+      "avg_cyclomatic_complexity": 4.55,
+      "total_decision_points": 39,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P0",
+      "eta_hours_estimate": 12.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/post_smoothing/anti_regression_omega.py",
+      "rel_path": "post_smoothing/anti_regression_omega.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.post_smoothing.anti_regression_omega"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 13837,
+      "sha256_now": "c644223b4c90fd36bc58f6be2ee4c78634b035f88aaf548ed0bfff04e8893d7a",
+      "sha256_match_pre_purge": true,
+      "lines_total": 321,
+      "lines_code": 263,
+      "lines_blank": 34,
+      "lines_comment": 24,
+      "imports_count": 6,
+      "imports_list": [
+        "__future__",
+        "collections",
+        "datetime",
+        "os",
+        "threading",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 10,
+      "classes": [],
+      "functions": [
+        {
+          "name": "is_p6_authorized",
+          "lineno": 38,
+          "args_count": 0,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "_classify_violation_text",
+          "lineno": 116,
+          "args_count": 1,
+          "cyclomatic_complexity": 7,
+          "is_async": false
+        },
+        {
+          "name": "_now_iso",
+          "lineno": 155,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_extract_violations",
+          "lineno": 162,
+          "args_count": 1,
+          "cyclomatic_complexity": 6,
+          "is_async": false
+        },
+        {
+          "name": "record_corridor_verdict",
+          "lineno": 173,
+          "args_count": 3,
+          "cyclomatic_complexity": 12,
+          "is_async": false
+        },
+        {
+          "name": "record_bundle_summary",
+          "lineno": 218,
+          "args_count": 1,
+          "cyclomatic_complexity": 10,
+          "is_async": false
+        },
+        {
+          "name": "get_ledger_snapshot",
+          "lineno": 240,
+          "args_count": 0,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        },
+        {
+          "name": "get_recent_violations",
+          "lineno": 264,
+          "args_count": 3,
+          "cyclomatic_complexity": 9,
+          "is_async": false
+        },
+        {
+          "name": "build_audit_matrix",
+          "lineno": 283,
+          "args_count": 0,
+          "cyclomatic_complexity": 6,
+          "is_async": false
+        },
+        {
+          "name": "reset_ledger",
+          "lineno": 305,
+          "args_count": 0,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        }
+      ],
+      "max_cyclomatic_complexity": 12,
+      "avg_cyclomatic_complexity": 6.1,
+      "total_decision_points": 51,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P1",
+      "eta_hours_estimate": 12.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/supra_engine_v7/router.py",
+      "rel_path": "supra_engine_v7/router.py",
+      "reason": "legacy:LEGACY_SUPRA",
+      "modules_active_imports": [
+        "engines.supra_engine_v7.router"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 13823,
+      "sha256_now": "853c38ba273a98409bfe84098104a5279ef5d60db72a38818ccea7c65a6f0d52",
+      "sha256_match_pre_purge": true,
+      "lines_total": 305,
+      "lines_code": 235,
+      "lines_blank": 44,
+      "lines_comment": 26,
+      "imports_count": 11,
+      "imports_list": [
+        "datetime",
+        "fastapi",
+        "logging",
+        "modules.camera_engine.dependencies",
+        "modules.nutrition_engine_v7.pipeline",
+        "modules.roles_engine.v1.dependencies",
+        "modules.roles_engine.v1.models",
+        "motor.motor_asyncio",
+        "pydantic",
+        "time",
+        "typing"
+      ],
+      "legacy_imports": [
+        "modules.nutrition_engine_v7.pipeline"
+      ],
+      "legacy_imports_count": 1,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 1,
+      "functions_count": 8,
+      "classes": [
+        {
+          "name": "SupraAnalyseRequest",
+          "lineno": 31,
+          "methods_count": 0
+        }
+      ],
+      "functions": [
+        {
+          "name": "_get_nutrition_v7",
+          "lineno": 42,
+          "args_count": 5,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "_get_spatial_v7_scoring",
+          "lineno": 50,
+          "args_count": 4,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "supra_analyse",
+          "lineno": 66,
+          "args_count": 1,
+          "cyclomatic_complexity": 4,
+          "is_async": true
+        },
+        {
+          "name": "supra_fiche",
+          "lineno": 143,
+          "args_count": 1,
+          "cyclomatic_complexity": 12,
+          "is_async": true
+        },
+        {
+          "name": "supra_compare",
+          "lineno": 194,
+          "args_count": 1,
+          "cyclomatic_complexity": 5,
+          "is_async": true
+        },
+        {
+          "name": "supra_recommande",
+          "lineno": 224,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": true
+        },
+        {
+          "name": "supra_commande",
+          "lineno": 265,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "supra_status",
+          "lineno": 296,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 12,
+      "avg_cyclomatic_complexity": 4.0,
+      "total_decision_points": 24,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P0",
+      "eta_hours_estimate": 12.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/legal_time_omega/router.py",
+      "rel_path": "legal_time_omega/router.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.legal_time_omega.router"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 8210,
+      "sha256_now": "3212acc450f2667a82e0a5f013a54f86a95153dfaed93e5da1fc3a16bd216077",
+      "sha256_match_pre_purge": true,
+      "lines_total": 186,
+      "lines_code": 147,
+      "lines_blank": 25,
+      "lines_comment": 14,
+      "imports_count": 6,
+      "imports_list": [
+        "__future__",
+        "datetime",
+        "engines.x199_commons",
+        "fastapi",
+        "fastapi.responses",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 5,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_in_range",
+          "lineno": 85,
+          "args_count": 3,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "is_legal",
+          "lineno": 91,
+          "args_count": 4,
+          "cyclomatic_complexity": 12,
+          "is_async": false
+        },
+        {
+          "name": "compute_legal_time",
+          "lineno": 135,
+          "args_count": 4,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "engine_status",
+          "lineno": 154,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "engine_compute",
+          "lineno": 177,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 12,
+      "avg_cyclomatic_complexity": 3.8,
+      "total_decision_points": 14,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P1",
+      "eta_hours_estimate": 6.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/hunt_orchestrator/router.py",
+      "rel_path": "hunt_orchestrator/router.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.hunt_orchestrator.router"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 16253,
+      "sha256_now": "fc3d4bd8f45f5e41b074a58d8c08a745ecc310ccb4e957e6f344f07775d06976",
+      "sha256_match_pre_purge": true,
+      "lines_total": 454,
+      "lines_code": 376,
+      "lines_blank": 67,
+      "lines_comment": 11,
+      "imports_count": 10,
+      "imports_list": [
+        "bce.exclusion_layer_bce4x",
+        "engines.hunt_orchestrator.orchestrator",
+        "engines.hunt_orchestrator.vent_odeurs",
+        "engines.terrain_nav.terrain_sources",
+        "fastapi",
+        "logging",
+        "os",
+        "pydantic",
+        "time",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 7,
+      "functions_count": 9,
+      "classes": [
+        {
+          "name": "FeedingSite",
+          "lineno": 27,
+          "methods_count": 0
+        },
+        {
+          "name": "FixedBlind",
+          "lineno": 34,
+          "methods_count": 0
+        },
+        {
+          "name": "OrchestrationRequest",
+          "lineno": 42,
+          "methods_count": 0
+        },
+        {
+          "name": "ScentZoneRequest",
+          "lineno": 55,
+          "methods_count": 0
+        },
+        {
+          "name": "AccessRouteRequest",
+          "lineno": 63,
+          "methods_count": 0
+        },
+        {
+          "name": "ContaminationZoneRequest",
+          "lineno": 74,
+          "methods_count": 0
+        },
+        {
+          "name": "CacheInvalidateRequest",
+          "lineno": 408,
+          "methods_count": 0
+        }
+      ],
+      "functions": [
+        {
+          "name": "orchestrate_hunt",
+          "lineno": 88,
+          "args_count": 1,
+          "cyclomatic_complexity": 8,
+          "is_async": true
+        },
+        {
+          "name": "compute_scent",
+          "lineno": 146,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": true
+        },
+        {
+          "name": "compute_contamination_zones",
+          "lineno": 161,
+          "args_count": 1,
+          "cyclomatic_complexity": 11,
+          "is_async": true
+        },
+        {
+          "name": "_classify_risk",
+          "lineno": 299,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "_deg_to_cardinal",
+          "lineno": 309,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "compute_access",
+          "lineno": 323,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "hunt_orchestrator_status",
+          "lineno": 344,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "terrain_cache_stats",
+          "lineno": 368,
+          "args_count": 0,
+          "cyclomatic_complexity": 3,
+          "is_async": true
+        },
+        {
+          "name": "terrain_cache_invalidate",
+          "lineno": 415,
+          "args_count": 1,
+          "cyclomatic_complexity": 8,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 11,
+      "avg_cyclomatic_complexity": 4.33,
+      "total_decision_points": 30,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P1",
+      "eta_hours_estimate": 12.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/reseau_veineux_omega/external_inflow.py",
+      "rel_path": "reseau_veineux_omega/external_inflow.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.reseau_veineux_omega.external_inflow"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 16534,
+      "sha256_now": "bfd70e6944aae817f9a383989505be3dfc1151f9b16687522d8e840eef07004d",
+      "sha256_match_pre_purge": true,
+      "lines_total": 332,
+      "lines_code": 258,
+      "lines_blank": 38,
+      "lines_comment": 36,
+      "imports_count": 4,
+      "imports_list": [
+        "__future__",
+        "math",
+        "os",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 13,
+      "classes": [],
+      "functions": [
+        {
+          "name": "is_external_inflow_authorized",
+          "lineno": 32,
+          "args_count": 0,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "_meters_per_deg_lng",
+          "lineno": 81,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_offset_latlng",
+          "lineno": 85,
+          "args_count": 4,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_haversine_m",
+          "lineno": 93,
+          "args_count": 2,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "generate_entry_nodes",
+          "lineno": 105,
+          "args_count": 6,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "_weight_components",
+          "lineno": 143,
+          "args_count": 3,
+          "cyclomatic_complexity": 11,
+          "is_async": false
+        },
+        {
+          "name": "weight_entry_node",
+          "lineno": 177,
+          "args_count": 5,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "trace_organic_path",
+          "lineno": 192,
+          "args_count": 3,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "find_nearest_vital_zone",
+          "lineno": 225,
+          "args_count": 2,
+          "cyclomatic_complexity": 7,
+          "is_async": false
+        },
+        {
+          "name": "fuse_external_internal",
+          "lineno": 250,
+          "args_count": 3,
+          "cyclomatic_complexity": 6,
+          "is_async": false
+        },
+        {
+          "name": "_find_contact",
+          "lineno": 287,
+          "args_count": 3,
+          "cyclomatic_complexity": 7,
+          "is_async": false
+        },
+        {
+          "name": "classify_corridor_commandant",
+          "lineno": 305,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "external_inflow_status",
+          "lineno": 315,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        }
+      ],
+      "max_cyclomatic_complexity": 11,
+      "avg_cyclomatic_complexity": 3.69,
+      "total_decision_points": 35,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "HIGH",
+      "priority": "P1",
+      "eta_hours_estimate": 12.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/terrain_nav/terrain_sources.py",
+      "rel_path": "terrain_nav/terrain_sources.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.terrain_nav.terrain_sources"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 17054,
+      "sha256_now": "6f1e4d22bfa19c5f271488dcb7ea8929cdc83eaa658459ac3bcf6028cbd06efe",
+      "sha256_match_pre_purge": true,
+      "lines_total": 453,
+      "lines_code": 354,
+      "lines_blank": 72,
+      "lines_comment": 27,
+      "imports_count": 10,
+      "imports_list": [
+        "concurrent.futures",
+        "gzip",
+        "hashlib",
+        "json",
+        "logging",
+        "os",
+        "pathlib",
+        "requests",
+        "time",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 14,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_zone_key",
+          "lineno": 84,
+          "args_count": 3,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_persistent_cache_path",
+          "lineno": 92,
+          "args_count": 3,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_ensure_cache_dir",
+          "lineno": 100,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_save_persistent_cache",
+          "lineno": 105,
+          "args_count": 4,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "_load_persistent_cache",
+          "lineno": 144,
+          "args_count": 3,
+          "cyclomatic_complexity": 9,
+          "is_async": false
+        },
+        {
+          "name": "_make_json_serializable",
+          "lineno": 196,
+          "args_count": 1,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "_restore_from_json",
+          "lineno": 211,
+          "args_count": 1,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "_adaptive_timeout",
+          "lineno": 229,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_build_combined_query",
+          "lineno": 234,
+          "args_count": 3,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_classify_ways",
+          "lineno": 256,
+          "args_count": 1,
+          "cyclomatic_complexity": 9,
+          "is_async": false
+        },
+        {
+          "name": "_fetch_single_mirror",
+          "lineno": 286,
+          "args_count": 3,
+          "cyclomatic_complexity": 7,
+          "is_async": false
+        },
+        {
+          "name": "_fetch_overpass",
+          "lineno": 308,
+          "args_count": 3,
+          "cyclomatic_complexity": 7,
+          "is_async": false
+        },
+        {
+          "name": "_parse_osm_elements",
+          "lineno": 333,
+          "args_count": 1,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        },
+        {
+          "name": "fetch_terrain_data",
+          "lineno": 347,
+          "args_count": 3,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        }
+      ],
+      "max_cyclomatic_complexity": 9,
+      "avg_cyclomatic_complexity": 4.14,
+      "total_decision_points": 44,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "MEDIUM",
+      "priority": "P1",
+      "eta_hours_estimate": 8.4,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/nutrition_intelligence/x7000_supplier_product_engine.py",
+      "rel_path": "nutrition_intelligence/x7000_supplier_product_engine.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.nutrition_intelligence.x7000_supplier_product_engine"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 9953,
+      "sha256_now": "515002deb9cfa2b778d08be028019933a2b88443951319a853718f9aaed9bc07",
+      "sha256_match_pre_purge": true,
+      "lines_total": 299,
+      "lines_code": 244,
+      "lines_blank": 46,
+      "lines_comment": 9,
+      "imports_count": 4,
+      "imports_list": [
+        "database",
+        "datetime",
+        "logging",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 11,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_get_collection",
+          "lineno": 43,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_get_counter_collection",
+          "lineno": 50,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_next_submission_id",
+          "lineno": 57,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "ensure_indexes",
+          "lineno": 70,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "submit_product",
+          "lineno": 82,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "_auto_validate",
+          "lineno": 127,
+          "args_count": 1,
+          "cyclomatic_complexity": 9,
+          "is_async": false
+        },
+        {
+          "name": "review_submission",
+          "lineno": 182,
+          "args_count": 3,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        },
+        {
+          "name": "activate_product",
+          "lineno": 225,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "get_submission",
+          "lineno": 262,
+          "args_count": 1,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "get_all_submissions",
+          "lineno": 271,
+          "args_count": 1,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "get_pipeline_stats",
+          "lineno": 285,
+          "args_count": 0,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        }
+      ],
+      "max_cyclomatic_complexity": 9,
+      "avg_cyclomatic_complexity": 2.73,
+      "total_decision_points": 19,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "MEDIUM",
+      "priority": "P1",
+      "eta_hours_estimate": 8.4,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/v8_national/p1_pipelines.py",
+      "rel_path": "v8_national/p1_pipelines.py",
+      "reason": "legacy:LEGACY_V8",
+      "modules_active_imports": [
+        "engines.v8_national.p1_pipelines"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 10454,
+      "sha256_now": "ba2d682e255481db3904731933cad57e464f85e7c0e8a01d6415d4d28f997e80",
+      "sha256_match_pre_purge": true,
+      "lines_total": 261,
+      "lines_code": 210,
+      "lines_blank": 36,
+      "lines_comment": 15,
+      "imports_count": 6,
+      "imports_list": [
+        "fastapi",
+        "logging",
+        "math",
+        "modules.canada_v72.data",
+        "time",
+        "typing"
+      ],
+      "legacy_imports": [
+        "modules.canada_v72.data"
+      ],
+      "legacy_imports_count": 1,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 5,
+      "classes": [],
+      "functions": [
+        {
+          "name": "fetch_lidar_data",
+          "lineno": 73,
+          "args_count": 4,
+          "cyclomatic_complexity": 8,
+          "is_async": true
+        },
+        {
+          "name": "fetch_pedology_data",
+          "lineno": 147,
+          "args_count": 3,
+          "cyclomatic_complexity": 3,
+          "is_async": true
+        },
+        {
+          "name": "lidar_profile",
+          "lineno": 204,
+          "args_count": 3,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "pedology_profile",
+          "lineno": 220,
+          "args_count": 2,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "p1_status",
+          "lineno": 235,
+          "args_count": 0,
+          "cyclomatic_complexity": 4,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 8,
+      "avg_cyclomatic_complexity": 3.4,
+      "total_decision_points": 12,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "MEDIUM",
+      "priority": "P0",
+      "eta_hours_estimate": 8.4,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/bdre/router.py",
+      "rel_path": "bdre/router.py",
+      "reason": "sentinel:fallback_assignment|orphan",
+      "modules_active_imports": [
+        "engines.bdre.router"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 19282,
+      "sha256_now": "c3daf59360e065abdfaa5bf9d275038a40ec049407982189563f904a5b7b51a3",
+      "sha256_match_pre_purge": true,
+      "lines_total": 571,
+      "lines_code": 442,
+      "lines_blank": 84,
+      "lines_comment": 45,
+      "imports_count": 6,
+      "imports_list": [
+        "engines.bdre",
+        "engines.bdre.institutional_cache",
+        "fastapi",
+        "logging",
+        "time",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 18,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_get_bdre",
+          "lineno": 26,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "bdre_health",
+          "lineno": 37,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "get_sources",
+          "lineno": 68,
+          "args_count": 1,
+          "cyclomatic_complexity": 4,
+          "is_async": true
+        },
+        {
+          "name": "get_source_health",
+          "lineno": 93,
+          "args_count": 1,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        },
+        {
+          "name": "get_source_score",
+          "lineno": 107,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": true
+        },
+        {
+          "name": "get_quality_report",
+          "lineno": 130,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "get_recent_fallbacks",
+          "lineno": 141,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "get_audit_log",
+          "lineno": 159,
+          "args_count": 3,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "validate_territory",
+          "lineno": 174,
+          "args_count": 1,
+          "cyclomatic_complexity": 7,
+          "is_async": true
+        },
+        {
+          "name": "get_monitor_status",
+          "lineno": 240,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "get_recent_anomalies",
+          "lineno": 255,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "get_dashboard",
+          "lineno": 274,
+          "args_count": 0,
+          "cyclomatic_complexity": 5,
+          "is_async": true
+        },
+        {
+          "name": "get_cached_routes",
+          "lineno": 357,
+          "args_count": 2,
+          "cyclomatic_complexity": 3,
+          "is_async": true
+        },
+        {
+          "name": "get_cached_objects",
+          "lineno": 394,
+          "args_count": 2,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        },
+        {
+          "name": "get_cached_corridors",
+          "lineno": 422,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "certify_territory",
+          "lineno": 446,
+          "args_count": 4,
+          "cyclomatic_complexity": 3,
+          "is_async": true
+        },
+        {
+          "name": "audit_territory_cache",
+          "lineno": 502,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": true
+        },
+        {
+          "name": "register_object",
+          "lineno": 538,
+          "args_count": 6,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 7,
+      "avg_cyclomatic_complexity": 2.33,
+      "total_decision_points": 24,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "MEDIUM",
+      "priority": "P1",
+      "eta_hours_estimate": 8.4,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/eco_zones_omega/router.py",
+      "rel_path": "eco_zones_omega/router.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.eco_zones_omega.router"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 6403,
+      "sha256_now": "edc97f665dd230c415dd3867b854717e66b89bf465fce93b513b5960fde85d92",
+      "sha256_match_pre_purge": true,
+      "lines_total": 142,
+      "lines_code": 113,
+      "lines_blank": 21,
+      "lines_comment": 8,
+      "imports_count": 4,
+      "imports_list": [
+        "__future__",
+        "fastapi",
+        "fastapi.responses",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 6,
+      "classes": [],
+      "functions": [
+        {
+          "name": "classify_habitat",
+          "lineno": 64,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "get_20_saline_sources",
+          "lineno": 72,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "build_vital_zones_hierarchy",
+          "lineno": 77,
+          "args_count": 1,
+          "cyclomatic_complexity": 7,
+          "is_async": false
+        },
+        {
+          "name": "status",
+          "lineno": 100,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "saline_sources",
+          "lineno": 118,
+          "args_count": 0,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        },
+        {
+          "name": "compute",
+          "lineno": 132,
+          "args_count": 1,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 7,
+      "avg_cyclomatic_complexity": 2.67,
+      "total_decision_points": 10,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "MEDIUM",
+      "priority": "P1",
+      "eta_hours_estimate": 4.2,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/advanced_geospatial_omega/router.py",
+      "rel_path": "advanced_geospatial_omega/router.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.advanced_geospatial_omega.router"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 6344,
+      "sha256_now": "1ba26c9c0c7874a4aee88bd85eb38596b9eb2319091f9ebb0769fc6a9494ccd5",
+      "sha256_match_pre_purge": true,
+      "lines_total": 169,
+      "lines_code": 140,
+      "lines_blank": 26,
+      "lines_comment": 3,
+      "imports_count": 6,
+      "imports_list": [
+        "__future__",
+        "engines.x199_commons",
+        "fastapi",
+        "fastapi.responses",
+        "math",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 7,
+      "classes": [],
+      "functions": [
+        {
+          "name": "haversine_m",
+          "lineno": 35,
+          "args_count": 2,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "latlng_to_utm",
+          "lineno": 43,
+          "args_count": 2,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "bbox_from_points",
+          "lineno": 83,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "multi_source_fusion_score",
+          "lineno": 93,
+          "args_count": 1,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        },
+        {
+          "name": "compute_advanced_geospatial",
+          "lineno": 115,
+          "args_count": 4,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        },
+        {
+          "name": "engine_status",
+          "lineno": 141,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "engine_compute",
+          "lineno": 160,
+          "args_count": 1,
+          "cyclomatic_complexity": 5,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 5,
+      "avg_cyclomatic_complexity": 3.43,
+      "total_decision_points": 17,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "MEDIUM",
+      "priority": "P1",
+      "eta_hours_estimate": 4.2,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/ecoforestry_omega/router.py",
+      "rel_path": "ecoforestry_omega/router.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.ecoforestry_omega.router"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 5765,
+      "sha256_now": "37f26422cd92d62a846f3b12c1b23a128d93874ad8912a022a55b1a5b05708cb",
+      "sha256_match_pre_purge": true,
+      "lines_total": 140,
+      "lines_code": 105,
+      "lines_blank": 23,
+      "lines_comment": 12,
+      "imports_count": 6,
+      "imports_list": [
+        "__future__",
+        "engines.x199_commons",
+        "fastapi",
+        "fastapi.responses",
+        "math",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 7,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_base_forest_type",
+          "lineno": 44,
+          "args_count": 2,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        },
+        {
+          "name": "_canopy_fraction",
+          "lineno": 58,
+          "args_count": 3,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "_succession_stage",
+          "lineno": 73,
+          "args_count": 2,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "_edge_proximity_m",
+          "lineno": 80,
+          "args_count": 2,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "compute_ecoforestry",
+          "lineno": 87,
+          "args_count": 3,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "engine_status",
+          "lineno": 112,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "engine_compute",
+          "lineno": 132,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 5,
+      "avg_cyclomatic_complexity": 2.43,
+      "total_decision_points": 10,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "MEDIUM",
+      "priority": "P1",
+      "eta_hours_estimate": 4.2,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/hydro_topo_omega/router.py",
+      "rel_path": "hydro_topo_omega/router.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.hydro_topo_omega.router"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 4611,
+      "sha256_now": "64d5f7f4eb8b06194a438a03133863991af633595cad2f5a6be461146cc41a63",
+      "sha256_match_pre_purge": true,
+      "lines_total": 128,
+      "lines_code": 103,
+      "lines_blank": 22,
+      "lines_comment": 3,
+      "imports_count": 5,
+      "imports_list": [
+        "__future__",
+        "fastapi",
+        "fastapi.responses",
+        "math",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 6,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_haversine_m",
+          "lineno": 39,
+          "args_count": 2,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "hydro_attraction_bonus",
+          "lineno": 50,
+          "args_count": 3,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "compute_terrain_aware_boost",
+          "lineno": 66,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "fuse_multiscale_dem",
+          "lineno": 75,
+          "args_count": 1,
+          "cyclomatic_complexity": 5,
+          "is_async": false
+        },
+        {
+          "name": "status",
+          "lineno": 91,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "compute",
+          "lineno": 108,
+          "args_count": 1,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 5,
+      "avg_cyclomatic_complexity": 3.0,
+      "total_decision_points": 12,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "MEDIUM",
+      "priority": "P1",
+      "eta_hours_estimate": 4.2,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/v8_national/governance.py",
+      "rel_path": "v8_national/governance.py",
+      "reason": "legacy:LEGACY_V8",
+      "modules_active_imports": [
+        "engines.v8_national.governance"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 7661,
+      "sha256_now": "690ff6835b7eea1bbfc90e5f6b11171dc6e77f25f1732f0efd1f7106e19d87b8",
+      "sha256_match_pre_purge": true,
+      "lines_total": 197,
+      "lines_code": 163,
+      "lines_blank": 28,
+      "lines_comment": 6,
+      "imports_count": 8,
+      "imports_list": [
+        "datetime",
+        "fastapi",
+        "logging",
+        "modules.camera_engine.dependencies",
+        "modules.roles_engine.v1.dependencies",
+        "modules.roles_engine.v1.models",
+        "motor.motor_asyncio",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 5,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_get_governance_state",
+          "lineno": 50,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": true
+        },
+        {
+          "name": "_is_admin_premium",
+          "lineno": 63,
+          "args_count": 1,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        },
+        {
+          "name": "governance_state",
+          "lineno": 73,
+          "args_count": 1,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        },
+        {
+          "name": "activate_mode",
+          "lineno": 101,
+          "args_count": 3,
+          "cyclomatic_complexity": 4,
+          "is_async": true
+        },
+        {
+          "name": "governance_audit",
+          "lineno": 169,
+          "args_count": 2,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 4,
+      "avg_cyclomatic_complexity": 2.6,
+      "total_decision_points": 8,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 3.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/terrain_3d_omega/router.py",
+      "rel_path": "terrain_3d_omega/router.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.terrain_3d_omega.router"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 5267,
+      "sha256_now": "1e25c08a5fb6c5af273e16deb075180fce86c8731edfff215a792530cf459c43",
+      "sha256_match_pre_purge": true,
+      "lines_total": 148,
+      "lines_code": 118,
+      "lines_blank": 24,
+      "lines_comment": 6,
+      "imports_count": 6,
+      "imports_list": [
+        "__future__",
+        "engines.x199_commons",
+        "fastapi",
+        "fastapi.responses",
+        "math",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 7,
+      "classes": [],
+      "functions": [
+        {
+          "name": "slope_aspect_from_triangle",
+          "lineno": 41,
+          "args_count": 3,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "classify_slope",
+          "lineno": 78,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "microrelief_index",
+          "lineno": 85,
+          "args_count": 2,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "compute_terrain_3d",
+          "lineno": 94,
+          "args_count": 1,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "engine_status",
+          "lineno": 124,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": true
+        },
+        {
+          "name": "engine_compute",
+          "lineno": 144,
+          "args_count": 1,
+          "cyclomatic_complexity": 4,
+          "is_async": true
+        },
+        {
+          "name": "to_xy",
+          "lineno": 48,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        }
+      ],
+      "max_cyclomatic_complexity": 4,
+      "avg_cyclomatic_complexity": 2.43,
+      "total_decision_points": 10,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 3.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/wildlife_behavior_omega/router.py",
+      "rel_path": "wildlife_behavior_omega/router.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.wildlife_behavior_omega.router"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 4910,
+      "sha256_now": "bf35ea0b0e59ca28ae777b8c1188c3651db415349d548b6c040a26a60b442dab",
+      "sha256_match_pre_purge": true,
+      "lines_total": 113,
+      "lines_code": 89,
+      "lines_blank": 17,
+      "lines_comment": 7,
+      "imports_count": 5,
+      "imports_list": [
+        "__future__",
+        "core.scoring_pipeline.corridors_v10.species_profiles",
+        "fastapi",
+        "fastapi.responses",
+        "typing"
+      ],
+      "legacy_imports": [
+        "core.scoring_pipeline.corridors_v10.species_profiles"
+      ],
+      "legacy_imports_count": 1,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 5,
+      "classes": [],
+      "functions": [
+        {
+          "name": "_load_v7_profiles",
+          "lineno": 25,
+          "args_count": 0,
+          "cyclomatic_complexity": 3,
+          "is_async": false
+        },
+        {
+          "name": "get_species_profile",
+          "lineno": 34,
+          "args_count": 1,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "locomotion_constraints",
+          "lineno": 51,
+          "args_count": 2,
+          "cyclomatic_complexity": 4,
+          "is_async": false
+        },
+        {
+          "name": "status",
+          "lineno": 91,
+          "args_count": 0,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        },
+        {
+          "name": "compute",
+          "lineno": 104,
+          "args_count": 1,
+          "cyclomatic_complexity": 2,
+          "is_async": true
+        }
+      ],
+      "max_cyclomatic_complexity": 4,
+      "avg_cyclomatic_complexity": 3.0,
+      "total_decision_points": 10,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "MEDIUM",
+      "priority": "P0",
+      "eta_hours_estimate": 4.2,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/bdre/__init__.py",
+      "rel_path": "bdre/__init__.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.bdre"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 3431,
+      "sha256_now": "b2412b738ac1b8efba611e160b7d02c6503742d01a1ace1645e7b9d415f6d02d",
+      "sha256_match_pre_purge": true,
+      "lines_total": 111,
+      "lines_code": 83,
+      "lines_blank": 28,
+      "lines_comment": 0,
+      "imports_count": 1,
+      "imports_list": [
+        "logging"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 12,
+      "classes": [],
+      "functions": [
+        {
+          "name": "check_source",
+          "lineno": 32,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "score_response",
+          "lineno": 39,
+          "args_count": 3,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "alert_empty",
+          "lineno": 52,
+          "args_count": 2,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "log_audit",
+          "lineno": 63,
+          "args_count": 7,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "classify_waterway",
+          "lineno": 74,
+          "args_count": 1,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "get_registry",
+          "lineno": 79,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "get_scorer",
+          "lineno": 84,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "get_audit_logger",
+          "lineno": 89,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "get_health_monitor",
+          "lineno": 94,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "get_anomaly_detector",
+          "lineno": 99,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "get_source_selector",
+          "lineno": 104,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        },
+        {
+          "name": "get_fallback_chain",
+          "lineno": 109,
+          "args_count": 0,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        }
+      ],
+      "max_cyclomatic_complexity": 2,
+      "avg_cyclomatic_complexity": 1.17,
+      "total_decision_points": 2,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 3.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/x199_commons.py",
+      "rel_path": "x199_commons.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.x199_commons"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 2017,
+      "sha256_now": "e916dbc9527b6f19caade5465ebe698725cadb33ee32233c6836f46b0ce75ea8",
+      "sha256_match_pre_purge": true,
+      "lines_total": 57,
+      "lines_code": 47,
+      "lines_blank": 10,
+      "lines_comment": 0,
+      "imports_count": 4,
+      "imports_list": [
+        "__future__",
+        "fastapi",
+        "os",
+        "typing"
+      ],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 2,
+      "classes": [],
+      "functions": [
+        {
+          "name": "is_x199_authorized",
+          "lineno": 25,
+          "args_count": 1,
+          "cyclomatic_complexity": 2,
+          "is_async": false
+        },
+        {
+          "name": "unauthorized_response",
+          "lineno": 45,
+          "args_count": 2,
+          "cyclomatic_complexity": 1,
+          "is_async": false
+        }
+      ],
+      "max_cyclomatic_complexity": 2,
+      "avg_cyclomatic_complexity": 1.5,
+      "total_decision_points": 1,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 1.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/nutrition_intelligence/__init__.py",
+      "rel_path": "nutrition_intelligence/__init__.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.nutrition_intelligence"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 1361,
+      "sha256_now": "27d3d1e9d6942326c5ea9f1af888fd03d0f8e374121aa03fc85d0c7cf2b331c0",
+      "sha256_match_pre_purge": true,
+      "lines_total": 16,
+      "lines_code": 16,
+      "lines_blank": 0,
+      "lines_comment": 0,
+      "imports_count": 0,
+      "imports_list": [],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 0,
+      "classes": [],
+      "functions": [],
+      "max_cyclomatic_complexity": 0,
+      "avg_cyclomatic_complexity": 0.0,
+      "total_decision_points": 0,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 1.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/wildlife_behavior_omega/__init__.py",
+      "rel_path": "wildlife_behavior_omega/__init__.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.wildlife_behavior_omega"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 551,
+      "sha256_now": "8424303e2ced6375a4bb2736f4a354073036daa50c682916f1e42508fda8faed",
+      "sha256_match_pre_purge": true,
+      "lines_total": 15,
+      "lines_code": 13,
+      "lines_blank": 2,
+      "lines_comment": 0,
+      "imports_count": 0,
+      "imports_list": [],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 0,
+      "classes": [],
+      "functions": [],
+      "max_cyclomatic_complexity": 0,
+      "avg_cyclomatic_complexity": 0.0,
+      "total_decision_points": 0,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 1.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/terrain_3d_omega/__init__.py",
+      "rel_path": "terrain_3d_omega/__init__.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.terrain_3d_omega"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 508,
+      "sha256_now": "5f25b11a7171ecb8cb5db419ba86a8d0a485d8656838f3d38236c027b77eeab1",
+      "sha256_match_pre_purge": true,
+      "lines_total": 15,
+      "lines_code": 13,
+      "lines_blank": 2,
+      "lines_comment": 0,
+      "imports_count": 0,
+      "imports_list": [],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 0,
+      "classes": [],
+      "functions": [],
+      "max_cyclomatic_complexity": 0,
+      "avg_cyclomatic_complexity": 0.0,
+      "total_decision_points": 0,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 1.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/ecoforestry_omega/__init__.py",
+      "rel_path": "ecoforestry_omega/__init__.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.ecoforestry_omega"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 525,
+      "sha256_now": "4f3ab419d74e3f11ec9ecae9d6fbc6ad4545157a6b2b0d081f3937f1a0b911f9",
+      "sha256_match_pre_purge": true,
+      "lines_total": 15,
+      "lines_code": 13,
+      "lines_blank": 2,
+      "lines_comment": 0,
+      "imports_count": 0,
+      "imports_list": [],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 0,
+      "classes": [],
+      "functions": [],
+      "max_cyclomatic_complexity": 0,
+      "avg_cyclomatic_complexity": 0.0,
+      "total_decision_points": 0,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 1.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/bio_scoring_omega/__init__.py",
+      "rel_path": "bio_scoring_omega/__init__.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.bio_scoring_omega"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 520,
+      "sha256_now": "941fa23447776dbfc96b9e9dcc6cb6fea9c0923c3efcc1884fa2c25044915417",
+      "sha256_match_pre_purge": true,
+      "lines_total": 15,
+      "lines_code": 13,
+      "lines_blank": 2,
+      "lines_comment": 0,
+      "imports_count": 0,
+      "imports_list": [],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 0,
+      "classes": [],
+      "functions": [],
+      "max_cyclomatic_complexity": 0,
+      "avg_cyclomatic_complexity": 0.0,
+      "total_decision_points": 0,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 1.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/legal_time_omega/__init__.py",
+      "rel_path": "legal_time_omega/__init__.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.legal_time_omega"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 532,
+      "sha256_now": "5724b7d5ed8e894a29a6fb7caec76d8646b4532374f755382ca7b8af15b12f18",
+      "sha256_match_pre_purge": true,
+      "lines_total": 15,
+      "lines_code": 13,
+      "lines_blank": 2,
+      "lines_comment": 0,
+      "imports_count": 0,
+      "imports_list": [],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 0,
+      "classes": [],
+      "functions": [],
+      "max_cyclomatic_complexity": 0,
+      "avg_cyclomatic_complexity": 0.0,
+      "total_decision_points": 0,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 1.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/hydro_topo_omega/__init__.py",
+      "rel_path": "hydro_topo_omega/__init__.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.hydro_topo_omega"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 529,
+      "sha256_now": "bdeef00259211b3201802b5ee687f56641b2b100cc9ee6efd45f544d17de3cf6",
+      "sha256_match_pre_purge": true,
+      "lines_total": 15,
+      "lines_code": 13,
+      "lines_blank": 2,
+      "lines_comment": 0,
+      "imports_count": 0,
+      "imports_list": [],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 0,
+      "classes": [],
+      "functions": [],
+      "max_cyclomatic_complexity": 0,
+      "avg_cyclomatic_complexity": 0.0,
+      "total_decision_points": 0,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 1.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/eco_zones_omega/__init__.py",
+      "rel_path": "eco_zones_omega/__init__.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.eco_zones_omega"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 522,
+      "sha256_now": "f5e350081f45316358a360aa7c59ceaaf3e5ba2bdb1e4bb87c95d490d80f49bc",
+      "sha256_match_pre_purge": true,
+      "lines_total": 15,
+      "lines_code": 13,
+      "lines_blank": 2,
+      "lines_comment": 0,
+      "imports_count": 0,
+      "imports_list": [],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 0,
+      "classes": [],
+      "functions": [],
+      "max_cyclomatic_complexity": 0,
+      "avg_cyclomatic_complexity": 0.0,
+      "total_decision_points": 0,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 1.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/reseau_veineux_omega/__init__.py",
+      "rel_path": "reseau_veineux_omega/__init__.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.reseau_veineux_omega"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 537,
+      "sha256_now": "17954cdf7161b634b5b12e8e6c7ad450bf8c6399841c7556e6a352db576c90b0",
+      "sha256_match_pre_purge": true,
+      "lines_total": 15,
+      "lines_code": 13,
+      "lines_blank": 2,
+      "lines_comment": 0,
+      "imports_count": 0,
+      "imports_list": [],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 0,
+      "classes": [],
+      "functions": [],
+      "max_cyclomatic_complexity": 0,
+      "avg_cyclomatic_complexity": 0.0,
+      "total_decision_points": 0,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 1.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/advanced_geospatial_omega/__init__.py",
+      "rel_path": "advanced_geospatial_omega/__init__.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.advanced_geospatial_omega"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 538,
+      "sha256_now": "c9d83e77b014e5dc05cf8eccd9a945a4d2f26a3047ab8d3d819705daea5d43b2",
+      "sha256_match_pre_purge": true,
+      "lines_total": 15,
+      "lines_code": 13,
+      "lines_blank": 2,
+      "lines_comment": 0,
+      "imports_count": 0,
+      "imports_list": [],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 0,
+      "classes": [],
+      "functions": [],
+      "max_cyclomatic_complexity": 0,
+      "avg_cyclomatic_complexity": 0.0,
+      "total_decision_points": 0,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 1.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/predictive_omega/__init__.py",
+      "rel_path": "predictive_omega/__init__.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.predictive_omega"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 542,
+      "sha256_now": "95c1a1fbf60c81c3f267bedd617cb5cbb3b96326ff0df62c0a5537f74ab204c3",
+      "sha256_match_pre_purge": true,
+      "lines_total": 15,
+      "lines_code": 13,
+      "lines_blank": 2,
+      "lines_comment": 0,
+      "imports_count": 0,
+      "imports_list": [],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 0,
+      "classes": [],
+      "functions": [],
+      "max_cyclomatic_complexity": 0,
+      "avg_cyclomatic_complexity": 0.0,
+      "total_decision_points": 0,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 1.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/hunt_orchestrator/__init__.py",
+      "rel_path": "hunt_orchestrator/__init__.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.hunt_orchestrator"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 456,
+      "sha256_now": "3374506dd2048070428ac80058ec70810aa3ee33a49842c9afc5c9f0c4df6a5a",
+      "sha256_match_pre_purge": true,
+      "lines_total": 14,
+      "lines_code": 12,
+      "lines_blank": 2,
+      "lines_comment": 0,
+      "imports_count": 0,
+      "imports_list": [],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 0,
+      "classes": [],
+      "functions": [],
+      "max_cyclomatic_complexity": 0,
+      "avg_cyclomatic_complexity": 0.0,
+      "total_decision_points": 0,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 1.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/post_smoothing/__init__.py",
+      "rel_path": "post_smoothing/__init__.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.post_smoothing"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 283,
+      "sha256_now": "d8bea42c1665da903f0b0ba3bb945768efa896bf5949be1353c1ef0b46c9c9e2",
+      "sha256_match_pre_purge": true,
+      "lines_total": 8,
+      "lines_code": 6,
+      "lines_blank": 2,
+      "lines_comment": 0,
+      "imports_count": 0,
+      "imports_list": [],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 0,
+      "classes": [],
+      "functions": [],
+      "max_cyclomatic_complexity": 0,
+      "avg_cyclomatic_complexity": 0.0,
+      "total_decision_points": 0,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 1.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/supra_engine_v7/__init__.py",
+      "rel_path": "supra_engine_v7/__init__.py",
+      "reason": "legacy:LEGACY_SUPRA",
+      "modules_active_imports": [
+        "engines.supra_engine_v7"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 52,
+      "sha256_now": "f22160ec405072494e0ab0c67c73d85e1eb559fb1c0894d08bbb37384d729a94",
+      "sha256_match_pre_purge": true,
+      "lines_total": 1,
+      "lines_code": 0,
+      "lines_blank": 0,
+      "lines_comment": 1,
+      "imports_count": 0,
+      "imports_list": [],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 0,
+      "classes": [],
+      "functions": [],
+      "max_cyclomatic_complexity": 0,
+      "avg_cyclomatic_complexity": 0.0,
+      "total_decision_points": 0,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 1.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/supra_advanced/__init__.py",
+      "rel_path": "supra_advanced/__init__.py",
+      "reason": "legacy:LEGACY_SUPRA",
+      "modules_active_imports": [
+        "engines.supra_advanced"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 36,
+      "sha256_now": "06bbb37510fa098d2261e6a97008a0df59d9f1d45c7bb6bc65359d0d2fcd7558",
+      "sha256_match_pre_purge": true,
+      "lines_total": 1,
+      "lines_code": 0,
+      "lines_blank": 0,
+      "lines_comment": 1,
+      "imports_count": 0,
+      "imports_list": [],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 0,
+      "classes": [],
+      "functions": [],
+      "max_cyclomatic_complexity": 0,
+      "avg_cyclomatic_complexity": 0.0,
+      "total_decision_points": 0,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 1.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/spatial_engine_v7/__init__.py",
+      "rel_path": "spatial_engine_v7/__init__.py",
+      "reason": "legacy:LEGACY_V7",
+      "modules_active_imports": [
+        "engines.spatial_engine_v7"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 53,
+      "sha256_now": "5776153084c2e9b097b8255f85c10616c83307a94170eff660965fd4ac37041f",
+      "sha256_match_pre_purge": true,
+      "lines_total": 1,
+      "lines_code": 0,
+      "lines_blank": 0,
+      "lines_comment": 1,
+      "imports_count": 0,
+      "imports_list": [],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 0,
+      "classes": [],
+      "functions": [],
+      "max_cyclomatic_complexity": 0,
+      "avg_cyclomatic_complexity": 0.0,
+      "total_decision_points": 0,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 1.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/v8_national/__init__.py",
+      "rel_path": "v8_national/__init__.py",
+      "reason": "legacy:LEGACY_V8",
+      "modules_active_imports": [
+        "engines.v8_national"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 52,
+      "sha256_now": "345acca0100309a5da9a6ed92120018346ebdb9da3dbd9132242a2adb18d2e84",
+      "sha256_match_pre_purge": true,
+      "lines_total": 1,
+      "lines_code": 0,
+      "lines_blank": 0,
+      "lines_comment": 1,
+      "imports_count": 0,
+      "imports_list": [],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 0,
+      "classes": [],
+      "functions": [],
+      "max_cyclomatic_complexity": 0,
+      "avg_cyclomatic_complexity": 0.0,
+      "total_decision_points": 0,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 1.0,
+      "wave": 3
+    },
+    {
+      "abs_path": "/app/backend/engines/weather_v3/__init__.py",
+      "rel_path": "weather_v3/__init__.py",
+      "reason": "orphan",
+      "modules_active_imports": [
+        "engines.weather_v3"
+      ],
+      "is_imported_actively": true,
+      "size_bytes": 31,
+      "sha256_now": "07356eb74fd40746885ba4e65bfa1078c412e0183d0ddad801e40070a2bb827d",
+      "sha256_match_pre_purge": true,
+      "lines_total": 1,
+      "lines_code": 0,
+      "lines_blank": 0,
+      "lines_comment": 1,
+      "imports_count": 0,
+      "imports_list": [],
+      "legacy_imports": [],
+      "legacy_imports_count": 0,
+      "omega_imports": [],
+      "omega_imports_count": 0,
+      "ast_parse_ok": true,
+      "ast_error": null,
+      "classes_count": 0,
+      "functions_count": 0,
+      "classes": [],
+      "functions": [],
+      "max_cyclomatic_complexity": 0,
+      "avg_cyclomatic_complexity": 0.0,
+      "total_decision_points": 0,
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "candidate_purge_phase_xvii": false,
+      "risk_level": "LOW",
+      "priority": "P1",
+      "eta_hours_estimate": 1.0,
+      "wave": 3
+    }
+  ]
+}

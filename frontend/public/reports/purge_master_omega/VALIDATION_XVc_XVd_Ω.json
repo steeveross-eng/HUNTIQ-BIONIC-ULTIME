@@ -1,0 +1,38 @@
+{
+  "manifest_id": "VALIDATION_XVc_XVd_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°34",
+  "validated_at_utc": "2026-04-29T18:18:22+00:00",
+  "pytest": {
+    "exit_code": 0,
+    "passed": 62,
+    "failed": 0,
+    "errored": 0,
+    "skipped": 0,
+    "all_pass": true
+  },
+  "v30_intact": true,
+  "freeze_intact": true,
+  "backend_endpoints_check": [
+    {
+      "endpoint": "/api/v30/especes/audit/status",
+      "code": 200
+    },
+    {
+      "endpoint": "/api/v30/especes/bio-reacteur/list",
+      "code": 200
+    },
+    {
+      "endpoint": "/api/v30/scientifique/list",
+      "code": 200
+    },
+    {
+      "endpoint": "/api/v30/sceau-phase-xiii/verify",
+      "code": 200
+    }
+  ],
+  "backend_ok": true,
+  "anti_regression": true,
+  "anti_contamination": true,
+  "all_validations_pass": true
+}

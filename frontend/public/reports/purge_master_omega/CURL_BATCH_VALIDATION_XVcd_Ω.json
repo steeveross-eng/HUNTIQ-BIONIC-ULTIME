@@ -1,0 +1,113 @@
+{
+  "manifest_id": "CURL_BATCH_VALIDATION_XVcd_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°34",
+  "executed_at_utc": "2026-04-29T18:18:22+00:00",
+  "strategy": "4.b — curl batch HTTPS 200 OK avec User-Agent Mozilla",
+  "ingress": "https://huntiq-restore.preview.emergentagent.com",
+  "user_agent": "Mozilla/5.0 BCE-4X-OMEGA-FORENSIC",
+  "livrables_total": 11,
+  "livrables_https_200": 11,
+  "all_https_ok": true,
+  "results": [
+    {
+      "filename": "SUPPRESSION_XVc_Ω.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/SUPPRESSION_XVc_%CE%A9.json",
+      "exists_local": true,
+      "http_code": 200,
+      "size_bytes": 18607,
+      "size_https": 18607,
+      "sha256": "4f0e6b53ab0be6f65f12471d302679e497bd03baa9d99b3ea72c2a24deef67ee"
+    },
+    {
+      "filename": "SUPPRESSION_XVc_Ω.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/SUPPRESSION_XVc_%CE%A9.html",
+      "exists_local": true,
+      "http_code": 200,
+      "size_bytes": 11382,
+      "size_https": 12301,
+      "sha256": "fac3cb3d7577d1c5f5e9fde881cc8dcf4b05e92b94e2a5fb9450cf830f30a673"
+    },
+    {
+      "filename": "SUPPRESSION_XVc_Ω.csv",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/SUPPRESSION_XVc_%CE%A9.csv",
+      "exists_local": true,
+      "http_code": 200,
+      "size_bytes": 7669,
+      "size_https": 7669,
+      "sha256": "dad4ef8a2dbe95bed9e8bef3f1c796e7019186fd27a263c4f0df6407aa238893"
+    },
+    {
+      "filename": "SUPPRESSION_XVc_Ω_SHA256.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/SUPPRESSION_XVc_%CE%A9_SHA256.json",
+      "exists_local": true,
+      "http_code": 200,
+      "size_bytes": 985,
+      "size_https": 985,
+      "sha256": "3f7f3cf358c70c38b0bedacb26f86ca2d1f78a083ead95b46df930694cc8e856"
+    },
+    {
+      "filename": "QUARANTINE_XVb_Ω_ARCHIVE.tar.gz",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/QUARANTINE_XVb_%CE%A9_ARCHIVE.tar.gz",
+      "exists_local": true,
+      "http_code": 200,
+      "size_bytes": 83539,
+      "size_https": 83539,
+      "sha256": "3473899df15bc75c185790e2ee78b1075dfa0f8e557593c5b5ffd720c037ec98"
+    },
+    {
+      "filename": "AUDIT_KEPT_FOR_INTEGRITY_Ω.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/AUDIT_KEPT_FOR_INTEGRITY_%CE%A9.json",
+      "exists_local": true,
+      "http_code": 200,
+      "size_bytes": 159353,
+      "size_https": 159353,
+      "sha256": "e0e2d4892fd0ac362d90f8a04cf25ffea80c98c53f4a1b56a74b37defb41f8ce"
+    },
+    {
+      "filename": "AUDIT_KEPT_FOR_INTEGRITY_Ω.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/AUDIT_KEPT_FOR_INTEGRITY_%CE%A9.html",
+      "exists_local": true,
+      "http_code": 200,
+      "size_bytes": 24785,
+      "size_https": 25704,
+      "sha256": "429ea3ee397e7027486f759d5599b3015f74c4626930aa7013e486526a5742b1"
+    },
+    {
+      "filename": "AUDIT_KEPT_FOR_INTEGRITY_Ω.csv",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/AUDIT_KEPT_FOR_INTEGRITY_%CE%A9.csv",
+      "exists_local": true,
+      "http_code": 200,
+      "size_bytes": 13919,
+      "size_https": 13919,
+      "sha256": "b2ab11694aefad65229b996fdd43a32f04b7a6eed7f3daf00b47e66ef8733465"
+    },
+    {
+      "filename": "PLAN_REFACTOR_XVd_Ω.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/PLAN_REFACTOR_XVd_%CE%A9.json",
+      "exists_local": true,
+      "http_code": 200,
+      "size_bytes": 36981,
+      "size_https": 36981,
+      "sha256": "d1bd7ef5966cd49d6bcc2a6561a01f918dafc9c38edb1a13b9403784830a1a08"
+    },
+    {
+      "filename": "PLAN_REFACTOR_XVd_Ω.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/PLAN_REFACTOR_XVd_%CE%A9.html",
+      "exists_local": true,
+      "http_code": 200,
+      "size_bytes": 21727,
+      "size_https": 22646,
+      "sha256": "3131492a4b127d39d64bdc4c51e88fafc8179d551046da11188d4975a59c8ee4"
+    },
+    {
+      "filename": "VALIDATION_XVc_XVd_Ω.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/VALIDATION_XVc_XVd_%CE%A9.json",
+      "exists_local": true,
+      "http_code": 200,
+      "size_bytes": 813,
+      "size_https": 813,
+      "sha256": "f6b543e1cbda1f51dbe00175bc4498aea2df6899f2caa6c1a4d11d4a023a08ec"
+    }
+  ]
+}

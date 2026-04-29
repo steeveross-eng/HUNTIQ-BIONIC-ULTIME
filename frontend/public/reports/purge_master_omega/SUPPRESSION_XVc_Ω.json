@@ -1,0 +1,357 @@
+{
+  "manifest_id": "SUPPRESSION_XVc_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°34",
+  "directive": "PHASE_XVc_SUPPRESSION_IRRÉVERSIBLE_Ω",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "executed_at_utc": "2026-04-29T18:18:22+00:00",
+  "deletion_ts_utc": "2026-04-29T18:18:22+00:00",
+  "strategy": "1.b — SHA-256 forensique calculé avant suppression irréversible",
+  "files_deleted_count": 38,
+  "total_bytes_deleted": 344204,
+  "deleted_files_inventory": [
+    {
+      "rel_path_quarantine": "bdre/source_selector.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/bdre/source_selector.py",
+      "abs_path_before_purge": "/app/backend/engines/bdre/source_selector.py",
+      "size_bytes": 2399,
+      "sha256_pre_deletion": "9b2cc4a065fb9693e12f35b6a95ce7c96fad5ed982bc437ae206dab9c2928af7",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "bdre/audit_logger.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/bdre/audit_logger.py",
+      "abs_path_before_purge": "/app/backend/engines/bdre/audit_logger.py",
+      "size_bytes": 3292,
+      "sha256_pre_deletion": "0cf0aeaee2481bfdd7ac9a7e3239804e12f796f5f32abbe06925d32314e1d5c8",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "bdre/health_monitor.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/bdre/health_monitor.py",
+      "abs_path_before_purge": "/app/backend/engines/bdre/health_monitor.py",
+      "size_bytes": 2836,
+      "sha256_pre_deletion": "b0ef40b124744c089c0c58af4dc2b643e8fc6644dc95a225f03d4bd1e0cb70b2",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "bdre/anomaly_detector.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/bdre/anomaly_detector.py",
+      "abs_path_before_purge": "/app/backend/engines/bdre/anomaly_detector.py",
+      "size_bytes": 5367,
+      "sha256_pre_deletion": "396741ae948b2e5ed7ef399cbf0d2c38fd991f6b95b6349c89ff925d29c1b50b",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "bdre/source_registry.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/bdre/source_registry.py",
+      "abs_path_before_purge": "/app/backend/engines/bdre/source_registry.py",
+      "size_bytes": 8120,
+      "sha256_pre_deletion": "8179d2621f63b0897c8669a9898c9f31663a4dbbefe1e3811a85eec4c0ebbf58",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "bdre/quality_scorer.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/bdre/quality_scorer.py",
+      "abs_path_before_purge": "/app/backend/engines/bdre/quality_scorer.py",
+      "size_bytes": 7294,
+      "sha256_pre_deletion": "20d8f43df07515160d360addd7d5ee51b678eb716b1d46aae69464984e668d25",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "bdre/fallback_chain.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/bdre/fallback_chain.py",
+      "abs_path_before_purge": "/app/backend/engines/bdre/fallback_chain.py",
+      "size_bytes": 22722,
+      "sha256_pre_deletion": "21ef92978293ee38be967b6b1fcb73a3016cace0148b19609e54efb4178a5794",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "bdre/waterway_classifier.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/bdre/waterway_classifier.py",
+      "abs_path_before_purge": "/app/backend/engines/bdre/waterway_classifier.py",
+      "size_bytes": 4520,
+      "sha256_pre_deletion": "e6c7ded32715ca4d2a4c5fdc78dee02646043b34eff0ac3c30ff0bdf3a298f58",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "hunt_orchestrator/access_engine.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/hunt_orchestrator/access_engine.py",
+      "abs_path_before_purge": "/app/backend/engines/hunt_orchestrator/access_engine.py",
+      "size_bytes": 35599,
+      "sha256_pre_deletion": "1f6d82167783d9ca11c5a59d86c1da7459ef4d5117a6aeb17044e42814321614",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "hunt_orchestrator/vent_odeurs.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/hunt_orchestrator/vent_odeurs.py",
+      "abs_path_before_purge": "/app/backend/engines/hunt_orchestrator/vent_odeurs.py",
+      "size_bytes": 11395,
+      "sha256_pre_deletion": "99c387b05625177ff5b3f7b28f6055a41d6ec011c8404a0a68aa59ba12a878c2",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "hunt_orchestrator/choix_affuts.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/hunt_orchestrator/choix_affuts.py",
+      "abs_path_before_purge": "/app/backend/engines/hunt_orchestrator/choix_affuts.py",
+      "size_bytes": 16874,
+      "sha256_pre_deletion": "846af306006ce60a6f8e8827810e2036eb024017d79f1f1248405688a16969bd",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "v8_national/referentials.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/v8_national/referentials.py",
+      "abs_path_before_purge": "/app/backend/engines/v8_national/referentials.py",
+      "size_bytes": 13401,
+      "sha256_pre_deletion": "0c610c3466b853a6a7a66643821ba6ca454ac0affc9af4302da45a83de6daa06",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "nutrition_intelligence/x5300_order_engine.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/nutrition_intelligence/x5300_order_engine.py",
+      "abs_path_before_purge": "/app/backend/engines/nutrition_intelligence/x5300_order_engine.py",
+      "size_bytes": 2175,
+      "sha256_pre_deletion": "a3342f2e149abab3d57bf7ed0610cd2f29f91aa2e6b1e9c01fa9f48a66f2ebd1",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "nutrition_intelligence/x5500_energy_protein.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/nutrition_intelligence/x5500_energy_protein.py",
+      "abs_path_before_purge": "/app/backend/engines/nutrition_intelligence/x5500_energy_protein.py",
+      "size_bytes": 15685,
+      "sha256_pre_deletion": "a1aa53f156bdaf9b278f9f1fb9207a75e39313c669b49cb3f62783e2f99a0376",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "nutrition_intelligence/x6011_market_availability_engine.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/nutrition_intelligence/x6011_market_availability_engine.py",
+      "abs_path_before_purge": "/app/backend/engines/nutrition_intelligence/x6011_market_availability_engine.py",
+      "size_bytes": 12560,
+      "sha256_pre_deletion": "544433ede26ba8a060a03ca74cd947e272cef2515712ccec49b79e5a96473e4b",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "nutrition_intelligence/x5800_recipe_engine.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/nutrition_intelligence/x5800_recipe_engine.py",
+      "abs_path_before_purge": "/app/backend/engines/nutrition_intelligence/x5800_recipe_engine.py",
+      "size_bytes": 3496,
+      "sha256_pre_deletion": "1d1593ad02541aec6f9c026a2d09970d2253103169b9d6f72886fb721a7553ea",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "nutrition_intelligence/x5600_site_guide.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/nutrition_intelligence/x5600_site_guide.py",
+      "abs_path_before_purge": "/app/backend/engines/nutrition_intelligence/x5600_site_guide.py",
+      "size_bytes": 9037,
+      "sha256_pre_deletion": "85e93f9bcd60568e6c85d3a3902edfe893f64fd03413122e439b2efa349983d9",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "nutrition_intelligence/x5100_mineral_score.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/nutrition_intelligence/x5100_mineral_score.py",
+      "abs_path_before_purge": "/app/backend/engines/nutrition_intelligence/x5100_mineral_score.py",
+      "size_bytes": 5904,
+      "sha256_pre_deletion": "612120c19bf068b0aa87209a9838a1f598ea832308f17709e7787c908ebe5230",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "nutrition_intelligence/x6010_product_quality_analyzer.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/nutrition_intelligence/x6010_product_quality_analyzer.py",
+      "abs_path_before_purge": "/app/backend/engines/nutrition_intelligence/x6010_product_quality_analyzer.py",
+      "size_bytes": 7727,
+      "sha256_pre_deletion": "7ad548cf41c319d9ba496b39710db5522f39902f7edfae9b4c881bca4c8e78fc",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "nutrition_intelligence/x5900_evidence_engine.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/nutrition_intelligence/x5900_evidence_engine.py",
+      "abs_path_before_purge": "/app/backend/engines/nutrition_intelligence/x5900_evidence_engine.py",
+      "size_bytes": 10974,
+      "sha256_pre_deletion": "7759654fb7669203e02e7001b5760fed8c31959a3b7b87e22ea4d4ddc1b1a409",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "nutrition_intelligence/x5700_cost_engine.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/nutrition_intelligence/x5700_cost_engine.py",
+      "abs_path_before_purge": "/app/backend/engines/nutrition_intelligence/x5700_cost_engine.py",
+      "size_bytes": 3287,
+      "sha256_pre_deletion": "62e1dc0008af9719037b907f981f129f3a5f2cb0fcf362dcd379cf54b6e6d6bb",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "nutrition_intelligence/x6030_product_ecosystem.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/nutrition_intelligence/x6030_product_ecosystem.py",
+      "abs_path_before_purge": "/app/backend/engines/nutrition_intelligence/x6030_product_ecosystem.py",
+      "size_bytes": 12177,
+      "sha256_pre_deletion": "3e633d24b3a265be9b04bfbbb985399de47f8e9404825e0577c79a9c0619b924",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "nutrition_intelligence/x5200_mineral_recommendation.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/nutrition_intelligence/x5200_mineral_recommendation.py",
+      "abs_path_before_purge": "/app/backend/engines/nutrition_intelligence/x5200_mineral_recommendation.py",
+      "size_bytes": 4286,
+      "sha256_pre_deletion": "61acbd99f2fff019e7ab0e988799279b0035d2bb7f5626419c5774d59d3353a1",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "nutrition_intelligence/x6020_terrain_solutions.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/nutrition_intelligence/x6020_terrain_solutions.py",
+      "abs_path_before_purge": "/app/backend/engines/nutrition_intelligence/x6020_terrain_solutions.py",
+      "size_bytes": 14668,
+      "sha256_pre_deletion": "966c41a5c0b3cdd94d594a4a96c758d4c150c3f4f8ca54fb3905bec5fecf062d",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "nutrition_intelligence/x6000_product_score.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/nutrition_intelligence/x6000_product_score.py",
+      "abs_path_before_purge": "/app/backend/engines/nutrition_intelligence/x6000_product_score.py",
+      "size_bytes": 11015,
+      "sha256_pre_deletion": "07bfea2885850076d3e95735c66a3ef2dc844f39e27080db091711e061fa440c",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "bio_scoring_omega/v30_mirror_read_only.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/bio_scoring_omega/v30_mirror_read_only.py",
+      "abs_path_before_purge": "/app/backend/engines/bio_scoring_omega/v30_mirror_read_only.py",
+      "size_bytes": 5222,
+      "sha256_pre_deletion": "45d7d0ceebad90bf5219278e134ff15c9322531687807c62b21211f59bb826c9",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "corridor_unified/corridor_builder.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/corridor_unified/corridor_builder.py",
+      "abs_path_before_purge": "/app/backend/engines/corridor_unified/corridor_builder.py",
+      "size_bytes": 9557,
+      "sha256_pre_deletion": "f4e4f98d4e5b483cc074f361587e9edd0f28e12c8548057c2eb50a37fba90557",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "corridor_unified/router.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/corridor_unified/router.py",
+      "abs_path_before_purge": "/app/backend/engines/corridor_unified/router.py",
+      "size_bytes": 7024,
+      "sha256_pre_deletion": "a91ba0bbfab7c6b57df3edabec0719620d912c667f3ada8f9727652a265eb191",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "corridor_unified/corridor_model.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/corridor_unified/corridor_model.py",
+      "abs_path_before_purge": "/app/backend/engines/corridor_unified/corridor_model.py",
+      "size_bytes": 9254,
+      "sha256_pre_deletion": "bd85c47997f3a690a001d9a00fd564c7f237a286641845fee61f8b456e8ba255",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "corridor_unified/__init__.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/corridor_unified/__init__.py",
+      "abs_path_before_purge": "/app/backend/engines/corridor_unified/__init__.py",
+      "size_bytes": 111,
+      "sha256_pre_deletion": "0b90008baa28d92cf0befd42e7e7957b4590d2718fc6beea6453232d9d5359e9",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "terrain_nav/terrain_router.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/terrain_nav/terrain_router.py",
+      "abs_path_before_purge": "/app/backend/engines/terrain_nav/terrain_router.py",
+      "size_bytes": 20568,
+      "sha256_pre_deletion": "7b7e1ea91844b06d79450668cfa0bca2fd7b7d322f30ba3dc9af4e4528f016c7",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "terrain_nav/terrain_costs.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/terrain_nav/terrain_costs.py",
+      "abs_path_before_purge": "/app/backend/engines/terrain_nav/terrain_costs.py",
+      "size_bytes": 11719,
+      "sha256_pre_deletion": "992ce471479217badaaff8b007c5b54579e82f7cff2b511bc08527d57a03ad1f",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "weather_v3/wind_model_provider.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/weather_v3/wind_model_provider.py",
+      "abs_path_before_purge": "/app/backend/engines/weather_v3/wind_model_provider.py",
+      "size_bytes": 6889,
+      "sha256_pre_deletion": "2ff795863f7ef9719d913d8c8a6c23b3ac4971e9e8ce2366b7796b7c6442cefb",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "relocation/candidate_generator.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/relocation/candidate_generator.py",
+      "abs_path_before_purge": "/app/backend/engines/relocation/candidate_generator.py",
+      "size_bytes": 5885,
+      "sha256_pre_deletion": "d49a6f3ae5f9ad544eae5db0093072ab4a607184cacc0909fb9e89cc66ec305f",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "relocation/router.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/relocation/router.py",
+      "abs_path_before_purge": "/app/backend/engines/relocation/router.py",
+      "size_bytes": 4688,
+      "sha256_pre_deletion": "3f826f109d86425f631d7a0153f960e48b954a068431fe25eb913d476d3479a3",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "relocation/relocation_engine.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/relocation/relocation_engine.py",
+      "abs_path_before_purge": "/app/backend/engines/relocation/relocation_engine.py",
+      "size_bytes": 10885,
+      "sha256_pre_deletion": "fb04a55c18191a895710cf751169395c7bdba370ff9882d241c76804b9f18fdc",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "relocation/__init__.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/relocation/__init__.py",
+      "abs_path_before_purge": "/app/backend/engines/relocation/__init__.py",
+      "size_bytes": 121,
+      "sha256_pre_deletion": "70a5257b66fa238aef59001f182349e8bbc5e4e622fa8056ae66e8455193bb3f",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    },
+    {
+      "rel_path_quarantine": "supra_advanced/territory_bridge.py",
+      "abs_path_quarantine": "/app/_QUARANTINE_XVb_OMEGA/supra_advanced/territory_bridge.py",
+      "abs_path_before_purge": "/app/backend/engines/supra_advanced/territory_bridge.py",
+      "size_bytes": 5471,
+      "sha256_pre_deletion": "01638845bee9333b6b6ea10e936d8280822f56408d010c9a331e7811a114c3ed",
+      "deleted_at_utc": "2026-04-29T18:18:22+00:00"
+    }
+  ],
+  "archive_preuve": {
+    "filename": "QUARANTINE_XVb_Ω_ARCHIVE.tar.gz",
+    "size_bytes": 83539,
+    "sha256": "3473899df15bc75c185790e2ee78b1075dfa0f8e557593c5b5ffd720c037ec98",
+    "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/QUARANTINE_XVb_%CE%A9_ARCHIVE.tar.gz"
+  },
+  "suppression_executed": true,
+  "suppression_error": null,
+  "quarantine_dir_removed": true,
+  "engines_root_intact": true,
+  "backend_ok_post_suppression": true,
+  "endpoints_check": [
+    {
+      "endpoint": "/api/v30/especes/audit/status",
+      "code": 200
+    },
+    {
+      "endpoint": "/api/v30/especes/bio-reacteur/list",
+      "code": 200
+    },
+    {
+      "endpoint": "/api/v30/scientifique/list",
+      "code": 200
+    },
+    {
+      "endpoint": "/api/v30/sceau-phase-xiii/verify",
+      "code": 200
+    }
+  ],
+  "v30_locked_invariant": {
+    "registry_lock_omega.py": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+    "engine_ia_corridors_omega.py": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3"
+  },
+  "freeze_master_sha256_inchange": "31c18388ab3090fc0588cc0028a0181c638ac2fba0dff9f9d40700e9f97ccf27",
+  "interdictions_respectees": {
+    "36_fichiers_geles_intacts": true,
+    "60_kept_for_integrity_intacts": true,
+    "v30_lock_intact": true
+  }
+}

@@ -1,0 +1,1144 @@
+{
+  "manifest_id": "PLAN_REFACTOR_XVd_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°34",
+  "issued_at_utc": "2026-04-29T18:18:22+00:00",
+  "strategy": "3.b — Plan détaillé : fichier_legacy → cible + priorité + risque + dépendances + ETA",
+  "objectif": "Migrer progressivement les 60 KEPT_FOR_INTEGRITY vers la couche Ω (SCIENTIFIQUE_Ω + BIO_REACTEUR_Ω + ENGINE_IA_Ω + SUPER_ENGINES_Ω) afin de permettre la purge totale en PHASE XVII.",
+  "etapes_globales": [
+    {
+      "step": 1,
+      "name": "PHASE XV.d.1 - Inventaire forensique validé",
+      "status": "DONE",
+      "description": "Audit AUDIT_KEPT_FOR_INTEGRITY_Ω.json/csv produit (BLOC 3)."
+    },
+    {
+      "step": 2,
+      "name": "PHASE XV.d.2 - Wave 1 (purge directe XVII) — 6 fichiers",
+      "status": "PROPOSED",
+      "description": "Purger 6 fichiers déjà 100% Ω-compatibles. ETA: 54.6 h."
+    },
+    {
+      "step": 3,
+      "name": "PHASE XV.d.3 - Wave 2 (refactor partiel) — 1 fichiers",
+      "status": "PROPOSED",
+      "description": "Refactoriser en remplaçant les imports legacy résiduels. ETA: 24.0 h."
+    },
+    {
+      "step": 4,
+      "name": "PHASE XV.d.4 - Wave 3 (réécriture totale) — 53 fichiers",
+      "status": "PROPOSED",
+      "description": "Réécrire en consommateurs purs des BIO_REACTEUR_Ω. ETA: 382.6 h."
+    },
+    {
+      "step": 5,
+      "name": "PHASE XVI - Implémentation logique des 6 SUPER ENGINES_Ω",
+      "status": "DEFERRED_AWAITING_FORMAL_ORDER",
+      "description": "Connecter les 6 SUPER ENGINES_Ω aux ENGINES SCIENTIFIQUES_Ω et BIO_REACTEUR_Ω."
+    },
+    {
+      "step": 6,
+      "name": "PHASE XVII - Purge finale",
+      "status": "DEFERRED_AWAITING_FORMAL_ORDER",
+      "description": "Suppression irréversible des derniers fichiers KEPT après refactorisation."
+    }
+  ],
+  "wave_summary": [
+    {
+      "wave": 1,
+      "label": "Purge directe en XVII (déjà 100% Ω-compatibles)",
+      "files_count": 6,
+      "total_eta_hours": 54.6,
+      "total_loc": 1451,
+      "rel_paths": [
+        "post_smoothing/p1_preparation.py",
+        "post_smoothing/terrain_signals_builder.py",
+        "reseau_veineux_omega/router.py",
+        "bio_scoring_omega/router.py",
+        "post_smoothing/predictive_integration.py",
+        "predictive_omega/router.py"
+      ]
+    },
+    {
+      "wave": 2,
+      "label": "Refactor partiel vers Ω",
+      "files_count": 1,
+      "total_eta_hours": 24.0,
+      "total_loc": 636,
+      "rel_paths": [
+        "post_smoothing/organic_corridor_smoother.py"
+      ]
+    },
+    {
+      "wave": 3,
+      "label": "Réécriture totale Ω requise",
+      "files_count": 53,
+      "total_eta_hours": 382.6,
+      "total_loc": 9835,
+      "rel_paths": [
+        "nutrition_intelligence/router.py",
+        "spatial_engine_v7/router.py",
+        "v8_national/exclusion_engine.py",
+        "v8_national/phase_c_engines.py",
+        "v8_national/phase_a_engines.py",
+        "v8_national/map_bundle.py",
+        "v8_national/router.py",
+        "supra_engine_v7/router.py",
+        "v8_national/p1_pipelines.py",
+        "wildlife_behavior_omega/router.py",
+        "v8_national/phase_b_engines.py",
+        "post_smoothing/renduomega.py",
+        "bdre/corridor_optimizer_v2.py",
+        "hunt_orchestrator/router.py",
+        "hunt_orchestrator/orchestrator.py",
+        "bdre/institutional_cache.py",
+        "weather_v3/router.py",
+        "post_smoothing/anti_regression_omega.py",
+        "reseau_veineux_omega/external_inflow.py",
+        "terrain_nav/terrain_graph.py",
+        "v8_institutional/species_presence_mask_omega.py",
+        "supra_advanced/router.py",
+        "terrain_nav/__init__.py",
+        "legal_time_omega/router.py",
+        "bdre/router.py",
+        "terrain_nav/terrain_sources.py",
+        "nutrition_intelligence/x7000_supplier_product_engine.py",
+        "advanced_geospatial_omega/router.py",
+        "eco_zones_omega/router.py",
+        "ecoforestry_omega/router.py",
+        "hydro_topo_omega/router.py",
+        "v8_national/governance.py",
+        "terrain_3d_omega/router.py",
+        "bdre/__init__.py",
+        "x199_commons.py",
+        "nutrition_intelligence/__init__.py",
+        "wildlife_behavior_omega/__init__.py",
+        "terrain_3d_omega/__init__.py",
+        "ecoforestry_omega/__init__.py",
+        "bio_scoring_omega/__init__.py",
+        "legal_time_omega/__init__.py",
+        "hydro_topo_omega/__init__.py",
+        "eco_zones_omega/__init__.py",
+        "reseau_veineux_omega/__init__.py",
+        "advanced_geospatial_omega/__init__.py",
+        "predictive_omega/__init__.py",
+        "hunt_orchestrator/__init__.py",
+        "post_smoothing/__init__.py",
+        "supra_engine_v7/__init__.py",
+        "supra_advanced/__init__.py",
+        "spatial_engine_v7/__init__.py",
+        "v8_national/__init__.py",
+        "weather_v3/__init__.py"
+      ]
+    }
+  ],
+  "plan_per_file": [
+    {
+      "rel_path": "post_smoothing/p1_preparation.py",
+      "wave": 1,
+      "priority": "P1",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.post_smoothing.p1_preparation"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 12.0,
+      "lines_code": 424,
+      "max_mccabe": 22,
+      "candidate_purge_phase_xvii": true,
+      "rationale": "Wave 1 · HIGH · P1 · 0 legacy imports, 3 Ω imports, max McCabe=22"
+    },
+    {
+      "rel_path": "post_smoothing/terrain_signals_builder.py",
+      "wave": 1,
+      "priority": "P1",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.post_smoothing.terrain_signals_builder"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 12.0,
+      "lines_code": 286,
+      "max_mccabe": 27,
+      "candidate_purge_phase_xvii": true,
+      "rationale": "Wave 1 · HIGH · P1 · 0 legacy imports, 1 Ω imports, max McCabe=27"
+    },
+    {
+      "rel_path": "reseau_veineux_omega/router.py",
+      "wave": 1,
+      "priority": "P1",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.reseau_veineux_omega.router"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 12.0,
+      "lines_code": 274,
+      "max_mccabe": 14,
+      "candidate_purge_phase_xvii": true,
+      "rationale": "Wave 1 · HIGH · P1 · 0 legacy imports, 1 Ω imports, max McCabe=14"
+    },
+    {
+      "rel_path": "bio_scoring_omega/router.py",
+      "wave": 1,
+      "priority": "P1",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.bio_scoring_omega.router"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 6.0,
+      "lines_code": 90,
+      "max_mccabe": 10,
+      "candidate_purge_phase_xvii": true,
+      "rationale": "Wave 1 · HIGH · P1 · 0 legacy imports, 1 Ω imports, max McCabe=10"
+    },
+    {
+      "rel_path": "post_smoothing/predictive_integration.py",
+      "wave": 1,
+      "priority": "P1",
+      "risk_level": "MEDIUM",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.post_smoothing.predictive_integration"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 8.4,
+      "lines_code": 230,
+      "max_mccabe": 8,
+      "candidate_purge_phase_xvii": true,
+      "rationale": "Wave 1 · MEDIUM · P1 · 0 legacy imports, 1 Ω imports, max McCabe=8"
+    },
+    {
+      "rel_path": "predictive_omega/router.py",
+      "wave": 1,
+      "priority": "P1",
+      "risk_level": "MEDIUM",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.predictive_omega.router"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 4.2,
+      "lines_code": 147,
+      "max_mccabe": 5,
+      "candidate_purge_phase_xvii": true,
+      "rationale": "Wave 1 · MEDIUM · P1 · 0 legacy imports, 3 Ω imports, max McCabe=5"
+    },
+    {
+      "rel_path": "post_smoothing/organic_corridor_smoother.py",
+      "wave": 2,
+      "priority": "P0",
+      "risk_level": "HIGH",
+      "target_migration": "BIO_REACTEUR_Ω (corridors)",
+      "dependencies": [
+        "engines.post_smoothing.organic_corridor_smoother",
+        "engines.v8_institutional"
+      ],
+      "dependencies_count": 2,
+      "eta_hours": 24.0,
+      "lines_code": 636,
+      "max_mccabe": 41,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 2 · HIGH · P0 · 1 legacy imports, 1 Ω imports, max McCabe=41"
+    },
+    {
+      "rel_path": "nutrition_intelligence/router.py",
+      "wave": 3,
+      "priority": "P0",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.nutrition_intelligence.router",
+        "engines.supra_advanced.territory_bridge",
+        "modules.nutrition_engine_v7.pipeline"
+      ],
+      "dependencies_count": 3,
+      "eta_hours": 24.0,
+      "lines_code": 672,
+      "max_mccabe": 34,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P0 · 2 legacy imports, 0 Ω imports, max McCabe=34"
+    },
+    {
+      "rel_path": "spatial_engine_v7/router.py",
+      "wave": 3,
+      "priority": "P0",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.spatial_engine_v7.router",
+        "modules.nutrition_engine_v7.pipeline"
+      ],
+      "dependencies_count": 2,
+      "eta_hours": 24.0,
+      "lines_code": 571,
+      "max_mccabe": 18,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P0 · 1 legacy imports, 0 Ω imports, max McCabe=18"
+    },
+    {
+      "rel_path": "v8_national/exclusion_engine.py",
+      "wave": 3,
+      "priority": "P0",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.v8_national.exclusion_engine",
+        "modules.canada_v72.data"
+      ],
+      "dependencies_count": 2,
+      "eta_hours": 12.0,
+      "lines_code": 389,
+      "max_mccabe": 55,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P0 · 1 legacy imports, 0 Ω imports, max McCabe=55"
+    },
+    {
+      "rel_path": "v8_national/phase_c_engines.py",
+      "wave": 3,
+      "priority": "P0",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.v8_national.phase_a_engines",
+        "engines.v8_national.phase_b_engines",
+        "engines.v8_national.phase_c_engines"
+      ],
+      "dependencies_count": 3,
+      "eta_hours": 12.0,
+      "lines_code": 282,
+      "max_mccabe": 12,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P0 · 2 legacy imports, 0 Ω imports, max McCabe=12"
+    },
+    {
+      "rel_path": "v8_national/phase_a_engines.py",
+      "wave": 3,
+      "priority": "P0",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.v8_national.exclusion_engine",
+        "engines.v8_national.phase_a_engines"
+      ],
+      "dependencies_count": 2,
+      "eta_hours": 12.0,
+      "lines_code": 277,
+      "max_mccabe": 20,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P0 · 1 legacy imports, 0 Ω imports, max McCabe=20"
+    },
+    {
+      "rel_path": "v8_national/map_bundle.py",
+      "wave": 3,
+      "priority": "P0",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.v8_national.exclusion_engine",
+        "engines.v8_national.governance",
+        "engines.v8_national.map_bundle",
+        "engines.v8_national.p1_pipelines",
+        "engines.v8_national.phase_b_engines",
+        "engines.v8_national.phase_c_engines",
+        "engines.v8_national.referentials",
+        "modules.canada_v72.data"
+      ],
+      "dependencies_count": 8,
+      "eta_hours": 12.0,
+      "lines_code": 261,
+      "max_mccabe": 15,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P0 · 7 legacy imports, 0 Ω imports, max McCabe=15"
+    },
+    {
+      "rel_path": "v8_national/router.py",
+      "wave": 3,
+      "priority": "P0",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.v8_national.exclusion_engine",
+        "engines.v8_national.governance",
+        "engines.v8_national.router",
+        "modules.canada_v72.data"
+      ],
+      "dependencies_count": 4,
+      "eta_hours": 12.0,
+      "lines_code": 259,
+      "max_mccabe": 37,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P0 · 3 legacy imports, 0 Ω imports, max McCabe=37"
+    },
+    {
+      "rel_path": "supra_engine_v7/router.py",
+      "wave": 3,
+      "priority": "P0",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.supra_engine_v7.router",
+        "modules.nutrition_engine_v7.pipeline"
+      ],
+      "dependencies_count": 2,
+      "eta_hours": 12.0,
+      "lines_code": 235,
+      "max_mccabe": 12,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P0 · 1 legacy imports, 0 Ω imports, max McCabe=12"
+    },
+    {
+      "rel_path": "v8_national/p1_pipelines.py",
+      "wave": 3,
+      "priority": "P0",
+      "risk_level": "MEDIUM",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.v8_national.p1_pipelines",
+        "modules.canada_v72.data"
+      ],
+      "dependencies_count": 2,
+      "eta_hours": 8.4,
+      "lines_code": 210,
+      "max_mccabe": 8,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · MEDIUM · P0 · 1 legacy imports, 0 Ω imports, max McCabe=8"
+    },
+    {
+      "rel_path": "wildlife_behavior_omega/router.py",
+      "wave": 3,
+      "priority": "P0",
+      "risk_level": "MEDIUM",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "core.scoring_pipeline.corridors_v10.species_profiles",
+        "engines.wildlife_behavior_omega.router"
+      ],
+      "dependencies_count": 2,
+      "eta_hours": 4.2,
+      "lines_code": 89,
+      "max_mccabe": 4,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · MEDIUM · P0 · 1 legacy imports, 0 Ω imports, max McCabe=4"
+    },
+    {
+      "rel_path": "v8_national/phase_b_engines.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.v8_national.phase_b_engines"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 24.0,
+      "lines_code": 571,
+      "max_mccabe": 18,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P1 · 0 legacy imports, 0 Ω imports, max McCabe=18"
+    },
+    {
+      "rel_path": "post_smoothing/renduomega.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.post_smoothing.renduomega"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 24.0,
+      "lines_code": 501,
+      "max_mccabe": 29,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P1 · 0 legacy imports, 0 Ω imports, max McCabe=29"
+    },
+    {
+      "rel_path": "bdre/corridor_optimizer_v2.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "HIGH",
+      "target_migration": "BIO_REACTEUR_Ω (corridors)",
+      "dependencies": [
+        "engines.bdre.corridor_optimizer_v2"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 12.0,
+      "lines_code": 480,
+      "max_mccabe": 20,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P1 · 0 legacy imports, 0 Ω imports, max McCabe=20"
+    },
+    {
+      "rel_path": "hunt_orchestrator/router.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.hunt_orchestrator.router"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 12.0,
+      "lines_code": 376,
+      "max_mccabe": 11,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P1 · 0 legacy imports, 0 Ω imports, max McCabe=11"
+    },
+    {
+      "rel_path": "hunt_orchestrator/orchestrator.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.hunt_orchestrator.orchestrator"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 12.0,
+      "lines_code": 366,
+      "max_mccabe": 39,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P1 · 0 legacy imports, 0 Ω imports, max McCabe=39"
+    },
+    {
+      "rel_path": "bdre/institutional_cache.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.bdre.institutional_cache"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 12.0,
+      "lines_code": 342,
+      "max_mccabe": 12,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P1 · 0 legacy imports, 0 Ω imports, max McCabe=12"
+    },
+    {
+      "rel_path": "weather_v3/router.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.weather_v3.router"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 12.0,
+      "lines_code": 326,
+      "max_mccabe": 20,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P1 · 0 legacy imports, 0 Ω imports, max McCabe=20"
+    },
+    {
+      "rel_path": "post_smoothing/anti_regression_omega.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.post_smoothing.anti_regression_omega"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 12.0,
+      "lines_code": 263,
+      "max_mccabe": 12,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P1 · 0 legacy imports, 0 Ω imports, max McCabe=12"
+    },
+    {
+      "rel_path": "reseau_veineux_omega/external_inflow.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.reseau_veineux_omega.external_inflow"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 12.0,
+      "lines_code": 258,
+      "max_mccabe": 11,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P1 · 0 legacy imports, 0 Ω imports, max McCabe=11"
+    },
+    {
+      "rel_path": "terrain_nav/terrain_graph.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.terrain_nav.terrain_graph"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 12.0,
+      "lines_code": 252,
+      "max_mccabe": 38,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P1 · 0 legacy imports, 0 Ω imports, max McCabe=38"
+    },
+    {
+      "rel_path": "v8_institutional/species_presence_mask_omega.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.v8_institutional.species_presence_mask_omega"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 12.0,
+      "lines_code": 247,
+      "max_mccabe": 23,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P1 · 0 legacy imports, 0 Ω imports, max McCabe=23"
+    },
+    {
+      "rel_path": "supra_advanced/router.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.supra_advanced.router"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 12.0,
+      "lines_code": 237,
+      "max_mccabe": 17,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P1 · 0 legacy imports, 0 Ω imports, max McCabe=17"
+    },
+    {
+      "rel_path": "terrain_nav/__init__.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.terrain_nav"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 6.0,
+      "lines_code": 148,
+      "max_mccabe": 14,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P1 · 0 legacy imports, 0 Ω imports, max McCabe=14"
+    },
+    {
+      "rel_path": "legal_time_omega/router.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "HIGH",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.legal_time_omega.router"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 6.0,
+      "lines_code": 147,
+      "max_mccabe": 12,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · HIGH · P1 · 0 legacy imports, 0 Ω imports, max McCabe=12"
+    },
+    {
+      "rel_path": "bdre/router.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "MEDIUM",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.bdre.router"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 8.4,
+      "lines_code": 442,
+      "max_mccabe": 7,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · MEDIUM · P1 · 0 legacy imports, 0 Ω imports, max McCabe=7"
+    },
+    {
+      "rel_path": "terrain_nav/terrain_sources.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "MEDIUM",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.terrain_nav.terrain_sources"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 8.4,
+      "lines_code": 354,
+      "max_mccabe": 9,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · MEDIUM · P1 · 0 legacy imports, 0 Ω imports, max McCabe=9"
+    },
+    {
+      "rel_path": "nutrition_intelligence/x7000_supplier_product_engine.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "MEDIUM",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.nutrition_intelligence.x7000_supplier_product_engine"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 8.4,
+      "lines_code": 244,
+      "max_mccabe": 9,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · MEDIUM · P1 · 0 legacy imports, 0 Ω imports, max McCabe=9"
+    },
+    {
+      "rel_path": "advanced_geospatial_omega/router.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "MEDIUM",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.advanced_geospatial_omega.router"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 4.2,
+      "lines_code": 140,
+      "max_mccabe": 5,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · MEDIUM · P1 · 0 legacy imports, 0 Ω imports, max McCabe=5"
+    },
+    {
+      "rel_path": "eco_zones_omega/router.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "MEDIUM",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.eco_zones_omega.router"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 4.2,
+      "lines_code": 113,
+      "max_mccabe": 7,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · MEDIUM · P1 · 0 legacy imports, 0 Ω imports, max McCabe=7"
+    },
+    {
+      "rel_path": "ecoforestry_omega/router.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "MEDIUM",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.ecoforestry_omega.router"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 4.2,
+      "lines_code": 105,
+      "max_mccabe": 5,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · MEDIUM · P1 · 0 legacy imports, 0 Ω imports, max McCabe=5"
+    },
+    {
+      "rel_path": "hydro_topo_omega/router.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "MEDIUM",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.hydro_topo_omega.router"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 4.2,
+      "lines_code": 103,
+      "max_mccabe": 5,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · MEDIUM · P1 · 0 legacy imports, 0 Ω imports, max McCabe=5"
+    },
+    {
+      "rel_path": "v8_national/governance.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.v8_national.governance"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 3.0,
+      "lines_code": 163,
+      "max_mccabe": 4,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=4"
+    },
+    {
+      "rel_path": "terrain_3d_omega/router.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.terrain_3d_omega.router"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 3.0,
+      "lines_code": 118,
+      "max_mccabe": 4,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=4"
+    },
+    {
+      "rel_path": "bdre/__init__.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.bdre"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 3.0,
+      "lines_code": 83,
+      "max_mccabe": 2,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=2"
+    },
+    {
+      "rel_path": "x199_commons.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.x199_commons"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 1.0,
+      "lines_code": 47,
+      "max_mccabe": 2,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=2"
+    },
+    {
+      "rel_path": "nutrition_intelligence/__init__.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.nutrition_intelligence"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 1.0,
+      "lines_code": 16,
+      "max_mccabe": 0,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=0"
+    },
+    {
+      "rel_path": "wildlife_behavior_omega/__init__.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.wildlife_behavior_omega"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 1.0,
+      "lines_code": 13,
+      "max_mccabe": 0,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=0"
+    },
+    {
+      "rel_path": "terrain_3d_omega/__init__.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.terrain_3d_omega"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 1.0,
+      "lines_code": 13,
+      "max_mccabe": 0,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=0"
+    },
+    {
+      "rel_path": "ecoforestry_omega/__init__.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.ecoforestry_omega"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 1.0,
+      "lines_code": 13,
+      "max_mccabe": 0,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=0"
+    },
+    {
+      "rel_path": "bio_scoring_omega/__init__.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.bio_scoring_omega"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 1.0,
+      "lines_code": 13,
+      "max_mccabe": 0,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=0"
+    },
+    {
+      "rel_path": "legal_time_omega/__init__.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.legal_time_omega"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 1.0,
+      "lines_code": 13,
+      "max_mccabe": 0,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=0"
+    },
+    {
+      "rel_path": "hydro_topo_omega/__init__.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.hydro_topo_omega"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 1.0,
+      "lines_code": 13,
+      "max_mccabe": 0,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=0"
+    },
+    {
+      "rel_path": "eco_zones_omega/__init__.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.eco_zones_omega"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 1.0,
+      "lines_code": 13,
+      "max_mccabe": 0,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=0"
+    },
+    {
+      "rel_path": "reseau_veineux_omega/__init__.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.reseau_veineux_omega"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 1.0,
+      "lines_code": 13,
+      "max_mccabe": 0,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=0"
+    },
+    {
+      "rel_path": "advanced_geospatial_omega/__init__.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.advanced_geospatial_omega"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 1.0,
+      "lines_code": 13,
+      "max_mccabe": 0,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=0"
+    },
+    {
+      "rel_path": "predictive_omega/__init__.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.predictive_omega"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 1.0,
+      "lines_code": 13,
+      "max_mccabe": 0,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=0"
+    },
+    {
+      "rel_path": "hunt_orchestrator/__init__.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.hunt_orchestrator"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 1.0,
+      "lines_code": 12,
+      "max_mccabe": 0,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=0"
+    },
+    {
+      "rel_path": "post_smoothing/__init__.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.post_smoothing"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 1.0,
+      "lines_code": 6,
+      "max_mccabe": 0,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=0"
+    },
+    {
+      "rel_path": "supra_engine_v7/__init__.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.supra_engine_v7"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 1.0,
+      "lines_code": 0,
+      "max_mccabe": 0,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=0"
+    },
+    {
+      "rel_path": "supra_advanced/__init__.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.supra_advanced"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 1.0,
+      "lines_code": 0,
+      "max_mccabe": 0,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=0"
+    },
+    {
+      "rel_path": "spatial_engine_v7/__init__.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.spatial_engine_v7"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 1.0,
+      "lines_code": 0,
+      "max_mccabe": 0,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=0"
+    },
+    {
+      "rel_path": "v8_national/__init__.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.v8_national"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 1.0,
+      "lines_code": 0,
+      "max_mccabe": 0,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=0"
+    },
+    {
+      "rel_path": "weather_v3/__init__.py",
+      "wave": 3,
+      "priority": "P1",
+      "risk_level": "LOW",
+      "target_migration": "SUPER_ENGINES_Ω (à classifier)",
+      "dependencies": [
+        "engines.weather_v3"
+      ],
+      "dependencies_count": 1,
+      "eta_hours": 1.0,
+      "lines_code": 0,
+      "max_mccabe": 0,
+      "candidate_purge_phase_xvii": false,
+      "rationale": "Wave 3 · LOW · P1 · 0 legacy imports, 0 Ω imports, max McCabe=0"
+    }
+  ],
+  "totals": {
+    "files": 60,
+    "total_eta_hours": 461.2,
+    "total_loc_to_migrate": 11922,
+    "by_priority": {
+      "P0": 11,
+      "P1": 49,
+      "P2": 0
+    },
+    "by_risk_level": {
+      "HIGH": 27,
+      "MEDIUM": 11,
+      "LOW": 22
+    },
+    "by_wave": {
+      "1": 6,
+      "2": 1,
+      "3": 53
+    }
+  },
+  "doctrine_anti_contamination": [
+    "Aucune logique legacy ne sera réutilisée — réécriture EXCLUSIVEMENT depuis les BIO_REACTEUR_Ω.",
+    "Aucune ligne de code legacy copiée. Périmètres fonctionnels uniquement.",
+    "Tests pytest XIII+XIV+XV doivent rester 100% PASSED après chaque wave.",
+    "V30 et FREEZE_MASTER doivent rester INVIOLÉS."
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "manifest_id": "SUPPRESSION_XVc_Ω_SHA256",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "files": [
+    {
+      "filename": "SUPPRESSION_XVc_Ω.json",
+      "size": 18607,
+      "sha256": "4f0e6b53ab0be6f65f12471d302679e497bd03baa9d99b3ea72c2a24deef67ee",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/SUPPRESSION_XVc_%CE%A9.json"
+    },
+    {
+      "filename": "SUPPRESSION_XVc_Ω.csv",
+      "size": 7669,
+      "sha256": "dad4ef8a2dbe95bed9e8bef3f1c796e7019186fd27a263c4f0df6407aa238893",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/SUPPRESSION_XVc_%CE%A9.csv"
+    },
+    {
+      "filename": "QUARANTINE_XVb_Ω_ARCHIVE.tar.gz",
+      "size": 83539,
+      "sha256": "3473899df15bc75c185790e2ee78b1075dfa0f8e557593c5b5ffd720c037ec98",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/QUARANTINE_XVb_%CE%A9_ARCHIVE.tar.gz"
+    }
+  ]
+}

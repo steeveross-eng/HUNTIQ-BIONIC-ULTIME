@@ -27,6 +27,42 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XV.c + XV.d · SUPPRESSION IRRÉVERSIBLE + AUDIT FORENSIQUE + PLAN_REFACTOR (2026-04-29 · ordre n°34)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PHASE_XVc_SUPPRESSION_IRRÉVERSIBLE_Ω + XV.d_AUDIT + PLAN_REFACTOR`).
+  Stratégies validées : **1.b SHA-256 forensique** · **2.c AST + complexité McCabe** · **3.b plan détaillé per-file** · **4.b curl batch HTTPS**.
+  7 BLOCS séquentiels exécutés. V30 INVIOLÉ. FREEZE INTACT. pytest 62/62 PASSED. 11/11 livrables HTTPS 200 OK.
+  - **BLOC 1 — PRE-FLIGHT Ω** : panic_stop OK · FREEZE 36/36 INTACT · DIFF_MASTER=0 → PASS ✓
+  - **BLOC 2 — SUPPRESSION IRRÉVERSIBLE Ω (XV.c, stratégie 1.b)** :
+    - SHA-256 forensique calculé sur 38 fichiers AVANT suppression (344 204 o au total).
+    - **Archive scellée** `QUARANTINE_XVb_Ω_ARCHIVE.tar.gz` (83 539 o · sha `3473899df15bc75c…`) conservée pour audit institutionnel.
+    - **38 fichiers supprimés irréversiblement** via `shutil.rmtree('/app/_QUARANTINE_XVb_OMEGA')` (PATH_GUARD vérifié).
+    - QUARANTINE supprimée ✓ · Engines/ intact ✓ · Backend post-restart : 4/4 endpoints HTTP 200 OK.
+  - **BLOC 3 — AUDIT FORENSIQUE KEPT_FOR_INTEGRITY (XV.d, stratégie 2.c)** :
+    - **60 fichiers audités** (AST parse OK 60/60 · 0 erreur).
+    - **11 922 LOC totales** · **24 classes** · **420 fonctions** · max McCabe = **55**.
+    - Risk : **HIGH=27 · MEDIUM=11 · LOW=22**. Priorité : **P0=11 · P1=49 · P2=0**.
+    - Waves : **W1=6** (purge directe XVII) · **W2=1** (refactor partiel) · **W3=53** (réécriture totale).
+    - 4 livrables : `AUDIT_KEPT_FOR_INTEGRITY_Ω.{json,html,csv}`.
+  - **BLOC 4 — PLAN_REFACTOR_XVd_Ω (stratégie 3.b)** :
+    - Plan détaillé par fichier : rel_path → wave + priorité + risque + cible + dépendances + LOC + maxCC + ETA.
+    - 6 étapes globales · 3 vagues de migration · ETA total **461.2 h**.
+    - Cibles : SCIENTIFIQUE_Ω · BIO_REACTEUR_Ω (habitat/corridors/nutrition/rut/mineraux) · ENGINE_IA_Ω · SUPER_ENGINES_Ω.
+    - Doctrine anti-contamination : aucune ligne legacy copiée, réécriture pure depuis BIO_REACTEUR_Ω.
+  - **BLOC 5 — VALIDATION pytest** : **62/62 PASSED** · V30 intact · FREEZE intact · backend OK.
+  - **BLOC 6 — Génération HTML** : SUPPRESSION + AUDIT + PLAN + INDEX_PURGE_MASTER régénérés.
+  - **BLOC 7 — VALIDATION HTTPS BATCH (4.b)** :
+    - curl Mozilla-UA batch sur **11 livrables principaux → 11/11 HTTPS 200 OK**.
+    - `INDEX_XVcd_Ω.html` créé (cliquable + statut HTTP par fichier).
+    - `CURL_BATCH_VALIDATION_XVcd_Ω.json` archivé.
+  - **14 livrables totaux** publiés dans `/reports/purge_master_omega/` :
+    - SUPPRESSION_XVc_Ω.{json,html,csv} · SUPPRESSION_XVc_Ω_SHA256.json · QUARANTINE_XVb_Ω_ARCHIVE.tar.gz
+    - AUDIT_KEPT_FOR_INTEGRITY_Ω.{json,html,csv}
+    - PLAN_REFACTOR_XVd_Ω.{json,html} · VALIDATION_XVc_XVd_Ω.json
+    - CURL_BATCH_VALIDATION_XVcd_Ω.json · INDEX_XVcd_Ω.html · INDEX_PURGE_MASTER_Ω.html
+  - **V30 INVIOLÉ** : `fb765b94…ecb0c` + `bcb1e3a6…39d3` · **FREEZE_MASTER** : `31c18388ab3090fc…ccf27`.
+  - **Script institutionnel scellé** : `/app/scripts/phase_xvc_xvd_omega_full.py` (1100 lignes, 7 blocs).
+  - **Tests** : pytest 62/62 + bash + curl + python3. Aucun testing subagent.
+
 - **PHASE_XV.b · PURGE PHYSIQUE Ω + DIFF_MASTER_Ω (2026-04-29 · ordre n°33)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PHASE_XVb_PURGE_PHYSIQUE_Ω + DIFF_MASTER_Ω`).
   7 BLOCS exécutés. V30 INVIOLÉ. FREEZE INTACT. DIFF métier = 0.
