@@ -1,0 +1,337 @@
+{
+  "manifest_id": "TESTS_MASTER_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°30",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-29T16:40:23+00:00",
+  "pytest_version": "9.0.2",
+  "summary": {
+    "total": 62,
+    "passed": 62,
+    "failed": 0,
+    "skipped": 0,
+    "errored": 0
+  },
+  "duration_seconds": 0.15,
+  "exit_code": 0,
+  "all_pass": true,
+  "targets": [
+    "tests/test_phase_xiii_bio_reacteurs_omega.py",
+    "tests/test_phase_xiv_omega.py",
+    "tests/test_phase_xv_omega.py"
+  ],
+  "individual_tests": [
+    {
+      "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+      "test_name": "test_phase_xiii_01_bio_reacteur_files_present",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+      "test_name": "test_phase_xiii_02_bio_profiles_present",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+      "test_name": "test_phase_xiii_03_audit_validated_by_commandant",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+      "test_name": "test_phase_xiii_04_runtime_loader_loads_all_5",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+      "test_name": "test_phase_xiii_05_runtime_loader_unknown_species_raises",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+      "test_name": "test_phase_xiii_06_anti_generique_pass_all",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+      "test_name": "test_phase_xiii_07_no_fallback_no_interpolation",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+      "test_name": "test_phase_xiii_08_13_engines_outputs_per_species",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+      "test_name": "test_phase_xiii_09_10_champs_obligatoires_all_present",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+      "test_name": "test_phase_xiii_10_engine_outputs_paths_resolved",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+      "test_name": "test_phase_xiii_11_integrity_report_all_pass",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+      "test_name": "test_phase_xiii_12_v30_locked_intact",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+      "test_name": "test_phase_xiii_13_attach_decorates_compute_result",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiv_omega.py",
+      "test_name": "test_xiv_b2_01_recompute_sceau_works",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiv_omega.py",
+      "test_name": "test_xiv_b2_02_reference_loaded",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiv_omega.py",
+      "test_name": "test_xiv_b2_03_verify_sceau_match",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiv_omega.py",
+      "test_name": "test_xiv_b2_04_log_jsonl_appended",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiv_omega.py",
+      "test_name": "test_xiv_b3_01_take_snapshot_artefacts",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiv_omega.py",
+      "test_name": "test_xiv_b3_02_diff_baseline_stable",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiv_omega.py",
+      "test_name": "test_xiv_b3_03_paths_propagation_275",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiv_omega.py",
+      "test_name": "test_xiv_b3_04_pipeline_continuity_all_ok",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiv_omega.py",
+      "test_name": "test_xiv_b3_05_full_report_assembled",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiv_omega.py",
+      "test_name": "test_xiv_b4_01_six_super_engines_present",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiv_omega.py",
+      "test_name": "test_xiv_b4_02_super_engines_immutable_and_no_logic_yet",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiv_omega.py",
+      "test_name": "test_xiv_b4_03_lock_sha_present",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiv_omega.py",
+      "test_name": "test_xiv_b4_04_list_super_engines_stable",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xiv_omega.py",
+      "test_name": "test_xiv_b4_05_master_engine_consumes_5_others",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_VISION_\\u03a9-compute-CHEVREUIL]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_VISION_\\u03a9-compute-ORIGNAL]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_VISION_\\u03a9-compute-OURS_NOIR]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_VISION_\\u03a9-compute-WAPITI]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_VISION_\\u03a9-compute-DINDON_SAUVAGE]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_ODEUR_\\u03a9-compute-CHEVREUIL]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_ODEUR_\\u03a9-compute-ORIGNAL]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_ODEUR_\\u03a9-compute-OURS_NOIR]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_ODEUR_\\u03a9-compute-WAPITI]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_ODEUR_\\u03a9-compute-DINDON_SAUVAGE]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_PATTERNS_\\u03a9-compute-CHEVREUIL]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_PATTERNS_\\u03a9-compute-ORIGNAL]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_PATTERNS_\\u03a9-compute-OURS_NOIR]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_PATTERNS_\\u03a9-compute-WAPITI]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_PATTERNS_\\u03a9-compute-DINDON_SAUVAGE]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_COMPORTEMENT_\\u03a9-compute-CHEVREUIL]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_COMPORTEMENT_\\u03a9-compute-ORIGNAL]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_COMPORTEMENT_\\u03a9-compute-OURS_NOIR]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_COMPORTEMENT_\\u03a9-compute-WAPITI]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_COMPORTEMENT_\\u03a9-compute-DINDON_SAUVAGE]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_SENSORIEL_\\u03a9-compute-CHEVREUIL]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_SENSORIEL_\\u03a9-compute-ORIGNAL]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_SENSORIEL_\\u03a9-compute-OURS_NOIR]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_SENSORIEL_\\u03a9-compute-WAPITI]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_engine_compute_works[ENGINE_SENSORIEL_\\u03a9-compute-DINDON_SAUVAGE]",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_unknown_species_raises",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b1_specs_constants_immutable",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b2_ia_runs_5_species_5_engines",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b2_ia_correlations_present",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b2_ia_specs_no_decision",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b3_manifest_migration_present",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b4_liste_noire_present",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b4_specs_files_present",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_b4_index_html_present",
+      "result": "PASSED"
+    },
+    {
+      "file": "tests/test_phase_xv_omega.py",
+      "test_name": "test_xv_v30_locked_intact",
+      "result": "PASSED"
+    }
+  ],
+  "stdout_excerpt": "test_xv_b1_engine_compute_works[ENGINE_ODEUR_\\u03a9-compute-OURS_NOIR] PASSED [ 56%]\ntests/test_phase_xv_omega.py::test_xv_b1_engine_compute_works[ENGINE_ODEUR_\\u03a9-compute-WAPITI] PASSED [ 58%]\ntests/test_phase_xv_omega.py::test_xv_b1_engine_compute_works[ENGINE_ODEUR_\\u03a9-compute-DINDON_SAUVAGE] PASSED [ 59%]\ntests/test_phase_xv_omega.py::test_xv_b1_engine_compute_works[ENGINE_PATTERNS_\\u03a9-compute-CHEVREUIL] PASSED [ 61%]\ntests/test_phase_xv_omega.py::test_xv_b1_engine_compute_works[ENGINE_PATTERNS_\\u03a9-compute-ORIGNAL] PASSED [ 62%]\ntests/test_phase_xv_omega.py::test_xv_b1_engine_compute_works[ENGINE_PATTERNS_\\u03a9-compute-OURS_NOIR] PASSED [ 64%]\ntests/test_phase_xv_omega.py::test_xv_b1_engine_compute_works[ENGINE_PATTERNS_\\u03a9-compute-WAPITI] PASSED [ 66%]\ntests/test_phase_xv_omega.py::test_xv_b1_engine_compute_works[ENGINE_PATTERNS_\\u03a9-compute-DINDON_SAUVAGE] PASSED [ 67%]\ntests/test_phase_xv_omega.py::test_xv_b1_engine_compute_works[ENGINE_COMPORTEMENT_\\u03a9-compute-CHEVREUIL] PASSED [ 69%]\ntests/test_phase_xv_omega.py::test_xv_b1_engine_compute_works[ENGINE_COMPORTEMENT_\\u03a9-compute-ORIGNAL] PASSED [ 70%]\ntests/test_phase_xv_omega.py::test_xv_b1_engine_compute_works[ENGINE_COMPORTEMENT_\\u03a9-compute-OURS_NOIR] PASSED [ 72%]\ntests/test_phase_xv_omega.py::test_xv_b1_engine_compute_works[ENGINE_COMPORTEMENT_\\u03a9-compute-WAPITI] PASSED [ 74%]\ntests/test_phase_xv_omega.py::test_xv_b1_engine_compute_works[ENGINE_COMPORTEMENT_\\u03a9-compute-DINDON_SAUVAGE] PASSED [ 75%]\ntests/test_phase_xv_omega.py::test_xv_b1_engine_compute_works[ENGINE_SENSORIEL_\\u03a9-compute-CHEVREUIL] PASSED [ 77%]\ntests/test_phase_xv_omega.py::test_xv_b1_engine_compute_works[ENGINE_SENSORIEL_\\u03a9-compute-ORIGNAL] PASSED [ 79%]\ntests/test_phase_xv_omega.py::test_xv_b1_engine_compute_works[ENGINE_SENSORIEL_\\u03a9-compute-OURS_NOIR] PASSED [ 80%]\ntests/test_phase_xv_omega.py::test_xv_b1_engine_compute_works[ENGINE_SENSORIEL_\\u03a9-compute-WAPITI] PASSED [ 82%]\ntests/test_phase_xv_omega.py::test_xv_b1_engine_compute_works[ENGINE_SENSORIEL_\\u03a9-compute-DINDON_SAUVAGE] PASSED [ 83%]\ntests/test_phase_xv_omega.py::test_xv_b1_unknown_species_raises PASSED   [ 85%]\ntests/test_phase_xv_omega.py::test_xv_b1_specs_constants_immutable PASSED [ 87%]\ntests/test_phase_xv_omega.py::test_xv_b2_ia_runs_5_species_5_engines PASSED [ 88%]\ntests/test_phase_xv_omega.py::test_xv_b2_ia_correlations_present PASSED  [ 90%]\ntests/test_phase_xv_omega.py::test_xv_b2_ia_specs_no_decision PASSED     [ 91%]\ntests/test_phase_xv_omega.py::test_xv_b3_manifest_migration_present PASSED [ 93%]\ntests/test_phase_xv_omega.py::test_xv_b4_liste_noire_present PASSED      [ 95%]\ntests/test_phase_xv_omega.py::test_xv_b4_specs_files_present PASSED      [ 96%]\ntests/test_phase_xv_omega.py::test_xv_b4_index_html_present PASSED       [ 98%]\ntests/test_phase_xv_omega.py::test_xv_v30_locked_intact PASSED           [100%]\n\n============================== 62 passed in 0.15s ==============================\n",
+  "stderr_excerpt": ""
+}

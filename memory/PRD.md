@@ -27,6 +27,38 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PROTECTIONS_MAXIMALES_Ω avant PHASE XV.b (2026-04-29 · ordre n°30)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PROCEED_TO_PROTECTIONS_MAXIMALES`).
+  4 BLOCS exécutés. V30 INVIOLÉ. XV.b autorisation : **GRANTED**.
+  - **BLOC 1 — VÉRIFICATION_CRYPTO_Ω** : ✓ PASS
+    - V30 LOCKED : 2/2 fichiers SHA-256 INTACTS (`fb765b94…ecb0c` + `bcb1e3a6…39d3`).
+    - Phase XII-XV référence : 21/21 fichiers présents (5 ENGINES ESPECES + 5
+      ENGINES SCIENTIFIQUES + ENGINE_IA + 5 manifests AUDIT_MASTER + super_engines
+      specs + sceau validator + audit_longitudinal + bio_reacteur_loader + audit_especes).
+    - Aucune divergence vs ORDRE N°28 et N°29.
+  - **BLOC 2 — PROTECTIONS_BCE4X_Ω** : ✓ PASS
+    - 5/5 modules présents et déclarés READ-ONLY pour XV.b :
+      - `engine_territoire_anti_regression_omega.py`
+      - `baseline_registry_omega.py` (post_smoothing)
+      - `interzone_omega.py` (post_smoothing)
+      - `veineux_omega.py` (post_smoothing)
+      - `engine_gouvernance_omega.py`
+  - **BLOC 3 — MODE_PANIC_STOP_Ω** : STAND-BY (aucune condition critique)
+    - Script CLI `/app/scripts/panic_stop_xvb_omega.sh` (chmod +x).
+    - Conditions ABORT : SHA-256 altéré · module protection manquant ·
+      tests pytest non 100% PASSED · import cassé.
+    - Test exécuté : exit code 0 → XV.b AUTORISÉ.
+  - **BLOC 4 — TESTS_AUTOMATIQUES_Ω** : ✓ PASS
+    - **62/62 tests pytest PASSED** (Phase XIII 13 + XIV 14 + XV 35) en 0.15s.
+    - 0 failed, 0 skipped, 0 errored.
+    - exit_code = 0.
+  - **3 livrables HTTPS** dans `/reports/audit_master_omega/` (200 OK 3/3) :
+    - `PROTECTIONS_MAXIMALES_Ω.json` (22 398 o · sha `8cec28c534718447…`)
+    - `TESTS_MASTER_Ω.json` (13 822 o · sha `e703584f2c962dde…`)
+    - `TESTS_MASTER_Ω.html` (15 883 o · sha `f495cb713be38cbc…`)
+  - **XV.b AUTHORIZATION** : `GRANTED` (auth=GRANTED, panic=False, all_blocs_passed=True).
+  - **Tests** : pytest manuel + bash + curl. Aucun testing subagent.
+
 - **AUDIT_MASTER_Ω · RAPPORT_MASTER_Ω (2026-04-29 · ordre n°29)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PROCEED_TO_AUDIT_MASTER_Ω`).
   4 BLOCS exécutés. V30 INVIOLÉ. Audit exhaustif + bundle ZIP 1-click.

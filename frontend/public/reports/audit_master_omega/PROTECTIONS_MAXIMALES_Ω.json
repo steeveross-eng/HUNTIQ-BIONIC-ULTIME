@@ -1,0 +1,585 @@
+{
+  "manifest_id": "PROTECTIONS_MAXIMALES_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°30",
+  "directive": "ACTIVATION_PROTECTIONS_MAXIMALES_AVANT_XVb_Ω",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-29T16:40:23+00:00",
+  "blocs": {
+    "BLOC_1_VERIFICATION_CRYPTO_Ω": {
+      "passed": true,
+      "v30_locked_intact_count": 2,
+      "v30_locked_total": 2,
+      "crypto_results": [
+        {
+          "path": "/app/backend/engines/v8_institutional/registry_lock_omega.py",
+          "category": "V30_LOCKED",
+          "expected_sha256": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+          "actual_sha256": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+          "intact": true,
+          "status": "INTACT"
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/engine_ia_corridors_omega.py",
+          "category": "V30_LOCKED",
+          "expected_sha256": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3",
+          "actual_sha256": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3",
+          "intact": true,
+          "status": "INTACT"
+        }
+      ],
+      "phase_xii_xv_reference_count": 21,
+      "phase_xii_xv_files_snapshot": [
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/engine_chevreuil_omega.py",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "7fa3584b6afa29a49a75b44814d164fa4d42057a6c04e776d1cca4be5dbab796",
+          "size_bytes": 6594,
+          "exists": true
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/engine_orignal_omega.py",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "fe79ebc37531f052bf9567b7375040a3b41adc822941174cf641d3d9d8766546",
+          "size_bytes": 6770,
+          "exists": true
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/engine_ours_noir_omega.py",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "3f9c28e206eb21136bf5e0c5abae6a098219b06878178496168cd1348893aea9",
+          "size_bytes": 6583,
+          "exists": true
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/engine_wapiti_omega.py",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "5d3b0f0f765c0a77deb486bd2056f2e4a7e10c45422b90a344d686c64343f917",
+          "size_bytes": 6770,
+          "exists": true
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/engine_dindon_omega.py",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "c1fc49d44802dad0bae09061735599b17efa8e33fabf15c22c2bc5ad6f2e56d1",
+          "size_bytes": 7453,
+          "exists": true
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/scientifique_omega/engine_vision_omega.py",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "a2463f472e9454474540e21abbb7761d88c83a4e82107decc66113ac9564058b",
+          "size_bytes": 6082,
+          "exists": true
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/scientifique_omega/engine_odeur_omega.py",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "0377cd4046f22d4ba021f232a2d54bf31c400c2b4fe877da587b3c3585eb3d6d",
+          "size_bytes": 6963,
+          "exists": true
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/scientifique_omega/engine_patterns_omega.py",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "0e89063c9eade4364b85dd66d8f3d65228dab5c31a21d65d84456a28e98bdf40",
+          "size_bytes": 5315,
+          "exists": true
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/scientifique_omega/engine_comportement_omega.py",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "ff3bddae2aaff70055a95033ad20074852868636ded835928cd52105b820de69",
+          "size_bytes": 4997,
+          "exists": true
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/scientifique_omega/engine_sensoriel_omega.py",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "632f0f64350c957245c4953b05ce53d00e9f822d4a61600d9f738b23b1a335d9",
+          "size_bytes": 4475,
+          "exists": true
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/scientifique_omega/engine_ia_omega.py",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "f716b870a7185f5a7aa54d762d817479c5088ec56592261b0cf1c32a1f2b234c",
+          "size_bytes": 10304,
+          "exists": true
+        },
+        {
+          "path": "/app/frontend/public/reports/audit_master_omega/RAPPORT_MASTER_Ω.html",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "cf3bc7b7e61b80fc1b47d34683a42360bc6d108c976df6d7bde41339805a3207",
+          "size_bytes": 79011,
+          "exists": true
+        },
+        {
+          "path": "/app/frontend/public/reports/audit_master_omega/RAPPORT_MASTER_Ω.json",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "39a3e354c0be2f26176363f9545173a0e1d22d4156084f1d4786041fb85570a9",
+          "size_bytes": 232287,
+          "exists": true
+        },
+        {
+          "path": "/app/frontend/public/reports/audit_master_omega/RAPPORT_MASTER_Ω.csv",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "93690fbe0b4a797f16c374551006e31b069fbb8a481b32f7e320b2a2ccf1605f",
+          "size_bytes": 52691,
+          "exists": true
+        },
+        {
+          "path": "/app/frontend/public/reports/audit_master_omega/RAPPORT_MASTER_Ω.zip",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "1aa7e813569b099073ed2e96a5821eeac47994639172bae3e9706ccf8d8236a9",
+          "size_bytes": 61569,
+          "exists": true
+        },
+        {
+          "path": "/app/frontend/public/reports/audit_master_omega/INDEX_MASTER_Ω.html",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "7fc4c58bd16c2c483fde4853357a30bc379aa4c98458499e8d55a9d3a88a306e",
+          "size_bytes": 8561,
+          "exists": true
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/super_engines_omega_specs.py",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "db0b240870507751e82ab0c78d5c6dd4e5c29a3ecab634a5c68b9c863ee71669",
+          "size_bytes": 12251,
+          "exists": true
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/sceau_phase_xiii_validator_omega.py",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "86af448153979795f0cc626e40ae8f034a3b4be44454df5651e75b799500b490",
+          "size_bytes": 6908,
+          "exists": true
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/audit_longitudinal_omega.py",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "104fc8eb497122a9c879bb65a3815cbda0489872ecc2b355d393192289bf06a8",
+          "size_bytes": 9748,
+          "exists": true
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/bio_reacteur_loader_omega.py",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "067cf7aa7ea535564b7ac2d386de2bafd82eda5a085e42a77bbbdc461750e727",
+          "size_bytes": 10247,
+          "exists": true
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/audit_especes_omega.py",
+          "category": "PHASE_XII-XV_REFERENCE",
+          "sha256": "17ddafa6f68781c2922a3af6725ab5ea5e3b7758a1b7552bd77f209cc78534b4",
+          "size_bytes": 14485,
+          "exists": true
+        }
+      ]
+    },
+    "BLOC_2_PROTECTIONS_BCE4X_Ω": {
+      "passed": true,
+      "protections_present_count": 5,
+      "protections_total": 5,
+      "read_only_during_xvb": true,
+      "results": [
+        {
+          "protection": "anti_regression_omega",
+          "path": "/app/backend/engines/v8_institutional/engine_territoire_anti_regression_omega.py",
+          "exists": true,
+          "sha256": "b7ddafc36500ca6d83d547c824c3f56e50cd35f2b788c771e73a44cfb63ba7b2",
+          "size_bytes": 14013,
+          "read_only_during_xvb": true
+        },
+        {
+          "protection": "baseline_registry_omega",
+          "path": "/app/backend/engines/post_smoothing/baseline_registry_omega.py",
+          "exists": true,
+          "sha256": "6712bc21dd619fef44a7c948c48a0eba74670c77d09cc7799f7794d91d6d2d1e",
+          "size_bytes": 4451,
+          "read_only_during_xvb": true
+        },
+        {
+          "protection": "interzone_omega",
+          "path": "/app/backend/engines/post_smoothing/interzone_omega.py",
+          "exists": true,
+          "sha256": "c612b36046314f6890856c97085154818b809922e2b1bd3623ce371ea119d24a",
+          "size_bytes": 25719,
+          "read_only_during_xvb": true
+        },
+        {
+          "protection": "veineux_omega",
+          "path": "/app/backend/engines/post_smoothing/veineux_omega.py",
+          "exists": true,
+          "sha256": "180b65c30dccb7c62e24d382135a4b260b7f9c78cafe2b2a7ca05942e63621ff",
+          "size_bytes": 21073,
+          "read_only_during_xvb": true
+        },
+        {
+          "protection": "engine_gouvernance_omega",
+          "path": "/app/backend/engines/v8_institutional/engine_gouvernance_omega.py",
+          "exists": true,
+          "sha256": "d96ca368e55a7106af31150799ddec30ec4b1525120fbf966bf7e21a83391058",
+          "size_bytes": 3196,
+          "read_only_during_xvb": true
+        }
+      ]
+    },
+    "BLOC_3_MODE_PANIC_STOP_Ω": {
+      "panic_stop_active": false,
+      "xvb_authorized": true,
+      "abort_conditions": [
+        "Échec SHA-256 V30 ou ENGINES_Ω",
+        "Module de protection BCE-4X manquant",
+        "Tests pytest non 100% PASSED",
+        "Import cassé détecté (à exécuter en pré-XV.b runtime)"
+      ],
+      "log": [
+        {
+          "at_utc": "2026-04-29T16:40:23.812609+00:00",
+          "severity": "INFO",
+          "message": "Tous les blocs VALIDÉS — autorisation conditionnelle XV.b granted",
+          "context": {}
+        }
+      ]
+    },
+    "BLOC_4_TESTS_AUTOMATIQUES_Ω": {
+      "passed": true,
+      "pytest_exit_code": 0,
+      "summary": {
+        "total": 62,
+        "passed": 62,
+        "failed": 0,
+        "skipped": 0,
+        "errored": 0
+      },
+      "duration_seconds": 0.15,
+      "targets": [
+        "tests/test_phase_xiii_bio_reacteurs_omega.py",
+        "tests/test_phase_xiv_omega.py",
+        "tests/test_phase_xv_omega.py"
+      ],
+      "individual_tests_count": 62,
+      "individual_tests": [
+        {
+          "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+          "test_name": "test_phase_xiii_01_bio_reacteur_files_present",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+          "test_name": "test_phase_xiii_02_bio_profiles_present",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+          "test_name": "test_phase_xiii_03_audit_validated_by_commandant",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+          "test_name": "test_phase_xiii_04_runtime_loader_loads_all_5",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+          "test_name": "test_phase_xiii_05_runtime_loader_unknown_species_raises",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+          "test_name": "test_phase_xiii_06_anti_generique_pass_all",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+          "test_name": "test_phase_xiii_07_no_fallback_no_interpolation",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+          "test_name": "test_phase_xiii_08_13_engines_outputs_per_species",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+          "test_name": "test_phase_xiii_09_10_champs_obligatoires_all_present",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+          "test_name": "test_phase_xiii_10_engine_outputs_paths_resolved",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+          "test_name": "test_phase_xiii_11_integrity_report_all_pass",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+          "test_name": "test_phase_xiii_12_v30_locked_intact",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiii_bio_reacteurs_omega.py",
+          "test_name": "test_phase_xiii_13_attach_decorates_compute_result",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiv_omega.py",
+          "test_name": "test_xiv_b2_01_recompute_sceau_works",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiv_omega.py",
+          "test_name": "test_xiv_b2_02_reference_loaded",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiv_omega.py",
+          "test_name": "test_xiv_b2_03_verify_sceau_match",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiv_omega.py",
+          "test_name": "test_xiv_b2_04_log_jsonl_appended",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiv_omega.py",
+          "test_name": "test_xiv_b3_01_take_snapshot_artefacts",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiv_omega.py",
+          "test_name": "test_xiv_b3_02_diff_baseline_stable",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiv_omega.py",
+          "test_name": "test_xiv_b3_03_paths_propagation_275",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiv_omega.py",
+          "test_name": "test_xiv_b3_04_pipeline_continuity_all_ok",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiv_omega.py",
+          "test_name": "test_xiv_b3_05_full_report_assembled",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiv_omega.py",
+          "test_name": "test_xiv_b4_01_six_super_engines_present",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiv_omega.py",
+          "test_name": "test_xiv_b4_02_super_engines_immutable_and_no_logic_yet",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiv_omega.py",
+          "test_name": "test_xiv_b4_03_lock_sha_present",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiv_omega.py",
+          "test_name": "test_xiv_b4_04_list_super_engines_stable",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xiv_omega.py",
+          "test_name": "test_xiv_b4_05_master_engine_consumes_5_others",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_VISION_\\u03a9-compute-CHEVREUIL]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_VISION_\\u03a9-compute-ORIGNAL]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_VISION_\\u03a9-compute-OURS_NOIR]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_VISION_\\u03a9-compute-WAPITI]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_VISION_\\u03a9-compute-DINDON_SAUVAGE]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_ODEUR_\\u03a9-compute-CHEVREUIL]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_ODEUR_\\u03a9-compute-ORIGNAL]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_ODEUR_\\u03a9-compute-OURS_NOIR]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_ODEUR_\\u03a9-compute-WAPITI]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_ODEUR_\\u03a9-compute-DINDON_SAUVAGE]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_PATTERNS_\\u03a9-compute-CHEVREUIL]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_PATTERNS_\\u03a9-compute-ORIGNAL]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_PATTERNS_\\u03a9-compute-OURS_NOIR]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_PATTERNS_\\u03a9-compute-WAPITI]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_PATTERNS_\\u03a9-compute-DINDON_SAUVAGE]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_COMPORTEMENT_\\u03a9-compute-CHEVREUIL]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_COMPORTEMENT_\\u03a9-compute-ORIGNAL]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_COMPORTEMENT_\\u03a9-compute-OURS_NOIR]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_COMPORTEMENT_\\u03a9-compute-WAPITI]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_COMPORTEMENT_\\u03a9-compute-DINDON_SAUVAGE]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_SENSORIEL_\\u03a9-compute-CHEVREUIL]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_SENSORIEL_\\u03a9-compute-ORIGNAL]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_SENSORIEL_\\u03a9-compute-OURS_NOIR]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_SENSORIEL_\\u03a9-compute-WAPITI]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_engine_compute_works[ENGINE_SENSORIEL_\\u03a9-compute-DINDON_SAUVAGE]",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_unknown_species_raises",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b1_specs_constants_immutable",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b2_ia_runs_5_species_5_engines",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b2_ia_correlations_present",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b2_ia_specs_no_decision",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b3_manifest_migration_present",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b4_liste_noire_present",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b4_specs_files_present",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_b4_index_html_present",
+          "result": "PASSED"
+        },
+        {
+          "file": "tests/test_phase_xv_omega.py",
+          "test_name": "test_xv_v30_locked_intact",
+          "result": "PASSED"
+        }
+      ]
+    }
+  },
+  "all_blocs_passed": true,
+  "xvb_authorization": "GRANTED",
+  "v30_master_sha_invariant_attendu": [
+    "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+    "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3"
+  ]
+}
