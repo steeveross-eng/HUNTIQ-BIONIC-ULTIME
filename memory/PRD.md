@@ -27,6 +27,42 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PUBLICATION_INDEX_HTML_ESPECES_Ω · LIENS HTTPS CLIQUABLES (2026-04-29 · ordre n°23)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-5 — COMMANDE_INSTITUTIONNELLE_Ω
+  PUBLICATION_INDEX_HTML_ESPECES_Ω). Sans changement d'activation. V30 INVIOLÉ.
+  - **Livrable unique** :
+    `/app/frontend/public/reports/especes_omega/INDEX_ESPECES_Ω_SPEC.html` —
+    21 877 octets · sha256 final `f6a28e874800e995aa231b43a3c5ca9b30e6121b139277aefacea16dcf6a0984`
+    (pré-stamping `d478724556f2684c1c4be73f61272cb32273f70f1785233f1c177f0602b9de11`).
+  - **Contenu** :
+    - En-tête institutionnel "INDEX_ESPECES_Ω_SPEC — BCE-4X — VERSION ULTIME ABSOLUE x3".
+    - Bandeau ambre "STATUT : EN_ATTENTE_VALIDATION_COMMANDANT — AUCUN ENGINE ACTIF_Ω_DÉFINITIF".
+    - Tableau récapitulatif 5 espèces × 3 formats (15 lignes) avec colonnes :
+      Espèce (nom commun + nom scientifique italique + espece_id), Type
+      (badge JSON/HTML/CSV), URL HTTPS absolue cliquable (icône ⬇),
+      Taille (octets), SHA-256 (16 fichiers), Statut (badge ambre).
+    - Section meta (Directive, Phase, Doctrine, Émetteur, Token validation,
+      lien vers INDEX JSON source + son self_sha256).
+    - Footer institutionnel (UTC ISO 8601, ordre n°23, V30 SHA-256
+      registry + corridors, snapshot SHA-256 du fichier HTML lui-même,
+      mention "V30 LOCKED — AUCUNE MODIFICATION DU PIPELINE").
+  - **URLs HTTPS publiques absolues** (format URL-encodé Ω → %CE%A9) :
+    - HTML INDEX : `https://huntiq-restore.preview.emergentagent.com/reports/especes_omega/INDEX_ESPECES_%CE%A9_SPEC.html`
+    - 15 fiches : `…/reports/especes_omega/ENGINE_<ESPECE>_%CE%A9_SPEC.{json,html}` et `…_%CE%A9_PARAMS.csv`
+  - **Attestation HTTPS curl** :
+    - `curl -I` sur HTML INDEX : HTTP/2 200 · `content-type: text/html; charset=UTF-8`.
+    - `curl -I` sur les 15 liens fichiers + 1 lien INDEX JSON : **16/16 HTTP 200 OK**.
+  - **Verrouillage préservé** :
+    - API `/api/v30/especes/audit/status` → `AUDIT_ESPECES_Ω_STATUS=EN_ATTENTE_VALIDATION_COMMANDANT`,
+      `is_validated=false`. Aucun appel à `/audit/validate` ni `/audit/revoke`.
+    - Bandeau frontend ambre `EspecesOmegaPanel.jsx` : ACTIF.
+  - **V30 LOCKED · INTÉGRITÉ INTACTE** :
+    - registry_lock_omega.py SHA-256 : `fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c`
+    - engine_ia_corridors_omega.py SHA-256 : `bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3`
+  - **Inventaire dossier final** : 17 fichiers (15 fiches + INDEX JSON + INDEX HTML).
+    Aucun fichier additionnel autre que la page demandée.
+  - **Tests** : Bash + curl uniquement (aucun testing subagent).
+
 - **EXTRACTION_COMPLÈTE_ENGINES_ESPECES_Ω_V2 · 15 + 1 LIVRABLES (2026-04-29 · ordre n°22)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-3 — COMMANDE_INSTITUTIONNELLE_Ω
   EXTRACTION_COMPLÈTE_ENGINES_ESPECES_Ω_V2_CONFIRMER_EXECUTION). Aucune modification du
