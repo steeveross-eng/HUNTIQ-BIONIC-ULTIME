@@ -27,6 +27,37 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **SNAPSHOT_TERRITOIRE_Ω · référence pré-XV.b (2026-04-29 · ordre n°32)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PROCEED_TO_SNAPSHOT_TERRITOIRE_Ω`).
+  4 BLOCS exécutés. V30 INVIOLÉ. Référence institutionnelle scellée.
+  - **BLOC 1 — Extraction couches Ω** : 11 catégories assemblées en lecture
+    seule depuis BIO_REACTEURS_Ω + ENGINES SCIENTIFIQUES_Ω + ENGINE_IA_Ω :
+    - corridors (5 espèces) · zones (5) · salines (5) · hotspots (5) ·
+      contamination (5) · meteo_sensoriel (5) · sensoriel (5) ·
+      pression_humaine (5) · score_ultime (5) · ia_omega (1 IA bundle) ·
+      scientifique_omega_par_espece (25 computes signature).
+    - 25 computes ENGINES_SCIENTIFIQUES + 1 ENGINE_IA + 5 BIO_REACTEURS chargés.
+  - **BLOC 2 — 4 livrables exportés** dans `/reports/snapshots/` :
+    - `TERRITOIRE_SNAPSHOT_Ω.json` (33 773 o · sha `0980647e0d1657fe…`) — données complètes 11 couches + validation.
+    - `TERRITOIRE_SNAPSHOT_Ω.geojson` (6 265 o · sha `448ee0e1f1f1f849…`) — FeatureCollection 5 features (geometry policy strict NO_INTERPOLATION, centroïde Québec institutionnel).
+    - `TERRITOIRE_SNAPSHOT_Ω.png` (55 254 o · sha `e791d8362e894439…`) — dashboard 1600×1000 (KPIs · IA corrélations · seuils par espèce · footer V30).
+    - `TERRITOIRE_SNAPSHOT_Ω_SHA256.json` (1 879 o · sha `cde39710a1208974…`) — manifest cumulatif.
+  - **BLOC 3 — Hébergement HTTPS** : 4/4 fichiers servis HTTP 200 OK
+    (Content-Type : application/json, application/geo+json, image/png).
+  - **BLOC 4 — Validation cohérence** :
+    - **freeze_check** : 36 fichiers vérifiés · 0 altered · 0 missing · `intact=True`.
+    - **fallback_clean** : `True` (aucun engine scientifique avec
+      fallback_active/interpolation_active=True).
+    - **legacy_dep_clean** : `True` (chaîne runtime exclusivement Ω).
+    - **anti_generique_pass** runtime : 5/5 BIO_REACTEURS.
+  - **Snapshot cumulative SHA-256** : `a5d0ab6737a578f4a7d73fce6043ddbbf74cc384c4d9224e7a8b7f923adfae0b`.
+  - **Pre-flight check post-snapshot** : `panic_stop_xvb_omega.sh` exit 0
+    (PROTECTIONS_MAXIMALES + FREEZE intacts).
+  - **Tests** : pytest + bash + curl + python3. Aucun testing subagent.
+  - **Note** : aucune coordonnée géographique réelle n'est interpolée
+    (ce sera le rôle de PHASE XVI). Le geojson utilise un centroïde
+    institutionnel fixe (Québec ville) avec marqueur `no_geom_interpolation: true`.
+
 - **PRÉPARATION_PHASE_XVb · GEL CRYPTOGRAPHIQUE + 4 PROTECTIONS (2026-04-29 · ordre n°31)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PRÉPARATION_PHASE_XVb`).
   V30 INVIOLÉ. XV.b éligible avec double pre-flight check obligatoire.

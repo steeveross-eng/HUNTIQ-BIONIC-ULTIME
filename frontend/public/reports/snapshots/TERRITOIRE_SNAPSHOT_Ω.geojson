@@ -1,0 +1,179 @@
+{
+  "type": "FeatureCollection",
+  "name": "TERRITOIRE_SNAPSHOT_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°32",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "captured_at_utc": "2026-04-29T17:17:07+00:00",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "geom_policy_strict": "Aucune interpolation géographique. Chaque feature porte un Point fixe (centroïde Québec institutionnel). Les attributs métier sont issus des BIO_REACTEURS_Ω. La carte territoriale réelle relève de PHASE XVI.",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "espece_id": "CHEVREUIL",
+        "engine_marker": "BIO_REACTEUR_Ω_CHEVREUIL",
+        "activation_status_bio_reacteur": "ACTIF_BIO_REACTEUR_Ω",
+        "anti_generique_pass": true,
+        "thermique_seuil_C": 27.0,
+        "neige_seuil_mobilite_cm": 45.0,
+        "neige_seuil_mortalite_cm": null,
+        "vision_zones_critiques_count": 7,
+        "odeur_attractions_count": 3,
+        "odeur_alertes_count": 1,
+        "scores_engine_especes": {
+          "score_thermique": 0.0,
+          "score_neige_mortalite": 0.0,
+          "score_pression_humaine": 21.19,
+          "score_fragmentation": 36.33,
+          "score_cwd_risk": 27.25
+        },
+        "bio_reacteur_runtime_sha256": "0e2ea1e47f16a8106393d58e933438b7d78642fe01294b88705a4c3ac72effe1",
+        "no_geom_interpolation": true,
+        "geom_reference": "Centroïde institutionnel Québec ville (référence fixe non-interpolée)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.208,
+          46.8139
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "espece_id": "ORIGNAL",
+        "engine_marker": "BIO_REACTEUR_Ω_ORIGNAL",
+        "activation_status_bio_reacteur": "ACTIF_BIO_REACTEUR_Ω",
+        "anti_generique_pass": true,
+        "thermique_seuil_C": 15.5,
+        "neige_seuil_mobilite_cm": 65.0,
+        "neige_seuil_mortalite_cm": null,
+        "vision_zones_critiques_count": 6,
+        "odeur_attractions_count": 4,
+        "odeur_alertes_count": 1,
+        "scores_engine_especes": {
+          "score_thermique": 25.0,
+          "score_neige_mortalite": 0.0,
+          "score_pression_humaine": 21.19,
+          "score_fragmentation": 36.33,
+          "score_risque_tique": 76.0
+        },
+        "bio_reacteur_runtime_sha256": "a6d37f5646c5e5eb302a6128490f923bb9245a49191b2a16f3041c73b73c564c",
+        "no_geom_interpolation": true,
+        "geom_reference": "Centroïde institutionnel Québec ville (référence fixe non-interpolée)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.208,
+          46.8139
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "espece_id": "OURS_NOIR",
+        "engine_marker": "BIO_REACTEUR_Ω_OURS_NOIR",
+        "activation_status_bio_reacteur": "ACTIF_BIO_REACTEUR_Ω",
+        "anti_generique_pass": true,
+        "thermique_seuil_C": null,
+        "neige_seuil_mobilite_cm": null,
+        "neige_seuil_mortalite_cm": null,
+        "vision_zones_critiques_count": 6,
+        "odeur_attractions_count": 2,
+        "odeur_alertes_count": 3,
+        "scores_engine_especes": {
+          "score_pression_humaine": 21.19,
+          "score_fragmentation": 36.33,
+          "score_attractifs_anthropiques": 10.4,
+          "score_conflits_humains": 13.64,
+          "score_nutrition_automne_mast": 65.0
+        },
+        "bio_reacteur_runtime_sha256": "10f88b8641027deed6c5be91ceb86a4f4ac1923ed9fa83d0e5583b60717b7daa",
+        "no_geom_interpolation": true,
+        "geom_reference": "Centroïde institutionnel Québec ville (référence fixe non-interpolée)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.208,
+          46.8139
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "espece_id": "WAPITI",
+        "engine_marker": "BIO_REACTEUR_Ω_WAPITI",
+        "activation_status_bio_reacteur": "ACTIF_BIO_REACTEUR_Ω",
+        "anti_generique_pass": true,
+        "thermique_seuil_C": 22.5,
+        "neige_seuil_mobilite_cm": 50.0,
+        "neige_seuil_mortalite_cm": null,
+        "vision_zones_critiques_count": 8,
+        "odeur_attractions_count": 3,
+        "odeur_alertes_count": 1,
+        "scores_engine_especes": {
+          "score_thermique": 0.0,
+          "score_neige_mortalite": 0.0,
+          "score_pression_humaine_multi_echelles": 28.76,
+          "score_fragmentation": 36.33,
+          "score_cwd": 6.0,
+          "score_connectivite": 62.0
+        },
+        "bio_reacteur_runtime_sha256": "fa6b3486342f282d6bc4f58809c75ec39bcc0185f1814f9e4918111f86b007d7",
+        "no_geom_interpolation": true,
+        "geom_reference": "Centroïde institutionnel Québec ville (référence fixe non-interpolée)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.208,
+          46.8139
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "espece_id": "DINDON_SAUVAGE",
+        "engine_marker": "BIO_REACTEUR_Ω_DINDON_SAUVAGE",
+        "activation_status_bio_reacteur": "ACTIF_BIO_REACTEUR_Ω",
+        "anti_generique_pass": true,
+        "thermique_seuil_C": null,
+        "neige_seuil_mobilite_cm": 25.0,
+        "neige_seuil_mortalite_cm": null,
+        "vision_zones_critiques_count": 5,
+        "odeur_attractions_count": 2,
+        "odeur_alertes_count": 1,
+        "scores_engine_especes": {
+          "score_neige_mortalite": 50.0,
+          "score_pression_humaine": 21.19,
+          "score_fragmentation": 36.33,
+          "score_nidification_quality": 58.0,
+          "score_mosaic_foret_agri": 55.0,
+          "score_maladies_aviaires_LPDV": 12.0
+        },
+        "bio_reacteur_runtime_sha256": "ba7ab4c86c3607bfe98d74895da051ed11689918a64b86ec0383a2a802ed7e47",
+        "no_geom_interpolation": true,
+        "geom_reference": "Centroïde institutionnel Québec ville (référence fixe non-interpolée)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.208,
+          46.8139
+        ]
+      }
+    }
+  ]
+}

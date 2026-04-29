@@ -1,0 +1,986 @@
+{
+  "snapshot_id": "TERRITOIRE_SNAPSHOT_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°32",
+  "directive": "SNAPSHOT_TERRITOIRE_Ω · référence pré-XV.b",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "captured_at_utc": "2026-04-29T17:17:07+00:00",
+  "audit_status": {
+    "AUDIT_ESPECES_Ω_STATUS": "VALIDÉ_PAR_STEEVE_MAX",
+    "validated_at_utc": "2026-04-29T12:28:15.348988+00:00",
+    "validated_by": "COMMANDANT-STEEVE-MAX",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU"
+  },
+  "is_validated": true,
+  "v30_locked_invariant": {
+    "registry_lock_omega.py": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+    "engine_ia_corridors_omega.py": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3"
+  },
+  "freeze_master_sha256": "31c18388ab3090fc0588cc0028a0181c638ac2fba0dff9f9d40700e9f97ccf27",
+  "freeze_check": {
+    "files_verified": 36,
+    "altered_count": 0,
+    "missing_count": 0,
+    "intact": true
+  },
+  "validation": {
+    "freeze_intact": true,
+    "fallback_clean": true,
+    "legacy_dep_clean": true,
+    "fallback_violations": []
+  },
+  "couches": {
+    "corridors": [
+      {
+        "espece_id": "CHEVREUIL",
+        "corridors_reels_gps": [],
+        "connectivite_optimum": [
+          "corridors stables entre zones de repos ↔ alimentation"
+        ],
+        "fragmentation_penalty": [
+          "fragmentation = augmentation du risque de mortalité"
+        ],
+        "zones_passage_essentielles": [
+          "dispersion juvénile influencée par sexe (mâles dispersent davantage)",
+          "évitement des zones agricoles lors des déplacements"
+        ],
+        "distances_typiques": [
+          "évitement des zones agricoles lors des déplacements"
+        ]
+      },
+      {
+        "espece_id": "ORIGNAL",
+        "corridors_reels_gps": [],
+        "connectivite_optimum": [
+          "corridors stables",
+          "connectivité essentielle"
+        ],
+        "fragmentation_penalty": [
+          "fragmentation = réduction de mobilité"
+        ],
+        "zones_passage_essentielles": [
+          "connectivité essentielle",
+          "évitement des routes"
+        ],
+        "distances_typiques": []
+      },
+      {
+        "espece_id": "OURS_NOIR",
+        "corridors_reels_gps": [],
+        "connectivite_optimum": [],
+        "fragmentation_penalty": [
+          "fragmentation = augmentation des conflits humains"
+        ],
+        "zones_passage_essentielles": [
+          "corridors fonctionnels entre zones de nourriture ↔ repos",
+          "évitement des zones fortement urbanisées"
+        ],
+        "distances_typiques": [
+          "déplacements saisonniers marqués"
+        ]
+      },
+      {
+        "espece_id": "WAPITI",
+        "corridors_reels_gps": [],
+        "connectivite_optimum": [
+          "corridors migratoires stables sur plusieurs années",
+          "connectivité essentielle entre zones d’alimentation et zones de repos"
+        ],
+        "fragmentation_penalty": [
+          "fragmentation = réduction de mobilité + augmentation mortalité"
+        ],
+        "zones_passage_essentielles": [
+          "connectivité essentielle entre zones d’alimentation et zones de repos",
+          "évitement des routes et infrastructures humaines"
+        ],
+        "distances_typiques": [
+          "déplacements saisonniers marqués (printemps ↔ automne)"
+        ]
+      },
+      {
+        "espece_id": "DINDON_SAUVAGE",
+        "corridors_reels_gps": [],
+        "connectivite_optimum": [],
+        "fragmentation_penalty": [
+          "fragmentation = réduction du succès de nidification"
+        ],
+        "zones_passage_essentielles": [
+          "corridors fonctionnels entre zones de repos ↔ alimentation",
+          "évitement des routes à fort trafic"
+        ],
+        "distances_typiques": [
+          "déplacements quotidiens courts (espèce non migratoire)"
+        ]
+      }
+    ],
+    "zones": [
+      {
+        "espece_id": "CHEVREUIL",
+        "habitat_types_couverts": [
+          "mosaïques feuillus/conifères",
+          "zones de transition forêt-agriculture",
+          "forêts matures pour le couvert",
+          "clairières pour l’alimentation"
+        ],
+        "habitat_zones_humides": [],
+        "habitat_zones_thermiques": [],
+        "habitat_mosaiques_foret_agri": [
+          "mosaïques feuillus/conifères",
+          "zones de transition forêt-agriculture"
+        ],
+        "sites_mise_bas": [
+          "Mise bas : zones isolées, couvert dense"
+        ],
+        "sites_rut": [
+          "Rut : clairières, mosaïques forestières",
+          "Frottis / rubs : zones de rut, corridors"
+        ],
+        "sites_repos": [
+          "Mise bas : zones isolées, couvert dense",
+          "Repos : forêts matures, zones thermiques"
+        ],
+        "sites_eau": [],
+        "sites_alimentation": [
+          "Rut : clairières, mosaïques forestières"
+        ]
+      },
+      {
+        "espece_id": "ORIGNAL",
+        "habitat_types_couverts": [
+          "forêts mixtes boréales",
+          "zones humides (été)",
+          "forêts matures conifériennes (hiver)"
+        ],
+        "habitat_zones_humides": [
+          "zones humides (été)"
+        ],
+        "habitat_zones_thermiques": [
+          "forêts mixtes boréales"
+        ],
+        "habitat_mosaiques_foret_agri": [],
+        "sites_mise_bas": [
+          "mise bas : couvert dense, zones isolées"
+        ],
+        "sites_rut": [
+          "rut : mosaïques feuillus/conifères",
+          "souilles / frottis : zones de rut"
+        ],
+        "sites_repos": [
+          "mise bas : couvert dense, zones isolées",
+          "repos : forêts matures"
+        ],
+        "sites_eau": [],
+        "sites_alimentation": []
+      },
+      {
+        "espece_id": "OURS_NOIR",
+        "habitat_types_couverts": [
+          "forêts mixtes",
+          "zones de régénération forestière",
+          "milieux humides",
+          "zones de transition forêt-agriculture",
+          "pentes abritées pour tanières"
+        ],
+        "habitat_zones_humides": [
+          "milieux humides"
+        ],
+        "habitat_zones_thermiques": [],
+        "habitat_mosaiques_foret_agri": [
+          "zones de transition forêt-agriculture"
+        ],
+        "sites_mise_bas": [],
+        "sites_rut": [],
+        "sites_repos": [
+          "Repos : couvert dense"
+        ],
+        "sites_eau": [
+          "Alimentation : zones de baies, régénérations forestières, milieux humides",
+          "Déplacements : corridors forestiers continus"
+        ],
+        "sites_alimentation": [
+          "Alimentation : zones de baies, régénérations forestières, milieux humides"
+        ]
+      },
+      {
+        "espece_id": "WAPITI",
+        "habitat_types_couverts": [
+          "prairies ouvertes adjacentes à forêts mixtes",
+          "vallées fluviales",
+          "zones de transition prairie-forêt",
+          "forêts matures pour repos",
+          "zones de pente modérée pour rut"
+        ],
+        "habitat_zones_humides": [],
+        "habitat_zones_thermiques": [],
+        "habitat_mosaiques_foret_agri": [],
+        "sites_mise_bas": [
+          "Mise bas : zones isolées, couvert dense, proximité d’eau"
+        ],
+        "sites_rut": [
+          "Rut : clairières, vallées ouvertes, zones de transition",
+          "Frottis / souilles : zones de rut, corridors"
+        ],
+        "sites_repos": [
+          "Mise bas : zones isolées, couvert dense, proximité d’eau",
+          "Repos : forêts mixtes, zones thermiques"
+        ],
+        "sites_eau": [
+          "Mise bas : zones isolées, couvert dense, proximité d’eau"
+        ],
+        "sites_alimentation": [
+          "Rut : clairières, vallées ouvertes, zones de transition"
+        ]
+      },
+      {
+        "espece_id": "DINDON_SAUVAGE",
+        "habitat_types_couverts": [
+          "mosaïques forêt-agriculture",
+          "forêts mixtes avec sous-bois dense",
+          "clairières pour alimentation",
+          "zones de conifères pour refuge hivernal"
+        ],
+        "habitat_zones_humides": [],
+        "habitat_zones_thermiques": [],
+        "habitat_mosaiques_foret_agri": [
+          "mosaïques forêt-agriculture"
+        ],
+        "sites_mise_bas": [],
+        "sites_rut": [],
+        "sites_repos": [
+          "Repos : zones de conifères, pentes abritées",
+          "Perchoirs : arbres matures, conifères"
+        ],
+        "sites_eau": [],
+        "sites_alimentation": [
+          "Alimentation : clairières, champs, lisières"
+        ]
+      }
+    ],
+    "salines": [
+      {
+        "espece_id": "CHEVREUIL",
+        "besoins_mineraux_sodium": [],
+        "besoins_mineraux_calcium": [],
+        "besoins_mineraux_magnesium": []
+      },
+      {
+        "espece_id": "ORIGNAL",
+        "besoins_mineraux_sodium": [
+          "besoins en minéraux (Na, K, Ca, Mg)"
+        ],
+        "besoins_mineraux_calcium": [],
+        "besoins_mineraux_magnesium": []
+      },
+      {
+        "espece_id": "OURS_NOIR",
+        "besoins_mineraux_sodium": [],
+        "besoins_mineraux_calcium": [],
+        "besoins_mineraux_magnesium": []
+      },
+      {
+        "espece_id": "WAPITI",
+        "besoins_mineraux_sodium": [
+          "importance des minéraux (Na, Ca, Mg) dans certaines régions"
+        ],
+        "besoins_mineraux_calcium": [],
+        "besoins_mineraux_magnesium": []
+      },
+      {
+        "espece_id": "DINDON_SAUVAGE",
+        "besoins_mineraux_sodium": [],
+        "besoins_mineraux_calcium": [],
+        "besoins_mineraux_magnesium": []
+      }
+    ],
+    "hotspots": [
+      {
+        "espece_id": "CHEVREUIL",
+        "rut_actif_concurrents": true,
+        "hyperphagie_active": false,
+        "ravages_hivernaux": true,
+        "nidification_active": false
+      },
+      {
+        "espece_id": "ORIGNAL",
+        "rut_actif_concurrents": true,
+        "hyperphagie_active": false,
+        "ravages_hivernaux": true,
+        "nidification_active": false
+      },
+      {
+        "espece_id": "OURS_NOIR",
+        "rut_actif_concurrents": true,
+        "hyperphagie_active": true,
+        "ravages_hivernaux": false,
+        "nidification_active": false
+      },
+      {
+        "espece_id": "WAPITI",
+        "rut_actif_concurrents": true,
+        "hyperphagie_active": false,
+        "ravages_hivernaux": true,
+        "nidification_active": false
+      },
+      {
+        "espece_id": "DINDON_SAUVAGE",
+        "rut_actif_concurrents": true,
+        "hyperphagie_active": false,
+        "ravages_hivernaux": false,
+        "nidification_active": true
+      }
+    ],
+    "contamination": [
+      {
+        "espece_id": "CHEVREUIL",
+        "cwd": [
+          "rôle majeur dans la propagation du CWD",
+          "CWD = menace majeure"
+        ],
+        "lpdv": [],
+        "tique_hiver": [],
+        "autres": [
+          "compétition avec orignal dans zones de chevauchement",
+          "prédation sur faons : coyote, ours noir",
+          "expansion vers le nord (climat plus doux)",
+          "augmentation de densité dans plusieurs régions",
+          "fragmentation = mortalité accrue"
+        ]
+      },
+      {
+        "espece_id": "ORIGNAL",
+        "cwd": [],
+        "lpdv": [],
+        "tique_hiver": [
+          "transmission de parasites (tique d’hiver)",
+          "déclin dans plusieurs régions du Maine / NH (tique d’hiver)"
+        ],
+        "autres": [
+          "compétition avec cerf de Virginie",
+          "prédation : loup, ours noir",
+          "stabilité variable au Québec",
+          "climat = facteur majeur (neige, chaleur)"
+        ]
+      },
+      {
+        "espece_id": "OURS_NOIR",
+        "cwd": [],
+        "lpdv": [],
+        "tique_hiver": [],
+        "autres": [
+          "compétition alimentaire avec cervidés dans zones de mast",
+          "prédation occasionnelle sur faons (orignal, chevreuil)",
+          "interactions spatiales avec coyotes et loups",
+          "conflits ours-humains liés à disponibilité alimentaire",
+          "stabilité ou croissance dans plusieurs régions",
+          "augmentation des conflits humains",
+          "influence du climat sur disponibilité alimentaire",
+          "expansion vers le nord dans certaines zones"
+        ]
+      },
+      {
+        "espece_id": "WAPITI",
+        "cwd": [
+          "transmission potentielle du CWD dans zones mixtes cervidés",
+          "CWD = menace majeure"
+        ],
+        "lpdv": [],
+        "tique_hiver": [],
+        "autres": [
+          "compétition avec cerf de Virginie dans zones de chevauchement",
+          "prédation sur faons : loup, coyote, ours noir",
+          "interactions spatiales avec orignal dans zones boréales",
+          "réintroduction réussie dans plusieurs États (Kentucky, Pennsylvanie)",
+          "croissance dans certaines régions",
+          "fragmentation = réduction connectivité",
+          "climat = influence sur disponibilité alimentaire"
+        ]
+      },
+      {
+        "espece_id": "DINDON_SAUVAGE",
+        "cwd": [],
+        "lpdv": [],
+        "tique_hiver": [],
+        "autres": [
+          "prédation sur nids : raton laveur, renard, coyote, corvidés",
+          "compétition alimentaire avec cerf dans zones de mast",
+          "interactions spatiales limitées avec autres galliformes",
+          "expansion dans plusieurs régions du Nord-Est",
+          "stabilité dans zones agricoles mixtes",
+          "déclin localisé dans zones fortement fragmentées",
+          "maladies aviaires = menace émergente",
+          "climat = influence sur disponibilité alimentaire"
+        ]
+      }
+    ],
+    "meteo_sensoriel": [
+      {
+        "espece_id": "CHEVREUIL",
+        "thermique_seuil_C": 27.0,
+        "neige_seuil_mobilite_cm": 45.0,
+        "neige_seuil_mortalite_cm": null,
+        "comportements_adaptation": [
+          "stress thermique dès 26–28°C",
+          "sélection d’habitats ombragés",
+          "réduction des déplacements en période chaude"
+        ],
+        "facteurs_climatiques": [
+          "expansion vers le nord (climat plus doux)",
+          "CWD = menace majeure",
+          "fragmentation = mortalité accrue"
+        ]
+      },
+      {
+        "espece_id": "ORIGNAL",
+        "thermique_seuil_C": 15.5,
+        "neige_seuil_mobilite_cm": 65.0,
+        "neige_seuil_mortalite_cm": null,
+        "comportements_adaptation": [
+          "stress thermique dès 14–17°C",
+          "sélection d’habitats frais",
+          "réduction des déplacements en période chaude"
+        ],
+        "facteurs_climatiques": [
+          "déclin dans plusieurs régions du Maine / NH (tique d’hiver)",
+          "stabilité variable au Québec",
+          "climat = facteur majeur (neige, chaleur)"
+        ]
+      },
+      {
+        "espece_id": "OURS_NOIR",
+        "thermique_seuil_C": null,
+        "neige_seuil_mobilite_cm": null,
+        "neige_seuil_mortalite_cm": null,
+        "comportements_adaptation": [
+          "tolérance thermique élevée",
+          "sélection de zones ombragées en été",
+          "dépendance aux tanières isolées en hiver"
+        ],
+        "facteurs_climatiques": [
+          "stabilité ou croissance dans plusieurs régions",
+          "influence du climat sur disponibilité alimentaire"
+        ]
+      },
+      {
+        "espece_id": "WAPITI",
+        "thermique_seuil_C": 22.5,
+        "neige_seuil_mobilite_cm": 50.0,
+        "neige_seuil_mortalite_cm": null,
+        "comportements_adaptation": [
+          "stress thermique dès 20–25°C",
+          "sélection de zones ombragées, forêts mixtes, zones humides",
+          "réduction des déplacements en période chaude",
+          "utilisation accrue des pentes nord et zones d’altitude"
+        ],
+        "facteurs_climatiques": [
+          "réintroduction réussie dans plusieurs États (Kentucky, Pennsylvanie)",
+          "croissance dans certaines régions",
+          "CWD = menace majeure",
+          "fragmentation = réduction connectivité",
+          "climat = influence sur disponibilité alimentaire"
+        ]
+      },
+      {
+        "espece_id": "DINDON_SAUVAGE",
+        "thermique_seuil_C": null,
+        "neige_seuil_mobilite_cm": 25.0,
+        "neige_seuil_mortalite_cm": null,
+        "comportements_adaptation": [
+          "sensibilité modérée à la chaleur",
+          "sélection de zones ombragées en été",
+          "dépendance aux conifères en hiver pour réduire pertes thermiques"
+        ],
+        "facteurs_climatiques": [
+          "stabilité dans zones agricoles mixtes",
+          "maladies aviaires = menace émergente",
+          "climat = influence sur disponibilité alimentaire"
+        ]
+      }
+    ],
+    "sensoriel": [
+      {
+        "espece_id": "CHEVREUIL",
+        "vision": {
+          "zones_thermiques_habitat": [],
+          "seuil_stress_C": 27.0
+        },
+        "odeur_alertes_count": 1,
+        "odeur_attractions_count": 3,
+        "comportements_thermiques_count": 3
+      },
+      {
+        "espece_id": "ORIGNAL",
+        "vision": {
+          "zones_thermiques_habitat": [
+            "forêts mixtes boréales"
+          ],
+          "seuil_stress_C": 15.5
+        },
+        "odeur_alertes_count": 1,
+        "odeur_attractions_count": 4,
+        "comportements_thermiques_count": 3
+      },
+      {
+        "espece_id": "OURS_NOIR",
+        "vision": {
+          "zones_thermiques_habitat": [],
+          "seuil_stress_C": null
+        },
+        "odeur_alertes_count": 3,
+        "odeur_attractions_count": 2,
+        "comportements_thermiques_count": 3
+      },
+      {
+        "espece_id": "WAPITI",
+        "vision": {
+          "zones_thermiques_habitat": [],
+          "seuil_stress_C": 22.5
+        },
+        "odeur_alertes_count": 1,
+        "odeur_attractions_count": 3,
+        "comportements_thermiques_count": 4
+      },
+      {
+        "espece_id": "DINDON_SAUVAGE",
+        "vision": {
+          "zones_thermiques_habitat": [],
+          "seuil_stress_C": null
+        },
+        "odeur_alertes_count": 1,
+        "odeur_attractions_count": 2,
+        "comportements_thermiques_count": 3
+      }
+    ],
+    "pression_humaine": [
+      {
+        "espece_id": "CHEVREUIL",
+        "routes": [
+          "corridors anthropiques (routes, champs) utilisés comme axes de déplacement"
+        ],
+        "agriculture": [
+          "corridors anthropiques (routes, champs) utilisés comme axes de déplacement"
+        ],
+        "urbanisation": [],
+        "fragmentation": [
+          "forte tolérance à la présence humaine",
+          "augmentation des déplacements nocturnes en zones perturbées"
+        ],
+        "attractifs_anthropiques": [],
+        "conflits_humains": []
+      },
+      {
+        "espece_id": "ORIGNAL",
+        "routes": [
+          "évitement des routes et coupes"
+        ],
+        "agriculture": [],
+        "urbanisation": [],
+        "fragmentation": [
+          "déplacements nocturnes accrus",
+          "fragmentation = mortalité accrue"
+        ],
+        "attractifs_anthropiques": [],
+        "conflits_humains": []
+      },
+      {
+        "espece_id": "OURS_NOIR",
+        "routes": [
+          "mortalité accrue liée aux routes"
+        ],
+        "agriculture": [
+          "utilisation opportuniste des zones agricoles"
+        ],
+        "urbanisation": [
+          "évitement des zones urbaines denses"
+        ],
+        "fragmentation": [
+          "fragmentation = augmentation des conflits",
+          "mortalité accrue liée aux routes"
+        ],
+        "attractifs_anthropiques": [],
+        "conflits_humains": [
+          "fragmentation = augmentation des conflits"
+        ]
+      },
+      {
+        "espece_id": "WAPITI",
+        "routes": [
+          "évitement des routes, sentiers motorisés, zones agricoles intensives"
+        ],
+        "agriculture": [
+          "évitement des routes, sentiers motorisés, zones agricoles intensives"
+        ],
+        "urbanisation": [],
+        "fragmentation": [
+          "déplacements nocturnes accrus en zones perturbées",
+          "fragmentation = mortalité accrue",
+          "corridors anthropiques parfois utilisés comme axes de déplacement (selon région)"
+        ],
+        "attractifs_anthropiques": [],
+        "conflits_humains": []
+      },
+      {
+        "espece_id": "DINDON_SAUVAGE",
+        "routes": [],
+        "agriculture": [
+          "évitement des zones agricoles intensives"
+        ],
+        "urbanisation": [
+          "tolérance modérée aux habitats semi-urbains"
+        ],
+        "fragmentation": [
+          "fragmentation = baisse du succès de nidification",
+          "chasse = facteur de mortalité régulé"
+        ],
+        "attractifs_anthropiques": [],
+        "conflits_humains": []
+      }
+    ],
+    "score_ultime": [
+      {
+        "espece_id": "CHEVREUIL",
+        "engine_marker": "ENGINE_ESPECE_CHEVREUIL_Ω",
+        "scores": {
+          "score_thermique": 0.0,
+          "score_neige_mortalite": 0.0,
+          "score_pression_humaine": 21.19,
+          "score_fragmentation": 36.33,
+          "score_cwd_risk": 27.25
+        },
+        "activation_status": "ACTIF_Ω_DÉFINITIF"
+      },
+      {
+        "espece_id": "ORIGNAL",
+        "engine_marker": "ENGINE_ESPECE_ORIGNAL_Ω",
+        "scores": {
+          "score_thermique": 25.0,
+          "score_neige_mortalite": 0.0,
+          "score_pression_humaine": 21.19,
+          "score_fragmentation": 36.33,
+          "score_risque_tique": 76.0
+        },
+        "activation_status": "ACTIF_Ω_DÉFINITIF"
+      },
+      {
+        "espece_id": "OURS_NOIR",
+        "engine_marker": "ENGINE_ESPECE_OURS_NOIR_Ω",
+        "scores": {
+          "score_pression_humaine": 21.19,
+          "score_fragmentation": 36.33,
+          "score_attractifs_anthropiques": 10.4,
+          "score_conflits_humains": 13.64,
+          "score_nutrition_automne_mast": 65.0
+        },
+        "activation_status": "ACTIF_Ω_DÉFINITIF"
+      },
+      {
+        "espece_id": "WAPITI",
+        "engine_marker": "ENGINE_ESPECE_WAPITI_Ω",
+        "scores": {
+          "score_thermique": 0.0,
+          "score_neige_mortalite": 0.0,
+          "score_pression_humaine_multi_echelles": 28.76,
+          "score_fragmentation": 36.33,
+          "score_cwd": 6.0,
+          "score_connectivite": 62.0
+        },
+        "activation_status": "ACTIF_Ω_DÉFINITIF"
+      },
+      {
+        "espece_id": "DINDON_SAUVAGE",
+        "engine_marker": "ENGINE_ESPECE_DINDON_SAUVAGE_Ω",
+        "scores": {
+          "score_neige_mortalite": 50.0,
+          "score_pression_humaine": 21.19,
+          "score_fragmentation": 36.33,
+          "score_nidification_quality": 58.0,
+          "score_mosaic_foret_agri": 55.0,
+          "score_maladies_aviaires_LPDV": 12.0
+        },
+        "activation_status": "ACTIF_Ω_DÉFINITIF"
+      }
+    ],
+    "ia_omega": {
+      "engine_id": "ENGINE_IA_Ω",
+      "correlations": {
+        "corridors_overlaps_inter_especes": [],
+        "anomalies_thermiques": [
+          {
+            "espece": "ORIGNAL",
+            "type": "seuil_thermique_critique",
+            "valeur_C": 15.5,
+            "note": "Seuil < 20°C — espèce thermosensible (stress hivernal/estival critique)"
+          },
+          {
+            "espece": "OURS_NOIR",
+            "type": "seuil_thermique_NON_DOCUMENTE"
+          },
+          {
+            "espece": "DINDON_SAUVAGE",
+            "type": "seuil_thermique_NON_DOCUMENTE"
+          }
+        ],
+        "anomalies_neige": [
+          {
+            "espece": "OURS_NOIR",
+            "type": "seuil_neige_NON_DOCUMENTE"
+          },
+          {
+            "espece": "DINDON_SAUVAGE",
+            "type": "seuil_neige_mobilite_critique",
+            "valeur_cm": 25.0,
+            "note": "Seuil mobilité < 30 cm — vulnérabilité hivernale forte"
+          }
+        ],
+        "patterns_saisonniers_simultanes": {
+          "rut_actif_concurrents": [
+            "CHEVREUIL",
+            "ORIGNAL",
+            "OURS_NOIR",
+            "WAPITI",
+            "DINDON_SAUVAGE"
+          ],
+          "hyperphagie_active_concurrents": [
+            "OURS_NOIR"
+          ],
+          "ravages_hivernaux_concurrents": [
+            "CHEVREUIL",
+            "ORIGNAL",
+            "WAPITI"
+          ],
+          "nidification_active_concurrents": [
+            "DINDON_SAUVAGE"
+          ]
+        },
+        "pression_humaine_concentration": {
+          "routes_total_lines": 4,
+          "agriculture_total_lines": 4,
+          "urbanisation_total_lines": 2,
+          "attractifs_anthropiques_total_lines": 0,
+          "conflits_humains_total_lines": 1,
+          "by_espece": {
+            "CHEVREUIL": {
+              "routes": 1,
+              "agriculture": 1,
+              "urbanisation": 0,
+              "attractifs": 0,
+              "conflits": 0
+            },
+            "ORIGNAL": {
+              "routes": 1,
+              "agriculture": 0,
+              "urbanisation": 0,
+              "attractifs": 0,
+              "conflits": 0
+            },
+            "OURS_NOIR": {
+              "routes": 1,
+              "agriculture": 1,
+              "urbanisation": 1,
+              "attractifs": 0,
+              "conflits": 1
+            },
+            "WAPITI": {
+              "routes": 1,
+              "agriculture": 1,
+              "urbanisation": 0,
+              "attractifs": 0,
+              "conflits": 0
+            },
+            "DINDON_SAUVAGE": {
+              "routes": 0,
+              "agriculture": 1,
+              "urbanisation": 1,
+              "attractifs": 0,
+              "conflits": 0
+            }
+          }
+        }
+      },
+      "consolidation": {
+        "engines_executed": 25,
+        "anomalies_count": 5,
+        "corridors_overlaps_count": 0
+      },
+      "decision_authority": false,
+      "analyse_only": true,
+      "bio_reacteurs_runtime_sha256": {
+        "CHEVREUIL": "0e2ea1e47f16a8106393d58e933438b7d78642fe01294b88705a4c3ac72effe1",
+        "ORIGNAL": "a6d37f5646c5e5eb302a6128490f923bb9245a49191b2a16f3041c73b73c564c",
+        "OURS_NOIR": "10f88b8641027deed6c5be91ceb86a4f4ac1923ed9fa83d0e5583b60717b7daa",
+        "WAPITI": "fa6b3486342f282d6bc4f58809c75ec39bcc0185f1814f9e4918111f86b007d7",
+        "DINDON_SAUVAGE": "ba7ab4c86c3607bfe98d74895da051ed11689918a64b86ec0383a2a802ed7e47"
+      }
+    },
+    "scientifique_omega_par_espece": {
+      "CHEVREUIL": {
+        "ENGINE_VISION_Ω": {
+          "engine_id": "ENGINE_VISION_Ω",
+          "source_bio_reacteur_sha256": "0e2ea1e47f16a8106393d58e933438b7d78642fe01294b88705a4c3ac72effe1",
+          "fallback_active": false,
+          "interpolation_active": false
+        },
+        "ENGINE_ODEUR_Ω": {
+          "engine_id": "ENGINE_ODEUR_Ω",
+          "source_bio_reacteur_sha256": "0e2ea1e47f16a8106393d58e933438b7d78642fe01294b88705a4c3ac72effe1",
+          "fallback_active": false,
+          "interpolation_active": false
+        },
+        "ENGINE_PATTERNS_Ω": {
+          "engine_id": "ENGINE_PATTERNS_Ω",
+          "source_bio_reacteur_sha256": "0e2ea1e47f16a8106393d58e933438b7d78642fe01294b88705a4c3ac72effe1",
+          "fallback_active": false,
+          "interpolation_active": false
+        },
+        "ENGINE_COMPORTEMENT_Ω": {
+          "engine_id": "ENGINE_COMPORTEMENT_Ω",
+          "source_bio_reacteur_sha256": "0e2ea1e47f16a8106393d58e933438b7d78642fe01294b88705a4c3ac72effe1",
+          "fallback_active": false,
+          "interpolation_active": false
+        },
+        "ENGINE_SENSORIEL_Ω": {
+          "engine_id": "ENGINE_SENSORIEL_Ω",
+          "source_bio_reacteur_sha256": "0e2ea1e47f16a8106393d58e933438b7d78642fe01294b88705a4c3ac72effe1",
+          "fallback_active": false,
+          "interpolation_active": false
+        }
+      },
+      "ORIGNAL": {
+        "ENGINE_VISION_Ω": {
+          "engine_id": "ENGINE_VISION_Ω",
+          "source_bio_reacteur_sha256": "a6d37f5646c5e5eb302a6128490f923bb9245a49191b2a16f3041c73b73c564c",
+          "fallback_active": false,
+          "interpolation_active": false
+        },
+        "ENGINE_ODEUR_Ω": {
+          "engine_id": "ENGINE_ODEUR_Ω",
+          "source_bio_reacteur_sha256": "a6d37f5646c5e5eb302a6128490f923bb9245a49191b2a16f3041c73b73c564c",
+          "fallback_active": false,
+          "interpolation_active": false
+        },
+        "ENGINE_PATTERNS_Ω": {
+          "engine_id": "ENGINE_PATTERNS_Ω",
+          "source_bio_reacteur_sha256": "a6d37f5646c5e5eb302a6128490f923bb9245a49191b2a16f3041c73b73c564c",
+          "fallback_active": false,
+          "interpolation_active": false
+        },
+        "ENGINE_COMPORTEMENT_Ω": {
+          "engine_id": "ENGINE_COMPORTEMENT_Ω",
+          "source_bio_reacteur_sha256": "a6d37f5646c5e5eb302a6128490f923bb9245a49191b2a16f3041c73b73c564c",
+          "fallback_active": false,
+          "interpolation_active": false
+        },
+        "ENGINE_SENSORIEL_Ω": {
+          "engine_id": "ENGINE_SENSORIEL_Ω",
+          "source_bio_reacteur_sha256": "a6d37f5646c5e5eb302a6128490f923bb9245a49191b2a16f3041c73b73c564c",
+          "fallback_active": false,
+          "interpolation_active": false
+        }
+      },
+      "OURS_NOIR": {
+        "ENGINE_VISION_Ω": {
+          "engine_id": "ENGINE_VISION_Ω",
+          "source_bio_reacteur_sha256": "10f88b8641027deed6c5be91ceb86a4f4ac1923ed9fa83d0e5583b60717b7daa",
+          "fallback_active": false,
+          "interpolation_active": false
+        },
+        "ENGINE_ODEUR_Ω": {
+          "engine_id": "ENGINE_ODEUR_Ω",
+          "source_bio_reacteur_sha256": "10f88b8641027deed6c5be91ceb86a4f4ac1923ed9fa83d0e5583b60717b7daa",
+          "fallback_active": false,
+          "interpolation_active": false
+        },
+        "ENGINE_PATTERNS_Ω": {
+          "engine_id": "ENGINE_PATTERNS_Ω",
+          "source_bio_reacteur_sha256": "10f88b8641027deed6c5be91ceb86a4f4ac1923ed9fa83d0e5583b60717b7daa",
+          "fallback_active": false,
+          "interpolation_active": false
+        },
+        "ENGINE_COMPORTEMENT_Ω": {
+          "engine_id": "ENGINE_COMPORTEMENT_Ω",
+          "source_bio_reacteur_sha256": "10f88b8641027deed6c5be91ceb86a4f4ac1923ed9fa83d0e5583b60717b7daa",
+          "fallback_active": false,
+          "interpolation_active": false
+        },
+        "ENGINE_SENSORIEL_Ω": {
+          "engine_id": "ENGINE_SENSORIEL_Ω",
+          "source_bio_reacteur_sha256": "10f88b8641027deed6c5be91ceb86a4f4ac1923ed9fa83d0e5583b60717b7daa",
+          "fallback_active": false,
+          "interpolation_active": false
+        }
+      },
+      "WAPITI": {
+        "ENGINE_VISION_Ω": {
+          "engine_id": "ENGINE_VISION_Ω",
+          "source_bio_reacteur_sha256": "fa6b3486342f282d6bc4f58809c75ec39bcc0185f1814f9e4918111f86b007d7",
+          "fallback_active": false,
+          "interpolation_active": false
+        },
+        "ENGINE_ODEUR_Ω": {
+          "engine_id": "ENGINE_ODEUR_Ω",
+          "source_bio_reacteur_sha256": "fa6b3486342f282d6bc4f58809c75ec39bcc0185f1814f9e4918111f86b007d7",
+          "fallback_active": false,
+          "interpolation_active": false
+        },
+        "ENGINE_PATTERNS_Ω": {
+          "engine_id": "ENGINE_PATTERNS_Ω",
+          "source_bio_reacteur_sha256": "fa6b3486342f282d6bc4f58809c75ec39bcc0185f1814f9e4918111f86b007d7",
+          "fallback_active": false,
+          "interpolation_active": false
+        },
+        "ENGINE_COMPORTEMENT_Ω": {
+          "engine_id": "ENGINE_COMPORTEMENT_Ω",
+          "source_bio_reacteur_sha256": "fa6b3486342f282d6bc4f58809c75ec39bcc0185f1814f9e4918111f86b007d7",
+          "fallback_active": false,
+          "interpolation_active": false
+        },
+        "ENGINE_SENSORIEL_Ω": {
+          "engine_id": "ENGINE_SENSORIEL_Ω",
+          "source_bio_reacteur_sha256": "fa6b3486342f282d6bc4f58809c75ec39bcc0185f1814f9e4918111f86b007d7",
+          "fallback_active": false,
+          "interpolation_active": false
+        }
+      },
+      "DINDON_SAUVAGE": {
+        "ENGINE_VISION_Ω": {
+          "engine_id": "ENGINE_VISION_Ω",
+          "source_bio_reacteur_sha256": "ba7ab4c86c3607bfe98d74895da051ed11689918a64b86ec0383a2a802ed7e47",
+          "fallback_active": false,
+          "interpolation_active": false
+        },
+        "ENGINE_ODEUR_Ω": {
+          "engine_id": "ENGINE_ODEUR_Ω",
+          "source_bio_reacteur_sha256": "ba7ab4c86c3607bfe98d74895da051ed11689918a64b86ec0383a2a802ed7e47",
+          "fallback_active": false,
+          "interpolation_active": false
+        },
+        "ENGINE_PATTERNS_Ω": {
+          "engine_id": "ENGINE_PATTERNS_Ω",
+          "source_bio_reacteur_sha256": "ba7ab4c86c3607bfe98d74895da051ed11689918a64b86ec0383a2a802ed7e47",
+          "fallback_active": false,
+          "interpolation_active": false
+        },
+        "ENGINE_COMPORTEMENT_Ω": {
+          "engine_id": "ENGINE_COMPORTEMENT_Ω",
+          "source_bio_reacteur_sha256": "ba7ab4c86c3607bfe98d74895da051ed11689918a64b86ec0383a2a802ed7e47",
+          "fallback_active": false,
+          "interpolation_active": false
+        },
+        "ENGINE_SENSORIEL_Ω": {
+          "engine_id": "ENGINE_SENSORIEL_Ω",
+          "source_bio_reacteur_sha256": "ba7ab4c86c3607bfe98d74895da051ed11689918a64b86ec0383a2a802ed7e47",
+          "fallback_active": false,
+          "interpolation_active": false
+        }
+      }
+    }
+  },
+  "metadata": {
+    "especes_count": 5,
+    "couches_count": 11,
+    "engines_scientifiques_per_espece": 5,
+    "engine_ia_runs": 1,
+    "bio_reacteurs_runtime_count": 5,
+    "pipeline_continuity": true,
+    "paths_propagation_total": 275
+  }
+}

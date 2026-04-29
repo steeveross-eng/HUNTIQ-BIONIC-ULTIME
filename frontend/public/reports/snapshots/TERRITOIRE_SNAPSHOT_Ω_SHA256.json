@@ -1,0 +1,46 @@
+{
+  "manifest_id": "TERRITOIRE_SNAPSHOT_Ω_SHA256",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°32",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-29T17:17:07+00:00",
+  "files": [
+    {
+      "filename": "TERRITOIRE_SNAPSHOT_Ω.json",
+      "size_bytes": 33773,
+      "sha256": "0980647e0d1657fe7c36b84e816fc4a4d899ed92701368a5c21e1cda73243b6d",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/snapshots/TERRITOIRE_SNAPSHOT_%CE%A9.json"
+    },
+    {
+      "filename": "TERRITOIRE_SNAPSHOT_Ω.geojson",
+      "size_bytes": 6265,
+      "sha256": "448ee0e1f1f1f849e2c528e273876183e9b9f897a7904ee0367cb112c881f892",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/snapshots/TERRITOIRE_SNAPSHOT_%CE%A9.geojson"
+    },
+    {
+      "filename": "TERRITOIRE_SNAPSHOT_Ω.png",
+      "size_bytes": 55254,
+      "sha256": "e791d8362e894439bff14b945061a0cebf48ecde594b86cbd80135caf479b13b",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/snapshots/TERRITOIRE_SNAPSHOT_%CE%A9.png"
+    }
+  ],
+  "freeze_master_sha256_reference": "31c18388ab3090fc0588cc0028a0181c638ac2fba0dff9f9d40700e9f97ccf27",
+  "freeze_check": {
+    "files_verified": 36,
+    "altered_count": 0,
+    "missing_count": 0,
+    "intact": true
+  },
+  "validation": {
+    "freeze_intact": true,
+    "fallback_clean": true,
+    "legacy_dep_clean": true,
+    "fallback_violations": []
+  },
+  "v30_locked_sha256": {
+    "registry_lock_omega.py": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+    "engine_ia_corridors_omega.py": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3"
+  },
+  "snapshot_cumulative_sha256": "a5d0ab6737a578f4a7d73fce6043ddbbf74cc384c4d9224e7a8b7f923adfae0b",
+  "self_sha256": "cde39710a12089748e6765c52aeb812d27bc1675ea1d6c9fb9e26ce26496a8d2"
+}
