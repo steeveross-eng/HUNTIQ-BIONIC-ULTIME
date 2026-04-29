@@ -1,0 +1,1565 @@
+{
+  "espece_id": "CHEVREUIL",
+  "nom_scientifique": "Odocoileus virginianus",
+  "nom_vernaculaire_en": "White-tailed deer",
+  "classification": {
+    "famille": "Cervidae",
+    "genre": "Odocoileus",
+    "espece": "virginianus"
+  },
+  "comportements_saisonniers": {
+    "printemps": {
+      "deplacements": [
+        "dispersion juvénile, recherche de végétation riche en protéines"
+      ],
+      "alimentation": [
+        "dispersion juvénile, recherche de végétation riche en protéines"
+      ],
+      "reproduction": [],
+      "habitat": [],
+      "raw_bullets": [
+        "dispersion juvénile, recherche de végétation riche en protéines"
+      ]
+    },
+    "ete": {
+      "thermoregulation": [
+        "sélection d’habitats thermiques, évitement de chaleur excessive"
+      ],
+      "habitat": [
+        "sélection d’habitats thermiques, évitement de chaleur excessive"
+      ],
+      "alimentation": [],
+      "raw_bullets": [
+        "sélection d’habitats thermiques, évitement de chaleur excessive"
+      ]
+    },
+    "automne": {
+      "rut": [
+        "rut, déplacements accrus, utilisation de mosaïques forestières"
+      ],
+      "hyperphagie": [],
+      "deplacements": [
+        "rut, déplacements accrus, utilisation de mosaïques forestières"
+      ],
+      "raw_bullets": [
+        "rut, déplacements accrus, utilisation de mosaïques forestières"
+      ]
+    },
+    "hiver": {
+      "ravages": [
+        "dépendance aux zones de couvert dense, réduction des déplacements"
+      ],
+      "zones_refuge": [
+        "dépendance aux zones de couvert dense, réduction des déplacements"
+      ],
+      "mobilite": [
+        "dépendance aux zones de couvert dense, réduction des déplacements"
+      ],
+      "raw_bullets": [
+        "dépendance aux zones de couvert dense, réduction des déplacements"
+      ]
+    }
+  },
+  "habitat": {
+    "types_couverts": [
+      "mosaïques feuillus/conifères",
+      "zones de transition forêt-agriculture",
+      "forêts matures pour le couvert",
+      "clairières pour l’alimentation"
+    ],
+    "mosaiques_foret_agriculture": [
+      "mosaïques feuillus/conifères",
+      "zones de transition forêt-agriculture"
+    ],
+    "zones_humides": [],
+    "zones_thermiques": [],
+    "zones_ouvertes": [
+      "forêts matures pour le couvert",
+      "clairières pour l’alimentation"
+    ],
+    "zones_matures": [
+      "forêts matures pour le couvert"
+    ],
+    "zones_transition": [
+      "zones de transition forêt-agriculture"
+    ]
+  },
+  "corridors": {
+    "corridors_reels_gps": [],
+    "connectivite_optimum": [
+      "corridors stables entre zones de repos ↔ alimentation"
+    ],
+    "fragmentation_penalty": [
+      "fragmentation = augmentation du risque de mortalité"
+    ],
+    "zones_passage_essentielles": [
+      "dispersion juvénile influencée par sexe (mâles dispersent davantage)",
+      "évitement des zones agricoles lors des déplacements"
+    ],
+    "distances_typiques": [
+      "évitement des zones agricoles lors des déplacements"
+    ]
+  },
+  "nutrition": {
+    "besoins_proteines": [
+      "besoins élevés en protéines au printemps"
+    ],
+    "besoins_energetiques": [
+      "alimentation mixte : feuilles, bourgeons, glands, fruits, herbacées",
+      "dépendance aux glands (mast) en automne"
+    ],
+    "besoins_mineraux": {
+      "sodium": [],
+      "calcium": [],
+      "magnesium": []
+    },
+    "alimentation_saisonniere": {
+      "printemps": [
+        "besoins élevés en protéines au printemps"
+      ],
+      "ete": [
+        "sélection de végétation riche en humidité en été (thermorégulation)"
+      ],
+      "automne": [
+        "dépendance aux glands (mast) en automne"
+      ],
+      "hiver": []
+    },
+    "general_bullets": [
+      "sélection de végétation riche en humidité en été (thermorégulation)"
+    ]
+  },
+  "sites_critiques": {
+    "mise_bas": [
+      "Mise bas : zones isolées, couvert dense"
+    ],
+    "nidification": [],
+    "rut": [
+      "Rut : clairières, mosaïques forestières",
+      "Frottis / rubs : zones de rut, corridors"
+    ],
+    "tanieres": [
+      "Mise bas : zones isolées, couvert dense"
+    ],
+    "repos": [
+      "Mise bas : zones isolées, couvert dense",
+      "Repos : forêts matures, zones thermiques"
+    ],
+    "alimentation": [
+      "Rut : clairières, mosaïques forestières"
+    ],
+    "eau": []
+  },
+  "pression_humaine": {
+    "routes": [
+      "corridors anthropiques (routes, champs) utilisés comme axes de déplacement"
+    ],
+    "agriculture": [
+      "corridors anthropiques (routes, champs) utilisés comme axes de déplacement"
+    ],
+    "urbanisation": [],
+    "fragmentation": [
+      "forte tolérance à la présence humaine",
+      "augmentation des déplacements nocturnes en zones perturbées"
+    ],
+    "attractifs_anthropiques": [],
+    "conflits_humains": []
+  },
+  "maladies": {
+    "cwd": [
+      "rôle majeur dans la propagation du CWD",
+      "CWD = menace majeure"
+    ],
+    "lpdv": [],
+    "tique_hiver": [],
+    "autres": [
+      "compétition avec orignal dans zones de chevauchement",
+      "prédation sur faons : coyote, ours noir",
+      "expansion vers le nord (climat plus doux)",
+      "augmentation de densité dans plusieurs régions",
+      "fragmentation = mortalité accrue"
+    ]
+  },
+  "thermoregulation": {
+    "seuil_stress": 27.0,
+    "comportements_adaptation": [
+      "stress thermique dès 26–28°C",
+      "sélection d’habitats ombragés",
+      "réduction des déplacements en période chaude"
+    ],
+    "zones_refuge": [
+      "sélection d’habitats ombragés"
+    ]
+  },
+  "neige": {
+    "seuil_mobilite": 45.0,
+    "seuil_mortalite": null,
+    "zones_refuge": [
+      "dépendance aux zones de couvert dense"
+    ],
+    "raw_bullets": [
+      "mobilité réduite > 40–50 cm",
+      "mortalité accrue lors d’hivers rigoureux",
+      "dépendance aux zones de couvert dense"
+    ]
+  },
+  "interactions": {
+    "competition": [
+      "compétition avec orignal dans zones de chevauchement",
+      "rôle majeur dans la propagation du CWD"
+    ],
+    "predation": [
+      "prédation sur faons : coyote, ours noir"
+    ],
+    "partage_corridors": [
+      "compétition avec orignal dans zones de chevauchement"
+    ]
+  },
+  "dynamique": {
+    "tendances_20_ans": [
+      "expansion vers le nord (climat plus doux)",
+      "augmentation de densité dans plusieurs régions",
+      "CWD = menace majeure",
+      "fragmentation = mortalité accrue"
+    ],
+    "expansion": [
+      "expansion vers le nord (climat plus doux)",
+      "augmentation de densité dans plusieurs régions"
+    ],
+    "declin": [],
+    "facteurs": [
+      "expansion vers le nord (climat plus doux)",
+      "CWD = menace majeure",
+      "fragmentation = mortalité accrue"
+    ]
+  },
+  "sources_scientifiques": [
+    {
+      "header": [
+        "Institution",
+        "Titre / Type",
+        "Année",
+        "Portée",
+        "Lien / Référence"
+      ],
+      "row": [
+        "MFFP Québec",
+        "Inventaires cervidés, analyses d’habitat",
+        "2004–2024",
+        "Densité, tendances, habitat",
+        "https://mffp.gouv.qc.ca (mffp.gouv.qc.ca in Bing)"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Titre / Type",
+        "Année",
+        "Portée",
+        "Lien / Référence"
+      ],
+      "row": [
+        "Ontario MNRF",
+        "Deer Management Reports",
+        "2004–2024",
+        "Gestion, mortalité, habitat",
+        "https://www.ontario.ca/page/ministry-natural-resources-and-forestry (ontario.ca in Bing)"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Titre / Type",
+        "Année",
+        "Portée",
+        "Lien / Référence"
+      ],
+      "row": [
+        "NB DNR",
+        "Deer Population Trends",
+        "2004–2024",
+        "Tendances, climat, mortalité",
+        "https://www2.gnb.ca"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Titre / Type",
+        "Année",
+        "Portée",
+        "Lien / Référence"
+      ],
+      "row": [
+        "USGS",
+        "Movement Ecology (GPS)",
+        "2010–2024",
+        "Corridors, déplacements",
+        "https://www.usgs.gov"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Titre / Type",
+        "Année",
+        "Portée",
+        "Lien / Référence"
+      ],
+      "row": [
+        "USFWS",
+        "Habitat & Disease Assessments",
+        "2004–2024",
+        "CWD, habitat",
+        "https://www.fws.gov"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Titre / Type",
+        "Année",
+        "Portée",
+        "Lien / Référence"
+      ],
+      "row": [
+        "NOAA",
+        "Snow/Temp datasets",
+        "2004–2024",
+        "Neige, climat",
+        "https://www.noaa.gov"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Titre / Type",
+        "Année",
+        "Portée",
+        "Lien / Référence"
+      ],
+      "row": [
+        "NASA EarthData",
+        "NDVI, télédétection",
+        "2004–2024",
+        "Habitat, végétation",
+        "https://earthdata.nasa.gov"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre",
+        "Année",
+        "Revue / Institution",
+        "DOI / Lien"
+      ],
+      "row": [
+        "LaSharr et al.",
+        "Dispersal dynamics of white-tailed deer in human-altered landscapes and implications for disease risk",
+        "2025",
+        "PLOS One",
+        "https://doi.org/10.1371/journal.pone.0325656"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre",
+        "Année",
+        "Revue / Institution",
+        "DOI / Lien"
+      ],
+      "row": [
+        "Fulbright",
+        "White-Tailed Deer (chapitre scientifique)",
+        "2023",
+        "Springer Nature",
+        "https://link.springer.com"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre",
+        "Année",
+        "Revue / Institution",
+        "DOI / Lien"
+      ],
+      "row": [
+        "Wiley (consortium génomique)",
+        "Development of high-throughput genomic resources to inform white-tailed deer management",
+        "2024",
+        "Wiley Online Library",
+        "https://onlinelibrary.wiley.com (onlinelibrary.wiley.com in Bing)"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre",
+        "Année",
+        "Revue / Institution",
+        "DOI / Lien"
+      ],
+      "row": [
+        "UMaine / UNB / UVM",
+        "Thèses sur déplacements, habitat, CWD",
+        "2004–2024",
+        "Universités",
+        "Portails institutionnels"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre",
+        "Année",
+        "Revue / Institution",
+        "DOI / Lien"
+      ],
+      "row": [
+        "Movement Ecology",
+        "Études GPS cervidés",
+        "2010–2024",
+        "Movement Ecology Journal",
+        "https://movementecologyjournal.biomedcentral.com (movementecologyjournal.biomedcentral.com in Bing)"
+      ]
+    },
+    {
+      "header": [
+        "Organisation",
+        "Titre / Type",
+        "Année",
+        "Portée",
+        "Lien"
+      ],
+      "row": [
+        "NDA (National Deer Association)",
+        "Analyses habitat, nutrition, corridors",
+        "2004–2024",
+        "Gestion cervidés",
+        "https://deerassociation.com"
+      ]
+    },
+    {
+      "header": [
+        "Organisation",
+        "Titre / Type",
+        "Année",
+        "Portée",
+        "Lien"
+      ],
+      "row": [
+        "QDMA Archives",
+        "Habitat, rut, pression humaine",
+        "2004–2020",
+        "Gestion cervidés",
+        "https://www.qdma.com (archives)"
+      ]
+    },
+    {
+      "header": [
+        "Organisation",
+        "Titre / Type",
+        "Année",
+        "Portée",
+        "Lien"
+      ],
+      "row": [
+        "Données terrain validées",
+        "GPS, télémétrie, stations météo",
+        "2004–2024",
+        "Corridors, habitat",
+        "Programmes régionaux"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut"
+      ],
+      "row": [
+        "Sources non scientifiques",
+        "Interdit",
+        "❌"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut"
+      ],
+      "row": [
+        "Sources GOV",
+        "Obligatoire",
+        "✔️"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut"
+      ],
+      "row": [
+        "Sources UNI",
+        "Obligatoire",
+        "✔️"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut"
+      ],
+      "row": [
+        "Sources PR validées",
+        "Obligatoire",
+        "✔️"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut"
+      ],
+      "row": [
+        "DOI",
+        "Obligatoire",
+        "✔️"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut"
+      ],
+      "row": [
+        "Traçabilité",
+        "Obligatoire",
+        "✔️"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut"
+      ],
+      "row": [
+        "Triple validation",
+        "Obligatoire",
+        "✔️"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Catégorie",
+        "GOV"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "MFFP Québec"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "Québec"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2023"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Plan de gestion du cerf de Virginie 2020–2027"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "Gouvernement du Québec"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://mffp.gouv.qc.ca (mffp.gouv.qc.ca in Bing)"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Type",
+        "Rapport de gestion"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "Inventaires aériens, analyses d’habitat"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Densité, mortalité, ravages"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Pression de chasse, tendances régionales"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Variabilité régionale"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Validation1",
+        "✔ Source officielle"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Validation2",
+        "✔ Méthodologie scientifique"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Validation3",
+        "✔ Conformité BCE-4X"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Statut",
+        "Accepté"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Date",
+        "2026-04-08"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Responsable",
+        "SR-BCE4X"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "Ontario Ministry of Natural Resources and Forestry"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "Ontario"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2022"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "White-Tailed Deer Population and Harvest Summary"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "MNRF"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://www.ontario.ca/page/ministry-natural-resources-and-forestry (ontario.ca in Bing)"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Type",
+        "Rapport gouvernemental"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "Inventaires, télémétrie"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Densité, mortalité, succès de chasse"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Expansion vers le nord"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Données manquantes dans zones agricoles"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Validation1",
+        "✔"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Validation2",
+        "✔"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Validation3",
+        "✔"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "Maine Department of Inland Fisheries & Wildlife"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "Maine"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2021"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Maine White-Tailed Deer Assessment"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "Maine IFW"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://www.maine.gov/ifw"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Type",
+        "Rapport populationnel"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "Inventaires, séries temporelles"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Tendances 2000–2020"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Croissance dans zones côtières"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Variabilité climatique"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Catégorie",
+        "UNI"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "PLOS One"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "USA / Midwest"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2025"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Dispersal dynamics of white-tailed deer in human-altered landscapes and implications for disease risk"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "LaSharr et al."
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://doi.org/10.1371/journal.pone.0325656"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Type",
+        "Article scientifique"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "GPS, modèles de dispersion"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Déplacements, corridors, risques CWD"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Corridors anthropiques = vecteurs de dispersion"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Données centrées sur une région"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "Springer Nature"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "USA"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "White-Tailed Deer (chapitre scientifique)"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "Fulbright"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://link.springer.com"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Type",
+        "Chapitre scientifique"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "Synthèse scientifique"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Habitat, nutrition, comportement"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Forte plasticité écologique"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Synthèse, pas de données brutes"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "Wiley Online Library"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2024"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Development of high-throughput genomic resources to inform white-tailed deer management"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "Consortium génomique"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://onlinelibrary.wiley.com (onlinelibrary.wiley.com in Bing)"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "Génomique, analyses génétiques"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Variabilité génétique, structure populationnelle"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Outils génétiques pour gestion CWD"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Données centrées sur USA"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Catégorie",
+        "PR"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "National Deer Association"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "USA / Est"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Annual Deer Report"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "NDA"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://deerassociation.com"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Type",
+        "Rapport professionnel validé"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "Données terrain, séries temporelles"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Densité, habitat, mortalité"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Expansion nordique, pression humaine"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Données USA seulement"
+      ]
+    }
+  ],
+  "outputs_engines": {
+    "ENGINE_COMPORTEMENT": {
+      "phases_jour": [
+        "dawn",
+        "day",
+        "dusk",
+        "night"
+      ],
+      "saisons_actives": [
+        "printemps",
+        "ete",
+        "automne",
+        "hiver"
+      ],
+      "rut_actif": true,
+      "hyperphagie_active": false,
+      "ravages_actifs": true
+    },
+    "ENGINE_SENSORIEL": {
+      "thermique_seuil_C": 27.0,
+      "neige_seuil_mobilite_cm": 45.0,
+      "neige_seuil_mortalite_cm": null
+    },
+    "ENGINE_CORRIDORS": {
+      "fragmentation_penalty": [
+        "fragmentation = augmentation du risque de mortalité"
+      ],
+      "connectivite_optimum": [
+        "corridors stables entre zones de repos ↔ alimentation"
+      ],
+      "corridors_gps_documentes": []
+    },
+    "ENGINE_NUTRITION": {
+      "besoins_proteines": [
+        "besoins élevés en protéines au printemps"
+      ],
+      "besoins_energetiques": [
+        "alimentation mixte : feuilles, bourgeons, glands, fruits, herbacées",
+        "dépendance aux glands (mast) en automne"
+      ],
+      "alimentation_par_saison": {
+        "printemps": [
+          "besoins élevés en protéines au printemps"
+        ],
+        "ete": [
+          "sélection de végétation riche en humidité en été (thermorégulation)"
+        ],
+        "automne": [
+          "dépendance aux glands (mast) en automne"
+        ],
+        "hiver": []
+      }
+    },
+    "ENGINE_TERRITOIRE": {
+      "habitat_types": [
+        "mosaïques feuillus/conifères",
+        "zones de transition forêt-agriculture",
+        "forêts matures pour le couvert",
+        "clairières pour l’alimentation"
+      ],
+      "zones_humides": [],
+      "zones_thermiques": []
+    },
+    "ENGINE_INTERACTIONS": {
+      "competition": [
+        "compétition avec orignal dans zones de chevauchement",
+        "rôle majeur dans la propagation du CWD"
+      ],
+      "predation": [
+        "prédation sur faons : coyote, ours noir"
+      ],
+      "partage_corridors": [
+        "compétition avec orignal dans zones de chevauchement"
+      ]
+    },
+    "ENGINE_CLIMAT": {
+      "thermique_stress_C": 27.0,
+      "neige_mortalite_cm": null,
+      "facteurs_climatiques": [
+        "expansion vers le nord (climat plus doux)",
+        "CWD = menace majeure",
+        "fragmentation = mortalité accrue"
+      ]
+    },
+    "ENGINE_SITES_CRITIQUES": {
+      "mise_bas": [
+        "Mise bas : zones isolées, couvert dense"
+      ],
+      "nidification": [],
+      "rut": [
+        "Rut : clairières, mosaïques forestières",
+        "Frottis / rubs : zones de rut, corridors"
+      ],
+      "tanieres": [
+        "Mise bas : zones isolées, couvert dense"
+      ],
+      "repos": [
+        "Mise bas : zones isolées, couvert dense",
+        "Repos : forêts matures, zones thermiques"
+      ],
+      "alimentation": [
+        "Rut : clairières, mosaïques forestières"
+      ],
+      "eau": []
+    },
+    "ENGINE_HABITAT": {
+      "types_couverts": [
+        "mosaïques feuillus/conifères",
+        "zones de transition forêt-agriculture",
+        "forêts matures pour le couvert",
+        "clairières pour l’alimentation"
+      ],
+      "mosaiques_foret_agriculture": [
+        "mosaïques feuillus/conifères",
+        "zones de transition forêt-agriculture"
+      ],
+      "zones_humides": [],
+      "zones_thermiques": [],
+      "zones_ouvertes": [
+        "forêts matures pour le couvert",
+        "clairières pour l’alimentation"
+      ],
+      "zones_matures": [
+        "forêts matures pour le couvert"
+      ],
+      "zones_transition": [
+        "zones de transition forêt-agriculture"
+      ]
+    },
+    "ENGINE_RUT": {
+      "actif": true,
+      "comportements": [
+        "rut, déplacements accrus, utilisation de mosaïques forestières"
+      ],
+      "sites": [
+        "Rut : clairières, mosaïques forestières",
+        "Frottis / rubs : zones de rut, corridors"
+      ]
+    },
+    "ENGINE_NIDIFICATION": {
+      "actif": false,
+      "sites": []
+    },
+    "ENGINE_EAU": {
+      "sites_eau": [],
+      "zones_humides": []
+    },
+    "ENGINE_MINERAUX": {
+      "sodium": [],
+      "calcium": [],
+      "magnesium": []
+    }
+  }
+}

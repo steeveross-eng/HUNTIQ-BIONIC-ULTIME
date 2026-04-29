@@ -1,0 +1,44 @@
+{
+  "espece_id": "CHEVREUIL",
+  "nom_scientifique": "Odocoileus virginianus",
+  "directive": "ACTIVATION_BIO_PROFILE_Ω_VERSION_ULTIME_ABSOLUE_X3",
+  "ordre": "n°24",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "activation_status": "EN_ATTENTE_VALIDATION_COMMANDANT",
+  "generated_at_utc": "2026-04-29T12:06:18+00:00",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "v30_locked": true,
+  "registry_lock_omega_sha256": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+  "engine_ia_corridors_omega_sha256": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3",
+  "files": [
+    {
+      "filename": "BIO_PROFILE_Ω_CHEVREUIL.json",
+      "format": "JSON",
+      "size_bytes": 30711,
+      "sha256": "ef6a794d2477c5cc3cb44ab01e833cb1a47bac4a86e1948b9f73910767a9d72a",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_CHEVREUIL.json"
+    },
+    {
+      "filename": "BIO_PROFILE_Ω_CHEVREUIL.html",
+      "format": "HTML",
+      "size_bytes": 26657,
+      "sha256": "890b3f082d97c3f3e59b82cb0b4050d011c394cbfb9a58dd63cf49cf7438f9b3",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_CHEVREUIL.html"
+    },
+    {
+      "filename": "BIO_PROFILE_Ω_CHEVREUIL.csv",
+      "format": "CSV",
+      "size_bytes": 25641,
+      "sha256": "b5dc9ee90d7a80cbd83b10e245f225394524f96b4c8d6872e4812f8a8749f66e",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_CHEVREUIL.csv"
+    },
+    {
+      "filename": "MANIFEST_BIO_PROFILE_Ω_CHEVREUIL.json",
+      "format": "JSON_MANIFEST",
+      "size_bytes": 1588,
+      "sha256": "8a70a134c11711495c4c39d556a05861f68aed707479f87ad5c3aab425d7daa6",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/MANIFEST_BIO_PROFILE_%CE%A9_CHEVREUIL.json"
+    }
+  ],
+  "self_sha256": "8a70a134c11711495c4c39d556a05861f68aed707479f87ad5c3aab425d7daa6"
+}

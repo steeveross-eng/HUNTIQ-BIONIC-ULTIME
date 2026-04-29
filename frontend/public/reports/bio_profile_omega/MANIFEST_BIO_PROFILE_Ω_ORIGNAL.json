@@ -1,0 +1,44 @@
+{
+  "espece_id": "ORIGNAL",
+  "nom_scientifique": "Alces alces / Alces americanus",
+  "directive": "ACTIVATION_BIO_PROFILE_Ω_VERSION_ULTIME_ABSOLUE_X3",
+  "ordre": "n°24",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "activation_status": "EN_ATTENTE_VALIDATION_COMMANDANT",
+  "generated_at_utc": "2026-04-29T12:06:18+00:00",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "v30_locked": true,
+  "registry_lock_omega_sha256": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+  "engine_ia_corridors_omega_sha256": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3",
+  "files": [
+    {
+      "filename": "BIO_PROFILE_Ω_ORIGNAL.json",
+      "format": "JSON",
+      "size_bytes": 28447,
+      "sha256": "a1275b952bdde581c978d16fb0d916e2b36c624ef14ac86478a428efda14b5df",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_ORIGNAL.json"
+    },
+    {
+      "filename": "BIO_PROFILE_Ω_ORIGNAL.html",
+      "format": "HTML",
+      "size_bytes": 25585,
+      "sha256": "0347d32a324216a192853a9a434556b6b57a680f28f50468b0f06140145570d1",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_ORIGNAL.html"
+    },
+    {
+      "filename": "BIO_PROFILE_Ω_ORIGNAL.csv",
+      "format": "CSV",
+      "size_bytes": 22558,
+      "sha256": "77d7a04ea1ce38bb70d4b18ba1b828418478daa5d0d3598a8582ebd3676c579a",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_ORIGNAL.csv"
+    },
+    {
+      "filename": "MANIFEST_BIO_PROFILE_Ω_ORIGNAL.json",
+      "format": "JSON_MANIFEST",
+      "size_bytes": 1582,
+      "sha256": "bcdf99733fad0b326a16088c1432193e5946f0a75a60b69522af29da0116e84b",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/MANIFEST_BIO_PROFILE_%CE%A9_ORIGNAL.json"
+    }
+  ],
+  "self_sha256": "bcdf99733fad0b326a16088c1432193e5946f0a75a60b69522af29da0116e84b"
+}

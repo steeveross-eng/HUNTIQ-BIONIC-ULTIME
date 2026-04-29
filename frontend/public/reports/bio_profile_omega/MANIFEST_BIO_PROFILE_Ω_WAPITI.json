@@ -1,0 +1,44 @@
+{
+  "espece_id": "WAPITI",
+  "nom_scientifique": "Cervus canadensis",
+  "directive": "ACTIVATION_BIO_PROFILE_Ω_VERSION_ULTIME_ABSOLUE_X3",
+  "ordre": "n°24",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "activation_status": "EN_ATTENTE_VALIDATION_COMMANDANT",
+  "generated_at_utc": "2026-04-29T12:06:18+00:00",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "v30_locked": true,
+  "registry_lock_omega_sha256": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+  "engine_ia_corridors_omega_sha256": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3",
+  "files": [
+    {
+      "filename": "BIO_PROFILE_Ω_WAPITI.json",
+      "format": "JSON",
+      "size_bytes": 25511,
+      "sha256": "1dd532ee6378a6e8e6a92da28c271d9e0a2df8020d07a695e44e6d1f00279836",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_WAPITI.json"
+    },
+    {
+      "filename": "BIO_PROFILE_Ω_WAPITI.html",
+      "format": "HTML",
+      "size_bytes": 26333,
+      "sha256": "c8bf2aaf4e03d6a1e691dd42ab0c4836285e1eedec076218e57e204fad88ffb0",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_WAPITI.html"
+    },
+    {
+      "filename": "BIO_PROFILE_Ω_WAPITI.csv",
+      "format": "CSV",
+      "size_bytes": 27794,
+      "sha256": "6e0d80d89af213ddbffed3121938205907d80ffce06d878527d4b8be100c9b25",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_WAPITI.csv"
+    },
+    {
+      "filename": "MANIFEST_BIO_PROFILE_Ω_WAPITI.json",
+      "format": "JSON_MANIFEST",
+      "size_bytes": 1562,
+      "sha256": "20d67b5e501a6b7218adbae21356e63544c8f4185b72f90b9b65beaa3023a6df",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/MANIFEST_BIO_PROFILE_%CE%A9_WAPITI.json"
+    }
+  ],
+  "self_sha256": "20d67b5e501a6b7218adbae21356e63544c8f4185b72f90b9b65beaa3023a6df"
+}

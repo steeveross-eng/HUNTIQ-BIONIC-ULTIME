@@ -1,0 +1,1249 @@
+{
+  "espece_id": "WAPITI",
+  "nom_scientifique": "Cervus canadensis",
+  "nom_vernaculaire_en": "Elk",
+  "classification": {
+    "famille": "Cervidae",
+    "genre": "Cervus",
+    "espece": "canadensis"
+  },
+  "comportements_saisonniers": {
+    "printemps": {
+      "deplacements": [
+        "dispersion des mâles, recherche de végétation riche en protéines"
+      ],
+      "alimentation": [
+        "dispersion des mâles, recherche de végétation riche en protéines"
+      ],
+      "reproduction": [],
+      "habitat": [],
+      "raw_bullets": [
+        "dispersion des mâles, recherche de végétation riche en protéines"
+      ]
+    },
+    "ete": {
+      "thermoregulation": [
+        "sélection de zones ouvertes avec accès à couvert forestier pour thermorégulation"
+      ],
+      "habitat": [
+        "sélection de zones ouvertes avec accès à couvert forestier pour thermorégulation"
+      ],
+      "alimentation": [],
+      "raw_bullets": [
+        "sélection de zones ouvertes avec accès à couvert forestier pour thermorégulation"
+      ]
+    },
+    "automne": {
+      "rut": [
+        "rut, déplacements accrus, formation de harems"
+      ],
+      "hyperphagie": [],
+      "deplacements": [
+        "rut, déplacements accrus, formation de harems"
+      ],
+      "raw_bullets": [
+        "rut, déplacements accrus, formation de harems"
+      ]
+    },
+    "hiver": {
+      "ravages": [
+        "regroupement dans zones à faible neige, dépendance au couvert"
+      ],
+      "zones_refuge": [
+        "regroupement dans zones à faible neige, dépendance au couvert"
+      ],
+      "mobilite": [],
+      "raw_bullets": [
+        "regroupement dans zones à faible neige, dépendance au couvert"
+      ]
+    }
+  },
+  "habitat": {
+    "types_couverts": [
+      "prairies ouvertes adjacentes à forêts mixtes",
+      "vallées fluviales",
+      "zones de transition prairie-forêt",
+      "forêts matures pour repos",
+      "zones de pente modérée pour rut"
+    ],
+    "mosaiques_foret_agriculture": [],
+    "zones_humides": [],
+    "zones_thermiques": [],
+    "zones_ouvertes": [
+      "prairies ouvertes adjacentes à forêts mixtes",
+      "zones de transition prairie-forêt"
+    ],
+    "zones_matures": [
+      "forêts matures pour repos"
+    ],
+    "zones_transition": [
+      "zones de transition prairie-forêt"
+    ]
+  },
+  "corridors": {
+    "corridors_reels_gps": [],
+    "connectivite_optimum": [
+      "corridors migratoires stables sur plusieurs années",
+      "connectivité essentielle entre zones d’alimentation et zones de repos"
+    ],
+    "fragmentation_penalty": [
+      "fragmentation = réduction de mobilité + augmentation mortalité"
+    ],
+    "zones_passage_essentielles": [
+      "connectivité essentielle entre zones d’alimentation et zones de repos",
+      "évitement des routes et infrastructures humaines"
+    ],
+    "distances_typiques": [
+      "déplacements saisonniers marqués (printemps ↔ automne)"
+    ]
+  },
+  "nutrition": {
+    "besoins_proteines": [
+      "besoins élevés en protéines au printemps (graminées, herbacées)"
+    ],
+    "besoins_energetiques": [
+      "dépendance aux plantes riches en énergie en automne (préparation hivernale)"
+    ],
+    "besoins_mineraux": {
+      "sodium": [
+        "importance des minéraux (Na, Ca, Mg) dans certaines régions"
+      ],
+      "calcium": [],
+      "magnesium": []
+    },
+    "alimentation_saisonniere": {
+      "printemps": [
+        "besoins élevés en protéines au printemps (graminées, herbacées)"
+      ],
+      "ete": [
+        "sélection de végétation fraîche en été pour thermorégulation"
+      ],
+      "automne": [
+        "dépendance aux plantes riches en énergie en automne (préparation hivernale)"
+      ],
+      "hiver": []
+    },
+    "general_bullets": [
+      "sélection de végétation fraîche en été pour thermorégulation",
+      "dépendance aux zones ouvertes pour alimentation"
+    ]
+  },
+  "sites_critiques": {
+    "mise_bas": [
+      "Mise bas : zones isolées, couvert dense, proximité d’eau"
+    ],
+    "nidification": [],
+    "rut": [
+      "Rut : clairières, vallées ouvertes, zones de transition",
+      "Frottis / souilles : zones de rut, corridors"
+    ],
+    "tanieres": [
+      "Mise bas : zones isolées, couvert dense, proximité d’eau"
+    ],
+    "repos": [
+      "Mise bas : zones isolées, couvert dense, proximité d’eau",
+      "Repos : forêts mixtes, zones thermiques"
+    ],
+    "alimentation": [
+      "Rut : clairières, vallées ouvertes, zones de transition"
+    ],
+    "eau": [
+      "Mise bas : zones isolées, couvert dense, proximité d’eau"
+    ]
+  },
+  "pression_humaine": {
+    "routes": [
+      "évitement des routes, sentiers motorisés, zones agricoles intensives"
+    ],
+    "agriculture": [
+      "évitement des routes, sentiers motorisés, zones agricoles intensives"
+    ],
+    "urbanisation": [],
+    "fragmentation": [
+      "déplacements nocturnes accrus en zones perturbées",
+      "fragmentation = mortalité accrue",
+      "corridors anthropiques parfois utilisés comme axes de déplacement (selon région)"
+    ],
+    "attractifs_anthropiques": [],
+    "conflits_humains": []
+  },
+  "maladies": {
+    "cwd": [
+      "transmission potentielle du CWD dans zones mixtes cervidés",
+      "CWD = menace majeure"
+    ],
+    "lpdv": [],
+    "tique_hiver": [],
+    "autres": [
+      "compétition avec cerf de Virginie dans zones de chevauchement",
+      "prédation sur faons : loup, coyote, ours noir",
+      "interactions spatiales avec orignal dans zones boréales",
+      "réintroduction réussie dans plusieurs États (Kentucky, Pennsylvanie)",
+      "croissance dans certaines régions",
+      "fragmentation = réduction connectivité",
+      "climat = influence sur disponibilité alimentaire"
+    ]
+  },
+  "thermoregulation": {
+    "seuil_stress": 22.5,
+    "comportements_adaptation": [
+      "stress thermique dès 20–25°C",
+      "sélection de zones ombragées, forêts mixtes, zones humides",
+      "réduction des déplacements en période chaude",
+      "utilisation accrue des pentes nord et zones d’altitude"
+    ],
+    "zones_refuge": [
+      "sélection de zones ombragées, forêts mixtes, zones humides"
+    ]
+  },
+  "neige": {
+    "seuil_mobilite": 50.0,
+    "seuil_mortalite": null,
+    "zones_refuge": [],
+    "raw_bullets": [
+      "mobilité réduite > 40–60 cm",
+      "mortalité accrue lors d’hivers rigoureux",
+      "sélection de zones à faible accumulation (pentes sud, vallées)"
+    ]
+  },
+  "interactions": {
+    "competition": [
+      "compétition avec cerf de Virginie dans zones de chevauchement",
+      "transmission potentielle du CWD dans zones mixtes cervidés",
+      "interactions spatiales avec orignal dans zones boréales"
+    ],
+    "predation": [
+      "prédation sur faons : loup, coyote, ours noir"
+    ],
+    "partage_corridors": [
+      "compétition avec cerf de Virginie dans zones de chevauchement"
+    ]
+  },
+  "dynamique": {
+    "tendances_20_ans": [
+      "réintroduction réussie dans plusieurs États (Kentucky, Pennsylvanie)",
+      "croissance dans certaines régions",
+      "CWD = menace majeure",
+      "fragmentation = réduction connectivité",
+      "climat = influence sur disponibilité alimentaire"
+    ],
+    "expansion": [],
+    "declin": [],
+    "facteurs": [
+      "réintroduction réussie dans plusieurs États (Kentucky, Pennsylvanie)",
+      "croissance dans certaines régions",
+      "CWD = menace majeure",
+      "fragmentation = réduction connectivité",
+      "climat = influence sur disponibilité alimentaire"
+    ]
+  },
+  "sources_scientifiques": [
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Catégorie",
+        "GOV"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "Parcs Canada"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "Alberta / Colombie-Britannique"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2022"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Elk Population Monitoring Report — Mountain National Parks"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "Parcs Canada"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://parks.canada.ca"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Type",
+        "Rapport populationnel"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "Inventaires aériens, télémétrie"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Densité, mortalité, utilisation habitat"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Stabilité globale, variations locales"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Conditions météo, zones inaccessibles"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Validation1",
+        "✔"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Validation2",
+        "✔"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Validation3",
+        "✔"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Statut",
+        "Accepté"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Date",
+        "2026-04-08"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Responsable",
+        "SR-BCE4X"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "Alberta Environment & Parks"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "Alberta"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2021"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Elk Management and Harvest Summary"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "Gouvernement de l’Alberta"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://www.alberta.ca"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Type",
+        "Rapport de gestion"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "Inventaires, séries temporelles"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Densité, quotas, mortalité"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Croissance dans zones agricoles"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Variabilité régionale"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "Kentucky Department of Fish & Wildlife Resources"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "Kentucky"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2020"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Elk Restoration and Population Status Report"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "KDFWR"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://fw.ky.gov"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "GPS, inventaires"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Tendances 2000–2020"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Expansion rapide post-réintroduction"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Données limitées hors zones restaurées"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Catégorie",
+        "UNI"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "Journal of Wildlife Management"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "USA"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2016"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Elk resource selection and migration in a changing landscape"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "Proffitt et al."
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://doi.org/10.1002/jwmg.1030"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Type",
+        "Article scientifique"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "RSF, GPS"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Sélection habitat, corridors"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Corridors migratoires stables"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Zone d’étude restreinte"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "Ecological Applications"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2019"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Elk responses to human disturbance across multiple spatial scales"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "Montgomery et al."
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://doi.org/10.1002/eap.1923"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "GPS, analyses multi-échelles"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Déplacements, perturbation humaine"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Évitement routes, fragmentation"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Données centrées sur une région"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "Journal of Wildlife Diseases"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "Amérique du Nord"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "The epidemiology of chronic wasting disease in North America"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "Miller & Fischer"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://doi.org/10.7589/2015-07-178 (doi.org in Bing)"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "Analyses épidémiologiques"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "CWD, transmission cervidés"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Risque élevé pour wapiti"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Données multi-espèces"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Catégorie",
+        "PR"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "Rocky Mountain Elk Foundation (RMEF)"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "USA / Ouest"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2024"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Elk Habitat and Migration Corridor Analysis"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "RMEF"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://www.rmef.org"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Type",
+        "Rapport professionnel validé"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "GPS, SIG, analyses habitat"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Corridors, fragmentation"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Importance connectivité"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Données USA seulement"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut attendu"
+      ],
+      "row": [
+        "GOV",
+        "Couverture complète 2004–2024",
+        "À compléter"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut attendu"
+      ],
+      "row": [
+        "UNI",
+        "Liste exhaustive avec DOI",
+        "À compléter"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut attendu"
+      ],
+      "row": [
+        "PR",
+        "Programmes validés uniquement",
+        "À compléter"
+      ]
+    }
+  ],
+  "outputs_engines": {
+    "ENGINE_COMPORTEMENT": {
+      "phases_jour": [
+        "dawn",
+        "day",
+        "dusk",
+        "night"
+      ],
+      "saisons_actives": [
+        "printemps",
+        "ete",
+        "automne",
+        "hiver"
+      ],
+      "rut_actif": true,
+      "hyperphagie_active": false,
+      "ravages_actifs": true
+    },
+    "ENGINE_SENSORIEL": {
+      "thermique_seuil_C": 22.5,
+      "neige_seuil_mobilite_cm": 50.0,
+      "neige_seuil_mortalite_cm": null
+    },
+    "ENGINE_CORRIDORS": {
+      "fragmentation_penalty": [
+        "fragmentation = réduction de mobilité + augmentation mortalité"
+      ],
+      "connectivite_optimum": [
+        "corridors migratoires stables sur plusieurs années",
+        "connectivité essentielle entre zones d’alimentation et zones de repos"
+      ],
+      "corridors_gps_documentes": []
+    },
+    "ENGINE_NUTRITION": {
+      "besoins_proteines": [
+        "besoins élevés en protéines au printemps (graminées, herbacées)"
+      ],
+      "besoins_energetiques": [
+        "dépendance aux plantes riches en énergie en automne (préparation hivernale)"
+      ],
+      "alimentation_par_saison": {
+        "printemps": [
+          "besoins élevés en protéines au printemps (graminées, herbacées)"
+        ],
+        "ete": [
+          "sélection de végétation fraîche en été pour thermorégulation"
+        ],
+        "automne": [
+          "dépendance aux plantes riches en énergie en automne (préparation hivernale)"
+        ],
+        "hiver": []
+      }
+    },
+    "ENGINE_TERRITOIRE": {
+      "habitat_types": [
+        "prairies ouvertes adjacentes à forêts mixtes",
+        "vallées fluviales",
+        "zones de transition prairie-forêt",
+        "forêts matures pour repos",
+        "zones de pente modérée pour rut"
+      ],
+      "zones_humides": [],
+      "zones_thermiques": []
+    },
+    "ENGINE_INTERACTIONS": {
+      "competition": [
+        "compétition avec cerf de Virginie dans zones de chevauchement",
+        "transmission potentielle du CWD dans zones mixtes cervidés",
+        "interactions spatiales avec orignal dans zones boréales"
+      ],
+      "predation": [
+        "prédation sur faons : loup, coyote, ours noir"
+      ],
+      "partage_corridors": [
+        "compétition avec cerf de Virginie dans zones de chevauchement"
+      ]
+    },
+    "ENGINE_CLIMAT": {
+      "thermique_stress_C": 22.5,
+      "neige_mortalite_cm": null,
+      "facteurs_climatiques": [
+        "réintroduction réussie dans plusieurs États (Kentucky, Pennsylvanie)",
+        "croissance dans certaines régions",
+        "CWD = menace majeure",
+        "fragmentation = réduction connectivité",
+        "climat = influence sur disponibilité alimentaire"
+      ]
+    },
+    "ENGINE_SITES_CRITIQUES": {
+      "mise_bas": [
+        "Mise bas : zones isolées, couvert dense, proximité d’eau"
+      ],
+      "nidification": [],
+      "rut": [
+        "Rut : clairières, vallées ouvertes, zones de transition",
+        "Frottis / souilles : zones de rut, corridors"
+      ],
+      "tanieres": [
+        "Mise bas : zones isolées, couvert dense, proximité d’eau"
+      ],
+      "repos": [
+        "Mise bas : zones isolées, couvert dense, proximité d’eau",
+        "Repos : forêts mixtes, zones thermiques"
+      ],
+      "alimentation": [
+        "Rut : clairières, vallées ouvertes, zones de transition"
+      ],
+      "eau": [
+        "Mise bas : zones isolées, couvert dense, proximité d’eau"
+      ]
+    },
+    "ENGINE_HABITAT": {
+      "types_couverts": [
+        "prairies ouvertes adjacentes à forêts mixtes",
+        "vallées fluviales",
+        "zones de transition prairie-forêt",
+        "forêts matures pour repos",
+        "zones de pente modérée pour rut"
+      ],
+      "mosaiques_foret_agriculture": [],
+      "zones_humides": [],
+      "zones_thermiques": [],
+      "zones_ouvertes": [
+        "prairies ouvertes adjacentes à forêts mixtes",
+        "zones de transition prairie-forêt"
+      ],
+      "zones_matures": [
+        "forêts matures pour repos"
+      ],
+      "zones_transition": [
+        "zones de transition prairie-forêt"
+      ]
+    },
+    "ENGINE_RUT": {
+      "actif": true,
+      "comportements": [
+        "rut, déplacements accrus, formation de harems"
+      ],
+      "sites": [
+        "Rut : clairières, vallées ouvertes, zones de transition",
+        "Frottis / souilles : zones de rut, corridors"
+      ]
+    },
+    "ENGINE_NIDIFICATION": {
+      "actif": false,
+      "sites": []
+    },
+    "ENGINE_EAU": {
+      "sites_eau": [
+        "Mise bas : zones isolées, couvert dense, proximité d’eau"
+      ],
+      "zones_humides": []
+    },
+    "ENGINE_MINERAUX": {
+      "sodium": [
+        "importance des minéraux (Na, Ca, Mg) dans certaines régions"
+      ],
+      "calcium": [],
+      "magnesium": []
+    }
+  }
+}

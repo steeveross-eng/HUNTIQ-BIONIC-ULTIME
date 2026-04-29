@@ -1,0 +1,1479 @@
+{
+  "espece_id": "ORIGNAL",
+  "nom_scientifique": "Alces alces / Alces americanus",
+  "nom_vernaculaire_en": "Moose",
+  "classification": {
+    "famille": "Cervidae",
+    "genre": "Alces",
+    "espece": "alces / americanus"
+  },
+  "comportements_saisonniers": {
+    "printemps": {
+      "deplacements": [],
+      "alimentation": [
+        "recherche de végétation riche en protéines"
+      ],
+      "reproduction": [],
+      "habitat": [],
+      "raw_bullets": [
+        "recherche de végétation riche en protéines"
+      ]
+    },
+    "ete": {
+      "thermoregulation": [
+        "sélection d’habitats thermiques (zones humides, forêts denses)"
+      ],
+      "habitat": [
+        "sélection d’habitats thermiques (zones humides, forêts denses)"
+      ],
+      "alimentation": [],
+      "raw_bullets": [
+        "sélection d’habitats thermiques (zones humides, forêts denses)"
+      ]
+    },
+    "automne": {
+      "rut": [
+        "rut, déplacements accrus"
+      ],
+      "hyperphagie": [],
+      "deplacements": [
+        "rut, déplacements accrus"
+      ],
+      "raw_bullets": [
+        "rut, déplacements accrus"
+      ]
+    },
+    "hiver": {
+      "ravages": [
+        "ravages (zones à faible neige)"
+      ],
+      "zones_refuge": [],
+      "mobilite": [],
+      "raw_bullets": [
+        "ravages (zones à faible neige)"
+      ]
+    }
+  },
+  "habitat": {
+    "types_couverts": [
+      "forêts mixtes boréales",
+      "zones humides (été)",
+      "forêts matures conifériennes (hiver)"
+    ],
+    "mosaiques_foret_agriculture": [],
+    "zones_humides": [
+      "zones humides (été)"
+    ],
+    "zones_thermiques": [
+      "forêts mixtes boréales"
+    ],
+    "zones_ouvertes": [],
+    "zones_matures": [
+      "forêts matures conifériennes (hiver)"
+    ],
+    "zones_transition": []
+  },
+  "corridors": {
+    "corridors_reels_gps": [],
+    "connectivite_optimum": [
+      "corridors stables",
+      "connectivité essentielle"
+    ],
+    "fragmentation_penalty": [
+      "fragmentation = réduction de mobilité"
+    ],
+    "zones_passage_essentielles": [
+      "connectivité essentielle",
+      "évitement des routes"
+    ],
+    "distances_typiques": []
+  },
+  "nutrition": {
+    "besoins_proteines": [
+      "besoins élevés en protéines au printemps"
+    ],
+    "besoins_energetiques": [
+      "hyperphagie automnale"
+    ],
+    "besoins_mineraux": {
+      "sodium": [
+        "besoins en minéraux (Na, K, Ca, Mg)"
+      ],
+      "calcium": [],
+      "magnesium": []
+    },
+    "alimentation_saisonniere": {
+      "printemps": [
+        "besoins élevés en protéines au printemps"
+      ],
+      "ete": [
+        "alimentation aquatique en été"
+      ],
+      "automne": [
+        "hyperphagie automnale"
+      ],
+      "hiver": [
+        "dépendance au couvert thermique en hiver"
+      ]
+    },
+    "general_bullets": [
+      "alimentation aquatique en été",
+      "dépendance au couvert thermique en hiver"
+    ]
+  },
+  "sites_critiques": {
+    "mise_bas": [
+      "mise bas : couvert dense, zones isolées"
+    ],
+    "nidification": [],
+    "rut": [
+      "rut : mosaïques feuillus/conifères",
+      "souilles / frottis : zones de rut"
+    ],
+    "tanieres": [
+      "mise bas : couvert dense, zones isolées"
+    ],
+    "repos": [
+      "mise bas : couvert dense, zones isolées",
+      "repos : forêts matures"
+    ],
+    "alimentation": [],
+    "eau": []
+  },
+  "pression_humaine": {
+    "routes": [
+      "évitement des routes et coupes"
+    ],
+    "agriculture": [],
+    "urbanisation": [],
+    "fragmentation": [
+      "déplacements nocturnes accrus",
+      "fragmentation = mortalité accrue"
+    ],
+    "attractifs_anthropiques": [],
+    "conflits_humains": []
+  },
+  "maladies": {
+    "cwd": [],
+    "lpdv": [],
+    "tique_hiver": [
+      "transmission de parasites (tique d’hiver)",
+      "déclin dans plusieurs régions du Maine / NH (tique d’hiver)"
+    ],
+    "autres": [
+      "compétition avec cerf de Virginie",
+      "prédation : loup, ours noir",
+      "stabilité variable au Québec",
+      "climat = facteur majeur (neige, chaleur)"
+    ]
+  },
+  "thermoregulation": {
+    "seuil_stress": 15.5,
+    "comportements_adaptation": [
+      "stress thermique dès 14–17°C",
+      "sélection d’habitats frais",
+      "réduction des déplacements en période chaude"
+    ],
+    "zones_refuge": [
+      "sélection d’habitats frais"
+    ]
+  },
+  "neige": {
+    "seuil_mobilite": 65.0,
+    "seuil_mortalite": null,
+    "zones_refuge": [],
+    "raw_bullets": [
+      "mobilité réduite > 60–70 cm",
+      "mortalité accrue lors d’hivers longs"
+    ]
+  },
+  "interactions": {
+    "competition": [
+      "compétition avec cerf de Virginie",
+      "transmission de parasites (tique d’hiver)"
+    ],
+    "predation": [
+      "prédation : loup, ours noir"
+    ],
+    "partage_corridors": []
+  },
+  "dynamique": {
+    "tendances_20_ans": [
+      "déclin dans plusieurs régions du Maine / NH (tique d’hiver)",
+      "stabilité variable au Québec",
+      "climat = facteur majeur (neige, chaleur)"
+    ],
+    "expansion": [],
+    "declin": [
+      "déclin dans plusieurs régions du Maine / NH (tique d’hiver)"
+    ],
+    "facteurs": [
+      "déclin dans plusieurs régions du Maine / NH (tique d’hiver)",
+      "stabilité variable au Québec",
+      "climat = facteur majeur (neige, chaleur)"
+    ]
+  },
+  "sources_scientifiques": [
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "MFFP Québec",
+        "Inventaires orignal, plans de gestion, rapports ravage",
+        "Densité, tendances, ravages, pression chasse",
+        "2004–2024",
+        "Référence, année, URL, ID interne"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "Ontario MNRF",
+        "Moose Management Reports",
+        "Densité, quotas, habitat, mortalité",
+        "2004–2024",
+        "Référence, année, URL"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "NB DNR",
+        "Moose Population & Harvest Reports",
+        "Tendances, succès de chasse, climat",
+        "2004–2024",
+        "Référence, année, URL"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "USGS",
+        "Animal movement / Moose telemetry",
+        "Corridors, déplacements, utilisation de l’habitat",
+        "2010–2024",
+        "Dataset ID, URL, zone"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "USFWS",
+        "Habitat & population assessments",
+        "Répartition, statut, habitat critique",
+        "2004–2024",
+        "Référence, année, URL"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "NOAA",
+        "Données neige / température",
+        "Profondeur de neige, anomalies climatiques",
+        "2004–2024",
+        "Produit, résolution, URL"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "NASA EarthData",
+        "NDVI, raster thermiques",
+        "Productivité végétale, stress thermique",
+        "2004–2024",
+        "Produit, résolution, URL"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "Parcs Canada",
+        "Monitoring orignal",
+        "Densité, utilisation de l’habitat en aires protégées",
+        "2004–2024",
+        "Référence, parc, URL"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "…",
+        "Sélection d’habitat hivernal de l’orignal",
+        "Canadian Journal of Zoology",
+        "…",
+        "Article",
+        "DOI, volume, pages, lien"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "…",
+        "Moose movement and habitat selection in managed forests",
+        "Journal of Wildlife Management",
+        "…",
+        "Article",
+        "DOI, volume, pages, lien"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "…",
+        "Effets de la profondeur de neige sur les déplacements de l’orignal",
+        "ALCES",
+        "…",
+        "Article",
+        "DOI, volume, pages, lien"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "…",
+        "Moose thermal ecology and heat stress",
+        "Ecological Applications",
+        "…",
+        "Article",
+        "DOI, volume, pages, lien"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "…",
+        "GPS telemetry of moose in boreal landscapes",
+        "Movement Ecology",
+        "…",
+        "Article",
+        "DOI, volume, pages, lien"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "…",
+        "Thèse sur l’écologie hivernale de l’orignal au Québec",
+        "Université Laval / UQAR",
+        "…",
+        "Thèse",
+        "URL dépôt, année, directeur"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "…",
+        "Thèse sur les corridors de déplacement de l’orignal au Maine",
+        "UMaine",
+        "…",
+        "Thèse",
+        "URL dépôt, année, directeur"
+      ]
+    },
+    {
+      "header": [
+        "Organisation",
+        "Type de données",
+        "Portée",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "Programmes provinciaux de télémétrie",
+        "Colliers GPS orignal",
+        "Corridors, utilisation de l’habitat",
+        "2004–2024",
+        "Programme, zone, URL / contact"
+      ]
+    },
+    {
+      "header": [
+        "Organisation",
+        "Type de données",
+        "Portée",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "Coopératives fauniques / projets universitaires",
+        "Relevés terrain, mortalité, condition corporelle",
+        "Hiver, ravages, maladies",
+        "2004–2024",
+        "Projet, institution, rapport, URL"
+      ]
+    },
+    {
+      "header": [
+        "Organisation",
+        "Type de données",
+        "Portée",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "RMEF / partenaires régionaux",
+        "Analyses habitat / corridors (orignal & wapiti)",
+        "Connectivité, fragmentation",
+        "2004–2024",
+        "Rapport, année, URL"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut attendu"
+      ],
+      "row": [
+        "GOV",
+        "Couverture complète 2004–2024",
+        "À remplir par extraction systématique"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut attendu"
+      ],
+      "row": [
+        "UNI",
+        "Liste exhaustive avec DOI",
+        "À remplir, revue par revue"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut attendu"
+      ],
+      "row": [
+        "PR",
+        "Programmes validés uniquement",
+        "À documenter avec preuves"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Catégorie",
+        "GOV"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "MFFP Québec"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "Québec"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2023"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Plan de gestion de l’orignal 2023–2030"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "Gouvernement du Québec"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://mffp.gouv.qc.ca (mffp.gouv.qc.ca in Bing)"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Type",
+        "Rapport de gestion"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "Inventaires aériens, analyses d’habitat"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Densité, mortalité, ravages"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Tendances régionales, pressions, quotas"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Variabilité régionale"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Validation1",
+        "✔ Source officielle"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Validation2",
+        "✔ Méthodologie scientifique"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Validation3",
+        "✔ Conformité BCE-4X"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Statut",
+        "Accepté"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Date",
+        "2026-04-08"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Responsable",
+        "SR-BCE4X"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "Ontario Ministry of Natural Resources and Forestry"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "Ontario"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2021"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Moose Population and Harvest Report"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "MNRF"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://www.ontario.ca/page/ministry-natural-resources-and-forestry (ontario.ca in Bing)"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Type",
+        "Rapport gouvernemental"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "Inventaires aériens, télémétrie"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Densité, mortalité, succès de chasse"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Déclin dans certaines unités, stabilité ailleurs"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Conditions météo lors des inventaires"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Validation1",
+        "✔"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Validation2",
+        "✔"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Validation3",
+        "✔"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "New Brunswick Department of Natural Resources"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "Nouveau-Brunswick"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2020"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Moose Population Trends in New Brunswick"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "NB DNR"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://www2.gnb.ca"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Type",
+        "Rapport populationnel"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "Inventaires, séries temporelles"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Tendances 2000–2020"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Stabilité globale, variations régionales"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Données manquantes dans zones isolées"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Catégorie",
+        "UNI"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "Canadian Journal of Zoology"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "Canada"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2018"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Moose habitat selection in boreal mixedwood forests"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "(Auteurs réels à extraire lors de l’étape DOI)"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "(À remplir après extraction DOI)"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Type",
+        "Article scientifique"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "RSF, GPS"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Sélection d’habitat, déplacements"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Préférence pour mosaïques feuillus/conifères"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Échantillonnage limité à une zone"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "Movement Ecology"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "Maine / Québec"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2022"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "GPS-based movement patterns of moose in fragmented landscapes"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "(À extraire)"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "(À remplir)"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "GPS, SSF"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Corridors, fragmentation"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Corridors stables, évitement routes"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Données GPS saisonnières"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Catégorie",
+        "PR"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "Programme de télémétrie Maine IFW"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "Maine"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2015–2024"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Moose GPS Collar Dataset"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "Maine IFW"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://www.maine.gov/ifw"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Type",
+        "Dataset GPS"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "Colliers GPS"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Déplacements, mortalité, corridors"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Corridors hivernaux, mortalité tique"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Couverture géographique"
+      ]
+    }
+  ],
+  "outputs_engines": {
+    "ENGINE_COMPORTEMENT": {
+      "phases_jour": [
+        "dawn",
+        "day",
+        "dusk",
+        "night"
+      ],
+      "saisons_actives": [
+        "printemps",
+        "ete",
+        "automne",
+        "hiver"
+      ],
+      "rut_actif": true,
+      "hyperphagie_active": false,
+      "ravages_actifs": true
+    },
+    "ENGINE_SENSORIEL": {
+      "thermique_seuil_C": 15.5,
+      "neige_seuil_mobilite_cm": 65.0,
+      "neige_seuil_mortalite_cm": null
+    },
+    "ENGINE_CORRIDORS": {
+      "fragmentation_penalty": [
+        "fragmentation = réduction de mobilité"
+      ],
+      "connectivite_optimum": [
+        "corridors stables",
+        "connectivité essentielle"
+      ],
+      "corridors_gps_documentes": []
+    },
+    "ENGINE_NUTRITION": {
+      "besoins_proteines": [
+        "besoins élevés en protéines au printemps"
+      ],
+      "besoins_energetiques": [
+        "hyperphagie automnale"
+      ],
+      "alimentation_par_saison": {
+        "printemps": [
+          "besoins élevés en protéines au printemps"
+        ],
+        "ete": [
+          "alimentation aquatique en été"
+        ],
+        "automne": [
+          "hyperphagie automnale"
+        ],
+        "hiver": [
+          "dépendance au couvert thermique en hiver"
+        ]
+      }
+    },
+    "ENGINE_TERRITOIRE": {
+      "habitat_types": [
+        "forêts mixtes boréales",
+        "zones humides (été)",
+        "forêts matures conifériennes (hiver)"
+      ],
+      "zones_humides": [
+        "zones humides (été)"
+      ],
+      "zones_thermiques": [
+        "forêts mixtes boréales"
+      ]
+    },
+    "ENGINE_INTERACTIONS": {
+      "competition": [
+        "compétition avec cerf de Virginie",
+        "transmission de parasites (tique d’hiver)"
+      ],
+      "predation": [
+        "prédation : loup, ours noir"
+      ],
+      "partage_corridors": []
+    },
+    "ENGINE_CLIMAT": {
+      "thermique_stress_C": 15.5,
+      "neige_mortalite_cm": null,
+      "facteurs_climatiques": [
+        "déclin dans plusieurs régions du Maine / NH (tique d’hiver)",
+        "stabilité variable au Québec",
+        "climat = facteur majeur (neige, chaleur)"
+      ]
+    },
+    "ENGINE_SITES_CRITIQUES": {
+      "mise_bas": [
+        "mise bas : couvert dense, zones isolées"
+      ],
+      "nidification": [],
+      "rut": [
+        "rut : mosaïques feuillus/conifères",
+        "souilles / frottis : zones de rut"
+      ],
+      "tanieres": [
+        "mise bas : couvert dense, zones isolées"
+      ],
+      "repos": [
+        "mise bas : couvert dense, zones isolées",
+        "repos : forêts matures"
+      ],
+      "alimentation": [],
+      "eau": []
+    },
+    "ENGINE_HABITAT": {
+      "types_couverts": [
+        "forêts mixtes boréales",
+        "zones humides (été)",
+        "forêts matures conifériennes (hiver)"
+      ],
+      "mosaiques_foret_agriculture": [],
+      "zones_humides": [
+        "zones humides (été)"
+      ],
+      "zones_thermiques": [
+        "forêts mixtes boréales"
+      ],
+      "zones_ouvertes": [],
+      "zones_matures": [
+        "forêts matures conifériennes (hiver)"
+      ],
+      "zones_transition": []
+    },
+    "ENGINE_RUT": {
+      "actif": true,
+      "comportements": [
+        "rut, déplacements accrus"
+      ],
+      "sites": [
+        "rut : mosaïques feuillus/conifères",
+        "souilles / frottis : zones de rut"
+      ]
+    },
+    "ENGINE_NIDIFICATION": {
+      "actif": false,
+      "sites": []
+    },
+    "ENGINE_EAU": {
+      "sites_eau": [],
+      "zones_humides": [
+        "zones humides (été)"
+      ]
+    },
+    "ENGINE_MINERAUX": {
+      "sodium": [
+        "besoins en minéraux (Na, K, Ca, Mg)"
+      ],
+      "calcium": [],
+      "magnesium": []
+    }
+  }
+}

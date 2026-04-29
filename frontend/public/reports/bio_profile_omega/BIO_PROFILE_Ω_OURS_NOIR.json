@@ -1,0 +1,722 @@
+{
+  "espece_id": "OURS_NOIR",
+  "nom_scientifique": "Ursus americanus",
+  "nom_vernaculaire_en": "Black bear",
+  "classification": {
+    "famille": "Ursidae",
+    "genre": "Ursus",
+    "espece": "americanus"
+  },
+  "comportements_saisonniers": {
+    "printemps": {
+      "deplacements": [],
+      "alimentation": [
+        "sortie d’hibernation, recherche de nourriture riche en protéines"
+      ],
+      "reproduction": [],
+      "habitat": [],
+      "raw_bullets": [
+        "sortie d’hibernation, recherche de nourriture riche en protéines"
+      ]
+    },
+    "ete": {
+      "thermoregulation": [],
+      "habitat": [],
+      "alimentation": [
+        "déplacements accrus, alimentation variée (fruits, insectes, végétaux)"
+      ],
+      "raw_bullets": [
+        "déplacements accrus, alimentation variée (fruits, insectes, végétaux)"
+      ]
+    },
+    "automne": {
+      "rut": [
+        "hyperphagie pré-hibernation, déplacements intensifs"
+      ],
+      "hyperphagie": [
+        "hyperphagie pré-hibernation, déplacements intensifs"
+      ],
+      "deplacements": [
+        "hyperphagie pré-hibernation, déplacements intensifs"
+      ],
+      "raw_bullets": [
+        "hyperphagie pré-hibernation, déplacements intensifs"
+      ]
+    },
+    "hiver": {
+      "ravages": [],
+      "zones_refuge": [
+        "hibernation (durée variable selon latitude)"
+      ],
+      "mobilite": [],
+      "raw_bullets": [
+        "hibernation (durée variable selon latitude)"
+      ]
+    }
+  },
+  "habitat": {
+    "types_couverts": [
+      "forêts mixtes",
+      "zones de régénération forestière",
+      "milieux humides",
+      "zones de transition forêt-agriculture",
+      "pentes abritées pour tanières"
+    ],
+    "mosaiques_foret_agriculture": [
+      "zones de transition forêt-agriculture"
+    ],
+    "zones_humides": [
+      "milieux humides"
+    ],
+    "zones_thermiques": [],
+    "zones_ouvertes": [],
+    "zones_matures": [],
+    "zones_transition": [
+      "zones de transition forêt-agriculture"
+    ]
+  },
+  "corridors": {
+    "corridors_reels_gps": [],
+    "connectivite_optimum": [],
+    "fragmentation_penalty": [
+      "fragmentation = augmentation des conflits humains"
+    ],
+    "zones_passage_essentielles": [
+      "corridors fonctionnels entre zones de nourriture ↔ repos",
+      "évitement des zones fortement urbanisées"
+    ],
+    "distances_typiques": [
+      "déplacements saisonniers marqués"
+    ]
+  },
+  "nutrition": {
+    "besoins_proteines": [],
+    "besoins_energetiques": [
+      "importance des glands (mast) en automne",
+      "dépendance aux ressources énergétiques avant hibernation"
+    ],
+    "besoins_mineraux": {
+      "sodium": [],
+      "calcium": [],
+      "magnesium": []
+    },
+    "alimentation_saisonniere": {
+      "printemps": [],
+      "ete": [
+        "importance des fruits (baies) en été"
+      ],
+      "automne": [
+        "importance des glands (mast) en automne"
+      ],
+      "hiver": []
+    },
+    "general_bullets": [
+      "omnivore opportuniste",
+      "importance des fruits (baies) en été",
+      "consommation d’insectes, charognes, végétaux"
+    ]
+  },
+  "sites_critiques": {
+    "mise_bas": [],
+    "nidification": [],
+    "rut": [],
+    "tanieres": [
+      "Tanières : cavités, pentes, arbres creux, zones rocheuses",
+      "Repos : couvert dense"
+    ],
+    "repos": [
+      "Repos : couvert dense"
+    ],
+    "alimentation": [
+      "Alimentation : zones de baies, régénérations forestières, milieux humides"
+    ],
+    "eau": [
+      "Alimentation : zones de baies, régénérations forestières, milieux humides",
+      "Déplacements : corridors forestiers continus"
+    ]
+  },
+  "pression_humaine": {
+    "routes": [
+      "mortalité accrue liée aux routes"
+    ],
+    "agriculture": [
+      "utilisation opportuniste des zones agricoles"
+    ],
+    "urbanisation": [
+      "évitement des zones urbaines denses"
+    ],
+    "fragmentation": [
+      "fragmentation = augmentation des conflits",
+      "mortalité accrue liée aux routes"
+    ],
+    "attractifs_anthropiques": [],
+    "conflits_humains": [
+      "fragmentation = augmentation des conflits"
+    ]
+  },
+  "maladies": {
+    "cwd": [],
+    "lpdv": [],
+    "tique_hiver": [],
+    "autres": [
+      "compétition alimentaire avec cervidés dans zones de mast",
+      "prédation occasionnelle sur faons (orignal, chevreuil)",
+      "interactions spatiales avec coyotes et loups",
+      "conflits ours-humains liés à disponibilité alimentaire",
+      "stabilité ou croissance dans plusieurs régions",
+      "augmentation des conflits humains",
+      "influence du climat sur disponibilité alimentaire",
+      "expansion vers le nord dans certaines zones"
+    ]
+  },
+  "thermoregulation": {
+    "seuil_stress": null,
+    "comportements_adaptation": [
+      "tolérance thermique élevée",
+      "sélection de zones ombragées en été",
+      "dépendance aux tanières isolées en hiver"
+    ],
+    "zones_refuge": [
+      "sélection de zones ombragées en été"
+    ]
+  },
+  "neige": {
+    "seuil_mobilite": null,
+    "seuil_mortalite": null,
+    "zones_refuge": [],
+    "raw_bullets": [
+      "mobilité réduite en neige profonde",
+      "sélection de zones à faible accumulation pour déplacements automnaux",
+      "impact sur choix de tanières"
+    ]
+  },
+  "interactions": {
+    "competition": [
+      "compétition alimentaire avec cervidés dans zones de mast"
+    ],
+    "predation": [
+      "prédation occasionnelle sur faons (orignal, chevreuil)",
+      "interactions spatiales avec coyotes et loups",
+      "conflits ours-humains liés à disponibilité alimentaire"
+    ],
+    "partage_corridors": []
+  },
+  "dynamique": {
+    "tendances_20_ans": [
+      "stabilité ou croissance dans plusieurs régions",
+      "augmentation des conflits humains",
+      "influence du climat sur disponibilité alimentaire",
+      "expansion vers le nord dans certaines zones"
+    ],
+    "expansion": [
+      "augmentation des conflits humains",
+      "expansion vers le nord dans certaines zones"
+    ],
+    "declin": [],
+    "facteurs": [
+      "stabilité ou croissance dans plusieurs régions",
+      "influence du climat sur disponibilité alimentaire"
+    ]
+  },
+  "sources_scientifiques": [
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "MFFP Québec",
+        "Suivi ours noir, inventaires, analyses d’habitat",
+        "Densité, reproduction, mortalité, conflits humains",
+        "2004–2024",
+        "Référence, année, URL, ID interne"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "Ontario MNRF",
+        "Black Bear Management Reports",
+        "Densité, quotas, mortalité, habitat",
+        "2004–2024",
+        "Référence, année, URL"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "NB DNR",
+        "Black Bear Population Trends",
+        "Tendances, climat, mortalité",
+        "2004–2024",
+        "Référence, année, URL"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "USGS",
+        "Black Bear Movement Dataset",
+        "Déplacements, corridors, télémétrie",
+        "2010–2024",
+        "Dataset ID, URL, zone"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "USFWS",
+        "Habitat & Population Assessments",
+        "Répartition, statut, habitat critique",
+        "2004–2024",
+        "Référence, année, URL"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "NOAA",
+        "Données neige / température",
+        "Climat, neige, anomalies",
+        "2004–2024",
+        "Produit, résolution, URL"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "NASA EarthData",
+        "NDVI, raster thermiques",
+        "Productivité végétale, stress thermique",
+        "2004–2024",
+        "Produit, résolution, URL"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "State Wildlife Agencies (ME, VT, NH)",
+        "Bear Status Reports",
+        "Tendances, reproduction, conflits humains",
+        "2004–2024",
+        "Référence, année, URL"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "Costello et al.",
+        "Black bear habitat selection & movement",
+        "Journal of Wildlife Management",
+        "2016",
+        "Article",
+        "DOI, volume, pages, lien"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "Merkle et al.",
+        "Resource selection in human-dominated landscapes",
+        "Ecological Applications",
+        "2013",
+        "Article",
+        "DOI, volume, pages, lien"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "Baruch-Mordo et al.",
+        "Human–bear conflicts & food availability",
+        "Journal of Applied Ecology",
+        "2014",
+        "Article",
+        "DOI, volume, pages, lien"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "McLellan",
+        "Black bear population dynamics",
+        "Journal of Wildlife Management",
+        "2015",
+        "Article",
+        "DOI, volume, pages, lien"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "…",
+        "GPS-based movement ecology",
+        "Movement Ecology",
+        "…",
+        "Article",
+        "DOI, volume, pages, lien"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "…",
+        "Thèse sur l’écologie de l’ours noir au Québec",
+        "Université Laval / UQAR",
+        "…",
+        "Thèse",
+        "URL dépôt, année, directeur"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "…",
+        "Thèse sur les conflits ours-humains",
+        "UMaine",
+        "…",
+        "Thèse",
+        "URL dépôt, année, directeur"
+      ]
+    },
+    {
+      "header": [
+        "Organisation",
+        "Type de données",
+        "Portée",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "BearWise",
+        "Habitat, conflits humains, SIG",
+        "Conflits, attractifs, prévention",
+        "2004–2024",
+        "Rapport, année, URL"
+      ]
+    },
+    {
+      "header": [
+        "Organisation",
+        "Type de données",
+        "Portée",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "Programmes régionaux de télémétrie",
+        "Colliers GPS ours noir",
+        "Déplacements, corridors",
+        "2010–2024",
+        "Programme, zone, URL / contact"
+      ]
+    },
+    {
+      "header": [
+        "Organisation",
+        "Type de données",
+        "Portée",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "Coopératives fauniques",
+        "Relevés terrain, reproduction",
+        "Tanières, survie juvénile",
+        "2004–2024",
+        "Projet, institution, rapport, URL"
+      ]
+    },
+    {
+      "header": [
+        "Organisation",
+        "Type de données",
+        "Portée",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "Partenaires universitaires",
+        "Analyses habitat / fragmentation",
+        "Connectivité, conflits humains",
+        "2004–2024",
+        "Rapport, année, URL"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut attendu"
+      ],
+      "row": [
+        "GOV",
+        "Couverture complète 2004–2024",
+        "À remplir par extraction systématique"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut attendu"
+      ],
+      "row": [
+        "UNI",
+        "Liste exhaustive avec DOI",
+        "À remplir, revue par revue"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut attendu"
+      ],
+      "row": [
+        "PR",
+        "Programmes validés uniquement",
+        "À documenter avec preuves"
+      ]
+    }
+  ],
+  "outputs_engines": {
+    "ENGINE_COMPORTEMENT": {
+      "phases_jour": [
+        "dawn",
+        "day",
+        "dusk",
+        "night"
+      ],
+      "saisons_actives": [
+        "printemps",
+        "ete",
+        "automne",
+        "hiver"
+      ],
+      "rut_actif": true,
+      "hyperphagie_active": true,
+      "ravages_actifs": false
+    },
+    "ENGINE_SENSORIEL": {
+      "thermique_seuil_C": null,
+      "neige_seuil_mobilite_cm": null,
+      "neige_seuil_mortalite_cm": null
+    },
+    "ENGINE_CORRIDORS": {
+      "fragmentation_penalty": [
+        "fragmentation = augmentation des conflits humains"
+      ],
+      "connectivite_optimum": [],
+      "corridors_gps_documentes": []
+    },
+    "ENGINE_NUTRITION": {
+      "besoins_proteines": [],
+      "besoins_energetiques": [
+        "importance des glands (mast) en automne",
+        "dépendance aux ressources énergétiques avant hibernation"
+      ],
+      "alimentation_par_saison": {
+        "printemps": [],
+        "ete": [
+          "importance des fruits (baies) en été"
+        ],
+        "automne": [
+          "importance des glands (mast) en automne"
+        ],
+        "hiver": []
+      }
+    },
+    "ENGINE_TERRITOIRE": {
+      "habitat_types": [
+        "forêts mixtes",
+        "zones de régénération forestière",
+        "milieux humides",
+        "zones de transition forêt-agriculture",
+        "pentes abritées pour tanières"
+      ],
+      "zones_humides": [
+        "milieux humides"
+      ],
+      "zones_thermiques": []
+    },
+    "ENGINE_INTERACTIONS": {
+      "competition": [
+        "compétition alimentaire avec cervidés dans zones de mast"
+      ],
+      "predation": [
+        "prédation occasionnelle sur faons (orignal, chevreuil)",
+        "interactions spatiales avec coyotes et loups",
+        "conflits ours-humains liés à disponibilité alimentaire"
+      ],
+      "partage_corridors": []
+    },
+    "ENGINE_CLIMAT": {
+      "thermique_stress_C": null,
+      "neige_mortalite_cm": null,
+      "facteurs_climatiques": [
+        "stabilité ou croissance dans plusieurs régions",
+        "influence du climat sur disponibilité alimentaire"
+      ]
+    },
+    "ENGINE_SITES_CRITIQUES": {
+      "mise_bas": [],
+      "nidification": [],
+      "rut": [],
+      "tanieres": [
+        "Tanières : cavités, pentes, arbres creux, zones rocheuses",
+        "Repos : couvert dense"
+      ],
+      "repos": [
+        "Repos : couvert dense"
+      ],
+      "alimentation": [
+        "Alimentation : zones de baies, régénérations forestières, milieux humides"
+      ],
+      "eau": [
+        "Alimentation : zones de baies, régénérations forestières, milieux humides",
+        "Déplacements : corridors forestiers continus"
+      ]
+    },
+    "ENGINE_HABITAT": {
+      "types_couverts": [
+        "forêts mixtes",
+        "zones de régénération forestière",
+        "milieux humides",
+        "zones de transition forêt-agriculture",
+        "pentes abritées pour tanières"
+      ],
+      "mosaiques_foret_agriculture": [
+        "zones de transition forêt-agriculture"
+      ],
+      "zones_humides": [
+        "milieux humides"
+      ],
+      "zones_thermiques": [],
+      "zones_ouvertes": [],
+      "zones_matures": [],
+      "zones_transition": [
+        "zones de transition forêt-agriculture"
+      ]
+    },
+    "ENGINE_RUT": {
+      "actif": true,
+      "comportements": [
+        "hyperphagie pré-hibernation, déplacements intensifs"
+      ],
+      "sites": []
+    },
+    "ENGINE_NIDIFICATION": {
+      "actif": false,
+      "sites": []
+    },
+    "ENGINE_EAU": {
+      "sites_eau": [
+        "Alimentation : zones de baies, régénérations forestières, milieux humides",
+        "Déplacements : corridors forestiers continus"
+      ],
+      "zones_humides": [
+        "milieux humides"
+      ]
+    },
+    "ENGINE_MINERAUX": {
+      "sodium": [],
+      "calcium": [],
+      "magnesium": []
+    }
+  }
+}

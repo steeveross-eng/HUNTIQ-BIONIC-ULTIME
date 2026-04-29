@@ -1,0 +1,1524 @@
+{
+  "espece_id": "DINDON_SAUVAGE",
+  "nom_scientifique": "Meleagris gallopavo",
+  "nom_vernaculaire_en": "Wild turkey",
+  "classification": {
+    "famille": "Phasianidae",
+    "genre": "Meleagris",
+    "espece": "gallopavo"
+  },
+  "comportements_saisonniers": {
+    "printemps": {
+      "deplacements": [
+        "nidification, déplacements réduits des femelles, sélection de couvert dense"
+      ],
+      "alimentation": [],
+      "reproduction": [
+        "nidification, déplacements réduits des femelles, sélection de couvert dense"
+      ],
+      "habitat": [
+        "nidification, déplacements réduits des femelles, sélection de couvert dense"
+      ],
+      "raw_bullets": [
+        "nidification, déplacements réduits des femelles, sélection de couvert dense"
+      ]
+    },
+    "ete": {
+      "thermoregulation": [],
+      "habitat": [
+        "dispersion des jeunes, utilisation de zones ouvertes pour alimentation"
+      ],
+      "alimentation": [
+        "dispersion des jeunes, utilisation de zones ouvertes pour alimentation"
+      ],
+      "raw_bullets": [
+        "dispersion des jeunes, utilisation de zones ouvertes pour alimentation"
+      ]
+    },
+    "automne": {
+      "rut": [
+        "regroupements sociaux, déplacements accrus"
+      ],
+      "hyperphagie": [],
+      "deplacements": [
+        "regroupements sociaux, déplacements accrus"
+      ],
+      "raw_bullets": [
+        "regroupements sociaux, déplacements accrus"
+      ]
+    },
+    "hiver": {
+      "ravages": [],
+      "zones_refuge": [],
+      "mobilite": [],
+      "raw_bullets": [
+        "regroupements en grands groupes, dépendance aux zones de conifères"
+      ]
+    }
+  },
+  "habitat": {
+    "types_couverts": [
+      "mosaïques forêt-agriculture",
+      "forêts mixtes avec sous-bois dense",
+      "clairières pour alimentation",
+      "zones de conifères pour refuge hivernal"
+    ],
+    "mosaiques_foret_agriculture": [
+      "mosaïques forêt-agriculture"
+    ],
+    "zones_humides": [],
+    "zones_thermiques": [],
+    "zones_ouvertes": [
+      "clairières pour alimentation"
+    ],
+    "zones_matures": [],
+    "zones_transition": []
+  },
+  "corridors": {
+    "corridors_reels_gps": [],
+    "connectivite_optimum": [],
+    "fragmentation_penalty": [
+      "fragmentation = réduction du succès de nidification"
+    ],
+    "zones_passage_essentielles": [
+      "corridors fonctionnels entre zones de repos ↔ alimentation",
+      "évitement des routes à fort trafic"
+    ],
+    "distances_typiques": [
+      "déplacements quotidiens courts (espèce non migratoire)"
+    ]
+  },
+  "nutrition": {
+    "besoins_proteines": [],
+    "besoins_energetiques": [
+      "dépendance aux glands (mast) en automne"
+    ],
+    "besoins_mineraux": {
+      "sodium": [],
+      "calcium": [],
+      "magnesium": []
+    },
+    "alimentation_saisonniere": {
+      "printemps": [
+        "sélection de zones riches en nourriture au printemps pour femelles nidifiantes"
+      ],
+      "ete": [],
+      "automne": [
+        "dépendance aux glands (mast) en automne"
+      ],
+      "hiver": []
+    },
+    "general_bullets": [
+      "alimentation omnivore : graines, fruits, insectes, herbacées",
+      "importance des insectes pour croissance des jeunes",
+      "sélection de zones riches en nourriture au printemps pour femelles nidifiantes"
+    ]
+  },
+  "sites_critiques": {
+    "mise_bas": [],
+    "nidification": [
+      "Nidification : sous-bois dense, végétation herbacée, zones isolées"
+    ],
+    "rut": [],
+    "tanieres": [
+      "Nidification : sous-bois dense, végétation herbacée, zones isolées"
+    ],
+    "repos": [
+      "Repos : zones de conifères, pentes abritées",
+      "Perchoirs : arbres matures, conifères"
+    ],
+    "alimentation": [
+      "Alimentation : clairières, champs, lisières"
+    ],
+    "eau": []
+  },
+  "pression_humaine": {
+    "routes": [],
+    "agriculture": [
+      "évitement des zones agricoles intensives"
+    ],
+    "urbanisation": [
+      "tolérance modérée aux habitats semi-urbains"
+    ],
+    "fragmentation": [
+      "fragmentation = baisse du succès de nidification",
+      "chasse = facteur de mortalité régulé"
+    ],
+    "attractifs_anthropiques": [],
+    "conflits_humains": []
+  },
+  "maladies": {
+    "cwd": [],
+    "lpdv": [],
+    "tique_hiver": [],
+    "autres": [
+      "prédation sur nids : raton laveur, renard, coyote, corvidés",
+      "compétition alimentaire avec cerf dans zones de mast",
+      "interactions spatiales limitées avec autres galliformes",
+      "expansion dans plusieurs régions du Nord-Est",
+      "stabilité dans zones agricoles mixtes",
+      "déclin localisé dans zones fortement fragmentées",
+      "maladies aviaires = menace émergente",
+      "climat = influence sur disponibilité alimentaire"
+    ]
+  },
+  "thermoregulation": {
+    "seuil_stress": null,
+    "comportements_adaptation": [
+      "sensibilité modérée à la chaleur",
+      "sélection de zones ombragées en été",
+      "dépendance aux conifères en hiver pour réduire pertes thermiques"
+    ],
+    "zones_refuge": [
+      "sélection de zones ombragées en été"
+    ]
+  },
+  "neige": {
+    "seuil_mobilite": 25.0,
+    "seuil_mortalite": null,
+    "zones_refuge": [
+      "dépendance aux zones de conifères pour refuge"
+    ],
+    "raw_bullets": [
+      "mobilité réduite > 20–30 cm",
+      "dépendance aux zones de conifères pour refuge",
+      "mortalité accrue lors d’hivers rigoureux prolongés"
+    ]
+  },
+  "interactions": {
+    "competition": [
+      "compétition alimentaire avec cerf dans zones de mast",
+      "interactions spatiales limitées avec autres galliformes"
+    ],
+    "predation": [
+      "prédation sur nids : raton laveur, renard, coyote, corvidés"
+    ],
+    "partage_corridors": []
+  },
+  "dynamique": {
+    "tendances_20_ans": [
+      "expansion dans plusieurs régions du Nord-Est",
+      "stabilité dans zones agricoles mixtes",
+      "déclin localisé dans zones fortement fragmentées",
+      "maladies aviaires = menace émergente",
+      "climat = influence sur disponibilité alimentaire"
+    ],
+    "expansion": [
+      "expansion dans plusieurs régions du Nord-Est"
+    ],
+    "declin": [
+      "déclin localisé dans zones fortement fragmentées"
+    ],
+    "facteurs": [
+      "stabilité dans zones agricoles mixtes",
+      "maladies aviaires = menace émergente",
+      "climat = influence sur disponibilité alimentaire"
+    ]
+  },
+  "sources_scientifiques": [
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "MFFP Québec",
+        "Suivi du dindon sauvage, rapports annuels",
+        "Densité, reproduction, mortalité, expansion",
+        "2004–2024",
+        "Référence, année, URL, ID interne"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "Maine IFW",
+        "Wild Turkey Population & Harvest Reports",
+        "Tendances, succès de chasse, mortalité",
+        "2004–2024",
+        "Référence, année, URL"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "Vermont F&W",
+        "Turkey Harvest & Population Reports",
+        "Tendances, climat, pression chasse",
+        "2004–2024",
+        "Référence, année, URL"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "New Hampshire F&G",
+        "Turkey Population Status",
+        "Densité, reproduction, mortalité",
+        "2004–2024",
+        "Référence, année, URL"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "USGS",
+        "Wild Turkey Movement Dataset",
+        "Déplacements, corridors, télémétrie",
+        "2010–2024",
+        "Dataset ID, URL, zone"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "USFWS",
+        "Habitat & Population Assessments",
+        "Répartition, statut, habitat critique",
+        "2004–2024",
+        "Référence, année, URL"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "NOAA",
+        "Données neige / température",
+        "Climat, neige, anomalies",
+        "2004–2024",
+        "Produit, résolution, URL"
+      ]
+    },
+    {
+      "header": [
+        "Institution",
+        "Type de document",
+        "Portée principale",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "NASA EarthData",
+        "NDVI, raster thermiques",
+        "Productivité végétale, stress thermique",
+        "2004–2024",
+        "Produit, résolution, URL"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "Kilburg et al.",
+        "Resource selection & nest survival",
+        "Journal of Wildlife Management",
+        "2014",
+        "Article",
+        "DOI, volume, pages, lien"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "Little et al.",
+        "Habitat selection during nesting",
+        "Journal of Wildlife Management",
+        "2016",
+        "Article",
+        "DOI, volume, pages, lien"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "Pollentier et al.",
+        "Effects of fragmentation on movement",
+        "Journal of Wildlife Management",
+        "2017",
+        "Article",
+        "DOI, volume, pages, lien"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "Allison et al.",
+        "LPDV prevalence in wild turkeys",
+        "Journal of Wildlife Diseases",
+        "2015",
+        "Article",
+        "DOI, volume, pages, lien"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "…",
+        "GPS-based movement ecology",
+        "Movement Ecology",
+        "…",
+        "Article",
+        "DOI, volume, pages, lien"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "…",
+        "Thèse sur la nidification en mosaïque forêt-agriculture",
+        "Université du Maine",
+        "…",
+        "Thèse",
+        "URL dépôt, année, directeur"
+      ]
+    },
+    {
+      "header": [
+        "Auteurs",
+        "Titre / Thème",
+        "Revue / Institution",
+        "Année",
+        "Type",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "…",
+        "Thèse sur la dynamique populationnelle du dindon",
+        "Université du Vermont",
+        "…",
+        "Thèse",
+        "URL dépôt, année, directeur"
+      ]
+    },
+    {
+      "header": [
+        "Organisation",
+        "Type de données",
+        "Portée",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "NWTF (National Wild Turkey Federation)",
+        "Habitat, tendances, SIG",
+        "Habitat, corridors, reproduction",
+        "2004–2024",
+        "Rapport, année, URL"
+      ]
+    },
+    {
+      "header": [
+        "Organisation",
+        "Type de données",
+        "Portée",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "Programmes régionaux de télémétrie",
+        "Colliers GPS dindon",
+        "Déplacements, corridors",
+        "2010–2024",
+        "Programme, zone, URL / contact"
+      ]
+    },
+    {
+      "header": [
+        "Organisation",
+        "Type de données",
+        "Portée",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "Coopératives fauniques",
+        "Relevés terrain, reproduction",
+        "Nidification, survie juvénile",
+        "2004–2024",
+        "Projet, institution, rapport, URL"
+      ]
+    },
+    {
+      "header": [
+        "Organisation",
+        "Type de données",
+        "Portée",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "row": [
+        "Partenaires universitaires",
+        "Analyses habitat / fragmentation",
+        "Connectivité, succès de nidification",
+        "2004–2024",
+        "Rapport, année, URL"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut attendu"
+      ],
+      "row": [
+        "GOV",
+        "Couverture complète 2004–2024",
+        "À remplir par extraction systématique"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut attendu"
+      ],
+      "row": [
+        "UNI",
+        "Liste exhaustive avec DOI",
+        "À remplir, revue par revue"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut attendu"
+      ],
+      "row": [
+        "PR",
+        "Programmes validés uniquement",
+        "À documenter avec preuves"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Catégorie",
+        "GOV"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "MFFP Québec"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "Québec"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2023"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Suivi du dindon sauvage au Québec — Rapport annuel"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "Gouvernement du Québec"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://mffp.gouv.qc.ca (mffp.gouv.qc.ca in Bing)"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Type",
+        "Rapport populationnel"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "Inventaires, analyses habitat"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Densité, reproduction, mortalité"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Expansion dans plusieurs zones"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Données limitées en zones nordiques"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Validation1",
+        "✔"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Validation2",
+        "✔"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Validation3",
+        "✔"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Statut",
+        "Accepté"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Date",
+        "2026-04-08"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Responsable",
+        "SR-BCE4X"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "Maine Department of Inland Fisheries & Wildlife"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "Maine"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2022"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Wild Turkey Population Status and Harvest Summary"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "Maine IFW"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://www.maine.gov/ifw"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "Inventaires, télémétrie"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Tendances, succès de chasse"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Stabilité globale, variations régionales"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Données manquantes dans zones agricoles"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "USGS"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "USA"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2018"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Wild Turkey Movement and Habitat Use Dataset"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "USGS Wildlife Program"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://www.usgs.gov"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Type",
+        "Dataset GPS"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "Colliers GPS"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Déplacements, corridors"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Corridors courts mais stables"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Zones d’étude limitées"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Catégorie",
+        "UNI"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "Journal of Wildlife Management"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2014"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Resource selection and nest survival of wild turkeys in mixed landscapes"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "Kilburg et al."
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://doi.org/10.1002/jwmg.703"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Type",
+        "Article scientifique"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "RSF, analyses nidification"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Sélection habitat, survie nids"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Importance du couvert dense"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Zone d’étude restreinte"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2016"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Wild turkey habitat selection during the nesting season"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "Little et al."
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://doi.org/10.1002/jwmg.1034"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Habitat, reproduction"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Sélection sous-bois dense"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Données centrées sur une région"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "Journal of Wildlife Diseases"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2015"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Prevalence of Lymphoproliferative Disease Virus in wild turkeys"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "Allison et al."
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://doi.org/10.7589/2014-05-123 (doi.org in Bing)"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "Analyses virologiques"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Prévalence LPDV"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Présence confirmée dans plusieurs États"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Données multi-régions"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Catégorie",
+        "PR"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Institution",
+        "National Wild Turkey Federation (NWTF)"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Région",
+        "USA / Est"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Année",
+        "2024"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Titre",
+        "Wild Turkey Habitat and Population Assessment"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Auteurs",
+        "NWTF"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "DOI/URL",
+        "https://www.nwtf.org"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Type",
+        "Rapport professionnel validé"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Méthodologie",
+        "Données terrain, SIG"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Données",
+        "Habitat, tendances"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Résultats",
+        "Expansion dans plusieurs régions"
+      ]
+    },
+    {
+      "header": [
+        "Champ",
+        "Valeur"
+      ],
+      "row": [
+        "Limites",
+        "Données USA seulement"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut attendu"
+      ],
+      "row": [
+        "GOV",
+        "Couverture complète 2004–2024",
+        "À compléter"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut attendu"
+      ],
+      "row": [
+        "UNI",
+        "Liste exhaustive avec DOI",
+        "À compléter"
+      ]
+    },
+    {
+      "header": [
+        "Catégorie",
+        "Exigence",
+        "Statut attendu"
+      ],
+      "row": [
+        "PR",
+        "Programmes validés uniquement",
+        "À compléter"
+      ]
+    }
+  ],
+  "outputs_engines": {
+    "ENGINE_COMPORTEMENT": {
+      "phases_jour": [
+        "dawn",
+        "day",
+        "dusk",
+        "night"
+      ],
+      "saisons_actives": [
+        "printemps",
+        "ete",
+        "automne",
+        "hiver"
+      ],
+      "rut_actif": true,
+      "hyperphagie_active": false,
+      "ravages_actifs": false
+    },
+    "ENGINE_SENSORIEL": {
+      "thermique_seuil_C": null,
+      "neige_seuil_mobilite_cm": 25.0,
+      "neige_seuil_mortalite_cm": null
+    },
+    "ENGINE_CORRIDORS": {
+      "fragmentation_penalty": [
+        "fragmentation = réduction du succès de nidification"
+      ],
+      "connectivite_optimum": [],
+      "corridors_gps_documentes": []
+    },
+    "ENGINE_NUTRITION": {
+      "besoins_proteines": [],
+      "besoins_energetiques": [
+        "dépendance aux glands (mast) en automne"
+      ],
+      "alimentation_par_saison": {
+        "printemps": [
+          "sélection de zones riches en nourriture au printemps pour femelles nidifiantes"
+        ],
+        "ete": [],
+        "automne": [
+          "dépendance aux glands (mast) en automne"
+        ],
+        "hiver": []
+      }
+    },
+    "ENGINE_TERRITOIRE": {
+      "habitat_types": [
+        "mosaïques forêt-agriculture",
+        "forêts mixtes avec sous-bois dense",
+        "clairières pour alimentation",
+        "zones de conifères pour refuge hivernal"
+      ],
+      "zones_humides": [],
+      "zones_thermiques": []
+    },
+    "ENGINE_INTERACTIONS": {
+      "competition": [
+        "compétition alimentaire avec cerf dans zones de mast",
+        "interactions spatiales limitées avec autres galliformes"
+      ],
+      "predation": [
+        "prédation sur nids : raton laveur, renard, coyote, corvidés"
+      ],
+      "partage_corridors": []
+    },
+    "ENGINE_CLIMAT": {
+      "thermique_stress_C": null,
+      "neige_mortalite_cm": null,
+      "facteurs_climatiques": [
+        "stabilité dans zones agricoles mixtes",
+        "maladies aviaires = menace émergente",
+        "climat = influence sur disponibilité alimentaire"
+      ]
+    },
+    "ENGINE_SITES_CRITIQUES": {
+      "mise_bas": [],
+      "nidification": [
+        "Nidification : sous-bois dense, végétation herbacée, zones isolées"
+      ],
+      "rut": [],
+      "tanieres": [
+        "Nidification : sous-bois dense, végétation herbacée, zones isolées"
+      ],
+      "repos": [
+        "Repos : zones de conifères, pentes abritées",
+        "Perchoirs : arbres matures, conifères"
+      ],
+      "alimentation": [
+        "Alimentation : clairières, champs, lisières"
+      ],
+      "eau": []
+    },
+    "ENGINE_HABITAT": {
+      "types_couverts": [
+        "mosaïques forêt-agriculture",
+        "forêts mixtes avec sous-bois dense",
+        "clairières pour alimentation",
+        "zones de conifères pour refuge hivernal"
+      ],
+      "mosaiques_foret_agriculture": [
+        "mosaïques forêt-agriculture"
+      ],
+      "zones_humides": [],
+      "zones_thermiques": [],
+      "zones_ouvertes": [
+        "clairières pour alimentation"
+      ],
+      "zones_matures": [],
+      "zones_transition": []
+    },
+    "ENGINE_RUT": {
+      "actif": true,
+      "comportements": [
+        "regroupements sociaux, déplacements accrus"
+      ],
+      "sites": []
+    },
+    "ENGINE_NIDIFICATION": {
+      "actif": true,
+      "sites": [
+        "Nidification : sous-bois dense, végétation herbacée, zones isolées"
+      ]
+    },
+    "ENGINE_EAU": {
+      "sites_eau": [],
+      "zones_humides": []
+    },
+    "ENGINE_MINERAUX": {
+      "sodium": [],
+      "calcium": [],
+      "magnesium": []
+    }
+  }
+}

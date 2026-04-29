@@ -27,6 +27,54 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **ACTIVATION_BIO_PROFILE_Ω · VERSION ULTIME ABSOLUE x3 (2026-04-29 · ordre n°24)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (COMMANDE_INSTITUTIONNELLE_Ω
+  ACTIVATION_BIO_PROFILE_Ω_VERSION_ULTIME_ABSOLUE_X3). Aucune modification du
+  statut d'activation. V30 INVIOLÉ. Aucune interpolation.
+  - **Sources lecture seule** : 5 rapports scientifiques institutionnels DOCX
+    fournis par le Commandant (CHEVREUIL · ORIGNAL · OURS_NOIR · WAPITI ·
+    DINDON_SAUVAGE), parsés via python-docx 1.2.0 (extraction paragraphes +
+    tableaux). Stockés sous `/tmp/bio_profile_sources/extracted_raw.json`.
+  - **Pipeline d'extraction stricte** : `/tmp/generate_bio_profiles_omega.py` —
+    découpe en sections 4.1 à 4.10 + 8.x, classification par mots-clés des
+    bullets bruts, extraction regex des seuils numériques (°C, cm), aucune
+    interpolation. Champs structurels obligatoires conservés même si vides
+    (champ `null` ou liste vide) — refus catégorique de toute donnée fabriquée.
+  - **20 livrables produits** dans `/app/frontend/public/reports/bio_profile_omega/` :
+    - 5 × `BIO_PROFILE_Ω_<ESPECE>.json` (structure complète : classification,
+      comportements_saisonniers/4 saisons, habitat, corridors,
+      nutrition/minéraux/saison, sites_critiques, pression_humaine,
+      maladies, thermoregulation, neige, interactions, dynamique,
+      sources_scientifiques, outputs_engines × 13).
+    - 5 × `BIO_PROFILE_Ω_<ESPECE>.html` — fiche institutionnelle lisible
+      (13 sections, KPIs seuils, badges, palette Ω, footer V30 LOCK).
+    - 5 × `BIO_PROFILE_Ω_<ESPECE>.csv` — paramètres triables (UTF-8 BOM,
+      colonnes : espece_id, section, subsection, champ, valeur, ordre,
+      doctrine, activation_status).
+    - 5 × `MANIFEST_BIO_PROFILE_Ω_<ESPECE>.json` — SHA-256, tailles, URLs
+      HTTPS, V30 SHA, self_sha256, statut verrouillage.
+  - **Seuils scientifiques extraits (extraction stricte, non interpolés)** :
+    - CHEVREUIL : thermique 27.0°C · neige_mobilité 45.0 cm.
+    - ORIGNAL : thermique 15.5°C · neige_mobilité 65.0 cm.
+    - OURS_NOIR : thermique null · neige null (rapport ne mentionne pas de
+      seuils chiffrés — comportement strict respecté, pas de fabrication).
+    - WAPITI : thermique 22.5°C · neige_mobilité 50.0 cm.
+    - DINDON_SAUVAGE : thermique null (non chiffré) · neige_mobilité 25.0 cm.
+  - **13 ENGINE outputs** par espèce : ENGINE_COMPORTEMENT, ENGINE_SENSORIEL,
+    ENGINE_CORRIDORS, ENGINE_NUTRITION, ENGINE_TERRITOIRE, ENGINE_INTERACTIONS,
+    ENGINE_CLIMAT, ENGINE_SITES_CRITIQUES, ENGINE_HABITAT, ENGINE_RUT,
+    ENGINE_NIDIFICATION, ENGINE_EAU, ENGINE_MINERAUX.
+  - **Attestation HTTPS** : `curl -I` sur les 20 fichiers → **20/20 HTTP 200 OK**.
+  - **Verrouillage préservé** :
+    - API `/api/v30/especes/audit/status` → `is_validated=false` (INCHANGÉ).
+    - Bandeau frontend ambre `EspecesOmegaPanel.jsx` : ACTIF.
+    - Aucun appel à `/audit/validate` ni `/audit/revoke`.
+  - **V30 LOCKED · INTÉGRITÉ INTACTE** :
+    - registry_lock_omega.py SHA-256 : `fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c`
+    - engine_ia_corridors_omega.py SHA-256 : `bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3`
+  - **Tests** : Bash + curl + python3 + python-docx (lecture seule). Aucun
+    testing subagent invoqué.
+
 - **PUBLICATION_INDEX_HTML_ESPECES_Ω · LIENS HTTPS CLIQUABLES (2026-04-29 · ordre n°23)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (Articles 1-5 — COMMANDE_INSTITUTIONNELLE_Ω
   PUBLICATION_INDEX_HTML_ESPECES_Ω). Sans changement d'activation. V30 INVIOLÉ.
