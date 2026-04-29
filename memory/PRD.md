@@ -27,6 +27,55 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XII_VALIDATION_BIO_PROFILE_Ω + TRANSFORMATION_BIO-REACTEURS_Ω (2026-04-29 · ordre n°25)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PHASE_XII_VALIDATION_BIO_PROFILE_Ω_ET_TRANSFORMATION_EN_BIO-REACTEURS_Ω`).
+  V30 INVIOLÉ. Aucune modification des engines espèces existants.
+  - **Phase 1 — Validation Commandant** : DECISION_COMMANDANT = VALIDE
+    confirmée formellement (validation contenu scientifique + structure
+    BIO_PROFILE_Ω vs RAPPORTS DOCX + TABLEAUX MAÎTRES GOV/UNI/PR).
+  - **Phase 2 — Activation officielle** :
+    - `POST /api/v30/especes/audit/validate` → HTTP 200.
+    - Token `STEEVE-MAX-PHASE-XII-AUDIT-BCE4X-VALIDE` accepté.
+    - `AUDIT_ESPECES_Ω_STATUS` : `EN_ATTENTE_VALIDATION_COMMANDANT` →
+      **`VALIDÉ_PAR_STEEVE_MAX`**.
+    - `validated_at_utc` : `2026-04-29T12:28:15.348988+00:00`.
+    - `validated_by` : `COMMANDANT-STEEVE-MAX`. `is_validated` : true.
+    - ENGINES_ESPECES_Ω_ACTIVES = TRUE.
+  - **Phase 3 — Transformation BIO-REACTEURS_Ω** (couche aval déclarative) :
+    - 5 BIO_REACTEUR_Ω (CHEVREUIL · ORIGNAL · OURS_NOIR · WAPITI ·
+      DINDON_SAUVAGE) + 5 MATRICE_PROPAGATION_Ω + 1 INDEX_BIO_REACTEURS_Ω
+      = **11 livrables** dans `/app/frontend/public/reports/bio_reacteurs_omega/`.
+    - Source biologique unique : `BIO_PROFILE_Ω_<ESPECE>.json` (SHA-256 figé
+      par fichier dans `source_biologique.sha256`).
+    - 13 ENGINE outputs par espèce (COMPORTEMENT, SENSORIEL, CORRIDORS,
+      NUTRITION, TERRITOIRE, INTERACTIONS, CLIMAT, SITES_CRITIQUES, HABITAT,
+      RUT, NIDIFICATION, EAU, MINERAUX) avec mapping strict des paramètres
+      (`bio_profile_paths`) — aucun fallback, aucune interpolation.
+    - 55 paths de propagation par espèce = **275 paths totaux propagés**.
+    - 10 champs obligatoires status PRESENT pour les 5 espèces.
+    - Anti-générique : **0/5 violations** (signature détecte
+      "default/fallback/todo/n/a/placeholder").
+    - INDEX HTML cliquable avec liens HTTPS absolus pour les 5 BIO-REACTEURS
+      + leurs BIO_PROFILE_Ω sources.
+  - **SHA-256 livrables (samples)** :
+    - BIO_REACTEUR_Ω_CHEVREUIL.json (27 159 o · `0e2ea1e47f16a810…`)
+    - BIO_REACTEUR_Ω_ORIGNAL.json (25 309 o · `a6d37f5646c5e5eb…`)
+    - BIO_REACTEUR_Ω_OURS_NOIR.json (25 928 o · `10f88b8641027dee…`)
+    - BIO_REACTEUR_Ω_WAPITI.json (28 128 o · `fa6b3486342f282d…`)
+    - BIO_REACTEUR_Ω_DINDON_SAUVAGE.json (26 055 o · `ba7ab4c86c3607bf…`)
+    - INDEX_BIO_REACTEURS_Ω.html (9 609 o · `0b3386395ac4bd6a…`)
+  - **Attestation HTTPS** : `curl -I` sur les 11 fichiers → **11/11 HTTP 200 OK**.
+  - **V30 LOCKED · INTÉGRITÉ INTACTE** :
+    - registry_lock_omega.py SHA-256 : `fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c`
+    - engine_ia_corridors_omega.py SHA-256 : `bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3`
+  - **Engines espèces SHA-256 (intacts)** :
+    - engine_chevreuil_omega.py · `7fa3584b6afa29a4…`
+    - engine_orignal_omega.py · `fe79ebc37531f052…`
+    - engine_ours_noir_omega.py · `3f9c28e206eb2113…`
+    - engine_wapiti_omega.py · `5d3b0f0f765c0a77…`
+    - engine_dindon_omega.py · `c1fc49d44802dad0…`
+  - **Tests** : Bash + curl + python3 (lecture seule). Aucun testing subagent.
+
 - **ACTIVATION_BIO_PROFILE_Ω · VERSION ULTIME ABSOLUE x3 (2026-04-29 · ordre n°24)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (COMMANDE_INSTITUTIONNELLE_Ω
   ACTIVATION_BIO_PROFILE_Ω_VERSION_ULTIME_ABSOLUE_X3). Aucune modification du

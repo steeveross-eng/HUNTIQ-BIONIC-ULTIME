@@ -1,0 +1,859 @@
+{
+  "reacteur_id": "BIO_REACTEUR_Ω_DINDON_SAUVAGE",
+  "espece_id": "DINDON_SAUVAGE",
+  "directive": "PHASE_XII_VALIDATION_BIO_PROFILE_Ω_ET_TRANSFORMATION_EN_BIO-REACTEURS_Ω",
+  "ordre": "n°25 — PHASE 3",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "phase": "PHASE_XII_BIO_REACTEURS_Ω",
+  "generated_at_utc": "2026-04-29T12:30:25+00:00",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "audit_validation": {
+    "audit_especes_omega_status": "VALIDÉ_PAR_STEEVE_MAX",
+    "validated_by": "COMMANDANT-STEEVE-MAX",
+    "validated_at_utc_phase2": "2026-04-29T12:28:15.348988+00:00"
+  },
+  "engines_especes_omega_actives": true,
+  "activation_status_bio_reacteur": "ACTIF_BIO_REACTEUR_Ω",
+  "v30_locked": true,
+  "v30_registry_lock_sha256": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+  "v30_engine_ia_corridors_sha256": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3",
+  "source_biologique": {
+    "filename": "BIO_PROFILE_Ω_DINDON_SAUVAGE.json",
+    "path": "/app/frontend/public/reports/bio_profile_omega/BIO_PROFILE_Ω_DINDON_SAUVAGE.json",
+    "size_bytes": 30339,
+    "sha256": "93a59f997ddd4c87118d43e0eb4d3bd366d5b97cc22f74ae06bd1a93cd918401",
+    "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_DINDON_SAUVAGE.json"
+  },
+  "champs_obligatoires_status": {
+    "comportements_saisonniers": "PRESENT",
+    "habitat": "PRESENT",
+    "corridors": "PRESENT",
+    "nutrition": "PRESENT",
+    "sites_critiques": "PRESENT",
+    "pression_humaine": "PRESENT",
+    "thermoregulation": "PRESENT",
+    "neige": "PRESENT",
+    "interactions": "PRESENT",
+    "dynamique": "PRESENT"
+  },
+  "anti_generique_violations": [],
+  "anti_generique_pass": true,
+  "bio_reacteur_outputs": {
+    "ENGINE_COMPORTEMENT": {
+      "param_label": "PARAMETRES_DINDON_SAUVAGE_COMPORTEMENT",
+      "bio_profile_paths": [
+        "comportements_saisonniers.printemps",
+        "comportements_saisonniers.ete",
+        "comportements_saisonniers.automne",
+        "comportements_saisonniers.hiver"
+      ],
+      "parametres_alimentes": {
+        "comportements_saisonniers.printemps": {
+          "value": {
+            "deplacements": [
+              "nidification, déplacements réduits des femelles, sélection de couvert dense"
+            ],
+            "alimentation": [],
+            "reproduction": [
+              "nidification, déplacements réduits des femelles, sélection de couvert dense"
+            ],
+            "habitat": [
+              "nidification, déplacements réduits des femelles, sélection de couvert dense"
+            ],
+            "raw_bullets": [
+              "nidification, déplacements réduits des femelles, sélection de couvert dense"
+            ]
+          },
+          "signature": {
+            "type": "dict",
+            "card": 5,
+            "preview": [
+              "deplacements",
+              "alimentation",
+              "reproduction",
+              "habitat",
+              "raw_bullets"
+            ]
+          },
+          "is_generic": false
+        },
+        "comportements_saisonniers.ete": {
+          "value": {
+            "thermoregulation": [],
+            "habitat": [
+              "dispersion des jeunes, utilisation de zones ouvertes pour alimentation"
+            ],
+            "alimentation": [
+              "dispersion des jeunes, utilisation de zones ouvertes pour alimentation"
+            ],
+            "raw_bullets": [
+              "dispersion des jeunes, utilisation de zones ouvertes pour alimentation"
+            ]
+          },
+          "signature": {
+            "type": "dict",
+            "card": 4,
+            "preview": [
+              "thermoregulation",
+              "habitat",
+              "alimentation",
+              "raw_bullets"
+            ]
+          },
+          "is_generic": false
+        },
+        "comportements_saisonniers.automne": {
+          "value": {
+            "rut": [
+              "regroupements sociaux, déplacements accrus"
+            ],
+            "hyperphagie": [],
+            "deplacements": [
+              "regroupements sociaux, déplacements accrus"
+            ],
+            "raw_bullets": [
+              "regroupements sociaux, déplacements accrus"
+            ]
+          },
+          "signature": {
+            "type": "dict",
+            "card": 4,
+            "preview": [
+              "rut",
+              "hyperphagie",
+              "deplacements",
+              "raw_bullets"
+            ]
+          },
+          "is_generic": false
+        },
+        "comportements_saisonniers.hiver": {
+          "value": {
+            "ravages": [],
+            "zones_refuge": [],
+            "mobilite": [],
+            "raw_bullets": [
+              "regroupements en grands groupes, dépendance aux zones de conifères"
+            ]
+          },
+          "signature": {
+            "type": "dict",
+            "card": 4,
+            "preview": [
+              "ravages",
+              "zones_refuge",
+              "mobilite",
+              "raw_bullets"
+            ]
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_SENSORIEL": {
+      "param_label": "PARAMETRES_DINDON_SAUVAGE_SENSORIEL",
+      "bio_profile_paths": [
+        "thermoregulation.seuil_stress",
+        "neige.seuil_mobilite",
+        "neige.seuil_mortalite",
+        "thermoregulation.comportements_adaptation"
+      ],
+      "parametres_alimentes": {
+        "thermoregulation.seuil_stress": {
+          "value": null,
+          "signature": {
+            "type": "null",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "neige.seuil_mobilite": {
+          "value": 25.0,
+          "signature": {
+            "type": "float",
+            "card": 1,
+            "preview": 25.0
+          },
+          "is_generic": false
+        },
+        "neige.seuil_mortalite": {
+          "value": null,
+          "signature": {
+            "type": "null",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "thermoregulation.comportements_adaptation": {
+          "value": [
+            "sensibilité modérée à la chaleur",
+            "sélection de zones ombragées en été",
+            "dépendance aux conifères en hiver pour réduire pertes thermiques"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 3,
+            "preview": "sensibilité modérée à la chaleur"
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_CORRIDORS": {
+      "param_label": "PARAMETRES_DINDON_SAUVAGE_CORRIDORS",
+      "bio_profile_paths": [
+        "corridors.corridors_reels_gps",
+        "corridors.connectivite_optimum",
+        "corridors.fragmentation_penalty",
+        "corridors.zones_passage_essentielles",
+        "corridors.distances_typiques"
+      ],
+      "parametres_alimentes": {
+        "corridors.corridors_reels_gps": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "corridors.connectivite_optimum": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "corridors.fragmentation_penalty": {
+          "value": [
+            "fragmentation = réduction du succès de nidification"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "fragmentation = réduction du succès de nidification"
+          },
+          "is_generic": false
+        },
+        "corridors.zones_passage_essentielles": {
+          "value": [
+            "corridors fonctionnels entre zones de repos ↔ alimentation",
+            "évitement des routes à fort trafic"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 2,
+            "preview": "corridors fonctionnels entre zones de repos ↔ alimentation"
+          },
+          "is_generic": false
+        },
+        "corridors.distances_typiques": {
+          "value": [
+            "déplacements quotidiens courts (espèce non migratoire)"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "déplacements quotidiens courts (espèce non migratoire)"
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_NUTRITION": {
+      "param_label": "PARAMETRES_DINDON_SAUVAGE_NUTRITION",
+      "bio_profile_paths": [
+        "nutrition.besoins_proteines",
+        "nutrition.besoins_energetiques",
+        "nutrition.alimentation_saisonniere.printemps",
+        "nutrition.alimentation_saisonniere.ete",
+        "nutrition.alimentation_saisonniere.automne",
+        "nutrition.alimentation_saisonniere.hiver"
+      ],
+      "parametres_alimentes": {
+        "nutrition.besoins_proteines": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "nutrition.besoins_energetiques": {
+          "value": [
+            "dépendance aux glands (mast) en automne"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "dépendance aux glands (mast) en automne"
+          },
+          "is_generic": false
+        },
+        "nutrition.alimentation_saisonniere.printemps": {
+          "value": [
+            "sélection de zones riches en nourriture au printemps pour femelles nidifiantes"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "sélection de zones riches en nourriture au printemps pour femelles nidifiantes"
+          },
+          "is_generic": false
+        },
+        "nutrition.alimentation_saisonniere.ete": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "nutrition.alimentation_saisonniere.automne": {
+          "value": [
+            "dépendance aux glands (mast) en automne"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "dépendance aux glands (mast) en automne"
+          },
+          "is_generic": false
+        },
+        "nutrition.alimentation_saisonniere.hiver": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_TERRITOIRE": {
+      "param_label": "PARAMETRES_DINDON_SAUVAGE_TERRITOIRE",
+      "bio_profile_paths": [
+        "habitat.types_couverts",
+        "habitat.zones_humides",
+        "habitat.zones_thermiques",
+        "habitat.zones_ouvertes",
+        "habitat.zones_matures",
+        "habitat.mosaiques_foret_agriculture",
+        "habitat.zones_transition"
+      ],
+      "parametres_alimentes": {
+        "habitat.types_couverts": {
+          "value": [
+            "mosaïques forêt-agriculture",
+            "forêts mixtes avec sous-bois dense",
+            "clairières pour alimentation",
+            "zones de conifères pour refuge hivernal"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 4,
+            "preview": "mosaïques forêt-agriculture"
+          },
+          "is_generic": false
+        },
+        "habitat.zones_humides": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "habitat.zones_thermiques": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "habitat.zones_ouvertes": {
+          "value": [
+            "clairières pour alimentation"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "clairières pour alimentation"
+          },
+          "is_generic": false
+        },
+        "habitat.zones_matures": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "habitat.mosaiques_foret_agriculture": {
+          "value": [
+            "mosaïques forêt-agriculture"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "mosaïques forêt-agriculture"
+          },
+          "is_generic": false
+        },
+        "habitat.zones_transition": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_INTERACTIONS": {
+      "param_label": "PARAMETRES_DINDON_SAUVAGE_INTERACTIONS",
+      "bio_profile_paths": [
+        "interactions.competition",
+        "interactions.predation",
+        "interactions.partage_corridors"
+      ],
+      "parametres_alimentes": {
+        "interactions.competition": {
+          "value": [
+            "compétition alimentaire avec cerf dans zones de mast",
+            "interactions spatiales limitées avec autres galliformes"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 2,
+            "preview": "compétition alimentaire avec cerf dans zones de mast"
+          },
+          "is_generic": false
+        },
+        "interactions.predation": {
+          "value": [
+            "prédation sur nids : raton laveur, renard, coyote, corvidés"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "prédation sur nids : raton laveur, renard, coyote, corvidés"
+          },
+          "is_generic": false
+        },
+        "interactions.partage_corridors": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_CLIMAT": {
+      "param_label": "PARAMETRES_DINDON_SAUVAGE_CLIMAT",
+      "bio_profile_paths": [
+        "thermoregulation.seuil_stress",
+        "neige.seuil_mortalite",
+        "dynamique.facteurs"
+      ],
+      "parametres_alimentes": {
+        "thermoregulation.seuil_stress": {
+          "value": null,
+          "signature": {
+            "type": "null",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "neige.seuil_mortalite": {
+          "value": null,
+          "signature": {
+            "type": "null",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "dynamique.facteurs": {
+          "value": [
+            "stabilité dans zones agricoles mixtes",
+            "maladies aviaires = menace émergente",
+            "climat = influence sur disponibilité alimentaire"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 3,
+            "preview": "stabilité dans zones agricoles mixtes"
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_SITES_CRITIQUES": {
+      "param_label": "PARAMETRES_DINDON_SAUVAGE_SITES_CRITIQUES",
+      "bio_profile_paths": [
+        "sites_critiques.mise_bas",
+        "sites_critiques.nidification",
+        "sites_critiques.rut",
+        "sites_critiques.tanieres",
+        "sites_critiques.repos",
+        "sites_critiques.alimentation",
+        "sites_critiques.eau"
+      ],
+      "parametres_alimentes": {
+        "sites_critiques.mise_bas": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "sites_critiques.nidification": {
+          "value": [
+            "Nidification : sous-bois dense, végétation herbacée, zones isolées"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "Nidification : sous-bois dense, végétation herbacée, zones isolées"
+          },
+          "is_generic": false
+        },
+        "sites_critiques.rut": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "sites_critiques.tanieres": {
+          "value": [
+            "Nidification : sous-bois dense, végétation herbacée, zones isolées"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "Nidification : sous-bois dense, végétation herbacée, zones isolées"
+          },
+          "is_generic": false
+        },
+        "sites_critiques.repos": {
+          "value": [
+            "Repos : zones de conifères, pentes abritées",
+            "Perchoirs : arbres matures, conifères"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 2,
+            "preview": "Repos : zones de conifères, pentes abritées"
+          },
+          "is_generic": false
+        },
+        "sites_critiques.alimentation": {
+          "value": [
+            "Alimentation : clairières, champs, lisières"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "Alimentation : clairières, champs, lisières"
+          },
+          "is_generic": false
+        },
+        "sites_critiques.eau": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_HABITAT": {
+      "param_label": "PARAMETRES_DINDON_SAUVAGE_HABITAT",
+      "bio_profile_paths": [
+        "habitat.types_couverts",
+        "habitat.mosaiques_foret_agriculture",
+        "habitat.zones_humides",
+        "habitat.zones_thermiques",
+        "habitat.zones_ouvertes",
+        "habitat.zones_matures",
+        "habitat.zones_transition"
+      ],
+      "parametres_alimentes": {
+        "habitat.types_couverts": {
+          "value": [
+            "mosaïques forêt-agriculture",
+            "forêts mixtes avec sous-bois dense",
+            "clairières pour alimentation",
+            "zones de conifères pour refuge hivernal"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 4,
+            "preview": "mosaïques forêt-agriculture"
+          },
+          "is_generic": false
+        },
+        "habitat.mosaiques_foret_agriculture": {
+          "value": [
+            "mosaïques forêt-agriculture"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "mosaïques forêt-agriculture"
+          },
+          "is_generic": false
+        },
+        "habitat.zones_humides": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "habitat.zones_thermiques": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "habitat.zones_ouvertes": {
+          "value": [
+            "clairières pour alimentation"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "clairières pour alimentation"
+          },
+          "is_generic": false
+        },
+        "habitat.zones_matures": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "habitat.zones_transition": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_RUT": {
+      "param_label": "PARAMETRES_DINDON_SAUVAGE_RUT",
+      "bio_profile_paths": [
+        "comportements_saisonniers.automne.rut",
+        "sites_critiques.rut"
+      ],
+      "parametres_alimentes": {
+        "comportements_saisonniers.automne.rut": {
+          "value": [
+            "regroupements sociaux, déplacements accrus"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "regroupements sociaux, déplacements accrus"
+          },
+          "is_generic": false
+        },
+        "sites_critiques.rut": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_NIDIFICATION": {
+      "param_label": "PARAMETRES_DINDON_SAUVAGE_NIDIFICATION",
+      "bio_profile_paths": [
+        "sites_critiques.nidification",
+        "comportements_saisonniers.printemps.reproduction"
+      ],
+      "parametres_alimentes": {
+        "sites_critiques.nidification": {
+          "value": [
+            "Nidification : sous-bois dense, végétation herbacée, zones isolées"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "Nidification : sous-bois dense, végétation herbacée, zones isolées"
+          },
+          "is_generic": false
+        },
+        "comportements_saisonniers.printemps.reproduction": {
+          "value": [
+            "nidification, déplacements réduits des femelles, sélection de couvert dense"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "nidification, déplacements réduits des femelles, sélection de couvert dense"
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_EAU": {
+      "param_label": "PARAMETRES_DINDON_SAUVAGE_EAU",
+      "bio_profile_paths": [
+        "sites_critiques.eau",
+        "habitat.zones_humides"
+      ],
+      "parametres_alimentes": {
+        "sites_critiques.eau": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "habitat.zones_humides": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_MINERAUX": {
+      "param_label": "PARAMETRES_DINDON_SAUVAGE_MINERAUX",
+      "bio_profile_paths": [
+        "nutrition.besoins_mineraux.sodium",
+        "nutrition.besoins_mineraux.calcium",
+        "nutrition.besoins_mineraux.magnesium"
+      ],
+      "parametres_alimentes": {
+        "nutrition.besoins_mineraux.sodium": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "nutrition.besoins_mineraux.calcium": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "nutrition.besoins_mineraux.magnesium": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    }
+  },
+  "propagation_summary": {
+    "engines_count": 13,
+    "total_paths_propaged": 55,
+    "null_paths_count": 4
+  },
+  "contraintes_respectees": {
+    "pipeline_v30_lecture_seule": true,
+    "engines_existants_modifies": false,
+    "logique_generique_residuelle": false,
+    "fallback_active": false,
+    "interpolation_active": false,
+    "exclusivement_bio_profile_omega": true
+  }
+}

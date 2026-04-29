@@ -1,0 +1,890 @@
+{
+  "reacteur_id": "BIO_REACTEUR_Ω_WAPITI",
+  "espece_id": "WAPITI",
+  "directive": "PHASE_XII_VALIDATION_BIO_PROFILE_Ω_ET_TRANSFORMATION_EN_BIO-REACTEURS_Ω",
+  "ordre": "n°25 — PHASE 3",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "phase": "PHASE_XII_BIO_REACTEURS_Ω",
+  "generated_at_utc": "2026-04-29T12:30:25+00:00",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "audit_validation": {
+    "audit_especes_omega_status": "VALIDÉ_PAR_STEEVE_MAX",
+    "validated_by": "COMMANDANT-STEEVE-MAX",
+    "validated_at_utc_phase2": "2026-04-29T12:28:15.348988+00:00"
+  },
+  "engines_especes_omega_actives": true,
+  "activation_status_bio_reacteur": "ACTIF_BIO_REACTEUR_Ω",
+  "v30_locked": true,
+  "v30_registry_lock_sha256": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+  "v30_engine_ia_corridors_sha256": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3",
+  "source_biologique": {
+    "filename": "BIO_PROFILE_Ω_WAPITI.json",
+    "path": "/app/frontend/public/reports/bio_profile_omega/BIO_PROFILE_Ω_WAPITI.json",
+    "size_bytes": 25511,
+    "sha256": "1dd532ee6378a6e8e6a92da28c271d9e0a2df8020d07a695e44e6d1f00279836",
+    "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_WAPITI.json"
+  },
+  "champs_obligatoires_status": {
+    "comportements_saisonniers": "PRESENT",
+    "habitat": "PRESENT",
+    "corridors": "PRESENT",
+    "nutrition": "PRESENT",
+    "sites_critiques": "PRESENT",
+    "pression_humaine": "PRESENT",
+    "thermoregulation": "PRESENT",
+    "neige": "PRESENT",
+    "interactions": "PRESENT",
+    "dynamique": "PRESENT"
+  },
+  "anti_generique_violations": [],
+  "anti_generique_pass": true,
+  "bio_reacteur_outputs": {
+    "ENGINE_COMPORTEMENT": {
+      "param_label": "PARAMETRES_WAPITI_COMPORTEMENT",
+      "bio_profile_paths": [
+        "comportements_saisonniers.printemps",
+        "comportements_saisonniers.ete",
+        "comportements_saisonniers.automne",
+        "comportements_saisonniers.hiver"
+      ],
+      "parametres_alimentes": {
+        "comportements_saisonniers.printemps": {
+          "value": {
+            "deplacements": [
+              "dispersion des mâles, recherche de végétation riche en protéines"
+            ],
+            "alimentation": [
+              "dispersion des mâles, recherche de végétation riche en protéines"
+            ],
+            "reproduction": [],
+            "habitat": [],
+            "raw_bullets": [
+              "dispersion des mâles, recherche de végétation riche en protéines"
+            ]
+          },
+          "signature": {
+            "type": "dict",
+            "card": 5,
+            "preview": [
+              "deplacements",
+              "alimentation",
+              "reproduction",
+              "habitat",
+              "raw_bullets"
+            ]
+          },
+          "is_generic": false
+        },
+        "comportements_saisonniers.ete": {
+          "value": {
+            "thermoregulation": [
+              "sélection de zones ouvertes avec accès à couvert forestier pour thermorégulation"
+            ],
+            "habitat": [
+              "sélection de zones ouvertes avec accès à couvert forestier pour thermorégulation"
+            ],
+            "alimentation": [],
+            "raw_bullets": [
+              "sélection de zones ouvertes avec accès à couvert forestier pour thermorégulation"
+            ]
+          },
+          "signature": {
+            "type": "dict",
+            "card": 4,
+            "preview": [
+              "thermoregulation",
+              "habitat",
+              "alimentation",
+              "raw_bullets"
+            ]
+          },
+          "is_generic": false
+        },
+        "comportements_saisonniers.automne": {
+          "value": {
+            "rut": [
+              "rut, déplacements accrus, formation de harems"
+            ],
+            "hyperphagie": [],
+            "deplacements": [
+              "rut, déplacements accrus, formation de harems"
+            ],
+            "raw_bullets": [
+              "rut, déplacements accrus, formation de harems"
+            ]
+          },
+          "signature": {
+            "type": "dict",
+            "card": 4,
+            "preview": [
+              "rut",
+              "hyperphagie",
+              "deplacements",
+              "raw_bullets"
+            ]
+          },
+          "is_generic": false
+        },
+        "comportements_saisonniers.hiver": {
+          "value": {
+            "ravages": [
+              "regroupement dans zones à faible neige, dépendance au couvert"
+            ],
+            "zones_refuge": [
+              "regroupement dans zones à faible neige, dépendance au couvert"
+            ],
+            "mobilite": [],
+            "raw_bullets": [
+              "regroupement dans zones à faible neige, dépendance au couvert"
+            ]
+          },
+          "signature": {
+            "type": "dict",
+            "card": 4,
+            "preview": [
+              "ravages",
+              "zones_refuge",
+              "mobilite",
+              "raw_bullets"
+            ]
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_SENSORIEL": {
+      "param_label": "PARAMETRES_WAPITI_SENSORIEL",
+      "bio_profile_paths": [
+        "thermoregulation.seuil_stress",
+        "neige.seuil_mobilite",
+        "neige.seuil_mortalite",
+        "thermoregulation.comportements_adaptation"
+      ],
+      "parametres_alimentes": {
+        "thermoregulation.seuil_stress": {
+          "value": 22.5,
+          "signature": {
+            "type": "float",
+            "card": 1,
+            "preview": 22.5
+          },
+          "is_generic": false
+        },
+        "neige.seuil_mobilite": {
+          "value": 50.0,
+          "signature": {
+            "type": "float",
+            "card": 1,
+            "preview": 50.0
+          },
+          "is_generic": false
+        },
+        "neige.seuil_mortalite": {
+          "value": null,
+          "signature": {
+            "type": "null",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "thermoregulation.comportements_adaptation": {
+          "value": [
+            "stress thermique dès 20–25°C",
+            "sélection de zones ombragées, forêts mixtes, zones humides",
+            "réduction des déplacements en période chaude",
+            "utilisation accrue des pentes nord et zones d’altitude"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 4,
+            "preview": "stress thermique dès 20–25°C"
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_CORRIDORS": {
+      "param_label": "PARAMETRES_WAPITI_CORRIDORS",
+      "bio_profile_paths": [
+        "corridors.corridors_reels_gps",
+        "corridors.connectivite_optimum",
+        "corridors.fragmentation_penalty",
+        "corridors.zones_passage_essentielles",
+        "corridors.distances_typiques"
+      ],
+      "parametres_alimentes": {
+        "corridors.corridors_reels_gps": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "corridors.connectivite_optimum": {
+          "value": [
+            "corridors migratoires stables sur plusieurs années",
+            "connectivité essentielle entre zones d’alimentation et zones de repos"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 2,
+            "preview": "corridors migratoires stables sur plusieurs années"
+          },
+          "is_generic": false
+        },
+        "corridors.fragmentation_penalty": {
+          "value": [
+            "fragmentation = réduction de mobilité + augmentation mortalité"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "fragmentation = réduction de mobilité + augmentation mortalité"
+          },
+          "is_generic": false
+        },
+        "corridors.zones_passage_essentielles": {
+          "value": [
+            "connectivité essentielle entre zones d’alimentation et zones de repos",
+            "évitement des routes et infrastructures humaines"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 2,
+            "preview": "connectivité essentielle entre zones d’alimentation et zones de repos"
+          },
+          "is_generic": false
+        },
+        "corridors.distances_typiques": {
+          "value": [
+            "déplacements saisonniers marqués (printemps ↔ automne)"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "déplacements saisonniers marqués (printemps ↔ automne)"
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_NUTRITION": {
+      "param_label": "PARAMETRES_WAPITI_NUTRITION",
+      "bio_profile_paths": [
+        "nutrition.besoins_proteines",
+        "nutrition.besoins_energetiques",
+        "nutrition.alimentation_saisonniere.printemps",
+        "nutrition.alimentation_saisonniere.ete",
+        "nutrition.alimentation_saisonniere.automne",
+        "nutrition.alimentation_saisonniere.hiver"
+      ],
+      "parametres_alimentes": {
+        "nutrition.besoins_proteines": {
+          "value": [
+            "besoins élevés en protéines au printemps (graminées, herbacées)"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "besoins élevés en protéines au printemps (graminées, herbacées)"
+          },
+          "is_generic": false
+        },
+        "nutrition.besoins_energetiques": {
+          "value": [
+            "dépendance aux plantes riches en énergie en automne (préparation hivernale)"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "dépendance aux plantes riches en énergie en automne (préparation hivernale)"
+          },
+          "is_generic": false
+        },
+        "nutrition.alimentation_saisonniere.printemps": {
+          "value": [
+            "besoins élevés en protéines au printemps (graminées, herbacées)"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "besoins élevés en protéines au printemps (graminées, herbacées)"
+          },
+          "is_generic": false
+        },
+        "nutrition.alimentation_saisonniere.ete": {
+          "value": [
+            "sélection de végétation fraîche en été pour thermorégulation"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "sélection de végétation fraîche en été pour thermorégulation"
+          },
+          "is_generic": false
+        },
+        "nutrition.alimentation_saisonniere.automne": {
+          "value": [
+            "dépendance aux plantes riches en énergie en automne (préparation hivernale)"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "dépendance aux plantes riches en énergie en automne (préparation hivernale)"
+          },
+          "is_generic": false
+        },
+        "nutrition.alimentation_saisonniere.hiver": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_TERRITOIRE": {
+      "param_label": "PARAMETRES_WAPITI_TERRITOIRE",
+      "bio_profile_paths": [
+        "habitat.types_couverts",
+        "habitat.zones_humides",
+        "habitat.zones_thermiques",
+        "habitat.zones_ouvertes",
+        "habitat.zones_matures",
+        "habitat.mosaiques_foret_agriculture",
+        "habitat.zones_transition"
+      ],
+      "parametres_alimentes": {
+        "habitat.types_couverts": {
+          "value": [
+            "prairies ouvertes adjacentes à forêts mixtes",
+            "vallées fluviales",
+            "zones de transition prairie-forêt",
+            "forêts matures pour repos",
+            "zones de pente modérée pour rut"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 5,
+            "preview": "prairies ouvertes adjacentes à forêts mixtes"
+          },
+          "is_generic": false
+        },
+        "habitat.zones_humides": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "habitat.zones_thermiques": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "habitat.zones_ouvertes": {
+          "value": [
+            "prairies ouvertes adjacentes à forêts mixtes",
+            "zones de transition prairie-forêt"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 2,
+            "preview": "prairies ouvertes adjacentes à forêts mixtes"
+          },
+          "is_generic": false
+        },
+        "habitat.zones_matures": {
+          "value": [
+            "forêts matures pour repos"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "forêts matures pour repos"
+          },
+          "is_generic": false
+        },
+        "habitat.mosaiques_foret_agriculture": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "habitat.zones_transition": {
+          "value": [
+            "zones de transition prairie-forêt"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "zones de transition prairie-forêt"
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_INTERACTIONS": {
+      "param_label": "PARAMETRES_WAPITI_INTERACTIONS",
+      "bio_profile_paths": [
+        "interactions.competition",
+        "interactions.predation",
+        "interactions.partage_corridors"
+      ],
+      "parametres_alimentes": {
+        "interactions.competition": {
+          "value": [
+            "compétition avec cerf de Virginie dans zones de chevauchement",
+            "transmission potentielle du CWD dans zones mixtes cervidés",
+            "interactions spatiales avec orignal dans zones boréales"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 3,
+            "preview": "compétition avec cerf de Virginie dans zones de chevauchement"
+          },
+          "is_generic": false
+        },
+        "interactions.predation": {
+          "value": [
+            "prédation sur faons : loup, coyote, ours noir"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "prédation sur faons : loup, coyote, ours noir"
+          },
+          "is_generic": false
+        },
+        "interactions.partage_corridors": {
+          "value": [
+            "compétition avec cerf de Virginie dans zones de chevauchement"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "compétition avec cerf de Virginie dans zones de chevauchement"
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_CLIMAT": {
+      "param_label": "PARAMETRES_WAPITI_CLIMAT",
+      "bio_profile_paths": [
+        "thermoregulation.seuil_stress",
+        "neige.seuil_mortalite",
+        "dynamique.facteurs"
+      ],
+      "parametres_alimentes": {
+        "thermoregulation.seuil_stress": {
+          "value": 22.5,
+          "signature": {
+            "type": "float",
+            "card": 1,
+            "preview": 22.5
+          },
+          "is_generic": false
+        },
+        "neige.seuil_mortalite": {
+          "value": null,
+          "signature": {
+            "type": "null",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "dynamique.facteurs": {
+          "value": [
+            "réintroduction réussie dans plusieurs États (Kentucky, Pennsylvanie)",
+            "croissance dans certaines régions",
+            "CWD = menace majeure",
+            "fragmentation = réduction connectivité",
+            "climat = influence sur disponibilité alimentaire"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 5,
+            "preview": "réintroduction réussie dans plusieurs États (Kentucky, Pennsylvanie)"
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_SITES_CRITIQUES": {
+      "param_label": "PARAMETRES_WAPITI_SITES_CRITIQUES",
+      "bio_profile_paths": [
+        "sites_critiques.mise_bas",
+        "sites_critiques.nidification",
+        "sites_critiques.rut",
+        "sites_critiques.tanieres",
+        "sites_critiques.repos",
+        "sites_critiques.alimentation",
+        "sites_critiques.eau"
+      ],
+      "parametres_alimentes": {
+        "sites_critiques.mise_bas": {
+          "value": [
+            "Mise bas : zones isolées, couvert dense, proximité d’eau"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "Mise bas : zones isolées, couvert dense, proximité d’eau"
+          },
+          "is_generic": false
+        },
+        "sites_critiques.nidification": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "sites_critiques.rut": {
+          "value": [
+            "Rut : clairières, vallées ouvertes, zones de transition",
+            "Frottis / souilles : zones de rut, corridors"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 2,
+            "preview": "Rut : clairières, vallées ouvertes, zones de transition"
+          },
+          "is_generic": false
+        },
+        "sites_critiques.tanieres": {
+          "value": [
+            "Mise bas : zones isolées, couvert dense, proximité d’eau"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "Mise bas : zones isolées, couvert dense, proximité d’eau"
+          },
+          "is_generic": false
+        },
+        "sites_critiques.repos": {
+          "value": [
+            "Mise bas : zones isolées, couvert dense, proximité d’eau",
+            "Repos : forêts mixtes, zones thermiques"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 2,
+            "preview": "Mise bas : zones isolées, couvert dense, proximité d’eau"
+          },
+          "is_generic": false
+        },
+        "sites_critiques.alimentation": {
+          "value": [
+            "Rut : clairières, vallées ouvertes, zones de transition"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "Rut : clairières, vallées ouvertes, zones de transition"
+          },
+          "is_generic": false
+        },
+        "sites_critiques.eau": {
+          "value": [
+            "Mise bas : zones isolées, couvert dense, proximité d’eau"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "Mise bas : zones isolées, couvert dense, proximité d’eau"
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_HABITAT": {
+      "param_label": "PARAMETRES_WAPITI_HABITAT",
+      "bio_profile_paths": [
+        "habitat.types_couverts",
+        "habitat.mosaiques_foret_agriculture",
+        "habitat.zones_humides",
+        "habitat.zones_thermiques",
+        "habitat.zones_ouvertes",
+        "habitat.zones_matures",
+        "habitat.zones_transition"
+      ],
+      "parametres_alimentes": {
+        "habitat.types_couverts": {
+          "value": [
+            "prairies ouvertes adjacentes à forêts mixtes",
+            "vallées fluviales",
+            "zones de transition prairie-forêt",
+            "forêts matures pour repos",
+            "zones de pente modérée pour rut"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 5,
+            "preview": "prairies ouvertes adjacentes à forêts mixtes"
+          },
+          "is_generic": false
+        },
+        "habitat.mosaiques_foret_agriculture": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "habitat.zones_humides": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "habitat.zones_thermiques": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "habitat.zones_ouvertes": {
+          "value": [
+            "prairies ouvertes adjacentes à forêts mixtes",
+            "zones de transition prairie-forêt"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 2,
+            "preview": "prairies ouvertes adjacentes à forêts mixtes"
+          },
+          "is_generic": false
+        },
+        "habitat.zones_matures": {
+          "value": [
+            "forêts matures pour repos"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "forêts matures pour repos"
+          },
+          "is_generic": false
+        },
+        "habitat.zones_transition": {
+          "value": [
+            "zones de transition prairie-forêt"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "zones de transition prairie-forêt"
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_RUT": {
+      "param_label": "PARAMETRES_WAPITI_RUT",
+      "bio_profile_paths": [
+        "comportements_saisonniers.automne.rut",
+        "sites_critiques.rut"
+      ],
+      "parametres_alimentes": {
+        "comportements_saisonniers.automne.rut": {
+          "value": [
+            "rut, déplacements accrus, formation de harems"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "rut, déplacements accrus, formation de harems"
+          },
+          "is_generic": false
+        },
+        "sites_critiques.rut": {
+          "value": [
+            "Rut : clairières, vallées ouvertes, zones de transition",
+            "Frottis / souilles : zones de rut, corridors"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 2,
+            "preview": "Rut : clairières, vallées ouvertes, zones de transition"
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_NIDIFICATION": {
+      "param_label": "PARAMETRES_WAPITI_NIDIFICATION",
+      "bio_profile_paths": [
+        "sites_critiques.nidification",
+        "comportements_saisonniers.printemps.reproduction"
+      ],
+      "parametres_alimentes": {
+        "sites_critiques.nidification": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "comportements_saisonniers.printemps.reproduction": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_EAU": {
+      "param_label": "PARAMETRES_WAPITI_EAU",
+      "bio_profile_paths": [
+        "sites_critiques.eau",
+        "habitat.zones_humides"
+      ],
+      "parametres_alimentes": {
+        "sites_critiques.eau": {
+          "value": [
+            "Mise bas : zones isolées, couvert dense, proximité d’eau"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "Mise bas : zones isolées, couvert dense, proximité d’eau"
+          },
+          "is_generic": false
+        },
+        "habitat.zones_humides": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    },
+    "ENGINE_MINERAUX": {
+      "param_label": "PARAMETRES_WAPITI_MINERAUX",
+      "bio_profile_paths": [
+        "nutrition.besoins_mineraux.sodium",
+        "nutrition.besoins_mineraux.calcium",
+        "nutrition.besoins_mineraux.magnesium"
+      ],
+      "parametres_alimentes": {
+        "nutrition.besoins_mineraux.sodium": {
+          "value": [
+            "importance des minéraux (Na, Ca, Mg) dans certaines régions"
+          ],
+          "signature": {
+            "type": "list",
+            "card": 1,
+            "preview": "importance des minéraux (Na, Ca, Mg) dans certaines régions"
+          },
+          "is_generic": false
+        },
+        "nutrition.besoins_mineraux.calcium": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        },
+        "nutrition.besoins_mineraux.magnesium": {
+          "value": [],
+          "signature": {
+            "type": "list",
+            "card": 0,
+            "preview": null
+          },
+          "is_generic": false
+        }
+      },
+      "exclusivement_alimente_par_bio_profile": true,
+      "fallback_active": false,
+      "interpolation_active": false
+    }
+  },
+  "propagation_summary": {
+    "engines_count": 13,
+    "total_paths_propaged": 55,
+    "null_paths_count": 2
+  },
+  "contraintes_respectees": {
+    "pipeline_v30_lecture_seule": true,
+    "engines_existants_modifies": false,
+    "logique_generique_residuelle": false,
+    "fallback_active": false,
+    "interpolation_active": false,
+    "exclusivement_bio_profile_omega": true
+  }
+}
