@@ -1229,6 +1229,14 @@ try:
 except Exception as e:
     logger.warning(f"PHASE_XII_ESPECES_Ω router not loaded: {e}")
 
+# ═══ PHASE_XIII_BIO_REACTEURS_Ω — RUNTIME LOADER (Commandant STEEVE-MAX · 2026-04-29) ═══
+try:
+    from routes.bio_reacteur_router_omega import router as bio_reacteur_router
+    app.include_router(bio_reacteur_router)
+    logger.info("✓ PHASE_XIII_BIO_REACTEURS_Ω active : runtime loader 5 BIO-REACTEURS — /api/v30/especes/bio-reacteur/*")
+except Exception as e:
+    logger.warning(f"PHASE_XIII_BIO_REACTEURS_Ω router not loaded: {e}")
+
 
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")

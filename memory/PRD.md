@@ -27,6 +27,49 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XIII — RUNTIME LOADER + SCEAU + TESTS PYTEST (2026-04-29 · ordre n°26)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PROCEED_TO_PHASE_XIII` ·
+  `PASSAGE_OFFICIEL_EN_PHASE_XIII`). Promotion des 3 items Future/Backlog en
+  ACTION_IMMEDIATE. V30 INVIOLÉ. Engines espèces existants INTOUCHÉS
+  (couche aval déclarative).
+  - **Sous-phase A — Runtime loader** :
+    - Nouveau fichier `/app/backend/engines/v8_institutional/especes/bio_reacteur_loader_omega.py`
+      (READ-ONLY, cache mtime-aware, validation anti-générique au chargement,
+      lève `BioReacteurError` sur fallback/interpolation/champs manquants).
+    - Nouveau fichier `/app/backend/routes/bio_reacteur_router_omega.py`
+      avec **5 endpoints** sous prefix `/api/v30/especes/bio-reacteur/` :
+      - `GET /list` — métadata des 5 BIO-REACTEURS.
+      - `GET /integrity` — audit SHA-256 runtime + alignement source BIO_PROFILE.
+      - `GET /{species_id}` — BIO_REACTEUR_Ω complet.
+      - `GET /{species_id}/{engine_name}` — paramètres d'un ENGINE output.
+      - `POST /compute` — pipeline combiné engines + BIO-REACTEUR attaché.
+    - Inscription dans `/app/backend/server.py` (PHASE_XIII_BIO_REACTEURS_Ω).
+    - **Tous les 5 endpoints renvoient HTTP 200**.
+  - **Sous-phase B — Sceau institutionnel** :
+    - `SCEAU_PHASE_XIII_BIO_REACTEURS_Ω.html` (22 603 o · sha256
+      `b0dd59f253043ef9…`) — sceau visuel SVG circulaire avec ring-text,
+      KPIs, tableaux SHA-256 (V30, engines espèces, runtime, 31 artefacts
+      scellés), tests pytest passed badge, sceau cumulatif.
+    - `SCEAU_PHASE_XIII_BIO_REACTEURS_Ω.json` (14 788 o) — manifest JSON
+      complet (artefacts, V30, runtime SHA, conformite_omega=100%).
+    - **SHA-256 cumulatif du sceau** :
+      `7259e67bd6d0c65a6c3d53503036113e3a109bd56f23bf19a70bd801bb58ae4e`.
+  - **Sous-phase C — Tests pytest dédiés** :
+    - `/app/backend/tests/test_phase_xiii_bio_reacteurs_omega.py` —
+      **13 tests** couvrant : structure artefacts, BIO_PROFILE présents,
+      audit validé, runtime loader (5/5), espèce inconnue raises,
+      anti-générique pass, no fallback/interpolation, 13 engines outputs,
+      10 champs obligatoires, paths résolus dans BIO_PROFILE,
+      integrity_report all_pass, V30 invariant, attach decorates.
+    - **13/13 PASSED** en 0.05s.
+  - **Verrou cryptographique préservé** :
+    - V30 LOCKED : `fb765b94…ecb0c` + `bcb1e3a6…39d3` (intacts).
+    - 5 engines espèces SHA-256 intacts (couche AVAL non invasive).
+  - **Inventaire dossier bio_reacteurs_omega** : 13 fichiers (5 JSON
+    BIO_REACTEUR + 5 CSV MATRICE_PROPAGATION + 1 INDEX HTML + 2 SCEAU
+    HTML/JSON).
+  - **Tests** : pytest manuel + bash + curl (5/5 endpoints HTTPS 200).
+
 - **PHASE_XII_VALIDATION_BIO_PROFILE_Ω + TRANSFORMATION_BIO-REACTEURS_Ω (2026-04-29 · ordre n°25)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PHASE_XII_VALIDATION_BIO_PROFILE_Ω_ET_TRANSFORMATION_EN_BIO-REACTEURS_Ω`).
   V30 INVIOLÉ. Aucune modification des engines espèces existants.

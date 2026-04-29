@@ -1,0 +1,322 @@
+{
+  "sceau_id": "SCEAU_PHASE_XIII_BIO_REACTEURS_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "phase": "PHASE_XIII_BIO_REACTEURS_Ω",
+  "ordres_executes": [
+    "n°22",
+    "n°23",
+    "n°24",
+    "n°25"
+  ],
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "sealed_at_utc": "2026-04-29T14:22:53+00:00",
+  "audit_validation": {
+    "status": "VALIDÉ_PAR_STEEVE_MAX",
+    "validated_at_utc": "2026-04-29T12:28:15.348988+00:00",
+    "validated_by": "COMMANDANT-STEEVE-MAX"
+  },
+  "engines_especes_omega_actives": true,
+  "v30_locked": true,
+  "v30_sha256": {
+    "registry_lock_omega.py": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+    "engine_ia_corridors_omega.py": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3"
+  },
+  "engines_especes_sha256": {
+    "engine_chevreuil_omega.py": "7fa3584b6afa29a49a75b44814d164fa4d42057a6c04e776d1cca4be5dbab796",
+    "engine_orignal_omega.py": "fe79ebc37531f052bf9567b7375040a3b41adc822941174cf641d3d9d8766546",
+    "engine_ours_noir_omega.py": "3f9c28e206eb21136bf5e0c5abae6a098219b06878178496168cd1348893aea9",
+    "engine_wapiti_omega.py": "5d3b0f0f765c0a77deb486bd2056f2e4a7e10c45422b90a344d686c64343f917",
+    "engine_dindon_omega.py": "c1fc49d44802dad0bae09061735599b17efa8e33fabf15c22c2bc5ad6f2e56d1"
+  },
+  "phase_xiii_runtime_sha256": {
+    "bio_reacteur_loader_omega.py": "067cf7aa7ea535564b7ac2d386de2bafd82eda5a085e42a77bbbdc461750e727",
+    "bio_reacteur_router_omega.py": "20a4f3a492a57e129a902b651e2972ac7d5f5fd72bbe34352858d637d545765f",
+    "test_phase_xiii_bio_reacteurs_omega.py": "9a3300cf8c7557caf254adbf38d2bba14f70aa532773db1cf39fb34dfa57f0a3"
+  },
+  "artefacts_count": 31,
+  "artefacts_total_size_bytes": 619797,
+  "artefacts": [
+    {
+      "phase": "XII",
+      "espece": "CHEVREUIL",
+      "filename": "BIO_PROFILE_Ω_CHEVREUIL.json",
+      "size_bytes": 30711,
+      "sha256": "ef6a794d2477c5cc3cb44ab01e833cb1a47bac4a86e1948b9f73910767a9d72a",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_CHEVREUIL.json"
+    },
+    {
+      "phase": "XII",
+      "espece": "CHEVREUIL",
+      "filename": "BIO_PROFILE_Ω_CHEVREUIL.html",
+      "size_bytes": 26657,
+      "sha256": "890b3f082d97c3f3e59b82cb0b4050d011c394cbfb9a58dd63cf49cf7438f9b3",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_CHEVREUIL.html"
+    },
+    {
+      "phase": "XII",
+      "espece": "CHEVREUIL",
+      "filename": "BIO_PROFILE_Ω_CHEVREUIL.csv",
+      "size_bytes": 25641,
+      "sha256": "b5dc9ee90d7a80cbd83b10e245f225394524f96b4c8d6872e4812f8a8749f66e",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_CHEVREUIL.csv"
+    },
+    {
+      "phase": "XII",
+      "espece": "CHEVREUIL",
+      "filename": "MANIFEST_BIO_PROFILE_Ω_CHEVREUIL.json",
+      "size_bytes": 2028,
+      "sha256": "31ba5dd24af614a4aa9d001dd1cb468bffd5b647dd81d70a51d36db5565480ee",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/MANIFEST_BIO_PROFILE_%CE%A9_CHEVREUIL.json"
+    },
+    {
+      "phase": "XIII",
+      "espece": "CHEVREUIL",
+      "filename": "BIO_REACTEUR_Ω_CHEVREUIL.json",
+      "size_bytes": 27159,
+      "sha256": "0e2ea1e47f16a8106393d58e933438b7d78642fe01294b88705a4c3ac72effe1",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_reacteurs_omega/BIO_REACTEUR_%CE%A9_CHEVREUIL.json"
+    },
+    {
+      "phase": "XIII",
+      "espece": "CHEVREUIL",
+      "filename": "MATRICE_PROPAGATION_Ω_CHEVREUIL.csv",
+      "size_bytes": 16263,
+      "sha256": "3bd025a711b28db35e009d08a25760b41ce3d921740e856ade039f107316a9f4",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_reacteurs_omega/MATRICE_PROPAGATION_%CE%A9_CHEVREUIL.csv"
+    },
+    {
+      "phase": "XII",
+      "espece": "ORIGNAL",
+      "filename": "BIO_PROFILE_Ω_ORIGNAL.json",
+      "size_bytes": 28447,
+      "sha256": "a1275b952bdde581c978d16fb0d916e2b36c624ef14ac86478a428efda14b5df",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_ORIGNAL.json"
+    },
+    {
+      "phase": "XII",
+      "espece": "ORIGNAL",
+      "filename": "BIO_PROFILE_Ω_ORIGNAL.html",
+      "size_bytes": 25585,
+      "sha256": "0347d32a324216a192853a9a434556b6b57a680f28f50468b0f06140145570d1",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_ORIGNAL.html"
+    },
+    {
+      "phase": "XII",
+      "espece": "ORIGNAL",
+      "filename": "BIO_PROFILE_Ω_ORIGNAL.csv",
+      "size_bytes": 22558,
+      "sha256": "77d7a04ea1ce38bb70d4b18ba1b828418478daa5d0d3598a8582ebd3676c579a",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_ORIGNAL.csv"
+    },
+    {
+      "phase": "XII",
+      "espece": "ORIGNAL",
+      "filename": "MANIFEST_BIO_PROFILE_Ω_ORIGNAL.json",
+      "size_bytes": 2018,
+      "sha256": "de790fcc67fb52b673b8b9f38a9cf391a8d5ea062d113610f77c344a7e469a7f",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/MANIFEST_BIO_PROFILE_%CE%A9_ORIGNAL.json"
+    },
+    {
+      "phase": "XIII",
+      "espece": "ORIGNAL",
+      "filename": "BIO_REACTEUR_Ω_ORIGNAL.json",
+      "size_bytes": 25309,
+      "sha256": "a6d37f5646c5e5eb302a6128490f923bb9245a49191b2a16f3041c73b73c564c",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_reacteurs_omega/BIO_REACTEUR_%CE%A9_ORIGNAL.json"
+    },
+    {
+      "phase": "XIII",
+      "espece": "ORIGNAL",
+      "filename": "MATRICE_PROPAGATION_Ω_ORIGNAL.csv",
+      "size_bytes": 15620,
+      "sha256": "d38c7c295976663c573b440f4efffcfa547151a800042c3bd03cb0a948c9b1af",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_reacteurs_omega/MATRICE_PROPAGATION_%CE%A9_ORIGNAL.csv"
+    },
+    {
+      "phase": "XII",
+      "espece": "OURS_NOIR",
+      "filename": "BIO_PROFILE_Ω_OURS_NOIR.json",
+      "size_bytes": 17982,
+      "sha256": "77157a186928d7af16deb8361aa218ef34ec522affa2a197a8bf216d411033bc",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_OURS_NOIR.json"
+    },
+    {
+      "phase": "XII",
+      "espece": "OURS_NOIR",
+      "filename": "BIO_PROFILE_Ω_OURS_NOIR.html",
+      "size_bytes": 23076,
+      "sha256": "7d810db1185bef72c9a023464cffb72b972f590b7f661802e4c6a251d6e18314",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_OURS_NOIR.html"
+    },
+    {
+      "phase": "XII",
+      "espece": "OURS_NOIR",
+      "filename": "BIO_PROFILE_Ω_OURS_NOIR.csv",
+      "size_bytes": 25025,
+      "sha256": "0abdb36dccb074d13f414859c0a0d454e820cd5321d110e7bbbdc30baead4406",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_OURS_NOIR.csv"
+    },
+    {
+      "phase": "XII",
+      "espece": "OURS_NOIR",
+      "filename": "MANIFEST_BIO_PROFILE_Ω_OURS_NOIR.json",
+      "size_bytes": 2022,
+      "sha256": "85d158dd24d7693dbed0a2a51bd666a1a9cdbaf174861b8e67385f003d36313d",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/MANIFEST_BIO_PROFILE_%CE%A9_OURS_NOIR.json"
+    },
+    {
+      "phase": "XIII",
+      "espece": "OURS_NOIR",
+      "filename": "BIO_REACTEUR_Ω_OURS_NOIR.json",
+      "size_bytes": 25928,
+      "sha256": "10f88b8641027deed6c5be91ceb86a4f4ac1923ed9fa83d0e5583b60717b7daa",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_reacteurs_omega/BIO_REACTEUR_%CE%A9_OURS_NOIR.json"
+    },
+    {
+      "phase": "XIII",
+      "espece": "OURS_NOIR",
+      "filename": "MATRICE_PROPAGATION_Ω_OURS_NOIR.csv",
+      "size_bytes": 15935,
+      "sha256": "f80667cd2ddc527841d4c664b627db7bad391c2c7aa2545ff3bea264dbedb4dd",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_reacteurs_omega/MATRICE_PROPAGATION_%CE%A9_OURS_NOIR.csv"
+    },
+    {
+      "phase": "XII",
+      "espece": "WAPITI",
+      "filename": "BIO_PROFILE_Ω_WAPITI.json",
+      "size_bytes": 25511,
+      "sha256": "1dd532ee6378a6e8e6a92da28c271d9e0a2df8020d07a695e44e6d1f00279836",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_WAPITI.json"
+    },
+    {
+      "phase": "XII",
+      "espece": "WAPITI",
+      "filename": "BIO_PROFILE_Ω_WAPITI.html",
+      "size_bytes": 26333,
+      "sha256": "c8bf2aaf4e03d6a1e691dd42ab0c4836285e1eedec076218e57e204fad88ffb0",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_WAPITI.html"
+    },
+    {
+      "phase": "XII",
+      "espece": "WAPITI",
+      "filename": "BIO_PROFILE_Ω_WAPITI.csv",
+      "size_bytes": 27794,
+      "sha256": "6e0d80d89af213ddbffed3121938205907d80ffce06d878527d4b8be100c9b25",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_WAPITI.csv"
+    },
+    {
+      "phase": "XII",
+      "espece": "WAPITI",
+      "filename": "MANIFEST_BIO_PROFILE_Ω_WAPITI.json",
+      "size_bytes": 1996,
+      "sha256": "3c24e0995855904fcc9e05ed7ceb17804a6a5c43c46f43eef2fb6c39b12848a4",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/MANIFEST_BIO_PROFILE_%CE%A9_WAPITI.json"
+    },
+    {
+      "phase": "XIII",
+      "espece": "WAPITI",
+      "filename": "BIO_REACTEUR_Ω_WAPITI.json",
+      "size_bytes": 28128,
+      "sha256": "fa6b3486342f282d6bc4f58809c75ec39bcc0185f1814f9e4918111f86b007d7",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_reacteurs_omega/BIO_REACTEUR_%CE%A9_WAPITI.json"
+    },
+    {
+      "phase": "XIII",
+      "espece": "WAPITI",
+      "filename": "MATRICE_PROPAGATION_Ω_WAPITI.csv",
+      "size_bytes": 16344,
+      "sha256": "921a16f3c6843e0fbffab3cfd69d7907d2cf68db0e54a25c1afbd02032d9c3cb",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_reacteurs_omega/MATRICE_PROPAGATION_%CE%A9_WAPITI.csv"
+    },
+    {
+      "phase": "XII",
+      "espece": "DINDON_SAUVAGE",
+      "filename": "BIO_PROFILE_Ω_DINDON_SAUVAGE.json",
+      "size_bytes": 30339,
+      "sha256": "93a59f997ddd4c87118d43e0eb4d3bd366d5b97cc22f74ae06bd1a93cd918401",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_DINDON_SAUVAGE.json"
+    },
+    {
+      "phase": "XII",
+      "espece": "DINDON_SAUVAGE",
+      "filename": "BIO_PROFILE_Ω_DINDON_SAUVAGE.html",
+      "size_bytes": 26344,
+      "sha256": "339be814943325fba736b98482066770f043cf11261bce13a1c74793d3109bec",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_DINDON_SAUVAGE.html"
+    },
+    {
+      "phase": "XII",
+      "espece": "DINDON_SAUVAGE",
+      "filename": "BIO_PROFILE_Ω_DINDON_SAUVAGE.csv",
+      "size_bytes": 24745,
+      "sha256": "ec8f4ac82944eee8371d235089cf1553833b75e3e17103b3c733859f3ac1cdab",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/BIO_PROFILE_%CE%A9_DINDON_SAUVAGE.csv"
+    },
+    {
+      "phase": "XII",
+      "espece": "DINDON_SAUVAGE",
+      "filename": "MANIFEST_BIO_PROFILE_Ω_DINDON_SAUVAGE.json",
+      "size_bytes": 2070,
+      "sha256": "98deaf53538b1772c88972544b28dcf1511e7533957d546185c9afe380079156",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_profile_omega/MANIFEST_BIO_PROFILE_%CE%A9_DINDON_SAUVAGE.json"
+    },
+    {
+      "phase": "XIII",
+      "espece": "DINDON_SAUVAGE",
+      "filename": "BIO_REACTEUR_Ω_DINDON_SAUVAGE.json",
+      "size_bytes": 26055,
+      "sha256": "ba7ab4c86c3607bfe98d74895da051ed11689918a64b86ec0383a2a802ed7e47",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_reacteurs_omega/BIO_REACTEUR_%CE%A9_DINDON_SAUVAGE.json"
+    },
+    {
+      "phase": "XIII",
+      "espece": "DINDON_SAUVAGE",
+      "filename": "MATRICE_PROPAGATION_Ω_DINDON_SAUVAGE.csv",
+      "size_bytes": 16565,
+      "sha256": "68f1c1ba2aa3fcecfaf9a7a9dec81a895913c95d31616aa847ee3e84c183e65c",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_reacteurs_omega/MATRICE_PROPAGATION_%CE%A9_DINDON_SAUVAGE.csv"
+    },
+    {
+      "phase": "XIII",
+      "espece": "ALL",
+      "filename": "INDEX_BIO_REACTEURS_Ω.html",
+      "size_bytes": 9609,
+      "sha256": "0b3386395ac4bd6ad449befa7e727910650313671a786e0f7487559856b1e22e",
+      "url_https": "https://huntiq-restore.preview.emergentagent.com/reports/bio_reacteurs_omega/INDEX_BIO_REACTEURS_%CE%A9.html"
+    }
+  ],
+  "sceau_sha_cumulatif_sha256": "7259e67bd6d0c65a6c3d53503036113e3a109bd56f23bf19a70bd801bb58ae4e",
+  "tests_pytest": {
+    "fichier": "/app/backend/tests/test_phase_xiii_bio_reacteurs_omega.py",
+    "tests_count": 13,
+    "tests_passed": 13,
+    "couverture": [
+      "structure_artefacts_5_especes",
+      "bio_profiles_present",
+      "audit_validated_by_commandant",
+      "runtime_loader_5_charges",
+      "espece_inconnue_raises",
+      "anti_generique_pass_5_5",
+      "no_fallback_no_interpolation",
+      "13_engines_outputs_per_species",
+      "10_champs_obligatoires_present",
+      "engine_outputs_paths_resolved",
+      "integrity_report_all_pass",
+      "v30_locked_intact",
+      "attach_decorates_compute_result"
+    ]
+  },
+  "endpoints_runtime": [
+    "GET /api/v30/especes/bio-reacteur/list",
+    "GET /api/v30/especes/bio-reacteur/integrity",
+    "GET /api/v30/especes/bio-reacteur/{species_id}",
+    "GET /api/v30/especes/bio-reacteur/{species_id}/{engine_name}",
+    "POST /api/v30/especes/bio-reacteur/compute"
+  ],
+  "conformite_omega": "100%",
+  "note_institutionnelle": "Sceau institutionnel attestant la conformité totale BCE-4X ULTIME ABSOLU x3 des Phases XII et XIII : génération scientifique stricte des BIO_PROFILE_Ω, transformation déclarative en BIO-REACTEURS_Ω, runtime loader actif, tests pytest intégraux, V30 INVIOLÉ. Aucune logique générique, aucun fallback, aucune interpolation. Données strictement issues des rapports scientifiques institutionnels du Commandant STEEVE-MAX.",
+  "html_path": "/app/frontend/public/reports/bio_reacteurs_omega/SCEAU_PHASE_XIII_BIO_REACTEURS_Ω.html",
+  "html_sha256": "b0dd59f253043ef9625ce3514c5871cc6b7055937eeb30beeced0d0152cd0b44",
+  "html_size_bytes": 22603,
+  "json_self_sha256": "9a923b2c04c1ea51d6bb5b2e8e2c4a6880054bf9d59ed6a6e77f69a74aa47972"
+}
