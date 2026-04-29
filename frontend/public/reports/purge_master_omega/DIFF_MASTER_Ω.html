@@ -1,0 +1,52 @@
+<!DOCTYPE html><html lang='fr'><head><meta charset='utf-8'/>
+<title>DIFF_MASTER_Ω</title><style>
+:root{--bg:#0a1018;--panel:#111c2e;--panel2:#162032;--txt:#e2e8f0;--mute:#94a3b8;--accent:#06b6d4;--accent2:#22d3ee;--ok:#16a34a;--gold:#f59e0b;--dang:#dc2626;--bord:#1e293b;}
+*{box-sizing:border-box;}
+body{font-family:'Inter','Segoe UI',sans-serif;background:linear-gradient(180deg,#0a1018 0%,#0b1320 100%);color:var(--txt);margin:0;padding:32px 20px;}
+.wrap{max-width:1280px;margin:0 auto;}
+header.title{border-left:5px solid var(--gold);padding:6px 0 6px 18px;margin-bottom:22px;}
+header.title h1{margin:0;font-size:24px;color:#fef3c7;letter-spacing:0.6px;}
+header.title .sub{color:var(--mute);font-size:13px;margin-top:6px;}
+.b-ok{background:linear-gradient(135deg,#14532d 0%,#15803d 100%);border:1px solid var(--ok);color:#dcfce7;padding:12px 22px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:18px;}
+.b-ko{background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 100%);border:1px solid var(--dang);color:#fee2e2;padding:12px 22px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:18px;}
+h2{color:var(--gold);font-size:18px;margin:32px 0 12px;border-left:4px solid var(--gold);padding-left:12px;}
+.card{background:var(--panel);border:1px solid var(--bord);border-radius:10px;padding:18px 22px;margin-bottom:18px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px;}
+.kpi{padding:14px 18px;background:var(--panel2);border:1px solid var(--bord);border-radius:8px;}
+.kpi .num{color:var(--accent2);font-weight:700;font-size:22px;}
+.kpi .lbl{color:var(--mute);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;}
+table{width:100%;border-collapse:collapse;font-size:11.5px;}
+th,td{padding:8px 10px;border-bottom:1px solid var(--bord);text-align:left;vertical-align:middle;}
+th{background:var(--panel2);color:#fff;text-transform:uppercase;font-size:10.5px;letter-spacing:0.5px;}
+.scroll{max-height:400px;overflow-y:auto;border:1px solid var(--bord);border-radius:6px;}
+.dl{color:var(--accent2);text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid rgba(6,182,212,0.35);border-radius:5px;}
+.dl:hover{color:#fff;background:rgba(6,182,212,0.18);border-color:var(--accent);}
+.mono{font-family:'JetBrains Mono','Courier New',monospace;font-size:10px;color:var(--mute);word-break:break-all;}
+.foot{margin-top:30px;padding:18px 22px;background:var(--panel);border:1px solid var(--bord);border-radius:10px;font-size:12px;color:var(--mute);}
+.lbl-foot{color:var(--accent2);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:0.5px;}
+.v30-lock{margin-top:14px;padding:10px 14px;background:rgba(22,163,74,0.10);border:1px solid rgba(22,163,74,0.45);border-radius:6px;color:#4ade80;font-weight:700;text-align:center;letter-spacing:0.6px;}
+img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--bord);}
+</style></head><body><div class='wrap' data-testid='diff-master-omega'>
+<header class='title'><h1>DIFF_MASTER_Ω · Comparaison snapshot vs rebuilt</h1><div class='sub'>BCE-4X ULTIME ABSOLU x3 · Ordre n°33 · 2026-04-29T17:41:03+00:00</div></header>
+<div class='b-ok'>✓ DIFF MÉTIER = 0 · PURGE PARFAITE</div>
+
+<div class='card'><div class='kpi-grid'>
+<div class='kpi'><div class='lbl'>Couches comparées</div><div class='num'>11</div></div>
+<div class='kpi'><div class='lbl'>Diff métier strict</div><div class='num' style='color:#22c55e'>0</div></div>
+<div class='kpi'><div class='lbl'>Diff brut (timestamps)</div><div class='num' style='color:#fbbf24'>0</div></div>
+</div></div>
+
+<h2>1. Heatmap</h2>
+<div class='card'><img src='https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/DIFF_MASTER_%CE%A9.png' alt='heatmap diff'/></div>
+
+<h2>2. Diff par couche (métier strict, hors timestamps)</h2>
+<div class='card'><table><thead><tr><th>Couche</th><th>Statut</th><th>SHA snapshot</th><th>SHA rebuilt</th></tr></thead>
+<tbody><tr><td><b>corridors</b></td><td><span style='color:#22c55e;font-weight:700'>✓ IDENTIQUE</span></td><td class='mono'>f282ea84699117ec9ae2899ea447d665…</td><td class='mono'>f282ea84699117ec9ae2899ea447d665…</td></tr><tr><td><b>zones</b></td><td><span style='color:#22c55e;font-weight:700'>✓ IDENTIQUE</span></td><td class='mono'>e94c13304709146b3b23afdf8a8fa668…</td><td class='mono'>e94c13304709146b3b23afdf8a8fa668…</td></tr><tr><td><b>salines</b></td><td><span style='color:#22c55e;font-weight:700'>✓ IDENTIQUE</span></td><td class='mono'>3dd7a4230f077ffc142b7b36ebd81b91…</td><td class='mono'>3dd7a4230f077ffc142b7b36ebd81b91…</td></tr><tr><td><b>hotspots</b></td><td><span style='color:#22c55e;font-weight:700'>✓ IDENTIQUE</span></td><td class='mono'>e9124120cc38ac66c1aef675a00f4f3c…</td><td class='mono'>e9124120cc38ac66c1aef675a00f4f3c…</td></tr><tr><td><b>contamination</b></td><td><span style='color:#22c55e;font-weight:700'>✓ IDENTIQUE</span></td><td class='mono'>c5c4493cf7de1efecee8a1ec8118fb6f…</td><td class='mono'>c5c4493cf7de1efecee8a1ec8118fb6f…</td></tr><tr><td><b>pression_humaine</b></td><td><span style='color:#22c55e;font-weight:700'>✓ IDENTIQUE</span></td><td class='mono'>25a2bf484822bcc668e775ebc26cd41e…</td><td class='mono'>25a2bf484822bcc668e775ebc26cd41e…</td></tr><tr><td><b>score_ultime</b></td><td><span style='color:#22c55e;font-weight:700'>✓ IDENTIQUE</span></td><td class='mono'>7ca2c105e19870dc366e4367b2f4195f…</td><td class='mono'>7ca2c105e19870dc366e4367b2f4195f…</td></tr><tr><td><b>ia_omega</b></td><td><span style='color:#22c55e;font-weight:700'>✓ IDENTIQUE</span></td><td class='mono'>f42e49baeaa0634296f81b8b7deb98c1…</td><td class='mono'>f42e49baeaa0634296f81b8b7deb98c1…</td></tr><tr><td><b>scientifique_omega_par_espece</b></td><td><span style='color:#22c55e;font-weight:700'>✓ IDENTIQUE</span></td><td class='mono'>c47c4d673fa55fcc74444a4bf2bfb331…</td><td class='mono'>c47c4d673fa55fcc74444a4bf2bfb331…</td></tr><tr><td><b>sensoriel</b></td><td><span style='color:#22c55e;font-weight:700'>✓ IDENTIQUE</span></td><td class='mono'>2068098b6ec65de99b25cec30327bc63…</td><td class='mono'>2068098b6ec65de99b25cec30327bc63…</td></tr><tr><td><b>meteo_sensoriel</b></td><td><span style='color:#22c55e;font-weight:700'>✓ IDENTIQUE</span></td><td class='mono'>311bc2b9a16ce2257dc51a65811c773c…</td><td class='mono'>311bc2b9a16ce2257dc51a65811c773c…</td></tr></tbody></table></div>
+
+<h2>3. Règle institutionnelle</h2>
+<div class='card'>DIFF MÉTIER = 0 → purge parfaite. DIFF MÉTIER &gt; 0 → ABORT_XVb + ROLLBACK. DIFFs bruts non-nuls dus aux timestamps volatils sont attendus et acceptés.</div>
+
+<footer class='foot'>
+<div><span class='lbl-foot'>Émis :</span> COMMANDANT STEEVE-MAX</div>
+<div class='v30-lock'>✓ DIFF MÉTIER 0/11 — couche TERRITOIRE_Ω cohérente après purge</div>
+</footer></div></body></html>

@@ -1,0 +1,138 @@
+{
+  "manifest_id": "DIFF_MASTER_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°33",
+  "compared_at_utc": "2026-04-29T17:41:03+00:00",
+  "snapshot_source": "TERRITOIRE_SNAPSHOT_Ω.json",
+  "rebuilt_source": "TERRITOIRE_REBUILT_Ω.json",
+  "couches_compared_count": 11,
+  "diff_brut_total": 0,
+  "diff_metier_strict_total": 0,
+  "regle_institutionnelle": "DIFF MÉTIER = 0 → purge parfaite. DIFF MÉTIER > 0 → ABORT_XVb + ROLLBACK. DIFFs bruts non-nuls dus aux timestamps volatils sont attendus et acceptés.",
+  "purge_status": "PARFAITE",
+  "diff_per_couche_brut": {
+    "corridors": {
+      "snapshot_sha256": "f282ea84699117ec9ae2899ea447d6657700d28090a4ffe7b2397b54c5bcd2cc",
+      "rebuilt_sha256": "f282ea84699117ec9ae2899ea447d6657700d28090a4ffe7b2397b54c5bcd2cc",
+      "equal": true,
+      "n_diffs": 0
+    },
+    "zones": {
+      "snapshot_sha256": "e94c13304709146b3b23afdf8a8fa6688f271db14f082d98378b7cdb7c121e04",
+      "rebuilt_sha256": "e94c13304709146b3b23afdf8a8fa6688f271db14f082d98378b7cdb7c121e04",
+      "equal": true,
+      "n_diffs": 0
+    },
+    "salines": {
+      "snapshot_sha256": "3dd7a4230f077ffc142b7b36ebd81b91187dea9359720dd9ce7c2c1a532cd419",
+      "rebuilt_sha256": "3dd7a4230f077ffc142b7b36ebd81b91187dea9359720dd9ce7c2c1a532cd419",
+      "equal": true,
+      "n_diffs": 0
+    },
+    "hotspots": {
+      "snapshot_sha256": "e9124120cc38ac66c1aef675a00f4f3cdb56ce25300638e021ecf176b0b6b5f7",
+      "rebuilt_sha256": "e9124120cc38ac66c1aef675a00f4f3cdb56ce25300638e021ecf176b0b6b5f7",
+      "equal": true,
+      "n_diffs": 0
+    },
+    "contamination": {
+      "snapshot_sha256": "c5c4493cf7de1efecee8a1ec8118fb6fc558e878cb7e8e6fee7580264657c8c0",
+      "rebuilt_sha256": "c5c4493cf7de1efecee8a1ec8118fb6fc558e878cb7e8e6fee7580264657c8c0",
+      "equal": true,
+      "n_diffs": 0
+    },
+    "pression_humaine": {
+      "snapshot_sha256": "25a2bf484822bcc668e775ebc26cd41ebaf47d092a4eccef2141ca254eae48e1",
+      "rebuilt_sha256": "25a2bf484822bcc668e775ebc26cd41ebaf47d092a4eccef2141ca254eae48e1",
+      "equal": true,
+      "n_diffs": 0
+    },
+    "score_ultime": {
+      "snapshot_sha256": "7ca2c105e19870dc366e4367b2f4195f64d1f06e6a644a8c7fe81cf532e0f7d6",
+      "rebuilt_sha256": "7ca2c105e19870dc366e4367b2f4195f64d1f06e6a644a8c7fe81cf532e0f7d6",
+      "equal": true,
+      "n_diffs": 0
+    },
+    "ia_omega": {
+      "snapshot_sha256": "f42e49baeaa0634296f81b8b7deb98c1ccccfd2a9b95a7101071743a48f28eaa",
+      "rebuilt_sha256": "f42e49baeaa0634296f81b8b7deb98c1ccccfd2a9b95a7101071743a48f28eaa",
+      "equal": true,
+      "n_diffs": 0
+    },
+    "scientifique_omega_par_espece": {
+      "snapshot_sha256": "c47c4d673fa55fcc74444a4bf2bfb33175c8d35c41db8a1f567d8c95f539cb2f",
+      "rebuilt_sha256": "c47c4d673fa55fcc74444a4bf2bfb33175c8d35c41db8a1f567d8c95f539cb2f",
+      "equal": true,
+      "n_diffs": 0
+    },
+    "sensoriel": {
+      "snapshot_sha256": "2068098b6ec65de99b25cec30327bc6373ccb558b02af0402e2ca56473a82066",
+      "rebuilt_sha256": "2068098b6ec65de99b25cec30327bc6373ccb558b02af0402e2ca56473a82066",
+      "equal": true,
+      "n_diffs": 0
+    },
+    "meteo_sensoriel": {
+      "snapshot_sha256": "311bc2b9a16ce2257dc51a65811c773cfd4d07107b81bfe3a0a133345287292d",
+      "rebuilt_sha256": "311bc2b9a16ce2257dc51a65811c773cfd4d07107b81bfe3a0a133345287292d",
+      "equal": true,
+      "n_diffs": 0
+    }
+  },
+  "diff_per_couche_metier_strict": {
+    "corridors": {
+      "metier_snapshot_sha256": "f282ea84699117ec9ae2899ea447d6657700d28090a4ffe7b2397b54c5bcd2cc",
+      "metier_rebuilt_sha256": "f282ea84699117ec9ae2899ea447d6657700d28090a4ffe7b2397b54c5bcd2cc",
+      "metier_equal": true
+    },
+    "zones": {
+      "metier_snapshot_sha256": "e94c13304709146b3b23afdf8a8fa6688f271db14f082d98378b7cdb7c121e04",
+      "metier_rebuilt_sha256": "e94c13304709146b3b23afdf8a8fa6688f271db14f082d98378b7cdb7c121e04",
+      "metier_equal": true
+    },
+    "salines": {
+      "metier_snapshot_sha256": "3dd7a4230f077ffc142b7b36ebd81b91187dea9359720dd9ce7c2c1a532cd419",
+      "metier_rebuilt_sha256": "3dd7a4230f077ffc142b7b36ebd81b91187dea9359720dd9ce7c2c1a532cd419",
+      "metier_equal": true
+    },
+    "hotspots": {
+      "metier_snapshot_sha256": "e9124120cc38ac66c1aef675a00f4f3cdb56ce25300638e021ecf176b0b6b5f7",
+      "metier_rebuilt_sha256": "e9124120cc38ac66c1aef675a00f4f3cdb56ce25300638e021ecf176b0b6b5f7",
+      "metier_equal": true
+    },
+    "contamination": {
+      "metier_snapshot_sha256": "c5c4493cf7de1efecee8a1ec8118fb6fc558e878cb7e8e6fee7580264657c8c0",
+      "metier_rebuilt_sha256": "c5c4493cf7de1efecee8a1ec8118fb6fc558e878cb7e8e6fee7580264657c8c0",
+      "metier_equal": true
+    },
+    "pression_humaine": {
+      "metier_snapshot_sha256": "25a2bf484822bcc668e775ebc26cd41ebaf47d092a4eccef2141ca254eae48e1",
+      "metier_rebuilt_sha256": "25a2bf484822bcc668e775ebc26cd41ebaf47d092a4eccef2141ca254eae48e1",
+      "metier_equal": true
+    },
+    "score_ultime": {
+      "metier_snapshot_sha256": "7ca2c105e19870dc366e4367b2f4195f64d1f06e6a644a8c7fe81cf532e0f7d6",
+      "metier_rebuilt_sha256": "7ca2c105e19870dc366e4367b2f4195f64d1f06e6a644a8c7fe81cf532e0f7d6",
+      "metier_equal": true
+    },
+    "ia_omega": {
+      "metier_snapshot_sha256": "f42e49baeaa0634296f81b8b7deb98c1ccccfd2a9b95a7101071743a48f28eaa",
+      "metier_rebuilt_sha256": "f42e49baeaa0634296f81b8b7deb98c1ccccfd2a9b95a7101071743a48f28eaa",
+      "metier_equal": true
+    },
+    "scientifique_omega_par_espece": {
+      "metier_snapshot_sha256": "c47c4d673fa55fcc74444a4bf2bfb33175c8d35c41db8a1f567d8c95f539cb2f",
+      "metier_rebuilt_sha256": "c47c4d673fa55fcc74444a4bf2bfb33175c8d35c41db8a1f567d8c95f539cb2f",
+      "metier_equal": true
+    },
+    "sensoriel": {
+      "metier_snapshot_sha256": "2068098b6ec65de99b25cec30327bc6373ccb558b02af0402e2ca56473a82066",
+      "metier_rebuilt_sha256": "2068098b6ec65de99b25cec30327bc6373ccb558b02af0402e2ca56473a82066",
+      "metier_equal": true
+    },
+    "meteo_sensoriel": {
+      "metier_snapshot_sha256": "311bc2b9a16ce2257dc51a65811c773cfd4d07107b81bfe3a0a133345287292d",
+      "metier_rebuilt_sha256": "311bc2b9a16ce2257dc51a65811c773cfd4d07107b81bfe3a0a133345287292d",
+      "metier_equal": true
+    }
+  }
+}

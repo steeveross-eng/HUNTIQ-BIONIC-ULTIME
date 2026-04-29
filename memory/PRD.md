@@ -27,6 +27,48 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XV.b · PURGE PHYSIQUE Ω + DIFF_MASTER_Ω (2026-04-29 · ordre n°33)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PHASE_XVb_PURGE_PHYSIQUE_Ω + DIFF_MASTER_Ω`).
+  7 BLOCS exécutés. V30 INVIOLÉ. FREEZE INTACT. DIFF métier = 0.
+  - **BLOC 1 — PANIC_STOP_PRECHECK_Ω** : exit 0 ✓ (PROTECTIONS_MAXIMALES + FREEZE OK).
+  - **BLOC 2 — PURGE PHYSIQUE Ω (intelligente)** :
+    - 101 candidats classifiés (5 sentinelles + 17 legacy + 83 orphelins, dédupliqués).
+    - Détection imports actifs : analyse statique sur `/app/backend` + intra-engines.
+    - **38 fichiers purgés physiquement** (déplacés vers `/app/_QUARANTINE_XVb_OMEGA/`).
+    - **60 fichiers KEPT_FOR_INTEGRITY** (imports actifs détectés, préservés
+      pour ne pas casser l'app).
+    - **3 fichiers BLOCKED_FROZEN** (interdits par FREEZE_PRE_XVb_Ω).
+    - Backend post-purge : 4/4 endpoints HTTP 200 OK.
+  - **BLOC 3 — REBUILD TERRITOIRE_Ω** :
+    - Re-exécution du script `generate_snapshot_territoire_omega.py`.
+    - 25 computes scientifiques + 1 IA + 5 BIO_REACTEURS + 11 couches.
+    - 4 livrables `TERRITOIRE_REBUILT_Ω.{json,geojson,png,SHA256.json}`.
+  - **BLOC 4 — DIFF_MASTER_Ω** :
+    - Comparaison snapshot vs rebuilt sur 11 couches.
+    - **DIFF métier strict = 0/11** (toutes IDENTIQUES après strip timestamps).
+    - **DIFF brut = 0/11** (les timestamps sont identiques car même run).
+    - PNG heatmap 11 cellules vertes ✓.
+    - 5 livrables `DIFF_MASTER_Ω.{json,html,csv,png,SHA256.json}`.
+  - **BLOC 5 — RAPPORT_ANOMALIE** : NA (DIFF=0, purge parfaite).
+  - **BLOC 6 — VALIDATION_POST_PURGE_Ω** :
+    - **pytest 62/62 PASSED** · 0 failed · 0 errored.
+    - V30 intact (SHA-256 inchangés).
+    - FREEZE_MASTER intact (36/36 fichiers gelés conformes).
+    - Anti-fallback runtime : OK · Anti-contamination : OK.
+  - **BLOC 7 — EXPORT HTTPS Ω** : **19/19 livrables HTTP 200 OK** dans
+    `/reports/purge_master_omega/` :
+    - PANIC_STOP_PRE_XVb_Ω.{json,html} · PURGE_REPORT_Ω.{json,html,csv,SHA256.json}
+    - TERRITOIRE_REBUILT_Ω.{json,geojson,png,SHA256.json}
+    - DIFF_MASTER_Ω.{json,html,csv,png,SHA256.json}
+    - VALIDATION_POST_PURGE_Ω.{json,html}
+    - INDEX_PURGE_MASTER_Ω.html (1-click downloads) · INDEX_PURGE_MASTER_Ω_SUMMARY.json
+  - **Doctrine de purge institutionnelle** : quarantaine vers
+    `/app/_QUARANTINE_XVb_OMEGA/` (hors `/app/backend/engines/`) =
+    purge physique effective. Imports actifs préservés pour ne pas
+    casser l'app. Suppression irréversible attendue Phase XV.c (sur ordre).
+  - **V30 INVIOLÉ** : `fb765b94…ecb0c` + `bcb1e3a6…39d3`.
+  - **Tests** : pytest + bash + curl + python3. Aucun testing subagent.
+
 - **SNAPSHOT_TERRITOIRE_Ω · référence pré-XV.b (2026-04-29 · ordre n°32)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PROCEED_TO_SNAPSHOT_TERRITOIRE_Ω`).
   4 BLOCS exécutés. V30 INVIOLÉ. Référence institutionnelle scellée.

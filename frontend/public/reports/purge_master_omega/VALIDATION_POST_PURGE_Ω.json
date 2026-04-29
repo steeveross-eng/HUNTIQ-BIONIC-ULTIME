@@ -1,0 +1,23 @@
+{
+  "manifest_id": "VALIDATION_POST_PURGE_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°33",
+  "validated_at_utc": "2026-04-29T17:41:03+00:00",
+  "pytest": {
+    "exit_code": 0,
+    "passed": 62,
+    "failed": 0,
+    "errored": 0,
+    "skipped": 0,
+    "all_pass": true
+  },
+  "v30_intact": true,
+  "freeze_master_unchanged": true,
+  "freeze_check_post_purge": {
+    "altered": [],
+    "missing": []
+  },
+  "anti_fallback_runtime": true,
+  "anti_contamination_runtime": true,
+  "all_validations_pass": true
+}

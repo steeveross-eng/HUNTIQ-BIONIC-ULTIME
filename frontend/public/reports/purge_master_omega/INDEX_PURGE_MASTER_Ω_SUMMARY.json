@@ -1,0 +1,28 @@
+{
+  "ordre": "n°33",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "directive": "PHASE_XVb_PURGE_PHYSIQUE_Ω + DIFF_MASTER_Ω",
+  "executed_at_utc": "2026-04-29T17:41:03+00:00",
+  "blocs_status": {
+    "BLOC_1_PANIC_STOP_PRECHECK": "OK",
+    "BLOC_2_PURGE_PHYSIQUE": "OK",
+    "BLOC_3_REBUILD_TERRITOIRE": "OK",
+    "BLOC_4_DIFF_MASTER": "OK_DIFF=0",
+    "BLOC_5_RAPPORT_ANOMALIE": "NA",
+    "BLOC_6_VALIDATION_POST_PURGE": "OK",
+    "BLOC_7_EXPORT_HTTPS": "OK"
+  },
+  "v30_intact": true,
+  "freeze_intact": true,
+  "purge_files_total": 38,
+  "kept_for_integrity": 60,
+  "diff_metier_total": 0,
+  "pytest_summary": {
+    "exit_code": 0,
+    "passed": 62,
+    "failed": 0,
+    "errored": 0,
+    "skipped": 0,
+    "all_pass": true
+  }
+}
