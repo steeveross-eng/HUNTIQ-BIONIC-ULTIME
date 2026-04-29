@@ -1,0 +1,75 @@
+<!DOCTYPE html><html lang='fr'><head><meta charset='utf-8'/>
+<title>VALIDATION_PROTOCOLES_Ω</title><style>
+:root{--bg:#0a1018;--panel:#111c2e;--panel2:#162032;--txt:#e2e8f0;--mute:#94a3b8;--accent:#06b6d4;--accent2:#22d3ee;--ok:#16a34a;--gold:#f59e0b;--dang:#dc2626;--bord:#1e293b;}
+*{box-sizing:border-box;}
+body{font-family:'Inter','Segoe UI',sans-serif;background:linear-gradient(180deg,#0a1018 0%,#0b1320 100%);color:var(--txt);margin:0;padding:32px 20px;}
+.wrap{max-width:1320px;margin:0 auto;}
+header.title{border-left:5px solid var(--gold);padding:6px 0 6px 18px;margin-bottom:22px;}
+header.title h1{margin:0;font-size:24px;color:#fef3c7;letter-spacing:0.6px;}
+header.title .sub{color:var(--mute);font-size:13px;margin-top:6px;}
+.b-ok{background:linear-gradient(135deg,#14532d 0%,#15803d 100%);border:1px solid var(--ok);color:#dcfce7;padding:12px 22px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:18px;}
+.b-ko{background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 100%);border:1px solid var(--dang);color:#fee2e2;padding:12px 22px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:18px;}
+.b-gold{background:linear-gradient(135deg,#78350f 0%,#92400e 100%);border:1px solid var(--gold);color:#fef3c7;padding:12px 22px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:18px;}
+h2{color:var(--gold);font-size:18px;margin:32px 0 12px;border-left:4px solid var(--gold);padding-left:12px;}
+h3{color:var(--accent2);font-size:15px;margin:22px 0 10px;}
+.card{background:var(--panel);border:1px solid var(--bord);border-radius:10px;padding:18px 22px;margin-bottom:18px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px;}
+.kpi{padding:14px 18px;background:var(--panel2);border:1px solid var(--bord);border-radius:8px;}
+.kpi .num{color:var(--accent2);font-weight:700;font-size:22px;}
+.kpi .lbl{color:var(--mute);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;}
+table{width:100%;border-collapse:collapse;font-size:11.5px;}
+th,td{padding:8px 10px;border-bottom:1px solid var(--bord);text-align:left;vertical-align:top;}
+th{background:var(--panel2);color:#fff;text-transform:uppercase;font-size:10.5px;letter-spacing:0.5px;}
+.scroll{max-height:520px;overflow-y:auto;border:1px solid var(--bord);border-radius:6px;}
+.dl{color:var(--accent2);text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid rgba(6,182,212,0.35);border-radius:5px;}
+.mono{font-family:'JetBrains Mono','Courier New',monospace;font-size:10px;color:var(--mute);word-break:break-all;}
+.foot{margin-top:30px;padding:18px 22px;background:var(--panel);border:1px solid var(--bord);border-radius:10px;font-size:12px;color:var(--mute);}
+.lbl-foot{color:var(--accent2);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:0.5px;}
+.v30-lock{margin-top:14px;padding:10px 14px;background:rgba(22,163,74,0.10);border:1px solid rgba(22,163,74,0.45);border-radius:6px;color:#4ade80;font-weight:700;text-align:center;letter-spacing:0.6px;}
+.b-acc{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(6,182,212,0.18);color:var(--accent2);border:1px solid rgba(6,182,212,0.45);font-weight:700;font-size:10px;}
+.b-warn{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.18);color:var(--gold);border:1px solid rgba(245,158,11,0.45);font-weight:700;font-size:10px;}
+.b-dang{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(220,38,38,0.18);color:#fca5a5;border:1px solid rgba(220,38,38,0.45);font-weight:700;font-size:10px;}
+.b-low{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(34,197,94,0.18);color:#86efac;border:1px solid rgba(34,197,94,0.45);font-weight:700;font-size:10px;}
+.b-p0{background:#fb7185;color:#1f2937;font-weight:700;padding:2px 6px;border-radius:4px;font-size:10px;}
+.b-p1{background:#fbbf24;color:#1f2937;font-weight:700;padding:2px 6px;border-radius:4px;font-size:10px;}
+.b-p2{background:#22d3ee;color:#1f2937;font-weight:700;padding:2px 6px;border-radius:4px;font-size:10px;}
+.cite{color:#60a5fa;font-style:italic;font-size:11px;}
+</style></head><body>
+<div class='wrap' data-testid='validation-protocoles'>
+<header class='title'><h1>VALIDATION_PROTOCOLES_Ω · Sceau des 3 protocoles</h1>
+<div class='sub'>BCE-4X ULTIME ABSOLU x3 · Ordre n°36 · 2026-04-29T19:10:04+00:00</div></header>
+
+<div class='b-ok'>
+✓ TOUTES VALIDATIONS PASSED · pytest 85/85 · V30 INVIOLÉ · FREEZE INTACT · backend 4/4 · HTTPS 6/6
+</div>
+
+<div class='card'><div class='kpi-grid'>
+<div class='kpi'><div class='lbl'>pytest</div><div class='num' style='color:#22c55e'>85/85</div></div>
+<div class='kpi'><div class='lbl'>V30</div><div class='num' style='color:#22c55e'>✓</div></div>
+<div class='kpi'><div class='lbl'>FREEZE</div><div class='num' style='color:#22c55e'>✓</div></div>
+<div class='kpi'><div class='lbl'>Backend</div><div class='num' style='color:#22c55e'>4/4</div></div>
+<div class='kpi'><div class='lbl'>HTTPS livrables</div><div class='num' style='color:#22c55e'>6/6</div></div>
+</div></div>
+
+<h2>1. Synthèse projections globales</h2>
+<div class='card'><table><thead><tr><th>Master</th><th>Actuel</th><th>Projeté (3 protocoles)</th><th>Δ</th></tr></thead><tbody>
+<tr><td><b>NUTRITION_MASTER</b></td><td>0.0</td><td><b>48.96</b></td><td>+48.96</td></tr>
+<tr><td><b>CORRIDORS_MASTER</b></td><td>40.0</td><td><b>69.04</b></td><td>+29.04</td></tr>
+<tr><td><b>SENSORIEL_MASTER</b></td><td>33.08</td><td><b>59.71</b></td><td>+26.63</td></tr>
+<tr><td><b>TERRITOIRE_MASTER</b></td><td>48.21</td><td><b>71.56</b></td><td>+23.35</td></tr>
+<tr><td>Décision globale</td><td>MARGINAL</td><td><b>APTE</b></td><td>—</td></tr>
+</tbody></table></div>
+
+<h2>2. Backend endpoints</h2>
+<div class='card'><table><thead><tr><th>Endpoint</th><th>HTTP</th></tr></thead><tbody><tr><td><code>/api/v30/especes/audit/status</code></td><td><b style='color:#22c55e'>200</b></td></tr><tr><td><code>/api/v30/especes/bio-reacteur/list</code></td><td><b style='color:#22c55e'>200</b></td></tr><tr><td><code>/api/v30/scientifique/list</code></td><td><b style='color:#22c55e'>200</b></td></tr><tr><td><code>/api/v30/sceau-phase-xiii/verify</code></td><td><b style='color:#22c55e'>200</b></td></tr></tbody></table></div>
+
+<h2>3. Livrables HTTPS</h2>
+<div class='card'><table><thead><tr><th>Fichier</th><th>Taille</th><th>HTTP</th><th>SHA-256</th></tr></thead>
+<tbody><tr><td><a class='dl' href='https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/PROTOCOLE_BIO_PROFILE_NUTRITION_%CE%A9.json' target='_blank' rel='noopener'>⬇ PROTOCOLE_BIO_PROFILE_NUTRITION_Ω.json</a></td><td>33 152 o</td><td><b style='color:#22c55e'>200</b></td><td class='mono'>e63485360e5f6ababd82a2310ed5da52…</td></tr><tr><td><a class='dl' href='https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/PROTOCOLE_BIO_PROFILE_NUTRITION_%CE%A9.html' target='_blank' rel='noopener'>⬇ PROTOCOLE_BIO_PROFILE_NUTRITION_Ω.html</a></td><td>28 064 o</td><td><b style='color:#22c55e'>200</b></td><td class='mono'>d80c07499a1bd9599045add4a9c79341…</td></tr><tr><td><a class='dl' href='https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_CORRIDORS_%CE%A9.json' target='_blank' rel='noopener'>⬇ PROGRESSION_CORRIDORS_Ω.json</a></td><td>22 647 o</td><td><b style='color:#22c55e'>200</b></td><td class='mono'>03636626bc24aae7a093da44455b0a37…</td></tr><tr><td><a class='dl' href='https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_CORRIDORS_%CE%A9.html' target='_blank' rel='noopener'>⬇ PROGRESSION_CORRIDORS_Ω.html</a></td><td>26 339 o</td><td><b style='color:#22c55e'>200</b></td><td class='mono'>74e9abfaf6f7cbcc08fce9db8e20cfbe…</td></tr><tr><td><a class='dl' href='https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_SENSORIEL_%CE%A9.json' target='_blank' rel='noopener'>⬇ PROGRESSION_SENSORIEL_Ω.json</a></td><td>29 168 o</td><td><b style='color:#22c55e'>200</b></td><td class='mono'>5e74a6820a96409a1c826ebb8e1c9e30…</td></tr><tr><td><a class='dl' href='https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_SENSORIEL_%CE%A9.html' target='_blank' rel='noopener'>⬇ PROGRESSION_SENSORIEL_Ω.html</a></td><td>31 026 o</td><td><b style='color:#22c55e'>200</b></td><td class='mono'>ad346d1ad9eccd235df660077425d0e5…</td></tr></tbody></table></div>
+
+<footer class='foot'>
+<div><span class='lbl-foot'>Émis :</span> COMMANDANT STEEVE-MAX</div>
+<div><span class='lbl-foot'>V30 :</span> <span class='mono'>fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c</span></div>
+<div><span class='lbl-foot'>FREEZE_MASTER_SHA :</span> <span class='mono'>31c18388ab3090fc0588cc0028a0181c638ac2fba0dff9f9d40700e9f97ccf27</span></div>
+<div class='v30-lock'>✓ Validation institutionnelle scellée · 3 protocoles prêts pour exécution</div>
+</footer></div></body></html>

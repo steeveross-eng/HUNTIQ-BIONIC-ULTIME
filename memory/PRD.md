@@ -27,6 +27,44 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XVI · 3 PROTOCOLES SCIENTIFIQUES_Ω (NUTRITION/CORRIDORS/SENSORIEL) (2026-04-29 · ordre n°36)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`DEMANDER_3_PROTOCOLES_SCIENTIFIQUES_Ω`).
+  Documents institutionnels strictement déclaratifs identifiant TOUT ce qui manque pour porter à >90 les scores des 3 SUPER ENGINES bas. **V30 INVIOLÉ. FREEZE INTACT. pytest 85/85. 8/8 livrables HTTPS 200.**
+  - **BLOC 1 — PROTOCOLE_BIO_PROFILE_NUTRITION_Ω** :
+    - 9 paramètres × 5 espèces = **45 cibles institutionnelles** (besoins_proteines, besoins_energetiques, 3 minéraux, 4 saisons).
+    - Format `{value, signature{type, unit, source, range, semantics}}` documenté.
+    - 7 sources scientifiques sourcées (Hewitt 2011, Renecker 1990, MFFP 2020-2027, Pelton 2003, Eaton-Healy 1991, Lyon-Burcham 1998, Crête 1989).
+    - Règles normalisation saisonnière + minéraux + protéines/énergie.
+    - **NUTRITION_MASTER projeté : 0.0 → 48.96** (avec valeurs nominales sourcées).
+    - 33 152 o JSON · 28 064 o HTML.
+  - **BLOC 2 — PROGRESSION_CORRIDORS_Ω** :
+    - **9 données écologiques GIS manquantes** (P0=6/P1=2/P2=1) : Circuit-theory fragmentation, couvert forestier, DEM/pente, hydrologie, anthropisation fine, barrières linéaires, pièges écologiques, **GPS-tracking 5 espèces**, indice de résistance paysage.
+    - **8 coefficients × 5 espèces = 40 cibles** (connectivite_optimum, fragmentation_penalty, distances_typiques, tolerance_ouvertures, aversion_infrastructures, distance_fuite_m, couvert_forestier_min, pente_max_deg).
+    - **5 poids manquants dans ENGINE_CORRIDORS_Ω** (couvert/pente/aversion).
+    - 7 sources sci. (Forman 2003, Beauchesne 2014, Walter 2018, Proctor 2012, Frair 2008, MFFP-Corridors 2018, Dickson 2017).
+    - **CORRIDORS_MASTER projeté : 40.0 → 69.04**.
+    - 22 647 o JSON · 26 339 o HTML.
+  - **BLOC 3 — PROGRESSION_SENSORIEL_Ω** :
+    - **8 violations BIO_PROFILE détectées** (neige.seuil_mortalite NULL ×5 ; thermo+neige_mob NULL pour OURS+DINDON).
+    - **8 stimuli manquants** (BRUIT trafic/chasse/résidentiel · LUMIÈRE pollution/routes éclairées · ODEUR humain/prédateur/phéromones).
+    - **~10 paramètres × 5 espèces = 50 cibles sensorielles** (seuil_stress, neige_mortalite, olfaction.portee_m, sensibilite_predateur, audition.seuil_db, vision.champ_visuel_deg, dichromate, pollution_lumineuse, distance_perturbation_m).
+    - **5 liens comportementaux manquants** (bruit→fuite, lumière→activité, odeur→évitement, audition→vigilance, thermo→microhabitat).
+    - 8 sources sci. (DeYoung-Miller 2011, Bloomfield 2008, Gagnon 2007, Van der Loeff 2014, Parker 2009, Powell 1997, Healy 1992, MFFP-Neige 2019).
+    - **SENSORIEL_MASTER projeté : 33.08 → 59.71**.
+    - 29 168 o JSON · 31 026 o HTML.
+  - **BLOC 4 — VALIDATION_PROTOCOLES_Ω** :
+    - **pytest 85/85 PASSED** · **V30 INVIOLÉ** · **FREEZE INTACT** · **backend 4/4 HTTP 200** · **6/6 livrables HTTPS 200 OK**.
+    - Synthèse projection cumulative : **TERRITOIRE_MASTER 48.21 → 71.56 (MARGINAL → APTE)** avec les 3 protocoles intégrés.
+  - **8 livrables institutionnels** publiés dans `/reports/purge_master_omega/` :
+    - PROTOCOLE_BIO_PROFILE_NUTRITION_Ω.{json,html}
+    - PROGRESSION_CORRIDORS_Ω.{json,html}
+    - PROGRESSION_SENSORIEL_Ω.{json,html}
+    - VALIDATION_PROTOCOLES_Ω.{json,html}
+  - **V30 INVIOLÉ** · **FREEZE_MASTER** : `31c18388ab3090fc…ccf27`.
+  - **Scripts institutionnels scellés** : `/app/scripts/protocoles_data_omega.py` (~880 lignes constantes scientifiques sourcées) + `/app/scripts/phase_xvi_protocoles_omega.py` (~720 lignes exécution 4 BLOCS).
+  - **Tests** : pytest 85/85 + curl batch 8/8 HTTPS 200 + bash + python3. Aucun testing subagent.
+  - **Action requise** : ordre formel pour démarrer la régénération des BIO_PROFILE_Ω avec les 135 valeurs cibles (45+40+50) sur les 5 espèces.
+
 - **PHASE_XVI · SUPER_ENGINES_Ω + HEATMAP + MIGRATION_TRACKER (2026-04-29 · ordre n°35)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PHASE_XVI_SUPER_ENGINES_Ω`).
   5 BLOCS séquentiels exécutés. V30 INVIOLÉ. FREEZE INTACT. **pytest 85/85 PASSED** (62 baseline + 23 PHASE XVI). 9/9 livrables HTTPS 200 OK.

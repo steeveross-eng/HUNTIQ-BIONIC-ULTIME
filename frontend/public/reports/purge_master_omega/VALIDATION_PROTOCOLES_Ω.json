@@ -1,0 +1,107 @@
+{
+  "manifest_id": "VALIDATION_PROTOCOLES_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°36",
+  "directive": "VALIDATION_3_PROTOCOLES_SCIENTIFIQUES",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "validated_at_utc": "2026-04-29T19:10:04+00:00",
+  "pytest": {
+    "passed": 85,
+    "all_pass": true,
+    "exit_code": 0
+  },
+  "v30_intact": true,
+  "freeze_intact": true,
+  "freeze_check_details": {
+    "altered": [],
+    "missing": []
+  },
+  "backend_endpoints": [
+    {
+      "endpoint": "/api/v30/especes/audit/status",
+      "code": 200
+    },
+    {
+      "endpoint": "/api/v30/especes/bio-reacteur/list",
+      "code": 200
+    },
+    {
+      "endpoint": "/api/v30/scientifique/list",
+      "code": 200
+    },
+    {
+      "endpoint": "/api/v30/sceau-phase-xiii/verify",
+      "code": 200
+    }
+  ],
+  "backend_ok": true,
+  "livrables_https": [
+    {
+      "filename": "PROTOCOLE_BIO_PROFILE_NUTRITION_Ω.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/PROTOCOLE_BIO_PROFILE_NUTRITION_%CE%A9.json",
+      "http_code": 200,
+      "size_bytes": 33152,
+      "sha256": "e63485360e5f6ababd82a2310ed5da52e2b7a121d99a1e125b5fc175b39f6dd6"
+    },
+    {
+      "filename": "PROTOCOLE_BIO_PROFILE_NUTRITION_Ω.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/PROTOCOLE_BIO_PROFILE_NUTRITION_%CE%A9.html",
+      "http_code": 200,
+      "size_bytes": 28064,
+      "sha256": "d80c07499a1bd9599045add4a9c79341d3a86ab79bebc72ee98901ef9521b186"
+    },
+    {
+      "filename": "PROGRESSION_CORRIDORS_Ω.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_CORRIDORS_%CE%A9.json",
+      "http_code": 200,
+      "size_bytes": 22647,
+      "sha256": "03636626bc24aae7a093da44455b0a370bc5855fdd10ae8fde6c30b15cfa1a7b"
+    },
+    {
+      "filename": "PROGRESSION_CORRIDORS_Ω.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_CORRIDORS_%CE%A9.html",
+      "http_code": 200,
+      "size_bytes": 26339,
+      "sha256": "74e9abfaf6f7cbcc08fce9db8e20cfbe72ccf14aeb50a01ab88cef4abab2e255"
+    },
+    {
+      "filename": "PROGRESSION_SENSORIEL_Ω.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_SENSORIEL_%CE%A9.json",
+      "http_code": 200,
+      "size_bytes": 29168,
+      "sha256": "5e74a6820a96409a1c826ebb8e1c9e3085ace5a403152f852db0bed039932f91"
+    },
+    {
+      "filename": "PROGRESSION_SENSORIEL_Ω.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_SENSORIEL_%CE%A9.html",
+      "http_code": 200,
+      "size_bytes": 31026,
+      "sha256": "ad346d1ad9eccd235df660077425d0e516f88b993f89b409172504af2698f8d4"
+    }
+  ],
+  "all_https_ok": true,
+  "anti_regression": true,
+  "anti_contamination": true,
+  "all_validations_pass": true,
+  "synthese_projections_globales": {
+    "actuels": {
+      "nutrition_master": 0.0,
+      "corridors_master": 40.0,
+      "sensoriel_master": 33.08,
+      "territoire_master": 48.21
+    },
+    "projetes_3_protocoles": {
+      "nutrition_master": 48.96,
+      "corridors_master": 69.04,
+      "sensoriel_master": 59.71,
+      "territoire_master": 71.56
+    },
+    "deltas": {
+      "nutrition_master": 48.96,
+      "corridors_master": 29.04,
+      "sensoriel_master": 26.63,
+      "territoire_master": 23.35
+    },
+    "decision_globale_projected": "APTE"
+  }
+}

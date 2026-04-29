@@ -1,0 +1,893 @@
+{
+  "manifest_id": "PROGRESSION_SENSORIEL_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°36",
+  "directive": "PROTOCOLE_SENSORIEL_Ω",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-29T19:10:04+00:00",
+  "objectif": "Inventaire institutionnel des stimuli manquants (bruit, lumière, odeurs), des paramètres sensoriels par espèce, des liens comportementaux absents dans ENGINE_SENSORIEL_Ω et des données minimales requises pour SENSORIEL > 90.",
+  "diagnostic_actuel": {
+    "sensoriel_master_score_actuel": 33.08,
+    "racine_du_probleme": "8 violations BIO_PROFILE détectées (neige.seuil_mortalite NULL pour 5/5 espèces ; thermoregulation.seuil_stress et neige.seuil_mobilite NULL pour OURS_NOIR et DINDON_SAUVAGE). Aucun stimulus bruit/lumière/odeur n'est intégré. Le score est calculé sur seulement 2 axes (thermique + neige) au lieu de 5+ axes.",
+    "violations_detectees_8": [
+      "CHEVREUIL::neige.seuil_mortalite::NULL_VALUE",
+      "ORIGNAL::neige.seuil_mortalite::NULL_VALUE",
+      "OURS_NOIR::thermoregulation.seuil_stress::NULL_VALUE",
+      "OURS_NOIR::neige.seuil_mobilite::NULL_VALUE",
+      "OURS_NOIR::neige.seuil_mortalite::NULL_VALUE",
+      "WAPITI::neige.seuil_mortalite::NULL_VALUE",
+      "DINDON_SAUVAGE::thermoregulation.seuil_stress::NULL_VALUE",
+      "DINDON_SAUVAGE::neige.seuil_mortalite::NULL_VALUE"
+    ]
+  },
+  "stimuli_manquants": [
+    {
+      "categorie": "BRUIT",
+      "id": "stimuli.bruit.trafic_db",
+      "priority": "P0",
+      "description": "Niveau bruit véhiculaire continu (dB SPL) cartographié sur 100m.",
+      "source": "GAGNON_2007 ; MTQ Atlas sonore",
+      "format": "raster · dB SPL"
+    },
+    {
+      "categorie": "BRUIT",
+      "id": "stimuli.bruit.chasse_ponctuel_db",
+      "priority": "P0",
+      "description": "Niveau bruit chasse — pic événementiel saison automnale.",
+      "source": "BLOOMFIELD_2008 ; MFFP",
+      "format": "vecteur point + dB"
+    },
+    {
+      "categorie": "BRUIT",
+      "id": "stimuli.bruit.humain_residentiel_db",
+      "priority": "P1",
+      "description": "Bruit anthropique résidentiel (jour/nuit séparés).",
+      "source": "BLOOMFIELD_2008",
+      "format": "raster · dB SPL"
+    },
+    {
+      "categorie": "LUMIERE",
+      "id": "stimuli.lumiere.pollution_lux",
+      "priority": "P0",
+      "description": "Pollution lumineuse nocturne (lux ou mag/arcsec²).",
+      "source": "VANDERLOEFF_2014 ; VIIRS satellite",
+      "format": "raster · mag/arcsec² ou lux"
+    },
+    {
+      "categorie": "LUMIERE",
+      "id": "stimuli.lumiere.routes_eclairees_lin",
+      "priority": "P1",
+      "description": "Linéaire routes éclairées (km par pixel 100m).",
+      "source": "MTQ ; Hydro-Québec",
+      "format": "raster · km"
+    },
+    {
+      "categorie": "ODEUR",
+      "id": "stimuli.odeur.humain_persistance_h",
+      "priority": "P0",
+      "description": "Persistance trace olfactive humaine (heures avant dissipation).",
+      "source": "DEYOUNG_MILLER_2011",
+      "format": "scalar par espèce"
+    },
+    {
+      "categorie": "ODEUR",
+      "id": "stimuli.odeur.predateur_intensite",
+      "priority": "P0",
+      "description": "Présence olfactive prédateurs (loup/coyote/couguar) — densité estimée.",
+      "source": "DEYOUNG_MILLER_2011 ; MFFP",
+      "format": "raster · indice 0..1"
+    },
+    {
+      "categorie": "ODEUR",
+      "id": "stimuli.odeur.congeneres_phéromones",
+      "priority": "P1",
+      "description": "Phéromones congénères — sites de marquage rut/territoire.",
+      "source": "DEYOUNG_MILLER_2011",
+      "format": "vecteur point"
+    }
+  ],
+  "parametres_sensoriels_par_espece": {
+    "CHEVREUIL": {
+      "thermoregulation.seuil_stress": {
+        "value_target": 27.0,
+        "priority": "P0",
+        "deja_present": true,
+        "actuel_si_present": 27.0,
+        "signature": {
+          "type": "float",
+          "unit": "°C",
+          "source": "DEYOUNG_MILLER_2011 ; HEWITT_2011",
+          "range": "[20..32]",
+          "semantics": "Stress thermique au-dessus de 27°C"
+        }
+      },
+      "neige.seuil_mobilite": {
+        "value_target": 45.0,
+        "priority": "P0",
+        "deja_present": true,
+        "actuel_si_present": 45.0,
+        "signature": {
+          "type": "float",
+          "unit": "cm",
+          "source": "MFFP_NEIGE_2019",
+          "range": "[30..70]",
+          "semantics": "Seuil mobilité réduite au-dessus de 45 cm"
+        }
+      },
+      "neige.seuil_mortalite": {
+        "value_target": 80.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "cm",
+          "source": "MFFP_NEIGE_2019 ; PARKER_2009",
+          "range": "[60..120]",
+          "semantics": "Seuil mortalité hivernale (énergie+prédation+ravage)"
+        }
+      },
+      "olfaction.portee_m": {
+        "value_target": 250.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "m",
+          "source": "DEYOUNG_MILLER_2011",
+          "range": "[100..500]",
+          "semantics": "Portée olfactive humain/prédateur"
+        }
+      },
+      "olfaction.sensibilite_predateur": {
+        "value_target": 0.85,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "DEYOUNG_MILLER_2011",
+          "range": "[0..1]",
+          "semantics": "Détection coyote/loup"
+        }
+      },
+      "audition.seuil_db": {
+        "value_target": 20.0,
+        "priority": "P1",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "dB SPL @ 4kHz",
+          "source": "BLOOMFIELD_2008",
+          "range": "[15..30]",
+          "semantics": "Seuil détection auditive"
+        }
+      },
+      "vision.champ_visuel_deg": {
+        "value_target": 310.0,
+        "priority": "P1",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "degrés",
+          "source": "DEYOUNG_MILLER_2011",
+          "range": "[280..330]",
+          "semantics": "Champ panoramique très large"
+        }
+      },
+      "vision.dichromate": {
+        "value_target": true,
+        "priority": "P2",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "bool",
+          "unit": "—",
+          "source": "DEYOUNG_MILLER_2011",
+          "range": "True/False",
+          "semantics": "Vision dichromatique (bleu/jaune)"
+        }
+      },
+      "lumiere.sensibilite_pollution": {
+        "value_target": 0.55,
+        "priority": "P1",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "VANDERLOEFF_2014",
+          "range": "[0..1]",
+          "semantics": "Sensibilité éclairage artificiel"
+        }
+      },
+      "reaction.distance_perturbation_m": {
+        "value_target": 150.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "m",
+          "source": "DEYOUNG_MILLER_2011",
+          "range": "[50..400]",
+          "semantics": "Distance déclenchement fuite"
+        }
+      }
+    },
+    "ORIGNAL": {
+      "thermoregulation.seuil_stress": {
+        "value_target": 15.5,
+        "priority": "P0",
+        "deja_present": true,
+        "actuel_si_present": 15.5,
+        "signature": {
+          "type": "float",
+          "unit": "°C",
+          "source": "RENECKER_HUDSON_1990",
+          "range": "[12..18]",
+          "semantics": "Stress thermique très bas"
+        }
+      },
+      "neige.seuil_mobilite": {
+        "value_target": 65.0,
+        "priority": "P0",
+        "deja_present": true,
+        "actuel_si_present": 65.0,
+        "signature": {
+          "type": "float",
+          "unit": "cm",
+          "source": "MFFP_NEIGE_2019",
+          "range": "[50..90]",
+          "semantics": "Seuil mobilité — gabarit grand"
+        }
+      },
+      "neige.seuil_mortalite": {
+        "value_target": 110.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "cm",
+          "source": "MFFP_NEIGE_2019 ; CRETE_1989",
+          "range": "[90..150]",
+          "semantics": "Seuil mortalité hivernale orignal"
+        }
+      },
+      "olfaction.portee_m": {
+        "value_target": 350.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "m",
+          "source": "RENECKER_HUDSON_1990",
+          "range": "[150..600]",
+          "semantics": "Portée olfactive grande (museau allongé)"
+        }
+      },
+      "olfaction.sensibilite_predateur": {
+        "value_target": 0.8,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "RENECKER_HUDSON_1990",
+          "range": "[0..1]",
+          "semantics": "Détection loup/ours noir"
+        }
+      },
+      "audition.seuil_db": {
+        "value_target": 18.0,
+        "priority": "P1",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "dB SPL @ 2kHz",
+          "source": "BLOOMFIELD_2008",
+          "range": "[12..25]",
+          "semantics": "Seuil détection — basses fréquences"
+        }
+      },
+      "vision.champ_visuel_deg": {
+        "value_target": 295.0,
+        "priority": "P2",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "degrés",
+          "source": "RENECKER_HUDSON_1990",
+          "range": "[280..310]",
+          "semantics": "Champ panoramique modéré"
+        }
+      },
+      "vision.dichromate": {
+        "value_target": true,
+        "priority": "P2",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "bool",
+          "unit": "—",
+          "source": "RENECKER_HUDSON_1990",
+          "range": "True/False",
+          "semantics": "Vision dichromatique cervidé"
+        }
+      },
+      "lumiere.sensibilite_pollution": {
+        "value_target": 0.4,
+        "priority": "P1",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "VANDERLOEFF_2014",
+          "range": "[0..1]",
+          "semantics": "Sensibilité modérée éclairage"
+        }
+      },
+      "reaction.distance_perturbation_m": {
+        "value_target": 300.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "m",
+          "source": "RENECKER_HUDSON_1990",
+          "range": "[150..500]",
+          "semantics": "Distance fuite supérieure au chevreuil"
+        }
+      }
+    },
+    "OURS_NOIR": {
+      "thermoregulation.seuil_stress": {
+        "value_target": 24.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "°C",
+          "source": "POWELL_1997",
+          "range": "[20..30]",
+          "semantics": "Stress thermique — fourrure dense"
+        }
+      },
+      "neige.seuil_mobilite": {
+        "value_target": 50.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "cm",
+          "source": "POWELL_1997 ; MFFP_NEIGE_2019",
+          "range": "[40..80]",
+          "semantics": "Seuil mobilité (généralement en hibernation)"
+        }
+      },
+      "neige.seuil_mortalite": {
+        "value_target": 150.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "cm",
+          "source": "POWELL_1997",
+          "range": "Hibernation ; seuil élevé (rare exposition)",
+          "semantics": "Mortalité rare neige (hibernation protectrice)"
+        }
+      },
+      "olfaction.portee_m": {
+        "value_target": 800.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "m",
+          "source": "POWELL_1997",
+          "range": "[500..2000]",
+          "semantics": "Portée olfactive exceptionnelle (carcasses)"
+        }
+      },
+      "olfaction.sensibilite_predateur": {
+        "value_target": 0.4,
+        "priority": "P1",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "POWELL_1997",
+          "range": "[0..1]",
+          "semantics": "Apex predator — peu de prédateurs"
+        }
+      },
+      "audition.seuil_db": {
+        "value_target": 22.0,
+        "priority": "P1",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "dB SPL @ 2kHz",
+          "source": "BLOOMFIELD_2008 ; POWELL_1997",
+          "range": "[15..30]",
+          "semantics": "Seuil détection auditive"
+        }
+      },
+      "vision.champ_visuel_deg": {
+        "value_target": 230.0,
+        "priority": "P2",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "degrés",
+          "source": "POWELL_1997",
+          "range": "[210..250]",
+          "semantics": "Champ visuel limité (yeux frontaux)"
+        }
+      },
+      "vision.dichromate": {
+        "value_target": true,
+        "priority": "P2",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "bool",
+          "unit": "—",
+          "source": "POWELL_1997",
+          "range": "True/False",
+          "semantics": "Vision dichromatique mais olfaction dominante"
+        }
+      },
+      "lumiere.sensibilite_pollution": {
+        "value_target": 0.35,
+        "priority": "P1",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "VANDERLOEFF_2014",
+          "range": "[0..1]",
+          "semantics": "Sensibilité faible — habitat forestier"
+        }
+      },
+      "reaction.distance_perturbation_m": {
+        "value_target": 100.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "m",
+          "source": "POWELL_1997 ; PELTON_2003",
+          "range": "[40..250]",
+          "semantics": "Distance fuite — habituation possible"
+        }
+      }
+    },
+    "WAPITI": {
+      "thermoregulation.seuil_stress": {
+        "value_target": 22.5,
+        "priority": "P0",
+        "deja_present": true,
+        "actuel_si_present": 22.5,
+        "signature": {
+          "type": "float",
+          "unit": "°C",
+          "source": "LYON_BURCHAM_1998",
+          "range": "[18..28]",
+          "semantics": "Stress thermique"
+        }
+      },
+      "neige.seuil_mobilite": {
+        "value_target": 50.0,
+        "priority": "P0",
+        "deja_present": true,
+        "actuel_si_present": 50.0,
+        "signature": {
+          "type": "float",
+          "unit": "cm",
+          "source": "MFFP_NEIGE_2019 ; LYON_BURCHAM_1998",
+          "range": "[35..75]",
+          "semantics": "Seuil mobilité"
+        }
+      },
+      "neige.seuil_mortalite": {
+        "value_target": 100.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "cm",
+          "source": "MFFP_NEIGE_2019 ; PARKER_2009",
+          "range": "[80..140]",
+          "semantics": "Seuil mortalité hivernale wapiti"
+        }
+      },
+      "olfaction.portee_m": {
+        "value_target": 280.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "m",
+          "source": "GAGNON_2007 ; LYON_BURCHAM_1998",
+          "range": "[120..500]",
+          "semantics": "Portée olfactive humain/prédateur"
+        }
+      },
+      "olfaction.sensibilite_predateur": {
+        "value_target": 0.78,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "FRAIR_2008",
+          "range": "[0..1]",
+          "semantics": "Détection loup, couguar"
+        }
+      },
+      "audition.seuil_db": {
+        "value_target": 19.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "dB SPL @ 4kHz",
+          "source": "BLOOMFIELD_2008",
+          "range": "[14..28]",
+          "semantics": "Sensibilité bruit véhiculaire élevée"
+        }
+      },
+      "vision.champ_visuel_deg": {
+        "value_target": 300.0,
+        "priority": "P1",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "degrés",
+          "source": "FRAIR_2008",
+          "range": "[280..320]",
+          "semantics": "Champ panoramique large"
+        }
+      },
+      "vision.dichromate": {
+        "value_target": true,
+        "priority": "P2",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "bool",
+          "unit": "—",
+          "source": "FRAIR_2008",
+          "range": "True/False",
+          "semantics": "Vision dichromatique"
+        }
+      },
+      "lumiere.sensibilite_pollution": {
+        "value_target": 0.5,
+        "priority": "P1",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "VANDERLOEFF_2014",
+          "range": "[0..1]",
+          "semantics": "Sensibilité modérée — sites brâme"
+        }
+      },
+      "reaction.distance_perturbation_m": {
+        "value_target": 250.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "m",
+          "source": "GAGNON_2007 ; FRAIR_2008",
+          "range": "[100..500]",
+          "semantics": "Distance fuite véhicule (fermée chasse) ; >500m sites brâme"
+        }
+      }
+    },
+    "DINDON_SAUVAGE": {
+      "thermoregulation.seuil_stress": {
+        "value_target": 30.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "°C",
+          "source": "EATON_HEALY_1991",
+          "range": "[26..35]",
+          "semantics": "Stress thermique élevé (plumes isolantes)"
+        }
+      },
+      "neige.seuil_mobilite": {
+        "value_target": 25.0,
+        "priority": "P0",
+        "deja_present": true,
+        "actuel_si_present": 25.0,
+        "signature": {
+          "type": "float",
+          "unit": "cm",
+          "source": "MFFP_NEIGE_2019 ; EATON_HEALY_1991",
+          "range": "[15..40]",
+          "semantics": "Seuil mobilité (gabarit petit, pattes courtes)"
+        }
+      },
+      "neige.seuil_mortalite": {
+        "value_target": 50.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "cm",
+          "source": "MFFP_NEIGE_2019 ; EATON_HEALY_1991",
+          "range": "[35..70]",
+          "semantics": "Seuil mortalité — accès graines bloqué"
+        }
+      },
+      "olfaction.portee_m": {
+        "value_target": 30.0,
+        "priority": "P2",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "m",
+          "source": "HEALY_1992",
+          "range": "[10..80]",
+          "semantics": "Olfaction faible (oiseau)"
+        }
+      },
+      "olfaction.sensibilite_predateur": {
+        "value_target": 0.2,
+        "priority": "P2",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "HEALY_1992",
+          "range": "[0..1]",
+          "semantics": "Olfaction marginale — vision dominante"
+        }
+      },
+      "audition.seuil_db": {
+        "value_target": 10.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "dB SPL @ 2kHz",
+          "source": "HEALY_1992 ; BLOOMFIELD_2008",
+          "range": "[8..15]",
+          "semantics": "Audition très fine"
+        }
+      },
+      "vision.champ_visuel_deg": {
+        "value_target": 360.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "degrés",
+          "source": "HEALY_1992 ; EATON_HEALY_1991",
+          "range": "[340..360]",
+          "semantics": "Champ panoramique total (yeux latéraux)"
+        }
+      },
+      "vision.acuite_relative": {
+        "value_target": 8.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "× humain",
+          "source": "HEALY_1992",
+          "range": "[5..12]",
+          "semantics": "Acuité visuelle 5-8x humaine"
+        }
+      },
+      "vision.tetrachromate_uv": {
+        "value_target": true,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "bool",
+          "unit": "—",
+          "source": "HEALY_1992",
+          "range": "True/False",
+          "semantics": "Vision tétrachromatique avec UV"
+        }
+      },
+      "lumiere.sensibilite_pollution": {
+        "value_target": 0.65,
+        "priority": "P1",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "VANDERLOEFF_2014 ; HEALY_1992",
+          "range": "[0..1]",
+          "semantics": "Sensibilité élevée — perchage nocturne"
+        }
+      },
+      "reaction.distance_perturbation_m": {
+        "value_target": 80.0,
+        "priority": "P0",
+        "deja_present": false,
+        "actuel_si_present": null,
+        "signature": {
+          "type": "float",
+          "unit": "m",
+          "source": "EATON_HEALY_1991",
+          "range": "[30..200]",
+          "semantics": "Distance fuite ; chasse intensifie"
+        }
+      }
+    }
+  },
+  "liens_comportementaux_manquants": [
+    {
+      "id": "lien.bruit_to_distance_perturbation",
+      "description": "Liaison niveau bruit (dB) → distance fuite par espèce.",
+      "missing": "Aucune table d'équivalence dB→distance dans ENGINE_SENSORIEL_Ω."
+    },
+    {
+      "id": "lien.lumiere_to_activite_nocturne",
+      "description": "Liaison pollution lumineuse → modulation activité nocturne.",
+      "missing": "Aucune fonction de pondération dans ENGINE_COMPORTEMENT_Ω."
+    },
+    {
+      "id": "lien.odeur_predateur_to_evitement",
+      "description": "Liaison odeur prédateur → indice d'évitement zone.",
+      "missing": "Aucune cartographie présence olfactive."
+    },
+    {
+      "id": "lien.audition_to_vigilance",
+      "description": "Liaison seuil auditif × bruit ambiant → temps consacré à vigilance.",
+      "missing": "Aucune fonction de partition vigilance/alimentation."
+    },
+    {
+      "id": "lien.thermoregulation_to_microhabitat",
+      "description": "Liaison seuil_stress × température réelle → sélection microhabitat.",
+      "missing": "ENGINE_SENSORIEL ne consomme pas la couche thermique fine."
+    }
+  ],
+  "valeurs_minimales_pour_master_sup_90": {
+    "regle": "Pour SENSORIEL_MASTER > 90 : score moyen 5 espèces sur 5 axes (thermo, neige, olf, aud, vis) ≥ 90. Les 5 axes doivent simultanément être à au moins 85 par espèce. Le minimum institutionnel : seuil_mortalite renseigné × portée olfactive nominale × audition fine.",
+    "minimums_par_espece": {
+      "CHEVREUIL": {
+        "thermoregulation_min": 27.0,
+        "neige_mortalite_min": 80.0,
+        "olfaction_portee_min": 250.0,
+        "audition_seuil_max": 20.0,
+        "vision_champ_min": 310.0
+      },
+      "ORIGNAL": {
+        "thermoregulation_min": 15.5,
+        "neige_mortalite_min": 110.0,
+        "olfaction_portee_min": 350.0,
+        "audition_seuil_max": 18.0,
+        "vision_champ_min": 295.0
+      },
+      "OURS_NOIR": {
+        "thermoregulation_min": 24.0,
+        "neige_mortalite_min": 150.0,
+        "olfaction_portee_min": 800.0,
+        "audition_seuil_max": 22.0,
+        "vision_champ_min": 230.0
+      },
+      "WAPITI": {
+        "thermoregulation_min": 22.5,
+        "neige_mortalite_min": 100.0,
+        "olfaction_portee_min": 280.0,
+        "audition_seuil_max": 19.0,
+        "vision_champ_min": 300.0
+      },
+      "DINDON_SAUVAGE": {
+        "thermoregulation_min": 30.0,
+        "neige_mortalite_min": 50.0,
+        "olfaction_portee_min": 30.0,
+        "audition_seuil_max": 10.0,
+        "vision_champ_min": 360.0
+      }
+    },
+    "feasibilite_institutionnelle": "Les valeurs cibles correspondent à des données scientifiques moyennes publiées. Atteindre >90 exige collecter ces 50+ paramètres et étendre la formule SENSORIEL_MASTER à 5 axes pondérés."
+  },
+  "projection_impact": {
+    "sensoriel_master_projected": 59.71,
+    "score_par_espece_projected": {
+      "CHEVREUIL": 58.51,
+      "ORIGNAL": 53.01,
+      "OURS_NOIR": 64.36,
+      "WAPITI": 56.83,
+      "DINDON_SAUVAGE": 65.85
+    },
+    "territoire_master_projected_with_3_protocoles": 71.56,
+    "delta_territoire_master": 23.35,
+    "decision_globale_projected": "APTE"
+  },
+  "sources_scientifiques": [
+    {
+      "id": "DEYOUNG_MILLER_2011",
+      "citation": "DeYoung CA & Miller KV (2011). Behavior. In: Hewitt DG (ed.) Biology and Management of WT Deer. CRC Press.",
+      "domaine": "Cervidé — communication chimique, olfaction."
+    },
+    {
+      "id": "BLOOMFIELD_2008",
+      "citation": "Bloomfield LL et al. (2008). Auditory thresholds and noise impacts. Wildl Soc Bull 36:34–42.",
+      "domaine": "Sensibilité auditive faune sauvage."
+    },
+    {
+      "id": "GAGNON_2007",
+      "citation": "Gagnon JW et al. (2007). Effects of vehicular traffic on elk. J Wildl Manag 71:2318–2323.",
+      "domaine": "Wapiti — bruit véhiculaire, distance perturbation."
+    },
+    {
+      "id": "VANDERLOEFF_2014",
+      "citation": "Van der Loeff IH et al. (2014). Light pollution and wildlife. Phil Trans R Soc B 370.",
+      "domaine": "Pollution lumineuse — réponse comportementale."
+    },
+    {
+      "id": "PARKER_2009",
+      "citation": "Parker KL et al. (2009). Nutrition integrates environmental responses of ungulates. Funct Ecol 23:57–69.",
+      "domaine": "Ongulés — seuils thermiques mortalité hivernale."
+    },
+    {
+      "id": "POWELL_1997",
+      "citation": "Powell RA et al. (1997). Ecology and behaviour of N. American Black Bears. Chapman & Hall.",
+      "domaine": "Ours noir — sens, hibernation, perception."
+    },
+    {
+      "id": "HEALY_1992",
+      "citation": "Healy WM (1992). Behavior. In: Dickson JG (ed.) The Wild Turkey. Stackpole.",
+      "domaine": "Dindon — vision (champ visuel, dichromate)."
+    },
+    {
+      "id": "MFFP_NEIGE_2019",
+      "citation": "MFFP Québec (2019). Tableau de bord neige et grand cervidé — seuils mortalité hivernale.",
+      "domaine": "Référentiel institutionnel seuils nivologiques 5 espèces."
+    }
+  ],
+  "doctrine_anti_contamination": [
+    "Aucune logique générique. Chaque seuil est sourcé scientifiquement.",
+    "Aucun fallback. Seuil_mortalite NULL = anti_generique_violation tracée.",
+    "Régénération du BIO_PROFILE_Ω via processus institutionnel — V30 INVIOLABLE.",
+    "ENGINE_SENSORIEL_Ω existant non modifié — extension via ENGINE_SENSORIEL_AVANCE_Ω."
+  ]
+}

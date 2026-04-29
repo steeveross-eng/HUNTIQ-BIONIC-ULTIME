@@ -1,0 +1,838 @@
+{
+  "manifest_id": "PROTOCOLE_BIO_PROFILE_NUTRITION_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°36",
+  "directive": "PROTOCOLE_NUTRITION_Ω",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-29T19:10:04+00:00",
+  "objectif": "Protocole institutionnel listant les 9 paramètres nutrition manquants par espèce, le format attendu {value, signature}, les sources scientifiques, les règles de normalisation saisonnière, les valeurs minimales requises pour atteindre NUTRITION_MASTER > 90 et l'impact projeté sur TERRITOIRE_MASTER.",
+  "diagnostic_actuel": {
+    "nutrition_master_score_actuel": 0.0,
+    "score_par_espece_actuel": {
+      "CHEVREUIL": 0.0,
+      "ORIGNAL": 0.0,
+      "OURS_NOIR": 0.0,
+      "WAPITI": 0.0,
+      "DINDON_SAUVAGE": 0.0
+    },
+    "racine_du_probleme": "Les 9 paramètres nutrition (besoins_proteines, besoins_energetiques, 3 minéraux, 4 saisons) sont stockés sous forme de listes textuelles qualitatives au lieu du format institutionnel {value, signature}. La fonction de normalisation _coerce_float retourne 0.0 sur ces listes."
+  },
+  "format_attendu_par_parametre": {
+    "schema_value_signature": {
+      "value": "<float | object {disponibilite, ration_kg, categorie}>",
+      "signature": {
+        "type": "<float | object | bool>",
+        "unit": "<unité SI ou métabolique>",
+        "source": "<référence scientifique sourcée>",
+        "range": "<intervalle min..max validé>",
+        "semantics": "<description institutionnelle>"
+      }
+    },
+    "regles_normalisation_saisonniere": [
+      "Chaque saison fournit {disponibilite: bool, ration_kg: float, categorie: str}.",
+      "ration_kg = 0 + disponibilite=False = saison critique (hibernation acceptée pour OURS_NOIR.hiver).",
+      "Score saison = 100 si (disponibilite=True ET ration_kg > 0), sinon 0.",
+      "Score saisons = moyenne(printemps, ete, automne, hiver) — 4 valeurs."
+    ],
+    "regle_normalisation_minéraux": [
+      "Sodium ∈ [0..2.0] g/kg MS  → norm 0..100 = value/2.0 * 100 (clampé).",
+      "Calcium ∈ [0..5.0] g/kg MS → norm 0..100 = value/5.0 * 100 (clampé).",
+      "Magnésium ∈ [0..2.0] g/kg MS → norm 0..100 = value/2.0 * 100 (clampé).",
+      "Pour DINDON_SAUVAGE le calcium peut atteindre 25 g/kg (œufs) — borne supérieure adaptée 0..40."
+    ],
+    "regle_normalisation_proteines_energie": [
+      "Protéines (cervidés) ∈ [0..30%] MS → norm 0..100 = value/30 * 100.",
+      "Énergie kcal/jour : norme par espèce — chevreuil [0..5000], orignal [0..50000], ours [0..20000], wapiti [0..40000], dindon [0..500]."
+    ]
+  },
+  "parametres_manquants_par_espece": {
+    "CHEVREUIL": {
+      "nutrition.besoins_proteines": {
+        "value_actuel": "TEXTE_QUALITATIF (liste)",
+        "value_target_institutionnel": 16.0,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "% MS",
+          "source": "HEWITT_2011 ch.4 ; MFFP_PG_2020_2027 §3.2.1",
+          "range": "[12.0..20.0]",
+          "semantics": "% protéines brutes/MS, valeur printemps adulte ; ration <14 = stress reproductif"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 53.3,
+        "delta_score": 53.3
+      },
+      "nutrition.besoins_energetiques": {
+        "value_actuel": "TEXTE_QUALITATIF",
+        "value_target_institutionnel": 2800.0,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "kcal/kg MS jour",
+          "source": "HEWITT_2011 ch.4 ; CRETE_1989",
+          "range": "[1800..3500]",
+          "semantics": "Besoins énergétiques métaboliques en kcal/kg/jour pour adulte 60 kg"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 56.0,
+        "delta_score": 56.0
+      },
+      "nutrition.besoins_mineraux.sodium": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 0.3,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "g/kg MS",
+          "source": "HEWITT_2011 ch.4 ; MFFP_PG_2020_2027",
+          "range": "[0.10..0.80]",
+          "semantics": "Sodium pour gestation/lactation ; carences fréquentes en sol acide québécois"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 15.0,
+        "delta_score": 15.0
+      },
+      "nutrition.besoins_mineraux.calcium": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 4.5,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "g/kg MS",
+          "source": "HEWITT_2011 ch.4",
+          "range": "[1.5..8.0]",
+          "semantics": "Ca pour antlérogenèse, gestation, lactation"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 90.0,
+        "delta_score": 90.0
+      },
+      "nutrition.besoins_mineraux.magnesium": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 0.45,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "g/kg MS",
+          "source": "HEWITT_2011 ch.4",
+          "range": "[0.10..1.50]",
+          "semantics": "Mg cofacteur >300 enzymes ; carence = tétanie hivernale"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 22.5,
+        "delta_score": 22.5
+      },
+      "nutrition.alimentation_saisonniere.printemps": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": {
+          "disponibilite": true,
+          "ration_kg": 2.5,
+          "categorie": "fourrage_riche_proteines"
+        },
+        "signature_attendue": {
+          "type": "object",
+          "unit": "kg MS/jour + dispo",
+          "source": "MFFP_PG_2020_2027 §3.2.2 ; HEWITT_2011",
+          "range": "ration ∈ [0..5.0]",
+          "semantics": "Disponibilité fourrage printanier ; bourgeons, pousses, herbacées"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      },
+      "nutrition.alimentation_saisonniere.ete": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": {
+          "disponibilite": true,
+          "ration_kg": 2.2,
+          "categorie": "vegetation_humide_riche"
+        },
+        "signature_attendue": {
+          "type": "object",
+          "unit": "kg MS/jour",
+          "source": "HEWITT_2011 ch.4",
+          "range": "[0..5.0]",
+          "semantics": "Sélection thermorégulation été (zones humides)"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      },
+      "nutrition.alimentation_saisonniere.automne": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": {
+          "disponibilite": true,
+          "ration_kg": 3.0,
+          "categorie": "mast_glands_fruits"
+        },
+        "signature_attendue": {
+          "type": "object",
+          "unit": "kg MS/jour",
+          "source": "HEWITT_2011 ch.4",
+          "range": "[0..5.0]",
+          "semantics": "Mast (glands, faînes) — pic énergétique automnal"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      },
+      "nutrition.alimentation_saisonniere.hiver": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": {
+          "disponibilite": true,
+          "ration_kg": 1.8,
+          "categorie": "ravage_thuya_branchage"
+        },
+        "signature_attendue": {
+          "type": "object",
+          "unit": "kg MS/jour",
+          "source": "MFFP_PG_2020_2027 §3.2.3",
+          "range": "[0..3.5]",
+          "semantics": "Ravages d'hiver, thuya, ericacees"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      }
+    },
+    "ORIGNAL": {
+      "nutrition.besoins_proteines": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 12.0,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "% MS",
+          "source": "RENECKER_HUDSON_1990 ; MFFP_PG_2020_2027",
+          "range": "[8.0..18.0]",
+          "semantics": "% protéines brutes ; adulte 450 kg"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 40.0,
+        "delta_score": 40.0
+      },
+      "nutrition.besoins_energetiques": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 35000.0,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "kcal/jour",
+          "source": "RENECKER_HUDSON_1990 ; CRETE_1989",
+          "range": "[20000..50000]",
+          "semantics": "Besoins métaboliques quotidiens orignal adulte"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 70.0,
+        "delta_score": 70.0
+      },
+      "nutrition.besoins_mineraux.sodium": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 1.2,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "g/kg MS",
+          "source": "RENECKER_HUDSON_1990",
+          "range": "[0.30..2.50]",
+          "semantics": "Sodium élevé — fréquentation salines/lichens"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 60.0,
+        "delta_score": 60.0
+      },
+      "nutrition.besoins_mineraux.calcium": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 6.0,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "g/kg MS",
+          "source": "HEWITT_2011 ch.4 (cervidés)",
+          "range": "[2.0..10.0]",
+          "semantics": "Ca antlérogenèse mâle, gestation femelle"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      },
+      "nutrition.besoins_mineraux.magnesium": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 0.8,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "g/kg MS",
+          "source": "HEWITT_2011 ch.4",
+          "range": "[0.20..2.00]",
+          "semantics": "Mg activité enzymatique"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 40.0,
+        "delta_score": 40.0
+      },
+      "nutrition.alimentation_saisonniere.printemps": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": {
+          "disponibilite": true,
+          "ration_kg": 18.0,
+          "categorie": "feuillus_bourgeons"
+        },
+        "signature_attendue": {
+          "type": "object",
+          "unit": "kg MS/jour",
+          "source": "RENECKER_HUDSON_1990",
+          "range": "ration ∈ [0..30.0]",
+          "semantics": "Bourgeons saule, peuplier, sorbier"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      },
+      "nutrition.alimentation_saisonniere.ete": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": {
+          "disponibilite": true,
+          "ration_kg": 22.0,
+          "categorie": "aquatique_macrophytes"
+        },
+        "signature_attendue": {
+          "type": "object",
+          "unit": "kg MS/jour",
+          "source": "RENECKER_HUDSON_1990",
+          "range": "[0..30.0]",
+          "semantics": "Plantes aquatiques riches en Na (Potamogeton, Nuphar)"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      },
+      "nutrition.alimentation_saisonniere.automne": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": {
+          "disponibilite": true,
+          "ration_kg": 20.0,
+          "categorie": "hyperphagie_pre_rut"
+        },
+        "signature_attendue": {
+          "type": "object",
+          "unit": "kg MS/jour",
+          "source": "CRETE_1989",
+          "range": "[0..30.0]",
+          "semantics": "Hyperphagie pré-rut, accumulation graisses"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      },
+      "nutrition.alimentation_saisonniere.hiver": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": {
+          "disponibilite": true,
+          "ration_kg": 12.0,
+          "categorie": "ramilles_sapinieres"
+        },
+        "signature_attendue": {
+          "type": "object",
+          "unit": "kg MS/jour",
+          "source": "CRETE_1989 ; MFFP_PG_2020_2027",
+          "range": "[0..18.0]",
+          "semantics": "Ramilles sapin baumier, bouleau, érable"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      }
+    },
+    "OURS_NOIR": {
+      "nutrition.besoins_proteines": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 12.0,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "% MS",
+          "source": "PELTON_2003",
+          "range": "[8.0..16.0]",
+          "semantics": "Omnivore — protéines variables saisonnières"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 40.0,
+        "delta_score": 40.0
+      },
+      "nutrition.besoins_energetiques": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 8500.0,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "kcal/jour",
+          "source": "PELTON_2003",
+          "range": "[3000..20000]",
+          "semantics": "Besoins métaboliques adulte — pic hyperphagie 20 000+"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      },
+      "nutrition.besoins_mineraux.sodium": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 0.2,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "g/kg MS",
+          "source": "PELTON_2003 ; HEWITT_2011 (omnivores)",
+          "range": "[0.05..0.50]",
+          "semantics": "Faible besoin Na (omnivore)"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 10.0,
+        "delta_score": 10.0
+      },
+      "nutrition.besoins_mineraux.calcium": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 3.0,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "g/kg MS",
+          "source": "PELTON_2003",
+          "range": "[1.0..6.0]",
+          "semantics": "Ca via os carcasses, fourmis, baies"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 60.0,
+        "delta_score": 60.0
+      },
+      "nutrition.besoins_mineraux.magnesium": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 0.3,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "g/kg MS",
+          "source": "PELTON_2003",
+          "range": "[0.10..0.80]",
+          "semantics": "Mg via végétaux verts printemps"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 15.0,
+        "delta_score": 15.0
+      },
+      "nutrition.alimentation_saisonniere.printemps": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": {
+          "disponibilite": true,
+          "ration_kg": 4.5,
+          "categorie": "carcasses_herbes_emerges"
+        },
+        "signature_attendue": {
+          "type": "object",
+          "unit": "kg MS/jour",
+          "source": "PELTON_2003",
+          "range": "[0..8.0]",
+          "semantics": "Sortie tanière : herbes émergentes, carcasses ongulés"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      },
+      "nutrition.alimentation_saisonniere.ete": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": {
+          "disponibilite": true,
+          "ration_kg": 6.5,
+          "categorie": "fruits_baies_insectes"
+        },
+        "signature_attendue": {
+          "type": "object",
+          "unit": "kg MS/jour",
+          "source": "PELTON_2003 ; MFFP_PG_2020_2027",
+          "range": "[0..10.0]",
+          "semantics": "Bleuets, framboises, fourmis bois"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      },
+      "nutrition.alimentation_saisonniere.automne": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": {
+          "disponibilite": true,
+          "ration_kg": 12.0,
+          "categorie": "hyperphagie_mast"
+        },
+        "signature_attendue": {
+          "type": "object",
+          "unit": "kg MS/jour",
+          "source": "PELTON_2003",
+          "range": "[0..18.0]",
+          "semantics": "Hyperphagie pré-hibernale : glands hêtres, faînes"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      },
+      "nutrition.alimentation_saisonniere.hiver": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": {
+          "disponibilite": false,
+          "ration_kg": 0.0,
+          "categorie": "hibernation"
+        },
+        "signature_attendue": {
+          "type": "object",
+          "unit": "kg MS/jour",
+          "source": "PELTON_2003",
+          "range": "ration_kg = 0 valide",
+          "semantics": "Hibernation — disponibilite=False conforme"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      }
+    },
+    "WAPITI": {
+      "nutrition.besoins_proteines": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 14.0,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "% MS",
+          "source": "LYON_BURCHAM_1998",
+          "range": "[10.0..20.0]",
+          "semantics": "% prot brutes printemps — graminées herbacées"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 46.7,
+        "delta_score": 46.7
+      },
+      "nutrition.besoins_energetiques": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 28000.0,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "kcal/jour",
+          "source": "LYON_BURCHAM_1998",
+          "range": "[15000..40000]",
+          "semantics": "Besoins métaboliques adulte 250 kg"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 56.0,
+        "delta_score": 56.0
+      },
+      "nutrition.besoins_mineraux.sodium": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 0.5,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "g/kg MS",
+          "source": "LYON_BURCHAM_1998 ; HEWITT_2011",
+          "range": "[0.15..1.20]",
+          "semantics": "Sodium élevé — fréquentation salines"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 25.0,
+        "delta_score": 25.0
+      },
+      "nutrition.besoins_mineraux.calcium": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 5.5,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "g/kg MS",
+          "source": "LYON_BURCHAM_1998",
+          "range": "[2.0..9.0]",
+          "semantics": "Ca antlérogenèse mâle wapiti"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      },
+      "nutrition.besoins_mineraux.magnesium": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 0.55,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "g/kg MS",
+          "source": "HEWITT_2011 ch.4",
+          "range": "[0.15..1.80]",
+          "semantics": "Mg cofacteur enzymatique"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 27.5,
+        "delta_score": 27.5
+      },
+      "nutrition.alimentation_saisonniere.printemps": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": {
+          "disponibilite": true,
+          "ration_kg": 8.5,
+          "categorie": "graminees_herbacees_pousses"
+        },
+        "signature_attendue": {
+          "type": "object",
+          "unit": "kg MS/jour",
+          "source": "LYON_BURCHAM_1998",
+          "range": "[0..15.0]",
+          "semantics": "Pousses graminées, herbacées riches"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      },
+      "nutrition.alimentation_saisonniere.ete": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": {
+          "disponibilite": true,
+          "ration_kg": 9.0,
+          "categorie": "vegetation_fraiche"
+        },
+        "signature_attendue": {
+          "type": "object",
+          "unit": "kg MS/jour",
+          "source": "LYON_BURCHAM_1998",
+          "range": "[0..15.0]",
+          "semantics": "Végétation fraîche en altitude (thermo)"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      },
+      "nutrition.alimentation_saisonniere.automne": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": {
+          "disponibilite": true,
+          "ration_kg": 10.5,
+          "categorie": "graminees_glands_pre_rut"
+        },
+        "signature_attendue": {
+          "type": "object",
+          "unit": "kg MS/jour",
+          "source": "LYON_BURCHAM_1998",
+          "range": "[0..15.0]",
+          "semantics": "Pré-rut : énergie pour brame + déplacements"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      },
+      "nutrition.alimentation_saisonniere.hiver": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": {
+          "disponibilite": true,
+          "ration_kg": 6.0,
+          "categorie": "ecorces_branchages"
+        },
+        "signature_attendue": {
+          "type": "object",
+          "unit": "kg MS/jour",
+          "source": "LYON_BURCHAM_1998 ; MFFP_PG_2020_2027",
+          "range": "[0..10.0]",
+          "semantics": "Écorces, branchages, conifères"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      }
+    },
+    "DINDON_SAUVAGE": {
+      "nutrition.besoins_proteines": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 18.0,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "% MS",
+          "source": "EATON_HEALY_1991",
+          "range": "[12.0..28.0]",
+          "semantics": "% prot brutes ; juvéniles >25%, adultes 18%"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 60.0,
+        "delta_score": 60.0
+      },
+      "nutrition.besoins_energetiques": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 350.0,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "kcal/jour",
+          "source": "EATON_HEALY_1991",
+          "range": "[200..500]",
+          "semantics": "Adulte 6 kg — base ratio métabolique"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 7.0,
+        "delta_score": 7.0
+      },
+      "nutrition.besoins_mineraux.sodium": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 0.1,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "g/kg MS",
+          "source": "EATON_HEALY_1991",
+          "range": "[0.03..0.40]",
+          "semantics": "Faible besoin Na ; eau libre majeure"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 5.0,
+        "delta_score": 5.0
+      },
+      "nutrition.besoins_mineraux.calcium": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 25.0,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "g/kg MS",
+          "source": "EATON_HEALY_1991 (femelles ponte)",
+          "range": "[3.0..40.0]",
+          "semantics": "Ca très élevé pour formation coquilles œufs"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      },
+      "nutrition.besoins_mineraux.magnesium": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": 0.5,
+        "signature_attendue": {
+          "type": "float",
+          "unit": "g/kg MS",
+          "source": "EATON_HEALY_1991",
+          "range": "[0.10..1.20]",
+          "semantics": "Mg activité musculaire/nerveuse"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 25.0,
+        "delta_score": 25.0
+      },
+      "nutrition.alimentation_saisonniere.printemps": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": {
+          "disponibilite": true,
+          "ration_kg": 0.45,
+          "categorie": "insectes_proteines_juvenile"
+        },
+        "signature_attendue": {
+          "type": "object",
+          "unit": "kg MS/jour",
+          "source": "EATON_HEALY_1991",
+          "range": "[0..1.0]",
+          "semantics": "Insectes pour juvéniles ; bourgeons adultes"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      },
+      "nutrition.alimentation_saisonniere.ete": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": {
+          "disponibilite": true,
+          "ration_kg": 0.35,
+          "categorie": "fruits_insectes_graines"
+        },
+        "signature_attendue": {
+          "type": "object",
+          "unit": "kg MS/jour",
+          "source": "EATON_HEALY_1991",
+          "range": "[0..0.8]",
+          "semantics": "Baies, sauterelles, graines"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      },
+      "nutrition.alimentation_saisonniere.automne": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": {
+          "disponibilite": true,
+          "ration_kg": 0.55,
+          "categorie": "mast_glands"
+        },
+        "signature_attendue": {
+          "type": "object",
+          "unit": "kg MS/jour",
+          "source": "EATON_HEALY_1991",
+          "range": "[0..1.2]",
+          "semantics": "Glands chêne, faînes, baies"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      },
+      "nutrition.alimentation_saisonniere.hiver": {
+        "value_actuel": "TEXTE_QUALITATIF (liste sans value/signature)",
+        "value_target_institutionnel": {
+          "disponibilite": true,
+          "ration_kg": 0.25,
+          "categorie": "graines_residus_culture"
+        },
+        "signature_attendue": {
+          "type": "object",
+          "unit": "kg MS/jour",
+          "source": "EATON_HEALY_1991 ; MFFP_PG_2020_2027",
+          "range": "[0..0.6]",
+          "semantics": "Maïs résiduel, graines, glands sous neige"
+        },
+        "score_actuel_apres_normalisation": 0.0,
+        "score_attendu_apres_remplissage": 100.0,
+        "delta_score": 100.0
+      }
+    }
+  },
+  "sources_scientifiques": [
+    {
+      "id": "HEWITT_2011",
+      "citation": "Hewitt DG (2011). Biology and Management of White-tailed Deer. CRC Press.",
+      "domaine": "Cervidés — bilan énergétique, protéines, minéraux."
+    },
+    {
+      "id": "RENECKER_HUDSON_1990",
+      "citation": "Renecker LA & Hudson RJ (1990). Behavioral and thermoregulatory responses of moose to high temperatures. Can J Zool 68:122–133.",
+      "domaine": "Orignal — thermorégulation et besoins énergétiques."
+    },
+    {
+      "id": "MFFP_PG_2020_2027",
+      "citation": "MFFP Québec (2020). Plans de gestion 2020-2027 (chevreuil, orignal, ours noir, wapiti, dindon sauvage).",
+      "domaine": "Données saisonnières institutionnelles 5 espèces."
+    },
+    {
+      "id": "PELTON_2003",
+      "citation": "Pelton MR (2003). Black bear ecology and management. In: Wild Mammals of NA, 2nd ed.",
+      "domaine": "Ours noir — hyperphagie automnale, glands, fruits."
+    },
+    {
+      "id": "EATON_HEALY_1991",
+      "citation": "Eaton SW & Healy WM (1991). Wild Turkey ecology. Stackpole Books.",
+      "domaine": "Dindon sauvage — régimes saisonniers, glands, insectes."
+    },
+    {
+      "id": "LYON_BURCHAM_1998",
+      "citation": "Lyon LJ & Burcham MG (1998). Wapiti security cover and seasonal forage. USFS GTR.",
+      "domaine": "Wapiti — phénologie protéines printanières, herbacées."
+    },
+    {
+      "id": "CRETE_1989",
+      "citation": "Crête M (1989). Approximation of K carrying capacity for moose in eastern Quebec. Can J Zool 67:373–380.",
+      "domaine": "Orignal — capacité de support hivernale."
+    }
+  ],
+  "valeurs_minimales_requises_pour_master_sup_90": {
+    "regle": "Pour NUTRITION_MASTER > 90, il faut que le score moyen par espèce ≥ 90. Avec la formule actuelle (moyenne 5 paramètres × 5 espèces), les 5 cibles minimales par espèce sont : protéines/30 ≥ 0.90, énergie ≥ borne sup-10%, minéraux Na/Ca/Mg simultanément à seuils nominaux.",
+    "exemple_chevreuil_min_master_90": {
+      "proteines_min": 27.0,
+      "energie_min": 4500.0,
+      "sodium_min": 1.8,
+      "calcium_min": 4.5,
+      "magnesium_min": 1.8,
+      "score_compose_attendu": 90.0
+    },
+    "feasibilite_institutionnelle": "Atteindre 90 simultanément sur les 5 paramètres minéraux demande une saturation rare en milieu naturel. La cible institutionnelle réaliste est NUTRITION_MASTER ∈ [60..80] avec les valeurs nominales sourcées."
+  },
+  "projection_impact": {
+    "nutrition_master_projected": 48.96,
+    "score_par_espece_projected": {
+      "CHEVREUIL": 47.36,
+      "ORIGNAL": 62.0,
+      "OURS_NOIR": 45.0,
+      "WAPITI": 51.04,
+      "DINDON_SAUVAGE": 39.4
+    },
+    "territoire_master_projected_only_nutrition": 61.75,
+    "delta_territoire_master": 13.54,
+    "decision_globale_projected": "MARGINAL"
+  },
+  "doctrine_anti_contamination": [
+    "Aucune logique générique — chaque valeur est sourcée scientifiquement.",
+    "Aucun fallback, aucune interpolation. Valeur ABSENTE = anti_generique_violation.",
+    "Régénération du BIO_PROFILE_Ω via un processus institutionnel séparé (hors V30, hors FREEZE_MASTER).",
+    "Specs SUPER_ENGINES_Ω PHASE XIV verrouillées et INVIOLABLES."
+  ]
+}

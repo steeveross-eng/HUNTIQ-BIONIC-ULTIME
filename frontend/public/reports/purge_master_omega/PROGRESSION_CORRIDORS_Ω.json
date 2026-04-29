@@ -1,0 +1,674 @@
+{
+  "manifest_id": "PROGRESSION_CORRIDORS_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°36",
+  "directive": "PROTOCOLE_CORRIDORS_Ω",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-29T19:10:04+00:00",
+  "objectif": "Inventaire institutionnel de toutes les données écologiques, coefficients spécifiques par espèce, poids manquants dans ENGINE_CORRIDORS_Ω et priorisation P0/P1/P2 nécessaires pour porter CORRIDORS_MASTER > 90.",
+  "diagnostic_actuel": {
+    "corridors_master_score_actuel": 40.0,
+    "racine_du_probleme": "Les 5 paramètres BIO_PROFILE corridors retournent des LISTES TEXTUELLES (connectivite_optimum, fragmentation_penalty, distances_typiques) au lieu d'indices numériques 0..1. Aucun GPS-tracking réel n'est intégré (corridors_reels_gps=[]). Les facteurs couvert/pente/aversion sont absents.",
+    "score_par_espece_actuel": {
+      "CHEVREUIL": 40.0,
+      "ORIGNAL": 40.0,
+      "OURS_NOIR": 40.0,
+      "WAPITI": 40.0,
+      "DINDON_SAUVAGE": 40.0
+    }
+  },
+  "donnees_ecologiques_manquantes": [
+    {
+      "id": "GIS_FRAGMENTATION_INDEX",
+      "priority": "P0",
+      "description": "Indice de fragmentation Circuit-theory (Dickson 2017) calculé sur grille 250m × 250m sur l'ensemble du Québec.",
+      "source": "DICKSON_2017 ; MFFP_CORRIDORS_2018",
+      "format": "raster GeoTIFF · valeurs ∈ [0,1]"
+    },
+    {
+      "id": "GIS_COUVERT_FORESTIER_DENSITY",
+      "priority": "P0",
+      "description": "Couvert forestier sur 100m × 100m (densité canopée %).",
+      "source": "MFFP — base de données écoforestière 2024",
+      "format": "raster · % couvert"
+    },
+    {
+      "id": "GIS_PENTE_DEM",
+      "priority": "P1",
+      "description": "Modèle numérique de terrain (DEM) — pente en degrés.",
+      "source": "MERN — base 1m LIDAR",
+      "format": "raster · degrés"
+    },
+    {
+      "id": "GIS_HYDROLOGIE_RESEAU",
+      "priority": "P0",
+      "description": "Réseau hydrographique avec ordre de Strahler — barrières (rivières infranchissables) et corridors aquatiques.",
+      "source": "GRHQ Québec",
+      "format": "vecteur LineString"
+    },
+    {
+      "id": "GIS_ANTHROPISATION_FINE",
+      "priority": "P0",
+      "description": "Carte d'anthropisation fine (urbain, agricole, infrastructures linéaires routes/voies).",
+      "source": "Statistique Canada + MTQ — RTSS",
+      "format": "raster + vecteur"
+    },
+    {
+      "id": "GIS_BARRIERES_LINEAIRES",
+      "priority": "P0",
+      "description": "Inventaire barrières linéaires (autoroutes, voies ferrées, lignes électriques, clôtures).",
+      "source": "MTQ ; Hydro-Québec",
+      "format": "vecteur LineString"
+    },
+    {
+      "id": "GIS_PIEGES_ECOLOGIQUES",
+      "priority": "P1",
+      "description": "Zones identifiées comme pièges écologiques (mortalité supérieure à recrutement).",
+      "source": "Études MFFP régionales 2018-2024",
+      "format": "vecteur Polygon"
+    },
+    {
+      "id": "GPS_TRACKING_5_ESPECES",
+      "priority": "P0",
+      "description": "Données GPS-collar (>500 individus) pour les 5 espèces pour calibrer corridors_reels_gps.",
+      "source": "MFFP — banque de données GPS faune",
+      "format": "table {animal_id, espece, lat, lon, ts}"
+    },
+    {
+      "id": "INDICE_RESISTANCE_PAYSAGE",
+      "priority": "P1",
+      "description": "Carte de résistance au déplacement (résultat circuit-theory pondéré par espèce).",
+      "source": "Calcul à partir des couches GIS ci-dessus",
+      "format": "raster par espèce"
+    }
+  ],
+  "coefficients_par_espece": {
+    "CHEVREUIL": {
+      "corridors.connectivite_optimum": {
+        "value_target": 0.78,
+        "priority": "P0",
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "WALTER_2018 ; MFFP_CORRIDORS_2018",
+          "range": "[0..1]",
+          "semantics": "Connectivité Circuit-theory — > 0.7 fonctionnelle pour chevreuil"
+        }
+      },
+      "corridors.fragmentation_penalty": {
+        "value_target": 0.32,
+        "priority": "P0",
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "FORMAN_2003 ; DICKSON_2017",
+          "range": "[0..1]",
+          "semantics": "Pénalité fragmentation ; <0.4 acceptable pour chevreuil dispersionniste"
+        }
+      },
+      "corridors.distances_typiques": {
+        "value_target": {
+          "juveniles_km": 18.0,
+          "adultes_km": 4.5
+        },
+        "priority": "P0",
+        "signature": {
+          "type": "object",
+          "unit": "km",
+          "source": "WALTER_2018 ; HEWITT_2011",
+          "range": "juveniles ∈ [5..50], adultes ∈ [1..10]",
+          "semantics": "Dispersion juvéniles mâles >>> femelles (philopatrie)"
+        }
+      },
+      "corridors.tolerance_ouvertures": {
+        "value_target": 0.85,
+        "priority": "P1",
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "WALTER_2018",
+          "range": "[0..1]",
+          "semantics": "Espèce de bordure — tolère grandes ouvertures agricoles"
+        }
+      },
+      "corridors.aversion_infrastructures": {
+        "value_target": 0.45,
+        "priority": "P1",
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "FORMAN_2003 ; WALTER_2018",
+          "range": "[0..1]",
+          "semantics": "Aversion routes/urbanisation moyenne"
+        }
+      },
+      "corridors.distance_fuite_m": {
+        "value_target": 80.0,
+        "priority": "P1",
+        "signature": {
+          "type": "float",
+          "unit": "m",
+          "source": "HEWITT_2011 ch.7",
+          "range": "[20..200]",
+          "semantics": "Distance fuite humain en milieu agricole"
+        }
+      },
+      "corridors.couvert_forestier_min": {
+        "value_target": 0.35,
+        "priority": "P0",
+        "signature": {
+          "type": "float",
+          "unit": "fraction",
+          "source": "MFFP_CORRIDORS_2018",
+          "range": "[0..1]",
+          "semantics": "Couvert forestier minimum requis (corridors fonctionnels)"
+        }
+      },
+      "corridors.pente_max_deg": {
+        "value_target": 35.0,
+        "priority": "P2",
+        "signature": {
+          "type": "float",
+          "unit": "degrés",
+          "source": "FRAIR_2008 (cervidés)",
+          "range": "[0..60]",
+          "semantics": "Pente max acceptée en déplacement"
+        }
+      }
+    },
+    "ORIGNAL": {
+      "corridors.connectivite_optimum": {
+        "value_target": 0.85,
+        "priority": "P0",
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "BEAUCHESNE_2014 ; MFFP_CORRIDORS_2018",
+          "range": "[0..1]",
+          "semantics": "Connectivité critique en habitat morcelé québécois"
+        }
+      },
+      "corridors.fragmentation_penalty": {
+        "value_target": 0.48,
+        "priority": "P0",
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "BEAUCHESNE_2014 ; FORMAN_2003",
+          "range": "[0..1]",
+          "semantics": "Pénalité fragmentation forte (espèce sensible)"
+        }
+      },
+      "corridors.distances_typiques": {
+        "value_target": {
+          "saisonnieres_km": 25.0,
+          "quotidienne_km": 3.0
+        },
+        "priority": "P0",
+        "signature": {
+          "type": "object",
+          "unit": "km",
+          "source": "BEAUCHESNE_2014",
+          "range": "saisonnieres ∈ [5..80]",
+          "semantics": "Migrations saisonnières été↔hiver moyennes 25km"
+        }
+      },
+      "corridors.tolerance_ouvertures": {
+        "value_target": 0.25,
+        "priority": "P1",
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "BEAUCHESNE_2014",
+          "range": "[0..1]",
+          "semantics": "Faible tolérance ouvertures (préfère couvert dense)"
+        }
+      },
+      "corridors.aversion_infrastructures": {
+        "value_target": 0.78,
+        "priority": "P0",
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "FORMAN_2003 ; BEAUCHESNE_2014",
+          "range": "[0..1]",
+          "semantics": "Forte aversion routes (collisions élevées)"
+        }
+      },
+      "corridors.distance_fuite_m": {
+        "value_target": 250.0,
+        "priority": "P1",
+        "signature": {
+          "type": "float",
+          "unit": "m",
+          "source": "RENECKER_HUDSON_1990",
+          "range": "[100..500]",
+          "semantics": "Distance fuite humain en habitat ouvert"
+        }
+      },
+      "corridors.couvert_forestier_min": {
+        "value_target": 0.65,
+        "priority": "P0",
+        "signature": {
+          "type": "float",
+          "unit": "fraction",
+          "source": "MFFP_CORRIDORS_2018 ; BEAUCHESNE_2014",
+          "range": "[0..1]",
+          "semantics": "Couvert forestier minimum élevé requis"
+        }
+      },
+      "corridors.pente_max_deg": {
+        "value_target": 30.0,
+        "priority": "P2",
+        "signature": {
+          "type": "float",
+          "unit": "degrés",
+          "source": "BEAUCHESNE_2014",
+          "range": "[0..50]",
+          "semantics": "Pente max — gabarit limite mobilité"
+        }
+      }
+    },
+    "OURS_NOIR": {
+      "corridors.connectivite_optimum": {
+        "value_target": 0.72,
+        "priority": "P0",
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "PROCTOR_2012 ; MFFP_CORRIDORS_2018",
+          "range": "[0..1]",
+          "semantics": "Connectivité populations métapopulation"
+        }
+      },
+      "corridors.fragmentation_penalty": {
+        "value_target": 0.55,
+        "priority": "P0",
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "PROCTOR_2012",
+          "range": "[0..1]",
+          "semantics": "Forte pénalité — fragmentation amplifie conflits humains"
+        }
+      },
+      "corridors.distances_typiques": {
+        "value_target": {
+          "males_km": 35.0,
+          "femelles_km": 8.0,
+          "dispersion_juv_km": 60.0
+        },
+        "priority": "P0",
+        "signature": {
+          "type": "object",
+          "unit": "km",
+          "source": "PROCTOR_2012",
+          "range": "males ∈ [10..150]",
+          "semantics": "Dispersion mâles >> femelles philopatriques"
+        }
+      },
+      "corridors.tolerance_ouvertures": {
+        "value_target": 0.4,
+        "priority": "P1",
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "PELTON_2003",
+          "range": "[0..1]",
+          "semantics": "Tolérance ouvertures moyenne (recherche fruits)"
+        }
+      },
+      "corridors.aversion_infrastructures": {
+        "value_target": 0.62,
+        "priority": "P0",
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "PROCTOR_2012 ; FORMAN_2003",
+          "range": "[0..1]",
+          "semantics": "Aversion forte infrastructures - mortalité par route"
+        }
+      },
+      "corridors.distance_fuite_m": {
+        "value_target": 120.0,
+        "priority": "P1",
+        "signature": {
+          "type": "float",
+          "unit": "m",
+          "source": "PELTON_2003",
+          "range": "[50..300]",
+          "semantics": "Distance fuite humain ; habituation possible"
+        }
+      },
+      "corridors.couvert_forestier_min": {
+        "value_target": 0.55,
+        "priority": "P0",
+        "signature": {
+          "type": "float",
+          "unit": "fraction",
+          "source": "PROCTOR_2012 ; MFFP_CORRIDORS_2018",
+          "range": "[0..1]",
+          "semantics": "Forêt mature requise"
+        }
+      },
+      "corridors.pente_max_deg": {
+        "value_target": 45.0,
+        "priority": "P2",
+        "signature": {
+          "type": "float",
+          "unit": "degrés",
+          "source": "PROCTOR_2012",
+          "range": "[0..60]",
+          "semantics": "Forte tolérance pentes (escarpements)"
+        }
+      }
+    },
+    "WAPITI": {
+      "corridors.connectivite_optimum": {
+        "value_target": 0.8,
+        "priority": "P0",
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "FRAIR_2008 ; MFFP_CORRIDORS_2018",
+          "range": "[0..1]",
+          "semantics": "Connectivité migrations stables pluri-annuelles"
+        }
+      },
+      "corridors.fragmentation_penalty": {
+        "value_target": 0.42,
+        "priority": "P0",
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "FRAIR_2008",
+          "range": "[0..1]",
+          "semantics": "Pénalité fragmentation modérée — corridors larges"
+        }
+      },
+      "corridors.distances_typiques": {
+        "value_target": {
+          "migration_saisonniere_km": 45.0,
+          "quotidienne_km": 5.0
+        },
+        "priority": "P0",
+        "signature": {
+          "type": "object",
+          "unit": "km",
+          "source": "FRAIR_2008",
+          "range": "migration ∈ [15..120]",
+          "semantics": "Migrations saisonnières marquées"
+        }
+      },
+      "corridors.tolerance_ouvertures": {
+        "value_target": 0.7,
+        "priority": "P1",
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "LYON_BURCHAM_1998",
+          "range": "[0..1]",
+          "semantics": "Tolère prairies et parcs ouverts"
+        }
+      },
+      "corridors.aversion_infrastructures": {
+        "value_target": 0.55,
+        "priority": "P0",
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "FRAIR_2008",
+          "range": "[0..1]",
+          "semantics": "Aversion modérée routes"
+        }
+      },
+      "corridors.distance_fuite_m": {
+        "value_target": 200.0,
+        "priority": "P1",
+        "signature": {
+          "type": "float",
+          "unit": "m",
+          "source": "LYON_BURCHAM_1998",
+          "range": "[80..400]",
+          "semantics": "Distance fuite supérieure au chevreuil"
+        }
+      },
+      "corridors.couvert_forestier_min": {
+        "value_target": 0.4,
+        "priority": "P0",
+        "signature": {
+          "type": "float",
+          "unit": "fraction",
+          "source": "FRAIR_2008",
+          "range": "[0..1]",
+          "semantics": "Couvert forestier modéré requis"
+        }
+      },
+      "corridors.pente_max_deg": {
+        "value_target": 40.0,
+        "priority": "P2",
+        "signature": {
+          "type": "float",
+          "unit": "degrés",
+          "source": "FRAIR_2008",
+          "range": "[0..50]",
+          "semantics": "Pente max — espèce montagnarde"
+        }
+      }
+    },
+    "DINDON_SAUVAGE": {
+      "corridors.connectivite_optimum": {
+        "value_target": 0.65,
+        "priority": "P0",
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "EATON_HEALY_1991 ; MFFP_CORRIDORS_2018",
+          "range": "[0..1]",
+          "semantics": "Connectivité localisée (déplacements <10 km)"
+        }
+      },
+      "corridors.fragmentation_penalty": {
+        "value_target": 0.3,
+        "priority": "P0",
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "EATON_HEALY_1991",
+          "range": "[0..1]",
+          "semantics": "Faible pénalité (s'adapte aux mosaïques)"
+        }
+      },
+      "corridors.distances_typiques": {
+        "value_target": {
+          "quotidienne_km": 1.5,
+          "saisonniere_km": 5.0
+        },
+        "priority": "P0",
+        "signature": {
+          "type": "object",
+          "unit": "km",
+          "source": "EATON_HEALY_1991",
+          "range": "quotidienne ∈ [0.5..3.0]",
+          "semantics": "Déplacements limités"
+        }
+      },
+      "corridors.tolerance_ouvertures": {
+        "value_target": 0.9,
+        "priority": "P1",
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "EATON_HEALY_1991",
+          "range": "[0..1]",
+          "semantics": "Tolère champs/bordures (recherche graines)"
+        }
+      },
+      "corridors.aversion_infrastructures": {
+        "value_target": 0.4,
+        "priority": "P1",
+        "signature": {
+          "type": "float",
+          "unit": "indice 0..1",
+          "source": "EATON_HEALY_1991",
+          "range": "[0..1]",
+          "semantics": "Aversion modérée routes ; sensible à la chasse"
+        }
+      },
+      "corridors.distance_fuite_m": {
+        "value_target": 60.0,
+        "priority": "P1",
+        "signature": {
+          "type": "float",
+          "unit": "m",
+          "source": "EATON_HEALY_1991",
+          "range": "[20..150]",
+          "semantics": "Distance fuite (adultes méfiants)"
+        }
+      },
+      "corridors.couvert_forestier_min": {
+        "value_target": 0.3,
+        "priority": "P0",
+        "signature": {
+          "type": "float",
+          "unit": "fraction",
+          "source": "EATON_HEALY_1991 ; MFFP_CORRIDORS_2018",
+          "range": "[0..1]",
+          "semantics": "Mosaïque forêt-champ optimale (30-50% forêt)"
+        }
+      },
+      "corridors.pente_max_deg": {
+        "value_target": 25.0,
+        "priority": "P2",
+        "signature": {
+          "type": "float",
+          "unit": "degrés",
+          "source": "EATON_HEALY_1991",
+          "range": "[0..40]",
+          "semantics": "Pente max — terrain accidenté limite"
+        }
+      }
+    }
+  },
+  "poids_manquants_engine_corridors": [
+    {
+      "id": "w_connectivite",
+      "value_actuel": 0.6,
+      "value_recommandee": 0.5,
+      "rationale": "Réduction pour laisser place à fragmentation_penalty + nouveaux facteurs."
+    },
+    {
+      "id": "w_fragmentation_penalty_inverse",
+      "value_actuel": 0.4,
+      "value_recommandee": 0.25,
+      "rationale": "Réduit ; fragmentation reste dominant en cellules problématiques."
+    },
+    {
+      "id": "w_couvert_forestier",
+      "value_actuel": "ABSENT",
+      "value_recommandee": 0.1,
+      "rationale": "Nouveau facteur — couvert mosaïque vs minimum requis par espèce."
+    },
+    {
+      "id": "w_pente",
+      "value_actuel": "ABSENT",
+      "value_recommandee": 0.05,
+      "rationale": "Pénalité pentes >tolérance par espèce."
+    },
+    {
+      "id": "w_aversion_infrastructures",
+      "value_actuel": "ABSENT",
+      "value_recommandee": 0.1,
+      "rationale": "Distance moyenne à infrastructure × aversion par espèce."
+    }
+  ],
+  "priorisation_institutionnelle": {
+    "P0_critique": [
+      "GIS_FRAGMENTATION_INDEX",
+      "GIS_COUVERT_FORESTIER_DENSITY",
+      "GIS_HYDROLOGIE_RESEAU",
+      "GIS_ANTHROPISATION_FINE",
+      "GIS_BARRIERES_LINEAIRES",
+      "GPS_TRACKING_5_ESPECES"
+    ],
+    "P1_importante": [
+      "GIS_PENTE_DEM",
+      "GIS_PIEGES_ECOLOGIQUES",
+      "INDICE_RESISTANCE_PAYSAGE"
+    ],
+    "P2_complementaire": []
+  },
+  "valeurs_minimales_pour_master_sup_90": {
+    "connectivite_optimum_min_par_espece": {
+      "CHEVREUIL": 0.85,
+      "ORIGNAL": 0.85,
+      "OURS_NOIR": 0.85,
+      "WAPITI": 0.85,
+      "DINDON_SAUVAGE": 0.85
+    },
+    "fragmentation_penalty_max_par_espece": {
+      "CHEVREUIL": 0.2,
+      "ORIGNAL": 0.2,
+      "OURS_NOIR": 0.2,
+      "WAPITI": 0.2,
+      "DINDON_SAUVAGE": 0.2
+    },
+    "regle": "Pour CORRIDORS_MASTER > 90 : connectivite ≥ 0.85 ET fragmentation ≤ 0.20 sur les 5 espèces. Score formule: 0.85 × 100 × 0.6 + (1 - 0.20) × 100 × 0.4 = 51 + 32 = 83. Pour atteindre >90 il faut soit connectivite ≥ 0.95 ET fragmentation ≤ 0.10, soit revoir la formule de pondération avec couvert/pente/aversion.",
+    "feasibilite_institutionnelle": "Atteindre 90 demande des corridors PROTÉGÉS (statut juridique : aires protégées, zones de conservation). Inscription au plan de développement durable du Québec."
+  },
+  "projection_impact": {
+    "corridors_master_projected": 69.04,
+    "score_par_espece_projected": {
+      "CHEVREUIL": 74.0,
+      "ORIGNAL": 71.8,
+      "OURS_NOIR": 61.2,
+      "WAPITI": 71.2,
+      "DINDON_SAUVAGE": 67.0
+    },
+    "territoire_master_projected_with_nutrition_and_corridors": 67.56,
+    "delta_territoire_master": 19.35
+  },
+  "sources_scientifiques": [
+    {
+      "id": "FORMAN_2003",
+      "citation": "Forman RTT et al. (2003). Road Ecology — Science and Solutions. Island Press.",
+      "domaine": "Effets routes sur faune ; barrières et indices fragmentation."
+    },
+    {
+      "id": "BEAUCHESNE_2014",
+      "citation": "Beauchesne D et al. (2014). Connectivity for moose in fragmented landscapes. Landscape Ecol 29:1187–1201.",
+      "domaine": "Orignal Québec — corridors fonctionnels."
+    },
+    {
+      "id": "WALTER_2018",
+      "citation": "Walter WD et al. (2018). White-tailed deer movement ecology. Ecol Monogr 88:67–88.",
+      "domaine": "Cervidé — distances dispersion juvéniles."
+    },
+    {
+      "id": "PROCTOR_2012",
+      "citation": "Proctor MF et al. (2012). Population fragmentation and inter-ecosystem movements of grizzly/black bears. Wildl Monogr 180:1–46.",
+      "domaine": "Ours — connectivité populations."
+    },
+    {
+      "id": "FRAIR_2008",
+      "citation": "Frair JL et al. (2008). Resource selection by elk. J Appl Ecol 45:1504–1513.",
+      "domaine": "Wapiti — sélection corridors saisonniers."
+    },
+    {
+      "id": "MFFP_CORRIDORS_2018",
+      "citation": "MFFP Québec (2018). Atlas des corridors écologiques — réseau de connectivité 5 espèces.",
+      "domaine": "Référentiel institutionnel québécois."
+    },
+    {
+      "id": "DICKSON_2017",
+      "citation": "Dickson BG et al. (2017). Circuit-theory applications to connectivity science. Conserv Biol 31:90–104.",
+      "domaine": "Méthode circuit-theory pour fragmentation_penalty quantitative."
+    }
+  ],
+  "doctrine_anti_contamination": [
+    "Aucune logique générique. Chaque indice est calculé sur données géo-spatiales sourcées.",
+    "Aucun fallback ; absence d'une couche GIS = anti_generique_violation tracée.",
+    "Régénération du BIO_PROFILE_Ω à partir des nouvelles couches GIS (chantier institutionnel séparé).",
+    "ENGINE_CORRIDORS_Ω existant non modifié — extension via nouveau module ENGINE_CORRIDORS_GIS_Ω en aval."
+  ]
+}

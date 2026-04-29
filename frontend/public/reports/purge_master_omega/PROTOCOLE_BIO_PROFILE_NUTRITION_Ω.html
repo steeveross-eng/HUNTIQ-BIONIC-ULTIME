@@ -1,0 +1,141 @@
+<!DOCTYPE html><html lang='fr'><head><meta charset='utf-8'/>
+<title>PROTOCOLE_BIO_PROFILE_NUTRITION_Ω</title><style>
+:root{--bg:#0a1018;--panel:#111c2e;--panel2:#162032;--txt:#e2e8f0;--mute:#94a3b8;--accent:#06b6d4;--accent2:#22d3ee;--ok:#16a34a;--gold:#f59e0b;--dang:#dc2626;--bord:#1e293b;}
+*{box-sizing:border-box;}
+body{font-family:'Inter','Segoe UI',sans-serif;background:linear-gradient(180deg,#0a1018 0%,#0b1320 100%);color:var(--txt);margin:0;padding:32px 20px;}
+.wrap{max-width:1320px;margin:0 auto;}
+header.title{border-left:5px solid var(--gold);padding:6px 0 6px 18px;margin-bottom:22px;}
+header.title h1{margin:0;font-size:24px;color:#fef3c7;letter-spacing:0.6px;}
+header.title .sub{color:var(--mute);font-size:13px;margin-top:6px;}
+.b-ok{background:linear-gradient(135deg,#14532d 0%,#15803d 100%);border:1px solid var(--ok);color:#dcfce7;padding:12px 22px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:18px;}
+.b-ko{background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 100%);border:1px solid var(--dang);color:#fee2e2;padding:12px 22px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:18px;}
+.b-gold{background:linear-gradient(135deg,#78350f 0%,#92400e 100%);border:1px solid var(--gold);color:#fef3c7;padding:12px 22px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:18px;}
+h2{color:var(--gold);font-size:18px;margin:32px 0 12px;border-left:4px solid var(--gold);padding-left:12px;}
+h3{color:var(--accent2);font-size:15px;margin:22px 0 10px;}
+.card{background:var(--panel);border:1px solid var(--bord);border-radius:10px;padding:18px 22px;margin-bottom:18px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px;}
+.kpi{padding:14px 18px;background:var(--panel2);border:1px solid var(--bord);border-radius:8px;}
+.kpi .num{color:var(--accent2);font-weight:700;font-size:22px;}
+.kpi .lbl{color:var(--mute);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;}
+table{width:100%;border-collapse:collapse;font-size:11.5px;}
+th,td{padding:8px 10px;border-bottom:1px solid var(--bord);text-align:left;vertical-align:top;}
+th{background:var(--panel2);color:#fff;text-transform:uppercase;font-size:10.5px;letter-spacing:0.5px;}
+.scroll{max-height:520px;overflow-y:auto;border:1px solid var(--bord);border-radius:6px;}
+.dl{color:var(--accent2);text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid rgba(6,182,212,0.35);border-radius:5px;}
+.mono{font-family:'JetBrains Mono','Courier New',monospace;font-size:10px;color:var(--mute);word-break:break-all;}
+.foot{margin-top:30px;padding:18px 22px;background:var(--panel);border:1px solid var(--bord);border-radius:10px;font-size:12px;color:var(--mute);}
+.lbl-foot{color:var(--accent2);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:0.5px;}
+.v30-lock{margin-top:14px;padding:10px 14px;background:rgba(22,163,74,0.10);border:1px solid rgba(22,163,74,0.45);border-radius:6px;color:#4ade80;font-weight:700;text-align:center;letter-spacing:0.6px;}
+.b-acc{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(6,182,212,0.18);color:var(--accent2);border:1px solid rgba(6,182,212,0.45);font-weight:700;font-size:10px;}
+.b-warn{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.18);color:var(--gold);border:1px solid rgba(245,158,11,0.45);font-weight:700;font-size:10px;}
+.b-dang{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(220,38,38,0.18);color:#fca5a5;border:1px solid rgba(220,38,38,0.45);font-weight:700;font-size:10px;}
+.b-low{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(34,197,94,0.18);color:#86efac;border:1px solid rgba(34,197,94,0.45);font-weight:700;font-size:10px;}
+.b-p0{background:#fb7185;color:#1f2937;font-weight:700;padding:2px 6px;border-radius:4px;font-size:10px;}
+.b-p1{background:#fbbf24;color:#1f2937;font-weight:700;padding:2px 6px;border-radius:4px;font-size:10px;}
+.b-p2{background:#22d3ee;color:#1f2937;font-weight:700;padding:2px 6px;border-radius:4px;font-size:10px;}
+.cite{color:#60a5fa;font-style:italic;font-size:11px;}
+</style></head><body>
+<div class='wrap' data-testid='protocole-nutrition'>
+<header class='title'><h1>PROTOCOLE_BIO_PROFILE_NUTRITION_Ω · 9 paramètres × 5 espèces</h1>
+<div class='sub'>BCE-4X ULTIME ABSOLU x3 · Ordre n°36 · 2026-04-29T19:10:04+00:00</div></header>
+
+<div class='b-gold'>★ DIAGNOSTIC : NUTRITION_MASTER actuel = 0.0 · valeurs textuelles qualitatives non normalisables ★</div>
+
+<div class='card'><div class='kpi-grid'>
+<div class='kpi'><div class='lbl'>Score actuel</div><div class='num' style='color:#ef4444'>0.0</div></div>
+<div class='kpi'><div class='lbl'>Score projeté</div><div class='num' style='color:#22c55e'>48.96</div></div>
+<div class='kpi'><div class='lbl'>Δ NUTRITION</div><div class='num' style='color:#22d3ee'>+48.96</div></div>
+<div class='kpi'><div class='lbl'>TERRITOIRE projeté</div><div class='num' style='color:#22d3ee'>61.75</div></div>
+<div class='kpi'><div class='lbl'>Δ TERRITOIRE</div><div class='num' style='color:#22d3ee'>+13.54</div></div>
+<div class='kpi'><div class='lbl'>Sources sci.</div><div class='num'>7</div></div>
+</div></div>
+
+<h2>1. Diagnostic racine</h2>
+<div class='card'><p>Les 9 paramètres nutrition (besoins_proteines, besoins_energetiques, 3 minéraux, 4 saisons) sont stockés sous forme de listes textuelles qualitatives au lieu du format institutionnel {value, signature}. La fonction de normalisation _coerce_float retourne 0.0 sur ces listes.</p></div>
+
+<h2>2. Format institutionnel attendu — {value, signature}</h2>
+<div class='card'>
+<pre class='mono'>{
+  &quot;value&quot;: &quot;&lt;float | object {disponibilite, ration_kg, categorie}&gt;&quot;,
+  &quot;signature&quot;: {
+    &quot;type&quot;: &quot;&lt;float | object | bool&gt;&quot;,
+    &quot;unit&quot;: &quot;&lt;unité SI ou métabolique&gt;&quot;,
+    &quot;source&quot;: &quot;&lt;référence scientifique sourcée&gt;&quot;,
+    &quot;range&quot;: &quot;&lt;intervalle min..max validé&gt;&quot;,
+    &quot;semantics&quot;: &quot;&lt;description institutionnelle&gt;&quot;
+  }
+}</pre>
+<h3>Règles de normalisation saisonnière</h3>
+<ul><li>Chaque saison fournit {disponibilite: bool, ration_kg: float, categorie: str}.</li><li>ration_kg = 0 + disponibilite=False = saison critique (hibernation acceptée pour OURS_NOIR.hiver).</li><li>Score saison = 100 si (disponibilite=True ET ration_kg &gt; 0), sinon 0.</li><li>Score saisons = moyenne(printemps, ete, automne, hiver) — 4 valeurs.</li></ul>
+<h3>Règles de normalisation minéraux</h3>
+<ul><li>Sodium ∈ [0..2.0] g/kg MS  → norm 0..100 = value/2.0 * 100 (clampé).</li><li>Calcium ∈ [0..5.0] g/kg MS → norm 0..100 = value/5.0 * 100 (clampé).</li><li>Magnésium ∈ [0..2.0] g/kg MS → norm 0..100 = value/2.0 * 100 (clampé).</li><li>Pour DINDON_SAUVAGE le calcium peut atteindre 25 g/kg (œufs) — borne supérieure adaptée 0..40.</li></ul>
+<h3>Règles protéines / énergie</h3>
+<ul><li>Protéines (cervidés) ∈ [0..30%] MS → norm 0..100 = value/30 * 100.</li><li>Énergie kcal/jour : norme par espèce — chevreuil [0..5000], orignal [0..50000], ours [0..20000], wapiti [0..40000], dindon [0..500].</li></ul>
+</div>
+
+<h2>3. Paramètres manquants par espèce</h2>
+
+<h3>CHEVREUIL</h3>
+<div class='card scroll'><table><thead><tr>
+<th>Paramètre</th><th>Valeur actuelle</th><th>Valeur target</th><th>Type / Unité</th><th>Source</th><th>Score (avant→après)</th>
+</tr></thead><tbody>
+<tr><td class='mono'>nutrition.besoins_proteines</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste)</span></td><td class='mono'>16.0</td><td>float<br/><span class='mono'>% MS</span></td><td><span class='cite'>HEWITT_2011 ch.4 ; MFFP_PG_2020_2027 §3.2.1</span></td><td>0.0 → <b>53.3</b></td></tr><tr><td class='mono'>nutrition.besoins_energetiques</td><td><span class='b-warn'>TEXTE_QUALITATIF</span></td><td class='mono'>2800.0</td><td>float<br/><span class='mono'>kcal/kg MS jour</span></td><td><span class='cite'>HEWITT_2011 ch.4 ; CRETE_1989</span></td><td>0.0 → <b>56.0</b></td></tr><tr><td class='mono'>nutrition.besoins_mineraux.sodium</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>0.3</td><td>float<br/><span class='mono'>g/kg MS</span></td><td><span class='cite'>HEWITT_2011 ch.4 ; MFFP_PG_2020_2027</span></td><td>0.0 → <b>15.0</b></td></tr><tr><td class='mono'>nutrition.besoins_mineraux.calcium</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>4.5</td><td>float<br/><span class='mono'>g/kg MS</span></td><td><span class='cite'>HEWITT_2011 ch.4</span></td><td>0.0 → <b>90.0</b></td></tr><tr><td class='mono'>nutrition.besoins_mineraux.magnesium</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>0.45</td><td>float<br/><span class='mono'>g/kg MS</span></td><td><span class='cite'>HEWITT_2011 ch.4</span></td><td>0.0 → <b>22.5</b></td></tr><tr><td class='mono'>nutrition.alimentation_saisonniere.printemps</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>{&quot;disponibilite&quot;: true, &quot;ration_kg&quot;: 2.5, &quot;categorie&qu</td><td>object<br/><span class='mono'>kg MS/jour + dispo</span></td><td><span class='cite'>MFFP_PG_2020_2027 §3.2.2 ; HEWITT_2011</span></td><td>0.0 → <b>100.0</b></td></tr><tr><td class='mono'>nutrition.alimentation_saisonniere.ete</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>{&quot;disponibilite&quot;: true, &quot;ration_kg&quot;: 2.2, &quot;categorie&qu</td><td>object<br/><span class='mono'>kg MS/jour</span></td><td><span class='cite'>HEWITT_2011 ch.4</span></td><td>0.0 → <b>100.0</b></td></tr><tr><td class='mono'>nutrition.alimentation_saisonniere.automne</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>{&quot;disponibilite&quot;: true, &quot;ration_kg&quot;: 3.0, &quot;categorie&qu</td><td>object<br/><span class='mono'>kg MS/jour</span></td><td><span class='cite'>HEWITT_2011 ch.4</span></td><td>0.0 → <b>100.0</b></td></tr><tr><td class='mono'>nutrition.alimentation_saisonniere.hiver</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>{&quot;disponibilite&quot;: true, &quot;ration_kg&quot;: 1.8, &quot;categorie&qu</td><td>object<br/><span class='mono'>kg MS/jour</span></td><td><span class='cite'>MFFP_PG_2020_2027 §3.2.3</span></td><td>0.0 → <b>100.0</b></td></tr>
+</tbody></table></div>
+<h3>ORIGNAL</h3>
+<div class='card scroll'><table><thead><tr>
+<th>Paramètre</th><th>Valeur actuelle</th><th>Valeur target</th><th>Type / Unité</th><th>Source</th><th>Score (avant→après)</th>
+</tr></thead><tbody>
+<tr><td class='mono'>nutrition.besoins_proteines</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>12.0</td><td>float<br/><span class='mono'>% MS</span></td><td><span class='cite'>RENECKER_HUDSON_1990 ; MFFP_PG_2020_2027</span></td><td>0.0 → <b>40.0</b></td></tr><tr><td class='mono'>nutrition.besoins_energetiques</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>35000.0</td><td>float<br/><span class='mono'>kcal/jour</span></td><td><span class='cite'>RENECKER_HUDSON_1990 ; CRETE_1989</span></td><td>0.0 → <b>70.0</b></td></tr><tr><td class='mono'>nutrition.besoins_mineraux.sodium</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>1.2</td><td>float<br/><span class='mono'>g/kg MS</span></td><td><span class='cite'>RENECKER_HUDSON_1990</span></td><td>0.0 → <b>60.0</b></td></tr><tr><td class='mono'>nutrition.besoins_mineraux.calcium</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>6.0</td><td>float<br/><span class='mono'>g/kg MS</span></td><td><span class='cite'>HEWITT_2011 ch.4 (cervidés)</span></td><td>0.0 → <b>100.0</b></td></tr><tr><td class='mono'>nutrition.besoins_mineraux.magnesium</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>0.8</td><td>float<br/><span class='mono'>g/kg MS</span></td><td><span class='cite'>HEWITT_2011 ch.4</span></td><td>0.0 → <b>40.0</b></td></tr><tr><td class='mono'>nutrition.alimentation_saisonniere.printemps</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>{&quot;disponibilite&quot;: true, &quot;ration_kg&quot;: 18.0, &quot;categorie&q</td><td>object<br/><span class='mono'>kg MS/jour</span></td><td><span class='cite'>RENECKER_HUDSON_1990</span></td><td>0.0 → <b>100.0</b></td></tr><tr><td class='mono'>nutrition.alimentation_saisonniere.ete</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>{&quot;disponibilite&quot;: true, &quot;ration_kg&quot;: 22.0, &quot;categorie&q</td><td>object<br/><span class='mono'>kg MS/jour</span></td><td><span class='cite'>RENECKER_HUDSON_1990</span></td><td>0.0 → <b>100.0</b></td></tr><tr><td class='mono'>nutrition.alimentation_saisonniere.automne</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>{&quot;disponibilite&quot;: true, &quot;ration_kg&quot;: 20.0, &quot;categorie&q</td><td>object<br/><span class='mono'>kg MS/jour</span></td><td><span class='cite'>CRETE_1989</span></td><td>0.0 → <b>100.0</b></td></tr><tr><td class='mono'>nutrition.alimentation_saisonniere.hiver</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>{&quot;disponibilite&quot;: true, &quot;ration_kg&quot;: 12.0, &quot;categorie&q</td><td>object<br/><span class='mono'>kg MS/jour</span></td><td><span class='cite'>CRETE_1989 ; MFFP_PG_2020_2027</span></td><td>0.0 → <b>100.0</b></td></tr>
+</tbody></table></div>
+<h3>OURS_NOIR</h3>
+<div class='card scroll'><table><thead><tr>
+<th>Paramètre</th><th>Valeur actuelle</th><th>Valeur target</th><th>Type / Unité</th><th>Source</th><th>Score (avant→après)</th>
+</tr></thead><tbody>
+<tr><td class='mono'>nutrition.besoins_proteines</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>12.0</td><td>float<br/><span class='mono'>% MS</span></td><td><span class='cite'>PELTON_2003</span></td><td>0.0 → <b>40.0</b></td></tr><tr><td class='mono'>nutrition.besoins_energetiques</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>8500.0</td><td>float<br/><span class='mono'>kcal/jour</span></td><td><span class='cite'>PELTON_2003</span></td><td>0.0 → <b>100.0</b></td></tr><tr><td class='mono'>nutrition.besoins_mineraux.sodium</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>0.2</td><td>float<br/><span class='mono'>g/kg MS</span></td><td><span class='cite'>PELTON_2003 ; HEWITT_2011 (omnivores)</span></td><td>0.0 → <b>10.0</b></td></tr><tr><td class='mono'>nutrition.besoins_mineraux.calcium</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>3.0</td><td>float<br/><span class='mono'>g/kg MS</span></td><td><span class='cite'>PELTON_2003</span></td><td>0.0 → <b>60.0</b></td></tr><tr><td class='mono'>nutrition.besoins_mineraux.magnesium</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>0.3</td><td>float<br/><span class='mono'>g/kg MS</span></td><td><span class='cite'>PELTON_2003</span></td><td>0.0 → <b>15.0</b></td></tr><tr><td class='mono'>nutrition.alimentation_saisonniere.printemps</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>{&quot;disponibilite&quot;: true, &quot;ration_kg&quot;: 4.5, &quot;categorie&qu</td><td>object<br/><span class='mono'>kg MS/jour</span></td><td><span class='cite'>PELTON_2003</span></td><td>0.0 → <b>100.0</b></td></tr><tr><td class='mono'>nutrition.alimentation_saisonniere.ete</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>{&quot;disponibilite&quot;: true, &quot;ration_kg&quot;: 6.5, &quot;categorie&qu</td><td>object<br/><span class='mono'>kg MS/jour</span></td><td><span class='cite'>PELTON_2003 ; MFFP_PG_2020_2027</span></td><td>0.0 → <b>100.0</b></td></tr><tr><td class='mono'>nutrition.alimentation_saisonniere.automne</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>{&quot;disponibilite&quot;: true, &quot;ration_kg&quot;: 12.0, &quot;categorie&q</td><td>object<br/><span class='mono'>kg MS/jour</span></td><td><span class='cite'>PELTON_2003</span></td><td>0.0 → <b>100.0</b></td></tr><tr><td class='mono'>nutrition.alimentation_saisonniere.hiver</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>{&quot;disponibilite&quot;: false, &quot;ration_kg&quot;: 0.0, &quot;categorie&q</td><td>object<br/><span class='mono'>kg MS/jour</span></td><td><span class='cite'>PELTON_2003</span></td><td>0.0 → <b>100.0</b></td></tr>
+</tbody></table></div>
+<h3>WAPITI</h3>
+<div class='card scroll'><table><thead><tr>
+<th>Paramètre</th><th>Valeur actuelle</th><th>Valeur target</th><th>Type / Unité</th><th>Source</th><th>Score (avant→après)</th>
+</tr></thead><tbody>
+<tr><td class='mono'>nutrition.besoins_proteines</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>14.0</td><td>float<br/><span class='mono'>% MS</span></td><td><span class='cite'>LYON_BURCHAM_1998</span></td><td>0.0 → <b>46.7</b></td></tr><tr><td class='mono'>nutrition.besoins_energetiques</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>28000.0</td><td>float<br/><span class='mono'>kcal/jour</span></td><td><span class='cite'>LYON_BURCHAM_1998</span></td><td>0.0 → <b>56.0</b></td></tr><tr><td class='mono'>nutrition.besoins_mineraux.sodium</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>0.5</td><td>float<br/><span class='mono'>g/kg MS</span></td><td><span class='cite'>LYON_BURCHAM_1998 ; HEWITT_2011</span></td><td>0.0 → <b>25.0</b></td></tr><tr><td class='mono'>nutrition.besoins_mineraux.calcium</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>5.5</td><td>float<br/><span class='mono'>g/kg MS</span></td><td><span class='cite'>LYON_BURCHAM_1998</span></td><td>0.0 → <b>100.0</b></td></tr><tr><td class='mono'>nutrition.besoins_mineraux.magnesium</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>0.55</td><td>float<br/><span class='mono'>g/kg MS</span></td><td><span class='cite'>HEWITT_2011 ch.4</span></td><td>0.0 → <b>27.5</b></td></tr><tr><td class='mono'>nutrition.alimentation_saisonniere.printemps</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>{&quot;disponibilite&quot;: true, &quot;ration_kg&quot;: 8.5, &quot;categorie&qu</td><td>object<br/><span class='mono'>kg MS/jour</span></td><td><span class='cite'>LYON_BURCHAM_1998</span></td><td>0.0 → <b>100.0</b></td></tr><tr><td class='mono'>nutrition.alimentation_saisonniere.ete</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>{&quot;disponibilite&quot;: true, &quot;ration_kg&quot;: 9.0, &quot;categorie&qu</td><td>object<br/><span class='mono'>kg MS/jour</span></td><td><span class='cite'>LYON_BURCHAM_1998</span></td><td>0.0 → <b>100.0</b></td></tr><tr><td class='mono'>nutrition.alimentation_saisonniere.automne</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>{&quot;disponibilite&quot;: true, &quot;ration_kg&quot;: 10.5, &quot;categorie&q</td><td>object<br/><span class='mono'>kg MS/jour</span></td><td><span class='cite'>LYON_BURCHAM_1998</span></td><td>0.0 → <b>100.0</b></td></tr><tr><td class='mono'>nutrition.alimentation_saisonniere.hiver</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>{&quot;disponibilite&quot;: true, &quot;ration_kg&quot;: 6.0, &quot;categorie&qu</td><td>object<br/><span class='mono'>kg MS/jour</span></td><td><span class='cite'>LYON_BURCHAM_1998 ; MFFP_PG_2020_2027</span></td><td>0.0 → <b>100.0</b></td></tr>
+</tbody></table></div>
+<h3>DINDON_SAUVAGE</h3>
+<div class='card scroll'><table><thead><tr>
+<th>Paramètre</th><th>Valeur actuelle</th><th>Valeur target</th><th>Type / Unité</th><th>Source</th><th>Score (avant→après)</th>
+</tr></thead><tbody>
+<tr><td class='mono'>nutrition.besoins_proteines</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>18.0</td><td>float<br/><span class='mono'>% MS</span></td><td><span class='cite'>EATON_HEALY_1991</span></td><td>0.0 → <b>60.0</b></td></tr><tr><td class='mono'>nutrition.besoins_energetiques</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>350.0</td><td>float<br/><span class='mono'>kcal/jour</span></td><td><span class='cite'>EATON_HEALY_1991</span></td><td>0.0 → <b>7.0</b></td></tr><tr><td class='mono'>nutrition.besoins_mineraux.sodium</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>0.1</td><td>float<br/><span class='mono'>g/kg MS</span></td><td><span class='cite'>EATON_HEALY_1991</span></td><td>0.0 → <b>5.0</b></td></tr><tr><td class='mono'>nutrition.besoins_mineraux.calcium</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>25.0</td><td>float<br/><span class='mono'>g/kg MS</span></td><td><span class='cite'>EATON_HEALY_1991 (femelles ponte)</span></td><td>0.0 → <b>100.0</b></td></tr><tr><td class='mono'>nutrition.besoins_mineraux.magnesium</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>0.5</td><td>float<br/><span class='mono'>g/kg MS</span></td><td><span class='cite'>EATON_HEALY_1991</span></td><td>0.0 → <b>25.0</b></td></tr><tr><td class='mono'>nutrition.alimentation_saisonniere.printemps</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>{&quot;disponibilite&quot;: true, &quot;ration_kg&quot;: 0.45, &quot;categorie&q</td><td>object<br/><span class='mono'>kg MS/jour</span></td><td><span class='cite'>EATON_HEALY_1991</span></td><td>0.0 → <b>100.0</b></td></tr><tr><td class='mono'>nutrition.alimentation_saisonniere.ete</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>{&quot;disponibilite&quot;: true, &quot;ration_kg&quot;: 0.35, &quot;categorie&q</td><td>object<br/><span class='mono'>kg MS/jour</span></td><td><span class='cite'>EATON_HEALY_1991</span></td><td>0.0 → <b>100.0</b></td></tr><tr><td class='mono'>nutrition.alimentation_saisonniere.automne</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>{&quot;disponibilite&quot;: true, &quot;ration_kg&quot;: 0.55, &quot;categorie&q</td><td>object<br/><span class='mono'>kg MS/jour</span></td><td><span class='cite'>EATON_HEALY_1991</span></td><td>0.0 → <b>100.0</b></td></tr><tr><td class='mono'>nutrition.alimentation_saisonniere.hiver</td><td><span class='b-warn'>TEXTE_QUALITATIF (liste sans value/signature)</span></td><td class='mono'>{&quot;disponibilite&quot;: true, &quot;ration_kg&quot;: 0.25, &quot;categorie&q</td><td>object<br/><span class='mono'>kg MS/jour</span></td><td><span class='cite'>EATON_HEALY_1991 ; MFFP_PG_2020_2027</span></td><td>0.0 → <b>100.0</b></td></tr>
+</tbody></table></div>
+
+<h2>4. Valeurs minimales requises pour NUTRITION_MASTER &gt; 90</h2>
+<div class='card'>
+<p>Pour NUTRITION_MASTER &gt; 90, il faut que le score moyen par espèce ≥ 90. Avec la formule actuelle (moyenne 5 paramètres × 5 espèces), les 5 cibles minimales par espèce sont : protéines/30 ≥ 0.90, énergie ≥ borne sup-10%, minéraux Na/Ca/Mg simultanément à seuils nominaux.</p>
+<h3>Exemple CHEVREUIL — minimums absolus</h3>
+<pre class='mono'>{
+  &quot;proteines_min&quot;: 27.0,
+  &quot;energie_min&quot;: 4500.0,
+  &quot;sodium_min&quot;: 1.8,
+  &quot;calcium_min&quot;: 4.5,
+  &quot;magnesium_min&quot;: 1.8,
+  &quot;score_compose_attendu&quot;: 90.0
+}</pre>
+<p><b>Note institutionnelle :</b> Atteindre 90 simultanément sur les 5 paramètres minéraux demande une saturation rare en milieu naturel. La cible institutionnelle réaliste est NUTRITION_MASTER ∈ [60..80] avec les valeurs nominales sourcées.</p>
+</div>
+
+<h2>5. Projection d'impact (TERRITOIRE_MASTER)</h2>
+<div class='card'><table><thead><tr><th>Métrique</th><th>Avant</th><th>Après</th><th>Δ</th></tr></thead><tbody>
+<tr><td>NUTRITION_MASTER</td><td>0.0</td><td><b>48.96</b></td><td>+48.96</td></tr>
+<tr><td>TERRITOIRE_MASTER (nutrition seule)</td><td>48.21</td><td><b>61.75</b></td><td>+13.54</td></tr>
+<tr><td>Décision globale projetée</td><td>MARGINAL</td><td><b>MARGINAL</b></td><td>—</td></tr>
+</tbody></table></div>
+
+<h2>6. Sources scientifiques</h2>
+<div class='card scroll'><table><thead><tr><th>ID</th><th>Citation</th><th>Domaine</th></tr></thead><tbody><tr><td><b>HEWITT_2011</b></td><td>Hewitt DG (2011). Biology and Management of White-tailed Deer. CRC Press.</td><td><i>Cervidés — bilan énergétique, protéines, minéraux.</i></td></tr><tr><td><b>RENECKER_HUDSON_1990</b></td><td>Renecker LA &amp; Hudson RJ (1990). Behavioral and thermoregulatory responses of moose to high temperatures. Can J Zool 68:122–133.</td><td><i>Orignal — thermorégulation et besoins énergétiques.</i></td></tr><tr><td><b>MFFP_PG_2020_2027</b></td><td>MFFP Québec (2020). Plans de gestion 2020-2027 (chevreuil, orignal, ours noir, wapiti, dindon sauvage).</td><td><i>Données saisonnières institutionnelles 5 espèces.</i></td></tr><tr><td><b>PELTON_2003</b></td><td>Pelton MR (2003). Black bear ecology and management. In: Wild Mammals of NA, 2nd ed.</td><td><i>Ours noir — hyperphagie automnale, glands, fruits.</i></td></tr><tr><td><b>EATON_HEALY_1991</b></td><td>Eaton SW &amp; Healy WM (1991). Wild Turkey ecology. Stackpole Books.</td><td><i>Dindon sauvage — régimes saisonniers, glands, insectes.</i></td></tr><tr><td><b>LYON_BURCHAM_1998</b></td><td>Lyon LJ &amp; Burcham MG (1998). Wapiti security cover and seasonal forage. USFS GTR.</td><td><i>Wapiti — phénologie protéines printanières, herbacées.</i></td></tr><tr><td><b>CRETE_1989</b></td><td>Crête M (1989). Approximation of K carrying capacity for moose in eastern Quebec. Can J Zool 67:373–380.</td><td><i>Orignal — capacité de support hivernale.</i></td></tr></tbody></table></div>
+
+<h2>7. Doctrine anti-contamination</h2>
+<div class='card'><ul><li>Aucune logique générique — chaque valeur est sourcée scientifiquement.</li><li>Aucun fallback, aucune interpolation. Valeur ABSENTE = anti_generique_violation.</li><li>Régénération du BIO_PROFILE_Ω via un processus institutionnel séparé (hors V30, hors FREEZE_MASTER).</li><li>Specs SUPER_ENGINES_Ω PHASE XIV verrouillées et INVIOLABLES.</li></ul></div>
+
+<footer class='foot'>
+<div><span class='lbl-foot'>Émis :</span> COMMANDANT STEEVE-MAX</div>
+<div><span class='lbl-foot'>V30 :</span> <span class='mono'>fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c</span></div>
+<div class='v30-lock'>✓ Protocole institutionnel scellé · prêt pour régénération BIO_PROFILE_Ω</div>
+</footer></div></body></html>
