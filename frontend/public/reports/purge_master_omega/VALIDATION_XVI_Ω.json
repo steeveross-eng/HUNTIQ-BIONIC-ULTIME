@@ -1,0 +1,80 @@
+{
+  "manifest_id": "VALIDATION_XVI_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°35",
+  "directive": "PHASE_XVI_VALIDATION",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "validated_at_utc": "2026-04-29T18:43:22+00:00",
+  "pytest": {
+    "exit_code": 0,
+    "passed": 85,
+    "all_pass": true
+  },
+  "v30_intact": true,
+  "freeze_intact": true,
+  "freeze_check_details": {
+    "altered": [],
+    "missing": []
+  },
+  "backend_endpoints": [
+    {
+      "endpoint": "/api/v30/especes/audit/status",
+      "code": 200
+    },
+    {
+      "endpoint": "/api/v30/especes/bio-reacteur/list",
+      "code": 200
+    },
+    {
+      "endpoint": "/api/v30/scientifique/list",
+      "code": 200
+    },
+    {
+      "endpoint": "/api/v30/sceau-phase-xiii/verify",
+      "code": 200
+    }
+  ],
+  "backend_ok": true,
+  "anti_regression": true,
+  "anti_contamination": true,
+  "xvi_livrables_https": [
+    {
+      "filename": "HEATMAP_XVd_Ω.png",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_XVd_%CE%A9.png",
+      "http_code": 200,
+      "size_bytes": 117371
+    },
+    {
+      "filename": "HEATMAP_XVd_Ω.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_XVd_%CE%A9.html",
+      "http_code": 200,
+      "size_bytes": 6935
+    },
+    {
+      "filename": "SUPER_ENGINES_Ω_SPEC.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/SUPER_ENGINES_%CE%A9_SPEC.json",
+      "http_code": 200,
+      "size_bytes": 38191
+    },
+    {
+      "filename": "SUPER_ENGINES_Ω_SPEC.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/SUPER_ENGINES_%CE%A9_SPEC.html",
+      "http_code": 200,
+      "size_bytes": 8518
+    },
+    {
+      "filename": "MIGRATION_TRACKER_Ω.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/MIGRATION_TRACKER_%CE%A9.json",
+      "http_code": 200,
+      "size_bytes": 27214
+    },
+    {
+      "filename": "MIGRATION_TRACKER_Ω.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/MIGRATION_TRACKER_%CE%A9.html",
+      "http_code": 200,
+      "size_bytes": 22111
+    }
+  ],
+  "all_xvi_https_ok": true,
+  "all_validations_pass": true
+}

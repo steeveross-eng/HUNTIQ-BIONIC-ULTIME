@@ -1,0 +1,760 @@
+{
+  "manifest_id": "SUPER_ENGINES_Ω_SPEC",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°35",
+  "directive": "PHASE_XVI_SUPER_ENGINES_Ω",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-29T18:43:22+00:00",
+  "phase": "PHASE_XVI_SUPER_ENGINES_Ω_LOGIQUE_ACTIVE",
+  "super_engine_lock_sha256": "39efe34425c06a41225a2fe126e3612e99ef5c40a09f7a92c633d9cf32007a4c",
+  "specs_count": 6,
+  "specs_verrouillees": {
+    "ENGINE_CORRIDORS_MASTER_Ω": {
+      "super_engine_id": "ENGINE_CORRIDORS_MASTER_Ω",
+      "nom_doctrinal": "Maître des corridors écologiques inter-espèces",
+      "objectif_institutionnel": "Fusion institutionnelle des 5 ENGINE_CORRIDORS d'espèce en un score corridor maître par tuile territoriale, prenant en compte le partage inter-espèces, la fragmentation et la connectivité optimale issus exclusivement des BIO_REACTEURS_Ω.",
+      "bio_reacteur_inputs_required": [
+        "corridors.corridors_reels_gps",
+        "corridors.connectivite_optimum",
+        "corridors.fragmentation_penalty",
+        "corridors.zones_passage_essentielles",
+        "corridors.distances_typiques",
+        "interactions.partage_corridors"
+      ],
+      "engines_consumed": [
+        "ENGINE_CORRIDORS",
+        "ENGINE_INTERACTIONS"
+      ],
+      "outputs_signature": {
+        "score_corridor_master_omega": "float (0..100) — fusion 5 espèces",
+        "layer_corridors_master_omega": "geo-feature collection",
+        "bottleneck_segments": "list[dict]",
+        "shared_corridor_segments": "list[dict] — partage inter-espèces",
+        "fragmentation_penalty_master": "float (0..1)"
+      },
+      "anti_generique_strict": true,
+      "fallback_authorized": false,
+      "interpolation_authorized": false,
+      "bio_reacteur_dependency": "BIO_REACTEURS_Ω_<ESPECE>.json (READ-ONLY)",
+      "activation_status": "PRE_ACTIVATED_AWAITING_PHASE_XV_LOGIC",
+      "phase_creation": "PHASE_XIV",
+      "phase_activation_logique": "PHASE_XV (à venir)"
+    },
+    "ENGINE_NUTRITION_MASTER_Ω": {
+      "super_engine_id": "ENGINE_NUTRITION_MASTER_Ω",
+      "nom_doctrinal": "Maître de la disponibilité nutritionnelle territoriale",
+      "objectif_institutionnel": "Synthèse territoriale des besoins nutritionnels, énergétiques et minéraux des 5 espèces avec saisonnalité stricte issue exclusivement des BIO_REACTEURS_Ω. Pondération sodium/calcium/magnésium par espèce.",
+      "bio_reacteur_inputs_required": [
+        "nutrition.besoins_proteines",
+        "nutrition.besoins_energetiques",
+        "nutrition.besoins_mineraux.sodium",
+        "nutrition.besoins_mineraux.calcium",
+        "nutrition.besoins_mineraux.magnesium",
+        "nutrition.alimentation_saisonniere.printemps",
+        "nutrition.alimentation_saisonniere.ete",
+        "nutrition.alimentation_saisonniere.automne",
+        "nutrition.alimentation_saisonniere.hiver"
+      ],
+      "engines_consumed": [
+        "ENGINE_NUTRITION",
+        "ENGINE_MINERAUX"
+      ],
+      "outputs_signature": {
+        "score_nutrition_master_omega": "float (0..100)",
+        "layer_nutrition_disponibilite": "geo-feature collection",
+        "saisons_critiques": "list[str]",
+        "deficit_mineraux_par_espece": "dict[espece -> dict]"
+      },
+      "anti_generique_strict": true,
+      "fallback_authorized": false,
+      "interpolation_authorized": false,
+      "bio_reacteur_dependency": "BIO_REACTEURS_Ω_<ESPECE>.json (READ-ONLY)",
+      "activation_status": "PRE_ACTIVATED_AWAITING_PHASE_XV_LOGIC",
+      "phase_creation": "PHASE_XIV",
+      "phase_activation_logique": "PHASE_XV (à venir)"
+    },
+    "ENGINE_SENSORIEL_MASTER_Ω": {
+      "super_engine_id": "ENGINE_SENSORIEL_MASTER_Ω",
+      "nom_doctrinal": "Maître des contraintes sensorielles & climatiques",
+      "objectif_institutionnel": "Synthèse des seuils thermiques, pluviométriques et nivologiques par espèce ; dérive un indicateur sensoriel territorial composite exclusivement à partir des seuils BIO_PROFILE_Ω validés.",
+      "bio_reacteur_inputs_required": [
+        "thermoregulation.seuil_stress",
+        "thermoregulation.comportements_adaptation",
+        "neige.seuil_mobilite",
+        "neige.seuil_mortalite"
+      ],
+      "engines_consumed": [
+        "ENGINE_SENSORIEL",
+        "ENGINE_CLIMAT"
+      ],
+      "outputs_signature": {
+        "score_sensoriel_master_omega": "float (0..100)",
+        "thermique_stress_aggregate_C": "float",
+        "neige_critique_aggregate_cm": "float",
+        "espece_zones_refuge": "dict[espece -> list]"
+      },
+      "anti_generique_strict": true,
+      "fallback_authorized": false,
+      "interpolation_authorized": false,
+      "bio_reacteur_dependency": "BIO_REACTEURS_Ω_<ESPECE>.json (READ-ONLY)",
+      "activation_status": "PRE_ACTIVATED_AWAITING_PHASE_XV_LOGIC",
+      "phase_creation": "PHASE_XIV",
+      "phase_activation_logique": "PHASE_XV (à venir)"
+    },
+    "ENGINE_COMPORTEMENT_MASTER_Ω": {
+      "super_engine_id": "ENGINE_COMPORTEMENT_MASTER_Ω",
+      "nom_doctrinal": "Maître des comportements saisonniers fusionnés",
+      "objectif_institutionnel": "Fusion saisonnière des comportements des 5 espèces (printemps, été, automne, hiver) avec sous-blocs déplacements/alimentation/rut/hyperphagie/ravages/mise-bas/nidification — alimenté EXCLUSIVEMENT par BIO_REACTEURS_Ω.",
+      "bio_reacteur_inputs_required": [
+        "comportements_saisonniers.printemps",
+        "comportements_saisonniers.ete",
+        "comportements_saisonniers.automne",
+        "comportements_saisonniers.hiver"
+      ],
+      "engines_consumed": [
+        "ENGINE_COMPORTEMENT",
+        "ENGINE_RUT",
+        "ENGINE_NIDIFICATION",
+        "ENGINE_HABITAT"
+      ],
+      "outputs_signature": {
+        "score_comportement_master_omega": "float (0..100)",
+        "calendrier_phenologique_unifie": "dict[saison -> dict[espece -> bullets]]",
+        "rut_actif_concurrents": "list[espece]",
+        "hyperphagie_active_concurrents": "list[espece]"
+      },
+      "anti_generique_strict": true,
+      "fallback_authorized": false,
+      "interpolation_authorized": false,
+      "bio_reacteur_dependency": "BIO_REACTEURS_Ω_<ESPECE>.json (READ-ONLY)",
+      "activation_status": "PRE_ACTIVATED_AWAITING_PHASE_XV_LOGIC",
+      "phase_creation": "PHASE_XIV",
+      "phase_activation_logique": "PHASE_XV (à venir)"
+    },
+    "ENGINE_GOUVERNANCE_MASTER_Ω": {
+      "super_engine_id": "ENGINE_GOUVERNANCE_MASTER_Ω",
+      "nom_doctrinal": "Maître de la gouvernance institutionnelle BCE-4X",
+      "objectif_institutionnel": "Auditeur institutionnel multi-espèces — agrège pression humaine, maladies, dynamique populationnelle 20 ans, conflits, attractifs anthropiques. Émet des recommandations d'aménagement et de régulation cynégétique à partir des BIO_REACTEURS_Ω strictement.",
+      "bio_reacteur_inputs_required": [
+        "pression_humaine.routes",
+        "pression_humaine.agriculture",
+        "pression_humaine.urbanisation",
+        "pression_humaine.fragmentation",
+        "pression_humaine.attractifs_anthropiques",
+        "pression_humaine.conflits_humains",
+        "maladies.cwd",
+        "maladies.lpdv",
+        "maladies.tique_hiver",
+        "maladies.autres",
+        "dynamique.tendances_20_ans",
+        "dynamique.expansion",
+        "dynamique.declin",
+        "dynamique.facteurs"
+      ],
+      "engines_consumed": [
+        "ENGINE_INTERACTIONS"
+      ],
+      "outputs_signature": {
+        "score_gouvernance_master_omega": "float (0..100)",
+        "recommandations_amenagement": "list[dict]",
+        "alertes_maladies_actives": "list[espece -> maladie]",
+        "tendances_population_20_ans": "dict[espece -> trend]"
+      },
+      "anti_generique_strict": true,
+      "fallback_authorized": false,
+      "interpolation_authorized": false,
+      "bio_reacteur_dependency": "BIO_REACTEURS_Ω_<ESPECE>.json (READ-ONLY)",
+      "activation_status": "PRE_ACTIVATED_AWAITING_PHASE_XV_LOGIC",
+      "phase_creation": "PHASE_XIV",
+      "phase_activation_logique": "PHASE_XV (à venir)"
+    },
+    "ENGINE_TERRITOIRE_MASTER_Ω": {
+      "super_engine_id": "ENGINE_TERRITOIRE_MASTER_Ω",
+      "nom_doctrinal": "Maître territorial — fusion finale Ω",
+      "objectif_institutionnel": "Engine final qui consomme les 5 SUPER ENGINES précédents pour produire le score territorial composite BCE-4X et la couche TERRITOIRE_Ω_MASTER. Aucune logique générique. Strictement piloté par les sorties des autres SUPER ENGINES_Ω.",
+      "bio_reacteur_inputs_required": [
+        "habitat.types_couverts",
+        "habitat.mosaiques_foret_agriculture",
+        "habitat.zones_humides",
+        "habitat.zones_thermiques",
+        "habitat.zones_ouvertes",
+        "habitat.zones_matures",
+        "habitat.zones_transition",
+        "sites_critiques.mise_bas",
+        "sites_critiques.nidification",
+        "sites_critiques.rut",
+        "sites_critiques.tanieres",
+        "sites_critiques.repos",
+        "sites_critiques.alimentation",
+        "sites_critiques.eau"
+      ],
+      "engines_consumed": [
+        "ENGINE_CORRIDORS_MASTER_Ω",
+        "ENGINE_NUTRITION_MASTER_Ω",
+        "ENGINE_SENSORIEL_MASTER_Ω",
+        "ENGINE_COMPORTEMENT_MASTER_Ω",
+        "ENGINE_GOUVERNANCE_MASTER_Ω"
+      ],
+      "outputs_signature": {
+        "score_territoire_master_omega": "float (0..100) — score Ω final",
+        "layer_territoire_master_omega": "geo-feature collection unifié",
+        "decision_aptitude_territoriale": "str (APTE/MARGINAL/INAPTE)",
+        "rang_territorial_par_espece": "dict[espece -> rang]"
+      },
+      "anti_generique_strict": true,
+      "fallback_authorized": false,
+      "interpolation_authorized": false,
+      "bio_reacteur_dependency": "BIO_REACTEURS_Ω_<ESPECE>.json (READ-ONLY)",
+      "activation_status": "PRE_ACTIVATED_AWAITING_PHASE_XV_LOGIC",
+      "phase_creation": "PHASE_XIV",
+      "phase_activation_logique": "PHASE_XV (à venir)"
+    }
+  },
+  "logic_module": "engines.v8_institutional.especes.super_engines_omega_logic",
+  "logic_functions": [
+    "compute_corridors_master",
+    "compute_nutrition_master",
+    "compute_sensoriel_master",
+    "compute_comportement_master",
+    "compute_gouvernance_master",
+    "compute_territoire_master",
+    "compute_all_super_engines"
+  ],
+  "implementation_runtime_demo": {
+    "phase": "PHASE_XVI_SUPER_ENGINES_Ω_LOGIQUE_ACTIVE",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+    "issued_by": "COMMANDANT STEEVE-MAX",
+    "computed_at_utc": "2026-04-29T18:43:23+00:00",
+    "super_engine_lock_sha256": "39efe34425c06a41225a2fe126e3612e99ef5c40a09f7a92c633d9cf32007a4c",
+    "specs_count": 6,
+    "engines": {
+      "ENGINE_CORRIDORS_MASTER_Ω": {
+        "super_engine_id": "ENGINE_CORRIDORS_MASTER_Ω",
+        "computed_at_utc": "2026-04-29T18:43:23+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "score_corridor_master_omega": 40.0,
+        "score_par_espece": {
+          "CHEVREUIL": 40.0,
+          "ORIGNAL": 40.0,
+          "OURS_NOIR": 40.0,
+          "WAPITI": 40.0,
+          "DINDON_SAUVAGE": 40.0
+        },
+        "layer_corridors_master_omega": {
+          "type": "FeatureCollection",
+          "features": [],
+          "no_geom_interpolation": true
+        },
+        "bottleneck_segments": [],
+        "shared_corridor_segments": [],
+        "fragmentation_penalty_master": 0.0,
+        "anti_generique_violations": [],
+        "anti_generique_pass": true,
+        "fallback_active": false,
+        "interpolation_active": false
+      },
+      "ENGINE_NUTRITION_MASTER_Ω": {
+        "super_engine_id": "ENGINE_NUTRITION_MASTER_Ω",
+        "computed_at_utc": "2026-04-29T18:43:23+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "score_nutrition_master_omega": 0.0,
+        "score_par_espece": {
+          "CHEVREUIL": 0.0,
+          "ORIGNAL": 0.0,
+          "OURS_NOIR": 0.0,
+          "WAPITI": 0.0,
+          "DINDON_SAUVAGE": 0.0
+        },
+        "layer_nutrition_disponibilite": {
+          "type": "FeatureCollection",
+          "features": [],
+          "no_geom_interpolation": true
+        },
+        "saisons_critiques": [
+          "ete",
+          "hiver",
+          "printemps"
+        ],
+        "deficit_mineraux_par_espece": {
+          "CHEVREUIL": {
+            "sodium_score": 0.0,
+            "calcium_score": 0.0,
+            "magnesium_score": 0.0,
+            "deficit_actif": true
+          },
+          "ORIGNAL": {
+            "sodium_score": 0.0,
+            "calcium_score": 0.0,
+            "magnesium_score": 0.0,
+            "deficit_actif": true
+          },
+          "OURS_NOIR": {
+            "sodium_score": 0.0,
+            "calcium_score": 0.0,
+            "magnesium_score": 0.0,
+            "deficit_actif": true
+          },
+          "WAPITI": {
+            "sodium_score": 0.0,
+            "calcium_score": 0.0,
+            "magnesium_score": 0.0,
+            "deficit_actif": true
+          },
+          "DINDON_SAUVAGE": {
+            "sodium_score": 0.0,
+            "calcium_score": 0.0,
+            "magnesium_score": 0.0,
+            "deficit_actif": true
+          }
+        },
+        "anti_generique_violations": [],
+        "anti_generique_pass": true,
+        "fallback_active": false,
+        "interpolation_active": false
+      },
+      "ENGINE_SENSORIEL_MASTER_Ω": {
+        "super_engine_id": "ENGINE_SENSORIEL_MASTER_Ω",
+        "computed_at_utc": "2026-04-29T18:43:23+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "score_sensoriel_master_omega": 33.08,
+        "score_par_espece": {
+          "CHEVREUIL": 43.85,
+          "ORIGNAL": 35.0,
+          "OURS_NOIR": 23.08,
+          "WAPITI": 40.38,
+          "DINDON_SAUVAGE": 23.08
+        },
+        "thermique_stress_aggregate_C": 13.0,
+        "neige_critique_aggregate_cm": 37.0,
+        "espece_zones_refuge": {
+          "CHEVREUIL": [
+            "stress thermique dès 26–28°C",
+            "sélection d’habitats ombragés",
+            "réduction des déplacements en période chaude"
+          ],
+          "ORIGNAL": [
+            "stress thermique dès 14–17°C",
+            "sélection d’habitats frais",
+            "réduction des déplacements en période chaude"
+          ],
+          "OURS_NOIR": [
+            "tolérance thermique élevée",
+            "sélection de zones ombragées en été",
+            "dépendance aux tanières isolées en hiver"
+          ],
+          "WAPITI": [
+            "stress thermique dès 20–25°C",
+            "sélection de zones ombragées, forêts mixtes, zones humides",
+            "réduction des déplacements en période chaude",
+            "utilisation accrue des pentes nord et zones d’altitude"
+          ],
+          "DINDON_SAUVAGE": [
+            "sensibilité modérée à la chaleur",
+            "sélection de zones ombragées en été",
+            "dépendance aux conifères en hiver pour réduire pertes thermiques"
+          ]
+        },
+        "anti_generique_violations": [
+          "CHEVREUIL::ENGINE_SENSORIEL::neige.seuil_mortalite::NULL_VALUE",
+          "ORIGNAL::ENGINE_SENSORIEL::neige.seuil_mortalite::NULL_VALUE",
+          "OURS_NOIR::ENGINE_SENSORIEL::thermoregulation.seuil_stress::NULL_VALUE",
+          "OURS_NOIR::ENGINE_SENSORIEL::neige.seuil_mobilite::NULL_VALUE",
+          "OURS_NOIR::ENGINE_SENSORIEL::neige.seuil_mortalite::NULL_VALUE",
+          "WAPITI::ENGINE_SENSORIEL::neige.seuil_mortalite::NULL_VALUE",
+          "DINDON_SAUVAGE::ENGINE_SENSORIEL::thermoregulation.seuil_stress::NULL_VALUE",
+          "DINDON_SAUVAGE::ENGINE_SENSORIEL::neige.seuil_mortalite::NULL_VALUE"
+        ],
+        "anti_generique_pass": false,
+        "fallback_active": false,
+        "interpolation_active": false
+      },
+      "ENGINE_COMPORTEMENT_MASTER_Ω": {
+        "super_engine_id": "ENGINE_COMPORTEMENT_MASTER_Ω",
+        "computed_at_utc": "2026-04-29T18:43:23+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "score_comportement_master_omega": 100.0,
+        "score_par_espece": {
+          "CHEVREUIL": 100.0,
+          "ORIGNAL": 100.0,
+          "OURS_NOIR": 100.0,
+          "WAPITI": 100.0,
+          "DINDON_SAUVAGE": 100.0
+        },
+        "calendrier_phenologique_unifie": {
+          "printemps": {
+            "CHEVREUIL": [
+              "deplacements=['dispersion juvénile, recherche de végétation riche en protéines']",
+              "alimentation=['dispersion juvénile, recherche de végétation riche en protéines']",
+              "reproduction=[]",
+              "habitat=[]",
+              "raw_bullets=['dispersion juvénile, recherche de végétation riche en protéines']"
+            ],
+            "ORIGNAL": [
+              "deplacements=[]",
+              "alimentation=['recherche de végétation riche en protéines']",
+              "reproduction=[]",
+              "habitat=[]",
+              "raw_bullets=['recherche de végétation riche en protéines']"
+            ],
+            "OURS_NOIR": [
+              "deplacements=[]",
+              "alimentation=['sortie d’hibernation, recherche de nourriture riche en protéines']",
+              "reproduction=[]",
+              "habitat=[]",
+              "raw_bullets=['sortie d’hibernation, recherche de nourriture riche en protéines']"
+            ],
+            "WAPITI": [
+              "deplacements=['dispersion des mâles, recherche de végétation riche en protéines']",
+              "alimentation=['dispersion des mâles, recherche de végétation riche en protéines']",
+              "reproduction=[]",
+              "habitat=[]",
+              "raw_bullets=['dispersion des mâles, recherche de végétation riche en protéines']"
+            ],
+            "DINDON_SAUVAGE": [
+              "deplacements=['nidification, déplacements réduits des femelles, sélection de couvert dense']",
+              "alimentation=[]",
+              "reproduction=['nidification, déplacements réduits des femelles, sélection de couvert dense']",
+              "habitat=['nidification, déplacements réduits des femelles, sélection de couvert dense']",
+              "raw_bullets=['nidification, déplacements réduits des femelles, sélection de couvert dense']"
+            ]
+          },
+          "ete": {
+            "CHEVREUIL": [
+              "thermoregulation=['sélection d’habitats thermiques, évitement de chaleur excessive']",
+              "habitat=['sélection d’habitats thermiques, évitement de chaleur excessive']",
+              "alimentation=[]",
+              "raw_bullets=['sélection d’habitats thermiques, évitement de chaleur excessive']"
+            ],
+            "ORIGNAL": [
+              "thermoregulation=['sélection d’habitats thermiques (zones humides, forêts denses)']",
+              "habitat=['sélection d’habitats thermiques (zones humides, forêts denses)']",
+              "alimentation=[]",
+              "raw_bullets=['sélection d’habitats thermiques (zones humides, forêts denses)']"
+            ],
+            "OURS_NOIR": [
+              "thermoregulation=[]",
+              "habitat=[]",
+              "alimentation=['déplacements accrus, alimentation variée (fruits, insectes, végétaux)']",
+              "raw_bullets=['déplacements accrus, alimentation variée (fruits, insectes, végétaux)']"
+            ],
+            "WAPITI": [
+              "thermoregulation=['sélection de zones ouvertes avec accès à couvert forestier pour thermorégulation']",
+              "habitat=['sélection de zones ouvertes avec accès à couvert forestier pour thermorégulation']",
+              "alimentation=[]",
+              "raw_bullets=['sélection de zones ouvertes avec accès à couvert forestier pour thermorégulation']"
+            ],
+            "DINDON_SAUVAGE": [
+              "thermoregulation=[]",
+              "habitat=['dispersion des jeunes, utilisation de zones ouvertes pour alimentation']",
+              "alimentation=['dispersion des jeunes, utilisation de zones ouvertes pour alimentation']",
+              "raw_bullets=['dispersion des jeunes, utilisation de zones ouvertes pour alimentation']"
+            ]
+          },
+          "automne": {
+            "CHEVREUIL": [
+              "rut=['rut, déplacements accrus, utilisation de mosaïques forestières']",
+              "hyperphagie=[]",
+              "deplacements=['rut, déplacements accrus, utilisation de mosaïques forestières']",
+              "raw_bullets=['rut, déplacements accrus, utilisation de mosaïques forestières']"
+            ],
+            "ORIGNAL": [
+              "rut=['rut, déplacements accrus']",
+              "hyperphagie=[]",
+              "deplacements=['rut, déplacements accrus']",
+              "raw_bullets=['rut, déplacements accrus']"
+            ],
+            "OURS_NOIR": [
+              "rut=['hyperphagie pré-hibernation, déplacements intensifs']",
+              "hyperphagie=['hyperphagie pré-hibernation, déplacements intensifs']",
+              "deplacements=['hyperphagie pré-hibernation, déplacements intensifs']",
+              "raw_bullets=['hyperphagie pré-hibernation, déplacements intensifs']"
+            ],
+            "WAPITI": [
+              "rut=['rut, déplacements accrus, formation de harems']",
+              "hyperphagie=[]",
+              "deplacements=['rut, déplacements accrus, formation de harems']",
+              "raw_bullets=['rut, déplacements accrus, formation de harems']"
+            ],
+            "DINDON_SAUVAGE": [
+              "rut=['regroupements sociaux, déplacements accrus']",
+              "hyperphagie=[]",
+              "deplacements=['regroupements sociaux, déplacements accrus']",
+              "raw_bullets=['regroupements sociaux, déplacements accrus']"
+            ]
+          },
+          "hiver": {
+            "CHEVREUIL": [
+              "ravages=['dépendance aux zones de couvert dense, réduction des déplacements']",
+              "zones_refuge=['dépendance aux zones de couvert dense, réduction des déplacements']",
+              "mobilite=['dépendance aux zones de couvert dense, réduction des déplacements']",
+              "raw_bullets=['dépendance aux zones de couvert dense, réduction des déplacements']"
+            ],
+            "ORIGNAL": [
+              "ravages=['ravages (zones à faible neige)']",
+              "zones_refuge=[]",
+              "mobilite=[]",
+              "raw_bullets=['ravages (zones à faible neige)']"
+            ],
+            "OURS_NOIR": [
+              "ravages=[]",
+              "zones_refuge=['hibernation (durée variable selon latitude)']",
+              "mobilite=[]",
+              "raw_bullets=['hibernation (durée variable selon latitude)']"
+            ],
+            "WAPITI": [
+              "ravages=['regroupement dans zones à faible neige, dépendance au couvert']",
+              "zones_refuge=['regroupement dans zones à faible neige, dépendance au couvert']",
+              "mobilite=[]",
+              "raw_bullets=['regroupement dans zones à faible neige, dépendance au couvert']"
+            ],
+            "DINDON_SAUVAGE": [
+              "ravages=[]",
+              "zones_refuge=[]",
+              "mobilite=[]",
+              "raw_bullets=['regroupements en grands groupes, dépendance aux zones de conifères']"
+            ]
+          }
+        },
+        "rut_actif_concurrents": [
+          "CHEVREUIL",
+          "ORIGNAL",
+          "OURS_NOIR",
+          "WAPITI",
+          "DINDON_SAUVAGE"
+        ],
+        "hyperphagie_active_concurrents": [
+          "CHEVREUIL",
+          "ORIGNAL",
+          "OURS_NOIR",
+          "WAPITI",
+          "DINDON_SAUVAGE"
+        ],
+        "anti_generique_violations": [],
+        "anti_generique_pass": true,
+        "fallback_active": false,
+        "interpolation_active": false
+      },
+      "ENGINE_GOUVERNANCE_MASTER_Ω": {
+        "super_engine_id": "ENGINE_GOUVERNANCE_MASTER_Ω",
+        "computed_at_utc": "2026-04-29T18:43:23+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "score_gouvernance_master_omega": 75.0,
+        "score_par_espece": {
+          "CHEVREUIL": 75.0,
+          "ORIGNAL": 75.0,
+          "OURS_NOIR": 75.0,
+          "WAPITI": 75.0,
+          "DINDON_SAUVAGE": 75.0
+        },
+        "recommandations_amenagement": [],
+        "alertes_maladies_actives": [],
+        "tendances_population_20_ans": {
+          "CHEVREUIL": "INCONNU",
+          "ORIGNAL": "INCONNU",
+          "OURS_NOIR": "INCONNU",
+          "WAPITI": "INCONNU",
+          "DINDON_SAUVAGE": "INCONNU"
+        },
+        "anti_generique_violations": [
+          "CHEVREUIL::ENGINE_INTERACTIONS::pression_humaine.routes::ABSENT",
+          "CHEVREUIL::ENGINE_INTERACTIONS::pression_humaine.agriculture::ABSENT",
+          "CHEVREUIL::ENGINE_INTERACTIONS::pression_humaine.urbanisation::ABSENT",
+          "CHEVREUIL::ENGINE_INTERACTIONS::pression_humaine.fragmentation::ABSENT",
+          "CHEVREUIL::ENGINE_INTERACTIONS::pression_humaine.attractifs_anthropiques::ABSENT",
+          "CHEVREUIL::ENGINE_INTERACTIONS::pression_humaine.conflits_humains::ABSENT",
+          "CHEVREUIL::ENGINE_INTERACTIONS::maladies.cwd::ABSENT",
+          "CHEVREUIL::ENGINE_INTERACTIONS::maladies.lpdv::ABSENT",
+          "CHEVREUIL::ENGINE_INTERACTIONS::maladies.tique_hiver::ABSENT",
+          "CHEVREUIL::ENGINE_INTERACTIONS::maladies.autres::ABSENT",
+          "CHEVREUIL::ENGINE_INTERACTIONS::dynamique.tendances_20_ans::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::pression_humaine.routes::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::pression_humaine.agriculture::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::pression_humaine.urbanisation::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::pression_humaine.fragmentation::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::pression_humaine.attractifs_anthropiques::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::pression_humaine.conflits_humains::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::maladies.cwd::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::maladies.lpdv::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::maladies.tique_hiver::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::maladies.autres::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::dynamique.tendances_20_ans::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::pression_humaine.routes::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::pression_humaine.agriculture::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::pression_humaine.urbanisation::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::pression_humaine.fragmentation::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::pression_humaine.attractifs_anthropiques::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::pression_humaine.conflits_humains::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::maladies.cwd::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::maladies.lpdv::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::maladies.tique_hiver::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::maladies.autres::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::dynamique.tendances_20_ans::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::pression_humaine.routes::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::pression_humaine.agriculture::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::pression_humaine.urbanisation::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::pression_humaine.fragmentation::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::pression_humaine.attractifs_anthropiques::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::pression_humaine.conflits_humains::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::maladies.cwd::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::maladies.lpdv::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::maladies.tique_hiver::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::maladies.autres::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::dynamique.tendances_20_ans::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::pression_humaine.routes::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::pression_humaine.agriculture::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::pression_humaine.urbanisation::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::pression_humaine.fragmentation::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::pression_humaine.attractifs_anthropiques::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::pression_humaine.conflits_humains::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::maladies.cwd::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::maladies.lpdv::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::maladies.tique_hiver::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::maladies.autres::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::dynamique.tendances_20_ans::ABSENT"
+        ],
+        "anti_generique_pass": false,
+        "fallback_active": false,
+        "interpolation_active": false
+      },
+      "ENGINE_TERRITOIRE_MASTER_Ω": {
+        "super_engine_id": "ENGINE_TERRITOIRE_MASTER_Ω",
+        "computed_at_utc": "2026-04-29T18:43:23+00:00",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "score_territoire_master_omega": 48.21,
+        "score_par_espece": {
+          "CHEVREUIL": 51.54,
+          "ORIGNAL": 48.07,
+          "OURS_NOIR": 46.28,
+          "WAPITI": 50.31,
+          "DINDON_SAUVAGE": 44.85
+        },
+        "rang_territorial_par_espece": {
+          "CHEVREUIL": 1,
+          "WAPITI": 2,
+          "ORIGNAL": 3,
+          "OURS_NOIR": 4,
+          "DINDON_SAUVAGE": 5
+        },
+        "decision_aptitude_territoriale": "MARGINAL",
+        "decision_par_espece": {
+          "CHEVREUIL": "MARGINAL",
+          "ORIGNAL": "MARGINAL",
+          "OURS_NOIR": "MARGINAL",
+          "WAPITI": "MARGINAL",
+          "DINDON_SAUVAGE": "MARGINAL"
+        },
+        "layer_territoire_master_omega": {
+          "type": "FeatureCollection",
+          "features": [],
+          "no_geom_interpolation": true
+        },
+        "upstream_super_engines_scores": {
+          "corridors_master": 40.0,
+          "nutrition_master": 0.0,
+          "sensoriel_master": 33.08,
+          "comportement_master": 100.0,
+          "gouvernance_master": 75.0
+        },
+        "anti_generique_violations": [
+          "CHEVREUIL::ENGINE_SENSORIEL::neige.seuil_mortalite::NULL_VALUE",
+          "ORIGNAL::ENGINE_SENSORIEL::neige.seuil_mortalite::NULL_VALUE",
+          "OURS_NOIR::ENGINE_SENSORIEL::thermoregulation.seuil_stress::NULL_VALUE",
+          "OURS_NOIR::ENGINE_SENSORIEL::neige.seuil_mobilite::NULL_VALUE",
+          "OURS_NOIR::ENGINE_SENSORIEL::neige.seuil_mortalite::NULL_VALUE",
+          "WAPITI::ENGINE_SENSORIEL::neige.seuil_mortalite::NULL_VALUE",
+          "DINDON_SAUVAGE::ENGINE_SENSORIEL::thermoregulation.seuil_stress::NULL_VALUE",
+          "DINDON_SAUVAGE::ENGINE_SENSORIEL::neige.seuil_mortalite::NULL_VALUE",
+          "CHEVREUIL::ENGINE_INTERACTIONS::pression_humaine.routes::ABSENT",
+          "CHEVREUIL::ENGINE_INTERACTIONS::pression_humaine.agriculture::ABSENT",
+          "CHEVREUIL::ENGINE_INTERACTIONS::pression_humaine.urbanisation::ABSENT",
+          "CHEVREUIL::ENGINE_INTERACTIONS::pression_humaine.fragmentation::ABSENT",
+          "CHEVREUIL::ENGINE_INTERACTIONS::pression_humaine.attractifs_anthropiques::ABSENT",
+          "CHEVREUIL::ENGINE_INTERACTIONS::pression_humaine.conflits_humains::ABSENT",
+          "CHEVREUIL::ENGINE_INTERACTIONS::maladies.cwd::ABSENT",
+          "CHEVREUIL::ENGINE_INTERACTIONS::maladies.lpdv::ABSENT",
+          "CHEVREUIL::ENGINE_INTERACTIONS::maladies.tique_hiver::ABSENT",
+          "CHEVREUIL::ENGINE_INTERACTIONS::maladies.autres::ABSENT",
+          "CHEVREUIL::ENGINE_INTERACTIONS::dynamique.tendances_20_ans::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::pression_humaine.routes::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::pression_humaine.agriculture::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::pression_humaine.urbanisation::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::pression_humaine.fragmentation::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::pression_humaine.attractifs_anthropiques::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::pression_humaine.conflits_humains::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::maladies.cwd::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::maladies.lpdv::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::maladies.tique_hiver::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::maladies.autres::ABSENT",
+          "ORIGNAL::ENGINE_INTERACTIONS::dynamique.tendances_20_ans::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::pression_humaine.routes::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::pression_humaine.agriculture::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::pression_humaine.urbanisation::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::pression_humaine.fragmentation::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::pression_humaine.attractifs_anthropiques::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::pression_humaine.conflits_humains::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::maladies.cwd::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::maladies.lpdv::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::maladies.tique_hiver::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::maladies.autres::ABSENT",
+          "OURS_NOIR::ENGINE_INTERACTIONS::dynamique.tendances_20_ans::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::pression_humaine.routes::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::pression_humaine.agriculture::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::pression_humaine.urbanisation::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::pression_humaine.fragmentation::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::pression_humaine.attractifs_anthropiques::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::pression_humaine.conflits_humains::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::maladies.cwd::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::maladies.lpdv::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::maladies.tique_hiver::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::maladies.autres::ABSENT",
+          "WAPITI::ENGINE_INTERACTIONS::dynamique.tendances_20_ans::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::pression_humaine.routes::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::pression_humaine.agriculture::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::pression_humaine.urbanisation::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::pression_humaine.fragmentation::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::pression_humaine.attractifs_anthropiques::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::pression_humaine.conflits_humains::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::maladies.cwd::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::maladies.lpdv::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::maladies.tique_hiver::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::maladies.autres::ABSENT",
+          "DINDON_SAUVAGE::ENGINE_INTERACTIONS::dynamique.tendances_20_ans::ABSENT"
+        ],
+        "anti_generique_pass": false,
+        "fallback_active": false,
+        "interpolation_active": false
+      }
+    },
+    "anti_generique_violations_total": 126,
+    "anti_generique_violations_sample": [
+      "ENGINE_SENSORIEL_MASTER_Ω::CHEVREUIL::ENGINE_SENSORIEL::neige.seuil_mortalite::NULL_VALUE",
+      "ENGINE_SENSORIEL_MASTER_Ω::ORIGNAL::ENGINE_SENSORIEL::neige.seuil_mortalite::NULL_VALUE",
+      "ENGINE_SENSORIEL_MASTER_Ω::OURS_NOIR::ENGINE_SENSORIEL::thermoregulation.seuil_stress::NULL_VALUE",
+      "ENGINE_SENSORIEL_MASTER_Ω::OURS_NOIR::ENGINE_SENSORIEL::neige.seuil_mobilite::NULL_VALUE",
+      "ENGINE_SENSORIEL_MASTER_Ω::OURS_NOIR::ENGINE_SENSORIEL::neige.seuil_mortalite::NULL_VALUE",
+      "ENGINE_SENSORIEL_MASTER_Ω::WAPITI::ENGINE_SENSORIEL::neige.seuil_mortalite::NULL_VALUE",
+      "ENGINE_SENSORIEL_MASTER_Ω::DINDON_SAUVAGE::ENGINE_SENSORIEL::thermoregulation.seuil_stress::NULL_VALUE",
+      "ENGINE_SENSORIEL_MASTER_Ω::DINDON_SAUVAGE::ENGINE_SENSORIEL::neige.seuil_mortalite::NULL_VALUE",
+      "ENGINE_GOUVERNANCE_MASTER_Ω::CHEVREUIL::ENGINE_INTERACTIONS::pression_humaine.routes::ABSENT",
+      "ENGINE_GOUVERNANCE_MASTER_Ω::CHEVREUIL::ENGINE_INTERACTIONS::pression_humaine.agriculture::ABSENT",
+      "ENGINE_GOUVERNANCE_MASTER_Ω::CHEVREUIL::ENGINE_INTERACTIONS::pression_humaine.urbanisation::ABSENT",
+      "ENGINE_GOUVERNANCE_MASTER_Ω::CHEVREUIL::ENGINE_INTERACTIONS::pression_humaine.fragmentation::ABSENT",
+      "ENGINE_GOUVERNANCE_MASTER_Ω::CHEVREUIL::ENGINE_INTERACTIONS::pression_humaine.attractifs_anthropiques::ABSENT",
+      "ENGINE_GOUVERNANCE_MASTER_Ω::CHEVREUIL::ENGINE_INTERACTIONS::pression_humaine.conflits_humains::ABSENT",
+      "ENGINE_GOUVERNANCE_MASTER_Ω::CHEVREUIL::ENGINE_INTERACTIONS::maladies.cwd::ABSENT",
+      "ENGINE_GOUVERNANCE_MASTER_Ω::CHEVREUIL::ENGINE_INTERACTIONS::maladies.lpdv::ABSENT",
+      "ENGINE_GOUVERNANCE_MASTER_Ω::CHEVREUIL::ENGINE_INTERACTIONS::maladies.tique_hiver::ABSENT",
+      "ENGINE_GOUVERNANCE_MASTER_Ω::CHEVREUIL::ENGINE_INTERACTIONS::maladies.autres::ABSENT",
+      "ENGINE_GOUVERNANCE_MASTER_Ω::CHEVREUIL::ENGINE_INTERACTIONS::dynamique.tendances_20_ans::ABSENT",
+      "ENGINE_GOUVERNANCE_MASTER_Ω::ORIGNAL::ENGINE_INTERACTIONS::pression_humaine.routes::ABSENT"
+    ],
+    "anti_generique_pass_global": false
+  },
+  "doctrine_anti_contamination": [
+    "Aucune dépendance V7/V8/SUPRA — uniquement BIO_REACTEUR_Ω + spécifications XIV.",
+    "Aucun fallback, aucune interpolation runtime (toujours False).",
+    "Toute valeur manquante = anti_generique_violation tracée explicitement.",
+    "Specs PHASE XIV verrouillées par SUPER_ENGINE_LOCK_SHA256, INVIOLABLES.",
+    "V30 inchangé — registry_lock_omega + engine_ia_corridors_omega INTOUCHÉS."
+  ]
+}

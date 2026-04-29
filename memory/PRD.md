@@ -27,6 +27,46 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XVI · SUPER_ENGINES_Ω + HEATMAP + MIGRATION_TRACKER (2026-04-29 · ordre n°35)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PHASE_XVI_SUPER_ENGINES_Ω`).
+  5 BLOCS séquentiels exécutés. V30 INVIOLÉ. FREEZE INTACT. **pytest 85/85 PASSED** (62 baseline + 23 PHASE XVI). 9/9 livrables HTTPS 200 OK.
+  - **BLOC 1 — PRE-FLIGHT_Ω** : pytest 62/62 baseline · FREEZE 36/36 INTACT · 4/4 URLs HTTPS pré-existantes (INDEX_XVcd, PLAN_REFACTOR, AUDIT) → PASS ✓
+  - **BLOC 2 — HEATMAP_RISQUE_XVd_Ω** :
+    - PNG 1400×650 généré via matplotlib (cmap YlOrRd + viridis sur fond #0a1018) — **117 371 o**.
+    - 2 panneaux : count+maxCC × ETA cumulée (axes Risk × Priorité 3×3).
+    - HTML institutionnel avec légende + Top 11 P0/HIGH (cibles Wave 1).
+  - **BLOC 3 — IMPLÉMENTATION SUPER_ENGINES_Ω (logique active)** :
+    - Nouveau module `engines/v8_institutional/especes/super_engines_omega_logic.py` (~430 lignes).
+    - 6 fonctions `compute_<engine>()` lisant EXCLUSIVEMENT BIO_REACTEURS_Ω via le loader runtime.
+    - **ENGINE_CORRIDORS_MASTER_Ω** = 40.0 · **NUTRITION** = 0.0 · **SENSORIEL** = 33.08 · **COMPORTEMENT** = 100.0 · **GOUVERNANCE** = 75.0 · **TERRITOIRE_MASTER** = **48.21** (decision: MARGINAL).
+    - Rang territorial : CHEVREUIL > WAPITI > ORIGNAL > OURS_NOIR > DINDON_SAUVAGE.
+    - **Anti-régression stricte** : `fallback_active=False`, `interpolation_active=False` partout. 126 violations BIO_PROFILE tracées explicitement (paramètres absents/non normalisables, anti-générique respecté).
+    - SUPER_ENGINES_Ω_SPEC.{json,html} produits (specs PHASE XIV verrouillées + runtime demo).
+  - **BLOC 4 — MIGRATION_TRACKER_Ω** :
+    - 60 fichiers reclassés selon mandat ordre n°35 :
+      - **Wave 1 (P0/HIGH)** : 11 fichiers · `READY_TO_START`
+      - **Wave 2 (P1/HIGH+MED)** : 27 fichiers · `QUEUED`
+      - **Wave 3 (P1/LOW)** : 22 fichiers · `QUEUED`
+    - ETA total **461.2 h** · LOC totales **11 922**.
+    - MIGRATION_TRACKER_Ω.{json,html} produits avec rationale per-file et next_action_required.
+  - **BLOC 5 — VALIDATION_XVI_Ω** :
+    - **pytest 85/85 PASSED** (62 base + 23 nouveaux SUPER ENGINES tests).
+    - V30_LOCK intact (registry_lock_omega + engine_ia_corridors_omega INTOUCHÉS).
+    - FREEZE_MASTER intact (36/36 SHA-256 inchangés).
+    - Backend post-validation : 4/4 endpoints HTTPS 200 OK.
+    - **9/9 livrables PHASE XVI HTTPS 200 OK** (Mozilla-UA).
+    - VALIDATION_XVI_Ω.{json,html} + INDEX_XVI_Ω.html scellés.
+  - **9 livrables** publiés dans `/reports/purge_master_omega/` :
+    - HEATMAP_XVd_Ω.{png,html}
+    - SUPER_ENGINES_Ω_SPEC.{json,html}
+    - MIGRATION_TRACKER_Ω.{json,html}
+    - VALIDATION_XVI_Ω.{json,html} · INDEX_XVI_Ω.html
+  - **V30 INVIOLÉ** : `fb765b94…ecb0c` + `bcb1e3a6…39d3` · **FREEZE_MASTER** : `31c18388ab3090fc…ccf27`.
+  - **SUPER_ENGINE_LOCK_SHA256** (specs XIV verrouillées) : préservé inchangé.
+  - **Tests** : pytest 85/85 + bash + curl + python3. Aucun testing subagent.
+  - **Script institutionnel scellé** : `/app/scripts/phase_xvi_omega.py` (~700 lignes, 5 blocs).
+  - **Action requise pour Wave 1** : ordre formel du Commandant pour démarrer la migration P0/HIGH (11 fichiers, ~110 h ETA).
+
 - **PHASE_XV.c + XV.d · SUPPRESSION IRRÉVERSIBLE + AUDIT FORENSIQUE + PLAN_REFACTOR (2026-04-29 · ordre n°34)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PHASE_XVc_SUPPRESSION_IRRÉVERSIBLE_Ω + XV.d_AUDIT + PLAN_REFACTOR`).
   Stratégies validées : **1.b SHA-256 forensique** · **2.c AST + complexité McCabe** · **3.b plan détaillé per-file** · **4.b curl batch HTTPS**.

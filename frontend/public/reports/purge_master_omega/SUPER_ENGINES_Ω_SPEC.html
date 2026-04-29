@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang='fr'><head><meta charset='utf-8'/>
+<title>SUPER_ENGINES_Ω_SPEC</title><style>
+:root{--bg:#0a1018;--panel:#111c2e;--panel2:#162032;--txt:#e2e8f0;--mute:#94a3b8;--accent:#06b6d4;--accent2:#22d3ee;--ok:#16a34a;--gold:#f59e0b;--dang:#dc2626;--bord:#1e293b;}
+*{box-sizing:border-box;}
+body{font-family:'Inter','Segoe UI',sans-serif;background:linear-gradient(180deg,#0a1018 0%,#0b1320 100%);color:var(--txt);margin:0;padding:32px 20px;}
+.wrap{max-width:1320px;margin:0 auto;}
+header.title{border-left:5px solid var(--gold);padding:6px 0 6px 18px;margin-bottom:22px;}
+header.title h1{margin:0;font-size:24px;color:#fef3c7;letter-spacing:0.6px;}
+header.title .sub{color:var(--mute);font-size:13px;margin-top:6px;}
+.b-ok{background:linear-gradient(135deg,#14532d 0%,#15803d 100%);border:1px solid var(--ok);color:#dcfce7;padding:12px 22px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:18px;}
+.b-ko{background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 100%);border:1px solid var(--dang);color:#fee2e2;padding:12px 22px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:18px;}
+h2{color:var(--gold);font-size:18px;margin:32px 0 12px;border-left:4px solid var(--gold);padding-left:12px;}
+.card{background:var(--panel);border:1px solid var(--bord);border-radius:10px;padding:18px 22px;margin-bottom:18px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px;}
+.kpi{padding:14px 18px;background:var(--panel2);border:1px solid var(--bord);border-radius:8px;}
+.kpi .num{color:var(--accent2);font-weight:700;font-size:22px;}
+.kpi .lbl{color:var(--mute);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;}
+table{width:100%;border-collapse:collapse;font-size:11.5px;}
+th,td{padding:8px 10px;border-bottom:1px solid var(--bord);text-align:left;vertical-align:middle;}
+th{background:var(--panel2);color:#fff;text-transform:uppercase;font-size:10.5px;letter-spacing:0.5px;}
+.scroll{max-height:520px;overflow-y:auto;border:1px solid var(--bord);border-radius:6px;}
+.dl{color:var(--accent2);text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid rgba(6,182,212,0.35);border-radius:5px;}
+.mono{font-family:'JetBrains Mono','Courier New',monospace;font-size:10px;color:var(--mute);word-break:break-all;}
+.foot{margin-top:30px;padding:18px 22px;background:var(--panel);border:1px solid var(--bord);border-radius:10px;font-size:12px;color:var(--mute);}
+.lbl-foot{color:var(--accent2);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:0.5px;}
+.v30-lock{margin-top:14px;padding:10px 14px;background:rgba(22,163,74,0.10);border:1px solid rgba(22,163,74,0.45);border-radius:6px;color:#4ade80;font-weight:700;text-align:center;letter-spacing:0.6px;}
+.b-acc{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(6,182,212,0.18);color:var(--accent2);border:1px solid rgba(6,182,212,0.45);font-weight:700;font-size:10px;}
+.b-warn{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.18);color:var(--gold);border:1px solid rgba(245,158,11,0.45);font-weight:700;font-size:10px;}
+.b-dang{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(220,38,38,0.18);color:#fca5a5;border:1px solid rgba(220,38,38,0.45);font-weight:700;font-size:10px;}
+.b-low{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(34,197,94,0.18);color:#86efac;border:1px solid rgba(34,197,94,0.45);font-weight:700;font-size:10px;}
+.heatmap-img{max-width:100%;border-radius:10px;border:1px solid var(--bord);}
+</style></head><body>
+<div class='wrap' data-testid='super-engines-spec'>
+<header class='title'><h1>SUPER_ENGINES_Ω_SPEC · Logique implémentée (PHASE XVI)</h1>
+<div class='sub'>BCE-4X ULTIME ABSOLU x3 · Ordre n°35 · 2026-04-29T18:43:22+00:00 · LOCK_SHA=39efe34425c06a41225a2fe126e3612e…</div></header>
+<div class='b-ok'>★ 6 SUPER ENGINES_Ω LOGIQUEMENT ACTIVÉS · BIO_REACTEUR_Ω only · zéro fallback · zéro interpolation</div>
+
+<div class='card'><div class='kpi-grid'>
+<div class='kpi'><div class='lbl'>Specs verrouillées</div><div class='num'>6</div></div>
+<div class='kpi'><div class='lbl'>BIO_REACTEURS lus</div><div class='num'>5</div></div>
+<div class='kpi'><div class='lbl'>Score TERRITOIRE_MASTER</div><div class='num' style='color:#22d3ee'>48.21</div></div>
+<div class='kpi'><div class='lbl'>Decision globale</div><div class='num' style='color:#fbbf24'>MARGINAL</div></div>
+<div class='kpi'><div class='lbl'>Violations totales</div><div class='num' style='color:#fbbf24'>126</div></div>
+<div class='kpi'><div class='lbl'>Anti-pass global</div><div class='num' style='color:#fbbf24'>⚠</div></div>
+</div></div>
+
+<h2>1. Les 6 SUPER ENGINES_Ω</h2>
+<div class='card'><table><thead><tr>
+<th>Engine ID</th><th>Doctrine</th><th>Score</th><th>Inputs BIO</th><th>Engines consommés</th><th>Outputs</th><th>Viol.</th></tr></thead>
+<tbody>
+<tr><td><b>ENGINE_CORRIDORS_MASTER_Ω</b></td>
+<td>Maître des corridors écologiques inter-espèces</td>
+<td>40.0</td>
+<td>6</td>
+<td>2</td>
+<td>5</td>
+<td><span class='b-low'>0</span></td>
+</tr>
+<tr><td><b>ENGINE_NUTRITION_MASTER_Ω</b></td>
+<td>Maître de la disponibilité nutritionnelle territoriale</td>
+<td>0.0</td>
+<td>9</td>
+<td>2</td>
+<td>4</td>
+<td><span class='b-low'>0</span></td>
+</tr>
+<tr><td><b>ENGINE_SENSORIEL_MASTER_Ω</b></td>
+<td>Maître des contraintes sensorielles &amp; climatiques</td>
+<td>33.08</td>
+<td>4</td>
+<td>2</td>
+<td>4</td>
+<td><span class='b-warn'>8</span></td>
+</tr>
+<tr><td><b>ENGINE_COMPORTEMENT_MASTER_Ω</b></td>
+<td>Maître des comportements saisonniers fusionnés</td>
+<td>100.0</td>
+<td>4</td>
+<td>4</td>
+<td>4</td>
+<td><span class='b-low'>0</span></td>
+</tr>
+<tr><td><b>ENGINE_GOUVERNANCE_MASTER_Ω</b></td>
+<td>Maître de la gouvernance institutionnelle BCE-4X</td>
+<td>75.0</td>
+<td>14</td>
+<td>1</td>
+<td>4</td>
+<td><span class='b-dang'>55</span></td>
+</tr>
+<tr><td><b>ENGINE_TERRITOIRE_MASTER_Ω</b></td>
+<td>Maître territorial — fusion finale Ω</td>
+<td>48.21</td>
+<td>14</td>
+<td>5</td>
+<td>4</td>
+<td><span class='b-dang'>63</span></td>
+</tr></tbody></table></div>
+
+<h2>2. Décision territoriale par espèce</h2>
+<div class='card'><table><thead><tr><th>Espèce</th><th>Score composite</th><th>Rang</th><th>Décision</th></tr></thead>
+<tbody>
+<tr><td><b>CHEVREUIL</b></td><td>51.54</td><td>1</td><td><span class='b-warn'>MARGINAL</span></td></tr><tr><td><b>ORIGNAL</b></td><td>48.07</td><td>3</td><td><span class='b-warn'>MARGINAL</span></td></tr><tr><td><b>OURS_NOIR</b></td><td>46.28</td><td>4</td><td><span class='b-warn'>MARGINAL</span></td></tr><tr><td><b>WAPITI</b></td><td>50.31</td><td>2</td><td><span class='b-warn'>MARGINAL</span></td></tr><tr><td><b>DINDON_SAUVAGE</b></td><td>44.85</td><td>5</td><td><span class='b-warn'>MARGINAL</span></td></tr>
+</tbody></table></div>
+
+<h2>3. Doctrine anti-contamination</h2>
+<div class='card'><ul>
+<li>Aucune dépendance V7/V8/SUPRA — uniquement BIO_REACTEUR_Ω + spécifications XIV.</li><li>Aucun fallback, aucune interpolation runtime (toujours False).</li><li>Toute valeur manquante = anti_generique_violation tracée explicitement.</li><li>Specs PHASE XIV verrouillées par SUPER_ENGINE_LOCK_SHA256, INVIOLABLES.</li><li>V30 inchangé — registry_lock_omega + engine_ia_corridors_omega INTOUCHÉS.</li>
+</ul></div>
+
+<h2>4. Module logique</h2>
+<div class='card'>
+<p><b>Module Python :</b> <code>engines.v8_institutional.especes.super_engines_omega_logic</code></p>
+<p><b>Fonctions :</b> <code>compute_corridors_master()</code>, <code>compute_nutrition_master()</code>, <code>compute_sensoriel_master()</code>, <code>compute_comportement_master()</code>, <code>compute_gouvernance_master()</code>, <code>compute_territoire_master()</code>, <code>compute_all_super_engines()</code></p>
+<p><b>Tests pytest :</b> <code>tests/test_phase_xvi_super_engines_omega.py</code> (23 tests)</p>
+</div>
+
+<footer class='foot'>
+<div><span class='lbl-foot'>Émis :</span> COMMANDANT STEEVE-MAX</div>
+<div><span class='lbl-foot'>SUPER_ENGINE_LOCK_SHA256 :</span> <span class='mono'>39efe34425c06a41225a2fe126e3612e99ef5c40a09f7a92c633d9cf32007a4c</span></div>
+<div><span class='lbl-foot'>V30 :</span> <span class='mono'>fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c</span></div>
+<div class='v30-lock'>✓ V30 INVIOLÉ · Specs PHASE XIV verrouillées · Logique XVI activée</div>
+</footer></div></body></html>
