@@ -1,0 +1,395 @@
+{
+  "manifest_id": "FREEZE_PRE_XVb_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°31",
+  "directive": "PRÉPARATION_PHASE_XVb · GEL CRYPTOGRAPHIQUE + 4 PROTECTIONS",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "frozen_at_utc": "2026-04-29T17:09:47+00:00",
+  "scope": "Snapshot immuable des engines Ω, SCIENTIFIQUE_Ω, IA_Ω, BIO_REACTEUR_Ω, données BIO_PROFILE/BIO_REACTEUR + modules de protection BCE-4X. XV.b ne peut altérer aucun de ces fichiers.",
+  "metadata": {
+    "groups_count": 8,
+    "total_files_frozen": 36,
+    "total_size_bytes": 500763,
+    "missing_files": []
+  },
+  "groups": {
+    "V30_LOCKED": {
+      "files_count": 2,
+      "total_size_bytes": 26151,
+      "cumulative_sha256": "4dd62d5b427af407e94c1e9c2f2f0e32c432922bbc0ce589d152bbe266048558",
+      "entries": [
+        {
+          "path": "/app/backend/engines/v8_institutional/registry_lock_omega.py",
+          "filename": "registry_lock_omega.py",
+          "exists": true,
+          "sha256": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+          "size_bytes": 8703
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/engine_ia_corridors_omega.py",
+          "filename": "engine_ia_corridors_omega.py",
+          "exists": true,
+          "sha256": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3",
+          "size_bytes": 17448
+        }
+      ]
+    },
+    "ENGINES_ESPECES_Ω": {
+      "files_count": 7,
+      "total_size_bytes": 46876,
+      "cumulative_sha256": "6dc334ace64e4a277fbbbc85a2bc4031ca1b93bda5b1d67d29d88e4f1ccbbc69",
+      "entries": [
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/engine_chevreuil_omega.py",
+          "filename": "engine_chevreuil_omega.py",
+          "exists": true,
+          "sha256": "7fa3584b6afa29a49a75b44814d164fa4d42057a6c04e776d1cca4be5dbab796",
+          "size_bytes": 6594
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/engine_orignal_omega.py",
+          "filename": "engine_orignal_omega.py",
+          "exists": true,
+          "sha256": "fe79ebc37531f052bf9567b7375040a3b41adc822941174cf641d3d9d8766546",
+          "size_bytes": 6770
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/engine_ours_noir_omega.py",
+          "filename": "engine_ours_noir_omega.py",
+          "exists": true,
+          "sha256": "3f9c28e206eb21136bf5e0c5abae6a098219b06878178496168cd1348893aea9",
+          "size_bytes": 6583
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/engine_wapiti_omega.py",
+          "filename": "engine_wapiti_omega.py",
+          "exists": true,
+          "sha256": "5d3b0f0f765c0a77deb486bd2056f2e4a7e10c45422b90a344d686c64343f917",
+          "size_bytes": 6770
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/engine_dindon_omega.py",
+          "filename": "engine_dindon_omega.py",
+          "exists": true,
+          "sha256": "c1fc49d44802dad0bae09061735599b17efa8e33fabf15c22c2bc5ad6f2e56d1",
+          "size_bytes": 7453
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/engine_especes_omega.py",
+          "filename": "engine_especes_omega.py",
+          "exists": true,
+          "sha256": "8c4205d814fa91f067e86d7ef13b77b20c0db52cb65b71e03b80415a5bc2a370",
+          "size_bytes": 6746
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/__init__.py",
+          "filename": "__init__.py",
+          "exists": true,
+          "sha256": "5842df8138d021b59556d5357a671d194a74d97d11eae75b1d9dd10700fb130c",
+          "size_bytes": 5960
+        }
+      ]
+    },
+    "ENGINES_SCIENTIFIQUES_Ω": {
+      "files_count": 6,
+      "total_size_bytes": 29772,
+      "cumulative_sha256": "0ab87a76653b5f70a6f85b0fed78d01fcb475aaa530a948d90d03ec88d479241",
+      "entries": [
+        {
+          "path": "/app/backend/engines/v8_institutional/scientifique_omega/engine_vision_omega.py",
+          "filename": "engine_vision_omega.py",
+          "exists": true,
+          "sha256": "a2463f472e9454474540e21abbb7761d88c83a4e82107decc66113ac9564058b",
+          "size_bytes": 6082
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/scientifique_omega/engine_odeur_omega.py",
+          "filename": "engine_odeur_omega.py",
+          "exists": true,
+          "sha256": "0377cd4046f22d4ba021f232a2d54bf31c400c2b4fe877da587b3c3585eb3d6d",
+          "size_bytes": 6963
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/scientifique_omega/engine_patterns_omega.py",
+          "filename": "engine_patterns_omega.py",
+          "exists": true,
+          "sha256": "0e89063c9eade4364b85dd66d8f3d65228dab5c31a21d65d84456a28e98bdf40",
+          "size_bytes": 5315
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/scientifique_omega/engine_comportement_omega.py",
+          "filename": "engine_comportement_omega.py",
+          "exists": true,
+          "sha256": "ff3bddae2aaff70055a95033ad20074852868636ded835928cd52105b820de69",
+          "size_bytes": 4997
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/scientifique_omega/engine_sensoriel_omega.py",
+          "filename": "engine_sensoriel_omega.py",
+          "exists": true,
+          "sha256": "632f0f64350c957245c4953b05ce53d00e9f822d4a61600d9f738b23b1a335d9",
+          "size_bytes": 4475
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/scientifique_omega/__init__.py",
+          "filename": "__init__.py",
+          "exists": true,
+          "sha256": "a9f5efc0fcb01af33ceecaaa805b1419e675611f642154c9d6bf1d309af72172",
+          "size_bytes": 1940
+        }
+      ]
+    },
+    "ENGINE_IA_Ω": {
+      "files_count": 1,
+      "total_size_bytes": 10304,
+      "cumulative_sha256": "dc209b741960c5139faef0a34ee28c20dd1834035fd167d15f68562e3b5731a0",
+      "entries": [
+        {
+          "path": "/app/backend/engines/v8_institutional/scientifique_omega/engine_ia_omega.py",
+          "filename": "engine_ia_omega.py",
+          "exists": true,
+          "sha256": "f716b870a7185f5a7aa54d762d817479c5088ec56592261b0cf1c32a1f2b234c",
+          "size_bytes": 10304
+        }
+      ]
+    },
+    "BIO_REACTEURS_Ω_RUNTIME": {
+      "files_count": 5,
+      "total_size_bytes": 53639,
+      "cumulative_sha256": "a3cb48eeb253bba5fb5dfa43cb0cf67bfdfd4d7184b130c8ad839325fd63f1cf",
+      "entries": [
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/bio_reacteur_loader_omega.py",
+          "filename": "bio_reacteur_loader_omega.py",
+          "exists": true,
+          "sha256": "067cf7aa7ea535564b7ac2d386de2bafd82eda5a085e42a77bbbdc461750e727",
+          "size_bytes": 10247
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/audit_especes_omega.py",
+          "filename": "audit_especes_omega.py",
+          "exists": true,
+          "sha256": "17ddafa6f68781c2922a3af6725ab5ea5e3b7758a1b7552bd77f209cc78534b4",
+          "size_bytes": 14485
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/audit_longitudinal_omega.py",
+          "filename": "audit_longitudinal_omega.py",
+          "exists": true,
+          "sha256": "104fc8eb497122a9c879bb65a3815cbda0489872ecc2b355d393192289bf06a8",
+          "size_bytes": 9748
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/sceau_phase_xiii_validator_omega.py",
+          "filename": "sceau_phase_xiii_validator_omega.py",
+          "exists": true,
+          "sha256": "86af448153979795f0cc626e40ae8f034a3b4be44454df5651e75b799500b490",
+          "size_bytes": 6908
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/especes/super_engines_omega_specs.py",
+          "filename": "super_engines_omega_specs.py",
+          "exists": true,
+          "sha256": "db0b240870507751e82ab0c78d5c6dd4e5c29a3ecab634a5c68b9c863ee71669",
+          "size_bytes": 12251
+        }
+      ]
+    },
+    "BIO_PROFILES_DATA": {
+      "files_count": 5,
+      "total_size_bytes": 132990,
+      "cumulative_sha256": "11d0b2de1fc725df1be44288791db2d93d3115fac97c877b4508c9dd375e4e8d",
+      "entries": [
+        {
+          "path": "/app/frontend/public/reports/bio_profile_omega/BIO_PROFILE_Ω_CHEVREUIL.json",
+          "filename": "BIO_PROFILE_Ω_CHEVREUIL.json",
+          "exists": true,
+          "sha256": "ef6a794d2477c5cc3cb44ab01e833cb1a47bac4a86e1948b9f73910767a9d72a",
+          "size_bytes": 30711
+        },
+        {
+          "path": "/app/frontend/public/reports/bio_profile_omega/BIO_PROFILE_Ω_ORIGNAL.json",
+          "filename": "BIO_PROFILE_Ω_ORIGNAL.json",
+          "exists": true,
+          "sha256": "a1275b952bdde581c978d16fb0d916e2b36c624ef14ac86478a428efda14b5df",
+          "size_bytes": 28447
+        },
+        {
+          "path": "/app/frontend/public/reports/bio_profile_omega/BIO_PROFILE_Ω_OURS_NOIR.json",
+          "filename": "BIO_PROFILE_Ω_OURS_NOIR.json",
+          "exists": true,
+          "sha256": "77157a186928d7af16deb8361aa218ef34ec522affa2a197a8bf216d411033bc",
+          "size_bytes": 17982
+        },
+        {
+          "path": "/app/frontend/public/reports/bio_profile_omega/BIO_PROFILE_Ω_WAPITI.json",
+          "filename": "BIO_PROFILE_Ω_WAPITI.json",
+          "exists": true,
+          "sha256": "1dd532ee6378a6e8e6a92da28c271d9e0a2df8020d07a695e44e6d1f00279836",
+          "size_bytes": 25511
+        },
+        {
+          "path": "/app/frontend/public/reports/bio_profile_omega/BIO_PROFILE_Ω_DINDON_SAUVAGE.json",
+          "filename": "BIO_PROFILE_Ω_DINDON_SAUVAGE.json",
+          "exists": true,
+          "sha256": "93a59f997ddd4c87118d43e0eb4d3bd366d5b97cc22f74ae06bd1a93cd918401",
+          "size_bytes": 30339
+        }
+      ]
+    },
+    "BIO_REACTEURS_DATA": {
+      "files_count": 5,
+      "total_size_bytes": 132579,
+      "cumulative_sha256": "157b21b49057a0d042a1bf50eed9a22d2c5356183405af2bfdd8be041ba2f1ec",
+      "entries": [
+        {
+          "path": "/app/frontend/public/reports/bio_reacteurs_omega/BIO_REACTEUR_Ω_CHEVREUIL.json",
+          "filename": "BIO_REACTEUR_Ω_CHEVREUIL.json",
+          "exists": true,
+          "sha256": "0e2ea1e47f16a8106393d58e933438b7d78642fe01294b88705a4c3ac72effe1",
+          "size_bytes": 27159
+        },
+        {
+          "path": "/app/frontend/public/reports/bio_reacteurs_omega/BIO_REACTEUR_Ω_ORIGNAL.json",
+          "filename": "BIO_REACTEUR_Ω_ORIGNAL.json",
+          "exists": true,
+          "sha256": "a6d37f5646c5e5eb302a6128490f923bb9245a49191b2a16f3041c73b73c564c",
+          "size_bytes": 25309
+        },
+        {
+          "path": "/app/frontend/public/reports/bio_reacteurs_omega/BIO_REACTEUR_Ω_OURS_NOIR.json",
+          "filename": "BIO_REACTEUR_Ω_OURS_NOIR.json",
+          "exists": true,
+          "sha256": "10f88b8641027deed6c5be91ceb86a4f4ac1923ed9fa83d0e5583b60717b7daa",
+          "size_bytes": 25928
+        },
+        {
+          "path": "/app/frontend/public/reports/bio_reacteurs_omega/BIO_REACTEUR_Ω_WAPITI.json",
+          "filename": "BIO_REACTEUR_Ω_WAPITI.json",
+          "exists": true,
+          "sha256": "fa6b3486342f282d6bc4f58809c75ec39bcc0185f1814f9e4918111f86b007d7",
+          "size_bytes": 28128
+        },
+        {
+          "path": "/app/frontend/public/reports/bio_reacteurs_omega/BIO_REACTEUR_Ω_DINDON_SAUVAGE.json",
+          "filename": "BIO_REACTEUR_Ω_DINDON_SAUVAGE.json",
+          "exists": true,
+          "sha256": "ba7ab4c86c3607bfe98d74895da051ed11689918a64b86ec0383a2a802ed7e47",
+          "size_bytes": 26055
+        }
+      ]
+    },
+    "PROTECTIONS_BCE4X_MODULES": {
+      "files_count": 5,
+      "total_size_bytes": 68452,
+      "cumulative_sha256": "f65b6f0b6c1325b7f32b08517b0f0adb3a6cede33a669428eacb9903206a5e38",
+      "entries": [
+        {
+          "path": "/app/backend/engines/v8_institutional/engine_territoire_anti_regression_omega.py",
+          "filename": "engine_territoire_anti_regression_omega.py",
+          "exists": true,
+          "sha256": "b7ddafc36500ca6d83d547c824c3f56e50cd35f2b788c771e73a44cfb63ba7b2",
+          "size_bytes": 14013
+        },
+        {
+          "path": "/app/backend/engines/post_smoothing/baseline_registry_omega.py",
+          "filename": "baseline_registry_omega.py",
+          "exists": true,
+          "sha256": "6712bc21dd619fef44a7c948c48a0eba74670c77d09cc7799f7794d91d6d2d1e",
+          "size_bytes": 4451
+        },
+        {
+          "path": "/app/backend/engines/post_smoothing/interzone_omega.py",
+          "filename": "interzone_omega.py",
+          "exists": true,
+          "sha256": "c612b36046314f6890856c97085154818b809922e2b1bd3623ce371ea119d24a",
+          "size_bytes": 25719
+        },
+        {
+          "path": "/app/backend/engines/post_smoothing/veineux_omega.py",
+          "filename": "veineux_omega.py",
+          "exists": true,
+          "sha256": "180b65c30dccb7c62e24d382135a4b260b7f9c78cafe2b2a7ca05942e63621ff",
+          "size_bytes": 21073
+        },
+        {
+          "path": "/app/backend/engines/v8_institutional/engine_gouvernance_omega.py",
+          "filename": "engine_gouvernance_omega.py",
+          "exists": true,
+          "sha256": "d96ca368e55a7106af31150799ddec30ec4b1525120fbf966bf7e21a83391058",
+          "size_bytes": 3196
+        }
+      ]
+    }
+  },
+  "freeze_master_sha256": "31c18388ab3090fc0588cc0028a0181c638ac2fba0dff9f9d40700e9f97ccf27",
+  "protections_systeme_actives": {
+    "BCE_4X_x3": {
+      "active": true,
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+      "couches": [
+        "Doctrine institutionnelle (toutes phases XII-XV)",
+        "Audit BCE-4X_VALIDE_VERROUILLE 120/120 paramètres (Phase XII)",
+        "Tests pytest cumulés 62/62 PASSED (Phase XIII+XIV+XV)"
+      ],
+      "verifies_par": [
+        "engines/v8_institutional/especes/audit_especes_omega.py",
+        "scripts/panic_stop_xvb_omega.sh",
+        "tests/test_phase_xiii_bio_reacteurs_omega.py",
+        "tests/test_phase_xiv_omega.py",
+        "tests/test_phase_xv_omega.py"
+      ]
+    },
+    "ANTI_REGRESSION_Ω": {
+      "active": true,
+      "doctrine": "Aucun engine Ω ne peut régresser pendant XV.b",
+      "couches": [
+        "engine_territoire_anti_regression_omega.py (registry baseline)",
+        "audit_longitudinal_omega.py (snapshots historisés JSONL)",
+        "sceau_phase_xiii_validator_omega.py (CI hook SHA cumulatif)",
+        "Freeze SHA-256 de tous les engines Ω (présent manifest)"
+      ],
+      "verifies_par": [
+        "GET /api/v30/audit-longitudinal/diff",
+        "GET /api/v30/sceau-phase-xiii/verify",
+        "scripts/ci_hook_sceau_validation.sh"
+      ]
+    },
+    "ANTI_FALLBACK": {
+      "active": true,
+      "doctrine": "Détection runtime de tout fallback/default/todo/placeholder",
+      "couches": [
+        "BIO_REACTEUR loader : anti_generique_pass=True obligatoire au load",
+        "Engines scientifiques Ω : fallback_active=False/interpolation_active=False codés en spec",
+        "SUPER ENGINES_Ω : fallback_authorized=False (frozen dataclass)",
+        "Sentinelles scannées : LISTE_NOIRE_LEGACY_Ω.json (228 fichiers)"
+      ],
+      "verifies_par": [
+        "engines/v8_institutional/especes/bio_reacteur_loader_omega.py::_validate_loaded",
+        "GET /api/v30/especes/bio-reacteur/integrity"
+      ]
+    },
+    "ANTI_CONTAMINATION": {
+      "active": true,
+      "doctrine": "Aucune ligne de code legacy ne peut polluer les engines Ω",
+      "couches": [
+        "MANIFEST_MIGRATION_LEGACY_Ω.json (périmètres uniquement, pas de copie)",
+        "LISTE_NOIRE_LEGACY_Ω.json (sentinelles tracées)",
+        "BIO_REACTEUR_Ω : exclusivement_bio_profile_omega=True",
+        "ENGINES_SCIENTIFIQUES_Ω : exclusivement_bio_reacteur=True"
+      ],
+      "verifies_par": [
+        "GET /api/v30/scientifique/spec/{engine}",
+        "GET /api/v30/audit-longitudinal/pipeline-continuity"
+      ]
+    }
+  },
+  "v30_locked_invariant": {
+    "registry_lock_omega.py": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+    "engine_ia_corridors_omega.py": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3"
+  },
+  "panic_stop_authorization_required_for_xvb": true,
+  "panic_stop_script": "/app/scripts/panic_stop_xvb_omega.sh",
+  "freeze_verification_script": "/app/scripts/verify_freeze_pre_xvb_omega.sh",
+  "regle_or": "AUCUN fichier listé dans 'groups' ne peut être altéré pendant PHASE XV.b. Toute modification = ABORT_XVb immédiat + ROLLBACK + RAPPORT_AUDIT."
+}

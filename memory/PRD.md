@@ -27,6 +27,36 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PRÉPARATION_PHASE_XVb · GEL CRYPTOGRAPHIQUE + 4 PROTECTIONS (2026-04-29 · ordre n°31)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PRÉPARATION_PHASE_XVb`).
+  V30 INVIOLÉ. XV.b éligible avec double pre-flight check obligatoire.
+  - **GEL CRYPTOGRAPHIQUE** : 36 fichiers gelés en 8 groupes (snapshot SHA-256 immuable) :
+    - V30_LOCKED (2) · ENGINES_ESPECES_Ω (7) · ENGINES_SCIENTIFIQUES_Ω (6)
+    - ENGINE_IA_Ω (1) · BIO_REACTEURS_Ω_RUNTIME (5) · BIO_PROFILES_DATA (5)
+    - BIO_REACTEURS_DATA (5) · PROTECTIONS_BCE4X_MODULES (5)
+    - **FREEZE_MASTER_SHA-256** : `31c18388ab3090fc0588cc0028a0181c638ac2fba0dff9f9d40700e9f97ccf27`.
+  - **4 systèmes de protection ACTIFS** :
+    1. **BCE-4X ×3** : doctrine + audit 120/120 paramètres + 62/62 tests pytest
+    2. **ANTI_REGRESSION_Ω** : engine_anti_regression + audit_longitudinal +
+       sceau CI hook + freeze SHA-256
+    3. **ANTI_FALLBACK** : BIO_REACTEUR loader anti_generique + spec engines
+       (fallback_active=False) + frozen dataclass SUPER ENGINES + sentinelles
+    4. **ANTI_CONTAMINATION** : MANIFEST_MIGRATION_LEGACY + LISTE_NOIRE +
+       exclusivement_bio_profile/bio_reacteur=True
+  - **Scripts CLI mis à jour** :
+    - `/app/scripts/panic_stop_xvb_omega.sh` — pre-flight COMBINÉ (PROTECTIONS_MAXIMALES + FREEZE)
+    - `/app/scripts/verify_freeze_pre_xvb_omega.sh` — vérifie chaque SHA gelé
+  - **2 livrables HTTPS** dans `/reports/audit_master_omega/` (200/200) :
+    - `FREEZE_PRE_XVb_Ω.json` (16 691 o · sha `c4be61aaad26470b…`)
+    - `PREPARATION_XVb_Ω.html` (18 643 o · sha `2fc23c7db3d0e889…`)
+  - **Pré-flight check final** : `panic_stop_xvb_omega.sh` exit code **0**
+    - Étape 1/2 PROTECTIONS_MAXIMALES_Ω : OK
+    - Étape 2/2 FREEZE_PRE_XVb_Ω : 0 altered · 0 missing · OK
+    - **XV.b AUTORISÉ** ✓
+  - **Règle d'or** : Aucun fichier gelé ne peut être altéré pendant XV.b.
+    Toute modification = ABORT_XVb + ROLLBACK + RAPPORT_AUDIT.
+  - **Tests** : pytest 62/62 PASSED (cumul Phase XIII+XIV+XV) · CI hook ALLOW.
+
 - **PROTECTIONS_MAXIMALES_Ω avant PHASE XV.b (2026-04-29 · ordre n°30)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (`PROCEED_TO_PROTECTIONS_MAXIMALES`).
   4 BLOCS exécutés. V30 INVIOLÉ. XV.b autorisation : **GRANTED**.
