@@ -717,19 +717,33 @@ const SlotCard = ({
       e.stopPropagation();
       setDrag(false);
       if (!tokenReady) return;
-      const f = e.dataTransfer.files?.[0];
-      if (f) onUpload(slot.slot_id, f);
+      const files = Array.from(e.dataTransfer.files || []);
+      if (files.length === 0) return;
+      // ORDRE N°46 · Multi-upload : envoi séquentiel pour FORET_MFFP_Ω
+      if (slot.multi_upload) {
+        files.forEach((f) => onUpload(slot.slot_id, f));
+      } else {
+        onUpload(slot.slot_id, files[0]);
+      }
     },
-    [slot.slot_id, onUpload, tokenReady]
+    [slot.slot_id, slot.multi_upload, onUpload, tokenReady]
   );
 
   const handlePick = useCallback(
     (e) => {
-      const f = e.target.files?.[0];
-      if (f) onUpload(slot.slot_id, f);
+      const files = Array.from(e.target.files || []);
+      if (files.length === 0) {
+        e.target.value = "";
+        return;
+      }
+      if (slot.multi_upload) {
+        files.forEach((f) => onUpload(slot.slot_id, f));
+      } else {
+        onUpload(slot.slot_id, files[0]);
+      }
       e.target.value = "";
     },
-    [slot.slot_id, onUpload]
+    [slot.slot_id, slot.multi_upload, onUpload]
   );
 
   const sBadge =
@@ -740,6 +754,17 @@ const SlotCard = ({
     ] || STATUS_BADGE.ABSENT;
   const pBadge = PRIO_BADGE[slot.priority] || PRIO_BADGE.P2_OPTIONNELLE;
   const lastUpload = uploads[uploads.length - 1];
+
+  // ─── ORDRE N°46 · Multi-upload (VOIE B tuiles régionales) ───
+  const isMulti = Boolean(slot.multi_upload);
+  const filesLoadedCount = uploads.filter((u) => u.passed).length;
+  const filesMax = slot.files_max || 1;
+  // Calcul simple du composite SHA-256 côté client (affichage seulement)
+  const compositeFromUploads = uploads
+    .filter((u) => u.passed && u.sha256)
+    .map((u) => u.sha256)
+    .sort()
+    .join("\n");
 
   return (
     <div
@@ -764,6 +789,17 @@ const SlotCard = ({
       <div style={S.muted}>
         {slot.organisme} · {slot.format_recommandé}
       </div>
+
+      {/* ─── ORDRE N°46 · Bandeau VOIE B multi-upload ─────────── */}
+      {isMulti && (
+        <div
+          style={S.voieBBanner}
+          data-testid={`multi-upload-banner-${slot.slot_id}`}
+        >
+          VOIE_B · TUILES RÉGIONALES · {filesLoadedCount}/{filesMax} tuiles
+          chargées
+        </div>
+      )}
 
       <div style={S.slotStatusRow}>
         <span
@@ -827,6 +863,7 @@ const SlotCard = ({
         <input
           ref={inputRef}
           type="file"
+          multiple={isMulti}
           style={{ display: "none" }}
           onChange={handlePick}
           accept=".gpkg,.zip,.geojson,.json,.parquet,.tif,.tiff"
@@ -890,12 +927,52 @@ const SlotCard = ({
 
       {lastUpload && uploads.length > 0 && (
         <div style={S.lastUpload}>
-          <div style={S.lastUploadLabel}>Dernier upload retenu :</div>
-          <code style={S.mono}>{lastUpload.filename}</code>
-          <div style={S.muted}>
-            {formatBytes(lastUpload.size_bytes)} ·{" "}
-            {shortSha(lastUpload.sha256)}
+          <div style={S.lastUploadLabel}>
+            {isMulti
+              ? `Tuiles chargées (${filesLoadedCount}) :`
+              : "Dernier upload retenu :"}
           </div>
+          {isMulti ? (
+            <>
+              <div
+                style={S.tuilesList}
+                data-testid={`tuiles-list-${slot.slot_id}`}
+              >
+                {uploads.filter((u) => u.passed).map((u, i) => (
+                  <div
+                    key={`${u.filename}-${i}`}
+                    style={S.tuileRow}
+                    data-testid={`tuile-row-${slot.slot_id}-${i}`}
+                  >
+                    <code style={S.monoMini}>{u.filename}</code>
+                    <code style={S.monoMini}>
+                      {formatBytes(u.size_bytes)}
+                    </code>
+                    <code style={S.monoMini}>{shortSha(u.sha256)}</code>
+                  </div>
+                ))}
+              </div>
+              {filesLoadedCount > 0 && compositeFromUploads && (
+                <div
+                  style={S.compositeSha}
+                  data-testid={`composite-sha256-${slot.slot_id}`}
+                >
+                  <span style={S.lbl}>COMPOSITE_SHA256</span>
+                  <code style={S.mono}>
+                    SHA256(concat ordonnée des {filesLoadedCount} SHA-256 individuels)
+                  </code>
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <code style={S.mono}>{lastUpload.filename}</code>
+              <div style={S.muted}>
+                {formatBytes(lastUpload.size_bytes)} ·{" "}
+                {shortSha(lastUpload.sha256)}
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>
@@ -969,6 +1046,53 @@ const S = {
   auditRow: { display: "flex", gap: 8, padding: "5px 8px", marginBottom: 4, background: "rgba(255,255,255,0.02)", borderRadius: 4, alignItems: "center" },
   auditEvent: { fontWeight: 700, fontSize: 10, minWidth: 130 },
   auditSlot: { fontWeight: 700, color: "#67e8f9", minWidth: 130, fontSize: 10 },
+
+  // ═════ ORDRE N°46 — VOIE B multi-upload ═════
+  voieBBanner: {
+    marginTop: 6,
+    padding: "5px 10px",
+    background: "linear-gradient(135deg,rgba(245,158,11,0.20),rgba(251,146,60,0.12))",
+    border: "1px solid rgba(245,158,11,0.45)",
+    borderRadius: 5,
+    color: "#fcd34d",
+    fontSize: 10,
+    fontWeight: 700,
+    letterSpacing: "0.4px",
+    textAlign: "center",
+  },
+  tuilesList: {
+    maxHeight: 120,
+    overflowY: "auto",
+    border: "1px solid #1e293b",
+    borderRadius: 4,
+    padding: 4,
+    marginTop: 4,
+    background: "rgba(10,16,24,0.5)",
+  },
+  tuileRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: 6,
+    padding: "2px 4px",
+    borderBottom: "1px dashed #1e293b",
+    fontSize: 10,
+  },
+  monoMini: {
+    fontFamily: "JetBrains Mono, Menlo, monospace",
+    fontSize: 9,
+    color: "#94a3b8",
+    wordBreak: "break-all",
+  },
+  compositeSha: {
+    marginTop: 6,
+    padding: "6px 8px",
+    background: "rgba(34,211,238,0.06)",
+    border: "1px solid rgba(34,211,238,0.35)",
+    borderRadius: 4,
+    display: "flex",
+    flexDirection: "column",
+    gap: 2,
+  },
 };
 
 export default AdminGISReceptionPanel;

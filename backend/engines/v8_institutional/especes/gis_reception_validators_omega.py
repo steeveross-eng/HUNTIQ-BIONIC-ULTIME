@@ -45,6 +45,11 @@ SLOTS_GIS_PROTÉGÉS_SPEC: List[Dict[str, Any]] = [
             "Conversion optionnelle Shapefile → GeoPackage via ogr2ogr",
         ],
         "validators": ["check_format", "check_size", "check_integrity"],
+        # ─── ORDRE N°46 · VOIE B — Multi-upload tuiles régionales ───────
+        "multi_upload": True,
+        "files_min": 1,
+        "files_max": 32,
+        "voie_acquisition": "VOIE_B_TUILES_REGIONALES_MFFP",
     },
     {
         "slot_id": "SOL_IRDA_Ω",
@@ -280,9 +285,43 @@ def list_slots() -> List[Dict[str, Any]]:
             "formats_acceptes": s["formats_acceptes"],
             "taille_max_octets": s["taille_max_octets"],
             "prerequis": s["prerequis"],
+            # ─── ORDRE N°46 · Exposition flags multi-upload au frontend ──
+            "multi_upload": bool(s.get("multi_upload", False)),
+            "files_min": int(s.get("files_min", 1)),
+            "files_max": int(s.get("files_max", 1)),
+            "voie_acquisition": s.get("voie_acquisition", "VOIE_A_MONOFICHIER"),
         }
         for s in SLOTS_GIS_PROTÉGÉS_SPEC
     ]
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°46 · Agrégation SHA-256 composite (VOIE B — tuiles régionales)
+# ═════════════════════════════════════════════════════════════════════════
+def compute_composite_sha256(individual_shas: List[str]) -> str:
+    """Calcule un SHA-256 composite déterministe à partir d'une liste de
+    SHA-256 individuels. L'ordre des hashes est imposé (tri alphabétique)
+    pour garantir un résultat reproductible indépendamment de l'ordre
+    d'arrivée des tuiles.
+
+    Formule : SHA256( sorted(sha_i).join('\\n') )
+
+    Anti-générique : rejette une entrée vide.
+    """
+    if not individual_shas:
+        return ""
+    ordered = sorted(s for s in individual_shas if s)
+    h = hashlib.sha256()
+    for s in ordered:
+        h.update(s.encode("utf-8"))
+        h.update(b"\n")
+    return h.hexdigest()
+
+
+def is_multi_upload_slot(slot_id: str) -> bool:
+    """Retourne True si le slot accepte plusieurs fichiers agrégés."""
+    spec = SLOT_BY_ID.get(slot_id, {})
+    return bool(spec.get("multi_upload", False))
 
 
 __all__ = [
@@ -293,4 +332,6 @@ __all__ = [
     "check_integrity",
     "validate_upload",
     "list_slots",
+    "compute_composite_sha256",
+    "is_multi_upload_slot",
 ]

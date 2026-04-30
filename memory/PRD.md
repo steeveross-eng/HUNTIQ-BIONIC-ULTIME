@@ -27,6 +27,23 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXIV · VOIE B MULTI-UPLOAD TUILES MFFP + ÉCHEC VOIE D (2026-04-30 · ordre n°46)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX suite à l'échec structurel de la VOIE D (téléchargement direct 12 Go impossible sur pod Kubernetes). Bascule immédiate vers VOIE B (tuiles régionales MFFP). **V30 INVIOLÉ · pytest 236/236 · 2/2 PDF HTTPS 200 · FUSION ADD-ONLY strict.**
+  - **NOTE_INFRASTRUCTURE_VOIE_D_ECHEC_Ω.pdf** (6 721 o · sha256 `fc5b6680…fff8`) — preuves forensiques : rotation volume nvme0n5→nvme0n6, /var/tmp/ purgé à chaque restart, espace libre /app=1.4Go/9.8Go, 2 tentatives wget échouées à ~60%. Conclusion : VOIE D structurellement inviable.
+  - **RAPPORT_ORDRE_46_Ω.pdf** (7 965 o · sha256 `1cd0dfaf…2d05`).
+  - **Modifications FUSION ADD-ONLY** (aucune spec existante altérée) :
+    - `gis_reception_validators_omega.py` : flag `multi_upload: True` + `files_min: 1` + `files_max: 32` + `voie_acquisition: VOIE_B_TUILES_REGIONALES_MFFP` sur le seul slot `FORET_MFFP_Ω` · ajout fonctions `compute_composite_sha256()` et `is_multi_upload_slot()`.
+    - `gis_reception_router_omega.py` : dédup par filename + calcul automatique `composite_sha256` (SHA256 de la concaténation ordonnée des SHA-256 individuels triés) + exposition `files_loaded_count` / `multi_upload` / `composite_sha256` dans réponse upload et intake-status.
+    - `AdminGISReceptionPanel.jsx` : bandeau VOIE_B dans les SlotCards multi_upload · liste des tuiles chargées (filename + size + SHA-256 tronqué) · bloc COMPOSITE_SHA256 · input file `multiple={isMulti}` · drop zone multi-fichiers.
+    - `test_phase_xxiv_multi_upload_omega.py` **NOUVEAU** · 14 tests pytest (flag spec, déterminisme composite, ordre-insensibilité, dédup filename, non-régression single-upload, anti-générique).
+  - **Preuves E2E live** : 2 tuiles factices GeoJSON (<12 Ko/tuile, test_fixture=True) uploadées via curl · `composite_sha256=5d22ff5a60744756…fef08` · vérification Python indépendante MATCH ✓ · slot FORET_MFFP_Ω passe à LOADED avec `files_loaded_count=2`.
+  - **Validation visuelle Playwright** : bandeau "VOIE_B · TUILES RÉGIONALES · 2/32 tuiles chargées", liste des tuiles, bloc COMPOSITE_SHA256, autres slots single-upload inchangés.
+  - **Pytest cumul** : 236/236 PASSED (20+16+14 Phase XXII/XXIII/XXIV + 186 cumul Phase XII→XX). 0 régression.
+  - **Invariants** : V30 LOCKED `fb765b94…ecb0c` + `bcb1e3a6…39d3` intacts · FREEZE_MASTER 36/36 intact · anti-générique strict (0 donnée synthétique injectée).
+  - **Fixtures de test purgées** post-validation · slot FORET_MFFP_Ω remis ABSENT · prêt à recevoir les 16 tuiles MFFP officielles du Commandant.
+  - **Prochaine étape** (sous ordre) : ingestion manuelle des 16 tuiles régionales par le Commandant → POST /promote → si status=OPERATIONAL+anti_generique_pass=True → ORDRE N°47 SCEAU_INSTITUTIONNEL_X5_FINAL_Ω.
+  - **Tests** : pytest + curl + python3 + screenshot Playwright. Aucun testing subagent.
+
 - **PHASE_XX · FRONTEND_TERRITOIRE_APTE_Ω + INIT_GPS_GIS + PRE_SCEAU_X5 (2026-04-30 · ordre n°40)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX. **Stratégie A (STUB_READY) validée** — anti-générique strict respecté. **V30 INVIOLÉ · pytest 168/168 · 7/7 HTTPS 200 · Frontend HTTP 200.**
   - **🎯 PRE_SCEAU_X5_Ω = `80b58a6ed4efce36562e3d156474bbbdcee4521e044f22be5a20272eb4b927ec`** (PROVISIONAL · finalisation post-GIS).

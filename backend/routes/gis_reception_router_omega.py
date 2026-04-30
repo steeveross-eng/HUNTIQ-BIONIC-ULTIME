@@ -36,6 +36,8 @@ from engines.v8_institutional.especes.gis_reception_validators_omega import (
     SLOT_BY_ID,
     list_slots,
     validate_upload,
+    compute_composite_sha256,
+    is_multi_upload_slot,
 )
 from engines.v8_institutional.especes import gis_audit_log_omega as audit
 
@@ -122,9 +124,22 @@ def _record_upload(slot_id: str, filename: str, sha256: str, size: int,
         "passed": passed,
         "validators": validation.get("validators", []),
     }
+    # ─── ORDRE N°46 · Multi-upload : dédup par filename (écrase version précédente) ───
+    # Si un fichier ayant le même nom a déjà été uploadé dans ce slot, on remplace
+    # son entrée pour éviter les doublons dans le composite SHA-256.
+    slot["uploads"] = [u for u in slot.get("uploads", []) if u.get("filename") != filename]
     slot["uploads"].append(entry)
+
     if passed:
         slot["status"] = "LOADED"
+
+    # ─── ORDRE N°46 · Agrégation SHA-256 composite (VOIE B tuiles régionales) ───
+    passed_shas = [u["sha256"] for u in slot["uploads"]
+                   if u.get("passed") and u.get("sha256")]
+    slot["files_loaded_count"] = len(passed_shas)
+    slot["composite_sha256"] = compute_composite_sha256(passed_shas) if passed_shas else None
+    slot["multi_upload"] = is_multi_upload_slot(slot_id)
+
     _write_manifest(manifest)
     return manifest
 
@@ -267,6 +282,9 @@ async def upload_layer(
         validators=validation.get("validators", []),
     )
 
+    # ─── ORDRE N°46 · Champs multi-upload exposés dans la réponse ───
+    slot_state = manifest["slots"].get(slot_id, {})
+
     return JSONResponse(
         status_code=200 if passed else 422,
         content={
@@ -277,6 +295,10 @@ async def upload_layer(
             "passed": passed,
             "status": "LOADED" if passed else "QUARANTINED",
             "validators": validation.get("validators", []),
+            # ─── ORDRE N°46 · Multi-upload / SHA-256 composite ─────────
+            "multi_upload": slot_state.get("multi_upload", False),
+            "files_loaded_count": slot_state.get("files_loaded_count", 0),
+            "composite_sha256": slot_state.get("composite_sha256"),
             "intake_stats": {
                 "total_slots": len(manifest["slots"]),
                 "loaded": sum(1 for s in manifest["slots"].values()

@@ -46,3 +46,13 @@
 - **Storage** : `/app/backend/data/gis_operational/audit_log.jsonl` (JSONL append-only)
 - **Rétention** : env `GIS_AUDIT_RETENTION_DAYS` (défaut 90 jours)
 - **Filtres GET** : `?slot_id=...&event=...&limit=1..2000`
+
+## VOIE B Multi-Upload FORET_MFFP_Ω (Ordre n°46) — ADMIN_PREMIUM_ONLY
+- **Flag spec** : `multi_upload=True` exclusivement sur `FORET_MFFP_Ω` (5 autres slots restent single-upload)
+- **Capacité** : `files_max=32` tuiles, taille cumulée max 5 Go
+- **Endpoint inchangé** : `POST /api/v30/admin-premium/gis/upload/FORET_MFFP_Ω` · un appel par tuile
+- **Dédup** : ré-upload d'un filename identique remplace l'entrée (pas de doublon composite)
+- **SHA-256 composite** : `SHA256(sorted(sha_i).join('\n'))` · ordre-insensible, déterministe
+- **Champs exposés** dans réponse upload et `intake-status` : `multi_upload`, `files_loaded_count`, `composite_sha256`
+- **Test pytest** : `test_phase_xxiv_multi_upload_omega.py` (14 tests)
+- **data-testid UI** : `multi-upload-banner-FORET_MFFP_Ω`, `tuiles-list-FORET_MFFP_Ω`, `tuile-row-FORET_MFFP_Ω-{i}`, `composite-sha256-FORET_MFFP_Ω`

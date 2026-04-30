@@ -10,7 +10,10 @@
       "label": "Couvert forestier MFFP (carte écoforestière)",
       "priority": "P0",
       "status": "ABSENT",
-      "uploads": []
+      "uploads": [],
+      "files_loaded_count": 0,
+      "composite_sha256": null,
+      "multi_upload": true
     },
     "SOL_IRDA_Ω": {
       "slot_id": "SOL_IRDA_Ω",
@@ -29,7 +32,7 @@
           "filename": "good.geojson",
           "sha256": "eb65fa70f224ec205e5cfbffa273bee1115f4b341f2908564c1345e55fbd19c4",
           "size_bytes": 2081,
-          "uploaded_at_utc": "2026-04-30T15:45:14+00:00",
+          "uploaded_at_utc": "2026-04-30T22:51:10+00:00",
           "passed": true,
           "validators": [
             {
@@ -64,7 +67,7 @@
           "filename": "tiny.geojson",
           "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
           "size_bytes": 2,
-          "uploaded_at_utc": "2026-04-30T15:45:14+00:00",
+          "uploaded_at_utc": "2026-04-30T22:51:10+00:00",
           "passed": false,
           "validators": [
             {
@@ -99,7 +102,7 @@
           "filename": "a.geojson",
           "sha256": "eb65fa70f224ec205e5cfbffa273bee1115f4b341f2908564c1345e55fbd19c4",
           "size_bytes": 2081,
-          "uploaded_at_utc": "2026-04-30T15:45:14+00:00",
+          "uploaded_at_utc": "2026-04-30T22:51:10+00:00",
           "passed": true,
           "validators": [
             {
@@ -130,7 +133,10 @@
             }
           ]
         }
-      ]
+      ],
+      "files_loaded_count": 2,
+      "composite_sha256": "2f1043832789d1b3d2eb4ab0db039d524ab3945e71e874e7ba01b0f4ab462aad",
+      "multi_upload": false
     },
     "ROUTES_MTQ_SECONDAIRES_Ω": {
       "slot_id": "ROUTES_MTQ_SECONDAIRES_Ω",
@@ -154,5 +160,5 @@
       "uploads": []
     }
   },
-  "last_updated_utc": "2026-04-30T15:45:14+00:00"
+  "last_updated_utc": "2026-04-30T22:52:36+00:00"
 }
