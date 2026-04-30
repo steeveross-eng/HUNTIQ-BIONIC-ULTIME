@@ -2666,3 +2666,52 @@ DASHBOARD_PILOTAGE_BCE_4X_Ω + GIS_OPERATIONAL_Ω + GPS_LOADED_CORRIDORS_Ω
 - pytest (8 modules test_phase_*) : **168/168 PASSED** (zéro régression)
 - HTTPS : **12/12 · 200 OK**
 - V30 INVIOLÉ vs FREEZE_MASTER
+
+## ═════════════════════════════════════════════════════════════════════
+## PHASE XXII — ORDRE N°42_BIS (2026-04-30) — SCELLÉ
+## ═════════════════════════════════════════════════════════════════════
+### Objet
+PRÉPARATION_ACQUISITION_GIS_PROTÉGÉES_Ω :
+INFRASTRUCTURE_RÉCEPTION_GIS_Ω + 6 SLOTS protégés + RAPPORT institutionnel.
+Aucune donnée synthétique générée — anti-générique strict.
+
+### Slots GIS protégés (6)
+- **P0** : `FORET_MFFP_Ω`, `SOL_IRDA_Ω`, `CHASSE_ZEC_SEPAQ_Ω`
+- **P1** : `ROUTES_MTQ_SECONDAIRES_Ω`, `LIMITES_TERRITORIALES_FINES_Ω`
+- **P2 optionnelle** : `PRESSION_HUMAINE_Ω`
+
+### Endpoints HTTP (`/api/v30/admin-premium/gis/*`)
+- `GET /slots` — Liste publique (PUBLIC)
+- `GET /intake-status` — Manifest intake live (PUBLIC)
+- `POST /upload/{slot_id}` — Upload couche RÉELLE (ADMIN_PREMIUM_ONLY)
+  - Header obligatoire : `X-Commandant-Token: STEEVE-MAX-X42BIS-GIS-RECEPTION-EXPLICIT`
+  - Multipart : `file=@chemin/vers/fichier`
+  - Validators : check_format · check_size · check_integrity (SHA-256 + zipfile.testzip)
+  - Quarantaine auto (HTTP 422) si validation échoue
+
+### Livrables HTTPS 200 OK (5)
+- `/reports/purge_master_omega/SLOTS_GIS_PROTÉGÉS_Ω.json` — SHA `77cf8bc8…`
+- `/reports/purge_master_omega/GIS_RECEPTION_INFRA_Ω.json` — SHA `763e3184…`
+- `/reports/purge_master_omega/GIS_RECEPTION_INFRA_Ω.html`
+- `/reports/purge_master_omega/VALIDATION_GIS_RECEPTION_Ω.json`
+- `/reports/institution/RAPPORT_ORDRE_42_BIS_Ω.pdf` — SHA `4cd079ab…`
+
+### Sceau institutionnel
+- `/app/backend/institution/sceaux/VALIDATION_GIS_Ω.sha256`
+
+### Code
+- Router : `/app/backend/routes/gis_reception_router_omega.py`
+- Validators : `/app/backend/engines/v8_institutional/especes/gis_reception_validators_omega.py`
+- Tests : `/app/backend/tests/test_phase_xxii_gis_reception_omega.py` (31 tests)
+
+### Tests
+- pytest Phase XXII : **31/31 PASSED**
+- pytest baseline cumulée : **199/199 PASSED** (168 + 31, zéro régression)
+- HTTPS livrables : **5/5 · 200 OK**
+- Endpoints API : **2/2 · 200 OK**
+- V30 INVIOLÉ vs FREEZE_MASTER
+
+### Storage
+- Incoming : `/app/backend/data/gis_operational/incoming/{slot_id}/`
+- Quarantine : `/app/backend/data/gis_operational/quarantine/`
+- Manifest live : `/app/backend/data/gis_operational/GIS_RECEPTION_INTAKE_Ω.json`

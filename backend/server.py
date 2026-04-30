@@ -1262,6 +1262,15 @@ except Exception as e:
     logger.warning(f"PHASE_XIX_Ω router not loaded: {e}")
 
 
+# ═══ PHASE_XXII_OMEGA — GIS RECEPTION INFRA (Commandant STEEVE-MAX · ORDRE N°42_BIS) ═══
+try:
+    from routes.gis_reception_router_omega import router as gis_reception_router
+    app.include_router(gis_reception_router)
+    logger.info("✓ PHASE_XXII_Ω active : GIS RECEPTION — /api/v30/admin-premium/gis/*")
+except Exception as e:
+    logger.warning(f"PHASE_XXII_Ω GIS reception router not loaded: {e}")
+
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")

@@ -1,0 +1,69 @@
+{
+  "manifest_id": "GIS_RECEPTION_INFRA_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°42_BIS",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-30T14:44:10+00:00",
+  "infrastructure": {
+    "router_module": "routes.gis_reception_router_omega",
+    "router_prefix": "/api/v30/admin-premium/gis",
+    "validators_module": "engines.v8_institutional.especes.gis_reception_validators_omega",
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/api/v30/admin-premium/gis/slots",
+        "auth": "PUBLIC",
+        "purpose": "Liste publique des 6 slots"
+      },
+      {
+        "method": "GET",
+        "path": "/api/v30/admin-premium/gis/intake-status",
+        "auth": "PUBLIC",
+        "purpose": "État live du manifest intake"
+      },
+      {
+        "method": "POST",
+        "path": "/api/v30/admin-premium/gis/upload/{slot_id}",
+        "auth": "ADMIN_PREMIUM_ONLY (X-Commandant-Token)",
+        "purpose": "Upload couche RÉELLE pour un slot"
+      }
+    ],
+    "auth_mechanism": "X-Commandant-Token header (env GIS_RECEPTION_COMMANDANT_TOKEN)",
+    "storage_root": "/app/backend/data/gis_operational",
+    "incoming_dir": "/app/backend/data/gis_operational/incoming",
+    "quarantine_dir": "/app/backend/data/gis_operational/quarantine",
+    "manifest_path": "/app/backend/data/gis_operational/GIS_RECEPTION_INTAKE_Ω.json"
+  },
+  "infrastructure_sha256": {
+    "router": "ac74d93d5841c288387cd56e75f7d17e82bccf4267a5e42bb7d4a5ec3076789f",
+    "validators": "dfde9aa8019d153ce3d6471096c43825e317d2c19c3da40711493f7c1d2b168b",
+    "tests": "d4bdfa1c9b44d7a04db5981f4e8b6342d94189e97fd427be5d3bf1a375be8ec3"
+  },
+  "validators_doctrinaux": {
+    "check_format": "Vérifie l'extension contre formats_acceptes du slot",
+    "check_size": "Vérifie taille ∈ [taille_min, taille_max] du slot",
+    "check_integrity": "SHA-256 + zipfile.testzip() pour les .zip",
+    "fail_action": "Quarantaine automatique (HTTP 422)"
+  },
+  "intake_manifest_live": null,
+  "garde_fous": [
+    "ADMIN_PREMIUM_ONLY — header X-Commandant-Token obligatoire",
+    "Filename safety : /^[A-Za-z0-9._-]+$/ (pas de path traversal)",
+    "Stream chunked + max_size en cours d'écriture (HTTP 413 si dépassement)",
+    "Atomic move tmp → final après écriture complète",
+    "Aucun fallback synthétique",
+    "V30 LOCKED INVIOLABLE"
+  ],
+  "tests_pytest": {
+    "module": "test_phase_xxii_gis_reception_omega.py",
+    "tests_count": 31,
+    "couvre": [
+      "Specs slots (6 slots, 3 P0 + 2 P1 + 1 P2 optionnelle)",
+      "Validators (formats, size, integrity, ZIP corrompu)",
+      "Endpoints HTTP (slots, intake-status, upload)",
+      "Garde-fous auth (401 sans token, 401 token invalide, 404 slot inconnu)",
+      "Sécurité (400 filename unsafe)",
+      "Anti-générique (mots-clés interdits dans validators)"
+    ]
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "manifest_id": "SLOTS_GIS_PROTÉGÉS_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°42_BIS",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-30T14:44:10+00:00",
+  "slots_count": 6,
+  "endpoint_upload": "/api/v30/admin-premium/gis/upload/{slot_id}",
+  "endpoint_status": "/api/v30/admin-premium/gis/intake-status",
+  "endpoint_list": "/api/v30/admin-premium/gis/slots",
+  "auth_header": "X-Commandant-Token (obligatoire)",
+  "doctrine_anti_contamination": [
+    "ADMIN_PREMIUM_ONLY — token Commandant requis",
+    "Anti-générique strict — fichiers vides/tronqués rejetés",
+    "Validation 3-couches : format, taille, intégrité (SHA-256 + ZIP testzip)",
+    "Quarantaine automatique des uploads non conformes",
+    "Aucune donnée synthétique générée"
+  ],
+  "slots": [
+    {
+      "slot_id": "FORET_MFFP_Ω",
+      "label": "Couvert forestier MFFP (carte écoforestière)",
+      "priority": "P0",
+      "organisme": "MFFP — Direction des inventaires forestiers",
+      "access_type": "TÉLÉCHARGEMENT_DIRECT_LICENCE",
+      "url_acquisition": "https://www.donneesquebec.ca/recherche/dataset/carte-ecoforestiere-avec-perturbations",
+      "license": "Licence ouverte gouvernement du Québec",
+      "format_recommandé": "GeoPackage (.gpkg) ou Shapefile (.zip) ou Parquet",
+      "formats_acceptes": [
+        "gpkg",
+        "zip",
+        "parquet",
+        "geojson"
+      ],
+      "taille_max_octets": 5368709120,
+      "prerequis": [
+        "Téléchargement portail Données Québec",
+        "Acceptation licence ouverte",
+        "Conversion optionnelle Shapefile → GeoPackage via ogr2ogr"
+      ]
+    },
+    {
+      "slot_id": "SOL_IRDA_Ω",
+      "label": "Pédologie / classes de sol IRDA",
+      "priority": "P0",
+      "organisme": "IRDA — Institut de recherche et de développement en agroenvironnement",
+      "access_type": "API_OU_LICENCE",
+      "url_acquisition": "https://www.irda.qc.ca/fr/services/donnees-pedologiques/",
+      "license": "Licence IRDA — entente d'utilisation requise",
+      "format_recommandé": "GeoPackage (.gpkg) ou Shapefile (.zip)",
+      "formats_acceptes": [
+        "gpkg",
+        "zip",
+        "geojson",
+        "parquet"
+      ],
+      "taille_max_octets": 2147483648,
+      "prerequis": [
+        "Demande d'accès IRDA",
+        "Signature entente d'utilisation",
+        "Réception données par canal sécurisé"
+      ]
+    },
+    {
+      "slot_id": "CHASSE_ZEC_SEPAQ_Ω",
+      "label": "Zones de chasse ZEC + SÉPAQ + Réserves fauniques",
+      "priority": "P0",
+      "organisme": "MFFP — SÉPAQ — Fédération des ZECs",
+      "access_type": "TÉLÉCHARGEMENT_DIRECT_LICENCE",
+      "url_acquisition": "https://www.donneesquebec.ca/recherche/dataset/territoires-fauniques-structures",
+      "license": "Licence ouverte gouvernement du Québec",
+      "format_recommandé": "GeoPackage (.gpkg) ou GeoJSON",
+      "formats_acceptes": [
+        "gpkg",
+        "geojson",
+        "zip",
+        "parquet"
+      ],
+      "taille_max_octets": 524288000,
+      "prerequis": [
+        "Téléchargement portail Données Québec",
+        "Vérification jeu 'territoires fauniques structurés'"
+      ]
+    },
+    {
+      "slot_id": "ROUTES_MTQ_SECONDAIRES_Ω",
+      "label": "Réseau routier secondaire et chemins forestiers MTQ + RTSS",
+      "priority": "P1",
+      "organisme": "MTQ — Direction RTSS",
+      "access_type": "API_OU_TÉLÉCHARGEMENT_LICENCE",
+      "url_acquisition": "https://www.donneesquebec.ca/recherche/dataset/adresses-quebec-feature",
+      "license": "Licence ouverte gouvernement du Québec + RTSS MTQ (convention possible)",
+      "format_recommandé": "GeoPackage (.gpkg) ou GeoJSON",
+      "formats_acceptes": [
+        "gpkg",
+        "geojson",
+        "zip",
+        "parquet"
+      ],
+      "taille_max_octets": 1073741824,
+      "prerequis": [
+        "Téléchargement portail Données Québec (Adresses Québec)",
+        "Convention MTQ pour RTSS détaillé (optionnel)"
+      ]
+    },
+    {
+      "slot_id": "LIMITES_TERRITORIALES_FINES_Ω",
+      "label": "Limites territoriales fines (cantons, lots, arpentage cadastral)",
+      "priority": "P1",
+      "organisme": "MERN — Service de l'arpentage / Cadastre Québec",
+      "access_type": "API_FONCIER_OU_TÉLÉCHARGEMENT",
+      "url_acquisition": "https://www.donneesquebec.ca/recherche/dataset/cadastre-du-quebec-en-format-shapefile",
+      "license": "Licence ouverte cadastre — conditions d'utilisation Cadastre Québec",
+      "format_recommandé": "GeoPackage (.gpkg) ou Shapefile (.zip)",
+      "formats_acceptes": [
+        "gpkg",
+        "zip",
+        "geojson",
+        "parquet"
+      ],
+      "taille_max_octets": 3221225472,
+      "prerequis": [
+        "Téléchargement portail Cadastre Québec",
+        "Acceptation conditions Cadastre"
+      ]
+    },
+    {
+      "slot_id": "PRESSION_HUMAINE_Ω",
+      "label": "Pression humaine fine (densité population + activités récréatives)",
+      "priority": "P2_OPTIONNELLE",
+      "organisme": "Statistique Canada + MFFP (fréquentation chasse)",
+      "access_type": "TÉLÉCHARGEMENT_DIRECT",
+      "url_acquisition": "https://www150.statcan.gc.ca/n1/fr/catalogue/97F0008X",
+      "license": "Open Data StatCan",
+      "format_recommandé": "Parquet ou GeoTIFF (raster densité)",
+      "formats_acceptes": [
+        "parquet",
+        "tif",
+        "tiff",
+        "gpkg",
+        "geojson"
+      ],
+      "taille_max_octets": 2147483648,
+      "prerequis": [
+        "Téléchargement landcover StatCan",
+        "Optionnel : compilation données fréquentation MFFP"
+      ]
+    }
+  ]
+}

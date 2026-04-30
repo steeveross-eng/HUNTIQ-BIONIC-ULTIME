@@ -1,0 +1,12 @@
+# VALIDATION_GIS_RECEPTION_Ω · Ordre n°42_BIS · 2026-04-30T14:44:10+00:00
+# Doctrine : BCE-4X_ULTIME_ABSOLU_x3
+# Émis : COMMANDANT STEEVE-MAX
+#
+77cf8bc89e1c91dad2a3e6c7fd1f4570488f074c0cdab97a8ed3d68c702a9063  SLOTS_GIS_PROTÉGÉS_Ω.json
+763e31849429f96deea4eb6dea3af2e4f06a735f1920d260ce1b6c4ea5709437  GIS_RECEPTION_INFRA_Ω.json
+ffef5e632b39008399d82fb96a658e6b61e69a87fb242cc53d0dffc1b72b468c  GIS_RECEPTION_INFRA_Ω.html
+51ed69076f321ab463cee5dfbda987f988a0a51f6bea3fc6fcbe941975e88349  VALIDATION_GIS_RECEPTION_Ω.json
+# Infrastructure :
+ac74d93d5841c288387cd56e75f7d17e82bccf4267a5e42bb7d4a5ec3076789f  router::/app/backend/routes/gis_reception_router_omega.py
+dfde9aa8019d153ce3d6471096c43825e317d2c19c3da40711493f7c1d2b168b  validators::/app/backend/engines/v8_institutional/especes/gis_reception_validators_omega.py
+d4bdfa1c9b44d7a04db5981f4e8b6342d94189e97fd427be5d3bf1a375be8ec3  tests::/app/backend/tests/test_phase_xxii_gis_reception_omega.py

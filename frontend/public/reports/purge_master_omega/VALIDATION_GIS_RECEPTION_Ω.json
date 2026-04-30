@@ -1,0 +1,45 @@
+{
+  "manifest_id": "VALIDATION_GIS_RECEPTION_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°42_BIS",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "validated_at_utc": "2026-04-30T14:44:10+00:00",
+  "pytest": {
+    "passed": 31,
+    "exit_code": 0,
+    "all_pass": true
+  },
+  "https_checks": [
+    {
+      "filename": "SLOTS_GIS_PROTÉGÉS_Ω.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/SLOTS_GIS_PROT%C3%89G%C3%89S_%CE%A9.json",
+      "http_code": 200,
+      "size_bytes": 5682
+    },
+    {
+      "filename": "GIS_RECEPTION_INFRA_Ω.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/GIS_RECEPTION_INFRA_%CE%A9.json",
+      "http_code": 200,
+      "size_bytes": 2866
+    },
+    {
+      "filename": "GIS_RECEPTION_INFRA_Ω.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/GIS_RECEPTION_INFRA_%CE%A9.html",
+      "http_code": 200,
+      "size_bytes": 10649
+    }
+  ],
+  "all_https_ok": true,
+  "infrastructure_sha256": {
+    "router": "ac74d93d5841c288387cd56e75f7d17e82bccf4267a5e42bb7d4a5ec3076789f",
+    "validators": "dfde9aa8019d153ce3d6471096c43825e317d2c19c3da40711493f7c1d2b168b",
+    "tests": "d4bdfa1c9b44d7a04db5981f4e8b6342d94189e97fd427be5d3bf1a375be8ec3"
+  },
+  "synthese": {
+    "infrastructure_active": true,
+    "slots_count": 6,
+    "endpoints_count": 3,
+    "anti_generique_strict": true,
+    "v30_intact": true
+  }
+}
