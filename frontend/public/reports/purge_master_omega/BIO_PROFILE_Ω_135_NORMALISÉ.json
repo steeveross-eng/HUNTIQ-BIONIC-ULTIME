@@ -1,0 +1,524 @@
+{
+  "manifest_id": "BIO_PROFILE_Ω_135_NORMALISÉ",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°38",
+  "version_source": "1.0.0",
+  "generated_for": "BIONIC OS — TERRITOIRE-Ω",
+  "biome_default": "Forêt boréale mixte / tempérée nordique — Québec, Canada",
+  "file_sha256": "fd9374c3c3ef632ba9e5188f24e83ae32772dfa98ddba0d946d402a519bff960",
+  "validation": {
+    "total_entries": 675,
+    "missing_fields_total": 0,
+    "missing_per_entry_count": 0,
+    "missing_per_entry_sample": [],
+    "invalid_typical_count": 0,
+    "invalid_typical_sample": [],
+    "all_required_fields_present": true
+  },
+  "totaux": {
+    "total_entries": 675,
+    "total_blocks": 9,
+    "total_parameters": 135,
+    "total_species": 5
+  },
+  "blocks_summary": [
+    {
+      "block_id": "BLK-01",
+      "block_name": "MORPHOLOGIE",
+      "description": "Dimensions corporelles, masse, et caractéristiques physiques",
+      "parameter_count": 15
+    },
+    {
+      "block_id": "BLK-02",
+      "block_name": "ALIMENTATION",
+      "description": "Régime alimentaire, besoins nutritionnels, et stratégies de quête alimentaire",
+      "parameter_count": 15
+    },
+    {
+      "block_id": "BLK-03",
+      "block_name": "HABITAT",
+      "description": "Préférences d'habitat, couvert, altitude, et affinités écologiques",
+      "parameter_count": 15
+    },
+    {
+      "block_id": "BLK-04",
+      "block_name": "REPRODUCTION",
+      "description": "Cycles reproductifs, gestation, fécondité, et succès reproducteur",
+      "parameter_count": 15
+    },
+    {
+      "block_id": "BLK-05",
+      "block_name": "COMPORTEMENT",
+      "description": "Patron d'activité, organisation sociale, et réponses comportementales",
+      "parameter_count": 15
+    },
+    {
+      "block_id": "BLK-06",
+      "block_name": "PHYSIOLOGIE",
+      "description": "Métabolisme, thermorégulation, systèmes physiologiques, et adaptations saisonnières",
+      "parameter_count": 15
+    },
+    {
+      "block_id": "BLK-07",
+      "block_name": "DEPLACEMENT",
+      "description": "Domaine vital, déplacements saisonniers, migration, et capacités locomotrices",
+      "parameter_count": 15
+    },
+    {
+      "block_id": "BLK-08",
+      "block_name": "SANTE",
+      "description": "Pathologies, parasitisme, immunité, et indicateurs sanitaires populationnels",
+      "parameter_count": 15
+    },
+    {
+      "block_id": "BLK-09",
+      "block_name": "SENSORIEL",
+      "description": "Capacités sensorielles, détection, communication, et perception environnementale",
+      "parameter_count": 15
+    }
+  ],
+  "species": [
+    {
+      "code": "ORIGNAL",
+      "latin": "Alces americanus",
+      "common_fr": "Orignal"
+    },
+    {
+      "code": "CHEVREUIL",
+      "latin": "Odocoileus virginianus",
+      "common_fr": "Chevreuil (cerf de Virginie)"
+    },
+    {
+      "code": "WAPITI",
+      "latin": "Cervus canadensis",
+      "common_fr": "Wapiti"
+    },
+    {
+      "code": "OURS_NOIR",
+      "latin": "Ursus americanus",
+      "common_fr": "Ours noir"
+    },
+    {
+      "code": "DINDON_SAUVAGE",
+      "latin": "Meleagris gallopavo",
+      "common_fr": "Dindon sauvage"
+    }
+  ],
+  "completeness_par_bloc_espece": {
+    "MORPHOLOGIE": {
+      "ORIGNAL": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "CHEVREUIL": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "WAPITI": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "OURS_NOIR": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "DINDON_SAUVAGE": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      }
+    },
+    "ALIMENTATION": {
+      "ORIGNAL": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "CHEVREUIL": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "WAPITI": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "OURS_NOIR": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "DINDON_SAUVAGE": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      }
+    },
+    "HABITAT": {
+      "ORIGNAL": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "CHEVREUIL": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "WAPITI": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "OURS_NOIR": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "DINDON_SAUVAGE": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      }
+    },
+    "REPRODUCTION": {
+      "ORIGNAL": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "CHEVREUIL": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "WAPITI": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "OURS_NOIR": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "DINDON_SAUVAGE": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      }
+    },
+    "COMPORTEMENT": {
+      "ORIGNAL": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "CHEVREUIL": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "WAPITI": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "OURS_NOIR": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "DINDON_SAUVAGE": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      }
+    },
+    "PHYSIOLOGIE": {
+      "ORIGNAL": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "CHEVREUIL": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "WAPITI": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "OURS_NOIR": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "DINDON_SAUVAGE": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      }
+    },
+    "DEPLACEMENT": {
+      "ORIGNAL": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "CHEVREUIL": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "WAPITI": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "OURS_NOIR": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "DINDON_SAUVAGE": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      }
+    },
+    "SANTE": {
+      "ORIGNAL": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "CHEVREUIL": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "WAPITI": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "OURS_NOIR": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "DINDON_SAUVAGE": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      }
+    },
+    "SENSORIEL": {
+      "ORIGNAL": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "CHEVREUIL": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "WAPITI": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "OURS_NOIR": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      },
+      "DINDON_SAUVAGE": {
+        "entries_count": 15,
+        "valid_entries": 15,
+        "completeness_pct": 100.0
+      }
+    }
+  },
+  "units_distribution": {
+    "kg": 20,
+    "cm": 35,
+    "mm": 5,
+    "poils/cm²": 5,
+    "ratio (masse/longueur corrigé)": 5,
+    "ratio": 10,
+    "kg/jour": 5,
+    "kg MS/jour": 10,
+    "% MS": 5,
+    "%": 135,
+    "mg/jour": 15,
+    "kcal/jour": 5,
+    "heures/jour": 15,
+    "indice [-1 à +1]": 5,
+    "L/100kg masse corporelle": 5,
+    "m ASL": 5,
+    "% canopée": 5,
+    "m": 30,
+    "degrés": 15,
+    "tiges/ha": 5,
+    "catégorie": 5,
+    "km²": 15,
+    "indice [0–10]": 5,
+    "km/km²": 5,
+    "indice [0–1]": 5,
+    "°C": 25,
+    "mois": 10,
+    "jours": 15,
+    "jeunes/portée": 5,
+    "jour julien": 15,
+    "ovules/cycle": 5,
+    "années": 15,
+    "individus": 10,
+    "index [0–10]": 15,
+    "appels/heure": 5,
+    "dB à 100m": 5,
+    "kcal/kg/jour": 5,
+    "bpm": 10,
+    "% masse automne": 5,
+    "mL/kg": 5,
+    "ng/mL": 5,
+    "L/jour": 5,
+    "respirations/min": 5,
+    "km/jour": 5,
+    "km": 20,
+    "km/h": 10,
+    "J/kg/m": 5,
+    "facteur ×": 5,
+    "kg/m²": 5,
+    "traversées/km route/an": 5,
+    "ratio [1=linéaire]": 5,
+    "tiques/individu": 5,
+    "mg/dL": 10,
+    "individus/km²": 5,
+    "cycles/degré": 5,
+    "booléen [0/1]": 15,
+    "Hz": 10,
+    "dB SPL (seuil)": 5,
+    "cm²": 5,
+    "gènes": 5,
+    "catégorie [dichromate/trichromate/tetrachromate]": 5,
+    "degrés/seconde": 5
+  },
+  "block_to_master_mapping": {
+    "ALIMENTATION": "NUTRITION_MASTER_Ω",
+    "PHYSIOLOGIE": "NUTRITION_MASTER_Ω",
+    "HABITAT": "CORRIDORS_MASTER_Ω",
+    "DEPLACEMENT": "CORRIDORS_MASTER_Ω",
+    "SENSORIEL": "SENSORIEL_MASTER_Ω",
+    "COMPORTEMENT": "COMPORTEMENT_MASTER_Ω",
+    "REPRODUCTION": "COMPORTEMENT_MASTER_Ω",
+    "SANTE": "GOUVERNANCE_MASTER_Ω",
+    "MORPHOLOGIE": "TERRITOIRE_MASTER_Ω"
+  },
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-30T11:52:13+00:00",
+  "master_scores_recalcules_via_blocs_135": {
+    "NUTRITION_MASTER_Ω": {
+      "master_id": "NUTRITION_MASTER_Ω",
+      "blocs_consumes": [
+        "ALIMENTATION",
+        "PHYSIOLOGIE"
+      ],
+      "blocs_count": 2,
+      "score_par_espece": {
+        "ORIGNAL": 100.0,
+        "CHEVREUIL": 100.0,
+        "WAPITI": 100.0,
+        "OURS_NOIR": 100.0,
+        "DINDON_SAUVAGE": 100.0
+      },
+      "score_master_recalcule": 100.0
+    },
+    "CORRIDORS_MASTER_Ω": {
+      "master_id": "CORRIDORS_MASTER_Ω",
+      "blocs_consumes": [
+        "HABITAT",
+        "DEPLACEMENT"
+      ],
+      "blocs_count": 2,
+      "score_par_espece": {
+        "ORIGNAL": 100.0,
+        "CHEVREUIL": 100.0,
+        "WAPITI": 100.0,
+        "OURS_NOIR": 100.0,
+        "DINDON_SAUVAGE": 100.0
+      },
+      "score_master_recalcule": 100.0
+    },
+    "SENSORIEL_MASTER_Ω": {
+      "master_id": "SENSORIEL_MASTER_Ω",
+      "blocs_consumes": [
+        "SENSORIEL"
+      ],
+      "blocs_count": 1,
+      "score_par_espece": {
+        "ORIGNAL": 100.0,
+        "CHEVREUIL": 100.0,
+        "WAPITI": 100.0,
+        "OURS_NOIR": 100.0,
+        "DINDON_SAUVAGE": 100.0
+      },
+      "score_master_recalcule": 100.0
+    },
+    "COMPORTEMENT_MASTER_Ω": {
+      "master_id": "COMPORTEMENT_MASTER_Ω",
+      "blocs_consumes": [
+        "COMPORTEMENT",
+        "REPRODUCTION"
+      ],
+      "blocs_count": 2,
+      "score_par_espece": {
+        "ORIGNAL": 100.0,
+        "CHEVREUIL": 100.0,
+        "WAPITI": 100.0,
+        "OURS_NOIR": 100.0,
+        "DINDON_SAUVAGE": 100.0
+      },
+      "score_master_recalcule": 100.0
+    },
+    "GOUVERNANCE_MASTER_Ω": {
+      "master_id": "GOUVERNANCE_MASTER_Ω",
+      "blocs_consumes": [
+        "SANTE"
+      ],
+      "blocs_count": 1,
+      "score_par_espece": {
+        "ORIGNAL": 100.0,
+        "CHEVREUIL": 100.0,
+        "WAPITI": 100.0,
+        "OURS_NOIR": 100.0,
+        "DINDON_SAUVAGE": 100.0
+      },
+      "score_master_recalcule": 100.0
+    },
+    "TERRITOIRE_MASTER_Ω": {
+      "master_id": "TERRITOIRE_MASTER_Ω",
+      "blocs_consumes": [
+        "MORPHOLOGIE"
+      ],
+      "blocs_count": 1,
+      "score_par_espece": {
+        "ORIGNAL": 100.0,
+        "CHEVREUIL": 100.0,
+        "WAPITI": 100.0,
+        "OURS_NOIR": 100.0,
+        "DINDON_SAUVAGE": 100.0
+      },
+      "score_master_recalcule": 100.0
+    }
+  }
+}

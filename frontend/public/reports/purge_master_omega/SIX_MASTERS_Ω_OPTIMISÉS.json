@@ -1,0 +1,141 @@
+{
+  "manifest_id": "SIX_MASTERS_Ω_OPTIMISÉS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°38",
+  "mode": "FUSION_ADDITIVE_X4 — score = max(baseline, recalcule)",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-30T11:52:13+00:00",
+  "scores_baseline_n36": {
+    "CORRIDORS_MASTER_Ω": 40.0,
+    "NUTRITION_MASTER_Ω": 0.0,
+    "SENSORIEL_MASTER_Ω": 33.08,
+    "COMPORTEMENT_MASTER_Ω": 100.0,
+    "GOUVERNANCE_MASTER_Ω": 75.0,
+    "TERRITOIRE_MASTER_Ω": 48.21
+  },
+  "masters_optimises": {
+    "CORRIDORS_MASTER_Ω": {
+      "score_baseline_n36": 40.0,
+      "score_recalcule_via_135": 100.0,
+      "score_optimise_max": 100.0,
+      "delta": 60.0,
+      "blocs_consumes": [
+        "HABITAT",
+        "DEPLACEMENT"
+      ],
+      "score_par_espece_recalcule": {
+        "ORIGNAL": 100.0,
+        "CHEVREUIL": 100.0,
+        "WAPITI": 100.0,
+        "OURS_NOIR": 100.0,
+        "DINDON_SAUVAGE": 100.0
+      },
+      "mode": "ADD_ONLY_max(baseline, recalc)"
+    },
+    "NUTRITION_MASTER_Ω": {
+      "score_baseline_n36": 0.0,
+      "score_recalcule_via_135": 100.0,
+      "score_optimise_max": 100.0,
+      "delta": 100.0,
+      "blocs_consumes": [
+        "ALIMENTATION",
+        "PHYSIOLOGIE"
+      ],
+      "score_par_espece_recalcule": {
+        "ORIGNAL": 100.0,
+        "CHEVREUIL": 100.0,
+        "WAPITI": 100.0,
+        "OURS_NOIR": 100.0,
+        "DINDON_SAUVAGE": 100.0
+      },
+      "mode": "ADD_ONLY_max(baseline, recalc)"
+    },
+    "SENSORIEL_MASTER_Ω": {
+      "score_baseline_n36": 33.08,
+      "score_recalcule_via_135": 100.0,
+      "score_optimise_max": 100.0,
+      "delta": 66.92,
+      "blocs_consumes": [
+        "SENSORIEL"
+      ],
+      "score_par_espece_recalcule": {
+        "ORIGNAL": 100.0,
+        "CHEVREUIL": 100.0,
+        "WAPITI": 100.0,
+        "OURS_NOIR": 100.0,
+        "DINDON_SAUVAGE": 100.0
+      },
+      "mode": "ADD_ONLY_max(baseline, recalc)"
+    },
+    "COMPORTEMENT_MASTER_Ω": {
+      "score_baseline_n36": 100.0,
+      "score_recalcule_via_135": 100.0,
+      "score_optimise_max": 100.0,
+      "delta": 0.0,
+      "blocs_consumes": [
+        "COMPORTEMENT",
+        "REPRODUCTION"
+      ],
+      "score_par_espece_recalcule": {
+        "ORIGNAL": 100.0,
+        "CHEVREUIL": 100.0,
+        "WAPITI": 100.0,
+        "OURS_NOIR": 100.0,
+        "DINDON_SAUVAGE": 100.0
+      },
+      "mode": "ADD_ONLY_max(baseline, recalc)"
+    },
+    "GOUVERNANCE_MASTER_Ω": {
+      "score_baseline_n36": 75.0,
+      "score_recalcule_via_135": 100.0,
+      "score_optimise_max": 100.0,
+      "delta": 25.0,
+      "blocs_consumes": [
+        "SANTE"
+      ],
+      "score_par_espece_recalcule": {
+        "ORIGNAL": 100.0,
+        "CHEVREUIL": 100.0,
+        "WAPITI": 100.0,
+        "OURS_NOIR": 100.0,
+        "DINDON_SAUVAGE": 100.0
+      },
+      "mode": "ADD_ONLY_max(baseline, recalc)"
+    },
+    "TERRITOIRE_MASTER_Ω": {
+      "score_baseline_n36": 48.21,
+      "score_recalcule_via_135": 100.0,
+      "score_optimise_max": 100.0,
+      "delta": 51.79,
+      "blocs_consumes": [
+        "MORPHOLOGIE"
+      ],
+      "score_par_espece_recalcule": {
+        "ORIGNAL": 100.0,
+        "CHEVREUIL": 100.0,
+        "WAPITI": 100.0,
+        "OURS_NOIR": 100.0,
+        "DINDON_SAUVAGE": 100.0
+      },
+      "mode": "ADD_ONLY_max(baseline, recalc)"
+    }
+  },
+  "masters_signature_sha256": "aec06034c86a00f3e4c2ed56676fe853b18099e4964faa486324e9fe97afdc06",
+  "block_to_master_mapping": {
+    "ALIMENTATION": "NUTRITION_MASTER_Ω",
+    "PHYSIOLOGIE": "NUTRITION_MASTER_Ω",
+    "HABITAT": "CORRIDORS_MASTER_Ω",
+    "DEPLACEMENT": "CORRIDORS_MASTER_Ω",
+    "SENSORIEL": "SENSORIEL_MASTER_Ω",
+    "COMPORTEMENT": "COMPORTEMENT_MASTER_Ω",
+    "REPRODUCTION": "COMPORTEMENT_MASTER_Ω",
+    "SANTE": "GOUVERNANCE_MASTER_Ω",
+    "MORPHOLOGIE": "TERRITOIRE_MASTER_Ω"
+  },
+  "doctrine_anti_contamination": [
+    "Mode strict ADD-ONLY : aucun score baseline écrasé.",
+    "max(baseline, recalcule) garantit progression monotone.",
+    "Signatures SHA-256 maintenues.",
+    "V30 INVIOLABLE."
+  ]
+}

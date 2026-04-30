@@ -1,0 +1,52 @@
+{
+  "manifest_id": "TERRITOIRE_MASTER_Ω_FUSION_X4",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°38",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-30T11:52:13+00:00",
+  "ponderation": {
+    "six_masters_optimises_part": 0.7,
+    "engines_scientifiques_part": 0.3,
+    "score_method": "max(baseline_n36, recalcule_bp135) per master"
+  },
+  "score_par_espece": {
+    "ORIGNAL": {
+      "score_composite_x4": 93.55,
+      "masters_part": 70.0,
+      "sci_part": 23.55,
+      "decision": "APTE"
+    },
+    "CHEVREUIL": {
+      "score_composite_x4": 92.41,
+      "masters_part": 70.0,
+      "sci_part": 22.41,
+      "decision": "APTE"
+    },
+    "WAPITI": {
+      "score_composite_x4": 92.18,
+      "masters_part": 70.0,
+      "sci_part": 22.18,
+      "decision": "APTE"
+    },
+    "OURS_NOIR": {
+      "score_composite_x4": 92.1,
+      "masters_part": 70.0,
+      "sci_part": 22.1,
+      "decision": "APTE"
+    },
+    "DINDON_SAUVAGE": {
+      "score_composite_x4": 92.36,
+      "masters_part": 70.0,
+      "sci_part": 22.36,
+      "decision": "APTE"
+    }
+  },
+  "territoire_master_x4_score": 92.52,
+  "decision_globale": "APTE",
+  "evolution": {
+    "score_apres_phase_xvi_n36": 48.21,
+    "score_apres_phase_xvii_n37": 56.33,
+    "score_apres_phase_xviii_n38": 92.52,
+    "delta_total_n36_to_n38": 44.31
+  }
+}

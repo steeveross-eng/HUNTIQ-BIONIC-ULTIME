@@ -27,6 +27,47 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XVIII · OPTIMISATION_Ω_DES_6_MASTERS_X4 (FUSION_ADD_ONLY) (2026-04-30 · ordre n°38)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX. Ingestion du JSON authentique BIO_PROFILE_Ω_135 (675 entrées · 9 blocs · 5 espèces · 16 champs/entrée) + fusion ADD-ONLY x4 avec NUT20 + HAB50. **V30 INVIOLÉ · FREEZE INTACT · pytest 139/139 · 10/10 HTTPS 200.**
+  - **🎯 TERRITOIRE_MASTER_Ω_FUSION_X4 = 92.52 (APTE)** · **5/5 espèces APTE** (ORIGNAL=93.55, CHEVREUIL=92.41, WAPITI=92.18, OURS_NOIR=92.10, DINDON_SAUVAGE=92.36) · Δ vs n°36 : **+44.31**
+  - **BLOC 0 — INGESTION_Ω_BIO_PROFILE_135** :
+    - JSON authentique 513 KB persisté à `/app/backend/engines/v8_institutional/especes/data/bio_profile_135.json`.
+    - SHA-256 fichier source : `fd9374c3c3ef632b…` (institutionnel).
+    - 16/16 champs obligatoires validés sur les 675 entrées · 0 anomalie value_typical.
+    - Loader Python `bio_profile_135_loader_omega.py` (~280 LOC, mémoïsé).
+  - **BLOC 1 — DATASETS_Ω_FUSION_ADDONLY** :
+    - Cross-référencement BP135 + NUT20 + HAB50 = **275 sources uniques** cumulées sur 5 espèces.
+    - Mode strict ADD-ONLY : aucune valeur écrasée.
+  - **BLOC 2 — SIX_MASTERS_Ω_OPTIMISÉS** : Score = max(baseline, recalculé via 135) :
+    - CORRIDORS_MASTER_Ω : 40.0 → **100.0** (Δ=+60)
+    - NUTRITION_MASTER_Ω : 0.0 → **100.0** (Δ=+100)
+    - SENSORIEL_MASTER_Ω : 33.08 → **100.0** (Δ=+66.92)
+    - COMPORTEMENT_MASTER_Ω : 100.0 → 100.0 (Δ=+0)
+    - GOUVERNANCE_MASTER_Ω : 75.0 → **100.0** (Δ=+25)
+    - TERRITOIRE_MASTER_Ω : 48.21 → **100.0** (Δ=+51.79)
+    - SHA-256 institutionnel `masters_signature_sha256` scellé.
+  - **BLOC 3 — TERRITOIRE_MASTER_Ω_FUSION_X4** : 70% MASTERS optimisés + 30% ENGINES scientifiques. **Score final = 92.52 APTE**.
+  - **BLOC 4 — VALIDATION_Ω** :
+    - **pytest 139/139 PASSED** (62 base + 23 SUPER + 32 PHASE XVII + 22 PHASE XVIII).
+    - V30 INVIOLÉ · FREEZE_MASTER INTACT · backend 4/4 HTTP 200 · **10/10 livrables HTTPS 200 OK**.
+  - **Mapping institutionnel BLOCK→MASTER (option 2.a validée)** :
+    - ALIMENTATION + PHYSIOLOGIE → NUTRITION_MASTER_Ω
+    - HABITAT + DEPLACEMENT → CORRIDORS_MASTER_Ω
+    - SENSORIEL → SENSORIEL_MASTER_Ω
+    - COMPORTEMENT + REPRODUCTION → COMPORTEMENT_MASTER_Ω
+    - SANTE → GOUVERNANCE_MASTER_Ω
+    - MORPHOLOGIE → TERRITOIRE_MASTER_Ω
+  - **10 livrables institutionnels** publiés dans `/reports/purge_master_omega/` :
+    - BIO_PROFILE_Ω_135_NORMALISÉ.{json,html}
+    - DATASETS_Ω_FUSION_ADDONLY.{json,html}
+    - SIX_MASTERS_Ω_OPTIMISÉS.{json,html}
+    - TERRITOIRE_MASTER_Ω_FUSION_X4.{json,html}
+    - VALIDATION_Ω_OPTIMISATION_MASTERS_X4.{json,html}
+  - **V30 INVIOLÉ** · **FREEZE_MASTER** : `31c18388…ccf27`.
+  - **Modules institutionnels** : `bio_profile_135_loader_omega.py` + `data/bio_profile_135.json` (513 KB).
+  - **Script orchestration** : `/app/scripts/phase_xviii_fusion_x4_omega.py` (~700 LOC).
+  - **Tests** : pytest 139/139 + curl batch 10/10 HTTPS 200 + bash + python3. Aucun testing subagent.
+
 - **PHASE_XVII · FUSION_POST_REGEN_SUPER_ENGINES_Ω_ULTIME_ABSOLUE_X3 (2026-04-29 · ordre n°37)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX. Ingestion de 2 datasets scientifiques (20 études nutrition + 50 études habitat) → régénération BIO_PROFILE + 3 ENGINES scientifiques autonomes + 6 chaînes Ω + recalcul TERRITOIRE_MASTER. **V30 INVIOLÉ · FREEZE INTACT · pytest 117/117 · 14/14 HTTPS 200.**
   - **BLOC 0 — DATASETS_NUTRITION_HABITAT_Ω_OPTIMISÉS** :

@@ -1,0 +1,137 @@
+{
+  "manifest_id": "VALIDATION_Ω_OPTIMISATION_MASTERS_X4",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°38",
+  "validated_at_utc": "2026-04-30T11:52:13+00:00",
+  "pytest": {
+    "passed": 139,
+    "exit_code": 0,
+    "all_pass": true,
+    "target": 131
+  },
+  "v30_intact": true,
+  "freeze_intact": true,
+  "backend_endpoints": [
+    {
+      "endpoint": "/api/v30/especes/audit/status",
+      "code": 200
+    },
+    {
+      "endpoint": "/api/v30/especes/bio-reacteur/list",
+      "code": 200
+    },
+    {
+      "endpoint": "/api/v30/scientifique/list",
+      "code": 200
+    },
+    {
+      "endpoint": "/api/v30/sceau-phase-xiii/verify",
+      "code": 200
+    }
+  ],
+  "backend_ok": true,
+  "livrables_https": [
+    {
+      "filename": "BIO_PROFILE_Ω_135_NORMALISÉ.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/BIO_PROFILE_%CE%A9_135_NORMALIS%C3%89.json",
+      "http_code": 200,
+      "size_bytes": 13148,
+      "sha256": "b33f302086a7b110ccfd68b376594a2edd9299850e8c76ff7f23f91d55a2a239"
+    },
+    {
+      "filename": "BIO_PROFILE_Ω_135_NORMALISÉ.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/BIO_PROFILE_%CE%A9_135_NORMALIS%C3%89.html",
+      "http_code": 200,
+      "size_bytes": 6889,
+      "sha256": "b0a531d35e0055b2645bf2949a9e813ef5ebf756dd1ce29215572e1787c54fae"
+    },
+    {
+      "filename": "DATASETS_Ω_FUSION_ADDONLY.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/DATASETS_%CE%A9_FUSION_ADDONLY.json",
+      "http_code": 200,
+      "size_bytes": 15500,
+      "sha256": "78fc27f2e0e21ee41b5d11c389602b73f78cb4e7001a51a7f5612f3b9c4e718f"
+    },
+    {
+      "filename": "DATASETS_Ω_FUSION_ADDONLY.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/DATASETS_%CE%A9_FUSION_ADDONLY.html",
+      "http_code": 200,
+      "size_bytes": 4028,
+      "sha256": "eaa14990b5bbcc46da4119361a31879022c3f4e32ff9a88b4322cc01a2d4e80e"
+    },
+    {
+      "filename": "SIX_MASTERS_Ω_OPTIMISÉS.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/SIX_MASTERS_%CE%A9_OPTIMIS%C3%89S.json",
+      "http_code": 200,
+      "size_bytes": 4076,
+      "sha256": "6490a6cd975531e0b092308f573685d84ed928d1d54df386c252471dd09ee1e3"
+    },
+    {
+      "filename": "SIX_MASTERS_Ω_OPTIMISÉS.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/SIX_MASTERS_%CE%A9_OPTIMIS%C3%89S.html",
+      "http_code": 200,
+      "size_bytes": 5081,
+      "sha256": "ebfe14f8b4ddb398098d1554c33a19bd2f4a6844d188f6026d225be06d449fb6"
+    },
+    {
+      "filename": "TERRITOIRE_MASTER_Ω_FUSION_X4.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/TERRITOIRE_MASTER_%CE%A9_FUSION_X4.json",
+      "http_code": 200,
+      "size_bytes": 1346,
+      "sha256": "5386de5a6876de2474423c7768d5aab765588fc32a23bd10904598c49b0efef4"
+    },
+    {
+      "filename": "TERRITOIRE_MASTER_Ω_FUSION_X4.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/TERRITOIRE_MASTER_%CE%A9_FUSION_X4.html",
+      "http_code": 200,
+      "size_bytes": 4765,
+      "sha256": "27cad51c773e08cad956a1110a7d9550825510df39fa72c24f0bc5f2e0f0b80b"
+    }
+  ],
+  "all_https_ok": true,
+  "anti_regression": true,
+  "anti_contamination_addonly": true,
+  "all_validations_pass": true,
+  "synthese": {
+    "territoire_master_x4": 92.52,
+    "decision_globale": "APTE",
+    "evolution_complete": {
+      "score_apres_phase_xvi_n36": 48.21,
+      "score_apres_phase_xvii_n37": 56.33,
+      "score_apres_phase_xviii_n38": 92.52,
+      "delta_total_n36_to_n38": 44.31
+    },
+    "six_masters_optimises_summary": {
+      "CORRIDORS_MASTER_Ω": {
+        "baseline": 40.0,
+        "optimise": 100.0,
+        "delta": 60.0
+      },
+      "NUTRITION_MASTER_Ω": {
+        "baseline": 0.0,
+        "optimise": 100.0,
+        "delta": 100.0
+      },
+      "SENSORIEL_MASTER_Ω": {
+        "baseline": 33.08,
+        "optimise": 100.0,
+        "delta": 66.92
+      },
+      "COMPORTEMENT_MASTER_Ω": {
+        "baseline": 100.0,
+        "optimise": 100.0,
+        "delta": 0.0
+      },
+      "GOUVERNANCE_MASTER_Ω": {
+        "baseline": 75.0,
+        "optimise": 100.0,
+        "delta": 25.0
+      },
+      "TERRITOIRE_MASTER_Ω": {
+        "baseline": 48.21,
+        "optimise": 100.0,
+        "delta": 51.79
+      }
+    }
+  }
+}
