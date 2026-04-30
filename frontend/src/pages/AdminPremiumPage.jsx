@@ -66,6 +66,8 @@ import { AdminMessaging } from '@/ui/administration/admin_messaging';
 // CAM-ALPHA: Module Analyse Photos ALPHA
 import AdminAlphaAnalysis from '@/components/admin/AdminAlphaAnalysis';
 import AdminTerritoryValue from '@/components/admin/AdminTerritoryValue';
+// PHASE XXI (Ordre n°41) : Pilotage BCE-4X Ω
+import AdminPilotageBce4xOmega from '@/components/admin/AdminPilotageBce4xOmega';
 
 // Phase X-C: Institutional Health Panel (V20-SUPRA governance)
 import InstitutionalHealthPanel from '@/components/territoire/InstitutionalHealthPanel';
@@ -74,6 +76,8 @@ const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
   // --- Phase X-C : Health Panel institutionnel V20-SUPRA ---
   { id: 'health-panel-v20', label: 'Health Panel V20', icon: Activity, highlight: true },
+  // --- PHASE XXI (Ordre n°41) : Pilotage BCE-4X Ω ---
+  { id: 'pilotage-bce4x', label: 'Pilotage BCE-4X Ω', icon: Crown, highlight: true },
   // --- ALPHA Analysis ---
   { id: 'alpha-analysis', label: 'Analyse ALPHA', icon: Crown, highlight: true },
   { id: 'territory-value', label: 'Valeur Territoires', icon: TrendingUp, highlight: true },
@@ -186,6 +190,7 @@ const AdminPremiumPage = () => {
     switch (activeSection) {
       case 'dashboard': return <AdminDashboard onNavigate={setActiveSection} />;
       case 'health-panel-v20': return <InstitutionalHealthPanel visible={true} />;
+      case 'pilotage-bce4x': return <AdminPilotageBce4xOmega />;
       case 'alpha-analysis': return <AdminAlphaAnalysis />;
       case 'territory-value': return <AdminTerritoryValue />;
       case 'bdre': return <AdminBDREMonitor />;
