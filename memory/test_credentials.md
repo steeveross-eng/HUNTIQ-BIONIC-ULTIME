@@ -38,3 +38,11 @@
   - `event-log` · `event-row-{i}`
 - **Token storage** : `sessionStorage["gis_reception_commandant_token"]`
 - **Token de test** : `STEEVE-MAX-X42BIS-GIS-RECEPTION-EXPLICIT`
+
+## Audit-Log GIS (Ordre n°44) — ADMIN_PREMIUM_ONLY
+- **Endpoint GET** : `/api/v30/admin-premium/gis/audit-log`
+- **Endpoint POST** : `/api/v30/admin-premium/gis/promote`
+- **Header auth** : `X-Commandant-Token` (même token : `STEEVE-MAX-X42BIS-GIS-RECEPTION-EXPLICIT`)
+- **Storage** : `/app/backend/data/gis_operational/audit_log.jsonl` (JSONL append-only)
+- **Rétention** : env `GIS_AUDIT_RETENTION_DAYS` (défaut 90 jours)
+- **Filtres GET** : `?slot_id=...&event=...&limit=1..2000`

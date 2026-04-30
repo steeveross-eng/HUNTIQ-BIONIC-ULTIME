@@ -26,9 +26,9 @@ import re
 import shutil
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, HTTPException, Header, UploadFile, File, Path as FPath
+from fastapi import APIRouter, HTTPException, Header, UploadFile, File, Path as FPath, Query, Request
 from fastapi.responses import JSONResponse
 
 from engines.v8_institutional.especes.gis_reception_validators_omega import (
@@ -37,6 +37,7 @@ from engines.v8_institutional.especes.gis_reception_validators_omega import (
     list_slots,
     validate_upload,
 )
+from engines.v8_institutional.especes import gis_audit_log_omega as audit
 
 
 router = APIRouter(
@@ -163,21 +164,37 @@ def get_intake_status() -> Dict[str, Any]:
 
 @router.post("/upload/{slot_id}")
 async def upload_layer(
+    request: Request,
     slot_id: str = FPath(..., description="Identifiant du SLOT cible"),
     file: UploadFile = File(...),
     x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+    user_agent: str | None = Header(default=None, alias="User-Agent"),
 ) -> Dict[str, Any]:
     """Upload d'une couche RÉELLE pour un slot protégé.
     ADMIN_PREMIUM_ONLY · token requis.
+    Toute opération est journalisée dans l'audit-log persistant.
     """
     _verify_token(x_commandant_token)
 
+    client_ip = request.client.host if request.client else "unknown"
+
     if slot_id not in SLOT_BY_ID:
+        audit.append_event(
+            event="UPLOAD_ERROR", slot_id=slot_id,
+            filename=(file.filename or "?"), sha256=None, size_bytes=0,
+            http_code=404, client_ip=client_ip, user_agent=user_agent,
+            validators=None,
+        )
         raise HTTPException(status_code=404,
                               detail=f"SLOT_INCONNU::{slot_id}")
 
     fname = (file.filename or "uploaded.bin").strip()
     if not SAFE_FILENAME.match(fname) or len(fname) > 200:
+        audit.append_event(
+            event="UPLOAD_ERROR", slot_id=slot_id, filename=fname[:120],
+            sha256=None, size_bytes=0, http_code=400,
+            client_ip=client_ip, user_agent=user_agent, validators=None,
+        )
         raise HTTPException(status_code=400,
                               detail="FILENAME_UNSAFE — caractères autorisés : A-Za-z0-9._-")
 
@@ -201,6 +218,12 @@ async def upload_layer(
                 if size > max_size:
                     out.close()
                     tmp_path.unlink(missing_ok=True)
+                    audit.append_event(
+                        event="UPLOAD_ERROR", slot_id=slot_id, filename=fname,
+                        sha256=None, size_bytes=size, http_code=413,
+                        client_ip=client_ip, user_agent=user_agent,
+                        validators=None,
+                    )
                     raise HTTPException(
                         status_code=413,
                         detail=f"FILE_TOO_LARGE :: > {max_size} octets")
@@ -212,6 +235,11 @@ async def upload_layer(
         raise
     except Exception as e:
         tmp_path.unlink(missing_ok=True)
+        audit.append_event(
+            event="UPLOAD_ERROR", slot_id=slot_id, filename=fname,
+            sha256=None, size_bytes=size, http_code=500,
+            client_ip=client_ip, user_agent=user_agent, validators=None,
+        )
         raise HTTPException(status_code=500, detail=f"UPLOAD_FAILED::{e}")
 
     sha256 = h.hexdigest()
@@ -229,6 +257,15 @@ async def upload_layer(
             pass
 
     manifest = _record_upload(slot_id, fname, sha256, size, validation, passed)
+
+    # Audit-log append
+    audit.append_event(
+        event="UPLOAD_LOADED" if passed else "UPLOAD_QUARANTINED",
+        slot_id=slot_id, filename=fname, sha256=sha256, size_bytes=size,
+        http_code=200 if passed else 422,
+        client_ip=client_ip, user_agent=user_agent,
+        validators=validation.get("validators", []),
+    )
 
     return JSONResponse(
         status_code=200 if passed else 422,
@@ -249,3 +286,82 @@ async def upload_layer(
             "v30_lock": "INVIOLÉ",
         },
     )
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°44 — Audit log persistant (ADMIN_PREMIUM_ONLY)
+# ═════════════════════════════════════════════════════════════════════════
+@router.get("/audit-log")
+def get_audit_log(
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+    slot_id: Optional[str] = Query(default=None, description="Filtre slot_id"),
+    event: Optional[str] = Query(default=None, description="Filtre event"),
+    limit: int = Query(default=200, ge=1, le=2000),
+) -> Dict[str, Any]:
+    """Récupère le journal d'audit persistant (ADMIN_PREMIUM_ONLY).
+    Filtres : slot_id, event ; limit max 2000."""
+    _verify_token(x_commandant_token)
+    rows = audit.read_entries(slot_id=slot_id, event=event, limit=limit)
+    return {
+        "manifest_id": "AUDIT_LOG_GIS_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "ordre": "n°44",
+        "issued_by": "COMMANDANT STEEVE-MAX",
+        "generated_at_utc": _utc_now(),
+        "filters": {"slot_id": slot_id, "event": event, "limit": limit},
+        "stats": audit.stats(),
+        "entries": rows,
+    }
+
+
+@router.post("/promote")
+def promote_to_operational(
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """Déclenche compute_corridors_gis() à partir de l'état réel des slots.
+    Précondition : couches GIS LOADED. Si OPERATIONAL, prépare le SCEAU_X5_FINAL.
+    ADMIN_PREMIUM_ONLY.
+    """
+    _verify_token(x_commandant_token)
+
+    from engines.v8_institutional.especes.engine_corridors_gis_omega import (
+        compute_corridors_gis, get_all_layers_status,
+    )
+
+    layers_status = get_all_layers_status()
+    compute = compute_corridors_gis()
+    intake_manifest = _read_manifest()
+    intake_loaded = sum(
+        1 for s in intake_manifest["slots"].values()
+        if s.get("status") == "LOADED"
+    )
+
+    return {
+        "manifest_id": "PROMOTE_GIS_OPERATIONAL_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "ordre": "n°44",
+        "generated_at_utc": _utc_now(),
+        "intake_loaded_slots": intake_loaded,
+        "intake_total_slots": len(intake_manifest["slots"]),
+        "engine_layers_status": {
+            "total": layers_status["layers_total"],
+            "loaded": layers_status["layers_loaded"],
+            "absent": layers_status["layers_absent"],
+            "global_status": layers_status["global_status"],
+        },
+        "compute_corridors_gis": {
+            "status": compute["status"],
+            "anti_generique_pass": compute["anti_generique_pass"],
+            "missing_layers": compute.get("missing_layers"),
+            "score_corridors_gis_omega": compute.get("score_corridors_gis_omega"),
+        },
+        "sceau_x5_final_ready": (
+            compute["status"] == "OPERATIONAL"
+            and compute["anti_generique_pass"] is True
+        ),
+        "next_action": (
+            "TRIGGER_SCEAU_X5_FINAL" if compute["status"] == "OPERATIONAL"
+            else "EN_ATTENTE_DE_COUCHES_RÉELLES_LOADED"
+        ),
+        "v30_lock": "INVIOLÉ",
+    }

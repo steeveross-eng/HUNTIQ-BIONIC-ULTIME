@@ -2758,3 +2758,52 @@ intégré dans `/admin-premium → Pilotage BCE-4X Ω → onglet RÉCEPTION GIS 
 - pytest baseline cumulée : **199/199 PASSED** (zéro régression)
 - Lint ESLint : 0 issue (panel + pilotage)
 - V30 INVIOLÉ vs FREEZE_MASTER
+
+## ═════════════════════════════════════════════════════════════════════
+## PHASE XXIII — ORDRE N°44 (2026-04-30) — SCELLÉ
+## ═════════════════════════════════════════════════════════════════════
+### Objet
+AUDIT_LOG_GIS_RECEPTION_Ω + ACTIVATION_UPLOAD_DIRECT_COMMANDANT_Ω :
+journal forensique persistant + endpoint promote vers GIS_OPERATIONAL.
+
+### Backend (nouveaux composants)
+- `backend/engines/v8_institutional/especes/gis_audit_log_omega.py` (NEW)
+  - JSONL append-only à `/app/backend/data/gis_operational/audit_log.jsonl`
+  - Rétention configurable via env `GIS_AUDIT_RETENTION_DAYS` (défaut 90j)
+  - Purge automatique à chaque append (fenêtre glissante)
+  - API : `append_event()`, `read_entries()`, `stats()`
+- `backend/routes/gis_reception_router_omega.py` (mis à jour)
+  - Journalisation auto de chaque upload (LOADED · QUARANTINED · ERROR)
+  - Capture forensique : ts_utc, slot_id, sha256, IP, user-agent, http_code
+
+### Endpoints HTTP (nouveaux)
+- `GET /api/v30/admin-premium/gis/audit-log` (ADMIN_PREMIUM_ONLY)
+  - Filtres : `slot_id`, `event` ; `limit` 1..2000 (défaut 200)
+  - Réponse : stats agrégées + entrées triées par ts_utc desc
+- `POST /api/v30/admin-premium/gis/promote` (ADMIN_PREMIUM_ONLY)
+  - Évalue `compute_corridors_gis()` à partir de l'état réel
+  - Retourne `sceau_x5_final_ready` + `next_action`
+
+### Champs forensiques capturés
+- `ts_utc` · `event` · `slot_id` · `filename` · `sha256` · `size_bytes`
+- `http_code` · `client_ip` · `user_agent` · `validators_summary`
+- Pas de PII étendu — tronqué 300 caractères pour user-agent
+
+### Livrables HTTPS 200 OK (3)
+- `/reports/purge_master_omega/AUDIT_LOG_GIS_Ω.json` — SHA `281c0ffd55041c…`
+- `/reports/purge_master_omega/TRANSITION_GIS_OPERATIONAL_STATUS_Ω.json`
+- `/reports/institution/RAPPORT_ORDRE_44_Ω.pdf` — SHA `e684e0d8512ce1860…`
+- Sceau `/app/backend/institution/sceaux/VALIDATION_AUDIT_LOG_Ω.sha256`
+
+### Tests
+- pytest Phase XXIII (audit-log) : **16/16 PASSED**
+- pytest baseline cumulée : **215/215 PASSED** (zéro régression)
+- E2E curl : 401 sans token · 200 GET · 200/422/404 capturés en audit
+- V30 INVIOLÉ vs FREEZE_MASTER
+
+### ACTIVATION_UPLOAD_DIRECT_COMMANDANT_Ω
+- Le COMMANDANT peut désormais uploader des couches RÉELLES via :
+  - **UI** : `/admin-premium → Pilotage BCE-4X Ω → onglet RÉCEPTION GIS Ω` (drag-drop)
+  - **API** : `POST /upload/{slot_id}` avec `X-Commandant-Token`
+  - **Audit** : journal forensique persistant
+  - **Promote** : `POST /promote` pour évaluer transition vers SCEAU_X5_FINAL

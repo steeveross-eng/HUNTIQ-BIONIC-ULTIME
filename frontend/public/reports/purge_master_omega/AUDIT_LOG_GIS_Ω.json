@@ -1,0 +1,60 @@
+{
+  "manifest_id": "AUDIT_LOG_GIS_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°44",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-30T15:19:39+00:00",
+  "stats": {
+    "total_events": 2,
+    "events_by_type": {
+      "UPLOAD_LOADED": 0,
+      "UPLOAD_QUARANTINED": 0,
+      "UPLOAD_ERROR": 2
+    },
+    "events_by_slot": {
+      "SLOT_INEXISTANT": 1,
+      "CHASSE_ZEC_SEPAQ_Ω": 1
+    },
+    "first_event_ts": "2026-04-30T15:17:52+00:00",
+    "last_event_ts": "2026-04-30T15:17:52+00:00",
+    "retention_days": 90,
+    "log_path": "/app/backend/data/gis_operational/audit_log.jsonl",
+    "log_exists": true,
+    "log_size_bytes": 512
+  },
+  "doctrine_anti_contamination": [
+    "Append-only JSONL — aucune réécriture rétrospective",
+    "Anti-générique strict — aucun évènement synthétique",
+    "Champs forensiques : ts_utc, slot_id, sha256, IP, user-agent",
+    "Validation cryptographique SHA-256 de chaque upload",
+    "Rétention glissante (env GIS_AUDIT_RETENTION_DAYS, défaut 90j)",
+    "Endpoint GET /audit-log protégé ADMIN_PREMIUM_ONLY"
+  ],
+  "entries_snapshot_count": 2,
+  "entries_snapshot": [
+    {
+      "ts_utc": "2026-04-30T15:17:52+00:00",
+      "event": "UPLOAD_ERROR",
+      "slot_id": "SLOT_INEXISTANT",
+      "filename": "x.geojson",
+      "sha256": null,
+      "size_bytes": 0,
+      "http_code": 404,
+      "client_ip": "testclient",
+      "user_agent": "testclient",
+      "validators_summary": []
+    },
+    {
+      "ts_utc": "2026-04-30T15:17:52+00:00",
+      "event": "UPLOAD_ERROR",
+      "slot_id": "CHASSE_ZEC_SEPAQ_Ω",
+      "filename": "../etc/passwd",
+      "sha256": null,
+      "size_bytes": 0,
+      "http_code": 400,
+      "client_ip": "testclient",
+      "user_agent": "testclient",
+      "validators_summary": []
+    }
+  ]
+}

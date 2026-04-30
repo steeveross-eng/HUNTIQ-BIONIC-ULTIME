@@ -1,0 +1,35 @@
+{
+  "manifest_id": "TRANSITION_GIS_OPERATIONAL_STATUS_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°44",
+  "generated_at_utc": "2026-04-30T15:19:39+00:00",
+  "intake_reception": {
+    "loaded": 1,
+    "total": 6,
+    "manifest_present": true
+  },
+  "engine_layers": {
+    "loaded": 0,
+    "total": 9,
+    "absent": 9,
+    "global_status": "STUB_READY"
+  },
+  "compute_corridors_gis": {
+    "status": "STUB_READY",
+    "anti_generique_pass": false,
+    "missing_layers": [
+      "GIS_FRAGMENTATION_INDEX",
+      "GIS_COUVERT_FORESTIER_DENSITY",
+      "GIS_PENTE_DEM",
+      "GIS_HYDROLOGIE_RESEAU",
+      "GIS_ANTHROPISATION_FINE",
+      "GIS_BARRIERES_LINEAIRES",
+      "GIS_PIEGES_ECOLOGIQUES",
+      "GPS_TRACKING_5_ESPECES",
+      "INDICE_RESISTANCE_PAYSAGE"
+    ],
+    "score_corridors_gis_omega": null
+  },
+  "sceau_x5_final_ready": false,
+  "next_action": "EN_ATTENTE_DE_COUCHES_RÉELLES_LOADED"
+}
