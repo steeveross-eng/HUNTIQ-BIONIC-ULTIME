@@ -1,11 +1,11 @@
 /**
- * AdminGISReceptionPanel — Phase XXII (ORDRE N°43)
+ * AdminGISReceptionPanel — Phase XXII (ORDRE N°43) + ORDRE N°45
  * ════════════════════════════════════════════════════════════════════════
- * COMMANDANT STEEVE-MAX · BCE-4X ULTIME ABSOLU x3 · ORDRE N°43
+ * COMMANDANT STEEVE-MAX · BCE-4X ULTIME ABSOLU x3 · Ordres N°43 + N°45
  *
  * Panneau ADMIN_PREMIUM_ONLY de réception des couches GIS protégées.
  *
- * Fonctionnalités :
+ * Fonctionnalités (Ordre 43) :
  *   · Drag-and-drop par slot GIS
  *   · Upload chunked XHR avec progression
  *   · Intake-status live (auto-refresh)
@@ -13,10 +13,17 @@
  *   · Affichage SHA-256 + statut LOADED/QUARANTINE
  *   · Token Commandant en sessionStorage (sécurité par session)
  *
+ * Extensions (Ordre 45) :
+ *   · Section "Journal forensique" — GET /audit-log + filtres slot_id/event
+ *   · Bouton "Promouvoir vers GIS_OPERATIONAL_Ω" — POST /promote
+ *   · Affichage sceau_x5_final_ready, next_action, layers_status
+ *
  * Endpoints utilisés :
  *   GET  /api/v30/admin-premium/gis/slots
  *   GET  /api/v30/admin-premium/gis/intake-status
  *   POST /api/v30/admin-premium/gis/upload/{slot_id}
+ *   GET  /api/v30/admin-premium/gis/audit-log         (Ordre 45)
+ *   POST /api/v30/admin-premium/gis/promote           (Ordre 45)
  *
  * V30 LOCKED INVIOLABLE — aucune génération synthétique.
  * ════════════════════════════════════════════════════════════════════════
@@ -63,6 +70,16 @@ export const AdminGISReceptionPanel = () => {
   const [uploadState, setUploadState] = useState({}); // { [slotId]: {progress, status, message, sha256, sizeBytes} }
   const [eventLog, setEventLog] = useState([]);
   const xhrRefs = useRef({});
+
+  // ═════ ORDRE N°45 — État Journal forensique + Promote ═════
+  const [auditEntries, setAuditEntries] = useState([]);
+  const [auditStats, setAuditStats] = useState(null);
+  const [auditFilters, setAuditFilters] = useState({ slot_id: "", event: "" });
+  const [auditLoading, setAuditLoading] = useState(false);
+  const [auditError, setAuditError] = useState(null);
+  const [promoteResult, setPromoteResult] = useState(null);
+  const [promoteLoading, setPromoteLoading] = useState(false);
+  const [promoteError, setPromoteError] = useState(null);
 
   const appendEvent = useCallback((entry) => {
     setEventLog((prev) =>
@@ -296,6 +313,72 @@ export const AdminGISReceptionPanel = () => {
     }
   }, []);
 
+  // ═════ ORDRE N°45 — Journal forensique (GET /audit-log) ═════
+  const fetchAuditLog = useCallback(async () => {
+    if (!token) {
+      setAuditError("Token Commandant requis pour lire le journal forensique");
+      return;
+    }
+    setAuditLoading(true);
+    setAuditError(null);
+    try {
+      const params = new URLSearchParams({ limit: "20" });
+      if (auditFilters.slot_id) params.set("slot_id", auditFilters.slot_id);
+      if (auditFilters.event) params.set("event", auditFilters.event);
+      const r = await fetch(
+        `${API}/api/v30/admin-premium/gis/audit-log?${params.toString()}`,
+        { headers: { "X-Commandant-Token": token } }
+      );
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const d = await r.json();
+      setAuditEntries(d.entries || []);
+      setAuditStats(d.stats || null);
+      appendEvent({
+        level: "INFO",
+        message: `Audit-log lu (${(d.entries || []).length} entrées)`,
+      });
+    } catch (e) {
+      setAuditError(e.message);
+    } finally {
+      setAuditLoading(false);
+    }
+  }, [token, auditFilters, appendEvent]);
+
+  // ═════ ORDRE N°45 — Promotion vers GIS_OPERATIONAL_Ω ═════
+  const runPromote = useCallback(async () => {
+    if (!token) {
+      setPromoteError("Token Commandant requis pour la promotion");
+      return;
+    }
+    setPromoteLoading(true);
+    setPromoteError(null);
+    try {
+      const r = await fetch(`${API}/api/v30/admin-premium/gis/promote`, {
+        method: "POST",
+        headers: { "X-Commandant-Token": token },
+      });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const d = await r.json();
+      setPromoteResult(d);
+      appendEvent({
+        level: d.sceau_x5_final_ready ? "INFO" : "WARN",
+        message: `Promote · status=${d.compute_corridors_gis?.status} · next=${d.next_action}`,
+      });
+    } catch (e) {
+      setPromoteError(e.message);
+    } finally {
+      setPromoteLoading(false);
+    }
+  }, [token, appendEvent]);
+
+  // Auto-load audit log dès qu'un token est enregistré
+  useEffect(() => {
+    if (tokenSaved && token) {
+      fetchAuditLog();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tokenSaved]);
+
   const stats = intake?.stats || { total_slots: 0, loaded: 0, absent: 0 };
 
   return (
@@ -379,6 +462,213 @@ export const AdminGISReceptionPanel = () => {
             tokenReady={tokenSaved && Boolean(token)}
           />
         ))}
+      </section>
+
+      {/* ═══ ORDRE N°45 — Section Promotion vers GIS_OPERATIONAL_Ω ═══ */}
+      <section style={S.promoteCard} data-testid="gis-promote-section">
+        <div style={S.promoteHeader}>
+          <h3 style={S.h3}>Promotion vers GIS_OPERATIONAL_Ω</h3>
+          <button
+            onClick={runPromote}
+            disabled={!tokenSaved || promoteLoading}
+            style={{
+              ...S.btnPromote,
+              opacity: !tokenSaved || promoteLoading ? 0.5 : 1,
+              cursor: !tokenSaved || promoteLoading ? "not-allowed" : "pointer",
+            }}
+            data-testid="gis-promote-btn"
+          >
+            {promoteLoading ? "Évaluation…" : "Promouvoir"}
+          </button>
+        </div>
+        {promoteError && (
+          <div style={S.banner.error} data-testid="gis-promote-error">
+            ⚠ {promoteError}
+          </div>
+        )}
+        {!promoteResult && !promoteError && (
+          <div style={S.muted}>
+            Cliquer pour évaluer <code>compute_corridors_gis()</code> à partir
+            de l'état réel des couches LOADED.
+          </div>
+        )}
+        {promoteResult && (
+          <div style={S.promoteResult} data-testid="gis-promote-result">
+            <div style={S.promoteRow}>
+              <span style={S.lbl}>compute_status</span>
+              <code
+                style={{
+                  ...S.mono,
+                  color:
+                    promoteResult.compute_corridors_gis?.status === "OPERATIONAL"
+                      ? "#86efac"
+                      : "#fcd34d",
+                }}
+                data-testid="promote-compute-status"
+              >
+                {promoteResult.compute_corridors_gis?.status}
+              </code>
+            </div>
+            <div style={S.promoteRow}>
+              <span style={S.lbl}>engine_layers</span>
+              <code style={S.mono}>
+                {promoteResult.engine_layers_status?.loaded}/
+                {promoteResult.engine_layers_status?.total} (
+                {promoteResult.engine_layers_status?.global_status})
+              </code>
+            </div>
+            <div style={S.promoteRow}>
+              <span style={S.lbl}>intake_loaded</span>
+              <code style={S.mono}>
+                {promoteResult.intake_loaded_slots}/
+                {promoteResult.intake_total_slots}
+              </code>
+            </div>
+            <div style={S.promoteRow}>
+              <span style={S.lbl}>anti_generique_pass</span>
+              <code style={S.mono}>
+                {String(
+                  promoteResult.compute_corridors_gis?.anti_generique_pass
+                )}
+              </code>
+            </div>
+            <div style={S.promoteRow}>
+              <span style={S.lbl}>sceau_x5_final_ready</span>
+              <code
+                style={{
+                  ...S.mono,
+                  color: promoteResult.sceau_x5_final_ready
+                    ? "#86efac"
+                    : "#fbbf24",
+                  fontWeight: 700,
+                }}
+                data-testid="promote-x5-ready"
+              >
+                {String(promoteResult.sceau_x5_final_ready)}
+              </code>
+            </div>
+            <div style={S.promoteRow}>
+              <span style={S.lbl}>next_action</span>
+              <code
+                style={{ ...S.mono, color: "#67e8f9" }}
+                data-testid="promote-next-action"
+              >
+                {promoteResult.next_action}
+              </code>
+            </div>
+            {promoteResult.compute_corridors_gis?.missing_layers &&
+              promoteResult.compute_corridors_gis.missing_layers.length > 0 && (
+                <div style={S.muted}>
+                  Couches manquantes :{" "}
+                  {promoteResult.compute_corridors_gis.missing_layers.join(", ")}
+                </div>
+              )}
+          </div>
+        )}
+      </section>
+
+      {/* ═══ ORDRE N°45 — Section Journal forensique ═══ */}
+      <section style={S.auditCard} data-testid="gis-audit-section">
+        <div style={S.auditHeader}>
+          <h3 style={S.h3}>Journal forensique GIS</h3>
+          <span style={S.lbl}>
+            {auditStats
+              ? `${auditStats.total_events} évts · rétention ${auditStats.retention_days}j`
+              : "—"}
+          </span>
+        </div>
+        <div style={S.auditFilters}>
+          <select
+            value={auditFilters.slot_id}
+            onChange={(e) =>
+              setAuditFilters((f) => ({ ...f, slot_id: e.target.value }))
+            }
+            style={S.select}
+            data-testid="audit-filter-slot"
+          >
+            <option value="">— Tous les slots —</option>
+            {slots.map((s) => (
+              <option key={s.slot_id} value={s.slot_id}>
+                {s.slot_id}
+              </option>
+            ))}
+          </select>
+          <select
+            value={auditFilters.event}
+            onChange={(e) =>
+              setAuditFilters((f) => ({ ...f, event: e.target.value }))
+            }
+            style={S.select}
+            data-testid="audit-filter-event"
+          >
+            <option value="">— Tous les évènements —</option>
+            <option value="UPLOAD_LOADED">UPLOAD_LOADED</option>
+            <option value="UPLOAD_QUARANTINED">UPLOAD_QUARANTINED</option>
+            <option value="UPLOAD_ERROR">UPLOAD_ERROR</option>
+          </select>
+          <button
+            onClick={fetchAuditLog}
+            disabled={!tokenSaved || auditLoading}
+            style={{
+              ...S.btnPrimary,
+              opacity: !tokenSaved || auditLoading ? 0.5 : 1,
+              cursor: !tokenSaved || auditLoading ? "not-allowed" : "pointer",
+            }}
+            data-testid="audit-refresh-btn"
+          >
+            {auditLoading ? "Lecture…" : "Rafraîchir"}
+          </button>
+        </div>
+        {auditError && (
+          <div style={S.banner.error} data-testid="gis-audit-error">
+            ⚠ {auditError}
+          </div>
+        )}
+        <div style={S.auditScroll}>
+          {auditEntries.length === 0 && !auditLoading && (
+            <div style={S.muted}>
+              {tokenSaved
+                ? "Aucun évènement (filtres trop stricts ou pipeline vide)."
+                : "Saisir le token Commandant pour charger le journal."}
+            </div>
+          )}
+          {auditEntries.map((e, i) => (
+            <div
+              key={i}
+              style={{
+                ...S.auditRow,
+                borderLeft: `3px solid ${
+                  e.event === "UPLOAD_LOADED"
+                    ? "#22c55e"
+                    : e.event === "UPLOAD_QUARANTINED"
+                    ? "#fbbf24"
+                    : "#fb7185"
+                }`,
+              }}
+              data-testid={`audit-entry-${i}`}
+            >
+              <code style={S.mono}>{e.ts_utc}</code>
+              <span
+                style={{
+                  ...S.auditEvent,
+                  color:
+                    e.event === "UPLOAD_LOADED"
+                      ? "#86efac"
+                      : e.event === "UPLOAD_QUARANTINED"
+                      ? "#fcd34d"
+                      : "#fca5a5",
+                }}
+              >
+                {e.event}
+              </span>
+              <span style={S.auditSlot}>{e.slot_id}</span>
+              <span style={{ flex: 1, fontSize: 11 }}>{e.filename}</span>
+              <code style={S.mono}>HTTP {e.http_code}</code>
+              <code style={S.mono}>{shortSha(e.sha256)}</code>
+              <code style={S.mono}>{e.client_ip}</code>
+            </div>
+          ))}
+        </div>
       </section>
 
       <section style={S.logCard} data-testid="event-log">
@@ -663,6 +953,22 @@ const S = {
   logRow: { display: "flex", gap: 8, padding: "3px 0", borderBottom: "1px dashed #1e293b" },
   logLevel: { fontWeight: 700, minWidth: 50 },
   logSlot: { fontWeight: 700, color: "#67e8f9", minWidth: 130 },
+
+  // ═════ ORDRE N°45 — Promote + Audit ═════
+  promoteCard: { background: "#111c2e", border: "1px solid #f59e0b", borderRadius: 10, padding: 14, marginBottom: 16 },
+  promoteHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 },
+  btnPromote: { padding: "10px 22px", background: "linear-gradient(135deg,#f59e0b,#d97706)", color: "#0a1018", border: "none", borderRadius: 6, fontWeight: 700, fontSize: 12, letterSpacing: "0.4px" },
+  promoteResult: { background: "#0a1018", border: "1px solid #1e293b", borderRadius: 6, padding: 12, display: "flex", flexDirection: "column", gap: 6 },
+  promoteRow: { display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 },
+
+  auditCard: { background: "#111c2e", border: "1px solid #1e293b", borderRadius: 10, padding: 14, marginBottom: 16 },
+  auditHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 },
+  auditFilters: { display: "flex", gap: 8, marginBottom: 10, alignItems: "center", flexWrap: "wrap" },
+  select: { padding: "6px 10px", background: "#0a1018", border: "1px solid #3a4a66", borderRadius: 6, color: "#e2e8f0", fontSize: 11, fontFamily: "inherit" },
+  auditScroll: { maxHeight: 280, overflowY: "auto", border: "1px solid #1e293b", borderRadius: 6, padding: 8, fontSize: 11 },
+  auditRow: { display: "flex", gap: 8, padding: "5px 8px", marginBottom: 4, background: "rgba(255,255,255,0.02)", borderRadius: 4, alignItems: "center" },
+  auditEvent: { fontWeight: 700, fontSize: 10, minWidth: 130 },
+  auditSlot: { fontWeight: 700, color: "#67e8f9", minWidth: 130, fontSize: 10 },
 };
 
 export default AdminGISReceptionPanel;

@@ -2848,3 +2848,40 @@ PURGE_FRONTEND_CHUNKS_Ω + CDN_INVALIDATION_Ω + SERVICE_WORKER_RESET_Ω
 ### Tests
 - pytest baseline cumulée : **215/215 PASSED** (zéro régression backend)
 - V30 INVIOLÉ : `registry_lock_omega.py` + `engine_ia_corridors_omega.py` SHA inchangés
+
+## ═════════════════════════════════════════════════════════════════════
+## PHASE XXIV — ORDRE N°45 (2026-04-30) — SCELLÉ
+## ═════════════════════════════════════════════════════════════════════
+### Objet
+ADMIN_GIS_AUDIT_ET_PROMOTION_PANEL_Ω : extension du panneau React
+`AdminGISReceptionPanel.jsx` avec Journal forensique + Bouton Promotion.
+
+### Frontend (extensions)
+- `AdminGISReceptionPanel.jsx` — Section "Promotion vers GIS_OPERATIONAL_Ω" :
+  - Bouton "Promouvoir" (POST /promote)
+  - 6 KPIs affichés : compute_status, engine_layers, intake_loaded,
+    anti_generique_pass, sceau_x5_final_ready, next_action
+  - Affichage des couches manquantes
+- `AdminGISReceptionPanel.jsx` — Section "Journal forensique GIS" :
+  - GET /audit-log avec filtres slot_id (7 options) + event (4 options)
+  - Top 20 entrées affichées
+  - Code couleur par event (vert/jaune/rose)
+  - Auto-load au token enregistré + bouton Rafraîchir manuel
+
+### Backend
+- AUCUNE MODIFICATION (ADD_ONLY strict, validators et moteurs IA inchangés)
+
+### Test E2E Playwright
+- ✓ Token saisie + auto-load audit-log (3 entrées)
+- ✓ Upload réel CHASSE_ZEC_SEPAQ_Ω → audit `UPLOAD_LOADED` capturé
+- ✓ Filtres slot_id/event opérationnels
+- ✓ Click Promouvoir → résultat affiché (compute_status STUB_READY · sceau_x5_final_ready false · next_action EN_ATTENTE_DE_COUCHES_RÉELLES_LOADED)
+
+### Livrable HTTPS 200 OK
+- `/reports/institution/RAPPORT_ORDRE_45_Ω.pdf` — 7 584 o · SHA `82b05dc493f5d2ff…`
+- Sceau `/app/backend/institution/sceaux/VALIDATION_AUDIT_PROMOTE_PANEL_Ω.sha256`
+
+### Tests
+- pytest baseline cumulée : **215/215 PASSED** (zéro régression backend)
+- Lint ESLint : 0 issue
+- V30 INVIOLÉ vs FREEZE_MASTER
