@@ -19,7 +19,7 @@
  */
 import { useEffect, useRef, useState, useMemo } from 'react';
 
-const API = import.meta?.env?.VITE_API_URL || process.env.REACT_APP_BACKEND_URL || '';
+const API = process.env.REACT_APP_BACKEND_URL || '';
 
 function StatusDot({ ok }) {
   const color = ok === true ? '#22c55e' : ok === false ? '#ef4444' : '#f59e0b';

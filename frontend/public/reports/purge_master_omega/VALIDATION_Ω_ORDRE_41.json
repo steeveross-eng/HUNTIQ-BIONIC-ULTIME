@@ -1,0 +1,72 @@
+{
+  "manifest_id": "VALIDATION_Ω_ORDRE_41",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°41",
+  "validated_at_utc": "2026-04-30T13:45:12+00:00",
+  "pytest": {
+    "passed": 168,
+    "exit_code": 0,
+    "all_pass": true
+  },
+  "v30_intact": true,
+  "freeze_master_sha256": "31c18388ab3090fc0588cc0028a0181c638ac2fba0dff9f9d40700e9f97ccf27",
+  "livrables_https": [
+    {
+      "filename": "DASHBOARD_PILOTAGE_BCE_4X_Ω.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/DASHBOARD_PILOTAGE_BCE_4X_%CE%A9.json",
+      "http_code": 200,
+      "size_bytes": 12498
+    },
+    {
+      "filename": "DASHBOARD_PILOTAGE_BCE_4X_Ω.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/DASHBOARD_PILOTAGE_BCE_4X_%CE%A9.html",
+      "http_code": 200,
+      "size_bytes": 16640
+    },
+    {
+      "filename": "GIS_OPERATIONAL_Ω.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/GIS_OPERATIONAL_%CE%A9.json",
+      "http_code": 200,
+      "size_bytes": 9276
+    },
+    {
+      "filename": "GIS_OPERATIONAL_Ω.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/GIS_OPERATIONAL_%CE%A9.html",
+      "http_code": 200,
+      "size_bytes": 9818
+    },
+    {
+      "filename": "GPS_LOADED_CORRIDORS_Ω.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/GPS_LOADED_CORRIDORS_%CE%A9.json",
+      "http_code": 200,
+      "size_bytes": 2707
+    },
+    {
+      "filename": "GPS_LOADED_CORRIDORS_Ω.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/GPS_LOADED_CORRIDORS_%CE%A9.html",
+      "http_code": 200,
+      "size_bytes": 6759
+    },
+    {
+      "filename": "PRÉPARATION_SCEAU_X5_FINAL_Ω.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/institution/PR%C3%89PARATION_SCEAU_X5_FINAL_%CE%A9.html",
+      "http_code": 200,
+      "size_bytes": 7490
+    },
+    {
+      "filename": "PRÉPARATION_SCEAU_X5_FINAL_Ω.pdf",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/institution/PR%C3%89PARATION_SCEAU_X5_FINAL_%CE%A9.pdf",
+      "http_code": 200,
+      "size_bytes": 4071
+    }
+  ],
+  "all_https_ok": true,
+  "synthese": {
+    "dashboard_deployed": true,
+    "gis_operational_status": "STUB_READY (Option C)",
+    "gps_loaded_corridors_status": "STUB_READY (Option C)",
+    "pre_sceau_x5_final_sha256": "35ca6c6778036cb5e1b4601df38d5751d41ae7272d2d18cd6455a766b922295f",
+    "ordres_recenses": 20,
+    "sceaux_actifs": 6
+  }
+}

@@ -1,0 +1,363 @@
+{
+  "manifest_id": "DASHBOARD_PILOTAGE_BCE_4X_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°41",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-30T13:45:12+00:00",
+  "freeze_master_sha256": "31c18388ab3090fc0588cc0028a0181c638ac2fba0dff9f9d40700e9f97ccf27",
+  "v30_intact": true,
+  "ordres": [
+    {
+      "numero": 1,
+      "titre": "EXTRACTION_ESPECES_Ω_V2",
+      "status": "DONE",
+      "date": "2026-01",
+      "description": "Extraction complète moteurs 5 espèces (JSON/HTML/CSV + Index)",
+      "sceau_sha256": null,
+      "pytest": null,
+      "livrables_https": []
+    },
+    {
+      "numero": 2,
+      "titre": "BIO_PROFILE_Ω_ACTIVATION",
+      "status": "DONE",
+      "date": "2026-02",
+      "description": "Activation BIO_PROFILE_Ω depuis 5 documents scientifiques",
+      "sceau_sha256": null,
+      "pytest": null,
+      "livrables_https": []
+    },
+    {
+      "numero": 12,
+      "titre": "BIO_REACTEURS_Ω_VALIDATION",
+      "status": "DONE",
+      "date": "2026-03",
+      "description": "Phase XII: Validation et transformation en BIO-REACTEURS_Ω",
+      "sceau_sha256": null,
+      "pytest": "62/62",
+      "livrables_https": []
+    },
+    {
+      "numero": 13,
+      "titre": "PHASE_XIII_LOADER_RUNTIME",
+      "status": "DONE",
+      "date": "2026-03",
+      "description": "Loader runtime, Sceau institutionnel, tests pytest",
+      "sceau_sha256": null,
+      "pytest": "62/62",
+      "livrables_https": []
+    },
+    {
+      "numero": 14,
+      "titre": "PHASE_XIV_FRONTEND_VISUALISATION",
+      "status": "DONE",
+      "date": "2026-03",
+      "description": "Visualisation Frontend, CI Hook, Audit longitudinal, Pré-activation SUPER ENGINES_Ω",
+      "sceau_sha256": null,
+      "pytest": "62/62",
+      "livrables_https": []
+    },
+    {
+      "numero": 15,
+      "titre": "PHASE_XV_ENGINES_SCIENTIFIQUES_Ω",
+      "status": "DONE",
+      "date": "2026-04",
+      "description": "5 ENGINES SCIENTIFIQUES_Ω + ENGINE_IA_Ω + Manifeste de migration",
+      "sceau_sha256": null,
+      "pytest": "62/62",
+      "livrables_https": []
+    },
+    {
+      "numero": 33,
+      "titre": "PHASE_XV.b_PURGE_PHYSIQUE_Ω",
+      "status": "DONE",
+      "date": "2026-04-29",
+      "description": "Quarantaine de 38 fichiers, Rebuild, DIFF_MASTER_Ω = 0",
+      "sceau_sha256": null,
+      "pytest": "62/62",
+      "livrables_https": [
+        {
+          "label": "PURGE_REPORT",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/PURGE_REPORT_%CE%A9.json"
+        },
+        {
+          "label": "DIFF_MASTER",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/DIFF_MASTER_%CE%A9.json"
+        }
+      ]
+    },
+    {
+      "numero": 34,
+      "titre": "PHASE_XV.c_+_XV.d",
+      "status": "DONE",
+      "date": "2026-04-29",
+      "description": "Suppression irréversible 38 fichiers + Audit forensique 60 KEPT + PLAN_REFACTOR",
+      "sceau_sha256": null,
+      "pytest": "62/62",
+      "livrables_https": [
+        {
+          "label": "INDEX_XVcd",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/INDEX_XVcd_%CE%A9.html"
+        },
+        {
+          "label": "PLAN_REFACTOR",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/PLAN_REFACTOR_XVd_%CE%A9.html"
+        },
+        {
+          "label": "AUDIT_KEPT",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/AUDIT_KEPT_FOR_INTEGRITY_%CE%A9.html"
+        }
+      ]
+    },
+    {
+      "numero": 35,
+      "titre": "PHASE_XVI_SUPER_ENGINES_Ω",
+      "status": "DONE",
+      "date": "2026-04-29",
+      "description": "6 SUPER ENGINES logique + HEATMAP + MIGRATION_TRACKER (Wave 1 READY)",
+      "sceau_sha256": null,
+      "pytest": "85/85",
+      "livrables_https": [
+        {
+          "label": "INDEX_XVI",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/INDEX_XVI_%CE%A9.html"
+        },
+        {
+          "label": "HEATMAP_XVd",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/HEATMAP_XVd_%CE%A9.html"
+        },
+        {
+          "label": "MIGRATION_TRACKER",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/MIGRATION_TRACKER_%CE%A9.html"
+        }
+      ]
+    },
+    {
+      "numero": 36,
+      "titre": "3_PROTOCOLES_SCIENTIFIQUES_Ω",
+      "status": "DONE",
+      "date": "2026-04-29",
+      "description": "PROTOCOLE_NUTRITION + PROGRESSION_CORRIDORS + PROGRESSION_SENSORIEL (135 cibles)",
+      "sceau_sha256": null,
+      "pytest": "85/85",
+      "livrables_https": [
+        {
+          "label": "PROTOCOLE_NUTRITION",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/PROTOCOLE_BIO_PROFILE_NUTRITION_%CE%A9.html"
+        },
+        {
+          "label": "PROGRESSION_CORRIDORS",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_CORRIDORS_%CE%A9.html"
+        },
+        {
+          "label": "PROGRESSION_SENSORIEL",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/PROGRESSION_SENSORIEL_%CE%A9.html"
+        }
+      ]
+    },
+    {
+      "numero": 37,
+      "titre": "FUSION_POST_REGEN_SUPER_ENGINES_Ω_X3",
+      "status": "DONE",
+      "date": "2026-04-29",
+      "description": "Fusion 70 études + 3 ENGINES scientifiques + 6 chaînes Ω · TERRITOIRE=56.33",
+      "sceau_sha256": null,
+      "pytest": "117/117",
+      "livrables_https": [
+        {
+          "label": "VALIDATION_X3",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/VALIDATION_FUSION_SUPER_ENGINES_%CE%A9_ULTIME_ABSOLUE_X3.html"
+        },
+        {
+          "label": "TERRITOIRE_FUSION",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/TERRITOIRE_MASTER_%CE%A9_FUSION.html"
+        }
+      ]
+    },
+    {
+      "numero": 38,
+      "titre": "OPTIMISATION_6_MASTERS_X4",
+      "status": "DONE",
+      "date": "2026-04-30",
+      "description": "Ingestion BIO_PROFILE_135 (675 entrées) + ADD-ONLY · TERRITOIRE_X4=92.52 APTE",
+      "sceau_sha256": null,
+      "pytest": "139/139",
+      "livrables_https": [
+        {
+          "label": "VALIDATION_X4",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/VALIDATION_%CE%A9_OPTIMISATION_MASTERS_X4.html"
+        },
+        {
+          "label": "TERRITOIRE_X4",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/TERRITOIRE_MASTER_%CE%A9_FUSION_X4.html"
+        },
+        {
+          "label": "SIX_MASTERS",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/SIX_MASTERS_%CE%A9_OPTIMIS%C3%89S.html"
+        }
+      ]
+    },
+    {
+      "numero": 39,
+      "titre": "SCEAU_X4_FINAL_Ω + HTTP + VISU + GPS_SPEC",
+      "status": "DONE",
+      "date": "2026-04-30",
+      "description": "SCEAU institutionnel scellé · 8 routes API · 5 heatmaps PNG · spec GIS",
+      "sceau_sha256": "07dc3d41ba8061bddf96bfa585a115eebf18773cf88ba5cbf7b4d1eb11e16de7",
+      "pytest": "154/153",
+      "livrables_https": [
+        {
+          "label": "SCEAU_X4_PDF",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/institution/SCEAU_INSTITUTIONNEL_X4_FINAL_%CE%A9.pdf"
+        },
+        {
+          "label": "ATTESTATION",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/institution/ATTESTATION_INSTITUTIONNELLE_%CE%A9.html"
+        },
+        {
+          "label": "VALIDATION_39",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/VALIDATION_%CE%A9_ORDRE_39.html"
+        },
+        {
+          "label": "VISUALISATION",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/TERRITOIRE_MASTER_%CE%A9_APTE_VISUALISATION.html"
+        }
+      ]
+    },
+    {
+      "numero": 40,
+      "titre": "FRONTEND_TERRITOIRE_APTE_Ω + INIT_GPS_GIS + PRE_X5",
+      "status": "DONE",
+      "date": "2026-04-30",
+      "description": "Widget React /territoire-apte · 9 couches GIS STUB_READY · pré-sceau X5 PROVISIONAL",
+      "sceau_sha256": "80b58a6ed4efce36562e3d156474bbbdcee4521e044f22be5a20272eb4b927ec",
+      "pytest": "168/168",
+      "livrables_https": [
+        {
+          "label": "GPS_GIS_INIT",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/GPS_GIS_PHASE_INIT_%CE%A9.html"
+        },
+        {
+          "label": "FRONTEND",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/FRONTEND_TERRITOIRE_APTE_%CE%A9.html"
+        },
+        {
+          "label": "ATTESTATION_X5",
+          "url": "https://huntiq-restore.preview.emergentagent.com/reports/institution/ATTESTATION_X5.pdf"
+        },
+        {
+          "label": "/territoire-apte (LIVE)",
+          "url": "https://huntiq-restore.preview.emergentagent.com/territoire-apte"
+        }
+      ]
+    },
+    {
+      "numero": 41,
+      "titre": "DASHBOARD + GIS_OPERATIONAL + GPS_LOADER + PRE_X5_FINAL",
+      "status": "DONE",
+      "date": "2026-04-30",
+      "description": "Dashboard pilotage + GIS_OPERATIONAL ROADMAP + GPS_LOADER ROADMAP + PRE_X5_FINAL",
+      "sceau_sha256": null,
+      "pytest": "168/168",
+      "livrables_https": []
+    },
+    {
+      "numero": 42,
+      "titre": "PHASE_GIS_OPERATIONAL_REELLE",
+      "status": "BACKLOG",
+      "date": null,
+      "description": "Acquisition réelle 9 couches GIS (MFFP/MTQ/MERN) + ENGINE_CORRIDORS_GIS_Ω LOADED",
+      "sceau_sha256": null,
+      "pytest": null,
+      "livrables_https": []
+    },
+    {
+      "numero": 43,
+      "titre": "GPS_TRACKING_5_ESPECES_REEL",
+      "status": "BACKLOG",
+      "date": null,
+      "description": "Import traces GPS Parquet/CSV · activation corridors réels",
+      "sceau_sha256": null,
+      "pytest": null,
+      "livrables_https": []
+    },
+    {
+      "numero": 44,
+      "titre": "SCEAU_INSTITUTIONNEL_X5_FINAL_Ω",
+      "status": "BACKLOG",
+      "date": null,
+      "description": "Sceau X5 final post-GIS effective + ATTESTATION_X5 finalisée",
+      "sceau_sha256": null,
+      "pytest": null,
+      "livrables_https": []
+    },
+    {
+      "numero": 45,
+      "titre": "WAVE_1_MIGRATION_P0_HIGH",
+      "status": "BACKLOG",
+      "date": null,
+      "description": "Migration des 11 fichiers P0/HIGH (READY_TO_START depuis ordre n°35)",
+      "sceau_sha256": null,
+      "pytest": null,
+      "livrables_https": []
+    },
+    {
+      "numero": 46,
+      "titre": "PHASE_XVII_PURGE_KEPT",
+      "status": "BACKLOG",
+      "date": null,
+      "description": "Purge finale des 60 KEPT_FOR_INTEGRITY post-refactor",
+      "sceau_sha256": null,
+      "pytest": null,
+      "livrables_https": []
+    }
+  ],
+  "sceaux": [
+    {
+      "id": "freeze_master",
+      "label": "FREEZE_MASTER_SHA-256",
+      "sha256": "31c18388ab3090fc0588cc0028a0181c638ac2fba0dff9f9d40700e9f97ccf27",
+      "status": "FINAL"
+    },
+    {
+      "id": "v30_registry_lock",
+      "label": "V30_REGISTRY_LOCK",
+      "sha256": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+      "status": "FINAL"
+    },
+    {
+      "id": "v30_engine_ia",
+      "label": "V30_ENGINE_IA_CORRIDORS",
+      "sha256": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3",
+      "status": "FINAL"
+    },
+    {
+      "id": "sceau_x4_final",
+      "label": "SCEAU_INSTITUTIONNEL_X4_FINAL_Ω",
+      "sha256": "07dc3d41ba8061bddf96bfa585a115eebf18773cf88ba5cbf7b4d1eb11e16de7",
+      "status": "FINAL"
+    },
+    {
+      "id": "pre_sceau_x5",
+      "label": "PRE_SCEAU_X5_Ω",
+      "sha256": "80b58a6ed4efce36562e3d156474bbbdcee4521e044f22be5a20272eb4b927ec",
+      "status": "PROVISIONAL"
+    },
+    {
+      "id": "engine_corridors_gis",
+      "label": "ENGINE_CORRIDORS_GIS_Ω_LOCK",
+      "sha256": "52eb4d378758a6a55ce65dc0283abf809350566e4aac146a1bc735d848480e17",
+      "status": "FINAL"
+    }
+  ],
+  "statistiques_globales": {
+    "total_ordres": 20,
+    "done_count": 15,
+    "progress_count": 0,
+    "backlog_count": 5,
+    "sceaux_count": 6,
+    "livrables_https_count": 24,
+    "pytest_total": 168,
+    "v30_intact": true
+  }
+}

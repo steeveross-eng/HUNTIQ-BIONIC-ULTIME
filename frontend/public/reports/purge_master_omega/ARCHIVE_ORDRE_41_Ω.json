@@ -1,0 +1,169 @@
+{
+  "manifest_id": "ARCHIVE_ORDRE_41_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°41",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "archived_at_utc": "2026-04-30T13:54:41+00:00",
+  "pipeline_status": "ORDRE_41_SCELLÉ · pytest 168/168 · HTTPS 11/11 · V30 INVIOLÉ",
+  "mode_courant": "MODE_ATTENTE_ACTIVE_GPS_Ω",
+  "freeze_master_sha256": "31c18388ab3090fc0588cc0028a0181c638ac2fba0dff9f9d40700e9f97ccf27",
+  "pre_sceau_x5_final_sha256": "35ca6c6778036cb5e1b4601df38d5751d41ae7272d2d18cd6455a766b922295f",
+  "sceaux_actifs": {
+    "freeze_master": "31c18388ab3090fc0588cc0028a0181c638ac2fba0dff9f9d40700e9f97ccf27",
+    "v30_registry_lock": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+    "v30_engine_ia_corridors": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3",
+    "sceau_x4_final": "07dc3d41ba8061bddf96bfa585a115eebf18773cf88ba5cbf7b4d1eb11e16de7",
+    "pre_sceau_x5_n40": "80b58a6ed4efce36562e3d156474bbbdcee4521e044f22be5a20272eb4b927ec",
+    "pre_sceau_x5_final_n41": "35ca6c6778036cb5e1b4601df38d5751d41ae7272d2d18cd6455a766b922295f"
+  },
+  "v30_integrity_check": {
+    "registry_lock_omega.py": {
+      "sha256_freeze": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+      "sha256_current": "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c",
+      "intact": true
+    },
+    "engine_ia_corridors_omega.py": {
+      "sha256_freeze": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3",
+      "sha256_current": "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3",
+      "intact": true
+    }
+  },
+  "all_v30_intact": true,
+  "livrables": [
+    {
+      "filename": "DASHBOARD_PILOTAGE_BCE_4X_Ω.json",
+      "type": "JSON",
+      "status": "PRESENT",
+      "size_bytes": 12498,
+      "sha256": "889f5e1a483cc812f8a6cea94b1707ceed191d59766c67cd6e9c4e87bd1c2c2a",
+      "http_url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/DASHBOARD_PILOTAGE_BCE_4X_Ω.json",
+      "http_code": 200
+    },
+    {
+      "filename": "DASHBOARD_PILOTAGE_BCE_4X_Ω.html",
+      "type": "HTML",
+      "status": "PRESENT",
+      "size_bytes": 16640,
+      "sha256": "785d5dedbb89c014e00bbff11228fdc575d2272b301525df1bbb9fe8e8c191c0",
+      "http_url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/DASHBOARD_PILOTAGE_BCE_4X_Ω.html",
+      "http_code": 200
+    },
+    {
+      "filename": "GIS_OPERATIONAL_Ω.json",
+      "type": "JSON",
+      "status": "PRESENT",
+      "size_bytes": 9276,
+      "sha256": "3bd0224264b507baff135d8b85222af581876c563c4601d1e0be4bc9a2a2b57d",
+      "http_url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/GIS_OPERATIONAL_Ω.json",
+      "http_code": 200
+    },
+    {
+      "filename": "GIS_OPERATIONAL_Ω.html",
+      "type": "HTML",
+      "status": "PRESENT",
+      "size_bytes": 9818,
+      "sha256": "c998fb29101224d45ba66680b8f954c1513a7c53c325581b23e5ab12dcc64f3a",
+      "http_url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/GIS_OPERATIONAL_Ω.html",
+      "http_code": 200
+    },
+    {
+      "filename": "GPS_LOADED_CORRIDORS_Ω.json",
+      "type": "JSON",
+      "status": "PRESENT",
+      "size_bytes": 2707,
+      "sha256": "4a2001cfd081293cf9ba81621569e5a103f0a7bca0655a2534e27f74c931dd3a",
+      "http_url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/GPS_LOADED_CORRIDORS_Ω.json",
+      "http_code": 200
+    },
+    {
+      "filename": "GPS_LOADED_CORRIDORS_Ω.html",
+      "type": "HTML",
+      "status": "PRESENT",
+      "size_bytes": 6759,
+      "sha256": "1e8ad746cfe2f3c7d0af9509c71da1eeca082fe9a865bcc16041ae6ef2c0368f",
+      "http_url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/GPS_LOADED_CORRIDORS_Ω.html",
+      "http_code": 200
+    },
+    {
+      "filename": "VALIDATION_Ω_ORDRE_41.json",
+      "type": "JSON",
+      "status": "PRESENT",
+      "size_bytes": 2640,
+      "sha256": "e04bf6d86eaf47c6274ae1c3cd95b21e9ef0d6e1ccded383c7e50747c90dc7e0",
+      "http_url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/VALIDATION_Ω_ORDRE_41.json",
+      "http_code": 200
+    },
+    {
+      "filename": "MODE_ATTENTE_ACTIVE_GPS_Ω.json",
+      "type": "JSON",
+      "status": "PRESENT",
+      "size_bytes": 5969,
+      "sha256": "f24c75eda79a2790fd421d976e63bb3722b9117d83d3bc05c9e533b01f6c71f1",
+      "http_url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/MODE_ATTENTE_ACTIVE_GPS_Ω.json",
+      "http_code": 200
+    },
+    {
+      "filename": "PRÉPARATION_SCEAU_X5_FINAL_Ω.html",
+      "type": "HTML",
+      "status": "PRESENT",
+      "size_bytes": 7490,
+      "sha256": "a65fd5ef9204311e2bac1fb170301b7bd6d178bca4f2124b91a73bd966bba294",
+      "http_url": "https://huntiq-restore.preview.emergentagent.com/reports/institution/PRÉPARATION_SCEAU_X5_FINAL_Ω.html",
+      "http_code": 200
+    },
+    {
+      "filename": "PRÉPARATION_SCEAU_X5_FINAL_Ω.pdf",
+      "type": "PDF",
+      "status": "PRESENT",
+      "size_bytes": 4071,
+      "sha256": "ad374f8a93ef2243db653e90b39632204b290114aa7916f0f58468c9d33ced18",
+      "http_url": "https://huntiq-restore.preview.emergentagent.com/reports/institution/PRÉPARATION_SCEAU_X5_FINAL_Ω.pdf",
+      "http_code": 200
+    },
+    {
+      "filename": "RAPPORT_ORDRE_41_Ω.pdf",
+      "type": "PDF",
+      "status": "PRESENT",
+      "size_bytes": 8164,
+      "sha256": "746ff4f149150d9878876c8cec99713387b52e975164a3da677eef46d92ade97",
+      "http_url": "https://huntiq-restore.preview.emergentagent.com/reports/institution/RAPPORT_ORDRE_41_Ω.pdf",
+      "http_code": 200
+    }
+  ],
+  "livrables_stats": {
+    "total": 11,
+    "present": 11,
+    "https_200": 11,
+    "bytes_total": 86032
+  },
+  "pytest_baseline": {
+    "total_passed": 168,
+    "modules_ciblés": 8,
+    "zero_regression": true
+  },
+  "interface_frontend": {
+    "route": "/admin-premium",
+    "section": "Pilotage BCE-4X Ω",
+    "component": "AdminPilotageBce4xOmega",
+    "data_source": "reports/purge_master_omega/DASHBOARD_PILOTAGE_BCE_4X_Ω.json",
+    "testids_exposes": [
+      "pilotage-bce4x-dashboard",
+      "pilotage-banner",
+      "pilotage-bce4x-loading",
+      "pilotage-bce4x-error"
+    ]
+  },
+  "regression_notes": [
+    "Correction frontend : remplacement de 'import.meta?.env' par 'process.env.REACT_APP_BACKEND_URL' dans InstitutionalHealthPanel.jsx (syntaxe Vite incompatible webpack/CRA) — débloque le chargement chunk AdminPremiumPage.",
+    "Aucune modification V30 LOCKED.",
+    "FREEZE_MASTER SHA-256 inchangé."
+  ],
+  "garde_fous_respectes": [
+    "ADMIN_PREMIUM_ONLY (écran de login préservé)",
+    "ADD_ONLY ACTIVÉ",
+    "ANTI_GÉNÉRIQUE STRICT",
+    "V30_LOCK INVIOLÉ",
+    "FREEZE_MASTER_SHA-256 CONTINU",
+    "MODE_ATTENTE_ACTIVE_GPS_Ω ACTIVÉ"
+  ]
+}

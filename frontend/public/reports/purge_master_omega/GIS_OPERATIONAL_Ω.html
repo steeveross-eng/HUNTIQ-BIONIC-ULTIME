@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang='fr'><head><meta charset='utf-8'/>
+<title>GIS_OPERATIONAL_Ω · ROADMAP</title><style>
+:root{--bg:#0a1018;--panel:#111c2e;--panel2:#162032;--txt:#e2e8f0;--mute:#94a3b8;--accent:#06b6d4;--accent2:#22d3ee;--ok:#16a34a;--gold:#f59e0b;--bord:#1e293b;}
+*{box-sizing:border-box;}
+body{font-family:'Inter','Segoe UI',sans-serif;background:linear-gradient(180deg,#0a1018 0%,#0b1320 100%);color:var(--txt);margin:0;padding:32px 20px;}
+.wrap{max-width:1320px;margin:0 auto;}
+header.title{border-left:5px solid var(--gold);padding:6px 0 6px 18px;margin-bottom:22px;}
+header.title h1{margin:0;font-size:22px;color:#fef3c7;letter-spacing:0.6px;}
+header.title .sub{color:var(--mute);font-size:13px;margin-top:6px;}
+.b-ok{background:linear-gradient(135deg,#14532d 0%,#15803d 100%);border:1px solid var(--ok);color:#dcfce7;padding:12px 22px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:18px;}
+.b-gold{background:linear-gradient(135deg,#78350f 0%,#92400e 100%);border:1px solid var(--gold);color:#fef3c7;padding:12px 22px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:18px;}
+h2{color:var(--gold);font-size:18px;margin:32px 0 12px;border-left:4px solid var(--gold);padding-left:12px;}
+h3{color:var(--accent2);font-size:15px;margin:22px 0 10px;}
+.card{background:var(--panel);border:1px solid var(--bord);border-radius:10px;padding:18px 22px;margin-bottom:18px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px;}
+.kpi{padding:14px 18px;background:var(--panel2);border:1px solid var(--bord);border-radius:8px;}
+.kpi .num{color:var(--accent2);font-weight:700;font-size:22px;}
+.kpi .lbl{color:var(--mute);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;}
+table{width:100%;border-collapse:collapse;font-size:11.5px;}
+th,td{padding:8px 10px;border-bottom:1px solid var(--bord);text-align:left;vertical-align:top;}
+th{background:var(--panel2);color:#fff;text-transform:uppercase;font-size:10.5px;letter-spacing:0.5px;}
+.scroll{max-height:520px;overflow-y:auto;border:1px solid var(--bord);border-radius:6px;}
+.dl{color:var(--accent2);text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border:1px solid rgba(6,182,212,0.35);border-radius:5px;font-size:11px;}
+.mono{font-family:'JetBrains Mono','Courier New',monospace;font-size:10px;color:var(--mute);word-break:break-all;}
+.foot{margin-top:30px;padding:18px 22px;background:var(--panel);border:1px solid var(--bord);border-radius:10px;font-size:12px;color:var(--mute);}
+.lbl-foot{color:var(--accent2);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:0.5px;}
+.v30-lock{margin-top:14px;padding:10px 14px;background:rgba(22,163,74,0.10);border:1px solid rgba(22,163,74,0.45);border-radius:6px;color:#4ade80;font-weight:700;text-align:center;letter-spacing:0.6px;}
+.b-done{padding:2px 8px;border-radius:4px;background:rgba(34,197,94,0.18);color:#86efac;border:1px solid rgba(34,197,94,0.45);font-weight:700;font-size:10px;}
+.b-progress{padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.18);color:#fcd34d;border:1px solid rgba(245,158,11,0.45);font-weight:700;font-size:10px;}
+.b-backlog{padding:2px 8px;border-radius:4px;background:rgba(34,211,238,0.18);color:#67e8f9;border:1px solid rgba(34,211,238,0.45);font-weight:700;font-size:10px;}
+.b-p0{background:#fb7185;color:#1f2937;font-weight:700;padding:2px 6px;border-radius:4px;font-size:10px;}
+.b-p1{background:#fbbf24;color:#1f2937;font-weight:700;padding:2px 6px;border-radius:4px;font-size:10px;}
+</style></head><body>
+<div class='wrap' data-testid='gis-operational'>
+<header class='title'><h1>GIS_OPERATIONAL_Ω · ROADMAP exhaustif d'acquisition</h1>
+<div class='sub'>BCE-4X ULTIME ABSOLU x3 · Ordre n°41 · 2026-04-30T13:45:12+00:00 · OPTION C — STUB_READY</div></header>
+<div class='b-gold'>★ 9/9 couches en STUB_READY · délai total estimé 166 jours · 24.01 GB ★</div>
+
+<div class='card'><div class='kpi-grid'>
+<div class='kpi'><div class='lbl'>Layers Total</div><div class='num'>9</div></div>
+<div class='kpi'><div class='lbl'>LOADED</div><div class='num' style='color:#22c55e'>0</div></div>
+<div class='kpi'><div class='lbl'>ABSENT</div><div class='num' style='color:#fbbf24'>9</div></div>
+<div class='kpi'><div class='lbl'>Délai total</div><div class='num' style='color:#22d3ee'>166 j</div></div>
+<div class='kpi'><div class='lbl'>Taille</div><div class='num' style='color:#22d3ee'>24.01 GB</div></div>
+</div></div>
+
+<h2>1. Roadmap d'acquisition par couche</h2>
+<div class='card scroll'><table><thead><tr><th>Layer ID</th><th>Prio</th><th>Status</th><th>Source / Organisme</th><th>Format</th><th>Taille</th><th>Délai</th></tr></thead>
+<tbody><tr><td><b>GIS_FRAGMENTATION_INDEX</b></td><td><span class='b-p0'>P0</span></td><td><span class='b-progress'>ABSENT</span></td><td><a class='dl' href='https://www.donneesquebec.ca/recherche/dataset/aires-protegees-au-quebec' target='_blank' rel='noopener'>🌐 portail</a><br/><span class='mono'>MELCC - Direction des aires protégées</span></td><td><span class='mono'>Shapefile · GeoTIFF dérivé via Circuit-theory (Dickson 2017)</span></td><td>250 MB</td><td>14 j</td></tr><tr><td><b>GIS_COUVERT_FORESTIER_DENSITY</b></td><td><span class='b-p0'>P0</span></td><td><span class='b-progress'>ABSENT</span></td><td><a class='dl' href='https://www.donneesquebec.ca/recherche/dataset/carte-ecoforestiere-avec-perturbations' target='_blank' rel='noopener'>🌐 portail</a><br/><span class='mono'>MFFP - Direction des inventaires forestiers</span></td><td><span class='mono'>Shapefile (carte écoforestière 4e décennal)</span></td><td>1800 MB</td><td>7 j</td></tr><tr><td><b>GIS_PENTE_DEM</b></td><td><span class='b-p1'>P1</span></td><td><span class='b-progress'>ABSENT</span></td><td><a class='dl' href='https://www.donneesquebec.ca/recherche/dataset/produits-derives-de-base-du-lidar' target='_blank' rel='noopener'>🌐 portail</a><br/><span class='mono'>MERN - Service du géoréférencement</span></td><td><span class='mono'>GeoTIFF DEM 1m LIDAR</span></td><td>5000 MB</td><td>21 j</td></tr><tr><td><b>GIS_HYDROLOGIE_RESEAU</b></td><td><span class='b-p0'>P0</span></td><td><span class='b-progress'>ABSENT</span></td><td><a class='dl' href='https://www.donneesquebec.ca/recherche/dataset/grhq' target='_blank' rel='noopener'>🌐 portail</a><br/><span class='mono'>MELCC - GRHQ</span></td><td><span class='mono'>Shapefile / GeoJSON LineString</span></td><td>450 MB</td><td>3 j</td></tr><tr><td><b>GIS_ANTHROPISATION_FINE</b></td><td><span class='b-p0'>P0</span></td><td><span class='b-progress'>ABSENT</span></td><td><a class='dl' href='https://www150.statcan.gc.ca/n1/fr/catalogue/97F0008X' target='_blank' rel='noopener'>🌐 portail</a><br/><span class='mono'>Statistique Canada · MTQ Direction RTSS</span></td><td><span class='mono'>Raster + Shapefile RTSS</span></td><td>600 MB</td><td>14 j</td></tr><tr><td><b>GIS_BARRIERES_LINEAIRES</b></td><td><span class='b-p0'>P0</span></td><td><span class='b-progress'>ABSENT</span></td><td><a class='dl' href='https://www.donneesquebec.ca/recherche/dataset/adresses-quebec-feature' target='_blank' rel='noopener'>🌐 portail</a><br/><span class='mono'>MTQ + Hydro-Québec (lignes)</span></td><td><span class='mono'>Shapefile LineString</span></td><td>280 MB</td><td>10 j</td></tr><tr><td><b>GIS_PIEGES_ECOLOGIQUES</b></td><td><span class='b-p1'>P1</span></td><td><span class='b-progress'>ABSENT</span></td><td><a class='dl' href='Études MFFP régionales 2018-2024 (publications scientifiques)' target='_blank' rel='noopener'>🌐 portail</a><br/><span class='mono'>MFFP - Direction de la faune terrestre</span></td><td><span class='mono'>Vecteur Polygon (à digitaliser depuis publications)</span></td><td>5 MB</td><td>30 j</td></tr><tr><td><b>GPS_TRACKING_5_ESPECES</b></td><td><span class='b-p0'>P0</span></td><td><span class='b-progress'>ABSENT</span></td><td><a class='dl' href='Demande institutionnelle MFFP (banque GPS faune)' target='_blank' rel='noopener'>🌐 portail</a><br/><span class='mono'>MFFP - Direction de la recherche faune</span></td><td><span class='mono'>Tables Postgres exportables CSV/Parquet</span></td><td>15000 MB</td><td>60 j</td></tr><tr><td><b>INDICE_RESISTANCE_PAYSAGE</b></td><td><span class='b-p1'>P1</span></td><td><span class='b-progress'>ABSENT</span></td><td><a class='dl' href='Calcul interne (dépend des 8 couches précédentes)' target='_blank' rel='noopener'>🌐 portail</a><br/><span class='mono'>Bionic - calcul Circuit-theory</span></td><td><span class='mono'>GeoTIFF par espèce (5 rasters)</span></td><td>1200 MB</td><td>7 j</td></tr></tbody></table></div>
+
+<h2>2. compute_corridors_gis() actuel</h2>
+<div class='card'><pre class='mono' style='font-size:11px'>{
+  &quot;status&quot;: &quot;STUB_READY&quot;,
+  &quot;score_corridors_gis_omega&quot;: null,
+  &quot;missing_layers&quot;: [
+    &quot;GIS_FRAGMENTATION_INDEX&quot;,
+    &quot;GIS_COUVERT_FORESTIER_DENSITY&quot;,
+    &quot;GIS_PENTE_DEM&quot;,
+    &quot;GIS_HYDROLOGIE_RESEAU&quot;,
+    &quot;GIS_ANTHROPISATION_FINE&quot;,
+    &quot;GIS_BARRIERES_LINEAIRES&quot;,
+    &quot;GIS_PIEGES_ECOLOGIQUES&quot;,
+    &quot;GPS_TRACKING_5_ESPECES&quot;,
+    &quot;INDICE_RESISTANCE_PAYSAGE&quot;
+  ],
+  &quot;anti_generique_pass&quot;: false
+}</pre></div>
+
+<h2>3. Doctrine</h2>
+<div class='card'><ul><li>STUB_READY strict — aucune donnée synthétique générée.</li><li>Couches GIS absentes = anti_generique_violations tracées.</li><li>Calcul effectif différé jusqu&#x27;à acquisition réelle.</li><li>V30 INVIOLABLE.</li></ul></div>
+
+<footer class='foot'><div class='v30-lock'>✓ ROADMAP institutionnel scellé · attente acquisition réelle MFFP/MTQ/MERN</div></footer>
+</div></body></html>

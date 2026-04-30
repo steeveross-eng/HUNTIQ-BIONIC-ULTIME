@@ -2621,3 +2621,48 @@ BCE-4X ULTIME ABSOLU :
 - DIAGNOSTIC-CORRIDORS-Ω interdit.
 - Aucun refactoring non sanctionné.
 - Toute activation nouvelle exige ORDRE DIRECT du COMMANDANT.
+
+## ═════════════════════════════════════════════════════════════════════
+## PHASE XXI — ORDRE N°41 (2026-04-30) — SCELLÉ
+## ═════════════════════════════════════════════════════════════════════
+### Objet
+DASHBOARD_PILOTAGE_BCE_4X_Ω + GIS_OPERATIONAL_Ω + GPS_LOADED_CORRIDORS_Ω
++ PRE_SCEAU_X5_FINAL_Ω + RAPPORT_ORDRE_41_Ω.pdf + MODE_ATTENTE_ACTIVE_GPS_Ω
+
+### Livrables (12) — HTTPS 200 OK
+- `/reports/purge_master_omega/DASHBOARD_PILOTAGE_BCE_4X_Ω.json` + `.html`
+- `/reports/purge_master_omega/GIS_OPERATIONAL_Ω.json` + `.html`
+- `/reports/purge_master_omega/GPS_LOADED_CORRIDORS_Ω.json` + `.html`
+- `/reports/purge_master_omega/VALIDATION_Ω_ORDRE_41.json`
+- `/reports/purge_master_omega/MODE_ATTENTE_ACTIVE_GPS_Ω.json`
+- `/reports/purge_master_omega/ARCHIVE_ORDRE_41_Ω.json`
+- `/reports/institution/PRÉPARATION_SCEAU_X5_FINAL_Ω.html` + `.pdf`
+- `/reports/institution/RAPPORT_ORDRE_41_Ω.pdf`
+
+### Sceaux institutionnels
+- FREEZE_MASTER : `31c18388ab3090fc0588cc0028a0181c638ac2fba0dff9f9d40700e9f97ccf27`
+- V30_REGISTRY_LOCK : `fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c` (inviolé)
+- V30_ENGINE_IA_CORRIDORS : `bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3` (inviolé)
+- SCEAU_X4_FINAL : `07dc3d41ba8061bddf96bfa585a115eebf18773cf88ba5cbf7b4d1eb11e16de7` (FINAL)
+- PRE_SCEAU_X5 (n°40) : `80b58a6ed4efce36562e3d156474bbbdcee4521e044f22be5a20272eb4b927ec`
+- PRE_SCEAU_X5_FINAL_Ω (n°41) : `35ca6c6778036cb5e1b4601df38d5751d41ae7272d2d18cd6455a766b922295f`
+- ARCHIVE_ORDRE_41_Ω.json : `dd2b2847d94872904068abe28622546f82b017650d31f024d05f2e35df62436e`
+
+### Frontend (AdminPremium)
+- Composant `AdminPilotageBce4xOmega.jsx` intégré à `/admin-premium`
+  section "Pilotage BCE-4X Ω" (data-testid: `pilotage-bce4x-dashboard`)
+- Correction minimale : `import.meta?.env` → `process.env.REACT_APP_BACKEND_URL`
+  dans `InstitutionalHealthPanel.jsx:22` (Vite → CRA) pour débloquer
+  le chunk `src_pages_AdminPremiumPage_jsx`.
+
+### MODE_ATTENTE_ACTIVE_GPS_Ω
+- Pipeline READY · STUB_READY strict · anti-générique
+- ENGINE_CORRIDORS_GIS_Ω lock: `52eb4d378758a6a55ce65dc0283abf809350566e4aac146a1bc735d848480e17`
+- Traces GPS acceptées : Parquet/CSV, schéma {animal_id, espece, lat, lon, ts_utc, season}
+- 9 couches GIS attendues · délai estimé 166 j · 24.01 GB total
+- Aucun fallback synthétique · aucun blocage pipeline
+
+### Tests
+- pytest (8 modules test_phase_*) : **168/168 PASSED** (zéro régression)
+- HTTPS : **12/12 · 200 OK**
+- V30 INVIOLÉ vs FREEZE_MASTER

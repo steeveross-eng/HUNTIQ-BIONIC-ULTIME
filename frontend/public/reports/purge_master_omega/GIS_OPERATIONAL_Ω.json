@@ -1,0 +1,218 @@
+{
+  "manifest_id": "GIS_OPERATIONAL_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°41",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-30T13:45:12+00:00",
+  "strategie_appliquee": "OPTION_C — STUB_READY + ROADMAP exhaustif d'acquisition",
+  "engine_lock_sha256": "52eb4d378758a6a55ce65dc0283abf809350566e4aac146a1bc735d848480e17",
+  "current_status": {
+    "total_layers": 9,
+    "loaded": 0,
+    "absent": 9,
+    "global_status": "STUB_READY"
+  },
+  "roadmap_acquisition": [
+    {
+      "layer_id": "GIS_FRAGMENTATION_INDEX",
+      "priority": "P0",
+      "status_current": "ABSENT",
+      "expected_path": "/app/backend/engines/v8_institutional/especes/data/gis/GIS_FRAGMENTATION_INDEX.tif",
+      "filename_attendu": "GIS_FRAGMENTATION_INDEX.tif",
+      "format_attendu": "GeoTIFF raster 250m × 250m",
+      "value_range": [
+        0.0,
+        1.0
+      ],
+      "injection_point": "ENGINE_CORRIDORS_GIS_Ω.fragmentation_input",
+      "acquisition_details": {
+        "url_acquisition": "https://www.donneesquebec.ca/recherche/dataset/aires-protegees-au-quebec",
+        "organisme_contact": "MELCC - Direction des aires protégées",
+        "format_natif": "Shapefile · GeoTIFF dérivé via Circuit-theory (Dickson 2017)",
+        "taille_estimee_mb": 250,
+        "procedure": "Téléchargement portail ouvert → conversion DEM/landcover → calcul Circuit-theory.",
+        "delai_estime_jours": 14
+      }
+    },
+    {
+      "layer_id": "GIS_COUVERT_FORESTIER_DENSITY",
+      "priority": "P0",
+      "status_current": "ABSENT",
+      "expected_path": "/app/backend/engines/v8_institutional/especes/data/gis/GIS_COUVERT_FORESTIER_DENSITY.tif",
+      "filename_attendu": "GIS_COUVERT_FORESTIER_DENSITY.tif",
+      "format_attendu": "GeoTIFF raster 100m × 100m",
+      "value_range": [
+        0.0,
+        100.0
+      ],
+      "injection_point": "ENGINE_HABITAT_Ω.couvert_forestier_input",
+      "acquisition_details": {
+        "url_acquisition": "https://www.donneesquebec.ca/recherche/dataset/carte-ecoforestiere-avec-perturbations",
+        "organisme_contact": "MFFP - Direction des inventaires forestiers",
+        "format_natif": "Shapefile (carte écoforestière 4e décennal)",
+        "taille_estimee_mb": 1800,
+        "procedure": "Téléchargement données ouvertes Québec · raster densité canopée 100m.",
+        "delai_estime_jours": 7
+      }
+    },
+    {
+      "layer_id": "GIS_PENTE_DEM",
+      "priority": "P1",
+      "status_current": "ABSENT",
+      "expected_path": "/app/backend/engines/v8_institutional/especes/data/gis/GIS_PENTE_DEM.tif",
+      "filename_attendu": "GIS_PENTE_DEM.tif",
+      "format_attendu": "GeoTIFF raster 1m LIDAR (degrés)",
+      "value_range": [
+        0.0,
+        90.0
+      ],
+      "injection_point": "ENGINE_CORRIDORS_GIS_Ω.pente_input",
+      "acquisition_details": {
+        "url_acquisition": "https://www.donneesquebec.ca/recherche/dataset/produits-derives-de-base-du-lidar",
+        "organisme_contact": "MERN - Service du géoréférencement",
+        "format_natif": "GeoTIFF DEM 1m LIDAR",
+        "taille_estimee_mb": 5000,
+        "procedure": "Téléchargement par tuile MERN · calcul pente via gdaldem slope.",
+        "delai_estime_jours": 21
+      }
+    },
+    {
+      "layer_id": "GIS_HYDROLOGIE_RESEAU",
+      "priority": "P0",
+      "status_current": "ABSENT",
+      "expected_path": "/app/backend/engines/v8_institutional/especes/data/gis/GIS_HYDROLOGIE_RESEAU.geojson",
+      "filename_attendu": "GIS_HYDROLOGIE_RESEAU.geojson",
+      "format_attendu": "Vecteur LineString (Shapefile/GeoJSON)",
+      "value_range": null,
+      "injection_point": "ENGINE_CORRIDORS_GIS_Ω.hydrologie_input",
+      "acquisition_details": {
+        "url_acquisition": "https://www.donneesquebec.ca/recherche/dataset/grhq",
+        "organisme_contact": "MELCC - GRHQ",
+        "format_natif": "Shapefile / GeoJSON LineString",
+        "taille_estimee_mb": 450,
+        "procedure": "Téléchargement direct GRHQ Québec · ordre Strahler calculé.",
+        "delai_estime_jours": 3
+      }
+    },
+    {
+      "layer_id": "GIS_ANTHROPISATION_FINE",
+      "priority": "P0",
+      "status_current": "ABSENT",
+      "expected_path": "/app/backend/engines/v8_institutional/especes/data/gis/GIS_ANTHROPISATION_FINE.tif",
+      "filename_attendu": "GIS_ANTHROPISATION_FINE.tif",
+      "format_attendu": "Raster + Vecteur",
+      "value_range": [
+        0.0,
+        1.0
+      ],
+      "injection_point": "ENGINE_GOUVERNANCE_Ω.anthropisation_input",
+      "acquisition_details": {
+        "url_acquisition": "https://www150.statcan.gc.ca/n1/fr/catalogue/97F0008X",
+        "organisme_contact": "Statistique Canada · MTQ Direction RTSS",
+        "format_natif": "Raster + Shapefile RTSS",
+        "taille_estimee_mb": 600,
+        "procedure": "Recensement landcover StatCan + RTSS routes MTQ · classes urbain/agricole.",
+        "delai_estime_jours": 14
+      }
+    },
+    {
+      "layer_id": "GIS_BARRIERES_LINEAIRES",
+      "priority": "P0",
+      "status_current": "ABSENT",
+      "expected_path": "/app/backend/engines/v8_institutional/especes/data/gis/GIS_BARRIERES_LINEAIRES.geojson",
+      "filename_attendu": "GIS_BARRIERES_LINEAIRES.geojson",
+      "format_attendu": "Vecteur LineString",
+      "value_range": null,
+      "injection_point": "ENGINE_CORRIDORS_GIS_Ω.barrieres_input",
+      "acquisition_details": {
+        "url_acquisition": "https://www.donneesquebec.ca/recherche/dataset/adresses-quebec-feature",
+        "organisme_contact": "MTQ + Hydro-Québec (lignes)",
+        "format_natif": "Shapefile LineString",
+        "taille_estimee_mb": 280,
+        "procedure": "Fusion MTQ autoroutes/routes + lignes électriques Hydro-Québec.",
+        "delai_estime_jours": 10
+      }
+    },
+    {
+      "layer_id": "GIS_PIEGES_ECOLOGIQUES",
+      "priority": "P1",
+      "status_current": "ABSENT",
+      "expected_path": "/app/backend/engines/v8_institutional/especes/data/gis/GIS_PIEGES_ECOLOGIQUES.geojson",
+      "filename_attendu": "GIS_PIEGES_ECOLOGIQUES.geojson",
+      "format_attendu": "Vecteur Polygon",
+      "value_range": null,
+      "injection_point": "ENGINE_CORRIDORS_GIS_Ω.pieges_ecologiques_input",
+      "acquisition_details": {
+        "url_acquisition": "Études MFFP régionales 2018-2024 (publications scientifiques)",
+        "organisme_contact": "MFFP - Direction de la faune terrestre",
+        "format_natif": "Vecteur Polygon (à digitaliser depuis publications)",
+        "taille_estimee_mb": 5,
+        "procedure": "Compilation manuelle des zones identifiées dans publications MFFP.",
+        "delai_estime_jours": 30
+      }
+    },
+    {
+      "layer_id": "GPS_TRACKING_5_ESPECES",
+      "priority": "P0",
+      "status_current": "ABSENT",
+      "expected_path": "/app/backend/engines/v8_institutional/especes/data/gis/GPS_TRACKING_5_ESPECES.parquet",
+      "filename_attendu": "GPS_TRACKING_5_ESPECES.parquet",
+      "format_attendu": "Parquet ou CSV {animal_id, espece, lat, lon, ts_utc, season}",
+      "value_range": null,
+      "injection_point": "ENGINE_CORRIDORS_GIS_Ω.gps_traces_input",
+      "acquisition_details": {
+        "url_acquisition": "Demande institutionnelle MFFP (banque GPS faune)",
+        "organisme_contact": "MFFP - Direction de la recherche faune",
+        "format_natif": "Tables Postgres exportables CSV/Parquet",
+        "taille_estimee_mb": 15000,
+        "procedure": "Convention de partage de données · accès restreint aux chercheurs accrédités.",
+        "delai_estime_jours": 60
+      }
+    },
+    {
+      "layer_id": "INDICE_RESISTANCE_PAYSAGE",
+      "priority": "P1",
+      "status_current": "ABSENT",
+      "expected_path": "/app/backend/engines/v8_institutional/especes/data/gis/INDICE_RESISTANCE_PAYSAGE.tif",
+      "filename_attendu": "INDICE_RESISTANCE_PAYSAGE.tif",
+      "format_attendu": "GeoTIFF raster par espèce",
+      "value_range": [
+        0.0,
+        1.0
+      ],
+      "injection_point": "ENGINE_CORRIDORS_GIS_Ω.resistance_input",
+      "acquisition_details": {
+        "url_acquisition": "Calcul interne (dépend des 8 couches précédentes)",
+        "organisme_contact": "Bionic - calcul Circuit-theory",
+        "format_natif": "GeoTIFF par espèce (5 rasters)",
+        "taille_estimee_mb": 1200,
+        "procedure": "Calcul circuitscape/Circuit-theory à partir des couches GIS chargées.",
+        "delai_estime_jours": 7
+      }
+    }
+  ],
+  "compute_corridors_gis_test": {
+    "status": "STUB_READY",
+    "score_corridors_gis_omega": null,
+    "missing_layers": [
+      "GIS_FRAGMENTATION_INDEX",
+      "GIS_COUVERT_FORESTIER_DENSITY",
+      "GIS_PENTE_DEM",
+      "GIS_HYDROLOGIE_RESEAU",
+      "GIS_ANTHROPISATION_FINE",
+      "GIS_BARRIERES_LINEAIRES",
+      "GIS_PIEGES_ECOLOGIQUES",
+      "GPS_TRACKING_5_ESPECES",
+      "INDICE_RESISTANCE_PAYSAGE"
+    ],
+    "anti_generique_pass": false
+  },
+  "delai_total_acquisition_estime_jours": 166,
+  "taille_totale_estimee_gb": 24.01,
+  "doctrine_anti_contamination": [
+    "STUB_READY strict — aucune donnée synthétique générée.",
+    "Couches GIS absentes = anti_generique_violations tracées.",
+    "Calcul effectif différé jusqu'à acquisition réelle.",
+    "V30 INVIOLABLE."
+  ]
+}

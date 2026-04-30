@@ -1,0 +1,83 @@
+{
+  "manifest_id": "GPS_LOADED_CORRIDORS_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°41",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-30T13:45:12+00:00",
+  "strategie_appliquee": "OPTION_C — ROADMAP de chargement GPS (aucune trace réelle disponible)",
+  "current_loader_status": {
+    "loader_id": "GPS_LOADER_Ω",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+    "data_dir": "/app/backend/engines/v8_institutional/especes/data/gps",
+    "canonical_fields": [
+      "animal_id",
+      "espece",
+      "lat",
+      "lon",
+      "ts_utc",
+      "season"
+    ],
+    "allowed_especes": [
+      "CHEVREUIL",
+      "DINDON_SAUVAGE",
+      "ORIGNAL",
+      "OURS_NOIR",
+      "WAPITI"
+    ],
+    "allowed_seasons": [
+      "AUTOMNE",
+      "ETE",
+      "HIVER",
+      "PRINTEMPS"
+    ],
+    "supported_formats": [
+      "CSV",
+      "PARQUET"
+    ],
+    "available_files_count": 0,
+    "available_files": [],
+    "status": "STUB_READY"
+  },
+  "available_gps_files_count": 0,
+  "available_gps_files": [],
+  "corridors_calcules_count": 0,
+  "roadmap_chargement": {
+    "etape_1_acquisition": {
+      "source": "MFFP - Banque GPS faune (5 espèces : ORIGNAL, CHEVREUIL, WAPITI, OURS_NOIR, DINDON_SAUVAGE)",
+      "format_attendu": "Parquet (recommandé) ou CSV avec entêtes",
+      "schema_canonical": "{animal_id, espece, lat, lon, ts_utc, season}",
+      "frequence_recommandee": "≥1 fix / 4h pendant ≥6 mois pour validation territoriale",
+      "delai_estime_jours": 60,
+      "taille_estimee_mb": 15000
+    },
+    "etape_2_validation": {
+      "test_module": "engines.v8_institutional.especes.gps_loader_omega",
+      "fonctions": [
+        "load_gps_csv",
+        "load_gps_parquet",
+        "load_gps_auto"
+      ],
+      "regles_validation": [
+        "16 champs canoniques requis",
+        "espece ∈ ALLOWED_ESPECES (5)",
+        "season ∈ ALLOWED_SEASONS (4)",
+        "lat ∈ [-90, 90]",
+        "lon ∈ [-180, 180]"
+      ]
+    },
+    "etape_3_calcul_corridors": {
+      "engine_cible": "engine_corridors_gis_omega.compute_corridors_gis",
+      "prerequis": "9 couches GIS LOADED + GPS_TRACKING LOADED",
+      "sortie_attendue": "Score corridors_gis_omega ∈ [0, 100] par espèce"
+    },
+    "etape_4_sceau_x5_final": {
+      "trigger": "Compute_corridors_gis() == 'OPERATIONAL' (toutes couches LOADED)",
+      "action": "Régénérer SCEAU_INSTITUTIONNEL_X5_FINAL_Ω + ATTESTATION_X5 finalisée"
+    }
+  },
+  "doctrine_anti_contamination": [
+    "Aucune trace GPS synthétique. Anti-générique strict.",
+    "Couches absentes = LAYER_ABSENT::* dans anti_generique_violations.",
+    "Préparation pour PHASE_GIS_OPERATIONAL_Ω (ordre futur)."
+  ]
+}

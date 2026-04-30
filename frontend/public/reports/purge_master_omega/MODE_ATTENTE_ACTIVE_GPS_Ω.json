@@ -1,0 +1,194 @@
+{
+  "manifest_id": "MODE_ATTENTE_ACTIVE_GPS_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°41",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "activated_at_utc": "2026-04-30T13:47:43+00:00",
+  "mode": "ATTENTE_ACTIVE_GPS",
+  "etat_pipeline": "READY · STUB_READY strict · anti-générique",
+  "engine_corridors_gis_lock_sha256": "52eb4d378758a6a55ce65dc0283abf809350566e4aac146a1bc735d848480e17",
+  "principes_doctrinaux": [
+    "ENGINE_CORRIDORS_GIS_Ω préparé pour activation progressive",
+    "Acceptation immédiate de futures traces GPS membres (Parquet/CSV)",
+    "Aucun blocage pipeline tant que les couches sont absentes",
+    "Aucun fallback synthétique généré (anti-générique strict)",
+    "SCEAU_X5_FINAL_Ω auto-déclenché dès conditions remplies"
+  ],
+  "interfaces_acceptees": {
+    "formats_gps": [
+      "Parquet",
+      "CSV"
+    ],
+    "schema_gps_canonical": [
+      "animal_id",
+      "espece",
+      "lat",
+      "lon",
+      "ts_utc",
+      "season"
+    ],
+    "especes_autorisees": [
+      "CHEVREUIL",
+      "DINDON_SAUVAGE",
+      "ORIGNAL",
+      "OURS_NOIR",
+      "WAPITI"
+    ],
+    "saisons_autorisees": [
+      "AUTOMNE",
+      "ETE",
+      "HIVER",
+      "PRINTEMPS"
+    ],
+    "bornes_geo": {
+      "lat": [
+        -90,
+        90
+      ],
+      "lon": [
+        -180,
+        180
+      ]
+    },
+    "fichiers_actuellement_presents": 0,
+    "loader_status": "STUB_READY"
+  },
+  "couches_gis_attendues": [
+    {
+      "layer_id": "GIS_FRAGMENTATION_INDEX",
+      "priority": "P0",
+      "filename_attendu": "GIS_FRAGMENTATION_INDEX.tif",
+      "format_attendu": "GeoTIFF raster 250m × 250m",
+      "current_status": "ABSENT"
+    },
+    {
+      "layer_id": "GIS_COUVERT_FORESTIER_DENSITY",
+      "priority": "P0",
+      "filename_attendu": "GIS_COUVERT_FORESTIER_DENSITY.tif",
+      "format_attendu": "GeoTIFF raster 100m × 100m",
+      "current_status": "ABSENT"
+    },
+    {
+      "layer_id": "GIS_PENTE_DEM",
+      "priority": "P1",
+      "filename_attendu": "GIS_PENTE_DEM.tif",
+      "format_attendu": "GeoTIFF raster 1m LIDAR (degrés)",
+      "current_status": "ABSENT"
+    },
+    {
+      "layer_id": "GIS_HYDROLOGIE_RESEAU",
+      "priority": "P0",
+      "filename_attendu": "GIS_HYDROLOGIE_RESEAU.geojson",
+      "format_attendu": "Vecteur LineString (Shapefile/GeoJSON)",
+      "current_status": "ABSENT"
+    },
+    {
+      "layer_id": "GIS_ANTHROPISATION_FINE",
+      "priority": "P0",
+      "filename_attendu": "GIS_ANTHROPISATION_FINE.tif",
+      "format_attendu": "Raster + Vecteur",
+      "current_status": "ABSENT"
+    },
+    {
+      "layer_id": "GIS_BARRIERES_LINEAIRES",
+      "priority": "P0",
+      "filename_attendu": "GIS_BARRIERES_LINEAIRES.geojson",
+      "format_attendu": "Vecteur LineString",
+      "current_status": "ABSENT"
+    },
+    {
+      "layer_id": "GIS_PIEGES_ECOLOGIQUES",
+      "priority": "P1",
+      "filename_attendu": "GIS_PIEGES_ECOLOGIQUES.geojson",
+      "format_attendu": "Vecteur Polygon",
+      "current_status": "ABSENT"
+    },
+    {
+      "layer_id": "GPS_TRACKING_5_ESPECES",
+      "priority": "P0",
+      "filename_attendu": "GPS_TRACKING_5_ESPECES.parquet",
+      "format_attendu": "Parquet ou CSV {animal_id, espece, lat, lon, ts_utc, season}",
+      "current_status": "ABSENT"
+    },
+    {
+      "layer_id": "INDICE_RESISTANCE_PAYSAGE",
+      "priority": "P1",
+      "filename_attendu": "INDICE_RESISTANCE_PAYSAGE.tif",
+      "format_attendu": "GeoTIFF raster par espèce",
+      "current_status": "ABSENT"
+    }
+  ],
+  "trigger_sceau_x5_final": {
+    "auto_activation": true,
+    "all_conditions_required": true,
+    "current_overall_fulfilled": false,
+    "conditions": [
+      {
+        "id": "GIS_OPERATIONAL_FULL_LOAD",
+        "label": "Toutes les couches GIS chargées (status=LOADED)",
+        "current_value": "0/9",
+        "target": "9/9",
+        "fulfilled": false
+      },
+      {
+        "id": "GPS_TRACES_PER_SPECIES",
+        "label": "≥1 trace GPS validée par espèce autorisée",
+        "current_value": "0 fichiers présents",
+        "target": "≥5 (1 par espèce)",
+        "fulfilled": false
+      },
+      {
+        "id": "COMPUTE_OPERATIONAL",
+        "label": "compute_corridors_gis() retourne status=OPERATIONAL",
+        "current_value": "STUB_READY",
+        "target": "OPERATIONAL",
+        "fulfilled": false
+      },
+      {
+        "id": "ANTI_GENERIQUE_PASS",
+        "label": "anti_generique_pass=True après calcul réel",
+        "current_value": "False",
+        "target": "True",
+        "fulfilled": false
+      },
+      {
+        "id": "PYTEST_BASELINE",
+        "label": "pytest cumulé ≥ 168/168 PASSED",
+        "current_value": "168/168 (baseline n°40)",
+        "target": "≥168/168",
+        "fulfilled": true
+      },
+      {
+        "id": "V30_INVIOLABLE",
+        "label": "V30 LOCKED inviolable + FREEZE_MASTER inchangé",
+        "current_value": "INVIOLÉ",
+        "target": "INVIOLÉ",
+        "fulfilled": true
+      }
+    ],
+    "next_action_si_remplies": "Génération automatique de SCEAU_INSTITUTIONNEL_X5_FINAL_Ω + ATTESTATION_X5_FINAL.pdf · publication HTTPS · pytest régression."
+  },
+  "garde_fous": [
+    "V30 LOCKED INVIOLABLE — fichiers core non modifiables",
+    "FREEZE_MASTER_SHA-256 inchangé en lecture seule",
+    "ADD_ONLY ACTIVÉ — score = max(baseline, nouveau_score)",
+    "ADMIN_PREMIUM_ONLY — accès dashboard restreint",
+    "Aucun mock, aucune trace synthétique, aucun fallback générique"
+  ],
+  "compute_corridors_gis_actuel": {
+    "status": "STUB_READY",
+    "missing_layers": [
+      "GIS_FRAGMENTATION_INDEX",
+      "GIS_COUVERT_FORESTIER_DENSITY",
+      "GIS_PENTE_DEM",
+      "GIS_HYDROLOGIE_RESEAU",
+      "GIS_ANTHROPISATION_FINE",
+      "GIS_BARRIERES_LINEAIRES",
+      "GIS_PIEGES_ECOLOGIQUES",
+      "GPS_TRACKING_5_ESPECES",
+      "INDICE_RESISTANCE_PAYSAGE"
+    ],
+    "anti_generique_pass": false,
+    "score_corridors_gis_omega": null
+  }
+}
