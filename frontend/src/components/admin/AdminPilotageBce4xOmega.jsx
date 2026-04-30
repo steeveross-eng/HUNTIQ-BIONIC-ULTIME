@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import AdminGISReceptionPanel from "./AdminGISReceptionPanel";
 
 const API = process.env.REACT_APP_BACKEND_URL;
 const REPORTS_BASE = `${API}/reports/purge_master_omega`;
@@ -13,6 +14,7 @@ export const AdminPilotageBce4xOmega = () => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState("ALL");
+  const [tab, setTab] = useState("DASHBOARD"); // DASHBOARD | GIS_RECEPTION
 
   useEffect(() => {
     fetch(`${REPORTS_BASE}/${encodeURIComponent("DASHBOARD_PILOTAGE_BCE_4X_Ω.json")}`)
@@ -48,11 +50,40 @@ export const AdminPilotageBce4xOmega = () => {
       <header style={styles.header}>
         <h1 style={styles.h1}>DASHBOARD_PILOTAGE_BCE-4X_Ω</h1>
         <div style={styles.sub}>
-          ADMIN PREMIUM · Doctrine BCE-4X ULTIME ABSOLU x3 · Ordre n°41 ·{" "}
+          ADMIN PREMIUM · Doctrine BCE-4X ULTIME ABSOLU x3 · Ordres n°41 / 42_BIS / 43 ·{" "}
           {data.generated_at_utc}
         </div>
       </header>
 
+      <div style={styles.tabRow} data-testid="pilotage-tabs">
+        <button
+          onClick={() => setTab("DASHBOARD")}
+          style={{
+            ...styles.tabBtn,
+            background: tab === "DASHBOARD" ? "#22d3ee" : "#162032",
+            color: tab === "DASHBOARD" ? "#0a1018" : "#e2e8f0",
+          }}
+          data-testid="pilotage-tab-dashboard"
+        >
+          DASHBOARD ORDRES
+        </button>
+        <button
+          onClick={() => setTab("GIS_RECEPTION")}
+          style={{
+            ...styles.tabBtn,
+            background: tab === "GIS_RECEPTION" ? "#f59e0b" : "#162032",
+            color: tab === "GIS_RECEPTION" ? "#0a1018" : "#e2e8f0",
+          }}
+          data-testid="pilotage-tab-gis-reception"
+        >
+          RÉCEPTION GIS Ω
+        </button>
+      </div>
+
+      {tab === "GIS_RECEPTION" ? (
+        <AdminGISReceptionPanel />
+      ) : (
+        <>
       <div style={styles.bannerOk} data-testid="pilotage-banner">
         ★ {stats.total_ordres} ORDRES recensés · {stats.done_count} DONE ·{" "}
         {stats.progress_count} PROGRESS · {stats.backlog_count} BACKLOG · pytest{" "}
@@ -176,6 +207,8 @@ export const AdminPilotageBce4xOmega = () => {
           ✓ Pilotage institutionnel · {ordres.length} ordres recensés · accès ADMIN_PREMIUM
         </div>
       </footer>
+        </>
+      )}
     </div>
   );
 };
@@ -192,6 +225,17 @@ const styles = {
   header: { borderLeft: "5px solid #f59e0b", padding: "6px 0 6px 18px", marginBottom: 22 },
   h1: { margin: 0, fontSize: 22, color: "#fef3c7", letterSpacing: "0.6px" },
   sub: { color: "#94a3b8", fontSize: 12, marginTop: 6 },
+  tabRow: { display: "flex", gap: 8, marginBottom: 18, borderBottom: "1px solid #1e293b", paddingBottom: 8 },
+  tabBtn: {
+    padding: "10px 20px",
+    border: "1px solid #1e293b",
+    borderRadius: 6,
+    fontWeight: 700,
+    fontSize: 12,
+    cursor: "pointer",
+    letterSpacing: "0.4px",
+    transition: "all 0.15s ease",
+  },
   bannerOk: {
     background: "linear-gradient(135deg,#14532d 0%,#15803d 100%)",
     border: "1px solid #16a34a",

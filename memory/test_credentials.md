@@ -24,3 +24,17 @@
 - **Token env** : `GIS_RECEPTION_COMMANDANT_TOKEN` (backend/.env)
 - **Validators** : check_format · check_size · check_integrity (SHA-256 + zipfile.testzip)
 - **Codes HTTP** : 200=LOADED · 401=token invalide · 404=slot inconnu · 400=filename unsafe · 413=too_large · 422=QUARANTINED
+
+## AdminGISReceptionPanel UI (Ordre n°43)
+- **Route** : `/admin-premium` → menu "Pilotage BCE-4X Ω" → onglet "RÉCEPTION GIS Ω"
+- **data-testid clés** :
+  - `pilotage-tab-gis-reception` (onglet)
+  - `gis-reception-panel` (root)
+  - `gis-reception-token-input` (saisie token)
+  - `gis-reception-save-token-btn` / `gis-reception-clear-token-btn`
+  - `slot-card-{SLOT_ID}` · `drop-zone-{SLOT_ID}` · `file-input-{SLOT_ID}`
+  - `slot-status-{SLOT_ID}` · `sha256-{SLOT_ID}`
+  - `progress-bar-{SLOT_ID}` · `upload-cancel-{SLOT_ID}`
+  - `event-log` · `event-row-{i}`
+- **Token storage** : `sessionStorage["gis_reception_commandant_token"]`
+- **Token de test** : `STEEVE-MAX-X42BIS-GIS-RECEPTION-EXPLICIT`

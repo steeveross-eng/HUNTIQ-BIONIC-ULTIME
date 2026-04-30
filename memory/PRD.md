@@ -2715,3 +2715,46 @@ Aucune donnée synthétique générée — anti-générique strict.
 - Incoming : `/app/backend/data/gis_operational/incoming/{slot_id}/`
 - Quarantine : `/app/backend/data/gis_operational/quarantine/`
 - Manifest live : `/app/backend/data/gis_operational/GIS_RECEPTION_INTAKE_Ω.json`
+
+## ═════════════════════════════════════════════════════════════════════
+## PHASE XXII — ORDRE N°43 (2026-04-30) — SCELLÉ
+## ═════════════════════════════════════════════════════════════════════
+### Objet
+ADMIN_GIS_RECEPTION_PANEL_Ω : panneau React drag-drop ADMIN_PREMIUM_ONLY
+intégré dans `/admin-premium → Pilotage BCE-4X Ω → onglet RÉCEPTION GIS Ω`.
+
+### Composants
+- `frontend/src/components/admin/AdminGISReceptionPanel.jsx` (NOUVEAU)
+  - SHA-256 : `2bfe6e9d3d87a52503a375e68608913e563e6171bfd118f076acc890be40578d`
+- `frontend/src/components/admin/AdminPilotageBce4xOmega.jsx` (mis à jour : onglets)
+  - SHA-256 : `4056521426933e820fa7c276b4b87dad2059ab4a4bd9095890d531a21e6b4d6e`
+
+### Fonctionnalités
+- Drag-and-drop par slot (HTML5 + click-to-pick)
+- Upload chunked XHR avec barre de progression (1 Mo/chunk)
+- Annulation en cours (xhr.abort)
+- Token Commandant en sessionStorage (jamais localStorage, effacement explicite)
+- Polling /intake-status toutes les 7s
+- Affichage temps-réel SHA-256 + status LOADED/QUARANTINED/ABORTED/ERROR
+- Validators détaillés (3 couches)
+- Journal institutionnel circulaire (60 derniers évènements)
+- Drop-zones désactivées tant que token non saisi
+- Gestion erreurs : 401 / 404 / 422 / 413 / 400 / réseau
+
+### Tests E2E (Playwright)
+- ✓ Render onglet GIS RECEPTION (panneau + 6 slots + token input)
+- ✓ Saisie token + persistance sessionStorage
+- ✓ Activation drop-zones post-token (cyan)
+- ✓ Upload XHR réel (geojson 12.4 Ko) → status LOADED
+- ✓ Banner mis à jour live : "6 SLOTS · 1 LOADED · 5 ABSENT"
+- ✓ SHA-256 affiché tronqué + 3 validators ✓
+- ✓ Polling auto-refresh /intake-status
+
+### Livrable institutionnel
+- `/reports/institution/RAPPORT_ORDRE_43_Ω.pdf` · 7 701 o
+  - SHA-256 : `cced6b63250d83996f9213214c30f26a31fd8f4ed0605fa4e2c1fda4dadd17d2`
+
+### Tests
+- pytest baseline cumulée : **199/199 PASSED** (zéro régression)
+- Lint ESLint : 0 issue (panel + pilotage)
+- V30 INVIOLÉ vs FREEZE_MASTER
