@@ -1,0 +1,58 @@
+<!DOCTYPE html><html lang='fr'><head><meta charset='utf-8'/>
+<title>GPS_GIS_INTEGRATION_SPEC_Ω</title><style>
+:root{--bg:#0a1018;--panel:#111c2e;--panel2:#162032;--txt:#e2e8f0;--mute:#94a3b8;--accent:#06b6d4;--accent2:#22d3ee;--ok:#16a34a;--gold:#f59e0b;--dang:#dc2626;--bord:#1e293b;}
+*{box-sizing:border-box;}
+body{font-family:'Inter','Segoe UI',sans-serif;background:linear-gradient(180deg,#0a1018 0%,#0b1320 100%);color:var(--txt);margin:0;padding:32px 20px;}
+.wrap{max-width:1320px;margin:0 auto;}
+header.title{border-left:5px solid var(--gold);padding:6px 0 6px 18px;margin-bottom:22px;}
+header.title h1{margin:0;font-size:24px;color:#fef3c7;letter-spacing:0.6px;}
+header.title .sub{color:var(--mute);font-size:13px;margin-top:6px;}
+.b-ok{background:linear-gradient(135deg,#14532d 0%,#15803d 100%);border:1px solid var(--ok);color:#dcfce7;padding:12px 22px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:18px;}
+.b-gold{background:linear-gradient(135deg,#78350f 0%,#92400e 100%);border:1px solid var(--gold);color:#fef3c7;padding:12px 22px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:18px;}
+h2{color:var(--gold);font-size:18px;margin:32px 0 12px;border-left:4px solid var(--gold);padding-left:12px;}
+h3{color:var(--accent2);font-size:15px;margin:22px 0 10px;}
+.card{background:var(--panel);border:1px solid var(--bord);border-radius:10px;padding:18px 22px;margin-bottom:18px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px;}
+.kpi{padding:14px 18px;background:var(--panel2);border:1px solid var(--bord);border-radius:8px;}
+.kpi .num{color:var(--accent2);font-weight:700;font-size:22px;}
+.kpi .lbl{color:var(--mute);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;}
+table{width:100%;border-collapse:collapse;font-size:11.5px;}
+th,td{padding:8px 10px;border-bottom:1px solid var(--bord);text-align:left;vertical-align:top;}
+th{background:var(--panel2);color:#fff;text-transform:uppercase;font-size:10.5px;letter-spacing:0.5px;}
+.scroll{max-height:520px;overflow-y:auto;border:1px solid var(--bord);border-radius:6px;}
+.dl{color:var(--accent2);text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid rgba(6,182,212,0.35);border-radius:5px;}
+.mono{font-family:'JetBrains Mono','Courier New',monospace;font-size:10px;color:var(--mute);word-break:break-all;}
+.foot{margin-top:30px;padding:18px 22px;background:var(--panel);border:1px solid var(--bord);border-radius:10px;font-size:12px;color:var(--mute);}
+.lbl-foot{color:var(--accent2);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:0.5px;}
+.v30-lock{margin-top:14px;padding:10px 14px;background:rgba(22,163,74,0.10);border:1px solid rgba(22,163,74,0.45);border-radius:6px;color:#4ade80;font-weight:700;text-align:center;letter-spacing:0.6px;}
+.heatmap-img{max-width:100%;border-radius:10px;border:1px solid var(--bord);}
+</style>
+<style>.b-p0{background:#fb7185;color:#1f2937;font-weight:700;padding:2px 6px;border-radius:4px;font-size:10px;}
+.b-p1{background:#fbbf24;color:#1f2937;font-weight:700;padding:2px 6px;border-radius:4px;font-size:10px;}
+.b-p2{background:#22d3ee;color:#1f2937;font-weight:700;padding:2px 6px;border-radius:4px;font-size:10px;}
+.cite{color:#60a5fa;font-style:italic;font-size:11px;}</style>
+</head><body>
+<div class='wrap' data-testid='gps-gis-integration-spec'>
+<header class='title'><h1>GPS_GIS_INTEGRATION_SPEC_Ω · Spécification phase suivante</h1>
+<div class='sub'>BCE-4X ULTIME ABSOLU x3 · Ordre n°39 · 2026-04-30T12:15:31+00:00 · SPÉC SEULEMENT</div></header>
+<div class='b-gold'>★ 9 couches GIS attendues · format GPS canonical défini · 5 étapes de réalisation ★</div>
+<h2>1. Couches GIS attendues</h2>
+<div class='card scroll'><table><thead><tr><th>ID</th><th>Prio</th><th>Format</th><th>Source</th><th>Injection</th></tr></thead>
+<tbody><tr><td><b>GIS_FRAGMENTATION_INDEX</b></td><td><span class='b-p0'>P0</span></td><td><span class='mono'>GeoTIFF raster · 250m × 250m · valeurs ∈ [0,1]</span></td><td><span class='cite'>DICKSON_2017 · MFFP_CORRIDORS_2018</span></td><td><code>ENGINE_CORRIDORS_GIS_Ω.fragmentation_input</code></td></tr><tr><td><b>GIS_COUVERT_FORESTIER_DENSITY</b></td><td><span class='b-p0'>P0</span></td><td><span class='mono'>GeoTIFF raster · 100m × 100m · % canopée</span></td><td><span class='cite'>MFFP — base écoforestière 2024</span></td><td><code>ENGINE_HABITAT_Ω.couvert_forestier_input</code></td></tr><tr><td><b>GIS_PENTE_DEM</b></td><td><span class='b-p1'>P1</span></td><td><span class='mono'>GeoTIFF raster · 1m LIDAR · degrés</span></td><td><span class='cite'>MERN — base 1m LIDAR</span></td><td><code>ENGINE_CORRIDORS_GIS_Ω.pente_input</code></td></tr><tr><td><b>GIS_HYDROLOGIE_RESEAU</b></td><td><span class='b-p0'>P0</span></td><td><span class='mono'>Vecteur LineString · ordre Strahler</span></td><td><span class='cite'>GRHQ Québec</span></td><td><code>ENGINE_CORRIDORS_GIS_Ω.hydrologie_input</code></td></tr><tr><td><b>GIS_ANTHROPISATION_FINE</b></td><td><span class='b-p0'>P0</span></td><td><span class='mono'>Raster + Vecteur · classes urbain/agricole/infra</span></td><td><span class='cite'>Statistique Canada + MTQ — RTSS</span></td><td><code>ENGINE_GOUVERNANCE_Ω.anthropisation_input</code></td></tr><tr><td><b>GIS_BARRIERES_LINEAIRES</b></td><td><span class='b-p0'>P0</span></td><td><span class='mono'>Vecteur LineString · autoroutes/voies/clôtures</span></td><td><span class='cite'>MTQ ; Hydro-Québec</span></td><td><code>ENGINE_CORRIDORS_GIS_Ω.barrieres_input</code></td></tr><tr><td><b>GIS_PIEGES_ECOLOGIQUES</b></td><td><span class='b-p1'>P1</span></td><td><span class='mono'>Vecteur Polygon</span></td><td><span class='cite'>Études MFFP régionales 2018-2024</span></td><td><code>ENGINE_CORRIDORS_GIS_Ω.pieges_ecologiques_input</code></td></tr><tr><td><b>GPS_TRACKING_5_ESPECES</b></td><td><span class='b-p0'>P0</span></td><td><span class='mono'>Table {animal_id, espece, lat, lon, ts_utc, season} — Parquet ou CSV</span></td><td><span class='cite'>MFFP — banque GPS faune</span></td><td><code>ENGINE_CORRIDORS_GIS_Ω.gps_traces_input</code></td></tr><tr><td><b>INDICE_RESISTANCE_PAYSAGE</b></td><td><span class='b-p1'>P1</span></td><td><span class='mono'>GeoTIFF raster par espèce · résistance circuit-theory</span></td><td><span class='cite'>Calcul à partir des couches GIS</span></td><td><code>ENGINE_CORRIDORS_GIS_Ω.resistance_input</code></td></tr></tbody></table></div>
+<h2>2. Format GPS canonical</h2>
+<div class='card'><pre class='mono'>{
+  &quot;schema&quot;: [
+    &quot;animal_id (str)&quot;,
+    &quot;espece (str ∈ ESPECES_135)&quot;,
+    &quot;lat (float WGS84)&quot;,
+    &quot;lon (float WGS84)&quot;,
+    &quot;ts_utc (ISO 8601)&quot;,
+    &quot;season (str ∈ PRINTEMPS|ETE|AUTOMNE|HIVER)&quot;
+  ],
+  &quot;format_recommande&quot;: &quot;Parquet (rapide, typé) ou CSV avec entêtes&quot;,
+  &quot;frequence&quot;: &quot;≥1 fix / 4h pendant ≥6 mois pour validation territoriale&quot;
+}</pre></div>
+<h2>3. Étapes de réalisation</h2>
+<div class='card'><ol><li>Étape 1 : Acquisition couches MFFP/MTQ/Statistique Canada (P0).</li><li>Étape 2 : Création ENGINE_CORRIDORS_GIS_Ω (module Python hors-FREEZE).</li><li>Étape 3 : Loader GPS multi-format (Parquet/CSV).</li><li>Étape 4 : Recalcul TERRITOIRE_MASTER_Ω avec GIS effectif.</li><li>Étape 5 : Sceau institutionnel post-GIS (X5 FINAL).</li></ol></div>
+<footer class='foot'><div class='v30-lock'>✓ Spécification scellée · prêt pour PHASE GPS+GIS sur ordre formel</div></footer>
+</div></body></html>

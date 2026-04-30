@@ -1,0 +1,41 @@
+{
+  "manifest_id": "RAPPORT_CONFIRMATION_OPTIMISATION_6_MASTERS_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°39",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-30T12:15:31+00:00",
+  "checks": [
+    {
+      "check": "ADD-ONLY (score >= baseline)",
+      "result": true
+    },
+    {
+      "check": "6 SUPER MASTERS = 100/100",
+      "result": true
+    },
+    {
+      "check": "Mapping bloc→master conforme",
+      "result": true
+    },
+    {
+      "check": "TERRITOIRE_MASTER_X4 = 92.52",
+      "result": true
+    },
+    {
+      "check": "5/5 espèces APTE",
+      "result": true
+    },
+    {
+      "check": "V30_LOCK INVIOLÉ",
+      "result": true
+    }
+  ],
+  "all_checks_pass": true,
+  "synthese": {
+    "territoire_master_x4_score": 92.52,
+    "decision_globale": "APTE",
+    "six_masters_at_100": true,
+    "mapping_conforme": true,
+    "addonly_respecte": true
+  }
+}

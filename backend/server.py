@@ -1253,6 +1253,14 @@ try:
 except Exception as e:
     logger.warning(f"PHASE_XV_Ω router not loaded: {e}")
 
+# ═══ PHASE_XIX_OMEGA — 6 SUPER MASTERS HTTP optimisés (Commandant STEEVE-MAX · 2026-04-30 · ORDRE N°39) ═══
+try:
+    from routes.phase_xix_router_omega import router as phase_xix_router
+    app.include_router(phase_xix_router)
+    logger.info("✓ PHASE_XIX_Ω active : 6 SUPER MASTERS HTTP — /api/v30/super-masters/*")
+except Exception as e:
+    logger.warning(f"PHASE_XIX_Ω router not loaded: {e}")
+
 
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")

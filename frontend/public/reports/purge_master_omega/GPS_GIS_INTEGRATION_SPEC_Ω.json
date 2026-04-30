@@ -1,0 +1,117 @@
+{
+  "manifest_id": "GPS_GIS_INTEGRATION_SPEC_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°39",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-30T12:15:31+00:00",
+  "scope": "SPÉCIFICATION SEULEMENT — aucun code GIS produit dans cet ordre.",
+  "couches_gis_attendues": [
+    {
+      "id": "GIS_FRAGMENTATION_INDEX",
+      "priority": "P0",
+      "format": "GeoTIFF raster · 250m × 250m · valeurs ∈ [0,1]",
+      "source": "DICKSON_2017 · MFFP_CORRIDORS_2018",
+      "injection": "ENGINE_CORRIDORS_GIS_Ω.fragmentation_input"
+    },
+    {
+      "id": "GIS_COUVERT_FORESTIER_DENSITY",
+      "priority": "P0",
+      "format": "GeoTIFF raster · 100m × 100m · % canopée",
+      "source": "MFFP — base écoforestière 2024",
+      "injection": "ENGINE_HABITAT_Ω.couvert_forestier_input"
+    },
+    {
+      "id": "GIS_PENTE_DEM",
+      "priority": "P1",
+      "format": "GeoTIFF raster · 1m LIDAR · degrés",
+      "source": "MERN — base 1m LIDAR",
+      "injection": "ENGINE_CORRIDORS_GIS_Ω.pente_input"
+    },
+    {
+      "id": "GIS_HYDROLOGIE_RESEAU",
+      "priority": "P0",
+      "format": "Vecteur LineString · ordre Strahler",
+      "source": "GRHQ Québec",
+      "injection": "ENGINE_CORRIDORS_GIS_Ω.hydrologie_input"
+    },
+    {
+      "id": "GIS_ANTHROPISATION_FINE",
+      "priority": "P0",
+      "format": "Raster + Vecteur · classes urbain/agricole/infra",
+      "source": "Statistique Canada + MTQ — RTSS",
+      "injection": "ENGINE_GOUVERNANCE_Ω.anthropisation_input"
+    },
+    {
+      "id": "GIS_BARRIERES_LINEAIRES",
+      "priority": "P0",
+      "format": "Vecteur LineString · autoroutes/voies/clôtures",
+      "source": "MTQ ; Hydro-Québec",
+      "injection": "ENGINE_CORRIDORS_GIS_Ω.barrieres_input"
+    },
+    {
+      "id": "GIS_PIEGES_ECOLOGIQUES",
+      "priority": "P1",
+      "format": "Vecteur Polygon",
+      "source": "Études MFFP régionales 2018-2024",
+      "injection": "ENGINE_CORRIDORS_GIS_Ω.pieges_ecologiques_input"
+    },
+    {
+      "id": "GPS_TRACKING_5_ESPECES",
+      "priority": "P0",
+      "format": "Table {animal_id, espece, lat, lon, ts_utc, season} — Parquet ou CSV",
+      "source": "MFFP — banque GPS faune",
+      "injection": "ENGINE_CORRIDORS_GIS_Ω.gps_traces_input"
+    },
+    {
+      "id": "INDICE_RESISTANCE_PAYSAGE",
+      "priority": "P1",
+      "format": "GeoTIFF raster par espèce · résistance circuit-theory",
+      "source": "Calcul à partir des couches GIS",
+      "injection": "ENGINE_CORRIDORS_GIS_Ω.resistance_input"
+    }
+  ],
+  "format_gps_canonical": {
+    "schema": [
+      "animal_id (str)",
+      "espece (str ∈ ESPECES_135)",
+      "lat (float WGS84)",
+      "lon (float WGS84)",
+      "ts_utc (ISO 8601)",
+      "season (str ∈ PRINTEMPS|ETE|AUTOMNE|HIVER)"
+    ],
+    "format_recommande": "Parquet (rapide, typé) ou CSV avec entêtes",
+    "frequence": "≥1 fix / 4h pendant ≥6 mois pour validation territoriale"
+  },
+  "points_injection": {
+    "ENGINE_CORRIDORS_GIS_Ω": [
+      "fragmentation_input",
+      "pente_input",
+      "hydrologie_input",
+      "barrieres_input",
+      "pieges_ecologiques_input",
+      "gps_traces_input",
+      "resistance_input"
+    ],
+    "ENGINE_HABITAT_Ω": [
+      "couvert_forestier_input"
+    ],
+    "ENGINE_GOUVERNANCE_Ω": [
+      "anthropisation_input"
+    ],
+    "TERRITOIRE_MASTER_Ω": [
+      "intègre les sorties des engines amont"
+    ]
+  },
+  "doctrine_anti_contamination": [
+    "Aucune logique générique. Aucune interpolation par défaut.",
+    "Toute couche GIS absente = anti_generique_violation tracée.",
+    "V30 INVIOLABLE."
+  ],
+  "etapes_de_realisation_proposees": [
+    "Étape 1 : Acquisition couches MFFP/MTQ/Statistique Canada (P0).",
+    "Étape 2 : Création ENGINE_CORRIDORS_GIS_Ω (module Python hors-FREEZE).",
+    "Étape 3 : Loader GPS multi-format (Parquet/CSV).",
+    "Étape 4 : Recalcul TERRITOIRE_MASTER_Ω avec GIS effectif.",
+    "Étape 5 : Sceau institutionnel post-GIS (X5 FINAL)."
+  ]
+}

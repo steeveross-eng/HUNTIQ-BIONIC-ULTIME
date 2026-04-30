@@ -1,0 +1,68 @@
+{
+  "manifest_id": "SUPER_MASTERS_Ω_HTTP_SPEC",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°39",
+  "generated_at_utc": "2026-04-30T12:15:31+00:00",
+  "router_module": "routes.phase_xix_router_omega",
+  "routes_definitions": [
+    {
+      "method": "GET",
+      "path": "/api/v30/super-masters/list",
+      "description": "Liste des 6 SUPER MASTERS exposés"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v30/super-masters/sceau/status",
+      "description": "Statut du SCEAU_INSTITUTIONNEL_X4_FINAL_Ω"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v30/super-masters/{master_id}/optimised",
+      "description": "Détail d'un SUPER MASTER optimisé (master_id ∈ corridors|nutrition|sensoriel|comportement|gouvernance|territoire)"
+    }
+  ],
+  "curl_validation": [
+    {
+      "endpoint": "/api/v30/super-masters/list",
+      "http_code": 200,
+      "size": 1349
+    },
+    {
+      "endpoint": "/api/v30/super-masters/sceau/status",
+      "http_code": 200,
+      "size": 995
+    },
+    {
+      "endpoint": "/api/v30/super-masters/corridors/optimised",
+      "http_code": 200,
+      "size": 1347
+    },
+    {
+      "endpoint": "/api/v30/super-masters/nutrition/optimised",
+      "http_code": 200,
+      "size": 1352
+    },
+    {
+      "endpoint": "/api/v30/super-masters/sensoriel/optimised",
+      "http_code": 200,
+      "size": 1337
+    },
+    {
+      "endpoint": "/api/v30/super-masters/comportement/optimised",
+      "http_code": 200,
+      "size": 1359
+    },
+    {
+      "endpoint": "/api/v30/super-masters/gouvernance/optimised",
+      "http_code": 200,
+      "size": 1335
+    },
+    {
+      "endpoint": "/api/v30/super-masters/territoire/optimised",
+      "http_code": 200,
+      "size": 1341
+    }
+  ],
+  "all_routes_https_200": true,
+  "sceau_referenced_in_responses": true
+}

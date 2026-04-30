@@ -1,0 +1,42 @@
+{
+  "manifest_id": "ATTESTATION_INSTITUTIONNELLE_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°39",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "issued_at_utc": "2026-04-30T12:15:31+00:00",
+  "sceau_institutionnel_x4_final": "07dc3d41ba8061bddf96bfa585a115eebf18773cf88ba5cbf7b4d1eb11e16de7",
+  "etat_certifié": "APTE",
+  "territoire_master_x4_score": 92.52,
+  "six_masters_optimises_100": true,
+  "loi_biologique_de_reference": "BIO_PROFILE_Ω_135 (675 entrées · 9 blocs · 5 espèces)",
+  "artefacts_scellés": [
+    {
+      "filename": "BIO_PROFILE_Ω_135_NORMALISÉ.json",
+      "sha256": "b33f302086a7b110ccfd68b376594a2edd9299850e8c76ff7f23f91d55a2a239",
+      "size_bytes": 13148
+    },
+    {
+      "filename": "DATASETS_Ω_FUSION_ADDONLY.json",
+      "sha256": "78fc27f2e0e21ee41b5d11c389602b73f78cb4e7001a51a7f5612f3b9c4e718f",
+      "size_bytes": 15500
+    },
+    {
+      "filename": "SIX_MASTERS_Ω_OPTIMISÉS.json",
+      "sha256": "6490a6cd975531e0b092308f573685d84ed928d1d54df386c252471dd09ee1e3",
+      "size_bytes": 4076
+    },
+    {
+      "filename": "TERRITOIRE_MASTER_Ω_FUSION_X4.json",
+      "sha256": "5386de5a6876de2474423c7768d5aab765588fc32a23bd10904598c49b0efef4",
+      "size_bytes": 1346
+    },
+    {
+      "filename": "VALIDATION_Ω_OPTIMISATION_MASTERS_X4.json",
+      "sha256": "77a4218925819074d60dffd7925c0c7f2ce6995adc63274fedfb745bbdde9a30",
+      "size_bytes": 4541
+    }
+  ],
+  "v30_lock_inviole": true,
+  "freeze_master_sha256": "31c18388ab3090fc0588cc0028a0181c638ac2fba0dff9f9d40700e9f97ccf27",
+  "validite": "Permanente jusqu'au prochain ordre du Commandant"
+}

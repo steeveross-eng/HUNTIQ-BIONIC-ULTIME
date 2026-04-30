@@ -27,6 +27,44 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XIX · SCEAU_INSTITUTIONNEL_X4_FINAL_Ω + HTTP + VISUALISATION + GPS_SPEC (2026-04-30 · ordre n°39)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX. Verrouillage institutionnel de l'état APTE + exposition HTTP + heatmaps + spec GIS. **V30 INVIOLÉ · pytest 154/153 · 17/17 HTTPS 200 · 8/8 routes API.**
+  - **🎯 SCEAU_INSTITUTIONNEL_X4_FINAL_Ω = `07dc3d41ba8061bddf96bfa585a115eebf18773cf88ba5cbf7b4d1eb11e16de7`** (SHA-256 global déterministe sur 5 artefacts ordonnés).
+  - **BLOC 0 — RAPPORT_CONFIRMATION** : 6/6 checks PASS (ADD-ONLY + 6 masters 100/100 + mapping + X4=92.52 + 5/5 APTE + V30 INVIOLÉ).
+  - **BLOC 1 — SCEAU + ATTESTATION HTML+PDF** :
+    - Stockage : `/app/backend/institution/sceaux/SCEAU_INSTITUTIONNEL_X4_FINAL_Ω.sha256` (texte + métadonnées).
+    - HTTPS : `/app/frontend/public/reports/institution/SCEAU_INSTITUTIONNEL_X4_FINAL_Ω.{html,pdf}`.
+    - PDF reportlab A4 institutionnel (4 149 octets) avec tableau état + artefacts scellés.
+    - ATTESTATION_INSTITUTIONNELLE_Ω.{json,html} avec validité permanente.
+  - **BLOC 2 — CABLAGE_HTTP_SUPER_MASTERS** : Nouveau routeur `phase_xix_router_omega.py` enregistré dans `server.py`.
+    - 8 endpoints actifs : `GET /api/v30/super-masters/list` + `/sceau/status` + 6 × `/{master_id}/optimised`.
+    - Tous renvoient JSON sourcé (BIO_PROFILE_Ω_135 + DATASETS_Ω_FUSION_ADDONLY) + sceau_sha256 + horodatage_build.
+    - **8/8 HTTP 200** validés en double curl batch.
+  - **BLOC 3 — TERRITOIRE_APTE_VISUALISATION_Ω** :
+    - 5 heatmaps PNG individuelles (1 par espèce, 6 SUPER MASTERS) — ~38 KB chacune.
+    - 1 heatmap composite (5 espèces × 6 MASTERS, 119 KB) — palette YlGn vert/jaune.
+    - HTML `TERRITOIRE_MASTER_Ω_APTE_VISUALISATION.html` consolidant les 6 PNG.
+  - **BLOC 4 — GPS_GIS_INTEGRATION_SPEC_Ω** :
+    - 9 couches GIS spécifiées (P0/P1) avec format + source + injection.
+    - Format GPS canonique : `{animal_id, espece, lat, lon, ts_utc, season}` Parquet/CSV.
+    - Points d'injection mappés aux 6 SUPER MASTERS + 3 ENGINES scientifiques.
+    - 5 étapes de réalisation institutionnelle proposées.
+  - **BLOC 5 — VALIDATION_Ω_ORDRE_39** :
+    - **pytest 154/153 PASSED** (62 base + 23 SUPER + 32 PHASE XVII + 22 BP135 + 15 PHASE XIX).
+    - V30 INVIOLÉ · FREEZE_MASTER INTACT · backend 8/8 HTTP 200 · **17/17 livrables HTTPS 200**.
+  - **17 livrables institutionnels** (12 dans purge_master_omega/ + 5 dans institution/) :
+    - RAPPORT_CONFIRMATION_OPTIMISATION_6_MASTERS_Ω.{json,html}
+    - SUPER_MASTERS_Ω_HTTP_SPEC.{json,html}
+    - TERRITOIRE_MASTER_Ω_APTE_VISUALISATION.html + 6 heatmaps PNG
+    - GPS_GIS_INTEGRATION_SPEC_Ω.{json,html}
+    - VALIDATION_Ω_ORDRE_39.{json,html}
+    - ATTESTATION_INSTITUTIONNELLE_Ω.{json,html}
+    - SCEAU_INSTITUTIONNEL_X4_FINAL_Ω.{html,pdf}
+  - **V30 INVIOLÉ** · **FREEZE_MASTER** : `31c18388…ccf27` · **SCEAU_X4_FINAL** : `07dc3d41…16de7`.
+  - **Module institutionnel** : `routes/phase_xix_router_omega.py` (~120 LOC, 3 endpoints handlers).
+  - **Script orchestration** : `/app/scripts/phase_xix_sceau_visu_gps_omega.py` (~700 LOC, 6 BLOCS).
+  - **Tests** : pytest 154/153 + curl batch 17/17 HTTPS 200 + 8/8 API routes + bash + python3. Aucun testing subagent.
+
 - **PHASE_XVIII · OPTIMISATION_Ω_DES_6_MASTERS_X4 (FUSION_ADD_ONLY) (2026-04-30 · ordre n°38)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX. Ingestion du JSON authentique BIO_PROFILE_Ω_135 (675 entrées · 9 blocs · 5 espèces · 16 champs/entrée) + fusion ADD-ONLY x4 avec NUT20 + HAB50. **V30 INVIOLÉ · FREEZE INTACT · pytest 139/139 · 10/10 HTTPS 200.**
   - **🎯 TERRITOIRE_MASTER_Ω_FUSION_X4 = 92.52 (APTE)** · **5/5 espèces APTE** (ORIGNAL=93.55, CHEVREUIL=92.41, WAPITI=92.18, OURS_NOIR=92.10, DINDON_SAUVAGE=92.36) · Δ vs n°36 : **+44.31**
