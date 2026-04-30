@@ -27,6 +27,42 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XX · FRONTEND_TERRITOIRE_APTE_Ω + INIT_GPS_GIS + PRE_SCEAU_X5 (2026-04-30 · ordre n°40)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX. **Stratégie A (STUB_READY) validée** — anti-générique strict respecté. **V30 INVIOLÉ · pytest 168/168 · 7/7 HTTPS 200 · Frontend HTTP 200.**
+  - **🎯 PRE_SCEAU_X5_Ω = `80b58a6ed4efce36562e3d156474bbbdcee4521e044f22be5a20272eb4b927ec`** (PROVISIONAL · finalisation post-GIS).
+  - **BLOC 1 — FRONTEND_TERRITOIRE_APTE_Ω** :
+    - Composant React `WidgetTerritoireApteOmega.jsx` (8 781 octets · sha=`2f0d7c5e…`).
+    - Route `/territoire-apte` enregistrée dans `App.js` (lazy import).
+    - Consommation 3 endpoints API : `/list`, `/sceau/status`, `/{master_id}/optimised` ×6.
+    - Affichage temps-réel : bandeau APTE/MARGINAL · 6 cartes MASTERS · heatmap composite + 5 par espèce (tabs).
+    - 12 `data-testid` pour instrumentation tests.
+    - **Page live HTTP 200** : https://huntiq-restore.preview.emergentagent.com/territoire-apte
+  - **BLOC 2 — GPS_GIS_PHASE_INIT_Ω (STUB_READY)** :
+    - Module `gps_loader_omega.py` (~175 LOC) : Parquet (pyarrow 24.0) + CSV avec validation stricte.
+    - Module `engine_corridors_gis_omega.py` (~165 LOC) : 9 couches GIS spécifiées, status `ABSENT|LOADED`.
+    - Schéma canonical GPS : `{animal_id, espece, lat, lon, ts_utc, season}`.
+    - 9/9 couches en `STUB_READY` (aucune donnée synthétique générée — anti-générique strict).
+    - `compute_corridors_gis()` retourne `STUB_READY` + 9 violations tracées (LAYER_ABSENT::*).
+    - 14 tests pytest (validation interface + validation rejet espèces non-canoniques + GPS CSV E2E).
+  - **BLOC 3 — PRE_SCEAU_X5_Ω + ATTESTATION skeleton** :
+    - Calcul SHA-256 global déterministe sur 8 artefacts (X4 baseline + 2 nouveaux X5).
+    - Stocké : `/app/backend/institution/sceaux/PRE_SCEAU_X5_Ω.sha256` avec status `PROVISIONAL`.
+    - Squelette ATTESTATION_X5 HTML (5 398 octets) + PDF reportlab A4 (3 121 octets).
+    - 6 sections marquées "à finaliser après PHASE_GIS_OPERATIONAL".
+    - Projection institutionnelle post-GIS : score 95-98 (croissance ~+5 attendue, décision RESTE APTE).
+  - **VALIDATION FINALE** :
+    - **pytest 168/168 PASSED** (62+23+32+22+15+14 = 6 fichiers test_phase_*.py Ω).
+    - V30 INVIOLÉ · FREEZE INTACT · backend 4/4 + 8 routes XIX HTTP 200.
+    - **7/7 livrables HTTPS 200** (FRONTEND.{json,html} · GPS_GIS_INIT.{json,html} · PRE_SCEAU.json · ATTESTATION_X5.{html,pdf}).
+    - Frontend `/territoire-apte` confirmé en production via screenshot Playwright (bandeau APTE vert · 6 MASTERS=100 · heatmap chargée).
+  - **Modules institutionnels créés** :
+    - `engines/v8_institutional/especes/gps_loader_omega.py`
+    - `engines/v8_institutional/especes/engine_corridors_gis_omega.py`
+    - `frontend/src/components/WidgetTerritoireApteOmega.jsx`
+    - `tests/test_phase_xx_gps_gis_omega.py`
+  - **Script orchestration** : `/app/scripts/phase_xx_frontend_gps_pre_sceau_x5_omega.py` (~700 LOC).
+  - **Tests** : pytest 168/168 + curl batch 7/7 HTTPS 200 + screenshot Playwright e2e + bash + python3. Aucun testing subagent.
+
 - **PHASE_XIX · SCEAU_INSTITUTIONNEL_X4_FINAL_Ω + HTTP + VISUALISATION + GPS_SPEC (2026-04-30 · ordre n°39)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX. Verrouillage institutionnel de l'état APTE + exposition HTTP + heatmaps + spec GIS. **V30 INVIOLÉ · pytest 154/153 · 17/17 HTTPS 200 · 8/8 routes API.**
   - **🎯 SCEAU_INSTITUTIONNEL_X4_FINAL_Ω = `07dc3d41ba8061bddf96bfa585a115eebf18773cf88ba5cbf7b4d1eb11e16de7`** (SHA-256 global déterministe sur 5 artefacts ordonnés).

@@ -1,0 +1,55 @@
+{
+  "manifest_id": "FRONTEND_TERRITOIRE_APTE_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°40",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-30T12:58:06+00:00",
+  "component_path": "/app/frontend/src/components/WidgetTerritoireApteOmega.jsx",
+  "component_sha256": "2f0d7c5eccf5fe4d5876562797589dc096c644cf91318f4d5abbe1b984a449a8",
+  "component_size_bytes": 8781,
+  "react_route": "/territoire-apte",
+  "route_registered_in_app_js": true,
+  "api_endpoints_consumed": [
+    "GET /api/v30/super-masters/list",
+    "GET /api/v30/super-masters/sceau/status",
+    "GET /api/v30/super-masters/{master_id}/optimised (×6)"
+  ],
+  "api_endpoints_check": [
+    {
+      "endpoint": "/api/v30/super-masters/list",
+      "http_code": 200
+    },
+    {
+      "endpoint": "/api/v30/super-masters/sceau/status",
+      "http_code": 200
+    },
+    {
+      "endpoint": "/api/v30/super-masters/territoire/optimised",
+      "http_code": 200
+    }
+  ],
+  "api_endpoints_ok": true,
+  "heatmaps_used": [
+    "HEATMAP_TERRITOIRE_Ω_COMPOSITE.png",
+    "HEATMAP_TERRITOIRE_Ω_ORIGNAL.png",
+    "HEATMAP_TERRITOIRE_Ω_CHEVREUIL.png",
+    "HEATMAP_TERRITOIRE_Ω_WAPITI.png",
+    "HEATMAP_TERRITOIRE_Ω_OURS_NOIR.png",
+    "HEATMAP_TERRITOIRE_Ω_DINDON_SAUVAGE.png"
+  ],
+  "data_testids": [
+    "widget-territoire-apte",
+    "widget-territoire-banner",
+    "widget-sceau-sha256",
+    "widget-masters-grid",
+    "widget-heatmap-composite",
+    "widget-espece-tabs",
+    "master-card-corridors",
+    "master-card-nutrition",
+    "master-card-sensoriel",
+    "master-card-comportement",
+    "master-card-gouvernance",
+    "master-card-territoire"
+  ],
+  "url_finale": "https://huntiq-restore.preview.emergentagent.com/territoire-apte"
+}

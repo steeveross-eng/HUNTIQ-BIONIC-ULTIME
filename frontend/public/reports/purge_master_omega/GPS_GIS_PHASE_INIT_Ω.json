@@ -1,0 +1,298 @@
+{
+  "manifest_id": "GPS_GIS_PHASE_INIT_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°40",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-30T12:58:06+00:00",
+  "strategie_appliquee": "STUB_READY (option A) — aucune donnée synthétique",
+  "modules_python_crees": [
+    {
+      "path": "engines/v8_institutional/especes/gps_loader_omega.py",
+      "lines": 175,
+      "role": "Loader GPS Parquet/CSV avec validation stricte"
+    },
+    {
+      "path": "engines/v8_institutional/especes/engine_corridors_gis_omega.py",
+      "lines": 165,
+      "role": "Engine GIS aval — 9 couches déclarées en STUB_READY"
+    }
+  ],
+  "engine_corridors_gis_status": {
+    "engine_id": "ENGINE_CORRIDORS_GIS_Ω",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+    "engine_lock_sha256": "52eb4d378758a6a55ce65dc0283abf809350566e4aac146a1bc735d848480e17",
+    "computed_at_utc": "2026-04-30T12:58:06+00:00",
+    "data_dir": "/app/backend/engines/v8_institutional/especes/data/gis",
+    "layers_total": 9,
+    "layers_loaded": 0,
+    "layers_absent": 9,
+    "layers": [
+      {
+        "layer_id": "GIS_FRAGMENTATION_INDEX",
+        "spec": {
+          "layer_id": "GIS_FRAGMENTATION_INDEX",
+          "priority": "P0",
+          "format_attendu": "GeoTIFF raster 250m × 250m",
+          "value_range": [
+            0.0,
+            1.0
+          ],
+          "source": "DICKSON_2017 · MFFP_CORRIDORS_2018",
+          "injection_point": "ENGINE_CORRIDORS_GIS_Ω.fragmentation_input",
+          "filename_attendu": "GIS_FRAGMENTATION_INDEX.tif"
+        },
+        "expected_path": "/app/backend/engines/v8_institutional/especes/data/gis/GIS_FRAGMENTATION_INDEX.tif",
+        "status": "ABSENT",
+        "size_bytes": 0
+      },
+      {
+        "layer_id": "GIS_COUVERT_FORESTIER_DENSITY",
+        "spec": {
+          "layer_id": "GIS_COUVERT_FORESTIER_DENSITY",
+          "priority": "P0",
+          "format_attendu": "GeoTIFF raster 100m × 100m",
+          "value_range": [
+            0.0,
+            100.0
+          ],
+          "source": "MFFP base écoforestière 2024",
+          "injection_point": "ENGINE_HABITAT_Ω.couvert_forestier_input",
+          "filename_attendu": "GIS_COUVERT_FORESTIER_DENSITY.tif"
+        },
+        "expected_path": "/app/backend/engines/v8_institutional/especes/data/gis/GIS_COUVERT_FORESTIER_DENSITY.tif",
+        "status": "ABSENT",
+        "size_bytes": 0
+      },
+      {
+        "layer_id": "GIS_PENTE_DEM",
+        "spec": {
+          "layer_id": "GIS_PENTE_DEM",
+          "priority": "P1",
+          "format_attendu": "GeoTIFF raster 1m LIDAR (degrés)",
+          "value_range": [
+            0.0,
+            90.0
+          ],
+          "source": "MERN base 1m LIDAR",
+          "injection_point": "ENGINE_CORRIDORS_GIS_Ω.pente_input",
+          "filename_attendu": "GIS_PENTE_DEM.tif"
+        },
+        "expected_path": "/app/backend/engines/v8_institutional/especes/data/gis/GIS_PENTE_DEM.tif",
+        "status": "ABSENT",
+        "size_bytes": 0
+      },
+      {
+        "layer_id": "GIS_HYDROLOGIE_RESEAU",
+        "spec": {
+          "layer_id": "GIS_HYDROLOGIE_RESEAU",
+          "priority": "P0",
+          "format_attendu": "Vecteur LineString (Shapefile/GeoJSON)",
+          "value_range": null,
+          "source": "GRHQ Québec",
+          "injection_point": "ENGINE_CORRIDORS_GIS_Ω.hydrologie_input",
+          "filename_attendu": "GIS_HYDROLOGIE_RESEAU.geojson"
+        },
+        "expected_path": "/app/backend/engines/v8_institutional/especes/data/gis/GIS_HYDROLOGIE_RESEAU.geojson",
+        "status": "ABSENT",
+        "size_bytes": 0
+      },
+      {
+        "layer_id": "GIS_ANTHROPISATION_FINE",
+        "spec": {
+          "layer_id": "GIS_ANTHROPISATION_FINE",
+          "priority": "P0",
+          "format_attendu": "Raster + Vecteur",
+          "value_range": [
+            0.0,
+            1.0
+          ],
+          "source": "Statistique Canada + MTQ RTSS",
+          "injection_point": "ENGINE_GOUVERNANCE_Ω.anthropisation_input",
+          "filename_attendu": "GIS_ANTHROPISATION_FINE.tif"
+        },
+        "expected_path": "/app/backend/engines/v8_institutional/especes/data/gis/GIS_ANTHROPISATION_FINE.tif",
+        "status": "ABSENT",
+        "size_bytes": 0
+      },
+      {
+        "layer_id": "GIS_BARRIERES_LINEAIRES",
+        "spec": {
+          "layer_id": "GIS_BARRIERES_LINEAIRES",
+          "priority": "P0",
+          "format_attendu": "Vecteur LineString",
+          "value_range": null,
+          "source": "MTQ ; Hydro-Québec",
+          "injection_point": "ENGINE_CORRIDORS_GIS_Ω.barrieres_input",
+          "filename_attendu": "GIS_BARRIERES_LINEAIRES.geojson"
+        },
+        "expected_path": "/app/backend/engines/v8_institutional/especes/data/gis/GIS_BARRIERES_LINEAIRES.geojson",
+        "status": "ABSENT",
+        "size_bytes": 0
+      },
+      {
+        "layer_id": "GIS_PIEGES_ECOLOGIQUES",
+        "spec": {
+          "layer_id": "GIS_PIEGES_ECOLOGIQUES",
+          "priority": "P1",
+          "format_attendu": "Vecteur Polygon",
+          "value_range": null,
+          "source": "Études MFFP régionales 2018-2024",
+          "injection_point": "ENGINE_CORRIDORS_GIS_Ω.pieges_ecologiques_input",
+          "filename_attendu": "GIS_PIEGES_ECOLOGIQUES.geojson"
+        },
+        "expected_path": "/app/backend/engines/v8_institutional/especes/data/gis/GIS_PIEGES_ECOLOGIQUES.geojson",
+        "status": "ABSENT",
+        "size_bytes": 0
+      },
+      {
+        "layer_id": "GPS_TRACKING_5_ESPECES",
+        "spec": {
+          "layer_id": "GPS_TRACKING_5_ESPECES",
+          "priority": "P0",
+          "format_attendu": "Parquet ou CSV {animal_id, espece, lat, lon, ts_utc, season}",
+          "value_range": null,
+          "source": "MFFP banque GPS faune",
+          "injection_point": "ENGINE_CORRIDORS_GIS_Ω.gps_traces_input",
+          "filename_attendu": "GPS_TRACKING_5_ESPECES.parquet"
+        },
+        "expected_path": "/app/backend/engines/v8_institutional/especes/data/gis/GPS_TRACKING_5_ESPECES.parquet",
+        "status": "ABSENT",
+        "size_bytes": 0
+      },
+      {
+        "layer_id": "INDICE_RESISTANCE_PAYSAGE",
+        "spec": {
+          "layer_id": "INDICE_RESISTANCE_PAYSAGE",
+          "priority": "P1",
+          "format_attendu": "GeoTIFF raster par espèce",
+          "value_range": [
+            0.0,
+            1.0
+          ],
+          "source": "Calcul à partir des couches GIS",
+          "injection_point": "ENGINE_CORRIDORS_GIS_Ω.resistance_input",
+          "filename_attendu": "INDICE_RESISTANCE_PAYSAGE.tif"
+        },
+        "expected_path": "/app/backend/engines/v8_institutional/especes/data/gis/INDICE_RESISTANCE_PAYSAGE.tif",
+        "status": "ABSENT",
+        "size_bytes": 0
+      }
+    ],
+    "global_status": "STUB_READY",
+    "gps_loader_status": {
+      "loader_id": "GPS_LOADER_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+      "data_dir": "/app/backend/engines/v8_institutional/especes/data/gps",
+      "canonical_fields": [
+        "animal_id",
+        "espece",
+        "lat",
+        "lon",
+        "ts_utc",
+        "season"
+      ],
+      "allowed_especes": [
+        "CHEVREUIL",
+        "DINDON_SAUVAGE",
+        "ORIGNAL",
+        "OURS_NOIR",
+        "WAPITI"
+      ],
+      "allowed_seasons": [
+        "AUTOMNE",
+        "ETE",
+        "HIVER",
+        "PRINTEMPS"
+      ],
+      "supported_formats": [
+        "CSV",
+        "PARQUET"
+      ],
+      "available_files_count": 0,
+      "available_files": [],
+      "status": "STUB_READY"
+    }
+  },
+  "gps_loader_status": {
+    "loader_id": "GPS_LOADER_Ω",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+    "data_dir": "/app/backend/engines/v8_institutional/especes/data/gps",
+    "canonical_fields": [
+      "animal_id",
+      "espece",
+      "lat",
+      "lon",
+      "ts_utc",
+      "season"
+    ],
+    "allowed_especes": [
+      "CHEVREUIL",
+      "DINDON_SAUVAGE",
+      "ORIGNAL",
+      "OURS_NOIR",
+      "WAPITI"
+    ],
+    "allowed_seasons": [
+      "AUTOMNE",
+      "ETE",
+      "HIVER",
+      "PRINTEMPS"
+    ],
+    "supported_formats": [
+      "CSV",
+      "PARQUET"
+    ],
+    "available_files_count": 0,
+    "available_files": [],
+    "status": "STUB_READY"
+  },
+  "compute_test": {
+    "engine_id": "ENGINE_CORRIDORS_GIS_Ω",
+    "computed_at_utc": "2026-04-30T12:58:06+00:00",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+    "status": "STUB_READY",
+    "score_corridors_gis_omega": null,
+    "missing_layers": [
+      "GIS_FRAGMENTATION_INDEX",
+      "GIS_COUVERT_FORESTIER_DENSITY",
+      "GIS_PENTE_DEM",
+      "GIS_HYDROLOGIE_RESEAU",
+      "GIS_ANTHROPISATION_FINE",
+      "GIS_BARRIERES_LINEAIRES",
+      "GIS_PIEGES_ECOLOGIQUES",
+      "GPS_TRACKING_5_ESPECES",
+      "INDICE_RESISTANCE_PAYSAGE"
+    ],
+    "missing_layers_count": 9,
+    "anti_generique_violations": [
+      "LAYER_ABSENT::GIS_FRAGMENTATION_INDEX",
+      "LAYER_ABSENT::GIS_COUVERT_FORESTIER_DENSITY",
+      "LAYER_ABSENT::GIS_PENTE_DEM",
+      "LAYER_ABSENT::GIS_HYDROLOGIE_RESEAU",
+      "LAYER_ABSENT::GIS_ANTHROPISATION_FINE",
+      "LAYER_ABSENT::GIS_BARRIERES_LINEAIRES",
+      "LAYER_ABSENT::GIS_PIEGES_ECOLOGIQUES",
+      "LAYER_ABSENT::GPS_TRACKING_5_ESPECES",
+      "LAYER_ABSENT::INDICE_RESISTANCE_PAYSAGE"
+    ],
+    "anti_generique_pass": false,
+    "fallback_active": false,
+    "interpolation_active": false,
+    "doctrine_action_requise": "Acquérir les couches GIS auprès du MFFP/MTQ/MERN avant calcul effectif. Aucune donnée synthétique tolérée (anti-générique strict)."
+  },
+  "tests_pytest_path": "tests/test_phase_xx_gps_gis_omega.py",
+  "tests_pytest_count": 14,
+  "couches_gis_etat": {
+    "total": 9,
+    "loaded": 0,
+    "absent": 9,
+    "global_status": "STUB_READY"
+  },
+  "doctrine_anti_contamination": [
+    "Mode STUB_READY strict — aucune donnée synthétique générée.",
+    "Toute couche absente = anti_generique_violation tracée.",
+    "Calcul effectif différé jusqu'à acquisition des fichiers MFFP/MTQ/MERN.",
+    "V30 INVIOLABLE."
+  ],
+  "next_phase": "PHASE_GIS_OPERATIONAL_Ω (sur acquisition des fichiers + ordre formel)"
+}

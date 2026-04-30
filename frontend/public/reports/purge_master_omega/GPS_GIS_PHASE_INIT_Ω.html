@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang='fr'><head><meta charset='utf-8'/>
+<title>GPS_GIS_PHASE_INIT_Ω</title><style>
+:root{--bg:#0a1018;--panel:#111c2e;--panel2:#162032;--txt:#e2e8f0;--mute:#94a3b8;--accent:#06b6d4;--accent2:#22d3ee;--ok:#16a34a;--gold:#f59e0b;--bord:#1e293b;}
+*{box-sizing:border-box;}
+body{font-family:'Inter','Segoe UI',sans-serif;background:linear-gradient(180deg,#0a1018 0%,#0b1320 100%);color:var(--txt);margin:0;padding:32px 20px;}
+.wrap{max-width:1320px;margin:0 auto;}
+header.title{border-left:5px solid var(--gold);padding:6px 0 6px 18px;margin-bottom:22px;}
+header.title h1{margin:0;font-size:22px;color:#fef3c7;letter-spacing:0.6px;}
+header.title .sub{color:var(--mute);font-size:13px;margin-top:6px;}
+.b-ok{background:linear-gradient(135deg,#14532d 0%,#15803d 100%);border:1px solid var(--ok);color:#dcfce7;padding:12px 22px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:18px;}
+.b-gold{background:linear-gradient(135deg,#78350f 0%,#92400e 100%);border:1px solid var(--gold);color:#fef3c7;padding:12px 22px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:18px;}
+h2{color:var(--gold);font-size:18px;margin:32px 0 12px;border-left:4px solid var(--gold);padding-left:12px;}
+h3{color:var(--accent2);font-size:15px;margin:22px 0 10px;}
+.card{background:var(--panel);border:1px solid var(--bord);border-radius:10px;padding:18px 22px;margin-bottom:18px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px;}
+.kpi{padding:14px 18px;background:var(--panel2);border:1px solid var(--bord);border-radius:8px;}
+.kpi .num{color:var(--accent2);font-weight:700;font-size:22px;}
+.kpi .lbl{color:var(--mute);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;}
+table{width:100%;border-collapse:collapse;font-size:11.5px;}
+th,td{padding:8px 10px;border-bottom:1px solid var(--bord);text-align:left;vertical-align:top;}
+th{background:var(--panel2);color:#fff;text-transform:uppercase;font-size:10.5px;letter-spacing:0.5px;}
+.scroll{max-height:520px;overflow-y:auto;border:1px solid var(--bord);border-radius:6px;}
+.dl{color:var(--accent2);text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid rgba(6,182,212,0.35);border-radius:5px;}
+.mono{font-family:'JetBrains Mono','Courier New',monospace;font-size:10px;color:var(--mute);word-break:break-all;}
+.foot{margin-top:30px;padding:18px 22px;background:var(--panel);border:1px solid var(--bord);border-radius:10px;font-size:12px;color:var(--mute);}
+.lbl-foot{color:var(--accent2);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:0.5px;}
+.v30-lock{margin-top:14px;padding:10px 14px;background:rgba(22,163,74,0.10);border:1px solid rgba(22,163,74,0.45);border-radius:6px;color:#4ade80;font-weight:700;text-align:center;letter-spacing:0.6px;}
+.b-absent{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.18);color:var(--gold);border:1px solid rgba(245,158,11,0.45);font-weight:700;font-size:10px;}
+.b-loaded{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(34,197,94,0.18);color:#86efac;border:1px solid rgba(34,197,94,0.45);font-weight:700;font-size:10px;}
+.b-p0{background:#fb7185;color:#1f2937;font-weight:700;padding:2px 6px;border-radius:4px;font-size:10px;}
+.b-p1{background:#fbbf24;color:#1f2937;font-weight:700;padding:2px 6px;border-radius:4px;font-size:10px;}
+</style></head><body>
+<div class='wrap' data-testid='gps-gis-phase-init'>
+<header class='title'><h1>GPS_GIS_PHASE_INIT_Ω · Stratégie STUB_READY</h1>
+<div class='sub'>BCE-4X ULTIME ABSOLU x3 · Ordre n°40 · 2026-04-30T12:58:06+00:00</div></header>
+<div class='b-gold'>★ Mode STUB_READY · 9 couches déclarées · 0/9 LOADED · attente acquisition MFFP/MTQ/MERN ★</div>
+
+<div class='card'><div class='kpi-grid'>
+<div class='kpi'><div class='lbl'>Layers Total</div><div class='num'>9</div></div>
+<div class='kpi'><div class='lbl'>LOADED</div><div class='num' style='color:#22c55e'>0</div></div>
+<div class='kpi'><div class='lbl'>ABSENT</div><div class='num' style='color:#fbbf24'>9</div></div>
+<div class='kpi'><div class='lbl'>GPS Loader</div><div class='num' style='font-size:13px'>STUB_READY</div></div>
+<div class='kpi'><div class='lbl'>Engine SHA-256</div><div class='num' style='font-size:11px;color:#22d3ee'>52eb4d378758a6a5…</div></div>
+<div class='kpi'><div class='lbl'>Tests pytest</div><div class='num' style='color:#22c55e'>14/14</div></div>
+</div></div>
+
+<h2>1. État des 9 couches GIS</h2>
+<div class='card scroll'><table><thead><tr><th>Layer ID</th><th>Prio</th><th>Status</th><th>Format</th><th>Filename</th><th>Injection</th></tr></thead>
+<tbody><tr><td><b>GIS_FRAGMENTATION_INDEX</b></td><td><span class='b-p0'>P0</span></td><td><span class='b-absent'>ABSENT</span></td><td class='mono'>GeoTIFF raster 250m × 250m</td><td class='mono'>GIS_FRAGMENTATION_INDEX.tif</td><td><code>ENGINE_CORRIDORS_GIS_Ω.fragmentation_input</code></td></tr><tr><td><b>GIS_COUVERT_FORESTIER_DENSITY</b></td><td><span class='b-p0'>P0</span></td><td><span class='b-absent'>ABSENT</span></td><td class='mono'>GeoTIFF raster 100m × 100m</td><td class='mono'>GIS_COUVERT_FORESTIER_DENSITY.tif</td><td><code>ENGINE_HABITAT_Ω.couvert_forestier_input</code></td></tr><tr><td><b>GIS_PENTE_DEM</b></td><td><span class='b-p1'>P1</span></td><td><span class='b-absent'>ABSENT</span></td><td class='mono'>GeoTIFF raster 1m LIDAR (degrés)</td><td class='mono'>GIS_PENTE_DEM.tif</td><td><code>ENGINE_CORRIDORS_GIS_Ω.pente_input</code></td></tr><tr><td><b>GIS_HYDROLOGIE_RESEAU</b></td><td><span class='b-p0'>P0</span></td><td><span class='b-absent'>ABSENT</span></td><td class='mono'>Vecteur LineString (Shapefile/GeoJSON)</td><td class='mono'>GIS_HYDROLOGIE_RESEAU.geojson</td><td><code>ENGINE_CORRIDORS_GIS_Ω.hydrologie_input</code></td></tr><tr><td><b>GIS_ANTHROPISATION_FINE</b></td><td><span class='b-p0'>P0</span></td><td><span class='b-absent'>ABSENT</span></td><td class='mono'>Raster + Vecteur</td><td class='mono'>GIS_ANTHROPISATION_FINE.tif</td><td><code>ENGINE_GOUVERNANCE_Ω.anthropisation_input</code></td></tr><tr><td><b>GIS_BARRIERES_LINEAIRES</b></td><td><span class='b-p0'>P0</span></td><td><span class='b-absent'>ABSENT</span></td><td class='mono'>Vecteur LineString</td><td class='mono'>GIS_BARRIERES_LINEAIRES.geojson</td><td><code>ENGINE_CORRIDORS_GIS_Ω.barrieres_input</code></td></tr><tr><td><b>GIS_PIEGES_ECOLOGIQUES</b></td><td><span class='b-p1'>P1</span></td><td><span class='b-absent'>ABSENT</span></td><td class='mono'>Vecteur Polygon</td><td class='mono'>GIS_PIEGES_ECOLOGIQUES.geojson</td><td><code>ENGINE_CORRIDORS_GIS_Ω.pieges_ecologiques_input</code></td></tr><tr><td><b>GPS_TRACKING_5_ESPECES</b></td><td><span class='b-p0'>P0</span></td><td><span class='b-absent'>ABSENT</span></td><td class='mono'>Parquet ou CSV {animal_id, espece, lat, lon, ts_utc, season}</td><td class='mono'>GPS_TRACKING_5_ESPECES.parquet</td><td><code>ENGINE_CORRIDORS_GIS_Ω.gps_traces_input</code></td></tr><tr><td><b>INDICE_RESISTANCE_PAYSAGE</b></td><td><span class='b-p1'>P1</span></td><td><span class='b-absent'>ABSENT</span></td><td class='mono'>GeoTIFF raster par espèce</td><td class='mono'>INDICE_RESISTANCE_PAYSAGE.tif</td><td><code>ENGINE_CORRIDORS_GIS_Ω.resistance_input</code></td></tr></tbody></table></div>
+
+<h2>2. Modules Python créés (STUB_READY)</h2>
+<div class='card'><table><thead><tr><th>Path</th><th>LOC</th><th>Rôle</th></tr></thead>
+<tbody><tr><td class='mono'>engines/v8_institutional/especes/gps_loader_omega.py</td><td>175</td><td>Loader GPS Parquet/CSV avec validation stricte</td></tr><tr><td class='mono'>engines/v8_institutional/especes/engine_corridors_gis_omega.py</td><td>165</td><td>Engine GIS aval — 9 couches déclarées en STUB_READY</td></tr>
+</tbody></table></div>
+
+<h2>3. compute_corridors_gis() — résultat actuel</h2>
+<div class='card'><pre class='mono' style='font-size:11px'>{
+  &quot;engine_id&quot;: &quot;ENGINE_CORRIDORS_GIS_Ω&quot;,
+  &quot;computed_at_utc&quot;: &quot;2026-04-30T12:58:06+00:00&quot;,
+  &quot;doctrine&quot;: &quot;BCE-4X_ULTIME_ABSOLU_x3&quot;,
+  &quot;status&quot;: &quot;STUB_READY&quot;,
+  &quot;score_corridors_gis_omega&quot;: null,
+  &quot;missing_layers&quot;: [
+    &quot;GIS_FRAGMENTATION_INDEX&quot;,
+    &quot;GIS_COUVERT_FORESTIER_DENSITY&quot;,
+    &quot;GIS_PENTE_DEM&quot;,
+    &quot;GIS_HYDROLOGIE_RESEAU&quot;,
+    &quot;GIS_ANTHROPISATION_FINE&quot;,
+    &quot;GIS_BARRIERES_LINEAIRES&quot;,
+    &quot;GIS_PIEGES_ECOLOGIQUES&quot;,
+    &quot;GPS_TRACKING_5_ESPECES&quot;,
+    &quot;INDICE_RESISTANCE_PAYSAGE&quot;
+  ],
+  &quot;missing_layers_count&quot;: 9,
+  &quot;anti_generique_pass&quot;: false,
+  &quot;fallback_active&quot;: false,
+  &quot;interpolation_active&quot;: false,
+  &quot;doctrine_action_requise&quot;: &quot;Acquérir les couches GIS auprès du MFFP/MTQ/MERN avant calcul effectif. Aucune donnée synthétique tolérée (anti-générique strict).&quot;
+}</pre></div>
+
+<h2>4. Doctrine</h2>
+<div class='card'><ul><li>Mode STUB_READY strict — aucune donnée synthétique générée.</li><li>Toute couche absente = anti_generique_violation tracée.</li><li>Calcul effectif différé jusqu&#x27;à acquisition des fichiers MFFP/MTQ/MERN.</li><li>V30 INVIOLABLE.</li></ul></div>
+
+<footer class='foot'><div class='v30-lock'>✓ Phase GPS_GIS initialisée · interfaces complètes · attente fichiers réels</div></footer>
+</div></body></html>

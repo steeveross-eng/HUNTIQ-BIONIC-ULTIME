@@ -1,0 +1,78 @@
+{
+  "manifest_id": "PRE_SCEAU_X5_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°40",
+  "status": "PROVISIONAL",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-30T12:58:06+00:00",
+  "pre_sceau_x5_sha256": "80b58a6ed4efce36562e3d156474bbbdcee4521e044f22be5a20272eb4b927ec",
+  "reference_sceau_x4_final": "07dc3d41ba8061bddf96bfa585a115eebf18773cf88ba5cbf7b4d1eb11e16de7",
+  "artefacts_pre_x5": [
+    {
+      "filename": "BIO_PROFILE_Ω_135_NORMALISÉ.json",
+      "sha256": "b33f302086a7b110ccfd68b376594a2edd9299850e8c76ff7f23f91d55a2a239",
+      "size_bytes": 13148,
+      "status": "PRESENT"
+    },
+    {
+      "filename": "DATASETS_Ω_FUSION_ADDONLY.json",
+      "sha256": "78fc27f2e0e21ee41b5d11c389602b73f78cb4e7001a51a7f5612f3b9c4e718f",
+      "size_bytes": 15500,
+      "status": "PRESENT"
+    },
+    {
+      "filename": "SIX_MASTERS_Ω_OPTIMISÉS.json",
+      "sha256": "6490a6cd975531e0b092308f573685d84ed928d1d54df386c252471dd09ee1e3",
+      "size_bytes": 4076,
+      "status": "PRESENT"
+    },
+    {
+      "filename": "TERRITOIRE_MASTER_Ω_FUSION_X4.json",
+      "sha256": "5386de5a6876de2474423c7768d5aab765588fc32a23bd10904598c49b0efef4",
+      "size_bytes": 1346,
+      "status": "PRESENT"
+    },
+    {
+      "filename": "VALIDATION_Ω_OPTIMISATION_MASTERS_X4.json",
+      "sha256": "77a4218925819074d60dffd7925c0c7f2ce6995adc63274fedfb745bbdde9a30",
+      "size_bytes": 4541,
+      "status": "PRESENT"
+    },
+    {
+      "filename": "VALIDATION_Ω_ORDRE_39.json",
+      "sha256": "a53e2ae4946fe3cc779bd7d29461ebfdf2166f65dcd0986af90fdc49099cb3a3",
+      "size_bytes": 7488,
+      "status": "PRESENT"
+    },
+    {
+      "filename": "FRONTEND_TERRITOIRE_APTE_Ω.json",
+      "sha256": "e2846a9981beb78e492bd5ed2952286a3cc94875d61901129d8938631e76effc",
+      "size_bytes": 1746,
+      "status": "PRESENT"
+    },
+    {
+      "filename": "GPS_GIS_PHASE_INIT_Ω.json",
+      "sha256": "0b91f9b186ee397f81508006bbf23f62b2280e701c74f819bd09bdfdce2c1174",
+      "size_bytes": 10137,
+      "status": "PRESENT"
+    }
+  ],
+  "verification_apte_actuel": {
+    "territoire_master_x4_score": 92.52,
+    "apte_actuel": true,
+    "projection_post_gis": "Avec GIS effectif (9 couches LOADED), score projeté ~95-98 (croissance ~+5 attendue via injection corridors quantitatifs) → décision RESTE APTE.",
+    "decision_apte_post_gis": "APTE_PROJETE"
+  },
+  "structure_attestation_x5": {
+    "html_path_attendu": "/app/frontend/public/reports/institution/ATTESTATION_X5.html",
+    "pdf_path_attendu": "/app/frontend/public/reports/institution/ATTESTATION_X5.pdf",
+    "status": "STRUCTURE_PREPAREE — finalisation post-GIS",
+    "skeleton_genere": true
+  },
+  "doctrine_anti_contamination": [
+    "Pré-sceau provisional — non final.",
+    "Sera converti en SCEAU_INSTITUTIONNEL_X5_FINAL_Ω après acquisition GIS.",
+    "Anti-régression : V30 INVIOLABLE.",
+    "Aucun fallback. Aucune interpolation."
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "manifest_id": "VALIDATION_Ω_ORDRE_40",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°40",
+  "validated_at_utc": "2026-04-30T12:58:06+00:00",
+  "pytest": {
+    "passed": 168,
+    "exit_code": 0,
+    "all_pass": true
+  },
+  "v30_intact": true,
+  "freeze_intact": true,
+  "frontend_route_check": {
+    "path": "/territoire-apte",
+    "http_code": 200
+  },
+  "livrables_https": [
+    {
+      "filename": "FRONTEND_TERRITOIRE_APTE_Ω.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/FRONTEND_TERRITOIRE_APTE_%CE%A9.json",
+      "http_code": 200,
+      "size_bytes": 1746
+    },
+    {
+      "filename": "FRONTEND_TERRITOIRE_APTE_Ω.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/FRONTEND_TERRITOIRE_APTE_%CE%A9.html",
+      "http_code": 200,
+      "size_bytes": 6506
+    },
+    {
+      "filename": "GPS_GIS_PHASE_INIT_Ω.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/GPS_GIS_PHASE_INIT_%CE%A9.json",
+      "http_code": 200,
+      "size_bytes": 10137
+    },
+    {
+      "filename": "GPS_GIS_PHASE_INIT_Ω.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/GPS_GIS_PHASE_INIT_%CE%A9.html",
+      "http_code": 200,
+      "size_bytes": 9519
+    },
+    {
+      "filename": "PRE_SCEAU_X5_Ω.json",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/purge_master_omega/PRE_SCEAU_X5_%CE%A9.json",
+      "http_code": 200,
+      "size_bytes": 2946
+    },
+    {
+      "filename": "ATTESTATION_X5.html",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/institution/ATTESTATION_X5.html",
+      "http_code": 200,
+      "size_bytes": 5398
+    },
+    {
+      "filename": "ATTESTATION_X5.pdf",
+      "url": "https://huntiq-restore.preview.emergentagent.com/reports/institution/ATTESTATION_X5.pdf",
+      "http_code": 200,
+      "size_bytes": 3121
+    }
+  ],
+  "all_https_ok": true,
+  "synthese": {
+    "frontend_widget_deployed": true,
+    "gps_gis_init_status": "STUB_READY",
+    "pre_sceau_x5_sha256": "80b58a6ed4efce36562e3d156474bbbdcee4521e044f22be5a20272eb4b927ec",
+    "attestation_x5_skeleton_ready": true,
+    "next_phase": "PHASE_GIS_OPERATIONAL_Ω"
+  }
+}

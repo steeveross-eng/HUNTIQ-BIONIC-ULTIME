@@ -39,6 +39,8 @@ const BecomePartner = lazy(() => import("@/components/BecomePartner"));
 const PartnerDashboard = lazy(() => import("@/components/PartnerDashboard"));
 const ReferralModule = lazy(() => import("@/components/ReferralModule"));
 const GoogleOAuthCallback = lazy(() => import("@/components/GoogleOAuthCallback"));
+// PHASE XX (Ordre n°40) : Widget institutionnel TERRITOIRE_APTE_Ω
+const WidgetTerritoireApteOmega = lazy(() => import("@/components/WidgetTerritoireApteOmega"));
 
 // BLOC 2 OPTIMIZATION: Lazy-loaded pages
 // BCE-4X PURGE: AdminPage SUPPRIME — Admin v2 = AdminPremiumPage (source unique)
@@ -1071,6 +1073,8 @@ function App() {
                 <Route path="/carte-2027" element={<Carte2027Page />} />
                 <Route path="/forecast" element={<ForecastPage />} />
                 <Route path="/trips" element={<TripsPage />} />
+                {/* PHASE XX (Ordre n°40) — WIDGET institutionnel TERRITOIRE_APTE_Ω */}
+                <Route path="/territoire-apte" element={<WidgetTerritoireApteOmega />} />
                 <Route path="/referral" element={<ReferralModule />} />
                 {/* ADMIN v2: Interface unique — AdminPremiumPage absorbe AdminPage */}
                 <Route path="/admin" element={<Navigate to="/admin-premium" replace />} />

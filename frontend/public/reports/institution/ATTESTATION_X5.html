@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang='fr'><head><meta charset='utf-8'/>
+<title>ATTESTATION_X5_Ω · SQUELETTE EN ATTENTE</title><style>
+:root{--bg:#0a1018;--panel:#111c2e;--panel2:#162032;--txt:#e2e8f0;--mute:#94a3b8;--accent:#06b6d4;--accent2:#22d3ee;--ok:#16a34a;--gold:#f59e0b;--bord:#1e293b;}
+*{box-sizing:border-box;}
+body{font-family:'Inter','Segoe UI',sans-serif;background:linear-gradient(180deg,#0a1018 0%,#0b1320 100%);color:var(--txt);margin:0;padding:32px 20px;}
+.wrap{max-width:1320px;margin:0 auto;}
+header.title{border-left:5px solid var(--gold);padding:6px 0 6px 18px;margin-bottom:22px;}
+header.title h1{margin:0;font-size:22px;color:#fef3c7;letter-spacing:0.6px;}
+header.title .sub{color:var(--mute);font-size:13px;margin-top:6px;}
+.b-ok{background:linear-gradient(135deg,#14532d 0%,#15803d 100%);border:1px solid var(--ok);color:#dcfce7;padding:12px 22px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:18px;}
+.b-gold{background:linear-gradient(135deg,#78350f 0%,#92400e 100%);border:1px solid var(--gold);color:#fef3c7;padding:12px 22px;border-radius:8px;font-weight:700;text-align:center;margin-bottom:18px;}
+h2{color:var(--gold);font-size:18px;margin:32px 0 12px;border-left:4px solid var(--gold);padding-left:12px;}
+h3{color:var(--accent2);font-size:15px;margin:22px 0 10px;}
+.card{background:var(--panel);border:1px solid var(--bord);border-radius:10px;padding:18px 22px;margin-bottom:18px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px;}
+.kpi{padding:14px 18px;background:var(--panel2);border:1px solid var(--bord);border-radius:8px;}
+.kpi .num{color:var(--accent2);font-weight:700;font-size:22px;}
+.kpi .lbl{color:var(--mute);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;}
+table{width:100%;border-collapse:collapse;font-size:11.5px;}
+th,td{padding:8px 10px;border-bottom:1px solid var(--bord);text-align:left;vertical-align:top;}
+th{background:var(--panel2);color:#fff;text-transform:uppercase;font-size:10.5px;letter-spacing:0.5px;}
+.scroll{max-height:520px;overflow-y:auto;border:1px solid var(--bord);border-radius:6px;}
+.dl{color:var(--accent2);text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid rgba(6,182,212,0.35);border-radius:5px;}
+.mono{font-family:'JetBrains Mono','Courier New',monospace;font-size:10px;color:var(--mute);word-break:break-all;}
+.foot{margin-top:30px;padding:18px 22px;background:var(--panel);border:1px solid var(--bord);border-radius:10px;font-size:12px;color:var(--mute);}
+.lbl-foot{color:var(--accent2);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:0.5px;}
+.v30-lock{margin-top:14px;padding:10px 14px;background:rgba(22,163,74,0.10);border:1px solid rgba(22,163,74,0.45);border-radius:6px;color:#4ade80;font-weight:700;text-align:center;letter-spacing:0.6px;}
+.b-absent{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,0.18);color:var(--gold);border:1px solid rgba(245,158,11,0.45);font-weight:700;font-size:10px;}
+.b-loaded{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(34,197,94,0.18);color:#86efac;border:1px solid rgba(34,197,94,0.45);font-weight:700;font-size:10px;}
+.b-p0{background:#fb7185;color:#1f2937;font-weight:700;padding:2px 6px;border-radius:4px;font-size:10px;}
+.b-p1{background:#fbbf24;color:#1f2937;font-weight:700;padding:2px 6px;border-radius:4px;font-size:10px;}
+</style></head><body>
+<div class='wrap' data-testid='attestation-x5-skeleton'>
+<header class='title'><h1>ATTESTATION_INSTITUTIONNELLE_X5_Ω · SQUELETTE</h1>
+<div class='sub'>BCE-4X ULTIME ABSOLU x3 · Ordre n°40 · 2026-04-30T12:58:06+00:00 · STATUS = PROVISIONAL</div></header>
+<div class='b-gold'>⏳ STRUCTURE PRÉPARÉE · finalisation post-acquisition GIS effective</div>
+
+<h2>1. Pré-sceau X5 (provisional)</h2>
+<div class='card'>
+<p><b>PRE_SCEAU_X5_Ω :</b><br/>
+<code class='mono' style='font-size:13px'>80b58a6ed4efce36562e3d156474bbbdcee4521e044f22be5a20272eb4b927ec</code></p>
+<p><b>Référence X4 FINAL :</b><br/>
+<code class='mono' style='font-size:11px'>07dc3d41ba8061bddf96bfa585a115eebf18773cf88ba5cbf7b4d1eb11e16de7</code></p>
+</div>
+
+<h2>2. État APTE actuel (X4 baseline)</h2>
+<div class='card'>
+<p>TERRITOIRE_MASTER_X4 = <b>92.52</b></p>
+<p>Décision actuelle : <b style='color:#22c55e'>APTE</b></p>
+<p>Projection post-GIS effective : <b style='color:#22d3ee'>APTE_PROJETE (~95-98)</b></p>
+</div>
+
+<h2>3. Sections à finaliser après PHASE_GIS_OPERATIONAL_Ω</h2>
+<div class='card'><ul>
+<li>Section A : Sceau X5 SHA-256 final (calcul après LOADED des 9 couches GIS)</li>
+<li>Section B : Score TERRITOIRE_MASTER_X5 effectif (avec GIS quantitatif)</li>
+<li>Section C : Tableau des 9 couches GIS LOADED + métriques (résolution, étendue, période)</li>
+<li>Section D : Carte composite TERRITOIRE_X5 enrichie (GeoJSON + heatmap)</li>
+<li>Section E : Validation pytest 167+/167+ (incluant pytest GIS_OPERATIONAL)</li>
+<li>Section F : Attestation institutionnelle scellée + signature SHA-256 globale</li>
+</ul></div>
+
+<footer class='foot'>
+<div><span class='lbl-foot'>Status :</span> <b>PROVISIONAL</b></div>
+<div><span class='lbl-foot'>Validité :</span> En attente de l'acquisition GIS</div>
+<div class='v30-lock'>⏳ Squelette préparé · finalisation post-GIS</div></footer>
+</div></body></html>
