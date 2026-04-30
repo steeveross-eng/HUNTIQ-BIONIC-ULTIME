@@ -1,0 +1,158 @@
+{
+  "manifest_id": "GIS_RECEPTION_INTAKE_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°42_BIS",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "created_at_utc": "2026-04-30T15:32:36+00:00",
+  "slots": {
+    "FORET_MFFP_Ω": {
+      "slot_id": "FORET_MFFP_Ω",
+      "label": "Couvert forestier MFFP (carte écoforestière)",
+      "priority": "P0",
+      "status": "ABSENT",
+      "uploads": []
+    },
+    "SOL_IRDA_Ω": {
+      "slot_id": "SOL_IRDA_Ω",
+      "label": "Pédologie / classes de sol IRDA",
+      "priority": "P0",
+      "status": "ABSENT",
+      "uploads": []
+    },
+    "CHASSE_ZEC_SEPAQ_Ω": {
+      "slot_id": "CHASSE_ZEC_SEPAQ_Ω",
+      "label": "Zones de chasse ZEC + SÉPAQ + Réserves fauniques",
+      "priority": "P0",
+      "status": "LOADED",
+      "uploads": [
+        {
+          "filename": "good.geojson",
+          "sha256": "eb65fa70f224ec205e5cfbffa273bee1115f4b341f2908564c1345e55fbd19c4",
+          "size_bytes": 2081,
+          "uploaded_at_utc": "2026-04-30T15:32:36+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "geojson",
+              "formats_acceptes": [
+                "gpkg",
+                "geojson",
+                "zip",
+                "parquet"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 2081,
+              "min": 512,
+              "max": 524288000,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "eb65fa70f224ec205e5cfbffa273bee1115f4b341f2908564c1345e55fbd19c4",
+              "reason": "OK"
+            }
+          ]
+        },
+        {
+          "filename": "tiny.geojson",
+          "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "size_bytes": 2,
+          "uploaded_at_utc": "2026-04-30T15:32:36+00:00",
+          "passed": false,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "geojson",
+              "formats_acceptes": [
+                "gpkg",
+                "geojson",
+                "zip",
+                "parquet"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": false,
+              "size_bytes": 2,
+              "min": 512,
+              "max": 524288000,
+              "reason": "Taille 2 hors bornes [512, 524288000]"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "reason": "OK"
+            }
+          ]
+        },
+        {
+          "filename": "a.geojson",
+          "sha256": "eb65fa70f224ec205e5cfbffa273bee1115f4b341f2908564c1345e55fbd19c4",
+          "size_bytes": 2081,
+          "uploaded_at_utc": "2026-04-30T15:32:36+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "geojson",
+              "formats_acceptes": [
+                "gpkg",
+                "geojson",
+                "zip",
+                "parquet"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 2081,
+              "min": 512,
+              "max": 524288000,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "eb65fa70f224ec205e5cfbffa273bee1115f4b341f2908564c1345e55fbd19c4",
+              "reason": "OK"
+            }
+          ]
+        }
+      ]
+    },
+    "ROUTES_MTQ_SECONDAIRES_Ω": {
+      "slot_id": "ROUTES_MTQ_SECONDAIRES_Ω",
+      "label": "Réseau routier secondaire et chemins forestiers MTQ + RTSS",
+      "priority": "P1",
+      "status": "ABSENT",
+      "uploads": []
+    },
+    "LIMITES_TERRITORIALES_FINES_Ω": {
+      "slot_id": "LIMITES_TERRITORIALES_FINES_Ω",
+      "label": "Limites territoriales fines (cantons, lots, arpentage cadastral)",
+      "priority": "P1",
+      "status": "ABSENT",
+      "uploads": []
+    },
+    "PRESSION_HUMAINE_Ω": {
+      "slot_id": "PRESSION_HUMAINE_Ω",
+      "label": "Pression humaine fine (densité population + activités récréatives)",
+      "priority": "P2_OPTIONNELLE",
+      "status": "ABSENT",
+      "uploads": []
+    }
+  },
+  "last_updated_utc": "2026-04-30T15:32:36+00:00"
+}

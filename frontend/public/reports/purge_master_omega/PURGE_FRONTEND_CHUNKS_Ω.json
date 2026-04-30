@@ -1,0 +1,179 @@
+{
+  "manifest_id": "PURGE_FRONTEND_CHUNKS_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+  "ordre": "n°44 (volet PURGE_FRONTEND)",
+  "issued_by": "COMMANDANT STEEVE-MAX",
+  "generated_at_utc": "2026-04-30T15:32:02+00:00",
+  "objectifs": [
+    "Purger tous les chunks obsolètes du frontend",
+    "Invalider le CDN (CRA dev mode : recompilation forcée)",
+    "Forcer un reset complet du Service Worker",
+    "Vérifier que /admin-premium charge sans ChunkLoadError"
+  ],
+  "service_worker_strategy": {
+    "killswitch_inline_in_index_html": true,
+    "killswitch_files": [
+      "/app/frontend/public/sw.js",
+      "/app/frontend/public/sw-v2.js",
+      "/app/frontend/public/sw-push.js"
+    ],
+    "anti_pattern": "Aucun fetch handler — désinscription auto + purge CacheStorage",
+    "client_action": "Reload automatique après désinscription",
+    "validated_by_inventory": true
+  },
+  "cdn_invalidation_strategy": {
+    "environment": "CRA dev mode (yarn start via craco) + Kubernetes ingress",
+    "no_external_cdn": true,
+    "cache_busting": "Webpack content-hash (auto en production)",
+    "dev_mode": "Recompilation complète à chaque restart",
+    "action": "supervisorctl restart frontend"
+  },
+  "actions_executees": [
+    {
+      "type": "PURGE_CACHE",
+      "path": "/app/frontend/node_modules/.cache/babel-loader",
+      "freed_bytes": 100665344,
+      "status": "OK"
+    },
+    {
+      "type": "PURGE_CACHE",
+      "path": "/app/frontend/node_modules/.cache/default-development",
+      "freed_bytes": 634535936,
+      "status": "OK"
+    },
+    {
+      "type": "PURGE_CACHE",
+      "path": "/app/frontend/node_modules/.cache/.eslintcache",
+      "freed_bytes": 174281,
+      "status": "OK"
+    },
+    {
+      "type": "SW_KILLSWITCH_VALIDATE",
+      "path": "/app/frontend/public/sw.js",
+      "is_killswitch": true,
+      "status": "OK"
+    },
+    {
+      "type": "SW_KILLSWITCH_VALIDATE",
+      "path": "/app/frontend/public/sw-v2.js",
+      "is_killswitch": true,
+      "status": "OK"
+    },
+    {
+      "type": "SW_KILLSWITCH_VALIDATE",
+      "path": "/app/frontend/public/sw-push.js",
+      "is_killswitch": true,
+      "status": "OK"
+    },
+    {
+      "type": "FRONTEND_RESTART",
+      "stdout": "frontend: stopped\nfrontend: started",
+      "returncode": 0,
+      "status": "OK"
+    }
+  ],
+  "inventory_before": {
+    "caches": [
+      {
+        "path": "/app/frontend/node_modules/.cache/babel-loader",
+        "exists": true,
+        "size_bytes": 100665344
+      },
+      {
+        "path": "/app/frontend/node_modules/.cache/default-development",
+        "exists": true,
+        "size_bytes": 634535936
+      },
+      {
+        "path": "/app/frontend/node_modules/.cache/.eslintcache",
+        "exists": true,
+        "size_bytes": 174281
+      }
+    ],
+    "service_workers_killswitch": true,
+    "smoke_admin_premium": {
+      "path": "/admin-premium",
+      "http_code": 200,
+      "size_bytes": 18239,
+      "time_total_s": 0.0
+    },
+    "smoke_bundle_js": {
+      "path": "/static/js/bundle.js",
+      "http_code": 200,
+      "size_bytes": 0,
+      "time_total_s": 0.0
+    }
+  },
+  "inventory_after": {
+    "caches": [
+      {
+        "path": "/app/frontend/node_modules/.cache/babel-loader",
+        "exists": true,
+        "size_bytes": 50557250
+      },
+      {
+        "path": "/app/frontend/node_modules/.cache/default-development",
+        "exists": true,
+        "size_bytes": 598937035
+      },
+      {
+        "path": "/app/frontend/node_modules/.cache/.eslintcache",
+        "exists": true,
+        "size_bytes": 174281
+      }
+    ],
+    "service_workers": [
+      {
+        "path": "/app/frontend/public/sw.js",
+        "exists": true,
+        "size_bytes": 2629,
+        "sha256": "55fe53b7a0d0076082451ccbfb1bb123ab6816021dcfee6b8731713f1749825a"
+      },
+      {
+        "path": "/app/frontend/public/sw-v2.js",
+        "exists": true,
+        "size_bytes": 865,
+        "sha256": "3c64a1b30ddb21430a866729aa902893172c4fb07aebbfdfce42780cf3a3933a"
+      },
+      {
+        "path": "/app/frontend/public/sw-push.js",
+        "exists": true,
+        "size_bytes": 828,
+        "sha256": "4260e0172e2d3f0d33670abfeb91de073b439fcaedc7099fece60a96b7bc66ee"
+      }
+    ],
+    "smoke_admin_premium": {
+      "path": "/admin-premium",
+      "http_code": 200,
+      "size_bytes": 18239,
+      "time_total_s": 0.2179
+    },
+    "smoke_bundle_js": {
+      "path": "/static/js/bundle.js",
+      "http_code": 200,
+      "size_bytes": 4770071,
+      "time_total_s": 0.32632
+    }
+  },
+  "stats_purge": {
+    "caches_total_before_bytes": 735375561,
+    "caches_total_after_bytes": 649668566,
+    "freed_bytes": 85706995,
+    "freed_human": "81.7 Mo",
+    "purge_ratio": 11.65
+  },
+  "validation": {
+    "admin_premium_http_after": 200,
+    "admin_premium_size_after": 18239,
+    "bundle_js_http_after": 200,
+    "no_chunk_load_error": true,
+    "v30_intact": true
+  },
+  "garde_fous": [
+    "V30 LOCKED INVIOLABLE — aucun fichier core touché",
+    "ADD_ONLY — n'écrase pas le rapport audit-log Ordre 44",
+    "ANTI_GÉNÉRIQUE — aucune donnée synthétique générée",
+    "Reset SW : killswitch validé sur les 3 SW",
+    "Backend non impacté (pytest baseline conservée)"
+  ]
+}

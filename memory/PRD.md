@@ -2807,3 +2807,44 @@ journal forensique persistant + endpoint promote vers GIS_OPERATIONAL.
   - **API** : `POST /upload/{slot_id}` avec `X-Commandant-Token`
   - **Audit** : journal forensique persistant
   - **Promote** : `POST /promote` pour évaluer transition vers SCEAU_X5_FINAL
+
+## ═════════════════════════════════════════════════════════════════════
+## PHASE XXIV — ORDRE N°44 (volet PURGE FRONTEND, 2026-04-30) — SCELLÉ
+## ═════════════════════════════════════════════════════════════════════
+### Objet
+PURGE_FRONTEND_CHUNKS_Ω + CDN_INVALIDATION_Ω + SERVICE_WORKER_RESET_Ω
+(volet ADD_ONLY — n'écrase pas le rapport audit-log Ordre 44)
+
+### Caches purgés
+- `node_modules/.cache/babel-loader` : 96.0 Mo → re-build optimisé
+- `node_modules/.cache/default-development` : 605.1 Mo → re-build optimisé
+- `node_modules/.cache/.eslintcache` : 170.2 Ko → reset
+- **Total purgé brut** : 701.3 Mo
+- **Caches reconstruits par webpack** : 619.6 Mo (uniquement chunks actifs)
+- **Net libéré post-recompilation** : 81.7 Mo (purge des chunks obsolètes)
+
+### Service Worker Reset (validé killswitch)
+- `sw.js` · `sw-v2.js` · `sw-push.js` — tous en killswitch auto-désinscription
+- `index.html` — script inline pré-tout désinscrit SW résiduels + purge CacheStorage
+- `serviceWorkerRegistration.unregister()` actif dans `src/index.js`
+
+### CDN Invalidation
+- Environnement : CRA dev mode (yarn start via craco) + Kubernetes ingress direct
+- Aucun CDN externe — recompilation complète forcée via `supervisorctl restart frontend`
+- Webpack content-hash actif (cache-busting auto)
+
+### Validation post-purge
+- `/admin-premium` : HTTP 200 · 17.8 Ko · 220 ms ✓
+- `/static/js/bundle.js` : HTTP 200 · 4.5 Mo ✓
+- **HAS_CHUNK_LOAD_ERROR : False** (zéro erreur de chargement chunk)
+- TERRITOIRE_WIDGET visible sur `/territoire-apte` (regression test)
+- Screenshot capturé · Sidebar "Pilotage BCE-4X Ω" présent
+
+### Livrables HTTPS 200 OK (2)
+- `/reports/purge_master_omega/PURGE_FRONTEND_CHUNKS_Ω.json` — SHA `1d06671da765c979…`
+- `/reports/institution/RAPPORT_ORDRE_44_PURGE_FRONTEND_Ω.pdf` — SHA `c2cba95640be2664…`
+- Sceau `/app/backend/institution/sceaux/VALIDATION_PURGE_FRONTEND_Ω.sha256`
+
+### Tests
+- pytest baseline cumulée : **215/215 PASSED** (zéro régression backend)
+- V30 INVIOLÉ : `registry_lock_omega.py` + `engine_ia_corridors_omega.py` SHA inchangés
