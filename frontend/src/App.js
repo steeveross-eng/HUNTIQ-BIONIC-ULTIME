@@ -84,6 +84,8 @@ const BsaaDashboardPage = lazy(() => import("@/pages/BsaaDashboardPage"));
 const GuideProPage = lazy(() => import("@/pages/GuideProPage"));
 // GESTIONNAIRE — Phase F Frontend (BCE-4X BDRE-FIRST)
 const GestionnairePage = lazy(() => import("@/pages/GestionnairePage"));
+// ORDRE N°47 — Auth Guard Saturn5858* sur /gestionnaire
+const GestionnaireAuthGuard = lazy(() => import("@/components/auth/GestionnaireAuthGuard"));
 // CAM-Omega: Module Cameras de chasse
 const CameraModule = lazy(() => import("@/components/CameraModule"));
 const Carte2027Page = lazy(() => import("@/pages/Carte2027Page"));
@@ -1122,8 +1124,15 @@ function App() {
                 <Route path="/ads" element={<BsaaDashboardPage />} />
                 {/* GUIDE PRO — Phase E-2 BCE-4X BDRE-FIRST */}
                 <Route path="/guide-pro" element={<GuideProPage />} />
-                {/* GESTIONNAIRE — Phase F BCE-4X BDRE-FIRST */}
-                <Route path="/gestionnaire" element={<GestionnairePage />} />
+                {/* GESTIONNAIRE — Phase F BCE-4X BDRE-FIRST · ORDRE N°47 sécurisé */}
+                <Route
+                  path="/gestionnaire"
+                  element={
+                    <GestionnaireAuthGuard>
+                      <GestionnairePage />
+                    </GestionnaireAuthGuard>
+                  }
+                />
                 <Route path="/cameras" element={<CameraModule />} />
                 {/* Phase XI-SUPRA-D : Route stable pour captures Playwright institutionnelles.
                     StrictMode désactivé via index.js quand pathname.startsWith('/territoire-capture-mode').

@@ -27,6 +27,19 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXV · ORDRE N°47 — SÉCURISATION GESTIONNAIRE + TROMBONE + DURCISSEMENT DASHBOARD (2026-05-01 · ordre n°47)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX. **V30 INVIOLÉ · pytest 59/59 phases XXII→XXV PASSED · FUSION ADD-ONLY strict · 1 PDF HTTPS 200.**
+  - **AXE 1 (P0) — Mot de passe `Saturn5858*` Admin Premium** : VÉRIFIÉ déjà actif sur `POST /api/auth/login` (`admin@huntiq.com`/`Saturn5858*` → HTTP 200 + JWT). Aucun changement code requis.
+  - **AXE 2 (P0) — Sécurisation `/gestionnaire`** : NOUVEAU composant `GestionnaireAuthGuard.jsx` (wrapper auth identique à AdminPremiumPage · `localStorage.gestionnaire_authenticated`). Route `/gestionnaire` enveloppée dans App.js. Bouton Déconnexion fixe top-right. data-testid `gestionnaire-auth-guard`, `gestionnaire-password-input`, `gestionnaire-login-btn`, `gestionnaire-logout-btn`, `gestionnaire-authenticated-root`.
+  - **AXE 3 (P0) — Bug DASHBOARD `Unexpected token '<'` durci** : `AdminPilotageBce4xOmega` refactoré avec `loadDashboard` async/await · validation stricte `Content-Type=application/json` (rejet HTML `<!DOCTYPE`) · cache-busting `?v=Date.now()` + `cache:'no-store'` · bouton "⟳ Réessayer" (data-testid `pilotage-bce4x-retry-btn`) · URL exacte affichée dans le message d'erreur.
+  - **AXE 4 (P0) — Bouton 📎 trombone** : Ajout d'un bouton paperclip cyan/turquoise dans chaque `SlotCard` (data-testid `trombone-btn-{slot_id}`) · texte "📎+" pour FORET_MFFP_Ω (multi-upload) sinon "📎" simple · click direct → file picker avec `multiple={isMulti}`.
+  - **NOUVEAU test pytest** `test_phase_xxv_ordre_47_auth_omega.py` (9 tests) : auth Saturn5858* OK, refus mauvais mdp, JSON valide DASHBOARD (anti `<` HTML), manifest GIS clean state post-purge ORDRE 46, anti-générique credentials.
+  - **Preuves E2E live (Playwright)** : 5/5 testids validés en single run (guard=1, wrong-pwd→still_guard=1, good-pwd→auth_root=1+logout_btn=1, dashboard error=0+loaded=1, slot-cards=6+trombone-buttons=6+multi-banner=1).
+  - **Livrable HTTPS 200** : `RAPPORT_ORDRE_47_Ω.pdf` (7 023 o · sha256 `93c887df…9b65`).
+  - **Pytest cumul Phase XXII→XXV** : 59/59 PASSED (20+16+14+9). 0 régression.
+  - **Invariants** : V30 LOCKED `fb765b94…ecb0c` + `bcb1e3a6…39d3` intacts · FREEZE_MASTER 36/36 intact · Backend `/api/auth/login` JWT 24h validity actif.
+  - **Tests** : pytest + curl + python3 + screenshot Playwright. Aucun testing subagent.
+
 - **PHASE_XXIV · VOIE B MULTI-UPLOAD TUILES MFFP + ÉCHEC VOIE D (2026-04-30 · ordre n°46)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX suite à l'échec structurel de la VOIE D (téléchargement direct 12 Go impossible sur pod Kubernetes). Bascule immédiate vers VOIE B (tuiles régionales MFFP). **V30 INVIOLÉ · pytest 236/236 · 2/2 PDF HTTPS 200 · FUSION ADD-ONLY strict.**
   - **NOTE_INFRASTRUCTURE_VOIE_D_ECHEC_Ω.pdf** (6 721 o · sha256 `fc5b6680…fff8`) — preuves forensiques : rotation volume nvme0n5→nvme0n6, /var/tmp/ purgé à chaque restart, espace libre /app=1.4Go/9.8Go, 2 tentatives wget échouées à ~60%. Conclusion : VOIE D structurellement inviable.

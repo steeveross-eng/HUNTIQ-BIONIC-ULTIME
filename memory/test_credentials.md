@@ -5,6 +5,22 @@
 - **Password** : `Saturn5858*`
 - **Rôle** : Admin institutionnel (accès self-audit, registry-lock, captures)
 
+## Admin Premium + Gestionnaire (Ordre n°47) — ACCÈS UNIFIÉ
+- **Login form** : `POST /api/auth/login` avec `email=admin@huntiq.com` + password `Saturn5858*`
+- **Pages sécurisées** :
+  - `/admin-premium` → localStorage `admin_premium_authenticated=true`
+  - `/gestionnaire` → localStorage `gestionnaire_authenticated=true` (Ordre n°47)
+- **Bypass client-side institutionnel** (captures Playwright) :
+  ```js
+  localStorage.setItem('admin_premium_authenticated', 'true');
+  localStorage.setItem('gestionnaire_authenticated', 'true');
+  ```
+- **data-testid Gestionnaire (Ordre n°47)** :
+  - `gestionnaire-auth-guard` (form de connexion)
+  - `gestionnaire-password-input` · `gestionnaire-login-btn`
+  - `gestionnaire-authenticated-root` (page authentifiée)
+  - `gestionnaire-logout-btn` (top-right)
+
 ## Endpoints d'audit (sans auth)
 - `GET /api/v20/territoire/self-audit` — exécute les 60 suites
 - `GET /api/v20/territoire/self-audit/last` — dernier résultat
@@ -15,6 +31,8 @@
 - **Bypass client-side** (captures institutionnelles Playwright) :
   `localStorage.setItem('admin_premium_authenticated', 'true')`
 - **Section Pilotage BCE-4X Ω** : data-testid `pilotage-bce4x-dashboard`
+- **ORDRE N°47 · Bug Dashboard durci** : data-testid `pilotage-bce4x-retry-btn` (bouton Réessayer)
+- **ORDRE N°47 · Bouton trombone 📎** : data-testid `trombone-btn-{slot_id}` (6 boutons, un par slot)
 
 ## GIS Reception API (Ordre n°42_BIS) — ADMIN_PREMIUM_ONLY
 - **Header auth** : `X-Commandant-Token: STEEVE-MAX-X42BIS-GIS-RECEPTION-EXPLICIT`

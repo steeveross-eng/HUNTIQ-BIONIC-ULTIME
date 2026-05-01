@@ -15,21 +15,63 @@ export const AdminPilotageBce4xOmega = () => {
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState("ALL");
   const [tab, setTab] = useState("DASHBOARD"); // DASHBOARD | GIS_RECEPTION
+  const [retryCount, setRetryCount] = useState(0);
+
+  // ─── ORDRE N°47 — Loader durci avec validation Content-Type + cache-bust ───
+  const loadDashboard = React.useCallback(async () => {
+    setError(null);
+    setData(null);
+    const cacheBust = `?v=${Date.now()}`;
+    const fullUrl = `${REPORTS_BASE}/${encodeURIComponent("DASHBOARD_PILOTAGE_BCE_4X_Ω.json")}${cacheBust}`;
+    try {
+      const r = await fetch(fullUrl, {
+        cache: "no-store",
+        headers: { Accept: "application/json" },
+      });
+      if (!r.ok) {
+        throw new Error(`HTTP ${r.status} sur ${fullUrl}`);
+      }
+      // Validation stricte du Content-Type pour éviter le piège "<!DOCTYPE…"
+      const ct = (r.headers.get("content-type") || "").toLowerCase();
+      if (!ct.includes("application/json") && !ct.includes("text/json")) {
+        const bodyPreview = (await r.text()).slice(0, 80);
+        throw new Error(
+          `Content-Type non-JSON (reçu '${ct}'). Aperçu : ${bodyPreview}…`
+        );
+      }
+      const j = await r.json();
+      setData(j);
+    } catch (e) {
+      setError(`${String(e.message || e)} | URL: ${fullUrl}`);
+    }
+  }, []);
 
   useEffect(() => {
-    fetch(`${REPORTS_BASE}/${encodeURIComponent("DASHBOARD_PILOTAGE_BCE_4X_Ω.json")}`)
-      .then((r) => {
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r.json();
-      })
-      .then(setData)
-      .catch((e) => setError(String(e)));
-  }, []);
+    loadDashboard();
+  }, [loadDashboard, retryCount]);
 
   if (error) {
     return (
       <div style={styles.errorBanner} data-testid="pilotage-bce4x-error">
-        ⚠ Erreur de chargement DASHBOARD : {error}
+        <div style={{ marginBottom: 10 }}>
+          ⚠ Erreur de chargement DASHBOARD : {error}
+        </div>
+        <button
+          onClick={() => setRetryCount((c) => c + 1)}
+          data-testid="pilotage-bce4x-retry-btn"
+          style={{
+            padding: "8px 16px",
+            background: "#22d3ee",
+            color: "#0a1018",
+            border: "none",
+            borderRadius: 6,
+            fontWeight: 700,
+            cursor: "pointer",
+            fontSize: 12,
+          }}
+        >
+          ⟳ Réessayer
+        </button>
       </div>
     );
   }

@@ -773,16 +773,40 @@ const SlotCard = ({
     >
       <div style={S.slotHeader}>
         <div style={S.slotTitle}>{slot.slot_id}</div>
-        <span
-          style={{
-            ...S.priorityBadge,
-            background: pBadge.bg,
-            color: pBadge.color,
-          }}
-          data-testid={`slot-prio-${slot.slot_id}`}
-        >
-          {slot.priority}
-        </span>
+        <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              if (tokenReady) inputRef.current?.click();
+            }}
+            disabled={!tokenReady}
+            style={{
+              ...S.trombonneBtn,
+              opacity: tokenReady ? 1 : 0.4,
+              cursor: tokenReady ? "pointer" : "not-allowed",
+            }}
+            data-testid={`trombone-btn-${slot.slot_id}`}
+            title={
+              tokenReady
+                ? isMulti
+                  ? "Joindre une ou plusieurs tuiles"
+                  : "Joindre un fichier"
+                : "Token Commandant requis"
+            }
+          >
+            📎{isMulti ? "+" : ""}
+          </button>
+          <span
+            style={{
+              ...S.priorityBadge,
+              background: pBadge.bg,
+              color: pBadge.color,
+            }}
+            data-testid={`slot-prio-${slot.slot_id}`}
+          >
+            {slot.priority}
+          </span>
+        </div>
       </div>
 
       <div style={S.slotLabel}>{slot.label}</div>
@@ -1092,6 +1116,23 @@ const S = {
     display: "flex",
     flexDirection: "column",
     gap: 2,
+  },
+  // ─── ORDRE N°47 · Bouton trombone (paperclip pickers) ───────────
+  trombonneBtn: {
+    padding: "4px 10px",
+    background: "linear-gradient(135deg,#22d3ee,#0891b2)",
+    color: "#0a1018",
+    border: "1px solid rgba(34,211,238,0.6)",
+    borderRadius: 6,
+    fontSize: 13,
+    fontWeight: 700,
+    minWidth: 38,
+    height: 28,
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    transition: "transform 0.15s ease, box-shadow 0.15s ease",
+    boxShadow: "0 2px 8px rgba(34,211,238,0.2)",
   },
 };
 
