@@ -50,11 +50,18 @@ router = APIRouter(
 # ═════════════════════════════════════════════════════════════════════════
 # Configuration
 # ═════════════════════════════════════════════════════════════════════════
+# ─── ORDRE N°47-EXT · Délocalisation incoming/ vers overlay 95Go ─────────
+# Les fichiers uploadés physiques vont dans GIS_INCOMING_ROOT (éphémère OK),
+# MAIS le manifest JSON + audit_log.jsonl restent dans RECEPTION_ROOT
+# (persistent /app) pour la traçabilité institutionnelle durable.
 RECEPTION_ROOT = Path("/app/backend/data/gis_operational")
-INCOMING_DIR = RECEPTION_ROOT / "incoming"
-QUARANTINE_DIR = RECEPTION_ROOT / "quarantine"
+_INCOMING_OVERRIDE = os.environ.get("GIS_INCOMING_ROOT")
+INCOMING_DIR = Path(_INCOMING_OVERRIDE) if _INCOMING_OVERRIDE else (RECEPTION_ROOT / "incoming")
+_QUARANTINE_OVERRIDE = os.environ.get("GIS_QUARANTINE_ROOT")
+QUARANTINE_DIR = Path(_QUARANTINE_OVERRIDE) if _QUARANTINE_OVERRIDE else (RECEPTION_ROOT / "quarantine")
 MANIFEST_PATH = RECEPTION_ROOT / "GIS_RECEPTION_INTAKE_Ω.json"
 
+RECEPTION_ROOT.mkdir(parents=True, exist_ok=True)
 INCOMING_DIR.mkdir(parents=True, exist_ok=True)
 QUARANTINE_DIR.mkdir(parents=True, exist_ok=True)
 

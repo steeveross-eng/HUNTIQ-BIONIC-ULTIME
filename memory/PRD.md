@@ -27,6 +27,16 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXV-EXT · ORDRE N°47 HYBRIDE — DÉLOCALISATION INCOMING + PURGE ZEC (2026-05-01)**
+  Sur ORDRE du Commandant STEEVE-MAX suite au health check pré-ingestion révélant 2 alertes : disque /app saturé (87%) et résidu de tests sur CHASSE_ZEC_SEPAQ_Ω. Option (d) HYBRIDE validée et exécutée. **V30 INVIOLÉ · pytest 70/70 · 80 Go libres /var/cache.**
+  - **Délocalisation non-invasive** : Ajout env vars `GIS_INCOMING_ROOT=/var/cache/gis_operational/incoming` + `GIS_QUARANTINE_ROOT=/var/cache/gis_operational/quarantine` dans `backend/.env`. Le routeur `gis_reception_router_omega.py` lit ces env vars avec fallback sur le chemin historique (compatibilité totale).
+  - **Séparation institutionnelle** : Fichiers physiques uploadés → `/var/cache` (80 Go libres, éphémère acceptable entre upload et promotion). Manifest JSON + audit-log JSONL → `/app/backend/data/gis_operational/` (persistent pour traçabilité durable).
+  - **Purge CHASSE_ZEC_SEPAQ_Ω** : 3 fichiers résidus de tests supprimés physiquement (`a.geojson`, `good.geojson`, `tiny.geojson`), manifest réinitialisé (status=ABSENT, files_loaded_count=0, composite=null), audit event `SLOT_PURGED` append pour traçabilité.
+  - **Preuve E2E délocalisation** : Upload test d'une tuile factice via curl → fichier physique écrit dans `/var/cache/gis_operational/incoming/FORET_MFFP_Ω/` ✓ · manifest mis à jour dans `/app/backend/data/` ✓ · composite_sha256 déterministe `672b492d43ac6020…` vérifié cryptographiquement ✓ · fixture purgée après validation.
+  - **Pytest anti-régression** : 70/70 PASSED (31 Phase XXII + 16 Phase XXIII + 14 Phase XXIV + 9 Phase XXV). 0 régression malgré changement d'infrastructure.
+  - **Health check final** : 6/6 slots en ABSENT propre, /var/cache 79 Go libres (~50 tuiles de 1.5 Go possibles), backend uptime post-restart OK, auth Saturn5858* HTTP 200 ✓, journal forensique opérationnel (8 events historiques).
+  - **Commandant a feu vert** pour ingestion immédiate des 16 tuiles MFFP + 5 autres slots GIS.
+
 - **PHASE_XXV · ORDRE N°47 — SÉCURISATION GESTIONNAIRE + TROMBONE + DURCISSEMENT DASHBOARD (2026-05-01 · ordre n°47)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX. **V30 INVIOLÉ · pytest 59/59 phases XXII→XXV PASSED · FUSION ADD-ONLY strict · 1 PDF HTTPS 200.**
   - **AXE 1 (P0) — Mot de passe `Saturn5858*` Admin Premium** : VÉRIFIÉ déjà actif sur `POST /api/auth/login` (`admin@huntiq.com`/`Saturn5858*` → HTTP 200 + JWT). Aucun changement code requis.
