@@ -10,7 +10,43 @@
       "label": "Couvert forestier MFFP (carte écoforestière)",
       "priority": "P0",
       "status": "ABSENT",
-      "uploads": [],
+      "uploads": [
+        {
+          "filename": "test_token.geojson",
+          "sha256": "6d18edfe75b3149104038dcbca4d0096bbcb923f0f9fa4b49f4815344e75bb90",
+          "size_bytes": 43,
+          "uploaded_at_utc": "2026-05-03T14:12:14+00:00",
+          "passed": false,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "geojson",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "parquet",
+                "geojson"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": false,
+              "size_bytes": 43,
+              "min": 1024,
+              "max": 5368709120,
+              "reason": "Taille 43 hors bornes [1024, 5368709120]"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "6d18edfe75b3149104038dcbca4d0096bbcb923f0f9fa4b49f4815344e75bb90",
+              "reason": "OK"
+            }
+          ]
+        }
+      ],
       "files_loaded_count": 0,
       "composite_sha256": null,
       "multi_upload": true
@@ -54,5 +90,5 @@
       "uploads": []
     }
   },
-  "last_updated_utc": "2026-05-01T15:15:41+00:00"
+  "last_updated_utc": "2026-05-03T14:12:14+00:00"
 }

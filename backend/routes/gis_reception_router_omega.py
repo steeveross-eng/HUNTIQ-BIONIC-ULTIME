@@ -78,7 +78,10 @@ def _verify_token(x_commandant_token: str | None) -> None:
     if not expected:
         raise HTTPException(status_code=503,
                               detail="GIS_RECEPTION_COMMANDANT_TOKEN_NOT_CONFIGURED")
-    if not x_commandant_token or x_commandant_token != expected:
+    # ─── ORDRE N°48-EXT · Trim defensif (espaces/CRLF copiés-collés) ───
+    received = (x_commandant_token or "").strip()
+    expected_clean = expected.strip()
+    if not received or received != expected_clean:
         raise HTTPException(status_code=401,
                               detail="ADMIN_PREMIUM_ONLY · Token Commandant invalide")
 
@@ -181,6 +184,45 @@ def get_intake_status() -> Dict[str, Any]:
             "global_status": ("OPERATIONAL" if counts.get("LOADED", 0) ==
                                 len(manifest["slots"]) else "PARTIAL_OR_EMPTY"),
         },
+    }
+
+
+@router.get("/token-check")
+async def token_check(
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°48-EXT · Vérification non-destructive du token Commandant.
+    Renvoie 200 OK si le token est valide, 401 sinon. Ne déclenche aucune
+    opération d'écriture. Pas de log audit (anti-spam).
+
+    Diagnostic-friendly : la réponse contient un hint sur la longueur attendue
+    sans révéler le token (anti-fuite).
+    """
+    expected = os.environ.get("GIS_RECEPTION_COMMANDANT_TOKEN")
+    if not expected:
+        raise HTTPException(
+            status_code=503,
+            detail="GIS_RECEPTION_COMMANDANT_TOKEN_NOT_CONFIGURED",
+        )
+    received = (x_commandant_token or "").strip()
+    expected_clean = expected.strip()
+    if not received:
+        raise HTTPException(
+            status_code=401,
+            detail=f"Token absent · longueur attendue {len(expected_clean)} caractères",
+        )
+    if received != expected_clean:
+        raise HTTPException(
+            status_code=401,
+            detail=(
+                f"Token invalide · reçu {len(received)} chars, attendu "
+                f"{len(expected_clean)} chars · vérifiez la copie complète"
+            ),
+        )
+    return {
+        "ok": True,
+        "token_length": len(expected_clean),
+        "doctrine": "ADMIN_PREMIUM_ONLY",
     }
 
 

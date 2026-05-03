@@ -189,11 +189,16 @@ export const AdminGISReceptionPanel = () => {
   );
 
   const handleSaveToken = () => {
-    sessionStorage.setItem(TOKEN_STORAGE_KEY, token);
+    // ─── ORDRE N°48-EXT · Trim defensif (espaces/CRLF copiés-collés) ───
+    const cleaned = (token || "").trim();
+    if (!cleaned) return;
+    sessionStorage.setItem(TOKEN_STORAGE_KEY, cleaned);
+    setToken(cleaned);
     setTokenSaved(true);
+    setTokenTestResult(null);
     appendEvent({
       level: "INFO",
-      message: "Token Commandant enregistré (sessionStorage)",
+      message: `Token Commandant enregistré (${cleaned.length} chars, sessionStorage)`,
     });
   };
 
@@ -201,8 +206,50 @@ export const AdminGISReceptionPanel = () => {
     sessionStorage.removeItem(TOKEN_STORAGE_KEY);
     setToken("");
     setTokenSaved(false);
+    setTokenTestResult(null);
     appendEvent({ level: "WARN", message: "Token Commandant effacé" });
   };
+
+  // ─── ORDRE N°48-EXT · Test non-destructif du token ─────────────────
+  const [tokenTestResult, setTokenTestResult] = useState(null);
+  const [tokenTesting, setTokenTesting] = useState(false);
+  const handleTestToken = useCallback(async () => {
+    const cleaned = (token || "").trim();
+    if (!cleaned) {
+      setTokenTestResult({ ok: false, message: "Saisissez un token d'abord" });
+      return;
+    }
+    setTokenTesting(true);
+    setTokenTestResult(null);
+    try {
+      const r = await fetch(`${API}/api/v30/admin-premium/gis/token-check`, {
+        headers: { "X-Commandant-Token": cleaned },
+      });
+      const d = await r.json().catch(() => ({}));
+      if (r.ok && d.ok) {
+        setTokenTestResult({
+          ok: true,
+          message: `✓ Token valide (${d.token_length} chars)`,
+        });
+        // Auto-save sur test réussi
+        sessionStorage.setItem(TOKEN_STORAGE_KEY, cleaned);
+        setToken(cleaned);
+        setTokenSaved(true);
+      } else {
+        setTokenTestResult({
+          ok: false,
+          message: `✗ HTTP ${r.status} · ${d.detail || "Token rejeté"}`,
+        });
+      }
+    } catch (e) {
+      setTokenTestResult({
+        ok: false,
+        message: `✗ Réseau : ${String(e.message || e)}`,
+      });
+    } finally {
+      setTokenTesting(false);
+    }
+  }, [token]);
 
   const performUpload = useCallback(
     (slotId, file) => {
@@ -233,7 +280,7 @@ export const AdminGISReceptionPanel = () => {
         `${API}/api/v30/admin-premium/gis/upload/${encodeURIComponent(slotId)}`,
         true
       );
-      xhr.setRequestHeader("X-Commandant-Token", token);
+      xhr.setRequestHeader("X-Commandant-Token", (token || "").trim());
 
       xhr.upload.onprogress = (evt) => {
         if (evt.lengthComputable) {
@@ -389,7 +436,7 @@ export const AdminGISReceptionPanel = () => {
       if (auditFilters.event) params.set("event", auditFilters.event);
       const r = await fetch(
         `${API}/api/v30/admin-premium/gis/audit-log?${params.toString()}`,
-        { headers: { "X-Commandant-Token": token } }
+        { headers: { "X-Commandant-Token": (token || "").trim() } }
       );
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const d = await r.json();
@@ -417,7 +464,7 @@ export const AdminGISReceptionPanel = () => {
     try {
       const r = await fetch(`${API}/api/v30/admin-premium/gis/promote`, {
         method: "POST",
-        headers: { "X-Commandant-Token": token },
+        headers: { "X-Commandant-Token": (token || "").trim() },
       });
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const d = await r.json();
@@ -519,6 +566,15 @@ export const AdminGISReceptionPanel = () => {
             Enregistrer
           </button>
           <button
+            onClick={handleTestToken}
+            disabled={!token || tokenTesting}
+            style={S.btnSecondary}
+            data-testid="gis-reception-test-token-btn"
+            title="Vérifie que le token correspond à celui attendu côté backend (non-destructif)"
+          >
+            {tokenTesting ? "..." : "🔍 Tester"}
+          </button>
+          <button
             onClick={handleClearToken}
             disabled={!tokenSaved}
             style={S.btnSecondary}
@@ -527,6 +583,30 @@ export const AdminGISReceptionPanel = () => {
             Effacer
           </button>
         </div>
+        {tokenTestResult && (
+          <div
+            style={{
+              ...S.muted,
+              marginTop: 8,
+              padding: "6px 10px",
+              borderRadius: 4,
+              background: tokenTestResult.ok
+                ? "rgba(134,239,172,0.10)"
+                : "rgba(252,165,165,0.10)",
+              border: `1px solid ${
+                tokenTestResult.ok
+                  ? "rgba(134,239,172,0.4)"
+                  : "rgba(252,165,165,0.4)"
+              }`,
+              color: tokenTestResult.ok ? "#86efac" : "#fca5a5",
+              fontWeight: 600,
+              fontFamily: "JetBrains Mono, Menlo, monospace",
+            }}
+            data-testid="gis-reception-token-test-result"
+          >
+            {tokenTestResult.message}
+          </div>
+        )}
         <div style={S.muted}>
           Stockage en <code>sessionStorage</code> uniquement (jamais en
           localStorage). Le token reste sur ce navigateur, sur cette session.
