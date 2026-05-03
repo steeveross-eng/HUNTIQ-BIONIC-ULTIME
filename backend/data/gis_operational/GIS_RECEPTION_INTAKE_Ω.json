@@ -1480,10 +1480,80 @@
               "reason": "OK"
             }
           ]
+        },
+        {
+          "filename": "CARTE_ECO_MAJ_31N.gpkg",
+          "sha256": "337899e2317193577f8caa39f088ac7431983850cf15fe56aa994a2135519e2e",
+          "size_bytes": 951590912,
+          "uploaded_at_utc": "2026-05-03T20:21:56+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "gpkg",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "parquet",
+                "geojson"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 951590912,
+              "min": 1024,
+              "max": 5368709120,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "337899e2317193577f8caa39f088ac7431983850cf15fe56aa994a2135519e2e",
+              "reason": "OK"
+            }
+          ]
+        },
+        {
+          "filename": "CARTE_ECO_MAJ_31O.gpkg",
+          "sha256": "5dd6bc4da86ec615a49a6a421963f9c29f1ef03c7261e004235a9ae080f64852",
+          "size_bytes": 1159602176,
+          "uploaded_at_utc": "2026-05-03T20:22:22+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "gpkg",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "parquet",
+                "geojson"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 1159602176,
+              "min": 1024,
+              "max": 5368709120,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "5dd6bc4da86ec615a49a6a421963f9c29f1ef03c7261e004235a9ae080f64852",
+              "reason": "OK"
+            }
+          ]
         }
       ],
-      "files_loaded_count": 42,
-      "composite_sha256": "967b9cd438d3abc5bb59a2ff0e3891472cf07882a5a52981a4ad4d4a3ed94aad",
+      "files_loaded_count": 44,
+      "composite_sha256": "c85e7d21d5c7365485d943ba90d82330a03ef93b3dde198ae7e1d8dc489b261c",
       "multi_upload": true
     },
     "SOL_IRDA_Ω": {
@@ -1525,5 +1595,5 @@
       "uploads": []
     }
   },
-  "last_updated_utc": "2026-05-03T20:04:46+00:00"
+  "last_updated_utc": "2026-05-03T20:22:22+00:00"
 }
