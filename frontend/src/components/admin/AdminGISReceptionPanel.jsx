@@ -263,15 +263,23 @@ export const AdminGISReceptionPanel = () => {
     }
     setTokenTesting(true);
     setTokenTestResult(null);
+    // Cache-bust fort pour ignorer tout cache navigateur/SW intermédiaire
+    const url = `${API}/api/v30/admin-premium/gis/token-check?_=${Date.now()}`;
     try {
-      const r = await fetch(`${API}/api/v30/admin-premium/gis/token-check`, {
-        headers: { "X-Commandant-Token": cleaned },
+      const r = await fetch(url, {
+        method: "GET",
+        cache: "no-store",
+        headers: {
+          "X-Commandant-Token": cleaned,
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          Pragma: "no-cache",
+        },
       });
       const d = await r.json().catch(() => ({}));
       if (r.ok && d.ok) {
         setTokenTestResult({
           ok: true,
-          message: `✓ Token valide (${d.token_length} chars)`,
+          message: `✓ Token valide (${d.token_length} chars) · ${url}`,
         });
         // Auto-save sur test réussi
         sessionStorage.setItem(TOKEN_STORAGE_KEY, cleaned);
@@ -280,17 +288,83 @@ export const AdminGISReceptionPanel = () => {
       } else {
         setTokenTestResult({
           ok: false,
-          message: `✗ HTTP ${r.status} · ${d.detail || "Token rejeté"}`,
+          message: `✗ HTTP ${r.status} · ${
+            d.detail || "Token rejeté"
+          } · URL: ${url}`,
         });
       }
     } catch (e) {
       setTokenTestResult({
         ok: false,
-        message: `✗ Réseau : ${String(e.message || e)}`,
+        message: `✗ Réseau : ${String(e.message || e)} · URL: ${url}`,
       });
     } finally {
       setTokenTesting(false);
     }
+  }, [token]);
+
+  // ─── ORDRE N°51-DIAG · Diagnostic global multi-endpoints ──────────
+  const [diagResult, setDiagResult] = useState(null);
+  const [diagRunning, setDiagRunning] = useState(false);
+  const handleRunDiagnostic = useCallback(async () => {
+    setDiagRunning(true);
+    setDiagResult(null);
+    const cleaned = (token || "").trim();
+    const ts = Date.now();
+    const tests = [
+      {
+        label: "Slots publics",
+        url: `${API}/api/v30/admin-premium/gis/slots?_=${ts}`,
+        opts: { cache: "no-store" },
+      },
+      {
+        label: "Intake-status",
+        url: `${API}/api/v30/admin-premium/gis/intake-status?_=${ts}`,
+        opts: { cache: "no-store" },
+      },
+      {
+        label: "Token-check (REQUIS)",
+        url: `${API}/api/v30/admin-premium/gis/token-check?_=${ts}`,
+        opts: {
+          cache: "no-store",
+          headers: { "X-Commandant-Token": cleaned || "(absent)" },
+        },
+      },
+      {
+        label: "Audit-log (REQUIS)",
+        url: `${API}/api/v30/admin-premium/gis/audit-log?limit=1&_=${ts}`,
+        opts: {
+          cache: "no-store",
+          headers: { "X-Commandant-Token": cleaned || "(absent)" },
+        },
+      },
+    ];
+    const results = [];
+    for (const t of tests) {
+      try {
+        const r = await fetch(t.url, t.opts);
+        results.push({
+          label: t.label,
+          status: r.status,
+          ok: r.ok,
+          url: t.url.replace(API, ""),
+        });
+      } catch (e) {
+        results.push({
+          label: t.label,
+          status: 0,
+          ok: false,
+          url: t.url.replace(API, ""),
+          error: String(e.message || e),
+        });
+      }
+    }
+    setDiagResult({
+      backend_url: API,
+      timestamp_utc: new Date().toISOString(),
+      tests: results,
+    });
+    setDiagRunning(false);
   }, [token]);
 
   const performUpload = useCallback(
@@ -859,6 +933,75 @@ export const AdminGISReceptionPanel = () => {
             data-testid="gis-reception-token-test-result"
           >
             {tokenTestResult.message}
+          </div>
+        )}
+
+        {/* ─── ORDRE N°51-DIAG · Diagnostic complet multi-endpoints ─── */}
+        <div style={{ marginTop: 10 }}>
+          <button
+            onClick={handleRunDiagnostic}
+            disabled={diagRunning}
+            style={{
+              ...S.btnSecondary,
+              borderColor: "rgba(168,85,247,0.5)",
+              color: "#c4b5fd",
+              fontSize: 11,
+            }}
+            data-testid="gis-reception-diag-btn"
+            title="Pingue 4 endpoints en série pour identifier où le 404 surgit"
+          >
+            {diagRunning ? "🩺 Diagnostic..." : "🩺 Diagnostic complet"}
+          </button>
+        </div>
+
+        {diagResult && (
+          <div
+            style={{
+              marginTop: 8,
+              padding: "8px 10px",
+              borderRadius: 4,
+              background: "rgba(168,85,247,0.06)",
+              border: "1px solid rgba(168,85,247,0.35)",
+              color: "#e9d5ff",
+              fontFamily: "JetBrains Mono, Menlo, monospace",
+              fontSize: 10,
+            }}
+            data-testid="gis-reception-diag-result"
+          >
+            <div style={{ marginBottom: 4, fontWeight: 700 }}>
+              Backend cible : <code>{diagResult.backend_url}</code>
+            </div>
+            <div style={{ marginBottom: 6, opacity: 0.7 }}>
+              {diagResult.timestamp_utc}
+            </div>
+            {diagResult.tests.map((t, i) => (
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: 8,
+                  padding: "3px 0",
+                  borderBottom: "1px dashed rgba(168,85,247,0.2)",
+                }}
+              >
+                <span>
+                  {t.ok ? "🟢" : "🔴"} {t.label}
+                </span>
+                <span
+                  style={{
+                    color: t.ok ? "#86efac" : "#fca5a5",
+                    fontWeight: 700,
+                  }}
+                >
+                  HTTP {t.status}
+                </span>
+              </div>
+            ))}
+            <div style={{ marginTop: 6, opacity: 0.6, fontSize: 9 }}>
+              Si tous 🟢 → backend OK. Si 404 isolé → mauvais URL côté client.
+              Si 401 sur token-check/audit-log → token absent ou invalide.
+            </div>
           </div>
         )}
         <div style={S.muted}>
