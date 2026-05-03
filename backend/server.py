@@ -1271,6 +1271,27 @@ except Exception as e:
     logger.warning(f"PHASE_XXII_Ω GIS reception router not loaded: {e}")
 
 
+# ═══ PHASE_XXVI_OMEGA — BIO_PROFILE_135 SCHEMA API (ORDRE N°52 · Commandant STEEVE-MAX) ═══
+try:
+    from routes.bio_profile_schema_router_omega import router as bio_profile_schema_router
+    app.include_router(bio_profile_schema_router)
+    # Signal institutionnel SCHEMA_READY (émis au démarrage si chargement OK)
+    from engines.v8_institutional.especes.bio_profile_135_loader_omega import (
+        load_bio_profile_135, file_sha256,
+    )
+    _bp_data = load_bio_profile_135()
+    _bp_sha = file_sha256()
+    logger.info(
+        "✓ PHASE_XXVI_Ω active · SCHEMA_READY BIO_PROFILE_OMEGA_135 · "
+        f"entries={len(_bp_data['entries'])} · sha256={_bp_sha[:16]}… · "
+        "routes /api/schema/*"
+    )
+except Exception as e:
+    logger.error(
+        f"SCHEMA_VIOLATION PHASE_XXVI_Ω BIO_PROFILE_135: {e} · PIPELINE_PARTIAL"
+    )
+
+
 logger.info("=" * 60)
 logger.info(f"✓ V5-ULTIME-FUSION: {len(CORE_ROUTERS)} modules registered")
 logger.info("✓ PHASE G: BIONIC Engine P0 active")
