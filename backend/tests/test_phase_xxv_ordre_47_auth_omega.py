@@ -97,15 +97,23 @@ def test_gis_manifest_exists():
     assert GIS_MANIFEST.exists()
 
 
-def test_gis_foret_mffp_slot_clean_state():
-    """Après purge fixtures, FORET_MFFP_Ω doit être ABSENT, multi_upload=True."""
+def test_gis_foret_mffp_slot_coherent_state():
+    """FORET_MFFP_Ω doit avoir un état cohérent (multi_upload=True, status
+    cohérent avec files_loaded_count). Évolutif après uploads réels.
+    """
     d = json.loads(GIS_MANIFEST.read_text(encoding="utf-8"))
     foret = d["slots"].get("FORET_MFFP_Ω")
     assert foret is not None
-    assert foret["status"] == "ABSENT"
     assert foret.get("multi_upload") is True
-    assert foret.get("files_loaded_count", 0) == 0
-    assert foret.get("composite_sha256") is None
+    files_count = foret.get("files_loaded_count", 0)
+    if files_count == 0:
+        assert foret["status"] == "ABSENT"
+        assert foret.get("composite_sha256") is None
+    else:
+        assert foret["status"] == "LOADED"
+        assert foret.get("composite_sha256") is not None
+        assert len(foret["composite_sha256"]) == 64
+        assert len(foret.get("uploads", [])) >= files_count
 
 
 # ═══════════════════════════════════════════════════════════════════

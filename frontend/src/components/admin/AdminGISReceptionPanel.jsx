@@ -312,6 +312,24 @@ export const AdminGISReceptionPanel = () => {
         return;
       }
 
+      // ─── ORDRE N°50 · Bascule chunked auto si > seuil Cloudflare ────
+      // Cloudflare/proxies limitent à 100 MB. On découpe à 50 MB pour
+      // garder une marge. Au-dessus → mode chunked résilient.
+      const CHUNK_THRESHOLD = 50 * 1024 * 1024; // 50 MB
+      if (file.size > CHUNK_THRESHOLD) {
+        return performChunkedUpload(slotId, file);
+      }
+      return performStandardUpload(slotId, file);
+    },
+    // performChunkedUpload et performStandardUpload sont définis ci-dessous
+    // avec leurs propres dépendances → useCallback ne dépend que de token.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [token]
+  );
+
+  // ─── ORDRE N°50 · Upload mono-fichier (≤ 50 MB) ────────────────────
+  const performStandardUpload = useCallback(
+    (slotId, file) => {
       const xhr = new XMLHttpRequest();
       xhrRefs.current[slotId] = xhr;
       const fd = new FormData();
@@ -457,6 +475,192 @@ export const AdminGISReceptionPanel = () => {
       });
 
       xhr.send(fd);
+    },
+    [token, fetchIntake, appendEvent]
+  );
+
+  // ─── ORDRE N°50 · Upload chunked résilient (> 50 MB) ──────────────
+  // Découpe le fichier en chunks de 50 MB et POST séquentiel sur
+  // /upload-chunk/{slot_id} avec headers de session. Le dernier chunk
+  // (X-Final-Chunk: true) déclenche le reassemblage + validation.
+  const performChunkedUpload = useCallback(
+    async (slotId, file) => {
+      const CHUNK_SIZE = 50 * 1024 * 1024; // 50 MB par chunk
+      const total = Math.ceil(file.size / CHUNK_SIZE);
+      // upload_id : timestamp-base36 + 8 chars random hex (12-16 chars · safe)
+      const uploadId =
+        Date.now().toString(36) +
+        "-" +
+        Math.random().toString(16).slice(2, 10);
+
+      setUploadState((s) => ({
+        ...s,
+        [slotId]: {
+          progress: 0,
+          status: "UPLOADING",
+          filename: file.name,
+          sizeBytes: file.size,
+          message: `Mode chunked · ${total} chunks de ~50 MB · démarrage…`,
+          chunked: true,
+          chunksTotal: total,
+          uploadId,
+        },
+      }));
+      appendEvent({
+        level: "INFO",
+        slotId,
+        message: `Upload chunked démarré · ${file.name} · ${formatBytes(file.size)} · ${total} chunks`,
+      });
+
+      const headersBase = {
+        "X-Commandant-Token": (token || "").trim(),
+        "X-Upload-Id": uploadId,
+        "X-Chunks-Total": String(total),
+        "X-Original-Filename": file.name,
+        "X-Total-Size": String(file.size),
+      };
+
+      let lastResponse = null;
+
+      for (let i = 0; i < total; i++) {
+        const start = i * CHUNK_SIZE;
+        const end = Math.min(start + CHUNK_SIZE, file.size);
+        const blob = file.slice(start, end);
+        const fd = new FormData();
+        fd.append("file", blob, file.name);
+
+        try {
+          const r = await fetch(
+            `${API}/api/v30/admin-premium/gis/upload-chunk/${encodeURIComponent(slotId)}`,
+            {
+              method: "POST",
+              headers: {
+                ...headersBase,
+                "X-Chunk-Index": String(i),
+                ...(i === total - 1 ? { "X-Final-Chunk": "true" } : {}),
+              },
+              body: fd,
+            }
+          );
+          const payload = await r.json().catch(() => ({}));
+
+          if (!r.ok && r.status !== 200) {
+            // Erreur réseau ou backend
+            const codeLabel =
+              r.status === 401
+                ? "401 · Token invalide"
+                : r.status === 413
+                ? "413 · Chunk trop volumineux (réduire CHUNK_SIZE)"
+                : r.status === 409
+                ? "409 · Chunks incomplets"
+                : `HTTP ${r.status}`;
+            setUploadState((s) => ({
+              ...s,
+              [slotId]: {
+                progress: Math.round((i / total) * 100),
+                status: "ERROR",
+                filename: file.name,
+                sizeBytes: file.size,
+                message: `${codeLabel} (chunk ${i}/${total}) — ${
+                  payload.detail || ""
+                }`,
+                chunked: true,
+              },
+            }));
+            appendEvent({
+              level: "ERROR",
+              slotId,
+              message: `Chunk ${i}/${total} échoué · ${codeLabel}`,
+            });
+            return;
+          }
+
+          lastResponse = payload;
+
+          // Progress (% chunks reçus côté serveur ou approximé)
+          const progress =
+            i === total - 1
+              ? 99
+              : Math.round(((i + 1) / total) * 95);
+          setUploadState((s) => ({
+            ...s,
+            [slotId]: {
+              ...(s[slotId] || {}),
+              progress,
+              status: "UPLOADING",
+              filename: file.name,
+              sizeBytes: file.size,
+              message: `Chunked · ${i + 1}/${total} chunks · ${formatBytes(end)} / ${formatBytes(file.size)}`,
+              chunked: true,
+              chunksTotal: total,
+              chunksReceived: i + 1,
+            },
+          }));
+        } catch (e) {
+          setUploadState((s) => ({
+            ...s,
+            [slotId]: {
+              progress: Math.round((i / total) * 100),
+              status: "ERROR",
+              filename: file.name,
+              sizeBytes: file.size,
+              message: `Erreur réseau chunk ${i}/${total} : ${String(
+                e.message || e
+              )}`,
+              chunked: true,
+            },
+          }));
+          appendEvent({
+            level: "ERROR",
+            slotId,
+            message: `Réseau chunk ${i}/${total} · ${e.message || e}`,
+          });
+          return;
+        }
+      }
+
+      // ─── Dernier chunk → lastResponse contient le payload final ───
+      if (lastResponse && lastResponse.passed) {
+        setUploadState((s) => ({
+          ...s,
+          [slotId]: {
+            progress: 100,
+            status: "LOADED",
+            filename: file.name,
+            sizeBytes: file.size,
+            sha256: lastResponse.sha256,
+            message: `LOADED · chunked (${total}) · validators OK`,
+            validators: lastResponse.validators,
+            chunked: true,
+            chunksTotal: total,
+          },
+        }));
+        appendEvent({
+          level: "INFO",
+          slotId,
+          message: `LOADED chunked · ${file.name} · ${shortSha(lastResponse.sha256)} · ${total} chunks`,
+        });
+      } else if (lastResponse && !lastResponse.passed) {
+        setUploadState((s) => ({
+          ...s,
+          [slotId]: {
+            progress: 100,
+            status: "QUARANTINED",
+            filename: file.name,
+            sizeBytes: file.size,
+            sha256: lastResponse.sha256,
+            message: "QUARANTAINE · validators échoués (post-assemblage)",
+            validators: lastResponse.validators,
+            chunked: true,
+          },
+        }));
+        appendEvent({
+          level: "ERROR",
+          slotId,
+          message: `QUARANTAINE chunked · ${file.name}`,
+        });
+      }
+      fetchIntake();
     },
     [token, fetchIntake, appendEvent]
   );

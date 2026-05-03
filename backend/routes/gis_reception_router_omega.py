@@ -226,6 +226,287 @@ async def token_check(
     }
 
 
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°50 — Upload chunked résilient (contournement limite Cloudflare 100MB)
+# ═════════════════════════════════════════════════════════════════════════
+# Architecture :
+#   • Frontend découpe en chunks de 50 MB (sous la limite proxy)
+#   • Chaque chunk : POST /upload-chunk/{slot_id} avec headers de session
+#   • Stockage : INCOMING_DIR / slot_id / .chunks / {upload_id} / {NNNN}.bin
+#   • Au header X-Final-Chunk: true → reassemblage atomique + validation
+#       complète via validate_upload(), même payload final qu'un upload mono
+#   • FUSION ADD-ONLY : aucune route existante modifiée
+#
+# Sécurité :
+#   • Token Commandant requis sur chaque chunk
+#   • Filename safety identique
+#   • upload_id [A-Za-z0-9._-]{8,64} (UUID-like, généré client)
+#   • Limite max_size par slot vérifiée en cumulé (anti DoS)
+
+CHUNKED_UPLOAD_ID_RE = re.compile(r"^[A-Za-z0-9._-]{8,64}$")
+CHUNKS_SUBDIR = ".chunks"
+
+
+def _chunks_dir(slot_id: str, upload_id: str) -> Path:
+    base = _slot_dir(slot_id) / CHUNKS_SUBDIR / upload_id
+    base.mkdir(parents=True, exist_ok=True)
+    return base
+
+
+def _chunk_session_manifest(slot_id: str, upload_id: str) -> Path:
+    return _chunks_dir(slot_id, upload_id) / "session.json"
+
+
+def _read_chunk_session(slot_id: str, upload_id: str) -> Dict[str, Any]:
+    p = _chunk_session_manifest(slot_id, upload_id)
+    if p.exists():
+        try:
+            return json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {
+        "upload_id": upload_id,
+        "slot_id": slot_id,
+        "filename": None,
+        "chunks_total": None,
+        "chunks_received": [],
+        "total_size_expected": None,
+        "started_at_utc": _utc_now(),
+    }
+
+
+def _write_chunk_session(slot_id: str, upload_id: str, data: Dict[str, Any]) -> None:
+    _chunk_session_manifest(slot_id, upload_id).write_text(
+        json.dumps(data, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+@router.post("/upload-chunk/{slot_id}")
+async def upload_chunk(
+    request: Request,
+    slot_id: str = FPath(..., description="Identifiant du SLOT cible"),
+    file: UploadFile = File(...),
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+    x_upload_id: str | None = Header(default=None, alias="X-Upload-Id"),
+    x_chunk_index: int | None = Header(default=None, alias="X-Chunk-Index"),
+    x_chunks_total: int | None = Header(default=None, alias="X-Chunks-Total"),
+    x_original_filename: str | None = Header(default=None, alias="X-Original-Filename"),
+    x_total_size: int | None = Header(default=None, alias="X-Total-Size"),
+    x_final_chunk: str | None = Header(default=None, alias="X-Final-Chunk"),
+    user_agent: str | None = Header(default=None, alias="User-Agent"),
+) -> Dict[str, Any]:
+    """ORDRE N°50 · Upload chunked d'une couche RÉELLE pour contourner la
+    limite Cloudflare 100 MB. ADMIN_PREMIUM_ONLY · token requis sur chaque
+    chunk. Au dernier chunk, le fichier est reassemblé et validé exactement
+    comme un upload mono-fichier (validators identiques).
+    """
+    _verify_token(x_commandant_token)
+    client_ip = request.client.host if request.client else "unknown"
+
+    # ─── Validations entêtes ───────────────────────────────────────
+    if slot_id not in SLOT_BY_ID:
+        raise HTTPException(status_code=404,
+                              detail=f"SLOT_INCONNU::{slot_id}")
+    if not x_upload_id or not CHUNKED_UPLOAD_ID_RE.match(x_upload_id):
+        raise HTTPException(status_code=400,
+                              detail="X-Upload-Id INVALIDE (8-64 chars [A-Za-z0-9._-])")
+    if x_chunk_index is None or x_chunk_index < 0:
+        raise HTTPException(status_code=400, detail="X-Chunk-Index manquant")
+    if not x_chunks_total or x_chunks_total <= 0:
+        raise HTTPException(status_code=400, detail="X-Chunks-Total manquant")
+    if x_chunk_index >= x_chunks_total:
+        raise HTTPException(status_code=400,
+                              detail="X-Chunk-Index hors-borne")
+    if not x_original_filename:
+        raise HTTPException(status_code=400, detail="X-Original-Filename manquant")
+    fname = x_original_filename.strip()
+    if not SAFE_FILENAME.match(fname) or len(fname) > 200:
+        raise HTTPException(status_code=400,
+                              detail="FILENAME_UNSAFE — caractères autorisés : A-Za-z0-9._-")
+
+    spec = SLOT_BY_ID[slot_id]
+    max_size = int(spec["taille_max_octets"])
+    if x_total_size and x_total_size > max_size:
+        raise HTTPException(
+            status_code=413,
+            detail=f"FILE_TOO_LARGE :: > {max_size} octets")
+
+    is_final = (x_final_chunk or "").lower() in ("true", "1", "yes", "y")
+    chunks_dir = _chunks_dir(slot_id, x_upload_id)
+    session = _read_chunk_session(slot_id, x_upload_id)
+    if session.get("filename") and session["filename"] != fname:
+        raise HTTPException(
+            status_code=400,
+            detail=f"FILENAME_MISMATCH :: session={session['filename']} vs {fname}")
+
+    # ─── Écriture du chunk binaire ─────────────────────────────────
+    chunk_path = chunks_dir / f"{x_chunk_index:06d}.bin"
+    bytes_written = 0
+    try:
+        with open(chunk_path, "wb") as out:
+            while True:
+                buf = await file.read(1024 * 1024)
+                if not buf:
+                    break
+                bytes_written += len(buf)
+                out.write(buf)
+    except Exception as e:
+        chunk_path.unlink(missing_ok=True)
+        raise HTTPException(status_code=500, detail=f"CHUNK_WRITE_FAILED::{e}")
+
+    # ─── Mise à jour de la session ─────────────────────────────────
+    received = set(session.get("chunks_received", []))
+    received.add(int(x_chunk_index))
+    session.update({
+        "filename": fname,
+        "chunks_total": int(x_chunks_total),
+        "chunks_received": sorted(received),
+        "total_size_expected": int(x_total_size or 0),
+        "last_update_utc": _utc_now(),
+    })
+    _write_chunk_session(slot_id, x_upload_id, session)
+
+    progress_pct = round(100.0 * len(received) / x_chunks_total, 2)
+
+    # ─── Cas non-finalisé : retour intermédiaire ───────────────────
+    if not is_final:
+        return {
+            "upload_id": x_upload_id,
+            "slot_id": slot_id,
+            "chunk_index": int(x_chunk_index),
+            "chunks_received": len(received),
+            "chunks_total": int(x_chunks_total),
+            "progress_pct": progress_pct,
+            "status": "CHUNK_STORED",
+            "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
+        }
+
+    # ─── Vérification : tous les chunks doivent être présents ──────
+    expected_indices = set(range(x_chunks_total))
+    if received != expected_indices:
+        missing = sorted(expected_indices - received)
+        raise HTTPException(
+            status_code=409,
+            detail=f"CHUNKS_INCOMPLETS · manquants={missing[:10]}{'…' if len(missing)>10 else ''}")
+
+    # ─── Reassemblage atomique + SHA-256 streaming ─────────────────
+    target_dir = _slot_dir(slot_id)
+    final_path = target_dir / fname
+    tmp_assembled = target_dir / f".{fname}.assembled.partial"
+    h = hashlib.sha256()
+    total_size = 0
+    try:
+        with open(tmp_assembled, "wb") as out:
+            for i in range(x_chunks_total):
+                cp = chunks_dir / f"{i:06d}.bin"
+                if not cp.exists():
+                    raise HTTPException(
+                        status_code=500,
+                        detail=f"CHUNK_DISPARU::index={i}")
+                with open(cp, "rb") as inp:
+                    while True:
+                        b = inp.read(1024 * 1024)
+                        if not b:
+                            break
+                        total_size += len(b)
+                        if total_size > max_size:
+                            tmp_assembled.unlink(missing_ok=True)
+                            raise HTTPException(
+                                status_code=413,
+                                detail=f"FILE_TOO_LARGE :: > {max_size} octets")
+                        h.update(b)
+                        out.write(b)
+        shutil.move(str(tmp_assembled), str(final_path))
+    except HTTPException:
+        raise
+    except Exception as e:
+        tmp_assembled.unlink(missing_ok=True)
+        raise HTTPException(status_code=500, detail=f"ASSEMBLE_FAILED::{e}")
+    finally:
+        # Cleanup chunks dir, même en cas d'erreur partielle
+        try:
+            shutil.rmtree(chunks_dir, ignore_errors=True)
+        except Exception:
+            pass
+
+    sha256 = h.hexdigest()
+
+    # ─── Validation post-assemblage ───────────────────────────────
+    validation = validate_upload(slot_id, fname, final_path)
+    passed = bool(validation.get("passed"))
+    if not passed:
+        quarantine_path = QUARANTINE_DIR / f"{slot_id}__{fname}"
+        try:
+            shutil.move(str(final_path), str(quarantine_path))
+        except Exception:
+            pass
+
+    manifest = _record_upload(slot_id, fname, sha256, total_size, validation, passed)
+
+    audit.append_event(
+        event="UPLOAD_LOADED" if passed else "UPLOAD_QUARANTINED",
+        slot_id=slot_id, filename=fname, sha256=sha256, size_bytes=total_size,
+        http_code=200 if passed else 422,
+        client_ip=client_ip, user_agent=user_agent,
+        validators=validation.get("validators", []),
+    )
+
+    slot_state = manifest["slots"].get(slot_id, {})
+    return JSONResponse(
+        status_code=200 if passed else 422,
+        content={
+            "slot_id": slot_id,
+            "filename": fname,
+            "size_bytes": total_size,
+            "sha256": sha256,
+            "passed": passed,
+            "status": "LOADED" if passed else "QUARANTINED",
+            "validators": validation.get("validators", []),
+            "multi_upload": slot_state.get("multi_upload", False),
+            "files_loaded_count": slot_state.get("files_loaded_count", 0),
+            "composite_sha256": slot_state.get("composite_sha256"),
+            "chunked": True,
+            "chunks_total": int(x_chunks_total),
+            "upload_id": x_upload_id,
+            "intake_stats": {
+                "total_slots": len(manifest["slots"]),
+                "loaded": sum(1 for s in manifest["slots"].values()
+                                if s.get("status") == "LOADED"),
+            },
+            "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
+            "v30_lock": "INVIOLÉ",
+        },
+    )
+
+
+@router.delete("/upload-chunk/{slot_id}/{upload_id}")
+async def upload_chunk_abort(
+    slot_id: str = FPath(...),
+    upload_id: str = FPath(...),
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°50 · Annulation d'une session chunked en cours.
+    Supprime tous les chunks partiels et la session manifest.
+    """
+    _verify_token(x_commandant_token)
+    if slot_id not in SLOT_BY_ID:
+        raise HTTPException(status_code=404, detail=f"SLOT_INCONNU::{slot_id}")
+    if not CHUNKED_UPLOAD_ID_RE.match(upload_id):
+        raise HTTPException(status_code=400, detail="X-Upload-Id INVALIDE")
+    chunks_dir = _slot_dir(slot_id) / CHUNKS_SUBDIR / upload_id
+    deleted = 0
+    if chunks_dir.exists():
+        deleted = len(list(chunks_dir.glob("*.bin")))
+        shutil.rmtree(chunks_dir, ignore_errors=True)
+    return {
+        "upload_id": upload_id,
+        "slot_id": slot_id,
+        "deleted_chunks": deleted,
+        "status": "ABORTED",
+    }
+
+
 @router.post("/upload/{slot_id}")
 async def upload_layer(
     request: Request,
