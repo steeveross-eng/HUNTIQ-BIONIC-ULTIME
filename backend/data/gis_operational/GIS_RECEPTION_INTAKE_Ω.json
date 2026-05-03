@@ -10,78 +10,7 @@
       "label": "Couvert forestier MFFP (carte écoforestière)",
       "priority": "P0",
       "status": "ABSENT",
-      "uploads": [
-        {
-          "filename": "test_token.geojson",
-          "sha256": "6d18edfe75b3149104038dcbca4d0096bbcb923f0f9fa4b49f4815344e75bb90",
-          "size_bytes": 43,
-          "uploaded_at_utc": "2026-05-03T14:12:14+00:00",
-          "passed": false,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "geojson",
-              "formats_acceptes": [
-                "gpkg",
-                "zip",
-                "parquet",
-                "geojson"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": false,
-              "size_bytes": 43,
-              "min": 1024,
-              "max": 5368709120,
-              "reason": "Taille 43 hors bornes [1024, 5368709120]"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "6d18edfe75b3149104038dcbca4d0096bbcb923f0f9fa4b49f4815344e75bb90",
-              "reason": "OK"
-            }
-          ]
-        },
-        {
-          "filename": "test.geojson",
-          "sha256": "f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2",
-          "size_bytes": 5,
-          "uploaded_at_utc": "2026-05-03T16:09:46+00:00",
-          "passed": false,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "geojson",
-              "formats_acceptes": [
-                "gpkg",
-                "zip",
-                "parquet",
-                "geojson"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": false,
-              "size_bytes": 5,
-              "min": 1024,
-              "max": 5368709120,
-              "reason": "Taille 5 hors bornes [1024, 5368709120]"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2",
-              "reason": "OK"
-            }
-          ]
-        }
-      ],
+      "uploads": [],
       "files_loaded_count": 0,
       "composite_sha256": null,
       "multi_upload": true
@@ -125,5 +54,5 @@
       "uploads": []
     }
   },
-  "last_updated_utc": "2026-05-03T16:09:46+00:00"
+  "last_updated_utc": "2026-05-03T16:20:41+00:00"
 }

@@ -113,7 +113,7 @@ export const AdminGISReceptionPanel = () => {
     setTimeout(() => setTokenAttention(false), 2500);
   }, []);
 
-  // ─── ORDRE N°48 · Pré-injection token via URL `?token=...` ──────────
+  // ─── ORDRE N°48-EXT · Pré-injection token via URL `?token=...` ──────
   useEffect(() => {
     try {
       const params = new URLSearchParams(window.location.search);
@@ -132,6 +132,48 @@ export const AdminGISReceptionPanel = () => {
       /* best-effort */
     }
   }, []);
+
+  // ─── ORDRE N°49 · Auto-validation token au montage (purge auto si invalide) ──
+  // Empêche un sessionStorage corrompu de bloquer le Commandant indéfiniment.
+  useEffect(() => {
+    const stored = sessionStorage.getItem(TOKEN_STORAGE_KEY);
+    if (!stored) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const r = await fetch(
+          `${API}/api/v30/admin-premium/gis/token-check`,
+          { headers: { "X-Commandant-Token": stored.trim() } }
+        );
+        if (cancelled) return;
+        if (r.ok) {
+          // Token valide → on s'assure du marquage "saved"
+          setTokenSaved(true);
+        } else if (r.status === 401) {
+          // Token corrompu → purge automatique + alerte UX
+          sessionStorage.removeItem(TOKEN_STORAGE_KEY);
+          setToken("");
+          setTokenSaved(false);
+          setTokenTestResult({
+            ok: false,
+            message:
+              "⚠ Token précédent invalide — purgé automatiquement. " +
+              "Re-saisissez le token Commandant ci-dessous.",
+          });
+          appendEvent({
+            level: "WARN",
+            message: "Token invalide détecté en session → purge auto",
+          });
+        }
+      } catch {
+        /* réseau temporairement indisponible — silencieux */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // au montage uniquement
 
   // ═════ ORDRE N°45 — État Journal forensique + Promote ═════
   const [auditEntries, setAuditEntries] = useState([]);
