@@ -22,6 +22,7 @@ import {
   Handshake, Palette, Brain, Search, ToggleLeft, Activity,
   FlaskConical, Power, Store, UserCheck, Megaphone, LayoutGrid, Lock,
   Database, RefreshCw, CheckCircle, AlertTriangle, TrendingUp,
+  Eye, EyeOff,
 } from 'lucide-react';
 
 // Import all admin modules
@@ -127,6 +128,7 @@ const AdminPremiumPage = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const [authError, setAuthError] = useState(null); // ORDRE N°48 — message explicite
 
@@ -230,15 +232,31 @@ const AdminPremiumPage = () => {
             <p className="text-gray-500 text-sm mt-1">Acces securise — mot de passe requis</p>
           </div>
           <form onSubmit={handleLogin} className="space-y-4">
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Mot de passe administrateur"
-              className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-[#F5A623] focus:outline-none"
-              data-testid="admin-premium-password-input"
-              autoComplete="current-password"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Mot de passe administrateur"
+                className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 pr-12 text-white placeholder-gray-500 focus:border-[#F5A623] focus:outline-none"
+                data-testid="admin-premium-password-input"
+                autoComplete="current-password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-[#F5A623] transition-colors"
+                data-testid="admin-premium-toggle-password-visibility"
+                aria-label={showPassword ? "Masquer" : "Afficher"}
+                title={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
+                  <Eye className="h-5 w-5" />
+                )}
+              </button>
+            </div>
             {authError && (
               <div
                 className="text-xs text-red-400 bg-red-950/40 border border-red-900/60 rounded p-2 font-mono break-all"

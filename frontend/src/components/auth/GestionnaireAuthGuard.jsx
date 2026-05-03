@@ -14,7 +14,7 @@
  */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Lock, Shield } from "lucide-react";
+import { Lock, Shield, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
@@ -24,6 +24,7 @@ const STORAGE_KEY = "gestionnaire_authenticated";
 export default function GestionnaireAuthGuard({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [authError, setAuthError] = useState(null);
 
@@ -116,15 +117,31 @@ export default function GestionnaireAuthGuard({ children }) {
             </p>
           </div>
           <form onSubmit={handleLogin} className="space-y-4">
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Mot de passe Commandant"
-              className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-[#F5A623] focus:outline-none"
-              data-testid="gestionnaire-password-input"
-              autoComplete="current-password"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Mot de passe Commandant"
+                className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 pr-12 text-white placeholder-gray-500 focus:border-[#F5A623] focus:outline-none"
+                data-testid="gestionnaire-password-input"
+                autoComplete="current-password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-[#F5A623] transition-colors"
+                data-testid="gestionnaire-toggle-password-visibility"
+                aria-label={showPassword ? "Masquer" : "Afficher"}
+                title={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
+                  <Eye className="h-5 w-5" />
+                )}
+              </button>
+            </div>
             {authError && (
               <div
                 className="text-xs text-red-400 bg-red-950/40 border border-red-900/60 rounded p-2 font-mono break-all"
