@@ -71,6 +71,68 @@ export const AdminGISReceptionPanel = () => {
   const [eventLog, setEventLog] = useState([]);
   const xhrRefs = useRef({});
 
+  // ─── ORDRE N°48 · UX déblocage token Commandant ─────────────────────
+  const tokenSectionRef = useRef(null);
+  const tokenInputRef = useRef(null);
+  const [tokenAttention, setTokenAttention] = useState(false);
+
+  const requestTokenFocus = useCallback(() => {
+    // Scroll robuste (compte tient des conteneurs scrollables imbriqués)
+    try {
+      const el = tokenSectionRef.current;
+      if (el) {
+        // Méthode 1 : scrollIntoView (best-effort sur container parent)
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        // Méthode 2 : remonter aussi tous les conteneurs scrollables ancêtres
+        let parent = el.parentElement;
+        while (parent && parent !== document.body) {
+          const cs = window.getComputedStyle(parent);
+          if (
+            ["auto", "scroll"].includes(cs.overflowY) ||
+            ["auto", "scroll"].includes(cs.overflow)
+          ) {
+            parent.scrollTo({
+              top: el.offsetTop - parent.offsetTop - 60,
+              behavior: "smooth",
+            });
+          }
+          parent = parent.parentElement;
+        }
+        // Méthode 3 : window scroll en backup absolu
+        const rect = el.getBoundingClientRect();
+        window.scrollTo({
+          top: window.pageYOffset + rect.top - 100,
+          behavior: "smooth",
+        });
+      }
+      setTimeout(() => tokenInputRef.current?.focus({ preventScroll: false }), 450);
+    } catch {
+      tokenInputRef.current?.focus();
+    }
+    setTokenAttention(true);
+    setTimeout(() => setTokenAttention(false), 2500);
+  }, []);
+
+  // ─── ORDRE N°48 · Pré-injection token via URL `?token=...` ──────────
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const urlToken = params.get("gis_token") || params.get("token");
+      if (urlToken && urlToken.length > 8) {
+        sessionStorage.setItem(TOKEN_STORAGE_KEY, urlToken);
+        setToken(urlToken);
+        setTokenSaved(true);
+        // Nettoyer l'URL pour ne pas exposer le token dans l'historique
+        const url = new URL(window.location.href);
+        url.searchParams.delete("gis_token");
+        url.searchParams.delete("token");
+        window.history.replaceState({}, "", url.pathname + url.search + url.hash);
+      }
+    } catch {
+      /* best-effort */
+    }
+  }, []);
+
   // ═════ ORDRE N°45 — État Journal forensique + Promote ═════
   const [auditEntries, setAuditEntries] = useState([]);
   const [auditStats, setAuditStats] = useState(null);
@@ -383,6 +445,14 @@ export const AdminGISReceptionPanel = () => {
 
   return (
     <div style={S.wrap} data-testid="gis-reception-panel">
+      {/* ─── ORDRE N°48 · Keyframes pour animation pulsante token ─── */}
+      <style>{`
+        @keyframes gisTokenPulse {
+          0%   { box-shadow: 0 0 0 4px rgba(251,191,36,0.20), 0 0 24px rgba(251,191,36,0.30); }
+          50%  { box-shadow: 0 0 0 10px rgba(251,191,36,0.45), 0 0 36px rgba(251,191,36,0.65); }
+          100% { box-shadow: 0 0 0 4px rgba(251,191,36,0.20), 0 0 24px rgba(251,191,36,0.30); }
+        }
+      `}</style>
       <header style={S.header}>
         <h2 style={S.h2}>RÉCEPTION_GIS_Ω · ADMIN_PREMIUM_ONLY</h2>
         <div style={S.sub}>
@@ -401,9 +471,19 @@ export const AdminGISReceptionPanel = () => {
         {" · "}global_status: <code>{intake?.stats?.global_status || "—"}</code> ★
       </div>
 
-      <section style={S.tokenCard} data-testid="token-section">
+      <section
+        ref={tokenSectionRef}
+        style={{
+          ...S.tokenCard,
+          ...(tokenAttention ? S.tokenCardAttention : {}),
+          ...(!tokenSaved ? S.tokenCardEmpty : {}),
+        }}
+        data-testid="token-section"
+      >
         <div style={S.tokenHeader}>
-          <span style={S.lbl}>X-COMMANDANT-TOKEN</span>
+          <span style={S.lbl}>
+            X-COMMANDANT-TOKEN {!tokenSaved && <span style={S.tokenBadgeRequired}>· REQUIS POUR UPLOAD</span>}
+          </span>
           <span
             style={{
               ...S.tokenStatus,
@@ -415,6 +495,7 @@ export const AdminGISReceptionPanel = () => {
         </div>
         <div style={S.tokenRow}>
           <input
+            ref={tokenInputRef}
             type="password"
             value={token}
             onChange={(e) => {
@@ -422,7 +503,10 @@ export const AdminGISReceptionPanel = () => {
               setTokenSaved(false);
             }}
             placeholder="Saisir le token Commandant…"
-            style={S.tokenInput}
+            style={{
+              ...S.tokenInput,
+              ...(tokenAttention ? S.tokenInputAttention : {}),
+            }}
             data-testid="gis-reception-token-input"
             autoComplete="off"
           />
@@ -446,6 +530,16 @@ export const AdminGISReceptionPanel = () => {
         <div style={S.muted}>
           Stockage en <code>sessionStorage</code> uniquement (jamais en
           localStorage). Le token reste sur ce navigateur, sur cette session.
+          {!tokenSaved && (
+            <>
+              {" · "}
+              <span style={{ color: "#fcd34d", fontWeight: 700 }}>
+                Astuce : ouvrez l'URL avec
+                <code style={S.inlineCode}>?token=VOTRE_TOKEN</code>
+                pour pré-remplir automatiquement.
+              </span>
+            </>
+          )}
         </div>
       </section>
 
@@ -460,6 +554,7 @@ export const AdminGISReceptionPanel = () => {
             onUpload={performUpload}
             onCancel={cancelUpload}
             tokenReady={tokenSaved && Boolean(token)}
+            onRequestTokenFocus={requestTokenFocus}
           />
         ))}
       </section>
@@ -707,6 +802,7 @@ const SlotCard = ({
   onUpload,
   onCancel,
   tokenReady,
+  onRequestTokenFocus,
 }) => {
   const [drag, setDrag] = useState(false);
   const inputRef = useRef(null);
@@ -716,7 +812,10 @@ const SlotCard = ({
       e.preventDefault();
       e.stopPropagation();
       setDrag(false);
-      if (!tokenReady) return;
+      if (!tokenReady) {
+        onRequestTokenFocus?.();
+        return;
+      }
       const files = Array.from(e.dataTransfer.files || []);
       if (files.length === 0) return;
       // ORDRE N°46 · Multi-upload : envoi séquentiel pour FORET_MFFP_Ω
@@ -726,7 +825,7 @@ const SlotCard = ({
         onUpload(slot.slot_id, files[0]);
       }
     },
-    [slot.slot_id, slot.multi_upload, onUpload, tokenReady]
+    [slot.slot_id, slot.multi_upload, onUpload, tokenReady, onRequestTokenFocus]
   );
 
   const handlePick = useCallback(
@@ -745,6 +844,27 @@ const SlotCard = ({
     },
     [slot.slot_id, slot.multi_upload, onUpload]
   );
+
+  // ─── ORDRE N°48 · Click trombone sans token → scroll & pulse ────
+  const handleTromboneClick = useCallback(
+    (e) => {
+      e.stopPropagation();
+      if (tokenReady) {
+        inputRef.current?.click();
+      } else {
+        onRequestTokenFocus?.();
+      }
+    },
+    [tokenReady, onRequestTokenFocus]
+  );
+
+  const handleDropZoneClick = useCallback(() => {
+    if (tokenReady) {
+      inputRef.current?.click();
+    } else {
+      onRequestTokenFocus?.();
+    }
+  }, [tokenReady, onRequestTokenFocus]);
 
   const sBadge =
     STATUS_BADGE[
@@ -775,15 +895,12 @@ const SlotCard = ({
         <div style={S.slotTitle}>{slot.slot_id}</div>
         <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              if (tokenReady) inputRef.current?.click();
-            }}
-            disabled={!tokenReady}
+            onClick={handleTromboneClick}
             style={{
               ...S.trombonneBtn,
-              opacity: tokenReady ? 1 : 0.4,
-              cursor: tokenReady ? "pointer" : "not-allowed",
+              opacity: tokenReady ? 1 : 0.65,
+              cursor: "pointer",
+              ...(tokenReady ? {} : S.trombonneBtnDisabled),
             }}
             data-testid={`trombone-btn-${slot.slot_id}`}
             title={
@@ -791,7 +908,7 @@ const SlotCard = ({
                 ? isMulti
                   ? "Joindre une ou plusieurs tuiles"
                   : "Joindre un fichier"
-                : "Token Commandant requis"
+                : "Cliquer pour saisir le Token Commandant en haut"
             }
           >
             📎{isMulti ? "+" : ""}
@@ -855,7 +972,7 @@ const SlotCard = ({
         }}
         onDragLeave={() => setDrag(false)}
         onDrop={handleDrop}
-        onClick={() => tokenReady && inputRef.current?.click()}
+        onClick={handleDropZoneClick}
         style={{
           ...S.dropZone,
           borderColor: drag ? "#22d3ee" : tokenReady ? "#3a4a66" : "#7f1d1d",
@@ -864,7 +981,7 @@ const SlotCard = ({
             : tokenReady
             ? "rgba(34,211,238,0.04)"
             : "rgba(127,29,29,0.10)",
-          cursor: tokenReady ? "pointer" : "not-allowed",
+          cursor: "pointer",
         }}
         data-testid={`drop-zone-${slot.slot_id}`}
       >
@@ -881,7 +998,9 @@ const SlotCard = ({
             <div style={{ ...S.dropMain, color: "#fca5a5" }}>
               ⛔ Token Commandant requis
             </div>
-            <div style={S.muted}>Saisir le token plus haut pour activer l'upload</div>
+            <div style={{ ...S.muted, color: "#fcd34d" }}>
+              Cliquer ici pour saisir le token (champ tout en haut) ↑
+            </div>
           </>
         )}
         <input
@@ -1133,6 +1252,45 @@ const S = {
     justifyContent: "center",
     transition: "transform 0.15s ease, box-shadow 0.15s ease",
     boxShadow: "0 2px 8px rgba(34,211,238,0.2)",
+  },
+  trombonneBtnDisabled: {
+    background: "linear-gradient(135deg,#475569,#1e293b)",
+    border: "1px solid rgba(252,211,77,0.5)",
+    boxShadow: "0 0 0 2px rgba(252,211,77,0.2)",
+    color: "#fcd34d",
+  },
+  // ─── ORDRE N°48 · Token attention/empty states ─────────────────
+  tokenCardEmpty: {
+    border: "1px solid rgba(252,211,77,0.45)",
+    boxShadow: "0 0 0 1px rgba(252,211,77,0.12) inset",
+  },
+  tokenCardAttention: {
+    border: "2px solid #fbbf24",
+    boxShadow:
+      "0 0 0 4px rgba(251,191,36,0.25), 0 0 24px rgba(251,191,36,0.45)",
+    animation: "gisTokenPulse 0.6s ease-in-out 0s 3",
+  },
+  tokenInputAttention: {
+    borderColor: "#fbbf24",
+    boxShadow: "0 0 0 3px rgba(251,191,36,0.35)",
+    background: "#1e1308",
+  },
+  tokenBadgeRequired: {
+    color: "#fcd34d",
+    fontWeight: 800,
+    fontSize: 10,
+    letterSpacing: "0.5px",
+    marginLeft: 6,
+  },
+  inlineCode: {
+    margin: "0 4px",
+    padding: "1px 6px",
+    background: "rgba(34,211,238,0.10)",
+    border: "1px solid rgba(34,211,238,0.35)",
+    borderRadius: 4,
+    fontFamily: "JetBrains Mono, Menlo, monospace",
+    fontSize: 11,
+    color: "#67e8f9",
   },
 };
 

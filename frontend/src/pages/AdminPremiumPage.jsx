@@ -158,6 +158,23 @@ const AdminPremiumPage = () => {
       window.location.replace(url.pathname + url.search);
       return;
     }
+
+    // ─── ORDRE N°48 · Pré-injection token GIS via URL ───────────
+    // Permet au Commandant d'arriver pré-authentifié pour les uploads.
+    const urlGisToken = params.get('gis_token') || params.get('token');
+    if (urlGisToken && urlGisToken.length > 8) {
+      try {
+        sessionStorage.setItem('gis_reception_commandant_token', urlGisToken);
+      } catch {
+        /* sessionStorage indisponible — best-effort */
+      }
+      // Nettoyer l'URL pour ne pas exposer le token dans l'historique
+      const url = new URL(window.location.href);
+      url.searchParams.delete('gis_token');
+      url.searchParams.delete('token');
+      window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+    }
+
     const auth = localStorage.getItem('admin_premium_authenticated');
     if (auth === 'true') setIsAuthenticated(true);
   }, []);
