@@ -51,11 +51,36 @@ export const AdminPilotageBce4xOmega = () => {
   }, [loadDashboard, retryCount]);
 
   if (error) {
+    // ─── ORDRE N°51-EXT · Détection automatique mode HIBERNATION ───
+    const isHibernating =
+      /text\/html/i.test(error) ||
+      /<!DOCTYPE/i.test(error) ||
+      /<html/i.test(error);
+
     return (
       <div style={styles.errorBanner} data-testid="pilotage-bce4x-error">
-        <div style={{ marginBottom: 10 }}>
-          ⚠ Erreur de chargement DASHBOARD : {error}
-        </div>
+        {isHibernating ? (
+          <>
+            <div style={{ marginBottom: 8, fontWeight: 800, fontSize: 14 }}>
+              ⏸ SERVEURS BACKEND EN HIBERNATION
+            </div>
+            <div style={{ marginBottom: 10, fontSize: 12, lineHeight: 1.5 }}>
+              Les serveurs sont en mode économie d'énergie (Emergent Preview).
+              Ils renvoient l'index.html du SPA au lieu du JSON attendu.
+              <br />
+              <br />
+              <strong style={{ color: "#fcd34d" }}>
+                ▶ Cliquez le bouton vert "Wake up servers" en bas de votre
+                écran
+              </strong>
+              , attendez 10-30 secondes, puis cliquez "⟳ Réessayer".
+            </div>
+          </>
+        ) : (
+          <div style={{ marginBottom: 10 }}>
+            ⚠ Erreur de chargement DASHBOARD : {error}
+          </div>
+        )}
         <button
           onClick={() => setRetryCount((c) => c + 1)}
           data-testid="pilotage-bce4x-retry-btn"
