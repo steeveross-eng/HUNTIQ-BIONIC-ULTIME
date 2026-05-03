@@ -343,16 +343,24 @@ export const AdminGISReceptionPanel = () => {
             message: `QUARANTAINE · ${file.name} · ${shortSha(payload.sha256)}`,
           });
         } else {
+          // ─── ORDRE N°48-EXT · Codes d'erreur explicites ───
           const codeLabel =
             xhr.status === 401
               ? "401 · Token invalide / refusé"
               : xhr.status === 404
-              ? "404 · Slot inconnu"
+              ? "404 · Endpoint absent (backend en redémarrage ?)"
               : xhr.status === 413
               ? "413 · Fichier trop volumineux"
               : xhr.status === 400
               ? "400 · Nom de fichier invalide"
+              : xhr.status === 502 || xhr.status === 503 || xhr.status === 504
+              ? `${xhr.status} · Backend indisponible · Réessayer dans 10s`
               : `HTTP ${xhr.status}`;
+          // Conseil de retry si erreur transitoire
+          const retryHint =
+            [404, 502, 503, 504, 0].includes(xhr.status)
+              ? " · ⚠ Vérifiez que le backend est UP (rafraîchir la page) puis réessayez l'upload"
+              : "";
           setUploadState((s) => ({
             ...s,
             [slotId]: {
@@ -360,7 +368,7 @@ export const AdminGISReceptionPanel = () => {
               status: "ERROR",
               filename: file.name,
               sizeBytes: file.size,
-              message: `${codeLabel} — ${payload.detail || ""}`,
+              message: `${codeLabel} — ${payload.detail || ""}${retryHint}`,
             },
           }));
           appendEvent({
