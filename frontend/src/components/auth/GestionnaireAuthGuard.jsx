@@ -25,10 +25,34 @@ export default function GestionnaireAuthGuard({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [authError, setAuthError] = useState(null);
 
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
+    // ─── ORDRE N°48 · MODE RESET URL — débloque caches/SW corrompus ───
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("reset") === "1" || params.get("clear") === "1") {
+      try {
+        localStorage.clear();
+        sessionStorage.clear();
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.getRegistrations().then((regs) => {
+            regs.forEach((r) => r.unregister());
+          });
+        }
+        if (window.caches) {
+          caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
+        }
+      } catch (err) {
+        console.warn("[GESTIONNAIRE_RESET] partial:", err);
+      }
+      const url = new URL(window.location.href);
+      url.searchParams.delete("reset");
+      url.searchParams.delete("clear");
+      window.location.replace(url.pathname + url.search);
+      return;
+    }
     if (localStorage.getItem(STORAGE_KEY) === "true") {
       setIsAuthenticated(true);
     }
@@ -37,19 +61,36 @@ export default function GestionnaireAuthGuard({ children }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setAuthError(null);
     try {
-      await axios.post(`${BACKEND_URL}/api/auth/login`, {
-        email: "admin@huntiq.com",
-        password,
-      });
-      localStorage.setItem(STORAGE_KEY, "true");
-      setIsAuthenticated(true);
-      toast.success("Accès Gestionnaire autorisé — Commandant identifié");
-    } catch {
-      toast.error("Mot de passe incorrect — accès refusé");
+      const r = await axios.post(
+        `${BACKEND_URL}/api/auth/login`,
+        { email: "admin@huntiq.com", password },
+        { timeout: 15000 }
+      );
+      if (r.data?.success) {
+        localStorage.setItem(STORAGE_KEY, "true");
+        setIsAuthenticated(true);
+        toast.success("Accès Gestionnaire autorisé — Commandant identifié");
+      } else {
+        setAuthError(`Réponse inattendue: ${JSON.stringify(r.data).slice(0, 80)}`);
+      }
+    } catch (err) {
+      let msg = "Mot de passe incorrect ou réseau indisponible";
+      if (err.response) {
+        msg = `HTTP ${err.response.status} · ${err.response.data?.detail || err.response.statusText}`;
+      } else if (err.request) {
+        msg = `Réseau injoignable · ${BACKEND_URL}`;
+      }
+      setAuthError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleHardReset = () => {
+    window.location.href = `${window.location.pathname}?reset=1`;
   };
 
   const handleLogout = () => {
@@ -84,6 +125,14 @@ export default function GestionnaireAuthGuard({ children }) {
               data-testid="gestionnaire-password-input"
               autoComplete="current-password"
             />
+            {authError && (
+              <div
+                className="text-xs text-red-400 bg-red-950/40 border border-red-900/60 rounded p-2 font-mono break-all"
+                data-testid="gestionnaire-auth-error"
+              >
+                ⚠ {authError}
+              </div>
+            )}
             <Button
               type="submit"
               className="w-full bg-[#F5A623] text-black font-bold hover:bg-[#F5A623]/90"
@@ -94,9 +143,21 @@ export default function GestionnaireAuthGuard({ children }) {
               {loading ? "Connexion..." : "Se connecter"}
             </Button>
           </form>
-          <div className="mt-6 pt-4 border-t border-gray-800 text-center">
-            <p className="text-[10px] text-gray-500 font-mono">
+          <div className="mt-6 pt-4 border-t border-gray-800">
+            <button
+              type="button"
+              onClick={handleHardReset}
+              className="w-full text-xs text-cyan-400/80 hover:text-cyan-300 font-mono py-2 px-3 border border-cyan-900/40 rounded hover:bg-cyan-950/20 transition-colors"
+              data-testid="gestionnaire-hard-reset-btn"
+              title="Vide le cache local + service workers + storage si la connexion échoue"
+            >
+              ⟳ Connexion bloquée ? Vider la session locale & recharger
+            </button>
+            <p className="text-[10px] text-gray-600 mt-3 text-center font-mono">
               ORDRE N°47 · ANTI-GÉNÉRIQUE STRICT · V30 INVIOLÉ
+            </p>
+            <p className="text-[10px] text-gray-700 mt-1 text-center font-mono break-all">
+              {BACKEND_URL}/api/auth/login
             </p>
           </div>
         </Card>

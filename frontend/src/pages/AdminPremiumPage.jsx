@@ -128,10 +128,36 @@ const AdminPremiumPage = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
+  const [authError, setAuthError] = useState(null); // ORDRE N°48 — message explicite
 
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
+    // ─── ORDRE N°48 · MODE RESET URL — débloque les caches/SW corrompus ───
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('reset') === '1' || params.get('clear') === '1') {
+      try {
+        localStorage.clear();
+        sessionStorage.clear();
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then((regs) => {
+            regs.forEach((r) => r.unregister());
+          });
+        }
+        if (window.caches) {
+          caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
+        }
+      } catch (err) {
+        // best-effort cleanup
+        console.warn('[ADMIN_PREMIUM_RESET] partial:', err);
+      }
+      // Recharge sans le param pour repartir propre
+      const url = new URL(window.location.href);
+      url.searchParams.delete('reset');
+      url.searchParams.delete('clear');
+      window.location.replace(url.pathname + url.search);
+      return;
+    }
     const auth = localStorage.getItem('admin_premium_authenticated');
     if (auth === 'true') setIsAuthenticated(true);
   }, []);
@@ -139,18 +165,36 @@ const AdminPremiumPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoginLoading(true);
+    setAuthError(null);
     try {
-      await axios.post(`${BACKEND_URL}/api/auth/login`, {
+      const r = await axios.post(`${BACKEND_URL}/api/auth/login`, {
         email: "admin@huntiq.com",
         password,
-      });
-      localStorage.setItem('admin_premium_authenticated', 'true');
-      setIsAuthenticated(true);
-      toast.success("Connexion Admin Premium reussie!");
-    } catch {
-      toast.error("Mot de passe incorrect");
+      }, { timeout: 15000 });
+      if (r.data?.success) {
+        localStorage.setItem('admin_premium_authenticated', 'true');
+        setIsAuthenticated(true);
+        toast.success("Connexion Admin Premium reussie!");
+      } else {
+        setAuthError(`Réponse backend inattendue : ${JSON.stringify(r.data).slice(0, 80)}`);
+      }
+    } catch (err) {
+      // Message d'erreur explicite (HTTP code + raison)
+      let msg = "Mot de passe incorrect ou réseau indisponible";
+      if (err.response) {
+        msg = `HTTP ${err.response.status} · ${err.response.data?.detail || err.response.statusText}`;
+      } else if (err.request) {
+        msg = `Réseau injoignable (timeout ou CORS) · ${BACKEND_URL}`;
+      }
+      setAuthError(msg);
+      toast.error(msg);
     }
     setLoginLoading(false);
+  };
+
+  const handleHardReset = () => {
+    // Force-clear puis recharge avec ?reset=1 pour purger SW + caches
+    window.location.href = `${window.location.pathname}?reset=1`;
   };
 
   const handleLogout = () => {
@@ -176,11 +220,36 @@ const AdminPremiumPage = () => {
               placeholder="Mot de passe administrateur"
               className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-[#F5A623] focus:outline-none"
               data-testid="admin-premium-password-input"
+              autoComplete="current-password"
             />
+            {authError && (
+              <div
+                className="text-xs text-red-400 bg-red-950/40 border border-red-900/60 rounded p-2 font-mono break-all"
+                data-testid="admin-premium-auth-error"
+              >
+                ⚠ {authError}
+              </div>
+            )}
             <Button type="submit" className="w-full bg-[#F5A623] text-black font-bold" disabled={loginLoading} data-testid="admin-premium-login-btn">
               {loginLoading ? 'Connexion...' : 'Se connecter'}
             </Button>
           </form>
+
+          {/* ─── ORDRE N°48 · Bouton de déblocage cache navigateur ─── */}
+          <div className="mt-6 pt-4 border-t border-gray-800">
+            <button
+              type="button"
+              onClick={handleHardReset}
+              className="w-full text-xs text-cyan-400/80 hover:text-cyan-300 font-mono py-2 px-3 border border-cyan-900/40 rounded hover:bg-cyan-950/20 transition-colors"
+              data-testid="admin-premium-hard-reset-btn"
+              title="Vide le cache local + service workers + storage si la connexion échoue"
+            >
+              ⟳ Connexion bloquée ? Vider la session locale & recharger
+            </button>
+            <p className="text-[10px] text-gray-600 mt-2 text-center">
+              Backend : <code>{BACKEND_URL}/api/auth/login</code>
+            </p>
+          </div>
         </Card>
       </main>
     );
