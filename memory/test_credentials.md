@@ -5,21 +5,30 @@
 - **Password** : `Saturn5858*`
 - **Rôle** : Admin institutionnel (accès self-audit, registry-lock, captures)
 
-## Admin Premium + Gestionnaire (Ordre n°47) — ACCÈS UNIFIÉ
+## Admin Premium + Gestionnaire (Ordre n°51 · Token unifié) — ACCÈS UNIFIÉ
 - **Login form** : `POST /api/auth/login` avec `email=admin@huntiq.com` + password `Saturn5858*`
 - **Pages sécurisées** :
   - `/admin-premium` → localStorage `admin_premium_authenticated=true`
   - `/gestionnaire` → localStorage `gestionnaire_authenticated=true` (Ordre n°47)
+- **Token GIS Commandant (Ordre n°51)** : `Saturn5858*` (unifié avec le mot de passe admin sur directive du Commandant)
+  - Header HTTP : `X-Commandant-Token: Saturn5858*`
+  - Variable env backend : `GIS_RECEPTION_COMMANDANT_TOKEN=Saturn5858*`
+  - À saisir dans le panel `RÉCEPTION GIS Ω` → section X-COMMANDANT-TOKEN → 🔍 Tester
 - **Bypass client-side institutionnel** (captures Playwright) :
   ```js
   localStorage.setItem('admin_premium_authenticated', 'true');
   localStorage.setItem('gestionnaire_authenticated', 'true');
+  sessionStorage.setItem('gis_reception_commandant_token', 'Saturn5858*');
   ```
 - **data-testid Gestionnaire (Ordre n°47)** :
   - `gestionnaire-auth-guard` (form de connexion)
   - `gestionnaire-password-input` · `gestionnaire-login-btn`
+  - `gestionnaire-toggle-password-visibility` (Ordre n°51 · œil)
   - `gestionnaire-authenticated-root` (page authentifiée)
   - `gestionnaire-logout-btn` (top-right)
+- **data-testid Admin Premium (Ordre n°51 · œil)** :
+  - `admin-premium-password-input`
+  - `admin-premium-toggle-password-visibility` (œil 👁 affiche/masque)
 
 ## Endpoints d'audit (sans auth)
 - `GET /api/v20/territoire/self-audit` — exécute les 60 suites
@@ -60,7 +69,7 @@
 ## Audit-Log GIS (Ordre n°44) — ADMIN_PREMIUM_ONLY
 - **Endpoint GET** : `/api/v30/admin-premium/gis/audit-log`
 - **Endpoint POST** : `/api/v30/admin-premium/gis/promote`
-- **Header auth** : `X-Commandant-Token` (même token : `STEEVE-MAX-X42BIS-GIS-RECEPTION-EXPLICIT`)
+- **Header auth** : `X-Commandant-Token: Saturn5858*` (Ordre n°51 · unifié)
 - **Storage** : `/app/backend/data/gis_operational/audit_log.jsonl` (JSONL append-only)
 - **Rétention** : env `GIS_AUDIT_RETENTION_DAYS` (défaut 90 jours)
 - **Filtres GET** : `?slot_id=...&event=...&limit=1..2000`
