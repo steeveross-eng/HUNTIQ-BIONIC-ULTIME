@@ -27,6 +27,30 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXVII-EXT · ORDRE N°52-EXT VOIE A — `/diagnostic/pee-maj/compress-and-archive` (2026-05-04)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (option de compression validée). **V30 INVIOLÉ · pytest 126/126 PASSED phases XXII→XXVII-EXT · 0 régression · doctrine ANTI_GÉNÉRIQUE_STRICT respectée.**
+  - **Contexte** : préparation en arrière-plan d'un endpoint pour tenter de rendre persistant le `pee_maj.gpkg` brut lui-même (compression zstd niveau 10), pendant que le Commandant procède à l'upload monolithique.
+  - **Dépendance ajoutée** : `zstandard==0.25.0` installée via pip (compression streaming high-perf, multi-threads natifs).
+  - **Endpoint livré (FUSION ADD-ONLY)** : `POST /api/v30/admin-premium/gis/diagnostic/pee-maj/compress-and-archive` (ADMIN_PREMIUM_ONLY · token `Saturn5858*`).
+    - Lit `/var/cache/gis_operational/incoming/FORET_MFFP_PEE_MAJ_Ω/pee_maj.gpkg` en streaming (chunks 8 Mo).
+    - Compresse vers `pee_maj.gpkg.zstd` à côté avec `zstd.ZstdCompressor(level=10, threads=0)` (utilise tous les CPUs).
+    - Calcule SHA-256 raw + compressed + ratio + temps écoulé.
+    - **Logique d'archivage conditionnelle** :
+      - Si `compressed_size > 1 Go` → audit `PEE_MAJ_COMPRESSED_TOO_LARGE_Ω` + `archived=False` + `skip_reason: COMPRESSED_TOO_LARGE`.
+      - Si `compressed_size > 0.9 × disk_free /app` → audit `PEE_MAJ_COMPRESSED_ARCHIVE_DISK_FULL_Ω` + `archived=False` + `skip_reason: DISK_INSUFFICIENT_APP`.
+      - Sinon → copie atomique vers `/app/backend/data/gis_archive/pee_maj.gpkg.zstd` + audit `PEE_MAJ_COMPRESSED_ARCHIVED_Ω` + `archived=True`.
+    - **Anti-générique strict** : aucune simulation. Si la source est absente (pas encore uploadée) → HTTP 409 avec message honnête révélant le chemin manquant et l'action requise (upload chunked préalable).
+  - **Réponse JSON structurée** : `raw{path,size_bytes,size_GB,sha256}` · `compressed{path,size_bytes,size_GB,sha256,ratio,elapsed_s}` · `archive_persistent{archived,dest_path,threshold_bytes,threshold_GB,skip_reason,free_app_bytes}` · `v30_lock`.
+  - **Tests pytest** : nouveau `test_phase_xxvii_ext_compress_archive_omega.py` (4 tests · isolation tmp_path) :
+    - `test_compress_archive_requires_token` : 401 sans token.
+    - `test_compress_archive_409_when_source_absent` : 409 honnête + `PEE_MAJ_SOURCE_ABSENT`.
+    - `test_compress_archive_success_under_1GB` : E2E réel avec fixture 5 Mo de zéros (ratio > 5x), vérifie `archived=True`, `dest_path` présent, fichier réellement archivé · cleanup automatique.
+    - `test_compress_archive_returns_anti_generique_doctrine` : valide la cohérence du message 409 (action requise + chemin source révélé).
+  - **Pytest cumul** : 126/126 PASSED (XXII 33 + XXIII 16 + XXIV 14 + XXV 9 + XXVI 11 + XXVI-EXT 15 + XXVI-EXT2 13 + XXVII 13 + XXVII-EXT 4). 0 régression.
+  - **Tests** : pytest + curl + python3. **Aucun testing subagent**.
+  - **Stratégie d'utilisation** : une fois `pee_maj.gpkg` LOADED, le Commandant déclenche `POST /diagnostic/pee-maj/compress-and-archive`. **Si ratio > ~37x** (improbable mais possible sur GeoPackage avec géométries répétitives), le fichier compressé sera persistant. **Sinon** (ratio typique 2-5x sur GeoPackage = ~7-18 Go compressé > seuil 1 Go), le rapport documentera honnêtement l'inadéquation et la persistance reposera sur les **dérivées analytiques** post-compute (voie principale).
+
+
 - **PHASE_XXVII · ORDRE N°52-EXT VOIE A — PEE_MAJ_Ω PIPELINE MONOLITHIQUE (2026-05-04)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (option A validée). **V30 INVIOLÉ · pytest 122/122 PASSED phases XXII→XXVII · 0 régression · doctrine ANTI_GÉNÉRIQUE_STRICT respectée jusque dans le naming.**
   - **Contexte de bascule architecturale** : le modèle multi-tuiles `FORET_MFFP_Ω` (60 .gpkg, ~36 Go cumulés) est progressivement remplacé par un fichier monolithique unique `pee_maj.gpkg` (~36,9 Go) issu de la nouvelle Carte écoforestière unifiée du Québec. Le Commandant a ordonné un nouveau slot dédié + substitution canonique dans `compute_corridors_gis()`.

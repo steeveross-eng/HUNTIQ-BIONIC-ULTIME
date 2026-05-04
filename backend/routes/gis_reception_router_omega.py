@@ -1528,6 +1528,193 @@ async def pee_maj_persist_derivatives(
 
 
 # ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°52-EXT VOIE A · Compression + archivage persistant pee_maj.gpkg
+# Tente de compresser le fichier brut en zstd. Si compressé < 1 Go, archive
+# atomiquement vers /app/backend/data/gis_archive/. Sinon, conserve dans
+# /var/cache (éphémère) avec audit-event explicit. Anti-générique : refuse
+# de simuler un succès si le ratio est défavorable.
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/diagnostic/pee-maj/compress-and-archive")
+async def pee_maj_compress_and_archive(
+    request: Request,
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+    user_agent: str | None = Header(default=None, alias="User-Agent"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-EXT VOIE A · Compression zstd + archivage persistant.
+    Anti-générique : pas d'archivage si compressed > 1 Go (slot trop gros
+    pour /app 9,8 Go). Audit-event PEE_MAJ_COMPRESSED_ARCHIVED_Ω ou
+    PEE_MAJ_COMPRESSED_TOO_LARGE_Ω selon résultat.
+    """
+    _verify_token(x_commandant_token)
+    client_ip = request.client.host if request.client else "unknown"
+    ua = (user_agent or "")[:200]
+
+    # Vérifier dépendance zstandard
+    try:
+        import zstandard as zstd
+    except ImportError as e:
+        raise HTTPException(
+            status_code=503,
+            detail=f"ZSTANDARD_MODULE_MISSING::{e}")
+
+    # Vérifier source physique
+    src = Path("/var/cache/gis_operational/incoming/FORET_MFFP_PEE_MAJ_Ω/pee_maj.gpkg")
+    if not src.exists() or src.stat().st_size == 0:
+        raise HTTPException(
+            status_code=409,
+            detail=("PEE_MAJ_SOURCE_ABSENT — pee_maj.gpkg introuvable dans "
+                    f"{src.parent}. Procéder d'abord à l'upload chunked."))
+
+    raw_size = src.stat().st_size
+    raw_size_GB = round(raw_size / 1e9, 2)
+
+    # Compression streaming vers /var/cache (éphémère mais suffisant pour évaluer)
+    compressed_path = src.with_suffix(".gpkg.zstd")
+    tmp_path = src.with_suffix(".gpkg.zstd.compressing.partial")
+    cctx = zstd.ZstdCompressor(level=10, threads=0)  # threads=0 = nb_cpus
+    raw_h = hashlib.sha256()
+    cmp_h = hashlib.sha256()
+    import time as _time
+    t0 = _time.time()
+    bytes_written = 0
+    try:
+        with open(src, "rb") as inp, open(tmp_path, "wb") as out:
+            with cctx.stream_writer(out) as compressor:
+                while True:
+                    buf = inp.read(8 << 20)  # 8 MB chunks
+                    if not buf:
+                        break
+                    raw_h.update(buf)
+                    compressor.write(buf)
+        # Recalc compressed sha256 + size
+        with open(tmp_path, "rb") as f:
+            while True:
+                buf = f.read(1 << 20)
+                if not buf:
+                    break
+                cmp_h.update(buf)
+                bytes_written += len(buf)
+        os.replace(str(tmp_path), str(compressed_path))
+    except Exception as e:
+        if tmp_path.exists():
+            tmp_path.unlink(missing_ok=True)
+        raise HTTPException(status_code=500,
+                              detail=f"COMPRESSION_ERROR::{e}")
+
+    elapsed_s = round(_time.time() - t0, 2)
+    compressed_size = compressed_path.stat().st_size
+    compressed_size_GB = round(compressed_size / 1e9, 2)
+    ratio = round(raw_size / compressed_size, 2) if compressed_size > 0 else 0
+    raw_sha = raw_h.hexdigest()
+    cmp_sha = cmp_h.hexdigest()
+
+    # Vérifier disque /app suffisant pour archivage (compressed + 10% marge)
+    threshold_bytes = 1 * 1024 * 1024 * 1024  # 1 Go institutionnel
+    archive_dest_dir = Path("/app/backend/data/gis_archive")
+    archive_dest_dir.mkdir(parents=True, exist_ok=True)
+    archive_dest = archive_dest_dir / "pee_maj.gpkg.zstd"
+
+    archived = False
+    archive_skip_reason: Optional[str] = None
+    free_app = 0
+    try:
+        free_app = __import__("shutil").disk_usage(str(archive_dest_dir)).free
+    except Exception:
+        pass
+
+    if compressed_size > threshold_bytes:
+        archive_skip_reason = (
+            f"COMPRESSED_TOO_LARGE — {compressed_size_GB} Go > seuil 1 Go")
+        audit.append_event(
+            event="PEE_MAJ_COMPRESSED_TOO_LARGE_Ω",
+            slot_id="FORET_MFFP_PEE_MAJ_Ω",
+            filename="pee_maj.gpkg.zstd", sha256=cmp_sha,
+            size_bytes=compressed_size, http_code=200,
+            client_ip=client_ip, user_agent=ua,
+            validators=[{"name": "compressed_size_check", "passed": False,
+                         "compressed_size_bytes": compressed_size,
+                         "threshold_bytes": threshold_bytes,
+                         "raw_size_bytes": raw_size,
+                         "ratio": ratio,
+                         "compression_elapsed_s": elapsed_s}],
+        )
+    elif compressed_size > free_app * 0.9:
+        archive_skip_reason = (
+            f"DISK_INSUFFICIENT_APP — {compressed_size} octets vs {free_app} libres /app")
+        audit.append_event(
+            event="PEE_MAJ_COMPRESSED_ARCHIVE_DISK_FULL_Ω",
+            slot_id="FORET_MFFP_PEE_MAJ_Ω",
+            filename="pee_maj.gpkg.zstd", sha256=cmp_sha,
+            size_bytes=compressed_size, http_code=200,
+            client_ip=client_ip, user_agent=ua,
+            validators=[{"name": "disk_check_app", "passed": False,
+                         "free_bytes": free_app, "needed": compressed_size}],
+        )
+    else:
+        # Copie atomique vers archive persistante
+        tmp_archive = archive_dest.with_suffix(".zstd.archiving.partial")
+        try:
+            with open(compressed_path, "rb") as inp, open(tmp_archive, "wb") as out:
+                while True:
+                    buf = inp.read(1 << 20)
+                    if not buf:
+                        break
+                    out.write(buf)
+            os.replace(str(tmp_archive), str(archive_dest))
+            archived = True
+            audit.append_event(
+                event="PEE_MAJ_COMPRESSED_ARCHIVED_Ω",
+                slot_id="FORET_MFFP_PEE_MAJ_Ω",
+                filename="pee_maj.gpkg.zstd", sha256=cmp_sha,
+                size_bytes=compressed_size, http_code=200,
+                client_ip=client_ip, user_agent=ua,
+                validators=[
+                    {"name": "compression", "passed": True,
+                     "raw_sha256": raw_sha, "compressed_sha256": cmp_sha,
+                     "raw_size_bytes": raw_size,
+                     "compressed_size_bytes": compressed_size,
+                     "ratio": ratio,
+                     "elapsed_s": elapsed_s},
+                    {"name": "archive_persistent", "passed": True,
+                     "dest_path": str(archive_dest)},
+                ],
+            )
+        except Exception as e:
+            if tmp_archive.exists():
+                tmp_archive.unlink(missing_ok=True)
+            archive_skip_reason = f"ARCHIVE_WRITE_ERROR::{e}"
+
+    return {
+        "manifest_id": "PEE_MAJ_COMPRESS_AND_ARCHIVE_Ω",
+        "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "n°52_ext_voie_a",
+        "raw": {
+            "path": str(src),
+            "size_bytes": raw_size,
+            "size_GB": raw_size_GB,
+            "sha256": raw_sha,
+        },
+        "compressed": {
+            "path": str(compressed_path),
+            "size_bytes": compressed_size,
+            "size_GB": compressed_size_GB,
+            "sha256": cmp_sha,
+            "ratio": ratio,
+            "elapsed_s": elapsed_s,
+        },
+        "archive_persistent": {
+            "archived": archived,
+            "dest_path": str(archive_dest) if archived else None,
+            "threshold_bytes": threshold_bytes,
+            "threshold_GB": 1.0,
+            "skip_reason": archive_skip_reason,
+            "free_app_bytes": free_app,
+        },
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+# ═════════════════════════════════════════════════════════════════════════
 # ORDRE N°50 — Upload chunked résilient (contournement limite Cloudflare 100MB)
 #   • Frontend découpe en chunks de 50 MB (sous la limite proxy)
 #   • Chaque chunk : POST /upload-chunk/{slot_id} avec headers de session
