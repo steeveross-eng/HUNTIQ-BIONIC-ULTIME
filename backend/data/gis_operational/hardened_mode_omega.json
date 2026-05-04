@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "history": [
+    {
+      "action": "ACTIVATE",
+      "ts_utc": "2026-05-04T19:09:42+00:00",
+      "by_ip": "10.79.131.92",
+      "by_ua": "curl/7.88.1",
+      "activated_by": "COMMANDANT_STEEVE_MAX",
+      "reason": "ORDRE_N52_EXT",
+      "previous_state": "DISABLED"
+    }
+  ],
+  "last_activated_utc": "2026-05-04T19:09:42+00:00",
+  "last_activated_by_ip": "10.79.131.92"
+}

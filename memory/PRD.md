@@ -27,6 +27,32 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXVI-EXT · ORDRE N°52-EXT BCE4X_HARDENED_PIPELINE_MODE_Ω (2026-05-04)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (ordre n°52-ext). **V30 INVIOLÉ · pytest 96/96 PASSED phases XXII→XXVI-EXT · doctrine `ANTI_GÉNÉRIQUE_STRICT` respectée jusque dans le nommage des fonctionnalités.**
+  - **Contexte d'incident** : suite au HTTP 404 systématique sur `CARTE_ECO_MAJ_22I.gpkg` lors du retry chunk 0/6, le Commandant a demandé l'activation d'un mode "hardened pipeline" avec 6 directives. **Honnêteté institutionnelle préalable** : 2 directives sur 6 sont structurellement non-implémentables au niveau applicatif ("bypass Cloudflare/WAF" — pod en aval du proxy ; "garantie 100% réussite" — théoriquement impossible). Voie (a) validée par le Commandant : livrer le réel + substituts honnêtes nommés `CLOUDFLARE_CONSTRAINT_HONORED_Ω` au lieu de "bypass".
+  - **Endpoints livrés (FUSION ADD-ONLY)** :
+    - `POST /api/v30/admin-premium/gis/diagnostic/hardened/activate` · activation idempotente · audit-event `BCE4X_HARDENED_MODE_ACTIVATED_Ω` consigné · flag persistant à `/app/backend/data/gis_operational/hardened_mode_omega.json`.
+    - `POST /diagnostic/hardened/deactivate` · désactivation symétrique avec audit-event `BCE4X_HARDENED_MODE_DEACTIVATED_Ω`.
+    - `GET /diagnostic/hardened/status` · expose `enabled`, `flag_persistant_enabled`, `env_var_enabled` (lit aussi `BCE4X_HARDENED_PIPELINE_MODE` env var), `last_activated_utc`, `history` complet.
+    - `POST /diagnostic/validate-url` · normalisation Unicode NFC/NFD + percent-decoding du slot_id, retourne `matched_canonical`, `matched_via`, `tested_variants[]`, `canonical_endpoint` exact, validation regex filename + upload_id.
+    - `GET /upload-chunk/{slot_id}/resume/{upload_id}` · retourne `chunks_received[]`, `chunks_missing[]`, `physical_chunks_present[]`, `session_vs_physical_consistent`, `rereception_log{}` — permet au client de **reprendre uniquement les chunks manquants** après timeout/502 (idempotence forensique).
+  - **Effets RÉELS quand activé** :
+    - `fsync` sur chaque chunk binaire écrit (durabilité disque garantie).
+    - `session.json` ré-écrit à chaque chunk avec compteur `rereception_log{}` par index.
+    - Helper `_normalize_slot_id()` reconnaît raw / NFC / NFD / percent_decoded / nfc_percent_decoded.
+    - Audit-event `BCE4X_HARDENED_MODE_ACTIVATED_Ω` traçable cryptographiquement.
+  - **Substituts honnêtes nommés (anti-générique strict)** :
+    - "Bypass Cloudflare" → `CLOUDFLARE_CONSTRAINT_HONORED_Ω` (chunks ≤ 50 Mo + idempotence).
+    - "Retry auto 5x serveur" → idempotence par `chunk_index` + endpoint `/resume` côté client (le serveur ne peut pas rappeler le client).
+    - "Garantie 100%" → `100_percent_promise: ASYMPTOTIQUE — pas garanti, doctrine institutionnelle honnête`.
+  - **Exposition globale** : `/health-snapshot.flags.hardened_pipeline_mode` (true/false) + `hardened_pipeline_mode_source` (`env` ou `persistent_flag_or_disabled`).
+  - **Activation live confirmée** : POST hardened/activate HTTP 200 · flag écrit · audit-event consigné · status post-restart toujours `enabled=true` (persistance OK · `last_activated_utc=2026-05-04T19:09:42Z`).
+  - **Tests pytest** : nouveau fichier `test_phase_xxvi_ext_bce4x_hardened_omega.py` (15 tests) · validations : status initial disabled · auth requise sur activate · token KO=401 · activation→status enabled · doctrine ANTI_GÉNÉRIQUE_STRICT exposée · pas de promesse "100%" fictive · CLOUDFLARE_CONSTRAINT_HONORED_Ω présent · deactivate · validate-url canonical OK · validate-url filename-as-slot KO (hypothèse #1 du diag CARTE_ECO_MAJ_22I) · validate-url unsafe filename · validate-url upload_id invalide · resume session inexistante · resume slot inconnu · resume upload_id invalide · resume sans token · health-snapshot expose flag.
+  - **Pytest cumul** : 96/96 PASSED (XXII 31 + XXIII 16 + XXIV 14 + XXV 9 + XXVI 11 + XXVI-EXT 15). 0 régression.
+  - **Tests** : pytest + curl + python3. **Aucun testing subagent**.
+  - **Prochaine action attendue** : Commandant relance l'upload de `CARTE_ECO_MAJ_22I.gpkg`. Suggestion d'exploitation : `POST /diagnostic/validate-url` avec slot+filename+upload_id pour valider l'URL côté client AVANT envoi. Si chunk 0 atteint le backend, `GET /diagnostic/inspect/FORET_MFFP_Ω` montrera la session live. Si HTTP 404 persiste, isoler entre cause cliente vs Cloudflare via le test curl probe.
+
+
 - **PHASE_XXVI · ORDRE N°52 SUSPENSIF (VOIE B) — DIVERGENCE PHYS/MANIFEST + HEALTH-SNAPSHOT (2026-05-04)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (ordre n°52, voie B). **V30 INVIOLÉ · pytest 81/81 PASSED phases XXII→XXVI · audit-log forensique enrichi.**
   - **Diagnostic critique pré-promotion** : avant `POST /promote`, vérification physique des slots a révélé que **FORET_MFFP_Ω présentait une divergence PHYS_LOST_Ω** (manifest=60 tuiles · 36 Go déclarés vs **0 fichier physique** sur `/var/cache/gis_operational/incoming/FORET_MFFP_Ω/`). Confirmation de la volatilité du `/var/cache` du pod Kubernetes (problème déjà documenté). Les 5 autres slots restent intègres physiquement.

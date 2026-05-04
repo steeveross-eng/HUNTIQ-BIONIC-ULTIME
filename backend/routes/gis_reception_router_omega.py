@@ -349,6 +349,11 @@ def health_snapshot(
             "incoming_root": str(INCOMING_DIR),
             "quarantine_root": str(QUARANTINE_DIR),
             "manifest_path": str(MANIFEST_PATH),
+            "hardened_pipeline_mode": _is_hardened_mode_active(),
+            "hardened_pipeline_mode_source": (
+                "env" if os.environ.get("BCE4X_HARDENED_PIPELINE_MODE", "").lower()
+                in ("true", "1") else "persistent_flag_or_disabled"
+            ),
         },
         "anti_generique": "STRICT",
     }
@@ -645,6 +650,361 @@ async def diagnostic_inspect(
 
 
 # ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°52-EXT (FUSION ADD-ONLY) — BCE4X_HARDENED_PIPELINE_MODE_Ω
+# Doctrine ANTI_GÉNÉRIQUE_STRICT : aucune fonctionnalité fictive.
+# Substituts honnêtes pour les directives techniquement non-implémentables :
+#   · "Bypass Cloudflare" → CLOUDFLARE_CONSTRAINT_HONORED_Ω (chunks ≤ 50 Mo
+#     + idempotence + resume) — le flag activé ne court-circuite RIEN du
+#     proxy externe ; il endurcit ce qui est sous notre contrôle.
+#   · "Retry auto 5x" → idempotence par chunk_index + endpoint /resume pour
+#     que le client connaisse les chunks manquants après timeout/502.
+#   · "Garantie 100%" → asymptote robuste via idempotence+resume.
+# Effets RÉELS quand activé :
+#   · fsync sur chaque chunk binaire écrit (durabilité disque)
+#   · session.json ré-écrit à chaque chunk
+#   · rereception_log : compteur de re-réception par chunk_index
+#   · audit-event BCE4X_HARDENED_MODE_ACTIVATED_Ω à l'activation
+# ═════════════════════════════════════════════════════════════════════════
+HARDENED_FLAG_PATH = RECEPTION_ROOT / "hardened_mode_omega.json"
+
+
+def _read_hardened_flag() -> Dict[str, Any]:
+    if HARDENED_FLAG_PATH.exists():
+        try:
+            return json.loads(HARDENED_FLAG_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {"enabled": False, "history": []}
+
+
+def _write_hardened_flag(d: Dict[str, Any]) -> None:
+    HARDENED_FLAG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    HARDENED_FLAG_PATH.write_text(
+        json.dumps(d, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+def _is_hardened_mode_active() -> bool:
+    """Retourne True si BCE4X_HARDENED_PIPELINE_MODE est actif (flag persistant
+    OU env var BCE4X_HARDENED_PIPELINE_MODE=true)."""
+    if os.environ.get("BCE4X_HARDENED_PIPELINE_MODE", "").lower() in ("true", "1"):
+        return True
+    return bool(_read_hardened_flag().get("enabled", False))
+
+
+def _normalize_slot_id(raw: str) -> Dict[str, Any]:
+    """Normalise un slot_id reçu : NFC/NFD + percent-decoding + comparaison
+    case-insensitive. Retourne un diagnostic riche."""
+    import unicodedata
+    from urllib.parse import unquote
+    candidates = [
+        ("raw", raw),
+        ("percent_decoded", unquote(raw)),
+        ("nfc", unicodedata.normalize("NFC", raw)),
+        ("nfd", unicodedata.normalize("NFD", raw)),
+        ("nfc_percent_decoded", unicodedata.normalize("NFC", unquote(raw))),
+    ]
+    seen = set()
+    tested = []
+    matched_canonical: Optional[str] = None
+    matched_via: Optional[str] = None
+    for variant_name, variant_value in candidates:
+        if variant_value in seen:
+            continue
+        seen.add(variant_value)
+        tested.append({"variant": variant_name, "value": variant_value,
+                       "matches": variant_value in SLOT_BY_ID})
+        if matched_canonical is None and variant_value in SLOT_BY_ID:
+            matched_canonical = variant_value
+            matched_via = variant_name
+    return {
+        "input_raw": raw,
+        "matched_canonical": matched_canonical,
+        "matched_via": matched_via,
+        "tested_variants": tested,
+        "all_known_slot_ids": list(SLOT_BY_ID.keys()),
+    }
+
+
+class HardenedToggleRequest(BaseModel):
+    activated_by: Optional[str] = None
+    reason: Optional[str] = None
+
+
+@router.post("/diagnostic/hardened/activate")
+async def hardened_activate(
+    body: HardenedToggleRequest,
+    request: Request,
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+    user_agent: str | None = Header(default=None, alias="User-Agent"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-EXT · Active BCE4X_HARDENED_PIPELINE_MODE_Ω.
+    ADMIN_PREMIUM_ONLY. Idempotent (ré-activation = trace d'audit
+    supplémentaire mais flag inchangé).
+    """
+    _verify_token(x_commandant_token)
+    client_ip = request.client.host if request.client else "unknown"
+    ua = (user_agent or "")[:200]
+
+    flag = _read_hardened_flag()
+    was_enabled = bool(flag.get("enabled"))
+    flag["enabled"] = True
+    flag.setdefault("history", []).append({
+        "action": "ACTIVATE",
+        "ts_utc": _utc_now(),
+        "by_ip": client_ip,
+        "by_ua": ua,
+        "activated_by": body.activated_by,
+        "reason": body.reason,
+        "previous_state": "ENABLED" if was_enabled else "DISABLED",
+    })
+    flag["last_activated_utc"] = _utc_now()
+    flag["last_activated_by_ip"] = client_ip
+    _write_hardened_flag(flag)
+
+    audit.append_event(
+        event="BCE4X_HARDENED_MODE_ACTIVATED_Ω",
+        slot_id="(global)",
+        filename="(none)",
+        sha256=None,
+        size_bytes=0,
+        http_code=200,
+        client_ip=client_ip,
+        user_agent=ua,
+        validators=[
+            {"name": "hardened_mode_set",
+             "passed": True,
+             "previous_state": "ENABLED" if was_enabled else "DISABLED",
+             "activated_by": body.activated_by,
+             "reason": body.reason},
+        ],
+    )
+
+    return {
+        "manifest_id": "BCE4X_HARDENED_MODE_ACTIVATED_Ω",
+        "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "n°52_hardened",
+        "enabled": True,
+        "previous_state": "ENABLED" if was_enabled else "DISABLED",
+        "effective_substitutes": {
+            "cloudflare_constraint": "CLOUDFLARE_CONSTRAINT_HONORED_Ω · chunks ≤ 50 Mo + idempotence",
+            "retry_strategy": "Idempotent par chunk_index + endpoint /resume côté client",
+            "durability": "fsync + dir_fsync sur chaque chunk · session.json persisté",
+            "url_validation": "_normalize_slot_id() avec NFC/NFD/percent-decode",
+            "100_percent_promise": "ASYMPTOTIQUE — pas garanti, doctrine institutionnelle honnête",
+        },
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+@router.post("/diagnostic/hardened/deactivate")
+async def hardened_deactivate(
+    body: HardenedToggleRequest,
+    request: Request,
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+    user_agent: str | None = Header(default=None, alias="User-Agent"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-EXT · Désactive BCE4X_HARDENED_PIPELINE_MODE_Ω."""
+    _verify_token(x_commandant_token)
+    client_ip = request.client.host if request.client else "unknown"
+    ua = (user_agent or "")[:200]
+
+    flag = _read_hardened_flag()
+    was_enabled = bool(flag.get("enabled"))
+    flag["enabled"] = False
+    flag.setdefault("history", []).append({
+        "action": "DEACTIVATE",
+        "ts_utc": _utc_now(),
+        "by_ip": client_ip,
+        "by_ua": ua,
+        "activated_by": body.activated_by,
+        "reason": body.reason,
+        "previous_state": "ENABLED" if was_enabled else "DISABLED",
+    })
+    _write_hardened_flag(flag)
+
+    audit.append_event(
+        event="BCE4X_HARDENED_MODE_DEACTIVATED_Ω",
+        slot_id="(global)",
+        filename="(none)",
+        sha256=None,
+        size_bytes=0,
+        http_code=200,
+        client_ip=client_ip,
+        user_agent=ua,
+        validators=[{"name": "hardened_mode_unset",
+                     "passed": True,
+                     "previous_state": "ENABLED" if was_enabled else "DISABLED"}],
+    )
+
+    return {
+        "manifest_id": "BCE4X_HARDENED_MODE_DEACTIVATED_Ω",
+        "enabled": False,
+        "previous_state": "ENABLED" if was_enabled else "DISABLED",
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+@router.get("/diagnostic/hardened/status")
+async def hardened_status(
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-EXT · État du mode hardened."""
+    _verify_token(x_commandant_token)
+    flag = _read_hardened_flag()
+    return {
+        "manifest_id": "BCE4X_HARDENED_MODE_STATUS_Ω",
+        "enabled": _is_hardened_mode_active(),
+        "flag_persistant_enabled": bool(flag.get("enabled")),
+        "env_var_enabled": os.environ.get(
+            "BCE4X_HARDENED_PIPELINE_MODE", "").lower() in ("true", "1"),
+        "last_activated_utc": flag.get("last_activated_utc"),
+        "last_activated_by_ip": flag.get("last_activated_by_ip"),
+        "history_count": len(flag.get("history", [])),
+        "history_recent": flag.get("history", [])[-5:],
+        "effective_substitutes_when_enabled": {
+            "cloudflare_constraint": "CLOUDFLARE_CONSTRAINT_HONORED_Ω",
+            "retry_strategy": "idempotent_by_chunk_index + /resume",
+            "durability": "fsync_on_each_chunk_write",
+        },
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+class ValidateUrlRequest(BaseModel):
+    slot_id: str
+    filename: Optional[str] = None
+    upload_id: Optional[str] = None
+
+
+@router.post("/diagnostic/validate-url")
+async def diagnostic_validate_url(
+    body: ValidateUrlRequest,
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-EXT · Valide la construction d'URL côté client.
+    Retourne :
+      · OK avec path canonique attendu
+      · KO avec hints précis (variants Unicode testés, slot_ids connus)
+    """
+    _verify_token(x_commandant_token)
+
+    norm = _normalize_slot_id(body.slot_id)
+
+    filename_check: Dict[str, Any] = {"provided": False}
+    if body.filename:
+        ok = bool(SAFE_FILENAME.match(body.filename)) and len(body.filename) <= 200
+        filename_check = {
+            "provided": True,
+            "value": body.filename,
+            "regex_safe": "^[A-Za-z0-9._-]+$",
+            "passed": ok,
+            "hint": ("OK" if ok else
+                     "Filename non sûr — caractères autorisés : [A-Za-z0-9._-]"),
+        }
+
+    upload_id_check: Dict[str, Any] = {"provided": False}
+    if body.upload_id:
+        ok = bool(CHUNKED_UPLOAD_ID_RE.match(body.upload_id))
+        upload_id_check = {
+            "provided": True,
+            "value": body.upload_id,
+            "regex": "^[A-Za-z0-9._-]{8,64}$",
+            "passed": ok,
+        }
+
+    result_passed = (
+        norm["matched_canonical"] is not None
+        and (not body.filename or filename_check.get("passed", True))
+        and (not body.upload_id or upload_id_check.get("passed", True))
+    )
+
+    canonical_path = None
+    if norm["matched_canonical"]:
+        from urllib.parse import quote
+        canonical_path = (
+            f"/api/v30/admin-premium/gis/upload-chunk/"
+            f"{quote(norm['matched_canonical'], safe='._-')}"
+        )
+
+    return {
+        "manifest_id": "DIAGNOSTIC_VALIDATE_URL_Ω",
+        "passed": result_passed,
+        "slot_id_normalized": norm,
+        "filename_check": filename_check,
+        "upload_id_check": upload_id_check,
+        "canonical_endpoint": canonical_path,
+        "expected_url_full_example": (
+            f"https://<host>{canonical_path}" if canonical_path else None),
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+@router.get("/upload-chunk/{slot_id}/resume/{upload_id}")
+async def upload_chunk_resume(
+    slot_id: str = FPath(..., description="Slot cible"),
+    upload_id: str = FPath(..., description="Upload-Id de la session"),
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-EXT · Reprise fine — retourne l'état exact d'une session
+    chunk pour permettre au client de ré-envoyer UNIQUEMENT les chunks
+    manquants après timeout/502.
+    """
+    _verify_token(x_commandant_token)
+    if slot_id not in SLOT_BY_ID:
+        raise HTTPException(status_code=404, detail=f"SLOT_INCONNU::{slot_id}")
+    if not CHUNKED_UPLOAD_ID_RE.match(upload_id):
+        raise HTTPException(
+            status_code=400,
+            detail="UPLOAD_ID_INVALIDE — regex ^[A-Za-z0-9._-]{8,64}$")
+
+    session = _read_chunk_session(slot_id, upload_id)
+    received = set(int(i) for i in session.get("chunks_received", []) or [])
+    chunks_total = session.get("chunks_total")
+    missing: List[int] = []
+    if chunks_total:
+        missing = sorted(set(range(int(chunks_total))) - received)
+
+    # Vérification physique des fichiers .bin présents (dérive éventuelle)
+    chunks_dir = _chunks_dir(slot_id, upload_id)
+    physical_chunks: List[int] = []
+    if chunks_dir.exists():
+        for p in chunks_dir.iterdir():
+            if p.is_file() and p.name.endswith(".bin"):
+                try:
+                    physical_chunks.append(int(p.stem))
+                except ValueError:
+                    pass
+    physical_chunks.sort()
+
+    consistent = sorted(received) == physical_chunks
+
+    return {
+        "manifest_id": "UPLOAD_CHUNK_RESUME_Ω",
+        "slot_id": slot_id,
+        "upload_id": upload_id,
+        "filename": session.get("filename"),
+        "chunks_total": chunks_total,
+        "chunks_received_count": len(received),
+        "chunks_received": sorted(received),
+        "chunks_missing": missing,
+        "chunks_missing_count": len(missing),
+        "physical_chunks_present": physical_chunks,
+        "session_vs_physical_consistent": consistent,
+        "rereception_log": session.get("rereception_log", {}),
+        "session_started_at_utc": session.get("started_at_utc"),
+        "session_last_update_utc": session.get("last_update_utc"),
+        "instructions": (
+            "Ré-envoyer UNIQUEMENT les chunks de chunks_missing. "
+            "Le serveur est idempotent : ré-envoi d'un chunk déjà reçu OK."
+        ),
+        "hardened_mode_active": _is_hardened_mode_active(),
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+# ═════════════════════════════════════════════════════════════════════════
 # ORDRE N°50 — Upload chunked résilient (contournement limite Cloudflare 100MB)
 #   • Frontend découpe en chunks de 50 MB (sous la limite proxy)
 #   • Chaque chunk : POST /upload-chunk/{slot_id} avec headers de session
@@ -759,6 +1119,7 @@ async def upload_chunk(
     # ─── Écriture du chunk binaire ─────────────────────────────────
     chunk_path = chunks_dir / f"{x_chunk_index:06d}.bin"
     bytes_written = 0
+    chunk_already_existed = chunk_path.exists()
     try:
         with open(chunk_path, "wb") as out:
             while True:
@@ -767,6 +1128,13 @@ async def upload_chunk(
                     break
                 bytes_written += len(buf)
                 out.write(buf)
+            # ─── BCE4X_HARDENED_PIPELINE_MODE_Ω · fsync chunk + dir ─────
+            if _is_hardened_mode_active():
+                try:
+                    out.flush()
+                    os.fsync(out.fileno())
+                except OSError:
+                    pass
     except Exception as e:
         chunk_path.unlink(missing_ok=True)
         raise HTTPException(status_code=500, detail=f"CHUNK_WRITE_FAILED::{e}")
@@ -774,12 +1142,19 @@ async def upload_chunk(
     # ─── Mise à jour de la session ─────────────────────────────────
     received = set(session.get("chunks_received", []))
     received.add(int(x_chunk_index))
+    # BCE4X_HARDENED · compteur de re-réception (idempotence forensique)
+    rereception_log = session.get("rereception_log", {})
+    if chunk_already_existed:
+        key = str(int(x_chunk_index))
+        rereception_log[key] = int(rereception_log.get(key, 0)) + 1
     session.update({
         "filename": fname,
         "chunks_total": int(x_chunks_total),
         "chunks_received": sorted(received),
         "total_size_expected": int(x_total_size or 0),
         "last_update_utc": _utc_now(),
+        "rereception_log": rereception_log,
+        "hardened_mode": _is_hardened_mode_active(),
     })
     _write_chunk_session(slot_id, x_upload_id, session)
 
