@@ -2120,32 +2120,191 @@
       "slot_id": "SOL_IRDA_Ω",
       "label": "Pédologie / classes de sol IRDA",
       "priority": "P0",
-      "status": "ABSENT",
-      "uploads": []
+      "status": "LOADED",
+      "uploads": [
+        {
+          "filename": "pedo_21m08102_BSL_IRDA.zip",
+          "sha256": "3d6c8adb69569c7aec2d7063e6004cfdbc54ec3afe98f1efb02363feeccbf783",
+          "size_bytes": 201235,
+          "uploaded_at_utc": "2026-05-04T16:02:21+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "zip",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "geojson",
+                "parquet"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 201235,
+              "min": 1024,
+              "max": 2147483648,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "3d6c8adb69569c7aec2d7063e6004cfdbc54ec3afe98f1efb02363feeccbf783",
+              "zip_entries": 6,
+              "has_shapefile": true,
+              "reason": "OK"
+            }
+          ]
+        }
+      ],
+      "files_loaded_count": 1,
+      "composite_sha256": "973094d6e962b573657e0b60faf7697f3903db508d52a3744dc3a2881648e39d",
+      "multi_upload": false
     },
     "CHASSE_ZEC_SEPAQ_Ω": {
       "slot_id": "CHASSE_ZEC_SEPAQ_Ω",
       "label": "Zones de chasse ZEC + SÉPAQ + Réserves fauniques",
       "priority": "P0",
-      "status": "ABSENT",
-      "uploads": [],
-      "files_loaded_count": 0,
-      "composite_sha256": null,
+      "status": "LOADED",
+      "uploads": [
+        {
+          "filename": "Territoires_Fauniques_Structures.geojson",
+          "sha256": "a00faa08048f1e0c9fe8087c09ca8ddaae64a6cee043705142216c7d92c77bfb",
+          "size_bytes": 133222335,
+          "uploaded_at_utc": "2026-05-04T15:59:01+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "geojson",
+              "formats_acceptes": [
+                "gpkg",
+                "geojson",
+                "zip",
+                "parquet"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 133222335,
+              "min": 512,
+              "max": 524288000,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "a00faa08048f1e0c9fe8087c09ca8ddaae64a6cee043705142216c7d92c77bfb",
+              "reason": "OK"
+            }
+          ]
+        }
+      ],
+      "files_loaded_count": 1,
+      "composite_sha256": "863aebc164caedcea3b4f98e746096dd16e2ddcbd22e09f7a3aa9894be8c9103",
       "multi_upload": false
     },
     "ROUTES_MTQ_SECONDAIRES_Ω": {
       "slot_id": "ROUTES_MTQ_SECONDAIRES_Ω",
       "label": "Réseau routier secondaire et chemins forestiers MTQ + RTSS",
       "priority": "P1",
-      "status": "ABSENT",
-      "uploads": []
+      "status": "LOADED",
+      "uploads": [
+        {
+          "filename": "AQreseau_GPKG.zip",
+          "sha256": "d894bd71f354ce788db0bf5c27f301c9527e99fddf0e38335b67e2222fc39083",
+          "size_bytes": 79935977,
+          "uploaded_at_utc": "2026-05-04T16:02:33+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "zip",
+              "formats_acceptes": [
+                "gpkg",
+                "geojson",
+                "zip",
+                "parquet"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 79935977,
+              "min": 1024,
+              "max": 1073741824,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "d894bd71f354ce788db0bf5c27f301c9527e99fddf0e38335b67e2222fc39083",
+              "zip_entries": 1,
+              "has_shapefile": false,
+              "reason": "OK"
+            }
+          ]
+        }
+      ],
+      "files_loaded_count": 1,
+      "composite_sha256": "e2fe5fdcbe0f11eb9203b07035160a0477258ceb40dbedb920ddf82697d307c2",
+      "multi_upload": false
     },
     "LIMITES_TERRITORIALES_FINES_Ω": {
       "slot_id": "LIMITES_TERRITORIALES_FINES_Ω",
       "label": "Limites territoriales fines (cantons, lots, arpentage cadastral)",
       "priority": "P1",
-      "status": "ABSENT",
-      "uploads": []
+      "status": "LOADED",
+      "uploads": [
+        {
+          "filename": "SDA_GPKG_MRNF.zip",
+          "sha256": "a01dce294602192a5ff443a96f199eac6e2864baf89a5fdf98cfef20738c084c",
+          "size_bytes": 104246094,
+          "uploaded_at_utc": "2026-05-04T16:02:45+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "zip",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "geojson",
+                "parquet"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 104246094,
+              "min": 1024,
+              "max": 3221225472,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "a01dce294602192a5ff443a96f199eac6e2864baf89a5fdf98cfef20738c084c",
+              "zip_entries": 1,
+              "has_shapefile": false,
+              "reason": "OK"
+            }
+          ]
+        }
+      ],
+      "files_loaded_count": 1,
+      "composite_sha256": "1bcf396099cbcbb9d99da83882a7d62652b18032d430e8643b77dab884f506ed",
+      "multi_upload": false
     },
     "PRESSION_HUMAINE_Ω": {
       "slot_id": "PRESSION_HUMAINE_Ω",
@@ -2155,5 +2314,5 @@
       "uploads": []
     }
   },
-  "last_updated_utc": "2026-05-03T20:57:00+00:00"
+  "last_updated_utc": "2026-05-04T16:02:45+00:00"
 }
