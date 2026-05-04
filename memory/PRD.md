@@ -27,6 +27,31 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXVI · ORDRE N°52 SUSPENSIF (VOIE B) — DIVERGENCE PHYS/MANIFEST + HEALTH-SNAPSHOT (2026-05-04)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (ordre n°52, voie B). **V30 INVIOLÉ · pytest 81/81 PASSED phases XXII→XXVI · audit-log forensique enrichi.**
+  - **Diagnostic critique pré-promotion** : avant `POST /promote`, vérification physique des slots a révélé que **FORET_MFFP_Ω présentait une divergence PHYS_LOST_Ω** (manifest=60 tuiles · 36 Go déclarés vs **0 fichier physique** sur `/var/cache/gis_operational/incoming/FORET_MFFP_Ω/`). Confirmation de la volatilité du `/var/cache` du pod Kubernetes (problème déjà documenté). Les 5 autres slots restent intègres physiquement.
+  - **Décision Commandant** : **VOIE B SUSPENSIVE** validée. Promotion suspendue. Audit-event documenté + endpoint `/health-snapshot` ajouté + réception préparée pour réupload manuel des 60 tuiles MFFP.
+  - **Audit-event consigné** : `SLOT_PHYS_LOST_Ω` ajouté à `/app/backend/data/gis_operational/audit_log.jsonl` avec composite_sha256 pré-perte `f0a4f572deec71cb…3211`, manifest_count=60, physical_files_remaining=0, client_ip=`kubernetes_pod_volatility`, user_agent=`ORDRE_N52_VOIE_B_SUSPENSIVE`.
+  - **Nouveau endpoint FUSION ADD-ONLY** : `GET /api/v30/admin-premium/gis/health-snapshot` (ADMIN_PREMIUM_ONLY · token `Saturn5858*`). Sérialise en un seul appel non-destructif :
+    - `intake_summary` : total_slots, loaded, absent, quarantined.
+    - `slots[*]` : manifest_status/files_count/cumulative_bytes/composite_sha256 + physical_files_count/cumulative_bytes/files (cap 64) + flag `consistent_manifest_vs_physical`.
+    - `divergences_manifest_vs_physical[]` : kind ∈ {`PHYS_LOST_Ω`, `PHYS_DIVERGENT`}.
+    - `engine_layers` : 9 layers analytiques status (sans déclencher `compute_corridors_gis()`), `engine_lock_sha256`, `data_dir`, `global_status` ∈ {STUB_READY, OPERATIONAL}.
+    - `audit_log_stats` : total_events + events_by_type + events_by_slot + retention.
+    - `v30_lock` : `INVIOLÉ` + registry_version + sealed_at + engines_locked_count.
+    - `flags` : `prep_only_mode`, `incoming_root`, `quarantine_root`, `manifest_path`.
+    - **Aucun side-effect, aucun audit-log généré** (anti-spam · idempotent).
+  - **Helper non-invasif** : `_scan_physical_state(slot_id)` ajouté au router, scan léger du dossier physique sans toucher manifest.
+  - **Nouveau test pytest** : `test_phase_xxvi_ordre_52_health_snapshot.py` (11 tests · isolation tmp_path · pattern FastAPI app dédiée pour éviter pollution `load_dotenv` qui cassait les tests xxiv via `setdefault`). Validations : auth requise · 401 si mauvais token · structure JSON complète · 9 engine layers · V30 INVIOLÉ · audit_log_stats keys · idempotence (no-side-effect) · divergences_field_present · flags institutionnels.
+  - **Détection live des divergences** post-déploiement (snapshot live) :
+    - `FORET_MFFP_Ω` : kind=`PHYS_LOST_Ω` · manifest=60/36 Go vs physique=0/0 octet.
+    - `CHASSE_ZEC_SEPAQ_Ω` : kind=`PHYS_DIVERGENT` · 2 octets résiduels (fixture `tiny.geojson` du test n°46 supprimée physiquement, entrée upload restante).
+  - **Pipeline réception MFFP préparé** : dossier `/var/cache/gis_operational/incoming/FORET_MFFP_Ω/` recréé, 80 Go libres sur `/var/cache`, endpoint chunked `POST /api/v30/admin-premium/gis/upload-chunk/FORET_MFFP_Ω` opérationnel · token `Saturn5858*` actif · token-check HTTP 200.
+  - **Pytest cumul** : 81/81 PASSED (Phase XXII 31 + XXIII 16 + XXIV 14 + XXV 9 + XXVI 11). 0 régression.
+  - **Tests** : pytest + curl + python3. **Aucun testing subagent**.
+  - **Prochaine action** : Commandant STEEVE-MAX réuploade les 60 tuiles écoforestières MFFP via le pipeline chunked. Une fois `/health-snapshot` confirme `divergences_count=0` ou `1` (CHASSE résidu uniquement), l'ORDRE N°52 reprendra avec le mapping des 9 layers analytiques.
+
+
 - **PHASE_XXV-Ω49 · ORDRE N°49 INGESTION GIS PAR URL — FINALISATION 6/6 LOADED (2026-05-04)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (ordre n°49). **V30 INVIOLÉ · pytest 70/70 PASSED phases XXII→XXV · 6 / 6 slots GIS LOADED · doctrine ANTI_GÉNÉRIQUE_STRICT respectée · PREP_ONLY=true (aucune promotion).**
   - **Reprise du chantier** : à la prise de relais, 5/6 slots étaient déjà LOADED (FORET_MFFP_Ω 60 tuiles, SOL_IRDA_Ω, CHASSE_ZEC_SEPAQ_Ω, ROUTES_MTQ_SECONDAIRES_Ω, LIMITES_TERRITORIALES_FINES_Ω). Slot manquant : `PRESSION_HUMAINE_Ω` (ABSENT).

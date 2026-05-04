@@ -2209,7 +2209,7 @@
           "filename": "good.geojson",
           "sha256": "eb65fa70f224ec205e5cfbffa273bee1115f4b341f2908564c1345e55fbd19c4",
           "size_bytes": 2081,
-          "uploaded_at_utc": "2026-05-04T16:24:40+00:00",
+          "uploaded_at_utc": "2026-05-04T16:58:22+00:00",
           "passed": true,
           "validators": [
             {
@@ -2244,7 +2244,7 @@
           "filename": "tiny.geojson",
           "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
           "size_bytes": 2,
-          "uploaded_at_utc": "2026-05-04T16:24:40+00:00",
+          "uploaded_at_utc": "2026-05-04T16:58:22+00:00",
           "passed": false,
           "validators": [
             {
@@ -2279,7 +2279,7 @@
           "filename": "a.geojson",
           "sha256": "eb65fa70f224ec205e5cfbffa273bee1115f4b341f2908564c1345e55fbd19c4",
           "size_bytes": 2081,
-          "uploaded_at_utc": "2026-05-04T16:24:40+00:00",
+          "uploaded_at_utc": "2026-05-04T16:58:22+00:00",
           "passed": true,
           "validators": [
             {
@@ -2459,5 +2459,5 @@
       "multi_upload": false
     }
   },
-  "last_updated_utc": "2026-05-04T16:24:40+00:00"
+  "last_updated_utc": "2026-05-04T16:58:22+00:00"
 }

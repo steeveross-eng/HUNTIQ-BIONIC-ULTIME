@@ -187,6 +187,172 @@ def get_intake_status() -> Dict[str, Any]:
     }
 
 
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°52 (FUSION ADD-ONLY · VOIE B) — Health-snapshot institutionnel
+# Sérialise en un seul appel l'état complet : manifest + état physique
+# (scan disque) + audit-log stats + engine_layers_status + V30 lock + flags
+# institutionnels. Aucun side-effect.
+# ═════════════════════════════════════════════════════════════════════════
+def _scan_physical_state(slot_id: str) -> Dict[str, Any]:
+    """Scan non-invasif du dossier physique d'un slot (FUSION ADD-ONLY)."""
+    p = _slot_dir(slot_id)
+    files: List[Dict[str, Any]] = []
+    if p.exists():
+        for entry in p.iterdir():
+            # Ignore les sous-dossiers de chunks / partial assemblies
+            if entry.name.startswith(".") or entry.is_dir():
+                continue
+            try:
+                files.append({
+                    "filename": entry.name,
+                    "size_bytes": entry.stat().st_size,
+                })
+            except OSError:
+                continue
+    files.sort(key=lambda x: x["filename"])
+    cum = sum(f["size_bytes"] for f in files)
+    return {
+        "physical_dir": str(p),
+        "physical_files_count": len(files),
+        "physical_cumulative_bytes": cum,
+        "physical_files": files[:64],  # cap pour réponse JSON
+        "physical_files_truncated": len(files) > 64,
+    }
+
+
+@router.get("/health-snapshot")
+def health_snapshot(
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52 · Snapshot institutionnel non-destructif (ADMIN_PREMIUM_ONLY).
+
+    Sérialise en un seul appel l'état complet pré/post-promotion :
+      · intake_manifest (déclaratif)
+      · physical_state (scan disque par slot)
+      · divergences (manifest vs physique)
+      · engine_layers_status (compute_corridors_gis sans déclencher)
+      · audit_log_stats
+      · v30_lock_status
+      · prep_only_mode (env var)
+
+    Aucun side-effect. Aucun log audit (anti-spam, comme /token-check).
+    """
+    _verify_token(x_commandant_token)
+
+    manifest = _read_manifest()
+    slots_state: Dict[str, Any] = {}
+    divergences: List[Dict[str, Any]] = []
+
+    for slot_id, sm in manifest.get("slots", {}).items():
+        phys = _scan_physical_state(slot_id)
+        manifest_count = int(sm.get("files_loaded_count", 0))
+        manifest_cum = sum(int(u.get("size_bytes", 0)) for u in sm.get("uploads", []))
+        is_consistent = (
+            manifest_count == phys["physical_files_count"]
+            and manifest_cum == phys["physical_cumulative_bytes"]
+        )
+        slots_state[slot_id] = {
+            "manifest_status": sm.get("status"),
+            "manifest_files_count": manifest_count,
+            "manifest_cumulative_bytes": manifest_cum,
+            "manifest_composite_sha256": sm.get("composite_sha256"),
+            "physical_files_count": phys["physical_files_count"],
+            "physical_cumulative_bytes": phys["physical_cumulative_bytes"],
+            "physical_files": phys["physical_files"],
+            "physical_files_truncated": phys["physical_files_truncated"],
+            "consistent_manifest_vs_physical": is_consistent,
+        }
+        if not is_consistent:
+            divergences.append({
+                "slot_id": slot_id,
+                "manifest_files": manifest_count,
+                "physical_files": phys["physical_files_count"],
+                "manifest_bytes": manifest_cum,
+                "physical_bytes": phys["physical_cumulative_bytes"],
+                "kind": (
+                    "PHYS_LOST_Ω" if phys["physical_files_count"] == 0
+                                       and manifest_count > 0
+                    else "PHYS_DIVERGENT"
+                ),
+            })
+
+    # Engine layers status (sans déclencher compute_corridors_gis)
+    try:
+        from engines.v8_institutional.especes.engine_corridors_gis_omega import (
+            get_all_layers_status,
+        )
+        eng = get_all_layers_status()
+        engine_layers = {
+            "engine_id": eng["engine_id"],
+            "layers_total": eng["layers_total"],
+            "layers_loaded": eng["layers_loaded"],
+            "layers_absent": eng["layers_absent"],
+            "global_status": eng["global_status"],
+            "engine_lock_sha256": eng["engine_lock_sha256"],
+            "data_dir": eng["data_dir"],
+            "layers": [
+                {"layer_id": layer["layer_id"],
+                 "status": layer["status"],
+                 "size_bytes": layer["size_bytes"],
+                 "expected_path": layer["expected_path"]}
+                for layer in eng["layers"]
+            ],
+        }
+    except Exception as e:
+        engine_layers = {"error": f"engine_layers_unavailable::{e}"}
+
+    # Audit log stats
+    try:
+        audit_stats = audit.stats()
+    except Exception as e:
+        audit_stats = {"error": f"audit_stats_unavailable::{e}"}
+
+    # V30 lock status (best-effort)
+    try:
+        from engines.v8_institutional.registry_lock_omega import (
+            REGISTRY_VERSION, REGISTRY_SEALED_AT, ENGINES_LOCKED,
+        )
+        v30 = {
+            "registry_version": REGISTRY_VERSION,
+            "sealed_at": REGISTRY_SEALED_AT,
+            "engines_locked_count": len(ENGINES_LOCKED),
+            "status": "INVIOLÉ",
+        }
+    except Exception as e:
+        v30 = {"status": "UNKNOWN", "error": str(e)}
+
+    # Intake stats global
+    counts = {"LOADED": 0, "ABSENT": 0, "QUARANTINED": 0}
+    for s in manifest.get("slots", {}).values():
+        counts[s.get("status", "ABSENT")] = counts.get(s.get("status", "ABSENT"), 0) + 1
+
+    return {
+        "manifest_id": "GIS_HEALTH_SNAPSHOT_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "ordre": "n°52",
+        "generated_at_utc": _utc_now(),
+        "intake_summary": {
+            "total_slots": len(manifest.get("slots", {})),
+            "loaded": counts.get("LOADED", 0),
+            "absent": counts.get("ABSENT", 0),
+            "quarantined": counts.get("QUARANTINED", 0),
+        },
+        "slots": slots_state,
+        "divergences_manifest_vs_physical": divergences,
+        "divergences_count": len(divergences),
+        "engine_layers": engine_layers,
+        "audit_log_stats": audit_stats,
+        "v30_lock": v30,
+        "flags": {
+            "prep_only_mode": os.environ.get("PREP_ONLY", "true"),
+            "incoming_root": str(INCOMING_DIR),
+            "quarantine_root": str(QUARANTINE_DIR),
+            "manifest_path": str(MANIFEST_PATH),
+        },
+        "anti_generique": "STRICT",
+    }
+
+
 @router.get("/token-check")
 async def token_check(
     x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
