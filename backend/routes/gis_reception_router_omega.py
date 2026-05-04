@@ -1469,6 +1469,137 @@ async def pee_maj_status(
     manifest = _read_manifest()
     slot = manifest.get("slots", {}).get("FORET_MFFP_PEE_MAJ_Ω", {})
 
+    # ─── Scan sessions chunked en cours (forensique upload) ───────────
+    slot_dir = _slot_dir("FORET_MFFP_PEE_MAJ_Ω")
+    chunks_dir = slot_dir / CHUNKS_SUBDIR
+    sessions_in_flight: List[Dict[str, Any]] = []
+    last_session_summary: Dict[str, Any] = {
+        "exists": False,
+        "upload_id": None,
+        "filename": None,
+        "chunks_total": None,
+        "chunks_received_count": 0,
+        "last_successful_chunk_index": None,
+        "physical_chunks_count": 0,
+        "session_vs_physical_consistent": None,
+        "started_at_utc": None,
+        "last_update_utc": None,
+        "rereception_log": {},
+    }
+    if chunks_dir.exists():
+        sessions_subdirs = sorted(
+            [d for d in chunks_dir.iterdir() if d.is_dir()],
+            key=lambda d: d.stat().st_mtime, reverse=True,
+        )
+        for upload_subdir in sessions_subdirs:
+            session_path = upload_subdir / "session.json"
+            sd: Dict[str, Any] = {}
+            if session_path.exists():
+                try:
+                    sd = json.loads(session_path.read_text(encoding="utf-8"))
+                except Exception:
+                    sd = {}
+            phys_chunks = sorted([
+                int(p.stem) for p in upload_subdir.iterdir()
+                if p.is_file() and p.name.endswith(".bin")
+                and p.stem.isdigit()
+            ])
+            received = sorted(int(i) for i in sd.get("chunks_received", []) or [])
+            entry = {
+                "upload_id": upload_subdir.name,
+                "filename": sd.get("filename"),
+                "chunks_total": sd.get("chunks_total"),
+                "chunks_received_count": len(received),
+                "physical_chunks_count": len(phys_chunks),
+                "last_successful_chunk_index": (max(received) if received else None),
+                "started_at_utc": sd.get("started_at_utc"),
+                "last_update_utc": sd.get("last_update_utc"),
+                "rereception_log": sd.get("rereception_log", {}),
+            }
+            sessions_in_flight.append(entry)
+
+        if sessions_in_flight:
+            most_recent = sessions_in_flight[0]
+            last_session_summary = {
+                "exists": True,
+                "upload_id": most_recent["upload_id"],
+                "filename": most_recent["filename"],
+                "chunks_total": most_recent["chunks_total"],
+                "chunks_received_count": most_recent["chunks_received_count"],
+                "physical_chunks_count": most_recent["physical_chunks_count"],
+                "last_successful_chunk_index": most_recent["last_successful_chunk_index"],
+                "session_vs_physical_consistent": (
+                    most_recent["chunks_received_count"]
+                    == most_recent["physical_chunks_count"]
+                ),
+                "started_at_utc": most_recent["started_at_utc"],
+                "last_update_utc": most_recent["last_update_utc"],
+                "rereception_log": most_recent["rereception_log"],
+                "resume_endpoint": (
+                    f"/api/v30/admin-premium/gis/upload-chunk/"
+                    f"FORET_MFFP_PEE_MAJ_%CE%A9/resume/"
+                    f"{most_recent['upload_id']}"),
+            }
+
+    # ─── Dernière erreur observable côté backend (audit-log) ──────────
+    last_error_event: Dict[str, Any] = {
+        "exists": False,
+        "ts_utc": None,
+        "event": None,
+        "http_status": None,
+        "filename": None,
+        "phase_diagnostic": None,
+    }
+    try:
+        # Scan des derniers events PEE_MAJ + UPLOAD_*  pour ce slot
+        recent = audit.read_entries(slot_id="FORET_MFFP_PEE_MAJ_Ω", limit=50)
+        error_events = [e for e in recent
+                         if e.get("event") in (
+                             "UPLOAD_QUARANTINED", "UPLOAD_ERROR",
+                             "UPLOAD_VALIDATION_FAILED")
+                         or (e.get("http_code") or 0) >= 400]
+        if error_events:
+            last_err = error_events[-1]
+            last_error_event = {
+                "exists": True,
+                "ts_utc": last_err.get("ts_utc"),
+                "event": last_err.get("event"),
+                "http_status": last_err.get("http_code"),
+                "filename": last_err.get("filename"),
+                "phase_diagnostic": "BACKEND_REJECT_OR_VALIDATION_FAIL",
+            }
+    except Exception:
+        pass
+
+    # ─── Inférence proxy/backend phase d'erreur (anti-générique) ─────
+    proxy_constraint_hint: str
+    last_error_phase: str
+    if not chunks_dir.exists() or not any(chunks_dir.iterdir() if chunks_dir.exists() else []):
+        # Aucune session côté backend → erreur amont (proxy/Cloudflare/réseau)
+        last_error_phase = "PROXY_OR_NETWORK_BEFORE_BACKEND"
+        proxy_constraint_hint = (
+            "Aucun chunk reçu par le pod FastAPI. L'erreur HTTP 5xx provient "
+            "AVANT le router : Cloudflare (502 Bad Gateway / 504), WAF "
+            "(blocage / payload), ou pod restart cours upload. "
+            "Vérifiez côté client : (1) cookies/session expirés ; "
+            "(2) chunk size ≤ 50 Mo strict ; (3) timeout client < 300s ; "
+            "(4) UA identifié ; (5) X-Upload-Id [A-Za-z0-9._-]{8,64}."
+        )
+    elif last_error_event["exists"]:
+        last_error_phase = "BACKEND_ROUTER_VALIDATION_OR_ASSEMBLY"
+        proxy_constraint_hint = (
+            "Erreur consignée côté backend (audit-log). "
+            "Voir last_error_http_status et last_error_event."
+        )
+    else:
+        last_error_phase = "NO_ERROR_OBSERVED_OR_TRANSIENT"
+        proxy_constraint_hint = (
+            "Aucune erreur backend consignée. Si une erreur 5xx est observée "
+            "côté client mais une session existe : c'est probablement une "
+            "déconnexion réseau pendant un chunk transmis ; les chunks "
+            "précédents restent valides (idempotence par chunk_index)."
+        )
+
     return {
         "manifest_id": "PEE_MAJ_PIPELINE_STATUS_Ω",
         "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
@@ -1486,6 +1617,27 @@ async def pee_maj_status(
         "engine_summary": eng_summary,
         "derivatives_persistent_root": derivatives_root,
         "derivatives_persisted_files": derivatives_files,
+        # ─── ORDRE N°52-EXT VOIE A · Forensique resume (502/504) ────
+        "last_upload_id": last_session_summary["upload_id"],
+        "last_successful_chunk_index": last_session_summary[
+            "last_successful_chunk_index"],
+        "last_error_http_status": last_error_event["http_status"],
+        "last_error_event": last_error_event,
+        "last_error_phase": last_error_phase,
+        "proxy_constraint_hint": proxy_constraint_hint,
+        "last_session_detail": last_session_summary,
+        "all_sessions_in_flight": sessions_in_flight,
+        "all_sessions_count": len(sessions_in_flight),
+        "retry_policy": {
+            "5xx_retryable": True,
+            "non_invalidated_chunks": (
+                "Tous chunks déjà fsyncés sur disque restent valides. "
+                "Le client doit ré-envoyer UNIQUEMENT les chunks manquants "
+                "via le même X-Upload-Id."),
+            "endpoint_resume": (
+                "/api/v30/admin-premium/gis/upload-chunk/"
+                "FORET_MFFP_PEE_MAJ_%CE%A9/resume/<upload_id>"),
+        },
         "v30_lock": "INVIOLÉ",
     }
 

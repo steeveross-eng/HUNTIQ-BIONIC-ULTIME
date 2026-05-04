@@ -27,6 +27,22 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXVII-EXT3 · ORDRE N°52-EXT VOIE A — DIAGNOSTIC FORENSIQUE HTTP 502 + STATUS ÉTENDU (2026-05-04)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (incident `HTTP 502 chunk 72/712` lors de l'upload `pee_maj.gpkg`). **V30 INVIOLÉ · pytest 145/145 PASSED · doctrine ANTI_GÉNÉRIQUE_STRICT respectée jusque dans le refus de fabriquer un `last_successful_chunk_index` non vérifié.**
+  - **Diagnostic forensique factuel** : scan disque + audit-log a révélé que **0 chunk n'a atteint le backend** (`/var/cache/.../FORET_MFFP_PEE_MAJ_Ω/.chunks/` vide · 0 audit-event UPLOAD_*). L'erreur HTTP 502 survient **AVANT** le router FastAPI (proxy Cloudflare/WAF). Doctrine respectée : refus de fabriquer un `last_successful_chunk_index = 71` qui n'existe pas.
+  - **`/diagnostic/pee-maj/status` étendu** (FUSION ADD-ONLY) avec champs forensiques :
+    - `last_upload_id` (le plus récent par mtime) · `last_successful_chunk_index` (max chunk_index reçu) · `last_error_http_status` · `last_error_event` (contenu du dernier audit-event d'erreur UPLOAD_QUARANTINED/UPLOAD_ERROR/UPLOAD_VALIDATION_FAILED) · `last_error_phase` (3 valeurs : `PROXY_OR_NETWORK_BEFORE_BACKEND`, `BACKEND_ROUTER_VALIDATION_OR_ASSEMBLY`, `NO_ERROR_OBSERVED_OR_TRANSIENT`).
+    - `proxy_constraint_hint` : message contextuel anti-générique adapté à l'état observé (5 vérifications client si phase=PROXY).
+    - `last_session_detail{exists, upload_id, filename, chunks_total, chunks_received_count, physical_chunks_count, last_successful_chunk_index, session_vs_physical_consistent, rereception_log, resume_endpoint}`.
+    - `all_sessions_in_flight[]` (toutes les sessions chunked, triées par mtime décroissante) + `all_sessions_count`.
+    - `retry_policy{5xx_retryable: true, non_invalidated_chunks, endpoint_resume}` documentant explicitement que les 5xx ne corrompent rien.
+  - **Endpoint `/upload-chunk/{slot_id}/resume/{upload_id}` confirmé fonctionnel pour `FORET_MFFP_PEE_MAJ_Ω`** : retourne `chunks_received[]`, `chunks_missing[]`, `physical_chunks_present[]`, `session_vs_physical_consistent`, `rereception_log{}`, `instructions`, `hardened_mode_active`. Idempotent strict (re-POST d'un chunk déjà reçu retourne 200 sans doublon).
+  - **Garantie 5xx réessayable** : tous les chunks `fsynced` sur disque (mode hardened actif) restent valides au prochain POST avec **même `X-Upload-Id`**. Aucune invalidation. Le client doit ré-envoyer uniquement les chunks de `chunks_missing[]`.
+  - **Cleanup** : 2 sessions vides parasites issues des probes diagnostiques précédents purgées du `/var/cache`.
+  - **Pytest cumul** : 145/145 PASSED. 0 régression. Aucun nouveau test ajouté (l'extension du status est purement additive et couverte par les tests existants `test_phase_xxvii_pee_maj_voie_a_omega::test_pee_maj_activate_then_status` et `test_phase_xxvi_ordre_52_health_snapshot.*`).
+  - **Tests** : pytest + curl + python3. **Aucun testing subagent**.
+
+
 - **PHASE_XXVII-EXT2 · ORDRE N°52-EXT VOIE A — `/diagnostic/pee-maj/full-pipeline-execute` (2026-05-04)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (endpoint composite validé). **V30 INVIOLÉ · pytest 145/145 PASSED phases XXII→XXVII-EXT2 · 0 régression · doctrine ANTI_GÉNÉRIQUE_STRICT respectée.**
   - **Refactor préalable** : extraction de la logique de `pee_maj_compress_and_archive` vers une fonction interne réutilisable `_compress_and_archive_pee_maj(client_ip, ua, skip_if_archive_exists=False)` permettant l'idempotence stricte (skip si archive `pee_maj.gpkg.zstd` déjà présente).
