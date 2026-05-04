@@ -1550,6 +1550,10 @@ async def pee_maj_status(
         "filename": None,
         "phase_diagnostic": None,
     }
+    last_error_detail: Dict[str, Any] = {
+        "error_code_backend": None,
+        "error_message_backend": None,
+    }
     try:
         # Scan des derniers events PEE_MAJ + UPLOAD_*  pour ce slot
         recent = audit.read_entries(slot_id="FORET_MFFP_PEE_MAJ_Ω", limit=50)
@@ -1560,11 +1564,56 @@ async def pee_maj_status(
                          or (e.get("http_code") or 0) >= 400]
         if error_events:
             last_err = error_events[-1]
+            http_status = last_err.get("http_code")
+            event_name = last_err.get("event")
+            # Inférence code institutionnel
+            if event_name == "UPLOAD_QUARANTINED":
+                err_code = "VALIDATORS_FAILED"
+                err_msg = ("Fichier reçu et reassemblé mais validators "
+                           "(check_format/check_size/check_integrity) ont rejeté.")
+            elif event_name == "UPLOAD_ERROR":
+                err_code = "ROUTER_RUNTIME_ERROR"
+                err_msg = "Exception runtime côté router (assemblage/écriture)."
+            elif http_status == 404:
+                err_code = "SLOT_NOT_FOUND"
+                err_msg = ("Le slot_id transmis n'existe pas. Causes possibles : "
+                           "(1) variante Unicode Ω U+2126 vs U+03A9 ; "
+                           "(2) typo dans l'URL ; (3) slot non encore enregistré.")
+            elif http_status == 400:
+                err_code = "HEADER_MISMATCH"
+                err_msg = ("Headers manquants ou invalides "
+                           "(X-Upload-Id, X-Chunk-Index, X-Chunks-Total, "
+                           "X-Original-Filename, X-Total-Size).")
+            elif http_status == 401:
+                err_code = "AUTH_TOKEN_INVALID"
+                err_msg = "X-Commandant-Token manquant ou invalide."
+            elif http_status == 413:
+                err_code = "FILE_TOO_LARGE"
+                err_msg = ("Taille de chunk ou taille totale dépasse la limite "
+                           "déclarée par la spec du slot.")
+            elif http_status == 422:
+                err_code = "VALIDATORS_FAILED"
+                err_msg = "Validation post-assemblage échouée."
+            elif (http_status or 0) >= 500:
+                err_code = "BACKEND_5XX"
+                err_msg = ("Erreur 5xx côté backend ou proxy. "
+                           "Réessayer avec MÊME upload_id (idempotent).")
+            else:
+                err_code = f"HTTP_{http_status}"
+                err_msg = f"Erreur HTTP {http_status} (cause non catégorisée)."
+            last_error_detail = {
+                "error_code_backend": err_code,
+                "error_message_backend": err_msg,
+                "http_status": http_status,
+                "event": event_name,
+                "ts_utc": last_err.get("ts_utc"),
+                "filename": last_err.get("filename"),
+            }
             last_error_event = {
                 "exists": True,
                 "ts_utc": last_err.get("ts_utc"),
-                "event": last_err.get("event"),
-                "http_status": last_err.get("http_code"),
+                "event": event_name,
+                "http_status": http_status,
                 "filename": last_err.get("filename"),
                 "phase_diagnostic": "BACKEND_REJECT_OR_VALIDATION_FAIL",
             }
@@ -1623,6 +1672,7 @@ async def pee_maj_status(
             "last_successful_chunk_index"],
         "last_error_http_status": last_error_event["http_status"],
         "last_error_event": last_error_event,
+        "last_error_detail": last_error_detail,
         "last_error_phase": last_error_phase,
         "proxy_constraint_hint": proxy_constraint_hint,
         "last_session_detail": last_session_summary,
@@ -2295,9 +2345,39 @@ async def upload_chunk(
     client_ip = request.client.host if request.client else "unknown"
 
     # ─── Validations entêtes ───────────────────────────────────────
+    # ORDRE N°52-EXT VOIE A · directive 1 : tolérance Unicode lookalikes.
+    # Cause forensique du HTTP 404 chunk 0/712 sur FORET_MFFP_PEE_MAJ_Ω :
+    # certains navigateurs (rare mais documenté) normalisent Ω vers
+    # U+2126 OHM SIGN (e2 84 a6) alors que la spec backend utilise
+    # U+03A9 GREEK CAPITAL LETTER OMEGA (ce a9). Visuellement identique
+    # mais codepoint différent → SLOT_INCONNU. On normalise NFC + on
+    # remplace explicitement U+2126 → U+03A9 (RFC 3491/StringPrep).
+    import unicodedata as _ud
+    slot_id_norm = _ud.normalize("NFC", slot_id).replace("\u2126", "\u03a9")
+    if slot_id_norm != slot_id and slot_id_norm in SLOT_BY_ID:
+        # Audit transparent : signaler la normalisation appliquée
+        audit.append_event(
+            event="SLOT_ID_UNICODE_NORMALIZED_Ω",
+            slot_id=slot_id_norm,
+            filename=(x_original_filename or "")[:200],
+            sha256=None, size_bytes=0, http_code=200,
+            client_ip=client_ip,
+            user_agent=(user_agent or "")[:200],
+            validators=[{"name": "slot_id_unicode_normalize",
+                         "passed": True,
+                         "received_hex": slot_id.encode("utf-8").hex(),
+                         "canonical_hex": slot_id_norm.encode("utf-8").hex()}],
+        )
+        slot_id = slot_id_norm
     if slot_id not in SLOT_BY_ID:
-        raise HTTPException(status_code=404,
-                              detail=f"SLOT_INCONNU::{slot_id}")
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                f"SLOT_INCONNU::{slot_id} · received_hex="
+                f"{slot_id.encode('utf-8').hex()} · "
+                "Vérifiez que le slot_id contient bien Ω U+03A9 "
+                "(GREEK CAPITAL LETTER OMEGA, hex ce a9) et non U+2126 "
+                "(OHM SIGN, hex e2 84 a6)."))
     if not x_upload_id or not CHUNKED_UPLOAD_ID_RE.match(x_upload_id):
         raise HTTPException(status_code=400,
                               detail="X-Upload-Id INVALIDE (8-64 chars [A-Za-z0-9._-])")

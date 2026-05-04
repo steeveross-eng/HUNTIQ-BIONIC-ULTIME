@@ -27,6 +27,34 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXVII-EXT5 · ORDRE N°52-EXT VOIE A — DIAGNOSTIC HTTP 404 RÉSOLU (Unicode lookalikes) (2026-05-04)**
+  Sur incident remonté par le Commandant STEEVE-MAX (HTTP 404 chunk 0/712 sur FORET_MFFP_PEE_MAJ_Ω, upload_id=morry3nm-06092a2c). **V30 INVIOLÉ · pytest 159/159 PASSED · 0 régression · cause forensique identifiée + corrigée + tests de régression.**
+  - **Investigation forensique** : reproduction par 5 variantes de curl :
+    - Variant A (`%CE%A9` URL-encoded) → **HTTP 200 CHUNK_STORED** ✅
+    - Variant B (`Ω` brut UTF-8) → **HTTP 200 CHUNK_STORED** ✅
+    - Variant C (User-Agent Mozilla complet) → **HTTP 200 CHUNK_STORED** ✅
+    - Variant D (upload_id `morry3nm-06092a2c` exact) → **HTTP 200 CHUNK_STORED** ✅
+    - **Variant E (U+2126 OHM SIGN à la place de U+03A9 GREEK CAPITAL LETTER OMEGA) → HTTP 404 SLOT_INCONNU** ❌
+  - **Cause identifiée** : `Ω` U+03A9 GREEK CAPITAL LETTER OMEGA (UTF-8 hex `ce a9`, 2 octets) est le caractère officiel de la spec. Certains navigateurs/systèmes (rare mais documenté · RFC 3491 StringPrep) normalisent vers `Ω` U+2126 OHM SIGN (UTF-8 hex `e2 84 a6`, 3 octets), **visuellement identique** mais codepoint différent → backend retourne `SLOT_INCONNU` car les keys de `SLOT_BY_ID` contiennent strictement U+03A9.
+  - **Fix appliqué (FUSION ADD-ONLY dans `upload_chunk_chunked`)** :
+    - `unicodedata.normalize("NFC", slot_id).replace("\u2126", "\u03a9")` — normalisation Unicode + remplacement explicit OHM SIGN → GREEK OMEGA.
+    - Si normalisation modifie le slot_id ET le résultat est dans `SLOT_BY_ID` → audit-event `SLOT_ID_UNICODE_NORMALIZED_Ω` consigné avec `received_hex` + `canonical_hex` (transparence forensique totale, doctrine respectée).
+    - 404 enrichi : message inclut désormais `received_hex=<hex_utf8>` + indication explicite des deux codepoints possibles (U+03A9 vs U+2126) pour aider à diagnostiquer.
+  - **Directive 2 — `last_error_detail` exposé** dans `/diagnostic/pee-maj/status` :
+    - `error_code_backend` ∈ {`SLOT_NOT_FOUND`, `HEADER_MISMATCH`, `AUTH_TOKEN_INVALID`, `FILE_TOO_LARGE`, `VALIDATORS_FAILED`, `ROUTER_RUNTIME_ERROR`, `BACKEND_5XX`, `HTTP_<status>`}
+    - `error_message_backend` lisible, anti-générique (révèle la cause sans fabrication)
+    - `http_status`, `event`, `ts_utc`, `filename` consignés.
+  - **Directive 3 — Vérification UI alignée** : audit du frontend confirme :
+    - URL utilisée : `${API}/api/v30/admin-premium/gis/upload-chunk/${encodeURIComponent(slotId)}` ✓
+    - Headers transmis : `X-Commandant-Token`, `X-Upload-Id`, `X-Chunk-Index`, `X-Chunks-Total`, `X-Original-Filename`, `X-Total-Size`, `X-Final-Chunk` ✓
+    - Aucune divergence frontend/spec. La cause du 404 était strictement Unicode côté serveur.
+  - **Directive 4 — Curl reproductible** : voir bloc finish ci-après.
+  - **Tests pytest** : nouveau `test_phase_xxvii_ext4_unicode_fix_omega.py` (6 tests) :
+    - U+03A9 canonique → 200 OK · U+2126 OHM SIGN → auto-normalisé → 200 OK · slot inconnu → 404 enrichi · `last_error_detail` exposé · classification 404 · idempotence (pas de nouvel audit-event si déjà canonique).
+  - **Pytest cumul** : 159/159 PASSED. 0 régression.
+  - **Tests** : pytest + curl + python3. **Aucun testing subagent**.
+
+
 - **PHASE_XXVII-EXT4 · ORDRE N°52-EXT VOIE A — CLIENT-SPEC + PROBE-NETWORK + UI ALIGNÉE (2026-05-04)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (4 directives validées). **V30 INVIOLÉ · pytest 153/153 PASSED phases XXII→XXVII-EXT4 · 0 régression · doctrine ANTI_GÉNÉRIQUE_STRICT respectée.**
   - **Directive 2 — Spec client recommandée** (FUSION ADD-ONLY) : `/diagnostic/pee-maj/status.client_recommended_parameters` expose en JSON dédié toute la spec opérationnelle :
