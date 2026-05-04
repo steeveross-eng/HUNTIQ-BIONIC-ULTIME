@@ -1638,6 +1638,163 @@ async def pee_maj_status(
                 "/api/v30/admin-premium/gis/upload-chunk/"
                 "FORET_MFFP_PEE_MAJ_%CE%A9/resume/<upload_id>"),
         },
+        # ─── ORDRE N°52-EXT VOIE A · Spec client recommandée ──────────
+        "client_recommended_parameters": {
+            "chunk_size_max_bytes": 50 * 1024 * 1024,
+            "chunk_size_max_human": "50 Mo (sous limite Cloudflare 100 Mo)",
+            "client_timeout_s_per_chunk": 90,
+            "client_timeout_s_per_chunk_note": (
+                "Strictement < 100s pour rester sous le timeout Cloudflare typique"),
+            "max_retries_5xx": 5,
+            "backoff_strategy": "exponential",
+            "backoff_initial_ms": 1000,
+            "backoff_factor": 2,
+            "backoff_max_ms": 30000,
+            "backoff_jitter_ms_range": [0, 500],
+            "user_agent_hint": (
+                "BIONIC-OS-V20-SUPRA/1.0 (BCE-4X · ORDRE_N52_EXT_VOIE_A · "
+                "<client_name>) — UA identifié obligatoire (Cloudflare WAF)"),
+            "x_upload_id_regex": "^[A-Za-z0-9._-]{8,64}$",
+            "x_upload_id_recommendation": (
+                "UUID v4 sans tirets ou format <session-prefix>.<uuid8>"),
+            "x_chunk_index_format": "0-based incremental (0, 1, ..., N-1)",
+            "x_final_chunk_only_on_last": (
+                "true UNIQUEMENT sur chunk_index == chunks_total - 1"),
+            "filename_safe_regex": "^[A-Za-z0-9._-]+$",
+            "expected_filename_pee_maj": "pee_maj.gpkg",
+            "resume_strategy": (
+                "Avant chaque session, GET /resume/{upload_id} pour récupérer "
+                "chunks_missing[] et POSTer uniquement ces indices."),
+            "probe_network_endpoint": (
+                "/api/v30/admin-premium/gis/diagnostic/pee-maj/probe-network"),
+        },
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°52-EXT VOIE A · Probe réseau pour qualifier la chaîne proxy/WAF
+# Accepte un chunk binaire test (≤ 1 Mo), mesure latency_ms, observed_size,
+# compare à X-Expected-Size header. Audit-event PEE_MAJ_PROBE_NETWORK_Ω.
+# Aucune écriture disque persistante. Stream → bytearray RAM → cleanup auto.
+# Anti-générique : aucune simulation ; toutes les mesures sont réelles.
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/diagnostic/pee-maj/probe-network")
+async def pee_maj_probe_network(
+    request: Request,
+    file: UploadFile = File(...),
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+    x_expected_size: int = Header(..., alias="X-Expected-Size"),
+    x_probe_id: str | None = Header(default=None, alias="X-Probe-Id"),
+    user_agent: str | None = Header(default=None, alias="User-Agent"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-EXT VOIE A · Probe réseau end-to-end (client → Cloudflare → pod).
+    Limite stricte 1 Mo. Aucun fichier persisté. Audit-event consigné.
+    """
+    _verify_token(x_commandant_token)
+    client_ip = request.client.host if request.client else "unknown"
+    ua = (user_agent or "")[:200]
+    probe_id = (x_probe_id or "").strip()
+    if probe_id and (len(probe_id) < 4 or len(probe_id) > 64
+                       or not CHUNKED_UPLOAD_ID_RE.match(probe_id)):
+        raise HTTPException(
+            status_code=400,
+            detail="X-Probe-Id invalide (regex ^[A-Za-z0-9._-]{8,64}$)")
+
+    PROBE_LIMIT_BYTES = 1 * 1024 * 1024  # 1 Mo strict
+    if int(x_expected_size) > PROBE_LIMIT_BYTES:
+        raise HTTPException(
+            status_code=413,
+            detail=f"PROBE_TOO_LARGE — limite stricte {PROBE_LIMIT_BYTES} octets")
+    if int(x_expected_size) < 16:
+        raise HTTPException(
+            status_code=400,
+            detail="X-Expected-Size doit être ≥ 16 octets")
+
+    import time as _time
+    t0 = _time.time()
+    h = hashlib.sha256()
+    observed_size = 0
+    buffer = bytearray()
+    try:
+        # Stream → RAM (cap à 2 Mo de sécurité au cas où expected mensonger)
+        while True:
+            chunk = await file.read(64 * 1024)
+            if not chunk:
+                break
+            buffer.extend(chunk)
+            h.update(chunk)
+            observed_size += len(chunk)
+            if observed_size > 2 * PROBE_LIMIT_BYTES:
+                raise HTTPException(
+                    status_code=413,
+                    detail=("PROBE_OVERFLOW — payload reçu > 2 Mo; "
+                            "X-Expected-Size mensonger ou client défectueux"))
+    finally:
+        # Cleanup explicite RAM (anti-générique : on ne garde RIEN)
+        del buffer
+    latency_ms = round((_time.time() - t0) * 1000, 2)
+    sha = h.hexdigest()
+
+    proxy_truncated = observed_size != int(x_expected_size)
+    mismatch_bytes = observed_size - int(x_expected_size)
+
+    if proxy_truncated:
+        diagnostic_phase = "PROXY_TRUNCATED_OR_CLIENT_LIED"
+        diagnostic_hint = (
+            f"Taille reçue ({observed_size}) ≠ X-Expected-Size "
+            f"({x_expected_size}). Mismatch={mismatch_bytes}. "
+            "Causes possibles : Cloudflare/WAF tronque le payload OU "
+            "header X-Expected-Size mensonger côté client OU "
+            "transfert-encoding chunked HTTP altéré.")
+    elif latency_ms > 30000:
+        diagnostic_phase = "NETWORK_HIGH_LATENCY"
+        diagnostic_hint = (
+            f"Probe reçu intégralement mais latency={latency_ms} ms. "
+            "Risque de timeout Cloudflare sur chunks réels de 50 Mo.")
+    else:
+        diagnostic_phase = "PROXY_OK"
+        diagnostic_hint = (
+            "Probe traversé intégralement. Aucune troncation détectée. "
+            "La chaîne proxy/WAF/pod fonctionne correctement.")
+
+    audit.append_event(
+        event="PEE_MAJ_PROBE_NETWORK_Ω",
+        slot_id="FORET_MFFP_PEE_MAJ_Ω",
+        filename="(probe_network_1MB_RAM)",
+        sha256=sha,
+        size_bytes=observed_size,
+        http_code=200,
+        client_ip=client_ip,
+        user_agent=ua,
+        validators=[
+            {"name": "probe_size_match", "passed": not proxy_truncated,
+             "expected_size": int(x_expected_size),
+             "observed_size": observed_size,
+             "mismatch_bytes": mismatch_bytes,
+             "latency_ms": latency_ms,
+             "diagnostic_phase": diagnostic_phase,
+             "probe_id": probe_id or None},
+        ],
+    )
+
+    return {
+        "manifest_id": "PEE_MAJ_PROBE_NETWORK_Ω",
+        "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "n°52_ext_voie_a_probe",
+        "probe_id": probe_id or None,
+        "expected_size": int(x_expected_size),
+        "observed_size": observed_size,
+        "mismatch_bytes": mismatch_bytes,
+        "proxy_truncated": proxy_truncated,
+        "latency_ms": latency_ms,
+        "sha256_received": sha,
+        "diagnostic_phase": diagnostic_phase,
+        "diagnostic_hint": diagnostic_hint,
+        "client_ip_observed": client_ip,
+        "user_agent_observed": ua,
+        "ram_cleanup_executed": True,
+        "no_disk_persistence": True,
         "v30_lock": "INVIOLÉ",
     }
 

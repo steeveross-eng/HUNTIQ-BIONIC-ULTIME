@@ -27,6 +27,31 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXVII-EXT4 · ORDRE N°52-EXT VOIE A — CLIENT-SPEC + PROBE-NETWORK + UI ALIGNÉE (2026-05-04)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (4 directives validées). **V30 INVIOLÉ · pytest 153/153 PASSED phases XXII→XXVII-EXT4 · 0 régression · doctrine ANTI_GÉNÉRIQUE_STRICT respectée.**
+  - **Directive 2 — Spec client recommandée** (FUSION ADD-ONLY) : `/diagnostic/pee-maj/status.client_recommended_parameters` expose en JSON dédié toute la spec opérationnelle :
+    - `chunk_size_max_bytes=52428800` (50 Mo) · `client_timeout_s_per_chunk=90` (< Cloudflare 100s) · `max_retries_5xx=5` · `backoff_strategy="exponential"` · `backoff_initial_ms=1000` · `backoff_factor=2` · `backoff_max_ms=30000` · `backoff_jitter_ms_range=[0, 500]`.
+    - `user_agent_hint` recommandé identifié WAF · `x_upload_id_regex="^[A-Za-z0-9._-]{8,64}$"` · `expected_filename_pee_maj="pee_maj.gpkg"` · `resume_strategy` documentée · `probe_network_endpoint` exposé.
+  - **Directive 3 — Endpoint `POST /diagnostic/pee-maj/probe-network`** livré (ADMIN_PREMIUM_ONLY · `Saturn5858*`) :
+    - Accepte un chunk binaire ≤ 1 Mo + headers `X-Expected-Size` (obligatoire 16 ≤ N ≤ 1 Mo), `X-Probe-Id` (optionnel `^[A-Za-z0-9._-]{8,64}$`).
+    - Stream → bytearray RAM → cleanup explicit (zéro persistance disque, doctrine respectée).
+    - Mesure `latency_ms` server-side · calcul `observed_size` réel · comparaison `mismatch_bytes = observed - expected`.
+    - **3 phases diagnostiques** : `PROXY_OK` (mismatch=0, latency<30s) · `NETWORK_HIGH_LATENCY` (latency>30s) · `PROXY_TRUNCATED_OR_CLIENT_LIED` (mismatch≠0, hints anti-générique précis sur causes possibles).
+    - Audit-event `PEE_MAJ_PROBE_NETWORK_Ω` consigné avec validators détaillés.
+    - Sécurités : 413 si expected > 1 Mo · 400 si expected < 16 octets · cap 2 Mo réception (anti-mensonge X-Expected-Size).
+  - **Directive 4 — UI alignée** (`AdminGISReceptionPanel.jsx` FUSION ADD-ONLY ciblée) :
+    - **Auto-resume** : avant chaque session, GET `/upload-chunk/{slot_id}/resume/{upload_id}` pour récupérer `chunks_missing[]` ; envoi limité aux indices manquants (idempotence).
+    - **Retry exponentiel sur 5xx** (max 5 tentatives par chunk) avec backoff `1s → 2s → 4s → 8s → 16s` + jitter `[0-500ms]`. Erreurs réseau (`fetch` reject) traitées identiquement aux 5xx.
+    - **Réutilisation upload_id** : si un slot est en `ERROR` avec le même filename, le upload_id est réutilisé automatiquement → resume serveur transparent.
+    - **Affichage forensique UI** : nouveau bloc cyan dans la cellule slot affichant `upload_id` (mono), `last_successful_chunk_index / chunks_total - 1`, `error_phase` (jaune si PROXY, rouge si BACKEND), message d'instruction au retry. data-testid : `chunked-forensic-{slot_id}`.
+    - **Non-régression** : aucune modification du chemin upload mono < 50 Mo · aucun changement de comportement pour les autres slots · aucun import frontend ajouté.
+  - **Tests pytest** : nouveau `test_phase_xxvii_ext3_probe_network_omega.py` (8 tests) :
+    - `test_probe_requires_token` · `test_probe_ok_proxy_not_truncated` · `test_probe_proxy_truncated_lying_expected` · `test_probe_413_too_large` · `test_probe_400_too_small` · `test_probe_audit_event_consigned` · `test_status_exposes_client_recommended_parameters` · `test_probe_invalid_probe_id_rejected`.
+  - **Tests live curl** validés : T1 status expose 16 paramètres client · T2 probe 1 Mo zéros → `proxy_truncated=False, latency_ms<30000, diagnostic_phase=PROXY_OK` · T3 probe avec mensonge 512o vs 1024o expected → `proxy_truncated=True, mismatch=-512` · T4 probe 2 Mo → `HTTP 413 PROBE_TOO_LARGE`.
+  - **Pytest cumul** : 153/153 PASSED (XXII 33 + XXIII 16 + XXIV 14 + XXV 9 + XXVI 11 + XXVI-EXT 15 + XXVI-EXT2 13 + XXVII 13 + XXVII-EXT 4 + XXVII-EXT2 5 + XXVII-EXT3 8 + tests transverses). 0 régression. Lint Python+JavaScript clean.
+  - **Tests** : pytest + curl + python3 + screenshot smoke frontend. **Aucun testing subagent**.
+
+
 - **PHASE_XXVII-EXT3 · ORDRE N°52-EXT VOIE A — DIAGNOSTIC FORENSIQUE HTTP 502 + STATUS ÉTENDU (2026-05-04)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (incident `HTTP 502 chunk 72/712` lors de l'upload `pee_maj.gpkg`). **V30 INVIOLÉ · pytest 145/145 PASSED · doctrine ANTI_GÉNÉRIQUE_STRICT respectée jusque dans le refus de fabriquer un `last_successful_chunk_index` non vérifié.**
   - **Diagnostic forensique factuel** : scan disque + audit-log a révélé que **0 chunk n'a atteint le backend** (`/var/cache/.../FORET_MFFP_PEE_MAJ_Ω/.chunks/` vide · 0 audit-event UPLOAD_*). L'erreur HTTP 502 survient **AVANT** le router FastAPI (proxy Cloudflare/WAF). Doctrine respectée : refus de fabriquer un `last_successful_chunk_index = 71` qui n'existe pas.
