@@ -27,6 +27,29 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXVII-EXT2 · ORDRE N°52-EXT VOIE A — `/diagnostic/pee-maj/full-pipeline-execute` (2026-05-04)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (endpoint composite validé). **V30 INVIOLÉ · pytest 145/145 PASSED phases XXII→XXVII-EXT2 · 0 régression · doctrine ANTI_GÉNÉRIQUE_STRICT respectée.**
+  - **Refactor préalable** : extraction de la logique de `pee_maj_compress_and_archive` vers une fonction interne réutilisable `_compress_and_archive_pee_maj(client_ip, ua, skip_if_archive_exists=False)` permettant l'idempotence stricte (skip si archive `pee_maj.gpkg.zstd` déjà présente).
+  - **Endpoint composite livré** : `POST /api/v30/admin-premium/gis/diagnostic/pee-maj/full-pipeline-execute` (ADMIN_PREMIUM_ONLY · token `Saturn5858*`).
+  - **Séquence atomique en 3 phases avec mesure du temps écoulé par phase** :
+    - **PHASE 1** : `compute_corridors_gis()` du moteur (canonical pee_maj.gpkg). En STUB_READY tant que les 9 dérivées ne sont pas calculées. Expose `status`, `score`, `missing_layers`, `pee_maj_canonical_active`, `pee_maj_substitutes_slot`, `doctrine_action_requise`.
+    - **PHASE 2** : `persist_derivatives_to_archive()` du moteur. Copie atomique des `.tif/.geojson` calculés vers `/app/backend/data/gis_archive/_derived/`. Audit-event `DERIVATIVE_LAYER_PERSISTED_Ω` par fichier. Idempotent (skip si déjà persisté avec même taille).
+    - **PHASE 3** : `_compress_and_archive_pee_maj(skip_if_archive_exists=True)`. Compression zstd niveau 10 multi-threads. Archive vers `/app/backend/data/gis_archive/pee_maj.gpkg.zstd` si compressed < 1 Go. **Idempotent** : retourne `skipped_idempotent=true` si archive déjà présente.
+  - **Audit-event composite** : un seul `PEE_MAJ_FULL_PIPELINE_EXECUTED_Ω` par appel, avec validators détaillés des 3 phases (status, elapsed_s, persisted_count, archived, ratio, sha256, skip_reason). Permet une traçabilité forensique compacte de l'exécution.
+  - **Pré-condition `pee_maj_canonical_active=True`** : si pee_maj.gpkg absent → HTTP 409 honnête avec message anti-générique explicit `PEE_MAJ_CANONICAL_INACTIVE`. Aucune simulation autorisée.
+  - **Réponse JSON structurée** : `manifest_id` · `total_elapsed_s` · `canonical_state` · `phase1_compute_corridors_gis{...}` · `phase2_persist_derivatives{...}` · `phase3_compress_and_archive{skipped_idempotent, raw, compressed, archive_persistent}` · `audit_event_composite` · `honest_disclosure{ephemeral_source_warning, anti_generique_strict, no_simulation_executed}` · `v30_lock`.
+  - **Tests pytest** : nouveau `test_phase_xxvii_ext2_full_pipeline_omega.py` (5 tests E2E réels avec fixtures `pee_maj.gpkg` 2-5 Mo de zéros, ratio compression > 50x mesuré) :
+    - `test_full_pipeline_requires_token` · 401 sans token.
+    - `test_full_pipeline_409_when_canonical_inactive` · 409 + message anti-générique.
+    - `test_full_pipeline_e2e_real_fixture` · 200 OK · 3 phases · `archived=True` · `pee_maj_canonical_active=True` · `pee_maj_substitutes_slot=FORET_MFFP_Ω` · `no_simulation_executed=True` · `v30_lock=INVIOLÉ` · cleanup auto.
+    - `test_full_pipeline_idempotent_phase3` · 2ᵉ appel → `skipped_idempotent=True`.
+    - `test_full_pipeline_audit_event_consigned` · `PEE_MAJ_FULL_PIPELINE_EXECUTED_Ω` ≥ 1 dans audit_log.
+  - **Probe live des 5 endpoints PEE_MAJ** : `activate` HTTP 200 · `status` HTTP 200 · `persist-derivatives` HTTP 200 (skipped sans dérivées) · `compress-and-archive` HTTP 409 (pas de pee_maj.gpkg) · `full-pipeline-execute` HTTP 409 (pas de canonical actif). Cohérence parfaite.
+  - **Pytest cumul** : 145/145 PASSED (XXII 33 + XXIII 16 + XXIV 14 + XXV 9 + XXVI 11 + XXVI-EXT 15 + XXVI-EXT2 13 + XXVII 13 + XXVII-EXT 4 + XXVII-EXT2 5 + xx tests internes connexes). 0 régression.
+  - **Tests** : pytest + curl + python3. **Aucun testing subagent**.
+  - **Stratégie d'utilisation** : une fois `pee_maj.gpkg` LOADED via le pipeline chunked monolithique, **un seul appel** `POST /diagnostic/pee-maj/full-pipeline-execute` orchestre l'ensemble : compute_corridors_gis → persist_derivatives → compress_and_archive → audit composite. Idempotence stricte permet de l'appeler en boucle pour finaliser une exécution interrompue sans dupliquer le travail.
+
+
 - **PHASE_XXVII-EXT · ORDRE N°52-EXT VOIE A — `/diagnostic/pee-maj/compress-and-archive` (2026-05-04)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (option de compression validée). **V30 INVIOLÉ · pytest 126/126 PASSED phases XXII→XXVII-EXT · 0 régression · doctrine ANTI_GÉNÉRIQUE_STRICT respectée.**
   - **Contexte** : préparation en arrière-plan d'un endpoint pour tenter de rendre persistant le `pee_maj.gpkg` brut lui-même (compression zstd niveau 10), pendant que le Commandant procède à l'upload monolithique.

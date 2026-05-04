@@ -1534,22 +1534,15 @@ async def pee_maj_persist_derivatives(
 # /var/cache (éphémère) avec audit-event explicit. Anti-générique : refuse
 # de simuler un succès si le ratio est défavorable.
 # ═════════════════════════════════════════════════════════════════════════
-@router.post("/diagnostic/pee-maj/compress-and-archive")
-async def pee_maj_compress_and_archive(
-    request: Request,
-    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
-    user_agent: str | None = Header(default=None, alias="User-Agent"),
-) -> Dict[str, Any]:
+def _compress_and_archive_pee_maj(client_ip: str, ua: str,
+                                    skip_if_archive_exists: bool = False,
+                                    ) -> Dict[str, Any]:
     """ORDRE N°52-EXT VOIE A · Compression zstd + archivage persistant.
-    Anti-générique : pas d'archivage si compressed > 1 Go (slot trop gros
-    pour /app 9,8 Go). Audit-event PEE_MAJ_COMPRESSED_ARCHIVED_Ω ou
-    PEE_MAJ_COMPRESSED_TOO_LARGE_Ω selon résultat.
+    Logique factorisée réutilisée par /compress-and-archive et /full-pipeline.
+    Si skip_if_archive_exists=True et l'archive est déjà présente avec une
+    taille > 0, retourne immédiatement un état "ALREADY_PERSISTED" (idempotent).
+    Lève HTTPException sur erreur fatale.
     """
-    _verify_token(x_commandant_token)
-    client_ip = request.client.host if request.client else "unknown"
-    ua = (user_agent or "")[:200]
-
-    # Vérifier dépendance zstandard
     try:
         import zstandard as zstd
     except ImportError as e:
@@ -1557,43 +1550,59 @@ async def pee_maj_compress_and_archive(
             status_code=503,
             detail=f"ZSTANDARD_MODULE_MISSING::{e}")
 
-    # Vérifier source physique
-    src = Path("/var/cache/gis_operational/incoming/FORET_MFFP_PEE_MAJ_Ω/pee_maj.gpkg")
+    src = Path(
+        "/var/cache/gis_operational/incoming/FORET_MFFP_PEE_MAJ_Ω/pee_maj.gpkg")
     if not src.exists() or src.stat().st_size == 0:
         raise HTTPException(
             status_code=409,
             detail=("PEE_MAJ_SOURCE_ABSENT — pee_maj.gpkg introuvable dans "
                     f"{src.parent}. Procéder d'abord à l'upload chunked."))
 
+    archive_dest_dir = Path("/app/backend/data/gis_archive")
+    archive_dest_dir.mkdir(parents=True, exist_ok=True)
+    archive_dest = archive_dest_dir / "pee_maj.gpkg.zstd"
+
+    # ─── Idempotence stricte ─────────────────────────────────────────
+    if skip_if_archive_exists and archive_dest.exists() and archive_dest.stat().st_size > 0:
+        return {
+            "manifest_id": "PEE_MAJ_COMPRESS_AND_ARCHIVE_Ω",
+            "skipped_idempotent": True,
+            "skip_reason": "ALREADY_PERSISTED — archive existante préservée",
+            "raw": {"path": str(src), "size_bytes": src.stat().st_size,
+                    "size_GB": round(src.stat().st_size / 1e9, 2)},
+            "compressed": {"path": None, "ratio": None},
+            "archive_persistent": {
+                "archived": True,
+                "dest_path": str(archive_dest),
+                "size_bytes": archive_dest.stat().st_size,
+            },
+        }
+
     raw_size = src.stat().st_size
     raw_size_GB = round(raw_size / 1e9, 2)
 
-    # Compression streaming vers /var/cache (éphémère mais suffisant pour évaluer)
     compressed_path = src.with_suffix(".gpkg.zstd")
     tmp_path = src.with_suffix(".gpkg.zstd.compressing.partial")
-    cctx = zstd.ZstdCompressor(level=10, threads=0)  # threads=0 = nb_cpus
+    cctx = zstd.ZstdCompressor(level=10, threads=0)
     raw_h = hashlib.sha256()
     cmp_h = hashlib.sha256()
     import time as _time
     t0 = _time.time()
-    bytes_written = 0
     try:
         with open(src, "rb") as inp, open(tmp_path, "wb") as out:
             with cctx.stream_writer(out) as compressor:
                 while True:
-                    buf = inp.read(8 << 20)  # 8 MB chunks
+                    buf = inp.read(8 << 20)
                     if not buf:
                         break
                     raw_h.update(buf)
                     compressor.write(buf)
-        # Recalc compressed sha256 + size
         with open(tmp_path, "rb") as f:
             while True:
                 buf = f.read(1 << 20)
                 if not buf:
                     break
                 cmp_h.update(buf)
-                bytes_written += len(buf)
         os.replace(str(tmp_path), str(compressed_path))
     except Exception as e:
         if tmp_path.exists():
@@ -1608,12 +1617,7 @@ async def pee_maj_compress_and_archive(
     raw_sha = raw_h.hexdigest()
     cmp_sha = cmp_h.hexdigest()
 
-    # Vérifier disque /app suffisant pour archivage (compressed + 10% marge)
-    threshold_bytes = 1 * 1024 * 1024 * 1024  # 1 Go institutionnel
-    archive_dest_dir = Path("/app/backend/data/gis_archive")
-    archive_dest_dir.mkdir(parents=True, exist_ok=True)
-    archive_dest = archive_dest_dir / "pee_maj.gpkg.zstd"
-
+    threshold_bytes = 1 * 1024 * 1024 * 1024
     archived = False
     archive_skip_reason: Optional[str] = None
     free_app = 0
@@ -1651,7 +1655,6 @@ async def pee_maj_compress_and_archive(
                          "free_bytes": free_app, "needed": compressed_size}],
         )
     else:
-        # Copie atomique vers archive persistante
         tmp_archive = archive_dest.with_suffix(".zstd.archiving.partial")
         try:
             with open(compressed_path, "rb") as inp, open(tmp_archive, "wb") as out:
@@ -1673,8 +1676,7 @@ async def pee_maj_compress_and_archive(
                      "raw_sha256": raw_sha, "compressed_sha256": cmp_sha,
                      "raw_size_bytes": raw_size,
                      "compressed_size_bytes": compressed_size,
-                     "ratio": ratio,
-                     "elapsed_s": elapsed_s},
+                     "ratio": ratio, "elapsed_s": elapsed_s},
                     {"name": "archive_persistent", "passed": True,
                      "dest_path": str(archive_dest)},
                 ],
@@ -1688,19 +1690,12 @@ async def pee_maj_compress_and_archive(
         "manifest_id": "PEE_MAJ_COMPRESS_AND_ARCHIVE_Ω",
         "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
         "ordre": "n°52_ext_voie_a",
-        "raw": {
-            "path": str(src),
-            "size_bytes": raw_size,
-            "size_GB": raw_size_GB,
-            "sha256": raw_sha,
-        },
+        "raw": {"path": str(src), "size_bytes": raw_size,
+                "size_GB": raw_size_GB, "sha256": raw_sha},
         "compressed": {
-            "path": str(compressed_path),
-            "size_bytes": compressed_size,
-            "size_GB": compressed_size_GB,
-            "sha256": cmp_sha,
-            "ratio": ratio,
-            "elapsed_s": elapsed_s,
+            "path": str(compressed_path), "size_bytes": compressed_size,
+            "size_GB": compressed_size_GB, "sha256": cmp_sha,
+            "ratio": ratio, "elapsed_s": elapsed_s,
         },
         "archive_persistent": {
             "archived": archived,
@@ -1709,6 +1704,206 @@ async def pee_maj_compress_and_archive(
             "threshold_GB": 1.0,
             "skip_reason": archive_skip_reason,
             "free_app_bytes": free_app,
+        },
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+@router.post("/diagnostic/pee-maj/compress-and-archive")
+async def pee_maj_compress_and_archive(
+    request: Request,
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+    user_agent: str | None = Header(default=None, alias="User-Agent"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-EXT VOIE A · Endpoint dédié compression + archivage."""
+    _verify_token(x_commandant_token)
+    client_ip = request.client.host if request.client else "unknown"
+    ua = (user_agent or "")[:200]
+    return _compress_and_archive_pee_maj(client_ip, ua,
+                                          skip_if_archive_exists=False)
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°52-EXT VOIE A · Endpoint composite full-pipeline-execute
+# Orchestration atomique :
+#   (1) compute_corridors_gis()      — calcul moteur (canonical pee_maj.gpkg)
+#   (2) persist_derivatives_to_archive()  — copie persistante des 9 layers
+#   (3) compress_and_archive (idempotent)  — tentative archivage du brut
+# Audit-event composite unique : PEE_MAJ_FULL_PIPELINE_EXECUTED_Ω.
+# Idempotence stricte : phase 2 et 3 sautent les éléments déjà persistés.
+# Anti-générique : si pee_maj_canonical_active=False → 409 honnête.
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/diagnostic/pee-maj/full-pipeline-execute")
+async def pee_maj_full_pipeline_execute(
+    request: Request,
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+    user_agent: str | None = Header(default=None, alias="User-Agent"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-EXT VOIE A · Pipeline composite atomique PEE_MAJ_Ω."""
+    _verify_token(x_commandant_token)
+    client_ip = request.client.host if request.client else "unknown"
+    ua = (user_agent or "")[:200]
+    import time as _time
+    t_start = _time.time()
+
+    # ─── Pré-condition : canonical_active=True ─────────────────────────
+    try:
+        from engines.v8_institutional.especes.engine_corridors_gis_omega import (
+            _pee_maj_canonical_state, compute_corridors_gis,
+            persist_derivatives_to_archive,
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=503,
+            detail=f"ENGINE_IMPORT_ERROR::{e}")
+
+    canonical = _pee_maj_canonical_state()
+    if not canonical.get("active"):
+        raise HTTPException(
+            status_code=409,
+            detail=(
+                "PEE_MAJ_CANONICAL_INACTIVE — pee_maj.gpkg absent du chemin "
+                f"{canonical.get('path')}. "
+                "Procéder d'abord à l'upload chunked monolithique. "
+                "Aucune simulation autorisée (anti-générique strict)."))
+
+    # ─── PHASE 1 : compute_corridors_gis() ────────────────────────────
+    phase1_t0 = _time.time()
+    try:
+        compute_result = compute_corridors_gis()
+    except Exception as e:
+        compute_result = {
+            "status": "ERROR", "error": str(e)[:300],
+            "anti_generique_pass": False,
+        }
+    phase1_elapsed = round(_time.time() - phase1_t0, 2)
+
+    # ─── PHASE 2 : persist_derivatives_to_archive() ────────────────────
+    phase2_t0 = _time.time()
+    try:
+        derivatives_result = persist_derivatives_to_archive()
+        for p in derivatives_result.get("persisted", []):
+            audit.append_event(
+                event="DERIVATIVE_LAYER_PERSISTED_Ω",
+                slot_id="FORET_MFFP_PEE_MAJ_Ω",
+                filename=p["dest"].split("/")[-1],
+                sha256=p["sha256"], size_bytes=p["size_bytes"],
+                http_code=200, client_ip=client_ip,
+                user_agent="ORDRE_N52_EXT_FULL_PIPELINE",
+                validators=[{"name": "derivative_persisted", "passed": True,
+                             "layer_id": p["layer_id"]}],
+            )
+    except Exception as e:
+        derivatives_result = {
+            "manifest_id": "DERIVATIVES_PERSIST_ERROR_Ω",
+            "error": str(e)[:300],
+            "persisted_count": 0, "skipped_count": 0, "failed_count": 0,
+        }
+    phase2_elapsed = round(_time.time() - phase2_t0, 2)
+
+    # ─── PHASE 3 : compress_and_archive (idempotent) ──────────────────
+    phase3_t0 = _time.time()
+    phase3_result: Dict[str, Any]
+    try:
+        phase3_result = _compress_and_archive_pee_maj(
+            client_ip, ua, skip_if_archive_exists=True)
+    except HTTPException as he:
+        phase3_result = {
+            "manifest_id": "PEE_MAJ_COMPRESS_AND_ARCHIVE_ERROR_Ω",
+            "http_status": he.status_code,
+            "error": str(he.detail)[:300],
+            "archive_persistent": {"archived": False,
+                                    "skip_reason": str(he.detail)[:200]},
+        }
+    except Exception as e:
+        phase3_result = {
+            "manifest_id": "PEE_MAJ_COMPRESS_AND_ARCHIVE_ERROR_Ω",
+            "error": str(e)[:300],
+            "archive_persistent": {"archived": False,
+                                    "skip_reason": f"UNEXPECTED::{e}"},
+        }
+    phase3_elapsed = round(_time.time() - phase3_t0, 2)
+
+    total_elapsed = round(_time.time() - t_start, 2)
+
+    # ─── Audit-event composite ────────────────────────────────────────
+    raw_summary = phase3_result.get("raw", {}) or {}
+    cmp_summary = phase3_result.get("compressed", {}) or {}
+    arch_summary = phase3_result.get("archive_persistent", {}) or {}
+    audit.append_event(
+        event="PEE_MAJ_FULL_PIPELINE_EXECUTED_Ω",
+        slot_id="FORET_MFFP_PEE_MAJ_Ω",
+        filename="(full_pipeline_composite)",
+        sha256=cmp_summary.get("sha256") or raw_summary.get("sha256"),
+        size_bytes=int(raw_summary.get("size_bytes") or 0),
+        http_code=200,
+        client_ip=client_ip, user_agent=ua,
+        validators=[
+            {"name": "phase1_compute_corridors_gis",
+             "passed": compute_result.get("status") in ("STUB_READY", "OPERATIONAL"),
+             "status": compute_result.get("status"),
+             "missing_layers_count": compute_result.get("missing_layers_count"),
+             "elapsed_s": phase1_elapsed},
+            {"name": "phase2_persist_derivatives",
+             "passed": "error" not in derivatives_result,
+             "persisted_count": derivatives_result.get("persisted_count"),
+             "skipped_count": derivatives_result.get("skipped_count"),
+             "failed_count": derivatives_result.get("failed_count"),
+             "elapsed_s": phase2_elapsed},
+            {"name": "phase3_compress_and_archive",
+             "passed": True,
+             "archived": arch_summary.get("archived"),
+             "skip_reason": arch_summary.get("skip_reason"),
+             "skipped_idempotent": phase3_result.get("skipped_idempotent", False),
+             "raw_sha256": raw_summary.get("sha256"),
+             "compressed_sha256": cmp_summary.get("sha256"),
+             "ratio": cmp_summary.get("ratio"),
+             "elapsed_s": phase3_elapsed},
+        ],
+    )
+
+    return {
+        "manifest_id": "PEE_MAJ_FULL_PIPELINE_EXECUTED_Ω",
+        "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "n°52_ext_voie_a_composite",
+        "executed_at_utc": _utc_now(),
+        "total_elapsed_s": total_elapsed,
+        "canonical_state": canonical,
+        "phase1_compute_corridors_gis": {
+            "elapsed_s": phase1_elapsed,
+            "status": compute_result.get("status"),
+            "score_corridors_gis_omega": compute_result.get("score_corridors_gis_omega"),
+            "missing_layers": compute_result.get("missing_layers"),
+            "missing_layers_count": compute_result.get("missing_layers_count"),
+            "anti_generique_pass": compute_result.get("anti_generique_pass"),
+            "pee_maj_canonical_active": compute_result.get("pee_maj_canonical_active"),
+            "pee_maj_substitutes_slot": compute_result.get("pee_maj_substitutes_slot"),
+            "doctrine_action_requise": compute_result.get("doctrine_action_requise"),
+        },
+        "phase2_persist_derivatives": {
+            "elapsed_s": phase2_elapsed,
+            "persisted_count": derivatives_result.get("persisted_count"),
+            "persisted": derivatives_result.get("persisted"),
+            "skipped_count": derivatives_result.get("skipped_count"),
+            "failed_count": derivatives_result.get("failed_count"),
+            "persistent_root": derivatives_result.get("persistent_root"),
+        },
+        "phase3_compress_and_archive": {
+            "elapsed_s": phase3_elapsed,
+            "skipped_idempotent": phase3_result.get("skipped_idempotent", False),
+            "raw": raw_summary,
+            "compressed": cmp_summary,
+            "archive_persistent": arch_summary,
+        },
+        "audit_event_composite": "PEE_MAJ_FULL_PIPELINE_EXECUTED_Ω",
+        "honest_disclosure": {
+            "ephemeral_source_warning": (
+                "pee_maj.gpkg réside sur /var/cache (éphémère). Au pod restart, "
+                "le brut est perdu. Les dérivées analytiques persistées "
+                "(phase 2) et l'archive zstd éventuelle (phase 3) restent la "
+                "référence canonique institutionnelle."),
+            "anti_generique_strict": True,
+            "no_simulation_executed": True,
         },
         "v30_lock": "INVIOLÉ",
     }
