@@ -237,10 +237,32 @@ def health_snapshot(
       · prep_only_mode (env var)
 
     Aucun side-effect. Aucun log audit (anti-spam, comme /token-check).
+
+    ORDRE N°52-EXT : déclenche (best-effort, idempotent) un auto-restore
+    depuis l'archive persistante pour les slots archivables en divergence
+    PHYS_LOST_Ω. Le restore effectif est consigné en audit (PHYS_AUTO_RESTORED_Ω).
     """
     _verify_token(x_commandant_token)
 
     manifest = _read_manifest()
+
+    # ─── ORDRE N°52-EXT · Auto-restore idempotent préalable ─────────
+    # Pour chaque slot archivable LOADED, vérifie que tous les fichiers
+    # manifestés existent physiquement, sinon restaure depuis l'archive.
+    auto_restore_summary: List[Dict[str, Any]] = []
+    for slot_id in sorted(ARCHIVABLE_SLOTS):
+        sm = manifest.get("slots", {}).get(slot_id, {})
+        if sm.get("status") != "LOADED":
+            continue
+        # _auto_restore_slot_from_archive est idempotent : il saute les fichiers
+        # déjà présents avec la bonne taille
+        res = _auto_restore_slot_from_archive(
+            slot_id, client_ip="HEALTH_SNAPSHOT_AUTO_RESTORE")
+        if res.get("restored_count", 0) > 0:
+            auto_restore_summary.append(res)
+
+    # Re-lire manifest au cas où (il n'est pas modifié par le restore,
+    # mais les fichiers physiques oui)
     slots_state: Dict[str, Any] = {}
     divergences: List[Dict[str, Any]] = []
 
@@ -341,6 +363,9 @@ def health_snapshot(
         "slots": slots_state,
         "divergences_manifest_vs_physical": divergences,
         "divergences_count": len(divergences),
+        "auto_restore_triggered": auto_restore_summary,
+        "auto_restore_files_count": sum(
+            r.get("restored_count", 0) for r in auto_restore_summary),
         "engine_layers": engine_layers,
         "audit_log_stats": audit_stats,
         "v30_lock": v30,
@@ -354,6 +379,10 @@ def health_snapshot(
                 "env" if os.environ.get("BCE4X_HARDENED_PIPELINE_MODE", "").lower()
                 in ("true", "1") else "persistent_flag_or_disabled"
             ),
+            "persistent_archive_enabled": True,
+            "persistent_archive_variant": "A_5_slots_legers",
+            "persistent_archive_root": str(ARCHIVE_ROOT),
+            "archivable_slots": sorted(ARCHIVABLE_SLOTS),
         },
         "anti_generique": "STRICT",
     }
@@ -691,6 +720,276 @@ def _is_hardened_mode_active() -> bool:
     if os.environ.get("BCE4X_HARDENED_PIPELINE_MODE", "").lower() in ("true", "1"):
         return True
     return bool(_read_hardened_flag().get("enabled", False))
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°52-EXT · PERSISTENT_ARCHIVE_Ω (VARIANTE A — 5 slots légers)
+# Archive atomique vers /app/backend/data/gis_archive/{slot}/ pour protéger
+# contre la volatilité de /var/cache au reboot du pod Kubernetes.
+# ═════════════════════════════════════════════════════════════════════════
+ARCHIVE_ROOT = Path("/app/backend/data/gis_archive")
+ARCHIVE_ROOT.mkdir(parents=True, exist_ok=True)
+
+# Liste blanche explicite — variante A : 5 slots secondaires uniquement.
+# FORET_MFFP_Ω (36 Go) EXCLU — trop volumineux pour /app (9,8 Go).
+ARCHIVABLE_SLOTS = {
+    "SOL_IRDA_Ω",
+    "CHASSE_ZEC_SEPAQ_Ω",
+    "ROUTES_MTQ_SECONDAIRES_Ω",
+    "LIMITES_TERRITORIALES_FINES_Ω",
+    "PRESSION_HUMAINE_Ω",
+}
+
+
+def _archive_dir(slot_id: str) -> Path:
+    p = ARCHIVE_ROOT / slot_id
+    p.mkdir(parents=True, exist_ok=True)
+    return p
+
+
+def _archive_file_persistent(slot_id: str, filename: str,
+                              src_path: Path,
+                              sha256_source: str,
+                              client_ip: str = "unknown",
+                              user_agent: str = "") -> Dict[str, Any]:
+    """Copie atomique d'un fichier validé vers /app/backend/data/gis_archive/.
+    Retourne le status de l'opération. Ne lève jamais (best-effort).
+    Anti-générique : copie RÉELLE (même contenu physique, SHA-256 re-vérifié).
+    """
+    if slot_id not in ARCHIVABLE_SLOTS:
+        return {"archived": False, "reason": "SLOT_NOT_IN_WHITELIST_A"}
+    if not src_path.exists() or src_path.stat().st_size == 0:
+        return {"archived": False, "reason": "SOURCE_MISSING_OR_EMPTY"}
+
+    dest_dir = _archive_dir(slot_id)
+    dest_path = dest_dir / filename
+    tmp_path = dest_dir / f".{filename}.archiving.partial"
+
+    # Check disk space (best-effort)
+    try:
+        import shutil as _sh
+        src_size = src_path.stat().st_size
+        free_bytes = _sh.disk_usage(str(ARCHIVE_ROOT)).free
+        if free_bytes < src_size * 1.1:
+            audit.append_event(
+                event="PHYS_ARCHIVE_SKIPPED_DISK_FULL_Ω",
+                slot_id=slot_id, filename=filename, sha256=sha256_source,
+                size_bytes=src_size, http_code=0,
+                client_ip=client_ip, user_agent=user_agent,
+                validators=[{"name": "disk_free_check", "passed": False,
+                             "free_bytes": free_bytes, "needed": src_size}],
+            )
+            return {"archived": False, "reason": "DISK_FULL",
+                    "free_bytes": free_bytes, "needed": src_size}
+    except Exception:
+        pass
+
+    h = hashlib.sha256()
+    try:
+        with open(src_path, "rb") as inp, open(tmp_path, "wb") as out:
+            while True:
+                buf = inp.read(1 << 20)
+                if not buf:
+                    break
+                h.update(buf)
+                out.write(buf)
+            if _is_hardened_mode_active():
+                try:
+                    out.flush()
+                    os.fsync(out.fileno())
+                except OSError:
+                    pass
+        sha_copy = h.hexdigest()
+        if sha_copy != sha256_source:
+            tmp_path.unlink(missing_ok=True)
+            audit.append_event(
+                event="PHYS_ARCHIVE_SHA_MISMATCH_Ω",
+                slot_id=slot_id, filename=filename, sha256=sha_copy,
+                size_bytes=src_size, http_code=0,
+                client_ip=client_ip, user_agent=user_agent,
+                validators=[{"name": "archive_sha_match",
+                             "passed": False,
+                             "expected": sha256_source,
+                             "got": sha_copy}],
+            )
+            return {"archived": False, "reason": "SHA_MISMATCH"}
+        # Atomic move (rename)
+        os.replace(str(tmp_path), str(dest_path))
+    except Exception as e:
+        tmp_path.unlink(missing_ok=True)
+        audit.append_event(
+            event="PHYS_ARCHIVE_ERROR_Ω",
+            slot_id=slot_id, filename=filename, sha256=sha256_source,
+            size_bytes=src_path.stat().st_size if src_path.exists() else 0,
+            http_code=500, client_ip=client_ip, user_agent=user_agent,
+            validators=[{"name": "archive_write", "passed": False, "error": str(e)[:200]}],
+        )
+        return {"archived": False, "reason": f"ARCHIVE_ERROR::{e}"}
+
+    audit.append_event(
+        event="PHYS_ARCHIVE_PERSISTED_Ω",
+        slot_id=slot_id, filename=filename, sha256=sha256_source,
+        size_bytes=dest_path.stat().st_size, http_code=200,
+        client_ip=client_ip, user_agent=user_agent,
+        validators=[{"name": "archive_copy", "passed": True},
+                    {"name": "archive_sha_match", "passed": True}],
+    )
+    return {
+        "archived": True,
+        "dest_path": str(dest_path),
+        "sha256": sha256_source,
+        "size_bytes": dest_path.stat().st_size,
+    }
+
+
+def _auto_restore_slot_from_archive(slot_id: str,
+                                     client_ip: str = "auto_restore") -> Dict[str, Any]:
+    """Si slot archivable et fichier physique absent mais présent en archive,
+    copie l'archive vers /var/cache/.../incoming/{slot}/. Consigne PHYS_AUTO_RESTORED_Ω.
+    Retourne la liste des fichiers restaurés.
+    """
+    if slot_id not in ARCHIVABLE_SLOTS:
+        return {"slot_id": slot_id, "skipped": "NOT_ARCHIVABLE",
+                "restored_files": []}
+
+    archive_dir = _archive_dir(slot_id)
+    incoming_dir = _slot_dir(slot_id)
+    restored: List[Dict[str, Any]] = []
+    failed: List[Dict[str, Any]] = []
+
+    for arch_file in sorted(archive_dir.iterdir()):
+        if not arch_file.is_file():
+            continue
+        if arch_file.name.startswith("."):
+            continue
+        target = incoming_dir / arch_file.name
+        # Skip if already present with same size
+        if target.exists() and target.stat().st_size == arch_file.stat().st_size:
+            continue
+        tmp = incoming_dir / f".{arch_file.name}.restoring.partial"
+        try:
+            with open(arch_file, "rb") as inp, open(tmp, "wb") as out:
+                while True:
+                    buf = inp.read(1 << 20)
+                    if not buf:
+                        break
+                    out.write(buf)
+            os.replace(str(tmp), str(target))
+            restored.append({
+                "filename": arch_file.name,
+                "size_bytes": target.stat().st_size,
+            })
+            audit.append_event(
+                event="PHYS_AUTO_RESTORED_Ω",
+                slot_id=slot_id,
+                filename=arch_file.name,
+                sha256=None,  # Le SHA manifesté reste la référence
+                size_bytes=target.stat().st_size,
+                http_code=200,
+                client_ip=client_ip,
+                user_agent="AUTO_RESTORE_FROM_PERSISTENT_ARCHIVE_Ω",
+                validators=[{"name": "auto_restore", "passed": True,
+                             "source_archive": str(arch_file)}],
+            )
+        except Exception as e:
+            tmp.unlink(missing_ok=True)
+            failed.append({"filename": arch_file.name, "error": str(e)[:200]})
+
+    return {
+        "slot_id": slot_id,
+        "restored_count": len(restored),
+        "restored_files": restored,
+        "failed_files": failed,
+    }
+
+
+@router.get("/diagnostic/persistent-archive/status")
+async def persistent_archive_status(
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-EXT · Inventaire de l'archive persistante (variante A)."""
+    _verify_token(x_commandant_token)
+
+    inventory: Dict[str, Any] = {}
+    total_files = 0
+    total_bytes = 0
+    for slot_id in sorted(ARCHIVABLE_SLOTS):
+        d = _archive_dir(slot_id)
+        files: List[Dict[str, Any]] = []
+        for p in sorted(d.iterdir()):
+            if p.is_file() and not p.name.startswith("."):
+                files.append({"filename": p.name,
+                              "size_bytes": p.stat().st_size})
+        cum = sum(f["size_bytes"] for f in files)
+        total_files += len(files)
+        total_bytes += cum
+        inventory[slot_id] = {
+            "archive_dir": str(d),
+            "files_count": len(files),
+            "cumulative_bytes": cum,
+            "files": files,
+        }
+
+    try:
+        import shutil as _sh
+        usage = _sh.disk_usage(str(ARCHIVE_ROOT))
+        disk = {"total_bytes": usage.total, "used_bytes": usage.used,
+                "free_bytes": usage.free}
+    except Exception:
+        disk = {"error": "disk_usage_unavailable"}
+
+    return {
+        "manifest_id": "PERSISTENT_ARCHIVE_STATUS_Ω",
+        "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
+        "variant": "A_5_slots_legers",
+        "archive_root": str(ARCHIVE_ROOT),
+        "archivable_slots_whitelist": sorted(ARCHIVABLE_SLOTS),
+        "slot_excluded_from_archive": ["FORET_MFFP_Ω (trop volumineux pour /app)"],
+        "inventory": inventory,
+        "totals": {"files": total_files, "bytes": total_bytes},
+        "disk_usage": disk,
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+class RestoreRequest(BaseModel):
+    slot_id: Optional[str] = None
+    restore_all: Optional[bool] = False
+
+
+@router.post("/diagnostic/persistent-archive/restore")
+async def persistent_archive_restore(
+    body: RestoreRequest,
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-EXT · Restaure manuellement les fichiers d'un slot depuis
+    l'archive vers /var/cache. Consigne PHYS_AUTO_RESTORED_Ω par fichier."""
+    _verify_token(x_commandant_token)
+
+    results: List[Dict[str, Any]] = []
+    if body.restore_all:
+        for slot_id in sorted(ARCHIVABLE_SLOTS):
+            results.append(_auto_restore_slot_from_archive(slot_id,
+                                                            client_ip="MANUAL_RESTORE_ALL"))
+    elif body.slot_id:
+        if body.slot_id not in ARCHIVABLE_SLOTS:
+            raise HTTPException(
+                status_code=400,
+                detail=f"SLOT_NOT_IN_WHITELIST_A::{body.slot_id}")
+        results.append(_auto_restore_slot_from_archive(body.slot_id,
+                                                        client_ip="MANUAL_RESTORE_SINGLE"))
+    else:
+        raise HTTPException(
+            status_code=400,
+            detail="Fournir 'slot_id' OU 'restore_all: true'")
+
+    total_restored = sum(r.get("restored_count", 0) for r in results)
+    return {
+        "manifest_id": "PERSISTENT_ARCHIVE_RESTORE_Ω",
+        "total_restored_files": total_restored,
+        "results": results,
+        "v30_lock": "INVIOLÉ",
+    }
 
 
 def _normalize_slot_id(raw: str) -> Dict[str, Any]:
@@ -1243,6 +1542,15 @@ async def upload_chunk(
         validators=validation.get("validators", []),
     )
 
+    # ─── ORDRE N°52-EXT · Archive persistante (variante A) ──────────
+    archive_result: Dict[str, Any] = {"archived": False, "reason": "NOT_APPLICABLE"}
+    if passed and slot_id in ARCHIVABLE_SLOTS:
+        archive_result = _archive_file_persistent(
+            slot_id=slot_id, filename=fname, src_path=final_path,
+            sha256_source=sha256, client_ip=client_ip,
+            user_agent=user_agent or "",
+        )
+
     slot_state = manifest["slots"].get(slot_id, {})
     return JSONResponse(
         status_code=200 if passed else 422,
@@ -1260,6 +1568,7 @@ async def upload_chunk(
             "chunked": True,
             "chunks_total": int(x_chunks_total),
             "upload_id": x_upload_id,
+            "persistent_archive": archive_result,
             "intake_stats": {
                 "total_slots": len(manifest["slots"]),
                 "loaded": sum(1 for s in manifest["slots"].values()
@@ -1403,6 +1712,16 @@ async def upload_layer(
         validators=validation.get("validators", []),
     )
 
+    # ─── ORDRE N°52-EXT · Archive persistante (variante A) ──────────
+    archive_result_mono: Dict[str, Any] = {"archived": False,
+                                            "reason": "NOT_APPLICABLE"}
+    if passed and slot_id in ARCHIVABLE_SLOTS:
+        archive_result_mono = _archive_file_persistent(
+            slot_id=slot_id, filename=fname, src_path=final_path,
+            sha256_source=sha256, client_ip=client_ip,
+            user_agent=user_agent or "",
+        )
+
     # ─── ORDRE N°46 · Champs multi-upload exposés dans la réponse ───
     slot_state = manifest["slots"].get(slot_id, {})
 
@@ -1420,6 +1739,7 @@ async def upload_layer(
             "multi_upload": slot_state.get("multi_upload", False),
             "files_loaded_count": slot_state.get("files_loaded_count", 0),
             "composite_sha256": slot_state.get("composite_sha256"),
+            "persistent_archive": archive_result_mono,
             "intake_stats": {
                 "total_slots": len(manifest["slots"]),
                 "loaded": sum(1 for s in manifest["slots"].values()

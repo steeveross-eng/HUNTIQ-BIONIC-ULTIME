@@ -2161,7 +2161,7 @@
         }
       ],
       "files_loaded_count": 1,
-      "composite_sha256": "973094d6e962b573657e0b60faf7697f3903db508d52a3744dc3a2881648e39d",
+      "composite_sha256": "145038838533fd470b0c10aca72ae73953a966c9251122a08672d382dcb49c2a",
       "multi_upload": false
     },
     "CHASSE_ZEC_SEPAQ_Ω": {
@@ -2204,115 +2204,10 @@
               "reason": "OK"
             }
           ]
-        },
-        {
-          "filename": "good.geojson",
-          "sha256": "eb65fa70f224ec205e5cfbffa273bee1115f4b341f2908564c1345e55fbd19c4",
-          "size_bytes": 2081,
-          "uploaded_at_utc": "2026-05-04T19:11:10+00:00",
-          "passed": true,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "geojson",
-              "formats_acceptes": [
-                "gpkg",
-                "geojson",
-                "zip",
-                "parquet"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": true,
-              "size_bytes": 2081,
-              "min": 512,
-              "max": 524288000,
-              "reason": "OK"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "eb65fa70f224ec205e5cfbffa273bee1115f4b341f2908564c1345e55fbd19c4",
-              "reason": "OK"
-            }
-          ]
-        },
-        {
-          "filename": "tiny.geojson",
-          "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-          "size_bytes": 2,
-          "uploaded_at_utc": "2026-05-04T19:11:10+00:00",
-          "passed": false,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "geojson",
-              "formats_acceptes": [
-                "gpkg",
-                "geojson",
-                "zip",
-                "parquet"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": false,
-              "size_bytes": 2,
-              "min": 512,
-              "max": 524288000,
-              "reason": "Taille 2 hors bornes [512, 524288000]"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "reason": "OK"
-            }
-          ]
-        },
-        {
-          "filename": "a.geojson",
-          "sha256": "eb65fa70f224ec205e5cfbffa273bee1115f4b341f2908564c1345e55fbd19c4",
-          "size_bytes": 2081,
-          "uploaded_at_utc": "2026-05-04T19:11:10+00:00",
-          "passed": true,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "geojson",
-              "formats_acceptes": [
-                "gpkg",
-                "geojson",
-                "zip",
-                "parquet"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": true,
-              "size_bytes": 2081,
-              "min": 512,
-              "max": 524288000,
-              "reason": "OK"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "eb65fa70f224ec205e5cfbffa273bee1115f4b341f2908564c1345e55fbd19c4",
-              "reason": "OK"
-            }
-          ]
         }
       ],
-      "files_loaded_count": 3,
-      "composite_sha256": "4924be9b2ac3597ce88d392ef874bd896fd2c1557fda01849125acfd6e965f3e",
+      "files_loaded_count": 1,
+      "composite_sha256": "33964b78182c5357785c79c431ba863e3a6584bad9566f8c6678ba43a28d0d66",
       "multi_upload": false
     },
     "ROUTES_MTQ_SECONDAIRES_Ω": {
@@ -2360,7 +2255,7 @@
         }
       ],
       "files_loaded_count": 1,
-      "composite_sha256": "e2fe5fdcbe0f11eb9203b07035160a0477258ceb40dbedb920ddf82697d307c2",
+      "composite_sha256": "4ac7505b53a99e445b923409c4f3fb9601009778258e47892c03194045784d7c",
       "multi_upload": false
     },
     "LIMITES_TERRITORIALES_FINES_Ω": {
@@ -2408,7 +2303,7 @@
         }
       ],
       "files_loaded_count": 1,
-      "composite_sha256": "1bcf396099cbcbb9d99da83882a7d62652b18032d430e8643b77dab884f506ed",
+      "composite_sha256": "3fbb6a55688a83f10018eaacb8ce4bd4debb5392808445c621147e81e0ce47f2",
       "multi_upload": false
     },
     "PRESSION_HUMAINE_Ω": {
@@ -2455,9 +2350,9 @@
         }
       ],
       "files_loaded_count": 1,
-      "composite_sha256": "25b0c81274d18388d824d09534a7598189179ba04cb865a8a34a3a6b03b77a54",
+      "composite_sha256": "0fc03b68885d6295b45e0271cff774e17278781d7855d8d94053332875ea6e77",
       "multi_upload": false
     }
   },
-  "last_updated_utc": "2026-05-04T20:25:09+00:00"
+  "last_updated_utc": "2026-05-04T20:44:25+00:00"
 }

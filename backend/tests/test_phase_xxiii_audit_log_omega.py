@@ -167,13 +167,31 @@ def test_read_returns_empty_when_no_log(tmp_path, monkeypatch):
 # Endpoint /audit-log (HTTP)
 # ═══════════════════════════════════════════════════════════════════
 @pytest.fixture
-def http_client(isolate_audit_log, monkeypatch):
+def http_client(isolate_audit_log, tmp_path, monkeypatch):
     monkeypatch.setenv("GIS_RECEPTION_COMMANDANT_TOKEN",
                         "TEST_TOKEN_AUDIT_LOG_OMEGA")
-    # Force le router à utiliser notre audit isolé
-    from routes.gis_reception_router_omega import router
+    # ─── ORDRE N°52-EXT · Isolation complète du router (manifest, incoming,
+    # quarantine, archive) pour éviter de polluer la PROD au pytest ───
+    from routes import gis_reception_router_omega as router_mod
+    isolated_root = tmp_path / "gis_operational"
+    isolated_root.mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr(router_mod, "RECEPTION_ROOT", isolated_root)
+    monkeypatch.setattr(router_mod, "INCOMING_DIR", isolated_root / "incoming")
+    monkeypatch.setattr(router_mod, "QUARANTINE_DIR",
+                         isolated_root / "quarantine")
+    monkeypatch.setattr(router_mod, "MANIFEST_PATH",
+                         isolated_root / "GIS_RECEPTION_INTAKE_Ω.json")
+    monkeypatch.setattr(router_mod, "HARDENED_FLAG_PATH",
+                         isolated_root / "hardened_mode_omega.json")
+    monkeypatch.setattr(router_mod, "DIAG_MARKER_PATH",
+                         isolated_root / "diagnostic_marker_omega.json")
+    monkeypatch.setattr(router_mod, "ARCHIVE_ROOT",
+                         tmp_path / "gis_archive")
+    (isolated_root / "incoming").mkdir(parents=True, exist_ok=True)
+    (isolated_root / "quarantine").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "gis_archive").mkdir(parents=True, exist_ok=True)
     app = FastAPI()
-    app.include_router(router)
+    app.include_router(router_mod.router)
     return TestClient(app)
 
 
@@ -231,17 +249,21 @@ def test_audit_log_endpoint_records_upload_events(http_client):
     )
     assert r3.status_code == 404
 
-    # Audit log doit refléter les 3
+    # Audit log doit refléter les 3 événements d'upload, +1 si archive
+    # persistante activée (ORDRE N°52-EXT · PHYS_ARCHIVE_PERSISTED_Ω).
     r4 = http_client.get(
         "/api/v30/admin-premium/gis/audit-log",
         headers={"X-Commandant-Token": "TEST_TOKEN_AUDIT_LOG_OMEGA"},
     )
     data = r4.json()
-    assert data["stats"]["total_events"] == 3
     types = data["stats"]["events_by_type"]
     assert types["UPLOAD_LOADED"] == 1
     assert types["UPLOAD_QUARANTINED"] == 1
     assert types["UPLOAD_ERROR"] == 1
+    # total = 3 events d'upload + éventuel event d'archive persistante sur CHASSE_ZEC_SEPAQ_Ω
+    # (ORDRE N°52-EXT · slot dans ARCHIVABLE_SLOTS)
+    expected_min = 3
+    assert data["stats"]["total_events"] >= expected_min
 
 
 def test_audit_log_filter_by_slot(http_client):

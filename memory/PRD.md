@@ -27,6 +27,30 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXVI-EXT2 · ORDRE N°52-EXT PERSISTENT_ARCHIVE_Ω VARIANTE A (2026-05-04)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (option A validée). **V30 INVIOLÉ · pytest 109/109 PASSED phases XXII→XXVI-EXT2 · 0 régression.**
+  - **Contexte d'incident** : 2ᵉ pod restart Kubernetes confirmé entre 19:58 et 20:21 UTC pendant l'opération de réupload. Détection forensique cross-check : `CARTE_ECO_MAJ_32I.gpkg` uploadée à 19:58 puis ré-uploadée à 20:21 (même filename, même size). 6 audit-events `SLOT_PHYS_LOST_POD_RESTART_Ω` consignés (5 slots secondaires + FORET_MFFP_Ω partiel 7/60 = 11,7 %).
+  - **Mitigation institutionnelle déployée — Variante A** : archive persistante atomique vers `/app/backend/data/gis_archive/` (stockage `/app` persistant, hors /var/cache volatile) pour les **5 slots légers** (~400 Mo cumulés) :
+    - Whitelist explicite `ARCHIVABLE_SLOTS = {SOL_IRDA_Ω, CHASSE_ZEC_SEPAQ_Ω, ROUTES_MTQ_SECONDAIRES_Ω, LIMITES_TERRITORIALES_FINES_Ω, PRESSION_HUMAINE_Ω}`.
+    - `FORET_MFFP_Ω` **EXCLU** (36 Go vs 1,4 Go libres sur /app — limitation honnêtement documentée dans la réponse `/diagnostic/persistent-archive/status.slot_excluded_from_archive`).
+    - Logique d'archivage : copie streaming + `fsync` (si hardened mode) + vérification SHA-256 cross-check + `os.replace()` atomique. En cas d'erreur (disk full, sha mismatch, write fail) → audit-events spécifiques `PHYS_ARCHIVE_SKIPPED_DISK_FULL_Ω`, `PHYS_ARCHIVE_SHA_MISMATCH_Ω`, `PHYS_ARCHIVE_ERROR_Ω`.
+  - **Endpoints livrés (FUSION ADD-ONLY)** :
+    - `GET /diagnostic/persistent-archive/status` · inventaire complet par slot (files, sizes, disk_usage).
+    - `POST /diagnostic/persistent-archive/restore` · body `{slot_id}` ou `{restore_all: true}` · restore manuel + audit-event `PHYS_AUTO_RESTORED_Ω` par fichier.
+  - **Hooks d'archivage automatique** : intégrés en FUSION ADD-ONLY dans `upload_chunk` (chunked) et `upload_layer` (mono). Activé uniquement si `passed=True` ET `slot_id ∈ ARCHIVABLE_SLOTS`. Le résultat est exposé dans la réponse JSON sous `persistent_archive: {archived, dest_path, sha256, size_bytes}`.
+  - **Auto-restore au /health-snapshot** : à chaque appel, parcourt les 5 slots archivables LOADED, et pour chaque fichier présent en archive mais absent (ou taille différente) en /var/cache → restauration atomique + audit-event `PHYS_AUTO_RESTORED_Ω`. **Idempotent** : skipe les fichiers déjà présents avec bonne taille.
+  - **Exposition globale** : `/health-snapshot.flags.persistent_archive_enabled=true`, `persistent_archive_variant=A_5_slots_legers`, `persistent_archive_root=/app/backend/data/gis_archive`, `archivable_slots[]` exposé. Champ `auto_restore_triggered[]` + `auto_restore_files_count` exposés.
+  - **Tests pytest E2E live validés** (preuves curl) :
+    - Upload mono 6642 octets sur CHASSE_ZEC_SEPAQ_Ω → `passed=True`, `persistent_archive.archived=True`, `dest_path=/app/backend/data/gis_archive/CHASSE_ZEC_SEPAQ_Ω/...`, audit `PHYS_ARCHIVE_PERSISTED_Ω` consigné.
+    - Suppression manuelle dans `/var/cache` → `/health-snapshot` détecte → `auto_restore_files_count=1`, fichier re-présent, audit `PHYS_AUTO_RESTORED_Ω` consigné.
+  - **Nouveau test pytest** : `test_phase_xxvi_ext2_persistent_archive_omega.py` (13 tests, isolation tmp_path complète) — auth requise · status whitelist correcte · FORET_MFFP exclu · upload archivable triggers archive · upload non-archivable n'archive pas · auto-restore via /health-snapshot · restore manuel single+all · rejet non-archivable · rejet sans paramètre · health-snapshot expose flags · audit-events consignés · idempotence ré-upload.
+  - **Correction qualité** : isolation pytest renforcée sur `test_phase_xxiii_audit_log_omega.py` (fixture `http_client` étendue avec monkeypatch sur `RECEPTION_ROOT`, `INCOMING_DIR`, `MANIFEST_PATH`, `ARCHIVE_ROOT`, etc.) → cesse de polluer le manifest et l'archive PROD aux futurs runs pytest. Test xxiii adapté pour `total_events >= 3` (au lieu de `==`) afin d'accepter l'event PHYS_ARCHIVE_PERSISTED_Ω sur slot archivable.
+  - **Cleanup PROD** : 3 fixtures résiduelles de tests précédents purgées du manifest (`good.geojson`, `tiny.geojson`, `a.geojson` sur CHASSE_ZEC_SEPAQ_Ω · composite recalculé) + fichiers physiques + entrées archive purgées.
+  - **Pytest cumul** : 109/109 PASSED (Phase XXII 31 + XXIII 16 + XXIV 14 + XXV 9 + XXVI 11 + XXVI-EXT 15 + XXVI-EXT2 13). 0 régression.
+  - **Tests** : pytest + curl + python3. **Aucun testing subagent**.
+  - **Prochaine action** : Commandant procède au réupload **fenêtre serrée** des 6 slots. Les 5 slots archivables seront automatiquement protégés contre le prochain pod restart. FORET_MFFP_Ω reste vulnérable mais le mode hardened est actif (idempotence + resume). État après réupload sera vérifié par `/health-snapshot` (`divergences_count` doit décroître vers 0 pour les 5 slots, FORET_MFFP_Ω atteint 60/60).
+
+
 - **PHASE_XXVI-EXT · ORDRE N°52-EXT BCE4X_HARDENED_PIPELINE_MODE_Ω (2026-05-04)**
   Sur ORDRE ABSOLU du Commandant STEEVE-MAX (ordre n°52-ext). **V30 INVIOLÉ · pytest 96/96 PASSED phases XXII→XXVI-EXT · doctrine `ANTI_GÉNÉRIQUE_STRICT` respectée jusque dans le nommage des fonctionnalités.**
   - **Contexte d'incident** : suite au HTTP 404 systématique sur `CARTE_ECO_MAJ_22I.gpkg` lors du retry chunk 0/6, le Commandant a demandé l'activation d'un mode "hardened pipeline" avec 6 directives. **Honnêteté institutionnelle préalable** : 2 directives sur 6 sont structurellement non-implémentables au niveau applicatif ("bypass Cloudflare/WAF" — pod en aval du proxy ; "garantie 100% réussite" — théoriquement impossible). Voie (a) validée par le Commandant : livrer le réel + substituts honnêtes nommés `CLOUDFLARE_CONSTRAINT_HONORED_Ω` au lieu de "bypass".
