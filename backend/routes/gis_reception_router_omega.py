@@ -30,6 +30,7 @@ from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, HTTPException, Header, UploadFile, File, Path as FPath, Query, Request
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
 from engines.v8_institutional.especes.gis_reception_validators_omega import (
     SLOTS_GIS_PROTÉGÉS_SPEC,
@@ -393,9 +394,258 @@ async def token_check(
 
 
 # ═════════════════════════════════════════════════════════════════════════
-# ORDRE N°50 — Upload chunked résilient (contournement limite Cloudflare 100MB)
+# ORDRE N°52 (FUSION ADD-ONLY) — Mode DIAGNOSTIC institutionnel pour retry
+# Permet d'armer un slot/filename pour observation forensique au prochain
+# upload (consigne UPLOAD_RETRY_ARMED_Ω, expose l'état chunks/sessions/audit).
+# Aucun side-effect sur le pipeline upload existant.
 # ═════════════════════════════════════════════════════════════════════════
-# Architecture :
+DIAG_MARKER_PATH = RECEPTION_ROOT / "diagnostic_marker_omega.json"
+
+
+def _read_diag_marker() -> Dict[str, Any]:
+    if DIAG_MARKER_PATH.exists():
+        try:
+            return json.loads(DIAG_MARKER_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            return {"armed": []}
+    return {"armed": []}
+
+
+def _write_diag_marker(d: Dict[str, Any]) -> None:
+    DIAG_MARKER_PATH.parent.mkdir(parents=True, exist_ok=True)
+    DIAG_MARKER_PATH.write_text(
+        json.dumps(d, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+class DiagnosticArmRequest(BaseModel):
+    slot_id: str
+    filename: str
+    expected_chunks_total: Optional[int] = None
+    expected_total_size: Optional[int] = None
+    note: Optional[str] = None
+
+
+@router.post("/diagnostic/arm")
+async def diagnostic_arm(
+    body: DiagnosticArmRequest,
+    request: Request,
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+    user_agent: str | None = Header(default=None, alias="User-Agent"),
+) -> Dict[str, Any]:
+    """ORDRE N°52 · Arme le mode DIAGNOSTIC sur un (slot_id, filename) précis.
+    ADMIN_PREMIUM_ONLY. Consigne un audit-event UPLOAD_RETRY_ARMED_Ω.
+    Idempotent : ré-armer un même couple (slot_id, filename) écrase l'entrée.
+    """
+    _verify_token(x_commandant_token)
+    if body.slot_id not in SLOT_BY_ID:
+        raise HTTPException(status_code=404, detail=f"SLOT_INCONNU::{body.slot_id}")
+    if not SAFE_FILENAME.match(body.filename) or len(body.filename) > 200:
+        raise HTTPException(
+            status_code=400,
+            detail="FILENAME_UNSAFE — caractères autorisés : [A-Za-z0-9._-]",
+        )
+
+    client_ip = request.client.host if request.client else "unknown"
+    ua = (user_agent or "")[:200]
+
+    marker = _read_diag_marker()
+    # Dédup par (slot_id, filename) — ré-armement écrase
+    marker["armed"] = [
+        a for a in marker.get("armed", [])
+        if not (a.get("slot_id") == body.slot_id
+                 and a.get("filename") == body.filename)
+    ]
+    entry = {
+        "slot_id": body.slot_id,
+        "filename": body.filename,
+        "expected_chunks_total": body.expected_chunks_total,
+        "expected_total_size": body.expected_total_size,
+        "note": body.note,
+        "armed_at_utc": _utc_now(),
+        "armed_by_ip": client_ip,
+        "armed_by_ua": ua,
+    }
+    marker["armed"].append(entry)
+    _write_diag_marker(marker)
+
+    audit.append_event(
+        event="UPLOAD_RETRY_ARMED_Ω",
+        slot_id=body.slot_id,
+        filename=body.filename,
+        sha256=None,
+        size_bytes=int(body.expected_total_size or 0),
+        http_code=200,
+        client_ip=client_ip,
+        user_agent=ua,
+        validators=[
+            {"name": "diagnostic_armed", "passed": True},
+        ],
+    )
+
+    return {
+        "manifest_id": "DIAGNOSTIC_ARMED_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "ordre": "n°52_diag",
+        "armed_marker": entry,
+        "instructions_pour_client": {
+            "method": "POST",
+            "path": f"/api/v30/admin-premium/gis/upload-chunk/{body.slot_id}",
+            "url_encoding_slot_id": "Le segment Ω du slot_id doit être URL-encodé en %CE%A9",
+            "headers_obligatoires": [
+                "X-Commandant-Token: <token>",
+                "X-Upload-Id: <uuid 8-64 chars [A-Za-z0-9._-]>",
+                "X-Chunk-Index: <0..N-1>",
+                "X-Chunks-Total: <N>",
+                "X-Original-Filename: <" + body.filename + ">",
+                "X-Total-Size: <bytes>",
+                "X-Final-Chunk: 'true' UNIQUEMENT sur le dernier chunk",
+            ],
+            "body": "multipart/form-data field 'file' = chunk binaire (≤ 50 Mo)",
+            "filename_PAS_dans_url": True,
+            "regex_filename_safe": "^[A-Za-z0-9._-]+$",
+            "responses": {
+                "200": "CHUNK_STORED ou (final) UPLOAD_LOADED",
+                "400": "X-Upload-Id, X-Chunk-Index, X-Original-Filename invalide",
+                "401": "Token Commandant invalide",
+                "404": "SLOT_INCONNU :: vérifiez l'URL et l'encodage du slot_id",
+                "409": "CHUNKS_INCOMPLETS au final",
+                "413": "FILE_TOO_LARGE",
+                "422": "QUARANTINED (validators échoués)",
+            },
+        },
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+@router.post("/diagnostic/disarm")
+async def diagnostic_disarm(
+    body: DiagnosticArmRequest,
+    request: Request,
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+    user_agent: str | None = Header(default=None, alias="User-Agent"),
+) -> Dict[str, Any]:
+    """ORDRE N°52 · Désarme un marker diagnostic (slot_id, filename)."""
+    _verify_token(x_commandant_token)
+    if body.slot_id not in SLOT_BY_ID:
+        raise HTTPException(status_code=404, detail=f"SLOT_INCONNU::{body.slot_id}")
+
+    client_ip = request.client.host if request.client else "unknown"
+    marker = _read_diag_marker()
+    before = len(marker.get("armed", []))
+    marker["armed"] = [
+        a for a in marker.get("armed", [])
+        if not (a.get("slot_id") == body.slot_id
+                 and a.get("filename") == body.filename)
+    ]
+    after = len(marker.get("armed", []))
+    _write_diag_marker(marker)
+
+    audit.append_event(
+        event="UPLOAD_RETRY_DISARMED_Ω",
+        slot_id=body.slot_id,
+        filename=body.filename,
+        sha256=None,
+        size_bytes=0,
+        http_code=200,
+        client_ip=client_ip,
+        user_agent=(user_agent or "")[:200],
+        validators=[{"name": "diagnostic_disarmed",
+                     "passed": True,
+                     "removed_count": before - after}],
+    )
+
+    return {
+        "manifest_id": "DIAGNOSTIC_DISARMED_Ω",
+        "removed_count": before - after,
+        "still_armed_count": after,
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+@router.get("/diagnostic/inspect/{slot_id}")
+async def diagnostic_inspect(
+    slot_id: str = FPath(..., description="Slot à inspecter"),
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52 · Inspection forensique exhaustive d'un slot.
+    ADMIN_PREMIUM_ONLY. Aucun side-effect, aucun audit-log généré.
+
+    Expose :
+      · Markers diagnostic armés
+      · Sessions chunk en cours (chunks reçus, total attendu, filename)
+      · Fichiers physiques présents (avec tailles)
+      · Fichiers .partial / assemblies en cours
+      · 10 derniers audit-events sur ce slot
+    """
+    _verify_token(x_commandant_token)
+    if slot_id not in SLOT_BY_ID:
+        raise HTTPException(status_code=404, detail=f"SLOT_INCONNU::{slot_id}")
+
+    marker = _read_diag_marker()
+    armed_for_slot = [a for a in marker.get("armed", [])
+                      if a.get("slot_id") == slot_id]
+
+    slot_dir = _slot_dir(slot_id)
+    chunks_dir = slot_dir / CHUNKS_SUBDIR
+    sessions: List[Dict[str, Any]] = []
+    if chunks_dir.exists():
+        for upload_subdir in sorted(chunks_dir.iterdir()):
+            if not upload_subdir.is_dir():
+                continue
+            session_path = upload_subdir / "session.json"
+            session_data: Dict[str, Any] = {}
+            if session_path.exists():
+                try:
+                    session_data = json.loads(
+                        session_path.read_text(encoding="utf-8"))
+                except Exception as e:
+                    session_data = {"error": f"session_parse_error::{e}"}
+            chunks_present = sorted([
+                p.name for p in upload_subdir.iterdir()
+                if p.is_file() and p.name.endswith(".bin")
+            ])
+            sessions.append({
+                "upload_id": upload_subdir.name,
+                "session": session_data,
+                "chunks_files_present_count": len(chunks_present),
+                "chunks_files_sample": chunks_present[:8],
+                "chunks_files_truncated": len(chunks_present) > 8,
+            })
+
+    partials: List[str] = []
+    if slot_dir.exists():
+        partials = sorted([
+            p.name for p in slot_dir.iterdir()
+            if p.is_file() and (p.name.endswith(".partial")
+                                  or p.name.startswith("."))
+        ])
+
+    last_events = audit.read_entries(slot_id=slot_id, limit=10)
+    phys = _scan_physical_state(slot_id)
+
+    return {
+        "manifest_id": "DIAGNOSTIC_INSPECT_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+        "slot_id": slot_id,
+        "generated_at_utc": _utc_now(),
+        "diagnostic_marker_armed": armed_for_slot,
+        "diagnostic_marker_armed_count": len(armed_for_slot),
+        "chunk_sessions_in_flight": sessions,
+        "chunk_sessions_in_flight_count": len(sessions),
+        "physical_state": phys,
+        "partial_or_hidden_files": partials,
+        "last_audit_events": last_events,
+        "endpoint_chunked": (
+            f"/api/v30/admin-premium/gis/upload-chunk/{slot_id}"
+        ),
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°50 — Upload chunked résilient (contournement limite Cloudflare 100MB)
 #   • Frontend découpe en chunks de 50 MB (sous la limite proxy)
 #   • Chaque chunk : POST /upload-chunk/{slot_id} avec headers de session
 #   • Stockage : INCOMING_DIR / slot_id / .chunks / {upload_id} / {NNNN}.bin

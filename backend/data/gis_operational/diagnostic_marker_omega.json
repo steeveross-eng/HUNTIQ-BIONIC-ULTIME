@@ -1,0 +1,14 @@
+{
+  "armed": [
+    {
+      "slot_id": "FORET_MFFP_Ω",
+      "filename": "CARTE_ECO_MAJ_22I.gpkg",
+      "expected_chunks_total": 6,
+      "expected_total_size": 308682752,
+      "note": "Retry suite HTTP 404 chunk 0/6",
+      "armed_at_utc": "2026-05-04T17:32:35+00:00",
+      "armed_by_ip": "10.79.131.93",
+      "armed_by_ua": "ORDRE_N52_DIAGNOSTIC_22I"
+    }
+  ]
+}

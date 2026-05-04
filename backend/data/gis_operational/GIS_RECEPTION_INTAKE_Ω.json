@@ -12,566 +12,6 @@
       "status": "LOADED",
       "uploads": [
         {
-          "filename": "CARTE_ECO_MAJ_11M.gpkg",
-          "sha256": "e2254f924fb06f532d0714eb2b66a9183c5c3e54c8acac14146ef0922bc81717",
-          "size_bytes": 741376,
-          "uploaded_at_utc": "2026-05-03T19:22:45+00:00",
-          "passed": true,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "gpkg",
-              "formats_acceptes": [
-                "gpkg",
-                "zip",
-                "parquet",
-                "geojson"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": true,
-              "size_bytes": 741376,
-              "min": 1024,
-              "max": 5368709120,
-              "reason": "OK"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "e2254f924fb06f532d0714eb2b66a9183c5c3e54c8acac14146ef0922bc81717",
-              "reason": "OK"
-            }
-          ]
-        },
-        {
-          "filename": "CARTE_ECO_MAJ_11N.gpkg",
-          "sha256": "80dfde2171078d2744b27ed0bb123353a69ef82aad1556bdf81e5ec06ae05919",
-          "size_bytes": 10489856,
-          "uploaded_at_utc": "2026-05-03T19:22:46+00:00",
-          "passed": true,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "gpkg",
-              "formats_acceptes": [
-                "gpkg",
-                "zip",
-                "parquet",
-                "geojson"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": true,
-              "size_bytes": 10489856,
-              "min": 1024,
-              "max": 5368709120,
-              "reason": "OK"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "80dfde2171078d2744b27ed0bb123353a69ef82aad1556bdf81e5ec06ae05919",
-              "reason": "OK"
-            }
-          ]
-        },
-        {
-          "filename": "CARTE_ECO_MAJ_12F.gpkg",
-          "sha256": "f6e5a190d9b28abb695e296a8e03b3c9c13558c6b61c7b18ffa4fb191fb63773",
-          "size_bytes": 29581312,
-          "uploaded_at_utc": "2026-05-03T19:22:48+00:00",
-          "passed": true,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "gpkg",
-              "formats_acceptes": [
-                "gpkg",
-                "zip",
-                "parquet",
-                "geojson"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": true,
-              "size_bytes": 29581312,
-              "min": 1024,
-              "max": 5368709120,
-              "reason": "OK"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "f6e5a190d9b28abb695e296a8e03b3c9c13558c6b61c7b18ffa4fb191fb63773",
-              "reason": "OK"
-            }
-          ]
-        },
-        {
-          "filename": "CARTE_ECO_MAJ_12N.gpkg",
-          "sha256": "843ef876f09f9cf013c6f6843d2fa553229a1a09f65908ef08e1258aa6334ffc",
-          "size_bytes": 40554496,
-          "uploaded_at_utc": "2026-05-03T19:22:48+00:00",
-          "passed": true,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "gpkg",
-              "formats_acceptes": [
-                "gpkg",
-                "zip",
-                "parquet",
-                "geojson"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": true,
-              "size_bytes": 40554496,
-              "min": 1024,
-              "max": 5368709120,
-              "reason": "OK"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "843ef876f09f9cf013c6f6843d2fa553229a1a09f65908ef08e1258aa6334ffc",
-              "reason": "OK"
-            }
-          ]
-        },
-        {
-          "filename": "CARTE_ECO_MAJ_12K.gpkg",
-          "sha256": "c3c820f67f89530d6ca4cc7d93dac053b19b70de0fc9824efb0264fec6398510",
-          "size_bytes": 61661184,
-          "uploaded_at_utc": "2026-05-03T19:22:55+00:00",
-          "passed": true,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "gpkg",
-              "formats_acceptes": [
-                "gpkg",
-                "zip",
-                "parquet",
-                "geojson"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": true,
-              "size_bytes": 61661184,
-              "min": 1024,
-              "max": 5368709120,
-              "reason": "OK"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "c3c820f67f89530d6ca4cc7d93dac053b19b70de0fc9824efb0264fec6398510",
-              "reason": "OK"
-            }
-          ]
-        },
-        {
-          "filename": "CARTE_ECO_MAJ_12M.gpkg",
-          "sha256": "66ddb14773b8a8fe9d72a67269c8baa22fc0a0b804bbae3d84222c9019a5c0be",
-          "size_bytes": 123043840,
-          "uploaded_at_utc": "2026-05-03T19:23:02+00:00",
-          "passed": true,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "gpkg",
-              "formats_acceptes": [
-                "gpkg",
-                "zip",
-                "parquet",
-                "geojson"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": true,
-              "size_bytes": 123043840,
-              "min": 1024,
-              "max": 5368709120,
-              "reason": "OK"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "66ddb14773b8a8fe9d72a67269c8baa22fc0a0b804bbae3d84222c9019a5c0be",
-              "reason": "OK"
-            }
-          ]
-        },
-        {
-          "filename": "CARTE_ECO_MAJ_12L.gpkg",
-          "sha256": "10b040276b962d44d8ee4f3e4d69b6a22eb71181f682e962eb0e69b018cf1aa1",
-          "size_bytes": 265068544,
-          "uploaded_at_utc": "2026-05-03T19:23:14+00:00",
-          "passed": true,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "gpkg",
-              "formats_acceptes": [
-                "gpkg",
-                "zip",
-                "parquet",
-                "geojson"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": true,
-              "size_bytes": 265068544,
-              "min": 1024,
-              "max": 5368709120,
-              "reason": "OK"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "10b040276b962d44d8ee4f3e4d69b6a22eb71181f682e962eb0e69b018cf1aa1",
-              "reason": "OK"
-            }
-          ]
-        },
-        {
-          "filename": "CARTE_ECO_MAJ_12E.gpkg",
-          "sha256": "9a2bfb235388a0de2cb86913e36377710a416ad41f6f7b15078cc4d73c518742",
-          "size_bytes": 348561408,
-          "uploaded_at_utc": "2026-05-03T19:23:18+00:00",
-          "passed": true,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "gpkg",
-              "formats_acceptes": [
-                "gpkg",
-                "zip",
-                "parquet",
-                "geojson"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": true,
-              "size_bytes": 348561408,
-              "min": 1024,
-              "max": 5368709120,
-              "reason": "OK"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "9a2bfb235388a0de2cb86913e36377710a416ad41f6f7b15078cc4d73c518742",
-              "reason": "OK"
-            }
-          ]
-        },
-        {
-          "filename": "CARTE_ECO_MAJ_21O.gpkg",
-          "sha256": "8ed629fea270f4bcd8167aa9ce87e6e8a72de1f7ede3914e2487dc155e235d5a",
-          "size_bytes": 28999680,
-          "uploaded_at_utc": "2026-05-03T19:24:36+00:00",
-          "passed": true,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "gpkg",
-              "formats_acceptes": [
-                "gpkg",
-                "zip",
-                "parquet",
-                "geojson"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": true,
-              "size_bytes": 28999680,
-              "min": 1024,
-              "max": 5368709120,
-              "reason": "OK"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "8ed629fea270f4bcd8167aa9ce87e6e8a72de1f7ede3914e2487dc155e235d5a",
-              "reason": "OK"
-            }
-          ]
-        },
-        {
-          "filename": "CARTE_ECO_MAJ_21K.gpkg",
-          "sha256": "f80f52d8a86e0254aa88ce20a200ed25fa7898e936e850fe13acdc000a6147db",
-          "size_bytes": 39878656,
-          "uploaded_at_utc": "2026-05-03T19:24:36+00:00",
-          "passed": true,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "gpkg",
-              "formats_acceptes": [
-                "gpkg",
-                "zip",
-                "parquet",
-                "geojson"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": true,
-              "size_bytes": 39878656,
-              "min": 1024,
-              "max": 5368709120,
-              "reason": "OK"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "f80f52d8a86e0254aa88ce20a200ed25fa7898e936e850fe13acdc000a6147db",
-              "reason": "OK"
-            }
-          ]
-        },
-        {
-          "filename": "CARTE_ECO_MAJ_21N.gpkg",
-          "sha256": "13a09080bb997ca4626f7842b7fdcdd4087f4e1f3ac33c9b941e73f7e5dca105",
-          "size_bytes": 534843392,
-          "uploaded_at_utc": "2026-05-03T19:25:29+00:00",
-          "passed": true,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "gpkg",
-              "formats_acceptes": [
-                "gpkg",
-                "zip",
-                "parquet",
-                "geojson"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": true,
-              "size_bytes": 534843392,
-              "min": 1024,
-              "max": 5368709120,
-              "reason": "OK"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "13a09080bb997ca4626f7842b7fdcdd4087f4e1f3ac33c9b941e73f7e5dca105",
-              "reason": "OK"
-            }
-          ]
-        },
-        {
-          "filename": "CARTE_ECO_MAJ_21E.gpkg",
-          "sha256": "edfc3a6e18c3e3b253cab015644b2adcb76cb6493ba1051a1382f2eb456918ed",
-          "size_bytes": 619692032,
-          "uploaded_at_utc": "2026-05-03T19:25:36+00:00",
-          "passed": true,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "gpkg",
-              "formats_acceptes": [
-                "gpkg",
-                "zip",
-                "parquet",
-                "geojson"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": true,
-              "size_bytes": 619692032,
-              "min": 1024,
-              "max": 5368709120,
-              "reason": "OK"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "edfc3a6e18c3e3b253cab015644b2adcb76cb6493ba1051a1382f2eb456918ed",
-              "reason": "OK"
-            }
-          ]
-        },
-        {
-          "filename": "CARTE_ECO_MAJ_21L.gpkg",
-          "sha256": "f30fa7479468e14f0af20e8b568d6fa5a693b998b8c16177aa1c87580f3d58e2",
-          "size_bytes": 827330560,
-          "uploaded_at_utc": "2026-05-03T19:25:55+00:00",
-          "passed": true,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "gpkg",
-              "formats_acceptes": [
-                "gpkg",
-                "zip",
-                "parquet",
-                "geojson"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": true,
-              "size_bytes": 827330560,
-              "min": 1024,
-              "max": 5368709120,
-              "reason": "OK"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "f30fa7479468e14f0af20e8b568d6fa5a693b998b8c16177aa1c87580f3d58e2",
-              "reason": "OK"
-            }
-          ]
-        },
-        {
-          "filename": "CARTE_ECO_MAJ_21M.gpkg",
-          "sha256": "a6cf42e8a61fdc03157c362a3f734131f1eafd676b9bf2bc2ecad85c5463697b",
-          "size_bytes": 1084665856,
-          "uploaded_at_utc": "2026-05-03T19:26:14+00:00",
-          "passed": true,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "gpkg",
-              "formats_acceptes": [
-                "gpkg",
-                "zip",
-                "parquet",
-                "geojson"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": true,
-              "size_bytes": 1084665856,
-              "min": 1024,
-              "max": 5368709120,
-              "reason": "OK"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "a6cf42e8a61fdc03157c362a3f734131f1eafd676b9bf2bc2ecad85c5463697b",
-              "reason": "OK"
-            }
-          ]
-        },
-        {
-          "filename": "CARTE_ECO_MAJ_22C.gpkg",
-          "sha256": "278c6d1d46e270dc8db760471a4d6c124109367245a50493bf132e29123ea291",
-          "size_bytes": 674168832,
-          "uploaded_at_utc": "2026-05-03T19:30:59+00:00",
-          "passed": true,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "gpkg",
-              "formats_acceptes": [
-                "gpkg",
-                "zip",
-                "parquet",
-                "geojson"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": true,
-              "size_bytes": 674168832,
-              "min": 1024,
-              "max": 5368709120,
-              "reason": "OK"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "278c6d1d46e270dc8db760471a4d6c124109367245a50493bf132e29123ea291",
-              "reason": "OK"
-            }
-          ]
-        },
-        {
-          "filename": "CARTE_ECO_MAJ_22A.gpkg",
-          "sha256": "9064e06b0ab15b229366d2fcc9b24b96cab8e8fd5a3159e6a266ce4feb199ad5",
-          "size_bytes": 837591040,
-          "uploaded_at_utc": "2026-05-03T19:31:19+00:00",
-          "passed": true,
-          "validators": [
-            {
-              "name": "check_format",
-              "passed": true,
-              "extension_detectee": "gpkg",
-              "formats_acceptes": [
-                "gpkg",
-                "zip",
-                "parquet",
-                "geojson"
-              ],
-              "reason": "OK"
-            },
-            {
-              "name": "check_size",
-              "passed": true,
-              "size_bytes": 837591040,
-              "min": 1024,
-              "max": 5368709120,
-              "reason": "OK"
-            },
-            {
-              "name": "check_integrity",
-              "passed": true,
-              "sha256": "9064e06b0ab15b229366d2fcc9b24b96cab8e8fd5a3159e6a266ce4feb199ad5",
-              "reason": "OK"
-            }
-          ]
-        },
-        {
           "filename": "CARTE_ECO_MAJ_22D.gpkg",
           "sha256": "7b526c893c561b97f9666523c00c6255455e58d5f403f3e79f1f579f68b9a905",
           "size_bytes": 1048219648,
@@ -2110,6 +1550,566 @@
               "reason": "OK"
             }
           ]
+        },
+        {
+          "filename": "CARTE_ECO_MAJ_11M.gpkg",
+          "sha256": "e2254f924fb06f532d0714eb2b66a9183c5c3e54c8acac14146ef0922bc81717",
+          "size_bytes": 741376,
+          "uploaded_at_utc": "2026-05-04T17:10:56+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "gpkg",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "parquet",
+                "geojson"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 741376,
+              "min": 1024,
+              "max": 5368709120,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "e2254f924fb06f532d0714eb2b66a9183c5c3e54c8acac14146ef0922bc81717",
+              "reason": "OK"
+            }
+          ]
+        },
+        {
+          "filename": "CARTE_ECO_MAJ_11N.gpkg",
+          "sha256": "80dfde2171078d2744b27ed0bb123353a69ef82aad1556bdf81e5ec06ae05919",
+          "size_bytes": 10489856,
+          "uploaded_at_utc": "2026-05-04T17:10:57+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "gpkg",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "parquet",
+                "geojson"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 10489856,
+              "min": 1024,
+              "max": 5368709120,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "80dfde2171078d2744b27ed0bb123353a69ef82aad1556bdf81e5ec06ae05919",
+              "reason": "OK"
+            }
+          ]
+        },
+        {
+          "filename": "CARTE_ECO_MAJ_12F.gpkg",
+          "sha256": "f6e5a190d9b28abb695e296a8e03b3c9c13558c6b61c7b18ffa4fb191fb63773",
+          "size_bytes": 29581312,
+          "uploaded_at_utc": "2026-05-04T17:10:58+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "gpkg",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "parquet",
+                "geojson"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 29581312,
+              "min": 1024,
+              "max": 5368709120,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "f6e5a190d9b28abb695e296a8e03b3c9c13558c6b61c7b18ffa4fb191fb63773",
+              "reason": "OK"
+            }
+          ]
+        },
+        {
+          "filename": "CARTE_ECO_MAJ_12K.gpkg",
+          "sha256": "c3c820f67f89530d6ca4cc7d93dac053b19b70de0fc9824efb0264fec6398510",
+          "size_bytes": 61661184,
+          "uploaded_at_utc": "2026-05-04T17:11:00+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "gpkg",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "parquet",
+                "geojson"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 61661184,
+              "min": 1024,
+              "max": 5368709120,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "c3c820f67f89530d6ca4cc7d93dac053b19b70de0fc9824efb0264fec6398510",
+              "reason": "OK"
+            }
+          ]
+        },
+        {
+          "filename": "CARTE_ECO_MAJ_12E.gpkg",
+          "sha256": "9a2bfb235388a0de2cb86913e36377710a416ad41f6f7b15078cc4d73c518742",
+          "size_bytes": 348561408,
+          "uploaded_at_utc": "2026-05-04T17:11:19+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "gpkg",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "parquet",
+                "geojson"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 348561408,
+              "min": 1024,
+              "max": 5368709120,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "9a2bfb235388a0de2cb86913e36377710a416ad41f6f7b15078cc4d73c518742",
+              "reason": "OK"
+            }
+          ]
+        },
+        {
+          "filename": "CARTE_ECO_MAJ_12N.gpkg",
+          "sha256": "843ef876f09f9cf013c6f6843d2fa553229a1a09f65908ef08e1258aa6334ffc",
+          "size_bytes": 40554496,
+          "uploaded_at_utc": "2026-05-04T17:12:00+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "gpkg",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "parquet",
+                "geojson"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 40554496,
+              "min": 1024,
+              "max": 5368709120,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "843ef876f09f9cf013c6f6843d2fa553229a1a09f65908ef08e1258aa6334ffc",
+              "reason": "OK"
+            }
+          ]
+        },
+        {
+          "filename": "CARTE_ECO_MAJ_21K.gpkg",
+          "sha256": "f80f52d8a86e0254aa88ce20a200ed25fa7898e936e850fe13acdc000a6147db",
+          "size_bytes": 39878656,
+          "uploaded_at_utc": "2026-05-04T17:12:00+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "gpkg",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "parquet",
+                "geojson"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 39878656,
+              "min": 1024,
+              "max": 5368709120,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "f80f52d8a86e0254aa88ce20a200ed25fa7898e936e850fe13acdc000a6147db",
+              "reason": "OK"
+            }
+          ]
+        },
+        {
+          "filename": "CARTE_ECO_MAJ_12M.gpkg",
+          "sha256": "66ddb14773b8a8fe9d72a67269c8baa22fc0a0b804bbae3d84222c9019a5c0be",
+          "size_bytes": 123043840,
+          "uploaded_at_utc": "2026-05-04T17:12:09+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "gpkg",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "parquet",
+                "geojson"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 123043840,
+              "min": 1024,
+              "max": 5368709120,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "66ddb14773b8a8fe9d72a67269c8baa22fc0a0b804bbae3d84222c9019a5c0be",
+              "reason": "OK"
+            }
+          ]
+        },
+        {
+          "filename": "CARTE_ECO_MAJ_12L.gpkg",
+          "sha256": "10b040276b962d44d8ee4f3e4d69b6a22eb71181f682e962eb0e69b018cf1aa1",
+          "size_bytes": 265068544,
+          "uploaded_at_utc": "2026-05-04T17:12:18+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "gpkg",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "parquet",
+                "geojson"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 265068544,
+              "min": 1024,
+              "max": 5368709120,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "10b040276b962d44d8ee4f3e4d69b6a22eb71181f682e962eb0e69b018cf1aa1",
+              "reason": "OK"
+            }
+          ]
+        },
+        {
+          "filename": "CARTE_ECO_MAJ_21E.gpkg",
+          "sha256": "edfc3a6e18c3e3b253cab015644b2adcb76cb6493ba1051a1382f2eb456918ed",
+          "size_bytes": 619692032,
+          "uploaded_at_utc": "2026-05-04T17:12:40+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "gpkg",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "parquet",
+                "geojson"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 619692032,
+              "min": 1024,
+              "max": 5368709120,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "edfc3a6e18c3e3b253cab015644b2adcb76cb6493ba1051a1382f2eb456918ed",
+              "reason": "OK"
+            }
+          ]
+        },
+        {
+          "filename": "CARTE_ECO_MAJ_21O.gpkg",
+          "sha256": "8ed629fea270f4bcd8167aa9ce87e6e8a72de1f7ede3914e2487dc155e235d5a",
+          "size_bytes": 28999680,
+          "uploaded_at_utc": "2026-05-04T17:14:10+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "gpkg",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "parquet",
+                "geojson"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 28999680,
+              "min": 1024,
+              "max": 5368709120,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "8ed629fea270f4bcd8167aa9ce87e6e8a72de1f7ede3914e2487dc155e235d5a",
+              "reason": "OK"
+            }
+          ]
+        },
+        {
+          "filename": "CARTE_ECO_MAJ_21N.gpkg",
+          "sha256": "13a09080bb997ca4626f7842b7fdcdd4087f4e1f3ac33c9b941e73f7e5dca105",
+          "size_bytes": 534843392,
+          "uploaded_at_utc": "2026-05-04T17:14:57+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "gpkg",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "parquet",
+                "geojson"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 534843392,
+              "min": 1024,
+              "max": 5368709120,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "13a09080bb997ca4626f7842b7fdcdd4087f4e1f3ac33c9b941e73f7e5dca105",
+              "reason": "OK"
+            }
+          ]
+        },
+        {
+          "filename": "CARTE_ECO_MAJ_22A.gpkg",
+          "sha256": "9064e06b0ab15b229366d2fcc9b24b96cab8e8fd5a3159e6a266ce4feb199ad5",
+          "size_bytes": 837591040,
+          "uploaded_at_utc": "2026-05-04T17:15:17+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "gpkg",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "parquet",
+                "geojson"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 837591040,
+              "min": 1024,
+              "max": 5368709120,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "9064e06b0ab15b229366d2fcc9b24b96cab8e8fd5a3159e6a266ce4feb199ad5",
+              "reason": "OK"
+            }
+          ]
+        },
+        {
+          "filename": "CARTE_ECO_MAJ_21L.gpkg",
+          "sha256": "f30fa7479468e14f0af20e8b568d6fa5a693b998b8c16177aa1c87580f3d58e2",
+          "size_bytes": 827330560,
+          "uploaded_at_utc": "2026-05-04T17:15:25+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "gpkg",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "parquet",
+                "geojson"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 827330560,
+              "min": 1024,
+              "max": 5368709120,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "f30fa7479468e14f0af20e8b568d6fa5a693b998b8c16177aa1c87580f3d58e2",
+              "reason": "OK"
+            }
+          ]
+        },
+        {
+          "filename": "CARTE_ECO_MAJ_21M.gpkg",
+          "sha256": "a6cf42e8a61fdc03157c362a3f734131f1eafd676b9bf2bc2ecad85c5463697b",
+          "size_bytes": 1084665856,
+          "uploaded_at_utc": "2026-05-04T17:15:44+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "gpkg",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "parquet",
+                "geojson"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 1084665856,
+              "min": 1024,
+              "max": 5368709120,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "a6cf42e8a61fdc03157c362a3f734131f1eafd676b9bf2bc2ecad85c5463697b",
+              "reason": "OK"
+            }
+          ]
+        },
+        {
+          "filename": "CARTE_ECO_MAJ_22C.gpkg",
+          "sha256": "278c6d1d46e270dc8db760471a4d6c124109367245a50493bf132e29123ea291",
+          "size_bytes": 674168832,
+          "uploaded_at_utc": "2026-05-04T17:17:33+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "gpkg",
+              "formats_acceptes": [
+                "gpkg",
+                "zip",
+                "parquet",
+                "geojson"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 674168832,
+              "min": 1024,
+              "max": 5368709120,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "278c6d1d46e270dc8db760471a4d6c124109367245a50493bf132e29123ea291",
+              "reason": "OK"
+            }
+          ]
         }
       ],
       "files_loaded_count": 60,
@@ -2459,5 +2459,5 @@
       "multi_upload": false
     }
   },
-  "last_updated_utc": "2026-05-04T16:58:22+00:00"
+  "last_updated_utc": "2026-05-04T17:17:33+00:00"
 }
