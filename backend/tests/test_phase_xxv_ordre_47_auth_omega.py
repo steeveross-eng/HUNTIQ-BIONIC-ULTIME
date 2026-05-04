@@ -123,7 +123,8 @@ def test_gis_slots_endpoint_returns_six():
     r = requests.get(f"{BASE_URL_ENV}/api/v30/admin-premium/gis/slots", timeout=10)
     assert r.status_code == 200
     data = r.json()
-    assert data["slots_count"] == 6
+    # ORDRE N°52-EXT VOIE A : 6 originaux + PEE_MAJ_Ω
+    assert data["slots_count"] == 7
     foret = next(s for s in data["slots"] if s["slot_id"] == "FORET_MFFP_Ω")
     assert foret["multi_upload"] is True
     assert foret["voie_acquisition"] == "VOIE_B_TUILES_REGIONALES_MFFP"
@@ -136,7 +137,7 @@ def test_intake_status_returns_partial_or_empty():
     )
     assert r.status_code == 200
     data = r.json()
-    assert data["stats"]["total_slots"] == 6
+    assert data["stats"]["total_slots"] == 7  # ORDRE N°52-EXT
     assert data["stats"]["global_status"] in ("PARTIAL_OR_EMPTY", "OPERATIONAL")
 
 

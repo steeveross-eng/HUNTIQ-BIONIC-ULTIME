@@ -80,7 +80,8 @@ def test_health_snapshot_intake_summary_keys(health_client):
     r = health_client.get(ENDPOINT, headers=HDR_OK)
     d = r.json()
     s = d["intake_summary"]
-    assert s["total_slots"] == 6
+    # ORDRE N°52-EXT VOIE A : 6 originaux + PEE_MAJ_Ω
+    assert s["total_slots"] == 7
     for k in ("loaded", "absent", "quarantined"):
         assert k in s
 
@@ -92,6 +93,7 @@ def test_health_snapshot_slots_per_slot_keys(health_client):
         "FORET_MFFP_Ω", "SOL_IRDA_Ω", "CHASSE_ZEC_SEPAQ_Ω",
         "ROUTES_MTQ_SECONDAIRES_Ω", "LIMITES_TERRITORIALES_FINES_Ω",
         "PRESSION_HUMAINE_Ω",
+        "FORET_MFFP_PEE_MAJ_Ω",  # ORDRE N°52-EXT VOIE A
     }
     assert set(d["slots"].keys()) == expected_slots
     for slot_id, st in d["slots"].items():

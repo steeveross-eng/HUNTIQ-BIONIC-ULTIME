@@ -38,7 +38,9 @@ from engines.v8_institutional.especes.gis_reception_validators_omega import (
 # Tests des Spécifications
 # ═══════════════════════════════════════════════════════════════════
 def test_slots_spec_count_six():
-    assert len(SLOTS_GIS_PROTÉGÉS_SPEC) == 6
+    """ORDRE N°52-EXT : ajout du 7ᵉ slot FORET_MFFP_PEE_MAJ_Ω (VOIE A monolithique).
+    L'invariant strict est désormais 7 slots."""
+    assert len(SLOTS_GIS_PROTÉGÉS_SPEC) == 7
 
 
 def test_slots_canonical_ids():
@@ -46,13 +48,16 @@ def test_slots_canonical_ids():
         "FORET_MFFP_Ω", "SOL_IRDA_Ω", "CHASSE_ZEC_SEPAQ_Ω",
         "ROUTES_MTQ_SECONDAIRES_Ω", "LIMITES_TERRITORIALES_FINES_Ω",
         "PRESSION_HUMAINE_Ω",
+        # ORDRE N°52-EXT VOIE A · pipeline monolithique pee_maj.gpkg
+        "FORET_MFFP_PEE_MAJ_Ω",
     }
     assert {s["slot_id"] for s in SLOTS_GIS_PROTÉGÉS_SPEC} == expected
 
 
 def test_slots_priorities_distribution():
     prios = [s["priority"] for s in SLOTS_GIS_PROTÉGÉS_SPEC]
-    assert prios.count("P0") == 3
+    # ORDRE N°52-EXT VOIE A : ajout du slot P0 PEE_MAJ → P0 passe de 3 à 4
+    assert prios.count("P0") == 4
     assert prios.count("P1") == 2
     assert prios.count("P2_OPTIONNELLE") == 1
 
@@ -75,7 +80,7 @@ def test_slot_by_id_lookup_consistent():
 
 def test_list_slots_strips_internal_fields():
     public = list_slots()
-    assert len(public) == 6
+    assert len(public) == 7  # 6 originaux + FORET_MFFP_PEE_MAJ_Ω (ORDRE N°52-EXT)
     for p in public:
         # Validators internes ne sont PAS exposés
         assert "validators" not in p
@@ -204,7 +209,8 @@ def test_endpoint_slots_returns_six(http_client):
     r = http_client.get("/api/v30/admin-premium/gis/slots")
     assert r.status_code == 200
     data = r.json()
-    assert data["slots_count"] == 6
+    # ORDRE N°52-EXT VOIE A : 6 slots originaux + 1 PEE_MAJ_Ω
+    assert data["slots_count"] == 7
     assert data["manifest_id"] == "SLOTS_GIS_PROTÉGÉS_Ω"
 
 
@@ -213,7 +219,8 @@ def test_endpoint_intake_status_default(http_client):
     assert r.status_code == 200
     data = r.json()
     assert data["manifest_id"] == "GIS_RECEPTION_INTAKE_Ω"
-    assert data["stats"]["total_slots"] == 6
+    # ORDRE N°52-EXT VOIE A : intake étendu à 7 slots
+    assert data["stats"]["total_slots"] == 7
 
 
 def test_endpoint_upload_no_token_returns_401(http_client):

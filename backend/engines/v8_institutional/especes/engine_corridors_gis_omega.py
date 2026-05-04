@@ -126,8 +126,9 @@ def get_layer_status(layer_id: str) -> Dict[str, Any]:
 def get_all_layers_status() -> Dict[str, Any]:
     """Status de toutes les 9 couches GIS."""
     layers = [get_layer_status(s["layer_id"]) for s in GIS_LAYERS_SPEC]
-    loaded = sum(1 for l in layers if l["status"] == "LOADED")
-    absent = sum(1 for l in layers if l["status"] == "ABSENT")
+    loaded = sum(1 for layer in layers if layer["status"] == "LOADED")
+    absent = sum(1 for layer in layers if layer["status"] == "ABSENT")
+    pee = _pee_maj_canonical_state()
     return {
         "engine_id": "ENGINE_CORRIDORS_GIS_Ω",
         "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
@@ -140,6 +141,99 @@ def get_all_layers_status() -> Dict[str, Any]:
         "layers": layers,
         "global_status": "STUB_READY" if absent > 0 else "OPERATIONAL",
         "gps_loader_status": gps_status(),
+        # ─── ORDRE N°52-EXT · PEE_MAJ_Ω VOIE A — substitution canonique ───
+        "pee_maj_canonical_active": pee["active"],
+        "pee_maj_canonical_path": pee["path"],
+        "pee_maj_canonical_size_bytes": pee["size_bytes"],
+        "pee_maj_substitutes_slot": "FORET_MFFP_Ω" if pee["active"] else None,
+        "ephemeral_source_warning": (
+            "pee_maj.gpkg réside sur /var/cache/* (éphémère) ; les dérivés "
+            "analytiques sont archivés en persistance après compute."
+            if pee["active"] else None
+        ),
+    }
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°52-EXT · PEE_MAJ_Ω VOIE A — Substitution canonique + persistance
+# des dérivées analytiques (anti-générique strict).
+# ═════════════════════════════════════════════════════════════════════════
+PEE_MAJ_INCOMING_PATH = Path(
+    "/var/cache/gis_operational/incoming/FORET_MFFP_PEE_MAJ_Ω/pee_maj.gpkg")
+DERIVATIVES_PERSISTENT_DIR = Path(
+    "/app/backend/data/gis_archive/_derived")
+DERIVATIVES_PERSISTENT_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def _pee_maj_canonical_state() -> Dict[str, Any]:
+    """Vérifie si pee_maj.gpkg est physiquement disponible (canonical actif).
+    Anti-générique : aucune simulation. Retour basé sur fichier réel.
+    """
+    if PEE_MAJ_INCOMING_PATH.exists() and PEE_MAJ_INCOMING_PATH.stat().st_size > 0:
+        return {
+            "active": True,
+            "path": str(PEE_MAJ_INCOMING_PATH),
+            "size_bytes": PEE_MAJ_INCOMING_PATH.stat().st_size,
+        }
+    return {"active": False, "path": None, "size_bytes": 0}
+
+
+def persist_derivatives_to_archive() -> Dict[str, Any]:
+    """ORDRE N°52-EXT · Copie persistante des couches dérivées calculées
+    depuis /data/gis/ vers /app/backend/data/gis_archive/_derived/.
+    Anti-générique : ne copie QUE les fichiers réellement présents et non vides.
+    Idempotent : skipe les fichiers déjà présents avec même taille.
+    Hook activé après compute_corridors_gis() en mode OPERATIONAL.
+    """
+    persisted: List[Dict[str, Any]] = []
+    skipped: List[Dict[str, Any]] = []
+    failed: List[Dict[str, Any]] = []
+    DERIVATIVES_PERSISTENT_DIR.mkdir(parents=True, exist_ok=True)
+
+    for spec in GIS_LAYERS_SPEC:
+        src = GIS_DATA_DIR / spec["filename_attendu"]
+        if not src.exists() or src.stat().st_size == 0:
+            skipped.append({"layer_id": spec["layer_id"],
+                            "reason": "SOURCE_ABSENT_OR_EMPTY"})
+            continue
+        dest = DERIVATIVES_PERSISTENT_DIR / spec["filename_attendu"]
+        if dest.exists() and dest.stat().st_size == src.stat().st_size:
+            skipped.append({"layer_id": spec["layer_id"],
+                            "reason": "ALREADY_PERSISTED_SAME_SIZE"})
+            continue
+        try:
+            tmp = dest.with_suffix(dest.suffix + ".persisting.partial")
+            h = hashlib.sha256()
+            with open(src, "rb") as inp, open(tmp, "wb") as out:
+                while True:
+                    buf = inp.read(1 << 20)
+                    if not buf:
+                        break
+                    h.update(buf)
+                    out.write(buf)
+            import os as _os
+            _os.replace(str(tmp), str(dest))
+            persisted.append({
+                "layer_id": spec["layer_id"],
+                "src": str(src),
+                "dest": str(dest),
+                "size_bytes": dest.stat().st_size,
+                "sha256": h.hexdigest(),
+            })
+        except Exception as e:
+            failed.append({"layer_id": spec["layer_id"], "error": str(e)[:200]})
+
+    return {
+        "manifest_id": "DERIVATIVES_PERSISTED_Ω",
+        "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "n°52_ext_pee_maj_voie_a",
+        "persistent_root": str(DERIVATIVES_PERSISTENT_DIR),
+        "persisted_count": len(persisted),
+        "persisted": persisted,
+        "skipped_count": len(skipped),
+        "skipped": skipped,
+        "failed_count": len(failed),
+        "failed": failed,
     }
 
 
@@ -151,7 +245,8 @@ def compute_corridors_gis(layer_overrides: Optional[Dict[str, Any]] = None) -> D
       • Sinon, retourne status="STUB_READY" avec liste des couches manquantes.
     """
     s = get_all_layers_status()
-    missing = [l["layer_id"] for l in s["layers"] if l["status"] == "ABSENT"]
+    missing = [layer["layer_id"] for layer in s["layers"]
+                if layer["status"] == "ABSENT"]
     if missing:
         return {
             "engine_id": "ENGINE_CORRIDORS_GIS_Ω",
@@ -162,11 +257,15 @@ def compute_corridors_gis(layer_overrides: Optional[Dict[str, Any]] = None) -> D
             "missing_layers": missing,
             "missing_layers_count": len(missing),
             "anti_generique_violations": [
-                f"LAYER_ABSENT::{l}" for l in missing
+                f"LAYER_ABSENT::{layer_id}" for layer_id in missing
             ],
             "anti_generique_pass": False,
             "fallback_active": False,
             "interpolation_active": False,
+            # ─── ORDRE N°52-EXT · Substitution PEE_MAJ_Ω ──────────────
+            "pee_maj_canonical_active": s.get("pee_maj_canonical_active", False),
+            "pee_maj_canonical_path": s.get("pee_maj_canonical_path"),
+            "pee_maj_substitutes_slot": s.get("pee_maj_substitutes_slot"),
             "doctrine_action_requise": (
                 "Acquérir les couches GIS auprès du MFFP/MTQ/MERN avant calcul effectif. "
                 "Aucune donnée synthétique tolérée (anti-générique strict)."
@@ -183,4 +282,7 @@ __all__ = [
     "GIS_LAYERS_SPEC", "ENGINE_CORRIDORS_GIS_Ω_LOCK_SHA256",
     "get_layer_status", "get_all_layers_status", "compute_corridors_gis",
     "CorridorsGisError",
+    # ORDRE N°52-EXT · PEE_MAJ_Ω VOIE A
+    "PEE_MAJ_INCOMING_PATH", "DERIVATIVES_PERSISTENT_DIR",
+    "persist_derivatives_to_archive",
 ]

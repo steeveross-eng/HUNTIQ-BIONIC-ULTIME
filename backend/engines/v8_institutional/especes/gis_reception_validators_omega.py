@@ -147,6 +147,42 @@ SLOTS_GIS_PROTÉGÉS_SPEC: List[Dict[str, Any]] = [
         ],
         "validators": ["check_format", "check_size", "check_integrity"],
     },
+    # ═══════════════════════════════════════════════════════════════════
+    # ORDRE N°52-EXT · PEE_MAJ_Ω VOIE A — Pipeline monolithique
+    # Substitut institutionnel des 60 tuiles FORET_MFFP_Ω
+    # via fichier unique pee_maj.gpkg (~36,9 Go).
+    # Anti-générique : ce slot ne devient canonique que sur upload réel.
+    # ═══════════════════════════════════════════════════════════════════
+    {
+        "slot_id": "FORET_MFFP_PEE_MAJ_Ω",
+        "label": "PEE_MAJ.gpkg monolithique — Couvert forestier MFFP unifié",
+        "priority": "P0",
+        "organisme": "MFFP — Direction des inventaires forestiers (PEE_MAJ)",
+        "access_type": "TÉLÉCHARGEMENT_DIRECT_LICENCE",
+        "url_acquisition": (
+            "https://www.donneesquebec.ca/recherche/dataset/"
+            "carte-ecoforestiere-avec-perturbations"
+        ),
+        "license": "Licence ouverte gouvernement du Québec",
+        "format_recommandé": "GeoPackage (.gpkg) monolithique — pee_maj.gpkg",
+        "formats_acceptes": ["gpkg"],
+        "taille_min_octets": 1 * 1024 * 1024,             # 1 Mo (sécurité)
+        "taille_max_octets": 50 * 1024 * 1024 * 1024,     # 50 Go (relevé)
+        "champs_obligatoires_min": 5,
+        "prerequis": [
+            "Fichier monolithique pee_maj.gpkg (~36,9 Go)",
+            "Pipeline chunked obligatoire (Cloudflare 100 Mo + payload >50Mo)",
+            "Stockage éphémère /var/cache (67 Go libres) — derivés persistants post-promotion",
+        ],
+        "validators": ["check_format", "check_size", "check_integrity"],
+        "type_pipeline": "MONO_GPKG_INSTITUTIONNEL",
+        "voie_acquisition": "VOIE_A_PEE_MAJ_MONOLITHIQUE",
+        # Substitution canonique des 60 tuiles FORET_MFFP_Ω quand LOADED
+        "substitutes_slot_for_corridors_gis": "FORET_MFFP_Ω",
+        # Pipeline éphémère — derivés institutionnels archivés post-compute
+        "ephemeral_storage": True,
+        "derivatives_persistent": True,
+    },
 ]
 
 
@@ -290,6 +326,12 @@ def list_slots() -> List[Dict[str, Any]]:
             "files_min": int(s.get("files_min", 1)),
             "files_max": int(s.get("files_max", 1)),
             "voie_acquisition": s.get("voie_acquisition", "VOIE_A_MONOFICHIER"),
+            # ─── ORDRE N°52-EXT · PEE_MAJ_Ω VOIE A — exposition champs canon ──
+            "type_pipeline": s.get("type_pipeline"),
+            "substitutes_slot_for_corridors_gis": s.get(
+                "substitutes_slot_for_corridors_gis"),
+            "ephemeral_storage": bool(s.get("ephemeral_storage", False)),
+            "derivatives_persistent": bool(s.get("derivatives_persistent", False)),
         }
         for s in SLOTS_GIS_PROTÉGÉS_SPEC
     ]

@@ -96,7 +96,21 @@ def _slot_dir(slot_id: str) -> Path:
 def _read_manifest() -> Dict[str, Any]:
     if MANIFEST_PATH.exists():
         try:
-            return json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+            manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+            # ─── ORDRE N°52-EXT · Auto-sync slot SLOT_BY_ID → manifest ─
+            # Tout slot enregistré dans la spec mais absent du manifest est
+            # ajouté avec status=ABSENT (FUSION ADD-ONLY, anti-régressif).
+            if "slots" in manifest and isinstance(manifest["slots"], dict):
+                for s in SLOTS_GIS_PROTÉGÉS_SPEC:
+                    if s["slot_id"] not in manifest["slots"]:
+                        manifest["slots"][s["slot_id"]] = {
+                            "slot_id": s["slot_id"],
+                            "label": s["label"],
+                            "priority": s["priority"],
+                            "status": "ABSENT",
+                            "uploads": [],
+                        }
+            return manifest
         except Exception:
             pass
     return {
@@ -1301,6 +1315,216 @@ async def upload_chunk_resume(
         "hardened_mode_active": _is_hardened_mode_active(),
         "v30_lock": "INVIOLÉ",
     }
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°52-EXT · PEE_MAJ_Ω VOIE A — Endpoints de pilotage du pipeline
+# monolithique : status canonical, persistance des dérivées, audit-event
+# d'activation. Aucune réécriture du pipeline chunked existant — il est
+# re-utilisé tel quel grâce à l'inscription du slot dans SLOT_BY_ID.
+# ═════════════════════════════════════════════════════════════════════════
+PEE_MAJ_ACTIVATION_FLAG = RECEPTION_ROOT / "pee_maj_pipeline_activated_omega.json"
+
+
+def _read_pee_maj_flag() -> Dict[str, Any]:
+    if PEE_MAJ_ACTIVATION_FLAG.exists():
+        try:
+            return json.loads(PEE_MAJ_ACTIVATION_FLAG.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {"activated": False, "history": []}
+
+
+def _write_pee_maj_flag(d: Dict[str, Any]) -> None:
+    PEE_MAJ_ACTIVATION_FLAG.parent.mkdir(parents=True, exist_ok=True)
+    PEE_MAJ_ACTIVATION_FLAG.write_text(
+        json.dumps(d, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+@router.post("/diagnostic/pee-maj/activate")
+async def pee_maj_activate(
+    request: Request,
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+    user_agent: str | None = Header(default=None, alias="User-Agent"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-EXT · Active formellement le pipeline monolithique
+    PEE_MAJ_Ω. Idempotent. Consigne PEE_MAJ_PIPELINE_ACTIVATED_Ω."""
+    _verify_token(x_commandant_token)
+    if "FORET_MFFP_PEE_MAJ_Ω" not in SLOT_BY_ID:
+        raise HTTPException(
+            status_code=503,
+            detail="SLOT_NOT_REGISTERED::FORET_MFFP_PEE_MAJ_Ω · "
+                   "Spec absente de SLOTS_GIS_PROTÉGÉS_SPEC")
+
+    client_ip = request.client.host if request.client else "unknown"
+    ua = (user_agent or "")[:200]
+    flag = _read_pee_maj_flag()
+    was_activated = bool(flag.get("activated"))
+    flag["activated"] = True
+    flag.setdefault("history", []).append({
+        "action": "ACTIVATE", "ts_utc": _utc_now(),
+        "by_ip": client_ip, "by_ua": ua,
+        "previous_state": "ACTIVATED" if was_activated else "INACTIVE",
+    })
+    flag["last_activated_utc"] = _utc_now()
+    _write_pee_maj_flag(flag)
+
+    audit.append_event(
+        event="PEE_MAJ_PIPELINE_ACTIVATED_Ω",
+        slot_id="FORET_MFFP_PEE_MAJ_Ω",
+        filename="(pipeline_activation_only)",
+        sha256=None, size_bytes=0, http_code=200,
+        client_ip=client_ip, user_agent=ua,
+        validators=[
+            {"name": "pipeline_activated", "passed": True,
+             "previous_state": "ACTIVATED" if was_activated else "INACTIVE",
+             "spec_taille_max_octets": SLOT_BY_ID["FORET_MFFP_PEE_MAJ_Ω"]
+                                              ["taille_max_octets"],
+             "spec_formats_acceptes": SLOT_BY_ID["FORET_MFFP_PEE_MAJ_Ω"]
+                                             ["formats_acceptes"],
+             "substitutes_slot": SLOT_BY_ID["FORET_MFFP_PEE_MAJ_Ω"]
+                                       .get("substitutes_slot_for_corridors_gis")},
+        ],
+    )
+
+    spec = SLOT_BY_ID["FORET_MFFP_PEE_MAJ_Ω"]
+    return {
+        "manifest_id": "PEE_MAJ_PIPELINE_ACTIVATED_Ω",
+        "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "n°52_ext_pee_maj_voie_a",
+        "activated": True,
+        "previous_state": "ACTIVATED" if was_activated else "INACTIVE",
+        "slot_id": "FORET_MFFP_PEE_MAJ_Ω",
+        "slot_spec_summary": {
+            "type_pipeline": spec.get("type_pipeline"),
+            "voie_acquisition": spec.get("voie_acquisition"),
+            "formats_acceptes": spec.get("formats_acceptes"),
+            "taille_max_octets": spec.get("taille_max_octets"),
+            "taille_max_GB": round(spec.get("taille_max_octets", 0) / 1e9, 1),
+            "substitutes_slot": spec.get("substitutes_slot_for_corridors_gis"),
+            "ephemeral_storage": spec.get("ephemeral_storage"),
+            "derivatives_persistent": spec.get("derivatives_persistent"),
+        },
+        "endpoint_chunked": (
+            "/api/v30/admin-premium/gis/upload-chunk/FORET_MFFP_PEE_MAJ_%CE%A9"),
+        "expected_filename": "pee_maj.gpkg",
+        "incoming_dir": str(_slot_dir("FORET_MFFP_PEE_MAJ_Ω")),
+        "honest_disclosure": {
+            "storage_kind": "EPHEMERAL_var_cache",
+            "var_cache_total_GB": round(
+                __import__("shutil").disk_usage("/var/cache").total / 1e9, 1),
+            "var_cache_free_GB": round(
+                __import__("shutil").disk_usage("/var/cache").free / 1e9, 1),
+            "warning": (
+                "pee_maj.gpkg réside dans /var/cache (éphémère). Au reboot du "
+                "pod, le fichier brut est perdu. Les dérivés analytiques "
+                "(GIS_FRAGMENTATION_INDEX, GIS_COUVERT_FORESTIER_DENSITY, etc.) "
+                "produits par compute_corridors_gis() seront archivés en "
+                "persistance via persist_derivatives_to_archive() vers "
+                "/app/backend/data/gis_archive/_derived/."),
+        },
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+@router.get("/diagnostic/pee-maj/status")
+async def pee_maj_status(
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-EXT · Status complet du pipeline PEE_MAJ_Ω VOIE A."""
+    _verify_token(x_commandant_token)
+    flag = _read_pee_maj_flag()
+
+    # Engine canonical state
+    try:
+        from engines.v8_institutional.especes.engine_corridors_gis_omega import (
+            _pee_maj_canonical_state, get_all_layers_status,
+            DERIVATIVES_PERSISTENT_DIR,
+        )
+        canonical = _pee_maj_canonical_state()
+        eng = get_all_layers_status()
+        eng_summary = {
+            "global_status": eng["global_status"],
+            "layers_loaded": eng["layers_loaded"],
+            "layers_absent": eng["layers_absent"],
+            "pee_maj_canonical_active": eng["pee_maj_canonical_active"],
+            "pee_maj_canonical_path": eng["pee_maj_canonical_path"],
+            "pee_maj_canonical_size_bytes": eng["pee_maj_canonical_size_bytes"],
+            "pee_maj_substitutes_slot": eng["pee_maj_substitutes_slot"],
+        }
+        derivatives_root = str(DERIVATIVES_PERSISTENT_DIR)
+        derivatives_files = []
+        if DERIVATIVES_PERSISTENT_DIR.exists():
+            for p in sorted(DERIVATIVES_PERSISTENT_DIR.iterdir()):
+                if p.is_file():
+                    derivatives_files.append(
+                        {"filename": p.name, "size_bytes": p.stat().st_size})
+    except Exception as e:
+        canonical = {"error": str(e)}
+        eng_summary = {"error": str(e)}
+        derivatives_root = "(unavailable)"
+        derivatives_files = []
+
+    # Slot state
+    manifest = _read_manifest()
+    slot = manifest.get("slots", {}).get("FORET_MFFP_PEE_MAJ_Ω", {})
+
+    return {
+        "manifest_id": "PEE_MAJ_PIPELINE_STATUS_Ω",
+        "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
+        "pipeline_activated": bool(flag.get("activated")),
+        "last_activated_utc": flag.get("last_activated_utc"),
+        "history_count": len(flag.get("history", [])),
+        "slot_state": {
+            "status": slot.get("status", "ABSENT"),
+            "files_loaded_count": slot.get("files_loaded_count", 0),
+            "composite_sha256": slot.get("composite_sha256"),
+            "last_upload": (slot.get("uploads", [])[-1]
+                              if slot.get("uploads") else None),
+        },
+        "canonical_state": canonical,
+        "engine_summary": eng_summary,
+        "derivatives_persistent_root": derivatives_root,
+        "derivatives_persisted_files": derivatives_files,
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+@router.post("/diagnostic/pee-maj/persist-derivatives")
+async def pee_maj_persist_derivatives(
+    x_commandant_token: str | None = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-EXT · Déclenche la copie persistante des dérivées
+    analytiques calculées (GIS_FRAGMENTATION_INDEX, GIS_COUVERT_FORESTIER, ...)
+    depuis /data/gis/ vers /app/backend/data/gis_archive/_derived/.
+    Idempotent. Consigne 1 audit-event par fichier persisté.
+    """
+    _verify_token(x_commandant_token)
+    try:
+        from engines.v8_institutional.especes.engine_corridors_gis_omega import (
+            persist_derivatives_to_archive,
+        )
+        result = persist_derivatives_to_archive()
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"PERSIST_DERIVATIVES_ERROR::{e}")
+
+    for p in result.get("persisted", []):
+        audit.append_event(
+            event="DERIVATIVE_LAYER_PERSISTED_Ω",
+            slot_id="FORET_MFFP_PEE_MAJ_Ω",
+            filename=p["dest"].split("/")[-1],
+            sha256=p["sha256"],
+            size_bytes=p["size_bytes"],
+            http_code=200,
+            client_ip="MANUAL_PERSIST_DERIVATIVES",
+            user_agent="ORDRE_N52_EXT_PEE_MAJ_VOIE_A",
+            validators=[{"name": "derivative_persisted", "passed": True,
+                         "layer_id": p["layer_id"]}],
+        )
+
+    return result
 
 
 # ═════════════════════════════════════════════════════════════════════════
