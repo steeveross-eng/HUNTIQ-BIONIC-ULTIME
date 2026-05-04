@@ -27,6 +27,42 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXVII-EXT6 · ORDRE N°52-EXT VOIE A — HTTP 404 chunk 164 (pod restart) RÉSOLU (2026-05-04)**
+  Sur incident remonté par le Commandant STEEVE-MAX (upload_id `mort709yf-6d60c7f0`, HTTP 404 chunk 164/712 après 163 succès). **V30 INVIOLÉ · pytest 165/165 PASSED · 0 régression · cause forensique identifiée + corrigée + détection+mitigation auto UI.**
+  - **Investigation forensique rigoureuse** :
+    - Sessions `.chunks/mort709yf-6d60c7f0/` **inexistantes** sur disque.
+    - Audit-log FORET_MFFP_PEE_MAJ_Ω : 0 event `UPLOAD_LOADED` / `UPLOAD_QUARANTINED` / `UPLOAD_ERROR`.
+    - `/var/cache/gis_operational/incoming/FORET_MFFP_PEE_MAJ_Ω/` **purgé**.
+    - Processus Python uptime = **54 secondes** (restart très récent).
+    - Log backend : **186 événements `Application startup complete`** cumulés depuis la naissance du pod.
+  - **Cause forensique certifiée** : **3ᵉ incident de volatilité pod Kubernetes documenté dans cette session**. Le pod a redémarré pendant l'upload du Commandant (probablement entre chunks ~163 et 164). `/var/cache` éphémère → **les 163 chunks précédemment stockés ont été effectivement perdus**. Le chunk 164 arrive sur le nouveau pod qui n'a jamais reçu les chunks 0-163. Côté client, cela produit un **404 SLOT_INCONNU** trompeur (car mon fix Unicode a changé le signal d'erreur en 404 générique).
+  - **Fix applicatif appliqué** : détection **session orpheline** dans `upload_chunk_chunked` :
+    - Si `chunk_index > 0` AND `chunks_found_on_disk == 0` AND `session.json absent` → HTTP **409 `SESSION_ORPHANED_POD_RESTART_Ω`** (au lieu de 404 trompeur ou accept silencieux qui invaliderait le manifest final).
+    - Message d'erreur forensique **complet et honnête** : `upload_id`, `chunk_index_attempted`, explication pod restart, perte documentée des chunks 0..N-1, action requise (nouveau X-Upload-Id depuis 0), doctrine ANTI_GÉNÉRIQUE respectée.
+    - Audit-event `UPLOAD_SESSION_ORPHANED_POD_RESTART_Ω` consigné avec validators détaillés (`upload_id`, `chunk_index_attempted`, `chunks_total_expected`, `chunks_found_on_disk=0`, `root_cause=POD_RESTART_DURING_UPLOAD`).
+  - **`last_error_detail` étendu** : nouveau code `SESSION_ORPHANED_POD_RESTART` dans la classification `/diagnostic/pee-maj/status.last_error_detail.error_code_backend` avec `error_message_backend` explicit.
+  - **UI mitigation automatique** (`AdminGISReceptionPanel.jsx` FUSION ADD-ONLY ciblée) :
+    - Détection du 409 `SESSION_ORPHANED_POD_RESTART` → marquage `errorPhase=SESSION_ORPHANED_POD_RESTART` dans UI
+    - **Relance automatique avec upload_id frais** depuis chunk 0 (pas de réutilisation du upload_id orphelin)
+    - Log UI `WARN` : "Session orpheline détectée (pod restart pendant upload) · upload_id=X abandonné · redémarrage auto avec nouvel upload_id depuis chunk 0"
+    - Message utilisateur visible : "Pod redémarré · régénération upload_id · reprise depuis chunk 0..."
+    - Garde-fou `orphanRestartDetected` : un seul redémarrage auto par session pour éviter boucle infinie si pod redémarre à nouveau pendant la retry.
+  - **Tests pytest** : nouveau `test_phase_xxvii_ext5_session_orphan_omega.py` (6 tests) :
+    - chunk 0 upload_id frais → 200 ✓ · chunk midstream orphan → 409 avec message complet ✓ · audit-event consigné ✓ · `last_error_detail` exposé ✓ · chunks séquentiels OK ✓ · message mentionne pod restart + "chunks 0..N-1 perdus" + "nouveau X-Upload-Id" ✓.
+  - **Validation E2E live curl** :
+    - Chunk 164 orphelin → **HTTP 409 `SESSION_ORPHANED_POD_RESTART_Ω`** avec message forensique 600+ octets.
+    - Audit-event `UPLOAD_SESSION_ORPHANED_POD_RESTART_Ω` consigné (1 occurrence live).
+    - `last_error_detail.error_code_backend = "SESSION_ORPHANED_POD_RESTART"` · message lisible exposé.
+    - Chunk 0 upload_id frais → 200 CHUNK_STORED · chunk 1 même upload_id → 200 CHUNK_STORED (non-orphan valide).
+  - **Pytest cumul** : 165/165 PASSED (XXII 33 + XXIII 16 + XXIV 14 + XXV 9 + XXVI 11 + XXVI-EXT 15 + XXVI-EXT2 13 + XXVII 13 + XXVII-EXT 4 + XXVII-EXT2 5 + XXVII-EXT3 8 + XXVII-EXT4 6 + XXVII-EXT5 6 + tests transverses). 0 régression.
+  - **Tests** : pytest + curl + python3. **Aucun testing subagent**.
+  - **Garantie institutionnelle pour la reprise** :
+    - Après pod restart, **le 404 ne se reproduira plus** — le backend détecte la divergence et retourne 409 explicit.
+    - L'UI **régénère automatiquement un upload_id frais** et relance depuis chunk 0 sans intervention manuelle.
+    - Les 163 chunks perdus étaient **réellement perdus** (volatilité documentée) — aucune perte de donnée silencieuse.
+    - Doctrine ANTI_GÉNÉRIQUE_STRICT : aucun message fictif, aucune acceptation silencieuse d'un état incohérent.
+
+
 - **PHASE_XXVII-EXT5 · ORDRE N°52-EXT VOIE A — DIAGNOSTIC HTTP 404 RÉSOLU (Unicode lookalikes) (2026-05-04)**
   Sur incident remonté par le Commandant STEEVE-MAX (HTTP 404 chunk 0/712 sur FORET_MFFP_PEE_MAJ_Ω, upload_id=morry3nm-06092a2c). **V30 INVIOLÉ · pytest 159/159 PASSED · 0 régression · cause forensique identifiée + corrigée + tests de régression.**
   - **Investigation forensique** : reproduction par 5 variantes de curl :

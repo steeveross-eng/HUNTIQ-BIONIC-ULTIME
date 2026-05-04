@@ -744,16 +744,42 @@ export const AdminGISReceptionPanel = () => {
       };
 
       let sentCount = 0;
+      let orphanRestartDetected = false;
       for (const i of chunksToSend) {
         const res = await sendChunkWithRetry(i);
         if (!res.ok) {
+          // ─── ORDRE N°52-EXT · Détection session orpheline pod-restart ──
+          const isOrphan =
+            res.status === 409 &&
+            typeof res.payload?.detail === "string" &&
+            res.payload.detail.includes("SESSION_ORPHANED_POD_RESTART");
+          if (isOrphan && !orphanRestartDetected) {
+            orphanRestartDetected = true;
+            appendEvent({
+              level: "WARN",
+              slotId,
+              message: `Session orpheline détectée (pod restart pendant upload) · upload_id=${uploadId} abandonné · redémarrage auto avec nouvel upload_id depuis chunk 0`,
+            });
+            setUploadState((s) => ({
+              ...s,
+              [slotId]: {
+                ...(s[slotId] || {}),
+                status: "UPLOADING",
+                message:
+                  "Pod redémarré · régénération upload_id · reprise depuis chunk 0...",
+                errorPhase: "SESSION_ORPHANED_POD_RESTART",
+              },
+            }));
+            // Relancer avec un upload_id frais (pas de réutilisation)
+            return performChunkedUpload(slotId, file, {});
+          }
           const codeLabel =
             res.status === 401
               ? "401 · Token invalide"
               : res.status === 413
               ? "413 · Chunk trop volumineux (réduire CHUNK_SIZE)"
               : res.status === 409
-              ? "409 · Chunks incomplets"
+              ? "409 · Chunks incomplets ou session orpheline"
               : `HTTP ${res.status}`;
           setUploadState((s) => ({
             ...s,

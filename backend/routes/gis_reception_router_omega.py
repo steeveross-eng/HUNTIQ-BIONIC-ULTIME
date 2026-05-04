@@ -1574,6 +1574,13 @@ async def pee_maj_status(
             elif event_name == "UPLOAD_ERROR":
                 err_code = "ROUTER_RUNTIME_ERROR"
                 err_msg = "Exception runtime côté router (assemblage/écriture)."
+            elif http_status == 409:
+                err_code = "SESSION_ORPHANED_POD_RESTART"
+                err_msg = (
+                    "Le pod Kubernetes a redémarré pendant l'upload précédent. "
+                    "Le /var/cache éphémère a été purgé, tous les chunks "
+                    "intermédiaires ont été effectivement perdus. Recommencer "
+                    "avec un nouveau X-Upload-Id depuis chunk_index=0.")
             elif http_status == 404:
                 err_code = "SLOT_NOT_FOUND"
                 err_msg = ("Le slot_id transmis n'existe pas. Causes possibles : "
@@ -2409,6 +2416,56 @@ async def upload_chunk(
         raise HTTPException(
             status_code=400,
             detail=f"FILENAME_MISMATCH :: session={session['filename']} vs {fname}")
+
+    # ─── ORDRE N°52-EXT · Détection session orpheline post-pod-restart ─
+    # Cause forensique documentée : le pod Kubernetes peut redémarrer
+    # pendant un upload long (ephemeral /var/cache). Si le client envoie
+    # chunk_index > 0 mais qu'aucun chunk précédent n'est présent sur
+    # disque, la session est orpheline. On retourne 409 CONFLICT avec un
+    # message institutionnel explicite (au lieu d'un 404 ambigu ou d'un
+    # accept silencieux qui invaliderait le manifest final).
+    if int(x_chunk_index) > 0:
+        received_prev = set(
+            int(p.stem) for p in chunks_dir.iterdir()
+            if chunks_dir.exists() and p.is_file() and p.name.endswith(".bin")
+            and p.stem.isdigit()
+        ) if chunks_dir.exists() else set()
+        # Orphelin = aucun chunk précédent ET pas de session.json persistée
+        if not received_prev and not session.get("chunks_received"):
+            audit.append_event(
+                event="UPLOAD_SESSION_ORPHANED_POD_RESTART_Ω",
+                slot_id=slot_id, filename=fname, sha256=None,
+                size_bytes=int(x_total_size or 0),
+                http_code=409,
+                client_ip=client_ip,
+                user_agent=(user_agent or "")[:200],
+                validators=[{
+                    "name": "session_orphan_check",
+                    "passed": False,
+                    "upload_id": x_upload_id,
+                    "chunk_index_attempted": int(x_chunk_index),
+                    "chunks_total_expected": int(x_chunks_total),
+                    "chunks_found_on_disk": 0,
+                    "session_json_present": False,
+                    "root_cause": "POD_RESTART_DURING_UPLOAD",
+                }],
+            )
+            raise HTTPException(
+                status_code=409,
+                detail=(
+                    f"SESSION_ORPHANED_POD_RESTART_Ω :: upload_id="
+                    f"{x_upload_id} · chunk_index_attempted="
+                    f"{x_chunk_index} · chunks_found_on_disk=0. "
+                    "Cause institutionnelle : le pod Kubernetes a redémarré "
+                    "pendant votre upload ; /var/cache (éphémère) a été purgé. "
+                    "Les chunks 0 à "
+                    f"{int(x_chunk_index)-1} précédemment reçus ont été "
+                    "effectivement perdus. Action requise : recommencer "
+                    "l'upload depuis chunk_index=0 avec un nouveau "
+                    "X-Upload-Id (UUID frais). L'UI alignée (ORDRE N°52-EXT) "
+                    "détecte ce cas via /resume et propose automatiquement "
+                    "une nouvelle session. Aucune simulation autorisée "
+                    "(anti-générique strict)."))
 
     # ─── Écriture du chunk binaire ─────────────────────────────────
     chunk_path = chunks_dir / f"{x_chunk_index:06d}.bin"
