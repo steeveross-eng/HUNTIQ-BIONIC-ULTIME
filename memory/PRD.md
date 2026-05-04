@@ -27,6 +27,25 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXV-Ω49 · ORDRE N°49 INGESTION GIS PAR URL — FINALISATION 6/6 LOADED (2026-05-04)**
+  Sur ORDRE ABSOLU du Commandant STEEVE-MAX (ordre n°49). **V30 INVIOLÉ · pytest 70/70 PASSED phases XXII→XXV · 6 / 6 slots GIS LOADED · doctrine ANTI_GÉNÉRIQUE_STRICT respectée · PREP_ONLY=true (aucune promotion).**
+  - **Reprise du chantier** : à la prise de relais, 5/6 slots étaient déjà LOADED (FORET_MFFP_Ω 60 tuiles, SOL_IRDA_Ω, CHASSE_ZEC_SEPAQ_Ω, ROUTES_MTQ_SECONDAIRES_Ω, LIMITES_TERRITORIALES_FINES_Ω). Slot manquant : `PRESSION_HUMAINE_Ω` (ABSENT).
+  - **Variante validée par le Commandant** : option (c) — extraction Overpass officielle GeoJSON filtrée sur `highway`, `building`, `place`, `landuse=residential`, `landuse=industrial` couvrant l'emprise institutionnelle Bas-Saint-Laurent autour du waypoint doctrinal `48.206657 / -68.382422`.
+  - **Extraction Overpass** : 5 requêtes thématiques séquentielles vers `https://overpass-api.de/api/interpreter` (endpoint officiel · User-Agent identifié BIONIC-OS-V20-SUPRA), bbox `S=47.30 / W=-70.20 / N=49.40 / E=-66.00`, conversion OSM→GeoJSON via `osm2geojson` (lib officielle pip · v0.3.2). **157 088 features réelles ODbL** : 51 005 highways · 101 634 buildings · 1 049 places · 3 144 landuse résidentiels · 256 landuse industriels.
+  - **Fichier final** : `PRESSION_HUMAINE_OSM_QC_BSL.geojson` · 99 490 794 octets (99,49 Mo) · SHA-256 `3fe77b3961de9bd1e1bee7d2be87fe8487596ca761f92db475d4dfbe9a1a16cd`.
+  - **Upload chunked institutionnel** : 2 chunks de 50 Mo via `POST /api/v30/admin-premium/gis/upload-chunk/PRESSION_HUMAINE_Ω` (protocole Ordre N°50, headers `X-Upload-Id`, `X-Chunk-Index`, `X-Chunks-Total`, `X-Total-Size`, `X-Final-Chunk`). Token unifié `Saturn5858*`. Upload total ~5 s.
+  - **Validation post-assemblage** : `check_format=OK` (geojson dans formats acceptés `[parquet, tif, tiff, gpkg, geojson]`) · `check_size=OK` (99 490 794 ∈ [512, 2 147 483 648]) · `check_integrity=OK` (SHA-256 backend = SHA-256 local). HTTP 200 · `passed=true` · `status=LOADED`.
+  - **Composite SHA-256 PRESSION_HUMAINE_Ω** : `25b0c81274d18388d824d09534a7598189179ba04cb865a8a34a3a6b03b77a54` (déterministe sur fichier unique).
+  - **Audit-log forensique** : événement `UPLOAD_LOADED` ajouté dans `/app/backend/data/gis_operational/audit_log.jsonl` (98 events historiques, 54 106 octets, 89 UPLOAD_LOADED cumulés).
+  - **Manifest persisté** : `/app/backend/data/gis_operational/GIS_RECEPTION_INTAKE_Ω.json` mis à jour. `intake_stats.loaded = 6 / 6`.
+  - **Anti-générique strict** : zéro mock, zéro donnée synthétique. Source 100 % OSM officielle (ODbL), conversion par lib publique vérifiable, hashes déterministes reproductibles.
+  - **Rapport institutionnel** : `RAPPORT_ORDRE_49_Ω.pdf` (7 318 octets · sha256 `3429642592ceccb8f189e1e07d4c20486d9d0aa0e5982a505554f0f9e417c707`) servi en HTTP 200 sur `/reports/institution/RAPPORT_ORDRE_49_Ω.pdf`. 5 sections : récapitulatif global · détail des 5 ingestions URL · spécifique PRESSION_HUMAINE_Ω (Overpass) · état des 6 slots · conclusion.
+  - **PREP_ONLY** : aucune promotion vers `GIS_OPERATIONAL_Ω` n'a été déclenchée. Le système attend l'ORDRE N°52 explicite du Commandant pour déclencher `compute_corridors_gis()`.
+  - **Pytest cumul** : 70/70 PASSED (Phase XXII 31 + Phase XXIII 16 + Phase XXIV 14 + Phase XXV 9). 0 régression.
+  - **Tests** : pytest + curl + python3 (osm2geojson + reportlab). **Aucun testing subagent**.
+  - **Prochaine action sur ordre du Commandant** : ORDRE N°52 = promotion GIS_OPERATIONAL_Ω + mapping des 9 layers analytiques.
+
+
 - **PHASE_XXV-EXT · ORDRE N°47 HYBRIDE — DÉLOCALISATION INCOMING + PURGE ZEC (2026-05-01)**
   Sur ORDRE du Commandant STEEVE-MAX suite au health check pré-ingestion révélant 2 alertes : disque /app saturé (87%) et résidu de tests sur CHASSE_ZEC_SEPAQ_Ω. Option (d) HYBRIDE validée et exécutée. **V30 INVIOLÉ · pytest 70/70 · 80 Go libres /var/cache.**
   - **Délocalisation non-invasive** : Ajout env vars `GIS_INCOMING_ROOT=/var/cache/gis_operational/incoming` + `GIS_QUARANTINE_ROOT=/var/cache/gis_operational/quarantine` dans `backend/.env`. Le routeur `gis_reception_router_omega.py` lit ces env vars avec fallback sur le chemin historique (compatibilité totale).

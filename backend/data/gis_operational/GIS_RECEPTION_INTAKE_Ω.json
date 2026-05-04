@@ -2204,10 +2204,115 @@
               "reason": "OK"
             }
           ]
+        },
+        {
+          "filename": "good.geojson",
+          "sha256": "eb65fa70f224ec205e5cfbffa273bee1115f4b341f2908564c1345e55fbd19c4",
+          "size_bytes": 2081,
+          "uploaded_at_utc": "2026-05-04T16:24:40+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "geojson",
+              "formats_acceptes": [
+                "gpkg",
+                "geojson",
+                "zip",
+                "parquet"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 2081,
+              "min": 512,
+              "max": 524288000,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "eb65fa70f224ec205e5cfbffa273bee1115f4b341f2908564c1345e55fbd19c4",
+              "reason": "OK"
+            }
+          ]
+        },
+        {
+          "filename": "tiny.geojson",
+          "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "size_bytes": 2,
+          "uploaded_at_utc": "2026-05-04T16:24:40+00:00",
+          "passed": false,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "geojson",
+              "formats_acceptes": [
+                "gpkg",
+                "geojson",
+                "zip",
+                "parquet"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": false,
+              "size_bytes": 2,
+              "min": 512,
+              "max": 524288000,
+              "reason": "Taille 2 hors bornes [512, 524288000]"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "reason": "OK"
+            }
+          ]
+        },
+        {
+          "filename": "a.geojson",
+          "sha256": "eb65fa70f224ec205e5cfbffa273bee1115f4b341f2908564c1345e55fbd19c4",
+          "size_bytes": 2081,
+          "uploaded_at_utc": "2026-05-04T16:24:40+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "geojson",
+              "formats_acceptes": [
+                "gpkg",
+                "geojson",
+                "zip",
+                "parquet"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 2081,
+              "min": 512,
+              "max": 524288000,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "eb65fa70f224ec205e5cfbffa273bee1115f4b341f2908564c1345e55fbd19c4",
+              "reason": "OK"
+            }
+          ]
         }
       ],
-      "files_loaded_count": 1,
-      "composite_sha256": "863aebc164caedcea3b4f98e746096dd16e2ddcbd22e09f7a3aa9894be8c9103",
+      "files_loaded_count": 3,
+      "composite_sha256": "4924be9b2ac3597ce88d392ef874bd896fd2c1557fda01849125acfd6e965f3e",
       "multi_upload": false
     },
     "ROUTES_MTQ_SECONDAIRES_Ω": {
@@ -2310,9 +2415,49 @@
       "slot_id": "PRESSION_HUMAINE_Ω",
       "label": "Pression humaine fine (densité population + activités récréatives)",
       "priority": "P2_OPTIONNELLE",
-      "status": "ABSENT",
-      "uploads": []
+      "status": "LOADED",
+      "uploads": [
+        {
+          "filename": "PRESSION_HUMAINE_OSM_QC_BSL.geojson",
+          "sha256": "3fe77b3961de9bd1e1bee7d2be87fe8487596ca761f92db475d4dfbe9a1a16cd",
+          "size_bytes": 99490794,
+          "uploaded_at_utc": "2026-05-04T16:17:30+00:00",
+          "passed": true,
+          "validators": [
+            {
+              "name": "check_format",
+              "passed": true,
+              "extension_detectee": "geojson",
+              "formats_acceptes": [
+                "parquet",
+                "tif",
+                "tiff",
+                "gpkg",
+                "geojson"
+              ],
+              "reason": "OK"
+            },
+            {
+              "name": "check_size",
+              "passed": true,
+              "size_bytes": 99490794,
+              "min": 512,
+              "max": 2147483648,
+              "reason": "OK"
+            },
+            {
+              "name": "check_integrity",
+              "passed": true,
+              "sha256": "3fe77b3961de9bd1e1bee7d2be87fe8487596ca761f92db475d4dfbe9a1a16cd",
+              "reason": "OK"
+            }
+          ]
+        }
+      ],
+      "files_loaded_count": 1,
+      "composite_sha256": "25b0c81274d18388d824d09534a7598189179ba04cb865a8a34a3a6b03b77a54",
+      "multi_upload": false
     }
   },
-  "last_updated_utc": "2026-05-04T16:02:45+00:00"
+  "last_updated_utc": "2026-05-04T16:24:40+00:00"
 }
