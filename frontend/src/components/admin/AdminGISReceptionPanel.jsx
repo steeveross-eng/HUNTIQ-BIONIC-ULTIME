@@ -1546,6 +1546,29 @@ const SlotCard = ({
   const RESUME_ID_REGEX = /^[A-Za-z0-9._-]{8,64}$/;
   const isResumeIdValid =
     resumeUploadId === "" || RESUME_ID_REGEX.test(resumeUploadId);
+  // ─── ORDRE N°52-R5 · Sessions resumables cliquables (anti-ambiguïté) ─
+  const [resumableSessions, setResumableSessions] = useState([]);
+  const [resumableLoading, setResumableLoading] = useState(false);
+  const fetchResumableSessions = useCallback(async () => {
+    if (!isPeeMajSlot) return;
+    setResumableLoading(true);
+    try {
+      const r = await fetch(
+        `${API}/api/v30/admin-premium/gis/s3/list-resumable-sessions/` +
+          encodeURIComponent(slot.slot_id),
+        { headers: { "X-Commandant-Token": "Saturn5858*" } }
+      );
+      if (r.ok) {
+        const d = await r.json();
+        setResumableSessions(Array.isArray(d.sessions) ? d.sessions : []);
+      } else {
+        setResumableSessions([]);
+      }
+    } catch (_e) {
+      setResumableSessions([]);
+    }
+    setResumableLoading(false);
+  }, [isPeeMajSlot, slot.slot_id]);
 
   const handleDrop = useCallback(
     (e) => {
@@ -1810,6 +1833,7 @@ const SlotCard = ({
       )}
 
       {/* ─── ORDRE N°52-PRE-AUDIT · Reprise upload_id existant (Voie B) ── */}
+      {/* ─── ORDRE N°52-R5 · Anti-ambiguïté visuelle l/1/I/O/0 ────────── */}
       {isPeeMajSlot && voieBMode && (
         <div
           style={{
@@ -1843,22 +1867,34 @@ const SlotCard = ({
                   marginBottom: 4,
                 }}
               >
-                Reprise d'upload (optionnel · ORDRE N°52-PRE-AUDIT)
+                Reprise d'upload (optionnel · ORDRE N°52-PRE-AUDIT/R5)
               </div>
               <div style={{ ...S.muted, fontSize: 11, marginBottom: 6 }}>
-                Coller l'<code>upload_id</code> d'une session interrompue
-                (visible via <code>/s3/status</code>) pour reprendre depuis
-                les chunks manquants. Laisser vide pour démarrer une nouvelle
-                session.
+                Coller un <code>upload_id</code>{" "}
+                ou choisir parmi les sessions actives ci-dessous (clic).
+                Police anti-ambiguïté pour distinguer{" "}
+                <span style={{ color: "#fbbf24" }}>l</span> (lowercase L)
+                vs <span style={{ color: "#22d3ee" }}>1</span> (chiffre).
               </div>
               <input
                 type="text"
                 value={resumeUploadId}
                 onChange={(e) => setResumeUploadId(e.target.value.trim())}
+                onPaste={(e) => {
+                  // Capture la valeur PURE depuis le clipboard
+                  // (anti-substitution éventuelle)
+                  e.preventDefault();
+                  const raw = e.clipboardData.getData("text");
+                  setResumeUploadId(raw.trim());
+                }}
                 placeholder="Ex: moslx2ne-49da58dd"
+                spellCheck={false}
+                autoCorrect="off"
+                autoCapitalize="off"
+                autoComplete="off"
                 style={{
                   width: "100%",
-                  padding: "6px 10px",
+                  padding: "8px 12px",
                   background: "#0a1018",
                   border: `1px solid ${
                     resumeUploadId && !isResumeIdValid
@@ -1867,11 +1903,74 @@ const SlotCard = ({
                   }`,
                   borderRadius: 4,
                   color: "#e2e8f0",
-                  fontSize: 12,
-                  fontFamily: "monospace",
+                  fontSize: 14,
+                  // ─── Police anti-ambiguïté : distinction nette l/1/I/O/0 ───
+                  fontFamily:
+                    '"JetBrains Mono", "Fira Code", "Source Code Pro", "Consolas", "Menlo", "Courier New", monospace',
+                  letterSpacing: 1.2,
+                  fontVariantNumeric: "tabular-nums slashed-zero",
                 }}
                 data-testid="resume-upload-id-input"
               />
+              {/* ─── Inspecteur Unicode temps réel (anti-confusion) ─── */}
+              {resumeUploadId && (
+                <div
+                  style={{
+                    marginTop: 6,
+                    padding: "6px 8px",
+                    background: "rgba(0,0,0,0.30)",
+                    borderRadius: 4,
+                    border: "1px dashed #475569",
+                    fontSize: 10,
+                    color: "#94a3b8",
+                    fontFamily:
+                      '"JetBrains Mono", "Fira Code", monospace',
+                    overflowX: "auto",
+                    whiteSpace: "nowrap",
+                  }}
+                  data-testid="resume-upload-id-inspector"
+                >
+                  <span style={{ color: "#fbbf24", fontWeight: 700 }}>
+                    INSPECTEUR Unicode :
+                  </span>{" "}
+                  {[...resumeUploadId].map((c, ci) => {
+                    const cp = c
+                      .charCodeAt(0)
+                      .toString(16)
+                      .toUpperCase()
+                      .padStart(4, "0");
+                    // Mise en évidence visuelle des caractères ambigus
+                    const isAmbig = "lI1Oo0".includes(c);
+                    return (
+                      <span
+                        key={ci}
+                        style={{
+                          display: "inline-block",
+                          margin: "0 2px",
+                          padding: "1px 4px",
+                          background: isAmbig
+                            ? "rgba(251,191,36,0.15)"
+                            : "transparent",
+                          color: isAmbig ? "#fbbf24" : "#86efac",
+                          borderRadius: 2,
+                        }}
+                        title={`U+${cp}`}
+                      >
+                        {c}
+                        <sub
+                          style={{
+                            fontSize: 8,
+                            color: "#64748b",
+                            marginLeft: 1,
+                          }}
+                        >
+                          U+{cp}
+                        </sub>
+                      </span>
+                    );
+                  })}
+                </div>
+              )}
               {resumeUploadId && !isResumeIdValid && (
                 <div
                   style={{
@@ -1899,22 +1998,127 @@ const SlotCard = ({
                 </div>
               )}
             </div>
-            {resumeUploadId && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              {resumeUploadId && (
+                <button
+                  onClick={() => setResumeUploadId("")}
+                  style={{
+                    ...S.btnPrimary,
+                    background: "#3a4a66",
+                    color: "#cbd5e1",
+                    fontSize: 11,
+                    padding: "4px 10px",
+                  }}
+                  data-testid="resume-upload-id-clear"
+                >
+                  Effacer
+                </button>
+              )}
               <button
-                onClick={() => setResumeUploadId("")}
+                onClick={fetchResumableSessions}
+                disabled={resumableLoading || !tokenReady}
                 style={{
                   ...S.btnPrimary,
-                  background: "#3a4a66",
-                  color: "#cbd5e1",
+                  background: "#0e7490",
+                  color: "#e2e8f0",
                   fontSize: 11,
                   padding: "4px 10px",
+                  opacity: resumableLoading || !tokenReady ? 0.5 : 1,
+                  cursor:
+                    resumableLoading || !tokenReady ? "not-allowed" : "pointer",
                 }}
-                data-testid="resume-upload-id-clear"
+                data-testid="resume-list-fetch-btn"
               >
-                Effacer
+                {resumableLoading ? "Lecture…" : "Charger sessions actives"}
               </button>
-            )}
+            </div>
           </div>
+
+          {/* ─── Liste cliquable des sessions reprenables ────────────────── */}
+          {resumableSessions.length > 0 && (
+            <div
+              style={{
+                marginTop: 10,
+                padding: 6,
+                background: "rgba(14,116,144,0.08)",
+                border: "1px solid #0e7490",
+                borderRadius: 4,
+              }}
+              data-testid="resume-sessions-list"
+            >
+              <div
+                style={{
+                  fontSize: 11,
+                  color: "#67e8f9",
+                  marginBottom: 4,
+                  fontWeight: 700,
+                }}
+              >
+                {resumableSessions.length} session
+                {resumableSessions.length > 1 ? "s" : ""} active
+                {resumableSessions.length > 1 ? "s" : ""} (cliquer pour
+                pré-remplir le champ ci-dessus) :
+              </div>
+              {resumableSessions.map((sess, si) => (
+                <div
+                  key={sess.upload_id_ui}
+                  onClick={() => setResumeUploadId(sess.upload_id_ui)}
+                  style={{
+                    padding: "4px 8px",
+                    margin: "3px 0",
+                    background:
+                      resumeUploadId === sess.upload_id_ui
+                        ? "rgba(251,146,60,0.15)"
+                        : "rgba(0,0,0,0.20)",
+                    border: `1px solid ${
+                      resumeUploadId === sess.upload_id_ui
+                        ? "#fb923c"
+                        : "#475569"
+                    }`,
+                    borderRadius: 3,
+                    cursor: "pointer",
+                    fontSize: 11,
+                    color: "#e2e8f0",
+                    fontFamily:
+                      '"JetBrains Mono", "Fira Code", "Source Code Pro", monospace',
+                  }}
+                  data-testid={`resume-session-row-${si}`}
+                  title={`hex=${sess.upload_id_hex}`}
+                >
+                  <span
+                    style={{
+                      display: "inline-block",
+                      minWidth: 80,
+                      color: sess.resumable ? "#86efac" : "#fb923c",
+                      fontWeight: 700,
+                    }}
+                  >
+                    [{sess.status}]
+                  </span>{" "}
+                  <span
+                    style={{
+                      color: "#22d3ee",
+                      fontWeight: 700,
+                      letterSpacing: 0.5,
+                    }}
+                  >
+                    {sess.upload_id_ui}
+                  </span>
+                  <span style={{ color: "#94a3b8", marginLeft: 8 }}>
+                    · {sess.chunks_received_count}/{sess.chunks_total} chunks
+                    · {sess.filename}
+                    {sess.resumable && (
+                      <span
+                        style={{ color: "#86efac", marginLeft: 6 }}
+                      >
+                        ✓ resumable
+                      </span>
+                    )}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

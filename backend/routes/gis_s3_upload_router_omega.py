@@ -410,6 +410,19 @@ async def upload_chunk_s3(
     client_ip = request.client.host if request.client else "unknown"
     ua = (user_agent or "")[:200]
 
+    # ─── ORDRE N°52-R5 · Forensic upload_id reçu (anti-ambiguïté) ─────
+    # Tracer en hex la valeur EXACTE reçue pour permettre l'audit
+    # forensique de toute confusion l/1/I/O/0 côté frontend.
+    upload_id_hex = (
+        (x_upload_id or "").encode("utf-8").hex() if x_upload_id else ""
+    )
+    if x_upload_id:
+        logger.info(
+            "S3_REQUEST_INCOMING slot=%s upload_id=%r upload_id_hex=%s "
+            "chunk_index=%s chunks_total=%s",
+            slot_id, x_upload_id, upload_id_hex,
+            x_chunk_index, x_chunks_total)
+
     # Normalisation Unicode (cohérence avec Voie A)
     import unicodedata as _ud
     slot_id = _ud.normalize("NFC", slot_id).replace("\u2126", "\u03a9")
@@ -509,6 +522,8 @@ async def upload_chunk_s3(
             "manifest_id": "CHUNK_S3_ALREADY_UPLOADED",
             "slot_id": slot_id,
             "upload_id": x_upload_id,
+            "upload_id_received": x_upload_id,
+            "upload_id_received_hex": upload_id_hex,
             "chunk_index": int(x_chunk_index),
             "part_number": part_number,
             "etag": existing.get("etag"),
@@ -757,6 +772,8 @@ async def upload_chunk_s3(
         "status": "CHUNK_STORED",
         "slot_id": slot_id,
         "upload_id": x_upload_id,
+        "upload_id_received": x_upload_id,
+        "upload_id_received_hex": upload_id_hex,
         "chunk_index": int(x_chunk_index),
         "part_number": part_number,
         "etag": etag,
@@ -1219,6 +1236,98 @@ async def gis_s3_cleanup_orphans(
             "Cela libère le quota B2 consommé par les multipart inachevés."
             if do_dry_run else
             "Cleanup effectué. Quota B2 libéré pour les multipart abortés."),
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# Endpoint : list-resumable-sessions (ORDRE N°52-R5 anti-ambiguïté)
+# ═════════════════════════════════════════════════════════════════════════
+@router.get("/s3/list-resumable-sessions/{slot_id}")
+async def gis_s3_list_resumable_sessions(
+    slot_id: str,
+    x_commandant_token: Optional[str] = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-R5 · Liste les sessions S3 reprenables pour un slot.
+
+    Permet au frontend de présenter une liste cliquable d'upload_ids
+    existants au lieu d'exiger une saisie manuelle (qui peut souffrir
+    de confusions visuelles l/1/I/O/0 selon la police du navigateur).
+
+    Critères d'inclusion :
+      · status == UPLOADING (session active interrompue)
+      · status == ABORTED si chunks_received > 0 (référence historique)
+      · Filtré par slot_id
+
+    Renvoie pour chaque session :
+      · upload_id_ui : valeur exacte (pour copy direct)
+      · upload_id_hex : pour vérification anti-ambiguïté
+      · chunks_received / chunks_total / chunks_missing_first[]
+      · status, started_at_utc, last_update_utc
+      · resumable: bool (true si status==UPLOADING + 0 missing en [0..max])
+    """
+    _verify_token(x_commandant_token)
+    import unicodedata as _ud
+    slot_id = _ud.normalize("NFC", slot_id).replace("\u2126", "\u03a9")
+    if slot_id not in SLOT_BY_ID:
+        raise HTTPException(status_code=404, detail=f"SLOT_INCONNU::{slot_id}")
+
+    sessions: List[Dict[str, Any]] = []
+    try:
+        for p in sorted(S3_SESSIONS_DIR.glob("*.json")):
+            try:
+                sess = json.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            if sess.get("slot_id") != slot_id:
+                continue
+            status = sess.get("status")
+            if status not in ("UPLOADING", "ABORTED"):
+                continue
+            parts = sess.get("parts", {}) or {}
+            chunks_total = int(sess.get("chunks_total") or 0)
+            received_idx = sorted(int(k) for k in parts.keys())
+            received_count = len(received_idx)
+            missing = (
+                sorted(set(range(chunks_total)) - set(received_idx))
+                if chunks_total else []
+            )
+            uid_ui = sess.get("upload_id_ui") or ""
+            sessions.append({
+                "upload_id_ui": uid_ui,
+                "upload_id_hex": uid_ui.encode("utf-8").hex(),
+                "filename": sess.get("filename"),
+                "status": status,
+                "chunks_total": chunks_total,
+                "chunks_received_count": received_count,
+                "chunks_missing_count": len(missing),
+                "chunks_missing_first": missing[:5],
+                "first_received_idx": received_idx[0] if received_idx else None,
+                "last_received_idx": received_idx[-1] if received_idx else None,
+                "total_size_expected": sess.get("total_size_expected"),
+                "started_at_utc": sess.get("started_at_utc"),
+                "last_update_utc": sess.get("last_update_utc"),
+                "b2_upload_id": sess.get("b2_upload_id"),
+                "b2_key": sess.get("b2_key"),
+                "resumable": (
+                    status == "UPLOADING" and received_count > 0 and
+                    received_count < chunks_total
+                ),
+            })
+    except Exception as e:
+        logger.warning("LIST_RESUMABLE_SESSIONS_ERROR: %s", e)
+
+    return {
+        "manifest_id": "GIS_S3_LIST_RESUMABLE_SESSIONS_Ω",
+        "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
+        "slot_id": slot_id,
+        "sessions_count": len(sessions),
+        "sessions": sessions,
+        "anti_ambiguity_note": (
+            "Pour éviter toute confusion visuelle l/1/I/O/0, utiliser "
+            "upload_id_ui (string brute) et vérifier upload_id_hex "
+            "(encodage UTF-8). Le frontend doit utiliser ces valeurs "
+            "telles quelles, sans réécriture."),
         "v30_lock": "INVIOLÉ",
     }
 

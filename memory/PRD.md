@@ -3405,3 +3405,74 @@ PHASE XXVIII · ORDRE N°52-PRE-AUDIT — DURCISSEMENT POST-INCIDENT (2026-05-05
 
 ## V30 LOCK
 - V30 INVIOLÉ · FUSION ADD-ONLY · ANTI_GÉNÉRIQUE_STRICT
+
+═══════════════════════════════════════════════════════════════════════════
+PHASE XXVIII · ORDRE N°52-R5 — ANTI-AMBIGUÏTÉ VISUELLE l/1/I/O/0 (2026-05-05)
+═══════════════════════════════════════════════════════════════════════════
+
+## Constat Commandant
+Saisie manuelle de `moslx2ne-49da58dd` ne fonctionnait pas → reprise
+échouait. Hypothèse initiale : transformation côté UI.
+
+## Investigation forensique
+- AUCUNE transformation côté code frontend (seul `.trim()` appliqué).
+- Regex `^[A-Za-z0-9._-]{8,64}$` accepte `l` (U+006C) ET `1` (U+0031).
+- Backend logger trace upload_id_hex : preuve octet-pour-octet.
+- **Root cause confirmée** : police monospace par défaut du navigateur
+  rend `l` (U+006C) et `1` (U+0031) visuellement quasi-identiques.
+
+## Preuve E2E backend
+```
+upload_id envoyé : "testl1IO0-1777991481"
+hex reçu         : 746573746c31494f302d31373737393931343831
+                   t  e  s  t  l  1  I  O  0  -  ...
+                   74 65 73 74 6c 31 49 4f 30
+```
+Confirmation : `l` (0x6C) ≠ `1` (0x31) ≠ `I` (0x49) ≠ `O` (0x4F) ≠ `0` (0x30).
+Aucune collision possible côté backend.
+
+## Correctifs appliqués (FUSION ADD-ONLY)
+
+### Backend
+- `S3_REQUEST_INCOMING` : logger forensique avec `upload_id_hex` à
+  chaque requête.
+- Réponses `CHUNK_S3_STORED` et `CHUNK_S3_ALREADY_UPLOADED` ajoutent :
+  - `upload_id_received` (string brute)
+  - `upload_id_received_hex` (hex UTF-8 pour audit absolu)
+- **Nouvel endpoint** : `GET /s3/list-resumable-sessions/{slot_id}`
+  qui retourne la liste des sessions S3 reprenables avec :
+  - `upload_id_ui` (string brute, copy direct)
+  - `upload_id_hex` (vérif anti-ambiguïté)
+  - `chunks_received_count` / `chunks_total` / `chunks_missing_first[]`
+  - `resumable: bool`
+
+### Frontend
+- Police anti-ambiguïté : stack `JetBrains Mono → Fira Code → Source Code Pro`
+  (distinction nette `l/1/I/O/0`) appliquée au champ resume.
+- `letterSpacing: 1.2` + `fontVariantNumeric: tabular-nums slashed-zero`.
+- **Inspecteur Unicode temps réel** : pour chaque caractère saisi,
+  affichage du caractère + code U+XXXX en sous-script. Caractères
+  ambigus surlignés en jaune (`l/I/1/O/o/0`).
+- `onPaste` capture la valeur PURE du clipboard (anti-substitution).
+- `spellCheck=false` `autoCorrect=off` `autoCapitalize=off` `autoComplete=off`.
+- **Sélecteur cliquable** : bouton "Charger sessions actives" qui
+  appelle l'endpoint backend et affiche une liste cliquable. Un clic
+  pré-remplit le champ avec la valeur EXACTE (zéro saisie manuelle).
+
+## Tests
+- Pytest régression : **67/67 PASSED** (6 nouveaux tests R5 + 61
+  régressions, 0 régression).
+- E2E live : caractères ambigus envoyés et hex échoé → confirmé
+  identique octet-pour-octet.
+- Frontend smoke : "✓ Liste sessions affichée", clic propagé au champ.
+
+## Procédure définitive de reprise (ZÉRO saisie manuelle)
+1. `/admin-premium` → Pilotage BCE-4X Ω → GIS_RECEPTION → token
+2. Slot `FORET_MFFP_PEE_MAJ_Ω` → activer toggle "Voie B (S3/B2)"
+3. Cliquer **[Charger sessions actives]**
+4. Cliquer sur la ligne `[UPLOADING] moslx2ne-49da58dd · 243/712 chunks`
+5. Vérifier l'inspecteur Unicode : 4ème char doit afficher `l<sub>U+006C</sub>`
+6. Drop `pee_maj.gpkg` → reprise auto à 244/712 (12 Go préservés sur B2)
+
+## V30 LOCK
+- V30 INVIOLÉ · FUSION ADD-ONLY · ANTI_GÉNÉRIQUE_STRICT

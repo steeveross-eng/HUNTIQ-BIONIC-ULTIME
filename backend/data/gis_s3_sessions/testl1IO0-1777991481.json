@@ -1,0 +1,23 @@
+{
+  "slot_id": "FORET_MFFP_PEE_MAJ_Ω",
+  "upload_id_ui": "testl1IO0-1777991481",
+  "b2_upload_id": "4_z27f03715a111fa5a93d0071d_f202c547b0b26f66f_d20260505_m143121_c006_v0601000_t0054_u01777991481698",
+  "b2_key": "pee_maj/2026-05-05/testl1IO0-1777991481/test.gpkg",
+  "b2_bucket": "pee-maj-gpkg",
+  "filename": "test.gpkg",
+  "chunks_total": 2,
+  "total_size_expected": 2048,
+  "parts": {
+    "0": {
+      "part_number": 1,
+      "etag": "0f343b0931126a20f133d67c2b018a3b",
+      "size": 1024,
+      "sha256": "5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+      "uploaded_at_utc": "2026-05-05T14:31:22.087649+00:00"
+    }
+  },
+  "started_at_utc": "2026-05-05T14:31:21.814942+00:00",
+  "last_update_utc": "2026-05-05T14:31:22.087660+00:00",
+  "status": "ABORTED",
+  "aborted_at_utc": "2026-05-05T14:31:23.318700+00:00"
+}
