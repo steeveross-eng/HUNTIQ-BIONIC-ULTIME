@@ -3732,3 +3732,58 @@ state R8 → débloque automatiquement les 9 cibles dès que PHASE_3 R8 = OK.
 
 ## V30 LOCK
 - V30 INVIOLÉ · FUSION ADD-ONLY · ANTI_GÉNÉRIQUE_STRICT
+
+═══════════════════════════════════════════════════════════════════════════
+PHASE XXVIII · ORDRE N°52-R11 — SPÉCIFICATIONS PHASE_3 R8 (2026-05-05)
+═══════════════════════════════════════════════════════════════════════════
+
+## 3 livrables produits
+- **Module Python** : `engines/v8_institutional/especes/mffp_phase3_specs_omega.py`
+  · MFFP_LAYERS_SPECS (8 specs canoniques)
+  · 8 squelettes de fonctions (NotImplementedError forcé)
+  · PHASE3_MINIMAL_PLAN (4 couches P0 critiques)
+- **Documentation** : `/app/memory/MFFP_PHASE3_SPECS.md` (gabarit lisible)
+- **Endpoint** : `GET /diagnostic/pee-maj/phase3-specs[?layer=...]`
+
+## 8 couches MFFP dérivées spécifiées (toutes EPSG:32198)
+
+| Couche | Priorité | Format | Résolution | Complexité | Effort |
+|---|---|---|---|---|---|
+| MFFP_DENSITY | P0 | GeoTIFF uint8 | 100m | LOW | 4h |
+| MFFP_AGE | P0 | GeoTIFF uint8 | 250m | LOW | 4h |
+| MFFP_STRUCTURE | P0 | GeoTIFF uint8 | 100m | MEDIUM | 12h |
+| MFFP_FRAGMENTATION | P0 | GeoTIFF float32 | 250m | HIGH | 24h |
+| MFFP_PRODUCTIVITY | P1 | GeoTIFF float32 | 100m | MEDIUM | 16h |
+| MFFP_HABITAT | P1 | GeoTIFF uint8 (5 bandes) | 250m | HIGH | 24h |
+| MFFP_CONNECTIVITY | P2 | GeoPackage | — | HIGH | 32h |
+| MFFP_CONTINUITY | P2 | GeoTIFF uint8 | 100m | MEDIUM | 12h |
+
+**Total 4 P0 : 44h dev** (déblocage R9). Total 8 couches : 128h.
+
+## Plan minimal (déblocage R9)
+1. MFFP_DENSITY — 4h LOW
+2. MFFP_AGE — 4h LOW
+3. MFFP_STRUCTURE — 12h MEDIUM
+4. MFFP_FRAGMENTATION — 24h HIGH
+
+## Dictionnaires Commandant à fournir (4 critiques)
+- structure_classification_rules.json
+- cl_dens_to_pct.json
+- classes_age.json
+- ty_couv_to_forest_binary.json
+
+## Champs canoniques pee_maj.gpkg documentés
+GEOMETRY · POLY_ID · ESS_DOMI · ESS_CODOMI · GR_ESS · CL_AGE · CL_HAUT ·
+CL_DENS · CL_PENT · TY_COUV · TYPE_ECO · ORIGINE · AN_ORIGINE · PERTURB ·
+AN_PERTURB · IND_QUAL · SUPERFICIE
+
+## Anti-générique strict
+Les 8 fonctions skeletons lèvent NotImplementedError avec message
+explicite "ANTI_GÉNÉRIQUE_STRICT". Aucune simulation tolérée.
+
+## Tests
+- `tests/test_phase_xxviii_r11_phase3_specs_omega.py` : **12/12 PASSED**
+- Régression totale : **100/100 PASSED · 0 régression**
+
+## V30 LOCK
+- V30 INVIOLÉ · FUSION ADD-ONLY · ANTI_GÉNÉRIQUE_STRICT

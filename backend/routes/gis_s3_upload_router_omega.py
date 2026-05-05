@@ -1491,6 +1491,57 @@ async def territoire_r9_recalc_status(
 
 
 # ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°52-R11 · Specs PHASE_3 R8 (lecture seule)
+# ═════════════════════════════════════════════════════════════════════════
+@router.get("/diagnostic/pee-maj/phase3-specs")
+async def get_phase3_specs(
+    layer: Optional[str] = None,
+    x_commandant_token: Optional[str] = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-R11 · Expose les spécifications canoniques des 8 couches
+    MFFP dérivées + plan d'implémentation minimal PHASE_3 R8.
+
+    Si query `?layer=MFFP_STRUCTURE` (ou autre), retourne uniquement la
+    spec ciblée. Sinon retourne les 8 specs + plan minimal.
+    """
+    _verify_token(x_commandant_token)
+    from engines.v8_institutional.especes.mffp_phase3_specs_omega import (
+        MFFP_LAYERS_SPECS, PHASE3_MINIMAL_PLAN,
+    )
+    if layer:
+        if layer not in MFFP_LAYERS_SPECS:
+            raise HTTPException(
+                status_code=404,
+                detail=f"LAYER_INCONNUE::{layer} :: "
+                       f"connues={list(MFFP_LAYERS_SPECS.keys())}")
+        return {
+            "manifest_id": "MFFP_PHASE3_SPECS_Ω",
+            "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "ordre": "N°52-R11",
+            "layer_id": layer,
+            "spec": MFFP_LAYERS_SPECS[layer],
+            "v30_lock": "INVIOLÉ",
+        }
+    return {
+        "manifest_id": "MFFP_PHASE3_SPECS_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°52-R11",
+        "layers_count": len(MFFP_LAYERS_SPECS),
+        "layers": MFFP_LAYERS_SPECS,
+        "minimal_plan": PHASE3_MINIMAL_PLAN,
+        "function_skeletons_module": (
+            "engines.v8_institutional.especes.mffp_phase3_specs_omega"),
+        "function_skeletons": [
+            "compute_mffp_structure", "compute_mffp_density",
+            "compute_mffp_age", "compute_mffp_fragmentation",
+            "compute_mffp_productivity", "compute_mffp_habitat",
+            "compute_mffp_connectivity", "compute_mffp_continuity",
+        ],
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+# ═════════════════════════════════════════════════════════════════════════
 # ORDRE N°52-R8 · Orchestrateur pipeline complet 8 phases (Option δ)
 # ═════════════════════════════════════════════════════════════════════════
 @router.post("/diagnostic/pee-maj/r8-execute")
