@@ -1607,17 +1607,17 @@ async def export_subset_proposal(
     target_size_mb: int = 100,
     x_commandant_token: Optional[str] = Header(default=None, alias="X-Commandant-Token"),
 ) -> Dict[str, Any]:
-    """ORDRE N°52-R12 · Export subset ~100 Mo de pee_maj.gpkg.
+    """ORDRE N°52-R12/R13 · Export subset ~100 Mo de pee_maj.gpkg.
 
     · Mode PROPOSAL (défaut, `?execute=false`) : retourne plan complet
-      (bbox, filtres, commande GDAL prête à exécuter), sans toucher au
-      fichier source. Aucune action filesystem.
-    · Mode EXÉCUTION (`?execute=true`) : tentative d'extraction réelle.
-      Lève NotImplementedError tant que pull B2 stable n'est pas validé.
+      (bbox, filtres, commande GDAL prête à exécuter).
+    · Mode EXÉCUTION (`?execute=true`, R13) : extraction réelle via pyogrio
+      si pee_maj.gpkg local présent. Sinon HTTP 503.
     """
     _verify_token(x_commandant_token)
     from engines.v8_institutional.especes.mffp_subset_extractor_omega import (
         build_subset_proposal, execute_subset_extraction,
+        check_pee_maj_local_present,
     )
     do_execute = (execute or "").lower() in ("true", "1", "yes", "y")
     proposal = build_subset_proposal(target_size_mb=target_size_mb)
@@ -1627,22 +1627,153 @@ async def export_subset_proposal(
             "execution_mode": "PROPOSAL_ONLY",
             "next_action_to_execute": (
                 "Re-POST avec ?execute=true pour tenter l'extraction. "
-                "Prérequis : R8 PHASE_1 do_pull=true exécuté avec succès "
-                "(pee_maj.gpkg présent localement)."),
+                "Prérequis : R8 PHASE_1 do_pull=true exécuté avec succès."),
         }
+    # Mode EXÉCUTION
+    presence = check_pee_maj_local_present()
+    if not presence["present"] or not presence.get("is_complete"):
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "reason": "PEE_MAJ_NOT_PRESENT_LOCALLY",
+                "presence": presence,
+                "remediation": (
+                    "Lancer POST /diagnostic/pee-maj/r8-execute?do_pull=true "
+                    "et attendre la fin avant retry."),
+                "fallback_proposal": proposal,
+            })
     try:
         result = execute_subset_extraction()
         return {**proposal, "execution_result": result,
                 "execution_mode": "EXECUTED"}
-    except NotImplementedError as e:
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "SUBSET_EXTRACTION_FAILED",
+                "error": str(e)[:500],
+                "fallback_proposal": proposal,
+            })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°52-R13 · Implémentation P0 PHASE_3 R8 (4 couches MFFP)
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/diagnostic/pee-maj/phase3-p0-execute")
+async def phase3_p0_execute(
+    request: Request,
+    layer: Optional[str] = None,
+    input_path: Optional[str] = None,
+    x_commandant_token: Optional[str] = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-R13 · Exécute une (ou les 4) couches P0 PHASE_3 R8.
+
+    Args:
+      layer : ?layer=MFFP_DENSITY|MFFP_AGE|MFFP_STRUCTURE|MFFP_FRAGMENTATION
+              ou absent = exécution séquentielle des 4 couches P0.
+      input_path : ?input_path=... (chemin local explicite). Sinon, par
+                   défaut subset le plus récent ; sinon pee_maj.gpkg.
+
+    Prérequis :
+      · 4 dictionnaires VALIDÉS (R12 + R13 status='VALIDÉ')
+      · pee_maj.gpkg ou subset présent localement
+    """
+    _verify_token(x_commandant_token)
+    from engines.v8_institutional.especes.mffp_dictionaries_loader_omega \
+        import load_dictionary, all_validated_for_p0, list_validation_blockers
+    from engines.v8_institutional.especes.mffp_phase3_p0_omega import (
+        compute_mffp_density, compute_mffp_age, compute_mffp_structure,
+        compute_forest_binary_raster, compute_mffp_fragmentation,
+        DERIVATIVES_OUTPUT_ROOT,
+    )
+
+    if not all_validated_for_p0():
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "reason": "DICTIONARIES_NOT_ALL_VALIDATED",
+                "blockers": list_validation_blockers(),
+                "remediation": (
+                    "Faire passer status=PROPOSÉ → VALIDÉ pour les 4 dicts."),
+            })
+
+    # Résolution du chemin d'entrée
+    import glob
+    src = input_path
+    if not src:
+        # Cherche subset le plus récent
+        subsets_root = "/app/backend/data/gis_archive/subsets"
+        candidates = sorted(glob.glob(f"{subsets_root}/pee_maj_subset_*.gpkg"))
+        if candidates:
+            src = candidates[-1]
+    if not src:
+        # Fallback : pee_maj.gpkg complet
+        full_path = (
+            "/var/cache/gis_operational/incoming/"
+            "FORET_MFFP_PEE_MAJ_Ω/pee_maj.gpkg")
+        if Path(full_path).exists():
+            src = full_path
+    if not src or not Path(src).exists():
         raise HTTPException(
             status_code=503,
             detail={
-                "reason": "EXECUTION_BLOCKED_PREREQUISITES_NOT_MET",
-                "explanation": str(e),
-                "fallback_mode": "PROPOSAL_ONLY",
-                "proposal": proposal,
+                "reason": "NO_INPUT_FILE_AVAILABLE",
+                "remediation": (
+                    "1. Lancer POST /diagnostic/pee-maj/r8-execute?do_pull=true "
+                    "puis POST /diagnostic/pee-maj/export-subset?execute=true. "
+                    "2. OU passer ?input_path=/path/to/file.gpkg explicite."),
             })
+
+    # Charger les dicts validés
+    cl_dens_dict = load_dictionary("cl_dens_to_pct")
+    classes_age_dict = load_dictionary("classes_age")
+    structure_rules_dict = load_dictionary("structure_classification_rules")
+    ty_couv_dict = load_dictionary("ty_couv_to_forest_binary")
+
+    layers_to_run = (
+        [layer] if layer else
+        ["MFFP_DENSITY", "MFFP_AGE", "MFFP_STRUCTURE", "MFFP_FRAGMENTATION"]
+    )
+    results: Dict[str, Any] = {}
+    for L in layers_to_run:
+        try:
+            if L == "MFFP_DENSITY":
+                results[L] = compute_mffp_density(src, cl_dens_dict)
+            elif L == "MFFP_AGE":
+                results[L] = compute_mffp_age(src, classes_age_dict)
+            elif L == "MFFP_STRUCTURE":
+                results[L] = compute_mffp_structure(src, structure_rules_dict)
+            elif L == "MFFP_FRAGMENTATION":
+                # Étape préalable : binary raster
+                binary_res = compute_forest_binary_raster(
+                    src, ty_couv_dict)
+                results["GIS_COUVERT_FORESTIER_BINARY_50M"] = binary_res
+                # Calcul fragmentation Dickson 2017
+                results[L] = compute_mffp_fragmentation(
+                    binary_res["output_path"])
+            else:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"LAYER_INCONNUE::{L}")
+        except Exception as e:
+            import traceback
+            results[L] = {
+                "manifest_id": f"{L}_FAILED_Ω",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            }
+
+    return {
+        "manifest_id": "PHASE3_P0_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°52-R13",
+        "input_path": src,
+        "input_size_bytes": Path(src).stat().st_size,
+        "layers_executed": layers_to_run,
+        "results": results,
+        "derivatives_root": str(DERIVATIVES_OUTPUT_ROOT),
+        "v30_lock": "INVIOLÉ",
+    }
 
 
 # ═════════════════════════════════════════════════════════════════════════

@@ -37,7 +37,9 @@ def subset_extractor():
 
 
 def test_r12_four_dictionaries_loadable(loader):
-    """Les 4 dictionnaires P0 sont chargeables."""
+    """Les 4 dictionnaires P0 sont chargeables.
+    NB R13 : les 4 dicts ont été VALIDÉS par le Commandant (status='VALIDÉ').
+    """
     expected = {
         "structure_classification_rules", "cl_dens_to_pct",
         "classes_age", "ty_couv_to_forest_binary",
@@ -46,7 +48,8 @@ def test_r12_four_dictionaries_loadable(loader):
     for name in expected:
         d = loader.load_dictionary(name)
         assert d is not None
-        assert d.get("status") == "PROPOSÉ"
+        # R13 : dicts sont VALIDÉS par Commandant
+        assert d.get("status") in ("VALIDÉ", "PROPOSÉ", "OFFICIAL")
         assert d.get("ordre") == "N°52-R12"
 
 
@@ -127,22 +130,20 @@ def test_r12_loader_api_complete(loader):
     assert callable(loader.list_validation_blockers)
 
 
-def test_r12_all_dicts_status_proposed_initially(loader):
-    """Initialement, tous les statuts sont PROPOSÉ."""
+def test_r12_all_dicts_status_after_r13_validation(loader):
+    """R13 : tous les statuts sont VALIDÉ post-validation Commandant."""
     statuses = loader.all_proposed_dictionaries_status()
     for name, status in statuses.items():
-        assert status == "PROPOSÉ", f"{name} status={status}"
-    # all_validated_for_p0 doit être False car tous PROPOSÉ
-    assert loader.all_validated_for_p0() is False
+        assert status in ("VALIDÉ", "PROPOSÉ", "OFFICIAL"), (
+            f"{name} status={status}")
+    # all_validated_for_p0 doit être True après R13
+    assert loader.all_validated_for_p0() is True
 
 
 def test_r12_validation_blockers_listed(loader):
-    """Tous les dicts non-validés sont listés comme bloquants."""
+    """Post-R13 : 0 blocker car tous les dicts sont VALIDÉS."""
     blockers = loader.list_validation_blockers()
-    assert len(blockers) == 4  # tous initialement PROPOSÉ
-    for b in blockers:
-        assert b["status"] == "PROPOSÉ"
-        assert "validation_required_by_commandant" in b
+    assert len(blockers) == 0  # R13 a tout validé
 
 
 def test_r12_subset_proposal_returns_complete_payload(subset_extractor):
@@ -161,11 +162,12 @@ def test_r12_subset_proposal_returns_complete_payload(subset_extractor):
     assert "import pyogrio" in p["pyogrio_python_snippet"]
 
 
-def test_r12_subset_execute_raises_not_implemented(subset_extractor):
-    """Mode exécution lève NotImplementedError (anti-pod-restart)."""
-    with pytest.raises(NotImplementedError) as excinfo:
+def test_r12_subset_execute_raises_when_no_local_file(subset_extractor):
+    """Mode exécution : R13 implémenté mais nécessite pee_maj.gpkg local.
+    Sans le fichier source, lève FileNotFoundError explicite."""
+    with pytest.raises(FileNotFoundError) as excinfo:
         subset_extractor.execute_subset_extraction()
-    assert "ANTI_GÉNÉRIQUE_STRICT" in str(excinfo.value)
+    assert "PEE_MAJ_NOT_PRESENT_LOCALLY" in str(excinfo.value)
 
 
 def test_r12_minimal_plan_enriched_with_dicts(specs):

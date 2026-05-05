@@ -3839,3 +3839,62 @@ Pour chaque couche P0, ajout de :
 
 ## V30 LOCK
 - V30 INVIOLÉ · FUSION ADD-ONLY · ANTI_GÉNÉRIQUE_STRICT
+
+═══════════════════════════════════════════════════════════════════════════
+PHASE XXVIII · ORDRE N°52-R13 — VALIDATION + IMPLÉMENTATION P0 (2026-05-05)
+═══════════════════════════════════════════════════════════════════════════
+
+## Validations Commandant
+- 4 dictionnaires : status PROPOSÉ → VALIDÉ (validated_by=COMMANDANT_STEEVE_MAX_R13)
+- Subset 100 Mo Estrie/Cantons-Est : VALIDÉ + autorisé exécution
+- Implémentation P0 PHASE_3 R8 : autorisée (4 couches MFFP)
+
+## 4 fonctions compute_mffp_* IMPLÉMENTÉES (RÉELLES)
+Module : `engines/v8_institutional/especes/mffp_phase3_p0_omega.py`
+
+| Fonction | Algorithme | Output | Test E2E |
+|---|---|---|---|
+| `compute_mffp_density` | CL_DENS → pct + correction GR_ESS | GeoTIFF uint8 100m | ✅ OK |
+| `compute_mffp_age` | CL_AGE → bins MFFP + fallback AN_ORIGINE | GeoTIFF uint8 250m | ✅ OK |
+| `compute_mffp_structure` | Arbre décision step1/2/3 + fallback | GeoTIFF uint8 100m | ✅ OK |
+| `compute_forest_binary_raster` | TY_COUV → forêt binaire | GeoTIFF uint8 50m | ✅ OK |
+| `compute_mffp_fragmentation` | Dickson 2017 (Pf, Pff, FRAG_INDEX) | GeoTIFF float32 250m | ✅ OK |
+
+## Outils GIS sur pod (disponibles)
+- pyogrio 0.12.1 · geopandas 1.1.3 · rasterio 1.4.4
+- shapely 2.1.2 · pyproj 3.7.2 · scipy 1.17.0 · numpy 2.4.0
+
+## subset_extractor R13 (IMPLÉMENTÉ)
+`execute_subset_extraction()` utilise pyogrio.read_dataframe(bbox, use_arrow=True) →
+filtres NULL → write_dataframe(driver='GPKG'). SHA-256 reproductible + distribution
+Counter top-10 des champs critiques.
+
+## Endpoint orchestrateur P0
+`POST /diagnostic/pee-maj/phase3-p0-execute?layer=...&input_path=...` :
+- Sans `?layer=`, exécute les 4 P0 séquentiellement
+- Vérifie all_validated_for_p0() (409 si dicts non validés)
+- Cherche subset le plus récent ou pee_maj.gpkg
+- Sinon 503 NO_INPUT_FILE_AVAILABLE
+
+## Test E2E live (GPKG synthétique 20 polygones, 96 Ko)
+```
+MFFP_DENSITY                     → OK (sha=0d3753005b45105a.., n=20, elapsed=0.25s)
+MFFP_AGE                         → OK (sha=4ccfe334552b49c6.., n=20, elapsed=0.01s)
+MFFP_STRUCTURE                   → OK (sha=1eb909ac60d45cad.., n=20, elapsed=0.01s)
+GIS_COUVERT_FORESTIER_BINARY_50M → OK (sha=b2e7aef6852b1832.., elapsed=0.01s)
+MFFP_FRAGMENTATION               → OK (sha=1dae5699ea68b26d.., elapsed=0.01s)
+```
+5 GeoTIFF EPSG:32198 produits avec SHA-256 idempotents.
+
+## Tests Pytest
+- `tests/test_phase_xxviii_r13_p0_real_omega.py` : **11/11 PASSED**
+- Régression totale : **123/123 PASSED · 0 régression**
+
+## Pipeline pour pee_maj.gpkg réel (en attente Commandant)
+1. `POST /diagnostic/pee-maj/r8-execute?do_pull=true` (pull B2 → /var/cache, 5-15 min)
+2. `POST /diagnostic/pee-maj/export-subset?execute=true` (subset ~100 Mo)
+3. `POST /diagnostic/pee-maj/phase3-p0-execute` (4 couches MFFP réelles)
+4. `POST /territoire/r9-recalc-execute` (recalcul corridors/zones avec score MFFP×0.8)
+
+## V30 LOCK
+- V30 INVIOLÉ · FUSION ADD-ONLY · ANTI_GÉNÉRIQUE_STRICT

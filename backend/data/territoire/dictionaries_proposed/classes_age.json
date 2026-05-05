@@ -2,8 +2,10 @@
   "manifest_id": "CLASSES_AGE_MFFP_PROPOSED_Ω",
   "ordre": "N°52-R12",
   "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
-  "status": "PROPOSÉ",
-  "version": "1.0.0-PROPOSAL",
+  "status": "VALIDÉ",
+  "validated_at_utc": "2026-05-05T20:00:00+00:00",
+  "validated_by": "COMMANDANT_STEEVE_MAX_R13",
+  "version": "1.0.0-VALIDATED",
   "source_documentation": [
     "MFFP (2016) Manuel d'aménagement forestier durable, ch. 4 Classes d'âge",
     "MFFP (2018) Normes d'inventaire écoforestier, fascicule III ch. 5",

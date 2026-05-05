@@ -159,32 +159,171 @@ def build_subset_proposal(
 def execute_subset_extraction(
     bbox_epsg_32198: Optional[Dict[str, float]] = None,
     sql_filter: Optional[str] = None,
+    pee_maj_local_path: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Mode EXÉCUTION RÉELLE (background, ~5-15 min).
+    """ORDRE N°52-R13 · Extraction RÉELLE du subset 100 Mo via pyogrio.
 
-    Vérifie :
-      1. pee_maj.gpkg présent localement (sinon : RuntimeError prérequis)
-      2. ogr2ogr disponible (préféré) sinon pyogrio
-      3. Lance l'extraction avec subprocess
-      4. Compresse zstd le résultat
-      5. Calcule SHA-256 + métriques (n_polygons, distribution)
+    Préconditions :
+      · pee_maj.gpkg présent localement (vérifié par
+        check_pee_maj_local_present()).
+      · pyogrio installé (déjà OK sur ce pod : 0.12.1).
 
-    NB : La lourdeur de l'extraction (~5-15 min sur 37 Go) impose un
-    threading.Thread daemon. Cette fonction lève NotImplementedError tant
-    que le pull B2 réel n'a pas été validé en infrastructure stable.
+    Stratégie :
+      1. pyogrio.read_dataframe(bbox=..., use_arrow=True) — streaming
+      2. Filtres DataFrame (NULL exclus)
+      3. pyogrio.write_dataframe(driver='GPKG')
+      4. SHA-256 du résultat + métriques distribution
+
+    Retourne :
+      · output_path, output_size_bytes, sha256
+      · n_polygons_extracted
+      · distribution {TY_COUV, ESS_DOMI, CL_AGE} (Counter top-N)
+      · elapsed_s
     """
-    raise NotImplementedError(
-        "MFFP_SUBSET_EXECUTE · ANTI_GÉNÉRIQUE_STRICT · "
-        "Exécution réelle nécessite : 1) pee_maj.gpkg présent localement "
-        "(R8 PHASE_1 do_pull=true exécuté avec succès), 2) ogr2ogr/pyogrio "
-        "installés, 3) infrastructure stable (sans pod restart pendant "
-        "l'extraction). Tant que ces conditions ne sont pas réunies, "
-        "utiliser uniquement le mode PROPOSAL via build_subset_proposal().")
+    import hashlib
+    import time
+    from collections import Counter
+
+    bbox = bbox_epsg_32198 or DEFAULT_SUBSET_BBOX_EPSG_32198
+    src_path = pee_maj_local_path or (
+        "/var/cache/gis_operational/incoming/FORET_MFFP_PEE_MAJ_Ω/pee_maj.gpkg")
+
+    # Vérification préalable du fichier source
+    src = Path(src_path)
+    if not src.exists():
+        raise FileNotFoundError(
+            f"PEE_MAJ_NOT_PRESENT_LOCALLY :: {src_path} :: "
+            "Lancer POST /diagnostic/pee-maj/r8-execute?do_pull=true "
+            "préalablement.")
+    if src.stat().st_size < 1_000_000:
+        raise RuntimeError(
+            f"PEE_MAJ_TOO_SMALL :: {src_path} size={src.stat().st_size}. "
+            "Pull B2 incomplet ?")
+
+    # Chargement pyogrio avec bbox spatial
+    import pyogrio  # noqa: PLC0415
+
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    output_filename = (
+        f"pee_maj_subset_{bbox.get('label','custom')}_{timestamp}.gpkg")
+    output_path = SUBSETS_OUTPUT_ROOT / output_filename
+
+    t0 = time.time()
+    bbox_tuple = (
+        float(bbox["xmin"]), float(bbox["ymin"]),
+        float(bbox["xmax"]), float(bbox["ymax"]),
+    )
+    logger.info(
+        "SUBSET_EXTRACT_START src=%s bbox=%s out=%s",
+        src_path, bbox_tuple, output_path)
+
+    # Lister les layers disponibles dans le GPKG
+    layers_info = pyogrio.list_layers(src_path)
+    layer_names = (
+        list(layers_info[:, 0]) if hasattr(layers_info, "shape")
+        else [L[0] for L in layers_info]
+    )
+    if not layer_names:
+        raise RuntimeError(f"PEE_MAJ_NO_LAYERS :: {src_path}")
+    # Choix du layer principal (le plus volumineux ou nom canonique)
+    primary_layer = (
+        "peuplement_ecoforestier"
+        if "peuplement_ecoforestier" in layer_names
+        else layer_names[0]
+    )
+    logger.info("SUBSET_LAYER_SELECTED %s (parmi %s)",
+                primary_layer, layer_names)
+
+    df = pyogrio.read_dataframe(
+        src_path, layer=primary_layer,
+        bbox=bbox_tuple, use_arrow=True)
+
+    # Filtres NULL sur champs critiques (si présents)
+    critical_fields = ["TY_COUV", "CL_DENS", "CL_AGE", "ESS_DOMI"]
+    cols_lower = {c.lower(): c for c in df.columns}
+    for cf in critical_fields:
+        cf_actual = cols_lower.get(cf.lower())
+        if cf_actual:
+            df = df.dropna(subset=[cf_actual])
+
+    n_polygons = len(df)
+    logger.info("SUBSET_FILTERED n_polygons=%d", n_polygons)
+
+    # Écriture du subset
+    SUBSETS_OUTPUT_ROOT.mkdir(parents=True, exist_ok=True)
+    pyogrio.write_dataframe(
+        df, str(output_path), layer=primary_layer, driver="GPKG")
+
+    # SHA-256 du fichier produit
+    h = hashlib.sha256()
+    with open(output_path, "rb") as fh:
+        while True:
+            blk = fh.read(8 << 20)
+            if not blk:
+                break
+            h.update(blk)
+    sha256 = h.hexdigest()
+    output_size_bytes = output_path.stat().st_size
+
+    # Distributions (Counter top 10)
+    distributions: Dict[str, Any] = {}
+    for cf in critical_fields:
+        cf_actual = cols_lower.get(cf.lower())
+        if cf_actual and cf_actual in df.columns:
+            counts = Counter(df[cf_actual].astype(str))
+            distributions[cf] = {
+                "unique_count": len(counts),
+                "top_10": dict(counts.most_common(10)),
+            }
+
+    elapsed_s = round(time.time() - t0, 2)
+    logger.info(
+        "SUBSET_EXTRACT_DONE elapsed=%ss size=%dMB sha256=%s",
+        elapsed_s, output_size_bytes // (1 << 20), sha256)
+
+    return {
+        "manifest_id": "MFFP_SUBSET_EXTRACTED_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°52-R13",
+        "status": "EXECUTED",
+        "src_path": src_path,
+        "src_layer": primary_layer,
+        "output_path": str(output_path),
+        "output_size_bytes": output_size_bytes,
+        "output_size_mb": round(output_size_bytes / (1 << 20), 2),
+        "sha256": sha256,
+        "n_polygons_extracted": n_polygons,
+        "bbox_used": bbox,
+        "distributions": distributions,
+        "elapsed_s": elapsed_s,
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+def check_pee_maj_local_present() -> Dict[str, Any]:
+    """Vérifie si pee_maj.gpkg est présent localement et complet."""
+    p = Path(
+        "/var/cache/gis_operational/incoming/FORET_MFFP_PEE_MAJ_Ω/pee_maj.gpkg")
+    if not p.exists():
+        return {
+            "present": False,
+            "path": str(p),
+            "reason": "FILE_ABSENT",
+        }
+    size = p.stat().st_size
+    return {
+        "present": True,
+        "path": str(p),
+        "size_bytes": size,
+        "size_gb": round(size / (1 << 30), 2),
+        "is_complete": size >= 30_000_000_000,  # ~30 Go minimum
+    }
 
 
 __all__ = [
     "build_subset_proposal",
     "execute_subset_extraction",
+    "check_pee_maj_local_present",
     "DEFAULT_SUBSET_BBOX_EPSG_32198",
     "DEFAULT_SUBSET_SQL_FILTER",
     "SUBSETS_OUTPUT_ROOT",
