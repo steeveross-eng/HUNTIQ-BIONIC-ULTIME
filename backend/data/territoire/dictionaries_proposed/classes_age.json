@@ -1,0 +1,97 @@
+{
+  "manifest_id": "CLASSES_AGE_MFFP_PROPOSED_Ω",
+  "ordre": "N°52-R12",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "status": "PROPOSÉ",
+  "version": "1.0.0-PROPOSAL",
+  "source_documentation": [
+    "MFFP (2016) Manuel d'aménagement forestier durable, ch. 4 Classes d'âge",
+    "MFFP (2018) Normes d'inventaire écoforestier, fascicule III ch. 5",
+    "Pothier, D. et Savard, F. (1998) Évaluation de classes structurales — MRNF Rapport interne"
+  ],
+  "description": "Conversion canonique des classes d'âge MFFP (CL_AGE) vers des bornes en années + classes spéciales inéquiennes.",
+  "field_canonical": "CL_AGE",
+  "raster_class_id_strategy": "Les classes 1-6 sont régulières (équiennes) ; 7-8 sont spéciales (inéquiennes). NoData=0.",
+  "regular_age_classes": {
+    "10": {
+      "raster_class_id": 1,
+      "year_bounds": [0, 20],
+      "label": "0-20 ans",
+      "description_mffp": "Régénération récente (post-perturbation 0-20 ans)",
+      "ecological_note": "Habitat ouvert, riche en herbacées et arbustes (alimentation chevreuil/orignal)"
+    },
+    "30": {
+      "raster_class_id": 2,
+      "year_bounds": [20, 40],
+      "label": "20-40 ans",
+      "description_mffp": "Jeune peuplement en croissance",
+      "ecological_note": "Habitat de transition, fermeture progressive"
+    },
+    "50": {
+      "raster_class_id": 3,
+      "year_bounds": [40, 60],
+      "label": "40-60 ans",
+      "description_mffp": "Peuplement intermédiaire",
+      "ecological_note": "Habitat structural en formation"
+    },
+    "70": {
+      "raster_class_id": 4,
+      "year_bounds": [60, 80],
+      "label": "60-80 ans",
+      "description_mffp": "Peuplement mature",
+      "ecological_note": "Productivité optimale (peuplements optimaux orignal/ours)"
+    },
+    "90": {
+      "raster_class_id": 5,
+      "year_bounds": [80, 100],
+      "label": "80-100 ans",
+      "description_mffp": "Peuplement mûr",
+      "ecological_note": "Forêts âgées en transition vers irrégularité"
+    },
+    "120": {
+      "raster_class_id": 6,
+      "year_bounds": [100, 999],
+      "label": "100+ ans",
+      "description_mffp": "Forêt ancienne (vieille forêt potentielle)",
+      "ecological_note": "Habitat critique (chicots, débris ligneux, refuges)"
+    }
+  },
+  "inequienne_age_classes": {
+    "JIN": {
+      "raster_class_id": 7,
+      "label": "Jeune inéquienne irrégulière",
+      "description_mffp": "Peuplement multi-strate jeune",
+      "ecological_note": "Structure verticale développée, biodiversité riche"
+    },
+    "JIR": {
+      "raster_class_id": 7,
+      "label": "Jeune inéquienne régulière",
+      "description_mffp": "Multi-strate jeune homogène spatialement",
+      "ecological_note": "Variante régulière de JIN"
+    },
+    "VIN": {
+      "raster_class_id": 8,
+      "label": "Vieille inéquienne irrégulière",
+      "description_mffp": "Forêt ancienne multi-strate hétérogène",
+      "ecological_note": "Habitat de très haute valeur écologique (espèces spécialistes)"
+    },
+    "VIR": {
+      "raster_class_id": 8,
+      "label": "Vieille inéquienne régulière",
+      "description_mffp": "Forêt ancienne multi-strate homogène",
+      "ecological_note": "Variante régulière de VIN"
+    }
+  },
+  "fallback_age_from_an_origine": {
+    "method": "age_local = current_year - AN_ORIGINE",
+    "current_year_default": 2026,
+    "use_when_cl_age_missing": true,
+    "binning_method": "Application des year_bounds régulières ci-dessus"
+  },
+  "validation_required_by_commandant": [
+    "Confirmer les bornes 0-20, 20-40, ... vs nomenclature BCE-4X interne",
+    "Valider que JIN/JIR fusionnés en raster_class_id=7 et VIN/VIR=8",
+    "Tester sur subset 100 Mo : distribution des classes (histogramme attendu)"
+  ],
+  "v30_lock": "INVIOLÉ"
+}

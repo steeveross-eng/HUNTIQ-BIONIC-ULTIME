@@ -649,7 +649,7 @@ def compute_mffp_continuity(
 # ═════════════════════════════════════════════════════════════════════════
 PHASE3_MINIMAL_PLAN: Dict[str, Any] = {
     "title": "Plan d'implémentation minimal PHASE_3 R8 — débloquer R9",
-    "ordre": "N°52-R11",
+    "ordre": "N°52-R11_R12_UPDATED",
     "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
     "priority_layers_4_critical": [
         "MFFP_STRUCTURE",   # P0 priority pour scoring corridor/zone_*
@@ -659,18 +659,69 @@ PHASE3_MINIMAL_PLAN: Dict[str, Any] = {
     ],
     "implementation_order_recommended": [
         # Ordre = simple → complexe + dépendances respectées
-        {"step": 1, "layer": "MFFP_DENSITY",       "complexity": "LOW",
-         "estimated_dev_hours": 4,
-         "note": "Mapping direct CL_DENS → pct, rasterisation simple."},
-        {"step": 2, "layer": "MFFP_AGE",           "complexity": "LOW",
-         "estimated_dev_hours": 4,
-         "note": "Mapping CL_AGE → bins MFFP."},
-        {"step": 3, "layer": "MFFP_STRUCTURE",     "complexity": "MEDIUM",
-         "estimated_dev_hours": 12,
-         "note": "Arbre décision CL_AGE × CL_HAUT × CL_DENS."},
-        {"step": 4, "layer": "MFFP_FRAGMENTATION", "complexity": "HIGH",
-         "estimated_dev_hours": 24,
-         "note": "Convolutions Dickson 2017, fenêtres glissantes."},
+        {
+            "step": 1, "layer": "MFFP_DENSITY", "complexity": "LOW",
+            "estimated_dev_hours": 4,
+            "fields_used_pee_maj_gpkg": ["CL_DENS", "GR_ESS", "CL_HAUT"],
+            "dictionaries_proposed_used": ["cl_dens_to_pct.json"],
+            "subset_validation_tests": [
+                "Histogramme distribution CL_DENS A/B/C/D/E (cohérent attendu)",
+                "Statistiques mean_pct par GR_ESS (R > F par +5%)",
+                "Compare 3-5 polygones échantillon vs lookup manuel dict",
+                "SHA-256 raster output reproductible (run idempotent)",
+            ],
+            "note": "Mapping direct CL_DENS → pct via dict, rasterisation simple.",
+        },
+        {
+            "step": 2, "layer": "MFFP_AGE", "complexity": "LOW",
+            "estimated_dev_hours": 4,
+            "fields_used_pee_maj_gpkg": ["CL_AGE", "AN_ORIGINE"],
+            "dictionaries_proposed_used": ["classes_age.json"],
+            "subset_validation_tests": [
+                "Distribution classes 1-8 (régulières + inéquiennes)",
+                "Vérifier fallback AN_ORIGINE si CL_AGE manquant",
+                "JIN/JIR fusionnés en class_id=7 ; VIN/VIR=8",
+                "% classe 6 (100+ ans) attendu : 5-15% selon écorégion",
+            ],
+            "note": "Mapping CL_AGE → bins MFFP via dict.",
+        },
+        {
+            "step": 3, "layer": "MFFP_STRUCTURE", "complexity": "MEDIUM",
+            "estimated_dev_hours": 12,
+            "fields_used_pee_maj_gpkg": [
+                "CL_AGE", "CL_HAUT", "CL_DENS", "GR_ESS", "TY_COUV"],
+            "dictionaries_proposed_used": [
+                "structure_classification_rules.json",
+                "classes_age.json",
+                "cl_dens_to_pct.json",
+            ],
+            "subset_validation_tests": [
+                "Distribution 7 classes structurales (1-7)",
+                "Cohérence step_1 (inéquiennes → 5/6) sur 50 cas test",
+                "Cohérence step_3 (régulières/irrégulières) sur 50 cas test",
+                "Fallback rule (REGULIERE_MONOSTRATE) appliqué si pas de match",
+                "Comparaison croisée avec couches MFFP officielles (si dispo)",
+            ],
+            "note": "Arbre décision CL_AGE × CL_HAUT × CL_DENS appliqué via dict structure_classification_rules.",
+        },
+        {
+            "step": 4, "layer": "MFFP_FRAGMENTATION", "complexity": "HIGH",
+            "estimated_dev_hours": 24,
+            "fields_used_pee_maj_gpkg": ["TY_COUV", "GR_ESS", "CL_DENS"],
+            "dictionaries_proposed_used": ["ty_couv_to_forest_binary.json"],
+            "prerequisites": [
+                "GIS_COUVERT_FORESTIER_BINARY.tif (50m) calculé d'abord "
+                "via ty_couv_to_forest_binary.json",
+            ],
+            "subset_validation_tests": [
+                "Calcul Pf (proportion forêt) sur fenêtre 5×5",
+                "Calcul Pff (proportion adjacences forêt-forêt)",
+                "FRAG_INDEX = Pff/max(Pf, eps) range [0.0, 1.0]",
+                "Validation visuelle 3-5 zones (forêt continue → 1.0)",
+                "Validation Dickson 2017 sur 100 cas test",
+            ],
+            "note": "Convolutions Dickson 2017 + scipy.ndimage. Performance critique.",
+        },
     ],
     "technical_dependencies": {
         "python_modules": [
@@ -693,9 +744,17 @@ PHASE3_MINIMAL_PLAN: Dict[str, Any] = {
             "classes_age.json (validation bornes MFFP)",
             "ty_couv_to_forest_binary.json",
         ],
+        "dictionaries_proposed_status_R12": (
+            "Les 4 dictionnaires sont fournis en mode PROPOSÉ par R12. "
+            "Statuts disponibles via "
+            "GET /api/v30/admin-premium/gis/territoire/dictionaries-proposed. "
+            "Validation Commandant requise (passer status=PROPOSÉ → VALIDÉ)."),
         "validation_subset_required": (
             "Subset 100 Mo de pee_maj.gpkg (échantillon couvrant ≥ 5 "
-            "écorégions) pour valider les algorithmes avant production."),
+            "écorégions) pour valider les algorithmes avant production. "
+            "R12 propose : bbox Estrie/Cantons-Est EPSG:32198 "
+            "[560000,175000,670000,250000]. Endpoint : "
+            "POST /api/v30/admin-premium/gis/diagnostic/pee-maj/export-subset."),
     },
     "estimated_total_effort_hours_4_critical_layers": 44,
     "blocker_to_unblock_r9_targets": (

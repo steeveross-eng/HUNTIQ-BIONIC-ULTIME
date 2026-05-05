@@ -1,0 +1,88 @@
+{
+  "manifest_id": "STRUCTURE_CLASSIFICATION_RULES_MFFP_PROPOSED_Ω",
+  "ordre": "N°52-R12",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "status": "PROPOSÉ",
+  "version": "1.0.0-PROPOSAL",
+  "source_documentation": [
+    "MFFP (2016) Manuel d'aménagement forestier durable, ch. 3 Structure des peuplements",
+    "Pothier, D. et Savard, F. (1998) Évaluation des classes structurales (rapport interne MRNF)",
+    "Saucier, J.-P. et al. (2009) Cadre bioclimatique de référence du Québec",
+    "Bergeron, Y. & Harvey, B. (1997) Forest Ecology and Management 92(1-3):235-242"
+  ],
+  "description": "Arbre de décision pour classifier un peuplement écoforestier en 7 classes structurales fondées sur l'âge (CL_AGE), la hauteur (CL_HAUT) et la densité (CL_DENS). Aligné avec MFFP_STRUCTURE.tif valeurs 1-7.",
+  "fields_required": ["CL_AGE", "CL_HAUT", "CL_DENS", "GR_ESS", "TY_COUV"],
+  "decision_tree": {
+    "step_1_check_inequienne": {
+      "condition": "CL_AGE in ['JIN', 'JIR', 'VIN', 'VIR']",
+      "true_branch": {
+        "JIN": {"raster_class_id": 5, "label": "INEQUIENNE_JEUNE"},
+        "JIR": {"raster_class_id": 5, "label": "INEQUIENNE_JEUNE"},
+        "VIN": {"raster_class_id": 6, "label": "INEQUIENNE_VIEILLE"},
+        "VIR": {"raster_class_id": 6, "label": "INEQUIENNE_VIEILLE"}
+      },
+      "false_branch": "step_2_check_recrue"
+    },
+    "step_2_check_recrue": {
+      "condition": "CL_AGE == '10' AND CL_DENS in ['D', 'E']",
+      "true_branch": {"raster_class_id": 7, "label": "RECRUE_OUVERT"},
+      "false_branch": "step_3_check_haut_dens"
+    },
+    "step_3_check_haut_dens": {
+      "rules": [
+        {
+          "condition": "CL_HAUT in [1, 2] AND CL_DENS == 'A'",
+          "result": {"raster_class_id": 2, "label": "REGULIERE_BISTRATE"},
+          "rationale": "Haute hauteur + densité dense → potentielle stratification verticale détectable"
+        },
+        {
+          "condition": "CL_HAUT in [1, 2] AND CL_DENS in ['B', 'C']",
+          "result": {"raster_class_id": 3, "label": "IRREGULIERE_ETAGEE"},
+          "rationale": "Haute hauteur + densité moyenne → étages multiples probables"
+        },
+        {
+          "condition": "CL_HAUT in [3, 4] AND CL_DENS in ['A', 'B']",
+          "result": {"raster_class_id": 1, "label": "REGULIERE_MONOSTRATE"},
+          "rationale": "Hauteur moyenne + densité haute = peuplement homogène typique"
+        },
+        {
+          "condition": "CL_HAUT == 5",
+          "result": {"raster_class_id": 1, "label": "REGULIERE_MONOSTRATE"},
+          "rationale": "Hauteur faible 4-7m = jeune peuplement régulier"
+        },
+        {
+          "condition": "CL_DENS in ['D', 'E'] AND CL_HAUT in [3, 4, 5]",
+          "result": {"raster_class_id": 4, "label": "IRREGULIERE_JARDINEE"},
+          "rationale": "Densité faible avec hauteur intermédiaire = structure jardinée potentielle"
+        }
+      ],
+      "fallback_rule": {
+        "condition": "default if no rule match",
+        "result": {"raster_class_id": 1, "label": "REGULIERE_MONOSTRATE"},
+        "rationale": "Par défaut, classer en REGULIERE_MONOSTRATE (la plus commune au Québec)"
+      }
+    }
+  },
+  "raster_class_ids_overview": {
+    "1": "REGULIERE_MONOSTRATE",
+    "2": "REGULIERE_BISTRATE",
+    "3": "IRREGULIERE_ETAGEE",
+    "4": "IRREGULIERE_JARDINEE",
+    "5": "INEQUIENNE_JEUNE",
+    "6": "INEQUIENNE_VIEILLE",
+    "7": "RECRUE_OUVERT"
+  },
+  "ecological_significance": {
+    "1_2_REGULIERE": "Aménagement forestier intensif, biodiversité homogène",
+    "3_4_IRREGULIERE": "Structure naturelle, biodiversité élevée, refuges fauniques",
+    "5_6_INEQUIENNE": "Forêt ancienne ou perturbée par feu, valeur écologique TRÈS HAUTE",
+    "7_RECRUE_OUVERT": "Régénération précoce, alimentation faune (chevreuil, ours)"
+  },
+  "validation_required_by_commandant": [
+    "Confirmer ou ajuster les seuils CL_HAUT × CL_DENS dans step_3",
+    "Valider le fallback_rule (REGULIERE_MONOSTRATE par défaut)",
+    "Tester sur subset 100 Mo : distribution attendue des 7 classes",
+    "Comparer avec couches officielles MFFP si disponibles"
+  ],
+  "v30_lock": "INVIOLÉ"
+}

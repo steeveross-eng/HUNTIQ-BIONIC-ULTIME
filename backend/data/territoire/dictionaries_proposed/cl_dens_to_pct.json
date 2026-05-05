@@ -1,0 +1,64 @@
+{
+  "manifest_id": "CL_DENS_TO_PCT_MFFP_PROPOSED_Ω",
+  "ordre": "N°52-R12",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "status": "PROPOSÉ",
+  "version": "1.0.0-PROPOSAL",
+  "source_documentation": [
+    "MFFP (2018) Normes d'inventaire écoforestier du Québec méridional, ch. 3.4 Densité du couvert",
+    "MFFP (2016) Manuel d'aménagement forestier durable, fascicule II",
+    "Coops, N.C. et al. (2007) Remote Sensing of Environment 110(1):113-129"
+  ],
+  "description": "Conversion canonique des classes de densité de couvert MFFP (CL_DENS, lettre A-E) vers un pourcentage de canopée représentatif (centre de l'intervalle officiel MFFP).",
+  "field_canonical": "CL_DENS",
+  "midpoint_strategy": "Le pct retourné est le centre de l'intervalle officiel MFFP : A = ]80,100], B = ]60,80], C = ]40,60], D = ]25,40], E = [10,25]",
+  "mapping": {
+    "A": {
+      "pct_canopy_midpoint": 90,
+      "interval_official_pct": [80, 100],
+      "label": "Très dense",
+      "description_mffp": "Couvert dépassant 80% (canopée fermée)",
+      "ecological_note": "Habitat thermique optimal (hiver chevreuil/orignal)"
+    },
+    "B": {
+      "pct_canopy_midpoint": 70,
+      "interval_official_pct": [60, 80],
+      "label": "Dense",
+      "description_mffp": "Couvert 60-80% (canopée presque continue)",
+      "ecological_note": "Bon habitat structural multi-espèces"
+    },
+    "C": {
+      "pct_canopy_midpoint": 50,
+      "interval_official_pct": [40, 60],
+      "label": "Moyennement dense",
+      "description_mffp": "Couvert 40-60% (canopée semi-ouverte)",
+      "ecological_note": "Zone alimentation (lumière sous-bois)"
+    },
+    "D": {
+      "pct_canopy_midpoint": 32,
+      "interval_official_pct": [25, 40],
+      "label": "Clairsemé",
+      "description_mffp": "Couvert 25-40% (canopée ouverte)",
+      "ecological_note": "Habitat ouvert (dindon, jeunes pousses)"
+    },
+    "E": {
+      "pct_canopy_midpoint": 17,
+      "interval_official_pct": [10, 25],
+      "label": "Très clairsemé / dégradé",
+      "description_mffp": "Couvert 10-25% (canopée éparse)",
+      "ecological_note": "Zone perturbée ou en régénération"
+    }
+  },
+  "correction_factors_proposed": {
+    "GR_ESS_F_feuillus": 1.0,
+    "GR_ESS_R_resineux": 1.05,
+    "GR_ESS_M_mixte": 1.025,
+    "justification": "Les peuplements résineux ont une canopée plus dense pour une même classe MFFP (pénétration lumineuse moindre) — facteur de correction empirique +5% pour résineux purs."
+  },
+  "validation_required_by_commandant": [
+    "Vérifier les midpoints (90, 70, 50, 32, 17) vs valeurs internes BCE-4X éventuelles",
+    "Confirmer ou ajuster les facteurs de correction GR_ESS",
+    "Valider sur le subset 100 Mo (statistiques distribution attendue)"
+  ],
+  "v30_lock": "INVIOLÉ"
+}

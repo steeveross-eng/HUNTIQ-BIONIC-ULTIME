@@ -1542,6 +1542,110 @@ async def get_phase3_specs(
 
 
 # ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°52-R12 · Dictionnaires PROPOSÉS + Subset proposal
+# ═════════════════════════════════════════════════════════════════════════
+@router.get("/territoire/dictionaries-proposed")
+async def get_dictionaries_proposed(
+    name: Optional[str] = None,
+    x_commandant_token: Optional[str] = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-R12 · Expose les 4 dictionnaires PROPOSÉS pour PHASE_3 R8.
+
+    Filtre optionnel `?name=cl_dens_to_pct` pour retourner uniquement un
+    dictionnaire ciblé. Sinon retourne tous les dictionnaires + statuts.
+    """
+    _verify_token(x_commandant_token)
+    from engines.v8_institutional.especes.mffp_dictionaries_loader_omega \
+        import (
+            load_dictionary, load_all_dictionaries,
+            all_proposed_dictionaries_status, all_validated_for_p0,
+            list_validation_blockers,
+        )
+    if name:
+        try:
+            d = load_dictionary(name)
+        except KeyError as e:
+            raise HTTPException(status_code=404, detail=str(e))
+        except FileNotFoundError as e:
+            raise HTTPException(status_code=500, detail=str(e))
+        return {
+            "manifest_id": "MFFP_DICTIONARY_PROPOSED_Ω",
+            "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "ordre": "N°52-R12",
+            "dictionary_name": name,
+            "content": d,
+            "v30_lock": "INVIOLÉ",
+        }
+    statuses = all_proposed_dictionaries_status()
+    validated = all_validated_for_p0()
+    blockers = list_validation_blockers()
+    return {
+        "manifest_id": "MFFP_DICTIONARIES_PROPOSED_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°52-R12",
+        "dictionaries_count": len(statuses),
+        "dictionaries": load_all_dictionaries(),
+        "statuses_summary": statuses,
+        "all_validated_for_p0": validated,
+        "validation_blockers": blockers,
+        "next_steps": (
+            "Pour valider un dictionnaire, modifier le champ `status` de "
+            "PROPOSÉ → VALIDÉ dans le fichier JSON correspondant sous "
+            "/app/backend/data/territoire/dictionaries_proposed/. "
+            "Une fois les 4 dicts validés, P0 PHASE_3 R8 peut être "
+            "implémentée."
+            if not validated else
+            "Tous les dicts P0 sont VALIDÉS. PHASE_3 R8 peut commencer."),
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+@router.post("/diagnostic/pee-maj/export-subset")
+async def export_subset_proposal(
+    request: Request,
+    execute: Optional[str] = None,
+    target_size_mb: int = 100,
+    x_commandant_token: Optional[str] = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-R12 · Export subset ~100 Mo de pee_maj.gpkg.
+
+    · Mode PROPOSAL (défaut, `?execute=false`) : retourne plan complet
+      (bbox, filtres, commande GDAL prête à exécuter), sans toucher au
+      fichier source. Aucune action filesystem.
+    · Mode EXÉCUTION (`?execute=true`) : tentative d'extraction réelle.
+      Lève NotImplementedError tant que pull B2 stable n'est pas validé.
+    """
+    _verify_token(x_commandant_token)
+    from engines.v8_institutional.especes.mffp_subset_extractor_omega import (
+        build_subset_proposal, execute_subset_extraction,
+    )
+    do_execute = (execute or "").lower() in ("true", "1", "yes", "y")
+    proposal = build_subset_proposal(target_size_mb=target_size_mb)
+    if not do_execute:
+        return {
+            **proposal,
+            "execution_mode": "PROPOSAL_ONLY",
+            "next_action_to_execute": (
+                "Re-POST avec ?execute=true pour tenter l'extraction. "
+                "Prérequis : R8 PHASE_1 do_pull=true exécuté avec succès "
+                "(pee_maj.gpkg présent localement)."),
+        }
+    try:
+        result = execute_subset_extraction()
+        return {**proposal, "execution_result": result,
+                "execution_mode": "EXECUTED"}
+    except NotImplementedError as e:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "reason": "EXECUTION_BLOCKED_PREREQUISITES_NOT_MET",
+                "explanation": str(e),
+                "fallback_mode": "PROPOSAL_ONLY",
+                "proposal": proposal,
+            })
+
+
+# ═════════════════════════════════════════════════════════════════════════
 # ORDRE N°52-R8 · Orchestrateur pipeline complet 8 phases (Option δ)
 # ═════════════════════════════════════════════════════════════════════════
 @router.post("/diagnostic/pee-maj/r8-execute")

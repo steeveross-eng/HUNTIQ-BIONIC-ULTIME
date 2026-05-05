@@ -1,0 +1,128 @@
+{
+  "manifest_id": "TY_COUV_TO_FOREST_BINARY_MFFP_PROPOSED_Ω",
+  "ordre": "N°52-R12",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "status": "PROPOSÉ",
+  "version": "1.0.0-PROPOSAL",
+  "source_documentation": [
+    "MFFP (2018) Normes d'inventaire écoforestier, fascicule II ch. 4 Codes de couverture",
+    "Pelletier, G. et al. (2007) Système d'inventaire forestier MFFP — Référentiel des codes",
+    "Saucier, J.-P. et al. (2009) Cadre bioclimatique de référence du Québec"
+  ],
+  "description": "Conversion binaire des codes de type de couverture (TY_COUV) vers forêt (1) ou non-forêt (0). Indispensable pour le calcul de fragmentation Dickson 2017 et pour les couches dérivées MFFP_HABITAT et MFFP_CONNECTIVITY.",
+  "field_canonical": "TY_COUV",
+  "decision_rule": "Tous les types couvert avec composante boisée significative (≥10% canopée) classés FORÊT (1). Eaux, dénudés, agricoles, anthropisés classés NON-FORÊT (0).",
+  "forest_codes": {
+    "FE": {
+      "binary": 1,
+      "label": "Feuillus",
+      "description_mffp": "Peuplement à dominante feuillue (>75% feuillus)",
+      "category": "FORET_FEUILLUE"
+    },
+    "FR": {
+      "binary": 1,
+      "label": "Feuillus à résineux",
+      "description_mffp": "Mixte à dominance feuillue (50-75% feuillus)",
+      "category": "FORET_MIXTE_F"
+    },
+    "FM": {
+      "binary": 1,
+      "label": "Feuillus mélangés",
+      "description_mffp": "Variante mixte feuillus dominants",
+      "category": "FORET_MIXTE_F"
+    },
+    "RE": {
+      "binary": 1,
+      "label": "Résineux",
+      "description_mffp": "Peuplement à dominante résineuse (>75% résineux)",
+      "category": "FORET_RESINEUSE"
+    },
+    "RN": {
+      "binary": 1,
+      "label": "Résineux à feuillus",
+      "description_mffp": "Mixte à dominance résineuse (50-75% résineux)",
+      "category": "FORET_MIXTE_R"
+    },
+    "RM": {
+      "binary": 1,
+      "label": "Résineux mélangés",
+      "description_mffp": "Variante mixte résineux dominants",
+      "category": "FORET_MIXTE_R"
+    },
+    "MS": {
+      "binary": 1,
+      "label": "Mixte sans dominance",
+      "description_mffp": "Mixte 50-50 feuillus/résineux",
+      "category": "FORET_MIXTE_M"
+    }
+  },
+  "non_forest_codes": {
+    "EAU": {
+      "binary": 0,
+      "label": "Plan d'eau",
+      "description_mffp": "Lac, rivière, étang permanent",
+      "category": "EAU"
+    },
+    "DH": {
+      "binary": 0,
+      "label": "Dénudé humide",
+      "description_mffp": "Tourbière, marais",
+      "category": "MILIEU_HUMIDE"
+    },
+    "DS": {
+      "binary": 0,
+      "label": "Dénudé sec",
+      "description_mffp": "Affleurement rocheux, sol dénudé",
+      "category": "DENUDE_SEC"
+    },
+    "AGR": {
+      "binary": 0,
+      "label": "Terre agricole",
+      "description_mffp": "Cultures, prairies",
+      "category": "AGRICOLE"
+    },
+    "AN": {
+      "binary": 0,
+      "label": "Anthropisé",
+      "description_mffp": "Urbain, infrastructures, routes",
+      "category": "ANTHROPISE"
+    },
+    "GR": {
+      "binary": 0,
+      "label": "Coupe récente / gravière",
+      "description_mffp": "Sol minéral exposé (coupe totale récente)",
+      "category": "PERTURBATION_AIGUE"
+    },
+    "AL": {
+      "binary": 0,
+      "label": "Aulnaie / arbustaie",
+      "description_mffp": "Couvert arbustif (non-forestier)",
+      "category": "ARBUSTAIE"
+    }
+  },
+  "ambiguous_codes_default_decision": {
+    "BR": {
+      "binary": 1,
+      "label": "Brûlis",
+      "decision_rationale": "Bien que couvert dégradé, classifié FORÊT (1) car en régénération forestière prévue",
+      "review_required_by_commandant": true
+    },
+    "RX": {
+      "binary": 0,
+      "label": "Régénération non commerciale",
+      "decision_rationale": "Couverture < 10% jugée non-forêt par défaut",
+      "review_required_by_commandant": true
+    }
+  },
+  "fallback_unknown_code": {
+    "binary": 0,
+    "rationale": "Pour tout code TY_COUV non répertorié, par défaut = NON-FORÊT (0). Évite la sur-estimation de la fragmentation."
+  },
+  "validation_required_by_commandant": [
+    "Vérifier la liste exhaustive des codes TY_COUV présents dans pee_maj.gpkg (extraire DISTINCT TY_COUV)",
+    "Confirmer la décision sur BR (brûlis) : forêt ou non ?",
+    "Confirmer la décision sur AL (aulnaie) : forêt ou non ?",
+    "Ajouter les codes manquants détectés dans le subset 100 Mo"
+  ],
+  "v30_lock": "INVIOLÉ"
+}

@@ -3787,3 +3787,55 @@ explicite "ANTI_GÉNÉRIQUE_STRICT". Aucune simulation tolérée.
 
 ## V30 LOCK
 - V30 INVIOLÉ · FUSION ADD-ONLY · ANTI_GÉNÉRIQUE_STRICT
+
+═══════════════════════════════════════════════════════════════════════════
+PHASE XXVIII · ORDRE N°52-R12 — DICTIONNAIRES + SUBSET (2026-05-05)
+═══════════════════════════════════════════════════════════════════════════
+
+## 3 livrables produits
+
+### Livrable 1 · 4 dictionnaires PROPOSÉS (status=PROPOSÉ)
+Sous `/app/backend/data/territoire/dictionaries_proposed/` :
+- `cl_dens_to_pct.json` (5 classes A/B/C/D/E + facteurs correction GR_ESS)
+- `classes_age.json` (6 régulières + 4 inéquiennes JIN/JIR/VIN/VIR)
+- `ty_couv_to_forest_binary.json` (7 forêt + 7 non-forêt + 2 ambigus)
+- `structure_classification_rules.json` (arbre décision 3 steps + fallback)
+
+Toutes les valeurs sont basées sur la documentation publique MFFP :
+- MFFP (2016) Manuel d'aménagement forestier durable
+- MFFP (2018) Normes d'inventaire écoforestier du Québec méridional
+- Pothier & Savard (1998), Coops et al. (2007), Saucier et al. (2009)
+
+### Livrable 2 · Subset 100 Mo (proposition)
+Bbox proposée Estrie/Cantons-Est EPSG:32198 [560000,175000,670000,250000] :
+- ~8 250 km² · couvre ≥5 écorégions · mix feuillu/résineux/mixte
+- Filtre SQL : exclure peuplements avec champs critiques NULL
+- Commande ogr2ogr prête à exécuter (mode `?execute=true`)
+- Alternative pyogrio Python pour streaming
+- Mode EXÉCUTION : NotImplementedError (anti-pod-restart) tant que pull B2 pas validé
+
+### Livrable 3 · PHASE3_MINIMAL_PLAN enrichi
+Pour chaque couche P0, ajout de :
+- `fields_used_pee_maj_gpkg` (champs CL_DENS, CL_AGE, etc.)
+- `dictionaries_proposed_used` (pointage explicite vers les dicts R12)
+- `subset_validation_tests` (4-5 tests par couche)
+
+## Endpoints REST (FUSION ADD-ONLY)
+- `GET /territoire/dictionaries-proposed[?name=X]` (lecture)
+- `POST /diagnostic/pee-maj/export-subset[?execute=true]` (proposal/exec)
+
+## Tests Pytest
+- `test_phase_xxviii_r12_dictionaries_subset_omega.py` : **12/12 PASSED**
+- Régression totale : **112/112 PASSED · 0 régression**
+
+## Pipeline de validation Commandant proposé
+1. Inspecter chaque dictionnaire via `GET /territoire/dictionaries-proposed?name=X`
+2. Ajuster les valeurs si nécessaire (édition fichiers JSON)
+3. Changer `status: PROPOSÉ` → `status: VALIDÉ` dans chaque JSON
+4. Relancer `GET /territoire/dictionaries-proposed` (vérifier `all_validated_for_p0=true`)
+5. Lancer `POST /diagnostic/pee-maj/r8-execute?do_pull=true` pour pull B2
+6. Lancer `POST /diagnostic/pee-maj/export-subset?execute=true` (subset 100 Mo)
+7. Implémentation P0 : MFFP_DENSITY (4h) → MFFP_AGE (4h) → MFFP_STRUCTURE (12h) → MFFP_FRAGMENTATION (24h)
+
+## V30 LOCK
+- V30 INVIOLÉ · FUSION ADD-ONLY · ANTI_GÉNÉRIQUE_STRICT
