@@ -19,12 +19,13 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import os
 import re
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import boto3
 from botocore.client import Config
@@ -34,9 +35,19 @@ from fastapi import APIRouter, File, Header, HTTPException, Request, UploadFile
 from engines.v8_institutional.especes import gis_audit_log_omega as audit
 from engines.v8_institutional.especes.gis_reception_validators_omega import (
     SLOT_BY_ID,
+    SLOTS_GIS_PROTÉGÉS_SPEC,
 )
 
+logger = logging.getLogger("gis_s3_b2_omega")
+
 router = APIRouter(prefix="/api/v30/admin-premium/gis", tags=["gis-s3-b2"])
+
+# ═════════════════════════════════════════════════════════════════════════
+# Manifest institutionnel (partagé avec VOIE A) — ANTI-RÉGRESSIF
+# ═════════════════════════════════════════════════════════════════════════
+MANIFEST_PATH = Path(
+    "/app/backend/data/gis_operational/GIS_RECEPTION_INTAKE_Ω.json"
+)
 
 # ═════════════════════════════════════════════════════════════════════════
 # Sessions persistantes B2 (survit au pod restart grâce à /app ext4)
@@ -105,6 +116,193 @@ def _write_session(upload_id: str, session: Dict[str, Any]) -> None:
     tmp.write_text(json.dumps(session, ensure_ascii=False, indent=2),
                     encoding="utf-8")
     os.replace(str(tmp), str(p))
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# Manifest helpers — ANTI-RÉGRESSIF · FUSION ADD-ONLY
+# ═════════════════════════════════════════════════════════════════════════
+def _read_manifest_raw() -> Dict[str, Any]:
+    """Lit le manifest + auto-sync SLOT_BY_ID absents (FUSION ADD-ONLY).
+
+    Identique à la logique VOIE A dans gis_reception_router_omega._read_manifest()
+    mais dupliquée ici pour éviter une dépendance circulaire sur les imports
+    du router principal.
+    """
+    if MANIFEST_PATH.exists():
+        try:
+            manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+        except Exception as e:
+            logger.warning("MANIFEST_READ_FALLBACK: %s — régénération", e)
+            manifest = {
+                "manifest_id": "GIS_RECEPTION_INTAKE_Ω",
+                "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+                "slots": {},
+            }
+    else:
+        manifest = {
+            "manifest_id": "GIS_RECEPTION_INTAKE_Ω",
+            "doctrine": "BCE-4X_ULTIME_ABSOLU_x3",
+            "slots": {},
+        }
+
+    manifest.setdefault("slots", {})
+    # Auto-sync : ajouter tout slot SLOT_BY_ID absent (ABSENT par défaut)
+    for s in SLOTS_GIS_PROTÉGÉS_SPEC:
+        if s["slot_id"] not in manifest["slots"]:
+            manifest["slots"][s["slot_id"]] = {
+                "slot_id": s["slot_id"],
+                "label": s["label"],
+                "priority": s["priority"],
+                "status": "ABSENT",
+                "uploads": [],
+            }
+    return manifest
+
+
+def _write_manifest(manifest: Dict[str, Any]) -> None:
+    manifest["last_updated_utc"] = _utc_now()
+    tmp = MANIFEST_PATH.with_suffix(".partial")
+    tmp.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+    os.replace(str(tmp), str(MANIFEST_PATH))
+
+
+def _ensure_slot_in_manifest(slot_id: str,
+                             manifest: Dict[str, Any]) -> Dict[str, Any]:
+    """Garantit que le slot est présent dans le manifest (ANTI-KeyError).
+
+    Utilise SLOT_BY_ID comme source canonique. Si le slot est absent,
+    il est initialisé avec status=ABSENT, uploads=[].
+    """
+    manifest.setdefault("slots", {})
+    if slot_id not in manifest["slots"]:
+        spec = SLOT_BY_ID.get(slot_id, {})
+        manifest["slots"][slot_id] = {
+            "slot_id": slot_id,
+            "label": spec.get("label", slot_id),
+            "priority": spec.get("priority", "P?"),
+            "status": "ABSENT",
+            "uploads": [],
+        }
+    return manifest["slots"][slot_id]
+
+
+def _finalize_manifest_from_b2(
+    session: Dict[str, Any],
+    s3,
+    bucket: str,
+) -> Dict[str, Any]:
+    """Stream SHA-256 depuis B2 + met à jour le manifest institutionnel.
+
+    Helper idempotent : si `session["manifest_finalized"]==True`, on se
+    contente de relire les valeurs déjà persistées (anti-double-finalize).
+
+    Retourne un dict avec sha256_global, size_bytes, elapsed_s,
+    composite_sha256, files_loaded_count, slot_status.
+    """
+    slot_id = session["slot_id"]
+    b2_key = session["b2_key"]
+    filename = session["filename"]
+
+    # Idempotence : si déjà finalisé et manifest cohérent, on retourne
+    # les valeurs en cache.
+    if session.get("manifest_finalized") and session.get("sha256_global"):
+        logger.info(
+            "FINALIZE_IDEMPOTENT_SKIP slot=%s b2_key=%s sha256=%s",
+            slot_id, b2_key, session["sha256_global"])
+        return {
+            "sha256_global": session["sha256_global"],
+            "size_bytes": int(session.get("final_size_bytes") or 0),
+            "elapsed_s": 0.0,
+            "composite_sha256": session.get("composite_sha256"),
+            "files_loaded_count": session.get("files_loaded_count"),
+            "slot_status": session.get("slot_status", "LOADED"),
+            "idempotent_skip": True,
+        }
+
+    logger.info(
+        "FINALIZE_STREAM_BEGIN slot=%s b2_key=%s", slot_id, b2_key)
+    try:
+        obj = s3.get_object(Bucket=bucket, Key=b2_key)
+    except ClientError as e:
+        logger.error("B2_GET_OBJECT_ERROR slot=%s b2_key=%s err=%s",
+                     slot_id, b2_key, e)
+        raise HTTPException(status_code=502,
+                            detail=f"B2_GET_OBJECT_ERROR::{e}")
+
+    h = hashlib.sha256()
+    total_streamed = 0
+    t0 = time.time()
+    try:
+        body = obj["Body"]
+        while True:
+            chunk = body.read(8 << 20)  # 8 Mo
+            if not chunk:
+                break
+            h.update(chunk)
+            total_streamed += len(chunk)
+    finally:
+        try:
+            obj["Body"].close()
+        except Exception:
+            pass
+    sha256_global = h.hexdigest()
+    elapsed_s = round(time.time() - t0, 2)
+    logger.info(
+        "FINALIZE_STREAM_DONE slot=%s bytes=%d elapsed_s=%s sha256=%s",
+        slot_id, total_streamed, elapsed_s, sha256_global)
+
+    # MAJ manifest
+    manifest = _read_manifest_raw()
+    slot = _ensure_slot_in_manifest(slot_id, manifest)
+    slot["status"] = "LOADED"
+    # Dédup par b2_key (un même fichier ne s'additionne pas)
+    slot.setdefault("uploads", [])
+    slot["uploads"] = [
+        u for u in slot["uploads"]
+        if u.get("b2_key") != b2_key and u.get("filename") != filename
+    ]
+    upload_entry = {
+        "filename": filename,
+        "size_bytes": total_streamed,
+        "sha256": sha256_global,
+        "source": "BACKBLAZE_B2_MULTIPART",
+        "b2_bucket": bucket,
+        "b2_key": b2_key,
+        "b2_upload_id": session["b2_upload_id"],
+        "upload_id_ui": session.get("upload_id_ui"),
+        "uploaded_at_utc": session.get("completed_at_utc"),
+        "validation_passed": True,
+    }
+    slot["uploads"].append(upload_entry)
+    slot["files_loaded_count"] = len(slot["uploads"])
+    slot["composite_sha256"] = hashlib.sha256(
+        "\n".join(sorted(u["sha256"] for u in slot["uploads"]
+                         if u.get("sha256"))).encode("utf-8")
+    ).hexdigest()
+    _write_manifest(manifest)
+    logger.info(
+        "MANIFEST_UPDATED slot=%s files_loaded=%d composite=%s",
+        slot_id, slot["files_loaded_count"], slot["composite_sha256"])
+
+    # Persister sur session (idempotence)
+    session["manifest_finalized"] = True
+    session["sha256_global"] = sha256_global
+    session["final_size_bytes"] = total_streamed
+    session["composite_sha256"] = slot["composite_sha256"]
+    session["files_loaded_count"] = slot["files_loaded_count"]
+    session["slot_status"] = slot["status"]
+    _write_session(session["upload_id_ui"], session)
+
+    return {
+        "sha256_global": sha256_global,
+        "size_bytes": total_streamed,
+        "elapsed_s": elapsed_s,
+        "composite_sha256": slot["composite_sha256"],
+        "files_loaded_count": slot["files_loaded_count"],
+        "slot_status": slot["status"],
+        "idempotent_skip": False,
+    }
 
 
 # ═════════════════════════════════════════════════════════════════════════
@@ -248,6 +446,11 @@ async def upload_chunk_s3(
                     "session files /app/backend/data/gis_s3_sessions/ SURVIVENT "
                     "(persistants) → re-GET /resume pour reprendre."))
         b2_key = f"pee_maj/{_utc_now()[:10]}/{x_upload_id}/{fname}"
+        logger.info(
+            "S3_INITIATE_MULTIPART slot=%s upload_id=%s b2_key=%s "
+            "chunks_total=%d total_size=%d",
+            slot_id, x_upload_id, b2_key, int(x_chunks_total),
+            int(x_total_size or 0))
         try:
             ma = s3.create_multipart_upload(
                 Bucket=bucket, Key=b2_key,
@@ -264,6 +467,9 @@ async def upload_chunk_s3(
                 },
             )
         except ClientError as e:
+            logger.error(
+                "B2_CREATE_MULTIPART_ERROR slot=%s upload_id=%s err=%s",
+                slot_id, x_upload_id, e)
             raise HTTPException(
                 status_code=502,
                 detail=f"B2_CREATE_MULTIPART_ERROR::{e}")
@@ -329,7 +535,13 @@ async def upload_chunk_s3(
             Body=body,
         )
         etag = resp["ETag"].strip('"')
+        logger.info(
+            "B2_UPLOAD_PART_OK slot=%s upload_id=%s part=%d size=%d etag=%s",
+            slot_id, x_upload_id, part_number, chunk_size, etag)
     except ClientError as e:
+        logger.error(
+            "B2_UPLOAD_PART_ERROR slot=%s upload_id=%s part=%d size=%d err=%s",
+            slot_id, x_upload_id, part_number, chunk_size, e)
         raise HTTPException(status_code=502,
                               detail=f"B2_UPLOAD_PART_ERROR::{e}")
     finally:
@@ -392,6 +604,9 @@ async def upload_chunk_s3(
                 MultipartUpload={"Parts": parts_list},
             )
         except ClientError as e:
+            logger.error(
+                "B2_COMPLETE_MULTIPART_ERROR slot=%s key=%s parts=%d err=%s",
+                slot_id, session["b2_key"], len(parts_list), e)
             raise HTTPException(status_code=502,
                                   detail=f"B2_COMPLETE_MULTIPART_ERROR::{e}")
         # Récupérer la taille réelle depuis B2
@@ -407,6 +622,9 @@ async def upload_chunk_s3(
         session["final_s3_etag"] = s3_etag
         session["final_size_bytes"] = final_size
         _write_session(x_upload_id, session)
+        logger.info(
+            "B2_COMPLETE_MULTIPART_OK slot=%s key=%s parts=%d size=%d etag=%s",
+            slot_id, session["b2_key"], len(parts_list), final_size, s3_etag)
         audit.append_event(
             event="UPLOAD_CHUNK_S3_COMPLETED_Ω",
             slot_id=slot_id, filename=fname, sha256=None,
@@ -419,20 +637,75 @@ async def upload_chunk_s3(
                          "final_etag": s3_etag,
                          "final_size_bytes": final_size}],
         )
+
+        # ─── AUTO-FINALIZE ÉTENDU · ORDRE N°52-EXT VOIE B ──────────────
+        # Stream SHA-256 depuis B2 + MAJ manifest institutionnel avec
+        # setdefault (anti-KeyError) → passe le slot à LOADED en une
+        # seule requête. Idempotent via session["manifest_finalized"].
+        try:
+            fin = _finalize_manifest_from_b2(session, s3, bucket)
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.error("AUTO_FINALIZE_MANIFEST_ERROR slot=%s err=%s",
+                         slot_id, e)
+            # On ne bloque pas la réponse COMPLETED : l'opérateur peut
+            # rappeler /pee-maj/s3-finalize/{upload_id} (idempotent).
+            return {
+                "manifest_id": "CHUNK_S3_COMPLETED_MANIFEST_ERROR",
+                "status": "COMPLETED_MANIFEST_PENDING",
+                "slot_id": slot_id,
+                "upload_id": x_upload_id,
+                "b2_key": session["b2_key"],
+                "b2_bucket": bucket,
+                "final_size_bytes": final_size,
+                "final_s3_etag": s3_etag,
+                "parts_count": len(parts_list),
+                "manifest_error": f"{type(e).__name__}:{e}",
+                "recovery_endpoint": (
+                    f"POST /api/v30/admin-premium/gis/pee-maj/s3-finalize/"
+                    f"{x_upload_id}"),
+                "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
+            }
+
+        audit.append_event(
+            event="PEE_MAJ_S3_FINALIZED_Ω",
+            slot_id=slot_id, filename=fname,
+            sha256=fin["sha256_global"],
+            size_bytes=int(fin["size_bytes"]), http_code=200,
+            client_ip=client_ip, user_agent=ua,
+            validators=[
+                {"name": "b2_stream_sha256", "passed": True,
+                 "elapsed_s": fin["elapsed_s"],
+                 "bytes_streamed": fin["size_bytes"]},
+                {"name": "manifest_updated", "passed": True,
+                 "composite_sha256": fin["composite_sha256"],
+                 "slot_status": fin["slot_status"],
+                 "files_loaded_count": fin["files_loaded_count"]},
+            ],
+        )
+
         return {
-            "manifest_id": "CHUNK_S3_COMPLETED",
+            "manifest_id": "CHUNK_S3_COMPLETED_AND_FINALIZED",
             "status": "COMPLETED",
             "slot_id": slot_id,
             "upload_id": x_upload_id,
             "b2_key": session["b2_key"],
             "b2_bucket": bucket,
-            "final_size_bytes": final_size,
+            "final_size_bytes": fin["size_bytes"],
             "final_s3_etag": s3_etag,
             "parts_count": len(parts_list),
+            "sha256_global": fin["sha256_global"],
+            "stream_elapsed_s": fin["elapsed_s"],
+            "composite_sha256": fin["composite_sha256"],
+            "files_loaded_count": fin["files_loaded_count"],
+            "slot_status": fin["slot_status"],
+            "idempotent_finalize": fin.get("idempotent_skip", False),
             "next_step": (
-                f"POST /api/v30/admin-premium/gis/pee-maj/s3-finalize/"
-                f"{x_upload_id} pour calculer SHA-256 composite + "
-                "mettre à jour manifest LOADED."),
+                "Appeler POST /api/v30/admin-premium/gis/diagnostic/pee-maj/"
+                "full-pipeline-execute pour déclencher le calcul des "
+                "dérivées analytiques (9 couches) et la persistance "
+                "locale dans /app/backend/data/gis_archive/."),
             "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
         }
 
@@ -575,8 +848,16 @@ async def pee_maj_s3_finalize(
     x_commandant_token: Optional[str] = Header(default=None, alias="X-Commandant-Token"),
     user_agent: Optional[str] = Header(default=None, alias="User-Agent"),
 ) -> Dict[str, Any]:
-    """ORDRE N°52-EXT VOIE B · Post-upload, calcule SHA-256 streaming depuis
-    B2, met à jour le manifest pour passer FORET_MFFP_PEE_MAJ_Ω à LOADED."""
+    """ORDRE N°52-EXT VOIE B · Finalize idempotent.
+
+    Post-upload, calcule SHA-256 streaming depuis B2 et met à jour le
+    manifest institutionnel pour passer le slot à LOADED.
+
+    Cette route est automatiquement appelée par `upload-chunk-s3` quand
+    `X-Final-Chunk=true` ; elle reste exposée pour permettre :
+      · la récupération manuelle si la finalize auto a échoué
+      · le recalcul idempotent du SHA-256
+    """
     _verify_token(x_commandant_token)
     if not SAFE_UPLOAD_ID.match(upload_id):
         raise HTTPException(status_code=400,
@@ -593,76 +874,28 @@ async def pee_maj_s3_finalize(
                 "Attendre tous les chunks avant finalize."))
 
     s3, bucket = _get_b2_client()
-    try:
-        obj = s3.get_object(Bucket=bucket, Key=session["b2_key"])
-    except ClientError as e:
-        raise HTTPException(status_code=502,
-                              detail=f"B2_GET_OBJECT_ERROR::{e}")
+    logger.info(
+        "S3_FINALIZE_MANUAL_CALL upload_id=%s slot=%s b2_key=%s",
+        upload_id, session.get("slot_id"), session.get("b2_key"))
+    fin = _finalize_manifest_from_b2(session, s3, bucket)
 
-    # Stream SHA-256 direct depuis B2 (zéro disque local)
-    h = hashlib.sha256()
-    total_streamed = 0
-    t0 = time.time()
-    try:
-        body = obj["Body"]
-        while True:
-            chunk = body.read(8 << 20)  # 8 Mo
-            if not chunk:
-                break
-            h.update(chunk)
-            total_streamed += len(chunk)
-    finally:
-        try:
-            obj["Body"].close()
-        except Exception:
-            pass
-    sha256_global = h.hexdigest()
-    elapsed_s = round(time.time() - t0, 2)
-
-    # Mise à jour du manifest institutionnel
-    manifest_path = Path("/app/backend/data/gis_operational/GIS_RECEPTION_INTAKE_Ω.json")
-    try:
-        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    except Exception as e:
-        raise HTTPException(status_code=500,
-                              detail=f"MANIFEST_READ_ERROR::{e}")
-    slot = manifest["slots"]["FORET_MFFP_PEE_MAJ_Ω"]
-    slot["status"] = "LOADED"
-    upload_entry = {
-        "filename": session["filename"],
-        "size_bytes": total_streamed,
-        "sha256": sha256_global,
-        "source": "BACKBLAZE_B2_MULTIPART",
-        "b2_bucket": bucket,
-        "b2_key": session["b2_key"],
-        "b2_upload_id": session["b2_upload_id"],
-        "uploaded_at_utc": session.get("completed_at_utc"),
-        "validation_passed": True,
-    }
-    slot.setdefault("uploads", []).append(upload_entry)
-    slot["files_loaded_count"] = len(slot["uploads"])
-    slot["composite_sha256"] = hashlib.sha256(
-        "\n".join(sorted(u["sha256"] for u in slot["uploads"]
-                           if u.get("sha256"))).encode("utf-8")
-    ).hexdigest()
-    manifest_path.write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2),
-        encoding="utf-8")
-
-    # Audit-event
     audit.append_event(
         event="PEE_MAJ_S3_FINALIZED_Ω",
-        slot_id="FORET_MFFP_PEE_MAJ_Ω",
+        slot_id=session["slot_id"],
         filename=session["filename"],
-        sha256=sha256_global, size_bytes=total_streamed,
-        http_code=200,
+        sha256=fin["sha256_global"],
+        size_bytes=int(fin["size_bytes"]), http_code=200,
         client_ip=request.client.host if request.client else "unknown",
         user_agent=(user_agent or "")[:200],
         validators=[
             {"name": "b2_stream_sha256", "passed": True,
-             "elapsed_s": elapsed_s, "bytes_streamed": total_streamed},
+             "elapsed_s": fin["elapsed_s"],
+             "bytes_streamed": fin["size_bytes"]},
             {"name": "manifest_updated", "passed": True,
-             "composite_sha256": slot["composite_sha256"]},
+             "composite_sha256": fin["composite_sha256"],
+             "slot_status": fin["slot_status"],
+             "files_loaded_count": fin["files_loaded_count"],
+             "idempotent_skip": fin.get("idempotent_skip", False)},
         ],
     )
 
@@ -670,19 +903,158 @@ async def pee_maj_s3_finalize(
         "manifest_id": "PEE_MAJ_S3_FINALIZED_Ω",
         "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
         "upload_id": upload_id,
+        "slot_id": session["slot_id"],
         "b2_key": session["b2_key"],
         "b2_bucket": bucket,
-        "sha256_global": sha256_global,
-        "size_bytes": total_streamed,
-        "stream_elapsed_s": elapsed_s,
-        "slot_status": "LOADED",
-        "composite_sha256": slot["composite_sha256"],
-        "files_loaded_count": slot["files_loaded_count"],
+        "sha256_global": fin["sha256_global"],
+        "size_bytes": fin["size_bytes"],
+        "stream_elapsed_s": fin["elapsed_s"],
+        "slot_status": fin["slot_status"],
+        "composite_sha256": fin["composite_sha256"],
+        "files_loaded_count": fin["files_loaded_count"],
+        "idempotent_skip": fin.get("idempotent_skip", False),
         "note": (
             "pee_maj.gpkg est désormais persistant sur Backblaze B2. "
             "Le fichier brut est à l'abri du pod restart. Appeler ensuite "
             "/diagnostic/pee-maj/full-pipeline-execute pour déclencher "
             "compute + persist_derivatives + compress_and_archive."),
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# Endpoint : GIS S3 status diagnostic structuré (ORDRE N°52-EXT ÉTENDU)
+# ═════════════════════════════════════════════════════════════════════════
+@router.get("/s3/status/{slot_id}")
+async def gis_s3_status(
+    slot_id: str,
+    x_commandant_token: Optional[str] = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """Diagnostic structuré du slot S3/B2.
+
+    Agrège :
+      · Les sessions S3 locales (/app/backend/data/gis_s3_sessions/)
+      · L'état du slot dans le manifest GIS_RECEPTION_INTAKE_Ω
+      · La liste des objets B2 sous le préfixe `pee_maj/`
+      · Les uploads multipart en cours (list_multipart_uploads)
+
+    Aucune mutation. Lecture seule. Permet d'auditer l'état complet
+    d'un slot pour détecter des incohérences (session orpheline,
+    manifest désynchronisé, objet B2 sans entrée manifest, etc.).
+    """
+    _verify_token(x_commandant_token)
+    import unicodedata as _ud
+    slot_id = _ud.normalize("NFC", slot_id).replace("\u2126", "\u03a9")
+    if slot_id not in SLOT_BY_ID:
+        raise HTTPException(status_code=404, detail=f"SLOT_INCONNU::{slot_id}")
+
+    # ─── Sessions locales persistantes ────────────────────────────────
+    sessions_summary: List[Dict[str, Any]] = []
+    try:
+        for p in sorted(S3_SESSIONS_DIR.glob("*.json")):
+            try:
+                sess = json.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            if sess.get("slot_id") != slot_id:
+                continue
+            parts = sess.get("parts", {}) or {}
+            sessions_summary.append({
+                "upload_id_ui": sess.get("upload_id_ui"),
+                "b2_upload_id": sess.get("b2_upload_id"),
+                "b2_key": sess.get("b2_key"),
+                "filename": sess.get("filename"),
+                "status": sess.get("status"),
+                "chunks_total": sess.get("chunks_total"),
+                "chunks_received_count": len(parts),
+                "total_size_expected": sess.get("total_size_expected"),
+                "final_size_bytes": sess.get("final_size_bytes"),
+                "sha256_global": sess.get("sha256_global"),
+                "manifest_finalized": bool(sess.get("manifest_finalized")),
+                "started_at_utc": sess.get("started_at_utc"),
+                "last_update_utc": sess.get("last_update_utc"),
+                "completed_at_utc": sess.get("completed_at_utc"),
+                "session_file": str(p),
+            })
+    except Exception as e:
+        logger.warning("S3_STATUS_SESSIONS_SCAN_ERROR: %s", e)
+
+    # ─── État du slot dans le manifest ────────────────────────────────
+    manifest = _read_manifest_raw()
+    slot_entry = manifest.get("slots", {}).get(slot_id, {})
+
+    # ─── B2 live : objets existants + multipart en cours ──────────────
+    b2_objects: List[Dict[str, Any]] = []
+    b2_in_progress: List[Dict[str, Any]] = []
+    b2_errors: List[str] = []
+    try:
+        s3, bucket = _get_b2_client()
+        try:
+            r = s3.list_objects_v2(Bucket=bucket,
+                                   Prefix="pee_maj/", MaxKeys=100)
+            for o in r.get("Contents", []) or []:
+                b2_objects.append({
+                    "key": o["Key"],
+                    "size": o["Size"],
+                    "etag": (o.get("ETag") or "").strip('"'),
+                    "last_modified": (
+                        o.get("LastModified").isoformat()
+                        if o.get("LastModified") else None),
+                })
+        except ClientError as e:
+            b2_errors.append(
+                f"list_objects_v2: {e.response.get('Error',{}).get('Code','?')}")
+
+        try:
+            mpu = s3.list_multipart_uploads(Bucket=bucket, Prefix="pee_maj/")
+            for u in mpu.get("Uploads", []) or []:
+                b2_in_progress.append({
+                    "key": u.get("Key"),
+                    "upload_id": u.get("UploadId"),
+                    "initiated": (u.get("Initiated").isoformat()
+                                  if u.get("Initiated") else None),
+                })
+        except ClientError as e:
+            b2_errors.append(
+                f"list_multipart_uploads: "
+                f"{e.response.get('Error',{}).get('Code','?')}")
+    except HTTPException:
+        b2_errors.append("B2_CREDENTIALS_NOT_CONFIGURED")
+    except EndpointConnectionError as e:
+        b2_errors.append(f"NetworkError:{type(e).__name__}")
+    except Exception as e:
+        b2_errors.append(f"UnexpectedError:{type(e).__name__}:{e}")
+
+    return {
+        "manifest_id": "GIS_S3_STATUS_Ω",
+        "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
+        "slot_id": slot_id,
+        "slot_spec": {
+            "label": SLOT_BY_ID[slot_id].get("label"),
+            "priority": SLOT_BY_ID[slot_id].get("priority"),
+            "organisme": SLOT_BY_ID[slot_id].get("organisme"),
+            "voie_acquisition": SLOT_BY_ID[slot_id].get("voie_acquisition"),
+        },
+        "manifest_slot": {
+            "status": slot_entry.get("status"),
+            "files_loaded_count": slot_entry.get("files_loaded_count"),
+            "composite_sha256": slot_entry.get("composite_sha256"),
+            "uploads_count": len(slot_entry.get("uploads", [])),
+            "uploads": slot_entry.get("uploads", []),
+        },
+        "local_sessions": {
+            "count": len(sessions_summary),
+            "sessions": sessions_summary,
+        },
+        "b2_live": {
+            "bucket": os.environ.get("B2_BUCKET_NAME"),
+            "endpoint": os.environ.get("B2_ENDPOINT_URL"),
+            "objects_count": len(b2_objects),
+            "objects": b2_objects,
+            "multipart_in_progress_count": len(b2_in_progress),
+            "multipart_in_progress": b2_in_progress,
+            "errors": b2_errors,
+        },
         "v30_lock": "INVIOLÉ",
     }
 

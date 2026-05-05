@@ -3191,3 +3191,83 @@ ADMIN_GIS_AUDIT_ET_PROMOTION_PANEL_Ω : extension du panneau React
 - pytest baseline cumulée : **215/215 PASSED** (zéro régression backend)
 - Lint ESLint : 0 issue
 - V30 INVIOLÉ vs FREEZE_MASTER
+
+═══════════════════════════════════════════════════════════════════════════
+PHASE XXVIII · ORDRE N°52-EXT VOIE B — S3/B2 UPLOAD FINALIZE (2026-05-05)
+═══════════════════════════════════════════════════════════════════════════
+
+## Contexte
+Suite aux 3 redémarrages intempestifs du pod Kubernetes ayant vidé
+`/var/cache` pendant l'ingestion de `pee_maj.gpkg` (36,9 Go) en local,
+la Voie B (Backblaze B2 S3-compatible) a été implémentée. Le dernier
+obstacle était un `KeyError: 'FORET_MFFP_PEE_MAJ_Ω'` lors de la
+finalisation du multipart upload.
+
+## Root Cause identifiée
+`gis_s3_upload_router_omega.py` lisait directement le JSON manifest
+(`GIS_RECEPTION_INTAKE_Ω.json`) sans passer par le helper
+`_read_manifest()` du routeur VOIE A qui effectue l'auto-sync des
+slots `SLOTS_GIS_PROTÉGÉS_SPEC`. Le slot `FORET_MFFP_PEE_MAJ_Ω` était
+donc absent du JSON → `manifest["slots"]["FORET_MFFP_PEE_MAJ_Ω"]` crash.
+
+## Correctif ÉTENDU (option b-2 validée par Commandant)
+1. **Helper `_read_manifest_raw()`** : auto-sync identique à la Voie A,
+   sans dépendance circulaire sur le router principal.
+2. **Helper `_ensure_slot_in_manifest()`** : garantit la présence du
+   slot via `setdefault()` sur `SLOT_BY_ID` (anti-KeyError).
+3. **Helper `_finalize_manifest_from_b2()`** : stream SHA-256 depuis B2
+   + MAJ manifest + idempotence via flag `session["manifest_finalized"]`.
+4. **Auto-finalize sur chunk final** : `upload-chunk-s3` avec
+   `X-Final-Chunk=true` déclenche automatiquement
+   `complete_multipart_upload` + stream SHA-256 + MAJ manifest
+   (manifest_id=`CHUNK_S3_COMPLETED_AND_FINALIZED`).
+5. **Endpoint `/pee-maj/s3-finalize/{upload_id}`** : conservé comme
+   recovery path idempotent.
+6. **Nouvel endpoint `GET /s3/status/{slot_id}`** : diagnostic structuré
+   (sessions locales + manifest + objets B2 + multipart en cours).
+7. **Durcissement logs forensiques** : `logger.info` à chaque étape
+   critique (initiate, upload_part, complete, finalize, stream SHA-256).
+
+## Fichiers modifiés
+- `/app/backend/routes/gis_s3_upload_router_omega.py` (routeur étendu)
+
+## Fichiers ajoutés
+- `/app/backend/tests/test_phase_xxviii_s3_b2_voie_b_omega.py`
+  (11 tests anti-régressifs)
+- `/tmp/test_s3_e2e_15mb.py` (script manuel E2E live B2)
+
+## Credentials B2 (persistés dans `/app/backend/.env`)
+- `B2_KEY_ID=006707511aa307d0000000001`
+- `B2_APPLICATION_KEY=***REDACTED***`
+- `B2_BUCKET_NAME=pee-maj-gpkg`
+- `B2_ENDPOINT_URL=https://s3.ca-east-006.backblazeb2.com`
+- `B2_REGION=ca-east-006`
+
+## Validation manuelle E2E (fichier synthétique 15 Mo)
+- Probe credentials B2 : head_bucket + list + create+abort multipart → OK
+- Upload 3 chunks de 5 Mo vers B2 via route `/upload-chunk-s3` :
+  - Chunk 0 (initiate) → 200 en 0.5 s
+  - Chunk 1 → 200 en 0.5 s
+  - Chunk 2 (final) → 200 en 1.17 s · auto-finalize déclenchée
+- SHA-256 bout-en-bout (client ↔ B2 via stream serveur) **IDENTIQUE** :
+  `99c61552bcb332da84091e2f7f37bb20d7b21643d61b7f9cd502297907493dae`
+- Slot `FORET_MFFP_PEE_MAJ_Ω` passé `ABSENT` → `LOADED`
+- `composite_sha256` = `3dda31ccac94c8a8070e4080a5bff40eeaf78b35ccff4f00b11dc833ddf710db`
+- Endpoint `/s3/status` : 1 objet B2, 0 multipart en cours, manifest LOADED
+- Re-call `/s3-finalize` → `idempotent_skip=true` confirmé
+- Cleanup : delete_object B2 + reset manifest + unlink session file → OK
+
+## Tests Pytest
+- `tests/test_phase_xxviii_s3_b2_voie_b_omega.py` : **11/11 PASSED**
+- Régression phase XXVII (42 tests) : **42/42 PASSED**
+- **Total Phase XXVII + XXVIII : 53/53 PASSED** — zéro régression
+
+## Next Actions (en attente d'ordre explicite)
+- [En attente Commandant] Lancement upload réel 36,9 Go `pee_maj.gpkg`
+- [En attente Commandant] ORDRE N°52 : `/diagnostic/pee-maj/full-pipeline-execute`
+  (calcul + persistance des 9 couches dérivées analytiques)
+- [Backlog P1] SCEAU_INSTITUTIONNEL_X5_FINAL_Ω
+- [Backlog P2] ORDRE N°53 : binding moteurs ↔ BIO_PROFILE_OMEGA_135
+
+## V30 LOCK
+- V30 INVIOLÉ · FUSION ADD-ONLY respecté · ANTI_GÉNÉRIQUE_STRICT
