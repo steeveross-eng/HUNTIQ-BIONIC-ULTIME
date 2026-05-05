@@ -1271,6 +1271,15 @@ except Exception as e:
     logger.warning(f"PHASE_XXII_Ω GIS reception router not loaded: {e}")
 
 
+# ═══ PHASE_XXVII_VOIE_B — GIS S3/B2 UPLOAD (ORDRE N°52-EXT · voie B) ═══
+try:
+    from routes.gis_s3_upload_router_omega import router as gis_s3_router
+    app.include_router(gis_s3_router)
+    logger.info("✓ VOIE_B active : GIS S3/B2 — /api/v30/admin-premium/gis/upload-chunk-s3/*")
+except Exception as e:
+    logger.warning(f"VOIE_B GIS S3/B2 router not loaded: {e}")
+
+
 # ═══ PHASE_XXVI_OMEGA — BIO_PROFILE_135 SCHEMA API (ORDRE N°52 · Commandant STEEVE-MAX) ═══
 try:
     from routes.bio_profile_schema_router_omega import router as bio_profile_schema_router
