@@ -1370,3 +1370,115 @@ async def gis_s3_list_resumable_sessions(
 
 
 __all__ = ["router"]
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°52-R8 · Orchestrateur pipeline complet 8 phases (Option δ)
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/diagnostic/pee-maj/r8-execute")
+async def pee_maj_r8_execute(
+    request: Request,
+    force: Optional[str] = None,
+    do_pull: Optional[str] = None,
+    x_commandant_token: Optional[str] = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-R8 · Démarre le pipeline R8 (8 phases) en background.
+
+    · Idempotent : si déjà RUNNING, retourne 409 avec state courant.
+    · Pour forcer un redémarrage (zombie override), ?force=true.
+    · Par défaut, do_pull=false (pull B2 désactivé car phases 1-5 en
+      STUB_READY). Activer ?do_pull=true si spécifications métier
+      disponibles ET infrastructure stable.
+    · L'exécution se fait dans un thread daemon ; poll via /r8-status.
+    """
+    _verify_token(x_commandant_token)
+    from engines.v8_institutional.especes.pee_maj_r8_orchestrator_omega import (
+        start_r8_background,
+    )
+    force_bool = (force or "").lower() in ("true", "1", "yes", "y")
+    do_pull_bool = (do_pull or "").lower() in ("true", "1", "yes", "y")
+    result = start_r8_background(force=force_bool, do_pull=do_pull_bool)
+    if not result["ok"]:
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "reason": result["reason"],
+                "note": (
+                    "Un run R8 est déjà en cours. Attendre la fin ou "
+                    "poller /r8-status. Utiliser ?force=true pour "
+                    "écraser (déconseillé)."),
+                "current_state_summary": {
+                    "run_id": result["current_state"].get("run_id"),
+                    "status": result["current_state"].get("status"),
+                    "started_at_utc": result["current_state"].get(
+                        "started_at_utc"),
+                },
+            })
+    return {
+        "manifest_id": "PEE_MAJ_R8_EXECUTE_ACCEPTED",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°52-R8",
+        "option": "δ_HYBRIDE_α_β",
+        **result,
+        "poll_endpoint": "/api/v30/admin-premium/gis/diagnostic/pee-maj/r8-status",
+        "note": (
+            "Run démarré en background. Les phases 0/6/7/8 seront exécutées "
+            "réellement ; les phases 1-5 seront STUB_READY (ANTI_GÉNÉRIQUE "
+            "strict · spécifications métier à fournir). "
+            + (
+                "Pull B2 ACTIVÉ (~5-15 min · risque pod restart pendant pull)."
+                if do_pull_bool else
+                "Pull B2 DÉSACTIVÉ par défaut (source de vérité durable = B2). "
+                "Activer via ?do_pull=true si infrastructure stable."
+            )),
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+@router.get("/diagnostic/pee-maj/r8-status")
+async def pee_maj_r8_status(
+    x_commandant_token: Optional[str] = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-R8 · Lit le state file live du pipeline R8."""
+    _verify_token(x_commandant_token)
+    from engines.v8_institutional.especes.pee_maj_r8_orchestrator_omega import (
+        read_state, R8_STATE_PATH,
+    )
+    state = read_state()
+    if not state:
+        return {
+            "manifest_id": "PEE_MAJ_R8_STATUS_Ω",
+            "status": "NEVER_STARTED",
+            "state_path": str(R8_STATE_PATH),
+            "note": "Aucun run R8 encore démarré. POST /r8-execute pour lancer.",
+        }
+    # Retour compact (sans tracebacks)
+    phases_compact = {}
+    for pid, phase in (state.get("phases") or {}).items():
+        phases_compact[pid] = {
+            "status": phase.get("status"),
+            "started_at_utc": phase.get("started_at_utc"),
+            "completed_at_utc": phase.get("completed_at_utc"),
+            "last_update_utc": phase.get("last_update_utc"),
+            "pull_progress_pct": phase.get("pull_progress_pct"),
+            "pull_bytes": phase.get("pull_bytes"),
+            "results": {
+                k: v for k, v in (phase.get("results") or {}).items()
+                if k != "traceback"
+            } if phase.get("results") else None,
+        }
+    return {
+        "manifest_id": "PEE_MAJ_R8_STATUS_Ω",
+        "run_id": state.get("run_id"),
+        "status": state.get("status"),
+        "started_at_utc": state.get("started_at_utc"),
+        "completed_at_utc": state.get("completed_at_utc"),
+        "last_update_utc": state.get("last_update_utc"),
+        "total_elapsed_s": state.get("total_elapsed_s"),
+        "ordre": state.get("ordre"),
+        "option": state.get("option"),
+        "phases": phases_compact,
+        "global_error": state.get("global_error"),
+        "state_path": str(R8_STATE_PATH),
+        "v30_lock": "INVIOLÉ",
+    }

@@ -1,0 +1,170 @@
+{
+  "manifest_id": "BIONIC_SYNTHESIS_REPORT_R8_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "ordre": "N°52-R8",
+  "option": "δ_HYBRIDE_α_β",
+  "slot_id": "FORET_MFFP_PEE_MAJ_Ω",
+  "run_id": "R8_1778010277_16a9de",
+  "started_at_utc": "2026-05-05T19:44:37.373494+00:00",
+  "generated_at_utc": "2026-05-05T19:44:37.975066+00:00",
+  "phases_summary": {
+    "PHASE_0_VALIDATIONS": {
+      "status": "OK",
+      "elapsed_s": 0.59,
+      "results_preview": {
+        "slot_status": "LOADED",
+        "uploads_count": 1,
+        "pee_maj_upload_present": true,
+        "b2_bucket": "pee-maj-gpkg",
+        "b2_key": "pee_maj/2026-05-05/moslx2ne-49da58dd/pee_maj.gpkg",
+        "b2_upload_id": "4_z27f03715a111fa5a93d0071d_f202c547b0b0610b9_d20260505_m123056_c006_v0601000_t0055_u01777984256815",
+        "expected_sha256": "cc4c9fd83093cbb0df74971b454a394c433de106a6abda41608eae9c5ad4bb1b",
+        "expected_size_bytes": 37315948544,
+        "b2_live_size_bytes": 37315948544,
+        "b2_live_etag": "c889ff83b4c543326cf69417c10a52cd-712",
+        "b2_parts_count": 712,
+        "active_resumable_sessions": 0,
+        "elapsed_s": 0.59
+      }
+    },
+    "PHASE_1_EXTRACTION": {
+      "status": "STUB_READY",
+      "elapsed_s": 0.0,
+      "results_preview": {
+        "do_pull_requested": false,
+        "local_pull_path_planned": "/var/cache/gis_operational/incoming/FORET_MFFP_PEE_MAJ_Ω/pee_maj.gpkg",
+        "ephemeral_storage_warning": "/var/cache est éphémère (wipe pod restart). Pod restarts observés pendant le pull de 37 Go. Source de vérité durable = Backblaze B2 bucket=pee-maj-gpkg key=pee_maj/2026-05-05/moslx2ne-49da58dd/pee_maj.gpkg sha256=cc4c9fd83093cbb0df74971b454a394c433de106a6abda41608eae9c5ad4bb1b.",
+        "pull_performed": false,
+        "pull_skip_reason": "Pull désactivé par défaut : phases 1-5 en STUB_READY (spécifications métier non fournies). Le pull sera réactivable via ?do_pull=true quand les modules GIS (geopandas/fiona/rasterio) seront installés et les algorithmes BCE-4X spécifiés.",
+        "pull_skipped_to_prevent_waste": true,
+        "extraction_stub_ready": true,
+        "extraction_status": "STUB_READY_ANTI_GENERIC_BLOCK",
+        "target_epsg": 32198,
+        "target_epsg_description": "NAD83 / Québec Lambert",
+        "elapsed_s": 0.0
+      }
+    },
+    "PHASE_2_STRUCTURATION": {
+      "status": "STUB_READY",
+      "elapsed_s": 0.0,
+      "results_preview": {
+        "status": "STUB_READY_ANTI_GENERIC_BLOCK",
+        "anti_generique_note": "Phase NON exécutée · simulation formellement interdite. Dépendances non satisfaites listées ci-dessus. Fournir spécifications + algorithmes pour débloquer.",
+        "elapsed_s": 0.0
+      }
+    },
+    "PHASE_3_DERIVATION_9_COUCHES": {
+      "status": "STUB_READY",
+      "elapsed_s": 0.0,
+      "results_preview": {
+        "status": "STUB_READY_ANTI_GENERIC_BLOCK",
+        "anti_generique_note": "Phase NON exécutée · simulation formellement interdite. Dépendances non satisfaites listées ci-dessus. Fournir spécifications + algorithmes pour débloquer.",
+        "elapsed_s": 0.0
+      }
+    },
+    "PHASE_4_INDEXATION": {
+      "status": "STUB_READY",
+      "elapsed_s": 0.0,
+      "results_preview": {
+        "status": "STUB_READY_ANTI_GENERIC_BLOCK",
+        "anti_generique_note": "Phase NON exécutée · simulation formellement interdite. Dépendances non satisfaites listées ci-dessus. Fournir spécifications + algorithmes pour débloquer.",
+        "elapsed_s": 0.0
+      }
+    },
+    "PHASE_5_VALIDATION": {
+      "status": "STUB_READY",
+      "elapsed_s": 0.0,
+      "results_preview": {
+        "status": "STUB_READY_ANTI_GENERIC_BLOCK",
+        "anti_generique_note": "Phase NON exécutée · simulation formellement interdite. Dépendances non satisfaites listées ci-dessus. Fournir spécifications + algorithmes pour débloquer.",
+        "elapsed_s": 0.0
+      }
+    },
+    "PHASE_6_SCEAU": {
+      "status": "OK",
+      "elapsed_s": 0.0,
+      "results_preview": {
+        "seals": {
+          "BCE4X": {
+            "protocol": "BCE-4X_ULTIME_ABSOLU",
+            "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
+            "authority": "COMMANDANT_STEEVE_MAX",
+            "version": "x3"
+          },
+          "MFFP": {
+            "organisme": "MFFP — Direction des inventaires forestiers",
+            "dataset": "PEE_MAJ",
+            "format_source": "gpkg_monolithique"
+          },
+          "SHA256": {
+            "object_sha256": "cc4c9fd83093cbb0df74971b454a394c433de106a6abda41608eae9c5ad4bb1b",
+            "composite_sha256": "c0e7b2ff4b73456fe095b1f432e514606c8935e4b5f87bb1ed421dfc75e5d888",
+            "seal_sha256": "789a0041e0880407e726bdfef3c85c322200a3c11167389c087b8c72a8c2b280"
+          },
+          "V30": {
+            "lock": "INVIOLÉ",
+            "freeze_master": "LOCKED",
+            "doctrine_version": "V30"
+          }
+        },
+        "elapsed_s": 0.0
+      }
+    },
+    "PHASE_7_INTEGRATION": {
+      "status": "OK",
+      "elapsed_s": 0.0,
+      "results_preview": {
+        "persist_derivatives": {
+          "persisted_count": 0,
+          "skipped_count": 9,
+          "failed_count": 0,
+          "persistent_root": "/app/backend/data/gis_archive/_derived"
+        },
+        "slot_r8_engine_ready": true,
+        "dependent_engines": [
+          "engine_corridors_gis_omega (ORDRE N°40)",
+          "engine_habitat_omega (ORDRE N°53 à venir)",
+          "bio_profile_omega_135 (ORDRE N°53 à venir)"
+        ],
+        "elapsed_s": 0.0
+      }
+    },
+    "PHASE_8_RAPPORT": {
+      "status": "RUNNING",
+      "elapsed_s": null,
+      "results_preview": {}
+    }
+  },
+  "phases_stub_ready": [
+    "PHASE_1_EXTRACTION",
+    "PHASE_2_STRUCTURATION",
+    "PHASE_3_DERIVATION_9_COUCHES",
+    "PHASE_4_INDEXATION",
+    "PHASE_5_VALIDATION"
+  ],
+  "phases_executed_real": [
+    "PHASE_0_VALIDATIONS",
+    "PHASE_6_SCEAU",
+    "PHASE_7_INTEGRATION"
+  ],
+  "phases_failed": [],
+  "target_epsg": 32198,
+  "ephemeral_storage_notes": {
+    "local_pull_path": "/var/cache/gis_operational/incoming/FORET_MFFP_PEE_MAJ_Ω/pee_maj.gpkg",
+    "storage_layer": "/var/cache (éphémère · wipe pod restart)",
+    "durable_source_of_truth": {
+      "b2_bucket": "pee-maj-gpkg",
+      "b2_key": "pee_maj/2026-05-05/moslx2ne-49da58dd/pee_maj.gpkg",
+      "b2_sha256": "cc4c9fd83093cbb0df74971b454a394c433de106a6abda41608eae9c5ad4bb1b"
+    },
+    "durable_archive_prereq_future": "Pour archiver pee_maj.gpkg durablement localement, prévoir ≥40 Go libres sur /app ext4 (actuellement insuffisant). Alternative : compression zstd ciblée sur les dérivés calculés (phase 3 future)."
+  },
+  "next_steps_to_unlock_phases_1_to_5": [
+    "Fournir dictionnaires MFFP_CODES (essences/classes_age/types_couvert/types_ecologique)",
+    "Fournir spécifications algorithmiques BCE-4X par couche",
+    "Fournir subset 100 Mo pour validation algorithmique",
+    "Installer modules GIS : geopandas, fiona, pyogrio, rasterio, rtree, pyproj, shapely",
+    "Intégrer modules AMPLIFICATEURS : LiDAR, GEM, carte 2D/3D (phases ultérieures)"
+  ],
+  "v30_lock": "INVIOLÉ"
+}

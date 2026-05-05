@@ -2373,8 +2373,37 @@
         }
       ],
       "files_loaded_count": 1,
-      "composite_sha256": "c0e7b2ff4b73456fe095b1f432e514606c8935e4b5f87bb1ed421dfc75e5d888"
+      "composite_sha256": "c0e7b2ff4b73456fe095b1f432e514606c8935e4b5f87bb1ed421dfc75e5d888",
+      "r8_seals": {
+        "BCE4X": {
+          "protocol": "BCE-4X_ULTIME_ABSOLU",
+          "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
+          "authority": "COMMANDANT_STEEVE_MAX",
+          "version": "x3"
+        },
+        "MFFP": {
+          "organisme": "MFFP — Direction des inventaires forestiers",
+          "dataset": "PEE_MAJ",
+          "format_source": "gpkg_monolithique"
+        },
+        "SHA256": {
+          "object_sha256": "cc4c9fd83093cbb0df74971b454a394c433de106a6abda41608eae9c5ad4bb1b",
+          "composite_sha256": "c0e7b2ff4b73456fe095b1f432e514606c8935e4b5f87bb1ed421dfc75e5d888",
+          "seal_sha256": "789a0041e0880407e726bdfef3c85c322200a3c11167389c087b8c72a8c2b280"
+        },
+        "V30": {
+          "lock": "INVIOLÉ",
+          "freeze_master": "LOCKED",
+          "doctrine_version": "V30"
+        }
+      },
+      "r8_sealed_at_utc": "2026-05-05T19:44:37.966848+00:00",
+      "r8_engine_ready": true,
+      "r8_activated_at_utc": "2026-05-05T19:44:37.972086+00:00",
+      "r8_local_pull_path": "/var/cache/gis_operational/incoming/FORET_MFFP_PEE_MAJ_Ω/pee_maj.gpkg",
+      "r8_local_pull_is_ephemeral": true,
+      "r8_local_pull_path_note": "Stockage /var/cache éphémère. Source durable = B2."
     }
   },
-  "last_updated_utc": "2026-05-05T16:03:01.175407+00:00"
+  "last_updated_utc": "2026-05-05T19:44:37.972092+00:00"
 }

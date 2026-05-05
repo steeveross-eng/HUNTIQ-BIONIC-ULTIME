@@ -3588,3 +3588,98 @@ S3_RESUME_SESSION_LOADED b2_upload_id=4_z27f...u01777992717414 parts_already=2/3
 
 ## V30 LOCK
 - V30 INVIOLÉ · FUSION ADD-ONLY · ANTI_GÉNÉRIQUE_STRICT
+
+═══════════════════════════════════════════════════════════════════════════
+PHASE XXVIII · ORDRE N°52-R8 — PIPELINE R8 OPTION δ HYBRIDE (2026-05-05)
+═══════════════════════════════════════════════════════════════════════════
+
+## Décisions du Commandant (arbitrages)
+- OPTION δ (hybride α+β) validée
+- EPSG cible : **32198 (NAD83 / Québec Lambert)**
+- Dictionnaires MFFP_CODES + algorithmes BCE-4X + subset 100 Mo :
+  fournis progressivement par Commandant
+- Risque éphémérité /var/cache accepté
+- Rapport R8 doit documenter : emplacement local, éphémérité, prérequis
+  archive durable
+
+## Implémentation
+- **Module** : `engines/v8_institutional/especes/pee_maj_r8_orchestrator_omega.py`
+- **Endpoints** : 
+  · `POST /api/v30/admin-premium/gis/diagnostic/pee-maj/r8-execute`
+    (query: `force=true|false`, `do_pull=true|false`)
+  · `GET /api/v30/admin-premium/gis/diagnostic/pee-maj/r8-status`
+- **State file** (persistant ext4) : `/app/backend/data/gis_operational/R8_STATE.json`
+- **Rapports** : `/app/backend/data/gis_operational/r8_reports/*.json`
+- **Pull B2 local** : `/var/cache/gis_operational/incoming/FORET_MFFP_PEE_MAJ_Ω/`
+
+## 8 phases R8
+
+| Phase | Status | Mode |
+|---|---|---|
+| PHASE_0_VALIDATIONS | ✅ OK | **RÉEL** — slot=LOADED + B2 HEAD + 0 session active |
+| PHASE_1_EXTRACTION | 🟡 STUB_READY | Pull B2 optionnel (désactivé par défaut) |
+| PHASE_2_STRUCTURATION | 🟡 STUB_READY | Nécessite dict MFFP_CODES |
+| PHASE_3_DERIVATION_9_COUCHES | 🟡 STUB_READY | Nécessite algos BCE-4X + modules GIS |
+| PHASE_4_INDEXATION | 🟡 STUB_READY | Nécessite rtree/parquet |
+| PHASE_5_VALIDATION | 🟡 STUB_READY | Nécessite topologie + stats |
+| PHASE_6_SCEAU | ✅ OK | **RÉEL** — BCE4X+MFFP+SHA256+V30 persistés |
+| PHASE_7_INTEGRATION | ✅ OK | **RÉEL** — slot.r8_engine_ready=true |
+| PHASE_8_RAPPORT | ✅ OK | **RÉEL** — BIONIC_SYNTHESIS_REPORT.json |
+
+## Incidents observés (documentés)
+- 2 pod restarts pendant le pull B2 à ~25% (9.44 Go) → /var/cache wipe.
+- **Doctrine adoptée** : pull B2 désactivé par défaut (do_pull=false) car
+  phases 1-5 en STUB_READY de toute façon. Réactivable via `?do_pull=true`
+  quand specs métier fournies ET infrastructure stable.
+- Zombie detection : runs RUNNING avec last_update > 120s auto-reset
+  (ZOMBIE_POD_RESTART) au prochain démarrage.
+
+## Sceaux institutionnels persistés sur slot.r8_seals
+```json
+{
+  "BCE4X": {
+    "protocol": "BCE-4X_ULTIME_ABSOLU",
+    "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
+    "authority": "COMMANDANT_STEEVE_MAX",
+    "version": "x3"
+  },
+  "MFFP": {
+    "organisme": "MFFP — Direction des inventaires forestiers",
+    "dataset": "PEE_MAJ",
+    "format_source": "gpkg_monolithique"
+  },
+  "SHA256": {
+    "object_sha256": "cc4c9fd83093cbb0df74971b454a394c433de106a6abda41608eae9c5ad4bb1b",
+    "composite_sha256": "c0e7b2ff4b73456fe095b1f432e514606c8935e4b5f87bb1ed421dfc75e5d888",
+    "seal_sha256": "789a0041e0880407e726bdfef3c85c322200a3c11167389c087b8c72a8c2b280"
+  },
+  "V30": {
+    "lock": "INVIOLÉ",
+    "freeze_master": "LOCKED",
+    "doctrine_version": "V30"
+  }
+}
+```
+
+## Résultat du run R8_1778010277_16a9de
+- `status` : **OK_WITH_STUBS**
+- `total_elapsed_s` : 0.6s
+- `phases_executed_real` : 3 (PHASE_0, PHASE_6, PHASE_7)
+- `phases_stub_ready` : 5 (PHASE_1 à PHASE_5)
+- `phases_executed_real` dans rapport : 4 (+ PHASE_8 rapport)
+- `phases_failed` : 0
+- `slot.r8_engine_ready` : **true**
+
+## Next steps pour débloquer phases 1-5
+1. Fournir dictionnaires MFFP_CODES JSON (essences, classes_age, etc.)
+2. Fournir spécifications algorithmiques BCE-4X par couche (9 couches)
+3. Fournir subset 100 Mo pour validation algorithmique
+4. Installer modules GIS : geopandas, fiona, pyogrio, rasterio, rtree
+5. Intégrer modules AMPLIFICATEURS : LiDAR, GEM, carte 2D/3D
+
+## Tests Pytest
+- `tests/test_phase_xxviii_r8_orchestrator_omega.py` : **10/10 PASSED**
+- Régression totale Phases XXVII + XXVIII : **77/77 PASSED · 0 régression**
+
+## V30 LOCK
+- V30 INVIOLÉ · FUSION ADD-ONLY · ANTI_GÉNÉRIQUE_STRICT
