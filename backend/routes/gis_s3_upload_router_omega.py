@@ -1886,3 +1886,131 @@ async def pee_maj_r8_status(
         "state_path": str(R8_STATE_PATH),
         "v30_lock": "INVIOLÉ",
     }
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°52-R14 · Pull résiliant B2 par segments de 500 Mo (HTTP Range)
+# FUSION ADD-ONLY · Remplace le get_object monolithique qui crashait à 9,44 Go
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/diagnostic/pee-maj/resilient-pull-start")
+async def pee_maj_resilient_pull_start(
+    request: Request,
+    force: Optional[str] = None,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-R14 · Démarre le pull résiliant de pee_maj.gpkg (~37 Go).
+
+    Stratégie : GetObject Range HTTP par segments de 500 Mo
+    · Contourne les OOM/timeout observés sur streams get_object longs.
+    · Append vers `.pulling.partial` (reprise automatique sur offset).
+    · Vérification SHA-256 finale vs manifest avant rename → pee_maj.gpkg.
+    · Idempotent · zombie detection (age > 120s) · ?force=true override.
+    · Thread daemon background · poll /resilient-pull-status.
+    """
+    _verify_token(x_commandant_token)
+    from engines.v8_institutional.especes.mffp_resilient_pull_omega import (
+        start_resilient_pull,
+    )
+    force_bool = (force or "").lower() in ("true", "1", "yes", "y")
+    result = start_resilient_pull(force=force_bool)
+    if not result["ok"]:
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "reason": result["reason"],
+                "note": (
+                    "Un pull résiliant est déjà en cours. Poll "
+                    "/resilient-pull-status. Utiliser ?force=true "
+                    "pour écraser (déconseillé · lockerait la session)."),
+                "current_state_summary": {
+                    "run_id": result["current_state"].get("run_id"),
+                    "status": result["current_state"].get("status"),
+                    "progress_pct": result["current_state"].get(
+                        "progress_pct"),
+                    "bytes_pulled": result["current_state"].get(
+                        "bytes_pulled"),
+                    "last_update_utc": result["current_state"].get(
+                        "last_update_utc"),
+                },
+            })
+    return {
+        "manifest_id": "PEE_MAJ_RESILIENT_PULL_START_ACCEPTED",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°52-R14",
+        **result,
+        "poll_endpoint": (
+            "/api/v30/admin-premium/gis/diagnostic/pee-maj/"
+            "resilient-pull-status"),
+        "note": (
+            "Pull résiliant démarré en background. Segments de 500 Mo "
+            "(HTTP Range). Durée estimée : 30-60 min selon infra. "
+            "Le .pulling.partial est écrit sur /var/cache (éphémère). "
+            "Source durable = B2."),
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+@router.get("/diagnostic/pee-maj/resilient-pull-status")
+async def pee_maj_resilient_pull_status(
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-R14 · État live du pull résiliant + validation fichier final."""
+    _verify_token(x_commandant_token)
+    from engines.v8_institutional.especes.mffp_resilient_pull_omega import (
+        read_resilient_state, is_pee_maj_complete_and_valid,
+        RESILIENT_STATE_PATH, PEE_MAJ_LOCAL_PATH, PEE_MAJ_PARTIAL_PATH,
+    )
+    state = read_resilient_state()
+    # Vérif complétion live (SHA-256 si fichier final présent)
+    completeness = None
+    try:
+        completeness = is_pee_maj_complete_and_valid()
+    except Exception as e:  # noqa: BLE001
+        completeness = {"complete": False, "reason": "CHECK_ERROR",
+                        "error": str(e)[:200]}
+    # État physique disque
+    partial_size = (PEE_MAJ_PARTIAL_PATH.stat().st_size
+                    if PEE_MAJ_PARTIAL_PATH.exists() else 0)
+    final_size = (PEE_MAJ_LOCAL_PATH.stat().st_size
+                  if PEE_MAJ_LOCAL_PATH.exists() else 0)
+    if not state:
+        return {
+            "manifest_id": "PEE_MAJ_RESILIENT_PULL_STATUS_Ω",
+            "ordre": "N°52-R14",
+            "status": "NEVER_STARTED",
+            "state_path": str(RESILIENT_STATE_PATH),
+            "completeness": completeness,
+            "partial_size_bytes": partial_size,
+            "final_size_bytes": final_size,
+            "note": ("Aucun pull résiliant démarré. "
+                     "POST /resilient-pull-start pour lancer."),
+            "v30_lock": "INVIOLÉ",
+        }
+    return {
+        "manifest_id": "PEE_MAJ_RESILIENT_PULL_STATUS_Ω",
+        "ordre": "N°52-R14",
+        "run_id": state.get("run_id"),
+        "status": state.get("status"),
+        "progress_pct": state.get("progress_pct"),
+        "bytes_pulled": state.get("bytes_pulled"),
+        "total_size": state.get("total_size"),
+        "segments_completed": state.get("segments_completed"),
+        "last_segment_elapsed_s": state.get("last_segment_elapsed_s"),
+        "last_segment_bytes": state.get("last_segment_bytes"),
+        "start_offset": state.get("start_offset"),
+        "started_at_utc": state.get("started_at_utc"),
+        "last_update_utc": state.get("last_update_utc"),
+        "completed_at_utc": state.get("completed_at_utc"),
+        "sha256_computed": state.get("sha256_computed"),
+        "expected_sha256": state.get("expected_sha256"),
+        "error": state.get("error"),
+        "partial_size_bytes": partial_size,
+        "final_size_bytes": final_size,
+        "completeness": completeness,
+        "state_path": str(RESILIENT_STATE_PATH),
+        "segment_size_bytes": state.get("segment_size_bytes"),
+        "previous_run_was_zombie": state.get("previous_run_was_zombie"),
+        "v30_lock": "INVIOLÉ",
+    }

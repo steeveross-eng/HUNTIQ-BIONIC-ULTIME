@@ -1,6 +1,6 @@
 {
   "run_id": "R8_1778014312_54694b",
-  "status": "RUNNING",
+  "status": "ZOMBIE_POD_RESTART",
   "started_at_utc": "2026-05-05T20:51:52.362029+00:00",
   "last_update_utc": "2026-05-05T20:53:57.464622+00:00",
   "ordre": "N°52-R8",
@@ -58,5 +58,7 @@
     "PHASE_8_RAPPORT": {
       "status": "PENDING"
     }
-  }
+  },
+  "zombified_at_utc": "2026-05-05T21:11:27.302828+00:00",
+  "zombie_reason": "Pod restart detected on agent takeover (backend uptime < last_update age > 120s)"
 }

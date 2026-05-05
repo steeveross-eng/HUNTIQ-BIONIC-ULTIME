@@ -120,14 +120,27 @@ def is_pee_maj_complete_and_valid() -> Dict[str, Any]:
         return {"complete": False, "reason": "SIZE_MISMATCH",
                 "size_local": size,
                 "expected_size": meta["expected_size_bytes"]}
-    # SHA-256 vérification
+    # SHA-256 vérification (avec fadvise pour ne pas peupler le pagecache)
     h = hashlib.sha256()
+    bytes_hashed = 0
     with open(PEE_MAJ_LOCAL_PATH, "rb") as fh:
+        fd = fh.fileno()
+        try:
+            os.posix_fadvise(fd, 0, 0, os.POSIX_FADV_SEQUENTIAL)
+        except (AttributeError, OSError):
+            pass
         while True:
             blk = fh.read(8 << 20)
             if not blk:
                 break
             h.update(blk)
+            bytes_hashed += len(blk)
+            if bytes_hashed % (500 << 20) < (8 << 20):
+                try:
+                    os.posix_fadvise(
+                        fd, 0, bytes_hashed, os.POSIX_FADV_DONTNEED)
+                except (AttributeError, OSError):
+                    pass
     sha = h.hexdigest()
     if sha != meta["expected_sha256"]:
         return {"complete": False, "reason": "SHA256_MISMATCH",
@@ -135,25 +148,129 @@ def is_pee_maj_complete_and_valid() -> Dict[str, Any]:
     return {"complete": True, "size_bytes": size, "sha256": sha}
 
 
+def _generate_presigned_url(meta: Dict[str, Any],
+                             expires_in_s: int = 14400) -> str:
+    """Génère URL présignée HTTPS pour pull anonyme par curl (4h validité)."""
+    s3, _bucket = _get_b2_client_and_bucket()
+    return s3.generate_presigned_url(
+        "get_object",
+        Params={"Bucket": meta["b2_bucket"], "Key": meta["b2_key"]},
+        ExpiresIn=expires_in_s,
+    )
+
+
+def _download_segment_via_curl(presigned_url: str, start: int, end: int,
+                                tmp_seg_path: Path,
+                                timeout_s: int = 240) -> int:
+    """Télécharge bytes [start..end] (inclusif) via subprocess curl.
+
+    Isolation mémoire : le process curl libère toute sa RAM en sortant.
+    Aucun streaming via Python = aucune accumulation boto3/urllib3.
+
+    Retourne le nombre d'octets reçus (vérifié par stat).
+    Lève RuntimeError si curl échoue ou taille incorrecte.
+    """
+    import subprocess  # localisé pour éviter ImportError tests sans subprocess
+    if tmp_seg_path.exists():
+        tmp_seg_path.unlink()
+    expected_bytes = end - start + 1
+    range_header = f"bytes={start}-{end}"
+    proc = subprocess.run(
+        [
+            "curl",
+            "-fSs",  # fail on HTTP error · silent · show errors
+            "--max-time", str(timeout_s),
+            "--retry", "0",  # retries gérés au niveau supérieur
+            "-H", f"Range: {range_header}",
+            "-o", str(tmp_seg_path),
+            presigned_url,
+        ],
+        check=False,
+        capture_output=True,
+        timeout=timeout_s + 30,
+    )
+    if proc.returncode != 0:
+        stderr = (proc.stderr or b"").decode("utf-8", errors="replace")[:300]
+        raise RuntimeError(
+            f"CURL_FAIL rc={proc.returncode} range={range_header} "
+            f"stderr={stderr}")
+    if not tmp_seg_path.exists():
+        raise RuntimeError(
+            f"CURL_NO_OUTPUT range={range_header}")
+    actual = tmp_seg_path.stat().st_size
+    if actual != expected_bytes:
+        raise RuntimeError(
+            f"CURL_SIZE_MISMATCH range={range_header} "
+            f"actual={actual} expected={expected_bytes}")
+    return actual
+
+
+def _append_tmp_segment_to_partial(tmp_seg_path: Path,
+                                    partial_path: Path) -> None:
+    """Append tmp_seg → partial via dd avec nocache (libère pagecache).
+
+    CRITIQUE — anti-cgroup memory.max=8Go :
+      · oflag=append,nocache : append + fadvise(DONTNEED) après écriture
+      · iflag=nocache : fadvise(DONTNEED) sur tmp_seg après lecture
+      · conv=notrunc : ne pas tronquer le fichier de destination
+    """
+    import subprocess
+    proc = subprocess.run(
+        ["dd",
+         f"if={tmp_seg_path}",
+         f"of={partial_path}",
+         "bs=8M",
+         "conv=notrunc",
+         "iflag=nocache",
+         "oflag=append,nocache",
+         "status=none"],
+        check=False, capture_output=True, timeout=300,
+    )
+    if proc.returncode != 0:
+        stderr = (proc.stderr or b"").decode("utf-8", errors="replace")[:300]
+        raise RuntimeError(f"DD_APPEND_FAIL rc={proc.returncode} "
+                           f"stderr={stderr}")
+    # En complément, fadvise(DONTNEED) sur le partial entier pour
+    # évacuer toute page résiduelle du pagecache cumulée
+    try:
+        fd = os.open(str(partial_path), os.O_RDONLY)
+        try:
+            os.posix_fadvise(fd, 0, 0, os.POSIX_FADV_DONTNEED)
+        finally:
+            os.close(fd)
+    except (AttributeError, OSError):
+        pass
+
+
 # ═════════════════════════════════════════════════════════════════════════
-# Pull RÉSILIANT par RANGES
+# Pull RÉSILIANT par RANGES (subprocess curl · isolation mémoire totale)
 # ═════════════════════════════════════════════════════════════════════════
 def _execute_resilient_pull(run_id: str) -> None:
-    """Background thread : pull RANGE résiliant.
+    """Background thread : pull RANGE résiliant via subprocess curl.
 
-    1. Lecture metadata (taille totale + sha256 attendu)
-    2. Si fichier final déjà présent et valide → SKIP
-    3. Sinon, démarre depuis offset = taille du .partial existant
-    4. Boucle GetObject Range par segments de 500 Mo
-    5. Persiste state file avec progress %
-    6. À la fin : compare sha256 + rename .partial → final
+    Stratégie anti-OOM Kubernetes (root cause après 4 incidents docs) :
+      · boto3 stream `body.read()` accumule mémoire interne urllib3/SSL →
+        OOM kill au cgroup pod à ~9-15 Go.
+      · Solution : chaque segment est téléchargé par un PROCESSUS curl
+        SÉPARÉ via URL présignée. La RAM du curl est libérée à sa sortie.
+      · Le Python parent ne fait que des appels stat() + subprocess et
+        écrit le state JSON. Mémoire bornée < 50 Mo.
+
+    Pipeline par segment :
+      1. curl -H "Range: ..." -> /var/cache/_seg.tmp
+      2. vérif size (curl exit code + stat)
+      3. cat /var/cache/_seg.tmp >> .pulling.partial (subprocess bash)
+      4. rm /var/cache/_seg.tmp
+      5. update state JSON (atomic)
     """
+    import gc
     state = read_resilient_state()
     try:
         meta = _get_pee_maj_b2_metadata()
         state["b2_metadata"] = meta
         state["expected_size_bytes"] = meta["expected_size_bytes"]
         state["expected_sha256"] = meta["expected_sha256"]
+        state["transport"] = "subprocess_curl_presigned_url"
         _atomic_write_state(state)
 
         # Vérif rapide : fichier final déjà OK ?
@@ -167,6 +284,10 @@ def _execute_resilient_pull(run_id: str) -> None:
 
         # Création répertoire + démarrage offset
         PEE_MAJ_LOCAL_DIR.mkdir(parents=True, exist_ok=True)
+        tmp_seg_path = PEE_MAJ_LOCAL_DIR / "_seg.tmp"
+        if tmp_seg_path.exists():
+            tmp_seg_path.unlink()
+
         start_offset = (
             PEE_MAJ_PARTIAL_PATH.stat().st_size
             if PEE_MAJ_PARTIAL_PATH.exists() else 0
@@ -177,36 +298,38 @@ def _execute_resilient_pull(run_id: str) -> None:
         state["progress_pct"] = round(start_offset / total_size * 100, 2)
         _atomic_write_state(state)
         logger.info(
-            "RESILIENT_PULL_START offset=%d total=%d progress=%.2f%%",
+            "RESILIENT_PULL_START_CURL offset=%d total=%d progress=%.2f%%",
             start_offset, total_size, state["progress_pct"])
 
-        s3, bucket = _get_b2_client_and_bucket()
+        # Génération URL présignée (4h validité)
+        presigned_url = _generate_presigned_url(meta, expires_in_s=14400)
+        state["presigned_url_generated_at_utc"] = _utc_now()
+        state["presigned_url_expires_in_s"] = 14400
+        _atomic_write_state(state)
+
         current = start_offset
+        url_generated_at = time.time()
 
         while current < total_size:
+            # Régénération URL si > 3h écoulées (safety margin sur 4h)
+            if time.time() - url_generated_at > 10800:
+                presigned_url = _generate_presigned_url(
+                    meta, expires_in_s=14400)
+                url_generated_at = time.time()
+                state["presigned_url_regenerated_at_utc"] = _utc_now()
+
             range_end = min(current + SEGMENT_SIZE_BYTES - 1, total_size - 1)
-            range_header = f"bytes={current}-{range_end}"
             attempt = 0
             success = False
             while attempt < MAX_RETRIES_PER_SEGMENT and not success:
                 attempt += 1
                 try:
                     t0 = time.time()
-                    resp = s3.get_object(
-                        Bucket=meta["b2_bucket"],
-                        Key=meta["b2_key"],
-                        Range=range_header,
-                    )
-                    body = resp["Body"]
-                    bytes_in_segment = 0
-                    with open(PEE_MAJ_PARTIAL_PATH, "ab") as out:
-                        while True:
-                            blk = body.read(8 << 20)  # 8 Mo sub-chunks
-                            if not blk:
-                                break
-                            out.write(blk)
-                            bytes_in_segment += len(blk)
-                    body.close()
+                    bytes_in_segment = _download_segment_via_curl(
+                        presigned_url, current, range_end, tmp_seg_path)
+                    _append_tmp_segment_to_partial(
+                        tmp_seg_path, PEE_MAJ_PARTIAL_PATH)
+                    tmp_seg_path.unlink(missing_ok=True)
                     elapsed = round(time.time() - t0, 2)
                     current += bytes_in_segment
                     success = True
@@ -218,36 +341,60 @@ def _execute_resilient_pull(run_id: str) -> None:
                     state["segments_completed"] = (
                         int(state.get("segments_completed", 0)) + 1)
                     _atomic_write_state(state)
+                    gc.collect()  # releve la RAM Python potentiellement accumulée
                     logger.info(
-                        "RESILIENT_PULL_SEGMENT range=%s bytes=%d elapsed=%ss progress=%.2f%%",
-                        range_header, bytes_in_segment, elapsed,
-                        state["progress_pct"])
+                        "RESILIENT_PULL_SEGMENT_CURL range=bytes=%d-%d "
+                        "bytes=%d elapsed=%ss progress=%.2f%%",
+                        current - bytes_in_segment, range_end,
+                        bytes_in_segment, elapsed, state["progress_pct"])
                 except Exception as e:
                     wait = RETRY_BACKOFF_BASE_S ** attempt
                     logger.warning(
-                        "RESILIENT_PULL_RETRY range=%s attempt=%d/%d "
-                        "wait=%.1fs err=%s",
-                        range_header, attempt, MAX_RETRIES_PER_SEGMENT,
-                        wait, e)
+                        "RESILIENT_PULL_RETRY_CURL range=bytes=%d-%d "
+                        "attempt=%d/%d wait=%.1fs err=%s",
+                        current, range_end, attempt,
+                        MAX_RETRIES_PER_SEGMENT, wait, e)
+                    # Si tmp_seg corrompu (taille partielle), purger
+                    if tmp_seg_path.exists():
+                        tmp_seg_path.unlink(missing_ok=True)
                     time.sleep(wait)
             if not success:
                 state["status"] = "FAILED"
                 state["error"] = (
-                    f"SEGMENT_RETRIES_EXHAUSTED range={range_header}")
+                    f"SEGMENT_RETRIES_EXHAUSTED range=bytes={current}-"
+                    f"{range_end}")
                 _atomic_write_state(state)
                 logger.error(
-                    "RESILIENT_PULL_FAIL_SEGMENT range=%s", range_header)
+                    "RESILIENT_PULL_FAIL_SEGMENT_CURL range=bytes=%d-%d",
+                    current, range_end)
                 return
 
         # Vérif SHA-256 du fichier complet
+        # Lecture explicite avec fadvise(DONTNEED) périodique pour
+        # éviter de repeupler le pagecache à 37 Go (OOM kubernetes).
         logger.info("RESILIENT_PULL_VERIFY_SHA256")
         h = hashlib.sha256()
+        bytes_hashed = 0
         with open(PEE_MAJ_PARTIAL_PATH, "rb") as fh:
+            fd = fh.fileno()
+            try:
+                # Indique au kernel : lecture séquentielle (drop-after-read)
+                os.posix_fadvise(fd, 0, 0, os.POSIX_FADV_SEQUENTIAL)
+            except (AttributeError, OSError):
+                pass
             while True:
                 blk = fh.read(8 << 20)
                 if not blk:
                     break
                 h.update(blk)
+                bytes_hashed += len(blk)
+                # Toutes les 500 Mo lues, vide le pagecache
+                if bytes_hashed % (500 << 20) < (8 << 20):
+                    try:
+                        os.posix_fadvise(
+                            fd, 0, bytes_hashed, os.POSIX_FADV_DONTNEED)
+                    except (AttributeError, OSError):
+                        pass
         final_sha = h.hexdigest()
         state["sha256_computed"] = final_sha
         if final_sha != meta["expected_sha256"]:

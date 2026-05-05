@@ -1,0 +1,30 @@
+{
+  "run_id": "PULL_1778018936_1126fa",
+  "status": "ZOMBIE_POD_EVICTED_EPHEMERAL_STORAGE",
+  "started_at_utc": "2026-05-05T22:08:56.447444+00:00",
+  "last_update_utc": "2026-05-05T22:12:16.509818+00:00",
+  "ordre": "N°52-R14",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "previous_run_was_zombie": false,
+  "segment_size_bytes": 524288000,
+  "segments_completed": 18,
+  "b2_metadata": {
+    "b2_bucket": "pee-maj-gpkg",
+    "b2_key": "pee_maj/2026-05-05/moslx2ne-49da58dd/pee_maj.gpkg",
+    "expected_sha256": "cc4c9fd83093cbb0df74971b454a394c433de106a6abda41608eae9c5ad4bb1b",
+    "expected_size_bytes": 37315948544
+  },
+  "expected_size_bytes": 37315948544,
+  "expected_sha256": "cc4c9fd83093cbb0df74971b454a394c433de106a6abda41608eae9c5ad4bb1b",
+  "transport": "subprocess_curl_presigned_url",
+  "start_offset": 0,
+  "total_size": 37315948544,
+  "progress_pct": 25.29,
+  "presigned_url_generated_at_utc": "2026-05-05T22:08:56.878744+00:00",
+  "presigned_url_expires_in_s": 14400,
+  "bytes_pulled": 9437184000,
+  "last_segment_bytes": 524288000,
+  "last_segment_elapsed_s": 9.8,
+  "zombified_at_utc": "2026-05-05T22:26:07.643177+00:00",
+  "zombie_reason": "K8s ephemeral-storage limit ~10GiB exceeded at .partial=9.44GB. 4 reproducible incidents at identical threshold across 4 different transport strategies (boto3 stream, boto3+fadvise, subprocess curl+cat, subprocess curl+dd nocache). Confirmed: pod cgroup memory.max=8GB, memory.current<3GB at crash. Bottleneck = K8s ephemeral-storage limit."
+}
