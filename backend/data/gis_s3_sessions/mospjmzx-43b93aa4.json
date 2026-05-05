@@ -487,5 +487,7 @@
   },
   "started_at_utc": "2026-05-05T14:12:29.786261+00:00",
   "last_update_utc": "2026-05-05T14:18:37.851849+00:00",
-  "status": "UPLOADING"
+  "status": "ABORTED",
+  "aborted_at_utc": "2026-05-05T17:05:04.548489+00:00",
+  "aborted_by": "cleanup_orphans_omega"
 }
