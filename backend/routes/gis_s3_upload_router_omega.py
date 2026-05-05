@@ -1373,6 +1373,124 @@ __all__ = ["router"]
 
 
 # ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°52-R9 · Amplification MFFP×1000 (Registre + Recalc planner)
+# ═════════════════════════════════════════════════════════════════════════
+@router.get("/territoire/mffp-master-weights")
+async def get_mffp_master_weights(
+    x_commandant_token: Optional[str] = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-R9 · Lecture du registre de pondération MFFP×1000."""
+    _verify_token(x_commandant_token)
+    from engines.v8_institutional.especes.mffp_master_weight_registry_omega \
+        import read_master_weights, check_mffp_derived_layers_availability
+    weights = read_master_weights()
+    availability = check_mffp_derived_layers_availability()
+    return {
+        "manifest_id": "MFFP_MASTER_WEIGHTS_LIVE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°52-R9",
+        "weights": weights,
+        "mffp_derived_layers_availability": availability,
+    }
+
+
+@router.post("/territoire/mffp-master-weights/activate")
+async def activate_mffp_master_weights(
+    request: Request,
+    deactivate: Optional[str] = None,
+    x_commandant_token: Optional[str] = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-R9 · Active (ou désactive avec ?deactivate=true) le registre."""
+    _verify_token(x_commandant_token)
+    from engines.v8_institutional.especes.mffp_master_weight_registry_omega \
+        import activate_mffp_master, deactivate_mffp_master
+    do_deact = (deactivate or "").lower() in ("true", "1", "yes", "y")
+    if do_deact:
+        w = deactivate_mffp_master(authority="COMMANDANT_STEEVE_MAX")
+        return {
+            "manifest_id": "MFFP_MASTER_WEIGHTS_DEACTIVATED",
+            "ordre": "N°52-R9",
+            "weights": w,
+            "active": False,
+        }
+    w = activate_mffp_master(authority="COMMANDANT_STEEVE_MAX")
+    return {
+        "manifest_id": "MFFP_MASTER_WEIGHTS_ACTIVATED",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°52-R9",
+        "weights": w,
+        "active": True,
+    }
+
+
+@router.post("/territoire/r9-recalc-execute")
+async def territoire_r9_recalc_execute(
+    request: Request,
+    force: Optional[str] = None,
+    x_commandant_token: Optional[str] = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-R9 · Lance le planificateur de recalcul R9 en background.
+
+    · Active automatiquement le registre MFFP×1000 si non actif.
+    · Pour chaque cible (corridors/hotspots/affuts/salines/zones_*),
+      vérifie la disponibilité des couches MFFP dérivées (PHASE_3 R8).
+    · Si couches indisponibles → STUB_READY_BLOCKED_BY_R8_PHASE_3.
+    · Marque tous les moteurs dépendants en `force_rebuild_pending=true`.
+    · Génère un rapport BIONIC_AMPLIFICATION_REPORT.json.
+    """
+    _verify_token(x_commandant_token)
+    from engines.v8_institutional.especes.mffp_master_weight_registry_omega \
+        import start_r9_recalc_background
+    force_bool = (force or "").lower() in ("true", "1", "yes", "y")
+    result = start_r9_recalc_background(force=force_bool)
+    if not result["ok"]:
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "reason": result["reason"],
+                "current_state_summary": {
+                    "run_id": result["current_state"].get("run_id"),
+                    "status": result["current_state"].get("status"),
+                    "started_at_utc": result["current_state"].get(
+                        "started_at_utc"),
+                },
+            })
+    return {
+        "manifest_id": "TERRITOIRE_R9_RECALC_ACCEPTED",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°52-R9",
+        **result,
+        "poll_endpoint": "/api/v30/admin-premium/gis/territoire/r9-recalc-status",
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+@router.get("/territoire/r9-recalc-status")
+async def territoire_r9_recalc_status(
+    x_commandant_token: Optional[str] = Header(default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-R9 · Lit le state file live du recalcul R9."""
+    _verify_token(x_commandant_token)
+    from engines.v8_institutional.especes.mffp_master_weight_registry_omega \
+        import read_r9_state, R9_STATE_PATH
+    state = read_r9_state()
+    if not state:
+        return {
+            "manifest_id": "TERRITOIRE_R9_STATUS_Ω",
+            "status": "NEVER_STARTED",
+            "state_path": str(R9_STATE_PATH),
+            "note": ("Aucun run R9 encore démarré. POST /territoire/"
+                     "r9-recalc-execute pour lancer."),
+        }
+    return {
+        "manifest_id": "TERRITOIRE_R9_STATUS_Ω",
+        **state,
+        "state_path": str(R9_STATE_PATH),
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+# ═════════════════════════════════════════════════════════════════════════
 # ORDRE N°52-R8 · Orchestrateur pipeline complet 8 phases (Option δ)
 # ═════════════════════════════════════════════════════════════════════════
 @router.post("/diagnostic/pee-maj/r8-execute")

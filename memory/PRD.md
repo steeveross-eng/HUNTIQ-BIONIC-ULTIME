@@ -3683,3 +3683,52 @@ PHASE XXVIII · ORDRE N°52-R8 — PIPELINE R8 OPTION δ HYBRIDE (2026-05-05)
 
 ## V30 LOCK
 - V30 INVIOLÉ · FUSION ADD-ONLY · ANTI_GÉNÉRIQUE_STRICT
+
+═══════════════════════════════════════════════════════════════════════════
+PHASE XXVIII · ORDRE N°52-R9 — AMPLIFICATION MFFP×1000 (2026-05-05)
+═══════════════════════════════════════════════════════════════════════════
+
+## Doctrine R9
+- WEIGHT_MFFP = 1.0 · WEIGHT_ALL_OTHER = 0.1
+- `score_final = (score_original × 0.2) + (score_MFFP × 0.8)`
+- 9 cibles recalcul : corridors, hotspots, affuts, salines, zones_vitales,
+  zones_passage, zones_rut, zones_repos, zones_alimentation
+- 12 moteurs dépendants : engine_corridors_gis · engine_chevreuil ·
+  engine_orignal · engine_ours_noir · engine_dindon · engine_wapiti ·
+  engine_habitat · engine_vegetation · engine_phenologie ·
+  engine_calibration_dynamique · engine_corridors_vitaux ·
+  engine_ecological_orchestrator
+
+## Implémentation (FUSION ADD-ONLY)
+- Module : `engines/v8_institutional/especes/mffp_master_weight_registry_omega.py`
+- Endpoints :
+  · `GET  /territoire/mffp-master-weights`
+  · `POST /territoire/mffp-master-weights/activate` (?deactivate=true rollback)
+  · `POST /territoire/r9-recalc-execute` (?force=true)
+  · `GET  /territoire/r9-recalc-status`
+- State file : `/app/backend/data/territoire/R9_RECALC_STATE.json` (ext4)
+- Rapports : `/app/backend/data/territoire/r9_reports/*.json`
+
+## Run R9 final (run_id `R9_1778011002_f38578`)
+- status : **OK_WITH_STUBS** · total_elapsed_s : 0.01s
+- Registre activé · seal_sha256 : `f04eeefd…0c7`
+- 9 cibles → **STUB_READY_BLOCKED_BY_R8_PHASE_3** (anti-générique strict)
+- 12 moteurs marqués `force_rebuild_pending: True · primary_input: MFFP`
+- Rapport BIONIC_AMPLIFICATION_REPORT_R9_*.json généré
+
+## Logique anti-générique
+Les 9 recalculs effectifs nécessitent les 8 couches MFFP dérivées
+(`MFFP_STRUCTURE`, `MFFP_DENSITY`, `MFFP_AGE`, `MFFP_FRAGMENTATION`,
+`MFFP_PRODUCTIVITY`, `MFFP_HABITAT`, `MFFP_CONNECTIVITY`,
+`MFFP_CONTINUITY`) produites par PHASE_3 du R8. Tant que cette phase est
+en STUB_READY, les recalculs sont STUB_READY (zéro simulation).
+
+`check_mffp_derived_layers_availability()` interroge dynamiquement le
+state R8 → débloque automatiquement les 9 cibles dès que PHASE_3 R8 = OK.
+
+## Tests
+- `tests/test_phase_xxviii_r9_mffp_master_omega.py` : **11/11 PASSED**
+- Régression totale Phases XXVII + XXVIII : **88/88 PASSED · 0 régression**
+
+## V30 LOCK
+- V30 INVIOLÉ · FUSION ADD-ONLY · ANTI_GÉNÉRIQUE_STRICT

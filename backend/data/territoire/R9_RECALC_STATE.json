@@ -1,0 +1,256 @@
+{
+  "run_id": "R9_1778011002_f38578",
+  "status": "OK_WITH_STUBS",
+  "started_at_utc": "2026-05-05T19:56:42.072174+00:00",
+  "last_update_utc": "2026-05-05T19:56:42.072181+00:00",
+  "ordre": "N°52-R9",
+  "amplification_label": "MFFP×1000",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "authority": "COMMANDANT_STEEVE_MAX",
+  "targets": {
+    "corridors": {
+      "status": "STUB_READY_BLOCKED_BY_R8_PHASE_3",
+      "last_update_utc": "2026-05-05T19:56:42.074005+00:00",
+      "started_at_utc": "2026-05-05T19:56:42.073287+00:00",
+      "completed_at_utc": "2026-05-05T19:56:42.073990+00:00",
+      "elapsed_s": 0.0,
+      "blocker": "R8_PHASE_3_STUB_READY · les 9 couches dérivées n'ont pas encore été calculées. PHASE_3 du R8 doit être exécutée (specs métier + algorithmes BCE-4X requis).",
+      "weights_applied": {
+        "WEIGHT_MFFP": 1.0,
+        "WEIGHT_ALL_OTHER": 0.1
+      },
+      "score_formula_applied": "score_final = (score_original * 0.2) + (score_MFFP * 0.8)"
+    },
+    "hotspots": {
+      "status": "STUB_READY_BLOCKED_BY_R8_PHASE_3",
+      "last_update_utc": "2026-05-05T19:56:42.074591+00:00",
+      "started_at_utc": "2026-05-05T19:56:42.074195+00:00",
+      "completed_at_utc": "2026-05-05T19:56:42.074582+00:00",
+      "elapsed_s": 0.0,
+      "blocker": "R8_PHASE_3_STUB_READY · les 9 couches dérivées n'ont pas encore été calculées. PHASE_3 du R8 doit être exécutée (specs métier + algorithmes BCE-4X requis).",
+      "weights_applied": {
+        "WEIGHT_MFFP": 1.0,
+        "WEIGHT_ALL_OTHER": 0.1
+      },
+      "score_formula_applied": "score_final = (score_original * 0.2) + (score_MFFP * 0.8)"
+    },
+    "affuts": {
+      "status": "STUB_READY_BLOCKED_BY_R8_PHASE_3",
+      "last_update_utc": "2026-05-05T19:56:42.075153+00:00",
+      "started_at_utc": "2026-05-05T19:56:42.074765+00:00",
+      "completed_at_utc": "2026-05-05T19:56:42.075147+00:00",
+      "elapsed_s": 0.0,
+      "blocker": "R8_PHASE_3_STUB_READY · les 9 couches dérivées n'ont pas encore été calculées. PHASE_3 du R8 doit être exécutée (specs métier + algorithmes BCE-4X requis).",
+      "weights_applied": {
+        "WEIGHT_MFFP": 1.0,
+        "WEIGHT_ALL_OTHER": 0.1
+      },
+      "score_formula_applied": "score_final = (score_original * 0.2) + (score_MFFP * 0.8)"
+    },
+    "salines": {
+      "status": "STUB_READY_BLOCKED_BY_R8_PHASE_3",
+      "last_update_utc": "2026-05-05T19:56:42.075928+00:00",
+      "started_at_utc": "2026-05-05T19:56:42.075289+00:00",
+      "completed_at_utc": "2026-05-05T19:56:42.075919+00:00",
+      "elapsed_s": 0.0,
+      "blocker": "R8_PHASE_3_STUB_READY · les 9 couches dérivées n'ont pas encore été calculées. PHASE_3 du R8 doit être exécutée (specs métier + algorithmes BCE-4X requis).",
+      "weights_applied": {
+        "WEIGHT_MFFP": 1.0,
+        "WEIGHT_ALL_OTHER": 0.1
+      },
+      "score_formula_applied": "score_final = (score_original * 0.2) + (score_MFFP * 0.8)"
+    },
+    "zones_vitales": {
+      "status": "STUB_READY_BLOCKED_BY_R8_PHASE_3",
+      "last_update_utc": "2026-05-05T19:56:42.076695+00:00",
+      "started_at_utc": "2026-05-05T19:56:42.076082+00:00",
+      "completed_at_utc": "2026-05-05T19:56:42.076683+00:00",
+      "elapsed_s": 0.0,
+      "blocker": "R8_PHASE_3_STUB_READY · les 9 couches dérivées n'ont pas encore été calculées. PHASE_3 du R8 doit être exécutée (specs métier + algorithmes BCE-4X requis).",
+      "weights_applied": {
+        "WEIGHT_MFFP": 1.0,
+        "WEIGHT_ALL_OTHER": 0.1
+      },
+      "score_formula_applied": "score_final = (score_original * 0.2) + (score_MFFP * 0.8)"
+    },
+    "zones_passage": {
+      "status": "STUB_READY_BLOCKED_BY_R8_PHASE_3",
+      "last_update_utc": "2026-05-05T19:56:42.077756+00:00",
+      "started_at_utc": "2026-05-05T19:56:42.076906+00:00",
+      "completed_at_utc": "2026-05-05T19:56:42.077747+00:00",
+      "elapsed_s": 0.0,
+      "blocker": "R8_PHASE_3_STUB_READY · les 9 couches dérivées n'ont pas encore été calculées. PHASE_3 du R8 doit être exécutée (specs métier + algorithmes BCE-4X requis).",
+      "weights_applied": {
+        "WEIGHT_MFFP": 1.0,
+        "WEIGHT_ALL_OTHER": 0.1
+      },
+      "score_formula_applied": "score_final = (score_original * 0.2) + (score_MFFP * 0.8)"
+    },
+    "zones_rut": {
+      "status": "STUB_READY_BLOCKED_BY_R8_PHASE_3",
+      "last_update_utc": "2026-05-05T19:56:42.078649+00:00",
+      "started_at_utc": "2026-05-05T19:56:42.077957+00:00",
+      "completed_at_utc": "2026-05-05T19:56:42.078641+00:00",
+      "elapsed_s": 0.0,
+      "blocker": "R8_PHASE_3_STUB_READY · les 9 couches dérivées n'ont pas encore été calculées. PHASE_3 du R8 doit être exécutée (specs métier + algorithmes BCE-4X requis).",
+      "weights_applied": {
+        "WEIGHT_MFFP": 1.0,
+        "WEIGHT_ALL_OTHER": 0.1
+      },
+      "score_formula_applied": "score_final = (score_original * 0.2) + (score_MFFP * 0.8)"
+    },
+    "zones_repos": {
+      "status": "STUB_READY_BLOCKED_BY_R8_PHASE_3",
+      "last_update_utc": "2026-05-05T19:56:42.079539+00:00",
+      "started_at_utc": "2026-05-05T19:56:42.078839+00:00",
+      "completed_at_utc": "2026-05-05T19:56:42.079531+00:00",
+      "elapsed_s": 0.0,
+      "blocker": "R8_PHASE_3_STUB_READY · les 9 couches dérivées n'ont pas encore été calculées. PHASE_3 du R8 doit être exécutée (specs métier + algorithmes BCE-4X requis).",
+      "weights_applied": {
+        "WEIGHT_MFFP": 1.0,
+        "WEIGHT_ALL_OTHER": 0.1
+      },
+      "score_formula_applied": "score_final = (score_original * 0.2) + (score_MFFP * 0.8)"
+    },
+    "zones_alimentation": {
+      "status": "STUB_READY_BLOCKED_BY_R8_PHASE_3",
+      "last_update_utc": "2026-05-05T19:56:42.080497+00:00",
+      "started_at_utc": "2026-05-05T19:56:42.079756+00:00",
+      "completed_at_utc": "2026-05-05T19:56:42.080488+00:00",
+      "elapsed_s": 0.0,
+      "blocker": "R8_PHASE_3_STUB_READY · les 9 couches dérivées n'ont pas encore été calculées. PHASE_3 du R8 doit être exécutée (specs métier + algorithmes BCE-4X requis).",
+      "weights_applied": {
+        "WEIGHT_MFFP": 1.0,
+        "WEIGHT_ALL_OTHER": 0.1
+      },
+      "score_formula_applied": "score_final = (score_original * 0.2) + (score_MFFP * 0.8)"
+    }
+  },
+  "last_updated_utc": "2026-05-05T19:56:42.081280+00:00",
+  "mffp_layers_availability": {
+    "all_available": false,
+    "per_layer": {
+      "MFFP_STRUCTURE": false,
+      "MFFP_DENSITY": false,
+      "MFFP_AGE": false,
+      "MFFP_FRAGMENTATION": false,
+      "MFFP_PRODUCTIVITY": false,
+      "MFFP_HABITAT": false,
+      "MFFP_CONNECTIVITY": false,
+      "MFFP_CONTINUITY": false
+    },
+    "phase_3_status": "STUB_READY",
+    "blocker_reason": "R8_PHASE_3_STUB_READY · les 9 couches dérivées n'ont pas encore été calculées. PHASE_3 du R8 doit être exécutée (specs métier + algorithmes BCE-4X requis).",
+    "mffp_derived_layers_required": [
+      "MFFP_STRUCTURE",
+      "MFFP_DENSITY",
+      "MFFP_AGE",
+      "MFFP_FRAGMENTATION",
+      "MFFP_PRODUCTIVITY",
+      "MFFP_HABITAT",
+      "MFFP_CONNECTIVITY",
+      "MFFP_CONTINUITY"
+    ]
+  },
+  "engine_dependencies_marked": [
+    {
+      "engine_name": "engine_corridors_gis_omega",
+      "category": "corridors",
+      "primary_input": "MFFP",
+      "force_rebuild_pending": true,
+      "marked_at_utc": "2026-05-05T19:56:42.080694+00:00"
+    },
+    {
+      "engine_name": "engine_chevreuil_omega",
+      "category": "behavior_population",
+      "primary_input": "MFFP",
+      "force_rebuild_pending": true,
+      "marked_at_utc": "2026-05-05T19:56:42.080698+00:00"
+    },
+    {
+      "engine_name": "engine_orignal_omega",
+      "category": "behavior_population",
+      "primary_input": "MFFP",
+      "force_rebuild_pending": true,
+      "marked_at_utc": "2026-05-05T19:56:42.080700+00:00"
+    },
+    {
+      "engine_name": "engine_ours_noir_omega",
+      "category": "behavior_population",
+      "primary_input": "MFFP",
+      "force_rebuild_pending": true,
+      "marked_at_utc": "2026-05-05T19:56:42.080702+00:00"
+    },
+    {
+      "engine_name": "engine_dindon_omega",
+      "category": "behavior_population",
+      "primary_input": "MFFP",
+      "force_rebuild_pending": true,
+      "marked_at_utc": "2026-05-05T19:56:42.080704+00:00"
+    },
+    {
+      "engine_name": "engine_wapiti_omega",
+      "category": "behavior_population",
+      "primary_input": "MFFP",
+      "force_rebuild_pending": true,
+      "marked_at_utc": "2026-05-05T19:56:42.080706+00:00"
+    },
+    {
+      "engine_name": "engine_habitat_omega",
+      "category": "habitat",
+      "primary_input": "MFFP",
+      "force_rebuild_pending": true,
+      "marked_at_utc": "2026-05-05T19:56:42.080708+00:00"
+    },
+    {
+      "engine_name": "engine_vegetation_omega",
+      "category": "vegetation",
+      "primary_input": "MFFP",
+      "force_rebuild_pending": true,
+      "marked_at_utc": "2026-05-05T19:56:42.080709+00:00"
+    },
+    {
+      "engine_name": "engine_phenologie_omega",
+      "category": "phenology",
+      "primary_input": "MFFP",
+      "force_rebuild_pending": true,
+      "marked_at_utc": "2026-05-05T19:56:42.080711+00:00"
+    },
+    {
+      "engine_name": "engine_calibration_dynamique_omega",
+      "category": "calibration",
+      "primary_input": "MFFP",
+      "force_rebuild_pending": true,
+      "marked_at_utc": "2026-05-05T19:56:42.080713+00:00"
+    },
+    {
+      "engine_name": "engine_corridors_vitaux",
+      "category": "corridors",
+      "primary_input": "MFFP",
+      "force_rebuild_pending": true,
+      "marked_at_utc": "2026-05-05T19:56:42.080715+00:00"
+    },
+    {
+      "engine_name": "engine_ecological_orchestrator",
+      "category": "orchestration",
+      "primary_input": "MFFP",
+      "force_rebuild_pending": true,
+      "marked_at_utc": "2026-05-05T19:56:42.080716+00:00"
+    }
+  ],
+  "engine_dependencies_count": 12,
+  "targets_summary": {
+    "corridors": "STUB_READY_BLOCKED_BY_R8_PHASE_3",
+    "hotspots": "STUB_READY_BLOCKED_BY_R8_PHASE_3",
+    "affuts": "STUB_READY_BLOCKED_BY_R8_PHASE_3",
+    "salines": "STUB_READY_BLOCKED_BY_R8_PHASE_3",
+    "zones_vitales": "STUB_READY_BLOCKED_BY_R8_PHASE_3",
+    "zones_passage": "STUB_READY_BLOCKED_BY_R8_PHASE_3",
+    "zones_rut": "STUB_READY_BLOCKED_BY_R8_PHASE_3",
+    "zones_repos": "STUB_READY_BLOCKED_BY_R8_PHASE_3",
+    "zones_alimentation": "STUB_READY_BLOCKED_BY_R8_PHASE_3"
+  },
+  "completed_at_utc": "2026-05-05T19:56:42.080727+00:00",
+  "total_elapsed_s": 0.01,
+  "report_path": "/app/backend/data/territoire/r9_reports/BIONIC_AMPLIFICATION_REPORT_R9_1778011002_f38578.json"
+}

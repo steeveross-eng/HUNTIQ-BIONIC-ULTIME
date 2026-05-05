@@ -1,0 +1,110 @@
+{
+  "manifest_id": "MFFP_MASTER_WEIGHTS_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "ordre": "N°52-R9",
+  "amplification_label": "MFFP×1000",
+  "active": true,
+  "weights": {
+    "WEIGHT_MFFP": 1.0,
+    "WEIGHT_ALL_OTHER": 0.1
+  },
+  "score_formula": "score_final = (score_original * 0.2) + (score_MFFP * 0.8)",
+  "score_coefficients": {
+    "alpha_original": 0.2,
+    "beta_mffp": 0.8
+  },
+  "prioritized_layers": [
+    "MFFP_STRUCTURE",
+    "MFFP_DENSITY",
+    "MFFP_AGE",
+    "MFFP_FRAGMENTATION"
+  ],
+  "mffp_derived_layers_required": [
+    "MFFP_STRUCTURE",
+    "MFFP_DENSITY",
+    "MFFP_AGE",
+    "MFFP_FRAGMENTATION",
+    "MFFP_PRODUCTIVITY",
+    "MFFP_HABITAT",
+    "MFFP_CONNECTIVITY",
+    "MFFP_CONTINUITY"
+  ],
+  "recalc_targets": [
+    "corridors",
+    "hotspots",
+    "affuts",
+    "salines",
+    "zones_vitales",
+    "zones_passage",
+    "zones_rut",
+    "zones_repos",
+    "zones_alimentation"
+  ],
+  "dependent_engines": [
+    {
+      "name": "engine_corridors_gis_omega",
+      "category": "corridors",
+      "force_rebuild_required": true
+    },
+    {
+      "name": "engine_chevreuil_omega",
+      "category": "behavior_population",
+      "force_rebuild_required": true
+    },
+    {
+      "name": "engine_orignal_omega",
+      "category": "behavior_population",
+      "force_rebuild_required": true
+    },
+    {
+      "name": "engine_ours_noir_omega",
+      "category": "behavior_population",
+      "force_rebuild_required": true
+    },
+    {
+      "name": "engine_dindon_omega",
+      "category": "behavior_population",
+      "force_rebuild_required": true
+    },
+    {
+      "name": "engine_wapiti_omega",
+      "category": "behavior_population",
+      "force_rebuild_required": true
+    },
+    {
+      "name": "engine_habitat_omega",
+      "category": "habitat",
+      "force_rebuild_required": true
+    },
+    {
+      "name": "engine_vegetation_omega",
+      "category": "vegetation",
+      "force_rebuild_required": true
+    },
+    {
+      "name": "engine_phenologie_omega",
+      "category": "phenology",
+      "force_rebuild_required": true
+    },
+    {
+      "name": "engine_calibration_dynamique_omega",
+      "category": "calibration",
+      "force_rebuild_required": true
+    },
+    {
+      "name": "engine_corridors_vitaux",
+      "category": "corridors",
+      "force_rebuild_required": true
+    },
+    {
+      "name": "engine_ecological_orchestrator",
+      "category": "orchestration",
+      "force_rebuild_required": true
+    }
+  ],
+  "v30_lock": "INVIOLÉ",
+  "last_updated_utc": "2026-05-05T19:56:42.053024+00:00",
+  "activated_at_utc": "2026-05-05T19:56:42.052911+00:00",
+  "activated_by": "COMMANDANT_STEEVE_MAX",
+  "activation_seal_sha256": "f04eeefd30ab7545e31a0d28a36184cbe92e9bdfb926d0ffcc45c5033bcfa0c7"
+}
