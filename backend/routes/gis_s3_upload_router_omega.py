@@ -539,11 +539,52 @@ async def upload_chunk_s3(
             "B2_UPLOAD_PART_OK slot=%s upload_id=%s part=%d size=%d etag=%s",
             slot_id, x_upload_id, part_number, chunk_size, etag)
     except ClientError as e:
+        # ─── Distinguer quota dépassé (507) vs erreur réseau (502) ───
+        err = e.response.get("Error", {}) if hasattr(e, "response") else {}
+        err_code = (err.get("Code") or "").strip()
+        err_msg = (err.get("Message") or str(e)).strip()
+        is_quota_exceeded = (
+            err_code == "AccessDenied"
+            and "storage cap exceeded" in err_msg.lower()
+        ) or "storage cap exceeded" in str(e).lower()
         logger.error(
-            "B2_UPLOAD_PART_ERROR slot=%s upload_id=%s part=%d size=%d err=%s",
-            slot_id, x_upload_id, part_number, chunk_size, e)
-        raise HTTPException(status_code=502,
-                              detail=f"B2_UPLOAD_PART_ERROR::{e}")
+            "B2_UPLOAD_PART_ERROR slot=%s upload_id=%s part=%d size=%d "
+            "err_code=%s quota_exceeded=%s err=%s",
+            slot_id, x_upload_id, part_number, chunk_size,
+            err_code, is_quota_exceeded, e)
+        if is_quota_exceeded:
+            # Tentative d'auto-cleanup : abort des autres multipart
+            # orphelins du même slot pour libérer du quota.
+            audit.append_event(
+                event="B2_STORAGE_CAP_EXCEEDED_Ω",
+                slot_id=slot_id, filename=fname, sha256=None,
+                size_bytes=chunk_size, http_code=507,
+                client_ip=client_ip, user_agent=ua,
+                validators=[{
+                    "name": "b2_storage_cap_exceeded", "passed": False,
+                    "err_code": err_code, "part_number": part_number,
+                    "upload_id_ui": x_upload_id,
+                    "remediation": (
+                        "1. Augmenter le cap B2 (Caps & Alerts) OU "
+                        "2. Appeler POST /s3/cleanup-orphans/{slot_id} pour "
+                        "libérer les multipart inachevés."),
+                }],
+            )
+            raise HTTPException(
+                status_code=507,
+                detail=(
+                    f"B2_STORAGE_CAP_EXCEEDED::{err_code}::{err_msg} :: "
+                    f"slot={slot_id} part={part_number} upload_id={x_upload_id}. "
+                    "Action requise : augmenter le cap dans Backblaze B2 "
+                    "(Caps & Alerts) puis re-POST le même chunk (idempotent). "
+                    "OU POST /api/v30/admin-premium/gis/s3/cleanup-orphans/"
+                    f"{slot_id} pour purger multipart orphelins consommant le quota."))
+        # 502 générique pour erreurs B2 transitoires (réseau, throttle, etc.)
+        raise HTTPException(
+            status_code=502,
+            detail=(
+                f"B2_UPLOAD_PART_ERROR::{err_code}::{err_msg} :: "
+                f"slot={slot_id} part={part_number} retryable=true"))
     finally:
         del body
 
@@ -1055,6 +1096,129 @@ async def gis_s3_status(
             "multipart_in_progress": b2_in_progress,
             "errors": b2_errors,
         },
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# Endpoint : cleanup-orphans — abort des multipart orphelins (P0)
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/s3/cleanup-orphans/{slot_id}")
+async def gis_s3_cleanup_orphans(
+    slot_id: str,
+    request: Request,
+    confirm: Optional[str] = None,
+    dry_run: Optional[str] = None,
+    x_commandant_token: Optional[str] = Header(default=None, alias="X-Commandant-Token"),
+    user_agent: Optional[str] = Header(default=None, alias="User-Agent"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-PRE-AUDIT · Abort des multipart inachevés sur B2.
+
+    Libère le quota B2 consommé par des sessions multipart abandonnées
+    (pod restart, frontend fermé, quota dépassé en cours d'upload).
+
+    Sécurité : exige `?confirm=true` pour effectuer l'abort.
+    Sans `confirm`, fonctionne en dry-run (liste seulement).
+
+    Met à jour les sessions locales en conséquence (status=ABORTED).
+    """
+    _verify_token(x_commandant_token)
+    import unicodedata as _ud
+    slot_id = _ud.normalize("NFC", slot_id).replace("\u2126", "\u03a9")
+    if slot_id not in SLOT_BY_ID:
+        raise HTTPException(status_code=404, detail=f"SLOT_INCONNU::{slot_id}")
+    do_abort = (confirm or "").lower() in ("true", "1", "yes", "y")
+    do_dry_run = (dry_run or "").lower() in ("true", "1", "yes", "y") or not do_abort
+    client_ip = request.client.host if request.client else "unknown"
+    ua = (user_agent or "")[:200]
+
+    s3, bucket = _get_b2_client()
+    aborted: List[Dict[str, Any]] = []
+    skipped: List[Dict[str, Any]] = []
+    errors: List[str] = []
+
+    try:
+        mpu = s3.list_multipart_uploads(Bucket=bucket, Prefix="pee_maj/")
+        for u in mpu.get("Uploads", []) or []:
+            entry = {
+                "key": u.get("Key"),
+                "upload_id": u.get("UploadId"),
+                "initiated": (u.get("Initiated").isoformat()
+                              if u.get("Initiated") else None),
+            }
+            if do_dry_run:
+                skipped.append({**entry, "would_abort": True})
+                continue
+            try:
+                s3.abort_multipart_upload(
+                    Bucket=bucket, Key=entry["key"],
+                    UploadId=entry["upload_id"])
+                aborted.append(entry)
+                logger.info("B2_ABORT_OK key=%s upload_id=%s",
+                            entry["key"], entry["upload_id"])
+            except ClientError as e:
+                errors.append(
+                    f"abort {entry['key']}: "
+                    f"{e.response.get('Error',{}).get('Code','?')}")
+                logger.error("B2_ABORT_ERROR key=%s err=%s",
+                             entry["key"], e)
+    except ClientError as e:
+        errors.append(
+            f"list_multipart_uploads: "
+            f"{e.response.get('Error',{}).get('Code','?')}")
+
+    # ─── Mise à jour des sessions locales correspondantes ───────────
+    sessions_updated: List[str] = []
+    if do_abort and aborted:
+        aborted_b2_upload_ids = {a["upload_id"] for a in aborted}
+        try:
+            for p in S3_SESSIONS_DIR.glob("*.json"):
+                try:
+                    sess = json.loads(p.read_text(encoding="utf-8"))
+                except Exception:
+                    continue
+                if (sess.get("b2_upload_id") in aborted_b2_upload_ids
+                        and sess.get("status") not in ("ABORTED", "COMPLETED")):
+                    sess["status"] = "ABORTED"
+                    sess["aborted_at_utc"] = _utc_now()
+                    sess["aborted_by"] = "cleanup_orphans_omega"
+                    _write_session(sess["upload_id_ui"], sess)
+                    sessions_updated.append(sess["upload_id_ui"])
+        except Exception as e:
+            errors.append(f"sessions_update: {type(e).__name__}:{e}")
+
+    audit.append_event(
+        event="GIS_S3_CLEANUP_ORPHANS_Ω",
+        slot_id=slot_id, filename="(cleanup_orphans)", sha256=None,
+        size_bytes=0,
+        http_code=200, client_ip=client_ip, user_agent=ua,
+        validators=[{
+            "name": "cleanup_orphans", "passed": len(errors) == 0,
+            "dry_run": do_dry_run,
+            "aborted_count": len(aborted),
+            "skipped_count": len(skipped),
+            "sessions_updated_count": len(sessions_updated),
+            "errors_count": len(errors),
+        }],
+    )
+    return {
+        "manifest_id": "GIS_S3_CLEANUP_ORPHANS_Ω",
+        "doctrine": "ANTI_GÉNÉRIQUE_STRICT",
+        "slot_id": slot_id,
+        "dry_run": do_dry_run,
+        "confirm_was_passed": do_abort,
+        "aborted_count": len(aborted),
+        "aborted": aborted,
+        "skipped_count": len(skipped),
+        "skipped": skipped,
+        "sessions_updated_count": len(sessions_updated),
+        "sessions_updated": sessions_updated,
+        "errors": errors,
+        "instructions": (
+            "Pour effectuer l'abort réellement : ré-appeler avec ?confirm=true. "
+            "Cela libère le quota B2 consommé par les multipart inachevés."
+            if do_dry_run else
+            "Cleanup effectué. Quota B2 libéré pour les multipart abortés."),
         "v30_lock": "INVIOLÉ",
     }
 

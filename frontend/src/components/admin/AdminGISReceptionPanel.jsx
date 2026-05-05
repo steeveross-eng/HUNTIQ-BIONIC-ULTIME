@@ -736,6 +736,42 @@ export const AdminGISReceptionPanel = () => {
             continue;
           }
 
+          // ─── ORDRE N°52-PRE-AUDIT · Retry transitoire sur 404 ingress ─
+          // Cloudflare/ingress peut retourner 404 quand le pod est en train
+          // de redémarrer ou quand un upstream timeout dépasse une limite.
+          // On retry max 3 fois, SAUF si le payload contient SLOT_INCONNU
+          // (404 définitif côté backend → STOP immédiat, pas de retry).
+          if (
+            r.status === 404 &&
+            attempt <= 3 &&
+            !(typeof payload?.detail === "string" &&
+              payload.detail.includes("SLOT_INCONNU"))
+          ) {
+            const jitter = Math.floor(Math.random() * 500);
+            const wait = Math.min(delayMs + jitter, 15000);
+            appendEvent({
+              level: "WARN",
+              slotId,
+              message: `HTTP 404 transitoire chunk ${i}/${total} · attempt ${attempt}/3 · retry dans ${wait}ms (ingress/proxy)`,
+            });
+            await sleep(wait);
+            delayMs *= 2;
+            continue;
+          }
+
+          // ─── ORDRE N°52-PRE-AUDIT · STOP DÉFINITIF sur 507 quota ─────
+          // 507 = B2 storage cap exceeded → aucun retry ne réparera.
+          // L'opérateur doit augmenter le cap B2 ou cleanup-orphans avant
+          // de relancer.
+          if (r.status === 507) {
+            return {
+              ok: false,
+              status: 507,
+              payload,
+              phase: "B2_STORAGE_CAP_EXCEEDED",
+            };
+          }
+
           // 200 OK ou erreur non-5xx → retour
           return {
             ok: r.ok,
@@ -744,6 +780,8 @@ export const AdminGISReceptionPanel = () => {
             phase:
               r.status >= 500
                 ? "PROXY_OR_NETWORK_BEFORE_BACKEND"
+                : r.status === 404
+                ? "ROUTER_404_OR_PROXY_TIMEOUT"
                 : r.status >= 400
                 ? "BACKEND_ROUTER_VALIDATION_OR_ASSEMBLY"
                 : "OK",
@@ -752,7 +790,7 @@ export const AdminGISReceptionPanel = () => {
         return {
           ok: false,
           status: 599,
-          payload: { detail: "Max retries 5xx épuisés" },
+          payload: { detail: "Max retries 5xx/404-transitoires épuisés" },
           phase: "PROXY_OR_NETWORK_BEFORE_BACKEND",
         };
       };
@@ -794,6 +832,10 @@ export const AdminGISReceptionPanel = () => {
               ? "413 · Chunk trop volumineux (réduire CHUNK_SIZE)"
               : res.status === 409
               ? "409 · Chunks incomplets ou session orpheline"
+              : res.status === 507
+              ? "507 · QUOTA B2 DÉPASSÉ — augmenter le cap Backblaze ou cleanup-orphans"
+              : res.status === 404
+              ? "404 · Endpoint absent ou ingress timeout (vérifier backend UP)"
               : `HTTP ${res.status}`;
           setUploadState((s) => ({
             ...s,
