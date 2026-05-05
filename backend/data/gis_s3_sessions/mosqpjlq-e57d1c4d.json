@@ -1,0 +1,638 @@
+{
+  "slot_id": "FORET_MFFP_PEE_MAJ_Ω",
+  "upload_id_ui": "mosqpjlq-e57d1c4d",
+  "b2_upload_id": "4_z27f03715a111fa5a93d0071d_f20172413be4e81a2_d20260505_m144503_c006_v0601002_t0039_u01777992303727",
+  "b2_key": "pee_maj/2026-05-05/mosqpjlq-e57d1c4d/pee_maj.gpkg",
+  "b2_bucket": "pee-maj-gpkg",
+  "filename": "pee_maj.gpkg",
+  "chunks_total": 712,
+  "total_size_expected": 37315948544,
+  "parts": {
+    "0": {
+      "part_number": 1,
+      "etag": "b2f8e7424b229b7a2cac2314adf5b03c",
+      "size": 52428800,
+      "sha256": "832907f527c84dbeebb0450e0d36bf336725bf4e8c75381a4677e8e908bfadf2",
+      "uploaded_at_utc": "2026-05-05T14:45:04.871389+00:00"
+    },
+    "1": {
+      "part_number": 2,
+      "etag": "40a1b6fed122b2ac012ffae5c3680d12",
+      "size": 52428800,
+      "sha256": "e3c30a244d0f651f78347c9195a9d306a5effc347ade5b29b0d9440ddc1d2f3d",
+      "uploaded_at_utc": "2026-05-05T14:45:09.394482+00:00"
+    },
+    "2": {
+      "part_number": 3,
+      "etag": "a21ef400d6901aa789c4c90376503b9d",
+      "size": 52428800,
+      "sha256": "35c3e58b53271df69df7fabf3b6fe1464bd608f90fba63727391a4410ea39d7c",
+      "uploaded_at_utc": "2026-05-05T14:45:14.893003+00:00"
+    },
+    "3": {
+      "part_number": 4,
+      "etag": "9a24c9876637017826a0611a325934b6",
+      "size": 52428800,
+      "sha256": "2705a5273e9c92e41e5c680841a238285dc07ce64dd155548a5b962f39e8dc56",
+      "uploaded_at_utc": "2026-05-05T14:45:21.074253+00:00"
+    },
+    "4": {
+      "part_number": 5,
+      "etag": "dc9651c4f14d5fc397bbd50b3cc7f844",
+      "size": 52428800,
+      "sha256": "0e9e53593bca8b79f9ac6aa6a961d37cff47938ccf653ab70a76afcf67fecb7e",
+      "uploaded_at_utc": "2026-05-05T14:45:26.052289+00:00"
+    },
+    "5": {
+      "part_number": 6,
+      "etag": "00c499aa2edddd182f79927d185ce809",
+      "size": 52428800,
+      "sha256": "f12c325b99ed30483a3dfb68008addfa4f9d021154f0d33f846f47e57c7b3e32",
+      "uploaded_at_utc": "2026-05-05T14:45:31.653189+00:00"
+    },
+    "6": {
+      "part_number": 7,
+      "etag": "f28db22a3eab57b065f74eba6afb8483",
+      "size": 52428800,
+      "sha256": "ecb724d09df26e27fdc43657894f28496b2d3dc76108f4be31848cf42051331f",
+      "uploaded_at_utc": "2026-05-05T14:45:37.095500+00:00"
+    },
+    "7": {
+      "part_number": 8,
+      "etag": "a0028cfa62b8624567bd16d90241b6c8",
+      "size": 52428800,
+      "sha256": "e9a619d3c24f8d605480bca116816276b5af71eaa13b4df5ed8c2f409b413614",
+      "uploaded_at_utc": "2026-05-05T14:45:42.796051+00:00"
+    },
+    "8": {
+      "part_number": 9,
+      "etag": "063bd14a8ae2be4c41fdc6679081b3c9",
+      "size": 52428800,
+      "sha256": "e81f02c2c6fabdf486c226bc7fb1a8098c8855a68184a72eceb978537b59ef37",
+      "uploaded_at_utc": "2026-05-05T14:45:48.389345+00:00"
+    },
+    "9": {
+      "part_number": 10,
+      "etag": "0cfc2b7d35be821354cab9b7a7431765",
+      "size": 52428800,
+      "sha256": "e71b56c285cf6d1d0bb2ea387053c4e28cc05e756f03fc63a3d5e44b36408263",
+      "uploaded_at_utc": "2026-05-05T14:45:53.931954+00:00"
+    },
+    "10": {
+      "part_number": 11,
+      "etag": "662fa56c24f937cfdfcaacc677b1e467",
+      "size": 52428800,
+      "sha256": "a9c80ecc61cbd9a8686aeaeb263a16c40a0f7e97ba51939587a3b3e51bf37c4b",
+      "uploaded_at_utc": "2026-05-05T14:45:59.535179+00:00"
+    },
+    "11": {
+      "part_number": 12,
+      "etag": "476439205125dfbb5c26fdcc62e4c8d5",
+      "size": 52428800,
+      "sha256": "13930fd6cb989ef99cf677388d2451f3c5847c6806b9a89c9c19b3aadd82e634",
+      "uploaded_at_utc": "2026-05-05T14:46:04.927511+00:00"
+    },
+    "12": {
+      "part_number": 13,
+      "etag": "988793f0e56b9c2a8c7f1be1d458fc1e",
+      "size": 52428800,
+      "sha256": "8fa4fce388857c3341bb7144a3b69a03e89295756ee52f0283ba5f654858d0c7",
+      "uploaded_at_utc": "2026-05-05T14:46:11.060894+00:00"
+    },
+    "13": {
+      "part_number": 14,
+      "etag": "eac67e05ea82e519135e147e94bd6ec5",
+      "size": 52428800,
+      "sha256": "4275d02e6bb7ede4718f88d2b9ac5dcf121da6f85b03e3f31417c86e51ad6bee",
+      "uploaded_at_utc": "2026-05-05T14:46:17.228554+00:00"
+    },
+    "14": {
+      "part_number": 15,
+      "etag": "a2ccb1d6eaa5a30281f829d350331277",
+      "size": 52428800,
+      "sha256": "16b2744969ad79d69b0cd6196b2f78816e31a17fa46b54f08730f18df470f8a2",
+      "uploaded_at_utc": "2026-05-05T14:46:22.766700+00:00"
+    },
+    "15": {
+      "part_number": 16,
+      "etag": "07a8a0c7ad0fd4790bceeeece3b01ea7",
+      "size": 52428800,
+      "sha256": "76c513d052f2b35a7ca29a20e84aa43b613062f1786c95364e34f3515fcbed6c",
+      "uploaded_at_utc": "2026-05-05T14:46:28.265679+00:00"
+    },
+    "16": {
+      "part_number": 17,
+      "etag": "ed3ed153f773e46e541982198b4d8b9f",
+      "size": 52428800,
+      "sha256": "c9579dbc0e9fcc9b771b1d711f88a7ec03c9ccc47812268a402d3ef7bfdd26e9",
+      "uploaded_at_utc": "2026-05-05T14:46:32.596668+00:00"
+    },
+    "17": {
+      "part_number": 18,
+      "etag": "8aeb906a0e9344e47fb6a4725a20b284",
+      "size": 52428800,
+      "sha256": "c45ccdd4daf7c533dd739b1f2e61a1d7d8a3bee622860786e36c5ba03d368d60",
+      "uploaded_at_utc": "2026-05-05T14:46:37.130106+00:00"
+    },
+    "18": {
+      "part_number": 19,
+      "etag": "1d68ab3c58fdb40c479a49ab10c7fefd",
+      "size": 52428800,
+      "sha256": "705c341f431f117df0fe6c428d6ad1ea25e4557a2bff4506ef79904d87d427d7",
+      "uploaded_at_utc": "2026-05-05T14:46:41.585611+00:00"
+    },
+    "19": {
+      "part_number": 20,
+      "etag": "e6f6eb96cb57d57990ce7b46343c93d2",
+      "size": 52428800,
+      "sha256": "91fc0f429e2006eadba26258f907efdfd9f5ac8f76af7d66764cd353bc12b6b7",
+      "uploaded_at_utc": "2026-05-05T14:46:46.358077+00:00"
+    },
+    "20": {
+      "part_number": 21,
+      "etag": "b7ecda260117b217043ee83d98f50521",
+      "size": 52428800,
+      "sha256": "86fbec87a223bafa1bea9ff93e8541601242eaef96749d249125ac9d40ab8534",
+      "uploaded_at_utc": "2026-05-05T14:46:50.889194+00:00"
+    },
+    "21": {
+      "part_number": 22,
+      "etag": "c098f9af80bf6aaf9372a99026e589e0",
+      "size": 52428800,
+      "sha256": "4db7b03ee282ebd14fe812ebd4e273a66861a40f176906a38e9ff7972996ee17",
+      "uploaded_at_utc": "2026-05-05T14:46:55.687671+00:00"
+    },
+    "22": {
+      "part_number": 23,
+      "etag": "bea3fd46f0bc81c593ffc187ee6da4f3",
+      "size": 52428800,
+      "sha256": "9b603360ea8442d4cdea80b6efcdceec36aaf52369c5fad6c6ffe801c0db8798",
+      "uploaded_at_utc": "2026-05-05T14:47:01.962656+00:00"
+    },
+    "23": {
+      "part_number": 24,
+      "etag": "f69269252783d39cac377efd5c95f596",
+      "size": 52428800,
+      "sha256": "48ecdbf06f880f71c7127ffd48a9b28fb75f3140a1b0a001a5250b4d0bd5a00d",
+      "uploaded_at_utc": "2026-05-05T14:47:08.519258+00:00"
+    },
+    "24": {
+      "part_number": 25,
+      "etag": "5caa6edec63ef0e2d3298274a589f396",
+      "size": 52428800,
+      "sha256": "fa1722fe075709835c86fbb405e1ec5c2d25720025315dee1237d5380ea25d6e",
+      "uploaded_at_utc": "2026-05-05T14:47:13.609410+00:00"
+    },
+    "25": {
+      "part_number": 26,
+      "etag": "aea9d10b4765acdf19f5dc7a9bd09ac3",
+      "size": 52428800,
+      "sha256": "4ad92aee2f6c6c56e43f8ecb099df292c02a6ff65772afb2cee5ab362953971e",
+      "uploaded_at_utc": "2026-05-05T14:47:18.730726+00:00"
+    },
+    "26": {
+      "part_number": 27,
+      "etag": "d993639b64d84976cfdba2c1cbfc8fe1",
+      "size": 52428800,
+      "sha256": "e5609dd2e35b5287195ba3c60a44bfa87eb9c569a02c3bba6042f614e385cacf",
+      "uploaded_at_utc": "2026-05-05T14:47:24.998050+00:00"
+    },
+    "27": {
+      "part_number": 28,
+      "etag": "128682b4391d535c30968335f292337b",
+      "size": 52428800,
+      "sha256": "36d5ac21cd84713a01795e373597fbeb863341c6c5996ac73f05d6fdac36db98",
+      "uploaded_at_utc": "2026-05-05T14:47:30.254946+00:00"
+    },
+    "28": {
+      "part_number": 29,
+      "etag": "6dee01a912f0e5ca019945c0c8ebfb9b",
+      "size": 52428800,
+      "sha256": "5371e2fa0f27e41ae23041081840eff6b5660585f2afa541ac4bd315e43b0372",
+      "uploaded_at_utc": "2026-05-05T14:47:35.252801+00:00"
+    },
+    "29": {
+      "part_number": 30,
+      "etag": "f9d8bf6c545a6edde8ae3658700ea26c",
+      "size": 52428800,
+      "sha256": "4f558a32126cbe652c096b2d8bd6fb3facd3af5e7dfcbd59db75dbd50c59ff79",
+      "uploaded_at_utc": "2026-05-05T14:47:40.093894+00:00"
+    },
+    "30": {
+      "part_number": 31,
+      "etag": "69c8516d4e99f89713f6945f12703e60",
+      "size": 52428800,
+      "sha256": "508a75c0af7fa100361fffa839788e3d6d5f7ab83e22076cd807980f2bfef43e",
+      "uploaded_at_utc": "2026-05-05T14:47:47.180964+00:00"
+    },
+    "31": {
+      "part_number": 32,
+      "etag": "912b24dd5d11016ec3588415533fc584",
+      "size": 52428800,
+      "sha256": "e247f4ef4429b7dfebad7803e538357fb422fe917a695f4094be4f0c4f98a12e",
+      "uploaded_at_utc": "2026-05-05T14:47:53.038572+00:00"
+    },
+    "32": {
+      "part_number": 33,
+      "etag": "5bf7eb54f62effeae1a9f4a627dff102",
+      "size": 52428800,
+      "sha256": "c9d13348db30469e885e869435fdc60b43c98e7acef2cc922640f1b12dbce65f",
+      "uploaded_at_utc": "2026-05-05T14:47:57.479562+00:00"
+    },
+    "33": {
+      "part_number": 34,
+      "etag": "fdc28fc4a71c2bfe68fb7cbcf5c6cffb",
+      "size": 52428800,
+      "sha256": "3bf26b3042954381e57f8ef1735ea549305b00dae25f2384438db8d96258652a",
+      "uploaded_at_utc": "2026-05-05T14:48:02.411144+00:00"
+    },
+    "34": {
+      "part_number": 35,
+      "etag": "49254bec26d1e56f6f02f7b1d3702a4b",
+      "size": 52428800,
+      "sha256": "90cc56ec371dd53ba552c17f92d1ccc4bc72866f7f0bed537f4ed99c3e3a9efa",
+      "uploaded_at_utc": "2026-05-05T14:48:07.126879+00:00"
+    },
+    "35": {
+      "part_number": 36,
+      "etag": "f34798b88f08f7bcbb9dadc2f64c1b4f",
+      "size": 52428800,
+      "sha256": "d0d029660a04e74ca2ffc8f9ca8db10932db3f69fa6e0d78472091383d91b385",
+      "uploaded_at_utc": "2026-05-05T14:48:18.203813+00:00"
+    },
+    "36": {
+      "part_number": 37,
+      "etag": "049cd9840387195821f31bb41639af4f",
+      "size": 52428800,
+      "sha256": "cb15081c1e888e2fc6142b16830ab981ea2008453ed3dc1a0a706108ed56b0f2",
+      "uploaded_at_utc": "2026-05-05T14:48:28.774733+00:00"
+    },
+    "37": {
+      "part_number": 38,
+      "etag": "9672d4ce7eaba6af29d64ae84dd5514c",
+      "size": 52428800,
+      "sha256": "d4f449f1eccd8fe82a2839c13d329cd3d36dce53ec23be002cc0910b2928e57f",
+      "uploaded_at_utc": "2026-05-05T14:48:39.256588+00:00"
+    },
+    "38": {
+      "part_number": 39,
+      "etag": "3ad63f3045998958c7c0c63387824a0d",
+      "size": 52428800,
+      "sha256": "7bb20c069660c1cf628682f47c3aee0e6d9fecf2a9e5a66491a177e213dc24a1",
+      "uploaded_at_utc": "2026-05-05T14:48:44.323735+00:00"
+    },
+    "39": {
+      "part_number": 40,
+      "etag": "6627b9c708ec5b55b261d60d1340dd2d",
+      "size": 52428800,
+      "sha256": "1bc54d56e0245a707f0e7425ade07c9b27a63909180cf4d9fcfeff1a28927cb1",
+      "uploaded_at_utc": "2026-05-05T14:48:49.475889+00:00"
+    },
+    "40": {
+      "part_number": 41,
+      "etag": "f6388d7ee127b77435ec2ba6d11e9c35",
+      "size": 52428800,
+      "sha256": "33d5bb1a90e959c3c6c1c9153ee4a6d0068f66d72600697f9ba5b7a5574be595",
+      "uploaded_at_utc": "2026-05-05T14:48:55.243420+00:00"
+    },
+    "41": {
+      "part_number": 42,
+      "etag": "4576f2885c72071fe354db31c2f3b34a",
+      "size": 52428800,
+      "sha256": "d8921057baccbbe6dacb2b3d9a5a846017d7bf53619418e753b5f7b018c8f7d5",
+      "uploaded_at_utc": "2026-05-05T14:48:59.975378+00:00"
+    },
+    "42": {
+      "part_number": 43,
+      "etag": "34358e34cbdfbc6a9113935d8cf3c81e",
+      "size": 52428800,
+      "sha256": "d1c456554573350c1fcf0f740c965b5729acf047b05c65fd932cf3d39e3ea68d",
+      "uploaded_at_utc": "2026-05-05T14:49:05.237329+00:00"
+    },
+    "43": {
+      "part_number": 44,
+      "etag": "519d498b6e99574f5442c40d566954a6",
+      "size": 52428800,
+      "sha256": "cb29ef34b8dcd3d06d40416683542b44d74f53a83220ac4748f0b1e5c925fa23",
+      "uploaded_at_utc": "2026-05-05T14:49:10.749878+00:00"
+    },
+    "44": {
+      "part_number": 45,
+      "etag": "3898ed6edbfbfe4ddd0f511650149af4",
+      "size": 52428800,
+      "sha256": "a37c45d2fcebfd9220e518b1abd6bb5a3c4052a94b525787cb125d00dd6d7275",
+      "uploaded_at_utc": "2026-05-05T14:49:16.050272+00:00"
+    },
+    "45": {
+      "part_number": 46,
+      "etag": "1153c43dc3f9b3d46b8e8e8d9cc7c794",
+      "size": 52428800,
+      "sha256": "f57f3df35c53ba04a1657cf4c79cb137e266d7e40a969b0e5bfef26dd09fcbd3",
+      "uploaded_at_utc": "2026-05-05T14:49:20.620212+00:00"
+    },
+    "46": {
+      "part_number": 47,
+      "etag": "6701952132a56d5cc5f14600146fe9d5",
+      "size": 52428800,
+      "sha256": "d9271e7b24dd18238e1bb667bc2dc9a7543332fd93376e85183768cba9756769",
+      "uploaded_at_utc": "2026-05-05T14:49:30.959696+00:00"
+    },
+    "47": {
+      "part_number": 48,
+      "etag": "a2725ccacb59b9c9ff113ba818e11783",
+      "size": 52428800,
+      "sha256": "5ccdc85da126384a80bf6e53928be64de290e2e9fb4149dd7ddcc6f8a7017603",
+      "uploaded_at_utc": "2026-05-05T14:49:36.076200+00:00"
+    },
+    "48": {
+      "part_number": 49,
+      "etag": "6b760fdd467233f508da8e09aa50c7bf",
+      "size": 52428800,
+      "sha256": "d89a6af72d972e88b3c904b227675becb50ab5b5831355858860ac55fdf50f5c",
+      "uploaded_at_utc": "2026-05-05T14:49:41.165425+00:00"
+    },
+    "49": {
+      "part_number": 50,
+      "etag": "6ab9858a78f0824dfd62bd63a916cf42",
+      "size": 52428800,
+      "sha256": "614efc242aef87c5bce8830cb6e416ccedbf5e41d90863dd1bda159bdc2b4a89",
+      "uploaded_at_utc": "2026-05-05T14:49:47.477097+00:00"
+    },
+    "50": {
+      "part_number": 51,
+      "etag": "39f05b597ee9bcedca629af05f58e601",
+      "size": 52428800,
+      "sha256": "9e2d229ec43e5b3e025223cd52372cc52b376bd905965bb0025c2d9a3e0f1a34",
+      "uploaded_at_utc": "2026-05-05T14:49:51.754328+00:00"
+    },
+    "51": {
+      "part_number": 52,
+      "etag": "9d4b7e61daf75e6d5a435cdc5cede363",
+      "size": 52428800,
+      "sha256": "868afe7a1f28bdfc69620bef3eaf20e027461fa6f5aedce6fc34d149b086330b",
+      "uploaded_at_utc": "2026-05-05T14:49:56.576770+00:00"
+    },
+    "52": {
+      "part_number": 53,
+      "etag": "91e1d607d73581fc89d313562f1c4b61",
+      "size": 52428800,
+      "sha256": "7505bca25f4733a8c841e3eac0e924e14a8d11fbe5e04a97b3770c2504a59a20",
+      "uploaded_at_utc": "2026-05-05T14:50:01.451784+00:00"
+    },
+    "53": {
+      "part_number": 54,
+      "etag": "ce60eb4fc9326d4b4a7d68b5d6bbf2b3",
+      "size": 52428800,
+      "sha256": "9622ed4f128024e7c44c55d88b89f02aecee978e407597bc4db3ded184ac96d7",
+      "uploaded_at_utc": "2026-05-05T14:50:07.622248+00:00"
+    },
+    "54": {
+      "part_number": 55,
+      "etag": "4dadb791b731cbcde92b4c86f6e5b057",
+      "size": 52428800,
+      "sha256": "342afa3e534f9efcb7bbab3ff08f3056cb170338fab0c15e6672abf00113430c",
+      "uploaded_at_utc": "2026-05-05T14:50:14.414763+00:00"
+    },
+    "55": {
+      "part_number": 56,
+      "etag": "dfc6b5d95e826b2ba2fa5bc99bfa1a3c",
+      "size": 52428800,
+      "sha256": "6e59dd0bb7462474e71be0e8395fb3fb98db13ec67d7a76d3ff011b30303299b",
+      "uploaded_at_utc": "2026-05-05T14:50:22.383734+00:00"
+    },
+    "56": {
+      "part_number": 57,
+      "etag": "77c704ccd69e2c354c12a5abff7358e2",
+      "size": 52428800,
+      "sha256": "e759fcf41b55dbe57f6861cd74db108cbe49bd52b9f688d8fbe614ae77eea34a",
+      "uploaded_at_utc": "2026-05-05T14:50:27.511334+00:00"
+    },
+    "57": {
+      "part_number": 58,
+      "etag": "55d03dae0be1798125be0499a3c3164a",
+      "size": 52428800,
+      "sha256": "a6fe83507a95c459d4c4efee54b842d802b880a6e72783347f233be81d6a009a",
+      "uploaded_at_utc": "2026-05-05T14:50:38.411713+00:00"
+    },
+    "58": {
+      "part_number": 59,
+      "etag": "5950cc54695867ac2a89115692dc5332",
+      "size": 52428800,
+      "sha256": "43f61e3798e0defb8bb3066df47634ed70504e8149da5c4a674afecbf94d9f32",
+      "uploaded_at_utc": "2026-05-05T14:50:43.547655+00:00"
+    },
+    "59": {
+      "part_number": 60,
+      "etag": "149c73fab24d7890f6a7bd97ab1c6f39",
+      "size": 52428800,
+      "sha256": "b466ee622e9e1763642aceae8b34553766eaeeff8c98ff1beaa2ccd90784b422",
+      "uploaded_at_utc": "2026-05-05T14:50:48.564499+00:00"
+    },
+    "60": {
+      "part_number": 61,
+      "etag": "c8033f5911c060675bcb50f882a44af2",
+      "size": 52428800,
+      "sha256": "966e10bcab635a2430a55df18cbfab8d20183c8884c5fd16972f09babda86d65",
+      "uploaded_at_utc": "2026-05-05T14:50:54.753503+00:00"
+    },
+    "61": {
+      "part_number": 62,
+      "etag": "15b71691ff6f7dd9b95f342e20ef70bd",
+      "size": 52428800,
+      "sha256": "ba2020592ea19ef5b852b932bb5e3a6b35a2fbe88111679cbb0a3cb91be39a11",
+      "uploaded_at_utc": "2026-05-05T14:51:00.158615+00:00"
+    },
+    "62": {
+      "part_number": 63,
+      "etag": "0c9d7807f5cf89e8bdee710087f50ee3",
+      "size": 52428800,
+      "sha256": "b20534af2c758fd81a32079e9c79322345f9e08432e60d6282bbfa49b03244b6",
+      "uploaded_at_utc": "2026-05-05T14:51:05.243170+00:00"
+    },
+    "63": {
+      "part_number": 64,
+      "etag": "9c07f1aef825b0da1f7e1ed2ec8b697f",
+      "size": 52428800,
+      "sha256": "87e82dd16e10221f3dc48c0bc3a3f48a488b3432d3c5f79d5b32502d940f5bc1",
+      "uploaded_at_utc": "2026-05-05T14:51:11.625486+00:00"
+    },
+    "64": {
+      "part_number": 65,
+      "etag": "0fc34feaa3ff8e13eaffcc292880d4e5",
+      "size": 52428800,
+      "sha256": "a8b9ecd8c72d85fbfd7a32aa4873e8d31f2582349a515c2fcfc004e4b9c28d67",
+      "uploaded_at_utc": "2026-05-05T14:51:19.102951+00:00"
+    },
+    "65": {
+      "part_number": 66,
+      "etag": "fea4f7538436c6282f7bd0e3394fa7cf",
+      "size": 52428800,
+      "sha256": "40bc41160cd5037eea7b8cb472e56d604b650135d3690445afe423a5f3bcd880",
+      "uploaded_at_utc": "2026-05-05T14:51:25.139303+00:00"
+    },
+    "66": {
+      "part_number": 67,
+      "etag": "2c3a5969efc0968f6b9587546781aabb",
+      "size": 52428800,
+      "sha256": "1336d6924e9d528b6fdcd463bb458f8546c3499412e69e0fefbffaf613b7aee4",
+      "uploaded_at_utc": "2026-05-05T14:51:30.318471+00:00"
+    },
+    "67": {
+      "part_number": 68,
+      "etag": "9820a8a2a80fa2ac11b6d7804de7eb19",
+      "size": 52428800,
+      "sha256": "fde5c7f56b879f06e5ebb32c7976b2444cb0e494c77e42a7f973490d8856be9e",
+      "uploaded_at_utc": "2026-05-05T14:51:36.633148+00:00"
+    },
+    "68": {
+      "part_number": 69,
+      "etag": "d41ef1f1295b866783cba8ebb326f5db",
+      "size": 52428800,
+      "sha256": "97da97b683253bc238bb66d4d0ed00c0c6a09c4ec2f1b0db7c8147f95c085210",
+      "uploaded_at_utc": "2026-05-05T14:51:42.816855+00:00"
+    },
+    "69": {
+      "part_number": 70,
+      "etag": "8d68e54c74054d38565c4daab4b0e2a4",
+      "size": 52428800,
+      "sha256": "8cbd5abde30b6a2f662dbece840060cf6b86382ab8c9537fae3c1c0b353d44fa",
+      "uploaded_at_utc": "2026-05-05T14:51:48.144285+00:00"
+    },
+    "70": {
+      "part_number": 71,
+      "etag": "14a091e1f9ec4951d8ef21478e0a5044",
+      "size": 52428800,
+      "sha256": "0e5001426b103c13f2705941f8727ab674adf2584997d741071ebccb9b447a20",
+      "uploaded_at_utc": "2026-05-05T14:51:53.073052+00:00"
+    },
+    "71": {
+      "part_number": 72,
+      "etag": "0d0511e9eff4fb2229caa7256355b072",
+      "size": 52428800,
+      "sha256": "fd9b5f2ce0ea69d1b3b4ef77ef4b2d76921f4ad0a5ddcdf57adeb2e92dd421c4",
+      "uploaded_at_utc": "2026-05-05T14:52:01.188295+00:00"
+    },
+    "72": {
+      "part_number": 73,
+      "etag": "aa40b4aa70e5b71f80fad66f69fea322",
+      "size": 52428800,
+      "sha256": "b97b2fd5da0c5dcba752cdd545f936598e87f11afe34029c738efe27825ad0b2",
+      "uploaded_at_utc": "2026-05-05T14:52:05.776175+00:00"
+    },
+    "73": {
+      "part_number": 74,
+      "etag": "63d8694453889151bad5b73bf5805143",
+      "size": 52428800,
+      "sha256": "54008023ea342310f61bef9114b76f8500a119e7a0ca5bed1442b814cd2059bc",
+      "uploaded_at_utc": "2026-05-05T14:52:10.674851+00:00"
+    },
+    "74": {
+      "part_number": 75,
+      "etag": "2bfc9230c0621ef8e25fdb77148e8f55",
+      "size": 52428800,
+      "sha256": "83b1cc376096599f03ecd0690a28242a6ec1b48a1d71f85e602bf4035b1eea3c",
+      "uploaded_at_utc": "2026-05-05T14:52:16.699199+00:00"
+    },
+    "75": {
+      "part_number": 76,
+      "etag": "9750cad8881b1fd6d3b144baecfdc2e9",
+      "size": 52428800,
+      "sha256": "6587f21b63ac8fc135e6f43c4ee799ef62fb74e69100ca567548a5626b802330",
+      "uploaded_at_utc": "2026-05-05T14:52:22.691376+00:00"
+    },
+    "76": {
+      "part_number": 77,
+      "etag": "94e1ee7b1d8f4e1207b849177d3419f5",
+      "size": 52428800,
+      "sha256": "8ae541fd26715cb5b89327f1d5e81dceac35e8501877ec7d4896be9522f012fa",
+      "uploaded_at_utc": "2026-05-05T14:52:27.491643+00:00"
+    },
+    "77": {
+      "part_number": 78,
+      "etag": "842f2ca216ab39526f48612fd5265013",
+      "size": 52428800,
+      "sha256": "5c91d364e45e28e93720d2b2f19796f3acf7ef448e9a756ce0d5a93e93b70737",
+      "uploaded_at_utc": "2026-05-05T14:52:32.810376+00:00"
+    },
+    "78": {
+      "part_number": 79,
+      "etag": "9cec43a80cfc353006cc7da3345616ee",
+      "size": 52428800,
+      "sha256": "2b392a373def6e9fcff563813675ca23c51a4a6e43c8058249ac631f08e59a5e",
+      "uploaded_at_utc": "2026-05-05T14:52:37.565279+00:00"
+    },
+    "79": {
+      "part_number": 80,
+      "etag": "efe2fadb3d5f9205365865b10ecb6106",
+      "size": 52428800,
+      "sha256": "fb2b4890ba720bc09790b6c658493afdc719c55084773a9eecafdfccaafe11e4",
+      "uploaded_at_utc": "2026-05-05T14:52:43.038882+00:00"
+    },
+    "80": {
+      "part_number": 81,
+      "etag": "84ec487318180fc96b590a6551b1424d",
+      "size": 52428800,
+      "sha256": "cc079baf74539e21868eb0c2dbc3e8910db6ce86b89101cb899f2ed0798c6cb9",
+      "uploaded_at_utc": "2026-05-05T14:52:48.942202+00:00"
+    },
+    "81": {
+      "part_number": 82,
+      "etag": "66aad519b76d312e98d530e9a27f0eec",
+      "size": 52428800,
+      "sha256": "47ca470f36672df94df174218399bec2330c92a0801d5db094101c3d02226b82",
+      "uploaded_at_utc": "2026-05-05T14:52:54.540695+00:00"
+    },
+    "82": {
+      "part_number": 83,
+      "etag": "b0ef005a9f133e170c3bf1ee0986944e",
+      "size": 52428800,
+      "sha256": "4331abb2075afa30d80cd1278c0c2b9409cc73120c246bbaa02d7a37649230c3",
+      "uploaded_at_utc": "2026-05-05T14:53:00.492574+00:00"
+    },
+    "83": {
+      "part_number": 84,
+      "etag": "6ff7b62406f05fb81ffa1fcaed205fb6",
+      "size": 52428800,
+      "sha256": "44a63224ec439f0cffedb51b24d7a68ad69fadc27761fe0e736dbf57c0774cb2",
+      "uploaded_at_utc": "2026-05-05T14:53:06.626618+00:00"
+    },
+    "84": {
+      "part_number": 85,
+      "etag": "7ce593d9e7cae0e2f4da26647353d783",
+      "size": 52428800,
+      "sha256": "eda7c0b4e1b227228ccf560363031fbe7522a605cbda6edbeb1bda1ba8b0c9bd",
+      "uploaded_at_utc": "2026-05-05T14:53:11.487905+00:00"
+    },
+    "85": {
+      "part_number": 86,
+      "etag": "56b664eccabe0864a6185c0f8f087d25",
+      "size": 52428800,
+      "sha256": "d2d772d6abff0d49c71bb31a9313126c2d1817ab53783565afc36de5d46c6df0",
+      "uploaded_at_utc": "2026-05-05T14:53:19.123365+00:00"
+    },
+    "86": {
+      "part_number": 87,
+      "etag": "090592aaf55ea6d3bc189950cae1fa6f",
+      "size": 52428800,
+      "sha256": "65a84cf97712114f24abcc69e68b414c154b6fcf7c689f33a2e8d5ec628a6176",
+      "uploaded_at_utc": "2026-05-05T14:53:23.494344+00:00"
+    },
+    "87": {
+      "part_number": 88,
+      "etag": "65909fa5a062a0bba32c65e7bbb3d28d",
+      "size": 52428800,
+      "sha256": "3bcb102866e70d4f2ee0d681e8121fe08b9b496387514e2366daab5562eb5054",
+      "uploaded_at_utc": "2026-05-05T14:53:27.997335+00:00"
+    },
+    "88": {
+      "part_number": 89,
+      "etag": "48f1b57660560ef8012903b5641c9670",
+      "size": 52428800,
+      "sha256": "f6110a5e20da59f4a2bae862a2056358caa5465b13f5c290dc4c0debc196c431",
+      "uploaded_at_utc": "2026-05-05T14:53:33.117682+00:00"
+    }
+  },
+  "started_at_utc": "2026-05-05T14:45:03.743422+00:00",
+  "last_update_utc": "2026-05-05T14:53:33.117694+00:00",
+  "status": "UPLOADING"
+}

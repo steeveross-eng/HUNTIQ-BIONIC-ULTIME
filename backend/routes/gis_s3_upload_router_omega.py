@@ -416,12 +416,24 @@ async def upload_chunk_s3(
     upload_id_hex = (
         (x_upload_id or "").encode("utf-8").hex() if x_upload_id else ""
     )
+    # ─── ORDRE N°52-R6 · Détection mode RESUME explicite ──────────────
+    # Si le upload_id correspond à une session existante avec parts
+    # déjà reçus, on est en mode RESUME. Sinon, INITIATE.
+    resume_mode_detected = False
+    pre_session_parts_count = 0
+    if x_upload_id:
+        _pre_session = _read_session(x_upload_id)
+        if _pre_session and _pre_session.get("parts"):
+            resume_mode_detected = True
+            pre_session_parts_count = len(_pre_session.get("parts", {}))
     if x_upload_id:
         logger.info(
             "S3_REQUEST_INCOMING slot=%s upload_id=%r upload_id_hex=%s "
-            "chunk_index=%s chunks_total=%s",
+            "chunk_index=%s chunks_total=%s resume_mode=%s "
+            "pre_session_parts=%d",
             slot_id, x_upload_id, upload_id_hex,
-            x_chunk_index, x_chunks_total)
+            x_chunk_index, x_chunks_total,
+            resume_mode_detected, pre_session_parts_count)
 
     # Normalisation Unicode (cohérence avec Voie A)
     import unicodedata as _ud
@@ -505,12 +517,33 @@ async def upload_chunk_s3(
         if session.get("filename") and session["filename"] != fname:
             raise HTTPException(
                 status_code=400,
-                detail=f"FILENAME_MISMATCH :: session={session['filename']} "
-                       f"vs header={fname}")
+                detail=(
+                    f"FILENAME_MISMATCH :: session={session['filename']} "
+                    f"vs header={fname}. Le upload_id fourni correspond à "
+                    "une autre filename. Pour un nouveau fichier, utiliser "
+                    "un upload_id frais (NE PAS le saisir dans le champ "
+                    "'Reprise upload_id').")
+            )
         if int(session.get("chunks_total", 0)) != int(x_chunks_total):
             raise HTTPException(
                 status_code=400,
-                detail="CHUNKS_TOTAL_MISMATCH entre session et headers")
+                detail=(
+                    f"CHUNKS_TOTAL_MISMATCH :: session.chunks_total="
+                    f"{session.get('chunks_total')} vs "
+                    f"header.X-Chunks-Total={x_chunks_total}. Le fichier "
+                    "déposé doit avoir EXACTEMENT la même taille que celui "
+                    "de la session originale. Vérifier la taille du fichier "
+                    f"(session attendait total_size={session.get('total_size_expected')}). "
+                    "Pour un fichier différent, NE PAS utiliser la reprise "
+                    "upload_id ; laisser le frontend générer un nouvel "
+                    "uploadId frais."))
+        # Log forensique de la résolution de session existante
+        logger.info(
+            "S3_RESUME_SESSION_LOADED slot=%s upload_id=%r "
+            "b2_upload_id=%s b2_key=%s parts_already=%d/%d filename=%s",
+            slot_id, x_upload_id, session.get("b2_upload_id"),
+            session.get("b2_key"), len(session.get("parts", {})),
+            int(x_chunks_total), session.get("filename"))
 
     # ─── Upload du part vers B2 (streaming) ──────────────────────────
     # B2 multipart : part_number = chunk_index + 1 (B2 part numbers start at 1)
@@ -524,6 +557,8 @@ async def upload_chunk_s3(
             "upload_id": x_upload_id,
             "upload_id_received": x_upload_id,
             "upload_id_received_hex": upload_id_hex,
+            "resume_mode_detected": resume_mode_detected,
+            "pre_session_parts_count": pre_session_parts_count,
             "chunk_index": int(x_chunk_index),
             "part_number": part_number,
             "etag": existing.get("etag"),
@@ -774,6 +809,8 @@ async def upload_chunk_s3(
         "upload_id": x_upload_id,
         "upload_id_received": x_upload_id,
         "upload_id_received_hex": upload_id_hex,
+        "resume_mode_detected": resume_mode_detected,
+        "pre_session_parts_count": pre_session_parts_count,
         "chunk_index": int(x_chunk_index),
         "part_number": part_number,
         "etag": etag,

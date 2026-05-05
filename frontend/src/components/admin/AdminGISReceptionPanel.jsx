@@ -395,20 +395,25 @@ export const AdminGISReceptionPanel = () => {
       const CHUNK_THRESHOLD = 50 * 1024 * 1024; // 50 MB
       const useS3 = Boolean(opts.useS3);
       if (useS3 || file.size > CHUNK_THRESHOLD) {
-        // ─── ORDRE N°52-EXT VOIE A · Réutilisation upload_id si retry ──
-        // Si une session est en ERROR pour ce slot avec le même filename,
-        // on réutilise le upload_id pour bénéficier du resume serveur
-        // (skip chunks déjà reçus + retry exponentiel sur 5xx).
+        // ─── ORDRE N°52-R6 · PRIORITÉ ABSOLUE à opts.uploadId (champ UI) ─
+        // 1. Si l'opérateur a saisi/cliqué un upload_id de reprise dans
+        //    le SlotCard (champ "Reprise upload_id"), opts.uploadId est
+        //    présent → utilisation directe sans création de nouvelle session.
+        // 2. Sinon, fallback automatique : si la session précédente est
+        //    en ERROR avec le même filename, on réutilise son uploadId
+        //    pour bénéficier de l'auto-retry resume.
+        // 3. Sinon, génération d'un nouvel uploadId.
         const prev = uploadState[slotId];
-        const reuseUploadId =
+        const autoReuseUploadId =
           prev &&
           prev.status === "ERROR" &&
           prev.uploadId &&
           prev.filename === file.name
             ? prev.uploadId
             : undefined;
+        const finalUploadId = opts.uploadId || autoReuseUploadId;
         return performChunkedUpload(slotId, file, {
-          uploadId: reuseUploadId,
+          uploadId: finalUploadId,
           useS3,
         });
       }
@@ -593,6 +598,15 @@ export const AdminGISReceptionPanel = () => {
         Date.now().toString(36) +
           "-" +
           Math.random().toString(16).slice(2, 10);
+      // ─── ORDRE N°52-R6 · Forensic log frontend (preuve propagation) ──
+      const uploadIdSource = opts.uploadId
+        ? "RESUME_FROM_UI_OPTS"
+        : "AUTO_GENERATED";
+      const uploadIdHex = [...uploadId]
+        .map((c) =>
+          c.charCodeAt(0).toString(16).padStart(2, "0").toUpperCase()
+        )
+        .join("");
       // ─── ORDRE N°52-EXT VOIE B · S3/B2 routing ──────────────────────
       // Si opts.useS3 === true → /upload-chunk-s3/ (Backblaze B2 multipart)
       // Sinon → /upload-chunk/ (Voie A locale /var/cache)
@@ -601,6 +615,13 @@ export const AdminGISReceptionPanel = () => {
         ? `${API}/api/v30/admin-premium/gis/upload-chunk-s3/`
         : `${API}/api/v30/admin-premium/gis/upload-chunk/`;
       const voieLabel = useS3 ? "VOIE_B/S3-B2" : "VOIE_A/LOCAL";
+      appendEvent({
+        level: opts.uploadId ? "INFO" : "DEBUG",
+        slotId,
+        message:
+          `[${voieLabel}] uploadId=${uploadId} source=${uploadIdSource} ` +
+          `hex=${uploadIdHex.slice(0, 32)}…`,
+      });
 
       // ─── Auto-resume préalable : récupérer chunks_missing[] ─────────
       let chunksToSend = Array.from({ length: total }, (_, i) => i);

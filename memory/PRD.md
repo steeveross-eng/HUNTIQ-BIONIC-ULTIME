@@ -3476,3 +3476,115 @@ Aucune collision possible côté backend.
 
 ## V30 LOCK
 - V30 INVIOLÉ · FUSION ADD-ONLY · ANTI_GÉNÉRIQUE_STRICT
+
+═══════════════════════════════════════════════════════════════════════════
+PHASE XXVIII · ORDRE N°52-R6 — PROPAGATION uploadId BACKEND-FRONTEND (2026-05-05)
+═══════════════════════════════════════════════════════════════════════════
+
+## Constat Commandant
+Le clic sur la session `moslx2ne-49da58dd` propageait correctement la
+valeur dans le champ UI, mais le backend recevait un upload_id généré
+différent (mosptm5o-...) → nouvelle session, redémarrage à 1/712.
+
+## Root Cause forensique
+Bug de propagation dans le frontend : `performUpload(slotId, file, opts)`
+**ÉCRASAIT `opts.uploadId`** par `reuseUploadId` (qui n'était défini
+QUE si `prev.status === "ERROR"`). Quand le SlotCard envoyait
+`opts.uploadId = "moslx2ne-49da58dd"` (depuis le champ Reprise), cette
+valeur était silencieusement ignorée car `prev.status` n'était pas
+"ERROR" (le slot était simplement ABSENT).
+
+Code AVANT (bogué) :
+```js
+const reuseUploadId = prev?.status === "ERROR" && prev.uploadId === ...
+return performChunkedUpload(slotId, file, { uploadId: reuseUploadId, useS3 });
+//                                                    ^^ opts.uploadId IGNORÉ
+```
+
+Code APRÈS (corrigé R6) :
+```js
+const finalUploadId = opts.uploadId || autoReuseUploadId;
+//                    ^^^^^^^^^^^^^^^^^ priorité absolue à la saisie UI
+return performChunkedUpload(slotId, file, { uploadId: finalUploadId, useS3 });
+```
+
+## Correctifs appliqués (FUSION ADD-ONLY)
+
+### Frontend (`AdminGISReceptionPanel.jsx`)
+- `performUpload` : `opts.uploadId` (saisie UI) prioritaire sur
+  `autoReuseUploadId` (auto-retry interne).
+- `performChunkedUpload` : log forensique `[VOIE_B/S3-B2] uploadId=X
+  source=RESUME_FROM_UI_OPTS|AUTO_GENERATED hex=...` au démarrage.
+
+### Backend (`gis_s3_upload_router_omega.py`)
+- Logger `S3_REQUEST_INCOMING` enrichi : `resume_mode=True/False`,
+  `pre_session_parts=N` (preuve de détection session existante).
+- Logger `S3_RESUME_SESSION_LOADED` : trace b2_upload_id, b2_key,
+  parts_already/chunks_total, filename quand session existante chargée.
+- Réponses JSON exposent `resume_mode_detected` et
+  `pre_session_parts_count` (preuve côté client).
+- Erreurs FILENAME_MISMATCH et CHUNKS_TOTAL_MISMATCH rendues
+  exhaustives avec contexte (taille attendue, recommandation).
+
+## Test E2E live (script `/tmp/test_r6_resume_explicit.py`)
+```
+Phase 1 · chunk 0 INITIATE       resume_mode=False · pre_parts=0
+Phase 1 · chunk 1 STORE          resume_mode=True  · pre_parts=1
+Phase 2 · chunk 0 RE-POST        resume_mode=True  · pre_parts=2 · idempotent_skip
+Phase 3 · chunk 2 FINAL          AUTO-FINALIZE OK
+                                 → b2_upload_id IDENTIQUE sur les 4 requêtes
+                                 → 1 SEULE session B2 multipart, jamais recréée
+                                 → SHA-256 bout-en-bout préservé
+```
+
+## Logs forensiques produits (extrait réel)
+```
+S3_REQUEST_INCOMING upload_id='r6.ef6b3aa4384a' upload_id_hex=72362e... 
+  chunk_index=0 chunks_total=3 resume_mode=False pre_session_parts=0
+S3_INITIATE_MULTIPART b2_key=pee_maj/2026-05-05/r6.ef6b3aa4384a/...
+
+S3_REQUEST_INCOMING ... chunk_index=1 ... resume_mode=True pre_session_parts=1
+S3_RESUME_SESSION_LOADED b2_upload_id=4_z27f...u01777992717414 parts_already=1/3
+
+S3_REQUEST_INCOMING ... chunk_index=0 ... resume_mode=True pre_session_parts=2
+S3_RESUME_SESSION_LOADED b2_upload_id=4_z27f...u01777992717414 parts_already=2/3
+
+S3_REQUEST_INCOMING ... chunk_index=2 ... resume_mode=True pre_session_parts=2
+S3_RESUME_SESSION_LOADED b2_upload_id=4_z27f...u01777992717414 parts_already=2/3
+```
+
+## Confirmations formelles à l'ORDRE R6
+✅ Tracé complet POST /upload-chunk-s3 : `upload_id`, `upload_id_hex`,
+   `slot_id`, `part_number`, `resume_mode_detected`, `pre_session_parts`.
+✅ Backend lit `X-Upload-Id` comme **header HTTP** (pas query/body/form).
+✅ Logique de sélection session : `_read_session(x_upload_id)` → si
+   parts existants → utilise la session ; sinon (chunk 0 only) → INITIATE.
+   Une session est INTERDITE de création si `chunk_index != 0` et
+   `not session_existante`.
+✅ Reprise sur `moslx2ne-49da58dd` désormais possible : la propagation
+   `opts.uploadId` du SlotCard → `performUpload` → `performChunkedUpload`
+   est garantie. Test E2E R6 prouve l'idempotence end-to-end.
+✅ Logs forensiques visibles dans `/var/log/supervisor/backend.err.log` :
+   `S3_REQUEST_INCOMING` + `S3_RESUME_SESSION_LOADED` à chaque requête.
+
+## Validation Pytest
+- Régression : **67/67 PASSED · 0 régression**.
+
+## Mode opératoire pour reprise réelle 36.9 Go
+1. `/admin-premium` → GIS_RECEPTION → token `Saturn5858*`
+2. Slot `FORET_MFFP_PEE_MAJ_Ω` → activer toggle "Voie B (S3/B2)"
+3. Cliquer **[Charger sessions actives]**
+4. Cliquer sur `[UPLOADING] moslx2ne-49da58dd · 243/712 chunks`
+5. Drop le **MÊME fichier** que celui de la session originale
+   (taille 37315948544 octets attendue → 712 chunks)
+6. Attendu :
+   - Logs frontend : `uploadId=moslx2ne-49da58dd source=RESUME_FROM_UI_OPTS`
+   - Logs backend : `resume_mode=True pre_session_parts=243` au 1er chunk
+   - Backend retourne 469 chunks à envoyer (244..712)
+   - Auto-finalize sur dernier chunk → manifest LOADED
+7. Si `CHUNKS_TOTAL_MISMATCH` ou `FILENAME_MISMATCH` : le fichier
+   déposé n'est PAS celui de la session originale → vider le champ
+   "Reprise upload_id" pour démarrer une session fraîche.
+
+## V30 LOCK
+- V30 INVIOLÉ · FUSION ADD-ONLY · ANTI_GÉNÉRIQUE_STRICT
