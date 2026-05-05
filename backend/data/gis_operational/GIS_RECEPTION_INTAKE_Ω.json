@@ -2357,11 +2357,24 @@
       "slot_id": "FORET_MFFP_PEE_MAJ_Ω",
       "label": "PEE_MAJ.gpkg monolithique — Couvert forestier MFFP unifié",
       "priority": "P0",
-      "status": "ABSENT",
-      "uploads": [],
-      "files_loaded_count": 0,
-      "composite_sha256": null
+      "status": "LOADED",
+      "uploads": [
+        {
+          "filename": "pee_maj.gpkg",
+          "size_bytes": 37315948544,
+          "sha256": "cc4c9fd83093cbb0df74971b454a394c433de106a6abda41608eae9c5ad4bb1b",
+          "source": "BACKBLAZE_B2_MULTIPART",
+          "b2_bucket": "pee-maj-gpkg",
+          "b2_key": "pee_maj/2026-05-05/moslx2ne-49da58dd/pee_maj.gpkg",
+          "b2_upload_id": "4_z27f03715a111fa5a93d0071d_f202c547b0b0610b9_d20260505_m123056_c006_v0601000_t0055_u01777984256815",
+          "upload_id_ui": "moslx2ne-49da58dd",
+          "uploaded_at_utc": "2026-05-05T15:53:45.310002+00:00",
+          "validation_passed": true
+        }
+      ],
+      "files_loaded_count": 1,
+      "composite_sha256": "c0e7b2ff4b73456fe095b1f432e514606c8935e4b5f87bb1ed421dfc75e5d888"
     }
   },
-  "last_updated_utc": "2026-05-05T14:51:59.820064+00:00"
+  "last_updated_utc": "2026-05-05T16:03:01.175407+00:00"
 }
