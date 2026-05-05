@@ -1600,5 +1600,6 @@
   },
   "started_at_utc": "2026-05-05T11:58:57.866924+00:00",
   "last_update_utc": "2026-05-05T12:16:24.170114+00:00",
-  "status": "UPLOADING"
+  "status": "ABORTED",
+  "aborted_at_utc": "2026-05-05T13:47:34.264160+00:00"
 }

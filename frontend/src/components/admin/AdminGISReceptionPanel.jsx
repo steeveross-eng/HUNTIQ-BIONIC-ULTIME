@@ -1538,6 +1538,14 @@ const SlotCard = ({
   // true=/upload-chunk-s3 (Backblaze B2 multipart streaming).
   const isPeeMajSlot = slot.slot_id === "FORET_MFFP_PEE_MAJ_Ω";
   const [voieBMode, setVoieBMode] = useState(false);
+  // ─── ORDRE N°52-PRE-AUDIT · Reprise upload_id existant ──────────────
+  // Permet au Commandant de coller l'upload_id d'une session interrompue
+  // (visible via /s3/status) pour reprendre depuis chunks_missing[].
+  // Validation regex côté UI : ^[A-Za-z0-9._-]{8,64}$
+  const [resumeUploadId, setResumeUploadId] = useState("");
+  const RESUME_ID_REGEX = /^[A-Za-z0-9._-]{8,64}$/;
+  const isResumeIdValid =
+    resumeUploadId === "" || RESUME_ID_REGEX.test(resumeUploadId);
 
   const handleDrop = useCallback(
     (e) => {
@@ -1550,7 +1558,16 @@ const SlotCard = ({
       }
       const files = Array.from(e.dataTransfer.files || []);
       if (files.length === 0) return;
-      const uploadOpts = isPeeMajSlot && voieBMode ? { useS3: true } : {};
+      const baseOpts = isPeeMajSlot && voieBMode ? { useS3: true } : {};
+      // Si resumeUploadId saisi et valide → injecter dans opts
+      const resumeOpts =
+        isPeeMajSlot &&
+        voieBMode &&
+        resumeUploadId &&
+        RESUME_ID_REGEX.test(resumeUploadId)
+          ? { uploadId: resumeUploadId }
+          : {};
+      const uploadOpts = { ...baseOpts, ...resumeOpts };
       // ORDRE N°46 · Multi-upload : envoi séquentiel pour FORET_MFFP_Ω
       if (slot.multi_upload) {
         files.forEach((f) => onUpload(slot.slot_id, f, uploadOpts));
@@ -1566,6 +1583,7 @@ const SlotCard = ({
       onRequestTokenFocus,
       isPeeMajSlot,
       voieBMode,
+      resumeUploadId,
     ]
   );
 
@@ -1576,7 +1594,15 @@ const SlotCard = ({
         e.target.value = "";
         return;
       }
-      const uploadOpts = isPeeMajSlot && voieBMode ? { useS3: true } : {};
+      const baseOpts = isPeeMajSlot && voieBMode ? { useS3: true } : {};
+      const resumeOpts =
+        isPeeMajSlot &&
+        voieBMode &&
+        resumeUploadId &&
+        RESUME_ID_REGEX.test(resumeUploadId)
+          ? { uploadId: resumeUploadId }
+          : {};
+      const uploadOpts = { ...baseOpts, ...resumeOpts };
       if (slot.multi_upload) {
         files.forEach((f) => onUpload(slot.slot_id, f, uploadOpts));
       } else {
@@ -1584,7 +1610,14 @@ const SlotCard = ({
       }
       e.target.value = "";
     },
-    [slot.slot_id, slot.multi_upload, onUpload, isPeeMajSlot, voieBMode]
+    [
+      slot.slot_id,
+      slot.multi_upload,
+      onUpload,
+      isPeeMajSlot,
+      voieBMode,
+      resumeUploadId,
+    ]
   );
 
   // ─── ORDRE N°48 · Click trombone sans token → scroll & pulse ────
@@ -1773,6 +1806,115 @@ const SlotCard = ({
               Voie B (S3/B2)
             </span>
           </label>
+        </div>
+      )}
+
+      {/* ─── ORDRE N°52-PRE-AUDIT · Reprise upload_id existant (Voie B) ── */}
+      {isPeeMajSlot && voieBMode && (
+        <div
+          style={{
+            margin: "0 0 8px",
+            padding: "10px 12px",
+            border: `1px solid ${
+              resumeUploadId && !isResumeIdValid ? "#dc2626" : "#3a4a66"
+            }`,
+            borderRadius: 6,
+            background: resumeUploadId
+              ? "rgba(251,146,60,0.08)"
+              : "rgba(58,74,102,0.06)",
+          }}
+          data-testid="resume-upload-id-container"
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              flexWrap: "wrap",
+            }}
+          >
+            <div style={{ flex: 1, minWidth: 220 }}>
+              <div
+                style={{
+                  fontWeight: 700,
+                  color: resumeUploadId ? "#fb923c" : "#cbd5e1",
+                  fontSize: 12,
+                  letterSpacing: 0.3,
+                  marginBottom: 4,
+                }}
+              >
+                Reprise d'upload (optionnel · ORDRE N°52-PRE-AUDIT)
+              </div>
+              <div style={{ ...S.muted, fontSize: 11, marginBottom: 6 }}>
+                Coller l'<code>upload_id</code> d'une session interrompue
+                (visible via <code>/s3/status</code>) pour reprendre depuis
+                les chunks manquants. Laisser vide pour démarrer une nouvelle
+                session.
+              </div>
+              <input
+                type="text"
+                value={resumeUploadId}
+                onChange={(e) => setResumeUploadId(e.target.value.trim())}
+                placeholder="Ex: moslx2ne-49da58dd"
+                style={{
+                  width: "100%",
+                  padding: "6px 10px",
+                  background: "#0a1018",
+                  border: `1px solid ${
+                    resumeUploadId && !isResumeIdValid
+                      ? "#dc2626"
+                      : "#3a4a66"
+                  }`,
+                  borderRadius: 4,
+                  color: "#e2e8f0",
+                  fontSize: 12,
+                  fontFamily: "monospace",
+                }}
+                data-testid="resume-upload-id-input"
+              />
+              {resumeUploadId && !isResumeIdValid && (
+                <div
+                  style={{
+                    color: "#fca5a5",
+                    fontSize: 11,
+                    marginTop: 4,
+                  }}
+                  data-testid="resume-upload-id-invalid"
+                >
+                  ⚠ Format invalide · regex attendu :
+                  <code> ^[A-Za-z0-9._-]{"{8,64}"}$</code>
+                </div>
+              )}
+              {resumeUploadId && isResumeIdValid && (
+                <div
+                  style={{
+                    color: "#86efac",
+                    fontSize: 11,
+                    marginTop: 4,
+                  }}
+                  data-testid="resume-upload-id-valid"
+                >
+                  ✓ Au prochain drop : reprise depuis chunks_missing[]
+                  (chunks déjà uploadés seront skippés idempotent).
+                </div>
+              )}
+            </div>
+            {resumeUploadId && (
+              <button
+                onClick={() => setResumeUploadId("")}
+                style={{
+                  ...S.btnPrimary,
+                  background: "#3a4a66",
+                  color: "#cbd5e1",
+                  fontSize: 11,
+                  padding: "4px 10px",
+                }}
+                data-testid="resume-upload-id-clear"
+              >
+                Effacer
+              </button>
+            )}
+          </div>
         </div>
       )}
 

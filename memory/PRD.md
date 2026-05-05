@@ -3334,3 +3334,74 @@ entre la Voie A locale (/upload-chunk) et la Voie B Backblaze B2
 
 ## V30 LOCK
 - V30 INVIOLÉ · FUSION ADD-ONLY · ANTI_GÉNÉRIQUE_STRICT
+
+═══════════════════════════════════════════════════════════════════════════
+PHASE XXVIII · ORDRE N°52-PRE-AUDIT — DURCISSEMENT POST-INCIDENT (2026-05-05)
+═══════════════════════════════════════════════════════════════════════════
+
+## Audit forensique
+- **Root cause** : Backblaze B2 storage cap exceeded → backend renvoyait
+  502 → ingress Cloudflare convertissait certains 502 longs en 404
+  d'erreur, perçus côté frontend.
+- **Sessions intactes** : moskrxro (227/712), moslx2ne (243/712) — 0 chunk
+  manquant en [0..max], idempotence préservée par sessions ext4.
+- **Multipart B2 orphelins** : 2 (consommaient quota).
+
+## Correctifs ÉTENDUS appliqués
+### Backend
+- `B2_UPLOAD_PART_ERROR` détecte spécifiquement `AccessDenied + storage
+  cap exceeded` → **HTTP 507 Insufficient Storage** (vs 502 générique).
+- Endpoint `POST /s3/cleanup-orphans/{slot_id}` (dry-run par défaut,
+  `?confirm=true` pour abort réel + sessions locales mises à jour).
+- Logs forensiques : err_code, quota_exceeded, part_number, upload_id_ui.
+
+### Frontend
+- Retry transitoire sur 404 ingress (max 3, exponentiel) hors SLOT_INCONNU.
+- STOP DÉFINITIF sur 507 avec message UI clair.
+- Phase d'erreur `ROUTER_404_OR_PROXY_TIMEOUT` distincte.
+- **Champ "Reprise upload_id"** sur SlotCard PEE_MAJ (Voie B uniquement) :
+  validation regex client-side, indicateurs valide/invalide, propagation
+  `opts.uploadId` vers `performChunkedUpload` pour reprise depuis
+  `chunks_missing[]`.
+
+## Arbitrages Commandant exécutés (2026-05-05 13:47 UTC)
+- **A** : Abort sélectif `moskrxro-5fd8f164` → ABORTED · `moslx2ne-49da58dd`
+  (243/712) PRÉSERVÉE.
+- **B** : UI "Reprendre upload_id" implémentée + smoke test ✓.
+- **C** : Dumps institutionnels archivés dans `/app/backend/institution/audit_archives/` :
+  - `S3_STATUS_INCIDENT_20260505T134752Z.json` (2147 octets, état complet)
+  - `AUDIT_LOG_INCIDENT_20260505T134752Z.jsonl` (240 Ko, 489 events filtrés)
+
+## État S3/B2 post-arbitrages (référence pour reprise)
+```json
+{
+  "sessions_locales": [
+    {"upload_id_ui":"moskrxro-5fd8f164","status":"ABORTED","chunks":227},
+    {"upload_id_ui":"moslx2ne-49da58dd","status":"UPLOADING","chunks":243}
+  ],
+  "b2_multipart_in_progress": 1,
+  "b2_key_active": "pee_maj/2026-05-05/moslx2ne-49da58dd/pee_maj.gpkg",
+  "manifest_slot_status": "ABSENT"
+}
+```
+
+## Tests
+- E2E IDEMPOTENCE 15 Mo : 3 chunks + interruption + re-POST + finalize →
+  SHA-256 IDENTIQUE bout-en-bout · idempotent_skip confirmé.
+- Pytest : **61/61 PASSED** (8 nouveaux tests pre-audit + 53 régressions).
+- Frontend smoke : toggle + champ resume validés (regex, indicateurs).
+
+## Procédure de reprise upload réel pee_maj.gpkg (autorisée pour reprise)
+1. `/admin-premium` → Pilotage BCE-4X Ω → GIS_RECEPTION → token Saturn5858*
+2. Slot `FORET_MFFP_PEE_MAJ_Ω` → activer toggle "Voie B (S3/B2)"
+3. Champ "Reprise upload_id" : coller `moslx2ne-49da58dd`
+4. Vérifier indicateur vert "✓ Au prochain drop : reprise depuis
+   chunks_missing[]"
+5. Drop `pee_maj.gpkg` (36.9 Go) → frontend POST resume → backend
+   répond `chunks_missing=[243..711]` → upload reprend à 244/712
+   (12 Go déjà sur B2 préservés)
+6. Auto-finalize sur dernier chunk → manifest LOADED garanti
+7. Vérification : `GET /s3/status/FORET_MFFP_PEE_MAJ_Ω`
+
+## V30 LOCK
+- V30 INVIOLÉ · FUSION ADD-ONLY · ANTI_GÉNÉRIQUE_STRICT
