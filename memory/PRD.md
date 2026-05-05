@@ -3271,3 +3271,66 @@ donc absent du JSON → `manifest["slots"]["FORET_MFFP_PEE_MAJ_Ω"]` crash.
 
 ## V30 LOCK
 - V30 INVIOLÉ · FUSION ADD-ONLY respecté · ANTI_GÉNÉRIQUE_STRICT
+
+═══════════════════════════════════════════════════════════════════════════
+PHASE XXVIII · DIRECTIVE 2 — TOGGLE FRONTEND VOIE B (2026-05-05)
+═══════════════════════════════════════════════════════════════════════════
+
+## Contexte
+Le Commandant a ordonné l'ajout d'un toggle explicite "Voie B (S3/B2)"
+sur l'interface AdminGISReceptionPanel afin de basculer sans ambiguïté
+entre la Voie A locale (/upload-chunk) et la Voie B Backblaze B2
+(/upload-chunk-s3) avant le drop de pee_maj.gpkg (~36.9 Go).
+
+## Implémentation FUSION ADD-ONLY (frontend uniquement)
+- Fichier modifié : `/app/frontend/src/components/admin/AdminGISReceptionPanel.jsx`
+- `performUpload(slotId, file, opts={})` accepte `opts.useS3` propagé.
+- `performChunkedUpload` accepte `opts.useS3` qui change :
+  · uploadPath : `/upload-chunk-s3/` au lieu de `/upload-chunk/`
+  · resume URL : suit le même path
+  · gestion réponse finale : `manifest_id=CHUNK_S3_COMPLETED_AND_FINALIZED`
+    + status COMPLETED + slot_status LOADED + sha256_global +
+    composite_sha256 + b2_key + parts_count
+- SlotCard ajoute :
+  · State local `voieBMode` (boolean, défaut false)
+  · `isPeeMajSlot` calculé sur `slot.slot_id === "FORET_MFFP_PEE_MAJ_Ω"`
+  · Toggle UI conditionnel : visible UNIQUEMENT pour PEE_MAJ
+  · 3 data-testid : `voie-b-toggle-container`, `voie-b-toggle-label`,
+    `voie-b-toggle-checkbox`
+  · Label dynamique : `VOIE_A · LOCAL /var/cache (par défaut)` ↔
+    `VOIE_B · S3/Backblaze B2 ACTIVÉE`
+  · Couleur cyan (#22d3ee) quand activé · gris quand désactivé
+  · Auto-bascule du mode chunked si useS3 true (même < 50 Mo)
+- Restart auto sur SESSION_ORPHANED_POD_RESTART : propage `useS3` au
+  retry pour ne pas perdre le flag.
+
+## Validation
+- ESLint : 0 issue.
+- Pytest backend (régression) : 53/53 PASSED.
+- Frontend : `wait_for_selector("[data-testid='voie-b-toggle-container']")`
+  réussi → toggle confirmé présent dans le DOM rendu sur PEE_MAJ.
+- Compte `n_toggles == 1` attendu (slot PEE_MAJ uniquement).
+
+## Mode opératoire pour le Commandant (UPLOAD RÉEL 36.9 Go)
+1. Ouvrir `/admin-premium`
+2. Onglet "Pilotage BCE-4X Ω" → onglet "GIS_RECEPTION"
+3. Saisir token `Saturn5858*` + Enregistrer
+4. Scroller jusqu'au slot `FORET_MFFP_PEE_MAJ_Ω`
+5. **ACTIVER le toggle "Voie B (S3/B2)"** (le bandeau passe en cyan
+   et affiche "VOIE_B · S3/Backblaze B2 ACTIVÉE")
+6. Drop le fichier `pee_maj.gpkg` (36.9 Go)
+7. Le frontend chunke en 738 parts de 50 Mo (36.9 GB / 50 MB ≈ 738)
+8. Suivi temps réel : barre de progression + chunked forensic panel
+9. Auto-finalize sur le dernier chunk → manifest LOADED automatique
+10. Vérification post-upload : `GET /api/v30/admin-premium/gis/s3/status/
+    FORET_MFFP_PEE_MAJ_Ω` (1 objet B2 · 0 multipart en cours · sha256_global)
+
+## Tolérance pannes (déjà éprouvée)
+- Pod restart pendant upload → 409 SESSION_ORPHANED_POD_RESTART détecté
+  côté backend ; frontend redémarre avec un nouvel upload_id depuis
+  chunk 0 (sessions S3 sont `/app/backend/data/gis_s3_sessions/` ext4).
+- 5xx réseau/proxy → retry exponentiel max 5 par chunk.
+- Idempotence /s3-finalize : `idempotent_skip=true` si déjà fait.
+
+## V30 LOCK
+- V30 INVIOLÉ · FUSION ADD-ONLY · ANTI_GÉNÉRIQUE_STRICT

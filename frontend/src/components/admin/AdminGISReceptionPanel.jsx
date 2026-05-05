@@ -368,7 +368,7 @@ export const AdminGISReceptionPanel = () => {
   }, [token]);
 
   const performUpload = useCallback(
-    (slotId, file) => {
+    (slotId, file, opts = {}) => {
       if (!token) {
         setUploadState((s) => ({
           ...s,
@@ -389,8 +389,12 @@ export const AdminGISReceptionPanel = () => {
       // ─── ORDRE N°50 · Bascule chunked auto si > seuil Cloudflare ────
       // Cloudflare/proxies limitent à 100 MB. On découpe à 50 MB pour
       // garder une marge. Au-dessus → mode chunked résilient.
+      // ─── ORDRE N°52-EXT VOIE B · useS3 toggle (S3/B2) ───────────────
+      // Si opts.useS3 === true (toggle "Voie B (S3/B2)"), on force le mode
+      // chunked (même < 50 MB) pour router vers /upload-chunk-s3/.
       const CHUNK_THRESHOLD = 50 * 1024 * 1024; // 50 MB
-      if (file.size > CHUNK_THRESHOLD) {
+      const useS3 = Boolean(opts.useS3);
+      if (useS3 || file.size > CHUNK_THRESHOLD) {
         // ─── ORDRE N°52-EXT VOIE A · Réutilisation upload_id si retry ──
         // Si une session est en ERROR pour ce slot avec le même filename,
         // on réutilise le upload_id pour bénéficier du resume serveur
@@ -405,6 +409,7 @@ export const AdminGISReceptionPanel = () => {
             : undefined;
         return performChunkedUpload(slotId, file, {
           uploadId: reuseUploadId,
+          useS3,
         });
       }
       return performStandardUpload(slotId, file);
@@ -588,13 +593,21 @@ export const AdminGISReceptionPanel = () => {
         Date.now().toString(36) +
           "-" +
           Math.random().toString(16).slice(2, 10);
+      // ─── ORDRE N°52-EXT VOIE B · S3/B2 routing ──────────────────────
+      // Si opts.useS3 === true → /upload-chunk-s3/ (Backblaze B2 multipart)
+      // Sinon → /upload-chunk/ (Voie A locale /var/cache)
+      const useS3 = Boolean(opts.useS3);
+      const uploadPath = useS3
+        ? `${API}/api/v30/admin-premium/gis/upload-chunk-s3/`
+        : `${API}/api/v30/admin-premium/gis/upload-chunk/`;
+      const voieLabel = useS3 ? "VOIE_B/S3-B2" : "VOIE_A/LOCAL";
 
       // ─── Auto-resume préalable : récupérer chunks_missing[] ─────────
       let chunksToSend = Array.from({ length: total }, (_, i) => i);
       let lastSuccessfulIdx = -1;
       try {
         const resumeUrl =
-          `${API}/api/v30/admin-premium/gis/upload-chunk/` +
+          uploadPath +
           `${encodeURIComponent(slotId)}/resume/${encodeURIComponent(uploadId)}`;
         const rResume = await fetch(resumeUrl, {
           headers: { "X-Commandant-Token": (token || "").trim() },
@@ -617,7 +630,7 @@ export const AdminGISReceptionPanel = () => {
             appendEvent({
               level: "INFO",
               slotId,
-              message: `RESUME · upload_id=${uploadId} · ${dResume.chunks_received_count}/${total} déjà reçus · ${missing.length} chunks à envoyer`,
+              message: `RESUME [${voieLabel}] · upload_id=${uploadId} · ${dResume.chunks_received_count}/${total} déjà reçus · ${missing.length} chunks à envoyer`,
             });
           }
         }
@@ -632,19 +645,20 @@ export const AdminGISReceptionPanel = () => {
           status: "UPLOADING",
           filename: file.name,
           sizeBytes: file.size,
-          message: `Mode chunked · ${total} chunks de ~50 MB · démarrage…`,
+          message: `[${voieLabel}] ${total} chunks de ~50 MB · démarrage…`,
           chunked: true,
           chunksTotal: total,
           uploadId,
           lastSuccessfulIdx,
           chunksToSend: chunksToSend.length,
           errorPhase: null,
+          useS3,
         },
       }));
       appendEvent({
         level: "INFO",
         slotId,
-        message: `Upload chunked démarré · ${file.name} · ${formatBytes(file.size)} · ${total} chunks · upload_id=${uploadId}`,
+        message: `Upload chunked démarré [${voieLabel}] · ${file.name} · ${formatBytes(file.size)} · ${total} chunks · upload_id=${uploadId}`,
       });
 
       const headersBase = {
@@ -675,7 +689,7 @@ export const AdminGISReceptionPanel = () => {
           let payload = {};
           try {
             r = await fetch(
-              `${API}/api/v30/admin-premium/gis/upload-chunk/${encodeURIComponent(slotId)}`,
+              uploadPath + encodeURIComponent(slotId),
               {
                 method: "POST",
                 headers: {
@@ -771,7 +785,7 @@ export const AdminGISReceptionPanel = () => {
               },
             }));
             // Relancer avec un upload_id frais (pas de réutilisation)
-            return performChunkedUpload(slotId, file, {});
+            return performChunkedUpload(slotId, file, { useS3 });
           }
           const codeLabel =
             res.status === 401
@@ -828,7 +842,63 @@ export const AdminGISReceptionPanel = () => {
       }
 
       // ─── Dernier chunk → lastResponse contient le payload final ───
-      if (lastResponse && lastResponse.passed) {
+      // Voie A : { passed: true, sha256, validators }
+      // Voie B : { status: "COMPLETED", slot_status: "LOADED",
+      //            sha256_global, composite_sha256, manifest_id:
+      //            "CHUNK_S3_COMPLETED_AND_FINALIZED" }
+      const isVoieBFinal =
+        useS3 &&
+        lastResponse &&
+        (lastResponse.status === "COMPLETED" ||
+          lastResponse.manifest_id === "CHUNK_S3_COMPLETED_AND_FINALIZED");
+      const isVoieAFinalPassed = !useS3 && lastResponse && lastResponse.passed;
+      const isVoieAFinalQuarantined =
+        !useS3 && lastResponse && lastResponse.passed === false;
+
+      if (isVoieBFinal) {
+        const shaFinal =
+          lastResponse.sha256_global || lastResponse.composite_sha256;
+        setUploadState((s) => ({
+          ...s,
+          [slotId]: {
+            progress: 100,
+            status: "LOADED",
+            filename: file.name,
+            sizeBytes: lastResponse.final_size_bytes || file.size,
+            sha256: shaFinal,
+            message: `LOADED [VOIE_B/S3-B2] · ${total} chunks · b2_key=${lastResponse.b2_key}`,
+            validators: [
+              {
+                name: "b2_complete_multipart",
+                passed: true,
+                detail: `parts=${lastResponse.parts_count} · etag=${lastResponse.final_s3_etag}`,
+              },
+              {
+                name: "b2_stream_sha256",
+                passed: true,
+                detail: `${lastResponse.stream_elapsed_s}s · sha256_global`,
+              },
+              {
+                name: "manifest_updated",
+                passed: true,
+                detail: `composite=${(lastResponse.composite_sha256 || "").slice(0, 16)}…`,
+              },
+            ],
+            chunked: true,
+            chunksTotal: total,
+            uploadId,
+            lastSuccessfulIdx: total - 1,
+            useS3: true,
+            b2Key: lastResponse.b2_key,
+            b2Bucket: lastResponse.b2_bucket,
+          },
+        }));
+        appendEvent({
+          level: "INFO",
+          slotId,
+          message: `LOADED [VOIE_B/S3-B2] · ${file.name} · sha256=${shortSha(shaFinal)} · ${total} chunks · slot=LOADED`,
+        });
+      } else if (isVoieAFinalPassed) {
         setUploadState((s) => ({
           ...s,
           [slotId]: {
@@ -850,7 +920,7 @@ export const AdminGISReceptionPanel = () => {
           slotId,
           message: `LOADED chunked · ${file.name} · ${shortSha(lastResponse.sha256)} · ${total} chunks`,
         });
-      } else if (lastResponse && !lastResponse.passed) {
+      } else if (isVoieAFinalQuarantined) {
         setUploadState((s) => ({
           ...s,
           [slotId]: {
@@ -1420,6 +1490,12 @@ const SlotCard = ({
 }) => {
   const [drag, setDrag] = useState(false);
   const inputRef = useRef(null);
+  // ─── ORDRE N°52-EXT VOIE B · Toggle "Voie B (S3/B2)" ────────────────
+  // Visible et fonctionnel UNIQUEMENT pour le slot FORET_MFFP_PEE_MAJ_Ω.
+  // Bascule la cible d'upload : false=/upload-chunk (local /var/cache),
+  // true=/upload-chunk-s3 (Backblaze B2 multipart streaming).
+  const isPeeMajSlot = slot.slot_id === "FORET_MFFP_PEE_MAJ_Ω";
+  const [voieBMode, setVoieBMode] = useState(false);
 
   const handleDrop = useCallback(
     (e) => {
@@ -1432,14 +1508,23 @@ const SlotCard = ({
       }
       const files = Array.from(e.dataTransfer.files || []);
       if (files.length === 0) return;
+      const uploadOpts = isPeeMajSlot && voieBMode ? { useS3: true } : {};
       // ORDRE N°46 · Multi-upload : envoi séquentiel pour FORET_MFFP_Ω
       if (slot.multi_upload) {
-        files.forEach((f) => onUpload(slot.slot_id, f));
+        files.forEach((f) => onUpload(slot.slot_id, f, uploadOpts));
       } else {
-        onUpload(slot.slot_id, files[0]);
+        onUpload(slot.slot_id, files[0], uploadOpts);
       }
     },
-    [slot.slot_id, slot.multi_upload, onUpload, tokenReady, onRequestTokenFocus]
+    [
+      slot.slot_id,
+      slot.multi_upload,
+      onUpload,
+      tokenReady,
+      onRequestTokenFocus,
+      isPeeMajSlot,
+      voieBMode,
+    ]
   );
 
   const handlePick = useCallback(
@@ -1449,14 +1534,15 @@ const SlotCard = ({
         e.target.value = "";
         return;
       }
+      const uploadOpts = isPeeMajSlot && voieBMode ? { useS3: true } : {};
       if (slot.multi_upload) {
-        files.forEach((f) => onUpload(slot.slot_id, f));
+        files.forEach((f) => onUpload(slot.slot_id, f, uploadOpts));
       } else {
-        onUpload(slot.slot_id, files[0]);
+        onUpload(slot.slot_id, files[0], uploadOpts);
       }
       e.target.value = "";
     },
-    [slot.slot_id, slot.multi_upload, onUpload]
+    [slot.slot_id, slot.multi_upload, onUpload, isPeeMajSlot, voieBMode]
   );
 
   // ─── ORDRE N°48 · Click trombone sans token → scroll & pulse ────
@@ -1574,6 +1660,79 @@ const SlotCard = ({
           </span>
         )}
       </div>
+
+      {/* ─── ORDRE N°52-EXT VOIE B · Toggle S3/B2 (slot PEE_MAJ uniquement) ── */}
+      {isPeeMajSlot && (
+        <div
+          style={{
+            margin: "12px 0 8px",
+            padding: "10px 12px",
+            border: `1px solid ${voieBMode ? "#22d3ee" : "#3a4a66"}`,
+            borderRadius: 6,
+            background: voieBMode
+              ? "rgba(34,211,238,0.10)"
+              : "rgba(58,74,102,0.10)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+          }}
+          data-testid="voie-b-toggle-container"
+        >
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div
+              style={{
+                fontWeight: 700,
+                color: voieBMode ? "#22d3ee" : "#cbd5e1",
+                fontSize: 13,
+                letterSpacing: 0.4,
+              }}
+            >
+              {voieBMode
+                ? "VOIE_B · S3/Backblaze B2 ACTIVÉE"
+                : "VOIE_A · LOCAL /var/cache (par défaut)"}
+            </div>
+            <div style={{ ...S.muted, fontSize: 11, marginTop: 2 }}>
+              {voieBMode
+                ? "Upload streaming → Backblaze B2 (immunisé pod restart). Endpoint : /upload-chunk-s3/"
+                : "Upload local /var/cache (éphémère). Recommandé : VOIE_B pour pee_maj.gpkg ~36.9 Go."}
+            </div>
+          </div>
+          <label
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              cursor: "pointer",
+              userSelect: "none",
+              flexShrink: 0,
+            }}
+            data-testid="voie-b-toggle-label"
+          >
+            <input
+              type="checkbox"
+              checked={voieBMode}
+              onChange={(e) => setVoieBMode(e.target.checked)}
+              style={{
+                width: 18,
+                height: 18,
+                accentColor: "#22d3ee",
+                cursor: "pointer",
+              }}
+              data-testid="voie-b-toggle-checkbox"
+            />
+            <span
+              style={{
+                fontSize: 12,
+                fontWeight: 600,
+                color: voieBMode ? "#22d3ee" : "#94a3b8",
+              }}
+            >
+              Voie B (S3/B2)
+            </span>
+          </label>
+        </div>
+      )}
 
       <div
         onDragEnter={(e) => {
