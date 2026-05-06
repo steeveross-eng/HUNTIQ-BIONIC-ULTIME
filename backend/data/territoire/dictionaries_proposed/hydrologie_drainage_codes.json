@@ -1,0 +1,46 @@
+{
+  "manifest_id": "HYDROLOGIE_DRAINAGE_CODES_VALIDATED_Ω",
+  "ordre": "N°52-R16-A",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "status": "VALIDÉ",
+  "validated_at_utc": "2026-05-06T00:30:00+00:00",
+  "validated_by": "COMMANDANT_STEEVE_MAX_R16_A",
+  "version": "1.0.0-VALIDATED",
+  "source_documentation": [
+    "MFFP (2018) Normes d'inventaire écoforestier ch. 3 — Drainage et type écologique",
+    "Saucier, J.P. et al. (2009) Cadre de référence sur les écosystèmes forestiers du Québec — types écologiques humides",
+    "MELCC (2018) Cartographie détaillée des milieux humides du Québec méridional"
+  ],
+  "description": "Règles canoniques d'identification des zones humides depuis le schéma MFFP (cl_drai + type_eco) sans nécessité d'une source externe hydrologique distincte (qui reste optionnelle).",
+  "fields_canonical": ["cl_drai", "type_eco"],
+  "wetland_classification": {
+    "by_cl_drai": {
+      "description": "Codes de drainage MFFP — 5 (mauvais) et 6 (très mauvais) = humide.",
+      "wetland_codes": ["5", "6"],
+      "transition_codes": ["4"],
+      "non_wetland_codes": ["0", "1", "2", "3"]
+    },
+    "by_type_eco_prefix": {
+      "description": "Types écologiques Saucier 2009 codes commençant par R (résineux humides), F (feuillu humide riverain), M (milieu humide).",
+      "wetland_prefixes_in_type_eco": ["RB", "RC", "RE", "RS", "MJ", "MS", "MF", "ME"],
+      "marais_marsh_codes": ["MJ", "MS", "MF", "ME"]
+    }
+  },
+  "decision_rule": {
+    "description": "Polygone classé HUMIDE si cl_drai ∈ {5, 6} OU type_eco commence par un préfixe humide. Logique OU explicite.",
+    "logic": "OR",
+    "fallback_unknown": false
+  },
+  "raster_encoding": {
+    "values": {"0": "non_humide", "1": "humide", "255": "nodata"},
+    "dtype": "uint8"
+  },
+  "external_source_optional": {
+    "MELCC_milieu_humide_quebec": {
+      "expected_path": "/app/backend/data/environnement/hydrologie/milieu_humide_quebec.gpkg",
+      "fallback_when_absent": "use_mffp_only",
+      "anti_generique": true
+    }
+  },
+  "v30_lock": "INVIOLÉ"
+}

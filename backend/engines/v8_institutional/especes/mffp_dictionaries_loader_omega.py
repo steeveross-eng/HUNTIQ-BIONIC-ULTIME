@@ -45,6 +45,14 @@ DICTIONARY_FILES = {
         DICTIONARIES_ROOT / "habitat_preferences_par_espece.json"),
     "perturbation_severity": (
         DICTIONARIES_ROOT / "perturbation_severity.json"),
+    "regles_territoires_canonical": (
+        DICTIONARIES_ROOT / "regles_territoires_canonical.json"),
+    "exclusions_thresholds": (
+        DICTIONARIES_ROOT / "exclusions_thresholds.json"),
+    "hydrologie_drainage_codes": (
+        DICTIONARIES_ROOT / "hydrologie_drainage_codes.json"),
+    "couvert_securite_thresholds": (
+        DICTIONARIES_ROOT / "couvert_securite_thresholds.json"),
 }
 
 
@@ -115,6 +123,26 @@ def all_validated_for_p1() -> bool:
     return True
 
 
+def all_validated_for_r16a() -> bool:
+    """Indique si TOUS les dicts requis pour R9 R16-A sont VALIDÉS.
+
+    R16-A = P1 requis + regles_territoires_canonical +
+            exclusions_thresholds + hydrologie_drainage_codes +
+            couvert_securite_thresholds.
+    """
+    r16a_required = [
+        "regles_territoires_canonical", "exclusions_thresholds",
+        "hydrologie_drainage_codes", "couvert_securite_thresholds",
+    ]
+    if not all_validated_for_p1():
+        return False
+    for name in r16a_required:
+        status = get_dictionary_status(name)
+        if status not in ("VALIDÉ", "OFFICIAL"):
+            return False
+    return True
+
+
 def list_validation_blockers() -> List[Dict[str, Any]]:
     """Liste les dictionnaires non validés et les raisons."""
     blockers = []
@@ -145,6 +173,7 @@ __all__ = [
     "all_proposed_dictionaries_status",
     "all_validated_for_p0",
     "all_validated_for_p1",
+    "all_validated_for_r16a",
     "list_validation_blockers",
     "DICTIONARIES_ROOT",
     "DICTIONARY_FILES",

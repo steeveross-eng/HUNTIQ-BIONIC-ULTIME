@@ -50,7 +50,11 @@ def test_r12_four_dictionaries_loadable(loader):
         "tables_rendement_mffp", "habitat_preferences_par_espece",
         "perturbation_severity",
     }
-    expected_all = expected_p0 | expected_p1_added
+    expected_r16a_added = {
+        "regles_territoires_canonical", "exclusions_thresholds",
+        "hydrologie_drainage_codes", "couvert_securite_thresholds",
+    }
+    expected_all = expected_p0 | expected_p1_added | expected_r16a_added
     assert set(loader.DICTIONARY_FILES.keys()) == expected_all
     for name in expected_p0:
         d = loader.load_dictionary(name)
@@ -62,6 +66,11 @@ def test_r12_four_dictionaries_loadable(loader):
         assert d is not None
         assert d.get("status") in ("VALIDÉ", "OFFICIAL")
         assert d.get("ordre") == "N°52-R15"
+    for name in expected_r16a_added:
+        d = loader.load_dictionary(name)
+        assert d is not None
+        assert d.get("status") in ("VALIDÉ", "OFFICIAL")
+        assert d.get("ordre") == "N°52-R16-A"
 
 
 def test_r12_cl_dens_pct_canonical_values(loader):

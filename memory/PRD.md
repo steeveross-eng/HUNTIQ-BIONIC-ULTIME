@@ -27,6 +27,30 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXVIII · ORDRE N°52-R16-A — R9 BUSINESS LOGIC FONDATIONS (4 targets RÉELS) (2026-05-06)**
+  Premier batch de l'implémentation R9 (option β batchée approuvée par Commandant). 4 fondations cynégétiques implémentées sur subset Bas-Saint-Laurent réel via FUSION ADD-ONLY. **R9 status passe de `STUB_READY_AWAITING_BUSINESS_LOGIC` → `OK_REAL_PARTIAL_R16A` · 308/308 pytests PASSED · 0 régression.**
+  - **Module créé** : `engines/v8_institutional/especes/r9_phase3_orchestrator_omega.py` (4 fonctions + pipeline + probe hooks territoire_ultime + auto-pick subset).
+  - **4 nouveaux dictionnaires VALIDÉS R16-A** dans `data/territoire/dictionaries_proposed/` :
+    - `regles_territoires_canonical.json` (signature 8-tuple + 6 hooks territoire_ultime registry-aware)
+    - `exclusions_thresholds.json` (cl_pent extrême + cl_drai extrême + fragmentation + sources externes routes/habitations/réglementaires en `skip_with_log`)
+    - `hydrologie_drainage_codes.json` (cl_drai 5/6 OU type_eco préfixes humides Saucier 2009)
+    - `couvert_securite_thresholds.json` (cl_dens 40% + cl_haut 35% + type_couv 25% — hiver R>M>F, MFFP 2010)
+  - **Loader étendu** : `mffp_dictionaries_loader_omega.py` accepte 11 dicts (P0+P1+R16-A) et expose `all_validated_for_r16a()`.
+  - **Endpoint câblé (FUSION ADD-ONLY)** : `POST /api/v30/admin-premium/gis/territoire/r9-phase3-execute` (params : territory_id, options_scenarios, temporalite=annuel, targets optional).
+  - **Validation live · DONNÉES RÉELLES sur subset Bas-Saint-Laurent 2 957 polygones** :
+    - `R9_SIGNATURES_TERRAIN.tif` 52 K + `.gpkg` 11 M · SHA-256 raster `d5f94386ae177388...` · **1 966 signatures uniques** sur 2 957 (66,5 % d'unicité — territoire diversifié) · 0,68 s
+    - `R9_EXCLUSIONS.tif` 1 045 oct · SHA-256 `53aa6a9506dd8354...` · **32 polygones exclus / 2 957 (1,08 %)** · règles appliquées : `pentes_extremes`, `drainage_extreme`, `fragmentation_extreme` · règles skipped (anti-générique strict, sources externes absentes) : `distance_routes_meters`, `distance_habitations_meters`, `zones_reglementaires` · 0,37 s
+    - `R9_ZONES_HUMIDES.tif` 2 985 oct · SHA-256 `cb47095a8cc1587b...` · **2 569 polygones humides / 2 957 (86,88 %)** — cohérent avec écorégion boréale méridionale Bas-Saint-Laurent + cl_drai + type_eco humides Saucier 2009 · 0,30 s
+    - `R9_COUVERT_SECURITE.tif` 11 058 oct · SHA-256 `1a4bbb2491dd37b6...` · **mean_score=69,13/100** · distribution buckets : 75-100 (1 061 pol), 50-75 (1 718), 25-50 (177), 0-25 (1) — forêt mature résineuse dominante = abri optimal hiver · 0,31 s
+  - **Hooks territoire_ultime (registry-aware probe live)** :
+    - IA_VISION : interface python loadable (engine_ia_vision_ecologique_omega) ✓ · paths externes 0
+    - DONNEES_CHASSEUR : interface python loadable (gps_loader_omega) ✓ · paths externes 0
+    - ENVIRONNEMENT/NUTRITION/COMPORTEMENT/PREDICTIF : 16/16 paths externes absents → skip_with_log (anti-générique strict, attendent fournitures Q3-Q4)
+  - **R9_RECALC_STATE.json mis à jour** : status global=`OK_REAL_PARTIAL_R16A` · 4 targets en `OK_REAL` (signatures, exclusions, zones_humides, couvert_securite) · 9 targets historiques restent en `STUB_READY_AWAITING_BUSINESS_LOGIC` (corridors, hotspots, affuts, salines, zones_vitales/passage/rut/repos/alimentation) — couverts par R16-B/C/D.
+  - **Tests pytest ajoutés (FUSION ADD-ONLY)** : `tests/test_phase_xxviii_r16a_r9_foundations_omega.py` (15 tests : exports + 4 dicts loadables + probe hooks + 4 fonctions execute + signatures stable + exclusions extreme slope + anti-générique strict + zones humides drai 5/6 + couvert score 0-100 + résineux > feuillu + pipeline 4 targets + subset required).
+  - **Authority chain** : COMMANDANT STEEVE-MAX → R16-A approuvée le 2026-05-06 (option β batchée).
+  - **V30 INVIOLÉ · ANTI_GÉNÉRIQUE_STRICT** : aucune simulation. Toutes les sorties tracables au subset MFFP 2025 réel + dictionnaires VALIDÉS (Saucier 2009, MFFP 2010/2018, MELCC 2017/2018, Drolet 1999, Potvin 2003, Dickson 2017).
+
 - **PHASE_XXVIII · ORDRE N°52-R15 — PHASE_3 R8 P1+P2 RÉEL · 4 COUCHES RESTANTES IMPLÉMENTÉES (2026-05-06)**
   Implémentation effective et live des 4 couches manquantes (MFFP_PRODUCTIVITY, MFFP_HABITAT, MFFP_CONNECTIVITY, MFFP_CONTINUITY) qui débloquent R9 hors mode STUB_BLOCKED. **R8 status=OK · 8 artifacts_keys présents · 293/293 pytests PASSED · 0 régression.**
   - **Module créé** : `engines/v8_institutional/especes/mffp_phase3_p1_omega.py` (FUSION ADD-ONLY · réutilise les helpers P0 `_load_gdf`, `_ensure_epsg_32198`, `_rasterize_to_tif`, `_sha256_file`).

@@ -2290,3 +2290,100 @@ async def pee_maj_resilient_pull_status(
         "previous_run_was_zombie": state.get("previous_run_was_zombie"),
         "v30_lock": "INVIOLÉ",
     }
+
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°52-R16-A · R9 BUSINESS LOGIC PIPELINE (4 fondations)
+# FUSION ADD-ONLY · Mode batché : R16-A puis R16-B/C/D
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/territoire/r9-phase3-execute")
+async def territoire_r9_phase3_execute(
+    request: Request,
+    territory_id: Optional[str] = None,
+    options_scenarios: Optional[str] = None,
+    temporalite: Optional[str] = "annuel",
+    targets: Optional[str] = None,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-R16-A · R9 BUSINESS LOGIC pipeline d'exécution réelle.
+
+    R16-A (cette implémentation) implémente les 4 fondations :
+      · R9_SIGNATURES_TERRAIN
+      · R9_EXCLUSIONS
+      · R9_ZONES_HUMIDES
+      · R9_COUVERT_SECURITE
+
+    Les targets R16-B/C/D (zones_vitales, repos, alimentation, rut,
+    corridors, hotspots, salines, affuts, corridors_multi_especes) sont
+    listées dans la réponse en BACKLOG (status à venir dans ordre suivant).
+
+    Args :
+      territory_id : Optionnel · identifiant territoire (annoté seulement).
+      options_scenarios : Optionnel · scenarios (annoté seulement R16-A).
+      temporalite : 'annuel' (défaut R16-A). 'saisonnier'/'mensuel' = backlog.
+      targets : Optionnel · liste comma-separated pour cibler spécifiquement.
+    """
+    _verify_token(x_commandant_token)
+    from engines.v8_institutional.especes.r9_phase3_orchestrator_omega import (  # noqa: E501
+        execute_r16a_pipeline, R16A_PIPELINE,
+    )
+    from engines.v8_institutional.especes.mffp_dictionaries_loader_omega import (  # noqa: E501
+        all_validated_for_r16a, list_validation_blockers,
+    )
+    if not all_validated_for_r16a():
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "reason": "DICTIONARIES_NOT_VALIDATED_FOR_R16A",
+                "blockers": list_validation_blockers(),
+                "remediation": (
+                    "Tous les dicts R16-A (regles_territoires_canonical, "
+                    "exclusions_thresholds, hydrologie_drainage_codes, "
+                    "couvert_securite_thresholds) doivent être "
+                    "status='VALIDÉ' ou 'OFFICIAL'."),
+            })
+
+    target_list = (
+        [t.strip() for t in targets.split(",") if t.strip()]
+        if targets else None)
+
+    try:
+        pipeline_result = execute_r16a_pipeline(targets=target_list)
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "R16A_PIPELINE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+
+    # Annoter les targets en backlog R16-B/C/D pour transparence
+    backlog_targets = {
+        "R16-B_BIOTIC_BEHAVIOR": [
+            "R9_ZONES_VITALES", "R9_REPOS",
+            "R9_ALIMENTATION", "R9_RUT"],
+        "R16-C_CONNECTIVITY": [
+            "R9_CORRIDORS", "R9_ZONES_PASSAGE",
+            "R9_HOTSPOTS", "R9_CORRIDORS_MULTI_ESPECES"],
+        "R16-D_TACTICAL_GROUND": [
+            "R9_SALINES", "R9_AFFUTS", "R9_TERRITOIRES",
+            "TERRITOIRE_ULTIME_HOOKS_DEEP_INTEGRATION"],
+    }
+
+    return {
+        "manifest_id": "R9_PHASE3_EXECUTE_R16A_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°52-R16-A",
+        "territory_id": territory_id,
+        "options_scenarios": options_scenarios,
+        "temporalite": temporalite,
+        "r16a_pipeline_result": pipeline_result,
+        "backlog_for_next_orders": backlog_targets,
+        "endpoint_path": "/api/v30/admin-premium/gis/territoire/"
+                          "r9-phase3-execute",
+        "v30_lock": "INVIOLÉ",
+    }

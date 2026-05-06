@@ -1,0 +1,57 @@
+{
+  "manifest_id": "COUVERT_SECURITE_THRESHOLDS_VALIDATED_Ω",
+  "ordre": "N°52-R16-A",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "status": "VALIDÉ",
+  "validated_at_utc": "2026-05-06T00:30:00+00:00",
+  "validated_by": "COMMANDANT_STEEVE_MAX_R16_A",
+  "version": "1.0.0-VALIDATED",
+  "source_documentation": [
+    "MFFP (2010) Outils d'évaluation qualité habitat cerf de Virginie — couvert de sécurité hivernal",
+    "Drolet, B. (1999) Couvert résineux dense + hauteur ≥7m = abri hivernal (sapinière baumière)",
+    "Potvin, F. et al. (2003) Effet du couvert sur la survie hivernale du cerf"
+  ],
+  "description": "Score 0-100 du couvert de sécurité forestier (utilisé comme cache, abri pour la faune). Combine densité (MFFP_DENSITY) + hauteur (cl_haut) + composition (type_couv R/M favorisé hiver).",
+  "fields_canonical": ["cl_dens", "cl_haut", "type_couv"],
+  "scoring": {
+    "weights": {
+      "cl_dens": 0.40,
+      "cl_haut": 0.35,
+      "type_couv": 0.25
+    },
+    "cl_dens_score": {
+      "A": 100,
+      "B": 80,
+      "C": 50,
+      "D": 25,
+      "E": 10,
+      "fallback": 0
+    },
+    "cl_haut_score": {
+      "1": 10, "2": 25, "3": 50, "4": 75, "5": 90,
+      "6": 100, "7": 100,
+      "fallback": 30
+    },
+    "type_couv_score": {
+      "description": "Résineux > Mixte > Feuillu (les feuillus perdent leur couvert hivernal).",
+      "R": 100,
+      "M": 75,
+      "F": 35,
+      "fallback": 0
+    }
+  },
+  "interpretation": {
+    "100": "abri optimal hiver",
+    "75": "bon abri",
+    "50": "abri moyen",
+    "25": "couvert insuffisant",
+    "0": "aucun couvert"
+  },
+  "raster_encoding": {
+    "dtype": "uint8",
+    "domain_min": 0,
+    "domain_max": 100,
+    "nodata_value": 255
+  },
+  "v30_lock": "INVIOLÉ"
+}

@@ -1,6 +1,6 @@
 {
   "run_id": "R9_1778027156_98807b",
-  "status": "OK_WITH_STUBS",
+  "status": "OK_REAL_PARTIAL_R16A",
   "started_at_utc": "2026-05-06T00:25:56.378713+00:00",
   "last_update_utc": "2026-05-06T00:25:56.378724+00:00",
   "ordre": "N°52-R9",
@@ -79,6 +79,46 @@
       "completed_at_utc": "2026-05-06T00:25:56.385878+00:00",
       "elapsed_s": 0.0,
       "anti_generique_note": "Couches MFFP disponibles mais logique de recalcul zones_alimentation non encore implémentée. Spécifications métier R9 à fournir : comment combiner score_original × 0.2 + score_MFFP × 0.8 par cible."
+    },
+    "R9_SIGNATURES_TERRAIN": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-A",
+      "completed_at_utc": "2026-05-06T15:03:43.136322+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_SIGNATURES_TERRAIN.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_SIGNATURES_TERRAIN.gpkg",
+      "raster_sha256": "d5f94386ae17738836c0d56dcc2d753ea8df0a8264f39c68c6ae2f27f370d07c",
+      "vector_sha256": "5724ff13ca4e674183df909129f36bcc41618d0d19824911cd3789bc3a846a99",
+      "elapsed_s": 0.68
+    },
+    "R9_EXCLUSIONS": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-A",
+      "completed_at_utc": "2026-05-06T15:03:43.136335+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_EXCLUSIONS.tif",
+      "output_vector": null,
+      "raster_sha256": "53aa6a9506dd8354d3904743cdb46c93234e0396e724a17a9cdb8724c9170224",
+      "vector_sha256": null,
+      "elapsed_s": 0.37
+    },
+    "R9_ZONES_HUMIDES": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-A",
+      "completed_at_utc": "2026-05-06T15:03:43.136339+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_HUMIDES.tif",
+      "output_vector": null,
+      "raster_sha256": "cb47095a8cc1587bec3c73248d5d241c87e84978ec88b152e7296604b14ec1ba",
+      "vector_sha256": null,
+      "elapsed_s": 0.3
+    },
+    "R9_COUVERT_SECURITE": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-A",
+      "completed_at_utc": "2026-05-06T15:03:43.136346+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_COUVERT_SECURITE.tif",
+      "output_vector": null,
+      "raster_sha256": "1a4bbb2491dd37b6d6e49d9eeb4b598e33d0b2d878578c1e58897ea2a71cdb73",
+      "vector_sha256": null,
+      "elapsed_s": 0.31
     }
   },
   "last_updated_utc": "2026-05-06T00:25:56.386825+00:00",
@@ -207,5 +247,14 @@
   },
   "completed_at_utc": "2026-05-06T00:25:56.386178+00:00",
   "total_elapsed_s": 0.01,
-  "report_path": "/app/backend/data/territoire/r9_reports/BIONIC_AMPLIFICATION_REPORT_R9_1778027156_98807b.json"
+  "report_path": "/app/backend/data/territoire/r9_reports/BIONIC_AMPLIFICATION_REPORT_R9_1778027156_98807b.json",
+  "last_r16a_run_id": "R16A_1778079823",
+  "last_r16a_run_completed_at_utc": "2026-05-06T15:03:43.136351+00:00",
+  "last_r16a_subset_used": "/app/backend/data/gis_archive/subsets/pee_maj_subset_Bas_Saint_Laurent_Rimouski_doctrinal_20260505T234859Z.gpkg",
+  "last_r16a_targets_succeeded": [
+    "R9_SIGNATURES_TERRAIN",
+    "R9_EXCLUSIONS",
+    "R9_ZONES_HUMIDES",
+    "R9_COUVERT_SECURITE"
+  ]
 }

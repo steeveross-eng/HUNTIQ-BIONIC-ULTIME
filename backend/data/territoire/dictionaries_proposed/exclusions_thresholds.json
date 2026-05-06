@@ -1,0 +1,60 @@
+{
+  "manifest_id": "EXCLUSIONS_THRESHOLDS_VALIDATED_Ω",
+  "ordre": "N°52-R16-A",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "status": "VALIDÉ",
+  "validated_at_utc": "2026-05-06T00:30:00+00:00",
+  "validated_by": "COMMANDANT_STEEVE_MAX_R16_A",
+  "version": "1.0.0-VALIDATED",
+  "source_documentation": [
+    "MFFP (2018) Normes d'inventaire écoforestier ch. 3 cl_pent / cl_drai",
+    "MELCC (2017) Règlement sur les habitats fauniques RHQ-R c. 4 — distances minimales habitations",
+    "MTQ (2020) Norme de distance hors-route corridors fauniques",
+    "Dickson, B.G. et al. (2017) Forest fragmentation thresholds critical habitats"
+  ],
+  "description": "Seuils canoniques pour générer le raster R9_EXCLUSIONS (zones interdites pour les activités cynégétiques/aménagement). Applique les règlements MFFP/MELCC/MTQ.",
+  "fields_canonical": ["cl_pent", "cl_drai", "fragmentation_index"],
+  "rules": {
+    "pentes_extremes": {
+      "description": "MFFP cl_pent classes 7-9 = pentes >40% considérées risque physique.",
+      "cl_pent_excluded": ["7", "8", "9", "F", "S"],
+      "weight_in_exclusion": 1.0
+    },
+    "drainage_extreme": {
+      "description": "cl_drai 0 (excessif/sec extrême) inutilisable + 6 (très mauvais) = hydromorphe submersé impraticable.",
+      "cl_drai_excluded": ["0", "6"],
+      "weight_in_exclusion": 0.5
+    },
+    "fragmentation_extreme": {
+      "description": "Index Dickson 2017 > 0.7 → fragmentation critique, abandonner.",
+      "fragmentation_threshold": 0.70,
+      "weight_in_exclusion": 0.7
+    },
+    "distance_routes_meters": {
+      "description": "MTQ : zone tampon 30 m minimum hors-route. Source vectorielle externe REQUISE (CanVec/Adresses Québec) ; en absence, règle non appliquée → log degraded.",
+      "buffer_m": 30,
+      "weight_in_exclusion": 0.5,
+      "fallback_when_source_absent": "skip_with_log"
+    },
+    "distance_habitations_meters": {
+      "description": "MELCC RHQ-R : tampon 100 m minimum autour bâtiments. Source vectorielle externe REQUISE ; fallback skip+log.",
+      "buffer_m": 100,
+      "weight_in_exclusion": 0.6,
+      "fallback_when_source_absent": "skip_with_log"
+    },
+    "zones_reglementaires": {
+      "description": "Aires protégées MFFP (parcs, ZEC, réserves fauniques). Source vectorielle externe REQUISE.",
+      "weight_in_exclusion": 1.0,
+      "fallback_when_source_absent": "skip_with_log"
+    }
+  },
+  "aggregation_rule": {
+    "description": "Output uint8 : 1 si la somme pondérée des règles applicables dépasse le seuil 0.5, sinon 0.",
+    "binary_threshold": 0.5
+  },
+  "anti_generique_strict": {
+    "description": "PAS de simulation : si une source externe est absente, sa règle est SKIPPED et logguée. Aucune valeur fabriquée.",
+    "verifiable": true
+  },
+  "v30_lock": "INVIOLÉ"
+}
