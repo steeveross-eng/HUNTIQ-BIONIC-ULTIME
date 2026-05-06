@@ -731,5 +731,21 @@
         "R9_CORRIDORS_MULTI_ESPECES"
       ]
     }
-  }
+  },
+  "r16dprep_status": "READY_FOR_R16D",
+  "r16dprep_completed_at_utc": "2026-05-06T16:01:11.757282+00:00",
+  "r16dprep_hooks_initialized": [
+    "IA_VISION",
+    "DONNEES_CHASSEUR",
+    "ENVIRONNEMENT",
+    "NUTRITION",
+    "COMPORTEMENT",
+    "PREDICTIF"
+  ],
+  "r16dprep_stub_loaders_created": [
+    "environment_loader_omega",
+    "nutrition_loader_omega",
+    "comportement_loader_omega",
+    "predictif_loader_omega"
+  ]
 }

@@ -27,6 +27,30 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXVIII · ORDRE N°52-R16-D-PREP — TERRITOIRE_ULTIME HOOKS INITIALIZATION (STUBS) (2026-05-06)**
+  Initialisation **STUB_INITIALIZATION** des 4 hooks externes manquants (ENVIRONNEMENT, NUTRITION, COMPORTEMENT, PREDICTIF) sans aucune logique métier ni donnée — uniquement architecture chargeable. **R9 r16dprep_status=`READY_FOR_R16D` · 385/385 pytests PASSED · 0 régression.**
+  - **4 modules loaders stubs créés** (FUSION ADD-ONLY) :
+    - `engines/v8_institutional/especes/environment_loader_omega.py` (3,7 K)
+    - `engines/v8_institutional/especes/nutrition_loader_omega.py` (2,9 K)
+    - `engines/v8_institutional/especes/comportement_loader_omega.py` (2,8 K)
+    - `engines/v8_institutional/especes/predictif_loader_omega.py` (2,8 K)
+    Chaque module expose : `is_available()` (auto-détecte les paths externes), `probe()` (retourne statut détaillé), `load_data()` (returns None — ANTI_GÉNÉRIQUE_STRICT), constantes `HOOK_NAME / IS_STUB=True / ORDRE`.
+  - **4 dictionnaires VALIDÉS STUB_INITIALIZATION** :
+    - `environment_rules.json` (paths NOAA/NASA/USGS attendus)
+    - `nutrition_rules.json` (paths NDVI/sol/minéraux/mast attendus)
+    - `comportement_rules.json` (paths RSF/SSF/temporal_patterns attendus)
+    - `predictif_rules.json` (paths MaxEnt/RSF/SSF prédictifs/forecast_48h attendus)
+    Tous avec `rules: {}` (aucune logique métier), `is_stub: true`, `mode: STUB_INITIALIZATION`, `anti_generique_strict.verifiable: true`.
+  - **Registry update** : `regles_territoires_canonical.json` enrichi · les 4 specs hooks ENVIRONNEMENT/NUTRITION/COMPORTEMENT/PREDICTIF pointent désormais vers leurs `loader_module` + `rules_dictionary` + flag `is_stub_initialized_R16D_PREP=true`. IA_VISION et DONNEES_CHASSEUR conservés (interfaces python existantes loadable).
+  - **Loader étendu** : `mffp_dictionaries_loader_omega.py` accepte 17 dicts au total · expose `all_validated_for_r16dprep()`.
+  - **R9_RECALC_STATE.json mis à jour** (FUSION ADD-ONLY · status global préservé) :
+    - `r16dprep_status: "READY_FOR_R16D"`
+    - `r16dprep_hooks_initialized: [IA_VISION, DONNEES_CHASSEUR, ENVIRONNEMENT, NUTRITION, COMPORTEMENT, PREDICTIF]` (6 hooks documentés)
+    - `r16dprep_stub_loaders_created: [environment_loader_omega, nutrition_loader_omega, comportement_loader_omega, predictif_loader_omega]`
+  - **Probe live des 4 stubs** : tous `is_stub=True · available=False · 0 paths présents` (Q3-Q4 attendu pour fournitures NOAA/NASA/USGS/MFFP).
+  - **Tests pytest ajoutés (FUSION ADD-ONLY)** : `tests/test_phase_xxviii_r16dprep_hooks_init_omega.py` (26 tests : 4 modules loadables + 4 dicts valides parametrized + registry pointe vers loaders + all_validated_for_r16dprep + 4 dicts dans DICTIONARY_FILES + load_data returns None × 4 + is_available false par défaut + auto-detection true quand path présent + probe structure stable × 4 + v30 INVIOLÉ × 4 + R9_RECALC_STATE r16dprep_status field).
+  - **V30 INVIOLÉ · ANTI_GÉNÉRIQUE_STRICT** : aucune simulation, aucune règle, aucune donnée. Stubs pure-architecture, prêts à se connecter automatiquement dès qu'une source externe arrivera.
+
 - **PHASE_XXVIII · ORDRE N°52-R16-C — R9 CONNECTIVITY · 16/16 CIBLES RÉELLES (2026-05-06)**
   Troisième batch R9 (option β batchée). 16 nouvelles cibles connectivité exécutées sur subset Bas-Saint-Laurent réel via FUSION ADD-ONLY. **R9 status passe `OK_REAL_PARTIAL_R16B` → `OK_REAL_PARTIAL_R16C` · 359/359 pytests PASSED · 0 régression · 0 erreur live · 12,02 s pour 16 cibles.**
   - **Module créé** : `engines/v8_institutional/especes/r9_phase3_r16c_omega.py` (4 fonctions + pipeline orchestrator).

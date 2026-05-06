@@ -1,0 +1,27 @@
+{
+  "manifest_id": "PREDICTIF_RULES_STUB_INITIALIZED_Ω",
+  "ordre": "N°52-R16-D-PREP",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "status": "VALIDÉ",
+  "mode": "STUB_INITIALIZATION",
+  "is_stub": true,
+  "validated_at_utc": "2026-05-06T16:30:00+00:00",
+  "validated_by": "COMMANDANT_STEEVE_MAX_R16_D_PREP",
+  "version": "0.1.0-STUB",
+  "description": "Stub initialisé pour le hook TERRITOIRE_ULTIME PREDICTIF. Aucune règle métier, aucune donnée. Règles à venir quand les modèles MaxEnt/RSF/SSF prédictifs et forecasts 48h seront fournis.",
+  "external_paths_expected": [
+    "/app/backend/data/predictif/maxent/models_v1/",
+    "/app/backend/data/predictif/rsf/rsf_predictive_v1/",
+    "/app/backend/data/predictif/ssf/ssf_predictive_v1/",
+    "/app/backend/data/predictif/temporal/forecast_48h/"
+  ],
+  "expected_sources": [
+    "NOAA", "NASA", "Ecological Applications", "Movement Ecology"
+  ],
+  "rules": {},
+  "anti_generique_strict": {
+    "description": "AUCUNE simulation, AUCUNE règle, AUCUNE donnée. Stub valide.",
+    "verifiable": true
+  },
+  "v30_lock": "INVIOLÉ"
+}

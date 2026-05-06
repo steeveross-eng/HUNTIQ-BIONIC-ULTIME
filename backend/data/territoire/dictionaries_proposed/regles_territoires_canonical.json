@@ -42,6 +42,9 @@
           "/app/backend/data/environnement/solunar/solunar_2004_2024.csv",
           "/app/backend/data/environnement/risques/climate_risk_index.nc"
         ],
+        "loader_module": "engines.v8_institutional.especes.environment_loader_omega",
+        "rules_dictionary": "environment_rules",
+        "is_stub_initialized_R16D_PREP": true,
         "fallback_when_absent": "skip_with_log",
         "consumed_by_targets": ["R9_REPOS", "R9_RUT", "R9_CORRIDORS_MULTI_ESPECES"]
       },
@@ -52,6 +55,9 @@
           "/app/backend/data/nutrition/mineraux/soil_minerals_quebec.tif",
           "/app/backend/data/nutrition/attractivite/mast_index_2004_2024.csv"
         ],
+        "loader_module": "engines.v8_institutional.especes.nutrition_loader_omega",
+        "rules_dictionary": "nutrition_rules",
+        "is_stub_initialized_R16D_PREP": true,
         "fallback_when_absent": "skip_with_log",
         "consumed_by_targets": ["R9_ALIMENTATION", "R9_HOTSPOTS"]
       },
@@ -61,6 +67,9 @@
           "/app/backend/data/comportement/ssf/ssf_models_v1/",
           "/app/backend/data/comportement/temporal_patterns/activity_patterns.csv"
         ],
+        "loader_module": "engines.v8_institutional.especes.comportement_loader_omega",
+        "rules_dictionary": "comportement_rules",
+        "is_stub_initialized_R16D_PREP": true,
         "fallback_when_absent": "skip_with_log",
         "consumed_by_targets": ["R9_RUT", "R9_REPOS", "R9_CORRIDORS"]
       },
@@ -71,6 +80,9 @@
           "/app/backend/data/predictif/ssf/ssf_predictive_v1/",
           "/app/backend/data/predictif/temporal/forecast_48h/"
         ],
+        "loader_module": "engines.v8_institutional.especes.predictif_loader_omega",
+        "rules_dictionary": "predictif_rules",
+        "is_stub_initialized_R16D_PREP": true,
         "fallback_when_absent": "skip_with_log",
         "consumed_by_targets": ["R9_HOTSPOTS", "R9_CORRIDORS_MULTI_ESPECES"]
       }

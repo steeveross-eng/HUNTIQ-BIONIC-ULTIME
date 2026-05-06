@@ -57,6 +57,14 @@ DICTIONARY_FILES = {
         DICTIONARIES_ROOT / "phenologie_saisonniere.json"),
     "connectivity_rules": (
         DICTIONARIES_ROOT / "connectivity_rules.json"),
+    "environment_rules": (
+        DICTIONARIES_ROOT / "environment_rules.json"),
+    "nutrition_rules": (
+        DICTIONARIES_ROOT / "nutrition_rules.json"),
+    "comportement_rules": (
+        DICTIONARIES_ROOT / "comportement_rules.json"),
+    "predictif_rules": (
+        DICTIONARIES_ROOT / "predictif_rules.json"),
 }
 
 
@@ -169,6 +177,26 @@ def all_validated_for_r16c() -> bool:
         "connectivity_rules") in ("VALIDÉ", "OFFICIAL")
 
 
+def all_validated_for_r16dprep() -> bool:
+    """ORDRE N°52-R16-D-PREP : valide la présence des 4 stubs hooks.
+
+    R16-D-PREP = R16-C requis + environment_rules + nutrition_rules
+                  + comportement_rules + predictif_rules (tous stubs).
+    Aucune logique métier vérifiée — uniquement présence des stubs valides.
+    """
+    if not all_validated_for_r16c():
+        return False
+    r16dprep_required = [
+        "environment_rules", "nutrition_rules",
+        "comportement_rules", "predictif_rules",
+    ]
+    for name in r16dprep_required:
+        status = get_dictionary_status(name)
+        if status not in ("VALIDÉ", "OFFICIAL"):
+            return False
+    return True
+
+
 def list_validation_blockers() -> List[Dict[str, Any]]:
     """Liste les dictionnaires non validés et les raisons."""
     blockers = []
@@ -202,6 +230,7 @@ __all__ = [
     "all_validated_for_r16a",
     "all_validated_for_r16b",
     "all_validated_for_r16c",
+    "all_validated_for_r16dprep",
     "list_validation_blockers",
     "DICTIONARIES_ROOT",
     "DICTIONARY_FILES",
