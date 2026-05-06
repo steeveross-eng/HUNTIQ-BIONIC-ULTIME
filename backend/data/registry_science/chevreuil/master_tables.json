@@ -1,0 +1,1156 @@
+{
+  "species": "chevreuil",
+  "ordre": "N°54-Ω-VAGUE-1",
+  "summary": {
+    "n_tables_total": 11,
+    "n_gov": 1,
+    "n_uni": 1,
+    "n_pr": 1,
+    "n_fiche_ligne": 7,
+    "n_autres": 1
+  },
+  "master_tables": {
+    "n_tables_total": 11,
+    "n_gov": 1,
+    "n_uni": 1,
+    "n_pr": 1,
+    "n_fiche_ligne": 7,
+    "n_autres": 1,
+    "by_category": {
+      "GOV": [
+        {
+          "table_index": 0,
+          "header": [
+            "Institution",
+            "Titre / Type",
+            "Année",
+            "Portée",
+            "Lien / Référence"
+          ],
+          "rows": [
+            [
+              "MFFP Québec",
+              "Inventaires cervidés, analyses d’habitat",
+              "2004–2024",
+              "Densité, tendances, habitat",
+              "https://mffp.gouv.qc.ca (mffp.gouv.qc.ca in Bing)"
+            ],
+            [
+              "Ontario MNRF",
+              "Deer Management Reports",
+              "2004–2024",
+              "Gestion, mortalité, habitat",
+              "https://www.ontario.ca/page/ministry-natural-resources-and-forestry (ontario.ca in Bing)"
+            ],
+            [
+              "NB DNR",
+              "Deer Population Trends",
+              "2004–2024",
+              "Tendances, climat, mortalité",
+              "https://www2.gnb.ca"
+            ],
+            [
+              "USGS",
+              "Movement Ecology (GPS)",
+              "2010–2024",
+              "Corridors, déplacements",
+              "https://www.usgs.gov"
+            ],
+            [
+              "USFWS",
+              "Habitat & Disease Assessments",
+              "2004–2024",
+              "CWD, habitat",
+              "https://www.fws.gov"
+            ],
+            [
+              "NOAA",
+              "Snow/Temp datasets",
+              "2004–2024",
+              "Neige, climat",
+              "https://www.noaa.gov"
+            ],
+            [
+              "NASA EarthData",
+              "NDVI, télédétection",
+              "2004–2024",
+              "Habitat, végétation",
+              "https://earthdata.nasa.gov"
+            ]
+          ],
+          "n_rows": 7
+        }
+      ],
+      "UNI": [
+        {
+          "table_index": 1,
+          "header": [
+            "Auteurs",
+            "Titre",
+            "Année",
+            "Revue / Institution",
+            "DOI / Lien"
+          ],
+          "rows": [
+            [
+              "LaSharr et al.",
+              "Dispersal dynamics of whitetailed deer in humanaltered landscapes and implications for disease risk",
+              "2025",
+              "PLOS One",
+              "https://doi.org/10.1371/journal.pone.0325656"
+            ],
+            [
+              "Fulbright",
+              "WhiteTailed Deer (chapitre scientifique)",
+              "2023",
+              "Springer Nature",
+              "https://link.springer.com"
+            ],
+            [
+              "Wiley (consortium génomique)",
+              "Development of highthroughput genomic resources to inform whitetailed deer management",
+              "2024",
+              "Wiley Online Library",
+              "https://onlinelibrary.wiley.com (onlinelibrary.wiley.com in Bing)"
+            ],
+            [
+              "UMaine / UNB / UVM",
+              "Thèses sur déplacements, habitat, CWD",
+              "2004–2024",
+              "Universités",
+              "Portails institutionnels"
+            ],
+            [
+              "Movement Ecology",
+              "Études GPS cervidés",
+              "2010–2024",
+              "Movement Ecology Journal",
+              "https://movementecologyjournal.biomedcentral.com (movementecologyjournal.biomedcentral.com in Bing)"
+            ]
+          ],
+          "n_rows": 5
+        }
+      ],
+      "PR": [
+        {
+          "table_index": 2,
+          "header": [
+            "Organisation",
+            "Titre / Type",
+            "Année",
+            "Portée",
+            "Lien"
+          ],
+          "rows": [
+            [
+              "NDA (National Deer Association)",
+              "Analyses habitat, nutrition, corridors",
+              "2004–2024",
+              "Gestion cervidés",
+              "https://deerassociation.com"
+            ],
+            [
+              "QDMA Archives",
+              "Habitat, rut, pression humaine",
+              "2004–2020",
+              "Gestion cervidés",
+              "https://www.qdma.com (archives)"
+            ],
+            [
+              "Données terrain validées",
+              "GPS, télémétrie, stations météo",
+              "2004–2024",
+              "Corridors, habitat",
+              "Programmes régionaux"
+            ]
+          ],
+          "n_rows": 3
+        }
+      ],
+      "FICHE_LIGNE": [
+        {
+          "table_index": 4,
+          "fiche_data": {
+            "Catégorie": "GOV",
+            "Institution": "MFFP Québec",
+            "Région": "Québec",
+            "Année": "2023",
+            "Titre": "Plan de gestion du cerf de Virginie 2020–2027",
+            "Auteurs": "Gouvernement du Québec",
+            "DOI/URL": "https://mffp.gouv.qc.ca (mffp.gouv.qc.ca in Bing)",
+            "Type": "Rapport de gestion",
+            "Méthodologie": "Inventaires aériens, analyses d’habitat",
+            "Données": "Densité, mortalité, ravages",
+            "Résultats": "Pression de chasse, tendances régionales",
+            "Limites": "Variabilité régionale",
+            "Validation1": "✔ Source officielle",
+            "Validation2": "✔ Méthodologie scientifique",
+            "Validation3": "✔ Conformité BCE4X",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 5,
+          "fiche_data": {
+            "Catégorie": "GOV",
+            "Institution": "Ontario Ministry of Natural Resources and Forestry",
+            "Région": "Ontario",
+            "Année": "2022",
+            "Titre": "WhiteTailed Deer Population and Harvest Summary",
+            "Auteurs": "MNRF",
+            "DOI/URL": "https://www.ontario.ca/page/ministry-natural-resources-and-forestry (ontario.ca in Bing)",
+            "Type": "Rapport gouvernemental",
+            "Méthodologie": "Inventaires, télémétrie",
+            "Données": "Densité, mortalité, succès de chasse",
+            "Résultats": "Expansion vers le nord",
+            "Limites": "Données manquantes dans zones agricoles",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 6,
+          "fiche_data": {
+            "Catégorie": "GOV",
+            "Institution": "Maine Department of Inland Fisheries & Wildlife",
+            "Région": "Maine",
+            "Année": "2021",
+            "Titre": "Maine WhiteTailed Deer Assessment",
+            "Auteurs": "Maine IFW",
+            "DOI/URL": "https://www.maine.gov/ifw",
+            "Type": "Rapport populationnel",
+            "Méthodologie": "Inventaires, séries temporelles",
+            "Données": "Tendances 2000–2020",
+            "Résultats": "Croissance dans zones côtières",
+            "Limites": "Variabilité climatique",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 7,
+          "fiche_data": {
+            "Catégorie": "UNI",
+            "Institution": "PLOS One",
+            "Région": "USA / Midwest",
+            "Année": "2025",
+            "Titre": "Dispersal dynamics of whitetailed deer in humanaltered landscapes and implications for disease risk",
+            "Auteurs": "LaSharr et al.",
+            "DOI/URL": "https://doi.org/10.1371/journal.pone.0325656",
+            "Type": "Article scientifique",
+            "Méthodologie": "GPS, modèles de dispersion",
+            "Données": "Déplacements, corridors, risques CWD",
+            "Résultats": "Corridors anthropiques = vecteurs de dispersion",
+            "Limites": "Données centrées sur une région",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 8,
+          "fiche_data": {
+            "Catégorie": "UNI",
+            "Institution": "Springer Nature",
+            "Région": "USA",
+            "Année": "2023",
+            "Titre": "WhiteTailed Deer (chapitre scientifique)",
+            "Auteurs": "Fulbright",
+            "DOI/URL": "https://link.springer.com",
+            "Type": "Chapitre scientifique",
+            "Méthodologie": "Synthèse scientifique",
+            "Données": "Habitat, nutrition, comportement",
+            "Résultats": "Forte plasticité écologique",
+            "Limites": "Synthèse, pas de données brutes",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 9,
+          "fiche_data": {
+            "Catégorie": "UNI",
+            "Institution": "Wiley Online Library",
+            "Région": "USA",
+            "Année": "2024",
+            "Titre": "Development of highthroughput genomic resources to inform whitetailed deer management",
+            "Auteurs": "Consortium génomique",
+            "DOI/URL": "https://onlinelibrary.wiley.com (onlinelibrary.wiley.com in Bing)",
+            "Type": "Article scientifique",
+            "Méthodologie": "Génomique, analyses génétiques",
+            "Données": "Variabilité génétique, structure populationnelle",
+            "Résultats": "Outils génétiques pour gestion CWD",
+            "Limites": "Données centrées sur USA",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 10,
+          "fiche_data": {
+            "Catégorie": "PR",
+            "Institution": "National Deer Association",
+            "Région": "USA / Est",
+            "Année": "2024",
+            "Titre": "Annual Deer Report",
+            "Auteurs": "NDA",
+            "DOI/URL": "https://deerassociation.com",
+            "Type": "Rapport professionnel validé",
+            "Méthodologie": "Données terrain, séries temporelles",
+            "Données": "Densité, habitat, mortalité",
+            "Résultats": "Expansion nordique, pression humaine",
+            "Limites": "Données USA seulement",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        }
+      ],
+      "AUTRES": [
+        {
+          "table_index": 3,
+          "header": [
+            "Catégorie",
+            "Exigence",
+            "Statut"
+          ],
+          "rows": [
+            [
+              "Sources non scientifiques",
+              "Interdit",
+              "❌"
+            ],
+            [
+              "Sources GOV",
+              "Obligatoire",
+              "✔️"
+            ],
+            [
+              "Sources UNI",
+              "Obligatoire",
+              "✔️"
+            ],
+            [
+              "Sources PR validées",
+              "Obligatoire",
+              "✔️"
+            ],
+            [
+              "DOI",
+              "Obligatoire",
+              "✔️"
+            ],
+            [
+              "Traçabilité",
+              "Obligatoire",
+              "✔️"
+            ],
+            [
+              "Triple validation",
+              "Obligatoire",
+              "✔️"
+            ]
+          ],
+          "n_rows": 7
+        }
+      ]
+    },
+    "raw_tables": [
+      {
+        "table_index": 0,
+        "header": [
+          "Institution",
+          "Titre / Type",
+          "Année",
+          "Portée",
+          "Lien / Référence"
+        ],
+        "rows": [
+          [
+            "MFFP Québec",
+            "Inventaires cervidés, analyses d’habitat",
+            "2004–2024",
+            "Densité, tendances, habitat",
+            "https://mffp.gouv.qc.ca (mffp.gouv.qc.ca in Bing)"
+          ],
+          [
+            "Ontario MNRF",
+            "Deer Management Reports",
+            "2004–2024",
+            "Gestion, mortalité, habitat",
+            "https://www.ontario.ca/page/ministry-natural-resources-and-forestry (ontario.ca in Bing)"
+          ],
+          [
+            "NB DNR",
+            "Deer Population Trends",
+            "2004–2024",
+            "Tendances, climat, mortalité",
+            "https://www2.gnb.ca"
+          ],
+          [
+            "USGS",
+            "Movement Ecology (GPS)",
+            "2010–2024",
+            "Corridors, déplacements",
+            "https://www.usgs.gov"
+          ],
+          [
+            "USFWS",
+            "Habitat & Disease Assessments",
+            "2004–2024",
+            "CWD, habitat",
+            "https://www.fws.gov"
+          ],
+          [
+            "NOAA",
+            "Snow/Temp datasets",
+            "2004–2024",
+            "Neige, climat",
+            "https://www.noaa.gov"
+          ],
+          [
+            "NASA EarthData",
+            "NDVI, télédétection",
+            "2004–2024",
+            "Habitat, végétation",
+            "https://earthdata.nasa.gov"
+          ]
+        ],
+        "n_rows": 7
+      },
+      {
+        "table_index": 1,
+        "header": [
+          "Auteurs",
+          "Titre",
+          "Année",
+          "Revue / Institution",
+          "DOI / Lien"
+        ],
+        "rows": [
+          [
+            "LaSharr et al.",
+            "Dispersal dynamics of whitetailed deer in humanaltered landscapes and implications for disease risk",
+            "2025",
+            "PLOS One",
+            "https://doi.org/10.1371/journal.pone.0325656"
+          ],
+          [
+            "Fulbright",
+            "WhiteTailed Deer (chapitre scientifique)",
+            "2023",
+            "Springer Nature",
+            "https://link.springer.com"
+          ],
+          [
+            "Wiley (consortium génomique)",
+            "Development of highthroughput genomic resources to inform whitetailed deer management",
+            "2024",
+            "Wiley Online Library",
+            "https://onlinelibrary.wiley.com (onlinelibrary.wiley.com in Bing)"
+          ],
+          [
+            "UMaine / UNB / UVM",
+            "Thèses sur déplacements, habitat, CWD",
+            "2004–2024",
+            "Universités",
+            "Portails institutionnels"
+          ],
+          [
+            "Movement Ecology",
+            "Études GPS cervidés",
+            "2010–2024",
+            "Movement Ecology Journal",
+            "https://movementecologyjournal.biomedcentral.com (movementecologyjournal.biomedcentral.com in Bing)"
+          ]
+        ],
+        "n_rows": 5
+      },
+      {
+        "table_index": 2,
+        "header": [
+          "Organisation",
+          "Titre / Type",
+          "Année",
+          "Portée",
+          "Lien"
+        ],
+        "rows": [
+          [
+            "NDA (National Deer Association)",
+            "Analyses habitat, nutrition, corridors",
+            "2004–2024",
+            "Gestion cervidés",
+            "https://deerassociation.com"
+          ],
+          [
+            "QDMA Archives",
+            "Habitat, rut, pression humaine",
+            "2004–2020",
+            "Gestion cervidés",
+            "https://www.qdma.com (archives)"
+          ],
+          [
+            "Données terrain validées",
+            "GPS, télémétrie, stations météo",
+            "2004–2024",
+            "Corridors, habitat",
+            "Programmes régionaux"
+          ]
+        ],
+        "n_rows": 3
+      },
+      {
+        "table_index": 3,
+        "header": [
+          "Catégorie",
+          "Exigence",
+          "Statut"
+        ],
+        "rows": [
+          [
+            "Sources non scientifiques",
+            "Interdit",
+            "❌"
+          ],
+          [
+            "Sources GOV",
+            "Obligatoire",
+            "✔️"
+          ],
+          [
+            "Sources UNI",
+            "Obligatoire",
+            "✔️"
+          ],
+          [
+            "Sources PR validées",
+            "Obligatoire",
+            "✔️"
+          ],
+          [
+            "DOI",
+            "Obligatoire",
+            "✔️"
+          ],
+          [
+            "Traçabilité",
+            "Obligatoire",
+            "✔️"
+          ],
+          [
+            "Triple validation",
+            "Obligatoire",
+            "✔️"
+          ]
+        ],
+        "n_rows": 7
+      },
+      {
+        "table_index": 4,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "GOV"
+          ],
+          [
+            "Institution",
+            "MFFP Québec"
+          ],
+          [
+            "Région",
+            "Québec"
+          ],
+          [
+            "Année",
+            "2023"
+          ],
+          [
+            "Titre",
+            "Plan de gestion du cerf de Virginie 2020–2027"
+          ],
+          [
+            "Auteurs",
+            "Gouvernement du Québec"
+          ],
+          [
+            "DOI/URL",
+            "https://mffp.gouv.qc.ca (mffp.gouv.qc.ca in Bing)"
+          ],
+          [
+            "Type",
+            "Rapport de gestion"
+          ],
+          [
+            "Méthodologie",
+            "Inventaires aériens, analyses d’habitat"
+          ],
+          [
+            "Données",
+            "Densité, mortalité, ravages"
+          ],
+          [
+            "Résultats",
+            "Pression de chasse, tendances régionales"
+          ],
+          [
+            "Limites",
+            "Variabilité régionale"
+          ],
+          [
+            "Validation1",
+            "✔ Source officielle"
+          ],
+          [
+            "Validation2",
+            "✔ Méthodologie scientifique"
+          ],
+          [
+            "Validation3",
+            "✔ Conformité BCE4X"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 5,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "GOV"
+          ],
+          [
+            "Institution",
+            "Ontario Ministry of Natural Resources and Forestry"
+          ],
+          [
+            "Région",
+            "Ontario"
+          ],
+          [
+            "Année",
+            "2022"
+          ],
+          [
+            "Titre",
+            "WhiteTailed Deer Population and Harvest Summary"
+          ],
+          [
+            "Auteurs",
+            "MNRF"
+          ],
+          [
+            "DOI/URL",
+            "https://www.ontario.ca/page/ministry-natural-resources-and-forestry (ontario.ca in Bing)"
+          ],
+          [
+            "Type",
+            "Rapport gouvernemental"
+          ],
+          [
+            "Méthodologie",
+            "Inventaires, télémétrie"
+          ],
+          [
+            "Données",
+            "Densité, mortalité, succès de chasse"
+          ],
+          [
+            "Résultats",
+            "Expansion vers le nord"
+          ],
+          [
+            "Limites",
+            "Données manquantes dans zones agricoles"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 6,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "GOV"
+          ],
+          [
+            "Institution",
+            "Maine Department of Inland Fisheries & Wildlife"
+          ],
+          [
+            "Région",
+            "Maine"
+          ],
+          [
+            "Année",
+            "2021"
+          ],
+          [
+            "Titre",
+            "Maine WhiteTailed Deer Assessment"
+          ],
+          [
+            "Auteurs",
+            "Maine IFW"
+          ],
+          [
+            "DOI/URL",
+            "https://www.maine.gov/ifw"
+          ],
+          [
+            "Type",
+            "Rapport populationnel"
+          ],
+          [
+            "Méthodologie",
+            "Inventaires, séries temporelles"
+          ],
+          [
+            "Données",
+            "Tendances 2000–2020"
+          ],
+          [
+            "Résultats",
+            "Croissance dans zones côtières"
+          ],
+          [
+            "Limites",
+            "Variabilité climatique"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 7,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "UNI"
+          ],
+          [
+            "Institution",
+            "PLOS One"
+          ],
+          [
+            "Région",
+            "USA / Midwest"
+          ],
+          [
+            "Année",
+            "2025"
+          ],
+          [
+            "Titre",
+            "Dispersal dynamics of whitetailed deer in humanaltered landscapes and implications for disease risk"
+          ],
+          [
+            "Auteurs",
+            "LaSharr et al."
+          ],
+          [
+            "DOI/URL",
+            "https://doi.org/10.1371/journal.pone.0325656"
+          ],
+          [
+            "Type",
+            "Article scientifique"
+          ],
+          [
+            "Méthodologie",
+            "GPS, modèles de dispersion"
+          ],
+          [
+            "Données",
+            "Déplacements, corridors, risques CWD"
+          ],
+          [
+            "Résultats",
+            "Corridors anthropiques = vecteurs de dispersion"
+          ],
+          [
+            "Limites",
+            "Données centrées sur une région"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 8,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "UNI"
+          ],
+          [
+            "Institution",
+            "Springer Nature"
+          ],
+          [
+            "Région",
+            "USA"
+          ],
+          [
+            "Année",
+            "2023"
+          ],
+          [
+            "Titre",
+            "WhiteTailed Deer (chapitre scientifique)"
+          ],
+          [
+            "Auteurs",
+            "Fulbright"
+          ],
+          [
+            "DOI/URL",
+            "https://link.springer.com"
+          ],
+          [
+            "Type",
+            "Chapitre scientifique"
+          ],
+          [
+            "Méthodologie",
+            "Synthèse scientifique"
+          ],
+          [
+            "Données",
+            "Habitat, nutrition, comportement"
+          ],
+          [
+            "Résultats",
+            "Forte plasticité écologique"
+          ],
+          [
+            "Limites",
+            "Synthèse, pas de données brutes"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 9,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "UNI"
+          ],
+          [
+            "Institution",
+            "Wiley Online Library"
+          ],
+          [
+            "Région",
+            "USA"
+          ],
+          [
+            "Année",
+            "2024"
+          ],
+          [
+            "Titre",
+            "Development of highthroughput genomic resources to inform whitetailed deer management"
+          ],
+          [
+            "Auteurs",
+            "Consortium génomique"
+          ],
+          [
+            "DOI/URL",
+            "https://onlinelibrary.wiley.com (onlinelibrary.wiley.com in Bing)"
+          ],
+          [
+            "Type",
+            "Article scientifique"
+          ],
+          [
+            "Méthodologie",
+            "Génomique, analyses génétiques"
+          ],
+          [
+            "Données",
+            "Variabilité génétique, structure populationnelle"
+          ],
+          [
+            "Résultats",
+            "Outils génétiques pour gestion CWD"
+          ],
+          [
+            "Limites",
+            "Données centrées sur USA"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 10,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "PR"
+          ],
+          [
+            "Institution",
+            "National Deer Association"
+          ],
+          [
+            "Région",
+            "USA / Est"
+          ],
+          [
+            "Année",
+            "2024"
+          ],
+          [
+            "Titre",
+            "Annual Deer Report"
+          ],
+          [
+            "Auteurs",
+            "NDA"
+          ],
+          [
+            "DOI/URL",
+            "https://deerassociation.com"
+          ],
+          [
+            "Type",
+            "Rapport professionnel validé"
+          ],
+          [
+            "Méthodologie",
+            "Données terrain, séries temporelles"
+          ],
+          [
+            "Données",
+            "Densité, habitat, mortalité"
+          ],
+          [
+            "Résultats",
+            "Expansion nordique, pression humaine"
+          ],
+          [
+            "Limites",
+            "Données USA seulement"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      }
+    ]
+  }
+}

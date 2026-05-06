@@ -1,0 +1,73 @@
+{
+  "species": "orignal",
+  "ordre": "N°54-Ω-VAGUE-1",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "ingested_at_utc": "2026-05-06T19:38:09+00:00",
+  "docx_source": "/app/backend/data/docs/science/orignal.docx",
+  "docx_sha256": "bdd3718fe8694d7572536daad10fe74b5104fa4b5bfb461ed6e6a2df1840c12a",
+  "validation_BCE_4X": {
+    "sources_categories_required": [
+      "GOV",
+      "UNI",
+      "PR"
+    ],
+    "n_paragraphs_per_section": {
+      "GOV": 63,
+      "UNI": 45,
+      "PR": 34
+    },
+    "all_categories_present": true
+  },
+  "n_dois_extracted": 3,
+  "dois": [
+    "10.1139/cjfr-2020-XXXX",
+    "10.1002/ece3.10909",
+    "10.3389/fevo.2021.758374"
+  ],
+  "tables_summary": {
+    "n_tables_total": 10,
+    "n_gov": 0,
+    "n_uni": 0,
+    "n_pr": 1,
+    "n_fiche_ligne": 6,
+    "n_autres": 3
+  },
+  "tables_GOV": [],
+  "tables_UNI": [],
+  "tables_PR": [
+    {
+      "table_index": 2,
+      "header": [
+        "Organisation",
+        "Type de données",
+        "Portée",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "rows": [
+        [
+          "Programmes provinciaux de télémétrie",
+          "Colliers GPS orignal",
+          "Corridors, utilisation de l’habitat",
+          "2004–2024",
+          "Programme, zone, URL / contact"
+        ],
+        [
+          "Coopératives fauniques / projets universitaires",
+          "Relevés terrain, mortalité, condition corporelle",
+          "Hiver, ravages, maladies",
+          "2004–2024",
+          "Projet, institution, rapport, URL"
+        ],
+        [
+          "RMEF / partenaires régionaux",
+          "Analyses habitat / corridors (orignal & wapiti)",
+          "Connectivité, fragmentation",
+          "2004–2024",
+          "Rapport, année, URL"
+        ]
+      ],
+      "n_rows": 3
+    }
+  ]
+}

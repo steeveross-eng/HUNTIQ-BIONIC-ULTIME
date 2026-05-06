@@ -1,0 +1,13 @@
+{
+  "species": "dindon",
+  "ordre": "N°54-Ω-VAGUE-1",
+  "docx_source_sha256": "a55ec682cbd1b5df44e96652997ad808965deb541afce608489d6d56ffa97716",
+  "registry_files_sha256": {
+    "paragraphs.json": "45d25f8dc8fcb27a3b73d7709f57baf0b5d8a75db9ad9b0ba2b8393cf54a470f",
+    "sections.json": "d3056c8e50866a9a4f4bd5cc5c8cacba21dae5afa427098f781cda7b55d23878",
+    "dois.json": "3f5fd85692d622d07e325cb5364739781d6df0848ce3876d3957ff5087618f45",
+    "master_tables.json": "cc335a9dff0024f286f58f0c4481fea91ed2f6c4dcea6e68ce05cb463fcf2e2d",
+    "master_table_consolidated.json": "38f7d23dcec5218c9aa7682ffb7344da4ecd33905699c4863e99ed907d8516b9"
+  },
+  "computed_at_utc": "2026-05-06T19:38:09+00:00"
+}

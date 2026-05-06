@@ -1,0 +1,825 @@
+{
+  "species": "wapiti",
+  "ordre": "N°54-Ω-VAGUE-1",
+  "summary": {
+    "n_tables_total": 8,
+    "n_gov": 0,
+    "n_uni": 0,
+    "n_pr": 0,
+    "n_fiche_ligne": 7,
+    "n_autres": 1
+  },
+  "master_tables": {
+    "n_tables_total": 8,
+    "n_gov": 0,
+    "n_uni": 0,
+    "n_pr": 0,
+    "n_fiche_ligne": 7,
+    "n_autres": 1,
+    "by_category": {
+      "GOV": [],
+      "UNI": [],
+      "PR": [],
+      "FICHE_LIGNE": [
+        {
+          "table_index": 0,
+          "fiche_data": {
+            "Catégorie": "GOV",
+            "Institution": "Parcs Canada",
+            "Région": "Alberta / ColombieBritannique",
+            "Année": "2022",
+            "Titre": "Elk Population Monitoring Report — Mountain National Parks",
+            "Auteurs": "Parcs Canada",
+            "DOI/URL": "https://parks.canada.ca",
+            "Type": "Rapport populationnel",
+            "Méthodologie": "Inventaires aériens, télémétrie",
+            "Données": "Densité, mortalité, utilisation habitat",
+            "Résultats": "Stabilité globale, variations locales",
+            "Limites": "Conditions météo, zones inaccessibles",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 1,
+          "fiche_data": {
+            "Catégorie": "GOV",
+            "Institution": "Alberta Environment & Parks",
+            "Région": "Alberta",
+            "Année": "2021",
+            "Titre": "Elk Management and Harvest Summary",
+            "Auteurs": "Gouvernement de l’Alberta",
+            "DOI/URL": "https://www.alberta.ca",
+            "Type": "Rapport de gestion",
+            "Méthodologie": "Inventaires, séries temporelles",
+            "Données": "Densité, quotas, mortalité",
+            "Résultats": "Croissance dans zones agricoles",
+            "Limites": "Variabilité régionale",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 2,
+          "fiche_data": {
+            "Catégorie": "GOV",
+            "Institution": "Kentucky Department of Fish & Wildlife Resources",
+            "Région": "Kentucky",
+            "Année": "2020",
+            "Titre": "Elk Restoration and Population Status Report",
+            "Auteurs": "KDFWR",
+            "DOI/URL": "https://fw.ky.gov",
+            "Type": "Rapport populationnel",
+            "Méthodologie": "GPS, inventaires",
+            "Données": "Tendances 2000–2020",
+            "Résultats": "Expansion rapide postréintroduction",
+            "Limites": "Données limitées hors zones restaurées",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 3,
+          "fiche_data": {
+            "Catégorie": "UNI",
+            "Institution": "Journal of Wildlife Management",
+            "Région": "USA",
+            "Année": "2016",
+            "Titre": "Elk resource selection and migration in a changing landscape",
+            "Auteurs": "Proffitt et al.",
+            "DOI/URL": "https://doi.org/10.1002/jwmg.1030",
+            "Type": "Article scientifique",
+            "Méthodologie": "RSF, GPS",
+            "Données": "Sélection habitat, corridors",
+            "Résultats": "Corridors migratoires stables",
+            "Limites": "Zone d’étude restreinte",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 4,
+          "fiche_data": {
+            "Catégorie": "UNI",
+            "Institution": "Ecological Applications",
+            "Région": "USA",
+            "Année": "2019",
+            "Titre": "Elk responses to human disturbance across multiple spatial scales",
+            "Auteurs": "Montgomery et al.",
+            "DOI/URL": "https://doi.org/10.1002/eap.1923",
+            "Type": "Article scientifique",
+            "Méthodologie": "GPS, analyses multiéchelles",
+            "Données": "Déplacements, perturbation humaine",
+            "Résultats": "Évitement routes, fragmentation",
+            "Limites": "Données centrées sur une région",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 5,
+          "fiche_data": {
+            "Catégorie": "UNI",
+            "Institution": "Journal of Wildlife Diseases",
+            "Région": "Amérique du Nord",
+            "Année": "2016",
+            "Titre": "The epidemiology of chronic wasting disease in North America",
+            "Auteurs": "Miller & Fischer",
+            "DOI/URL": "https://doi.org/10.7589/201507178 (doi.org in Bing)",
+            "Type": "Article scientifique",
+            "Méthodologie": "Analyses épidémiologiques",
+            "Données": "CWD, transmission cervidés",
+            "Résultats": "Risque élevé pour wapiti",
+            "Limites": "Données multiespèces",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 6,
+          "fiche_data": {
+            "Catégorie": "PR",
+            "Institution": "Rocky Mountain Elk Foundation (RMEF)",
+            "Région": "USA / Ouest",
+            "Année": "2024",
+            "Titre": "Elk Habitat and Migration Corridor Analysis",
+            "Auteurs": "RMEF",
+            "DOI/URL": "https://www.rmef.org",
+            "Type": "Rapport professionnel validé",
+            "Méthodologie": "GPS, SIG, analyses habitat",
+            "Données": "Corridors, fragmentation",
+            "Résultats": "Importance connectivité",
+            "Limites": "Données USA seulement",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        }
+      ],
+      "AUTRES": [
+        {
+          "table_index": 7,
+          "header": [
+            "Catégorie",
+            "Exigence",
+            "Statut attendu"
+          ],
+          "rows": [
+            [
+              "GOV",
+              "Couverture complète 2004–2024",
+              "À compléter"
+            ],
+            [
+              "UNI",
+              "Liste exhaustive avec DOI",
+              "À compléter"
+            ],
+            [
+              "PR",
+              "Programmes validés uniquement",
+              "À compléter"
+            ]
+          ],
+          "n_rows": 3
+        }
+      ]
+    },
+    "raw_tables": [
+      {
+        "table_index": 0,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "GOV"
+          ],
+          [
+            "Institution",
+            "Parcs Canada"
+          ],
+          [
+            "Région",
+            "Alberta / ColombieBritannique"
+          ],
+          [
+            "Année",
+            "2022"
+          ],
+          [
+            "Titre",
+            "Elk Population Monitoring Report — Mountain National Parks"
+          ],
+          [
+            "Auteurs",
+            "Parcs Canada"
+          ],
+          [
+            "DOI/URL",
+            "https://parks.canada.ca"
+          ],
+          [
+            "Type",
+            "Rapport populationnel"
+          ],
+          [
+            "Méthodologie",
+            "Inventaires aériens, télémétrie"
+          ],
+          [
+            "Données",
+            "Densité, mortalité, utilisation habitat"
+          ],
+          [
+            "Résultats",
+            "Stabilité globale, variations locales"
+          ],
+          [
+            "Limites",
+            "Conditions météo, zones inaccessibles"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 1,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "GOV"
+          ],
+          [
+            "Institution",
+            "Alberta Environment & Parks"
+          ],
+          [
+            "Région",
+            "Alberta"
+          ],
+          [
+            "Année",
+            "2021"
+          ],
+          [
+            "Titre",
+            "Elk Management and Harvest Summary"
+          ],
+          [
+            "Auteurs",
+            "Gouvernement de l’Alberta"
+          ],
+          [
+            "DOI/URL",
+            "https://www.alberta.ca"
+          ],
+          [
+            "Type",
+            "Rapport de gestion"
+          ],
+          [
+            "Méthodologie",
+            "Inventaires, séries temporelles"
+          ],
+          [
+            "Données",
+            "Densité, quotas, mortalité"
+          ],
+          [
+            "Résultats",
+            "Croissance dans zones agricoles"
+          ],
+          [
+            "Limites",
+            "Variabilité régionale"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 2,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "GOV"
+          ],
+          [
+            "Institution",
+            "Kentucky Department of Fish & Wildlife Resources"
+          ],
+          [
+            "Région",
+            "Kentucky"
+          ],
+          [
+            "Année",
+            "2020"
+          ],
+          [
+            "Titre",
+            "Elk Restoration and Population Status Report"
+          ],
+          [
+            "Auteurs",
+            "KDFWR"
+          ],
+          [
+            "DOI/URL",
+            "https://fw.ky.gov"
+          ],
+          [
+            "Type",
+            "Rapport populationnel"
+          ],
+          [
+            "Méthodologie",
+            "GPS, inventaires"
+          ],
+          [
+            "Données",
+            "Tendances 2000–2020"
+          ],
+          [
+            "Résultats",
+            "Expansion rapide postréintroduction"
+          ],
+          [
+            "Limites",
+            "Données limitées hors zones restaurées"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 3,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "UNI"
+          ],
+          [
+            "Institution",
+            "Journal of Wildlife Management"
+          ],
+          [
+            "Région",
+            "USA"
+          ],
+          [
+            "Année",
+            "2016"
+          ],
+          [
+            "Titre",
+            "Elk resource selection and migration in a changing landscape"
+          ],
+          [
+            "Auteurs",
+            "Proffitt et al."
+          ],
+          [
+            "DOI/URL",
+            "https://doi.org/10.1002/jwmg.1030"
+          ],
+          [
+            "Type",
+            "Article scientifique"
+          ],
+          [
+            "Méthodologie",
+            "RSF, GPS"
+          ],
+          [
+            "Données",
+            "Sélection habitat, corridors"
+          ],
+          [
+            "Résultats",
+            "Corridors migratoires stables"
+          ],
+          [
+            "Limites",
+            "Zone d’étude restreinte"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 4,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "UNI"
+          ],
+          [
+            "Institution",
+            "Ecological Applications"
+          ],
+          [
+            "Région",
+            "USA"
+          ],
+          [
+            "Année",
+            "2019"
+          ],
+          [
+            "Titre",
+            "Elk responses to human disturbance across multiple spatial scales"
+          ],
+          [
+            "Auteurs",
+            "Montgomery et al."
+          ],
+          [
+            "DOI/URL",
+            "https://doi.org/10.1002/eap.1923"
+          ],
+          [
+            "Type",
+            "Article scientifique"
+          ],
+          [
+            "Méthodologie",
+            "GPS, analyses multiéchelles"
+          ],
+          [
+            "Données",
+            "Déplacements, perturbation humaine"
+          ],
+          [
+            "Résultats",
+            "Évitement routes, fragmentation"
+          ],
+          [
+            "Limites",
+            "Données centrées sur une région"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 5,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "UNI"
+          ],
+          [
+            "Institution",
+            "Journal of Wildlife Diseases"
+          ],
+          [
+            "Région",
+            "Amérique du Nord"
+          ],
+          [
+            "Année",
+            "2016"
+          ],
+          [
+            "Titre",
+            "The epidemiology of chronic wasting disease in North America"
+          ],
+          [
+            "Auteurs",
+            "Miller & Fischer"
+          ],
+          [
+            "DOI/URL",
+            "https://doi.org/10.7589/201507178 (doi.org in Bing)"
+          ],
+          [
+            "Type",
+            "Article scientifique"
+          ],
+          [
+            "Méthodologie",
+            "Analyses épidémiologiques"
+          ],
+          [
+            "Données",
+            "CWD, transmission cervidés"
+          ],
+          [
+            "Résultats",
+            "Risque élevé pour wapiti"
+          ],
+          [
+            "Limites",
+            "Données multiespèces"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 6,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "PR"
+          ],
+          [
+            "Institution",
+            "Rocky Mountain Elk Foundation (RMEF)"
+          ],
+          [
+            "Région",
+            "USA / Ouest"
+          ],
+          [
+            "Année",
+            "2024"
+          ],
+          [
+            "Titre",
+            "Elk Habitat and Migration Corridor Analysis"
+          ],
+          [
+            "Auteurs",
+            "RMEF"
+          ],
+          [
+            "DOI/URL",
+            "https://www.rmef.org"
+          ],
+          [
+            "Type",
+            "Rapport professionnel validé"
+          ],
+          [
+            "Méthodologie",
+            "GPS, SIG, analyses habitat"
+          ],
+          [
+            "Données",
+            "Corridors, fragmentation"
+          ],
+          [
+            "Résultats",
+            "Importance connectivité"
+          ],
+          [
+            "Limites",
+            "Données USA seulement"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 7,
+        "header": [
+          "Catégorie",
+          "Exigence",
+          "Statut attendu"
+        ],
+        "rows": [
+          [
+            "GOV",
+            "Couverture complète 2004–2024",
+            "À compléter"
+          ],
+          [
+            "UNI",
+            "Liste exhaustive avec DOI",
+            "À compléter"
+          ],
+          [
+            "PR",
+            "Programmes validés uniquement",
+            "À compléter"
+          ]
+        ],
+        "n_rows": 3
+      }
+    ]
+  }
+}

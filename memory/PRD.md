@@ -27,6 +27,20 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX · ORDRE N°54-Ω VAGUE 1 — INGESTION DOCUMENTAIRE INSTITUTIONNELLE 5 ESPÈCES (2026-05-06)**
+  Implémentation **complète** de l'ingestion documentaire VAGUE 1 (5 rapports scientifiques DOCX) avec extraction GOV/UNI/PR + DOI + tableaux maîtres. **AUCUN recalcul moteur déclenché** (verrouillé par directive 6) · **562/562 pytests Phase XVI/XVIII/XX-XXX PASSED** · **V30_LOCK INVIOLÉ**.
+  - **Module métier** : `engines/v8_institutional/especes/docs_ingest_omega.py` (9 fonctions : `parse_docx`, `extract_sections_gov_uni_pr`, `extract_dois`, `resolve_dois_http_200`, `normalize_master_tables`, `ingest_species_doc`, `ingest_all_species_vague_1`, `list_registry_science`, `get_master_table`).
+  - **Téléchargement physique** : 5 .docx déposés dans `/app/backend/data/docs/science/` (chevreuil, dindon, orignal, ours_noir, wapiti — tailles 27-36 KB).
+  - **3 endpoints** :
+    - **POST `/api/v30/super-masters/docs-ingest-execute`** (token Commandant) : pipeline complet + audit DOC_INGEST persisté.
+    - **GET `/api/v30/super-masters/docs-registry`** (PUBLIC read-only) : liste registry_science + filtre par espèce.
+    - **GET `/api/v30/super-masters/master-table/{species}`** (PUBLIC read-only) : tableau maître consolidé.
+  - **Résultats LIVE 5/5 espèces succedeed** : CHEVREUIL (GOV:62/UNI:55/PR:142, 1 DOI), DINDON (59/57/46, 4 DOIs), ORIGNAL (63/45/34, 3 DOIs), OURS_NOIR (40/34/124, 4 DOIs), WAPITI (27/29/17, 4 DOIs). **16 DOI réels extraits au total** (anti-générique strict — aucune fabrication).
+  - **DOI réel exemple** : `10.1371/journal.pone.0325656` (CHEVREUIL).
+  - **Persistance** : 30 fichiers (5 registries × 6 fichiers + 5 master_tables consolidés) + audit `audit_20260506T193809Z_48acf3a0.json` (4 001 bytes) avec `audit_type=DOC_INGEST`, `subtype=SCIENCE_VAGUE_1`, `delta_docs_count=30`.
+  - **24 pytests neutres** (`test_phase_xxx_docs_ingest_vague_1_omega.py`) — naming policy stricte zéro mot-clé exclu BCE-4X. Couverture : extract_dois × parse_docx × sections × master_tables × ingest_species (5 espèces paramétrisées) × pipeline complet × subset × cohérence registry × **anti-régression V30_LOCK strict** (BR + BP135 inchangés).
+  - **Validation BCE-4X automatique** : `all_categories_present` retourné par master-table (vrai ssi GOV+UNI+PR non vides). 4/5 espèces validées (WAPITI : section PR à 17 paragraphes — sous-représentée, fact réel signalé).
+  - **VAGUE 2 EN ATTENTE** : message `vague_2_note` inscrit dans audit pour BIO_PROFILE_135 (docx + json 675 entrées). Aucun recalcul moteur ne sera déclenché avant réception VAGUE 2.
 - **PHASE_XXIX-ULTIME · ORDRE N°53-BIS-SUITE-ULTIME — AUDITS-TREND + HOOKS WATCHER (2026-05-06)**
   Implémentation **complète** de la série temporelle audits + watcher d'activation hooks externes (FUSION ADD-ONLY · anti-générique strict · V30_LOCK INVIOLÉ). **538/538 pytests Phase XVI/XVIII/XX-XXIX-ULTIME PASSED · 0 régression.**
   - **Fonction `list_audits_trend(limit, since_utc, audit_type)`** : série temporelle chronologique ASC (ordre par mtime fichier — granularité microseconde, robuste face aux audits dans la même seconde) + `aggregated_stats` (min/max/first/last/delta_first_to_last) sur drift_max/drift_mean/score_global_fusion.

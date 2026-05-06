@@ -1,0 +1,13 @@
+{
+  "species": "chevreuil",
+  "ordre": "N°54-Ω-VAGUE-1",
+  "docx_source_sha256": "df0f229125f47912dd96acce5c2cf9fb0dc79f8ea53afd519e7afda6343ee211",
+  "registry_files_sha256": {
+    "paragraphs.json": "f753b85ef1c73c7c8f3245512f00de549561fa6332900d27d80affd63f4b9730",
+    "sections.json": "73eb30e063bb092298c3e4f61c8a31f4f2d1a77a117f2a72c098818057f33ffb",
+    "dois.json": "b0548957a4e4abbd1fa4695bfc45fefe2996363b87fb6053475ab8dd44fc5906",
+    "master_tables.json": "e92307a2fce65ce4ca38a68534fd0d1136e97ede91ef75769449a7e9450d612c",
+    "master_table_consolidated.json": "ddbcaee4eacfbd97835710190799c898619997737713d6584e6b3ffa0b75f759"
+  },
+  "computed_at_utc": "2026-05-06T19:38:09+00:00"
+}

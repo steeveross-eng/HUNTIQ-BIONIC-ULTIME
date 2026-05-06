@@ -1,0 +1,13 @@
+{
+  "species": "wapiti",
+  "ordre": "N°54-Ω-VAGUE-1",
+  "docx_source_sha256": "27d20a8b29d47c214a0a3a107c0b3c9224d6888889268d0749cbc39d8c337c50",
+  "registry_files_sha256": {
+    "paragraphs.json": "dbdca12117f832382d90d08654fce6f8446181d60fde2ab690c993faf4035dc2",
+    "sections.json": "859d3bf2124b2e08eb366d1a669f14b85a2fdbe144800fd9c0c1be91b9246169",
+    "dois.json": "0fa7e70a6c40bf757c3d96e98c0d18189f90ffc78283da9100310b674b32df94",
+    "master_tables.json": "b99294a1fb929a7df5c65787ee24aa873af953fba8120853116bf1951c96127b",
+    "master_table_consolidated.json": "b49c438460df943d7b78a6d71607a883f48d61971cf6ab652fc05b0ca662dce9"
+  },
+  "computed_at_utc": "2026-05-06T19:38:09+00:00"
+}

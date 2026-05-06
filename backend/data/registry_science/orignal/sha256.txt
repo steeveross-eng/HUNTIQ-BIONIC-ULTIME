@@ -1,0 +1,13 @@
+{
+  "species": "orignal",
+  "ordre": "N°54-Ω-VAGUE-1",
+  "docx_source_sha256": "bdd3718fe8694d7572536daad10fe74b5104fa4b5bfb461ed6e6a2df1840c12a",
+  "registry_files_sha256": {
+    "paragraphs.json": "663ea8f8dc3597d51693630e4cc1dc23ede295bd13fba14e8ed2a63050ec1bb5",
+    "sections.json": "0a72bd3eb405b518634bba9c657355dea4a3c2546ff857475466d95e36f561c9",
+    "dois.json": "3b593bf0137fc8121525c722e267a52627b03c317e86242006b586cf6c241c8b",
+    "master_tables.json": "a150d919f0e763dc4c45c345235ee50f4bc6fbffd0ed1a4fd7e4e50e40c42d58",
+    "master_table_consolidated.json": "33859d253a1c34d16c509915d2b7e70e161fd85730c58c29089eddf2e538c5b7"
+  },
+  "computed_at_utc": "2026-05-06T19:38:09+00:00"
+}

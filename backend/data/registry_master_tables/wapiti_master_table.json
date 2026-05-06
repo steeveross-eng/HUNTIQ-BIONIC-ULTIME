@@ -1,0 +1,39 @@
+{
+  "species": "wapiti",
+  "ordre": "N°54-Ω-VAGUE-1",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "ingested_at_utc": "2026-05-06T19:38:09+00:00",
+  "docx_source": "/app/backend/data/docs/science/wapiti.docx",
+  "docx_sha256": "27d20a8b29d47c214a0a3a107c0b3c9224d6888889268d0749cbc39d8c337c50",
+  "validation_BCE_4X": {
+    "sources_categories_required": [
+      "GOV",
+      "UNI",
+      "PR"
+    ],
+    "n_paragraphs_per_section": {
+      "GOV": 27,
+      "UNI": 29,
+      "PR": 17
+    },
+    "all_categories_present": true
+  },
+  "n_dois_extracted": 4,
+  "dois": [
+    "10.1111/j.13652664.2010.01856.x",
+    "10.1002/jwmg.1030",
+    "10.1002/eap.1923",
+    "10.7589/201507178"
+  ],
+  "tables_summary": {
+    "n_tables_total": 8,
+    "n_gov": 0,
+    "n_uni": 0,
+    "n_pr": 0,
+    "n_fiche_ligne": 7,
+    "n_autres": 1
+  },
+  "tables_GOV": [],
+  "tables_UNI": [],
+  "tables_PR": []
+}

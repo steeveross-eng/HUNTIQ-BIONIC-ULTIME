@@ -442,3 +442,134 @@ async def hooks_watcher_execute_endpoint(
         "result": payload,
         "v30_lock": "INVIOLÉ",
     })
+
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°54-Ω VAGUE 1 — INGESTION DOCUMENTAIRE INSTITUTIONNELLE
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/docs-ingest-execute")
+async def docs_ingest_execute_endpoint(
+    species_subset: Optional[str] = None,
+    resolve_dois: bool = False,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """ORDRE N°54-Ω VAGUE 1 · Ingestion documentaire institutionnelle.
+
+    Pipeline :
+      1. Lecture .docx (paragraphes + tables)
+      2. Extraction sections GOV / UNI / PR
+      3. Extraction DOI (anti-générique strict)
+      4. Normalisation tableaux maîtres
+      5. Persistance registry_science/<espece>/ +
+         registry_master_tables/<espece>_master_table.json
+      6. Audit DOC_INGEST/SCIENCE_VAGUE_1 persisté
+
+    AUCUN recalcul moteur. Token Commandant requis.
+
+    Args:
+      species_subset: CSV des espèces à ingérer (default = all 5).
+      resolve_dois:   True → vérification HTTP 200 des DOI extraites.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.docs_ingest_omega import (
+        ingest_all_species_vague_1, ESPECES_VAGUE_1,
+    )
+    subset = None
+    if species_subset:
+        subset = [
+            s.strip().lower() for s in species_subset.split(",")
+            if s.strip()]
+        invalid = [s for s in subset if s not in ESPECES_VAGUE_1]
+        if invalid:
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    f"Espèces invalides : {invalid}. "
+                    f"Valides : {ESPECES_VAGUE_1}"))
+    try:
+        payload = ingest_all_species_vague_1(
+            species_subset=subset,
+            resolve_dois=resolve_dois,
+        )
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "DOC_INGEST_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "DOC_INGEST_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°54-Ω-VAGUE-1",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/docs-registry")
+async def docs_registry_endpoint(
+    species: Optional[str] = None,
+) -> JSONResponse:
+    """ORDRE N°54-Ω VAGUE 1 · Liste registry documentaire (PUBLIC read-only).
+
+    Strictement dérivée des fichiers persistés. Aucune mutation.
+    """
+    from engines.v8_institutional.especes.docs_ingest_omega import (
+        list_registry_science,
+    )
+    try:
+        payload = list_registry_science(species=species)
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "DOCS_REGISTRY_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "DOCS_REGISTRY_LIST_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°54-Ω-VAGUE-1",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/master-table/{species_code}")
+async def master_table_endpoint(
+    species_code: str,
+) -> JSONResponse:
+    """ORDRE N°54-Ω VAGUE 1 · Tableau maître consolidé (PUBLIC read-only)."""
+    from engines.v8_institutional.especes.docs_ingest_omega import (
+        get_master_table,
+    )
+    try:
+        payload = get_master_table(species_code)
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "MASTER_TABLE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "MASTER_TABLE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°54-Ω-VAGUE-1",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })

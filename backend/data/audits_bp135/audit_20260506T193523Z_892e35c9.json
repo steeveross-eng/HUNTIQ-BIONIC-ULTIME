@@ -1,0 +1,71 @@
+{
+  "audit_filename": "audit_20260506T193523Z_892e35c9.json",
+  "audit_sha256": "892e35c93c9ee07ed6fe7bf65d21a4562a9357bc31a76e0d76fafe6ce00c4a0f",
+  "persisted_at_utc": "2026-05-06T19:35:23+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "DOC_INGEST",
+    "subtype": "SCIENCE_VAGUE_1",
+    "ordre": "N°54-Ω-VAGUE-1",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "species": [
+      "CHEVREUIL",
+      "DINDON",
+      "ORIGNAL",
+      "OURS_NOIR",
+      "WAPITI"
+    ],
+    "n_species_processed": 5,
+    "n_species_failed": 0,
+    "failed_details": [],
+    "sha256_docs": {
+      "chevreuil": "df0f229125f47912dd96acce5c2cf9fb0dc79f8ea53afd519e7afda6343ee211",
+      "dindon": "a55ec682cbd1b5df44e96652997ad808965deb541afce608489d6d56ffa97716",
+      "orignal": "bdd3718fe8694d7572536daad10fe74b5104fa4b5bfb461ed6e6a2df1840c12a",
+      "ours_noir": "53c915ded57bfbc074bc64cbd1dbafc58f273f63eb2df93aa4fb72dfc55a04fd",
+      "wapiti": "27d20a8b29d47c214a0a3a107c0b3c9224d6888889268d0749cbc39d8c337c50"
+    },
+    "sha256_registry_files": {
+      "chevreuil": {
+        "paragraphs.json": "2908909ebc0e49bd39b35ac325d1ead0af5cb9b80c4d1b3c07ffdc72a19926e4",
+        "sections.json": "73eb30e063bb092298c3e4f61c8a31f4f2d1a77a117f2a72c098818057f33ffb",
+        "dois.json": "b0548957a4e4abbd1fa4695bfc45fefe2996363b87fb6053475ab8dd44fc5906",
+        "master_tables.json": "e92307a2fce65ce4ca38a68534fd0d1136e97ede91ef75769449a7e9450d612c",
+        "master_table_consolidated.json": "ae94100b0917a8f81dd1292abd45ad6bd73268e346ee6599ae867cf8d8ce3c6c"
+      },
+      "dindon": {
+        "paragraphs.json": "097128aa5550bd787b3c27dcd62dbfba6235de4c743ad10153b0f9693ad5b5c8",
+        "sections.json": "d3056c8e50866a9a4f4bd5cc5c8cacba21dae5afa427098f781cda7b55d23878",
+        "dois.json": "3f5fd85692d622d07e325cb5364739781d6df0848ce3876d3957ff5087618f45",
+        "master_tables.json": "cc335a9dff0024f286f58f0c4481fea91ed2f6c4dcea6e68ce05cb463fcf2e2d",
+        "master_table_consolidated.json": "58232bb78f11c56031cf9e403b4202ada46584aab09c5802958f85b77899b3e8"
+      },
+      "orignal": {
+        "paragraphs.json": "287c519e1a150d17131d368a3223c8f7fd7277113974fb6c6ebcf07258f66e1a",
+        "sections.json": "0a72bd3eb405b518634bba9c657355dea4a3c2546ff857475466d95e36f561c9",
+        "dois.json": "3b593bf0137fc8121525c722e267a52627b03c317e86242006b586cf6c241c8b",
+        "master_tables.json": "a150d919f0e763dc4c45c345235ee50f4bc6fbffd0ed1a4fd7e4e50e40c42d58",
+        "master_table_consolidated.json": "bed433ad4dd916e90cb6a3216b4ba3f40242c9ef54a2dee2aad6fd42c19811f5"
+      },
+      "ours_noir": {
+        "paragraphs.json": "f28365c7dec1984a3efadb13625c22610b23ddd870eb8e4f6807e7e6ec5f29e6",
+        "sections.json": "fa2590a91cc8aa1b12f392fdd5a3ae9a160c6839fd6d57e8e3d52820ac3e67ee",
+        "dois.json": "5a52ee7c511a3fb4745c35a21745a19d1d790927e94f023afd436ee64904aa00",
+        "master_tables.json": "83df87626fac89e8b540b5ee95f01a24a5f9559b59fe8838e22c2e24f41dffdf",
+        "master_table_consolidated.json": "df0fc8e354fbb1ea259898b80be2032816d13c247d8a144834a88a2a8f7aa9a4"
+      },
+      "wapiti": {
+        "paragraphs.json": "516e700d60bd379b1d774529e66d4e1726922f31c9216d5191dbcb5168ad4c3c",
+        "sections.json": "859d3bf2124b2e08eb366d1a669f14b85a2fdbe144800fd9c0c1be91b9246169",
+        "dois.json": "0fa7e70a6c40bf757c3d96e98c0d18189f90ffc78283da9100310b674b32df94",
+        "master_tables.json": "b99294a1fb929a7df5c65787ee24aa873af953fba8120853116bf1951c96127b",
+        "master_table_consolidated.json": "dabe0bc5c384389518232af641c00f69b19cce2e1133ba67989bc914675de5f9"
+      }
+    },
+    "delta_docs_count": 30,
+    "no_engine_recompute_triggered": true,
+    "vague_2_pending": true,
+    "vague_2_note": "BIO_PROFILE_135 (docx + json 675 entrées) sera transmis dans une VAGUE 2 distincte. Aucun recalcul moteur ne doit être déclenché avant réception VAGUE 2."
+  }
+}

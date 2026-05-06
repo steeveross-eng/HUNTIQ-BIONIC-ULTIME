@@ -1,0 +1,1238 @@
+{
+  "species": "dindon",
+  "ordre": "N°54-Ω-VAGUE-1",
+  "summary": {
+    "n_tables_total": 12,
+    "n_gov": 0,
+    "n_uni": 0,
+    "n_pr": 1,
+    "n_fiche_ligne": 7,
+    "n_autres": 4
+  },
+  "master_tables": {
+    "n_tables_total": 12,
+    "n_gov": 0,
+    "n_uni": 0,
+    "n_pr": 1,
+    "n_fiche_ligne": 7,
+    "n_autres": 4,
+    "by_category": {
+      "GOV": [],
+      "UNI": [],
+      "PR": [
+        {
+          "table_index": 2,
+          "header": [
+            "Organisation",
+            "Type de données",
+            "Portée",
+            "Période",
+            "Colonnes à remplir"
+          ],
+          "rows": [
+            [
+              "NWTF (National Wild Turkey Federation)",
+              "Habitat, tendances, SIG",
+              "Habitat, corridors, reproduction",
+              "2004–2024",
+              "Rapport, année, URL"
+            ],
+            [
+              "Programmes régionaux de télémétrie",
+              "Colliers GPS dindon",
+              "Déplacements, corridors",
+              "2010–2024",
+              "Programme, zone, URL / contact"
+            ],
+            [
+              "Coopératives fauniques",
+              "Relevés terrain, reproduction",
+              "Nidification, survie juvénile",
+              "2004–2024",
+              "Projet, institution, rapport, URL"
+            ],
+            [
+              "Partenaires universitaires",
+              "Analyses habitat / fragmentation",
+              "Connectivité, succès de nidification",
+              "2004–2024",
+              "Rapport, année, URL"
+            ]
+          ],
+          "n_rows": 4
+        }
+      ],
+      "FICHE_LIGNE": [
+        {
+          "table_index": 4,
+          "fiche_data": {
+            "Catégorie": "GOV",
+            "Institution": "MFFP Québec",
+            "Région": "Québec",
+            "Année": "2023",
+            "Titre": "Suivi du dindon sauvage au Québec — Rapport annuel",
+            "Auteurs": "Gouvernement du Québec",
+            "DOI/URL": "https://mffp.gouv.qc.ca (mffp.gouv.qc.ca in Bing)",
+            "Type": "Rapport populationnel",
+            "Méthodologie": "Inventaires, analyses habitat",
+            "Données": "Densité, reproduction, mortalité",
+            "Résultats": "Expansion dans plusieurs zones",
+            "Limites": "Données limitées en zones nordiques",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 5,
+          "fiche_data": {
+            "Catégorie": "GOV",
+            "Institution": "Maine Department of Inland Fisheries & Wildlife",
+            "Région": "Maine",
+            "Année": "2022",
+            "Titre": "Wild Turkey Population Status and Harvest Summary",
+            "Auteurs": "Maine IFW",
+            "DOI/URL": "https://www.maine.gov/ifw",
+            "Type": "Rapport populationnel",
+            "Méthodologie": "Inventaires, télémétrie",
+            "Données": "Tendances, succès de chasse",
+            "Résultats": "Stabilité globale, variations régionales",
+            "Limites": "Données manquantes dans zones agricoles",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 6,
+          "fiche_data": {
+            "Catégorie": "GOV",
+            "Institution": "USGS",
+            "Région": "USA",
+            "Année": "2018",
+            "Titre": "Wild Turkey Movement and Habitat Use Dataset",
+            "Auteurs": "USGS Wildlife Program",
+            "DOI/URL": "https://www.usgs.gov",
+            "Type": "Dataset GPS",
+            "Méthodologie": "Colliers GPS",
+            "Données": "Déplacements, corridors",
+            "Résultats": "Corridors courts mais stables",
+            "Limites": "Zones d’étude limitées",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 7,
+          "fiche_data": {
+            "Catégorie": "UNI",
+            "Institution": "Journal of Wildlife Management",
+            "Région": "USA",
+            "Année": "2014",
+            "Titre": "Resource selection and nest survival of wild turkeys in mixed landscapes",
+            "Auteurs": "Kilburg et al.",
+            "DOI/URL": "https://doi.org/10.1002/jwmg.703",
+            "Type": "Article scientifique",
+            "Méthodologie": "RSF, analyses nidification",
+            "Données": "Sélection habitat, survie nids",
+            "Résultats": "Importance du couvert dense",
+            "Limites": "Zone d’étude restreinte",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 8,
+          "fiche_data": {
+            "Catégorie": "UNI",
+            "Institution": "Journal of Wildlife Management",
+            "Région": "USA",
+            "Année": "2016",
+            "Titre": "Wild turkey habitat selection during the nesting season",
+            "Auteurs": "Little et al.",
+            "DOI/URL": "https://doi.org/10.1002/jwmg.1034",
+            "Type": "Article scientifique",
+            "Méthodologie": "RSF, analyses nidification",
+            "Données": "Habitat, reproduction",
+            "Résultats": "Sélection sousbois dense",
+            "Limites": "Données centrées sur une région",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 9,
+          "fiche_data": {
+            "Catégorie": "UNI",
+            "Institution": "Journal of Wildlife Diseases",
+            "Région": "USA",
+            "Année": "2015",
+            "Titre": "Prevalence of Lymphoproliferative Disease Virus in wild turkeys",
+            "Auteurs": "Allison et al.",
+            "DOI/URL": "https://doi.org/10.7589/201405123 (doi.org in Bing)",
+            "Type": "Article scientifique",
+            "Méthodologie": "Analyses virologiques",
+            "Données": "Prévalence LPDV",
+            "Résultats": "Présence confirmée dans plusieurs États",
+            "Limites": "Données multirégions",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 10,
+          "fiche_data": {
+            "Catégorie": "PR",
+            "Institution": "National Wild Turkey Federation (NWTF)",
+            "Région": "USA / Est",
+            "Année": "2024",
+            "Titre": "Wild Turkey Habitat and Population Assessment",
+            "Auteurs": "NWTF",
+            "DOI/URL": "https://www.nwtf.org",
+            "Type": "Rapport professionnel validé",
+            "Méthodologie": "Données terrain, SIG",
+            "Données": "Habitat, tendances",
+            "Résultats": "Expansion dans plusieurs régions",
+            "Limites": "Données USA seulement",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        }
+      ],
+      "AUTRES": [
+        {
+          "table_index": 0,
+          "header": [
+            "Institution",
+            "Type de document",
+            "Portée principale",
+            "Période",
+            "Colonnes à remplir"
+          ],
+          "rows": [
+            [
+              "MFFP Québec",
+              "Suivi du dindon sauvage, rapports annuels",
+              "Densité, reproduction, mortalité, expansion",
+              "2004–2024",
+              "Référence, année, URL, ID interne"
+            ],
+            [
+              "Maine IFW",
+              "Wild Turkey Population & Harvest Reports",
+              "Tendances, succès de chasse, mortalité",
+              "2004–2024",
+              "Référence, année, URL"
+            ],
+            [
+              "Vermont F&W",
+              "Turkey Harvest & Population Reports",
+              "Tendances, climat, pression chasse",
+              "2004–2024",
+              "Référence, année, URL"
+            ],
+            [
+              "New Hampshire F&G",
+              "Turkey Population Status",
+              "Densité, reproduction, mortalité",
+              "2004–2024",
+              "Référence, année, URL"
+            ],
+            [
+              "USGS",
+              "Wild Turkey Movement Dataset",
+              "Déplacements, corridors, télémétrie",
+              "2010–2024",
+              "Dataset ID, URL, zone"
+            ],
+            [
+              "USFWS",
+              "Habitat & Population Assessments",
+              "Répartition, statut, habitat critique",
+              "2004–2024",
+              "Référence, année, URL"
+            ],
+            [
+              "NOAA",
+              "Données neige / température",
+              "Climat, neige, anomalies",
+              "2004–2024",
+              "Produit, résolution, URL"
+            ],
+            [
+              "NASA EarthData",
+              "NDVI, raster thermiques",
+              "Productivité végétale, stress thermique",
+              "2004–2024",
+              "Produit, résolution, URL"
+            ]
+          ],
+          "n_rows": 8
+        },
+        {
+          "table_index": 1,
+          "header": [
+            "Auteurs",
+            "Titre / Thème",
+            "Revue / Institution",
+            "Année",
+            "Type",
+            "Colonnes à remplir"
+          ],
+          "rows": [
+            [
+              "Kilburg et al.",
+              "Resource selection & nest survival",
+              "Journal of Wildlife Management",
+              "2014",
+              "Article",
+              "DOI, volume, pages, lien"
+            ],
+            [
+              "Little et al.",
+              "Habitat selection during nesting",
+              "Journal of Wildlife Management",
+              "2016",
+              "Article",
+              "DOI, volume, pages, lien"
+            ],
+            [
+              "Pollentier et al.",
+              "Effects of fragmentation on movement",
+              "Journal of Wildlife Management",
+              "2017",
+              "Article",
+              "DOI, volume, pages, lien"
+            ],
+            [
+              "Allison et al.",
+              "LPDV prevalence in wild turkeys",
+              "Journal of Wildlife Diseases",
+              "2015",
+              "Article",
+              "DOI, volume, pages, lien"
+            ],
+            [
+              "…",
+              "GPSbased movement ecology",
+              "Movement Ecology",
+              "…",
+              "Article",
+              "DOI, volume, pages, lien"
+            ],
+            [
+              "…",
+              "Thèse sur la nidification en mosaïque forêtagriculture",
+              "Université du Maine",
+              "…",
+              "Thèse",
+              "URL dépôt, année, directeur"
+            ],
+            [
+              "…",
+              "Thèse sur la dynamique populationnelle du dindon",
+              "Université du Vermont",
+              "…",
+              "Thèse",
+              "URL dépôt, année, directeur"
+            ]
+          ],
+          "n_rows": 7
+        },
+        {
+          "table_index": 3,
+          "header": [
+            "Catégorie",
+            "Exigence",
+            "Statut attendu"
+          ],
+          "rows": [
+            [
+              "GOV",
+              "Couverture complète 2004–2024",
+              "À remplir par extraction systématique"
+            ],
+            [
+              "UNI",
+              "Liste exhaustive avec DOI",
+              "À remplir, revue par revue"
+            ],
+            [
+              "PR",
+              "Programmes validés uniquement",
+              "À documenter avec preuves"
+            ]
+          ],
+          "n_rows": 3
+        },
+        {
+          "table_index": 11,
+          "header": [
+            "Catégorie",
+            "Exigence",
+            "Statut attendu"
+          ],
+          "rows": [
+            [
+              "GOV",
+              "Couverture complète 2004–2024",
+              "À compléter"
+            ],
+            [
+              "UNI",
+              "Liste exhaustive avec DOI",
+              "À compléter"
+            ],
+            [
+              "PR",
+              "Programmes validés uniquement",
+              "À compléter"
+            ]
+          ],
+          "n_rows": 3
+        }
+      ]
+    },
+    "raw_tables": [
+      {
+        "table_index": 0,
+        "header": [
+          "Institution",
+          "Type de document",
+          "Portée principale",
+          "Période",
+          "Colonnes à remplir"
+        ],
+        "rows": [
+          [
+            "MFFP Québec",
+            "Suivi du dindon sauvage, rapports annuels",
+            "Densité, reproduction, mortalité, expansion",
+            "2004–2024",
+            "Référence, année, URL, ID interne"
+          ],
+          [
+            "Maine IFW",
+            "Wild Turkey Population & Harvest Reports",
+            "Tendances, succès de chasse, mortalité",
+            "2004–2024",
+            "Référence, année, URL"
+          ],
+          [
+            "Vermont F&W",
+            "Turkey Harvest & Population Reports",
+            "Tendances, climat, pression chasse",
+            "2004–2024",
+            "Référence, année, URL"
+          ],
+          [
+            "New Hampshire F&G",
+            "Turkey Population Status",
+            "Densité, reproduction, mortalité",
+            "2004–2024",
+            "Référence, année, URL"
+          ],
+          [
+            "USGS",
+            "Wild Turkey Movement Dataset",
+            "Déplacements, corridors, télémétrie",
+            "2010–2024",
+            "Dataset ID, URL, zone"
+          ],
+          [
+            "USFWS",
+            "Habitat & Population Assessments",
+            "Répartition, statut, habitat critique",
+            "2004–2024",
+            "Référence, année, URL"
+          ],
+          [
+            "NOAA",
+            "Données neige / température",
+            "Climat, neige, anomalies",
+            "2004–2024",
+            "Produit, résolution, URL"
+          ],
+          [
+            "NASA EarthData",
+            "NDVI, raster thermiques",
+            "Productivité végétale, stress thermique",
+            "2004–2024",
+            "Produit, résolution, URL"
+          ]
+        ],
+        "n_rows": 8
+      },
+      {
+        "table_index": 1,
+        "header": [
+          "Auteurs",
+          "Titre / Thème",
+          "Revue / Institution",
+          "Année",
+          "Type",
+          "Colonnes à remplir"
+        ],
+        "rows": [
+          [
+            "Kilburg et al.",
+            "Resource selection & nest survival",
+            "Journal of Wildlife Management",
+            "2014",
+            "Article",
+            "DOI, volume, pages, lien"
+          ],
+          [
+            "Little et al.",
+            "Habitat selection during nesting",
+            "Journal of Wildlife Management",
+            "2016",
+            "Article",
+            "DOI, volume, pages, lien"
+          ],
+          [
+            "Pollentier et al.",
+            "Effects of fragmentation on movement",
+            "Journal of Wildlife Management",
+            "2017",
+            "Article",
+            "DOI, volume, pages, lien"
+          ],
+          [
+            "Allison et al.",
+            "LPDV prevalence in wild turkeys",
+            "Journal of Wildlife Diseases",
+            "2015",
+            "Article",
+            "DOI, volume, pages, lien"
+          ],
+          [
+            "…",
+            "GPSbased movement ecology",
+            "Movement Ecology",
+            "…",
+            "Article",
+            "DOI, volume, pages, lien"
+          ],
+          [
+            "…",
+            "Thèse sur la nidification en mosaïque forêtagriculture",
+            "Université du Maine",
+            "…",
+            "Thèse",
+            "URL dépôt, année, directeur"
+          ],
+          [
+            "…",
+            "Thèse sur la dynamique populationnelle du dindon",
+            "Université du Vermont",
+            "…",
+            "Thèse",
+            "URL dépôt, année, directeur"
+          ]
+        ],
+        "n_rows": 7
+      },
+      {
+        "table_index": 2,
+        "header": [
+          "Organisation",
+          "Type de données",
+          "Portée",
+          "Période",
+          "Colonnes à remplir"
+        ],
+        "rows": [
+          [
+            "NWTF (National Wild Turkey Federation)",
+            "Habitat, tendances, SIG",
+            "Habitat, corridors, reproduction",
+            "2004–2024",
+            "Rapport, année, URL"
+          ],
+          [
+            "Programmes régionaux de télémétrie",
+            "Colliers GPS dindon",
+            "Déplacements, corridors",
+            "2010–2024",
+            "Programme, zone, URL / contact"
+          ],
+          [
+            "Coopératives fauniques",
+            "Relevés terrain, reproduction",
+            "Nidification, survie juvénile",
+            "2004–2024",
+            "Projet, institution, rapport, URL"
+          ],
+          [
+            "Partenaires universitaires",
+            "Analyses habitat / fragmentation",
+            "Connectivité, succès de nidification",
+            "2004–2024",
+            "Rapport, année, URL"
+          ]
+        ],
+        "n_rows": 4
+      },
+      {
+        "table_index": 3,
+        "header": [
+          "Catégorie",
+          "Exigence",
+          "Statut attendu"
+        ],
+        "rows": [
+          [
+            "GOV",
+            "Couverture complète 2004–2024",
+            "À remplir par extraction systématique"
+          ],
+          [
+            "UNI",
+            "Liste exhaustive avec DOI",
+            "À remplir, revue par revue"
+          ],
+          [
+            "PR",
+            "Programmes validés uniquement",
+            "À documenter avec preuves"
+          ]
+        ],
+        "n_rows": 3
+      },
+      {
+        "table_index": 4,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "GOV"
+          ],
+          [
+            "Institution",
+            "MFFP Québec"
+          ],
+          [
+            "Région",
+            "Québec"
+          ],
+          [
+            "Année",
+            "2023"
+          ],
+          [
+            "Titre",
+            "Suivi du dindon sauvage au Québec — Rapport annuel"
+          ],
+          [
+            "Auteurs",
+            "Gouvernement du Québec"
+          ],
+          [
+            "DOI/URL",
+            "https://mffp.gouv.qc.ca (mffp.gouv.qc.ca in Bing)"
+          ],
+          [
+            "Type",
+            "Rapport populationnel"
+          ],
+          [
+            "Méthodologie",
+            "Inventaires, analyses habitat"
+          ],
+          [
+            "Données",
+            "Densité, reproduction, mortalité"
+          ],
+          [
+            "Résultats",
+            "Expansion dans plusieurs zones"
+          ],
+          [
+            "Limites",
+            "Données limitées en zones nordiques"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 5,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "GOV"
+          ],
+          [
+            "Institution",
+            "Maine Department of Inland Fisheries & Wildlife"
+          ],
+          [
+            "Région",
+            "Maine"
+          ],
+          [
+            "Année",
+            "2022"
+          ],
+          [
+            "Titre",
+            "Wild Turkey Population Status and Harvest Summary"
+          ],
+          [
+            "Auteurs",
+            "Maine IFW"
+          ],
+          [
+            "DOI/URL",
+            "https://www.maine.gov/ifw"
+          ],
+          [
+            "Type",
+            "Rapport populationnel"
+          ],
+          [
+            "Méthodologie",
+            "Inventaires, télémétrie"
+          ],
+          [
+            "Données",
+            "Tendances, succès de chasse"
+          ],
+          [
+            "Résultats",
+            "Stabilité globale, variations régionales"
+          ],
+          [
+            "Limites",
+            "Données manquantes dans zones agricoles"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 6,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "GOV"
+          ],
+          [
+            "Institution",
+            "USGS"
+          ],
+          [
+            "Région",
+            "USA"
+          ],
+          [
+            "Année",
+            "2018"
+          ],
+          [
+            "Titre",
+            "Wild Turkey Movement and Habitat Use Dataset"
+          ],
+          [
+            "Auteurs",
+            "USGS Wildlife Program"
+          ],
+          [
+            "DOI/URL",
+            "https://www.usgs.gov"
+          ],
+          [
+            "Type",
+            "Dataset GPS"
+          ],
+          [
+            "Méthodologie",
+            "Colliers GPS"
+          ],
+          [
+            "Données",
+            "Déplacements, corridors"
+          ],
+          [
+            "Résultats",
+            "Corridors courts mais stables"
+          ],
+          [
+            "Limites",
+            "Zones d’étude limitées"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 7,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "UNI"
+          ],
+          [
+            "Institution",
+            "Journal of Wildlife Management"
+          ],
+          [
+            "Région",
+            "USA"
+          ],
+          [
+            "Année",
+            "2014"
+          ],
+          [
+            "Titre",
+            "Resource selection and nest survival of wild turkeys in mixed landscapes"
+          ],
+          [
+            "Auteurs",
+            "Kilburg et al."
+          ],
+          [
+            "DOI/URL",
+            "https://doi.org/10.1002/jwmg.703"
+          ],
+          [
+            "Type",
+            "Article scientifique"
+          ],
+          [
+            "Méthodologie",
+            "RSF, analyses nidification"
+          ],
+          [
+            "Données",
+            "Sélection habitat, survie nids"
+          ],
+          [
+            "Résultats",
+            "Importance du couvert dense"
+          ],
+          [
+            "Limites",
+            "Zone d’étude restreinte"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 8,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "UNI"
+          ],
+          [
+            "Institution",
+            "Journal of Wildlife Management"
+          ],
+          [
+            "Région",
+            "USA"
+          ],
+          [
+            "Année",
+            "2016"
+          ],
+          [
+            "Titre",
+            "Wild turkey habitat selection during the nesting season"
+          ],
+          [
+            "Auteurs",
+            "Little et al."
+          ],
+          [
+            "DOI/URL",
+            "https://doi.org/10.1002/jwmg.1034"
+          ],
+          [
+            "Type",
+            "Article scientifique"
+          ],
+          [
+            "Méthodologie",
+            "RSF, analyses nidification"
+          ],
+          [
+            "Données",
+            "Habitat, reproduction"
+          ],
+          [
+            "Résultats",
+            "Sélection sousbois dense"
+          ],
+          [
+            "Limites",
+            "Données centrées sur une région"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 9,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "UNI"
+          ],
+          [
+            "Institution",
+            "Journal of Wildlife Diseases"
+          ],
+          [
+            "Région",
+            "USA"
+          ],
+          [
+            "Année",
+            "2015"
+          ],
+          [
+            "Titre",
+            "Prevalence of Lymphoproliferative Disease Virus in wild turkeys"
+          ],
+          [
+            "Auteurs",
+            "Allison et al."
+          ],
+          [
+            "DOI/URL",
+            "https://doi.org/10.7589/201405123 (doi.org in Bing)"
+          ],
+          [
+            "Type",
+            "Article scientifique"
+          ],
+          [
+            "Méthodologie",
+            "Analyses virologiques"
+          ],
+          [
+            "Données",
+            "Prévalence LPDV"
+          ],
+          [
+            "Résultats",
+            "Présence confirmée dans plusieurs États"
+          ],
+          [
+            "Limites",
+            "Données multirégions"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 10,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "PR"
+          ],
+          [
+            "Institution",
+            "National Wild Turkey Federation (NWTF)"
+          ],
+          [
+            "Région",
+            "USA / Est"
+          ],
+          [
+            "Année",
+            "2024"
+          ],
+          [
+            "Titre",
+            "Wild Turkey Habitat and Population Assessment"
+          ],
+          [
+            "Auteurs",
+            "NWTF"
+          ],
+          [
+            "DOI/URL",
+            "https://www.nwtf.org"
+          ],
+          [
+            "Type",
+            "Rapport professionnel validé"
+          ],
+          [
+            "Méthodologie",
+            "Données terrain, SIG"
+          ],
+          [
+            "Données",
+            "Habitat, tendances"
+          ],
+          [
+            "Résultats",
+            "Expansion dans plusieurs régions"
+          ],
+          [
+            "Limites",
+            "Données USA seulement"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 11,
+        "header": [
+          "Catégorie",
+          "Exigence",
+          "Statut attendu"
+        ],
+        "rows": [
+          [
+            "GOV",
+            "Couverture complète 2004–2024",
+            "À compléter"
+          ],
+          [
+            "UNI",
+            "Liste exhaustive avec DOI",
+            "À compléter"
+          ],
+          [
+            "PR",
+            "Programmes validés uniquement",
+            "À compléter"
+          ]
+        ],
+        "n_rows": 3
+      }
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "species": "ours_noir",
+  "ordre": "N°54-Ω-VAGUE-1",
+  "docx_source_sha256": "53c915ded57bfbc074bc64cbd1dbafc58f273f63eb2df93aa4fb72dfc55a04fd",
+  "registry_files_sha256": {
+    "paragraphs.json": "7129c19ea45ad99d3aeb3a158c095f55fb9e82ae4635ea23f90f7e2347fd6561",
+    "sections.json": "fa2590a91cc8aa1b12f392fdd5a3ae9a160c6839fd6d57e8e3d52820ac3e67ee",
+    "dois.json": "5a52ee7c511a3fb4745c35a21745a19d1d790927e94f023afd436ee64904aa00",
+    "master_tables.json": "83df87626fac89e8b540b5ee95f01a24a5f9559b59fe8838e22c2e24f41dffdf",
+    "master_table_consolidated.json": "988e1aac7ca140309954dc8b5842ffdc2f1b664be5878d0d47f5997cf0374a01"
+  },
+  "computed_at_utc": "2026-05-06T19:38:09+00:00"
+}

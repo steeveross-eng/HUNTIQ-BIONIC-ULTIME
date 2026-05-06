@@ -1,0 +1,443 @@
+{
+  "species": "ours_noir",
+  "ordre": "N°54-Ω-VAGUE-1",
+  "summary": {
+    "n_tables_total": 4,
+    "n_gov": 0,
+    "n_uni": 0,
+    "n_pr": 1,
+    "n_fiche_ligne": 0,
+    "n_autres": 3
+  },
+  "master_tables": {
+    "n_tables_total": 4,
+    "n_gov": 0,
+    "n_uni": 0,
+    "n_pr": 1,
+    "n_fiche_ligne": 0,
+    "n_autres": 3,
+    "by_category": {
+      "GOV": [],
+      "UNI": [],
+      "PR": [
+        {
+          "table_index": 2,
+          "header": [
+            "Organisation",
+            "Type de données",
+            "Portée",
+            "Période",
+            "Colonnes à remplir"
+          ],
+          "rows": [
+            [
+              "BearWise",
+              "Habitat, conflits humains, SIG",
+              "Conflits, attractifs, prévention",
+              "2004–2024",
+              "Rapport, année, URL"
+            ],
+            [
+              "Programmes régionaux de télémétrie",
+              "Colliers GPS ours noir",
+              "Déplacements, corridors",
+              "2010–2024",
+              "Programme, zone, URL / contact"
+            ],
+            [
+              "Coopératives fauniques",
+              "Relevés terrain, reproduction",
+              "Tanières, survie juvénile",
+              "2004–2024",
+              "Projet, institution, rapport, URL"
+            ],
+            [
+              "Partenaires universitaires",
+              "Analyses habitat / fragmentation",
+              "Connectivité, conflits humains",
+              "2004–2024",
+              "Rapport, année, URL"
+            ]
+          ],
+          "n_rows": 4
+        }
+      ],
+      "FICHE_LIGNE": [],
+      "AUTRES": [
+        {
+          "table_index": 0,
+          "header": [
+            "Institution",
+            "Type de document",
+            "Portée principale",
+            "Période",
+            "Colonnes à remplir"
+          ],
+          "rows": [
+            [
+              "MFFP Québec",
+              "Suivi ours noir, inventaires, analyses d’habitat",
+              "Densité, reproduction, mortalité, conflits humains",
+              "2004–2024",
+              "Référence, année, URL, ID interne"
+            ],
+            [
+              "Ontario MNRF",
+              "Black Bear Management Reports",
+              "Densité, quotas, mortalité, habitat",
+              "2004–2024",
+              "Référence, année, URL"
+            ],
+            [
+              "NB DNR",
+              "Black Bear Population Trends",
+              "Tendances, climat, mortalité",
+              "2004–2024",
+              "Référence, année, URL"
+            ],
+            [
+              "USGS",
+              "Black Bear Movement Dataset",
+              "Déplacements, corridors, télémétrie",
+              "2010–2024",
+              "Dataset ID, URL, zone"
+            ],
+            [
+              "USFWS",
+              "Habitat & Population Assessments",
+              "Répartition, statut, habitat critique",
+              "2004–2024",
+              "Référence, année, URL"
+            ],
+            [
+              "NOAA",
+              "Données neige / température",
+              "Climat, neige, anomalies",
+              "2004–2024",
+              "Produit, résolution, URL"
+            ],
+            [
+              "NASA EarthData",
+              "NDVI, raster thermiques",
+              "Productivité végétale, stress thermique",
+              "2004–2024",
+              "Produit, résolution, URL"
+            ],
+            [
+              "State Wildlife Agencies (ME, VT, NH)",
+              "Bear Status Reports",
+              "Tendances, reproduction, conflits humains",
+              "2004–2024",
+              "Référence, année, URL"
+            ]
+          ],
+          "n_rows": 8
+        },
+        {
+          "table_index": 1,
+          "header": [
+            "Auteurs",
+            "Titre / Thème",
+            "Revue / Institution",
+            "Année",
+            "Type",
+            "Colonnes à remplir"
+          ],
+          "rows": [
+            [
+              "Costello et al.",
+              "Black bear habitat selection & movement",
+              "Journal of Wildlife Management",
+              "2016",
+              "Article",
+              "DOI, volume, pages, lien"
+            ],
+            [
+              "Merkle et al.",
+              "Resource selection in humandominated landscapes",
+              "Ecological Applications",
+              "2013",
+              "Article",
+              "DOI, volume, pages, lien"
+            ],
+            [
+              "BaruchMordo et al.",
+              "Human–bear conflicts & food availability",
+              "Journal of Applied Ecology",
+              "2014",
+              "Article",
+              "DOI, volume, pages, lien"
+            ],
+            [
+              "McLellan",
+              "Black bear population dynamics",
+              "Journal of Wildlife Management",
+              "2015",
+              "Article",
+              "DOI, volume, pages, lien"
+            ],
+            [
+              "…",
+              "GPSbased movement ecology",
+              "Movement Ecology",
+              "…",
+              "Article",
+              "DOI, volume, pages, lien"
+            ],
+            [
+              "…",
+              "Thèse sur l’écologie de l’ours noir au Québec",
+              "Université Laval / UQAR",
+              "…",
+              "Thèse",
+              "URL dépôt, année, directeur"
+            ],
+            [
+              "…",
+              "Thèse sur les conflits ourshumains",
+              "UMaine",
+              "…",
+              "Thèse",
+              "URL dépôt, année, directeur"
+            ]
+          ],
+          "n_rows": 7
+        },
+        {
+          "table_index": 3,
+          "header": [
+            "Catégorie",
+            "Exigence",
+            "Statut attendu"
+          ],
+          "rows": [
+            [
+              "GOV",
+              "Couverture complète 2004–2024",
+              "À remplir par extraction systématique"
+            ],
+            [
+              "UNI",
+              "Liste exhaustive avec DOI",
+              "À remplir, revue par revue"
+            ],
+            [
+              "PR",
+              "Programmes validés uniquement",
+              "À documenter avec preuves"
+            ]
+          ],
+          "n_rows": 3
+        }
+      ]
+    },
+    "raw_tables": [
+      {
+        "table_index": 0,
+        "header": [
+          "Institution",
+          "Type de document",
+          "Portée principale",
+          "Période",
+          "Colonnes à remplir"
+        ],
+        "rows": [
+          [
+            "MFFP Québec",
+            "Suivi ours noir, inventaires, analyses d’habitat",
+            "Densité, reproduction, mortalité, conflits humains",
+            "2004–2024",
+            "Référence, année, URL, ID interne"
+          ],
+          [
+            "Ontario MNRF",
+            "Black Bear Management Reports",
+            "Densité, quotas, mortalité, habitat",
+            "2004–2024",
+            "Référence, année, URL"
+          ],
+          [
+            "NB DNR",
+            "Black Bear Population Trends",
+            "Tendances, climat, mortalité",
+            "2004–2024",
+            "Référence, année, URL"
+          ],
+          [
+            "USGS",
+            "Black Bear Movement Dataset",
+            "Déplacements, corridors, télémétrie",
+            "2010–2024",
+            "Dataset ID, URL, zone"
+          ],
+          [
+            "USFWS",
+            "Habitat & Population Assessments",
+            "Répartition, statut, habitat critique",
+            "2004–2024",
+            "Référence, année, URL"
+          ],
+          [
+            "NOAA",
+            "Données neige / température",
+            "Climat, neige, anomalies",
+            "2004–2024",
+            "Produit, résolution, URL"
+          ],
+          [
+            "NASA EarthData",
+            "NDVI, raster thermiques",
+            "Productivité végétale, stress thermique",
+            "2004–2024",
+            "Produit, résolution, URL"
+          ],
+          [
+            "State Wildlife Agencies (ME, VT, NH)",
+            "Bear Status Reports",
+            "Tendances, reproduction, conflits humains",
+            "2004–2024",
+            "Référence, année, URL"
+          ]
+        ],
+        "n_rows": 8
+      },
+      {
+        "table_index": 1,
+        "header": [
+          "Auteurs",
+          "Titre / Thème",
+          "Revue / Institution",
+          "Année",
+          "Type",
+          "Colonnes à remplir"
+        ],
+        "rows": [
+          [
+            "Costello et al.",
+            "Black bear habitat selection & movement",
+            "Journal of Wildlife Management",
+            "2016",
+            "Article",
+            "DOI, volume, pages, lien"
+          ],
+          [
+            "Merkle et al.",
+            "Resource selection in humandominated landscapes",
+            "Ecological Applications",
+            "2013",
+            "Article",
+            "DOI, volume, pages, lien"
+          ],
+          [
+            "BaruchMordo et al.",
+            "Human–bear conflicts & food availability",
+            "Journal of Applied Ecology",
+            "2014",
+            "Article",
+            "DOI, volume, pages, lien"
+          ],
+          [
+            "McLellan",
+            "Black bear population dynamics",
+            "Journal of Wildlife Management",
+            "2015",
+            "Article",
+            "DOI, volume, pages, lien"
+          ],
+          [
+            "…",
+            "GPSbased movement ecology",
+            "Movement Ecology",
+            "…",
+            "Article",
+            "DOI, volume, pages, lien"
+          ],
+          [
+            "…",
+            "Thèse sur l’écologie de l’ours noir au Québec",
+            "Université Laval / UQAR",
+            "…",
+            "Thèse",
+            "URL dépôt, année, directeur"
+          ],
+          [
+            "…",
+            "Thèse sur les conflits ourshumains",
+            "UMaine",
+            "…",
+            "Thèse",
+            "URL dépôt, année, directeur"
+          ]
+        ],
+        "n_rows": 7
+      },
+      {
+        "table_index": 2,
+        "header": [
+          "Organisation",
+          "Type de données",
+          "Portée",
+          "Période",
+          "Colonnes à remplir"
+        ],
+        "rows": [
+          [
+            "BearWise",
+            "Habitat, conflits humains, SIG",
+            "Conflits, attractifs, prévention",
+            "2004–2024",
+            "Rapport, année, URL"
+          ],
+          [
+            "Programmes régionaux de télémétrie",
+            "Colliers GPS ours noir",
+            "Déplacements, corridors",
+            "2010–2024",
+            "Programme, zone, URL / contact"
+          ],
+          [
+            "Coopératives fauniques",
+            "Relevés terrain, reproduction",
+            "Tanières, survie juvénile",
+            "2004–2024",
+            "Projet, institution, rapport, URL"
+          ],
+          [
+            "Partenaires universitaires",
+            "Analyses habitat / fragmentation",
+            "Connectivité, conflits humains",
+            "2004–2024",
+            "Rapport, année, URL"
+          ]
+        ],
+        "n_rows": 4
+      },
+      {
+        "table_index": 3,
+        "header": [
+          "Catégorie",
+          "Exigence",
+          "Statut attendu"
+        ],
+        "rows": [
+          [
+            "GOV",
+            "Couverture complète 2004–2024",
+            "À remplir par extraction systématique"
+          ],
+          [
+            "UNI",
+            "Liste exhaustive avec DOI",
+            "À remplir, revue par revue"
+          ],
+          [
+            "PR",
+            "Programmes validés uniquement",
+            "À documenter avec preuves"
+          ]
+        ],
+        "n_rows": 3
+      }
+    ]
+  }
+}

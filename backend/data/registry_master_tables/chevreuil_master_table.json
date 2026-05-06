@@ -1,0 +1,183 @@
+{
+  "species": "chevreuil",
+  "ordre": "N°54-Ω-VAGUE-1",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "ingested_at_utc": "2026-05-06T19:38:09+00:00",
+  "docx_source": "/app/backend/data/docs/science/chevreuil.docx",
+  "docx_sha256": "df0f229125f47912dd96acce5c2cf9fb0dc79f8ea53afd519e7afda6343ee211",
+  "validation_BCE_4X": {
+    "sources_categories_required": [
+      "GOV",
+      "UNI",
+      "PR"
+    ],
+    "n_paragraphs_per_section": {
+      "GOV": 62,
+      "UNI": 55,
+      "PR": 142
+    },
+    "all_categories_present": true
+  },
+  "n_dois_extracted": 1,
+  "dois": [
+    "10.1371/journal.pone.0325656"
+  ],
+  "tables_summary": {
+    "n_tables_total": 11,
+    "n_gov": 1,
+    "n_uni": 1,
+    "n_pr": 1,
+    "n_fiche_ligne": 7,
+    "n_autres": 1
+  },
+  "tables_GOV": [
+    {
+      "table_index": 0,
+      "header": [
+        "Institution",
+        "Titre / Type",
+        "Année",
+        "Portée",
+        "Lien / Référence"
+      ],
+      "rows": [
+        [
+          "MFFP Québec",
+          "Inventaires cervidés, analyses d’habitat",
+          "2004–2024",
+          "Densité, tendances, habitat",
+          "https://mffp.gouv.qc.ca (mffp.gouv.qc.ca in Bing)"
+        ],
+        [
+          "Ontario MNRF",
+          "Deer Management Reports",
+          "2004–2024",
+          "Gestion, mortalité, habitat",
+          "https://www.ontario.ca/page/ministry-natural-resources-and-forestry (ontario.ca in Bing)"
+        ],
+        [
+          "NB DNR",
+          "Deer Population Trends",
+          "2004–2024",
+          "Tendances, climat, mortalité",
+          "https://www2.gnb.ca"
+        ],
+        [
+          "USGS",
+          "Movement Ecology (GPS)",
+          "2010–2024",
+          "Corridors, déplacements",
+          "https://www.usgs.gov"
+        ],
+        [
+          "USFWS",
+          "Habitat & Disease Assessments",
+          "2004–2024",
+          "CWD, habitat",
+          "https://www.fws.gov"
+        ],
+        [
+          "NOAA",
+          "Snow/Temp datasets",
+          "2004–2024",
+          "Neige, climat",
+          "https://www.noaa.gov"
+        ],
+        [
+          "NASA EarthData",
+          "NDVI, télédétection",
+          "2004–2024",
+          "Habitat, végétation",
+          "https://earthdata.nasa.gov"
+        ]
+      ],
+      "n_rows": 7
+    }
+  ],
+  "tables_UNI": [
+    {
+      "table_index": 1,
+      "header": [
+        "Auteurs",
+        "Titre",
+        "Année",
+        "Revue / Institution",
+        "DOI / Lien"
+      ],
+      "rows": [
+        [
+          "LaSharr et al.",
+          "Dispersal dynamics of whitetailed deer in humanaltered landscapes and implications for disease risk",
+          "2025",
+          "PLOS One",
+          "https://doi.org/10.1371/journal.pone.0325656"
+        ],
+        [
+          "Fulbright",
+          "WhiteTailed Deer (chapitre scientifique)",
+          "2023",
+          "Springer Nature",
+          "https://link.springer.com"
+        ],
+        [
+          "Wiley (consortium génomique)",
+          "Development of highthroughput genomic resources to inform whitetailed deer management",
+          "2024",
+          "Wiley Online Library",
+          "https://onlinelibrary.wiley.com (onlinelibrary.wiley.com in Bing)"
+        ],
+        [
+          "UMaine / UNB / UVM",
+          "Thèses sur déplacements, habitat, CWD",
+          "2004–2024",
+          "Universités",
+          "Portails institutionnels"
+        ],
+        [
+          "Movement Ecology",
+          "Études GPS cervidés",
+          "2010–2024",
+          "Movement Ecology Journal",
+          "https://movementecologyjournal.biomedcentral.com (movementecologyjournal.biomedcentral.com in Bing)"
+        ]
+      ],
+      "n_rows": 5
+    }
+  ],
+  "tables_PR": [
+    {
+      "table_index": 2,
+      "header": [
+        "Organisation",
+        "Titre / Type",
+        "Année",
+        "Portée",
+        "Lien"
+      ],
+      "rows": [
+        [
+          "NDA (National Deer Association)",
+          "Analyses habitat, nutrition, corridors",
+          "2004–2024",
+          "Gestion cervidés",
+          "https://deerassociation.com"
+        ],
+        [
+          "QDMA Archives",
+          "Habitat, rut, pression humaine",
+          "2004–2020",
+          "Gestion cervidés",
+          "https://www.qdma.com (archives)"
+        ],
+        [
+          "Données terrain validées",
+          "GPS, télémétrie, stations météo",
+          "2004–2024",
+          "Corridors, habitat",
+          "Programmes régionaux"
+        ]
+      ],
+      "n_rows": 3
+    }
+  ]
+}

@@ -1,0 +1,1066 @@
+{
+  "species": "orignal",
+  "ordre": "N°54-Ω-VAGUE-1",
+  "summary": {
+    "n_tables_total": 10,
+    "n_gov": 0,
+    "n_uni": 0,
+    "n_pr": 1,
+    "n_fiche_ligne": 6,
+    "n_autres": 3
+  },
+  "master_tables": {
+    "n_tables_total": 10,
+    "n_gov": 0,
+    "n_uni": 0,
+    "n_pr": 1,
+    "n_fiche_ligne": 6,
+    "n_autres": 3,
+    "by_category": {
+      "GOV": [],
+      "UNI": [],
+      "PR": [
+        {
+          "table_index": 2,
+          "header": [
+            "Organisation",
+            "Type de données",
+            "Portée",
+            "Période",
+            "Colonnes à remplir"
+          ],
+          "rows": [
+            [
+              "Programmes provinciaux de télémétrie",
+              "Colliers GPS orignal",
+              "Corridors, utilisation de l’habitat",
+              "2004–2024",
+              "Programme, zone, URL / contact"
+            ],
+            [
+              "Coopératives fauniques / projets universitaires",
+              "Relevés terrain, mortalité, condition corporelle",
+              "Hiver, ravages, maladies",
+              "2004–2024",
+              "Projet, institution, rapport, URL"
+            ],
+            [
+              "RMEF / partenaires régionaux",
+              "Analyses habitat / corridors (orignal & wapiti)",
+              "Connectivité, fragmentation",
+              "2004–2024",
+              "Rapport, année, URL"
+            ]
+          ],
+          "n_rows": 3
+        }
+      ],
+      "FICHE_LIGNE": [
+        {
+          "table_index": 4,
+          "fiche_data": {
+            "Catégorie": "GOV",
+            "Institution": "MFFP Québec",
+            "Région": "Québec",
+            "Année": "2023",
+            "Titre": "Plan de gestion de l’orignal 2023–2030",
+            "Auteurs": "Gouvernement du Québec",
+            "DOI/URL": "https://mffp.gouv.qc.ca (mffp.gouv.qc.ca in Bing)",
+            "Type": "Rapport de gestion",
+            "Méthodologie": "Inventaires aériens, analyses d’habitat",
+            "Données": "Densité, mortalité, ravages",
+            "Résultats": "Tendances régionales, pressions, quotas",
+            "Limites": "Variabilité régionale",
+            "Validation1": "✔ Source officielle",
+            "Validation2": "✔ Méthodologie scientifique",
+            "Validation3": "✔ Conformité BCE4X",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 5,
+          "fiche_data": {
+            "Catégorie": "GOV",
+            "Institution": "Ontario Ministry of Natural Resources and Forestry",
+            "Région": "Ontario",
+            "Année": "2021",
+            "Titre": "Moose Population and Harvest Report",
+            "Auteurs": "MNRF",
+            "DOI/URL": "https://www.ontario.ca/page/ministry-natural-resources-and-forestry (ontario.ca in Bing)",
+            "Type": "Rapport gouvernemental",
+            "Méthodologie": "Inventaires aériens, télémétrie",
+            "Données": "Densité, mortalité, succès de chasse",
+            "Résultats": "Déclin dans certaines unités, stabilité ailleurs",
+            "Limites": "Conditions météo lors des inventaires",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 6,
+          "fiche_data": {
+            "Catégorie": "GOV",
+            "Institution": "New Brunswick Department of Natural Resources",
+            "Région": "NouveauBrunswick",
+            "Année": "2020",
+            "Titre": "Moose Population Trends in New Brunswick",
+            "Auteurs": "NB DNR",
+            "DOI/URL": "https://www2.gnb.ca",
+            "Type": "Rapport populationnel",
+            "Méthodologie": "Inventaires, séries temporelles",
+            "Données": "Tendances 2000–2020",
+            "Résultats": "Stabilité globale, variations régionales",
+            "Limites": "Données manquantes dans zones isolées",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 7,
+          "fiche_data": {
+            "Catégorie": "UNI",
+            "Institution": "Canadian Journal of Zoology",
+            "Région": "Canada",
+            "Année": "2018",
+            "Titre": "Moose habitat selection in boreal mixedwood forests",
+            "Auteurs": "(Auteurs réels à extraire lors de l’étape DOI)",
+            "DOI/URL": "(À remplir après extraction DOI)",
+            "Type": "Article scientifique",
+            "Méthodologie": "RSF, GPS",
+            "Données": "Sélection d’habitat, déplacements",
+            "Résultats": "Préférence pour mosaïques feuillus/conifères",
+            "Limites": "Échantillonnage limité à une zone",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 8,
+          "fiche_data": {
+            "Catégorie": "UNI",
+            "Institution": "Movement Ecology",
+            "Région": "Maine / Québec",
+            "Année": "2022",
+            "Titre": "GPSbased movement patterns of moose in fragmented landscapes",
+            "Auteurs": "(À extraire)",
+            "DOI/URL": "(À remplir)",
+            "Type": "Article scientifique",
+            "Méthodologie": "GPS, SSF",
+            "Données": "Corridors, fragmentation",
+            "Résultats": "Corridors stables, évitement routes",
+            "Limites": "Données GPS saisonnières",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        },
+        {
+          "table_index": 9,
+          "fiche_data": {
+            "Catégorie": "PR",
+            "Institution": "Programme de télémétrie Maine IFW",
+            "Région": "Maine",
+            "Année": "2015–2024",
+            "Titre": "Moose GPS Collar Dataset",
+            "Auteurs": "Maine IFW",
+            "DOI/URL": "https://www.maine.gov/ifw",
+            "Type": "Dataset GPS",
+            "Méthodologie": "Colliers GPS",
+            "Données": "Déplacements, mortalité, corridors",
+            "Résultats": "Corridors hivernaux, mortalité tique",
+            "Limites": "Couverture géographique",
+            "Validation1": "✔",
+            "Validation2": "✔",
+            "Validation3": "✔",
+            "Statut": "Accepté",
+            "Date": "20260408",
+            "Responsable": "SRBCE4X"
+          },
+          "n_fields": 18
+        }
+      ],
+      "AUTRES": [
+        {
+          "table_index": 0,
+          "header": [
+            "Institution",
+            "Type de document",
+            "Portée principale",
+            "Période",
+            "Colonnes à remplir"
+          ],
+          "rows": [
+            [
+              "MFFP Québec",
+              "Inventaires orignal, plans de gestion, rapports ravage",
+              "Densité, tendances, ravages, pression chasse",
+              "2004–2024",
+              "Référence, année, URL, ID interne"
+            ],
+            [
+              "Ontario MNRF",
+              "Moose Management Reports",
+              "Densité, quotas, habitat, mortalité",
+              "2004–2024",
+              "Référence, année, URL"
+            ],
+            [
+              "NB DNR",
+              "Moose Population & Harvest Reports",
+              "Tendances, succès de chasse, climat",
+              "2004–2024",
+              "Référence, année, URL"
+            ],
+            [
+              "USGS",
+              "Animal movement / Moose telemetry",
+              "Corridors, déplacements, utilisation de l’habitat",
+              "2010–2024",
+              "Dataset ID, URL, zone"
+            ],
+            [
+              "USFWS",
+              "Habitat & population assessments",
+              "Répartition, statut, habitat critique",
+              "2004–2024",
+              "Référence, année, URL"
+            ],
+            [
+              "NOAA",
+              "Données neige / température",
+              "Profondeur de neige, anomalies climatiques",
+              "2004–2024",
+              "Produit, résolution, URL"
+            ],
+            [
+              "NASA EarthData",
+              "NDVI, raster thermiques",
+              "Productivité végétale, stress thermique",
+              "2004–2024",
+              "Produit, résolution, URL"
+            ],
+            [
+              "Parcs Canada",
+              "Monitoring orignal",
+              "Densité, utilisation de l’habitat en aires protégées",
+              "2004–2024",
+              "Référence, parc, URL"
+            ]
+          ],
+          "n_rows": 8
+        },
+        {
+          "table_index": 1,
+          "header": [
+            "Auteurs",
+            "Titre / Thème",
+            "Revue / Institution",
+            "Année",
+            "Type",
+            "Colonnes à remplir"
+          ],
+          "rows": [
+            [
+              "…",
+              "Sélection d’habitat hivernal de l’orignal",
+              "Canadian Journal of Zoology",
+              "…",
+              "Article",
+              "DOI, volume, pages, lien"
+            ],
+            [
+              "…",
+              "Moose movement and habitat selection in managed forests",
+              "Journal of Wildlife Management",
+              "…",
+              "Article",
+              "DOI, volume, pages, lien"
+            ],
+            [
+              "…",
+              "Effets de la profondeur de neige sur les déplacements de l’orignal",
+              "ALCES",
+              "…",
+              "Article",
+              "DOI, volume, pages, lien"
+            ],
+            [
+              "…",
+              "Moose thermal ecology and heat stress",
+              "Ecological Applications",
+              "…",
+              "Article",
+              "DOI, volume, pages, lien"
+            ],
+            [
+              "…",
+              "GPS telemetry of moose in boreal landscapes",
+              "Movement Ecology",
+              "…",
+              "Article",
+              "DOI, volume, pages, lien"
+            ],
+            [
+              "…",
+              "Thèse sur l’écologie hivernale de l’orignal au Québec",
+              "Université Laval / UQAR",
+              "…",
+              "Thèse",
+              "URL dépôt, année, directeur"
+            ],
+            [
+              "…",
+              "Thèse sur les corridors de déplacement de l’orignal au Maine",
+              "UMaine",
+              "…",
+              "Thèse",
+              "URL dépôt, année, directeur"
+            ]
+          ],
+          "n_rows": 7
+        },
+        {
+          "table_index": 3,
+          "header": [
+            "Catégorie",
+            "Exigence",
+            "Statut attendu"
+          ],
+          "rows": [
+            [
+              "GOV",
+              "Couverture complète 2004–2024",
+              "À remplir par extraction systématique"
+            ],
+            [
+              "UNI",
+              "Liste exhaustive avec DOI",
+              "À remplir, revue par revue"
+            ],
+            [
+              "PR",
+              "Programmes validés uniquement",
+              "À documenter avec preuves"
+            ]
+          ],
+          "n_rows": 3
+        }
+      ]
+    },
+    "raw_tables": [
+      {
+        "table_index": 0,
+        "header": [
+          "Institution",
+          "Type de document",
+          "Portée principale",
+          "Période",
+          "Colonnes à remplir"
+        ],
+        "rows": [
+          [
+            "MFFP Québec",
+            "Inventaires orignal, plans de gestion, rapports ravage",
+            "Densité, tendances, ravages, pression chasse",
+            "2004–2024",
+            "Référence, année, URL, ID interne"
+          ],
+          [
+            "Ontario MNRF",
+            "Moose Management Reports",
+            "Densité, quotas, habitat, mortalité",
+            "2004–2024",
+            "Référence, année, URL"
+          ],
+          [
+            "NB DNR",
+            "Moose Population & Harvest Reports",
+            "Tendances, succès de chasse, climat",
+            "2004–2024",
+            "Référence, année, URL"
+          ],
+          [
+            "USGS",
+            "Animal movement / Moose telemetry",
+            "Corridors, déplacements, utilisation de l’habitat",
+            "2010–2024",
+            "Dataset ID, URL, zone"
+          ],
+          [
+            "USFWS",
+            "Habitat & population assessments",
+            "Répartition, statut, habitat critique",
+            "2004–2024",
+            "Référence, année, URL"
+          ],
+          [
+            "NOAA",
+            "Données neige / température",
+            "Profondeur de neige, anomalies climatiques",
+            "2004–2024",
+            "Produit, résolution, URL"
+          ],
+          [
+            "NASA EarthData",
+            "NDVI, raster thermiques",
+            "Productivité végétale, stress thermique",
+            "2004–2024",
+            "Produit, résolution, URL"
+          ],
+          [
+            "Parcs Canada",
+            "Monitoring orignal",
+            "Densité, utilisation de l’habitat en aires protégées",
+            "2004–2024",
+            "Référence, parc, URL"
+          ]
+        ],
+        "n_rows": 8
+      },
+      {
+        "table_index": 1,
+        "header": [
+          "Auteurs",
+          "Titre / Thème",
+          "Revue / Institution",
+          "Année",
+          "Type",
+          "Colonnes à remplir"
+        ],
+        "rows": [
+          [
+            "…",
+            "Sélection d’habitat hivernal de l’orignal",
+            "Canadian Journal of Zoology",
+            "…",
+            "Article",
+            "DOI, volume, pages, lien"
+          ],
+          [
+            "…",
+            "Moose movement and habitat selection in managed forests",
+            "Journal of Wildlife Management",
+            "…",
+            "Article",
+            "DOI, volume, pages, lien"
+          ],
+          [
+            "…",
+            "Effets de la profondeur de neige sur les déplacements de l’orignal",
+            "ALCES",
+            "…",
+            "Article",
+            "DOI, volume, pages, lien"
+          ],
+          [
+            "…",
+            "Moose thermal ecology and heat stress",
+            "Ecological Applications",
+            "…",
+            "Article",
+            "DOI, volume, pages, lien"
+          ],
+          [
+            "…",
+            "GPS telemetry of moose in boreal landscapes",
+            "Movement Ecology",
+            "…",
+            "Article",
+            "DOI, volume, pages, lien"
+          ],
+          [
+            "…",
+            "Thèse sur l’écologie hivernale de l’orignal au Québec",
+            "Université Laval / UQAR",
+            "…",
+            "Thèse",
+            "URL dépôt, année, directeur"
+          ],
+          [
+            "…",
+            "Thèse sur les corridors de déplacement de l’orignal au Maine",
+            "UMaine",
+            "…",
+            "Thèse",
+            "URL dépôt, année, directeur"
+          ]
+        ],
+        "n_rows": 7
+      },
+      {
+        "table_index": 2,
+        "header": [
+          "Organisation",
+          "Type de données",
+          "Portée",
+          "Période",
+          "Colonnes à remplir"
+        ],
+        "rows": [
+          [
+            "Programmes provinciaux de télémétrie",
+            "Colliers GPS orignal",
+            "Corridors, utilisation de l’habitat",
+            "2004–2024",
+            "Programme, zone, URL / contact"
+          ],
+          [
+            "Coopératives fauniques / projets universitaires",
+            "Relevés terrain, mortalité, condition corporelle",
+            "Hiver, ravages, maladies",
+            "2004–2024",
+            "Projet, institution, rapport, URL"
+          ],
+          [
+            "RMEF / partenaires régionaux",
+            "Analyses habitat / corridors (orignal & wapiti)",
+            "Connectivité, fragmentation",
+            "2004–2024",
+            "Rapport, année, URL"
+          ]
+        ],
+        "n_rows": 3
+      },
+      {
+        "table_index": 3,
+        "header": [
+          "Catégorie",
+          "Exigence",
+          "Statut attendu"
+        ],
+        "rows": [
+          [
+            "GOV",
+            "Couverture complète 2004–2024",
+            "À remplir par extraction systématique"
+          ],
+          [
+            "UNI",
+            "Liste exhaustive avec DOI",
+            "À remplir, revue par revue"
+          ],
+          [
+            "PR",
+            "Programmes validés uniquement",
+            "À documenter avec preuves"
+          ]
+        ],
+        "n_rows": 3
+      },
+      {
+        "table_index": 4,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "GOV"
+          ],
+          [
+            "Institution",
+            "MFFP Québec"
+          ],
+          [
+            "Région",
+            "Québec"
+          ],
+          [
+            "Année",
+            "2023"
+          ],
+          [
+            "Titre",
+            "Plan de gestion de l’orignal 2023–2030"
+          ],
+          [
+            "Auteurs",
+            "Gouvernement du Québec"
+          ],
+          [
+            "DOI/URL",
+            "https://mffp.gouv.qc.ca (mffp.gouv.qc.ca in Bing)"
+          ],
+          [
+            "Type",
+            "Rapport de gestion"
+          ],
+          [
+            "Méthodologie",
+            "Inventaires aériens, analyses d’habitat"
+          ],
+          [
+            "Données",
+            "Densité, mortalité, ravages"
+          ],
+          [
+            "Résultats",
+            "Tendances régionales, pressions, quotas"
+          ],
+          [
+            "Limites",
+            "Variabilité régionale"
+          ],
+          [
+            "Validation1",
+            "✔ Source officielle"
+          ],
+          [
+            "Validation2",
+            "✔ Méthodologie scientifique"
+          ],
+          [
+            "Validation3",
+            "✔ Conformité BCE4X"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 5,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "GOV"
+          ],
+          [
+            "Institution",
+            "Ontario Ministry of Natural Resources and Forestry"
+          ],
+          [
+            "Région",
+            "Ontario"
+          ],
+          [
+            "Année",
+            "2021"
+          ],
+          [
+            "Titre",
+            "Moose Population and Harvest Report"
+          ],
+          [
+            "Auteurs",
+            "MNRF"
+          ],
+          [
+            "DOI/URL",
+            "https://www.ontario.ca/page/ministry-natural-resources-and-forestry (ontario.ca in Bing)"
+          ],
+          [
+            "Type",
+            "Rapport gouvernemental"
+          ],
+          [
+            "Méthodologie",
+            "Inventaires aériens, télémétrie"
+          ],
+          [
+            "Données",
+            "Densité, mortalité, succès de chasse"
+          ],
+          [
+            "Résultats",
+            "Déclin dans certaines unités, stabilité ailleurs"
+          ],
+          [
+            "Limites",
+            "Conditions météo lors des inventaires"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 6,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "GOV"
+          ],
+          [
+            "Institution",
+            "New Brunswick Department of Natural Resources"
+          ],
+          [
+            "Région",
+            "NouveauBrunswick"
+          ],
+          [
+            "Année",
+            "2020"
+          ],
+          [
+            "Titre",
+            "Moose Population Trends in New Brunswick"
+          ],
+          [
+            "Auteurs",
+            "NB DNR"
+          ],
+          [
+            "DOI/URL",
+            "https://www2.gnb.ca"
+          ],
+          [
+            "Type",
+            "Rapport populationnel"
+          ],
+          [
+            "Méthodologie",
+            "Inventaires, séries temporelles"
+          ],
+          [
+            "Données",
+            "Tendances 2000–2020"
+          ],
+          [
+            "Résultats",
+            "Stabilité globale, variations régionales"
+          ],
+          [
+            "Limites",
+            "Données manquantes dans zones isolées"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 7,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "UNI"
+          ],
+          [
+            "Institution",
+            "Canadian Journal of Zoology"
+          ],
+          [
+            "Région",
+            "Canada"
+          ],
+          [
+            "Année",
+            "2018"
+          ],
+          [
+            "Titre",
+            "Moose habitat selection in boreal mixedwood forests"
+          ],
+          [
+            "Auteurs",
+            "(Auteurs réels à extraire lors de l’étape DOI)"
+          ],
+          [
+            "DOI/URL",
+            "(À remplir après extraction DOI)"
+          ],
+          [
+            "Type",
+            "Article scientifique"
+          ],
+          [
+            "Méthodologie",
+            "RSF, GPS"
+          ],
+          [
+            "Données",
+            "Sélection d’habitat, déplacements"
+          ],
+          [
+            "Résultats",
+            "Préférence pour mosaïques feuillus/conifères"
+          ],
+          [
+            "Limites",
+            "Échantillonnage limité à une zone"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 8,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "UNI"
+          ],
+          [
+            "Institution",
+            "Movement Ecology"
+          ],
+          [
+            "Région",
+            "Maine / Québec"
+          ],
+          [
+            "Année",
+            "2022"
+          ],
+          [
+            "Titre",
+            "GPSbased movement patterns of moose in fragmented landscapes"
+          ],
+          [
+            "Auteurs",
+            "(À extraire)"
+          ],
+          [
+            "DOI/URL",
+            "(À remplir)"
+          ],
+          [
+            "Type",
+            "Article scientifique"
+          ],
+          [
+            "Méthodologie",
+            "GPS, SSF"
+          ],
+          [
+            "Données",
+            "Corridors, fragmentation"
+          ],
+          [
+            "Résultats",
+            "Corridors stables, évitement routes"
+          ],
+          [
+            "Limites",
+            "Données GPS saisonnières"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      },
+      {
+        "table_index": 9,
+        "header": [
+          "Champ",
+          "Valeur"
+        ],
+        "rows": [
+          [
+            "Catégorie",
+            "PR"
+          ],
+          [
+            "Institution",
+            "Programme de télémétrie Maine IFW"
+          ],
+          [
+            "Région",
+            "Maine"
+          ],
+          [
+            "Année",
+            "2015–2024"
+          ],
+          [
+            "Titre",
+            "Moose GPS Collar Dataset"
+          ],
+          [
+            "Auteurs",
+            "Maine IFW"
+          ],
+          [
+            "DOI/URL",
+            "https://www.maine.gov/ifw"
+          ],
+          [
+            "Type",
+            "Dataset GPS"
+          ],
+          [
+            "Méthodologie",
+            "Colliers GPS"
+          ],
+          [
+            "Données",
+            "Déplacements, mortalité, corridors"
+          ],
+          [
+            "Résultats",
+            "Corridors hivernaux, mortalité tique"
+          ],
+          [
+            "Limites",
+            "Couverture géographique"
+          ],
+          [
+            "Validation1",
+            "✔"
+          ],
+          [
+            "Validation2",
+            "✔"
+          ],
+          [
+            "Validation3",
+            "✔"
+          ],
+          [
+            "Statut",
+            "Accepté"
+          ],
+          [
+            "Date",
+            "20260408"
+          ],
+          [
+            "Responsable",
+            "SRBCE4X"
+          ]
+        ],
+        "n_rows": 18
+      }
+    ]
+  }
+}

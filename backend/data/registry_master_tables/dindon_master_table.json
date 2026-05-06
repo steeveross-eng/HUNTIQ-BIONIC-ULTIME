@@ -1,0 +1,81 @@
+{
+  "species": "dindon",
+  "ordre": "N°54-Ω-VAGUE-1",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "ingested_at_utc": "2026-05-06T19:38:09+00:00",
+  "docx_source": "/app/backend/data/docs/science/dindon.docx",
+  "docx_sha256": "a55ec682cbd1b5df44e96652997ad808965deb541afce608489d6d56ffa97716",
+  "validation_BCE_4X": {
+    "sources_categories_required": [
+      "GOV",
+      "UNI",
+      "PR"
+    ],
+    "n_paragraphs_per_section": {
+      "GOV": 59,
+      "UNI": 57,
+      "PR": 46
+    },
+    "all_categories_present": true
+  },
+  "n_dois_extracted": 4,
+  "dois": [
+    "10.1002/jwmg.703",
+    "10.1002/jwmg.1034",
+    "10.1002/jwmg.21234",
+    "10.7589/201405123"
+  ],
+  "tables_summary": {
+    "n_tables_total": 12,
+    "n_gov": 0,
+    "n_uni": 0,
+    "n_pr": 1,
+    "n_fiche_ligne": 7,
+    "n_autres": 4
+  },
+  "tables_GOV": [],
+  "tables_UNI": [],
+  "tables_PR": [
+    {
+      "table_index": 2,
+      "header": [
+        "Organisation",
+        "Type de données",
+        "Portée",
+        "Période",
+        "Colonnes à remplir"
+      ],
+      "rows": [
+        [
+          "NWTF (National Wild Turkey Federation)",
+          "Habitat, tendances, SIG",
+          "Habitat, corridors, reproduction",
+          "2004–2024",
+          "Rapport, année, URL"
+        ],
+        [
+          "Programmes régionaux de télémétrie",
+          "Colliers GPS dindon",
+          "Déplacements, corridors",
+          "2010–2024",
+          "Programme, zone, URL / contact"
+        ],
+        [
+          "Coopératives fauniques",
+          "Relevés terrain, reproduction",
+          "Nidification, survie juvénile",
+          "2004–2024",
+          "Projet, institution, rapport, URL"
+        ],
+        [
+          "Partenaires universitaires",
+          "Analyses habitat / fragmentation",
+          "Connectivité, succès de nidification",
+          "2004–2024",
+          "Rapport, année, URL"
+        ]
+      ],
+      "n_rows": 4
+    }
+  ]
+}
