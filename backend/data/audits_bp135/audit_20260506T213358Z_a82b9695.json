@@ -1,0 +1,22 @@
+{
+  "audit_filename": "audit_20260506T213358Z_a82b9695.json",
+  "audit_sha256": "a82b9695226a4bb80bd5517645b721b5a416742088302b739a2a8b98eebf43a4",
+  "persisted_at_utc": "2026-05-06T21:33:58+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "DOC_INGEST",
+    "subtype": "BP135_OFFICIAL_VALIDATED",
+    "ordre": "N°54-Ω-VAGUE-2-BIS",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "official_json_path": "/app/backend/data/registry_docs/bio_profile_omega_135/BIO_PROFILE_OMEGA_135_OFFICIAL.json",
+    "official_json_sha256": "1982136c0a0e51abbfe2c5f07baabbe26e1cfa1e0f99bae9a309b6e408998e7f",
+    "official_json_size_bytes": 557899,
+    "n_entries": 675,
+    "schema_version": "1.0.0-INSTITUTIONAL-RECONSTITUTED",
+    "commandant_signature": "STEEVE-MAX (validation officielle ORDRE 54-Ω VAGUE 2-BIS)",
+    "no_engine_recompute_triggered": true,
+    "v30_lock_inviolate": true,
+    "drift_zero": true
+  }
+}

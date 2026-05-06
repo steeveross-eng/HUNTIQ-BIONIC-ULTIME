@@ -27,6 +27,21 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-TER · ORDRE N°54-Ω VAGUE 2-BIS — REGISTRY OFFICIEL BP135 + VALIDATION FORENSIQUE (2026-05-06)**
+  Implémentation **complète** du registry officiel BIO_PROFILE_OMEGA_135 + endpoint validation forensique cellule-par-cellule. **AUCUN recalcul moteur déclenché** · **605/605 pytests Phase XVI/XVIII/XX-XXX-TER PASSED · V30_LOCK INVIOLÉ · DRIFT_ZERO**.
+  - **Module métier** : `engines/v8_institutional/especes/bp135_official_registry_omega.py` (4 fonctions : `ingest_bp135_official`, `get_official_metadata`, `get_validation_log`, `validate_against_official`).
+  - **Registry officiel** : `/app/backend/data/registry_docs/bio_profile_omega_135/` avec 3 fichiers — `BIO_PROFILE_OMEGA_135_OFFICIAL.json` (557 899 bytes) + `metadata.json` + `validation_log.json` (chain of custody).
+  - **4 endpoints API** :
+    - **POST `/api/v30/super-masters/bp135-ingest-official`** (token Commandant) : ingestion officielle JSON 675 + audit `DOC_INGEST/BP135_OFFICIAL_VALIDATED`.
+    - **GET `/api/v30/super-masters/bp135-official-metadata`** (PUBLIC) : metadata + validation_log.
+    - **GET `/api/v30/super-masters/bp135-official-json`** (PUBLIC) : téléchargement JSON officiel.
+    - **POST `/api/v30/super-masters/bp135-validate-against-official`** (token Commandant) : validation forensique cellule-par-cellule contre JSON candidat. Retourne deltas (typical/min/max) par paramètre × espèce + verdict (`STRICTEMENT_IDENTIQUE` / `ALIGNEMENT_NUMERIQUE_STRICT` / `DIVERGENCES_MINEURES` / `DIVERGENCES_MAJEURES`) + audit `BP135_VALIDATION/OFFICIAL_VS_CANDIDATE`.
+  - **Self-test forensique LIVE** : verdict=`STRICTEMENT_IDENTIQUE` (675/675 identiques · delta_max=0.0).
+  - **Watcher hooks externes exécuté** : `n_transitions=0` · 6/6 sources en `PATHS_ABSENT` (anti-générique strict — pas de fichier physique = pas de flip available=True).
+  - **Chain of custody longitudinale** : `validation_log.json` enregistre 3 events (OFFICIAL_INGESTION × 2, VALIDATION_AGAINST_OFFICIAL × 1) avec timestamps UTC + audit_filename pour traçabilité institutionnelle.
+  - **16 pytests neutres** (`test_phase_xxx_ter_bp135_official_registry_omega.py`) — naming policy stricte : ingestion × metadata × log append × invalid source raises × validation strict_identical × delta detection × only_official/only_candidate × audit BP135_VALIDATION × **anti-régression V30_LOCK strict** (BR + BP135 inchangés post-pipeline).
+  - **V30_LOCK INVIOLÉ + DRIFT_ZERO** confirmés : MD5 des 5 BR identiques, BP135 SHA-256 stable, super_engines_omega_logic.py non modifié.
+  - **Audits cumulés totaux** : 11 fichiers persistés dans `/app/backend/data/audits_bp135/` (depuis ORDRE 53 jusqu'à 54-Ω VAGUE 2-BIS).
 - **PHASE_XXX-BIS · ORDRE N°54-Ω VAGUE 2 — RECONSTITUTION INSTITUTIONNELLE BP135 (2026-05-06)**
   Implémentation **complète** de la reconstitution overlay BP135 depuis le document institutionnel `BIO_PROFILE_135.docx` (76 489 bytes, transmis par Commandant). **AUCUN recalcul moteur déclenché** (verrouillé par directive ORDRE 54 VAGUE 2) · **589/589 pytests Phase XVI/XVIII/XX-XXX-BIS PASSED · V30_LOCK INVIOLÉ**.
   - **Module métier** : `engines/v8_institutional/especes/bp135_reconstitution_omega.py` (5 fonctions principales : `parse_institutional_docx`, `generate_675_entries`, `diff_against_existing_bp135`, `build_consolidated_docx`, `execute_reconstitution_pipeline`).

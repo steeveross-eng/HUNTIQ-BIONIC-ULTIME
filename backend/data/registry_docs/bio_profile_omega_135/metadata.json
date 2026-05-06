@@ -1,0 +1,17 @@
+{
+  "manifest_id": "BP135_OFFICIAL_REGISTRY_Ω",
+  "ordre": "N°54-Ω-VAGUE-2-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "status": "OFFICIAL_VALIDATED",
+  "official_json_path": "/app/backend/data/registry_docs/bio_profile_omega_135/BIO_PROFILE_OMEGA_135_OFFICIAL.json",
+  "official_json_sha256": "1982136c0a0e51abbfe2c5f07baabbe26e1cfa1e0f99bae9a309b6e408998e7f",
+  "official_json_size_bytes": 557899,
+  "source_json_path": "/app/backend/data/bp135_reconstitution/BIO_PROFILE_OMEGA_135_RECONSTITUTED.json",
+  "n_entries": 675,
+  "schema_version": "1.0.0-INSTITUTIONAL-RECONSTITUTED",
+  "validated_at_utc": "2026-05-06T21:37:27+00:00",
+  "commandant_signature": "STEEVE-MAX_VAGUE_2-BIS_OFFICIAL",
+  "v30_lock": "INVIOLÉ",
+  "drift_zero": true,
+  "no_engine_recompute_triggered": true
+}

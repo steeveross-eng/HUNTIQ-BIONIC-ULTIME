@@ -1,0 +1,44 @@
+{
+  "log": [
+    {
+      "event": "OFFICIAL_INGESTION",
+      "ordre": "N°54-Ω-VAGUE-2-BIS",
+      "timestamp_utc": "2026-05-06T21:33:58+00:00",
+      "official_sha256": "1982136c0a0e51abbfe2c5f07baabbe26e1cfa1e0f99bae9a309b6e408998e7f",
+      "source_path": "/app/backend/data/bp135_reconstitution/BIO_PROFILE_OMEGA_135_RECONSTITUTED.json",
+      "n_entries": 675,
+      "size_bytes": 557899
+    },
+    {
+      "event": "VALIDATION_AGAINST_OFFICIAL",
+      "ordre": "N°54-Ω-VAGUE-2-BIS",
+      "timestamp_utc": "2026-05-06T21:33:58+00:00",
+      "verdict": "STRICTEMENT_IDENTIQUE",
+      "n_entries_official": 675,
+      "n_entries_candidate": 675,
+      "n_with_delta": 0,
+      "audit_filename": "audit_20260506T213358Z_ae8177eb.json"
+    },
+    {
+      "event": "OFFICIAL_INGESTION",
+      "ordre": "N°54-Ω-VAGUE-2-BIS",
+      "timestamp_utc": "2026-05-06T21:37:27+00:00",
+      "official_sha256": "1982136c0a0e51abbfe2c5f07baabbe26e1cfa1e0f99bae9a309b6e408998e7f",
+      "source_path": "/app/backend/data/bp135_reconstitution/BIO_PROFILE_OMEGA_135_RECONSTITUTED.json",
+      "n_entries": 675,
+      "size_bytes": 557899
+    },
+    {
+      "event": "VALIDATION_AGAINST_OFFICIAL",
+      "ordre": "N°54-Ω-VAGUE-2-BIS",
+      "timestamp_utc": "2026-05-06T21:37:28+00:00",
+      "verdict": "STRICTEMENT_IDENTIQUE",
+      "n_entries_official": 675,
+      "n_entries_candidate": 675,
+      "n_with_delta": 0,
+      "audit_filename": "audit_20260506T213728Z_ae8177eb.json"
+    }
+  ],
+  "last_updated_utc": "2026-05-06T21:37:28+00:00",
+  "n_events": 4
+}

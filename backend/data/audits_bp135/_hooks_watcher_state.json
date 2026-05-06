@@ -1,5 +1,5 @@
 {
-  "last_scan_at_utc": "2026-05-06T19:17:50+00:00",
+  "last_scan_at_utc": "2026-05-06T21:37:28+00:00",
   "source_states": {
     "NOAA": {
       "available": false,
@@ -33,5 +33,5 @@
     }
   },
   "last_transitions": [],
-  "last_recompute_audit_id": "audit_20260506T191750Z_76d08ac1"
+  "last_recompute_audit_id": null
 }

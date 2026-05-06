@@ -18,7 +18,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
 
 
@@ -690,3 +690,149 @@ async def bp135_reconstitution_json_endpoint():
         media_type="application/json",
         filename="BIO_PROFILE_OMEGA_135_RECONSTITUTED.json",
     )
+
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°54-Ω VAGUE 2-BIS — Registry officiel + Validation forensique
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/bp135-ingest-official")
+async def bp135_ingest_official_endpoint(
+    commandant_signature: Optional[str] = None,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """ORDRE N°54-Ω VAGUE 2-BIS · Ingestion officielle BIO_PROFILE_OMEGA_135.
+
+    Copie le JSON 675 reconstitué validé Commandant dans le registry
+    officiel `registry_docs/bio_profile_omega_135/` avec SHA-256
+    persisté + chain of custody + audit DOC_INGEST/BP135_OFFICIAL_VALIDATED.
+
+    AUCUN recalcul moteur. Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.bp135_official_registry_omega import (  # noqa: E501
+        ingest_bp135_official,
+    )
+    try:
+        payload = ingest_bp135_official(
+            commandant_signature=commandant_signature)
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "BP135_INGEST_OFFICIAL_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "BP135_INGEST_OFFICIAL_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°54-Ω-VAGUE-2-BIS",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/bp135-official-metadata")
+async def bp135_official_metadata_endpoint() -> JSONResponse:
+    """ORDRE N°54-Ω VAGUE 2-BIS · Metadata officielle (PUBLIC RO)."""
+    from engines.v8_institutional.especes.bp135_official_registry_omega import (  # noqa: E501
+        get_official_metadata, get_validation_log,
+    )
+    try:
+        metadata = get_official_metadata()
+        log = get_validation_log()
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    return JSONResponse({
+        "manifest_id": "BP135_OFFICIAL_METADATA_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°54-Ω-VAGUE-2-BIS",
+        "horodatage_build": _build_horodatage(),
+        "metadata": metadata,
+        "validation_log": log,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/bp135-official-json")
+async def bp135_official_json_endpoint():
+    """ORDRE N°54-Ω VAGUE 2-BIS · Téléchargement JSON officiel (PUBLIC).
+
+    Fichier : `BIO_PROFILE_OMEGA_135_OFFICIAL.json` (675 entrées validées).
+    """
+    from engines.v8_institutional.especes.bp135_official_registry_omega import (  # noqa: E501
+        BP135_OFFICIAL_JSON_PATH,
+    )
+    if not BP135_OFFICIAL_JSON_PATH.exists():
+        raise HTTPException(
+            status_code=404,
+            detail="OFFICIAL_JSON_NOT_INGESTED_YET")
+    return FileResponse(
+        path=str(BP135_OFFICIAL_JSON_PATH),
+        media_type="application/json",
+        filename="BIO_PROFILE_OMEGA_135_OFFICIAL.json",
+    )
+
+
+@router.post("/bp135-validate-against-official")
+async def bp135_validate_against_official_endpoint(
+    request: Request,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """ORDRE N°54-Ω VAGUE 2-BIS · Validation forensique cellule-par-cellule.
+
+    Reçoit en body JSON un candidat (avec `entries` list) et compare
+    cellule-par-cellule avec le BIO_PROFILE_OMEGA_135_OFFICIAL.json.
+
+    Retourne deltas (typical/min/max) par paramètre × espèce + verdict
+    + audit BP135_VALIDATION persisté.
+
+    AUCUN recalcul moteur. Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    try:
+        candidate = await request.json()
+    except Exception as e:
+        raise HTTPException(
+            status_code=400,
+            detail=f"INVALID_JSON_BODY::{str(e)[:200]}")
+    if not isinstance(candidate, dict):
+        raise HTTPException(
+            status_code=400,
+            detail="JSON body must be an object with 'entries' list.")
+
+    from engines.v8_institutional.especes.bp135_official_registry_omega import (  # noqa: E501
+        validate_against_official,
+    )
+    try:
+        payload = validate_against_official(candidate)
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "BP135_VALIDATION_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "BP135_VALIDATE_AGAINST_OFFICIAL_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°54-Ω-VAGUE-2-BIS",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })

@@ -1,0 +1,40 @@
+{
+  "audit_filename": "audit_20260506T213358Z_ae8177eb.json",
+  "audit_sha256": "ae8177eb7878a2325f909bb2bdd413b68a5dc194a5baac717f03ca22ee2d30fa",
+  "persisted_at_utc": "2026-05-06T21:33:58+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "BP135_VALIDATION",
+    "subtype": "OFFICIAL_VS_CANDIDATE",
+    "ordre": "N°54-Ω-VAGUE-2-BIS",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "n_entries_official": 675,
+    "n_entries_candidate": 675,
+    "n_only_official": 0,
+    "n_only_candidate": 0,
+    "n_identical": 675,
+    "n_with_delta": 0,
+    "field_mismatches": {},
+    "stats_summary": {
+      "delta_typical": {
+        "n": 0,
+        "max": 0.0,
+        "mean": 0.0
+      },
+      "delta_min": {
+        "n": 0,
+        "max": 0.0,
+        "mean": 0.0
+      },
+      "delta_max": {
+        "n": 0,
+        "max": 0.0,
+        "mean": 0.0
+      }
+    },
+    "verdict": "STRICTEMENT_IDENTIQUE",
+    "no_engine_recompute_triggered": true,
+    "v30_lock_inviolate": true
+  }
+}
