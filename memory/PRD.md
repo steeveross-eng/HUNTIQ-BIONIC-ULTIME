@@ -27,6 +27,22 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-BIS · ORDRE N°54-Ω VAGUE 2 — RECONSTITUTION INSTITUTIONNELLE BP135 (2026-05-06)**
+  Implémentation **complète** de la reconstitution overlay BP135 depuis le document institutionnel `BIO_PROFILE_135.docx` (76 489 bytes, transmis par Commandant). **AUCUN recalcul moteur déclenché** (verrouillé par directive ORDRE 54 VAGUE 2) · **589/589 pytests Phase XVI/XVIII/XX-XXX-BIS PASSED · V30_LOCK INVIOLÉ**.
+  - **Module métier** : `engines/v8_institutional/especes/bp135_reconstitution_omega.py` (5 fonctions principales : `parse_institutional_docx`, `generate_675_entries`, `diff_against_existing_bp135`, `build_consolidated_docx`, `execute_reconstitution_pipeline`).
+  - **675/675 entrées BCE-4X** générées depuis 9 tables × 16 rows × 8 cols du DOCX institutionnel (135 paramètres × 5 espèces × 16 champs).
+  - **Méthodes d'extraction strictes** : `numeric_range` (593) + `binary_tagged_na` (27) + `categorical_text` (37) + `binary_tagged_oui_non` (10) + `categorical_chromatic` (5) + `binary_tagged_hibernation` (3). Encodage chromatique SEN-013 : dichromate=2, trichromate=3, tétrachromate=4.
+  - **4 endpoints API** :
+    - **POST `/api/v30/super-masters/bp135-reconstitution-execute`** (token Commandant) : pipeline complet + audit DOC_INGEST/BP135_INSTITUTIONAL persisté.
+    - **GET `/api/v30/super-masters/bp135-reconstitution-overlay`** (PUBLIC) : overlay détaillé.
+    - **GET `/api/v30/super-masters/bp135-reconstitution-document`** (PUBLIC) : **téléchargement DOCX consolidé** institutionnel (9 551 bytes, 9 sections par bloc avec tables récapitulatives).
+    - **GET `/api/v30/super-masters/bp135-reconstitution-json`** (PUBLIC) : **téléchargement JSON 675 entrées** (557 899 bytes) candidat à validation Commandant.
+  - **3 artefacts persistés** : `bp135_reconstitution_overlay.json` (217 KB) + `BIO_PROFILE_OMEGA_135_RECONSTITUTED.json` (558 KB) + `BIO_PROFILE_OMEGA_135_CONSOLIDATED.docx` (9.5 KB) dans `/app/backend/data/bp135_reconstitution/`.
+  - **Diff vs JSON existant** : 588 identiques · 87 value_changes · 0 missing (cohérence retrouvée). Les 87 changes correspondent aux paramètres reconstitués depuis DOCX institutionnel (DINDON_SAUVAGE × DEP+SEN, etc.).
+  - **Registry external sources étendu** : champ `official_https_sources` ajouté pour 6 sources avec **19 URLs HTTPS officielles** transmises (NOAA 4, NASA 4, USGS 4, RSF/SSF 2, MAXENT 2, FORECAST 3). Hooks restent en `PATHS_ABSENT` doctrinal jusqu'à dépôt physique des fichiers.
+  - **27 pytests neutres** (`test_phase_xxx_bis_bp135_reconstitution_omega.py`) — naming policy stricte : extraction × parse DOCX × génération 675 × schéma BCE-4X × diff × DOCX validation × pipeline complet × no_persist × **anti-régression V30_LOCK strict** × URLs HTTPS registry.
+  - **V30_LOCK INVIOLÉ** post-pipeline : MD5 des 5 BR identiques · BP135 SHA-256 (`fd9374c3c3ef632b…`) stable · super_engines_omega_logic.py non modifié.
+  - **DINDON_SAUVAGE × (DEP+SEN) reconstitution complète** : 30/30 paramètres avec valeurs réelles extraites du DOCX institutionnel (typ/min/max numériques pour ≥13/15 par bloc, le reste catégoriel cohérent).
 - **PHASE_XXX · ORDRE N°54-Ω VAGUE 1 — INGESTION DOCUMENTAIRE INSTITUTIONNELLE 5 ESPÈCES (2026-05-06)**
   Implémentation **complète** de l'ingestion documentaire VAGUE 1 (5 rapports scientifiques DOCX) avec extraction GOV/UNI/PR + DOI + tableaux maîtres. **AUCUN recalcul moteur déclenché** (verrouillé par directive 6) · **562/562 pytests Phase XVI/XVIII/XX-XXX PASSED** · **V30_LOCK INVIOLÉ**.
   - **Module métier** : `engines/v8_institutional/especes/docs_ingest_omega.py` (9 fonctions : `parse_docx`, `extract_sections_gov_uni_pr`, `extract_dois`, `resolve_dois_http_200`, `normalize_master_tables`, `ingest_species_doc`, `ingest_all_species_vague_1`, `list_registry_science`, `get_master_table`).

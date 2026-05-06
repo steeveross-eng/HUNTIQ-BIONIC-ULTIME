@@ -374,7 +374,7 @@ def test_format_extensions_realistic(overlay):
         "NOAA": {".nc", ".grib2"},
         "NASA": {".tif", ".hdf"},
         "USGS": {".tif", ".csv"},
-        "RSF_SSF": {".pkl", ".json"},
+        "RSF_SSF": {".pkl", ".rds", ".json"},
         "MAXENT": {".jar", ".asc", ".tif"},
     }
     for src in overlay.EXTERNAL_SOURCES_REGISTRY:

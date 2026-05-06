@@ -1,0 +1,48 @@
+{
+  "audit_filename": "audit_20260506T210317Z_e1460d77.json",
+  "audit_sha256": "e1460d77f694f8dc781ec7662a818bbcb8407ce12a2885ada8ba76f8b4b01420",
+  "persisted_at_utc": "2026-05-06T21:03:17+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "DOC_INGEST",
+    "subtype": "BP135_INSTITUTIONAL",
+    "ordre": "N°54-Ω-VAGUE-2",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "docx_source": "/app/backend/data/docs/institutional/BIO_PROFILE_135_INSTITUTIONNEL.docx",
+    "docx_sha256": "31631b118cc1ea5e58c349f4cb3dc1ae9751f88feedc2487b6d884781e6a3322",
+    "n_entries_reconstituted": 675,
+    "n_entries_expected": 675,
+    "complete": true,
+    "extraction_methods_distribution": {
+      "numeric_range": 593,
+      "binary_tagged_na": 27,
+      "categorical_text": 37,
+      "binary_tagged_hibernation": 3,
+      "binary_tagged_oui_non": 10,
+      "categorical_chromatic": 5
+    },
+    "diff_summary": {
+      "n_missing_filled": 0,
+      "n_value_changes": 87,
+      "n_identical": 588
+    },
+    "persisted_files": {
+      "overlay_json": "/app/backend/data/bp135_reconstitution/bp135_reconstitution_overlay.json",
+      "reconstituted_json": "/app/backend/data/bp135_reconstitution/BIO_PROFILE_OMEGA_135_RECONSTITUTED.json",
+      "consolidated_docx": "/app/backend/data/bp135_reconstitution/BIO_PROFILE_OMEGA_135_CONSOLIDATED.docx",
+      "sha256_per_file": {
+        "overlay_json": "4f9d06c13718562e46406731c34c97f2c47f6d42759e2ba595bd1048fb39c9a6",
+        "reconstituted_json": "8da7773771a7ed3a198918bd2b0b8f79b6ac82c6f4b6df33c5344d48b8a6d2ec",
+        "consolidated_docx": "86a09d836dab19e89d02bc9d4dc1dd57a9675855884fe81d9e2a1312598e4316"
+      },
+      "sizes_per_file": {
+        "overlay_json": 217522,
+        "reconstituted_json": 557899,
+        "consolidated_docx": 9552
+      }
+    },
+    "no_engine_recompute_triggered": true,
+    "v30_lock_inviolate": true
+  }
+}

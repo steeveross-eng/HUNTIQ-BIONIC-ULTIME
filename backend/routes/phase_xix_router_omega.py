@@ -573,3 +573,120 @@ async def master_table_endpoint(
         "result": payload,
         "v30_lock": "INVIOLÉ",
     })
+
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°54-Ω VAGUE 2 — RECONSTITUTION INSTITUTIONNELLE BP135
+# ═════════════════════════════════════════════════════════════════════════
+from fastapi.responses import FileResponse  # noqa: E402
+
+
+@router.post("/bp135-reconstitution-execute")
+async def bp135_reconstitution_execute_endpoint(
+    persist: bool = True,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """ORDRE N°54-Ω VAGUE 2 · Reconstitution overlay BP135 depuis DOCX.
+
+    Pipeline :
+      1. Parse BIO_PROFILE_135.docx institutionnel
+      2. Génère 675 entrées BCE-4X (135 paramètres × 5 espèces × 16 champs)
+      3. Diff vs JSON existant (audit)
+      4. Persiste : overlay + JSON 675 + DOCX consolidé + audit
+        DOC_INGEST/BP135_INSTITUTIONAL
+
+    AUCUN recalcul moteur. V30_LOCK INVIOLÉ. Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.bp135_reconstitution_omega import (
+        execute_reconstitution_pipeline,
+    )
+    try:
+        payload = execute_reconstitution_pipeline(persist=persist)
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "BP135_RECONSTITUTION_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "BP135_RECONSTITUTION_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°54-Ω-VAGUE-2",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/bp135-reconstitution-overlay")
+async def bp135_reconstitution_overlay_endpoint() -> JSONResponse:
+    """ORDRE N°54-Ω VAGUE 2 · Overlay reconstitution BP135 (PUBLIC RO)."""
+    from engines.v8_institutional.especes.bp135_reconstitution_omega import (
+        OVERLAY_JSON_PATH,
+    )
+    if not OVERLAY_JSON_PATH.exists():
+        raise HTTPException(
+            status_code=404,
+            detail="OVERLAY_NOT_GENERATED_YET")
+    import json as _json
+    payload = _json.loads(OVERLAY_JSON_PATH.read_text(encoding="utf-8"))
+    return JSONResponse({
+        "manifest_id": "BP135_RECONSTITUTION_OVERLAY_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°54-Ω-VAGUE-2",
+        "horodatage_build": _build_horodatage(),
+        "overlay_json_size": OVERLAY_JSON_PATH.stat().st_size,
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/bp135-reconstitution-document")
+async def bp135_reconstitution_document_endpoint():
+    """ORDRE N°54-Ω VAGUE 2 · Téléchargement document consolidé .docx
+    institutionnel (PUBLIC).
+
+    Format : application/vnd.openxmlformats-officedocument.
+             wordprocessingml.document
+    """
+    from engines.v8_institutional.especes.bp135_reconstitution_omega import (
+        CONSOLIDATED_DOCX_PATH,
+    )
+    if not CONSOLIDATED_DOCX_PATH.exists():
+        raise HTTPException(
+            status_code=404,
+            detail="CONSOLIDATED_DOCX_NOT_GENERATED_YET")
+    return FileResponse(
+        path=str(CONSOLIDATED_DOCX_PATH),
+        media_type=(
+            "application/vnd.openxmlformats-officedocument."
+            "wordprocessingml.document"),
+        filename="BIO_PROFILE_OMEGA_135_CONSOLIDATED.docx",
+    )
+
+
+@router.get("/bp135-reconstitution-json")
+async def bp135_reconstitution_json_endpoint():
+    """ORDRE N°54-Ω VAGUE 2 · Téléchargement JSON 675 entrées (PUBLIC).
+
+    Fichier candidat à validation Commandant pour devenir
+    BIO_PROFILE_OMEGA_135.json officiel.
+    """
+    from engines.v8_institutional.especes.bp135_reconstitution_omega import (
+        RECONSTITUTED_JSON_PATH,
+    )
+    if not RECONSTITUTED_JSON_PATH.exists():
+        raise HTTPException(
+            status_code=404,
+            detail="RECONSTITUTED_JSON_NOT_GENERATED_YET")
+    return FileResponse(
+        path=str(RECONSTITUTED_JSON_PATH),
+        media_type="application/json",
+        filename="BIO_PROFILE_OMEGA_135_RECONSTITUTED.json",
+    )

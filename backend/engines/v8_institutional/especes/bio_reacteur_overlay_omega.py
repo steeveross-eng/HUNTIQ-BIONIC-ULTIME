@@ -72,6 +72,13 @@ EXTERNAL_SOURCES_REGISTRY: List[Dict[str, Any]] = [
         "formats": [".nc", ".grib2"],
         "hooks_targets": ["ENVIRONNEMENT"],
         "consumed_by_masters": ["SENSORIEL_MASTER_Ω"],
+        "official_https_sources": [
+            "https://www.noaa.gov",
+            "https://www.ncei.noaa.gov",
+            "https://psl.noaa.gov",
+            "https://www.ncdc.noaa.gov/data-access/model-data/"
+            "model-datasets",
+        ],
     },
     {
         "source_name": "NASA",
@@ -81,6 +88,12 @@ EXTERNAL_SOURCES_REGISTRY: List[Dict[str, Any]] = [
         "hooks_targets": ["NUTRITION", "ENVIRONNEMENT"],
         "consumed_by_masters": [
             "NUTRITION_MASTER_Ω", "SENSORIEL_MASTER_Ω"],
+        "official_https_sources": [
+            "https://earthdata.nasa.gov",
+            "https://lpdaac.usgs.gov",
+            "https://modis.gsfc.nasa.gov",
+            "https://search.earthdata.nasa.gov",
+        ],
     },
     {
         "source_name": "USGS",
@@ -90,6 +103,12 @@ EXTERNAL_SOURCES_REGISTRY: List[Dict[str, Any]] = [
         "hooks_targets": ["COMPORTEMENT", "PREDICTIF"],
         "consumed_by_masters": [
             "COMPORTEMENT_MASTER_Ω", "GOUVERNANCE_MASTER_Ω"],
+        "official_https_sources": [
+            "https://www.usgs.gov",
+            "https://www.sciencebase.gov",
+            "https://prd-tnm.s3.amazonaws.com/index.html",
+            "https://mrdata.usgs.gov",
+        ],
     },
     {
         "source_name": "RSF_SSF",
@@ -97,10 +116,14 @@ EXTERNAL_SOURCES_REGISTRY: List[Dict[str, Any]] = [
             _per_species_paths("/models/rsf")
             + _per_species_paths("/models/ssf")),
         "expected_subpath_glob": "*",
-        "formats": [".pkl", ".json"],
+        "formats": [".pkl", ".rds", ".json"],
         "hooks_targets": ["PREDICTIF"],
         "consumed_by_masters": ["GOUVERNANCE_MASTER_Ω"],
         "per_species_aware": True,
+        "official_https_sources": [
+            "https://movementecologyjournal.biomedcentral.com",
+            "https://www.usgs.gov",
+        ],
     },
     {
         "source_name": "MAXENT",
@@ -110,6 +133,10 @@ EXTERNAL_SOURCES_REGISTRY: List[Dict[str, Any]] = [
         "hooks_targets": ["PREDICTIF"],
         "consumed_by_masters": ["GOUVERNANCE_MASTER_Ω"],
         "per_species_aware": True,
+        "official_https_sources": [
+            "https://biodiversityinformatics.amnh.org/open_source/maxent",
+            "https://github.com/mrmaxent/maxent",
+        ],
     },
     {
         "source_name": "FORECAST_48H",
@@ -118,6 +145,11 @@ EXTERNAL_SOURCES_REGISTRY: List[Dict[str, Any]] = [
         "formats": [".nc", ".json", ".csv"],
         "hooks_targets": ["ENVIRONNEMENT"],
         "consumed_by_masters": ["SENSORIEL_MASTER_Ω"],
+        "official_https_sources": [
+            "https://www.weather.gov",
+            "https://api.weather.gov",
+            "https://www.nws.noaa.gov",
+        ],
     },
 ]
 
@@ -191,6 +223,8 @@ def scan_external_sources() -> Dict[str, Any]:
             "formats_expected": src["formats"],
             "hooks_targets": src["hooks_targets"],
             "consumed_by_masters": src["consumed_by_masters"],
+            "official_https_sources": src.get(
+                "official_https_sources", []),
             "available": available,
             "fallback_when_unavailable": "skip_with_log",
             "anti_generique_strict": True,
