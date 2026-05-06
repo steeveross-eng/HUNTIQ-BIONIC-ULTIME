@@ -55,6 +55,8 @@ DICTIONARY_FILES = {
         DICTIONARIES_ROOT / "couvert_securite_thresholds.json"),
     "phenologie_saisonniere": (
         DICTIONARIES_ROOT / "phenologie_saisonniere.json"),
+    "connectivity_rules": (
+        DICTIONARIES_ROOT / "connectivity_rules.json"),
 }
 
 
@@ -156,6 +158,17 @@ def all_validated_for_r16b() -> bool:
         "phenologie_saisonniere") in ("VALIDÉ", "OFFICIAL")
 
 
+def all_validated_for_r16c() -> bool:
+    """Indique si TOUS les dicts requis pour R16-C sont VALIDÉS.
+
+    R16-C = R16-B requis + connectivity_rules.
+    """
+    if not all_validated_for_r16b():
+        return False
+    return get_dictionary_status(
+        "connectivity_rules") in ("VALIDÉ", "OFFICIAL")
+
+
 def list_validation_blockers() -> List[Dict[str, Any]]:
     """Liste les dictionnaires non validés et les raisons."""
     blockers = []
@@ -188,6 +201,7 @@ __all__ = [
     "all_validated_for_p1",
     "all_validated_for_r16a",
     "all_validated_for_r16b",
+    "all_validated_for_r16c",
     "list_validation_blockers",
     "DICTIONARIES_ROOT",
     "DICTIONARY_FILES",

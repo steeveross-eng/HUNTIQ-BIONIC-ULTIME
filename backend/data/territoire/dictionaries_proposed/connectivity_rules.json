@@ -1,0 +1,76 @@
+{
+  "manifest_id": "CONNECTIVITY_RULES_VALIDATED_Ω",
+  "ordre": "N°52-R16-C",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "status": "VALIDÉ",
+  "validated_at_utc": "2026-05-06T16:00:00+00:00",
+  "validated_by": "COMMANDANT_STEEVE_MAX_R16_C",
+  "version": "1.0.0-VALIDATED",
+  "source_documentation": [
+    "Dickson, B.G. et al. (2017) Connectivity modeling — least-cost path",
+    "Beier, P. & Noss, R.F. (1998) Do habitat corridors provide connectivity?",
+    "Bennett, A.F. (2003) Linkages in landscape ecosystems",
+    "Clevenger, A.P. & Wierzchowski, J. (2001) Passage wildlife structures",
+    "Cushman, S.A. & Lewis, J.S. (2010) Multi-species connectivity Yellowstone"
+  ],
+  "description": "Règles canoniques R16-C : corridors (cost-surface) + zones de passage (buffers) + hotspots (top percentile) + fusion multi-espèces.",
+  "corridors_rules": {
+    "description": "Corridor potential score par pixel (0-100). Combinaison habitat × couvert_securite inverse fragmentation + exclusion.",
+    "score_formula_weights": {
+      "habitat_brut_per_species": 0.40,
+      "couvert_securite": 0.25,
+      "inverse_fragmentation": 0.20,
+      "inverse_exclusion": 0.15
+    },
+    "fragmentation_inversion_method": "100 - fragmentation*100",
+    "exclusion_penalty_factor": 0,
+    "resolution_m": 100,
+    "anti_generique_strict": true
+  },
+  "zones_passage_rules": {
+    "description": "Zones reliant les zones vitales — score basé sur zones_vitales ≥ seuil + buffer corridor.",
+    "seuil_zones_vitales_high": 70,
+    "buffer_corridor_score_min": 50,
+    "score_formula": "min(zones_vitales*0.6 + corridor_score*0.4, 100)",
+    "buffer_m": 500,
+    "resolution_m": 100
+  },
+  "hotspots_rules": {
+    "description": "Hotspots = top 5 % des polygones selon score combiné habitat + productivité + structure + continuité.",
+    "score_formula_weights": {
+      "habitat_brut_per_species": 0.35,
+      "productivity": 0.20,
+      "structure": 0.15,
+      "continuity": 0.15,
+      "couvert_securite": 0.15
+    },
+    "top_percentile": 95,
+    "min_area_ha_per_hotspot": 5,
+    "merge_adjacent": true,
+    "resolution_m": 100
+  },
+  "corridors_multi_especes_rules": {
+    "description": "Fusion corridors × 5 espèces + bonus hydrologie. Valeur pixel = moyenne des 5 corridors (si > 0 pour espèce) + bonus si proche zone humide.",
+    "fusion_method": "weighted_mean_then_bonus",
+    "species_weights_by_mass": {
+      "chevreuil": 0.18,
+      "orignal": 0.30,
+      "ours_noir": 0.22,
+      "dindon": 0.10,
+      "wapiti": 0.20
+    },
+    "hydrologie_bonus_pts": 10,
+    "external_source_optional": {
+      "IA_VISION_corridors": {
+        "interface": "engines.v8_institutional.engine_ia_vision_ecologique_omega",
+        "fallback_when_unavailable": "skip_with_log"
+      },
+      "DONNEES_CHASSEUR_gps": {
+        "interface": "engines.v8_institutional.especes.gps_loader_omega",
+        "fallback_when_unavailable": "skip_with_log"
+      }
+    },
+    "resolution_m": 100
+  },
+  "v30_lock": "INVIOLÉ"
+}

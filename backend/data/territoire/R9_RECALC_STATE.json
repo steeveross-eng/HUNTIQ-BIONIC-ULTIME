@@ -1,6 +1,6 @@
 {
   "run_id": "R9_1778027156_98807b",
-  "status": "OK_REAL_PARTIAL_R16B",
+  "status": "OK_REAL_PARTIAL_R16C",
   "started_at_utc": "2026-05-06T00:25:56.378713+00:00",
   "last_update_utc": "2026-05-06T00:25:56.378724+00:00",
   "ordre": "N°52-R9",
@@ -299,6 +299,150 @@
       "output_vector": null,
       "raster_sha256": "6f03e435f58f6e25f2907cd526b2e737929038d86dd36e9524b8e68c6f777abe",
       "elapsed_s": 0.54
+    },
+    "R9_CORRIDORS_CHEVREUIL": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-C",
+      "completed_at_utc": "2026-05-06T15:39:20.443274+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_CORRIDORS_CHEVREUIL.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_CORRIDORS_CHEVREUIL.gpkg",
+      "raster_sha256": "819ff54a5ae673109ab778b2a158f6b797734fa5804709a5446063ba54d306f4",
+      "elapsed_s": 1.1
+    },
+    "R9_CORRIDORS_ORIGNAL": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-C",
+      "completed_at_utc": "2026-05-06T15:39:20.443288+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_CORRIDORS_ORIGNAL.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_CORRIDORS_ORIGNAL.gpkg",
+      "raster_sha256": "2daa3e1f852c40bca702a9fe26eee53f06cad52ac681689ffe495406c45d236c",
+      "elapsed_s": 0.71
+    },
+    "R9_CORRIDORS_OURS_NOIR": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-C",
+      "completed_at_utc": "2026-05-06T15:39:20.443291+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_CORRIDORS_OURS_NOIR.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_CORRIDORS_OURS_NOIR.gpkg",
+      "raster_sha256": "c7b66468b00219dced39e92928c13d247751268961004bd9dc7a4f3d32f3e818",
+      "elapsed_s": 0.71
+    },
+    "R9_CORRIDORS_DINDON": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-C",
+      "completed_at_utc": "2026-05-06T15:39:20.443294+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_CORRIDORS_DINDON.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_CORRIDORS_DINDON.gpkg",
+      "raster_sha256": "6ae17e70d0beb90208816d90d3df1545f573691ac7da247848e58e54a361ade0",
+      "elapsed_s": 0.7
+    },
+    "R9_CORRIDORS_WAPITI": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-C",
+      "completed_at_utc": "2026-05-06T15:39:20.443297+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_CORRIDORS_WAPITI.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_CORRIDORS_WAPITI.gpkg",
+      "raster_sha256": "03285c8975b456bb2d88432fd413a799a6a54181df55117a796a3c70b6f70d66",
+      "elapsed_s": 0.7
+    },
+    "R9_ZONES_PASSAGE_CHEVREUIL": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-C",
+      "completed_at_utc": "2026-05-06T15:39:20.443300+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_PASSAGE_CHEVREUIL.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_PASSAGE_CHEVREUIL.gpkg",
+      "raster_sha256": "a1cd4e1e3b75dce07ffb4170e16fa45b8e51b201e757cce1e7d2761b36182e69",
+      "elapsed_s": 0.6
+    },
+    "R9_ZONES_PASSAGE_ORIGNAL": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-C",
+      "completed_at_utc": "2026-05-06T15:39:20.443303+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_PASSAGE_ORIGNAL.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_PASSAGE_ORIGNAL.gpkg",
+      "raster_sha256": "fb9cecf53d92cd57d345a0d9931bf5bb1dca619683ab4ec78f95e24b1b0c6bf4",
+      "elapsed_s": 0.6
+    },
+    "R9_ZONES_PASSAGE_OURS_NOIR": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-C",
+      "completed_at_utc": "2026-05-06T15:39:20.443306+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_PASSAGE_OURS_NOIR.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_PASSAGE_OURS_NOIR.gpkg",
+      "raster_sha256": "275f99eb2c18dffa42e6d340c028e634d475b37179ad12ad26cedcc6e86f0eac",
+      "elapsed_s": 0.6
+    },
+    "R9_ZONES_PASSAGE_DINDON": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-C",
+      "completed_at_utc": "2026-05-06T15:39:20.443309+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_PASSAGE_DINDON.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_PASSAGE_DINDON.gpkg",
+      "raster_sha256": "ed30d42d1d2137aaf77043e545b6c11cb79cde4a2c7cfdc1cd7e545f4ae353b6",
+      "elapsed_s": 0.59
+    },
+    "R9_ZONES_PASSAGE_WAPITI": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-C",
+      "completed_at_utc": "2026-05-06T15:39:20.443312+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_PASSAGE_WAPITI.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_PASSAGE_WAPITI.gpkg",
+      "raster_sha256": "6f15699a6f609d090732f995cf28a2da9925caac53550fd41dfc9f352682b656",
+      "elapsed_s": 0.71
+    },
+    "R9_HOTSPOTS_CHEVREUIL": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-C",
+      "completed_at_utc": "2026-05-06T15:39:20.443315+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_HOTSPOTS_CHEVREUIL.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_HOTSPOTS_CHEVREUIL.gpkg",
+      "raster_sha256": "8ee050334cc9e1052fec6b9a0c33a7b7d72eaaf83f381efbcb14733d14951bab",
+      "elapsed_s": 0.81
+    },
+    "R9_HOTSPOTS_ORIGNAL": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-C",
+      "completed_at_utc": "2026-05-06T15:39:20.443318+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_HOTSPOTS_ORIGNAL.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_HOTSPOTS_ORIGNAL.gpkg",
+      "raster_sha256": "9170371b8fc67e41387fa992f8bade591dae2028934db212d66a9a4ba226bb1e",
+      "elapsed_s": 0.81
+    },
+    "R9_HOTSPOTS_OURS_NOIR": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-C",
+      "completed_at_utc": "2026-05-06T15:39:20.443320+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_HOTSPOTS_OURS_NOIR.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_HOTSPOTS_OURS_NOIR.gpkg",
+      "raster_sha256": "1302e173c4cd6585ac7afa72a745f9f64011300e0b942be2021726462f33ff07",
+      "elapsed_s": 0.81
+    },
+    "R9_HOTSPOTS_DINDON": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-C",
+      "completed_at_utc": "2026-05-06T15:39:20.443323+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_HOTSPOTS_DINDON.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_HOTSPOTS_DINDON.gpkg",
+      "raster_sha256": "b76e826296882aee83b71c9faeb18d66708de3a81efc3da2bd8ef9b2b5f997f8",
+      "elapsed_s": 0.81
+    },
+    "R9_HOTSPOTS_WAPITI": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-C",
+      "completed_at_utc": "2026-05-06T15:39:20.443326+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_HOTSPOTS_WAPITI.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_HOTSPOTS_WAPITI.gpkg",
+      "raster_sha256": "f47f0f4debebde6f44f9fc7c8db6b50ca157f0d594f0c730235366c0c016c100",
+      "elapsed_s": 0.81
+    },
+    "R9_CORRIDORS_MULTI_ESPECES": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-C",
+      "completed_at_utc": "2026-05-06T15:39:20.443328+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_CORRIDORS_MULTI_ESPECES.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_CORRIDORS_MULTI_ESPECES.gpkg",
+      "raster_sha256": "6130c81e3fe70b5078c9bd5addce3bf4db544328460f6dbdbf56d5d7b03a48dc",
+      "elapsed_s": 0.93
     }
   },
   "last_updated_utc": "2026-05-06T00:25:56.386825+00:00",
@@ -462,5 +606,130 @@
     "R9_ALIMENTATION_WAPITI",
     "R9_RUT_WAPITI"
   ],
-  "last_r16b_n_species": 5
+  "last_r16b_n_species": 5,
+  "last_r16c_run_id": "R16C_1778081960",
+  "last_r16c_run_completed_at_utc": "2026-05-06T15:39:20.443332+00:00",
+  "last_r16c_subset_used": "/app/backend/data/gis_archive/subsets/pee_maj_subset_Bas_Saint_Laurent_Rimouski_doctrinal_20260505T234859Z.gpkg",
+  "last_r16c_targets_succeeded": [
+    "R9_CORRIDORS_CHEVREUIL",
+    "R9_CORRIDORS_ORIGNAL",
+    "R9_CORRIDORS_OURS_NOIR",
+    "R9_CORRIDORS_DINDON",
+    "R9_CORRIDORS_WAPITI",
+    "R9_ZONES_PASSAGE_CHEVREUIL",
+    "R9_ZONES_PASSAGE_ORIGNAL",
+    "R9_ZONES_PASSAGE_OURS_NOIR",
+    "R9_ZONES_PASSAGE_DINDON",
+    "R9_ZONES_PASSAGE_WAPITI",
+    "R9_HOTSPOTS_CHEVREUIL",
+    "R9_HOTSPOTS_ORIGNAL",
+    "R9_HOTSPOTS_OURS_NOIR",
+    "R9_HOTSPOTS_DINDON",
+    "R9_HOTSPOTS_WAPITI",
+    "R9_CORRIDORS_MULTI_ESPECES"
+  ],
+  "last_r16c_external_sources_status": {
+    "IA_VISION": {
+      "available": true,
+      "expected_paths_count": 0,
+      "paths_present": [],
+      "paths_absent": [],
+      "interface": "engines.v8_institutional.engine_ia_vision_ecologique_omega",
+      "interface_loadable": true,
+      "fallback_when_unavailable": "skip_with_log",
+      "consumed_by_targets": [
+        "R9_HOTSPOTS",
+        "R9_AFFUTS",
+        "R9_SIGNATURES_TERRAIN"
+      ]
+    },
+    "DONNEES_CHASSEUR": {
+      "available": true,
+      "expected_paths_count": 0,
+      "paths_present": [],
+      "paths_absent": [],
+      "interface": "engines.v8_institutional.especes.gps_loader_omega",
+      "interface_loadable": true,
+      "fallback_when_unavailable": "skip_with_log",
+      "consumed_by_targets": [
+        "R9_AFFUTS",
+        "R9_HOTSPOTS",
+        "R9_CORRIDORS"
+      ]
+    },
+    "ENVIRONNEMENT": {
+      "available": false,
+      "expected_paths_count": 5,
+      "paths_present": [],
+      "paths_absent": [
+        "/app/backend/data/environnement/meteo/noaa_hourly_2004_2024.nc",
+        "/app/backend/data/environnement/neige/noaa_snowdepth_2004_2024.nc",
+        "/app/backend/data/environnement/vent/noaa_wind_2004_2024.nc",
+        "/app/backend/data/environnement/solunar/solunar_2004_2024.csv",
+        "/app/backend/data/environnement/risques/climate_risk_index.nc"
+      ],
+      "interface": null,
+      "interface_loadable": false,
+      "fallback_when_unavailable": "skip_with_log",
+      "consumed_by_targets": [
+        "R9_REPOS",
+        "R9_RUT",
+        "R9_CORRIDORS_MULTI_ESPECES"
+      ]
+    },
+    "NUTRITION": {
+      "available": false,
+      "expected_paths_count": 4,
+      "paths_present": [],
+      "paths_absent": [
+        "/app/backend/data/nutrition/ndvi/nasa_ndvi_2004_2024.tif",
+        "/app/backend/data/nutrition/sol/soil_quality_canada.tif",
+        "/app/backend/data/nutrition/mineraux/soil_minerals_quebec.tif",
+        "/app/backend/data/nutrition/attractivite/mast_index_2004_2024.csv"
+      ],
+      "interface": null,
+      "interface_loadable": false,
+      "fallback_when_unavailable": "skip_with_log",
+      "consumed_by_targets": [
+        "R9_ALIMENTATION",
+        "R9_HOTSPOTS"
+      ]
+    },
+    "COMPORTEMENT": {
+      "available": false,
+      "expected_paths_count": 3,
+      "paths_present": [],
+      "paths_absent": [
+        "/app/backend/data/comportement/rsf/rsf_models_v1/",
+        "/app/backend/data/comportement/ssf/ssf_models_v1/",
+        "/app/backend/data/comportement/temporal_patterns/activity_patterns.csv"
+      ],
+      "interface": null,
+      "interface_loadable": false,
+      "fallback_when_unavailable": "skip_with_log",
+      "consumed_by_targets": [
+        "R9_RUT",
+        "R9_REPOS",
+        "R9_CORRIDORS"
+      ]
+    },
+    "PREDICTIF": {
+      "available": false,
+      "expected_paths_count": 4,
+      "paths_present": [],
+      "paths_absent": [
+        "/app/backend/data/predictif/maxent/models_v1/",
+        "/app/backend/data/predictif/rsf/rsf_predictive_v1/",
+        "/app/backend/data/predictif/ssf/ssf_predictive_v1/",
+        "/app/backend/data/predictif/temporal/forecast_48h/"
+      ],
+      "interface": null,
+      "interface_loadable": false,
+      "fallback_when_unavailable": "skip_with_log",
+      "consumed_by_targets": [
+        "R9_HOTSPOTS",
+        "R9_CORRIDORS_MULTI_ESPECES"
+      ]
+    }
+  }
 }

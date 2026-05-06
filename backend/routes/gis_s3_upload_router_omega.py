@@ -2477,3 +2477,77 @@ async def territoire_r9_phase3_r16b_execute(
         "r16b_pipeline_result": pipeline_result,
         "v30_lock": "INVIOLÉ",
     }
+
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°52-R16-C · R9 CONNECTIVITY (3 cibles × 5 espèces + 1 multi = 16)
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/territoire/r9-phase3-r16c-execute")
+async def territoire_r9_phase3_r16c_execute(
+    request: Request,
+    territory_id: Optional[str] = None,
+    species: Optional[str] = None,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-R16-C · CONNECTIVITY — 16 cibles.
+
+    · CORRIDORS_[ESPECE] × 5 (cost-surface inversé)
+    · ZONES_PASSAGE_[ESPECE] × 5 (liens zones_vitales × corridors)
+    · HOTSPOTS_[ESPECE] × 5 (top 5 % score combiné)
+    · CORRIDORS_MULTI_ESPECES × 1 (fusion pondérée masse + hydrologie)
+    """
+    _verify_token(x_commandant_token)
+    from engines.v8_institutional.especes.r9_phase3_r16c_omega import (
+        execute_r16c_pipeline,
+    )
+    from engines.v8_institutional.especes.r9_phase3_r16b_omega import (
+        SPECIES_LIST,
+    )
+    from engines.v8_institutional.especes.mffp_dictionaries_loader_omega import (  # noqa: E501
+        all_validated_for_r16c, list_validation_blockers,
+    )
+    if not all_validated_for_r16c():
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "reason": "DICTIONARIES_NOT_VALIDATED_FOR_R16C",
+                "blockers": list_validation_blockers(),
+                "remediation": (
+                    "Tous les dicts R16-A/B + connectivity_rules "
+                    "doivent être VALIDÉ ou OFFICIAL."),
+            })
+
+    species_list = (
+        [s.strip() for s in species.split(",") if s.strip()]
+        if species else None)
+    if species_list:
+        invalid_sp = [s for s in species_list if s not in SPECIES_LIST]
+        if invalid_sp:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Espèces invalides: {invalid_sp}. "
+                       f"Valides: {SPECIES_LIST}")
+
+    try:
+        pipeline_result = execute_r16c_pipeline(
+            species_subset=species_list)
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "R16C_PIPELINE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+
+    return {
+        "manifest_id": "R9_PHASE3_R16C_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°52-R16-C",
+        "territory_id": territory_id,
+        "r16c_pipeline_result": pipeline_result,
+        "v30_lock": "INVIOLÉ",
+    }

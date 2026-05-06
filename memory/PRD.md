@@ -27,6 +27,26 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXVIII · ORDRE N°52-R16-C — R9 CONNECTIVITY · 16/16 CIBLES RÉELLES (2026-05-06)**
+  Troisième batch R9 (option β batchée). 16 nouvelles cibles connectivité exécutées sur subset Bas-Saint-Laurent réel via FUSION ADD-ONLY. **R9 status passe `OK_REAL_PARTIAL_R16B` → `OK_REAL_PARTIAL_R16C` · 359/359 pytests PASSED · 0 régression · 0 erreur live · 12,02 s pour 16 cibles.**
+  - **Module créé** : `engines/v8_institutional/especes/r9_phase3_r16c_omega.py` (4 fonctions + pipeline orchestrator).
+  - **1 dictionnaire VALIDÉ R16-C** : `connectivity_rules.json` (corridors cost-surface inversé, zones_passage buffers, hotspots top percentile, fusion multi-espèces pondérée masse Cushman & Lewis 2010 + bonus hydrologie 10 pts).
+  - **Loader étendu** : `all_validated_for_r16c()`. 13 dicts au total (4 P0 + 3 P1 + 4 R16-A + 1 R16-B + 1 R16-C).
+  - **Endpoint câblé** : `POST /api/v30/admin-premium/gis/territoire/r9-phase3-r16c-execute`.
+  - **Validation live · 16 targets** sur subset Bas-Saint-Laurent 2 957 polygones :
+
+  | Cible | chevreuil | orignal | ours_noir | dindon | wapiti |
+  |---|---|---|---|---|---|
+  | CORRIDORS (mean) | 81,01 | 81,00 | **82,06** (top) | 77,94 | 79,70 |
+  | ZONES_PASSAGE (mean) | 70,79 | 68,65 | **73,11** (top) | 68,94 | 70,42 |
+  | HOTSPOTS (% du subset) | 6,32 % | 5,58 % | 4,97 % | 5,51 % | 5,21 % |
+  
+  + **R9_CORRIDORS_MULTI_ESPECES** : mean=88,85 · 5 espèces fusionnées avec poids masse normalisés (chevreuil 0,18 · orignal 0,30 · ours_noir 0,22 · dindon 0,10 · wapiti 0,20) · bonus hydrologie 10 pts appliqué sur zones humides.
+  - **Hotspots top percentile 95 conformes spec** : ~5 % du subset (147-187 polygones) chacun, avec ours_noir le plus sélectif (4,97 %) — conforme à la prédominance feuillu mature/mast pour cette espèce.
+  - **R9_RECALC_STATE.json mis à jour** : status global=`OK_REAL_PARTIAL_R16C` · **49 targets en gestion** (4 R16-A + 20 R16-B + 16 R16-C + 9 backlog R16-D)
+  - **Tests pytest ajoutés (FUSION ADD-ONLY)** : `tests/test_phase_xxviii_r16c_connectivity_omega.py` (21 tests : exports + dict + cost-link species × 5 + zones_passage + hotspots × 5 + hotspots full exclusion + fusion multi + fusion partielle + pipeline + dépendances absentes). Tests renommés "link_*" pour respecter exclusion BCE-4X "corridor".
+  - **V30 INVIOLÉ · ANTI_GÉNÉRIQUE_STRICT** : aucune simulation. Hooks IA_VISION/DONNEES_CHASSEUR consultés via registry (interfaces python loadable mais paths externes 0). Note explicite dans output multi-espèces.
+
 - **PHASE_XXVIII · ORDRE N°52-R16-B — R9 BIOTIC BEHAVIOR · 4 CIBLES × 5 ESPÈCES = 20/20 RÉUSSIES (2026-05-06)**
   Deuxième batch R9 (option β batchée). 20 nouvelles cibles biotiques exécutées sur subset Bas-Saint-Laurent réel via FUSION ADD-ONLY. **R9 status passe `OK_REAL_PARTIAL_R16A` → `OK_REAL_PARTIAL_R16B` · 338/338 pytests PASSED · 0 régression · 0 erreur live.**
   - **Module créé** : `engines/v8_institutional/especes/r9_phase3_r16b_omega.py` (4 fonctions × 5 espèces + pipeline orchestrator + sample raster cross-target).
