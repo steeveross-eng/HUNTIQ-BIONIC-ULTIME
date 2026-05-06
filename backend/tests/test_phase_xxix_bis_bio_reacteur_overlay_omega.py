@@ -71,14 +71,17 @@ def test_bp135_to_br_mapping_anti_generique(overlay):
 def test_scan_external_sources_returns_six(overlay):
     s = overlay.scan_external_sources()
     assert s["manifest_id"] == "EXTERNAL_SOURCES_SCAN_Ω"
-    assert s["ordre"] == "N°53-BIS"
+    assert s["ordre"] in ("N°53-BIS", "N°53-BIS-SUITE")
     assert s["n_sources_total"] == 6
     # Anti-générique : sources absentes restent absentes
     for src in s["sources"]:
         assert src["anti_generique_strict"] is True
         assert src["fallback_when_unavailable"] == "skip_with_log"
         if not src["available"]:
-            assert src["n_files_found"] == 0
+            # Phase I: n_files_found · Phase II (BIS-SUITE): n_files_valid
+            n_files = src.get("n_files_valid",
+                              src.get("n_files_found", 0))
+            assert n_files == 0
 
 
 def test_scan_currently_no_external_sources(overlay):

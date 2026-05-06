@@ -27,6 +27,16 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXIX-SUITE · ORDRE N°53-BIS-SUITE — ACTIVATION HOOKS PHASE II + API AUDITS PUBLIQUE (2026-05-06)**
+  Implémentation **complète** de l'activation différée des hooks externes Phase II + API publique d'audits (FUSION ADD-ONLY · anti-générique strict · V30_LOCK INVIOLÉ). **524/524 pytests Phase XVI/XVIII/XX-XXIX-SUITE PASSED · 0 régression.**
+  - **Registry Phase II étendu** : sous-paths exacts du Commandant — NOAA `2025/*` · NASA `ndvi/*` · USGS `soil/*` · RSF_SSF/MAXENT **per-species-aware** (5 espèces × paths : `/models/rsf/<espece>/`, `/models/ssf/<espece>/`, `/models/maxent/<espece>/`) · FORECAST_48H `/streams/forecast48h/`. Total 18 paths concrets (vs 6 auparavant).
+  - **Détection d'anomalies doctrinale** : `zero_size`, `format_unexpected`, `unreadable` → fichier rejeté + log `anomalies_detected[]`. Doctrine stricte : **anomalies présentes ⇒ `available=False`** + entrée audit_bp135.
+  - **Fonction `recompute_with_drift_audit(reason, weights, persist)`** : produit snapshot BEFORE/AFTER explicite avec deltas (`drift_max`, `drift_mean`, `score_global_fusion`) + `external_sources_state` + persistance auto.
+  - **Endpoint POST `/api/v30/super-masters/recompute-with-drift-audit`** (token Commandant) : déclenche recouplage avec audit dédié + persistance dans `/app/backend/data/audits_bp135/`. **LIVE OK** : recompute live → BEFORE 27.56/51.37, AFTER 22.04/50.76, audit `audit_20260506T185806Z_ed27e83e.json` persisté (1 559 bytes).
+  - **Endpoint GET `/api/v30/super-masters/audits-list`** (PUBLIC read-only) : pagination (page/page_size 1-500) + 6 filtres (`drift_max_min/max`, `drift_mean_min/max`, `since_utc`, `audit_type`). Champs obligatoires retournés : `audit_id`, `timestamp_utc`, `sha256`, `drift_max`, `drift_mean`, `score_global_fusion`, `bp135_sha256`. **LIVE OK** : 2 audits indexés correctement.
+  - **20 pytests neutres** (`test_phase_xxix_suite_audits_api_omega.py`) — naming policy stricte : registry sub-paths × anomaly detection × recompute before/after × API list pagination/filters × cohérence API↔fichiers × V30_LOCK BP135+BR inchangés.
+  - **V30_LOCK INVIOLÉ** post-recompute : MD5 des 5 BIO_REACTEUR identiques · BP135 SHA-256 (`fd9374c3c3ef632b…`) stable · super_engines_omega_logic.py non modifié.
+  - **DIAGNOSTIC FORENSIQUE EXPOSÉ** : drift résiduels SENSORIEL=27.40 (NOAA-dépendant) · COMPORTEMENT=50.76 (USGS-dépendant) → activation automatique dès dépôt physique des sources externes (registry watching activé).
 - **PHASE_XXIX-BIS · ORDRE N°53-BIS — ENRICHISSEMENT BIO_REACTEUR_Ω + INFRASTRUCTURE D'INJECTION 6 SOURCES EXTERNES (2026-05-06)**
   Implémentation **complète** de l'overlay BP135→BIO_REACTEUR (FUSION ADD-ONLY strict, anti-générique inviolé) + infrastructure d'ingestion pluggable des 6 sources externes (NOAA/NASA/USGS/RSF_SSF/MAXENT/FORECAST_48H). **504/504 pytests Phase XVI/XVIII/XX-XXIX-BIS PASSED · 0 régression · V30_LOCK INVIOLÉ.**
   - **Module métier** : `engines/v8_institutional/especes/bio_reacteur_overlay_omega.py` (5 fonctions : `scan_external_sources`, `compute_overlay_for_species`, `merge_overlay`, `compute_super_engines_with_overlay`, `compute_overlay_fusion`, `persist_audit`).

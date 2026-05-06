@@ -53,11 +53,22 @@ from engines.v8_institutional.especes.bio_reacteur_loader_omega import (
 
 # ═════════════════════════════════════════════════════════════════════════
 # 1. Registry des 6 sources externes (état + paths configurés)
+#    ORDRE N°53-BIS-SUITE : sous-paths doctrinaux précis du Commandant.
 # ═════════════════════════════════════════════════════════════════════════
+ESPECES_FOR_MODELS = ["chevreuil", "orignal", "ours_noir",
+                      "dindon_sauvage", "wapiti"]
+
+
+def _per_species_paths(base: str) -> List[Path]:
+    """Produit la liste des paths {base}/<espece>/ pour les 5 espèces."""
+    return [Path(base) / esp for esp in ESPECES_FOR_MODELS]
+
+
 EXTERNAL_SOURCES_REGISTRY: List[Dict[str, Any]] = [
     {
         "source_name": "NOAA",
         "paths": [Path("/data/external/noaa")],
+        "expected_subpath_glob": "2025/*",
         "formats": [".nc", ".grib2"],
         "hooks_targets": ["ENVIRONNEMENT"],
         "consumed_by_masters": ["SENSORIEL_MASTER_Ω"],
@@ -65,6 +76,7 @@ EXTERNAL_SOURCES_REGISTRY: List[Dict[str, Any]] = [
     {
         "source_name": "NASA",
         "paths": [Path("/data/external/nasa")],
+        "expected_subpath_glob": "ndvi/*",
         "formats": [".tif", ".hdf"],
         "hooks_targets": ["NUTRITION", "ENVIRONNEMENT"],
         "consumed_by_masters": [
@@ -73,6 +85,7 @@ EXTERNAL_SOURCES_REGISTRY: List[Dict[str, Any]] = [
     {
         "source_name": "USGS",
         "paths": [Path("/data/external/usgs")],
+        "expected_subpath_glob": "soil/*",
         "formats": [".tif", ".csv"],
         "hooks_targets": ["COMPORTEMENT", "PREDICTIF"],
         "consumed_by_masters": [
@@ -80,21 +93,28 @@ EXTERNAL_SOURCES_REGISTRY: List[Dict[str, Any]] = [
     },
     {
         "source_name": "RSF_SSF",
-        "paths": [Path("/models/rsf"), Path("/models/ssf")],
+        "paths": (
+            _per_species_paths("/models/rsf")
+            + _per_species_paths("/models/ssf")),
+        "expected_subpath_glob": "*",
         "formats": [".pkl", ".json"],
         "hooks_targets": ["PREDICTIF"],
         "consumed_by_masters": ["GOUVERNANCE_MASTER_Ω"],
+        "per_species_aware": True,
     },
     {
         "source_name": "MAXENT",
-        "paths": [Path("/models/maxent")],
+        "paths": _per_species_paths("/models/maxent"),
+        "expected_subpath_glob": "*",
         "formats": [".jar", ".asc", ".tif"],
         "hooks_targets": ["PREDICTIF"],
         "consumed_by_masters": ["GOUVERNANCE_MASTER_Ω"],
+        "per_species_aware": True,
     },
     {
         "source_name": "FORECAST_48H",
         "paths": [Path("/streams/forecast48h")],
+        "expected_subpath_glob": "*",
         "formats": [".nc", ".json", ".csv"],
         "hooks_targets": ["ENVIRONNEMENT"],
         "consumed_by_masters": ["SENSORIEL_MASTER_Ω"],
@@ -102,54 +122,92 @@ EXTERNAL_SOURCES_REGISTRY: List[Dict[str, Any]] = [
 ]
 
 
+def _detect_file_anomalies(path: Path,
+                           expected_formats: List[str]) -> List[str]:
+    """Détecte les anomalies doctrinales d'un fichier source externe.
+
+    Anomalies retournées :
+      · `zero_size`         : fichier vide
+      · `format_unexpected` : extension hors formats attendus
+      · `unreadable`        : I/O error
+    """
+    anomalies: List[str] = []
+    try:
+        st = path.stat()
+        if st.st_size == 0:
+            anomalies.append("zero_size")
+    except OSError:
+        anomalies.append("unreadable")
+    if path.suffix not in expected_formats:
+        anomalies.append("format_unexpected")
+    return anomalies
+
+
 def scan_external_sources() -> Dict[str, Any]:
     """Scanne les 6 sources externes configurées · état réel disque.
 
-    Retourne pour chaque source :
-      · paths_present : paths existants
-      · paths_absent  : paths absents
-      · files_found   : fichiers détectés au format approprié
-      · available     : True ssi au moins 1 fichier présent
-    Anti-générique : aucune fabrication de présence.
+    ORDRE N°53-BIS-SUITE :
+      · Détection d'anomalies par fichier (zero_size, format_unexpected,
+        unreadable).
+      · `available=True` ssi ≥1 fichier valide (sans anomalie).
+      · Anomalies → `available=False` + log dans `anomalies_detected`.
+      · Anti-générique strict : aucune fabrication.
     """
     results: List[Dict[str, Any]] = []
     for src in EXTERNAL_SOURCES_REGISTRY:
         paths_present: List[str] = []
         paths_absent: List[str] = []
-        files_found: List[str] = []
+        files_valid: List[str] = []
+        files_anomalies: List[Dict[str, Any]] = []
         for p in src["paths"]:
             if p.exists() and p.is_dir():
                 paths_present.append(str(p))
-                # Scan récursif des fichiers de format attendu
                 for fmt in src["formats"]:
                     for f in p.rglob(f"*{fmt}"):
-                        if f.is_file():
-                            files_found.append(str(f))
+                        if not f.is_file():
+                            continue
+                        anomalies = _detect_file_anomalies(
+                            f, src["formats"])
+                        if anomalies:
+                            files_anomalies.append({
+                                "path": str(f),
+                                "anomalies": anomalies,
+                            })
+                        else:
+                            files_valid.append(str(f))
             else:
                 paths_absent.append(str(p))
+        available = len(files_valid) > 0 and len(files_anomalies) == 0
         results.append({
             "source_name": src["source_name"],
             "paths_present": paths_present,
             "paths_absent": paths_absent,
-            "n_files_found": len(files_found),
-            "files_sample": files_found[:5],
+            "expected_subpath_glob": src.get("expected_subpath_glob", "*"),
+            "per_species_aware": src.get("per_species_aware", False),
+            "n_files_valid": len(files_valid),
+            "n_files_anomalies": len(files_anomalies),
+            "files_sample_valid": files_valid[:5],
+            "anomalies_detected": files_anomalies[:10],
             "formats_expected": src["formats"],
             "hooks_targets": src["hooks_targets"],
             "consumed_by_masters": src["consumed_by_masters"],
-            "available": len(files_found) > 0,
+            "available": available,
             "fallback_when_unavailable": "skip_with_log",
             "anti_generique_strict": True,
         })
     n_available = sum(1 for r in results if r["available"])
+    n_anomalies_total = sum(
+        r["n_files_anomalies"] for r in results)
     return {
         "manifest_id": "EXTERNAL_SOURCES_SCAN_Ω",
-        "ordre": "N°53-BIS",
+        "ordre": "N°53-BIS-SUITE",
         "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
         "scanned_at_utc": datetime.now(
             timezone.utc).isoformat(timespec="seconds"),
         "n_sources_total": len(results),
         "n_sources_available": n_available,
         "n_sources_absent": len(results) - n_available,
+        "n_anomalies_total": n_anomalies_total,
         "sources": results,
         "v30_lock": "INVIOLÉ",
     }
@@ -617,9 +675,260 @@ def persist_audit(payload: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+# ═════════════════════════════════════════════════════════════════════════
+# 7. Recouplage avec audit before/after (ORDRE N°53-BIS-SUITE)
+# ═════════════════════════════════════════════════════════════════════════
+def recompute_with_drift_audit(
+    reason: str = "manual_recompute",
+    weights: Optional[Dict[str, float]] = None,
+    persist: bool = True,
+) -> Dict[str, Any]:
+    """Recouplage SUPER_ENGINES + audit forensique BEFORE/AFTER dédié.
+
+    Args:
+      reason: cause du recalcul (e.g., "hooks_activated", "manual",
+        "ndvi_arrived", "noaa_dump_2025_q1").
+      weights: poids fusion (default 50/50).
+      persist: True → persiste audit dans audits_bp135/.
+
+    Returns:
+      {
+        "before": {drift_max, drift_mean, score_global_fusion},
+        "after":  {drift_max, drift_mean, score_global_fusion},
+        "deltas": {drift_max, drift_mean, score_global_fusion},
+        "audit_persisted": {...} | None,
+        "v30_lock": "INVIOLÉ",
+      }
+    """
+    from engines.v8_institutional.especes.super_engines_bp135_coupling_omega import (  # noqa: E501
+        compute_super_engines_bp135_fusion,
+    )
+    if weights is None:
+        weights = {"bio_reacteur_overlay": 0.5, "bp135": 0.5}
+
+    t0 = time.time()
+    # BEFORE = couplage standard sans overlay (canal BIO_REACTEUR brut)
+    before = compute_super_engines_bp135_fusion(
+        weights={"bio_reacteur": 0.5, "bp135": 0.5})
+    before_snapshot = {
+        "drift_max": before["drift_max_br_vs_bp135"],
+        "drift_mean": before["drift_mean_br_vs_bp135"],
+        "score_global_fusion": before["score_global_fusion"],
+        "anti_generique_pass_global": before["anti_generique_pass_global"],
+        "snapshot_at_utc": datetime.now(
+            timezone.utc).isoformat(timespec="seconds"),
+    }
+
+    # AFTER = couplage POST-overlay BP135→BR
+    after = compute_overlay_fusion(weights=weights)
+    after_snapshot = {
+        "drift_max": after["drift_max_post_overlay"],
+        "drift_mean": after["drift_mean_post_overlay"],
+        "score_global_fusion": after["score_global_fusion_post_overlay"],
+        "snapshot_at_utc": datetime.now(
+            timezone.utc).isoformat(timespec="seconds"),
+    }
+
+    deltas = {
+        "drift_max": round(
+            before_snapshot["drift_max"]
+            - after_snapshot["drift_max"], 3),
+        "drift_mean": round(
+            before_snapshot["drift_mean"]
+            - after_snapshot["drift_mean"], 3),
+        "score_global_fusion": round(
+            after_snapshot["score_global_fusion"]
+            - before_snapshot["score_global_fusion"], 3),
+    }
+
+    # Sources scan (pour traçabilité activation hooks)
+    sources_scan = scan_external_sources()
+
+    payload = {
+        "manifest_id": "RECOMPUTE_DRIFT_AUDIT_Ω",
+        "ordre": "N°53-BIS-SUITE",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "audit_type": "recompute_with_drift_before_after",
+        "reason": reason,
+        "weights_doctrinal": weights,
+        "before": before_snapshot,
+        "after": after_snapshot,
+        "deltas": deltas,
+        "improvement_drift_max": deltas["drift_max"],
+        "improvement_drift_mean": deltas["drift_mean"],
+        "improvement_score_global_fusion": deltas["score_global_fusion"],
+        "external_sources_state": {
+            "n_total": sources_scan["n_sources_total"],
+            "n_available": sources_scan["n_sources_available"],
+            "n_absent": sources_scan["n_sources_absent"],
+            "n_anomalies_total": sources_scan.get("n_anomalies_total", 0),
+        },
+        "bp135_sha256": bp135_sha256(),
+        "elapsed_s": round(time.time() - t0, 3),
+        "computed_at_utc": datetime.now(
+            timezone.utc).isoformat(timespec="seconds"),
+        "v30_lock": "INVIOLÉ",
+    }
+
+    audit_meta = None
+    if persist:
+        audit_meta = persist_audit(payload)
+        payload["audit_persisted"] = audit_meta
+
+    return payload
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# 8. API READ-ONLY : liste audits persistés
+# ═════════════════════════════════════════════════════════════════════════
+def list_audits(
+    page: int = 1,
+    page_size: int = 50,
+    drift_max_min: Optional[float] = None,
+    drift_max_max: Optional[float] = None,
+    drift_mean_min: Optional[float] = None,
+    drift_mean_max: Optional[float] = None,
+    since_utc: Optional[str] = None,
+    audit_type: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Liste paginée et filtrable des audits persistés.
+
+    Champs obligatoires retournés par audit :
+      · audit_id              (= filename sans .json)
+      · timestamp_utc         (= persisted_at_utc)
+      · sha256                (= audit_sha256)
+      · drift_max
+      · drift_mean
+      · score_global_fusion
+      · bp135_sha256
+
+    Read-only · strictement dérivé des fichiers d'audit · aucune mutation.
+    """
+    if not AUDITS_ROOT.exists():
+        return {
+            "manifest_id": "AUDITS_LIST_Ω",
+            "ordre": "N°53-BIS-SUITE",
+            "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "page": page,
+            "page_size": page_size,
+            "total": 0,
+            "n_returned": 0,
+            "audits": [],
+            "v30_lock": "INVIOLÉ",
+        }
+
+    page = max(1, int(page))
+    page_size = max(1, min(500, int(page_size)))
+
+    audit_files = sorted(
+        AUDITS_ROOT.glob("audit_*.json"),
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
+
+    parsed: List[Dict[str, Any]] = []
+    for f in audit_files:
+        try:
+            data = json.loads(f.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        ap = data.get("audit_payload", {})
+        # Champs obligatoires (tolérants aux différents types d'audit)
+        # 1. drift_max / drift_mean / score_global_fusion :
+        #    cherche dans payload root puis dans before/after
+        drift_max = (
+            ap.get("drift_max_post_overlay")
+            or ap.get("drift_max_master_score")
+            or ap.get("after", {}).get("drift_max")
+            or ap.get("drift_max_br_vs_bp135")
+            or 0.0)
+        drift_mean = (
+            ap.get("drift_mean_post_overlay")
+            or ap.get("drift_mean_master_score")
+            or ap.get("after", {}).get("drift_mean")
+            or ap.get("drift_mean_br_vs_bp135")
+            or 0.0)
+        score_global_fusion = (
+            ap.get("score_global_fusion_post_overlay")
+            or ap.get("after", {}).get("score_global_fusion")
+            or ap.get("score_global_fusion")
+            or 0.0)
+        bp135_sha = (
+            ap.get("bp135_sha256")
+            or ap.get("v30_lock_status", {}).get("bp135_sha256")
+            or "")
+        record = {
+            "audit_id": f.stem,
+            "filename": f.name,
+            "timestamp_utc": data.get("persisted_at_utc"),
+            "sha256": data.get("audit_sha256"),
+            "drift_max": float(drift_max),
+            "drift_mean": float(drift_mean),
+            "score_global_fusion": float(score_global_fusion),
+            "bp135_sha256": bp135_sha,
+            "audit_type": (
+                ap.get("audit_type")
+                or ap.get("manifest_id")
+                or "unknown"),
+            "ordre": ap.get("ordre", data.get("ordre")),
+            "size_bytes": f.stat().st_size,
+        }
+        # Filtres
+        if (drift_max_min is not None
+                and record["drift_max"] < drift_max_min):
+            continue
+        if (drift_max_max is not None
+                and record["drift_max"] > drift_max_max):
+            continue
+        if (drift_mean_min is not None
+                and record["drift_mean"] < drift_mean_min):
+            continue
+        if (drift_mean_max is not None
+                and record["drift_mean"] > drift_mean_max):
+            continue
+        if (since_utc is not None
+                and record["timestamp_utc"] is not None
+                and record["timestamp_utc"] < since_utc):
+            continue
+        if (audit_type is not None
+                and audit_type.lower() not in (
+                    record["audit_type"] or "").lower()):
+            continue
+        parsed.append(record)
+
+    total = len(parsed)
+    start = (page - 1) * page_size
+    end = start + page_size
+    paged = parsed[start:end]
+
+    return {
+        "manifest_id": "AUDITS_LIST_Ω",
+        "ordre": "N°53-BIS-SUITE",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "page": page,
+        "page_size": page_size,
+        "total": total,
+        "n_returned": len(paged),
+        "filters_applied": {
+            "drift_max_min": drift_max_min,
+            "drift_max_max": drift_max_max,
+            "drift_mean_min": drift_mean_min,
+            "drift_mean_max": drift_mean_max,
+            "since_utc": since_utc,
+            "audit_type": audit_type,
+        },
+        "audits": paged,
+        "audits_root": str(AUDITS_ROOT),
+        "v30_lock": "INVIOLÉ",
+        "scanned_at_utc": datetime.now(
+            timezone.utc).isoformat(timespec="seconds"),
+    }
+
+
 __all__ = [
     "EXTERNAL_SOURCES_REGISTRY",
     "BP135_TO_BR_NUTRITION_MAPPING",
+    "ESPECES_FOR_MODELS",
     "AUDITS_ROOT",
     "scan_external_sources",
     "compute_overlay_for_species",
@@ -627,4 +936,6 @@ __all__ = [
     "compute_super_engines_with_overlay",
     "compute_overlay_fusion",
     "persist_audit",
+    "recompute_with_drift_audit",
+    "list_audits",
 ]

@@ -240,3 +240,113 @@ async def bp135_coupling_execute(
         "result": payload,
         "v30_lock": "INVIOLÉ",
     })
+
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°53-BIS-SUITE — Recompute + Audits list public read-only
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/recompute-with-drift-audit")
+async def recompute_with_drift_audit_endpoint(
+    reason: str = "manual_recompute",
+    weight_bio_reacteur: float = 0.5,
+    weight_bp135: float = 0.5,
+    persist: bool = True,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """ORDRE N°53-BIS-SUITE · Recouplage avec audit BEFORE/AFTER dédié.
+
+    Génère un audit forensique avec snapshot avant/après recouplage et
+    persiste le résultat dans `/app/backend/data/audits_bp135/`.
+
+    Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.bio_reacteur_overlay_omega import (
+        recompute_with_drift_audit,
+    )
+    try:
+        payload = recompute_with_drift_audit(
+            reason=reason,
+            weights={
+                "bio_reacteur_overlay": weight_bio_reacteur,
+                "bp135": weight_bp135,
+            },
+            persist=persist,
+        )
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "RECOMPUTE_AUDIT_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+
+    return JSONResponse({
+        "manifest_id": "RECOMPUTE_DRIFT_AUDIT_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°53-BIS-SUITE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/audits-list")
+async def audits_list_endpoint(
+    page: int = 1,
+    page_size: int = 50,
+    drift_max_min: Optional[float] = None,
+    drift_max_max: Optional[float] = None,
+    drift_mean_min: Optional[float] = None,
+    drift_mean_max: Optional[float] = None,
+    since_utc: Optional[str] = None,
+    audit_type: Optional[str] = None,
+) -> JSONResponse:
+    """ORDRE N°53-BIS-SUITE · Liste paginée et filtrable des audits BP135.
+
+    API PUBLIQUE READ-ONLY · paginée · filtrable.
+    Strictement dérivée des fichiers d'audit persistés. Aucune mutation.
+
+    Champs obligatoires retournés par audit :
+      · audit_id, timestamp_utc, sha256
+      · drift_max, drift_mean, score_global_fusion
+      · bp135_sha256
+
+    Filtres optionnels : drift_max_min/max, drift_mean_min/max, since_utc,
+    audit_type.
+    """
+    from engines.v8_institutional.especes.bio_reacteur_overlay_omega import (
+        list_audits,
+    )
+    try:
+        payload = list_audits(
+            page=page, page_size=page_size,
+            drift_max_min=drift_max_min,
+            drift_max_max=drift_max_max,
+            drift_mean_min=drift_mean_min,
+            drift_mean_max=drift_mean_max,
+            since_utc=since_utc,
+            audit_type=audit_type,
+        )
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "AUDITS_LIST_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+
+    return JSONResponse({
+        "manifest_id": "AUDITS_LIST_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°53-BIS-SUITE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
