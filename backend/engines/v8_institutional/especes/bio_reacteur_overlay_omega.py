@@ -925,11 +925,245 @@ def list_audits(
     }
 
 
+# ═════════════════════════════════════════════════════════════════════════
+# 9. ORDRE N°53-BIS-SUITE-ULTIME — Audits trend (time series read-only)
+# ═════════════════════════════════════════════════════════════════════════
+def list_audits_trend(
+    limit: int = 30,
+    since_utc: Optional[str] = None,
+    audit_type: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Série temporelle des N derniers audits persistés (read-only).
+
+    Strictement dérivée de la persistance disque (aucun recalcul).
+    Trié par mtime ASCENDANT (plus ancien → plus récent) — granularité
+    microseconde, robuste face aux audits créés dans la même seconde.
+
+    Champs par point :
+      · timestamp_utc, drift_max, drift_mean, score_global_fusion, sha256
+
+    Args:
+      limit:      nombre maximum de points (default 30, max 500)
+      since_utc:  filtre temporel (ISO 8601)
+      audit_type: filtre par type d'audit (substring)
+    """
+    limit = max(1, min(500, int(limit)))
+    # list_audits retourne déjà trié par mtime DESC (plus récent d'abord)
+    # On inverse pour obtenir l'ordre chronologique ASC (ancien → récent).
+    all_audits = list_audits(
+        page=1, page_size=500,
+        since_utc=since_utc, audit_type=audit_type,
+    )["audits"]
+    series = list(reversed(all_audits))  # ASC chronologique par mtime
+    # Conserver les N derniers points (les plus récents)
+    if len(series) > limit:
+        series = series[-limit:]
+
+    # Format série temporelle (champs strictement requis Commandant)
+    points = [
+        {
+            "timestamp_utc": a["timestamp_utc"],
+            "drift_max": a["drift_max"],
+            "drift_mean": a["drift_mean"],
+            "score_global_fusion": a["score_global_fusion"],
+            "sha256": a["sha256"],
+            "audit_id": a["audit_id"],
+            "bp135_sha256": a["bp135_sha256"],
+        }
+        for a in series
+    ]
+
+    # Statistiques agrégées de la série
+    drift_max_values = [p["drift_max"] for p in points]
+    drift_mean_values = [p["drift_mean"] for p in points]
+    score_values = [p["score_global_fusion"] for p in points]
+    stats = {
+        "n_points": len(points),
+        "drift_max": {
+            "min": min(drift_max_values) if drift_max_values else 0.0,
+            "max": max(drift_max_values) if drift_max_values else 0.0,
+            "first": drift_max_values[0] if drift_max_values else 0.0,
+            "last": drift_max_values[-1] if drift_max_values else 0.0,
+        },
+        "drift_mean": {
+            "min": min(drift_mean_values) if drift_mean_values else 0.0,
+            "max": max(drift_mean_values) if drift_mean_values else 0.0,
+            "first": drift_mean_values[0] if drift_mean_values else 0.0,
+            "last": drift_mean_values[-1] if drift_mean_values else 0.0,
+        },
+        "score_global_fusion": {
+            "min": min(score_values) if score_values else 0.0,
+            "max": max(score_values) if score_values else 0.0,
+            "first": score_values[0] if score_values else 0.0,
+            "last": score_values[-1] if score_values else 0.0,
+        },
+    }
+    if drift_max_values:
+        stats["drift_max"]["delta_first_to_last"] = round(
+            drift_max_values[-1] - drift_max_values[0], 3)
+        stats["drift_mean"]["delta_first_to_last"] = round(
+            drift_mean_values[-1] - drift_mean_values[0], 3)
+        stats["score_global_fusion"]["delta_first_to_last"] = round(
+            score_values[-1] - score_values[0], 3)
+
+    return {
+        "manifest_id": "AUDITS_TREND_Ω",
+        "ordre": "N°53-BIS-SUITE-ULTIME",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "limit_requested": limit,
+        "n_points_returned": len(points),
+        "filters_applied": {
+            "since_utc": since_utc,
+            "audit_type": audit_type,
+        },
+        "time_series_order": "chronological_ascending",
+        "points": points,
+        "aggregated_stats": stats,
+        "audits_root": str(AUDITS_ROOT),
+        "v30_lock": "INVIOLÉ",
+        "scanned_at_utc": datetime.now(
+            timezone.utc).isoformat(timespec="seconds"),
+    }
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# 10. ORDRE N°53-BIS-SUITE-ULTIME — Watcher d'activation hooks
+#     Détecte un changement d'état (PATHS_ABSENT → AVAILABLE) et déclenche
+#     automatiquement un recompute_with_drift_audit doctrinal.
+# ═════════════════════════════════════════════════════════════════════════
+HOOKS_WATCHER_STATE_PATH = AUDITS_ROOT / "_hooks_watcher_state.json"
+
+
+def _read_watcher_state() -> Dict[str, Any]:
+    """Charge l'état précédent du watcher (ou vide si premier appel)."""
+    if not HOOKS_WATCHER_STATE_PATH.exists():
+        return {}
+    try:
+        return json.loads(
+            HOOKS_WATCHER_STATE_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+def _write_watcher_state(state: Dict[str, Any]) -> None:
+    """Persiste l'état du watcher (FUSION ADD-ONLY isolated)."""
+    AUDITS_ROOT.mkdir(parents=True, exist_ok=True)
+    HOOKS_WATCHER_STATE_PATH.write_text(
+        json.dumps(state, ensure_ascii=False, indent=2),
+        encoding="utf-8")
+
+
+def watch_and_recompute_if_hooks_activated(
+    force: bool = False,
+) -> Dict[str, Any]:
+    """Détecte les transitions d'état des sources externes et déclenche
+    un recompute_with_drift_audit si au moins une source est passée
+    de PATHS_ABSENT/anomalous à AVAILABLE.
+
+    Args:
+      force: True → recompute toujours (ignore le watcher state).
+
+    Returns:
+      Dict avec :
+        · transitions_detected : liste des sources ayant changé d'état
+        · recompute_triggered  : True si recompute exécuté
+        · recompute_audit      : payload audit BEFORE/AFTER (si triggered)
+        · current_state        : état actuel des 6 sources
+    """
+    current_scan = scan_external_sources()
+    current_states = {
+        s["source_name"]: {
+            "available": s["available"],
+            "n_files_valid": s["n_files_valid"],
+            "n_files_anomalies": s["n_files_anomalies"],
+        }
+        for s in current_scan["sources"]
+    }
+    previous = _read_watcher_state()
+    previous_states = previous.get("source_states", {})
+
+    transitions: List[Dict[str, Any]] = []
+    for src_name, cur in current_states.items():
+        prev = previous_states.get(src_name, {
+            "available": False, "n_files_valid": 0,
+            "n_files_anomalies": 0,
+        })
+        if (not prev.get("available")) and cur["available"]:
+            transitions.append({
+                "source": src_name,
+                "transition": "PATHS_ABSENT_TO_AVAILABLE",
+                "previous": prev,
+                "current": cur,
+            })
+        elif prev.get("available") and (not cur["available"]):
+            transitions.append({
+                "source": src_name,
+                "transition": "AVAILABLE_TO_PATHS_ABSENT",
+                "previous": prev,
+                "current": cur,
+            })
+        elif (cur["available"]
+              and cur["n_files_valid"] != prev.get("n_files_valid", 0)):
+            transitions.append({
+                "source": src_name,
+                "transition": "AVAILABLE_FILES_CHANGED",
+                "previous": prev,
+                "current": cur,
+            })
+
+    should_recompute = (
+        force or any(
+            t["transition"] == "PATHS_ABSENT_TO_AVAILABLE"
+            or t["transition"] == "AVAILABLE_FILES_CHANGED"
+            for t in transitions))
+
+    recompute_payload = None
+    if should_recompute:
+        reasons = ["force_recompute"] if force else [
+            f"{t['source']}_{t['transition']}" for t in transitions
+            if t["transition"] != "AVAILABLE_TO_PATHS_ABSENT"
+        ]
+        recompute_payload = recompute_with_drift_audit(
+            reason=f"hooks_watcher::{','.join(reasons)[:200]}",
+            persist=True,
+        )
+
+    # Mise à jour state du watcher
+    new_state = {
+        "last_scan_at_utc": datetime.now(
+            timezone.utc).isoformat(timespec="seconds"),
+        "source_states": current_states,
+        "last_transitions": transitions,
+        "last_recompute_audit_id": (
+            recompute_payload.get("audit_persisted", {}).get(
+                "audit_filename", "").replace(".json", "")
+            if recompute_payload else None),
+    }
+    _write_watcher_state(new_state)
+
+    return {
+        "manifest_id": "HOOKS_WATCHER_RECOMPUTE_Ω",
+        "ordre": "N°53-BIS-SUITE-ULTIME",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "transitions_detected": transitions,
+        "n_transitions": len(transitions),
+        "force_requested": force,
+        "recompute_triggered": should_recompute,
+        "recompute_audit": recompute_payload,
+        "current_state": current_states,
+        "watcher_state_path": str(HOOKS_WATCHER_STATE_PATH),
+        "v30_lock": "INVIOLÉ",
+        "computed_at_utc": datetime.now(
+            timezone.utc).isoformat(timespec="seconds"),
+    }
+
+
 __all__ = [
     "EXTERNAL_SOURCES_REGISTRY",
     "BP135_TO_BR_NUTRITION_MAPPING",
     "ESPECES_FOR_MODELS",
     "AUDITS_ROOT",
+    "HOOKS_WATCHER_STATE_PATH",
     "scan_external_sources",
     "compute_overlay_for_species",
     "merge_overlay",
@@ -938,4 +1172,6 @@ __all__ = [
     "persist_audit",
     "recompute_with_drift_audit",
     "list_audits",
+    "list_audits_trend",
+    "watch_and_recompute_if_hooks_activated",
 ]

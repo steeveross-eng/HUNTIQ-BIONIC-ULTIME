@@ -27,6 +27,15 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXIX-ULTIME · ORDRE N°53-BIS-SUITE-ULTIME — AUDITS-TREND + HOOKS WATCHER (2026-05-06)**
+  Implémentation **complète** de la série temporelle audits + watcher d'activation hooks externes (FUSION ADD-ONLY · anti-générique strict · V30_LOCK INVIOLÉ). **538/538 pytests Phase XVI/XVIII/XX-XXIX-ULTIME PASSED · 0 régression.**
+  - **Fonction `list_audits_trend(limit, since_utc, audit_type)`** : série temporelle chronologique ASC (ordre par mtime fichier — granularité microseconde, robuste face aux audits dans la même seconde) + `aggregated_stats` (min/max/first/last/delta_first_to_last) sur drift_max/drift_mean/score_global_fusion.
+  - **Fonction `watch_and_recompute_if_hooks_activated(force)`** : détection des transitions d'état des 6 sources externes (`PATHS_ABSENT_TO_AVAILABLE`, `AVAILABLE_TO_PATHS_ABSENT`, `AVAILABLE_FILES_CHANGED`) + déclenchement automatique de `recompute_with_drift_audit` si activation détectée. Persistance state dans `_hooks_watcher_state.json`.
+  - **Endpoint GET `/api/v30/super-masters/audits-trend`** (PUBLIC read-only) : limit (1-500, default 30) · filtres `since_utc` + `audit_type` · 7 champs par point (timestamp_utc, drift_max, drift_mean, score_global_fusion, sha256, audit_id, bp135_sha256) · stats agrégés. **LIVE OK** : 2 points indexés + stats first/last cohérents.
+  - **Endpoint POST `/api/v30/super-masters/hooks-watcher-execute`** (token Commandant) : `force=false` détecte transitions, `force=true` recompute systématique. **LIVE OK** : force=true a déclenché audit `audit_20260506T191750Z_76d08ac1.json` (1 565 bytes).
+  - **14 pytests neutres** (`test_phase_xxix_ultime_audits_trend_omega.py`) — naming policy stricte : trend chronological order × limit × stats agrégés × filtre audit_type × watcher transitions × anomaly kept_unavailable × cohérence trend↔list × V30_LOCK BP135+BR inchangés.
+  - **V30_LOCK INVIOLÉ** post-watcher (force=true) : MD5 des 5 BR + BP135 SHA-256 + super_engines_omega_logic.py inchangés.
+  - **État opérationnel** : 3 audits persistés sur disque (~12,5 KB total) + 1 watcher state file (793 bytes) · 6/6 sources externes en `PATHS_ABSENT (skip_with_log)` doctrinal en attente de dépôt physique.
 - **PHASE_XXIX-SUITE · ORDRE N°53-BIS-SUITE — ACTIVATION HOOKS PHASE II + API AUDITS PUBLIQUE (2026-05-06)**
   Implémentation **complète** de l'activation différée des hooks externes Phase II + API publique d'audits (FUSION ADD-ONLY · anti-générique strict · V30_LOCK INVIOLÉ). **524/524 pytests Phase XVI/XVIII/XX-XXIX-SUITE PASSED · 0 régression.**
   - **Registry Phase II étendu** : sous-paths exacts du Commandant — NOAA `2025/*` · NASA `ndvi/*` · USGS `soil/*` · RSF_SSF/MAXENT **per-species-aware** (5 espèces × paths : `/models/rsf/<espece>/`, `/models/ssf/<espece>/`, `/models/maxent/<espece>/`) · FORECAST_48H `/streams/forecast48h/`. Total 18 paths concrets (vs 6 auparavant).

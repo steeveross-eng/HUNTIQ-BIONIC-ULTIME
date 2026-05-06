@@ -350,3 +350,95 @@ async def audits_list_endpoint(
         "result": payload,
         "v30_lock": "INVIOLÉ",
     })
+
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°53-BIS-SUITE-ULTIME — Audits trend + Hooks watcher
+# ═════════════════════════════════════════════════════════════════════════
+@router.get("/audits-trend")
+async def audits_trend_endpoint(
+    limit: int = 30,
+    since_utc: Optional[str] = None,
+    audit_type: Optional[str] = None,
+) -> JSONResponse:
+    """ORDRE N°53-BIS-SUITE-ULTIME · Série temporelle des N derniers audits.
+
+    API PUBLIQUE READ-ONLY · time series chronologique ascendante.
+    Strictement dérivée des audits persistés (aucun recalcul).
+
+    Champs par point de la série :
+      · timestamp_utc, drift_max, drift_mean, score_global_fusion, sha256
+
+    Filtres optionnels : `since_utc`, `audit_type`.
+    Limit max : 500 (default 30).
+    """
+    from engines.v8_institutional.especes.bio_reacteur_overlay_omega import (
+        list_audits_trend,
+    )
+    try:
+        payload = list_audits_trend(
+            limit=limit,
+            since_utc=since_utc,
+            audit_type=audit_type,
+        )
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "AUDITS_TREND_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+
+    return JSONResponse({
+        "manifest_id": "AUDITS_TREND_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°53-BIS-SUITE-ULTIME",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.post("/hooks-watcher-execute")
+async def hooks_watcher_execute_endpoint(
+    force: bool = False,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """ORDRE N°53-BIS-SUITE-ULTIME · Watcher d'activation hooks externes.
+
+    Détecte les transitions d'état des 6 sources externes et déclenche
+    automatiquement un recompute_with_drift_audit doctrinal si une source
+    passe de PATHS_ABSENT à AVAILABLE (ou si nouveaux fichiers détectés).
+
+    Token Commandant requis.
+    Args:
+      force: True → recompute toujours (ignore watcher state).
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.bio_reacteur_overlay_omega import (
+        watch_and_recompute_if_hooks_activated,
+    )
+    try:
+        payload = watch_and_recompute_if_hooks_activated(force=force)
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "HOOKS_WATCHER_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+
+    return JSONResponse({
+        "manifest_id": "HOOKS_WATCHER_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°53-BIS-SUITE-ULTIME",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })

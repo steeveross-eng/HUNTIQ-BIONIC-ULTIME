@@ -1,0 +1,37 @@
+{
+  "last_scan_at_utc": "2026-05-06T19:17:50+00:00",
+  "source_states": {
+    "NOAA": {
+      "available": false,
+      "n_files_valid": 0,
+      "n_files_anomalies": 0
+    },
+    "NASA": {
+      "available": false,
+      "n_files_valid": 0,
+      "n_files_anomalies": 0
+    },
+    "USGS": {
+      "available": false,
+      "n_files_valid": 0,
+      "n_files_anomalies": 0
+    },
+    "RSF_SSF": {
+      "available": false,
+      "n_files_valid": 0,
+      "n_files_anomalies": 0
+    },
+    "MAXENT": {
+      "available": false,
+      "n_files_valid": 0,
+      "n_files_anomalies": 0
+    },
+    "FORECAST_48H": {
+      "available": false,
+      "n_files_valid": 0,
+      "n_files_anomalies": 0
+    }
+  },
+  "last_transitions": [],
+  "last_recompute_audit_id": "audit_20260506T191750Z_76d08ac1"
+}

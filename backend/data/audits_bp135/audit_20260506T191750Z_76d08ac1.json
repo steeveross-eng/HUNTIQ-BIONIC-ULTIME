@@ -1,0 +1,49 @@
+{
+  "audit_filename": "audit_20260506T191750Z_76d08ac1.json",
+  "audit_sha256": "76d08ac1925e90a8b9addde8c3aa9b7d43c09efad2c14cd0a2b321523d5f4dc8",
+  "persisted_at_utc": "2026-05-06T19:17:50+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "manifest_id": "RECOMPUTE_DRIFT_AUDIT_Ω",
+    "ordre": "N°53-BIS-SUITE",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "audit_type": "recompute_with_drift_before_after",
+    "reason": "hooks_watcher::force_recompute",
+    "weights_doctrinal": {
+      "bio_reacteur_overlay": 0.5,
+      "bp135": 0.5
+    },
+    "before": {
+      "drift_max": 51.37,
+      "drift_mean": 27.56,
+      "score_global_fusion": 50.55,
+      "anti_generique_pass_global": false,
+      "snapshot_at_utc": "2026-05-06T19:17:50+00:00"
+    },
+    "after": {
+      "drift_max": 50.76,
+      "drift_mean": 22.04,
+      "score_global_fusion": 54.27,
+      "snapshot_at_utc": "2026-05-06T19:17:50+00:00"
+    },
+    "deltas": {
+      "drift_max": 0.61,
+      "drift_mean": 5.52,
+      "score_global_fusion": 3.72
+    },
+    "improvement_drift_max": 0.61,
+    "improvement_drift_mean": 5.52,
+    "improvement_score_global_fusion": 3.72,
+    "external_sources_state": {
+      "n_total": 6,
+      "n_available": 0,
+      "n_absent": 6,
+      "n_anomalies_total": 0
+    },
+    "bp135_sha256": "fd9374c3c3ef632ba9e5188f24e83ae32772dfa98ddba0d946d402a519bff960",
+    "elapsed_s": 0.022,
+    "computed_at_utc": "2026-05-06T19:17:50+00:00",
+    "v30_lock": "INVIOLÉ"
+  }
+}
