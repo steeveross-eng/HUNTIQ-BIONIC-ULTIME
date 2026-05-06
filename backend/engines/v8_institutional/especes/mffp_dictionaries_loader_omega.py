@@ -39,6 +39,12 @@ DICTIONARY_FILES = {
         DICTIONARIES_ROOT / "classes_age.json"),
     "ty_couv_to_forest_binary": (
         DICTIONARIES_ROOT / "ty_couv_to_forest_binary.json"),
+    "tables_rendement_mffp": (
+        DICTIONARIES_ROOT / "tables_rendement_mffp.json"),
+    "habitat_preferences_par_espece": (
+        DICTIONARIES_ROOT / "habitat_preferences_par_espece.json"),
+    "perturbation_severity": (
+        DICTIONARIES_ROOT / "perturbation_severity.json"),
 }
 
 
@@ -79,7 +85,30 @@ def all_validated_for_p0() -> bool:
     P0 critiques : structure_classification_rules, cl_dens_to_pct,
                    classes_age, ty_couv_to_forest_binary.
     """
-    for name in DICTIONARY_FILES:
+    p0_required = [
+        "structure_classification_rules", "cl_dens_to_pct",
+        "classes_age", "ty_couv_to_forest_binary",
+    ]
+    for name in p0_required:
+        status = get_dictionary_status(name)
+        if status not in ("VALIDÉ", "OFFICIAL"):
+            return False
+    return True
+
+
+def all_validated_for_p1() -> bool:
+    """Indique si TOUS les dicts requis pour P1 (R15) sont VALIDÉS.
+
+    P1 = P0 critiques + tables_rendement_mffp +
+         habitat_preferences_par_espece + perturbation_severity.
+    """
+    p1_required = [
+        "structure_classification_rules", "cl_dens_to_pct",
+        "classes_age", "ty_couv_to_forest_binary",
+        "tables_rendement_mffp", "habitat_preferences_par_espece",
+        "perturbation_severity",
+    ]
+    for name in p1_required:
         status = get_dictionary_status(name)
         if status not in ("VALIDÉ", "OFFICIAL"):
             return False
@@ -115,6 +144,7 @@ __all__ = [
     "get_dictionary_status",
     "all_proposed_dictionaries_status",
     "all_validated_for_p0",
+    "all_validated_for_p1",
     "list_validation_blockers",
     "DICTIONARIES_ROOT",
     "DICTIONARY_FILES",

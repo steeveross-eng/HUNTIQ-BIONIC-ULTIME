@@ -37,20 +37,31 @@ def subset_extractor():
 
 
 def test_r12_four_dictionaries_loadable(loader):
-    """Les 4 dictionnaires P0 sont chargeables.
-    NB R13 : les 4 dicts ont été VALIDÉS par le Commandant (status='VALIDÉ').
+    """Les 4 dictionnaires P0 + 3 dictionnaires P1 (R15) sont chargeables.
+    NB R13 : les 4 dicts P0 ont été VALIDÉS par le Commandant.
+    NB R15 : 3 dicts P1 (tables_rendement_mffp, habitat_preferences_par_espece,
+             perturbation_severity) ajoutés et VALIDÉS.
     """
-    expected = {
+    expected_p0 = {
         "structure_classification_rules", "cl_dens_to_pct",
         "classes_age", "ty_couv_to_forest_binary",
     }
-    assert set(loader.DICTIONARY_FILES.keys()) == expected
-    for name in expected:
+    expected_p1_added = {
+        "tables_rendement_mffp", "habitat_preferences_par_espece",
+        "perturbation_severity",
+    }
+    expected_all = expected_p0 | expected_p1_added
+    assert set(loader.DICTIONARY_FILES.keys()) == expected_all
+    for name in expected_p0:
         d = loader.load_dictionary(name)
         assert d is not None
-        # R13 : dicts sont VALIDÉS par Commandant
         assert d.get("status") in ("VALIDÉ", "PROPOSÉ", "OFFICIAL")
         assert d.get("ordre") == "N°52-R12"
+    for name in expected_p1_added:
+        d = loader.load_dictionary(name)
+        assert d is not None
+        assert d.get("status") in ("VALIDÉ", "OFFICIAL")
+        assert d.get("ordre") == "N°52-R15"
 
 
 def test_r12_cl_dens_pct_canonical_values(loader):

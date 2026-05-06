@@ -1,6 +1,6 @@
 {
   "run_id": "R8_1778014312_54694b",
-  "status": "ZOMBIE_POD_RESTART",
+  "status": "OK",
   "started_at_utc": "2026-05-05T20:51:52.362029+00:00",
   "last_update_utc": "2026-05-05T20:53:57.464622+00:00",
   "ordre": "N°52-R8",
@@ -41,7 +41,23 @@
       "status": "PENDING"
     },
     "PHASE_3_DERIVATION_9_COUCHES": {
-      "status": "PENDING"
+      "status": "OK",
+      "completed_at_utc": "2026-05-06T00:25:56.341266+00:00",
+      "results": {
+        "artifacts_keys": [
+          "MFFP_STRUCTURE",
+          "MFFP_DENSITY",
+          "MFFP_AGE",
+          "MFFP_FRAGMENTATION",
+          "MFFP_PRODUCTIVITY",
+          "MFFP_HABITAT",
+          "MFFP_CONNECTIVITY",
+          "MFFP_CONTINUITY"
+        ],
+        "p0_layers_status": "REAL_R13",
+        "p1_layers_status": "REAL_R15",
+        "input_subset_path": "/app/backend/data/gis_archive/subsets/pee_maj_subset_Bas_Saint_Laurent_Rimouski_doctrinal_20260505T234859Z.gpkg"
+      }
     },
     "PHASE_4_INDEXATION": {
       "status": "PENDING"
@@ -60,5 +76,13 @@
     }
   },
   "zombified_at_utc": "2026-05-05T21:11:27.302828+00:00",
-  "zombie_reason": "Pod restart detected on agent takeover (backend uptime < last_update age > 120s)"
+  "zombie_reason": "Pod restart detected on agent takeover (backend uptime < last_update age > 120s)",
+  "phase_3_p1_completed_at_utc": "2026-05-06T00:25:56.341255+00:00",
+  "phase_3_p1_layers_executed": [
+    "MFFP_PRODUCTIVITY",
+    "MFFP_HABITAT",
+    "MFFP_CONNECTIVITY",
+    "MFFP_CONTINUITY"
+  ],
+  "phase_3_p1_input_path": "/app/backend/data/gis_archive/subsets/pee_maj_subset_Bas_Saint_Laurent_Rimouski_doctrinal_20260505T234859Z.gpkg"
 }

@@ -27,6 +27,26 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXVIII · ORDRE N°52-R15 — PHASE_3 R8 P1+P2 RÉEL · 4 COUCHES RESTANTES IMPLÉMENTÉES (2026-05-06)**
+  Implémentation effective et live des 4 couches manquantes (MFFP_PRODUCTIVITY, MFFP_HABITAT, MFFP_CONNECTIVITY, MFFP_CONTINUITY) qui débloquent R9 hors mode STUB_BLOCKED. **R8 status=OK · 8 artifacts_keys présents · 293/293 pytests PASSED · 0 régression.**
+  - **Module créé** : `engines/v8_institutional/especes/mffp_phase3_p1_omega.py` (FUSION ADD-ONLY · réutilise les helpers P0 `_load_gdf`, `_ensure_epsg_32198`, `_rasterize_to_tif`, `_sha256_file`).
+  - **3 nouveaux dictionnaires VALIDÉS R15** dans `data/territoire/dictionaries_proposed/` :
+    - `tables_rendement_mffp.json` (Pothier-Savard 1998, Bolghari-Bertrand 1984, Berger-Boulay 2008 — production m³/ha pour R/F/M × 12 classes d'âge × correction densité A→1.10/B→1.00/C→0.85/D→0.65/E→0.45)
+    - `habitat_preferences_par_espece.json` (5 espèces : chevreuil, orignal, ours_noir, dindon, wapiti — scores 0-100 pondérés gr_ess 30%, cl_age 30%, cl_dens 25%, type_couv 15% — réf MFFP 2010, Crête & Courtois 1997, Tardif & Berger 2007)
+    - `perturbation_severity.json` (codes MFFP CT/CHT/BR/EP/CHP — 5 classes continuité 1=RECENT_<40 / 2=INTERMEDIAIRE_40-80 / 3=ANCIEN_80-150 / 4=VIEILLES_FORÊTS_>150 / 5=PERTURBE_RECEMMENT)
+  - **Loader étendu** : `mffp_dictionaries_loader_omega.py` accepte les 7 dicts (4 P0 + 3 P1) et expose `all_validated_for_p1()`.
+  - **Endpoint câblé (FUSION ADD-ONLY)** : `POST /api/v30/admin-premium/gis/diagnostic/pee-maj/phase3-p1-execute` (auto-pick subset par mtime, exécute les 4 couches, **met à jour R8_STATE.json → status=OK + PHASE_3_DERIVATION_9_COUCHES.status=OK + 8 artifacts_keys**).
+  - **Validation live · DONNÉES RÉELLES MFFP 2025** (subset Bas-Saint-Laurent 2 957 polygones · 11 Mo) :
+    - `MFFP_PRODUCTIVITE.tif` (22 743 oct · SHA-256 `715fdb382e3138a0a2e12205c366ace1...` · **mean=107,53 m³/ha** réaliste boréal méridional · 0,28 s)
+    - `MFFP_HABITAT_BRUT.tif` (8 107 oct · 5 bandes uint8 · SHA-256 `b82e96d13f677f987c6d92e5fa9c2338...` · scores moyens : chevreuil 74, orignal 74, **ours_noir 76 (top)**, dindon 65, wapiti 70 sur 100 · 1,8 s)
+    - `MFFP_CONNECTIVITE.gpkg` (1,5 Mo · SHA-256 `652bf70ff4c76c8f48623d144dc339ad...` · DBSCAN eps=500m min_samples=5 · **1 cluster macro** 2 947 polygones / 20 173 ha forêt continue Bas-Saint-Laurent · 0,8 s)
+    - `MFFP_CONTINUITE.tif` (5 343 oct · SHA-256 `c1443e12baf47ddf1c57124ce0d52917...` · 4 classes effectives sur 2 957 : **classe 1 (RECENT) 1 688 (57%) · classe 4 (VIEILLES_FORÊTS) 758 (26%) · classe 3 (ANCIEN) 264 (9%) · classe 2 (INTERMÉDIAIRE) 247 (8%)** — territoire à forte régénération récente avec préservation significative de vieilles forêts · 0,3 s)
+  - **R9 DÉBLOQUÉ** : status passe de `STUB_READY_BLOCKED_BY_R8_PHASE_3` → **`STUB_READY_AWAITING_BUSINESS_LOGIC`** sur les 9 targets (corridors, hotspots, affuts, salines, zones_vitales/passage/rut/repos/alimentation). Amplification MFFP×1000 active. (Le passage vers OK_REAL nécessitera l'implémentation des règles métier spécifiques par target — ORDRE futur.)
+  - **Schéma MFFP 2025 cohérence** : confirmation que `gr_ess` du dataset contient 323 codes d'essences détaillés (EN, SBEB, ESFT, RZ, EV...) qui ne matchent pas les groupes haut niveau {R,F,M}. Les fonctions PRODUCTIVITY et HABITAT utilisent désormais `type_couv` (R/F/M) pour le lookup gr_ess, fallback gr_ess.
+  - **scikit-learn 1.8.0** ajouté au requirements.txt (DBSCAN clustering pour MFFP_CONNECTIVITY).
+  - **Tests pytest ajoutés (FUSION ADD-ONLY)** : `tests/test_phase_xxviii_r15_p1_real_omega.py` (16 tests : API publique + 3 dicts loadables + productivity signature + execute + density correction + habitat 5 bands + score bounded + connectivity DBSCAN clusters + handles noise + continuity 5 classes + recent perturbation → classe 5 + old growth → classe 4). **+1 test R9 unblock** ajouté à `test_phase_xxviii_r9_mffp_master_omega.py`.
+  - **V30 INVIOLÉ · ANTI_GÉNÉRIQUE_STRICT** : aucune simulation. Toutes les sorties produites depuis lecture directe HTTP Range B2 du fichier réel MFFP 2025 36,9 Go via VSI s3 (option ζ R14).
+
 - **PHASE_XXVIII · ORDRE N°52-R14 OPTION ζ (zêta) — VSI S3 DIRECT READ : SÉQUENCE COMPLÈTE EXÉCUTÉE SUR DONNÉES RÉELLES MFFP 2025 (2026-05-05)**
   4 incidents pod restart reproductibles à 9,44 Go (= cgroup K8s ephemeral-storage limit ~10 GiB) **ont rendu le pull résiliant local infaisable**. **Pivot architectural validé par le Commandant** : lecture directe du `pee_maj.gpkg` 37 Go depuis Backblaze B2 via VSI s3 GDAL/pyogrio (`/vsis3/{bucket}/{key}`). **AUCUN octet local stocké pour le GPKG source.** **0 régression · 276/276 pytests PASSED (260 → 276, +16 nouveaux R14 ζ).**
   - **Diagnostic forensique 4 incidents reproductibles au seuil 9,44 Go** : boto3 stream OOM, boto3+fadvise, subprocess curl+cat, subprocess curl+dd nocache → tous tués au même seuil. cgroup memory.current restait à 2,5 Go pendant les crashes ⇒ le coupable n'était PAS la mémoire mais la **limite K8s `ephemeral-storage` ~10 GiB** sur `/var/cache` (overlayfs). Eviction K8s, pas OOM kernel.

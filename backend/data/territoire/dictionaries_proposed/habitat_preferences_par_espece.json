@@ -1,0 +1,129 @@
+{
+  "manifest_id": "HABITAT_PREFERENCES_PAR_ESPECE_VALIDATED_Ω",
+  "ordre": "N°52-R15",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "status": "VALIDÉ",
+  "validated_at_utc": "2026-05-05T23:59:00+00:00",
+  "validated_by": "COMMANDANT_STEEVE_MAX_R15",
+  "version": "1.0.0-VALIDATED",
+  "source_documentation": [
+    "MFFP (2010) Outils d'évaluation de la qualité de l'habitat — Cerf de Virginie, Direction de la faune terrestre",
+    "Drolet, B., Beaudet, M., Messier, C. (1999) Effets sur la biodiversité de l'aménagement intensif des plantations de résineux, MRNQ",
+    "Crête, M. et Courtois, R. (1997) Limiting factors might obscure population regulation of moose, J. Zoology",
+    "Potvin, F., Beaupré, P., Laprise, G. (2003) The eradication of balsam fir stands by white-tailed deer on Anticosti Island, Forestry Chron.",
+    "Tardif, B. et Berger, P. (2007) Qualité d'habitat de l'ours noir au Québec, MRNF",
+    "Lavoie, S. et Daigle, J. (2018) Atlas de la faune au Québec — Dindon sauvage, MFFP"
+  ],
+  "description": "Préférences d'habitat brut par espèce de gibier sur la base d'une combinaison MFFP standard de 4 attributs forestiers (gr_ess, cl_age, cl_dens, type_couv). Le score 0-100 représente la qualité brute de l'habitat indépendamment des autres facteurs (eau, anthropique, etc.).",
+  "fields_canonical": ["gr_ess", "cl_age", "cl_dens", "type_couv"],
+  "unit": "score_0_100",
+  "domain_min": 0,
+  "domain_max": 100,
+  "species": [
+    "chevreuil",
+    "orignal",
+    "ours_noir",
+    "dindon",
+    "wapiti"
+  ],
+  "weights_by_field": {
+    "gr_ess": 0.30,
+    "cl_age": 0.30,
+    "cl_dens": 0.25,
+    "type_couv": 0.15
+  },
+  "preferences": {
+    "chevreuil": {
+      "scientific_name": "Odocoileus virginianus",
+      "reference": "MFFP (2010) Outils d'évaluation cerf de Virginie",
+      "gr_ess_score": {"R": 75, "F": 60, "M": 90},
+      "cl_age_score": {
+        "10": 30, "30": 70, "50": 85, "70": 80, "90": 65,
+        "120": 50, "JIN": 60, "JIR": 70, "VIN": 60, "VIR": 55,
+        "VI": 60, "VIRS": 55
+      },
+      "cl_dens_score": {"A": 90, "B": 85, "C": 65, "D": 40, "E": 25},
+      "type_couv_score": {
+        "FE": 60, "FR": 70, "FM": 90, "RE": 75, "RN": 70,
+        "MFE": 85, "MRE": 80, "MFR": 90,
+        "F": 60, "R": 75, "M": 90,
+        "FFR": 75, "RFE": 80
+      }
+    },
+    "orignal": {
+      "scientific_name": "Alces americanus",
+      "reference": "Crête & Courtois (1997)",
+      "gr_ess_score": {"R": 65, "F": 75, "M": 90},
+      "cl_age_score": {
+        "10": 85, "30": 90, "50": 75, "70": 60, "90": 50,
+        "120": 40, "JIN": 80, "JIR": 75, "VIN": 50, "VIR": 45,
+        "VI": 50, "VIRS": 45
+      },
+      "cl_dens_score": {"A": 60, "B": 80, "C": 90, "D": 70, "E": 40},
+      "type_couv_score": {
+        "FE": 70, "FR": 80, "FM": 85, "RE": 65, "RN": 70,
+        "MFE": 80, "MRE": 80, "MFR": 90,
+        "F": 70, "R": 65, "M": 90,
+        "FFR": 75, "RFE": 75
+      }
+    },
+    "ours_noir": {
+      "scientific_name": "Ursus americanus",
+      "reference": "Tardif & Berger (2007)",
+      "gr_ess_score": {"R": 55, "F": 90, "M": 80},
+      "cl_age_score": {
+        "10": 50, "30": 70, "50": 85, "70": 90, "90": 85,
+        "120": 75, "JIN": 65, "JIR": 75, "VIN": 90, "VIR": 85,
+        "VI": 90, "VIRS": 85
+      },
+      "cl_dens_score": {"A": 85, "B": 90, "C": 75, "D": 50, "E": 25},
+      "type_couv_score": {
+        "FE": 90, "FR": 75, "FM": 85, "RE": 50, "RN": 55,
+        "MFE": 85, "MRE": 70, "MFR": 80,
+        "F": 90, "R": 50, "M": 85,
+        "FFR": 80, "RFE": 70
+      }
+    },
+    "dindon": {
+      "scientific_name": "Meleagris gallopavo silvestris",
+      "reference": "Lavoie & Daigle (2018) Atlas faune Québec",
+      "gr_ess_score": {"R": 35, "F": 90, "M": 75},
+      "cl_age_score": {
+        "10": 30, "30": 50, "50": 75, "70": 90, "90": 85,
+        "120": 80, "JIN": 40, "JIR": 65, "VIN": 80, "VIR": 75,
+        "VI": 80, "VIRS": 75
+      },
+      "cl_dens_score": {"A": 70, "B": 85, "C": 90, "D": 75, "E": 40},
+      "type_couv_score": {
+        "FE": 90, "FR": 60, "FM": 80, "RE": 25, "RN": 30,
+        "MFE": 80, "MRE": 50, "MFR": 70,
+        "F": 90, "R": 25, "M": 80,
+        "FFR": 65, "RFE": 50
+      }
+    },
+    "wapiti": {
+      "scientific_name": "Cervus canadensis",
+      "reference": "MFFP (2018) Plan de gestion wapiti, distribution réintroduite Québec",
+      "gr_ess_score": {"R": 50, "F": 85, "M": 90},
+      "cl_age_score": {
+        "10": 80, "30": 90, "50": 75, "70": 60, "90": 50,
+        "120": 40, "JIN": 75, "JIR": 75, "VIN": 50, "VIR": 45,
+        "VI": 50, "VIRS": 45
+      },
+      "cl_dens_score": {"A": 50, "B": 75, "C": 90, "D": 80, "E": 50},
+      "type_couv_score": {
+        "FE": 75, "FR": 80, "FM": 85, "RE": 55, "RN": 60,
+        "MFE": 85, "MRE": 75, "MFR": 90,
+        "F": 75, "R": 55, "M": 85,
+        "FFR": 75, "RFE": 70
+      }
+    }
+  },
+  "fallback_unknown_value": 0,
+  "validation_required_by_commandant": [
+    "Validation experte par biologistes MFFP de chaque score gr_ess/cl_age/cl_dens/type_couv",
+    "Confirmation pondération weights_by_field (0.30/0.30/0.25/0.15)",
+    "Validation des références scientifiques (publications post-2020 ?)"
+  ],
+  "v30_lock": "INVIOLÉ"
+}

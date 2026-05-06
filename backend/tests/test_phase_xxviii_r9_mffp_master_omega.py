@@ -109,13 +109,50 @@ def test_r9_dependent_engines_count(reg):
         assert e.get("force_rebuild_required") is True
 
 
-def test_r9_blocked_when_r8_phase3_stub(reg):
-    """Si R8 PHASE_3 est STUB_READY, l'analyseur retourne all_available=False."""
+def test_r9_blocked_when_r8_phase3_stub(reg, tmp_path, monkeypatch):
+    """Si R8 PHASE_3 est STUB_READY, l'analyseur retourne all_available=False.
+
+    Mocke r8_read_state pour isoler du state réel (qui peut être OK après
+    R15 P1+P2 exécution). Cette unitérification valide la sémantique
+    pure : STUB → blocked.
+    """
+    from engines.v8_institutional.especes import (
+        pee_maj_r8_orchestrator_omega as r8_orch)
+    monkeypatch.setattr(r8_orch, "read_state", lambda: {
+        "phases": {
+            "PHASE_3_DERIVATION_9_COUCHES": {"status": "STUB_READY"}
+        }
+    })
     av = reg.check_mffp_derived_layers_availability()
     assert "all_available" in av
     assert "blocker_reason" in av
-    # Dans l'environnement actuel, PHASE_3 est STUB_READY ou NEVER_RUN
     assert av["all_available"] is False
+
+
+def test_r9_unblocked_when_r8_phase3_ok_with_artifacts(reg, monkeypatch):
+    """ORDRE N°52-R15 : Si R8 PHASE_3 status=OK ET 8 artifacts_keys,
+    R9 doit être débloqué (all_available=True)."""
+    from engines.v8_institutional.especes import (
+        pee_maj_r8_orchestrator_omega as r8_orch)
+    monkeypatch.setattr(r8_orch, "read_state", lambda: {
+        "phases": {
+            "PHASE_3_DERIVATION_9_COUCHES": {
+                "status": "OK",
+                "results": {
+                    "artifacts_keys": [
+                        "MFFP_STRUCTURE", "MFFP_DENSITY", "MFFP_AGE",
+                        "MFFP_FRAGMENTATION", "MFFP_PRODUCTIVITY",
+                        "MFFP_HABITAT", "MFFP_CONNECTIVITY",
+                        "MFFP_CONTINUITY",
+                    ],
+                },
+            }
+        }
+    })
+    av = reg.check_mffp_derived_layers_availability()
+    assert av["all_available"] is True
+    for layer in reg.MFFP_DERIVED_LAYERS_REQUIRED:
+        assert av["per_layer"][layer] is True
 
 
 def test_r9_state_path_is_in_app_ext4(reg):

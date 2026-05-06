@@ -1859,6 +1859,200 @@ async def phase3_p0_execute(
 
 
 # ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°52-R15 · Phase 3 P1+P2 — 4 couches restantes (RÉEL pyogrio)
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/diagnostic/pee-maj/phase3-p1-execute")
+async def pee_maj_phase3_p1_execute(
+    request: Request,
+    layer: Optional[str] = None,
+    input_path: Optional[str] = None,
+    eps_meters: float = 500.0,
+    min_samples: int = 5,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-R15 · Exécution RÉELLE des 4 couches PHASE_3 R8 P1+P2.
+
+    Layers (default = toutes) :
+      MFFP_PRODUCTIVITY · MFFP_HABITAT · MFFP_CONNECTIVITY · MFFP_CONTINUITY
+
+    · Lit le subset 100 Mo via auto-pick (mtime, ignore vides < 1 Mo).
+    · Charge les 3 dictionnaires VALIDÉS R15 (tables_rendement_mffp,
+      habitat_preferences_par_espece, perturbation_severity).
+    · Persiste 4 GeoTIFF/GeoPackage + SHA-256.
+    · Met à jour R8_STATE.json → status=OK quand 4 couches PHASE_3 P1
+      complètes (débloque R9 hors mode STUB).
+    """
+    _verify_token(x_commandant_token)
+    from engines.v8_institutional.especes.mffp_phase3_p0_omega import (
+        DERIVATIVES_OUTPUT_ROOT)
+    from engines.v8_institutional.especes.mffp_phase3_p1_omega import (
+        compute_mffp_productivity, compute_mffp_habitat,
+        compute_mffp_connectivity, compute_mffp_continuity,
+    )
+    from engines.v8_institutional.especes.mffp_dictionaries_loader_omega import (  # noqa: E501
+        load_dictionary, all_validated_for_p1, list_validation_blockers,
+    )
+    if not all_validated_for_p1():
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "reason": "DICTIONARIES_NOT_VALIDATED_FOR_P1",
+                "blockers": list_validation_blockers(),
+                "remediation": (
+                    "Tous les dicts P1 (tables_rendement_mffp, "
+                    "habitat_preferences_par_espece, "
+                    "perturbation_severity + 4 dicts P0) doivent être "
+                    "status='VALIDÉ' ou 'OFFICIAL'."),
+            })
+
+    # Résolution du chemin d'entrée
+    import glob as _glob
+    src = input_path
+    if not src:
+        subsets_root = "/app/backend/data/gis_archive/subsets"
+        candidates = [
+            p for p in _glob.glob(f"{subsets_root}/pee_maj_subset_*.gpkg")
+            if Path(p).stat().st_size > 1_000_000
+        ]
+        candidates.sort(key=lambda p: Path(p).stat().st_mtime)
+        if candidates:
+            src = candidates[-1]
+    if not src or not Path(src).exists():
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "reason": "NO_USABLE_SUBSET_OR_PEE_MAJ_LOCAL",
+                "remediation": (
+                    "Lancer POST /diagnostic/pee-maj/export-subset"
+                    "?execute=true&source=vsi pour générer un subset."),
+            })
+
+    tables_rendement = load_dictionary("tables_rendement_mffp")
+    habitat_pref = load_dictionary("habitat_preferences_par_espece")
+    perturb_severity = load_dictionary("perturbation_severity")
+
+    layers_to_run = (
+        [layer] if layer else
+        ["MFFP_PRODUCTIVITY", "MFFP_HABITAT",
+         "MFFP_CONNECTIVITY", "MFFP_CONTINUITY"]
+    )
+    results: Dict[str, Any] = {}
+    for L in layers_to_run:
+        try:
+            if L == "MFFP_PRODUCTIVITY":
+                results[L] = compute_mffp_productivity(
+                    src, tables_rendement)
+            elif L == "MFFP_HABITAT":
+                results[L] = compute_mffp_habitat(src, habitat_pref)
+            elif L == "MFFP_CONNECTIVITY":
+                # Utilise le raster habitat si présent (dépendance optionnelle)
+                habitat_tif = (
+                    DERIVATIVES_OUTPUT_ROOT / "MFFP_HABITAT_BRUT.tif")
+                results[L] = compute_mffp_connectivity(
+                    src,
+                    habitat_tif_path=(str(habitat_tif)
+                                       if habitat_tif.exists() else None),
+                    eps_meters=eps_meters,
+                    min_samples=min_samples)
+            elif L == "MFFP_CONTINUITY":
+                results[L] = compute_mffp_continuity(
+                    src, perturb_severity)
+            else:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"LAYER_INCONNUE::{L}")
+        except Exception as e:
+            import traceback
+            results[L] = {
+                "manifest_id": f"{L}_FAILED_Ω",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            }
+
+    # Détecter quelles couches P1 ont réussi
+    p1_layers_succeeded = [
+        L for L in ["MFFP_PRODUCTIVITY", "MFFP_HABITAT",
+                    "MFFP_CONNECTIVITY", "MFFP_CONTINUITY"]
+        if L in results and "error" not in results[L]
+    ]
+
+    # Update R8_STATE.json → status=OK si on tournait toutes les 4 P1
+    # ET qu'elles ont toutes réussi (combiné avec les 4 P0 pré-existants)
+    r8_state_update = None
+    if (set(p1_layers_succeeded) ==
+            {"MFFP_PRODUCTIVITY", "MFFP_HABITAT",
+             "MFFP_CONNECTIVITY", "MFFP_CONTINUITY"}):
+        try:
+            from engines.v8_institutional.especes.pee_maj_r8_orchestrator_omega import (  # noqa: E501
+                R8_STATE_PATH)
+            import json as _json
+            from datetime import datetime as _dt, timezone as _tz
+            if Path(R8_STATE_PATH).exists():
+                state = _json.loads(
+                    Path(R8_STATE_PATH).read_text(encoding="utf-8"))
+            else:
+                state = {"phases": {}, "run_id": f"R15_{int(time.time())}"}
+            state["status"] = "OK"
+            state["phase_3_p1_completed_at_utc"] = _dt.now(
+                _tz.utc).isoformat()
+            state["phase_3_p1_layers_executed"] = p1_layers_succeeded
+            state["phase_3_p1_input_path"] = src
+            phases = state.setdefault("phases", {})
+            # Clé canonique attendue par check_mffp_derived_layers_availability
+            # dans mffp_master_weight_registry_omega.py
+            phase3 = phases.setdefault(
+                "PHASE_3_DERIVATION_9_COUCHES", {})
+            phase3["status"] = "OK"
+            phase3["completed_at_utc"] = _dt.now(_tz.utc).isoformat()
+            phase3_results = phase3.setdefault("results", {})
+            # 8 couches complètes : 4 P0 (R13) + 4 P1 (R15) — débloque R9
+            phase3_results["artifacts_keys"] = [
+                "MFFP_STRUCTURE", "MFFP_DENSITY", "MFFP_AGE",
+                "MFFP_FRAGMENTATION", "MFFP_PRODUCTIVITY",
+                "MFFP_HABITAT", "MFFP_CONNECTIVITY", "MFFP_CONTINUITY",
+            ]
+            phase3_results["p0_layers_status"] = "REAL_R13"
+            phase3_results["p1_layers_status"] = "REAL_R15"
+            phase3_results["input_subset_path"] = src
+            Path(R8_STATE_PATH).parent.mkdir(parents=True, exist_ok=True)
+            Path(R8_STATE_PATH).write_text(
+                _json.dumps(state, ensure_ascii=False, indent=2),
+                encoding="utf-8")
+            r8_state_update = {
+                "updated": True,
+                "new_status": "OK",
+                "phase_3_canonical_key": "PHASE_3_DERIVATION_9_COUCHES",
+                "phase_3_status": "OK",
+                "artifacts_keys": phase3_results["artifacts_keys"],
+                "state_path": str(R8_STATE_PATH),
+            }
+        except Exception as e:
+            import traceback
+            r8_state_update = {
+                "updated": False,
+                "error": str(e)[:300],
+                "traceback": traceback.format_exc()[-500:],
+            }
+
+    return {
+        "manifest_id": "PHASE3_P1_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°52-R15",
+        "input_path": src,
+        "input_size_bytes": Path(src).stat().st_size,
+        "layers_executed": layers_to_run,
+        "p1_layers_succeeded": p1_layers_succeeded,
+        "n_layers_succeeded": len(p1_layers_succeeded),
+        "results": results,
+        "derivatives_root": str(DERIVATIVES_OUTPUT_ROOT),
+        "r8_state_update": r8_state_update,
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+
+# ═════════════════════════════════════════════════════════════════════════
 # ORDRE N°52-R8 · Orchestrateur pipeline complet 8 phases (Option δ)
 # ═════════════════════════════════════════════════════════════════════════
 @router.post("/diagnostic/pee-maj/r8-execute")

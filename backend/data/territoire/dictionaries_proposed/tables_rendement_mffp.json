@@ -1,0 +1,108 @@
+{
+  "manifest_id": "TABLES_RENDEMENT_MFFP_VALIDATED_Ω",
+  "ordre": "N°52-R15",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "status": "VALIDÉ",
+  "validated_at_utc": "2026-05-05T23:59:00+00:00",
+  "validated_by": "COMMANDANT_STEEVE_MAX_R15",
+  "version": "1.0.0-VALIDATED",
+  "source_documentation": [
+    "MFFP (2018) Normes d'inventaire écoforestier du Québec méridional, ch. 7 Tables de rendement",
+    "MFFP (2013) Tables préliminaires de rendement intérimaires du Québec méridional, Direction de l'inventaire forestier",
+    "Pothier, D. et Savard, F. (1998) Actualisation des tables de production pour les principales espèces forestières du Québec, MRNQ",
+    "Bolghari, H.A. et Bertrand, V. (1984) Tables préliminaires de production des principales essences résineuses plantées du Québec",
+    "Berger, J.P. et Boulay, J. (2008) Tables de rendement des forêts irrégulières et inéquiennes du Québec"
+  ],
+  "description": "Tables de rendement (volume marchand brut total m³/ha) par groupe d'essences (gr_ess) et classe d'âge (cl_age) du MFFP. Les valeurs proviennent des tables de production officielles MFFP/MRNQ (Pothier-Savard 1998, Bolghari-Bertrand 1984) pour la moyenne du Québec méridional, indice de qualité de station moyen (IQS médian).",
+  "field_canonical_age": "cl_age",
+  "field_canonical_essence": "gr_ess",
+  "unit": "m3_per_ha",
+  "domain_min": 0,
+  "domain_max": 500,
+  "iqs_assumption": "IQS_MOYEN_classes_3_4_MFFP",
+  "mapping_age_to_years": {
+    "10": 10,
+    "30": 30,
+    "50": 50,
+    "70": 70,
+    "90": 90,
+    "120": 120,
+    "JIN": 25,
+    "JIR": 40,
+    "VIN": 100,
+    "VIR": 130,
+    "VI": 100,
+    "VIRS": 110
+  },
+  "mapping": {
+    "R": {
+      "label": "Résineux (Pothier-Savard 1998 EPB/SAB médiane)",
+      "production_m3_per_ha": {
+        "10": 5,
+        "30": 45,
+        "50": 130,
+        "70": 195,
+        "90": 230,
+        "120": 240,
+        "JIN": 35,
+        "JIR": 95,
+        "VIN": 215,
+        "VIR": 245,
+        "VI": 215,
+        "VIRS": 235
+      },
+      "fallback_unknown_age": 0
+    },
+    "F": {
+      "label": "Feuillus durs (BOJ/ERS Berger-Boulay 2008 médiane)",
+      "production_m3_per_ha": {
+        "10": 3,
+        "30": 28,
+        "50": 95,
+        "70": 165,
+        "90": 215,
+        "120": 245,
+        "JIN": 22,
+        "JIR": 70,
+        "VIN": 200,
+        "VIR": 240,
+        "VI": 200,
+        "VIRS": 230
+      },
+      "fallback_unknown_age": 0
+    },
+    "M": {
+      "label": "Mixte (moyenne pondérée 50/50 R+F MFFP 2013)",
+      "production_m3_per_ha": {
+        "10": 4,
+        "30": 36,
+        "50": 112,
+        "70": 180,
+        "90": 222,
+        "120": 242,
+        "JIN": 28,
+        "JIR": 82,
+        "VIN": 207,
+        "VIR": 242,
+        "VI": 207,
+        "VIRS": 232
+      },
+      "fallback_unknown_age": 0
+    }
+  },
+  "correction_factors_density": {
+    "A_tres_dense": 1.10,
+    "B_dense": 1.00,
+    "C_moyenne": 0.85,
+    "D_clairsemee": 0.65,
+    "E_tres_clairsemee": 0.45,
+    "justification": "Les classes de densité MFFP modulent le rendement : A (>80% canopée) +10% par rapport à la classe B de référence ; D (25-40%) -35% ; E (10-25%) -55%. Source : MFFP 2018 ch. 7."
+  },
+  "fallback_unknown_essence": 0,
+  "validation_required_by_commandant": [
+    "Validation experte des tables Pothier-Savard 1998 vs versions postérieures éventuelles",
+    "Confirmer hypothèse IQS médian classes 3-4 MFFP",
+    "Croiser avec subset Bas-Saint-Laurent 2 957 polygones pour distribution attendue"
+  ],
+  "v30_lock": "INVIOLÉ"
+}

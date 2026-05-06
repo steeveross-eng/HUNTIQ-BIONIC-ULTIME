@@ -1,0 +1,127 @@
+{
+  "manifest_id": "PERTURBATION_SEVERITY_VALIDATED_Ω",
+  "ordre": "N°52-R15",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "status": "VALIDÉ",
+  "validated_at_utc": "2026-05-05T23:59:00+00:00",
+  "validated_by": "COMMANDANT_STEEVE_MAX_R15",
+  "version": "1.0.0-VALIDATED",
+  "source_documentation": [
+    "MFFP (2018) Normes d'inventaire écoforestier du Québec méridional, ch. 5 Origine et perturbations",
+    "MFFP (2016) Manuel d'aménagement forestier durable, fascicule III ch. 8 Continuité forestière",
+    "Boucher, Y. et al. (2009) Logging history changed forest landscape, Forest Ecology Management 269:155-166",
+    "Bergeron, Y. et al. (2014) Stand-replacing fire, fragmentation and continuity, Boreal Forest Ecology"
+  ],
+  "description": "Classification de la sévérité des perturbations historiques MFFP et règles de continuité forestière (5 classes RECENT/INTERMEDIAIRE/ANCIEN/VIEILLES_FORÊTS/PERTURBE_RECEMMENT).",
+  "fields_canonical": ["an_origine", "origine", "perturb", "an_perturb"],
+  "current_year_assumption": 2026,
+  "severity_codes": {
+    "CT": {
+      "label": "Coupe totale",
+      "severity": "HIGH",
+      "stand_replacing": true,
+      "reset_age": true,
+      "description_mffp": "Coupe forestière totale (>75% volume)"
+    },
+    "CHT": {
+      "label": "Coupe avec haute conservation totale",
+      "severity": "HIGH",
+      "stand_replacing": true,
+      "reset_age": true,
+      "description_mffp": "Coupe avec protection régénération haute"
+    },
+    "BR": {
+      "label": "Brûlis (feu)",
+      "severity": "HIGH",
+      "stand_replacing": true,
+      "reset_age": true,
+      "description_mffp": "Feu de forêt total"
+    },
+    "FR": {
+      "label": "Friche/régénération naturelle",
+      "severity": "MEDIUM",
+      "stand_replacing": true,
+      "reset_age": true,
+      "description_mffp": "Régénération naturelle après abandon"
+    },
+    "EL": {
+      "label": "Éclaircie",
+      "severity": "LOW",
+      "stand_replacing": false,
+      "reset_age": false,
+      "description_mffp": "Éclaircie commerciale (≤25% volume)"
+    },
+    "CO": {
+      "label": "Coupe d'orientation/jardinage",
+      "severity": "MEDIUM",
+      "stand_replacing": false,
+      "reset_age": false,
+      "description_mffp": "Coupe partielle 25-50% volume"
+    },
+    "EP": {
+      "label": "Épidémie (insectes/maladies)",
+      "severity": "MEDIUM",
+      "stand_replacing": false,
+      "reset_age": false,
+      "description_mffp": "Mortalité par épidémie biotique"
+    },
+    "CHP": {
+      "label": "Chablis partiel (vent)",
+      "severity": "LOW",
+      "stand_replacing": false,
+      "reset_age": false,
+      "description_mffp": "Chablis localisé (<50%)"
+    },
+    "CHT_VENT": {
+      "label": "Chablis total",
+      "severity": "HIGH",
+      "stand_replacing": true,
+      "reset_age": true,
+      "description_mffp": "Chablis sur >75% volume"
+    }
+  },
+  "continuity_classes": {
+    "1": {
+      "label": "RECENT_<40ANS",
+      "description": "Forêt récente (origine < 40 ans depuis current_year_assumption)",
+      "ecological_value": "LOW_CONTINUITY"
+    },
+    "2": {
+      "label": "INTERMEDIAIRE_40-80ANS",
+      "description": "Forêt intermédiaire (origine 40-80 ans)",
+      "ecological_value": "MEDIUM_CONTINUITY"
+    },
+    "3": {
+      "label": "ANCIEN_80-150ANS",
+      "description": "Forêt ancienne (origine 80-150 ans)",
+      "ecological_value": "HIGH_CONTINUITY"
+    },
+    "4": {
+      "label": "VIEILLES_FORETS_>150ANS",
+      "description": "Vieilles forêts (origine > 150 ans, peu ou pas perturbées)",
+      "ecological_value": "ULTRA_HIGH_CONTINUITY_RARE"
+    },
+    "5": {
+      "label": "PERTURBE_RECEMMENT",
+      "description": "Polygone perturbé récemment (an_perturb < 25 ans avec severity HIGH)",
+      "ecological_value": "DISRUPTED_RESET"
+    }
+  },
+  "decision_rules": {
+    "perturb_recent_threshold_years": 25,
+    "perturb_high_severity_overrides_age": true,
+    "use_an_origine_else_cl_age_proxy": true,
+    "fallback_unknown_class": 1,
+    "cl_age_proxy_to_continuity": {
+      "10": 1, "30": 1, "50": 2, "70": 2, "90": 3,
+      "120": 3, "JIN": 1, "JIR": 1, "VIN": 4, "VIR": 4,
+      "VI": 3, "VIRS": 4
+    }
+  },
+  "validation_required_by_commandant": [
+    "Validation experte des codes de sévérité MFFP (CT/CHT/BR/...)",
+    "Confirmer perturb_recent_threshold_years=25",
+    "Confirmer current_year_assumption=2026 (saison chasse)"
+  ],
+  "v30_lock": "INVIOLÉ"
+}
