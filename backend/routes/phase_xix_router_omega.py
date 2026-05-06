@@ -157,19 +157,22 @@ async def bp135_coupling_execute(
     x_commandant_token: Optional[str] = Header(
         default=None, alias="X-Commandant-Token"),
 ) -> JSONResponse:
-    """ORDRE N°53 · Couplage direct SUPER_ENGINES ↔ BIO_PROFILE_OMEGA_135.
+    """ORDRE N°53 + N°53-BIS · Couplage SUPER_ENGINES ↔ BP135.
 
     Modes :
-      · `direct` → 6 scores BP135 directs (sans BIO_REACTEUR)
-      · `fusion` → fusion pondérée BIO_REACTEUR × BP135 par master
-      · `audit`  → drift report forensique BIO_REACTEUR vs BP135
+      · `direct`         → 6 scores BP135 directs
+      · `fusion`         → fusion pondérée BIO_REACTEUR × BP135
+      · `audit`          → drift report forensique
+      · `overlay_scan`   → scan registry-aware des 6 sources externes
+      · `overlay_fusion` → recouplage POST-overlay BP135→BR + persistance audit
 
     Token Commandant requis (X-Commandant-Token).
-    Garde-fous : V30_LOCK SHA-256 vérifié, pas de mutation.
+    Garde-fous : V30_LOCK SHA-256 vérifié, FUSION ADD-ONLY strict.
     """
     _verify_commandant_token(x_commandant_token)
 
-    valid_modes = {"direct", "fusion", "audit"}
+    valid_modes = {"direct", "fusion", "audit",
+                   "overlay_fusion", "overlay_scan"}
     if mode not in valid_modes:
         raise HTTPException(
             status_code=400,
@@ -191,8 +194,30 @@ async def bp135_coupling_execute(
                     "bio_reacteur": weight_bio_reacteur,
                     "bp135": weight_bp135,
                 })
-        else:  # audit
+        elif mode == "audit":
             payload = audit_bp135_vs_bioreacteur_drift()
+        elif mode == "overlay_scan":
+            from engines.v8_institutional.especes.bio_reacteur_overlay_omega import (  # noqa: E501
+                scan_external_sources,
+            )
+            payload = scan_external_sources()
+        else:  # overlay_fusion
+            from engines.v8_institutional.especes.bio_reacteur_overlay_omega import (  # noqa: E501
+                compute_overlay_fusion, persist_audit,
+                scan_external_sources,
+            )
+            overlay_payload = compute_overlay_fusion(
+                weights={
+                    "bio_reacteur_overlay": weight_bio_reacteur,
+                    "bp135": weight_bp135,
+                })
+            sources_scan = scan_external_sources()
+            payload = {
+                **overlay_payload,
+                "external_sources_scan": sources_scan,
+            }
+            audit_meta = persist_audit(payload)
+            payload["audit_persisted"] = audit_meta
     except CouplingError as e:
         raise HTTPException(
             status_code=400, detail=f"COUPLING_ERROR::{e}")

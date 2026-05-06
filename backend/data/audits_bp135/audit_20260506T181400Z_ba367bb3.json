@@ -1,0 +1,311 @@
+{
+  "audit_filename": "audit_20260506T181400Z_ba367bb3.json",
+  "audit_sha256": "ba367bb3d17f45ac8f47ca9f0cdb42fae9c09255106812fb570e62c19b249cc2",
+  "persisted_at_utc": "2026-05-06T18:14:00+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "manifest_id": "BP135_OVERLAY_FUSION_Ω",
+    "ordre": "N°53-BIS",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "mode": "overlay_fusion",
+    "weights_doctrinal": {
+      "bio_reacteur_overlay": 0.5,
+      "bp135": 0.5
+    },
+    "score_global_fusion_post_overlay": 54.27,
+    "score_global_fusion_pre_overlay": 50.55,
+    "drift_max_post_overlay": 50.76,
+    "drift_mean_post_overlay": 22.04,
+    "drift_max_pre_overlay": 51.37,
+    "drift_mean_pre_overlay": 27.56,
+    "drift_improvement_max": 0.61,
+    "drift_improvement_mean": 5.52,
+    "fusion_results": {
+      "ENGINE_CORRIDORS_MASTER_Ω": {
+        "master_id_long": "ENGINE_CORRIDORS_MASTER_Ω",
+        "master_id_short": "CORRIDORS_MASTER_Ω",
+        "br_score_post_overlay": 40.0,
+        "br_score_pre_overlay": 40.0,
+        "bp135_direct_score": 49.28,
+        "fusion_score_post_overlay": 44.64,
+        "fusion_score_pre_overlay": 44.64,
+        "drift_br_vs_bp135_post": 9.28,
+        "drift_br_vs_bp135_pre": 9.28,
+        "drift_improvement": 0.0,
+        "drift_alert_post": false,
+        "weights_applied": {
+          "bio_reacteur_overlay": 0.5,
+          "bp135": 0.5
+        },
+        "couplage_actif": true
+      },
+      "ENGINE_NUTRITION_MASTER_Ω": {
+        "master_id_long": "ENGINE_NUTRITION_MASTER_Ω",
+        "master_id_short": "NUTRITION_MASTER_Ω",
+        "br_score_post_overlay": 37.2,
+        "br_score_pre_overlay": 0.0,
+        "bp135_direct_score": 51.37,
+        "fusion_score_post_overlay": 44.28,
+        "fusion_score_pre_overlay": 25.68,
+        "drift_br_vs_bp135_post": 14.17,
+        "drift_br_vs_bp135_pre": 51.37,
+        "drift_improvement": 37.2,
+        "drift_alert_post": false,
+        "weights_applied": {
+          "bio_reacteur_overlay": 0.5,
+          "bp135": 0.5
+        },
+        "couplage_actif": true
+      },
+      "ENGINE_SENSORIEL_MASTER_Ω": {
+        "master_id_long": "ENGINE_SENSORIEL_MASTER_Ω",
+        "master_id_short": "SENSORIEL_MASTER_Ω",
+        "br_score_post_overlay": 33.08,
+        "br_score_pre_overlay": 33.08,
+        "bp135_direct_score": 60.48,
+        "fusion_score_post_overlay": 46.78,
+        "fusion_score_pre_overlay": 46.78,
+        "drift_br_vs_bp135_post": 27.4,
+        "drift_br_vs_bp135_pre": 27.4,
+        "drift_improvement": 0.0,
+        "drift_alert_post": false,
+        "weights_applied": {
+          "bio_reacteur_overlay": 0.5,
+          "bp135": 0.5
+        },
+        "couplage_actif": true
+      },
+      "ENGINE_COMPORTEMENT_MASTER_Ω": {
+        "master_id_long": "ENGINE_COMPORTEMENT_MASTER_Ω",
+        "master_id_short": "COMPORTEMENT_MASTER_Ω",
+        "br_score_post_overlay": 100.0,
+        "br_score_pre_overlay": 100.0,
+        "bp135_direct_score": 49.24,
+        "fusion_score_post_overlay": 74.62,
+        "fusion_score_pre_overlay": 74.62,
+        "drift_br_vs_bp135_post": 50.76,
+        "drift_br_vs_bp135_pre": 50.76,
+        "drift_improvement": 0.0,
+        "drift_alert_post": true,
+        "weights_applied": {
+          "bio_reacteur_overlay": 0.5,
+          "bp135": 0.5
+        },
+        "couplage_actif": true
+      },
+      "ENGINE_GOUVERNANCE_MASTER_Ω": {
+        "master_id_long": "ENGINE_GOUVERNANCE_MASTER_Ω",
+        "master_id_short": "GOUVERNANCE_MASTER_Ω",
+        "br_score_post_overlay": 75.0,
+        "br_score_pre_overlay": 75.0,
+        "bp135_direct_score": 50.13,
+        "fusion_score_post_overlay": 62.56,
+        "fusion_score_pre_overlay": 62.56,
+        "drift_br_vs_bp135_post": 24.87,
+        "drift_br_vs_bp135_pre": 24.87,
+        "drift_improvement": 0.0,
+        "drift_alert_post": false,
+        "weights_applied": {
+          "bio_reacteur_overlay": 0.5,
+          "bp135": 0.5
+        },
+        "couplage_actif": true
+      },
+      "ENGINE_TERRITOIRE_MASTER_Ω": {
+        "master_id_long": "ENGINE_TERRITOIRE_MASTER_Ω",
+        "master_id_short": "TERRITOIRE_MASTER_Ω",
+        "br_score_post_overlay": 55.65,
+        "br_score_pre_overlay": 48.21,
+        "bp135_direct_score": 49.86,
+        "fusion_score_post_overlay": 52.75,
+        "fusion_score_pre_overlay": 49.03,
+        "drift_br_vs_bp135_post": 5.79,
+        "drift_br_vs_bp135_pre": 1.65,
+        "drift_improvement": -4.14,
+        "drift_alert_post": false,
+        "weights_applied": {
+          "bio_reacteur_overlay": 0.5,
+          "bp135": 0.5
+        },
+        "couplage_actif": true
+      }
+    },
+    "overlay_application_summary": {
+      "CHEVREUIL": {
+        "n_applied": 2,
+        "n_preserved_existing": 2
+      },
+      "ORIGNAL": {
+        "n_applied": 1,
+        "n_preserved_existing": 3
+      },
+      "OURS_NOIR": {
+        "n_applied": 3,
+        "n_preserved_existing": 1
+      },
+      "WAPITI": {
+        "n_applied": 1,
+        "n_preserved_existing": 3
+      },
+      "DINDON_SAUVAGE": {
+        "n_applied": 3,
+        "n_preserved_existing": 1
+      }
+    },
+    "elapsed_s": 0.016,
+    "computed_at_utc": "2026-05-06T18:14:00+00:00",
+    "v30_lock": "INVIOLÉ",
+    "external_sources_scan": {
+      "manifest_id": "EXTERNAL_SOURCES_SCAN_Ω",
+      "ordre": "N°53-BIS",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "scanned_at_utc": "2026-05-06T18:14:00+00:00",
+      "n_sources_total": 6,
+      "n_sources_available": 0,
+      "n_sources_absent": 6,
+      "sources": [
+        {
+          "source_name": "NOAA",
+          "paths_present": [],
+          "paths_absent": [
+            "/data/external/noaa"
+          ],
+          "n_files_found": 0,
+          "files_sample": [],
+          "formats_expected": [
+            ".nc",
+            ".grib2"
+          ],
+          "hooks_targets": [
+            "ENVIRONNEMENT"
+          ],
+          "consumed_by_masters": [
+            "SENSORIEL_MASTER_Ω"
+          ],
+          "available": false,
+          "fallback_when_unavailable": "skip_with_log",
+          "anti_generique_strict": true
+        },
+        {
+          "source_name": "NASA",
+          "paths_present": [],
+          "paths_absent": [
+            "/data/external/nasa"
+          ],
+          "n_files_found": 0,
+          "files_sample": [],
+          "formats_expected": [
+            ".tif",
+            ".hdf"
+          ],
+          "hooks_targets": [
+            "NUTRITION",
+            "ENVIRONNEMENT"
+          ],
+          "consumed_by_masters": [
+            "NUTRITION_MASTER_Ω",
+            "SENSORIEL_MASTER_Ω"
+          ],
+          "available": false,
+          "fallback_when_unavailable": "skip_with_log",
+          "anti_generique_strict": true
+        },
+        {
+          "source_name": "USGS",
+          "paths_present": [],
+          "paths_absent": [
+            "/data/external/usgs"
+          ],
+          "n_files_found": 0,
+          "files_sample": [],
+          "formats_expected": [
+            ".tif",
+            ".csv"
+          ],
+          "hooks_targets": [
+            "COMPORTEMENT",
+            "PREDICTIF"
+          ],
+          "consumed_by_masters": [
+            "COMPORTEMENT_MASTER_Ω",
+            "GOUVERNANCE_MASTER_Ω"
+          ],
+          "available": false,
+          "fallback_when_unavailable": "skip_with_log",
+          "anti_generique_strict": true
+        },
+        {
+          "source_name": "RSF_SSF",
+          "paths_present": [],
+          "paths_absent": [
+            "/models/rsf",
+            "/models/ssf"
+          ],
+          "n_files_found": 0,
+          "files_sample": [],
+          "formats_expected": [
+            ".pkl",
+            ".json"
+          ],
+          "hooks_targets": [
+            "PREDICTIF"
+          ],
+          "consumed_by_masters": [
+            "GOUVERNANCE_MASTER_Ω"
+          ],
+          "available": false,
+          "fallback_when_unavailable": "skip_with_log",
+          "anti_generique_strict": true
+        },
+        {
+          "source_name": "MAXENT",
+          "paths_present": [],
+          "paths_absent": [
+            "/models/maxent"
+          ],
+          "n_files_found": 0,
+          "files_sample": [],
+          "formats_expected": [
+            ".jar",
+            ".asc",
+            ".tif"
+          ],
+          "hooks_targets": [
+            "PREDICTIF"
+          ],
+          "consumed_by_masters": [
+            "GOUVERNANCE_MASTER_Ω"
+          ],
+          "available": false,
+          "fallback_when_unavailable": "skip_with_log",
+          "anti_generique_strict": true
+        },
+        {
+          "source_name": "FORECAST_48H",
+          "paths_present": [],
+          "paths_absent": [
+            "/streams/forecast48h"
+          ],
+          "n_files_found": 0,
+          "files_sample": [],
+          "formats_expected": [
+            ".nc",
+            ".json",
+            ".csv"
+          ],
+          "hooks_targets": [
+            "ENVIRONNEMENT"
+          ],
+          "consumed_by_masters": [
+            "SENSORIEL_MASTER_Ω"
+          ],
+          "available": false,
+          "fallback_when_unavailable": "skip_with_log",
+          "anti_generique_strict": true
+        }
+      ],
+      "v30_lock": "INVIOLÉ"
+    }
+  }
+}

@@ -1,0 +1,630 @@
+"""
+bio_reacteur_overlay_omega.py — ORDRE N°53-BIS
+═══════════════════════════════════════════════════════════════════════════
+COMMANDANT STEEVE-MAX · BCE-4X ULTIME ABSOLU x3 · ANTI_GÉNÉRIQUE_STRICT
+
+ENRICHISSEMENT BIO_REACTEUR_Ω en mode FUSION ADD-ONLY uniquement via les
+sources RÉELLEMENT PRÉSENTES (BP135 · rasters R9). Aucune fabrication.
+
+INFRASTRUCTURE D'INGESTION pluggable pour les 6 sources externes :
+  · NOAA           (.nc/.grib2)        → ENVIRONNEMENT
+  · NASA           (.tif/.hdf)         → NUTRITION + ENVIRONNEMENT
+  · USGS           (.tif/.csv)         → COMPORTEMENT + PREDICTIF
+  · RSF/SSF        (.pkl/.json)        → PREDICTIF
+  · MaxEnt         (.jar/.asc/.tif)    → PREDICTIF
+  · Forecast 48h   (stream)            → ENVIRONNEMENT
+
+Tant que les sources externes sont absentes du disque, leur status reste
+`paths_absent` honnête (skip_with_log). L'overlay BIO_REACTEUR n'utilise
+QUE les sources réellement présentes (anti-générique strict).
+
+Doctrine FUSION ADD-ONLY :
+  · NE MODIFIE PAS les fichiers BIO_REACTEUR_Ω_<ESPECE>.json (V30 LOCKED)
+  · NE MODIFIE PAS bio_profile_135.json (V30 LOCKED)
+  · NE MODIFIE PAS super_engines_omega_logic.py (V30 LOCKED)
+  · L'overlay est appliqué EN MÉMOIRE puis transmis aux super engines.
+
+═══════════════════════════════════════════════════════════════════════════
+"""
+from __future__ import annotations
+
+import copy
+import hashlib
+import json
+import logging
+import time
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+logger = logging.getLogger("bio_reacteur_overlay_omega")
+
+from engines.v8_institutional.especes.bio_profile_135_loader_omega import (
+    load_bio_profile_135,
+    file_sha256 as bp135_sha256,
+    index_entries,
+    ESPECES_135,
+)
+from engines.v8_institutional.especes.bio_reacteur_loader_omega import (
+    ESPECES_SUPPORTEES,
+    load_all_bio_reacteurs,
+)
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# 1. Registry des 6 sources externes (état + paths configurés)
+# ═════════════════════════════════════════════════════════════════════════
+EXTERNAL_SOURCES_REGISTRY: List[Dict[str, Any]] = [
+    {
+        "source_name": "NOAA",
+        "paths": [Path("/data/external/noaa")],
+        "formats": [".nc", ".grib2"],
+        "hooks_targets": ["ENVIRONNEMENT"],
+        "consumed_by_masters": ["SENSORIEL_MASTER_Ω"],
+    },
+    {
+        "source_name": "NASA",
+        "paths": [Path("/data/external/nasa")],
+        "formats": [".tif", ".hdf"],
+        "hooks_targets": ["NUTRITION", "ENVIRONNEMENT"],
+        "consumed_by_masters": [
+            "NUTRITION_MASTER_Ω", "SENSORIEL_MASTER_Ω"],
+    },
+    {
+        "source_name": "USGS",
+        "paths": [Path("/data/external/usgs")],
+        "formats": [".tif", ".csv"],
+        "hooks_targets": ["COMPORTEMENT", "PREDICTIF"],
+        "consumed_by_masters": [
+            "COMPORTEMENT_MASTER_Ω", "GOUVERNANCE_MASTER_Ω"],
+    },
+    {
+        "source_name": "RSF_SSF",
+        "paths": [Path("/models/rsf"), Path("/models/ssf")],
+        "formats": [".pkl", ".json"],
+        "hooks_targets": ["PREDICTIF"],
+        "consumed_by_masters": ["GOUVERNANCE_MASTER_Ω"],
+    },
+    {
+        "source_name": "MAXENT",
+        "paths": [Path("/models/maxent")],
+        "formats": [".jar", ".asc", ".tif"],
+        "hooks_targets": ["PREDICTIF"],
+        "consumed_by_masters": ["GOUVERNANCE_MASTER_Ω"],
+    },
+    {
+        "source_name": "FORECAST_48H",
+        "paths": [Path("/streams/forecast48h")],
+        "formats": [".nc", ".json", ".csv"],
+        "hooks_targets": ["ENVIRONNEMENT"],
+        "consumed_by_masters": ["SENSORIEL_MASTER_Ω"],
+    },
+]
+
+
+def scan_external_sources() -> Dict[str, Any]:
+    """Scanne les 6 sources externes configurées · état réel disque.
+
+    Retourne pour chaque source :
+      · paths_present : paths existants
+      · paths_absent  : paths absents
+      · files_found   : fichiers détectés au format approprié
+      · available     : True ssi au moins 1 fichier présent
+    Anti-générique : aucune fabrication de présence.
+    """
+    results: List[Dict[str, Any]] = []
+    for src in EXTERNAL_SOURCES_REGISTRY:
+        paths_present: List[str] = []
+        paths_absent: List[str] = []
+        files_found: List[str] = []
+        for p in src["paths"]:
+            if p.exists() and p.is_dir():
+                paths_present.append(str(p))
+                # Scan récursif des fichiers de format attendu
+                for fmt in src["formats"]:
+                    for f in p.rglob(f"*{fmt}"):
+                        if f.is_file():
+                            files_found.append(str(f))
+            else:
+                paths_absent.append(str(p))
+        results.append({
+            "source_name": src["source_name"],
+            "paths_present": paths_present,
+            "paths_absent": paths_absent,
+            "n_files_found": len(files_found),
+            "files_sample": files_found[:5],
+            "formats_expected": src["formats"],
+            "hooks_targets": src["hooks_targets"],
+            "consumed_by_masters": src["consumed_by_masters"],
+            "available": len(files_found) > 0,
+            "fallback_when_unavailable": "skip_with_log",
+            "anti_generique_strict": True,
+        })
+    n_available = sum(1 for r in results if r["available"])
+    return {
+        "manifest_id": "EXTERNAL_SOURCES_SCAN_Ω",
+        "ordre": "N°53-BIS",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "scanned_at_utc": datetime.now(
+            timezone.utc).isoformat(timespec="seconds"),
+        "n_sources_total": len(results),
+        "n_sources_available": n_available,
+        "n_sources_absent": len(results) - n_available,
+        "sources": results,
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# 2. Mapping conservatif BP135 → BIO_REACTEUR (NUTRITION uniquement)
+#    Anti-générique strict : seulement les paramètres à correspondance
+#    scientifique directe + numériquement exploitable.
+# ═════════════════════════════════════════════════════════════════════════
+BP135_TO_BR_NUTRITION_MAPPING = {
+    # nutrition.besoins_proteines ← ALI besoin protéines
+    "nutrition.besoins_proteines": {
+        "bp135_param_id": "ALI-003",
+        "bp135_param_name": "besoin_proteine_brute",
+        "br_target_engine": "ENGINE_NUTRITION",
+        "rationale": "Besoin protéique brut quotidien (% matière sèche).",
+    },
+    # nutrition.besoins_energetiques ← ALI énergie de base été
+    "nutrition.besoins_energetiques": {
+        "bp135_param_id": "ALI-011",
+        "bp135_param_name": "besoin_energetique_basal_ete",
+        "br_target_engine": "ENGINE_NUTRITION",
+        "rationale": "Besoin énergétique basal estival (kcal/jour).",
+    },
+    # nutrition.besoins_mineraux.sodium ← ALI sodium
+    "nutrition.besoins_mineraux.sodium": {
+        "bp135_param_id": "ALI-008",
+        "bp135_param_name": "besoin_sodium",
+        "br_target_engine": "ENGINE_MINERAUX",
+        "rationale": "Besoin sodium quotidien (mg/jour).",
+    },
+    # nutrition.besoins_mineraux.calcium ← ALI calcium
+    "nutrition.besoins_mineraux.calcium": {
+        "bp135_param_id": "ALI-009",
+        "bp135_param_name": "besoin_calcium",
+        "br_target_engine": "ENGINE_MINERAUX",
+        "rationale": "Besoin calcium quotidien (mg/jour).",
+    },
+    # nutrition.besoins_mineraux.magnesium ← (aucun match BP135 direct)
+    # → reste vide (anti-générique strict, pas de fabrication)
+}
+
+
+def _get_bp135_value_for_species(
+    bp135_idx: Dict[str, Any],
+    block: str,
+    espece_bp135: str,
+    parameter_id: str,
+) -> Optional[float]:
+    """Cherche value_typical (numérique) d'un paramètre BP135 pour une espèce.
+
+    Returns None si non trouvé ou non numérique.
+    Anti-générique : aucune valeur fabriquée.
+    """
+    entries = bp135_idx["by_block_species"].get(
+        block, {}).get(espece_bp135, [])
+    for e in entries:
+        if e.get("parameter_id") == parameter_id:
+            v = e.get("value_typical")
+            if isinstance(v, (int, float)):
+                return float(v)
+            return None
+    return None
+
+
+def compute_overlay_for_species(espece_br: str) -> Dict[str, Any]:
+    """Calcule l'overlay BIO_REACTEUR pour une espèce, basé sur BP135.
+
+    Args:
+      espece_br: identifiant BR (ESPECES_SUPPORTEES) — coincide avec ESPECES_135.
+
+    Returns:
+      overlay dict {
+        "patches": [{dotted_path, target_engine, source, value, bp135_param}],
+        "skipped_anti_generique": [...],
+        "summary": {...}
+      }
+    """
+    if espece_br not in ESPECES_SUPPORTEES:
+        raise ValueError(f"espece_br invalide : {espece_br}")
+
+    bp = load_bio_profile_135()  # noqa: F841 (sanity load + lru_cache warmup)
+    idx = index_entries()
+
+    patches: List[Dict[str, Any]] = []
+    skipped: List[Dict[str, Any]] = []
+
+    # NUTRITION mapping (espèce identique côté BR/BP135)
+    espece_bp = espece_br
+    for dotted, mapping in BP135_TO_BR_NUTRITION_MAPPING.items():
+        # Recherche dans tous les blocs ALIMENTATION/PHYSIOLOGIE
+        value = None
+        bp_param_block = None
+        for blk in ("ALIMENTATION", "PHYSIOLOGIE"):
+            v = _get_bp135_value_for_species(
+                idx, blk, espece_bp, mapping["bp135_param_id"])
+            if v is not None:
+                value = v
+                bp_param_block = blk
+                break
+
+        if value is None:
+            skipped.append({
+                "dotted_path": dotted,
+                "reason": "bp135_value_absent_or_non_numeric",
+                "bp135_param_id": mapping["bp135_param_id"],
+                "anti_generique_strict": True,
+            })
+            continue
+
+        patches.append({
+            "dotted_path": dotted,
+            "target_engine": mapping["br_target_engine"],
+            "source": "BP135",
+            "bp135_param_id": mapping["bp135_param_id"],
+            "bp135_param_name": mapping["bp135_param_name"],
+            "bp135_block": bp_param_block,
+            "value": value,
+            "rationale": mapping["rationale"],
+        })
+
+    return {
+        "manifest_id": "BIO_REACTEUR_OVERLAY_Ω",
+        "ordre": "N°53-BIS",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "espece": espece_br,
+        "patches": patches,
+        "skipped_anti_generique": skipped,
+        "summary": {
+            "n_patches_applied": len(patches),
+            "n_skipped_anti_generique": len(skipped),
+            "patches_per_target_engine": {
+                eng: sum(1 for p in patches
+                         if p["target_engine"] == eng)
+                for eng in {p["target_engine"] for p in patches}
+            },
+        },
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# 3. Application overlay sur BIO_REACTEUR (mémoire uniquement)
+# ═════════════════════════════════════════════════════════════════════════
+def merge_overlay(br_dict: Dict[str, Any],
+                  overlay: Dict[str, Any]) -> Dict[str, Any]:
+    """Applique un overlay sur BR (deepcopy en mémoire, FUSION ADD-ONLY).
+
+    Règle stricte : un patch n'est appliqué que si le path BR est :
+      · ABSENT, ou
+      · présent mais value est `None`, `[]`, `{}` ou `""`.
+    Une valeur BR existante non vide est PRÉSERVÉE (FUSION ADD-ONLY strict).
+    """
+    enriched = copy.deepcopy(br_dict)
+    out_engines = enriched.setdefault("bio_reacteur_outputs", {})
+    n_applied = 0
+    n_preserved = 0
+    application_log: List[Dict[str, Any]] = []
+
+    for patch in overlay.get("patches", []):
+        engine = patch["target_engine"]
+        dotted = patch["dotted_path"]
+        new_value = patch["value"]
+
+        eng_block = out_engines.setdefault(engine, {})
+        params = eng_block.setdefault("parametres_alimentes", {})
+
+        existing = params.get(dotted)
+        existing_value = None
+        if isinstance(existing, dict) and "value" in existing:
+            existing_value = existing["value"]
+        else:
+            existing_value = existing
+
+        is_empty = (
+            existing is None
+            or existing_value is None
+            or existing_value == []
+            or existing_value == {}
+            or existing_value == "")
+
+        if is_empty:
+            # Application FUSION ADD-ONLY
+            params[dotted] = {
+                "value": new_value,
+                "signature": {
+                    "source": "BP135_OVERLAY",
+                    "bp135_param_id": patch.get("bp135_param_id"),
+                    "bp135_block": patch.get("bp135_block"),
+                    "applied_via_overlay": True,
+                    "ordre": "N°53-BIS",
+                },
+            }
+            n_applied += 1
+            application_log.append({
+                "dotted_path": dotted,
+                "action": "applied",
+                "value": new_value,
+            })
+        else:
+            n_preserved += 1
+            application_log.append({
+                "dotted_path": dotted,
+                "action": "preserved_existing",
+                "existing_value_type": type(existing_value).__name__,
+            })
+
+    return {
+        "enriched_br": enriched,
+        "n_applied": n_applied,
+        "n_preserved_existing": n_preserved,
+        "application_log": application_log,
+    }
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# 4. Calcul SUPER ENGINES avec overlay
+# ═════════════════════════════════════════════════════════════════════════
+def compute_super_engines_with_overlay() -> Dict[str, Any]:
+    """Calcule les 6 SUPER ENGINES_Ω en utilisant les BR + overlay BP135.
+
+    Aucune mutation disque : overlay appliqué en mémoire uniquement.
+    Pipeline : BR original → overlay BP135 → super_engines_omega_logic.
+    """
+    from engines.v8_institutional.especes.super_engines_omega_logic import (
+        compute_corridors_master, compute_nutrition_master,
+        compute_sensoriel_master, compute_comportement_master,
+        compute_gouvernance_master, compute_territoire_master,
+    )
+    from engines.v8_institutional.especes.super_engines_omega_specs import (
+        SUPER_ENGINE_LOCK_SHA256,
+    )
+
+    t0 = time.time()
+    bio_reacteurs_original = load_all_bio_reacteurs()
+    bio_reacteurs_enriched: Dict[str, Dict[str, Any]] = {}
+    overlays_per_species: Dict[str, Dict[str, Any]] = {}
+    application_summary: Dict[str, Dict[str, Any]] = {}
+
+    for esp in ESPECES_SUPPORTEES:
+        ovl = compute_overlay_for_species(esp)
+        merged = merge_overlay(bio_reacteurs_original[esp], ovl)
+        bio_reacteurs_enriched[esp] = merged["enriched_br"]
+        overlays_per_species[esp] = ovl
+        application_summary[esp] = {
+            "n_applied": merged["n_applied"],
+            "n_preserved_existing": merged["n_preserved_existing"],
+        }
+
+    # Recalcul des 6 super engines avec BR enrichis
+    out_corridors = compute_corridors_master(bio_reacteurs_enriched)
+    out_nutrition = compute_nutrition_master(bio_reacteurs_enriched)
+    out_sensoriel = compute_sensoriel_master(bio_reacteurs_enriched)
+    out_comportement = compute_comportement_master(bio_reacteurs_enriched)
+    out_gouvernance = compute_gouvernance_master(bio_reacteurs_enriched)
+    out_territoire = compute_territoire_master(bio_reacteurs_enriched)
+
+    return {
+        "manifest_id": "SUPER_ENGINES_WITH_BP135_OVERLAY_Ω",
+        "ordre": "N°53-BIS",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "computed_at_utc": datetime.now(
+            timezone.utc).isoformat(timespec="seconds"),
+        "super_engine_lock_sha256": SUPER_ENGINE_LOCK_SHA256,
+        "bp135_sha256": bp135_sha256(),
+        "engines": {
+            "ENGINE_CORRIDORS_MASTER_Ω": out_corridors,
+            "ENGINE_NUTRITION_MASTER_Ω": out_nutrition,
+            "ENGINE_SENSORIEL_MASTER_Ω": out_sensoriel,
+            "ENGINE_COMPORTEMENT_MASTER_Ω": out_comportement,
+            "ENGINE_GOUVERNANCE_MASTER_Ω": out_gouvernance,
+            "ENGINE_TERRITOIRE_MASTER_Ω": out_territoire,
+        },
+        "overlay_application_summary_per_species": application_summary,
+        "n_species_enriched": len(ESPECES_SUPPORTEES),
+        "elapsed_s": round(time.time() - t0, 3),
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# 5. Recouplage BP135 ↔ SUPER_ENGINES avec overlay (fusion ADD-ONLY)
+# ═════════════════════════════════════════════════════════════════════════
+def compute_overlay_fusion(
+    weights: Optional[Dict[str, float]] = None,
+) -> Dict[str, Any]:
+    """Recouplage BP135 ↔ SUPER_ENGINES après application de l'overlay BR.
+
+    Args:
+      weights: {"bio_reacteur_overlay": 0..1, "bp135": 0..1}, somme = 1.0.
+
+    Returns:
+      Score fusion par master + drift POST-overlay vs PRÉ-overlay.
+    """
+    from engines.v8_institutional.especes.super_engines_bp135_coupling_omega import (  # noqa: E501
+        compute_super_engines_bp135_fusion,
+        compute_all_masters_direct_bp135,
+        MASTER_LONG_TO_SHORT,
+    )
+
+    if weights is None:
+        weights = {"bio_reacteur_overlay": 0.5, "bp135": 0.5}
+    w_br = float(weights.get("bio_reacteur_overlay", 0.5))
+    w_bp = float(weights.get("bp135", 0.5))
+    total = w_br + w_bp
+    if total <= 0:
+        raise ValueError(f"weights_sum_invalid::{total}")
+    w_br /= total
+    w_bp /= total
+
+    t0 = time.time()
+    # Snapshot PRÉ-overlay (référence baseline)
+    pre_overlay = compute_super_engines_bp135_fusion(
+        weights={"bio_reacteur": 0.5, "bp135": 0.5})
+    # POST-overlay : BR enrichis
+    post_engines = compute_super_engines_with_overlay()
+    bp_bundle = compute_all_masters_direct_bp135()
+
+    # Fusion par master avec overlay BR
+    fusion_results: Dict[str, Any] = {}
+    for long_id, br_engine in post_engines["engines"].items():
+        short_id = MASTER_LONG_TO_SHORT.get(long_id)
+        # Score canonique BR : score_<engine>_master_omega
+        br_score_key = next(
+            (k for k in br_engine
+             if k.startswith("score_") and k.endswith("_master_omega")),
+            None)
+        br_score = (
+            br_engine.get(br_score_key, 0.0) if br_score_key else 0.0)
+
+        if short_id and short_id in bp_bundle["masters_results"]:
+            bp_engine = bp_bundle["masters_results"][short_id]
+            bp_score = bp_engine["score_master_bp135_direct"]
+            fusion_score = round(w_br * br_score + w_bp * bp_score, 2)
+            drift_post = round(abs(br_score - bp_score), 2)
+        else:
+            bp_score = None
+            fusion_score = br_score
+            drift_post = None
+
+        # Calcul du PRE drift pour mesurer l'amélioration
+        pre_v = pre_overlay["fusion_results"].get(long_id, {})
+        drift_pre = pre_v.get("drift_br_vs_bp135")
+        drift_improvement = (
+            round(drift_pre - drift_post, 2)
+            if drift_pre is not None and drift_post is not None
+            else None)
+
+        fusion_results[long_id] = {
+            "master_id_long": long_id,
+            "master_id_short": short_id,
+            "br_score_post_overlay": br_score,
+            "br_score_pre_overlay": pre_v.get("bio_reacteur_score"),
+            "bp135_direct_score": bp_score,
+            "fusion_score_post_overlay": fusion_score,
+            "fusion_score_pre_overlay": pre_v.get("fusion_score"),
+            "drift_br_vs_bp135_post": drift_post,
+            "drift_br_vs_bp135_pre": drift_pre,
+            "drift_improvement": drift_improvement,
+            "drift_alert_post": (
+                drift_post is not None and drift_post > 30.0),
+            "weights_applied": {
+                "bio_reacteur_overlay": round(w_br, 3),
+                "bp135": round(w_bp, 3),
+            },
+            "couplage_actif": (short_id is not None),
+        }
+
+    score_global_fusion = round(
+        sum(v["fusion_score_post_overlay"]
+            for v in fusion_results.values())
+        / len(fusion_results), 2)
+
+    drifts_post = [
+        v["drift_br_vs_bp135_post"]
+        for v in fusion_results.values()
+        if v.get("drift_br_vs_bp135_post") is not None
+    ]
+    drifts_pre = [
+        v["drift_br_vs_bp135_pre"]
+        for v in fusion_results.values()
+        if v.get("drift_br_vs_bp135_pre") is not None
+    ]
+    drift_max_post = max(drifts_post) if drifts_post else 0.0
+    drift_mean_post = (
+        round(sum(drifts_post) / len(drifts_post), 2)
+        if drifts_post else 0.0)
+    drift_max_pre = max(drifts_pre) if drifts_pre else 0.0
+    drift_mean_pre = (
+        round(sum(drifts_pre) / len(drifts_pre), 2)
+        if drifts_pre else 0.0)
+
+    return {
+        "manifest_id": "BP135_OVERLAY_FUSION_Ω",
+        "ordre": "N°53-BIS",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "mode": "overlay_fusion",
+        "weights_doctrinal": {
+            "bio_reacteur_overlay": round(w_br, 3),
+            "bp135": round(w_bp, 3),
+        },
+        "score_global_fusion_post_overlay": score_global_fusion,
+        "score_global_fusion_pre_overlay": (
+            pre_overlay["score_global_fusion"]),
+        "drift_max_post_overlay": drift_max_post,
+        "drift_mean_post_overlay": drift_mean_post,
+        "drift_max_pre_overlay": drift_max_pre,
+        "drift_mean_pre_overlay": drift_mean_pre,
+        "drift_improvement_max": round(
+            drift_max_pre - drift_max_post, 2),
+        "drift_improvement_mean": round(
+            drift_mean_pre - drift_mean_post, 2),
+        "fusion_results": fusion_results,
+        "overlay_application_summary": (
+            post_engines["overlay_application_summary_per_species"]),
+        "elapsed_s": round(time.time() - t0, 3),
+        "computed_at_utc": datetime.now(
+            timezone.utc).isoformat(timespec="seconds"),
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# 6. Persistance audit forensique
+# ═════════════════════════════════════════════════════════════════════════
+AUDITS_ROOT = Path("/app/backend/data/audits_bp135")
+
+
+def persist_audit(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Persiste un audit dans /app/backend/data/audits_bp135/.
+
+    Filename: audit_<timestamp>_<sha8>.json
+    SHA-256 du payload calculé pour traçabilité longitudinale.
+    """
+    AUDITS_ROOT.mkdir(parents=True, exist_ok=True)
+    payload_json = json.dumps(payload, sort_keys=True,
+                              ensure_ascii=False, default=str)
+    audit_sha256 = hashlib.sha256(
+        payload_json.encode("utf-8")).hexdigest()
+    sha8 = audit_sha256[:8]
+    ts = datetime.now(
+        timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    filename = f"audit_{ts}_{sha8}.json"
+    out_path = AUDITS_ROOT / filename
+    persisted_payload = {
+        "audit_filename": filename,
+        "audit_sha256": audit_sha256,
+        "persisted_at_utc": datetime.now(
+            timezone.utc).isoformat(timespec="seconds"),
+        "ordre": "N°53-BIS",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "audit_payload": payload,
+    }
+    out_path.write_text(
+        json.dumps(persisted_payload, ensure_ascii=False, indent=2),
+        encoding="utf-8")
+    return {
+        "audit_filename": filename,
+        "audit_path": str(out_path),
+        "audit_sha256": audit_sha256,
+        "audit_size_bytes": out_path.stat().st_size,
+        "persisted_at_utc": persisted_payload["persisted_at_utc"],
+        "v30_lock": "INVIOLÉ",
+    }
+
+
+__all__ = [
+    "EXTERNAL_SOURCES_REGISTRY",
+    "BP135_TO_BR_NUTRITION_MAPPING",
+    "AUDITS_ROOT",
+    "scan_external_sources",
+    "compute_overlay_for_species",
+    "merge_overlay",
+    "compute_super_engines_with_overlay",
+    "compute_overlay_fusion",
+    "persist_audit",
+]

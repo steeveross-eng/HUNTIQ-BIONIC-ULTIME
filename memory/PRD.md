@@ -27,6 +27,21 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXIX-BIS · ORDRE N°53-BIS — ENRICHISSEMENT BIO_REACTEUR_Ω + INFRASTRUCTURE D'INJECTION 6 SOURCES EXTERNES (2026-05-06)**
+  Implémentation **complète** de l'overlay BP135→BIO_REACTEUR (FUSION ADD-ONLY strict, anti-générique inviolé) + infrastructure d'ingestion pluggable des 6 sources externes (NOAA/NASA/USGS/RSF_SSF/MAXENT/FORECAST_48H). **504/504 pytests Phase XVI/XVIII/XX-XXIX-BIS PASSED · 0 régression · V30_LOCK INVIOLÉ.**
+  - **Module métier** : `engines/v8_institutional/especes/bio_reacteur_overlay_omega.py` (5 fonctions : `scan_external_sources`, `compute_overlay_for_species`, `merge_overlay`, `compute_super_engines_with_overlay`, `compute_overlay_fusion`, `persist_audit`).
+  - **Mapping conservatif anti-générique BP135→BR** : 4 dotted paths NUTRITION mappés via paramètres BP135 RÉELS (ALI-003 protéines · ALI-008 sodium · ALI-009 calcium · ALI-011 énergie). Magnésium volontairement absent (aucune correspondance BP135 directe — anti-générique strict).
+  - **Registry des 6 sources externes** : NOAA (.nc/.grib2 → ENVIRONNEMENT) · NASA (.tif/.hdf → NUTRITION+ENVIRONNEMENT) · USGS (.tif/.csv → COMPORTEMENT+PREDICTIF) · RSF_SSF (.pkl/.json → PREDICTIF) · MAXENT (.jar/.asc/.tif → PREDICTIF) · FORECAST_48H (stream → ENVIRONNEMENT). **Status actuel : 6/6 PATHS_ABSENT (`skip_with_log` doctrinal)**.
+  - **Endpoint étendu** : `POST /api/v30/super-masters/bp135-coupling-execute` avec **5 modes** : `direct` · `fusion` · `audit` · `overlay_scan` · `overlay_fusion`. Token Commandant requis (401/400 guard-rails confirmés).
+  - **Persistance audit forensique** : auto-déclenchée en mode `overlay_fusion` → `/app/backend/data/audits_bp135/audit_<timestamp>_<sha8>.json` avec SHA-256 du payload pour traçabilité longitudinale.
+  - **3 modes LIVE testés sur subset doctrinal complet (5 espèces × 6 masters)** :
+    - **Mode `overlay_scan`** : 6/6 sources en `PATHS_ABSENT`, fallback `skip_with_log` activé (anti-générique respecté). V30_LOCK INVIOLÉ.
+    - **Mode `overlay_fusion 50/50`** : `score_global` 50.55 → **54.27** (+7.4%) · `drift_max` 51.37→50.76 · `drift_mean` 27.56→**22.04** (-20%).
+    - **Effet par master** : NUTRITION_MASTER **0.00 → 37.20** (drift ↓**37.20**) · TERRITOIRE_MASTER 48.21→55.65 (cascade : NUTRITION upstream).
+  - **26 pytests neutres** (`test_phase_xxix_bis_bio_reacteur_overlay_omega.py`) — naming policy stricte zéro mot-clé exclu BCE-4X. Couverture : 6 sources × 5 espèces × FUSION ADD-ONLY × deepcopy non-mutation × persistance audit × KPI drift NUTRITION.
+  - **V30_LOCK INVIOLÉ vérifié post-exécution** : MD5 des 5 fichiers `BIO_REACTEUR_Ω_<ESPECE>.json` IDENTIQUES avant/après overlay · BP135 SHA-256 IDENTIQUE · super_engines_omega_logic.py NON modifié.
+  - **Couverture hooks** : 4 hooks doctrinaux (ENVIRONNEMENT/NUTRITION/COMPORTEMENT/PREDICTIF) tous référencés dans le registry external sources, prêts à passer `available=True` automatiquement dès qu'un fichier valide est déposé dans le path correspondant.
+  - **DIAGNOSTIC POST-OVERLAY** : 4 masters préservent un drift > 0 (CORRIDORS 9.28, SENSORIEL 27.40, COMPORTEMENT 50.76, GOUVERNANCE 24.87) → opportunités d'enrichissement supplémentaires si hooks externes deviennent disponibles (NOAA/NASA → SENSORIEL, USGS → COMPORTEMENT).
 - **PHASE_XXIX · ORDRE N°53 — COUPLAGE DIRECT SUPER_ENGINES ↔ BIO_PROFILE_OMEGA_135 (2026-05-06)**
   Implémentation **complète** du couplage doctrinal direct entre les 6 SUPER ENGINES_Ω et les 675 entrées BP135 (FUSION ADD-ONLY · pipeline BIO_REACTEUR PHASE XVI **intact**). **478/478 pytests Phase XVI/XVIII/XX-XXIX PASSED · 0 régression · V30_LOCK INVIOLÉ.**
   - **Module métier** : `engines/v8_institutional/especes/super_engines_bp135_coupling_omega.py` (4 fonctions : `compute_master_direct_bp135`, `compute_all_masters_direct_bp135`, `compute_super_engines_bp135_fusion`, `audit_bp135_vs_bioreacteur_drift`).
