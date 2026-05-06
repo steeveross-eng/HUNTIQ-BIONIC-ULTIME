@@ -246,7 +246,9 @@ def test_r9_state_has_r16dprep_status_field():
     assert "r16dprep_stub_loaders_created" in s
     assert len(s["r16dprep_stub_loaders_created"]) == 4
     # Le status global précédent doit être préservé (FUSION ADD-ONLY)
+    # OK_REAL_PARTIAL_R16D ajouté pour progression naturelle après R16-D.
     assert s.get("status") in (
         "OK_REAL_PARTIAL_R16C", "OK_REAL_PARTIAL_R16B",
         "OK_REAL_PARTIAL_R16A", "OK_REAL_PARTIAL_R16B_WITH_FAILURES",
+        "OK_REAL_PARTIAL_R16D",
         "OK_WITH_STUBS")

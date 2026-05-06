@@ -65,6 +65,8 @@ DICTIONARY_FILES = {
         DICTIONARIES_ROOT / "comportement_rules.json"),
     "predictif_rules": (
         DICTIONARIES_ROOT / "predictif_rules.json"),
+    "tactical_ground_rules": (
+        DICTIONARIES_ROOT / "tactical_ground_rules.json"),
 }
 
 
@@ -195,6 +197,18 @@ def all_validated_for_r16dprep() -> bool:
         if status not in ("VALIDÉ", "OFFICIAL"):
             return False
     return True
+
+
+def all_validated_for_r16d() -> bool:
+    """ORDRE N°52-R16-D : valide R16-D-PREP requis + tactical_ground_rules.
+
+    R16-D = R16-D-PREP requis + tactical_ground_rules (VALIDÉ).
+    Les 4 stubs hooks et tous les dicts en amont doivent être VALIDÉ/OFFICIAL.
+    """
+    if not all_validated_for_r16dprep():
+        return False
+    return get_dictionary_status(
+        "tactical_ground_rules") in ("VALIDÉ", "OFFICIAL")
 
 
 def list_validation_blockers() -> List[Dict[str, Any]]:

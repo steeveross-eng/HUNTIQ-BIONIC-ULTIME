@@ -2551,3 +2551,87 @@ async def territoire_r9_phase3_r16c_execute(
         "r16c_pipeline_result": pipeline_result,
         "v30_lock": "INVIOLÉ",
     }
+
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°52-R16-D · R9 TACTICAL GROUND
+#  · R9_SALINES (raster + GPKG)
+#  · R9_AFFUTS_SCORE / R9_AFFUTS.gpkg (raster + GPKG)
+#  · R9_TERRITOIRES.gpkg (vecteur uniquement)
+#  + Probe registry-aware des 6 hooks TERRITOIRE_ULTIME
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/territoire/r9-phase3-r16d-execute")
+async def territoire_r9_phase3_r16d_execute(
+    request: Request,
+    territory_id: Optional[str] = None,
+    targets: Optional[str] = None,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-R16-D · TACTICAL GROUND — 3 cibles + 6 hooks probe.
+
+    Execute le pipeline R16-D :
+      · R9_SALINES        : sites salines (cervidés, humides, drainage)
+      · R9_AFFUTS         : sites d'affût (corridors + alimentation +
+                            structure semi-ouverte)
+      · R9_TERRITOIRES    : polygones haute valeur multi-espèces
+                            (vecteur uniquement)
+
+    Probe registry-aware des 6 hooks TERRITOIRE_ULTIME :
+      IA_VISION, DONNEES_CHASSEUR, ENVIRONNEMENT, NUTRITION,
+      COMPORTEMENT, PREDICTIF.
+
+    Args:
+      targets: Optional CSV subset of {R9_SALINES,R9_AFFUTS,R9_TERRITOIRES}.
+    """
+    _verify_token(x_commandant_token)
+    from engines.v8_institutional.especes.r9_phase3_r16d_omega import (
+        execute_r16d_pipeline,
+    )
+    from engines.v8_institutional.especes.mffp_dictionaries_loader_omega import (  # noqa: E501
+        all_validated_for_r16d, list_validation_blockers,
+    )
+    if not all_validated_for_r16d():
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "reason": "DICTIONARIES_NOT_VALIDATED_FOR_R16D",
+                "blockers": list_validation_blockers(),
+                "remediation": (
+                    "Tous les dicts R16-A/B/C/D-PREP + "
+                    "tactical_ground_rules doivent être VALIDÉ ou OFFICIAL."),
+            })
+
+    valid_targets = {"R9_SALINES", "R9_AFFUTS", "R9_TERRITOIRES"}
+    targets_subset: Optional[List[str]] = None
+    if targets:
+        targets_subset = [t.strip() for t in targets.split(",") if t.strip()]
+        invalid_t = [t for t in targets_subset if t not in valid_targets]
+        if invalid_t:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Cibles invalides: {invalid_t}. "
+                       f"Valides: {sorted(valid_targets)}")
+
+    try:
+        pipeline_result = execute_r16d_pipeline(
+            targets_subset=targets_subset)
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "R16D_PIPELINE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+
+    return {
+        "manifest_id": "R9_PHASE3_R16D_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°52-R16-D",
+        "territory_id": territory_id,
+        "r16d_pipeline_result": pipeline_result,
+        "v30_lock": "INVIOLÉ",
+    }

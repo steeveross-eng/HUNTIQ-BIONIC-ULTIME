@@ -27,6 +27,22 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXVIII · ORDRE N°52-R16-D — R9 TACTICAL GROUND · 3/3 CIBLES RÉELLES + 6 HOOKS PROBE (2026-05-06)**
+  Implémentation **complète** du pipeline tactical ground avec score réel multi-couches (FUSION ADD-ONLY) sur subset doctrinal Bas-Saint-Laurent (4 091 polygones PEE_MAJ). **R9 status=`OK_REAL_PARTIAL_R16D` · 407/407 pytests Phase XX-XXVIII PASSED · 0 régression.**
+  - **1 dictionnaire VALIDÉ R16-D** : `tactical_ground_rules.json` (3 sections — salines/affuts/territoires — basé MFFP 2010 outils cerf, Tardif & Berger 2007 ours noir, Crête & Courtois 1997 orignal, Belant et al. 2010 mineral licks, Hewitt 2011, Jenkins 2007 sit-and-wait blinds).
+  - **Loader étendu** : `all_validated_for_r16d()`. **18 dicts au total** (4 P0 + 3 P1 + 4 R16-A + 1 R16-B + 1 R16-C + 4 R16-D-PREP + 1 R16-D).
+  - **Module métier R16-D** : `r9_phase3_r16d_omega.py` (779 lignes) — 4 fonctions : `compute_r9_salines`, `compute_r9_affuts`, `compute_r9_tactical_zones`, `probe_all_six_hooks`, orchestrateur `execute_r16d_pipeline`.
+  - **Endpoint** : `POST /api/v30/admin-premium/gis/territoire/r9-phase3-r16d-execute` (Token Commandant requis · 401/400 guard-rails confirmés).
+  - **3 cibles RÉELLES exécutées en LIVE** sur subset doctrinal :
+    - **R9_SALINES** (raster + GPKG · 9,03 MB) — score 0-100 = 0,30·humides + 0,20·productivity + 0,25·habitat_cervidés_mean + 0,15·corridors_multi + 0,10·drainage_transitionnel — `mean=60,53 · n_high(≥60)=2 445`.
+    - **R9_AFFUTS** (R9_AFFUTS_SCORE.tif + R9_AFFUTS.gpkg · 9,70 MB) — score = 0,30·corridors_multi + 0,25·alimentation_target_mean + 0,15·couvert_modéré[40,70] + 0,15·semi_open_cl_dens + 0,15·edge_proxy — `mean=73,96 · n_high(≥60)=2 580`.
+    - **R9_TERRITOIRES** (vecteur uniquement · 413 KB doctrinal) — fusion multi-espèces pondérée par masse (chevreuil 0.18 · orignal 0.30 · ours_noir 0.22 · dindon 0.10 · wapiti 0.20) sur 5 couches (zones_vitales 0.30 · link 0.20 · hotspot 0.15 · repos 0.15 · alim 0.20) · top percentile 90 · `n_high=79`.
+  - **Probe registry-aware des 6 hooks TERRITOIRE_ULTIME** :
+    - **2 disponibles** (interfaces loadable) : IA_VISION (engine_ia_vision_ecologique_omega), DONNEES_CHASSEUR (gps_loader_omega).
+    - **4 stubs ANTI_GÉNÉRIQUE** (R16-D-PREP) : ENVIRONNEMENT (5 paths absent), NUTRITION (4 paths absent), COMPORTEMENT (3 paths absent), PREDICTIF (4 paths absent). `fallback=skip_with_log`.
+  - **22 pytests neutres** créés : `test_phase_xxviii_r16d_tactical_ground_omega.py` — naming policy stricte (zéro mot-clé exclu BCE-4X). Inclut tests anti-régression : exclusion-zero-score, drainage_transitionnel boost, vector_only_no_raster doctrinal, validation_chain_strict, hooks_probe×6.
+  - **R9_RECALC_STATE.json mis à jour** : status global=`OK_REAL_PARTIAL_R16D` · **52 targets en gestion** (4 R16-A + 20 R16-B + 16 R16-C + 3 R16-D + 9 backlog) · `last_r16d_run_id`, `last_r16d_targets_succeeded`, `last_r16d_hooks_probe` persistés.
+  - **5 artefacts physiques** (~19,1 MB total) : R9_SALINES.tif/.gpkg + R9_AFFUTS_SCORE.tif/.gpkg + R9_TERRITOIRES.gpkg avec hash SHA-256 INVIOLÉ.
 - **PHASE_XXVIII · ORDRE N°52-R16-D-PREP — TERRITOIRE_ULTIME HOOKS INITIALIZATION (STUBS) (2026-05-06)**
   Initialisation **STUB_INITIALIZATION** des 4 hooks externes manquants (ENVIRONNEMENT, NUTRITION, COMPORTEMENT, PREDICTIF) sans aucune logique métier ni donnée — uniquement architecture chargeable. **R9 r16dprep_status=`READY_FOR_R16D` · 385/385 pytests PASSED · 0 régression.**
   - **4 modules loaders stubs créés** (FUSION ADD-ONLY) :

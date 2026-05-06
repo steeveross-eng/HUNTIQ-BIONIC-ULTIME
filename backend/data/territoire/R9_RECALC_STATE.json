@@ -1,6 +1,6 @@
 {
   "run_id": "R9_1778027156_98807b",
-  "status": "OK_REAL_PARTIAL_R16C",
+  "status": "OK_REAL_PARTIAL_R16D",
   "started_at_utc": "2026-05-06T00:25:56.378713+00:00",
   "last_update_utc": "2026-05-06T00:25:56.378724+00:00",
   "ordre": "N°52-R9",
@@ -443,6 +443,36 @@
       "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_CORRIDORS_MULTI_ESPECES.gpkg",
       "raster_sha256": "6130c81e3fe70b5078c9bd5addce3bf4db544328460f6dbdbf56d5d7b03a48dc",
       "elapsed_s": 0.93
+    },
+    "R9_SALINES": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-D",
+      "completed_at_utc": "2026-05-06T17:00:36.346823+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_SALINES.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_SALINES.gpkg",
+      "raster_sha256": "b864c899d9b3108779d469bfe1c55ef98b6a1c0aa81bab5cc577320883a71369",
+      "vector_sha256": "1c9719f31b9747e8ad9938e9572c821a3ad523511dd76fedd878af2753b479e9",
+      "elapsed_s": 1.18
+    },
+    "R9_AFFUTS": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-D",
+      "completed_at_utc": "2026-05-06T16:59:55.621315+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_AFFUTS_SCORE.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_AFFUTS.gpkg",
+      "raster_sha256": "4d5f9f52d516151527770e47501ccfb6629487a47981d912113086e6acc39234",
+      "vector_sha256": "1bc094408922d4bb0ffe1220610ab11e6e288193f355e50fd27c897d12b4a389",
+      "elapsed_s": 1.11
+    },
+    "R9_TERRITOIRES": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-D",
+      "completed_at_utc": "2026-05-06T16:59:55.621323+00:00",
+      "output_raster": null,
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_TERRITOIRES.gpkg",
+      "raster_sha256": null,
+      "vector_sha256": "aaf4715875b2f4c1eb0aca2e6a6156019d19aa5d46fb758ff1adcae08ac222fb",
+      "elapsed_s": 2.29
     }
   },
   "last_updated_utc": "2026-05-06T00:25:56.386825+00:00",
@@ -747,5 +777,113 @@
     "nutrition_loader_omega",
     "comportement_loader_omega",
     "predictif_loader_omega"
-  ]
+  ],
+  "last_r16d_run_id": "R16D_1778086836",
+  "last_r16d_run_completed_at_utc": "2026-05-06T17:00:36.346840+00:00",
+  "last_r16d_subset_used": "/app/backend/data/gis_archive/subsets/pee_maj_subset_Bas_Saint_Laurent_Rimouski_doctrinal_20260505T234859Z.gpkg",
+  "last_r16d_targets_succeeded": [
+    "R9_SALINES"
+  ],
+  "last_r16d_hooks_probe": {
+    "manifest_id": "R16D_HOOKS_PROBE_Ω",
+    "ordre": "N°52-R16-D",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "n_hooks_total": 6,
+    "n_hooks_available": 2,
+    "n_hooks_with_external_data_present": 0,
+    "hooks": {
+      "IA_VISION": {
+        "available": true,
+        "interface_loadable": true,
+        "is_stub": false,
+        "expected_paths_count": 0,
+        "fallback": "skip_with_log",
+        "note": "Interface engine_ia_vision_ecologique_omega loadable. Aucune image/détection live consommée (pas d'image source)."
+      },
+      "DONNEES_CHASSEUR": {
+        "available": true,
+        "interface_loadable": true,
+        "is_stub": false,
+        "fallback": "skip_with_log",
+        "note": "Interface gps_loader_omega loadable. Aucune trace GPS live consommée (pas de fichier source)."
+      },
+      "ENVIRONNEMENT": {
+        "manifest_id": "ENVIRONMENT_LOADER_PROBE_Ω",
+        "ordre": "N°52-R16-D-PREP",
+        "hook_name": "ENVIRONNEMENT",
+        "is_stub": true,
+        "available": false,
+        "expected_paths_count": 5,
+        "paths_present": [],
+        "paths_absent": [
+          "/app/backend/data/environnement/meteo/noaa_hourly_2004_2024.nc",
+          "/app/backend/data/environnement/neige/noaa_snowdepth_2004_2024.nc",
+          "/app/backend/data/environnement/vent/noaa_wind_2004_2024.nc",
+          "/app/backend/data/environnement/solunar/solunar_2004_2024.csv",
+          "/app/backend/data/environnement/risques/climate_risk_index.nc"
+        ],
+        "rules_loaded_count": 0,
+        "anti_generique_strict": true,
+        "probed_at_utc": "2026-05-06T17:00:35.159458+00:00",
+        "v30_lock": "INVIOLÉ"
+      },
+      "NUTRITION": {
+        "manifest_id": "NUTRITION_LOADER_PROBE_Ω",
+        "ordre": "N°52-R16-D-PREP",
+        "hook_name": "NUTRITION",
+        "is_stub": true,
+        "available": false,
+        "expected_paths_count": 4,
+        "paths_present": [],
+        "paths_absent": [
+          "/app/backend/data/nutrition/ndvi/nasa_ndvi_2004_2024.tif",
+          "/app/backend/data/nutrition/sol/soil_quality_canada.tif",
+          "/app/backend/data/nutrition/mineraux/soil_minerals_quebec.tif",
+          "/app/backend/data/nutrition/attractivite/mast_index_2004_2024.csv"
+        ],
+        "rules_loaded_count": 0,
+        "anti_generique_strict": true,
+        "probed_at_utc": "2026-05-06T17:00:35.159559+00:00",
+        "v30_lock": "INVIOLÉ"
+      },
+      "COMPORTEMENT": {
+        "manifest_id": "COMPORTEMENT_LOADER_PROBE_Ω",
+        "ordre": "N°52-R16-D-PREP",
+        "hook_name": "COMPORTEMENT",
+        "is_stub": true,
+        "available": false,
+        "expected_paths_count": 3,
+        "paths_present": [],
+        "paths_absent": [
+          "/app/backend/data/comportement/rsf/rsf_models_v1/",
+          "/app/backend/data/comportement/ssf/ssf_models_v1/",
+          "/app/backend/data/comportement/temporal_patterns/activity_patterns.csv"
+        ],
+        "rules_loaded_count": 0,
+        "anti_generique_strict": true,
+        "probed_at_utc": "2026-05-06T17:00:35.159633+00:00",
+        "v30_lock": "INVIOLÉ"
+      },
+      "PREDICTIF": {
+        "manifest_id": "PREDICTIF_LOADER_PROBE_Ω",
+        "ordre": "N°52-R16-D-PREP",
+        "hook_name": "PREDICTIF",
+        "is_stub": true,
+        "available": false,
+        "expected_paths_count": 4,
+        "paths_present": [],
+        "paths_absent": [
+          "/app/backend/data/predictif/maxent/models_v1/",
+          "/app/backend/data/predictif/rsf/rsf_predictive_v1/",
+          "/app/backend/data/predictif/ssf/ssf_predictive_v1/",
+          "/app/backend/data/predictif/temporal/forecast_48h/"
+        ],
+        "rules_loaded_count": 0,
+        "anti_generique_strict": true,
+        "probed_at_utc": "2026-05-06T17:00:35.159715+00:00",
+        "v30_lock": "INVIOLÉ"
+      }
+    },
+    "v30_lock": "INVIOLÉ"
+  }
 }

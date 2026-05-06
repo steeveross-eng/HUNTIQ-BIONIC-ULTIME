@@ -64,9 +64,13 @@ def test_r12_four_dictionaries_loadable(loader):
         "environment_rules", "nutrition_rules",
         "comportement_rules", "predictif_rules",
     }
+    expected_r16d_added = {
+        "tactical_ground_rules",
+    }
     expected_all = (expected_p0 | expected_p1_added
                     | expected_r16a_added | expected_r16b_added
-                    | expected_r16c_added | expected_r16dprep_added)
+                    | expected_r16c_added | expected_r16dprep_added
+                    | expected_r16d_added)
     assert set(loader.DICTIONARY_FILES.keys()) == expected_all
     for name in expected_p0:
         d = loader.load_dictionary(name)
@@ -101,6 +105,11 @@ def test_r12_four_dictionaries_loadable(loader):
         # Stubs : aucune logique métier
         assert d.get("rules") == {}
         assert d.get("is_stub") is True
+    for name in expected_r16d_added:
+        d = loader.load_dictionary(name)
+        assert d is not None
+        assert d.get("status") in ("VALIDÉ", "OFFICIAL")
+        assert d.get("ordre") == "N°52-R16-D"
 
 
 def test_r12_cl_dens_pct_canonical_values(loader):
