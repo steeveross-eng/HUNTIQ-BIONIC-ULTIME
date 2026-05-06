@@ -2387,3 +2387,93 @@ async def territoire_r9_phase3_execute(
                           "r9-phase3-execute",
         "v30_lock": "INVIOLÉ",
     }
+
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°52-R16-B · R9 BIOTIC BEHAVIOR (4 cibles × 5 espèces = 20 cibles)
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/territoire/r9-phase3-r16b-execute")
+async def territoire_r9_phase3_r16b_execute(
+    request: Request,
+    territory_id: Optional[str] = None,
+    species: Optional[str] = None,
+    targets: Optional[str] = None,
+    temporalite: Optional[str] = "annuel",
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-R16-B · BIOTIC BEHAVIOR — 4 cibles × 5 espèces.
+
+    Targets : ZONES_VITALES, REPOS, ALIMENTATION, RUT
+    Espèces : chevreuil, orignal, ours_noir, dindon, wapiti
+
+    Args :
+      species : Optionnel · liste comma-separated pour filtrer espèces.
+      targets : Optionnel · liste comma-separated pour filtrer targets.
+      temporalite : 'annuel' (R16-B). 'saisonnier'/'mensuel' = backlog.
+    """
+    _verify_token(x_commandant_token)
+    from engines.v8_institutional.especes.r9_phase3_r16b_omega import (
+        execute_r16b_pipeline, SPECIES_LIST, TARGETS_R16B_PER_SPECIES,
+    )
+    from engines.v8_institutional.especes.mffp_dictionaries_loader_omega import (  # noqa: E501
+        all_validated_for_r16b, list_validation_blockers,
+    )
+    if not all_validated_for_r16b():
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "reason": "DICTIONARIES_NOT_VALIDATED_FOR_R16B",
+                "blockers": list_validation_blockers(),
+                "remediation": (
+                    "Tous les dicts R16-A + phenologie_saisonniere "
+                    "doivent être VALIDÉ ou OFFICIAL."),
+            })
+
+    species_list = (
+        [s.strip() for s in species.split(",") if s.strip()]
+        if species else None)
+    if species_list:
+        invalid_sp = [s for s in species_list if s not in SPECIES_LIST]
+        if invalid_sp:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Espèces invalides: {invalid_sp}. "
+                       f"Valides: {SPECIES_LIST}")
+
+    targets_list = (
+        [t.strip().upper() for t in targets.split(",") if t.strip()]
+        if targets else None)
+    if targets_list:
+        invalid_t = [t for t in targets_list
+                     if t not in TARGETS_R16B_PER_SPECIES]
+        if invalid_t:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Targets invalides: {invalid_t}. "
+                       f"Valides: {TARGETS_R16B_PER_SPECIES}")
+
+    try:
+        pipeline_result = execute_r16b_pipeline(
+            species_subset=species_list,
+            targets_subset=targets_list)
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "R16B_PIPELINE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+
+    return {
+        "manifest_id": "R9_PHASE3_R16B_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°52-R16-B",
+        "territory_id": territory_id,
+        "temporalite": temporalite,
+        "r16b_pipeline_result": pipeline_result,
+        "v30_lock": "INVIOLÉ",
+    }

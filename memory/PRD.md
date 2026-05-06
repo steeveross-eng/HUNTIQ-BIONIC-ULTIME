@@ -27,6 +27,28 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXVIII · ORDRE N°52-R16-B — R9 BIOTIC BEHAVIOR · 4 CIBLES × 5 ESPÈCES = 20/20 RÉUSSIES (2026-05-06)**
+  Deuxième batch R9 (option β batchée). 20 nouvelles cibles biotiques exécutées sur subset Bas-Saint-Laurent réel via FUSION ADD-ONLY. **R9 status passe `OK_REAL_PARTIAL_R16A` → `OK_REAL_PARTIAL_R16B` · 338/338 pytests PASSED · 0 régression · 0 erreur live.**
+  - **Module créé** : `engines/v8_institutional/especes/r9_phase3_r16b_omega.py` (4 fonctions × 5 espèces + pipeline orchestrator + sample raster cross-target).
+  - **1 dictionnaire VALIDÉ R16-B** : `phenologie_saisonniere.json` (5 espèces × calendar rut/calving/winter + alimentation_proxy_rules anti-générique strict pour pallier hooks NUTRITION absents).
+  - **Loader étendu** : `all_validated_for_r16b()`. 12 dicts au total (4 P0 + 3 P1 + 4 R16-A + 1 R16-B).
+  - **Endpoint câblé** : `POST /api/v30/admin-premium/gis/territoire/r9-phase3-r16b-execute` (params : territory_id, species (filter), targets (filter), temporalite=annuel).
+  - **Validation live · 5 espèces × 4 cibles = 20 targets** sur subset Bas-Saint-Laurent 2 957 polygones :
+
+  | Espèce | ZONES_VITALES | REPOS | ALIMENTATION | RUT |
+  |---|---|---|---|---|
+  | chevreuil | 64,30 | 64,61 | 73,00 | 71,21 |
+  | orignal | 60,76 | 57,26 | 59,31 | 71,22 |
+  | ours_noir | 67,40 (top) | 60,13 | **81,42 (top)** | **72,72 (top)** |
+  | dindon | 63,05 | 48,14 (bas) | 77,41 | 66,38 |
+  | wapiti | 64,42 | 57,26 | 77,59 | 69,25 |
+
+  Cohérence biologique vérifiée : ours_noir domine alimentation (feuillu mature mast), chevreuil équilibré, orignal RUT élevé (mixte mature reproduction), dindon REPOS bas (peu de feuillu pur dans subset boréal méridional). 11,97 s total · 20 GeoTIFF + 5 GPKG ZONES_VITALES haute valeur (≥70) produits.
+  - **Anti-Générique strict transparent** : la note `anti_generique_note` est explicite dans chaque sortie ALIMENTATION : *"NUTRITION hooks (NDVI, mast, sol) absents Q3 → score ne reflète pas variation saisonnière réelle. Mise à niveau auto quand hooks deviendront available."*
+  - **R9_RECALC_STATE.json mis à jour** : status global=`OK_REAL_PARTIAL_R16B` · **33 targets en gestion** (4 R16-A + 20 R16-B + 9 backlog R16-C/D)
+  - **Tests pytest ajoutés (FUSION ADD-ONLY)** : `tests/test_phase_xxviii_r16b_biotic_behavior_omega.py` (30 tests : exports + dict + 4 fonctions × 5 espèces parametrized + cohérence rut multi-espèces + exclusions zero score + pipeline + dépendances manquantes + anti-générique notes).
+  - **V30 INVIOLÉ · ANTI_GÉNÉRIQUE_STRICT** : aucune simulation. Pondérations et scores dérivent de Crête 1997 (orignal), Tardif 2007 (ours_noir), MFFP 2010 (cerf), Lavoie 2018 (dindon), MFFP 2018 (wapiti).
+
 - **PHASE_XXVIII · ORDRE N°52-R16-A — R9 BUSINESS LOGIC FONDATIONS (4 targets RÉELS) (2026-05-06)**
   Premier batch de l'implémentation R9 (option β batchée approuvée par Commandant). 4 fondations cynégétiques implémentées sur subset Bas-Saint-Laurent réel via FUSION ADD-ONLY. **R9 status passe de `STUB_READY_AWAITING_BUSINESS_LOGIC` → `OK_REAL_PARTIAL_R16A` · 308/308 pytests PASSED · 0 régression.**
   - **Module créé** : `engines/v8_institutional/especes/r9_phase3_orchestrator_omega.py` (4 fonctions + pipeline + probe hooks territoire_ultime + auto-pick subset).

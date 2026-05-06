@@ -1,6 +1,6 @@
 {
   "run_id": "R9_1778027156_98807b",
-  "status": "OK_REAL_PARTIAL_R16A",
+  "status": "OK_REAL_PARTIAL_R16B",
   "started_at_utc": "2026-05-06T00:25:56.378713+00:00",
   "last_update_utc": "2026-05-06T00:25:56.378724+00:00",
   "ordre": "N°52-R9",
@@ -119,6 +119,186 @@
       "raster_sha256": "1a4bbb2491dd37b6d6e49d9eeb4b598e33d0b2d878578c1e58897ea2a71cdb73",
       "vector_sha256": null,
       "elapsed_s": 0.31
+    },
+    "R9_ZONES_VITALES_CHEVREUIL": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-B",
+      "completed_at_utc": "2026-05-06T15:18:49.167124+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_VITALES_CHEVREUIL.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_VITALES_CHEVREUIL.gpkg",
+      "raster_sha256": "c70927a42a438bd1119f609d7508832b962a229df399ba3bcd08200d26a113b1",
+      "elapsed_s": 0.95
+    },
+    "R9_REPOS_CHEVREUIL": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-B",
+      "completed_at_utc": "2026-05-06T15:18:49.167136+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_REPOS_CHEVREUIL.tif",
+      "output_vector": null,
+      "raster_sha256": "8668ebf9d8415454a7179b1fa192a11f47b4dc20988f10dcc0019387e207a24c",
+      "elapsed_s": 0.51
+    },
+    "R9_ALIMENTATION_CHEVREUIL": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-B",
+      "completed_at_utc": "2026-05-06T15:18:49.167140+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_ALIMENTATION_CHEVREUIL.tif",
+      "output_vector": null,
+      "raster_sha256": "a9f1cc75f9bba8240723b43346714af01b5d1411685a038d0ee3365f2928e3f1",
+      "elapsed_s": 0.51
+    },
+    "R9_RUT_CHEVREUIL": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-B",
+      "completed_at_utc": "2026-05-06T15:18:49.167143+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_RUT_CHEVREUIL.tif",
+      "output_vector": null,
+      "raster_sha256": "cbd7f25522cb5be608f55647c9cceb013b53358d678b5d38ff7fc224bc474e88",
+      "elapsed_s": 0.55
+    },
+    "R9_ZONES_VITALES_ORIGNAL": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-B",
+      "completed_at_utc": "2026-05-06T15:18:49.167145+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_VITALES_ORIGNAL.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_VITALES_ORIGNAL.gpkg",
+      "raster_sha256": "ee385978bd7c6e7fc7a40462be5971a0759bb80904dc436e2d4a1e9d771a0bef",
+      "elapsed_s": 0.7
+    },
+    "R9_REPOS_ORIGNAL": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-B",
+      "completed_at_utc": "2026-05-06T15:18:49.167148+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_REPOS_ORIGNAL.tif",
+      "output_vector": null,
+      "raster_sha256": "bd4f001823ac41a0288954ef54862333a29d76cd87a5ed79e3c0d844ee1b4963",
+      "elapsed_s": 0.51
+    },
+    "R9_ALIMENTATION_ORIGNAL": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-B",
+      "completed_at_utc": "2026-05-06T15:18:49.167151+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_ALIMENTATION_ORIGNAL.tif",
+      "output_vector": null,
+      "raster_sha256": "845841dc7a1ea7312cc87914046bfb947636e65d2e9835e466b7b3a2ead1b0cb",
+      "elapsed_s": 0.5
+    },
+    "R9_RUT_ORIGNAL": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-B",
+      "completed_at_utc": "2026-05-06T15:18:49.167154+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_RUT_ORIGNAL.tif",
+      "output_vector": null,
+      "raster_sha256": "2ee1408b984d6f36a22b29afbdca2a31ece0250a9d250c057fc542ee0b95cc5a",
+      "elapsed_s": 0.54
+    },
+    "R9_ZONES_VITALES_OURS_NOIR": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-B",
+      "completed_at_utc": "2026-05-06T15:18:49.167157+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_VITALES_OURS_NOIR.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_VITALES_OURS_NOIR.gpkg",
+      "raster_sha256": "36cc5d482e3260cda15c0bbaf80b31ea4a9f0fe577a62daaa2beef397733bc9b",
+      "elapsed_s": 0.72
+    },
+    "R9_REPOS_OURS_NOIR": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-B",
+      "completed_at_utc": "2026-05-06T15:18:49.167160+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_REPOS_OURS_NOIR.tif",
+      "output_vector": null,
+      "raster_sha256": "460926774b12c305fcc05392a3ac87ed7703abb36ce862d81ac00b9418ed5039",
+      "elapsed_s": 0.63
+    },
+    "R9_ALIMENTATION_OURS_NOIR": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-B",
+      "completed_at_utc": "2026-05-06T15:18:49.167162+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_ALIMENTATION_OURS_NOIR.tif",
+      "output_vector": null,
+      "raster_sha256": "07092e972a2dfe6bf47d92e0dd5e97ec7e1113b3f53bc7649cf34211dbc55b48",
+      "elapsed_s": 0.5
+    },
+    "R9_RUT_OURS_NOIR": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-B",
+      "completed_at_utc": "2026-05-06T15:18:49.167165+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_RUT_OURS_NOIR.tif",
+      "output_vector": null,
+      "raster_sha256": "a8bb6d85b1801de054eae36e74e90aabbe7dc760477da04e6829fb36ea99b817",
+      "elapsed_s": 0.54
+    },
+    "R9_ZONES_VITALES_DINDON": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-B",
+      "completed_at_utc": "2026-05-06T15:18:49.167168+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_VITALES_DINDON.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_VITALES_DINDON.gpkg",
+      "raster_sha256": "e87d1ba3c20ae003e8b0f116d51faee1e1ad019e3dd731393351c388fbf93530",
+      "elapsed_s": 0.71
+    },
+    "R9_REPOS_DINDON": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-B",
+      "completed_at_utc": "2026-05-06T15:18:49.167170+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_REPOS_DINDON.tif",
+      "output_vector": null,
+      "raster_sha256": "3b9e22be3c8f7a4e509d4e549677b5e9cb45478fe58ab9b606aad789825bc4c1",
+      "elapsed_s": 0.49
+    },
+    "R9_ALIMENTATION_DINDON": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-B",
+      "completed_at_utc": "2026-05-06T15:18:49.167173+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_ALIMENTATION_DINDON.tif",
+      "output_vector": null,
+      "raster_sha256": "192cc7e3d8f66861eada09af18568de4f4967ee36064b11f5416b8db8310c63b",
+      "elapsed_s": 0.5
+    },
+    "R9_RUT_DINDON": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-B",
+      "completed_at_utc": "2026-05-06T15:18:49.167175+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_RUT_DINDON.tif",
+      "output_vector": null,
+      "raster_sha256": "45cdeb212cb75aeb4a49bf0896dfec6285b89d5175236b5ebe9b01ab9c908b24",
+      "elapsed_s": 0.54
+    },
+    "R9_ZONES_VITALES_WAPITI": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-B",
+      "completed_at_utc": "2026-05-06T15:18:49.167177+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_VITALES_WAPITI.tif",
+      "output_vector": "/app/backend/data/gis_archive/derivatives_r9/R9_ZONES_VITALES_WAPITI.gpkg",
+      "raster_sha256": "4ac932f4385d7d661b6873c2e9ffa840539ac0ad59422e8fc19a0b25e1ac5761",
+      "elapsed_s": 0.71
+    },
+    "R9_REPOS_WAPITI": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-B",
+      "completed_at_utc": "2026-05-06T15:18:49.167180+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_REPOS_WAPITI.tif",
+      "output_vector": null,
+      "raster_sha256": "bd4f001823ac41a0288954ef54862333a29d76cd87a5ed79e3c0d844ee1b4963",
+      "elapsed_s": 0.5
+    },
+    "R9_ALIMENTATION_WAPITI": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-B",
+      "completed_at_utc": "2026-05-06T15:18:49.167183+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_ALIMENTATION_WAPITI.tif",
+      "output_vector": null,
+      "raster_sha256": "640d5fce087347b5f99c23a90d87ad717308af25e79cad8ce8107a788f72bf66",
+      "elapsed_s": 0.63
+    },
+    "R9_RUT_WAPITI": {
+      "status": "OK_REAL",
+      "ordre": "N°52-R16-B",
+      "completed_at_utc": "2026-05-06T15:18:49.167185+00:00",
+      "output_raster": "/app/backend/data/gis_archive/derivatives_r9/R9_RUT_WAPITI.tif",
+      "output_vector": null,
+      "raster_sha256": "6f03e435f58f6e25f2907cd526b2e737929038d86dd36e9524b8e68c6f777abe",
+      "elapsed_s": 0.54
     }
   },
   "last_updated_utc": "2026-05-06T00:25:56.386825+00:00",
@@ -256,5 +436,31 @@
     "R9_EXCLUSIONS",
     "R9_ZONES_HUMIDES",
     "R9_COUVERT_SECURITE"
-  ]
+  ],
+  "last_r16b_run_id": "R16B_1778080729",
+  "last_r16b_run_completed_at_utc": "2026-05-06T15:18:49.167189+00:00",
+  "last_r16b_subset_used": "/app/backend/data/gis_archive/subsets/pee_maj_subset_Bas_Saint_Laurent_Rimouski_doctrinal_20260505T234859Z.gpkg",
+  "last_r16b_targets_succeeded": [
+    "R9_ZONES_VITALES_CHEVREUIL",
+    "R9_REPOS_CHEVREUIL",
+    "R9_ALIMENTATION_CHEVREUIL",
+    "R9_RUT_CHEVREUIL",
+    "R9_ZONES_VITALES_ORIGNAL",
+    "R9_REPOS_ORIGNAL",
+    "R9_ALIMENTATION_ORIGNAL",
+    "R9_RUT_ORIGNAL",
+    "R9_ZONES_VITALES_OURS_NOIR",
+    "R9_REPOS_OURS_NOIR",
+    "R9_ALIMENTATION_OURS_NOIR",
+    "R9_RUT_OURS_NOIR",
+    "R9_ZONES_VITALES_DINDON",
+    "R9_REPOS_DINDON",
+    "R9_ALIMENTATION_DINDON",
+    "R9_RUT_DINDON",
+    "R9_ZONES_VITALES_WAPITI",
+    "R9_REPOS_WAPITI",
+    "R9_ALIMENTATION_WAPITI",
+    "R9_RUT_WAPITI"
+  ],
+  "last_r16b_n_species": 5
 }

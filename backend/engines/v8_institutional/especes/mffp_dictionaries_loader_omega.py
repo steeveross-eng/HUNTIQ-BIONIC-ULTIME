@@ -53,6 +53,8 @@ DICTIONARY_FILES = {
         DICTIONARIES_ROOT / "hydrologie_drainage_codes.json"),
     "couvert_securite_thresholds": (
         DICTIONARIES_ROOT / "couvert_securite_thresholds.json"),
+    "phenologie_saisonniere": (
+        DICTIONARIES_ROOT / "phenologie_saisonniere.json"),
 }
 
 
@@ -143,6 +145,17 @@ def all_validated_for_r16a() -> bool:
     return True
 
 
+def all_validated_for_r16b() -> bool:
+    """Indique si TOUS les dicts requis pour R16-B sont VALIDÉS.
+
+    R16-B = R16-A requis + phenologie_saisonniere.
+    """
+    if not all_validated_for_r16a():
+        return False
+    return get_dictionary_status(
+        "phenologie_saisonniere") in ("VALIDÉ", "OFFICIAL")
+
+
 def list_validation_blockers() -> List[Dict[str, Any]]:
     """Liste les dictionnaires non validés et les raisons."""
     blockers = []
@@ -174,6 +187,7 @@ __all__ = [
     "all_validated_for_p0",
     "all_validated_for_p1",
     "all_validated_for_r16a",
+    "all_validated_for_r16b",
     "list_validation_blockers",
     "DICTIONARIES_ROOT",
     "DICTIONARY_FILES",

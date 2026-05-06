@@ -1,0 +1,162 @@
+{
+  "manifest_id": "PHENOLOGIE_SAISONNIERE_VALIDATED_Ω",
+  "ordre": "N°52-R16-B",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "status": "VALIDÉ",
+  "validated_at_utc": "2026-05-06T15:30:00+00:00",
+  "validated_by": "COMMANDANT_STEEVE_MAX_R16_B",
+  "version": "1.0.0-VALIDATED",
+  "source_documentation": [
+    "MFFP (2010) Outils d'évaluation qualité habitat — calendrier biologique cerf",
+    "Crête, M. & Courtois, R. (1997) Limiting factors moose — rut & calving",
+    "Tardif, B. & Berger, P. (2007) Calendrier ours noir Québec",
+    "Lavoie, S. & Daigle, J. (2018) Atlas faune Québec — dindon parade printanière",
+    "MFFP (2018) Plan de gestion wapiti Québec — rut bugle automne",
+    "Drolet, B. et al. (1999) Phénologie biotique forêts boréales mixtes Québec"
+  ],
+  "description": "Phénologie saisonnière par espèce (rut, mise-bas, alimentation primaire, repos) pour pondérer les 4 cibles R9 R16-B (zones_vitales, repos, alimentation, rut) selon temporalité.",
+  "fields_canonical": ["species", "season", "behavior_intensity"],
+  "calendar": {
+    "chevreuil": {
+      "scientific_name": "Odocoileus virginianus",
+      "rut_peak_months": [11, 12],
+      "rut_intensity_by_month": {"10": 0.4, "11": 1.0, "12": 0.7, "1": 0.2},
+      "calving_months": [5, 6],
+      "winter_yards_months": [12, 1, 2, 3],
+      "alimentation_priorities_by_season": {
+        "printemps": ["jeunes_pousses", "feuillu_jeune"],
+        "ete": ["feuillu_mature", "ouverture_mixte"],
+        "automne": ["mast_chene_hetre", "feuillu_mature"],
+        "hiver": ["resineux_dense_couvert", "ramilles_feuillu"]
+      },
+      "repos_preferred_features": [
+        "couvert_securite_HIGH", "cl_dens_A_B", "cl_haut_4_5_6",
+        "type_couv_R_M"
+      ],
+      "vital_zone_weights": {
+        "habitat_score": 0.40,
+        "couvert_securite": 0.30,
+        "alimentation_potential": 0.20,
+        "exclusion_penalty": 0.10
+      }
+    },
+    "orignal": {
+      "scientific_name": "Alces americanus",
+      "rut_peak_months": [9, 10],
+      "rut_intensity_by_month": {"8": 0.3, "9": 1.0, "10": 0.7, "11": 0.2},
+      "calving_months": [5, 6],
+      "winter_yards_months": [12, 1, 2, 3],
+      "alimentation_priorities_by_season": {
+        "printemps": ["plantes_aquatiques", "jeune_peuplement_30ans"],
+        "ete": ["plantes_aquatiques", "jeunes_pousses"],
+        "automne": ["jeune_peuplement", "mixte_mature"],
+        "hiver": ["jeune_peuplement", "ramilles_feuillu_mixte"]
+      },
+      "repos_preferred_features": [
+        "type_couv_M", "cl_dens_B_C", "cl_haut_4_5",
+        "proximite_zones_humides_HIGH"
+      ],
+      "vital_zone_weights": {
+        "habitat_score": 0.40,
+        "couvert_securite": 0.20,
+        "alimentation_potential": 0.30,
+        "exclusion_penalty": 0.10
+      }
+    },
+    "ours_noir": {
+      "scientific_name": "Ursus americanus",
+      "rut_peak_months": [6, 7],
+      "rut_intensity_by_month": {"5": 0.3, "6": 1.0, "7": 0.8, "8": 0.3},
+      "denning_months": [11, 12, 1, 2, 3],
+      "alimentation_priorities_by_season": {
+        "printemps": ["jeunes_pousses_feuillu", "fourmilieres"],
+        "ete": ["petites_baies", "fourmilieres"],
+        "automne": ["mast_chene_hetre", "petites_baies_dernieres"],
+        "hiver": ["denning_no_alimentation"]
+      },
+      "repos_preferred_features": [
+        "type_couv_F", "cl_age_VIN_VIR", "cl_dens_A_B",
+        "couvert_securite_HIGH", "isolation_routes"
+      ],
+      "vital_zone_weights": {
+        "habitat_score": 0.45,
+        "couvert_securite": 0.25,
+        "alimentation_potential": 0.20,
+        "exclusion_penalty": 0.10
+      }
+    },
+    "dindon": {
+      "scientific_name": "Meleagris gallopavo silvestris",
+      "rut_peak_months": [4, 5],
+      "rut_intensity_by_month": {"3": 0.2, "4": 1.0, "5": 0.7, "6": 0.2},
+      "nesting_months": [4, 5, 6],
+      "winter_roost_months": [11, 12, 1, 2],
+      "alimentation_priorities_by_season": {
+        "printemps": ["clairieres_insectes", "champs_lisieres"],
+        "ete": ["graines", "insectes_baies"],
+        "automne": ["mast_chene_hetre", "graines_dernieres"],
+        "hiver": ["resineux_perchage_mast_residuels"]
+      },
+      "repos_preferred_features": [
+        "type_couv_F_M", "cl_age_50_70_90", "cl_haut_5_6",
+        "ouvertures_lisieres"
+      ],
+      "vital_zone_weights": {
+        "habitat_score": 0.35,
+        "couvert_securite": 0.25,
+        "alimentation_potential": 0.30,
+        "exclusion_penalty": 0.10
+      }
+    },
+    "wapiti": {
+      "scientific_name": "Cervus canadensis",
+      "rut_peak_months": [9, 10],
+      "rut_intensity_by_month": {"8": 0.3, "9": 1.0, "10": 0.6, "11": 0.1},
+      "calving_months": [5, 6],
+      "winter_yards_months": [12, 1, 2, 3],
+      "alimentation_priorities_by_season": {
+        "printemps": ["prairies_jeunes_pousses", "ouvertures"],
+        "ete": ["prairies_herbeux", "feuillu_jeune"],
+        "automne": ["herbacees_dernieres", "jeunes_peuplements"],
+        "hiver": ["resineux_couvert_mixte", "prairies_residuelles"]
+      },
+      "repos_preferred_features": [
+        "type_couv_M", "cl_dens_B_C", "cl_haut_4_5",
+        "ouvertures_proches"
+      ],
+      "vital_zone_weights": {
+        "habitat_score": 0.40,
+        "couvert_securite": 0.25,
+        "alimentation_potential": 0.25,
+        "exclusion_penalty": 0.10
+      }
+    }
+  },
+  "alimentation_proxy_rules": {
+    "description": "Score d'alimentation 0-100 dérivé du subset MFFP — proxy ANTI_GÉNÉRIQUE_STRICT en absence de NDVI/mast réels (NUTRITION hooks absents Q3).",
+    "rules_per_species": {
+      "chevreuil": {"type_couv_F_M_score": 80, "type_couv_R_score": 50,
+                     "cl_age_30_50_70_score": 90, "cl_age_VIN_VIR_score": 60,
+                     "cl_dens_A_B_score": 80, "cl_dens_C_D_E_score": 50},
+      "orignal":   {"type_couv_M_score": 90, "type_couv_F_score": 70,
+                     "cl_age_10_30_score": 95, "cl_age_50_70_score": 70,
+                     "cl_age_VIN_VIR_score": 50,
+                     "near_humid_bonus": 25},
+      "ours_noir": {"type_couv_F_score": 95, "type_couv_M_score": 70,
+                     "cl_age_70_90_120_score": 90, "cl_age_VIN_VIR_score": 95,
+                     "cl_dens_A_B_score": 85},
+      "dindon":    {"type_couv_F_score": 90, "type_couv_M_score": 75,
+                     "cl_age_50_70_90_score": 85, "cl_age_VIN_VIR_score": 75,
+                     "cl_dens_B_C_score": 90},
+      "wapiti":    {"type_couv_M_score": 85, "type_couv_F_score": 75,
+                     "cl_age_10_30_score": 90, "cl_age_50_70_score": 70,
+                     "cl_dens_C_D_score": 85}
+    }
+  },
+  "exclusion_penalty_factor": {
+    "description": "Si polygone est exclu (R9_EXCLUSIONS=1), score final mis à 0.",
+    "factor": 0,
+    "anti_generique": true
+  },
+  "v30_lock": "INVIOLÉ"
+}
