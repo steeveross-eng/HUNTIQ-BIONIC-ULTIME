@@ -65,18 +65,40 @@ def _sha256_file(path: Path) -> str:
 
 def _load_gdf(input_path: str, layer: Optional[str] = None,
                bbox: Optional[Tuple[float, ...]] = None):
-    """Charge un GeoDataFrame avec pyogrio (streaming arrow)."""
+    """Charge un GeoDataFrame avec pyogrio (streaming arrow).
+
+    Sélection canonique du layer :
+      1. layer explicite (param)
+      2. 'pee_maj' (MFFP 2025)
+      3. 'peuplement_ecoforestier' (legacy)
+      4. Premier (Multi)Polygon disponible
+      5. Premier layer (fallback)
+    """
     import pyogrio  # noqa: PLC0415
     layers = pyogrio.list_layers(input_path)
-    layer_names = list(layers[:, 0]) if hasattr(layers, "shape") else [
-        L[0] for L in layers]
+    if hasattr(layers, "shape"):
+        layer_names = list(layers[:, 0])
+        layer_geoms = list(layers[:, 1])
+    else:
+        layer_names = [L[0] for L in layers]
+        layer_geoms = [L[1] if len(L) > 1 else None for L in layers]
     if not layer_names:
         raise RuntimeError(f"NO_LAYERS_IN_GPKG :: {input_path}")
-    layer_name = layer or (
-        "peuplement_ecoforestier"
-        if "peuplement_ecoforestier" in layer_names
-        else layer_names[0]
-    )
+    if layer:
+        layer_name = layer
+    else:
+        layer_name = None
+        for canonical in ("pee_maj", "peuplement_ecoforestier"):
+            if canonical in layer_names:
+                layer_name = canonical
+                break
+        if layer_name is None:
+            for n, g in zip(layer_names, layer_geoms):
+                if g and "Polygon" in str(g):
+                    layer_name = n
+                    break
+        if layer_name is None:
+            layer_name = layer_names[0]
     df = pyogrio.read_dataframe(
         input_path, layer=layer_name, bbox=bbox, use_arrow=True)
     return df, layer_name
@@ -470,9 +492,12 @@ def compute_forest_binary_raster(
         code_to_binary[code.upper()] = int(spec["binary"])
 
     cols_lower = {c.lower(): c for c in gdf.columns}
-    ty_couv_col = cols_lower.get("ty_couv")
+    # Canonical MFFP 2025 = 'type_couv', legacy = 'ty_couv'
+    ty_couv_col = cols_lower.get("type_couv") or cols_lower.get("ty_couv")
     if ty_couv_col is None:
-        raise ValueError("Colonne TY_COUV absente.")
+        raise ValueError(
+            f"Colonne type_couv/ty_couv absente. "
+            f"Colonnes disponibles : {list(gdf.columns)[:15]}")
     gdf["_forest"] = gdf[ty_couv_col].astype(str).str.strip().str.upper().map(
         code_to_binary).fillna(fallback_unknown).astype("uint8")
     rast_info = _rasterize_to_tif(

@@ -27,6 +27,33 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXVIII · ORDRE N°52-R14 OPTION ζ (zêta) — VSI S3 DIRECT READ : SÉQUENCE COMPLÈTE EXÉCUTÉE SUR DONNÉES RÉELLES MFFP 2025 (2026-05-05)**
+  4 incidents pod restart reproductibles à 9,44 Go (= cgroup K8s ephemeral-storage limit ~10 GiB) **ont rendu le pull résiliant local infaisable**. **Pivot architectural validé par le Commandant** : lecture directe du `pee_maj.gpkg` 37 Go depuis Backblaze B2 via VSI s3 GDAL/pyogrio (`/vsis3/{bucket}/{key}`). **AUCUN octet local stocké pour le GPKG source.** **0 régression · 276/276 pytests PASSED (260 → 276, +16 nouveaux R14 ζ).**
+  - **Diagnostic forensique 4 incidents reproductibles au seuil 9,44 Go** : boto3 stream OOM, boto3+fadvise, subprocess curl+cat, subprocess curl+dd nocache → tous tués au même seuil. cgroup memory.current restait à 2,5 Go pendant les crashes ⇒ le coupable n'était PAS la mémoire mais la **limite K8s `ephemeral-storage` ~10 GiB** sur `/var/cache` (overlayfs). Eviction K8s, pas OOM kernel.
+  - **Module créé** : `engines/v8_institutional/especes/mffp_vsi_url_omega.py` (configuration GDAL/AWS pour B2 path-style + helper `get_pee_maj_vsi_url()` + `probe_vsi_pee_maj()`).
+  - **Module créé** : `engines/v8_institutional/especes/mffp_resilient_pull_omega.py` (pull résiliant 500 Mo/segment via subprocess curl + dd nocache + fsync + posix_fadvise(DONTNEED) — **conservé pour environnements futurs avec PVC ≥ 50 Go**, FUSION ADD-ONLY).
+  - **Endpoints câblés (FUSION ADD-ONLY)** dans `routes/gis_s3_upload_router_omega.py` :
+    - `GET /api/v30/admin-premium/gis/diagnostic/pee-maj/probe-vsi` (validation accès B2 via VSI)
+    - `POST /api/v30/admin-premium/gis/diagnostic/pee-maj/resilient-pull-start` (pull résiliant, conservé)
+    - `GET /api/v30/admin-premium/gis/diagnostic/pee-maj/resilient-pull-status`
+    - `POST /api/v30/admin-premium/gis/diagnostic/pee-maj/export-subset?execute=true&source=auto|local|vsi` (param `source` ajouté avec VSI par défaut en mode auto)
+  - **Probe VSI live testé** : 8 layers détectés (`meta_maj`, **`pee_maj`** ←MultiPolygon principal, `vue_peup_etage_maj`, `vue_peup_essence_maj`, `vue_peup_meta_maj`, `etage_maj`, `essence_maj`, `layer_styles`) en 5,5 s sans téléchargement.
+  - **Schéma MFFP 2025 RÉEL** identifié : colonnes en minuscules (`type_couv`, `cl_dens`, `cl_age`, `gr_ess`, `cl_haut`, `an_origine`). Spec antérieure (`TY_COUV`, `ESS_DOMI`) corrigée dans subset_extractor + phase3_p0 (case-insensitive lookup canonique : `type_couv` puis `ty_couv`).
+  - **CRS dataset** : EPSG:32198 NAD83 Québec Lambert. **Bounds réels** : `(-830340, 117964, 543808, 942383)`. **10 105 769 features** dans `pee_maj`. Bbox proposée Estrie hors bounds → corrigée vers Bas-Saint-Laurent (waypoint doctrinal `48.206657, -68.382422` → `(8706, 467587)`) couvrant **15×15 km = 225 km²** (dimensionnement validé live pour perfomance pyogrio+VSI HTTP Range bbox query).
+  - **Subset extrait via VSI s3 direct** : `pee_maj_subset_Bas_Saint_Laurent_Rimouski_doctrinal_20260505T234859Z.gpkg` · **2 957 polygones réels MFFP** · 11 Mo · 333 s · SHA-256 `d5f9767fe933eba9a532bda92bac316ff6328a58242eb5c4bf7c9473e1ce5c12`. Distributions : `type_couv` {R: 1403, M: 826, F: 728}, `cl_dens` {B: 1910, A: 655, C: 336, D: 56}, `cl_age` 14 classes, `gr_ess` 323 groupes d'essences distincts.
+  - **Phase 3 P0 RÉELLE 4/4 couches** exécutée sur subset Bas-Saint-Laurent (auto-pick par mtime, ignore subsets < 1 Mo) :
+    - `MFFP_COUVERT_FORESTIER_DENSITY.tif` 5,4 K · 2 957 polygones · mean_canopy=71,44 % · 0,30 s
+    - `MFFP_CLASSES_AGE.tif` 2,2 K · 2 954 polygones · 8 classes d'âge réelles · 0,43 s
+    - `MFFP_STRUCTURE.tif` 5,9 K · 2 957 polygones · 7 classes structure · 0,31 s
+    - `MFFP_FRAGMENTATION_INDEX.tif` 1,9 K (Dickson 2017, 250 m) + binaire forêt 50 m (`GIS_COUVERT_FORESTIER_BINARY_50M.tif` 7,2 K, 89 719 / 114 582 px = 78,3 % forêt) · 0,01 s
+  - **R9-recalc-execute** OK avec amplification MFFP×1000 sur 9 targets (corridors, hotspots, affuts, salines, zones_vitales/passage/rut/repos/alimentation) — status STUB_READY_BLOCKED_BY_R8_PHASE_3 (normal car phases R8 P1/P2/P3 non encore implémentées, backlog).
+  - **Bug glob auto-pick** corrigé : tri par `mtime` (au lieu d'alphabétique) + filtre `size > 1 Mo` (ignore subsets vides hérités).
+  - **Tests pytest ajoutés (FUSION ADD-ONLY)** :
+    - `tests/test_phase_xxviii_r14_resilient_pull_omega.py` (14 tests : API publique, complétion-validation, idempotence lock, zombie detection, pull multisegment success, SHA mismatch, skip if complete, resume from partial, segment size 500 Mo, paths /app vs /var/cache).
+    - `tests/test_phase_xxviii_r14_vsi_omega.py` (16 tests : API publique, strip endpoint protocol, configure GDAL missing/complete/no-secret-leak, b2_key from manifest, vsi_url build/raise/override, subset signature accepte vsi_url, vsi path skip local check).
+  - **Authority chain** : COMMANDANT STEEVE-MAX → Option ζ approuvée le 2026-05-05.
+  - **V30 INVIOLÉ · ANTI_GÉNÉRIQUE_STRICT** : aucune donnée mockée. Tous les artefacts produits (subset 11 Mo + 5 GeoTIFF) sont issus de la lecture HTTP Range B2 du fichier réel MFFP 2025 36,9 Go.
+
 - **PHASE_XXVII-EXT6 · ORDRE N°52-EXT VOIE A — HTTP 404 chunk 164 (pod restart) RÉSOLU (2026-05-04)**
   Sur incident remonté par le Commandant STEEVE-MAX (upload_id `mort709yf-6d60c7f0`, HTTP 404 chunk 164/712 après 163 succès). **V30 INVIOLÉ · pytest 165/165 PASSED · 0 régression · cause forensique identifiée + corrigée + détection+mitigation auto UI.**
   - **Investigation forensique rigoureuse** :

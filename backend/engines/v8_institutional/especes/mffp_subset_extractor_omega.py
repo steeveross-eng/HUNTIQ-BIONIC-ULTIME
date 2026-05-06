@@ -37,20 +37,29 @@ logger = logging.getLogger("mffp_subset_extractor_omega")
 SUBSETS_OUTPUT_ROOT = Path("/app/backend/data/gis_archive/subsets")
 SUBSETS_OUTPUT_ROOT.mkdir(parents=True, exist_ok=True)
 
-# Bbox proposée Estrie / Cantons-de-l'Est (EPSG:32198)
-# Couvre les écorégions 4d (Estrie-Beauce) + 4c (Cantons-de-l'Est)
-# avec mix forêt feuillue / mixte / résineuse représentatif.
+# Bbox proposée Bas-Saint-Laurent (EPSG:32198) — dataset MFFP 2025 réel
+# Centrée sur le waypoint institutionnel doctrinal LAT 48.206657 /
+# LNG -68.382422 reprojeté en EPSG:32198 = (8706, 467587).
+# Couvre 15x15 km = 225 km² autour de Rimouski / Bas-Saint-Laurent.
+# Dimensionnement validé live 2026-05-05 :
+#   · pyogrio+VSI bbox 5×5 km = 42s / 381 features
+#   · 15×15 km extrapolé ≈ ~6-10 min / ~3 500 features (~1-3 Mo)
+# Pour subsets > 50 Mo nécessitant 50+×50+ km, prévoir > 60 min ou
+# pull résiliant CIBLÉ (option future avec PVC ≥ 50 Go).
+# Bornes dataset live : (-830340, 117964, 543808, 942383) → DANS bounds.
 DEFAULT_SUBSET_BBOX_EPSG_32198 = {
-    "xmin": 560000,
-    "ymin": 175000,
-    "xmax": 670000,
-    "ymax": 250000,
-    "label": "Estrie_Cantons_Est_Quebec_meridional",
-    "approximate_area_km2": 8250,
+    "xmin": 1206,
+    "ymin": 460087,
+    "xmax": 16206,
+    "ymax": 475087,
+    "label": "Bas_Saint_Laurent_Rimouski_doctrinal",
+    "approximate_area_km2": 225,
     "rationale": (
-        "Région représentative du Québec méridional avec mix feuillu, "
-        "mixte et résineux (≥5 écorégions Saucier 2009). Évite les zones "
-        "dénudées du Nord et les zones sub-arctiques."),
+        "Région institutionnelle Bas-Saint-Laurent (waypoint doctrinal "
+        "lat=48.206657 lon=-68.382422). Couvre 15×15 km autour de "
+        "Rimouski. Mix résineux/feuillu/mixte boréal méridional. "
+        "Dimensionnement compatible perfomance pyogrio+VSI HTTP Range "
+        "(évite timeout K8s ephemeral-storage du pull complet 37 Go)."),
 }
 
 # Filtres SQL proposés (limiter aux peuplements avec données complètes)
@@ -160,16 +169,25 @@ def execute_subset_extraction(
     bbox_epsg_32198: Optional[Dict[str, float]] = None,
     sql_filter: Optional[str] = None,
     pee_maj_local_path: Optional[str] = None,
+    vsi_url: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """ORDRE N°52-R13 · Extraction RÉELLE du subset 100 Mo via pyogrio.
+    """ORDRE N°52-R13/R14 · Extraction RÉELLE du subset 100 Mo via pyogrio.
+
+    Args :
+      pee_maj_local_path : path local (mode legacy / pull complet).
+      vsi_url : URL VSI `/vsis3/{bucket}/{key}` (option ζ R14, recommandée
+                sur ce pod soumis à la limite K8s ephemeral-storage).
+                Si fourni, prime sur pee_maj_local_path.
 
     Préconditions :
-      · pee_maj.gpkg présent localement (vérifié par
-        check_pee_maj_local_present()).
-      · pyogrio installé (déjà OK sur ce pod : 0.12.1).
+      · Mode local : pee_maj.gpkg présent localement (taille ≥ 30 Go).
+      · Mode VSI : configure_gdal_for_b2() appelé en amont + b2_key
+        présent dans le manifest. La lecture passe par HTTP Range B2,
+        seul le subset spatial transite (typ. < 200 Mo réseau).
 
     Stratégie :
       1. pyogrio.read_dataframe(bbox=..., use_arrow=True) — streaming
+         sur source locale OU /vsis3/...
       2. Filtres DataFrame (NULL exclus)
       3. pyogrio.write_dataframe(driver='GPKG')
       4. SHA-256 du résultat + métriques distribution
@@ -179,26 +197,42 @@ def execute_subset_extraction(
       · n_polygons_extracted
       · distribution {TY_COUV, ESS_DOMI, CL_AGE} (Counter top-N)
       · elapsed_s
+      · source_kind (local | vsi_s3_b2)
     """
     import hashlib
     import time
     from collections import Counter
 
     bbox = bbox_epsg_32198 or DEFAULT_SUBSET_BBOX_EPSG_32198
-    src_path = pee_maj_local_path or (
-        "/var/cache/gis_operational/incoming/FORET_MFFP_PEE_MAJ_Ω/pee_maj.gpkg")
 
-    # Vérification préalable du fichier source
-    src = Path(src_path)
-    if not src.exists():
-        raise FileNotFoundError(
-            f"PEE_MAJ_NOT_PRESENT_LOCALLY :: {src_path} :: "
-            "Lancer POST /diagnostic/pee-maj/r8-execute?do_pull=true "
-            "préalablement.")
-    if src.stat().st_size < 1_000_000:
-        raise RuntimeError(
-            f"PEE_MAJ_TOO_SMALL :: {src_path} size={src.stat().st_size}. "
-            "Pull B2 incomplet ?")
+    # Détermination de la source : VSI prime sur local
+    if vsi_url:
+        # Mode VSI : configurer GDAL pour B2 (idempotent)
+        from engines.v8_institutional.especes.mffp_vsi_url_omega import (
+            configure_gdal_for_b2,
+        )
+        cfg = configure_gdal_for_b2()
+        if not cfg["configured"]:
+            raise RuntimeError(
+                f"VSI_GDAL_NOT_CONFIGURED :: missing={cfg.get('missing')}")
+        src_path = vsi_url
+        source_kind = "vsi_s3_b2"
+    else:
+        src_path = pee_maj_local_path or (
+            "/var/cache/gis_operational/incoming/"
+            "FORET_MFFP_PEE_MAJ_Ω/pee_maj.gpkg")
+        # Vérification préalable du fichier local
+        src = Path(src_path)
+        if not src.exists():
+            raise FileNotFoundError(
+                f"PEE_MAJ_NOT_PRESENT_LOCALLY :: {src_path} :: "
+                "Lancer POST /diagnostic/pee-maj/r8-execute?do_pull=true "
+                "OU passer vsi_url= pour bypass (option ζ R14).")
+        if src.stat().st_size < 1_000_000:
+            raise RuntimeError(
+                f"PEE_MAJ_TOO_SMALL :: {src_path} "
+                f"size={src.stat().st_size}. Pull B2 incomplet ?")
+        source_kind = "local"
 
     # Chargement pyogrio avec bbox spatial
     import pyogrio  # noqa: PLC0415
@@ -214,23 +248,36 @@ def execute_subset_extraction(
         float(bbox["xmax"]), float(bbox["ymax"]),
     )
     logger.info(
-        "SUBSET_EXTRACT_START src=%s bbox=%s out=%s",
-        src_path, bbox_tuple, output_path)
+        "SUBSET_EXTRACT_START source=%s src=%s bbox=%s out=%s",
+        source_kind, src_path, bbox_tuple, output_path)
 
     # Lister les layers disponibles dans le GPKG
     layers_info = pyogrio.list_layers(src_path)
-    layer_names = (
-        list(layers_info[:, 0]) if hasattr(layers_info, "shape")
-        else [L[0] for L in layers_info]
-    )
+    if hasattr(layers_info, "shape"):
+        layer_names = list(layers_info[:, 0])
+        layer_geoms = list(layers_info[:, 1])
+    else:
+        layer_names = [L[0] for L in layers_info]
+        layer_geoms = [L[1] if len(L) > 1 else None for L in layers_info]
     if not layer_names:
         raise RuntimeError(f"PEE_MAJ_NO_LAYERS :: {src_path}")
-    # Choix du layer principal (le plus volumineux ou nom canonique)
-    primary_layer = (
-        "peuplement_ecoforestier"
-        if "peuplement_ecoforestier" in layer_names
-        else layer_names[0]
-    )
+    # Choix du layer principal :
+    # 1. 'pee_maj' (nom canonique MFFP 2025)
+    # 2. 'peuplement_ecoforestier' (nom legacy)
+    # 3. Premier (Multi)Polygon disponible
+    # 4. Premier layer (fallback ultime)
+    primary_layer = None
+    for canonical in ("pee_maj", "peuplement_ecoforestier"):
+        if canonical in layer_names:
+            primary_layer = canonical
+            break
+    if primary_layer is None:
+        for n, g in zip(layer_names, layer_geoms):
+            if g and "Polygon" in str(g):
+                primary_layer = n
+                break
+    if primary_layer is None:
+        primary_layer = layer_names[0]
     logger.info("SUBSET_LAYER_SELECTED %s (parmi %s)",
                 primary_layer, layer_names)
 
@@ -238,8 +285,10 @@ def execute_subset_extraction(
         src_path, layer=primary_layer,
         bbox=bbox_tuple, use_arrow=True)
 
-    # Filtres NULL sur champs critiques (si présents)
-    critical_fields = ["TY_COUV", "CL_DENS", "CL_AGE", "ESS_DOMI"]
+    # Filtres NULL sur champs critiques (schéma MFFP 2025 réel)
+    # Schéma vérifié live 2026-05-05 sur layer 'pee_maj' :
+    # type_couv, cl_dens, cl_age, gr_ess (groupe d'essences) en minuscules.
+    critical_fields = ["type_couv", "cl_dens", "cl_age", "gr_ess"]
     cols_lower = {c.lower(): c for c in df.columns}
     for cf in critical_fields:
         cf_actual = cols_lower.get(cf.lower())
@@ -278,14 +327,16 @@ def execute_subset_extraction(
 
     elapsed_s = round(time.time() - t0, 2)
     logger.info(
-        "SUBSET_EXTRACT_DONE elapsed=%ss size=%dMB sha256=%s",
-        elapsed_s, output_size_bytes // (1 << 20), sha256)
+        "SUBSET_EXTRACT_DONE source=%s elapsed=%ss size=%dMB sha256=%s",
+        source_kind, elapsed_s,
+        output_size_bytes // (1 << 20), sha256)
 
     return {
         "manifest_id": "MFFP_SUBSET_EXTRACTED_Ω",
         "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
-        "ordre": "N°52-R13",
+        "ordre": "N°52-R13_R14",
         "status": "EXECUTED",
+        "source_kind": source_kind,
         "src_path": src_path,
         "src_layer": primary_layer,
         "output_path": str(output_path),

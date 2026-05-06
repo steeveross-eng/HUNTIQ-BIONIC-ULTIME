@@ -153,9 +153,12 @@ def test_r12_subset_proposal_returns_complete_payload(subset_extractor):
     assert p["target_size_mb"] == 100
     assert "bbox_proposed" in p
     bbox = p["bbox_proposed"]
-    assert bbox["xmin"] == 560000
-    assert bbox["xmax"] == 670000
-    assert bbox["label"] == "Estrie_Cantons_Est_Quebec_meridional"
+    # R14 ζ : bbox 15×15 km autour Rimouski (waypoint doctrinal
+    # 48.206657 / -68.382422 reprojeté en EPSG:32198) — dimensionnement
+    # validé live pour perfomance pyogrio+VSI HTTP Range bbox query.
+    assert bbox["xmin"] == 1206
+    assert bbox["xmax"] == 16206
+    assert bbox["label"] == "Bas_Saint_Laurent_Rimouski_doctrinal"
     assert "ogr2ogr_command_template" in p
     assert "EPSG:32198" in p["ogr2ogr_command_template"]
     assert "pyogrio_python_snippet" in p
@@ -184,14 +187,24 @@ def test_r12_minimal_plan_enriched_with_dicts(specs):
 
 
 def test_r12_subset_default_bbox_in_quebec(subset_extractor):
-    """La bbox par défaut est dans des coordonnées Québec EPSG:32198 plausibles."""
+    """La bbox par défaut est dans des coordonnées EPSG:32198 plausibles
+    et bornée DANS le dataset MFFP 2025 réel.
+    R14 ζ : Bas-Saint-Laurent 50×50 km (waypoint doctrinal 48.206657 /
+    -68.382422) — taille ajustée pour perfomance pyogrio+VSI bbox query.
+    Bounds dataset live : (-830340, 117964, 543808, 942383).
+    """
     bbox = subset_extractor.DEFAULT_SUBSET_BBOX_EPSG_32198
-    # EPSG:32198 (NAD83 Québec Lambert) : Estrie/Cantons-Est typiquement
-    # x ~ 500-700 km, y ~ 100-300 km depuis l'origine
-    assert 500000 < bbox["xmin"] < 700000
-    assert 500000 < bbox["xmax"] < 700000
-    assert 100000 < bbox["ymin"] < 300000
-    assert 100000 < bbox["ymax"] < 300000
+    # EPSG:32198 NAD83 Québec Lambert centrée sur le Bas-Saint-Laurent
+    assert -50000 < bbox["xmin"] < 50000
+    assert -50000 < bbox["xmax"] < 100000
+    assert 350000 < bbox["ymin"] < 600000
+    assert 350000 < bbox["ymax"] < 600000
     assert bbox["xmax"] > bbox["xmin"]
     assert bbox["ymax"] > bbox["ymin"]
-    assert bbox["approximate_area_km2"] > 1000
+    assert bbox["approximate_area_km2"] >= 100
+    # Bornes DANS le dataset MFFP 2025 réel (vérifié live 2026-05-05)
+    real_bounds = (-830340, 117964, 543808, 942383)
+    assert real_bounds[0] <= bbox["xmin"] <= real_bounds[2]
+    assert real_bounds[1] <= bbox["ymin"] <= real_bounds[3]
+    assert real_bounds[0] <= bbox["xmax"] <= real_bounds[2]
+    assert real_bounds[1] <= bbox["ymax"] <= real_bounds[3]

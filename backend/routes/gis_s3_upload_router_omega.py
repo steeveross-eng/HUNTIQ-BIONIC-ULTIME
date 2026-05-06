@@ -1605,55 +1605,133 @@ async def export_subset_proposal(
     request: Request,
     execute: Optional[str] = None,
     target_size_mb: int = 100,
+    source: Optional[str] = None,
     x_commandant_token: Optional[str] = Header(default=None, alias="X-Commandant-Token"),
 ) -> Dict[str, Any]:
-    """ORDRE N°52-R12/R13 · Export subset ~100 Mo de pee_maj.gpkg.
+    """ORDRE N°52-R12/R13/R14 · Export subset ~100 Mo de pee_maj.gpkg.
 
-    · Mode PROPOSAL (défaut, `?execute=false`) : retourne plan complet
-      (bbox, filtres, commande GDAL prête à exécuter).
-    · Mode EXÉCUTION (`?execute=true`, R13) : extraction réelle via pyogrio
-      si pee_maj.gpkg local présent. Sinon HTTP 503.
+    · Mode PROPOSAL (défaut, `?execute=false`) : retourne plan complet.
+    · Mode EXÉCUTION (`?execute=true`) : extraction réelle via pyogrio.
+    · Source (`?source=auto|local|vsi`, défaut auto) :
+        - `local` : exige pee_maj.gpkg local (> 30 Go).
+        - `vsi` (R14 ζ) : lecture HTTP Range B2 via /vsis3/.
+        - `auto` : VSI si local absent/incomplet, sinon local.
     """
     _verify_token(x_commandant_token)
     from engines.v8_institutional.especes.mffp_subset_extractor_omega import (
         build_subset_proposal, execute_subset_extraction,
         check_pee_maj_local_present,
     )
+    from engines.v8_institutional.especes.mffp_vsi_url_omega import (
+        configure_gdal_for_b2, get_pee_maj_vsi_url,
+    )
     do_execute = (execute or "").lower() in ("true", "1", "yes", "y")
+    src_choice = (source or "auto").lower().strip()
+    if src_choice not in ("auto", "local", "vsi"):
+        raise HTTPException(
+            status_code=400,
+            detail=f"INVALID_SOURCE :: '{source}' (auto|local|vsi)")
     proposal = build_subset_proposal(target_size_mb=target_size_mb)
     if not do_execute:
         return {
             **proposal,
             "execution_mode": "PROPOSAL_ONLY",
+            "source_modes_supported": ["auto", "local", "vsi"],
             "next_action_to_execute": (
-                "Re-POST avec ?execute=true pour tenter l'extraction. "
-                "Prérequis : R8 PHASE_1 do_pull=true exécuté avec succès."),
+                "Re-POST avec ?execute=true&source=vsi pour extraction "
+                "via lecture directe B2 (option ζ R14, recommandé sur ce "
+                "pod soumis à la limite K8s ephemeral-storage 10 GiB). "
+                "?source=local exige un pull local préalable de 37 Go."),
         }
     # Mode EXÉCUTION
     presence = check_pee_maj_local_present()
-    if not presence["present"] or not presence.get("is_complete"):
-        raise HTTPException(
-            status_code=503,
-            detail={
-                "reason": "PEE_MAJ_NOT_PRESENT_LOCALLY",
-                "presence": presence,
-                "remediation": (
-                    "Lancer POST /diagnostic/pee-maj/r8-execute?do_pull=true "
-                    "et attendre la fin avant retry."),
-                "fallback_proposal": proposal,
-            })
+    use_vsi = False
+    vsi_url = None
+
+    if src_choice == "local":
+        if not presence["present"] or not presence.get("is_complete"):
+            raise HTTPException(
+                status_code=503,
+                detail={
+                    "reason": "PEE_MAJ_NOT_PRESENT_LOCALLY",
+                    "presence": presence,
+                    "remediation_recommended": (
+                        "Forcer ?source=vsi (option ζ R14) pour bypass "
+                        "ce pod soumis à la limite K8s ephemeral-storage."),
+                    "fallback_proposal": proposal,
+                })
+    elif src_choice == "vsi":
+        use_vsi = True
+    else:  # auto
+        if presence["present"] and presence.get("is_complete"):
+            use_vsi = False
+        else:
+            use_vsi = True
+
+    if use_vsi:
+        cfg = configure_gdal_for_b2()
+        if not cfg["configured"]:
+            raise HTTPException(
+                status_code=503,
+                detail={
+                    "reason": "VSI_GDAL_NOT_CONFIGURED",
+                    "missing": cfg.get("missing"),
+                    "remediation": cfg.get("remediation"),
+                })
+        try:
+            vsi_url = get_pee_maj_vsi_url()
+        except ValueError as e:
+            raise HTTPException(
+                status_code=503,
+                detail={
+                    "reason": "VSI_URL_BUILD_FAILED",
+                    "error": str(e),
+                })
+
     try:
-        result = execute_subset_extraction()
+        result = execute_subset_extraction(vsi_url=vsi_url)
         return {**proposal, "execution_result": result,
-                "execution_mode": "EXECUTED"}
+                "execution_mode": "EXECUTED",
+                "source_used": (
+                    "vsi_s3_b2" if use_vsi else "local"),
+                "source_choice_requested": src_choice,
+                "presence_check_local": presence,
+                "vsi_url_used": vsi_url}
     except Exception as e:
+        import traceback
         raise HTTPException(
             status_code=500,
             detail={
                 "reason": "SUBSET_EXTRACTION_FAILED",
                 "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+                "source_used": (
+                    "vsi_s3_b2" if use_vsi else "local"),
                 "fallback_proposal": proposal,
             })
+
+
+@router.get("/diagnostic/pee-maj/probe-vsi")
+async def pee_maj_probe_vsi(
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> Dict[str, Any]:
+    """ORDRE N°52-R14 ζ · Test live de lecture VSI directe B2.
+
+    Configure GDAL/AWS pour B2, construit /vsis3/{bucket}/{key} et
+    appelle pyogrio.list_layers() pour confirmer l'accès.
+    Aucune écriture, aucun téléchargement. RAM bornée < 50 Mo.
+    """
+    _verify_token(x_commandant_token)
+    from engines.v8_institutional.especes.mffp_vsi_url_omega import (
+        probe_vsi_pee_maj,
+    )
+    return {
+        "manifest_id": "PEE_MAJ_VSI_PROBE_Ω",
+        "ordre": "N°52-R14",
+        "option": "ζ_VSI_S3_DIRECT",
+        **probe_vsi_pee_maj(),
+    }
 
 
 # ═════════════════════════════════════════════════════════════════════════
@@ -1701,9 +1779,13 @@ async def phase3_p0_execute(
     import glob
     src = input_path
     if not src:
-        # Cherche subset le plus récent
+        # Cherche subset le plus récent (par mtime, ignorant subsets vides)
         subsets_root = "/app/backend/data/gis_archive/subsets"
-        candidates = sorted(glob.glob(f"{subsets_root}/pee_maj_subset_*.gpkg"))
+        candidates = [
+            p for p in glob.glob(f"{subsets_root}/pee_maj_subset_*.gpkg")
+            if Path(p).stat().st_size > 1_000_000  # ignore subsets < 1 Mo
+        ]
+        candidates.sort(key=lambda p: Path(p).stat().st_mtime)
         if candidates:
             src = candidates[-1]
     if not src:
