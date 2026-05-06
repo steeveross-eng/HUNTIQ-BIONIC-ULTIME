@@ -1,0 +1,84 @@
+{
+  "manifest_id": "TACTICAL_GROUND_RULES_VALIDATED_Ω",
+  "ordre": "N°52-R16-D",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "status": "VALIDÉ",
+  "validated_at_utc": "2026-05-06T17:00:00+00:00",
+  "validated_by": "COMMANDANT_STEEVE_MAX_R16_D",
+  "version": "1.0.0-VALIDATED",
+  "source_documentation": [
+    "MFFP (2010) Outils d'évaluation cerf — sites de salines naturelles",
+    "Tardif & Berger (2007) Habitat ours noir — fréquentation salines",
+    "Crête & Courtois (1997) Orignal — sels minéraux et eau stagnante",
+    "Belant, J.L. et al. (2010) Use of mineral licks — multi-species",
+    "Hewitt, D.G. (2011) Biology and Management of White-tailed Deer (ch. 11 hunting strategies)",
+    "Jenkins, K.J. (2007) Hunter sit-and-wait blinds: structural cover analysis"
+  ],
+  "description": "Règles canoniques R16-D TACTICAL_GROUND : SALINES + AFFUTS + TERRITOIRES. Combine R8/R16-A/B/C + 6 hooks TERRITOIRE_ULTIME registry-aware.",
+  "salines_rules": {
+    "description": "Sites de salines naturelles : zones humides + sols productifs + proximité corridors cervidés + drainage transitionnel.",
+    "score_formula_weights": {
+      "zones_humides": 0.30,
+      "productivity": 0.20,
+      "habitat_cervides_mean": 0.25,
+      "corridors_multi": 0.15,
+      "drainage_transitionnel": 0.10
+    },
+    "cervides_species": ["chevreuil", "orignal", "wapiti"],
+    "drainage_transitionnel_codes": ["4", "5"],
+    "saline_threshold": 60,
+    "min_score_keep_in_gpkg": 60,
+    "resolution_m": 100
+  },
+  "affuts_rules": {
+    "description": "Sites d'affût : intersection corridors + alimentation + structure semi-ouverte + lisières.",
+    "score_formula_weights": {
+      "corridors_multi": 0.30,
+      "alimentation_target_species_mean": 0.25,
+      "couvert_securite_moderate": 0.15,
+      "semi_open_structure": 0.15,
+      "edge_proximity_proxy": 0.15
+    },
+    "target_species_for_affut": [
+      "chevreuil", "orignal", "ours_noir", "dindon"
+    ],
+    "semi_open_cl_dens_codes": ["B", "C"],
+    "couvert_moderate_range": [40, 70],
+    "edge_proximity_proxy_method": "mixte_FE_RE_or_humid_neighbor",
+    "affut_threshold": 60,
+    "min_score_keep_in_gpkg": 60,
+    "resolution_m": 100
+  },
+  "territoires_rules": {
+    "description": "Polygones de territoires haute valeur multi-espèces — fusion vitales + corridors + hotspots + repos + alimentation.",
+    "score_formula_weights_per_layer": {
+      "zones_vitales": 0.30,
+      "link_score": 0.20,
+      "hotspot_binary": 0.15,
+      "repos": 0.15,
+      "alimentation": 0.20
+    },
+    "species_aggregation": "weighted_mean_by_mass",
+    "species_weights_by_mass": {
+      "chevreuil": 0.18,
+      "orignal": 0.30,
+      "ours_noir": 0.22,
+      "dindon": 0.10,
+      "wapiti": 0.20
+    },
+    "high_value_threshold": 70,
+    "top_percentile": 90,
+    "min_polygons_per_zone": 1,
+    "vector_only_no_raster": true
+  },
+  "hooks_integration": {
+    "description": "Probe registry-aware des 6 hooks TERRITOIRE_ULTIME — output transparent, pas de simulation.",
+    "hooks_to_probe": [
+      "IA_VISION", "DONNEES_CHASSEUR",
+      "ENVIRONNEMENT", "NUTRITION", "COMPORTEMENT", "PREDICTIF"
+    ],
+    "anti_generique_strict": true,
+    "fallback_if_unavailable": "skip_with_log_no_score_modification"
+  },
+  "v30_lock": "INVIOLÉ"
+}
