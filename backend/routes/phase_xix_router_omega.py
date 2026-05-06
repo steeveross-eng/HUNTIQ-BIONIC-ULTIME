@@ -127,3 +127,91 @@ async def get_master_optimised(master_id: str) -> JSONResponse:
         "source": "BIO_PROFILE_Ω_135 + DATASETS_Ω_FUSION_ADDONLY",
         "sceau": sceau,
     })
+
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ORDRE N°53 — Couplage direct SUPER_ENGINES ↔ BIO_PROFILE_OMEGA_135
+# ═════════════════════════════════════════════════════════════════════════
+import os
+from fastapi import Header
+from typing import Optional
+
+
+def _verify_commandant_token(x_commandant_token: Optional[str]) -> None:
+    expected = os.environ.get("GIS_RECEPTION_COMMANDANT_TOKEN")
+    if not expected:
+        raise HTTPException(
+            status_code=503,
+            detail="GIS_RECEPTION_COMMANDANT_TOKEN_NOT_CONFIGURED")
+    if (not x_commandant_token
+            or x_commandant_token.strip() != expected.strip()):
+        raise HTTPException(status_code=401, detail="ADMIN_PREMIUM_ONLY")
+
+
+@router.post("/bp135-coupling-execute")
+async def bp135_coupling_execute(
+    mode: str = "fusion",
+    weight_bio_reacteur: float = 0.5,
+    weight_bp135: float = 0.5,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """ORDRE N°53 · Couplage direct SUPER_ENGINES ↔ BIO_PROFILE_OMEGA_135.
+
+    Modes :
+      · `direct` → 6 scores BP135 directs (sans BIO_REACTEUR)
+      · `fusion` → fusion pondérée BIO_REACTEUR × BP135 par master
+      · `audit`  → drift report forensique BIO_REACTEUR vs BP135
+
+    Token Commandant requis (X-Commandant-Token).
+    Garde-fous : V30_LOCK SHA-256 vérifié, pas de mutation.
+    """
+    _verify_commandant_token(x_commandant_token)
+
+    valid_modes = {"direct", "fusion", "audit"}
+    if mode not in valid_modes:
+        raise HTTPException(
+            status_code=400,
+            detail=f"MODE_INVALIDE::{mode} :: valides={sorted(valid_modes)}")
+
+    from engines.v8_institutional.especes.super_engines_bp135_coupling_omega import (  # noqa: E501
+        compute_all_masters_direct_bp135,
+        compute_super_engines_bp135_fusion,
+        audit_bp135_vs_bioreacteur_drift,
+        CouplingError,
+    )
+
+    try:
+        if mode == "direct":
+            payload = compute_all_masters_direct_bp135()
+        elif mode == "fusion":
+            payload = compute_super_engines_bp135_fusion(
+                weights={
+                    "bio_reacteur": weight_bio_reacteur,
+                    "bp135": weight_bp135,
+                })
+        else:  # audit
+            payload = audit_bp135_vs_bioreacteur_drift()
+    except CouplingError as e:
+        raise HTTPException(
+            status_code=400, detail=f"COUPLING_ERROR::{e}")
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "BP135_COUPLING_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+
+    return JSONResponse({
+        "manifest_id": "SUPER_ENGINES_BP135_COUPLING_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "N°53",
+        "mode_requested": mode,
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })

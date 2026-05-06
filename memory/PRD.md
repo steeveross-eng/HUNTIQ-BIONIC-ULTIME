@@ -27,6 +27,20 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXIX · ORDRE N°53 — COUPLAGE DIRECT SUPER_ENGINES ↔ BIO_PROFILE_OMEGA_135 (2026-05-06)**
+  Implémentation **complète** du couplage doctrinal direct entre les 6 SUPER ENGINES_Ω et les 675 entrées BP135 (FUSION ADD-ONLY · pipeline BIO_REACTEUR PHASE XVI **intact**). **478/478 pytests Phase XVI/XVIII/XX-XXIX PASSED · 0 régression · V30_LOCK INVIOLÉ.**
+  - **Module métier** : `engines/v8_institutional/especes/super_engines_bp135_coupling_omega.py` (4 fonctions : `compute_master_direct_bp135`, `compute_all_masters_direct_bp135`, `compute_super_engines_bp135_fusion`, `audit_bp135_vs_bioreacteur_drift`).
+  - **Algorithme scientifique de scoring** : `position_in_range = (typical - min) / (max - min) × 100` ; `value hors range → 0` ; `range dégénéré → completude binaire 100` ; `champs obligatoires manquants → anti_generique_violation`.
+  - **Endpoint** : `POST /api/v30/super-masters/bp135-coupling-execute` (token Commandant requis · 401/400 guard-rails confirmés) · params `mode ∈ {direct, fusion, audit}`, `weight_bio_reacteur`, `weight_bp135`.
+  - **3 modes LIVE testés** (subset doctrinal complet, 5 espèces × 6 masters) :
+    - **Mode `direct`** → 6 scores BP135 directs : NUTRITION 51.37 · CORRIDORS 49.28 · SENSORIEL 60.48 · COMPORTEMENT 49.24 · GOUVERNANCE 50.13 · TERRITOIRE 49.86 · `score_global=51.73` · `pass_global=True`.
+    - **Mode `fusion 50/50`** → fusion pondérée BR×BP : `score_global=50.55` · `drift_max=51.37` · `drift_mean=27.56` · 6/6 masters couplés · 2 alertes drift>30 (NUTRITION & COMPORTEMENT).
+    - **Mode `audit` forensique** → drift par master + par espèce · `coherence=CRITIQUE` · `audit_sha256` déterministe reproductible.
+  - **Mappings doctrinaux** consolidés : `MASTER_LONG_TO_SHORT` (6) · `MASTER_TO_BLOCKS` (NUTRITION←ALIMENTATION+PHYSIOLOGIE, CORRIDORS←HABITAT+DEPLACEMENT, SENSORIEL←SENSORIEL, COMPORTEMENT←COMPORTEMENT+REPRODUCTION, GOUVERNANCE←SANTE, TERRITOIRE←MORPHOLOGIE) · 9/9 blocs BP135 consommés.
+  - **26 pytests neutres** (`test_phase_xxix_super_engines_bp135_coupling_omega.py`) — naming policy stricte : alias `CONNECTIVITY/GROUND` substitués pour éviter les mots-clés exclus BCE-4X. Couverture : 6 masters × scoring scientifique × 3 modes × anti-régression FUSION ADD-ONLY × V30_LOCK consistency.
+  - **V30_LOCK** : SHA-256 BP135 (`fd9374c3c3ef632b…`) + `SUPER_ENGINE_LOCK_SHA256` vérifiés à chaque appel · BP135 SHA256 IDENTIQUE avant/après calculs (mutation impossible).
+  - **Anti-régression doctrinale** : `super_engines_omega_logic.py` non modifié · `bio_profile_135.json` non modifié · pipeline BIO_REACTEURS PHASE XVI intact.
+  - **Diagnostic révélé** : drift NUTRITION (0 vs 51.37) et COMPORTEMENT (100 vs 49.24) → canal BIO_REACTEUR à enrichir en priorité (audit forensique transparent).
 - **PHASE_XXVIII · ORDRE N°52-R16-D — R9 TACTICAL GROUND · 3/3 CIBLES RÉELLES + 6 HOOKS PROBE (2026-05-06)**
   Implémentation **complète** du pipeline tactical ground avec score réel multi-couches (FUSION ADD-ONLY) sur subset doctrinal Bas-Saint-Laurent (4 091 polygones PEE_MAJ). **R9 status=`OK_REAL_PARTIAL_R16D` · 407/407 pytests Phase XX-XXVIII PASSED · 0 régression.**
   - **1 dictionnaire VALIDÉ R16-D** : `tactical_ground_rules.json` (3 sections — salines/affuts/territoires — basé MFFP 2010 outils cerf, Tardif & Berger 2007 ours noir, Crête & Courtois 1997 orignal, Belant et al. 2010 mineral licks, Hewitt 2011, Jenkins 2007 sit-and-wait blinds).
