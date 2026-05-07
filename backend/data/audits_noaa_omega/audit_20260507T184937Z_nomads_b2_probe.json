@@ -1,0 +1,107 @@
+{
+  "audit_id": "NOAA_OMEGA_PROBE_20260507T184937Z",
+  "protocol": "BCE-4X ULTIME ABSOLU",
+  "principle": "ANTI-GENERIQUE_OMEGA_STRICT",
+  "mode": "FUSION_ADD_ONLY (V30_LOCK respected, no master mutation)",
+  "timestamp_utc": "2026-05-07T18:49:37Z",
+  "commandant_token_validated": true,
+  "directives_received": {
+    "nomads_url_candidate": "https://nomads.ncep.noaa.gov:9090/dods/cfs/cfsmon/202401/20240101/cfs.tavg.mon.mean.nc",
+    "b2_credentials_candidate": {
+      "keyId": "006707511aa307d0000000002",
+      "applicationKey_length": 26,
+      "endpoint": "https://s3.ca-east-006.backblazeb2.com",
+      "bucket": "noaa-territoire"
+    }
+  },
+  "probes_executed": [
+    {
+      "probe_id": "P1_NOMADS_PORT_9090",
+      "method": "curl HEAD/GET + TCP raw probe",
+      "target": "https://nomads.ncep.noaa.gov:9090/dods/cfs/cfsmon/202401/20240101/cfs.tavg.mon.mean.nc",
+      "result": {
+        "http_code": 0,
+        "tcp_state": "TIMEOUT_30s_PORT_9090_FILTERED_OR_RETIRED",
+        "bytes_received": 0,
+        "verdict": "FAIL_UNREACHABLE"
+      }
+    },
+    {
+      "probe_id": "P1bis_NOMADS_PORT_443",
+      "method": "curl GET via HTTPS standard port",
+      "target": "https://nomads.ncep.noaa.gov/dods/cfs/cfsmon/202401/20240101/cfs.tavg.mon.mean.nc",
+      "result": {
+        "http_code": 301,
+        "content_type": "text/html",
+        "size": 879,
+        "verdict": "FAIL_REDIRECT_TO_HTML_NOT_NETCDF"
+      }
+    },
+    {
+      "probe_id": "P1ter_NOMADS_ROOT",
+      "method": "curl GET root domain",
+      "target": "https://nomads.ncep.noaa.gov/",
+      "result": {
+        "http_code": 200,
+        "content_type": "text/html; charset=UTF-8",
+        "size": 50579,
+        "verdict": "DOMAIN_ALIVE_BUT_OPENDAP_PATH_NOT_SERVING_DATA"
+      }
+    },
+    {
+      "probe_id": "P2_B2_S3_LIST_BUCKETS",
+      "method": "boto3 s3.list_buckets via S3-compatible endpoint",
+      "result": {
+        "code": "SignatureDoesNotMatch",
+        "message": "Signature validation failed",
+        "verdict": "FAIL_AUTH"
+      }
+    },
+    {
+      "probe_id": "P2bis_B2_HEAD_BUCKET",
+      "method": "boto3 s3.head_bucket('noaa-territoire')",
+      "result": {
+        "http_code": 403,
+        "code": "403",
+        "verdict": "FAIL_FORBIDDEN_OR_MISSING"
+      }
+    },
+    {
+      "probe_id": "P2ter_B2_NATIVE_AUTHORIZE",
+      "method": "GET https://api.backblazeb2.com/b2api/v3/b2_authorize_account (Basic auth)",
+      "result": {
+        "http_code": 401,
+        "code": "bad_auth_token",
+        "verdict": "FAIL_AUTH_NATIVE_API"
+      }
+    },
+    {
+      "probe_id": "P2quater_B2_KEY_LENGTH_ANALYSIS",
+      "method": "static length analysis vs Backblaze documented format",
+      "result": {
+        "keyId_length": 25,
+        "keyId_expected_length": 25,
+        "keyId_verdict": "OK",
+        "applicationKey_length": 26,
+        "applicationKey_expected_length": 31,
+        "applicationKey_chars_missing": 5,
+        "applicationKey_verdict": "SUSPECT_TRUNCATED"
+      }
+    }
+  ],
+  "synthesis": {
+    "nomads_status": "BLOCKED_OPENDAP_RETIRED_OR_PORT_FILTERED",
+    "nomads_evidence": "Port 9090 TCP timeout; Port 443 returns HTML 301 not NetCDF; coherent with NOAA Service Change Notice 25-81 (OPeNDAP retirement).",
+    "b2_status": "BLOCKED_AUTH_FAILURE",
+    "b2_evidence": "applicationKey provided is 26 chars, Backblaze documented format is 31 chars. Both S3-compatible signature validation and native B2 authorize_account return auth failure.",
+    "anti_generique_compliance": "STRICT - no mock data, no fallback, no fabrication. Reporting reality."
+  },
+  "next_required_inputs_from_commandant": [
+    "Either: full NOMADS URL on a non-retired service (e.g., NCEI THREDDS, AWS Open Data CFSv2 s3://noaa-cfsv2-pds/, Copernicus Marine), OR confirmation to pivot.",
+    "Either: full 31-char applicationKey for B2 keyId 006707511aa307d0000000002 (likely missing prefix such as K0061 or similar 5-char head), OR new credentials."
+  ],
+  "files_mutated": [],
+  "files_added": [
+    "/app/backend/data/audits_noaa_omega/audit_20260507T184937Z_nomads_b2_probe.json"
+  ]
+}
