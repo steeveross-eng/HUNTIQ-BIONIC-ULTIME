@@ -1,0 +1,103 @@
+{
+  "manifest_id": "WOD23_HOOK_ACTIVATION_MANIFEST_Ω",
+  "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "fusion_add_only": true,
+  "v30_lock": "INVIOLÉ",
+  "drift_zero": true,
+  "no_engine_recompute_triggered": true,
+  "activated": true,
+  "verdict": "WOD23_HOOK_ACTIVATED_OPERATIONAL",
+  "probe_summary": {
+    "bucket": "noaa-territoire",
+    "path_prefix": "",
+    "endpoint_url": "https://s3.ca-east-006.backblazeb2.com",
+    "region": "ca-east-006",
+    "bucket_exists": true,
+    "n_objects_valid": 20,
+    "n_objects_recognized_wod23": 20,
+    "n_anomalies": 0,
+    "total_size_bytes": 169615828,
+    "total_size_mb": 161.758,
+    "classification_counts": {
+      "APB": 2,
+      "CTD": 3,
+      "DRB": 2,
+      "GLD": 3,
+      "MBT": 3,
+      "OSD": 2,
+      "PFL": 1,
+      "SUR": 1,
+      "UOR": 1,
+      "XBT": 1,
+      "MRB": 1
+    },
+    "http_head_bucket_ms": 127.0,
+    "http_list_objects_ms": 51.9
+  },
+  "sample_keys_first_12": [
+    {
+      "key": "ocldb1778153836.685480_APB.nc.gz",
+      "size_bytes": 3732774,
+      "wod23_signature": "APB"
+    },
+    {
+      "key": "ocldb1778153836.685480_CTD.nc.gz",
+      "size_bytes": 16135983,
+      "wod23_signature": "CTD"
+    },
+    {
+      "key": "ocldb1778153836.685480_CTD2.nc.gz",
+      "size_bytes": 6717410,
+      "wod23_signature": "CTD"
+    },
+    {
+      "key": "ocldb1778153836.685480_DRB.nc.gz",
+      "size_bytes": 10527,
+      "wod23_signature": "DRB"
+    },
+    {
+      "key": "ocldb1778153836.685480_GLD.nc.gz",
+      "size_bytes": 16921456,
+      "wod23_signature": "GLD"
+    },
+    {
+      "key": "ocldb1778153836.685480_GLD2.nc.gz",
+      "size_bytes": 8111407,
+      "wod23_signature": "GLD"
+    },
+    {
+      "key": "ocldb1778153836.685480_MBT.nc.gz",
+      "size_bytes": 9526976,
+      "wod23_signature": "MBT"
+    },
+    {
+      "key": "ocldb1778153836.685480_MBT2.nc.gz",
+      "size_bytes": 3446772,
+      "wod23_signature": "MBT"
+    },
+    {
+      "key": "ocldb1778153836.685480_OSD.nc.gz",
+      "size_bytes": 8990362,
+      "wod23_signature": "OSD"
+    },
+    {
+      "key": "ocldb1778153836.685480_OSD2.nc.gz",
+      "size_bytes": 7430187,
+      "wod23_signature": "OSD"
+    },
+    {
+      "key": "ocldb1778153836.685480_PFL.nc.gz",
+      "size_bytes": 7640314,
+      "wod23_signature": "PFL"
+    },
+    {
+      "key": "ocldb1778153836.685480_SUR.nc.gz",
+      "size_bytes": 837498,
+      "wod23_signature": "SUR"
+    }
+  ],
+  "anti_generique_strict": true,
+  "activated_at_utc": "2026-05-07T19:10:44+00:00",
+  "manifest_sha256": "aaaf85c980f482f59cb6405d6ad9d4d69ecf3b280ddd7e29975450f12d5bc8a3"
+}

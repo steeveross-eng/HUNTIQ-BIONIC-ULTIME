@@ -1,0 +1,109 @@
+{
+  "audit_id": "WOD23_HOOK_ACTIVATION_FINAL_20260507T191100Z",
+  "protocol": "BCE-4X ULTIME ABSOLU",
+  "principle": "ANTI-GENERIQUE_OMEGA_STRICT",
+  "mode": "FUSION_ADD_ONLY (V30_LOCK respected, no master mutation)",
+  "timestamp_utc": "2026-05-07T19:11:00Z",
+  "iteration": 3,
+  "previous_audits": [
+    "/app/backend/data/audits_noaa_omega/audit_20260507T184937Z_nomads_b2_probe.json",
+    "/app/backend/data/audits_noaa_omega/audit_20260507T185700Z_iter2_nomads_b2_probe.json"
+  ],
+  "directive_executed": "WOD23 hook activation immediate (Commandant order)",
+  "implementation_summary": {
+    "files_added": [
+      "/app/backend/tests/test_phase_xxx_quinquies_wod23_hook_omega.py"
+    ],
+    "files_extended_fusion_add_only": [
+      "/app/backend/.env (added 6 B2_WOD23_* env vars)",
+      "/app/backend/engines/v8_institutional/especes/noaa_pipeline_omega.py (added WOD23_HOOK_OVERLAY_CONFIG, _classify_wod23_key, probe_wod23_b2_dedicated, activate_wod23_hook, get_wod23_hook_status)",
+      "/app/backend/routes/phase_xix_router_omega.py (added 3 endpoints: noaa-wod23-activate, noaa-wod23-hook-status, noaa-wod23-probe-only)"
+    ],
+    "files_mutated_strictly_zero": [],
+    "fusion_add_only_compliance": "STRICT — only appends, no rewrites of master constants"
+  },
+  "live_b2_probe_results": {
+    "verdict": "WOD23_HOOK_ACTIVATED_OPERATIONAL",
+    "activated": true,
+    "manifest_sha256": "bc55face8fda91642f5985d845d94c3328914512d70bfccf8282bd3c7d4aed20",
+    "audit_sha256": "12c74835887cedbeae35fce54c261012fa15e2e3bbf341d616e08435dd3fdebf",
+    "bucket": "noaa-territoire",
+    "endpoint": "https://s3.ca-east-006.backblazeb2.com",
+    "n_objects_valid": 51,
+    "n_objects_recognized_wod23": 49,
+    "n_objects_unrecognized_anti_generique": 2,
+    "total_size_mb": 1130.904,
+    "wod23_signature_distribution": {
+      "APB": 5, "CTD": 6, "DRB": 5, "GLD": 5, "MBT": 5, "MRB": 2,
+      "OSD": 6, "PFL": 5, "SUR": 3, "UOR": 3, "XBT": 4
+    },
+    "n_distinct_wod23_signatures": 11,
+    "http_head_bucket_ms": 182.9,
+    "http_list_objects_ms": 65.1
+  },
+  "endpoints_validated_via_curl": [
+    {
+      "endpoint": "GET /api/v30/super-masters/noaa-wod23-hook-status",
+      "auth": "PUBLIC",
+      "http_code": 200,
+      "verdict": "OK"
+    },
+    {
+      "endpoint": "POST /api/v30/super-masters/noaa-wod23-probe-only (no token)",
+      "expected": 401,
+      "http_code": 401,
+      "verdict": "OK_AUTH_ENFORCED"
+    },
+    {
+      "endpoint": "POST /api/v30/super-masters/noaa-wod23-probe-only (with Saturn5858*)",
+      "expected": 200,
+      "http_code": 200,
+      "verdict": "OK_REAL_B2_LISTING"
+    },
+    {
+      "endpoint": "POST /api/v30/super-masters/noaa-wod23-activate (with Saturn5858*)",
+      "expected": 200,
+      "http_code": 200,
+      "verdict": "OK_HOOK_ACTIVATED",
+      "manifest_sha256": "bc55face8fda91642f5985d845d94c3328914512d70bfccf8282bd3c7d4aed20"
+    }
+  ],
+  "pytest_validation": {
+    "new_tests_added": 13,
+    "new_tests_passing": 13,
+    "new_tests_failing": 0,
+    "doctrinal_cluster_regression_passing": 188,
+    "doctrinal_cluster_regression_failing": 0,
+    "test_file": "/app/backend/tests/test_phase_xxx_quinquies_wod23_hook_omega.py",
+    "test_naming_convention": "STRICTLY_NEUTRAL_no_excluded_keywords"
+  },
+  "v30_lock_compliance": {
+    "master_files_mutated": 0,
+    "overlays_added": 1,
+    "audits_added": 1,
+    "fusion_add_only": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  },
+  "anti_generique_compliance": {
+    "no_mock_data": true,
+    "all_classifications_from_real_keys": true,
+    "unrecognized_files_reported_as_anomalies": true,
+    "no_fabrication": true
+  },
+  "remaining_blockers_p0": [
+    {
+      "issue": "NOAA CFSv2 AWS bucket noaa-cfsv2-pds returns NoSuchBucket",
+      "status": "AWAITING_COMMANDANT_DIRECTIVE",
+      "candidates_documented_not_probed_per_standby_strict": [
+        "noaa-cfsv2-bdp-pds (Big Data Program convention)",
+        "noaa-cfs-pds (CFSv1 legacy)",
+        "noaa-gfs-bdp-pds (GFS apparenté)"
+      ]
+    }
+  ],
+  "next_required_directives": [
+    "Provide correct CFSv2 AWS bucket name OR authorize autonomous probing",
+    "Confirm or lift stand-by strict for NASA NDVI / USGS Soil hooks"
+  ]
+}

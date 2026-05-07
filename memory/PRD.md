@@ -27,6 +27,20 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-QUINQUIES · ACTIVATION_HOOK_NOAA_WOD23 — Hook B2 dédié OPÉRATIONNEL (2026-05-07)**
+  Activation officielle du hook NOAA WOD23 sur Backblaze B2 après réception des credentials complètes du Commandant (FUSION ADD-ONLY · anti-générique strict · V30_LOCK INVIOLÉ · DRIFT_ZERO · NO_ENGINE_RECOMPUTE).
+  - **Credentials B2 dédiées WOD23** ajoutées en `.env` (séparées du B2 GIS existant) : `B2_WOD23_KEY_ID=006707511aa307d0000000002`, `B2_WOD23_APPLICATION_KEY=K006+a4Gg0VsmVYWP8MQkLYbC6t3K6U` (31 chars), `B2_WOD23_ENDPOINT_URL=https://s3.ca-east-006.backblazeb2.com`, `B2_WOD23_BUCKET=noaa-territoire`. **Aucune mutation des credentials GIS existantes**.
+  - **Module `noaa_pipeline_omega.py` étendu (FUSION ADD-ONLY)** : ajout de `WOD23_HOOK_OVERLAY_CONFIG` (overlay sans mutation de `WOD23_CONFIG` master), `_classify_wod23_key` (11 signatures NOAA reconnues : APB/CTD/DRB/GLD/MBT/MRB/OSD/PFL/SUR/UOR/XBT), `probe_wod23_b2_dedicated` (boto3 + classification anti-générique stricte), `activate_wod23_hook` (manifest signé SHA-256 + persistance overlay + audit), `get_wod23_hook_status` (read-only).
+  - **3 endpoints API** ajoutés :
+    - **POST `/api/v30/super-masters/noaa-wod23-activate`** (token Commandant) : activation officielle + manifest SHA-256 + audit NOAA_PIPELINE/WOD23_HOOK_ACTIVATION.
+    - **POST `/api/v30/super-masters/noaa-wod23-probe-only`** (token) : probe diagnostic sans persistance.
+    - **GET `/api/v30/super-masters/noaa-wod23-hook-status`** (PUBLIC RO) : état actuel du hook + manifest persisté.
+  - **Probe LIVE résultats** : `verdict=WOD23_HOOK_ACTIVATED_OPERATIONAL` · `activated=True` · 51 fichiers valides · 49 reconnus WOD23 · 2 anomalies anti-générique honnêtes · **1130.9 MB total** · **11 signatures distinctes** : APB(5), CTD(6), DRB(5), GLD(5), MBT(5), MRB(2), OSD(6), PFL(5), SUR(3), UOR(3), XBT(4). HEAD bucket 183ms, list 65ms.
+  - **Manifest SHA-256** : `bc55face8fda91642f5985d845d94c3328914512d70bfccf8282bd3c7d4aed20`. **Audit SHA-256** : `12c74835887cedbeae35fce54c261012fa15e2e3bbf341d616e08435dd3fdebf`.
+  - **Pytest** : 13 nouveaux tests neutres (`test_phase_xxx_quinquies_wod23_hook_omega.py`) **13/13 PASSED**. Régression cluster doctrinal Phase XXIX/XXX = **188/188 PASSED**.
+  - **Audits forensiques persistés** : `/app/backend/data/audits_noaa_omega/audit_*_iter1/2/3*.json` (3 itérations transparentes des probes : OPeNDAP retiré, applicationKey tronquée, activation finale réussie).
+  - **Diagnostic concurrent NOMADS OPeNDAP `:9090` + AWS `noaa-cfsv2-pds`** : transparence anti-générique stricte — Port 9090 timeout (legacy retiré), Port 443 retourne HTML 301 (Service Change Notice 25-81), bucket AWS `noaa-cfsv2-pds` retourne `NoSuchBucket`. **Hook CFSv2 reste BLOQUÉ en attente de directive corrective Commandant** (bucket alternatif documenté non probé per stand-by strict : `noaa-cfsv2-bdp-pds` / `noaa-cfs-pds` / `noaa-gfs-bdp-pds`).
+
 - **PHASE_XXX-QUINTUS · NOAA_WOD23_BACKBLAZE_UPDATE — Mode B2 (S3-compatible) (2026-05-07)**
   Mise à jour doctrinale du pipeline NOAA WOD23 vers mode Backblaze B2 (FUSION ADD-ONLY · anti-générique strict). **AUCUN recalcul moteur** · **627/627 pytests Phase XVI/XVIII/XX-XXX-QUINTUS PASSED · V30_LOCK INVIOLÉ · DRIFT_ZERO**.
   - **WOD23_CONFIG mis à jour** : `mode="B2"` (primary) · `primary_b2_bucket="noaa-territoire"` · `primary_b2_path="wod23/"` · `primary_path_commandant_legacy="C:/emergent_sources/noaa/wod23/"` (legacy) · fallbacks pod Linux conservés.

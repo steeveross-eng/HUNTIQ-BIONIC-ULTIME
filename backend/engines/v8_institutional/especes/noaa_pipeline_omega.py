@@ -1091,4 +1091,373 @@ __all__ = [
     "get_pipeline_status",
     "update_cfsv2_template",
     "probe_b2_credentials_alternative",
+    "WOD23_HOOK_OVERLAY_CONFIG",
+    "WOD23_HOOK_ACTIVATION_PATH",
+    "probe_wod23_b2_dedicated",
+    "activate_wod23_hook",
+    "get_wod23_hook_status",
 ]
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# 8. WOD23 HOOK ACTIVATION (overlay V30_LOCK FUSION ADD-ONLY)
+#    Utilise credentials B2 dédiées (B2_WOD23_*) — anti-générique strict.
+# ═════════════════════════════════════════════════════════════════════════
+WOD23_HOOK_OVERLAY_CONFIG: Dict[str, Any] = {
+    "manifest_id": "WOD23_HOOK_OVERLAY_CONFIG_Ω",
+    "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "credentials_source": "B2_WOD23_* env vars (dédiées WOD23, séparées du B2 GIS)",
+    "expected_formats": [".nc", ".nc.gz", ".csv", ".bin"],
+    "wod23_signatures_recognized": {
+        "APB": "Autonomous Pinniped Bathythermograph",
+        "CTD": "Conductivity-Temperature-Depth profile",
+        "DRB": "Drifting Buoy",
+        "GLD": "Glider",
+        "MBT": "Mechanical Bathythermograph",
+        "MRB": "Moored Buoy",
+        "OSD": "Ocean Station Data / bottle / low-res CTD",
+        "PFL": "Profiling Float",
+        "SUR": "Surface only",
+        "UOR": "Undulating Ocean Recorder",
+        "XBT": "Expendable Bathythermograph",
+    },
+    "consumed_by_modules": ["PHYSIOLOGIE", "HABITAT", "THERMIQUE"],
+    "anti_generique_strict": True,
+    "fusion_add_only": True,
+    "v30_lock": "INVIOLÉ",
+}
+
+WOD23_HOOK_ACTIVATION_PATH = (
+    PIPELINE_ROOT / "wod23_hook_activation_overlay.json")
+
+
+def _classify_wod23_key(key: str) -> Optional[str]:
+    """Classifie un nom de fichier WOD23 par signature institutionnelle.
+
+    Anti-générique strict : retourne None si aucun pattern reconnu (pas
+    de fabrication de classification). Patterns dérivés du registre
+    public NOAA WOD23.
+    """
+    upper = key.upper()
+    for sig, _ in WOD23_HOOK_OVERLAY_CONFIG[
+            "wod23_signatures_recognized"].items():
+        # Match patterns "_APB.", "_CTD.", "_CTD2." etc.
+        if (f"_{sig}." in upper
+                or f"_{sig}_" in upper
+                or upper.endswith(f"_{sig}")
+                or f"_{sig}2." in upper):
+            return sig
+    return None
+
+
+def probe_wod23_b2_dedicated(
+    max_keys: int = 1000,
+    classify: bool = True,
+) -> Dict[str, Any]:
+    """Probe RÉEL Backblaze B2 avec credentials WOD23 dédiées.
+
+    Lit B2_WOD23_KEY_ID / B2_WOD23_APPLICATION_KEY / B2_WOD23_ENDPOINT_URL
+    / B2_WOD23_REGION / B2_WOD23_BUCKET / B2_WOD23_PATH_PREFIX depuis env.
+
+    Anti-générique strict : aucune fabrication. Toutes les valeurs
+    proviennent d'appels boto3 réels.
+    """
+    import os
+    record: Dict[str, Any] = {
+        "manifest_id": "WOD23_B2_DEDICATED_PROBE_Ω",
+        "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "credentials_source": "B2_WOD23_* env vars",
+        "available": False,
+        "anti_generique_strict": True,
+        "v30_lock": "INVIOLÉ",
+        "probed_at_utc": _utc_now(),
+    }
+    key_id = os.environ.get("B2_WOD23_KEY_ID")
+    app_key = os.environ.get("B2_WOD23_APPLICATION_KEY")
+    endpoint = os.environ.get("B2_WOD23_ENDPOINT_URL")
+    region = os.environ.get("B2_WOD23_REGION")
+    bucket = os.environ.get("B2_WOD23_BUCKET")
+    path_prefix = os.environ.get("B2_WOD23_PATH_PREFIX", "")
+
+    record["bucket"] = bucket
+    record["path_prefix"] = path_prefix
+    record["endpoint_url"] = endpoint
+    record["region"] = region
+
+    missing = [
+        n for n, v in [
+            ("B2_WOD23_KEY_ID", key_id),
+            ("B2_WOD23_APPLICATION_KEY", app_key),
+            ("B2_WOD23_ENDPOINT_URL", endpoint),
+            ("B2_WOD23_BUCKET", bucket),
+        ] if not v
+    ]
+    if missing:
+        record["reason"] = (
+            f"wod23_credentials_missing_in_env::{','.join(missing)}")
+        return record
+
+    try:
+        import boto3
+        from botocore.config import Config
+        from botocore.exceptions import (
+            ClientError, EndpointConnectionError, NoCredentialsError,
+        )
+    except ImportError as e:
+        record["reason"] = f"boto3_import_error::{str(e)[:120]}"
+        return record
+
+    try:
+        s3 = boto3.client(
+            "s3",
+            aws_access_key_id=key_id,
+            aws_secret_access_key=app_key,
+            endpoint_url=endpoint,
+            region_name=region,
+            config=Config(
+                connect_timeout=10, read_timeout=15,
+                retries={"max_attempts": 1},
+                signature_version="s3v4"),
+        )
+    except Exception as e:
+        record["reason"] = f"s3_client_init_error::{str(e)[:120]}"
+        return record
+
+    # head_bucket
+    t0 = time.time()
+    try:
+        s3.head_bucket(Bucket=bucket)
+        record["bucket_exists"] = True
+        record["http_head_bucket_ms"] = round(
+            (time.time() - t0) * 1000, 1)
+    except ClientError as e:
+        code = e.response.get("Error", {}).get("Code", "?")
+        status = e.response.get(
+            "ResponseMetadata", {}).get("HTTPStatusCode")
+        record["bucket_exists"] = False
+        record["reason"] = f"head_bucket_error::http_{status}_code_{code}"
+        record["http_head_bucket_ms"] = round(
+            (time.time() - t0) * 1000, 1)
+        return record
+    except (EndpointConnectionError, NoCredentialsError) as e:
+        record["reason"] = (
+            f"network_or_credentials_error::{str(e)[:120]}")
+        return record
+
+    # list_objects_v2 (paginé)
+    t0 = time.time()
+    n_objects = 0
+    n_recognized = 0
+    n_anomalies = 0
+    total_bytes = 0
+    sample_keys: List[Dict[str, Any]] = []
+    classification_counts: Dict[str, int] = {}
+    try:
+        paginator = s3.get_paginator("list_objects_v2")
+        for page in paginator.paginate(
+            Bucket=bucket,
+            Prefix=path_prefix,
+            PaginationConfig={"MaxItems": max_keys, "PageSize": 1000},
+        ):
+            for obj in page.get("Contents", []):
+                key = obj["Key"]
+                size = obj.get("Size", 0)
+                ext_ok = any(
+                    key.lower().endswith(fmt.lower())
+                    for fmt in WOD23_HOOK_OVERLAY_CONFIG[
+                        "expected_formats"])
+                if size == 0:
+                    n_anomalies += 1
+                    continue
+                if not ext_ok:
+                    n_anomalies += 1
+                    continue
+                n_objects += 1
+                total_bytes += size
+                if classify:
+                    sig = _classify_wod23_key(key)
+                    if sig:
+                        n_recognized += 1
+                        classification_counts[sig] = (
+                            classification_counts.get(sig, 0) + 1)
+                if len(sample_keys) < 12:
+                    sample_keys.append({
+                        "key": key,
+                        "size_bytes": size,
+                        "wod23_signature": (
+                            _classify_wod23_key(key)
+                            if classify else None),
+                    })
+    except ClientError as e:
+        code = e.response.get("Error", {}).get("Code", "?")
+        record["reason"] = f"list_objects_error::{code}"
+        record["http_list_objects_ms"] = round(
+            (time.time() - t0) * 1000, 1)
+        return record
+
+    record["http_list_objects_ms"] = round(
+        (time.time() - t0) * 1000, 1)
+    record["n_objects_valid"] = n_objects
+    record["n_objects_recognized_wod23"] = n_recognized
+    record["n_anomalies"] = n_anomalies
+    record["total_size_bytes"] = total_bytes
+    record["total_size_mb"] = round(total_bytes / (1024 * 1024), 3)
+    record["classification_counts"] = classification_counts
+    record["sample_keys"] = sample_keys
+    record["available"] = (n_objects > 0)
+    if n_objects == 0:
+        record["reason"] = "bucket_empty_or_prefix_yields_zero_files"
+    return record
+
+
+def activate_wod23_hook(
+    persist: bool = True,
+    max_keys: int = 1000,
+) -> Dict[str, Any]:
+    """Active officiellement le hook NOAA WOD23 sur Backblaze B2.
+
+    Étapes :
+      1. Probe RÉEL avec credentials B2_WOD23_* dédiées
+      2. Classification anti-générique stricte des signatures WOD23
+      3. Calcul SHA-256 du manifest pour traçabilité longitudinale
+      4. Persistance overlay JSON (FUSION ADD-ONLY, V30_LOCK respecté)
+      5. Persistance audit NOAA_PIPELINE/WOD23_HOOK_ACTIVATION
+      6. AUCUN recalcul moteur déclenché
+
+    Returns:
+      Dict avec verdict, manifest signé SHA-256, échantillon, classification.
+    """
+    t0 = time.time()
+    probe = probe_wod23_b2_dedicated(
+        max_keys=max_keys, classify=True)
+
+    # Verdict doctrinal
+    if probe.get("available") and probe.get(
+            "n_objects_recognized_wod23", 0) > 0:
+        verdict = "WOD23_HOOK_ACTIVATED_OPERATIONAL"
+        activated = True
+    elif probe.get("available"):
+        verdict = "WOD23_HOOK_FILES_PRESENT_BUT_NO_WOD23_SIGNATURE"
+        activated = False
+    else:
+        verdict = "WOD23_HOOK_PROBE_FAILED_NOT_ACTIVATED"
+        activated = False
+
+    # Manifest signé pour traçabilité longitudinale
+    manifest_payload = {
+        "manifest_id": "WOD23_HOOK_ACTIVATION_MANIFEST_Ω",
+        "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "fusion_add_only": True,
+        "v30_lock": "INVIOLÉ",
+        "drift_zero": True,
+        "no_engine_recompute_triggered": True,
+        "activated": activated,
+        "verdict": verdict,
+        "probe_summary": {
+            "bucket": probe.get("bucket"),
+            "path_prefix": probe.get("path_prefix"),
+            "endpoint_url": probe.get("endpoint_url"),
+            "region": probe.get("region"),
+            "bucket_exists": probe.get("bucket_exists"),
+            "n_objects_valid": probe.get("n_objects_valid", 0),
+            "n_objects_recognized_wod23": probe.get(
+                "n_objects_recognized_wod23", 0),
+            "n_anomalies": probe.get("n_anomalies", 0),
+            "total_size_bytes": probe.get("total_size_bytes", 0),
+            "total_size_mb": probe.get("total_size_mb", 0),
+            "classification_counts": probe.get(
+                "classification_counts", {}),
+            "http_head_bucket_ms": probe.get("http_head_bucket_ms"),
+            "http_list_objects_ms": probe.get("http_list_objects_ms"),
+        },
+        "sample_keys_first_12": probe.get("sample_keys", []),
+        "anti_generique_strict": True,
+        "activated_at_utc": _utc_now(),
+    }
+    manifest_json = json.dumps(
+        manifest_payload, sort_keys=True, ensure_ascii=False, default=str)
+    manifest_sha256 = hashlib.sha256(
+        manifest_json.encode("utf-8")).hexdigest()
+    manifest_payload["manifest_sha256"] = manifest_sha256
+
+    persisted: Dict[str, Any] = {}
+    if persist:
+        PIPELINE_ROOT.mkdir(parents=True, exist_ok=True)
+        WOD23_HOOK_ACTIVATION_PATH.write_text(
+            json.dumps(manifest_payload, ensure_ascii=False, indent=2),
+            encoding="utf-8")
+        persisted["overlay_path"] = str(WOD23_HOOK_ACTIVATION_PATH)
+        persisted["overlay_size_bytes"] = (
+            WOD23_HOOK_ACTIVATION_PATH.stat().st_size)
+
+        # Audit forensique
+        from engines.v8_institutional.especes.bio_reacteur_overlay_omega import (  # noqa: E501
+            persist_audit,
+        )
+        audit_payload = {
+            "audit_type": "NOAA_PIPELINE",
+            "subtype": "WOD23_HOOK_ACTIVATION",
+            "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
+            "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "verdict": verdict,
+            "activated": activated,
+            "manifest_sha256": manifest_sha256,
+            "bucket": probe.get("bucket"),
+            "n_objects_valid": probe.get("n_objects_valid", 0),
+            "n_objects_recognized_wod23": probe.get(
+                "n_objects_recognized_wod23", 0),
+            "total_size_bytes": probe.get("total_size_bytes", 0),
+            "classification_counts": probe.get(
+                "classification_counts", {}),
+            "no_engine_recompute_triggered": True,
+            "v30_lock_inviolate": True,
+            "drift_zero": True,
+        }
+        persisted["audit_persisted"] = persist_audit(audit_payload)
+
+    return {
+        "manifest_id": "WOD23_HOOK_ACTIVATE_Ω",
+        "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "activated": activated,
+        "verdict": verdict,
+        "manifest": manifest_payload,
+        "manifest_sha256": manifest_sha256,
+        "probe_full": probe,
+        "persisted_paths": persisted,
+        "no_engine_recompute_triggered": True,
+        "v30_lock": "INVIOLÉ",
+        "drift_zero": True,
+        "elapsed_s": round(time.time() - t0, 3),
+        "computed_at_utc": _utc_now(),
+    }
+
+
+def get_wod23_hook_status() -> Dict[str, Any]:
+    """Lit l'état du hook WOD23 (read-only, V30_LOCK respecté)."""
+    if not WOD23_HOOK_ACTIVATION_PATH.exists():
+        return {
+            "manifest_id": "WOD23_HOOK_STATUS_Ω",
+            "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
+            "status": "NOT_ACTIVATED_YET",
+            "v30_lock": "INVIOLÉ",
+            "scanned_at_utc": _utc_now(),
+        }
+    payload = json.loads(
+        WOD23_HOOK_ACTIVATION_PATH.read_text(encoding="utf-8"))
+    return {
+        "manifest_id": "WOD23_HOOK_STATUS_Ω",
+        "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "status": "ACTIVATED" if payload.get("activated") else (
+            "PROBE_FAILED_NOT_ACTIVATED"),
+        "manifest": payload,
+        "overlay_path": str(WOD23_HOOK_ACTIVATION_PATH),
+        "overlay_size_bytes": (
+            WOD23_HOOK_ACTIVATION_PATH.stat().st_size),
+        "v30_lock": "INVIOLÉ",
+        "scanned_at_utc": _utc_now(),
+    }

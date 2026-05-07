@@ -958,3 +958,107 @@ async def noaa_cfsv2_urls_endpoint(
         "v30_lock": "INVIOLÉ",
     })
 
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ACTIVATION_HOOK_NOAA_WOD23 — Hook B2 dédié (FUSION ADD-ONLY)
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/noaa-wod23-activate")
+async def noaa_wod23_activate_endpoint(
+    persist: bool = True,
+    max_keys: int = 1000,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """ACTIVATION_HOOK_NOAA_WOD23 · Active officiellement le hook WOD23.
+
+    Workflow doctrinal :
+      1. Probe RÉEL Backblaze B2 avec credentials B2_WOD23_* dédiées
+      2. Classification anti-générique des fichiers WOD23 (signatures
+         APB/CTD/DRB/GLD/MBT/MRB/OSD/PFL/SUR/UOR/XBT)
+      3. Manifest signé SHA-256 pour traçabilité longitudinale
+      4. Persistance overlay JSON + audit forensique
+         NOAA_PIPELINE/WOD23_HOOK_ACTIVATION
+      5. AUCUN recalcul moteur (V30_LOCK + DRIFT_ZERO maintenus)
+
+    Token Commandant requis.
+    Anti-générique strict : status RÉEL retourné, zéro fabrication.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.noaa_pipeline_omega import (
+        activate_wod23_hook,
+    )
+    try:
+        payload = activate_wod23_hook(
+            persist=persist, max_keys=max_keys)
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "WOD23_HOOK_ACTIVATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "WOD23_HOOK_ACTIVATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "ACTIVATION_HOOK_NOAA_WOD23",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/noaa-wod23-hook-status")
+async def noaa_wod23_hook_status_endpoint() -> JSONResponse:
+    """ACTIVATION_HOOK_NOAA_WOD23 · État hook WOD23 (PUBLIC RO)."""
+    from engines.v8_institutional.especes.noaa_pipeline_omega import (
+        get_wod23_hook_status,
+    )
+    payload = get_wod23_hook_status()
+    return JSONResponse({
+        "manifest_id": "WOD23_HOOK_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "ACTIVATION_HOOK_NOAA_WOD23",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.post("/noaa-wod23-probe-only")
+async def noaa_wod23_probe_only_endpoint(
+    max_keys: int = 100,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """ACTIVATION_HOOK_NOAA_WOD23 · Probe seul (sans persistance).
+
+    Probe RÉEL B2_WOD23_* sans persistance d'overlay/audit. Utile pour
+    diagnostiquer sans muter le registre. Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.noaa_pipeline_omega import (
+        probe_wod23_b2_dedicated,
+    )
+    try:
+        payload = probe_wod23_b2_dedicated(
+            max_keys=max_keys, classify=True)
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "WOD23_PROBE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "WOD23_PROBE_ONLY_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "ACTIVATION_HOOK_NOAA_WOD23",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
