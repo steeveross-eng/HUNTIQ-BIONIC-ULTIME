@@ -27,6 +27,24 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-SEPTIES · NOAA_CFSV2_P0_DECISION — HEAD_ONLY strict + pivot CANDIDATE_LIST_ONLY (2026-05-07)**
+  Vérification stricte du candidat CFSv2 sous régime guardrails ENFORCED (FUSION ADD-ONLY · anti-générique strict · V30_LOCK INVIOLÉ · DRIFT_ZERO · NO_ENGINE_RECOMPUTE).
+  - **Module `noaa_pipeline_omega.py` étendu** : ajout `CFSV2_PIVOT_CANDIDATE_LIST` (NCEI_THREDDS_CFSR_MONTHLY + COPERNICUS_MARINE_GLOBAL_PHY), `verify_cfsv2_p0_head_only` (HEAD strict sans follow_redirects, guardrails enforce, manifest SHA-256, pivot CANDIDATE_LIST_ONLY si invalide), `_is_content_type_acceptable` (validation binaire stricte), `list_cfsv2_pivot_candidates`.
+  - **2 endpoints API** :
+    - **POST `/api/v30/super-masters/noaa-cfsv2-verification-p0`** (token + guardrails 412 si inactifs)
+    - **GET `/api/v30/super-masters/noaa-cfsv2-pivot-candidates`** (PUBLIC RO)
+  - **Probe RÉEL HEAD_ONLY** sur `https://noaa-cfs-pds.s3.amazonaws.com/cfs.20240101/01/6hrly_grib_01/cfs.tavg.01.2024010100.grb2` :
+    - HTTP **404** · content_type=None · content_length=None · redirect_detected=False · reason=`http_error_404` · 196.3ms
+    - Critères évalués : http_200_strict ❌ · no_redirect ✅ · content_length ❌ · content_type ❌
+    - **Verdict** : `CFSV2_P0_HEAD_PROBE_INVALID` · manifest_sha256=`2fb0fae2d900...3049`
+    - Le path '01/6hrly_grib_01/' est typique CFSv2 mais le bucket `noaa-cfs-pds` est CFSv1 legacy → 404 cohérent (anti-générique strict, aucune fabrication).
+  - **Pivot CANDIDATE_LIST_ONLY déclenché** (autonomy=LIMITED, require_commandant_confirm=True) :
+    - **NCEI_THREDDS_CFSR_MONTHLY** : `https://www.ncei.noaa.gov/thredds/catalog/model-cfs_reanl_mm_grb_v2/catalog.html` · format=GRIB2 · auth=False · template OPeNDAP `cfsmm.{YYYYMM}.grb2`
+    - **COPERNICUS_MARINE_GLOBAL_PHY** : `https://data.marine.copernicus.eu/products` · GLOBAL_ANALYSISFORECAST_PHY_001_024 · format=NETCDF4 · auth=True (credentials Commandant nécessaires)
+  - **Forensic log** : 1 entrée `ENDPOINT_PROBES/CFSV2_VERIFICATION_P0_HEAD_ONLY` JSONL persistée. Audit `audit_20260507T194719Z_b433f3a7.json` (sha=`b433f3a7...da7f`). Overlay history `cfsv2_verification_p0_overlay.json` (3958 bytes, n_verifications=1).
+  - **Pytest** : 9 nouveaux tests (`test_phase_xxx_septies_cfsv2_p0_omega.py`) **9/9 PASSED**. Régression cluster doctrinal Phase XXIX/XXX = **212/212 PASSED** (203 + 9).
+  - **5 audits forensiques NOAA Ω** cumulés sous `/app/backend/data/audits_noaa_omega/`.
+
 - **PHASE_XXX-SEXIES · PIPELINE_GUARDRAILS_RESTORE + CFSv2 candidate probe + drift audit WOD23 (2026-05-07)**
   Triple directive Commandant exécutée en séquence stricte (FUSION ADD-ONLY · anti-générique strict · V30_LOCK INVIOLÉ · DRIFT_ZERO · NO_ENGINE_RECOMPUTE).
   - **Module `pipeline_guardrails_omega.py`** créé : `GUARDRAILS_DOCTRINE` canonique (BCE-4X, STEVE_MAX, drift_zero_strict, lock_v30_inviolable, full_pytest_enforced, 3 safety_nets, 4 forensic scopes, autonomy=LIMITED, default_posture=STANDBY_STRICT, require_token=X-COMMANDANT-TOKEN). Fonctions : `restore_and_enforce_guardrails` (FUSION ADD-ONLY history + SHA-256), `get_guardrails_state`, `log_forensic_event` (JSONL append-only), `list_forensic_events`, `is_guardrails_enforced`, `require_guardrails_enforced` + exception `GuardrailsNotEnforcedError`.

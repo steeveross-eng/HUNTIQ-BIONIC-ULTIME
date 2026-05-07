@@ -1302,3 +1302,92 @@ async def noaa_cfsv2_candidate_probe_endpoint(
         "anti_generique_strict": True,
         "v30_lock": "INVIOLÉ",
     })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# NOAA_CFSV2_P0_DECISION — HEAD_ONLY strict + pivot CANDIDATE_LIST_ONLY
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/noaa-cfsv2-verification-p0")
+async def noaa_cfsv2_verification_p0_endpoint(
+    bucket: str = "noaa-cfs-pds",
+    path: str = (
+        "cfs.20240101/01/6hrly_grib_01/cfs.tavg.01.2024010100.grb2"),
+    expect_format: str = "GRIB2_OR_NETCDF",
+    require_no_redirect: bool = True,
+    require_http_200: bool = True,
+    persist: bool = True,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """NOAA_CFSV2_P0_DECISION · Vérification HEAD_ONLY stricte CFSv2.
+
+    Workflow doctrinal :
+      1. Vérifier guardrails ENFORCED (412 Precondition Failed sinon)
+      2. HEAD HTTP RÉEL sans follow_redirects (anti-générique)
+      3. Critères stricts Commandant : HTTP 200 + pas de redirect +
+         content-type binaire + content-length > 0
+      4. Si VALID → suggestion activation (await Commandant confirm)
+      5. Si INVALID → liste pivot CFSV2_PIVOT_CANDIDATE_LIST (mode
+         CANDIDATE_LIST_ONLY, require_commandant_confirm=True,
+         autonomy=LIMITED)
+      6. Forensic log ENDPOINT_PROBES + audit
+         NOAA_PIPELINE/CFSV2_VERIFICATION_P0
+      7. AUCUN recalcul moteur (V30_LOCK + DRIFT_ZERO)
+
+    Token Commandant requis. Anti-générique strict.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.noaa_pipeline_omega import (
+        verify_cfsv2_p0_head_only,
+    )
+    try:
+        payload = verify_cfsv2_p0_head_only(
+            bucket=bucket, path=path,
+            expect_format=expect_format,
+            require_no_redirect=require_no_redirect,
+            require_http_200=require_http_200,
+            persist=persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "NOAA_CFSV2_VERIFICATION_P0_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "NOAA_CFSV2_VERIFICATION_P0_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "NOAA_CFSV2_P0_DECISION",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/noaa-cfsv2-pivot-candidates")
+async def noaa_cfsv2_pivot_candidates_endpoint() -> JSONResponse:
+    """NOAA_CFSV2_P0_DECISION · Liste pivot CFSv2 (PUBLIC RO).
+
+    Mode CANDIDATE_LIST_ONLY · aucun probe automatique ·
+    require_commandant_confirm=True.
+    """
+    from engines.v8_institutional.especes.noaa_pipeline_omega import (
+        list_cfsv2_pivot_candidates,
+    )
+    payload = list_cfsv2_pivot_candidates()
+    return JSONResponse({
+        "manifest_id": "NOAA_CFSV2_PIVOT_LIST_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "NOAA_CFSV2_P0_DECISION",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })

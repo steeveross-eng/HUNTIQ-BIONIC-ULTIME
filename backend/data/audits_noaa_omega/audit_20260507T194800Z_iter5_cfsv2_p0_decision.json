@@ -1,0 +1,136 @@
+{
+  "audit_id": "NOAA_CFSV2_P0_DECISION_20260507T194800Z",
+  "protocol": "BCE-4X ULTIME ABSOLU",
+  "principle": "ANTI-GENERIQUE_OMEGA_STRICT",
+  "mode": "FUSION_ADD_ONLY (V30_LOCK respected, no master mutation)",
+  "timestamp_utc": "2026-05-07T19:48:00Z",
+  "iteration": 5,
+  "directive_executed": "NOAA_CFSV2_P0_DECISION (HEAD_ONLY strict + pivot CANDIDATE_LIST_ONLY)",
+
+  "directive_received": {
+    "cfs_bucket": "noaa-cfs-pds",
+    "probe": {
+      "mode": "HEAD_ONLY",
+      "pattern": "cfs.20240101/01/6hrly_grib_01/cfs.tavg.01.2024010100.grb2",
+      "expect_format": "GRIB2_OR_NETCDF",
+      "require_no_redirect": true,
+      "require_http_200": true
+    },
+    "pivot_if_invalid": {
+      "enabled": true,
+      "candidates": ["NCEI_THREDDS", "Copernicus_Marine"],
+      "mode": "CANDIDATE_LIST_ONLY",
+      "autonomy": "LIMITED",
+      "require_commandant_confirm": true
+    },
+    "guardrails": "ENFORCED",
+    "status": "P0_CFSV2_VERIFICATION"
+  },
+
+  "probe_result_real": {
+    "url": "https://noaa-cfs-pds.s3.amazonaws.com/cfs.20240101/01/6hrly_grib_01/cfs.tavg.01.2024010100.grb2",
+    "method": "HEAD",
+    "follow_redirects": false,
+    "http_status": 404,
+    "content_type": null,
+    "content_length": null,
+    "redirect_detected": false,
+    "redirect_location": null,
+    "reason": "http_error_404",
+    "elapsed_ms": 196.3,
+    "interpretation_anti_generique": "Le bucket noaa-cfs-pds (CFSv1 legacy) existe mais ne contient pas la clé exacte CFSv2 fournie. Le path '01/6hrly_grib_01/' est typique CFSv2, pas CFSv1. Anti-générique strict : 404 reporté tel quel."
+  },
+
+  "criteria_evaluation": {
+    "http_200_strict_required": true,
+    "http_200_strict_satisfied": false,
+    "no_redirect_required": true,
+    "no_redirect_satisfied": true,
+    "content_length_present": false,
+    "content_type_acceptable": false,
+    "expect_format": "GRIB2_OR_NETCDF"
+  },
+
+  "verdict": "CFSV2_P0_HEAD_PROBE_INVALID",
+  "valid": false,
+  "manifest_sha256": "2fb0fae2d9006691ed2e9b838f5a8181c322a60cdeef4aa078fae7922d8c3049",
+
+  "next_action": "PIVOT_REQUIRED — list of candidates returned in CANDIDATE_LIST_ONLY mode, await Commandant confirm.",
+
+  "pivot_payload": {
+    "mode": "CANDIDATE_LIST_ONLY",
+    "autonomy": "LIMITED",
+    "require_commandant_confirm": true,
+    "n_candidates": 2,
+    "candidates_summary": [
+      {
+        "label": "NCEI_THREDDS_CFSR_MONTHLY",
+        "provider": "NOAA NCEI",
+        "type": "THREDDS_OPENDAP",
+        "endpoint_root": "https://www.ncei.noaa.gov/thredds/catalog/model-cfs_reanl_mm_grb_v2/catalog.html",
+        "opendap_template": "https://www.ncei.noaa.gov/thredds/dodsC/model-cfs_reanl_mm_grb_v2/{YYYY}/{YYYYMM}/cfsmm.{YYYYMM}.grb2",
+        "format_native": "GRIB2",
+        "auth_required": false
+      },
+      {
+        "label": "COPERNICUS_MARINE_GLOBAL_PHY",
+        "provider": "Copernicus Marine Service (CMEMS)",
+        "type": "ERDDAP_OR_S3_OR_TOOLBOX_API",
+        "endpoint_root": "https://data.marine.copernicus.eu/products",
+        "format_native": "NETCDF4",
+        "auth_required": true
+      }
+    ]
+  },
+
+  "implementation_summary": {
+    "files_added": [
+      "/app/backend/tests/test_phase_xxx_septies_cfsv2_p0_omega.py"
+    ],
+    "files_extended_fusion_add_only": [
+      "/app/backend/engines/v8_institutional/especes/noaa_pipeline_omega.py (added CFSV2_PIVOT_CANDIDATE_LIST, verify_cfsv2_p0_head_only, _is_content_type_acceptable, list_cfsv2_pivot_candidates)",
+      "/app/backend/routes/phase_xix_router_omega.py (added 2 endpoints: noaa-cfsv2-verification-p0, noaa-cfsv2-pivot-candidates)"
+    ],
+    "files_mutated": []
+  },
+
+  "persisted_paths": {
+    "overlay_path": "/app/backend/data/pipelines/noaa/cfsv2_verification_p0_overlay.json",
+    "overlay_size_bytes": 3958,
+    "n_verifications_history": 1,
+    "audit_filename": "audit_20260507T194719Z_b433f3a7.json",
+    "audit_sha256": "b433f3a7f55f231bcc83302e5c9736cfbe292d561182021aacdefd4b358fda7f",
+    "forensic_log_added": "ENDPOINT_PROBES/CFSV2_VERIFICATION_P0_HEAD_ONLY"
+  },
+
+  "pytest_validation": {
+    "new_tests_added_iter5": 9,
+    "total_doctrinal_cluster_passing": 212,
+    "total_doctrinal_cluster_failing": 0,
+    "regression_status": "ZERO_REGRESSION"
+  },
+
+  "v30_lock_compliance": {
+    "master_files_mutated": 0,
+    "overlays_added": 1,
+    "audits_added": 2,
+    "fusion_add_only": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  },
+
+  "anti_generique_compliance": {
+    "no_mock_data": true,
+    "all_http_responses_real": true,
+    "head_only_strict_enforced": true,
+    "no_follow_redirects": true,
+    "guardrails_enforced_during_probe": true,
+    "pivot_list_no_automatic_probe": true
+  },
+
+  "next_required_directives_from_commandant": [
+    "Confirm pivot to NCEI_THREDDS_CFSR_MONTHLY (no auth) for CFSv2-equivalent monthly means OR",
+    "Provide Copernicus Marine credentials for COPERNICUS_MARINE_GLOBAL_PHY OR",
+    "Provide alternative bucket/path on noaa-cfs-pds (different CFSv2 layout) for retry HEAD probe"
+  ]
+}

@@ -1096,7 +1096,383 @@ __all__ = [
     "probe_wod23_b2_dedicated",
     "activate_wod23_hook",
     "get_wod23_hook_status",
+    "CFSV2_PIVOT_CANDIDATE_LIST",
+    "CFSV2_VERIFICATION_P0_PATH",
+    "verify_cfsv2_p0_head_only",
+    "list_cfsv2_pivot_candidates",
 ]
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# 9. NOAA CFSv2 VERIFICATION P0 (HEAD_ONLY + pivot CANDIDATE_LIST_ONLY)
+# ═════════════════════════════════════════════════════════════════════════
+CFSV2_VERIFICATION_P0_PATH = (
+    PIPELINE_ROOT / "cfsv2_verification_p0_overlay.json")
+
+# Liste des candidats pivot (mode CANDIDATE_LIST_ONLY — aucun téléchargement,
+# juste endpoints testables documentés). Anti-générique strict :
+# pour utilisation, le Commandant doit confirmer explicitement (le code ne
+# probe AUCUN candidat sans confirm).
+CFSV2_PIVOT_CANDIDATE_LIST: List[Dict[str, Any]] = [
+    {
+        "label": "NCEI_THREDDS_CFSR_MONTHLY",
+        "provider": "NOAA NCEI",
+        "type": "THREDDS_OPENDAP",
+        "endpoint_root": (
+            "https://www.ncei.noaa.gov/thredds/catalog/"
+            "model-cfs_reanl_mm_grb_v2/catalog.html"),
+        "opendap_endpoint_template": (
+            "https://www.ncei.noaa.gov/thredds/dodsC/"
+            "model-cfs_reanl_mm_grb_v2/{YYYY}/{YYYYMM}/"
+            "cfsmm.{YYYYMM}.grb2"),
+        "doc_url": (
+            "https://www.ncei.noaa.gov/products/"
+            "weather-climate-models/climate-forecast-system"),
+        "format_native": "GRIB2",
+        "coverage": "monthly_means_2011_to_present",
+        "auth_required": False,
+        "anti_generique_note": (
+            "Endpoint documenté NCEI ; "
+            "validation HTTP 200 NÉCESSAIRE par directive Commandant "
+            "avant activation."),
+    },
+    {
+        "label": "COPERNICUS_MARINE_GLOBAL_PHY",
+        "provider": "Copernicus Marine Service (CMEMS)",
+        "type": "ERDDAP_OR_S3_OR_TOOLBOX_API",
+        "endpoint_root": "https://data.marine.copernicus.eu/products",
+        "specific_product_example": (
+            "GLOBAL_ANALYSISFORECAST_PHY_001_024 "
+            "(Global Ocean Physics Analysis and Forecast)"),
+        "access_url": (
+            "https://data.marine.copernicus.eu/product/"
+            "GLOBAL_ANALYSISFORECAST_PHY_001_024/"),
+        "doc_url": (
+            "https://help.marine.copernicus.eu/en/"
+            "articles/9711619-copernicus-marine-toolbox-installation"),
+        "format_native": "NETCDF4",
+        "coverage": "global_ocean_physics_present",
+        "auth_required": True,
+        "auth_method": "Copernicus credentials (free registration)",
+        "anti_generique_note": (
+            "Authentification Copernicus requise ; "
+            "credentials Commandant nécessaires pour probe réel."),
+    },
+]
+
+
+def verify_cfsv2_p0_head_only(
+    bucket: str = "noaa-cfs-pds",
+    path: str = (
+        "cfs.20240101/01/6hrly_grib_01/cfs.tavg.01.2024010100.grb2"),
+    expect_format: str = "GRIB2_OR_NETCDF",
+    require_no_redirect: bool = True,
+    require_http_200: bool = True,
+    persist: bool = True,
+    timeout_s: int = 15,
+) -> Dict[str, Any]:
+    """NOAA_CFSV2_P0_DECISION · HEAD_ONLY strict probe.
+
+    Workflow doctrinal :
+      1. Vérifier guardrails ENFORCED (412 si pas actif)
+      2. HEAD HTTP RÉEL sans follow_redirects (anti-générique)
+      3. Critères stricts : HTTP 200 + Content-Type binaire +
+         Content-Length > 0 + pas de redirect
+      4. Forensic log ENDPOINT_PROBES persisté
+      5. Si valide → suggestion activation. Si invalide → liste pivot
+         CANDIDATE_LIST_ONLY (require_commandant_confirm=True)
+      6. Audit NOAA_CFSV2_VERIFICATION_P0 persisté
+
+    Args:
+      bucket: bucket S3 AWS public (default noaa-cfs-pds).
+      path: clé objet à probe (default path CFSv2 candidate Commandant).
+      expect_format: format(s) attendu(s) — GRIB2 ou NETCDF acceptés.
+      require_no_redirect: True (default) → status ≠ 3xx exigé.
+      require_http_200: True (default) → uniquement 200.
+
+    Returns:
+      Dict structuré avec verdict + (si invalide) liste pivot.
+    """
+    # 1. Guardrails check
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        require_guardrails_enforced, log_forensic_event,
+    )
+    require_guardrails_enforced("verify_cfsv2_p0_head_only")
+
+    import urllib.request
+    import urllib.error
+
+    class NoRedirectHandler(urllib.request.HTTPRedirectHandler):
+        def redirect_request(self, req, fp, code, msg, headers, newurl):
+            # Anti-générique : on capture le redirect au lieu de le suivre
+            return None
+
+    url = f"https://{bucket}.s3.amazonaws.com/{path}"
+    t0 = time.time()
+    record_probe: Dict[str, Any] = {
+        "url": url,
+        "bucket": bucket,
+        "path": path,
+        "method": "HEAD",
+        "follow_redirects": False,
+        "http_status": None,
+        "content_type": None,
+        "content_length": None,
+        "headers_subset": {},
+        "elapsed_ms": None,
+        "reason": None,
+        "redirect_detected": False,
+    }
+
+    try:
+        opener = urllib.request.build_opener(NoRedirectHandler)
+        req = urllib.request.Request(
+            url, method="HEAD",
+            headers={
+                "User-Agent": "BCE-4X-NOAA-CFSV2-P0-VERIFY/1.0",
+            })
+        with opener.open(req, timeout=timeout_s) as resp:
+            record_probe["http_status"] = resp.status
+            headers = dict(resp.headers)
+            record_probe["content_type"] = headers.get(
+                "Content-Type", headers.get("content-type"))
+            cl = headers.get(
+                "Content-Length", headers.get("content-length"))
+            try:
+                record_probe["content_length"] = (
+                    int(cl) if cl else None)
+            except (TypeError, ValueError):
+                record_probe["content_length"] = None
+            record_probe["headers_subset"] = {
+                k: v for k, v in headers.items()
+                if k.lower() in (
+                    "content-type", "content-length",
+                    "etag", "last-modified", "x-amz-request-id",
+                    "x-amz-server-side-encryption",
+                    "accept-ranges")
+            }
+    except urllib.error.HTTPError as e:
+        record_probe["http_status"] = e.code
+        record_probe["reason"] = f"http_error_{e.code}"
+        # Tentative lecture body limité (anti-générique)
+        try:
+            body = e.read(800)
+            record_probe["body_preview_first_500b"] = body[:500].decode(
+                "utf-8", errors="replace")
+            if "NoSuchKey" in (
+                    record_probe.get("body_preview_first_500b") or ""):
+                record_probe["reason"] = "NoSuchKey"
+            elif "NoSuchBucket" in (
+                    record_probe.get("body_preview_first_500b") or ""):
+                record_probe["reason"] = "NoSuchBucket"
+        except Exception:
+            pass
+        # Détection redirect explicite (3xx)
+        if 300 <= e.code < 400:
+            record_probe["redirect_detected"] = True
+            try:
+                location = e.headers.get("Location")
+                record_probe["redirect_location"] = location
+            except Exception:
+                pass
+    except (urllib.error.URLError, TimeoutError, OSError) as e:
+        record_probe["reason"] = f"network_error::{str(e)[:160]}"
+    record_probe["elapsed_ms"] = round((time.time() - t0) * 1000, 1)
+
+    # 2. Évaluation des critères stricts
+    criteria_evaluation = {
+        "http_200_strict_required": require_http_200,
+        "http_200_strict_satisfied": (
+            record_probe["http_status"] == 200),
+        "no_redirect_required": require_no_redirect,
+        "no_redirect_satisfied": (
+            not record_probe["redirect_detected"]),
+        "content_length_present": (
+            record_probe["content_length"] is not None
+            and record_probe["content_length"] > 0),
+        "content_type_acceptable": _is_content_type_acceptable(
+            record_probe["content_type"], expect_format),
+        "expect_format": expect_format,
+    }
+    valid = (
+        (not require_http_200 or criteria_evaluation[
+            "http_200_strict_satisfied"])
+        and (not require_no_redirect or criteria_evaluation[
+            "no_redirect_satisfied"])
+        and criteria_evaluation["content_length_present"]
+        and criteria_evaluation["content_type_acceptable"])
+    if valid:
+        verdict = "CFSV2_P0_HEAD_PROBE_VALID"
+        next_action = (
+            "ACCEPTED_CANDIDATE — suggest activation pipeline CFSv2 "
+            "after Commandant confirm.")
+    else:
+        verdict = "CFSV2_P0_HEAD_PROBE_INVALID"
+        next_action = (
+            "PIVOT_REQUIRED — list of candidates returned in "
+            "CANDIDATE_LIST_ONLY mode, await Commandant confirm.")
+
+    # 3. Forensic log ENDPOINT_PROBES
+    log_forensic_event(
+        scope="ENDPOINT_PROBES",
+        event="CFSV2_VERIFICATION_P0_HEAD_ONLY",
+        details={
+            "bucket": bucket,
+            "path": path,
+            "url": url,
+            "http_status": record_probe["http_status"],
+            "reason": record_probe["reason"],
+            "valid": valid,
+            "verdict": verdict,
+            "elapsed_ms": record_probe["elapsed_ms"],
+        },
+        persist=True,
+    )
+
+    # 4. Pivot list (CANDIDATE_LIST_ONLY)
+    pivot_payload = None
+    if not valid:
+        pivot_payload = {
+            "mode": "CANDIDATE_LIST_ONLY",
+            "autonomy": "LIMITED",
+            "require_commandant_confirm": True,
+            "n_candidates": len(CFSV2_PIVOT_CANDIDATE_LIST),
+            "candidates": CFSV2_PIVOT_CANDIDATE_LIST,
+            "doctrinal_note": (
+                "Aucun probe HTTP automatique sur les candidats pivot. "
+                "Le Commandant doit confirmer explicitement avant "
+                "validation et probe réel."),
+        }
+
+    # 5. Manifest signé + persistance
+    payload = {
+        "manifest_id": "NOAA_CFSV2_VERIFICATION_P0_Ω",
+        "ordre": "NOAA_CFSV2_P0_DECISION",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "guardrails_enforced": True,
+        "probe": record_probe,
+        "criteria_evaluation": criteria_evaluation,
+        "valid": valid,
+        "verdict": verdict,
+        "next_action": next_action,
+        "pivot_payload": pivot_payload,
+        "anti_generique_strict": True,
+        "v30_lock": "INVIOLÉ",
+        "drift_zero": True,
+        "no_engine_recompute_triggered": True,
+        "executed_at_utc": _utc_now(),
+    }
+    payload_sha256 = hashlib.sha256(
+        json.dumps(payload, sort_keys=True,
+                   ensure_ascii=False, default=str).encode("utf-8")
+    ).hexdigest()
+    payload["manifest_sha256"] = payload_sha256
+
+    persisted: Dict[str, Any] = {}
+    if persist:
+        PIPELINE_ROOT.mkdir(parents=True, exist_ok=True)
+        # FUSION ADD-ONLY history
+        if CFSV2_VERIFICATION_P0_PATH.exists():
+            try:
+                state = json.loads(
+                    CFSV2_VERIFICATION_P0_PATH.read_text(
+                        encoding="utf-8"))
+                if not isinstance(state, dict) or (
+                        "history" not in state):
+                    state = {"history": []}
+            except json.JSONDecodeError:
+                state = {"history": []}
+        else:
+            state = {"history": []}
+        state["history"].append(payload)
+        state["last_updated_utc"] = _utc_now()
+        state["n_verifications"] = len(state["history"])
+        state["last_manifest_sha256"] = payload_sha256
+        state["last_verdict"] = verdict
+        state["v30_lock"] = "INVIOLÉ"
+        CFSV2_VERIFICATION_P0_PATH.write_text(
+            json.dumps(state, ensure_ascii=False, indent=2),
+            encoding="utf-8")
+        persisted["overlay_path"] = str(CFSV2_VERIFICATION_P0_PATH)
+        persisted["overlay_size_bytes"] = (
+            CFSV2_VERIFICATION_P0_PATH.stat().st_size)
+        persisted["n_verifications_history"] = state["n_verifications"]
+
+        # Audit doctrinal
+        from engines.v8_institutional.especes.bio_reacteur_overlay_omega import (  # noqa: E501
+            persist_audit,
+        )
+        audit_payload = {
+            "audit_type": "NOAA_PIPELINE",
+            "subtype": "CFSV2_VERIFICATION_P0",
+            "ordre": "NOAA_CFSV2_P0_DECISION",
+            "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "bucket": bucket,
+            "path": path,
+            "valid": valid,
+            "verdict": verdict,
+            "manifest_sha256": payload_sha256,
+            "http_status": record_probe["http_status"],
+            "reason": record_probe["reason"],
+            "pivot_required": (not valid),
+            "n_pivot_candidates": (
+                len(CFSV2_PIVOT_CANDIDATE_LIST) if not valid else 0),
+            "v30_lock_inviolate": True,
+            "drift_zero": True,
+            "no_engine_recompute_triggered": True,
+        }
+        persisted["audit_persisted"] = persist_audit(audit_payload)
+
+    payload["persisted_paths"] = persisted
+    payload["elapsed_s"] = round(time.time() - t0, 3)
+    return payload
+
+
+def _is_content_type_acceptable(
+    content_type: Optional[str],
+    expect_format: str,
+) -> bool:
+    """Validation content-type pour formats GRIB2/NetCDF binaires.
+
+    Anti-générique : retourne False si pas de signature reconnue.
+    Ne fabrique aucun verdict.
+    """
+    if not content_type:
+        return False
+    ct = content_type.lower()
+    # Formats binaires acceptables (anti-générique : liste explicite)
+    acceptable = [
+        "application/octet-stream",
+        "application/x-grib",
+        "application/x-grib2",
+        "application/x-netcdf",
+        "application/netcdf",
+        "binary/octet-stream",
+        "application/x-netcdf4",
+    ]
+    return any(a in ct for a in acceptable)
+
+
+def list_cfsv2_pivot_candidates() -> Dict[str, Any]:
+    """Lecture seule de la liste pivot CFSv2 (anti-générique).
+
+    Mode CANDIDATE_LIST_ONLY : aucun probe automatique. Le Commandant
+    doit confirmer explicitement avant tout usage.
+    """
+    return {
+        "manifest_id": "NOAA_CFSV2_PIVOT_CANDIDATES_Ω",
+        "ordre": "NOAA_CFSV2_P0_DECISION",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "mode": "CANDIDATE_LIST_ONLY",
+        "autonomy": "LIMITED",
+        "require_commandant_confirm": True,
+        "n_candidates": len(CFSV2_PIVOT_CANDIDATE_LIST),
+        "candidates": CFSV2_PIVOT_CANDIDATE_LIST,
+        "doctrinal_note": (
+            "Aucun probe HTTP automatique. Confirmer avant probe réel."),
+        "v30_lock": "INVIOLÉ",
+        "scanned_at_utc": _utc_now(),
+    }
 
 
 # ═════════════════════════════════════════════════════════════════════════
