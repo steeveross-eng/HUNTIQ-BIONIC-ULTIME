@@ -1,0 +1,88 @@
+{
+  "audit_id": "NOAA_OMEGA_PROBE_20260507T185700Z",
+  "protocol": "BCE-4X ULTIME ABSOLU",
+  "principle": "ANTI-GENERIQUE_OMEGA_STRICT",
+  "mode": "FUSION_ADD_ONLY (V30_LOCK respected, no master mutation)",
+  "timestamp_utc": "2026-05-07T18:57:00Z",
+  "iteration": 2,
+  "previous_audit": "/app/backend/data/audits_noaa_omega/audit_20260507T184937Z_nomads_b2_probe.json",
+  "directives_received_v2": {
+    "noaa_cfsv2_url": "https://noaa-cfsv2-pds.s3.amazonaws.com/cfs.20240101/01/6hrly_grib_01/cfs.tavg.01.2024010100.grb2",
+    "b2_app_key": "K006+a4Gg0VsmVYWP8MQkLYbC6t3K6U (31 chars literal)"
+  },
+  "probes_executed_v2": [
+    {
+      "probe_id": "P3_NOAA_CFSV2_AWS_S3",
+      "method": "curl HEAD + GET Range",
+      "target": "https://noaa-cfsv2-pds.s3.amazonaws.com/cfs.20240101/01/6hrly_grib_01/cfs.tavg.01.2024010100.grb2",
+      "result": {
+        "http_code": 404,
+        "content_type": "application/xml",
+        "aws_error_code": "NoSuchBucket",
+        "aws_error_message": "The specified bucket does not exist",
+        "bucket_name_in_error": "noaa-cfsv2-pds",
+        "verdict": "FAIL_BUCKET_NOT_EXIST_ON_AWS"
+      }
+    },
+    {
+      "probe_id": "P4_B2_NATIVE_AUTHORIZE_31CHAR",
+      "method": "GET https://api.backblazeb2.com/b2api/v3/b2_authorize_account (Basic auth)",
+      "applicationKey_used_length": 31,
+      "result": {
+        "http_code": 200,
+        "verdict": "SUCCESS",
+        "apiUrl": "https://api006.backblazeb2.com",
+        "s3ApiUrl": "https://s3.ca-east-006.backblazeb2.com",
+        "bucketId": "b75027b591510a3a93e0071d",
+        "bucketName": "noaa-territoire",
+        "capabilities_count": 18,
+        "capabilities_critical": ["readFiles", "writeFiles", "listFiles", "listBuckets", "readBuckets"]
+      }
+    },
+    {
+      "probe_id": "P4bis_B2_S3_HEAD_BUCKET",
+      "method": "boto3 head_bucket",
+      "result": {
+        "verdict": "SUCCESS",
+        "bucket": "noaa-territoire"
+      }
+    },
+    {
+      "probe_id": "P4ter_B2_S3_LIST_OBJECTS",
+      "method": "boto3 list_objects_v2 MaxKeys=5",
+      "result": {
+        "verdict": "SUCCESS",
+        "key_count": 5,
+        "sample_keys_real": [
+          "ocldb1778153836.685480_APB.nc.gz",
+          "ocldb1778153836.685480_CTD.nc.gz",
+          "ocldb1778153836.685480_CTD2.nc.gz",
+          "ocldb1778153836.685480_DRB.nc.gz",
+          "ocldb1778153836.685480_GLD.nc.gz"
+        ],
+        "wod23_format_recognized": {
+          "APB": "Autonomous Pinniped Bathythermograph",
+          "CTD": "Conductivity-Temperature-Depth profile",
+          "DRB": "Drifting Buoy",
+          "GLD": "Glider"
+        },
+        "compatibility_with_wod23_target": "CONFIRMED_REAL_OCEANOGRAPHIC_DATA"
+      }
+    }
+  ],
+  "synthesis_v2": {
+    "noaa_cfsv2_aws": "BLOCKED — bucket noaa-cfsv2-pds returns NoSuchBucket on AWS S3",
+    "noaa_cfsv2_evidence": "AWS S3 returns standard XML <Code>NoSuchBucket</Code>. Possibly the correct NOAA bucket name differs (e.g., noaa-cfs-pds for CFSv1, or noaa-cfsv2-bdp-pds under Big Data Program). Cannot probe alternatives autonomously per stand-by strict directive.",
+    "b2_wod23_status": "UNBLOCKED — credentials valid, bucket exists, WOD23 NetCDF.gz files visible",
+    "b2_wod23_evidence": "Native B2 authorize_account HTTP 200 + S3-compatible head/list_objects success. 5 real WOD23 NetCDF.gz files enumerated. AUTH proven physically. No mock data."
+  },
+  "anti_generique_compliance": "STRICT - all results from real HTTP/Boto3 calls, no fabrication.",
+  "next_required_input_from_commandant": [
+    "CFSv2 bucket: provide correct AWS public bucket name OR authorize autonomous probing of documented candidates (noaa-cfs-pds, noaa-cfsv2-bdp-pds, noaa-gfs-bdp-pds)",
+    "WOD23 hook: authorize activation now that credentials are validated, OR maintain stand-by"
+  ],
+  "files_mutated": [],
+  "files_added": [
+    "/app/backend/data/audits_noaa_omega/audit_20260507T185700Z_iter2_nomads_b2_probe.json"
+  ]
+}
