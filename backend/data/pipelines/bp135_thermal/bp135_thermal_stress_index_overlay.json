@@ -1,0 +1,188 @@
+{
+  "history": [
+    {
+      "manifest_id": "BP135_THERMAL_STRESS_LIVE_Ω",
+      "ordre": "P1_BP135_THERMAL_STRESS_INDEX_ACTIVATE",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "valid": true,
+      "verdict": "BP135_THERMAL_STRESS_LIVE_ALL_LOW",
+      "reason": "bp135_thermal_stress_index_activated",
+      "thermal_limits_manifest_id": "BP135_THERMAL_LIMITS_V1",
+      "thermal_limits_manifest_sha256": "7f59c0c25ef580b48e372445a9c83909513f33d5e16eb66c203a97028a1506ea",
+      "owm_batch_hook_activation_sha256": "a5ffe9418f5e6e49623c6ba2ba1db883eb652bdcc9de6d4746e5fe625466c595",
+      "owm_batch_validated_manifest_sha256": "840ffe99bb6e0850619ba18f336f464bc175b45a4b826d17b3385a96bfb9df56",
+      "season_used": "summer",
+      "n_species_total": 5,
+      "global_stats": {
+        "n_species_total": 5,
+        "n_with_tsi_score": 5,
+        "tsi_min": 0.0,
+        "tsi_max": 10.0,
+        "tsi_mean": 3.0,
+        "risk_distribution": {
+          "LOW": 5
+        }
+      },
+      "species_results": [
+        {
+          "species_name": "cerf",
+          "scientific_name": "Odocoileus virginianus",
+          "season_used": "summer",
+          "lct_used_celsius": -2.0,
+          "uct_used_celsius": 25.0,
+          "weather_vars_used": {
+            "temperature_celsius": 8.41,
+            "humidity_pct": 76,
+            "wind_speed_ms": 4.02,
+            "precipitation_rain_1h_mm": null
+          },
+          "missing_variables": [],
+          "tsi_components": {
+            "base_temp": 0.0,
+            "precipitation_modulator": 0.0,
+            "total_modulators": 0.0
+          },
+          "tsi_score": 0.0,
+          "risk_class": "LOW",
+          "thermal_zone": "WITHIN_TCZ_COMFORT",
+          "precipitation_status": "no_rain_no_snow_in_response",
+          "coords": {
+            "lat": 46.8139,
+            "lon": -71.208
+          },
+          "city_resolved_by_owm": "Québec",
+          "weather_main": "Clouds"
+        },
+        {
+          "species_name": "orignal",
+          "scientific_name": "Alces alces",
+          "season_used": "summer",
+          "lct_used_celsius": -10.0,
+          "uct_used_celsius": 14.0,
+          "weather_vars_used": {
+            "temperature_celsius": 7.89,
+            "humidity_pct": 82,
+            "wind_speed_ms": 1.39,
+            "precipitation_rain_1h_mm": null
+          },
+          "missing_variables": [],
+          "tsi_components": {
+            "base_temp": 0.0,
+            "precipitation_modulator": 0.0,
+            "total_modulators": 0.0
+          },
+          "tsi_score": 0.0,
+          "risk_class": "LOW",
+          "thermal_zone": "WITHIN_TCZ_COMFORT",
+          "precipitation_status": "no_rain_no_snow_in_response",
+          "coords": {
+            "lat": 47.2,
+            "lon": -70.3
+          },
+          "city_resolved_by_owm": "St-Jean-Port-Joli",
+          "weather_main": "Clouds"
+        },
+        {
+          "species_name": "ours",
+          "scientific_name": "Ursus americanus",
+          "season_used": "summer",
+          "lct_used_celsius": 0.0,
+          "uct_used_celsius": 25.0,
+          "weather_vars_used": {
+            "temperature_celsius": 5.94,
+            "humidity_pct": 80,
+            "wind_speed_ms": 4.46,
+            "precipitation_rain_1h_mm": null
+          },
+          "missing_variables": [],
+          "tsi_components": {
+            "base_temp": 0.0,
+            "precipitation_modulator": 0.0,
+            "total_modulators": 0.0
+          },
+          "tsi_score": 0.0,
+          "risk_class": "LOW",
+          "thermal_zone": "WITHIN_TCZ_COMFORT",
+          "precipitation_status": "no_rain_no_snow_in_response",
+          "coords": {
+            "lat": 48.1,
+            "lon": -69.0
+          },
+          "city_resolved_by_owm": "Les Escoumins",
+          "weather_main": "Clouds"
+        },
+        {
+          "species_name": "dindon",
+          "scientific_name": "Meleagris gallopavo silvestris",
+          "season_used": "summer",
+          "lct_used_celsius": 5.0,
+          "uct_used_celsius": 30.0,
+          "weather_vars_used": {
+            "temperature_celsius": 7.92,
+            "humidity_pct": 73,
+            "wind_speed_ms": 5.37,
+            "precipitation_rain_1h_mm": 1.23
+          },
+          "missing_variables": [],
+          "tsi_components": {
+            "base_temp": 0.0,
+            "moderate_rain_modulator": 5.0,
+            "total_modulators": 5.0
+          },
+          "tsi_score": 5.0,
+          "risk_class": "LOW",
+          "thermal_zone": "WITHIN_TCZ_COMFORT",
+          "coords": {
+            "lat": 46.5,
+            "lon": -72.0
+          },
+          "city_resolved_by_owm": "Fortierville",
+          "weather_main": "Rain"
+        },
+        {
+          "species_name": "wapiti",
+          "scientific_name": "Cervus canadensis",
+          "season_used": "summer",
+          "lct_used_celsius": -5.0,
+          "uct_used_celsius": 22.0,
+          "weather_vars_used": {
+            "temperature_celsius": 1.95,
+            "humidity_pct": 100,
+            "wind_speed_ms": 1.44,
+            "precipitation_rain_1h_mm": 0.27
+          },
+          "missing_variables": [],
+          "tsi_components": {
+            "base_temp": 0.0,
+            "humidity_modulator": 10.0,
+            "precipitation_modulator": 0.0,
+            "total_modulators": 10.0
+          },
+          "tsi_score": 10.0,
+          "risk_class": "LOW",
+          "thermal_zone": "WITHIN_TCZ_COMFORT",
+          "coords": {
+            "lat": 47.8,
+            "lon": -71.5
+          },
+          "city_resolved_by_owm": "Capitale-Nationale",
+          "weather_main": "Rain"
+        }
+      ],
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-07T22:22:47+00:00",
+      "elapsed_s": 0.001,
+      "manifest_sha256": "79b7c70f50e434062d529924a115d18e6252f3c0e62637fe268174edd3df7995"
+    }
+  ],
+  "last_updated_utc": "2026-05-07T22:22:47+00:00",
+  "n_activations": 1,
+  "last_manifest_sha256": "79b7c70f50e434062d529924a115d18e6252f3c0e62637fe268174edd3df7995",
+  "last_verdict": "BP135_THERMAL_STRESS_LIVE_ALL_LOW",
+  "v30_lock": "INVIOLÉ"
+}

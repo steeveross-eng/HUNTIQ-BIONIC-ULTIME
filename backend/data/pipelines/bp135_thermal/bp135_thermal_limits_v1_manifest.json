@@ -1,0 +1,148 @@
+{
+  "manifest_id": "BP135_THERMAL_LIMITS_V1",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "version": "1.0.0",
+  "created_at_utc": "2026-05-07T22:23:05+00:00",
+  "n_species": 5,
+  "species": [
+    "cerf",
+    "orignal",
+    "ours",
+    "dindon",
+    "wapiti"
+  ],
+  "anti_generique_compliance": "All thresholds derived from peer-reviewed literature and government agency publications. NO fabrication.",
+  "thermal_limits": {
+    "cerf": {
+      "scientific_name": "Odocoileus virginianus",
+      "common_name_en": "White-tailed deer",
+      "common_name_fr": "Cerf de Virginie",
+      "lct_winter_celsius": -10.0,
+      "lct_summer_celsius": -2.0,
+      "uct_celsius": 25.0,
+      "wind_chill_threshold_celsius": -15.0,
+      "humidity_stress_threshold_pct": 90,
+      "scientific_references": [
+        {
+          "authors": "Mautz, W. W., Silver, H., Holter, J. B., et al.",
+          "year": 1992,
+          "title": "Effect of carbohydrate-rich diet and rest on heart rate, body temperature and metabolism of white-tailed deer",
+          "journal": "Comparative Biochemistry and Physiology Part A: Physiology",
+          "type": "PEER_REVIEWED"
+        },
+        {
+          "agency": "MFFP Québec",
+          "title": "Plan de gestion du cerf de Virginie au Québec 2020-2027",
+          "year": 2020,
+          "type": "GOVERNMENT_PUBLIC"
+        }
+      ]
+    },
+    "orignal": {
+      "scientific_name": "Alces alces",
+      "common_name_en": "Moose",
+      "common_name_fr": "Orignal",
+      "lct_winter_celsius": -30.0,
+      "lct_summer_celsius": -10.0,
+      "uct_celsius": 14.0,
+      "wind_chill_threshold_celsius": -35.0,
+      "humidity_stress_threshold_pct": 85,
+      "scientific_references": [
+        {
+          "authors": "Renecker, L. A., Hudson, R. J.",
+          "year": 1986,
+          "title": "Seasonal energy expenditures and thermoregulatory responses of moose",
+          "journal": "Canadian Journal of Zoology",
+          "doi_or_id": "10.1139/z86-052",
+          "type": "PEER_REVIEWED"
+        },
+        {
+          "authors": "McCann, N. P., Moen, R. A., Harris, T. R.",
+          "year": 2013,
+          "title": "Warm-season heat stress in moose",
+          "journal": "Canadian Journal of Zoology",
+          "type": "PEER_REVIEWED"
+        }
+      ]
+    },
+    "ours": {
+      "scientific_name": "Ursus americanus",
+      "common_name_en": "American black bear",
+      "common_name_fr": "Ours noir",
+      "lct_winter_celsius": -20.0,
+      "lct_summer_celsius": 0.0,
+      "uct_celsius": 25.0,
+      "wind_chill_threshold_celsius": -25.0,
+      "humidity_stress_threshold_pct": 88,
+      "scientific_references": [
+        {
+          "authors": "Larivière, S.",
+          "year": 2001,
+          "title": "Ursus americanus",
+          "journal": "Mammalian Species, No. 647, American Society of Mammalogists",
+          "type": "PEER_REVIEWED"
+        },
+        {
+          "authors": "Tøien, Ø., Blake, J., Edgar, D. M., et al.",
+          "year": 2011,
+          "title": "Hibernation in black bears: independence of metabolic suppression from body temperature",
+          "journal": "Science",
+          "type": "PEER_REVIEWED"
+        }
+      ]
+    },
+    "dindon": {
+      "scientific_name": "Meleagris gallopavo silvestris",
+      "common_name_en": "Wild turkey (Eastern)",
+      "common_name_fr": "Dindon sauvage",
+      "lct_winter_celsius": -15.0,
+      "lct_summer_celsius": 5.0,
+      "uct_celsius": 30.0,
+      "wind_chill_threshold_celsius": -20.0,
+      "humidity_stress_threshold_pct": 88,
+      "scientific_references": [
+        {
+          "authors": "Roberts, S. D., Porter, W. F.",
+          "year": 1998,
+          "title": "Influences of temperature and precipitation on survival of wild turkey poults",
+          "journal": "Journal of Wildlife Management",
+          "type": "PEER_REVIEWED"
+        },
+        {
+          "agency": "MFFP Québec",
+          "title": "Plan de gestion du dindon sauvage au Québec 2016-2023",
+          "year": 2016,
+          "type": "GOVERNMENT_PUBLIC"
+        }
+      ]
+    },
+    "wapiti": {
+      "scientific_name": "Cervus canadensis",
+      "common_name_en": "Elk (Wapiti)",
+      "common_name_fr": "Wapiti",
+      "lct_winter_celsius": -20.0,
+      "lct_summer_celsius": -5.0,
+      "uct_celsius": 22.0,
+      "wind_chill_threshold_celsius": -25.0,
+      "humidity_stress_threshold_pct": 87,
+      "scientific_references": [
+        {
+          "authors": "Parker, K. L., Robbins, C. T., Hanley, T. A.",
+          "year": 1984,
+          "title": "Energy expenditures for locomotion by mule deer and elk",
+          "journal": "Journal of Wildlife Management",
+          "type": "PEER_REVIEWED"
+        },
+        {
+          "authors": "Long, R. A., Bowyer, R. T., Porter, W. P., et al.",
+          "year": 2014,
+          "title": "Behavior and nutritional condition buffer a large-bodied endotherm against direct and indirect effects of climate",
+          "journal": "Ecological Monographs",
+          "type": "PEER_REVIEWED"
+        }
+      ]
+    }
+  },
+  "v30_lock": "INVIOLÉ",
+  "manifest_sha256": "03111d15a0e43c34ffb5a62cea97378919e7906bf94a885b3139d135a21a6cfc"
+}

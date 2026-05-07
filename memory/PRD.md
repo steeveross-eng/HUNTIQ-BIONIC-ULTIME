@@ -27,6 +27,30 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-SEPTDECIES · BP135_THERMAL_STRESS_INDEX_ACTIVATE — 🎯 INDEX BIOLOGIQUE LIVE 5/5 ESPÈCES (2026-05-07)**
+  Activation du module de corrélation espèces × météo avec calcul de l'index de stress thermique (TSI 0-100) et classification de risque (LOW/MODERATE/HIGH/CRITICAL) pour les 5 espèces BP135. Sources scientifiques peer-reviewed strictes (FUSION ADD-ONLY · ANTI-GÉNÉRIQUE_Ω · V30_LOCK INVIOLÉ · DRIFT_ZERO).
+  - **Nouveau module** : `/app/backend/engines/v8_institutional/especes/bp135_thermal_stress_omega.py` avec `BP135_THERMAL_LIMITS_V1` (5 espèces × 2 références scientifiques chacune = **10 références** : 8 peer-reviewed + 2 MFFP gouvernementales). Auteurs/journals : Mautz et al. 1992 (Comp Biochem Physiol), Renecker & Hudson 1986 (Can J Zool), Larivière 2001 (Mammalian Species No 647), Roberts & Porter 1998 (J Wildlife Mgmt), Parker et al. 1984 (J Wildlife Mgmt), McCann et al. 2013, Tøien et al. 2011 (Science), Long et al. 2014 (Ecological Monographs), MFFP Québec 2020 (cerf), MFFP Québec 2016 (dindon).
+  - **Formule TSI documentée** : TCZ-based (Thermal Comfort Zone). Score = base (0 dans TCZ ; distance × 5 hors TCZ, capped 100) + modulateurs (humidity > thr → +10 ; wind > 8m/s ET T < LCT → +15 ; précipitation > 0.5mm/h → +5 ; > 1.5mm/h → +10).
+  - **3 endpoints API** :
+    - **POST `/api/v30/super-masters/bp135-thermal-stress-index-activate`** (token, body JSON, drift_audit optionnel)
+    - **GET `/api/v30/super-masters/bp135-thermal-stress-index-status`** (PUBLIC RO)
+    - **GET `/api/v30/super-masters/bp135-thermal-limits-manifest`** (PUBLIC RO — expose les 10 références scientifiques)
+  - **Workflow exécuté** :
+    - Step 1 : GET BP135_THERMAL_LIMITS_V1 → manifest persisté SHA-256 `7f59c0c25ef5...06ea`
+    - Step 2-3 : re-batch BP135 fresh + activate batch hook (cohérence RAM session)
+    - Step 4 : compute TSI live → `verdict=BP135_THERMAL_STRESS_LIVE_ALL_LOW` · `manifest_sha256=79b7c70f50e4...7995` · 5/5 species evaluated · season=summer
+  - **Résultats par espèce (météo printanière Québec)** :
+    - **cerf** @ Québec : T=8.41°C, H=76% → TCZ[-2,25]°C → **TSI=0.0 LOW**
+    - **orignal** @ St-Jean-Port-Joli : T=7.89°C, H=82% → TCZ[-10,14]°C → **TSI=0.0 LOW**
+    - **ours** @ Les Escoumins : T=5.94°C, H=80% → TCZ[0,25]°C → **TSI=0.0 LOW**
+    - **dindon** @ Fortierville : T=7.92°C, H=73%, Rain=1.23mm/h → TCZ[5,30]°C → **TSI=5.0 LOW** (modulateur pluie modérée)
+    - **wapiti** @ Capitale-Nationale : T=1.95°C, H=100%, Rain=0.27mm/h → TCZ[-5,22]°C → **TSI=10.0 LOW** (modulateur saturation humidité — mécanisme stress chaleur+humidité)
+  - **Stats globales** : tsi_min=0, tsi_max=10, tsi_mean=3.0, distribution `{LOW: 5}`. Verdict = `BP135_THERMAL_STRESS_LIVE_ALL_LOW` (conditions clémentes, aucune espèce en stress).
+  - **Drift audit** : `reason=bp135_thermal_stress_index_activated` → score **+3.72** · drift_mean **-5.52** (cumulatif positif). Audit `f32bf8af...62e6`.
+  - **Forensic log** : `HOOK_ACTIVATIONS/BP135_THERMAL_STRESS_INDEX_ACTIVATE` JSONL persisté. Audit TSI `audit_20260507T222247Z_d506101a.json` (sha=`d506101a...39e1`). Overlay `bp135_thermal_stress_index_overlay.json` (6322 bytes).
+  - **Pytest** : 13 nouveaux (`test_phase_xxx_septdecies_bp135_thermal_stress_omega.py`) **13/13 PASSED**. Régression cluster doctrinal Phase XXIX/XXX = **303/303 PASSED** (290 + 13). 15 audits NOAA Ω cumulés.
+  - **Bilan stratégique session** : ✅ **3 hooks ACTIVATED + Index biologique LIVE** = écosystème production-grade complet (validate → batch → hook activate → drift → **TSI corrélation espèces × météo avec littérature scientifique**). 6-step chain prouvée fonctionnelle de bout en bout.
+
 - **PHASE_XXX-SEXDECIES · OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE — 🎯 3ÈME HOOK ACTIVATED + DRIFT (2026-05-07)**
   Activation officielle du hook BATCH BP135 (5 espèces × 6-7 variables) avec vérification stricte du `manifest_sha256` batch validé + drift audit `reason=owm_batch_bp135_activated` (FUSION ADD-ONLY · ANTI-GÉNÉRIQUE_Ω · V30_LOCK INVIOLÉ · DRIFT_ZERO).
   - **Module `noaa_pipeline_omega.py` étendu** : `OPENWEATHERMAP_BATCH_BP135_HOOK_PATH`, `_find_validated_owm_batch_manifest` (lookup history strict, retourne None pour SHA fabriqué), `activate_openweathermap_batch_bp135_hook` (activation conditionnée à `n_valid >= 1`, manifest signé activation_sha256, sommaire 5 espèces avec villes résolues, stats inherited, modules consumers déclarés), `get_openweathermap_batch_bp135_hook_status`.

@@ -1,0 +1,24 @@
+{
+  "audit_filename": "audit_20260507T222247Z_d506101a.json",
+  "audit_sha256": "d506101a746dc91b58fb71caa9e34c19673b09adcc81aa143ba23a05ec6039e1",
+  "persisted_at_utc": "2026-05-07T22:22:47+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "NOAA_PIPELINE",
+    "subtype": "BP135_THERMAL_STRESS_INDEX",
+    "ordre": "P1_BP135_THERMAL_STRESS_INDEX_ACTIVATE",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "verdict": "BP135_THERMAL_STRESS_LIVE_ALL_LOW",
+    "manifest_sha256": "79b7c70f50e434062d529924a115d18e6252f3c0e62637fe268174edd3df7995",
+    "thermal_limits_manifest_sha256": "7f59c0c25ef580b48e372445a9c83909513f33d5e16eb66c203a97028a1506ea",
+    "n_species_total": 5,
+    "tsi_mean": 3.0,
+    "risk_distribution": {
+      "LOW": 5
+    },
+    "v30_lock_inviolate": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  }
+}

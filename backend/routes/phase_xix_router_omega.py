@@ -2086,3 +2086,116 @@ async def openweathermap_batch_bp135_hook_status_endpoint() -> JSONResponse:
         "result": payload,
         "v30_lock": "INVIOLÉ",
     })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# BP135_THERMAL_STRESS_INDEX_ACTIVATE — TSI 0-100 par espèce
+# ═════════════════════════════════════════════════════════════════════════
+class Bp135ThermalStressActivateBody(BaseModel):
+    reason: str = "bp135_thermal_stress_index_activated"
+    persist: bool = True
+    enable_drift_audit: bool = True
+
+
+@router.post("/bp135-thermal-stress-index-activate")
+async def bp135_thermal_stress_index_activate_endpoint(
+    body: Bp135ThermalStressActivateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """BP135_THERMAL_STRESS_INDEX_ACTIVATE · calcul TSI 0-100 par espèce.
+
+    Workflow doctrinal :
+      1. Guardrails ENFORCED check (412 sinon)
+      2. Lecture du dernier hook OWM_BATCH_BP135 ACTIVATED_OPERATIONAL
+      3. Lookup BP135_THERMAL_LIMITS_V1 (sources peer-reviewed)
+      4. Calcul TSI = base TCZ + modulateurs documentés (humidity, wind,
+         précipitation), capped 0-100
+      5. Classification LOW/MODERATE/HIGH/CRITICAL selon TSI
+      6. Manifest signé SHA-256 + persistance overlay + audit
+      7. Drift audit optionnel (reason=bp135_thermal_stress_index_activated)
+
+    Anti-générique strict : refuse si aucun hook OWM batch actif.
+    Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.bp135_thermal_stress_omega import (
+        compute_bp135_thermal_stress_index,
+    )
+    try:
+        payload = compute_bp135_thermal_stress_index(
+            reason=body.reason,
+            persist=body.persist,
+            enable_drift_audit=body.enable_drift_audit,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason":
+                    "BP135_THERMAL_STRESS_INDEX_ACTIVATE_FAILED",
+                "error": str(e)[:500],
+                "traceback":
+                    traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id":
+            "BP135_THERMAL_STRESS_INDEX_ACTIVATE_EXECUTE_Ω",
+        "doctrine":
+            "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre":
+            "P1_BP135_THERMAL_STRESS_INDEX_ACTIVATE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/bp135-thermal-stress-index-status")
+async def bp135_thermal_stress_index_status_endpoint() -> JSONResponse:
+    """État actuel du module TSI (PUBLIC RO)."""
+    from engines.v8_institutional.especes.bp135_thermal_stress_omega import (
+        get_bp135_thermal_stress_index_status,
+    )
+    payload = get_bp135_thermal_stress_index_status()
+    return JSONResponse({
+        "manifest_id":
+            "BP135_THERMAL_STRESS_INDEX_STATUS_GET_Ω",
+        "doctrine":
+            "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre":
+            "P1_BP135_THERMAL_STRESS_INDEX_ACTIVATE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/bp135-thermal-limits-manifest")
+async def bp135_thermal_limits_manifest_endpoint() -> JSONResponse:
+    """Lit BP135_THERMAL_LIMITS_V1 manifest (PUBLIC RO).
+
+    Retourne les seuils thermiques documentés avec sources scientifiques.
+    """
+    from engines.v8_institutional.especes.bp135_thermal_stress_omega import (
+        persist_thermal_limits_manifest_if_missing,
+        BP135_THERMAL_LIMITS_V1,
+    )
+    payload = persist_thermal_limits_manifest_if_missing()
+    return JSONResponse({
+        "manifest_id": "BP135_THERMAL_LIMITS_V1_GET_Ω",
+        "doctrine":
+            "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre":
+            "P1_BP135_THERMAL_STRESS_INDEX_ACTIVATE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "n_species": len(BP135_THERMAL_LIMITS_V1),
+        "v30_lock": "INVIOLÉ",
+    })
