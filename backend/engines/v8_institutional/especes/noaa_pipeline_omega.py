@@ -1114,7 +1114,306 @@ __all__ = [
     "get_openweathermap_hook_status",
     "OPENWEATHERMAP_ZONE_PIVOT_PATH",
     "validate_openweathermap_zone_pivot",
+    "OPENWEATHERMAP_BATCH_BP135_PATH",
+    "batch_probe_owm_bp135",
 ]
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# 16. OPENWEATHERMAP BATCH PROBE BP135 (5 espèces × 2 endpoints = 10 calls)
+# ═════════════════════════════════════════════════════════════════════════
+OPENWEATHERMAP_BATCH_BP135_PATH = (
+    PIPELINE_ROOT / "openweathermap_batch_bp135_overlay.json")
+
+
+def batch_probe_owm_bp135(
+    endpoint_current: str = (
+        "https://api.openweathermap.org/data/2.5/weather"),
+    endpoint_forecast: str = (
+        "https://api.openweathermap.org/data/2.5/forecast"),
+    credentials_api_key: Optional[str] = None,
+    species_coordinates: Optional[Dict[str, Dict[str, float]]] = None,
+    units: str = "metric",
+    forensic_event: str = "OPENWEATHERMAP_BATCH_BP135",
+    persist: bool = True,
+    timeout_s: int = 15,
+    inter_call_sleep_s: float = 0.2,
+) -> Dict[str, Any]:
+    """OPENWEATHERMAP_BATCH_PROBE_BP135 · batch sur 5 espèces × 2 endpoints.
+
+    Workflow doctrinal :
+      1. Guardrails ENFORCED check (412 sinon)
+      2. Validation des coords (lat ∈ [-90,90], lon ∈ [-180,180])
+      3. Pour chaque espèce, appelle validate_openweathermap_zone_pivot
+         (persist=False pour ne pas saturer overlay zone_pivot)
+      4. Pause inter-calls (anti-rate-limit OWM 60/min gratuit)
+      5. Agrégation des résultats en manifest batch signé SHA-256
+      6. Forensic log ENDPOINT_PROBES/{forensic_event} par espèce
+      7. Persistance overlay batch + audit doctrinal
+      8. AUCUN recalcul moteur · V30_LOCK + DRIFT_ZERO
+
+    Anti-générique strict : variables extraites uniquement depuis JSON
+    réel par espèce, pas de fabrication entre espèces.
+    """
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        require_guardrails_enforced, log_forensic_event,
+    )
+    require_guardrails_enforced("batch_probe_owm_bp135")
+
+    if not species_coordinates:
+        raise ValueError(
+            "SPECIES_COORDINATES_REQUIRED::empty_or_none")
+
+    # Validation coords (anti-générique strict)
+    for sp_name, coords in species_coordinates.items():
+        lat = coords.get("lat") if isinstance(coords, dict) else None
+        lon = coords.get("lon") if isinstance(coords, dict) else None
+        if (lat is None or lon is None
+                or not (-90.0 <= float(lat) <= 90.0)
+                or not (-180.0 <= float(lon) <= 180.0)):
+            raise ValueError(
+                f"COORDS_INVALID::{sp_name}::lat={lat},lon={lon}")
+
+    appid_token_masked = _mask_token(credentials_api_key)
+    creds_placeholder = _is_placeholder_token(credentials_api_key)
+
+    if creds_placeholder:
+        return {
+            "manifest_id": "OWM_BATCH_BP135_Ω",
+            "ordre": "P1_OPENWEATHERMAP_BATCH_PROBE_BP135",
+            "doctrine":
+                "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "guardrails_enforced": True,
+            "autonomy": "LIMITED",
+            "valid": False,
+            "verdict": "OWM_BATCH_REJECTED_PLACEHOLDER_TOKEN",
+            "credentials_api_key_masked": appid_token_masked,
+            "next_action": (
+                "REJECTED — credentials_api_key is a placeholder. "
+                "No HTTP request emitted."),
+            "anti_generique_strict": True,
+            "v30_lock": "INVIOLÉ",
+            "executed_at_utc": _utc_now(),
+        }
+
+    t_total = time.time()
+    species_results: List[Dict[str, Any]] = []
+    n_valid = 0
+    n_invalid = 0
+    aggregated_variables: Dict[str, Dict[str, Any]] = {}
+
+    for sp_name, coords in species_coordinates.items():
+        lat = float(coords["lat"])
+        lon = float(coords["lon"])
+        # Re-utilisation de validate_openweathermap_zone_pivot (persist=False)
+        try:
+            sub = validate_openweathermap_zone_pivot(
+                endpoint_current=endpoint_current,
+                endpoint_forecast=endpoint_forecast,
+                credentials_api_key=None,
+                query_params={
+                    "lat": lat,
+                    "lon": lon,
+                    "appid": credentials_api_key,
+                    "units": units,
+                },
+                variables_requested={
+                    "temperature": True, "humidity": True,
+                    "pressure": True, "wind_speed": True,
+                    "wind_direction": True, "cloud_cover": True,
+                    "precipitation": True,
+                },
+                forensic_event=forensic_event,
+                persist=False,
+                timeout_s=timeout_s,
+            )
+        except Exception as e:
+            sub = {
+                "valid": False,
+                "verdict": "OWM_BATCH_SUB_PROBE_EXCEPTION",
+                "exception": str(e)[:300],
+                "manifest_sha256": None,
+            }
+
+        species_entry = {
+            "species_name": sp_name,
+            "coords": {"lat": lat, "lon": lon},
+            "sub_manifest_sha256": sub.get("manifest_sha256"),
+            "verdict": sub.get("verdict"),
+            "valid": sub.get("valid"),
+            "current_http_status": (
+                (sub.get("probe_current_summary") or {})
+                .get("http_status")),
+            "forecast_http_status": (
+                (sub.get("probe_forecast_summary") or {})
+                .get("http_status")),
+            "current_signature_present":
+                sub.get("current_owm_signature_present"),
+            "forecast_signature_present":
+                sub.get("forecast_owm_signature_present"),
+            "forecast_n_items": sub.get("forecast_n_items"),
+            "current_meta": sub.get("current_meta"),
+            "variables_extracted":
+                sub.get("variables_extracted") or {},
+            "variables_missing": sub.get("variables_missing"),
+            "n_variables_extracted":
+                sub.get("n_variables_extracted") or 0,
+        }
+        species_results.append(species_entry)
+        if species_entry["valid"]:
+            n_valid += 1
+            aggregated_variables[sp_name] = (
+                species_entry["variables_extracted"])
+        else:
+            n_invalid += 1
+
+        # Forensic log par sous-probe
+        log_forensic_event(
+            scope="ENDPOINT_PROBES",
+            event=forensic_event,
+            details={
+                "species": sp_name,
+                "lat": lat, "lon": lon,
+                "current_http_status":
+                    species_entry["current_http_status"],
+                "forecast_http_status":
+                    species_entry["forecast_http_status"],
+                "valid": species_entry["valid"],
+                "verdict": species_entry["verdict"],
+                "n_variables_extracted":
+                    species_entry["n_variables_extracted"],
+            },
+            persist=True,
+        )
+
+        # Pause inter-calls (anti-rate-limit OWM)
+        if inter_call_sleep_s > 0:
+            time.sleep(inter_call_sleep_s)
+
+    # Verdict batch
+    n_total = len(species_results)
+    if n_valid == n_total:
+        batch_verdict = "OWM_BATCH_BP135_ALL_SPECIES_VALID"
+        batch_valid = True
+    elif n_valid > 0:
+        batch_verdict = (
+            f"OWM_BATCH_BP135_PARTIAL::{n_valid}_OF_{n_total}_VALID")
+        batch_valid = False
+    else:
+        batch_verdict = "OWM_BATCH_BP135_ALL_INVALID"
+        batch_valid = False
+
+    # Statistiques agrégées (anti-générique : uniquement sur les valides)
+    stats: Dict[str, Any] = {}
+    if aggregated_variables:
+        for var in ("temperature", "humidity", "pressure",
+                    "wind_speed", "wind_direction", "cloud_cover"):
+            values = [
+                v[var] for v in aggregated_variables.values()
+                if isinstance(v, dict) and var in v
+                and isinstance(v[var], (int, float))
+            ]
+            if values:
+                stats[var] = {
+                    "n": len(values),
+                    "min": min(values),
+                    "max": max(values),
+                    "mean": round(sum(values) / len(values), 3),
+                }
+
+    # Manifest signé + persistance
+    payload = {
+        "manifest_id": "OWM_BATCH_BP135_Ω",
+        "ordre": "P1_OPENWEATHERMAP_BATCH_PROBE_BP135",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "forensic_event": forensic_event,
+        "guardrails_enforced": True,
+        "autonomy": "LIMITED",
+        "valid": batch_valid,
+        "verdict": batch_verdict,
+        "n_species_total": n_total,
+        "n_valid": n_valid,
+        "n_invalid": n_invalid,
+        "credentials_api_key_masked": appid_token_masked,
+        "endpoints": {
+            "current": endpoint_current,
+            "forecast": endpoint_forecast,
+        },
+        "units": units,
+        "species_coordinates_input": {
+            sp: {"lat": float(c["lat"]), "lon": float(c["lon"])}
+            for sp, c in species_coordinates.items()
+        },
+        "species_results": species_results,
+        "aggregated_stats_across_valid_species": stats,
+        "anti_generique_strict": True,
+        "anti_leakage_token_masked": True,
+        "v30_lock": "INVIOLÉ",
+        "drift_zero": True,
+        "no_engine_recompute_triggered": True,
+        "executed_at_utc": _utc_now(),
+        "elapsed_s": round(time.time() - t_total, 3),
+    }
+    payload_sha256 = hashlib.sha256(
+        json.dumps(payload, sort_keys=True,
+                   ensure_ascii=False, default=str).encode("utf-8")
+    ).hexdigest()
+    payload["manifest_sha256"] = payload_sha256
+
+    persisted: Dict[str, Any] = {}
+    if persist:
+        PIPELINE_ROOT.mkdir(parents=True, exist_ok=True)
+        if OPENWEATHERMAP_BATCH_BP135_PATH.exists():
+            try:
+                state = json.loads(
+                    OPENWEATHERMAP_BATCH_BP135_PATH.read_text(
+                        encoding="utf-8"))
+                if not isinstance(state, dict) or (
+                        "history" not in state):
+                    state = {"history": []}
+            except json.JSONDecodeError:
+                state = {"history": []}
+        else:
+            state = {"history": []}
+        state["history"].append(payload)
+        state["last_updated_utc"] = _utc_now()
+        state["n_batches"] = len(state["history"])
+        state["last_manifest_sha256"] = payload_sha256
+        state["last_verdict"] = batch_verdict
+        state["v30_lock"] = "INVIOLÉ"
+        OPENWEATHERMAP_BATCH_BP135_PATH.write_text(
+            json.dumps(state, ensure_ascii=False, indent=2),
+            encoding="utf-8")
+        persisted["overlay_path"] = str(
+            OPENWEATHERMAP_BATCH_BP135_PATH)
+        persisted["overlay_size_bytes"] = (
+            OPENWEATHERMAP_BATCH_BP135_PATH.stat().st_size)
+        persisted["n_batches_history"] = state["n_batches"]
+
+        from engines.v8_institutional.especes.bio_reacteur_overlay_omega import (  # noqa: E501
+            persist_audit,
+        )
+        audit_payload = {
+            "audit_type": "NOAA_PIPELINE",
+            "subtype": "OWM_BATCH_BP135",
+            "ordre": "P1_OPENWEATHERMAP_BATCH_PROBE_BP135",
+            "doctrine":
+                "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "provider": "OPENWEATHERMAP",
+            "valid": batch_valid,
+            "verdict": batch_verdict,
+            "manifest_sha256": payload_sha256,
+            "n_species_total": n_total,
+            "n_valid": n_valid,
+            "n_invalid": n_invalid,
+            "v30_lock_inviolate": True,
+            "drift_zero": True,
+            "no_engine_recompute_triggered": True,
+        }
+        persisted["audit_persisted"] = persist_audit(audit_payload)
+
+    payload["persisted_paths"] = persisted
+    return payload
 
 
 # ═════════════════════════════════════════════════════════════════════════

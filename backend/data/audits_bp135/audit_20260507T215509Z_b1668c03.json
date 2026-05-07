@@ -1,0 +1,25 @@
+{
+  "audit_filename": "audit_20260507T215509Z_b1668c03.json",
+  "audit_sha256": "b1668c038bc5aa36675637c2a3dda97de7872a2a011f7c254cefc1f469dde8eb",
+  "persisted_at_utc": "2026-05-07T21:55:09+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "NOAA_PIPELINE",
+    "subtype": "CFSV2_VERIFICATION_P0",
+    "ordre": "NOAA_CFSV2_P0_DECISION",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "bucket": "noaa-cfs-pds",
+    "path": "cfs.20240101/01/6hrly_grib_01/cfs.tavg.01.2024010100.grb2",
+    "valid": false,
+    "verdict": "CFSV2_P0_HEAD_PROBE_INVALID",
+    "manifest_sha256": "ed4ebda6f7cf9532070f47200d09f2116fd193c0d4672b8ba3f0c5b435ad8fc3",
+    "http_status": 404,
+    "reason": "http_error_404",
+    "pivot_required": true,
+    "n_pivot_candidates": 2,
+    "v30_lock_inviolate": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  }
+}

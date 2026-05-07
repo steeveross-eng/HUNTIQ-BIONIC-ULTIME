@@ -27,6 +27,23 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-QUINDECIES · OPENWEATHERMAP_BATCH_PROBE_BP135 — 🎯 5/5 ESPÈCES VALIDÉES LIVE (2026-05-07)**
+  Batch probe OWM sur les 5 espèces BP135 (cerf, orignal, ours, dindon, wapiti) × 2 endpoints (current + forecast) = **10 calls HTTP réels** sous régime guardrails ENFORCED + autonomy=LIMITED + quota OWM respecté (FUSION ADD-ONLY · ANTI-GÉNÉRIQUE_Ω · V30_LOCK INVIOLÉ · DRIFT_ZERO).
+  - **Module `noaa_pipeline_omega.py` étendu** : `OPENWEATHERMAP_BATCH_BP135_PATH`, `batch_probe_owm_bp135` (orchestrateur multi-coords réutilisant `validate_openweathermap_zone_pivot` en boucle, validation lat/lon ∈ ranges, court-circuit placeholder, pause inter-calls 200ms anti-rate-limit, agrégation stats sur espèces valides uniquement).
+  - **Endpoint API** : `POST /api/v30/super-masters/openweathermap-batch-probe-bp135` (token + body JSON Pydantic `OpenWeatherMapBatchBp135Body`).
+  - **Exécution batch RÉEL** : `verdict=OWM_BATCH_BP135_ALL_SPECIES_VALID` · `5/5 valid` · `2.72s total` · `200 forecast points cumulés` · `manifest_sha256=1e70c8cf53b0...8dcea` · `audit=3f24db5f...9e4b`.
+  - **Données météo réelles par espèce (OWM live)** :
+    - **cerf** @ Québec : 8.81°C, hum 73%, pression 1004hPa, vent 6.17m/s @260°, nuages 75%, Clouds (broken)
+    - **orignal** @ St-Jean-Port-Joli : 7.89°C, hum 82%, vent 1.39m/s, **Rain 0.15mm/h**
+    - **ours** @ Les Escoumins : 5.94°C, hum 80%, vent 4.46m/s @228°, nuages 100%, overcast
+    - **dindon** @ Fortierville : 7.92°C, hum 73%, vent 5.37m/s, **Rain 0.75mm/h**
+    - **wapiti** @ Capitale-Nationale (altitude) : 1.95°C, hum 100%, vent 1.44m/s, **Rain 0.15mm/h**
+  - **Statistiques agrégées RÉELLES (5 espèces valides)** : temp `1.95-8.81°C` (mean 6.50, **delta=6.86** gradient thermique latitudinal/altitudinal), humidité `73-100%` (mean 81.6%), pression `1002-1005hPa` (homogène, système atmosphérique unique), vent `1.39-6.17m/s @228-280°` (sud-ouest dominant), nuages `72-100%` (mean 86.6%, couverture forte).
+  - **Découverte météorologique** : front pluvieux actif sur 3/5 espèces avec précipitations RÉELLES tracées (anti-générique : `precipitation_rain={'1h': 0.15-0.75}`). Précipitation absente correctement tracée pour 2 espèces (cerf/ours en zone Clouds non-Rain).
+  - **Forensic log** : 5 entrées `ENDPOINT_PROBES/OPENWEATHERMAP_BATCH_BP135` JSONL (1 par espèce). Overlay `openweathermap_batch_bp135_overlay.json` (8936 bytes, n_batches=1).
+  - **Pytest** : 8 nouveaux (`test_phase_xxx_quindecies_owm_batch_bp135_omega.py`) **8/8 PASSED**. Régression cluster doctrinal Phase XXIX/XXX = **281/281 PASSED** (273 + 8). 13 audits NOAA Ω cumulés.
+  - **Bilan stratégique session** : ✅ **2 hooks ACTIVATED + 1 batch 5 espèces VALIDÉ LIVE**. Le hook OWM délivre des données météo enrichies pour TOUTES les espèces du registre BP135 — prêt à être consommé par PHYSIOLOGIE_THERMIQUE, HABITAT_MICROCLIMAT, NUTRITION_HUMIDITE.
+
 - **PHASE_XXX-QUATERDECIES · OPENWEATHERMAP_P0_PIVOT_TERRITOIRE — Double probe enrichi (current + forecast + 7 variables) (2026-05-07)**
   Pivot enrichi OWM avec extraction stricte de 7 variables météo + forecast 5-day/3h-intervals sous régime guardrails ENFORCED + autonomy=LIMITED (FUSION ADD-ONLY · ANTI-GÉNÉRIQUE_Ω · V30_LOCK INVIOLÉ · DRIFT_ZERO).
   - **Module `noaa_pipeline_omega.py` étendu** : `OPENWEATHERMAP_ZONE_PIVOT_PATH`, `OWM_VARIABLE_PATHS_CURRENT` (registry des paths nested OWM explicits : main.temp, main.humidity, wind.speed, wind.deg, clouds.all, etc.), `_extract_path` (extraction nested anti-générique, retourne None si absent — jamais fabriqué), `_http_get_json_strict` (helper réutilisable GET sans redirect + parsing JSON), `validate_openweathermap_zone_pivot` (orchestre 2 probes + extraction variables + persistance + audit).

@@ -1922,3 +1922,80 @@ async def openweathermap_zone_pivot_endpoint(
         "result": payload,
         "v30_lock": "INVIOLÉ",
     })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# OPENWEATHERMAP_BATCH_PROBE_BP135 — batch 5 espèces × 2 endpoints
+# ═════════════════════════════════════════════════════════════════════════
+class OpenWeatherMapBatchBp135Body(BaseModel):
+    endpoint_current: str = (
+        "https://api.openweathermap.org/data/2.5/weather")
+    endpoint_forecast: str = (
+        "https://api.openweathermap.org/data/2.5/forecast")
+    credentials_api_key: Optional[str] = None
+    species_coordinates: Dict[str, Dict[str, float]]
+    units: str = "metric"
+    forensic_event: str = "OPENWEATHERMAP_BATCH_BP135"
+    persist: bool = True
+
+
+@router.post("/openweathermap-batch-probe-bp135")
+async def openweathermap_batch_probe_bp135_endpoint(
+    body: OpenWeatherMapBatchBp135Body,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """OPENWEATHERMAP_BATCH_PROBE_BP135 · batch 5 espèces × 2 endpoints.
+
+    Workflow doctrinal :
+      1. Guardrails ENFORCED check (412 sinon)
+      2. Validation lat/lon par espèce
+      3. Pour chaque espèce : double probe current + forecast +
+         extraction 7 variables (réutilise validate_openweathermap_zone_pivot)
+      4. Pause inter-calls anti-rate-limit (200ms × 5 = 1s minimum)
+      5. Agrégation statistique (min/max/mean) sur espèces valides
+      6. Forensic log ENDPOINT_PROBES/{forensic_event} par sous-probe
+      7. Persistance overlay batch + audit doctrinal
+      8. AUCUN recalcul moteur · V30_LOCK + DRIFT_ZERO
+
+    Body POST JSON requis. Token Commandant requis.
+    Anti-générique strict + anti-leakage. Quota OWM 60/min respecté.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.noaa_pipeline_omega import (
+        batch_probe_owm_bp135,
+    )
+    try:
+        payload = batch_probe_owm_bp135(
+            endpoint_current=body.endpoint_current,
+            endpoint_forecast=body.endpoint_forecast,
+            credentials_api_key=body.credentials_api_key,
+            species_coordinates=body.species_coordinates,
+            units=body.units,
+            forensic_event=body.forensic_event,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "OWM_BATCH_BP135_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "OWM_BATCH_BP135_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_OPENWEATHERMAP_BATCH_PROBE_BP135",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
