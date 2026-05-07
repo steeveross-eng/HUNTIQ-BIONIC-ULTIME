@@ -1099,10 +1099,332 @@ __all__ = [
     "CFSV2_PIVOT_CANDIDATE_LIST",
     "CFSV2_VERIFICATION_P0_PATH",
     "CFSV2_PIVOT_VERIFICATION_PATH",
+    "CFSV2_CATALOGUE_CARTOGRAPHY_PATH",
     "verify_cfsv2_p0_head_only",
     "verify_cfsv2_pivot_head_only",
     "list_cfsv2_pivot_candidates",
+    "cartograph_ncei_catalogue",
 ]
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# 11. NOAA CFSV2 CATALOGUE CARTOGRAPHY (NCEI THREDDS, GET XML strict)
+# ═════════════════════════════════════════════════════════════════════════
+CFSV2_CATALOGUE_CARTOGRAPHY_PATH = (
+    PIPELINE_ROOT / "cfsv2_catalogue_cartography_overlay.json")
+
+
+def cartograph_ncei_catalogue(
+    root_catalog_url: str = (
+        "https://www.ncei.noaa.gov/thredds/catalog/"
+        "cfsr/mon/pgbh/catalog.xml"),
+    max_depth: int = 2,
+    max_datasets: int = 128,
+    timeout_s: int = 15,
+    persist: bool = True,
+) -> Dict[str, Any]:
+    """NOAA_CFSV2_P0_CATALOGUE_CARTOGRAPHY · NCEI THREDDS browse XML strict.
+
+    Contraintes doctrinales (NOAA_CFSV2_P0_CATALOGUE_CARTOGRAPHY) :
+      · mode             : CATALOGUE_BROWSE_ONLY (aucun téléchargement)
+      · allow_http_methods: ["GET"] (HEAD/POST interdits)
+      · allow_content_types: ["application/xml", "text/xml"]
+      · forbid_binary_probe: true (jamais de fichiers .nc/.grb2)
+      · forbid_follow_redirects: true
+      · max_depth         : 2 (récursion BFS limitée)
+      · max_datasets      : 128 (capping strict)
+      · guardrails ENFORCED requis · autonomy=LIMITED
+
+    Anti-générique strict : aucune fabrication. Tous les datasets/refs
+    proviennent du parsing XML réel du serveur NCEI.
+
+    Returns:
+      Dict structuré avec :
+        · visited_catalogs : liste des catalog.xml parcourus + status réel
+        · discovered_datasets : datasets feuilles (max 128) avec urlPath
+        · discovered_catalog_refs : sub-catalogues détectés
+        · capped : True si max_datasets atteint
+        · manifest_sha256 : signature traçabilité
+    """
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        require_guardrails_enforced, log_forensic_event,
+    )
+    require_guardrails_enforced("cartograph_ncei_catalogue")
+
+    if not root_catalog_url.startswith(("https://", "http://")):
+        raise ValueError(
+            f"ROOT_CATALOG_INVALID::not_http_url::"
+            f"{root_catalog_url[:120]}")
+
+    import urllib.request
+    import urllib.error
+    from urllib.parse import urljoin
+    import xml.etree.ElementTree as ET
+
+    THREDDS_NS = (
+        "{http://www.unidata.ucar.edu/namespaces/thredds/"
+        "InvCatalog/v1.0}")
+    XLINK_NS = "{http://www.w3.org/1999/xlink}"
+    MAX_BODY_BYTES = 2_000_000  # 2 MB cap (anti-générique)
+
+    class NoRedirectHandler(urllib.request.HTTPRedirectHandler):
+        def redirect_request(self, req, fp, code, msg,
+                              headers, newurl):
+            return None
+
+    t_total = time.time()
+    visited_catalogs: List[Dict[str, Any]] = []
+    discovered_datasets: List[Dict[str, Any]] = []
+    discovered_catalog_refs: List[Dict[str, Any]] = []
+    visited_urls: set = set()
+    queue: List[tuple] = [(root_catalog_url, 0)]
+    capped = False
+
+    while queue:
+        if len(discovered_datasets) >= max_datasets:
+            capped = True
+            break
+        cat_url, depth = queue.pop(0)
+        if cat_url in visited_urls or depth > max_depth:
+            continue
+        visited_urls.add(cat_url)
+
+        record: Dict[str, Any] = {
+            "url": cat_url,
+            "depth": depth,
+            "method": "GET",
+            "http_status": None,
+            "content_type": None,
+            "ctype_acceptable": False,
+            "redirect_detected": False,
+            "n_datasets_in_catalog": 0,
+            "n_catalogrefs_in_catalog": 0,
+            "elapsed_ms": None,
+            "reason": None,
+            "body_bytes_read": 0,
+        }
+        body: Optional[bytes] = None
+        t0 = time.time()
+        try:
+            opener = urllib.request.build_opener(NoRedirectHandler)
+            req = urllib.request.Request(
+                cat_url, method="GET",
+                headers={
+                    "User-Agent": (
+                        "BCE-4X-NCEI-CATALOGUE-CARTOGRAPHY/1.0"),
+                    "Accept": "application/xml, text/xml",
+                })
+            with opener.open(req, timeout=timeout_s) as resp:
+                record["http_status"] = resp.status
+                ct = (resp.headers.get("Content-Type") or "")
+                record["content_type"] = ct
+                # Validation stricte content-type (XML uniquement)
+                ct_lower = ct.lower()
+                ctype_ok = (
+                    "application/xml" in ct_lower
+                    or "text/xml" in ct_lower)
+                record["ctype_acceptable"] = ctype_ok
+                if ctype_ok and resp.status == 200:
+                    body = resp.read(MAX_BODY_BYTES)
+                    record["body_bytes_read"] = len(body)
+                elif not ctype_ok:
+                    record["reason"] = (
+                        f"content_type_not_xml::{ct[:80]}")
+        except urllib.error.HTTPError as e:
+            record["http_status"] = e.code
+            record["reason"] = f"http_error_{e.code}"
+            if 300 <= e.code < 400:
+                record["redirect_detected"] = True
+                try:
+                    record["redirect_location"] = (
+                        e.headers.get("Location"))
+                except Exception:
+                    pass
+        except (urllib.error.URLError, TimeoutError, OSError) as e:
+            record["reason"] = f"network_error::{str(e)[:120]}"
+        record["elapsed_ms"] = round((time.time() - t0) * 1000, 1)
+
+        # Forensic log par catalogue visité
+        log_forensic_event(
+            scope="ENDPOINT_PROBES",
+            event="CFSV2_CATALOGUE_CARTOGRAPHY",
+            details={
+                "url": cat_url,
+                "depth": depth,
+                "http_status": record["http_status"],
+                "content_type": record["content_type"],
+                "ctype_acceptable": record["ctype_acceptable"],
+                "redirect_detected": record["redirect_detected"],
+                "elapsed_ms": record["elapsed_ms"],
+                "reason": record["reason"],
+            },
+            persist=True,
+        )
+
+        # Parse XML strict (anti-générique : datasets et catalogRefs réels)
+        if body and record["ctype_acceptable"]:
+            try:
+                xroot = ET.fromstring(body)
+                # Datasets feuilles (avec urlPath)
+                for ds in xroot.iter(f"{THREDDS_NS}dataset"):
+                    if len(discovered_datasets) >= max_datasets:
+                        capped = True
+                        break
+                    name = ds.get("name")
+                    url_path = ds.get("urlPath")
+                    ds_id = ds.get("ID")
+                    # Capter taille si présente (<dataSize ...>)
+                    data_size_bytes = None
+                    for ds_size in ds.iter(f"{THREDDS_NS}dataSize"):
+                        try:
+                            data_size_bytes = int(
+                                float(ds_size.text or "0"))
+                        except (ValueError, TypeError):
+                            pass
+                        break
+                    if url_path:
+                        opendap_url = (
+                            "https://www.ncei.noaa.gov/thredds/dodsC/"
+                            + url_path.lstrip("/"))
+                        http_url = (
+                            "https://www.ncei.noaa.gov/thredds/fileServer/"
+                            + url_path.lstrip("/"))
+                        discovered_datasets.append({
+                            "name": name,
+                            "id": ds_id,
+                            "url_path": url_path,
+                            "opendap_url_candidate": opendap_url,
+                            "http_fileserver_url_candidate": http_url,
+                            "data_size_bytes": data_size_bytes,
+                            "found_in_catalog": cat_url,
+                            "depth": depth,
+                        })
+                        record["n_datasets_in_catalog"] += 1
+                # Sub-catalogues
+                for cref in xroot.iter(f"{THREDDS_NS}catalogRef"):
+                    href = cref.get(f"{XLINK_NS}href")
+                    title = cref.get(f"{XLINK_NS}title", "")
+                    name = cref.get("name", "")
+                    if href:
+                        sub_url = urljoin(cat_url, href)
+                        discovered_catalog_refs.append({
+                            "title": title,
+                            "name": name,
+                            "href": href,
+                            "sub_url": sub_url,
+                            "found_in_catalog": cat_url,
+                            "depth": depth,
+                        })
+                        record["n_catalogrefs_in_catalog"] += 1
+                        # Enqueue si profondeur OK
+                        if (depth + 1 <= max_depth
+                                and sub_url not in visited_urls):
+                            queue.append((sub_url, depth + 1))
+            except ET.ParseError as e:
+                record["xml_parse_error"] = str(e)[:200]
+
+        visited_catalogs.append(record)
+
+    # Synthèse
+    summary = {
+        "n_catalogs_visited": len(visited_catalogs),
+        "n_datasets_discovered": len(discovered_datasets),
+        "n_catalog_refs_discovered": len(discovered_catalog_refs),
+        "max_depth_reached": (
+            max((c["depth"] for c in visited_catalogs), default=0)),
+        "capped_by_max_datasets": capped,
+        "constraints_applied": {
+            "allow_http_methods": ["GET"],
+            "allow_content_types": ["application/xml", "text/xml"],
+            "forbid_binary_probe": True,
+            "forbid_follow_redirects": True,
+            "max_depth": max_depth,
+            "max_datasets": max_datasets,
+        },
+    }
+
+    # Manifest signé + persistance
+    payload = {
+        "manifest_id": "NOAA_CFSV2_CATALOGUE_CARTOGRAPHY_Ω",
+        "ordre": "NOAA_CFSV2_P0_CATALOGUE_CARTOGRAPHY",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "guardrails_enforced": True,
+        "autonomy": "LIMITED",
+        "mode": "CATALOGUE_BROWSE_ONLY",
+        "root_catalog_url": root_catalog_url,
+        "summary": summary,
+        "visited_catalogs": visited_catalogs,
+        "discovered_datasets": discovered_datasets,
+        "discovered_catalog_refs": discovered_catalog_refs,
+        "anti_generique_strict": True,
+        "v30_lock": "INVIOLÉ",
+        "drift_zero": True,
+        "no_engine_recompute_triggered": True,
+        "no_binary_probed": True,
+        "executed_at_utc": _utc_now(),
+    }
+    payload_sha256 = hashlib.sha256(
+        json.dumps(payload, sort_keys=True,
+                   ensure_ascii=False, default=str).encode("utf-8")
+    ).hexdigest()
+    payload["manifest_sha256"] = payload_sha256
+
+    persisted: Dict[str, Any] = {}
+    if persist:
+        PIPELINE_ROOT.mkdir(parents=True, exist_ok=True)
+        if CFSV2_CATALOGUE_CARTOGRAPHY_PATH.exists():
+            try:
+                state = json.loads(
+                    CFSV2_CATALOGUE_CARTOGRAPHY_PATH.read_text(
+                        encoding="utf-8"))
+                if not isinstance(state, dict) or (
+                        "history" not in state):
+                    state = {"history": []}
+            except json.JSONDecodeError:
+                state = {"history": []}
+        else:
+            state = {"history": []}
+        state["history"].append(payload)
+        state["last_updated_utc"] = _utc_now()
+        state["n_cartographies"] = len(state["history"])
+        state["last_manifest_sha256"] = payload_sha256
+        state["last_root_catalog_url"] = root_catalog_url
+        state["last_n_datasets_discovered"] = len(discovered_datasets)
+        state["v30_lock"] = "INVIOLÉ"
+        CFSV2_CATALOGUE_CARTOGRAPHY_PATH.write_text(
+            json.dumps(state, ensure_ascii=False, indent=2),
+            encoding="utf-8")
+        persisted["overlay_path"] = str(
+            CFSV2_CATALOGUE_CARTOGRAPHY_PATH)
+        persisted["overlay_size_bytes"] = (
+            CFSV2_CATALOGUE_CARTOGRAPHY_PATH.stat().st_size)
+        persisted["n_cartographies_history"] = state["n_cartographies"]
+
+        from engines.v8_institutional.especes.bio_reacteur_overlay_omega import (  # noqa: E501
+            persist_audit,
+        )
+        audit_payload = {
+            "audit_type": "NOAA_PIPELINE",
+            "subtype": "CFSV2_CATALOGUE_CARTOGRAPHY",
+            "ordre": "NOAA_CFSV2_P0_CATALOGUE_CARTOGRAPHY",
+            "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "root_catalog_url": root_catalog_url,
+            "manifest_sha256": payload_sha256,
+            "n_catalogs_visited": summary["n_catalogs_visited"],
+            "n_datasets_discovered": summary["n_datasets_discovered"],
+            "n_catalog_refs_discovered": (
+                summary["n_catalog_refs_discovered"]),
+            "capped": capped,
+            "no_binary_probed": True,
+            "v30_lock_inviolate": True,
+            "drift_zero": True,
+            "no_engine_recompute_triggered": True,
+        }
+        persisted["audit_persisted"] = persist_audit(audit_payload)
+
+    payload["persisted_paths"] = persisted
+    payload["elapsed_s"] = round(time.time() - t_total, 3)
+    return payload
 
 
 # ═════════════════════════════════════════════════════════════════════════

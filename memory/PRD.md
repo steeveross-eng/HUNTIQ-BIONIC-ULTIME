@@ -27,6 +27,19 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-NONIES · NOAA_CFSV2_P0_CATALOGUE_CARTOGRAPHY (NCEI THREDDS) — root 404 (2026-05-07)**
+  Cartographie XML stricte du catalogue NCEI THREDDS sous régime guardrails ENFORCED + autonomy=LIMITED + contraintes Commandant intégrales (FUSION ADD-ONLY · anti-générique · V30_LOCK INVIOLÉ · DRIFT_ZERO · NO_ENGINE_RECOMPUTE · NO_BINARY_PROBED).
+  - **Module `noaa_pipeline_omega.py` étendu** : ajout `cartograph_ncei_catalogue(root_catalog_url, max_depth, max_datasets, persist)` (BFS strict GET-only, content-type xml-only, no-redirect, max_depth=2, max_datasets=128, parsing `xml.etree.ElementTree` namespaces THREDDS+xlink, extraction `<dataset urlPath>` et `<catalogRef xlink:href>`), `CFSV2_CATALOGUE_CARTOGRAPHY_PATH`.
+  - **Endpoint API** : `POST /api/v30/super-masters/noaa-cfsv2-catalogue-cartography` (token + guardrails 412 + 400 si URL invalide). Bornes serveur : `max_depth ∈ [1,2]`, `max_datasets ∈ [1,128]`.
+  - **Probe RÉEL sur `https://www.ncei.noaa.gov/thredds/catalog/cfsr/mon/pgbh/catalog.xml`** :
+    - **HTTP 404** · content_type=None · ctype_acceptable=False · redirect_detected=False · `http_error_404` · 279.9ms (path racine fourni inexistant sur NCEI).
+    - 1 catalogue visité, 0 datasets, 0 catalogRefs, 0 binaire téléchargé.
+    - `manifest_sha256=c825f710156b...7be2` · `elapsed_s=0.281`.
+  - **Conformité contraintes Commandant** : ✅ allow_http_methods=["GET"] · ✅ allow_content_types=["application/xml","text/xml"] · ✅ forbid_binary_probe · ✅ forbid_follow_redirects · ✅ max_depth=2 · ✅ max_datasets=128 · ✅ autonomy=LIMITED (aucun root alternatif probé sans directive).
+  - **Forensic log** : `ENDPOINT_PROBES/CFSV2_CATALOGUE_CARTOGRAPHY` JSONL persisté. Audit `audit_20260507T200833Z_8a55f579.json` (sha=`8a55f579...40b4`). Overlay `cfsv2_catalogue_cartography_overlay.json` (2196 bytes).
+  - **Pytest** : 8 nouveaux (`test_phase_xxx_nonies_cfsv2_catalogue_cartography_omega.py`) **8/8 PASSED**. Régression cluster doctrinal Phase XXIX/XXX = **229/229 PASSED** (221 + 8). 7 audits NOAA Ω cumulés.
+  - **Observation doctrinale** : le path racine fourni `/thredds/catalog/cfsr/mon/pgbh/catalog.xml` n'est pas servi par NCEI. Le Commandant doit fournir un root alternatif (ex: `/thredds/catalog/catalog.xml` ou `/thredds/catalog/model-cfs_reanl_mm_grb_v2/catalog.xml`) OU pivoter vers Copernicus Marine.
+
 - **PHASE_XXX-OCTIES · NOAA_CFSV2_P0_PIVOT_VERIFY (NCEI THREDDS) — INVALID (2026-05-07)**
   Vérification stricte HEAD_ONLY + DDS du candidat pivot NCEI THREDDS sous régime guardrails ENFORCED + autonomy=LIMITED (FUSION ADD-ONLY · anti-générique · V30_LOCK INVIOLÉ · DRIFT_ZERO · NO_ENGINE_RECOMPUTE).
   - **Module `noaa_pipeline_omega.py` étendu** : ajout `_is_content_type_acceptable_opendap` (validation OPeNDAP-aware élargie : text/plain, application/x-dods-*, application/x-netcdf, octet-stream), `verify_cfsv2_pivot_head_only` (HEAD strict + DDS complémentaire si `expect_opendap=True`, signature `Dataset {` détectée, manifest SHA-256, FUSION ADD-ONLY history), `CFSV2_PIVOT_VERIFICATION_PATH`.

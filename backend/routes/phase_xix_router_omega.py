@@ -1458,3 +1458,72 @@ async def noaa_cfsv2_pivot_verify_endpoint(
         "result": payload,
         "v30_lock": "INVIOLÉ",
     })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# NOAA_CFSV2_P0_CATALOGUE_CARTOGRAPHY — NCEI THREDDS browse XML strict
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/noaa-cfsv2-catalogue-cartography")
+async def noaa_cfsv2_catalogue_cartography_endpoint(
+    root_catalog: str = (
+        "https://www.ncei.noaa.gov/thredds/catalog/"
+        "cfsr/mon/pgbh/catalog.xml"),
+    max_depth: int = 2,
+    max_datasets: int = 128,
+    persist: bool = True,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """NOAA_CFSV2_P0_CATALOGUE_CARTOGRAPHY · NCEI THREDDS browse XML.
+
+    Workflow doctrinal :
+      1. Guardrails ENFORCED check (412 sinon)
+      2. GET RÉCURSIF strict sur catalog.xml NCEI (BFS limité)
+      3. Contraintes : GET only · application/xml ou text/xml only ·
+         forbid_binary_probe · forbid_follow_redirects · max_depth=2 ·
+         max_datasets=128
+      4. Forensic log ENDPOINT_PROBES par catalogue visité
+      5. Persistance overlay + audit doctrinal
+      6. AUCUN recalcul moteur · AUCUN binaire téléchargé
+
+    Token Commandant requis. Anti-générique strict.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.noaa_pipeline_omega import (
+        cartograph_ncei_catalogue,
+    )
+    # Bornes de sécurité doctrinales
+    md = max(1, min(2, int(max_depth)))
+    mds = max(1, min(128, int(max_datasets)))
+    try:
+        payload = cartograph_ncei_catalogue(
+            root_catalog_url=root_catalog,
+            max_depth=md,
+            max_datasets=mds,
+            persist=persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "NOAA_CFSV2_CATALOGUE_CARTOGRAPHY_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": (
+            "NOAA_CFSV2_CATALOGUE_CARTOGRAPHY_EXECUTE_Ω"),
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "NOAA_CFSV2_P0_CATALOGUE_CARTOGRAPHY",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
