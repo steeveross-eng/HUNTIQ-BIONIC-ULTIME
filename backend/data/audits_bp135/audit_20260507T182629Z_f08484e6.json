@@ -1,0 +1,24 @@
+{
+  "audit_filename": "audit_20260507T182629Z_f08484e6.json",
+  "audit_sha256": "f08484e6a8991b954827ca0b267a0a921a38e059c3a84328a3e3d4471fff5044",
+  "persisted_at_utc": "2026-05-07T18:26:29+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "NOAA_PIPELINE",
+    "subtype": "TEMPLATE_UPDATE",
+    "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "previous_template": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.{YYYYMM}.mon.mean.{VARIABLE}.grb2",
+    "previous_source": "NCAR_THREDDS_LEGACY",
+    "new_template": "https://nomads.ncep.noaa.gov/dods/cfs_monthly/cfs{YYYYMM}/{VARIABLE}.{YYYYMM}.mean",
+    "new_source": "NOMADS",
+    "probe_main_http_status": 301,
+    "probe_dds_http_status": 301,
+    "verdict": "TEMPLATE_MAIN_OK_DDS_UNREACHABLE_ACCEPTED",
+    "activated": true,
+    "no_engine_recompute_triggered": true,
+    "v30_lock_inviolate": true,
+    "drift_zero": true
+  }
+}

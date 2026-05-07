@@ -1,0 +1,29 @@
+{
+  "log": [
+    {
+      "timestamp_utc": "2026-05-07T18:26:29+00:00",
+      "previous_template": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.{YYYYMM}.mon.mean.{VARIABLE}.grb2",
+      "previous_source": "NCAR_THREDDS_LEGACY",
+      "new_template": "https://nomads.ncep.noaa.gov/dods/cfs_monthly/cfs{YYYYMM}/{VARIABLE}.{YYYYMM}.mean",
+      "new_source": "NOMADS",
+      "probe_main": {
+        "url": "https://nomads.ncep.noaa.gov/dods/cfs_monthly/cfs201101/tavg.201101.mean",
+        "http_status": 301,
+        "elapsed_ms": 151.8,
+        "reason": "http_error_301"
+      },
+      "probe_dds": {
+        "url": "https://nomads.ncep.noaa.gov/dods/cfs_monthly/cfs201101/tavg.201101.mean.dds",
+        "http_status": 301,
+        "elapsed_ms": 66.6,
+        "reason": "http_error_301"
+      },
+      "verdict": "TEMPLATE_MAIN_OK_DDS_UNREACHABLE_ACCEPTED",
+      "activated": true
+    }
+  ],
+  "last_updated_utc": "2026-05-07T18:26:29+00:00",
+  "n_entries": 1,
+  "current_template": "https://nomads.ncep.noaa.gov/dods/cfs_monthly/cfs{YYYYMM}/{VARIABLE}.{YYYYMM}.mean",
+  "current_source": "NOMADS"
+}

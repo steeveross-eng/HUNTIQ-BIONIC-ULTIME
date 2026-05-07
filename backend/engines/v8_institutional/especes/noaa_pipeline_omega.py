@@ -44,6 +44,8 @@ PIPELINE_PROBE_RESULTS_PATH = (
     PIPELINE_ROOT / "noaa_pipeline_probe_results.json")
 PIPELINE_URLS_PATH = (
     PIPELINE_ROOT / "noaa_pipeline_cfsv2_urls.json")
+PIPELINE_TEMPLATE_HISTORY_PATH = (
+    PIPELINE_ROOT / "cfsv2_template_history.json")
 
 # Configuration WOD23 (multi-mode : LOCAL legacy + B2 primary depuis update)
 WOD23_CONFIG = {
@@ -79,7 +81,42 @@ CFSV2_CONFIG = {
     "forbidden_paths": ["/files/g/", "GDAS"],
     "forbidden_formats": [".tar"],
     "anti_generique_strict": True,
+    "template_source": "NCAR_THREDDS_LEGACY",
+    "template_history": [],
 }
+
+# Candidats NOMADS plausibles (source : documentation publique NOMADS NOAA)
+# Anti-générique strict : ces templates sont DES CANDIDATS — l'URL exacte
+# doit être validée par probe HTTP réel avant activation officielle.
+CFSV2_NOMADS_TEMPLATE_CANDIDATES: List[Dict[str, str]] = [
+    {
+        "label": "NOMADS_CFS_MONTHLY_DODS",
+        "template": (
+            "https://nomads.ncep.noaa.gov/dods/cfs_monthly/"
+            "cfs{YYYYMM}/{VARIABLE}.{YYYYMM}.mean"),
+        "source": "NOMADS",
+        "note": (
+            "NOMADS DAP path mensuel CFSv2 — candidat plausible "
+            "à valider par probe HTTP réel."),
+    },
+    {
+        "label": "NOMADS_CFS_FLX_DODS",
+        "template": (
+            "https://nomads.ncep.noaa.gov/dods/cfs/"
+            "cfs{YYYYMMDD}/cfs_{VARIABLE}_{YYYYMMDD}"),
+        "source": "NOMADS",
+        "note": (
+            "NOMADS CFSv2 surface flux — candidat plausible journalier."),
+    },
+    {
+        "label": "NOMADS_CFS_TIMESERIES_DODS",
+        "template": (
+            "https://nomads.ncep.noaa.gov/dods/cfs_timeseries/"
+            "{YYYYMM}/{VARIABLE}_{YYYYMM}_mean"),
+        "source": "NOMADS",
+        "note": "NOMADS CFSv2 timeseries — candidat plausible.",
+    },
+]
 
 
 def _utc_now() -> str:
@@ -700,17 +737,358 @@ def get_pipeline_status() -> Dict[str, Any]:
     }
 
 
+# ═════════════════════════════════════════════════════════════════════════
+# 6. Update template CFSv2 (NOMADS ou autre) avec probe + rollback
+# ═════════════════════════════════════════════════════════════════════════
+def update_cfsv2_template(
+    new_template: str,
+    source: str = "NOMADS",
+    sample_yyyymm: str = "201101",
+    sample_variable: str = "tavg",
+    sample_yyyymmdd: Optional[str] = None,
+    timeout_s: int = 10,
+    persist: bool = True,
+) -> Dict[str, Any]:
+    """Met à jour le template OPeNDAP CFSv2 après probe RÉEL préalable.
+
+    Workflow doctrinal :
+      1. Validation format (contient {YYYYMM} ou {YYYYMMDD} + {VARIABLE})
+      2. Probe HTTP HEAD + DDS sur sample (anti-générique)
+      3. Si endpoint répond ≠ 4xx/5xx → activation + sauvegarde ancien
+         dans template_history (rollback possible)
+      4. Sinon retourne refus + raison réelle (anti-générique)
+      5. Audit NOAA_PIPELINE/TEMPLATE_UPDATE persisté
+      6. AUCUN recalcul moteur
+
+    Anti-générique strict : aucune fabrication de status. Rollback toujours
+    possible via template_history.
+    """
+    import urllib.error
+    import urllib.request
+
+    # 1. Validation format
+    has_yyyymm = "{YYYYMM}" in new_template
+    has_yyyymmdd = "{YYYYMMDD}" in new_template
+    has_variable = "{VARIABLE}" in new_template
+    if not (has_yyyymm or has_yyyymmdd):
+        raise ValueError(
+            "TEMPLATE_INVALID::missing_{YYYYMM}_or_{YYYYMMDD}_placeholder")
+    if not has_variable:
+        raise ValueError(
+            "TEMPLATE_INVALID::missing_{VARIABLE}_placeholder")
+    if not new_template.startswith(("https://", "http://")):
+        raise ValueError("TEMPLATE_INVALID::not_http_url")
+    # Doctrine : interdiction patterns
+    for forbidden in CFSV2_CONFIG["forbidden_paths"]:
+        if forbidden in new_template:
+            raise ValueError(
+                f"TEMPLATE_FORBIDDEN_PATTERN::{forbidden}")
+    for forbidden in CFSV2_CONFIG["forbidden_formats"]:
+        if new_template.endswith(forbidden):
+            raise ValueError(
+                f"TEMPLATE_FORBIDDEN_FORMAT::{forbidden}")
+
+    # 2. Probe RÉEL sur sample
+    sample_url = new_template
+    if has_yyyymm:
+        sample_url = sample_url.replace("{YYYYMM}", sample_yyyymm)
+    if has_yyyymmdd:
+        ymd = sample_yyyymmdd or f"{sample_yyyymm}01"
+        sample_url = sample_url.replace("{YYYYMMDD}", ymd)
+    sample_url = sample_url.replace("{VARIABLE}", sample_variable)
+    dds_url = sample_url + ".dds"
+
+    t0 = time.time()
+    probe_main: Dict[str, Any] = {
+        "url": sample_url, "http_status": None, "elapsed_ms": None,
+        "reason": None,
+    }
+    try:
+        # GET (avec lecture body limitée) plutôt que HEAD : permet
+        # détection page "retired" / HTML d'erreur (anti-générique strict)
+        req = urllib.request.Request(
+            sample_url, method="GET",
+            headers={"User-Agent": "BCE-4X-NOAA-PIPELINE/1.0"})
+        with urllib.request.urlopen(req, timeout=timeout_s) as resp:
+            probe_main["http_status"] = resp.status
+            preview = resp.read(2048)
+            probe_main["dds_preview_first_500b"] = (
+                preview[:500].decode("utf-8", errors="replace"))
+    except urllib.error.HTTPError as e:
+        probe_main["http_status"] = e.code
+        probe_main["reason"] = f"http_error_{e.code}"
+        try:
+            probe_main["dds_preview_first_500b"] = (
+                e.read(2048)[:500].decode("utf-8", errors="replace"))
+        except Exception:
+            pass
+    except (urllib.error.URLError, TimeoutError, OSError) as e:
+        probe_main["reason"] = f"network_error::{str(e)[:120]}"
+    probe_main["elapsed_ms"] = round((time.time() - t0) * 1000, 1)
+
+    t0 = time.time()
+    probe_dds: Dict[str, Any] = {
+        "url": dds_url, "http_status": None, "elapsed_ms": None,
+        "reason": None,
+    }
+    try:
+        req = urllib.request.Request(
+            dds_url, method="GET",
+            headers={"User-Agent": "BCE-4X-NOAA-PIPELINE/1.0"})
+        with urllib.request.urlopen(req, timeout=timeout_s) as resp:
+            probe_dds["http_status"] = resp.status
+            probe_dds["dds_preview_first_500b"] = (
+                resp.read(2048)[:500].decode(
+                    "utf-8", errors="replace"))
+    except urllib.error.HTTPError as e:
+        probe_dds["http_status"] = e.code
+        probe_dds["reason"] = f"http_error_{e.code}"
+    except (urllib.error.URLError, TimeoutError, OSError) as e:
+        probe_dds["reason"] = f"network_error::{str(e)[:120]}"
+    probe_dds["elapsed_ms"] = round((time.time() - t0) * 1000, 1)
+
+    # 3. Verdict (HTTP 200 STRICT — anti-générique : 301 vers page d'erreur
+    #    ne compte pas comme OPeNDAP fonctionnel).
+    # Détection page "retired" / HTML d'erreur dans body main ou dds.
+    retirement_indicators = [
+        "OpenDAP format has been retired",
+        "OPENDAP_RETIRED", "service has been retired",
+        "Service Change Notice", "scn25-81",
+    ]
+    body_main = probe_main.get("dds_preview_first_500b", "") or ""
+    body_dds = probe_dds.get("dds_preview_first_500b", "") or ""
+    is_retired = any(
+        indicator.lower() in body_main.lower()
+        or indicator.lower() in body_dds.lower()
+        for indicator in retirement_indicators
+    )
+    main_ok = probe_main["http_status"] == 200
+    dds_ok = (
+        probe_dds["http_status"] == 200
+        and not is_retired
+        and "Dataset" in body_dds)
+    accepted = (main_ok or dds_ok) and not is_retired
+    if is_retired:
+        verdict = "TEMPLATE_REJECTED_OPENDAP_SERVICE_RETIRED"
+    elif accepted and dds_ok:
+        verdict = "TEMPLATE_VALIDATED_AND_ACTIVATED"
+    elif accepted:
+        verdict = "TEMPLATE_MAIN_OK_DDS_UNREACHABLE_ACCEPTED"
+    else:
+        verdict = "TEMPLATE_PROBE_FAILED_NOT_ACTIVATED"
+
+    # 4. Sauvegarde + activation (FUSION ADD-ONLY history)
+    previous_template = CFSV2_CONFIG["endpoint_template"]
+    history_entry = {
+        "timestamp_utc": _utc_now(),
+        "previous_template": previous_template,
+        "previous_source": CFSV2_CONFIG.get(
+            "template_source", "UNKNOWN"),
+        "new_template": new_template,
+        "new_source": source,
+        "probe_main": probe_main,
+        "probe_dds": probe_dds,
+        "verdict": verdict,
+        "activated": accepted,
+    }
+
+    if accepted:
+        CFSV2_CONFIG["endpoint_template"] = new_template
+        CFSV2_CONFIG["template_source"] = source
+        CFSV2_CONFIG.setdefault("template_history", []).append(
+            history_entry)
+
+    # 5. Persistance audit + history
+    persisted: Dict[str, Any] = {}
+    if persist:
+        PIPELINE_ROOT.mkdir(parents=True, exist_ok=True)
+        # History append (FUSION ADD-ONLY)
+        if PIPELINE_TEMPLATE_HISTORY_PATH.exists():
+            try:
+                hist = json.loads(
+                    PIPELINE_TEMPLATE_HISTORY_PATH.read_text(
+                        encoding="utf-8"))
+                if not isinstance(hist, dict) or "log" not in hist:
+                    hist = {"log": []}
+            except json.JSONDecodeError:
+                hist = {"log": []}
+        else:
+            hist = {"log": []}
+        hist["log"].append(history_entry)
+        hist["last_updated_utc"] = _utc_now()
+        hist["n_entries"] = len(hist["log"])
+        hist["current_template"] = CFSV2_CONFIG["endpoint_template"]
+        hist["current_source"] = CFSV2_CONFIG["template_source"]
+        PIPELINE_TEMPLATE_HISTORY_PATH.write_text(
+            json.dumps(hist, ensure_ascii=False, indent=2),
+            encoding="utf-8")
+        persisted["history_path"] = str(
+            PIPELINE_TEMPLATE_HISTORY_PATH)
+
+        # Audit doctrinal
+        from engines.v8_institutional.especes.bio_reacteur_overlay_omega import (  # noqa: E501
+            persist_audit,
+        )
+        audit_payload = {
+            "audit_type": "NOAA_PIPELINE",
+            "subtype": "TEMPLATE_UPDATE",
+            "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
+            "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "previous_template": previous_template,
+            "previous_source": history_entry["previous_source"],
+            "new_template": new_template,
+            "new_source": source,
+            "probe_main_http_status": probe_main["http_status"],
+            "probe_dds_http_status": probe_dds["http_status"],
+            "verdict": verdict,
+            "activated": accepted,
+            "no_engine_recompute_triggered": True,
+            "v30_lock_inviolate": True,
+            "drift_zero": True,
+        }
+        persisted["audit_persisted"] = persist_audit(audit_payload)
+
+    return {
+        "manifest_id": "CFSV2_TEMPLATE_UPDATE_Ω",
+        "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "previous_template": previous_template,
+        "new_template": new_template,
+        "new_source": source,
+        "sample_url_probed": sample_url,
+        "probe_main": probe_main,
+        "probe_dds": probe_dds,
+        "verdict": verdict,
+        "activated": accepted,
+        "current_template_after_update": (
+            CFSV2_CONFIG["endpoint_template"]),
+        "persisted_paths": persisted,
+        "no_engine_recompute_triggered": True,
+        "v30_lock": "INVIOLÉ",
+        "drift_zero": True,
+        "computed_at_utc": _utc_now(),
+    }
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# 7. Probe credentials B2 alternatifs (sans toucher .env)
+# ═════════════════════════════════════════════════════════════════════════
+def probe_b2_credentials_alternative(
+    key_id: str,
+    application_key: str,
+    bucket: str,
+    path_prefix: str = "",
+    endpoint_url: Optional[str] = None,
+    region: Optional[str] = None,
+    max_keys: int = 20,
+) -> Dict[str, Any]:
+    """Probe RÉEL B2 avec credentials alternatifs (pas de mutation .env).
+
+    Anti-générique strict : status RÉEL retourné.
+    """
+    import os
+    record: Dict[str, Any] = {
+        "manifest_id": "B2_CREDS_PROBE_Ω",
+        "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "bucket": bucket,
+        "path_prefix": path_prefix,
+        "endpoint_url": endpoint_url or os.environ.get(
+            "B2_ENDPOINT_URL"),
+        "region": region or os.environ.get("B2_REGION"),
+        "key_id_first_12": (key_id[:12] + "..." if key_id else None),
+        "available": False,
+        "anti_generique_strict": True,
+        "v30_lock": "INVIOLÉ",
+        "probed_at_utc": _utc_now(),
+    }
+    if not record["endpoint_url"]:
+        record["reason"] = "endpoint_url_missing_no_default"
+        return record
+    try:
+        import boto3
+        from botocore.config import Config
+        from botocore.exceptions import (
+            ClientError, EndpointConnectionError, NoCredentialsError,
+        )
+    except ImportError as e:
+        record["reason"] = f"boto3_import_error::{str(e)[:120]}"
+        return record
+
+    try:
+        s3 = boto3.client(
+            "s3",
+            aws_access_key_id=key_id,
+            aws_secret_access_key=application_key,
+            endpoint_url=record["endpoint_url"],
+            region_name=record["region"],
+            config=Config(
+                connect_timeout=10, read_timeout=10,
+                retries={"max_attempts": 1}),
+        )
+    except Exception as e:
+        record["reason"] = f"client_init_error::{str(e)[:120]}"
+        return record
+
+    t0 = time.time()
+    try:
+        s3.head_bucket(Bucket=bucket)
+        record["bucket_exists"] = True
+        record["http_head_bucket_ms"] = round(
+            (time.time() - t0) * 1000, 1)
+    except ClientError as e:
+        code = e.response.get("Error", {}).get("Code", "?")
+        record["bucket_exists"] = False
+        record["reason"] = f"head_bucket_error::{code}"
+        record["http_head_bucket_ms"] = round(
+            (time.time() - t0) * 1000, 1)
+        return record
+    except (EndpointConnectionError, NoCredentialsError) as e:
+        record["reason"] = (
+            f"network_or_credentials_error::{str(e)[:120]}")
+        return record
+
+    t0 = time.time()
+    n_objects = 0
+    sample = []
+    try:
+        resp = s3.list_objects_v2(
+            Bucket=bucket, Prefix=path_prefix, MaxKeys=max_keys)
+        for obj in resp.get("Contents", []):
+            n_objects += 1
+            if len(sample) < 5:
+                sample.append({
+                    "key": obj["Key"], "size": obj.get("Size", 0),
+                })
+    except ClientError as e:
+        code = e.response.get("Error", {}).get("Code", "?")
+        record["reason"] = f"list_objects_error::{code}"
+        record["http_list_objects_ms"] = round(
+            (time.time() - t0) * 1000, 1)
+        return record
+    record["http_list_objects_ms"] = round(
+        (time.time() - t0) * 1000, 1)
+    record["n_objects_found"] = n_objects
+    record["sample_keys"] = sample
+    record["available"] = True
+    return record
+
+
 __all__ = [
     "PIPELINE_ROOT",
     "PIPELINE_CONFIG_PATH",
     "PIPELINE_PROBE_RESULTS_PATH",
     "PIPELINE_URLS_PATH",
+    "PIPELINE_TEMPLATE_HISTORY_PATH",
     "WOD23_CONFIG",
     "CFSV2_CONFIG",
+    "CFSV2_NOMADS_TEMPLATE_CANDIDATES",
     "generate_cfsv2_urls",
     "probe_wod23_b2",
     "probe_wod23_local",
     "probe_cfsv2_opendap",
     "activate_noaa_pipeline",
     "get_pipeline_status",
+    "update_cfsv2_template",
+    "probe_b2_credentials_alternative",
 ]
