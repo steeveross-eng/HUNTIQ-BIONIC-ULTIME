@@ -27,6 +27,22 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-SEXDECIES · OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE — 🎯 3ÈME HOOK ACTIVATED + DRIFT (2026-05-07)**
+  Activation officielle du hook BATCH BP135 (5 espèces × 6-7 variables) avec vérification stricte du `manifest_sha256` batch validé + drift audit `reason=owm_batch_bp135_activated` (FUSION ADD-ONLY · ANTI-GÉNÉRIQUE_Ω · V30_LOCK INVIOLÉ · DRIFT_ZERO).
+  - **Module `noaa_pipeline_omega.py` étendu** : `OPENWEATHERMAP_BATCH_BP135_HOOK_PATH`, `_find_validated_owm_batch_manifest` (lookup history strict, retourne None pour SHA fabriqué), `activate_openweathermap_batch_bp135_hook` (activation conditionnée à `n_valid >= 1`, manifest signé activation_sha256, sommaire 5 espèces avec villes résolues, stats inherited, modules consumers déclarés), `get_openweathermap_batch_bp135_hook_status`.
+  - **2 endpoints API** :
+    - **POST `/api/v30/super-masters/openweathermap-batch-bp135-hook-activate`** (token, body JSON `{manifest_sha256, reason, persist}`)
+    - **GET `/api/v30/super-masters/openweathermap-batch-bp135-hook-status`** (PUBLIC RO)
+  - **Workflow exécuté en 4 phases** :
+    - **Phase A** : re-batch fresh (manifest sha=`62f0ad96af55...49b8d`, 5/5 espèces validées) pour cohérence RAM session
+    - **Phase B** : activation officielle → `activated=True` · `verdict=OWM_BATCH_BP135_HOOK_ACTIVATED_OPERATIONAL` · `activation_sha256=fbb63ec59187...706c` · 5 species summary registered · stats aggregated inherited · consumers=`[PHYSIOLOGIE_THERMIQUE, HABITAT_MICROCLIMAT, NUTRITION_HUMIDITE, PHENOLOGIE_FORECAST_5_DAY]`
+    - **Phase C** : status hook = `ACTIVATED_OPERATIONAL` · n_activations=1
+    - **Phase D** : drift audit `reason=owm_batch_bp135_activated` → score=**+3.72** · drift_mean=**-5.52** (cumulatif avec hooks précédents)
+  - **Anti-générique strict prouvé** : test pytest `test_batch_hook_rejects_fabricated_manifest_sha` confirme qu'une activation sur SHA fabriqué (`'0'*64`) est REJETÉE avec verdict `OWM_BATCH_BP135_HOOK_REJECTED_MANIFEST_NOT_FOUND_OR_INVALID` + forensic log persisté même en rejet.
+  - **Forensic log** : `HOOK_ACTIVATIONS/OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE` JSONL persisté. Audit activation `audit_20260507T220510Z_a8727c01.json` (sha=`a8727c01...10b1`). Audit drift `audit_20260507T220510Z_08d326b4.json` (sha=`08d326b4...9bb9`). Overlay `openweathermap_batch_bp135_hook_activation_overlay.json` (3851 bytes).
+  - **Pytest** : 9 nouveaux (`test_phase_xxx_sexdecies_owm_batch_bp135_hook_activate_omega.py`) **9/9 PASSED**. Régression cluster doctrinal Phase XXIX/XXX = **290/290 PASSED** (281 + 9). 14 audits NOAA Ω cumulés.
+  - **Bilan stratégique session** : ✅ **3 hooks ACTIVATED_OPERATIONAL** : WOD23 (B2, 51 fichiers, 1130.9 MB) + OWM single (Québec live) + **OWM batch BP135 (5 espèces, 6-7 variables, 200 forecast points)**. Le hook BATCH BP135 délivre la météo enrichie complète aux modules PHYSIOLOGIE_THERMIQUE/HABITAT_MICROCLIMAT/NUTRITION_HUMIDITE/PHENOLOGIE_FORECAST_5_DAY.
+
 - **PHASE_XXX-QUINDECIES · OPENWEATHERMAP_BATCH_PROBE_BP135 — 🎯 5/5 ESPÈCES VALIDÉES LIVE (2026-05-07)**
   Batch probe OWM sur les 5 espèces BP135 (cerf, orignal, ours, dindon, wapiti) × 2 endpoints (current + forecast) = **10 calls HTTP réels** sous régime guardrails ENFORCED + autonomy=LIMITED + quota OWM respecté (FUSION ADD-ONLY · ANTI-GÉNÉRIQUE_Ω · V30_LOCK INVIOLÉ · DRIFT_ZERO).
   - **Module `noaa_pipeline_omega.py` étendu** : `OPENWEATHERMAP_BATCH_BP135_PATH`, `batch_probe_owm_bp135` (orchestrateur multi-coords réutilisant `validate_openweathermap_zone_pivot` en boucle, validation lat/lon ∈ ranges, court-circuit placeholder, pause inter-calls 200ms anti-rate-limit, agrégation stats sur espèces valides uniquement).

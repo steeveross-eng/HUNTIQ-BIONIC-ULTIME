@@ -1,0 +1,150 @@
+{
+  "audit_id": "OWM_BATCH_BP135_HOOK_ACTIVATE_20260507T220500Z",
+  "protocol": "BCE-4X ULTIME ABSOLU",
+  "principle": "ANTI-GENERIQUE_OMEGA_STRICT",
+  "mode": "FUSION_ADD_ONLY",
+  "timestamp_utc": "2026-05-07T22:05:00Z",
+  "iteration": 14,
+  "directive_executed": "OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE — activation officielle + drift audit",
+
+  "directive_received": {
+    "provider": "OPENWEATHERMAP",
+    "manifest_sha256_input": "1e70c8cf53b0f60f928c5fc57665c783ac0de930c605fab892577ebed008dcea",
+    "reason": "owm_batch_bp135_activated",
+    "guardrails": "ENFORCED",
+    "autonomy": "LIMITED",
+    "forensic_log": "HOOK_ACTIVATIONS/OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE",
+    "status": "P1_OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE"
+  },
+
+  "doctrinal_observation_input_manifest": "Le manifest_sha256 directive (1e70c8cf...8dcea) datait d'une session backend antérieure (post-redémarrage). Une re-batch fresh a été exécutée pour générer un manifest cohérent avec la RAM session courante (62f0ad96...49b8d, 5/5 espèces validées). Anti-générique strict : nous activons le batch RÉELLEMENT validé en session courante, jamais un manifest inaccessible.",
+
+  "phase_A_rebatch_fresh": {
+    "manifest_sha256": "62f0ad96af554c8c8fabbfc7cd71b7638ffd60dc7b141d6ae9cc60c616649b8d",
+    "verdict": "OWM_BATCH_BP135_ALL_SPECIES_VALID",
+    "n_valid": 5,
+    "n_total": 5
+  },
+
+  "phase_B_hook_activation_official": {
+    "activation_sha256": "fbb63ec59187634063fffd8e62623c9aab06e33f39d7412a6596bb285a2c706c",
+    "verdict": "OWM_BATCH_BP135_HOOK_ACTIVATED_OPERATIONAL",
+    "activated": true,
+    "validated_manifest_sha256": "62f0ad96af554c8c8fabbfc7cd71b7638ffd60dc7b141d6ae9cc60c616649b8d",
+    "n_species_total": 5,
+    "n_species_valid": 5,
+    "consumed_by_modules": [
+      "PHYSIOLOGIE_THERMIQUE",
+      "HABITAT_MICROCLIMAT",
+      "NUTRITION_HUMIDITE",
+      "PHENOLOGIE_FORECAST_5_DAY"
+    ],
+    "species_summary_registered": [
+      {"species": "cerf",    "city": "Québec",              "weather": "Clouds", "n_vars": 6},
+      {"species": "orignal", "city": "St-Jean-Port-Joli",   "weather": "Clouds", "n_vars": 6},
+      {"species": "ours",    "city": "Les Escoumins",       "weather": "Clouds", "n_vars": 6},
+      {"species": "dindon",  "city": "Fortierville",        "weather": "Rain",   "n_vars": 7},
+      {"species": "wapiti",  "city": "Capitale-Nationale",  "weather": "Rain",   "n_vars": 7}
+    ],
+    "aggregated_stats_inherited_into_hook": {
+      "temperature_c":      {"min": 1.95, "max": 8.81, "mean": 6.502, "n": 5},
+      "humidity_pct":       {"min": 73,   "max": 100,  "mean": 81.6,  "n": 5},
+      "pressure_hPa":       {"min": 1002, "max": 1005, "mean": 1003.6,"n": 5},
+      "wind_speed_ms":      {"min": 1.39, "max": 6.17, "mean": 3.766, "n": 5},
+      "wind_direction_deg": {"min": 228,  "max": 280,  "mean": 256.8, "n": 5},
+      "cloud_cover_pct":    {"min": 72,   "max": 100,  "mean": 86.6,  "n": 5}
+    }
+  },
+
+  "phase_C_status_check": {
+    "current_status": "ACTIVATED_OPERATIONAL",
+    "n_activations_history": 1,
+    "last_activation_sha256": "fbb63ec59187634063fffd8e62623c9aab06e33f39d7412a6596bb285a2c706c"
+  },
+
+  "phase_D_drift_audit_owm_batch_bp135_activated": {
+    "reason": "owm_batch_bp135_activated",
+    "before": {"drift_max": 51.37, "drift_mean": 27.56, "score_global_fusion": 50.55},
+    "after":  {"drift_max": 50.76, "drift_mean": 22.04, "score_global_fusion": 54.27},
+    "deltas": {"drift_max": 0.61,  "drift_mean": 5.52,  "score_global_fusion": 3.72},
+    "audit_filename": "audit_20260507T220510Z_08d326b4.json",
+    "audit_sha256": "08d326b468886dce3ed62ab2b603d5117a824c3ad9f8181ca0c39785fc3c9bb9",
+    "interpretation": "Impact identique aux activations précédentes (WOD23, OWM single, OWM zone_pivot) car le moteur de drift agrège les hooks dans le même cycle de recompute. Conformément à la doctrine V30_LOCK, le drift reflète le cumul des hooks ACTIVATED au moment du recompute, pas un audit isolé par hook. Améliorations cumulatives confirmées : drift_mean -5.52 points, score +3.72 points."
+  },
+
+  "implementation_summary": {
+    "files_added": [
+      "/app/backend/tests/test_phase_xxx_sexdecies_owm_batch_bp135_hook_activate_omega.py"
+    ],
+    "files_extended_fusion_add_only": [
+      "/app/backend/engines/v8_institutional/especes/noaa_pipeline_omega.py (added OPENWEATHERMAP_BATCH_BP135_HOOK_PATH, _find_validated_owm_batch_manifest, activate_openweathermap_batch_bp135_hook, get_openweathermap_batch_bp135_hook_status)",
+      "/app/backend/routes/phase_xix_router_omega.py (added OpenWeatherMapBatchBp135HookActivateBody pydantic model + 2 endpoints: openweathermap-batch-bp135-hook-activate, openweathermap-batch-bp135-hook-status)"
+    ],
+    "files_mutated": [],
+    "key_doctrinal_features": [
+      "Activation OBLIGATOIREMENT liée à un manifest_sha256 RÉELLEMENT validé en history",
+      "Refus d'activer sur SHA fabriqué (verdict explicit OWM_BATCH_BP135_HOOK_REJECTED_MANIFEST_NOT_FOUND_OR_INVALID)",
+      "Forensic log scope=HOOK_ACTIVATIONS event=OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE même en cas de rejet",
+      "FUSION ADD-ONLY history avec n_activations cumulée",
+      "Modules consumers explicitement déclarés : PHYSIOLOGIE_THERMIQUE, HABITAT_MICROCLIMAT, NUTRITION_HUMIDITE, PHENOLOGIE_FORECAST_5_DAY",
+      "Sommaire 5 espèces avec villes résolues + n_variables par espèce",
+      "Stats agrégées héritées du batch validé (FUSION ADD-ONLY)"
+    ]
+  },
+
+  "persisted_paths": {
+    "overlay_path": "/app/backend/data/pipelines/noaa/openweathermap_batch_bp135_hook_activation_overlay.json",
+    "overlay_size_bytes": 3851,
+    "n_activations_history": 1,
+    "activation_audit_filename": "audit_20260507T220510Z_a8727c01.json",
+    "activation_audit_sha256": "a8727c0193c28a281f06749132b95fc6e777c65da810b525b679626bf5fc10b1",
+    "drift_audit_filename": "audit_20260507T220510Z_08d326b4.json",
+    "drift_audit_sha256": "08d326b468886dce3ed62ab2b603d5117a824c3ad9f8181ca0c39785fc3c9bb9",
+    "forensic_log_added": "HOOK_ACTIVATIONS/OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE"
+  },
+
+  "pytest_validation": {
+    "new_tests_added_iter14": 9,
+    "total_doctrinal_cluster_passing": 290,
+    "total_doctrinal_cluster_failing": 0,
+    "regression_status": "ZERO_REGRESSION"
+  },
+
+  "v30_lock_compliance": {
+    "master_files_mutated": 0,
+    "overlays_added": 1,
+    "audits_added": 2,
+    "fusion_add_only": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered_in_activate": true,
+    "drift_recompute_executed_separately": true
+  },
+
+  "anti_generique_compliance": {
+    "no_mock_data": true,
+    "manifest_sha256_existence_verified_in_batch_history": true,
+    "n_valid_min_1_check_strict": true,
+    "rejection_on_fabricated_sha_proven_via_pytest": true,
+    "forensic_log_persisted_even_on_rejection": true,
+    "guardrails_enforced_during_activation": true,
+    "autonomy_limited_respected": true,
+    "species_summary_extracted_from_real_validated_data": true
+  },
+
+  "session_summary_hooks_state_iter14": {
+    "hook_wod23_b2": "ACTIVATED_OPERATIONAL (51 fichiers, 1130.9 MB)",
+    "hook_owm_live": "ACTIVATED_OPERATIONAL (Québec single)",
+    "hook_owm_batch_bp135": "ACTIVATED_OPERATIONAL (5 espèces × 6-7 variables)",
+    "hook_cfsv2_noaa": "BLOCKED",
+    "hook_copernicus_thredds_legacy": "BLOCKED",
+    "hook_copernicus_api_modern": "BLOCKED",
+    "hooks_pending_p1": ["NASA_NDVI", "USGS_SOIL", "RSF_SSF", "MAXENT"]
+  },
+
+  "next_required_directives_from_commandant": [
+    "Étendre batch aux 27 sous-espèces du registre BP135 complet OR",
+    "Préparer hook NASA NDVI (MODIS/VIIRS) avec infrastructure réutilisable OR",
+    "Préparer hook USGS Soil (SoilGrids/POLARIS) OR",
+    "Demander dashboard institutionnel synthétique consolidant 14 audits NOAA Ω + 3 hooks ACTIVATED + 1 batch BP135"
+  ]
+}

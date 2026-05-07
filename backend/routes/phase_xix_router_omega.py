@@ -1999,3 +1999,90 @@ async def openweathermap_batch_probe_bp135_endpoint(
         "result": payload,
         "v30_lock": "INVIOLÉ",
     })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE — activation officielle
+# ═════════════════════════════════════════════════════════════════════════
+class OpenWeatherMapBatchBp135HookActivateBody(BaseModel):
+    manifest_sha256: str
+    reason: str = "owm_batch_bp135_activated"
+    persist: bool = True
+
+
+@router.post("/openweathermap-batch-bp135-hook-activate")
+async def openweathermap_batch_bp135_hook_activate_endpoint(
+    body: OpenWeatherMapBatchBp135HookActivateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE · activation officielle.
+
+    Workflow doctrinal :
+      1. Guardrails ENFORCED check (412 sinon)
+      2. Vérification ANTI-GÉNÉRIQUE STRICTE : manifest_sha256 doit
+         exister dans OPENWEATHERMAP_BATCH_BP135_PATH avec n_valid >= 1
+      3. Construction manifest activation signé SHA-256 + sommaire
+         des espèces validées + stats inherited
+      4. Forensic log HOOK_ACTIVATIONS/OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE
+      5. Persistance overlay history (V30_LOCK FUSION ADD-ONLY)
+      6. Audit doctrinal NOAA_PIPELINE/OWM_BATCH_BP135_HOOK_ACTIVATE
+      7. AUCUN recalcul moteur ICI (drift audit séparé)
+
+    Token Commandant requis. Anti-générique strict.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.noaa_pipeline_omega import (
+        activate_openweathermap_batch_bp135_hook,
+    )
+    try:
+        payload = activate_openweathermap_batch_bp135_hook(
+            manifest_sha256=body.manifest_sha256,
+            reason=body.reason,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "OWM_BATCH_BP135_HOOK_ACTIVATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id":
+            "OWM_BATCH_BP135_HOOK_ACTIVATE_EXECUTE_Ω",
+        "doctrine":
+            "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre":
+            "P1_OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/openweathermap-batch-bp135-hook-status")
+async def openweathermap_batch_bp135_hook_status_endpoint() -> JSONResponse:
+    """État actuel du hook BATCH BP135 (PUBLIC RO)."""
+    from engines.v8_institutional.especes.noaa_pipeline_omega import (
+        get_openweathermap_batch_bp135_hook_status,
+    )
+    payload = get_openweathermap_batch_bp135_hook_status()
+    return JSONResponse({
+        "manifest_id":
+            "OWM_BATCH_BP135_HOOK_STATUS_GET_Ω",
+        "doctrine":
+            "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre":
+            "P1_OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })

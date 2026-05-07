@@ -1116,7 +1116,281 @@ __all__ = [
     "validate_openweathermap_zone_pivot",
     "OPENWEATHERMAP_BATCH_BP135_PATH",
     "batch_probe_owm_bp135",
+    "OPENWEATHERMAP_BATCH_BP135_HOOK_PATH",
+    "activate_openweathermap_batch_bp135_hook",
+    "get_openweathermap_batch_bp135_hook_status",
 ]
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# 17. OPENWEATHERMAP BATCH BP135 HOOK ACTIVATION (officielle FUSION ADD-ONLY)
+# ═════════════════════════════════════════════════════════════════════════
+OPENWEATHERMAP_BATCH_BP135_HOOK_PATH = (
+    PIPELINE_ROOT / "openweathermap_batch_bp135_hook_activation_overlay.json")
+
+
+def _find_validated_owm_batch_manifest(
+    target_manifest_sha256: str,
+) -> Optional[Dict[str, Any]]:
+    """Cherche un manifest BATCH BP135 validé dans l'historique.
+
+    Anti-générique strict : on ne peut activer un hook batch que sur
+    un manifest_sha256 RÉELLEMENT validé (au moins 1 espèce valide).
+    Retourne None si introuvable ou non-valide.
+    """
+    if not OPENWEATHERMAP_BATCH_BP135_PATH.exists():
+        return None
+    try:
+        state = json.loads(
+            OPENWEATHERMAP_BATCH_BP135_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
+    history = state.get("history", [])
+    for entry in history:
+        if (entry.get("manifest_sha256") == target_manifest_sha256
+                and entry.get("n_valid", 0) >= 1):
+            return entry
+    return None
+
+
+def activate_openweathermap_batch_bp135_hook(
+    manifest_sha256: str,
+    reason: str = "owm_batch_bp135_activated",
+    persist: bool = True,
+) -> Dict[str, Any]:
+    """OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE · activation officielle.
+
+    Workflow doctrinal :
+      1. Guardrails ENFORCED check (412 sinon)
+      2. Vérification ANTI-GÉNÉRIQUE STRICTE : manifest_sha256 doit
+         exister dans OPENWEATHERMAP_BATCH_BP135_PATH avec n_valid >= 1.
+         Refus d'activer un manifest fabriqué.
+      3. Construction manifest activation signé SHA-256 + sommaire
+         5 espèces validées
+      4. Forensic log HOOK_ACTIVATIONS/OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE
+      5. Persistance overlay history (V30_LOCK FUSION ADD-ONLY)
+      6. Audit doctrinal NOAA_PIPELINE/OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE
+      7. AUCUN recalcul moteur ICI (drift audit séparé)
+
+    Returns:
+      Dict avec verdict + activation_sha256 + sommaire 5 espèces.
+    """
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        require_guardrails_enforced, log_forensic_event,
+    )
+    require_guardrails_enforced(
+        "activate_openweathermap_batch_bp135_hook")
+
+    t0 = time.time()
+    validated_batch = _find_validated_owm_batch_manifest(
+        manifest_sha256)
+    if validated_batch is None:
+        verdict = (
+            "OWM_BATCH_BP135_HOOK_REJECTED_MANIFEST_NOT_FOUND_OR_INVALID")
+        rejection_payload = {
+            "manifest_id": "OWM_BATCH_BP135_HOOK_ACTIVATE_Ω",
+            "ordre": "P1_OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE",
+            "doctrine":
+                "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "guardrails_enforced": True,
+            "autonomy": "LIMITED",
+            "activated": False,
+            "verdict": verdict,
+            "reason": reason,
+            "input_manifest_sha256": manifest_sha256,
+            "rejection_explanation": (
+                "Le manifest_sha256 fourni n'existe pas dans "
+                "OPENWEATHERMAP_BATCH_BP135_PATH avec n_valid >= 1. "
+                "Anti-générique strict : impossible d'activer un hook "
+                "batch sur un manifest non validé."),
+            "anti_generique_strict": True,
+            "v30_lock": "INVIOLÉ",
+            "drift_zero": True,
+            "no_engine_recompute_triggered": True,
+            "executed_at_utc": _utc_now(),
+            "elapsed_s": round(time.time() - t0, 3),
+        }
+        log_forensic_event(
+            scope="HOOK_ACTIVATIONS",
+            event="OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE",
+            details={
+                "input_manifest_sha256": manifest_sha256,
+                "reason": reason,
+                "activated": False,
+                "verdict": verdict,
+            },
+            persist=True,
+        )
+        return rejection_payload
+
+    # Construction sommaire batch (anti-générique : extraction réelle)
+    species_summary: List[Dict[str, Any]] = []
+    for sp in validated_batch.get("species_results", []):
+        species_summary.append({
+            "species_name": sp.get("species_name"),
+            "lat": (sp.get("coords") or {}).get("lat"),
+            "lon": (sp.get("coords") or {}).get("lon"),
+            "valid": sp.get("valid"),
+            "city_resolved_by_owm": (
+                (sp.get("current_meta") or {}).get("city_name")),
+            "country": (
+                (sp.get("current_meta") or {}).get("country")),
+            "weather_main": (
+                (sp.get("current_meta") or {}).get("weather_main")),
+            "n_variables_extracted": (
+                sp.get("n_variables_extracted")),
+        })
+
+    activation_payload = {
+        "manifest_id": "OWM_BATCH_BP135_HOOK_ACTIVATE_Ω",
+        "ordre": "P1_OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "guardrails_enforced": True,
+        "autonomy": "LIMITED",
+        "activated": True,
+        "verdict": "OWM_BATCH_BP135_HOOK_ACTIVATED_OPERATIONAL",
+        "reason": reason,
+        "validated_manifest_sha256": manifest_sha256,
+        "validated_batch_executed_at_utc": (
+            validated_batch.get("executed_at_utc")),
+        "n_species_total": validated_batch.get("n_species_total"),
+        "n_species_valid": validated_batch.get("n_valid"),
+        "species_summary": species_summary,
+        "aggregated_stats_inherited": validated_batch.get(
+            "aggregated_stats_across_valid_species") or {},
+        "endpoints_inherited": validated_batch.get("endpoints"),
+        "units": validated_batch.get("units"),
+        "consumed_by_modules": [
+            "PHYSIOLOGIE_THERMIQUE",
+            "HABITAT_MICROCLIMAT",
+            "NUTRITION_HUMIDITE",
+            "PHENOLOGIE_FORECAST_5_DAY",
+        ],
+        "fusion_add_only": True,
+        "anti_generique_strict": True,
+        "v30_lock": "INVIOLÉ",
+        "drift_zero": True,
+        "no_engine_recompute_triggered": True,
+        "registered_at_utc": _utc_now(),
+    }
+    activation_sha256 = hashlib.sha256(
+        json.dumps(activation_payload, sort_keys=True,
+                   ensure_ascii=False, default=str).encode("utf-8")
+    ).hexdigest()
+    activation_payload["activation_sha256"] = activation_sha256
+
+    persisted: Dict[str, Any] = {}
+    if persist:
+        PIPELINE_ROOT.mkdir(parents=True, exist_ok=True)
+        if OPENWEATHERMAP_BATCH_BP135_HOOK_PATH.exists():
+            try:
+                state = json.loads(
+                    OPENWEATHERMAP_BATCH_BP135_HOOK_PATH.read_text(
+                        encoding="utf-8"))
+                if not isinstance(state, dict) or (
+                        "history" not in state):
+                    state = {"history": []}
+            except json.JSONDecodeError:
+                state = {"history": []}
+        else:
+            state = {"history": []}
+        state["history"].append(activation_payload)
+        state["last_updated_utc"] = _utc_now()
+        state["n_activations"] = len(state["history"])
+        state["last_activation_sha256"] = activation_sha256
+        state["last_validated_manifest_sha256"] = manifest_sha256
+        state["v30_lock"] = "INVIOLÉ"
+        OPENWEATHERMAP_BATCH_BP135_HOOK_PATH.write_text(
+            json.dumps(state, ensure_ascii=False, indent=2),
+            encoding="utf-8")
+        persisted["overlay_path"] = str(
+            OPENWEATHERMAP_BATCH_BP135_HOOK_PATH)
+        persisted["overlay_size_bytes"] = (
+            OPENWEATHERMAP_BATCH_BP135_HOOK_PATH.stat().st_size)
+        persisted["n_activations_history"] = state["n_activations"]
+
+        log_forensic_event(
+            scope="HOOK_ACTIVATIONS",
+            event="OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE",
+            details={
+                "validated_manifest_sha256": manifest_sha256,
+                "activation_sha256": activation_sha256,
+                "reason": reason,
+                "activated": True,
+                "n_species_valid": validated_batch.get("n_valid"),
+                "verdict":
+                    "OWM_BATCH_BP135_HOOK_ACTIVATED_OPERATIONAL",
+            },
+            persist=True,
+        )
+
+        from engines.v8_institutional.especes.bio_reacteur_overlay_omega import (  # noqa: E501
+            persist_audit,
+        )
+        audit_payload = {
+            "audit_type": "NOAA_PIPELINE",
+            "subtype": "OWM_BATCH_BP135_HOOK_ACTIVATE",
+            "ordre":
+                "P1_OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE",
+            "doctrine":
+                "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "provider": "OPENWEATHERMAP",
+            "validated_manifest_sha256": manifest_sha256,
+            "activation_sha256": activation_sha256,
+            "reason": reason,
+            "activated": True,
+            "verdict":
+                "OWM_BATCH_BP135_HOOK_ACTIVATED_OPERATIONAL",
+            "n_species_valid": validated_batch.get("n_valid"),
+            "n_species_total": validated_batch.get(
+                "n_species_total"),
+            "v30_lock_inviolate": True,
+            "drift_zero": True,
+            "no_engine_recompute_triggered": True,
+        }
+        persisted["audit_persisted"] = persist_audit(audit_payload)
+
+    activation_payload["persisted_paths"] = persisted
+    activation_payload["elapsed_s"] = round(time.time() - t0, 3)
+    return activation_payload
+
+
+def get_openweathermap_batch_bp135_hook_status() -> Dict[str, Any]:
+    """État actuel du hook BATCH BP135 (read-only)."""
+    if not OPENWEATHERMAP_BATCH_BP135_HOOK_PATH.exists():
+        return {
+            "manifest_id": "OWM_BATCH_BP135_HOOK_STATUS_Ω",
+            "ordre":
+                "P1_OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE",
+            "current_status": "NOT_ACTIVATED",
+            "v30_lock": "INVIOLÉ",
+            "scanned_at_utc": _utc_now(),
+        }
+    state = json.loads(
+        OPENWEATHERMAP_BATCH_BP135_HOOK_PATH.read_text(
+            encoding="utf-8"))
+    last = (state["history"][-1]
+            if state.get("history") else None)
+    return {
+        "manifest_id": "OWM_BATCH_BP135_HOOK_STATUS_Ω",
+        "ordre": "P1_OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "current_status": (
+            "ACTIVATED_OPERATIONAL" if last
+            and last.get("activated") else "NOT_ACTIVATED"),
+        "n_activations_history": state.get("n_activations", 0),
+        "last_activation_sha256": state.get(
+            "last_activation_sha256"),
+        "last_validated_manifest_sha256": state.get(
+            "last_validated_manifest_sha256"),
+        "last_updated_utc": state.get("last_updated_utc"),
+        "last_activation": last,
+        "overlay_path": str(OPENWEATHERMAP_BATCH_BP135_HOOK_PATH),
+        "overlay_size_bytes": (
+            OPENWEATHERMAP_BATCH_BP135_HOOK_PATH.stat().st_size),
+        "v30_lock": "INVIOLÉ",
+        "scanned_at_utc": _utc_now(),
+    }
 
 
 # ═════════════════════════════════════════════════════════════════════════
