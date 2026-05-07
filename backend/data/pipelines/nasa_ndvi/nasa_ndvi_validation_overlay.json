@@ -1,0 +1,1028 @@
+{
+  "history": [
+    {
+      "manifest_id": "NASA_NDVI_P0_VALIDATE_Ω",
+      "ordre": "P1_NASA_NDVI_P0_VALIDATE_Ω_ULTIME",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "valid": false,
+      "verdict": "NASA_NDVI_VALIDATE_ALL_BANDS_INVALID",
+      "provider": "NASA_NDVI_MODIS_ORNL",
+      "base_endpoint": "https://modis.ornl.gov/rst/api/v1",
+      "products_used": [
+        "MOD13Q1"
+      ],
+      "products_documented_but_not_probed": [
+        "MOD15A2H (LAI/FPAR)",
+        "MOD17A2H (GPP)"
+      ],
+      "bands_requested_logical": [
+        "NDVI",
+        "EVI",
+        "VI_QUALITY",
+        "LAI",
+        "FPAR",
+        "GPP"
+      ],
+      "bands_probed_in_mod13q1": [
+        "NDVI",
+        "EVI",
+        "VI_QUALITY"
+      ],
+      "bands_deferred_other_product": [
+        "LAI",
+        "FPAR",
+        "GPP"
+      ],
+      "bands_unknown_in_registry": [],
+      "n_species_total": 5,
+      "n_calls_made": 15,
+      "n_calls_success": 0,
+      "n_calls_failed": 15,
+      "max_points_per_band": 24,
+      "temporal_range": {
+        "start_date_modis": "A2025127",
+        "end_date_modis": "A2026127",
+        "days_lookback": 365
+      },
+      "species_results": {
+        "espece_a": {
+          "coords": {
+            "lat": 46.8131,
+            "lon": -71.2075
+          },
+          "bands": {
+            "NDVI": {
+              "logical_name": "NDVI",
+              "canonical_band": "250m_16_days_NDVI",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1?latitude=46.8131&longitude=-71.2075&band=250m_16_days_NDVI&startDate=A2025127&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 404,
+              "content_type": null,
+              "elapsed_ms": 221.4,
+              "redirect_detected": false,
+              "reason": "http_error_404",
+              "valid": false,
+              "stats": null,
+              "n_subset_points_returned": 0
+            },
+            "EVI": {
+              "logical_name": "EVI",
+              "canonical_band": "250m_16_days_EVI",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1?latitude=46.8131&longitude=-71.2075&band=250m_16_days_EVI&startDate=A2025127&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 404,
+              "content_type": null,
+              "elapsed_ms": 152.7,
+              "redirect_detected": false,
+              "reason": "http_error_404",
+              "valid": false,
+              "stats": null,
+              "n_subset_points_returned": 0
+            },
+            "VI_QUALITY": {
+              "logical_name": "VI_QUALITY",
+              "canonical_band": "250m_16_days_VI_Quality",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1?latitude=46.8131&longitude=-71.2075&band=250m_16_days_VI_Quality&startDate=A2025127&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 404,
+              "content_type": null,
+              "elapsed_ms": 154.6,
+              "redirect_detected": false,
+              "reason": "http_error_404",
+              "valid": false,
+              "stats": null,
+              "n_subset_points_returned": 0
+            }
+          },
+          "deferred_bands": [
+            {
+              "logical_name": "LAI",
+              "would_require_product": "MOD15A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD15A2H::anti_generique_strict_no_fabrication"
+            },
+            {
+              "logical_name": "FPAR",
+              "would_require_product": "MOD15A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD15A2H::anti_generique_strict_no_fabrication"
+            },
+            {
+              "logical_name": "GPP",
+              "would_require_product": "MOD17A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD17A2H::anti_generique_strict_no_fabrication"
+            }
+          ]
+        },
+        "espece_b": {
+          "coords": {
+            "lat": 47.2,
+            "lon": -70.27
+          },
+          "bands": {
+            "NDVI": {
+              "logical_name": "NDVI",
+              "canonical_band": "250m_16_days_NDVI",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1?latitude=47.2&longitude=-70.27&band=250m_16_days_NDVI&startDate=A2025127&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 404,
+              "content_type": null,
+              "elapsed_ms": 152.5,
+              "redirect_detected": false,
+              "reason": "http_error_404",
+              "valid": false,
+              "stats": null,
+              "n_subset_points_returned": 0
+            },
+            "EVI": {
+              "logical_name": "EVI",
+              "canonical_band": "250m_16_days_EVI",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1?latitude=47.2&longitude=-70.27&band=250m_16_days_EVI&startDate=A2025127&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 404,
+              "content_type": null,
+              "elapsed_ms": 165.7,
+              "redirect_detected": false,
+              "reason": "http_error_404",
+              "valid": false,
+              "stats": null,
+              "n_subset_points_returned": 0
+            },
+            "VI_QUALITY": {
+              "logical_name": "VI_QUALITY",
+              "canonical_band": "250m_16_days_VI_Quality",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1?latitude=47.2&longitude=-70.27&band=250m_16_days_VI_Quality&startDate=A2025127&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 404,
+              "content_type": null,
+              "elapsed_ms": 151.3,
+              "redirect_detected": false,
+              "reason": "http_error_404",
+              "valid": false,
+              "stats": null,
+              "n_subset_points_returned": 0
+            }
+          },
+          "deferred_bands": [
+            {
+              "logical_name": "LAI",
+              "would_require_product": "MOD15A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD15A2H::anti_generique_strict_no_fabrication"
+            },
+            {
+              "logical_name": "FPAR",
+              "would_require_product": "MOD15A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD15A2H::anti_generique_strict_no_fabrication"
+            },
+            {
+              "logical_name": "GPP",
+              "would_require_product": "MOD17A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD17A2H::anti_generique_strict_no_fabrication"
+            }
+          ]
+        },
+        "espece_c": {
+          "coords": {
+            "lat": 48.34,
+            "lon": -69.39
+          },
+          "bands": {
+            "NDVI": {
+              "logical_name": "NDVI",
+              "canonical_band": "250m_16_days_NDVI",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1?latitude=48.34&longitude=-69.39&band=250m_16_days_NDVI&startDate=A2025127&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 404,
+              "content_type": null,
+              "elapsed_ms": 161.7,
+              "redirect_detected": false,
+              "reason": "http_error_404",
+              "valid": false,
+              "stats": null,
+              "n_subset_points_returned": 0
+            },
+            "EVI": {
+              "logical_name": "EVI",
+              "canonical_band": "250m_16_days_EVI",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1?latitude=48.34&longitude=-69.39&band=250m_16_days_EVI&startDate=A2025127&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 404,
+              "content_type": null,
+              "elapsed_ms": 157.3,
+              "redirect_detected": false,
+              "reason": "http_error_404",
+              "valid": false,
+              "stats": null,
+              "n_subset_points_returned": 0
+            },
+            "VI_QUALITY": {
+              "logical_name": "VI_QUALITY",
+              "canonical_band": "250m_16_days_VI_Quality",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1?latitude=48.34&longitude=-69.39&band=250m_16_days_VI_Quality&startDate=A2025127&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 404,
+              "content_type": null,
+              "elapsed_ms": 178.9,
+              "redirect_detected": false,
+              "reason": "http_error_404",
+              "valid": false,
+              "stats": null,
+              "n_subset_points_returned": 0
+            }
+          },
+          "deferred_bands": [
+            {
+              "logical_name": "LAI",
+              "would_require_product": "MOD15A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD15A2H::anti_generique_strict_no_fabrication"
+            },
+            {
+              "logical_name": "FPAR",
+              "would_require_product": "MOD15A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD15A2H::anti_generique_strict_no_fabrication"
+            },
+            {
+              "logical_name": "GPP",
+              "would_require_product": "MOD17A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD17A2H::anti_generique_strict_no_fabrication"
+            }
+          ]
+        },
+        "espece_d": {
+          "coords": {
+            "lat": 46.36,
+            "lon": -72.07
+          },
+          "bands": {
+            "NDVI": {
+              "logical_name": "NDVI",
+              "canonical_band": "250m_16_days_NDVI",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1?latitude=46.36&longitude=-72.07&band=250m_16_days_NDVI&startDate=A2025127&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 404,
+              "content_type": null,
+              "elapsed_ms": 152.7,
+              "redirect_detected": false,
+              "reason": "http_error_404",
+              "valid": false,
+              "stats": null,
+              "n_subset_points_returned": 0
+            },
+            "EVI": {
+              "logical_name": "EVI",
+              "canonical_band": "250m_16_days_EVI",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1?latitude=46.36&longitude=-72.07&band=250m_16_days_EVI&startDate=A2025127&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 404,
+              "content_type": null,
+              "elapsed_ms": 154.4,
+              "redirect_detected": false,
+              "reason": "http_error_404",
+              "valid": false,
+              "stats": null,
+              "n_subset_points_returned": 0
+            },
+            "VI_QUALITY": {
+              "logical_name": "VI_QUALITY",
+              "canonical_band": "250m_16_days_VI_Quality",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1?latitude=46.36&longitude=-72.07&band=250m_16_days_VI_Quality&startDate=A2025127&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 404,
+              "content_type": null,
+              "elapsed_ms": 151.9,
+              "redirect_detected": false,
+              "reason": "http_error_404",
+              "valid": false,
+              "stats": null,
+              "n_subset_points_returned": 0
+            }
+          },
+          "deferred_bands": [
+            {
+              "logical_name": "LAI",
+              "would_require_product": "MOD15A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD15A2H::anti_generique_strict_no_fabrication"
+            },
+            {
+              "logical_name": "FPAR",
+              "would_require_product": "MOD15A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD15A2H::anti_generique_strict_no_fabrication"
+            },
+            {
+              "logical_name": "GPP",
+              "would_require_product": "MOD17A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD17A2H::anti_generique_strict_no_fabrication"
+            }
+          ]
+        },
+        "espece_e": {
+          "coords": {
+            "lat": 47.0,
+            "lon": -71.0
+          },
+          "bands": {
+            "NDVI": {
+              "logical_name": "NDVI",
+              "canonical_band": "250m_16_days_NDVI",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1?latitude=47.0&longitude=-71.0&band=250m_16_days_NDVI&startDate=A2025127&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 404,
+              "content_type": null,
+              "elapsed_ms": 154.3,
+              "redirect_detected": false,
+              "reason": "http_error_404",
+              "valid": false,
+              "stats": null,
+              "n_subset_points_returned": 0
+            },
+            "EVI": {
+              "logical_name": "EVI",
+              "canonical_band": "250m_16_days_EVI",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1?latitude=47.0&longitude=-71.0&band=250m_16_days_EVI&startDate=A2025127&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 404,
+              "content_type": null,
+              "elapsed_ms": 154.4,
+              "redirect_detected": false,
+              "reason": "http_error_404",
+              "valid": false,
+              "stats": null,
+              "n_subset_points_returned": 0
+            },
+            "VI_QUALITY": {
+              "logical_name": "VI_QUALITY",
+              "canonical_band": "250m_16_days_VI_Quality",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1?latitude=47.0&longitude=-71.0&band=250m_16_days_VI_Quality&startDate=A2025127&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 404,
+              "content_type": null,
+              "elapsed_ms": 153.3,
+              "redirect_detected": false,
+              "reason": "http_error_404",
+              "valid": false,
+              "stats": null,
+              "n_subset_points_returned": 0
+            }
+          },
+          "deferred_bands": [
+            {
+              "logical_name": "LAI",
+              "would_require_product": "MOD15A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD15A2H::anti_generique_strict_no_fabrication"
+            },
+            {
+              "logical_name": "FPAR",
+              "would_require_product": "MOD15A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD15A2H::anti_generique_strict_no_fabrication"
+            },
+            {
+              "logical_name": "GPP",
+              "would_require_product": "MOD17A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD17A2H::anti_generique_strict_no_fabrication"
+            }
+          ]
+        }
+      },
+      "habitat_outputs_status": {
+        "phase": "P0_VALIDATE",
+        "habitat_outputs_computed": false,
+        "doctrinal_explanation": "Habitat outputs (food_availability, food_quality, bedding_zones, feeding_zones, rut_zones, refuge_zones, movement_corridors, saline_optimal_locations, pressure_sensitive_zones, microhabitat_clusters) require transformations applied to RAW NDVI/EVI/LAI/FPAR/GPP values combined with species-specific niche models. Anti-générique strict : these outputs are computed in a separate HOOK_ACTIVATE phase with documented transforms, NOT in P0_VALIDATE. Refer to NASA_NDVI_HOOK_ACTIVATE.",
+        "deferred_to_hook_activate": true
+      },
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-07T22:42:47+00:00",
+      "elapsed_s": 9.924,
+      "manifest_sha256": "d004af3f1038a7d3fa7288ed2e28c09071cc0990ff870c67b0af0aa2565fd865"
+    },
+    {
+      "manifest_id": "NASA_NDVI_P0_VALIDATE_Ω",
+      "ordre": "P1_NASA_NDVI_P0_VALIDATE_Ω_ULTIME",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "valid": true,
+      "verdict": "NASA_NDVI_VALIDATE_ALL_BANDS_VALID",
+      "provider": "NASA_NDVI_MODIS_ORNL",
+      "base_endpoint": "https://modis.ornl.gov/rst/api/v1",
+      "products_used": [
+        "MOD13Q1"
+      ],
+      "products_documented_but_not_probed": [
+        "MOD15A2H (LAI/FPAR)",
+        "MOD17A2H (GPP)"
+      ],
+      "bands_requested_logical": [
+        "NDVI",
+        "EVI",
+        "VI_QUALITY",
+        "LAI",
+        "FPAR",
+        "GPP"
+      ],
+      "bands_probed_in_mod13q1": [
+        "NDVI",
+        "EVI",
+        "VI_QUALITY"
+      ],
+      "bands_deferred_other_product": [
+        "LAI",
+        "FPAR",
+        "GPP"
+      ],
+      "bands_unknown_in_registry": [],
+      "n_species_total": 5,
+      "n_calls_made": 15,
+      "n_calls_success": 15,
+      "n_calls_failed": 0,
+      "max_points_per_band": 10,
+      "temporal_range": {
+        "start_date_modis": "A2025364",
+        "end_date_modis": "A2026127",
+        "days_lookback": 128
+      },
+      "species_results": {
+        "espece_a": {
+          "coords": {
+            "lat": 46.8131,
+            "lon": -71.2075
+          },
+          "bands": {
+            "NDVI": {
+              "logical_name": "NDVI",
+              "canonical_band": "250m_16_days_NDVI",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=46.8131&longitude=-71.2075&band=250m_16_days_NDVI&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 200,
+              "content_type": "application/json",
+              "elapsed_ms": 12187.4,
+              "redirect_detected": false,
+              "reason": null,
+              "valid": true,
+              "stats": {
+                "n_total": 6,
+                "n_valid": 6,
+                "n_nodata": 0,
+                "min": -0.0512,
+                "max": 0.0019,
+                "mean": -0.0235,
+                "first_date": "2026-01-01",
+                "last_date": "2026-03-22"
+              },
+              "n_subset_points_returned": 6,
+              "scale_factor_applied": 0.0001,
+              "modis_metadata": {
+                "header": "https://modisrest.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=46.8131&longitude=-71.2075&band=250m_16_days_NDVI&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+                "cellsize_m": 231.656358264,
+                "units": "NDVI ratio - No units"
+              }
+            },
+            "EVI": {
+              "logical_name": "EVI",
+              "canonical_band": "250m_16_days_EVI",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=46.8131&longitude=-71.2075&band=250m_16_days_EVI&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 200,
+              "content_type": "application/json",
+              "elapsed_ms": 2418.4,
+              "redirect_detected": false,
+              "reason": null,
+              "valid": true,
+              "stats": {
+                "n_total": 6,
+                "n_valid": 6,
+                "n_nodata": 0,
+                "min": -0.0319,
+                "max": 0.0013,
+                "mean": -0.0144,
+                "first_date": "2026-01-01",
+                "last_date": "2026-03-22"
+              },
+              "n_subset_points_returned": 6,
+              "scale_factor_applied": 0.0001,
+              "modis_metadata": {
+                "header": "https://modisrest.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=46.8131&longitude=-71.2075&band=250m_16_days_EVI&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+                "cellsize_m": 231.656358264,
+                "units": "EVI ratio - No units"
+              }
+            },
+            "VI_QUALITY": {
+              "logical_name": "VI_QUALITY",
+              "canonical_band": "250m_16_days_VI_Quality",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=46.8131&longitude=-71.2075&band=250m_16_days_VI_Quality&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 200,
+              "content_type": "application/json",
+              "elapsed_ms": 2232.4,
+              "redirect_detected": false,
+              "reason": null,
+              "valid": true,
+              "stats": {
+                "n_total": 6,
+                "n_valid": 6,
+                "n_nodata": 0,
+                "min": 4378.0,
+                "max": 54570.0,
+                "mean": 34460.6667,
+                "first_date": "2026-01-01",
+                "last_date": "2026-03-22"
+              },
+              "n_subset_points_returned": 6,
+              "scale_factor_applied": 1.0,
+              "modis_metadata": {
+                "header": "https://modisrest.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=46.8131&longitude=-71.2075&band=250m_16_days_VI_Quality&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+                "cellsize_m": 231.656358264,
+                "units": "bit field"
+              }
+            }
+          },
+          "deferred_bands": [
+            {
+              "logical_name": "LAI",
+              "would_require_product": "MOD15A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD15A2H::anti_generique_strict_no_fabrication"
+            },
+            {
+              "logical_name": "FPAR",
+              "would_require_product": "MOD15A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD15A2H::anti_generique_strict_no_fabrication"
+            },
+            {
+              "logical_name": "GPP",
+              "would_require_product": "MOD17A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD17A2H::anti_generique_strict_no_fabrication"
+            }
+          ]
+        },
+        "espece_b": {
+          "coords": {
+            "lat": 47.2,
+            "lon": -70.27
+          },
+          "bands": {
+            "NDVI": {
+              "logical_name": "NDVI",
+              "canonical_band": "250m_16_days_NDVI",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=47.2&longitude=-70.27&band=250m_16_days_NDVI&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 200,
+              "content_type": "application/json",
+              "elapsed_ms": 2252.1,
+              "redirect_detected": false,
+              "reason": null,
+              "valid": true,
+              "stats": {
+                "n_total": 6,
+                "n_valid": 6,
+                "n_nodata": 0,
+                "min": -0.0144,
+                "max": 0.0332,
+                "mean": 0.0085,
+                "first_date": "2026-01-01",
+                "last_date": "2026-03-22"
+              },
+              "n_subset_points_returned": 6,
+              "scale_factor_applied": 0.0001,
+              "modis_metadata": {
+                "header": "https://modisrest.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=47.2&longitude=-70.27&band=250m_16_days_NDVI&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+                "cellsize_m": 231.656358264,
+                "units": "NDVI ratio - No units"
+              }
+            },
+            "EVI": {
+              "logical_name": "EVI",
+              "canonical_band": "250m_16_days_EVI",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=47.2&longitude=-70.27&band=250m_16_days_EVI&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 200,
+              "content_type": "application/json",
+              "elapsed_ms": 2308.2,
+              "redirect_detected": false,
+              "reason": null,
+              "valid": true,
+              "stats": {
+                "n_total": 6,
+                "n_valid": 6,
+                "n_nodata": 0,
+                "min": -0.015,
+                "max": 0.0356,
+                "mean": 0.009,
+                "first_date": "2026-01-01",
+                "last_date": "2026-03-22"
+              },
+              "n_subset_points_returned": 6,
+              "scale_factor_applied": 0.0001,
+              "modis_metadata": {
+                "header": "https://modisrest.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=47.2&longitude=-70.27&band=250m_16_days_EVI&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+                "cellsize_m": 231.656358264,
+                "units": "EVI ratio - No units"
+              }
+            },
+            "VI_QUALITY": {
+              "logical_name": "VI_QUALITY",
+              "canonical_band": "250m_16_days_VI_Quality",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=47.2&longitude=-70.27&band=250m_16_days_VI_Quality&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 200,
+              "content_type": "application/json",
+              "elapsed_ms": 2305.5,
+              "redirect_detected": false,
+              "reason": null,
+              "valid": true,
+              "stats": {
+                "n_total": 6,
+                "n_valid": 6,
+                "n_nodata": 0,
+                "min": 4374.0,
+                "max": 21542.0,
+                "mean": 15299.5,
+                "first_date": "2026-01-01",
+                "last_date": "2026-03-22"
+              },
+              "n_subset_points_returned": 6,
+              "scale_factor_applied": 1.0,
+              "modis_metadata": {
+                "header": "https://modisrest.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=47.2&longitude=-70.27&band=250m_16_days_VI_Quality&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+                "cellsize_m": 231.656358264,
+                "units": "bit field"
+              }
+            }
+          },
+          "deferred_bands": [
+            {
+              "logical_name": "LAI",
+              "would_require_product": "MOD15A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD15A2H::anti_generique_strict_no_fabrication"
+            },
+            {
+              "logical_name": "FPAR",
+              "would_require_product": "MOD15A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD15A2H::anti_generique_strict_no_fabrication"
+            },
+            {
+              "logical_name": "GPP",
+              "would_require_product": "MOD17A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD17A2H::anti_generique_strict_no_fabrication"
+            }
+          ]
+        },
+        "espece_c": {
+          "coords": {
+            "lat": 48.34,
+            "lon": -69.39
+          },
+          "bands": {
+            "NDVI": {
+              "logical_name": "NDVI",
+              "canonical_band": "250m_16_days_NDVI",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=48.34&longitude=-69.39&band=250m_16_days_NDVI&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 200,
+              "content_type": "application/json",
+              "elapsed_ms": 2335.1,
+              "redirect_detected": false,
+              "reason": null,
+              "valid": true,
+              "stats": {
+                "n_total": 6,
+                "n_valid": 4,
+                "n_nodata": 2,
+                "min": -0.0972,
+                "max": 0.1036,
+                "mean": 0.0124,
+                "first_date": "2026-01-01",
+                "last_date": "2026-03-22"
+              },
+              "n_subset_points_returned": 6,
+              "scale_factor_applied": 0.0001,
+              "modis_metadata": {
+                "header": "https://modisrest.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=48.34&longitude=-69.39&band=250m_16_days_NDVI&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+                "cellsize_m": 231.656358264,
+                "units": "NDVI ratio - No units"
+              }
+            },
+            "EVI": {
+              "logical_name": "EVI",
+              "canonical_band": "250m_16_days_EVI",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=48.34&longitude=-69.39&band=250m_16_days_EVI&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 200,
+              "content_type": "application/json",
+              "elapsed_ms": 2442.8,
+              "redirect_detected": false,
+              "reason": null,
+              "valid": true,
+              "stats": {
+                "n_total": 6,
+                "n_valid": 4,
+                "n_nodata": 2,
+                "min": -0.0096,
+                "max": 0.0464,
+                "mean": 0.0184,
+                "first_date": "2026-01-01",
+                "last_date": "2026-03-22"
+              },
+              "n_subset_points_returned": 6,
+              "scale_factor_applied": 0.0001,
+              "modis_metadata": {
+                "header": "https://modisrest.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=48.34&longitude=-69.39&band=250m_16_days_EVI&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+                "cellsize_m": 231.656358264,
+                "units": "EVI ratio - No units"
+              }
+            },
+            "VI_QUALITY": {
+              "logical_name": "VI_QUALITY",
+              "canonical_band": "250m_16_days_VI_Quality",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=48.34&longitude=-69.39&band=250m_16_days_VI_Quality&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 200,
+              "content_type": "application/json",
+              "elapsed_ms": 2172.7,
+              "redirect_detected": false,
+              "reason": null,
+              "valid": true,
+              "stats": {
+                "n_total": 6,
+                "n_valid": 6,
+                "n_nodata": 0,
+                "min": 4110.0,
+                "max": 63487.0,
+                "mean": 32141.3333,
+                "first_date": "2026-01-01",
+                "last_date": "2026-03-22"
+              },
+              "n_subset_points_returned": 6,
+              "scale_factor_applied": 1.0,
+              "modis_metadata": {
+                "header": "https://modisrest.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=48.34&longitude=-69.39&band=250m_16_days_VI_Quality&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+                "cellsize_m": 231.656358264,
+                "units": "bit field"
+              }
+            }
+          },
+          "deferred_bands": [
+            {
+              "logical_name": "LAI",
+              "would_require_product": "MOD15A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD15A2H::anti_generique_strict_no_fabrication"
+            },
+            {
+              "logical_name": "FPAR",
+              "would_require_product": "MOD15A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD15A2H::anti_generique_strict_no_fabrication"
+            },
+            {
+              "logical_name": "GPP",
+              "would_require_product": "MOD17A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD17A2H::anti_generique_strict_no_fabrication"
+            }
+          ]
+        },
+        "espece_d": {
+          "coords": {
+            "lat": 46.36,
+            "lon": -72.07
+          },
+          "bands": {
+            "NDVI": {
+              "logical_name": "NDVI",
+              "canonical_band": "250m_16_days_NDVI",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=46.36&longitude=-72.07&band=250m_16_days_NDVI&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 200,
+              "content_type": "application/json",
+              "elapsed_ms": 2325.2,
+              "redirect_detected": false,
+              "reason": null,
+              "valid": true,
+              "stats": {
+                "n_total": 6,
+                "n_valid": 6,
+                "n_nodata": 0,
+                "min": 0.1842,
+                "max": 0.3707,
+                "mean": 0.248,
+                "first_date": "2026-01-01",
+                "last_date": "2026-03-22"
+              },
+              "n_subset_points_returned": 6,
+              "scale_factor_applied": 0.0001,
+              "modis_metadata": {
+                "header": "https://modisrest.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=46.36&longitude=-72.07&band=250m_16_days_NDVI&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+                "cellsize_m": 231.656358264,
+                "units": "NDVI ratio - No units"
+              }
+            },
+            "EVI": {
+              "logical_name": "EVI",
+              "canonical_band": "250m_16_days_EVI",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=46.36&longitude=-72.07&band=250m_16_days_EVI&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 200,
+              "content_type": "application/json",
+              "elapsed_ms": 2214.6,
+              "redirect_detected": false,
+              "reason": null,
+              "valid": true,
+              "stats": {
+                "n_total": 6,
+                "n_valid": 6,
+                "n_nodata": 0,
+                "min": 0.1263,
+                "max": 0.221,
+                "mean": 0.1723,
+                "first_date": "2026-01-01",
+                "last_date": "2026-03-22"
+              },
+              "n_subset_points_returned": 6,
+              "scale_factor_applied": 0.0001,
+              "modis_metadata": {
+                "header": "https://modisrest.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=46.36&longitude=-72.07&band=250m_16_days_EVI&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+                "cellsize_m": 231.656358264,
+                "units": "EVI ratio - No units"
+              }
+            },
+            "VI_QUALITY": {
+              "logical_name": "VI_QUALITY",
+              "canonical_band": "250m_16_days_VI_Quality",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=46.36&longitude=-72.07&band=250m_16_days_VI_Quality&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 200,
+              "content_type": "application/json",
+              "elapsed_ms": 2236.4,
+              "redirect_detected": false,
+              "reason": null,
+              "valid": true,
+              "stats": {
+                "n_total": 6,
+                "n_valid": 6,
+                "n_nodata": 0,
+                "min": 2062.0,
+                "max": 18453.0,
+                "mean": 10302.6667,
+                "first_date": "2026-01-01",
+                "last_date": "2026-03-22"
+              },
+              "n_subset_points_returned": 6,
+              "scale_factor_applied": 1.0,
+              "modis_metadata": {
+                "header": "https://modisrest.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=46.36&longitude=-72.07&band=250m_16_days_VI_Quality&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+                "cellsize_m": 231.656358264,
+                "units": "bit field"
+              }
+            }
+          },
+          "deferred_bands": [
+            {
+              "logical_name": "LAI",
+              "would_require_product": "MOD15A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD15A2H::anti_generique_strict_no_fabrication"
+            },
+            {
+              "logical_name": "FPAR",
+              "would_require_product": "MOD15A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD15A2H::anti_generique_strict_no_fabrication"
+            },
+            {
+              "logical_name": "GPP",
+              "would_require_product": "MOD17A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD17A2H::anti_generique_strict_no_fabrication"
+            }
+          ]
+        },
+        "espece_e": {
+          "coords": {
+            "lat": 47.0,
+            "lon": -71.0
+          },
+          "bands": {
+            "NDVI": {
+              "logical_name": "NDVI",
+              "canonical_band": "250m_16_days_NDVI",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=47.0&longitude=-71.0&band=250m_16_days_NDVI&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 200,
+              "content_type": "application/json",
+              "elapsed_ms": 2462.3,
+              "redirect_detected": false,
+              "reason": null,
+              "valid": true,
+              "stats": {
+                "n_total": 6,
+                "n_valid": 6,
+                "n_nodata": 0,
+                "min": 0.0261,
+                "max": 0.093,
+                "mean": 0.0462,
+                "first_date": "2026-01-01",
+                "last_date": "2026-03-22"
+              },
+              "n_subset_points_returned": 6,
+              "scale_factor_applied": 0.0001,
+              "modis_metadata": {
+                "header": "https://modisrest.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=47.0&longitude=-71.0&band=250m_16_days_NDVI&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+                "cellsize_m": 231.656358264,
+                "units": "NDVI ratio - No units"
+              }
+            },
+            "EVI": {
+              "logical_name": "EVI",
+              "canonical_band": "250m_16_days_EVI",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=47.0&longitude=-71.0&band=250m_16_days_EVI&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 200,
+              "content_type": "application/json",
+              "elapsed_ms": 2377.1,
+              "redirect_detected": false,
+              "reason": null,
+              "valid": true,
+              "stats": {
+                "n_total": 6,
+                "n_valid": 6,
+                "n_nodata": 0,
+                "min": 0.0274,
+                "max": 0.102,
+                "mean": 0.0494,
+                "first_date": "2026-01-01",
+                "last_date": "2026-03-22"
+              },
+              "n_subset_points_returned": 6,
+              "scale_factor_applied": 0.0001,
+              "modis_metadata": {
+                "header": "https://modisrest.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=47.0&longitude=-71.0&band=250m_16_days_EVI&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+                "cellsize_m": 231.656358264,
+                "units": "EVI ratio - No units"
+              }
+            },
+            "VI_QUALITY": {
+              "logical_name": "VI_QUALITY",
+              "canonical_band": "250m_16_days_VI_Quality",
+              "product": "MOD13Q1",
+              "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=47.0&longitude=-71.0&band=250m_16_days_VI_Quality&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+              "http_status": 200,
+              "content_type": "application/json",
+              "elapsed_ms": 2295.7,
+              "redirect_detected": false,
+              "reason": null,
+              "valid": true,
+              "stats": {
+                "n_total": 6,
+                "n_valid": 6,
+                "n_nodata": 0,
+                "min": 4114.0,
+                "max": 53277.0,
+                "mean": 20246.0,
+                "first_date": "2026-01-01",
+                "last_date": "2026-03-22"
+              },
+              "n_subset_points_returned": 6,
+              "scale_factor_applied": 1.0,
+              "modis_metadata": {
+                "header": "https://modisrest.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=47.0&longitude=-71.0&band=250m_16_days_VI_Quality&startDate=A2025364&endDate=A2026127&kmAboveBelow=0&kmLeftRight=0",
+                "cellsize_m": 231.656358264,
+                "units": "bit field"
+              }
+            }
+          },
+          "deferred_bands": [
+            {
+              "logical_name": "LAI",
+              "would_require_product": "MOD15A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD15A2H::anti_generique_strict_no_fabrication"
+            },
+            {
+              "logical_name": "FPAR",
+              "would_require_product": "MOD15A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD15A2H::anti_generique_strict_no_fabrication"
+            },
+            {
+              "logical_name": "GPP",
+              "would_require_product": "MOD17A2H",
+              "deferred_reason": "BAND_NOT_IN_MOD13Q1::requires_product_MOD17A2H::anti_generique_strict_no_fabrication"
+            }
+          ]
+        }
+      },
+      "habitat_outputs_status": {
+        "phase": "P0_VALIDATE",
+        "habitat_outputs_computed": false,
+        "doctrinal_explanation": "Habitat outputs (food_availability, food_quality, bedding_zones, feeding_zones, rut_zones, refuge_zones, movement_corridors, saline_optimal_locations, pressure_sensitive_zones, microhabitat_clusters) require transformations applied to RAW NDVI/EVI/LAI/FPAR/GPP values combined with species-specific niche models. Anti-générique strict : these outputs are computed in a separate HOOK_ACTIVATE phase with documented transforms, NOT in P0_VALIDATE. Refer to NASA_NDVI_HOOK_ACTIVATE.",
+        "deferred_to_hook_activate": true
+      },
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-07T22:44:41+00:00",
+      "elapsed_s": 52.071,
+      "manifest_sha256": "166178536dc5d662e0020e9838506b75b940fc045cb5da86d9a0cf23d9ca4148"
+    }
+  ],
+  "last_updated_utc": "2026-05-07T22:44:41+00:00",
+  "n_validations": 2,
+  "last_manifest_sha256": "166178536dc5d662e0020e9838506b75b940fc045cb5da86d9a0cf23d9ca4148",
+  "last_verdict": "NASA_NDVI_VALIDATE_ALL_BANDS_VALID",
+  "v30_lock": "INVIOLÉ"
+}

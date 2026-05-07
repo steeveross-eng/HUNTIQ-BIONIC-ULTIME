@@ -1,0 +1,93 @@
+{
+  "iteration": 16,
+  "ordre": "P1_NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "horodatage_utc": "2026-05-07T22:45:37+00:00",
+  "guardrails_enforced": true,
+  "autonomy": "LIMITED",
+  "executed_at": "2026-05-07T22:45:37Z",
+  "phase_a_validate": {
+    "verdict": "NASA_NDVI_VALIDATE_ALL_BANDS_VALID",
+    "manifest_sha256": "166178536dc5d662e0020e9838506b75b940fc045cb5da86d9a0cf23d9ca4148",
+    "n_calls_made": 15,
+    "n_calls_success": 15,
+    "n_calls_failed": 0,
+    "elapsed_s": 52.071,
+    "products_used": ["MOD13Q1"],
+    "products_documented_but_not_probed": ["MOD15A2H (LAI/FPAR)", "MOD17A2H (GPP)"],
+    "bands_probed_in_mod13q1": ["NDVI", "EVI", "VI_QUALITY"],
+    "bands_deferred_other_product_anti_generique_strict": ["LAI", "FPAR", "GPP"],
+    "temporal_range": {"start_date_modis": "A2025364", "end_date_modis": "A2026127", "days_lookback": 128},
+    "url_correction_anti_generique_documented": {
+      "initial_url_404": "/MOD13Q1?...",
+      "corrected_url_200": "/MOD13Q1/subset?...",
+      "ornl_constraint_discovered": "max 10 tiles temporelles (16 jours/tuile MOD13Q1 → 160 jours max)",
+      "transparent_correction": true
+    }
+  },
+  "phase_b_hook_activate": {
+    "verdict": "NASA_NDVI_HOOK_ACTIVATED_OPERATIONAL",
+    "activated": true,
+    "activation_sha256": "76b047f2980d824ce3f860d8f8647605ff42665f8592901f757e52f478c16a0d",
+    "validated_manifest_sha256": "166178536dc5d662e0020e9838506b75b940fc045cb5da86d9a0cf23d9ca4148",
+    "reason": "nasa_ndvi_ultimate_hook_activated",
+    "consumed_by_modules": [
+      "NUTRITION_VEGETATION_INDEX",
+      "PHENOLOGIE_NDVI_TIMESERIES",
+      "HABITAT_FOOD_AVAILABILITY",
+      "PREDICTIF_GREENNESS_PROXY"
+    ],
+    "habitat_outputs_status": {
+      "phase": "P1_HOOK_ACTIVATE",
+      "habitat_outputs_computed": false,
+      "deferred_to_habitat_outputs_compute": true
+    }
+  },
+  "phase_c_status": {
+    "current_status": "ACTIVATED_OPERATIONAL",
+    "n_activations_history": 1,
+    "overlay_size_bytes": 4475
+  },
+  "phase_d_drift_audit": {
+    "reason": "nasa_ndvi_ultimate_hook_activated",
+    "audit_filename": "audit_20260507T224537Z_2e3e6a28.json",
+    "before": {"drift_max": 51.37, "drift_mean": 27.56, "score_global_fusion": 50.55},
+    "after": {"drift_max": 50.76, "drift_mean": 22.04, "score_global_fusion": 54.27},
+    "deltas": {"drift_max": -0.61, "drift_mean": -5.52, "score_global_fusion": 3.72}
+  },
+  "anti_generique_sanity_test": {
+    "test": "POST /nasa-ndvi-hook-activate with manifest_sha256='0'*64",
+    "verdict": "NASA_NDVI_HOOK_REJECTED_MANIFEST_NOT_FOUND_OR_INVALID",
+    "activated_returned": false,
+    "forensic_log_persisted_even_in_rejection": true
+  },
+  "live_data_per_species_real_ndvi_evi_winter_quebec": {
+    "espece_a_quebec_46.81_-71.21": {"ndvi_mean": -0.024, "evi_mean": -0.014, "vi_quality_mean": 34461, "interpretation": "urbain_neige_dormant"},
+    "espece_b_st_jean_47.20_-70.27": {"ndvi_mean": 0.009, "evi_mean": 0.009, "interpretation": "cotier_neigeux"},
+    "espece_c_les_escoumins_48.34_-69.39": {"ndvi_mean": 0.012, "evi_mean": 0.018, "n_valid_4_n_nodata_2": true, "interpretation": "boreale_enneigee"},
+    "espece_d_fortierville_46.36_-72.07": {"ndvi_mean": 0.248, "evi_mean": 0.172, "interpretation": "agricoles_signal_residuel_hivernal_max"},
+    "espece_e_capitale_47.0_-71.0": {"ndvi_mean": 0.046, "evi_mean": 0.049, "interpretation": "epinette_neige_altitude"}
+  },
+  "pytest_status": {
+    "n_new_tests_octodecies": 17,
+    "all_passed_octodecies": true,
+    "regression_cluster_phase_xx_xxx_extended": "562/562 PASSED",
+    "no_regressions": true
+  },
+  "v30_lock": "INVIOLÉ",
+  "drift_zero": true,
+  "no_engine_recompute_triggered": true,
+  "fusion_add_only": true,
+  "anti_generique_strict": true,
+  "scientific_trap_respected": {
+    "commandant_requested_bands": ["NDVI", "EVI", "VI_QUALITY", "LAI", "FPAR", "GPP"],
+    "mod13q1_actually_contains": ["NDVI", "EVI", "VI_QUALITY", "pixel_reliability", "red/nir/blue/mir reflectance", "view/sun zenith"],
+    "deferred_to_other_products_documented": {
+      "LAI": "MOD15A2H (Leaf Area Index 8-Day 500m)",
+      "FPAR": "MOD15A2H (Fraction Photosynthetically Active Radiation 8-Day 500m)",
+      "GPP": "MOD17A2H (Gross Primary Productivity 8-Day 500m)"
+    },
+    "no_fabrication": true,
+    "directive_extension_required_for_lai_fpar_gpp": true
+  }
+}

@@ -350,7 +350,7 @@ def validate_nasa_ndvi_per_species(
             band_canonical = band_entry["band"]
             band_logical = band_entry["logical"]
             url = (
-                f"{base_endpoint}/MOD13Q1?"
+                f"{base_endpoint}/MOD13Q1/subset?"
                 f"latitude={lat}&longitude={lon}"
                 f"&band={band_canonical}"
                 f"&startDate={start_str}&endDate={end_str}"
@@ -576,10 +576,301 @@ def validate_nasa_ndvi_per_species(
     return payload
 
 
+# ═════════════════════════════════════════════════════════════════════════
+# NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME (officielle FUSION ADD-ONLY)
+# Activation conditionnée à un manifest_sha256 RÉELLEMENT validé.
+# Anti-générique strict : refus d'activation sur SHA fabriqué.
+# ═════════════════════════════════════════════════════════════════════════
+NASA_NDVI_HOOK_ACTIVATION_PATH = (
+    NASA_NDVI_ROOT / "nasa_ndvi_hook_activation_overlay.json")
+
+
+def _find_validated_nasa_ndvi_manifest(
+    target_manifest_sha256: str,
+) -> Optional[Dict[str, Any]]:
+    """Cherche un manifest NASA NDVI validé dans l'historique.
+
+    Anti-générique strict : on ne peut activer le hook que sur un
+    manifest_sha256 RÉELLEMENT validé (n_calls_success >= 1).
+    Retourne None si introuvable OU si aucun call success.
+    """
+    if not NASA_NDVI_VALIDATION_PATH.exists():
+        return None
+    try:
+        state = json.loads(
+            NASA_NDVI_VALIDATION_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
+    history = state.get("history", [])
+    for entry in history:
+        if (entry.get("manifest_sha256") == target_manifest_sha256
+                and entry.get("n_calls_success", 0) >= 1):
+            return entry
+    return None
+
+
+def activate_nasa_ndvi_hook(
+    manifest_sha256: str,
+    reason: str = "nasa_ndvi_ultimate_hook_activated",
+    persist: bool = True,
+) -> Dict[str, Any]:
+    """NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME · activation officielle.
+
+    Workflow doctrinal :
+      1. Guardrails ENFORCED check (412 sinon)
+      2. Anti-générique strict : manifest_sha256 doit exister dans
+         NASA_NDVI_VALIDATION_PATH avec n_calls_success >= 1.
+         Refus d'activer sur manifest fabriqué.
+      3. Construction manifest activation signé activation_sha256
+         + sommaire espèces validées (NDVI/EVI/VI_QUALITY)
+      4. Forensic log HOOK_ACTIVATIONS/NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME
+      5. Persistance overlay history (V30_LOCK FUSION ADD-ONLY)
+      6. Audit doctrinal NOAA_PIPELINE/NASA_NDVI_HOOK_ACTIVATE
+      7. AUCUN recalcul moteur ICI (drift audit séparé sur demande)
+
+    Returns:
+      Dict avec verdict + activation_sha256 + sommaire bandes/espèces.
+    """
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        require_guardrails_enforced, log_forensic_event,
+    )
+    require_guardrails_enforced("activate_nasa_ndvi_hook")
+
+    t0 = time.time()
+    validated = _find_validated_nasa_ndvi_manifest(manifest_sha256)
+    if validated is None:
+        verdict = (
+            "NASA_NDVI_HOOK_REJECTED_MANIFEST_NOT_FOUND_OR_INVALID")
+        rejection_payload = {
+            "manifest_id": "NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME",
+            "ordre": "P1_NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME",
+            "doctrine":
+                "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "guardrails_enforced": True,
+            "autonomy": "LIMITED",
+            "activated": False,
+            "verdict": verdict,
+            "reason": reason,
+            "input_manifest_sha256": manifest_sha256,
+            "rejection_explanation": (
+                "Le manifest_sha256 fourni n'existe pas dans "
+                "NASA_NDVI_VALIDATION_PATH avec n_calls_success >= 1. "
+                "Anti-générique strict : impossible d'activer le hook "
+                "sur un manifest non validé."),
+            "anti_generique_strict": True,
+            "v30_lock": "INVIOLÉ",
+            "drift_zero": True,
+            "no_engine_recompute_triggered": True,
+            "executed_at_utc": _utc_now(),
+            "elapsed_s": round(time.time() - t0, 3),
+        }
+        log_forensic_event(
+            scope="HOOK_ACTIVATIONS",
+            event="NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME",
+            details={
+                "input_manifest_sha256": manifest_sha256,
+                "reason": reason,
+                "activated": False,
+                "verdict": verdict,
+            },
+            persist=True,
+        )
+        return rejection_payload
+
+    # Construction sommaire validé (anti-générique : extraction réelle)
+    species_summary: List[Dict[str, Any]] = []
+    for sp_name, sp_data in (
+            validated.get("species_results") or {}).items():
+        bands_data = sp_data.get("bands", {}) or {}
+        bands_valid = [
+            b for b, br in bands_data.items() if br.get("valid")]
+        species_summary.append({
+            "species_name": sp_name,
+            "lat": (sp_data.get("coords") or {}).get("lat"),
+            "lon": (sp_data.get("coords") or {}).get("lon"),
+            "n_bands_probed": len(bands_data),
+            "n_bands_valid": len(bands_valid),
+            "bands_valid_logical": bands_valid,
+            "deferred_bands": [
+                d.get("logical_name") for d in (
+                    sp_data.get("deferred_bands") or [])],
+        })
+
+    activation_payload = {
+        "manifest_id": "NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME",
+        "ordre": "P1_NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "guardrails_enforced": True,
+        "autonomy": "LIMITED",
+        "activated": True,
+        "verdict": "NASA_NDVI_HOOK_ACTIVATED_OPERATIONAL",
+        "reason": reason,
+        "validated_manifest_sha256": manifest_sha256,
+        "validated_executed_at_utc": (
+            validated.get("executed_at_utc")),
+        "provider": "NASA_NDVI_MODIS_ORNL",
+        "products_activated": validated.get("products_used") or [
+            "MOD13Q1"],
+        "products_deferred": validated.get(
+            "products_documented_but_not_probed") or [],
+        "bands_probed_in_mod13q1": validated.get(
+            "bands_probed_in_mod13q1") or [],
+        "bands_deferred_other_product": validated.get(
+            "bands_deferred_other_product") or [],
+        "n_species_total": validated.get("n_species_total"),
+        "n_calls_success_inherited": validated.get(
+            "n_calls_success"),
+        "n_calls_failed_inherited": validated.get("n_calls_failed"),
+        "species_summary": species_summary,
+        "temporal_range_inherited": validated.get("temporal_range"),
+        "consumed_by_modules": [
+            "NUTRITION_VEGETATION_INDEX",
+            "PHENOLOGIE_NDVI_TIMESERIES",
+            "HABITAT_FOOD_AVAILABILITY",
+            "PREDICTIF_GREENNESS_PROXY",
+        ],
+        "habitat_outputs_status": {
+            "phase": "P1_HOOK_ACTIVATE",
+            "habitat_outputs_computed": False,
+            "doctrinal_explanation": (
+                "Hook NASA NDVI activé OPERATIONAL. Les habitat "
+                "outputs (food_availability, food_quality, "
+                "phenology_window, etc.) seront calculés dans une "
+                "phase ultérieure dédiée HABITAT_OUTPUTS_COMPUTE_Ω "
+                "avec transformations documentées espèce-par-espèce. "
+                "Anti-générique strict : aucun output fabriqué ici."),
+            "deferred_to_habitat_outputs_compute": True,
+        },
+        "fusion_add_only": True,
+        "anti_generique_strict": True,
+        "v30_lock": "INVIOLÉ",
+        "drift_zero": True,
+        "no_engine_recompute_triggered": True,
+        "registered_at_utc": _utc_now(),
+    }
+    activation_sha256 = hashlib.sha256(
+        json.dumps(activation_payload, sort_keys=True,
+                   ensure_ascii=False, default=str).encode("utf-8")
+    ).hexdigest()
+    activation_payload["activation_sha256"] = activation_sha256
+
+    persisted: Dict[str, Any] = {}
+    if persist:
+        NASA_NDVI_ROOT.mkdir(parents=True, exist_ok=True)
+        if NASA_NDVI_HOOK_ACTIVATION_PATH.exists():
+            try:
+                state = json.loads(
+                    NASA_NDVI_HOOK_ACTIVATION_PATH.read_text(
+                        encoding="utf-8"))
+                if not isinstance(state, dict) or (
+                        "history" not in state):
+                    state = {"history": []}
+            except json.JSONDecodeError:
+                state = {"history": []}
+        else:
+            state = {"history": []}
+        state["history"].append(activation_payload)
+        state["last_updated_utc"] = _utc_now()
+        state["n_activations"] = len(state["history"])
+        state["last_activation_sha256"] = activation_sha256
+        state["last_validated_manifest_sha256"] = manifest_sha256
+        state["v30_lock"] = "INVIOLÉ"
+        NASA_NDVI_HOOK_ACTIVATION_PATH.write_text(
+            json.dumps(state, ensure_ascii=False, indent=2),
+            encoding="utf-8")
+        persisted["overlay_path"] = str(
+            NASA_NDVI_HOOK_ACTIVATION_PATH)
+        persisted["overlay_size_bytes"] = (
+            NASA_NDVI_HOOK_ACTIVATION_PATH.stat().st_size)
+        persisted["n_activations_history"] = state["n_activations"]
+
+        log_forensic_event(
+            scope="HOOK_ACTIVATIONS",
+            event="NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME",
+            details={
+                "validated_manifest_sha256": manifest_sha256,
+                "activation_sha256": activation_sha256,
+                "reason": reason,
+                "activated": True,
+                "n_calls_success_inherited": validated.get(
+                    "n_calls_success"),
+                "verdict":
+                    "NASA_NDVI_HOOK_ACTIVATED_OPERATIONAL",
+            },
+            persist=True,
+        )
+
+        from engines.v8_institutional.especes.bio_reacteur_overlay_omega import (  # noqa: E501
+            persist_audit,
+        )
+        audit_payload = {
+            "audit_type": "NOAA_PIPELINE",
+            "subtype": "NASA_NDVI_HOOK_ACTIVATE",
+            "ordre": "P1_NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME",
+            "doctrine":
+                "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "provider": "NASA_NDVI_MODIS_ORNL",
+            "validated_manifest_sha256": manifest_sha256,
+            "activation_sha256": activation_sha256,
+            "reason": reason,
+            "activated": True,
+            "verdict": "NASA_NDVI_HOOK_ACTIVATED_OPERATIONAL",
+            "n_species_total": validated.get("n_species_total"),
+            "n_calls_success": validated.get("n_calls_success"),
+            "v30_lock_inviolate": True,
+            "drift_zero": True,
+            "no_engine_recompute_triggered": True,
+        }
+        persisted["audit_persisted"] = persist_audit(audit_payload)
+
+    activation_payload["persisted_paths"] = persisted
+    activation_payload["elapsed_s"] = round(time.time() - t0, 3)
+    return activation_payload
+
+
+def get_nasa_ndvi_hook_status() -> Dict[str, Any]:
+    """État actuel du hook NASA NDVI (read-only)."""
+    if not NASA_NDVI_HOOK_ACTIVATION_PATH.exists():
+        return {
+            "manifest_id": "NASA_NDVI_HOOK_STATUS_Ω",
+            "ordre": "P1_NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME",
+            "current_status": "NOT_ACTIVATED",
+            "v30_lock": "INVIOLÉ",
+            "scanned_at_utc": _utc_now(),
+        }
+    state = json.loads(
+        NASA_NDVI_HOOK_ACTIVATION_PATH.read_text(encoding="utf-8"))
+    last = (state["history"][-1]
+            if state.get("history") else None)
+    return {
+        "manifest_id": "NASA_NDVI_HOOK_STATUS_Ω",
+        "ordre": "P1_NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "current_status": (
+            "ACTIVATED_OPERATIONAL" if last
+            and last.get("activated") else "NOT_ACTIVATED"),
+        "n_activations_history": state.get("n_activations", 0),
+        "last_activation_sha256": state.get(
+            "last_activation_sha256"),
+        "last_validated_manifest_sha256": state.get(
+            "last_validated_manifest_sha256"),
+        "last_updated_utc": state.get("last_updated_utc"),
+        "last_activation": last,
+        "overlay_path": str(NASA_NDVI_HOOK_ACTIVATION_PATH),
+        "overlay_size_bytes": (
+            NASA_NDVI_HOOK_ACTIVATION_PATH.stat().st_size),
+        "v30_lock": "INVIOLÉ",
+        "scanned_at_utc": _utc_now(),
+    }
+
+
 __all__ = [
     "NASA_NDVI_ROOT",
     "NASA_NDVI_VALIDATION_PATH",
+    "NASA_NDVI_HOOK_ACTIVATION_PATH",
     "MODIS_PRODUCTS_BANDS_REGISTRY",
     "NDVI_LOGICAL_TO_BAND",
     "validate_nasa_ndvi_per_species",
+    "activate_nasa_ndvi_hook",
+    "get_nasa_ndvi_hook_status",
 ]

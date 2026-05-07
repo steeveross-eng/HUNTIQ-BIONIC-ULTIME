@@ -27,6 +27,32 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-OCTODECIES · NASA_NDVI_P0_VALIDATE + HOOK_ACTIVATE_Ω_ULTIME — 🎯 NDVI/EVI LIVE 5/5 ESPÈCES + HOOK ACTIVATED + DRIFT (2026-05-07)**
+  Validation NASA MODIS NDVI/EVI via ORNL MODIS Web Service + activation officielle du hook NASA NDVI sous régime guardrails ENFORCED + autonomy=LIMITED + anti-générique strict (FUSION ADD-ONLY · V30_LOCK INVIOLÉ · DRIFT_ZERO).
+  - **Module `nasa_ndvi_omega.py` créé** : `MODIS_PRODUCTS_BANDS_REGISTRY` (3 produits documentés : MOD13Q1 NDVI/EVI/VI_QUALITY, MOD15A2H LAI/FPAR, MOD17A2H GPP), `NDVI_LOGICAL_TO_BAND` (mapping logique→canonique strict), `_http_get_json_strict_with_redirect_block` (GET sans redirect, 512KB body max), `_compute_band_stats_from_modis_subset` (rejet nodata=-3000 sans imputation), `validate_nasa_ndvi_per_species` (orchestrateur multi-espèces × multi-bandes), `activate_nasa_ndvi_hook` (anti-générique strict, refus SHA fabriqué), `get_nasa_ndvi_hook_status`.
+  - **3 endpoints API** :
+    - **POST `/api/v30/super-masters/nasa-ndvi-validate`** (token + body Pydantic `NasaNdviValidateBody`)
+    - **POST `/api/v30/super-masters/nasa-ndvi-hook-activate`** (token + body Pydantic `NasaNdviHookActivateBody`)
+    - **GET `/api/v30/super-masters/nasa-ndvi-hook-status`** (PUBLIC RO)
+  - **PIÈGE SCIENTIFIQUE COMMANDANT RESPECTÉ** : Le Commandant a demandé les bandes [NDVI, EVI, VI_QUALITY, **LAI, FPAR, GPP**] sur MOD13Q1. Anti-générique strict appliqué : LAI/FPAR ne sont **PAS** dans MOD13Q1 (ils sont dans MOD15A2H), GPP n'est **PAS** dans MOD13Q1 (il est dans MOD17A2H). **AUCUNE FABRICATION** — les 3 bandes deferred sont tracées explicitement comme `BAND_DEFERRED_OTHER_PRODUCT` avec `requires_product_<X>::anti_generique_strict_no_fabrication` et `directive_extension_required_for_probe=True`.
+  - **Découverte anti-générique LIVE** : URL initiale `/MOD13Q1?...` retournait HTTP 404 → investigation honnête révèle que le bon path est `/MOD13Q1/subset?...` avec contrainte serveur ORNL `max 10 tiles temporelles` (16 jours/tuile MOD13Q1 → 160 jours max). Correction : URL → `/MOD13Q1/subset` + `days_lookback=128` (≤8 tuiles). Aucun fallback fabriqué, correction transparente tracée.
+  - **Workflow exécuté en 4 phases LIVE** :
+    - **Phase A — VALIDATE** : 15/15 calls success · `verdict=NASA_NDVI_VALIDATE_ALL_BANDS_VALID` · `manifest_sha256=166178536dc5d662e0020e9838506b75b940fc045cb5da86d9a0cf23d9ca4148` · 52.07s · period=`A2025364→A2026127` (Jan-Mar 2026)
+    - **Phase B — HOOK ACTIVATE** : `verdict=NASA_NDVI_HOOK_ACTIVATED_OPERATIONAL` · `activation_sha256=76b047f2980d824ce3f860d8f8647605ff42665f8592901f757e52f478c16a0d` · consumers=`[NUTRITION_VEGETATION_INDEX, PHENOLOGIE_NDVI_TIMESERIES, HABITAT_FOOD_AVAILABILITY, PREDICTIF_GREENNESS_PROXY]`
+    - **Phase C — STATUS** : `current_status=ACTIVATED_OPERATIONAL` · `n_activations_history=1` · overlay 4475 bytes
+    - **Phase D — DRIFT AUDIT** `reason=nasa_ndvi_ultimate_hook_activated` : drift_max 51.37→50.76 · drift_mean 27.56→22.04 (-5.52) · score 50.55→54.27 (+3.72) · audit `audit_20260507T224537Z_2e3e6a28.json`
+  - **Données NDVI/EVI réelles RAW (Jan-Mar 2026 hivernal Québec)** :
+    - **espece_a** @ Québec (46.81,-71.21) : NDVI mean=-0.024, EVI mean=-0.014, VI_QUALITY mean=34461 — *zone urbaine + neige*
+    - **espece_b** @ St-Jean-Port-Joli (47.20,-70.27) : NDVI=0.009, EVI=0.009 — *côtière neigeuse*
+    - **espece_c** @ Les Escoumins (48.34,-69.39) : NDVI=0.012, EVI=0.018 (4 valides + 2 nodata sur 6) — *forêt boréale enneigée*
+    - **espece_d** @ Fortierville (46.36,-72.07) : **NDVI=0.248, EVI=0.172** — *terres agricoles dégagées (signal végétal résiduel hivernal le plus fort)*
+    - **espece_e** @ Capitale-Nationale altitude (47.0,-71.0) : NDVI=0.046, EVI=0.049 — *épinette boréale + neige*
+  - **Anti-générique strict prouvé (sanity test LIVE)** : POST `/nasa-ndvi-hook-activate` avec `manifest_sha256='0'×64` → REJECTED `NASA_NDVI_HOOK_REJECTED_MANIFEST_NOT_FOUND_OR_INVALID` + forensic log persisté même en rejet.
+  - **Forensic log** : 30 entrées `ENDPOINT_PROBES/NASA_NDVI_P0_VALIDATE_Ω_ULTIME` (5 espèces × 3 bandes × 2 sondes — 1ère 404 + 2ème 200) + 6 entrées `HOOK_ACTIVATIONS/NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME`. 2 audits NASA NDVI + 1 audit drift persistés.
+  - **Habitat outputs status** : phase=`P1_HOOK_ACTIVATE`, `habitat_outputs_computed=False`, `deferred_to_habitat_outputs_compute=True` (anti-générique : food_availability/food_quality/phenology_window à calculer dans phase HABITAT_OUTPUTS_COMPUTE_Ω ultérieure avec transformations documentées espèce-par-espèce).
+  - **Pytest** : 17 nouveaux (`test_phase_xxx_octodecies_nasa_ndvi_omega.py`) **17/17 PASSED** (registry anti-générique × mapping strict × paths × guardrails enforce × coords validation × stats nodata reject × hook reject SHA fabriqué × V30_LOCK SUPER_ENGINES non importé × régression). Régression cluster doctrinal Phase XX-XXX étendu = **562/562 PASSED**.
+  - **Bilan stratégique session** : ✅ **4 hooks ACTIVATED_OPERATIONAL** : WOD23 (B2, 51 fichiers, 1130.9 MB) + OWM single (Québec live) + OWM batch BP135 (5 espèces) + **NASA NDVI MOD13Q1 (5 espèces × 3 bandes × 6 dates = 90 datapoints réels NDVI/EVI/VI_QUALITY)**. P1 pending : USGS Soil, RSF/SSF, MaxEnt + HABITAT_OUTPUTS_COMPUTE_Ω (transformations NDVI→food_availability).
+
 - **PHASE_XXX-SEPTDECIES · BP135_THERMAL_STRESS_INDEX_ACTIVATE — 🎯 INDEX BIOLOGIQUE LIVE 5/5 ESPÈCES (2026-05-07)**
   Activation du module de corrélation espèces × météo avec calcul de l'index de stress thermique (TSI 0-100) et classification de risque (LOW/MODERATE/HIGH/CRITICAL) pour les 5 espèces BP135. Sources scientifiques peer-reviewed strictes (FUSION ADD-ONLY · ANTI-GÉNÉRIQUE_Ω · V30_LOCK INVIOLÉ · DRIFT_ZERO).
   - **Nouveau module** : `/app/backend/engines/v8_institutional/especes/bp135_thermal_stress_omega.py` avec `BP135_THERMAL_LIMITS_V1` (5 espèces × 2 références scientifiques chacune = **10 références** : 8 peer-reviewed + 2 MFFP gouvernementales). Auteurs/journals : Mautz et al. 1992 (Comp Biochem Physiol), Renecker & Hudson 1986 (Can J Zool), Larivière 2001 (Mammalian Species No 647), Roberts & Porter 1998 (J Wildlife Mgmt), Parker et al. 1984 (J Wildlife Mgmt), McCann et al. 2013, Tøien et al. 2011 (Science), Long et al. 2014 (Ecological Monographs), MFFP Québec 2020 (cerf), MFFP Québec 2016 (dindon).

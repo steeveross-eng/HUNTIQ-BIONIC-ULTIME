@@ -2199,3 +2199,159 @@ async def bp135_thermal_limits_manifest_endpoint() -> JSONResponse:
         "n_species": len(BP135_THERMAL_LIMITS_V1),
         "v30_lock": "INVIOLÉ",
     })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# NASA_NDVI_P0_VALIDATE_Ω_ULTIME + NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME
+# Anti-générique strict : MOD13Q1 contient NDVI/EVI/VI_QUALITY uniquement.
+# LAI/FPAR/GPP demandés par directive Commandant → tracés
+# BAND_DEFERRED_OTHER_PRODUCT (jamais fabriqués).
+# ═════════════════════════════════════════════════════════════════════════
+class NasaNdviValidateBody(BaseModel):
+    species_coordinates: Dict[str, Dict[str, float]]
+    bands_requested_logical: Optional[list] = None
+    base_endpoint: str = "https://modis.ornl.gov/rst/api/v1"
+    days_lookback: int = 365
+    max_points: int = 46
+    persist: bool = True
+
+
+@router.post("/nasa-ndvi-validate")
+async def nasa_ndvi_validate_endpoint(
+    body: NasaNdviValidateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """NASA_NDVI_P0_VALIDATE_Ω_ULTIME · validation multi-espèces × bandes.
+
+    Workflow doctrinal :
+      1. Guardrails ENFORCED check (412 sinon)
+      2. Validation coordonnées espèces (lat/lon)
+      3. Probe RÉEL NASA ORNL MODIS Web Service (no creds required)
+      4. ANTI-GÉNÉRIQUE STRICT :
+         · MOD13Q1 → NDVI/EVI/VI_QUALITY probés
+         · LAI/FPAR (MOD15A2H) → DEFERRED, jamais fabriqués
+         · GPP (MOD17A2H) → DEFERRED, jamais fabriqué
+      5. Calcul stats anti-génériques (rejet nodata, pas d'imputation)
+      6. Forensic log ENDPOINT_PROBES/NASA_NDVI_P0_VALIDATE_Ω_ULTIME
+      7. Persistance overlay + audit doctrinal NOAA_PIPELINE
+      8. AUCUN habitat_output calculé ICI · V30_LOCK + DRIFT_ZERO
+
+    Token Commandant requis. Anti-générique strict.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.nasa_ndvi_omega import (
+        validate_nasa_ndvi_per_species,
+    )
+    try:
+        payload = validate_nasa_ndvi_per_species(
+            species_coordinates=body.species_coordinates,
+            bands_requested_logical=body.bands_requested_logical,
+            base_endpoint=body.base_endpoint,
+            days_lookback=body.days_lookback,
+            max_points=body.max_points,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "NASA_NDVI_VALIDATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "NASA_NDVI_VALIDATE_EXECUTE_Ω_ULTIME",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_NASA_NDVI_P0_VALIDATE_Ω_ULTIME",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+class NasaNdviHookActivateBody(BaseModel):
+    manifest_sha256: str
+    reason: str = "nasa_ndvi_ultimate_hook_activated"
+    persist: bool = True
+
+
+@router.post("/nasa-ndvi-hook-activate")
+async def nasa_ndvi_hook_activate_endpoint(
+    body: NasaNdviHookActivateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME · activation officielle.
+
+    Workflow doctrinal :
+      1. Guardrails ENFORCED check (412 sinon)
+      2. Vérification ANTI-GÉNÉRIQUE STRICTE : manifest_sha256 doit
+         exister dans NASA_NDVI_VALIDATION_PATH avec n_calls_success>=1.
+         Refus d'activer un manifest fabriqué.
+      3. Construction manifest activation signé activation_sha256
+         + sommaire espèces + bandes valides + bandes deferred
+      4. Forensic log HOOK_ACTIVATIONS/NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME
+      5. Persistance overlay history + audit doctrinal
+      6. AUCUN recalcul moteur · V30_LOCK + DRIFT_ZERO
+
+    Token Commandant requis. Anti-générique strict.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.nasa_ndvi_omega import (
+        activate_nasa_ndvi_hook,
+    )
+    try:
+        payload = activate_nasa_ndvi_hook(
+            manifest_sha256=body.manifest_sha256,
+            reason=body.reason,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "NASA_NDVI_HOOK_ACTIVATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "NASA_NDVI_HOOK_ACTIVATE_EXECUTE_Ω_ULTIME",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/nasa-ndvi-hook-status")
+async def nasa_ndvi_hook_status_endpoint() -> JSONResponse:
+    """NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME · état hook (PUBLIC RO)."""
+    from engines.v8_institutional.especes.nasa_ndvi_omega import (
+        get_nasa_ndvi_hook_status,
+    )
+    payload = get_nasa_ndvi_hook_status()
+    return JSONResponse({
+        "manifest_id": "NASA_NDVI_HOOK_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+

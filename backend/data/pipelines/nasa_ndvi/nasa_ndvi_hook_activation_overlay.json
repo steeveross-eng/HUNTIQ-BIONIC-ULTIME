@@ -1,0 +1,153 @@
+{
+  "history": [
+    {
+      "manifest_id": "NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME",
+      "ordre": "P1_NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "activated": true,
+      "verdict": "NASA_NDVI_HOOK_ACTIVATED_OPERATIONAL",
+      "reason": "nasa_ndvi_ultimate_hook_activated",
+      "validated_manifest_sha256": "166178536dc5d662e0020e9838506b75b940fc045cb5da86d9a0cf23d9ca4148",
+      "validated_executed_at_utc": "2026-05-07T22:44:41+00:00",
+      "provider": "NASA_NDVI_MODIS_ORNL",
+      "products_activated": [
+        "MOD13Q1"
+      ],
+      "products_deferred": [
+        "MOD15A2H (LAI/FPAR)",
+        "MOD17A2H (GPP)"
+      ],
+      "bands_probed_in_mod13q1": [
+        "NDVI",
+        "EVI",
+        "VI_QUALITY"
+      ],
+      "bands_deferred_other_product": [
+        "LAI",
+        "FPAR",
+        "GPP"
+      ],
+      "n_species_total": 5,
+      "n_calls_success_inherited": 15,
+      "n_calls_failed_inherited": 0,
+      "species_summary": [
+        {
+          "species_name": "espece_a",
+          "lat": 46.8131,
+          "lon": -71.2075,
+          "n_bands_probed": 3,
+          "n_bands_valid": 3,
+          "bands_valid_logical": [
+            "NDVI",
+            "EVI",
+            "VI_QUALITY"
+          ],
+          "deferred_bands": [
+            "LAI",
+            "FPAR",
+            "GPP"
+          ]
+        },
+        {
+          "species_name": "espece_b",
+          "lat": 47.2,
+          "lon": -70.27,
+          "n_bands_probed": 3,
+          "n_bands_valid": 3,
+          "bands_valid_logical": [
+            "NDVI",
+            "EVI",
+            "VI_QUALITY"
+          ],
+          "deferred_bands": [
+            "LAI",
+            "FPAR",
+            "GPP"
+          ]
+        },
+        {
+          "species_name": "espece_c",
+          "lat": 48.34,
+          "lon": -69.39,
+          "n_bands_probed": 3,
+          "n_bands_valid": 3,
+          "bands_valid_logical": [
+            "NDVI",
+            "EVI",
+            "VI_QUALITY"
+          ],
+          "deferred_bands": [
+            "LAI",
+            "FPAR",
+            "GPP"
+          ]
+        },
+        {
+          "species_name": "espece_d",
+          "lat": 46.36,
+          "lon": -72.07,
+          "n_bands_probed": 3,
+          "n_bands_valid": 3,
+          "bands_valid_logical": [
+            "NDVI",
+            "EVI",
+            "VI_QUALITY"
+          ],
+          "deferred_bands": [
+            "LAI",
+            "FPAR",
+            "GPP"
+          ]
+        },
+        {
+          "species_name": "espece_e",
+          "lat": 47.0,
+          "lon": -71.0,
+          "n_bands_probed": 3,
+          "n_bands_valid": 3,
+          "bands_valid_logical": [
+            "NDVI",
+            "EVI",
+            "VI_QUALITY"
+          ],
+          "deferred_bands": [
+            "LAI",
+            "FPAR",
+            "GPP"
+          ]
+        }
+      ],
+      "temporal_range_inherited": {
+        "start_date_modis": "A2025364",
+        "end_date_modis": "A2026127",
+        "days_lookback": 128
+      },
+      "consumed_by_modules": [
+        "NUTRITION_VEGETATION_INDEX",
+        "PHENOLOGIE_NDVI_TIMESERIES",
+        "HABITAT_FOOD_AVAILABILITY",
+        "PREDICTIF_GREENNESS_PROXY"
+      ],
+      "habitat_outputs_status": {
+        "phase": "P1_HOOK_ACTIVATE",
+        "habitat_outputs_computed": false,
+        "doctrinal_explanation": "Hook NASA NDVI activé OPERATIONAL. Les habitat outputs (food_availability, food_quality, phenology_window, etc.) seront calculés dans une phase ultérieure dédiée HABITAT_OUTPUTS_COMPUTE_Ω avec transformations documentées espèce-par-espèce. Anti-générique strict : aucun output fabriqué ici.",
+        "deferred_to_habitat_outputs_compute": true
+      },
+      "fusion_add_only": true,
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "registered_at_utc": "2026-05-07T22:45:18+00:00",
+      "activation_sha256": "76b047f2980d824ce3f860d8f8647605ff42665f8592901f757e52f478c16a0d"
+    }
+  ],
+  "last_updated_utc": "2026-05-07T22:45:18+00:00",
+  "n_activations": 1,
+  "last_activation_sha256": "76b047f2980d824ce3f860d8f8647605ff42665f8592901f757e52f478c16a0d",
+  "last_validated_manifest_sha256": "166178536dc5d662e0020e9838506b75b940fc045cb5da86d9a0cf23d9ca4148",
+  "v30_lock": "INVIOLÉ"
+}
