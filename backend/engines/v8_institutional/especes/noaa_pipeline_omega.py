@@ -1109,7 +1109,283 @@ __all__ = [
     "validate_copernicus_api_endpoint",
     "OPENWEATHERMAP_VALIDATION_PATH",
     "validate_openweathermap_endpoint",
+    "OPENWEATHERMAP_HOOK_ACTIVATION_PATH",
+    "activate_openweathermap_hook",
+    "get_openweathermap_hook_status",
 ]
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# 14. OPENWEATHERMAP HOOK ACTIVATION (officielle, V30_LOCK FUSION ADD-ONLY)
+# ═════════════════════════════════════════════════════════════════════════
+OPENWEATHERMAP_HOOK_ACTIVATION_PATH = (
+    PIPELINE_ROOT / "openweathermap_hook_activation_overlay.json")
+
+
+def _find_validated_owm_manifest(
+    target_manifest_sha256: str,
+) -> Optional[Dict[str, Any]]:
+    """Cherche un manifest OWM validé dans l'historique des validations.
+
+    Anti-générique strict : on ne peut activer un hook que sur un
+    manifest_sha256 RÉELLEMENT validé (HTTP 200 + signature OWM).
+    Retourne None si introuvable ou non-valide.
+    """
+    if not OPENWEATHERMAP_VALIDATION_PATH.exists():
+        return None
+    try:
+        state = json.loads(
+            OPENWEATHERMAP_VALIDATION_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
+    history = state.get("history", [])
+    for entry in history:
+        if (entry.get("manifest_sha256") == target_manifest_sha256
+                and entry.get("valid") is True
+                and entry.get("verdict")
+                == "OPENWEATHERMAP_VALID_LIVE_DATA_RETURNED"):
+            return entry
+    return None
+
+
+def activate_openweathermap_hook(
+    manifest_sha256: str,
+    reason: str = "owm_hook_activated",
+    persist: bool = True,
+) -> Dict[str, Any]:
+    """OPENWEATHERMAP_HOOK_ACTIVATE · activation officielle FUSION ADD-ONLY.
+
+    Workflow doctrinal :
+      1. Guardrails ENFORCED check (412 sinon)
+      2. Vérification ANTI-GÉNÉRIQUE STRICTE : le manifest_sha256 doit
+         exister dans OPENWEATHERMAP_VALIDATION_PATH avec valid=True
+         et verdict=OPENWEATHERMAP_VALID_LIVE_DATA_RETURNED. Refus
+         d'activer un manifest fabriqué.
+      3. Construction manifest d'activation signé SHA-256
+      4. Forensic log HOOK_ACTIVATIONS/OPENWEATHERMAP_HOOK_ACTIVATE
+      5. Persistance overlay history (V30_LOCK FUSION ADD-ONLY)
+      6. Audit doctrinal NOAA_PIPELINE/OPENWEATHERMAP_HOOK_ACTIVATE
+      7. AUCUN recalcul moteur déclenché ICI (drift audit séparé)
+
+    Args:
+      manifest_sha256: SHA-256 du manifest de validation à activer.
+      reason: raison doctrinale (default 'owm_hook_activated').
+      persist: persister overlay + audit.
+
+    Returns:
+      Dict structuré avec verdict + activation_sha256 + lien manifest.
+    """
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        require_guardrails_enforced, log_forensic_event,
+    )
+    require_guardrails_enforced("activate_openweathermap_hook")
+
+    t0 = time.time()
+
+    # 1. Anti-générique : le manifest DOIT exister et être validé
+    validated_manifest = _find_validated_owm_manifest(
+        manifest_sha256)
+    if validated_manifest is None:
+        verdict = (
+            "OPENWEATHERMAP_HOOK_REJECTED_MANIFEST_NOT_FOUND_OR_INVALID")
+        activated = False
+        activation_payload = {
+            "manifest_id": "OPENWEATHERMAP_HOOK_ACTIVATE_Ω",
+            "ordre": "P0_OPENWEATHERMAP_HOOK_ACTIVATE",
+            "doctrine": (
+                "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT"),
+            "guardrails_enforced": True,
+            "autonomy": "LIMITED",
+            "activated": False,
+            "verdict": verdict,
+            "reason": reason,
+            "input_manifest_sha256": manifest_sha256,
+            "rejection_explanation": (
+                "Le manifest_sha256 fourni n'existe pas dans "
+                "OPENWEATHERMAP_VALIDATION_PATH avec valid=True et "
+                "verdict=OPENWEATHERMAP_VALID_LIVE_DATA_RETURNED. "
+                "Anti-générique strict : impossible d'activer un hook "
+                "sur un manifest non validé."),
+            "anti_generique_strict": True,
+            "v30_lock": "INVIOLÉ",
+            "drift_zero": True,
+            "no_engine_recompute_triggered": True,
+            "executed_at_utc": _utc_now(),
+            "elapsed_s": round(time.time() - t0, 3),
+        }
+        # Forensic log même en cas de rejet
+        log_forensic_event(
+            scope="HOOK_ACTIVATIONS",
+            event="OPENWEATHERMAP_HOOK_ACTIVATE",
+            details={
+                "input_manifest_sha256": manifest_sha256,
+                "reason": reason,
+                "activated": False,
+                "verdict": verdict,
+            },
+            persist=True,
+        )
+        return activation_payload
+
+    # 2. Construction manifest activation officiel
+    owm_summary = {
+        "endpoint": validated_manifest.get("endpoint"),
+        "auth_strategy": validated_manifest.get("auth_strategy"),
+        "city_name": validated_manifest.get(
+            "probe", {}).get("owm_city_name"),
+        "country": validated_manifest.get(
+            "probe", {}).get("owm_country"),
+        "temp_kelvin_at_validation": validated_manifest.get(
+            "probe", {}).get("owm_temp_kelvin"),
+        "weather_main_at_validation": validated_manifest.get(
+            "probe", {}).get("owm_weather_main"),
+        "owm_required_keys_present": validated_manifest.get(
+            "probe", {}).get("owm_required_present"),
+    }
+
+    activation_payload = {
+        "manifest_id": "OPENWEATHERMAP_HOOK_ACTIVATE_Ω",
+        "ordre": "P0_OPENWEATHERMAP_HOOK_ACTIVATE",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "guardrails_enforced": True,
+        "autonomy": "LIMITED",
+        "activated": True,
+        "verdict": "OPENWEATHERMAP_HOOK_ACTIVATED_OPERATIONAL",
+        "reason": reason,
+        "validated_manifest_sha256": manifest_sha256,
+        "validated_manifest_executed_at_utc": (
+            validated_manifest.get("executed_at_utc")),
+        "owm_validation_summary": owm_summary,
+        "fusion_add_only": True,
+        "anti_generique_strict": True,
+        "v30_lock": "INVIOLÉ",
+        "drift_zero": True,
+        "no_engine_recompute_triggered": True,
+        "consumed_by_modules": [
+            "PHYSIOLOGIE_THERMIQUE",
+            "HABITAT_MICROCLIMAT",
+            "NUTRITION_HUMIDITE",
+        ],
+        "registered_at_utc": _utc_now(),
+    }
+    activation_sha256 = hashlib.sha256(
+        json.dumps(activation_payload, sort_keys=True,
+                   ensure_ascii=False, default=str).encode("utf-8")
+    ).hexdigest()
+    activation_payload["activation_sha256"] = activation_sha256
+    activated = True
+
+    persisted: Dict[str, Any] = {}
+    if persist:
+        PIPELINE_ROOT.mkdir(parents=True, exist_ok=True)
+        # FUSION ADD-ONLY history
+        if OPENWEATHERMAP_HOOK_ACTIVATION_PATH.exists():
+            try:
+                state = json.loads(
+                    OPENWEATHERMAP_HOOK_ACTIVATION_PATH.read_text(
+                        encoding="utf-8"))
+                if not isinstance(state, dict) or (
+                        "history" not in state):
+                    state = {"history": []}
+            except json.JSONDecodeError:
+                state = {"history": []}
+        else:
+            state = {"history": []}
+        state["history"].append(activation_payload)
+        state["last_updated_utc"] = _utc_now()
+        state["n_activations"] = len(state["history"])
+        state["last_activation_sha256"] = activation_sha256
+        state["last_validated_manifest_sha256"] = manifest_sha256
+        state["v30_lock"] = "INVIOLÉ"
+        OPENWEATHERMAP_HOOK_ACTIVATION_PATH.write_text(
+            json.dumps(state, ensure_ascii=False, indent=2),
+            encoding="utf-8")
+        persisted["overlay_path"] = str(
+            OPENWEATHERMAP_HOOK_ACTIVATION_PATH)
+        persisted["overlay_size_bytes"] = (
+            OPENWEATHERMAP_HOOK_ACTIVATION_PATH.stat().st_size)
+        persisted["n_activations_history"] = state["n_activations"]
+
+        # Forensic log HOOK_ACTIVATIONS
+        log_forensic_event(
+            scope="HOOK_ACTIVATIONS",
+            event="OPENWEATHERMAP_HOOK_ACTIVATE",
+            details={
+                "validated_manifest_sha256": manifest_sha256,
+                "activation_sha256": activation_sha256,
+                "reason": reason,
+                "activated": True,
+                "verdict": "OPENWEATHERMAP_HOOK_ACTIVATED_OPERATIONAL",
+                "owm_city_name": owm_summary["city_name"],
+                "owm_country": owm_summary["country"],
+            },
+            persist=True,
+        )
+
+        # Audit doctrinal
+        from engines.v8_institutional.especes.bio_reacteur_overlay_omega import (  # noqa: E501
+            persist_audit,
+        )
+        audit_payload = {
+            "audit_type": "NOAA_PIPELINE",
+            "subtype": "OPENWEATHERMAP_HOOK_ACTIVATE",
+            "ordre": "P0_OPENWEATHERMAP_HOOK_ACTIVATE",
+            "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "provider": "OPENWEATHERMAP",
+            "validated_manifest_sha256": manifest_sha256,
+            "activation_sha256": activation_sha256,
+            "reason": reason,
+            "activated": activated,
+            "verdict": "OPENWEATHERMAP_HOOK_ACTIVATED_OPERATIONAL",
+            "owm_endpoint": owm_summary["endpoint"],
+            "owm_auth_strategy": owm_summary["auth_strategy"],
+            "owm_city_name": owm_summary["city_name"],
+            "v30_lock_inviolate": True,
+            "drift_zero": True,
+            "no_engine_recompute_triggered": True,
+        }
+        persisted["audit_persisted"] = persist_audit(audit_payload)
+
+    activation_payload["persisted_paths"] = persisted
+    activation_payload["elapsed_s"] = round(time.time() - t0, 3)
+    return activation_payload
+
+
+def get_openweathermap_hook_status() -> Dict[str, Any]:
+    """Lit l'état actuel du hook OWM (read-only, V30_LOCK respecté)."""
+    if not OPENWEATHERMAP_HOOK_ACTIVATION_PATH.exists():
+        return {
+            "manifest_id": "OPENWEATHERMAP_HOOK_STATUS_Ω",
+            "ordre": "P0_OPENWEATHERMAP_HOOK_ACTIVATE",
+            "current_status": "NOT_ACTIVATED",
+            "v30_lock": "INVIOLÉ",
+            "scanned_at_utc": _utc_now(),
+        }
+    state = json.loads(
+        OPENWEATHERMAP_HOOK_ACTIVATION_PATH.read_text(
+            encoding="utf-8"))
+    last = (state["history"][-1]
+            if state.get("history") else None)
+    return {
+        "manifest_id": "OPENWEATHERMAP_HOOK_STATUS_Ω",
+        "ordre": "P0_OPENWEATHERMAP_HOOK_ACTIVATE",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "current_status": (
+            "ACTIVATED_OPERATIONAL" if last
+            and last.get("activated") else "NOT_ACTIVATED"),
+        "n_activations_history": state.get("n_activations", 0),
+        "last_activation_sha256": state.get(
+            "last_activation_sha256"),
+        "last_validated_manifest_sha256": state.get(
+            "last_validated_manifest_sha256"),
+        "last_updated_utc": state.get("last_updated_utc"),
+        "last_activation": last,
+        "overlay_path": str(OPENWEATHERMAP_HOOK_ACTIVATION_PATH),
+        "overlay_size_bytes": (
+            OPENWEATHERMAP_HOOK_ACTIVATION_PATH.stat().st_size),
+        "v30_lock": "INVIOLÉ",
+        "scanned_at_utc": _utc_now(),
+    }
 
 
 # ═════════════════════════════════════════════════════════════════════════

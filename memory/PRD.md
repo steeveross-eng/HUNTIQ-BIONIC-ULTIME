@@ -27,6 +27,22 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-TERDECIES · OPENWEATHERMAP_HOOK_ACTIVATE — 🎯 HOOK OFFICIELLEMENT ACTIVÉ + DRIFT AUDIT (2026-05-07)**
+  Activation officielle du hook OWM avec vérification stricte du `manifest_sha256` validé + déclenchement drift audit `reason=owm_hook_activated` (FUSION ADD-ONLY · ANTI-GÉNÉRIQUE_Ω · V30_LOCK INVIOLÉ · DRIFT_ZERO).
+  - **Module `noaa_pipeline_omega.py` étendu** : `OPENWEATHERMAP_HOOK_ACTIVATION_PATH`, `_find_validated_owm_manifest` (lookup history strict, retourne None pour SHA fabriqué), `activate_openweathermap_hook` (activation conditionnée à manifest valid+verdict canonique, manifest signé activation_sha256, FUSION ADD-ONLY history, modules consumers déclarés), `get_openweathermap_hook_status`.
+  - **2 endpoints API** :
+    - **POST `/api/v30/super-masters/openweathermap-hook-activate`** (token, body JSON `{manifest_sha256, reason, persist}`)
+    - **GET `/api/v30/super-masters/openweathermap-hook-status`** (PUBLIC RO)
+  - **Workflow exécuté en 4 phases** :
+    - **Phase A** : revalidation OWM fresh (manifest sha=`150647b75270...4a8a`, `Québec, CA, 281.94K, Clouds`)
+    - **Phase B** : activation officielle → `activated=True` · `verdict=OPENWEATHERMAP_HOOK_ACTIVATED_OPERATIONAL` · `activation_sha256=6dc762d1...5286` · consumers=`[PHYSIOLOGIE_THERMIQUE, HABITAT_MICROCLIMAT, NUTRITION_HUMIDITE]`
+    - **Phase C** : status hook = `ACTIVATED_OPERATIONAL` · n_activations=1
+    - **Phase D** : drift audit `reason=owm_hook_activated` → before(drift_max=51.37, drift_mean=27.56, score=50.55) → after(drift_max=50.76, drift_mean=22.04, score=54.27) · **deltas: drift_mean=-5.52 ⬇️ · score=+3.72 ⬆️**
+  - **Anti-générique strict prouvé** : test pytest `test_activate_rejects_fabricated_manifest_sha256` confirme qu'une activation sur SHA fabriqué (`'0'*64`) est REJETÉE avec verdict `OPENWEATHERMAP_HOOK_REJECTED_MANIFEST_NOT_FOUND_OR_INVALID`. Forensic log persisté même en cas de rejet (transparence absolue).
+  - **Forensic log** : `HOOK_ACTIVATIONS/OPENWEATHERMAP_HOOK_ACTIVATE` JSONL persisté. Audit activation `audit_20260507T213208Z_3a51e665.json` (sha=`3a51e665...d24e`). Audit drift `audit_20260507T213208Z_b673a20e.json` (sha=`b673a20e...a3ac`). Overlay `openweathermap_hook_activation_overlay.json` (1737 bytes).
+  - **Pytest** : 9 nouveaux (`test_phase_xxx_terdecies_owm_hook_activate_omega.py`) **9/9 PASSED**. Régression cluster doctrinal Phase XXIX/XXX = **264/264 PASSED** (255 + 9). 11 audits NOAA Ω cumulés.
+  - **Bilan stratégique session** : ✅ **2 hooks ACTIVATED_OPERATIONAL** : WOD23 (B2, 51 fichiers, 1130.9 MB) + OWM (live Québec). 3 hooks bloqués : CFSv2/Copernicus THREDDS legacy/Copernicus API modern. P1 pending : NASA NDVI, USGS Soil, RSF_SSF, MaxEnt.
+
 - **PHASE_XXX-DUODECIES · OPENWEATHERMAP_P0_VALIDATE — 🎯 HOOK LIVE OPÉRATIONNEL (2026-05-07)**
   **PREMIER HOOK EXTERNE VALIDÉ LIVE DE LA SESSION.** OpenWeatherMap répond avec données météo Québec réelles sous régime guardrails ENFORCED + autonomy=LIMITED + double placeholder check + signature OWM canonique (FUSION ADD-ONLY · ANTI-GÉNÉRIQUE_Ω · V30_LOCK INVIOLÉ · DRIFT_ZERO).
   - **Module `noaa_pipeline_omega.py` étendu** : `OPENWEATHERMAP_VALIDATION_PATH`, `validate_openweathermap_endpoint` (mode GET_JSON différent de HEAD_ONLY, lecture body 8KB, parsing JSON, signature OWM canonique `{weather, main, name}` validée, extraction 8 champs réels), heuristique `_is_placeholder_token` étendue aux patterns français tutoiement `TON_*/TA_*/MON_*/MA_*/MES_*`.

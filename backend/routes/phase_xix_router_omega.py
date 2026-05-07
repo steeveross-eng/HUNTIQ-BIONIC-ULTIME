@@ -1756,3 +1756,86 @@ async def openweathermap_validate_endpoint(
         "result": payload,
         "v30_lock": "INVIOLÉ",
     })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# OPENWEATHERMAP_HOOK_ACTIVATE — activation officielle V30_LOCK
+# ═════════════════════════════════════════════════════════════════════════
+class OpenWeatherMapHookActivateBody(BaseModel):
+    manifest_sha256: str
+    reason: str = "owm_hook_activated"
+    persist: bool = True
+
+
+@router.post("/openweathermap-hook-activate")
+async def openweathermap_hook_activate_endpoint(
+    body: OpenWeatherMapHookActivateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """OPENWEATHERMAP_HOOK_ACTIVATE · activation officielle FUSION ADD-ONLY.
+
+    Workflow doctrinal :
+      1. Guardrails ENFORCED check (412 sinon)
+      2. Vérification ANTI-GÉNÉRIQUE STRICTE : manifest_sha256 doit
+         exister dans OPENWEATHERMAP_VALIDATION_PATH avec valid=True +
+         verdict=OPENWEATHERMAP_VALID_LIVE_DATA_RETURNED
+      3. Construction manifest activation signé SHA-256
+      4. Forensic log HOOK_ACTIVATIONS/OPENWEATHERMAP_HOOK_ACTIVATE
+      5. Persistance overlay history (V30_LOCK FUSION ADD-ONLY)
+      6. Audit doctrinal NOAA_PIPELINE/OPENWEATHERMAP_HOOK_ACTIVATE
+      7. AUCUN recalcul moteur ICI (drift audit séparé via
+         /recompute-with-drift-audit)
+
+    Token Commandant requis. Anti-générique strict : refus d'activer
+    un manifest fabriqué.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.noaa_pipeline_omega import (
+        activate_openweathermap_hook,
+    )
+    try:
+        payload = activate_openweathermap_hook(
+            manifest_sha256=body.manifest_sha256,
+            reason=body.reason,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "OPENWEATHERMAP_HOOK_ACTIVATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "OPENWEATHERMAP_HOOK_ACTIVATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P0_OPENWEATHERMAP_HOOK_ACTIVATE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/openweathermap-hook-status")
+async def openweathermap_hook_status_endpoint() -> JSONResponse:
+    """OPENWEATHERMAP_HOOK_ACTIVATE · état actuel (PUBLIC RO)."""
+    from engines.v8_institutional.especes.noaa_pipeline_omega import (
+        get_openweathermap_hook_status,
+    )
+    payload = get_openweathermap_hook_status()
+    return JSONResponse({
+        "manifest_id": "OPENWEATHERMAP_HOOK_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P0_OPENWEATHERMAP_HOOK_ACTIVATE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
