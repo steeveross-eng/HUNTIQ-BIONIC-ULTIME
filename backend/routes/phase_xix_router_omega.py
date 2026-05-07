@@ -1678,3 +1678,81 @@ async def copernicus_api_validate_endpoint(
         "v30_lock": "INVIOLÉ",
     })
 
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# OPENWEATHERMAP_P0_VALIDATE — GET_JSON + double placeholder check
+# ═════════════════════════════════════════════════════════════════════════
+class OpenWeatherMapValidateBody(BaseModel):
+    endpoint: str = (
+        "https://api.openweathermap.org/data/2.5/weather")
+    credentials_api_key: Optional[str] = None
+    query_params: Optional[Dict[str, str]] = None
+    require_http_200: bool = True
+    require_no_redirect: bool = True
+    expect_content_type: str = "application/json"
+    persist: bool = True
+
+
+@router.post("/openweathermap-validate")
+async def openweathermap_validate_endpoint(
+    body: OpenWeatherMapValidateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """OPENWEATHERMAP_P0_VALIDATE · GET_JSON + double placeholder check.
+
+    Workflow doctrinal :
+      1. Guardrails ENFORCED check (412 sinon)
+      2. Détection STRICTE placeholder DOUBLE niveau :
+         · credentials_api_key (Bearer header potentiel)
+         · query_params['appid'] (auth canonique OpenWeatherMap)
+      3. Sélection du token actif anti-générique strict (priorité query
+         appid si réel, sinon Bearer header, sinon REJECTED).
+      4. GET HTTP RÉEL avec NoRedirectHandler + parsing JSON
+      5. Vérification signature OWM canonique (weather + main + name)
+      6. Forensic log ENDPOINT_PROBES/OPENWEATHERMAP_VALIDATE
+      7. Persistance overlay + audit doctrinal
+      8. AUCUN recalcul moteur · V30_LOCK + DRIFT_ZERO
+
+    Body POST JSON requis (tokens jamais en query string GET du router).
+    Token Commandant requis. Anti-générique strict + anti-leakage.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.noaa_pipeline_omega import (
+        validate_openweathermap_endpoint,
+    )
+    try:
+        payload = validate_openweathermap_endpoint(
+            endpoint=body.endpoint,
+            credentials_api_key=body.credentials_api_key,
+            query_params=body.query_params,
+            require_http_200=body.require_http_200,
+            require_no_redirect=body.require_no_redirect,
+            expect_content_type=body.expect_content_type,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "OPENWEATHERMAP_VALIDATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "OPENWEATHERMAP_VALIDATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "OPENWEATHERMAP_P0_VALIDATE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })

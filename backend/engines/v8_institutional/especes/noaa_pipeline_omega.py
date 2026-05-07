@@ -1107,7 +1107,446 @@ __all__ = [
     "COPERNICUS_API_PLACEHOLDERS",
     "COPERNICUS_API_VALIDATION_PATH",
     "validate_copernicus_api_endpoint",
+    "OPENWEATHERMAP_VALIDATION_PATH",
+    "validate_openweathermap_endpoint",
 ]
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# 13. OPENWEATHERMAP API VALIDATION (GET_JSON + double placeholder check)
+# ═════════════════════════════════════════════════════════════════════════
+OPENWEATHERMAP_VALIDATION_PATH = (
+    PIPELINE_ROOT / "openweathermap_validation_overlay.json")
+
+
+def validate_openweathermap_endpoint(
+    endpoint: str = (
+        "https://api.openweathermap.org/data/2.5/weather"),
+    credentials_api_key: Optional[str] = None,
+    query_params: Optional[Dict[str, str]] = None,
+    require_http_200: bool = True,
+    require_no_redirect: bool = True,
+    expect_content_type: str = "application/json",
+    persist: bool = True,
+    timeout_s: int = 15,
+    body_max_bytes: int = 8192,
+) -> Dict[str, Any]:
+    """OPENWEATHERMAP_P0_VALIDATE · GET_JSON strict avec double placeholder
+    detection (credentials_api_key + query_params['appid']) + masquage.
+
+    Workflow doctrinal anti-générique :
+      1. Guardrails ENFORCED check (412 sinon)
+      2. Détection STRICTE placeholder sur DEUX niveaux :
+         · credentials_api_key (Bearer header potentiel)
+         · query_params['appid'] (auth OpenWeatherMap canonique)
+      3. Sélection du token actif selon priorité :
+         · Si appid réel dans query_params → utilisation query auth (OWM)
+         · Sinon si credentials_api_key réel → utilisation Bearer header
+         · Sinon REJECTED (les deux placeholders)
+      4. GET HTTP RÉEL avec NoRedirectHandler (forbid_follow_redirects)
+      5. Lecture body JSON limitée (body_max_bytes) avec parsing
+      6. Critères stricts : HTTP 200 + content-type=application/json +
+         pas de redirect + JSON parsable + champs météo cohérents (anti-
+         générique : on vérifie que la réponse est cohérente avec OWM)
+      7. Forensic log ENDPOINT_PROBES/OPENWEATHERMAP_VALIDATE (token masqué)
+      8. Persistance overlay + audit doctrinal
+      9. AUCUN recalcul moteur · V30_LOCK + DRIFT_ZERO
+
+    Anti-leakage : tous les tokens (header ET query) sont masqués dans
+    logs/persistence, mais utilisés en clair dans la requête HTTP réelle.
+    """
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        require_guardrails_enforced, log_forensic_event,
+    )
+    require_guardrails_enforced("validate_openweathermap_endpoint")
+
+    if not endpoint.startswith(("https://", "http://")):
+        raise ValueError(
+            f"ENDPOINT_INVALID::not_http_url::{endpoint[:120]}")
+
+    import urllib.request
+    import urllib.error
+    from urllib.parse import urlencode
+
+    qp = dict(query_params or {})
+    appid_in_query = qp.get("appid")
+
+    # Détection placeholder DOUBLE niveau
+    creds_placeholder = _is_placeholder_token(credentials_api_key)
+    appid_placeholder = _is_placeholder_token(appid_in_query)
+    creds_token_masked = _mask_token(credentials_api_key)
+    appid_token_masked = _mask_token(appid_in_query)
+
+    # Décision auth (anti-générique strict : ne JAMAIS envoyer placeholder)
+    use_query_auth = (
+        bool(appid_in_query) and not appid_placeholder)
+    use_header_auth = (
+        (not use_query_auth)
+        and bool(credentials_api_key)
+        and not creds_placeholder)
+    auth_strategy = (
+        "QUERY_PARAM_APPID" if use_query_auth
+        else "BEARER_HEADER" if use_header_auth
+        else "NONE_BOTH_PLACEHOLDERS")
+
+    class NoRedirectHandler(urllib.request.HTTPRedirectHandler):
+        def redirect_request(self, req, fp, code, msg,
+                              headers, newurl):
+            return None
+
+    # Préparation URL réelle (auth en clair) ET URL masquée (pour persist)
+    qp_real = dict(qp)
+    qp_masked = dict(qp)
+    if "appid" in qp_real:
+        qp_masked["appid"] = appid_token_masked
+    if qp_real:
+        url_real = endpoint + "?" + urlencode(qp_real)
+        url_masked = endpoint + "?" + urlencode(qp_masked)
+    else:
+        url_real = endpoint
+        url_masked = endpoint
+
+    record_probe: Dict[str, Any] = {
+        "url_masked": url_masked,
+        "method": "GET",
+        "follow_redirects": False,
+        "auth_strategy": auth_strategy,
+        "credentials_api_key_masked": creds_token_masked,
+        "credentials_placeholder_detected": creds_placeholder,
+        "query_appid_masked": (
+            appid_token_masked if appid_in_query else None),
+        "query_appid_placeholder_detected": appid_placeholder,
+        "http_status": None,
+        "content_type": None,
+        "content_length_actual": None,
+        "headers_subset": {},
+        "body_bytes_read": 0,
+        "body_is_json": False,
+        "json_parse_error": None,
+        "json_keys_top_level": None,
+        "json_owm_signature_present": False,
+        "elapsed_ms": None,
+        "reason": None,
+        "redirect_detected": False,
+        "redirect_location": None,
+    }
+
+    # Court-circuit doctrinal : si aucune auth valide, on ne fait pas
+    # la requête (anti-générique : ne pas spammer l'API publique sans
+    # credentials valides).
+    if auth_strategy == "NONE_BOTH_PLACEHOLDERS":
+        record_probe["reason"] = (
+            "no_valid_auth::both_placeholders_detected")
+        record_probe["elapsed_ms"] = 0.0
+        verdict = (
+            "OPENWEATHERMAP_REJECTED_BOTH_PLACEHOLDERS_DETECTED")
+        valid = False
+        next_action = (
+            "REJECTED — credentials.api_key ET query_params.appid sont "
+            "tous deux des placeholders. Aucune requête HTTP émise. "
+            "Le Commandant doit fournir un token OWM réel dans l'un "
+            "des deux champs.")
+    else:
+        t0 = time.time()
+        try:
+            opener = urllib.request.build_opener(NoRedirectHandler)
+            req_headers: Dict[str, str] = {
+                "User-Agent": (
+                    "BCE-4X-OPENWEATHERMAP-VALIDATE/1.0"),
+                "Accept": "application/json",
+            }
+            if use_header_auth:
+                req_headers["Authorization"] = (
+                    f"Bearer {credentials_api_key}")
+            req = urllib.request.Request(
+                url_real, method="GET", headers=req_headers)
+            with opener.open(req, timeout=timeout_s) as resp:
+                record_probe["http_status"] = resp.status
+                headers = dict(resp.headers)
+                record_probe["content_type"] = headers.get(
+                    "Content-Type", headers.get("content-type"))
+                cl = headers.get(
+                    "Content-Length", headers.get("content-length"))
+                try:
+                    record_probe["content_length_actual"] = (
+                        int(cl) if cl else None)
+                except (TypeError, ValueError):
+                    record_probe["content_length_actual"] = None
+                record_probe["headers_subset"] = {
+                    k: v for k, v in headers.items()
+                    if k.lower() in (
+                        "content-type", "content-length", "etag",
+                        "x-cache-key", "x-ratelimit-remaining",
+                        "server", "via", "cache-control")
+                }
+                # Lecture body limitée (anti-générique)
+                body = resp.read(body_max_bytes)
+                record_probe["body_bytes_read"] = len(body)
+                # Parse JSON (anti-générique : signature OWM)
+                try:
+                    parsed = json.loads(
+                        body.decode("utf-8", errors="replace"))
+                    record_probe["body_is_json"] = True
+                    if isinstance(parsed, dict):
+                        record_probe["json_keys_top_level"] = (
+                            sorted(parsed.keys()))
+                        # Signature OWM canonique : champs typiques
+                        owm_required = {"weather", "main", "name"}
+                        owm_optional = {"coord", "wind", "sys", "id"}
+                        present = set(parsed.keys())
+                        record_probe[
+                            "json_owm_signature_present"] = (
+                            owm_required.issubset(present))
+                        record_probe["owm_required_present"] = (
+                            sorted(owm_required & present))
+                        record_probe["owm_optional_present"] = (
+                            sorted(owm_optional & present))
+                        # Capter quelques champs anti-générique
+                        if "name" in parsed:
+                            record_probe["owm_city_name"] = (
+                                str(parsed["name"])[:50])
+                        if "sys" in parsed and isinstance(
+                                parsed["sys"], dict):
+                            record_probe["owm_country"] = (
+                                str(parsed["sys"].get(
+                                    "country", ""))[:5])
+                        if "main" in parsed and isinstance(
+                                parsed["main"], dict):
+                            record_probe["owm_temp_kelvin"] = (
+                                parsed["main"].get("temp"))
+                        if "weather" in parsed and isinstance(
+                                parsed["weather"], list) and (
+                                parsed["weather"]):
+                            w0 = parsed["weather"][0]
+                            if isinstance(w0, dict):
+                                record_probe[
+                                    "owm_weather_main"] = (
+                                    str(w0.get("main", ""))[:30])
+                                record_probe[
+                                    "owm_weather_desc"] = (
+                                    str(w0.get(
+                                        "description", ""))[:50])
+                        if "cod" in parsed:
+                            record_probe["owm_response_code"] = (
+                                parsed.get("cod"))
+                except json.JSONDecodeError as e:
+                    record_probe["json_parse_error"] = str(e)[:200]
+                    record_probe["body_preview_first_300b"] = (
+                        body[:300].decode(
+                            "utf-8", errors="replace"))
+        except urllib.error.HTTPError as e:
+            record_probe["http_status"] = e.code
+            record_probe["reason"] = f"http_error_{e.code}"
+            try:
+                body = e.read(800)
+                record_probe["body_preview_first_500b"] = (
+                    body[:500].decode("utf-8", errors="replace"))
+                # Tentative parse JSON sur erreur (OWM renvoie JSON erreurs)
+                try:
+                    err_json = json.loads(
+                        body.decode("utf-8", errors="replace"))
+                    record_probe["error_json_parsed"] = err_json
+                except json.JSONDecodeError:
+                    pass
+            except Exception:
+                pass
+            if 300 <= e.code < 400:
+                record_probe["redirect_detected"] = True
+                try:
+                    record_probe["redirect_location"] = (
+                        e.headers.get("Location"))
+                except Exception:
+                    pass
+        except (urllib.error.URLError, TimeoutError, OSError) as e:
+            record_probe["reason"] = (
+                f"network_error::{str(e)[:160]}")
+        record_probe["elapsed_ms"] = round(
+            (time.time() - t0) * 1000, 1)
+
+        # Verdict OPenWeatherMap-aware (anti-générique strict)
+        ct = record_probe["content_type"] or ""
+        ct_acceptable = (expect_content_type.lower() in ct.lower())
+        if (record_probe["http_status"] == 200
+                and ct_acceptable
+                and record_probe["body_is_json"]
+                and record_probe["json_owm_signature_present"]
+                and not record_probe["redirect_detected"]):
+            verdict = "OPENWEATHERMAP_VALID_LIVE_DATA_RETURNED"
+            valid = True
+            next_action = (
+                "ACCEPTED — endpoint OWM répond HTTP 200 application/"
+                "json avec signature OWM canonique (weather + main + "
+                "name présents). Données météo réelles confirmées. "
+                "Await Commandant confirm to register as official "
+                "OWM hook source.")
+        elif (record_probe["http_status"] == 200
+                and record_probe["body_is_json"]
+                and not record_probe["json_owm_signature_present"]):
+            verdict = (
+                "OPENWEATHERMAP_INVALID_HTTP_200_BUT_NO_OWM_SIGNATURE")
+            valid = False
+            next_action = (
+                "REJECTED — HTTP 200 JSON mais signature OWM absente. "
+                "L'endpoint répond mais ne semble pas servir l'API "
+                "OpenWeatherMap canonique.")
+        elif record_probe["http_status"] == 401:
+            verdict = "OPENWEATHERMAP_INVALID_HTTP_401_INVALID_API_KEY"
+            valid = False
+            next_action = (
+                "REJECTED — HTTP 401 : l'appid OWM fourni est "
+                "invalide ou en attente d'activation (les nouvelles "
+                "clés OWM peuvent prendre 2h à s'activer).")
+        elif record_probe["http_status"] == 404:
+            verdict = "OPENWEATHERMAP_INVALID_HTTP_404"
+            valid = False
+            next_action = (
+                "REJECTED — HTTP 404 : ressource OWM introuvable.")
+        elif record_probe["http_status"] == 429:
+            verdict = (
+                "OPENWEATHERMAP_INVALID_HTTP_429_RATE_LIMITED")
+            valid = False
+            next_action = (
+                "REJECTED — HTTP 429 : quota OWM dépassé.")
+        elif record_probe["redirect_detected"]:
+            verdict = "OPENWEATHERMAP_INVALID_REDIRECT_DETECTED"
+            valid = False
+            next_action = (
+                "REJECTED — redirect détecté.")
+        else:
+            verdict = "OPENWEATHERMAP_INVALID_OTHER"
+            valid = False
+            next_action = (
+                "REJECTED — verdict autre. Voir probe_record.")
+
+    criteria_evaluation = {
+        "expect_http_200": require_http_200,
+        "expect_content_type": expect_content_type,
+        "expect_no_redirect": require_no_redirect,
+        "http_200_satisfied": (record_probe["http_status"] == 200),
+        "no_redirect_satisfied": (
+            not record_probe["redirect_detected"]),
+        "content_type_satisfied": (
+            expect_content_type.lower() in (
+                record_probe["content_type"] or "").lower()),
+        "body_is_json": record_probe["body_is_json"],
+        "json_owm_signature_present": (
+            record_probe["json_owm_signature_present"]),
+        "auth_strategy": auth_strategy,
+        "credentials_placeholder_detected": creds_placeholder,
+        "query_appid_placeholder_detected": appid_placeholder,
+    }
+
+    # Forensic log ENDPOINT_PROBES (TOKENS MASQUÉS)
+    log_forensic_event(
+        scope="ENDPOINT_PROBES",
+        event="OPENWEATHERMAP_VALIDATE",
+        details={
+            "provider": "OPENWEATHERMAP",
+            "url_masked": url_masked,
+            "auth_strategy": auth_strategy,
+            "credentials_api_key_masked": creds_token_masked,
+            "credentials_placeholder_detected": creds_placeholder,
+            "query_appid_masked": (
+                appid_token_masked if appid_in_query else None),
+            "query_appid_placeholder_detected": appid_placeholder,
+            "http_status": record_probe["http_status"],
+            "content_type": record_probe["content_type"],
+            "owm_signature_present": (
+                record_probe["json_owm_signature_present"]),
+            "owm_city_name": record_probe.get("owm_city_name"),
+            "valid": valid,
+            "verdict": verdict,
+            "elapsed_ms": record_probe["elapsed_ms"],
+        },
+        persist=True,
+    )
+
+    # Manifest signé + persistance
+    payload = {
+        "manifest_id": "OPENWEATHERMAP_VALIDATE_Ω",
+        "ordre": "OPENWEATHERMAP_P0_VALIDATE",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "guardrails_enforced": True,
+        "autonomy": "LIMITED",
+        "provider": "OPENWEATHERMAP",
+        "endpoint": endpoint,
+        "auth_strategy": auth_strategy,
+        "probe": record_probe,
+        "criteria_evaluation": criteria_evaluation,
+        "valid": valid,
+        "verdict": verdict,
+        "next_action": next_action,
+        "anti_generique_strict": True,
+        "anti_leakage_token_masked": True,
+        "v30_lock": "INVIOLÉ",
+        "drift_zero": True,
+        "no_engine_recompute_triggered": True,
+        "executed_at_utc": _utc_now(),
+    }
+    payload_sha256 = hashlib.sha256(
+        json.dumps(payload, sort_keys=True,
+                   ensure_ascii=False, default=str).encode("utf-8")
+    ).hexdigest()
+    payload["manifest_sha256"] = payload_sha256
+
+    persisted: Dict[str, Any] = {}
+    if persist:
+        PIPELINE_ROOT.mkdir(parents=True, exist_ok=True)
+        if OPENWEATHERMAP_VALIDATION_PATH.exists():
+            try:
+                state = json.loads(
+                    OPENWEATHERMAP_VALIDATION_PATH.read_text(
+                        encoding="utf-8"))
+                if not isinstance(state, dict) or (
+                        "history" not in state):
+                    state = {"history": []}
+            except json.JSONDecodeError:
+                state = {"history": []}
+        else:
+            state = {"history": []}
+        state["history"].append(payload)
+        state["last_updated_utc"] = _utc_now()
+        state["n_validations"] = len(state["history"])
+        state["last_manifest_sha256"] = payload_sha256
+        state["last_verdict"] = verdict
+        state["v30_lock"] = "INVIOLÉ"
+        OPENWEATHERMAP_VALIDATION_PATH.write_text(
+            json.dumps(state, ensure_ascii=False, indent=2),
+            encoding="utf-8")
+        persisted["overlay_path"] = str(
+            OPENWEATHERMAP_VALIDATION_PATH)
+        persisted["overlay_size_bytes"] = (
+            OPENWEATHERMAP_VALIDATION_PATH.stat().st_size)
+        persisted["n_validations_history"] = state["n_validations"]
+
+        from engines.v8_institutional.especes.bio_reacteur_overlay_omega import (  # noqa: E501
+            persist_audit,
+        )
+        audit_payload = {
+            "audit_type": "NOAA_PIPELINE",
+            "subtype": "OPENWEATHERMAP_VALIDATE",
+            "ordre": "OPENWEATHERMAP_P0_VALIDATE",
+            "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "provider": "OPENWEATHERMAP",
+            "endpoint": endpoint,
+            "auth_strategy": auth_strategy,
+            "valid": valid,
+            "verdict": verdict,
+            "manifest_sha256": payload_sha256,
+            "http_status": record_probe["http_status"],
+            "owm_signature_present": (
+                record_probe["json_owm_signature_present"]),
+            "owm_city_name": record_probe.get("owm_city_name"),
+            "credentials_placeholder_detected": creds_placeholder,
+            "query_appid_placeholder_detected": appid_placeholder,
+            "v30_lock_inviolate": True,
+            "drift_zero": True,
+            "no_engine_recompute_triggered": True,
+        }
+        persisted["audit_persisted"] = persist_audit(audit_payload)
+
+    payload["persisted_paths"] = persisted
+    return payload
 
 
 # ═════════════════════════════════════════════════════════════════════════
@@ -1167,8 +1606,11 @@ def _is_placeholder_token(api_key: Optional[str]) -> bool:
     # Heuristiques additionnelles anti-générique
     if cleaned.startswith("<") and cleaned.endswith(">"):
         return True  # <YOUR_TOKEN> patterns
-    if "VOTRE_" in cleaned or "YOUR_" in cleaned:
-        return True
+    # Patterns français/anglais (vous/tu/ma/mon) + your
+    for prefix in ("VOTRE_", "YOUR_", "TON_", "TA_",
+                   "MON_", "MA_", "MES_"):
+        if prefix in cleaned:
+            return True
     return False
 
 

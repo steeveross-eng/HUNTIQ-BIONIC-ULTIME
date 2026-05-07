@@ -27,6 +27,21 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-DUODECIES · OPENWEATHERMAP_P0_VALIDATE — 🎯 HOOK LIVE OPÉRATIONNEL (2026-05-07)**
+  **PREMIER HOOK EXTERNE VALIDÉ LIVE DE LA SESSION.** OpenWeatherMap répond avec données météo Québec réelles sous régime guardrails ENFORCED + autonomy=LIMITED + double placeholder check + signature OWM canonique (FUSION ADD-ONLY · ANTI-GÉNÉRIQUE_Ω · V30_LOCK INVIOLÉ · DRIFT_ZERO).
+  - **Module `noaa_pipeline_omega.py` étendu** : `OPENWEATHERMAP_VALIDATION_PATH`, `validate_openweathermap_endpoint` (mode GET_JSON différent de HEAD_ONLY, lecture body 8KB, parsing JSON, signature OWM canonique `{weather, main, name}` validée, extraction 8 champs réels), heuristique `_is_placeholder_token` étendue aux patterns français tutoiement `TON_*/TA_*/MON_*/MA_*/MES_*`.
+  - **Endpoint API** : `POST /api/v30/super-masters/openweathermap-validate` (POST body JSON, modèle Pydantic `OpenWeatherMapValidateBody`).
+  - **Auth priority strategy doctrinale** : `QUERY_PARAM_APPID` > `BEARER_HEADER` > `NONE_BOTH_PLACEHOLDERS` (court-circuit : aucune requête HTTP émise si les deux placeholders).
+  - **Probe RÉEL avec `appid=444e2f79...4a08` (32 chars hex format OWM)** :
+    - **HTTP 200** · `application/json; charset=utf-8` · 514 bytes body · 176.2ms · auth=`QUERY_PARAM_APPID` · no_redirect ✅
+    - **Signature OWM canonique** : `{weather, main, name}` ✅ · 13 keys top-level cohérents
+    - **Données météo Québec RÉELLES** : `Québec, CA · 282.44K (9.29°C) · Clouds · broken clouds · cod=200`
+    - `verdict=OPENWEATHERMAP_VALID_LIVE_DATA_RETURNED` · `valid=True` · `manifest_sha256=3670eb0fe3df...17e7`
+  - **Anti-générique multi-niveaux** : ✅ token jamais en query string GET du router (POST body) · ✅ tokens masqués partout (`***MASKED(32_CHARS_HEAD=44...TAIL=08)***`) · ✅ URL masquée pour persistance · ✅ priority auth strategy · ✅ heuristique placeholder étendue post-probe.
+  - **Forensic log** : 1 entrée `ENDPOINT_PROBES/OPENWEATHERMAP_VALIDATE` (token masqué). Audit `audit_20260507T212038Z_bae0b3a6.json` (sha=`bae0b3a6...8737`). Overlay `openweathermap_validation_overlay.json` (3663 bytes).
+  - **Pytest** : 10 nouveaux (`test_phase_xxx_duodecies_openweathermap_validate_omega.py`) **10/10 PASSED** + nouveau test `test_placeholder_french_tutoiement_patterns_detected`. Régression cluster doctrinal Phase XXIX/XXX = **255/255 PASSED** (245 + 10). 10 audits NOAA Ω cumulés.
+  - **Pivot stratégique** : OWM est le **premier hook externe entièrement opérationnel** de la session (WOD23 sur B2 + OWM live). Premiers hits drift potentiels sur le couplage SUPER_ENGINES ↔ BP135.
+
 - **PHASE_XXX-UNDECIES · COPERNICUS_API_P0_VALIDATE — Triple détection anti-générique (2026-05-07)**
   Validation HEAD_ONLY de l'API REST Copernicus Marine moderne avec **détection placeholder STRICTE** + **masquage token anti-leakage** + endpoint URL réel testé (FUSION ADD-ONLY · ANTI-GÉNÉRIQUE_Ω · V30_LOCK INVIOLÉ · DRIFT_ZERO).
   - **Module `noaa_pipeline_omega.py` étendu** : `COPERNICUS_API_PLACEHOLDERS` (set canonique 18 valeurs : VOTRE_TOKEN_ICI, YOUR_TOKEN_HERE, PLACEHOLDER, TODO, TBD, REPLACE_ME, etc.), `_mask_token` (anti-leakage : retourne `***MASKED(N_CHARS_HEAD=XX...TAIL=YY)***`), `_is_placeholder_token` (set + heuristiques `VOTRE_*`/`YOUR_*`/`<*>`/case-insensitive/trim), `validate_copernicus_api_endpoint` (HEAD strict + détection placeholder + masquage), `COPERNICUS_API_VALIDATION_PATH`.
