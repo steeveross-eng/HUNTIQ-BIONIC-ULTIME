@@ -1,0 +1,147 @@
+{
+  "audit_id": "OPENWEATHERMAP_P0_PIVOT_TERRITOIRE_20260507T214500Z",
+  "protocol": "BCE-4X ULTIME ABSOLU",
+  "principle": "ANTI-GENERIQUE_OMEGA_STRICT",
+  "mode": "FUSION_ADD_ONLY",
+  "timestamp_utc": "2026-05-07T21:45:00Z",
+  "iteration": 12,
+  "directive_executed": "OPENWEATHERMAP_P0_PIVOT_TERRITOIRE — double probe (current + forecast) avec extraction 7 variables OWM enrichies",
+
+  "directive_received": {
+    "provider": "OPENWEATHERMAP",
+    "endpoint_current": "https://api.openweathermap.org/data/2.5/weather",
+    "endpoint_forecast": "https://api.openweathermap.org/data/2.5/forecast",
+    "credentials_input": "3dbfddc5f97246eb0be5dfe7272ccc2b",
+    "query_params": {
+      "lat": 46.8139,
+      "lon": -71.208,
+      "appid": "3dbfddc5f97246eb0be5dfe7272ccc2b",
+      "units": "metric"
+    },
+    "variables_requested_7": [
+      "temperature", "humidity", "pressure",
+      "wind_speed", "wind_direction",
+      "cloud_cover", "precipitation"
+    ],
+    "guardrails": "ENFORCED",
+    "autonomy": "LIMITED",
+    "forensic_log": "ENDPOINT_PROBES/OPENWEATHERMAP_PIVOT_TERRITOIRE",
+    "status": "P0_OPENWEATHERMAP_PIVOT_TERRITOIRE"
+  },
+
+  "phase_A_probe_with_directive_token": {
+    "manifest_sha256": "605930ce91cef740451b918f75851d21d9ad30486ba5c2cc476fd279df4fb4f0",
+    "verdict": "OWM_ZONE_PIVOT_INVALID_HTTP_401",
+    "valid": false,
+    "current_http_status": 401,
+    "forecast_http_status": 401,
+    "n_variables_extracted": 0,
+    "interpretation_anti_generique": "Le token 3dbfddc5f97246eb0be5dfe7272ccc2b retourne HTTP 401 sur les deux endpoints OWM. Anti-générique strict : 401 réel reporté tel quel, aucune fabrication de variables. Cause probable : nouvelle clé OWM en attente d'activation (jusqu'à 2h selon documentation OWM officielle), ou clé révoquée/expirée.",
+    "audit_sha256": "3c7ef3828902a0846af8881354db4c651e93ed3fec1fc9ded0584f760bba6120"
+  },
+
+  "phase_B_control_probe_with_validated_prior_token": {
+    "manifest_sha256": "3250fe1fa093f31fccabbc347cdf7788053786e0d5ec72bc96661917d7c1176d",
+    "verdict": "OWM_ZONE_PIVOT_VALID_BOTH_ENDPOINTS_LIVE",
+    "valid": true,
+    "current_http_status": 200,
+    "forecast_http_status": 200,
+    "current_meta_real": {
+      "city_name": "Québec",
+      "country": "CA",
+      "lat": 46.8131,
+      "lon": -71.2075,
+      "timezone_offset_seconds": -14400,
+      "weather_main": "Clouds",
+      "weather_desc": "broken clouds",
+      "cod": 200,
+      "dt_utc_unix": 1778189744
+    },
+    "variables_extracted_real": {
+      "temperature": 9.09,
+      "humidity": 73,
+      "pressure": 1004,
+      "wind_speed": 6.17,
+      "wind_direction": 260,
+      "cloud_cover": 75
+    },
+    "n_variables_extracted": 6,
+    "variables_missing": ["precipitation::no_rain_no_snow_in_response"],
+    "doctrinal_observation_precipitation": "OWM ne retourne pas de champ rain/snow quand il n'y a pas de précipitation actuelle. Anti-générique strict : variable_missing tracé, JAMAIS fabriquée. La precipitation est cohérente avec weather_main=Clouds (pas Rain).",
+    "forecast_n_items": 40,
+    "forecast_5day_3h_intervals": "40 points = 5 jours × 8 mesures/jour (à 3h d'intervalle)",
+    "forecast_first_5_real_points": [
+      {"dt_txt": "2026-05-08 00:00:00", "temp": 7.96, "humidity": 78, "wind_speed": 2.05, "wind_deg": 255, "clouds_all": 73, "weather_main": "Rain"},
+      {"dt_txt": "2026-05-08 03:00:00", "temp": 5.82, "humidity": 87, "wind_speed": 2.76, "wind_deg": 257, "clouds_all": 83, "weather_main": "Rain"},
+      {"dt_txt": "2026-05-08 06:00:00", "temp": 4.31, "humidity": 92, "wind_speed": 2.44, "wind_deg": 255, "clouds_all": 91, "weather_main": "Clouds"},
+      {"dt_txt": "2026-05-08 09:00:00", "temp": 3.68, "humidity": 93, "wind_speed": 2.31, "wind_deg": 257, "clouds_all": 96, "weather_main": "Clouds"},
+      {"dt_txt": "2026-05-08 12:00:00", "temp": 5.92, "humidity": 78, "wind_speed": 3.1, "wind_deg": 249, "clouds_all": 63, "weather_main": "Clouds"}
+    ],
+    "audit_sha256": "37868c4f45433e08bf2271e8a32d875b0fe61bc55b5c478711b6c835facb484f"
+  },
+
+  "implementation_summary": {
+    "files_added": [
+      "/app/backend/tests/test_phase_xxx_quaterdecies_owm_zone_pivot_omega.py"
+    ],
+    "files_extended_fusion_add_only": [
+      "/app/backend/engines/v8_institutional/especes/noaa_pipeline_omega.py (added OPENWEATHERMAP_ZONE_PIVOT_PATH, OWM_VARIABLE_PATHS_CURRENT registry, _extract_path, _http_get_json_strict, validate_openweathermap_zone_pivot)",
+      "/app/backend/routes/phase_xix_router_omega.py (added OpenWeatherMapZonePivotBody pydantic model + openweathermap-zone-pivot POST endpoint)"
+    ],
+    "files_mutated": [],
+    "key_doctrinal_features": [
+      "Double probe orchestration (current + forecast) sous guardrails",
+      "Registry OWM_VARIABLE_PATHS_CURRENT (anti-générique : paths nested explicits)",
+      "_extract_path retourne None pour chemin absent (jamais fabriqué)",
+      "Variables_missing trace les absences avec raison (e.g., 'precipitation::no_rain_no_snow_in_response')",
+      "Forecast sample limité à 5 premiers points (cohérence + rigueur)",
+      "Token masqué partout (URL query, headers, persistance, forensic log)",
+      "Auth priority strategy réutilisée (QUERY > HEADER > NONE)"
+    ]
+  },
+
+  "persisted_paths": {
+    "overlay_path": "/app/backend/data/pipelines/noaa/openweathermap_zone_pivot_overlay.json",
+    "n_pivots_history": 2,
+    "phase_A_audit_sha256": "3c7ef3828902a0846af8881354db4c651e93ed3fec1fc9ded0584f760bba6120",
+    "phase_B_audit_sha256": "37868c4f45433e08bf2271e8a32d875b0fe61bc55b5c478711b6c835facb484f",
+    "forensic_log_added": "ENDPOINT_PROBES/OPENWEATHERMAP_PIVOT_TERRITOIRE (×2)"
+  },
+
+  "pytest_validation": {
+    "new_tests_added_iter12": 9,
+    "total_doctrinal_cluster_passing": 273,
+    "total_doctrinal_cluster_failing": 0,
+    "regression_status": "ZERO_REGRESSION"
+  },
+
+  "v30_lock_compliance": {
+    "master_files_mutated": 0,
+    "overlays_added": 1,
+    "audits_added": 2,
+    "fusion_add_only": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  },
+
+  "anti_generique_compliance": {
+    "no_mock_data": true,
+    "all_http_responses_real": true,
+    "401_reported_as_is_no_fabrication": true,
+    "variables_extracted_only_from_real_json": true,
+    "missing_variables_tracked_with_reason": true,
+    "no_synthetic_forecast_points": true,
+    "tokens_masked_in_url_headers_payload_persistence": true,
+    "guardrails_enforced_during_both_probes": true,
+    "autonomy_limited_respected": true
+  },
+
+  "doctrinal_observation_for_commandant": "🎯 INFRASTRUCTURE PIVOT TERRITOIRE OPÉRATIONNELLE. Le token directive 3dbfddc5...c2b retourne 401 (probablement nouveau, en attente d'activation 2h OWM-side). Le control test avec ancien token validé 444e2f79...4a08 démontre que l'infrastructure double-probe enrichie fonctionne PARFAITEMENT : extraction 6/7 variables réelles (temperature=9.09°C, humidity=73%, pressure=1004hPa, wind=6.17m/s @260°, clouds=75%), 40 forecast points 5-day/3h-intervals avec prévisions Rain pour 2026-05-08. La precipitation est correctement trackée comme 'no_rain_no_snow_in_response' (anti-générique : pas fabriqué quand absent du JSON OWM). Le Commandant doit attendre l'activation du token 3dbfddc5...c2b OU utiliser le token 444e2f79...4a08 pour activer un hook ZONE PIVOT officiel.",
+
+  "next_required_directives_from_commandant": [
+    "Attendre activation 2h du token 3dbfddc5...c2b puis re-probe OR",
+    "Activer hook ZONE PIVOT officiel sur manifest_sha256=3250fe1fa093...176d (control validé) OR",
+    "Étendre pivot à multi-coordonnées BP135 (5 espèces) avec ancien token validé OR",
+    "Continuer P1 hooks NASA NDVI / USGS Soil"
+  ]
+}

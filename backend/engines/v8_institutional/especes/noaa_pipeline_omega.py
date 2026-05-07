@@ -1112,7 +1112,529 @@ __all__ = [
     "OPENWEATHERMAP_HOOK_ACTIVATION_PATH",
     "activate_openweathermap_hook",
     "get_openweathermap_hook_status",
+    "OPENWEATHERMAP_ZONE_PIVOT_PATH",
+    "validate_openweathermap_zone_pivot",
 ]
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# 15. OPENWEATHERMAP ZONE PIVOT (current + forecast + 7 variables enrichies)
+# ═════════════════════════════════════════════════════════════════════════
+OPENWEATHERMAP_ZONE_PIVOT_PATH = (
+    PIPELINE_ROOT / "openweathermap_zone_pivot_overlay.json")
+
+# Variables canoniques OWM (anti-générique : extraction strictement
+# basée sur les champs du body JSON réel, jamais inventés).
+OWM_VARIABLE_PATHS_CURRENT: Dict[str, List[str]] = {
+    "temperature": ["main", "temp"],
+    "feels_like": ["main", "feels_like"],
+    "temperature_min": ["main", "temp_min"],
+    "temperature_max": ["main", "temp_max"],
+    "humidity": ["main", "humidity"],
+    "pressure": ["main", "pressure"],
+    "wind_speed": ["wind", "speed"],
+    "wind_direction": ["wind", "deg"],
+    "wind_gust": ["wind", "gust"],
+    "cloud_cover": ["clouds", "all"],
+    "visibility": ["visibility"],
+}
+
+
+def _extract_path(d: Dict[str, Any], path: List[str]) -> Optional[Any]:
+    """Extrait une valeur à un path nested dans un dict (anti-générique).
+
+    Retourne None si chemin inexistant. Aucune fabrication.
+    """
+    cur: Any = d
+    for k in path:
+        if isinstance(cur, dict) and k in cur:
+            cur = cur[k]
+        else:
+            return None
+    return cur
+
+
+def _http_get_json_strict(
+    url: str,
+    follow_redirects: bool = False,
+    timeout_s: int = 15,
+    body_max_bytes: int = 65536,
+    headers_extra: Optional[Dict[str, str]] = None,
+) -> Dict[str, Any]:
+    """GET HTTP strict avec NoRedirect + parsing JSON (anti-générique).
+
+    Retourne dict avec http_status, content_type, body_is_json,
+    parsed_json (ou None), reason, elapsed_ms, redirect_detected.
+    """
+    import urllib.request
+    import urllib.error
+
+    class NoRedirectHandler(urllib.request.HTTPRedirectHandler):
+        def redirect_request(self, req, fp, code, msg,
+                              headers, newurl):
+            return None
+
+    record: Dict[str, Any] = {
+        "url": url,
+        "http_status": None,
+        "content_type": None,
+        "body_bytes_read": 0,
+        "body_is_json": False,
+        "parsed_json": None,
+        "json_parse_error": None,
+        "redirect_detected": False,
+        "reason": None,
+        "elapsed_ms": None,
+    }
+    t0 = time.time()
+    try:
+        opener = (
+            urllib.request.build_opener(NoRedirectHandler)
+            if not follow_redirects
+            else urllib.request.build_opener())
+        h = {
+            "User-Agent":
+                "BCE-4X-OWM-ZONE-PIVOT/1.0",
+            "Accept": "application/json",
+        }
+        if headers_extra:
+            h.update(headers_extra)
+        req = urllib.request.Request(url, method="GET", headers=h)
+        with opener.open(req, timeout=timeout_s) as resp:
+            record["http_status"] = resp.status
+            record["content_type"] = resp.headers.get("Content-Type")
+            body = resp.read(body_max_bytes)
+            record["body_bytes_read"] = len(body)
+            try:
+                record["parsed_json"] = json.loads(
+                    body.decode("utf-8", errors="replace"))
+                record["body_is_json"] = True
+            except json.JSONDecodeError as e:
+                record["json_parse_error"] = str(e)[:200]
+    except urllib.error.HTTPError as e:
+        record["http_status"] = e.code
+        record["reason"] = f"http_error_{e.code}"
+        if 300 <= e.code < 400:
+            record["redirect_detected"] = True
+        try:
+            body = e.read(800)
+            try:
+                record["parsed_error_json"] = json.loads(
+                    body.decode("utf-8", errors="replace"))
+            except json.JSONDecodeError:
+                record["body_preview_first_500b"] = (
+                    body[:500].decode("utf-8", errors="replace"))
+        except Exception:
+            pass
+    except (urllib.error.URLError, TimeoutError, OSError) as e:
+        record["reason"] = f"network_error::{str(e)[:160]}"
+    record["elapsed_ms"] = round((time.time() - t0) * 1000, 1)
+    return record
+
+
+def validate_openweathermap_zone_pivot(
+    endpoint_current: str = (
+        "https://api.openweathermap.org/data/2.5/weather"),
+    endpoint_forecast: str = (
+        "https://api.openweathermap.org/data/2.5/forecast"),
+    credentials_api_key: Optional[str] = None,
+    query_params: Optional[Dict[str, Any]] = None,
+    variables_requested: Optional[Dict[str, bool]] = None,
+    require_http_200: bool = True,
+    require_no_redirect: bool = True,
+    expect_content_type: str = "application/json",
+    forensic_event: str = "OPENWEATHERMAP_PIVOT_TERRITOIRE",
+    persist: bool = True,
+    timeout_s: int = 15,
+) -> Dict[str, Any]:
+    """OPENWEATHERMAP_P0_PIVOT_TERRITOIRE · double probe enrichi (current
+    + forecast) avec extraction stricte des variables OWM réelles.
+
+    Workflow doctrinal :
+      1. Guardrails ENFORCED check (412 sinon)
+      2. Détection placeholder DOUBLE niveau (credentials + query.appid)
+      3. Auth priority : QUERY_PARAM_APPID > BEARER_HEADER > NONE
+      4. Probe 1 : current weather (lat/lon, units)
+      5. Probe 2 : forecast (mêmes coords)
+      6. Extraction stricte des variables demandées (anti-générique :
+         seules les valeurs RÉELLEMENT présentes dans le JSON sont
+         persistées, jamais fabriquées)
+      7. Forensic log ENDPOINT_PROBES/{forensic_event}
+      8. Persistance overlay history + audit doctrinal
+      9. AUCUN recalcul moteur · V30_LOCK + DRIFT_ZERO
+
+    Anti-leakage : tokens masqués dans URL/payload/persistence.
+    """
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        require_guardrails_enforced, log_forensic_event,
+    )
+    require_guardrails_enforced(
+        "validate_openweathermap_zone_pivot")
+
+    if not endpoint_current.startswith(("https://", "http://")):
+        raise ValueError(
+            f"ENDPOINT_CURRENT_INVALID::{endpoint_current[:120]}")
+    if not endpoint_forecast.startswith(("https://", "http://")):
+        raise ValueError(
+            f"ENDPOINT_FORECAST_INVALID::{endpoint_forecast[:120]}")
+
+    from urllib.parse import urlencode
+
+    qp = dict(query_params or {})
+    appid_in_query = qp.get("appid")
+    creds_placeholder = _is_placeholder_token(credentials_api_key)
+    appid_placeholder = _is_placeholder_token(appid_in_query)
+    creds_token_masked = _mask_token(credentials_api_key)
+    appid_token_masked = _mask_token(appid_in_query)
+
+    use_query_auth = (
+        bool(appid_in_query) and not appid_placeholder)
+    use_header_auth = (
+        (not use_query_auth)
+        and bool(credentials_api_key)
+        and not creds_placeholder)
+    auth_strategy = (
+        "QUERY_PARAM_APPID" if use_query_auth
+        else "BEARER_HEADER" if use_header_auth
+        else "NONE_BOTH_PLACEHOLDERS")
+
+    # Construction URLs (réelles ET masquées)
+    qp_real = dict(qp)
+    qp_masked = dict(qp)
+    if "appid" in qp_real:
+        qp_masked["appid"] = appid_token_masked
+    qs_real = ("?" + urlencode(qp_real)) if qp_real else ""
+    qs_masked = (
+        "?" + urlencode(qp_masked)) if qp_masked else ""
+    url_current_real = endpoint_current + qs_real
+    url_current_masked = endpoint_current + qs_masked
+    url_forecast_real = endpoint_forecast + qs_real
+    url_forecast_masked = endpoint_forecast + qs_masked
+
+    # Court-circuit doctrinal
+    if auth_strategy == "NONE_BOTH_PLACEHOLDERS":
+        verdict = (
+            "OWM_ZONE_PIVOT_REJECTED_BOTH_PLACEHOLDERS_DETECTED")
+        return {
+            "manifest_id": "OWM_ZONE_PIVOT_Ω",
+            "ordre": "P0_OPENWEATHERMAP_PIVOT_TERRITOIRE",
+            "doctrine":
+                "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "guardrails_enforced": True,
+            "autonomy": "LIMITED",
+            "valid": False,
+            "verdict": verdict,
+            "auth_strategy": auth_strategy,
+            "credentials_api_key_masked": creds_token_masked,
+            "query_appid_masked": appid_token_masked,
+            "next_action": (
+                "REJECTED — both auth tokens are placeholders. "
+                "No HTTP request emitted."),
+            "anti_generique_strict": True,
+            "v30_lock": "INVIOLÉ",
+            "drift_zero": True,
+            "no_engine_recompute_triggered": True,
+            "executed_at_utc": _utc_now(),
+        }
+
+    # Probe 1 : current weather
+    headers_extra: Dict[str, str] = {}
+    if use_header_auth:
+        headers_extra["Authorization"] = (
+            f"Bearer {credentials_api_key}")
+    probe_current = _http_get_json_strict(
+        url=url_current_real,
+        follow_redirects=False,
+        timeout_s=timeout_s,
+        headers_extra=headers_extra,
+    )
+    probe_current["url_masked"] = url_current_masked
+
+    # Probe 2 : forecast
+    probe_forecast = _http_get_json_strict(
+        url=url_forecast_real,
+        follow_redirects=False,
+        timeout_s=timeout_s,
+        headers_extra=headers_extra,
+    )
+    probe_forecast["url_masked"] = url_forecast_masked
+
+    # Validation signature current (weather + main + name)
+    current_owm_signature_present = False
+    if probe_current["body_is_json"] and isinstance(
+            probe_current["parsed_json"], dict):
+        keys = set(probe_current["parsed_json"].keys())
+        current_owm_signature_present = {
+            "weather", "main", "name"}.issubset(keys)
+    # Validation signature forecast (list + city)
+    forecast_owm_signature_present = False
+    forecast_n_items = 0
+    if probe_forecast["body_is_json"] and isinstance(
+            probe_forecast["parsed_json"], dict):
+        keys = set(probe_forecast["parsed_json"].keys())
+        forecast_owm_signature_present = {
+            "list", "city"}.issubset(keys)
+        if "list" in probe_forecast["parsed_json"] and (
+                isinstance(
+                    probe_forecast["parsed_json"]["list"], list)):
+            forecast_n_items = len(
+                probe_forecast["parsed_json"]["list"])
+
+    # Extraction des variables demandées (anti-générique strict)
+    vars_req = dict(variables_requested or {
+        "temperature": True, "humidity": True, "pressure": True,
+        "wind_speed": True, "wind_direction": True,
+        "cloud_cover": True, "precipitation": True})
+    variables_extracted: Dict[str, Any] = {}
+    variables_missing: List[str] = []
+    if (probe_current["body_is_json"]
+            and isinstance(probe_current["parsed_json"], dict)):
+        parsed = probe_current["parsed_json"]
+        for var_name, requested in vars_req.items():
+            if not requested:
+                continue
+            if var_name == "precipitation":
+                # OWM : rain ou snow optionnels avec sub-keys 1h/3h
+                rain = parsed.get("rain")
+                snow = parsed.get("snow")
+                if isinstance(rain, dict) and rain:
+                    variables_extracted["precipitation_rain"] = rain
+                if isinstance(snow, dict) and snow:
+                    variables_extracted["precipitation_snow"] = snow
+                if not rain and not snow:
+                    variables_missing.append(
+                        "precipitation::no_rain_no_snow_in_response")
+                continue
+            path = OWM_VARIABLE_PATHS_CURRENT.get(var_name)
+            if path:
+                val = _extract_path(parsed, path)
+                if val is not None:
+                    variables_extracted[var_name] = val
+                else:
+                    variables_missing.append(
+                        f"{var_name}::path_{'.'.join(path)}_absent")
+            else:
+                # Variable inconnue (anti-générique : ne fabrique pas)
+                variables_missing.append(
+                    f"{var_name}::unknown_path_in_owm_schema")
+
+    # Métadonnées current (anti-générique : champs réels uniquement)
+    current_meta: Dict[str, Any] = {}
+    if (probe_current["body_is_json"]
+            and isinstance(probe_current["parsed_json"], dict)):
+        p = probe_current["parsed_json"]
+        current_meta = {
+            "city_name": p.get("name"),
+            "country": (p.get("sys") or {}).get("country"),
+            "lat": (p.get("coord") or {}).get("lat"),
+            "lon": (p.get("coord") or {}).get("lon"),
+            "timezone_offset_seconds": p.get("timezone"),
+            "weather_main": (
+                (p.get("weather") or [{}])[0].get("main")
+                if p.get("weather") else None),
+            "weather_desc": (
+                (p.get("weather") or [{}])[0].get("description")
+                if p.get("weather") else None),
+            "cod": p.get("cod"),
+            "dt_utc_unix": p.get("dt"),
+        }
+    # Échantillon forecast (5 premiers points pour cohérence)
+    forecast_sample: List[Dict[str, Any]] = []
+    if forecast_owm_signature_present:
+        for item in (
+                probe_forecast["parsed_json"]["list"][:5]):
+            if not isinstance(item, dict):
+                continue
+            forecast_sample.append({
+                "dt_unix": item.get("dt"),
+                "dt_txt": item.get("dt_txt"),
+                "temp": (item.get("main") or {}).get("temp"),
+                "humidity": (
+                    item.get("main") or {}).get("humidity"),
+                "pressure": (
+                    item.get("main") or {}).get("pressure"),
+                "wind_speed": (
+                    item.get("wind") or {}).get("speed"),
+                "wind_deg": (
+                    item.get("wind") or {}).get("deg"),
+                "clouds_all": (
+                    item.get("clouds") or {}).get("all"),
+                "weather_main": (
+                    (item.get("weather") or [{}])[0].get("main")
+                    if item.get("weather") else None),
+                "rain_3h": (
+                    (item.get("rain") or {}).get("3h")),
+                "snow_3h": (
+                    (item.get("snow") or {}).get("3h")),
+            })
+
+    # Verdict doctrinal
+    if (current_owm_signature_present
+            and forecast_owm_signature_present
+            and probe_current["http_status"] == 200
+            and probe_forecast["http_status"] == 200):
+        verdict = "OWM_ZONE_PIVOT_VALID_BOTH_ENDPOINTS_LIVE"
+        valid = True
+    elif current_owm_signature_present:
+        verdict = "OWM_ZONE_PIVOT_VALID_CURRENT_ONLY_FORECAST_FAILED"
+        valid = False
+    elif forecast_owm_signature_present:
+        verdict = "OWM_ZONE_PIVOT_VALID_FORECAST_ONLY_CURRENT_FAILED"
+        valid = False
+    elif (probe_current["http_status"] == 401
+          or probe_forecast["http_status"] == 401):
+        verdict = "OWM_ZONE_PIVOT_INVALID_HTTP_401"
+        valid = False
+    elif (probe_current["http_status"] == 429
+          or probe_forecast["http_status"] == 429):
+        verdict = "OWM_ZONE_PIVOT_INVALID_HTTP_429_RATE_LIMITED"
+        valid = False
+    else:
+        verdict = "OWM_ZONE_PIVOT_INVALID_OTHER"
+        valid = False
+
+    # Forensic log
+    log_forensic_event(
+        scope="ENDPOINT_PROBES",
+        event=forensic_event,
+        details={
+            "provider": "OPENWEATHERMAP",
+            "endpoint_current": endpoint_current,
+            "endpoint_forecast": endpoint_forecast,
+            "auth_strategy": auth_strategy,
+            "credentials_api_key_masked": creds_token_masked,
+            "query_appid_masked": (
+                appid_token_masked if appid_in_query else None),
+            "current_http_status": probe_current["http_status"],
+            "forecast_http_status": probe_forecast["http_status"],
+            "current_signature_present": (
+                current_owm_signature_present),
+            "forecast_signature_present": (
+                forecast_owm_signature_present),
+            "forecast_n_items": forecast_n_items,
+            "n_variables_extracted": len(variables_extracted),
+            "n_variables_missing": len(variables_missing),
+            "valid": valid,
+            "verdict": verdict,
+        },
+        persist=True,
+    )
+
+    # Manifest signé + persistance
+    payload = {
+        "manifest_id": "OWM_ZONE_PIVOT_Ω",
+        "ordre": "P0_OPENWEATHERMAP_PIVOT_TERRITOIRE",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "forensic_event": forensic_event,
+        "guardrails_enforced": True,
+        "autonomy": "LIMITED",
+        "auth_strategy": auth_strategy,
+        "endpoint_current": endpoint_current,
+        "endpoint_forecast": endpoint_forecast,
+        "valid": valid,
+        "verdict": verdict,
+        "credentials_api_key_masked": creds_token_masked,
+        "query_appid_masked": appid_token_masked,
+        "query_params_lat": qp.get("lat"),
+        "query_params_lon": qp.get("lon"),
+        "query_params_units": qp.get("units"),
+        "current_owm_signature_present":
+            current_owm_signature_present,
+        "forecast_owm_signature_present":
+            forecast_owm_signature_present,
+        "forecast_n_items": forecast_n_items,
+        "current_meta": current_meta,
+        "forecast_sample_first_5": forecast_sample,
+        "variables_requested": vars_req,
+        "variables_extracted": variables_extracted,
+        "variables_missing": variables_missing,
+        "n_variables_extracted": len(variables_extracted),
+        "probe_current_summary": {
+            "url_masked": probe_current["url_masked"],
+            "http_status": probe_current["http_status"],
+            "content_type": probe_current["content_type"],
+            "body_bytes_read": probe_current["body_bytes_read"],
+            "elapsed_ms": probe_current["elapsed_ms"],
+            "redirect_detected": probe_current["redirect_detected"],
+        },
+        "probe_forecast_summary": {
+            "url_masked": probe_forecast["url_masked"],
+            "http_status": probe_forecast["http_status"],
+            "content_type": probe_forecast["content_type"],
+            "body_bytes_read": probe_forecast["body_bytes_read"],
+            "elapsed_ms": probe_forecast["elapsed_ms"],
+            "redirect_detected":
+                probe_forecast["redirect_detected"],
+        },
+        "anti_generique_strict": True,
+        "anti_leakage_token_masked": True,
+        "v30_lock": "INVIOLÉ",
+        "drift_zero": True,
+        "no_engine_recompute_triggered": True,
+        "executed_at_utc": _utc_now(),
+    }
+    payload_sha256 = hashlib.sha256(
+        json.dumps(payload, sort_keys=True,
+                   ensure_ascii=False, default=str).encode("utf-8")
+    ).hexdigest()
+    payload["manifest_sha256"] = payload_sha256
+
+    persisted: Dict[str, Any] = {}
+    if persist:
+        PIPELINE_ROOT.mkdir(parents=True, exist_ok=True)
+        if OPENWEATHERMAP_ZONE_PIVOT_PATH.exists():
+            try:
+                state = json.loads(
+                    OPENWEATHERMAP_ZONE_PIVOT_PATH.read_text(
+                        encoding="utf-8"))
+                if not isinstance(state, dict) or (
+                        "history" not in state):
+                    state = {"history": []}
+            except json.JSONDecodeError:
+                state = {"history": []}
+        else:
+            state = {"history": []}
+        state["history"].append(payload)
+        state["last_updated_utc"] = _utc_now()
+        state["n_pivots"] = len(state["history"])
+        state["last_manifest_sha256"] = payload_sha256
+        state["last_verdict"] = verdict
+        state["v30_lock"] = "INVIOLÉ"
+        OPENWEATHERMAP_ZONE_PIVOT_PATH.write_text(
+            json.dumps(state, ensure_ascii=False, indent=2),
+            encoding="utf-8")
+        persisted["overlay_path"] = str(
+            OPENWEATHERMAP_ZONE_PIVOT_PATH)
+        persisted["overlay_size_bytes"] = (
+            OPENWEATHERMAP_ZONE_PIVOT_PATH.stat().st_size)
+        persisted["n_pivots_history"] = state["n_pivots"]
+
+        from engines.v8_institutional.especes.bio_reacteur_overlay_omega import (  # noqa: E501
+            persist_audit,
+        )
+        audit_payload = {
+            "audit_type": "NOAA_PIPELINE",
+            "subtype": "OWM_ZONE_PIVOT",
+            "ordre": "P0_OPENWEATHERMAP_PIVOT_TERRITOIRE",
+            "doctrine":
+                "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "provider": "OPENWEATHERMAP",
+            "auth_strategy": auth_strategy,
+            "valid": valid,
+            "verdict": verdict,
+            "manifest_sha256": payload_sha256,
+            "current_http_status": probe_current["http_status"],
+            "forecast_http_status": probe_forecast["http_status"],
+            "n_variables_extracted": len(variables_extracted),
+            "forecast_n_items": forecast_n_items,
+            "v30_lock_inviolate": True,
+            "drift_zero": True,
+            "no_engine_recompute_triggered": True,
+        }
+        persisted["audit_persisted"] = persist_audit(audit_payload)
+
+    payload["persisted_paths"] = persisted
+    return payload
 
 
 # ═════════════════════════════════════════════════════════════════════════

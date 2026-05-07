@@ -1839,3 +1839,86 @@ async def openweathermap_hook_status_endpoint() -> JSONResponse:
         "result": payload,
         "v30_lock": "INVIOLÉ",
     })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# OPENWEATHERMAP_P0_PIVOT_TERRITOIRE — current + forecast + 7 variables
+# ═════════════════════════════════════════════════════════════════════════
+class OpenWeatherMapZonePivotBody(BaseModel):
+    endpoint_current: str = (
+        "https://api.openweathermap.org/data/2.5/weather")
+    endpoint_forecast: str = (
+        "https://api.openweathermap.org/data/2.5/forecast")
+    credentials_api_key: Optional[str] = None
+    query_params: Optional[Dict[str, Any]] = None
+    variables_requested: Optional[Dict[str, bool]] = None
+    forensic_event: str = "OPENWEATHERMAP_PIVOT_TERRITOIRE"
+    require_http_200: bool = True
+    require_no_redirect: bool = True
+    expect_content_type: str = "application/json"
+    persist: bool = True
+
+
+@router.post("/openweathermap-zone-pivot")
+async def openweathermap_zone_pivot_endpoint(
+    body: OpenWeatherMapZonePivotBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """OPENWEATHERMAP_P0_PIVOT_TERRITOIRE · double probe enrichi.
+
+    Workflow doctrinal :
+      1. Guardrails ENFORCED check (412 sinon)
+      2. Détection placeholder DOUBLE niveau + auth priority
+      3. Probe 1 : current weather (lat/lon, units)
+      4. Probe 2 : forecast (mêmes coords)
+      5. Extraction stricte des variables OWM RÉELLEMENT présentes
+         (anti-générique : variables_missing trace les absentes)
+      6. Forensic log ENDPOINT_PROBES/{forensic_event}
+      7. Persistance overlay + audit doctrinal
+      8. AUCUN recalcul moteur · V30_LOCK + DRIFT_ZERO
+
+    Body POST JSON requis. Token Commandant requis.
+    Anti-générique strict + anti-leakage.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.noaa_pipeline_omega import (
+        validate_openweathermap_zone_pivot,
+    )
+    try:
+        payload = validate_openweathermap_zone_pivot(
+            endpoint_current=body.endpoint_current,
+            endpoint_forecast=body.endpoint_forecast,
+            credentials_api_key=body.credentials_api_key,
+            query_params=body.query_params,
+            variables_requested=body.variables_requested,
+            require_http_200=body.require_http_200,
+            require_no_redirect=body.require_no_redirect,
+            expect_content_type=body.expect_content_type,
+            forensic_event=body.forensic_event,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "OWM_ZONE_PIVOT_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "OWM_ZONE_PIVOT_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P0_OPENWEATHERMAP_PIVOT_TERRITOIRE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })

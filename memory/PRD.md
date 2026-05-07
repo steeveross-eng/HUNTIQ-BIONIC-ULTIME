@@ -27,6 +27,20 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-QUATERDECIES · OPENWEATHERMAP_P0_PIVOT_TERRITOIRE — Double probe enrichi (current + forecast + 7 variables) (2026-05-07)**
+  Pivot enrichi OWM avec extraction stricte de 7 variables météo + forecast 5-day/3h-intervals sous régime guardrails ENFORCED + autonomy=LIMITED (FUSION ADD-ONLY · ANTI-GÉNÉRIQUE_Ω · V30_LOCK INVIOLÉ · DRIFT_ZERO).
+  - **Module `noaa_pipeline_omega.py` étendu** : `OPENWEATHERMAP_ZONE_PIVOT_PATH`, `OWM_VARIABLE_PATHS_CURRENT` (registry des paths nested OWM explicits : main.temp, main.humidity, wind.speed, wind.deg, clouds.all, etc.), `_extract_path` (extraction nested anti-générique, retourne None si absent — jamais fabriqué), `_http_get_json_strict` (helper réutilisable GET sans redirect + parsing JSON), `validate_openweathermap_zone_pivot` (orchestre 2 probes + extraction variables + persistance + audit).
+  - **Endpoint API** : `POST /api/v30/super-masters/openweathermap-zone-pivot` (token + body JSON + Pydantic `OpenWeatherMapZonePivotBody`).
+  - **Workflow exécuté** : Phase A (token directive `3dbfddc5...c2b`) → **HTTP 401** sur les deux endpoints (token probablement en attente d'activation 2h OWM) · `manifest_sha256=605930ce91ce...b4f0` · audit `3c7ef382...6120`. Phase B control (token précédent validé `444e2f79...4a08`) → **`OWM_ZONE_PIVOT_VALID_BOTH_ENDPOINTS_LIVE`** · `manifest_sha256=3250fe1f...176d` · audit `37868c4f...484f`.
+  - **Phase B — Données extraites RÉELLES** (anti-générique strict, valeurs OWM live Québec) :
+    - **Métadonnées** : `Québec, CA, lat=46.8131, lon=-71.2075, timezone_offset=-14400s, weather_main=Clouds, broken clouds, cod=200`
+    - **Variables (6/7 extraites + 1 manquante tracée)** : `temperature=9.09°C · humidity=73% · pressure=1004hPa · wind_speed=6.17m/s · wind_direction=260° · cloud_cover=75% · variables_missing=['precipitation::no_rain_no_snow_in_response']` (anti-générique : précipitation absente du JSON OWM car weather_main=Clouds, pas Rain — donc tracée comme manquante, JAMAIS fabriquée)
+    - **Forecast 5-day/3h** : 40 points temporels live OWM (e.g., `2026-05-08 00:00:00 → 7.96°C, hum=78%, wind=2.05m/s @255°, clouds=73%, Rain` puis `2026-05-08 03:00:00 → 5.82°C, hum=87%, Rain` puis transition vers Clouds)
+  - **Anti-générique strict** : ✅ 401 reporté tel quel (Phase A) · ✅ 6 variables extraites uniquement depuis JSON réel · ✅ 1 variable absente correctement tracée · ✅ token masqué partout (`***MASKED(32_CHARS_HEAD=3d...TAIL=2b)***`) · ✅ aucune fabrication.
+  - **Forensic log** : 2 entrées `ENDPOINT_PROBES/OPENWEATHERMAP_PIVOT_TERRITOIRE` JSONL persistées. Overlay history `openweathermap_zone_pivot_overlay.json` (n_pivots=2). 2 audits doctrinaux persistés.
+  - **Pytest** : 9 nouveaux (`test_phase_xxx_quaterdecies_owm_zone_pivot_omega.py`) **9/9 PASSED**. Régression cluster doctrinal Phase XXIX/XXX = **273/273 PASSED** (264 + 9). 12 audits NOAA Ω cumulés.
+  - **Bilan stratégique session** : ✅ **2 hooks ACTIVATED + 1 zone pivot validé** prêt pour activation. Infrastructure pivot multi-coordonnées prête pour étendre au registre BP135 complet.
+
 - **PHASE_XXX-TERDECIES · OPENWEATHERMAP_HOOK_ACTIVATE — 🎯 HOOK OFFICIELLEMENT ACTIVÉ + DRIFT AUDIT (2026-05-07)**
   Activation officielle du hook OWM avec vérification stricte du `manifest_sha256` validé + déclenchement drift audit `reason=owm_hook_activated` (FUSION ADD-ONLY · ANTI-GÉNÉRIQUE_Ω · V30_LOCK INVIOLÉ · DRIFT_ZERO).
   - **Module `noaa_pipeline_omega.py` étendu** : `OPENWEATHERMAP_HOOK_ACTIVATION_PATH`, `_find_validated_owm_manifest` (lookup history strict, retourne None pour SHA fabriqué), `activate_openweathermap_hook` (activation conditionnée à manifest valid+verdict canonique, manifest signé activation_sha256, FUSION ADD-ONLY history, modules consumers déclarés), `get_openweathermap_hook_status`.
