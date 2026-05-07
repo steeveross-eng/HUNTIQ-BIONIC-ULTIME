@@ -27,6 +27,19 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-OCTIES · NOAA_CFSV2_P0_PIVOT_VERIFY (NCEI THREDDS) — INVALID (2026-05-07)**
+  Vérification stricte HEAD_ONLY + DDS du candidat pivot NCEI THREDDS sous régime guardrails ENFORCED + autonomy=LIMITED (FUSION ADD-ONLY · anti-générique · V30_LOCK INVIOLÉ · DRIFT_ZERO · NO_ENGINE_RECOMPUTE).
+  - **Module `noaa_pipeline_omega.py` étendu** : ajout `_is_content_type_acceptable_opendap` (validation OPeNDAP-aware élargie : text/plain, application/x-dods-*, application/x-netcdf, octet-stream), `verify_cfsv2_pivot_head_only` (HEAD strict + DDS complémentaire si `expect_opendap=True`, signature `Dataset {` détectée, manifest SHA-256, FUSION ADD-ONLY history), `CFSV2_PIVOT_VERIFICATION_PATH`.
+  - **Endpoint API** : `POST /api/v30/super-masters/noaa-cfsv2-pivot-verify` (token + guardrails 412 si inactifs + 400 si URL invalide).
+  - **Probe RÉEL sur `https://www.ncei.noaa.gov/thredds/dodsC/cfsr/mon/pgbh/pgbh.202401.nc`** :
+    - HEAD : **HTTP 400** · content_type=None · redirect_detected=False · `http_error_400` · 230.9ms (typique THREDDS rejetant HEAD direct sur dodsC sans suffixe).
+    - DDS (`.dds`, GET 4KB) : **HTTP 404** · `dds_signature_dataset_present=False` · 155.9ms (le catalogue NCEI ne sert pas ce path exact).
+    - **Verdict** : `CFSV2_PIVOT_INVALID_OTHER` · manifest_sha256=`3ef23434fe5b...8cbc`.
+  - **Action** : `REJECTED — Await Commandant directive (alternative pivot URL or credentials)`. Aucune alternative probée autonomement (autonomy=LIMITED, require_commandant_confirm=True respectés).
+  - **Forensic log** : 1 entrée `ENDPOINT_PROBES/CFSV2_PIVOT_HEAD_ONLY_VERIFY`. Audit `audit_20260507T195744Z_67f03c7c.json` (sha=`67f03c7c...1eee`). Overlay `cfsv2_pivot_verification_overlay.json` (2599 bytes).
+  - **Pytest** : 9 nouveaux (`test_phase_xxx_octies_cfsv2_pivot_verify_omega.py`) **9/9 PASSED**. Régression cluster doctrinal Phase XXIX/XXX = **221/221 PASSED** (212 + 9). 6 audits NOAA Ω cumulés.
+  - **Observation doctrinale** : le path `/thredds/dodsC/cfsr/mon/pgbh/pgbh.202401.nc` n'est pas servi par NCEI THREDDS actuel. Le Commandant doit fournir le path corrigé OU autoriser explicitement la consultation du catalogue NCEI racine pour identifier le path correct.
+
 - **PHASE_XXX-SEPTIES · NOAA_CFSV2_P0_DECISION — HEAD_ONLY strict + pivot CANDIDATE_LIST_ONLY (2026-05-07)**
   Vérification stricte du candidat CFSv2 sous régime guardrails ENFORCED (FUSION ADD-ONLY · anti-générique strict · V30_LOCK INVIOLÉ · DRIFT_ZERO · NO_ENGINE_RECOMPUTE).
   - **Module `noaa_pipeline_omega.py` étendu** : ajout `CFSV2_PIVOT_CANDIDATE_LIST` (NCEI_THREDDS_CFSR_MONTHLY + COPERNICUS_MARINE_GLOBAL_PHY), `verify_cfsv2_p0_head_only` (HEAD strict sans follow_redirects, guardrails enforce, manifest SHA-256, pivot CANDIDATE_LIST_ONLY si invalide), `_is_content_type_acceptable` (validation binaire stricte), `list_cfsv2_pivot_candidates`.

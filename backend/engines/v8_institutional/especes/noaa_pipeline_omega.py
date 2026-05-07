@@ -1098,9 +1098,390 @@ __all__ = [
     "get_wod23_hook_status",
     "CFSV2_PIVOT_CANDIDATE_LIST",
     "CFSV2_VERIFICATION_P0_PATH",
+    "CFSV2_PIVOT_VERIFICATION_PATH",
     "verify_cfsv2_p0_head_only",
+    "verify_cfsv2_pivot_head_only",
     "list_cfsv2_pivot_candidates",
 ]
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# 10. NOAA CFSV2 PIVOT VERIFY (NCEI THREDDS / Copernicus / autre URL)
+# ═════════════════════════════════════════════════════════════════════════
+CFSV2_PIVOT_VERIFICATION_PATH = (
+    PIPELINE_ROOT / "cfsv2_pivot_verification_overlay.json")
+
+
+def _is_content_type_acceptable_opendap(
+    content_type: Optional[str],
+) -> bool:
+    """Validation content-type pour OPeNDAP/THREDDS endpoints.
+
+    Anti-générique : retourne False si content-type absent ou non
+    reconnu comme OPeNDAP/HTTP-readable.
+    """
+    if not content_type:
+        return False
+    ct = content_type.lower()
+    # OPeNDAP DDS/DAS/DODS + binaires + text/plain (THREDDS legacy)
+    acceptable = [
+        "application/octet-stream",
+        "application/x-netcdf",
+        "application/netcdf",
+        "application/x-grib",
+        "application/x-grib2",
+        "application/x-dods",
+        "application/x-dods-dds",
+        "application/x-dods-das",
+        "application/x-dods-dods",
+        "binary/octet-stream",
+        "text/plain",
+    ]
+    return any(a in ct for a in acceptable)
+
+
+def verify_cfsv2_pivot_head_only(
+    endpoint: str,
+    provider: str = "NCEI_THREDDS_CFSR_MONTHLY",
+    expect_format: str = "GRIB2_OR_NETCDF",
+    expect_opendap: bool = True,
+    require_no_redirect: bool = True,
+    require_http_200: bool = True,
+    persist: bool = True,
+    timeout_s: int = 15,
+    dds_max_bytes: int = 4096,
+) -> Dict[str, Any]:
+    """NOAA_CFSV2_P0_PIVOT · HEAD_ONLY strict pivot endpoint verification.
+
+    Workflow doctrinal :
+      1. Guardrails ENFORCED check (412 sinon)
+      2. HEAD HTTP RÉEL sans follow_redirects sur endpoint absolu
+      3. Si expect_opendap=True : probe complémentaire `.dds` (GET 4KB)
+         pour vérifier signature OPeNDAP "Dataset {"
+      4. Critères stricts : HTTP 200 + pas de redirect + content-type
+         binaire/OPeNDAP + (si OPeNDAP) DDS contient "Dataset"
+      5. Forensic log ENDPOINT_PROBES persisté
+      6. Manifest signé SHA-256 + persistance overlay + audit
+      7. AUCUN recalcul moteur
+
+    Args:
+      endpoint: URL absolue HTTPS (ex: NCEI THREDDS dodsC).
+      provider: label provider (default NCEI).
+      expect_format: GRIB2_OR_NETCDF.
+      expect_opendap: True → probe .dds complémentaire requis.
+      require_no_redirect: True (default).
+      require_http_200: True (default).
+      timeout_s: timeout HTTP.
+      dds_max_bytes: lecture limitée pour DDS preview.
+
+    Returns:
+      Dict structuré avec verdict + manifest_sha256 + persistance.
+    """
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        require_guardrails_enforced, log_forensic_event,
+    )
+    require_guardrails_enforced("verify_cfsv2_pivot_head_only")
+
+    import urllib.request
+    import urllib.error
+
+    if not endpoint.startswith(("https://", "http://")):
+        raise ValueError(
+            f"ENDPOINT_INVALID::not_http_url::{endpoint[:120]}")
+
+    class NoRedirectHandler(urllib.request.HTTPRedirectHandler):
+        def redirect_request(self, req, fp, code, msg,
+                              headers, newurl):
+            return None
+
+    t_total = time.time()
+
+    # 1. HEAD probe principale (anti-générique strict)
+    record_head: Dict[str, Any] = {
+        "url": endpoint,
+        "method": "HEAD",
+        "follow_redirects": False,
+        "http_status": None,
+        "content_type": None,
+        "content_length": None,
+        "headers_subset": {},
+        "elapsed_ms": None,
+        "reason": None,
+        "redirect_detected": False,
+    }
+    t0 = time.time()
+    try:
+        opener = urllib.request.build_opener(NoRedirectHandler)
+        req = urllib.request.Request(
+            endpoint, method="HEAD",
+            headers={
+                "User-Agent": "BCE-4X-NOAA-CFSV2-PIVOT-VERIFY/1.0",
+            })
+        with opener.open(req, timeout=timeout_s) as resp:
+            record_head["http_status"] = resp.status
+            headers = dict(resp.headers)
+            record_head["content_type"] = headers.get(
+                "Content-Type", headers.get("content-type"))
+            cl = headers.get(
+                "Content-Length", headers.get("content-length"))
+            try:
+                record_head["content_length"] = (
+                    int(cl) if cl else None)
+            except (TypeError, ValueError):
+                record_head["content_length"] = None
+            record_head["headers_subset"] = {
+                k: v for k, v in headers.items()
+                if k.lower() in (
+                    "content-type", "content-length", "etag",
+                    "last-modified", "server", "accept-ranges",
+                    "x-thredds-server-version",
+                    "x-amz-request-id", "location")
+            }
+    except urllib.error.HTTPError as e:
+        record_head["http_status"] = e.code
+        record_head["reason"] = f"http_error_{e.code}"
+        try:
+            body = e.read(800)
+            record_head["body_preview_first_500b"] = body[:500].decode(
+                "utf-8", errors="replace")
+        except Exception:
+            pass
+        if 300 <= e.code < 400:
+            record_head["redirect_detected"] = True
+            try:
+                record_head["redirect_location"] = e.headers.get(
+                    "Location")
+            except Exception:
+                pass
+    except (urllib.error.URLError, TimeoutError, OSError) as e:
+        record_head["reason"] = f"network_error::{str(e)[:160]}"
+    record_head["elapsed_ms"] = round((time.time() - t0) * 1000, 1)
+
+    # 2. Probe DDS complémentaire (si OPeNDAP attendu)
+    record_dds: Optional[Dict[str, Any]] = None
+    if expect_opendap:
+        dds_url = endpoint + ".dds"
+        record_dds = {
+            "url": dds_url,
+            "method": "GET",
+            "max_bytes_read": dds_max_bytes,
+            "http_status": None,
+            "content_type": None,
+            "elapsed_ms": None,
+            "reason": None,
+            "dds_signature_dataset_present": False,
+            "dds_preview_first_500b": None,
+        }
+        t1 = time.time()
+        try:
+            opener_dds = urllib.request.build_opener(
+                NoRedirectHandler)
+            req_dds = urllib.request.Request(
+                dds_url, method="GET",
+                headers={
+                    "User-Agent":
+                    "BCE-4X-NOAA-CFSV2-PIVOT-VERIFY/1.0",
+                })
+            with opener_dds.open(
+                    req_dds, timeout=timeout_s) as resp_dds:
+                record_dds["http_status"] = resp_dds.status
+                record_dds["content_type"] = (
+                    resp_dds.headers.get("Content-Type"))
+                preview = resp_dds.read(dds_max_bytes)
+                record_dds["dds_preview_first_500b"] = (
+                    preview[:500].decode(
+                        "utf-8", errors="replace"))
+                # Signature OPeNDAP DDS
+                record_dds["dds_signature_dataset_present"] = (
+                    "Dataset {" in record_dds[
+                        "dds_preview_first_500b"]
+                    or "Dataset:" in record_dds[
+                        "dds_preview_first_500b"])
+        except urllib.error.HTTPError as e:
+            record_dds["http_status"] = e.code
+            record_dds["reason"] = f"http_error_{e.code}"
+        except (urllib.error.URLError, TimeoutError, OSError) as e:
+            record_dds["reason"] = f"network_error::{str(e)[:160]}"
+        record_dds["elapsed_ms"] = round(
+            (time.time() - t1) * 1000, 1)
+
+    # 3. Évaluation des critères stricts
+    head_http_200 = (record_head["http_status"] == 200)
+    head_no_redirect = (not record_head["redirect_detected"])
+    head_ct_acceptable = _is_content_type_acceptable_opendap(
+        record_head["content_type"])
+    head_cl_present = (
+        record_head["content_length"] is not None
+        and record_head["content_length"] > 0)
+    dds_valid = (
+        record_dds is not None
+        and record_dds.get("http_status") == 200
+        and record_dds.get("dds_signature_dataset_present"))
+
+    criteria_evaluation = {
+        "expect_format": expect_format,
+        "expect_opendap": expect_opendap,
+        "require_http_200": require_http_200,
+        "require_no_redirect": require_no_redirect,
+        "head_http_200_satisfied": head_http_200,
+        "head_no_redirect_satisfied": head_no_redirect,
+        "head_content_type_acceptable": head_ct_acceptable,
+        "head_content_length_present": head_cl_present,
+        "dds_probe_executed": (record_dds is not None),
+        "dds_http_200_satisfied": (
+            record_dds is not None
+            and record_dds.get("http_status") == 200),
+        "dds_signature_dataset_present": dds_valid,
+    }
+
+    # Verdict OPeNDAP-aware (anti-générique strict)
+    if expect_opendap:
+        # Pour OPeNDAP : OK si HEAD 200 OK OU DDS 200 + signature Dataset
+        # (THREDDS retourne parfois 4xx sur HEAD direct mais 200 sur .dds)
+        valid = (
+            (not require_no_redirect or head_no_redirect)
+            and (
+                # Voie A : HEAD strictement parfait
+                (head_http_200 and head_ct_acceptable)
+                # Voie B : DDS valide (signature OPeNDAP réelle)
+                or dds_valid))
+    else:
+        valid = (
+            (not require_http_200 or head_http_200)
+            and (not require_no_redirect or head_no_redirect)
+            and head_ct_acceptable
+            and head_cl_present)
+
+    if valid and dds_valid:
+        verdict = "CFSV2_PIVOT_VALID_OPENDAP_DDS_CONFIRMED"
+    elif valid and head_http_200:
+        verdict = "CFSV2_PIVOT_VALID_HEAD_OK_DDS_FALLBACK"
+    elif (record_head["http_status"] is not None
+          and 300 <= record_head["http_status"] < 400):
+        verdict = "CFSV2_PIVOT_INVALID_REDIRECT_DETECTED"
+    elif record_head["http_status"] == 404:
+        verdict = "CFSV2_PIVOT_INVALID_HTTP_404"
+    elif record_head["reason"] and (
+            "network_error" in record_head["reason"]):
+        verdict = "CFSV2_PIVOT_INVALID_NETWORK_ERROR"
+    else:
+        verdict = "CFSV2_PIVOT_INVALID_OTHER"
+
+    next_action = (
+        "ACCEPTED — pivot endpoint validated. Await Commandant "
+        "confirm to register as official CFSv2 source."
+        if valid else
+        "REJECTED — pivot endpoint failed strict verification. "
+        "Await Commandant directive (alternative pivot URL or "
+        "credentials).")
+
+    # 4. Forensic log ENDPOINT_PROBES
+    log_forensic_event(
+        scope="ENDPOINT_PROBES",
+        event="CFSV2_PIVOT_HEAD_ONLY_VERIFY",
+        details={
+            "provider": provider,
+            "endpoint": endpoint,
+            "head_http_status": record_head["http_status"],
+            "dds_http_status": (
+                record_dds.get("http_status")
+                if record_dds else None),
+            "valid": valid,
+            "verdict": verdict,
+            "dds_signature_dataset_present": dds_valid,
+            "elapsed_ms_total": round(
+                (time.time() - t_total) * 1000, 1),
+        },
+        persist=True,
+    )
+
+    # 5. Manifest signé + persistance
+    payload = {
+        "manifest_id": "NOAA_CFSV2_PIVOT_VERIFY_Ω",
+        "ordre": "NOAA_CFSV2_P0_PIVOT_VERIFY",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "guardrails_enforced": True,
+        "autonomy": "LIMITED",
+        "provider": provider,
+        "endpoint": endpoint,
+        "probe_head": record_head,
+        "probe_dds": record_dds,
+        "criteria_evaluation": criteria_evaluation,
+        "valid": valid,
+        "verdict": verdict,
+        "next_action": next_action,
+        "anti_generique_strict": True,
+        "v30_lock": "INVIOLÉ",
+        "drift_zero": True,
+        "no_engine_recompute_triggered": True,
+        "executed_at_utc": _utc_now(),
+    }
+    payload_sha256 = hashlib.sha256(
+        json.dumps(payload, sort_keys=True,
+                   ensure_ascii=False, default=str).encode("utf-8")
+    ).hexdigest()
+    payload["manifest_sha256"] = payload_sha256
+
+    persisted: Dict[str, Any] = {}
+    if persist:
+        PIPELINE_ROOT.mkdir(parents=True, exist_ok=True)
+        if CFSV2_PIVOT_VERIFICATION_PATH.exists():
+            try:
+                state = json.loads(
+                    CFSV2_PIVOT_VERIFICATION_PATH.read_text(
+                        encoding="utf-8"))
+                if not isinstance(state, dict) or (
+                        "history" not in state):
+                    state = {"history": []}
+            except json.JSONDecodeError:
+                state = {"history": []}
+        else:
+            state = {"history": []}
+        state["history"].append(payload)
+        state["last_updated_utc"] = _utc_now()
+        state["n_pivot_verifications"] = len(state["history"])
+        state["last_manifest_sha256"] = payload_sha256
+        state["last_verdict"] = verdict
+        state["last_provider"] = provider
+        state["last_endpoint"] = endpoint
+        state["v30_lock"] = "INVIOLÉ"
+        CFSV2_PIVOT_VERIFICATION_PATH.write_text(
+            json.dumps(state, ensure_ascii=False, indent=2),
+            encoding="utf-8")
+        persisted["overlay_path"] = str(
+            CFSV2_PIVOT_VERIFICATION_PATH)
+        persisted["overlay_size_bytes"] = (
+            CFSV2_PIVOT_VERIFICATION_PATH.stat().st_size)
+        persisted["n_pivot_verifications_history"] = state[
+            "n_pivot_verifications"]
+
+        from engines.v8_institutional.especes.bio_reacteur_overlay_omega import (  # noqa: E501
+            persist_audit,
+        )
+        audit_payload = {
+            "audit_type": "NOAA_PIPELINE",
+            "subtype": "CFSV2_PIVOT_VERIFY",
+            "ordre": "NOAA_CFSV2_P0_PIVOT_VERIFY",
+            "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "provider": provider,
+            "endpoint": endpoint,
+            "valid": valid,
+            "verdict": verdict,
+            "manifest_sha256": payload_sha256,
+            "head_http_status": record_head["http_status"],
+            "dds_http_status": (
+                record_dds.get("http_status")
+                if record_dds else None),
+            "dds_signature_dataset_present": dds_valid,
+            "v30_lock_inviolate": True,
+            "drift_zero": True,
+            "no_engine_recompute_triggered": True,
+        }
+        persisted["audit_persisted"] = persist_audit(audit_payload)
+
+    payload["persisted_paths"] = persisted
+    payload["elapsed_s"] = round(time.time() - t_total, 3)
+    return payload
 
 
 # ═════════════════════════════════════════════════════════════════════════

@@ -32,8 +32,8 @@
       "XBT": 1,
       "MRB": 1
     },
-    "http_head_bucket_ms": 134.8,
-    "http_list_objects_ms": 55.2
+    "http_head_bucket_ms": 133.0,
+    "http_list_objects_ms": 53.3
   },
   "sample_keys_first_12": [
     {
@@ -98,6 +98,6 @@
     }
   ],
   "anti_generique_strict": true,
-  "activated_at_utc": "2026-05-07T19:47:42+00:00",
-  "manifest_sha256": "7d0e906ecbe7874be0720ac19ad64386f6c3a804bb9a97edb98603ff6e69986a"
+  "activated_at_utc": "2026-05-07T19:58:10+00:00",
+  "manifest_sha256": "23dc4c427f6d94769af01a9cd6b67f8d4ed2ce4704e1310cccc6d51ff31f21f8"
 }

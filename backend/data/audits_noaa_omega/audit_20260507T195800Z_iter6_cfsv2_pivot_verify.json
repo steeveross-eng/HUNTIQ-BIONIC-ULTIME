@@ -1,0 +1,125 @@
+{
+  "audit_id": "NOAA_CFSV2_P0_PIVOT_VERIFY_20260507T195800Z",
+  "protocol": "BCE-4X ULTIME ABSOLU",
+  "principle": "ANTI-GENERIQUE_OMEGA_STRICT",
+  "mode": "FUSION_ADD_ONLY",
+  "timestamp_utc": "2026-05-07T19:58:00Z",
+  "iteration": 6,
+  "directive_executed": "NOAA_CFSV2_P0_PIVOT_VERIFY (NCEI THREDDS HEAD_ONLY + DDS strict)",
+
+  "directive_received": {
+    "provider": "NCEI_THREDDS_CFSR_MONTHLY",
+    "endpoint": "https://www.ncei.noaa.gov/thredds/dodsC/cfsr/mon/pgbh/pgbh.202401.nc",
+    "probe": {
+      "mode": "HEAD_ONLY",
+      "expect_http_200": true,
+      "expect_opendap": true,
+      "expect_format": "GRIB2_OR_NETCDF",
+      "require_no_redirect": true
+    },
+    "guardrails": "ENFORCED",
+    "autonomy": "LIMITED",
+    "status": "P0_CFSV2_PIVOT_VERIFY"
+  },
+
+  "probe_results_real": {
+    "head": {
+      "url": "https://www.ncei.noaa.gov/thredds/dodsC/cfsr/mon/pgbh/pgbh.202401.nc",
+      "method": "HEAD",
+      "follow_redirects": false,
+      "http_status": 400,
+      "content_type": null,
+      "content_length": null,
+      "redirect_detected": false,
+      "reason": "http_error_400",
+      "elapsed_ms": 230.9,
+      "interpretation_anti_generique": "HTTP 400 typique de THREDDS qui refuse HEAD direct sur le path dodsC. Le serveur NCEI répond mais rejette la requête — pas de redirect, pas de timeout."
+    },
+    "dds": {
+      "url": "https://www.ncei.noaa.gov/thredds/dodsC/cfsr/mon/pgbh/pgbh.202401.nc.dds",
+      "method": "GET",
+      "max_bytes_read": 4096,
+      "http_status": 404,
+      "content_type": null,
+      "reason": "http_error_404",
+      "dds_signature_dataset_present": false,
+      "elapsed_ms": 155.9,
+      "interpretation_anti_generique": "HTTP 404 NCEI : le path /cfsr/mon/pgbh/ n'existe pas dans le catalogue NCEI THREDDS actuel (dataset non publié sous ce path exact)."
+    }
+  },
+
+  "criteria_evaluation": {
+    "expect_format": "GRIB2_OR_NETCDF",
+    "expect_opendap": true,
+    "require_http_200": true,
+    "require_no_redirect": true,
+    "head_http_200_satisfied": false,
+    "head_no_redirect_satisfied": true,
+    "head_content_type_acceptable": false,
+    "head_content_length_present": false,
+    "dds_probe_executed": true,
+    "dds_http_200_satisfied": false,
+    "dds_signature_dataset_present": false
+  },
+
+  "verdict": "CFSV2_PIVOT_INVALID_OTHER",
+  "valid": false,
+  "manifest_sha256": "3ef23434fe5b58e9887039af34a2585cf44355ca0d66beeb3025f059edb38cbc",
+
+  "next_action": "REJECTED — pivot endpoint failed strict verification. Await Commandant directive (alternative pivot URL or credentials).",
+
+  "implementation_summary": {
+    "files_added": [
+      "/app/backend/tests/test_phase_xxx_octies_cfsv2_pivot_verify_omega.py"
+    ],
+    "files_extended_fusion_add_only": [
+      "/app/backend/engines/v8_institutional/especes/noaa_pipeline_omega.py (added _is_content_type_acceptable_opendap, verify_cfsv2_pivot_head_only, CFSV2_PIVOT_VERIFICATION_PATH)",
+      "/app/backend/routes/phase_xix_router_omega.py (added 1 endpoint: noaa-cfsv2-pivot-verify)"
+    ],
+    "files_mutated": []
+  },
+
+  "persisted_paths": {
+    "overlay_path": "/app/backend/data/pipelines/noaa/cfsv2_pivot_verification_overlay.json",
+    "overlay_size_bytes": 2599,
+    "n_pivot_verifications_history": 1,
+    "audit_filename": "audit_20260507T195744Z_67f03c7c.json",
+    "audit_sha256": "67f03c7c58fe1193c542f890c3eb4c2cdf051e8906fa216b8b65966af80e1eee",
+    "forensic_log_added": "ENDPOINT_PROBES/CFSV2_PIVOT_HEAD_ONLY_VERIFY"
+  },
+
+  "pytest_validation": {
+    "new_tests_added_iter6": 9,
+    "total_doctrinal_cluster_passing": 221,
+    "total_doctrinal_cluster_failing": 0,
+    "regression_status": "ZERO_REGRESSION"
+  },
+
+  "v30_lock_compliance": {
+    "master_files_mutated": 0,
+    "overlays_added": 1,
+    "audits_added": 1,
+    "fusion_add_only": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  },
+
+  "anti_generique_compliance": {
+    "no_mock_data": true,
+    "all_http_responses_real": true,
+    "head_only_strict_enforced": true,
+    "no_follow_redirects": true,
+    "guardrails_enforced_during_probe": true,
+    "autonomy_limited_respected": true,
+    "no_autonomous_alternative_path_probed": true
+  },
+
+  "doctrinal_observation_for_commandant": "Le path /thredds/dodsC/cfsr/mon/pgbh/pgbh.202401.nc n'est pas servi par NCEI THREDDS (HEAD 400 / DDS 404). Aucune alternative ne peut être probée autonomement (autonomy=LIMITED + require_commandant_confirm=True). Le Commandant doit fournir le path NCEI exact OU autoriser explicitement la consultation du catalogue NCEI racine pour identifier le path correct.",
+
+  "next_required_directives_from_commandant": [
+    "Provide corrected NCEI THREDDS path (alternative catalogue location for CFSR/CFSv2 monthly means) OR",
+    "Explicitly authorize autonomous catalogue browsing (HEAD on https://www.ncei.noaa.gov/thredds/catalog/catalog.xml + sub-catalogues) under guardrails ENFORCED OR",
+    "Pivot to Copernicus Marine with credentials provision OR",
+    "Suspend CFSv2 hook activation and continue P1 hooks (NASA NDVI, USGS Soil)"
+  ]
+}

@@ -1391,3 +1391,70 @@ async def noaa_cfsv2_pivot_candidates_endpoint() -> JSONResponse:
         "result": payload,
         "v30_lock": "INVIOLÉ",
     })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# NOAA_CFSV2_P0_PIVOT_VERIFY — endpoint pivot HEAD_ONLY (NCEI/Copernicus)
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/noaa-cfsv2-pivot-verify")
+async def noaa_cfsv2_pivot_verify_endpoint(
+    endpoint: str,
+    provider: str = "NCEI_THREDDS_CFSR_MONTHLY",
+    expect_format: str = "GRIB2_OR_NETCDF",
+    expect_opendap: bool = True,
+    require_no_redirect: bool = True,
+    require_http_200: bool = True,
+    persist: bool = True,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """NOAA_CFSV2_P0_PIVOT_VERIFY · HEAD_ONLY strict + DDS si OPeNDAP.
+
+    Workflow doctrinal :
+      1. Guardrails ENFORCED check (412 sinon)
+      2. HEAD HTTP RÉEL sur endpoint absolu sans follow_redirects
+      3. Si expect_opendap : probe DDS complémentaire (.dds, GET 4KB)
+      4. Critères stricts OPeNDAP-aware (HEAD ou DDS valide)
+      5. Forensic log ENDPOINT_PROBES + audit doctrinal persisté
+      6. AUCUN recalcul moteur (V30_LOCK + DRIFT_ZERO)
+
+    Token Commandant requis. Anti-générique strict.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.noaa_pipeline_omega import (
+        verify_cfsv2_pivot_head_only,
+    )
+    try:
+        payload = verify_cfsv2_pivot_head_only(
+            endpoint=endpoint,
+            provider=provider,
+            expect_format=expect_format,
+            expect_opendap=expect_opendap,
+            require_no_redirect=require_no_redirect,
+            require_http_200=require_http_200,
+            persist=persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "NOAA_CFSV2_PIVOT_VERIFY_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "NOAA_CFSV2_PIVOT_VERIFY_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "NOAA_CFSV2_P0_PIVOT_VERIFY",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
