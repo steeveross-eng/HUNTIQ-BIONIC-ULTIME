@@ -2478,3 +2478,132 @@ async def habitat_outputs_doctrine_manifest_endpoint() -> JSONResponse:
         "n_species": len(SPECIES_FORAGE_THRESHOLDS_V1),
         "v30_lock": "INVIOLÉ",
     })
+
+# ═════════════════════════════════════════════════════════════════════════
+# USGS_SOIL_P0_VALIDATE_Ω + USGS_SOIL_HOOK_ACTIVATE_Ω
+# Pivot anti-générique strict : USGS NGS = US only → SoilGrids ISRIC
+# (Hengl 2017 PLOS ONE) couvre Québec/Canada. 5/5 sites BP135 valid via
+# offset terrestre +0.05° pour 3 sites water_mask St-Laurent.
+# ═════════════════════════════════════════════════════════════════════════
+class UsgsSoilValidateBody(BaseModel):
+    species_coordinates: Dict[str, Dict[str, float]]
+    properties: Optional[list] = None
+    depth_label: str = "0-5cm"
+    persist: bool = True
+
+
+@router.post("/usgs-soil-validate")
+async def usgs_soil_validate_endpoint(
+    body: UsgsSoilValidateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """USGS_SOIL_P0_VALIDATE_Ω · validation multi-sites avec offset.
+
+    Pivot anti-générique : SoilGrids ISRIC (USGS NGS=US only).
+    Offset terrestre +0.05° (4 directions cardinales) pour
+    récupérer les sites water_mask. Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.usgs_soil_omega import (
+        validate_usgs_soil_per_species,
+    )
+    try:
+        payload = validate_usgs_soil_per_species(
+            species_coordinates=body.species_coordinates,
+            properties=body.properties,
+            depth_label=body.depth_label,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "USGS_SOIL_VALIDATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "USGS_SOIL_VALIDATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_USGS_SOIL_P0_VALIDATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+class UsgsSoilHookActivateBody(BaseModel):
+    manifest_sha256: str
+    reason: str = "usgs_soil_hook_activated"
+    persist: bool = True
+
+
+@router.post("/usgs-soil-hook-activate")
+async def usgs_soil_hook_activate_endpoint(
+    body: UsgsSoilHookActivateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """USGS_SOIL_HOOK_ACTIVATE_Ω · activation officielle.
+
+    Anti-générique strict : refus SHA fabriqué. Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.usgs_soil_omega import (
+        activate_usgs_soil_hook,
+    )
+    try:
+        payload = activate_usgs_soil_hook(
+            manifest_sha256=body.manifest_sha256,
+            reason=body.reason,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "USGS_SOIL_HOOK_ACTIVATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "USGS_SOIL_HOOK_ACTIVATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_USGS_SOIL_HOOK_ACTIVATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/usgs-soil-hook-status")
+async def usgs_soil_hook_status_endpoint() -> JSONResponse:
+    """USGS_SOIL_HOOK_ACTIVATE_Ω · état (PUBLIC RO)."""
+    from engines.v8_institutional.especes.usgs_soil_omega import (
+        get_usgs_soil_hook_status,
+    )
+    payload = get_usgs_soil_hook_status()
+    return JSONResponse({
+        "manifest_id": "USGS_SOIL_HOOK_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_USGS_SOIL_HOOK_ACTIVATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+

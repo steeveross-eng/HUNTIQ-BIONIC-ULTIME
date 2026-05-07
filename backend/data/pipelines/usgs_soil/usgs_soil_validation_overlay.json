@@ -1,0 +1,262 @@
+{
+  "history": [
+    {
+      "manifest_id": "USGS_SOIL_P0_VALIDATE_Ω",
+      "ordre": "P1_USGS_SOIL_P0_VALIDATE_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "valid": true,
+      "verdict": "USGS_SOIL_VALIDATE_ALL_SITES_VALID",
+      "provider_logical": "USGS_SOIL",
+      "provider_physical": "SOILGRIDS_ISRIC",
+      "pivot_doctrinal_anti_generique": {
+        "reason_pivot": "USGS NGS WFS (mrdata.usgs.gov) couvre US continental uniquement (codes FIPS/HUC/QUAD). Le Québec n'est PAS couvert par USGS Soil. Pivot vers SoilGrids ISRIC (Hengl 2017 PLOS ONE) — référence mondiale 250m peer-reviewed couvrant Québec/Canada.",
+        "endpoint_used": "https://rest.isric.org/soilgrids/v2.0/properties/query",
+        "scientific_reference_primary": "Hengl et al. (2017). PLOS ONE, 12(2), e0169748. DOI:10.1371/journal.pone.0169748",
+        "scientific_reference_v2": "Poggio et al. (2021). SOIL, 7(1), 217-240. DOI:10.5194/soil-7-217-2021"
+      },
+      "depth_label": "0-5cm",
+      "properties_requested": [
+        "phh2o",
+        "cec",
+        "nitrogen",
+        "clay",
+        "sand",
+        "soc"
+      ],
+      "properties_validated_in_registry": [
+        "phh2o",
+        "cec",
+        "nitrogen",
+        "clay",
+        "sand",
+        "soc"
+      ],
+      "properties_unknown_skipped": [],
+      "n_species_total": 5,
+      "n_calls_made": 7,
+      "n_calls_success": 5,
+      "n_calls_failed": 0,
+      "n_sites_recovered_via_terrestrial_offset": 2,
+      "terrestrial_offset_strategy": "Sequential cardinal +0.05° fallback (N → S → E → W) for water_mask sites. Anti-générique strict : tracé par site.",
+      "species_results": {
+        "espece_a": {
+          "coord_origin": {
+            "lat": 46.8131,
+            "lon": -71.2075
+          },
+          "coord_used": {
+            "lat": 46.8631,
+            "lon": -71.2075
+          },
+          "offset_applied": {
+            "d_lat": 0.05,
+            "d_lon": 0.0
+          },
+          "offset_strategy": "WATER_MASK_OFFSET_RECOVERED::d_lat=0.05,d_lon=0.0",
+          "fallback_attempts": [
+            {
+              "offset": "ORIGINAL",
+              "lat": 46.8131,
+              "lon": -71.2075,
+              "n_properties_valid": 0
+            },
+            {
+              "offset": "d_lat=0.05,d_lon=0.0",
+              "lat": 46.8631,
+              "lon": -71.2075,
+              "http_status": 200,
+              "n_properties_valid": 6
+            }
+          ],
+          "probe_record": {
+            "lat": 46.8631,
+            "lon": -71.2075,
+            "url": "https://rest.isric.org/soilgrids/v2.0/properties/query?lon=-71.2075&lat=46.8631&property=phh2o&property=cec&property=nitrogen&property=clay&property=sand&property=soc&depth=0-5cm&value=mean",
+            "http_status": 200,
+            "elapsed_ms": 974.8,
+            "reason": null,
+            "extracted_properties": {
+              "phh2o": 5.2,
+              "cec": 30.9,
+              "nitrogen": 6.66,
+              "clay": 20.0,
+              "sand": 50.1,
+              "soc": 101.1
+            },
+            "n_properties_valid": 6,
+            "n_properties_requested": 6
+          },
+          "valid": true
+        },
+        "espece_b": {
+          "coord_origin": {
+            "lat": 47.2,
+            "lon": -70.27
+          },
+          "coord_used": {
+            "lat": 47.2,
+            "lon": -70.27
+          },
+          "offset_applied": {
+            "d_lat": 0.0,
+            "d_lon": 0.0
+          },
+          "offset_strategy": "ORIGINAL_COORD_VALID",
+          "fallback_attempts": [],
+          "probe_record": {
+            "lat": 47.2,
+            "lon": -70.27,
+            "url": "https://rest.isric.org/soilgrids/v2.0/properties/query?lon=-70.27&lat=47.2&property=phh2o&property=cec&property=nitrogen&property=clay&property=sand&property=soc&depth=0-5cm&value=mean",
+            "http_status": 200,
+            "elapsed_ms": 876.0,
+            "reason": null,
+            "extracted_properties": {
+              "phh2o": 6.1,
+              "cec": 29.9,
+              "nitrogen": 5.72,
+              "clay": 22.8,
+              "sand": 41.8,
+              "soc": 60.2
+            },
+            "n_properties_valid": 6,
+            "n_properties_requested": 6
+          },
+          "valid": true
+        },
+        "espece_c": {
+          "coord_origin": {
+            "lat": 48.34,
+            "lon": -69.39
+          },
+          "coord_used": {
+            "lat": 48.39,
+            "lon": -69.39
+          },
+          "offset_applied": {
+            "d_lat": 0.05,
+            "d_lon": 0.0
+          },
+          "offset_strategy": "WATER_MASK_OFFSET_RECOVERED::d_lat=0.05,d_lon=0.0",
+          "fallback_attempts": [
+            {
+              "offset": "ORIGINAL",
+              "lat": 48.34,
+              "lon": -69.39,
+              "n_properties_valid": 0
+            },
+            {
+              "offset": "d_lat=0.05,d_lon=0.0",
+              "lat": 48.39,
+              "lon": -69.39,
+              "http_status": 200,
+              "n_properties_valid": 6
+            }
+          ],
+          "probe_record": {
+            "lat": 48.39,
+            "lon": -69.39,
+            "url": "https://rest.isric.org/soilgrids/v2.0/properties/query?lon=-69.39&lat=48.39&property=phh2o&property=cec&property=nitrogen&property=clay&property=sand&property=soc&depth=0-5cm&value=mean",
+            "http_status": 200,
+            "elapsed_ms": 931.7,
+            "reason": null,
+            "extracted_properties": {
+              "phh2o": 4.9,
+              "cec": 42.2,
+              "nitrogen": 7.84,
+              "clay": 17.4,
+              "sand": 49.3,
+              "soc": 89.4
+            },
+            "n_properties_valid": 6,
+            "n_properties_requested": 6
+          },
+          "valid": true
+        },
+        "espece_d": {
+          "coord_origin": {
+            "lat": 46.36,
+            "lon": -72.07
+          },
+          "coord_used": {
+            "lat": 46.36,
+            "lon": -72.07
+          },
+          "offset_applied": {
+            "d_lat": 0.0,
+            "d_lon": 0.0
+          },
+          "offset_strategy": "ORIGINAL_COORD_VALID",
+          "fallback_attempts": [],
+          "probe_record": {
+            "lat": 46.36,
+            "lon": -72.07,
+            "url": "https://rest.isric.org/soilgrids/v2.0/properties/query?lon=-72.07&lat=46.36&property=phh2o&property=cec&property=nitrogen&property=clay&property=sand&property=soc&depth=0-5cm&value=mean",
+            "http_status": 200,
+            "elapsed_ms": 871.2,
+            "reason": null,
+            "extracted_properties": {
+              "phh2o": 4.9,
+              "cec": 42.1,
+              "nitrogen": 8.35,
+              "clay": 15.2,
+              "sand": 52.2,
+              "soc": 92.8
+            },
+            "n_properties_valid": 6,
+            "n_properties_requested": 6
+          },
+          "valid": true
+        },
+        "espece_e": {
+          "coord_origin": {
+            "lat": 47.0,
+            "lon": -71.0
+          },
+          "coord_used": {
+            "lat": 47.0,
+            "lon": -71.0
+          },
+          "offset_applied": {
+            "d_lat": 0.0,
+            "d_lon": 0.0
+          },
+          "offset_strategy": "ORIGINAL_COORD_VALID",
+          "fallback_attempts": [],
+          "probe_record": {
+            "lat": 47.0,
+            "lon": -71.0,
+            "url": "https://rest.isric.org/soilgrids/v2.0/properties/query?lon=-71.0&lat=47.0&property=phh2o&property=cec&property=nitrogen&property=clay&property=sand&property=soc&depth=0-5cm&value=mean",
+            "http_status": 200,
+            "elapsed_ms": 901.4,
+            "reason": null,
+            "extracted_properties": {
+              "phh2o": 6.0,
+              "cec": 31.0,
+              "nitrogen": 5.71,
+              "clay": 12.1,
+              "sand": 64.9,
+              "soc": 59.0
+            },
+            "n_properties_valid": 6,
+            "n_properties_requested": 6
+          },
+          "valid": true
+        }
+      },
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-07T23:42:10+00:00",
+      "elapsed_s": 8.169,
+      "manifest_sha256": "e71d4d273de149122679e233a07d6721e7bae17b6e0ed83dba11bf0753f1a568"
+    }
+  ],
+  "last_updated_utc": "2026-05-07T23:42:10+00:00",
+  "n_validations": 1,
+  "last_manifest_sha256": "e71d4d273de149122679e233a07d6721e7bae17b6e0ed83dba11bf0753f1a568",
+  "last_verdict": "USGS_SOIL_VALIDATE_ALL_SITES_VALID",
+  "v30_lock": "INVIOLÉ"
+}

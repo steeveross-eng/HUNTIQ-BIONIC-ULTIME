@@ -1,0 +1,169 @@
+{
+  "history": [
+    {
+      "manifest_id": "USGS_SOIL_HOOK_ACTIVATE_Ω",
+      "ordre": "P1_USGS_SOIL_HOOK_ACTIVATE_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "activated": true,
+      "verdict": "USGS_SOIL_HOOK_ACTIVATED_OPERATIONAL",
+      "reason": "usgs_soil_hook_activated",
+      "validated_manifest_sha256": "e71d4d273de149122679e233a07d6721e7bae17b6e0ed83dba11bf0753f1a568",
+      "validated_executed_at_utc": "2026-05-07T23:42:10+00:00",
+      "provider_logical": "USGS_SOIL",
+      "provider_physical": "SOILGRIDS_ISRIC",
+      "pivot_doctrinal_inherited": {
+        "reason_pivot": "USGS NGS WFS (mrdata.usgs.gov) couvre US continental uniquement (codes FIPS/HUC/QUAD). Le Québec n'est PAS couvert par USGS Soil. Pivot vers SoilGrids ISRIC (Hengl 2017 PLOS ONE) — référence mondiale 250m peer-reviewed couvrant Québec/Canada.",
+        "endpoint_used": "https://rest.isric.org/soilgrids/v2.0/properties/query",
+        "scientific_reference_primary": "Hengl et al. (2017). PLOS ONE, 12(2), e0169748. DOI:10.1371/journal.pone.0169748",
+        "scientific_reference_v2": "Poggio et al. (2021). SOIL, 7(1), 217-240. DOI:10.5194/soil-7-217-2021"
+      },
+      "properties_inherited": [
+        "phh2o",
+        "cec",
+        "nitrogen",
+        "clay",
+        "sand",
+        "soc"
+      ],
+      "depth_label_inherited": "0-5cm",
+      "n_species_total": 5,
+      "n_calls_success_inherited": 5,
+      "n_sites_recovered_via_terrestrial_offset_inherited": 2,
+      "species_summary": [
+        {
+          "species_name": "espece_a",
+          "coord_origin": {
+            "lat": 46.8131,
+            "lon": -71.2075
+          },
+          "coord_used": {
+            "lat": 46.8631,
+            "lon": -71.2075
+          },
+          "offset_strategy": "WATER_MASK_OFFSET_RECOVERED::d_lat=0.05,d_lon=0.0",
+          "valid": true,
+          "n_properties_valid": 6,
+          "extracted_properties": {
+            "phh2o": 5.2,
+            "cec": 30.9,
+            "nitrogen": 6.66,
+            "clay": 20.0,
+            "sand": 50.1,
+            "soc": 101.1
+          }
+        },
+        {
+          "species_name": "espece_b",
+          "coord_origin": {
+            "lat": 47.2,
+            "lon": -70.27
+          },
+          "coord_used": {
+            "lat": 47.2,
+            "lon": -70.27
+          },
+          "offset_strategy": "ORIGINAL_COORD_VALID",
+          "valid": true,
+          "n_properties_valid": 6,
+          "extracted_properties": {
+            "phh2o": 6.1,
+            "cec": 29.9,
+            "nitrogen": 5.72,
+            "clay": 22.8,
+            "sand": 41.8,
+            "soc": 60.2
+          }
+        },
+        {
+          "species_name": "espece_c",
+          "coord_origin": {
+            "lat": 48.34,
+            "lon": -69.39
+          },
+          "coord_used": {
+            "lat": 48.39,
+            "lon": -69.39
+          },
+          "offset_strategy": "WATER_MASK_OFFSET_RECOVERED::d_lat=0.05,d_lon=0.0",
+          "valid": true,
+          "n_properties_valid": 6,
+          "extracted_properties": {
+            "phh2o": 4.9,
+            "cec": 42.2,
+            "nitrogen": 7.84,
+            "clay": 17.4,
+            "sand": 49.3,
+            "soc": 89.4
+          }
+        },
+        {
+          "species_name": "espece_d",
+          "coord_origin": {
+            "lat": 46.36,
+            "lon": -72.07
+          },
+          "coord_used": {
+            "lat": 46.36,
+            "lon": -72.07
+          },
+          "offset_strategy": "ORIGINAL_COORD_VALID",
+          "valid": true,
+          "n_properties_valid": 6,
+          "extracted_properties": {
+            "phh2o": 4.9,
+            "cec": 42.1,
+            "nitrogen": 8.35,
+            "clay": 15.2,
+            "sand": 52.2,
+            "soc": 92.8
+          }
+        },
+        {
+          "species_name": "espece_e",
+          "coord_origin": {
+            "lat": 47.0,
+            "lon": -71.0
+          },
+          "coord_used": {
+            "lat": 47.0,
+            "lon": -71.0
+          },
+          "offset_strategy": "ORIGINAL_COORD_VALID",
+          "valid": true,
+          "n_properties_valid": 6,
+          "extracted_properties": {
+            "phh2o": 6.0,
+            "cec": 31.0,
+            "nitrogen": 5.71,
+            "clay": 12.1,
+            "sand": 64.9,
+            "soc": 59.0
+          }
+        }
+      ],
+      "consumed_by_modules": [
+        "SALINE_OPTIMAL_LOCATIONS_COMPUTE",
+        "SOIL_pH_HABITAT_CONSTRAINT",
+        "NUTRIENT_AVAILABILITY_PROXY",
+        "MINERAL_LICK_PROXY_PROXIMITY"
+      ],
+      "deferred_outputs_unblocked_via_this_hook": [
+        "saline_optimal_locations_partial_via_pH_CEC"
+      ],
+      "fusion_add_only": true,
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "registered_at_utc": "2026-05-07T23:43:00+00:00",
+      "activation_sha256": "41742077e4693ebbe8c73e3cc3ec6746f0d2dd1bf7d71ed042869cb50a9586ef"
+    }
+  ],
+  "last_updated_utc": "2026-05-07T23:43:00+00:00",
+  "n_activations": 1,
+  "last_activation_sha256": "41742077e4693ebbe8c73e3cc3ec6746f0d2dd1bf7d71ed042869cb50a9586ef",
+  "last_validated_manifest_sha256": "e71d4d273de149122679e233a07d6721e7bae17b6e0ed83dba11bf0753f1a568",
+  "v30_lock": "INVIOLÉ"
+}

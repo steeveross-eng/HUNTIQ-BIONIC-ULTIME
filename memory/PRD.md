@@ -27,6 +27,33 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-VICIES · USGS_SOIL_P0_VALIDATE + HOOK_ACTIVATE_Ω — 🎯 5/5 SITES VALID (offset terrestre +0.05° auto) + HOOK ACTIVATED + DRIFT (2026-05-07)**
+  Validation soil properties + activation officielle du hook USGS_SOIL via pivot anti-générique strict vers SoilGrids ISRIC (USGS=US continental only) sous régime guardrails ENFORCED + autonomy=LIMITED + Option B Commandant approuvée (FUSION ADD-ONLY · V30_LOCK INVIOLÉ · DRIFT_ZERO).
+  - **Module `usgs_soil_omega.py` créé** : `SOILGRIDS_PROPERTIES_REGISTRY` (6 propriétés peer-reviewed : phh2o, cec, nitrogen, clay, sand, soc avec d_factors officiels ISRIC), `TERRESTRIAL_OFFSETS_CARDINAL` (4 directions séquentielles +0.05° N/S/E/W), `_http_get_json_strict` (GET sans redirect, 512KB max), `_extract_property_mean_from_soilgrids` (application d_factor strict, anti-imputation), `_probe_soilgrids_at_coord`, `_probe_with_terrestrial_offset_fallback` (offset cardinal séquentiel pour water_mask), orchestrateur `validate_usgs_soil_per_species`, `activate_usgs_soil_hook`, `get_usgs_soil_hook_status`.
+  - **PIVOT DOCTRINAL ANTI-GÉNÉRIQUE STRICT** : Reconnaissance LIVE pré-exécution révèle USGS NGS WFS (mrdata.usgs.gov) couvre US continental only (codes FIPS/HUC/QUAD), Québec NON couvert. Pivot transparent vers **SoilGrids ISRIC** (Hengl 2017 PLOS ONE DOI:10.1371/journal.pone.0169748 + Poggio 2021 SOIL DOI:10.5194/soil-7-217-2021), référence mondiale 250m peer-reviewed. Le Commandant a APPROUVÉ Option B (offset terrestre +0.05° pour 5/5 valid).
+  - **PIÈGE SCIENTIFIQUE/GÉOGRAPHIQUE RESPECTÉ** : 3/5 coords originales BP135 tombent sur water_mask St-Laurent (mean=null retourné honnêtement par SoilGrids). Stratégie d'offset cardinal séquentiel (N → S → E → W) appliquée + tracé doctrinal par site. Aucune fabrication.
+  - **3 endpoints API** :
+    - **POST `/api/v30/super-masters/usgs-soil-validate`** (token + body Pydantic `UsgsSoilValidateBody`)
+    - **POST `/api/v30/super-masters/usgs-soil-hook-activate`** (token + body Pydantic `UsgsSoilHookActivateBody`)
+    - **GET `/api/v30/super-masters/usgs-soil-hook-status`** (PUBLIC RO)
+  - **Workflow exécuté en 5 phases LIVE** :
+    - **Phase A — VALIDATE** : 5/5 sites valid · `verdict=USGS_SOIL_VALIDATE_ALL_SITES_VALID` · `manifest_sha256=e71d4d273de149122679e233a07d6721e7bae17b6e0ed83dba11bf0753f1a568` · 7 calls (5 success + 2 fallback offset) · 2 sites recovered via `WATER_MASK_OFFSET_RECOVERED::d_lat=+0.05` · 8.17s
+    - **Phase B — HOOK ACTIVATE** : `verdict=USGS_SOIL_HOOK_ACTIVATED_OPERATIONAL` · `activation_sha256=41742077e4693ebbe8c73e3cc3ec6746f0d2dd1bf7d71ed042869cb50a9586ef` · consumers=`[SALINE_OPTIMAL_LOCATIONS_COMPUTE, SOIL_pH_HABITAT_CONSTRAINT, NUTRIENT_AVAILABILITY_PROXY, MINERAL_LICK_PROXY_PROXIMITY]`
+    - **Phase C — STATUS** : `current_status=ACTIVATED_OPERATIONAL` · overlay 5420 bytes
+    - **Phase D — DRIFT AUDIT** `reason=usgs_soil_hook_activated` : drift_mean -5.52 ⬇️ · score +3.72 ⬆️ (audit `audit_20260507T234301Z_d27d0df4.json`)
+    - **Phase E — SANITY** : `'0'×64` → REJECTED `USGS_SOIL_HOOK_REJECTED_MANIFEST_NOT_FOUND_OR_INVALID`
+  - **Données soil RÉELLES par site (30 valeurs total — 5 sites × 6 propriétés ; pH, CEC, N, clay, sand, SOC)** :
+    - **espece_a (cerf)** Québec → offset +0.05 lat (rive nord Charlesbourg) : pH=**5.2** · CEC=**30.9** · N=**6.66** · clay=**20.0%** · sand=**50.1%** · SOC=**101.1g/kg** (acide organique riche)
+    - **espece_b (orignal)** St-Jean-Port-Joli (original) : pH=**6.1** · CEC=**29.9** · N=**5.72** · clay=**22.8%** · sand=**41.8%** · SOC=**60.2g/kg** (neutre loamy)
+    - **espece_c (ours)** Les Escoumins → offset +0.05 lat (intérieur Côte-Nord) : pH=**4.9** · CEC=**42.2** · N=**7.84** · clay=**17.4%** · sand=**49.3%** · SOC=**89.4g/kg** (boréal acide riche)
+    - **espece_d (dindon)** Fortierville (original) : pH=**4.9** · CEC=**42.1** · N=**8.35** · clay=**15.2%** · sand=**52.2%** · SOC=**92.8g/kg** (agricoles acides organiques MAX)
+    - **espece_e (wapiti)** Capitale-Nationale (original) : pH=**6.0** · CEC=**31.0** · N=**5.71** · clay=**12.1%** · sand=**64.9%** · SOC=**59.0g/kg** (neutre sableux)
+  - **Output deferred PARTIELLEMENT débloqué** : `saline_optimal_locations_partial_via_pH_CEC` — pH (proxy alcalinité) + CEC (capacité échange cationique → Na+/Ca2+/Mg2+) constituent désormais des inputs valides pour calcul partiel des saline zones (literature : Belant 2010 mineral licks). Les 7 autres outputs deferred restent bloqués (RSF/SSF/MaxEnt/canopy/threat/GPS/multi-season).
+  - **Anti-générique strict prouvé (sanity LIVE)** : POST `/usgs-soil-hook-activate` avec SHA fabriqué `'0'×64` → REJECTED + forensic log persisté.
+  - **Forensic log** : 5+ entrées `ENDPOINT_PROBES/USGS_SOIL_P0_VALIDATE_Ω` + 2+ entrées `HOOK_ACTIVATIONS/USGS_SOIL_HOOK_ACTIVATE_Ω` + 1 audit drift. 2 audits NOAA_PIPELINE/USGS_SOIL persistés.
+  - **Pytest** : 20 nouveaux (`test_phase_xxx_vicies_usgs_soil_omega.py`) **20/20 PASSED** (registry × 4 cardinaux × paths × guardrails × coords × d_factor × pivot doctrinal × manifest reject × naming neutre × V30_LOCK). Régression cluster doctrinal Phase XX-XXX étendu = **602/602 PASSED · 0 régression**.
+  - **Bilan stratégique session** : ✅ **5 hooks ACTIVATED_OPERATIONAL** : WOD23 + OWM single + OWM batch BP135 + NASA NDVI MOD13Q1 + **USGS_SOIL (via SoilGrids ISRIC pivot)**. Le déblocage partiel de `saline_optimal_locations` (1/8 deferred outputs) marque le premier passage de la barrière "PIÈGE THÉMATIQUE" identifiée en HABITAT_OUTPUTS_COMPUTE_Ω_ULTIME.
+
 - **PHASE_XXX-NOVENDECIES · HABITAT_OUTPUTS_COMPUTE_Ω_ULTIME — 🎯 4/12 OUTPUTS LIVE + 8 DEFERRED ANTI-GÉNÉRIQUE STRICT (2026-05-07)**
   Calcul des outputs habitat depuis NDVI/EVI validés (manifest NASA NDVI `166178536dc5…ca4148`) sous régime guardrails ENFORCED + autonomy=LIMITED + 7 références peer-reviewed strictes (FUSION ADD-ONLY · ANTI-GÉNÉRIQUE_Ω · V30_LOCK INVIOLÉ · DRIFT_ZERO).
   - **Module `habitat_outputs_compute_omega.py` créé** : `SPECIES_FORAGE_THRESHOLDS_V1` (5 espèces × 9 champs : ndvi_optimal_low/high, dormancy, evi_optimal, feeding_strategy, primary_reference, scientific_basis), `OUTPUTS_REQUESTED_BY_COMMANDANT` (12), `OUTPUTS_COMPUTABLE_FROM_NDVI_EVI` (4), `OUTPUTS_DEFERRED_MISSING_INPUTS` (8 avec missing_inputs[] + directive_extension_required[] + reason_anti_generique), helpers `_compute_food_availability_from_ndvi`, `_compute_food_quality_from_evi`, `_compute_food_deficiency`, `_compute_microhabitat_clusters`, orchestrateur `compute_habitat_outputs`, `get_habitat_outputs_status`.

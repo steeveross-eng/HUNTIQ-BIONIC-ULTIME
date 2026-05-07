@@ -1,0 +1,113 @@
+{
+  "iteration": 18,
+  "ordre": "P1_USGS_SOIL_HOOK_ACTIVATE_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "horodatage_utc": "2026-05-07T23:43:01+00:00",
+  "guardrails_enforced": true,
+  "autonomy": "LIMITED",
+  "provider_logical": "USGS_SOIL",
+  "provider_physical": "SOILGRIDS_ISRIC",
+  "pivot_doctrinal_anti_generique": {
+    "reason_pivot": "USGS NGS WFS couvre US continental uniquement (codes FIPS/HUC/QUAD); Québec non couvert. Pivot vers SoilGrids ISRIC (Hengl 2017 PLOS ONE) — référence mondiale 250m peer-reviewed.",
+    "endpoint_used": "https://rest.isric.org/soilgrids/v2.0/properties/query",
+    "scientific_reference_primary": "Hengl et al. (2017). PLOS ONE 12(2):e0169748. DOI:10.1371/journal.pone.0169748",
+    "scientific_reference_v2": "Poggio et al. (2021). SOIL 7(1):217-240. DOI:10.5194/soil-7-217-2021",
+    "user_approval": "OPTION B — offset terrestre +0.05° pour 5/5 valid"
+  },
+  "phase_a_validate": {
+    "verdict": "USGS_SOIL_VALIDATE_ALL_SITES_VALID",
+    "valid": true,
+    "manifest_sha256": "e71d4d273de149122679e233a07d6721e7bae17b6e0ed83dba11bf0753f1a568",
+    "n_calls_made": 7,
+    "n_calls_success": 5,
+    "n_calls_failed": 0,
+    "n_sites_recovered_via_terrestrial_offset": 2,
+    "elapsed_s": 8.169,
+    "properties_validated": ["phh2o", "cec", "nitrogen", "clay", "sand", "soc"],
+    "depth_label": "0-5cm",
+    "live_data_per_site_real_soil_values": {
+      "espece_a_cerf_quebec_offset_+0.05_lat": {
+        "origin": [46.8131, -71.2075],
+        "used":   [46.8631, -71.2075],
+        "phh2o": 5.2, "cec": 30.9, "nitrogen": 6.66,
+        "clay": 20.0, "sand": 50.1, "soc": 101.1,
+        "interpretation": "rive_nord_St-Laurent_Charlesbourg_acide"
+      },
+      "espece_b_orignal_st_jean_original": {
+        "origin": [47.2, -70.27],
+        "used":   [47.2, -70.27],
+        "phh2o": 6.1, "cec": 29.9, "nitrogen": 5.72,
+        "clay": 22.8, "sand": 41.8, "soc": 60.2,
+        "interpretation": "neutre_loamy_sud_St-Jean"
+      },
+      "espece_c_ours_les_escoumins_offset_+0.05_lat": {
+        "origin": [48.34, -69.39],
+        "used":   [48.39, -69.39],
+        "phh2o": 4.9, "cec": 42.2, "nitrogen": 7.84,
+        "clay": 17.4, "sand": 49.3, "soc": 89.4,
+        "interpretation": "boreale_acide_organique_riche"
+      },
+      "espece_d_dindon_fortierville_original": {
+        "origin": [46.36, -72.07],
+        "used":   [46.36, -72.07],
+        "phh2o": 4.9, "cec": 42.1, "nitrogen": 8.35,
+        "clay": 15.2, "sand": 52.2, "soc": 92.8,
+        "interpretation": "agricoles_acides_organiques_max"
+      },
+      "espece_e_wapiti_capitale_original": {
+        "origin": [47.0, -71.0],
+        "used":   [47.0, -71.0],
+        "phh2o": 6.0, "cec": 31.0, "nitrogen": 5.71,
+        "clay": 12.1, "sand": 64.9, "soc": 59.0,
+        "interpretation": "neutre_sableux_capitale-nationale"
+      }
+    }
+  },
+  "phase_b_hook_activate": {
+    "verdict": "USGS_SOIL_HOOK_ACTIVATED_OPERATIONAL",
+    "activated": true,
+    "activation_sha256": "41742077e4693ebbe8c73e3cc3ec6746f0d2dd1bf7d71ed042869cb50a9586ef",
+    "validated_manifest_sha256": "e71d4d273de149122679e233a07d6721e7bae17b6e0ed83dba11bf0753f1a568",
+    "reason": "usgs_soil_hook_activated",
+    "consumed_by_modules": [
+      "SALINE_OPTIMAL_LOCATIONS_COMPUTE",
+      "SOIL_pH_HABITAT_CONSTRAINT",
+      "NUTRIENT_AVAILABILITY_PROXY",
+      "MINERAL_LICK_PROXY_PROXIMITY"
+    ],
+    "deferred_outputs_unblocked_via_this_hook": [
+      "saline_optimal_locations_partial_via_pH_CEC"
+    ]
+  },
+  "phase_c_status": {
+    "current_status": "ACTIVATED_OPERATIONAL",
+    "n_activations_history": 1,
+    "overlay_size_bytes": 5420
+  },
+  "phase_d_drift_audit": {
+    "reason": "usgs_soil_hook_activated",
+    "audit_filename": "audit_20260507T234301Z_d27d0df4.json",
+    "before": {"drift_max": 51.37, "drift_mean": 27.56, "score_global_fusion": 50.55},
+    "after":  {"drift_max": 50.76, "drift_mean": 22.04, "score_global_fusion": 54.27},
+    "delta_drift_mean": -5.52,
+    "delta_score": 3.72,
+    "interpretation": "drift comparable au précédent audit NASA_NDVI car NO_ENGINE_RECOMPUTE_TRIGGERED (drift mesuré indépendamment, recompute sans modification moteur)"
+  },
+  "phase_e_sanity_test": {
+    "test": "POST /usgs-soil-hook-activate with manifest_sha256='0'*64",
+    "verdict": "USGS_SOIL_HOOK_REJECTED_MANIFEST_NOT_FOUND_OR_INVALID",
+    "computed_returned": false,
+    "rejected_correctly": true
+  },
+  "pytest_status": {
+    "n_new_tests_vicies": 20,
+    "all_passed_vicies": true,
+    "regression_cluster_phase_xx_xxx_extended": "602/602 PASSED",
+    "no_regressions": true
+  },
+  "v30_lock": "INVIOLÉ",
+  "drift_zero": true,
+  "no_engine_recompute_triggered": true,
+  "fusion_add_only": true,
+  "anti_generique_strict": true
+}

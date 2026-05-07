@@ -1,0 +1,25 @@
+{
+  "audit_filename": "audit_20260507T234300Z_ebfac0a4.json",
+  "audit_sha256": "ebfac0a4d57ee0fdc15b4087c30929e61d16325bbb28c4663d9a1f0d3de3b0be",
+  "persisted_at_utc": "2026-05-07T23:43:00+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "NOAA_PIPELINE",
+    "subtype": "USGS_SOIL_HOOK_ACTIVATE",
+    "ordre": "P1_USGS_SOIL_HOOK_ACTIVATE_Ω",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "provider_logical": "USGS_SOIL",
+    "provider_physical": "SOILGRIDS_ISRIC",
+    "validated_manifest_sha256": "e71d4d273de149122679e233a07d6721e7bae17b6e0ed83dba11bf0753f1a568",
+    "activation_sha256": "41742077e4693ebbe8c73e3cc3ec6746f0d2dd1bf7d71ed042869cb50a9586ef",
+    "reason": "usgs_soil_hook_activated",
+    "activated": true,
+    "verdict": "USGS_SOIL_HOOK_ACTIVATED_OPERATIONAL",
+    "n_species_total": 5,
+    "n_calls_success": 5,
+    "v30_lock_inviolate": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  }
+}

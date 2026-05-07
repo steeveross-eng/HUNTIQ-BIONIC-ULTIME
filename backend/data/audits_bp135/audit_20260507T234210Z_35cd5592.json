@@ -1,0 +1,25 @@
+{
+  "audit_filename": "audit_20260507T234210Z_35cd5592.json",
+  "audit_sha256": "35cd5592aa553518d2327dbc344e37071e032952e8d0af6d796d2c092064b6fb",
+  "persisted_at_utc": "2026-05-07T23:42:10+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "NOAA_PIPELINE",
+    "subtype": "USGS_SOIL_VALIDATE",
+    "ordre": "P1_USGS_SOIL_P0_VALIDATE_Ω",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "provider_logical": "USGS_SOIL",
+    "provider_physical": "SOILGRIDS_ISRIC",
+    "valid": true,
+    "verdict": "USGS_SOIL_VALIDATE_ALL_SITES_VALID",
+    "manifest_sha256": "e71d4d273de149122679e233a07d6721e7bae17b6e0ed83dba11bf0753f1a568",
+    "n_species_total": 5,
+    "n_calls_success": 5,
+    "n_calls_failed": 0,
+    "n_sites_recovered_via_terrestrial_offset": 2,
+    "v30_lock_inviolate": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  }
+}
