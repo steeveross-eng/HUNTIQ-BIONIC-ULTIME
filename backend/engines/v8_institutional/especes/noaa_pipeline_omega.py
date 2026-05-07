@@ -1122,6 +1122,11 @@ def cartograph_ncei_catalogue(
     max_datasets: int = 128,
     timeout_s: int = 15,
     persist: bool = True,
+    provider: str = "NCEI_THREDDS_CFSR_MONTHLY",
+    forensic_event: str = "CFSV2_CATALOGUE_CARTOGRAPHY",
+    ordre: str = "NOAA_CFSV2_P0_CATALOGUE_CARTOGRAPHY",
+    base_dodsc_url: Optional[str] = None,
+    base_fileserver_url: Optional[str] = None,
 ) -> Dict[str, Any]:
     """NOAA_CFSV2_P0_CATALOGUE_CARTOGRAPHY · NCEI THREDDS browse XML strict.
 
@@ -1244,11 +1249,12 @@ def cartograph_ncei_catalogue(
             record["reason"] = f"network_error::{str(e)[:120]}"
         record["elapsed_ms"] = round((time.time() - t0) * 1000, 1)
 
-        # Forensic log par catalogue visité
+        # Forensic log par catalogue visité (event configurable)
         log_forensic_event(
             scope="ENDPOINT_PROBES",
-            event="CFSV2_CATALOGUE_CARTOGRAPHY",
+            event=forensic_event,
             details={
+                "provider": provider,
                 "url": cat_url,
                 "depth": depth,
                 "http_status": record["http_status"],
@@ -1283,12 +1289,23 @@ def cartograph_ncei_catalogue(
                             pass
                         break
                     if url_path:
-                        opendap_url = (
-                            "https://www.ncei.noaa.gov/thredds/dodsC/"
-                            + url_path.lstrip("/"))
-                        http_url = (
-                            "https://www.ncei.noaa.gov/thredds/fileServer/"
-                            + url_path.lstrip("/"))
+                        # URLs candidates (provider-aware, anti-générique)
+                        if base_dodsc_url:
+                            opendap_url = (
+                                base_dodsc_url.rstrip("/") + "/"
+                                + url_path.lstrip("/"))
+                        else:
+                            opendap_url = (
+                                "https://www.ncei.noaa.gov/thredds/dodsC/"
+                                + url_path.lstrip("/"))
+                        if base_fileserver_url:
+                            http_url = (
+                                base_fileserver_url.rstrip("/") + "/"
+                                + url_path.lstrip("/"))
+                        else:
+                            http_url = (
+                                "https://www.ncei.noaa.gov/thredds/"
+                                "fileServer/" + url_path.lstrip("/"))
                         discovered_datasets.append({
                             "name": name,
                             "id": ds_id,
@@ -1346,11 +1363,13 @@ def cartograph_ncei_catalogue(
     # Manifest signé + persistance
     payload = {
         "manifest_id": "NOAA_CFSV2_CATALOGUE_CARTOGRAPHY_Ω",
-        "ordre": "NOAA_CFSV2_P0_CATALOGUE_CARTOGRAPHY",
+        "ordre": ordre,
         "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
         "guardrails_enforced": True,
         "autonomy": "LIMITED",
         "mode": "CATALOGUE_BROWSE_ONLY",
+        "provider": provider,
+        "forensic_event": forensic_event,
         "root_catalog_url": root_catalog_url,
         "summary": summary,
         "visited_catalogs": visited_catalogs,
@@ -1405,9 +1424,11 @@ def cartograph_ncei_catalogue(
         )
         audit_payload = {
             "audit_type": "NOAA_PIPELINE",
-            "subtype": "CFSV2_CATALOGUE_CARTOGRAPHY",
-            "ordre": "NOAA_CFSV2_P0_CATALOGUE_CARTOGRAPHY",
+            "subtype": "CATALOGUE_CARTOGRAPHY",
+            "ordre": ordre,
             "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "provider": provider,
+            "forensic_event": forensic_event,
             "root_catalog_url": root_catalog_url,
             "manifest_sha256": payload_sha256,
             "n_catalogs_visited": summary["n_catalogs_visited"],

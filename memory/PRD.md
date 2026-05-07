@@ -27,6 +27,21 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-DECIES · COPERNICUS_P0_CATALOGUE_CARTOGRAPHY (Copernicus Marine) — text/html non-XML (2026-05-07)**
+  Cartographie XML stricte du catalogue Copernicus Marine sous régime guardrails ENFORCED + autonomy=LIMITED + 8 contraintes Commandant intégrales (FUSION ADD-ONLY · anti-générique · V30_LOCK INVIOLÉ · DRIFT_ZERO · NO_ENGINE_RECOMPUTE · NO_BINARY_PROBED).
+  - **Module `noaa_pipeline_omega.py` étendu** : `cartograph_ncei_catalogue` rendue **provider-aware** (FUSION ADD-ONLY) via 5 paramètres optionnels rétro-compatibles : `provider`, `forensic_event`, `ordre`, `base_dodsc_url`, `base_fileserver_url`. Aucune mutation de signature existante.
+  - **Endpoint API** : `POST /api/v30/super-masters/copernicus-catalogue-cartography` (token + guardrails 412 + 400 si URL invalide). Bornes serveur identiques.
+  - **Probe RÉEL sur `https://my.cmems-du.eu/thredds/catalog/catalog.xml`** (Copernicus legacy pré-nov-2023) :
+    - **HTTP 200** mais content_type=`text/html` · `ctype_acceptable=False` · redirect_detected=False · `content_type_not_xml::text/html` · 536.2ms.
+    - Le serveur répond mais retourne une page HTML de navigation interactive (pas un catalog.xml brut).
+    - Filtre Commandant `allow_content_types=[application/xml, text/xml]` strictement appliqué → **0 datasets parsés** (anti-générique : aucune fabrication, aucun parsing XML tenté).
+    - 1 catalogue visité, 0 datasets, 0 catalogRefs, 0 binaire téléchargé.
+    - `manifest_sha256=3a54109cf3c9...02fd` · `elapsed_s=0.538`.
+  - **Conformité contraintes Commandant** : ✅ allow_http_methods=["GET"] · ✅ allow_content_types=["application/xml","text/xml"] (filtre strict appliqué) · ✅ forbid_binary_probe · ✅ forbid_follow_redirects · ✅ max_depth=1 · ✅ max_datasets=128 · ✅ autonomy=LIMITED.
+  - **Forensic log** : 1 entrée `ENDPOINT_PROBES/COPERNICUS_CATALOGUE_CARTOGRAPHY` JSONL (event personnalisé). Audit `audit_20260507T202015Z_d58bf89c.json` (sha=`d58bf89c...9901`). Overlay history `cfsv2_catalogue_cartography_overlay.json` enrichi (7808 bytes, n_cartographies=2).
+  - **Pytest** : 5 nouveaux (`test_phase_xxx_decies_copernicus_catalogue_cartography_omega.py`) **5/5 PASSED**. Régression cluster doctrinal Phase XXIX/XXX = **234/234 PASSED** (229 + 5). 8 audits NOAA Ω cumulés.
+  - **Observation doctrinale** : `my.cmems-du.eu` est legacy ; depuis nov-2023 Copernicus Marine a migré vers `data.marine.copernicus.eu` (Toolbox API, credentials requises). Le Commandant doit fournir un endpoint XML direct OU credentials Copernicus pour le nouvel API.
+
 - **PHASE_XXX-NONIES · NOAA_CFSV2_P0_CATALOGUE_CARTOGRAPHY (NCEI THREDDS) — root 404 (2026-05-07)**
   Cartographie XML stricte du catalogue NCEI THREDDS sous régime guardrails ENFORCED + autonomy=LIMITED + contraintes Commandant intégrales (FUSION ADD-ONLY · anti-générique · V30_LOCK INVIOLÉ · DRIFT_ZERO · NO_ENGINE_RECOMPUTE · NO_BINARY_PROBED).
   - **Module `noaa_pipeline_omega.py` étendu** : ajout `cartograph_ncei_catalogue(root_catalog_url, max_depth, max_datasets, persist)` (BFS strict GET-only, content-type xml-only, no-redirect, max_depth=2, max_datasets=128, parsing `xml.etree.ElementTree` namespaces THREDDS+xlink, extraction `<dataset urlPath>` et `<catalogRef xlink:href>`), `CFSV2_CATALOGUE_CARTOGRAPHY_PATH`.

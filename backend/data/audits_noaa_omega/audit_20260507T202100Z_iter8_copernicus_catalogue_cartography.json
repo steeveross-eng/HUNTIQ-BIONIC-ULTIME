@@ -1,0 +1,120 @@
+{
+  "audit_id": "COPERNICUS_P0_CATALOGUE_CARTOGRAPHY_20260507T202100Z",
+  "protocol": "BCE-4X ULTIME ABSOLU",
+  "principle": "ANTI-GENERIQUE_OMEGA_STRICT",
+  "mode": "FUSION_ADD_ONLY",
+  "timestamp_utc": "2026-05-07T20:21:00Z",
+  "iteration": 8,
+  "directive_executed": "COPERNICUS_P0_CATALOGUE_CARTOGRAPHY (Copernicus Marine THREDDS GET XML strict)",
+
+  "directive_received": {
+    "provider": "COPERNICUS_MARINE",
+    "root_catalog": "https://my.cmems-du.eu/thredds/catalog/catalog.xml",
+    "mode": "CATALOGUE_BROWSE_ONLY",
+    "autonomy": "LIMITED",
+    "guardrails": "ENFORCED",
+    "forensic_log": "ENDPOINT_PROBES/COPERNICUS_CATALOGUE_CARTOGRAPHY",
+    "constraints": {
+      "allow_http_methods": ["GET"],
+      "allow_content_types": ["application/xml", "text/xml"],
+      "forbid_binary_probe": true,
+      "forbid_follow_redirects": true,
+      "max_depth": 1,
+      "max_datasets": 128
+    }
+  },
+
+  "execution_result_real": {
+    "manifest_sha256": "3a54109cf3c994762f047ccf9131d7e7b6769f486be7f74a619c89dfc8ae02fd",
+    "elapsed_s": 0.538,
+    "summary": {
+      "n_catalogs_visited": 1,
+      "n_datasets_discovered": 0,
+      "n_catalog_refs_discovered": 0,
+      "max_depth_reached": 0,
+      "capped_by_max_datasets": false
+    },
+    "constraints_applied_real": {
+      "allow_http_methods": ["GET"],
+      "allow_content_types": ["application/xml", "text/xml"],
+      "forbid_binary_probe": true,
+      "forbid_follow_redirects": true,
+      "max_depth": 1,
+      "max_datasets": 128
+    },
+    "root_catalog_probe": {
+      "url": "https://my.cmems-du.eu/thredds/catalog/catalog.xml",
+      "depth": 0,
+      "method": "GET",
+      "http_status": 200,
+      "content_type": "text/html",
+      "ctype_acceptable": false,
+      "redirect_detected": false,
+      "n_datasets_in_catalog": 0,
+      "n_catalogrefs_in_catalog": 0,
+      "elapsed_ms": 536.2,
+      "reason": "content_type_not_xml::text/html"
+    },
+    "interpretation_anti_generique": "Copernicus Marine my.cmems-du.eu (endpoint THREDDS legacy pré-novembre 2023) répond HTTP 200 mais retourne text/html (page interactive de navigation HTML), pas un catalog.xml brut. Le filtre Commandant 'allow_content_types: [application/xml, text/xml]' a strictement rejeté la réponse. Aucun parsing XML tenté, aucune fabrication de données. Le serveur peut nécessiter Accept-XML ou un suffixe spécifique (.xml direct vs catalog endpoint). Anti-générique respecté absolument."
+  },
+
+  "implementation_summary": {
+    "files_added": [
+      "/app/backend/tests/test_phase_xxx_decies_copernicus_catalogue_cartography_omega.py"
+    ],
+    "files_extended_fusion_add_only": [
+      "/app/backend/engines/v8_institutional/especes/noaa_pipeline_omega.py (cartograph_ncei_catalogue rendu provider-aware: ajout params provider, forensic_event, ordre, base_dodsc_url, base_fileserver_url avec defaults rétro-compatibles)",
+      "/app/backend/routes/phase_xix_router_omega.py (added 1 endpoint: copernicus-catalogue-cartography)"
+    ],
+    "files_mutated": [],
+    "fusion_add_only_compliance": "STRICT — ajout de paramètres optionnels avec valeurs par défaut, aucune signature ou logique cassée"
+  },
+
+  "persisted_paths": {
+    "overlay_path": "/app/backend/data/pipelines/noaa/cfsv2_catalogue_cartography_overlay.json",
+    "overlay_size_bytes": 7808,
+    "audit_filename": "audit_20260507T202015Z_d58bf89c.json",
+    "audit_sha256": "d58bf89c75c6c94b2452c3460e8603e41bc741f74579ed49fbf4085257c19901",
+    "forensic_log_added": "ENDPOINT_PROBES/COPERNICUS_CATALOGUE_CARTOGRAPHY"
+  },
+
+  "pytest_validation": {
+    "new_tests_added_iter8": 5,
+    "total_doctrinal_cluster_passing": 234,
+    "total_doctrinal_cluster_failing": 0,
+    "regression_status": "ZERO_REGRESSION"
+  },
+
+  "v30_lock_compliance": {
+    "master_files_mutated": 0,
+    "overlays_added": 0,
+    "overlays_extended_history": 1,
+    "audits_added": 1,
+    "fusion_add_only": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  },
+
+  "anti_generique_compliance": {
+    "no_mock_data": true,
+    "all_http_responses_real": true,
+    "get_only_enforced": true,
+    "content_type_xml_only_filter_enforced": true,
+    "no_binary_probed": true,
+    "no_follow_redirects_enforced": true,
+    "max_depth_enforced": true,
+    "max_datasets_enforced": true,
+    "guardrails_enforced_during_probe": true,
+    "autonomy_limited_respected": true,
+    "no_autonomous_alternative_root_probed": true
+  },
+
+  "doctrinal_observation_for_commandant": "Le root Copernicus my.cmems-du.eu/thredds/catalog/catalog.xml répond HTTP 200 mais en text/html (page HTML interactive de navigation THREDDS). Conformité stricte à 'allow_content_types' a empêché tout parsing. Suggestions strictes : 1) Tester suffix alternatif tel que /thredds/catalog/catalog.html/.xml (endpoint XML direct), 2) Pivoter vers data.marine.copernicus.eu (endpoint actuel post-novembre 2023, requiert credentials Toolbox), 3) Test d'un catalogue de produit spécifique (e.g., /thredds/catalog/GLOBAL_ANALYSISFORECAST_PHY_001_024/catalog.xml).",
+
+  "next_required_directives_from_commandant": [
+    "Provide alternative Copernicus root URL pointing to a real XML endpoint OR",
+    "Provide Copernicus Marine credentials for the new data.marine.copernicus.eu API OR",
+    "Suspend Copernicus pivot and continue P1 hooks (NASA NDVI, USGS Soil) OR",
+    "Validate WOD23 drift impact (+3.72 score) and commit overlay registry"
+  ]
+}
