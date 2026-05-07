@@ -20,6 +20,7 @@ from typing import Any, Dict
 
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
 
 router = APIRouter(prefix="/api/v30/super-masters", tags=["v30-super-masters"])
@@ -1597,6 +1598,81 @@ async def copernicus_catalogue_cartography_endpoint(
             "COPERNICUS_CATALOGUE_CARTOGRAPHY_EXECUTE_Ω"),
         "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
         "ordre": "COPERNICUS_P0_CATALOGUE_CARTOGRAPHY",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# COPERNICUS_API_P0_VALIDATE — REST API HEAD_ONLY + détection placeholder
+# ═════════════════════════════════════════════════════════════════════════
+class CopernicusApiValidateBody(BaseModel):
+    endpoint: str = (
+        "https://data.marine.copernicus.eu/api/v1/products")
+    api_key: Optional[str] = None
+    require_http_200: bool = True
+    require_no_redirect: bool = True
+    expect_content_type: str = "application/json"
+    persist: bool = True
+
+
+@router.post("/copernicus-api-validate")
+async def copernicus_api_validate_endpoint(
+    body: CopernicusApiValidateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """COPERNICUS_API_P0_VALIDATE · REST API HEAD_ONLY + placeholder check.
+
+    Workflow doctrinal :
+      1. Guardrails ENFORCED check (412 sinon)
+      2. Détection ANTI-GÉNÉRIQUE STRICT du placeholder token
+         (VOTRE_TOKEN_ICI, YOUR_TOKEN_HERE, etc.) → si détecté, le token
+         n'est JAMAIS envoyé en Bearer ; verdict explicite REJECTED
+      3. HEAD HTTP avec Bearer (token masqué dans logs/persistence)
+      4. Critères stricts : HTTP 200 + content-type=application/json +
+         pas de redirect
+      5. Forensic log ENDPOINT_PROBES/COPERNICUS_API_VALIDATE
+      6. Persistance overlay + audit doctrinal
+      7. AUCUN recalcul moteur · V30_LOCK + DRIFT_ZERO
+
+    Body POST JSON requis (contient api_key) — token jamais en query string.
+    Token Commandant requis. Anti-générique strict.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.noaa_pipeline_omega import (
+        validate_copernicus_api_endpoint,
+    )
+    try:
+        payload = validate_copernicus_api_endpoint(
+            endpoint=body.endpoint,
+            api_key=body.api_key,
+            require_http_200=body.require_http_200,
+            require_no_redirect=body.require_no_redirect,
+            expect_content_type=body.expect_content_type,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "COPERNICUS_API_VALIDATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "COPERNICUS_API_VALIDATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "COPERNICUS_API_P0_VALIDATE",
         "horodatage_build": _build_horodatage(),
         "result": payload,
         "v30_lock": "INVIOLÉ",

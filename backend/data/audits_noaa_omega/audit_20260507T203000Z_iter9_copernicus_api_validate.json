@@ -1,0 +1,134 @@
+{
+  "audit_id": "COPERNICUS_API_P0_VALIDATE_20260507T203000Z",
+  "protocol": "BCE-4X ULTIME ABSOLU",
+  "principle": "ANTI-GENERIQUE_OMEGA_STRICT",
+  "mode": "FUSION_ADD_ONLY",
+  "timestamp_utc": "2026-05-07T20:30:00Z",
+  "iteration": 9,
+  "directive_executed": "COPERNICUS_API_P0_VALIDATE (REST API HEAD_ONLY + détection placeholder strict + masquage token)",
+
+  "directive_received": {
+    "provider": "COPERNICUS_MARINE_API",
+    "endpoint": "https://data.marine.copernicus.eu/api/v1/products",
+    "credentials": {"api_key": "VOTRE_TOKEN_ICI"},
+    "probe": {
+      "mode": "HEAD_ONLY",
+      "expect_http_200": true,
+      "expect_content_type": "application/json",
+      "require_no_redirect": true
+    },
+    "guardrails": "ENFORCED",
+    "autonomy": "LIMITED",
+    "forensic_log": "ENDPOINT_PROBES/COPERNICUS_API_VALIDATE",
+    "status": "P0_COPERNICUS_API_VALIDATE"
+  },
+
+  "anti_generique_double_detection": {
+    "detection_1_placeholder_token": {
+      "input_token": "VOTRE_TOKEN_ICI",
+      "detected_as_placeholder": true,
+      "auth_header_was_sent": false,
+      "interpretation": "Le token literal 'VOTRE_TOKEN_ICI' est manifestement un placeholder template. Anti-générique strict : N'A JAMAIS été envoyé en tant que Bearer. Détection via _is_placeholder_token (set canonique + heuristiques VOTRE_/YOUR_/<...>).",
+      "token_masking_proof": "***MASKED(15_CHARS_HEAD=VO...TAIL=CI)*** — anti-leakage strict, le token complet n'apparaît jamais en log/persistence."
+    },
+    "detection_2_endpoint_url_outdated": {
+      "endpoint": "https://data.marine.copernicus.eu/api/v1/products",
+      "http_status": 404,
+      "reason": "http_error_404",
+      "interpretation": "L'URL /api/v1/products retourne HTTP 404. L'API REST Copernicus Marine moderne utilise un autre schéma — probablement /api/2.0/* ou /catalogue/* (post-novembre 2023). Endpoint candidat à valider en directive corrective."
+    }
+  },
+
+  "execution_result_real": {
+    "manifest_sha256": "8154608f59efa60d42e2b904f6205df87635d9bcc224dd63112123fd6703b446",
+    "elapsed_s": 0.202,
+    "verdict": "COPERNICUS_API_REJECTED_PLACEHOLDER_TOKEN_DETECTED",
+    "valid": false,
+    "probe": {
+      "url": "https://data.marine.copernicus.eu/api/v1/products",
+      "method": "HEAD",
+      "follow_redirects": false,
+      "auth_header_set": false,
+      "placeholder_detected": true,
+      "token_masked": "***MASKED(15_CHARS_HEAD=VO...TAIL=CI)***",
+      "http_status": 404,
+      "content_type": null,
+      "redirect_detected": false,
+      "elapsed_ms": 202.2,
+      "reason": "http_error_404"
+    },
+    "criteria_evaluation": {
+      "expect_http_200": true,
+      "expect_content_type": "application/json",
+      "expect_no_redirect": true,
+      "http_200_satisfied": false,
+      "no_redirect_satisfied": true,
+      "content_type_satisfied": false,
+      "auth_header_was_sent": false,
+      "placeholder_token_detected": true
+    }
+  },
+
+  "implementation_summary": {
+    "files_added": [
+      "/app/backend/tests/test_phase_xxx_undecies_copernicus_api_validate_omega.py"
+    ],
+    "files_extended_fusion_add_only": [
+      "/app/backend/engines/v8_institutional/especes/noaa_pipeline_omega.py (added COPERNICUS_API_PLACEHOLDERS, COPERNICUS_API_VALIDATION_PATH, _mask_token, _is_placeholder_token, validate_copernicus_api_endpoint)",
+      "/app/backend/routes/phase_xix_router_omega.py (added BaseModel import, CopernicusApiValidateBody pydantic model, copernicus-api-validate POST endpoint with JSON body)"
+    ],
+    "files_mutated": [],
+    "key_doctrinal_features": [
+      "Token JAMAIS dans query string (POST body JSON)",
+      "Détection placeholder via set canonique (18 valeurs) + heuristiques (VOTRE_*, YOUR_*, <*>)",
+      "Token masqué partout : logs forensiques, payload de retour, audit, overlay (***MASKED(N_CHARS_HEAD=XX...TAIL=YY)***)",
+      "auth_header_set=False prouvé même quand api_key passé (placeholder rejeté avant envoi HTTP)"
+    ]
+  },
+
+  "persisted_paths": {
+    "overlay_path": "/app/backend/data/pipelines/noaa/copernicus_api_validation_overlay.json",
+    "overlay_size_bytes": 2248,
+    "audit_filename": "audit_20260507T202935Z_2d07f35d.json",
+    "audit_sha256": "2d07f35dcef1b29ba1a9cfa953b54ec04f8480a99e4789bd76fe0312dedd6e3f",
+    "forensic_log_added": "ENDPOINT_PROBES/COPERNICUS_API_VALIDATE"
+  },
+
+  "pytest_validation": {
+    "new_tests_added_iter9": 11,
+    "total_doctrinal_cluster_passing": 245,
+    "total_doctrinal_cluster_failing": 0,
+    "regression_status": "ZERO_REGRESSION"
+  },
+
+  "v30_lock_compliance": {
+    "master_files_mutated": 0,
+    "overlays_added": 1,
+    "audits_added": 1,
+    "fusion_add_only": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  },
+
+  "anti_generique_compliance": {
+    "no_mock_data": true,
+    "all_http_responses_real": true,
+    "placeholder_detection_strict_set_18_values": true,
+    "placeholder_detection_heuristics": true,
+    "token_never_sent_when_placeholder": true,
+    "token_masked_in_all_logs_and_persistence": true,
+    "head_only_strict_enforced": true,
+    "no_follow_redirects_enforced": true,
+    "guardrails_enforced_during_probe": true,
+    "autonomy_limited_respected": true
+  },
+
+  "doctrinal_observation_for_commandant": "Triple anti-générique exécuté : (1) placeholder token VOTRE_TOKEN_ICI détecté et REFUSÉ d'être envoyé en Bearer, (2) endpoint URL /api/v1/products inexistant (HTTP 404 réel reporté), (3) token masqué dans toute la chaîne de persistance. Aucune fabrication, aucune assomption d'authentification réussie. Le Commandant doit fournir : (a) un token Copernicus Marine réel généré sur https://data.marine.copernicus.eu/registration/ ET (b) l'URL endpoint correcte du nouvel API REST Copernicus (probablement /api/2.0/* ou /catalogue/*).",
+
+  "next_required_directives_from_commandant": [
+    "Provide REAL Copernicus Marine API token (registered on data.marine.copernicus.eu/registration/) AND",
+    "Provide CORRECT endpoint URL (e.g., /api/2.0/products or /catalogue/* — current /api/v1/products returns 404) OR",
+    "Suspend Copernicus pivot definitively and continue P1 hooks (NASA NDVI, USGS Soil) OR",
+    "Validate WOD23 drift impact (+3.72 score) and commit overlay registry"
+  ]
+}

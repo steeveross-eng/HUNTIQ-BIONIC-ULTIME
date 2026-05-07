@@ -27,6 +27,20 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-UNDECIES · COPERNICUS_API_P0_VALIDATE — Triple détection anti-générique (2026-05-07)**
+  Validation HEAD_ONLY de l'API REST Copernicus Marine moderne avec **détection placeholder STRICTE** + **masquage token anti-leakage** + endpoint URL réel testé (FUSION ADD-ONLY · ANTI-GÉNÉRIQUE_Ω · V30_LOCK INVIOLÉ · DRIFT_ZERO).
+  - **Module `noaa_pipeline_omega.py` étendu** : `COPERNICUS_API_PLACEHOLDERS` (set canonique 18 valeurs : VOTRE_TOKEN_ICI, YOUR_TOKEN_HERE, PLACEHOLDER, TODO, TBD, REPLACE_ME, etc.), `_mask_token` (anti-leakage : retourne `***MASKED(N_CHARS_HEAD=XX...TAIL=YY)***`), `_is_placeholder_token` (set + heuristiques `VOTRE_*`/`YOUR_*`/`<*>`/case-insensitive/trim), `validate_copernicus_api_endpoint` (HEAD strict + détection placeholder + masquage), `COPERNICUS_API_VALIDATION_PATH`.
+  - **Endpoint API** : `POST /api/v30/super-masters/copernicus-api-validate` (token + guardrails 412 + 400 si URL invalide). **POST body JSON requis** (api_key JAMAIS en query string), modèle Pydantic `CopernicusApiValidateBody`.
+  - **Probe RÉEL avec input `api_key=VOTRE_TOKEN_ICI`** :
+    - **Détection 1** : `placeholder_detected=True` → `auth_header_set=**False**` → token JAMAIS envoyé en Bearer
+    - **Détection 2** : URL `/api/v1/products` retourne **HTTP 404** (endpoint legacy/inexistant — l'API REST moderne Copernicus utilise probablement `/api/2.0/*` ou `/catalogue/*`)
+    - **Détection 3** : token masqué partout `***MASKED(15_CHARS_HEAD=VO...TAIL=CI)***`
+    - `verdict=COPERNICUS_API_REJECTED_PLACEHOLDER_TOKEN_DETECTED` · `manifest_sha256=8154608f59ef...b446` · 202.2ms
+  - **Conformité anti-générique** : ✅ token jamais envoyé en Bearer si placeholder · ✅ token masqué dans logs/payload/persistence · ✅ HEAD only · ✅ no follow_redirects · ✅ content-type strict · ✅ guardrails ENFORCED · ✅ autonomy LIMITED.
+  - **Forensic log** : 1 entrée `ENDPOINT_PROBES/COPERNICUS_API_VALIDATE` (token masqué). Audit `audit_20260507T202935Z_2d07f35d.json` (sha=`2d07f35d...6e3f`). Overlay `copernicus_api_validation_overlay.json` (2248 bytes, n_validations=1).
+  - **Pytest** : 11 nouveaux (`test_phase_xxx_undecies_copernicus_api_validate_omega.py`) **11/11 PASSED**. Régression cluster doctrinal Phase XXIX/XXX = **245/245 PASSED** (234 + 11). 9 audits NOAA Ω cumulés.
+  - **Observation doctrinale** : double échec — token placeholder ET endpoint inexistant. Le Commandant doit fournir (1) un token Copernicus RÉEL (registration sur data.marine.copernicus.eu) ET (2) l'URL endpoint correcte du nouvel API REST.
+
 - **PHASE_XXX-DECIES · COPERNICUS_P0_CATALOGUE_CARTOGRAPHY (Copernicus Marine) — text/html non-XML (2026-05-07)**
   Cartographie XML stricte du catalogue Copernicus Marine sous régime guardrails ENFORCED + autonomy=LIMITED + 8 contraintes Commandant intégrales (FUSION ADD-ONLY · anti-générique · V30_LOCK INVIOLÉ · DRIFT_ZERO · NO_ENGINE_RECOMPUTE · NO_BINARY_PROBED).
   - **Module `noaa_pipeline_omega.py` étendu** : `cartograph_ncei_catalogue` rendue **provider-aware** (FUSION ADD-ONLY) via 5 paramètres optionnels rétro-compatibles : `provider`, `forensic_event`, `ordre`, `base_dodsc_url`, `base_fileserver_url`. Aucune mutation de signature existante.

@@ -1104,7 +1104,380 @@ __all__ = [
     "verify_cfsv2_pivot_head_only",
     "list_cfsv2_pivot_candidates",
     "cartograph_ncei_catalogue",
+    "COPERNICUS_API_PLACEHOLDERS",
+    "COPERNICUS_API_VALIDATION_PATH",
+    "validate_copernicus_api_endpoint",
 ]
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# 12. COPERNICUS API VALIDATION (HEAD_ONLY + détection placeholder strict)
+# ═════════════════════════════════════════════════════════════════════════
+COPERNICUS_API_VALIDATION_PATH = (
+    PIPELINE_ROOT / "copernicus_api_validation_overlay.json")
+
+# Anti-générique strict : détection des tokens placeholder template.
+# Toute valeur appartenant à ce set ne sera jamais envoyée comme Bearer.
+COPERNICUS_API_PLACEHOLDERS = {
+    "VOTRE_TOKEN_ICI",
+    "VOTRE_API_KEY",
+    "VOTRE_TOKEN",
+    "YOUR_TOKEN_HERE",
+    "YOUR_API_KEY",
+    "API_KEY",
+    "TOKEN",
+    "PLACEHOLDER",
+    "TODO",
+    "TBD",
+    "REPLACE_ME",
+    "<YOUR_TOKEN>",
+    "<API_KEY>",
+    "XXX",
+    "XXXXX",
+    "FILL_ME",
+    "EXAMPLE_TOKEN",
+    "DEMO_TOKEN",
+    "TEST_TOKEN",
+    "",
+}
+
+
+def _mask_token(token: Optional[str]) -> str:
+    """Masque un token pour logs/payload (anti-leakage strict)."""
+    if not token:
+        return "***NULL_OR_EMPTY***"
+    n = len(token)
+    if n <= 4:
+        return f"***MASKED({n}_CHARS)***"
+    return f"***MASKED({n}_CHARS_HEAD={token[:2]}...TAIL={token[-2:]})***"
+
+
+def _is_placeholder_token(api_key: Optional[str]) -> bool:
+    """Détecte un token placeholder template (anti-générique strict).
+
+    Retourne True si le token est manifestement un placeholder (vide,
+    None, ou appartient au set canonique des placeholders templates).
+    Insensible à la casse, trim espaces.
+    """
+    if not api_key:
+        return True
+    cleaned = api_key.strip().upper()
+    if cleaned in {p.upper() for p in COPERNICUS_API_PLACEHOLDERS}:
+        return True
+    # Heuristiques additionnelles anti-générique
+    if cleaned.startswith("<") and cleaned.endswith(">"):
+        return True  # <YOUR_TOKEN> patterns
+    if "VOTRE_" in cleaned or "YOUR_" in cleaned:
+        return True
+    return False
+
+
+def validate_copernicus_api_endpoint(
+    endpoint: str = (
+        "https://data.marine.copernicus.eu/api/v1/products"),
+    api_key: Optional[str] = None,
+    require_http_200: bool = True,
+    require_no_redirect: bool = True,
+    expect_content_type: str = "application/json",
+    persist: bool = True,
+    timeout_s: int = 15,
+) -> Dict[str, Any]:
+    """COPERNICUS_API_P0_VALIDATE · HEAD_ONLY strict avec détection
+    placeholder token.
+
+    Workflow doctrinal :
+      1. Guardrails ENFORCED check (412 sinon)
+      2. Détection ANTI-GÉNÉRIQUE STRICT du placeholder token
+      3. Si placeholder → probe SANS Authorization + verdict explicite
+         REJECTED_PLACEHOLDER_TOKEN. Le token n'est JAMAIS envoyé.
+      4. Si token réel → HEAD HTTP avec Bearer (token masqué dans logs)
+      5. Critères stricts : HTTP 200 + content-type=application/json +
+         pas de redirect
+      6. Forensic log ENDPOINT_PROBES/COPERNICUS_API_VALIDATE (token
+         toujours masqué)
+      7. Persistance overlay + audit doctrinal
+      8. AUCUN recalcul moteur · V30_LOCK + DRIFT_ZERO maintenus
+
+    Anti-leakage : le token complet n'apparaît JAMAIS en log/persistence,
+    uniquement masque (longueur + 2 premiers/derniers chars).
+    """
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        require_guardrails_enforced, log_forensic_event,
+    )
+    require_guardrails_enforced("validate_copernicus_api_endpoint")
+
+    if not endpoint.startswith(("https://", "http://")):
+        raise ValueError(
+            f"ENDPOINT_INVALID::not_http_url::{endpoint[:120]}")
+
+    import urllib.request
+    import urllib.error
+
+    # 1. Détection placeholder anti-générique
+    placeholder_detected = _is_placeholder_token(api_key)
+    token_masked = _mask_token(api_key)
+    auth_header_set = False
+
+    class NoRedirectHandler(urllib.request.HTTPRedirectHandler):
+        def redirect_request(self, req, fp, code, msg,
+                              headers, newurl):
+            return None
+
+    record_probe: Dict[str, Any] = {
+        "url": endpoint,
+        "method": "HEAD",
+        "follow_redirects": False,
+        "auth_header_set": False,
+        "token_masked": token_masked,
+        "placeholder_detected": placeholder_detected,
+        "http_status": None,
+        "content_type": None,
+        "content_length": None,
+        "headers_subset": {},
+        "elapsed_ms": None,
+        "reason": None,
+        "redirect_detected": False,
+        "redirect_location": None,
+    }
+
+    t0 = time.time()
+    try:
+        opener = urllib.request.build_opener(NoRedirectHandler)
+        req_headers: Dict[str, str] = {
+            "User-Agent": (
+                "BCE-4X-COPERNICUS-API-VALIDATE/1.0"),
+            "Accept": "application/json",
+        }
+        # Anti-générique : ne JAMAIS envoyer un placeholder comme Bearer
+        if api_key and not placeholder_detected:
+            req_headers["Authorization"] = f"Bearer {api_key}"
+            auth_header_set = True
+            record_probe["auth_header_set"] = True
+        req = urllib.request.Request(
+            endpoint, method="HEAD", headers=req_headers)
+        with opener.open(req, timeout=timeout_s) as resp:
+            record_probe["http_status"] = resp.status
+            headers = dict(resp.headers)
+            record_probe["content_type"] = headers.get(
+                "Content-Type", headers.get("content-type"))
+            cl = headers.get(
+                "Content-Length", headers.get("content-length"))
+            try:
+                record_probe["content_length"] = (
+                    int(cl) if cl else None)
+            except (TypeError, ValueError):
+                record_probe["content_length"] = None
+            record_probe["headers_subset"] = {
+                k: v for k, v in headers.items()
+                if k.lower() in (
+                    "content-type", "content-length", "etag",
+                    "last-modified", "server", "x-ratelimit-limit",
+                    "x-ratelimit-remaining", "www-authenticate",
+                    "cache-control", "via")
+            }
+    except urllib.error.HTTPError as e:
+        record_probe["http_status"] = e.code
+        record_probe["reason"] = f"http_error_{e.code}"
+        try:
+            body = e.read(800)
+            record_probe["body_preview_first_500b"] = body[:500].decode(
+                "utf-8", errors="replace")
+        except Exception:
+            pass
+        if 300 <= e.code < 400:
+            record_probe["redirect_detected"] = True
+            try:
+                record_probe["redirect_location"] = (
+                    e.headers.get("Location"))
+            except Exception:
+                pass
+        # Capture www-authenticate si 401/403
+        if e.code in (401, 403):
+            try:
+                record_probe["www_authenticate"] = (
+                    e.headers.get("WWW-Authenticate"))
+            except Exception:
+                pass
+    except (urllib.error.URLError, TimeoutError, OSError) as e:
+        record_probe["reason"] = f"network_error::{str(e)[:160]}"
+    record_probe["elapsed_ms"] = round((time.time() - t0) * 1000, 1)
+
+    # 2. Évaluation des critères stricts + verdict ANTI-GÉNÉRIQUE
+    ct = record_probe["content_type"] or ""
+    ct_acceptable = (expect_content_type.lower() in ct.lower())
+    criteria_evaluation = {
+        "expect_http_200": require_http_200,
+        "expect_content_type": expect_content_type,
+        "expect_no_redirect": require_no_redirect,
+        "http_200_satisfied": (record_probe["http_status"] == 200),
+        "no_redirect_satisfied": (
+            not record_probe["redirect_detected"]),
+        "content_type_satisfied": ct_acceptable,
+        "auth_header_was_sent": auth_header_set,
+        "placeholder_token_detected": placeholder_detected,
+    }
+
+    # Verdict doctrinal anti-générique strict
+    if placeholder_detected:
+        verdict = (
+            "COPERNICUS_API_REJECTED_PLACEHOLDER_TOKEN_DETECTED")
+        valid = False
+        next_action = (
+            "REJECTED — token reçu est un placeholder template "
+            "(`VOTRE_TOKEN_ICI` ou similaire). Anti-générique strict : "
+            "n'a JAMAIS été envoyé en tant que Bearer. Le Commandant "
+            "doit fournir un token Copernicus Marine RÉEL.")
+    elif (record_probe["http_status"] == 200
+            and ct_acceptable
+            and not record_probe["redirect_detected"]):
+        verdict = "COPERNICUS_API_VALID_ENDPOINT_AUTHENTICATED"
+        valid = True
+        next_action = (
+            "ACCEPTED — endpoint répond HTTP 200 application/json "
+            "avec auth Bearer valide. Await Commandant confirm to "
+            "register as official source.")
+    elif record_probe["http_status"] == 401:
+        verdict = (
+            "COPERNICUS_API_INVALID_HTTP_401_UNAUTHORIZED")
+        valid = False
+        next_action = (
+            "REJECTED — HTTP 401 Unauthorized. Le token Copernicus "
+            "fourni n'est pas valide ou a expiré. Le Commandant doit "
+            "régénérer un token sur data.marine.copernicus.eu.")
+    elif record_probe["http_status"] == 403:
+        verdict = "COPERNICUS_API_INVALID_HTTP_403_FORBIDDEN"
+        valid = False
+        next_action = (
+            "REJECTED — HTTP 403 Forbidden. Le token n'a pas les "
+            "permissions requises pour cet endpoint.")
+    elif record_probe["http_status"] == 404:
+        verdict = "COPERNICUS_API_INVALID_HTTP_404_NOT_FOUND"
+        valid = False
+        next_action = (
+            "REJECTED — HTTP 404 : l'endpoint API n'existe pas à "
+            "cette URL. Le Commandant doit fournir l'URL correcte.")
+    elif record_probe["redirect_detected"]:
+        verdict = "COPERNICUS_API_INVALID_REDIRECT_DETECTED"
+        valid = False
+        next_action = (
+            "REJECTED — redirect détecté (forbid_follow_redirects=True). "
+            "L'endpoint ne sert pas directement la ressource demandée.")
+    elif (record_probe["http_status"] == 200 and not ct_acceptable):
+        verdict = (
+            f"COPERNICUS_API_INVALID_CONTENT_TYPE::"
+            f"{ct[:80]}")
+        valid = False
+        next_action = (
+            f"REJECTED — HTTP 200 mais content-type "
+            f"({ct[:80]}) ≠ {expect_content_type}.")
+    else:
+        verdict = "COPERNICUS_API_INVALID_OTHER"
+        valid = False
+        next_action = (
+            "REJECTED — verdict autre (status/network). "
+            "Voir probe_record pour détails.")
+
+    # 3. Forensic log ENDPOINT_PROBES (TOKEN MASQUÉ STRICT)
+    log_forensic_event(
+        scope="ENDPOINT_PROBES",
+        event="COPERNICUS_API_VALIDATE",
+        details={
+            "provider": "COPERNICUS_MARINE_API",
+            "endpoint": endpoint,
+            "http_status": record_probe["http_status"],
+            "content_type": record_probe["content_type"],
+            "auth_header_was_sent": auth_header_set,
+            "token_masked": token_masked,
+            "placeholder_detected": placeholder_detected,
+            "valid": valid,
+            "verdict": verdict,
+            "elapsed_ms": record_probe["elapsed_ms"],
+        },
+        persist=True,
+    )
+
+    # 4. Manifest signé + persistance (TOKEN MASQUÉ EN PERSISTENCE)
+    payload = {
+        "manifest_id": "COPERNICUS_API_VALIDATE_Ω",
+        "ordre": "COPERNICUS_API_P0_VALIDATE",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "guardrails_enforced": True,
+        "autonomy": "LIMITED",
+        "provider": "COPERNICUS_MARINE_API",
+        "endpoint": endpoint,
+        "probe": record_probe,
+        "criteria_evaluation": criteria_evaluation,
+        "valid": valid,
+        "verdict": verdict,
+        "next_action": next_action,
+        "anti_generique_strict": True,
+        "anti_leakage_token_masked": True,
+        "v30_lock": "INVIOLÉ",
+        "drift_zero": True,
+        "no_engine_recompute_triggered": True,
+        "executed_at_utc": _utc_now(),
+    }
+    payload_sha256 = hashlib.sha256(
+        json.dumps(payload, sort_keys=True,
+                   ensure_ascii=False, default=str).encode("utf-8")
+    ).hexdigest()
+    payload["manifest_sha256"] = payload_sha256
+
+    persisted: Dict[str, Any] = {}
+    if persist:
+        PIPELINE_ROOT.mkdir(parents=True, exist_ok=True)
+        if COPERNICUS_API_VALIDATION_PATH.exists():
+            try:
+                state = json.loads(
+                    COPERNICUS_API_VALIDATION_PATH.read_text(
+                        encoding="utf-8"))
+                if not isinstance(state, dict) or (
+                        "history" not in state):
+                    state = {"history": []}
+            except json.JSONDecodeError:
+                state = {"history": []}
+        else:
+            state = {"history": []}
+        state["history"].append(payload)
+        state["last_updated_utc"] = _utc_now()
+        state["n_validations"] = len(state["history"])
+        state["last_manifest_sha256"] = payload_sha256
+        state["last_verdict"] = verdict
+        state["v30_lock"] = "INVIOLÉ"
+        COPERNICUS_API_VALIDATION_PATH.write_text(
+            json.dumps(state, ensure_ascii=False, indent=2),
+            encoding="utf-8")
+        persisted["overlay_path"] = str(
+            COPERNICUS_API_VALIDATION_PATH)
+        persisted["overlay_size_bytes"] = (
+            COPERNICUS_API_VALIDATION_PATH.stat().st_size)
+        persisted["n_validations_history"] = state["n_validations"]
+
+        from engines.v8_institutional.especes.bio_reacteur_overlay_omega import (  # noqa: E501
+            persist_audit,
+        )
+        audit_payload = {
+            "audit_type": "NOAA_PIPELINE",
+            "subtype": "COPERNICUS_API_VALIDATE",
+            "ordre": "COPERNICUS_API_P0_VALIDATE",
+            "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "provider": "COPERNICUS_MARINE_API",
+            "endpoint": endpoint,
+            "valid": valid,
+            "verdict": verdict,
+            "manifest_sha256": payload_sha256,
+            "http_status": record_probe["http_status"],
+            "auth_header_was_sent": auth_header_set,
+            "placeholder_detected": placeholder_detected,
+            "v30_lock_inviolate": True,
+            "drift_zero": True,
+            "no_engine_recompute_triggered": True,
+        }
+        persisted["audit_persisted"] = persist_audit(audit_payload)
+
+    payload["persisted_paths"] = persisted
+    payload["elapsed_s"] = round(time.time() - t0, 3)
+    return payload
 
 
 # ═════════════════════════════════════════════════════════════════════════
