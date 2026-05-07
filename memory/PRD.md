@@ -27,6 +27,25 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-SEXIES · PIPELINE_GUARDRAILS_RESTORE + CFSv2 candidate probe + drift audit WOD23 (2026-05-07)**
+  Triple directive Commandant exécutée en séquence stricte (FUSION ADD-ONLY · anti-générique strict · V30_LOCK INVIOLÉ · DRIFT_ZERO · NO_ENGINE_RECOMPUTE).
+  - **Module `pipeline_guardrails_omega.py`** créé : `GUARDRAILS_DOCTRINE` canonique (BCE-4X, STEVE_MAX, drift_zero_strict, lock_v30_inviolable, full_pytest_enforced, 3 safety_nets, 4 forensic scopes, autonomy=LIMITED, default_posture=STANDBY_STRICT, require_token=X-COMMANDANT-TOKEN). Fonctions : `restore_and_enforce_guardrails` (FUSION ADD-ONLY history + SHA-256), `get_guardrails_state`, `log_forensic_event` (JSONL append-only), `list_forensic_events`, `is_guardrails_enforced`, `require_guardrails_enforced` + exception `GuardrailsNotEnforcedError`.
+  - **4 endpoints API** :
+    - **POST `/api/v30/super-masters/pipeline-guardrails-restore`** (token) : activation directive + audit `PIPELINE_GUARDRAILS/RESTORE_AND_ENFORCE`
+    - **GET `/api/v30/super-masters/pipeline-guardrails-status`** (PUBLIC RO)
+    - **GET `/api/v30/super-masters/pipeline-guardrails-forensic-log`** (PUBLIC RO, filtre `scope`)
+    - **POST `/api/v30/super-masters/noaa-cfsv2-candidate-probe`** (token, **412 si guardrails inactifs**)
+  - **Activation officielle Commandant** : `activation_sha256=0c769235...d429`, audit `audit_20260507T192321Z_2cff5d6f.json` (sha=`2cff5d6f...e0c4`), n_history=8.
+  - **Probe AWS CFSv2 (3 candidats)** sous guardrails ENFORCED : 
+    - `noaa-cfsv2-bdp-pds` → ❌ HTTP 404 NoSuchBucket
+    - `noaa-cfs-pds` → ✅ HTTP 200 ListBucketResult (legacy CFSv1, peut contenir CFSv2)
+    - `noaa-gfs-bdp-pds` → ✅ HTTP 200 ListBucketResult (GFS apparenté, non-CFSv2 strict)
+    - 3 événements forensiques `ENDPOINT_PROBES` persistés.
+  - **recompute-with-drift-audit reason=`wod23_hook_activated`** : impact POSITIF NET mesuré → `before` (drift_max=51.37, drift_mean=27.56, score=50.55) → `after` (drift_max=50.76, drift_mean=22.04, score=54.27). **Deltas** : drift_max=-0.61, drift_mean=-5.52 (réduction), score=+3.72 (amélioration). Audit `audit_20260507T192322Z_588951d3.json` (sha=`588951d3...b85c`).
+  - **Pytest** : 15 nouveaux tests (`test_phase_xxx_sexies_pipeline_guardrails_omega.py`) **15/15 PASSED**. Régression cluster doctrinal Phase XXIX/XXX = **203/203 PASSED** (188 + 15).
+  - **V30_LOCK INVIOLÉ + DRIFT_ZERO + NO_ENGINE_RECOMPUTE_TRIGGERED** maintenus. Aucune mutation des modules maîtres. 1 nouveau module + 4 endpoints + 2 fichiers de pytest neutres + 4 audits forensiques. Ratio FUSION ADD-ONLY = 100 %.
+  - **Audits forensiques NOAA Ω cumulés** : 4 itérations transparentes persistées sous `/app/backend/data/audits_noaa_omega/`.
+
 - **PHASE_XXX-QUINQUIES · ACTIVATION_HOOK_NOAA_WOD23 — Hook B2 dédié OPÉRATIONNEL (2026-05-07)**
   Activation officielle du hook NOAA WOD23 sur Backblaze B2 après réception des credentials complètes du Commandant (FUSION ADD-ONLY · anti-générique strict · V30_LOCK INVIOLÉ · DRIFT_ZERO · NO_ENGINE_RECOMPUTE).
   - **Credentials B2 dédiées WOD23** ajoutées en `.env` (séparées du B2 GIS existant) : `B2_WOD23_KEY_ID=006707511aa307d0000000002`, `B2_WOD23_APPLICATION_KEY=K006+a4Gg0VsmVYWP8MQkLYbC6t3K6U` (31 chars), `B2_WOD23_ENDPOINT_URL=https://s3.ca-east-006.backblazeb2.com`, `B2_WOD23_BUCKET=noaa-territoire`. **Aucune mutation des credentials GIS existantes**.

@@ -1062,3 +1062,243 @@ async def noaa_wod23_probe_only_endpoint(
         "result": payload,
         "v30_lock": "INVIOLÉ",
     })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# PIPELINE_GUARDRAILS_RESTORE — Endpoints dédiés (FUSION ADD-ONLY)
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/pipeline-guardrails-restore")
+async def pipeline_guardrails_restore_endpoint(
+    activated_by: str = "COMMANDANT_STEVE_MAX",
+    persist: bool = True,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """PIPELINE_GUARDRAILS_RESTORE · Active la directive doctrinale.
+
+    Workflow doctrinal :
+      1. Persiste l'état des garde-fous (FUSION ADD-ONLY history)
+      2. Calcule SHA-256 d'activation (traçabilité longitudinale)
+      3. Enregistre événement forensique CONFIG_CHANGES/GUARDRAILS_ACTIVATED
+      4. Persiste audit PIPELINE_GUARDRAILS/RESTORE_AND_ENFORCE
+      5. AUCUN recalcul moteur (V30_LOCK + DRIFT_ZERO maintenus)
+
+    Token Commandant requis.
+    Anti-générique strict : aucune fabrication. État RÉEL persisté.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        restore_and_enforce_guardrails,
+    )
+    try:
+        payload = restore_and_enforce_guardrails(
+            persist=persist, activated_by=activated_by)
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "PIPELINE_GUARDRAILS_RESTORE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "PIPELINE_GUARDRAILS_RESTORE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "PIPELINE_GUARDRAILS_RESTORE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/pipeline-guardrails-status")
+async def pipeline_guardrails_status_endpoint() -> JSONResponse:
+    """PIPELINE_GUARDRAILS_RESTORE · État actuel (PUBLIC RO)."""
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        get_guardrails_state,
+    )
+    payload = get_guardrails_state()
+    return JSONResponse({
+        "manifest_id": "PIPELINE_GUARDRAILS_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "PIPELINE_GUARDRAILS_RESTORE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/pipeline-guardrails-forensic-log")
+async def pipeline_guardrails_forensic_log_endpoint(
+    scope: Optional[str] = None,
+    limit: int = 100,
+) -> JSONResponse:
+    """PIPELINE_GUARDRAILS_RESTORE · Log forensique JSONL (PUBLIC RO).
+
+    Filtres optionnels :
+      · scope ∈ {B2_CREDENTIALS, ENDPOINT_PROBES, HOOK_ACTIVATIONS,
+                  CONFIG_CHANGES}
+      · limit (default 100, max ordre chronologique)
+    """
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        list_forensic_events, VALID_FORENSIC_SCOPES,
+    )
+    if scope and scope not in VALID_FORENSIC_SCOPES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"INVALID_SCOPE::{scope} :: valides="
+                   f"{sorted(VALID_FORENSIC_SCOPES)}")
+    try:
+        payload = list_forensic_events(
+            scope=scope, limit=max(1, min(1000, int(limit))))
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"FORENSIC_LIST_FAILED::{str(e)[:200]}")
+    return JSONResponse({
+        "manifest_id": "PIPELINE_GUARDRAILS_FORENSIC_LIST_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "PIPELINE_GUARDRAILS_RESTORE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.post("/noaa-cfsv2-candidate-probe")
+async def noaa_cfsv2_candidate_probe_endpoint(
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """ACTIVATION_PIPELINE_NOAA_TERRITOIRE · Probe AWS CFSv2 candidates.
+
+    Probe RÉEL HEAD HTTPS sur les 3 buckets AWS publics documentés :
+      · noaa-cfsv2-bdp-pds (Big Data Program convention)
+      · noaa-cfs-pds       (CFSv1 legacy)
+      · noaa-gfs-bdp-pds   (GFS apparenté)
+
+    Pré-requis doctrinal : PIPELINE_GUARDRAILS_RESTORE doit être ENFORCED
+    (bloque sinon avec 412 Precondition Failed).
+
+    Anti-générique strict : status HTTP RÉEL retourné.
+    Forensic logging ENDPOINT_PROBES pour chaque candidat.
+    Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        require_guardrails_enforced, log_forensic_event,
+        GuardrailsNotEnforcedError,
+    )
+    try:
+        require_guardrails_enforced("noaa_cfsv2_candidate_probe")
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+
+    import urllib.request
+    import urllib.error
+    import time as _time
+
+    candidates = [
+        {
+            "bucket": "noaa-cfsv2-bdp-pds",
+            "label": "BDP_CFSV2_BIG_DATA_PROGRAM",
+            "test_url": "https://noaa-cfsv2-bdp-pds.s3.amazonaws.com/",
+        },
+        {
+            "bucket": "noaa-cfs-pds",
+            "label": "LEGACY_CFSV1",
+            "test_url": "https://noaa-cfs-pds.s3.amazonaws.com/",
+        },
+        {
+            "bucket": "noaa-gfs-bdp-pds",
+            "label": "GFS_BIG_DATA_PROGRAM_RELATED",
+            "test_url": "https://noaa-gfs-bdp-pds.s3.amazonaws.com/",
+        },
+    ]
+
+    results = []
+    for cand in candidates:
+        bucket = cand["bucket"]
+        url = cand["test_url"] + "?list-type=2&max-keys=3"
+        rec: Dict[str, Any] = {
+            "bucket": bucket,
+            "label": cand["label"],
+            "url": url,
+            "http_status": None,
+            "elapsed_ms": None,
+            "exists": False,
+            "body_preview_first_500b": None,
+            "reason": None,
+        }
+        t0 = _time.time()
+        try:
+            req = urllib.request.Request(
+                url, method="GET",
+                headers={
+                    "User-Agent": "BCE-4X-NOAA-CFSV2-CANDIDATE-PROBE/1.0",
+                })
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                rec["http_status"] = resp.status
+                preview = resp.read(2048)
+                rec["body_preview_first_500b"] = preview[:500].decode(
+                    "utf-8", errors="replace")
+                # Bucket existe si HTTP 200 et XML ListBucket
+                rec["exists"] = (
+                    resp.status == 200
+                    and ("ListBucketResult" in
+                         rec["body_preview_first_500b"]
+                         or "<Contents" in
+                         rec["body_preview_first_500b"]))
+        except urllib.error.HTTPError as e:
+            rec["http_status"] = e.code
+            rec["reason"] = f"http_error_{e.code}"
+            try:
+                body = e.read(2048)
+                rec["body_preview_first_500b"] = body[:500].decode(
+                    "utf-8", errors="replace")
+                if "NoSuchBucket" in (
+                        rec["body_preview_first_500b"] or ""):
+                    rec["reason"] = "NoSuchBucket"
+            except Exception:
+                pass
+        except (urllib.error.URLError, TimeoutError, OSError) as e:
+            rec["reason"] = f"network_error::{str(e)[:120]}"
+        rec["elapsed_ms"] = round((_time.time() - t0) * 1000, 1)
+        results.append(rec)
+
+        # Forensic log ENDPOINT_PROBES
+        log_forensic_event(
+            scope="ENDPOINT_PROBES",
+            event="CFSV2_CANDIDATE_PROBE",
+            details={
+                "bucket": bucket,
+                "label": cand["label"],
+                "http_status": rec["http_status"],
+                "exists": rec["exists"],
+                "reason": rec["reason"],
+                "elapsed_ms": rec["elapsed_ms"],
+            },
+            persist=True,
+        )
+
+    n_existing = sum(1 for r in results if r["exists"])
+    summary = {
+        "n_candidates": len(candidates),
+        "n_buckets_existing": n_existing,
+        "candidates_existing": [
+            r["bucket"] for r in results if r["exists"]],
+        "candidates_missing": [
+            r["bucket"] for r in results if not r["exists"]],
+    }
+    return JSONResponse({
+        "manifest_id": "NOAA_CFSV2_CANDIDATE_PROBE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
+        "horodatage_build": _build_horodatage(),
+        "summary": summary,
+        "results": results,
+        "guardrails_enforced": True,
+        "anti_generique_strict": True,
+        "v30_lock": "INVIOLÉ",
+    })

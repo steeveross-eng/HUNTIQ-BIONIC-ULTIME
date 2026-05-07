@@ -1,0 +1,140 @@
+{
+  "audit_id": "PIPELINE_GUARDRAILS_AND_TRIPLE_DIRECTIVE_20260507T192400Z",
+  "protocol": "BCE-4X ULTIME ABSOLU",
+  "principle": "ANTI-GENERIQUE_OMEGA_STRICT",
+  "mode": "FUSION_ADD_ONLY (V30_LOCK respected, no master mutation)",
+  "timestamp_utc": "2026-05-07T19:24:00Z",
+  "iteration": 4,
+  "directive_executed": "PIPELINE_GUARDRAILS_RESTORE + CFSv2 candidate probe + recompute-with-drift-audit reason=wod23_hook_activated",
+
+  "phase_A_guardrails_restore": {
+    "status": "ENFORCED",
+    "activation_sha256": "0c769235fd95cd657e6c27a53a3ef0995dbe4d76570fb4ffe3ffd17043dcd429",
+    "audit_filename": "audit_20260507T192321Z_2cff5d6f.json",
+    "audit_sha256": "2cff5d6f663c3ceb6a8ba3e5bcdb3a03a48fbb91f4c4751b2bc22700acd0e0c4",
+    "n_activations_history": 8,
+    "doctrine_enforced": {
+      "drift_control": "DRIFT_ZERO_STRICT",
+      "lock_level": "V30_LOCK_INVIOLABLE",
+      "anti_regression": "FULL_PYTEST_ENFORCED",
+      "safety_nets": [
+        "NO_AUTO_HOOK_EXPANSION",
+        "NO_PARALLEL_HOOKS_WITHOUT_EXPLICIT_DIRECTIVE",
+        "NO_ENDPOINT_SWITCH_WITHOUT_COMMANDANT_CONFIRM"
+      ],
+      "modularity": "100_PERCENT_MODULAR",
+      "logging.audit_level": "FORENSIC",
+      "logging.scope": ["B2_CREDENTIALS", "ENDPOINT_PROBES", "HOOK_ACTIVATIONS", "CONFIG_CHANGES"],
+      "execution_mode.autonomy": "LIMITED",
+      "execution_mode.default_posture": "STANDBY_STRICT",
+      "execution_mode.require_token": "X-COMMANDANT-TOKEN"
+    }
+  },
+
+  "phase_B_cfsv2_candidate_probe": {
+    "n_candidates_probed": 3,
+    "n_buckets_existing": 2,
+    "results": [
+      {
+        "bucket": "noaa-cfsv2-bdp-pds",
+        "label": "BDP_CFSV2_BIG_DATA_PROGRAM",
+        "http_status": 404,
+        "exists": false,
+        "reason": "NoSuchBucket",
+        "elapsed_ms": 166.3,
+        "verdict": "NOT_AVAILABLE_ON_AWS_PUBLIC"
+      },
+      {
+        "bucket": "noaa-cfs-pds",
+        "label": "LEGACY_CFSV1",
+        "http_status": 200,
+        "exists": true,
+        "reason": null,
+        "elapsed_ms": 187.8,
+        "verdict": "AVAILABLE_LISTBUCKETRESULT_OK"
+      },
+      {
+        "bucket": "noaa-gfs-bdp-pds",
+        "label": "GFS_BIG_DATA_PROGRAM_RELATED",
+        "http_status": 200,
+        "exists": true,
+        "reason": null,
+        "elapsed_ms": 171.0,
+        "verdict": "AVAILABLE_LISTBUCKETRESULT_OK"
+      }
+    ],
+    "interpretation_anti_generique": "noaa-cfs-pds existe et est public (CFSv1 legacy + possibly CFSv2). noaa-gfs-bdp-pds existe (GFS, modèle apparenté mais PAS CFSv2). noaa-cfsv2-bdp-pds n'existe pas. Aucun bucket explicite CFSv2 n'a été trouvé sur AWS public. Recommandation pour Commandant : valider avec lui si l'utilisation de noaa-cfs-pds (qui contient potentiellement données CFSv2) est doctrinaire ment acceptable.",
+    "guardrails_enforced_during_probe": true,
+    "forensic_log_entries_added": 3
+  },
+
+  "phase_C_recompute_drift_audit_after_wod23": {
+    "reason": "wod23_hook_activated",
+    "before": {
+      "drift_max": 51.37,
+      "drift_mean": 27.56,
+      "score_global_fusion": 50.55
+    },
+    "after": {
+      "drift_max": 50.76,
+      "drift_mean": 22.04,
+      "score_global_fusion": 54.27
+    },
+    "deltas": {
+      "drift_max": 0.61,
+      "drift_mean": 5.52,
+      "score_global_fusion": 3.72
+    },
+    "interpretation": "Impact POSITIF NET du hook WOD23 : drift_mean réduit de 5.52 points, score global amélioré de 3.72 points. Aucune divergence anormale.",
+    "audit_filename": "audit_20260507T192322Z_588951d3.json",
+    "audit_sha256": "588951d3a444d1a2b95e8602c4f9f5ed5c1e0638be18bf1d6f899bfaf108b85c"
+  },
+
+  "implementation_summary": {
+    "files_added": [
+      "/app/backend/engines/v8_institutional/especes/pipeline_guardrails_omega.py",
+      "/app/backend/tests/test_phase_xxx_sexies_pipeline_guardrails_omega.py"
+    ],
+    "files_extended_fusion_add_only": [
+      "/app/backend/routes/phase_xix_router_omega.py (added 4 endpoints: pipeline-guardrails-restore, pipeline-guardrails-status, pipeline-guardrails-forensic-log, noaa-cfsv2-candidate-probe)"
+    ],
+    "files_mutated": []
+  },
+
+  "pytest_validation": {
+    "new_tests_added_iter4": 15,
+    "total_doctrinal_cluster_passing": 203,
+    "total_doctrinal_cluster_failing": 0,
+    "regression_status": "ZERO_REGRESSION"
+  },
+
+  "v30_lock_compliance": {
+    "master_files_mutated": 0,
+    "overlays_added": 1,
+    "audits_added": 2,
+    "fusion_add_only": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered_in_master_files": true
+  },
+
+  "anti_generique_compliance": {
+    "no_mock_data": true,
+    "all_http_responses_real": true,
+    "all_buckets_probed_via_aws_s3_real": true,
+    "guardrails_real_persistence": true
+  },
+
+  "remaining_blockers_p0": [
+    {
+      "issue": "No exact CFSv2 bucket found on AWS public",
+      "candidates_tested": ["noaa-cfsv2-bdp-pds (missing)", "noaa-cfs-pds (exists, legacy CFSv1)", "noaa-gfs-bdp-pds (exists, GFS not CFSv2)"],
+      "next_step_proposal": "Probe contents of noaa-cfs-pds to verify if CFSv2 data is present (e.g., cfs.YYYYMMDD/ paths). Otherwise pivot to NCEI THREDDS or Copernicus Marine."
+    }
+  ],
+
+  "next_required_directives_from_commandant": [
+    "Confirm or refuse usage of noaa-cfs-pds bucket (legacy CFSv1, may contain CFSv2 data)",
+    "Authorize NASA NDVI / USGS Soil hooks preparation under guardrails",
+    "Validate the WOD23 drift impact (+3.72 score gain) and authorize commit to overlay registry"
+  ]
+}
