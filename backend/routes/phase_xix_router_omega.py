@@ -2355,3 +2355,126 @@ async def nasa_ndvi_hook_status_endpoint() -> JSONResponse:
         "v30_lock": "INVIOLÉ",
     })
 
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# HABITAT_OUTPUTS_COMPUTE_Ω_ULTIME — 4 outputs calculables + 8 deferred
+# Anti-générique strict : refus calcul sur manifest NASA NDVI fabriqué.
+# ═════════════════════════════════════════════════════════════════════════
+class HabitatOutputsComputeBody(BaseModel):
+    nasa_ndvi_manifest_sha256: str
+    species_to_threshold_map: Optional[Dict[str, str]] = None
+    persist: bool = True
+
+
+@router.post("/habitat-outputs-compute")
+async def habitat_outputs_compute_endpoint(
+    body: HabitatOutputsComputeBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """HABITAT_OUTPUTS_COMPUTE_Ω_ULTIME · 4 calculés + 8 deferred.
+
+    Workflow doctrinal :
+      1. Guardrails ENFORCED check (412 sinon)
+      2. Lookup manifest_sha256 NASA NDVI validé (anti-générique strict :
+         refus si SHA fabriqué/inconnu)
+      3. Calcul des 4 outputs CALCULABLES (peer-reviewed sourcing) :
+         · food_availability (Pettorelli 2005, Hamel 2009, Borowik 2013)
+         · food_quality (Garroutte 2016)
+         · food_deficiency (Hamel 2009, Hebblewhite 2008)
+         · microhabitat_clusters (ranking ordinal n>=2)
+      4. Tracé des 8 outputs DEFERRED avec missing_inputs[] +
+         directive_extension_required[] (RSF/SSF/MaxEnt/USGS/canopy/etc.)
+      5. Forensic log HABITAT/HABITAT_OUTPUTS_COMPUTE_Ω_ULTIME
+      6. Persistance overlay + audit doctrinal
+      7. AUCUN recalcul moteur · V30_LOCK + DRIFT_ZERO
+
+    Token Commandant requis. Anti-générique strict.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.habitat_outputs_compute_omega import (  # noqa: E501
+        compute_habitat_outputs,
+    )
+    try:
+        payload = compute_habitat_outputs(
+            nasa_ndvi_manifest_sha256=body.nasa_ndvi_manifest_sha256,
+            species_to_threshold_map=body.species_to_threshold_map,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "HABITAT_OUTPUTS_COMPUTE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "HABITAT_OUTPUTS_COMPUTE_EXECUTE_Ω_ULTIME",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_HABITAT_OUTPUTS_COMPUTE_Ω_ULTIME",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/habitat-outputs-status")
+async def habitat_outputs_status_endpoint() -> JSONResponse:
+    """HABITAT_OUTPUTS_COMPUTE_Ω_ULTIME · état (PUBLIC RO)."""
+    from engines.v8_institutional.especes.habitat_outputs_compute_omega import (  # noqa: E501
+        get_habitat_outputs_status,
+    )
+    payload = get_habitat_outputs_status()
+    return JSONResponse({
+        "manifest_id": "HABITAT_OUTPUTS_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_HABITAT_OUTPUTS_COMPUTE_Ω_ULTIME",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/habitat-outputs-doctrine-manifest")
+async def habitat_outputs_doctrine_manifest_endpoint() -> JSONResponse:
+    """HABITAT_OUTPUTS_COMPUTE_Ω_ULTIME · doctrine manifest (PUBLIC RO).
+
+    Expose les 12 outputs demandés, classification 4 calculables /
+    8 deferred, références peer-reviewed et seuils espèces-spécifiques.
+    """
+    from engines.v8_institutional.especes.habitat_outputs_compute_omega import (  # noqa: E501
+        OUTPUTS_REQUESTED_BY_COMMANDANT,
+        OUTPUTS_COMPUTABLE_FROM_NDVI_EVI,
+        OUTPUTS_DEFERRED_MISSING_INPUTS,
+        SPECIES_FORAGE_THRESHOLDS_V1,
+    )
+    return JSONResponse({
+        "manifest_id": "HABITAT_OUTPUTS_DOCTRINE_MANIFEST_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_HABITAT_OUTPUTS_COMPUTE_Ω_ULTIME",
+        "horodatage_build": _build_horodatage(),
+        "outputs_requested_by_commandant": (
+            OUTPUTS_REQUESTED_BY_COMMANDANT),
+        "n_outputs_requested": len(
+            OUTPUTS_REQUESTED_BY_COMMANDANT),
+        "outputs_computable_from_ndvi_evi": (
+            OUTPUTS_COMPUTABLE_FROM_NDVI_EVI),
+        "n_outputs_computable": len(
+            OUTPUTS_COMPUTABLE_FROM_NDVI_EVI),
+        "outputs_deferred_missing_inputs": (
+            OUTPUTS_DEFERRED_MISSING_INPUTS),
+        "n_outputs_deferred": len(
+            OUTPUTS_DEFERRED_MISSING_INPUTS),
+        "species_forage_thresholds_peer_reviewed": (
+            SPECIES_FORAGE_THRESHOLDS_V1),
+        "n_species": len(SPECIES_FORAGE_THRESHOLDS_V1),
+        "v30_lock": "INVIOLÉ",
+    })

@@ -27,6 +27,39 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-NOVENDECIES · HABITAT_OUTPUTS_COMPUTE_Ω_ULTIME — 🎯 4/12 OUTPUTS LIVE + 8 DEFERRED ANTI-GÉNÉRIQUE STRICT (2026-05-07)**
+  Calcul des outputs habitat depuis NDVI/EVI validés (manifest NASA NDVI `166178536dc5…ca4148`) sous régime guardrails ENFORCED + autonomy=LIMITED + 7 références peer-reviewed strictes (FUSION ADD-ONLY · ANTI-GÉNÉRIQUE_Ω · V30_LOCK INVIOLÉ · DRIFT_ZERO).
+  - **Module `habitat_outputs_compute_omega.py` créé** : `SPECIES_FORAGE_THRESHOLDS_V1` (5 espèces × 9 champs : ndvi_optimal_low/high, dormancy, evi_optimal, feeding_strategy, primary_reference, scientific_basis), `OUTPUTS_REQUESTED_BY_COMMANDANT` (12), `OUTPUTS_COMPUTABLE_FROM_NDVI_EVI` (4), `OUTPUTS_DEFERRED_MISSING_INPUTS` (8 avec missing_inputs[] + directive_extension_required[] + reason_anti_generique), helpers `_compute_food_availability_from_ndvi`, `_compute_food_quality_from_evi`, `_compute_food_deficiency`, `_compute_microhabitat_clusters`, orchestrateur `compute_habitat_outputs`, `get_habitat_outputs_status`.
+  - **DOCTRINE ANTI-GÉNÉRIQUE STRICTE — AUDIT TRANSPARENT AU COMMANDANT** : 12 outputs demandés, 4 calculables RÉELLEMENT depuis NDVI/EVI/VI_QUALITY, 8 deferred avec inputs manquants documentés. Le Commandant a APPROUVÉ Option A (anti-générique strict).
+  - **PIÈGES SCIENTIFIQUES IDENTIFIÉS ET DOCUMENTÉS** :
+    - **`rut_zones` PIÈGE TEMPOREL** : données NDVI Jan-Mar 2026 ≠ saisons rut (Cerf=oct-nov, Orignal=sept-oct, Ours=mai-juil, Dindon=avril-mai, Wapiti=sept). DEFERRED.
+    - **`saline_optimal_locations` PIÈGE THÉMATIQUE** : NDVI=chlorophyll greenness, salines=Na+/Mg2+/eau (Belant 2010 mineral licks). AUCUN lien physique direct → require USGS Soil hook (non activé). DEFERRED.
+    - **`habitat_suitability/movement_corridors`** : require RSF/SSF/MaxEnt models (hooks non activés). DEFERRED.
+    - **`bedding_zones/refuge_zones`** : require canopy raster + cover + threat + GPS. NDVI=greenness ≠ cover. DEFERRED.
+    - **`pressure_sensitive_zones`** : require anthropogenic pressure layers. DEFERRED.
+    - **`feeding_zones`** : require multi-season NDVI + dense grid (n=5 trop sparse). DEFERRED.
+  - **3 endpoints API** :
+    - **POST `/api/v30/super-masters/habitat-outputs-compute`** (token + body Pydantic `HabitatOutputsComputeBody`)
+    - **GET `/api/v30/super-masters/habitat-outputs-status`** (PUBLIC RO)
+    - **GET `/api/v30/super-masters/habitat-outputs-doctrine-manifest`** (PUBLIC RO — expose 12 outputs, classification, 7 references peer-reviewed, 5 species thresholds)
+  - **VALID_FORENSIC_SCOPES étendu (FUSION ADD-ONLY)** : ajout `HABITAT` aux 4 scopes existants (B2_CREDENTIALS, ENDPOINT_PROBES, HOOK_ACTIVATIONS, CONFIG_CHANGES). Total 5 scopes.
+  - **7 RÉFÉRENCES PEER-REVIEWED STRICTES (DOI vérifiables)** : Pettorelli 2005 (Trends Ecol Evol DOI:10.1016/j.tree.2005.05.011), Hamel 2009 (J Appl Ecol DOI:10.1111/j.1365-2664.2009.01643.x), Borowik 2013 (Eur J Wildl Res DOI:10.1007/s10344-013-0720-0), Garroutte 2016 (Remote Sensing DOI:10.3390/rs8050404), Hebblewhite 2008 (Ecol Monogr DOI:10.1890/06-1708.1), Belant 2006 (Ecol Applic DOI:10.1890/1051-0761(2006)016), St-Louis 2014 (Phil Trans R Soc B DOI:10.1098/rstb.2013.0197).
+  - **Workflow exécuté en 3 phases LIVE** :
+    - **Phase 1 — DOCTRINE MANIFEST** : 12 outputs requested · 4 computable · 8 deferred · 5 species exposed (PUBLIC RO)
+    - **Phase 2 — COMPUTE LIVE** : `verdict=HABITAT_OUTPUTS_PARTIAL_4_OF_12_COMPUTED_8_DEFERRED` · `habitat_outputs_sha256=bec62755a8115e3a9c4cf2fc0a3b79071d3471657d1de5e70146b179870f34e4` · 5/5 sites extracted · 16 valeurs réelles + 40 deferred tracés · 0.124s · audit `audit_20260507T232209Z_3d39deb7.json`
+    - **Phase 3 — STATUS** : `current_status=COMPUTED_OPERATIONAL` · overlay 20918 bytes
+  - **Outputs LIVE par espèce (signal hivernal Québec Jan-Mar 2026 — caveat doctrinal honnête)** :
+    - **cerf** @ Québec (NDVI=-0.024) : food_avail=**0.00** · food_qual=**0.00** · food_def=**100.00** · regime=`SUB_DORMANCY_SIGNAL` (urbain+neige extrême)
+    - **orignal** @ St-Jean (NDVI=0.009) : food_avail=**5.36** · food_qual=**10.09** · food_def=**82.13** · regime=`SUB_DORMANCY_SIGNAL`
+    - **ours** @ Escoumins (NDVI=0.012) : food_avail=**12.55** · food_qual=**31.23** · food_def=**58.17** · regime=`SUB_DORMANCY_SIGNAL` (tolérance large omnivore)
+    - **dindon** @ Fortierville (NDVI=0.248) : food_avail=**51.58** · food_qual=**58.61** · food_def=**0.00** · regime=`BELOW_OPTIMAL_GROWING+ADEQUATE_FORAGE` (terres agricoles signal résiduel max)
+    - **wapiti** @ Capitale (NDVI=0.046) : food_avail=**24.17** · food_qual=**43.20** · food_def=**19.43** · regime=`SUB_DORMANCY_SIGNAL`
+  - **Microhabitat clusters ranking ordinal cross-sites (n=5 — caveat Pettorelli 2005 documenté)** : #1 dindon Fortierville (composite=0.2102, agricoles), #2 wapiti Capitale (0.048), #3 ours Escoumins (0.015), #4 orignal St-Jean (0.009), #5 cerf Québec (-0.019, urbain).
+  - **Anti-générique strict prouvé (sanity LIVE)** : POST `/habitat-outputs-compute` avec SHA fabriqué `'0'×64` → `verdict=HABITAT_OUTPUTS_REJECTED_MANIFEST_NOT_FOUND_OR_INVALID` + forensic log persisté en rejet.
+  - **Forensic log** : scope `HABITAT` opérationnel avec event `HABITAT_OUTPUTS_COMPUTE_Ω_ULTIME`. 1 audit `NOAA_PIPELINE/HABITAT_OUTPUTS_COMPUTE` persisté.
+  - **Pytest** : 20 nouveaux (`test_phase_xxx_novendecies_habitat_outputs_omega.py`) **20/20 PASSED** (counts 12/4/8 × disjoints × pièges temporel et thématique × 5 espèces seuils peer-reviewed × helpers calc × ranking ordinal × hook reject × scope HABITAT × V30_LOCK). Régression cluster doctrinal Phase XX-XXX étendu = **582/582 PASSED · 0 régression**.
+  - **Bilan stratégique session** : ✅ **4 hooks ACTIVATED** + **1 transformation HABITAT_OUTPUTS computed** = 5 maillons opérationnels. La directive Commandant `HABITAT_OUTPUTS_COMPUTE_Ω_ULTIME` est exécutée intégralement dans les limites physiques de l'input NDVI/EVI/VI_QUALITY, avec audit transparent des 8 deferred outputs nécessitant futures activations (RSF/SSF/MaxEnt/USGS Soil/canopy/GPS/threat/multi-season).
+
 - **PHASE_XXX-OCTODECIES · NASA_NDVI_P0_VALIDATE + HOOK_ACTIVATE_Ω_ULTIME — 🎯 NDVI/EVI LIVE 5/5 ESPÈCES + HOOK ACTIVATED + DRIFT (2026-05-07)**
   Validation NASA MODIS NDVI/EVI via ORNL MODIS Web Service + activation officielle du hook NASA NDVI sous régime guardrails ENFORCED + autonomy=LIMITED + anti-générique strict (FUSION ADD-ONLY · V30_LOCK INVIOLÉ · DRIFT_ZERO).
   - **Module `nasa_ndvi_omega.py` créé** : `MODIS_PRODUCTS_BANDS_REGISTRY` (3 produits documentés : MOD13Q1 NDVI/EVI/VI_QUALITY, MOD15A2H LAI/FPAR, MOD17A2H GPP), `NDVI_LOGICAL_TO_BAND` (mapping logique→canonique strict), `_http_get_json_strict_with_redirect_block` (GET sans redirect, 512KB body max), `_compute_band_stats_from_modis_subset` (rejet nodata=-3000 sans imputation), `validate_nasa_ndvi_per_species` (orchestrateur multi-espèces × multi-bandes), `activate_nasa_ndvi_hook` (anti-générique strict, refus SHA fabriqué), `get_nasa_ndvi_hook_status`.
