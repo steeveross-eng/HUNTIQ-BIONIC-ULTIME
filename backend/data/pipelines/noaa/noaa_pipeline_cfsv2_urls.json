@@ -5569,5 +5569,5 @@
   ],
   "endpoint_template": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.{YYYYMM}.mon.mean.{VARIABLE}.grb2",
   "v30_lock": "INVIOLÉ",
-  "generated_at_utc": "2026-05-07T17:40:52+00:00"
+  "generated_at_utc": "2026-05-07T18:15:50+00:00"
 }

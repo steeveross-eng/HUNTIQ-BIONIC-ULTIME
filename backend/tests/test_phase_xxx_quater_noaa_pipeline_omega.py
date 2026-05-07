@@ -46,8 +46,10 @@ def test_module_exports(noaa):
 
 def test_wod23_config_doctrinal(noaa):
     cfg = noaa.WOD23_CONFIG
-    assert cfg["mode"] == "LOCAL"
-    assert cfg["primary_path_commandant"] == \
+    assert cfg["mode"] == "B2"
+    assert cfg["primary_b2_bucket"] == "noaa-territoire"
+    assert cfg["primary_b2_path"] == "wod23/"
+    assert cfg["primary_path_commandant_legacy"] == \
         "C:/emergent_sources/noaa/wod23/"
     assert "PHYSIOLOGIE" in cfg["consumed_by_modules"]
     assert "HABITAT" in cfg["consumed_by_modules"]
@@ -142,6 +144,56 @@ def test_probe_wod23_returns_real_status(noaa):
     assert p["available"] is False
     assert p["n_files_valid_total"] == 0
     assert p["anti_generique_strict"] is True
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# 3-BIS. probe_wod23_b2 (NOAA_WOD23_BACKBLAZE_UPDATE)
+# ═════════════════════════════════════════════════════════════════════════
+def test_probe_wod23_b2_module_exists(noaa):
+    assert hasattr(noaa, "probe_wod23_b2")
+
+
+def test_probe_wod23_b2_returns_real_status(noaa, monkeypatch):
+    """Probe RÉEL B2 — anti-générique strict.
+    Vérifie qu'aucune valeur n'est fabriquée même en cas d'échec
+    (credentials absents, bucket inexistant, etc.)."""
+    # Sans credentials → reason explicite
+    monkeypatch.delenv("B2_KEY_ID", raising=False)
+    monkeypatch.delenv("B2_APPLICATION_KEY", raising=False)
+    monkeypatch.delenv("B2_ENDPOINT_URL", raising=False)
+    p = noaa.probe_wod23_b2()
+    assert p["manifest_id"] == "WOD23_B2_PROBE_Ω"
+    assert p["mode"] == "B2"
+    assert p["bucket"] == "noaa-territoire"
+    assert p["path_prefix"] == "wod23/"
+    assert p["available"] is False
+    assert p["anti_generique_strict"] is True
+    assert p.get("reason") == "b2_credentials_missing_in_env"
+
+
+def test_probe_wod23_b2_with_credentials_real_call(noaa):
+    """Avec dotenv chargé, le probe doit retourner un status RÉEL
+    (anti-générique). Soit bucket_exists=True/False, jamais None."""
+    from dotenv import load_dotenv
+    load_dotenv("/app/backend/.env")
+    p = noaa.probe_wod23_b2()
+    # Attendu : credentials présents → on passe l'étape import + creds
+    if p.get("reason") == "b2_credentials_missing_in_env":
+        pytest.skip("B2 credentials not in env — test_credentials.md")
+    # Status réel : bucket existe ou non, jamais None
+    assert "bucket_exists" in p
+    assert isinstance(p["bucket_exists"], bool)
+    assert p["b2_endpoint_url"] is not None
+    assert p["b2_region"] is not None
+
+
+def test_probe_wod23_b2_custom_bucket_path(noaa):
+    """Probe accepte bucket + path_prefix custom."""
+    p = noaa.probe_wod23_b2(
+        bucket="test-bucket-custom",
+        path_prefix="custom/path/")
+    assert p["bucket"] == "test-bucket-custom"
+    assert p["path_prefix"] == "custom/path/"
 
 
 def test_probe_wod23_detects_files_when_present(noaa, tmp_path,

@@ -45,10 +45,12 @@ PIPELINE_PROBE_RESULTS_PATH = (
 PIPELINE_URLS_PATH = (
     PIPELINE_ROOT / "noaa_pipeline_cfsv2_urls.json")
 
-# Configuration WOD23 (LOCAL — Windows path Commandant)
+# Configuration WOD23 (multi-mode : LOCAL legacy + B2 primary depuis update)
 WOD23_CONFIG = {
-    "mode": "LOCAL",
-    "primary_path_commandant": "C:/emergent_sources/noaa/wod23/",
+    "mode": "B2",
+    "primary_b2_bucket": "noaa-territoire",
+    "primary_b2_path": "wod23/",
+    "primary_path_commandant_legacy": "C:/emergent_sources/noaa/wod23/",
     "fallback_paths_pod_linux": [
         "/data/external/noaa/wod23",
         "/app/backend/data/external/noaa/wod23",
@@ -154,19 +156,167 @@ def generate_cfsv2_urls(
 # ═════════════════════════════════════════════════════════════════════════
 # 2. Probe WOD23 local (status réel disque)
 # ═════════════════════════════════════════════════════════════════════════
+def probe_wod23_b2(
+    bucket: Optional[str] = None,
+    path_prefix: Optional[str] = None,
+    max_keys: int = 100,
+) -> Dict[str, Any]:
+    """Probe RÉEL Backblaze B2 (mode S3-compatible).
+
+    Anti-générique strict : aucune fabrication. Toutes les valeurs
+    retournées proviennent d'appels boto3 réels.
+
+    Returns:
+      {available, bucket, path_prefix, n_objects_found, total_size_bytes,
+       sample_keys, http_status, anti_generique_strict, ...}
+    """
+    bucket = bucket or WOD23_CONFIG["primary_b2_bucket"]
+    path_prefix = path_prefix or WOD23_CONFIG["primary_b2_path"]
+
+    record: Dict[str, Any] = {
+        "manifest_id": "WOD23_B2_PROBE_Ω",
+        "source_name": "WOD23",
+        "mode": "B2",
+        "bucket": bucket,
+        "path_prefix": path_prefix,
+        "available": False,
+        "anti_generique_strict": True,
+        "v30_lock": "INVIOLÉ",
+        "probed_at_utc": _utc_now(),
+    }
+
+    # Boto3 disponible ?
+    try:
+        import boto3
+        from botocore.config import Config
+        from botocore.exceptions import (
+            ClientError, EndpointConnectionError, NoCredentialsError,
+        )
+    except ImportError as e:
+        record["reason"] = f"boto3_import_error::{str(e)[:120]}"
+        return record
+
+    # Credentials B2 disponibles ?
+    import os
+    key_id = os.environ.get("B2_KEY_ID")
+    app_key = os.environ.get("B2_APPLICATION_KEY")
+    endpoint = os.environ.get("B2_ENDPOINT_URL")
+    region = os.environ.get("B2_REGION")
+    if not (key_id and app_key and endpoint):
+        record["reason"] = "b2_credentials_missing_in_env"
+        return record
+
+    record["b2_endpoint_url"] = endpoint
+    record["b2_region"] = region
+
+    # Construction client S3 compatible B2
+    try:
+        s3 = boto3.client(
+            "s3",
+            aws_access_key_id=key_id,
+            aws_secret_access_key=app_key,
+            endpoint_url=endpoint,
+            region_name=region,
+            config=Config(
+                connect_timeout=10, read_timeout=10,
+                retries={"max_attempts": 1}),
+        )
+    except Exception as e:
+        record["reason"] = (
+            f"b2_client_init_error::{str(e)[:120]}")
+        return record
+
+    # head_bucket : vérifier existence + accessibilité
+    t0 = time.time()
+    try:
+        s3.head_bucket(Bucket=bucket)
+        record["bucket_exists"] = True
+        record["http_head_bucket_ms"] = round(
+            (time.time() - t0) * 1000, 1)
+    except ClientError as e:
+        code = e.response.get("Error", {}).get("Code", "?")
+        record["bucket_exists"] = False
+        record["reason"] = f"head_bucket_error::{code}"
+        record["http_head_bucket_ms"] = round(
+            (time.time() - t0) * 1000, 1)
+        return record
+    except (EndpointConnectionError, NoCredentialsError) as e:
+        record["reason"] = (
+            f"network_or_credentials_error::{str(e)[:120]}")
+        return record
+    except Exception as e:
+        record["reason"] = f"unexpected_error::{str(e)[:120]}"
+        return record
+
+    # list_objects_v2 : compter objets avec préfixe
+    t0 = time.time()
+    n_objects = 0
+    total_bytes = 0
+    sample_keys: List[Dict[str, Any]] = []
+    n_anomalies = 0
+    try:
+        paginator = s3.get_paginator("list_objects_v2")
+        for page in paginator.paginate(
+            Bucket=bucket, Prefix=path_prefix,
+            PaginationConfig={"PageSize": max_keys},
+        ):
+            for obj in page.get("Contents", []):
+                key = obj["Key"]
+                size = obj.get("Size", 0)
+                # Filtre extensions attendues
+                ext_ok = any(
+                    key.lower().endswith(fmt.lower())
+                    for fmt in WOD23_CONFIG["expected_formats"])
+                if size == 0:
+                    n_anomalies += 1
+                    continue
+                if not ext_ok:
+                    # Format non attendu — anomalie doctrinale
+                    n_anomalies += 1
+                    continue
+                n_objects += 1
+                total_bytes += size
+                if len(sample_keys) < 10:
+                    sample_keys.append({
+                        "key": key, "size": size,
+                    })
+            # Limit échantillon
+            if n_objects >= max_keys:
+                break
+    except ClientError as e:
+        code = e.response.get("Error", {}).get("Code", "?")
+        record["reason"] = f"list_objects_error::{code}"
+        record["http_list_objects_ms"] = round(
+            (time.time() - t0) * 1000, 1)
+        return record
+    record["http_list_objects_ms"] = round(
+        (time.time() - t0) * 1000, 1)
+
+    record["n_objects_valid"] = n_objects
+    record["n_anomalies"] = n_anomalies
+    record["total_size_bytes"] = total_bytes
+    record["sample_keys"] = sample_keys
+    record["available"] = (n_objects > 0 and n_anomalies == 0)
+    if n_objects == 0 and n_anomalies == 0:
+        record["reason"] = "bucket_empty_or_prefix_not_found"
+    return record
+
+
 def probe_wod23_local() -> Dict[str, Any]:
     """Vérifie l'accessibilité réelle des paths WOD23.
 
     Anti-générique : status RÉEL retourné, zéro fabrication.
     """
-    primary = WOD23_CONFIG["primary_path_commandant"]
+    primary = WOD23_CONFIG.get(
+        "primary_path_commandant_legacy",
+        WOD23_CONFIG.get("primary_path_commandant", ""))
     fallbacks = WOD23_CONFIG["fallback_paths_pod_linux"]
 
-    # Le path primary est en Windows (C:/...) — non accessible en pod Linux
+    # Le path primary (legacy) est en Windows (C:/...) — non accessible
+    # en pod Linux
     primary_accessible = False
     primary_reason = "WINDOWS_PATH_NOT_ACCESSIBLE_FROM_LINUX_POD"
     try:
-        # Tenter accès filesystem (sera False sur pod Linux pour C:/)
         primary_accessible = Path(primary).exists()
     except (OSError, ValueError) as e:
         primary_reason = f"PATH_PROBE_ERROR::{str(e)[:100]}"
@@ -397,7 +547,8 @@ def activate_noaa_pipeline(
     }
 
     urls = generate_cfsv2_urls()
-    wod23_probe = probe_wod23_local()
+    wod23_b2_probe = probe_wod23_b2()
+    wod23_local_probe = probe_wod23_local()
     cfsv2_probe = probe_cfsv2_opendap(
         sample_yyyymm=sample_yyyymm,
         sample_variable=sample_variable)
@@ -410,7 +561,8 @@ def activate_noaa_pipeline(
             encoding="utf-8")
         PIPELINE_PROBE_RESULTS_PATH.write_text(
             json.dumps({
-                "wod23_probe": wod23_probe,
+                "wod23_b2_probe": wod23_b2_probe,
+                "wod23_local_probe": wod23_local_probe,
                 "cfsv2_probe": cfsv2_probe,
                 "probed_at_utc": _utc_now(),
                 "v30_lock": "INVIOLÉ",
@@ -436,10 +588,18 @@ def activate_noaa_pipeline(
             "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
             "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
             "wod23_status": {
-                "available": wod23_probe["available"],
-                "n_files": wod23_probe["n_files_valid_total"],
-                "primary_accessible": wod23_probe[
-                    "primary_accessible"],
+                "mode": "B2",
+                "b2_available": wod23_b2_probe.get(
+                    "available", False),
+                "b2_bucket": wod23_b2_probe.get("bucket"),
+                "b2_n_objects_valid": wod23_b2_probe.get(
+                    "n_objects_valid", 0),
+                "b2_total_size_bytes": wod23_b2_probe.get(
+                    "total_size_bytes", 0),
+                "b2_reason": wod23_b2_probe.get("reason"),
+                "local_available": wod23_local_probe["available"],
+                "local_n_files": wod23_local_probe[
+                    "n_files_valid_total"],
             },
             "cfsv2_status": {
                 "verdict": cfsv2_probe["verdict"],
@@ -461,10 +621,15 @@ def activate_noaa_pipeline(
 
     # Verdict global du pipeline
     pipeline_verdict_parts = []
-    if wod23_probe["available"]:
-        pipeline_verdict_parts.append("WOD23_AVAILABLE")
+    if wod23_b2_probe.get("available"):
+        pipeline_verdict_parts.append(
+            f"WOD23_B2_AVAILABLE_{wod23_b2_probe['n_objects_valid']}_objects")
+    elif wod23_local_probe["available"]:
+        pipeline_verdict_parts.append(
+            f"WOD23_LOCAL_AVAILABLE_{wod23_local_probe['n_files_valid_total']}_files")
     else:
-        pipeline_verdict_parts.append("WOD23_AWAITING_PHYSICAL_DEPLOY")
+        pipeline_verdict_parts.append(
+            "WOD23_AWAITING_B2_PROVISION_OR_LOCAL_DEPLOY")
     pipeline_verdict_parts.append(cfsv2_probe["verdict"])
     pipeline_verdict = " | ".join(pipeline_verdict_parts)
 
@@ -473,7 +638,8 @@ def activate_noaa_pipeline(
         "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
         "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
         "config": config_payload,
-        "wod23_probe": wod23_probe,
+        "wod23_b2_probe": wod23_b2_probe,
+        "wod23_local_probe": wod23_local_probe,
         "cfsv2_probe": cfsv2_probe,
         "cfsv2_urls_summary": {
             "n_urls_total": urls["n_urls_total"],
@@ -542,6 +708,7 @@ __all__ = [
     "WOD23_CONFIG",
     "CFSV2_CONFIG",
     "generate_cfsv2_urls",
+    "probe_wod23_b2",
     "probe_wod23_local",
     "probe_cfsv2_opendap",
     "activate_noaa_pipeline",

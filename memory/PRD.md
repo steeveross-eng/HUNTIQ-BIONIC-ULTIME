@@ -27,6 +27,20 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-QUINTUS · NOAA_WOD23_BACKBLAZE_UPDATE — Mode B2 (S3-compatible) (2026-05-07)**
+  Mise à jour doctrinale du pipeline NOAA WOD23 vers mode Backblaze B2 (FUSION ADD-ONLY · anti-générique strict). **AUCUN recalcul moteur** · **627/627 pytests Phase XVI/XVIII/XX-XXX-QUINTUS PASSED · V30_LOCK INVIOLÉ · DRIFT_ZERO**.
+  - **WOD23_CONFIG mis à jour** : `mode="B2"` (primary) · `primary_b2_bucket="noaa-territoire"` · `primary_b2_path="wod23/"` · `primary_path_commandant_legacy="C:/emergent_sources/noaa/wod23/"` (legacy) · fallbacks pod Linux conservés.
+  - **Fonction `probe_wod23_b2(bucket, path_prefix, max_keys)`** : probe RÉEL B2 via boto3 S3 client. Vérifications multi-étapes : import boto3 → credentials env → S3 client init → `head_bucket` (existence) → `list_objects_v2` (n_objects + filtre formats `.nc`/`.csv`/`.bin` + détection anomalies zero_size). Anti-générique strict : aucun status fabriqué, tous les statuts HTTP réels.
+  - **`activate_noaa_pipeline`** étendu : exécute `probe_wod23_b2()` + `probe_wod23_local()` (legacy) + `probe_cfsv2_opendap()`. Verdict combiné : `WOD23_B2_AVAILABLE_<n>_objects` ou `WOD23_LOCAL_AVAILABLE_<n>_files` ou `WOD23_AWAITING_B2_PROVISION_OR_LOCAL_DEPLOY`.
+  - **Probes RÉELS LIVE** :
+    - **B2 noaa-territoire/wod23/** : HTTP HEAD bucket=**403** (188ms) · `bucket_exists=False` · `reason=head_bucket_error::403` (anti-générique : bucket non créé OU credentials sans accès)
+    - **B2 endpoint** : `https://s3.ca-east-006.backblazeb2.com` (region `ca-east-006`)
+    - **Local legacy** : `WINDOWS_PATH_NOT_ACCESSIBLE_FROM_LINUX_POD` (cohérent)
+    - **Validation mécanique** sur bucket existant `pee-maj-gpkg` : HEAD 200 (133ms), list_objects 200 (52ms), 0 objet sous prefix wod23/ → mécanisme parfaitement fonctionnel.
+  - **22 pytests neutres mis à jour** : 4 nouveaux tests B2 ajoutés (`test_probe_wod23_b2_module_exists`, `test_probe_wod23_b2_returns_real_status`, `test_probe_wod23_b2_with_credentials_real_call`, `test_probe_wod23_b2_custom_bucket_path`). `test_wod23_config_doctrinal` mis à jour pour mode B2.
+  - **Audit `NOAA_PIPELINE/ACTIVATION`** étendu avec champs B2 : `b2_available`, `b2_bucket`, `b2_n_objects_valid`, `b2_total_size_bytes`, `b2_reason` + fallback `local_available`/`local_n_files`. **3 audits NOAA cumulés** persistés.
+  - **V30_LOCK INVIOLÉ + DRIFT_ZERO** : MD5 BR identiques, BP135 SHA-256 stable, super_engines_omega_logic.py non modifié.
+  - **Endpoints inchangés** : POST `/noaa-pipeline-activate`, GET `/noaa-pipeline-status`, GET `/noaa-cfsv2-urls` opérationnels avec nouveau probe B2.
 - **PHASE_XXX-QUATER · ACTIVATION_PIPELINE_NOAA_TERRITOIRE — WOD23 (LOCAL) + CFSv2 (OPeNDAP) (2026-05-07)**
   Implémentation **complète** de l'infrastructure d'activation du pipeline NOAA pour TERRITOIRE_Ω + TERRITOIRE_ULTIME (FUSION ADD-ONLY · anti-générique strict). **AUCUN recalcul moteur** · **623/623 pytests Phase XVI/XVIII/XX-XXX-QUATER PASSED · V30_LOCK INVIOLÉ · DRIFT_ZERO**.
   - **Module métier** : `engines/v8_institutional/especes/noaa_pipeline_omega.py` (5 fonctions : `generate_cfsv2_urls`, `probe_wod23_local`, `probe_cfsv2_opendap`, `activate_noaa_pipeline`, `get_pipeline_status`).

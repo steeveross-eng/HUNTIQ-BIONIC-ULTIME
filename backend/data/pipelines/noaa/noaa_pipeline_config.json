@@ -3,8 +3,10 @@
   "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
   "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
   "wod23": {
-    "mode": "LOCAL",
-    "primary_path_commandant": "C:/emergent_sources/noaa/wod23/",
+    "mode": "B2",
+    "primary_b2_bucket": "noaa-territoire",
+    "primary_b2_path": "wod23/",
+    "primary_path_commandant_legacy": "C:/emergent_sources/noaa/wod23/",
     "fallback_paths_pod_linux": [
       "/data/external/noaa/wod23",
       "/app/backend/data/external/noaa/wod23"
@@ -59,5 +61,5 @@
   "v30_lock": "INVIOLÉ",
   "drift_zero": true,
   "no_engine_recompute_triggered": true,
-  "configured_at_utc": "2026-05-07T17:40:52+00:00"
+  "configured_at_utc": "2026-05-07T18:15:50+00:00"
 }

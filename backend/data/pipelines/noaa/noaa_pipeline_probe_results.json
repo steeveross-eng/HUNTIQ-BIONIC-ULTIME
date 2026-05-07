@@ -1,5 +1,21 @@
 {
-  "wod23_probe": {
+  "wod23_b2_probe": {
+    "manifest_id": "WOD23_B2_PROBE_Ω",
+    "source_name": "WOD23",
+    "mode": "B2",
+    "bucket": "noaa-territoire",
+    "path_prefix": "wod23/",
+    "available": false,
+    "anti_generique_strict": true,
+    "v30_lock": "INVIOLÉ",
+    "probed_at_utc": "2026-05-07T18:15:50+00:00",
+    "b2_endpoint_url": "https://s3.ca-east-006.backblazeb2.com",
+    "b2_region": "ca-east-006",
+    "bucket_exists": false,
+    "reason": "head_bucket_error::403",
+    "http_head_bucket_ms": 188.2
+  },
+  "wod23_local_probe": {
     "manifest_id": "WOD23_PROBE_Ω",
     "source_name": "WOD23",
     "mode": "LOCAL",
@@ -35,7 +51,7 @@
       "THERMIQUE"
     ],
     "v30_lock": "INVIOLÉ",
-    "probed_at_utc": "2026-05-07T17:40:52+00:00"
+    "probed_at_utc": "2026-05-07T18:15:50+00:00"
   },
   "cfsv2_probe": {
     "manifest_id": "CFSV2_OPENDAP_PROBE_Ω",
@@ -48,13 +64,13 @@
     "probe_main": {
       "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201101.mon.mean.tavg.grb2",
       "http_status": 400,
-      "elapsed_ms": 120.9,
+      "elapsed_ms": 123.0,
       "reason": "http_error_400"
     },
     "probe_dds": {
       "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201101.mon.mean.tavg.grb2.dds",
       "http_status": 404,
-      "elapsed_ms": 74.3,
+      "elapsed_ms": 72.9,
       "reason": "http_error_404"
     },
     "scientific_deps_status": {
@@ -76,8 +92,8 @@
     "verdict": "ENDPOINT_PROBE_FAILED_AWAITING_VALID_OPENDAP",
     "anti_generique_strict": true,
     "v30_lock": "INVIOLÉ",
-    "probed_at_utc": "2026-05-07T17:40:52+00:00"
+    "probed_at_utc": "2026-05-07T18:15:50+00:00"
   },
-  "probed_at_utc": "2026-05-07T17:40:52+00:00",
+  "probed_at_utc": "2026-05-07T18:15:50+00:00",
   "v30_lock": "INVIOLÉ"
 }
