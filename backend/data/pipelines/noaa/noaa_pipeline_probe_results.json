@@ -1,0 +1,83 @@
+{
+  "wod23_probe": {
+    "manifest_id": "WOD23_PROBE_Ω",
+    "source_name": "WOD23",
+    "mode": "LOCAL",
+    "primary_path": "C:/emergent_sources/noaa/wod23/",
+    "primary_accessible": false,
+    "primary_reason": "WINDOWS_PATH_NOT_ACCESSIBLE_FROM_LINUX_POD",
+    "fallback_paths_results": [
+      {
+        "path": "/data/external/noaa/wod23",
+        "exists": false,
+        "n_files_valid": 0,
+        "files_sample": [],
+        "n_anomalies": 0,
+        "anomalies_sample": []
+      },
+      {
+        "path": "/app/backend/data/external/noaa/wod23",
+        "exists": false,
+        "n_files_valid": 0,
+        "files_sample": [],
+        "n_anomalies": 0,
+        "anomalies_sample": []
+      }
+    ],
+    "n_files_valid_total": 0,
+    "n_anomalies_total": 0,
+    "available": false,
+    "fallback_when_unavailable": "skip_with_log",
+    "anti_generique_strict": true,
+    "consumed_by_modules": [
+      "PHYSIOLOGIE",
+      "HABITAT",
+      "THERMIQUE"
+    ],
+    "v30_lock": "INVIOLÉ",
+    "probed_at_utc": "2026-05-07T17:40:52+00:00"
+  },
+  "cfsv2_probe": {
+    "manifest_id": "CFSV2_OPENDAP_PROBE_Ω",
+    "source_name": "CFSV2",
+    "mode": "OPENDAP",
+    "endpoint_template": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.{YYYYMM}.mon.mean.{VARIABLE}.grb2",
+    "sample_url_probed": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201101.mon.mean.tavg.grb2",
+    "sample_yyyymm": "201101",
+    "sample_variable": "tavg",
+    "probe_main": {
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201101.mon.mean.tavg.grb2",
+      "http_status": 400,
+      "elapsed_ms": 120.9,
+      "reason": "http_error_400"
+    },
+    "probe_dds": {
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201101.mon.mean.tavg.grb2.dds",
+      "http_status": 404,
+      "elapsed_ms": 74.3,
+      "reason": "http_error_404"
+    },
+    "scientific_deps_status": {
+      "xarray": {
+        "available": false,
+        "reason": "module_not_installed"
+      },
+      "netCDF4": {
+        "available": false,
+        "reason": "module_not_installed"
+      },
+      "pydap": {
+        "available": false,
+        "reason": "module_not_installed"
+      }
+    },
+    "n_deps_available": 0,
+    "streaming_capable": false,
+    "verdict": "ENDPOINT_PROBE_FAILED_AWAITING_VALID_OPENDAP",
+    "anti_generique_strict": true,
+    "v30_lock": "INVIOLÉ",
+    "probed_at_utc": "2026-05-07T17:40:52+00:00"
+  },
+  "probed_at_utc": "2026-05-07T17:40:52+00:00",
+  "v30_lock": "INVIOLÉ"
+}

@@ -1,0 +1,63 @@
+{
+  "manifest_id": "NOAA_PIPELINE_CONFIG_Ω",
+  "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "wod23": {
+    "mode": "LOCAL",
+    "primary_path_commandant": "C:/emergent_sources/noaa/wod23/",
+    "fallback_paths_pod_linux": [
+      "/data/external/noaa/wod23",
+      "/app/backend/data/external/noaa/wod23"
+    ],
+    "expected_formats": [
+      ".nc",
+      ".csv",
+      ".bin"
+    ],
+    "consumed_by_modules": [
+      "PHYSIOLOGIE",
+      "HABITAT",
+      "THERMIQUE"
+    ],
+    "fallback_when_unavailable": "skip_with_log",
+    "anti_generique_strict": true
+  },
+  "cfsv2": {
+    "mode": "OPENDAP",
+    "endpoint_template": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.{YYYYMM}.mon.mean.{VARIABLE}.grb2",
+    "variables": [
+      "tavg",
+      "prate",
+      "uwnd10m",
+      "vwnd10m",
+      "rhum",
+      "sst"
+    ],
+    "period_start": "2011-01",
+    "period_end": "present",
+    "ingestion_target": "TERRITOIRE",
+    "ingestion_mode": "STREAMING",
+    "caching": "ON",
+    "storage": "MINIMAL",
+    "forbidden_paths": [
+      "/files/g/",
+      "GDAS"
+    ],
+    "forbidden_formats": [
+      ".tar"
+    ],
+    "anti_generique_strict": true
+  },
+  "instructions_doctrinales": [
+    "Pas de fichiers .tar",
+    "Pas de /files/g/ ou GDAS",
+    "Exclusivement OPeNDAP pour CFSv2",
+    "WOD23 local pour PHYSIOLOGIE/HABITAT/THERMIQUE",
+    "URLs mensuelles auto-générées",
+    "Ingestion directe TERRITOIRE_Ω + TERRITOIRE_ULTIME"
+  ],
+  "v30_lock": "INVIOLÉ",
+  "drift_zero": true,
+  "no_engine_recompute_triggered": true,
+  "configured_at_utc": "2026-05-07T17:40:52+00:00"
+}

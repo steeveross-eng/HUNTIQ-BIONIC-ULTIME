@@ -836,3 +836,125 @@ async def bp135_validate_against_official_endpoint(
         "result": payload,
         "v30_lock": "INVIOLÉ",
     })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ACTIVATION_PIPELINE_NOAA_TERRITOIRE — WOD23 (LOCAL) + CFSv2 (OPeNDAP)
+# ═════════════════════════════════════════════════════════════════════════
+@router.post("/noaa-pipeline-activate")
+async def noaa_pipeline_activate_endpoint(
+    sample_yyyymm: str = "201101",
+    sample_variable: str = "tavg",
+    persist: bool = True,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """ACTIVATION_PIPELINE_NOAA_TERRITOIRE · Configuration + probes réels.
+
+    Activation doctrinale du pipeline :
+      · WOD23 (LOCAL) : probe paths réels (anti-générique)
+      · CFSv2 (OPeNDAP) : génération URLs mensuelles + probe HEAD/DDS
+        avec status HTTP réel
+      · Audit NOAA_PIPELINE/ACTIVATION persisté
+      · AUCUN recalcul moteur (V30_LOCK + DRIFT_ZERO)
+
+    Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.noaa_pipeline_omega import (
+        activate_noaa_pipeline,
+    )
+    try:
+        payload = activate_noaa_pipeline(
+            sample_yyyymm=sample_yyyymm,
+            sample_variable=sample_variable,
+            persist=persist,
+        )
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "NOAA_PIPELINE_ACTIVATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "NOAA_PIPELINE_ACTIVATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/noaa-pipeline-status")
+async def noaa_pipeline_status_endpoint() -> JSONResponse:
+    """ACTIVATION_PIPELINE_NOAA_TERRITOIRE · État pipeline (PUBLIC RO)."""
+    from engines.v8_institutional.especes.noaa_pipeline_omega import (
+        get_pipeline_status,
+    )
+    payload = get_pipeline_status()
+    return JSONResponse({
+        "manifest_id": "NOAA_PIPELINE_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/noaa-cfsv2-urls")
+async def noaa_cfsv2_urls_endpoint(
+    start_yyyymm: Optional[str] = None,
+    end_yyyymm: Optional[str] = None,
+    variable: Optional[str] = None,
+    page: int = 1,
+    page_size: int = 100,
+) -> JSONResponse:
+    """ACTIVATION_PIPELINE_NOAA_TERRITOIRE · URLs CFSv2 mensuelles paginées
+    (PUBLIC RO).
+
+    Params :
+      · start_yyyymm: défaut 2011-01
+      · end_yyyymm:   défaut mois courant
+      · variable:     filtre par variable (ex: tavg, sst...)
+      · page/page_size: pagination
+    """
+    from engines.v8_institutional.especes.noaa_pipeline_omega import (
+        generate_cfsv2_urls, CFSV2_CONFIG,
+    )
+    vars_used = (
+        [variable] if variable else CFSV2_CONFIG["variables"])
+    try:
+        full = generate_cfsv2_urls(
+            start_yyyymm=start_yyyymm,
+            end_yyyymm=end_yyyymm,
+            variables=vars_used,
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=400,
+            detail=f"INVALID_DATE_RANGE::{str(e)[:200]}")
+    page = max(1, int(page))
+    page_size = max(1, min(1000, int(page_size)))
+    start = (page - 1) * page_size
+    paged = full["urls"][start:start + page_size]
+    return JSONResponse({
+        "manifest_id": "NOAA_CFSV2_URLS_LIST_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
+        "horodatage_build": _build_horodatage(),
+        "page": page,
+        "page_size": page_size,
+        "total": full["n_urls_total"],
+        "n_returned": len(paged),
+        "period_start": full["period_start"],
+        "period_end": full["period_end"],
+        "variables_filter": vars_used,
+        "urls": paged,
+        "v30_lock": "INVIOLÉ",
+    })
+

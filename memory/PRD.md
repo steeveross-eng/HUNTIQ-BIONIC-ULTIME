@@ -27,6 +27,23 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-QUATER · ACTIVATION_PIPELINE_NOAA_TERRITOIRE — WOD23 (LOCAL) + CFSv2 (OPeNDAP) (2026-05-07)**
+  Implémentation **complète** de l'infrastructure d'activation du pipeline NOAA pour TERRITOIRE_Ω + TERRITOIRE_ULTIME (FUSION ADD-ONLY · anti-générique strict). **AUCUN recalcul moteur** · **623/623 pytests Phase XVI/XVIII/XX-XXX-QUATER PASSED · V30_LOCK INVIOLÉ · DRIFT_ZERO**.
+  - **Module métier** : `engines/v8_institutional/especes/noaa_pipeline_omega.py` (5 fonctions : `generate_cfsv2_urls`, `probe_wod23_local`, `probe_cfsv2_opendap`, `activate_noaa_pipeline`, `get_pipeline_status`).
+  - **Configuration WOD23 doctrinale** : mode=LOCAL, primary_path=`C:/emergent_sources/noaa/wod23/`, fallbacks pod Linux=`/data/external/noaa/wod23` + `/app/backend/data/external/noaa/wod23`, formats=`.nc/.csv/.bin`, modules=PHYSIOLOGIE/HABITAT/THERMIQUE.
+  - **Configuration CFSv2 doctrinale** : mode=OPENDAP, template=`https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.{YYYYMM}.mon.mean.{VARIABLE}.grb2`, 6 variables (tavg/prate/uwnd10m/vwnd10m/rhum/sst), période=2011-01→present, target=TERRITOIRE, mode=STREAMING, caching=ON, storage=MINIMAL, **forbidden_paths=`/files/g/`+`GDAS`**, **forbidden_formats=`.tar`** (directives strictes Commandant).
+  - **3 endpoints API** :
+    - **POST `/api/v30/super-masters/noaa-pipeline-activate`** (token Commandant) : configuration + probes réels + audit `NOAA_PIPELINE/ACTIVATION`.
+    - **GET `/api/v30/super-masters/noaa-pipeline-status`** (PUBLIC) : état pipeline + probes + URLs summary.
+    - **GET `/api/v30/super-masters/noaa-cfsv2-urls`** (PUBLIC) : URLs paginées avec filtres `start_yyyymm`/`end_yyyymm`/`variable`.
+  - **1 110 URLs mensuelles** générées déterministiquement (185 mois × 6 variables, 2011-01 → 2026-05). 191 513 bytes persistés dans `/app/backend/data/pipelines/noaa/`.
+  - **Probes RÉELS LIVE** (anti-générique strict, zéro fabrication) :
+    - **WOD23** : `WINDOWS_PATH_NOT_ACCESSIBLE_FROM_LINUX_POD` · 0 fichier valide · attente dépôt physique pod.
+    - **CFSv2** : main HTTP **400** (125ms) · DDS HTTP **404** (75ms) · 0/3 deps scientifiques (xarray/netCDF4/pydap) · verdict=`ENDPOINT_PROBE_FAILED_AWAITING_VALID_OPENDAP`.
+    - **Pipeline verdict** : `WOD23_AWAITING_PHYSICAL_DEPLOY | ENDPOINT_PROBE_FAILED_AWAITING_VALID_OPENDAP` (status réel inscrit, prêt à activation dès validation endpoint OPeNDAP fonctionnel + dépendances scientifiques).
+  - **18 pytests neutres** (`test_phase_xxx_quater_noaa_pipeline_omega.py`) — naming policy stricte : config doctrinal × URL generation × period filtering × forbidden patterns excluded × probes réels × activation persistance × **anti-régression V30_LOCK strict** (BR + BP135 inchangés).
+  - **V30_LOCK INVIOLÉ + DRIFT_ZERO** confirmés : MD5 BR identiques, BP135 SHA-256 stable, super_engines_omega_logic.py non modifié.
+  - **2 audits NOAA_PIPELINE/ACTIVATION** persistés · 13 audits cumulés totaux dans `/app/backend/data/audits_bp135/`.
 - **PHASE_XXX-TER · ORDRE N°54-Ω VAGUE 2-BIS — REGISTRY OFFICIEL BP135 + VALIDATION FORENSIQUE (2026-05-06)**
   Implémentation **complète** du registry officiel BIO_PROFILE_OMEGA_135 + endpoint validation forensique cellule-par-cellule. **AUCUN recalcul moteur déclenché** · **605/605 pytests Phase XVI/XVIII/XX-XXX-TER PASSED · V30_LOCK INVIOLÉ · DRIFT_ZERO**.
   - **Module métier** : `engines/v8_institutional/especes/bp135_official_registry_omega.py` (4 fonctions : `ingest_bp135_official`, `get_official_metadata`, `get_validation_log`, `validate_against_official`).

@@ -1,0 +1,29 @@
+{
+  "audit_filename": "audit_20260507T174052Z_dfa1431a.json",
+  "audit_sha256": "dfa1431a1550fe2b4fbaa6d70fced4cea5d315717a84e0c4713421c79366d4fc",
+  "persisted_at_utc": "2026-05-07T17:40:52+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "NOAA_PIPELINE",
+    "subtype": "ACTIVATION",
+    "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "wod23_status": {
+      "available": false,
+      "n_files": 0,
+      "primary_accessible": false
+    },
+    "cfsv2_status": {
+      "verdict": "ENDPOINT_PROBE_FAILED_AWAITING_VALID_OPENDAP",
+      "main_http_status": 400,
+      "dds_http_status": 404,
+      "streaming_capable": false,
+      "deps_available": 0
+    },
+    "n_cfsv2_urls_generated": 1110,
+    "no_engine_recompute_triggered": true,
+    "v30_lock_inviolate": true,
+    "drift_zero": true
+  }
+}

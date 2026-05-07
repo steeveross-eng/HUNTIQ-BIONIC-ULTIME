@@ -1,0 +1,5573 @@
+{
+  "manifest_id": "CFSV2_URLS_GENERATED_Ω",
+  "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "period_start": "2011-01",
+  "period_end": "2026-05",
+  "variables": [
+    "tavg",
+    "prate",
+    "uwnd10m",
+    "vwnd10m",
+    "rhum",
+    "sst"
+  ],
+  "n_months": 185,
+  "n_variables": 6,
+  "n_urls_total": 1110,
+  "urls": [
+    {
+      "yyyymm": "201101",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201101.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201101",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201101.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201101",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201101.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201101",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201101.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201101",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201101.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201101",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201101.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201102",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201102.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201102",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201102.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201102",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201102.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201102",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201102.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201102",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201102.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201102",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201102.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201103",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201103.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201103",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201103.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201103",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201103.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201103",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201103.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201103",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201103.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201103",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201103.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201104",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201104.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201104",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201104.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201104",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201104.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201104",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201104.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201104",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201104.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201104",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201104.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201105",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201105.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201105",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201105.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201105",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201105.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201105",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201105.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201105",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201105.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201105",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201105.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201106",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201106.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201106",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201106.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201106",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201106.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201106",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201106.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201106",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201106.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201106",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201106.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201107",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201107.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201107",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201107.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201107",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201107.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201107",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201107.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201107",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201107.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201107",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201107.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201108",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201108.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201108",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201108.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201108",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201108.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201108",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201108.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201108",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201108.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201108",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201108.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201109",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201109.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201109",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201109.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201109",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201109.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201109",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201109.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201109",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201109.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201109",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201109.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201110",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201110.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201110",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201110.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201110",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201110.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201110",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201110.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201110",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201110.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201110",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201110.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201111",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201111.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201111",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201111.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201111",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201111.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201111",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201111.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201111",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201111.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201111",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201111.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201112",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201112.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201112",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201112.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201112",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201112.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201112",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201112.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201112",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201112.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201112",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201112.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201201",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201201.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201201",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201201.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201201",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201201.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201201",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201201.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201201",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201201.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201201",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201201.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201202",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201202.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201202",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201202.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201202",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201202.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201202",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201202.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201202",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201202.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201202",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201202.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201203",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201203.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201203",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201203.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201203",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201203.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201203",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201203.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201203",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201203.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201203",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201203.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201204",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201204.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201204",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201204.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201204",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201204.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201204",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201204.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201204",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201204.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201204",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201204.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201205",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201205.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201205",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201205.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201205",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201205.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201205",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201205.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201205",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201205.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201205",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201205.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201206",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201206.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201206",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201206.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201206",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201206.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201206",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201206.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201206",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201206.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201206",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201206.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201207",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201207.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201207",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201207.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201207",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201207.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201207",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201207.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201207",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201207.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201207",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201207.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201208",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201208.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201208",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201208.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201208",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201208.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201208",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201208.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201208",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201208.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201208",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201208.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201209",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201209.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201209",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201209.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201209",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201209.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201209",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201209.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201209",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201209.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201209",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201209.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201210",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201210.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201210",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201210.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201210",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201210.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201210",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201210.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201210",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201210.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201210",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201210.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201211",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201211.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201211",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201211.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201211",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201211.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201211",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201211.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201211",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201211.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201211",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201211.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201212",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201212.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201212",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201212.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201212",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201212.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201212",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201212.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201212",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201212.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201212",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201212.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201301",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201301.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201301",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201301.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201301",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201301.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201301",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201301.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201301",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201301.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201301",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201301.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201302",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201302.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201302",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201302.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201302",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201302.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201302",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201302.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201302",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201302.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201302",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201302.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201303",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201303.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201303",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201303.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201303",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201303.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201303",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201303.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201303",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201303.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201303",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201303.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201304",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201304.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201304",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201304.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201304",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201304.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201304",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201304.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201304",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201304.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201304",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201304.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201305",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201305.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201305",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201305.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201305",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201305.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201305",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201305.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201305",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201305.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201305",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201305.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201306",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201306.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201306",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201306.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201306",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201306.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201306",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201306.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201306",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201306.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201306",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201306.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201307",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201307.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201307",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201307.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201307",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201307.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201307",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201307.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201307",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201307.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201307",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201307.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201308",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201308.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201308",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201308.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201308",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201308.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201308",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201308.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201308",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201308.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201308",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201308.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201309",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201309.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201309",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201309.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201309",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201309.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201309",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201309.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201309",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201309.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201309",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201309.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201310",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201310.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201310",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201310.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201310",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201310.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201310",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201310.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201310",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201310.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201310",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201310.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201311",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201311.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201311",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201311.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201311",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201311.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201311",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201311.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201311",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201311.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201311",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201311.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201312",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201312.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201312",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201312.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201312",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201312.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201312",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201312.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201312",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201312.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201312",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201312.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201401",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201401.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201401",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201401.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201401",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201401.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201401",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201401.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201401",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201401.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201401",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201401.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201402",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201402.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201402",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201402.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201402",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201402.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201402",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201402.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201402",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201402.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201402",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201402.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201403",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201403.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201403",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201403.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201403",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201403.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201403",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201403.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201403",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201403.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201403",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201403.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201404",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201404.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201404",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201404.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201404",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201404.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201404",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201404.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201404",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201404.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201404",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201404.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201405",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201405.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201405",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201405.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201405",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201405.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201405",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201405.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201405",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201405.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201405",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201405.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201406",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201406.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201406",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201406.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201406",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201406.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201406",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201406.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201406",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201406.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201406",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201406.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201407",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201407.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201407",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201407.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201407",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201407.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201407",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201407.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201407",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201407.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201407",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201407.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201408",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201408.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201408",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201408.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201408",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201408.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201408",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201408.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201408",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201408.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201408",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201408.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201409",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201409.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201409",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201409.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201409",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201409.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201409",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201409.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201409",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201409.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201409",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201409.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201410",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201410.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201410",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201410.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201410",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201410.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201410",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201410.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201410",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201410.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201410",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201410.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201411",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201411.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201411",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201411.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201411",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201411.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201411",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201411.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201411",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201411.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201411",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201411.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201412",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201412.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201412",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201412.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201412",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201412.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201412",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201412.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201412",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201412.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201412",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201412.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201501",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201501.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201501",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201501.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201501",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201501.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201501",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201501.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201501",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201501.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201501",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201501.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201502",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201502.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201502",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201502.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201502",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201502.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201502",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201502.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201502",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201502.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201502",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201502.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201503",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201503.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201503",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201503.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201503",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201503.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201503",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201503.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201503",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201503.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201503",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201503.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201504",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201504.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201504",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201504.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201504",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201504.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201504",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201504.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201504",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201504.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201504",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201504.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201505",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201505.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201505",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201505.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201505",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201505.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201505",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201505.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201505",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201505.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201505",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201505.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201506",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201506.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201506",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201506.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201506",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201506.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201506",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201506.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201506",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201506.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201506",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201506.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201507",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201507.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201507",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201507.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201507",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201507.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201507",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201507.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201507",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201507.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201507",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201507.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201508",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201508.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201508",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201508.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201508",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201508.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201508",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201508.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201508",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201508.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201508",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201508.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201509",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201509.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201509",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201509.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201509",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201509.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201509",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201509.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201509",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201509.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201509",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201509.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201510",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201510.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201510",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201510.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201510",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201510.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201510",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201510.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201510",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201510.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201510",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201510.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201511",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201511.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201511",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201511.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201511",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201511.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201511",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201511.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201511",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201511.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201511",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201511.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201512",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201512.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201512",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201512.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201512",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201512.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201512",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201512.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201512",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201512.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201512",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201512.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201601",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201601.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201601",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201601.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201601",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201601.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201601",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201601.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201601",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201601.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201601",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201601.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201602",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201602.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201602",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201602.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201602",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201602.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201602",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201602.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201602",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201602.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201602",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201602.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201603",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201603.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201603",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201603.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201603",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201603.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201603",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201603.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201603",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201603.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201603",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201603.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201604",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201604.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201604",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201604.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201604",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201604.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201604",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201604.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201604",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201604.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201604",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201604.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201605",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201605.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201605",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201605.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201605",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201605.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201605",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201605.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201605",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201605.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201605",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201605.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201606",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201606.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201606",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201606.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201606",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201606.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201606",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201606.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201606",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201606.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201606",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201606.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201607",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201607.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201607",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201607.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201607",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201607.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201607",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201607.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201607",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201607.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201607",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201607.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201608",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201608.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201608",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201608.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201608",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201608.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201608",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201608.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201608",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201608.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201608",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201608.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201609",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201609.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201609",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201609.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201609",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201609.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201609",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201609.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201609",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201609.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201609",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201609.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201610",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201610.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201610",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201610.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201610",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201610.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201610",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201610.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201610",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201610.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201610",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201610.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201611",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201611.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201611",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201611.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201611",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201611.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201611",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201611.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201611",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201611.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201611",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201611.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201612",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201612.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201612",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201612.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201612",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201612.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201612",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201612.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201612",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201612.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201612",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201612.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201701",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201701.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201701",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201701.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201701",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201701.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201701",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201701.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201701",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201701.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201701",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201701.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201702",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201702.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201702",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201702.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201702",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201702.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201702",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201702.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201702",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201702.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201702",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201702.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201703",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201703.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201703",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201703.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201703",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201703.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201703",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201703.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201703",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201703.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201703",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201703.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201704",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201704.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201704",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201704.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201704",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201704.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201704",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201704.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201704",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201704.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201704",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201704.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201705",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201705.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201705",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201705.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201705",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201705.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201705",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201705.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201705",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201705.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201705",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201705.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201706",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201706.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201706",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201706.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201706",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201706.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201706",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201706.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201706",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201706.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201706",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201706.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201707",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201707.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201707",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201707.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201707",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201707.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201707",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201707.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201707",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201707.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201707",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201707.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201708",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201708.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201708",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201708.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201708",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201708.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201708",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201708.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201708",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201708.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201708",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201708.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201709",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201709.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201709",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201709.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201709",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201709.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201709",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201709.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201709",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201709.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201709",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201709.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201710",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201710.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201710",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201710.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201710",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201710.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201710",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201710.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201710",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201710.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201710",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201710.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201711",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201711.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201711",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201711.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201711",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201711.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201711",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201711.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201711",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201711.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201711",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201711.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201712",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201712.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201712",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201712.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201712",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201712.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201712",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201712.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201712",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201712.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201712",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201712.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201801",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201801.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201801",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201801.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201801",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201801.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201801",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201801.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201801",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201801.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201801",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201801.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201802",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201802.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201802",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201802.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201802",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201802.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201802",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201802.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201802",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201802.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201802",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201802.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201803",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201803.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201803",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201803.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201803",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201803.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201803",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201803.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201803",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201803.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201803",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201803.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201804",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201804.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201804",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201804.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201804",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201804.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201804",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201804.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201804",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201804.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201804",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201804.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201805",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201805.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201805",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201805.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201805",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201805.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201805",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201805.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201805",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201805.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201805",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201805.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201806",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201806.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201806",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201806.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201806",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201806.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201806",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201806.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201806",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201806.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201806",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201806.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201807",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201807.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201807",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201807.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201807",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201807.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201807",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201807.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201807",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201807.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201807",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201807.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201808",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201808.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201808",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201808.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201808",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201808.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201808",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201808.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201808",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201808.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201808",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201808.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201809",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201809.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201809",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201809.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201809",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201809.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201809",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201809.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201809",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201809.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201809",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201809.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201810",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201810.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201810",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201810.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201810",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201810.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201810",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201810.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201810",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201810.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201810",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201810.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201811",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201811.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201811",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201811.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201811",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201811.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201811",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201811.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201811",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201811.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201811",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201811.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201812",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201812.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201812",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201812.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201812",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201812.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201812",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201812.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201812",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201812.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201812",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201812.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201901",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201901.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201901",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201901.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201901",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201901.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201901",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201901.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201901",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201901.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201901",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201901.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201902",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201902.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201902",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201902.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201902",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201902.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201902",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201902.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201902",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201902.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201902",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201902.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201903",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201903.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201903",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201903.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201903",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201903.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201903",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201903.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201903",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201903.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201903",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201903.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201904",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201904.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201904",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201904.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201904",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201904.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201904",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201904.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201904",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201904.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201904",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201904.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201905",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201905.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201905",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201905.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201905",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201905.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201905",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201905.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201905",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201905.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201905",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201905.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201906",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201906.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201906",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201906.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201906",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201906.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201906",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201906.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201906",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201906.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201906",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201906.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201907",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201907.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201907",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201907.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201907",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201907.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201907",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201907.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201907",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201907.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201907",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201907.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201908",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201908.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201908",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201908.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201908",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201908.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201908",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201908.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201908",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201908.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201908",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201908.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201909",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201909.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201909",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201909.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201909",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201909.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201909",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201909.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201909",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201909.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201909",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201909.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201910",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201910.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201910",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201910.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201910",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201910.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201910",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201910.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201910",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201910.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201910",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201910.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201911",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201911.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201911",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201911.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201911",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201911.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201911",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201911.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201911",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201911.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201911",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201911.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "201912",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201912.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "201912",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201912.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "201912",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201912.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201912",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201912.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "201912",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201912.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "201912",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.201912.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202001",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202001.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202001",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202001.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202001",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202001.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202001",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202001.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202001",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202001.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202001",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202001.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202002",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202002.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202002",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202002.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202002",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202002.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202002",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202002.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202002",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202002.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202002",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202002.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202003",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202003.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202003",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202003.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202003",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202003.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202003",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202003.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202003",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202003.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202003",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202003.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202004",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202004.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202004",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202004.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202004",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202004.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202004",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202004.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202004",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202004.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202004",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202004.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202005",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202005.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202005",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202005.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202005",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202005.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202005",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202005.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202005",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202005.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202005",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202005.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202006",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202006.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202006",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202006.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202006",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202006.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202006",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202006.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202006",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202006.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202006",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202006.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202007",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202007.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202007",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202007.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202007",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202007.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202007",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202007.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202007",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202007.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202007",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202007.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202008",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202008.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202008",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202008.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202008",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202008.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202008",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202008.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202008",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202008.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202008",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202008.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202009",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202009.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202009",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202009.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202009",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202009.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202009",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202009.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202009",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202009.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202009",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202009.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202010",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202010.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202010",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202010.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202010",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202010.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202010",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202010.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202010",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202010.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202010",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202010.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202011",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202011.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202011",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202011.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202011",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202011.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202011",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202011.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202011",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202011.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202011",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202011.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202012",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202012.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202012",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202012.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202012",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202012.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202012",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202012.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202012",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202012.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202012",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202012.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202101",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202101.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202101",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202101.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202101",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202101.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202101",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202101.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202101",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202101.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202101",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202101.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202102",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202102.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202102",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202102.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202102",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202102.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202102",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202102.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202102",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202102.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202102",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202102.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202103",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202103.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202103",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202103.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202103",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202103.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202103",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202103.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202103",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202103.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202103",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202103.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202104",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202104.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202104",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202104.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202104",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202104.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202104",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202104.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202104",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202104.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202104",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202104.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202105",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202105.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202105",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202105.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202105",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202105.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202105",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202105.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202105",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202105.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202105",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202105.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202106",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202106.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202106",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202106.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202106",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202106.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202106",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202106.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202106",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202106.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202106",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202106.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202107",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202107.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202107",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202107.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202107",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202107.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202107",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202107.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202107",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202107.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202107",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202107.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202108",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202108.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202108",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202108.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202108",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202108.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202108",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202108.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202108",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202108.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202108",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202108.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202109",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202109.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202109",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202109.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202109",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202109.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202109",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202109.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202109",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202109.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202109",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202109.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202110",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202110.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202110",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202110.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202110",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202110.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202110",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202110.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202110",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202110.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202110",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202110.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202111",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202111.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202111",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202111.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202111",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202111.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202111",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202111.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202111",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202111.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202111",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202111.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202112",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202112.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202112",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202112.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202112",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202112.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202112",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202112.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202112",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202112.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202112",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202112.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202201",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202201.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202201",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202201.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202201",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202201.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202201",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202201.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202201",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202201.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202201",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202201.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202202",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202202.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202202",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202202.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202202",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202202.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202202",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202202.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202202",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202202.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202202",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202202.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202203",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202203.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202203",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202203.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202203",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202203.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202203",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202203.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202203",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202203.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202203",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202203.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202204",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202204.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202204",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202204.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202204",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202204.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202204",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202204.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202204",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202204.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202204",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202204.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202205",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202205.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202205",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202205.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202205",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202205.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202205",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202205.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202205",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202205.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202205",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202205.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202206",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202206.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202206",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202206.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202206",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202206.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202206",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202206.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202206",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202206.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202206",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202206.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202207",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202207.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202207",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202207.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202207",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202207.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202207",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202207.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202207",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202207.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202207",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202207.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202208",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202208.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202208",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202208.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202208",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202208.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202208",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202208.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202208",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202208.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202208",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202208.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202209",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202209.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202209",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202209.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202209",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202209.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202209",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202209.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202209",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202209.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202209",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202209.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202210",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202210.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202210",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202210.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202210",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202210.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202210",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202210.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202210",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202210.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202210",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202210.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202211",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202211.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202211",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202211.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202211",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202211.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202211",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202211.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202211",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202211.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202211",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202211.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202212",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202212.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202212",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202212.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202212",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202212.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202212",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202212.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202212",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202212.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202212",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202212.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202301",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202301.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202301",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202301.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202301",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202301.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202301",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202301.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202301",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202301.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202301",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202301.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202302",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202302.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202302",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202302.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202302",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202302.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202302",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202302.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202302",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202302.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202302",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202302.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202303",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202303.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202303",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202303.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202303",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202303.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202303",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202303.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202303",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202303.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202303",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202303.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202304",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202304.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202304",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202304.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202304",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202304.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202304",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202304.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202304",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202304.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202304",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202304.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202305",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202305.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202305",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202305.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202305",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202305.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202305",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202305.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202305",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202305.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202305",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202305.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202306",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202306.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202306",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202306.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202306",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202306.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202306",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202306.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202306",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202306.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202306",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202306.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202307",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202307.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202307",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202307.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202307",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202307.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202307",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202307.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202307",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202307.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202307",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202307.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202308",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202308.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202308",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202308.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202308",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202308.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202308",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202308.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202308",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202308.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202308",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202308.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202309",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202309.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202309",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202309.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202309",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202309.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202309",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202309.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202309",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202309.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202309",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202309.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202310",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202310.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202310",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202310.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202310",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202310.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202310",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202310.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202310",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202310.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202310",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202310.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202311",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202311.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202311",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202311.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202311",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202311.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202311",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202311.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202311",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202311.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202311",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202311.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202312",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202312.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202312",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202312.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202312",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202312.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202312",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202312.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202312",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202312.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202312",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202312.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202401",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202401.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202401",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202401.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202401",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202401.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202401",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202401.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202401",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202401.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202401",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202401.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202402",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202402.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202402",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202402.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202402",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202402.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202402",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202402.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202402",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202402.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202402",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202402.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202403",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202403.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202403",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202403.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202403",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202403.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202403",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202403.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202403",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202403.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202403",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202403.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202404",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202404.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202404",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202404.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202404",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202404.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202404",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202404.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202404",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202404.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202404",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202404.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202405",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202405.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202405",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202405.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202405",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202405.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202405",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202405.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202405",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202405.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202405",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202405.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202406",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202406.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202406",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202406.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202406",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202406.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202406",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202406.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202406",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202406.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202406",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202406.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202407",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202407.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202407",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202407.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202407",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202407.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202407",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202407.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202407",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202407.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202407",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202407.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202408",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202408.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202408",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202408.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202408",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202408.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202408",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202408.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202408",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202408.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202408",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202408.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202409",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202409.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202409",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202409.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202409",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202409.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202409",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202409.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202409",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202409.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202409",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202409.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202410",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202410.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202410",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202410.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202410",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202410.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202410",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202410.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202410",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202410.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202410",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202410.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202411",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202411.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202411",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202411.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202411",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202411.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202411",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202411.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202411",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202411.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202411",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202411.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202412",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202412.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202412",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202412.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202412",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202412.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202412",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202412.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202412",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202412.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202412",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202412.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202501",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202501.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202501",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202501.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202501",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202501.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202501",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202501.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202501",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202501.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202501",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202501.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202502",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202502.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202502",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202502.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202502",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202502.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202502",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202502.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202502",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202502.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202502",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202502.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202503",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202503.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202503",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202503.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202503",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202503.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202503",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202503.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202503",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202503.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202503",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202503.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202504",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202504.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202504",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202504.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202504",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202504.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202504",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202504.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202504",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202504.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202504",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202504.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202505",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202505.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202505",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202505.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202505",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202505.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202505",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202505.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202505",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202505.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202505",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202505.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202506",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202506.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202506",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202506.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202506",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202506.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202506",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202506.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202506",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202506.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202506",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202506.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202507",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202507.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202507",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202507.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202507",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202507.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202507",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202507.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202507",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202507.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202507",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202507.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202508",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202508.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202508",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202508.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202508",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202508.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202508",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202508.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202508",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202508.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202508",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202508.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202509",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202509.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202509",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202509.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202509",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202509.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202509",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202509.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202509",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202509.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202509",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202509.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202510",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202510.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202510",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202510.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202510",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202510.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202510",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202510.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202510",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202510.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202510",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202510.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202511",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202511.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202511",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202511.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202511",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202511.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202511",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202511.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202511",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202511.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202511",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202511.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202512",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202512.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202512",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202512.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202512",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202512.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202512",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202512.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202512",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202512.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202512",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202512.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202601",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202601.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202601",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202601.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202601",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202601.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202601",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202601.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202601",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202601.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202601",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202601.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202602",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202602.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202602",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202602.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202602",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202602.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202602",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202602.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202602",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202602.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202602",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202602.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202603",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202603.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202603",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202603.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202603",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202603.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202603",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202603.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202603",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202603.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202603",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202603.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202604",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202604.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202604",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202604.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202604",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202604.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202604",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202604.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202604",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202604.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202604",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202604.mon.mean.sst.grb2"
+    },
+    {
+      "yyyymm": "202605",
+      "variable": "tavg",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202605.mon.mean.tavg.grb2"
+    },
+    {
+      "yyyymm": "202605",
+      "variable": "prate",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202605.mon.mean.prate.grb2"
+    },
+    {
+      "yyyymm": "202605",
+      "variable": "uwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202605.mon.mean.uwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202605",
+      "variable": "vwnd10m",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202605.mon.mean.vwnd10m.grb2"
+    },
+    {
+      "yyyymm": "202605",
+      "variable": "rhum",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202605.mon.mean.rhum.grb2"
+    },
+    {
+      "yyyymm": "202605",
+      "variable": "sst",
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.202605.mon.mean.sst.grb2"
+    }
+  ],
+  "endpoint_template": "https://tds.gdex.ucar.edu/thredds/dodsC/d094002/monthly_1p0/cfs.{YYYYMM}.mon.mean.{VARIABLE}.grb2",
+  "v30_lock": "INVIOLÉ",
+  "generated_at_utc": "2026-05-07T17:40:52+00:00"
+}
