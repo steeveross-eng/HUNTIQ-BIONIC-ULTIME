@@ -3911,3 +3911,45 @@ async def habitat_outputs_complete_merge_status_endpoint() -> JSONResponse:
     })
 
 
+
+# ═════════════════════════════════════════════════════════════════════════
+# TERRITOIRE_VISUALIZER_ENDPOINT_Ω (P10)
+# Exposition unifiée de TOUTES les couches doctrinales (PUBLIC RO).
+# Anti-générique strict : lecture seule, aucune mutation, aucune fabrication.
+# ═════════════════════════════════════════════════════════════════════════
+@router.get("/visualizer-all-layers")
+async def visualizer_all_layers_endpoint() -> JSONResponse:
+    """TERRITOIRE_VISUALIZER_ENDPOINT_Ω · scan unifié read-only.
+
+    Expose toutes les couches doctrinales pour validation et production :
+    SHA-256, verdict, status, last_updated par couche. PUBLIC RO.
+    """
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.visualizer_endpoint_omega import (
+        expose_all_layers_unified,
+    )
+    try:
+        payload = expose_all_layers_unified()
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "VISUALIZER_ALL_LAYERS_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "TERRITOIRE_VISUALIZER_ENDPOINT_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P10_TERRITOIRE_VISUALIZER_ENDPOINT_CREATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+

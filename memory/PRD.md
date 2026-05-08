@@ -27,6 +27,31 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-TRICTRICICIES · TERRITOIRE_VISUALIZER_ENDPOINT_Ω (P10) — 🛰️ EXPOSITION UNIFIÉE 15/15 LAYERS HEALTHY (2026-05-08)**
+  Endpoint d'exposition GET unifié read-only de toutes les couches doctrinales pour validation/production. Verdict `VISUALIZER_ALL_LAYERS_HEALTHY` · 15/15 layers présents et sains · Scan SHA `d0feb21763071d8f69b75321d92ba4c3e1c18e5b8ed6f10ddfef4374743973fd` · accessible HTTPS prod ingress (URL publique) ET HTTP localhost:8001.
+  - **Nouveau module `visualizer_endpoint_omega.py`** : `LAYER_CATALOG` (15 entrées doctrinales avec ordre/overlay_path/primary_reference), `_summarize_overlay` (lecture résumée avec fallback multi-clés SHA-256 : last_manifest_sha256, last_activation_sha256, last_habitat_outputs_sha256, last_recompute_sha256, last_recompute_v3_sha256, last_final_merge_sha256, last_complete_merge_sha256), `expose_all_layers_unified` (scan unifié read-only).
+  - **1 endpoint router (FUSION ADD-ONLY, +44 lignes)** : `GET /api/v30/super-masters/visualizer-all-layers` (PUBLIC RO, pas de token requis pour visualisation).
+  - **15 layers exposées (chronologique inverse)** :
+    1. HABITAT_OUTPUTS_COMPLETE_MERGE_P9 (12/12 atteint) — sha `14c8c2e7e631b2`
+    2. NASA_NDVI_DENSE_GRID_P8 — sha `4ac6fe46e24b97`
+    3. HABITAT_OUTPUTS_FINAL_MERGE_P7 — sha `a4802eede9ae34`
+    4. TEMPORAL_RUT_P6 — sha `ca6937d8d7a3c6`
+    5. V12_CONTAMINATION_AFFUT_DEPENDENCY — sha `d7cc8ea879bfa7`
+    6. HABITAT_OUTPUTS_RECOMPUTE_V3_P5 — sha `90b0e677c84128`
+    7. ANTHROPOGENIC_PRESSURE_P4 — sha `b7c5d9a5a90d3c`
+    8. NASA_NDVI_TIMESERIES_DECADE — sha `b88643955fabb9`
+    9. HABITAT_OUTPUTS_RECOMPUTE_V2 — sha `b6c2e7dda955a9`
+    10. CANOPY_MOD44B — sha `b3a506c431993b`
+    11. OPENTOPOGRAPHY_SRTM — sha `3451269d2f8bcf`
+    12. RSF_SSF_GBIF — sha `084f8720332f16`
+    13. USGS_SOIL — sha `41742077e4693e`
+    14. HABITAT_OUTPUTS_COMPUTE — sha `bec62755a8115e`
+    15. NASA_NDVI — sha `76b047f2980d82`
+  - **Anti-générique strict** : aucune mutation, aucune fabrication, aucun recalcul moteur. Lecture seule des overlays JSON. Le visualizer rapporte honnêtement le statut de chaque overlay (NOT_PRESENT, READ_ERROR, EMPTY_HISTORY, HEALTHY).
+  - **12 nouveaux pytests (`test_phase_xxx_trictricicies_visualizer_all_layers_omega.py`)** : 12/12 PASS — module imports, catalog 15 layers, fields requis, doctrinal keys, layers dict complet, chronologique sort desc, paths in pipelines/, missing overlay → NOT_PRESENT, verdict ALL_HEALTHY, P9+P8 référencés, scan_sha256 hex 64, no_engine_recompute_triggered.
+  - **Note interne doctrinale** : nom du module engine et endpoint URL = `visualizer_endpoint`/`visualizer-all-layers` (et non `territoire_*`) car le mot `territoire` est dans `BCE_4X_EXCLUDED_KEYWORDS` de tests/conftest.py (skip silencieux pytest). Le manifest_id `TERRITOIRE_VISUALIZER_ENDPOINT_Ω` est conservé en interne pour fidélité doctrinale.
+
+
 - **PHASE_XXX-DUOTRICICIES · HABITAT_OUTPUTS_COMPLETE_MERGE_Ω (P9) — 🎯🎯🎯 12/12 OUTPUTS COMPUTABLES ATTEINTS (2026-05-08)**
   Verdict final `HABITAT_COMPLETE_MERGE_FULL_12_OF_12_COMPUTABLE` · coverage 1.0 · 51/51 outputs · 5/5 feeding_zones_FULL_dense + 1/1 microhabitat_clusters_global_dense · AUCUN output deferred restant. SHA `14c8c2e7e631b25911fd9256747787c1a840f5d8456e189a182bb455b0ccf291`. Cascade complète V1→V2→V3→FINAL→COMPLETE intacte, FUSION ADD-ONLY strict (FINAL préservé sans mutation).
   - **Nouveau module `habitat_outputs_complete_merge_omega.py`** : `merge_habitat_outputs_complete` (refus si dense_grid hook non activé), `_extract_feeding_full_per_site`, `_compute_feeding_zones_full_output`, `_compute_microhabitat_clusters_global_dense_output`, `get_habitat_complete_merge_status`. Hérite intégralement FINAL (V3+V2+V1+5 hooks principaux+anthropogenic+rut).

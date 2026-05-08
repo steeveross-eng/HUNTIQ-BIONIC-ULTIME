@@ -2,7 +2,7 @@
   "manifest_id": "BP135_THERMAL_LIMITS_V1",
   "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
   "version": "1.0.0",
-  "created_at_utc": "2026-05-08T02:50:32+00:00",
+  "created_at_utc": "2026-05-08T12:07:44+00:00",
   "n_species": 5,
   "species": [
     "cerf",
@@ -144,5 +144,5 @@
     }
   },
   "v30_lock": "INVIOLÉ",
-  "manifest_sha256": "0ca6ceef26001cf7a9c10c4c5195996215dbc338fdf529b33204e3383654cd69"
+  "manifest_sha256": "0860efbe896c09714394ea4db1d0843e0af69bf347fd2ee91ac33595b2e6e5a1"
 }
