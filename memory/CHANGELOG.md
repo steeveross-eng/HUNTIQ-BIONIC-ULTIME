@@ -456,3 +456,59 @@
 - ✅ FUSION ADD-ONLY · legacy panels conservés derrière double override
 - ✅ ANTI-GÉNÉRIQUE STRICT · fix `executed_at_utc` → `scanned_at_utc` parsing réel
 - ✅ Aucun testing_agent_v3_fork
+
+## 2026-05-08 (suite 5) — P20_PHASE4_STABILIZE_TERRITOIRE_OMEGA_Ω
+
+### A · enforce_unified_panel: PRIMARY_ONLY · disable_legacy_panels: PERMANENT
+- `MonTerritoireBionicPage.jsx` : suppression de la branche legacy entièrement
+  · Plus aucune URL override `?panelMode=legacy + ?legacyPanels=on`
+  · `LayersPanelOmegaUnified` rendu inconditionnel (V30_LOCK INVIOLÉ)
+  · 10 states câblés réellement (anti-générique strict)
+- `TerritoireToolbar.jsx` : `UnifiedPanelBadge` simplifié (plus de toggle)
+  · Affichage dynamique `Ω · N/18` reflète les 10 toggles actifs en temps réel
+
+### B · watchdog 300s → 600s
+- `TerritoireWarmupSplash.jsx` : label `WATCHDOG-Ω 600s`
+- Backend `WATCHDOG_TIMEOUT_S_DEFAULT = 600` dans territoire_omega_reload_omega.py
+- Reload endpoint accepte `watchdog_timeout_s` (60..3600s)
+
+### C · Service Worker controlled re-activation
+- `public/sw.js` réécrit complet :
+  · NETWORK-ONLY pour `/api/v30/super-masters/*` et `/admin/bce-4x-premium/*`
+  · CACHE-FIRST pour static assets versionnés
+  · NETWORK-FIRST pour HTML navigation
+  · Cache versionné `bce-4x-omega-v10-p20-phase4-2026-05-08`
+  · Purge old caches sur `activate`
+  · Listener `BCE_4X_FORCE_PURGE` message pour purge manuelle
+- `serviceWorkerRegistration.js` : `SW_VERSION = 'v10'`
+- `index.js` : `serviceWorkerRegistration.register()` (au lieu de `unregister()`)
+
+### D · Backend reload_territoire_engine + purge_internal_engine_cache
+- Nouveau module `territoire_omega_reload_omega.py` :
+  · `_scan_overlay_files()` : 17 overlays scannés / 434 843 bytes (anti-générique)
+  · `_reload_engine_modules()` : `importlib.reload()` sur 5 engines doctrinaux
+  · `_purge_lru_caches()` : `cache_clear()` + `gc.collect()`
+- 2 endpoints : `POST /territoire-omega-reload-execute` · `GET /...-status`
+- **Curl proof** : `verdict=TERRITOIRE_OMEGA_RELOAD_COMPLETED · 5/5 engines reloaded · 0 fail · 17 overlays scanned · watchdog 300→600s`
+
+### E · Tests pytest neutres
+- `test_phase_xx_phase4_reload_omega.py` (5/5 tests passés)
+- Validation watchdog bornes (60..3600), reload réel, persistence overlay, GC purge
+
+### F · Maintenance disque
+- Purge logs supervisor rotated : 351 Mo libérés (disque passé de 100% à 80%)
+
+### Métriques cumulatives session
+- 50/50 pytests doctrinaux passés (zéro régression)
+- 1 nouveau module engine + 1 nouveau pytest neutre
+- 2 nouveaux endpoints (reload-execute · reload-status)
+- SW controlled v10 actif · register() au lieu de unregister()
+- `yarn build` SUCCESS 59.80s clean
+- 17 overlays scannés réellement · 5/5 engines reloaded · 0 fail
+
+### Conformité doctrinale
+- ✅ V30_LOCK INVIOLÉ · ZÉRO mutation engine maître
+- ✅ FUSION ADD-ONLY · `LayersOmegaSyncPanel` legacy code conservé (V30_LOCK)
+  mais désormais inaccessible (PRIMARY_ONLY enforced)
+- ✅ ANTI-GÉNÉRIQUE STRICT · 17 overlays comptés réellement · 5 modules reloaded réellement
+- ✅ Aucun testing_agent_v3_fork

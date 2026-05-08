@@ -1688,65 +1688,48 @@ const MonTerritoireBionicPage = () => {
           maxWidth: 300,
         }}
       >
-        {/* P20_PHASE3 · FORCE_PURGE Ω · panneau unifié = SEUL ACTIF par défaut.
-            Le legacy LayersOmegaSyncPanel est désactivé sauf override
-            URL `?legacyPanels=on` (anti-générique : pas de fake activation). */}
+        {/* P20_PHASE4 · enforce_unified_panel: PRIMARY_ONLY ·
+            disable_legacy_panels: PERMANENT (V30_LOCK INVIOLÉ).
+            Aucun fallback legacy : panneau unifié SEUL ACTIF. */}
         {(() => {
-          let useLegacy = false;
-          try {
-            const params = new URLSearchParams(window.location.search);
-            // Double override pour debug strict ; en production = unified
-            useLegacy = params.get('panelMode') === 'legacy'
-              && params.get('legacyPanels') === 'on';
-          } catch (e) {
-            /* no-op */
-          }
-          if (!useLegacy) {
-            const activeMap = {
-              zones: showZonesLayer,
-              corridors: showCorridorsLayer,
-              affuts: showPointsLayer,
-              salines: showPhaseA,
-              hotspots: showHeatmapV10,
-              vent: showWindFlow,
-              contamination: showPhaseC,
-              cursor_bionic: showCursorBionic,
-              inspection_bio: showInspectionBioPanel,
-              ndvi_overlay: showIntelLayer,
-            };
-            const setters = {
-              zones: setShowZonesLayer,
-              corridors: setShowCorridorsLayer,
-              affuts: setShowPointsLayer,
-              salines: setShowPhaseA,
-              hotspots: setShowHeatmapV10,
-              vent: setShowWindFlow,
-              contamination: setShowPhaseC,
-              cursor_bionic: setShowCursorBionic,
-              inspection_bio: setShowInspectionBioPanel,
-              ndvi_overlay: setShowIntelLayer,
-            };
-            const onToggle = (layerId) => {
-              const setter = setters[layerId];
-              if (setter) setter((v) => !v);
-            };
-            const onOpacityChange = (layerId, value) => {
-              setLayerOpacityMap((m) => ({ ...m, [layerId]: value }));
-            };
-            return (
-              <LayersPanelOmegaUnified
-                activeMap={activeMap}
-                opacityMap={layerOpacityMap}
-                onToggle={onToggle}
-                onOpacityChange={onOpacityChange}
-                initialExpanded={true}
-              />
-            );
-          }
+          const activeMap = {
+            zones: showZonesLayer,
+            corridors: showCorridorsLayer,
+            affuts: showPointsLayer,
+            salines: showPhaseA,
+            hotspots: showHeatmapV10,
+            vent: showWindFlow,
+            contamination: showPhaseC,
+            cursor_bionic: showCursorBionic,
+            inspection_bio: showInspectionBioPanel,
+            ndvi_overlay: showIntelLayer,
+          };
+          const setters = {
+            zones: setShowZonesLayer,
+            corridors: setShowCorridorsLayer,
+            affuts: setShowPointsLayer,
+            salines: setShowPhaseA,
+            hotspots: setShowHeatmapV10,
+            vent: setShowWindFlow,
+            contamination: setShowPhaseC,
+            cursor_bionic: setShowCursorBionic,
+            inspection_bio: setShowInspectionBioPanel,
+            ndvi_overlay: setShowIntelLayer,
+          };
+          const onToggle = (layerId) => {
+            const setter = setters[layerId];
+            if (setter) setter((v) => !v);
+          };
+          const onOpacityChange = (layerId, value) => {
+            setLayerOpacityMap((m) => ({ ...m, [layerId]: value }));
+          };
           return (
-            <LayersOmegaSyncPanel
-              bundleData={bundleDataV8}
-              species={selectedSpecies !== 'tous' ? selectedSpecies : 'orignal'}
+            <LayersPanelOmegaUnified
+              activeMap={activeMap}
+              opacityMap={layerOpacityMap}
+              onToggle={onToggle}
+              onOpacityChange={onOpacityChange}
+              initialExpanded={true}
             />
           );
         })()}

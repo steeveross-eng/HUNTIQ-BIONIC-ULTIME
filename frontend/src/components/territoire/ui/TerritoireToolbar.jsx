@@ -26,47 +26,26 @@ import { BionicScoreBadge } from '@/components/territoire/BionicScoreBadge';
 import { SPECIES_LIST } from '@/core/bionic/speciesConfig';
 
 // P20_PHASE3 · Badge migration unified panel (doctrinal)
-function UnifiedPanelBadge() {
-  let mode = 'unified';
-  try {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('panelMode') === 'legacy') mode = 'legacy';
-  } catch (e) { /* no-op */ }
-  const toggle = () => {
-    try {
-      const url = new URL(window.location.href);
-      if (mode === 'unified') {
-        url.searchParams.set('panelMode', 'legacy');
-      } else {
-        url.searchParams.delete('panelMode');
-      }
-      window.location.href = url.toString();
-    } catch (e) { /* no-op */ }
-  };
-  const active = mode === 'unified';
+// P20_PHASE4 · `enforce_badge_omega_18` ENABLED · sync avec state actif réel
+function UnifiedPanelBadge({ activeCount = 0, totalCount = 18 }) {
   return (
-    <button
-      onClick={toggle}
+    <div
       data-testid="toolbar-unified-panel-badge"
-      title={active
-        ? 'Panel Ω 18 couches actif (cliquer pour legacy)'
-        : 'Mode legacy actif (cliquer pour Ω unified)'}
+      title={`Panneau Ω 18 couches PRIMARY_ONLY · ${activeCount}/${totalCount} actives`}
       style={{
         display: 'inline-flex', alignItems: 'center', gap: 4,
         padding: '0 10px', height: 28, borderRadius: 4,
         fontSize: 9, fontWeight: 800, letterSpacing: 1,
-        cursor: 'pointer', flexShrink: 0,
+        flexShrink: 0,
         fontFamily: 'JetBrains Mono, monospace',
-        background: active ? 'rgba(212,160,23,0.25)' : 'transparent',
-        border: active
-          ? '1px solid #D4A017'
-          : '1px solid rgba(255,255,255,0.2)',
-        color: active ? '#D4A017' : '#94A3B8',
+        background: 'rgba(212,160,23,0.25)',
+        border: '1px solid #D4A017',
+        color: '#D4A017',
       }}
     >
       <Layers size={11} />
-      Ω · 18
-    </button>
+      Ω · {activeCount}/{totalCount}
+    </div>
   );
 }
 
@@ -145,6 +124,13 @@ export function TerritoireToolbar({
   // Legacy props accepted but ignored
   ...rest
 }) {
+  // P20_PHASE4 · sync_toolbar_with_unified_panel · count actif anti-générique
+  const unifiedActiveCount = [
+    showZonesLayer, showCorridorsLayer, showPointsLayer,
+    showPhaseA, showHeatmapV10, showWindFlow, showPhaseC,
+    showCursorBionic, showInspectionBioPanel, showIntelLayer,
+  ].filter(Boolean).length;
+
   // Species cycle
   const speciesIdx = SPECIES_LIST.findIndex(s => s.id === selectedSpecies);
   const cycleSpecies = () => {
@@ -157,8 +143,8 @@ export function TerritoireToolbar({
     <nav className="flex-shrink-0 h-[44px] bg-[#0d0d14] border-b border-[#1a1a2e] px-3 flex items-center relative z-40 overflow-hidden" data-testid="bionic-tabs">
       <div className="flex items-center gap-0.5 bg-black/60 backdrop-blur-sm rounded-lg border border-gray-700/40 p-0.5 flex-nowrap overflow-x-auto overflow-y-hidden scrollbar-none" style={{ flexWrap: 'nowrap', scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}>
 
-        {/* P20_PHASE3 · BADGE PANEL UNIFIÉ — migration doctrinale */}
-        <UnifiedPanelBadge />
+        {/* P20_PHASE4 · BADGE PANEL UNIFIÉ Ω · count dynamique synchro */}
+        <UnifiedPanelBadge activeCount={unifiedActiveCount} totalCount={18} />
         {SEP}
 
         {/* SPLIT */}

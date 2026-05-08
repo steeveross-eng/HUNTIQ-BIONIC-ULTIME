@@ -5414,3 +5414,74 @@ async def force_purge_doctrine_status_endpoint() -> JSONResponse:
     }
     return JSONResponse(payload)
 
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# P20_PHASE4 · TERRITOIRE_OMEGA_RELOAD_Ω
+# Force reload + purge cache + watchdog reinit (600s)
+# ═════════════════════════════════════════════════════════════════════════
+
+
+class TerritoireOmegaReloadBody(BaseModel):
+    persist: bool = True
+    watchdog_timeout_s: int = 600
+
+
+@router.post("/territoire-omega-reload-execute")
+async def territoire_omega_reload_execute_endpoint(
+    body: TerritoireOmegaReloadBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """P20_PHASE4 · force reload + purge + watchdog reinit."""
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.territoire_omega_reload_omega import (
+        execute_territoire_omega_reload,
+    )
+    try:
+        payload = execute_territoire_omega_reload(
+            persist=body.persist,
+            watchdog_timeout_s=body.watchdog_timeout_s,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "TERRITOIRE_OMEGA_RELOAD_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "TERRITOIRE_OMEGA_RELOAD_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P20_PHASE4_STABILIZATION_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/territoire-omega-reload-status")
+async def territoire_omega_reload_status_endpoint() -> JSONResponse:
+    """P20_PHASE4 · status (PUBLIC RO)."""
+    from engines.v8_institutional.especes.territoire_omega_reload_omega import (
+        get_territoire_omega_reload_status,
+    )
+    payload = get_territoire_omega_reload_status()
+    return JSONResponse({
+        "manifest_id": "TERRITOIRE_OMEGA_RELOAD_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P20_PHASE4_STABILIZATION_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+

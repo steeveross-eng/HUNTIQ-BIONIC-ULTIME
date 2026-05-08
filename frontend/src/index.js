@@ -90,7 +90,27 @@ if ('serviceWorker' in navigator) {
   }
 }
 
-serviceWorkerRegistration.unregister();
+// P20_PHASE4 · `reactivate_service_worker_controlled: ENABLED`
+// Ordre Commandant STEEVE-MAX · re-register SW avec règles strictes
+// (network-only super-masters + admin · cache-first static · etc.)
+serviceWorkerRegistration.register({
+  onSuccess: () => {
+    // eslint-disable-next-line no-console
+    console.log(
+      '[BCE-4X · SW-CONTROLLED] service worker registered · '
+      + 'cache rules : network-only super-masters/admin · '
+      + 'cache-first static · network-first HTML',
+    );
+  },
+  onUpdate: (registration) => {
+    // eslint-disable-next-line no-console
+    console.log(
+      '[BCE-4X · SW-CONTROLLED] update available · forcing skipWaiting');
+    if (registration && registration.waiting) {
+      registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+    }
+  },
+});
 
 // P20_PHASE3 · FORCE PURGE Ω · auto reload one-shot si version stale
 // Ordre Commandant STEEVE-MAX · 2026-05-08

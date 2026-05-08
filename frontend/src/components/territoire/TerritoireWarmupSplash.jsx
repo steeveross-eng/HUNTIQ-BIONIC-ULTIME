@@ -127,7 +127,7 @@ export default function TerritoireWarmupSplash({ onReady }) {
         ))}
       </div>
       <div style={{ fontSize: 10, color: '#6b9c87', marginTop: 12 }}>
-        PHASE_2_STABILISATION_TERRITOIRE_Ω · WATCHDOG-Ω 300s
+        PHASE_2_STABILISATION_TERRITOIRE_Ω · WATCHDOG-Ω 600s
       </div>
       <style>{`
         @keyframes splash-pulse {

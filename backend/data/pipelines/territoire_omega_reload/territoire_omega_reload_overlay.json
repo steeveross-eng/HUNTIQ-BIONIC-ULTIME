@@ -1,0 +1,89 @@
+{
+  "history": [
+    {
+      "manifest_id": "TERRITOIRE_OMEGA_RELOAD_Ω",
+      "ordre": "P20_PHASE4_STABILIZATION_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "verdict": "TERRITOIRE_OMEGA_RELOAD_COMPLETED",
+      "force_reload_actions": {
+        "reload_territoire_engine": "EXECUTED",
+        "reload_overlays": "SCANNED",
+        "reload_corridors": "SCANNED",
+        "reload_zones": "SCANNED",
+        "reload_affuts_salines_hotspots": "SCANNED",
+        "purge_internal_engine_cache": "EXECUTED",
+        "watchdog_reinitialize": "EXECUTED",
+        "init_pipeline_timeout": "EXTENDED_TO_600S"
+      },
+      "overlay_scan_summary": {
+        "n_overlays_scanned": 17,
+        "total_bytes": 434843,
+        "patterns_count": 15,
+        "samples_top_5": [
+          {
+            "path": "/app/backend/data/pipelines/anthropogenic_pressure/anthropogenic_pressure_hook_activation_overlay.json",
+            "size_bytes": 1670,
+            "exists": true
+          },
+          {
+            "path": "/app/backend/data/pipelines/anthropogenic_pressure/anthropogenic_pressure_validation_overlay.json",
+            "size_bytes": 28313,
+            "exists": true
+          },
+          {
+            "path": "/app/backend/data/pipelines/temporal_rut/temporal_rut_hook_activation_overlay.json",
+            "size_bytes": 1602,
+            "exists": true
+          },
+          {
+            "path": "/app/backend/data/pipelines/temporal_rut/temporal_rut_validation_overlay.json",
+            "size_bytes": 18264,
+            "exists": true
+          },
+          {
+            "path": "/app/backend/data/pipelines/habitat_complete_merge/habitat_outputs_complete_merge_overlay.json",
+            "size_bytes": 101784,
+            "exists": true
+          }
+        ]
+      },
+      "engine_reload_summary": {
+        "n_reloaded": 5,
+        "n_failed": 0,
+        "reloaded_modules": [
+          "engines.v8_institutional.especes.territoire_omega_report_omega",
+          "engines.v8_institutional.especes.waypoint_guide_omega",
+          "engines.v8_institutional.especes.layer_interpretation_manual_omega",
+          "engines.v8_institutional.especes.weather_provider_policy_omega",
+          "engines.v8_institutional.especes.territoire_ui_ux_audit_omega"
+        ],
+        "failed_modules": []
+      },
+      "cache_purge_summary": {
+        "n_lru_caches_purged": 0,
+        "purged_callables": [],
+        "gc_objects_collected": 10
+      },
+      "watchdog_state": {
+        "previous_timeout_s": 300,
+        "current_timeout_s": 600,
+        "reinitialized_at_utc": "2026-05-08T23:08:43+00:00"
+      },
+      "anti_generique_strict": true,
+      "fusion_add_only": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T23:08:43+00:00",
+      "elapsed_s": 0.1069,
+      "reload_sha256": "8f29090841a5156558c78784c7365be016614d74900115a6618d9a70b438e21b"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T23:08:43+00:00",
+  "n_reloads": 1,
+  "last_reload_sha256": "8f29090841a5156558c78784c7365be016614d74900115a6618d9a70b438e21b",
+  "last_verdict": "TERRITOIRE_OMEGA_RELOAD_COMPLETED",
+  "v30_lock": "INVIOLÉ"
+}
