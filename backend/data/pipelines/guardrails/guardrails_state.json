@@ -5039,10 +5039,304 @@
       "fusion_add_only": true,
       "v30_lock": "INVIOLÉ",
       "activation_sha256": "3a7baf32dc8fd3597967bed42c6aa97ba0ba13768abfcda865ac698861bbb51d"
+    },
+    {
+      "manifest_id": "PIPELINE_GUARDRAILS_RESTORE_Ω",
+      "doctrine": {
+        "doctrine": "BCE-4X",
+        "profile": "STEVE_MAX",
+        "protections": {
+          "drift_control": "DRIFT_ZERO_STRICT",
+          "lock_level": "V30_LOCK_INVIOLABLE",
+          "anti_regression": "FULL_PYTEST_ENFORCED",
+          "safety_nets": [
+            "NO_AUTO_HOOK_EXPANSION",
+            "NO_PARALLEL_HOOKS_WITHOUT_EXPLICIT_DIRECTIVE",
+            "NO_ENDPOINT_SWITCH_WITHOUT_COMMANDANT_CONFIRM"
+          ],
+          "modularity": "100_PERCENT_MODULAR",
+          "logging": {
+            "audit_level": "FORENSIC",
+            "scope": [
+              "B2_CREDENTIALS",
+              "ENDPOINT_PROBES",
+              "HOOK_ACTIVATIONS",
+              "CONFIG_CHANGES"
+            ],
+            "retention": "STRICT"
+          },
+          "execution_mode": {
+            "autonomy": "LIMITED",
+            "default_posture": "STANDBY_STRICT",
+            "require_token": "X-COMMANDANT-TOKEN"
+          }
+        },
+        "status_directive": "RESTORE_AND_ENFORCE_ALL_GUARDRAILS"
+      },
+      "activated": true,
+      "activated_by": "COMMANDANT_STEVE_MAX",
+      "activated_at_utc": "2026-05-08T00:30:47+00:00",
+      "status": "ENFORCED",
+      "anti_generique_strict": true,
+      "fusion_add_only": true,
+      "v30_lock": "INVIOLÉ",
+      "activation_sha256": "0a3aa05766f54920ec0bd6969683bd6f44f9c5b7bea41fb06488adea02a112cd"
+    },
+    {
+      "manifest_id": "PIPELINE_GUARDRAILS_RESTORE_Ω",
+      "doctrine": {
+        "doctrine": "BCE-4X",
+        "profile": "STEVE_MAX",
+        "protections": {
+          "drift_control": "DRIFT_ZERO_STRICT",
+          "lock_level": "V30_LOCK_INVIOLABLE",
+          "anti_regression": "FULL_PYTEST_ENFORCED",
+          "safety_nets": [
+            "NO_AUTO_HOOK_EXPANSION",
+            "NO_PARALLEL_HOOKS_WITHOUT_EXPLICIT_DIRECTIVE",
+            "NO_ENDPOINT_SWITCH_WITHOUT_COMMANDANT_CONFIRM"
+          ],
+          "modularity": "100_PERCENT_MODULAR",
+          "logging": {
+            "audit_level": "FORENSIC",
+            "scope": [
+              "B2_CREDENTIALS",
+              "ENDPOINT_PROBES",
+              "HOOK_ACTIVATIONS",
+              "CONFIG_CHANGES"
+            ],
+            "retention": "STRICT"
+          },
+          "execution_mode": {
+            "autonomy": "LIMITED",
+            "default_posture": "STANDBY_STRICT",
+            "require_token": "X-COMMANDANT-TOKEN"
+          }
+        },
+        "status_directive": "RESTORE_AND_ENFORCE_ALL_GUARDRAILS"
+      },
+      "activated": true,
+      "activated_by": "COMMANDANT_STEVE_MAX",
+      "activated_at_utc": "2026-05-08T00:30:47+00:00",
+      "status": "ENFORCED",
+      "anti_generique_strict": true,
+      "fusion_add_only": true,
+      "v30_lock": "INVIOLÉ",
+      "activation_sha256": "0a3aa05766f54920ec0bd6969683bd6f44f9c5b7bea41fb06488adea02a112cd"
+    },
+    {
+      "manifest_id": "PIPELINE_GUARDRAILS_RESTORE_Ω",
+      "doctrine": {
+        "doctrine": "BCE-4X",
+        "profile": "STEVE_MAX",
+        "protections": {
+          "drift_control": "DRIFT_ZERO_STRICT",
+          "lock_level": "V30_LOCK_INVIOLABLE",
+          "anti_regression": "FULL_PYTEST_ENFORCED",
+          "safety_nets": [
+            "NO_AUTO_HOOK_EXPANSION",
+            "NO_PARALLEL_HOOKS_WITHOUT_EXPLICIT_DIRECTIVE",
+            "NO_ENDPOINT_SWITCH_WITHOUT_COMMANDANT_CONFIRM"
+          ],
+          "modularity": "100_PERCENT_MODULAR",
+          "logging": {
+            "audit_level": "FORENSIC",
+            "scope": [
+              "B2_CREDENTIALS",
+              "ENDPOINT_PROBES",
+              "HOOK_ACTIVATIONS",
+              "CONFIG_CHANGES"
+            ],
+            "retention": "STRICT"
+          },
+          "execution_mode": {
+            "autonomy": "LIMITED",
+            "default_posture": "STANDBY_STRICT",
+            "require_token": "X-COMMANDANT-TOKEN"
+          }
+        },
+        "status_directive": "RESTORE_AND_ENFORCE_ALL_GUARDRAILS"
+      },
+      "activated": true,
+      "activated_by": "COMMANDANT_STEVE_MAX",
+      "activated_at_utc": "2026-05-08T00:30:47+00:00",
+      "status": "ENFORCED",
+      "anti_generique_strict": true,
+      "fusion_add_only": true,
+      "v30_lock": "INVIOLÉ",
+      "activation_sha256": "0a3aa05766f54920ec0bd6969683bd6f44f9c5b7bea41fb06488adea02a112cd"
+    },
+    {
+      "manifest_id": "PIPELINE_GUARDRAILS_RESTORE_Ω",
+      "doctrine": {
+        "doctrine": "BCE-4X",
+        "profile": "STEVE_MAX",
+        "protections": {
+          "drift_control": "DRIFT_ZERO_STRICT",
+          "lock_level": "V30_LOCK_INVIOLABLE",
+          "anti_regression": "FULL_PYTEST_ENFORCED",
+          "safety_nets": [
+            "NO_AUTO_HOOK_EXPANSION",
+            "NO_PARALLEL_HOOKS_WITHOUT_EXPLICIT_DIRECTIVE",
+            "NO_ENDPOINT_SWITCH_WITHOUT_COMMANDANT_CONFIRM"
+          ],
+          "modularity": "100_PERCENT_MODULAR",
+          "logging": {
+            "audit_level": "FORENSIC",
+            "scope": [
+              "B2_CREDENTIALS",
+              "ENDPOINT_PROBES",
+              "HOOK_ACTIVATIONS",
+              "CONFIG_CHANGES"
+            ],
+            "retention": "STRICT"
+          },
+          "execution_mode": {
+            "autonomy": "LIMITED",
+            "default_posture": "STANDBY_STRICT",
+            "require_token": "X-COMMANDANT-TOKEN"
+          }
+        },
+        "status_directive": "RESTORE_AND_ENFORCE_ALL_GUARDRAILS"
+      },
+      "activated": true,
+      "activated_by": "COMMANDANT_STEVE_MAX",
+      "activated_at_utc": "2026-05-08T00:30:47+00:00",
+      "status": "ENFORCED",
+      "anti_generique_strict": true,
+      "fusion_add_only": true,
+      "v30_lock": "INVIOLÉ",
+      "activation_sha256": "0a3aa05766f54920ec0bd6969683bd6f44f9c5b7bea41fb06488adea02a112cd"
+    },
+    {
+      "manifest_id": "PIPELINE_GUARDRAILS_RESTORE_Ω",
+      "doctrine": {
+        "doctrine": "BCE-4X",
+        "profile": "STEVE_MAX",
+        "protections": {
+          "drift_control": "DRIFT_ZERO_STRICT",
+          "lock_level": "V30_LOCK_INVIOLABLE",
+          "anti_regression": "FULL_PYTEST_ENFORCED",
+          "safety_nets": [
+            "NO_AUTO_HOOK_EXPANSION",
+            "NO_PARALLEL_HOOKS_WITHOUT_EXPLICIT_DIRECTIVE",
+            "NO_ENDPOINT_SWITCH_WITHOUT_COMMANDANT_CONFIRM"
+          ],
+          "modularity": "100_PERCENT_MODULAR",
+          "logging": {
+            "audit_level": "FORENSIC",
+            "scope": [
+              "B2_CREDENTIALS",
+              "ENDPOINT_PROBES",
+              "HOOK_ACTIVATIONS",
+              "CONFIG_CHANGES"
+            ],
+            "retention": "STRICT"
+          },
+          "execution_mode": {
+            "autonomy": "LIMITED",
+            "default_posture": "STANDBY_STRICT",
+            "require_token": "X-COMMANDANT-TOKEN"
+          }
+        },
+        "status_directive": "RESTORE_AND_ENFORCE_ALL_GUARDRAILS"
+      },
+      "activated": true,
+      "activated_by": "COMMANDANT_STEVE_MAX",
+      "activated_at_utc": "2026-05-08T00:30:47+00:00",
+      "status": "ENFORCED",
+      "anti_generique_strict": true,
+      "fusion_add_only": true,
+      "v30_lock": "INVIOLÉ",
+      "activation_sha256": "0a3aa05766f54920ec0bd6969683bd6f44f9c5b7bea41fb06488adea02a112cd"
+    },
+    {
+      "manifest_id": "PIPELINE_GUARDRAILS_RESTORE_Ω",
+      "doctrine": {
+        "doctrine": "BCE-4X",
+        "profile": "STEVE_MAX",
+        "protections": {
+          "drift_control": "DRIFT_ZERO_STRICT",
+          "lock_level": "V30_LOCK_INVIOLABLE",
+          "anti_regression": "FULL_PYTEST_ENFORCED",
+          "safety_nets": [
+            "NO_AUTO_HOOK_EXPANSION",
+            "NO_PARALLEL_HOOKS_WITHOUT_EXPLICIT_DIRECTIVE",
+            "NO_ENDPOINT_SWITCH_WITHOUT_COMMANDANT_CONFIRM"
+          ],
+          "modularity": "100_PERCENT_MODULAR",
+          "logging": {
+            "audit_level": "FORENSIC",
+            "scope": [
+              "B2_CREDENTIALS",
+              "ENDPOINT_PROBES",
+              "HOOK_ACTIVATIONS",
+              "CONFIG_CHANGES"
+            ],
+            "retention": "STRICT"
+          },
+          "execution_mode": {
+            "autonomy": "LIMITED",
+            "default_posture": "STANDBY_STRICT",
+            "require_token": "X-COMMANDANT-TOKEN"
+          }
+        },
+        "status_directive": "RESTORE_AND_ENFORCE_ALL_GUARDRAILS"
+      },
+      "activated": true,
+      "activated_by": "COMMANDANT_STEVE_MAX",
+      "activated_at_utc": "2026-05-08T00:30:47+00:00",
+      "status": "ENFORCED",
+      "anti_generique_strict": true,
+      "fusion_add_only": true,
+      "v30_lock": "INVIOLÉ",
+      "activation_sha256": "0a3aa05766f54920ec0bd6969683bd6f44f9c5b7bea41fb06488adea02a112cd"
+    },
+    {
+      "manifest_id": "PIPELINE_GUARDRAILS_RESTORE_Ω",
+      "doctrine": {
+        "doctrine": "BCE-4X",
+        "profile": "STEVE_MAX",
+        "protections": {
+          "drift_control": "DRIFT_ZERO_STRICT",
+          "lock_level": "V30_LOCK_INVIOLABLE",
+          "anti_regression": "FULL_PYTEST_ENFORCED",
+          "safety_nets": [
+            "NO_AUTO_HOOK_EXPANSION",
+            "NO_PARALLEL_HOOKS_WITHOUT_EXPLICIT_DIRECTIVE",
+            "NO_ENDPOINT_SWITCH_WITHOUT_COMMANDANT_CONFIRM"
+          ],
+          "modularity": "100_PERCENT_MODULAR",
+          "logging": {
+            "audit_level": "FORENSIC",
+            "scope": [
+              "B2_CREDENTIALS",
+              "ENDPOINT_PROBES",
+              "HOOK_ACTIVATIONS",
+              "CONFIG_CHANGES"
+            ],
+            "retention": "STRICT"
+          },
+          "execution_mode": {
+            "autonomy": "LIMITED",
+            "default_posture": "STANDBY_STRICT",
+            "require_token": "X-COMMANDANT-TOKEN"
+          }
+        },
+        "status_directive": "RESTORE_AND_ENFORCE_ALL_GUARDRAILS"
+      },
+      "activated": true,
+      "activated_by": "COMMANDANT_STEVE_MAX",
+      "activated_at_utc": "2026-05-08T00:30:47+00:00",
+      "status": "ENFORCED",
+      "anti_generique_strict": true,
+      "fusion_add_only": true,
+      "v30_lock": "INVIOLÉ",
+      "activation_sha256": "0a3aa05766f54920ec0bd6969683bd6f44f9c5b7bea41fb06488adea02a112cd"
     }
   ],
-  "last_updated_utc": "2026-05-08T00:16:17+00:00",
-  "n_activations": 120,
+  "last_updated_utc": "2026-05-08T00:30:47+00:00",
+  "n_activations": 127,
   "current_status": "ENFORCED",
   "current_doctrine": {
     "doctrine": "BCE-4X",
@@ -5075,6 +5369,6 @@
     },
     "status_directive": "RESTORE_AND_ENFORCE_ALL_GUARDRAILS"
   },
-  "current_activation_sha256": "3a7baf32dc8fd3597967bed42c6aa97ba0ba13768abfcda865ac698861bbb51d",
+  "current_activation_sha256": "0a3aa05766f54920ec0bd6969683bd6f44f9c5b7bea41fb06488adea02a112cd",
   "v30_lock": "INVIOLÉ"
 }

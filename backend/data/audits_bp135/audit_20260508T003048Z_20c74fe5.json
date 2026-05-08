@@ -1,0 +1,24 @@
+{
+  "audit_filename": "audit_20260508T003048Z_20c74fe5.json",
+  "audit_sha256": "20c74fe5c7f065c416568f988fe4f6b300f6c3abb8cdc04c5e5133c113717f3a",
+  "persisted_at_utc": "2026-05-08T00:30:48+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "NOAA_PIPELINE",
+    "subtype": "COPERNICUS_API_VALIDATE",
+    "ordre": "COPERNICUS_API_P0_VALIDATE",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "provider": "COPERNICUS_MARINE_API",
+    "endpoint": "https://data.marine.copernicus.eu/api/v1/products",
+    "valid": false,
+    "verdict": "COPERNICUS_API_REJECTED_PLACEHOLDER_TOKEN_DETECTED",
+    "manifest_sha256": "3b3e47fabe635385150f17e34b4dea7a458527186de160b1a4492af51fe3d997",
+    "http_status": 404,
+    "auth_header_was_sent": false,
+    "placeholder_detected": true,
+    "v30_lock_inviolate": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  }
+}

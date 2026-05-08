@@ -1,0 +1,107 @@
+{
+  "iteration": 20,
+  "ordre": "P1_OPENTOPOGRAPHY_P0_VALIDATE_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "horodatage_utc": "2026-05-08T00:29:49+00:00",
+  "guardrails_enforced": true,
+  "autonomy": "LIMITED",
+  "provider": "OPENTOPOGRAPHY",
+  "endpoint": "https://portal.opentopography.org/API/globaldem",
+  "api_key_handling": {
+    "storage": "/app/backend/.env (OPENTOPOGRAPHY_API_KEY)",
+    "loading": "os.environ.get only (anti-générique strict)",
+    "masking_in_logs": "3dbf...cc2b (4-first + 4-last only)",
+    "anti_leak_audit_passed": true,
+    "no_hardcoding_in_source_code": true
+  },
+  "phase_validate": {
+    "verdict": "OPENTOPOGRAPHY_VALIDATE_ALL_SITES_VALID",
+    "valid": true,
+    "manifest_sha256": "b513adb32a65a7f760ac2852a0ca522f3bd5a2316717ec9b889608ef5c762c3a",
+    "n_calls_made": 5,
+    "n_calls_success": 5,
+    "n_calls_failed": 0,
+    "elapsed_s": 55.284,
+    "demtypes_validated": ["SRTMGL1"],
+    "half_window_deg": 0.01,
+    "live_dem_data_per_site_5184_pixels_each": {
+      "espece_a_cerf_charlesbourg_46.86_-71.21": {
+        "elevation_min_m": -19.0,
+        "elevation_max_m": 76.0,
+        "elevation_mean_m": 53.56,
+        "elevation_std_m": 20.38,
+        "slope_mean_deg": 4.55,
+        "slope_max_deg": 52.6,
+        "interpretation": "rive_nord_St-Laurent_collines_Charlesbourg"
+      },
+      "espece_b_orignal_st_jean_47.2_-70.27": {
+        "elevation_min_m": 0.0,
+        "elevation_max_m": 51.0,
+        "elevation_mean_m": 28.56,
+        "elevation_std_m": 12.67,
+        "slope_mean_deg": 2.68,
+        "slope_max_deg": 16.79,
+        "interpretation": "plaine_cotiere_St-Jean-Port-Joli"
+      },
+      "espece_c_ours_les_escoumins_48.39_-69.39": {
+        "elevation_min_m": 91.0,
+        "elevation_max_m": 149.0,
+        "elevation_mean_m": 125.33,
+        "elevation_std_m": 10.31,
+        "slope_mean_deg": 3.51,
+        "slope_max_deg": 27.93,
+        "interpretation": "plateau_interieur_Cote-Nord"
+      },
+      "espece_d_dindon_fortierville_46.36_-72.07": {
+        "elevation_min_m": 89.0,
+        "elevation_max_m": 111.0,
+        "elevation_mean_m": 100.67,
+        "elevation_std_m": 4.25,
+        "slope_mean_deg": 2.09,
+        "slope_max_deg": 9.25,
+        "interpretation": "terres_agricoles_plateau_homogene"
+      },
+      "espece_e_wapiti_capitale_47.0_-71.0": {
+        "elevation_min_m": 1.0,
+        "elevation_max_m": 289.0,
+        "elevation_mean_m": 110.29,
+        "elevation_std_m": 72.25,
+        "slope_mean_deg": 8.05,
+        "slope_max_deg": 34.6,
+        "interpretation": "PIEMONT_LAURENTIDES_HAUT_GRADIENT_max_relief"
+      }
+    }
+  },
+  "scientific_references_peer_reviewed": [
+    "Farr et al. (2007). Reviews of Geophysics 45, RG2004. DOI:10.1029/2005RG000183 (SRTM)",
+    "Tadono et al. (2015). ISPRS (ALOS AW3D30)",
+    "Buchhorn et al. (2020). Zenodo. DOI:10.5281/zenodo.3939050 (Copernicus)"
+  ],
+  "datasets_registry_documented": [
+    "SRTMGL3 (90m, 60°S-60°N)",
+    "SRTMGL1 (30m, 60°S-60°N)",
+    "NASADEM (30m, 60°S-60°N)",
+    "AW3D30 (30m, JAXA, global)",
+    "COP30 (30m, ESA Copernicus, global)"
+  ],
+  "anti_generique_strict_features": {
+    "nodata_rejected_no_imputation": true,
+    "header_validation_strict": true,
+    "xml_error_response_detected_separately": true,
+    "demtypes_unknown_filtered_against_registry": true,
+    "api_key_never_hardcoded_in_source": true,
+    "api_key_masked_in_all_forensic_logs": true
+  },
+  "pytest_status": {
+    "n_new_tests_duovicies": 21,
+    "all_passed_duovicies": true,
+    "regression_cluster_phase_xx_xxx_extended": "644/644 PASSED",
+    "no_regressions": true
+  },
+  "v30_lock": "INVIOLÉ",
+  "drift_zero": true,
+  "no_engine_recompute_triggered": true,
+  "fusion_add_only": true,
+  "anti_generique_strict": true,
+  "directive_p0_only_no_hook_activate": "Le Commandant a explicitement émis P0_VALIDATE_Ω sans HOOK_ACTIVATE. Doctrinal strict : aucune activation effectuée."
+}

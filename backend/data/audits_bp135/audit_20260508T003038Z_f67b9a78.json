@@ -1,0 +1,25 @@
+{
+  "audit_filename": "audit_20260508T003038Z_f67b9a78.json",
+  "audit_sha256": "f67b9a78bcd1d66468bf4e3a984ebb6384477a04025f681edb32092d4734843b",
+  "persisted_at_utc": "2026-05-08T00:30:38+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "NOAA_PIPELINE",
+    "subtype": "CATALOGUE_CARTOGRAPHY",
+    "ordre": "NOAA_CFSV2_P0_CATALOGUE_CARTOGRAPHY",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "provider": "NCEI_THREDDS_CFSR_MONTHLY",
+    "forensic_event": "CFSV2_CATALOGUE_CARTOGRAPHY",
+    "root_catalog_url": "https://www.ncei.noaa.gov/thredds/catalog/cfsr/mon/pgbh/catalog.xml",
+    "manifest_sha256": "ccc250cdf215404b5ed17d5f7951600e6cd3ef8f179e76419b40a3c0ddfab3d3",
+    "n_catalogs_visited": 1,
+    "n_datasets_discovered": 0,
+    "n_catalog_refs_discovered": 0,
+    "capped": false,
+    "no_binary_probed": true,
+    "v30_lock_inviolate": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  }
+}

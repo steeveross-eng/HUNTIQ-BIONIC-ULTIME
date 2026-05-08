@@ -2293,11 +2293,159 @@
       "no_engine_recompute_triggered": true,
       "executed_at_utc": "2026-05-08T00:16:16+00:00",
       "manifest_sha256": "0e933397454e05c9bdce45b0aad3a088a86f9574bd9e21c196965faca9033b60"
+    },
+    {
+      "manifest_id": "NOAA_CFSV2_VERIFICATION_P0_Ω",
+      "ordre": "NOAA_CFSV2_P0_DECISION",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "probe": {
+        "url": "https://noaa-cfs-pds.s3.amazonaws.com/cfs.20240101/01/6hrly_grib_01/cfs.tavg.01.2024010100.grb2",
+        "bucket": "noaa-cfs-pds",
+        "path": "cfs.20240101/01/6hrly_grib_01/cfs.tavg.01.2024010100.grb2",
+        "method": "HEAD",
+        "follow_redirects": false,
+        "http_status": 404,
+        "content_type": null,
+        "content_length": null,
+        "headers_subset": {},
+        "elapsed_ms": 165.3,
+        "reason": "http_error_404",
+        "redirect_detected": false,
+        "body_preview_first_500b": ""
+      },
+      "criteria_evaluation": {
+        "http_200_strict_required": true,
+        "http_200_strict_satisfied": false,
+        "no_redirect_required": true,
+        "no_redirect_satisfied": true,
+        "content_length_present": false,
+        "content_type_acceptable": false,
+        "expect_format": "GRIB2_OR_NETCDF"
+      },
+      "valid": false,
+      "verdict": "CFSV2_P0_HEAD_PROBE_INVALID",
+      "next_action": "PIVOT_REQUIRED — list of candidates returned in CANDIDATE_LIST_ONLY mode, await Commandant confirm.",
+      "pivot_payload": {
+        "mode": "CANDIDATE_LIST_ONLY",
+        "autonomy": "LIMITED",
+        "require_commandant_confirm": true,
+        "n_candidates": 2,
+        "candidates": [
+          {
+            "label": "NCEI_THREDDS_CFSR_MONTHLY",
+            "provider": "NOAA NCEI",
+            "type": "THREDDS_OPENDAP",
+            "endpoint_root": "https://www.ncei.noaa.gov/thredds/catalog/model-cfs_reanl_mm_grb_v2/catalog.html",
+            "opendap_endpoint_template": "https://www.ncei.noaa.gov/thredds/dodsC/model-cfs_reanl_mm_grb_v2/{YYYY}/{YYYYMM}/cfsmm.{YYYYMM}.grb2",
+            "doc_url": "https://www.ncei.noaa.gov/products/weather-climate-models/climate-forecast-system",
+            "format_native": "GRIB2",
+            "coverage": "monthly_means_2011_to_present",
+            "auth_required": false,
+            "anti_generique_note": "Endpoint documenté NCEI ; validation HTTP 200 NÉCESSAIRE par directive Commandant avant activation."
+          },
+          {
+            "label": "COPERNICUS_MARINE_GLOBAL_PHY",
+            "provider": "Copernicus Marine Service (CMEMS)",
+            "type": "ERDDAP_OR_S3_OR_TOOLBOX_API",
+            "endpoint_root": "https://data.marine.copernicus.eu/products",
+            "specific_product_example": "GLOBAL_ANALYSISFORECAST_PHY_001_024 (Global Ocean Physics Analysis and Forecast)",
+            "access_url": "https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_PHY_001_024/",
+            "doc_url": "https://help.marine.copernicus.eu/en/articles/9711619-copernicus-marine-toolbox-installation",
+            "format_native": "NETCDF4",
+            "coverage": "global_ocean_physics_present",
+            "auth_required": true,
+            "auth_method": "Copernicus credentials (free registration)",
+            "anti_generique_note": "Authentification Copernicus requise ; credentials Commandant nécessaires pour probe réel."
+          }
+        ],
+        "doctrinal_note": "Aucun probe HTTP automatique sur les candidats pivot. Le Commandant doit confirmer explicitement avant validation et probe réel."
+      },
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T00:30:46+00:00",
+      "manifest_sha256": "94f830be89250b4efb52a13b5405be43403933aedfaf6d6430ccee560c18837b"
+    },
+    {
+      "manifest_id": "NOAA_CFSV2_VERIFICATION_P0_Ω",
+      "ordre": "NOAA_CFSV2_P0_DECISION",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "probe": {
+        "url": "https://noaa-cfs-pds.s3.amazonaws.com/cfs.20240101/01/6hrly_grib_01/cfs.tavg.01.2024010100.grb2",
+        "bucket": "noaa-cfs-pds",
+        "path": "cfs.20240101/01/6hrly_grib_01/cfs.tavg.01.2024010100.grb2",
+        "method": "HEAD",
+        "follow_redirects": false,
+        "http_status": 404,
+        "content_type": null,
+        "content_length": null,
+        "headers_subset": {},
+        "elapsed_ms": 125.5,
+        "reason": "http_error_404",
+        "redirect_detected": false,
+        "body_preview_first_500b": ""
+      },
+      "criteria_evaluation": {
+        "http_200_strict_required": true,
+        "http_200_strict_satisfied": false,
+        "no_redirect_required": true,
+        "no_redirect_satisfied": true,
+        "content_length_present": false,
+        "content_type_acceptable": false,
+        "expect_format": "GRIB2_OR_NETCDF"
+      },
+      "valid": false,
+      "verdict": "CFSV2_P0_HEAD_PROBE_INVALID",
+      "next_action": "PIVOT_REQUIRED — list of candidates returned in CANDIDATE_LIST_ONLY mode, await Commandant confirm.",
+      "pivot_payload": {
+        "mode": "CANDIDATE_LIST_ONLY",
+        "autonomy": "LIMITED",
+        "require_commandant_confirm": true,
+        "n_candidates": 2,
+        "candidates": [
+          {
+            "label": "NCEI_THREDDS_CFSR_MONTHLY",
+            "provider": "NOAA NCEI",
+            "type": "THREDDS_OPENDAP",
+            "endpoint_root": "https://www.ncei.noaa.gov/thredds/catalog/model-cfs_reanl_mm_grb_v2/catalog.html",
+            "opendap_endpoint_template": "https://www.ncei.noaa.gov/thredds/dodsC/model-cfs_reanl_mm_grb_v2/{YYYY}/{YYYYMM}/cfsmm.{YYYYMM}.grb2",
+            "doc_url": "https://www.ncei.noaa.gov/products/weather-climate-models/climate-forecast-system",
+            "format_native": "GRIB2",
+            "coverage": "monthly_means_2011_to_present",
+            "auth_required": false,
+            "anti_generique_note": "Endpoint documenté NCEI ; validation HTTP 200 NÉCESSAIRE par directive Commandant avant activation."
+          },
+          {
+            "label": "COPERNICUS_MARINE_GLOBAL_PHY",
+            "provider": "Copernicus Marine Service (CMEMS)",
+            "type": "ERDDAP_OR_S3_OR_TOOLBOX_API",
+            "endpoint_root": "https://data.marine.copernicus.eu/products",
+            "specific_product_example": "GLOBAL_ANALYSISFORECAST_PHY_001_024 (Global Ocean Physics Analysis and Forecast)",
+            "access_url": "https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_PHY_001_024/",
+            "doc_url": "https://help.marine.copernicus.eu/en/articles/9711619-copernicus-marine-toolbox-installation",
+            "format_native": "NETCDF4",
+            "coverage": "global_ocean_physics_present",
+            "auth_required": true,
+            "auth_method": "Copernicus credentials (free registration)",
+            "anti_generique_note": "Authentification Copernicus requise ; credentials Commandant nécessaires pour probe réel."
+          }
+        ],
+        "doctrinal_note": "Aucun probe HTTP automatique sur les candidats pivot. Le Commandant doit confirmer explicitement avant validation et probe réel."
+      },
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T00:30:46+00:00",
+      "manifest_sha256": "6ebfcacc86d0ec7425b83cb939f7d97c2945ca47d12fa521d6d969854f007e8a"
     }
   ],
-  "last_updated_utc": "2026-05-08T00:16:16+00:00",
-  "n_verifications": 31,
-  "last_manifest_sha256": "0e933397454e05c9bdce45b0aad3a088a86f9574bd9e21c196965faca9033b60",
+  "last_updated_utc": "2026-05-08T00:30:46+00:00",
+  "n_verifications": 33,
+  "last_manifest_sha256": "6ebfcacc86d0ec7425b83cb939f7d97c2945ca47d12fa521d6d969854f007e8a",
   "last_verdict": "CFSV2_P0_HEAD_PROBE_INVALID",
   "v30_lock": "INVIOLÉ"
 }

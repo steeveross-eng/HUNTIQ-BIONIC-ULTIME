@@ -2743,3 +2743,82 @@ async def rsf_ssf_hook_status_endpoint() -> JSONResponse:
         "v30_lock": "INVIOLÉ",
     })
 
+
+# ═════════════════════════════════════════════════════════════════════════
+# OPENTOPOGRAPHY_P0_VALIDATE_Ω — DEM elevation + slope per site BP135
+# API key sécurisée via os.environ['OPENTOPOGRAPHY_API_KEY'] + masking.
+# ═════════════════════════════════════════════════════════════════════════
+class OpenTopographyValidateBody(BaseModel):
+    site_coordinates: Dict[str, Dict[str, float]]
+    demtypes: Optional[list] = None
+    half_window_deg: float = 0.01
+    persist: bool = True
+
+
+@router.post("/opentopography-validate")
+async def opentopography_validate_endpoint(
+    body: OpenTopographyValidateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """OPENTOPOGRAPHY_P0_VALIDATE_Ω · DEM elevation + slope.
+
+    Probe AAIGrid ASCII parsable depuis OpenTopography globaldem API.
+    API key lue depuis env (sécurisée). Anti-générique strict :
+    NODATA REJETÉ sans imputation. 6 datasets DEM disponibles
+    (SRTMGL3/SRTMGL1/NASADEM/AW3D30/COP30/COP90).
+    Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.opentopography_omega import (
+        validate_opentopography_per_site,
+    )
+    try:
+        payload = validate_opentopography_per_site(
+            site_coordinates=body.site_coordinates,
+            demtypes=body.demtypes,
+            half_window_deg=body.half_window_deg,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "OPENTOPOGRAPHY_VALIDATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "OPENTOPOGRAPHY_VALIDATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_OPENTOPOGRAPHY_P0_VALIDATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/opentopography-validation-status")
+async def opentopography_validation_status_endpoint() -> JSONResponse:
+    """OPENTOPOGRAPHY_P0_VALIDATE_Ω · état (PUBLIC RO)."""
+    from engines.v8_institutional.especes.opentopography_omega import (
+        get_opentopography_validation_status,
+    )
+    payload = get_opentopography_validation_status()
+    return JSONResponse({
+        "manifest_id": "OPENTOPOGRAPHY_VALIDATION_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_OPENTOPOGRAPHY_P0_VALIDATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+

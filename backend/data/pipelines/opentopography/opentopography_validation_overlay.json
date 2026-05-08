@@ -1,0 +1,283 @@
+{
+  "history": [
+    {
+      "manifest_id": "OPENTOPOGRAPHY_P0_VALIDATE_Ω",
+      "ordre": "P1_OPENTOPOGRAPHY_P0_VALIDATE_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "valid": true,
+      "verdict": "OPENTOPOGRAPHY_VALIDATE_ALL_SITES_VALID",
+      "provider": "OPENTOPOGRAPHY",
+      "endpoint": "https://portal.opentopography.org/API/globaldem",
+      "api_key_status": "loaded_from_env::masked_in_logs",
+      "api_key_masked": "3dbf...cc2b",
+      "demtypes_requested": [
+        "SRTMGL1"
+      ],
+      "demtypes_validated_in_registry": [
+        "SRTMGL1"
+      ],
+      "demtypes_unknown_skipped": [],
+      "half_window_deg": 0.01,
+      "n_sites_total": 5,
+      "n_calls_made": 5,
+      "n_calls_success": 5,
+      "n_calls_failed": 0,
+      "site_results": {
+        "espece_a": {
+          "lat": 46.8631,
+          "lon": -71.2075,
+          "per_dem": {
+            "SRTMGL1": {
+              "lat": 46.8631,
+              "lon": -71.2075,
+              "demtype": "SRTMGL1",
+              "bbox": {
+                "south": 46.853100000000005,
+                "north": 46.8731,
+                "west": -71.2175,
+                "east": -71.19749999999999
+              },
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total_pixels": 5184,
+                "n_valid": 5184,
+                "n_nodata": 0,
+                "elevation_min_m": -19.0,
+                "elevation_max_m": 76.0,
+                "elevation_mean_m": 53.56,
+                "elevation_std_m": 20.38,
+                "slope_mean_deg": 4.55,
+                "slope_max_deg": 52.6,
+                "cell_size_m_estimated": 25.96
+              },
+              "header": {
+                "ncols": 72,
+                "nrows": 72,
+                "xllcorner": -71.217638888874,
+                "yllcorner": 46.853194444443,
+                "cellsize": 0.000277777778,
+                "nodata_value": -32768.0
+              },
+              "fail_reason": null,
+              "http_record": {
+                "http_status": 200,
+                "body_size_bytes": 15716,
+                "elapsed_ms": 10640.5
+              }
+            }
+          },
+          "n_dem_probed": 1,
+          "n_dem_valid": 1
+        },
+        "espece_b": {
+          "lat": 47.2,
+          "lon": -70.27,
+          "per_dem": {
+            "SRTMGL1": {
+              "lat": 47.2,
+              "lon": -70.27,
+              "demtype": "SRTMGL1",
+              "bbox": {
+                "south": 47.190000000000005,
+                "north": 47.21,
+                "west": -70.28,
+                "east": -70.25999999999999
+              },
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total_pixels": 5184,
+                "n_valid": 5184,
+                "n_nodata": 0,
+                "elevation_min_m": 0.0,
+                "elevation_max_m": 51.0,
+                "elevation_mean_m": 28.56,
+                "elevation_std_m": 12.67,
+                "slope_mean_deg": 2.68,
+                "slope_max_deg": 16.79,
+                "cell_size_m_estimated": 25.89
+              },
+              "header": {
+                "ncols": 72,
+                "nrows": 72,
+                "xllcorner": -70.280138888874,
+                "yllcorner": 47.190138888887,
+                "cellsize": 0.000277777778,
+                "nodata_value": -32768.0
+              },
+              "fail_reason": null,
+              "http_record": {
+                "http_status": 200,
+                "body_size_bytes": 15245,
+                "elapsed_ms": 10503.2
+              }
+            }
+          },
+          "n_dem_probed": 1,
+          "n_dem_valid": 1
+        },
+        "espece_c": {
+          "lat": 48.39,
+          "lon": -69.39,
+          "per_dem": {
+            "SRTMGL1": {
+              "lat": 48.39,
+              "lon": -69.39,
+              "demtype": "SRTMGL1",
+              "bbox": {
+                "south": 48.38,
+                "north": 48.4,
+                "west": -69.4,
+                "east": -69.38
+              },
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total_pixels": 5184,
+                "n_valid": 5184,
+                "n_nodata": 0,
+                "elevation_min_m": 91.0,
+                "elevation_max_m": 149.0,
+                "elevation_mean_m": 125.33,
+                "elevation_std_m": 10.31,
+                "slope_mean_deg": 3.51,
+                "slope_max_deg": 27.93,
+                "cell_size_m_estimated": 25.65
+              },
+              "header": {
+                "ncols": 72,
+                "nrows": 72,
+                "xllcorner": -69.400138888874,
+                "yllcorner": 48.380138888887,
+                "cellsize": 0.000277777778,
+                "nodata_value": -32768.0
+              },
+              "fail_reason": null,
+              "http_record": {
+                "http_status": 200,
+                "body_size_bytes": 20934,
+                "elapsed_ms": 10498.4
+              }
+            }
+          },
+          "n_dem_probed": 1,
+          "n_dem_valid": 1
+        },
+        "espece_d": {
+          "lat": 46.36,
+          "lon": -72.07,
+          "per_dem": {
+            "SRTMGL1": {
+              "lat": 46.36,
+              "lon": -72.07,
+              "demtype": "SRTMGL1",
+              "bbox": {
+                "south": 46.35,
+                "north": 46.37,
+                "west": -72.08,
+                "east": -72.05999999999999
+              },
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total_pixels": 5184,
+                "n_valid": 5184,
+                "n_nodata": 0,
+                "elevation_min_m": 89.0,
+                "elevation_max_m": 111.0,
+                "elevation_mean_m": 100.67,
+                "elevation_std_m": 4.25,
+                "slope_mean_deg": 2.09,
+                "slope_max_deg": 9.25,
+                "cell_size_m_estimated": 26.06
+              },
+              "header": {
+                "ncols": 72,
+                "nrows": 72,
+                "xllcorner": -72.080138888875,
+                "yllcorner": 46.350138888887,
+                "cellsize": 0.000277777778,
+                "nodata_value": -32768.0
+              },
+              "fail_reason": null,
+              "http_record": {
+                "http_status": 200,
+                "body_size_bytes": 19449,
+                "elapsed_ms": 10609.9
+              }
+            }
+          },
+          "n_dem_probed": 1,
+          "n_dem_valid": 1
+        },
+        "espece_e": {
+          "lat": 47.0,
+          "lon": -71.0,
+          "per_dem": {
+            "SRTMGL1": {
+              "lat": 47.0,
+              "lon": -71.0,
+              "demtype": "SRTMGL1",
+              "bbox": {
+                "south": 46.99,
+                "north": 47.01,
+                "west": -71.01,
+                "east": -70.99
+              },
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total_pixels": 5184,
+                "n_valid": 5184,
+                "n_nodata": 0,
+                "elevation_min_m": 1.0,
+                "elevation_max_m": 289.0,
+                "elevation_mean_m": 110.29,
+                "elevation_std_m": 72.25,
+                "slope_mean_deg": 8.05,
+                "slope_max_deg": 34.6,
+                "cell_size_m_estimated": 25.93
+              },
+              "header": {
+                "ncols": 72,
+                "nrows": 72,
+                "xllcorner": -71.010138888874,
+                "yllcorner": 46.990138888887,
+                "cellsize": 0.000277777778,
+                "nodata_value": -32768.0
+              },
+              "fail_reason": null,
+              "http_record": {
+                "http_status": 200,
+                "body_size_bytes": 17654,
+                "elapsed_ms": 10515.0
+              }
+            }
+          },
+          "n_dem_probed": 1,
+          "n_dem_valid": 1
+        }
+      },
+      "scientific_references_peer_reviewed": [
+        "Farr et al. (2007). Reviews of Geophysics 45, RG2004. DOI:10.1029/2005RG000183 (SRTM)",
+        "Tadono et al. (2015). ISPRS (ALOS AW3D30)",
+        "Buchhorn et al. (2020). Zenodo. DOI:10.5281/zenodo.3939050 (Copernicus)"
+      ],
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T00:29:49+00:00",
+      "elapsed_s": 55.284,
+      "manifest_sha256": "b513adb32a65a7f760ac2852a0ca522f3bd5a2316717ec9b889608ef5c762c3a"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T00:29:49+00:00",
+  "n_validations": 1,
+  "last_manifest_sha256": "b513adb32a65a7f760ac2852a0ca522f3bd5a2316717ec9b889608ef5c762c3a",
+  "last_verdict": "OPENTOPOGRAPHY_VALIDATE_ALL_SITES_VALID",
+  "v30_lock": "INVIOLÉ"
+}
