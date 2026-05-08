@@ -3953,3 +3953,323 @@ async def visualizer_all_layers_endpoint() -> JSONResponse:
     })
 
 
+
+# ═════════════════════════════════════════════════════════════════════════
+# MULTI_YEAR_DENSE_GRID_TIMESERIES_Ω (P11) — 10 ans × Mann-Kendall trend
+# ═════════════════════════════════════════════════════════════════════════
+class MultiYearDenseGridValidateBody(BaseModel):
+    site_coordinates: Optional[Dict[str, Dict[str, float]]] = None
+    species_to_site_map: Optional[Dict[str, str]] = None
+    year_start: int = 2015
+    year_end: int = 2024
+    km_above_below: int = 2
+    km_left_right: int = 2
+    persist: bool = True
+
+
+@router.post("/multi-year-dense-grid-timeseries-validate")
+async def multi_year_dense_grid_validate_endpoint(
+    body: MultiYearDenseGridValidateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """P11 · 10 ans × dense grid × Mann-Kendall trend test.
+
+    NOTE LONG-RUNNING : utiliser localhost:8001 (60-180s typique).
+    Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.multi_year_dense_grid_timeseries_omega import (  # noqa: E501
+        validate_multi_year_dense_grid_timeseries,
+    )
+    try:
+        payload = validate_multi_year_dense_grid_timeseries(
+            site_coordinates=body.site_coordinates,
+            species_to_site_map=body.species_to_site_map,
+            year_start=body.year_start,
+            year_end=body.year_end,
+            km_above_below=body.km_above_below,
+            km_left_right=body.km_left_right,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "MULTI_YEAR_DENSE_GRID_VALIDATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id":
+            "MULTI_YEAR_DENSE_GRID_VALIDATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P11_MULTI_YEAR_DENSE_GRID_TIMESERIES_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+class MultiYearHookActivateBody(BaseModel):
+    manifest_sha256: str
+    reason: str = (
+        "ecological_longitudinal_trend_analysis_10_years")
+    persist: bool = True
+
+
+@router.post("/multi-year-dense-grid-timeseries-hook-activate")
+async def multi_year_dense_grid_hook_activate_endpoint(
+    body: MultiYearHookActivateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """P11 · activation officielle. Token Commandant requis."""
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.multi_year_dense_grid_timeseries_omega import (  # noqa: E501
+        activate_multi_year_dense_grid_timeseries_hook,
+    )
+    try:
+        payload = (
+            activate_multi_year_dense_grid_timeseries_hook(
+                manifest_sha256=body.manifest_sha256,
+                reason=body.reason,
+                persist=body.persist,
+            ))
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": (
+                    "MULTI_YEAR_DENSE_GRID_HOOK_ACTIVATE_FAILED"),
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id":
+            "MULTI_YEAR_DENSE_GRID_HOOK_ACTIVATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P11_MULTI_YEAR_DENSE_GRID_TIMESERIES_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/multi-year-dense-grid-timeseries-hook-status")
+async def multi_year_dense_grid_hook_status_endpoint() -> JSONResponse:
+    """P11 · état (PUBLIC RO)."""
+    from engines.v8_institutional.especes.multi_year_dense_grid_timeseries_omega import (  # noqa: E501
+        get_multi_year_dense_grid_timeseries_hook_status,
+    )
+    payload = (
+        get_multi_year_dense_grid_timeseries_hook_status())
+    return JSONResponse({
+        "manifest_id":
+            "MULTI_YEAR_DENSE_GRID_HOOK_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P11_MULTI_YEAR_DENSE_GRID_TIMESERIES_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# MULTI_SIGNATURE_VERIFICATION_HOOK_Ω (P12) — Ed25519 + PGP RSA-2048
+# ═════════════════════════════════════════════════════════════════════════
+class MultiSignatureHookActivateBody(BaseModel):
+    reason: str = (
+        "reinforce_cryptographic_integrity_of_all_manifests")
+    persist: bool = True
+
+
+@router.post("/multi-signature-verification-hook-activate")
+async def multi_signature_hook_activate_endpoint(
+    body: MultiSignatureHookActivateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """P12 · co-signe TOUS les manifests + vérifie. Token requis."""
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.multi_signature_verification_omega import (  # noqa: E501
+        activate_multi_signature_verification_hook,
+    )
+    try:
+        payload = activate_multi_signature_verification_hook(
+            reason=body.reason,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": (
+                    "MULTI_SIGNATURE_HOOK_ACTIVATE_FAILED"),
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id":
+            "MULTI_SIGNATURE_HOOK_ACTIVATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P12_MULTI_SIGNATURE_VERIFICATION_HOOK_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.post("/multi-signature-verify-all")
+async def multi_signature_verify_all_endpoint(
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """P12 · vérifie TOUTES les signatures (Ed25519 + PGP).
+    Token requis (audit cryptographique).
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.multi_signature_verification_omega import (  # noqa: E501
+        verify_all_signatures,
+    )
+    try:
+        payload = verify_all_signatures(persist=False)
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "MULTI_SIGNATURE_VERIFY_ALL_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "MULTI_SIGNATURE_VERIFY_ALL_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P12_MULTI_SIGNATURE_VERIFICATION_HOOK_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/multi-signature-verification-hook-status")
+async def multi_signature_hook_status_endpoint() -> JSONResponse:
+    """P12 · état (PUBLIC RO)."""
+    from engines.v8_institutional.especes.multi_signature_verification_omega import (  # noqa: E501
+        get_multi_signature_hook_status,
+    )
+    payload = get_multi_signature_hook_status()
+    return JSONResponse({
+        "manifest_id":
+            "MULTI_SIGNATURE_HOOK_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P12_MULTI_SIGNATURE_VERIFICATION_HOOK_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# TERRITOIRE_DOWNLOAD_ENDPOINT_Ω (P13) — HTTPS one-click ZIP
+# ═════════════════════════════════════════════════════════════════════════
+@router.get("/download-all-layers-bundle")
+async def download_all_layers_bundle_endpoint(
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+):
+    """P13 · GET ZIP+JSON+SHA256_MANIFEST one-click HTTPS.
+
+    Returns ZIP bytes streaming (Content-Disposition attachment).
+    Token Commandant requis (write-equivalent operation).
+    """
+    _verify_commandant_token(x_commandant_token)
+    from fastapi.responses import Response as FastResponse
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.download_endpoint_omega import (
+        build_download_bundle,
+    )
+    try:
+        zip_bytes, metadata = build_download_bundle()
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "DOWNLOAD_BUNDLE_BUILD_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    timestamp = (
+        metadata.get("generated_at_utc", "unknown")
+        .replace(":", "").replace("-", "").replace("+", "_"))
+    filename = (
+        f"territoire_download_bundle_{timestamp}.zip")
+    headers = {
+        "Content-Disposition": (
+            f'attachment; filename="{filename}"'),
+        "X-Bundle-Sha256": metadata.get(
+            "bundle_sha256", "unknown"),
+        "X-N-Files-Included": str(
+            metadata.get("n_files_included", 0)),
+        "X-Doctrine": (
+            "BCE-4X_ULTIME_ABSOLU_ANTI_GENERIQUE_STRICT"),
+        "X-V30-Lock": "INVIOLE",
+        "X-Manifest-Id": "TERRITOIRE_DOWNLOAD_BUNDLE_OMEGA",
+        "X-Ordre":
+            "P13_TERRITOIRE_DOWNLOAD_ENDPOINT_CREATE_OMEGA",
+    }
+    return FastResponse(
+        content=zip_bytes,
+        media_type="application/zip",
+        headers=headers)
+
+
+@router.get("/download-all-layers-bundle-status")
+async def download_all_layers_bundle_status_endpoint() -> JSONResponse:
+    """P13 · état (PUBLIC RO)."""
+    from engines.v8_institutional.especes.download_endpoint_omega import (
+        get_download_endpoint_status,
+    )
+    payload = get_download_endpoint_status()
+    return JSONResponse({
+        "manifest_id":
+            "TERRITOIRE_DOWNLOAD_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P13_TERRITOIRE_DOWNLOAD_ENDPOINT_CREATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+

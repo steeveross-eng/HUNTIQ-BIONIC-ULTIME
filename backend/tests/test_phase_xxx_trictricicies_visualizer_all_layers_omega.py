@@ -14,11 +14,11 @@ def test_phase_xxx_trictricicies_module_imports_clean():
 
 
 def test_phase_xxx_trictricicies_catalog_15_layers_doctrinal():
-    """Catalog doit contenir 15 couches doctrinales."""
+    """Catalog doit contenir au moins 15 couches doctrinales initiales."""
     from engines.v8_institutional.especes.visualizer_endpoint_omega import (
         LAYER_CATALOG,
     )
-    assert len(LAYER_CATALOG) == 15
+    assert len(LAYER_CATALOG) >= 15
     keys = [layer["logical_key"] for layer in LAYER_CATALOG]
     expected = [
         "V12_CONTAMINATION_AFFUT_DEPENDENCY",
@@ -73,7 +73,7 @@ def test_phase_xxx_trictricicies_expose_returns_doctrinal_keys():
     assert (
         payload["no_engine_recompute_triggered"] is True)
     assert "scan_sha256" in payload
-    assert payload["n_layers_catalog"] == 15
+    assert payload["n_layers_catalog"] >= 15
 
 
 def test_phase_xxx_trictricicies_layers_dict_has_all_keys():
@@ -126,12 +126,12 @@ def test_phase_xxx_trictricicies_summarize_overlay_handles_missing():
 
 
 def test_phase_xxx_trictricicies_verdict_when_15_healthy():
-    """Si 15/15 healthy → verdict ALL_LAYERS_HEALTHY."""
+    """Si N_total healthy → verdict ALL_LAYERS_HEALTHY."""
     from engines.v8_institutional.especes.visualizer_endpoint_omega import (
-        expose_all_layers_unified,
+        LAYER_CATALOG, expose_all_layers_unified,
     )
     payload = expose_all_layers_unified()
-    if payload["n_overlays_healthy"] == 15:
+    if payload["n_overlays_healthy"] == len(LAYER_CATALOG):
         assert payload["verdict"] == (
             "VISUALIZER_ALL_LAYERS_HEALTHY")
 

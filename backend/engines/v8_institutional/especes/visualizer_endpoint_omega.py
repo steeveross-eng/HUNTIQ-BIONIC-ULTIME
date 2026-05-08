@@ -188,6 +188,24 @@ LAYER_CATALOG: List[Dict[str, Any]] = [
             "nasa_ndvi_timeseries_decade_overlay.json"),
         "primary_reference": "Hebblewhite_2008_EcolMonogr",
     },
+    {
+        "logical_key": "MULTI_YEAR_DENSE_GRID_TIMESERIES_P11",
+        "ordre": "P11_MULTI_YEAR_DENSE_GRID_TIMESERIES_Ω",
+        "overlay_path": (
+            "/app/backend/data/pipelines/"
+            "multi_year_dense_grid_timeseries/"
+            "multi_year_dense_grid_timeseries_hook_activation_overlay.json"),
+        "primary_reference": "Mann_1945_Econometrica_Sen_1968_JASA",
+    },
+    {
+        "logical_key": "MULTI_SIGNATURE_VERIFICATION_P12",
+        "ordre": "P12_MULTI_SIGNATURE_VERIFICATION_HOOK_Ω",
+        "overlay_path": (
+            "/app/backend/data/pipelines/"
+            "multi_signature_verification/"
+            "multi_signature_hook_activation_overlay.json"),
+        "primary_reference": "RFC8032_EdDSA_RFC4880_OpenPGP",
+    },
 ]
 
 

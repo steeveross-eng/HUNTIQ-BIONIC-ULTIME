@@ -1,0 +1,42 @@
+{
+  "history": [
+    {
+      "manifest_id": "MULTI_YEAR_DENSE_GRID_TIMESERIES_HOOK_ACTIVATE_Ω",
+      "ordre": "P11_MULTI_YEAR_DENSE_GRID_TIMESERIES_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "activated": true,
+      "verdict": "MULTI_YEAR_DENSE_GRID_TIMESERIES_HOOK_ACTIVATED",
+      "reason": "ecological_longitudinal_trend_analysis_10_years",
+      "validated_manifest_sha256": "d761d7ad7fb8f8bb87bf33afbc1e3f03fb9e825c53ad6945ec2d85b2cb73648c",
+      "validated_summary": {
+        "verdict": "MULTI_YEAR_DENSE_GRID_TIMESERIES_ALL_VALID",
+        "n_sites_total": 5,
+        "n_year_calls_success": 50,
+        "year_start": 2015,
+        "year_end": 2024
+      },
+      "outputs_unblocked_via_this_hook": [
+        "longitudinal_trend_per_site (Mann-Kendall + Sen)",
+        "climate_change_signature_NDVI_decade"
+      ],
+      "providers_physical_active": [
+        "NASA_MOD13Q1_ORNL_DENSE_SUBSET_DECADE"
+      ],
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T12:33:54+00:00",
+      "elapsed_s": 0.0,
+      "manifest_sha256": "a541926b77a60776fcec5e136e3022a484bc5f06ce6eb8fa344938e64f57d7e0"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T12:33:54+00:00",
+  "n_activations": 1,
+  "last_manifest_sha256": "a541926b77a60776fcec5e136e3022a484bc5f06ce6eb8fa344938e64f57d7e0",
+  "last_verdict": "MULTI_YEAR_DENSE_GRID_TIMESERIES_HOOK_ACTIVATED",
+  "last_validated_manifest_sha256": "d761d7ad7fb8f8bb87bf33afbc1e3f03fb9e825c53ad6945ec2d85b2cb73648c",
+  "v30_lock": "INVIOLÉ"
+}

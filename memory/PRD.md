@@ -27,6 +27,47 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-QUATTUORTRICICIES · P11+P12+P13 — 🛡️🔐📦 INTÉGRITÉ + LONGITUDINAL + DOWNLOAD HTTPS (2026-05-08)**
+
+  **P11 · MULTI_YEAR_DENSE_GRID_TIMESERIES_Ω** — Densification temporelle 10 ans (2015-2024) × 5 sites × dense grid spatial 17×17 pour analyse longitudinale climate change signature.
+  - Module `multi_year_dense_grid_timeseries_omega.py` : `validate_multi_year_dense_grid_timeseries` (boucle 10 ans summer + Mann-Kendall + Sen's slope), `_mann_kendall_trend_test` (Mann 1945 + Kendall 1975 + Sen 1968, déterministe non-parametric pur).
+  - 3 endpoints router (validate/activate/status).
+  - **Workflow LIVE** : VALIDATE 50/50 calls success en 204.85s (`manifest_sha256=d761d7ad7fb8f8bb87bf33afbc1e3f03fb9e825c53ad6945ec2d85b2cb73648c`) + ACTIVATE (`manifest_sha256=a541926b77a60776...`).
+  - **Tendances Mann-Kendall par site** (10 ans, p<0.05 = significatif) :
+    - cerf : tau positif → INCREASING_GREENING_NOT_SIGNIFICANT
+    - orignal : tau négatif → DECREASING_BROWNING_NOT_SIGNIFICANT
+    - ours : tau négatif → DECREASING_BROWNING_NOT_SIGNIFICANT
+    - dindon : slope quasi-nul → INCREASING_GREENING_NOT_SIGNIFICANT
+    - wapiti : tau négatif → DECREASING_BROWNING_NOT_SIGNIFICANT
+  - **Conclusion doctrinale** : aucune tendance significative sur 10 ans (p>0.05 partout) — cohérent avec la littérature : ~20-30 ans nécessaires pour climate change NDVI signal en zone tempérée mid-latitude (Pettorelli 2011).
+  - **Refs** : Mann 1945 (Econometrica), Kendall 1975 (Rank Correlation Methods), Sen 1968 (JASA), Pettorelli 2011 (Climate Research), Forkel 2013 (Remote Sensing).
+
+  **P12 · MULTI_SIGNATURE_VERIFICATION_HOOK_Ω** — Signatures cryptographiques dual Ed25519 + PGP RSA-2048 sur tous les manifests doctrinaux (chain of trust 2-tier).
+  - Module `multi_signature_verification_omega.py` : `_ensure_ed25519_keys` (cryptography lib, RFC 8032), `_ensure_pgp_key` (gnupg lib + gpg2 binary, RSA-2048 RFC 4880), `sign_manifest_dual` (signatures détachées), `verify_manifest_dual` (vraie vérification crypto), `sign_all_known_manifests`, `verify_all_signatures`.
+  - 3 endpoints router (activate/verify-all/status).
+  - **Workflow LIVE** : ACTIVATE → 17/17 manifests dual-signés Ed25519+PGP · 17/17 vérifications **VALID** · `manifest_sha256=48b078bd14972860cb4e569407b649c9222deaf90cf88af0b3a851de22d941d3` · 0.95 s.
+  - **Chain of trust** :
+    - Agent_A Ed25519 : public_key_sha256 ancré
+    - Agent_B PGP RSA-2048 : fingerprint OpenPGP RFC 4880 ancré
+  - **Anti-tamper test** : pytest `tampered_sig_rejected` confirme que toute modification d'une signature → verification échoue.
+  - **Refs** : Pearce 2010 (Nature, Open Science), Gentleman 2005 (JCGS, reproducibility), RFC 8032 (EdDSA), RFC 4880 (OpenPGP).
+
+  **P13 · TERRITOIRE_DOWNLOAD_ENDPOINT_Ω** — HTTPS one-click download bundle ZIP+JSON+SHA256_MANIFEST de toutes les couches doctrinales.
+  - Module `download_endpoint_omega.py` : `build_download_bundle` (ZIP en mémoire avec overlays + visualizer_snapshot + signatures + README_DOCTRINE.md + SHA256_MANIFEST.txt), `get_download_endpoint_status`.
+  - 2 endpoints router (download/status). Token Commandant requis pour download.
+  - **Workflow LIVE HTTPS prod** : Download `bundle_sha256=50d640f0e3fe0907a8ee87d901ddaf8495e51681a0f81697b0a193e0932f6044` · 81 KB · 20 fichiers · headers HTTP standardisés (X-Bundle-Sha256, X-N-Files-Included, X-V30-Lock=INVIOLE, etc).
+  - **Vérification cryptographique** : `sha256sum -c SHA256_MANIFEST.txt` → 18/18 OK + signatures + visualizer + README tous OK.
+  - **Format** : ZIP standard + JSON metadata + SHA256_MANIFEST.txt format `<sha256>  <arcname>` compatible `sha256sum -c`.
+
+  **Mise à jour visualizer (P10)** : catalog étendu de 15 → 17 layers (ajout P11 + P12).
+  - `MULTI_YEAR_DENSE_GRID_TIMESERIES_P11`
+  - `MULTI_SIGNATURE_VERIFICATION_P12`
+
+  **20 nouveaux pytests (`test_phase_xxx_quattuortricicies_p11_p12_p13_omega.py`)** : 20/20 PASS — Mann-Kendall increasing/decreasing/random/insufficient, P11 year_range invalid, dual signature verifiable + tampered rejected, build bundle ZIP valide + SHA matches + manifest correct par fichier, no_engine_recompute.
+
+  **Régression** : **643/643 PASS** sur le périmètre doctrinal (de 623 → 643). Aucune régression.
+
+
 - **PHASE_XXX-TRICTRICICIES · TERRITOIRE_VISUALIZER_ENDPOINT_Ω (P10) — 🛰️ EXPOSITION UNIFIÉE 15/15 LAYERS HEALTHY (2026-05-08)**
   Endpoint d'exposition GET unifié read-only de toutes les couches doctrinales pour validation/production. Verdict `VISUALIZER_ALL_LAYERS_HEALTHY` · 15/15 layers présents et sains · Scan SHA `d0feb21763071d8f69b75321d92ba4c3e1c18e5b8ed6f10ddfef4374743973fd` · accessible HTTPS prod ingress (URL publique) ET HTTP localhost:8001.
   - **Nouveau module `visualizer_endpoint_omega.py`** : `LAYER_CATALOG` (15 entrées doctrinales avec ordre/overlay_path/primary_reference), `_summarize_overlay` (lecture résumée avec fallback multi-clés SHA-256 : last_manifest_sha256, last_activation_sha256, last_habitat_outputs_sha256, last_recompute_sha256, last_recompute_v3_sha256, last_final_merge_sha256, last_complete_merge_sha256), `expose_all_layers_unified` (scan unifié read-only).

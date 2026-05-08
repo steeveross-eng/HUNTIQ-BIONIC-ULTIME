@@ -1,0 +1,1119 @@
+{
+  "history": [
+    {
+      "manifest_id": "MULTI_YEAR_DENSE_GRID_TIMESERIES_VALIDATE_Ω",
+      "ordre": "P11_MULTI_YEAR_DENSE_GRID_TIMESERIES_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "valid": true,
+      "verdict": "MULTI_YEAR_DENSE_GRID_TIMESERIES_ALL_VALID",
+      "provider": "MULTI_YEAR_DENSE_GRID",
+      "provider_physical": "NASA_MOD13Q1_ORNL_DENSE_SUBSET_DECADE",
+      "endpoint": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset",
+      "spatial_subset_config": {
+        "km_above_below": 2,
+        "km_left_right": 2
+      },
+      "temporal_window": {
+        "year_start": 2015,
+        "year_end": 2024,
+        "n_years": 10,
+        "summer_doy_start": 153,
+        "summer_doy_end": 244,
+        "primary_reference": "Pettorelli_2011_ClimateRes"
+      },
+      "n_sites_total": 5,
+      "n_year_calls_total": 50,
+      "n_year_calls_success": 50,
+      "n_year_calls_failed": 0,
+      "site_results": {
+        "espece_a": {
+          "lat": 46.8131,
+          "lon": -71.2075,
+          "species_canonical": "cerf",
+          "year_start": 2015,
+          "year_end": 2024,
+          "n_years_attempted": 10,
+          "n_years_valid": 10,
+          "annual_stats": {
+            "2015": {
+              "valid": true,
+              "n_pixels_valid": 1387,
+              "n_total": 1734,
+              "n_nodata": 347,
+              "stats": {
+                "mean": 0.374,
+                "min": -0.1786,
+                "max": 0.8643,
+                "p10": 0.1566,
+                "p50": 0.376,
+                "p90": 0.5869,
+                "std": 0.1724
+              },
+              "elapsed_ms": 11577.5
+            },
+            "2016": {
+              "valid": true,
+              "n_pixels_valid": 1363,
+              "n_total": 1734,
+              "n_nodata": 371,
+              "stats": {
+                "mean": 0.375,
+                "min": -0.195,
+                "max": 0.849,
+                "p10": 0.1649,
+                "p50": 0.3773,
+                "p90": 0.5779,
+                "std": 0.1634
+              },
+              "elapsed_ms": 10938.2
+            },
+            "2017": {
+              "valid": true,
+              "n_pixels_valid": 1456,
+              "n_total": 1734,
+              "n_nodata": 278,
+              "stats": {
+                "mean": 0.3484,
+                "min": -0.1969,
+                "max": 0.874,
+                "p10": 0.1097,
+                "p50": 0.36,
+                "p90": 0.5495,
+                "std": 0.1724
+              },
+              "elapsed_ms": 10851.2
+            },
+            "2018": {
+              "valid": true,
+              "n_pixels_valid": 1421,
+              "n_total": 1734,
+              "n_nodata": 313,
+              "stats": {
+                "mean": 0.3521,
+                "min": -0.1874,
+                "max": 0.8371,
+                "p10": 0.1424,
+                "p50": 0.3647,
+                "p90": 0.5518,
+                "std": 0.1673
+              },
+              "elapsed_ms": 11938.6
+            },
+            "2019": {
+              "valid": true,
+              "n_pixels_valid": 1424,
+              "n_total": 1734,
+              "n_nodata": 310,
+              "stats": {
+                "mean": 0.35,
+                "min": -0.1843,
+                "max": 0.8078,
+                "p10": 0.1395,
+                "p50": 0.3629,
+                "p90": 0.5414,
+                "std": 0.1627
+              },
+              "elapsed_ms": 12066.6
+            },
+            "2020": {
+              "valid": true,
+              "n_pixels_valid": 1329,
+              "n_total": 1734,
+              "n_nodata": 405,
+              "stats": {
+                "mean": 0.3567,
+                "min": -0.1918,
+                "max": 0.8059,
+                "p10": 0.1608,
+                "p50": 0.375,
+                "p90": 0.5411,
+                "std": 0.1599
+              },
+              "elapsed_ms": 9952.4
+            },
+            "2021": {
+              "valid": true,
+              "n_pixels_valid": 1393,
+              "n_total": 1734,
+              "n_nodata": 341,
+              "stats": {
+                "mean": 0.3914,
+                "min": -0.1813,
+                "max": 0.8182,
+                "p10": 0.2087,
+                "p50": 0.3935,
+                "p90": 0.5818,
+                "std": 0.1516
+              },
+              "elapsed_ms": 11219.3
+            },
+            "2022": {
+              "valid": true,
+              "n_pixels_valid": 1312,
+              "n_total": 1734,
+              "n_nodata": 422,
+              "stats": {
+                "mean": 0.3578,
+                "min": -0.1867,
+                "max": 0.837,
+                "p10": 0.164,
+                "p50": 0.3657,
+                "p90": 0.5504,
+                "std": 0.1626
+              },
+              "elapsed_ms": 2684.9
+            },
+            "2023": {
+              "valid": true,
+              "n_pixels_valid": 1244,
+              "n_total": 1734,
+              "n_nodata": 490,
+              "stats": {
+                "mean": 0.3665,
+                "min": -0.1774,
+                "max": 0.8084,
+                "p10": 0.1758,
+                "p50": 0.3739,
+                "p90": 0.5481,
+                "std": 0.1547
+              },
+              "elapsed_ms": 2568.2
+            },
+            "2024": {
+              "valid": true,
+              "n_pixels_valid": 1498,
+              "n_total": 1734,
+              "n_nodata": 236,
+              "stats": {
+                "mean": 0.3618,
+                "min": -0.15,
+                "max": 0.8208,
+                "p10": 0.1216,
+                "p50": 0.3779,
+                "p90": 0.561,
+                "std": 0.1703
+              },
+              "elapsed_ms": 2451.5
+            }
+          },
+          "mann_kendall_trend_test": {
+            "valid": true,
+            "n_years": 10,
+            "S_statistic": 7,
+            "var_S": 125.0,
+            "Z_statistic": 0.5367,
+            "p_value": 0.591505,
+            "alpha": 0.05,
+            "significant": false,
+            "Kendall_tau": 0.1556,
+            "slope_sen_per_year": 0.001269,
+            "trend_classification": "INCREASING_GREENING_NOT_SIGNIFICANT",
+            "primary_references": [
+              "Mann_1945_Econometrica",
+              "Kendall_1975_RankCorrelationMethods",
+              "Sen_1968_JASA"
+            ],
+            "years_used_chronological": [
+              2015,
+              2016,
+              2017,
+              2018,
+              2019,
+              2020,
+              2021,
+              2022,
+              2023,
+              2024
+            ],
+            "mean_ndvi_series": [
+              0.374,
+              0.375,
+              0.3484,
+              0.3521,
+              0.35,
+              0.3567,
+              0.3914,
+              0.3578,
+              0.3665,
+              0.3618
+            ]
+          }
+        },
+        "espece_b": {
+          "lat": 47.2,
+          "lon": -70.27,
+          "species_canonical": "orignal",
+          "year_start": 2015,
+          "year_end": 2024,
+          "n_years_attempted": 10,
+          "n_years_valid": 10,
+          "annual_stats": {
+            "2015": {
+              "valid": true,
+              "n_pixels_valid": 1192,
+              "n_total": 1734,
+              "n_nodata": 542,
+              "stats": {
+                "mean": 0.7083,
+                "min": -0.1985,
+                "max": 0.9083,
+                "p10": 0.5474,
+                "p50": 0.7512,
+                "p90": 0.849,
+                "std": 0.1688
+              },
+              "elapsed_ms": 2336.4
+            },
+            "2016": {
+              "valid": true,
+              "n_pixels_valid": 1181,
+              "n_total": 1734,
+              "n_nodata": 553,
+              "stats": {
+                "mean": 0.7361,
+                "min": -0.192,
+                "max": 0.9259,
+                "p10": 0.568,
+                "p50": 0.7756,
+                "p90": 0.8724,
+                "std": 0.1473
+              },
+              "elapsed_ms": 2331.5
+            },
+            "2017": {
+              "valid": true,
+              "n_pixels_valid": 1175,
+              "n_total": 1734,
+              "n_nodata": 559,
+              "stats": {
+                "mean": 0.68,
+                "min": -0.1559,
+                "max": 0.8997,
+                "p10": 0.5211,
+                "p50": 0.7069,
+                "p90": 0.8293,
+                "std": 0.149
+              },
+              "elapsed_ms": 2354.0
+            },
+            "2018": {
+              "valid": true,
+              "n_pixels_valid": 1223,
+              "n_total": 1734,
+              "n_nodata": 511,
+              "stats": {
+                "mean": 0.6785,
+                "min": -0.1816,
+                "max": 0.9035,
+                "p10": 0.5123,
+                "p50": 0.7101,
+                "p90": 0.8371,
+                "std": 0.1646
+              },
+              "elapsed_ms": 2324.3
+            },
+            "2019": {
+              "valid": true,
+              "n_pixels_valid": 1220,
+              "n_total": 1734,
+              "n_nodata": 514,
+              "stats": {
+                "mean": 0.6638,
+                "min": -0.1829,
+                "max": 0.9352,
+                "p10": 0.4761,
+                "p50": 0.703,
+                "p90": 0.8334,
+                "std": 0.1787
+              },
+              "elapsed_ms": 2337.6
+            },
+            "2020": {
+              "valid": true,
+              "n_pixels_valid": 1162,
+              "n_total": 1734,
+              "n_nodata": 572,
+              "stats": {
+                "mean": 0.6754,
+                "min": -0.1693,
+                "max": 0.9069,
+                "p10": 0.5019,
+                "p50": 0.7092,
+                "p90": 0.8283,
+                "std": 0.1618
+              },
+              "elapsed_ms": 2170.7
+            },
+            "2021": {
+              "valid": true,
+              "n_pixels_valid": 1161,
+              "n_total": 1734,
+              "n_nodata": 573,
+              "stats": {
+                "mean": 0.7088,
+                "min": -0.1873,
+                "max": 0.8937,
+                "p10": 0.5604,
+                "p50": 0.7468,
+                "p90": 0.8387,
+                "std": 0.1424
+              },
+              "elapsed_ms": 2417.3
+            },
+            "2022": {
+              "valid": true,
+              "n_pixels_valid": 1213,
+              "n_total": 1734,
+              "n_nodata": 521,
+              "stats": {
+                "mean": 0.7259,
+                "min": -0.1668,
+                "max": 0.9118,
+                "p10": 0.5598,
+                "p50": 0.7678,
+                "p90": 0.8541,
+                "std": 0.1526
+              },
+              "elapsed_ms": 2666.3
+            },
+            "2023": {
+              "valid": true,
+              "n_pixels_valid": 1177,
+              "n_total": 1734,
+              "n_nodata": 557,
+              "stats": {
+                "mean": 0.707,
+                "min": -0.175,
+                "max": 0.9073,
+                "p10": 0.5219,
+                "p50": 0.7524,
+                "p90": 0.857,
+                "std": 0.1747
+              },
+              "elapsed_ms": 2534.0
+            },
+            "2024": {
+              "valid": true,
+              "n_pixels_valid": 1218,
+              "n_total": 1734,
+              "n_nodata": 516,
+              "stats": {
+                "mean": 0.6949,
+                "min": -0.1939,
+                "max": 0.9341,
+                "p10": 0.5112,
+                "p50": 0.7392,
+                "p90": 0.8461,
+                "std": 0.1702
+              },
+              "elapsed_ms": 2407.6
+            }
+          },
+          "mann_kendall_trend_test": {
+            "valid": true,
+            "n_years": 10,
+            "S_statistic": -3,
+            "var_S": 125.0,
+            "Z_statistic": -0.1789,
+            "p_value": 0.858028,
+            "alpha": 0.05,
+            "significant": false,
+            "Kendall_tau": -0.0667,
+            "slope_sen_per_year": -0.000907,
+            "trend_classification": "DECREASING_BROWNING_NOT_SIGNIFICANT",
+            "primary_references": [
+              "Mann_1945_Econometrica",
+              "Kendall_1975_RankCorrelationMethods",
+              "Sen_1968_JASA"
+            ],
+            "years_used_chronological": [
+              2015,
+              2016,
+              2017,
+              2018,
+              2019,
+              2020,
+              2021,
+              2022,
+              2023,
+              2024
+            ],
+            "mean_ndvi_series": [
+              0.7083,
+              0.7361,
+              0.68,
+              0.6785,
+              0.6638,
+              0.6754,
+              0.7088,
+              0.7259,
+              0.707,
+              0.6949
+            ]
+          }
+        },
+        "espece_c": {
+          "lat": 48.34,
+          "lon": -69.39,
+          "species_canonical": "ours",
+          "year_start": 2015,
+          "year_end": 2024,
+          "n_years_attempted": 10,
+          "n_years_valid": 10,
+          "annual_stats": {
+            "2015": {
+              "valid": true,
+              "n_pixels_valid": 819,
+              "n_total": 1734,
+              "n_nodata": 915,
+              "stats": {
+                "mean": 0.6817,
+                "min": -0.0303,
+                "max": 0.9832,
+                "p10": 0.351,
+                "p50": 0.7466,
+                "p90": 0.8932,
+                "std": 0.2238
+              },
+              "elapsed_ms": 2449.4
+            },
+            "2016": {
+              "valid": true,
+              "n_pixels_valid": 816,
+              "n_total": 1734,
+              "n_nodata": 918,
+              "stats": {
+                "mean": 0.6787,
+                "min": -0.1692,
+                "max": 0.9543,
+                "p10": 0.3406,
+                "p50": 0.7369,
+                "p90": 0.8847,
+                "std": 0.2145
+              },
+              "elapsed_ms": 2414.7
+            },
+            "2017": {
+              "valid": true,
+              "n_pixels_valid": 836,
+              "n_total": 1734,
+              "n_nodata": 898,
+              "stats": {
+                "mean": 0.6644,
+                "min": -0.1886,
+                "max": 0.946,
+                "p10": 0.2943,
+                "p50": 0.7378,
+                "p90": 0.8829,
+                "std": 0.2365
+              },
+              "elapsed_ms": 2434.3
+            },
+            "2018": {
+              "valid": true,
+              "n_pixels_valid": 732,
+              "n_total": 1734,
+              "n_nodata": 1002,
+              "stats": {
+                "mean": 0.6248,
+                "min": -0.1268,
+                "max": 0.9181,
+                "p10": 0.2404,
+                "p50": 0.6993,
+                "p90": 0.8621,
+                "std": 0.2327
+              },
+              "elapsed_ms": 5990.6
+            },
+            "2019": {
+              "valid": true,
+              "n_pixels_valid": 863,
+              "n_total": 1734,
+              "n_nodata": 871,
+              "stats": {
+                "mean": 0.6108,
+                "min": -0.0505,
+                "max": 0.9439,
+                "p10": 0.1894,
+                "p50": 0.6824,
+                "p90": 0.8485,
+                "std": 0.2412
+              },
+              "elapsed_ms": 2880.4
+            },
+            "2020": {
+              "valid": true,
+              "n_pixels_valid": 802,
+              "n_total": 1734,
+              "n_nodata": 932,
+              "stats": {
+                "mean": 0.665,
+                "min": -0.1703,
+                "max": 0.9468,
+                "p10": 0.2976,
+                "p50": 0.7222,
+                "p90": 0.8876,
+                "std": 0.2319
+              },
+              "elapsed_ms": 2685.0
+            },
+            "2021": {
+              "valid": true,
+              "n_pixels_valid": 866,
+              "n_total": 1734,
+              "n_nodata": 868,
+              "stats": {
+                "mean": 0.6386,
+                "min": -0.04,
+                "max": 0.9564,
+                "p10": 0.3035,
+                "p50": 0.6923,
+                "p90": 0.8627,
+                "std": 0.2216
+              },
+              "elapsed_ms": 2425.4
+            },
+            "2022": {
+              "valid": true,
+              "n_pixels_valid": 801,
+              "n_total": 1734,
+              "n_nodata": 933,
+              "stats": {
+                "mean": 0.6816,
+                "min": -0.1877,
+                "max": 0.9261,
+                "p10": 0.3909,
+                "p50": 0.7371,
+                "p90": 0.8758,
+                "std": 0.2057
+              },
+              "elapsed_ms": 2487.1
+            },
+            "2023": {
+              "valid": true,
+              "n_pixels_valid": 874,
+              "n_total": 1734,
+              "n_nodata": 860,
+              "stats": {
+                "mean": 0.6447,
+                "min": -0.1068,
+                "max": 0.9952,
+                "p10": 0.1909,
+                "p50": 0.732,
+                "p90": 0.8793,
+                "std": 0.2595
+              },
+              "elapsed_ms": 2184.4
+            },
+            "2024": {
+              "valid": true,
+              "n_pixels_valid": 840,
+              "n_total": 1734,
+              "n_nodata": 894,
+              "stats": {
+                "mean": 0.6646,
+                "min": -0.012,
+                "max": 0.9748,
+                "p10": 0.2378,
+                "p50": 0.7266,
+                "p90": 0.8846,
+                "std": 0.2316
+              },
+              "elapsed_ms": 1944.2
+            }
+          },
+          "mann_kendall_trend_test": {
+            "valid": true,
+            "n_years": 10,
+            "S_statistic": -7,
+            "var_S": 125.0,
+            "Z_statistic": -0.5367,
+            "p_value": 0.591505,
+            "alpha": 0.05,
+            "significant": false,
+            "Kendall_tau": -0.1556,
+            "slope_sen_per_year": -0.001896,
+            "trend_classification": "DECREASING_BROWNING_NOT_SIGNIFICANT",
+            "primary_references": [
+              "Mann_1945_Econometrica",
+              "Kendall_1975_RankCorrelationMethods",
+              "Sen_1968_JASA"
+            ],
+            "years_used_chronological": [
+              2015,
+              2016,
+              2017,
+              2018,
+              2019,
+              2020,
+              2021,
+              2022,
+              2023,
+              2024
+            ],
+            "mean_ndvi_series": [
+              0.6817,
+              0.6787,
+              0.6644,
+              0.6248,
+              0.6108,
+              0.665,
+              0.6386,
+              0.6816,
+              0.6447,
+              0.6646
+            ]
+          }
+        },
+        "espece_d": {
+          "lat": 46.36,
+          "lon": -72.07,
+          "species_canonical": "dindon",
+          "year_start": 2015,
+          "year_end": 2024,
+          "n_years_attempted": 10,
+          "n_years_valid": 10,
+          "annual_stats": {
+            "2015": {
+              "valid": true,
+              "n_pixels_valid": 1734,
+              "n_total": 1734,
+              "n_nodata": 0,
+              "stats": {
+                "mean": 0.8564,
+                "min": 0.2455,
+                "max": 0.9936,
+                "p10": 0.7827,
+                "p50": 0.8729,
+                "p90": 0.9046,
+                "std": 0.0617
+              },
+              "elapsed_ms": 2014.9
+            },
+            "2016": {
+              "valid": true,
+              "n_pixels_valid": 1734,
+              "n_total": 1734,
+              "n_nodata": 0,
+              "stats": {
+                "mean": 0.8734,
+                "min": 0.5836,
+                "max": 0.959,
+                "p10": 0.8187,
+                "p50": 0.8877,
+                "p90": 0.9103,
+                "std": 0.0445
+              },
+              "elapsed_ms": 2123.6
+            },
+            "2017": {
+              "valid": true,
+              "n_pixels_valid": 1734,
+              "n_total": 1734,
+              "n_nodata": 0,
+              "stats": {
+                "mean": 0.8642,
+                "min": 0.6544,
+                "max": 0.9484,
+                "p10": 0.8052,
+                "p50": 0.8748,
+                "p90": 0.9057,
+                "std": 0.0415
+              },
+              "elapsed_ms": 2200.1
+            },
+            "2018": {
+              "valid": true,
+              "n_pixels_valid": 1734,
+              "n_total": 1734,
+              "n_nodata": 0,
+              "stats": {
+                "mean": 0.8725,
+                "min": 0.6376,
+                "max": 0.947,
+                "p10": 0.8117,
+                "p50": 0.8851,
+                "p90": 0.9094,
+                "std": 0.0426
+              },
+              "elapsed_ms": 2359.4
+            },
+            "2019": {
+              "valid": true,
+              "n_pixels_valid": 1734,
+              "n_total": 1734,
+              "n_nodata": 0,
+              "stats": {
+                "mean": 0.8756,
+                "min": 0.6521,
+                "max": 0.9339,
+                "p10": 0.8236,
+                "p50": 0.8862,
+                "p90": 0.915,
+                "std": 0.0391
+              },
+              "elapsed_ms": 2256.8
+            },
+            "2020": {
+              "valid": true,
+              "n_pixels_valid": 1734,
+              "n_total": 1734,
+              "n_nodata": 0,
+              "stats": {
+                "mean": 0.8749,
+                "min": 0.6407,
+                "max": 0.9932,
+                "p10": 0.8162,
+                "p50": 0.8839,
+                "p90": 0.9225,
+                "std": 0.0466
+              },
+              "elapsed_ms": 2338.9
+            },
+            "2021": {
+              "valid": true,
+              "n_pixels_valid": 1734,
+              "n_total": 1734,
+              "n_nodata": 0,
+              "stats": {
+                "mean": 0.8744,
+                "min": 0.5471,
+                "max": 0.9573,
+                "p10": 0.8213,
+                "p50": 0.8825,
+                "p90": 0.9141,
+                "std": 0.042
+              },
+              "elapsed_ms": 2409.7
+            },
+            "2022": {
+              "valid": true,
+              "n_pixels_valid": 1734,
+              "n_total": 1734,
+              "n_nodata": 0,
+              "stats": {
+                "mean": 0.8725,
+                "min": 0.6811,
+                "max": 0.9432,
+                "p10": 0.82,
+                "p50": 0.8833,
+                "p90": 0.9084,
+                "std": 0.0381
+              },
+              "elapsed_ms": 2497.4
+            },
+            "2023": {
+              "valid": true,
+              "n_pixels_valid": 1734,
+              "n_total": 1734,
+              "n_nodata": 0,
+              "stats": {
+                "mean": 0.8527,
+                "min": 0.2913,
+                "max": 0.9941,
+                "p10": 0.7949,
+                "p50": 0.8652,
+                "p90": 0.8979,
+                "std": 0.0586
+              },
+              "elapsed_ms": 2225.8
+            },
+            "2024": {
+              "valid": true,
+              "n_pixels_valid": 1734,
+              "n_total": 1734,
+              "n_nodata": 0,
+              "stats": {
+                "mean": 0.8734,
+                "min": 0.5164,
+                "max": 0.9411,
+                "p10": 0.8085,
+                "p50": 0.8862,
+                "p90": 0.9159,
+                "std": 0.0458
+              },
+              "elapsed_ms": 2551.1
+            }
+          },
+          "mann_kendall_trend_test": {
+            "valid": true,
+            "n_years": 10,
+            "S_statistic": 3,
+            "var_S": 125.0,
+            "Z_statistic": 0.1789,
+            "p_value": 0.858028,
+            "alpha": 0.05,
+            "significant": false,
+            "Kendall_tau": 0.0667,
+            "slope_sen_per_year": 0.00015,
+            "trend_classification": "INCREASING_GREENING_NOT_SIGNIFICANT",
+            "primary_references": [
+              "Mann_1945_Econometrica",
+              "Kendall_1975_RankCorrelationMethods",
+              "Sen_1968_JASA"
+            ],
+            "years_used_chronological": [
+              2015,
+              2016,
+              2017,
+              2018,
+              2019,
+              2020,
+              2021,
+              2022,
+              2023,
+              2024
+            ],
+            "mean_ndvi_series": [
+              0.8564,
+              0.8734,
+              0.8642,
+              0.8725,
+              0.8756,
+              0.8749,
+              0.8744,
+              0.8725,
+              0.8527,
+              0.8734
+            ]
+          }
+        },
+        "espece_e": {
+          "lat": 47.0,
+          "lon": -71.0,
+          "species_canonical": "wapiti",
+          "year_start": 2015,
+          "year_end": 2024,
+          "n_years_attempted": 10,
+          "n_years_valid": 10,
+          "annual_stats": {
+            "2015": {
+              "valid": true,
+              "n_pixels_valid": 1440,
+              "n_total": 1734,
+              "n_nodata": 294,
+              "stats": {
+                "mean": 0.8194,
+                "min": -0.1892,
+                "max": 0.9626,
+                "p10": 0.7414,
+                "p50": 0.8631,
+                "p90": 0.9047,
+                "std": 0.1494
+              },
+              "elapsed_ms": 2437.3
+            },
+            "2016": {
+              "valid": true,
+              "n_pixels_valid": 1446,
+              "n_total": 1734,
+              "n_nodata": 288,
+              "stats": {
+                "mean": 0.824,
+                "min": -0.1987,
+                "max": 0.9287,
+                "p10": 0.7547,
+                "p50": 0.8649,
+                "p90": 0.9074,
+                "std": 0.1549
+              },
+              "elapsed_ms": 2336.8
+            },
+            "2017": {
+              "valid": true,
+              "n_pixels_valid": 1471,
+              "n_total": 1734,
+              "n_nodata": 263,
+              "stats": {
+                "mean": 0.8112,
+                "min": -0.167,
+                "max": 0.9244,
+                "p10": 0.7302,
+                "p50": 0.8497,
+                "p90": 0.9025,
+                "std": 0.1506
+              },
+              "elapsed_ms": 2296.5
+            },
+            "2018": {
+              "valid": true,
+              "n_pixels_valid": 1447,
+              "n_total": 1734,
+              "n_nodata": 287,
+              "stats": {
+                "mean": 0.8205,
+                "min": -0.1911,
+                "max": 0.9498,
+                "p10": 0.7387,
+                "p50": 0.8564,
+                "p90": 0.902,
+                "std": 0.1445
+              },
+              "elapsed_ms": 2383.0
+            },
+            "2019": {
+              "valid": true,
+              "n_pixels_valid": 1494,
+              "n_total": 1734,
+              "n_nodata": 240,
+              "stats": {
+                "mean": 0.8056,
+                "min": -0.1968,
+                "max": 0.9589,
+                "p10": 0.7155,
+                "p50": 0.8563,
+                "p90": 0.8965,
+                "std": 0.1715
+              },
+              "elapsed_ms": 2364.9
+            },
+            "2020": {
+              "valid": true,
+              "n_pixels_valid": 1508,
+              "n_total": 1734,
+              "n_nodata": 226,
+              "stats": {
+                "mean": 0.8028,
+                "min": -0.1929,
+                "max": 0.9469,
+                "p10": 0.7014,
+                "p50": 0.8657,
+                "p90": 0.9132,
+                "std": 0.2029
+              },
+              "elapsed_ms": 2453.2
+            },
+            "2021": {
+              "valid": true,
+              "n_pixels_valid": 1440,
+              "n_total": 1734,
+              "n_nodata": 294,
+              "stats": {
+                "mean": 0.8123,
+                "min": -0.1115,
+                "max": 0.9292,
+                "p10": 0.7285,
+                "p50": 0.8518,
+                "p90": 0.9052,
+                "std": 0.1473
+              },
+              "elapsed_ms": 2370.0
+            },
+            "2022": {
+              "valid": true,
+              "n_pixels_valid": 1489,
+              "n_total": 1734,
+              "n_nodata": 245,
+              "stats": {
+                "mean": 0.7922,
+                "min": -0.2,
+                "max": 0.9884,
+                "p10": 0.698,
+                "p50": 0.8486,
+                "p90": 0.8913,
+                "std": 0.179
+              },
+              "elapsed_ms": 2432.4
+            },
+            "2023": {
+              "valid": true,
+              "n_pixels_valid": 1457,
+              "n_total": 1734,
+              "n_nodata": 277,
+              "stats": {
+                "mean": 0.8147,
+                "min": -0.1793,
+                "max": 0.9915,
+                "p10": 0.7158,
+                "p50": 0.8619,
+                "p90": 0.9127,
+                "std": 0.1557
+              },
+              "elapsed_ms": 2346.1
+            },
+            "2024": {
+              "valid": true,
+              "n_pixels_valid": 1445,
+              "n_total": 1734,
+              "n_nodata": 289,
+              "stats": {
+                "mean": 0.8209,
+                "min": -0.1881,
+                "max": 0.9498,
+                "p10": 0.7373,
+                "p50": 0.8672,
+                "p90": 0.916,
+                "std": 0.1539
+              },
+              "elapsed_ms": 2395.8
+            }
+          },
+          "mann_kendall_trend_test": {
+            "valid": true,
+            "n_years": 10,
+            "S_statistic": -7,
+            "var_S": 125.0,
+            "Z_statistic": -0.5367,
+            "p_value": 0.591505,
+            "alpha": 0.05,
+            "significant": false,
+            "Kendall_tau": -0.1556,
+            "slope_sen_per_year": -0.001172,
+            "trend_classification": "DECREASING_BROWNING_NOT_SIGNIFICANT",
+            "primary_references": [
+              "Mann_1945_Econometrica",
+              "Kendall_1975_RankCorrelationMethods",
+              "Sen_1968_JASA"
+            ],
+            "years_used_chronological": [
+              2015,
+              2016,
+              2017,
+              2018,
+              2019,
+              2020,
+              2021,
+              2022,
+              2023,
+              2024
+            ],
+            "mean_ndvi_series": [
+              0.8194,
+              0.824,
+              0.8112,
+              0.8205,
+              0.8056,
+              0.8028,
+              0.8123,
+              0.7922,
+              0.8147,
+              0.8209
+            ]
+          }
+        }
+      },
+      "scientific_references_peer_reviewed": [
+        "Mann (1945). Econometrica, 13:245-259. DOI:10.2307/1907187",
+        "Kendall (1975). Rank Correlation Methods. 4th ed. Charles Griffin.",
+        "Sen (1968). JASA, 63:1379-1389. DOI:10.1080/01621459.1968.10480934",
+        "Pettorelli et al. (2011). Climate Research, 46:15-27. DOI:10.3354/cr00936",
+        "Forkel et al. (2013). Remote Sensing, 5:2113-2144. DOI:10.3390/rs5052113"
+      ],
+      "anti_generique_strict": true,
+      "fusion_add_only": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T12:33:33+00:00",
+      "elapsed_s": 204.853,
+      "manifest_sha256": "d761d7ad7fb8f8bb87bf33afbc1e3f03fb9e825c53ad6945ec2d85b2cb73648c"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T12:33:33+00:00",
+  "n_validations": 1,
+  "last_manifest_sha256": "d761d7ad7fb8f8bb87bf33afbc1e3f03fb9e825c53ad6945ec2d85b2cb73648c",
+  "last_verdict": "MULTI_YEAR_DENSE_GRID_TIMESERIES_ALL_VALID",
+  "v30_lock": "INVIOLÉ"
+}

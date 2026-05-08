@@ -1,0 +1,97 @@
+{
+  "history": [
+    {
+      "manifest_id": "MULTI_SIGNATURE_VERIFICATION_HOOK_ACTIVATE_Ω",
+      "ordre": "P12_MULTI_SIGNATURE_VERIFICATION_HOOK_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "activated": true,
+      "verdict": "MULTI_SIGNATURE_VERIFICATION_HOOK_ACTIVATED",
+      "reason": "reinforce_cryptographic_integrity_of_all_manifests",
+      "sign_all_result_summary": {
+        "verdict": "MULTI_SIGNATURE_SIGN_ALL_SUCCESS",
+        "n_signed": 15,
+        "n_failed": 0,
+        "manifest_sha256": "716f59abe5ca4568312debe0a44254c119b08be79b23f85554bcd5f31a46bceb",
+        "agents_chain_of_trust": {
+          "agent_a_ed25519": {
+            "algorithm": "Ed25519_RFC8032",
+            "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0"
+          },
+          "agent_b_pgp": {
+            "algorithm": "RSA_2048_OpenPGP_RFC4880",
+            "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294"
+          }
+        }
+      },
+      "verify_all_result_summary": {
+        "verdict": "MULTI_SIGNATURE_VERIFY_ALL_VALID",
+        "n_both_signatures_valid": 15,
+        "n_invalid": 0,
+        "verify_manifest_sha256": "0d4a5b09f68d88ccefb9fc02d5247b39b197dd57f2862e045c5dff79b19217c9"
+      },
+      "outputs_unblocked_via_this_hook": [
+        "cryptographic_chain_of_trust_2_tier",
+        "Ed25519_signatures_per_manifest",
+        "PGP_RSA_2048_signatures_per_manifest"
+      ],
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T12:28:15+00:00",
+      "elapsed_s": 0.953,
+      "manifest_sha256": "611cd9a2284c3636cea946c2b9dfd9ad3ad3f6494dbf2247f15b69c1653fa823"
+    },
+    {
+      "manifest_id": "MULTI_SIGNATURE_VERIFICATION_HOOK_ACTIVATE_Ω",
+      "ordre": "P12_MULTI_SIGNATURE_VERIFICATION_HOOK_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "activated": true,
+      "verdict": "MULTI_SIGNATURE_VERIFICATION_HOOK_ACTIVATED",
+      "reason": "re_sign_after_P11_P12_added_to_catalog",
+      "sign_all_result_summary": {
+        "verdict": "MULTI_SIGNATURE_SIGN_ALL_SUCCESS",
+        "n_signed": 17,
+        "n_failed": 0,
+        "manifest_sha256": "b1b07d09fa2ffca54f958bb159b706eee32018b3f49a7cb5ba26a09d22822b93",
+        "agents_chain_of_trust": {
+          "agent_a_ed25519": {
+            "algorithm": "Ed25519_RFC8032",
+            "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0"
+          },
+          "agent_b_pgp": {
+            "algorithm": "RSA_2048_OpenPGP_RFC4880",
+            "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294"
+          }
+        }
+      },
+      "verify_all_result_summary": {
+        "verdict": "MULTI_SIGNATURE_VERIFY_ALL_VALID",
+        "n_both_signatures_valid": 17,
+        "n_invalid": 0,
+        "verify_manifest_sha256": "954f99eba0e699a4ddd719e940123797b7d4451ef0ce7497ddf6fb43ef6ffdc0"
+      },
+      "outputs_unblocked_via_this_hook": [
+        "cryptographic_chain_of_trust_2_tier",
+        "Ed25519_signatures_per_manifest",
+        "PGP_RSA_2048_signatures_per_manifest"
+      ],
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T12:37:27+00:00",
+      "elapsed_s": 0.747,
+      "manifest_sha256": "48b078bd14972860cb4e569407b649c9222deaf90cf88af0b3a851de22d941d3"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T12:37:27+00:00",
+  "n_activations": 2,
+  "last_manifest_sha256": "48b078bd14972860cb4e569407b649c9222deaf90cf88af0b3a851de22d941d3",
+  "last_verdict": "MULTI_SIGNATURE_VERIFICATION_HOOK_ACTIVATED",
+  "v30_lock": "INVIOLÉ"
+}
