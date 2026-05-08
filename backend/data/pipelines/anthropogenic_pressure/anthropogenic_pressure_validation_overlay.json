@@ -1,0 +1,788 @@
+{
+  "history": [
+    {
+      "manifest_id": "ANTHROPOGENIC_PRESSURE_P0_VALIDATE_Ω",
+      "ordre": "P4_ANTHROPOGENIC_PRESSURE_HOOK_ACTIVATE_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "valid": false,
+      "verdict": "ANTHROPOGENIC_PRESSURE_VALIDATE_PARTIAL::4_OF_5_VALID",
+      "provider": "ANTHROPOGENIC",
+      "providers_physical": [
+        "OSM_OVERPASS_API",
+        "WORLDPOP_REST_API"
+      ],
+      "endpoints": {
+        "osm_overpass": "https://overpass-api.de/api/interpreter",
+        "worldpop": "https://api.worldpop.org/v1/services/stats"
+      },
+      "doctrine_thresholds": {
+        "buffer_roads_buildings_m": 5000,
+        "buffer_population_m": 2000,
+        "road_density_saturation_km_per_km2": 5.0,
+        "building_density_saturation_per_km2": 200.0,
+        "population_density_saturation_per_km2": 500.0,
+        "weight_roads": 0.4,
+        "weight_population": 0.3,
+        "weight_buildings": 0.2,
+        "weight_residential_share": 0.1,
+        "high_pressure_threshold": 75.0,
+        "moderate_pressure_threshold": 50.0,
+        "low_pressure_threshold": 25.0
+      },
+      "n_sites_total": 5,
+      "n_osm_success": 4,
+      "n_worldpop_success": 5,
+      "n_composite_success": 4,
+      "site_results": {
+        "espece_a": {
+          "lat": 46.8131,
+          "lon": -71.2075,
+          "osm_overpass_result": {
+            "lat": 46.8131,
+            "lon": -71.2075,
+            "valid": false,
+            "http_status": 200,
+            "reason": "non_json_response",
+            "elapsed_ms": 2528.5
+          },
+          "worldpop_result": {
+            "lat": 46.8131,
+            "lon": -71.2075,
+            "valid": true,
+            "year": 2020,
+            "bbox_half_side_deg": 0.01,
+            "bbox_area_km2": 3.3729,
+            "total_population": 5627.65,
+            "population_density_per_km2": 1668.4898,
+            "elapsed_ms": 6384.7,
+            "data_source_url": "https://api.worldpop.org/v1/services/stats",
+            "license": "CC_BY_4_0_WorldPop"
+          },
+          "composite_index": {
+            "valid": false,
+            "reason": "at_least_one_source_invalid",
+            "osm_valid": false,
+            "worldpop_valid": true
+          },
+          "pressure_sensitive_zone_classification": null
+        },
+        "espece_b": {
+          "lat": 47.2,
+          "lon": -70.27,
+          "osm_overpass_result": {
+            "lat": 47.2,
+            "lon": -70.27,
+            "valid": true,
+            "buffer_radius_m": 5000,
+            "buffer_area_km2": 78.54,
+            "n_highway_ways": 292,
+            "n_building_ways": 81,
+            "n_residential_landuse_ways": 3,
+            "road_total_length_m": 155939.0,
+            "road_density_km_per_km2": 1.9855,
+            "building_total_count": 81,
+            "building_density_per_km2": 1.0313,
+            "residential_landuse_count": 3,
+            "elapsed_ms": 1227.8,
+            "data_source_url": "https://overpass-api.de/api/interpreter",
+            "license": "ODbL_OpenStreetMap"
+          },
+          "worldpop_result": {
+            "lat": 47.2,
+            "lon": -70.27,
+            "valid": true,
+            "year": 2020,
+            "bbox_half_side_deg": 0.01,
+            "bbox_area_km2": 3.3486,
+            "total_population": 282.56,
+            "population_density_per_km2": 84.3826,
+            "elapsed_ms": 4276.5,
+            "data_source_url": "https://api.worldpop.org/v1/services/stats",
+            "license": "CC_BY_4_0_WorldPop"
+          },
+          "composite_index": {
+            "valid": true,
+            "composite_index_0_100": 22.55,
+            "components": {
+              "road_score": 39.71,
+              "building_score": 0.52,
+              "population_score": 16.88,
+              "residential_share": 15.0
+            },
+            "weights_doctrinal": {
+              "roads": 0.4,
+              "population": 0.3,
+              "buildings": 0.2,
+              "residential_share": 0.1
+            },
+            "raw_inputs": {
+              "road_density_km_per_km2": 1.9855,
+              "building_density_per_km2": 1.0313,
+              "population_density_per_km2": 84.3826,
+              "n_residential_landuse_ways": 3,
+              "buffer_area_km2": 78.54
+            },
+            "primary_references": [
+              "Naidoo_Burton_2010_ConservationLetters",
+              "Frid_Dill_2002_ConservationEcology"
+            ]
+          },
+          "pressure_sensitive_zone_classification": {
+            "regime": "REFUGE_FROM_ANTHROPOGENIC_DISTURBANCE",
+            "is_pressure_sensitive": false,
+            "thresholds_doctrinal": {
+              "high": 75.0,
+              "moderate": 50.0,
+              "low": 25.0
+            }
+          }
+        },
+        "espece_c": {
+          "lat": 48.34,
+          "lon": -69.39,
+          "osm_overpass_result": {
+            "lat": 48.34,
+            "lon": -69.39,
+            "valid": true,
+            "buffer_radius_m": 5000,
+            "buffer_area_km2": 78.54,
+            "n_highway_ways": 189,
+            "n_building_ways": 239,
+            "n_residential_landuse_ways": 8,
+            "road_total_length_m": 125623.0,
+            "road_density_km_per_km2": 1.5995,
+            "building_total_count": 239,
+            "building_density_per_km2": 3.043,
+            "residential_landuse_count": 8,
+            "elapsed_ms": 1218.8,
+            "data_source_url": "https://overpass-api.de/api/interpreter",
+            "license": "ODbL_OpenStreetMap"
+          },
+          "worldpop_result": {
+            "lat": 48.34,
+            "lon": -69.39,
+            "valid": true,
+            "year": 2020,
+            "bbox_half_side_deg": 0.01,
+            "bbox_area_km2": 3.276,
+            "total_population": 101.82,
+            "population_density_per_km2": 31.081,
+            "elapsed_ms": 4321.5,
+            "data_source_url": "https://api.worldpop.org/v1/services/stats",
+            "license": "CC_BY_4_0_WorldPop"
+          },
+          "composite_index": {
+            "valid": true,
+            "composite_index_0_100": 18.97,
+            "components": {
+              "road_score": 31.99,
+              "building_score": 1.52,
+              "population_score": 6.22,
+              "residential_share": 40.0
+            },
+            "weights_doctrinal": {
+              "roads": 0.4,
+              "population": 0.3,
+              "buildings": 0.2,
+              "residential_share": 0.1
+            },
+            "raw_inputs": {
+              "road_density_km_per_km2": 1.5995,
+              "building_density_per_km2": 3.043,
+              "population_density_per_km2": 31.081,
+              "n_residential_landuse_ways": 8,
+              "buffer_area_km2": 78.54
+            },
+            "primary_references": [
+              "Naidoo_Burton_2010_ConservationLetters",
+              "Frid_Dill_2002_ConservationEcology"
+            ]
+          },
+          "pressure_sensitive_zone_classification": {
+            "regime": "REFUGE_FROM_ANTHROPOGENIC_DISTURBANCE",
+            "is_pressure_sensitive": false,
+            "thresholds_doctrinal": {
+              "high": 75.0,
+              "moderate": 50.0,
+              "low": 25.0
+            }
+          }
+        },
+        "espece_d": {
+          "lat": 46.36,
+          "lon": -72.07,
+          "osm_overpass_result": {
+            "lat": 46.36,
+            "lon": -72.07,
+            "valid": true,
+            "buffer_radius_m": 5000,
+            "buffer_area_km2": 78.54,
+            "n_highway_ways": 32,
+            "n_building_ways": 5,
+            "n_residential_landuse_ways": 3,
+            "road_total_length_m": 65584.7,
+            "road_density_km_per_km2": 0.8351,
+            "building_total_count": 5,
+            "building_density_per_km2": 0.0637,
+            "residential_landuse_count": 3,
+            "elapsed_ms": 3303.4,
+            "data_source_url": "https://overpass-api.de/api/interpreter",
+            "license": "ODbL_OpenStreetMap"
+          },
+          "worldpop_result": {
+            "lat": 46.36,
+            "lon": -72.07,
+            "valid": true,
+            "year": 2020,
+            "bbox_half_side_deg": 0.01,
+            "bbox_area_km2": 3.4012,
+            "total_population": 7.81,
+            "population_density_per_km2": 2.2962,
+            "elapsed_ms": 4716.7,
+            "data_source_url": "https://api.worldpop.org/v1/services/stats",
+            "license": "CC_BY_4_0_WorldPop"
+          },
+          "composite_index": {
+            "valid": true,
+            "composite_index_0_100": 8.32,
+            "components": {
+              "road_score": 16.7,
+              "building_score": 0.03,
+              "population_score": 0.46,
+              "residential_share": 15.0
+            },
+            "weights_doctrinal": {
+              "roads": 0.4,
+              "population": 0.3,
+              "buildings": 0.2,
+              "residential_share": 0.1
+            },
+            "raw_inputs": {
+              "road_density_km_per_km2": 0.8351,
+              "building_density_per_km2": 0.0637,
+              "population_density_per_km2": 2.2962,
+              "n_residential_landuse_ways": 3,
+              "buffer_area_km2": 78.54
+            },
+            "primary_references": [
+              "Naidoo_Burton_2010_ConservationLetters",
+              "Frid_Dill_2002_ConservationEcology"
+            ]
+          },
+          "pressure_sensitive_zone_classification": {
+            "regime": "REFUGE_FROM_ANTHROPOGENIC_DISTURBANCE",
+            "is_pressure_sensitive": false,
+            "thresholds_doctrinal": {
+              "high": 75.0,
+              "moderate": 50.0,
+              "low": 25.0
+            }
+          }
+        },
+        "espece_e": {
+          "lat": 47.0,
+          "lon": -71.0,
+          "osm_overpass_result": {
+            "lat": 47.0,
+            "lon": -71.0,
+            "valid": true,
+            "buffer_radius_m": 5000,
+            "buffer_area_km2": 78.54,
+            "n_highway_ways": 322,
+            "n_building_ways": 343,
+            "n_residential_landuse_ways": 15,
+            "road_total_length_m": 185778.6,
+            "road_density_km_per_km2": 2.3654,
+            "building_total_count": 343,
+            "building_density_per_km2": 4.3672,
+            "residential_landuse_count": 15,
+            "elapsed_ms": 1659.6,
+            "data_source_url": "https://overpass-api.de/api/interpreter",
+            "license": "ODbL_OpenStreetMap"
+          },
+          "worldpop_result": {
+            "lat": 47.0,
+            "lon": -71.0,
+            "valid": true,
+            "year": 2020,
+            "bbox_half_side_deg": 0.01,
+            "bbox_area_km2": 3.3612,
+            "total_population": 202.08,
+            "population_density_per_km2": 60.1221,
+            "elapsed_ms": 4510.6,
+            "data_source_url": "https://api.worldpop.org/v1/services/stats",
+            "license": "CC_BY_4_0_WorldPop"
+          },
+          "composite_index": {
+            "valid": true,
+            "composite_index_0_100": 30.47,
+            "components": {
+              "road_score": 47.31,
+              "building_score": 2.18,
+              "population_score": 12.02,
+              "residential_share": 75.0
+            },
+            "weights_doctrinal": {
+              "roads": 0.4,
+              "population": 0.3,
+              "buildings": 0.2,
+              "residential_share": 0.1
+            },
+            "raw_inputs": {
+              "road_density_km_per_km2": 2.3654,
+              "building_density_per_km2": 4.3672,
+              "population_density_per_km2": 60.1221,
+              "n_residential_landuse_ways": 15,
+              "buffer_area_km2": 78.54
+            },
+            "primary_references": [
+              "Naidoo_Burton_2010_ConservationLetters",
+              "Frid_Dill_2002_ConservationEcology"
+            ]
+          },
+          "pressure_sensitive_zone_classification": {
+            "regime": "LOW_PRESSURE_MARGINAL",
+            "is_pressure_sensitive": false,
+            "thresholds_doctrinal": {
+              "high": 75.0,
+              "moderate": 50.0,
+              "low": 25.0
+            }
+          }
+        }
+      },
+      "scientific_references_peer_reviewed": [
+        "Haklay (2010). Env & Planning B, 37:682-703. DOI:10.1068/b35097",
+        "Barrington-Leigh & Millard-Ball (2017). PLoS ONE, 12(8):e0180698. DOI:10.1371/journal.pone.0180698",
+        "Tatem (2017). Scientific Data, 4:170004. DOI:10.1038/sdata.2017.4",
+        "Stevens et al. (2015). PLoS ONE, 10(2). DOI:10.1371/journal.pone.0107042",
+        "Frid & Dill (2002). Conservation Ecology, 6(1):11.",
+        "Naidoo & Burton (2010). Conservation Letters, 3:431-440. DOI:10.1111/j.1755-263X.2010.00138.x",
+        "Tucker et al. (2018). Science, 359:466-469. DOI:10.1126/science.aam9712"
+      ],
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T02:02:40+00:00",
+      "elapsed_s": 39.159,
+      "manifest_sha256": "ff9c1035489acb7b03202d0de83461ad1a981707d80916932fce1a336f308fe8"
+    },
+    {
+      "manifest_id": "ANTHROPOGENIC_PRESSURE_P0_VALIDATE_Ω",
+      "ordre": "P4_ANTHROPOGENIC_PRESSURE_HOOK_ACTIVATE_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "valid": true,
+      "verdict": "ANTHROPOGENIC_PRESSURE_VALIDATE_ALL_VALID",
+      "provider": "ANTHROPOGENIC",
+      "providers_physical": [
+        "OSM_OVERPASS_API",
+        "WORLDPOP_REST_API"
+      ],
+      "endpoints": {
+        "osm_overpass": "https://overpass-api.de/api/interpreter",
+        "worldpop": "https://api.worldpop.org/v1/services/stats"
+      },
+      "doctrine_thresholds": {
+        "buffer_roads_buildings_m": 5000,
+        "buffer_population_m": 2000,
+        "road_density_saturation_km_per_km2": 5.0,
+        "building_density_saturation_per_km2": 200.0,
+        "population_density_saturation_per_km2": 500.0,
+        "weight_roads": 0.4,
+        "weight_population": 0.3,
+        "weight_buildings": 0.2,
+        "weight_residential_share": 0.1,
+        "high_pressure_threshold": 75.0,
+        "moderate_pressure_threshold": 50.0,
+        "low_pressure_threshold": 25.0
+      },
+      "n_sites_total": 5,
+      "n_osm_success": 5,
+      "n_worldpop_success": 5,
+      "n_composite_success": 5,
+      "site_results": {
+        "espece_a": {
+          "lat": 46.8131,
+          "lon": -71.2075,
+          "osm_overpass_result": {
+            "lat": 46.8131,
+            "lon": -71.2075,
+            "valid": true,
+            "buffer_radius_m": 5000,
+            "buffer_area_km2": 78.54,
+            "n_highway_ways": 11923,
+            "n_building_ways": 21044,
+            "n_residential_landuse_ways": 543,
+            "road_total_length_m": 1428118.9,
+            "road_density_km_per_km2": 18.1834,
+            "building_total_count": 21044,
+            "building_density_per_km2": 267.9405,
+            "residential_landuse_count": 543,
+            "elapsed_ms": 3414.9,
+            "data_source_url": "https://overpass-api.de/api/interpreter",
+            "license": "ODbL_OpenStreetMap"
+          },
+          "worldpop_result": {
+            "lat": 46.8131,
+            "lon": -71.2075,
+            "valid": true,
+            "year": 2020,
+            "bbox_half_side_deg": 0.01,
+            "bbox_area_km2": 3.3729,
+            "total_population": 5627.65,
+            "population_density_per_km2": 1668.4898,
+            "elapsed_ms": 5410.3,
+            "data_source_url": "https://api.worldpop.org/v1/services/stats",
+            "license": "CC_BY_4_0_WorldPop"
+          },
+          "composite_index": {
+            "valid": true,
+            "composite_index_0_100": 100.0,
+            "components": {
+              "road_score": 100.0,
+              "building_score": 100.0,
+              "population_score": 100.0,
+              "residential_share": 100.0
+            },
+            "weights_doctrinal": {
+              "roads": 0.4,
+              "population": 0.3,
+              "buildings": 0.2,
+              "residential_share": 0.1
+            },
+            "raw_inputs": {
+              "road_density_km_per_km2": 18.1834,
+              "building_density_per_km2": 267.9405,
+              "population_density_per_km2": 1668.4898,
+              "n_residential_landuse_ways": 543,
+              "buffer_area_km2": 78.54
+            },
+            "primary_references": [
+              "Naidoo_Burton_2010_ConservationLetters",
+              "Frid_Dill_2002_ConservationEcology"
+            ]
+          },
+          "pressure_sensitive_zone_classification": {
+            "regime": "HIGH_PRESSURE_AVOID_ZONE",
+            "is_pressure_sensitive": true,
+            "thresholds_doctrinal": {
+              "high": 75.0,
+              "moderate": 50.0,
+              "low": 25.0
+            }
+          }
+        },
+        "espece_b": {
+          "lat": 47.2,
+          "lon": -70.27,
+          "osm_overpass_result": {
+            "lat": 47.2,
+            "lon": -70.27,
+            "valid": true,
+            "buffer_radius_m": 5000,
+            "buffer_area_km2": 78.54,
+            "n_highway_ways": 292,
+            "n_building_ways": 81,
+            "n_residential_landuse_ways": 3,
+            "road_total_length_m": 155939.0,
+            "road_density_km_per_km2": 1.9855,
+            "building_total_count": 81,
+            "building_density_per_km2": 1.0313,
+            "residential_landuse_count": 3,
+            "elapsed_ms": 1213.4,
+            "data_source_url": "https://overpass-api.de/api/interpreter",
+            "license": "ODbL_OpenStreetMap"
+          },
+          "worldpop_result": {
+            "lat": 47.2,
+            "lon": -70.27,
+            "valid": true,
+            "year": 2020,
+            "bbox_half_side_deg": 0.01,
+            "bbox_area_km2": 3.3486,
+            "total_population": 282.56,
+            "population_density_per_km2": 84.3826,
+            "elapsed_ms": 4713.5,
+            "data_source_url": "https://api.worldpop.org/v1/services/stats",
+            "license": "CC_BY_4_0_WorldPop"
+          },
+          "composite_index": {
+            "valid": true,
+            "composite_index_0_100": 22.55,
+            "components": {
+              "road_score": 39.71,
+              "building_score": 0.52,
+              "population_score": 16.88,
+              "residential_share": 15.0
+            },
+            "weights_doctrinal": {
+              "roads": 0.4,
+              "population": 0.3,
+              "buildings": 0.2,
+              "residential_share": 0.1
+            },
+            "raw_inputs": {
+              "road_density_km_per_km2": 1.9855,
+              "building_density_per_km2": 1.0313,
+              "population_density_per_km2": 84.3826,
+              "n_residential_landuse_ways": 3,
+              "buffer_area_km2": 78.54
+            },
+            "primary_references": [
+              "Naidoo_Burton_2010_ConservationLetters",
+              "Frid_Dill_2002_ConservationEcology"
+            ]
+          },
+          "pressure_sensitive_zone_classification": {
+            "regime": "REFUGE_FROM_ANTHROPOGENIC_DISTURBANCE",
+            "is_pressure_sensitive": false,
+            "thresholds_doctrinal": {
+              "high": 75.0,
+              "moderate": 50.0,
+              "low": 25.0
+            }
+          }
+        },
+        "espece_c": {
+          "lat": 48.34,
+          "lon": -69.39,
+          "osm_overpass_result": {
+            "lat": 48.34,
+            "lon": -69.39,
+            "valid": true,
+            "buffer_radius_m": 5000,
+            "buffer_area_km2": 78.54,
+            "n_highway_ways": 189,
+            "n_building_ways": 239,
+            "n_residential_landuse_ways": 8,
+            "road_total_length_m": 125623.0,
+            "road_density_km_per_km2": 1.5995,
+            "building_total_count": 239,
+            "building_density_per_km2": 3.043,
+            "residential_landuse_count": 8,
+            "elapsed_ms": 1212.5,
+            "data_source_url": "https://overpass-api.de/api/interpreter",
+            "license": "ODbL_OpenStreetMap"
+          },
+          "worldpop_result": {
+            "lat": 48.34,
+            "lon": -69.39,
+            "valid": true,
+            "year": 2020,
+            "bbox_half_side_deg": 0.01,
+            "bbox_area_km2": 3.276,
+            "total_population": 101.82,
+            "population_density_per_km2": 31.081,
+            "elapsed_ms": 5174.1,
+            "data_source_url": "https://api.worldpop.org/v1/services/stats",
+            "license": "CC_BY_4_0_WorldPop"
+          },
+          "composite_index": {
+            "valid": true,
+            "composite_index_0_100": 18.97,
+            "components": {
+              "road_score": 31.99,
+              "building_score": 1.52,
+              "population_score": 6.22,
+              "residential_share": 40.0
+            },
+            "weights_doctrinal": {
+              "roads": 0.4,
+              "population": 0.3,
+              "buildings": 0.2,
+              "residential_share": 0.1
+            },
+            "raw_inputs": {
+              "road_density_km_per_km2": 1.5995,
+              "building_density_per_km2": 3.043,
+              "population_density_per_km2": 31.081,
+              "n_residential_landuse_ways": 8,
+              "buffer_area_km2": 78.54
+            },
+            "primary_references": [
+              "Naidoo_Burton_2010_ConservationLetters",
+              "Frid_Dill_2002_ConservationEcology"
+            ]
+          },
+          "pressure_sensitive_zone_classification": {
+            "regime": "REFUGE_FROM_ANTHROPOGENIC_DISTURBANCE",
+            "is_pressure_sensitive": false,
+            "thresholds_doctrinal": {
+              "high": 75.0,
+              "moderate": 50.0,
+              "low": 25.0
+            }
+          }
+        },
+        "espece_d": {
+          "lat": 46.36,
+          "lon": -72.07,
+          "osm_overpass_result": {
+            "lat": 46.36,
+            "lon": -72.07,
+            "valid": true,
+            "buffer_radius_m": 5000,
+            "buffer_area_km2": 78.54,
+            "n_highway_ways": 32,
+            "n_building_ways": 5,
+            "n_residential_landuse_ways": 3,
+            "road_total_length_m": 65584.7,
+            "road_density_km_per_km2": 0.8351,
+            "building_total_count": 5,
+            "building_density_per_km2": 0.0637,
+            "residential_landuse_count": 3,
+            "elapsed_ms": 810.6,
+            "data_source_url": "https://overpass-api.de/api/interpreter",
+            "license": "ODbL_OpenStreetMap"
+          },
+          "worldpop_result": {
+            "lat": 46.36,
+            "lon": -72.07,
+            "valid": true,
+            "year": 2020,
+            "bbox_half_side_deg": 0.01,
+            "bbox_area_km2": 3.4012,
+            "total_population": 7.81,
+            "population_density_per_km2": 2.2962,
+            "elapsed_ms": 5107.7,
+            "data_source_url": "https://api.worldpop.org/v1/services/stats",
+            "license": "CC_BY_4_0_WorldPop"
+          },
+          "composite_index": {
+            "valid": true,
+            "composite_index_0_100": 8.32,
+            "components": {
+              "road_score": 16.7,
+              "building_score": 0.03,
+              "population_score": 0.46,
+              "residential_share": 15.0
+            },
+            "weights_doctrinal": {
+              "roads": 0.4,
+              "population": 0.3,
+              "buildings": 0.2,
+              "residential_share": 0.1
+            },
+            "raw_inputs": {
+              "road_density_km_per_km2": 0.8351,
+              "building_density_per_km2": 0.0637,
+              "population_density_per_km2": 2.2962,
+              "n_residential_landuse_ways": 3,
+              "buffer_area_km2": 78.54
+            },
+            "primary_references": [
+              "Naidoo_Burton_2010_ConservationLetters",
+              "Frid_Dill_2002_ConservationEcology"
+            ]
+          },
+          "pressure_sensitive_zone_classification": {
+            "regime": "REFUGE_FROM_ANTHROPOGENIC_DISTURBANCE",
+            "is_pressure_sensitive": false,
+            "thresholds_doctrinal": {
+              "high": 75.0,
+              "moderate": 50.0,
+              "low": 25.0
+            }
+          }
+        },
+        "espece_e": {
+          "lat": 47.0,
+          "lon": -71.0,
+          "osm_overpass_result": {
+            "lat": 47.0,
+            "lon": -71.0,
+            "valid": true,
+            "buffer_radius_m": 5000,
+            "buffer_area_km2": 78.54,
+            "n_highway_ways": 322,
+            "n_building_ways": 343,
+            "n_residential_landuse_ways": 15,
+            "road_total_length_m": 185778.6,
+            "road_density_km_per_km2": 2.3654,
+            "building_total_count": 343,
+            "building_density_per_km2": 4.3672,
+            "residential_landuse_count": 15,
+            "elapsed_ms": 1300.7,
+            "data_source_url": "https://overpass-api.de/api/interpreter",
+            "license": "ODbL_OpenStreetMap"
+          },
+          "worldpop_result": {
+            "lat": 47.0,
+            "lon": -71.0,
+            "valid": true,
+            "year": 2020,
+            "bbox_half_side_deg": 0.01,
+            "bbox_area_km2": 3.3612,
+            "total_population": 202.08,
+            "population_density_per_km2": 60.1221,
+            "elapsed_ms": 4336.3,
+            "data_source_url": "https://api.worldpop.org/v1/services/stats",
+            "license": "CC_BY_4_0_WorldPop"
+          },
+          "composite_index": {
+            "valid": true,
+            "composite_index_0_100": 30.47,
+            "components": {
+              "road_score": 47.31,
+              "building_score": 2.18,
+              "population_score": 12.02,
+              "residential_share": 75.0
+            },
+            "weights_doctrinal": {
+              "roads": 0.4,
+              "population": 0.3,
+              "buildings": 0.2,
+              "residential_share": 0.1
+            },
+            "raw_inputs": {
+              "road_density_km_per_km2": 2.3654,
+              "building_density_per_km2": 4.3672,
+              "population_density_per_km2": 60.1221,
+              "n_residential_landuse_ways": 15,
+              "buffer_area_km2": 78.54
+            },
+            "primary_references": [
+              "Naidoo_Burton_2010_ConservationLetters",
+              "Frid_Dill_2002_ConservationEcology"
+            ]
+          },
+          "pressure_sensitive_zone_classification": {
+            "regime": "LOW_PRESSURE_MARGINAL",
+            "is_pressure_sensitive": false,
+            "thresholds_doctrinal": {
+              "high": 75.0,
+              "moderate": 50.0,
+              "low": 25.0
+            }
+          }
+        }
+      },
+      "scientific_references_peer_reviewed": [
+        "Haklay (2010). Env & Planning B, 37:682-703. DOI:10.1068/b35097",
+        "Barrington-Leigh & Millard-Ball (2017). PLoS ONE, 12(8):e0180698. DOI:10.1371/journal.pone.0180698",
+        "Tatem (2017). Scientific Data, 4:170004. DOI:10.1038/sdata.2017.4",
+        "Stevens et al. (2015). PLoS ONE, 10(2). DOI:10.1371/journal.pone.0107042",
+        "Frid & Dill (2002). Conservation Ecology, 6(1):11.",
+        "Naidoo & Burton (2010). Conservation Letters, 3:431-440. DOI:10.1111/j.1755-263X.2010.00138.x",
+        "Tucker et al. (2018). Science, 359:466-469. DOI:10.1126/science.aam9712"
+      ],
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T02:04:18+00:00",
+      "elapsed_s": 37.776,
+      "manifest_sha256": "da05ca1e2cb1c13766d442b1bfa03747f1d29d3f3fd762a3d0b8c1b2fb51a765"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T02:04:18+00:00",
+  "n_validations": 2,
+  "last_manifest_sha256": "da05ca1e2cb1c13766d442b1bfa03747f1d29d3f3fd762a3d0b8c1b2fb51a765",
+  "last_verdict": "ANTHROPOGENIC_PRESSURE_VALIDATE_ALL_VALID",
+  "v30_lock": "INVIOLÉ"
+}

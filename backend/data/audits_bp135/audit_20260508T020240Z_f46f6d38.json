@@ -1,0 +1,26 @@
+{
+  "audit_filename": "audit_20260508T020240Z_f46f6d38.json",
+  "audit_sha256": "f46f6d38a269f3ce64c6f2d0d42e860263e95d8b5acf55bdd6246510226ff633",
+  "persisted_at_utc": "2026-05-08T02:02:40+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "NOAA_PIPELINE",
+    "subtype": "ANTHROPOGENIC_PRESSURE_VALIDATE",
+    "ordre": "P4_ANTHROPOGENIC_PRESSURE_HOOK_ACTIVATE_Ω",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "provider": "ANTHROPOGENIC",
+    "providers_physical": [
+      "OSM_OVERPASS_API",
+      "WORLDPOP_REST_API"
+    ],
+    "valid": false,
+    "verdict": "ANTHROPOGENIC_PRESSURE_VALIDATE_PARTIAL::4_OF_5_VALID",
+    "manifest_sha256": "ff9c1035489acb7b03202d0de83461ad1a981707d80916932fce1a336f308fe8",
+    "n_sites_total": 5,
+    "n_composite_success": 4,
+    "v30_lock_inviolate": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  }
+}

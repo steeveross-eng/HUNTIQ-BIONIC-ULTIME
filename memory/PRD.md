@@ -27,6 +27,35 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-OCTOVICIES · HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME_V3 — 🎯 9/12 OUTPUTS COMPUTABLES + pressure_sensitive_zones LIVE (2026-05-08)**
+  Greffe `pressure_sensitive_zones` sur recompute V2 sous régime guardrails ENFORCED + autonomy=LIMITED, FUSION ADD-ONLY strict (V2 préservé sans mutation). Source institutionnelle composite : OSM Overpass (highways/buildings/landuse) + WorldPop (population). Doctrine peer-reviewed Naidoo & Burton 2010 §3.2 (poids 0.40 routes + 0.30 population + 0.20 bâtiments + 0.10 résidentiel) + Frid & Dill 2002 (disturbance threshold) + Tucker 2018 (HFI mammal movement).
+  - **Nouveau module `habitat_outputs_recompute_v3_omega.py`** : `recompute_habitat_outputs_with_anthropogenic_pressure_v3`, `_extract_pressure_per_site`, `_compute_pressure_sensitive_zones_output`, `get_habitat_recompute_v3_status`. Chargement V2 SANS mutation + greffe pressure per site + verdict 9_OF_12.
+  - **3 endpoints router (FUSION ADD-ONLY)** : `POST /api/v30/super-masters/habitat-outputs-recompute-v3` (token Commandant requis, refuse exec si hook anthro non activé), `GET /api/v30/super-masters/habitat-outputs-recompute-v3-status` (PUBLIC RO).
+  - **Workflow exécuté LIVE en 1 phase** :
+    - **RECOMPUTE V3** : `verdict=HABITAT_OUTPUTS_RECOMPUTE_V3_FULL_9_OF_12_COMPUTABLE` · `recompute_v3_sha256=90b0e677c84128d6fcdd8e1cdabd01f1c7194274004678b4ef39e4631b3ff342` · **coverage_ratio=1.0** · **40/40 outputs computables** · **5/5 pressure_sensitive_zones calculés** · audit BP135 persisté
+  - **Pressure_sensitive_zones par site (anti-générique strict, OSM Overpass + WorldPop LIVE)** :
+    - **espece_a (cerf, Charny urbain)** : composite=100.0 → **HIGH_PRESSURE_AVOID_ZONE** (18.18 km routes/km², 268 bâtiments/km² — cohérent zone urbaine dense)
+    - **espece_b (orignal, Charlevoix)** : composite=22.55 → REFUGE_FROM_ANTHROPOGENIC_DISTURBANCE
+    - **espece_c (ours, Saguenay)** : composite=18.97 → REFUGE_FROM_ANTHROPOGENIC_DISTURBANCE
+    - **espece_d (dindon, Mauricie)** : composite=8.32 → REFUGE_FROM_ANTHROPOGENIC_DISTURBANCE (zone la plus naturelle)
+    - **espece_e (wapiti, Laurentides)** : composite=30.47 → LOW_PRESSURE_MARGINAL
+  - **Outputs encore deferred V3 (3 vs 4 en V2)** : rut_zones (PIÈGE TEMPOREL), feeding_zones FULL (proxy NDVI_DECADE_Ω disponible), microhabitat_clusters_global_dense.
+  - **12 nouveaux pytests (`test_phase_xxx_octovicies_habitat_recompute_v3_omega.py`)** : 12/12 PASS — extraction pressure, classification, V2 inheritance vérifiée, deferred=3 confirmé, fusion add-only vérifié.
+  - **Régression 0** : 542/542 tests `test_phase_xviii/xix/xx/xxx_*` PASS (pas de mutation V2).
+
+- **PHASE_XXX-SEPTVICIES · ANTHROPOGENIC_PRESSURE_HOOK_ACTIVATE_Ω — 🎯 OSM + WorldPop LIVE (2026-05-08)**
+  Activation du hook anthropogenic pressure pour débloquer `pressure_sensitive_zones`, sous régime guardrails ENFORCED + autonomy=LIMITED + FUSION ADD-ONLY. Anti-générique strict : 2 sources institutionnelles publiques (zero token), variables physiques mesurables uniquement, composite refus si une source invalide.
+  - **Nouveau module `anthropogenic_pressure_omega.py`** : `validate_anthropogenic_pressure_per_site` (probes OSM Overpass + WorldPop LIVE), `_probe_osm_overpass_for_site` (highways/buildings/residential, Haversine length, buffer 5 km), `_probe_worldpop_for_site` (bbox 2 km, dataset wpgppop year 2020), `_compute_anthropogenic_pressure_index` (composite 0-100 doctrinal Naidoo & Burton 2010), `_classify_pressure_sensitive_zone` (4 régimes : HIGH/MODERATE/LOW/REFUGE), `activate_anthropogenic_pressure_hook` (refuse SHA fabriqué), `get_last_validated_pressure_per_site` (utilitaire V3), `get_anthropogenic_pressure_hook_status`.
+  - **Doctrine PRESSURE_DOCTRINE** : buffers 5 km routes/buildings + 2 km population, saturation thresholds (5.0 km routes/km², 200 bât/km², 500 hab/km²), poids composite 0.40+0.30+0.20+0.10=1.0, seuils HIGH=75/MODERATE=50/LOW=25.
+  - **Body buffer Overpass = 64 MB** (zone urbaine Québec dense 5 km radius retourne 20 MB JSON ; 2 MB initial provoquait `non_json_response` sur espece_a → corrigé pour anti-générique strict).
+  - **3 endpoints router (FUSION ADD-ONLY)** : `POST /api/v30/super-masters/anthropogenic-pressure-validate` (token Commandant), `POST /api/v30/super-masters/anthropogenic-pressure-hook-activate` (token + SHA validé requis), `GET /api/v30/super-masters/anthropogenic-pressure-hook-status` (PUBLIC RO).
+  - **Workflow exécuté LIVE en 2 phases** :
+    - **VALIDATE 5/5 sites** : `verdict=ANTHROPOGENIC_PRESSURE_VALIDATE_ALL_VALID` · `manifest_sha256=da05ca1e2cb1c13766d442b1bfa03747f1d29d3f3fd762a3d0b8c1b2fb51a765` · 5/5 OSM success + 5/5 WorldPop success + 5/5 composite success · 37.78 s · overlay 99 KB
+    - **HOOK ACTIVATE** : `verdict=ANTHROPOGENIC_PRESSURE_HOOK_ACTIVATED` · `manifest_sha256=b7c5d9a5a90d3c81a9bc5a5b2560c53384731ea3f06fadc957c968da9ee01a49` · audits BP135 persistés (`audit_20260508T020431Z_83eac421.json`)
+  - **20 nouveaux pytests (`test_phase_xxx_septvicies_anthropogenic_omega.py`)** : 20/20 PASS — module imports, doctrine weights sum=1.0, monotonie thresholds, Haversine 1°≈111km, query Overpass 3 filtres, 4 régimes classification, composite refus 1 source invalide, composite valide calculs corrects, overlay structure, status keys, get_last_validated, validation coords invalides → ValueError, activation refuse fake SHA, bbox geojson 5 points fermés.
+  - **Refs peer-reviewed** : Haklay 2010 (OSM quality), Barrington-Leigh 2017 (OSM completeness), Tatem 2017 (WorldPop), Stevens 2015 (WorldPop dasymetric), Frid & Dill 2002 (disturbance), Naidoo & Burton 2010 (anthropogenic pressure mapping), Tucker 2018 (HFI mammal movement).
+
+
 - **PHASE_XXX-SEXVICIES · HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME V2 — 🎯 5 HOOKS PRINCIPAUX + BEDDING/REFUGE FULL + ESPECE_D PROMOTION LOW→MODERATE (2026-05-08)**
   Recalcul global V2 anti-générique strict avec intégration CANOPY (FUSION ADD-ONLY) pour passage de bedding_zones/refuge_zones de PARTIAL à FULL via covariables canopy density (Mysterud 2001 §3 + Forman 1986 + Hansen 2003) sous régime guardrails ENFORCED + autonomy=LIMITED.
   - **Extension `habitat_outputs_recompute_omega.py` (FUSION ADD-ONLY)** : ajout `_extract_canopy_per_site` (tree_cover/nontree_veg/nonveg per site), `_compute_bedding_zones_FULL_dem_canopy` (geometric mean slope×canopy avec 5 régimes canopy : OPEN/SPARSE/MODERATE/OPTIMAL_FOREST/DENSE_OVERSTOCKED), `_compute_refuge_zones_FULL_tri_canopy` (weighted TRI=0.5 + canopy_thermal=0.35 + nontree_shrub=0.15 avec renormalisation si nontree absent). Helpers _partial préservés (graceful degradation FULL→PARTIAL si canopy manquant).

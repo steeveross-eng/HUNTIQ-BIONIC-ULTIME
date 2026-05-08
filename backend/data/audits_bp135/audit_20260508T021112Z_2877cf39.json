@@ -1,0 +1,23 @@
+{
+  "audit_filename": "audit_20260508T021112Z_2877cf39.json",
+  "audit_sha256": "2877cf39e4f1db220b7ef5ae1e8bbbca3508e489f5cf2d540aa39efcae57760b",
+  "persisted_at_utc": "2026-05-08T02:11:12+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "NOAA_PIPELINE",
+    "subtype": "OWM_BATCH_BP135",
+    "ordre": "P1_OPENWEATHERMAP_BATCH_PROBE_BP135",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "provider": "OPENWEATHERMAP",
+    "valid": true,
+    "verdict": "OWM_BATCH_BP135_ALL_SPECIES_VALID",
+    "manifest_sha256": "6c54e3a2139e9132dd7278b54bc2c8671cf7f368f9c5497f191360f79dd061c5",
+    "n_species_total": 3,
+    "n_valid": 3,
+    "n_invalid": 0,
+    "v30_lock_inviolate": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  }
+}

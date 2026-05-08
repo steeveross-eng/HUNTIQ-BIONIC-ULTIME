@@ -3179,3 +3179,212 @@ async def nasa_ndvi_timeseries_status_endpoint() -> JSONResponse:
         "v30_lock": "INVIOLÉ",
     })
 
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# ANTHROPOGENIC_PRESSURE_HOOK_ACTIVATE_Ω (P4) — OSM Overpass + WorldPop
+# Débloque pressure_sensitive_zones (Frid & Dill 2002 + Naidoo 2010 +
+# Tucker 2018). Sources libres anti-générique (zero token).
+# ═════════════════════════════════════════════════════════════════════════
+class AnthropogenicPressureValidateBody(BaseModel):
+    site_coordinates: Dict[str, Dict[str, float]]
+    radius_m_roads: int = 5000
+    half_side_deg_population: float = 0.01
+    year_population: int = 2020
+    persist: bool = True
+
+
+@router.post("/anthropogenic-pressure-validate")
+async def anthropogenic_pressure_validate_endpoint(
+    body: AnthropogenicPressureValidateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """ANTHROPOGENIC_PRESSURE_P0_VALIDATE_Ω · multi-sites probes LIVE.
+
+    OSM Overpass (roads/buildings/landuse) + WorldPop (population).
+    Composite index doctrinal Naidoo & Burton 2010 §3.2.
+    Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.anthropogenic_pressure_omega import (  # noqa: E501
+        validate_anthropogenic_pressure_per_site,
+    )
+    try:
+        payload = validate_anthropogenic_pressure_per_site(
+            site_coordinates=body.site_coordinates,
+            radius_m_roads=body.radius_m_roads,
+            half_side_deg_population=body.half_side_deg_population,
+            year_population=body.year_population,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "ANTHROPOGENIC_PRESSURE_VALIDATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "ANTHROPOGENIC_PRESSURE_VALIDATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P4_ANTHROPOGENIC_PRESSURE_HOOK_ACTIVATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+class AnthropogenicPressureHookActivateBody(BaseModel):
+    manifest_sha256: str
+    reason: str = "pressure_sensitive_zones_activation"
+    persist: bool = True
+
+
+@router.post("/anthropogenic-pressure-hook-activate")
+async def anthropogenic_pressure_hook_activate_endpoint(
+    body: AnthropogenicPressureHookActivateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """ANTHROPOGENIC_PRESSURE_HOOK_ACTIVATE_Ω · activation officielle.
+
+    Anti-générique strict : refus si SHA fabriqué/inconnu.
+    Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.anthropogenic_pressure_omega import (  # noqa: E501
+        activate_anthropogenic_pressure_hook,
+    )
+    try:
+        payload = activate_anthropogenic_pressure_hook(
+            manifest_sha256=body.manifest_sha256,
+            reason=body.reason,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "ANTHROPOGENIC_PRESSURE_HOOK_ACTIVATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "ANTHROPOGENIC_PRESSURE_HOOK_ACTIVATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P4_ANTHROPOGENIC_PRESSURE_HOOK_ACTIVATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/anthropogenic-pressure-hook-status")
+async def anthropogenic_pressure_hook_status_endpoint() -> JSONResponse:
+    """ANTHROPOGENIC_PRESSURE_HOOK_ACTIVATE_Ω · état (PUBLIC RO)."""
+    from engines.v8_institutional.especes.anthropogenic_pressure_omega import (  # noqa: E501
+        get_anthropogenic_pressure_hook_status,
+    )
+    payload = get_anthropogenic_pressure_hook_status()
+    return JSONResponse({
+        "manifest_id": "ANTHROPOGENIC_PRESSURE_HOOK_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P4_ANTHROPOGENIC_PRESSURE_HOOK_ACTIVATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME_V3 (P5) — greffe pressure_sensitive
+# Atteint 9/12 outputs computables (vs 8/12 en V2). FUSION ADD-ONLY strict.
+# ═════════════════════════════════════════════════════════════════════════
+class HabitatRecomputeV3Body(BaseModel):
+    species_to_site_map: Optional[Dict[str, str]] = None
+    persist: bool = True
+    require_anthropogenic_hook_active: bool = True
+
+
+@router.post("/habitat-outputs-recompute-v3")
+async def habitat_outputs_recompute_v3_endpoint(
+    body: HabitatRecomputeV3Body,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME_V3 · greffe pressure_sensitive.
+
+    Réutilise V2 sans mutation (FUSION ADD-ONLY) puis greffe
+    pressure_sensitive_zones (Frid & Dill 2002, Naidoo 2010, Tucker 2018).
+    Refuse l'exécution si ANTHROPOGENIC_PRESSURE_HOOK n'est pas activé.
+    Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.habitat_outputs_recompute_v3_omega import (  # noqa: E501
+        recompute_habitat_outputs_with_anthropogenic_pressure_v3,
+    )
+    try:
+        payload = (
+            recompute_habitat_outputs_with_anthropogenic_pressure_v3(
+                species_to_site_map=body.species_to_site_map,
+                persist=body.persist,
+                require_anthropogenic_hook_active=(
+                    body.require_anthropogenic_hook_active),
+            ))
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "HABITAT_OUTPUTS_RECOMPUTE_V3_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "HABITAT_OUTPUTS_RECOMPUTE_V3_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P5_HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME_V3",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/habitat-outputs-recompute-v3-status")
+async def habitat_outputs_recompute_v3_status_endpoint() -> JSONResponse:
+    """HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME_V3 · état (PUBLIC RO)."""
+    from engines.v8_institutional.especes.habitat_outputs_recompute_v3_omega import (  # noqa: E501
+        get_habitat_recompute_v3_status,
+    )
+    payload = get_habitat_recompute_v3_status()
+    return JSONResponse({
+        "manifest_id": "HABITAT_OUTPUTS_RECOMPUTE_V3_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P5_HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME_V3",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+

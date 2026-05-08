@@ -1,0 +1,22 @@
+{
+  "audit_filename": "audit_20260508T020444Z_fc3b51f6.json",
+  "audit_sha256": "fc3b51f6e236b89c5afd085501c7aee750b480ed9864d8db8ea84464c3911776",
+  "persisted_at_utc": "2026-05-08T02:04:44+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "NOAA_PIPELINE",
+    "subtype": "HABITAT_OUTPUTS_RECOMPUTE_V3",
+    "ordre": "P5_HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME_V3",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "verdict": "HABITAT_OUTPUTS_RECOMPUTE_V3_FULL_9_OF_12_COMPUTABLE",
+    "recompute_v3_sha256": "90b0e677c84128d6fcdd8e1cdabd01f1c7194274004678b4ef39e4631b3ff342",
+    "n_sites_processed": 5,
+    "n_pressure_sensitive_zones_computed": 5,
+    "n_outputs_total_values_computed_v3": 40,
+    "anthropogenic_validation_manifest_sha256": "da05ca1e2cb1c13766d442b1bfa03747f1d29d3f3fd762a3d0b8c1b2fb51a765",
+    "v30_lock_inviolate": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  }
+}

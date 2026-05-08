@@ -1,0 +1,42 @@
+{
+  "history": [
+    {
+      "manifest_id": "ANTHROPOGENIC_PRESSURE_HOOK_ACTIVATE_Ω",
+      "ordre": "P4_ANTHROPOGENIC_PRESSURE_HOOK_ACTIVATE_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "activated": true,
+      "verdict": "ANTHROPOGENIC_PRESSURE_HOOK_ACTIVATED",
+      "reason": "pressure_sensitive_zones_activation",
+      "validated_manifest_sha256": "da05ca1e2cb1c13766d442b1bfa03747f1d29d3f3fd762a3d0b8c1b2fb51a765",
+      "validated_manifest_summary": {
+        "verdict": "ANTHROPOGENIC_PRESSURE_VALIDATE_ALL_VALID",
+        "n_sites_total": 5,
+        "n_composite_success": 5,
+        "n_osm_success": 5,
+        "n_worldpop_success": 5
+      },
+      "outputs_unblocked_via_this_hook": [
+        "pressure_sensitive_zones (Frid & Dill 2002, Naidoo & Burton 2010, Tucker 2018)"
+      ],
+      "providers_physical_active": [
+        "OSM_OVERPASS_API",
+        "WORLDPOP_REST_API"
+      ],
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T02:04:31+00:00",
+      "elapsed_s": 0.0,
+      "manifest_sha256": "b7c5d9a5a90d3c81a9bc5a5b2560c53384731ea3f06fadc957c968da9ee01a49"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T02:04:31+00:00",
+  "n_activations": 1,
+  "last_manifest_sha256": "b7c5d9a5a90d3c81a9bc5a5b2560c53384731ea3f06fadc957c968da9ee01a49",
+  "last_verdict": "ANTHROPOGENIC_PRESSURE_HOOK_ACTIVATED",
+  "last_validated_manifest_sha256": "da05ca1e2cb1c13766d442b1bfa03747f1d29d3f3fd762a3d0b8c1b2fb51a765",
+  "v30_lock": "INVIOLÉ"
+}
