@@ -1163,11 +1163,103 @@
       "no_engine_recompute_triggered": true,
       "registered_at_utc": "2026-05-08T01:08:47+00:00",
       "activation_sha256": "f43e134bcc503a1f5e5bbfb0a2b5163187f99d4517df796c973bdee7c4009a7e"
+    },
+    {
+      "manifest_id": "OWM_BATCH_BP135_HOOK_ACTIVATE_Ω",
+      "ordre": "P1_OPENWEATHERMAP_BATCH_BP135_HOOK_ACTIVATE",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "activated": true,
+      "verdict": "OWM_BATCH_BP135_HOOK_ACTIVATED_OPERATIONAL",
+      "reason": "owm_batch_bp135_activated",
+      "validated_manifest_sha256": "4dc1496fc73b311f36d8ca66c6c4510d091b14b52872e95354f321a607bf8b41",
+      "validated_batch_executed_at_utc": "2026-05-08T01:20:56+00:00",
+      "n_species_total": 2,
+      "n_species_valid": 2,
+      "species_summary": [
+        {
+          "species_name": "sp1",
+          "lat": 46.8139,
+          "lon": -71.208,
+          "valid": true,
+          "city_resolved_by_owm": "Québec",
+          "country": "CA",
+          "weather_main": "Clouds",
+          "n_variables_extracted": 6
+        },
+        {
+          "species_name": "sp2",
+          "lat": 47.2,
+          "lon": -70.3,
+          "valid": true,
+          "city_resolved_by_owm": "St-Jean-Port-Joli",
+          "country": "CA",
+          "weather_main": "Clouds",
+          "n_variables_extracted": 6
+        }
+      ],
+      "aggregated_stats_inherited": {
+        "temperature": {
+          "n": 2,
+          "min": 5.89,
+          "max": 6.36,
+          "mean": 6.125
+        },
+        "humidity": {
+          "n": 2,
+          "min": 83,
+          "max": 84,
+          "mean": 83.5
+        },
+        "pressure": {
+          "n": 2,
+          "min": 1005,
+          "max": 1006,
+          "mean": 1005.5
+        },
+        "wind_speed": {
+          "n": 2,
+          "min": 2.17,
+          "max": 4.12,
+          "mean": 3.145
+        },
+        "wind_direction": {
+          "n": 2,
+          "min": 170,
+          "max": 250,
+          "mean": 210.0
+        },
+        "cloud_cover": {
+          "n": 2,
+          "min": 24,
+          "max": 75,
+          "mean": 49.5
+        }
+      },
+      "endpoints_inherited": {
+        "current": "https://api.openweathermap.org/data/2.5/weather",
+        "forecast": "https://api.openweathermap.org/data/2.5/forecast"
+      },
+      "units": "metric",
+      "consumed_by_modules": [
+        "PHYSIOLOGIE_THERMIQUE",
+        "HABITAT_MICROCLIMAT",
+        "NUTRITION_HUMIDITE",
+        "PHENOLOGIE_FORECAST_5_DAY"
+      ],
+      "fusion_add_only": true,
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "registered_at_utc": "2026-05-08T01:20:56+00:00",
+      "activation_sha256": "8ba4f6eae491a821c53fc1ac4ebc310bfd4107687f9969ce4236991348b61e32"
     }
   ],
-  "last_updated_utc": "2026-05-08T01:08:47+00:00",
-  "n_activations": 12,
-  "last_activation_sha256": "f43e134bcc503a1f5e5bbfb0a2b5163187f99d4517df796c973bdee7c4009a7e",
-  "last_validated_manifest_sha256": "b839999ee4fff5c6fef9838538a7134778f7ef132358cccc139e96267b38d38d",
+  "last_updated_utc": "2026-05-08T01:20:56+00:00",
+  "n_activations": 13,
+  "last_activation_sha256": "8ba4f6eae491a821c53fc1ac4ebc310bfd4107687f9969ce4236991348b61e32",
+  "last_validated_manifest_sha256": "4dc1496fc73b311f36d8ca66c6c4510d091b14b52872e95354f321a607bf8b41",
   "v30_lock": "INVIOLÉ"
 }

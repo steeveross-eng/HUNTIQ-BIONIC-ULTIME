@@ -191,6 +191,31 @@ def _extract_rsf_envelope_per_site_per_species(
     return out
 
 
+def _extract_canopy_per_site(
+    canopy_validation: Dict[str, Any],
+) -> Dict[str, Dict[str, Optional[float]]]:
+    """Extrait tree_cover/nontree_veg/nonveg mean per site (MOD44B)."""
+    out: Dict[str, Dict[str, Optional[float]]] = {}
+    for sp, sd in (
+            canopy_validation.get("site_results") or {}).items():
+        bands = sd.get("bands") or {}
+        out[sp] = {
+            "tree_cover_pct": (
+                (bands.get("TREE_COVER") or {}).get("stats", {})
+                .get("mean") if (bands.get("TREE_COVER") or {})
+                .get("valid") else None),
+            "nontree_veg_pct": (
+                (bands.get("NONTREE_VEG") or {}).get("stats", {})
+                .get("mean") if (bands.get("NONTREE_VEG") or {})
+                .get("valid") else None),
+            "nonveg_pct": (
+                (bands.get("NONVEG") or {}).get("stats", {})
+                .get("mean") if (bands.get("NONVEG") or {})
+                .get("valid") else None),
+        }
+    return out
+
+
 # ═════════════════════════════════════════════════════════════════════════
 # Calculs nouveaux outputs (peer-reviewed strict)
 # ═════════════════════════════════════════════════════════════════════════
@@ -238,6 +263,84 @@ def _compute_bedding_zones_slope_partial(
     }
 
 
+def _compute_bedding_zones_FULL_dem_canopy(
+    slope_mean_deg: Optional[float],
+    slope_max_deg: Optional[float],
+    tree_cover_pct: Optional[float],
+) -> Dict[str, Any]:
+    """Bedding zones FULL avec canopy (Mysterud 2001 §3 complet).
+
+    Composite anti-générique :
+      · slope_score : Mysterud 2001 (5-15° optimal, déjà computed)
+      · canopy_score : Mysterud 2001 Table 2 (60-80% cover optimal
+        for cerf bedding cover protection)
+        - 0% (open) : score 0 (no cover)
+        - 30% : score 50 (partial cover)
+        - 60-80% : score 100 (optimal forest cover)
+        - >90% : score 70 (dense, mais accès limité)
+      · Score FULL = geometric mean (slope_score × canopy_score)^0.5
+    """
+    if slope_mean_deg is None or tree_cover_pct is None:
+        # Fallback partial si une covariable absente
+        partial = _compute_bedding_zones_slope_partial(
+            slope_mean_deg, slope_max_deg)
+        partial["regime_full_status"] = (
+            "DEGRADED_TO_PARTIAL_MISSING_CANOPY"
+            if slope_mean_deg is not None
+            else "DEFERRED_NO_INPUTS")
+        return partial
+
+    # Canopy score (Mysterud 2001 Table 2)
+    c = tree_cover_pct
+    if c < 10.0:
+        canopy_score = c / 10.0 * 30.0
+        canopy_regime = "OPEN_NO_COVER"
+    elif c < 30.0:
+        canopy_score = 30.0 + (c - 10.0) / 20.0 * 30.0
+        canopy_regime = "SPARSE_COVER"
+    elif c < 60.0:
+        canopy_score = 60.0 + (c - 30.0) / 30.0 * 40.0
+        canopy_regime = "MODERATE_COVER"
+    elif c <= 80.0:
+        canopy_score = 100.0
+        canopy_regime = "OPTIMAL_FOREST_COVER"
+    else:
+        canopy_score = 100.0 - (c - 80.0) / 20.0 * 30.0
+        canopy_regime = "DENSE_OVERSTOCKED"
+
+    # Slope score (réutilise partial)
+    partial_slope = _compute_bedding_zones_slope_partial(
+        slope_mean_deg, slope_max_deg)
+    slope_score = partial_slope["value"] or 0.0
+
+    # Geometric mean (Mysterud 2001 §3.4)
+    composite = math.sqrt(slope_score * canopy_score)
+    composite = round(composite, 2)
+    if composite >= 75.0:
+        regime = "FULL_OPTIMAL_BEDDING_HABITAT"
+    elif composite >= 50.0:
+        regime = "FULL_GOOD_BEDDING_HABITAT"
+    elif composite >= 25.0:
+        regime = "FULL_MODERATE_BEDDING_HABITAT"
+    else:
+        regime = "FULL_POOR_BEDDING_HABITAT"
+    return {
+        "value": composite,
+        "unit": "score_0_100_FULL_geometric_mean_slope_canopy",
+        "regime": regime,
+        "regime_full_status": "FULL_BOTH_INPUTS_AVAILABLE",
+        "slope_mean_deg_input": slope_mean_deg,
+        "tree_cover_pct_input": tree_cover_pct,
+        "components": {
+            "slope_score": slope_score,
+            "slope_regime": partial_slope["regime"],
+            "canopy_score": round(canopy_score, 2),
+            "canopy_regime": canopy_regime,
+        },
+        "primary_reference": "Mysterud_2001_Ecography_§3",
+    }
+
+
 def _compute_refuge_zones_terrain_ruggedness(
     elevation_std_m: Optional[float],
     slope_max_deg: Optional[float],
@@ -273,6 +376,114 @@ def _compute_refuge_zones_terrain_ruggedness(
             "PARTIAL: requires threat layers (roads, hunting) "
             "for full refuge_zones (Forman 1986). Topography only."),
         "primary_reference": "Riley_1999_IntermountJSci",
+    }
+
+
+def _compute_refuge_zones_FULL_tri_canopy(
+    elevation_std_m: Optional[float],
+    slope_max_deg: Optional[float],
+    tree_cover_pct: Optional[float],
+    nontree_veg_pct: Optional[float] = None,
+) -> Dict[str, Any]:
+    """Refuge zones FULL avec canopy (Forman 1986 + Hansen 2003).
+
+    Composite anti-générique pondéré :
+      · TRI score (Riley 1999) : 50%
+      · Canopy cover thermique/visuel (Hansen 2003) : 35%
+      · NonTree vegetation (shrub cover) : 15%
+    Refuge nécessite ruggedness terrain ET cover végétal.
+    """
+    if elevation_std_m is None or slope_max_deg is None:
+        return {
+            "value": None,
+            "regime": "DEFERRED_NO_DEM_DATA",
+            "primary_reference": "Forman_1986_LandscapeEcology",
+        }
+    if tree_cover_pct is None:
+        # Fallback partial si canopy absent
+        partial = _compute_refuge_zones_terrain_ruggedness(
+            elevation_std_m, slope_max_deg)
+        partial["regime_full_status"] = (
+            "DEGRADED_TO_PARTIAL_MISSING_CANOPY")
+        return partial
+
+    # TRI score (réutilise partial)
+    partial_tri = _compute_refuge_zones_terrain_ruggedness(
+        elevation_std_m, slope_max_deg)
+    tri_score = partial_tri["value"] or 0.0
+
+    # Canopy refuge score : forêt dense = refuge thermique
+    # Mysterud 2001 + Forman 1986 : canopy >= 60% = high refuge
+    if tree_cover_pct < 20.0:
+        canopy_refuge_score = tree_cover_pct / 20.0 * 30.0
+        canopy_regime = "OPEN_LOW_THERMAL_COVER"
+    elif tree_cover_pct < 60.0:
+        canopy_refuge_score = 30.0 + (
+            (tree_cover_pct - 20.0) / 40.0) * 50.0
+        canopy_regime = "MODERATE_THERMAL_COVER"
+    else:
+        canopy_refuge_score = 80.0 + (
+            min((tree_cover_pct - 60.0) / 40.0, 1.0)) * 20.0
+        canopy_regime = "HIGH_THERMAL_COVER"
+
+    # NonTree veg (shrub cover) — bonus 0-100
+    nontree_score = 0.0
+    if nontree_veg_pct is not None:
+        if nontree_veg_pct < 30.0:
+            nontree_score = nontree_veg_pct / 30.0 * 50.0
+        else:
+            nontree_score = min(50.0 + (
+                (nontree_veg_pct - 30.0) / 40.0) * 50.0, 100.0)
+
+    # Pondération composite
+    weights = {
+        "tri": 0.50,
+        "canopy": 0.35,
+        "nontree": 0.15 if nontree_veg_pct is not None else 0.0,
+    }
+    total_w = sum(weights.values())
+    if total_w == 0:
+        composite = 0.0
+        norm_w = weights
+    else:
+        # Renormalisation si nontree absent
+        norm_w = {k: v / total_w for k, v in weights.items()}
+        composite = (
+            tri_score * norm_w["tri"]
+            + canopy_refuge_score * norm_w["canopy"]
+            + nontree_score * norm_w["nontree"])
+    composite = round(composite, 2)
+    if composite >= 70.0:
+        regime = "FULL_HIGH_REFUGE_POTENTIAL"
+    elif composite >= 40.0:
+        regime = "FULL_MODERATE_REFUGE"
+    elif composite >= 20.0:
+        regime = "FULL_LOW_REFUGE"
+    else:
+        regime = "FULL_OPEN_NO_REFUGE"
+    return {
+        "value": composite,
+        "unit": "score_0_100_FULL_weighted_tri_canopy_nontree",
+        "regime": regime,
+        "regime_full_status": "FULL_INPUTS_AVAILABLE",
+        "components": {
+            "tri_score": tri_score,
+            "tri_regime": partial_tri["regime"],
+            "canopy_refuge_score": round(
+                canopy_refuge_score, 2),
+            "canopy_regime": canopy_regime,
+            "nontree_score": round(nontree_score, 2)
+            if nontree_veg_pct is not None else None,
+            "weights_renormalized": {
+                k: round(v, 4) for k, v in norm_w.items()
+                if v > 0},
+        },
+        "elevation_std_m_input": elevation_std_m,
+        "slope_max_deg_input": slope_max_deg,
+        "tree_cover_pct_input": tree_cover_pct,
+        "nontree_veg_pct_input": nontree_veg_pct,
+        "primary_reference":
+            "Forman_1986_LandscapeEcology + Hansen_2003",
     }
 
 
@@ -508,6 +719,9 @@ def recompute_habitat_outputs_with_all_hooks(
     from engines.v8_institutional.especes.rsf_ssf_omega import (
         RSF_SSF_VALIDATION_PATH,
     )
+    from engines.v8_institutional.especes.canopy_omega import (
+        CANOPY_VALIDATION_PATH,
+    )
     from engines.v8_institutional.especes.habitat_outputs_compute_omega import (  # noqa: E501
         SPECIES_FORAGE_THRESHOLDS_V1,
         _compute_food_availability_from_ndvi,
@@ -521,7 +735,7 @@ def recompute_habitat_outputs_with_all_hooks(
     species_to_site_map = (
         species_to_site_map or SPECIES_TO_SITE_MAP_DEFAULT)
 
-    # 1) Charge les 4 validations
+    # 1) Charge les 5 validations
     nasa_v = _load_last_validated_history(
         NASA_NDVI_VALIDATION_PATH)
     usgs_v = _load_last_validated_history(
@@ -530,12 +744,15 @@ def recompute_habitat_outputs_with_all_hooks(
         OPENTOPOGRAPHY_VALIDATION_PATH)
     rsf_v = _load_last_validated_history(
         RSF_SSF_VALIDATION_PATH)
+    canopy_v = _load_last_validated_history(
+        CANOPY_VALIDATION_PATH)
 
     hooks_status = {
         "nasa_ndvi_loaded": nasa_v is not None,
         "usgs_soil_loaded": usgs_v is not None,
         "opentopography_loaded": opentopo_v is not None,
         "rsf_ssf_loaded": rsf_v is not None,
+        "canopy_loaded": canopy_v is not None,
     }
     hooks_manifests = {
         "nasa_ndvi_manifest_sha256": (
@@ -546,6 +763,8 @@ def recompute_habitat_outputs_with_all_hooks(
             (opentopo_v or {}).get("manifest_sha256")),
         "rsf_ssf_manifest_sha256": (
             (rsf_v or {}).get("manifest_sha256")),
+        "canopy_manifest_sha256": (
+            (canopy_v or {}).get("manifest_sha256")),
     }
     n_hooks_loaded = sum(1 for v in hooks_status.values() if v)
 
@@ -559,6 +778,8 @@ def recompute_habitat_outputs_with_all_hooks(
     rsf_envelope_per_species_site = (
         _extract_rsf_envelope_per_site_per_species(rsf_v)
         if rsf_v else {})
+    canopy_per_site = (
+        _extract_canopy_per_site(canopy_v) if canopy_v else {})
 
     # 3) Calcul per site
     per_site_outputs: Dict[str, Dict[str, Any]] = {}
@@ -574,9 +795,11 @@ def recompute_habitat_outputs_with_all_hooks(
         envelope = (
             rsf_envelope_per_species_site.get(species_canonical)
             or {}).get(site_name)
+        canopy = canopy_per_site.get(site_name) or {}
 
         sites_data_for_corridor[site_name] = {
-            "nasa_ndvi": nasa, "usgs_soil": usgs, "dem": dem}
+            "nasa_ndvi": nasa, "usgs_soil": usgs, "dem": dem,
+            "canopy": canopy}
 
         # Outputs initiaux (food_*) — recalcul cohérence
         food_avail = None
@@ -593,13 +816,28 @@ def recompute_habitat_outputs_with_all_hooks(
             food_def = _compute_food_deficiency(
                 food_avail["value"], thresholds)
 
-        # Outputs NOUVEAUX (4)
-        bedding = _compute_bedding_zones_slope_partial(
-            dem.get("slope_mean_deg"),
-            dem.get("slope_max_deg"))
-        refuge = _compute_refuge_zones_terrain_ruggedness(
-            dem.get("elevation_std_m"),
-            dem.get("slope_max_deg"))
+        # Outputs NOUVEAUX (4) — utilise FULL si canopy disponible
+        if canopy.get("tree_cover_pct") is not None:
+            bedding = _compute_bedding_zones_FULL_dem_canopy(
+                dem.get("slope_mean_deg"),
+                dem.get("slope_max_deg"),
+                canopy.get("tree_cover_pct"))
+            refuge = _compute_refuge_zones_FULL_tri_canopy(
+                dem.get("elevation_std_m"),
+                dem.get("slope_max_deg"),
+                canopy.get("tree_cover_pct"),
+                canopy.get("nontree_veg_pct"))
+            bedding_status = "FULL"
+            refuge_status = "FULL"
+        else:
+            bedding = _compute_bedding_zones_slope_partial(
+                dem.get("slope_mean_deg"),
+                dem.get("slope_max_deg"))
+            refuge = _compute_refuge_zones_terrain_ruggedness(
+                dem.get("elevation_std_m"),
+                dem.get("slope_max_deg"))
+            bedding_status = "PARTIAL"
+            refuge_status = "PARTIAL"
         saline = _compute_saline_optimal_partial(
             usgs.get("phh2o"), usgs.get("cec"))
         suitability = (
@@ -629,13 +867,22 @@ def recompute_habitat_outputs_with_all_hooks(
                 "slope_max_deg": dem.get("slope_max_deg"),
                 "envelope_phillips": envelope,
                 "demtype_used": dem.get("demtype_used"),
+                "tree_cover_pct": canopy.get("tree_cover_pct"),
+                "nontree_veg_pct": canopy.get("nontree_veg_pct"),
+                "nonveg_pct": canopy.get("nonveg_pct"),
             },
             "computed_outputs": {
                 "food_availability": food_avail,
                 "food_quality": food_qual,
                 "food_deficiency": food_def,
-                "bedding_zones_partial": bedding,
-                "refuge_zones_partial": refuge,
+                "bedding_zones": {
+                    **bedding,
+                    "computation_status": bedding_status,
+                },
+                "refuge_zones": {
+                    **refuge,
+                    "computation_status": refuge_status,
+                },
                 "saline_optimal_locations_partial": saline,
                 "habitat_suitability_composite": suitability,
             },
@@ -724,6 +971,7 @@ def recompute_habitat_outputs_with_all_hooks(
             "opentopography":
                 hooks_status["opentopography_loaded"],
             "rsf_ssf": hooks_status["rsf_ssf_loaded"],
+            "canopy": hooks_status["canopy_loaded"],
             "wod23_ocean":
                 "context_only_not_directly_consumed_per_site",
             "owm_single":

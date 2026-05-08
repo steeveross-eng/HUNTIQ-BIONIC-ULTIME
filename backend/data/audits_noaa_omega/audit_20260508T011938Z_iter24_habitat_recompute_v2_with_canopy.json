@@ -1,0 +1,106 @@
+{
+  "iteration": 24,
+  "ordre": "P2_HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME_V2",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "horodatage_utc": "2026-05-08T01:19:38+00:00",
+  "guardrails_enforced": true,
+  "autonomy": "LIMITED",
+  "phase_recompute_v2": {
+    "verdict": "HABITAT_OUTPUTS_RECOMPUTE_FULL_8_OF_12_COMPUTABLE",
+    "recompute_sha256": "b6c2e7dda955a9df2611605e24a994e40f231c82ae964a9b94c25e98eb92d873",
+    "coverage_ratio": 1.0,
+    "n_outputs_total_values_computed": 35,
+    "n_sites_processed": 5,
+    "n_hooks_principal_loaded": 5,
+    "elapsed_s": 0.001,
+    "audit_filename": "audit_20260508T011938Z_2e528e1c.json"
+  },
+  "v2_changes_doctrinal": {
+    "extension_fusion_add_only": "habitat_outputs_recompute_omega.py +canopy",
+    "new_helpers": [
+      "_extract_canopy_per_site",
+      "_compute_bedding_zones_FULL_dem_canopy (Mysterud 2001 §3 complete)",
+      "_compute_refuge_zones_FULL_tri_canopy (Forman 1986 + Hansen 2003)"
+    ],
+    "5_hooks_loaded": ["nasa_ndvi", "usgs_soil", "opentopography", "rsf_ssf", "canopy"],
+    "computation_status_per_site": "5/5 FULL bedding + 5/5 FULL refuge"
+  },
+  "hooks_aggregated_with_manifests_v2": {
+    "nasa_ndvi": "166178536dc5d662e0020e9838506b75b940fc045cb5da86d9a0cf23d9ca4148",
+    "usgs_soil": "e71d4d273de149122679e233a07d6721e7bae17b6e0ed83dba11bf0753f1a568",
+    "opentopography": "b513adb32a65a7f760ac2852a0ca522f3bd5a2316717ec9b889608ef5c762c3a",
+    "rsf_ssf": "8a4eafbe1f10b9d561332f93183a3a5c14ed27bd96fdbe3ebed3d7715dc33486",
+    "canopy_NEW_V2": "2c2b8577fa6f83507d72bdfeefba58ced820fcd30612d652eb58c27df8fa59c7"
+  },
+  "live_per_site_outputs_v2_FULL_bedding_refuge": {
+    "espece_a_cerf_charlesbourg": {
+      "bedding_FULL": "48.89/100 (slope=65.5 BELOW × canopy=36.49 SPARSE_COVER)",
+      "refuge_FULL": "34.45/100 (TRI=25.47 + canopy_refuge=21.5 + nontree=94.59)",
+      "habitat_suitability_v2": "47.9/100 (vs v1=49.87, Δ=-1.97)",
+      "regime_v2": "MODERATE_SUITABILITY"
+    },
+    "espece_b_orignal_st_jean": {
+      "bedding_FULL": "35.55/100 (slope=46.8 + canopy=27.0 OPEN_NO_COVER)",
+      "refuge_FULL": "22.68/100",
+      "habitat_suitability_v2": "37.03/100 (vs v1=36.76, Δ=+0.27)",
+      "regime_v2": "LOW_SUITABILITY"
+    },
+    "espece_c_ours_les_escoumins": {
+      "bedding_FULL_INCREASE": "73.07/100 ⬆️ (vs v1=55.1, Δ=+17.97 grâce canopy=57.67%)",
+      "refuge_FULL_INCREASE": "38.86/100 ⬆️ (vs v1=8.0, Δ=+30.86)",
+      "habitat_suitability_v2": "29.7/100 (vs v1=21.48, Δ=+8.22) ⬆️",
+      "regime_v2": "LOW_SUITABILITY"
+    },
+    "espece_d_dindon_fortierville_BIGGEST_GAIN": {
+      "bedding_FULL_INCREASE": "63.95/100 ⬆️ (vs v1=40.9, Δ=+23.05 grâce canopy=65.67% OPTIMAL_FOREST_COVER)",
+      "refuge_FULL_INCREASE": "36.45/100 ⬆️ (vs v1=1.09, Δ=+35.36)",
+      "habitat_suitability_v2_BIGGEST_GAIN_SESSION": "51.89/100 ⬆️ (vs v1=41.98, Δ=+9.91)",
+      "regime_v2": "MODERATE_SUITABILITY (was LOW in v1)",
+      "interpretation": "Canopy 65.67% (forêt mixte agricole MAX BP135) compense slope BELOW_OPTIMAL"
+    },
+    "espece_e_wapiti_capitale_REALISTIC_DECREASE": {
+      "bedding_FULL_DECREASE": "71.07/100 ⬇️ (vs v1=100.0, Δ=-28.93 — canopy=23.67% SPARSE atténue slope OPTIMAL)",
+      "refuge_FULL_DECREASE": "61.14/100 ⬇️ (vs v1=69.44 — canopy_refuge=34.59 modère TRI=69.44)",
+      "habitat_suitability_v2": "47.13/100 (vs v1=57.95, Δ=-10.82)",
+      "regime_v2": "MODERATE_SUITABILITY",
+      "interpretation": "Plus rigoureux scientifiquement : terrain accidenté + faible canopy = bedding/refuge dégradés"
+    }
+  },
+  "scientific_realism_v2": {
+    "espece_d_promotion_LOW_to_MODERATE": "Dindon Fortierville passe de LOW à MODERATE_SUITABILITY car canopy compense slope (cohérent ground forager forêt mixte)",
+    "espece_e_demotion_no_canopy_compensation": "Wapiti Capitale baisse car même slope OPTIMAL ne suffit pas sans canopy adéquat (anti-générique strict)",
+    "anti_generique_principle_validated": "V2 produit scores plus discriminants et cohérents avec ecology terrain"
+  },
+  "outputs_progression_session_complete": {
+    "habitat_outputs_compute_initial": "4/12 outputs computed",
+    "habitat_outputs_recompute_v1": "8/12 outputs computable (7 hooks)",
+    "habitat_outputs_recompute_v2_with_canopy": "8/12 outputs computable + 2 outputs PASSE PARTIAL→FULL (bedding, refuge)",
+    "remaining_deferred_4": ["rut_zones (temporal trap)", "feeding_zones (multi-season)", "pressure_sensitive_zones (anthropogenic)", "microhabitat_clusters_global (n=5 sparse)"]
+  },
+  "scientific_references_consolidated_13": [
+    "Pettorelli 2005 (TREE)",
+    "Hamel 2009 (J Appl Ecol)",
+    "Borowik 2013 (Eur J Wildl Res)",
+    "Garroutte 2016 (Remote Sens)",
+    "Hebblewhite 2008 (Ecol Monogr)",
+    "Mysterud 2001 (Ecography §3 complete)",
+    "Belant 2010 (Can J Zool)",
+    "Forman 1986 (Landscape Ecology)",
+    "Riley 1999 (Intermount J Sci)",
+    "Phillips 2006 (Ecol Modelling)",
+    "Hengl 2017 (PLOS ONE SoilGrids)",
+    "Farr 2007 (Rev Geophys SRTM)",
+    "Hansen 2003 (Earth Interactions MOD44B)"
+  ],
+  "pytest_status": {
+    "n_new_tests_sexvicies": 14,
+    "all_passed_sexvicies": true,
+    "regression_cluster_phase_xx_xxx_extended": "708/708 PASSED",
+    "no_regressions": true
+  },
+  "v30_lock": "INVIOLÉ",
+  "drift_zero": true,
+  "no_engine_recompute_triggered": true,
+  "fusion_add_only": true,
+  "anti_generique_strict": true
+}

@@ -27,6 +27,32 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-SEXVICIES · HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME V2 — 🎯 5 HOOKS PRINCIPAUX + BEDDING/REFUGE FULL + ESPECE_D PROMOTION LOW→MODERATE (2026-05-08)**
+  Recalcul global V2 anti-générique strict avec intégration CANOPY (FUSION ADD-ONLY) pour passage de bedding_zones/refuge_zones de PARTIAL à FULL via covariables canopy density (Mysterud 2001 §3 + Forman 1986 + Hansen 2003) sous régime guardrails ENFORCED + autonomy=LIMITED.
+  - **Extension `habitat_outputs_recompute_omega.py` (FUSION ADD-ONLY)** : ajout `_extract_canopy_per_site` (tree_cover/nontree_veg/nonveg per site), `_compute_bedding_zones_FULL_dem_canopy` (geometric mean slope×canopy avec 5 régimes canopy : OPEN/SPARSE/MODERATE/OPTIMAL_FOREST/DENSE_OVERSTOCKED), `_compute_refuge_zones_FULL_tri_canopy` (weighted TRI=0.5 + canopy_thermal=0.35 + nontree_shrub=0.15 avec renormalisation si nontree absent). Helpers _partial préservés (graceful degradation FULL→PARTIAL si canopy manquant).
+  - **Orchestrateur étendu** : 5 validations chargées (NASA NDVI + USGS_SOIL + OPENTOPOGRAPHY + RSF_SSF + **CANOPY**). Détection automatique : si canopy.tree_cover_pct disponible → bedding/refuge en mode FULL avec status="FULL", sinon fallback PARTIAL. Anti-générique strict : aucun output fabriqué.
+  - **Workflow exécuté en 1 phase LIVE** :
+    - **RECOMPUTE V2** : `verdict=HABITAT_OUTPUTS_RECOMPUTE_FULL_8_OF_12_COMPUTABLE` · `recompute_sha256=b6c2e7dda955a9df2611605e24a994e40f231c82ae964a9b94c25e98eb92d873` · **coverage_ratio=1.0** · 5/5 sites en bedding/refuge FULL · 0.001s · audit `audit_20260508T011938Z_2e528e1c.json`
+  - **5 manifests hérités** (intégrés dans payload pour traçabilité) :
+    - NASA NDVI : `166178536dc5d662…ca4148`
+    - USGS_SOIL : `e71d4d273de14912…f1a568`
+    - OPENTOPOGRAPHY : `b513adb32a65a7f7…762c3a`
+    - RSF_SSF : `8a4eafbe1f10b9d5…dc33486`
+    - **CANOPY (NEW V2)** : `2c2b8577fa6f8350…f8fa59c7`
+  - **Comparaison V1 → V2 par site (deltas habitat_suitability_composite)** :
+    - **espece_a (cerf, Charlesbourg)** : v1=49.87 → **v2=47.9** Δ=-1.97 (canopy=14.33% atténue slope BELOW)
+    - **espece_b (orignal, St-Jean)** : v1=36.76 → **v2=37.03** Δ=+0.27 (stable, canopy=9% comme prévu plaine)
+    - **espece_c (ours, Côte-Nord)** : v1=21.48 → **v2=29.7** Δ=+8.22 ⬆️ (bedding 55→73 grâce canopy 57.67%)
+    - **espece_d (dindon, Fortierville)** 🏆 **BIGGEST GAIN SESSION** : v1=41.98 → **v2=51.89 Δ=+9.91** ⬆️ (PROMOTION LOW→**MODERATE_SUITABILITY**, canopy=65.67% OPTIMAL_FOREST_COVER compense slope BELOW)
+    - **espece_e (wapiti, Capitale)** : v1=57.95 → **v2=47.13** Δ=-10.82 ⬇️ (réalisme : terrain accidenté seul ne suffit pas sans canopy adéquat, canopy=23.67% SPARSE atténue slope OPTIMAL)
+  - **Bilan scientifique V2 (RÉALISME RENFORCÉ)** :
+    - **espece_d (dindon)** confirmé comme TOP HABITAT BP135 (suitability=51.89) : terre agricole avec forêt mixte 65.67%, canopy compense le slope.
+    - **espece_e (wapiti)** corrigé scientifiquement : score baisse de 57.95 à 47.13 car canopy SPARSE (23.67%) ne fournit pas le cover thermique/visuel nécessaire au refuge (Forman 1986).
+    - **espece_c (ours)** progresse correctement : forêt boréale 57.67% canopy fournit bedding/refuge cohérents.
+  - **13 références peer-reviewed consolidées** (12 + Hansen 2003 nouveau).
+  - **Pytest** : 14 nouveaux (`test_phase_xxx_sexvicies_habitat_recompute_full_omega.py`) **14/14 PASSED** (5 bedding FULL × 5 refuge FULL × 2 extract canopy × V30_LOCK × functions exposed). Bug détecté & fixé en session : poids `weights_renormalized` exposait valeurs originales au lieu des renormalisées → corrigé. Régression cluster doctrinal Phase XX-XXX étendu = **708/708 PASSED · 0 régression**.
+  - **Bilan stratégique session COMPLET** : ✅ **8 hooks ACTIVATED** (WOD23 + OWM single + OWM batch + NASA NDVI + USGS_SOIL + RSF_SSF + OPENTOPOGRAPHY + CANOPY) + **2 RECOMPUTE V1+V2** · **8/12 outputs computable** dont **2 outputs PASSE PARTIAL→FULL** (bedding, refuge) · 35 valeurs réelles + 10 paires corridor · 13 références peer-reviewed consolidées · zéro fabrication · zéro régression · **708 pytests passing** · **24 audits forensiques iter1-iter24 persistés**.
+
 - **PHASE_XXX-QUINQUEVICIES · CANOPY_P0_VALIDATE + HOOK_ACTIVATE_Ω — 🎯 5/5 SITES × 4 BANDES VALID + HOOK ACTIVATED + 2 OUTPUTS FULL DÉBLOQUÉS (2026-05-08)**
   Validation + activation officielle du hook CANOPY (forest cover) via NASA MOD44B Vegetation Continuous Fields 250m (Hansen 2003 + DiMiceli 2017) sous régime guardrails ENFORCED + autonomy=LIMITED + workflow doctrinal anti-générique strict (FUSION ADD-ONLY · V30_LOCK INVIOLÉ · DRIFT_ZERO).
   - **DOCTRINE ANTI-GÉNÉRIQUE STRICT EXPLICITÉE** : Le Commandant a émis `CANOPY_HOOK_ACTIVATE_Ω` SANS `P0_VALIDATE` préalable. L'agent a respecté la doctrine en exécutant **VALIDATE → ACTIVATE séquentiellement** (impossible activer hook sans manifest validé). Aucune fabrication.
