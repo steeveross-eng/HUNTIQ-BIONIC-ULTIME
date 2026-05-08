@@ -1,0 +1,624 @@
+{
+  "history": [
+    {
+      "manifest_id": "NASA_NDVI_DENSE_GRID_P0_VALIDATE_Ω",
+      "ordre": "P8_NASA_NDVI_DENSE_GRID_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "valid": true,
+      "verdict": "NASA_NDVI_DENSE_GRID_VALIDATE_ALL_VALID",
+      "provider": "NASA_NDVI_DENSE",
+      "provider_physical": "NASA_MOD13Q1_ORNL_DENSE_SUBSET",
+      "endpoint": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset",
+      "spatial_subset_config": {
+        "km_above_below": 2,
+        "km_left_right": 2,
+        "expected_grid_pixels": 289
+      },
+      "temporal_summer_window": {
+        "year": 2024,
+        "doy_start": 153,
+        "doy_end": 244,
+        "start_modis": "A2024153",
+        "end_modis": "A2024244",
+        "primary_reference": "Borowik_2013_EurJWildlRes"
+      },
+      "ecological_ndvi_bins_doctrinal": [
+        {
+          "low": 0.0,
+          "high": 0.2,
+          "label": "BARREN_LOW_PRODUCTIVITY"
+        },
+        {
+          "low": 0.2,
+          "high": 0.4,
+          "label": "SHRUBLAND_MODERATE"
+        },
+        {
+          "low": 0.4,
+          "high": 0.6,
+          "label": "OPEN_FOREST_HIGH_PRODUCTIVITY"
+        },
+        {
+          "low": 0.6,
+          "high": 0.8,
+          "label": "DENSE_FOREST_PRIMARY"
+        },
+        {
+          "low": 0.8,
+          "high": 1.0001,
+          "label": "CANOPY_CLIMAX_OVERSTOCK"
+        }
+      ],
+      "n_sites_total": 5,
+      "n_calls_success": 5,
+      "n_calls_failed": 0,
+      "site_results": {
+        "espece_a": {
+          "lat": 46.8131,
+          "lon": -71.2075,
+          "species_canonical": "cerf",
+          "scientific_name": "Odocoileus virginianus",
+          "bands_dense_grid": {
+            "250m_16_days_NDVI": {
+              "valid": true,
+              "nrows": 17,
+              "ncols": 17,
+              "cellsize_m": 231.656358264,
+              "n_temporal_tiles": 6,
+              "n_pixels_per_tile": 289,
+              "n_total": 1734,
+              "n_nodata": 236,
+              "n_valid": 1498,
+              "stats": {
+                "mean": 0.3618,
+                "min": -0.15,
+                "max": 0.8208,
+                "p10": 0.1216,
+                "p50": 0.3779,
+                "p90": 0.561
+              },
+              "ecological_partition": {
+                "valid": true,
+                "n_pixels_valid": 1498,
+                "bins_count": {
+                  "BARREN_LOW_PRODUCTIVITY": 220,
+                  "SHRUBLAND_MODERATE": 555,
+                  "OPEN_FOREST_HIGH_PRODUCTIVITY": 592,
+                  "DENSE_FOREST_PRIMARY": 93,
+                  "CANOPY_CLIMAX_OVERSTOCK": 3
+                },
+                "bins_pct": {
+                  "BARREN_LOW_PRODUCTIVITY": 14.686,
+                  "SHRUBLAND_MODERATE": 37.049,
+                  "OPEN_FOREST_HIGH_PRODUCTIVITY": 39.519,
+                  "DENSE_FOREST_PRIMARY": 6.208,
+                  "CANOPY_CLIMAX_OVERSTOCK": 0.2
+                },
+                "shannon_diversity_h": 1.2015,
+                "shannon_max_log_5": 1.6094,
+                "shannon_evenness": 0.7465,
+                "bins_doctrinal": [
+                  {
+                    "low": 0.0,
+                    "high": 0.2,
+                    "label": "BARREN_LOW_PRODUCTIVITY"
+                  },
+                  {
+                    "low": 0.2,
+                    "high": 0.4,
+                    "label": "SHRUBLAND_MODERATE"
+                  },
+                  {
+                    "low": 0.4,
+                    "high": 0.6,
+                    "label": "OPEN_FOREST_HIGH_PRODUCTIVITY"
+                  },
+                  {
+                    "low": 0.6,
+                    "high": 0.8,
+                    "label": "DENSE_FOREST_PRIMARY"
+                  },
+                  {
+                    "low": 0.8,
+                    "high": 1.0001,
+                    "label": "CANOPY_CLIMAX_OVERSTOCK"
+                  }
+                ]
+              },
+              "feeding_zones_full_dense": {
+                "value": 39.94,
+                "unit": "feeding_zones_FULL_dense_score_0_100",
+                "regime": "LOW_FEEDING_ZONE_FULL_DENSE",
+                "components": {
+                  "pct_pixels_in_species_optimum_range": 44.06,
+                  "n_pixels_in_optimum": 660,
+                  "n_pixels_total_valid": 1498,
+                  "ndvi_mean_dense": 0.3618,
+                  "ndvi_p10": 0.1216,
+                  "ndvi_p50_median": 0.3779,
+                  "ndvi_p90": 0.561,
+                  "ndvi_iqr": 0.218,
+                  "homogeneity_bonus": 0.689
+                },
+                "species_thresholds_used": {
+                  "ndvi_optimal_low": 0.4,
+                  "ndvi_optimal_high": 0.7
+                },
+                "primary_references": [
+                  "Borowik_2013_EurJWildlRes",
+                  "Pettorelli_2005_TREE",
+                  "Hamel_2009_JApplEcol"
+                ]
+              },
+              "elapsed_ms": 2872.0
+            }
+          }
+        },
+        "espece_b": {
+          "lat": 47.2,
+          "lon": -70.27,
+          "species_canonical": "orignal",
+          "scientific_name": "Alces alces",
+          "bands_dense_grid": {
+            "250m_16_days_NDVI": {
+              "valid": true,
+              "nrows": 17,
+              "ncols": 17,
+              "cellsize_m": 231.656358264,
+              "n_temporal_tiles": 6,
+              "n_pixels_per_tile": 289,
+              "n_total": 1734,
+              "n_nodata": 516,
+              "n_valid": 1218,
+              "stats": {
+                "mean": 0.6949,
+                "min": -0.1939,
+                "max": 0.9341,
+                "p10": 0.5112,
+                "p50": 0.7392,
+                "p90": 0.8461
+              },
+              "ecological_partition": {
+                "valid": true,
+                "n_pixels_valid": 1218,
+                "bins_count": {
+                  "BARREN_LOW_PRODUCTIVITY": 15,
+                  "SHRUBLAND_MODERATE": 28,
+                  "OPEN_FOREST_HIGH_PRODUCTIVITY": 173,
+                  "DENSE_FOREST_PRIMARY": 652,
+                  "CANOPY_CLIMAX_OVERSTOCK": 332
+                },
+                "bins_pct": {
+                  "BARREN_LOW_PRODUCTIVITY": 1.232,
+                  "SHRUBLAND_MODERATE": 2.299,
+                  "OPEN_FOREST_HIGH_PRODUCTIVITY": 14.204,
+                  "DENSE_FOREST_PRIMARY": 53.53,
+                  "CANOPY_CLIMAX_OVERSTOCK": 27.258
+                },
+                "shannon_diversity_h": 1.1069,
+                "shannon_max_log_5": 1.6094,
+                "shannon_evenness": 0.6878,
+                "bins_doctrinal": [
+                  {
+                    "low": 0.0,
+                    "high": 0.2,
+                    "label": "BARREN_LOW_PRODUCTIVITY"
+                  },
+                  {
+                    "low": 0.2,
+                    "high": 0.4,
+                    "label": "SHRUBLAND_MODERATE"
+                  },
+                  {
+                    "low": 0.4,
+                    "high": 0.6,
+                    "label": "OPEN_FOREST_HIGH_PRODUCTIVITY"
+                  },
+                  {
+                    "low": 0.6,
+                    "high": 0.8,
+                    "label": "DENSE_FOREST_PRIMARY"
+                  },
+                  {
+                    "low": 0.8,
+                    "high": 1.0001,
+                    "label": "CANOPY_CLIMAX_OVERSTOCK"
+                  }
+                ]
+              },
+              "feeding_zones_full_dense": {
+                "value": 14.58,
+                "unit": "feeding_zones_FULL_dense_score_0_100",
+                "regime": "POOR_FEEDING_ZONE_FULL_DENSE",
+                "components": {
+                  "pct_pixels_in_species_optimum_range": 15.93,
+                  "n_pixels_in_optimum": 194,
+                  "n_pixels_total_valid": 1218,
+                  "ndvi_mean_dense": 0.6949,
+                  "ndvi_p10": 0.5112,
+                  "ndvi_p50_median": 0.7392,
+                  "ndvi_p90": 0.8461,
+                  "ndvi_iqr": 0.1692,
+                  "homogeneity_bonus": 0.718
+                },
+                "species_thresholds_used": {
+                  "ndvi_optimal_low": 0.3,
+                  "ndvi_optimal_high": 0.6
+                },
+                "primary_references": [
+                  "Borowik_2013_EurJWildlRes",
+                  "Pettorelli_2005_TREE",
+                  "Hamel_2009_JApplEcol"
+                ]
+              },
+              "elapsed_ms": 2715.6
+            }
+          }
+        },
+        "espece_c": {
+          "lat": 48.34,
+          "lon": -69.39,
+          "species_canonical": "ours",
+          "scientific_name": "Ursus americanus",
+          "bands_dense_grid": {
+            "250m_16_days_NDVI": {
+              "valid": true,
+              "nrows": 17,
+              "ncols": 17,
+              "cellsize_m": 231.656358264,
+              "n_temporal_tiles": 6,
+              "n_pixels_per_tile": 289,
+              "n_total": 1734,
+              "n_nodata": 894,
+              "n_valid": 840,
+              "stats": {
+                "mean": 0.6646,
+                "min": -0.012,
+                "max": 0.9748,
+                "p10": 0.2378,
+                "p50": 0.7266,
+                "p90": 0.8846
+              },
+              "ecological_partition": {
+                "valid": true,
+                "n_pixels_valid": 840,
+                "bins_count": {
+                  "BARREN_LOW_PRODUCTIVITY": 65,
+                  "SHRUBLAND_MODERATE": 60,
+                  "OPEN_FOREST_HIGH_PRODUCTIVITY": 98,
+                  "DENSE_FOREST_PRIMARY": 325,
+                  "CANOPY_CLIMAX_OVERSTOCK": 291
+                },
+                "bins_pct": {
+                  "BARREN_LOW_PRODUCTIVITY": 7.738,
+                  "SHRUBLAND_MODERATE": 7.143,
+                  "OPEN_FOREST_HIGH_PRODUCTIVITY": 11.667,
+                  "DENSE_FOREST_PRIMARY": 38.69,
+                  "CANOPY_CLIMAX_OVERSTOCK": 34.643
+                },
+                "shannon_diversity_h": 1.3718,
+                "shannon_max_log_5": 1.6094,
+                "shannon_evenness": 0.8524,
+                "bins_doctrinal": [
+                  {
+                    "low": 0.0,
+                    "high": 0.2,
+                    "label": "BARREN_LOW_PRODUCTIVITY"
+                  },
+                  {
+                    "low": 0.2,
+                    "high": 0.4,
+                    "label": "SHRUBLAND_MODERATE"
+                  },
+                  {
+                    "low": 0.4,
+                    "high": 0.6,
+                    "label": "OPEN_FOREST_HIGH_PRODUCTIVITY"
+                  },
+                  {
+                    "low": 0.6,
+                    "high": 0.8,
+                    "label": "DENSE_FOREST_PRIMARY"
+                  },
+                  {
+                    "low": 0.8,
+                    "high": 1.0001,
+                    "label": "CANOPY_CLIMAX_OVERSTOCK"
+                  }
+                ]
+              },
+              "feeding_zones_full_dense": {
+                "value": 51.84,
+                "unit": "feeding_zones_FULL_dense_score_0_100",
+                "regime": "MODERATE_FEEDING_ZONE_FULL_DENSE",
+                "components": {
+                  "pct_pixels_in_species_optimum_range": 57.5,
+                  "n_pixels_in_optimum": 483,
+                  "n_pixels_total_valid": 840,
+                  "ndvi_mean_dense": 0.6646,
+                  "ndvi_p10": 0.2378,
+                  "ndvi_p50_median": 0.7266,
+                  "ndvi_p90": 0.8846,
+                  "ndvi_iqr": 0.2625,
+                  "homogeneity_bonus": 0.672
+                },
+                "species_thresholds_used": {
+                  "ndvi_optimal_low": 0.2,
+                  "ndvi_optimal_high": 0.8
+                },
+                "primary_references": [
+                  "Borowik_2013_EurJWildlRes",
+                  "Pettorelli_2005_TREE",
+                  "Hamel_2009_JApplEcol"
+                ]
+              },
+              "elapsed_ms": 2671.0
+            }
+          }
+        },
+        "espece_d": {
+          "lat": 46.36,
+          "lon": -72.07,
+          "species_canonical": "dindon",
+          "scientific_name": "Meleagris gallopavo",
+          "bands_dense_grid": {
+            "250m_16_days_NDVI": {
+              "valid": true,
+              "nrows": 17,
+              "ncols": 17,
+              "cellsize_m": 231.656358264,
+              "n_temporal_tiles": 6,
+              "n_pixels_per_tile": 289,
+              "n_total": 1734,
+              "n_nodata": 0,
+              "n_valid": 1734,
+              "stats": {
+                "mean": 0.8734,
+                "min": 0.5164,
+                "max": 0.9411,
+                "p10": 0.8085,
+                "p50": 0.8862,
+                "p90": 0.9159
+              },
+              "ecological_partition": {
+                "valid": true,
+                "n_pixels_valid": 1734,
+                "bins_count": {
+                  "BARREN_LOW_PRODUCTIVITY": 0,
+                  "SHRUBLAND_MODERATE": 0,
+                  "OPEN_FOREST_HIGH_PRODUCTIVITY": 1,
+                  "DENSE_FOREST_PRIMARY": 136,
+                  "CANOPY_CLIMAX_OVERSTOCK": 1597
+                },
+                "bins_pct": {
+                  "BARREN_LOW_PRODUCTIVITY": 0.0,
+                  "SHRUBLAND_MODERATE": 0.0,
+                  "OPEN_FOREST_HIGH_PRODUCTIVITY": 0.058,
+                  "DENSE_FOREST_PRIMARY": 7.843,
+                  "CANOPY_CLIMAX_OVERSTOCK": 92.099
+                },
+                "shannon_diversity_h": 0.2798,
+                "shannon_max_log_5": 1.6094,
+                "shannon_evenness": 0.1738,
+                "bins_doctrinal": [
+                  {
+                    "low": 0.0,
+                    "high": 0.2,
+                    "label": "BARREN_LOW_PRODUCTIVITY"
+                  },
+                  {
+                    "low": 0.2,
+                    "high": 0.4,
+                    "label": "SHRUBLAND_MODERATE"
+                  },
+                  {
+                    "low": 0.4,
+                    "high": 0.6,
+                    "label": "OPEN_FOREST_HIGH_PRODUCTIVITY"
+                  },
+                  {
+                    "low": 0.6,
+                    "high": 0.8,
+                    "label": "DENSE_FOREST_PRIMARY"
+                  },
+                  {
+                    "low": 0.8,
+                    "high": 1.0001,
+                    "label": "CANOPY_CLIMAX_OVERSTOCK"
+                  }
+                ]
+              },
+              "feeding_zones_full_dense": {
+                "value": 0.06,
+                "unit": "feeding_zones_FULL_dense_score_0_100",
+                "regime": "POOR_FEEDING_ZONE_FULL_DENSE",
+                "components": {
+                  "pct_pixels_in_species_optimum_range": 0.06,
+                  "n_pixels_in_optimum": 1,
+                  "n_pixels_total_valid": 1734,
+                  "ndvi_mean_dense": 0.8734,
+                  "ndvi_p10": 0.8085,
+                  "ndvi_p50_median": 0.8862,
+                  "ndvi_p90": 0.9159,
+                  "ndvi_iqr": 0.0474,
+                  "homogeneity_bonus": 0.921
+                },
+                "species_thresholds_used": {
+                  "ndvi_optimal_low": 0.3,
+                  "ndvi_optimal_high": 0.6
+                },
+                "primary_references": [
+                  "Borowik_2013_EurJWildlRes",
+                  "Pettorelli_2005_TREE",
+                  "Hamel_2009_JApplEcol"
+                ]
+              },
+              "elapsed_ms": 2493.1
+            }
+          }
+        },
+        "espece_e": {
+          "lat": 47.0,
+          "lon": -71.0,
+          "species_canonical": "wapiti",
+          "scientific_name": "Cervus canadensis",
+          "bands_dense_grid": {
+            "250m_16_days_NDVI": {
+              "valid": true,
+              "nrows": 17,
+              "ncols": 17,
+              "cellsize_m": 231.656358264,
+              "n_temporal_tiles": 6,
+              "n_pixels_per_tile": 289,
+              "n_total": 1734,
+              "n_nodata": 289,
+              "n_valid": 1445,
+              "stats": {
+                "mean": 0.8209,
+                "min": -0.1881,
+                "max": 0.9498,
+                "p10": 0.7373,
+                "p50": 0.8672,
+                "p90": 0.916
+              },
+              "ecological_partition": {
+                "valid": true,
+                "n_pixels_valid": 1445,
+                "bins_count": {
+                  "BARREN_LOW_PRODUCTIVITY": 26,
+                  "SHRUBLAND_MODERATE": 19,
+                  "OPEN_FOREST_HIGH_PRODUCTIVITY": 17,
+                  "DENSE_FOREST_PRIMARY": 276,
+                  "CANOPY_CLIMAX_OVERSTOCK": 1098
+                },
+                "bins_pct": {
+                  "BARREN_LOW_PRODUCTIVITY": 1.799,
+                  "SHRUBLAND_MODERATE": 1.315,
+                  "OPEN_FOREST_HIGH_PRODUCTIVITY": 1.176,
+                  "DENSE_FOREST_PRIMARY": 19.1,
+                  "CANOPY_CLIMAX_OVERSTOCK": 75.986
+                },
+                "shannon_diversity_h": 0.7064,
+                "shannon_max_log_5": 1.6094,
+                "shannon_evenness": 0.4389,
+                "bins_doctrinal": [
+                  {
+                    "low": 0.0,
+                    "high": 0.2,
+                    "label": "BARREN_LOW_PRODUCTIVITY"
+                  },
+                  {
+                    "low": 0.2,
+                    "high": 0.4,
+                    "label": "SHRUBLAND_MODERATE"
+                  },
+                  {
+                    "low": 0.4,
+                    "high": 0.6,
+                    "label": "OPEN_FOREST_HIGH_PRODUCTIVITY"
+                  },
+                  {
+                    "low": 0.6,
+                    "high": 0.8,
+                    "label": "DENSE_FOREST_PRIMARY"
+                  },
+                  {
+                    "low": 0.8,
+                    "high": 1.0001,
+                    "label": "CANOPY_CLIMAX_OVERSTOCK"
+                  }
+                ]
+              },
+              "feeding_zones_full_dense": {
+                "value": 3.79,
+                "unit": "feeding_zones_FULL_dense_score_0_100",
+                "regime": "POOR_FEEDING_ZONE_FULL_DENSE",
+                "components": {
+                  "pct_pixels_in_species_optimum_range": 3.94,
+                  "n_pixels_in_optimum": 57,
+                  "n_pixels_total_valid": 1445,
+                  "ndvi_mean_dense": 0.8209,
+                  "ndvi_p10": 0.7373,
+                  "ndvi_p50_median": 0.8672,
+                  "ndvi_p90": 0.916,
+                  "ndvi_iqr": 0.0914,
+                  "homogeneity_bonus": 0.869
+                },
+                "species_thresholds_used": {
+                  "ndvi_optimal_low": 0.4,
+                  "ndvi_optimal_high": 0.7
+                },
+                "primary_references": [
+                  "Borowik_2013_EurJWildlRes",
+                  "Pettorelli_2005_TREE",
+                  "Hamel_2009_JApplEcol"
+                ]
+              },
+              "elapsed_ms": 2488.4
+            }
+          }
+        }
+      },
+      "microhabitat_clusters_global_dense": {
+        "value": 1.3224,
+        "unit": "shannon_diversity_h_global",
+        "regime": "HIGH_GLOBAL_DIVERSITY",
+        "components": {
+          "n_total_pixels_global": 6735,
+          "n_sites_aggregated": 5,
+          "n_clusters_present_global": 5,
+          "global_bins_count": {
+            "BARREN_LOW_PRODUCTIVITY": 326,
+            "SHRUBLAND_MODERATE": 662,
+            "OPEN_FOREST_HIGH_PRODUCTIVITY": 881,
+            "DENSE_FOREST_PRIMARY": 1482,
+            "CANOPY_CLIMAX_OVERSTOCK": 3321
+          },
+          "global_bins_pct": {
+            "BARREN_LOW_PRODUCTIVITY": 4.84,
+            "SHRUBLAND_MODERATE": 9.829,
+            "OPEN_FOREST_HIGH_PRODUCTIVITY": 13.081,
+            "DENSE_FOREST_PRIMARY": 22.004,
+            "CANOPY_CLIMAX_OVERSTOCK": 49.31
+          },
+          "site_dominant_clusters": [
+            "OPEN_FOREST_HIGH_PRODUCTIVITY",
+            "DENSE_FOREST_PRIMARY",
+            "DENSE_FOREST_PRIMARY",
+            "CANOPY_CLIMAX_OVERSTOCK",
+            "CANOPY_CLIMAX_OVERSTOCK"
+          ],
+          "site_shannon_mean": 0.9333,
+          "shannon_max_log_5": 1.6094,
+          "global_shannon_evenness": 0.8217
+        },
+        "primary_references": [
+          "Pettorelli_2005_TREE",
+          "Shannon_1948_BellSystemTechJ",
+          "Hamel_2009_JApplEcol"
+        ]
+      },
+      "scientific_references_peer_reviewed": [
+        "Pettorelli et al. (2005). TREE, 20(9):503-510. DOI:10.1016/j.tree.2005.05.011",
+        "Borowik et al. (2013). Eur J Wildl Res, 59:675-682. DOI:10.1007/s10344-013-0720-0",
+        "Hamel et al. (2009). J Appl Ecol, 46:582-589. DOI:10.1111/j.1365-2664.2009.01643.x",
+        "Shannon (1948). Bell System Technical J, 27(3):379-423."
+      ],
+      "anti_generique_strict": true,
+      "fusion_add_only": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T02:47:57+00:00",
+      "elapsed_s": 15.248,
+      "manifest_sha256": "e6e15e7af9013451c8b5a83eaee93b9a86dc8e39973c610d24a3c4e9af22f06c"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T02:47:57+00:00",
+  "n_validations": 1,
+  "last_manifest_sha256": "e6e15e7af9013451c8b5a83eaee93b9a86dc8e39973c610d24a3c4e9af22f06c",
+  "last_verdict": "NASA_NDVI_DENSE_GRID_VALIDATE_ALL_VALID",
+  "v30_lock": "INVIOLÉ"
+}

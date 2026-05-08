@@ -5593,11 +5593,235 @@
       "no_binary_probed": true,
       "executed_at_utc": "2026-05-08T02:32:42+00:00",
       "manifest_sha256": "534f9945c0f9c4ef0160e0841ed8328c1eb8eefc3361098c7f76e754de40b2eb"
+    },
+    {
+      "manifest_id": "NOAA_CFSV2_CATALOGUE_CARTOGRAPHY_Ω",
+      "ordre": "COPERNICUS_P0_CATALOGUE_CARTOGRAPHY",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "mode": "CATALOGUE_BROWSE_ONLY",
+      "provider": "COPERNICUS_MARINE",
+      "forensic_event": "COPERNICUS_CATALOGUE_CARTOGRAPHY",
+      "root_catalog_url": "https://my.cmems-du.eu/thredds/catalog/catalog.xml",
+      "summary": {
+        "n_catalogs_visited": 1,
+        "n_datasets_discovered": 0,
+        "n_catalog_refs_discovered": 0,
+        "max_depth_reached": 0,
+        "capped_by_max_datasets": false,
+        "constraints_applied": {
+          "allow_http_methods": [
+            "GET"
+          ],
+          "allow_content_types": [
+            "application/xml",
+            "text/xml"
+          ],
+          "forbid_binary_probe": true,
+          "forbid_follow_redirects": true,
+          "max_depth": 1,
+          "max_datasets": 128
+        }
+      },
+      "visited_catalogs": [
+        {
+          "url": "https://my.cmems-du.eu/thredds/catalog/catalog.xml",
+          "depth": 0,
+          "method": "GET",
+          "http_status": 200,
+          "content_type": "text/html",
+          "ctype_acceptable": false,
+          "redirect_detected": false,
+          "n_datasets_in_catalog": 0,
+          "n_catalogrefs_in_catalog": 0,
+          "elapsed_ms": 380.8,
+          "reason": "content_type_not_xml::text/html",
+          "body_bytes_read": 0
+        }
+      ],
+      "discovered_datasets": [],
+      "discovered_catalog_refs": [],
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "no_binary_probed": true,
+      "executed_at_utc": "2026-05-08T02:50:23+00:00",
+      "manifest_sha256": "86ba88b078ab721cbfe0f42d4dc6b8f8dc653ac94057ef2fa4902a4001288331"
+    },
+    {
+      "manifest_id": "NOAA_CFSV2_CATALOGUE_CARTOGRAPHY_Ω",
+      "ordre": "COPERNICUS_P0_CATALOGUE_CARTOGRAPHY",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "mode": "CATALOGUE_BROWSE_ONLY",
+      "provider": "COPERNICUS_MARINE",
+      "forensic_event": "COPERNICUS_CATALOGUE_CARTOGRAPHY",
+      "root_catalog_url": "https://my.cmems-du.eu/thredds/catalog/catalog.xml",
+      "summary": {
+        "n_catalogs_visited": 1,
+        "n_datasets_discovered": 0,
+        "n_catalog_refs_discovered": 0,
+        "max_depth_reached": 0,
+        "capped_by_max_datasets": false,
+        "constraints_applied": {
+          "allow_http_methods": [
+            "GET"
+          ],
+          "allow_content_types": [
+            "application/xml",
+            "text/xml"
+          ],
+          "forbid_binary_probe": true,
+          "forbid_follow_redirects": true,
+          "max_depth": 1,
+          "max_datasets": 30
+        }
+      },
+      "visited_catalogs": [
+        {
+          "url": "https://my.cmems-du.eu/thredds/catalog/catalog.xml",
+          "depth": 0,
+          "method": "GET",
+          "http_status": 200,
+          "content_type": "text/html",
+          "ctype_acceptable": false,
+          "redirect_detected": false,
+          "n_datasets_in_catalog": 0,
+          "n_catalogrefs_in_catalog": 0,
+          "elapsed_ms": 357.8,
+          "reason": "content_type_not_xml::text/html",
+          "body_bytes_read": 0
+        }
+      ],
+      "discovered_datasets": [],
+      "discovered_catalog_refs": [],
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "no_binary_probed": true,
+      "executed_at_utc": "2026-05-08T02:50:24+00:00",
+      "manifest_sha256": "1f6cb20592ba294bbf6a049e5a058073e57b56c851a4bd162803128f4da2d9a2"
+    },
+    {
+      "manifest_id": "NOAA_CFSV2_CATALOGUE_CARTOGRAPHY_Ω",
+      "ordre": "NOAA_CFSV2_P0_CATALOGUE_CARTOGRAPHY",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "mode": "CATALOGUE_BROWSE_ONLY",
+      "provider": "NCEI_THREDDS_CFSR_MONTHLY",
+      "forensic_event": "CFSV2_CATALOGUE_CARTOGRAPHY",
+      "root_catalog_url": "https://www.ncei.noaa.gov/thredds/catalog/cfsr/mon/pgbh/catalog.xml",
+      "summary": {
+        "n_catalogs_visited": 1,
+        "n_datasets_discovered": 0,
+        "n_catalog_refs_discovered": 0,
+        "max_depth_reached": 0,
+        "capped_by_max_datasets": false,
+        "constraints_applied": {
+          "allow_http_methods": [
+            "GET"
+          ],
+          "allow_content_types": [
+            "application/xml",
+            "text/xml"
+          ],
+          "forbid_binary_probe": true,
+          "forbid_follow_redirects": true,
+          "max_depth": 2,
+          "max_datasets": 128
+        }
+      },
+      "visited_catalogs": [
+        {
+          "url": "https://www.ncei.noaa.gov/thredds/catalog/cfsr/mon/pgbh/catalog.xml",
+          "depth": 0,
+          "method": "GET",
+          "http_status": 404,
+          "content_type": null,
+          "ctype_acceptable": false,
+          "redirect_detected": false,
+          "n_datasets_in_catalog": 0,
+          "n_catalogrefs_in_catalog": 0,
+          "elapsed_ms": 278.5,
+          "reason": "http_error_404",
+          "body_bytes_read": 0
+        }
+      ],
+      "discovered_datasets": [],
+      "discovered_catalog_refs": [],
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "no_binary_probed": true,
+      "executed_at_utc": "2026-05-08T02:50:25+00:00",
+      "manifest_sha256": "6a491127cf81307a96b0a6bb85e53233a691d19eaa864d69327f9e5d3b0b4131"
+    },
+    {
+      "manifest_id": "NOAA_CFSV2_CATALOGUE_CARTOGRAPHY_Ω",
+      "ordre": "NOAA_CFSV2_P0_CATALOGUE_CARTOGRAPHY",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "mode": "CATALOGUE_BROWSE_ONLY",
+      "provider": "NCEI_THREDDS_CFSR_MONTHLY",
+      "forensic_event": "CFSV2_CATALOGUE_CARTOGRAPHY",
+      "root_catalog_url": "https://www.ncei.noaa.gov/thredds/catalog/cfsr/mon/pgbh/catalog.xml",
+      "summary": {
+        "n_catalogs_visited": 1,
+        "n_datasets_discovered": 0,
+        "n_catalog_refs_discovered": 0,
+        "max_depth_reached": 0,
+        "capped_by_max_datasets": false,
+        "constraints_applied": {
+          "allow_http_methods": [
+            "GET"
+          ],
+          "allow_content_types": [
+            "application/xml",
+            "text/xml"
+          ],
+          "forbid_binary_probe": true,
+          "forbid_follow_redirects": true,
+          "max_depth": 2,
+          "max_datasets": 30
+        }
+      },
+      "visited_catalogs": [
+        {
+          "url": "https://www.ncei.noaa.gov/thredds/catalog/cfsr/mon/pgbh/catalog.xml",
+          "depth": 0,
+          "method": "GET",
+          "http_status": 404,
+          "content_type": null,
+          "ctype_acceptable": false,
+          "redirect_detected": false,
+          "n_datasets_in_catalog": 0,
+          "n_catalogrefs_in_catalog": 0,
+          "elapsed_ms": 163.5,
+          "reason": "http_error_404",
+          "body_bytes_read": 0
+        }
+      ],
+      "discovered_datasets": [],
+      "discovered_catalog_refs": [],
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "no_binary_probed": true,
+      "executed_at_utc": "2026-05-08T02:50:26+00:00",
+      "manifest_sha256": "59bcdfce7987e56412af8a1d19e3ee35622351fad9bf3bd814dbbcabc137ddd2"
     }
   ],
-  "last_updated_utc": "2026-05-08T02:32:42+00:00",
-  "n_cartographies": 100,
-  "last_manifest_sha256": "534f9945c0f9c4ef0160e0841ed8328c1eb8eefc3361098c7f76e754de40b2eb",
+  "last_updated_utc": "2026-05-08T02:50:26+00:00",
+  "n_cartographies": 104,
+  "last_manifest_sha256": "59bcdfce7987e56412af8a1d19e3ee35622351fad9bf3bd814dbbcabc137ddd2",
   "last_root_catalog_url": "https://www.ncei.noaa.gov/thredds/catalog/cfsr/mon/pgbh/catalog.xml",
   "last_n_datasets_discovered": 0,
   "v30_lock": "INVIOLÉ"

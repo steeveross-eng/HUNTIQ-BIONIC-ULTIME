@@ -27,6 +27,26 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-DUOTRICICIES · HABITAT_OUTPUTS_COMPLETE_MERGE_Ω (P9) — 🎯🎯🎯 12/12 OUTPUTS COMPUTABLES ATTEINTS (2026-05-08)**
+  Verdict final `HABITAT_COMPLETE_MERGE_FULL_12_OF_12_COMPUTABLE` · coverage 1.0 · 51/51 outputs · 5/5 feeding_zones_FULL_dense + 1/1 microhabitat_clusters_global_dense · AUCUN output deferred restant. SHA `14c8c2e7e631b25911fd9256747787c1a840f5d8456e189a182bb455b0ccf291`. Cascade complète V1→V2→V3→FINAL→COMPLETE intacte, FUSION ADD-ONLY strict (FINAL préservé sans mutation).
+  - **Nouveau module `habitat_outputs_complete_merge_omega.py`** : `merge_habitat_outputs_complete` (refus si dense_grid hook non activé), `_extract_feeding_full_per_site`, `_compute_feeding_zones_full_output`, `_compute_microhabitat_clusters_global_dense_output`, `get_habitat_complete_merge_status`. Hérite intégralement FINAL (V3+V2+V1+5 hooks principaux+anthropogenic+rut).
+  - **Nouveau module P8 `nasa_ndvi_dense_grid_omega.py`** : densification spatiale ORNL MOD13Q1 via `kmAboveBelow=2, kmLeftRight=2` (grille 17×17 = 289 pixels par tuile × 6 tuiles summer × 5 sites = **1734 pixels max/site**, **6,735 pixels totaux réels** ingérés sur la session). Variables : `_compute_feeding_zones_full_dense` (Borowik 2013 % pixels in species optimum + homogeneity bonus), `_ecological_partition_pixels` (5 clusters Pettorelli 2005 §4.1 : BARREN<0.2, SHRUBLAND 0.2-0.4, OPEN_FOREST 0.4-0.6, DENSE_FOREST 0.6-0.8, CANOPY_CLIMAX≥0.8), `_aggregate_microhabitat_clusters_global` (Shannon entropy 1948).
+  - **5 endpoints router (FUSION ADD-ONLY, +180 lignes)** : P8: 3 (validate/activate/status) + P9: 2 (merge/status).
+  - **Workflow LIVE en 3 phases** :
+    - **P8 VALIDATE** : `verdict=NASA_NDVI_DENSE_GRID_VALIDATE_ALL_VALID` · `manifest_sha256=e6e15e7af9013451c8b5a83eaee93b9a86dc8e39973c610d24a3c4e9af22f06c` · 5/5 calls success · 15.25 s
+    - **P8 ACTIVATE** : `manifest_sha256=4ac6fe46e24b972565bb8acc1d117122582b8cfe67988d8f5d337a0970621972`
+    - **P9 COMPLETE MERGE** : `verdict=HABITAT_COMPLETE_MERGE_FULL_12_OF_12_COMPUTABLE` · `complete_merge_sha256=14c8c2e7e631b25911fd9256747787c1a840f5d8456e189a182bb455b0ccf291` · 0.014 s
+  - **feeding_zones_FULL_dense par site (anti-générique strict, données réelles MOD13Q1)** :
+    - **espece_a (cerf, Charny)** : 1498 pixels valides · score=39.94 → LOW_FEEDING_ZONE_FULL_DENSE
+    - **espece_b (orignal, Charlevoix)** : 1218 pixels valides · score=14.58 → POOR (seuils orignal stricts)
+    - **espece_c (ours, Saguenay)** : 840 pixels valides · score=51.84 → MODERATE_FEEDING_ZONE_FULL_DENSE
+    - **espece_d (dindon, Mauricie)** : 1734 pixels valides · score=0.06 → POOR (seuils dindon très étroits)
+    - **espece_e (wapiti, Laurentides)** : 1445 pixels valides · score=3.79 → POOR
+  - **microhabitat_clusters_global_dense (cross-sites, Shannon entropy)** : value=1.3224 (sur max log(5)=1.6094) → **HIGH_GLOBAL_DIVERSITY** · evenness=0.8217 · 6735 pixels totaux agrégés sur 5 sites · 5/5 clusters écologiques présents.
+  - **25 nouveaux pytests (`test_phase_xxx_duotricicies_dense_grid_complete_merge_omega.py`)** : 25/25 PASS — module imports, 5 clusters doctrinal, percentiles linear interp, NODATA exclusion, partition Shannon evenness, feeding full optimum/empty, microhabitat aggregate, complete inheritance, 12/12 verification, no deferred si verdict 12/12.
+  - **Refs peer-reviewed** : Pettorelli 2005 (TREE, NDVI dense grid forage), Borowik 2013 (Eur J Wildl Res, forage availability mapping), Hamel 2009 (J Appl Ecol, NDVI thresholds ungulates), Shannon 1948 (Bell System Tech J, entropy diversity).
+
+
 - **PHASE_XXX-UNTRICICIES · HABITAT_OUTPUTS_FINAL_MERGE_Ω (P7) — 🎯 10/12 OUTPUTS COMPUTABLES + rut_zones LIVE (2026-05-08)**
   Greffe `rut_zones_temporal_proxy` sur recompute V3 sous régime guardrails ENFORCED + autonomy=LIMITED, FUSION ADD-ONLY strict (V3 préservé sans mutation). Lit V3 + TEMPORAL_RUT overlays. Verdict `HABITAT_FINAL_MERGE_FULL_10_OF_12_COMPUTABLE` · coverage 1.0 · 45/45 outputs · 5/5 rut_zones calculés.
   - **Nouveau module `habitat_outputs_final_merge_omega.py`** : `merge_habitat_outputs_final` (refus si hook RUT non activé), `_extract_rut_per_site`, `_compute_rut_zones_output`, `get_habitat_final_merge_status`. Hérite intégralement V3 (V2+V1+5 hooks principaux+anthropogenic).

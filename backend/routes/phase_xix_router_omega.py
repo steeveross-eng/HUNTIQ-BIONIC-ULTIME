@@ -16,7 +16,7 @@ import hashlib
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
@@ -3701,4 +3701,213 @@ async def habitat_outputs_final_merge_status_endpoint() -> JSONResponse:
         "result": payload,
         "v30_lock": "INVIOLÉ",
     })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# NASA_NDVI_DENSE_GRID_Ω (P8) — débloque feeding_FULL + microhab_dense
+# ═════════════════════════════════════════════════════════════════════════
+class NasaNdviDenseGridValidateBody(BaseModel):
+    site_coordinates: Optional[Dict[str, Dict[str, float]]] = None
+    species_to_site_map: Optional[Dict[str, str]] = None
+    year: Optional[int] = None
+    km_above_below: int = 2
+    km_left_right: int = 2
+    bands_logical: Optional[List[str]] = None
+    persist: bool = True
+
+
+@router.post("/nasa-ndvi-dense-grid-validate")
+async def nasa_ndvi_dense_grid_validate_endpoint(
+    body: NasaNdviDenseGridValidateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """NASA_NDVI_DENSE_GRID_P0_VALIDATE_Ω · spatial subset MOD13Q1.
+
+    kmAboveBelow×kmLeftRight → grille N×N pixels (231m, summer 2023).
+    Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.nasa_ndvi_dense_grid_omega import (
+        validate_nasa_ndvi_dense_grid,
+    )
+    try:
+        payload = validate_nasa_ndvi_dense_grid(
+            site_coordinates=body.site_coordinates,
+            species_to_site_map=body.species_to_site_map,
+            year=body.year,
+            km_above_below=body.km_above_below,
+            km_left_right=body.km_left_right,
+            bands_logical=body.bands_logical,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "NASA_NDVI_DENSE_GRID_VALIDATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "NASA_NDVI_DENSE_GRID_VALIDATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P8_NASA_NDVI_DENSE_GRID_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+class NasaNdviDenseGridHookActivateBody(BaseModel):
+    manifest_sha256: str
+    reason: str = (
+        "unlock_feeding_zones_FULL_and_microhabitat_dense")
+    persist: bool = True
+
+
+@router.post("/nasa-ndvi-dense-grid-hook-activate")
+async def nasa_ndvi_dense_grid_hook_activate_endpoint(
+    body: NasaNdviDenseGridHookActivateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """NASA_NDVI_DENSE_GRID_HOOK_ACTIVATE_Ω · activation officielle."""
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.nasa_ndvi_dense_grid_omega import (
+        activate_nasa_ndvi_dense_grid_hook,
+    )
+    try:
+        payload = activate_nasa_ndvi_dense_grid_hook(
+            manifest_sha256=body.manifest_sha256,
+            reason=body.reason,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": (
+                    "NASA_NDVI_DENSE_GRID_HOOK_ACTIVATE_FAILED"),
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id":
+            "NASA_NDVI_DENSE_GRID_HOOK_ACTIVATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P8_NASA_NDVI_DENSE_GRID_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/nasa-ndvi-dense-grid-hook-status")
+async def nasa_ndvi_dense_grid_hook_status_endpoint() -> JSONResponse:
+    """NASA_NDVI_DENSE_GRID_HOOK_STATUS_GET_Ω · état (PUBLIC RO)."""
+    from engines.v8_institutional.especes.nasa_ndvi_dense_grid_omega import (
+        get_nasa_ndvi_dense_grid_hook_status,
+    )
+    payload = get_nasa_ndvi_dense_grid_hook_status()
+    return JSONResponse({
+        "manifest_id": "NASA_NDVI_DENSE_GRID_HOOK_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P8_NASA_NDVI_DENSE_GRID_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# HABITAT_OUTPUTS_COMPLETE_MERGE_Ω (P9) — 12/12 outputs computables
+# ═════════════════════════════════════════════════════════════════════════
+class HabitatCompleteMergeBody(BaseModel):
+    species_to_site_map: Optional[Dict[str, str]] = None
+    persist: bool = True
+    require_dense_grid_hook_active: bool = True
+
+
+@router.post("/habitat-outputs-complete-merge")
+async def habitat_outputs_complete_merge_endpoint(
+    body: HabitatCompleteMergeBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """HABITAT_OUTPUTS_COMPLETE_MERGE_Ω · 12/12 outputs.
+
+    Réutilise FINAL sans mutation (FUSION ADD-ONLY) puis greffe
+    feeding_zones_FULL + microhabitat_clusters_global_dense.
+    Refuse l'exécution si NASA_NDVI_DENSE_GRID_HOOK n'est pas activé.
+    Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.habitat_outputs_complete_merge_omega import (  # noqa: E501
+        merge_habitat_outputs_complete,
+    )
+    try:
+        payload = merge_habitat_outputs_complete(
+            species_to_site_map=body.species_to_site_map,
+            persist=body.persist,
+            require_dense_grid_hook_active=(
+                body.require_dense_grid_hook_active),
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": (
+                    "HABITAT_OUTPUTS_COMPLETE_MERGE_FAILED"),
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id":
+            "HABITAT_OUTPUTS_COMPLETE_MERGE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P9_HABITAT_OUTPUTS_COMPLETE_MERGE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/habitat-outputs-complete-merge-status")
+async def habitat_outputs_complete_merge_status_endpoint() -> JSONResponse:
+    """HABITAT_OUTPUTS_COMPLETE_MERGE_STATUS_Ω · état (PUBLIC RO)."""
+    from engines.v8_institutional.especes.habitat_outputs_complete_merge_omega import (  # noqa: E501
+        get_habitat_complete_merge_status,
+    )
+    payload = get_habitat_complete_merge_status()
+    return JSONResponse({
+        "manifest_id":
+            "HABITAT_OUTPUTS_COMPLETE_MERGE_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P9_HABITAT_OUTPUTS_COMPLETE_MERGE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
 

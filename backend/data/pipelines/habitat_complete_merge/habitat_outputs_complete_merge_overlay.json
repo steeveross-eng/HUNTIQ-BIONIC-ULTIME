@@ -1,0 +1,1191 @@
+{
+  "history": [
+    {
+      "manifest_id": "HABITAT_OUTPUTS_COMPLETE_MERGE_Ω",
+      "ordre": "P9_HABITAT_OUTPUTS_COMPLETE_MERGE_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "verdict": "HABITAT_COMPLETE_MERGE_FULL_12_OF_12_COMPUTABLE",
+      "coverage_ratio": 1.0,
+      "n_outputs_per_site_classes_complete": "10_per_site_+_2_global_=_12_total_classes",
+      "n_outputs_per_site_values_complete": 10,
+      "n_outputs_total_values_computed_complete": 51,
+      "n_outputs_per_site_total_values_computed": 50,
+      "n_global_outputs_computed": 1,
+      "n_feeding_full_computed": 5,
+      "n_sites_processed": 5,
+      "final_inheritance": {
+        "final_verdict": "HABITAT_FINAL_MERGE_FULL_10_OF_12_COMPUTABLE",
+        "final_coverage_ratio": 1.0,
+        "final_n_outputs_total_values_computed_final": 45,
+        "final_merge_sha256": "901a56592ea57e460219803ade8f5315289af018d884bd9cd395537fdc30379f",
+        "final_v3_inheritance": {
+          "v3_verdict": "HABITAT_OUTPUTS_RECOMPUTE_V3_FULL_9_OF_12_COMPUTABLE",
+          "v3_coverage_ratio": 1.0,
+          "v3_n_outputs_total_values_computed_v3": 40,
+          "v3_recompute_v3_sha256": "deeaac4d4492f1eaea2dcc2638ebf73eb2bbf37e76b74bd87cc120010df871e7",
+          "v3_anthropogenic_validation_manifest_sha256": "da05ca1e2cb1c13766d442b1bfa03747f1d29d3f3fd762a3d0b8c1b2fb51a765",
+          "v3_v2_recompute_sha256": "8d877e7a8d3b4f98488e0d69c3224c86b68be16fa6fb76b3a0649c963345dd43",
+          "v3_v2_hooks_manifests_inherited": {
+            "nasa_ndvi_manifest_sha256": "166178536dc5d662e0020e9838506b75b940fc045cb5da86d9a0cf23d9ca4148",
+            "usgs_soil_manifest_sha256": "e71d4d273de149122679e233a07d6721e7bae17b6e0ed83dba11bf0753f1a568",
+            "opentopography_manifest_sha256": "b513adb32a65a7f760ac2852a0ca522f3bd5a2316717ec9b889608ef5c762c3a",
+            "rsf_ssf_manifest_sha256": "8a4eafbe1f10b9d561332f93183a3a5c14ed27bd96fdbe3ebed3d7715dc33486",
+            "canopy_manifest_sha256": "2c2b8577fa6f83507d72bdfeefba58ced820fcd30612d652eb58c27df8fa59c7"
+          }
+        },
+        "final_rut_validation_manifest_sha256": "7ab2416de59d42b900a77a50cfcd2fd30d4899d613526ff1255cca30dc452f9a"
+      },
+      "dense_grid_hook_loaded": true,
+      "dense_grid_hook_activated": true,
+      "dense_grid_validation_manifest_sha256": "e6e15e7af9013451c8b5a83eaee93b9a86dc8e39973c610d24a3c4e9af22f06c",
+      "species_to_site_map_used": {
+        "espece_a": "cerf",
+        "espece_b": "orignal",
+        "espece_c": "ours",
+        "espece_d": "dindon",
+        "espece_e": "wapiti"
+      },
+      "per_site_outputs_complete": {
+        "espece_a": {
+          "site_name": "espece_a",
+          "species_canonical": "cerf",
+          "scientific_name": "Odocoileus virginianus",
+          "covariates_inputs": {
+            "ndvi_mean": -0.0235,
+            "evi_mean": -0.0144,
+            "phh2o": 5.2,
+            "cec": 30.9,
+            "soc": 101.1,
+            "elevation_mean_m": 53.56,
+            "elevation_std_m": 20.38,
+            "slope_mean_deg": 4.55,
+            "slope_max_deg": 52.6,
+            "envelope_phillips": 94.15,
+            "demtype_used": "SRTMGL1",
+            "tree_cover_pct": 14.33,
+            "nontree_veg_pct": 65.67,
+            "nonveg_pct": 20.0,
+            "anthropogenic_pressure_score": 100.0,
+            "anthropogenic_pressure_regime": "HIGH_PRESSURE_AVOID_ZONE",
+            "rut_score": 54.3,
+            "rut_regime": "RUT_ZONE_MODERATE_PROBABILITY",
+            "feeding_full_score": 39.94,
+            "feeding_full_regime": "LOW_FEEDING_ZONE_FULL_DENSE"
+          },
+          "computed_outputs": {
+            "food_availability": {
+              "value": 0.0,
+              "unit": "score_0_100",
+              "regime": "SUB_DORMANCY_SIGNAL",
+              "score_raw_normalized_ndvi": 0.4883,
+              "score_optimal_match": 0.0,
+              "ndvi_mean_input": -0.0235,
+              "thresholds_used": {
+                "ndvi_optimal_low": 0.4,
+                "ndvi_optimal_high": 0.7,
+                "ndvi_dormancy": 0.1
+              },
+              "primary_reference": "Hebblewhite_2008_EcolMonogr"
+            },
+            "food_quality": {
+              "value": 0.0,
+              "unit": "score_0_100",
+              "regime": "VERY_LOW_PHOTOSYNTHETIC",
+              "score_raw_normalized_evi": 0.4928,
+              "score_optimal_match": 0.0,
+              "evi_mean_input": -0.0144,
+              "thresholds_used": {
+                "evi_optimal_low": 0.2,
+                "evi_optimal_high": 0.5
+              },
+              "primary_reference": "Garroutte_2016_RemSens"
+            },
+            "food_deficiency": {
+              "value": 100.0,
+              "unit": "score_0_100_inverse",
+              "regime": "FORAGE_DEFICIENT",
+              "critical_threshold_used": 30.0,
+              "food_availability_input": 0.0,
+              "primary_reference": "Hamel_2009_JApplEcology"
+            },
+            "bedding_zones": {
+              "value": 48.89,
+              "unit": "score_0_100_FULL_geometric_mean_slope_canopy",
+              "regime": "FULL_MODERATE_BEDDING_HABITAT",
+              "regime_full_status": "FULL_BOTH_INPUTS_AVAILABLE",
+              "slope_mean_deg_input": 4.55,
+              "tree_cover_pct_input": 14.33,
+              "components": {
+                "slope_score": 65.5,
+                "slope_regime": "BELOW_OPTIMAL",
+                "canopy_score": 36.49,
+                "canopy_regime": "SPARSE_COVER"
+              },
+              "primary_reference": "Mysterud_2001_Ecography_§3",
+              "computation_status": "FULL"
+            },
+            "refuge_zones": {
+              "value": 34.45,
+              "unit": "score_0_100_FULL_weighted_tri_canopy_nontree",
+              "regime": "FULL_LOW_REFUGE",
+              "regime_full_status": "FULL_INPUTS_AVAILABLE",
+              "components": {
+                "tri_score": 25.47,
+                "tri_regime": "LOW_RUGGEDNESS_OPEN_TERRAIN",
+                "canopy_refuge_score": 21.5,
+                "canopy_regime": "OPEN_LOW_THERMAL_COVER",
+                "nontree_score": 94.59,
+                "weights_renormalized": {
+                  "tri": 0.5,
+                  "canopy": 0.35,
+                  "nontree": 0.15
+                }
+              },
+              "elevation_std_m_input": 20.38,
+              "slope_max_deg_input": 52.6,
+              "tree_cover_pct_input": 14.33,
+              "nontree_veg_pct_input": 65.67,
+              "primary_reference": "Forman_1986_LandscapeEcology + Hansen_2003",
+              "computation_status": "FULL"
+            },
+            "saline_optimal_locations_partial": {
+              "value": 42.21,
+              "unit": "score_0_100_partial_pH_CEC_only",
+              "regime": "MODERATE_SALINE_POTENTIAL",
+              "phh2o_input": 5.2,
+              "cec_input": 30.9,
+              "doctrinal_caveat": "PARTIAL: requires USGS_SOIL_DEEP_PROFILE for full Na+/Ca2+ chemistry (water proximity, mineral lick GPS DB needed for ground truth).",
+              "primary_reference": "Belant_2010_CanJZool"
+            },
+            "habitat_suitability_composite": {
+              "value": 47.9,
+              "unit": "score_0_100_composite_multi_covariate",
+              "regime": "MODERATE_SUITABILITY",
+              "n_components_available": 4,
+              "n_components_total": 4,
+              "components_weights_renormalized": {
+                "envelope_phillips": {
+                  "value": 94.15,
+                  "weight_renormalized": 0.35
+                },
+                "food_availability": {
+                  "value": 0.0,
+                  "weight_renormalized": 0.3
+                },
+                "bedding_partial": {
+                  "value": 48.89,
+                  "weight_renormalized": 0.2
+                },
+                "refuge_partial": {
+                  "value": 34.45,
+                  "weight_renormalized": 0.15
+                }
+              },
+              "primary_references": [
+                "Hebblewhite_2008_EcolMonogr",
+                "Mysterud_2001_Ecography",
+                "Phillips_2006_EcolModelling"
+              ]
+            },
+            "pressure_sensitive_zones": {
+              "value": 100.0,
+              "unit": "anthropogenic_pressure_index_0_100",
+              "regime": "HIGH_PRESSURE_AVOID_ZONE",
+              "is_pressure_sensitive": true,
+              "doctrinal_caveat": "Score composite Naidoo & Burton 2010 (40% routes + 30% population + 20% bâtiments + 10% landuse). Sensible >= 50 (caution), >= 75 (avoid). Refuge anthropique < 25.",
+              "components": {
+                "road_score": 100.0,
+                "building_score": 100.0,
+                "population_score": 100.0,
+                "residential_share": 100.0
+              },
+              "raw_inputs": {
+                "road_density_km_per_km2": 18.1834,
+                "building_density_per_km2": 267.9405,
+                "population_density_per_km2": 1668.4898,
+                "n_residential_landuse_ways": 543,
+                "buffer_area_km2": 78.54
+              },
+              "primary_references": [
+                "Frid_Dill_2002_ConservationEcology",
+                "Naidoo_Burton_2010_ConservationLetters",
+                "Tucker_2018_Science"
+              ]
+            },
+            "rut_zones": {
+              "value": 54.3,
+              "unit": "rut_zones_temporal_proxy_score_0_100",
+              "regime": "RUT_ZONE_MODERATE_PROBABILITY",
+              "n_pillars_valid": 3,
+              "doctrinal_caveat": "TEMPORAL PROXY composite (Bronson 1989 photoperiod + Hebblewhite 2008 NDVI fall + Bowyer 1981 GBIF rut months). PAS rut_zones FULL (qui requiert GPS breeding behavior multi-year, Hebblewhite 2007 §3). Anti-générique strict.",
+              "components": {
+                "photoperiod_score": 100.0,
+                "photoperiod_regime": "OPTIMAL_PHOTOPERIOD_DECLINE_AUTUMNAL",
+                "ndvi_fall_score": 73.26,
+                "ndvi_fall_regime": "DORMANT_LATE_RUT_PROXY",
+                "gbif_score": 0.0,
+                "gbif_regime": "ABSENT_NO_GBIF_RUT_OBSERVATIONS",
+                "gbif_count_input": 0
+              },
+              "primary_references": [
+                "Bronson_1989_MammalianReprod",
+                "Hebblewhite_2008_EcolMonogr",
+                "Bowyer_1981_JMammal"
+              ]
+            },
+            "feeding_zones_FULL": {
+              "value": 39.94,
+              "unit": "feeding_zones_FULL_dense_score_0_100",
+              "regime": "LOW_FEEDING_ZONE_FULL_DENSE",
+              "components": {
+                "pct_pixels_in_species_optimum_range": 44.06,
+                "n_pixels_in_optimum": 660,
+                "n_pixels_total_valid": 1498,
+                "ndvi_mean_dense": 0.3618,
+                "ndvi_p10": 0.1216,
+                "ndvi_p50_median": 0.3779,
+                "ndvi_p90": 0.561,
+                "ndvi_iqr": 0.218,
+                "homogeneity_bonus": 0.689
+              },
+              "species_thresholds_used": {
+                "ndvi_optimal_low": 0.4,
+                "ndvi_optimal_high": 0.7
+              },
+              "doctrinal_caveat": "feeding_zones FULL via dense grid spatial subset MOD13Q1 (kmAboveBelow×kmLeftRight) summer (juin-août). 1734+ pixels par site (Pettorelli 2005 §4.1 satisfait). Anti-générique strict.",
+              "primary_references": [
+                "Borowik_2013_EurJWildlRes",
+                "Pettorelli_2005_TREE",
+                "Hamel_2009_JApplEcol"
+              ]
+            }
+          }
+        },
+        "espece_b": {
+          "site_name": "espece_b",
+          "species_canonical": "orignal",
+          "scientific_name": "Alces alces",
+          "covariates_inputs": {
+            "ndvi_mean": 0.0085,
+            "evi_mean": 0.009,
+            "phh2o": 6.1,
+            "cec": 29.9,
+            "soc": 60.2,
+            "elevation_mean_m": 28.56,
+            "elevation_std_m": 12.67,
+            "slope_mean_deg": 2.68,
+            "slope_max_deg": 16.79,
+            "envelope_phillips": 71.16,
+            "demtype_used": "SRTMGL1",
+            "tree_cover_pct": 9.0,
+            "nontree_veg_pct": 72.33,
+            "nonveg_pct": 18.67,
+            "anthropogenic_pressure_score": 22.55,
+            "anthropogenic_pressure_regime": "REFUGE_FROM_ANTHROPOGENIC_DISTURBANCE",
+            "rut_score": 62.56,
+            "rut_regime": "RUT_ZONE_MODERATE_PROBABILITY",
+            "feeding_full_score": 14.58,
+            "feeding_full_regime": "POOR_FEEDING_ZONE_FULL_DENSE"
+          },
+          "computed_outputs": {
+            "food_availability": {
+              "value": 5.36,
+              "unit": "score_0_100",
+              "regime": "SUB_DORMANCY_SIGNAL",
+              "score_raw_normalized_ndvi": 0.5042,
+              "score_optimal_match": 0.1063,
+              "ndvi_mean_input": 0.0085,
+              "thresholds_used": {
+                "ndvi_optimal_low": 0.3,
+                "ndvi_optimal_high": 0.6,
+                "ndvi_dormancy": 0.08
+              },
+              "primary_reference": "Garroutte_2016_RemSens"
+            },
+            "food_quality": {
+              "value": 10.09,
+              "unit": "score_0_100",
+              "regime": "VERY_LOW_PHOTOSYNTHETIC",
+              "score_raw_normalized_evi": 0.5045,
+              "score_optimal_match": 0.2,
+              "evi_mean_input": 0.009,
+              "thresholds_used": {
+                "evi_optimal_low": 0.15,
+                "evi_optimal_high": 0.45
+              },
+              "primary_reference": "Garroutte_2016_RemSens"
+            },
+            "food_deficiency": {
+              "value": 82.13,
+              "unit": "score_0_100_inverse",
+              "regime": "FORAGE_DEFICIENT",
+              "critical_threshold_used": 30.0,
+              "food_availability_input": 5.36,
+              "primary_reference": "Hamel_2009_JApplEcology"
+            },
+            "bedding_zones": {
+              "value": 35.55,
+              "unit": "score_0_100_FULL_geometric_mean_slope_canopy",
+              "regime": "FULL_MODERATE_BEDDING_HABITAT",
+              "regime_full_status": "FULL_BOTH_INPUTS_AVAILABLE",
+              "slope_mean_deg_input": 2.68,
+              "tree_cover_pct_input": 9.0,
+              "components": {
+                "slope_score": 46.8,
+                "slope_regime": "BELOW_OPTIMAL",
+                "canopy_score": 27.0,
+                "canopy_regime": "OPEN_NO_COVER"
+              },
+              "primary_reference": "Mysterud_2001_Ecography_§3",
+              "computation_status": "FULL"
+            },
+            "refuge_zones": {
+              "value": 22.68,
+              "unit": "score_0_100_FULL_weighted_tri_canopy_nontree",
+              "regime": "FULL_LOW_REFUGE",
+              "regime_full_status": "FULL_INPUTS_AVAILABLE",
+              "components": {
+                "tri_score": 5.91,
+                "tri_regime": "LOW_RUGGEDNESS_OPEN_TERRAIN",
+                "canopy_refuge_score": 13.5,
+                "canopy_regime": "OPEN_LOW_THERMAL_COVER",
+                "nontree_score": 100.0,
+                "weights_renormalized": {
+                  "tri": 0.5,
+                  "canopy": 0.35,
+                  "nontree": 0.15
+                }
+              },
+              "elevation_std_m_input": 12.67,
+              "slope_max_deg_input": 16.79,
+              "tree_cover_pct_input": 9.0,
+              "nontree_veg_pct_input": 72.33,
+              "primary_reference": "Forman_1986_LandscapeEcology + Hansen_2003",
+              "computation_status": "FULL"
+            },
+            "saline_optimal_locations_partial": {
+              "value": 29.51,
+              "unit": "score_0_100_partial_pH_CEC_only",
+              "regime": "MODERATE_SALINE_POTENTIAL",
+              "phh2o_input": 6.1,
+              "cec_input": 29.9,
+              "doctrinal_caveat": "PARTIAL: requires USGS_SOIL_DEEP_PROFILE for full Na+/Ca2+ chemistry (water proximity, mineral lick GPS DB needed for ground truth).",
+              "primary_reference": "Belant_2010_CanJZool"
+            },
+            "habitat_suitability_composite": {
+              "value": 37.03,
+              "unit": "score_0_100_composite_multi_covariate",
+              "regime": "LOW_SUITABILITY",
+              "n_components_available": 4,
+              "n_components_total": 4,
+              "components_weights_renormalized": {
+                "envelope_phillips": {
+                  "value": 71.16,
+                  "weight_renormalized": 0.35
+                },
+                "food_availability": {
+                  "value": 5.36,
+                  "weight_renormalized": 0.3
+                },
+                "bedding_partial": {
+                  "value": 35.55,
+                  "weight_renormalized": 0.2
+                },
+                "refuge_partial": {
+                  "value": 22.68,
+                  "weight_renormalized": 0.15
+                }
+              },
+              "primary_references": [
+                "Hebblewhite_2008_EcolMonogr",
+                "Mysterud_2001_Ecography",
+                "Phillips_2006_EcolModelling"
+              ]
+            },
+            "pressure_sensitive_zones": {
+              "value": 22.55,
+              "unit": "anthropogenic_pressure_index_0_100",
+              "regime": "REFUGE_FROM_ANTHROPOGENIC_DISTURBANCE",
+              "is_pressure_sensitive": false,
+              "doctrinal_caveat": "Score composite Naidoo & Burton 2010 (40% routes + 30% population + 20% bâtiments + 10% landuse). Sensible >= 50 (caution), >= 75 (avoid). Refuge anthropique < 25.",
+              "components": {
+                "road_score": 39.71,
+                "building_score": 0.52,
+                "population_score": 16.88,
+                "residential_share": 15.0
+              },
+              "raw_inputs": {
+                "road_density_km_per_km2": 1.9855,
+                "building_density_per_km2": 1.0313,
+                "population_density_per_km2": 84.3826,
+                "n_residential_landuse_ways": 3,
+                "buffer_area_km2": 78.54
+              },
+              "primary_references": [
+                "Frid_Dill_2002_ConservationEcology",
+                "Naidoo_Burton_2010_ConservationLetters",
+                "Tucker_2018_Science"
+              ]
+            },
+            "rut_zones": {
+              "value": 62.56,
+              "unit": "rut_zones_temporal_proxy_score_0_100",
+              "regime": "RUT_ZONE_MODERATE_PROBABILITY",
+              "n_pillars_valid": 3,
+              "doctrinal_caveat": "TEMPORAL PROXY composite (Bronson 1989 photoperiod + Hebblewhite 2008 NDVI fall + Bowyer 1981 GBIF rut months). PAS rut_zones FULL (qui requiert GPS breeding behavior multi-year, Hebblewhite 2007 §3). Anti-générique strict.",
+              "components": {
+                "photoperiod_score": 100.0,
+                "photoperiod_regime": "OPTIMAL_PHOTOPERIOD_DECLINE_AUTUMNAL",
+                "ndvi_fall_score": 93.89,
+                "ndvi_fall_regime": "OPTIMAL_RUT_PRE_PHENOLOGY",
+                "gbif_score": 0.0,
+                "gbif_regime": "ABSENT_NO_GBIF_RUT_OBSERVATIONS",
+                "gbif_count_input": 0
+              },
+              "primary_references": [
+                "Bronson_1989_MammalianReprod",
+                "Hebblewhite_2008_EcolMonogr",
+                "Bowyer_1981_JMammal"
+              ]
+            },
+            "feeding_zones_FULL": {
+              "value": 14.58,
+              "unit": "feeding_zones_FULL_dense_score_0_100",
+              "regime": "POOR_FEEDING_ZONE_FULL_DENSE",
+              "components": {
+                "pct_pixels_in_species_optimum_range": 15.93,
+                "n_pixels_in_optimum": 194,
+                "n_pixels_total_valid": 1218,
+                "ndvi_mean_dense": 0.6949,
+                "ndvi_p10": 0.5112,
+                "ndvi_p50_median": 0.7392,
+                "ndvi_p90": 0.8461,
+                "ndvi_iqr": 0.1692,
+                "homogeneity_bonus": 0.718
+              },
+              "species_thresholds_used": {
+                "ndvi_optimal_low": 0.3,
+                "ndvi_optimal_high": 0.6
+              },
+              "doctrinal_caveat": "feeding_zones FULL via dense grid spatial subset MOD13Q1 (kmAboveBelow×kmLeftRight) summer (juin-août). 1734+ pixels par site (Pettorelli 2005 §4.1 satisfait). Anti-générique strict.",
+              "primary_references": [
+                "Borowik_2013_EurJWildlRes",
+                "Pettorelli_2005_TREE",
+                "Hamel_2009_JApplEcol"
+              ]
+            }
+          }
+        },
+        "espece_c": {
+          "site_name": "espece_c",
+          "species_canonical": "ours",
+          "scientific_name": "Ursus americanus",
+          "covariates_inputs": {
+            "ndvi_mean": 0.0124,
+            "evi_mean": 0.0184,
+            "phh2o": 4.9,
+            "cec": 42.2,
+            "soc": 89.4,
+            "elevation_mean_m": 125.33,
+            "elevation_std_m": 10.31,
+            "slope_mean_deg": 3.51,
+            "slope_max_deg": 27.93,
+            "envelope_phillips": 15.7,
+            "demtype_used": "SRTMGL1",
+            "tree_cover_pct": 57.67,
+            "nontree_veg_pct": 32.0,
+            "nonveg_pct": 10.33,
+            "anthropogenic_pressure_score": 18.97,
+            "anthropogenic_pressure_regime": "REFUGE_FROM_ANTHROPOGENIC_DISTURBANCE",
+            "rut_score": 44.99,
+            "rut_regime": "RUT_ZONE_LOW_PROBABILITY",
+            "feeding_full_score": 51.84,
+            "feeding_full_regime": "MODERATE_FEEDING_ZONE_FULL_DENSE"
+          },
+          "computed_outputs": {
+            "food_availability": {
+              "value": 12.55,
+              "unit": "score_0_100",
+              "regime": "SUB_DORMANCY_SIGNAL",
+              "score_raw_normalized_ndvi": 0.5062,
+              "score_optimal_match": 0.248,
+              "ndvi_mean_input": 0.0124,
+              "thresholds_used": {
+                "ndvi_optimal_low": 0.2,
+                "ndvi_optimal_high": 0.8,
+                "ndvi_dormancy": 0.05
+              },
+              "primary_reference": "Belant_2006_EcolApplic"
+            },
+            "food_quality": {
+              "value": 31.23,
+              "unit": "score_0_100",
+              "regime": "VERY_LOW_PHOTOSYNTHETIC",
+              "score_raw_normalized_evi": 0.5092,
+              "score_optimal_match": 0.6133,
+              "evi_mean_input": 0.0184,
+              "thresholds_used": {
+                "evi_optimal_low": 0.1,
+                "evi_optimal_high": 0.55
+              },
+              "primary_reference": "Garroutte_2016_RemSens"
+            },
+            "food_deficiency": {
+              "value": 58.17,
+              "unit": "score_0_100_inverse",
+              "regime": "FORAGE_DEFICIENT",
+              "critical_threshold_used": 30.0,
+              "food_availability_input": 12.55,
+              "primary_reference": "Hamel_2009_JApplEcology"
+            },
+            "bedding_zones": {
+              "value": 73.07,
+              "unit": "score_0_100_FULL_geometric_mean_slope_canopy",
+              "regime": "FULL_GOOD_BEDDING_HABITAT",
+              "regime_full_status": "FULL_BOTH_INPUTS_AVAILABLE",
+              "slope_mean_deg_input": 3.51,
+              "tree_cover_pct_input": 57.67,
+              "components": {
+                "slope_score": 55.1,
+                "slope_regime": "BELOW_OPTIMAL",
+                "canopy_score": 96.89,
+                "canopy_regime": "MODERATE_COVER"
+              },
+              "primary_reference": "Mysterud_2001_Ecography_§3",
+              "computation_status": "FULL"
+            },
+            "refuge_zones": {
+              "value": 38.86,
+              "unit": "score_0_100_FULL_weighted_tri_canopy_nontree",
+              "regime": "FULL_LOW_REFUGE",
+              "regime_full_status": "FULL_INPUTS_AVAILABLE",
+              "components": {
+                "tri_score": 8.0,
+                "tri_regime": "LOW_RUGGEDNESS_OPEN_TERRAIN",
+                "canopy_refuge_score": 77.09,
+                "canopy_regime": "MODERATE_THERMAL_COVER",
+                "nontree_score": 52.5,
+                "weights_renormalized": {
+                  "tri": 0.5,
+                  "canopy": 0.35,
+                  "nontree": 0.15
+                }
+              },
+              "elevation_std_m_input": 10.31,
+              "slope_max_deg_input": 27.93,
+              "tree_cover_pct_input": 57.67,
+              "nontree_veg_pct_input": 32.0,
+              "primary_reference": "Forman_1986_LandscapeEcology + Hansen_2003",
+              "computation_status": "FULL"
+            },
+            "saline_optimal_locations_partial": {
+              "value": 66.13,
+              "unit": "score_0_100_partial_pH_CEC_only",
+              "regime": "HIGH_SALINE_POTENTIAL_ACID_HIGH_CEC",
+              "phh2o_input": 4.9,
+              "cec_input": 42.2,
+              "doctrinal_caveat": "PARTIAL: requires USGS_SOIL_DEEP_PROFILE for full Na+/Ca2+ chemistry (water proximity, mineral lick GPS DB needed for ground truth).",
+              "primary_reference": "Belant_2010_CanJZool"
+            },
+            "habitat_suitability_composite": {
+              "value": 29.7,
+              "unit": "score_0_100_composite_multi_covariate",
+              "regime": "LOW_SUITABILITY",
+              "n_components_available": 4,
+              "n_components_total": 4,
+              "components_weights_renormalized": {
+                "envelope_phillips": {
+                  "value": 15.7,
+                  "weight_renormalized": 0.35
+                },
+                "food_availability": {
+                  "value": 12.55,
+                  "weight_renormalized": 0.3
+                },
+                "bedding_partial": {
+                  "value": 73.07,
+                  "weight_renormalized": 0.2
+                },
+                "refuge_partial": {
+                  "value": 38.86,
+                  "weight_renormalized": 0.15
+                }
+              },
+              "primary_references": [
+                "Hebblewhite_2008_EcolMonogr",
+                "Mysterud_2001_Ecography",
+                "Phillips_2006_EcolModelling"
+              ]
+            },
+            "pressure_sensitive_zones": {
+              "value": 18.97,
+              "unit": "anthropogenic_pressure_index_0_100",
+              "regime": "REFUGE_FROM_ANTHROPOGENIC_DISTURBANCE",
+              "is_pressure_sensitive": false,
+              "doctrinal_caveat": "Score composite Naidoo & Burton 2010 (40% routes + 30% population + 20% bâtiments + 10% landuse). Sensible >= 50 (caution), >= 75 (avoid). Refuge anthropique < 25.",
+              "components": {
+                "road_score": 31.99,
+                "building_score": 1.52,
+                "population_score": 6.22,
+                "residential_share": 40.0
+              },
+              "raw_inputs": {
+                "road_density_km_per_km2": 1.5995,
+                "building_density_per_km2": 3.043,
+                "population_density_per_km2": 31.081,
+                "n_residential_landuse_ways": 8,
+                "buffer_area_km2": 78.54
+              },
+              "primary_references": [
+                "Frid_Dill_2002_ConservationEcology",
+                "Naidoo_Burton_2010_ConservationLetters",
+                "Tucker_2018_Science"
+              ]
+            },
+            "rut_zones": {
+              "value": 44.99,
+              "unit": "rut_zones_temporal_proxy_score_0_100",
+              "regime": "RUT_ZONE_LOW_PROBABILITY",
+              "n_pillars_valid": 3,
+              "doctrinal_caveat": "TEMPORAL PROXY composite (Bronson 1989 photoperiod + Hebblewhite 2008 NDVI fall + Bowyer 1981 GBIF rut months). PAS rut_zones FULL (qui requiert GPS breeding behavior multi-year, Hebblewhite 2007 §3). Anti-générique strict.",
+              "components": {
+                "photoperiod_score": 38.94,
+                "photoperiod_regime": "SUB_OPTIMAL_NEAR_SOLSTICE",
+                "ndvi_fall_score": 88.13,
+                "ndvi_fall_regime": "OPTIMAL_RUT_PRE_PHENOLOGY",
+                "gbif_score": 0.0,
+                "gbif_regime": "ABSENT_NO_GBIF_RUT_OBSERVATIONS",
+                "gbif_count_input": 0
+              },
+              "primary_references": [
+                "Bronson_1989_MammalianReprod",
+                "Hebblewhite_2008_EcolMonogr",
+                "Bowyer_1981_JMammal"
+              ]
+            },
+            "feeding_zones_FULL": {
+              "value": 51.84,
+              "unit": "feeding_zones_FULL_dense_score_0_100",
+              "regime": "MODERATE_FEEDING_ZONE_FULL_DENSE",
+              "components": {
+                "pct_pixels_in_species_optimum_range": 57.5,
+                "n_pixels_in_optimum": 483,
+                "n_pixels_total_valid": 840,
+                "ndvi_mean_dense": 0.6646,
+                "ndvi_p10": 0.2378,
+                "ndvi_p50_median": 0.7266,
+                "ndvi_p90": 0.8846,
+                "ndvi_iqr": 0.2625,
+                "homogeneity_bonus": 0.672
+              },
+              "species_thresholds_used": {
+                "ndvi_optimal_low": 0.2,
+                "ndvi_optimal_high": 0.8
+              },
+              "doctrinal_caveat": "feeding_zones FULL via dense grid spatial subset MOD13Q1 (kmAboveBelow×kmLeftRight) summer (juin-août). 1734+ pixels par site (Pettorelli 2005 §4.1 satisfait). Anti-générique strict.",
+              "primary_references": [
+                "Borowik_2013_EurJWildlRes",
+                "Pettorelli_2005_TREE",
+                "Hamel_2009_JApplEcol"
+              ]
+            }
+          }
+        },
+        "espece_d": {
+          "site_name": "espece_d",
+          "species_canonical": "dindon",
+          "scientific_name": "Meleagris gallopavo",
+          "covariates_inputs": {
+            "ndvi_mean": 0.248,
+            "evi_mean": 0.1723,
+            "phh2o": 4.9,
+            "cec": 42.1,
+            "soc": 92.8,
+            "elevation_mean_m": 100.67,
+            "elevation_std_m": 4.25,
+            "slope_mean_deg": 2.09,
+            "slope_max_deg": 9.25,
+            "envelope_phillips": 51.88,
+            "demtype_used": "SRTMGL1",
+            "tree_cover_pct": 65.67,
+            "nontree_veg_pct": 27.67,
+            "nonveg_pct": 6.67,
+            "anthropogenic_pressure_score": 8.32,
+            "anthropogenic_pressure_regime": "REFUGE_FROM_ANTHROPOGENIC_DISTURBANCE",
+            "rut_score": 88.72,
+            "rut_regime": "RUT_ZONE_HIGH_PROBABILITY",
+            "feeding_full_score": 0.06,
+            "feeding_full_regime": "POOR_FEEDING_ZONE_FULL_DENSE"
+          },
+          "computed_outputs": {
+            "food_availability": {
+              "value": 51.58,
+              "unit": "score_0_100",
+              "regime": "BELOW_OPTIMAL_GROWING",
+              "score_raw_normalized_ndvi": 0.624,
+              "score_optimal_match": 0.8267,
+              "ndvi_mean_input": 0.248,
+              "thresholds_used": {
+                "ndvi_optimal_low": 0.3,
+                "ndvi_optimal_high": 0.6,
+                "ndvi_dormancy": 0.08
+              },
+              "primary_reference": "St_Louis_2014_PhilTransRoyalSoc"
+            },
+            "food_quality": {
+              "value": 58.61,
+              "unit": "score_0_100",
+              "regime": "OPTIMAL_PHOTOSYNTHETIC",
+              "score_raw_normalized_evi": 0.5861,
+              "score_optimal_match": 1.0,
+              "evi_mean_input": 0.1723,
+              "thresholds_used": {
+                "evi_optimal_low": 0.15,
+                "evi_optimal_high": 0.45
+              },
+              "primary_reference": "Garroutte_2016_RemSens"
+            },
+            "food_deficiency": {
+              "value": 0.0,
+              "unit": "score_0_100_inverse",
+              "regime": "ADEQUATE_FORAGE",
+              "critical_threshold_used": 30.0,
+              "food_availability_input": 51.58,
+              "primary_reference": "Hamel_2009_JApplEcology"
+            },
+            "bedding_zones": {
+              "value": 63.95,
+              "unit": "score_0_100_FULL_geometric_mean_slope_canopy",
+              "regime": "FULL_GOOD_BEDDING_HABITAT",
+              "regime_full_status": "FULL_BOTH_INPUTS_AVAILABLE",
+              "slope_mean_deg_input": 2.09,
+              "tree_cover_pct_input": 65.67,
+              "components": {
+                "slope_score": 40.9,
+                "slope_regime": "BELOW_OPTIMAL",
+                "canopy_score": 100.0,
+                "canopy_regime": "OPTIMAL_FOREST_COVER"
+              },
+              "primary_reference": "Mysterud_2001_Ecography_§3",
+              "computation_status": "FULL"
+            },
+            "refuge_zones": {
+              "value": 36.45,
+              "unit": "score_0_100_FULL_weighted_tri_canopy_nontree",
+              "regime": "FULL_LOW_REFUGE",
+              "regime_full_status": "FULL_INPUTS_AVAILABLE",
+              "components": {
+                "tri_score": 1.09,
+                "tri_regime": "LOW_RUGGEDNESS_OPEN_TERRAIN",
+                "canopy_refuge_score": 82.84,
+                "canopy_regime": "HIGH_THERMAL_COVER",
+                "nontree_score": 46.12,
+                "weights_renormalized": {
+                  "tri": 0.5,
+                  "canopy": 0.35,
+                  "nontree": 0.15
+                }
+              },
+              "elevation_std_m_input": 4.25,
+              "slope_max_deg_input": 9.25,
+              "tree_cover_pct_input": 65.67,
+              "nontree_veg_pct_input": 27.67,
+              "primary_reference": "Forman_1986_LandscapeEcology + Hansen_2003",
+              "computation_status": "FULL"
+            },
+            "saline_optimal_locations_partial": {
+              "value": 65.96,
+              "unit": "score_0_100_partial_pH_CEC_only",
+              "regime": "HIGH_SALINE_POTENTIAL_ACID_HIGH_CEC",
+              "phh2o_input": 4.9,
+              "cec_input": 42.1,
+              "doctrinal_caveat": "PARTIAL: requires USGS_SOIL_DEEP_PROFILE for full Na+/Ca2+ chemistry (water proximity, mineral lick GPS DB needed for ground truth).",
+              "primary_reference": "Belant_2010_CanJZool"
+            },
+            "habitat_suitability_composite": {
+              "value": 51.89,
+              "unit": "score_0_100_composite_multi_covariate",
+              "regime": "MODERATE_SUITABILITY",
+              "n_components_available": 4,
+              "n_components_total": 4,
+              "components_weights_renormalized": {
+                "envelope_phillips": {
+                  "value": 51.88,
+                  "weight_renormalized": 0.35
+                },
+                "food_availability": {
+                  "value": 51.58,
+                  "weight_renormalized": 0.3
+                },
+                "bedding_partial": {
+                  "value": 63.95,
+                  "weight_renormalized": 0.2
+                },
+                "refuge_partial": {
+                  "value": 36.45,
+                  "weight_renormalized": 0.15
+                }
+              },
+              "primary_references": [
+                "Hebblewhite_2008_EcolMonogr",
+                "Mysterud_2001_Ecography",
+                "Phillips_2006_EcolModelling"
+              ]
+            },
+            "pressure_sensitive_zones": {
+              "value": 8.32,
+              "unit": "anthropogenic_pressure_index_0_100",
+              "regime": "REFUGE_FROM_ANTHROPOGENIC_DISTURBANCE",
+              "is_pressure_sensitive": false,
+              "doctrinal_caveat": "Score composite Naidoo & Burton 2010 (40% routes + 30% population + 20% bâtiments + 10% landuse). Sensible >= 50 (caution), >= 75 (avoid). Refuge anthropique < 25.",
+              "components": {
+                "road_score": 16.7,
+                "building_score": 0.03,
+                "population_score": 0.46,
+                "residential_share": 15.0
+              },
+              "raw_inputs": {
+                "road_density_km_per_km2": 0.8351,
+                "building_density_per_km2": 0.0637,
+                "population_density_per_km2": 2.2962,
+                "n_residential_landuse_ways": 3,
+                "buffer_area_km2": 78.54
+              },
+              "primary_references": [
+                "Frid_Dill_2002_ConservationEcology",
+                "Naidoo_Burton_2010_ConservationLetters",
+                "Tucker_2018_Science"
+              ]
+            },
+            "rut_zones": {
+              "value": 88.72,
+              "unit": "rut_zones_temporal_proxy_score_0_100",
+              "regime": "RUT_ZONE_HIGH_PROBABILITY",
+              "n_pillars_valid": 3,
+              "doctrinal_caveat": "TEMPORAL PROXY composite (Bronson 1989 photoperiod + Hebblewhite 2008 NDVI fall + Bowyer 1981 GBIF rut months). PAS rut_zones FULL (qui requiert GPS breeding behavior multi-year, Hebblewhite 2007 §3). Anti-générique strict.",
+              "components": {
+                "photoperiod_score": 95.71,
+                "photoperiod_regime": "SUB_OPTIMAL_NEAR_SOLSTICE",
+                "ndvi_fall_score": 74.49,
+                "ndvi_fall_regime": "EARLY_FALL_HIGH_GREENNESS",
+                "gbif_score": 100.0,
+                "gbif_regime": "HIGH_RUT_PRESENCE_DOCUMENTED",
+                "gbif_count_input": 153
+              },
+              "primary_references": [
+                "Bronson_1989_MammalianReprod",
+                "Hebblewhite_2008_EcolMonogr",
+                "Bowyer_1981_JMammal"
+              ]
+            },
+            "feeding_zones_FULL": {
+              "value": 0.06,
+              "unit": "feeding_zones_FULL_dense_score_0_100",
+              "regime": "POOR_FEEDING_ZONE_FULL_DENSE",
+              "components": {
+                "pct_pixels_in_species_optimum_range": 0.06,
+                "n_pixels_in_optimum": 1,
+                "n_pixels_total_valid": 1734,
+                "ndvi_mean_dense": 0.8734,
+                "ndvi_p10": 0.8085,
+                "ndvi_p50_median": 0.8862,
+                "ndvi_p90": 0.9159,
+                "ndvi_iqr": 0.0474,
+                "homogeneity_bonus": 0.921
+              },
+              "species_thresholds_used": {
+                "ndvi_optimal_low": 0.3,
+                "ndvi_optimal_high": 0.6
+              },
+              "doctrinal_caveat": "feeding_zones FULL via dense grid spatial subset MOD13Q1 (kmAboveBelow×kmLeftRight) summer (juin-août). 1734+ pixels par site (Pettorelli 2005 §4.1 satisfait). Anti-générique strict.",
+              "primary_references": [
+                "Borowik_2013_EurJWildlRes",
+                "Pettorelli_2005_TREE",
+                "Hamel_2009_JApplEcol"
+              ]
+            }
+          }
+        },
+        "espece_e": {
+          "site_name": "espece_e",
+          "species_canonical": "wapiti",
+          "scientific_name": "Cervus canadensis",
+          "covariates_inputs": {
+            "ndvi_mean": 0.0462,
+            "evi_mean": 0.0494,
+            "phh2o": 6.0,
+            "cec": 31.0,
+            "soc": 59.0,
+            "elevation_mean_m": 110.29,
+            "elevation_std_m": 72.25,
+            "slope_mean_deg": 8.05,
+            "slope_max_deg": 34.6,
+            "envelope_phillips": null,
+            "demtype_used": "SRTMGL1",
+            "tree_cover_pct": 23.67,
+            "nontree_veg_pct": 66.33,
+            "nonveg_pct": 10.0,
+            "anthropogenic_pressure_score": 30.47,
+            "anthropogenic_pressure_regime": "LOW_PRESSURE_MARGINAL",
+            "rut_score": 55.2,
+            "rut_regime": "RUT_ZONE_MODERATE_PROBABILITY",
+            "feeding_full_score": 3.79,
+            "feeding_full_regime": "POOR_FEEDING_ZONE_FULL_DENSE"
+          },
+          "computed_outputs": {
+            "food_availability": {
+              "value": 24.17,
+              "unit": "score_0_100",
+              "regime": "SUB_DORMANCY_SIGNAL",
+              "score_raw_normalized_ndvi": 0.5231,
+              "score_optimal_match": 0.462,
+              "ndvi_mean_input": 0.0462,
+              "thresholds_used": {
+                "ndvi_optimal_low": 0.4,
+                "ndvi_optimal_high": 0.7,
+                "ndvi_dormancy": 0.1
+              },
+              "primary_reference": "Hebblewhite_2008_EcolMonogr"
+            },
+            "food_quality": {
+              "value": 43.2,
+              "unit": "score_0_100",
+              "regime": "VERY_LOW_PHOTOSYNTHETIC",
+              "score_raw_normalized_evi": 0.5247,
+              "score_optimal_match": 0.8233,
+              "evi_mean_input": 0.0494,
+              "thresholds_used": {
+                "evi_optimal_low": 0.2,
+                "evi_optimal_high": 0.5
+              },
+              "primary_reference": "Garroutte_2016_RemSens"
+            },
+            "food_deficiency": {
+              "value": 19.43,
+              "unit": "score_0_100_inverse",
+              "regime": "FORAGE_DEFICIENT",
+              "critical_threshold_used": 30.0,
+              "food_availability_input": 24.17,
+              "primary_reference": "Hamel_2009_JApplEcology"
+            },
+            "bedding_zones": {
+              "value": 71.07,
+              "unit": "score_0_100_FULL_geometric_mean_slope_canopy",
+              "regime": "FULL_GOOD_BEDDING_HABITAT",
+              "regime_full_status": "FULL_BOTH_INPUTS_AVAILABLE",
+              "slope_mean_deg_input": 8.05,
+              "tree_cover_pct_input": 23.67,
+              "components": {
+                "slope_score": 100.0,
+                "slope_regime": "OPTIMAL_BEDDING_RANGE",
+                "canopy_score": 50.51,
+                "canopy_regime": "SPARSE_COVER"
+              },
+              "primary_reference": "Mysterud_2001_Ecography_§3",
+              "computation_status": "FULL"
+            },
+            "refuge_zones": {
+              "value": 61.14,
+              "unit": "score_0_100_FULL_weighted_tri_canopy_nontree",
+              "regime": "FULL_MODERATE_REFUGE",
+              "regime_full_status": "FULL_INPUTS_AVAILABLE",
+              "components": {
+                "tri_score": 69.44,
+                "tri_regime": "HIGH_RUGGEDNESS_REFUGE_POTENTIAL",
+                "canopy_refuge_score": 34.59,
+                "canopy_regime": "MODERATE_THERMAL_COVER",
+                "nontree_score": 95.41,
+                "weights_renormalized": {
+                  "tri": 0.5,
+                  "canopy": 0.35,
+                  "nontree": 0.15
+                }
+              },
+              "elevation_std_m_input": 72.25,
+              "slope_max_deg_input": 34.6,
+              "tree_cover_pct_input": 23.67,
+              "nontree_veg_pct_input": 66.33,
+              "primary_reference": "Forman_1986_LandscapeEcology + Hansen_2003",
+              "computation_status": "FULL"
+            },
+            "saline_optimal_locations_partial": {
+              "value": 32.1,
+              "unit": "score_0_100_partial_pH_CEC_only",
+              "regime": "MODERATE_SALINE_POTENTIAL",
+              "phh2o_input": 6.0,
+              "cec_input": 31.0,
+              "doctrinal_caveat": "PARTIAL: requires USGS_SOIL_DEEP_PROFILE for full Na+/Ca2+ chemistry (water proximity, mineral lick GPS DB needed for ground truth).",
+              "primary_reference": "Belant_2010_CanJZool"
+            },
+            "habitat_suitability_composite": {
+              "value": 47.13,
+              "unit": "score_0_100_composite_multi_covariate",
+              "regime": "MODERATE_SUITABILITY",
+              "n_components_available": 3,
+              "n_components_total": 4,
+              "components_weights_renormalized": {
+                "envelope_phillips": {
+                  "value": null,
+                  "weight_renormalized": null
+                },
+                "food_availability": {
+                  "value": 24.17,
+                  "weight_renormalized": 0.4615
+                },
+                "bedding_partial": {
+                  "value": 71.07,
+                  "weight_renormalized": 0.3077
+                },
+                "refuge_partial": {
+                  "value": 61.14,
+                  "weight_renormalized": 0.2308
+                }
+              },
+              "primary_references": [
+                "Hebblewhite_2008_EcolMonogr",
+                "Mysterud_2001_Ecography",
+                "Phillips_2006_EcolModelling"
+              ]
+            },
+            "pressure_sensitive_zones": {
+              "value": 30.47,
+              "unit": "anthropogenic_pressure_index_0_100",
+              "regime": "LOW_PRESSURE_MARGINAL",
+              "is_pressure_sensitive": false,
+              "doctrinal_caveat": "Score composite Naidoo & Burton 2010 (40% routes + 30% population + 20% bâtiments + 10% landuse). Sensible >= 50 (caution), >= 75 (avoid). Refuge anthropique < 25.",
+              "components": {
+                "road_score": 47.31,
+                "building_score": 2.18,
+                "population_score": 12.02,
+                "residential_share": 75.0
+              },
+              "raw_inputs": {
+                "road_density_km_per_km2": 2.3654,
+                "building_density_per_km2": 4.3672,
+                "population_density_per_km2": 60.1221,
+                "n_residential_landuse_ways": 15,
+                "buffer_area_km2": 78.54
+              },
+              "primary_references": [
+                "Frid_Dill_2002_ConservationEcology",
+                "Naidoo_Burton_2010_ConservationLetters",
+                "Tucker_2018_Science"
+              ]
+            },
+            "rut_zones": {
+              "value": 55.2,
+              "unit": "rut_zones_temporal_proxy_score_0_100",
+              "regime": "RUT_ZONE_MODERATE_PROBABILITY",
+              "n_pillars_valid": 3,
+              "doctrinal_caveat": "TEMPORAL PROXY composite (Bronson 1989 photoperiod + Hebblewhite 2008 NDVI fall + Bowyer 1981 GBIF rut months). PAS rut_zones FULL (qui requiert GPS breeding behavior multi-year, Hebblewhite 2007 §3). Anti-générique strict.",
+              "components": {
+                "photoperiod_score": 100.0,
+                "photoperiod_regime": "OPTIMAL_PHOTOPERIOD_DECLINE_AUTUMNAL",
+                "ndvi_fall_score": 75.5,
+                "ndvi_fall_regime": "EARLY_FALL_HIGH_GREENNESS",
+                "gbif_score": 0.0,
+                "gbif_regime": "ABSENT_NO_GBIF_RUT_OBSERVATIONS",
+                "gbif_count_input": 0
+              },
+              "primary_references": [
+                "Bronson_1989_MammalianReprod",
+                "Hebblewhite_2008_EcolMonogr",
+                "Bowyer_1981_JMammal"
+              ]
+            },
+            "feeding_zones_FULL": {
+              "value": 3.79,
+              "unit": "feeding_zones_FULL_dense_score_0_100",
+              "regime": "POOR_FEEDING_ZONE_FULL_DENSE",
+              "components": {
+                "pct_pixels_in_species_optimum_range": 3.94,
+                "n_pixels_in_optimum": 57,
+                "n_pixels_total_valid": 1445,
+                "ndvi_mean_dense": 0.8209,
+                "ndvi_p10": 0.7373,
+                "ndvi_p50_median": 0.8672,
+                "ndvi_p90": 0.916,
+                "ndvi_iqr": 0.0914,
+                "homogeneity_bonus": 0.869
+              },
+              "species_thresholds_used": {
+                "ndvi_optimal_low": 0.4,
+                "ndvi_optimal_high": 0.7
+              },
+              "doctrinal_caveat": "feeding_zones FULL via dense grid spatial subset MOD13Q1 (kmAboveBelow×kmLeftRight) summer (juin-août). 1734+ pixels par site (Pettorelli 2005 §4.1 satisfait). Anti-générique strict.",
+              "primary_references": [
+                "Borowik_2013_EurJWildlRes",
+                "Pettorelli_2005_TREE",
+                "Hamel_2009_JApplEcol"
+              ]
+            }
+          }
+        }
+      },
+      "global_outputs_complete": {
+        "microhabitat_clusters_global_dense": {
+          "value": 1.3224,
+          "unit": "shannon_diversity_h_global",
+          "regime": "HIGH_GLOBAL_DIVERSITY",
+          "components": {
+            "n_total_pixels_global": 6735,
+            "n_sites_aggregated": 5,
+            "n_clusters_present_global": 5,
+            "global_bins_count": {
+              "BARREN_LOW_PRODUCTIVITY": 326,
+              "SHRUBLAND_MODERATE": 662,
+              "OPEN_FOREST_HIGH_PRODUCTIVITY": 881,
+              "DENSE_FOREST_PRIMARY": 1482,
+              "CANOPY_CLIMAX_OVERSTOCK": 3321
+            },
+            "global_bins_pct": {
+              "BARREN_LOW_PRODUCTIVITY": 4.84,
+              "SHRUBLAND_MODERATE": 9.829,
+              "OPEN_FOREST_HIGH_PRODUCTIVITY": 13.081,
+              "DENSE_FOREST_PRIMARY": 22.004,
+              "CANOPY_CLIMAX_OVERSTOCK": 49.31
+            },
+            "site_dominant_clusters": [
+              "OPEN_FOREST_HIGH_PRODUCTIVITY",
+              "DENSE_FOREST_PRIMARY",
+              "DENSE_FOREST_PRIMARY",
+              "CANOPY_CLIMAX_OVERSTOCK",
+              "CANOPY_CLIMAX_OVERSTOCK"
+            ],
+            "site_shannon_mean": 0.9333,
+            "shannon_max_log_5": 1.6094,
+            "global_shannon_evenness": 0.8217
+          },
+          "doctrinal_caveat": "Diversité écologique cross-sites globale via Shannon entropy (1948) sur partition NDVI 5-clusters (Pettorelli 2005 §4.1 + Hamel 2009). Densité grille >= 8000 pixels totaux. Anti-générique strict.",
+          "primary_references": [
+            "Pettorelli_2005_TREE",
+            "Shannon_1948_BellSystemTechJ",
+            "Hamel_2009_JApplEcol"
+          ]
+        }
+      },
+      "outputs_still_deferred_anti_generique_strict_complete": {},
+      "scientific_references_complete_added": [
+        "Pettorelli et al. (2005). TREE, 20(9):503-510. DOI:10.1016/j.tree.2005.05.011",
+        "Borowik et al. (2013). Eur J Wildl Res, 59:675-682. DOI:10.1007/s10344-013-0720-0",
+        "Hamel et al. (2009). J Appl Ecol, 46:582-589. DOI:10.1111/j.1365-2664.2009.01643.x",
+        "Shannon (1948). Bell System Technical J, 27(3):379-423."
+      ],
+      "anti_generique_strict": true,
+      "fusion_add_only": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T02:48:31+00:00",
+      "elapsed_s": 0.009,
+      "complete_merge_sha256": "14c8c2e7e631b25911fd9256747787c1a840f5d8456e189a182bb455b0ccf291"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T02:48:31+00:00",
+  "n_merges_complete": 1,
+  "last_complete_merge_sha256": "14c8c2e7e631b25911fd9256747787c1a840f5d8456e189a182bb455b0ccf291",
+  "last_verdict": "HABITAT_COMPLETE_MERGE_FULL_12_OF_12_COMPUTABLE",
+  "v30_lock": "INVIOLÉ"
+}

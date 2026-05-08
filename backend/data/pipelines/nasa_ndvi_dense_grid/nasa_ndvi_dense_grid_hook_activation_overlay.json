@@ -1,0 +1,45 @@
+{
+  "history": [
+    {
+      "manifest_id": "NASA_NDVI_DENSE_GRID_HOOK_ACTIVATE_Ω",
+      "ordre": "P8_NASA_NDVI_DENSE_GRID_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "activated": true,
+      "verdict": "NASA_NDVI_DENSE_GRID_HOOK_ACTIVATED",
+      "reason": "unlock_feeding_zones_FULL_and_microhabitat_dense",
+      "validated_manifest_sha256": "e6e15e7af9013451c8b5a83eaee93b9a86dc8e39973c610d24a3c4e9af22f06c",
+      "validated_summary": {
+        "verdict": "NASA_NDVI_DENSE_GRID_VALIDATE_ALL_VALID",
+        "n_sites_total": 5,
+        "n_calls_success": 5,
+        "spatial_subset_config": {
+          "km_above_below": 2,
+          "km_left_right": 2,
+          "expected_grid_pixels": 289
+        }
+      },
+      "outputs_unblocked_via_this_hook": [
+        "feeding_zones_FULL_dense (Borowik 2013)",
+        "microhabitat_clusters_global_dense (Pettorelli 2005 + Shannon 1948)"
+      ],
+      "providers_physical_active": [
+        "NASA_MOD13Q1_ORNL_DENSE_SUBSET"
+      ],
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T02:48:15+00:00",
+      "elapsed_s": 0.0,
+      "manifest_sha256": "4ac6fe46e24b972565bb8acc1d117122582b8cfe67988d8f5d337a0970621972"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T02:48:15+00:00",
+  "n_activations": 1,
+  "last_manifest_sha256": "4ac6fe46e24b972565bb8acc1d117122582b8cfe67988d8f5d337a0970621972",
+  "last_verdict": "NASA_NDVI_DENSE_GRID_HOOK_ACTIVATED",
+  "last_validated_manifest_sha256": "e6e15e7af9013451c8b5a83eaee93b9a86dc8e39973c610d24a3c4e9af22f06c",
+  "v30_lock": "INVIOLÉ"
+}

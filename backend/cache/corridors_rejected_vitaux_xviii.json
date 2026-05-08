@@ -1,35 +1,14 @@
 [
  {
-  "timestamp": "2026-05-08T02:33:26.132283+00:00",
+  "timestamp": "2026-05-08T02:50:51.463669+00:00",
   "phase": "PHASE_XVIII_ENGINE_CORRIDORS_VITAUX_Ω",
   "species": "orignal",
   "waypoint": {
    "lat": 48.206657,
    "lng": -68.382422
   },
-  "rejected_count": 3,
+  "rejected_count": 2,
   "rejected": [
-   {
-    "id": "corr_omega_2",
-    "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
-    "anchors_summary": {
-     "major_zones_count": 0,
-     "secondary_zones_count": 0,
-     "transitions_count": 0,
-     "salines": 2,
-     "hotspots_major": 1,
-     "zones_humides": 0,
-     "strong_attractor_count": 3
-    },
-    "path_first": [
-     48.207692,
-     -68.381906
-    ],
-    "path_last": [
-     48.211605234121706,
-     -68.38474583389714
-    ]
-   },
    {
     "id": "corr_omega_4",
     "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
@@ -37,39 +16,39 @@
      "major_zones_count": 0,
      "secondary_zones_count": 0,
      "transitions_count": 0,
-     "salines": 3,
-     "hotspots_major": 2,
+     "salines": 2,
+     "hotspots_major": 0,
      "zones_humides": 0,
-     "strong_attractor_count": 5
+     "strong_attractor_count": 2
     },
     "path_first": [
-     48.207343,
-     -68.383892
+     48.207487,
+     -68.384112
     ],
     "path_last": [
-     48.20483629658044,
-     -68.38970158909939
+     48.20553436908216,
+     -68.39025744874489
     ]
    },
    {
-    "id": "corr_omega_5",
+    "id": "interzone_orignal_saline_saline_1__eau_zone_v10_eau",
     "reason": "fail_grands_mammiferes(missing=zone_vitale_majeure)",
     "anchors_summary": {
      "major_zones_count": 0,
      "secondary_zones_count": 0,
      "transitions_count": 0,
      "salines": 3,
-     "hotspots_major": 2,
+     "hotspots_major": 0,
      "zones_humides": 0,
-     "strong_attractor_count": 5
+     "strong_attractor_count": 3
     },
     "path_first": [
-     48.206951,
-     -68.384221
+     48.208301,
+     -68.387647
     ],
     "path_last": [
-     48.20488213515813,
-     -68.39029186832326
+     48.20205008721309,
+     -68.38738061808382
     ]
    }
   ]
