@@ -206,6 +206,15 @@ LAYER_CATALOG: List[Dict[str, Any]] = [
             "multi_signature_hook_activation_overlay.json"),
         "primary_reference": "RFC8032_EdDSA_RFC4880_OpenPGP",
     },
+    {
+        "logical_key": "MERKLE_TREE_ANCHOR_P14",
+        "ordre": "P14_MERKLE_TREE_ANCHOR_HOOK_Ω",
+        "overlay_path": (
+            "/app/backend/data/pipelines/merkle_tree_anchor/"
+            "merkle_tree_anchor_hook_activation_overlay.json"),
+        "primary_reference": (
+            "Merkle_1987_RFC6962_Todd_2016_OpenTimestamps"),
+    },
 ]
 
 

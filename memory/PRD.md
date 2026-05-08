@@ -27,6 +27,38 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-QUINTRICICIES · P14 + TERRITOIRE_V7_PREMIUM_REPORTS_Ω — 🔗📊 MERKLE BITCOIN ANCHORING + RAPPORTS PREMIUM PLEIN-ÉCRAN (2026-05-08)**
+
+  **P14 · MERKLE_TREE_ANCHOR_HOOK_Ω** — Construction d'arbre Merkle binaire RFC 6962 sur tous les SHA-256 doctrinaux + ancrage cryptographique Bitcoin via OpenTimestamps Calendar.
+  - Module `merkle_tree_anchor_omega.py` : `build_merkle_tree` (RFC 6962 standard CT, no domain prefix), `compute_merkle_audit_path` (proof per leaf), `verify_merkle_audit_path` (déterministe), `_ots_stamp_root` (subprocess `ots stamp` avec resolution chemin venv `/root/.venv/bin/ots`), `ots_verify_proof`, `collect_doctrinal_sha256_leaves` (lecture catalog visualizer).
+  - 3 endpoints router (build/activate/status). Stack : `opentimestamps==0.4.5`, `opentimestamps-client==0.7.2`, `python-bitcoinlib==0.12.2`.
+  - **Workflow LIVE** : BUILD → 17 leaves doctrinaux + 6 niveaux Merkle · `merkle_root_hex=37c079824ef0ff33a9f443062e837a4aeecee072b85424ac0371545cd48da402` · `manifest_sha256=d3c9adc9e176233b742b5aaf5412979d742e0115bf82f70e74659547cc186266` · ACTIVATE `manifest_sha256=09be873b0cea2714a06327199e3c3b206341d337071fbea641fdc41b84e888a1`.
+  - **Bitcoin anchoring** : OTS proof file 700 bytes persisté (`ots_proofs/bce4x_merkle_root_20260508T152326+0000_37c079824ef0ff33.bin.ots`). Statut : `PROOF_INCOMPLETE_PENDING_BITCOIN_CONFIRMATION` (attendu — Bitcoin block confirmation ~1-6h). Toute personne peut indépendamment vérifier via `ots verify` post-confirmation.
+  - **Audit paths RFC 6962** : 17 leaves chacun avec audit_path complet pour vérification indépendante.
+  - **11 nouveaux pytests** sur P14 — tous PASS (single leaf, two leaves, invalid format, audit path verifiable + tampered rejected, resolve_ots_binary, collect leaves, activate unknown SHA rejected).
+  - **Refs** : Merkle 1987 CRYPTO, RFC 6962 (Laurie 2013 CT), Todd 2016 (OpenTimestamps Protocol), BIP 88 (Bitcoin OP_RETURN).
+
+  **TERRITOIRE_V7_PREMIUM_REPORTS_Ω** — Système complet de rapports premium plein-écran avec CORE FLOW : ESPÈCE → WAYPOINT → COUCHE → RAPPORT.
+  - **Module backend `premium_reports_v7_omega.py`** : `generate_premium_report` (génération 6 blocs anti-générique), `_extract_real_data_for_waypoint` (lecture overlays habitat 12/12 + anthropogenic + rut + dense_grid + multi_year), `_compute_block_1_summary` à `_compute_block_6_ultimate_action`, `BEHAVIOR_MATRIX_LAYER_TO_MODULES` (6 couches × 8-9 modules filtrés), `ULTIMATE_MODULE_BY_LAYER` (6 modules ULTIME), `SPECIES_DOCTRINAL` (5 espèces avec NDVI optimum + rut months + alpha objectives).
+  - 3 endpoints router : `POST /premium-report-generate` (token requis), `GET /premium-reports-status` (PUBLIC RO), `POST /messaging-share` (token requis, channel email/social_media/internal).
+  - **Frontend `PremiumReportV7Modal.jsx`** : modal full-screen (z-9999) avec :
+    - Header dynamique avec SHA-256 ancré
+    - 3 selectors (espèce / couche / saison) + bouton regénérer
+    - Subheader contexte écologique 8 fields
+    - 6 BLOCS : Summary 5 lignes, 9 modules PREMIUM cards, ULTIME enrichi avec score AVANT/APRÈS + tableau comparatif 5 métriques, Recettes SUPRA par objectif, Action M16 prioritaire
+    - Footer 5 actions (Plan 30j, Export, Comparer, Note, 3× PARTAGER : email/social/interne)
+    - Toast confirmation share
+    - Bouton X close + sticky header/footer
+    - data-testid sur tous les éléments
+  - **Workflow LIVE** : Premium V7 génère rapports cohérents espèce-spécifiques :
+    - cerf alimentation summer : score 39.94/100 → 47.9 (+20% Borowik) · 1498 pixels MOD13Q1 réels · M16 plant trèfle+brassicas
+    - orignal rut autumn : score 62.6 → 71.9 (+15% Bowyer) · M16 maintenir scrapes/rubs
+  - **22 nouveaux pytests P14+Premium V7** : 22/22 PASS — Merkle algos + audit paths verify/tampered rejected, premium 5 species + 6 layers + 15 modules + behavior matrix filtering, invalid species/layer/radius validation, full report generation, anti-générique metadata.
+  - **Catalog visualizer étendu 17→18 layers** : ajout MERKLE_TREE_ANCHOR_P14.
+  - **Régression** : **665/665 PASS** sur le périmètre doctrinal (de 643 → 665, +22).
+  - **Refs** : Borowik 2013 (Eur J Wildl Res), Bowyer 1981 (J Mammal), Bronson 1989 (Mammalian Reprod), Hebblewhite 2008 (Ecol Monogr), Naidoo 2010 (Conservation Letters), Frid & Dill 2002 (Conservation Ecology), McNaughton 1988 (Nature mineral lick).
+
+
 - **PHASE_XXX-QUATTUORTRICICIES · P11+P12+P13 — 🛡️🔐📦 INTÉGRITÉ + LONGITUDINAL + DOWNLOAD HTTPS (2026-05-08)**
 
   **P11 · MULTI_YEAR_DENSE_GRID_TIMESERIES_Ω** — Densification temporelle 10 ans (2015-2024) × 5 sites × dense grid spatial 17×17 pour analyse longitudinale climate change signature.

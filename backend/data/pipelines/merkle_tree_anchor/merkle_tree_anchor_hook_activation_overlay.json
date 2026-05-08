@@ -1,0 +1,40 @@
+{
+  "history": [
+    {
+      "manifest_id": "MERKLE_TREE_ANCHOR_HOOK_ACTIVATE_Ω",
+      "ordre": "P14_MERKLE_TREE_ANCHOR_HOOK_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "activated": true,
+      "verdict": "MERKLE_TREE_ANCHOR_HOOK_ACTIVATED",
+      "reason": "anchor_all_doctrinal_SHA256_in_public_merkle_tree",
+      "validated_manifest_sha256": "d3c9adc9e176233b742b5aaf5412979d742e0115bf82f70e74659547cc186266",
+      "validated_summary": {
+        "verdict": "MERKLE_TREE_ANCHOR_OPERATIONAL",
+        "merkle_root_hex": "37c079824ef0ff33a9f443062e837a4aeecee072b85424ac0371545cd48da402",
+        "n_leaves": 17,
+        "ots_anchor": "PROOF_INCOMPLETE_PENDING_BITCOIN_CONFIRMATION",
+        "ots_file_path": "/app/backend/data/pipelines/merkle_tree_anchor/ots_proofs/bce4x_merkle_root_20260508T152326+0000_37c079824ef0ff33.bin.ots"
+      },
+      "outputs_unblocked_via_this_hook": [
+        "external_cryptographic_anchor_Bitcoin_blockchain",
+        "audit_path_per_leaf_RFC_6962",
+        "independent_verification_via_ots_verify"
+      ],
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T15:23:52+00:00",
+      "elapsed_s": 0.0,
+      "manifest_sha256": "09be873b0cea2714a06327199e3c3b206341d337071fbea641fdc41b84e888a1"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T15:23:52+00:00",
+  "n_activations": 1,
+  "last_manifest_sha256": "09be873b0cea2714a06327199e3c3b206341d337071fbea641fdc41b84e888a1",
+  "last_verdict": "MERKLE_TREE_ANCHOR_HOOK_ACTIVATED",
+  "last_validated_manifest_sha256": "d3c9adc9e176233b742b5aaf5412979d742e0115bf82f70e74659547cc186266",
+  "v30_lock": "INVIOLÉ"
+}

@@ -1,0 +1,21 @@
+{
+  "audit_filename": "audit_20260508T152013Z_739b6e2b.json",
+  "audit_sha256": "739b6e2b59cc9b2ec68f0ef1f370f4dae798e47e74e2fe9e6a3648240918ef82",
+  "persisted_at_utc": "2026-05-08T15:20:13+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "NOAA_PIPELINE",
+    "subtype": "MERKLE_TREE_ANCHOR_BUILD",
+    "ordre": "P14_MERKLE_TREE_ANCHOR_HOOK_Ω",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "verdict": "MERKLE_TREE_ANCHOR_PARTIAL",
+    "manifest_sha256": "a3e23a5ae5010b9e9e51c2b752b954fadefd5c7736c5d475fe0ec56feab6d105",
+    "merkle_root_hex": "37c079824ef0ff33a9f443062e837a4aeecee072b85424ac0371545cd48da402",
+    "n_leaves": 17,
+    "ots_anchored": false,
+    "v30_lock_inviolate": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  }
+}

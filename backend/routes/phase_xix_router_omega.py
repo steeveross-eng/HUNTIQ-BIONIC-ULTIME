@@ -4273,3 +4273,277 @@ async def download_all_layers_bundle_status_endpoint() -> JSONResponse:
     })
 
 
+
+# ═════════════════════════════════════════════════════════════════════════
+# MERKLE_TREE_ANCHOR_HOOK_Ω (P14) — Merkle Tree + OpenTimestamps
+# ═════════════════════════════════════════════════════════════════════════
+class MerkleTreeBuildBody(BaseModel):
+    persist: bool = True
+    enable_ots_anchor: bool = True
+
+
+@router.post("/merkle-tree-anchor-build")
+async def merkle_tree_anchor_build_endpoint(
+    body: MerkleTreeBuildBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """P14 · build Merkle tree + stamp OpenTimestamps."""
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.merkle_tree_anchor_omega import (
+        build_and_anchor_merkle_tree,
+    )
+    try:
+        payload = build_and_anchor_merkle_tree(
+            persist=body.persist,
+            enable_ots_anchor=body.enable_ots_anchor,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "MERKLE_BUILD_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "MERKLE_TREE_ANCHOR_BUILD_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P14_MERKLE_TREE_ANCHOR_HOOK_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+class MerkleTreeHookActivateBody(BaseModel):
+    manifest_sha256: str
+    reason: str = (
+        "anchor_all_doctrinal_SHA256_in_public_merkle_tree")
+    persist: bool = True
+
+
+@router.post("/merkle-tree-anchor-hook-activate")
+async def merkle_tree_anchor_hook_activate_endpoint(
+    body: MerkleTreeHookActivateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """P14 · activation officielle. Token Commandant requis."""
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.merkle_tree_anchor_omega import (
+        activate_merkle_tree_anchor_hook,
+    )
+    try:
+        payload = activate_merkle_tree_anchor_hook(
+            manifest_sha256=body.manifest_sha256,
+            reason=body.reason,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "MERKLE_HOOK_ACTIVATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id":
+            "MERKLE_TREE_ANCHOR_HOOK_ACTIVATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P14_MERKLE_TREE_ANCHOR_HOOK_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/merkle-tree-anchor-hook-status")
+async def merkle_tree_anchor_hook_status_endpoint() -> JSONResponse:
+    """P14 · état (PUBLIC RO)."""
+    from engines.v8_institutional.especes.merkle_tree_anchor_omega import (
+        get_merkle_tree_anchor_hook_status,
+    )
+    payload = get_merkle_tree_anchor_hook_status()
+    return JSONResponse({
+        "manifest_id":
+            "MERKLE_TREE_ANCHOR_HOOK_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P14_MERKLE_TREE_ANCHOR_HOOK_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# TERRITOIRE_V7_PREMIUM_REPORTS_Ω
+# ═════════════════════════════════════════════════════════════════════════
+class PremiumReportGenerateBody(BaseModel):
+    species: str
+    waypoint_lat: float
+    waypoint_lon: float
+    layer: str
+    season: str
+    waypoint_id: Optional[str] = None
+    radius_m: int = 500
+
+
+@router.post("/premium-report-generate")
+async def premium_report_generate_endpoint(
+    body: PremiumReportGenerateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """TERRITOIRE_V7_PREMIUM_REPORTS_Ω · plein écran genérique.
+
+    Token Commandant requis (genère un rapport personnalisé).
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.premium_reports_v7_omega import (
+        generate_premium_report,
+    )
+    try:
+        payload = generate_premium_report(
+            species=body.species,
+            waypoint_lat=body.waypoint_lat,
+            waypoint_lon=body.waypoint_lon,
+            layer=body.layer,
+            season=body.season,
+            waypoint_id=body.waypoint_id,
+            radius_m=body.radius_m,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "PREMIUM_REPORT_GENERATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id":
+            "TERRITOIRE_V7_PREMIUM_REPORT_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre":
+            "EMERGENT_EXECUTE_TERRITOIRE_V7_PREMIUM_REPORTS",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/premium-reports-status")
+async def premium_reports_status_endpoint() -> JSONResponse:
+    """TERRITOIRE_V7_PREMIUM_REPORTS_Ω · status (PUBLIC RO)."""
+    from engines.v8_institutional.especes.premium_reports_v7_omega import (
+        get_premium_reports_status,
+    )
+    payload = get_premium_reports_status()
+    return JSONResponse({
+        "manifest_id":
+            "TERRITOIRE_V7_PREMIUM_REPORTS_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre":
+            "EMERGENT_EXECUTE_TERRITOIRE_V7_PREMIUM_REPORTS",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# MESSAGING_ENGINE_INTEGRATION (Premium V7 footer share)
+# ═════════════════════════════════════════════════════════════════════════
+class MessagingShareBody(BaseModel):
+    report_sha256: str
+    channel: str  # "email" | "social_media" | "internal"
+    recipient: str
+    subject: Optional[str] = None
+    notes: Optional[str] = None
+
+
+@router.post("/messaging-share")
+async def messaging_share_endpoint(
+    body: MessagingShareBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """Messaging engine endpoint pour partage rapport premium.
+
+    Anti-générique strict : route le partage via channels.
+    Le canal réel est documenté (pas mocké) dans le payload.
+    """
+    _verify_commandant_token(x_commandant_token)
+    if body.channel not in (
+            "email", "social_media", "internal"):
+        raise HTTPException(
+            status_code=400,
+            detail=f"CHANNEL_INVALID::{body.channel}")
+    if not body.report_sha256 or len(
+            body.report_sha256) != 64:
+        raise HTTPException(
+            status_code=400,
+            detail="REPORT_SHA256_INVALID::expected_64_hex")
+    # Anti-générique : on documente le canal mais l'envoi
+    # réel nécessite intégration mail SMTP / API sociale spécifiques
+    # qui sont hors périmètre direct V14. On persiste le request.
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        log_forensic_event,
+    )
+    log_forensic_event(
+        scope="HOOK_ACTIVATIONS",
+        event="PREMIUM_REPORT_SHARE_REQUESTED",
+        details={
+            "report_sha256": body.report_sha256,
+            "channel": body.channel,
+            "recipient_hash": (
+                hashlib.sha256(
+                    body.recipient.encode()).hexdigest()[:32]),
+            "subject": body.subject,
+        },
+        persist=True)
+    return JSONResponse({
+        "manifest_id": "MESSAGING_SHARE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "result": {
+            "share_status": "SHARE_QUEUED_INTEGRATION_PENDING",
+            "channel": body.channel,
+            "report_sha256": body.report_sha256,
+            "recipient_hash_anonymized": hashlib.sha256(
+                body.recipient.encode()
+            ).hexdigest()[:32],
+            "doctrinal_caveat": (
+                "Le partage est queued pour intégration "
+                "channel-specific (SMTP email / API social). "
+                "Anti-générique : pas de fake sending. "
+                "Audit log persisté."),
+            "queued_at_utc": (
+                datetime.now(timezone.utc).isoformat(
+                    timespec="seconds")),
+        },
+        "v30_lock": "INVIOLÉ",
+    })
+
+
