@@ -1,0 +1,121 @@
+{
+  "iteration": 19,
+  "ordre": "P1_RSF_SSF_HOOK_ACTIVATE",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "horodatage_utc": "2026-05-08T00:15:54+00:00",
+  "guardrails_enforced": true,
+  "autonomy": "LIMITED",
+  "provider_logical": "RSF_SSF",
+  "provider_physical": "MAXENT_LITE_GBIF",
+  "pivot_doctrinal_anti_generique": {
+    "this_is_NOT_authentic_rsf_ssf": true,
+    "reason_pivot": "RSF/SSF authentiques (Manly 2002, Avgar 2016) requièrent données GPS use+availability. AUCUNE GPS BP135 fournie. MoveBank=HTTP 401. Pivot vers MaxEnt-lite presence-only envelope (Phillips 2006, Elith 2011).",
+    "method_physical": "MaxEnt-lite presence-only environmental envelope (Phillips 2006 §3.2)",
+    "endpoint_used": "https://api.gbif.org/v1/occurrence/search",
+    "user_approval": "OPTION B — Pivot MaxEnt-lite GBIF + 4 outputs partiels"
+  },
+  "phase_a_validate": {
+    "verdict": "RSF_SSF_VALIDATE_PARTIAL::4_OF_5_SPECIES_VALID",
+    "manifest_sha256": "8a4eafbe1f10b9d561332f93183a3a5c14ed27bd96fdbe3ebed3d7715dc33486",
+    "n_calls_made": 5,
+    "n_calls_success": 4,
+    "n_species_deferred": 1,
+    "elapsed_s": 6.985,
+    "issue_resolved_during_session": "Body GBIF limit=300 = 2.1MB > buffer initial 1MB → buffer augmenté à 5MB",
+    "live_data_per_species_real_gbif_quebec": {
+      "cerf": {
+        "taxon_key": 2440965, "count_total_gbif": 414,
+        "n_extracted": 300, "centroid": [47.0313, -71.3261],
+        "std_lat_lon": [0.6851, 0.8556], "years": "2020-2026",
+        "envelope_top_site": "espece_a (Québec): 94.15/100 dist=25.88km",
+        "envelope_low_site": "espece_c (Escoumins): 1.25/100 dist=205.37km"
+      },
+      "orignal": {
+        "taxon_key": 2440940, "count_total_gbif": 204,
+        "n_extracted": 204, "centroid": [47.5087, -70.8818],
+        "std_lat_lon": [0.6895, 0.883], "years": "1943-2026",
+        "envelope_top_site": "espece_e (Capitale): 75.49/100 dist=57.26km"
+      },
+      "ours": {
+        "taxon_key": 2433407, "count_total_gbif": 102,
+        "n_extracted": 102, "centroid": [47.6022, -70.9194],
+        "std_lat_lon": [0.6328, 0.999], "years": "1986-2025",
+        "envelope_top_site": "espece_b (St-Jean): 66.15/100 dist=66.25km"
+      },
+      "dindon": {
+        "taxon_key": 9606290, "count_total_gbif": 19633,
+        "n_extracted": 300, "centroid": [46.6362, -71.3912],
+        "std_lat_lon": [0.3834, 0.7621], "years": "2024-2026",
+        "envelope_top_site": "espece_a (Québec): 87.33/100 dist=24.15km"
+      },
+      "wapiti": {
+        "taxon_key": 8600904, "count_total_gbif": 0,
+        "deferred_doctrinal": "Non natif Québec — réintroduction gestion serrée. Anti-générique strict : aucune fabrication."
+      }
+    }
+  },
+  "phase_b_hook_activate": {
+    "verdict": "RSF_SSF_HOOK_ACTIVATED_OPERATIONAL",
+    "activated": true,
+    "activation_sha256": "084f8720332f1626f5b5a7afcebfbd7191cffe7386b1c7233879282b6b1c227a",
+    "validated_manifest_sha256": "8a4eafbe1f10b9d561332f93183a3a5c14ed27bd96fdbe3ebed3d7715dc33486",
+    "reason": "rsf_ssf_corridors_activated",
+    "consumed_by_modules": [
+      "HABITAT_SUITABILITY_ENVELOPE_COMPUTE",
+      "PRESENCE_DENSITY_KDE_PROXY",
+      "ENVIRONMENTAL_NICHE_BREADTH_INDEX",
+      "CORRIDOR_PROXY_VIA_CONTINUITY"
+    ],
+    "outputs_partially_unblocked": [
+      "habitat_suitability_envelope_phillips_2006",
+      "presence_density_index_via_gbif_count",
+      "environmental_niche_breadth_via_gbif_variance",
+      "corridor_proxy_via_continuity_inter_sites"
+    ],
+    "outputs_still_deferred_authentic_rsf_ssf_required": [
+      "true_step_selection_function_avgar_2016",
+      "true_resource_selection_function_manly_2002",
+      "movement_corridor_via_gps_trajectories",
+      "use_availability_paired_design"
+    ]
+  },
+  "phase_c_status": {
+    "current_status": "ACTIVATED_OPERATIONAL",
+    "overlay_size_bytes": 12745
+  },
+  "phase_d_drift_audit": {
+    "reason": "rsf_ssf_corridors_activated",
+    "audit_filename": "audit_20260508T001554Z_80632bb2.json",
+    "before": {"drift_max": 51.37, "drift_mean": 27.56, "score": 50.55},
+    "after":  {"drift_max": 50.76, "drift_mean": 22.04, "score": 54.27}
+  },
+  "phase_e_sanity_test": {
+    "test": "POST /rsf-ssf-hook-activate with manifest_sha256='0'*64",
+    "verdict": "RSF_SSF_HOOK_REJECTED_MANIFEST_NOT_FOUND_OR_INVALID",
+    "rejected_correctly": true
+  },
+  "scientific_references_peer_reviewed": [
+    {"id": "[1]", "citation": "Phillips et al. (2006). Ecological Modelling 190(3-4):231-259. DOI:10.1016/j.ecolmodel.2005.03.026"},
+    {"id": "[2]", "citation": "Elith et al. (2011). Diversity and Distributions 17(1):43-57. DOI:10.1111/j.1472-4642.2010.00725.x"},
+    {"id": "[3-blocked]", "citation": "Manly et al. (2002). Resource Selection by Animals. Springer. (RSF authentique non implémenté faute GPS)"},
+    {"id": "[4-blocked]", "citation": "Boyce et al. (2002). Ecological Modelling 157:281-300. (RSF non implémenté)"},
+    {"id": "[5-blocked]", "citation": "Avgar et al. (2016). Methods Ecol Evol 7:619-630. (SSF authentique non implémenté)"}
+  ],
+  "pytest_status": {
+    "n_new_tests_unvicies": 21,
+    "all_passed_unvicies": true,
+    "regression_cluster_phase_xx_xxx_extended": "623/623 PASSED",
+    "no_regressions": true
+  },
+  "v30_lock": "INVIOLÉ",
+  "drift_zero": true,
+  "no_engine_recompute_triggered": true,
+  "fusion_add_only": true,
+  "anti_generique_strict": true,
+  "scientific_traps_respected": {
+    "rsf_ssf_authentic_methodological_trap": "DEFERRED — RSF/SSF authentiques requièrent GPS use+availability. Pivot transparent vers MaxEnt-lite explicitement documenté avec 'this_is_NOT_authentic_rsf_ssf=true'.",
+    "wapiti_quebec_zero_occurrences_trap": "DEFERRED honnête — non natif Québec, GBIF=0, anti-générique strict.",
+    "movebank_auth_trap": "DEFERRED — HTTP 401 sans auth Commandant.",
+    "buffer_overflow_resolved_during_session": "Body GBIF 2.1MB > buffer 1MB initial → augmenté à 5MB transparent."
+  }
+}

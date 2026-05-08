@@ -27,6 +27,34 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-UNVICIES · RSF_SSF_VALIDATE + HOOK_ACTIVATE_Ω — 🎯 4/5 ESPÈCES VALID + WAPITI DEFERRED + HOOK ACTIVATED + DRIFT (2026-05-08)**
+  Validation présence GBIF + activation officielle du hook RSF/SSF via pivot anti-générique strict vers MaxEnt-lite presence-only envelope (RSF/SSF authentiques bloqués faute GPS) sous régime guardrails ENFORCED + autonomy=LIMITED + Option B Commandant approuvée (FUSION ADD-ONLY · V30_LOCK INVIOLÉ · DRIFT_ZERO).
+  - **Module `rsf_ssf_omega.py` créé** : `GBIF_TAXON_KEYS_BP135` (5 espèces taxon keys vérifiés LIVE : 2440965/2440940/2433407/9606290/8600904), `QUEBEC_BBOX` (46-49°N × -73 à -69°W), `_http_get_json_strict` (buffer 5MB pour body GBIF), `_fetch_gbif_presence_for_species` (centroid + variance + std + bbox extracted + first/last year), `_haversine_km`, `_compute_envelope_index_per_site` (Phillips 2006 envelope-based, anti-divbyzero floor 0.05 sur std), orchestrateur `validate_rsf_ssf_per_species`, `activate_rsf_ssf_hook`, `get_rsf_ssf_hook_status`.
+  - **PIVOT DOCTRINAL FONDAMENTAL ANTI-GÉNÉRIQUE STRICT** : RSF (Resource Selection Function, Manly 2002, Boyce 2002) et SSF (Step Selection Function, Avgar 2016) NE SONT PAS DES APIs — ce sont des modèles statistiques requérant données GPS use+availability sur animaux instrumentés. AUCUNE donnée GPS BP135 fournie par Commandant. MoveBank API = HTTP 401 (auth required). Pivot transparent vers **MaxEnt-lite presence-only environmental envelope** (Phillips 2006 *Ecological Modelling* DOI:10.1016/j.ecolmodel.2005.03.026 + Elith 2011 *Diversity & Distributions* DOI:10.1111/j.1472-4642.2010.00725.x).
+  - **PIÈGE MÉTHODOLOGIQUE FONDAMENTAL EXPLICITEMENT TRACÉ** : Le payload retourné expose `this_is_NOT_authentic_rsf_ssf=true` + `method_physical=MaxEnt-lite` + 3 références blocked (Manly/Boyce/Avgar) en plus des 2 références primary (Phillips/Elith). Anti-générique strict total.
+  - **3 endpoints API** :
+    - **POST `/api/v30/super-masters/rsf-ssf-validate`** (token + body Pydantic `RsfSsfValidateBody`)
+    - **POST `/api/v30/super-masters/rsf-ssf-hook-activate`** (token + body Pydantic `RsfSsfHookActivateBody`)
+    - **GET `/api/v30/super-masters/rsf-ssf-hook-status`** (PUBLIC RO)
+  - **Workflow exécuté en 5 phases LIVE** :
+    - **Phase A — VALIDATE** : 4/5 espèces valid · `verdict=RSF_SSF_VALIDATE_PARTIAL::4_OF_5_SPECIES_VALID` · `manifest_sha256=8a4eafbe1f10b9d561332f93183a3a5c14ed27bd96fdbe3ebed3d7715dc33486` · 6.985s · ⚠️ **issue résolue session** : body GBIF `limit=300`=2.1MB > buffer initial 1MB → augmenté à 5MB
+    - **Phase B — HOOK ACTIVATE** : `verdict=RSF_SSF_HOOK_ACTIVATED_OPERATIONAL` · `activation_sha256=084f8720332f1626f5b5a7afcebfbd7191cffe7386b1c7233879282b6b1c227a` · consumers=`[HABITAT_SUITABILITY_ENVELOPE_COMPUTE, PRESENCE_DENSITY_KDE_PROXY, ENVIRONMENTAL_NICHE_BREADTH_INDEX, CORRIDOR_PROXY_VIA_CONTINUITY]`
+    - **Phase C — STATUS** : `current_status=ACTIVATED_OPERATIONAL` · overlay 12745 bytes
+    - **Phase D — DRIFT AUDIT** `reason=rsf_ssf_corridors_activated` : audit `audit_20260508T001554Z_80632bb2.json`
+    - **Phase E — SANITY** : `'0'×64` → REJECTED `RSF_SSF_HOOK_REJECTED_MANIFEST_NOT_FOUND_OR_INVALID`
+  - **Données GBIF RÉELLES par espèce (Québec bbox 46-49°N × -73 à -69°W)** :
+    - **cerf** (taxon=2440965) : 414 occurrences (300 extraites) · centroid=(47.03,-71.33) · std=(0.685,0.856) · années 2020-2026 · **Top envelope : espece_a Québec=94.15/100 (dist=25.88km)** · faible : espece_c Escoumins=1.25/100 (205km)
+    - **orignal** (taxon=2440940) : 204 occurrences · centroid=(47.51,-70.88) · std=(0.690,0.883) · 1943-2026 · **Top : espece_e Capitale=75.49/100**
+    - **ours** (taxon=2433407) : 102 occurrences · centroid=(47.60,-70.92) · std=(0.633,0.999) · 1986-2025 · **Top : espece_b St-Jean=66.15/100**
+    - **dindon** (taxon=9606290) : 19633 occurrences (300 extraites) · centroid=(46.64,-71.39) · std=(0.383,0.762) · 2024-2026 (rapide expansion) · **Top : espece_a Québec=87.33/100**
+    - **wapiti** (taxon=8600904) : **0 occurrences GBIF Québec** → DEFERRED honnête (non natif, réintroduction gestion serrée). Anti-générique strict : aucune fabrication.
+  - **4 outputs partiellement débloqués** : `habitat_suitability_envelope_phillips_2006`, `presence_density_index_via_gbif_count`, `environmental_niche_breadth_via_gbif_variance`, `corridor_proxy_via_continuity_inter_sites`.
+  - **4 outputs encore DEFERRED (RSF/SSF authentique requis)** : `true_step_selection_function_avgar_2016`, `true_resource_selection_function_manly_2002`, `movement_corridor_via_gps_trajectories`, `use_availability_paired_design`.
+  - **Anti-générique strict prouvé (sanity LIVE)** : POST `/rsf-ssf-hook-activate` avec SHA `'0'×64` → REJECTED + forensic log persisté.
+  - **Forensic log** : 5 entrées `ENDPOINT_PROBES/RSF_SSF_VALIDATE_Ω` + 2+ entrées `HOOK_ACTIVATIONS/RSF_SSF_HOOK_ACTIVATE_Ω` + 1 audit drift. 2 audits NOAA_PIPELINE/RSF_SSF persistés.
+  - **Pytest** : 21 nouveaux (`test_phase_xxx_unvicies_rsf_ssf_omega.py`) **21/21 PASSED** (registry × bbox × paths × pivot doctrinal × outputs partial/deferred × haversine × envelope × wapiti deferred × manifest reject × guardrails × V30_LOCK). Régression cluster doctrinal Phase XX-XXX étendu = **623/623 PASSED · 0 régression**.
+  - **Bilan stratégique session** : ✅ **6 hooks ACTIVATED_OPERATIONAL** : WOD23 + OWM single + OWM batch BP135 + NASA NDVI MOD13Q1 + USGS_SOIL (SoilGrids) + **RSF_SSF (MaxEnt-lite GBIF pivot)**. 4/8 outputs deferred HABITAT_OUTPUTS_COMPUTE_Ω partiellement débloqués via envelope Phillips 2006. Wapiti DEFERRED honnêtement faute de présence Québec (anti-générique strict).
+
 - **PHASE_XXX-VICIES · USGS_SOIL_P0_VALIDATE + HOOK_ACTIVATE_Ω — 🎯 5/5 SITES VALID (offset terrestre +0.05° auto) + HOOK ACTIVATED + DRIFT (2026-05-07)**
   Validation soil properties + activation officielle du hook USGS_SOIL via pivot anti-générique strict vers SoilGrids ISRIC (USGS=US continental only) sous régime guardrails ENFORCED + autonomy=LIMITED + Option B Commandant approuvée (FUSION ADD-ONLY · V30_LOCK INVIOLÉ · DRIFT_ZERO).
   - **Module `usgs_soil_omega.py` créé** : `SOILGRIDS_PROPERTIES_REGISTRY` (6 propriétés peer-reviewed : phh2o, cec, nitrogen, clay, sand, soc avec d_factors officiels ISRIC), `TERRESTRIAL_OFFSETS_CARDINAL` (4 directions séquentielles +0.05° N/S/E/W), `_http_get_json_strict` (GET sans redirect, 512KB max), `_extract_property_mean_from_soilgrids` (application d_factor strict, anti-imputation), `_probe_soilgrids_at_coord`, `_probe_with_terrestrial_offset_fallback` (offset cardinal séquentiel pour water_mask), orchestrateur `validate_usgs_soil_per_species`, `activate_usgs_soil_hook`, `get_usgs_soil_hook_status`.

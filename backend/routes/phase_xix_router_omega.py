@@ -2607,3 +2607,139 @@ async def usgs_soil_hook_status_endpoint() -> JSONResponse:
         "v30_lock": "INVIOLÉ",
     })
 
+
+# ═════════════════════════════════════════════════════════════════════════
+# RSF_SSF_VALIDATE_Ω + RSF_SSF_HOOK_ACTIVATE_Ω
+# Pivot anti-générique strict : RSF/SSF authentiques requièrent GPS data.
+# Pivot vers MaxEnt-lite presence-only (Phillips 2006) via GBIF.
+# ═════════════════════════════════════════════════════════════════════════
+class RsfSsfValidateBody(BaseModel):
+    species_to_taxon: Optional[Dict[str, int]] = None
+    bp135_site_coordinates: Optional[
+        Dict[str, Dict[str, float]]] = None
+    bbox: Optional[Dict[str, float]] = None
+    limit_per_species: int = 300
+    persist: bool = True
+
+
+@router.post("/rsf-ssf-validate")
+async def rsf_ssf_validate_endpoint(
+    body: RsfSsfValidateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """RSF_SSF_VALIDATE_Ω · MaxEnt-lite presence-only via GBIF.
+
+    Pivot anti-générique strict : RSF/SSF authentiques requièrent GPS
+    use+availability (Manly 2002, Avgar 2016). Pivot transparent vers
+    Phillips 2006 envelope-based MaxEnt-lite.
+    Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.rsf_ssf_omega import (
+        validate_rsf_ssf_per_species,
+    )
+    try:
+        species_to_taxon_str = body.species_to_taxon
+        species_to_taxon = (
+            {k: int(v) for k, v in species_to_taxon_str.items()}
+            if species_to_taxon_str else None)
+        payload = validate_rsf_ssf_per_species(
+            species_to_taxon=species_to_taxon,
+            bp135_site_coordinates=body.bp135_site_coordinates,
+            bbox=body.bbox,
+            limit_per_species=body.limit_per_species,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "RSF_SSF_VALIDATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "RSF_SSF_VALIDATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_RSF_SSF_HOOK_ACTIVATE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+class RsfSsfHookActivateBody(BaseModel):
+    manifest_sha256: str
+    reason: str = "rsf_ssf_corridors_activated"
+    persist: bool = True
+
+
+@router.post("/rsf-ssf-hook-activate")
+async def rsf_ssf_hook_activate_endpoint(
+    body: RsfSsfHookActivateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """RSF_SSF_HOOK_ACTIVATE_Ω · activation officielle.
+
+    Anti-générique strict : refus SHA fabriqué. Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.rsf_ssf_omega import (
+        activate_rsf_ssf_hook,
+    )
+    try:
+        payload = activate_rsf_ssf_hook(
+            manifest_sha256=body.manifest_sha256,
+            reason=body.reason,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "RSF_SSF_HOOK_ACTIVATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "RSF_SSF_HOOK_ACTIVATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_RSF_SSF_HOOK_ACTIVATE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/rsf-ssf-hook-status")
+async def rsf_ssf_hook_status_endpoint() -> JSONResponse:
+    """RSF_SSF_HOOK_ACTIVATE_Ω · état (PUBLIC RO)."""
+    from engines.v8_institutional.especes.rsf_ssf_omega import (
+        get_rsf_ssf_hook_status,
+    )
+    payload = get_rsf_ssf_hook_status()
+    return JSONResponse({
+        "manifest_id": "RSF_SSF_HOOK_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_RSF_SSF_HOOK_ACTIVATE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+

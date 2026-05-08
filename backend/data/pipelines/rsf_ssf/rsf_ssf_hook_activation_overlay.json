@@ -1,0 +1,308 @@
+{
+  "history": [
+    {
+      "manifest_id": "RSF_SSF_HOOK_ACTIVATE_Ω",
+      "ordre": "P1_RSF_SSF_HOOK_ACTIVATE",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "activated": true,
+      "verdict": "RSF_SSF_HOOK_ACTIVATED_OPERATIONAL",
+      "reason": "rsf_ssf_corridors_activated",
+      "validated_manifest_sha256": "8a4eafbe1f10b9d561332f93183a3a5c14ed27bd96fdbe3ebed3d7715dc33486",
+      "validated_executed_at_utc": "2026-05-08T00:15:31+00:00",
+      "provider_logical": "RSF_SSF",
+      "provider_physical": "MAXENT_LITE_GBIF",
+      "pivot_doctrinal_inherited": {
+        "reason_pivot": "RSF/SSF authentiques (Manly 2002, Avgar 2016) requièrent données GPS use+availability sur animaux instrumentés. AUCUNE donnée GPS BP135 fournie. MoveBank API = HTTP 401 (auth required). Pivot vers MaxEnt-lite presence-only envelope (Phillips 2006, Elith 2011).",
+        "this_is_NOT_authentic_rsf_ssf": true,
+        "method_physical": "MaxEnt-lite presence-only environmental envelope (Phillips 2006 §3.2)",
+        "endpoint_used": "https://api.gbif.org/v1/occurrence/search",
+        "scientific_references_primary": [
+          "Phillips et al. (2006). Ecological Modelling, 190(3-4), 231-259. DOI:10.1016/j.ecolmodel.2005.03.026",
+          "Elith et al. (2011). Diversity and Distributions, 17(1), 43-57. DOI:10.1111/j.1472-4642.2010.00725.x"
+        ],
+        "scientific_references_authentic_rsf_ssf_blocked": [
+          "Manly et al. (2002). Resource Selection by Animals. 2nd ed. Springer.",
+          "Boyce et al. (2002). Ecological Modelling, 157, 281-300.",
+          "Avgar et al. (2016). Methods in Ecology and Evolution, 7, 619-630."
+        ]
+      },
+      "n_species_total": 5,
+      "n_calls_success_inherited": 4,
+      "n_species_deferred_inherited": 1,
+      "species_summary": [
+        {
+          "species_logical": "cerf",
+          "scientific_name": "Odocoileus virginianus",
+          "taxon_key": 2440965,
+          "valid": true,
+          "n_occurrences_extracted": 300,
+          "count_total_gbif": 414,
+          "centroid_lat_lon": {
+            "lat": 47.0313,
+            "lon": -71.3261
+          },
+          "niche_breadth_index": 1.5407,
+          "envelope_per_bp135_site": {
+            "espece_a": {
+              "habitat_suitability_envelope": 94.15,
+              "unit": "score_0_100_phillips_2006_envelope",
+              "delta_lat_to_centroid_deg": -0.2182,
+              "delta_lon_to_centroid_deg": 0.1186,
+              "z_squared": 0.1207,
+              "distance_to_centroid_km": 25.88
+            },
+            "espece_b": {
+              "habitat_suitability_envelope": 45.29,
+              "unit": "score_0_100_phillips_2006_envelope",
+              "delta_lat_to_centroid_deg": 0.1687,
+              "delta_lon_to_centroid_deg": 1.0561,
+              "z_squared": 1.5842,
+              "distance_to_centroid_km": 82.09
+            },
+            "espece_c": {
+              "habitat_suitability_envelope": 1.25,
+              "unit": "score_0_100_phillips_2006_envelope",
+              "delta_lat_to_centroid_deg": 1.3087,
+              "delta_lon_to_centroid_deg": 1.9361,
+              "z_squared": 8.7695,
+              "distance_to_centroid_km": 205.37
+            },
+            "espece_d": {
+              "habitat_suitability_envelope": 42.4,
+              "unit": "score_0_100_phillips_2006_envelope",
+              "delta_lat_to_centroid_deg": -0.6713,
+              "delta_lon_to_centroid_deg": -0.7439,
+              "z_squared": 1.7161,
+              "distance_to_centroid_km": 93.76
+            },
+            "espece_e": {
+              "habitat_suitability_envelope": 92.9,
+              "unit": "score_0_100_phillips_2006_envelope",
+              "delta_lat_to_centroid_deg": -0.0313,
+              "delta_lon_to_centroid_deg": 0.3261,
+              "z_squared": 0.1474,
+              "distance_to_centroid_km": 24.97
+            }
+          },
+          "deferred_doctrinal": null
+        },
+        {
+          "species_logical": "orignal",
+          "scientific_name": "Alces alces",
+          "taxon_key": 2440940,
+          "valid": true,
+          "n_occurrences_extracted": 204,
+          "count_total_gbif": 204,
+          "centroid_lat_lon": {
+            "lat": 47.5087,
+            "lon": -70.8818
+          },
+          "niche_breadth_index": 1.5725,
+          "envelope_per_bp135_site": {
+            "espece_a": {
+              "habitat_suitability_envelope": 56.16,
+              "unit": "score_0_100_phillips_2006_envelope",
+              "delta_lat_to_centroid_deg": -0.6956,
+              "delta_lon_to_centroid_deg": -0.3257,
+              "z_squared": 1.1538,
+              "distance_to_centroid_km": 81.17
+            },
+            "espece_b": {
+              "habitat_suitability_envelope": 71.16,
+              "unit": "score_0_100_phillips_2006_envelope",
+              "delta_lat_to_centroid_deg": -0.3087,
+              "delta_lon_to_centroid_deg": 0.6118,
+              "z_squared": 0.6805,
+              "distance_to_centroid_km": 57.47
+            },
+            "espece_c": {
+              "habitat_suitability_envelope": 11.6,
+              "unit": "score_0_100_phillips_2006_envelope",
+              "delta_lat_to_centroid_deg": 0.8313,
+              "delta_lon_to_centroid_deg": 1.4918,
+              "z_squared": 4.3079,
+              "distance_to_centroid_km": 144.57
+            },
+            "espece_d": {
+              "habitat_suitability_envelope": 10.09,
+              "unit": "score_0_100_phillips_2006_envelope",
+              "delta_lat_to_centroid_deg": -1.1487,
+              "delta_lon_to_centroid_deg": -1.1882,
+              "z_squared": 4.5863,
+              "distance_to_centroid_km": 156.37
+            },
+            "espece_e": {
+              "habitat_suitability_envelope": 75.49,
+              "unit": "score_0_100_phillips_2006_envelope",
+              "delta_lat_to_centroid_deg": -0.5087,
+              "delta_lon_to_centroid_deg": -0.1182,
+              "z_squared": 0.5622,
+              "distance_to_centroid_km": 57.26
+            }
+          },
+          "deferred_doctrinal": null
+        },
+        {
+          "species_logical": "ours",
+          "scientific_name": "Ursus americanus",
+          "taxon_key": 2433407,
+          "valid": true,
+          "n_occurrences_extracted": 102,
+          "count_total_gbif": 102,
+          "centroid_lat_lon": {
+            "lat": 47.6022,
+            "lon": -70.9194
+          },
+          "niche_breadth_index": 1.6318,
+          "envelope_per_bp135_site": {
+            "espece_a": {
+              "habitat_suitability_envelope": 44.08,
+              "unit": "score_0_100_phillips_2006_envelope",
+              "delta_lat_to_centroid_deg": -0.7891,
+              "delta_lon_to_centroid_deg": -0.2881,
+              "z_squared": 1.6382,
+              "distance_to_centroid_km": 90.4
+            },
+            "espece_b": {
+              "habitat_suitability_envelope": 66.15,
+              "unit": "score_0_100_phillips_2006_envelope",
+              "delta_lat_to_centroid_deg": -0.4022,
+              "delta_lon_to_centroid_deg": 0.6494,
+              "z_squared": 0.8265,
+              "distance_to_centroid_km": 66.25
+            },
+            "espece_c": {
+              "habitat_suitability_envelope": 15.7,
+              "unit": "score_0_100_phillips_2006_envelope",
+              "delta_lat_to_centroid_deg": 0.7378,
+              "delta_lon_to_centroid_deg": 1.5294,
+              "z_squared": 3.7031,
+              "distance_to_centroid_km": 140.33
+            },
+            "espece_d": {
+              "habitat_suitability_envelope": 7.5,
+              "unit": "score_0_100_phillips_2006_envelope",
+              "delta_lat_to_centroid_deg": -1.2422,
+              "delta_lon_to_centroid_deg": -1.1506,
+              "z_squared": 5.18,
+              "distance_to_centroid_km": 163.39
+            },
+            "espece_e": {
+              "habitat_suitability_envelope": 63.38,
+              "unit": "score_0_100_phillips_2006_envelope",
+              "delta_lat_to_centroid_deg": -0.6022,
+              "delta_lon_to_centroid_deg": -0.0806,
+              "z_squared": 0.9121,
+              "distance_to_centroid_km": 67.24
+            }
+          },
+          "deferred_doctrinal": null
+        },
+        {
+          "species_logical": "dindon",
+          "scientific_name": "Meleagris gallopavo",
+          "taxon_key": 9606290,
+          "valid": true,
+          "n_occurrences_extracted": 300,
+          "count_total_gbif": 19633,
+          "centroid_lat_lon": {
+            "lat": 46.6362,
+            "lon": -71.3912
+          },
+          "niche_breadth_index": 1.1455,
+          "envelope_per_bp135_site": {
+            "espece_a": {
+              "habitat_suitability_envelope": 87.33,
+              "unit": "score_0_100_phillips_2006_envelope",
+              "delta_lat_to_centroid_deg": 0.1769,
+              "delta_lon_to_centroid_deg": 0.1837,
+              "z_squared": 0.271,
+              "distance_to_centroid_km": 24.15
+            },
+            "espece_b": {
+              "habitat_suitability_envelope": 11.49,
+              "unit": "score_0_100_phillips_2006_envelope",
+              "delta_lat_to_centroid_deg": 0.5638,
+              "delta_lon_to_centroid_deg": 1.1212,
+              "z_squared": 4.3269,
+              "distance_to_centroid_km": 105.74
+            },
+            "espece_c": {
+              "habitat_suitability_envelope": 0.0,
+              "unit": "score_0_100_phillips_2006_envelope",
+              "delta_lat_to_centroid_deg": 1.7038,
+              "delta_lon_to_centroid_deg": 2.0012,
+              "z_squared": 26.6438,
+              "distance_to_centroid_km": 241.86
+            },
+            "espece_d": {
+              "habitat_suitability_envelope": 51.88,
+              "unit": "score_0_100_phillips_2006_envelope",
+              "delta_lat_to_centroid_deg": -0.2762,
+              "delta_lon_to_centroid_deg": -0.6788,
+              "z_squared": 1.3123,
+              "distance_to_centroid_km": 60.36
+            },
+            "espece_e": {
+              "habitat_suitability_envelope": 55.88,
+              "unit": "score_0_100_phillips_2006_envelope",
+              "delta_lat_to_centroid_deg": 0.3638,
+              "delta_lon_to_centroid_deg": 0.3912,
+              "z_squared": 1.1639,
+              "distance_to_centroid_km": 50.22
+            }
+          },
+          "deferred_doctrinal": null
+        },
+        {
+          "species_logical": "wapiti",
+          "scientific_name": "Cervus canadensis",
+          "taxon_key": 8600904,
+          "valid": false,
+          "n_occurrences_extracted": 0,
+          "count_total_gbif": 0,
+          "centroid_lat_lon": null,
+          "niche_breadth_index": null,
+          "envelope_per_bp135_site": null,
+          "deferred_doctrinal": {
+            "reason": "GBIF n_occurrences=0 in Quebec bbox — anti-générique strict : aucune fabrication d'envelope environnementale possible.",
+            "doctrinal_note": "Non natif Québec — réintroduction gestion serrée. GBIF presence_only=0 attendu. Anti-générique strict.",
+            "directive_extension_required": "GPS_DATA_HOOK_ACTIVATE or MOVEBANK_CREDENTIALS"
+          }
+        }
+      ],
+      "consumed_by_modules": [
+        "HABITAT_SUITABILITY_ENVELOPE_COMPUTE",
+        "PRESENCE_DENSITY_KDE_PROXY",
+        "ENVIRONMENTAL_NICHE_BREADTH_INDEX",
+        "CORRIDOR_PROXY_VIA_CONTINUITY"
+      ],
+      "outputs_partially_unblocked_via_this_hook": [
+        "habitat_suitability_envelope_phillips_2006",
+        "presence_density_index_via_gbif_count",
+        "environmental_niche_breadth_via_gbif_variance",
+        "corridor_proxy_via_continuity_inter_sites"
+      ],
+      "outputs_still_deferred_authentic_rsf_ssf_required": [
+        "true_step_selection_function_avgar_2016",
+        "true_resource_selection_function_manly_2002",
+        "movement_corridor_via_gps_trajectories",
+        "use_availability_paired_design"
+      ],
+      "fusion_add_only": true,
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "registered_at_utc": "2026-05-08T00:15:54+00:00",
+      "activation_sha256": "084f8720332f1626f5b5a7afcebfbd7191cffe7386b1c7233879282b6b1c227a"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T00:15:54+00:00",
+  "n_activations": 1,
+  "last_activation_sha256": "084f8720332f1626f5b5a7afcebfbd7191cffe7386b1c7233879282b6b1c227a",
+  "last_validated_manifest_sha256": "8a4eafbe1f10b9d561332f93183a3a5c14ed27bd96fdbe3ebed3d7715dc33486",
+  "v30_lock": "INVIOLÉ"
+}

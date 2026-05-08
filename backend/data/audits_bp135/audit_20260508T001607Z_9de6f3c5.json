@@ -1,0 +1,27 @@
+{
+  "audit_filename": "audit_20260508T001607Z_9de6f3c5.json",
+  "audit_sha256": "9de6f3c5d414f73e7569d4644f5180d4575eb0820354bebce972ad61faa82a4f",
+  "persisted_at_utc": "2026-05-08T00:16:07+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "NOAA_PIPELINE",
+    "subtype": "OPENWEATHERMAP_VALIDATE",
+    "ordre": "OPENWEATHERMAP_P0_VALIDATE",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "provider": "OPENWEATHERMAP",
+    "endpoint": "https://api.openweathermap.org/data/2.5/weather",
+    "auth_strategy": "NONE_BOTH_PLACEHOLDERS",
+    "valid": false,
+    "verdict": "OPENWEATHERMAP_REJECTED_BOTH_PLACEHOLDERS_DETECTED",
+    "manifest_sha256": "f485b10208ad4eb91b872cd4f01a22bf3d600ddf32f526079f4faa6f56813653",
+    "http_status": null,
+    "owm_signature_present": false,
+    "owm_city_name": null,
+    "credentials_placeholder_detected": true,
+    "query_appid_placeholder_detected": true,
+    "v30_lock_inviolate": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  }
+}
