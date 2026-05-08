@@ -2894,3 +2894,76 @@ async def opentopography_hook_status_endpoint() -> JSONResponse:
         "v30_lock": "INVIOLÉ",
     })
 
+
+# ═════════════════════════════════════════════════════════════════════════
+# HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME — agrégation 7 hooks → 8/12 outputs
+# ═════════════════════════════════════════════════════════════════════════
+class HabitatRecomputeBody(BaseModel):
+    species_to_site_map: Optional[Dict[str, str]] = None
+    persist: bool = True
+
+
+@router.post("/habitat-outputs-recompute")
+async def habitat_outputs_recompute_endpoint(
+    body: HabitatRecomputeBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME · agrégation 7 hooks.
+
+    Charge les dernières validations NASA NDVI, USGS_SOIL, OPENTOPOGRAPHY,
+    RSF_SSF + recalcule 8/12 outputs (4 initiaux + 4 nouveaux partiels) :
+    food_avail/qual/def + bedding (Mysterud 2001) + refuge (Riley 1999 TRI)
+    + saline (Belant 2010 pH+CEC) + habitat_suitability composite +
+    corridor_continuity inter-sites (Forman 1986).
+    Token Commandant requis. Anti-générique strict.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.habitat_outputs_recompute_omega import (  # noqa: E501
+        recompute_habitat_outputs_with_all_hooks,
+    )
+    try:
+        payload = recompute_habitat_outputs_with_all_hooks(
+            species_to_site_map=body.species_to_site_map,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "HABITAT_OUTPUTS_RECOMPUTE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "HABITAT_OUTPUTS_RECOMPUTE_EXECUTE_Ω_ULTIME",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/habitat-outputs-recompute-status")
+async def habitat_outputs_recompute_status_endpoint() -> JSONResponse:
+    """HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME · état (PUBLIC RO)."""
+    from engines.v8_institutional.especes.habitat_outputs_recompute_omega import (  # noqa: E501
+        get_habitat_recompute_status,
+    )
+    payload = get_habitat_recompute_status()
+    return JSONResponse({
+        "manifest_id": "HABITAT_RECOMPUTE_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+

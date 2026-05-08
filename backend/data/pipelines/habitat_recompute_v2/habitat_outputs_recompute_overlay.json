@@ -1,0 +1,786 @@
+{
+  "history": [
+    {
+      "manifest_id": "HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME",
+      "ordre": "P1_HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "verdict": "HABITAT_OUTPUTS_RECOMPUTE_FULL_8_OF_12_COMPUTABLE",
+      "coverage_ratio": 1.0,
+      "n_outputs_per_site_classes": "8_of_12_classes_computable_4_deferred",
+      "n_outputs_per_site_values": 7,
+      "n_outputs_total_values_computed": 35,
+      "n_sites_processed": 5,
+      "hooks_aggregated": {
+        "nasa_ndvi": true,
+        "usgs_soil": true,
+        "opentopography": true,
+        "rsf_ssf": true,
+        "wod23_ocean": "context_only_not_directly_consumed_per_site",
+        "owm_single": "context_only_not_directly_consumed_per_site",
+        "owm_batch_bp135": "context_only_not_directly_consumed_per_site"
+      },
+      "n_hooks_principal_loaded": 4,
+      "hooks_manifests_inherited": {
+        "nasa_ndvi_manifest_sha256": "166178536dc5d662e0020e9838506b75b940fc045cb5da86d9a0cf23d9ca4148",
+        "usgs_soil_manifest_sha256": "e71d4d273de149122679e233a07d6721e7bae17b6e0ed83dba11bf0753f1a568",
+        "opentopography_manifest_sha256": "b513adb32a65a7f760ac2852a0ca522f3bd5a2316717ec9b889608ef5c762c3a",
+        "rsf_ssf_manifest_sha256": "8a4eafbe1f10b9d561332f93183a3a5c14ed27bd96fdbe3ebed3d7715dc33486"
+      },
+      "species_to_site_map_used": {
+        "espece_a": "cerf",
+        "espece_b": "orignal",
+        "espece_c": "ours",
+        "espece_d": "dindon",
+        "espece_e": "wapiti"
+      },
+      "per_site_outputs": {
+        "espece_a": {
+          "site_name": "espece_a",
+          "species_canonical": "cerf",
+          "scientific_name": "Odocoileus virginianus",
+          "covariates_inputs": {
+            "ndvi_mean": -0.0235,
+            "evi_mean": -0.0144,
+            "phh2o": 5.2,
+            "cec": 30.9,
+            "soc": 101.1,
+            "elevation_mean_m": 53.56,
+            "elevation_std_m": 20.38,
+            "slope_mean_deg": 4.55,
+            "slope_max_deg": 52.6,
+            "envelope_phillips": 94.15,
+            "demtype_used": "SRTMGL1"
+          },
+          "computed_outputs": {
+            "food_availability": {
+              "value": 0.0,
+              "unit": "score_0_100",
+              "regime": "SUB_DORMANCY_SIGNAL",
+              "score_raw_normalized_ndvi": 0.4883,
+              "score_optimal_match": 0.0,
+              "ndvi_mean_input": -0.0235,
+              "thresholds_used": {
+                "ndvi_optimal_low": 0.4,
+                "ndvi_optimal_high": 0.7,
+                "ndvi_dormancy": 0.1
+              },
+              "primary_reference": "Hebblewhite_2008_EcolMonogr"
+            },
+            "food_quality": {
+              "value": 0.0,
+              "unit": "score_0_100",
+              "regime": "VERY_LOW_PHOTOSYNTHETIC",
+              "score_raw_normalized_evi": 0.4928,
+              "score_optimal_match": 0.0,
+              "evi_mean_input": -0.0144,
+              "thresholds_used": {
+                "evi_optimal_low": 0.2,
+                "evi_optimal_high": 0.5
+              },
+              "primary_reference": "Garroutte_2016_RemSens"
+            },
+            "food_deficiency": {
+              "value": 100.0,
+              "unit": "score_0_100_inverse",
+              "regime": "FORAGE_DEFICIENT",
+              "critical_threshold_used": 30.0,
+              "food_availability_input": 0.0,
+              "primary_reference": "Hamel_2009_JApplEcology"
+            },
+            "bedding_zones_partial": {
+              "value": 65.5,
+              "unit": "score_0_100_partial_dem_only",
+              "regime": "BELOW_OPTIMAL",
+              "slope_mean_deg_input": 4.55,
+              "slope_max_deg_input": 52.6,
+              "doctrinal_caveat": "PARTIAL: requires canopy density (Hansen 2013) for complete bedding suitability. DEM slope only.",
+              "primary_reference": "Mysterud_2001_Ecography"
+            },
+            "refuge_zones_partial": {
+              "value": 25.47,
+              "unit": "score_0_100_TRI_partial",
+              "regime": "LOW_RUGGEDNESS_OPEN_TERRAIN",
+              "elevation_std_m_input": 20.38,
+              "slope_max_deg_input": 52.6,
+              "doctrinal_caveat": "PARTIAL: requires threat layers (roads, hunting) for full refuge_zones (Forman 1986). Topography only.",
+              "primary_reference": "Riley_1999_IntermountJSci"
+            },
+            "saline_optimal_locations_partial": {
+              "value": 42.21,
+              "unit": "score_0_100_partial_pH_CEC_only",
+              "regime": "MODERATE_SALINE_POTENTIAL",
+              "phh2o_input": 5.2,
+              "cec_input": 30.9,
+              "doctrinal_caveat": "PARTIAL: requires USGS_SOIL_DEEP_PROFILE for full Na+/Ca2+ chemistry (water proximity, mineral lick GPS DB needed for ground truth).",
+              "primary_reference": "Belant_2010_CanJZool"
+            },
+            "habitat_suitability_composite": {
+              "value": 49.87,
+              "unit": "score_0_100_composite_multi_covariate",
+              "regime": "MODERATE_SUITABILITY",
+              "n_components_available": 4,
+              "n_components_total": 4,
+              "components_weights_renormalized": {
+                "envelope_phillips": {
+                  "value": 94.15,
+                  "weight_renormalized": 0.35
+                },
+                "food_availability": {
+                  "value": 0.0,
+                  "weight_renormalized": 0.3
+                },
+                "bedding_partial": {
+                  "value": 65.5,
+                  "weight_renormalized": 0.2
+                },
+                "refuge_partial": {
+                  "value": 25.47,
+                  "weight_renormalized": 0.15
+                }
+              },
+              "primary_references": [
+                "Hebblewhite_2008_EcolMonogr",
+                "Mysterud_2001_Ecography",
+                "Phillips_2006_EcolModelling"
+              ]
+            }
+          }
+        },
+        "espece_b": {
+          "site_name": "espece_b",
+          "species_canonical": "orignal",
+          "scientific_name": "Alces alces",
+          "covariates_inputs": {
+            "ndvi_mean": 0.0085,
+            "evi_mean": 0.009,
+            "phh2o": 6.1,
+            "cec": 29.9,
+            "soc": 60.2,
+            "elevation_mean_m": 28.56,
+            "elevation_std_m": 12.67,
+            "slope_mean_deg": 2.68,
+            "slope_max_deg": 16.79,
+            "envelope_phillips": 71.16,
+            "demtype_used": "SRTMGL1"
+          },
+          "computed_outputs": {
+            "food_availability": {
+              "value": 5.36,
+              "unit": "score_0_100",
+              "regime": "SUB_DORMANCY_SIGNAL",
+              "score_raw_normalized_ndvi": 0.5042,
+              "score_optimal_match": 0.1063,
+              "ndvi_mean_input": 0.0085,
+              "thresholds_used": {
+                "ndvi_optimal_low": 0.3,
+                "ndvi_optimal_high": 0.6,
+                "ndvi_dormancy": 0.08
+              },
+              "primary_reference": "Garroutte_2016_RemSens"
+            },
+            "food_quality": {
+              "value": 10.09,
+              "unit": "score_0_100",
+              "regime": "VERY_LOW_PHOTOSYNTHETIC",
+              "score_raw_normalized_evi": 0.5045,
+              "score_optimal_match": 0.2,
+              "evi_mean_input": 0.009,
+              "thresholds_used": {
+                "evi_optimal_low": 0.15,
+                "evi_optimal_high": 0.45
+              },
+              "primary_reference": "Garroutte_2016_RemSens"
+            },
+            "food_deficiency": {
+              "value": 82.13,
+              "unit": "score_0_100_inverse",
+              "regime": "FORAGE_DEFICIENT",
+              "critical_threshold_used": 30.0,
+              "food_availability_input": 5.36,
+              "primary_reference": "Hamel_2009_JApplEcology"
+            },
+            "bedding_zones_partial": {
+              "value": 46.8,
+              "unit": "score_0_100_partial_dem_only",
+              "regime": "BELOW_OPTIMAL",
+              "slope_mean_deg_input": 2.68,
+              "slope_max_deg_input": 16.79,
+              "doctrinal_caveat": "PARTIAL: requires canopy density (Hansen 2013) for complete bedding suitability. DEM slope only.",
+              "primary_reference": "Mysterud_2001_Ecography"
+            },
+            "refuge_zones_partial": {
+              "value": 5.91,
+              "unit": "score_0_100_TRI_partial",
+              "regime": "LOW_RUGGEDNESS_OPEN_TERRAIN",
+              "elevation_std_m_input": 12.67,
+              "slope_max_deg_input": 16.79,
+              "doctrinal_caveat": "PARTIAL: requires threat layers (roads, hunting) for full refuge_zones (Forman 1986). Topography only.",
+              "primary_reference": "Riley_1999_IntermountJSci"
+            },
+            "saline_optimal_locations_partial": {
+              "value": 29.51,
+              "unit": "score_0_100_partial_pH_CEC_only",
+              "regime": "MODERATE_SALINE_POTENTIAL",
+              "phh2o_input": 6.1,
+              "cec_input": 29.9,
+              "doctrinal_caveat": "PARTIAL: requires USGS_SOIL_DEEP_PROFILE for full Na+/Ca2+ chemistry (water proximity, mineral lick GPS DB needed for ground truth).",
+              "primary_reference": "Belant_2010_CanJZool"
+            },
+            "habitat_suitability_composite": {
+              "value": 36.76,
+              "unit": "score_0_100_composite_multi_covariate",
+              "regime": "LOW_SUITABILITY",
+              "n_components_available": 4,
+              "n_components_total": 4,
+              "components_weights_renormalized": {
+                "envelope_phillips": {
+                  "value": 71.16,
+                  "weight_renormalized": 0.35
+                },
+                "food_availability": {
+                  "value": 5.36,
+                  "weight_renormalized": 0.3
+                },
+                "bedding_partial": {
+                  "value": 46.8,
+                  "weight_renormalized": 0.2
+                },
+                "refuge_partial": {
+                  "value": 5.91,
+                  "weight_renormalized": 0.15
+                }
+              },
+              "primary_references": [
+                "Hebblewhite_2008_EcolMonogr",
+                "Mysterud_2001_Ecography",
+                "Phillips_2006_EcolModelling"
+              ]
+            }
+          }
+        },
+        "espece_c": {
+          "site_name": "espece_c",
+          "species_canonical": "ours",
+          "scientific_name": "Ursus americanus",
+          "covariates_inputs": {
+            "ndvi_mean": 0.0124,
+            "evi_mean": 0.0184,
+            "phh2o": 4.9,
+            "cec": 42.2,
+            "soc": 89.4,
+            "elevation_mean_m": 125.33,
+            "elevation_std_m": 10.31,
+            "slope_mean_deg": 3.51,
+            "slope_max_deg": 27.93,
+            "envelope_phillips": 15.7,
+            "demtype_used": "SRTMGL1"
+          },
+          "computed_outputs": {
+            "food_availability": {
+              "value": 12.55,
+              "unit": "score_0_100",
+              "regime": "SUB_DORMANCY_SIGNAL",
+              "score_raw_normalized_ndvi": 0.5062,
+              "score_optimal_match": 0.248,
+              "ndvi_mean_input": 0.0124,
+              "thresholds_used": {
+                "ndvi_optimal_low": 0.2,
+                "ndvi_optimal_high": 0.8,
+                "ndvi_dormancy": 0.05
+              },
+              "primary_reference": "Belant_2006_EcolApplic"
+            },
+            "food_quality": {
+              "value": 31.23,
+              "unit": "score_0_100",
+              "regime": "VERY_LOW_PHOTOSYNTHETIC",
+              "score_raw_normalized_evi": 0.5092,
+              "score_optimal_match": 0.6133,
+              "evi_mean_input": 0.0184,
+              "thresholds_used": {
+                "evi_optimal_low": 0.1,
+                "evi_optimal_high": 0.55
+              },
+              "primary_reference": "Garroutte_2016_RemSens"
+            },
+            "food_deficiency": {
+              "value": 58.17,
+              "unit": "score_0_100_inverse",
+              "regime": "FORAGE_DEFICIENT",
+              "critical_threshold_used": 30.0,
+              "food_availability_input": 12.55,
+              "primary_reference": "Hamel_2009_JApplEcology"
+            },
+            "bedding_zones_partial": {
+              "value": 55.1,
+              "unit": "score_0_100_partial_dem_only",
+              "regime": "BELOW_OPTIMAL",
+              "slope_mean_deg_input": 3.51,
+              "slope_max_deg_input": 27.93,
+              "doctrinal_caveat": "PARTIAL: requires canopy density (Hansen 2013) for complete bedding suitability. DEM slope only.",
+              "primary_reference": "Mysterud_2001_Ecography"
+            },
+            "refuge_zones_partial": {
+              "value": 8.0,
+              "unit": "score_0_100_TRI_partial",
+              "regime": "LOW_RUGGEDNESS_OPEN_TERRAIN",
+              "elevation_std_m_input": 10.31,
+              "slope_max_deg_input": 27.93,
+              "doctrinal_caveat": "PARTIAL: requires threat layers (roads, hunting) for full refuge_zones (Forman 1986). Topography only.",
+              "primary_reference": "Riley_1999_IntermountJSci"
+            },
+            "saline_optimal_locations_partial": {
+              "value": 66.13,
+              "unit": "score_0_100_partial_pH_CEC_only",
+              "regime": "HIGH_SALINE_POTENTIAL_ACID_HIGH_CEC",
+              "phh2o_input": 4.9,
+              "cec_input": 42.2,
+              "doctrinal_caveat": "PARTIAL: requires USGS_SOIL_DEEP_PROFILE for full Na+/Ca2+ chemistry (water proximity, mineral lick GPS DB needed for ground truth).",
+              "primary_reference": "Belant_2010_CanJZool"
+            },
+            "habitat_suitability_composite": {
+              "value": 21.48,
+              "unit": "score_0_100_composite_multi_covariate",
+              "regime": "LOW_SUITABILITY",
+              "n_components_available": 4,
+              "n_components_total": 4,
+              "components_weights_renormalized": {
+                "envelope_phillips": {
+                  "value": 15.7,
+                  "weight_renormalized": 0.35
+                },
+                "food_availability": {
+                  "value": 12.55,
+                  "weight_renormalized": 0.3
+                },
+                "bedding_partial": {
+                  "value": 55.1,
+                  "weight_renormalized": 0.2
+                },
+                "refuge_partial": {
+                  "value": 8.0,
+                  "weight_renormalized": 0.15
+                }
+              },
+              "primary_references": [
+                "Hebblewhite_2008_EcolMonogr",
+                "Mysterud_2001_Ecography",
+                "Phillips_2006_EcolModelling"
+              ]
+            }
+          }
+        },
+        "espece_d": {
+          "site_name": "espece_d",
+          "species_canonical": "dindon",
+          "scientific_name": "Meleagris gallopavo",
+          "covariates_inputs": {
+            "ndvi_mean": 0.248,
+            "evi_mean": 0.1723,
+            "phh2o": 4.9,
+            "cec": 42.1,
+            "soc": 92.8,
+            "elevation_mean_m": 100.67,
+            "elevation_std_m": 4.25,
+            "slope_mean_deg": 2.09,
+            "slope_max_deg": 9.25,
+            "envelope_phillips": 51.88,
+            "demtype_used": "SRTMGL1"
+          },
+          "computed_outputs": {
+            "food_availability": {
+              "value": 51.58,
+              "unit": "score_0_100",
+              "regime": "BELOW_OPTIMAL_GROWING",
+              "score_raw_normalized_ndvi": 0.624,
+              "score_optimal_match": 0.8267,
+              "ndvi_mean_input": 0.248,
+              "thresholds_used": {
+                "ndvi_optimal_low": 0.3,
+                "ndvi_optimal_high": 0.6,
+                "ndvi_dormancy": 0.08
+              },
+              "primary_reference": "St_Louis_2014_PhilTransRoyalSoc"
+            },
+            "food_quality": {
+              "value": 58.61,
+              "unit": "score_0_100",
+              "regime": "OPTIMAL_PHOTOSYNTHETIC",
+              "score_raw_normalized_evi": 0.5861,
+              "score_optimal_match": 1.0,
+              "evi_mean_input": 0.1723,
+              "thresholds_used": {
+                "evi_optimal_low": 0.15,
+                "evi_optimal_high": 0.45
+              },
+              "primary_reference": "Garroutte_2016_RemSens"
+            },
+            "food_deficiency": {
+              "value": 0.0,
+              "unit": "score_0_100_inverse",
+              "regime": "ADEQUATE_FORAGE",
+              "critical_threshold_used": 30.0,
+              "food_availability_input": 51.58,
+              "primary_reference": "Hamel_2009_JApplEcology"
+            },
+            "bedding_zones_partial": {
+              "value": 40.9,
+              "unit": "score_0_100_partial_dem_only",
+              "regime": "BELOW_OPTIMAL",
+              "slope_mean_deg_input": 2.09,
+              "slope_max_deg_input": 9.25,
+              "doctrinal_caveat": "PARTIAL: requires canopy density (Hansen 2013) for complete bedding suitability. DEM slope only.",
+              "primary_reference": "Mysterud_2001_Ecography"
+            },
+            "refuge_zones_partial": {
+              "value": 1.09,
+              "unit": "score_0_100_TRI_partial",
+              "regime": "LOW_RUGGEDNESS_OPEN_TERRAIN",
+              "elevation_std_m_input": 4.25,
+              "slope_max_deg_input": 9.25,
+              "doctrinal_caveat": "PARTIAL: requires threat layers (roads, hunting) for full refuge_zones (Forman 1986). Topography only.",
+              "primary_reference": "Riley_1999_IntermountJSci"
+            },
+            "saline_optimal_locations_partial": {
+              "value": 65.96,
+              "unit": "score_0_100_partial_pH_CEC_only",
+              "regime": "HIGH_SALINE_POTENTIAL_ACID_HIGH_CEC",
+              "phh2o_input": 4.9,
+              "cec_input": 42.1,
+              "doctrinal_caveat": "PARTIAL: requires USGS_SOIL_DEEP_PROFILE for full Na+/Ca2+ chemistry (water proximity, mineral lick GPS DB needed for ground truth).",
+              "primary_reference": "Belant_2010_CanJZool"
+            },
+            "habitat_suitability_composite": {
+              "value": 41.98,
+              "unit": "score_0_100_composite_multi_covariate",
+              "regime": "MODERATE_SUITABILITY",
+              "n_components_available": 4,
+              "n_components_total": 4,
+              "components_weights_renormalized": {
+                "envelope_phillips": {
+                  "value": 51.88,
+                  "weight_renormalized": 0.35
+                },
+                "food_availability": {
+                  "value": 51.58,
+                  "weight_renormalized": 0.3
+                },
+                "bedding_partial": {
+                  "value": 40.9,
+                  "weight_renormalized": 0.2
+                },
+                "refuge_partial": {
+                  "value": 1.09,
+                  "weight_renormalized": 0.15
+                }
+              },
+              "primary_references": [
+                "Hebblewhite_2008_EcolMonogr",
+                "Mysterud_2001_Ecography",
+                "Phillips_2006_EcolModelling"
+              ]
+            }
+          }
+        },
+        "espece_e": {
+          "site_name": "espece_e",
+          "species_canonical": "wapiti",
+          "scientific_name": "Cervus canadensis",
+          "covariates_inputs": {
+            "ndvi_mean": 0.0462,
+            "evi_mean": 0.0494,
+            "phh2o": 6.0,
+            "cec": 31.0,
+            "soc": 59.0,
+            "elevation_mean_m": 110.29,
+            "elevation_std_m": 72.25,
+            "slope_mean_deg": 8.05,
+            "slope_max_deg": 34.6,
+            "envelope_phillips": null,
+            "demtype_used": "SRTMGL1"
+          },
+          "computed_outputs": {
+            "food_availability": {
+              "value": 24.17,
+              "unit": "score_0_100",
+              "regime": "SUB_DORMANCY_SIGNAL",
+              "score_raw_normalized_ndvi": 0.5231,
+              "score_optimal_match": 0.462,
+              "ndvi_mean_input": 0.0462,
+              "thresholds_used": {
+                "ndvi_optimal_low": 0.4,
+                "ndvi_optimal_high": 0.7,
+                "ndvi_dormancy": 0.1
+              },
+              "primary_reference": "Hebblewhite_2008_EcolMonogr"
+            },
+            "food_quality": {
+              "value": 43.2,
+              "unit": "score_0_100",
+              "regime": "VERY_LOW_PHOTOSYNTHETIC",
+              "score_raw_normalized_evi": 0.5247,
+              "score_optimal_match": 0.8233,
+              "evi_mean_input": 0.0494,
+              "thresholds_used": {
+                "evi_optimal_low": 0.2,
+                "evi_optimal_high": 0.5
+              },
+              "primary_reference": "Garroutte_2016_RemSens"
+            },
+            "food_deficiency": {
+              "value": 19.43,
+              "unit": "score_0_100_inverse",
+              "regime": "FORAGE_DEFICIENT",
+              "critical_threshold_used": 30.0,
+              "food_availability_input": 24.17,
+              "primary_reference": "Hamel_2009_JApplEcology"
+            },
+            "bedding_zones_partial": {
+              "value": 100.0,
+              "unit": "score_0_100_partial_dem_only",
+              "regime": "OPTIMAL_BEDDING_RANGE",
+              "slope_mean_deg_input": 8.05,
+              "slope_max_deg_input": 34.6,
+              "doctrinal_caveat": "PARTIAL: requires canopy density (Hansen 2013) for complete bedding suitability. DEM slope only.",
+              "primary_reference": "Mysterud_2001_Ecography"
+            },
+            "refuge_zones_partial": {
+              "value": 69.44,
+              "unit": "score_0_100_TRI_partial",
+              "regime": "HIGH_RUGGEDNESS_REFUGE_POTENTIAL",
+              "elevation_std_m_input": 72.25,
+              "slope_max_deg_input": 34.6,
+              "doctrinal_caveat": "PARTIAL: requires threat layers (roads, hunting) for full refuge_zones (Forman 1986). Topography only.",
+              "primary_reference": "Riley_1999_IntermountJSci"
+            },
+            "saline_optimal_locations_partial": {
+              "value": 32.1,
+              "unit": "score_0_100_partial_pH_CEC_only",
+              "regime": "MODERATE_SALINE_POTENTIAL",
+              "phh2o_input": 6.0,
+              "cec_input": 31.0,
+              "doctrinal_caveat": "PARTIAL: requires USGS_SOIL_DEEP_PROFILE for full Na+/Ca2+ chemistry (water proximity, mineral lick GPS DB needed for ground truth).",
+              "primary_reference": "Belant_2010_CanJZool"
+            },
+            "habitat_suitability_composite": {
+              "value": 57.95,
+              "unit": "score_0_100_composite_multi_covariate",
+              "regime": "MODERATE_SUITABILITY",
+              "n_components_available": 3,
+              "n_components_total": 4,
+              "components_weights_renormalized": {
+                "envelope_phillips": {
+                  "value": null,
+                  "weight_renormalized": null
+                },
+                "food_availability": {
+                  "value": 24.17,
+                  "weight_renormalized": 0.4615
+                },
+                "bedding_partial": {
+                  "value": 100.0,
+                  "weight_renormalized": 0.3077
+                },
+                "refuge_partial": {
+                  "value": 69.44,
+                  "weight_renormalized": 0.2308
+                }
+              },
+              "primary_references": [
+                "Hebblewhite_2008_EcolMonogr",
+                "Mysterud_2001_Ecography",
+                "Phillips_2006_EcolModelling"
+              ]
+            }
+          }
+        }
+      },
+      "corridor_continuity_inter_sites": {
+        "n_pairs": 10,
+        "method": "delta_NDVI_pH_elevation_normalized_mean_inverse",
+        "pairs_ranked": [
+          {
+            "site_a": "espece_a",
+            "site_b": "espece_b",
+            "n_components_compared": 3,
+            "cost_normalized": 0.1051,
+            "continuity_score": 89.49,
+            "details": {
+              "delta_ndvi_normalized": 0.032,
+              "delta_ph_normalized": 0.2,
+              "delta_elev_normalized": 0.0833
+            }
+          },
+          {
+            "site_a": "espece_c",
+            "site_b": "espece_d",
+            "n_components_compared": 3,
+            "cost_normalized": 0.1059,
+            "continuity_score": 89.41,
+            "details": {
+              "delta_ndvi_normalized": 0.2356,
+              "delta_ph_normalized": 0.0,
+              "delta_elev_normalized": 0.0822
+            }
+          },
+          {
+            "site_a": "espece_c",
+            "site_b": "espece_e",
+            "n_components_compared": 3,
+            "cost_normalized": 0.1095,
+            "continuity_score": 89.05,
+            "details": {
+              "delta_ndvi_normalized": 0.0338,
+              "delta_ph_normalized": 0.2444,
+              "delta_elev_normalized": 0.0501
+            }
+          },
+          {
+            "site_a": "espece_b",
+            "site_b": "espece_e",
+            "n_components_compared": 3,
+            "cost_normalized": 0.1108,
+            "continuity_score": 88.92,
+            "details": {
+              "delta_ndvi_normalized": 0.0377,
+              "delta_ph_normalized": 0.0222,
+              "delta_elev_normalized": 0.2724
+            }
+          },
+          {
+            "site_a": "espece_a",
+            "site_b": "espece_c",
+            "n_components_compared": 3,
+            "cost_normalized": 0.1139,
+            "continuity_score": 88.61,
+            "details": {
+              "delta_ndvi_normalized": 0.0359,
+              "delta_ph_normalized": 0.0667,
+              "delta_elev_normalized": 0.2392
+            }
+          },
+          {
+            "site_a": "espece_a",
+            "site_b": "espece_e",
+            "n_components_compared": 3,
+            "cost_normalized": 0.1455,
+            "continuity_score": 85.45,
+            "details": {
+              "delta_ndvi_normalized": 0.0697,
+              "delta_ph_normalized": 0.1778,
+              "delta_elev_normalized": 0.1891
+            }
+          },
+          {
+            "site_a": "espece_d",
+            "site_b": "espece_e",
+            "n_components_compared": 3,
+            "cost_normalized": 0.1594,
+            "continuity_score": 84.06,
+            "details": {
+              "delta_ndvi_normalized": 0.2018,
+              "delta_ph_normalized": 0.2444,
+              "delta_elev_normalized": 0.0321
+            }
+          },
+          {
+            "site_a": "espece_a",
+            "site_b": "espece_d",
+            "n_components_compared": 3,
+            "cost_normalized": 0.1651,
+            "continuity_score": 83.49,
+            "details": {
+              "delta_ndvi_normalized": 0.2715,
+              "delta_ph_normalized": 0.0667,
+              "delta_elev_normalized": 0.157
+            }
+          },
+          {
+            "site_a": "espece_b",
+            "site_b": "espece_c",
+            "n_components_compared": 3,
+            "cost_normalized": 0.1977,
+            "continuity_score": 80.23,
+            "details": {
+              "delta_ndvi_normalized": 0.0039,
+              "delta_ph_normalized": 0.2667,
+              "delta_elev_normalized": 0.3226
+            }
+          },
+          {
+            "site_a": "espece_b",
+            "site_b": "espece_d",
+            "n_components_compared": 3,
+            "cost_normalized": 0.2488,
+            "continuity_score": 75.12,
+            "details": {
+              "delta_ndvi_normalized": 0.2395,
+              "delta_ph_normalized": 0.2667,
+              "delta_elev_normalized": 0.2404
+            }
+          }
+        ],
+        "top_corridor_pair": {
+          "site_a": "espece_a",
+          "site_b": "espece_b",
+          "n_components_compared": 3,
+          "cost_normalized": 0.1051,
+          "continuity_score": 89.49,
+          "details": {
+            "delta_ndvi_normalized": 0.032,
+            "delta_ph_normalized": 0.2,
+            "delta_elev_normalized": 0.0833
+          }
+        },
+        "doctrinal_caveat": "PARTIAL : 5C2=10 paires sites BP135. Vrai least-cost path requires raster cost surface continuous + GPS use+availability.",
+        "primary_reference": "Forman_1986_LandscapeEcology"
+      },
+      "outputs_still_deferred_anti_generique_strict": {
+        "rut_zones": {
+          "reason": "PIÈGE TEMPOREL inchangé : NDVI Jan-Mar 2026 ≠ saisons rut espèces (cerf=oct-nov, etc.)",
+          "directive_extension_required": "TEMPORAL_RUT_DATA_HOOK_ACTIVATE"
+        },
+        "feeding_zones": {
+          "reason": "Require multi-season NDVI (été) + dense grid (n=5 trop sparse, Pettorelli 2005 §4.1).",
+          "directive_extension_required": "NASA_NDVI_TIMESERIES_DECADE_Ω + NASA_NDVI_DENSE_GRID_Ω"
+        },
+        "pressure_sensitive_zones": {
+          "reason": "Require anthropogenic pressure layers (roads, hunters, urban) absent.",
+          "directive_extension_required": "ANTHROPOGENIC_PRESSURE_HOOK_ACTIVATE"
+        },
+        "microhabitat_clusters_global": {
+          "reason": "Computed cross-sites, see microhabitat_clusters in HABITAT_OUTPUTS_COMPUTE_Ω initial. Densification N=5 → grille requires NASA_NDVI_DENSE_GRID_Ω."
+        }
+      },
+      "scientific_references_peer_reviewed_consolidated": [
+        "Pettorelli et al. (2005). Trends Ecol Evol.",
+        "Hamel et al. (2009). J Appl Ecol.",
+        "Borowik et al. (2013). Eur J Wildl Res.",
+        "Garroutte et al. (2016). Remote Sensing.",
+        "Hebblewhite et al. (2008). Ecol Monogr.",
+        "Mysterud (2001). Ecography.",
+        "Belant et al. (2010). Can J Zool.",
+        "Forman & Godron (1986). Landscape Ecology.",
+        "Riley et al. (1999). Intermount J Sci.",
+        "Phillips et al. (2006). Ecol Modelling.",
+        "Hengl et al. (2017). PLOS ONE (SoilGrids).",
+        "Farr et al. (2007). Rev Geophys (SRTM)."
+      ],
+      "anti_generique_strict": true,
+      "fusion_add_only": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T00:52:21+00:00",
+      "elapsed_s": 0.001,
+      "recompute_sha256": "fa73033a34835fc5ef036256f0496c9945c90dc178ef194250f68360dfc29e3c"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T00:52:21+00:00",
+  "n_recomputations": 1,
+  "last_recompute_sha256": "fa73033a34835fc5ef036256f0496c9945c90dc178ef194250f68360dfc29e3c",
+  "last_verdict": "HABITAT_OUTPUTS_RECOMPUTE_FULL_8_OF_12_COMPUTABLE",
+  "v30_lock": "INVIOLÉ"
+}

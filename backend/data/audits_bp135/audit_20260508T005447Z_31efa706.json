@@ -1,0 +1,27 @@
+{
+  "audit_filename": "audit_20260508T005447Z_31efa706.json",
+  "audit_sha256": "31efa7069454c48518dbf3508ac6f1dbe715ddb78c47d744c20d87267f7147da",
+  "persisted_at_utc": "2026-05-08T00:54:47+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "NOAA_PIPELINE",
+    "subtype": "OPENWEATHERMAP_VALIDATE",
+    "ordre": "OPENWEATHERMAP_P0_VALIDATE",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "provider": "OPENWEATHERMAP",
+    "endpoint": "https://api.openweathermap.org/data/2.5/weather",
+    "auth_strategy": "QUERY_PARAM_APPID",
+    "valid": true,
+    "verdict": "OPENWEATHERMAP_VALID_LIVE_DATA_RETURNED",
+    "manifest_sha256": "1cd60b493a70c24b7c9b57654af42d6a2deba7cef07caa69c6163c931c5c8c2d",
+    "http_status": 200,
+    "owm_signature_present": true,
+    "owm_city_name": "Québec",
+    "credentials_placeholder_detected": true,
+    "query_appid_placeholder_detected": false,
+    "v30_lock_inviolate": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  }
+}
