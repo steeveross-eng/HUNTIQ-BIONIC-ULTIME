@@ -27,6 +27,25 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-TERVICIES · OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω — 🎯 HOOK ACTIVATED + 4 OUTPUTS PARTIELLEMENT DÉBLOQUÉS + DRIFT (2026-05-08)**
+  Activation officielle du hook OpenTopography sur manifest validé `b513adb32a65a7f760ac2852a0ca522f3bd5a2316717ec9b889608ef5c762c3a` sous régime guardrails ENFORCED + autonomy=LIMITED + anti-générique strict (FUSION ADD-ONLY · V30_LOCK INVIOLÉ · DRIFT_ZERO).
+  - **Extension `opentopography_omega.py` (FUSION ADD-ONLY)** : ajout `OPENTOPOGRAPHY_HOOK_ACTIVATION_PATH`, `_find_validated_opentopography_manifest`, `activate_opentopography_hook` (anti-générique strict, refus SHA fabriqué), `get_opentopography_hook_status`. Aucune modification des fonctions VALIDATE existantes.
+  - **2 endpoints API** :
+    - **POST `/api/v30/super-masters/opentopography-hook-activate`** (token + body Pydantic `OpenTopographyHookActivateBody`)
+    - **GET `/api/v30/super-masters/opentopography-hook-status`** (PUBLIC RO)
+  - **Workflow exécuté en 4 phases LIVE** :
+    - **Phase A — HOOK ACTIVATE** : `verdict=OPENTOPOGRAPHY_HOOK_ACTIVATED_OPERATIONAL` · `activation_sha256=3451269d2f8bcf0907bba18ef1d25d1e8c68c995f46dfa1615eee99068628f05` · 5/5 sites hérités du manifest · 0.001s · audit `audit_20260508T004105Z_aa94e0a7.json`
+    - **Phase B — STATUS** : `current_status=ACTIVATED_OPERATIONAL` · overlay 5276 bytes
+    - **Phase C — DRIFT AUDIT** `reason=topography_hook_for_corridors_and_bedding` : audit `audit_20260508T004106Z_48118aec.json`
+    - **Phase D — SANITY** : `'0'×64` → REJECTED `OPENTOPOGRAPHY_HOOK_REJECTED_MANIFEST_NOT_FOUND_OR_INVALID`
+  - **6 modules consommateurs déclarés** : `BEDDING_ZONES_SLOPE_BASED_COMPUTE`, `MOVEMENT_CORRIDORS_LEAST_COST_PATH`, `REFUGE_ZONES_DEM_COVER_COMBINED`, `TERRAIN_RUGGEDNESS_INDEX_TRI`, `WATERSHED_BOUNDARY_FROM_DEM`, `ELEVATION_GRADIENT_VEGETATION_COUPLING`.
+  - **4 outputs PARTIELLEMENT DÉBLOQUÉS** (de la liste HABITAT_OUTPUTS_COMPUTE_Ω initiale) : `bedding_zones_slope_threshold_based` (DEM slope only, manque canopy density), `movement_corridors_least_cost_path` (DEM gradient as cost surface), `refuge_zones_partial_via_topography` (DEM only, manque threat layers), `corridor_proxy_via_continuity_dem_enhanced` (renforce le proxy RSF/SSF activé en PHASE_XXX-UNVICIES).
+  - **3 outputs ENCORE DEFERRED** : `bedding_zones_full_canopy_density_required`, `refuge_zones_full_threat_layers_required`, `pressure_sensitive_zones_anthropogenic_layers` (require canopy + threat + anthropogenic layers).
+  - **Anti-générique strict prouvé (sanity LIVE)** : POST avec SHA fabriqué `'0'×64` → REJECTED + forensic log persisté.
+  - **Forensic log** : 2 entrées `HOOK_ACTIVATIONS/OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω` (1 succès + 1 rejet sanity) + 1 audit drift. 1 audit `NOAA_PIPELINE/OPENTOPOGRAPHY_HOOK_ACTIVATE` persisté.
+  - **Pytest** : 11 nouveaux (`test_phase_xxx_tervicies_opentopography_hook_activate_omega.py`) **11/11 PASSED** (function exposed × hook path × reject SHA fabriqué × reject random × find_validated none × guardrails × status × consumed_modules count=6 × cycle complet via mock × no super_engines × V30_LOCK). Régression cluster doctrinal Phase XX-XXX étendu = **655/655 PASSED · 0 régression**.
+  - **Bilan stratégique session** : ✅ **7 hooks ACTIVATED_OPERATIONAL** : WOD23 + OWM single + OWM batch BP135 + NASA NDVI + USGS_SOIL + RSF_SSF (MaxEnt-lite GBIF) + **OPENTOPOGRAPHY (SRTMGL1 30m DEM)**. Premier hook qui débloque 4 outputs deferred HABITAT_OUTPUTS_COMPUTE_Ω en une seule activation (record session). Combiné avec NASA NDVI + USGS_SOIL + RSF_SSF, le système peut maintenant calculer un envelope habitat multi-covariables (NDVI/EVI/pH/CEC/SOC/elevation/slope/GBIF presence) sur 5 sites BP135.
+
 - **PHASE_XXX-DUOVICIES · OPENTOPOGRAPHY_P0_VALIDATE_Ω — 🎯 5/5 SITES VALID + 25920 PIXELS DEM RÉELS + API KEY SÉCURISÉE (2026-05-08)**
   Validation P0 du provider OpenTopography (DEM elevation + slope) sous régime guardrails ENFORCED + autonomy=LIMITED + sécurisation stricte de l'API key fournie par Commandant (FUSION ADD-ONLY · V30_LOCK INVIOLÉ · DRIFT_ZERO).
   - **Module `opentopography_omega.py` créé** : `DEM_DATASETS_REGISTRY` (5 datasets connus : SRTMGL3, SRTMGL1, NASADEM, AW3D30, COP30 avec resolution_m/lat_coverage/license/primary_reference), `_get_api_key` (lecture os.environ stricte, refus placeholder/hardcode), `_mask_api_key` (4-first + 4-last seulement), `_parse_aaigrid_to_stats` (ASCII grid texte parsable, NODATA REJETÉ, slope proxy via finite differences), `_http_get_aaigrid_strict` (URL masking dans logs), `_probe_dem_at_site`, orchestrateur `validate_opentopography_per_site`, `get_opentopography_validation_status`.

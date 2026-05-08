@@ -1,0 +1,157 @@
+{
+  "history": [
+    {
+      "manifest_id": "OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω",
+      "ordre": "P1_OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "activated": true,
+      "verdict": "OPENTOPOGRAPHY_HOOK_ACTIVATED_OPERATIONAL",
+      "reason": "topography_hook_for_corridors_and_bedding",
+      "validated_manifest_sha256": "b513adb32a65a7f760ac2852a0ca522f3bd5a2316717ec9b889608ef5c762c3a",
+      "validated_executed_at_utc": "2026-05-08T00:29:49+00:00",
+      "provider": "OPENTOPOGRAPHY",
+      "endpoint_inherited": "https://portal.opentopography.org/API/globaldem",
+      "demtypes_activated": [
+        "SRTMGL1"
+      ],
+      "half_window_deg_inherited": 0.01,
+      "n_sites_total": 5,
+      "n_calls_success_inherited": 5,
+      "sites_summary": [
+        {
+          "site_name": "espece_a",
+          "lat": 46.8631,
+          "lon": -71.2075,
+          "n_dem_probed": 1,
+          "n_dem_valid": 1,
+          "dems_valid": [
+            {
+              "demtype": "SRTMGL1",
+              "elevation_min_m": -19.0,
+              "elevation_max_m": 76.0,
+              "elevation_mean_m": 53.56,
+              "elevation_std_m": 20.38,
+              "slope_mean_deg": 4.55,
+              "slope_max_deg": 52.6,
+              "n_valid_pixels": 5184
+            }
+          ]
+        },
+        {
+          "site_name": "espece_b",
+          "lat": 47.2,
+          "lon": -70.27,
+          "n_dem_probed": 1,
+          "n_dem_valid": 1,
+          "dems_valid": [
+            {
+              "demtype": "SRTMGL1",
+              "elevation_min_m": 0.0,
+              "elevation_max_m": 51.0,
+              "elevation_mean_m": 28.56,
+              "elevation_std_m": 12.67,
+              "slope_mean_deg": 2.68,
+              "slope_max_deg": 16.79,
+              "n_valid_pixels": 5184
+            }
+          ]
+        },
+        {
+          "site_name": "espece_c",
+          "lat": 48.39,
+          "lon": -69.39,
+          "n_dem_probed": 1,
+          "n_dem_valid": 1,
+          "dems_valid": [
+            {
+              "demtype": "SRTMGL1",
+              "elevation_min_m": 91.0,
+              "elevation_max_m": 149.0,
+              "elevation_mean_m": 125.33,
+              "elevation_std_m": 10.31,
+              "slope_mean_deg": 3.51,
+              "slope_max_deg": 27.93,
+              "n_valid_pixels": 5184
+            }
+          ]
+        },
+        {
+          "site_name": "espece_d",
+          "lat": 46.36,
+          "lon": -72.07,
+          "n_dem_probed": 1,
+          "n_dem_valid": 1,
+          "dems_valid": [
+            {
+              "demtype": "SRTMGL1",
+              "elevation_min_m": 89.0,
+              "elevation_max_m": 111.0,
+              "elevation_mean_m": 100.67,
+              "elevation_std_m": 4.25,
+              "slope_mean_deg": 2.09,
+              "slope_max_deg": 9.25,
+              "n_valid_pixels": 5184
+            }
+          ]
+        },
+        {
+          "site_name": "espece_e",
+          "lat": 47.0,
+          "lon": -71.0,
+          "n_dem_probed": 1,
+          "n_dem_valid": 1,
+          "dems_valid": [
+            {
+              "demtype": "SRTMGL1",
+              "elevation_min_m": 1.0,
+              "elevation_max_m": 289.0,
+              "elevation_mean_m": 110.29,
+              "elevation_std_m": 72.25,
+              "slope_mean_deg": 8.05,
+              "slope_max_deg": 34.6,
+              "n_valid_pixels": 5184
+            }
+          ]
+        }
+      ],
+      "consumed_by_modules": [
+        "BEDDING_ZONES_SLOPE_BASED_COMPUTE",
+        "MOVEMENT_CORRIDORS_LEAST_COST_PATH",
+        "REFUGE_ZONES_DEM_COVER_COMBINED",
+        "TERRAIN_RUGGEDNESS_INDEX_TRI",
+        "WATERSHED_BOUNDARY_FROM_DEM",
+        "ELEVATION_GRADIENT_VEGETATION_COUPLING"
+      ],
+      "deferred_outputs_partially_unblocked_via_this_hook": [
+        "bedding_zones_slope_threshold_based",
+        "movement_corridors_least_cost_path",
+        "refuge_zones_partial_via_topography",
+        "corridor_proxy_via_continuity_dem_enhanced"
+      ],
+      "outputs_still_deferred_canopy_threat_required": [
+        "bedding_zones_full_canopy_density_required",
+        "refuge_zones_full_threat_layers_required",
+        "pressure_sensitive_zones_anthropogenic_layers"
+      ],
+      "scientific_references_inherited": [
+        "Farr et al. (2007). Reviews of Geophysics 45, RG2004. DOI:10.1029/2005RG000183 (SRTM)",
+        "Tadono et al. (2015). ISPRS (ALOS AW3D30)",
+        "Buchhorn et al. (2020). Zenodo. DOI:10.5281/zenodo.3939050 (Copernicus)"
+      ],
+      "fusion_add_only": true,
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "registered_at_utc": "2026-05-08T00:41:05+00:00",
+      "activation_sha256": "3451269d2f8bcf0907bba18ef1d25d1e8c68c995f46dfa1615eee99068628f05"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T00:41:05+00:00",
+  "n_activations": 1,
+  "last_activation_sha256": "3451269d2f8bcf0907bba18ef1d25d1e8c68c995f46dfa1615eee99068628f05",
+  "last_validated_manifest_sha256": "b513adb32a65a7f760ac2852a0ca522f3bd5a2316717ec9b889608ef5c762c3a",
+  "v30_lock": "INVIOLÉ"
+}

@@ -50,6 +50,9 @@ OPENTOPOGRAPHY_ROOT = Path(
     "/app/backend/data/pipelines/opentopography")
 OPENTOPOGRAPHY_VALIDATION_PATH = (
     OPENTOPOGRAPHY_ROOT / "opentopography_validation_overlay.json")
+OPENTOPOGRAPHY_HOOK_ACTIVATION_PATH = (
+    OPENTOPOGRAPHY_ROOT
+    / "opentopography_hook_activation_overlay.json")
 
 
 # ═════════════════════════════════════════════════════════════════════════
@@ -667,7 +670,286 @@ def get_opentopography_validation_status() -> Dict[str, Any]:
 __all__ = [
     "OPENTOPOGRAPHY_ROOT",
     "OPENTOPOGRAPHY_VALIDATION_PATH",
+    "OPENTOPOGRAPHY_HOOK_ACTIVATION_PATH",
     "DEM_DATASETS_REGISTRY",
     "validate_opentopography_per_site",
+    "activate_opentopography_hook",
     "get_opentopography_validation_status",
+    "get_opentopography_hook_status",
 ]
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω (officielle FUSION ADD-ONLY)
+# Anti-générique strict : refus d'activation sur SHA fabriqué.
+# ═════════════════════════════════════════════════════════════════════════
+def _find_validated_opentopography_manifest(
+    target_manifest_sha256: str,
+) -> Optional[Dict[str, Any]]:
+    """Cherche manifest OpenTopography validé dans l'historique."""
+    if not OPENTOPOGRAPHY_VALIDATION_PATH.exists():
+        return None
+    try:
+        state = json.loads(
+            OPENTOPOGRAPHY_VALIDATION_PATH.read_text(
+                encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
+    history = state.get("history", [])
+    for entry in history:
+        if (entry.get("manifest_sha256") == target_manifest_sha256
+                and entry.get("n_calls_success", 0) >= 1):
+            return entry
+    return None
+
+
+def activate_opentopography_hook(
+    manifest_sha256: str,
+    reason: str = "topography_hook_for_corridors_and_bedding",
+    persist: bool = True,
+) -> Dict[str, Any]:
+    """OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω · activation officielle.
+
+    Anti-générique strict : refus si SHA fabriqué/inconnu.
+    """
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        require_guardrails_enforced, log_forensic_event,
+    )
+    require_guardrails_enforced("activate_opentopography_hook")
+
+    t0 = time.time()
+    validated = _find_validated_opentopography_manifest(
+        manifest_sha256)
+    if validated is None:
+        verdict = (
+            "OPENTOPOGRAPHY_HOOK_REJECTED_"
+            "MANIFEST_NOT_FOUND_OR_INVALID")
+        rejection_payload = {
+            "manifest_id": "OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω",
+            "ordre": "P1_OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω",
+            "doctrine":
+                "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "guardrails_enforced": True,
+            "autonomy": "LIMITED",
+            "activated": False,
+            "verdict": verdict,
+            "reason": reason,
+            "input_manifest_sha256": manifest_sha256,
+            "rejection_explanation": (
+                "Le manifest_sha256 fourni n'existe pas dans "
+                "OPENTOPOGRAPHY_VALIDATION_PATH avec "
+                "n_calls_success >= 1. Anti-générique strict."),
+            "anti_generique_strict": True,
+            "v30_lock": "INVIOLÉ",
+            "drift_zero": True,
+            "no_engine_recompute_triggered": True,
+            "executed_at_utc": _utc_now(),
+            "elapsed_s": round(time.time() - t0, 3),
+        }
+        log_forensic_event(
+            scope="HOOK_ACTIVATIONS",
+            event="OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω",
+            details={
+                "input_manifest_sha256": manifest_sha256,
+                "reason": reason,
+                "activated": False,
+                "verdict": verdict,
+            },
+            persist=True,
+        )
+        return rejection_payload
+
+    sites_summary: List[Dict[str, Any]] = []
+    for site_name, site_data in (
+            validated.get("site_results") or {}).items():
+        per_dem = site_data.get("per_dem") or {}
+        dems_valid = []
+        for demtype, dem_result in per_dem.items():
+            if dem_result.get("valid"):
+                stats = dem_result.get("stats") or {}
+                dems_valid.append({
+                    "demtype": demtype,
+                    "elevation_min_m": stats.get("elevation_min_m"),
+                    "elevation_max_m": stats.get("elevation_max_m"),
+                    "elevation_mean_m": stats.get(
+                        "elevation_mean_m"),
+                    "elevation_std_m": stats.get("elevation_std_m"),
+                    "slope_mean_deg": stats.get("slope_mean_deg"),
+                    "slope_max_deg": stats.get("slope_max_deg"),
+                    "n_valid_pixels": stats.get("n_valid"),
+                })
+        sites_summary.append({
+            "site_name": site_name,
+            "lat": site_data.get("lat"),
+            "lon": site_data.get("lon"),
+            "n_dem_probed": site_data.get("n_dem_probed"),
+            "n_dem_valid": site_data.get("n_dem_valid"),
+            "dems_valid": dems_valid,
+        })
+
+    activation_payload = {
+        "manifest_id": "OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω",
+        "ordre": "P1_OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "guardrails_enforced": True,
+        "autonomy": "LIMITED",
+        "activated": True,
+        "verdict": "OPENTOPOGRAPHY_HOOK_ACTIVATED_OPERATIONAL",
+        "reason": reason,
+        "validated_manifest_sha256": manifest_sha256,
+        "validated_executed_at_utc": validated.get(
+            "executed_at_utc"),
+        "provider": "OPENTOPOGRAPHY",
+        "endpoint_inherited": validated.get("endpoint"),
+        "demtypes_activated": validated.get(
+            "demtypes_validated_in_registry") or [],
+        "half_window_deg_inherited": validated.get(
+            "half_window_deg"),
+        "n_sites_total": validated.get("n_sites_total"),
+        "n_calls_success_inherited": validated.get(
+            "n_calls_success"),
+        "sites_summary": sites_summary,
+        "consumed_by_modules": [
+            "BEDDING_ZONES_SLOPE_BASED_COMPUTE",
+            "MOVEMENT_CORRIDORS_LEAST_COST_PATH",
+            "REFUGE_ZONES_DEM_COVER_COMBINED",
+            "TERRAIN_RUGGEDNESS_INDEX_TRI",
+            "WATERSHED_BOUNDARY_FROM_DEM",
+            "ELEVATION_GRADIENT_VEGETATION_COUPLING",
+        ],
+        "deferred_outputs_partially_unblocked_via_this_hook": [
+            "bedding_zones_slope_threshold_based",
+            "movement_corridors_least_cost_path",
+            "refuge_zones_partial_via_topography",
+            "corridor_proxy_via_continuity_dem_enhanced",
+        ],
+        "outputs_still_deferred_canopy_threat_required": [
+            "bedding_zones_full_canopy_density_required",
+            "refuge_zones_full_threat_layers_required",
+            "pressure_sensitive_zones_anthropogenic_layers",
+        ],
+        "scientific_references_inherited": validated.get(
+            "scientific_references_peer_reviewed"),
+        "fusion_add_only": True,
+        "anti_generique_strict": True,
+        "v30_lock": "INVIOLÉ",
+        "drift_zero": True,
+        "no_engine_recompute_triggered": True,
+        "registered_at_utc": _utc_now(),
+    }
+    activation_sha256 = hashlib.sha256(
+        json.dumps(activation_payload, sort_keys=True,
+                   ensure_ascii=False, default=str).encode("utf-8")
+    ).hexdigest()
+    activation_payload["activation_sha256"] = activation_sha256
+
+    persisted: Dict[str, Any] = {}
+    if persist:
+        OPENTOPOGRAPHY_ROOT.mkdir(parents=True, exist_ok=True)
+        if OPENTOPOGRAPHY_HOOK_ACTIVATION_PATH.exists():
+            try:
+                state = json.loads(
+                    OPENTOPOGRAPHY_HOOK_ACTIVATION_PATH.read_text(
+                        encoding="utf-8"))
+                if not isinstance(state, dict) or (
+                        "history" not in state):
+                    state = {"history": []}
+            except json.JSONDecodeError:
+                state = {"history": []}
+        else:
+            state = {"history": []}
+        state["history"].append(activation_payload)
+        state["last_updated_utc"] = _utc_now()
+        state["n_activations"] = len(state["history"])
+        state["last_activation_sha256"] = activation_sha256
+        state["last_validated_manifest_sha256"] = manifest_sha256
+        state["v30_lock"] = "INVIOLÉ"
+        OPENTOPOGRAPHY_HOOK_ACTIVATION_PATH.write_text(
+            json.dumps(state, ensure_ascii=False, indent=2),
+            encoding="utf-8")
+        persisted["overlay_path"] = str(
+            OPENTOPOGRAPHY_HOOK_ACTIVATION_PATH)
+        persisted["overlay_size_bytes"] = (
+            OPENTOPOGRAPHY_HOOK_ACTIVATION_PATH.stat().st_size)
+        persisted["n_activations_history"] = state["n_activations"]
+
+        log_forensic_event(
+            scope="HOOK_ACTIVATIONS",
+            event="OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω",
+            details={
+                "validated_manifest_sha256": manifest_sha256,
+                "activation_sha256": activation_sha256,
+                "reason": reason,
+                "activated": True,
+                "n_calls_success_inherited": validated.get(
+                    "n_calls_success"),
+                "verdict":
+                    "OPENTOPOGRAPHY_HOOK_ACTIVATED_OPERATIONAL",
+            },
+            persist=True,
+        )
+
+        from engines.v8_institutional.especes.bio_reacteur_overlay_omega import (  # noqa: E501
+            persist_audit,
+        )
+        audit_payload = {
+            "audit_type": "NOAA_PIPELINE",
+            "subtype": "OPENTOPOGRAPHY_HOOK_ACTIVATE",
+            "ordre": "P1_OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω",
+            "doctrine":
+                "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+            "provider": "OPENTOPOGRAPHY",
+            "validated_manifest_sha256": manifest_sha256,
+            "activation_sha256": activation_sha256,
+            "reason": reason,
+            "activated": True,
+            "verdict":
+                "OPENTOPOGRAPHY_HOOK_ACTIVATED_OPERATIONAL",
+            "n_sites_total": validated.get("n_sites_total"),
+            "n_calls_success": validated.get("n_calls_success"),
+            "v30_lock_inviolate": True,
+            "drift_zero": True,
+            "no_engine_recompute_triggered": True,
+        }
+        persisted["audit_persisted"] = persist_audit(audit_payload)
+
+    activation_payload["persisted_paths"] = persisted
+    activation_payload["elapsed_s"] = round(time.time() - t0, 3)
+    return activation_payload
+
+
+def get_opentopography_hook_status() -> Dict[str, Any]:
+    """État actuel du hook OpenTopography (read-only)."""
+    if not OPENTOPOGRAPHY_HOOK_ACTIVATION_PATH.exists():
+        return {
+            "manifest_id": "OPENTOPOGRAPHY_HOOK_STATUS_Ω",
+            "ordre": "P1_OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω",
+            "current_status": "NOT_ACTIVATED",
+            "v30_lock": "INVIOLÉ",
+            "scanned_at_utc": _utc_now(),
+        }
+    state = json.loads(
+        OPENTOPOGRAPHY_HOOK_ACTIVATION_PATH.read_text(
+            encoding="utf-8"))
+    last = (state["history"][-1]
+            if state.get("history") else None)
+    return {
+        "manifest_id": "OPENTOPOGRAPHY_HOOK_STATUS_Ω",
+        "ordre": "P1_OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "current_status": (
+            "ACTIVATED_OPERATIONAL" if last
+            and last.get("activated") else "NOT_ACTIVATED"),
+        "n_activations_history": state.get("n_activations", 0),
+        "last_activation_sha256": state.get(
+            "last_activation_sha256"),
+        "last_validated_manifest_sha256": state.get(
+            "last_validated_manifest_sha256"),
+        "last_updated_utc": state.get("last_updated_utc"),
+        "last_activation": last,
+        "overlay_path": str(OPENTOPOGRAPHY_HOOK_ACTIVATION_PATH),
+        "overlay_size_bytes": (
+            OPENTOPOGRAPHY_HOOK_ACTIVATION_PATH.stat().st_size),
+        "v30_lock": "INVIOLÉ",
+        "scanned_at_utc": _utc_now(),
+    }

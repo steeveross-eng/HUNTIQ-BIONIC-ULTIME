@@ -1,0 +1,73 @@
+{
+  "iteration": 21,
+  "ordre": "P1_OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "horodatage_utc": "2026-05-08T00:41:05+00:00",
+  "guardrails_enforced": true,
+  "autonomy": "LIMITED",
+  "provider": "OPENTOPOGRAPHY",
+  "phase_a_hook_activate": {
+    "verdict": "OPENTOPOGRAPHY_HOOK_ACTIVATED_OPERATIONAL",
+    "activated": true,
+    "activation_sha256": "3451269d2f8bcf0907bba18ef1d25d1e8c68c995f46dfa1615eee99068628f05",
+    "validated_manifest_sha256": "b513adb32a65a7f760ac2852a0ca522f3bd5a2316717ec9b889608ef5c762c3a",
+    "reason": "topography_hook_for_corridors_and_bedding",
+    "demtypes_activated": ["SRTMGL1"],
+    "n_sites_total": 5,
+    "n_calls_success_inherited": 5,
+    "elapsed_s": 0.001,
+    "consumed_by_modules": [
+      "BEDDING_ZONES_SLOPE_BASED_COMPUTE",
+      "MOVEMENT_CORRIDORS_LEAST_COST_PATH",
+      "REFUGE_ZONES_DEM_COVER_COMBINED",
+      "TERRAIN_RUGGEDNESS_INDEX_TRI",
+      "WATERSHED_BOUNDARY_FROM_DEM",
+      "ELEVATION_GRADIENT_VEGETATION_COUPLING"
+    ],
+    "deferred_outputs_partially_unblocked_via_this_hook": [
+      "bedding_zones_slope_threshold_based",
+      "movement_corridors_least_cost_path",
+      "refuge_zones_partial_via_topography",
+      "corridor_proxy_via_continuity_dem_enhanced"
+    ],
+    "outputs_still_deferred_canopy_threat_required": [
+      "bedding_zones_full_canopy_density_required",
+      "refuge_zones_full_threat_layers_required",
+      "pressure_sensitive_zones_anthropogenic_layers"
+    ]
+  },
+  "phase_b_status": {
+    "current_status": "ACTIVATED_OPERATIONAL",
+    "n_activations_history": 1,
+    "overlay_size_bytes": 5276
+  },
+  "phase_c_drift_audit": {
+    "reason": "topography_hook_for_corridors_and_bedding",
+    "audit_filename": "audit_20260508T004106Z_48118aec.json",
+    "before": {"drift_max": 51.37, "drift_mean": 27.56, "score": 50.55},
+    "after":  {"drift_max": 50.76, "drift_mean": 22.04, "score": 54.27}
+  },
+  "phase_d_sanity_test": {
+    "test": "POST /opentopography-hook-activate with manifest_sha256='0'*64",
+    "verdict": "OPENTOPOGRAPHY_HOOK_REJECTED_MANIFEST_NOT_FOUND_OR_INVALID",
+    "rejected_correctly": true
+  },
+  "sites_activated_with_dem_stats_inherited": {
+    "espece_a_charlesbourg": {"elev_range": "-19/76m", "elev_mean": 53.56, "slope_max": 52.6},
+    "espece_b_st_jean": {"elev_range": "0/51m", "elev_mean": 28.56, "slope_max": 16.79},
+    "espece_c_intérieur_côte_nord": {"elev_range": "91/149m", "elev_mean": 125.33, "slope_max": 27.93},
+    "espece_d_fortierville": {"elev_range": "89/111m", "elev_mean": 100.67, "slope_max": 9.25},
+    "espece_e_capitale": {"elev_range": "1/289m", "elev_mean": 110.29, "slope_max": 34.6, "interpretation": "PIEMONT_LAURENTIDES_max_relief"}
+  },
+  "pytest_status": {
+    "n_new_tests_tervicies": 11,
+    "all_passed_tervicies": true,
+    "regression_cluster_phase_xx_xxx_extended": "655/655 PASSED",
+    "no_regressions": true
+  },
+  "v30_lock": "INVIOLÉ",
+  "drift_zero": true,
+  "no_engine_recompute_triggered": true,
+  "fusion_add_only": true,
+  "anti_generique_strict": true
+}

@@ -2822,3 +2822,75 @@ async def opentopography_validation_status_endpoint() -> JSONResponse:
         "v30_lock": "INVIOLÉ",
     })
 
+
+# ═════════════════════════════════════════════════════════════════════════
+# OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω — bedding/corridors/refuge partial unlock
+# ═════════════════════════════════════════════════════════════════════════
+class OpenTopographyHookActivateBody(BaseModel):
+    manifest_sha256: str
+    reason: str = "topography_hook_for_corridors_and_bedding"
+    persist: bool = True
+
+
+@router.post("/opentopography-hook-activate")
+async def opentopography_hook_activate_endpoint(
+    body: OpenTopographyHookActivateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω · activation officielle.
+
+    Anti-générique strict : refus SHA fabriqué. Token Commandant requis.
+    Débloque partiellement bedding_zones (slope-based), movement_corridors
+    (least-cost path DEM), refuge_zones (DEM partial).
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.opentopography_omega import (
+        activate_opentopography_hook,
+    )
+    try:
+        payload = activate_opentopography_hook(
+            manifest_sha256=body.manifest_sha256,
+            reason=body.reason,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "OPENTOPOGRAPHY_HOOK_ACTIVATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "OPENTOPOGRAPHY_HOOK_ACTIVATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/opentopography-hook-status")
+async def opentopography_hook_status_endpoint() -> JSONResponse:
+    """OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω · état (PUBLIC RO)."""
+    from engines.v8_institutional.especes.opentopography_omega import (
+        get_opentopography_hook_status,
+    )
+    payload = get_opentopography_hook_status()
+    return JSONResponse({
+        "manifest_id": "OPENTOPOGRAPHY_HOOK_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+

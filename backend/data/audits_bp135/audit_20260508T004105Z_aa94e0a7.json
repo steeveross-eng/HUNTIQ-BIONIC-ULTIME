@@ -1,0 +1,24 @@
+{
+  "audit_filename": "audit_20260508T004105Z_aa94e0a7.json",
+  "audit_sha256": "aa94e0a7b003ea8a8f342d0785081557738f2e63b9e1b395d44f999c5ed31525",
+  "persisted_at_utc": "2026-05-08T00:41:05+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "NOAA_PIPELINE",
+    "subtype": "OPENTOPOGRAPHY_HOOK_ACTIVATE",
+    "ordre": "P1_OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "provider": "OPENTOPOGRAPHY",
+    "validated_manifest_sha256": "b513adb32a65a7f760ac2852a0ca522f3bd5a2316717ec9b889608ef5c762c3a",
+    "activation_sha256": "3451269d2f8bcf0907bba18ef1d25d1e8c68c995f46dfa1615eee99068628f05",
+    "reason": "topography_hook_for_corridors_and_bedding",
+    "activated": true,
+    "verdict": "OPENTOPOGRAPHY_HOOK_ACTIVATED_OPERATIONAL",
+    "n_sites_total": 5,
+    "n_calls_success": 5,
+    "v30_lock_inviolate": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  }
+}
