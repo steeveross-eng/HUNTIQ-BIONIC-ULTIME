@@ -681,6 +681,8 @@ const MonTerritoireBionicPage = () => {
   const [showIntelLayer, setShowIntelLayer] = useState(TERRITOIRE_DEFAULTS.INTEL);
   // MODE INSPECTION BIOLOGIQUE PRO/EXPERT — panneau institutionnel flottant
   const [showInspectionBioPanel, setShowInspectionBioPanel] = useState(false);
+  // P20_PHASE3 · opacity registry pour LayersPanelOmegaUnified (anti-générique)
+  const [layerOpacityMap, setLayerOpacityMap] = useState({});
   // PHASE_NUTRITION_SALINES_BINDING_Ω — panneau nutritionnel au dblclick saline
   const [nutritionPanelPayload, setNutritionPanelPayload] = useState(null);
 
@@ -1686,24 +1688,58 @@ const MonTerritoireBionicPage = () => {
           maxWidth: 300,
         }}
       >
-        {/* P20_PHASE2 · Panel unifié opt-in via ?panelMode=unified */}
+        {/* P20_PHASE3 · Panel unifié = DEFAULT · opt-out via ?panelMode=legacy */}
         {(() => {
+          let panelMode = 'unified';
           try {
             const params = new URLSearchParams(window.location.search);
-            const panelMode = params.get('panelMode');
-            if (panelMode === 'unified') {
-              return (
-                <LayersPanelOmegaUnified
-                  activeMap={{}}
-                  opacityMap={{}}
-                  onToggle={() => {}}
-                  onOpacityChange={() => {}}
-                  initialExpanded={true}
-                />
-              );
-            }
+            const flag = params.get('panelMode');
+            if (flag === 'legacy') panelMode = 'legacy';
           } catch (e) {
             /* no-op */
+          }
+          if (panelMode === 'unified') {
+            // Anti-générique : câblage réel sur les states existants
+            const activeMap = {
+              zones: showZonesLayer,
+              corridors: showCorridorsLayer,
+              affuts: showPointsLayer,
+              salines: showPhaseA,
+              hotspots: showHeatmapV10,
+              vent: showWindFlow,
+              contamination: showPhaseC,
+              cursor_bionic: showCursorBionic,
+              inspection_bio: showInspectionBioPanel,
+              ndvi_overlay: showIntelLayer,
+            };
+            const setters = {
+              zones: setShowZonesLayer,
+              corridors: setShowCorridorsLayer,
+              affuts: setShowPointsLayer,
+              salines: setShowPhaseA,
+              hotspots: setShowHeatmapV10,
+              vent: setShowWindFlow,
+              contamination: setShowPhaseC,
+              cursor_bionic: setShowCursorBionic,
+              inspection_bio: setShowInspectionBioPanel,
+              ndvi_overlay: setShowIntelLayer,
+            };
+            const onToggle = (layerId) => {
+              const setter = setters[layerId];
+              if (setter) setter((v) => !v);
+            };
+            const onOpacityChange = (layerId, value) => {
+              setLayerOpacityMap((m) => ({ ...m, [layerId]: value }));
+            };
+            return (
+              <LayersPanelOmegaUnified
+                activeMap={activeMap}
+                opacityMap={layerOpacityMap}
+                onToggle={onToggle}
+                onOpacityChange={onOpacityChange}
+                initialExpanded={true}
+              />
+            );
           }
           return (
             <LayersOmegaSyncPanel

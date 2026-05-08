@@ -544,16 +544,20 @@ def get_ots_upgrade_automation_history(
     threshold = datetime.now(timezone.utc).timestamp() - (hours * 3600)
     sliced: List[Dict[str, Any]] = []
     for rec in history:
-        executed = rec.get("executed_at_utc")
+        # Anti-générique : support des 2 clés (scanned_at_utc | executed_at_utc)
+        executed = (
+            rec.get("scanned_at_utc")
+            or rec.get("executed_at_utc"))
+        if not executed:
+            continue
         try:
             ts = datetime.fromisoformat(
-                executed.replace("Z", "+00:00")
-                if executed else _utc_now()).timestamp()
+                executed.replace("Z", "+00:00")).timestamp()
         except (ValueError, AttributeError, TypeError):
             continue
         if ts >= threshold:
             sliced.append({
-                "executed_at_utc": rec.get("executed_at_utc"),
+                "executed_at_utc": executed,
                 "n_ots_files_scanned": rec.get(
                     "n_ots_files_scanned", 0),
                 "n_upgraded_bitcoin_attested": rec.get(

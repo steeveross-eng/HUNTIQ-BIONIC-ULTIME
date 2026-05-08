@@ -47,11 +47,59 @@
       "scanned_at_utc": "2026-05-08T17:08:28+00:00",
       "elapsed_s": 0.342,
       "scan_sha256": "947f4665d07150f944d3cb484dc9e14d58020248eda31895766b79dae7dd6af5"
+    },
+    {
+      "manifest_id": "OTS_UPGRADE_SCAN_Ω",
+      "ordre": "P24_OTS_UPGRADE_AUTOMATION_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "verdict": "OTS_UPGRADE_SCAN_COMPLETED",
+      "n_ots_files_scanned": 2,
+      "n_upgraded_bitcoin_attested": 0,
+      "n_still_pending_next_block": 0,
+      "n_already_complete": 2,
+      "n_failed": 0,
+      "upgrade_results": [
+        {
+          "ots_file": "/app/backend/data/pipelines/merkle_tree_anchor/ots_proofs/bce4x_merkle_root_20260508T152326+0000_37c079824ef0ff33.bin.ots",
+          "status": "ALREADY_COMPLETE_OR_UPGRADED",
+          "size_before_bytes": 1596,
+          "size_after_bytes": 1596,
+          "sha256_before": "4ee3dce378c4e898706e625f19df6494a60441fa7dc5ad25cceeb4afe04775b7",
+          "sha256_after": "4ee3dce378c4e898706e625f19df6494a60441fa7dc5ad25cceeb4afe04775b7",
+          "file_changed": false,
+          "stdout": "",
+          "stderr": "Success! Timestamp complete\n",
+          "returncode": 0,
+          "elapsed_ms": 227.5
+        },
+        {
+          "ots_file": "/app/backend/data/pipelines/merkle_tree_anchor/ots_proofs/diag_20260508T152106+0000_37c079824ef0ff33.bin.ots",
+          "status": "ALREADY_COMPLETE_OR_UPGRADED",
+          "size_before_bytes": 1596,
+          "size_after_bytes": 1596,
+          "sha256_before": "7197a548067bcd22bdefbf3e2238de320b52b17f27ad567692158ca414439e65",
+          "sha256_after": "7197a548067bcd22bdefbf3e2238de320b52b17f27ad567692158ca414439e65",
+          "file_changed": false,
+          "stdout": "",
+          "stderr": "Success! Timestamp complete\n",
+          "returncode": 0,
+          "elapsed_ms": 157.8
+        }
+      ],
+      "anti_generique_strict": true,
+      "fusion_add_only": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "scanned_at_utc": "2026-05-08T21:41:36+00:00",
+      "elapsed_s": 0.393,
+      "scan_sha256": "ed17202244ecaef75c595a59843ce9a24ed314e12eac60634c378e8ae234a8ea"
     }
   ],
-  "last_updated_utc": "2026-05-08T17:08:28+00:00",
-  "n_scans": 1,
-  "last_scan_sha256": "947f4665d07150f944d3cb484dc9e14d58020248eda31895766b79dae7dd6af5",
+  "last_updated_utc": "2026-05-08T21:41:36+00:00",
+  "n_scans": 2,
+  "last_scan_sha256": "ed17202244ecaef75c595a59843ce9a24ed314e12eac60634c378e8ae234a8ea",
   "last_verdict": "OTS_UPGRADE_SCAN_COMPLETED",
   "v30_lock": "INVIOLÉ"
 }

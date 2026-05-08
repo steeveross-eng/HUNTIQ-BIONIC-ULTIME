@@ -342,3 +342,60 @@
 - ✅ NOAA/Copernicus levée d'exception explicite si appel tenté
 - ✅ V30_LOCK INVIOLÉ · panel legacy intact (toggle URL flag)
 - ✅ Aucun testing_agent_v3_fork utilisé
+
+## 2026-05-08 (suite 3) — P20_PHASE3_DEPLOY_AND_FINALIZE_TERRITOIRE_OMEGA_Ω
+
+### A · DEPLOY FORCE_REBUILD preview environment
+- `rm -rf /app/frontend/build /app/frontend/node_modules/.cache`
+- `yarn build` clean SUCCESS en 68.50s · 65 chunks générés
+- `supervisorctl restart frontend` · service RUNNING (pid 2629)
+- HTTP 200 vérifiés sur :
+  - `/admin/bce-4x-premium` (auth screen rebrandée)
+  - `/mon-territoire-bionic` (pipeline init "TERRITOIRE Ω · V30 LOCKED")
+  - `/api/v30/super-masters/weather-provider-policy-status`
+  - `/api/v30/super-masters/ots-upgrade-automation-history?hours=48`
+
+### B · Panneau unifié Ω = MODE PAR DÉFAUT
+- `MonTerritoireBionicPage.jsx` : default = `panelMode='unified'` · opt-out via `?panelMode=legacy`
+- Câblage RÉEL anti-générique :
+  - `activeMap` lit 10 states existants (zones, corridors, affuts, salines, hotspots, vent, contamination, cursor_bionic, inspection_bio, ndvi_overlay)
+  - `onToggle(layerId)` route vers le bon `setShow*` setter
+  - `opacityMap` persisté dans `layerOpacityMap` state local
+- Aucune mutation des states existants (V30_LOCK INVIOLÉ)
+
+### C · Migration TerritoireToolbar
+- Composant `UnifiedPanelBadge` ajouté au début de la toolbar
+- Badge `Ω · 18` cliquable : toggle entre unified (default) ↔ legacy
+- Indicateur visuel doctrinal · pas de bypass des boutons existants
+
+### D · OTS Countdown 6h (live)
+- Frontend `MerkleAuditPage.jsx` :
+  - Compteur live mis à jour chaque seconde via `useEffect` + `setInterval`
+  - Calcul next_scan_iso = last_updated_utc + interval_s
+  - Affichage HH:MM:SS · barre de progression · état `is_overdue`
+  - Anti-générique : utilise UNIQUEMENT `ots_status` retourné par backend
+- Backend `ots_upgrade_automation_omega.py` :
+  - Fix parsing : support des 2 clés `scanned_at_utc` | `executed_at_utc`
+  - **Curl proof** : 2 scans réels (17:08:28 + 21:41:36) avec sha unique par scan
+
+### E · Resend production confirmé
+- Curl proof récent : `delivery_status=DELIVERED_RESEND · delivery_id=bb0491c5-...`
+- Env vars actifs : RESEND_API_KEY · RESEND_FROM · RESEND_DOMAIN
+
+### F · Weather provider OWM ONLY confirmé
+- `weather-provider-policy-status` retourne `{"openweathermap":"ACTIVE_PRIMARY","noaa":"DEPRECATED_ENFORCED_P20_PHASE2","copernicus":"DEPRECATED_ENFORCED_P20_PHASE2"}`
+- 6/6 pytests weather policy passés
+
+### Métriques cumulatives session
+- 45/45 pytests doctrinaux passés (zéro régression)
+- Force rebuild clean SUCCESS · 65 chunks
+- 4 features finalisées en parallèle (deploy + unified + countdown + weather confirm)
+- ESLint clean sur 4 fichiers modifiés
+- 1 nouveau composant React (`UnifiedPanelBadge`)
+- 1 nouveau hook live (`countdown` useMemo + 1s interval)
+
+### Conformité doctrinale
+- ✅ V30_LOCK INVIOLÉ · panneau legacy intact derrière flag
+- ✅ FUSION ADD-ONLY · zéro mutation des states existants
+- ✅ ANTI-GÉNÉRIQUE STRICT · countdown calculé sur vrais timestamps overlay
+- ✅ Aucun testing_agent_v3_fork

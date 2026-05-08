@@ -27,11 +27,45 @@
       "executed_at_utc": "2026-05-08T17:08:28+00:00",
       "elapsed_s": 0.0,
       "manifest_sha256": "24d847d8016f3142982ff45a18d479a864de751df008c2c74b5edf1b3c74c799"
+    },
+    {
+      "manifest_id": "OTS_UPGRADE_AUTOMATION_HOOK_ACTIVATE_Ω",
+      "ordre": "P24_OTS_UPGRADE_AUTOMATION_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "activated": true,
+      "verdict": "OTS_UPGRADE_AUTOMATION_HOOK_ACTIVATED",
+      "schedule": "every_6h",
+      "interval_s": 21600,
+      "background_task_status": {
+        "status": "STARTED",
+        "interval_s": 21600,
+        "next_run_in_s": 21600
+      },
+      "immediate_scan_result_summary": {
+        "verdict": "OTS_UPGRADE_SCAN_COMPLETED",
+        "n_ots_files_scanned": 2,
+        "n_upgraded": 0,
+        "n_pending": 0,
+        "scan_sha256": "ed17202244ecaef75c595a59843ce9a24ed314e12eac60634c378e8ae234a8ea"
+      },
+      "outputs_unblocked_via_this_hook": [
+        "automated_bitcoin_proof_completion",
+        "witness_blockchain_independent_verification"
+      ],
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T21:41:36+00:00",
+      "elapsed_s": 0.396,
+      "manifest_sha256": "9d43e5ea2558c09d158e01c4635dbd3cf95a50ce95f9ae3ab9429d9e652f22a6"
     }
   ],
-  "last_updated_utc": "2026-05-08T17:08:28+00:00",
-  "n_activations": 1,
-  "last_manifest_sha256": "24d847d8016f3142982ff45a18d479a864de751df008c2c74b5edf1b3c74c799",
+  "last_updated_utc": "2026-05-08T21:41:36+00:00",
+  "n_activations": 2,
+  "last_manifest_sha256": "9d43e5ea2558c09d158e01c4635dbd3cf95a50ce95f9ae3ab9429d9e652f22a6",
   "last_verdict": "OTS_UPGRADE_AUTOMATION_HOOK_ACTIVATED",
   "v30_lock": "INVIOLÉ"
 }

@@ -12,7 +12,7 @@ import {
 } from '@/lib/bce4xApi';
 import {
   Anchor, Bitcoin, RefreshCw, Play, Pause, AlertTriangle, ShieldCheck,
-  TrendingUp,
+  TrendingUp, Clock,
 } from 'lucide-react';
 
 const MerkleAuditPage = () => {
@@ -25,6 +25,40 @@ const MerkleAuditPage = () => {
   const [hoursWindow, setHoursWindow] = useState(48);
 
   const log = (l) => setLogs((s) => [`${new Date().toLocaleTimeString()} · ${l}`, ...s].slice(0, 12));
+
+  // P20_PHASE3 · Countdown live 6h prochain scan auto
+  const [nowTick, setNowTick] = useState(Date.now());
+  useEffect(() => {
+    const t = setInterval(() => setNowTick(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, []);
+  const countdown = useMemo(() => {
+    const lastIso = ots?.last_updated_utc;
+    const intervalS = ots?.last_summary?.interval_s || 21600;
+    if (!lastIso || !ots?.background_task_alive) {
+      return { available: false };
+    }
+    try {
+      const lastTs = new Date(lastIso).getTime();
+      const nextTs = lastTs + intervalS * 1000;
+      const diffMs = nextTs - nowTick;
+      const total = Math.max(0, Math.floor(diffMs / 1000));
+      const h = Math.floor(total / 3600);
+      const m = Math.floor((total % 3600) / 60);
+      const s = total % 60;
+      return {
+        available: true,
+        next_scan_in_s: total,
+        formatted: `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`,
+        next_scan_iso: new Date(nextTs).toISOString(),
+        is_overdue: total <= 0,
+        progress_pct: Math.min(100, Math.max(0,
+          ((intervalS * 1000 - diffMs) / (intervalS * 1000)) * 100)),
+      };
+    } catch (e) {
+      return { available: false };
+    }
+  }, [ots, nowTick]);
 
   const refresh = async () => {
     const [m, o, h] = await Promise.all([
@@ -157,6 +191,89 @@ const MerkleAuditPage = () => {
             </span>
           ) : '—'
         } />
+
+        {/* P20_PHASE3 · Countdown 6h prochain scan auto */}
+        <div
+          data-testid="merkle-audit-ots-countdown"
+          style={{
+            marginTop: 10, padding: '10px 12px',
+            background: countdown.available
+              ? (countdown.is_overdue ? 'rgba(220,38,38,0.12)' : 'rgba(245,158,11,0.10)')
+              : 'rgba(15,23,42,0.4)',
+            border: countdown.available
+              ? `1px solid ${countdown.is_overdue ? '#DC2626' : '#F59E0B'}55`
+              : '1px solid rgba(255,255,255,0.08)',
+            borderRadius: 6,
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+            <Clock size={12} color={
+              countdown.available
+                ? (countdown.is_overdue ? '#DC2626' : '#F59E0B')
+                : '#94A3B8'
+            } />
+            <span style={{
+              fontSize: 9, fontWeight: 800, letterSpacing: 1.5,
+              color: countdown.available
+                ? (countdown.is_overdue ? '#DC2626' : '#F59E0B')
+                : '#94A3B8',
+              fontFamily: 'JetBrains Mono, monospace',
+            }}>
+              PROCHAIN SCAN AUTO 6H
+            </span>
+          </div>
+          {countdown.available ? (
+            <>
+              <div
+                data-testid="merkle-audit-ots-countdown-clock"
+                style={{
+                  fontSize: 24, fontWeight: 800,
+                  fontFamily: 'JetBrains Mono, monospace',
+                  color: countdown.is_overdue ? '#FCA5A5' : '#E8E4D9',
+                  letterSpacing: 2, lineHeight: 1.2,
+                }}
+              >
+                {countdown.is_overdue ? 'EN RETARD · OVERDUE' : countdown.formatted}
+              </div>
+              <div
+                style={{
+                  marginTop: 6, height: 4,
+                  background: 'rgba(15,23,42,0.6)',
+                  borderRadius: 2, overflow: 'hidden',
+                }}
+              >
+                <div
+                  data-testid="merkle-audit-ots-countdown-progress"
+                  style={{
+                    width: `${countdown.progress_pct.toFixed(1)}%`,
+                    height: '100%',
+                    background: countdown.is_overdue ? '#DC2626' : '#F59E0B',
+                    transition: 'width 0.5s linear',
+                  }}
+                />
+              </div>
+              <div
+                style={{
+                  fontSize: 9, opacity: 0.7, marginTop: 4,
+                  fontFamily: 'JetBrains Mono, monospace',
+                  color: '#94A3B8',
+                }}
+              >
+                next_scan_iso = {countdown.next_scan_iso?.slice(0, 19)}Z · interval = {ots?.last_summary?.interval_s || 21600}s
+              </div>
+            </>
+          ) : (
+            <div
+              data-testid="merkle-audit-ots-countdown-inactive"
+              style={{
+                fontSize: 11, opacity: 0.7,
+                fontFamily: 'JetBrains Mono, monospace',
+              }}
+            >
+              Background task INACTIVE · activer pour démarrer le countdown
+            </div>
+          )}
+        </div>
         <div style={{ marginTop: 10, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           <button onClick={onOtsActivate} disabled={busy}
                   data-testid="merkle-audit-ots-activate" style={primaryBtn('#F59E0B')}>
