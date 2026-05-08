@@ -1,0 +1,274 @@
+{
+  "history": [
+    {
+      "manifest_id": "CANOPY_HOOK_ACTIVATE_Ω",
+      "ordre": "P1_CANOPY_HOOK_ACTIVATE_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "activated": true,
+      "verdict": "CANOPY_HOOK_ACTIVATED_OPERATIONAL",
+      "reason": "bedding_refuge_full_via_forest_cover",
+      "validated_manifest_sha256": "2c2b8577fa6f83507d72bdfeefba58ced820fcd30612d652eb58c27df8fa59c7",
+      "validated_executed_at_utc": "2026-05-08T01:07:37+00:00",
+      "provider": "CANOPY",
+      "provider_physical": "NASA_MOD44B_VCF",
+      "endpoint_inherited": "https://modis.ornl.gov/rst/api/v1/MOD44B/subset",
+      "bands_canonical_inherited": [
+        "Percent_Tree_Cover",
+        "Percent_NonTree_Vegetation",
+        "Percent_NonVegetated",
+        "Quality"
+      ],
+      "temporal_range_inherited": {
+        "start_year": 2022,
+        "end_year": 2024,
+        "start_modis": "A2022065",
+        "end_modis": "A2024065",
+        "yearly_resolution_doy_065": true
+      },
+      "n_sites_total": 5,
+      "n_calls_success_inherited": 20,
+      "sites_summary": [
+        {
+          "site_name": "espece_a",
+          "lat": 46.8631,
+          "lon": -71.2075,
+          "n_bands_probed": 4,
+          "n_bands_valid": 4,
+          "bands_valid_data": [
+            {
+              "band_logical": "TREE_COVER",
+              "mean_percent": 14.33,
+              "min_percent": 8.0,
+              "max_percent": 24.0,
+              "n_valid_years": 3,
+              "year_range": "2022-03-06 → 2024-03-05"
+            },
+            {
+              "band_logical": "NONTREE_VEG",
+              "mean_percent": 65.67,
+              "min_percent": 57.0,
+              "max_percent": 75.0,
+              "n_valid_years": 3,
+              "year_range": "2022-03-06 → 2024-03-05"
+            },
+            {
+              "band_logical": "NONVEG",
+              "mean_percent": 20.0,
+              "min_percent": 11.0,
+              "max_percent": 35.0,
+              "n_valid_years": 3,
+              "year_range": "2022-03-06 → 2024-03-05"
+            },
+            {
+              "band_logical": "QUALITY",
+              "mean_percent": 192.67,
+              "min_percent": 192.0,
+              "max_percent": 193.0,
+              "n_valid_years": 3,
+              "year_range": "2022-03-06 → 2024-03-05"
+            }
+          ]
+        },
+        {
+          "site_name": "espece_b",
+          "lat": 47.2,
+          "lon": -70.27,
+          "n_bands_probed": 4,
+          "n_bands_valid": 4,
+          "bands_valid_data": [
+            {
+              "band_logical": "TREE_COVER",
+              "mean_percent": 9.0,
+              "min_percent": 4.0,
+              "max_percent": 13.0,
+              "n_valid_years": 3,
+              "year_range": "2022-03-06 → 2024-03-05"
+            },
+            {
+              "band_logical": "NONTREE_VEG",
+              "mean_percent": 72.33,
+              "min_percent": 68.0,
+              "max_percent": 79.0,
+              "n_valid_years": 3,
+              "year_range": "2022-03-06 → 2024-03-05"
+            },
+            {
+              "band_logical": "NONVEG",
+              "mean_percent": 18.67,
+              "min_percent": 11.0,
+              "max_percent": 28.0,
+              "n_valid_years": 3,
+              "year_range": "2022-03-06 → 2024-03-05"
+            },
+            {
+              "band_logical": "QUALITY",
+              "mean_percent": 213.67,
+              "min_percent": 193.0,
+              "max_percent": 224.0,
+              "n_valid_years": 3,
+              "year_range": "2022-03-06 → 2024-03-05"
+            }
+          ]
+        },
+        {
+          "site_name": "espece_c",
+          "lat": 48.39,
+          "lon": -69.39,
+          "n_bands_probed": 4,
+          "n_bands_valid": 4,
+          "bands_valid_data": [
+            {
+              "band_logical": "TREE_COVER",
+              "mean_percent": 57.67,
+              "min_percent": 55.0,
+              "max_percent": 60.0,
+              "n_valid_years": 3,
+              "year_range": "2022-03-06 → 2024-03-05"
+            },
+            {
+              "band_logical": "NONTREE_VEG",
+              "mean_percent": 32.0,
+              "min_percent": 29.0,
+              "max_percent": 34.0,
+              "n_valid_years": 3,
+              "year_range": "2022-03-06 → 2024-03-05"
+            },
+            {
+              "band_logical": "NONVEG",
+              "mean_percent": 10.33,
+              "min_percent": 9.0,
+              "max_percent": 11.0,
+              "n_valid_years": 3,
+              "year_range": "2022-03-06 → 2024-03-05"
+            },
+            {
+              "band_logical": "QUALITY",
+              "mean_percent": 225.0,
+              "min_percent": 225.0,
+              "max_percent": 225.0,
+              "n_valid_years": 3,
+              "year_range": "2022-03-06 → 2024-03-05"
+            }
+          ]
+        },
+        {
+          "site_name": "espece_d",
+          "lat": 46.36,
+          "lon": -72.07,
+          "n_bands_probed": 4,
+          "n_bands_valid": 4,
+          "bands_valid_data": [
+            {
+              "band_logical": "TREE_COVER",
+              "mean_percent": 65.67,
+              "min_percent": 57.0,
+              "max_percent": 70.0,
+              "n_valid_years": 3,
+              "year_range": "2022-03-06 → 2024-03-05"
+            },
+            {
+              "band_logical": "NONTREE_VEG",
+              "mean_percent": 27.67,
+              "min_percent": 22.0,
+              "max_percent": 37.0,
+              "n_valid_years": 3,
+              "year_range": "2022-03-06 → 2024-03-05"
+            },
+            {
+              "band_logical": "NONVEG",
+              "mean_percent": 6.67,
+              "min_percent": 6.0,
+              "max_percent": 8.0,
+              "n_valid_years": 3,
+              "year_range": "2022-03-06 → 2024-03-05"
+            },
+            {
+              "band_logical": "QUALITY",
+              "mean_percent": 202.67,
+              "min_percent": 192.0,
+              "max_percent": 224.0,
+              "n_valid_years": 3,
+              "year_range": "2022-03-06 → 2024-03-05"
+            }
+          ]
+        },
+        {
+          "site_name": "espece_e",
+          "lat": 47.0,
+          "lon": -71.0,
+          "n_bands_probed": 4,
+          "n_bands_valid": 4,
+          "bands_valid_data": [
+            {
+              "band_logical": "TREE_COVER",
+              "mean_percent": 23.67,
+              "min_percent": 21.0,
+              "max_percent": 27.0,
+              "n_valid_years": 3,
+              "year_range": "2022-03-06 → 2024-03-05"
+            },
+            {
+              "band_logical": "NONTREE_VEG",
+              "mean_percent": 66.33,
+              "min_percent": 62.0,
+              "max_percent": 69.0,
+              "n_valid_years": 3,
+              "year_range": "2022-03-06 → 2024-03-05"
+            },
+            {
+              "band_logical": "NONVEG",
+              "mean_percent": 10.0,
+              "min_percent": 8.0,
+              "max_percent": 11.0,
+              "n_valid_years": 3,
+              "year_range": "2022-03-06 → 2024-03-05"
+            },
+            {
+              "band_logical": "QUALITY",
+              "mean_percent": 193.0,
+              "min_percent": 193.0,
+              "max_percent": 193.0,
+              "n_valid_years": 3,
+              "year_range": "2022-03-06 → 2024-03-05"
+            }
+          ]
+        }
+      ],
+      "consumed_by_modules": [
+        "BEDDING_ZONES_FULL_DEM_CANOPY",
+        "REFUGE_ZONES_FULL_TRI_CANOPY",
+        "FOREST_COVER_FRACTION_INDEX",
+        "NONFOREST_VEG_FRACTION_INDEX",
+        "FOREST_FRAGMENTATION_PROXY"
+      ],
+      "outputs_fully_unblocked_via_this_hook": [
+        "bedding_zones_FULL_dem_canopy_combined",
+        "refuge_zones_FULL_tri_canopy_combined"
+      ],
+      "outputs_still_deferred": [
+        "rut_zones_temporal_data_required",
+        "feeding_zones_multi_season_required",
+        "pressure_sensitive_zones_anthropogenic_required"
+      ],
+      "scientific_references_inherited": [
+        "Hansen et al. (2003). Earth Interactions, 7(10), 1-15. DOI:10.1175/1087-3562(2003)007",
+        "DiMiceli et al. (2017). NASA LP DAAC. DOI:10.5067/MODIS/MOD44B.006",
+        "Hansen et al. (2013). Science, 342, 850-853. DOI:10.1126/science.1244693"
+      ],
+      "fusion_add_only": true,
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "registered_at_utc": "2026-05-08T01:08:25+00:00",
+      "activation_sha256": "b3a506c431993bdc5a3673616e23ca096b56e8b585ad5d41339f7fe7bd20c01f"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T01:08:25+00:00",
+  "n_activations": 1,
+  "last_activation_sha256": "b3a506c431993bdc5a3673616e23ca096b56e8b585ad5d41339f7fe7bd20c01f",
+  "last_validated_manifest_sha256": "2c2b8577fa6f83507d72bdfeefba58ced820fcd30612d652eb58c27df8fa59c7",
+  "v30_lock": "INVIOLÉ"
+}

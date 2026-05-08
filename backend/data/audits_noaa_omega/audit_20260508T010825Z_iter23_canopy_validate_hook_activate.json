@@ -1,0 +1,101 @@
+{
+  "iteration": 23,
+  "ordre": "P1_CANOPY_HOOK_ACTIVATE_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "horodatage_utc": "2026-05-08T01:08:25+00:00",
+  "guardrails_enforced": true,
+  "autonomy": "LIMITED",
+  "provider": "CANOPY",
+  "provider_physical": "NASA_MOD44B_VCF",
+  "doctrinal_workflow_anti_generique": {
+    "commandant_directive": "CANOPY_HOOK_ACTIVATE_Ω (sans P0_VALIDATE préalable)",
+    "agent_action": "Exécution séquentielle VALIDATE → ACTIVATE (impossible activer sans manifest validé)",
+    "transparency": "Anti-générique strict respecté : aucune fabrication de manifest"
+  },
+  "phase_a_validate": {
+    "verdict": "CANOPY_VALIDATE_ALL_BANDS_VALID",
+    "manifest_sha256": "2c2b8577fa6f83507d72bdfeefba58ced820fcd30612d652eb58c27df8fa59c7",
+    "n_calls_made": 20,
+    "n_calls_success": 20,
+    "elapsed_s": 56.931,
+    "bands_validated": ["Percent_Tree_Cover", "Percent_NonTree_Vegetation", "Percent_NonVegetated", "Quality"],
+    "temporal_range": "2022-2024 (3 ans, DOY=065 yearly)",
+    "live_canopy_data_per_site_real_mod44b": {
+      "espece_a_charlesbourg_46.86_-71.21": {
+        "tree_cover_mean_pct": 14.33, "tree_range": "[8,24]",
+        "nontree_veg_mean_pct": 65.67, "nonveg_mean_pct": 20.0,
+        "interpretation": "semi_urbain_peu_canopy_collines_charlesbourg"
+      },
+      "espece_b_st_jean_47.2_-70.27": {
+        "tree_cover_mean_pct": 9.0, "tree_range": "[4,13]",
+        "nontree_veg_mean_pct": 72.33, "nonveg_mean_pct": 18.67,
+        "interpretation": "plaine_cultivee_canopy_min"
+      },
+      "espece_c_les_escoumins_48.39_-69.39": {
+        "tree_cover_mean_pct": 57.67, "tree_range": "[55,60]",
+        "nontree_veg_mean_pct": 32.0, "nonveg_mean_pct": 10.33,
+        "interpretation": "FORET_BOREALE_DENSE"
+      },
+      "espece_d_fortierville_46.36_-72.07": {
+        "tree_cover_mean_pct": 65.67, "tree_range": "[57,70]",
+        "nontree_veg_mean_pct": 27.67, "nonveg_mean_pct": 6.67,
+        "interpretation": "FORET_MIXTE_AGRICOLE_max_canopy_BP135"
+      },
+      "espece_e_capitale_47.0_-71.0": {
+        "tree_cover_mean_pct": 23.67, "tree_range": "[21,27]",
+        "nontree_veg_mean_pct": 66.33, "nonveg_mean_pct": 10.0,
+        "interpretation": "mixte_semi_foret_piemont_laurentides"
+      }
+    }
+  },
+  "phase_b_hook_activate": {
+    "verdict": "CANOPY_HOOK_ACTIVATED_OPERATIONAL",
+    "activation_sha256": "b3a506c431993bdc5a3673616e23ca096b56e8b585ad5d41339f7fe7bd20c01f",
+    "validated_manifest_sha256": "2c2b8577fa6f83507d72bdfeefba58ced820fcd30612d652eb58c27df8fa59c7",
+    "reason": "bedding_refuge_full_via_forest_cover",
+    "consumed_by_modules": [
+      "BEDDING_ZONES_FULL_DEM_CANOPY",
+      "REFUGE_ZONES_FULL_TRI_CANOPY",
+      "FOREST_COVER_FRACTION_INDEX",
+      "NONFOREST_VEG_FRACTION_INDEX",
+      "FOREST_FRAGMENTATION_PROXY"
+    ],
+    "outputs_FULLY_unblocked_first_time_session": [
+      "bedding_zones_FULL_dem_canopy_combined (Mysterud 2001 §3 complete)",
+      "refuge_zones_FULL_tri_canopy_combined (Forman 1986 complete)"
+    ]
+  },
+  "phase_c_status": {
+    "current_status": "ACTIVATED_OPERATIONAL",
+    "overlay_size_bytes": 9113
+  },
+  "phase_d_drift_audit": {
+    "audit_filename": "audit_20260508T010825Z_58d78ee3.json"
+  },
+  "phase_e_sanity_test": {
+    "test": "POST /canopy-hook-activate with manifest_sha256='0'*64",
+    "verdict": "CANOPY_HOOK_REJECTED_MANIFEST_NOT_FOUND_OR_INVALID",
+    "rejected_correctly": true
+  },
+  "scientific_references_peer_reviewed": [
+    "Hansen et al. (2003). Earth Interactions 7(10):1-15. DOI:10.1175/1087-3562(2003)007",
+    "DiMiceli et al. (2017). NASA LP DAAC. DOI:10.5067/MODIS/MOD44B.006",
+    "Hansen et al. (2013). Science 342:850-853. DOI:10.1126/science.1244693"
+  ],
+  "outputs_progression_session": {
+    "before_canopy": "8/12 outputs computable (after HABITAT_RECOMPUTE_Ω_ULTIME)",
+    "after_canopy": "8/12 outputs FULL+computable, 2 FULL_unblocked passes from PARTIAL to COMPLETE",
+    "remaining_deferred": "4 outputs (rut, feeding, pressure, microhabitat_global)"
+  },
+  "pytest_status": {
+    "n_new_tests_quinquevicies": 17,
+    "all_passed_quinquevicies": true,
+    "regression_cluster_phase_xx_xxx_extended": "694/694 PASSED",
+    "no_regressions": true
+  },
+  "v30_lock": "INVIOLÉ",
+  "drift_zero": true,
+  "no_engine_recompute_triggered": true,
+  "fusion_add_only": true,
+  "anti_generique_strict": true
+}

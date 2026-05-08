@@ -27,6 +27,34 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-QUINQUEVICIES · CANOPY_P0_VALIDATE + HOOK_ACTIVATE_Ω — 🎯 5/5 SITES × 4 BANDES VALID + HOOK ACTIVATED + 2 OUTPUTS FULL DÉBLOQUÉS (2026-05-08)**
+  Validation + activation officielle du hook CANOPY (forest cover) via NASA MOD44B Vegetation Continuous Fields 250m (Hansen 2003 + DiMiceli 2017) sous régime guardrails ENFORCED + autonomy=LIMITED + workflow doctrinal anti-générique strict (FUSION ADD-ONLY · V30_LOCK INVIOLÉ · DRIFT_ZERO).
+  - **DOCTRINE ANTI-GÉNÉRIQUE STRICT EXPLICITÉE** : Le Commandant a émis `CANOPY_HOOK_ACTIVATE_Ω` SANS `P0_VALIDATE` préalable. L'agent a respecté la doctrine en exécutant **VALIDATE → ACTIVATE séquentiellement** (impossible activer hook sans manifest validé). Aucune fabrication.
+  - **Module `canopy_omega.py` créé** : `MOD44B_BANDS_REGISTRY` (4 bandes officielles vérifiées LIVE : Percent_Tree_Cover/NonTree_Vegetation/NonVegetated/Quality avec scale/units/valid_range/nodata=200), `_http_get_json_strict`, `_compute_band_stats` (NODATA=200 rejeté, pas d'imputation), `_probe_mod44b_band_at_site`, `_modis_year_doy_065`, orchestrateurs `validate_canopy_per_site`, `activate_canopy_hook`, `get_canopy_hook_status`.
+  - **Reconnaissance LIVE pré-implémentation** : Probes confirment NASA ORNL MOD44B subset endpoint HTTP 200 sans clé API requise, 4 bandes réelles (Percent_Tree_Cover, etc.), résolution annuelle DOY=065 (5 mars). Couvre Québec.
+  - **3 endpoints API** :
+    - **POST `/api/v30/super-masters/canopy-validate`** (token + body Pydantic `CanopyValidateBody`)
+    - **POST `/api/v30/super-masters/canopy-hook-activate`** (token + body Pydantic `CanopyHookActivateBody`)
+    - **GET `/api/v30/super-masters/canopy-hook-status`** (PUBLIC RO)
+  - **Workflow exécuté en 5 phases LIVE** :
+    - **Phase A — VALIDATE** : 20/20 calls success · `verdict=CANOPY_VALIDATE_ALL_BANDS_VALID` · `manifest_sha256=2c2b8577fa6f83507d72bdfeefba58ced820fcd30612d652eb58c27df8fa59c7` · 56.93s · period 2022-2024 (3 ans yearly) · audit `audit_20260508T010823Z_*`
+    - **Phase B — HOOK ACTIVATE** : `verdict=CANOPY_HOOK_ACTIVATED_OPERATIONAL` · `activation_sha256=b3a506c431993bdc5a3673616e23ca096b56e8b585ad5d41339f7fe7bd20c01f` · consumers=`[BEDDING_ZONES_FULL_DEM_CANOPY, REFUGE_ZONES_FULL_TRI_CANOPY, FOREST_COVER_FRACTION_INDEX, NONFOREST_VEG_FRACTION_INDEX, FOREST_FRAGMENTATION_PROXY]`
+    - **Phase C — STATUS** : `current_status=ACTIVATED_OPERATIONAL` · overlay 9113 bytes
+    - **Phase D — DRIFT AUDIT** `reason=bedding_refuge_full_via_forest_cover` : audit `audit_20260508T010825Z_58d78ee3.json`
+    - **Phase E — SANITY** : `'0'×64` → REJECTED `CANOPY_HOOK_REJECTED_MANIFEST_NOT_FOUND_OR_INVALID`
+  - **Données canopy RÉELLES par site (NASA MOD44B 250m, 3 ans 2022-2024)** :
+    - **espece_a (cerf, Charlesbourg)** : tree=**14.33%** · nontree_veg=65.67% · nonveg=20.0% (semi-urbain peu canopy)
+    - **espece_b (orignal, St-Jean)** : tree=**9.0%** · nontree_veg=72.33% · nonveg=18.67% (plaine cultivée canopy MIN)
+    - **espece_c (ours, Escoumins)** : tree=**57.67%** · nontree_veg=32.0% · nonveg=10.33% (**forêt boréale dense**)
+    - **espece_d (dindon, Fortierville)** 🌳 **MAX CANOPY BP135** : tree=**65.67%** · nontree_veg=27.67% · nonveg=6.67% (forêt mixte agricole)
+    - **espece_e (wapiti, Capitale)** : tree=**23.67%** · nontree_veg=66.33% · nonveg=10.0% (mixte semi-forêt piémont)
+  - **🎯 RECORD SESSION : 2 outputs PASSE DE PARTIAL À FULL** : `bedding_zones_FULL_dem_canopy_combined` (slope DEM × canopy density Mysterud 2001 §3 complet) + `refuge_zones_FULL_tri_canopy_combined` (TRI × canopy density Forman 1986 complet). Les deux outputs étaient `_partial` après PHASE_XXX-TERVICIES (DEM only) ; maintenant FULL avec canopy comme deuxième couche.
+  - **3 outputs encore DEFERRED** : `rut_zones` (piège temporel inchangé), `feeding_zones` (multi-season + dense grid), `pressure_sensitive_zones` (anthropogenic absent).
+  - **Anti-générique strict prouvé (sanity LIVE)** : POST avec SHA fabriqué `'0'×64` → REJECTED + forensic log persisté.
+  - **Forensic log** : 20 entrées `ENDPOINT_PROBES/CANOPY_P0_VALIDATE_Ω` + 2 entrées `HOOK_ACTIVATIONS/CANOPY_HOOK_ACTIVATE_Ω` (1 succès + 1 sanity reject) + 1 audit drift. 2 audits NOAA_PIPELINE/CANOPY persistés.
+  - **Pytest** : 17 nouveaux (`test_phase_xxx_quinquevicies_canopy_omega.py`) **17/17 PASSED** (registry × logical_names × paths × guardrails × empty/invalid coords × DOY 065 format × stats nodata=200 × bands filter × manifest reject × activation success via mock × V30_LOCK × outputs_full_unblocked). Régression cluster doctrinal Phase XX-XXX étendu = **694/694 PASSED · 0 régression**.
+  - **Bilan stratégique session** : ✅ **8 hooks ACTIVATED_OPERATIONAL** : WOD23 + OWM single + OWM batch BP135 + NASA NDVI + USGS_SOIL + RSF_SSF + OPENTOPOGRAPHY + **CANOPY (NASA MOD44B VCF)**. Premier hook qui transforme 2 outputs `_partial` en `_FULL` avec inputs complémentaires (DEM slope + canopy density). Le piège méthodologique "bedding/refuge complet" identifié en HABITAT_OUTPUTS_COMPUTE_Ω_ULTIME est désormais doctrinalement résolu.
+
 - **PHASE_XXX-QUATERVICIES · HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME — 🎯 8/12 OUTPUTS COMPUTABLE · COVERAGE 1.0 · 35 VALEURS RÉELLES · 7 HOOKS AGRÉGÉS (2026-05-08)**
   Recalcul global anti-générique strict agrégeant les 7 hooks ACTIVATED de la session sous régime guardrails ENFORCED + autonomy=LIMITED + 12 références peer-reviewed consolidées (FUSION ADD-ONLY · V30_LOCK INVIOLÉ · DRIFT_ZERO).
   - **Module `habitat_outputs_recompute_omega.py` créé** : `SPECIES_TO_SITE_MAP_DEFAULT` (5 sites BP135), helpers d'extraction par hook (`_extract_nasa_ndvi_per_site`, `_extract_usgs_soil_per_site`, `_extract_dem_per_site`, `_extract_rsf_envelope_per_site_per_species`), 5 calculs anti-générique (`_compute_bedding_zones_slope_partial` Mysterud 2001, `_compute_refuge_zones_terrain_ruggedness` Riley 1999, `_compute_saline_optimal_partial` Belant 2010, `_compute_habitat_suitability_multi_covariate` 4-components weighted, `_compute_corridor_continuity_inter_sites` Forman 1986), orchestrateur `recompute_habitat_outputs_with_all_hooks`, `get_habitat_recompute_status`.

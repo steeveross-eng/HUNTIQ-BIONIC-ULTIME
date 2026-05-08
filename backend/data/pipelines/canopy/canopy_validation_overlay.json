@@ -1,0 +1,559 @@
+{
+  "history": [
+    {
+      "manifest_id": "CANOPY_P0_VALIDATE_Ω",
+      "ordre": "P1_CANOPY_HOOK_ACTIVATE_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "valid": true,
+      "verdict": "CANOPY_VALIDATE_ALL_BANDS_VALID",
+      "provider": "CANOPY",
+      "provider_physical": "NASA_MOD44B_VCF",
+      "endpoint": "https://modis.ornl.gov/rst/api/v1/MOD44B/subset",
+      "bands_logical_requested": [
+        "TREE_COVER",
+        "NONTREE_VEG",
+        "NONVEG",
+        "QUALITY"
+      ],
+      "bands_canonical_validated": [
+        "Percent_Tree_Cover",
+        "Percent_NonTree_Vegetation",
+        "Percent_NonVegetated",
+        "Quality"
+      ],
+      "bands_unknown_skipped": [],
+      "temporal_range_modis": {
+        "start_year": 2022,
+        "end_year": 2024,
+        "start_modis": "A2022065",
+        "end_modis": "A2024065",
+        "yearly_resolution_doy_065": true
+      },
+      "n_sites_total": 5,
+      "n_calls_made": 20,
+      "n_calls_success": 20,
+      "n_calls_failed": 0,
+      "site_results": {
+        "espece_a": {
+          "lat": 46.8631,
+          "lon": -71.2075,
+          "bands": {
+            "TREE_COVER": {
+              "lat": 46.8631,
+              "lon": -71.2075,
+              "band_canonical": "Percent_Tree_Cover",
+              "band_logical": "TREE_COVER",
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total": 3,
+                "n_valid": 3,
+                "n_nodata": 0,
+                "min": 8.0,
+                "max": 24.0,
+                "mean": 14.33,
+                "first_date": "2022-03-06",
+                "last_date": "2024-03-05"
+              },
+              "fail_reason": null,
+              "http_status": 200,
+              "elapsed_ms": 2929.2,
+              "modis_cellsize": 231.656358264,
+              "modis_units": "percent"
+            },
+            "NONTREE_VEG": {
+              "lat": 46.8631,
+              "lon": -71.2075,
+              "band_canonical": "Percent_NonTree_Vegetation",
+              "band_logical": "NONTREE_VEG",
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total": 3,
+                "n_valid": 3,
+                "n_nodata": 0,
+                "min": 57.0,
+                "max": 75.0,
+                "mean": 65.67,
+                "first_date": "2022-03-06",
+                "last_date": "2024-03-05"
+              },
+              "fail_reason": null,
+              "http_status": 200,
+              "elapsed_ms": 2541.4,
+              "modis_cellsize": 231.656358264,
+              "modis_units": "percent"
+            },
+            "NONVEG": {
+              "lat": 46.8631,
+              "lon": -71.2075,
+              "band_canonical": "Percent_NonVegetated",
+              "band_logical": "NONVEG",
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total": 3,
+                "n_valid": 3,
+                "n_nodata": 0,
+                "min": 11.0,
+                "max": 35.0,
+                "mean": 20.0,
+                "first_date": "2022-03-06",
+                "last_date": "2024-03-05"
+              },
+              "fail_reason": null,
+              "http_status": 200,
+              "elapsed_ms": 2694.0,
+              "modis_cellsize": 231.656358264,
+              "modis_units": "percent"
+            },
+            "QUALITY": {
+              "lat": 46.8631,
+              "lon": -71.2075,
+              "band_canonical": "Quality",
+              "band_logical": "QUALITY",
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total": 3,
+                "n_valid": 3,
+                "n_nodata": 0,
+                "min": 192.0,
+                "max": 193.0,
+                "mean": 192.67,
+                "first_date": "2022-03-06",
+                "last_date": "2024-03-05"
+              },
+              "fail_reason": null,
+              "http_status": 200,
+              "elapsed_ms": 2330.7,
+              "modis_cellsize": 231.656358264,
+              "modis_units": "bit field"
+            }
+          },
+          "n_bands_probed": 4,
+          "n_bands_valid": 4
+        },
+        "espece_b": {
+          "lat": 47.2,
+          "lon": -70.27,
+          "bands": {
+            "TREE_COVER": {
+              "lat": 47.2,
+              "lon": -70.27,
+              "band_canonical": "Percent_Tree_Cover",
+              "band_logical": "TREE_COVER",
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total": 3,
+                "n_valid": 3,
+                "n_nodata": 0,
+                "min": 4.0,
+                "max": 13.0,
+                "mean": 9.0,
+                "first_date": "2022-03-06",
+                "last_date": "2024-03-05"
+              },
+              "fail_reason": null,
+              "http_status": 200,
+              "elapsed_ms": 2436.5,
+              "modis_cellsize": 231.656358264,
+              "modis_units": "percent"
+            },
+            "NONTREE_VEG": {
+              "lat": 47.2,
+              "lon": -70.27,
+              "band_canonical": "Percent_NonTree_Vegetation",
+              "band_logical": "NONTREE_VEG",
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total": 3,
+                "n_valid": 3,
+                "n_nodata": 0,
+                "min": 68.0,
+                "max": 79.0,
+                "mean": 72.33,
+                "first_date": "2022-03-06",
+                "last_date": "2024-03-05"
+              },
+              "fail_reason": null,
+              "http_status": 200,
+              "elapsed_ms": 2401.3,
+              "modis_cellsize": 231.656358264,
+              "modis_units": "percent"
+            },
+            "NONVEG": {
+              "lat": 47.2,
+              "lon": -70.27,
+              "band_canonical": "Percent_NonVegetated",
+              "band_logical": "NONVEG",
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total": 3,
+                "n_valid": 3,
+                "n_nodata": 0,
+                "min": 11.0,
+                "max": 28.0,
+                "mean": 18.67,
+                "first_date": "2022-03-06",
+                "last_date": "2024-03-05"
+              },
+              "fail_reason": null,
+              "http_status": 200,
+              "elapsed_ms": 2482.7,
+              "modis_cellsize": 231.656358264,
+              "modis_units": "percent"
+            },
+            "QUALITY": {
+              "lat": 47.2,
+              "lon": -70.27,
+              "band_canonical": "Quality",
+              "band_logical": "QUALITY",
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total": 3,
+                "n_valid": 3,
+                "n_nodata": 0,
+                "min": 193.0,
+                "max": 224.0,
+                "mean": 213.67,
+                "first_date": "2022-03-06",
+                "last_date": "2024-03-05"
+              },
+              "fail_reason": null,
+              "http_status": 200,
+              "elapsed_ms": 2272.1,
+              "modis_cellsize": 231.656358264,
+              "modis_units": "bit field"
+            }
+          },
+          "n_bands_probed": 4,
+          "n_bands_valid": 4
+        },
+        "espece_c": {
+          "lat": 48.39,
+          "lon": -69.39,
+          "bands": {
+            "TREE_COVER": {
+              "lat": 48.39,
+              "lon": -69.39,
+              "band_canonical": "Percent_Tree_Cover",
+              "band_logical": "TREE_COVER",
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total": 3,
+                "n_valid": 3,
+                "n_nodata": 0,
+                "min": 55.0,
+                "max": 60.0,
+                "mean": 57.67,
+                "first_date": "2022-03-06",
+                "last_date": "2024-03-05"
+              },
+              "fail_reason": null,
+              "http_status": 200,
+              "elapsed_ms": 2403.0,
+              "modis_cellsize": 231.656358264,
+              "modis_units": "percent"
+            },
+            "NONTREE_VEG": {
+              "lat": 48.39,
+              "lon": -69.39,
+              "band_canonical": "Percent_NonTree_Vegetation",
+              "band_logical": "NONTREE_VEG",
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total": 3,
+                "n_valid": 3,
+                "n_nodata": 0,
+                "min": 29.0,
+                "max": 34.0,
+                "mean": 32.0,
+                "first_date": "2022-03-06",
+                "last_date": "2024-03-05"
+              },
+              "fail_reason": null,
+              "http_status": 200,
+              "elapsed_ms": 2360.0,
+              "modis_cellsize": 231.656358264,
+              "modis_units": "percent"
+            },
+            "NONVEG": {
+              "lat": 48.39,
+              "lon": -69.39,
+              "band_canonical": "Percent_NonVegetated",
+              "band_logical": "NONVEG",
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total": 3,
+                "n_valid": 3,
+                "n_nodata": 0,
+                "min": 9.0,
+                "max": 11.0,
+                "mean": 10.33,
+                "first_date": "2022-03-06",
+                "last_date": "2024-03-05"
+              },
+              "fail_reason": null,
+              "http_status": 200,
+              "elapsed_ms": 2481.3,
+              "modis_cellsize": 231.656358264,
+              "modis_units": "percent"
+            },
+            "QUALITY": {
+              "lat": 48.39,
+              "lon": -69.39,
+              "band_canonical": "Quality",
+              "band_logical": "QUALITY",
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total": 3,
+                "n_valid": 3,
+                "n_nodata": 0,
+                "min": 225.0,
+                "max": 225.0,
+                "mean": 225.0,
+                "first_date": "2022-03-06",
+                "last_date": "2024-03-05"
+              },
+              "fail_reason": null,
+              "http_status": 200,
+              "elapsed_ms": 2338.3,
+              "modis_cellsize": 231.656358264,
+              "modis_units": "bit field"
+            }
+          },
+          "n_bands_probed": 4,
+          "n_bands_valid": 4
+        },
+        "espece_d": {
+          "lat": 46.36,
+          "lon": -72.07,
+          "bands": {
+            "TREE_COVER": {
+              "lat": 46.36,
+              "lon": -72.07,
+              "band_canonical": "Percent_Tree_Cover",
+              "band_logical": "TREE_COVER",
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total": 3,
+                "n_valid": 3,
+                "n_nodata": 0,
+                "min": 57.0,
+                "max": 70.0,
+                "mean": 65.67,
+                "first_date": "2022-03-06",
+                "last_date": "2024-03-05"
+              },
+              "fail_reason": null,
+              "http_status": 200,
+              "elapsed_ms": 2411.7,
+              "modis_cellsize": 231.656358264,
+              "modis_units": "percent"
+            },
+            "NONTREE_VEG": {
+              "lat": 46.36,
+              "lon": -72.07,
+              "band_canonical": "Percent_NonTree_Vegetation",
+              "band_logical": "NONTREE_VEG",
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total": 3,
+                "n_valid": 3,
+                "n_nodata": 0,
+                "min": 22.0,
+                "max": 37.0,
+                "mean": 27.67,
+                "first_date": "2022-03-06",
+                "last_date": "2024-03-05"
+              },
+              "fail_reason": null,
+              "http_status": 200,
+              "elapsed_ms": 2536.4,
+              "modis_cellsize": 231.656358264,
+              "modis_units": "percent"
+            },
+            "NONVEG": {
+              "lat": 46.36,
+              "lon": -72.07,
+              "band_canonical": "Percent_NonVegetated",
+              "band_logical": "NONVEG",
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total": 3,
+                "n_valid": 3,
+                "n_nodata": 0,
+                "min": 6.0,
+                "max": 8.0,
+                "mean": 6.67,
+                "first_date": "2022-03-06",
+                "last_date": "2024-03-05"
+              },
+              "fail_reason": null,
+              "http_status": 200,
+              "elapsed_ms": 2388.1,
+              "modis_cellsize": 231.656358264,
+              "modis_units": "percent"
+            },
+            "QUALITY": {
+              "lat": 46.36,
+              "lon": -72.07,
+              "band_canonical": "Quality",
+              "band_logical": "QUALITY",
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total": 3,
+                "n_valid": 3,
+                "n_nodata": 0,
+                "min": 192.0,
+                "max": 224.0,
+                "mean": 202.67,
+                "first_date": "2022-03-06",
+                "last_date": "2024-03-05"
+              },
+              "fail_reason": null,
+              "http_status": 200,
+              "elapsed_ms": 2297.7,
+              "modis_cellsize": 231.656358264,
+              "modis_units": "bit field"
+            }
+          },
+          "n_bands_probed": 4,
+          "n_bands_valid": 4
+        },
+        "espece_e": {
+          "lat": 47.0,
+          "lon": -71.0,
+          "bands": {
+            "TREE_COVER": {
+              "lat": 47.0,
+              "lon": -71.0,
+              "band_canonical": "Percent_Tree_Cover",
+              "band_logical": "TREE_COVER",
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total": 3,
+                "n_valid": 3,
+                "n_nodata": 0,
+                "min": 21.0,
+                "max": 27.0,
+                "mean": 23.67,
+                "first_date": "2022-03-06",
+                "last_date": "2024-03-05"
+              },
+              "fail_reason": null,
+              "http_status": 200,
+              "elapsed_ms": 2372.9,
+              "modis_cellsize": 231.656358264,
+              "modis_units": "percent"
+            },
+            "NONTREE_VEG": {
+              "lat": 47.0,
+              "lon": -71.0,
+              "band_canonical": "Percent_NonTree_Vegetation",
+              "band_logical": "NONTREE_VEG",
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total": 3,
+                "n_valid": 3,
+                "n_nodata": 0,
+                "min": 62.0,
+                "max": 69.0,
+                "mean": 66.33,
+                "first_date": "2022-03-06",
+                "last_date": "2024-03-05"
+              },
+              "fail_reason": null,
+              "http_status": 200,
+              "elapsed_ms": 2423.1,
+              "modis_cellsize": 231.656358264,
+              "modis_units": "percent"
+            },
+            "NONVEG": {
+              "lat": 47.0,
+              "lon": -71.0,
+              "band_canonical": "Percent_NonVegetated",
+              "band_logical": "NONVEG",
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total": 3,
+                "n_valid": 3,
+                "n_nodata": 0,
+                "min": 8.0,
+                "max": 11.0,
+                "mean": 10.0,
+                "first_date": "2022-03-06",
+                "last_date": "2024-03-05"
+              },
+              "fail_reason": null,
+              "http_status": 200,
+              "elapsed_ms": 2523.8,
+              "modis_cellsize": 231.656358264,
+              "modis_units": "percent"
+            },
+            "QUALITY": {
+              "lat": 47.0,
+              "lon": -71.0,
+              "band_canonical": "Quality",
+              "band_logical": "QUALITY",
+              "valid": true,
+              "stats": {
+                "valid": true,
+                "n_total": 3,
+                "n_valid": 3,
+                "n_nodata": 0,
+                "min": 193.0,
+                "max": 193.0,
+                "mean": 193.0,
+                "first_date": "2022-03-06",
+                "last_date": "2024-03-05"
+              },
+              "fail_reason": null,
+              "http_status": 200,
+              "elapsed_ms": 2299.1,
+              "modis_cellsize": 231.656358264,
+              "modis_units": "bit field"
+            }
+          },
+          "n_bands_probed": 4,
+          "n_bands_valid": 4
+        }
+      },
+      "scientific_references_peer_reviewed": [
+        "Hansen et al. (2003). Earth Interactions, 7(10), 1-15. DOI:10.1175/1087-3562(2003)007",
+        "DiMiceli et al. (2017). NASA LP DAAC. DOI:10.5067/MODIS/MOD44B.006",
+        "Hansen et al. (2013). Science, 342, 850-853. DOI:10.1126/science.1244693"
+      ],
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T01:07:37+00:00",
+      "elapsed_s": 56.931,
+      "manifest_sha256": "2c2b8577fa6f83507d72bdfeefba58ced820fcd30612d652eb58c27df8fa59c7"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T01:07:37+00:00",
+  "n_validations": 1,
+  "last_manifest_sha256": "2c2b8577fa6f83507d72bdfeefba58ced820fcd30612d652eb58c27df8fa59c7",
+  "last_verdict": "CANOPY_VALIDATE_ALL_BANDS_VALID",
+  "v30_lock": "INVIOLÉ"
+}

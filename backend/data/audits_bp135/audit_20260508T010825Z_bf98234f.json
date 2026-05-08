@@ -1,0 +1,25 @@
+{
+  "audit_filename": "audit_20260508T010825Z_bf98234f.json",
+  "audit_sha256": "bf98234f2f510e5708b22b35bc7be522af9d356af4522ede29205e73836f9ada",
+  "persisted_at_utc": "2026-05-08T01:08:25+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "NOAA_PIPELINE",
+    "subtype": "CANOPY_HOOK_ACTIVATE",
+    "ordre": "P1_CANOPY_HOOK_ACTIVATE_Ω",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "provider": "CANOPY",
+    "provider_physical": "NASA_MOD44B_VCF",
+    "validated_manifest_sha256": "2c2b8577fa6f83507d72bdfeefba58ced820fcd30612d652eb58c27df8fa59c7",
+    "activation_sha256": "b3a506c431993bdc5a3673616e23ca096b56e8b585ad5d41339f7fe7bd20c01f",
+    "reason": "bedding_refuge_full_via_forest_cover",
+    "activated": true,
+    "verdict": "CANOPY_HOOK_ACTIVATED_OPERATIONAL",
+    "n_sites_total": 5,
+    "n_calls_success": 20,
+    "v30_lock_inviolate": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  }
+}

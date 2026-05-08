@@ -2967,3 +2967,134 @@ async def habitat_outputs_recompute_status_endpoint() -> JSONResponse:
         "v30_lock": "INVIOLÉ",
     })
 
+
+# ═════════════════════════════════════════════════════════════════════════
+# CANOPY_P0_VALIDATE_Ω + CANOPY_HOOK_ACTIVATE_Ω
+# Forest cover via NASA MOD44B VCF (Hansen 2003, DiMiceli 2017).
+# Débloque bedding_zones_FULL + refuge_zones_FULL.
+# ═════════════════════════════════════════════════════════════════════════
+class CanopyValidateBody(BaseModel):
+    site_coordinates: Dict[str, Dict[str, float]]
+    bands_logical: Optional[list] = None
+    years_lookback: int = 3
+    end_year: Optional[int] = None
+    persist: bool = True
+
+
+@router.post("/canopy-validate")
+async def canopy_validate_endpoint(
+    body: CanopyValidateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """CANOPY_P0_VALIDATE_Ω · MOD44B Vegetation Continuous Fields.
+
+    Probe NASA MOD44B subset endpoint pour 4 bandes : TREE_COVER,
+    NONTREE_VEG, NONVEG, QUALITY (Hansen 2003 + DiMiceli 2017).
+    Anti-générique strict : NODATA=200 rejeté. Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.canopy_omega import (
+        validate_canopy_per_site,
+    )
+    try:
+        payload = validate_canopy_per_site(
+            site_coordinates=body.site_coordinates,
+            bands_logical=body.bands_logical,
+            years_lookback=body.years_lookback,
+            end_year=body.end_year,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "CANOPY_VALIDATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "CANOPY_VALIDATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_CANOPY_HOOK_ACTIVATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+class CanopyHookActivateBody(BaseModel):
+    manifest_sha256: str
+    reason: str = "bedding_refuge_full_via_forest_cover"
+    persist: bool = True
+
+
+@router.post("/canopy-hook-activate")
+async def canopy_hook_activate_endpoint(
+    body: CanopyHookActivateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """CANOPY_HOOK_ACTIVATE_Ω · activation officielle.
+
+    Anti-générique strict : refus SHA fabriqué. Débloque
+    bedding_zones_FULL + refuge_zones_FULL. Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.canopy_omega import (
+        activate_canopy_hook,
+    )
+    try:
+        payload = activate_canopy_hook(
+            manifest_sha256=body.manifest_sha256,
+            reason=body.reason,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "CANOPY_HOOK_ACTIVATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "CANOPY_HOOK_ACTIVATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_CANOPY_HOOK_ACTIVATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/canopy-hook-status")
+async def canopy_hook_status_endpoint() -> JSONResponse:
+    """CANOPY_HOOK_ACTIVATE_Ω · état (PUBLIC RO)."""
+    from engines.v8_institutional.especes.canopy_omega import (
+        get_canopy_hook_status,
+    )
+    payload = get_canopy_hook_status()
+    return JSONResponse({
+        "manifest_id": "CANOPY_HOOK_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P1_CANOPY_HOOK_ACTIVATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
