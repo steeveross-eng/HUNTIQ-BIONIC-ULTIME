@@ -114,7 +114,7 @@ serviceWorkerRegistration.register({
 
 // P20_PHASE3 · FORCE PURGE Ω · auto reload one-shot si version stale
 // Ordre Commandant STEEVE-MAX · 2026-05-08
-const BCE_4X_FORCE_PURGE_VERSION = "P20_PHASE3_FORCE_PURGE_2026_05_08_2147";
+const BCE_4X_FORCE_PURGE_VERSION = "P20_PHASE5_CANONICAL_LOCK_2026_05_08_2330";
 try {
   const stored = window.localStorage.getItem("bce4x_purge_version");
   if (stored !== BCE_4X_FORCE_PURGE_VERSION) {

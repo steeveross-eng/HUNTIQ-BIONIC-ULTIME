@@ -5388,26 +5388,29 @@ async def force_purge_doctrine_status_endpoint() -> JSONResponse:
     """P20_PHASE3 · status purge (PUBLIC RO)."""
     payload = {
         "manifest_id": "FORCE_PURGE_DOCTRINE_STATUS_Ω",
-        "ordre": "P20_PHASE3_FORCE_PURGE_Ω",
+        "ordre": "P20_PHASE5_CANONICAL_LOCK_Ω",
         "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
         "force_purge_version": (
-            "P20_PHASE3_FORCE_PURGE_2026_05_08_2147"),
+            "P20_PHASE5_CANONICAL_LOCK_2026_05_08_2330"),
         "no_cache_middleware_active": True,
         "no_cache_headers_emitted": [
             "Cache-Control: no-store, no-cache, "
             "must-revalidate, max-age=0",
             "Pragma: no-cache",
             "Expires: 0",
-            "X-BCE-4X-Force-Purge: P20_PHASE3_FORCE_PURGE_2026_05_08_2147",
+            "X-BCE-4X-Force-Purge: P20_PHASE5_CANONICAL_LOCK_2026_05_08_2330",
         ],
         "scope_paths": [
             "/api/v30/super-masters/*",
             "/admin/bce-4x-premium/*",
         ],
-        "legacy_panels_doctrinal_default": "DISABLED_BY_DEFAULT",
-        "analysis_v6_doctrinal_default": "DISABLED_BY_DEFAULT",
-        "debug_panels_doctrinal_default": "DISABLED_BY_DEFAULT",
-        "unified_panel_doctrinal_default": "ENABLED_PRIMARY",
+        "legacy_panels_doctrinal_default": "DISABLED_PERMANENT",
+        "analysis_v6_doctrinal_default": "DISABLED_PERMANENT",
+        "debug_panels_doctrinal_default": "DISABLED_PERMANENT",
+        "mini_tables_v6_doctrinal_default": "DISABLED_PERMANENT",
+        "unified_panel_doctrinal_default": "PRIMARY_ONLY_PERMANENT",
+        "service_worker_status": "CONTROLLED_PERMANENT",
+        "watchdog_lock_timeout_s": 600,
         "v30_lock": "INVIOLÉ",
         "scanned_at_utc": datetime.now(
             timezone.utc).isoformat(timespec="seconds"),
@@ -5480,6 +5483,33 @@ async def territoire_omega_reload_status_endpoint() -> JSONResponse:
         "manifest_id": "TERRITOIRE_OMEGA_RELOAD_STATUS_GET_Ω",
         "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
         "ordre": "P20_PHASE4_STABILIZATION_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# P20_PHASE5 · TERRITOIRE_OMEGA_CANONICAL_LOCK_Ω
+# Single source of truth · PUBLIC RO · canonical SHA-256 sync indicator
+# ═════════════════════════════════════════════════════════════════════════
+
+
+@router.get("/territoire-omega-canonical-status")
+async def territoire_omega_canonical_status_endpoint() -> JSONResponse:
+    """P20_PHASE5 · canonical lock status (PUBLIC RO).
+
+    Anti-générique : SHA-256 calculé sur le payload réel · pas de fake.
+    """
+    from engines.v8_institutional.especes.territoire_omega_canonical_omega import (  # noqa: E501
+        get_territoire_omega_canonical_status,
+    )
+    payload = get_territoire_omega_canonical_status()
+    return JSONResponse({
+        "manifest_id": "TERRITOIRE_OMEGA_CANONICAL_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P20_PHASE5_CANONICAL_LOCK_Ω",
         "horodatage_build": _build_horodatage(),
         "result": payload,
         "v30_lock": "INVIOLÉ",

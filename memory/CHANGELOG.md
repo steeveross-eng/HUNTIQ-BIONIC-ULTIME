@@ -512,3 +512,65 @@
   mais désormais inaccessible (PRIMARY_ONLY enforced)
 - ✅ ANTI-GÉNÉRIQUE STRICT · 17 overlays comptés réellement · 5 modules reloaded réellement
 - ✅ Aucun testing_agent_v3_fork
+
+## 2026-05-08 (suite 6) — P20_PHASE5_CANONICALIZE_AND_LOCK_TERRITOIRE_OMEGA_Ω
+
+### A · Cache version bump v10 → v11
+- `sw.js` : `CACHE_VERSION = 'bce-4x-omega-v11-p20-phase5-canonical-2026-05-08'`
+- `serviceWorkerRegistration.js` : `SW_VERSION = 'v11'`
+- `index.js` : `BCE_4X_FORCE_PURGE_VERSION = 'P20_PHASE5_CANONICAL_LOCK_2026_05_08_2330'`
+- `index.html` : meta `bionic-rendu-omega-version` v11.0 + meta `bce-4x-territoire-omega-canonical=ENFORCED`
+
+### B · Backend canonical lock module
+- Nouveau module `territoire_omega_canonical_omega.py` :
+  · `CANONICAL_LOCK_VERSION = "P20_PHASE5_CANONICAL_LOCK_2026_05_08_2330"`
+  · `WATCHDOG_LOCK_TIMEOUT_S = 600`
+  · `LAYER_CATALOG_FROZEN_COUNT = 18`
+  · `FORBIDDEN_DOCTRINAL = {legacy_paths, analysis_v6, debug_panels, mini_tables_v6}` (tous True)
+  · `_read_last_force_reload()` : lit overlay P20_PHASE4 réel pour sync indicator
+  · `get_territoire_omega_canonical_status()` : retourne canonical SHA-256 + sync data
+- 1 nouveau endpoint : `GET /territoire-omega-canonical-status` (PUBLIC RO)
+
+### C · Frontend sync indicator SHA-256 dans LayersPanelOmegaUnified
+- Polling 30s du canonical status (anti-générique : `cache: 'no-store'`)
+- Footer panneau Ω affiche :
+  · `⛓ canonical {sha:12}…` (état canonique courant)
+  · `⟲ reload {sha:12}… · {timestamp_utc}` (dernière réinitialisation)
+  · `⏱ watchdog 600s · LOCK`
+- Tous éléments avec data-testid pour future testing
+
+### D · Force-purge doctrine status mis à jour
+- `force-purge-doctrine-status` :
+  · version → `P20_PHASE5_CANONICAL_LOCK_2026_05_08_2330`
+  · `legacy_panels_doctrinal_default: DISABLED_PERMANENT`
+  · `analysis_v6_doctrinal_default: DISABLED_PERMANENT`
+  · `debug_panels_doctrinal_default: DISABLED_PERMANENT`
+  · `mini_tables_v6_doctrinal_default: DISABLED_PERMANENT` (NOUVEAU)
+  · `unified_panel_doctrinal_default: PRIMARY_ONLY_PERMANENT` (UPGRADED)
+  · `service_worker_status: CONTROLLED_PERMANENT` (NOUVEAU)
+  · `watchdog_lock_timeout_s: 600` (NOUVEAU)
+
+### E · Tests pytest neutres P20_PHASE5
+- `test_phase_xx_phase5_canonical_omega.py` (5/5 tests passés)
+- Tests : import, status shape, SHA hex 64, no_reload case, real reload sync
+
+### F · Verifications curl preview public
+- `cf-cache-status: DYNAMIC` (Cloudflare ne cache PAS)
+- `cache-control: no-store, no-cache, must-revalidate` injecté
+- `pragma: no-cache` présent
+- HTTP 200 sur tous endpoints (admin, mon-territoire, sw.js, canonical-status)
+- canonical_sha256 calculé : `61aa74485d832e6c70e4cf87…`
+- sync_indicator récupère vrai reload SHA : `8f29090841a5156558c78784…`
+
+### Métriques cumulatives session
+- 55/55 pytests doctrinaux passés (zéro régression)
+- 1 nouveau module engine + 1 nouveau pytest neutre
+- 1 nouveau endpoint `territoire-omega-canonical-status`
+- 1 nouvelle UI section sync indicator dans LayersPanelOmegaUnified
+- `yarn build` SUCCESS 61.78s clean
+
+### Conformité doctrinale
+- ✅ V30_LOCK INVIOLÉ
+- ✅ FUSION ADD-ONLY · zéro mutation engine maître
+- ✅ ANTI-GÉNÉRIQUE STRICT · canonical SHA calculé sur payload réel · sync indicator lit vrai overlay
+- ✅ Aucun testing_agent_v3_fork

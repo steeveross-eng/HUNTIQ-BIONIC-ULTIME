@@ -214,7 +214,7 @@ async def bce_4x_force_purge_no_cache_middleware(request, call_next):
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
         response.headers["X-BCE-4X-Force-Purge"] = (
-            "P20_PHASE3_FORCE_PURGE_2026_05_08_2147")
+            "P20_PHASE5_CANONICAL_LOCK_2026_05_08_2330")
     return response
 
 

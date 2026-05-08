@@ -8,7 +8,7 @@
  * V30_LOCK : INVIOLÉ — n'écrase aucun panel existant.
  * ═══════════════════════════════════════════════════════════════
  */
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
 import { ChevronDown, ChevronUp, Layers as LayersIcon } from 'lucide-react';
@@ -19,6 +19,12 @@ import {
   LAYER_CATALOG_DOCTRINE_META,
 } from './registry/layer_catalog_omega';
 
+// P20_PHASE5_CANONICAL_LOCK_Ω · BCE-4X URL canonique
+const CANONICAL_STATUS_URL = (() => {
+  const base = process.env.REACT_APP_BACKEND_URL || '';
+  return `${base}/api/v30/super-masters/territoire-omega-canonical-status`;
+})();
+
 const LayersPanelOmegaUnified = ({
   activeMap = {},
   opacityMap = {},
@@ -28,6 +34,26 @@ const LayersPanelOmegaUnified = ({
 }) => {
   const [expanded, setExpanded] = useState(initialExpanded);
   const [expandedGroups, setExpandedGroups] = useState({ B: true });
+  // P20_PHASE5 · sync indicator SHA-256 (canonical lock)
+  const [canonicalSync, setCanonicalSync] = useState(null);
+  useEffect(() => {
+    let cancelled = false;
+    const fetchCanonical = () => {
+      fetch(CANONICAL_STATUS_URL, { cache: 'no-store' })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => {
+          if (cancelled || !d) return;
+          setCanonicalSync(d.result || null);
+        })
+        .catch(() => {});
+    };
+    fetchCanonical();
+    const t = setInterval(fetchCanonical, 30000);
+    return () => {
+      cancelled = true;
+      clearInterval(t);
+    };
+  }, []);
 
   const totalActive = useMemo(
     () => LAYER_CATALOG_OMEGA.filter((l) => !!activeMap[l.id]).length,
@@ -279,6 +305,52 @@ const LayersPanelOmegaUnified = ({
             V30_LOCK INVIOLÉ · FUSION ADD-ONLY
             <br />
             ANTI-GÉNÉRIQUE STRICT · {LAYER_CATALOG_DOCTRINE_META.n_layers} couches
+            {/* P20_PHASE5 · sync indicator SHA-256 (canonical lock) */}
+            {canonicalSync && (
+              <div
+                data-testid="layers-panel-omega-sync-indicator"
+                style={{
+                  marginTop: 4,
+                  paddingTop: 4,
+                  borderTop: '1px dashed rgba(212,160,23,0.1)',
+                  color: '#7CB518',
+                }}
+              >
+                <div title={`Canonical SHA-256: ${canonicalSync.canonical_sha256}`}>
+                  ⛓ canonical {canonicalSync.canonical_sha256
+                    ? canonicalSync.canonical_sha256.slice(0, 12)
+                    : '—'}…
+                </div>
+                {canonicalSync?.sync_indicator?.data?.available
+                  ? (
+                    <div
+                      style={{ color: '#94A3B8' }}
+                      title={
+                        canonicalSync.sync_indicator.data
+                          .last_force_reload_sha256
+                        || 'no reload sha'
+                      }
+                    >
+                      ⟲ reload {canonicalSync.sync_indicator.data
+                        .last_force_reload_sha256
+                        ? canonicalSync.sync_indicator.data
+                            .last_force_reload_sha256.slice(0, 12)
+                        : '—'}…
+                      {' · '}
+                      {(canonicalSync.sync_indicator.data
+                        .last_force_reload_at_utc || '—').slice(0, 19)}
+                    </div>
+                  ) : (
+                    <div style={{ color: '#FCA5A5' }}>
+                      ⟲ no force-reload yet
+                    </div>
+                  )}
+                <div style={{ color: '#A78BFA' }}>
+                  ⏱ watchdog {canonicalSync?.watchdog_lock?.timeout_s
+                    ?? '—'}s · LOCK
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
