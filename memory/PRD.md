@@ -27,6 +27,44 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+- **PHASE_XXX-UNTRICICIES · HABITAT_OUTPUTS_FINAL_MERGE_Ω (P7) — 🎯 10/12 OUTPUTS COMPUTABLES + rut_zones LIVE (2026-05-08)**
+  Greffe `rut_zones_temporal_proxy` sur recompute V3 sous régime guardrails ENFORCED + autonomy=LIMITED, FUSION ADD-ONLY strict (V3 préservé sans mutation). Lit V3 + TEMPORAL_RUT overlays. Verdict `HABITAT_FINAL_MERGE_FULL_10_OF_12_COMPUTABLE` · coverage 1.0 · 45/45 outputs · 5/5 rut_zones calculés.
+  - **Nouveau module `habitat_outputs_final_merge_omega.py`** : `merge_habitat_outputs_final` (refus si hook RUT non activé), `_extract_rut_per_site`, `_compute_rut_zones_output`, `get_habitat_final_merge_status`. Hérite intégralement V3 (V2+V1+5 hooks principaux+anthropogenic).
+  - **2 endpoints router (FUSION ADD-ONLY)** : `POST /api/v30/super-masters/habitat-outputs-final-merge` (token Commandant), `GET /api/v30/super-masters/habitat-outputs-final-merge-status` (PUBLIC RO).
+  - **Workflow exécuté LIVE en 1 phase** :
+    - **FINAL MERGE** : `final_merge_sha256=a4802eede9ae34ddb9a56a4adb87ecb81485d78f04617c55abf70f95836954fa` · 0.007s · audit BP135 persisté
+  - **2 outputs encore deferred FINAL (vs 3 en V3)** : feeding_zones_FULL (proxy via NDVI_DECADE_Ω disponible), microhabitat_clusters_global_dense — tous deux requièrent `NASA_NDVI_DENSE_GRID_Ω`.
+  - **12 nouveaux pytests** : 12/12 PASS.
+
+- **PHASE_XXX-TRICICIES · TEMPORAL_RUT_DATA_HOOK_ACTIVATE_Ω (P6) — 🎯 3 PILIERS PHYSIQUES VALIDÉS (2026-05-08)**
+  Activation hook P6 pour débloquer `rut_zones`, sous régime guardrails ENFORCED + autonomy=LIMITED + FUSION ADD-ONLY. Composite 3 piliers physiques : (1) Photopériode astronomique pure (Bronson 1989, Forsythe 1995 CBM), (2) NDVI fall pre-rut (Hebblewhite 2008, lecture NDVI_DECADE overlay), (3) GBIF observations filtrées par mois rut (Bowyer 1981).
+  - **Nouveau module `temporal_rut_data_omega.py`** : `validate_temporal_rut_data_per_site`, `_solar_declination_deg` (Spencer 1971 NOAA), `_daylength_hours` (Forsythe 1995 CBM), `_photoperiod_signal_for_rut_window`, `_extract_ndvi_fall_for_site` (lecture overlay decade), `_fetch_gbif_rut_month_count` (live GBIF API, filtre mois rut), `_compute_rut_zones_composite` (poids 0.25 photoperiod + 0.40 NDVI fall + 0.35 GBIF, renormalisation si pilier manquant), `activate_temporal_rut_data_hook`, `get_last_validated_rut_per_site` (utilitaire P7).
+  - **5 saisons rut doctrinales** : cerf oct-nov (Odocoileus virginianus), orignal sept-oct (Alces alces), ours juin-juillet (Ursus americanus, Bunnell 1981), dindon avril-mai (Meleagris gallopavo, Healy 1992), wapiti sept-oct (Cervus canadensis).
+  - **3 endpoints router** : `POST /temporal-rut-validate`, `POST /temporal-rut-hook-activate`, `GET /temporal-rut-hook-status`.
+  - **Workflow LIVE en 2 phases** :
+    - **VALIDATE 5/5** : `verdict=TEMPORAL_RUT_VALIDATE_ALL_VALID` · `manifest_sha256=7ab2416de59d42b900a77a50cfcd2fd30d4899d613526ff1255cca30dc452f9a` · 5/5 photoperiod + 5/5 NDVI fall + 5/5 GBIF + 5/5 composite · 5.34 s
+    - **HOOK ACTIVATE** : `manifest_sha256=ca6937d8d7a3c68ba6c367c59d784f2f0586ad3923a936e14bab91bf53529952` · audit BP135 persisté
+  - **rut_zones par site (anti-générique strict, 3 piliers LIVE)** :
+    - **espece_a (cerf, Charny rut oct-nov)** : composite=54.30 → MODERATE_PROBABILITY
+    - **espece_b (orignal, Charlevoix rut sept-oct)** : composite=62.56 → MODERATE_PROBABILITY
+    - **espece_c (ours, Saguenay rut juin-juillet)** : composite=44.99 → LOW_PROBABILITY
+    - **espece_d (dindon, Mauricie rut avril-mai)** : composite=88.72 → **HIGH_PROBABILITY** ⬆️ (rut printanier optimal photopériode + GBIF)
+    - **espece_e (wapiti, Laurentides rut sept-oct)** : composite=55.20 → MODERATE_PROBABILITY
+  - **17 nouveaux pytests (`test_phase_xxx_tricicies_temporal_rut_omega.py`)** : 17/17 PASS — déclinaison solaire solstices, daylength équateur constant, daylength Québec été 15-16h, photopériode automne décline, GBIF score saturation log, composite renormalisation si pilier manquant.
+  - **Caveat doctrinal** : output `rut_zones_temporal_proxy` (pas FULL qui requiert GPS breeding behavior multi-year, Hebblewhite 2007 §3). Tracé explicitement.
+  - **Refs peer-reviewed** : Bronson 1989 (photoperiodic timing), Bowyer 1981 (rut behavior), Forsythe 1995 (CBM daylength), Spencer 1971 (Fourier solar), Hebblewhite 2008 (NDVI fall), Bunnell & Tait 1981 (bears), Healy 1992 (turkey).
+
+- **COMMANDE_INSTITUTIONNELLE_Ω V12-MAÎTRE · CONTAMINATION → AFFÛTS DEPENDENCY (2026-05-08)**
+  Verrouillage strict de la dépendance entre les couches CONTAMINATION et AFFÛTS_Ω. La couche CONTAMINATION devient un diagnostic dérivé (R1) — uniquement générable si AFFUT_POTENTIEL=TRUE (R2). Hook `HOOK_CONTAMINATION_AFFUT_DEPENDENCY` activé avec checksum SHA256 doctrinal V12 vérifié.
+  - **Nouveau module `contamination_affut_dependency_omega.py`** : `evaluate_affut_potentiel_for_tile` (logique conditionnelle R3+R4+R5 déterministe), `detect_anomaly_a3` (CI blocking), `audit_tiles_dependency` (A1+A2+A3+A4 batch), `activate_contamination_affut_dependency_hook` (refus si checksum invalide), `get_contamination_affut_dependency_hook_status`. Catégories urbaines/industrielles R5 : urban, residential, commercial, industrial, highway, motorway, trunk, primary, retail, warehouse, factory, construction, quarry.
+  - **3 endpoints router** : `POST /contamination-affut-dependency-hook-activate`, `POST /contamination-affut-dependency-audit`, `GET /contamination-affut-dependency-hook-status`.
+  - **Checksum V12 doctrinal** : `SHA256("CONTAMINATION_AFFUT_DEPENDENCY_V12") = bfe41b1e07d3f17c6352aa46212485bad4c06f7e937591c79058b8c888cfb9ba`.
+  - **Hook ACTIVATED LOCKED** : `manifest_sha256=d7cc8ea879bfa765984a12cc1d8b87fe7017528f86859150b3d5704fcabf1a8a` · checksum_match=True · `confirmation: DÉPENDANCE CONTAMINATION→AFFÛTS VERROUILLÉE.`
+  - **Audit doctrinal** : log JSONL `LOG_CONTAMINATION_AFFUT_DEPENDENCY`, violations persistées si A3 détectée (contamination dans secteur urbain = CI blocking).
+  - **Messages frontend** : M1=`CONTAMINATION MASQUÉE — AUCUN AFFÛT POSSIBLE DANS CE SECTEUR`, M2=`CONTAMINATION ACTIVE — AFFÛT ÉCOLOGIQUEMENT POSSIBLE`. Couche VENT préservée indépendante (R6).
+  - **15 nouveaux pytests (`test_phase_xxx_novendvicies_contamination_affut_omega.py`)** : 15/15 PASS — checksum doctrinal vérifié, R5 force False, R3 forest passes, R4 score<50, A3 anomaly detection, audit batch, activate rejette mauvais checksum.
+
+
 - **PHASE_XXX-OCTOVICIES · HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME_V3 — 🎯 9/12 OUTPUTS COMPUTABLES + pressure_sensitive_zones LIVE (2026-05-08)**
   Greffe `pressure_sensitive_zones` sur recompute V2 sous régime guardrails ENFORCED + autonomy=LIMITED, FUSION ADD-ONLY strict (V2 préservé sans mutation). Source institutionnelle composite : OSM Overpass (highways/buildings/landuse) + WorldPop (population). Doctrine peer-reviewed Naidoo & Burton 2010 §3.2 (poids 0.40 routes + 0.30 population + 0.20 bâtiments + 0.10 résidentiel) + Frid & Dill 2002 (disturbance threshold) + Tucker 2018 (HFI mammal movement).
   - **Nouveau module `habitat_outputs_recompute_v3_omega.py`** : `recompute_habitat_outputs_with_anthropogenic_pressure_v3`, `_extract_pressure_per_site`, `_compute_pressure_sensitive_zones_output`, `get_habitat_recompute_v3_status`. Chargement V2 SANS mutation + greffe pressure per site + verdict 9_OF_12.

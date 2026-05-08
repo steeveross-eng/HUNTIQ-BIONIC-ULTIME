@@ -1,0 +1,25 @@
+{
+  "audit_filename": "audit_20260508T023240Z_2462b151.json",
+  "audit_sha256": "2462b151688324325f24f8acc17f263ff900025ba57e5ca546bca855899822e4",
+  "persisted_at_utc": "2026-05-08T02:32:40+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "NOAA_PIPELINE",
+    "subtype": "CATALOGUE_CARTOGRAPHY",
+    "ordre": "COPERNICUS_P0_CATALOGUE_CARTOGRAPHY",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "provider": "COPERNICUS_MARINE",
+    "forensic_event": "COPERNICUS_CATALOGUE_CARTOGRAPHY",
+    "root_catalog_url": "https://my.cmems-du.eu/thredds/catalog/catalog.xml",
+    "manifest_sha256": "51eb6fe43acd6f2add9111df239d9c916a8c0c6cfbc7de18fc1d4aa59da1a92d",
+    "n_catalogs_visited": 1,
+    "n_datasets_discovered": 0,
+    "n_catalog_refs_discovered": 0,
+    "capped": false,
+    "no_binary_probed": true,
+    "v30_lock_inviolate": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  }
+}

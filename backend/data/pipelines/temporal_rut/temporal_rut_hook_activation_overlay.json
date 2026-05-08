@@ -1,0 +1,41 @@
+{
+  "history": [
+    {
+      "manifest_id": "TEMPORAL_RUT_DATA_HOOK_ACTIVATE_Ω",
+      "ordre": "P6_TEMPORAL_RUT_DATA_HOOK_ACTIVATE_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "activated": true,
+      "verdict": "TEMPORAL_RUT_DATA_HOOK_ACTIVATED",
+      "reason": "unlock_rut_zones_for_full_12_outputs",
+      "validated_manifest_sha256": "7ab2416de59d42b900a77a50cfcd2fd30d4899d613526ff1255cca30dc452f9a",
+      "validated_summary": {
+        "verdict": "TEMPORAL_RUT_VALIDATE_ALL_VALID",
+        "n_sites_total": 5,
+        "n_composite_valid": 5
+      },
+      "outputs_unblocked_via_this_hook": [
+        "rut_zones_temporal_proxy (Bronson 1989 + Hebblewhite 2008 + Bowyer 1981)"
+      ],
+      "providers_physical_active": [
+        "ASTRONOMICAL_PHOTOPERIOD",
+        "NASA_NDVI_DECADE_FALL",
+        "GBIF_RUT_MONTHS"
+      ],
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T02:29:28+00:00",
+      "elapsed_s": 0.0,
+      "manifest_sha256": "ca6937d8d7a3c68ba6c367c59d784f2f0586ad3923a936e14bab91bf53529952"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T02:29:28+00:00",
+  "n_activations": 1,
+  "last_manifest_sha256": "ca6937d8d7a3c68ba6c367c59d784f2f0586ad3923a936e14bab91bf53529952",
+  "last_verdict": "TEMPORAL_RUT_DATA_HOOK_ACTIVATED",
+  "last_validated_manifest_sha256": "7ab2416de59d42b900a77a50cfcd2fd30d4899d613526ff1255cca30dc452f9a",
+  "v30_lock": "INVIOLÉ"
+}

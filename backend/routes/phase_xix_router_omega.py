@@ -3388,3 +3388,317 @@ async def habitat_outputs_recompute_v3_status_endpoint() -> JSONResponse:
         "v30_lock": "INVIOLÉ",
     })
 
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# COMMANDE_INSTITUTIONNELLE_Ω V12-MAÎTRE
+# CONTAMINATION → AFFÛTS dependency lock (R1-R6)
+# ═════════════════════════════════════════════════════════════════════════
+class ContaminationAffutHookActivateBody(BaseModel):
+    activation_input_string: str = (
+        "CONTAMINATION_AFFUT_DEPENDENCY_V12")
+    persist: bool = True
+
+
+@router.post("/contamination-affut-dependency-hook-activate")
+async def contamination_affut_hook_activate_endpoint(
+    body: ContaminationAffutHookActivateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """HOOK_CONTAMINATION_AFFUT_DEPENDENCY · activation V12-MAÎTRE.
+
+    Vérification SHA-256 doctrinale obligatoire.
+    Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.contamination_affut_dependency_omega import (  # noqa: E501
+        activate_contamination_affut_dependency_hook,
+    )
+    try:
+        payload = activate_contamination_affut_dependency_hook(
+            activation_input_string=body.activation_input_string,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "CONTAMINATION_AFFUT_HOOK_ACTIVATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id":
+            "CONTAMINATION_AFFUT_HOOK_ACTIVATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "COMMANDE_INSTITUTIONNELLE_Ω_V12-MAÎTRE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+class ContaminationAffutAuditBody(BaseModel):
+    tiles: list
+    persist_violations: bool = True
+
+
+@router.post("/contamination-affut-dependency-audit")
+async def contamination_affut_audit_endpoint(
+    body: ContaminationAffutAuditBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """CONTAMINATION_AFFUT_DEPENDENCY_AUDIT_Ω · A1+A2+A3+A4 batch."""
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.contamination_affut_dependency_omega import (  # noqa: E501
+        audit_tiles_dependency,
+    )
+    try:
+        payload = audit_tiles_dependency(
+            tiles=body.tiles,
+            persist_violations=body.persist_violations,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "CONTAMINATION_AFFUT_AUDIT_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "CONTAMINATION_AFFUT_AUDIT_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "COMMANDE_INSTITUTIONNELLE_Ω_V12-MAÎTRE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/contamination-affut-dependency-hook-status")
+async def contamination_affut_hook_status_endpoint() -> JSONResponse:
+    """HOOK_CONTAMINATION_AFFUT_DEPENDENCY · état (PUBLIC RO)."""
+    from engines.v8_institutional.especes.contamination_affut_dependency_omega import (  # noqa: E501
+        get_contamination_affut_dependency_hook_status,
+    )
+    payload = get_contamination_affut_dependency_hook_status()
+    return JSONResponse({
+        "manifest_id":
+            "CONTAMINATION_AFFUT_HOOK_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "COMMANDE_INSTITUTIONNELLE_Ω_V12-MAÎTRE",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# TEMPORAL_RUT_DATA_HOOK_ACTIVATE_Ω (P6) — débloque rut_zones (10/12)
+# ═════════════════════════════════════════════════════════════════════════
+class TemporalRutValidateBody(BaseModel):
+    site_to_species_map: Optional[Dict[str, str]] = None
+    site_coordinates: Optional[Dict[str, Dict[str, float]]] = None
+    gbif_radius_km: float = 50.0
+    persist: bool = True
+
+
+@router.post("/temporal-rut-validate")
+async def temporal_rut_validate_endpoint(
+    body: TemporalRutValidateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """TEMPORAL_RUT_DATA_P0_VALIDATE_Ω · 3 piliers physiques.
+
+    Photopériode (Bronson 1989) + NDVI fall (Hebblewhite 2008) +
+    GBIF rut months (Bowyer 1981).
+    Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.temporal_rut_data_omega import (
+        validate_temporal_rut_data_per_site,
+    )
+    try:
+        payload = validate_temporal_rut_data_per_site(
+            site_to_species_map=body.site_to_species_map,
+            site_coordinates=body.site_coordinates,
+            gbif_radius_km=body.gbif_radius_km,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "TEMPORAL_RUT_VALIDATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "TEMPORAL_RUT_VALIDATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P6_TEMPORAL_RUT_DATA_HOOK_ACTIVATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+class TemporalRutHookActivateBody(BaseModel):
+    manifest_sha256: str
+    reason: str = "unlock_rut_zones_for_full_12_outputs"
+    persist: bool = True
+
+
+@router.post("/temporal-rut-hook-activate")
+async def temporal_rut_hook_activate_endpoint(
+    body: TemporalRutHookActivateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """TEMPORAL_RUT_DATA_HOOK_ACTIVATE_Ω · activation officielle."""
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.temporal_rut_data_omega import (
+        activate_temporal_rut_data_hook,
+    )
+    try:
+        payload = activate_temporal_rut_data_hook(
+            manifest_sha256=body.manifest_sha256,
+            reason=body.reason,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "TEMPORAL_RUT_HOOK_ACTIVATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "TEMPORAL_RUT_HOOK_ACTIVATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P6_TEMPORAL_RUT_DATA_HOOK_ACTIVATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/temporal-rut-hook-status")
+async def temporal_rut_hook_status_endpoint() -> JSONResponse:
+    """TEMPORAL_RUT_DATA_HOOK · état (PUBLIC RO)."""
+    from engines.v8_institutional.especes.temporal_rut_data_omega import (
+        get_temporal_rut_data_hook_status,
+    )
+    payload = get_temporal_rut_data_hook_status()
+    return JSONResponse({
+        "manifest_id": "TEMPORAL_RUT_HOOK_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P6_TEMPORAL_RUT_DATA_HOOK_ACTIVATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# HABITAT_OUTPUTS_FINAL_MERGE_Ω (P7) — 10/12 outputs computables
+# ═════════════════════════════════════════════════════════════════════════
+class HabitatFinalMergeBody(BaseModel):
+    species_to_site_map: Optional[Dict[str, str]] = None
+    persist: bool = True
+    require_rut_hook_active: bool = True
+
+
+@router.post("/habitat-outputs-final-merge")
+async def habitat_outputs_final_merge_endpoint(
+    body: HabitatFinalMergeBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """HABITAT_OUTPUTS_FINAL_MERGE_Ω · greffe rut sur V3.
+
+    Réutilise V3 sans mutation (FUSION ADD-ONLY) puis greffe rut_zones.
+    Refuse l'exécution si TEMPORAL_RUT_HOOK n'est pas activé.
+    Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.habitat_outputs_final_merge_omega import (  # noqa: E501
+        merge_habitat_outputs_final,
+    )
+    try:
+        payload = merge_habitat_outputs_final(
+            species_to_site_map=body.species_to_site_map,
+            persist=body.persist,
+            require_rut_hook_active=body.require_rut_hook_active,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "HABITAT_OUTPUTS_FINAL_MERGE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "HABITAT_OUTPUTS_FINAL_MERGE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P7_HABITAT_OUTPUTS_FINAL_MERGE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/habitat-outputs-final-merge-status")
+async def habitat_outputs_final_merge_status_endpoint() -> JSONResponse:
+    """HABITAT_OUTPUTS_FINAL_MERGE_Ω · état (PUBLIC RO)."""
+    from engines.v8_institutional.especes.habitat_outputs_final_merge_omega import (  # noqa: E501
+        get_habitat_final_merge_status,
+    )
+    payload = get_habitat_final_merge_status()
+    return JSONResponse({
+        "manifest_id": "HABITAT_OUTPUTS_FINAL_MERGE_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P7_HABITAT_OUTPUTS_FINAL_MERGE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+

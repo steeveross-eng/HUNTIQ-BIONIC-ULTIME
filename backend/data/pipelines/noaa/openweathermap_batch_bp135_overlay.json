@@ -6958,11 +6958,359 @@
       "executed_at_utc": "2026-05-08T02:13:37+00:00",
       "elapsed_s": 0.845,
       "manifest_sha256": "fe464508815d0a8e8f30da29b58b8f3797f7f39222a1deca806a8e93f6d708c6"
+    },
+    {
+      "manifest_id": "OWM_BATCH_BP135_Ω",
+      "ordre": "P1_OPENWEATHERMAP_BATCH_PROBE_BP135",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "forensic_event": "OPENWEATHERMAP_BATCH_BP135",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "valid": true,
+      "verdict": "OWM_BATCH_BP135_ALL_SPECIES_VALID",
+      "n_species_total": 3,
+      "n_valid": 3,
+      "n_invalid": 0,
+      "credentials_api_key_masked": "***MASKED(32_CHARS_HEAD=44...TAIL=08)***",
+      "endpoints": {
+        "current": "https://api.openweathermap.org/data/2.5/weather",
+        "forecast": "https://api.openweathermap.org/data/2.5/forecast"
+      },
+      "units": "metric",
+      "species_coordinates_input": {
+        "sp1": {
+          "lat": 46.8139,
+          "lon": -71.208
+        },
+        "sp2": {
+          "lat": 47.2,
+          "lon": -70.3
+        },
+        "sp3": {
+          "lat": 48.1,
+          "lon": -69.0
+        }
+      },
+      "species_results": [
+        {
+          "species_name": "sp1",
+          "coords": {
+            "lat": 46.8139,
+            "lon": -71.208
+          },
+          "sub_manifest_sha256": "73cb4c5477b4060801f6e3cec1271b04146799bacb252046b33b25741147d7ec",
+          "verdict": "OWM_ZONE_PIVOT_VALID_BOTH_ENDPOINTS_LIVE",
+          "valid": true,
+          "current_http_status": 200,
+          "forecast_http_status": 200,
+          "current_signature_present": true,
+          "forecast_signature_present": true,
+          "forecast_n_items": 40,
+          "current_meta": {
+            "city_name": "Québec",
+            "country": "CA",
+            "lat": 46.8131,
+            "lon": -71.2075,
+            "timezone_offset_seconds": -14400,
+            "weather_main": "Clouds",
+            "weather_desc": "broken clouds",
+            "cod": 200,
+            "dt_utc_unix": 1778207283
+          },
+          "variables_extracted": {
+            "temperature": 5.83,
+            "humidity": 85,
+            "pressure": 1006,
+            "wind_speed": 6.17,
+            "wind_direction": 260,
+            "cloud_cover": 75
+          },
+          "variables_missing": [
+            "precipitation::no_rain_no_snow_in_response"
+          ],
+          "n_variables_extracted": 6
+        },
+        {
+          "species_name": "sp2",
+          "coords": {
+            "lat": 47.2,
+            "lon": -70.3
+          },
+          "sub_manifest_sha256": "b656587b5fbb4004791d24becb10df9c917d9d8f0bbaf6ae222412648ff38951",
+          "verdict": "OWM_ZONE_PIVOT_VALID_BOTH_ENDPOINTS_LIVE",
+          "valid": true,
+          "current_http_status": 200,
+          "forecast_http_status": 200,
+          "current_signature_present": true,
+          "forecast_signature_present": true,
+          "forecast_n_items": 40,
+          "current_meta": {
+            "city_name": "St-Jean-Port-Joli",
+            "country": "CA",
+            "lat": 47.2,
+            "lon": -70.3,
+            "timezone_offset_seconds": -14400,
+            "weather_main": "Clouds",
+            "weather_desc": "broken clouds",
+            "cod": 200,
+            "dt_utc_unix": 1778207584
+          },
+          "variables_extracted": {
+            "temperature": 5.89,
+            "humidity": 85,
+            "pressure": 1005,
+            "wind_speed": 1.45,
+            "wind_direction": 262,
+            "cloud_cover": 68
+          },
+          "variables_missing": [
+            "precipitation::no_rain_no_snow_in_response"
+          ],
+          "n_variables_extracted": 6
+        },
+        {
+          "species_name": "sp3",
+          "coords": {
+            "lat": 48.1,
+            "lon": -69.0
+          },
+          "sub_manifest_sha256": "990062eeb1c6070aa5ba3f4f934bca9bd26a0d0812d622eb088849c7d0538d4d",
+          "verdict": "OWM_ZONE_PIVOT_VALID_BOTH_ENDPOINTS_LIVE",
+          "valid": true,
+          "current_http_status": 200,
+          "forecast_http_status": 200,
+          "current_signature_present": true,
+          "forecast_signature_present": true,
+          "forecast_n_items": 40,
+          "current_meta": {
+            "city_name": "Les Escoumins",
+            "country": "CA",
+            "lat": 48.1,
+            "lon": -69,
+            "timezone_offset_seconds": -14400,
+            "weather_main": "Clouds",
+            "weather_desc": "overcast clouds",
+            "cod": 200,
+            "dt_utc_unix": 1778207584
+          },
+          "variables_extracted": {
+            "temperature": 2.98,
+            "humidity": 94,
+            "pressure": 1004,
+            "wind_speed": 1.41,
+            "wind_direction": 35,
+            "cloud_cover": 100
+          },
+          "variables_missing": [
+            "precipitation::no_rain_no_snow_in_response"
+          ],
+          "n_variables_extracted": 6
+        }
+      ],
+      "aggregated_stats_across_valid_species": {
+        "temperature": {
+          "n": 3,
+          "min": 2.98,
+          "max": 5.89,
+          "mean": 4.9
+        },
+        "humidity": {
+          "n": 3,
+          "min": 85,
+          "max": 94,
+          "mean": 88.0
+        },
+        "pressure": {
+          "n": 3,
+          "min": 1004,
+          "max": 1006,
+          "mean": 1005.0
+        },
+        "wind_speed": {
+          "n": 3,
+          "min": 1.41,
+          "max": 6.17,
+          "mean": 3.01
+        },
+        "wind_direction": {
+          "n": 3,
+          "min": 35,
+          "max": 262,
+          "mean": 185.667
+        },
+        "cloud_cover": {
+          "n": 3,
+          "min": 68,
+          "max": 100,
+          "mean": 81.0
+        }
+      },
+      "anti_generique_strict": true,
+      "anti_leakage_token_masked": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T02:33:05+00:00",
+      "elapsed_s": 1.286,
+      "manifest_sha256": "d7981a6e0e5a81141aca16452f97f9d134a7acc4eb3f0cc11d4c04b820663735"
+    },
+    {
+      "manifest_id": "OWM_BATCH_BP135_Ω",
+      "ordre": "P1_OPENWEATHERMAP_BATCH_PROBE_BP135",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "forensic_event": "OPENWEATHERMAP_BATCH_BP135",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "valid": true,
+      "verdict": "OWM_BATCH_BP135_ALL_SPECIES_VALID",
+      "n_species_total": 2,
+      "n_valid": 2,
+      "n_invalid": 0,
+      "credentials_api_key_masked": "***MASKED(32_CHARS_HEAD=44...TAIL=08)***",
+      "endpoints": {
+        "current": "https://api.openweathermap.org/data/2.5/weather",
+        "forecast": "https://api.openweathermap.org/data/2.5/forecast"
+      },
+      "units": "metric",
+      "species_coordinates_input": {
+        "sp1": {
+          "lat": 46.8139,
+          "lon": -71.208
+        },
+        "sp2": {
+          "lat": 47.2,
+          "lon": -70.3
+        }
+      },
+      "species_results": [
+        {
+          "species_name": "sp1",
+          "coords": {
+            "lat": 46.8139,
+            "lon": -71.208
+          },
+          "sub_manifest_sha256": "fecc713cf28cfe7dc09379ddff861ba1f77d183f45ada60a69b1ad42c5fc6dcc",
+          "verdict": "OWM_ZONE_PIVOT_VALID_BOTH_ENDPOINTS_LIVE",
+          "valid": true,
+          "current_http_status": 200,
+          "forecast_http_status": 200,
+          "current_signature_present": true,
+          "forecast_signature_present": true,
+          "forecast_n_items": 40,
+          "current_meta": {
+            "city_name": "Québec",
+            "country": "CA",
+            "lat": 46.8131,
+            "lon": -71.2075,
+            "timezone_offset_seconds": -14400,
+            "weather_main": "Clouds",
+            "weather_desc": "broken clouds",
+            "cod": 200,
+            "dt_utc_unix": 1778207283
+          },
+          "variables_extracted": {
+            "temperature": 5.83,
+            "humidity": 85,
+            "pressure": 1006,
+            "wind_speed": 6.17,
+            "wind_direction": 260,
+            "cloud_cover": 75
+          },
+          "variables_missing": [
+            "precipitation::no_rain_no_snow_in_response"
+          ],
+          "n_variables_extracted": 6
+        },
+        {
+          "species_name": "sp2",
+          "coords": {
+            "lat": 47.2,
+            "lon": -70.3
+          },
+          "sub_manifest_sha256": "0a815f129cf0da19329bff60b3681a3e32b7f8e34a78ca793c5b84f610d129b2",
+          "verdict": "OWM_ZONE_PIVOT_VALID_BOTH_ENDPOINTS_LIVE",
+          "valid": true,
+          "current_http_status": 200,
+          "forecast_http_status": 200,
+          "current_signature_present": true,
+          "forecast_signature_present": true,
+          "forecast_n_items": 40,
+          "current_meta": {
+            "city_name": "St-Jean-Port-Joli",
+            "country": "CA",
+            "lat": 47.2,
+            "lon": -70.3,
+            "timezone_offset_seconds": -14400,
+            "weather_main": "Clouds",
+            "weather_desc": "broken clouds",
+            "cod": 200,
+            "dt_utc_unix": 1778207584
+          },
+          "variables_extracted": {
+            "temperature": 5.89,
+            "humidity": 85,
+            "pressure": 1005,
+            "wind_speed": 1.45,
+            "wind_direction": 262,
+            "cloud_cover": 68
+          },
+          "variables_missing": [
+            "precipitation::no_rain_no_snow_in_response"
+          ],
+          "n_variables_extracted": 6
+        }
+      ],
+      "aggregated_stats_across_valid_species": {
+        "temperature": {
+          "n": 2,
+          "min": 5.83,
+          "max": 5.89,
+          "mean": 5.86
+        },
+        "humidity": {
+          "n": 2,
+          "min": 85,
+          "max": 85,
+          "mean": 85.0
+        },
+        "pressure": {
+          "n": 2,
+          "min": 1005,
+          "max": 1006,
+          "mean": 1005.5
+        },
+        "wind_speed": {
+          "n": 2,
+          "min": 1.45,
+          "max": 6.17,
+          "mean": 3.81
+        },
+        "wind_direction": {
+          "n": 2,
+          "min": 260,
+          "max": 262,
+          "mean": 261.0
+        },
+        "cloud_cover": {
+          "n": 2,
+          "min": 68,
+          "max": 75,
+          "mean": 71.5
+        }
+      },
+      "anti_generique_strict": true,
+      "anti_leakage_token_masked": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T02:33:08+00:00",
+      "elapsed_s": 0.847,
+      "manifest_sha256": "ac57475f51f074e713caf5e277554867a1274b34082a0bc4e6e45c252f38de24"
     }
   ],
-  "last_updated_utc": "2026-05-08T02:13:37+00:00",
-  "n_batches": 38,
-  "last_manifest_sha256": "fe464508815d0a8e8f30da29b58b8f3797f7f39222a1deca806a8e93f6d708c6",
+  "last_updated_utc": "2026-05-08T02:33:08+00:00",
+  "n_batches": 40,
+  "last_manifest_sha256": "ac57475f51f074e713caf5e277554867a1274b34082a0bc4e6e45c252f38de24",
   "last_verdict": "OWM_BATCH_BP135_ALL_SPECIES_VALID",
   "v30_lock": "INVIOLÉ"
 }

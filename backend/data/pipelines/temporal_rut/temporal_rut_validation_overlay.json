@@ -1,0 +1,510 @@
+{
+  "history": [
+    {
+      "manifest_id": "TEMPORAL_RUT_DATA_P0_VALIDATE_Ω",
+      "ordre": "P6_TEMPORAL_RUT_DATA_HOOK_ACTIVATE_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "valid": true,
+      "verdict": "TEMPORAL_RUT_VALIDATE_ALL_VALID",
+      "provider": "TEMPORAL_RUT",
+      "providers_physical": [
+        "ASTRONOMICAL_PHOTOPERIOD_BRONSON_1989",
+        "NASA_NDVI_DECADE_FALL_HEBBLEWHITE_2008",
+        "GBIF_RUT_MONTHS_BOWYER_1981"
+      ],
+      "rut_seasons_doctrinal": {
+        "cerf": {
+          "scientific_name": "Odocoileus virginianus",
+          "rut_months": [
+            10,
+            11
+          ],
+          "rut_doy_start": 274,
+          "rut_doy_end": 334,
+          "primary_reference": "Bowyer_1981_JMammal",
+          "gbif_taxon_key": 5220126
+        },
+        "orignal": {
+          "scientific_name": "Alces alces",
+          "rut_months": [
+            9,
+            10
+          ],
+          "rut_doy_start": 244,
+          "rut_doy_end": 304,
+          "primary_reference": "Bowyer_1981_JMammal",
+          "gbif_taxon_key": 2440944
+        },
+        "ours": {
+          "scientific_name": "Ursus americanus",
+          "rut_months": [
+            6,
+            7
+          ],
+          "rut_doy_start": 152,
+          "rut_doy_end": 212,
+          "primary_reference": "Bunnell_Tait_1981",
+          "gbif_taxon_key": 2433433
+        },
+        "dindon": {
+          "scientific_name": "Meleagris gallopavo",
+          "rut_months": [
+            4,
+            5
+          ],
+          "rut_doy_start": 91,
+          "rut_doy_end": 151,
+          "primary_reference": "Healy_1992_StackpoleBooks",
+          "gbif_taxon_key": 2473958
+        },
+        "wapiti": {
+          "scientific_name": "Cervus canadensis",
+          "rut_months": [
+            9,
+            10
+          ],
+          "rut_doy_start": 244,
+          "rut_doy_end": 304,
+          "primary_reference": "Bowyer_1981_JMammal",
+          "gbif_taxon_key": 2441010
+        }
+      },
+      "weights_composite": {
+        "photoperiod": 0.25,
+        "ndvi_fall": 0.4,
+        "gbif_presence": 0.35
+      },
+      "n_sites_total": 5,
+      "n_photoperiod_valid": 5,
+      "n_ndvi_fall_valid": 5,
+      "n_gbif_valid": 5,
+      "n_composite_valid": 5,
+      "site_results": {
+        "espece_a": {
+          "lat": 46.8131,
+          "lon": -71.2075,
+          "species_canonical": "cerf",
+          "scientific_name": "Odocoileus virginianus",
+          "rut_months": [
+            10,
+            11
+          ],
+          "rut_doy_window": [
+            274,
+            334
+          ],
+          "photoperiod": {
+            "valid": true,
+            "lat": 46.8131,
+            "rut_doy_start": 274,
+            "rut_doy_end": 334,
+            "mean_daylength_hours": 10.2,
+            "delta_daylength_hours": -2.877,
+            "rate_change_h_per_day": -0.048,
+            "score_0_100": 100.0,
+            "regime": "OPTIMAL_PHOTOPERIOD_DECLINE_AUTUMNAL",
+            "primary_reference": "Bronson_1989_MammalianReprod"
+          },
+          "ndvi_fall": {
+            "valid": true,
+            "ndvi_fall_score_0_100": 73.26,
+            "regime": "DORMANT_LATE_RUT_PROXY",
+            "components": {
+              "decade_mean_ndvi_fall": 0.1904,
+              "decade_std_ndvi_fall": 0.0195,
+              "n_years_input": 3,
+              "consistency_score": 96.1
+            },
+            "primary_reference": "Hebblewhite_2008_EcolMonogr"
+          },
+          "gbif_presence": {
+            "valid": true,
+            "taxon_key": 5220126,
+            "rut_months": [
+              10,
+              11
+            ],
+            "lat_range": "46.3626,47.2636",
+            "lon_range": "-71.8657,-70.5493",
+            "radius_km": 50.0,
+            "total_count_in_window": 0,
+            "n_records_returned": 0,
+            "elapsed_ms": 568.6,
+            "primary_reference": "Bowyer_1981_JMammal_GBIF_filter"
+          },
+          "rut_zones_composite": {
+            "valid": true,
+            "n_pillars_valid": 3,
+            "composite_score_0_100": 54.3,
+            "regime": "RUT_ZONE_MODERATE_PROBABILITY",
+            "components": {
+              "photoperiod_score": 100.0,
+              "photoperiod_regime": "OPTIMAL_PHOTOPERIOD_DECLINE_AUTUMNAL",
+              "ndvi_fall_score": 73.26,
+              "ndvi_fall_regime": "DORMANT_LATE_RUT_PROXY",
+              "gbif_score": 0.0,
+              "gbif_regime": "ABSENT_NO_GBIF_RUT_OBSERVATIONS",
+              "gbif_count_input": 0
+            },
+            "weights_doctrinal_renormalized": 1.0,
+            "weights_doctrinal_full": {
+              "photoperiod": 0.25,
+              "ndvi_fall": 0.4,
+              "gbif_presence": 0.35
+            },
+            "doctrinal_caveat": "TEMPORAL PROXY composite (Bronson 1989 photoperiod + Hebblewhite 2008 NDVI fall + Bowyer 1981 GBIF rut months). PAS rut_zones FULL (qui requiert GPS breeding behavior multi-year, Hebblewhite 2007 §3). Anti-générique strict.",
+            "primary_references": [
+              "Bronson_1989_MammalianReprod",
+              "Hebblewhite_2008_EcolMonogr",
+              "Bowyer_1981_JMammal"
+            ]
+          }
+        },
+        "espece_b": {
+          "lat": 47.2,
+          "lon": -70.27,
+          "species_canonical": "orignal",
+          "scientific_name": "Alces alces",
+          "rut_months": [
+            9,
+            10
+          ],
+          "rut_doy_window": [
+            244,
+            304
+          ],
+          "photoperiod": {
+            "valid": true,
+            "lat": 47.2,
+            "rut_doy_start": 244,
+            "rut_doy_end": 304,
+            "mean_daylength_hours": 11.75,
+            "delta_daylength_hours": -3.304,
+            "rate_change_h_per_day": -0.0551,
+            "score_0_100": 100.0,
+            "regime": "OPTIMAL_PHOTOPERIOD_DECLINE_AUTUMNAL",
+            "primary_reference": "Bronson_1989_MammalianReprod"
+          },
+          "ndvi_fall": {
+            "valid": true,
+            "ndvi_fall_score_0_100": 93.89,
+            "regime": "OPTIMAL_RUT_PRE_PHENOLOGY",
+            "components": {
+              "decade_mean_ndvi_fall": 0.4979,
+              "decade_std_ndvi_fall": 0.1018,
+              "n_years_input": 3,
+              "consistency_score": 79.64
+            },
+            "primary_reference": "Hebblewhite_2008_EcolMonogr"
+          },
+          "gbif_presence": {
+            "valid": true,
+            "taxon_key": 2440944,
+            "rut_months": [
+              9,
+              10
+            ],
+            "lat_range": "46.7495,47.6505",
+            "lon_range": "-70.9330,-69.6070",
+            "radius_km": 50.0,
+            "total_count_in_window": 0,
+            "n_records_returned": 0,
+            "elapsed_ms": 464.7,
+            "primary_reference": "Bowyer_1981_JMammal_GBIF_filter"
+          },
+          "rut_zones_composite": {
+            "valid": true,
+            "n_pillars_valid": 3,
+            "composite_score_0_100": 62.56,
+            "regime": "RUT_ZONE_MODERATE_PROBABILITY",
+            "components": {
+              "photoperiod_score": 100.0,
+              "photoperiod_regime": "OPTIMAL_PHOTOPERIOD_DECLINE_AUTUMNAL",
+              "ndvi_fall_score": 93.89,
+              "ndvi_fall_regime": "OPTIMAL_RUT_PRE_PHENOLOGY",
+              "gbif_score": 0.0,
+              "gbif_regime": "ABSENT_NO_GBIF_RUT_OBSERVATIONS",
+              "gbif_count_input": 0
+            },
+            "weights_doctrinal_renormalized": 1.0,
+            "weights_doctrinal_full": {
+              "photoperiod": 0.25,
+              "ndvi_fall": 0.4,
+              "gbif_presence": 0.35
+            },
+            "doctrinal_caveat": "TEMPORAL PROXY composite (Bronson 1989 photoperiod + Hebblewhite 2008 NDVI fall + Bowyer 1981 GBIF rut months). PAS rut_zones FULL (qui requiert GPS breeding behavior multi-year, Hebblewhite 2007 §3). Anti-générique strict.",
+            "primary_references": [
+              "Bronson_1989_MammalianReprod",
+              "Hebblewhite_2008_EcolMonogr",
+              "Bowyer_1981_JMammal"
+            ]
+          }
+        },
+        "espece_c": {
+          "lat": 48.34,
+          "lon": -69.39,
+          "species_canonical": "ours",
+          "scientific_name": "Ursus americanus",
+          "rut_months": [
+            6,
+            7
+          ],
+          "rut_doy_window": [
+            152,
+            212
+          ],
+          "photoperiod": {
+            "valid": true,
+            "lat": 48.34,
+            "rut_doy_start": 152,
+            "rut_doy_end": 212,
+            "mean_daylength_hours": 15.84,
+            "delta_daylength_hours": -0.664,
+            "rate_change_h_per_day": -0.0111,
+            "score_0_100": 38.94,
+            "regime": "SUB_OPTIMAL_NEAR_SOLSTICE",
+            "primary_reference": "Bronson_1989_MammalianReprod"
+          },
+          "ndvi_fall": {
+            "valid": true,
+            "ndvi_fall_score_0_100": 88.13,
+            "regime": "OPTIMAL_RUT_PRE_PHENOLOGY",
+            "components": {
+              "decade_mean_ndvi_fall": 0.4633,
+              "decade_std_ndvi_fall": 0.1978,
+              "n_years_input": 3,
+              "consistency_score": 60.44
+            },
+            "primary_reference": "Hebblewhite_2008_EcolMonogr"
+          },
+          "gbif_presence": {
+            "valid": true,
+            "taxon_key": 2433433,
+            "rut_months": [
+              6,
+              7
+            ],
+            "lat_range": "47.8895,48.7905",
+            "lon_range": "-70.0677,-68.7123",
+            "radius_km": 50.0,
+            "total_count_in_window": 0,
+            "n_records_returned": 0,
+            "elapsed_ms": 493.2,
+            "primary_reference": "Bowyer_1981_JMammal_GBIF_filter"
+          },
+          "rut_zones_composite": {
+            "valid": true,
+            "n_pillars_valid": 3,
+            "composite_score_0_100": 44.99,
+            "regime": "RUT_ZONE_LOW_PROBABILITY",
+            "components": {
+              "photoperiod_score": 38.94,
+              "photoperiod_regime": "SUB_OPTIMAL_NEAR_SOLSTICE",
+              "ndvi_fall_score": 88.13,
+              "ndvi_fall_regime": "OPTIMAL_RUT_PRE_PHENOLOGY",
+              "gbif_score": 0.0,
+              "gbif_regime": "ABSENT_NO_GBIF_RUT_OBSERVATIONS",
+              "gbif_count_input": 0
+            },
+            "weights_doctrinal_renormalized": 1.0,
+            "weights_doctrinal_full": {
+              "photoperiod": 0.25,
+              "ndvi_fall": 0.4,
+              "gbif_presence": 0.35
+            },
+            "doctrinal_caveat": "TEMPORAL PROXY composite (Bronson 1989 photoperiod + Hebblewhite 2008 NDVI fall + Bowyer 1981 GBIF rut months). PAS rut_zones FULL (qui requiert GPS breeding behavior multi-year, Hebblewhite 2007 §3). Anti-générique strict.",
+            "primary_references": [
+              "Bronson_1989_MammalianReprod",
+              "Hebblewhite_2008_EcolMonogr",
+              "Bowyer_1981_JMammal"
+            ]
+          }
+        },
+        "espece_d": {
+          "lat": 46.36,
+          "lon": -72.07,
+          "species_canonical": "dindon",
+          "scientific_name": "Meleagris gallopavo",
+          "rut_months": [
+            4,
+            5
+          ],
+          "rut_doy_window": [
+            91,
+            151
+          ],
+          "photoperiod": {
+            "valid": true,
+            "lat": 46.36,
+            "rut_doy_start": 91,
+            "rut_doy_end": 151,
+            "mean_daylength_hours": 14.26,
+            "delta_daylength_hours": 2.743,
+            "rate_change_h_per_day": 0.0457,
+            "score_0_100": 95.71,
+            "regime": "SUB_OPTIMAL_NEAR_SOLSTICE",
+            "primary_reference": "Bronson_1989_MammalianReprod"
+          },
+          "ndvi_fall": {
+            "valid": true,
+            "ndvi_fall_score_0_100": 74.49,
+            "regime": "EARLY_FALL_HIGH_GREENNESS",
+            "components": {
+              "decade_mean_ndvi_fall": 0.7149,
+              "decade_std_ndvi_fall": 0.024,
+              "n_years_input": 3,
+              "consistency_score": 95.2
+            },
+            "primary_reference": "Hebblewhite_2008_EcolMonogr"
+          },
+          "gbif_presence": {
+            "valid": true,
+            "taxon_key": 2473958,
+            "rut_months": [
+              4,
+              5
+            ],
+            "lat_range": "45.9095,46.8105",
+            "lon_range": "-72.7227,-71.4173",
+            "radius_km": 50.0,
+            "total_count_in_window": 153,
+            "n_records_returned": 153,
+            "elapsed_ms": 1300.0,
+            "primary_reference": "Bowyer_1981_JMammal_GBIF_filter"
+          },
+          "rut_zones_composite": {
+            "valid": true,
+            "n_pillars_valid": 3,
+            "composite_score_0_100": 88.72,
+            "regime": "RUT_ZONE_HIGH_PROBABILITY",
+            "components": {
+              "photoperiod_score": 95.71,
+              "photoperiod_regime": "SUB_OPTIMAL_NEAR_SOLSTICE",
+              "ndvi_fall_score": 74.49,
+              "ndvi_fall_regime": "EARLY_FALL_HIGH_GREENNESS",
+              "gbif_score": 100.0,
+              "gbif_regime": "HIGH_RUT_PRESENCE_DOCUMENTED",
+              "gbif_count_input": 153
+            },
+            "weights_doctrinal_renormalized": 1.0,
+            "weights_doctrinal_full": {
+              "photoperiod": 0.25,
+              "ndvi_fall": 0.4,
+              "gbif_presence": 0.35
+            },
+            "doctrinal_caveat": "TEMPORAL PROXY composite (Bronson 1989 photoperiod + Hebblewhite 2008 NDVI fall + Bowyer 1981 GBIF rut months). PAS rut_zones FULL (qui requiert GPS breeding behavior multi-year, Hebblewhite 2007 §3). Anti-générique strict.",
+            "primary_references": [
+              "Bronson_1989_MammalianReprod",
+              "Hebblewhite_2008_EcolMonogr",
+              "Bowyer_1981_JMammal"
+            ]
+          }
+        },
+        "espece_e": {
+          "lat": 47.0,
+          "lon": -71.0,
+          "species_canonical": "wapiti",
+          "scientific_name": "Cervus canadensis",
+          "rut_months": [
+            9,
+            10
+          ],
+          "rut_doy_window": [
+            244,
+            304
+          ],
+          "photoperiod": {
+            "valid": true,
+            "lat": 47.0,
+            "rut_doy_start": 244,
+            "rut_doy_end": 304,
+            "mean_daylength_hours": 11.76,
+            "delta_daylength_hours": -3.28,
+            "rate_change_h_per_day": -0.0547,
+            "score_0_100": 100.0,
+            "regime": "OPTIMAL_PHOTOPERIOD_DECLINE_AUTUMNAL",
+            "primary_reference": "Bronson_1989_MammalianReprod"
+          },
+          "ndvi_fall": {
+            "valid": true,
+            "ndvi_fall_score_0_100": 75.5,
+            "regime": "EARLY_FALL_HIGH_GREENNESS",
+            "components": {
+              "decade_mean_ndvi_fall": 0.7113,
+              "decade_std_ndvi_fall": 0.0139,
+              "n_years_input": 3,
+              "consistency_score": 97.22
+            },
+            "primary_reference": "Hebblewhite_2008_EcolMonogr"
+          },
+          "gbif_presence": {
+            "valid": true,
+            "taxon_key": 2441010,
+            "rut_months": [
+              9,
+              10
+            ],
+            "lat_range": "46.5495,47.4505",
+            "lon_range": "-71.6605,-70.3395",
+            "radius_km": 50.0,
+            "total_count_in_window": 0,
+            "n_records_returned": 0,
+            "elapsed_ms": 502.0,
+            "primary_reference": "Bowyer_1981_JMammal_GBIF_filter"
+          },
+          "rut_zones_composite": {
+            "valid": true,
+            "n_pillars_valid": 3,
+            "composite_score_0_100": 55.2,
+            "regime": "RUT_ZONE_MODERATE_PROBABILITY",
+            "components": {
+              "photoperiod_score": 100.0,
+              "photoperiod_regime": "OPTIMAL_PHOTOPERIOD_DECLINE_AUTUMNAL",
+              "ndvi_fall_score": 75.5,
+              "ndvi_fall_regime": "EARLY_FALL_HIGH_GREENNESS",
+              "gbif_score": 0.0,
+              "gbif_regime": "ABSENT_NO_GBIF_RUT_OBSERVATIONS",
+              "gbif_count_input": 0
+            },
+            "weights_doctrinal_renormalized": 1.0,
+            "weights_doctrinal_full": {
+              "photoperiod": 0.25,
+              "ndvi_fall": 0.4,
+              "gbif_presence": 0.35
+            },
+            "doctrinal_caveat": "TEMPORAL PROXY composite (Bronson 1989 photoperiod + Hebblewhite 2008 NDVI fall + Bowyer 1981 GBIF rut months). PAS rut_zones FULL (qui requiert GPS breeding behavior multi-year, Hebblewhite 2007 §3). Anti-générique strict.",
+            "primary_references": [
+              "Bronson_1989_MammalianReprod",
+              "Hebblewhite_2008_EcolMonogr",
+              "Bowyer_1981_JMammal"
+            ]
+          }
+        }
+      },
+      "scientific_references_peer_reviewed": [
+        "Bronson, F. H. (1989). Mammalian Reproductive Biology. U Chicago. ISBN:978-0226075594",
+        "Bowyer, R. T. (1981). J Mammal, 62:574-582. DOI:10.2307/1380404",
+        "Hebblewhite et al. (2008). Ecol Monogr, 78:141-166. DOI:10.1890/06-1708.1",
+        "Forsythe et al. (1995). Ecol Modelling, 80(1):87-95 (CBM daylength)",
+        "Hebblewhite & Merrill (2007). J Appl Ecol, 45:834-844. DOI:10.1111/j.1365-2664.2008.01466.x",
+        "Bunnell & Tait (1981). Population dynamics of bears. In Dynamics of Large Mammal Pop. Wiley.",
+        "Healy (1992). Behavior. In: The Wild Turkey. Stackpole."
+      ],
+      "anti_generique_strict": true,
+      "fusion_add_only": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T02:29:15+00:00",
+      "elapsed_s": 5.335,
+      "manifest_sha256": "7ab2416de59d42b900a77a50cfcd2fd30d4899d613526ff1255cca30dc452f9a"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T02:29:15+00:00",
+  "n_validations": 1,
+  "last_manifest_sha256": "7ab2416de59d42b900a77a50cfcd2fd30d4899d613526ff1255cca30dc452f9a",
+  "last_verdict": "TEMPORAL_RUT_VALIDATE_ALL_VALID",
+  "v30_lock": "INVIOLÉ"
+}
