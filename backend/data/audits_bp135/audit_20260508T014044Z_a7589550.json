@@ -1,0 +1,19 @@
+{
+  "audit_filename": "audit_20260508T014044Z_a7589550.json",
+  "audit_sha256": "a7589550aa4a449ed375589da09f059e4135e2bd398846d139278d5be5a560c4",
+  "persisted_at_utc": "2026-05-08T01:40:44+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "PIPELINE_GUARDRAILS",
+    "subtype": "RESTORE_AND_ENFORCE",
+    "ordre": "PIPELINE_GUARDRAILS_RESTORE",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "activated_by": "COMMANDANT_STEVE_MAX",
+    "activation_sha256": "88dc30cf2e7ffde1b0a00caa3c5626b02986c4637891efc7d25faf37ad3593ef",
+    "n_activations_history": 158,
+    "v30_lock_inviolate": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  }
+}

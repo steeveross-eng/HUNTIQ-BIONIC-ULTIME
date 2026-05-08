@@ -3098,3 +3098,84 @@ async def canopy_hook_status_endpoint() -> JSONResponse:
         "v30_lock": "INVIOLÉ",
     })
 
+
+# ═════════════════════════════════════════════════════════════════════════
+# NASA_NDVI_TIMESERIES_DECADE_Ω — multi-saison × multi-année × multi-site
+# Débloque feeding_zones (Borowik 2013) + rut_phenology_proxy (Hebblewhite).
+# ═════════════════════════════════════════════════════════════════════════
+class NasaNdviTimeseriesDecadeBody(BaseModel):
+    site_coordinates: Dict[str, Dict[str, float]]
+    end_year: Optional[int] = None
+    years_lookback: int = 5
+    seasonal_windows: Optional[list] = None
+    bands_logical: Optional[list] = None
+    persist: bool = True
+
+
+@router.post("/nasa-ndvi-timeseries-validate")
+async def nasa_ndvi_timeseries_validate_endpoint(
+    body: NasaNdviTimeseriesDecadeBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """NASA_NDVI_TIMESERIES_DECADE_Ω · multi-season multi-year.
+
+    Probe MOD13Q1 sur fenêtres été (Borowik 2013) + fall pre-rut
+    (Hebblewhite 2008) sur n années consécutives. Anti-générique strict.
+    Token Commandant requis.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.nasa_ndvi_timeseries_decade_omega import (  # noqa: E501
+        validate_nasa_ndvi_timeseries_decade,
+    )
+    try:
+        payload = validate_nasa_ndvi_timeseries_decade(
+            site_coordinates=body.site_coordinates,
+            end_year=body.end_year,
+            years_lookback=body.years_lookback,
+            seasonal_windows=body.seasonal_windows,
+            bands_logical=body.bands_logical,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "NASA_NDVI_TIMESERIES_VALIDATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "NASA_NDVI_TIMESERIES_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P3_NASA_NDVI_TIMESERIES_DECADE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/nasa-ndvi-timeseries-status")
+async def nasa_ndvi_timeseries_status_endpoint() -> JSONResponse:
+    """NASA_NDVI_TIMESERIES_DECADE_Ω · état (PUBLIC RO)."""
+    from engines.v8_institutional.especes.nasa_ndvi_timeseries_decade_omega import (  # noqa: E501
+        get_ndvi_decade_status,
+    )
+    payload = get_ndvi_decade_status()
+    return JSONResponse({
+        "manifest_id": "NASA_NDVI_TIMESERIES_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P3_NASA_NDVI_TIMESERIES_DECADE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+

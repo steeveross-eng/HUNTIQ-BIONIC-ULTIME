@@ -1,0 +1,36 @@
+{
+  "audit_filename": "audit_20260508T014042Z_d945ee50.json",
+  "audit_sha256": "d945ee50c3fc3d26a48c70a179eee05e43493631bc731a8b828b58aeb759f6f9",
+  "persisted_at_utc": "2026-05-08T01:40:42+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "NOAA_PIPELINE",
+    "subtype": "WOD23_HOOK_ACTIVATION",
+    "ordre": "ACTIVATION_PIPELINE_NOAA_TERRITOIRE",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "verdict": "WOD23_HOOK_ACTIVATED_OPERATIONAL",
+    "activated": true,
+    "manifest_sha256": "a7799d9dc8c6d21697f4866a87943e9049e333b741830d58a9bab78301d9cef4",
+    "bucket": "noaa-territoire",
+    "n_objects_valid": 50,
+    "n_objects_recognized_wod23": 48,
+    "total_size_bytes": 1185823218,
+    "classification_counts": {
+      "APB": 5,
+      "CTD": 6,
+      "DRB": 5,
+      "GLD": 5,
+      "MBT": 5,
+      "OSD": 6,
+      "PFL": 5,
+      "SUR": 3,
+      "UOR": 3,
+      "XBT": 3,
+      "MRB": 2
+    },
+    "no_engine_recompute_triggered": true,
+    "v30_lock_inviolate": true,
+    "drift_zero": true
+  }
+}

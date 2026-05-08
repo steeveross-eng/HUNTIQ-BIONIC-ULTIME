@@ -1,0 +1,23 @@
+{
+  "audit_filename": "audit_20260508T013653Z_0bfb0276.json",
+  "audit_sha256": "0bfb0276c41c13522065f01c89c9f464c5f497735f8cdaf784a84cc826cc1466",
+  "persisted_at_utc": "2026-05-08T01:36:53+00:00",
+  "ordre": "N°53-BIS",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "audit_payload": {
+    "audit_type": "NOAA_PIPELINE",
+    "subtype": "NASA_NDVI_TIMESERIES_DECADE",
+    "ordre": "P3_NASA_NDVI_TIMESERIES_DECADE_Ω",
+    "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+    "provider": "NASA_NDVI_DECADE",
+    "valid": true,
+    "verdict": "NASA_NDVI_TIMESERIES_ALL_VALID",
+    "manifest_sha256": "9c0fd6157eee1d9f72d7291c386ff9a6646d9c45aac9a809a6082f16c95ed929",
+    "n_sites_total": 5,
+    "n_calls_success": 60,
+    "n_calls_failed": 0,
+    "v30_lock_inviolate": true,
+    "drift_zero": true,
+    "no_engine_recompute_triggered": true
+  }
+}

@@ -1,0 +1,2827 @@
+{
+  "history": [
+    {
+      "manifest_id": "NASA_NDVI_TIMESERIES_DECADE_Ω",
+      "ordre": "P3_NASA_NDVI_TIMESERIES_DECADE_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "valid": true,
+      "verdict": "NASA_NDVI_TIMESERIES_ALL_VALID",
+      "provider": "NASA_NDVI_DECADE",
+      "provider_physical": "NASA_MOD13Q1_ORNL_MULTISEASON",
+      "endpoint": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset",
+      "temporal_range": {
+        "start_year": 2022,
+        "end_year": 2024,
+        "n_years": 3
+      },
+      "seasonal_windows_validated": [
+        "summer_growing_peak",
+        "fall_pre_rut"
+      ],
+      "seasonal_windows_unknown": [],
+      "bands_mod13q1_used": [
+        "NDVI",
+        "EVI"
+      ],
+      "bands_deferred_other_product": [],
+      "bands_unknown": [],
+      "n_sites_total": 5,
+      "n_calls_made": 60,
+      "n_calls_success": 60,
+      "n_calls_failed": 0,
+      "site_results": {
+        "espece_a": {
+          "lat": 46.8131,
+          "lon": -71.2075,
+          "species_canonical": "cerf",
+          "seasons_data": {
+            "summer_growing_peak": {
+              "window_metadata": {
+                "start_month": 6,
+                "end_month": 8,
+                "doy_start": 153,
+                "doy_end": 244,
+                "max_tiles_mod13q1": 6,
+                "primary_reference": "Borowik_2013_EurJWildlRes",
+                "use": "feeding_zones_summer_NDVI_peak"
+              },
+              "yearly_results": {
+                "2022": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 4,
+                      "n_nodata": 2,
+                      "min": 0.258,
+                      "max": 0.3082,
+                      "mean": 0.2838,
+                      "first_date": "2022-06-10",
+                      "last_date": "2022-08-29"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 4,
+                      "n_nodata": 2,
+                      "min": 0.1286,
+                      "max": 0.1579,
+                      "mean": 0.1427,
+                      "first_date": "2022-06-10",
+                      "last_date": "2022-08-29"
+                    }
+                  }
+                },
+                "2023": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 5,
+                      "n_nodata": 1,
+                      "min": 0.2358,
+                      "max": 0.3091,
+                      "mean": 0.2787,
+                      "first_date": "2023-06-10",
+                      "last_date": "2023-08-29"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 5,
+                      "n_nodata": 1,
+                      "min": 0.1168,
+                      "max": 0.186,
+                      "mean": 0.1459,
+                      "first_date": "2023-06-10",
+                      "last_date": "2023-08-29"
+                    }
+                  }
+                },
+                "2024": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.2572,
+                      "max": 0.3523,
+                      "mean": 0.3014,
+                      "first_date": "2024-06-09",
+                      "last_date": "2024-08-28"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.1189,
+                      "max": 0.2178,
+                      "mean": 0.1595,
+                      "first_date": "2024-06-09",
+                      "last_date": "2024-08-28"
+                    }
+                  }
+                }
+              },
+              "decade_aggregated_stats": {
+                "valid": true,
+                "n_years_valid": 3,
+                "years_with_data": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years_high_ndvi_threshold_05": 0,
+                "years_high_ndvi_list": [],
+                "decade_mean_ndvi": 0.288,
+                "decade_max_ndvi": 0.3523,
+                "decade_std_ndvi": 0.0097,
+                "decade_mean_evi": 0.1494,
+                "trend_slope_ndvi_per_year": 0.0088,
+                "phenology_consistency_index_inverse_std": 100.0
+              }
+            },
+            "fall_pre_rut": {
+              "window_metadata": {
+                "start_month": 9,
+                "end_month": 10,
+                "doy_start": 244,
+                "doy_end": 305,
+                "max_tiles_mod13q1": 4,
+                "primary_reference": "Hebblewhite_2008_EcolMonogr",
+                "use": "rut_phenology_proxy_fall_NDVI"
+              },
+              "yearly_results": {
+                "2022": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.1267,
+                      "max": 0.2668,
+                      "mean": 0.1859,
+                      "first_date": "2022-09-14",
+                      "last_date": "2022-11-01"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.0634,
+                      "max": 0.1404,
+                      "mean": 0.0988,
+                      "first_date": "2022-09-14",
+                      "last_date": "2022-11-01"
+                    }
+                  }
+                },
+                "2023": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.0943,
+                      "max": 0.2975,
+                      "mean": 0.1691,
+                      "first_date": "2023-09-14",
+                      "last_date": "2023-11-01"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.0396,
+                      "max": 0.1374,
+                      "mean": 0.072,
+                      "first_date": "2023-09-14",
+                      "last_date": "2023-11-01"
+                    }
+                  }
+                },
+                "2024": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.1335,
+                      "max": 0.3121,
+                      "mean": 0.2162,
+                      "first_date": "2024-09-13",
+                      "last_date": "2024-10-31"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.0498,
+                      "max": 0.2218,
+                      "mean": 0.1128,
+                      "first_date": "2024-09-13",
+                      "last_date": "2024-10-31"
+                    }
+                  }
+                }
+              },
+              "decade_aggregated_stats": {
+                "valid": true,
+                "n_years_valid": 3,
+                "years_with_data": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years_high_ndvi_threshold_05": 0,
+                "years_high_ndvi_list": [],
+                "decade_mean_ndvi": 0.1904,
+                "decade_max_ndvi": 0.3121,
+                "decade_std_ndvi": 0.0195,
+                "decade_mean_evi": 0.0945,
+                "trend_slope_ndvi_per_year": 0.01515,
+                "phenology_consistency_index_inverse_std": 51.31
+              }
+            }
+          },
+          "computed_outputs_decade": {
+            "feeding_zones_summer_decade": {
+              "value": 79.82,
+              "unit": "score_0_100_decade_summer_NDVI",
+              "regime": "HIGH_QUALITY_FEEDING_ZONE_DECADE",
+              "regime_position": "BELOW_OPTIMAL",
+              "components": {
+                "position_score": 72.0,
+                "consistency_score": 98.06,
+                "decade_mean_ndvi_input": 0.288,
+                "decade_std_ndvi_input": 0.0097,
+                "n_years_input": 3
+              },
+              "primary_reference": "Borowik_2013_EurJWildlRes"
+            },
+            "rut_phenology_proxy_fall": {
+              "value": 73.26,
+              "unit": "score_0_100_PROXY_fall_NDVI",
+              "regime": "DORMANT_LATE_RUT_PROXY",
+              "doctrinal_caveat": "PROXY ONLY: NDVI fall capture sénescence prè-rut, PAS le rut zones complet (requires GPS breeding behavior multi-year). Anti-générique strict.",
+              "species_canonical": "cerf",
+              "components": {
+                "decade_mean_ndvi_fall": 0.1904,
+                "decade_std_ndvi_fall": 0.0195,
+                "n_years_input": 3,
+                "consistency_score": 96.1
+              },
+              "primary_reference": "Hebblewhite_2008_EcolMonogr"
+            }
+          }
+        },
+        "espece_b": {
+          "lat": 47.2,
+          "lon": -70.27,
+          "species_canonical": "orignal",
+          "seasons_data": {
+            "summer_growing_peak": {
+              "window_metadata": {
+                "start_month": 6,
+                "end_month": 8,
+                "doy_start": 153,
+                "doy_end": 244,
+                "max_tiles_mod13q1": 6,
+                "primary_reference": "Borowik_2013_EurJWildlRes",
+                "use": "feeding_zones_summer_NDVI_peak"
+              },
+              "yearly_results": {
+                "2022": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.5089,
+                      "max": 0.7777,
+                      "mean": 0.6557,
+                      "first_date": "2022-06-10",
+                      "last_date": "2022-08-29"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.3441,
+                      "max": 0.5991,
+                      "mean": 0.4675,
+                      "first_date": "2022-06-10",
+                      "last_date": "2022-08-29"
+                    }
+                  }
+                },
+                "2023": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.3804,
+                      "max": 0.8707,
+                      "mean": 0.7302,
+                      "first_date": "2023-06-10",
+                      "last_date": "2023-08-29"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.2185,
+                      "max": 0.7865,
+                      "mean": 0.5509,
+                      "first_date": "2023-06-10",
+                      "last_date": "2023-08-29"
+                    }
+                  }
+                },
+                "2024": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.3618,
+                      "max": 0.8092,
+                      "mean": 0.6343,
+                      "first_date": "2024-06-09",
+                      "last_date": "2024-08-28"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.2382,
+                      "max": 0.6506,
+                      "mean": 0.4703,
+                      "first_date": "2024-06-09",
+                      "last_date": "2024-08-28"
+                    }
+                  }
+                }
+              },
+              "decade_aggregated_stats": {
+                "valid": true,
+                "n_years_valid": 3,
+                "years_with_data": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years_high_ndvi_threshold_05": 3,
+                "years_high_ndvi_list": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "decade_mean_ndvi": 0.6734,
+                "decade_max_ndvi": 0.8707,
+                "decade_std_ndvi": 0.0411,
+                "decade_mean_evi": 0.4962,
+                "trend_slope_ndvi_per_year": -0.0107,
+                "phenology_consistency_index_inverse_std": 24.33
+              }
+            },
+            "fall_pre_rut": {
+              "window_metadata": {
+                "start_month": 9,
+                "end_month": 10,
+                "doy_start": 244,
+                "doy_end": 305,
+                "max_tiles_mod13q1": 4,
+                "primary_reference": "Hebblewhite_2008_EcolMonogr",
+                "use": "rut_phenology_proxy_fall_NDVI"
+              },
+              "yearly_results": {
+                "2022": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.3964,
+                      "max": 0.5679,
+                      "mean": 0.4884,
+                      "first_date": "2022-09-14",
+                      "last_date": "2022-11-01"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.2327,
+                      "max": 0.3596,
+                      "mean": 0.2792,
+                      "first_date": "2022-09-14",
+                      "last_date": "2022-11-01"
+                    }
+                  }
+                },
+                "2023": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.3738,
+                      "max": 0.8535,
+                      "mean": 0.6271,
+                      "first_date": "2023-09-14",
+                      "last_date": "2023-11-01"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.2182,
+                      "max": 0.6724,
+                      "mean": 0.4731,
+                      "first_date": "2023-09-14",
+                      "last_date": "2023-11-01"
+                    }
+                  }
+                },
+                "2024": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.3357,
+                      "max": 0.3976,
+                      "mean": 0.3783,
+                      "first_date": "2024-09-13",
+                      "last_date": "2024-10-31"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.1569,
+                      "max": 0.2089,
+                      "mean": 0.1839,
+                      "first_date": "2024-09-13",
+                      "last_date": "2024-10-31"
+                    }
+                  }
+                }
+              },
+              "decade_aggregated_stats": {
+                "valid": true,
+                "n_years_valid": 3,
+                "years_with_data": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years_high_ndvi_threshold_05": 1,
+                "years_high_ndvi_list": [
+                  2023
+                ],
+                "decade_mean_ndvi": 0.4979,
+                "decade_max_ndvi": 0.8535,
+                "decade_std_ndvi": 0.1018,
+                "decade_mean_evi": 0.3121,
+                "trend_slope_ndvi_per_year": -0.05505,
+                "phenology_consistency_index_inverse_std": 9.82
+              }
+            }
+          },
+          "computed_outputs_decade": {
+            "feeding_zones_summer_decade": {
+              "value": 84.69,
+              "unit": "score_0_100_decade_summer_NDVI",
+              "regime": "HIGH_QUALITY_FEEDING_ZONE_DECADE",
+              "regime_position": "OVER_OPTIMAL",
+              "components": {
+                "position_score": 81.65,
+                "consistency_score": 91.78,
+                "decade_mean_ndvi_input": 0.6734,
+                "decade_std_ndvi_input": 0.0411,
+                "n_years_input": 3
+              },
+              "primary_reference": "Borowik_2013_EurJWildlRes"
+            },
+            "rut_phenology_proxy_fall": {
+              "value": 93.89,
+              "unit": "score_0_100_PROXY_fall_NDVI",
+              "regime": "OPTIMAL_RUT_PRE_PHENOLOGY",
+              "doctrinal_caveat": "PROXY ONLY: NDVI fall capture sénescence prè-rut, PAS le rut zones complet (requires GPS breeding behavior multi-year). Anti-générique strict.",
+              "species_canonical": "orignal",
+              "components": {
+                "decade_mean_ndvi_fall": 0.4979,
+                "decade_std_ndvi_fall": 0.1018,
+                "n_years_input": 3,
+                "consistency_score": 79.64
+              },
+              "primary_reference": "Hebblewhite_2008_EcolMonogr"
+            }
+          }
+        },
+        "espece_c": {
+          "lat": 48.34,
+          "lon": -69.39,
+          "species_canonical": "ours",
+          "seasons_data": {
+            "summer_growing_peak": {
+              "window_metadata": {
+                "start_month": 6,
+                "end_month": 8,
+                "doy_start": 153,
+                "doy_end": 244,
+                "max_tiles_mod13q1": 6,
+                "primary_reference": "Borowik_2013_EurJWildlRes",
+                "use": "feeding_zones_summer_NDVI_peak"
+              },
+              "yearly_results": {
+                "2022": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 4,
+                      "n_nodata": 2,
+                      "min": 0.4418,
+                      "max": 0.8279,
+                      "mean": 0.6364,
+                      "first_date": "2022-06-10",
+                      "last_date": "2022-08-29"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 4,
+                      "n_nodata": 2,
+                      "min": 0.0367,
+                      "max": 0.3172,
+                      "mean": 0.1386,
+                      "first_date": "2022-06-10",
+                      "last_date": "2022-08-29"
+                    }
+                  }
+                },
+                "2023": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.3188,
+                      "max": 0.7396,
+                      "mean": 0.6031,
+                      "first_date": "2023-06-10",
+                      "last_date": "2023-08-29"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.1828,
+                      "max": 0.3322,
+                      "mean": 0.2452,
+                      "first_date": "2023-06-10",
+                      "last_date": "2023-08-29"
+                    }
+                  }
+                },
+                "2024": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 4,
+                      "n_nodata": 2,
+                      "min": 0.0821,
+                      "max": 0.7874,
+                      "mean": 0.5313,
+                      "first_date": "2024-06-09",
+                      "last_date": "2024-08-28"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 4,
+                      "n_nodata": 2,
+                      "min": 0.0666,
+                      "max": 0.4095,
+                      "mean": 0.1795,
+                      "first_date": "2024-06-09",
+                      "last_date": "2024-08-28"
+                    }
+                  }
+                }
+              },
+              "decade_aggregated_stats": {
+                "valid": true,
+                "n_years_valid": 3,
+                "years_with_data": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years_high_ndvi_threshold_05": 3,
+                "years_high_ndvi_list": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "decade_mean_ndvi": 0.5903,
+                "decade_max_ndvi": 0.8279,
+                "decade_std_ndvi": 0.0439,
+                "decade_mean_evi": 0.1878,
+                "trend_slope_ndvi_per_year": -0.05255,
+                "phenology_consistency_index_inverse_std": 22.8
+              }
+            },
+            "fall_pre_rut": {
+              "window_metadata": {
+                "start_month": 9,
+                "end_month": 10,
+                "doy_start": 244,
+                "doy_end": 305,
+                "max_tiles_mod13q1": 4,
+                "primary_reference": "Hebblewhite_2008_EcolMonogr",
+                "use": "rut_phenology_proxy_fall_NDVI"
+              },
+              "yearly_results": {
+                "2022": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 3,
+                      "n_nodata": 1,
+                      "min": 0.5047,
+                      "max": 0.602,
+                      "mean": 0.5445,
+                      "first_date": "2022-09-14",
+                      "last_date": "2022-11-01"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 3,
+                      "n_nodata": 1,
+                      "min": 0.0872,
+                      "max": 0.1917,
+                      "mean": 0.1353,
+                      "first_date": "2022-09-14",
+                      "last_date": "2022-11-01"
+                    }
+                  }
+                },
+                "2023": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 2,
+                      "n_nodata": 2,
+                      "min": 0.1267,
+                      "max": 0.2551,
+                      "mean": 0.1909,
+                      "first_date": "2023-09-14",
+                      "last_date": "2023-11-01"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 2,
+                      "n_nodata": 2,
+                      "min": 0.0224,
+                      "max": 0.0563,
+                      "mean": 0.0394,
+                      "first_date": "2023-09-14",
+                      "last_date": "2023-11-01"
+                    }
+                  }
+                },
+                "2024": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 2,
+                      "n_nodata": 2,
+                      "min": 0.6403,
+                      "max": 0.6688,
+                      "mean": 0.6545,
+                      "first_date": "2024-09-13",
+                      "last_date": "2024-10-31"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 2,
+                      "n_nodata": 2,
+                      "min": 0.161,
+                      "max": 0.2239,
+                      "mean": 0.1925,
+                      "first_date": "2024-09-13",
+                      "last_date": "2024-10-31"
+                    }
+                  }
+                }
+              },
+              "decade_aggregated_stats": {
+                "valid": true,
+                "n_years_valid": 3,
+                "years_with_data": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years_high_ndvi_threshold_05": 2,
+                "years_high_ndvi_list": [
+                  2022,
+                  2024
+                ],
+                "decade_mean_ndvi": 0.4633,
+                "decade_max_ndvi": 0.6688,
+                "decade_std_ndvi": 0.1978,
+                "decade_mean_evi": 0.1224,
+                "trend_slope_ndvi_per_year": 0.055,
+                "phenology_consistency_index_inverse_std": 5.06
+              }
+            }
+          },
+          "computed_outputs_decade": {
+            "feeding_zones_summer_decade": {
+              "value": 97.37,
+              "unit": "score_0_100_decade_summer_NDVI",
+              "regime": "HIGH_QUALITY_FEEDING_ZONE_DECADE",
+              "regime_position": "OPTIMAL_RANGE_DECADE_AVERAGE",
+              "components": {
+                "position_score": 100.0,
+                "consistency_score": 91.22,
+                "decade_mean_ndvi_input": 0.5903,
+                "decade_std_ndvi_input": 0.0439,
+                "n_years_input": 3
+              },
+              "primary_reference": "Borowik_2013_EurJWildlRes"
+            },
+            "rut_phenology_proxy_fall": {
+              "value": 88.13,
+              "unit": "score_0_100_PROXY_fall_NDVI",
+              "regime": "OPTIMAL_RUT_PRE_PHENOLOGY",
+              "doctrinal_caveat": "PROXY ONLY: NDVI fall capture sénescence prè-rut, PAS le rut zones complet (requires GPS breeding behavior multi-year). Anti-générique strict.",
+              "species_canonical": "ours",
+              "components": {
+                "decade_mean_ndvi_fall": 0.4633,
+                "decade_std_ndvi_fall": 0.1978,
+                "n_years_input": 3,
+                "consistency_score": 60.44
+              },
+              "primary_reference": "Hebblewhite_2008_EcolMonogr"
+            }
+          }
+        },
+        "espece_d": {
+          "lat": 46.36,
+          "lon": -72.07,
+          "species_canonical": "dindon",
+          "seasons_data": {
+            "summer_growing_peak": {
+              "window_metadata": {
+                "start_month": 6,
+                "end_month": 8,
+                "doy_start": 153,
+                "doy_end": 244,
+                "max_tiles_mod13q1": 6,
+                "primary_reference": "Borowik_2013_EurJWildlRes",
+                "use": "feeding_zones_summer_NDVI_peak"
+              },
+              "yearly_results": {
+                "2022": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.9,
+                      "max": 0.9331,
+                      "mean": 0.913,
+                      "first_date": "2022-06-10",
+                      "last_date": "2022-08-29"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.5121,
+                      "max": 0.7301,
+                      "mean": 0.6269,
+                      "first_date": "2022-06-10",
+                      "last_date": "2022-08-29"
+                    }
+                  }
+                },
+                "2023": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.7957,
+                      "max": 0.8984,
+                      "mean": 0.8667,
+                      "first_date": "2023-06-10",
+                      "last_date": "2023-08-29"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.5781,
+                      "max": 0.728,
+                      "mean": 0.6542,
+                      "first_date": "2023-06-10",
+                      "last_date": "2023-08-29"
+                    }
+                  }
+                },
+                "2024": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.8916,
+                      "max": 0.9294,
+                      "mean": 0.9117,
+                      "first_date": "2024-06-09",
+                      "last_date": "2024-08-28"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.5135,
+                      "max": 0.7163,
+                      "mean": 0.6047,
+                      "first_date": "2024-06-09",
+                      "last_date": "2024-08-28"
+                    }
+                  }
+                }
+              },
+              "decade_aggregated_stats": {
+                "valid": true,
+                "n_years_valid": 3,
+                "years_with_data": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years_high_ndvi_threshold_05": 3,
+                "years_high_ndvi_list": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "decade_mean_ndvi": 0.8971,
+                "decade_max_ndvi": 0.9331,
+                "decade_std_ndvi": 0.0215,
+                "decade_mean_evi": 0.6286,
+                "trend_slope_ndvi_per_year": -0.00065,
+                "phenology_consistency_index_inverse_std": 46.46
+              }
+            },
+            "fall_pre_rut": {
+              "window_metadata": {
+                "start_month": 9,
+                "end_month": 10,
+                "doy_start": 244,
+                "doy_end": 305,
+                "max_tiles_mod13q1": 4,
+                "primary_reference": "Hebblewhite_2008_EcolMonogr",
+                "use": "rut_phenology_proxy_fall_NDVI"
+              },
+              "yearly_results": {
+                "2022": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.5959,
+                      "max": 0.8513,
+                      "mean": 0.6832,
+                      "first_date": "2022-09-14",
+                      "last_date": "2022-11-01"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.244,
+                      "max": 0.5441,
+                      "mean": 0.3625,
+                      "first_date": "2022-09-14",
+                      "last_date": "2022-11-01"
+                    }
+                  }
+                },
+                "2023": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.6383,
+                      "max": 0.8777,
+                      "mean": 0.7412,
+                      "first_date": "2023-09-14",
+                      "last_date": "2023-11-01"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.267,
+                      "max": 0.5482,
+                      "mean": 0.3654,
+                      "first_date": "2023-09-14",
+                      "last_date": "2023-11-01"
+                    }
+                  }
+                },
+                "2024": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.6541,
+                      "max": 0.828,
+                      "mean": 0.7203,
+                      "first_date": "2024-09-13",
+                      "last_date": "2024-10-31"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.214,
+                      "max": 0.5041,
+                      "mean": 0.3465,
+                      "first_date": "2024-09-13",
+                      "last_date": "2024-10-31"
+                    }
+                  }
+                }
+              },
+              "decade_aggregated_stats": {
+                "valid": true,
+                "n_years_valid": 3,
+                "years_with_data": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years_high_ndvi_threshold_05": 3,
+                "years_high_ndvi_list": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "decade_mean_ndvi": 0.7149,
+                "decade_max_ndvi": 0.8777,
+                "decade_std_ndvi": 0.024,
+                "decade_mean_evi": 0.3581,
+                "trend_slope_ndvi_per_year": 0.01855,
+                "phenology_consistency_index_inverse_std": 41.69
+              }
+            }
+          },
+          "computed_outputs_decade": {
+            "feeding_zones_summer_decade": {
+              "value": 46.72,
+              "unit": "score_0_100_decade_summer_NDVI",
+              "regime": "LOW_FEEDING_ZONE",
+              "regime_position": "OVER_OPTIMAL",
+              "components": {
+                "position_score": 25.72,
+                "consistency_score": 95.7,
+                "decade_mean_ndvi_input": 0.8971,
+                "decade_std_ndvi_input": 0.0215,
+                "n_years_input": 3
+              },
+              "primary_reference": "Borowik_2013_EurJWildlRes"
+            },
+            "rut_phenology_proxy_fall": {
+              "value": 74.49,
+              "unit": "score_0_100_PROXY_fall_NDVI",
+              "regime": "EARLY_FALL_HIGH_GREENNESS",
+              "doctrinal_caveat": "PROXY ONLY: NDVI fall capture sénescence prè-rut, PAS le rut zones complet (requires GPS breeding behavior multi-year). Anti-générique strict.",
+              "species_canonical": "dindon",
+              "components": {
+                "decade_mean_ndvi_fall": 0.7149,
+                "decade_std_ndvi_fall": 0.024,
+                "n_years_input": 3,
+                "consistency_score": 95.2
+              },
+              "primary_reference": "Hebblewhite_2008_EcolMonogr"
+            }
+          }
+        },
+        "espece_e": {
+          "lat": 47.0,
+          "lon": -71.0,
+          "species_canonical": "wapiti",
+          "seasons_data": {
+            "summer_growing_peak": {
+              "window_metadata": {
+                "start_month": 6,
+                "end_month": 8,
+                "doy_start": 153,
+                "doy_end": 244,
+                "max_tiles_mod13q1": 6,
+                "primary_reference": "Borowik_2013_EurJWildlRes",
+                "use": "feeding_zones_summer_NDVI_peak"
+              },
+              "yearly_results": {
+                "2022": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.8138,
+                      "max": 0.8368,
+                      "mean": 0.8245,
+                      "first_date": "2022-06-10",
+                      "last_date": "2022-08-29"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.6259,
+                      "max": 0.743,
+                      "mean": 0.6824,
+                      "first_date": "2022-06-10",
+                      "last_date": "2022-08-29"
+                    }
+                  }
+                },
+                "2023": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.8129,
+                      "max": 0.8696,
+                      "mean": 0.8454,
+                      "first_date": "2023-06-10",
+                      "last_date": "2023-08-29"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.6533,
+                      "max": 0.7864,
+                      "mean": 0.7,
+                      "first_date": "2023-06-10",
+                      "last_date": "2023-08-29"
+                    }
+                  }
+                },
+                "2024": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.7984,
+                      "max": 0.8596,
+                      "mean": 0.8193,
+                      "first_date": "2024-06-09",
+                      "last_date": "2024-08-28"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.6321,
+                      "max": 0.7658,
+                      "mean": 0.7066,
+                      "first_date": "2024-06-09",
+                      "last_date": "2024-08-28"
+                    }
+                  }
+                }
+              },
+              "decade_aggregated_stats": {
+                "valid": true,
+                "n_years_valid": 3,
+                "years_with_data": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years_high_ndvi_threshold_05": 3,
+                "years_high_ndvi_list": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "decade_mean_ndvi": 0.8297,
+                "decade_max_ndvi": 0.8696,
+                "decade_std_ndvi": 0.0113,
+                "decade_mean_evi": 0.6963,
+                "trend_slope_ndvi_per_year": -0.0026,
+                "phenology_consistency_index_inverse_std": 88.66
+              }
+            },
+            "fall_pre_rut": {
+              "window_metadata": {
+                "start_month": 9,
+                "end_month": 10,
+                "doy_start": 244,
+                "doy_end": 305,
+                "max_tiles_mod13q1": 4,
+                "primary_reference": "Hebblewhite_2008_EcolMonogr",
+                "use": "rut_phenology_proxy_fall_NDVI"
+              },
+              "yearly_results": {
+                "2022": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.6163,
+                      "max": 0.8091,
+                      "mean": 0.7096,
+                      "first_date": "2022-09-14",
+                      "last_date": "2022-11-01"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.3251,
+                      "max": 0.6307,
+                      "mean": 0.5021,
+                      "first_date": "2022-09-14",
+                      "last_date": "2022-11-01"
+                    }
+                  }
+                },
+                "2023": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.6531,
+                      "max": 0.8324,
+                      "mean": 0.7291,
+                      "first_date": "2023-09-14",
+                      "last_date": "2023-11-01"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.3943,
+                      "max": 0.5864,
+                      "mean": 0.4877,
+                      "first_date": "2023-09-14",
+                      "last_date": "2023-11-01"
+                    }
+                  }
+                },
+                "2024": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.6132,
+                      "max": 0.7867,
+                      "mean": 0.6951,
+                      "first_date": "2024-09-13",
+                      "last_date": "2024-10-31"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.3483,
+                      "max": 0.5796,
+                      "mean": 0.4839,
+                      "first_date": "2024-09-13",
+                      "last_date": "2024-10-31"
+                    }
+                  }
+                }
+              },
+              "decade_aggregated_stats": {
+                "valid": true,
+                "n_years_valid": 3,
+                "years_with_data": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years_high_ndvi_threshold_05": 3,
+                "years_high_ndvi_list": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "decade_mean_ndvi": 0.7113,
+                "decade_max_ndvi": 0.8324,
+                "decade_std_ndvi": 0.0139,
+                "decade_mean_evi": 0.4912,
+                "trend_slope_ndvi_per_year": -0.00725,
+                "phenology_consistency_index_inverse_std": 71.79
+              }
+            }
+          },
+          "computed_outputs_decade": {
+            "feeding_zones_summer_decade": {
+              "value": 69.06,
+              "unit": "score_0_100_decade_summer_NDVI",
+              "regime": "MODERATE_FEEDING_ZONE",
+              "regime_position": "OVER_OPTIMAL",
+              "components": {
+                "position_score": 56.77,
+                "consistency_score": 97.74,
+                "decade_mean_ndvi_input": 0.8297,
+                "decade_std_ndvi_input": 0.0113,
+                "n_years_input": 3
+              },
+              "primary_reference": "Borowik_2013_EurJWildlRes"
+            },
+            "rut_phenology_proxy_fall": {
+              "value": 75.5,
+              "unit": "score_0_100_PROXY_fall_NDVI",
+              "regime": "EARLY_FALL_HIGH_GREENNESS",
+              "doctrinal_caveat": "PROXY ONLY: NDVI fall capture sénescence prè-rut, PAS le rut zones complet (requires GPS breeding behavior multi-year). Anti-générique strict.",
+              "species_canonical": "wapiti",
+              "components": {
+                "decade_mean_ndvi_fall": 0.7113,
+                "decade_std_ndvi_fall": 0.0139,
+                "n_years_input": 3,
+                "consistency_score": 97.22
+              },
+              "primary_reference": "Hebblewhite_2008_EcolMonogr"
+            }
+          }
+        }
+      },
+      "outputs_unblocked_via_this_validation": [
+        "feeding_zones_summer_decade (Borowik 2013)",
+        "rut_phenology_proxy_fall (Hebblewhite 2008 PROXY)"
+      ],
+      "outputs_still_deferred": [
+        "rut_zones_FULL_requires_GPS_breeding_behavior",
+        "pressure_sensitive_zones_anthropogenic_required"
+      ],
+      "scientific_references_peer_reviewed": [
+        "Borowik et al. (2013). Eur J Wildl Res, 59:675-682. DOI:10.1007/s10344-013-0720-0",
+        "Pettorelli et al. (2005). TREE, 20(9):503-510. DOI:10.1016/j.tree.2005.05.011",
+        "Garroutte et al. (2016). Remote Sensing, 8(5):404. DOI:10.3390/rs8050404",
+        "Hebblewhite et al. (2008). Ecol Monogr, 78:141-166. DOI:10.1890/06-1708.1"
+      ],
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T01:36:53+00:00",
+      "elapsed_s": 186.608,
+      "manifest_sha256": "9c0fd6157eee1d9f72d7291c386ff9a6646d9c45aac9a809a6082f16c95ed929"
+    },
+    {
+      "manifest_id": "NASA_NDVI_TIMESERIES_DECADE_Ω",
+      "ordre": "P3_NASA_NDVI_TIMESERIES_DECADE_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "valid": true,
+      "verdict": "NASA_NDVI_TIMESERIES_ALL_VALID",
+      "provider": "NASA_NDVI_DECADE",
+      "provider_physical": "NASA_MOD13Q1_ORNL_MULTISEASON",
+      "endpoint": "https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset",
+      "temporal_range": {
+        "start_year": 2022,
+        "end_year": 2024,
+        "n_years": 3
+      },
+      "seasonal_windows_validated": [
+        "summer_growing_peak",
+        "fall_pre_rut"
+      ],
+      "seasonal_windows_unknown": [],
+      "bands_mod13q1_used": [
+        "NDVI",
+        "EVI"
+      ],
+      "bands_deferred_other_product": [],
+      "bands_unknown": [],
+      "n_sites_total": 5,
+      "n_calls_made": 60,
+      "n_calls_success": 60,
+      "n_calls_failed": 0,
+      "site_results": {
+        "espece_a": {
+          "lat": 46.8131,
+          "lon": -71.2075,
+          "species_canonical": "cerf",
+          "seasons_data": {
+            "summer_growing_peak": {
+              "window_metadata": {
+                "start_month": 6,
+                "end_month": 8,
+                "doy_start": 153,
+                "doy_end": 244,
+                "max_tiles_mod13q1": 6,
+                "primary_reference": "Borowik_2013_EurJWildlRes",
+                "use": "feeding_zones_summer_NDVI_peak"
+              },
+              "yearly_results": {
+                "2022": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 4,
+                      "n_nodata": 2,
+                      "min": 0.258,
+                      "max": 0.3082,
+                      "mean": 0.2838,
+                      "first_date": "2022-06-10",
+                      "last_date": "2022-08-29"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 4,
+                      "n_nodata": 2,
+                      "min": 0.1286,
+                      "max": 0.1579,
+                      "mean": 0.1427,
+                      "first_date": "2022-06-10",
+                      "last_date": "2022-08-29"
+                    }
+                  }
+                },
+                "2023": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 5,
+                      "n_nodata": 1,
+                      "min": 0.2358,
+                      "max": 0.3091,
+                      "mean": 0.2787,
+                      "first_date": "2023-06-10",
+                      "last_date": "2023-08-29"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 5,
+                      "n_nodata": 1,
+                      "min": 0.1168,
+                      "max": 0.186,
+                      "mean": 0.1459,
+                      "first_date": "2023-06-10",
+                      "last_date": "2023-08-29"
+                    }
+                  }
+                },
+                "2024": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.2572,
+                      "max": 0.3523,
+                      "mean": 0.3014,
+                      "first_date": "2024-06-09",
+                      "last_date": "2024-08-28"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.1189,
+                      "max": 0.2178,
+                      "mean": 0.1595,
+                      "first_date": "2024-06-09",
+                      "last_date": "2024-08-28"
+                    }
+                  }
+                }
+              },
+              "decade_aggregated_stats": {
+                "valid": true,
+                "n_years_valid": 3,
+                "years_with_data": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years_high_ndvi_threshold_05": 0,
+                "years_high_ndvi_list": [],
+                "decade_mean_ndvi": 0.288,
+                "decade_max_ndvi": 0.3523,
+                "decade_std_ndvi": 0.0097,
+                "decade_mean_evi": 0.1494,
+                "trend_slope_ndvi_per_year": 0.0088,
+                "phenology_consistency_index_inverse_std": 100.0
+              }
+            },
+            "fall_pre_rut": {
+              "window_metadata": {
+                "start_month": 9,
+                "end_month": 10,
+                "doy_start": 244,
+                "doy_end": 305,
+                "max_tiles_mod13q1": 4,
+                "primary_reference": "Hebblewhite_2008_EcolMonogr",
+                "use": "rut_phenology_proxy_fall_NDVI"
+              },
+              "yearly_results": {
+                "2022": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.1267,
+                      "max": 0.2668,
+                      "mean": 0.1859,
+                      "first_date": "2022-09-14",
+                      "last_date": "2022-11-01"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.0634,
+                      "max": 0.1404,
+                      "mean": 0.0988,
+                      "first_date": "2022-09-14",
+                      "last_date": "2022-11-01"
+                    }
+                  }
+                },
+                "2023": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.0943,
+                      "max": 0.2975,
+                      "mean": 0.1691,
+                      "first_date": "2023-09-14",
+                      "last_date": "2023-11-01"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.0396,
+                      "max": 0.1374,
+                      "mean": 0.072,
+                      "first_date": "2023-09-14",
+                      "last_date": "2023-11-01"
+                    }
+                  }
+                },
+                "2024": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.1335,
+                      "max": 0.3121,
+                      "mean": 0.2162,
+                      "first_date": "2024-09-13",
+                      "last_date": "2024-10-31"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.0498,
+                      "max": 0.2218,
+                      "mean": 0.1128,
+                      "first_date": "2024-09-13",
+                      "last_date": "2024-10-31"
+                    }
+                  }
+                }
+              },
+              "decade_aggregated_stats": {
+                "valid": true,
+                "n_years_valid": 3,
+                "years_with_data": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years_high_ndvi_threshold_05": 0,
+                "years_high_ndvi_list": [],
+                "decade_mean_ndvi": 0.1904,
+                "decade_max_ndvi": 0.3121,
+                "decade_std_ndvi": 0.0195,
+                "decade_mean_evi": 0.0945,
+                "trend_slope_ndvi_per_year": 0.01515,
+                "phenology_consistency_index_inverse_std": 51.31
+              }
+            }
+          },
+          "computed_outputs_decade": {
+            "feeding_zones_summer_decade": {
+              "value": 79.82,
+              "unit": "score_0_100_decade_summer_NDVI",
+              "regime": "HIGH_QUALITY_FEEDING_ZONE_DECADE",
+              "regime_position": "BELOW_OPTIMAL",
+              "components": {
+                "position_score": 72.0,
+                "consistency_score": 98.06,
+                "decade_mean_ndvi_input": 0.288,
+                "decade_std_ndvi_input": 0.0097,
+                "n_years_input": 3
+              },
+              "primary_reference": "Borowik_2013_EurJWildlRes"
+            },
+            "rut_phenology_proxy_fall": {
+              "value": 73.26,
+              "unit": "score_0_100_PROXY_fall_NDVI",
+              "regime": "DORMANT_LATE_RUT_PROXY",
+              "doctrinal_caveat": "PROXY ONLY: NDVI fall capture sénescence prè-rut, PAS le rut zones complet (requires GPS breeding behavior multi-year). Anti-générique strict.",
+              "species_canonical": "cerf",
+              "components": {
+                "decade_mean_ndvi_fall": 0.1904,
+                "decade_std_ndvi_fall": 0.0195,
+                "n_years_input": 3,
+                "consistency_score": 96.1
+              },
+              "primary_reference": "Hebblewhite_2008_EcolMonogr"
+            }
+          }
+        },
+        "espece_b": {
+          "lat": 47.2,
+          "lon": -70.27,
+          "species_canonical": "orignal",
+          "seasons_data": {
+            "summer_growing_peak": {
+              "window_metadata": {
+                "start_month": 6,
+                "end_month": 8,
+                "doy_start": 153,
+                "doy_end": 244,
+                "max_tiles_mod13q1": 6,
+                "primary_reference": "Borowik_2013_EurJWildlRes",
+                "use": "feeding_zones_summer_NDVI_peak"
+              },
+              "yearly_results": {
+                "2022": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.5089,
+                      "max": 0.7777,
+                      "mean": 0.6557,
+                      "first_date": "2022-06-10",
+                      "last_date": "2022-08-29"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.3441,
+                      "max": 0.5991,
+                      "mean": 0.4675,
+                      "first_date": "2022-06-10",
+                      "last_date": "2022-08-29"
+                    }
+                  }
+                },
+                "2023": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.3804,
+                      "max": 0.8707,
+                      "mean": 0.7302,
+                      "first_date": "2023-06-10",
+                      "last_date": "2023-08-29"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.2185,
+                      "max": 0.7865,
+                      "mean": 0.5509,
+                      "first_date": "2023-06-10",
+                      "last_date": "2023-08-29"
+                    }
+                  }
+                },
+                "2024": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.3618,
+                      "max": 0.8092,
+                      "mean": 0.6343,
+                      "first_date": "2024-06-09",
+                      "last_date": "2024-08-28"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.2382,
+                      "max": 0.6506,
+                      "mean": 0.4703,
+                      "first_date": "2024-06-09",
+                      "last_date": "2024-08-28"
+                    }
+                  }
+                }
+              },
+              "decade_aggregated_stats": {
+                "valid": true,
+                "n_years_valid": 3,
+                "years_with_data": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years_high_ndvi_threshold_05": 3,
+                "years_high_ndvi_list": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "decade_mean_ndvi": 0.6734,
+                "decade_max_ndvi": 0.8707,
+                "decade_std_ndvi": 0.0411,
+                "decade_mean_evi": 0.4962,
+                "trend_slope_ndvi_per_year": -0.0107,
+                "phenology_consistency_index_inverse_std": 24.33
+              }
+            },
+            "fall_pre_rut": {
+              "window_metadata": {
+                "start_month": 9,
+                "end_month": 10,
+                "doy_start": 244,
+                "doy_end": 305,
+                "max_tiles_mod13q1": 4,
+                "primary_reference": "Hebblewhite_2008_EcolMonogr",
+                "use": "rut_phenology_proxy_fall_NDVI"
+              },
+              "yearly_results": {
+                "2022": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.3964,
+                      "max": 0.5679,
+                      "mean": 0.4884,
+                      "first_date": "2022-09-14",
+                      "last_date": "2022-11-01"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.2327,
+                      "max": 0.3596,
+                      "mean": 0.2792,
+                      "first_date": "2022-09-14",
+                      "last_date": "2022-11-01"
+                    }
+                  }
+                },
+                "2023": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.3738,
+                      "max": 0.8535,
+                      "mean": 0.6271,
+                      "first_date": "2023-09-14",
+                      "last_date": "2023-11-01"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.2182,
+                      "max": 0.6724,
+                      "mean": 0.4731,
+                      "first_date": "2023-09-14",
+                      "last_date": "2023-11-01"
+                    }
+                  }
+                },
+                "2024": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.3357,
+                      "max": 0.3976,
+                      "mean": 0.3783,
+                      "first_date": "2024-09-13",
+                      "last_date": "2024-10-31"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.1569,
+                      "max": 0.2089,
+                      "mean": 0.1839,
+                      "first_date": "2024-09-13",
+                      "last_date": "2024-10-31"
+                    }
+                  }
+                }
+              },
+              "decade_aggregated_stats": {
+                "valid": true,
+                "n_years_valid": 3,
+                "years_with_data": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years_high_ndvi_threshold_05": 1,
+                "years_high_ndvi_list": [
+                  2023
+                ],
+                "decade_mean_ndvi": 0.4979,
+                "decade_max_ndvi": 0.8535,
+                "decade_std_ndvi": 0.1018,
+                "decade_mean_evi": 0.3121,
+                "trend_slope_ndvi_per_year": -0.05505,
+                "phenology_consistency_index_inverse_std": 9.82
+              }
+            }
+          },
+          "computed_outputs_decade": {
+            "feeding_zones_summer_decade": {
+              "value": 84.69,
+              "unit": "score_0_100_decade_summer_NDVI",
+              "regime": "HIGH_QUALITY_FEEDING_ZONE_DECADE",
+              "regime_position": "OVER_OPTIMAL",
+              "components": {
+                "position_score": 81.65,
+                "consistency_score": 91.78,
+                "decade_mean_ndvi_input": 0.6734,
+                "decade_std_ndvi_input": 0.0411,
+                "n_years_input": 3
+              },
+              "primary_reference": "Borowik_2013_EurJWildlRes"
+            },
+            "rut_phenology_proxy_fall": {
+              "value": 93.89,
+              "unit": "score_0_100_PROXY_fall_NDVI",
+              "regime": "OPTIMAL_RUT_PRE_PHENOLOGY",
+              "doctrinal_caveat": "PROXY ONLY: NDVI fall capture sénescence prè-rut, PAS le rut zones complet (requires GPS breeding behavior multi-year). Anti-générique strict.",
+              "species_canonical": "orignal",
+              "components": {
+                "decade_mean_ndvi_fall": 0.4979,
+                "decade_std_ndvi_fall": 0.1018,
+                "n_years_input": 3,
+                "consistency_score": 79.64
+              },
+              "primary_reference": "Hebblewhite_2008_EcolMonogr"
+            }
+          }
+        },
+        "espece_c": {
+          "lat": 48.34,
+          "lon": -69.39,
+          "species_canonical": "ours",
+          "seasons_data": {
+            "summer_growing_peak": {
+              "window_metadata": {
+                "start_month": 6,
+                "end_month": 8,
+                "doy_start": 153,
+                "doy_end": 244,
+                "max_tiles_mod13q1": 6,
+                "primary_reference": "Borowik_2013_EurJWildlRes",
+                "use": "feeding_zones_summer_NDVI_peak"
+              },
+              "yearly_results": {
+                "2022": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 4,
+                      "n_nodata": 2,
+                      "min": 0.4418,
+                      "max": 0.8279,
+                      "mean": 0.6364,
+                      "first_date": "2022-06-10",
+                      "last_date": "2022-08-29"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 4,
+                      "n_nodata": 2,
+                      "min": 0.0367,
+                      "max": 0.3172,
+                      "mean": 0.1386,
+                      "first_date": "2022-06-10",
+                      "last_date": "2022-08-29"
+                    }
+                  }
+                },
+                "2023": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.3188,
+                      "max": 0.7396,
+                      "mean": 0.6031,
+                      "first_date": "2023-06-10",
+                      "last_date": "2023-08-29"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.1828,
+                      "max": 0.3322,
+                      "mean": 0.2452,
+                      "first_date": "2023-06-10",
+                      "last_date": "2023-08-29"
+                    }
+                  }
+                },
+                "2024": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 4,
+                      "n_nodata": 2,
+                      "min": 0.0821,
+                      "max": 0.7874,
+                      "mean": 0.5313,
+                      "first_date": "2024-06-09",
+                      "last_date": "2024-08-28"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 4,
+                      "n_nodata": 2,
+                      "min": 0.0666,
+                      "max": 0.4095,
+                      "mean": 0.1795,
+                      "first_date": "2024-06-09",
+                      "last_date": "2024-08-28"
+                    }
+                  }
+                }
+              },
+              "decade_aggregated_stats": {
+                "valid": true,
+                "n_years_valid": 3,
+                "years_with_data": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years_high_ndvi_threshold_05": 3,
+                "years_high_ndvi_list": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "decade_mean_ndvi": 0.5903,
+                "decade_max_ndvi": 0.8279,
+                "decade_std_ndvi": 0.0439,
+                "decade_mean_evi": 0.1878,
+                "trend_slope_ndvi_per_year": -0.05255,
+                "phenology_consistency_index_inverse_std": 22.8
+              }
+            },
+            "fall_pre_rut": {
+              "window_metadata": {
+                "start_month": 9,
+                "end_month": 10,
+                "doy_start": 244,
+                "doy_end": 305,
+                "max_tiles_mod13q1": 4,
+                "primary_reference": "Hebblewhite_2008_EcolMonogr",
+                "use": "rut_phenology_proxy_fall_NDVI"
+              },
+              "yearly_results": {
+                "2022": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 3,
+                      "n_nodata": 1,
+                      "min": 0.5047,
+                      "max": 0.602,
+                      "mean": 0.5445,
+                      "first_date": "2022-09-14",
+                      "last_date": "2022-11-01"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 3,
+                      "n_nodata": 1,
+                      "min": 0.0872,
+                      "max": 0.1917,
+                      "mean": 0.1353,
+                      "first_date": "2022-09-14",
+                      "last_date": "2022-11-01"
+                    }
+                  }
+                },
+                "2023": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 2,
+                      "n_nodata": 2,
+                      "min": 0.1267,
+                      "max": 0.2551,
+                      "mean": 0.1909,
+                      "first_date": "2023-09-14",
+                      "last_date": "2023-11-01"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 2,
+                      "n_nodata": 2,
+                      "min": 0.0224,
+                      "max": 0.0563,
+                      "mean": 0.0394,
+                      "first_date": "2023-09-14",
+                      "last_date": "2023-11-01"
+                    }
+                  }
+                },
+                "2024": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 2,
+                      "n_nodata": 2,
+                      "min": 0.6403,
+                      "max": 0.6688,
+                      "mean": 0.6545,
+                      "first_date": "2024-09-13",
+                      "last_date": "2024-10-31"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 2,
+                      "n_nodata": 2,
+                      "min": 0.161,
+                      "max": 0.2239,
+                      "mean": 0.1925,
+                      "first_date": "2024-09-13",
+                      "last_date": "2024-10-31"
+                    }
+                  }
+                }
+              },
+              "decade_aggregated_stats": {
+                "valid": true,
+                "n_years_valid": 3,
+                "years_with_data": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years_high_ndvi_threshold_05": 2,
+                "years_high_ndvi_list": [
+                  2022,
+                  2024
+                ],
+                "decade_mean_ndvi": 0.4633,
+                "decade_max_ndvi": 0.6688,
+                "decade_std_ndvi": 0.1978,
+                "decade_mean_evi": 0.1224,
+                "trend_slope_ndvi_per_year": 0.055,
+                "phenology_consistency_index_inverse_std": 5.06
+              }
+            }
+          },
+          "computed_outputs_decade": {
+            "feeding_zones_summer_decade": {
+              "value": 97.37,
+              "unit": "score_0_100_decade_summer_NDVI",
+              "regime": "HIGH_QUALITY_FEEDING_ZONE_DECADE",
+              "regime_position": "OPTIMAL_RANGE_DECADE_AVERAGE",
+              "components": {
+                "position_score": 100.0,
+                "consistency_score": 91.22,
+                "decade_mean_ndvi_input": 0.5903,
+                "decade_std_ndvi_input": 0.0439,
+                "n_years_input": 3
+              },
+              "primary_reference": "Borowik_2013_EurJWildlRes"
+            },
+            "rut_phenology_proxy_fall": {
+              "value": 88.13,
+              "unit": "score_0_100_PROXY_fall_NDVI",
+              "regime": "OPTIMAL_RUT_PRE_PHENOLOGY",
+              "doctrinal_caveat": "PROXY ONLY: NDVI fall capture sénescence prè-rut, PAS le rut zones complet (requires GPS breeding behavior multi-year). Anti-générique strict.",
+              "species_canonical": "ours",
+              "components": {
+                "decade_mean_ndvi_fall": 0.4633,
+                "decade_std_ndvi_fall": 0.1978,
+                "n_years_input": 3,
+                "consistency_score": 60.44
+              },
+              "primary_reference": "Hebblewhite_2008_EcolMonogr"
+            }
+          }
+        },
+        "espece_d": {
+          "lat": 46.36,
+          "lon": -72.07,
+          "species_canonical": "dindon",
+          "seasons_data": {
+            "summer_growing_peak": {
+              "window_metadata": {
+                "start_month": 6,
+                "end_month": 8,
+                "doy_start": 153,
+                "doy_end": 244,
+                "max_tiles_mod13q1": 6,
+                "primary_reference": "Borowik_2013_EurJWildlRes",
+                "use": "feeding_zones_summer_NDVI_peak"
+              },
+              "yearly_results": {
+                "2022": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.9,
+                      "max": 0.9331,
+                      "mean": 0.913,
+                      "first_date": "2022-06-10",
+                      "last_date": "2022-08-29"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.5121,
+                      "max": 0.7301,
+                      "mean": 0.6269,
+                      "first_date": "2022-06-10",
+                      "last_date": "2022-08-29"
+                    }
+                  }
+                },
+                "2023": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.7957,
+                      "max": 0.8984,
+                      "mean": 0.8667,
+                      "first_date": "2023-06-10",
+                      "last_date": "2023-08-29"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.5781,
+                      "max": 0.728,
+                      "mean": 0.6542,
+                      "first_date": "2023-06-10",
+                      "last_date": "2023-08-29"
+                    }
+                  }
+                },
+                "2024": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.8916,
+                      "max": 0.9294,
+                      "mean": 0.9117,
+                      "first_date": "2024-06-09",
+                      "last_date": "2024-08-28"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.5135,
+                      "max": 0.7163,
+                      "mean": 0.6047,
+                      "first_date": "2024-06-09",
+                      "last_date": "2024-08-28"
+                    }
+                  }
+                }
+              },
+              "decade_aggregated_stats": {
+                "valid": true,
+                "n_years_valid": 3,
+                "years_with_data": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years_high_ndvi_threshold_05": 3,
+                "years_high_ndvi_list": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "decade_mean_ndvi": 0.8971,
+                "decade_max_ndvi": 0.9331,
+                "decade_std_ndvi": 0.0215,
+                "decade_mean_evi": 0.6286,
+                "trend_slope_ndvi_per_year": -0.00065,
+                "phenology_consistency_index_inverse_std": 46.46
+              }
+            },
+            "fall_pre_rut": {
+              "window_metadata": {
+                "start_month": 9,
+                "end_month": 10,
+                "doy_start": 244,
+                "doy_end": 305,
+                "max_tiles_mod13q1": 4,
+                "primary_reference": "Hebblewhite_2008_EcolMonogr",
+                "use": "rut_phenology_proxy_fall_NDVI"
+              },
+              "yearly_results": {
+                "2022": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.5959,
+                      "max": 0.8513,
+                      "mean": 0.6832,
+                      "first_date": "2022-09-14",
+                      "last_date": "2022-11-01"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.244,
+                      "max": 0.5441,
+                      "mean": 0.3625,
+                      "first_date": "2022-09-14",
+                      "last_date": "2022-11-01"
+                    }
+                  }
+                },
+                "2023": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.6383,
+                      "max": 0.8777,
+                      "mean": 0.7412,
+                      "first_date": "2023-09-14",
+                      "last_date": "2023-11-01"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.267,
+                      "max": 0.5482,
+                      "mean": 0.3654,
+                      "first_date": "2023-09-14",
+                      "last_date": "2023-11-01"
+                    }
+                  }
+                },
+                "2024": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.6541,
+                      "max": 0.828,
+                      "mean": 0.7203,
+                      "first_date": "2024-09-13",
+                      "last_date": "2024-10-31"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.214,
+                      "max": 0.5041,
+                      "mean": 0.3465,
+                      "first_date": "2024-09-13",
+                      "last_date": "2024-10-31"
+                    }
+                  }
+                }
+              },
+              "decade_aggregated_stats": {
+                "valid": true,
+                "n_years_valid": 3,
+                "years_with_data": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years_high_ndvi_threshold_05": 3,
+                "years_high_ndvi_list": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "decade_mean_ndvi": 0.7149,
+                "decade_max_ndvi": 0.8777,
+                "decade_std_ndvi": 0.024,
+                "decade_mean_evi": 0.3581,
+                "trend_slope_ndvi_per_year": 0.01855,
+                "phenology_consistency_index_inverse_std": 41.69
+              }
+            }
+          },
+          "computed_outputs_decade": {
+            "feeding_zones_summer_decade": {
+              "value": 46.72,
+              "unit": "score_0_100_decade_summer_NDVI",
+              "regime": "LOW_FEEDING_ZONE",
+              "regime_position": "OVER_OPTIMAL",
+              "components": {
+                "position_score": 25.72,
+                "consistency_score": 95.7,
+                "decade_mean_ndvi_input": 0.8971,
+                "decade_std_ndvi_input": 0.0215,
+                "n_years_input": 3
+              },
+              "primary_reference": "Borowik_2013_EurJWildlRes"
+            },
+            "rut_phenology_proxy_fall": {
+              "value": 74.49,
+              "unit": "score_0_100_PROXY_fall_NDVI",
+              "regime": "EARLY_FALL_HIGH_GREENNESS",
+              "doctrinal_caveat": "PROXY ONLY: NDVI fall capture sénescence prè-rut, PAS le rut zones complet (requires GPS breeding behavior multi-year). Anti-générique strict.",
+              "species_canonical": "dindon",
+              "components": {
+                "decade_mean_ndvi_fall": 0.7149,
+                "decade_std_ndvi_fall": 0.024,
+                "n_years_input": 3,
+                "consistency_score": 95.2
+              },
+              "primary_reference": "Hebblewhite_2008_EcolMonogr"
+            }
+          }
+        },
+        "espece_e": {
+          "lat": 47.0,
+          "lon": -71.0,
+          "species_canonical": "wapiti",
+          "seasons_data": {
+            "summer_growing_peak": {
+              "window_metadata": {
+                "start_month": 6,
+                "end_month": 8,
+                "doy_start": 153,
+                "doy_end": 244,
+                "max_tiles_mod13q1": 6,
+                "primary_reference": "Borowik_2013_EurJWildlRes",
+                "use": "feeding_zones_summer_NDVI_peak"
+              },
+              "yearly_results": {
+                "2022": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.8138,
+                      "max": 0.8368,
+                      "mean": 0.8245,
+                      "first_date": "2022-06-10",
+                      "last_date": "2022-08-29"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.6259,
+                      "max": 0.743,
+                      "mean": 0.6824,
+                      "first_date": "2022-06-10",
+                      "last_date": "2022-08-29"
+                    }
+                  }
+                },
+                "2023": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.8129,
+                      "max": 0.8696,
+                      "mean": 0.8454,
+                      "first_date": "2023-06-10",
+                      "last_date": "2023-08-29"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.6533,
+                      "max": 0.7864,
+                      "mean": 0.7,
+                      "first_date": "2023-06-10",
+                      "last_date": "2023-08-29"
+                    }
+                  }
+                },
+                "2024": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.7984,
+                      "max": 0.8596,
+                      "mean": 0.8193,
+                      "first_date": "2024-06-09",
+                      "last_date": "2024-08-28"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 6,
+                      "n_valid": 6,
+                      "n_nodata": 0,
+                      "min": 0.6321,
+                      "max": 0.7658,
+                      "mean": 0.7066,
+                      "first_date": "2024-06-09",
+                      "last_date": "2024-08-28"
+                    }
+                  }
+                }
+              },
+              "decade_aggregated_stats": {
+                "valid": true,
+                "n_years_valid": 3,
+                "years_with_data": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years_high_ndvi_threshold_05": 3,
+                "years_high_ndvi_list": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "decade_mean_ndvi": 0.8297,
+                "decade_max_ndvi": 0.8696,
+                "decade_std_ndvi": 0.0113,
+                "decade_mean_evi": 0.6963,
+                "trend_slope_ndvi_per_year": -0.0026,
+                "phenology_consistency_index_inverse_std": 88.66
+              }
+            },
+            "fall_pre_rut": {
+              "window_metadata": {
+                "start_month": 9,
+                "end_month": 10,
+                "doy_start": 244,
+                "doy_end": 305,
+                "max_tiles_mod13q1": 4,
+                "primary_reference": "Hebblewhite_2008_EcolMonogr",
+                "use": "rut_phenology_proxy_fall_NDVI"
+              },
+              "yearly_results": {
+                "2022": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.6163,
+                      "max": 0.8091,
+                      "mean": 0.7096,
+                      "first_date": "2022-09-14",
+                      "last_date": "2022-11-01"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.3251,
+                      "max": 0.6307,
+                      "mean": 0.5021,
+                      "first_date": "2022-09-14",
+                      "last_date": "2022-11-01"
+                    }
+                  }
+                },
+                "2023": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.6531,
+                      "max": 0.8324,
+                      "mean": 0.7291,
+                      "first_date": "2023-09-14",
+                      "last_date": "2023-11-01"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.3943,
+                      "max": 0.5864,
+                      "mean": 0.4877,
+                      "first_date": "2023-09-14",
+                      "last_date": "2023-11-01"
+                    }
+                  }
+                },
+                "2024": {
+                  "NDVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.6132,
+                      "max": 0.7867,
+                      "mean": 0.6951,
+                      "first_date": "2024-09-13",
+                      "last_date": "2024-10-31"
+                    }
+                  },
+                  "EVI": {
+                    "valid": true,
+                    "stats": {
+                      "n_total": 4,
+                      "n_valid": 4,
+                      "n_nodata": 0,
+                      "min": 0.3483,
+                      "max": 0.5796,
+                      "mean": 0.4839,
+                      "first_date": "2024-09-13",
+                      "last_date": "2024-10-31"
+                    }
+                  }
+                }
+              },
+              "decade_aggregated_stats": {
+                "valid": true,
+                "n_years_valid": 3,
+                "years_with_data": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years_high_ndvi_threshold_05": 3,
+                "years_high_ndvi_list": [
+                  2022,
+                  2023,
+                  2024
+                ],
+                "decade_mean_ndvi": 0.7113,
+                "decade_max_ndvi": 0.8324,
+                "decade_std_ndvi": 0.0139,
+                "decade_mean_evi": 0.4912,
+                "trend_slope_ndvi_per_year": -0.00725,
+                "phenology_consistency_index_inverse_std": 71.79
+              }
+            }
+          },
+          "computed_outputs_decade": {
+            "feeding_zones_summer_decade": {
+              "value": 69.06,
+              "unit": "score_0_100_decade_summer_NDVI",
+              "regime": "MODERATE_FEEDING_ZONE",
+              "regime_position": "OVER_OPTIMAL",
+              "components": {
+                "position_score": 56.77,
+                "consistency_score": 97.74,
+                "decade_mean_ndvi_input": 0.8297,
+                "decade_std_ndvi_input": 0.0113,
+                "n_years_input": 3
+              },
+              "primary_reference": "Borowik_2013_EurJWildlRes"
+            },
+            "rut_phenology_proxy_fall": {
+              "value": 75.5,
+              "unit": "score_0_100_PROXY_fall_NDVI",
+              "regime": "EARLY_FALL_HIGH_GREENNESS",
+              "doctrinal_caveat": "PROXY ONLY: NDVI fall capture sénescence prè-rut, PAS le rut zones complet (requires GPS breeding behavior multi-year). Anti-générique strict.",
+              "species_canonical": "wapiti",
+              "components": {
+                "decade_mean_ndvi_fall": 0.7113,
+                "decade_std_ndvi_fall": 0.0139,
+                "n_years_input": 3,
+                "consistency_score": 97.22
+              },
+              "primary_reference": "Hebblewhite_2008_EcolMonogr"
+            }
+          }
+        }
+      },
+      "outputs_unblocked_via_this_validation": [
+        "feeding_zones_summer_decade (Borowik 2013)",
+        "rut_phenology_proxy_fall (Hebblewhite 2008 PROXY)"
+      ],
+      "outputs_still_deferred": [
+        "rut_zones_FULL_requires_GPS_breeding_behavior",
+        "pressure_sensitive_zones_anthropogenic_required"
+      ],
+      "scientific_references_peer_reviewed": [
+        "Borowik et al. (2013). Eur J Wildl Res, 59:675-682. DOI:10.1007/s10344-013-0720-0",
+        "Pettorelli et al. (2005). TREE, 20(9):503-510. DOI:10.1016/j.tree.2005.05.011",
+        "Garroutte et al. (2016). Remote Sensing, 8(5):404. DOI:10.3390/rs8050404",
+        "Hebblewhite et al. (2008). Ecol Monogr, 78:141-166. DOI:10.1890/06-1708.1"
+      ],
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T01:39:13+00:00",
+      "elapsed_s": 139.436,
+      "manifest_sha256": "b88643955fabb9e4fa820930a13e1a9556450e77e6914c7a575139aa5c6d7be4"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T01:39:13+00:00",
+  "n_validations": 2,
+  "last_manifest_sha256": "b88643955fabb9e4fa820930a13e1a9556450e77e6914c7a575139aa5c6d7be4",
+  "last_verdict": "NASA_NDVI_TIMESERIES_ALL_VALID",
+  "v30_lock": "INVIOLÉ"
+}
