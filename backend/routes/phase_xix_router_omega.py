@@ -4547,3 +4547,658 @@ async def messaging_share_endpoint(
     })
 
 
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# P22 · COMMANDANT_VALIDATION_P14_PREMIUM_V7_Ω
+# P23 · MESSAGING_ENGINE_CHANNEL_INTEGRATION_Ω
+# P24 · OTS_UPGRADE_AUTOMATION_Ω
+# FUSION ADD-ONLY · V30_LOCK INVIOLÉ · ANTI-GÉNÉRIQUE STRICT
+# ═════════════════════════════════════════════════════════════════════════
+
+
+# ----- P22 -----
+class CommandantValidationRecordBody(BaseModel):
+    scope: str
+    decision: str  # APPROVED | REJECTED | PENDING_REVIEW
+    sha256_list: List[str]
+    notes: Optional[str] = None
+    persist: bool = True
+
+
+@router.post("/commandant-validation-record")
+async def commandant_validation_record_endpoint(
+    body: CommandantValidationRecordBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """P22 · enregistre une validation Commandant (audit doctrinal)."""
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.commandant_validations_omega import (
+        record_commandant_validation,
+    )
+    try:
+        payload = record_commandant_validation(
+            scope=body.scope,
+            decision=body.decision,
+            sha256_list=body.sha256_list,
+            notes=body.notes,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "COMMANDANT_VALIDATION_RECORD_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "COMMANDANT_VALIDATION_RECORD_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P22_COMMANDANT_VALIDATION_P14_PREMIUM_V7_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/commandant-validation-status")
+async def commandant_validation_status_endpoint() -> JSONResponse:
+    """P22 · status lecture seule (PUBLIC RO)."""
+    from engines.v8_institutional.especes.commandant_validations_omega import (
+        get_commandant_validations_status,
+    )
+    payload = get_commandant_validations_status()
+    return JSONResponse({
+        "manifest_id": "COMMANDANT_VALIDATION_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P22_COMMANDANT_VALIDATION_P14_PREMIUM_V7_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+# ----- P23 -----
+class MessagingEngineChannelHookActivateBody(BaseModel):
+    persist: bool = True
+
+
+@router.post("/messaging-engine-channel-hook-activate")
+async def messaging_engine_channel_hook_activate_endpoint(
+    body: MessagingEngineChannelHookActivateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """P23 · activation officielle canaux messaging (email + internal)."""
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.messaging_engine_omega import (
+        activate_messaging_engine_channel_hook,
+    )
+    try:
+        payload = activate_messaging_engine_channel_hook(
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "MESSAGING_ENGINE_HOOK_ACTIVATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id":
+            "MESSAGING_ENGINE_CHANNEL_HOOK_ACTIVATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P23_MESSAGING_ENGINE_CHANNEL_INTEGRATION_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+class MessagingEngineChannelShareBody(BaseModel):
+    report_sha256: str
+    channel: str  # email | internal (social_media rejeté doctrinal)
+    recipient: str
+    subject: Optional[str] = None
+    notes: Optional[str] = None
+
+
+@router.post("/messaging-engine-channel-share")
+async def messaging_engine_channel_share_endpoint(
+    body: MessagingEngineChannelShareBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """P23 · partage rapport premium via canal (anti-générique strict).
+
+    `social_media` est explicitement exclu par directive Commandant.
+    """
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.messaging_engine_omega import (
+        share_premium_report,
+    )
+    try:
+        payload = share_premium_report(
+            report_sha256=body.report_sha256,
+            channel=body.channel,
+            recipient=body.recipient,
+            subject=body.subject,
+            notes=body.notes,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "MESSAGING_ENGINE_SHARE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "MESSAGING_ENGINE_CHANNEL_SHARE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P23_MESSAGING_ENGINE_CHANNEL_INTEGRATION_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/messaging-engine-channel-status")
+async def messaging_engine_channel_status_endpoint() -> JSONResponse:
+    """P23 · status lecture seule (PUBLIC RO)."""
+    from engines.v8_institutional.especes.messaging_engine_omega import (
+        get_messaging_engine_hook_status,
+    )
+    payload = get_messaging_engine_hook_status()
+    return JSONResponse({
+        "manifest_id": "MESSAGING_ENGINE_CHANNEL_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P23_MESSAGING_ENGINE_CHANNEL_INTEGRATION_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+# ----- P24 -----
+class OtsUpgradeAutomationHookActivateBody(BaseModel):
+    interval_s: int = 21600  # 6h
+    run_immediate_scan: bool = True
+    persist: bool = True
+
+
+@router.post("/ots-upgrade-automation-hook-activate")
+async def ots_upgrade_automation_hook_activate_endpoint(
+    body: OtsUpgradeAutomationHookActivateBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """P24 · démarre automation périodique OTS upgrade (6h cycle)."""
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.ots_upgrade_automation_omega import (
+        activate_ots_upgrade_automation_hook,
+    )
+    try:
+        payload = await activate_ots_upgrade_automation_hook(
+            interval_s=body.interval_s,
+            run_immediate_scan=body.run_immediate_scan,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "OTS_UPGRADE_AUTOMATION_HOOK_ACTIVATE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id":
+            "OTS_UPGRADE_AUTOMATION_HOOK_ACTIVATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P24_OTS_UPGRADE_AUTOMATION_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+class OtsUpgradeAutomationScanNowBody(BaseModel):
+    persist: bool = True
+    timeout_s_per_file: int = 60
+
+
+@router.post("/ots-upgrade-automation-scan-now")
+async def ots_upgrade_automation_scan_now_endpoint(
+    body: OtsUpgradeAutomationScanNowBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """P24 · déclenche un scan+upgrade manuel immédiat."""
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.ots_upgrade_automation_omega import (
+        scan_and_upgrade_pending_ots,
+    )
+    import asyncio as _asyncio
+    try:
+        loop = _asyncio.get_running_loop()
+        payload = await loop.run_in_executor(
+            None, scan_and_upgrade_pending_ots,
+            body.persist, body.timeout_s_per_file)
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "OTS_UPGRADE_AUTOMATION_SCAN_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "OTS_UPGRADE_AUTOMATION_SCAN_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P24_OTS_UPGRADE_AUTOMATION_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.post("/ots-upgrade-automation-stop")
+async def ots_upgrade_automation_stop_endpoint(
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """P24 · stop manuel de la background task (idempotent)."""
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.ots_upgrade_automation_omega import (
+        stop_background_automation,
+    )
+    try:
+        payload = await stop_background_automation()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e)[:500])
+    return JSONResponse({
+        "manifest_id": "OTS_UPGRADE_AUTOMATION_STOP_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P24_OTS_UPGRADE_AUTOMATION_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# P15 · TERRITOIRE_Ω_REPORT_CREATE_Ω
+# P17 · WAYPOINT_GUIDE_CREATE_Ω
+# P18 · LAYER_INTERPRETATION_MANUAL_Ω
+# FUSION ADD-ONLY · V30_LOCK INVIOLÉ · ANTI-GÉNÉRIQUE STRICT
+# ═════════════════════════════════════════════════════════════════════════
+
+
+# ----- P15 -----
+class TerritoireOmegaReportBody(BaseModel):
+    zone_label: str = "DEFAULT_ZONE"
+    include_pdf: bool = True
+    include_html: bool = True
+    persist: bool = True
+
+
+@router.post("/territoire-omega-report-create")
+async def territoire_omega_report_create_endpoint(
+    body: TerritoireOmegaReportBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """P15 · génère rapport opérationnel complet (PDF+HTML)."""
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.territoire_omega_report_omega import (
+        generate_territoire_omega_report,
+    )
+    try:
+        payload = generate_territoire_omega_report(
+            zone_label=body.zone_label,
+            include_pdf=body.include_pdf,
+            include_html=body.include_html,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "TERRITOIRE_OMEGA_REPORT_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "TERRITOIRE_OMEGA_REPORT_CREATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P15_TERRITOIRE_Ω_REPORT_CREATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/territoire-omega-report-status")
+async def territoire_omega_report_status_endpoint() -> JSONResponse:
+    """P15 · status lecture seule (PUBLIC RO)."""
+    from engines.v8_institutional.especes.territoire_omega_report_omega import (
+        get_territoire_omega_report_status,
+    )
+    payload = get_territoire_omega_report_status()
+    return JSONResponse({
+        "manifest_id": "TERRITOIRE_OMEGA_REPORT_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P15_TERRITOIRE_Ω_REPORT_CREATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/territoire-omega-report-download")
+async def territoire_omega_report_download_endpoint(
+    report_sha256: str,
+    fmt: str = "pdf",
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> FileResponse:
+    """P15 · télécharge rapport persisté (pdf|html|json)."""
+    _verify_commandant_token(x_commandant_token)
+    if fmt not in ("pdf", "html", "json"):
+        raise HTTPException(
+            status_code=400, detail=f"FORMAT_INVALID::{fmt}")
+    if len(report_sha256) < 16:
+        raise HTTPException(
+            status_code=400,
+            detail="REPORT_SHA256_PREFIX_TOO_SHORT")
+    from engines.v8_institutional.especes.territoire_omega_report_omega import (
+        REPORTS_STORE,
+    )
+    prefix = report_sha256[:16]
+    matches = list(REPORTS_STORE.glob(f"{prefix}*.{fmt}"))
+    if not matches:
+        raise HTTPException(
+            status_code=404,
+            detail=f"REPORT_FILE_NOT_FOUND::{prefix}.{fmt}")
+    return FileResponse(
+        str(matches[0]),
+        media_type={
+            "pdf": "application/pdf",
+            "html": "text/html",
+            "json": "application/json",
+        }[fmt],
+        filename=matches[0].name)
+
+
+# ----- P17 -----
+class WaypointFieldGuideBody(BaseModel):
+    latitude: float
+    longitude: float
+    species: str
+    waypoint_id: Optional[str] = None
+    radius_m: int = 500
+    include_pdf: bool = True
+    include_html: bool = True
+    persist: bool = True
+
+
+@router.post("/waypoint-field-guide-create")
+async def waypoint_field_guide_create_endpoint(
+    body: WaypointFieldGuideBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """P17 · génère fiche terrain pour un point (PDF+HTML)."""
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.waypoint_guide_omega import (
+        generate_waypoint_field_guide,
+    )
+    try:
+        payload = generate_waypoint_field_guide(
+            lat=body.latitude,
+            lon=body.longitude,
+            species=body.species,
+            waypoint_id=body.waypoint_id,
+            radius_m=body.radius_m,
+            include_pdf=body.include_pdf,
+            include_html=body.include_html,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "WAYPOINT_FIELD_GUIDE_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "WAYPOINT_FIELD_GUIDE_CREATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P17_WAYPOINT_GUIDE_CREATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/waypoint-field-guide-status")
+async def waypoint_field_guide_status_endpoint() -> JSONResponse:
+    """P17 · status lecture seule (PUBLIC RO)."""
+    from engines.v8_institutional.especes.waypoint_guide_omega import (
+        get_waypoint_guide_status,
+    )
+    payload = get_waypoint_guide_status()
+    return JSONResponse({
+        "manifest_id": "WAYPOINT_FIELD_GUIDE_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P17_WAYPOINT_GUIDE_CREATE_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/waypoint-field-guide-download")
+async def waypoint_field_guide_download_endpoint(
+    guide_sha256: str,
+    fmt: str = "pdf",
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> FileResponse:
+    """P17 · télécharge guide field persisté."""
+    _verify_commandant_token(x_commandant_token)
+    if fmt not in ("pdf", "html", "json"):
+        raise HTTPException(
+            status_code=400, detail=f"FORMAT_INVALID::{fmt}")
+    if len(guide_sha256) < 16:
+        raise HTTPException(
+            status_code=400,
+            detail="GUIDE_SHA256_PREFIX_TOO_SHORT")
+    from engines.v8_institutional.especes.waypoint_guide_omega import (
+        GUIDES_STORE,
+    )
+    prefix = guide_sha256[:16]
+    matches = list(GUIDES_STORE.glob(f"{prefix}*.{fmt}"))
+    if not matches:
+        raise HTTPException(
+            status_code=404,
+            detail=f"GUIDE_FILE_NOT_FOUND::{prefix}.{fmt}")
+    return FileResponse(
+        str(matches[0]),
+        media_type={
+            "pdf": "application/pdf",
+            "html": "text/html",
+            "json": "application/json",
+        }[fmt],
+        filename=matches[0].name)
+
+
+# ----- P18 -----
+class LayerInterpretationManualBody(BaseModel):
+    include_pdf: bool = True
+    include_html: bool = True
+    persist: bool = True
+
+
+@router.post("/layer-interpretation-manual-create")
+async def layer_interpretation_manual_create_endpoint(
+    body: LayerInterpretationManualBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """P18 · génère le manual 18 couches (PDF+HTML)."""
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.layer_interpretation_manual_omega import (  # noqa: E501
+        generate_layer_interpretation_manual,
+    )
+    try:
+        payload = generate_layer_interpretation_manual(
+            include_pdf=body.include_pdf,
+            include_html=body.include_html,
+            persist=body.persist,
+        )
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "LAYER_INTERPRETATION_MANUAL_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "LAYER_INTERPRETATION_MANUAL_CREATE_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P18_LAYER_INTERPRETATION_MANUAL_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/layer-interpretation-manual-status")
+async def layer_interpretation_manual_status_endpoint() -> JSONResponse:
+    """P18 · status lecture seule (PUBLIC RO)."""
+    from engines.v8_institutional.especes.layer_interpretation_manual_omega import (  # noqa: E501
+        get_layer_manual_status,
+    )
+    payload = get_layer_manual_status()
+    return JSONResponse({
+        "manifest_id": "LAYER_INTERPRETATION_MANUAL_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P18_LAYER_INTERPRETATION_MANUAL_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/layer-interpretation-manual-download")
+async def layer_interpretation_manual_download_endpoint(
+    manual_sha256: str,
+    fmt: str = "pdf",
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> FileResponse:
+    """P18 · télécharge manual persisté."""
+    _verify_commandant_token(x_commandant_token)
+    if fmt not in ("pdf", "html", "json"):
+        raise HTTPException(
+            status_code=400, detail=f"FORMAT_INVALID::{fmt}")
+    if len(manual_sha256) < 16:
+        raise HTTPException(
+            status_code=400,
+            detail="MANUAL_SHA256_PREFIX_TOO_SHORT")
+    from engines.v8_institutional.especes.layer_interpretation_manual_omega import (  # noqa: E501
+        MANUAL_STORE,
+    )
+    prefix = manual_sha256[:16]
+    matches = list(MANUAL_STORE.glob(f"{prefix}*.{fmt}"))
+    if not matches:
+        raise HTTPException(
+            status_code=404,
+            detail=f"MANUAL_FILE_NOT_FOUND::{prefix}.{fmt}")
+    return FileResponse(
+        str(matches[0]),
+        media_type={
+            "pdf": "application/pdf",
+            "html": "text/html",
+            "json": "application/json",
+        }[fmt],
+        filename=matches[0].name)
+
+
+@router.get("/ots-upgrade-automation-status")
+async def ots_upgrade_automation_status_endpoint() -> JSONResponse:
+    """P24 · status lecture seule (PUBLIC RO)."""
+    from engines.v8_institutional.especes.ots_upgrade_automation_omega import (
+        get_ots_upgrade_automation_hook_status,
+    )
+    payload = get_ots_upgrade_automation_hook_status()
+    return JSONResponse({
+        "manifest_id": "OTS_UPGRADE_AUTOMATION_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P24_OTS_UPGRADE_AUTOMATION_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })

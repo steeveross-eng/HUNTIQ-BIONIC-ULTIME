@@ -1,0 +1,31 @@
+{
+  "manifest_id": "WAYPOINT_FIELD_GUIDE_Ω",
+  "ordre": "P17_WAYPOINT_GUIDE_CREATE_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "species": "cerf",
+  "point_id": "WP_46.80000_-71.30000",
+  "latitude": 46.8,
+  "longitude": -71.3,
+  "radius_m": 500,
+  "habitat_quality": {
+    "status": "HABITAT_OVERLAY_ABSENT",
+    "caveat": "habitat_complete_merge overlay not found — P9 COMPLETE_MERGE doit être exécuté."
+  },
+  "decadal_trend": {
+    "status": "MULTI_YEAR_OVERLAY_ABSENT",
+    "caveat": "multi_year_dense_grid overlay not found — P11 MULTI_YEAR_DENSE_GRID doit être exécuté."
+  },
+  "anthropogenic_present": false,
+  "recommendations": [
+    {
+      "category": "AFFUT_POSITIONING",
+      "action": "Habitat overlay indisponible — lever un affût reconnaissance est recommandé avant installation.",
+      "priority": "P0"
+    }
+  ],
+  "recommendations_count": 1,
+  "generated_at_utc": "2026-05-08T17:16:32+00:00",
+  "anti_generique_strict": true,
+  "v30_lock": "INVIOLÉ",
+  "guide_sha256": "1d10f7fb94ced7fc254e1ffb93fdfd3c8fd95e27cbfc121c60f605baf1a7fd7b"
+}

@@ -961,11 +961,48 @@
       ],
       "registered_at_utc": "2026-05-08T15:29:06+00:00",
       "activation_sha256": "15d42cc10f82113552863e904c3b8948e89369c765403197023c9ab4acbb1735"
+    },
+    {
+      "manifest_id": "OPENWEATHERMAP_HOOK_ACTIVATE_Ω",
+      "ordre": "P0_OPENWEATHERMAP_HOOK_ACTIVATE",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "activated": true,
+      "verdict": "OPENWEATHERMAP_HOOK_ACTIVATED_OPERATIONAL",
+      "reason": "owm_hook_activated",
+      "validated_manifest_sha256": "aa707dac7132e400e2f9b75aa98fd1855c0b426476d06ada0eedd29fad92f890",
+      "validated_manifest_executed_at_utc": "2026-05-08T17:23:41+00:00",
+      "owm_validation_summary": {
+        "endpoint": "https://api.openweathermap.org/data/2.5/weather",
+        "auth_strategy": "QUERY_PARAM_APPID",
+        "city_name": "Québec",
+        "country": "CA",
+        "temp_kelvin_at_validation": 284.86,
+        "weather_main_at_validation": "Rain",
+        "owm_required_keys_present": [
+          "main",
+          "name",
+          "weather"
+        ]
+      },
+      "fusion_add_only": true,
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "consumed_by_modules": [
+        "PHYSIOLOGIE_THERMIQUE",
+        "HABITAT_MICROCLIMAT",
+        "NUTRITION_HUMIDITE"
+      ],
+      "registered_at_utc": "2026-05-08T17:23:41+00:00",
+      "activation_sha256": "3cef0981284ea5c2d069d6d92cf7062afc683b1e2187f077f1e99d4eefd8d69e"
     }
   ],
-  "last_updated_utc": "2026-05-08T15:29:06+00:00",
-  "n_activations": 26,
-  "last_activation_sha256": "15d42cc10f82113552863e904c3b8948e89369c765403197023c9ab4acbb1735",
-  "last_validated_manifest_sha256": "619d57a3b5eb1ba3ac0e750589bb1289fcb11919253894241dca5f75dfc8f7f0",
+  "last_updated_utc": "2026-05-08T17:23:41+00:00",
+  "n_activations": 27,
+  "last_activation_sha256": "3cef0981284ea5c2d069d6d92cf7062afc683b1e2187f077f1e99d4eefd8d69e",
+  "last_validated_manifest_sha256": "aa707dac7132e400e2f9b75aa98fd1855c0b426476d06ada0eedd29fad92f890",
   "v30_lock": "INVIOLÉ"
 }

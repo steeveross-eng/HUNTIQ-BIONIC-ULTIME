@@ -1,0 +1,156 @@
+{
+  "manifest_id": "LAYER_INTERPRETATION_MANUAL_Ω",
+  "ordre": "P18_LAYER_INTERPRETATION_MANUAL_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "n_layers": 18,
+  "layers": [
+    {
+      "code": "L01_NDVI_DENSE_GRID",
+      "name": "NDVI Dense Grid (NASA MOD13Q1)",
+      "definition": "Normalized Difference Vegetation Index (250m, 16-day composite).",
+      "usage": "NDVI 0.4-0.7 = habitat optimal cerf; >0.75 = couverture dense.",
+      "example": "Cellule NDVI=0.62 → optimal cerf Odocoileus virginianus.",
+      "source_overlay": "nasa_ndvi_dense_grid"
+    },
+    {
+      "code": "L02_HABITAT_OUTPUTS_12",
+      "name": "Habitat Outputs 12/12",
+      "definition": "Agrégation 12 métriques habitat doctrinales.",
+      "usage": "Score habitat composite ≥0.7 = zone primaire.",
+      "example": "12 outputs = saline, alimentation, rut, repos, etc.",
+      "source_overlay": "habitat_complete_merge"
+    },
+    {
+      "code": "L03_ANTHROPOGENIC_PRESSURE",
+      "name": "Pression anthropique (OSM + WorldPop)",
+      "definition": "Densité humaine + infrastructures routes/bâtiments.",
+      "usage": "p95>0.7 = éviter implantation affût.",
+      "example": "OSM highway + population density fusion.",
+      "source_overlay": "anthropogenic_pressure"
+    },
+    {
+      "code": "L04_TEMPORAL_RUT",
+      "name": "Rut Temporal Window",
+      "definition": "Fenêtres temporelles doctrinales espèce.",
+      "usage": "Cerf oct-nov / orignal sep-oct / ours juin-juil.",
+      "example": "Rut cerf = activation stratégies d'appel.",
+      "source_overlay": "temporal_rut"
+    },
+    {
+      "code": "L05_MULTI_YEAR_TREND",
+      "name": "Mann-Kendall Decadal Trend",
+      "definition": "Tendance statistique 10 ans NDVI (τ, p<0.05).",
+      "usage": "Tendance significative négative = habitat en dégradation.",
+      "example": "τ=-0.42, p=0.01 → déclin significatif.",
+      "source_overlay": "multi_year_dense_grid"
+    },
+    {
+      "code": "L06_USGS_SOIL",
+      "name": "USGS SoilGrids",
+      "definition": "Propriétés sol (pH, argile, organique).",
+      "usage": "Sol argileux + pH neutre = saline favorable.",
+      "example": "Clay>30% + pH 6.8 = site saline prioritaire.",
+      "source_overlay": "usgs_soil"
+    },
+    {
+      "code": "L07_OPEN_TOPOGRAPHY",
+      "name": "Open Topography (SRTM 30m)",
+      "definition": "Modèle élévation + pente.",
+      "usage": "Pente 5-15% = corridors déplacement naturels.",
+      "example": "Élévation 250m pente 8% = passage évident.",
+      "source_overlay": "open_topography"
+    },
+    {
+      "code": "L08_GBIF_OCCURRENCES",
+      "name": "GBIF Species Occurrences",
+      "definition": "Observations espèces géoréférencées (7M+ entrées).",
+      "usage": "Croiser présence historique avec prédiction habitat.",
+      "example": "10 obs cerf dans 5km → validation doctrinale.",
+      "source_overlay": "gbif"
+    },
+    {
+      "code": "L09_OPENWEATHERMAP",
+      "name": "OpenWeatherMap Conditions",
+      "definition": "Température, humidité, vent, pression.",
+      "usage": "Vent <15 km/h = conditions affût optimales.",
+      "example": "NE 8 km/h, 2°C = journée favorable.",
+      "source_overlay": "openweathermap"
+    },
+    {
+      "code": "L10_CANOPY_COVER",
+      "name": "Canopy Height / Cover",
+      "definition": "Hauteur canopée (GEDI/GLAD).",
+      "usage": "20-25m = couverture optimale orignal.",
+      "example": "Canopée 22m → habitat orignal qualifié.",
+      "source_overlay": "canopy"
+    },
+    {
+      "code": "L11_RSF_SSF",
+      "name": "Resource / Step Selection Functions",
+      "definition": "Modèles sélection ressources ind/pop.",
+      "usage": "Probabilité sélection > 0.6 = zone attractive.",
+      "example": "RSF cerf = 0.72 sur pixel donné.",
+      "source_overlay": "rsf_ssf"
+    },
+    {
+      "code": "L12_COPERNICUS_GLAD",
+      "name": "Copernicus GLAD Land Cover",
+      "definition": "Classification couverture sol (forêt, prairie, etc.).",
+      "usage": "Mosaïque forêt-prairie = écotone privilégié.",
+      "example": "Écotone feuillus/clairière = haute qualité.",
+      "source_overlay": "copernicus_glad"
+    },
+    {
+      "code": "L13_BIO_PROFILE_135",
+      "name": "BIO_PROFILE_135 Couplage",
+      "definition": "Profil bioréacteur institutionnel (6 scores).",
+      "usage": "Fusion pondérée BP135 ↔ BIO_REACTEUR.",
+      "example": "score_fusion = 0.5×BR + 0.5×BP135.",
+      "source_overlay": "bio_reacteur_overlay"
+    },
+    {
+      "code": "L14_MERKLE_TREE_ANCHOR",
+      "name": "Merkle Tree Anchor (Bitcoin OTS)",
+      "definition": "Root Merkle ancrée blockchain Bitcoin.",
+      "usage": "Vérification indépendante intégrité via OpenTimestamps.",
+      "example": "Root SHA256 → OTS stamp → Bitcoin block.",
+      "source_overlay": "merkle_tree_anchor"
+    },
+    {
+      "code": "L15_MULTI_SIGNATURE",
+      "name": "Multi-Signature (PGP + Ed25519)",
+      "definition": "Doubles signatures cryptographiques manifests.",
+      "usage": "Vérification authenticité via 2 chaînes indépendantes.",
+      "example": "PGP armor + Ed25519 hex fingerprints.",
+      "source_overlay": "multi_signature"
+    },
+    {
+      "code": "L16_COMMANDANT_VALIDATION",
+      "name": "Commandant Validation Audit (P22)",
+      "definition": "Audit doctrinal des approbations formelles.",
+      "usage": "Trace APPROVED/REJECTED/PENDING par scope.",
+      "example": "P14 Merkle anchor → APPROVED by STEEVE-MAX.",
+      "source_overlay": "commandant_validations"
+    },
+    {
+      "code": "L17_MESSAGING_ENGINE",
+      "name": "Messaging Engine Channels (P23)",
+      "definition": "Canaux diffusion rapports (email + internal).",
+      "usage": "social_media exclu doctrinalement.",
+      "example": "Report SHA → delivery JSONL internal trace.",
+      "source_overlay": "messaging_engine"
+    },
+    {
+      "code": "L18_OTS_UPGRADE_AUTOMATION",
+      "name": "OTS Upgrade Automation (P24)",
+      "definition": "Automation 6h upgrade preuves Bitcoin pending→confirmed.",
+      "usage": "Transition preuves OTS calendar → block attested.",
+      "example": "pending_next_block → UPGRADED_BITCOIN_ATTESTED.",
+      "source_overlay": "ots_upgrade_automation"
+    }
+  ],
+  "generated_at_utc": "2026-05-08T17:16:33+00:00",
+  "anti_generique_strict": true,
+  "v30_lock": "INVIOLÉ",
+  "manual_sha256": "70628ac4b6dba929d254da84dab90928ab8e1bd34a95ccfa3b66b148a110c865"
+}

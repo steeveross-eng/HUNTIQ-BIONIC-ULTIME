@@ -1,0 +1,67 @@
+{
+  "manifest_id": "TERRITOIRE_OMEGA_REPORT_Ω",
+  "ordre": "P15_TERRITOIRE_Ω_REPORT_CREATE_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "zone_label": "ZONE_CMDT_CURL_PROOF",
+  "n_overlays_present": 1,
+  "n_overlays_absent": 7,
+  "source_overlays_summary": {
+    "habitat_complete_merge": {
+      "status": "OVERLAY_ABSENT_DOCTRINAL_CAVEAT",
+      "path": "/app/backend/data/pipelines/habitat_complete_merge/habitat_complete_merge_overlay.json"
+    },
+    "merkle_tree_anchor": {
+      "status": "OVERLAY_ABSENT_DOCTRINAL_CAVEAT",
+      "path": "/app/backend/data/pipelines/merkle_tree_anchor/merkle_tree_anchor_overlay.json"
+    },
+    "multi_year_dense_grid": {
+      "status": "OVERLAY_ABSENT_DOCTRINAL_CAVEAT",
+      "path": "/app/backend/data/pipelines/multi_year_dense_grid/multi_year_dense_grid_overlay.json"
+    },
+    "multi_signature": {
+      "status": "OVERLAY_ABSENT_DOCTRINAL_CAVEAT",
+      "path": "/app/backend/data/pipelines/multi_signature/multi_signature_overlay.json"
+    },
+    "territoire_visualizer": {
+      "status": "OVERLAY_ABSENT_DOCTRINAL_CAVEAT",
+      "path": "/app/backend/data/pipelines/territoire_visualizer/territoire_visualizer_overlay.json"
+    },
+    "anthropogenic_pressure": {
+      "status": "OVERLAY_ABSENT_DOCTRINAL_CAVEAT",
+      "path": "/app/backend/data/pipelines/anthropogenic_pressure/anthropogenic_pressure_overlay.json"
+    },
+    "temporal_rut": {
+      "status": "OVERLAY_ABSENT_DOCTRINAL_CAVEAT",
+      "path": "/app/backend/data/pipelines/temporal_rut/temporal_rut_overlay.json"
+    },
+    "ots_upgrade_automation": {
+      "status": "PRESENT",
+      "path": "/app/backend/data/pipelines/ots_upgrade_automation/ots_upgrade_automation_hook_activation_overlay.json",
+      "last_updated_utc": "2026-05-08T17:08:28+00:00",
+      "last_manifest_sha256": "24d847d8016f3142982ff45a18d479a864de751df008c2c74b5edf1b3c74c799",
+      "last_verdict": "OTS_UPGRADE_AUTOMATION_HOOK_ACTIVATED",
+      "n_activations": 1,
+      "history_length": 1
+    }
+  },
+  "cryptographic_chain": {
+    "merkle_root_last_sha256": null,
+    "merkle_verdict": null,
+    "multi_signature_status": null,
+    "ots_automation_status": "OTS_UPGRADE_AUTOMATION_HOOK_ACTIVATED",
+    "chain_integrity_claim": "Ed25519 + PGP + Merkle + Bitcoin OTS (anti-générique strict)"
+  },
+  "operational_recommendations": [
+    {
+      "category": "HABITAT_INTEGRITY",
+      "action": "Overlay habitat_complete_merge absent — relancer P9 COMPLETE_MERGE.",
+      "priority": "P0"
+    }
+  ],
+  "recommendations_count": 1,
+  "generated_at_utc": "2026-05-08T17:16:32+00:00",
+  "anti_generique_strict": true,
+  "fusion_add_only": true,
+  "v30_lock": "INVIOLÉ",
+  "report_sha256": "6daf839b8020e9a688d61185b4a621a628ec907cb9e89d2f0bb100742e28537b"
+}
