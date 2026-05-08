@@ -1688,18 +1688,20 @@ const MonTerritoireBionicPage = () => {
           maxWidth: 300,
         }}
       >
-        {/* P20_PHASE3 · Panel unifié = DEFAULT · opt-out via ?panelMode=legacy */}
+        {/* P20_PHASE3 · FORCE_PURGE Ω · panneau unifié = SEUL ACTIF par défaut.
+            Le legacy LayersOmegaSyncPanel est désactivé sauf override
+            URL `?legacyPanels=on` (anti-générique : pas de fake activation). */}
         {(() => {
-          let panelMode = 'unified';
+          let useLegacy = false;
           try {
             const params = new URLSearchParams(window.location.search);
-            const flag = params.get('panelMode');
-            if (flag === 'legacy') panelMode = 'legacy';
+            // Double override pour debug strict ; en production = unified
+            useLegacy = params.get('panelMode') === 'legacy'
+              && params.get('legacyPanels') === 'on';
           } catch (e) {
             /* no-op */
           }
-          if (panelMode === 'unified') {
-            // Anti-générique : câblage réel sur les states existants
+          if (!useLegacy) {
             const activeMap = {
               zones: showZonesLayer,
               corridors: showCorridorsLayer,

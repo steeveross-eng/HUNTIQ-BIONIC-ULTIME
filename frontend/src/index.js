@@ -91,3 +91,36 @@ if ('serviceWorker' in navigator) {
 }
 
 serviceWorkerRegistration.unregister();
+
+// P20_PHASE3 · FORCE PURGE Ω · auto reload one-shot si version stale
+// Ordre Commandant STEEVE-MAX · 2026-05-08
+const BCE_4X_FORCE_PURGE_VERSION = "P20_PHASE3_FORCE_PURGE_2026_05_08_2147";
+try {
+  const stored = window.localStorage.getItem("bce4x_purge_version");
+  if (stored !== BCE_4X_FORCE_PURGE_VERSION) {
+    window.localStorage.setItem(
+      "bce4x_purge_version", BCE_4X_FORCE_PURGE_VERSION);
+    // Purge tous les flags de session UI legacy susceptibles de
+    // ré-afficher des panneaux pré-Ω (anti-générique strict).
+    const legacyKeys = [
+      "panel_mode", "show_debug_panel", "analysis_v6_open",
+      "legacy_corridors_visible", "show_dev_inspector",
+      "old_layers_state", "v6_panel_state",
+    ];
+    legacyKeys.forEach((k) => {
+      try { window.localStorage.removeItem(k); } catch (_) {}
+      try { window.sessionStorage.removeItem(k); } catch (_) {}
+    });
+    if ('caches' in window) {
+      caches.keys().then((keys) =>
+        Promise.all(keys.map((k) => caches.delete(k)))
+      ).catch(() => {});
+    }
+    console.log(
+      `[BCE-4X · FORCE PURGE] version=${BCE_4X_FORCE_PURGE_VERSION} `
+      + `· legacy keys cleared · CacheStorage purged`);
+    // Note : pas de reload automatique pour éviter un boucle si déjà à jour.
+  }
+} catch (_) {
+  /* no-op */
+}

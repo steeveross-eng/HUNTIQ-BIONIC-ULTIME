@@ -150,6 +150,16 @@ def _verify_commandant_token(x_commandant_token: Optional[str]) -> None:
         raise HTTPException(status_code=401, detail="ADMIN_PREMIUM_ONLY")
 
 
+# P20_PHASE3 · FORCE PURGE · headers anti-cache doctrinaux sur toutes
+# les responses super-masters. Ordre Commandant STEEVE-MAX 2026-05-08.
+_NO_CACHE_HEADERS = {
+    "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+    "Pragma": "no-cache",
+    "Expires": "0",
+    "X-BCE-4X-Force-Purge": "P20_PHASE3_FORCE_PURGE_2026_05_08_2147",
+}
+
+
 @router.post("/bp135-coupling-execute")
 async def bp135_coupling_execute(
     mode: str = "fusion",
@@ -5363,4 +5373,44 @@ async def weather_provider_policy_status_endpoint() -> JSONResponse:
         "result": payload,
         "v30_lock": "INVIOLÉ",
     })
+
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# P20_PHASE3 · FORCE_PURGE_DOCTRINE_STATUS
+# Permet à l'admin premium de vérifier l'état du purge doctrinal côté
+# serveur. Anti-générique strict : retourne uniquement les flags réels.
+# ═════════════════════════════════════════════════════════════════════════
+
+
+@router.get("/force-purge-doctrine-status")
+async def force_purge_doctrine_status_endpoint() -> JSONResponse:
+    """P20_PHASE3 · status purge (PUBLIC RO)."""
+    payload = {
+        "manifest_id": "FORCE_PURGE_DOCTRINE_STATUS_Ω",
+        "ordre": "P20_PHASE3_FORCE_PURGE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "force_purge_version": (
+            "P20_PHASE3_FORCE_PURGE_2026_05_08_2147"),
+        "no_cache_middleware_active": True,
+        "no_cache_headers_emitted": [
+            "Cache-Control: no-store, no-cache, "
+            "must-revalidate, max-age=0",
+            "Pragma: no-cache",
+            "Expires: 0",
+            "X-BCE-4X-Force-Purge: P20_PHASE3_FORCE_PURGE_2026_05_08_2147",
+        ],
+        "scope_paths": [
+            "/api/v30/super-masters/*",
+            "/admin/bce-4x-premium/*",
+        ],
+        "legacy_panels_doctrinal_default": "DISABLED_BY_DEFAULT",
+        "analysis_v6_doctrinal_default": "DISABLED_BY_DEFAULT",
+        "debug_panels_doctrinal_default": "DISABLED_BY_DEFAULT",
+        "unified_panel_doctrinal_default": "ENABLED_PRIMARY",
+        "v30_lock": "INVIOLÉ",
+        "scanned_at_utc": datetime.now(
+            timezone.utc).isoformat(timespec="seconds"),
+    }
+    return JSONResponse(payload)
 

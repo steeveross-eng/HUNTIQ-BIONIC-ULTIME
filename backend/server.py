@@ -201,6 +201,23 @@ app.add_middleware(
 app.add_middleware(GZipMiddleware, minimum_size=500)
 
 
+# P20_PHASE3 · FORCE PURGE Ω · injecte headers no-cache sur toutes les
+# responses super-masters et admin-premium. Ordre Commandant STEEVE-MAX.
+@app.middleware("http")
+async def bce_4x_force_purge_no_cache_middleware(request, call_next):
+    response = await call_next(request)
+    path = request.url.path
+    if (path.startswith("/api/v30/super-masters")
+            or path.startswith("/admin/bce-4x-premium")):
+        response.headers["Cache-Control"] = (
+            "no-store, no-cache, must-revalidate, max-age=0")
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+        response.headers["X-BCE-4X-Force-Purge"] = (
+            "P20_PHASE3_FORCE_PURGE_2026_05_08_2147")
+    return response
+
+
 # ==============================================
 # ORCHESTRATOR REGISTRATION (Phase 6)
 # ==============================================

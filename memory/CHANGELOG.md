@@ -399,3 +399,60 @@
 - ✅ FUSION ADD-ONLY · zéro mutation des states existants
 - ✅ ANTI-GÉNÉRIQUE STRICT · countdown calculé sur vrais timestamps overlay
 - ✅ Aucun testing_agent_v3_fork
+
+## 2026-05-08 (suite 4) — P20_PHASE3_FORCE_PURGE_AND_RELOAD_TERRITOIRE_OMEGA_Ω
+
+### Mesures de purge doctrinale exécutées (CDN + frontend + backend)
+
+#### A · Backend cache control
+- `server.py` middleware ajouté : `bce_4x_force_purge_no_cache_middleware`
+- Headers injectés sur `/api/v30/super-masters/*` et `/admin/bce-4x-premium/*` :
+  - `Cache-Control: no-store, no-cache, must-revalidate, max-age=0`
+  - `Pragma: no-cache`
+  - `Expires: 0`
+  - `X-BCE-4X-Force-Purge: P20_PHASE3_FORCE_PURGE_2026_05_08_2147`
+- Vérifié curl preview : `cache-control · pragma · x-bce-4x-force-purge` tous présents
+
+#### B · Frontend force purge
+- `index.js` : auto-purge one-shot si `localStorage.bce4x_purge_version` ≠ courant
+  - Suppression 7 keys legacy (panel_mode, show_debug_panel, analysis_v6_open, etc.)
+  - `caches.keys()` purgé via `caches.delete()` pour tous les CacheStorage
+  - Console log : `[BCE-4X · FORCE PURGE] version=... legacy keys cleared`
+- `public/index.html` : meta `bce-4x-force-purge-version` ajoutée
+- Bumper `bionic-rendu-omega-version` v9.3 → v10.0
+
+#### C · Force unified panel only
+- `MonTerritoireBionicPage.jsx` : double override requis pour legacy
+  (`?panelMode=legacy` + `?legacyPanels=on`). Default = unifié systématique.
+- Câblage 10 states existants conservé (anti-générique)
+
+#### D · Doctrine flags
+- Nouveau registre `doctrine_force_purge_omega.js` : flags doctrinaux
+  centralisés (legacyPanels, analysisV6, debugPanels, devInspector)
+- Tous = FALSE par défaut · override URL strict
+- Status retourné via `getForcePurgeStatus()`
+
+#### E · Audit endpoint
+- Nouveau endpoint `GET /api/v30/super-masters/force-purge-doctrine-status`
+- Retourne version, middleware status, scope paths, doctrinal defaults
+- Vérifié : `legacy_panels=DISABLED_BY_DEFAULT · unified_panel=ENABLED_PRIMARY`
+
+#### F · Force rebuild
+- `rm -rf build/ + node_modules/.cache` (clean)
+- `yarn build` SUCCESS en 61.57s · 65 chunks JS + 3 CSS bundles
+- Frontend `RUNNING` · Backend `RUNNING`
+- Smoke screenshot : "TERRITOIRE Ω INITIALISATION DU PIPELINE" · V30 LOCKED visible
+
+### Métriques cumulatives session
+- 45/45 pytests doctrinaux passés (zéro régression)
+- Headers no-cache vérifiés sur preview public
+- 65 chunks régénérés clean
+- 1 nouveau module frontend (doctrine_force_purge_omega.js)
+- 1 nouveau endpoint backend (force-purge-doctrine-status)
+- 1 nouveau middleware FastAPI (bce_4x_force_purge_no_cache_middleware)
+
+### Conformité doctrinale
+- ✅ V30_LOCK INVIOLÉ · zéro mutation engine maître
+- ✅ FUSION ADD-ONLY · legacy panels conservés derrière double override
+- ✅ ANTI-GÉNÉRIQUE STRICT · fix `executed_at_utc` → `scanned_at_utc` parsing réel
+- ✅ Aucun testing_agent_v3_fork
