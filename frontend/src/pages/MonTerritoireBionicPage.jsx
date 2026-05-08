@@ -49,6 +49,7 @@ import PlacesSidePanel from '@/components/territoire/PlacesSidePanel';
 import StatutCorridorsOmegaPanel from '@/components/territoire/StatutCorridorsOmegaPanel';
 import HudTerritoireUltime from '@/components/territoire/HudTerritoireUltime';
 import LayersOmegaSyncPanel from '@/components/territoire/LayersOmegaSyncPanel';
+import LayersPanelOmegaUnified from '@/components/territoire/LayersPanelOmegaUnified';
 import RenduOmegaIntegralCertifier from '@/components/territoire/RenduOmegaIntegralCertifier';
 import WeatherPanel from '@/components/territoire/ui/WeatherPanel';
 import useSpatialClipping from '@/hooks/useSpatialClipping';
@@ -1685,10 +1686,32 @@ const MonTerritoireBionicPage = () => {
           maxWidth: 300,
         }}
       >
-        <LayersOmegaSyncPanel
-          bundleData={bundleDataV8}
-          species={selectedSpecies !== 'tous' ? selectedSpecies : 'orignal'}
-        />
+        {/* P20_PHASE2 · Panel unifié opt-in via ?panelMode=unified */}
+        {(() => {
+          try {
+            const params = new URLSearchParams(window.location.search);
+            const panelMode = params.get('panelMode');
+            if (panelMode === 'unified') {
+              return (
+                <LayersPanelOmegaUnified
+                  activeMap={{}}
+                  opacityMap={{}}
+                  onToggle={() => {}}
+                  onOpacityChange={() => {}}
+                  initialExpanded={true}
+                />
+              );
+            }
+          } catch (e) {
+            /* no-op */
+          }
+          return (
+            <LayersOmegaSyncPanel
+              bundleData={bundleDataV8}
+              species={selectedSpecies !== 'tous' ? selectedSpecies : 'orignal'}
+            />
+          );
+        })()}
       </div>
 
       {/* RENDU-Ω INTÉGRAL CERTIFIÉ — overlay top-right (PHASE-E ordre Commandant 2026-04-28) */}

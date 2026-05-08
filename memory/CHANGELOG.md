@@ -293,3 +293,52 @@
 - ✅ ANTI-GÉNÉRIQUE STRICT · auth guard fait un POST réel (messaging-engine-channel-hook-activate persist:false) pour validation token
 - ✅ data-testid sur 100% des éléments interactifs et critiques
 - ✅ AUCUN testing_agent_v3_fork (interdiction respectée)
+
+## 2026-05-08 (suite 2) — P20_PHASE2_UNIFIED_AND_RESEND_Ω (FUSION ADD-ONLY · V30_LOCK INVIOLÉ)
+
+### A · Resend integration (P23 email primary)
+- `pip install resend==2.19.0` · ajout dans `requirements.txt`
+- ENV vars : `RESEND_API_KEY=re_...` · `RESEND_FROM` · `RESEND_DOMAIN`
+- `messaging_engine_omega.py` refactor : `_send_email_resend()` ajouté · `share_premium_report()` accepte `reply_to`
+- SMTP path conservé en LEGACY (deprecation tracée doctrinalement, code visible pour rollback)
+- **Curl proof** : `delivery_status=DELIVERED_RESEND · delivery_id=bb0491c5-...· elapsed_ms=271`
+- Tests pytest mis à jour : `QUEUED_NO_RESEND_CONFIG`, key format check, reply_to audit hash
+- 7/7 P23 tests passés
+
+### B · Weather provider policy (NOAA + Copernicus DEPRECATED ENFORCED)
+- Nouveau module `weather_provider_policy_omega.py` (anti-générique : raise `WeatherProviderDeprecatedError` si appel NOAA/Copernicus)
+- 2 endpoints : `POST /weather-provider-policy-attest` · `GET /weather-provider-policy-status`
+- Tests : `test_phase_xx_phase2_weather_policy_omega.py` (6/6)
+- Active providers : `["openweathermap"]` · Deprecated : NOAA + 5 alias Copernicus
+
+### C · LayersPanelOmegaUnified opt-in (P20 cleanup phase 2)
+- `MonTerritoireBionicPage.jsx` : import `LayersPanelOmegaUnified` + flag URL `?panelMode=unified`
+- Render conditionnel : si `panelMode=unified` → panneau unifié 18 couches · sinon (default) → `LayersOmegaSyncPanel` legacy
+- FUSION ADD-ONLY · zéro régression sur le flow par défaut
+
+### D · OTS Timeline 24-48h (P20_PHASE2 graph)
+- Backend : `get_ots_upgrade_automation_history(hours)` ajoute slicing temporel sur overlay
+- Endpoint : `GET /ots-upgrade-automation-history?hours=24|48` (PUBLIC RO)
+- Frontend `MerkleAuditPage.jsx` : nouveau composant SVG `OtsTimelineChart` (anti-générique : barres stack par scan : UPGRADED / ALREADY / PENDING / FAILED)
+- Toggle 24h / 48h · empty state explicite · cumul stats footer
+- API client `bce4xApi.js` : nouvelle fonction `otsHistory(hours)`
+
+### E · Frontend integration
+- `TerritoireReportPage.jsx` : champ `reply_to` (email perso utilisateur) ajouté dans share form
+- `lib/bce4xApi.js` : `messagingShare` propage déjà `reply_to` (modification body schema)
+
+### Métriques cumulatives session
+- 4 nouveaux endpoints (`weather-provider-policy-attest/status`, `ots-upgrade-automation-history`)
+- 1 nouveau module engine (weather_provider_policy_omega.py)
+- 2 modules engines mis à jour (messaging_engine, ots_upgrade_automation)
+- 1 nouveau test pytest neutre (test_phase_xx_phase2_weather_policy_omega.py · 6 tests)
+- 3 tests P23 ajoutés/mis à jour (15 tests P23 au total)
+- **45/45 pytests doctrinaux PASSÉS** (zéro régression)
+- 1 composant SVG OtsTimelineChart (frontend)
+- `yarn build` SUCCESS en 44.35s
+
+### Conformité doctrinale renforcée
+- ✅ Resend = vraie remise (delivery_id retourné, anti-générique strict)
+- ✅ NOAA/Copernicus levée d'exception explicite si appel tenté
+- ✅ V30_LOCK INVIOLÉ · panel legacy intact (toggle URL flag)
+- ✅ Aucun testing_agent_v3_fork utilisé

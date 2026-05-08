@@ -3,24 +3,25 @@
 COMMANDANT STEEVE-MAX · BCE-4X ULTIME ABSOLU x3 · ANTI_GÉNÉRIQUE_STRICT
 
 P23 — Intégration réelle des canaux MESSAGING ENGINE :
-  · email   : SMTP (smtplib stdlib) avec env vars (configured later)
+  · email   : RESEND API (Resend SDK · DOCTRINAL ACTIVE)
+              SMTP legacy DEPRECATED (P20_PHASE2_ENFORCED) · conservé en fallback
   · internal : persisté JSONL local (anti-générique : vraie persistence)
   · social_media : DÉSACTIVÉ (P23 scope = email+internal only)
 
 DOCTRINE :
-  · Anti-générique strict : vraie remise SMTP (pas de fake)
-  · Si SMTP env vars non setées → status QUEUED_NO_SMTP_CONFIG
+  · Anti-générique strict : vraie remise via Resend API (pas de fake)
+  · Si RESEND_API_KEY non setée → status QUEUED_NO_RESEND_CONFIG
   · Internal channel : persiste vraie ligne JSONL avec timestamp
   · Caveats explicites tracés
   · Aucune fabrication de réussite
 
-ENV VARS REQUIRED (configurées plus tard par le Commandant) :
-  · SMTP_HOST
-  · SMTP_PORT (default 587)
-  · SMTP_USER
-  · SMTP_PASS
-  · SMTP_FROM (default = SMTP_USER)
-  · SMTP_USE_TLS (default true)
+ENV VARS REQUIRED (P20_PHASE2 · RESEND PRIMARY) :
+  · RESEND_API_KEY (re_...)
+  · RESEND_FROM (default = "BCE-4X COMMANDANT <onboarding@resend.dev>")
+  · RESEND_DOMAIN (default = "resend.dev")
+
+ENV VARS LEGACY (DEPRECATED · fallback uniquement) :
+  · SMTP_HOST / SMTP_PORT / SMTP_USER / SMTP_PASS / SMTP_FROM / SMTP_USE_TLS
 
 INTERNAL CHANNEL : /app/backend/data/pipelines/messaging_engine/
   · internal_messages.jsonl
@@ -38,7 +39,7 @@ import time
 from datetime import datetime, timezone
 from email.message import EmailMessage
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 
 MESSAGING_ROOT = Path(
@@ -60,7 +61,7 @@ def _utc_now() -> str:
 
 
 def _smtp_config_present() -> Dict[str, Any]:
-    """Vérifie présence env vars SMTP (anti-générique strict)."""
+    """Vérifie présence env vars SMTP (LEGACY DEPRECATED · anti-générique)."""
     host = os.environ.get("SMTP_HOST")
     user = os.environ.get("SMTP_USER")
     password = os.environ.get("SMTP_PASS")
@@ -75,6 +76,94 @@ def _smtp_config_present() -> Dict[str, Any]:
             "true", "1", "yes"),
         "from_address": (
             os.environ.get("SMTP_FROM") or user or "noreply@bce-4x.local"),
+        "deprecation_status": "DEPRECATED_P20_PHASE2_USE_RESEND",
+    }
+
+
+def _resend_config_present() -> Dict[str, Any]:
+    """Vérifie présence env vars Resend (P20_PHASE2 PRIMARY)."""
+    api_key = os.environ.get("RESEND_API_KEY")
+    return {
+        "configured": bool(api_key and api_key.startswith("re_")),
+        "api_key_set": bool(api_key),
+        "api_key_format_ok": bool(
+            api_key and api_key.startswith("re_")),
+        "from_address": os.environ.get(
+            "RESEND_FROM",
+            "BCE-4X COMMANDANT <onboarding@resend.dev>"),
+        "domain": os.environ.get("RESEND_DOMAIN", "resend.dev"),
+    }
+
+
+def _send_email_resend(
+    to_address: str,
+    subject: str,
+    body_text: str,
+    body_html: Optional[str] = None,
+    reply_to: Optional[str] = None,
+    attachments: Optional[List[Dict[str, Any]]] = None,
+) -> Dict[str, Any]:
+    """Envoie email via Resend API (anti-générique strict).
+
+    Si RESEND_API_KEY non setée → QUEUED_NO_RESEND_CONFIG.
+    `reply_to` : email personnel utilisateur (set as Reply-To header).
+    `attachments` : list of {"filename": str, "content": bytes-base64-str, "content_type": str}.
+    """
+    cfg = _resend_config_present()
+    if not cfg["configured"]:
+        return {
+            "channel": "email",
+            "status": "QUEUED_NO_RESEND_CONFIG",
+            "reason": (
+                "RESEND_API_KEY env var not configured or invalid. "
+                "Anti-générique : no fake delivery."),
+            "resend_config_status": cfg,
+        }
+    try:
+        import resend  # noqa: WPS433
+    except ImportError as e:
+        return {
+            "channel": "email",
+            "status": "RESEND_SDK_MISSING",
+            "reason": f"resend_sdk_import_failed::{str(e)[:200]}",
+            "resend_config_status": cfg,
+        }
+    resend.api_key = os.environ["RESEND_API_KEY"]
+    params: Dict[str, Any] = {
+        "from": cfg["from_address"],
+        "to": [to_address],
+        "subject": subject,
+        "text": body_text,
+    }
+    if body_html:
+        params["html"] = body_html
+    if reply_to:
+        params["reply_to"] = reply_to
+    if attachments:
+        params["attachments"] = attachments
+    t0 = time.time()
+    try:
+        resp = resend.Emails.send(params)
+    except Exception as e:  # noqa: BLE001
+        return {
+            "channel": "email",
+            "status": "RESEND_DELIVERY_FAILED",
+            "reason": f"resend_error::{type(e).__name__}::{str(e)[:200]}",
+            "resend_config_status": cfg,
+            "elapsed_ms": round((time.time() - t0) * 1000, 1),
+        }
+    delivery_id = (
+        resp.get("id") if isinstance(resp, dict) else None)
+    return {
+        "channel": "email",
+        "status": "DELIVERED_RESEND",
+        "delivery_id": delivery_id,
+        "from_address": cfg["from_address"],
+        "to": to_address,
+        "reply_to": reply_to,
+        "subject_sha256": hashlib.sha256(
+            subject.encode()).hexdigest()[:16],
+        "elapsed_ms": round((time.time() - t0) * 1000, 1),
     }
 
 
@@ -181,8 +270,13 @@ def share_premium_report(
     recipient: str,
     subject: Optional[str] = None,
     notes: Optional[str] = None,
+    reply_to: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Partage un rapport via channel doctrinal (anti-générique strict)."""
+    """Partage un rapport via channel doctrinal (anti-générique strict).
+
+    P20_PHASE2 : email via Resend API (SMTP DEPRECATED).
+    `reply_to` : email personnel utilisateur (header Reply-To).
+    """
     from engines.v8_institutional.especes.pipeline_guardrails_omega import (
         require_guardrails_enforced, log_forensic_event,
     )
@@ -216,10 +310,29 @@ def share_premium_report(
         f"Notes: {notes or '(none)'}\n\n"
         f"Doctrine: BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT\n"
         f"V30 Lock: INVIOLÉ\n")
+    body_html = (
+        f"<!DOCTYPE html>"
+        f"<html><body style='font-family:Georgia,serif;background:#0F1419;color:#E8E4D9;padding:24px;'>"
+        f"<h1 style='color:#D4A017;border-bottom:2px solid #D4A017;padding-bottom:6px;'>"
+        f"COMMANDANT STEEVE-MAX · Premium Report Share</h1>"
+        f"<p><strong>Report SHA-256:</strong> "
+        f"<code style='color:#7CB518;'>{report_sha256}</code></p>"
+        f"<p><strong>Generated UTC:</strong> {_utc_now()}</p>"
+        f"<p><strong>Notes:</strong> {notes or '(none)'}</p>"
+        f"<hr style='border-color:#3D4654;'/>"
+        f"<p style='font-size:11px;opacity:0.7;'>"
+        f"Doctrine : BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT · "
+        f"V30 LOCK : INVIOLÉ"
+        f"</p></body></html>")
 
     if channel == "email":
-        delivery = _send_email_smtp(
-            recipient, final_subject, body_text)
+        delivery = _send_email_resend(
+            to_address=recipient,
+            subject=final_subject,
+            body_text=body_text,
+            body_html=body_html,
+            reply_to=reply_to,
+        )
     else:  # internal
         delivery = _send_internal(
             report_sha256, final_subject,
@@ -232,6 +345,9 @@ def share_premium_report(
             recipient.encode()).hexdigest()[:32],
         "subject_sha256": hashlib.sha256(
             final_subject.encode()).hexdigest()[:16],
+        "reply_to_sha256": (
+            hashlib.sha256(reply_to.encode()).hexdigest()[:16]
+            if reply_to else None),
         "delivery_result": delivery,
         "audited_at_utc": _utc_now(),
     }
@@ -278,6 +394,7 @@ def activate_messaging_engine_channel_hook(
 
     t0 = time.time()
     smtp_cfg = _smtp_config_present()
+    resend_cfg = _resend_config_present()
     payload = {
         "manifest_id":
             "MESSAGING_ENGINE_CHANNEL_INTEGRATION_HOOK_ACTIVATE_Ω",
@@ -293,19 +410,28 @@ def activate_messaging_engine_channel_hook(
             sorted(ALLOWED_CHANNELS_P23)),
         "social_media_status": (
             "EXPLICITLY_DISABLED_P23_DOCTRINE"),
-        "smtp_configured": smtp_cfg["configured"],
+        "primary_email_provider": "RESEND",
+        "resend_configured": resend_cfg["configured"],
+        "resend_config_summary": {
+            "api_key_set": resend_cfg["api_key_set"],
+            "api_key_format_ok": resend_cfg["api_key_format_ok"],
+            "from_address": resend_cfg["from_address"],
+            "domain": resend_cfg["domain"],
+        },
+        "smtp_deprecated": True,
+        "smtp_configured_legacy": smtp_cfg["configured"],
         "smtp_config_summary": {
             "host_set": smtp_cfg["host_set"],
             "user_set": smtp_cfg["user_set"],
             "pass_set": smtp_cfg["pass_set"],
             "port": smtp_cfg["port"],
             "use_tls": smtp_cfg["use_tls"],
+            "deprecation_status": smtp_cfg["deprecation_status"],
         },
-        "smtp_caveat_doctrinal": (
-            "Si SMTP_HOST/SMTP_USER/SMTP_PASS non setées, "
-            "les emails sont QUEUED_NO_SMTP_CONFIG. "
-            "Anti-générique : aucune fake delivery. "
-            "Configurer plus tard via .env."),
+        "resend_caveat_doctrinal": (
+            "Si RESEND_API_KEY non setée ou invalide, "
+            "les emails sont QUEUED_NO_RESEND_CONFIG. "
+            "Anti-générique : aucune fake delivery."),
         "internal_channel_path": str(
             INTERNAL_MESSAGES_PATH),
         "audit_log_path": str(MESSAGING_AUDIT_PATH),
@@ -360,7 +486,9 @@ def activate_messaging_engine_channel_hook(
             "activated": True,
             "verdict": payload["verdict"],
             "manifest_sha256": payload_sha256,
-            "smtp_configured": smtp_cfg["configured"],
+            "primary_email_provider": "RESEND",
+            "resend_configured": resend_cfg["configured"],
+            "smtp_deprecated": True,
             "v30_lock_inviolate": True,
             "drift_zero": True,
             "no_engine_recompute_triggered": True,
@@ -371,7 +499,8 @@ def activate_messaging_engine_channel_hook(
         event="MESSAGING_ENGINE_CHANNEL_HOOK_ACTIVATED",
         details={
             "manifest_sha256": payload_sha256,
-            "smtp_configured": smtp_cfg["configured"],
+            "primary_email_provider": "RESEND",
+            "resend_configured": resend_cfg["configured"],
         },
         persist=True)
     return payload
@@ -392,6 +521,7 @@ def get_messaging_engine_hook_status() -> Dict[str, Any]:
         state["history"][-1]
         if state.get("history") else None)
     smtp_cfg_now = _smtp_config_present()
+    resend_cfg_now = _resend_config_present()
     return {
         "manifest_id":
             "MESSAGING_ENGINE_CHANNEL_STATUS_Ω",
@@ -401,11 +531,21 @@ def get_messaging_engine_hook_status() -> Dict[str, Any]:
         "channels_enabled": sorted(ALLOWED_CHANNELS_P23),
         "social_media_status": (
             "EXPLICITLY_DISABLED_P23_DOCTRINE"),
+        "primary_email_provider": "RESEND",
+        "resend_configured_now": resend_cfg_now["configured"],
+        "resend_config_summary": {
+            "api_key_set": resend_cfg_now["api_key_set"],
+            "api_key_format_ok": resend_cfg_now["api_key_format_ok"],
+            "from_address": resend_cfg_now["from_address"],
+            "domain": resend_cfg_now["domain"],
+        },
+        "smtp_deprecated": True,
         "smtp_configured_now": smtp_cfg_now["configured"],
         "smtp_config_summary": {
             "host_set": smtp_cfg_now["host_set"],
             "user_set": smtp_cfg_now["user_set"],
             "pass_set": smtp_cfg_now["pass_set"],
+            "deprecation_status": smtp_cfg_now["deprecation_status"],
         },
         "n_activations_history": state.get(
             "n_activations", 0),

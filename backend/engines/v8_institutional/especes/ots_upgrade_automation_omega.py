@@ -512,4 +512,66 @@ __all__ = [
     "stop_background_automation",
     "activate_ots_upgrade_automation_hook",
     "get_ots_upgrade_automation_hook_status",
+    "get_ots_upgrade_automation_history",
 ]
+
+
+def get_ots_upgrade_automation_history(
+    hours: int = 48,
+) -> Dict[str, Any]:
+    """P20_PHASE2 · retourne timeline scan history sliced (anti-générique).
+
+    Lit le vrai overlay JSON et filtre par fenêtre temporelle.
+    """
+    if hours < 1 or hours > 720:  # cap 30 days
+        raise ValueError(f"HOURS_INVALID::{hours}::expected_1..720")
+    if not OTS_AUTOMATION_OVERLAY_PATH.exists():
+        return {
+            "manifest_id": "OTS_UPGRADE_AUTOMATION_HISTORY_Ω",
+            "hours_window": hours,
+            "n_records": 0,
+            "records": [],
+            "v30_lock": "INVIOLÉ",
+            "scanned_at_utc": _utc_now(),
+        }
+    try:
+        state = json.loads(
+            OTS_AUTOMATION_OVERLAY_PATH.read_text(
+                encoding="utf-8"))
+    except json.JSONDecodeError:
+        state = {"history": []}
+    history = state.get("history", []) or []
+    threshold = datetime.now(timezone.utc).timestamp() - (hours * 3600)
+    sliced: List[Dict[str, Any]] = []
+    for rec in history:
+        executed = rec.get("executed_at_utc")
+        try:
+            ts = datetime.fromisoformat(
+                executed.replace("Z", "+00:00")
+                if executed else _utc_now()).timestamp()
+        except (ValueError, AttributeError, TypeError):
+            continue
+        if ts >= threshold:
+            sliced.append({
+                "executed_at_utc": rec.get("executed_at_utc"),
+                "n_ots_files_scanned": rec.get(
+                    "n_ots_files_scanned", 0),
+                "n_upgraded_bitcoin_attested": rec.get(
+                    "n_upgraded_bitcoin_attested", 0),
+                "n_still_pending_next_block": rec.get(
+                    "n_still_pending_next_block", 0),
+                "n_already_complete": rec.get(
+                    "n_already_complete", 0),
+                "n_failed": rec.get("n_failed", 0),
+                "verdict": rec.get("verdict"),
+                "scan_sha256": (rec.get("scan_sha256") or "")[:16],
+            })
+    return {
+        "manifest_id": "OTS_UPGRADE_AUTOMATION_HISTORY_Ω",
+        "hours_window": hours,
+        "n_records": len(sliced),
+        "records": sliced,
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "v30_lock": "INVIOLÉ",
+        "scanned_at_utc": _utc_now(),
+    }

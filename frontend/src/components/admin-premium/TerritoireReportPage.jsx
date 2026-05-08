@@ -19,6 +19,7 @@ const TerritoireReportPage = () => {
   const [error, setError] = useState('');
   const [shareEmail, setShareEmail] = useState('');
   const [shareNotes, setShareNotes] = useState('');
+  const [shareReplyTo, setShareReplyTo] = useState('');
   const [shareResult, setShareResult] = useState(null);
 
   const refresh = async () => {
@@ -57,6 +58,7 @@ const TerritoireReportPage = () => {
       recipient: shareEmail,
       subject: `[BCE-4X] Rapport ${zoneLabel}`,
       notes: shareNotes,
+      reply_to: shareReplyTo || undefined,
     });
     setShareResult(r);
   };
@@ -307,6 +309,22 @@ const TerritoireReportPage = () => {
                   padding: '6px 10px',
                   background: '#0F1419',
                   border: '1px solid rgba(212,160,23,0.3)',
+                  borderRadius: 4,
+                  color: '#E8E4D9',
+                  fontSize: 11,
+                }}
+              />
+              <input
+                type="email"
+                placeholder="reply-to (mon email perso)"
+                value={shareReplyTo}
+                onChange={(e) => setShareReplyTo(e.target.value)}
+                data-testid="territoire-report-share-reply-to"
+                style={{
+                  flex: '1 1 200px',
+                  padding: '6px 10px',
+                  background: '#0F1419',
+                  border: '1px solid rgba(124,181,24,0.3)',
                   borderRadius: 4,
                   color: '#E8E4D9',
                   fontSize: 11,

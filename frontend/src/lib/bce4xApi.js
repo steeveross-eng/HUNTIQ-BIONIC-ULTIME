@@ -161,6 +161,12 @@ export const otsStop = () =>
   );
 export const otsStatus = () =>
   handle(axios.get(`${SUPER_MASTERS}/ots-upgrade-automation-status`));
+export const otsHistory = (hours = 48) =>
+  handle(
+    axios.get(
+      `${SUPER_MASTERS}/ots-upgrade-automation-history?hours=${hours}`,
+    ),
+  );
 
 // P10 ─ Visualizer all layers (existing endpoint)
 export const visualizerAllLayers = () =>

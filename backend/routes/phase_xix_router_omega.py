@@ -4679,6 +4679,7 @@ class MessagingEngineChannelShareBody(BaseModel):
     recipient: str
     subject: Optional[str] = None
     notes: Optional[str] = None
+    reply_to: Optional[str] = None  # P20_PHASE2 · email perso utilisateur
 
 
 @router.post("/messaging-engine-channel-share")
@@ -4690,6 +4691,7 @@ async def messaging_engine_channel_share_endpoint(
     """P23 · partage rapport premium via canal (anti-générique strict).
 
     `social_media` est explicitement exclu par directive Commandant.
+    P20_PHASE2 : email = Resend API · `reply_to` = email perso utilisateur.
     """
     _verify_commandant_token(x_commandant_token)
     from engines.v8_institutional.especes.pipeline_guardrails_omega import (
@@ -4705,6 +4707,7 @@ async def messaging_engine_channel_share_endpoint(
             recipient=body.recipient,
             subject=body.subject,
             notes=body.notes,
+            reply_to=body.reply_to,
         )
     except GuardrailsNotEnforcedError as e:
         raise HTTPException(status_code=412, detail=str(e))
@@ -5204,6 +5207,31 @@ async def ots_upgrade_automation_status_endpoint() -> JSONResponse:
     })
 
 
+@router.get("/ots-upgrade-automation-history")
+async def ots_upgrade_automation_history_endpoint(
+    hours: int = 48,
+) -> JSONResponse:
+    """P20_PHASE2 · timeline 24-48h (PUBLIC RO).
+
+    Anti-générique : lit l'overlay réel sans fabrication.
+    """
+    from engines.v8_institutional.especes.ots_upgrade_automation_omega import (
+        get_ots_upgrade_automation_history,
+    )
+    try:
+        payload = get_ots_upgrade_automation_history(hours=hours)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return JSONResponse({
+        "manifest_id": "OTS_UPGRADE_AUTOMATION_HISTORY_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P20_PHASE2_UNIFIED_AND_RESEND_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
 # ═════════════════════════════════════════════════════════════════════════
 # P20 · TERRITOIRE_UI_UX_AUDIT_Ω
 # READ-ONLY · FUSION ADD-ONLY · V30_LOCK INVIOLÉ
@@ -5265,6 +5293,72 @@ async def territoire_ui_ux_audit_status_endpoint() -> JSONResponse:
             "TERRITOIRE_UI_UX_AUDIT_STATUS_GET_Ω",
         "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
         "ordre": "P20_TERRITOIRE_UI_UX_AUDIT_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# P20_PHASE2 · WEATHER_PROVIDER_POLICY_Ω
+# OPENWEATHERMAP ONLY · NOAA + Copernicus DEPRECATED_ENFORCED
+# ═════════════════════════════════════════════════════════════════════════
+
+
+class WeatherProviderPolicyAttestBody(BaseModel):
+    persist: bool = True
+
+
+@router.post("/weather-provider-policy-attest")
+async def weather_provider_policy_attest_endpoint(
+    body: WeatherProviderPolicyAttestBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """P20_PHASE2 · attestation politique météo (OWM only)."""
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.weather_provider_policy_omega import (
+        execute_weather_provider_policy_attest,
+    )
+    try:
+        payload = execute_weather_provider_policy_attest(
+            persist=body.persist)
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "WEATHER_PROVIDER_POLICY_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id": "WEATHER_PROVIDER_POLICY_ATTEST_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P20_PHASE2_UNIFIED_AND_RESEND_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/weather-provider-policy-status")
+async def weather_provider_policy_status_endpoint() -> JSONResponse:
+    """P20_PHASE2 · status (PUBLIC RO)."""
+    from engines.v8_institutional.especes.weather_provider_policy_omega import (
+        get_weather_provider_policy_status,
+    )
+    payload = get_weather_provider_policy_status()
+    return JSONResponse({
+        "manifest_id": "WEATHER_PROVIDER_POLICY_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P20_PHASE2_UNIFIED_AND_RESEND_Ω",
         "horodatage_build": _build_horodatage(),
         "result": payload,
         "v30_lock": "INVIOLÉ",

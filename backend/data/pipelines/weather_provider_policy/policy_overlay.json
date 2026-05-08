@@ -1,0 +1,39 @@
+{
+  "history": [
+    {
+      "manifest_id": "WEATHER_PROVIDER_POLICY_Ω",
+      "ordre": "P20_PHASE2_UNIFIED_AND_RESEND_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "active_providers": [
+        "openweathermap"
+      ],
+      "deprecated_providers": [
+        "copernicus",
+        "copernicus_atmosphere",
+        "copernicus_marine",
+        "noaa",
+        "noaa_cfsv2",
+        "noaa_thredds"
+      ],
+      "active_provider_status": {
+        "active_provider": "openweathermap",
+        "api_key_set": false,
+        "api_key_format_ok": false
+      },
+      "noaa_status": "DEPRECATED_ENFORCED_P20_PHASE2",
+      "copernicus_status": "DEPRECATED_ENFORCED_P20_PHASE2",
+      "openweathermap_status": "ACTIVE_NO_API_KEY",
+      "v30_lock": "INVIOLÉ",
+      "anti_generique_strict": true,
+      "scanned_at_utc": "2026-05-08T21:12:28+00:00",
+      "activated": true,
+      "verdict": "WEATHER_PROVIDER_POLICY_ATTESTED",
+      "policy_sha256": "2c67617d4b540bd4bf4d30373b79b24194d0598bf244338cfadb97213971e1c5"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T21:12:28+00:00",
+  "n_attestations": 1,
+  "last_policy_sha256": "2c67617d4b540bd4bf4d30373b79b24194d0598bf244338cfadb97213971e1c5",
+  "last_verdict": "WEATHER_PROVIDER_POLICY_ATTESTED",
+  "v30_lock": "INVIOLÉ"
+}
