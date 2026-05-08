@@ -5202,3 +5202,71 @@ async def ots_upgrade_automation_status_endpoint() -> JSONResponse:
         "result": payload,
         "v30_lock": "INVIOLÉ",
     })
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# P20 · TERRITOIRE_UI_UX_AUDIT_Ω
+# READ-ONLY · FUSION ADD-ONLY · V30_LOCK INVIOLÉ
+# ═════════════════════════════════════════════════════════════════════════
+
+
+class TerritoireUiUxAuditExecuteBody(BaseModel):
+    persist: bool = True
+
+
+@router.post("/territoire-ui-ux-audit-execute")
+async def territoire_ui_ux_audit_execute_endpoint(
+    body: TerritoireUiUxAuditExecuteBody,
+    x_commandant_token: Optional[str] = Header(
+        default=None, alias="X-Commandant-Token"),
+) -> JSONResponse:
+    """P20 · execute audit READ-ONLY UI/UX TERRITOIRE."""
+    _verify_commandant_token(x_commandant_token)
+    from engines.v8_institutional.especes.pipeline_guardrails_omega import (
+        GuardrailsNotEnforcedError,
+    )
+    from engines.v8_institutional.especes.territoire_ui_ux_audit_omega import (
+        execute_territoire_ui_ux_audit,
+    )
+    try:
+        payload = execute_territoire_ui_ux_audit(
+            persist=body.persist)
+    except GuardrailsNotEnforcedError as e:
+        raise HTTPException(status_code=412, detail=str(e))
+    except Exception as e:
+        import traceback
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "reason": "TERRITOIRE_UI_UX_AUDIT_FAILED",
+                "error": str(e)[:500],
+                "traceback": traceback.format_exc()[-1000:],
+            })
+    return JSONResponse({
+        "manifest_id":
+            "TERRITOIRE_UI_UX_AUDIT_EXECUTE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P20_TERRITOIRE_UI_UX_AUDIT_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/territoire-ui-ux-audit-status")
+async def territoire_ui_ux_audit_status_endpoint() -> JSONResponse:
+    """P20 · status (PUBLIC RO)."""
+    from engines.v8_institutional.especes.territoire_ui_ux_audit_omega import (
+        get_territoire_ui_ux_audit_status,
+    )
+    payload = get_territoire_ui_ux_audit_status()
+    return JSONResponse({
+        "manifest_id":
+            "TERRITOIRE_UI_UX_AUDIT_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P20_TERRITOIRE_UI_UX_AUDIT_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+

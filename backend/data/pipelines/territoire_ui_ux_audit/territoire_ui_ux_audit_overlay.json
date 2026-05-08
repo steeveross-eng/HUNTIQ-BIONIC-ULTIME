@@ -1,0 +1,176 @@
+{
+  "history": [
+    {
+      "manifest_id": "TERRITOIRE_UI_UX_AUDIT_Ω",
+      "ordre": "P20_TERRITOIRE_UI_UX_AUDIT_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "mode": "READ_ONLY",
+      "frontend_scan": {
+        "status": "SCANNED",
+        "n_jsx_files": 67,
+        "n_js_files": 3,
+        "n_total_files": 70,
+        "subdirs": [
+          "intelligence",
+          "map",
+          "supra",
+          "ui"
+        ],
+        "total_loc": 18723,
+        "largest_10_components": [
+          {
+            "file": "BionicLayersV8.jsx",
+            "loc": 1579
+          },
+          {
+            "file": "EcoforestryLayers.jsx",
+            "loc": 1351
+          },
+          {
+            "file": "ZoneFavorites.jsx",
+            "loc": 685
+          },
+          {
+            "file": "GroupDashboard.jsx",
+            "loc": 649
+          },
+          {
+            "file": "StandsMapLayer.jsx",
+            "loc": 610
+          },
+          {
+            "file": "MonTerritoireBionic.jsx",
+            "loc": 594
+          },
+          {
+            "file": "WaypointUnifiedPanel.jsx",
+            "loc": 469
+          },
+          {
+            "file": "ShareComponents.jsx",
+            "loc": 451
+          },
+          {
+            "file": "BionicZoneDiagnosticPanel.jsx",
+            "loc": 449
+          },
+          {
+            "file": "StatutCorridorsOmegaPanel.jsx",
+            "loc": 446
+          }
+        ]
+      },
+      "audit_document": {
+        "status": "PRESENT",
+        "path": "/app/memory/P20_TERRITOIRE_UI_UX_AUDIT_OMEGA.md",
+        "size_bytes": 13806,
+        "sha256": "cd66f24b8e7272e4e5eef18da28a15e857e658f680648eeecaa70b4b86612cdd",
+        "n_lines": 235
+      },
+      "duplications_identified": [
+        {
+          "id": "D1",
+          "severity": "CRITICAL",
+          "title": "HF_LAYERS vs ECOFORESTRY",
+          "components": [
+            "HighFidelityMapsPanel.jsx",
+            "EcoforestryLayers.jsx"
+          ],
+          "remediation": "factor_into_LAYER_CATALOG_OMEGA"
+        },
+        {
+          "id": "D2",
+          "severity": "HIGH",
+          "title": "HEATMAP_TRIPLE",
+          "components": [
+            "ConsolidatedHeatmapLayer.jsx",
+            "AlphaHotspotsLayer.jsx",
+            "showHeatmapV10_flag"
+          ],
+          "remediation": "merge_under_HotspotsLayerOmega"
+        },
+        {
+          "id": "D3",
+          "severity": "HIGH",
+          "title": "ZONES_MULTIPLES",
+          "components": [
+            "BionicZone600m.jsx",
+            "BionicZone2km.jsx",
+            "BionicMicroZones.jsx",
+            "BionicPrecisionZonesLayer.jsx",
+            "BionicLayersV8.jsx"
+          ],
+          "remediation": "register_ZONES_OMEGA_REGISTRY"
+        },
+        {
+          "id": "D4",
+          "severity": "LOW",
+          "title": "STUBS_NEUTRALIZED",
+          "components": [
+            "TerritoryShell.jsx",
+            "BionicMapOverlay.jsx"
+          ],
+          "remediation": "keep_until_imports_traced"
+        }
+      ],
+      "n_duplications": 4,
+      "ux_issues": [
+        {
+          "id": "U1",
+          "domain": "Z_ORDER",
+          "score": 3,
+          "verdict": "ABSENT_CENTRAL_REGISTRY"
+        },
+        {
+          "id": "U2",
+          "domain": "OPACITY",
+          "score": 5,
+          "verdict": "ASYMMETRIC_HF_ONLY"
+        },
+        {
+          "id": "U3",
+          "domain": "PALETTE",
+          "score": 4,
+          "verdict": "THREE_PALETTES_COLLISION"
+        },
+        {
+          "id": "U4",
+          "domain": "ICON_REGISTRY",
+          "score": 7,
+          "verdict": "LUCIDE_REACT_OK_NO_REGISTRY"
+        },
+        {
+          "id": "U5",
+          "domain": "PERFORMANCE",
+          "score": 6,
+          "verdict": "RERENDERS_NOT_MEMOIZED"
+        },
+        {
+          "id": "U6",
+          "domain": "GROUPING",
+          "score": 4,
+          "verdict": "FLAT_TOOLBAR_13_BUTTONS"
+        }
+      ],
+      "n_ux_issues": 6,
+      "global_score_out_of_10": 4.83,
+      "verdict": "OPTIMIZATION_REQUIRED_BEFORE_P21",
+      "anti_generique_strict": true,
+      "fusion_add_only": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T19:46:55+00:00",
+      "elapsed_s": 0.004,
+      "audit_sha256": "2459134a2dfd4cd6f04ab754e48c81dc2f22cb863097b2d1194d416c6a9f8165"
+    }
+  ],
+  "last_updated_utc": "2026-05-08T19:46:55+00:00",
+  "n_audits": 1,
+  "last_audit_sha256": "2459134a2dfd4cd6f04ab754e48c81dc2f22cb863097b2d1194d416c6a9f8165",
+  "last_verdict": "OPTIMIZATION_REQUIRED_BEFORE_P21",
+  "last_global_score": 4.83,
+  "v30_lock": "INVIOLÉ"
+}

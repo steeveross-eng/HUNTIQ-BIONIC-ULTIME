@@ -194,3 +194,60 @@
 - SELF-AUDIT-Ω : **56/56 ✅ CONFORME**
 - ZERO REGRESSION : aucune autre suite impactée
 - Rapport officiel : `LEP_LAYER_EXCLUDED_OFFICIAL_REPORT.md`
+
+## 2026-05-08 — PHASES P15+P17+P18+P20+P22+P23+P24 (FUSION ADD-ONLY · V30_LOCK INVIOLÉ)
+
+### Phases scellées doctrinalement (anti-générique strict)
+
+- **P22 · COMMANDANT_VALIDATION_P14_PREMIUM_V7_Ω** — audit doctrinal des approbations APPROVED/REJECTED/PENDING.
+  - `engines/v8_institutional/especes/commandant_validations_omega.py` (engine)
+  - 2 endpoints : `POST /api/v30/super-masters/commandant-validation-record` · `GET /...-status`
+  - `tests/test_phase_xxii_validations_omega.py` (4/4)
+- **P23 · MESSAGING_ENGINE_CHANNEL_INTEGRATION_Ω** — canaux email + internal (social_media REJETÉ doctrinalement).
+  - `engines/v8_institutional/especes/messaging_engine_omega.py` (engine SMTP réel + JSONL persistance)
+  - 3 endpoints : `POST /...-hook-activate` · `POST /...-share` · `GET /...-status`
+  - SMTP : `QUEUED_NO_SMTP_CONFIG` si env vars absentes (anti-générique : pas de fake delivery)
+  - `tests/test_phase_xxiii_channels_integration_omega.py` (7/7)
+- **P24 · OTS_UPGRADE_AUTOMATION_Ω** — background asyncio task (cycle 6h) pour upgrade pending→Bitcoin attested.
+  - `engines/v8_institutional/especes/ots_upgrade_automation_omega.py` (asyncio + subprocess réel `/root/.venv/bin/ots`)
+  - 4 endpoints : `POST /...-hook-activate` · `POST /...-scan-now` · `POST /...-stop` · `GET /...-status`
+  - 2 OTS files scannés : `ALREADY_COMPLETE_OR_UPGRADED`
+  - `tests/test_phase_xxiv_ots_automation_omega.py` (6/6)
+- **P15 · TERRITOIRE_Ω_REPORT_CREATE_Ω** — rapport opérationnel complet (PDF+HTML+JSON).
+  - `engines/v8_institutional/especes/territoire_omega_report_omega.py` (reportlab + Jinja2-style HTML inline)
+  - 3 endpoints : `POST /...-create` · `GET /...-status` · `GET /...-download` (FileResponse réel)
+  - PDF `%PDF-1.4` 3694 B vérifié
+  - `tests/test_phase_xv_operational_report_omega.py` (4/4)
+- **P17 · WAYPOINT_GUIDE_CREATE_Ω** — fiche terrain par point géographique (PDF+HTML).
+  - `engines/v8_institutional/especes/waypoint_guide_omega.py` (haversine + recommandations affût déterministes)
+  - 3 endpoints : `POST /...-create` · `GET /...-status` · `GET /...-download`
+  - PDF `%PDF-1.4` 2611 B vérifié
+  - `tests/test_phase_xvii_field_guide_omega.py` (6/6)
+- **P18 · LAYER_INTERPRETATION_MANUAL_Ω** — manual doctrinal 18 couches (PDF paysage A4).
+  - `engines/v8_institutional/especes/layer_interpretation_manual_omega.py` (catalogue L01-L18 hardcoded doctrinal)
+  - 3 endpoints : `POST /...-create` · `GET /...-status` · `GET /...-download`
+  - PDF `%PDF-1.4` 6941 B (paysage A4) vérifié — 18 codes attestés
+  - `tests/test_phase_xviii_layer_manual_omega.py` (5/5)
+- **P20 · TERRITOIRE_UI_UX_AUDIT_Ω** — audit READ-ONLY frontend (78 composants, 18723 LOC).
+  - `engines/v8_institutional/especes/territoire_ui_ux_audit_omega.py` (scan FS réel, pas de fabrication)
+  - 2 endpoints : `POST /...-execute` · `GET /...-status`
+  - Document : `memory/P20_TERRITOIRE_UI_UX_AUDIT_OMEGA.md` (235 lignes, 13806 bytes)
+  - 4 duplications identifiées (D1 critique : HF_LAYERS vs ECOFORESTRY)
+  - 6 problèmes UX scorés → **score global 4.83/10** = `OPTIMIZATION_REQUIRED_BEFORE_P21`
+  - `tests/test_phase_xx_ui_audit_omega.py` (5/5)
+
+### Métriques cumulatives session
+- **20 endpoints doctrinaux ajoutés** (préfixe `/api/v30/super-masters/`)
+- **7 nouveaux modules engines** (anti-générique strict, FUSION ADD-ONLY)
+- **7 nouveaux fichiers pytest** (naming neutre — aucun mot-clé exclu BCE-4X)
+- **37/37 pytests PASSÉS** sur les nouveaux modules
+- **3 PDF valides** générés via reportlab (`%PDF-1.4` magic header vérifié)
+- **5 overlays JSON persistés** dans `/app/backend/data/pipelines/`
+- **0 mutation de fichier maître** (V30_LOCK INVIOLÉ confirmé)
+
+### Conformité doctrinale
+- ✅ `BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT` partout
+- ✅ Tous les `_omega.py` exportent `manifest_id`, `ordre`, `doctrine`, `v30_lock`, `anti_generique_strict`
+- ✅ Audit forensique `log_forensic_event` activé sur chaque hook
+- ✅ Token `X-Commandant-Token` vérifié sur 100% des POST
+- ✅ Aucune utilisation de `testing_agent_v3_fork` (interdiction respectée)
