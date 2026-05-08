@@ -93,6 +93,15 @@ const Carte2027Page = lazy(() => import("@/pages/Carte2027Page"));
 // Import statique (pas lazy) pour éviter tout remount/suspense sur capture-mode
 import TerritoireCaptureModePage from "@/pages/TerritoireCaptureModePage";
 import HudUltimeDemoPage from "@/pages/HudUltimeDemoPage";
+// P21 ADMIN_PREMIUM_FRONTEND_INTEGRATION_Ω · BCE-4X ULTIME ABSOLU
+const AdminPremiumLayout = lazy(() => import("@/components/admin-premium/AdminPremiumLayout"));
+const AdminPremiumIndexPage = lazy(() => import("@/components/admin-premium/AdminPremiumIndexPage"));
+const Visualizer18Page = lazy(() => import("@/components/admin-premium/Visualizer18Page"));
+const TerritoireReportPage = lazy(() => import("@/components/admin-premium/TerritoireReportPage"));
+const WaypointGuidePage = lazy(() => import("@/components/admin-premium/WaypointGuidePage"));
+const LayerManualPage = lazy(() => import("@/components/admin-premium/LayerManualPage"));
+const MerkleAuditPage = lazy(() => import("@/components/admin-premium/MerkleAuditPage"));
+const ValidationsPage = lazy(() => import("@/components/admin-premium/ValidationsPage"));
 // VIS-E: Vision Notifications Panel
 import VisionNotificationsPanel from '@/components/VisionNotificationsPanel';
 // PHASE_X200_P4_RUNTIME_BEACON_Ω — attestation runtime institutionnelle (LAT 48.206657 / LNG -68.382422)
@@ -1138,6 +1147,16 @@ function App() {
                     StrictMode désactivé via index.js quand pathname.startsWith('/territoire-capture-mode').
                     Aucun AuthGuard niveau route. MonTerritoireBionicPage rendu sans remount. */}
                 <Route path="/territoire-capture-mode" element={<TerritoireCaptureModePage />} />
+                {/* P21 · ADMIN_PREMIUM_FRONTEND_INTEGRATION_Ω · BCE-4X ULTIME ABSOLU */}
+                <Route path="/admin/bce-4x-premium" element={<AdminPremiumLayout />}>
+                  <Route index element={<AdminPremiumIndexPage />} />
+                  <Route path="visualizer" element={<Visualizer18Page />} />
+                  <Route path="territoire" element={<TerritoireReportPage />} />
+                  <Route path="waypoint" element={<WaypointGuidePage />} />
+                  <Route path="manual" element={<LayerManualPage />} />
+                  <Route path="merkle" element={<MerkleAuditPage />} />
+                  <Route path="validation" element={<ValidationsPage />} />
+                </Route>
               </Routes>
             </Suspense>
             <Footer />

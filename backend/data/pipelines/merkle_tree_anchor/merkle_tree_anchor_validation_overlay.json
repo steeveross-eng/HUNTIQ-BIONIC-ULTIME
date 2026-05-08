@@ -1740,12 +1740,615 @@
       "executed_at_utc": "2026-05-08T15:23:28+00:00",
       "elapsed_s": 1.693,
       "manifest_sha256": "d3c9adc9e176233b742b5aaf5412979d742e0115bf82f70e74659547cc186266"
+    },
+    {
+      "manifest_id": "MERKLE_TREE_ANCHOR_BUILD_Ω",
+      "ordre": "P14_MERKLE_TREE_ANCHOR_HOOK_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "verdict": "MERKLE_TREE_ANCHOR_OPERATIONAL",
+      "merkle_root_hex": "4fc742d52189f0b75dfb5d022e85f9b07cdf0880d0440b127263f51a28286e05",
+      "n_leaves": 18,
+      "n_levels": 6,
+      "tree_rfc": "RFC_6962_Certificate_Transparency",
+      "leaves_doctrinal_with_audit_paths": [
+        {
+          "logical_key": "V12_CONTAMINATION_AFFUT_DEPENDENCY",
+          "ordre": "COMMANDE_INSTITUTIONNELLE_Ω_V12-MAÎTRE",
+          "sha256_hex": "d7cc8ea879bfa765984a12cc1d8b87fe7017528f86859150b3d5704fcabf1a8a",
+          "overlay_path": "/app/backend/data/pipelines/contamination_affut_dependency/contamination_affut_dependency_hook_overlay.json",
+          "leaf_index": 0,
+          "audit_path": [
+            {
+              "sibling_hex": "76b047f2980d824ce3f860d8f8647605ff42665f8592901f757e52f478c16a0d",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "6d6620db5fcf139cc5252af0cf8a214791d4747b9a4d7ece45e69ef7322a7832",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "6567ccde95a033f26794ac03707b0f387a48b406db747ae3dc7ec04faa9b697e",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "feafb67833bb133167f95b0d5c4b4d5337ca8eb13b2da81ccca1ccf68fc0b825",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "172db40e38b59e7efb106b3a41a7c98f17ebab53546e950a9b1985fb59fa1df7",
+              "sibling_position": "right"
+            }
+          ]
+        },
+        {
+          "logical_key": "NASA_NDVI",
+          "ordre": "P1_NASA_NDVI_HOOK_ACTIVATE_Ω_ULTIME",
+          "sha256_hex": "76b047f2980d824ce3f860d8f8647605ff42665f8592901f757e52f478c16a0d",
+          "overlay_path": "/app/backend/data/pipelines/nasa_ndvi/nasa_ndvi_hook_activation_overlay.json",
+          "leaf_index": 1,
+          "audit_path": [
+            {
+              "sibling_hex": "d7cc8ea879bfa765984a12cc1d8b87fe7017528f86859150b3d5704fcabf1a8a",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "6d6620db5fcf139cc5252af0cf8a214791d4747b9a4d7ece45e69ef7322a7832",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "6567ccde95a033f26794ac03707b0f387a48b406db747ae3dc7ec04faa9b697e",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "feafb67833bb133167f95b0d5c4b4d5337ca8eb13b2da81ccca1ccf68fc0b825",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "172db40e38b59e7efb106b3a41a7c98f17ebab53546e950a9b1985fb59fa1df7",
+              "sibling_position": "right"
+            }
+          ]
+        },
+        {
+          "logical_key": "USGS_SOIL",
+          "ordre": "P2_USGS_SOIL_HOOK_ACTIVATE_Ω",
+          "sha256_hex": "41742077e4693ebbe8c73e3cc3ec6746f0d2dd1bf7d71ed042869cb50a9586ef",
+          "overlay_path": "/app/backend/data/pipelines/usgs_soil/usgs_soil_hook_activation_overlay.json",
+          "leaf_index": 2,
+          "audit_path": [
+            {
+              "sibling_hex": "084f8720332f1626f5b5a7afcebfbd7191cffe7386b1c7233879282b6b1c227a",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "89d41710f213da80551664fed9b72502ae0e47cc21edd9e117bbd91196f861a9",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "6567ccde95a033f26794ac03707b0f387a48b406db747ae3dc7ec04faa9b697e",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "feafb67833bb133167f95b0d5c4b4d5337ca8eb13b2da81ccca1ccf68fc0b825",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "172db40e38b59e7efb106b3a41a7c98f17ebab53546e950a9b1985fb59fa1df7",
+              "sibling_position": "right"
+            }
+          ]
+        },
+        {
+          "logical_key": "RSF_SSF_GBIF",
+          "ordre": "P3_RSF_SSF_HOOK_ACTIVATE",
+          "sha256_hex": "084f8720332f1626f5b5a7afcebfbd7191cffe7386b1c7233879282b6b1c227a",
+          "overlay_path": "/app/backend/data/pipelines/rsf_ssf/rsf_ssf_hook_activation_overlay.json",
+          "leaf_index": 3,
+          "audit_path": [
+            {
+              "sibling_hex": "41742077e4693ebbe8c73e3cc3ec6746f0d2dd1bf7d71ed042869cb50a9586ef",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "89d41710f213da80551664fed9b72502ae0e47cc21edd9e117bbd91196f861a9",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "6567ccde95a033f26794ac03707b0f387a48b406db747ae3dc7ec04faa9b697e",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "feafb67833bb133167f95b0d5c4b4d5337ca8eb13b2da81ccca1ccf68fc0b825",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "172db40e38b59e7efb106b3a41a7c98f17ebab53546e950a9b1985fb59fa1df7",
+              "sibling_position": "right"
+            }
+          ]
+        },
+        {
+          "logical_key": "OPENTOPOGRAPHY_SRTM",
+          "ordre": "P4_OPENTOPOGRAPHY_HOOK_ACTIVATE_Ω",
+          "sha256_hex": "3451269d2f8bcf0907bba18ef1d25d1e8c68c995f46dfa1615eee99068628f05",
+          "overlay_path": "/app/backend/data/pipelines/opentopography/opentopography_hook_activation_overlay.json",
+          "leaf_index": 4,
+          "audit_path": [
+            {
+              "sibling_hex": "b3a506c431993bdc5a3673616e23ca096b56e8b585ad5d41339f7fe7bd20c01f",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "9a39be1dd763b5d6cae8cb9766090013ee43faff4a4b0fe25f70daebe62b88a9",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "c054f409a5cccd22bab191c5939b3d4bbd71fcd00c2319e6288c278352c86ab8",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "feafb67833bb133167f95b0d5c4b4d5337ca8eb13b2da81ccca1ccf68fc0b825",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "172db40e38b59e7efb106b3a41a7c98f17ebab53546e950a9b1985fb59fa1df7",
+              "sibling_position": "right"
+            }
+          ]
+        },
+        {
+          "logical_key": "CANOPY_MOD44B",
+          "ordre": "P5_CANOPY_HOOK_ACTIVATE_Ω",
+          "sha256_hex": "b3a506c431993bdc5a3673616e23ca096b56e8b585ad5d41339f7fe7bd20c01f",
+          "overlay_path": "/app/backend/data/pipelines/canopy/canopy_hook_activation_overlay.json",
+          "leaf_index": 5,
+          "audit_path": [
+            {
+              "sibling_hex": "3451269d2f8bcf0907bba18ef1d25d1e8c68c995f46dfa1615eee99068628f05",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "9a39be1dd763b5d6cae8cb9766090013ee43faff4a4b0fe25f70daebe62b88a9",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "c054f409a5cccd22bab191c5939b3d4bbd71fcd00c2319e6288c278352c86ab8",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "feafb67833bb133167f95b0d5c4b4d5337ca8eb13b2da81ccca1ccf68fc0b825",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "172db40e38b59e7efb106b3a41a7c98f17ebab53546e950a9b1985fb59fa1df7",
+              "sibling_position": "right"
+            }
+          ]
+        },
+        {
+          "logical_key": "HABITAT_OUTPUTS_COMPUTE",
+          "ordre": "HABITAT_OUTPUTS_COMPUTE_Ω_ULTIME",
+          "sha256_hex": "bec62755a8115e3a9c4cf2fc0a3b79071d3471657d1de5e70146b179870f34e4",
+          "overlay_path": "/app/backend/data/pipelines/habitat_outputs/habitat_outputs_compute_overlay.json",
+          "leaf_index": 6,
+          "audit_path": [
+            {
+              "sibling_hex": "b6c2e7dda955a9df2611605e24a994e40f231c82ae964a9b94c25e98eb92d873",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "2038fab812d2efe27679a59dedb427379bc48d6df278fc4ad8dd38af78d22965",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "c054f409a5cccd22bab191c5939b3d4bbd71fcd00c2319e6288c278352c86ab8",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "feafb67833bb133167f95b0d5c4b4d5337ca8eb13b2da81ccca1ccf68fc0b825",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "172db40e38b59e7efb106b3a41a7c98f17ebab53546e950a9b1985fb59fa1df7",
+              "sibling_position": "right"
+            }
+          ]
+        },
+        {
+          "logical_key": "HABITAT_OUTPUTS_RECOMPUTE_V2",
+          "ordre": "HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME",
+          "sha256_hex": "b6c2e7dda955a9df2611605e24a994e40f231c82ae964a9b94c25e98eb92d873",
+          "overlay_path": "/app/backend/data/pipelines/habitat_recompute_v2/habitat_outputs_recompute_overlay.json",
+          "leaf_index": 7,
+          "audit_path": [
+            {
+              "sibling_hex": "bec62755a8115e3a9c4cf2fc0a3b79071d3471657d1de5e70146b179870f34e4",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "2038fab812d2efe27679a59dedb427379bc48d6df278fc4ad8dd38af78d22965",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "c054f409a5cccd22bab191c5939b3d4bbd71fcd00c2319e6288c278352c86ab8",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "feafb67833bb133167f95b0d5c4b4d5337ca8eb13b2da81ccca1ccf68fc0b825",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "172db40e38b59e7efb106b3a41a7c98f17ebab53546e950a9b1985fb59fa1df7",
+              "sibling_position": "right"
+            }
+          ]
+        },
+        {
+          "logical_key": "ANTHROPOGENIC_PRESSURE_P4",
+          "ordre": "P4_ANTHROPOGENIC_PRESSURE_HOOK_ACTIVATE_Ω",
+          "sha256_hex": "b7c5d9a5a90d3c81a9bc5a5b2560c53384731ea3f06fadc957c968da9ee01a49",
+          "overlay_path": "/app/backend/data/pipelines/anthropogenic_pressure/anthropogenic_pressure_hook_activation_overlay.json",
+          "leaf_index": 8,
+          "audit_path": [
+            {
+              "sibling_hex": "90b0e677c84128d6fcdd8e1cdabd01f1c7194274004678b4ef39e4631b3ff342",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "1f2c29e4fc43451004af7fc90775988f65a6b983a3b1371ba0942bcadc805a4a",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "7fe91fb3f561236ff2e70cc5780eb410b50e1595c2bc9a3bd31aa190f2d2d356",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "af1387b04edae14eb1420f2af4f444d9c68ed20dadba6862c5619e3c7815da7d",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "172db40e38b59e7efb106b3a41a7c98f17ebab53546e950a9b1985fb59fa1df7",
+              "sibling_position": "right"
+            }
+          ]
+        },
+        {
+          "logical_key": "HABITAT_OUTPUTS_RECOMPUTE_V3_P5",
+          "ordre": "P5_HABITAT_OUTPUTS_RECOMPUTE_Ω_ULTIME_V3",
+          "sha256_hex": "90b0e677c84128d6fcdd8e1cdabd01f1c7194274004678b4ef39e4631b3ff342",
+          "overlay_path": "/app/backend/data/pipelines/habitat_recompute_v3/habitat_outputs_recompute_v3_overlay.json",
+          "leaf_index": 9,
+          "audit_path": [
+            {
+              "sibling_hex": "b7c5d9a5a90d3c81a9bc5a5b2560c53384731ea3f06fadc957c968da9ee01a49",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "1f2c29e4fc43451004af7fc90775988f65a6b983a3b1371ba0942bcadc805a4a",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "7fe91fb3f561236ff2e70cc5780eb410b50e1595c2bc9a3bd31aa190f2d2d356",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "af1387b04edae14eb1420f2af4f444d9c68ed20dadba6862c5619e3c7815da7d",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "172db40e38b59e7efb106b3a41a7c98f17ebab53546e950a9b1985fb59fa1df7",
+              "sibling_position": "right"
+            }
+          ]
+        },
+        {
+          "logical_key": "TEMPORAL_RUT_P6",
+          "ordre": "P6_TEMPORAL_RUT_DATA_HOOK_ACTIVATE_Ω",
+          "sha256_hex": "ca6937d8d7a3c68ba6c367c59d784f2f0586ad3923a936e14bab91bf53529952",
+          "overlay_path": "/app/backend/data/pipelines/temporal_rut/temporal_rut_hook_activation_overlay.json",
+          "leaf_index": 10,
+          "audit_path": [
+            {
+              "sibling_hex": "a4802eede9ae34ddb9a56a4adb87ecb81485d78f04617c55abf70f95836954fa",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "8cb2af8069823d514d53a62c3ccc96973fa4ff5d926e24370afc684166082a0e",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "7fe91fb3f561236ff2e70cc5780eb410b50e1595c2bc9a3bd31aa190f2d2d356",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "af1387b04edae14eb1420f2af4f444d9c68ed20dadba6862c5619e3c7815da7d",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "172db40e38b59e7efb106b3a41a7c98f17ebab53546e950a9b1985fb59fa1df7",
+              "sibling_position": "right"
+            }
+          ]
+        },
+        {
+          "logical_key": "HABITAT_OUTPUTS_FINAL_MERGE_P7",
+          "ordre": "P7_HABITAT_OUTPUTS_FINAL_MERGE_Ω",
+          "sha256_hex": "a4802eede9ae34ddb9a56a4adb87ecb81485d78f04617c55abf70f95836954fa",
+          "overlay_path": "/app/backend/data/pipelines/habitat_final_merge/habitat_outputs_final_merge_overlay.json",
+          "leaf_index": 11,
+          "audit_path": [
+            {
+              "sibling_hex": "ca6937d8d7a3c68ba6c367c59d784f2f0586ad3923a936e14bab91bf53529952",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "8cb2af8069823d514d53a62c3ccc96973fa4ff5d926e24370afc684166082a0e",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "7fe91fb3f561236ff2e70cc5780eb410b50e1595c2bc9a3bd31aa190f2d2d356",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "af1387b04edae14eb1420f2af4f444d9c68ed20dadba6862c5619e3c7815da7d",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "172db40e38b59e7efb106b3a41a7c98f17ebab53546e950a9b1985fb59fa1df7",
+              "sibling_position": "right"
+            }
+          ]
+        },
+        {
+          "logical_key": "NASA_NDVI_DENSE_GRID_P8",
+          "ordre": "P8_NASA_NDVI_DENSE_GRID_Ω",
+          "sha256_hex": "4ac6fe46e24b972565bb8acc1d117122582b8cfe67988d8f5d337a0970621972",
+          "overlay_path": "/app/backend/data/pipelines/nasa_ndvi_dense_grid/nasa_ndvi_dense_grid_hook_activation_overlay.json",
+          "leaf_index": 12,
+          "audit_path": [
+            {
+              "sibling_hex": "9ddd11b870e3a5fd3d355c97c4d2439c7e9cd9ca6dca665615b3a0c57696e329",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "5d9a0a4c83b037d624a234488d84de4213fbb63b0411428cb3c070413d79bc48",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "3f7695bf8ca03577a277c1157435ee79c8dc27f4ef8dda2569550aecbd28054e",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "af1387b04edae14eb1420f2af4f444d9c68ed20dadba6862c5619e3c7815da7d",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "172db40e38b59e7efb106b3a41a7c98f17ebab53546e950a9b1985fb59fa1df7",
+              "sibling_position": "right"
+            }
+          ]
+        },
+        {
+          "logical_key": "HABITAT_OUTPUTS_COMPLETE_MERGE_P9",
+          "ordre": "P9_HABITAT_OUTPUTS_COMPLETE_MERGE_Ω",
+          "sha256_hex": "9ddd11b870e3a5fd3d355c97c4d2439c7e9cd9ca6dca665615b3a0c57696e329",
+          "overlay_path": "/app/backend/data/pipelines/habitat_complete_merge/habitat_outputs_complete_merge_overlay.json",
+          "leaf_index": 13,
+          "audit_path": [
+            {
+              "sibling_hex": "4ac6fe46e24b972565bb8acc1d117122582b8cfe67988d8f5d337a0970621972",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "5d9a0a4c83b037d624a234488d84de4213fbb63b0411428cb3c070413d79bc48",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "3f7695bf8ca03577a277c1157435ee79c8dc27f4ef8dda2569550aecbd28054e",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "af1387b04edae14eb1420f2af4f444d9c68ed20dadba6862c5619e3c7815da7d",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "172db40e38b59e7efb106b3a41a7c98f17ebab53546e950a9b1985fb59fa1df7",
+              "sibling_position": "right"
+            }
+          ]
+        },
+        {
+          "logical_key": "NASA_NDVI_TIMESERIES_DECADE",
+          "ordre": "NASA_NDVI_TIMESERIES_DECADE_Ω",
+          "sha256_hex": "b88643955fabb9e4fa820930a13e1a9556450e77e6914c7a575139aa5c6d7be4",
+          "overlay_path": "/app/backend/data/pipelines/nasa_ndvi_decade/nasa_ndvi_timeseries_decade_overlay.json",
+          "leaf_index": 14,
+          "audit_path": [
+            {
+              "sibling_hex": "a541926b77a60776fcec5e136e3022a484bc5f06ce6eb8fa344938e64f57d7e0",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "d586d7acbc5f92d76ede767a11e73f60b891a2a1da2b877433fda249dd52a898",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "3f7695bf8ca03577a277c1157435ee79c8dc27f4ef8dda2569550aecbd28054e",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "af1387b04edae14eb1420f2af4f444d9c68ed20dadba6862c5619e3c7815da7d",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "172db40e38b59e7efb106b3a41a7c98f17ebab53546e950a9b1985fb59fa1df7",
+              "sibling_position": "right"
+            }
+          ]
+        },
+        {
+          "logical_key": "MULTI_YEAR_DENSE_GRID_TIMESERIES_P11",
+          "ordre": "P11_MULTI_YEAR_DENSE_GRID_TIMESERIES_Ω",
+          "sha256_hex": "a541926b77a60776fcec5e136e3022a484bc5f06ce6eb8fa344938e64f57d7e0",
+          "overlay_path": "/app/backend/data/pipelines/multi_year_dense_grid_timeseries/multi_year_dense_grid_timeseries_hook_activation_overlay.json",
+          "leaf_index": 15,
+          "audit_path": [
+            {
+              "sibling_hex": "b88643955fabb9e4fa820930a13e1a9556450e77e6914c7a575139aa5c6d7be4",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "d586d7acbc5f92d76ede767a11e73f60b891a2a1da2b877433fda249dd52a898",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "3f7695bf8ca03577a277c1157435ee79c8dc27f4ef8dda2569550aecbd28054e",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "af1387b04edae14eb1420f2af4f444d9c68ed20dadba6862c5619e3c7815da7d",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "172db40e38b59e7efb106b3a41a7c98f17ebab53546e950a9b1985fb59fa1df7",
+              "sibling_position": "right"
+            }
+          ]
+        },
+        {
+          "logical_key": "MULTI_SIGNATURE_VERIFICATION_P12",
+          "ordre": "P12_MULTI_SIGNATURE_VERIFICATION_HOOK_Ω",
+          "sha256_hex": "16ae7c6832251889c88656d6f95ce570bd433fbd7e27bc9563b90d3c9e7ddb97",
+          "overlay_path": "/app/backend/data/pipelines/multi_signature_verification/multi_signature_hook_activation_overlay.json",
+          "leaf_index": 16,
+          "audit_path": [
+            {
+              "sibling_hex": "09be873b0cea2714a06327199e3c3b206341d337071fbea641fdc41b84e888a1",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "574433c04eb37f29667c1b843a998c443348ee78b6c1d7dbec0862e35643cd0c",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "9b6ecdb9d4be774ebd4e023d7f069530f49ce75d2c5e01c61cad6e50caefd8cd",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "71947cbfd0ce5d443860a7582ab1363eb863df545c36e37d98d7d062b758cd23",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "9495040118f1d84130af306764c632bc7767456b5862674b3939aff5a3ceb58b",
+              "sibling_position": "left"
+            }
+          ]
+        },
+        {
+          "logical_key": "MERKLE_TREE_ANCHOR_P14",
+          "ordre": "P14_MERKLE_TREE_ANCHOR_HOOK_Ω",
+          "sha256_hex": "09be873b0cea2714a06327199e3c3b206341d337071fbea641fdc41b84e888a1",
+          "overlay_path": "/app/backend/data/pipelines/merkle_tree_anchor/merkle_tree_anchor_hook_activation_overlay.json",
+          "leaf_index": 17,
+          "audit_path": [
+            {
+              "sibling_hex": "16ae7c6832251889c88656d6f95ce570bd433fbd7e27bc9563b90d3c9e7ddb97",
+              "sibling_position": "left"
+            },
+            {
+              "sibling_hex": "574433c04eb37f29667c1b843a998c443348ee78b6c1d7dbec0862e35643cd0c",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "9b6ecdb9d4be774ebd4e023d7f069530f49ce75d2c5e01c61cad6e50caefd8cd",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "71947cbfd0ce5d443860a7582ab1363eb863df545c36e37d98d7d062b758cd23",
+              "sibling_position": "right"
+            },
+            {
+              "sibling_hex": "9495040118f1d84130af306764c632bc7767456b5862674b3939aff5a3ceb58b",
+              "sibling_position": "left"
+            }
+          ]
+        }
+      ],
+      "tree_levels_hex": [
+        [
+          "d7cc8ea879bfa765984a12cc1d8b87fe7017528f86859150b3d5704fcabf1a8a",
+          "76b047f2980d824ce3f860d8f8647605ff42665f8592901f757e52f478c16a0d",
+          "41742077e4693ebbe8c73e3cc3ec6746f0d2dd1bf7d71ed042869cb50a9586ef",
+          "084f8720332f1626f5b5a7afcebfbd7191cffe7386b1c7233879282b6b1c227a",
+          "3451269d2f8bcf0907bba18ef1d25d1e8c68c995f46dfa1615eee99068628f05",
+          "b3a506c431993bdc5a3673616e23ca096b56e8b585ad5d41339f7fe7bd20c01f",
+          "bec62755a8115e3a9c4cf2fc0a3b79071d3471657d1de5e70146b179870f34e4",
+          "b6c2e7dda955a9df2611605e24a994e40f231c82ae964a9b94c25e98eb92d873",
+          "b7c5d9a5a90d3c81a9bc5a5b2560c53384731ea3f06fadc957c968da9ee01a49",
+          "90b0e677c84128d6fcdd8e1cdabd01f1c7194274004678b4ef39e4631b3ff342",
+          "ca6937d8d7a3c68ba6c367c59d784f2f0586ad3923a936e14bab91bf53529952",
+          "a4802eede9ae34ddb9a56a4adb87ecb81485d78f04617c55abf70f95836954fa",
+          "4ac6fe46e24b972565bb8acc1d117122582b8cfe67988d8f5d337a0970621972",
+          "9ddd11b870e3a5fd3d355c97c4d2439c7e9cd9ca6dca665615b3a0c57696e329",
+          "b88643955fabb9e4fa820930a13e1a9556450e77e6914c7a575139aa5c6d7be4",
+          "a541926b77a60776fcec5e136e3022a484bc5f06ce6eb8fa344938e64f57d7e0",
+          "16ae7c6832251889c88656d6f95ce570bd433fbd7e27bc9563b90d3c9e7ddb97",
+          "09be873b0cea2714a06327199e3c3b206341d337071fbea641fdc41b84e888a1"
+        ],
+        [
+          "89d41710f213da80551664fed9b72502ae0e47cc21edd9e117bbd91196f861a9",
+          "6d6620db5fcf139cc5252af0cf8a214791d4747b9a4d7ece45e69ef7322a7832",
+          "2038fab812d2efe27679a59dedb427379bc48d6df278fc4ad8dd38af78d22965",
+          "9a39be1dd763b5d6cae8cb9766090013ee43faff4a4b0fe25f70daebe62b88a9",
+          "8cb2af8069823d514d53a62c3ccc96973fa4ff5d926e24370afc684166082a0e",
+          "1f2c29e4fc43451004af7fc90775988f65a6b983a3b1371ba0942bcadc805a4a",
+          "d586d7acbc5f92d76ede767a11e73f60b891a2a1da2b877433fda249dd52a898",
+          "5d9a0a4c83b037d624a234488d84de4213fbb63b0411428cb3c070413d79bc48",
+          "574433c04eb37f29667c1b843a998c443348ee78b6c1d7dbec0862e35643cd0c"
+        ],
+        [
+          "c054f409a5cccd22bab191c5939b3d4bbd71fcd00c2319e6288c278352c86ab8",
+          "6567ccde95a033f26794ac03707b0f387a48b406db747ae3dc7ec04faa9b697e",
+          "3f7695bf8ca03577a277c1157435ee79c8dc27f4ef8dda2569550aecbd28054e",
+          "7fe91fb3f561236ff2e70cc5780eb410b50e1595c2bc9a3bd31aa190f2d2d356",
+          "9b6ecdb9d4be774ebd4e023d7f069530f49ce75d2c5e01c61cad6e50caefd8cd"
+        ],
+        [
+          "af1387b04edae14eb1420f2af4f444d9c68ed20dadba6862c5619e3c7815da7d",
+          "feafb67833bb133167f95b0d5c4b4d5337ca8eb13b2da81ccca1ccf68fc0b825",
+          "71947cbfd0ce5d443860a7582ab1363eb863df545c36e37d98d7d062b758cd23"
+        ],
+        [
+          "9495040118f1d84130af306764c632bc7767456b5862674b3939aff5a3ceb58b",
+          "172db40e38b59e7efb106b3a41a7c98f17ebab53546e950a9b1985fb59fa1df7"
+        ],
+        [
+          "4fc742d52189f0b75dfb5d022e85f9b07cdf0880d0440b127263f51a28286e05"
+        ]
+      ],
+      "ots_anchor": null,
+      "scientific_references_peer_reviewed": [
+        "Merkle (1987). A Digital Signature Based on Conventional Encryption Function. CRYPTO '87.",
+        "RFC 6962 — Certificate Transparency (Laurie 2013)",
+        "OpenTimestamps Protocol (Todd 2016)",
+        "BIP 88 — Bitcoin OP_RETURN timestamping"
+      ],
+      "anti_generique_strict": true,
+      "fusion_add_only": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T19:54:34+00:00",
+      "elapsed_s": 0.003,
+      "manifest_sha256": "fc911b42bae77dc02b94684d504ca60344db84c7e1c00eebd08544445296f49a"
     }
   ],
-  "last_updated_utc": "2026-05-08T15:23:28+00:00",
-  "n_anchors": 3,
-  "last_manifest_sha256": "d3c9adc9e176233b742b5aaf5412979d742e0115bf82f70e74659547cc186266",
-  "last_merkle_root_hex": "37c079824ef0ff33a9f443062e837a4aeecee072b85424ac0371545cd48da402",
+  "last_updated_utc": "2026-05-08T19:54:34+00:00",
+  "n_anchors": 4,
+  "last_manifest_sha256": "fc911b42bae77dc02b94684d504ca60344db84c7e1c00eebd08544445296f49a",
+  "last_merkle_root_hex": "4fc742d52189f0b75dfb5d022e85f9b07cdf0880d0440b127263f51a28286e05",
   "last_verdict": "MERKLE_TREE_ANCHOR_OPERATIONAL",
   "v30_lock": "INVIOLÉ"
 }

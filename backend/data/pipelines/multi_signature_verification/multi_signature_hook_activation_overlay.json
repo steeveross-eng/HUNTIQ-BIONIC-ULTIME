@@ -87,11 +87,55 @@
       "executed_at_utc": "2026-05-08T12:37:27+00:00",
       "elapsed_s": 0.747,
       "manifest_sha256": "48b078bd14972860cb4e569407b649c9222deaf90cf88af0b3a851de22d941d3"
+    },
+    {
+      "manifest_id": "MULTI_SIGNATURE_VERIFICATION_HOOK_ACTIVATE_Ω",
+      "ordre": "P12_MULTI_SIGNATURE_VERIFICATION_HOOK_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "activated": true,
+      "verdict": "MULTI_SIGNATURE_VERIFICATION_HOOK_ACTIVATED",
+      "reason": "reinforce_cryptographic_integrity_of_all_manifests",
+      "sign_all_result_summary": {
+        "verdict": "MULTI_SIGNATURE_SIGN_ALL_SUCCESS",
+        "n_signed": 18,
+        "n_failed": 0,
+        "manifest_sha256": "fbd6386ebe3ad5ee0a6c840dc337f3f9143e5d5478ecbe4464a0bda79762302b",
+        "agents_chain_of_trust": {
+          "agent_a_ed25519": {
+            "algorithm": "Ed25519_RFC8032",
+            "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0"
+          },
+          "agent_b_pgp": {
+            "algorithm": "RSA_2048_OpenPGP_RFC4880",
+            "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294"
+          }
+        }
+      },
+      "verify_all_result_summary": {
+        "verdict": "MULTI_SIGNATURE_VERIFY_ALL_VALID",
+        "n_both_signatures_valid": 18,
+        "n_invalid": 0,
+        "verify_manifest_sha256": "bc5b436553cdf003388cd69e5d9b4901fc24ab5b23741569d642acc9fe3a8057"
+      },
+      "outputs_unblocked_via_this_hook": [
+        "cryptographic_chain_of_trust_2_tier",
+        "Ed25519_signatures_per_manifest",
+        "PGP_RSA_2048_signatures_per_manifest"
+      ],
+      "anti_generique_strict": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T19:54:34+00:00",
+      "elapsed_s": 0.835,
+      "manifest_sha256": "16ae7c6832251889c88656d6f95ce570bd433fbd7e27bc9563b90d3c9e7ddb97"
     }
   ],
-  "last_updated_utc": "2026-05-08T12:37:27+00:00",
-  "n_activations": 2,
-  "last_manifest_sha256": "48b078bd14972860cb4e569407b649c9222deaf90cf88af0b3a851de22d941d3",
+  "last_updated_utc": "2026-05-08T19:54:34+00:00",
+  "n_activations": 3,
+  "last_manifest_sha256": "16ae7c6832251889c88656d6f95ce570bd433fbd7e27bc9563b90d3c9e7ddb97",
   "last_verdict": "MULTI_SIGNATURE_VERIFICATION_HOOK_ACTIVATED",
   "v30_lock": "INVIOLÉ"
 }

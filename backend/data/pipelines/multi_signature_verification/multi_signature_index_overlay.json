@@ -971,11 +971,553 @@
       "executed_at_utc": "2026-05-08T12:37:27+00:00",
       "elapsed_s": 0.557,
       "manifest_sha256": "b1b07d09fa2ffca54f958bb159b706eee32018b3f49a7cb5ba26a09d22822b93"
+    },
+    {
+      "manifest_id": "MULTI_SIGNATURE_SIGN_ALL_Ω",
+      "ordre": "P12_MULTI_SIGNATURE_VERIFICATION_HOOK_Ω",
+      "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+      "guardrails_enforced": true,
+      "autonomy": "LIMITED",
+      "verdict": "MULTI_SIGNATURE_SIGN_ALL_SUCCESS",
+      "agents_chain_of_trust": {
+        "agent_a_ed25519": {
+          "algorithm": "Ed25519_RFC8032",
+          "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0"
+        },
+        "agent_b_pgp": {
+          "algorithm": "RSA_2048_OpenPGP_RFC4880",
+          "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294"
+        }
+      },
+      "n_layers_total": 18,
+      "n_signed": 18,
+      "n_skipped_no_sha": 0,
+      "n_failed": 0,
+      "signatures_per_layer": {
+        "V12_CONTAMINATION_AFFUT_DEPENDENCY": {
+          "status": "SIGNED_DUAL",
+          "manifest_sha256": "d7cc8ea879bfa765984a12cc1d8b87fe7017528f86859150b3d5704fcabf1a8a",
+          "ed25519_signature_hex": "4422479b070ac63b73d1163caa43af76e5839b8d46489035ce6d7a6b72f401ac057e52b3bba59029fabc992f4f37b76f6bf1f0b3edf749763cfe9261405dd70d",
+          "pgp_signature_size": 488,
+          "signed_at_utc": "2026-05-08T19:54:34+00:00",
+          "full_record": {
+            "manifest_sha256": "d7cc8ea879bfa765984a12cc1d8b87fe7017528f86859150b3d5704fcabf1a8a",
+            "manifest_id": "V12_CONTAMINATION_AFFUT_DEPENDENCY",
+            "overlay_path": "/app/backend/data/pipelines/contamination_affut_dependency/contamination_affut_dependency_hook_overlay.json",
+            "canonical_message_used_for_signing": "d7cc8ea879bfa765984a12cc1d8b87fe7017528f86859150b3d5704fcabf1a8a|V12_CONTAMINATION_AFFUT_DEPENDENCY|/app/backend/data/pipelines/contamination_affut_dependency/contamination_affut_dependency_hook_overlay.json",
+            "agent_a_ed25519": {
+              "agent": "AGENT_A_ED25519_BCE-4X",
+              "algorithm": "Ed25519_RFC8032",
+              "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0",
+              "signature_hex": "4422479b070ac63b73d1163caa43af76e5839b8d46489035ce6d7a6b72f401ac057e52b3bba59029fabc992f4f37b76f6bf1f0b3edf749763cfe9261405dd70d",
+              "signature_size_bytes": 64
+            },
+            "agent_b_pgp": {
+              "agent": "AGENT_B_PGP_BCE-4X",
+              "algorithm": "RSA_2048_OpenPGP_RFC4880",
+              "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294",
+              "signature_armor": "-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCgAdFiEEJNS9fh43buY+9Q3ORLd4BlZRopQFAmn+P3oACgkQRLd4BlZR\nopRnBQf9FcCThI/kXJcNsiPD0D9DMxbMj839Dng+lcS9fppbAVU0rLfUH6p/EB1L\nKuXFocFDF83jV6E1Sa5OleuE3KOedGujPUB9cSgUGHacyX+CukQpnDxNQqEZI1++\n/bE0e9EvqbfpogPHMsxVNn/DmC8ozChKe68NE2OvQoLPYqOgOuMOB3zF8VEpxhOw\njVsknGDfUyK4ICv+6HvIAZyziY2QRWOFlUveZb6SzkBIGFs5mrOUSBPuiXoepKqv\nkXkCjqWzX4CGleOep3EIFu2sCoZUqqFRkAnf3ESkB16Bi07aglsSIBZL2YHcjvLF\nBGgjvZxXtKvywUy59MQqazGA9kIF2w==\n=48E7\n-----END PGP SIGNATURE-----\n",
+              "signature_size_bytes": 488
+            },
+            "signed_at_utc": "2026-05-08T19:54:34+00:00"
+          }
+        },
+        "NASA_NDVI": {
+          "status": "SIGNED_DUAL",
+          "manifest_sha256": "76b047f2980d824ce3f860d8f8647605ff42665f8592901f757e52f478c16a0d",
+          "ed25519_signature_hex": "b9dd068c6d2579933eeed7ee0aace9993f185df908b9bbd1a6268faccabc76132c0b700a9608e7f6ee8d4cf9b658f00db66603e0a214085cb17f1408d4edb905",
+          "pgp_signature_size": 488,
+          "signed_at_utc": "2026-05-08T19:54:34+00:00",
+          "full_record": {
+            "manifest_sha256": "76b047f2980d824ce3f860d8f8647605ff42665f8592901f757e52f478c16a0d",
+            "manifest_id": "NASA_NDVI",
+            "overlay_path": "/app/backend/data/pipelines/nasa_ndvi/nasa_ndvi_hook_activation_overlay.json",
+            "canonical_message_used_for_signing": "76b047f2980d824ce3f860d8f8647605ff42665f8592901f757e52f478c16a0d|NASA_NDVI|/app/backend/data/pipelines/nasa_ndvi/nasa_ndvi_hook_activation_overlay.json",
+            "agent_a_ed25519": {
+              "agent": "AGENT_A_ED25519_BCE-4X",
+              "algorithm": "Ed25519_RFC8032",
+              "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0",
+              "signature_hex": "b9dd068c6d2579933eeed7ee0aace9993f185df908b9bbd1a6268faccabc76132c0b700a9608e7f6ee8d4cf9b658f00db66603e0a214085cb17f1408d4edb905",
+              "signature_size_bytes": 64
+            },
+            "agent_b_pgp": {
+              "agent": "AGENT_B_PGP_BCE-4X",
+              "algorithm": "RSA_2048_OpenPGP_RFC4880",
+              "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294",
+              "signature_armor": "-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCgAdFiEEJNS9fh43buY+9Q3ORLd4BlZRopQFAmn+P3oACgkQRLd4BlZR\nopS+hwf/dZg9CicVy/C7HIZn0NTEAohK7Jd2oQ9GQeHpoAAjm7WCYiEsvOI4OTRR\nrY2BduKGfG90gblG+cGojO22LLulBXNQNYu5mjmuC8uEV8tEM5SIbJKipp8LMqeD\n38NxvILBHZNhI8WQ4u6xjbKISHr6GgLOH5VS+CcY0dmJ6Ym+KV/Q23IYvWXoN9TZ\n3ySDrtdIAP8nv3WwII7y92ZKLSqVztyYyeJDZLOk8XRLzaBnpl1hLmaoUT/rZG95\ngGYgtgcWritDNq0kfcbNNaSQE0HOPota7o2y8V3vkXjuH/IrsH/RBbji5eto+EOY\nymn2EIQq/0yVM0KT3xQtF22ZazwGSQ==\n=NUNm\n-----END PGP SIGNATURE-----\n",
+              "signature_size_bytes": 488
+            },
+            "signed_at_utc": "2026-05-08T19:54:34+00:00"
+          }
+        },
+        "USGS_SOIL": {
+          "status": "SIGNED_DUAL",
+          "manifest_sha256": "41742077e4693ebbe8c73e3cc3ec6746f0d2dd1bf7d71ed042869cb50a9586ef",
+          "ed25519_signature_hex": "11d601b406aaecb18e6d1a95b72cf01f724511e52c0fa6d1564d67156c4cb2b065ea4c831113f30cc8116be29c9315d1835aaa60c176acca163af66a06bf8f04",
+          "pgp_signature_size": 488,
+          "signed_at_utc": "2026-05-08T19:54:34+00:00",
+          "full_record": {
+            "manifest_sha256": "41742077e4693ebbe8c73e3cc3ec6746f0d2dd1bf7d71ed042869cb50a9586ef",
+            "manifest_id": "USGS_SOIL",
+            "overlay_path": "/app/backend/data/pipelines/usgs_soil/usgs_soil_hook_activation_overlay.json",
+            "canonical_message_used_for_signing": "41742077e4693ebbe8c73e3cc3ec6746f0d2dd1bf7d71ed042869cb50a9586ef|USGS_SOIL|/app/backend/data/pipelines/usgs_soil/usgs_soil_hook_activation_overlay.json",
+            "agent_a_ed25519": {
+              "agent": "AGENT_A_ED25519_BCE-4X",
+              "algorithm": "Ed25519_RFC8032",
+              "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0",
+              "signature_hex": "11d601b406aaecb18e6d1a95b72cf01f724511e52c0fa6d1564d67156c4cb2b065ea4c831113f30cc8116be29c9315d1835aaa60c176acca163af66a06bf8f04",
+              "signature_size_bytes": 64
+            },
+            "agent_b_pgp": {
+              "agent": "AGENT_B_PGP_BCE-4X",
+              "algorithm": "RSA_2048_OpenPGP_RFC4880",
+              "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294",
+              "signature_armor": "-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCgAdFiEEJNS9fh43buY+9Q3ORLd4BlZRopQFAmn+P3oACgkQRLd4BlZR\nopSiyQf+OkcF8vpYRZMP7DLd+4oA6HuC8MeLLHPA+15o8SDKsxu0GTvfxL5Mjd6V\nfHcRy9oz3C/X2+PCq9qd79PcudIdtefGEtaabFsyjLEtoJjSo8Y9QHreaAgYKiWb\n65E54gmWbCstESemOAFwsoXDn0NZ3TVVsZEKsDXWPP4HXKvKyIQfpoChbNugdcaK\nIP1qvedp+DS+H/v1jUsr+REOOGedjItM9kjICdBAZnh0NCk+8UAvJkdoOyoWBTkZ\nhRgkMRHHVHlk855MbzP/Om98qkKNxX5Tee0RqhlMiKHFNzrxiHZ3en7yyHtXDMdZ\nZ1nfsNmvHkEOT0bfSgPq1Le/UXmR5Q==\n=FYCu\n-----END PGP SIGNATURE-----\n",
+              "signature_size_bytes": 488
+            },
+            "signed_at_utc": "2026-05-08T19:54:34+00:00"
+          }
+        },
+        "RSF_SSF_GBIF": {
+          "status": "SIGNED_DUAL",
+          "manifest_sha256": "084f8720332f1626f5b5a7afcebfbd7191cffe7386b1c7233879282b6b1c227a",
+          "ed25519_signature_hex": "649cd712718e0b79e764076b65e6ea5ec81fa5b6100076832f566d8e929c20cbae7d90a918772c523c105a638a4080b362f99f9fa9baef803d6b785266610109",
+          "pgp_signature_size": 488,
+          "signed_at_utc": "2026-05-08T19:54:34+00:00",
+          "full_record": {
+            "manifest_sha256": "084f8720332f1626f5b5a7afcebfbd7191cffe7386b1c7233879282b6b1c227a",
+            "manifest_id": "RSF_SSF_GBIF",
+            "overlay_path": "/app/backend/data/pipelines/rsf_ssf/rsf_ssf_hook_activation_overlay.json",
+            "canonical_message_used_for_signing": "084f8720332f1626f5b5a7afcebfbd7191cffe7386b1c7233879282b6b1c227a|RSF_SSF_GBIF|/app/backend/data/pipelines/rsf_ssf/rsf_ssf_hook_activation_overlay.json",
+            "agent_a_ed25519": {
+              "agent": "AGENT_A_ED25519_BCE-4X",
+              "algorithm": "Ed25519_RFC8032",
+              "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0",
+              "signature_hex": "649cd712718e0b79e764076b65e6ea5ec81fa5b6100076832f566d8e929c20cbae7d90a918772c523c105a638a4080b362f99f9fa9baef803d6b785266610109",
+              "signature_size_bytes": 64
+            },
+            "agent_b_pgp": {
+              "agent": "AGENT_B_PGP_BCE-4X",
+              "algorithm": "RSA_2048_OpenPGP_RFC4880",
+              "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294",
+              "signature_armor": "-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCgAdFiEEJNS9fh43buY+9Q3ORLd4BlZRopQFAmn+P3oACgkQRLd4BlZR\nopSMXQgAkkdGoLjM8QlPkSNpkDUmFB9GceMprFU0o8hdL+b9xo85sPBb6XeAszTz\nEwrEsNXgX/x/+xLGWfeZQq//CNUKXVpNIevkNXypbtxhTQpW8PpFEHrJOZ5C8+i1\n7E4X0CZrpgVMzJINA7ynM0aIvBt4JrAG9BxafO6mQY4aD9bI6NZhNU8Vjwopq4cM\nZExa/CwHiDWsFBl0WR4tMZ/40swSPIMilwdI4AvZ80Otz1+0+A1tzugOTYqEKSHL\njbCd/hcVi+lgHKIcKyxumQ+OajDQfFiRCPPZizQjdIp9mBusXyZRNA0TSqPWNHax\nFG8T7Ad88POOBnmkwbPjXnBUmonrjw==\n=Kk0P\n-----END PGP SIGNATURE-----\n",
+              "signature_size_bytes": 488
+            },
+            "signed_at_utc": "2026-05-08T19:54:34+00:00"
+          }
+        },
+        "OPENTOPOGRAPHY_SRTM": {
+          "status": "SIGNED_DUAL",
+          "manifest_sha256": "3451269d2f8bcf0907bba18ef1d25d1e8c68c995f46dfa1615eee99068628f05",
+          "ed25519_signature_hex": "1d9990254ccd6252fc195ea6b3261eb4624dfcc428fc108d5dba8427db5ac57c82b683c0d50c5be97ad2cd0ddd65f96d2e4753e9af19c4d8f108174ab5aad206",
+          "pgp_signature_size": 488,
+          "signed_at_utc": "2026-05-08T19:54:34+00:00",
+          "full_record": {
+            "manifest_sha256": "3451269d2f8bcf0907bba18ef1d25d1e8c68c995f46dfa1615eee99068628f05",
+            "manifest_id": "OPENTOPOGRAPHY_SRTM",
+            "overlay_path": "/app/backend/data/pipelines/opentopography/opentopography_hook_activation_overlay.json",
+            "canonical_message_used_for_signing": "3451269d2f8bcf0907bba18ef1d25d1e8c68c995f46dfa1615eee99068628f05|OPENTOPOGRAPHY_SRTM|/app/backend/data/pipelines/opentopography/opentopography_hook_activation_overlay.json",
+            "agent_a_ed25519": {
+              "agent": "AGENT_A_ED25519_BCE-4X",
+              "algorithm": "Ed25519_RFC8032",
+              "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0",
+              "signature_hex": "1d9990254ccd6252fc195ea6b3261eb4624dfcc428fc108d5dba8427db5ac57c82b683c0d50c5be97ad2cd0ddd65f96d2e4753e9af19c4d8f108174ab5aad206",
+              "signature_size_bytes": 64
+            },
+            "agent_b_pgp": {
+              "agent": "AGENT_B_PGP_BCE-4X",
+              "algorithm": "RSA_2048_OpenPGP_RFC4880",
+              "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294",
+              "signature_armor": "-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCgAdFiEEJNS9fh43buY+9Q3ORLd4BlZRopQFAmn+P3oACgkQRLd4BlZR\nopTjKgf/eaFlJVYXOhv6bOXvtTzeMCoRcwWb9Lwj8exWRJx54eozLdZKlxAmS+72\nia1ztuWbSCotrcWf3LvvmQT2Es3puPfdf5kozpKEBFq6pkqE47RlIBcnnMx3sXQY\nb98gEA8G5AB34CtIWMfCIgpDWfLi9IO5bPB2MhMRFBjwjpGVPLK4/m8VNSsDa1Y9\nn9l3Zbh3H361gvEWROgiuClFDlSk5PeCLdu2pJ0DxSAk+KVbRlWLKxUfJ7vlAQ3e\nR9QJSkCisE0TgeloHiNQXA2O4MRKGQJMv8AW+NvetP3rxH+2OqR7Yujq8KTH6q1G\n426xmYnl2J/g9u9EO/+JvpnGmS9N0A==\n=cOV6\n-----END PGP SIGNATURE-----\n",
+              "signature_size_bytes": 488
+            },
+            "signed_at_utc": "2026-05-08T19:54:34+00:00"
+          }
+        },
+        "CANOPY_MOD44B": {
+          "status": "SIGNED_DUAL",
+          "manifest_sha256": "b3a506c431993bdc5a3673616e23ca096b56e8b585ad5d41339f7fe7bd20c01f",
+          "ed25519_signature_hex": "3010672efd5e9ef563f38ada390b3cf41004868e3e901c7fac4bce330c19bfe75e08d4e21c1bb612b2a7dc5ea01ffbae8f3ec494f715d1c7f52b22d700a1b70e",
+          "pgp_signature_size": 488,
+          "signed_at_utc": "2026-05-08T19:54:34+00:00",
+          "full_record": {
+            "manifest_sha256": "b3a506c431993bdc5a3673616e23ca096b56e8b585ad5d41339f7fe7bd20c01f",
+            "manifest_id": "CANOPY_MOD44B",
+            "overlay_path": "/app/backend/data/pipelines/canopy/canopy_hook_activation_overlay.json",
+            "canonical_message_used_for_signing": "b3a506c431993bdc5a3673616e23ca096b56e8b585ad5d41339f7fe7bd20c01f|CANOPY_MOD44B|/app/backend/data/pipelines/canopy/canopy_hook_activation_overlay.json",
+            "agent_a_ed25519": {
+              "agent": "AGENT_A_ED25519_BCE-4X",
+              "algorithm": "Ed25519_RFC8032",
+              "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0",
+              "signature_hex": "3010672efd5e9ef563f38ada390b3cf41004868e3e901c7fac4bce330c19bfe75e08d4e21c1bb612b2a7dc5ea01ffbae8f3ec494f715d1c7f52b22d700a1b70e",
+              "signature_size_bytes": 64
+            },
+            "agent_b_pgp": {
+              "agent": "AGENT_B_PGP_BCE-4X",
+              "algorithm": "RSA_2048_OpenPGP_RFC4880",
+              "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294",
+              "signature_armor": "-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCgAdFiEEJNS9fh43buY+9Q3ORLd4BlZRopQFAmn+P3oACgkQRLd4BlZR\nopQUWgf/cSv6E3tUa6ZOAHFiFdTgHbxpQpeUAhvhz5XJilYzPxUtXemaSw2qt+4b\n899rbLYTcciq30J/DeBtTVHo8kfFusIuJmjI+YJ1+TfZNogoNl+r1tXS1PswUK07\nBjY8v5Zr6eJEYzNWzFOuuBC4pZjvuqdYbDbW9moYBC1/4TlribuyZZ6g04QuBPYw\nTBrARXXeDFlat3g3dPJr/qkfAwdaocPYKOIzCBEPfldMGV1yqhI8lBSAntVeO+nb\nqFVZ5KPJbFz8dABuEGDOolM/FE/558kn54el+jHQcI1z5xEbPqTHAScOJtA+rAiP\nBBRf5ErWEp7wZSZzi+Oyt7qsfpu6qg==\n=SE03\n-----END PGP SIGNATURE-----\n",
+              "signature_size_bytes": 488
+            },
+            "signed_at_utc": "2026-05-08T19:54:34+00:00"
+          }
+        },
+        "HABITAT_OUTPUTS_COMPUTE": {
+          "status": "SIGNED_DUAL",
+          "manifest_sha256": "bec62755a8115e3a9c4cf2fc0a3b79071d3471657d1de5e70146b179870f34e4",
+          "ed25519_signature_hex": "9b1987f557084c0966949613d0c6d61c1325615cc5eb64b1723a4225f86078311dd5bff3aaf545cc9062db4148dc8539cc4c95dc627de62926acd81983db5906",
+          "pgp_signature_size": 488,
+          "signed_at_utc": "2026-05-08T19:54:34+00:00",
+          "full_record": {
+            "manifest_sha256": "bec62755a8115e3a9c4cf2fc0a3b79071d3471657d1de5e70146b179870f34e4",
+            "manifest_id": "HABITAT_OUTPUTS_COMPUTE",
+            "overlay_path": "/app/backend/data/pipelines/habitat_outputs/habitat_outputs_compute_overlay.json",
+            "canonical_message_used_for_signing": "bec62755a8115e3a9c4cf2fc0a3b79071d3471657d1de5e70146b179870f34e4|HABITAT_OUTPUTS_COMPUTE|/app/backend/data/pipelines/habitat_outputs/habitat_outputs_compute_overlay.json",
+            "agent_a_ed25519": {
+              "agent": "AGENT_A_ED25519_BCE-4X",
+              "algorithm": "Ed25519_RFC8032",
+              "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0",
+              "signature_hex": "9b1987f557084c0966949613d0c6d61c1325615cc5eb64b1723a4225f86078311dd5bff3aaf545cc9062db4148dc8539cc4c95dc627de62926acd81983db5906",
+              "signature_size_bytes": 64
+            },
+            "agent_b_pgp": {
+              "agent": "AGENT_B_PGP_BCE-4X",
+              "algorithm": "RSA_2048_OpenPGP_RFC4880",
+              "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294",
+              "signature_armor": "-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCgAdFiEEJNS9fh43buY+9Q3ORLd4BlZRopQFAmn+P3oACgkQRLd4BlZR\nopQeJwf/bi2AUqmqKpzx69PF94h3RV4V04l0mlcKbWrfjtbgdBZgPIvqSbcT427W\nEinmwLwZnjbhCZrx5zmYHiD6jVpPIs1IMy8oTNlJiLkDm1IX+DRyBjx/qkCJvpLu\nHaBeilg3tQp32mjXMuZrjdMqcjV6C4HLt+CAvrJaKK9wI893cOocNnp571y3onel\nsgEo3ogGJPm8x0K/aJnwlD34dU0JsjlrnkypzUTeuTaXKUWg2qZV6GzSz0mlBYYP\nFYjAtUXBdrp13w2GujVaAhVIlu5iIkvmBxCJusmzJbfr7EL+ukaeeVSksOe0Ahb0\nmNb75zt2yxdxUew9pexdKkGL0pd54Q==\n=iKia\n-----END PGP SIGNATURE-----\n",
+              "signature_size_bytes": 488
+            },
+            "signed_at_utc": "2026-05-08T19:54:34+00:00"
+          }
+        },
+        "HABITAT_OUTPUTS_RECOMPUTE_V2": {
+          "status": "SIGNED_DUAL",
+          "manifest_sha256": "b6c2e7dda955a9df2611605e24a994e40f231c82ae964a9b94c25e98eb92d873",
+          "ed25519_signature_hex": "ee908a3987c2138afd951fe2cdf750b872d4207b1332e69e497943c0a44b2f0dfbe774d201482355d6f4c55a50c0f93045735ed6898ff1efc7521bcf6a857509",
+          "pgp_signature_size": 488,
+          "signed_at_utc": "2026-05-08T19:54:34+00:00",
+          "full_record": {
+            "manifest_sha256": "b6c2e7dda955a9df2611605e24a994e40f231c82ae964a9b94c25e98eb92d873",
+            "manifest_id": "HABITAT_OUTPUTS_RECOMPUTE_V2",
+            "overlay_path": "/app/backend/data/pipelines/habitat_recompute_v2/habitat_outputs_recompute_overlay.json",
+            "canonical_message_used_for_signing": "b6c2e7dda955a9df2611605e24a994e40f231c82ae964a9b94c25e98eb92d873|HABITAT_OUTPUTS_RECOMPUTE_V2|/app/backend/data/pipelines/habitat_recompute_v2/habitat_outputs_recompute_overlay.json",
+            "agent_a_ed25519": {
+              "agent": "AGENT_A_ED25519_BCE-4X",
+              "algorithm": "Ed25519_RFC8032",
+              "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0",
+              "signature_hex": "ee908a3987c2138afd951fe2cdf750b872d4207b1332e69e497943c0a44b2f0dfbe774d201482355d6f4c55a50c0f93045735ed6898ff1efc7521bcf6a857509",
+              "signature_size_bytes": 64
+            },
+            "agent_b_pgp": {
+              "agent": "AGENT_B_PGP_BCE-4X",
+              "algorithm": "RSA_2048_OpenPGP_RFC4880",
+              "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294",
+              "signature_armor": "-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCgAdFiEEJNS9fh43buY+9Q3ORLd4BlZRopQFAmn+P3oACgkQRLd4BlZR\nopTmJgf/YO54C3sK4gJVn5Kmfx6dAbca17WECo9t5WHHM4RYWumQvZbhyFZapd8P\nCSi3Nfy5iEZbt3wSAftjF5/4G7HS0xwYTzOKmVfsxigtWNcuwGa2EsjZ4eTPB6Pd\npakAP8JxIF2uKnt6aDtOndPigeNL218C84P+7XsnKFNZwj3p+GDPCHs10HhS0XaU\n8CgFFS34XZYDgjxMPsWzdHXJeStIlBJM8sttmmzFy8XD6FOJz1W6n1ssfZLxCIu9\nCxFsFeSBgHQ743wqeuxjT1EkYekU166eaqZCdVP/dpLagNzYXBsOzRBHlSjU2Ikn\nEGbs1YAFn0H81A4hI3je5He46jmyEg==\n=KpK+\n-----END PGP SIGNATURE-----\n",
+              "signature_size_bytes": 488
+            },
+            "signed_at_utc": "2026-05-08T19:54:34+00:00"
+          }
+        },
+        "ANTHROPOGENIC_PRESSURE_P4": {
+          "status": "SIGNED_DUAL",
+          "manifest_sha256": "b7c5d9a5a90d3c81a9bc5a5b2560c53384731ea3f06fadc957c968da9ee01a49",
+          "ed25519_signature_hex": "3f494084de3907e63f28f18603f8722f908cb7d366e066dba02079b2a48df35d000297b5105e694d22f1feaad43af243a8eb570ed27ec64a0f5bbe2b4a00010f",
+          "pgp_signature_size": 488,
+          "signed_at_utc": "2026-05-08T19:54:34+00:00",
+          "full_record": {
+            "manifest_sha256": "b7c5d9a5a90d3c81a9bc5a5b2560c53384731ea3f06fadc957c968da9ee01a49",
+            "manifest_id": "ANTHROPOGENIC_PRESSURE_P4",
+            "overlay_path": "/app/backend/data/pipelines/anthropogenic_pressure/anthropogenic_pressure_hook_activation_overlay.json",
+            "canonical_message_used_for_signing": "b7c5d9a5a90d3c81a9bc5a5b2560c53384731ea3f06fadc957c968da9ee01a49|ANTHROPOGENIC_PRESSURE_P4|/app/backend/data/pipelines/anthropogenic_pressure/anthropogenic_pressure_hook_activation_overlay.json",
+            "agent_a_ed25519": {
+              "agent": "AGENT_A_ED25519_BCE-4X",
+              "algorithm": "Ed25519_RFC8032",
+              "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0",
+              "signature_hex": "3f494084de3907e63f28f18603f8722f908cb7d366e066dba02079b2a48df35d000297b5105e694d22f1feaad43af243a8eb570ed27ec64a0f5bbe2b4a00010f",
+              "signature_size_bytes": 64
+            },
+            "agent_b_pgp": {
+              "agent": "AGENT_B_PGP_BCE-4X",
+              "algorithm": "RSA_2048_OpenPGP_RFC4880",
+              "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294",
+              "signature_armor": "-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCgAdFiEEJNS9fh43buY+9Q3ORLd4BlZRopQFAmn+P3oACgkQRLd4BlZR\nopSurAf+LKQ4FtO2JYu7G6rOoXnurRI7snycGtcES31ObHcBj84+B0jbEdknC23F\nXwVmAaBPlnnDrQId+ZxGw3J2ezNo52tyx0nUl/gPu2tC2Y2ZjFoFxCakrhoyBIVr\nevBqQViJ0C7PJsBEfLlfF+z/u0WEIJ2NDNkkIyfXawGEAVuqD7UXtLg6mCQssTBR\noB93zIZxQkmoy+shclX/L5LGZJys0UAiSYus43FdXrWwBsgsUTQ3ocA8OshsKeGs\n6o0G3DiQtDeA8AKcgwvN0LOK3AtTHzy6SIJgQajf8/Wgb5/xmHqRH37/zOvUQR7G\nEBUJ9n/SEMkniZKkRIQHAkd4ZxQfDA==\n=dzZr\n-----END PGP SIGNATURE-----\n",
+              "signature_size_bytes": 488
+            },
+            "signed_at_utc": "2026-05-08T19:54:34+00:00"
+          }
+        },
+        "HABITAT_OUTPUTS_RECOMPUTE_V3_P5": {
+          "status": "SIGNED_DUAL",
+          "manifest_sha256": "90b0e677c84128d6fcdd8e1cdabd01f1c7194274004678b4ef39e4631b3ff342",
+          "ed25519_signature_hex": "e3d627bd4ce75b805afc73aa96124844d01c800e5bda3ed1ec6d2103235c95fb87c342019cad5631a58359afe6b517224738041d4d6c3b7a7a83290de2128d06",
+          "pgp_signature_size": 488,
+          "signed_at_utc": "2026-05-08T19:54:34+00:00",
+          "full_record": {
+            "manifest_sha256": "90b0e677c84128d6fcdd8e1cdabd01f1c7194274004678b4ef39e4631b3ff342",
+            "manifest_id": "HABITAT_OUTPUTS_RECOMPUTE_V3_P5",
+            "overlay_path": "/app/backend/data/pipelines/habitat_recompute_v3/habitat_outputs_recompute_v3_overlay.json",
+            "canonical_message_used_for_signing": "90b0e677c84128d6fcdd8e1cdabd01f1c7194274004678b4ef39e4631b3ff342|HABITAT_OUTPUTS_RECOMPUTE_V3_P5|/app/backend/data/pipelines/habitat_recompute_v3/habitat_outputs_recompute_v3_overlay.json",
+            "agent_a_ed25519": {
+              "agent": "AGENT_A_ED25519_BCE-4X",
+              "algorithm": "Ed25519_RFC8032",
+              "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0",
+              "signature_hex": "e3d627bd4ce75b805afc73aa96124844d01c800e5bda3ed1ec6d2103235c95fb87c342019cad5631a58359afe6b517224738041d4d6c3b7a7a83290de2128d06",
+              "signature_size_bytes": 64
+            },
+            "agent_b_pgp": {
+              "agent": "AGENT_B_PGP_BCE-4X",
+              "algorithm": "RSA_2048_OpenPGP_RFC4880",
+              "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294",
+              "signature_armor": "-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCgAdFiEEJNS9fh43buY+9Q3ORLd4BlZRopQFAmn+P3oACgkQRLd4BlZR\nopTBMAf+Kh+882n82jCwfqZeo6aMFtrA/+wkxKPo8jsncHeuIFvuoeLNAtLBJFmk\n+qeJDRdgcYNY16+URxMwicoqvs3Z2qcadGoLHLI0XJoqRV+x6SAI6JW8gZTE9M9j\n1JfhyqDb6//OyErxccMW+8/62ghjroQ9eUb9ZOJqHouWyYdKuODg8sB/l2TOag7b\nonK5HICRRKriQHA/2GZLK+z1bUtYQ/bApXUgAVSkY8x8bA4MFMMYPN+DWTdf+5ji\nuXO/Zfz0xbOK6IQrKsMnpHyOURi2tEPKft4XYydxzXYxJuA/572hUexA3DZkOpcZ\npKwDCG4YUeWB7E0YljCelA/Yypn30w==\n=VyEP\n-----END PGP SIGNATURE-----\n",
+              "signature_size_bytes": 488
+            },
+            "signed_at_utc": "2026-05-08T19:54:34+00:00"
+          }
+        },
+        "TEMPORAL_RUT_P6": {
+          "status": "SIGNED_DUAL",
+          "manifest_sha256": "ca6937d8d7a3c68ba6c367c59d784f2f0586ad3923a936e14bab91bf53529952",
+          "ed25519_signature_hex": "68a810f4ac6ab14c8f4b0ba8a99e77e5d92990892b1dc4d26aae5bf36905b375e36b6d3fd841e12431103188c338c0a400c0fb460b6cad6dafafb774f3bf5a05",
+          "pgp_signature_size": 488,
+          "signed_at_utc": "2026-05-08T19:54:34+00:00",
+          "full_record": {
+            "manifest_sha256": "ca6937d8d7a3c68ba6c367c59d784f2f0586ad3923a936e14bab91bf53529952",
+            "manifest_id": "TEMPORAL_RUT_P6",
+            "overlay_path": "/app/backend/data/pipelines/temporal_rut/temporal_rut_hook_activation_overlay.json",
+            "canonical_message_used_for_signing": "ca6937d8d7a3c68ba6c367c59d784f2f0586ad3923a936e14bab91bf53529952|TEMPORAL_RUT_P6|/app/backend/data/pipelines/temporal_rut/temporal_rut_hook_activation_overlay.json",
+            "agent_a_ed25519": {
+              "agent": "AGENT_A_ED25519_BCE-4X",
+              "algorithm": "Ed25519_RFC8032",
+              "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0",
+              "signature_hex": "68a810f4ac6ab14c8f4b0ba8a99e77e5d92990892b1dc4d26aae5bf36905b375e36b6d3fd841e12431103188c338c0a400c0fb460b6cad6dafafb774f3bf5a05",
+              "signature_size_bytes": 64
+            },
+            "agent_b_pgp": {
+              "agent": "AGENT_B_PGP_BCE-4X",
+              "algorithm": "RSA_2048_OpenPGP_RFC4880",
+              "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294",
+              "signature_armor": "-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCgAdFiEEJNS9fh43buY+9Q3ORLd4BlZRopQFAmn+P3oACgkQRLd4BlZR\nopSt7wf/XpziXhULOvcFcv4CWe3/sfV+oamWSIx8EtF/+vgqJXkoiTVrjSHodo3c\nui3jx3Ax2Qqy3JWRnPuigYqC+2GD7VVXJGURcNQdOw8hbcCBXFY12GtdcWNdgN3I\nBaOegKQzP/a4TGP/qK0cENDLsugSWrAGV95aEd2zezd6QGPJgoPtjzkLNv5qwSPo\nBnVz3ocGrE+ATkvjepo0usF0BvpaGR1eh/QKT4+wTnteYZir0Vec2TLZU1k4iG3s\noNT3b7Uqvi3AvAjz7m+uUrM587GM+6ROhLvWKplZZSWqPMssuRe0fqB7tr3xeE3R\ns5ENT0z7zvyGA88xUbb4EYCWpfAe2Q==\n=Jjs2\n-----END PGP SIGNATURE-----\n",
+              "signature_size_bytes": 488
+            },
+            "signed_at_utc": "2026-05-08T19:54:34+00:00"
+          }
+        },
+        "HABITAT_OUTPUTS_FINAL_MERGE_P7": {
+          "status": "SIGNED_DUAL",
+          "manifest_sha256": "a4802eede9ae34ddb9a56a4adb87ecb81485d78f04617c55abf70f95836954fa",
+          "ed25519_signature_hex": "f590fc7361bdb1503f7a6debf4cf76c79af43c14664c004a5aeae9e9a7391b6912612bf06d9481f353756f6c6dcfe617513fe9487bc4ecfaacee8c3e4ce86e04",
+          "pgp_signature_size": 488,
+          "signed_at_utc": "2026-05-08T19:54:34+00:00",
+          "full_record": {
+            "manifest_sha256": "a4802eede9ae34ddb9a56a4adb87ecb81485d78f04617c55abf70f95836954fa",
+            "manifest_id": "HABITAT_OUTPUTS_FINAL_MERGE_P7",
+            "overlay_path": "/app/backend/data/pipelines/habitat_final_merge/habitat_outputs_final_merge_overlay.json",
+            "canonical_message_used_for_signing": "a4802eede9ae34ddb9a56a4adb87ecb81485d78f04617c55abf70f95836954fa|HABITAT_OUTPUTS_FINAL_MERGE_P7|/app/backend/data/pipelines/habitat_final_merge/habitat_outputs_final_merge_overlay.json",
+            "agent_a_ed25519": {
+              "agent": "AGENT_A_ED25519_BCE-4X",
+              "algorithm": "Ed25519_RFC8032",
+              "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0",
+              "signature_hex": "f590fc7361bdb1503f7a6debf4cf76c79af43c14664c004a5aeae9e9a7391b6912612bf06d9481f353756f6c6dcfe617513fe9487bc4ecfaacee8c3e4ce86e04",
+              "signature_size_bytes": 64
+            },
+            "agent_b_pgp": {
+              "agent": "AGENT_B_PGP_BCE-4X",
+              "algorithm": "RSA_2048_OpenPGP_RFC4880",
+              "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294",
+              "signature_armor": "-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCgAdFiEEJNS9fh43buY+9Q3ORLd4BlZRopQFAmn+P3oACgkQRLd4BlZR\nopSNYwgAm2qUhPQ+HZFxighM40aMBLChIhyLJKrotwK0Gz5A+aQxLiY2L1/L4wxL\nDPvGwRogX4CSAbpZKIS2IpvNaAOi74NTfuiWAooUoizR7lCEhE/tctotaAk0d2z2\nf0DEF/DaxbcixvzbKlb0m16aCp8Sl2fBKe6VomuABwSh7KFPX9Xv+jZZWEE4/G+u\nyVtJRY97a2HNTZ/CYb8n3aUKRVqGLt4uOKp7h2RYSDdu8+eGUP55l72zysKbxjnk\nnhI/DrgMZPnKu/tbwUKkCsCKcShTTplGV+Vhj8cJ0gV6B09cQp2jswUioYxa7K4p\n6dOz9XZDzPMRhaX1NQqVKhooaLQ+FA==\n=HAnZ\n-----END PGP SIGNATURE-----\n",
+              "signature_size_bytes": 488
+            },
+            "signed_at_utc": "2026-05-08T19:54:34+00:00"
+          }
+        },
+        "NASA_NDVI_DENSE_GRID_P8": {
+          "status": "SIGNED_DUAL",
+          "manifest_sha256": "4ac6fe46e24b972565bb8acc1d117122582b8cfe67988d8f5d337a0970621972",
+          "ed25519_signature_hex": "5d62daec364512237e81336386d82a3e464cd2d257499e49b8148ad11e45b43f83e6bea937200efbf746d6a6bb38a72ba1eb285f8e0e97db3def9a689cd57b06",
+          "pgp_signature_size": 488,
+          "signed_at_utc": "2026-05-08T19:54:34+00:00",
+          "full_record": {
+            "manifest_sha256": "4ac6fe46e24b972565bb8acc1d117122582b8cfe67988d8f5d337a0970621972",
+            "manifest_id": "NASA_NDVI_DENSE_GRID_P8",
+            "overlay_path": "/app/backend/data/pipelines/nasa_ndvi_dense_grid/nasa_ndvi_dense_grid_hook_activation_overlay.json",
+            "canonical_message_used_for_signing": "4ac6fe46e24b972565bb8acc1d117122582b8cfe67988d8f5d337a0970621972|NASA_NDVI_DENSE_GRID_P8|/app/backend/data/pipelines/nasa_ndvi_dense_grid/nasa_ndvi_dense_grid_hook_activation_overlay.json",
+            "agent_a_ed25519": {
+              "agent": "AGENT_A_ED25519_BCE-4X",
+              "algorithm": "Ed25519_RFC8032",
+              "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0",
+              "signature_hex": "5d62daec364512237e81336386d82a3e464cd2d257499e49b8148ad11e45b43f83e6bea937200efbf746d6a6bb38a72ba1eb285f8e0e97db3def9a689cd57b06",
+              "signature_size_bytes": 64
+            },
+            "agent_b_pgp": {
+              "agent": "AGENT_B_PGP_BCE-4X",
+              "algorithm": "RSA_2048_OpenPGP_RFC4880",
+              "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294",
+              "signature_armor": "-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCgAdFiEEJNS9fh43buY+9Q3ORLd4BlZRopQFAmn+P3oACgkQRLd4BlZR\nopQdfggAib2a6cPlbJDNWc21xHWt+ZfZr4f1pAAE0lNEQ2//q9H4glrGjctfcIIK\nV2lb4qLLf1XT76CPWl/9HCWWX4Q4TeNPn7OH9NCc9ONOu2uRYArW5Gl3HcAbFhoH\nbry4Q52JTPPROtPbmdfNRtBBewpYDyMr2uT0TahWBazgMM01p31Qi/rk8Drmyd4r\nmr7XMslC3MklBkdmqqdWh8aUSpdUIWqu7hHKH4P4L9oDUg1Ts6Ts4zxS/4AHgnif\neYptFox6z9NFLvgnInxUppb1jV1cvSKghaAp/eVQnbm0piq5crTyvDN7TcgwX3/r\n8oh+I3Wh7H076DSdR/Cljn6D5tFK1w==\n=Mh+b\n-----END PGP SIGNATURE-----\n",
+              "signature_size_bytes": 488
+            },
+            "signed_at_utc": "2026-05-08T19:54:34+00:00"
+          }
+        },
+        "HABITAT_OUTPUTS_COMPLETE_MERGE_P9": {
+          "status": "SIGNED_DUAL",
+          "manifest_sha256": "9ddd11b870e3a5fd3d355c97c4d2439c7e9cd9ca6dca665615b3a0c57696e329",
+          "ed25519_signature_hex": "a78cd81d1ce5d2a6945d24e2bed96c524a82d671e8b57a185c963e78855c48e066fc32088364d54a0634cf27c24bd878958c7432fff8674a43359555fec46e07",
+          "pgp_signature_size": 488,
+          "signed_at_utc": "2026-05-08T19:54:34+00:00",
+          "full_record": {
+            "manifest_sha256": "9ddd11b870e3a5fd3d355c97c4d2439c7e9cd9ca6dca665615b3a0c57696e329",
+            "manifest_id": "HABITAT_OUTPUTS_COMPLETE_MERGE_P9",
+            "overlay_path": "/app/backend/data/pipelines/habitat_complete_merge/habitat_outputs_complete_merge_overlay.json",
+            "canonical_message_used_for_signing": "9ddd11b870e3a5fd3d355c97c4d2439c7e9cd9ca6dca665615b3a0c57696e329|HABITAT_OUTPUTS_COMPLETE_MERGE_P9|/app/backend/data/pipelines/habitat_complete_merge/habitat_outputs_complete_merge_overlay.json",
+            "agent_a_ed25519": {
+              "agent": "AGENT_A_ED25519_BCE-4X",
+              "algorithm": "Ed25519_RFC8032",
+              "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0",
+              "signature_hex": "a78cd81d1ce5d2a6945d24e2bed96c524a82d671e8b57a185c963e78855c48e066fc32088364d54a0634cf27c24bd878958c7432fff8674a43359555fec46e07",
+              "signature_size_bytes": 64
+            },
+            "agent_b_pgp": {
+              "agent": "AGENT_B_PGP_BCE-4X",
+              "algorithm": "RSA_2048_OpenPGP_RFC4880",
+              "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294",
+              "signature_armor": "-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCgAdFiEEJNS9fh43buY+9Q3ORLd4BlZRopQFAmn+P3oACgkQRLd4BlZR\nopTmuAgApq63APbslauIRtnuTSASWfWtY9uWCEKw4hKpjw3Hu23iOMT0ugBryOJ9\nbGrLheivh3D6qGhZ4aZl0TNWl8E/TC2uDR4zqrsZRj6VPkelS9hOvljG7xwl/HVZ\n061KAS3OUAw226BWFomgeZuSmZZhkGiCalXcsjJauFjI+Kdg3/ifYRGLPrVx+GSV\nkbvS0PYx8L+NvqaooBfSc8RNZRLIyXD9QDWRExNWx435jXxhWQD+SsObH8cEHfMi\nsD/ZXVQZfN481llRb5BWjl9/rCb47iRBMXcJmAyAIesyluW8iIlOqF5iiIopAwXb\nH5U1xnOdcp0DHixOw2F0KSkPfpaU8A==\n=LBII\n-----END PGP SIGNATURE-----\n",
+              "signature_size_bytes": 488
+            },
+            "signed_at_utc": "2026-05-08T19:54:34+00:00"
+          }
+        },
+        "NASA_NDVI_TIMESERIES_DECADE": {
+          "status": "SIGNED_DUAL",
+          "manifest_sha256": "b88643955fabb9e4fa820930a13e1a9556450e77e6914c7a575139aa5c6d7be4",
+          "ed25519_signature_hex": "6476a4f61f0d66b788f022f7c58e9d84f270be76016c9d12ed145c0a149fd724d31bed9581f037506d760dde0dec9ea1dff0e8caee792f2aae56b56dc4ae170c",
+          "pgp_signature_size": 488,
+          "signed_at_utc": "2026-05-08T19:54:34+00:00",
+          "full_record": {
+            "manifest_sha256": "b88643955fabb9e4fa820930a13e1a9556450e77e6914c7a575139aa5c6d7be4",
+            "manifest_id": "NASA_NDVI_TIMESERIES_DECADE",
+            "overlay_path": "/app/backend/data/pipelines/nasa_ndvi_decade/nasa_ndvi_timeseries_decade_overlay.json",
+            "canonical_message_used_for_signing": "b88643955fabb9e4fa820930a13e1a9556450e77e6914c7a575139aa5c6d7be4|NASA_NDVI_TIMESERIES_DECADE|/app/backend/data/pipelines/nasa_ndvi_decade/nasa_ndvi_timeseries_decade_overlay.json",
+            "agent_a_ed25519": {
+              "agent": "AGENT_A_ED25519_BCE-4X",
+              "algorithm": "Ed25519_RFC8032",
+              "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0",
+              "signature_hex": "6476a4f61f0d66b788f022f7c58e9d84f270be76016c9d12ed145c0a149fd724d31bed9581f037506d760dde0dec9ea1dff0e8caee792f2aae56b56dc4ae170c",
+              "signature_size_bytes": 64
+            },
+            "agent_b_pgp": {
+              "agent": "AGENT_B_PGP_BCE-4X",
+              "algorithm": "RSA_2048_OpenPGP_RFC4880",
+              "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294",
+              "signature_armor": "-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCgAdFiEEJNS9fh43buY+9Q3ORLd4BlZRopQFAmn+P3oACgkQRLd4BlZR\nopQeYQgAgzMEPQn49orAJNCl1aVAW9Hgp2uPGazbhCnH2IhcUpnlvfPlQiH6GQ3r\nI/gpsh6oK2+wBQ8Jl7s/2MxF5RLK0i31fI74lSqpJy3dnfpVoLtkFuDMFGXf/ku9\nSD/T+zgIKEDD8+O10BtP49UuXXW53DjV6raUDYjqMmbH9GyCyFd6D+AdMbhuuquh\nd7Ih8eN78NZBbFgdOgXNuRt7V31tJMvJ0i1AZ/kkUq/Go90KPKnieV3mFea0lJyc\nn4tFqcYe+7co6S8wX55t8WlSrhUluNPd4FeS0hTuwW78nYMN83pStJTKIsZzSq59\n2UVSsgw9V+J/YeK1SXdLUVkhT1zpMA==\n=0Cap\n-----END PGP SIGNATURE-----\n",
+              "signature_size_bytes": 488
+            },
+            "signed_at_utc": "2026-05-08T19:54:34+00:00"
+          }
+        },
+        "MULTI_YEAR_DENSE_GRID_TIMESERIES_P11": {
+          "status": "SIGNED_DUAL",
+          "manifest_sha256": "a541926b77a60776fcec5e136e3022a484bc5f06ce6eb8fa344938e64f57d7e0",
+          "ed25519_signature_hex": "993ce695d6a9507f083c1be633edb39e8f91fb471923230c0ce7350423db2d402c46294f90dd19b18e133dc70973e09e0b578baacb7be823b0277e59a795c408",
+          "pgp_signature_size": 488,
+          "signed_at_utc": "2026-05-08T19:54:34+00:00",
+          "full_record": {
+            "manifest_sha256": "a541926b77a60776fcec5e136e3022a484bc5f06ce6eb8fa344938e64f57d7e0",
+            "manifest_id": "MULTI_YEAR_DENSE_GRID_TIMESERIES_P11",
+            "overlay_path": "/app/backend/data/pipelines/multi_year_dense_grid_timeseries/multi_year_dense_grid_timeseries_hook_activation_overlay.json",
+            "canonical_message_used_for_signing": "a541926b77a60776fcec5e136e3022a484bc5f06ce6eb8fa344938e64f57d7e0|MULTI_YEAR_DENSE_GRID_TIMESERIES_P11|/app/backend/data/pipelines/multi_year_dense_grid_timeseries/multi_year_dense_grid_timeseries_hook_activation_overlay.json",
+            "agent_a_ed25519": {
+              "agent": "AGENT_A_ED25519_BCE-4X",
+              "algorithm": "Ed25519_RFC8032",
+              "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0",
+              "signature_hex": "993ce695d6a9507f083c1be633edb39e8f91fb471923230c0ce7350423db2d402c46294f90dd19b18e133dc70973e09e0b578baacb7be823b0277e59a795c408",
+              "signature_size_bytes": 64
+            },
+            "agent_b_pgp": {
+              "agent": "AGENT_B_PGP_BCE-4X",
+              "algorithm": "RSA_2048_OpenPGP_RFC4880",
+              "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294",
+              "signature_armor": "-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCgAdFiEEJNS9fh43buY+9Q3ORLd4BlZRopQFAmn+P3oACgkQRLd4BlZR\nopSH2wgAo+7tAnqEyI3x4T3JitwBD/dejuocCxcMDmGHdbyojqKN030XaFewaqPk\nyrta0lvi7eHr7NSWR/q7NxtNVPm9JqziN5yppRRGFUuGxFarjxNwE5P0m207B2MD\nuvfX6QfAwh3Ad64DHDo6TdprF4ab4wxp7fN9cqiDkXykY+l8doSzQjR0N1LxNShp\n89SS4/2TzhHCjGN0oqqkJ3BGC7trxAYG73lwMsUf2Aeb8O5kmj4YkzcLW1wYrgmt\nMwQxZgkPIOgih12BPer6JbR9wtCnFRa/3eY7cJrmqNgWiVH3MxDNCXn9G5edh+LN\nv3leHOXBX3/2E4FA5v+FGUPc5AF4xA==\n=HAeK\n-----END PGP SIGNATURE-----\n",
+              "signature_size_bytes": 488
+            },
+            "signed_at_utc": "2026-05-08T19:54:34+00:00"
+          }
+        },
+        "MULTI_SIGNATURE_VERIFICATION_P12": {
+          "status": "SIGNED_DUAL",
+          "manifest_sha256": "48b078bd14972860cb4e569407b649c9222deaf90cf88af0b3a851de22d941d3",
+          "ed25519_signature_hex": "69cc8a646dbdbdb3b3d3086157f6f9a4b573a4686765e49db1831944fef4680fee478a7c9d135d7a6f1a3436fff4a74326ce0b0fdf340d619c8fd8d1f4c9da04",
+          "pgp_signature_size": 488,
+          "signed_at_utc": "2026-05-08T19:54:34+00:00",
+          "full_record": {
+            "manifest_sha256": "48b078bd14972860cb4e569407b649c9222deaf90cf88af0b3a851de22d941d3",
+            "manifest_id": "MULTI_SIGNATURE_VERIFICATION_P12",
+            "overlay_path": "/app/backend/data/pipelines/multi_signature_verification/multi_signature_hook_activation_overlay.json",
+            "canonical_message_used_for_signing": "48b078bd14972860cb4e569407b649c9222deaf90cf88af0b3a851de22d941d3|MULTI_SIGNATURE_VERIFICATION_P12|/app/backend/data/pipelines/multi_signature_verification/multi_signature_hook_activation_overlay.json",
+            "agent_a_ed25519": {
+              "agent": "AGENT_A_ED25519_BCE-4X",
+              "algorithm": "Ed25519_RFC8032",
+              "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0",
+              "signature_hex": "69cc8a646dbdbdb3b3d3086157f6f9a4b573a4686765e49db1831944fef4680fee478a7c9d135d7a6f1a3436fff4a74326ce0b0fdf340d619c8fd8d1f4c9da04",
+              "signature_size_bytes": 64
+            },
+            "agent_b_pgp": {
+              "agent": "AGENT_B_PGP_BCE-4X",
+              "algorithm": "RSA_2048_OpenPGP_RFC4880",
+              "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294",
+              "signature_armor": "-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCgAdFiEEJNS9fh43buY+9Q3ORLd4BlZRopQFAmn+P3oACgkQRLd4BlZR\nopSomAf+N2MXpytrDAIfohSE7swBnD2lYI5nn6LhSRz1245I7Y1LQS6HA5Tw7Gfe\nGYECBbGkWsyXG7hHRi/FEl7IcM0Oji4jvd5SweK0d7X9az8HGxJsj1nR/YviJYk1\nV+ip6g81Qt5Bwgieq2zu2OIuWDrxTTqOpxdWeTVuBp+Ery8QDYKvLXaE/ElWFSb7\nn95XpU5/wPFzWzd7+iH8uKkscvxswN4Rt7mu5wEyIm5ydqsZjDwEQekJfGJ3qg3K\nfpo/vh8HfT8emwIyiQCw+/fOsaSXAVeuRQ7jqcxn+HAuYmIvr33Diit685wP1bdE\n/S8uSdKmmvjPib5b/8ZmSVMDgXHxHg==\n=NFX0\n-----END PGP SIGNATURE-----\n",
+              "signature_size_bytes": 488
+            },
+            "signed_at_utc": "2026-05-08T19:54:34+00:00"
+          }
+        },
+        "MERKLE_TREE_ANCHOR_P14": {
+          "status": "SIGNED_DUAL",
+          "manifest_sha256": "09be873b0cea2714a06327199e3c3b206341d337071fbea641fdc41b84e888a1",
+          "ed25519_signature_hex": "22355a371d0706dcdc551d6baf9094c1870ea48e347b3ca4c7641ca63aa124500557b76bcacdd3e654cce2027ba7acc71062ca75341e3d954584803b95ec1303",
+          "pgp_signature_size": 488,
+          "signed_at_utc": "2026-05-08T19:54:34+00:00",
+          "full_record": {
+            "manifest_sha256": "09be873b0cea2714a06327199e3c3b206341d337071fbea641fdc41b84e888a1",
+            "manifest_id": "MERKLE_TREE_ANCHOR_P14",
+            "overlay_path": "/app/backend/data/pipelines/merkle_tree_anchor/merkle_tree_anchor_hook_activation_overlay.json",
+            "canonical_message_used_for_signing": "09be873b0cea2714a06327199e3c3b206341d337071fbea641fdc41b84e888a1|MERKLE_TREE_ANCHOR_P14|/app/backend/data/pipelines/merkle_tree_anchor/merkle_tree_anchor_hook_activation_overlay.json",
+            "agent_a_ed25519": {
+              "agent": "AGENT_A_ED25519_BCE-4X",
+              "algorithm": "Ed25519_RFC8032",
+              "public_key_sha256": "4e300829d176ceffd919b87f88fd9729f181b5db1fc11168d29831481a0a74f0",
+              "signature_hex": "22355a371d0706dcdc551d6baf9094c1870ea48e347b3ca4c7641ca63aa124500557b76bcacdd3e654cce2027ba7acc71062ca75341e3d954584803b95ec1303",
+              "signature_size_bytes": 64
+            },
+            "agent_b_pgp": {
+              "agent": "AGENT_B_PGP_BCE-4X",
+              "algorithm": "RSA_2048_OpenPGP_RFC4880",
+              "fingerprint": "24D4BD7E1E376EE63EF50DCE44B778065651A294",
+              "signature_armor": "-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCgAdFiEEJNS9fh43buY+9Q3ORLd4BlZRopQFAmn+P3oACgkQRLd4BlZR\nopSpKwf/WrXz4RD91rAx0a9eWhtAEDARAHS97tMivdWTxIU/imTTh9PRKZN2T7yE\nNo9jqRrnbNXyeN/PRhnwkzLHWwRatlzfxPqrg4ROWQpyyb+AIKolk4VhzmMpfX24\nJvK6gCICq1d2k7+yi+pVYsWO4SharVKk+MzsJ5V1gjMRNTgE6Hp69olEAsEEvN3c\nCDPqA+PQPIT3Y/bxNHlDptUvjNwszKsvOXqQOzVgIAdHEIuIOd6mdXSbprMtU1a5\nZ117ra7W67XlgEgTXK0CYXRrmAy9vroeex82dNDJg+g6rl9Q2gJVITy6+YFjuZSd\nIk6HgUSFTJDBIaHRvfrHltZyJacnCA==\n=DwXU\n-----END PGP SIGNATURE-----\n",
+              "signature_size_bytes": 488
+            },
+            "signed_at_utc": "2026-05-08T19:54:34+00:00"
+          }
+        }
+      },
+      "scientific_references_peer_reviewed": [
+        "Pearce et al. (2010). Nature, 466:1090. DOI:10.1038/4661090a",
+        "Gentleman et al. (2005). JCGS, 14:1101-1108.",
+        "Bernstein (2017). RFC 8032: EdDSA Signatures",
+        "Callas et al. (2007). RFC 4880: OpenPGP"
+      ],
+      "anti_generique_strict": true,
+      "fusion_add_only": true,
+      "v30_lock": "INVIOLÉ",
+      "drift_zero": true,
+      "no_engine_recompute_triggered": true,
+      "executed_at_utc": "2026-05-08T19:54:34+00:00",
+      "elapsed_s": 0.658,
+      "manifest_sha256": "fbd6386ebe3ad5ee0a6c840dc337f3f9143e5d5478ecbe4464a0bda79762302b"
     }
   ],
-  "last_updated_utc": "2026-05-08T12:37:27+00:00",
-  "n_sign_operations": 2,
-  "last_manifest_sha256": "b1b07d09fa2ffca54f958bb159b706eee32018b3f49a7cb5ba26a09d22822b93",
+  "last_updated_utc": "2026-05-08T19:54:34+00:00",
+  "n_sign_operations": 3,
+  "last_manifest_sha256": "fbd6386ebe3ad5ee0a6c840dc337f3f9143e5d5478ecbe4464a0bda79762302b",
   "last_verdict": "MULTI_SIGNATURE_SIGN_ALL_SUCCESS",
   "v30_lock": "INVIOLÉ"
 }

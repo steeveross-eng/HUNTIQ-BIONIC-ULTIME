@@ -37,25 +37,25 @@ REPORTS_STORE = REPORT_ROOT / "store"
 SOURCE_OVERLAYS: Dict[str, Path] = {
     "habitat_complete_merge": Path(
         "/app/backend/data/pipelines/habitat_complete_merge/"
-        "habitat_complete_merge_overlay.json"),
+        "habitat_outputs_complete_merge_overlay.json"),
     "merkle_tree_anchor": Path(
         "/app/backend/data/pipelines/merkle_tree_anchor/"
-        "merkle_tree_anchor_overlay.json"),
+        "merkle_tree_anchor_hook_activation_overlay.json"),
     "multi_year_dense_grid": Path(
-        "/app/backend/data/pipelines/multi_year_dense_grid/"
-        "multi_year_dense_grid_overlay.json"),
+        "/app/backend/data/pipelines/multi_year_dense_grid_timeseries/"
+        "multi_year_dense_grid_timeseries_hook_activation_overlay.json"),
     "multi_signature": Path(
-        "/app/backend/data/pipelines/multi_signature/"
-        "multi_signature_overlay.json"),
+        "/app/backend/data/pipelines/multi_signature_verification/"
+        "multi_signature_hook_activation_overlay.json"),
     "territoire_visualizer": Path(
-        "/app/backend/data/pipelines/territoire_visualizer/"
-        "territoire_visualizer_overlay.json"),
+        "/app/backend/data/pipelines/multi_signature_verification/"
+        "multi_signature_index_overlay.json"),
     "anthropogenic_pressure": Path(
         "/app/backend/data/pipelines/anthropogenic_pressure/"
-        "anthropogenic_pressure_overlay.json"),
+        "anthropogenic_pressure_hook_activation_overlay.json"),
     "temporal_rut": Path(
         "/app/backend/data/pipelines/temporal_rut/"
-        "temporal_rut_overlay.json"),
+        "temporal_rut_hook_activation_overlay.json"),
     "ots_upgrade_automation": Path(
         "/app/backend/data/pipelines/ots_upgrade_automation/"
         "ots_upgrade_automation_hook_activation_overlay.json"),

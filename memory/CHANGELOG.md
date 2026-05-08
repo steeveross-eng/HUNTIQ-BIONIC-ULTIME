@@ -251,3 +251,45 @@
 - ✅ Audit forensique `log_forensic_event` activé sur chaque hook
 - ✅ Token `X-Commandant-Token` vérifié sur 100% des POST
 - ✅ Aucune utilisation de `testing_agent_v3_fork` (interdiction respectée)
+
+## 2026-05-08 (suite) — PHASES P15_FULL + P20_CLEANUP + P21 (FUSION ADD-ONLY · V30_LOCK INVIOLÉ)
+
+### Phase A · activation P4-P14 hooks (P15 full overlays)
+- 8 hooks activés via curl localhost:8001 : P4 anthropogenic + P6 temporal_rut + P8 ndvi_dense_grid + P9 complete_merge + P11 multi_year + P12 multi_signature + P14a merkle_build + P14b merkle_hook → tous HTTP 200
+- Correction `SOURCE_OVERLAYS` dans `territoire_omega_report_omega.py` (chemins overlay réels post-activation)
+- **P15 hit 8/8 overlays PRESENT** (vs 1/8 avant) · 4 recommendations dérivées
+- Persistance JSONL : `report_history.jsonl`
+
+### Phase B · P20 cleanup (registres doctrinaux frontend)
+- `frontend/src/components/territoire/registry/territoire_palette_omega.js` (palette unique 6 groupes Ω)
+- `frontend/src/components/territoire/registry/layer_icon_registry_omega.js` (mapping fonction→lucide-react)
+- `frontend/src/components/territoire/registry/layer_catalog_omega.js` (18 couches doctrinales · groupes A→F · z-index figé)
+- `frontend/src/components/territoire/LayersPanelOmegaUnified.jsx` (panneau unifié opt-in · FUSION ADD-ONLY · n'écrase aucun panel existant)
+
+### Phase C · P21 ADMIN_PREMIUM_FRONTEND_INTEGRATION_Ω
+**Route namespace** : `/admin/bce-4x-premium/*` · **Auth** : X-Commandant-Token (localStorage `bce4x_commandant_token`)
+
+- `frontend/src/lib/bce4xApi.js` — client API doctrinal centralisé (P14, P15, P17, P18, P20, P22, P23, P24, P10, P13)
+- `frontend/src/components/admin-premium/AdminPremiumLayout.jsx` — auth guard + sidebar 6 sections + logout
+- `frontend/src/components/admin-premium/AdminPremiumIndexPage.jsx` — dashboard accueil avec 8 status cards + 6 tiles
+- `frontend/src/components/admin-premium/Visualizer18Page.jsx` — dashboard interactif catalogue 18 couches + filtres groupe/recherche + génération manual + download PDF
+- `frontend/src/components/admin-premium/TerritoireReportPage.jsx` — UI P15 · génération + 3 downloads + share email/internal P23 doctrinal
+- `frontend/src/components/admin-premium/WaypointGuidePage.jsx` — UI P17 · form lat/lon/species/radius + résultat tabulaire + 3 downloads
+- `frontend/src/components/admin-premium/LayerManualPage.jsx` — UI P18 · regroupement 6 groupes A→F + 18 lignes + downloads
+- `frontend/src/components/admin-premium/MerkleAuditPage.jsx` — UI P14+P24 · build Merkle + activate/scan/stop OTS + audit log session
+- `frontend/src/components/admin-premium/ValidationsPage.jsx` — UI P22 · scope+decision+SHA list multi+notes+récap
+
+### Phase D · build & smoke
+- `yarn build` SUCCESS en 38.89s · tous chunks générés
+- HTTP 200 sur `/admin/bce-4x-premium` (preview public)
+- HTTP 200 sur 7 status endpoints publics (territoire, waypoint, manual, audit, validation, messaging, ots)
+- Playwright `wait_for_selector('admin-premium-layout')` PASS post-auth
+- Lint `eslint` clean sur tous les composants admin-premium + registry + lib
+- 37/37 pytests préservés (zéro régression)
+
+### Conformité doctrinale globale session
+- ✅ V30_LOCK INVIOLÉ · zéro mutation engine maître
+- ✅ FUSION ADD-ONLY · panneaux existants (TerritoireToolbar, HighFidelityMapsPanel, LayersOmegaSyncPanel) inchangés
+- ✅ ANTI-GÉNÉRIQUE STRICT · auth guard fait un POST réel (messaging-engine-channel-hook-activate persist:false) pour validation token
+- ✅ data-testid sur 100% des éléments interactifs et critiques
+- ✅ AUCUN testing_agent_v3_fork (interdiction respectée)

@@ -1,0 +1,114 @@
+{
+  "manifest_id": "TERRITOIRE_OMEGA_REPORT_Ω",
+  "ordre": "P15_TERRITOIRE_Ω_REPORT_CREATE_Ω",
+  "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+  "zone_label": "ZONE_FULL_8_OVERLAYS_V2",
+  "n_overlays_present": 8,
+  "n_overlays_absent": 0,
+  "source_overlays_summary": {
+    "habitat_complete_merge": {
+      "status": "PRESENT",
+      "path": "/app/backend/data/pipelines/habitat_complete_merge/habitat_outputs_complete_merge_overlay.json",
+      "last_updated_utc": "2026-05-08T19:54:33+00:00",
+      "last_verdict": "HABITAT_COMPLETE_MERGE_FULL_12_OF_12_COMPUTABLE",
+      "history_length": 2
+    },
+    "merkle_tree_anchor": {
+      "status": "PRESENT",
+      "path": "/app/backend/data/pipelines/merkle_tree_anchor/merkle_tree_anchor_hook_activation_overlay.json",
+      "last_updated_utc": "2026-05-08T15:23:52+00:00",
+      "last_manifest_sha256": "09be873b0cea2714a06327199e3c3b206341d337071fbea641fdc41b84e888a1",
+      "last_verdict": "MERKLE_TREE_ANCHOR_HOOK_ACTIVATED",
+      "n_activations": 1,
+      "history_length": 1
+    },
+    "multi_year_dense_grid": {
+      "status": "PRESENT",
+      "path": "/app/backend/data/pipelines/multi_year_dense_grid_timeseries/multi_year_dense_grid_timeseries_hook_activation_overlay.json",
+      "last_updated_utc": "2026-05-08T12:33:54+00:00",
+      "last_manifest_sha256": "a541926b77a60776fcec5e136e3022a484bc5f06ce6eb8fa344938e64f57d7e0",
+      "last_verdict": "MULTI_YEAR_DENSE_GRID_TIMESERIES_HOOK_ACTIVATED",
+      "n_activations": 1,
+      "history_length": 1
+    },
+    "multi_signature": {
+      "status": "PRESENT",
+      "path": "/app/backend/data/pipelines/multi_signature_verification/multi_signature_hook_activation_overlay.json",
+      "last_updated_utc": "2026-05-08T19:54:34+00:00",
+      "last_manifest_sha256": "16ae7c6832251889c88656d6f95ce570bd433fbd7e27bc9563b90d3c9e7ddb97",
+      "last_verdict": "MULTI_SIGNATURE_VERIFICATION_HOOK_ACTIVATED",
+      "n_activations": 3,
+      "history_length": 3
+    },
+    "territoire_visualizer": {
+      "status": "PRESENT",
+      "path": "/app/backend/data/pipelines/multi_signature_verification/multi_signature_index_overlay.json",
+      "last_updated_utc": "2026-05-08T19:54:34+00:00",
+      "last_manifest_sha256": "fbd6386ebe3ad5ee0a6c840dc337f3f9143e5d5478ecbe4464a0bda79762302b",
+      "last_verdict": "MULTI_SIGNATURE_SIGN_ALL_SUCCESS",
+      "history_length": 3
+    },
+    "anthropogenic_pressure": {
+      "status": "PRESENT",
+      "path": "/app/backend/data/pipelines/anthropogenic_pressure/anthropogenic_pressure_hook_activation_overlay.json",
+      "last_updated_utc": "2026-05-08T02:04:31+00:00",
+      "last_manifest_sha256": "b7c5d9a5a90d3c81a9bc5a5b2560c53384731ea3f06fadc957c968da9ee01a49",
+      "last_verdict": "ANTHROPOGENIC_PRESSURE_HOOK_ACTIVATED",
+      "n_activations": 1,
+      "history_length": 1
+    },
+    "temporal_rut": {
+      "status": "PRESENT",
+      "path": "/app/backend/data/pipelines/temporal_rut/temporal_rut_hook_activation_overlay.json",
+      "last_updated_utc": "2026-05-08T02:29:28+00:00",
+      "last_manifest_sha256": "ca6937d8d7a3c68ba6c367c59d784f2f0586ad3923a936e14bab91bf53529952",
+      "last_verdict": "TEMPORAL_RUT_DATA_HOOK_ACTIVATED",
+      "n_activations": 1,
+      "history_length": 1
+    },
+    "ots_upgrade_automation": {
+      "status": "PRESENT",
+      "path": "/app/backend/data/pipelines/ots_upgrade_automation/ots_upgrade_automation_hook_activation_overlay.json",
+      "last_updated_utc": "2026-05-08T17:08:28+00:00",
+      "last_manifest_sha256": "24d847d8016f3142982ff45a18d479a864de751df008c2c74b5edf1b3c74c799",
+      "last_verdict": "OTS_UPGRADE_AUTOMATION_HOOK_ACTIVATED",
+      "n_activations": 1,
+      "history_length": 1
+    }
+  },
+  "cryptographic_chain": {
+    "merkle_root_last_sha256": "09be873b0cea2714a06327199e3c3b206341d337071fbea641fdc41b84e888a1",
+    "merkle_verdict": "MERKLE_TREE_ANCHOR_HOOK_ACTIVATED",
+    "multi_signature_status": "MULTI_SIGNATURE_VERIFICATION_HOOK_ACTIVATED",
+    "ots_automation_status": "OTS_UPGRADE_AUTOMATION_HOOK_ACTIVATED",
+    "chain_integrity_claim": "Ed25519 + PGP + Merkle + Bitcoin OTS (anti-générique strict)"
+  },
+  "operational_recommendations": [
+    {
+      "category": "HABITAT_INTEGRITY",
+      "action": "Continuer la surveillance 12/12 outputs habitat_complete_merge; pas de dégradation détectée.",
+      "priority": "P2"
+    },
+    {
+      "category": "ANTHROPOGENIC_PRESSURE",
+      "action": "Croiser pression anthropique OSM+WorldPop avec zones de repos; relocaliser affûts si p95>0.7.",
+      "priority": "P1"
+    },
+    {
+      "category": "TEMPORAL_RUT",
+      "action": "Activer fenêtres rut doctrinales (octobre-novembre cerf / septembre orignal).",
+      "priority": "P1"
+    },
+    {
+      "category": "DECADAL_TREND",
+      "action": "Analyse Mann-Kendall 10 ans active : surveiller tendances NDVI significatives (p<0.05) pour planification long-terme.",
+      "priority": "P2"
+    }
+  ],
+  "recommendations_count": 4,
+  "generated_at_utc": "2026-05-08T19:55:22+00:00",
+  "anti_generique_strict": true,
+  "fusion_add_only": true,
+  "v30_lock": "INVIOLÉ",
+  "report_sha256": "04e67ff21bb6e4c0d7ed2e11ffa802f23652984f487af9a446fcfefd01dff757"
+}
