@@ -3,6 +3,30 @@
 
 ---
 
+## 2026-05-09T20:25Z — EMERGENT_AUDIT_CORRIDORS_DOUBLE_SYSTEME (DÉMENTI INSTITUTIONNEL)
+
+### Directive: AUDIT — RACINE IDENTIFIÉE · PAS DE DOUBLE SYSTÈME
+- **DÉMENTI INSTITUTIONNEL** : il n'y a PAS deux systèmes de corridors. C'est UN SEUL système ORGANIC rendu en 3 couches superposées doctrinales (palette PHASE-D X150-conforme).
+- **Décomposition mesurée PRD live** : 72 polylines = 24 halos externes (#B2F2D9 11.5px) + 24 halos internes (#4CC99A 4.4px) + 24 lignes principales (#00A676 4px) = 24 corridors × 3 couches
+- **Source `étoile turquoise`** : halos externes #B2F2D9 (turquoise diffus) — `BionicLayersV8.jsx:551`
+- **Source `corridors organiques`** : ENGINE-IA-CORRIDORS-ORGANIC-Ω V2.0-PHASE-XI-SUPRA-N
+- **Pipeline confirmé** : 1 backend moteur → frontend BionicLayersV8 → 3 polylines superposées par corridor (halo externe + halo interne + ligne principale)
+- **Preuve par espèce** (5 probes physiques PRD) :
+  - orignal=20 cor, hier=4P/0S, first_pair=[alimentation,saline]
+  - chevreuil=16 cor, hier=0P/0S, first_pair=[alimentation,saline]
+  - ours_noir=23 cor, hier=4P/3S, first_pair=[repos,alimentation] (différentiation omnivore!)
+  - dindon=16 cor, hier=0P/0S, first_pair=[alimentation,saline]
+  - wapiti=16 cor, hier=12P/3S (territoires grégaires), first_pair=[alimentation,saline]
+- **Aucun fallback actif** (visibility_ratio=1.0) · **Aucun lens visible** (panneau LOCAL_LENS absent) · **Aucun debug overlay** (clean PRD navigation)
+- **Architecture intentionnelle** : doctrine PHASE-D + X150 (palette stricte 3 couleurs vertes/turquoises)
+- Aucune mutation · `autonomy: LIMITED` (READ-ONLY PRD) · ANTI-GÉNÉRIQUE STRICT · Aucun `testing_agent_v3_fork`
+- Phase ultérieure proposée si désirée : P22Σ_RENDU_MONO_LAYER_Ω (désactiver halos) ou P22Σ_SPECIES_COLOR_PALETTE_Ω (couleur par espèce)
+- Rapport complet : `/app/memory/EMERGENT_AUDIT_CORRIDORS_REPORT.md`
+- Capture PRD clean : `/tmp/prd_clean_audit.png`
+- **STATUT** : ✅ AUDIT TERMINÉ — DÉMENTI VALIDÉ — STOP attente directive Commandant
+
+---
+
 ## 2026-05-09T19:44Z — P22Ω_ENABLE_TERRITOIRE_RENDERING_PRD · PRODUCTION OPÉRATIONNELLE
 
 ### Directive: P22Ω — 10/10 DIRECTIVES PRD VALIDÉES · TOUTES LES COUCHES ACTIVES EN LIVE
