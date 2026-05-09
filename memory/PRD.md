@@ -1,5 +1,21 @@
 # PRD — TERRITOIRE BIONIC OS V20-SUPRA (BCE-4X ULTIME ABSOLU)
 
+## 🟢 URLs CANONIQUES INSTITUTIONNELLES
+
+| Environnement | URL | Statut |
+|---|---|---|
+| **PRODUCTION (canonique)** ⭐ | `https://huntiq-restore.emergent.host` | 🟢 LIVE 24/7 (déployée 2026-05-09 par Commandant) |
+| Preview (dev) | `https://huntiq-restore.preview.emergentagent.com` | 🟡 Dev only (non synchronisé) |
+| TERRITOIRE PRD | `https://huntiq-restore.emergent.host/mon-territoire-bionic` | 🟢 Active |
+| Admin Premium PRD | `https://huntiq-restore.emergent.host/admin/bce-4x-premium/territoire` | 🟢 Active (auth gate) |
+
+**Pour propager une nouvelle phase P22x en PRD** :
+1. Modifier le code en `/app` (preview applique le hot reload automatiquement)
+2. Valider en preview (`huntiq-restore.preview.emergentagent.com`)
+3. Cliquer **"Deploy"** dans interface Emergent → 10-15 min → URL PRD reste stable
+
+---
+
 ## Original Problem Statement
 Le COMMANDANT STEEVE-MAX ordonne l'exécution de directives institutionnelles
 pour stabiliser la carte TERRITOIRE (BIONIC OS V20-SUPRA) sous protocole

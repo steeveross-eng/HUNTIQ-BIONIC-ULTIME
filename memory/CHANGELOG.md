@@ -3,6 +3,38 @@
 
 ---
 
+## 2026-05-09T19:44Z — P22Ω_ENABLE_TERRITOIRE_RENDERING_PRD · PRODUCTION OPÉRATIONNELLE
+
+### Directive: P22Ω — 10/10 DIRECTIVES PRD VALIDÉES · TOUTES LES COUCHES ACTIVES EN LIVE
+- **🟢 URL CANONIQUE PRODUCTION** : `https://huntiq-restore.emergent.host` (déployée par Commandant via bouton Emergent)
+- **`master_switch: UNCHANGED`** respecté — aucune mutation backend/frontend (toutes les couches étaient déjà default ON)
+- **Validation API physique** (7 endpoints critiques) :
+  - `GET /` → 200 (0.34s)
+  - `GET /api/v30/territoire/health` → 200 (0.19s)
+  - `GET /api/v30/super-masters/territoire-omega-canonical-status` → 200
+  - `GET /api/v30/corridors/status` → 200
+  - `POST /api/v20/territoire/corridors-organic/generate` → 200
+  - `POST /api/v20/territoire/corridors-organic/anomaly-map` → 200
+  - `POST /api/v20/territoire/corridors-organic/local-density-profile` → 200
+- **Validation visuelle Playwright PRD** :
+  - `polylinesInPane: 57` (rosace RENDU-Ω complète)
+  - `omegaConforme: TRUE` · `x150Conforme: TRUE`
+  - `organicHydrated: {key: 48.2067|-68.3824|orignal, corridors=19, smoother_total=19}`
+  - `p22hDoctrine: SALINE_CENTERED actif · first_pair=[alimentation, saline]`
+  - `p22lLens: 4 espèces évaluées · 1 bloquée biorégion · 60 corridors total · 31.4 densité · 8 paires uniques`
+  - `bioregion: BSL résolu · forbid=[cerf]`
+- **Différentiel PRD vs Preview** : +25% corridors (60 vs 48), +25% densité (31.4 vs 25.11), +1 paire unique (8 vs 7)
+- **8 paires écologiques observées en PRD** : alim,hotspot · alim,humide · alim,repos · alim,rut · alim,saline · hotspot,humide · humide,saline · repos,rut
+- **Doctrine exclusions V3 ULTIME** active en PRD : ENFORCED (parcs+no_hunt+expansion+override) / DISABLED_FOR_ECOLOGY_LOCAL (private_land+zec+pourvoirie+réserve)
+- **Wapiti province-gated** : bloqué en QC (cohérent doctrine BC/AB/SK/YT only)
+- Aucune mutation · `autonomy: LIMITED` (READ-ONLY pour PRD) · ANTI-GÉNÉRIQUE STRICT
+- Aucun `testing_agent_v3_fork`
+- Rapport complet : `/app/memory/P22OMEGA_PRD_RENDERING_REPORT.md`
+- Capture victorieuse : `/tmp/p22omega_prod_final.png`
+- **STATUT** : ✅ PRODUCTION OPÉRATIONNELLE — TOUTES LES PHASES P22 SYNCHRONISÉES
+
+---
+
 ## 2026-05-09T14:10Z — P22_ACCESS_TERRITOIRE_DIRECT_Ω · DEPLOYMENT READINESS
 
 ### Directive: P22_ACCESS_TERRITOIRE_DIRECT_Ω — ✅ READY TO DEPLOY (10/10 critiques + 1 warning non-bloquant)
