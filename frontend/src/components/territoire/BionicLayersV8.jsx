@@ -93,6 +93,8 @@ const BionicLayersV8 = ({
   const autoZoomAppliedRef = useRef(null);
   const [currentZoom, setCurrentZoom] = useState(() => (map ? map.getZoom() : 14));
   const [organicBundle, setOrganicBundle] = useState(null); // Phase M : cache local corridors organiques
+  // P22E_FIX_R3 — exposition d'un state corridorsLoading pour indicateur UI.
+  const [corridorsLoading, setCorridorsLoading] = useState(false);
   // PHASE_INSPECTION_BIO_GEOMETRY_BINDING — version bumpée à chaque activation/désactivation
   // pour forcer un re-render du featureGroup quand le mode inspection bascule.
   const [inspectionBioVersion, setInspectionBioVersion] = useState(0);
@@ -223,24 +225,52 @@ const BionicLayersV8 = ({
   // COMMANDE STEEVE-MAX — supprimé l'early return : on fetch même sans waypoint
   // pour éviter de bloquer le rendu RenduΩ. La condition `useOrganicCorridors`
   // suffit (defaut true, désactivable par prop).
+  // P22E_FIX_R2 (2026-05-09 · COMMANDANT STEEVE-MAX) :
+  //   - Suppression du flag `cancelled` qui empêchait setOrganicBundle()
+  //     d'être appliqué quand la promise se résolvait après cleanup
+  //     (3-19s de latence backend → re-render fréquent → setState perdu).
+  //   - Ref-based mutex empêche les requêtes concurrentes pour la même clé.
+  //   - State corridorsLoading exposé pour indicateur UI (R3).
+  const inflightOrganicKeyRef = useRef(null);
   useEffect(() => {
     if (!useOrganicCorridors || !enabled) return;
     if (!waypointCenter) return;  // garde-fou minimal : besoin d'un centre
-    let cancelled = false;
+    const requestKey = `${Number(waypointCenter.lat).toFixed(4)}|${Number(waypointCenter.lng).toFixed(4)}|${species}`;
+    // P22E_FIX_R2 — guard mutex : évite les requêtes parallèles pour la même clé
+    if (inflightOrganicKeyRef.current === requestKey) return;
+    inflightOrganicKeyRef.current = requestKey;
+    setCorridorsLoading(true);
     getOrganicCorridors(waypointCenter.lat, waypointCenter.lng, species)
       .then((data) => {
-        if (cancelled) return;
-        if (data) {
-          setOrganicBundle(data);
-          // COMMANDE STEEVE-MAX §3 — force re-render après hydratation organic
-          try {
-            // eslint-disable-next-line no-console
-            console.warn('[RENDUΩ] organicBundle hydrated → triggerRender. corridors=', data?.corridors?.length || 0);
-          } catch (_e) { /* noop */ }
+        // P22E_FIX_R2 : applique TOUJOURS si la requête est encore pertinente.
+        if (!data) {
+          setCorridorsLoading(false);
+          return;
         }
+        setOrganicBundle(data);
+        setCorridorsLoading(false);
+        try {
+          // eslint-disable-next-line no-console
+          console.warn('[RENDUΩ · P22E_FIX_R2] organicBundle hydrated → triggerRender. corridors=', data?.corridors?.length || 0, '· requestKey=', requestKey);
+          if (typeof window !== 'undefined') {
+            window.__P22E_ORGANIC_HYDRATED__ = {
+              ts: Date.now(),
+              key: requestKey,
+              corridors_count: data?.corridors?.length || 0,
+              smoother_total: data?.smoother_total_corridors || 0,
+            };
+          }
+        } catch (_e) { /* noop */ }
       })
-      .catch(() => {});
-    return () => { cancelled = true; };
+      .catch(() => {
+        setCorridorsLoading(false);
+      })
+      .finally(() => {
+        // libère le mutex pour permettre un nouveau fetch si la clé change
+        if (inflightOrganicKeyRef.current === requestKey) {
+          inflightOrganicKeyRef.current = null;
+        }
+      });
   }, [waypointCenter, species, useOrganicCorridors, enabled]);
 
   // AMPLIFICATION-Ω-V13: helpers de scaling

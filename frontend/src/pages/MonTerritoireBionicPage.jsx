@@ -376,6 +376,10 @@ const MonTerritoireBionicPage = () => {
   // BIONIC V6 GOLDEN — AUTO-SELECTION DU DERNIER WAYPOINT ACTIF
   // BCE-MAX x4.1: Priorite au waypointId de la session
   // PATCH 3D-RESTORE: Auto-select se relance si selectedWaypointForZones est perdu
+  // P22E_FIX_R1 (2026-05-09 · COMMANDANT STEEVE-MAX) : ajout du fallback canonique
+  // pour garantir un waypoint VALIDE et REEL dès l'ouverture du Territoire,
+  // même quand l'utilisateur n'a aucun waypoint personnel enregistré.
+  // BionicLayersV8 doit toujours être monté avec un waypoint réel (pas dans le vide).
   const autoSelectDoneRef = useRef(false);
   useLayoutEffect(() => {
     // Reset du ref si le waypoint est perdu — permet la re-selection
@@ -383,7 +387,10 @@ const MonTerritoireBionicPage = () => {
       autoSelectDoneRef.current = false;
     }
     if (autoSelectDoneRef.current) return;
-    if (!selectedWaypointForZones && activeWaypoints.length > 0) {
+    if (selectedWaypointForZones) return;
+
+    // 1) Premier choix : waypoint utilisateur sauvegardé/actif
+    if (activeWaypoints.length > 0) {
       const lastId = savedWaypointId || localStorage.getItem(LAST_WAYPOINT_KEY);
       const lastWp = lastId ? activeWaypoints.find(wp => wp.id === lastId) : null;
       const target = lastWp || activeWaypoints[0];
@@ -394,9 +401,44 @@ const MonTerritoireBionicPage = () => {
         setSelectedWaypointForZones(target);
         localStorage.setItem(LAST_WAYPOINT_KEY, target.id);
         updateWaypointId(target.id);
+        return;
       }
     }
-  }, [selectedWaypointForZones, activeWaypoints]);
+
+    // 2) P22E_FIX_R1 — Fallback CANONIQUE si AUCUN waypoint utilisateur.
+    //    Garantie doctrinale : BionicLayersV8 monté avec un centre RÉEL,
+    //    jamais dans le vide. Priorité userPosition GPS > Territoire BCE-4X Ω.
+    //    P22E_FIX_R3 — species_default biorégion-aware pour éviter fallback vide
+    //    (T1 BSL = biorégion ORIGNAL ; species=cerf à BSL → 0 corridor accepté).
+    const canonicalWp = userPosition && Number.isFinite(userPosition.lat) && Number.isFinite(userPosition.lng)
+      ? {
+          id: 'canonical-user-position-omega',
+          lat: userPosition.lat,
+          lng: userPosition.lng,
+          latitude: userPosition.lat,
+          longitude: userPosition.lng,
+          name: 'Ma position (canonique Ω)',
+          isCanonical: true,
+          isVirtual: true,
+          source: 'P22E_FIX_R1_USER_POSITION',
+          species_default: 'orignal',
+        }
+      : {
+          id: 'canonical-territoire-bce4x-omega',
+          lat: 48.206657,
+          lng: -68.382422,
+          latitude: 48.206657,
+          longitude: -68.382422,
+          name: 'Territoire BCE-4X Ω (canonique)',
+          isCanonical: true,
+          isVirtual: true,
+          source: 'P22E_FIX_R1_BCE4X_CANONICAL',
+          species_default: 'orignal',
+        };
+    console.log(`[P22E_FIX_R1] Sélection waypoint canonique fallback: "${canonicalWp.name}" (${canonicalWp.source})`);
+    autoSelectDoneRef.current = true;
+    setSelectedWaypointForZones(canonicalWp);
+  }, [selectedWaypointForZones, activeWaypoints, userPosition]);
 
   // BCE-MAX x4.1: CENTRAGE MAP depuis session persistante
   const initialCenterDoneRef = useRef(false);

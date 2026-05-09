@@ -162,7 +162,7 @@ const MapContentInner = React.memo(({
       <BionicLayersV8
         bundleData={bundleDataV8}
         waypointCenter={waypointCenter}
-        species={selectedSpecies && selectedSpecies !== 'tous' ? selectedSpecies.toLowerCase() : 'cerf'}
+        species={selectedSpecies && selectedSpecies !== 'tous' ? selectedSpecies.toLowerCase() : (selectedWaypointForZones?.species_default || 'cerf')}
         showZones={showZonesLayer !== false}
         showCorridors={showCorridorsLayer !== false}
         showAffuts={showPointsLayer !== false}

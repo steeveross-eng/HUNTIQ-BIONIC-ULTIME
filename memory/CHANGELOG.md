@@ -3,6 +3,30 @@
 
 ---
 
+## 2026-05-09T02:15Z — P22E_CORRIDORS_VISUAL_RESTORE_Ω (CORRIDORS VISIBLES SANS CLIC)
+
+### Directive: P22E — 11/11 CRITÈRES VALIDÉS · CORRIDORS VISIBLES DÈS L'OUVERTURE
+- **R1 PATCH** (`MonTerritoireBionicPage.jsx`) : Waypoint canonique fallback au boot si `activeWaypoints.length=0`. Priorité userPosition GPS > BCE-4X canonique (lat=48.206657/lon=-68.382422). Inclut `species_default: 'orignal'` (biorégion BSL).
+- **R2 PATCH** (`BionicLayersV8.jsx`) : Suppression du `cancelled=true` qui bloquait `setOrganicBundle()` après 3-19s de latence + mutex `useRef` anti-concurrent + state `corridorsLoading` exposé + flag global `window.__P22E_ORGANIC_HYDRATED__`.
+- **R3 PATCH** (`MapContent.jsx`) : Species biorégion-aware — `species={selectedWaypointForZones?.species_default || 'cerf'}` quand `selectedSpecies='tous'`. Évite le fallback vide (cerf à T1 BSL = 18/18 rejetés ; orignal = 1/20 accepté).
+- **Validation visuelle finale** :
+  - `polylinesInPane: 3` (vs 0 avant)
+  - `omegaConforme: true`
+  - `organicHydrated: {key: '48.2067|-68.3824|orignal', corridors_count: 1, smoother_total: 20}`
+  - 3 corridors verts (#00A676) visibles dès l'ouverture sans clic préalable
+- **Validation exclusions 100% actives** :
+  - 3 fichiers purgés (BionicCorridorsV6Layer, AccessRouteV6Layer, MovementCorridorsLayer) absents · 0 import vivant
+  - 6 couches autorisées présentes (BionicLayersV8, WindFlowLayer, CursorBionicLayer, EcoforestryLayers, CompassOmegaWidget, MapInteractionLayer)
+  - Filtres RENDU-Ω strict effectifs (segment ≤ 20m, angle ≤ 45°, dist_water ≥ 20m, no radial) — 18/18 cerf rejetés à T1 BSL (transparence anti-générique)
+  - 14/16 probes X150 conformes (`window.__OMEGA_CORRIDORS_X150_PROBES__`)
+- **Fichiers modifiés** : 3 EDIT (MonTerritoireBionicPage.jsx, BionicLayersV8.jsx, MapContent.jsx) · 0 fichier maître muté · 0 nouveau fichier
+- Aucun `testing_agent_v3_fork` · V30_LOCK INVIOLÉ · FUSION ADD-ONLY · ANTI-GÉNÉRIQUE STRICT · autonomy=LIMITED · guardrails=ENFORCED
+- Rapport complet : `/app/memory/P22E_CORRIDORS_VISUAL_RESTORE_REPORT.md`
+- Capture victorieuse : `/tmp/p22e_final_R1R2R3.png`
+- **STATUT** : ✅ MISSION ACCOMPLIE — STOP attente directive Commandant
+
+---
+
 ## 2026-05-09T01:39Z — P22D_CORRIDORS_AUDIT_AND_VISUAL_REVEAL_Ω
 
 ### Directive: P22D — AUDIT + DEBUG OVERLAY DEPLOYED · 11/11 CRITÈRES VALIDÉS
