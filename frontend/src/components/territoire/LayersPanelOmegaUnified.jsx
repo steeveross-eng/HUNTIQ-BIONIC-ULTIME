@@ -25,6 +25,16 @@ const CANONICAL_STATUS_URL = (() => {
   return `${base}/api/v30/super-masters/territoire-omega-canonical-status`;
 })();
 
+// P21_CANONICAL_VISUAL_LOCK_Ω · validation visuelle SHA-256
+const VISUAL_SYNC_VALIDATE_URL = (() => {
+  const base = process.env.REACT_APP_BACKEND_URL || '';
+  return `${base}/api/v30/super-masters/canonical-visual-sync-validate`;
+})();
+
+// P21 · Focus mode opacity multipliers
+const FOCUS_DIM_PCT = 20;
+const FOCUS_FOCUSED_PCT = 100;
+
 const LayersPanelOmegaUnified = ({
   activeMap = {},
   opacityMap = {},
@@ -36,6 +46,11 @@ const LayersPanelOmegaUnified = ({
   const [expandedGroups, setExpandedGroups] = useState({ B: true });
   // P20_PHASE5 · sync indicator SHA-256 (canonical lock)
   const [canonicalSync, setCanonicalSync] = useState(null);
+  // P21 · visual signature SHA-256 (recalculated on change)
+  const [visualSync, setVisualSync] = useState(null);
+  // P21 · Focus mode (hover layer dims others)
+  const [focusedLayerId, setFocusedLayerId] = useState(null);
+
   useEffect(() => {
     let cancelled = false;
     const fetchCanonical = () => {
@@ -54,6 +69,35 @@ const LayersPanelOmegaUnified = ({
       clearInterval(t);
     };
   }, []);
+
+  // P21 · recalcule visual signature côté backend à chaque changement
+  // d'activeMap ou opacityMap (debounced 600ms · anti-générique)
+  useEffect(() => {
+    let cancelled = false;
+    const activeIds = Object.entries(activeMap)
+      .filter(([, v]) => !!v).map(([k]) => k);
+    const handle = setTimeout(() => {
+      fetch(VISUAL_SYNC_VALIDATE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        cache: 'no-store',
+        body: JSON.stringify({
+          active_layer_ids: activeIds,
+          opacity_map: opacityMap,
+        }),
+      })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => {
+          if (cancelled || !d) return;
+          setVisualSync(d.result || null);
+        })
+        .catch(() => {});
+    }, 600);
+    return () => {
+      cancelled = true;
+      clearTimeout(handle);
+    };
+  }, [activeMap, opacityMap]);
 
   const totalActive = useMemo(
     () => LAYER_CATALOG_OMEGA.filter((l) => !!activeMap[l.id]).length,
@@ -184,16 +228,31 @@ const LayersPanelOmegaUnified = ({
                       const Icon = layer.icon;
                       const isActive = !!activeMap[layer.id];
                       const opacity = opacityMap[layer.id] ?? layer.opacityDefault;
+                      // P21 · focus mode : dim si autre couche focused
+                      const isFocused = focusedLayerId === layer.id;
+                      const isDimmed = focusedLayerId
+                        && focusedLayerId !== layer.id;
+                      const rowOpacity = isDimmed
+                        ? FOCUS_DIM_PCT / 100
+                        : 1;
                       return (
                         <div
                           key={layer.id}
                           data-testid={`layers-panel-omega-row-${layer.id}`}
+                          onMouseEnter={() => setFocusedLayerId(layer.id)}
+                          onMouseLeave={() => setFocusedLayerId(null)}
                           style={{
                             padding: '4px 8px',
                             background: isActive
                               ? `${layer.color}14`
                               : 'transparent',
                             borderRadius: 4,
+                            opacity: rowOpacity,
+                            outline: isFocused
+                              ? `1px solid ${layer.color}88`
+                              : 'none',
+                            transition:
+                              'opacity 0.18s, outline 0.12s',
                           }}
                         >
                           <div
@@ -348,6 +407,42 @@ const LayersPanelOmegaUnified = ({
                 <div style={{ color: '#A78BFA' }}>
                   ⏱ watchdog {canonicalSync?.watchdog_lock?.timeout_s
                     ?? '—'}s · LOCK
+                </div>
+              </div>
+            )}
+            {/* P21 · visual signature SHA + validation verdict */}
+            {visualSync && (
+              <div
+                data-testid="layers-panel-omega-visual-sync"
+                style={{
+                  marginTop: 3,
+                  paddingTop: 3,
+                  borderTop: '1px dashed rgba(212,160,23,0.1)',
+                  color: '#06B6D4',
+                }}
+              >
+                <div title={`Visual SHA-256: ${visualSync.visual_signature?.visual_sha256}`}>
+                  ◈ visual {visualSync.visual_signature?.visual_sha256
+                    ? visualSync.visual_signature.visual_sha256.slice(0, 12)
+                    : '—'}…
+                </div>
+                <div
+                  style={{
+                    color: visualSync.validation?.is_valid_doctrinal
+                      ? '#7CB518' : '#FCA5A5',
+                  }}
+                  data-testid="layers-panel-omega-visual-verdict"
+                >
+                  ✓ {visualSync.validation?.verdict || '—'}
+                  {' · '}
+                  {visualSync.validation?.components?.n_active_canonical || 0}
+                  /
+                  {visualSync.validation?.components?.minimum_required || 7}
+                  {visualSync.validation?.components?.bio_omega_missing?.length > 0 ? (
+                    <span style={{ color: '#F59E0B', marginLeft: 6 }}>
+                      missing: {visualSync.validation.components.bio_omega_missing.join(',')}
+                    </span>
+                  ) : null}
                 </div>
               </div>
             )}

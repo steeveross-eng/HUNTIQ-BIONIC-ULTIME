@@ -574,3 +574,65 @@
 - ✅ FUSION ADD-ONLY · zéro mutation engine maître
 - ✅ ANTI-GÉNÉRIQUE STRICT · canonical SHA calculé sur payload réel · sync indicator lit vrai overlay
 - ✅ Aucun testing_agent_v3_fork
+
+## 2026-05-08 (suite 7) — P21_CANONICAL_VISUAL_SYNC_AND_UX_LOCK_OMEGA_Ω
+
+### A · Cache version bump v11 → v12
+- `sw.js` : `bce-4x-omega-v12-p21-canonical-visual-2026-05-08`
+- `BCE_4X_FORCE_PURGE_VERSION = P21_CANONICAL_VISUAL_LOCK_2026_05_08_2400`
+- `index.html` : 2 nouvelles meta (`canonical-visual-sync=ENFORCED`, `focus-mode=ENABLED`)
+
+### B · Backend canonical_visual_sync_omega.py
+- 18 couches catalog frozen (z-index 210-530)
+- 5 couches Bio-Ω required : zones, corridors, affuts, salines, hotspots
+- `MIN_ACTIVE_LAYERS_PER_WAYPOINT = 7` (anti-générique)
+- 4 verdicts possibles :
+  - `VALID_CONSISTENT_DOCTRINAL` (≥7 layers · 5/5 Bio-Ω · 0 unknown)
+  - `WARN_BIO_OMEGA_INCOMPLETE` (≥7 mais missing Bio-Ω)
+  - `WARN_UNKNOWN_IDS_PRESENT` (unknown layer IDs)
+  - `FAIL_BELOW_MINIMUM_7_LAYERS`
+- `compute_visual_signature()` : SHA-256 deterministic (sorted)
+- `FOCUS_MODE_DIM_OPACITY = 20%` · `FOCUS_FOCUSED_OPACITY = 100%`
+
+### C · 2 nouveaux endpoints
+- `POST /canonical-visual-sync-validate` : valide active_layer_ids + opacity_map
+- `GET /canonical-visual-sync-status` : status + SHA + UX lock + focus mode
+
+### D · Frontend LayersPanelOmegaUnified · focus mode + visual signature
+- Hover sur une rangée de couche → autres rangées dim à 20% opacity
+- Outline doré sur la couche focused
+- `useEffect` debounced 600ms : POST validate au backend à chaque changement
+  d'`activeMap` ou `opacityMap`
+- Footer affiche désormais 2 indicateurs cryptographiques :
+  - `⛓ canonical {sha:12}…` (P20_PHASE5)
+  - `⟲ reload {sha:12}… · {timestamp}` (P20_PHASE4)
+  - `⏱ watchdog 600s · LOCK`
+  - **NOUVEAU** : `◈ visual {sha:12}…` (P21)
+  - **NOUVEAU** : `✓ {VERDICT} · n_active/min_required` avec couleur conditionnelle (vert/orange/rouge)
+
+### E · Tests pytest neutres P21
+- `test_phase_xxi_visual_sync_omega.py` (8/8 tests)
+  - import + constants
+  - validation 4 cas (FAIL/VALID/WARN_UNKNOWN/WARN_BIO_OMEGA)
+  - signature deterministic + change-on-opacity
+  - status payload shape
+
+### F · Vérifications curl preview public
+- POST validate : `verdict=VALID_CONSISTENT_DOCTRINAL · sha=0549c532e486a6ef5af9b288`
+- GET status : `verdict=FAIL_BELOW_MINIMUM_7_LAYERS · zindex_range={210..530}`
+- HTTP 200 sur tous endpoints (admin, mon-territoire, status, validate)
+- sw.js v12 confirmé actif
+
+### Métriques cumulatives session
+- 63/63 pytests doctrinaux passés (zéro régression)
+- 1 nouveau module engine + 1 nouveau pytest neutre
+- 2 nouveaux endpoints (`canonical-visual-sync-validate|status`)
+- Focus mode UX (hover dim 20%) implémenté
+- 5 indicateurs cryptographiques visibles dans footer (canonical/reload/watchdog/visual/verdict)
+- `yarn build` SUCCESS 58.71s clean
+
+### Conformité doctrinale
+- ✅ V30_LOCK INVIOLÉ · ZÉRO mutation engine maître
+- ✅ FUSION ADD-ONLY · 1 nouveau module + UX additif
+- ✅ ANTI-GÉNÉRIQUE STRICT · validation réelle 4 verdicts · SHA déterministe
+- ✅ Aucun testing_agent_v3_fork

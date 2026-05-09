@@ -5515,3 +5515,58 @@ async def territoire_omega_canonical_status_endpoint() -> JSONResponse:
         "v30_lock": "INVIOLÉ",
     })
 
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# P21 · CANONICAL_VISUAL_SYNC_AND_UX_LOCK_OMEGA_Ω
+# Validation cohérence couches · signature SHA-256 · focus mode · UX lock
+# ═════════════════════════════════════════════════════════════════════════
+
+
+class CanonicalVisualSyncBody(BaseModel):
+    active_layer_ids: Optional[List[str]] = None
+    opacity_map: Optional[Dict[str, int]] = None
+
+
+@router.post("/canonical-visual-sync-validate")
+async def canonical_visual_sync_validate_endpoint(
+    body: CanonicalVisualSyncBody,
+) -> JSONResponse:
+    """P21 · validate active layers + compute visual signature.
+
+    Anti-générique strict : pas de fake activation, validation réelle
+    contre le catalog doctrinal frozen à 18 couches.
+    """
+    from engines.v8_institutional.especes.canonical_visual_sync_omega import (
+        get_canonical_visual_sync_status,
+    )
+    payload = get_canonical_visual_sync_status(
+        active_layer_ids=body.active_layer_ids,
+        opacity_map=body.opacity_map,
+    )
+    return JSONResponse({
+        "manifest_id": "CANONICAL_VISUAL_SYNC_VALIDATE_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P21_CANONICAL_VISUAL_LOCK_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/canonical-visual-sync-status")
+async def canonical_visual_sync_status_endpoint() -> JSONResponse:
+    """P21 · status visual sync (PUBLIC RO · empty active set)."""
+    from engines.v8_institutional.especes.canonical_visual_sync_omega import (
+        get_canonical_visual_sync_status,
+    )
+    payload = get_canonical_visual_sync_status()
+    return JSONResponse({
+        "manifest_id": "CANONICAL_VISUAL_SYNC_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P21_CANONICAL_VISUAL_LOCK_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+

@@ -16,7 +16,7 @@ const isLocalhost = Boolean(
 // Service Worker version — incremented to force cache invalidation
 // x4520-B2: v6 → v7 pour invalider tous les caches HTTP stale
 // P20_PHASE4 · v10 · re-activation controlled (network-only super-masters)
-const SW_VERSION = 'v11'; // P20_PHASE5_CANONICAL_LOCK_Ω · territoire_omega canonical
+const SW_VERSION = 'v12'; // P21_CANONICAL_VISUAL_LOCK_Ω · visual sync
 
 /**
  * Register Service Worker
