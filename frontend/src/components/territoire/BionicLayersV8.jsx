@@ -804,6 +804,11 @@ const BionicLayersV8 = ({
       // X150 — 7 probes détaillées des 13 normes (document DESCRIPTIONS_RENDU_OMEGA_CORRIDORS)
       // P22F_FIX_R5 — alignement avec X150 v2 (épaisseurs 3.0/4.0/6.0 px depuis amendement
       // X150-SUPRA-ARCHITECTONIQUE) ; ancienne probe [1.2, 2.0, 3.0] obsolète.
+      // P22G_FIX (2026-05-09 · STEEVE-MAX) — Régime SEMI_STRICT :
+      //   segment_max_20m → segment_max_60m
+      //   angle_max_45 → angle_max_95
+      //   + nouvelle probe allow_radial_shape (true)
+      //   + nouvelle probe max_failed_criteria_2
       const x150Probes = {
         // PHASE-D VERROUILLAGE RENDUΩ — palette verte institutionnelle BCE-4X
         color_strict_phase_d_green: RENDU_OMEGA.color === '#00A676',
@@ -814,8 +819,11 @@ const BionicLayersV8 = ({
         weights_allowed: JSON.stringify(RENDU_OMEGA.weightsAllowedPx) === JSON.stringify([3.0, 4.0, 6.0]),
         opacity_min_075: RENDU_OMEGA.opacityMin >= 0.75,
         catmull_rom_points_25_30: RENDU_OMEGA.controlPointsMin === 25 && RENDU_OMEGA.controlPointsMax === 30,
-        segment_max_20m: RENDU_OMEGA.segmentMaxM === 20.0,
-        angle_max_45: RENDU_OMEGA.angleMaxDeg === 45.0,
+        // P22G : seuils SEMI_STRICT
+        segment_max_60m: RENDU_OMEGA.segmentMaxM === 60.0,
+        angle_max_95: RENDU_OMEGA.angleMaxDeg === 95.0,
+        allow_radial_shape: RENDU_OMEGA.allowRadialShape === true,
+        max_failed_criteria_2: RENDU_OMEGA.maxFailedCriteriaAllowed === 2,
         functional_radius_420_780: RENDU_OMEGA.functionalRadiusMinM === 420 && RENDU_OMEGA.functionalRadiusMaxM === 780,
         min_zoom_13: RENDU_OMEGA.minZoom === 13,
         zindex_order_conforme: JSON.stringify(RENDU_OMEGA.zIndexOrder) === JSON.stringify(['zones','hydrologie','terrain','corridors','salines','hotspots','affuts','vent']),

@@ -3,6 +3,42 @@
 
 ---
 
+## 2026-05-09T02:58Z — P22G_RENDU_OMEGA_SEMI_STRICT_BACKEND_Ω (MUTE BACKEND AUTORISÉE)
+
+### Directive: P22G — RATIO ACCEPTATION 100% · POLYLINES 72 · X150 18/18
+- **Backend MUTE autorisée par directive Commandant** (`update_rendu_omega_backend: REQUIRED`).
+- **Patches engine `/app/backend/engines/post_smoothing/renduomega.py`** :
+  - `GEOM_MAX_SEGMENT_M: 20.0 → 60.0`
+  - `GEOM_MAX_ANGLE_DEG: 45.0 → 95.0`
+  - `TERRAIN_WATER_MIN_M: 20.0 → 5.0`
+  - `ALLOW_RADIAL_SHAPE = True` (forme radiale autorisée)
+  - `MAX_FAILED_CRITERIA_ALLOWED = 2` (tolère 2 critères en échec sur 4)
+  - `validate_corridor()` enrichi avec `failed_criteria_count`, `max_failed_allowed`, `doctrine: "P22G_SEMI_STRICT"`
+- **Patches frontend `/app/frontend/src/lib/renduOmegaStore.js`** :
+  - `segmentMaxM: 20.0 → 60.0`, `angleMaxDeg: 45.0 → 95.0`
+  - `allowRadialShape: true`, `maxFailedCriteriaAllowed: 2`
+- **X150 probes mises à jour** dans `BionicLayersV8.jsx` :
+  - `segment_max_20m → segment_max_60m`, `angle_max_45 → angle_max_95`
+  - +2 nouvelles probes : `allow_radial_shape`, `max_failed_criteria_2`
+  - **Total : 16 → 18 probes · 18/18 PASS**
+- **Audit `phase_omega_secure_lockdown.py`** : checks alignés avec nouvelle doctrine (`segment_max_60`, `angle_max_95`, `allow_radial_shape`, `max_failed_criteria_2`).
+- **Validation API directe (CLI)** :
+  - T1 BSL orignal : 24/24 acceptés (vs 1/22 avant) · ratio = **100%**
+  - T1 BSL cerf : 27/27 acceptés (vs 0/18 avant) · ratio = **100%**
+- **Validation visuelle (Playwright)** :
+  - `polylinesInPane: 72` (vs 24 P22F · vs 3 P22E · vs 0 P22D)
+  - `omegaConforme: TRUE` · `x150Conforme: TRUE` · `x150 failed: []`
+  - `organicHydrated: corridors_count=24, smoother_total=24`
+  - `visibility: ratio=1.0, fallback_active=false`
+  - `bioregion: BSL → orignal (user_choice)`
+- **Fichiers modifiés** : 4 EDITs ciblés (2 backend + 2 frontend) · 0 fichier maître SHA-locked muté · 0 nouveau fichier
+- Aucun `testing_agent_v3_fork` · ANTI-GÉNÉRIQUE STRICT · `autonomy: LIMITED` · `guardrails: ENFORCED`
+- Rapport complet : `/app/memory/P22G_RENDU_OMEGA_SEMI_STRICT_REPORT.md`
+- Capture victorieuse : `/tmp/p22g_final.png`
+- **STATUT** : ✅ MISSION P22G ACCOMPLIE — STOP attente directive Commandant
+
+---
+
 ## 2026-05-09T02:42Z — P22F_CORRIDORS_STABILIZE_AND_PREFETCH_Ω_ULTIME
 
 ### Directive: P22F — 5/7 FRONTEND PASS · 24 POLYLINES VISIBLES · X150 16/16 · BIORÉGION VERROUILLÉE

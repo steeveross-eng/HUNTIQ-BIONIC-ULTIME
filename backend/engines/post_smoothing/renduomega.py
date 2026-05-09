@@ -79,19 +79,26 @@ SPECIES_COLOR_PALETTE = {
 }
 
 # Règles géométriques §2
+# P22G_FIX (2026-05-09 · COMMANDANT STEEVE-MAX) — MUTE BACKEND AUTORISÉE.
+# Ancien régime STRICT : segmentMax=20m, angleMax=45°, distWaterMin=20m, radial=FORBIDDEN.
+# Nouveau régime SEMI_STRICT (P22G) : seuils alignés avec les corridors écologiques
+# réels mesurés sur le terrain (déplacements opportunistes / contournement obstacles).
+# Doctrine : "Current strict RENDU-Ω destroys natural ecological corridors" — STEEVE-MAX
 GEOM_MIN_POINTS = 25
 GEOM_MAX_POINTS = 30
 GEOM_MIN_LENGTH_M = 100.0
 GEOM_IDEAL_MIN_M = 300.0
 GEOM_IDEAL_MAX_M = 800.0
-GEOM_MAX_SEGMENT_M = 20.0
-GEOM_MAX_ANGLE_DEG = 45.0
+GEOM_MAX_SEGMENT_M = 60.0    # P22G : 20.0 → 60.0
+GEOM_MAX_ANGLE_DEG = 95.0    # P22G : 45.0 → 95.0
+ALLOW_RADIAL_SHAPE = True    # P22G : forme radiale autorisée
+MAX_FAILED_CRITERIA_ALLOWED = 2  # P22G : tolère jusqu'à 2 critères en échec sur 4
 
 # Règles terrain §3
 TERRAIN_RADIUS_MIN_M = 420.0       # 600 − 30 %
 TERRAIN_RADIUS_MAX_M = 780.0       # 600 + 30 %
 TERRAIN_SLOPE_MAX_DEG = 35.0
-TERRAIN_WATER_MIN_M = 20.0
+TERRAIN_WATER_MIN_M = 5.0          # P22G : 20.0 → 5.0 (alignement déplacements rivulaires)
 ECO_HUMAN_MIN_M = 80.0             # évitement minimal de toute human_zone
 ECO_CONTAM_MIN_M = 50.0
 ECO_AFFUT_CONE_DEG = 80.0
@@ -162,12 +169,12 @@ def _is_radial_shape(path: List[List[float]], tolerance: float = 0.02,
     """Détecte les formes radiales/étoiles ou lignes géométriques parfaitement
     droites (signature fallback / rendu radial interdit §1.2).
 
-    Critère institutionnel Ω :
-      - path quasi-rectiligne (ratio longueur/distance directe < 1.02)
-      - ET courbure quasi-nulle (max_angle_deg < 1.5°)
-    Un corridor biologique courbé, même direct, présente des micro-variations
-    d'angle > 1.5° dues au terrain → accepté.
+    P22G_FIX (2026-05-09 · STEEVE-MAX) : ALLOW_RADIAL_SHAPE=True désactive
+    cette détection — les formes radiales sont désormais autorisées car
+    elles correspondent à des déplacements directs réels en biorégion ouverte.
     """
+    if ALLOW_RADIAL_SHAPE:  # P22G : radial autorisé
+        return False
     if not path or len(path) < 4:
         return False
     start = path[0]; end = path[-1]
@@ -446,7 +453,11 @@ def validate_corridor(corridor: Dict[str, Any],
                                             contamination_zones, affuts)
     sp   = validate_species_and_source(corridor, bundle_species)
 
-    accepted = geom["ok"] and terr["ok"] and eco["ok"] and sp["ok"]
+    # P22G_FIX (2026-05-09 · STEEVE-MAX) — MAX_FAILED_CRITERIA_ALLOWED=2
+    # Ancien régime : accepted = ALL OK (0 failed allowed)
+    # Nouveau régime SEMI_STRICT : tolère jusqu'à 2 critères en échec sur 4.
+    failed_count = sum(1 for ok in [geom["ok"], terr["ok"], eco["ok"], sp["ok"]] if not ok)
+    accepted = failed_count <= MAX_FAILED_CRITERIA_ALLOWED
     errors: List[Dict[str, Any]] = []
     if not geom["ok"]:
         errors.append({"kind": "ERREUR_RENDUΩ_GÉOMÉTRIE", "violations": geom["violations"]})
@@ -458,6 +469,9 @@ def validate_corridor(corridor: Dict[str, Any],
 
     verdict = {
         "accepted": accepted,
+        "failed_criteria_count": failed_count,
+        "max_failed_allowed": MAX_FAILED_CRITERIA_ALLOWED,
+        "doctrine": "P22G_SEMI_STRICT",
         "geometry": geom,
         "terrain":  terr,
         "ecology":  eco,

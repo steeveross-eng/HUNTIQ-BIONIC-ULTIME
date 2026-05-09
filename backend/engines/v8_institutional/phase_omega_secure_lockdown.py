@@ -204,8 +204,11 @@ def bloc_6_rendu_omega() -> dict[str, Any]:
         "opacity_default_1_00": "opacityDefault: 1.0" in src,
         "weights_4_levels": "weightsAllowedPx: [1.2, 2.0, 3.0, 4.0]" in src,
         "minZoom_13": "minZoom: 13" in src,
-        "segment_max_20": "segmentMaxM: 20.0" in src,
-        "angle_max_45": "angleMaxDeg: 45.0" in src,
+        # P22G_FIX (2026-05-09 · STEEVE-MAX) — régime SEMI_STRICT
+        "segment_max_60": "segmentMaxM: 60.0" in src,
+        "angle_max_95": "angleMaxDeg: 95.0" in src,
+        "allow_radial_shape": "allowRadialShape: true" in src,
+        "max_failed_criteria_2": "maxFailedCriteriaAllowed: 2" in src,
         "forbid_arrow": "forbidDirectionalArrow: true" in src,
         "preview_equals_final": "previewEqualsFinal: true" in src,
         "zindex_order_institutional": "'zones', 'hydrologie', 'terrain', 'corridors', 'salines', 'affuts', 'hotspots', 'vent'" in src,

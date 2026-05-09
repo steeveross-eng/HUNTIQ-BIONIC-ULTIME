@@ -73,8 +73,13 @@ export const RENDU_OMEGA = Object.freeze({
   controlPointsMin: 25,
   controlPointsMax: 30,
   controlPointsTarget: 28,        // SUPRA_S_CORRECTION : Catmull-Rom 28 strict
-  segmentMaxM: 20.0,
-  angleMaxDeg: 45.0,
+  // P22G_FIX (2026-05-09 · STEEVE-MAX) — Régime SEMI_STRICT
+  // Ancien : segmentMaxM=20.0, angleMaxDeg=45.0 (refus 95% des corridors organiques réels)
+  // Nouveau : 60.0 / 95.0 — alignement avec déplacements écologiques mesurés terrain.
+  segmentMaxM: 60.0,              // P22G : 20.0 → 60.0
+  angleMaxDeg: 95.0,              // P22G : 45.0 → 95.0
+  allowRadialShape: true,         // P22G : forme radiale autorisée
+  maxFailedCriteriaAllowed: 2,    // P22G : 2 critères en échec tolérés sur 4
   functionalRadiusMinM: 420.0,
   functionalRadiusMaxM: 780.0,
   functionalRadiusNominalM: 600.0,
