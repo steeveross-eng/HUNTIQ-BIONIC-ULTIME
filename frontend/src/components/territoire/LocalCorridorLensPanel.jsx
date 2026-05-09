@@ -50,6 +50,33 @@ const MULTI_SPECIES_PRESET = {
 const SPECIES_LIST_DEFAULT = ['orignal', 'chevreuil', 'ours_noir',
                               'dindon', 'wapiti'];
 
+// P22Λ v3 ULTIME — Overrides locaux (bypass biorégion dans bulle 780m)
+const SPECIES_OVERRIDES_V3 = [
+  { species: 'chevreuil', apply_regions: 'CANADA_WIDE',
+    enable_local_presence: 'ENABLED', ignore_bioregion_for_local_bubble: 'ENABLED',
+    forbid_global_override: 'ABSOLUTE' },
+  { species: 'orignal', apply_regions: 'CANADA_WIDE',
+    enable_local_presence: 'ENABLED', ignore_bioregion_for_local_bubble: 'ENABLED',
+    forbid_global_override: 'ABSOLUTE' },
+  { species: 'ours_noir', apply_regions: 'CANADA_WIDE',
+    enable_local_presence: 'ENABLED', ignore_bioregion_for_local_bubble: 'ENABLED',
+    forbid_global_override: 'ABSOLUTE' },
+  { species: 'dindon', apply_regions: 'CANADA_WIDE',
+    enable_local_presence: 'ENABLED', ignore_bioregion_for_local_bubble: 'ENABLED',
+    forbid_global_override: 'ABSOLUTE' },
+  { species: 'wapiti', apply_regions: ['BC', 'AB', 'SK', 'YT'],
+    enable_local_presence: 'ENABLED', ignore_bioregion_for_local_bubble: 'ENABLED',
+    forbid_global_override: 'ABSOLUTE' },
+];
+
+const OVERRIDE_EXCLUSIONS_V3 = {
+  disable_legal_exclusions: ['private_land', 'zec', 'pourvoirie', 'reserve_faunique'],
+  preserve_critical_legal_exclusions: ['parc_national', 'parc_provincial',
+                                       'parc_regional', 'no_hunt_zone'],
+  preserve_ecological_exclusions: ['deep_water', 'urban_dense', 'non_faunique',
+                                   'altitude_extreme', 'incompatible_biome'],
+};
+
 const isEnabled = () => {
   try {
     if (typeof window === 'undefined') return false;
@@ -83,6 +110,9 @@ const probeLocalDensity = async (lat, lon) => {
         anchor_mode: 'SALINE_CENTERED',
         enforce_bioregion_lock: true,
         enforce_no_hunt_zones: true,
+        // P22Λ v3 ULTIME — Overrides + exclusions
+        species_overrides: SPECIES_OVERRIDES_V3,
+        override_exclusions: OVERRIDE_EXCLUSIONS_V3,
       }),
     });
     const data = await resp.json();
@@ -149,13 +179,14 @@ const LiveProfilesTable = ({ data }) => {
     <div data-testid="lens-table-live-profiles" style={{ marginBottom: 24 }}>
       <h4 style={{ color: '#00A676', fontSize: 13, fontFamily: 'monospace',
                    marginBottom: 8, fontWeight: 'bold' }}>
-        🟢 Profil de densification LOCALE LIVE · biorégion {data.bioregion?.id}
+        🟢 Profil de densification LOCALE LIVE V3 · biorégion {data.bioregion?.id}
+        {' · province '}{data.scope?.province}
       </h4>
       <table style={{ borderCollapse: 'collapse', width: '100%',
                       background: 'rgba(0,0,0,0.45)' }}>
         <thead>
           <tr>
-            {['Espèce', 'Cor', 'Density/km²', 'Cont', 'Conn',
+            {['Espèce', 'OVR', 'Cor', 'Dens/km²', 'Cont', 'Conn',
               'Pairs uniques', 'Présence'].map((c) => (
               <th key={c} style={headerStyle}>{c}</th>
             ))}
@@ -166,11 +197,15 @@ const LiveProfilesTable = ({ data }) => {
             <tr key={p.species_resolved}
                 style={i % 2 ? { background: 'rgba(255,255,255,0.02)' } : null}>
               <td style={cellStyle}><b>{p.species_resolved}</b></td>
+              <td style={{ ...cellStyle, color: p.local_override_active ? '#FFC300' : '#666',
+                          fontWeight: 'bold', fontSize: 10 }}>
+                {p.local_override_active ? '✓ LOCAL' : '—'}
+              </td>
               <td style={cellStyle}>{p.n_corridors}</td>
               <td style={cellStyle}>{p.density_per_km2}</td>
               <td style={cellStyle}>{p.continuity_ratio}</td>
               <td style={cellStyle}>{p.connectivity_pairs}</td>
-              <td style={cellStyle}>
+              <td style={{ ...cellStyle, fontSize: 10 }}>
                 {p.pairs_unique?.map((pp) => `[${pp.join(',')}]`).join(' ') || '—'}
               </td>
               <td style={{ ...cellStyle, color: presenceColor(p.presence),
@@ -222,6 +257,78 @@ const SummaryTable = ({ data }) => {
           <b style={{ color: '#00A676' }}>Paires uniques observées :</b>
           <br />
           {s.all_pairs_observed.map((p) => `[${p.join(',')}]`).join(' · ')}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ═══ TABLEAU EXCLUSIONS DOCTRINALES V3 ═══
+const ExclusionsTable = ({ data }) => {
+  if (!data?.exclusions_doctrine_v3) return null;
+  const e = data.exclusions_doctrine_v3;
+  const enforced = [
+    ['Bioregion locking', e.respect_bioregion_locking],
+    ['Species forbid rules', e.respect_species_forbid_rules],
+    ['Parcs (national/prov/régional)', e.respect_parcs_exclusions],
+    ['No-hunt zones', e.respect_no_hunt_zones],
+    ['Override exclusions globales', e.forbid_override_exclusions],
+    ['Expansion hors bulle locale', e.forbid_expansion_outside_local_bubble],
+  ];
+  const disabled = [
+    ['Terres privées (légal)', e.respect_private_land_exclusions],
+    ['ZEC / Pourvoirie / Réserve', e.respect_zec_pourvoirie_reserve_exclusions],
+  ];
+  return (
+    <div data-testid="lens-table-exclusions-v3" style={{ marginBottom: 24 }}>
+      <h4 style={{ color: '#FFC300', fontSize: 13, fontFamily: 'monospace',
+                   marginBottom: 8, fontWeight: 'bold' }}>
+        🛡️ Doctrine exclusions V3 ULTIME · ENFORCED / DISABLED
+      </h4>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+        <div>
+          <div style={{ color: '#0f0', fontSize: 11, marginBottom: 4,
+                        fontWeight: 'bold' }}>✅ ENFORCED (critiques préservées)</div>
+          <table style={{ borderCollapse: 'collapse', width: '100%',
+                         background: 'rgba(0,255,0,0.05)' }}>
+            <tbody>
+              {enforced.map(([k, v]) => (
+                <tr key={k}>
+                  <td style={{ ...cellStyle, fontSize: 10 }}>{k}</td>
+                  <td style={{ ...cellStyle, fontSize: 10, color: '#0f0',
+                              fontWeight: 'bold' }}>{v}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <div style={{ color: '#FF8F00', fontSize: 11, marginBottom: 4,
+                        fontWeight: 'bold' }}>⚠️ DISABLED (écologie locale)</div>
+          <table style={{ borderCollapse: 'collapse', width: '100%',
+                         background: 'rgba(255,143,0,0.05)' }}>
+            <tbody>
+              {disabled.map(([k, v]) => (
+                <tr key={k}>
+                  <td style={{ ...cellStyle, fontSize: 10 }}>{k}</td>
+                  <td style={{ ...cellStyle, fontSize: 10, color: '#FF8F00',
+                              fontWeight: 'bold' }}>{v}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {e.disable_legal_exclusions?.length > 0 && (
+        <div style={{ marginTop: 8, fontSize: 10, color: '#aaa' }}>
+          <b style={{ color: '#FF8F00' }}>disabled_legal:</b>{' '}
+          {e.disable_legal_exclusions.join(', ')}
+          <br />
+          <b style={{ color: '#0f0' }}>preserve_critical:</b>{' '}
+          {e.preserve_critical_legal_exclusions?.join(', ')}
+          <br />
+          <b style={{ color: '#0f0' }}>preserve_ecological:</b>{' '}
+          {e.preserve_ecological_exclusions?.join(', ')}
         </div>
       )}
     </div>
@@ -314,6 +421,7 @@ export const LocalCorridorLensPanel = () => {
         </div>
       )}
       <SummaryTable data={data} />
+      <ExclusionsTable data={data} />
       <LiveProfilesTable data={data} />
       <PresetTable />
     </div>

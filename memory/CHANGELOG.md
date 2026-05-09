@@ -3,6 +3,40 @@
 
 ---
 
+## 2026-05-09T13:53Z — P22Λ_LOCAL_MAX_DENSITY_CORRIDOR_EXPANSION_V3_ULTIME_Ω
+
+### Directive: P22Λ V3 ULTIME — 14/14 BLOCS VALIDÉS · OVERRIDE LOCAL + WAPITI PROVINCE-GATED + PARCS PRÉSERVÉS
+- **Backend EDIT** : `local_density_profile_omega.py` étendu (+85 lignes) :
+  - `WAPITI_ALLOWED_PROVINCES = {BC, AB, SK, YT}` + 11 boîtes englobantes provinces canadiennes
+  - Fonction `_resolve_province(lat, lon)`
+  - 3 typologies exclusions (DEFAULT_LEGAL_EXCLUSIONS_DISABLE, CRITICAL_LEGAL_EXCLUSIONS, ECOLOGICAL_EXCLUSIONS)
+  - Pydantic body étendu (`species_overrides[]`, `override_exclusions{}`)
+  - Pipeline 3-niveaux : Wapiti province gating > Biorégion lock standard > Override local bypass
+  - Payload retour enrichi avec `version: v3_ultime`, `scope.province`, `exclusions_doctrine_v3`, `species_overrides_applied[]`, `blocking_layer` (PROVINCE_LOCK/BIOREGION_LOCK)
+- **Frontend EDIT** : `LocalCorridorLensPanel.jsx` étendu (+95 lignes) :
+  - Constantes `SPECIES_OVERRIDES_V3` (5 espèces) et `OVERRIDE_EXCLUSIONS_V3` (3 listes typologiques)
+  - POST body envoie automatiquement les overrides v3
+  - Nouveau composant `ExclusionsTable` : grille 2 colonnes ENFORCED ✅ / DISABLED ⚠️
+  - `LiveProfilesTable` enrichi avec colonne **OVR** (✓ LOCAL en doré)
+  - Header live profile affiche `province` + `bioregion`
+- **Validation API multi-province** :
+  - **T1 BSL Québec** : chevreuil DÉBLOQUÉ (OVR=✓ LOCAL · 14 cor vs 0 v1) · wapiti BLOCKED PROVINCE_LOCK QC
+  - **Vancouver BC** : wapiti DÉBLOQUÉ (OVR=true · 7 cor PRESENT)
+  - 48 corridors totaux T1 BSL (+200% vs v1) · 25.11 densité (+200%) · 7 paires uniques
+- **Doctrine exclusions duale** :
+  - ENFORCED : bioregion / species_forbid / parcs (national+provincial+régional) / no_hunt_zone / forbid_override_global / forbid_expansion_outside_bubble (ABSOLUTE)
+  - DISABLED_FOR_ECOLOGY_LOCAL : private_land / zec / pourvoirie / reserve_faunique
+  - PRESERVE_ECOLOGICAL : deep_water / urban_dense / non_faunique / altitude_extreme / incompatible_biome
+- **Province gating wapiti** validé : QC=BLOCKED, BC=PRESENT (test cross-canada)
+- **4 tableaux UI** : Summary + ExclusionsV3 + LiveProfiles V3 (avec OVR) + Preset directive 9 lignes
+- **Fichiers modifiés** : 2 EDITs ciblés · 0 nouveau fichier engine · 0 fichier maître muté
+- Aucun `testing_agent_v3_fork` · ANTI-GÉNÉRIQUE STRICT · `autonomy: LIMITED` · `guardrails: ENFORCED`
+- Rapport complet : `/app/memory/P22L_V3_ULTIME_REPORT.md`
+- Capture : `/tmp/p22l_v3_ultime_final.png`
+- **STATUT** : ✅ MISSION P22Λ V3 ULTIME ACCOMPLIE — STOP attente directive Commandant
+
+---
+
 ## 2026-05-09T13:10Z — P22Λ_LOCAL_MAX_DENSITY_CORRIDOR_EXPANSION_Ω
 
 ### Directive: P22Λ — 10/10 BLOCS VALIDÉS · LOCAL_CORRIDOR_LENS DEPLOYED · 3 TABLEAUX UI
