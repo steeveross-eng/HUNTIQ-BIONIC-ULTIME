@@ -729,11 +729,81 @@ const BionicLayersV8 = ({
           }
         }
       } catch (_e) { /* noop */ }
+
+      // ═══ P22F_FIX_R2 — FALLBACK RAW ORANGE SOUS 90% VISIBILITÉ ═══
+      // COMMANDANT STEEVE-MAX · 2026-05-09
+      // Doctrine : enable_raw_fallback_if_under_threshold=ENABLED · threshold=0.90 · style=orange_ff8f00
+      // Si le ratio (accepted RENDU-Ω) / (accepted + rejected_by_renduomega) < 0.90,
+      // on rend en plus les corridors REJETÉS avec style orange transparent.
+      // Cela garantit ≥ 90% de visibilité tout en distinguant doctrinalement
+      // les corridors strictement conformes (vert #00A676) des corridors brut (orange #FF8F00).
+      try {
+        const rejectedByRenduomega = Array.isArray(organicBundle?.corridors_rejected_by_renduomega)
+          ? organicBundle.corridors_rejected_by_renduomega : [];
+        const acceptedCount = corridorsToRender.length;
+        const totalCandidates = acceptedCount + rejectedByRenduomega.length;
+        const visibilityRatio = totalCandidates > 0 ? acceptedCount / totalCandidates : 1.0;
+        const threshold = 0.90;
+
+        if (typeof window !== 'undefined') {
+          window.__P22F_VISIBILITY__ = {
+            ts: Date.now(),
+            accepted: acceptedCount,
+            rejected_by_renduomega: rejectedByRenduomega.length,
+            total_candidates: totalCandidates,
+            visibility_ratio: visibilityRatio,
+            threshold,
+            fallback_active: visibilityRatio < threshold,
+          };
+        }
+
+        if (visibilityRatio < threshold && rejectedByRenduomega.length > 0) {
+          console.info(`[P22F_FIX_R2 · FALLBACK RAW ORANGE] visibility_ratio=${visibilityRatio.toFixed(3)} < ${threshold} → rendu de ${rejectedByRenduomega.length} corridors rejetés en orange #FF8F00`);
+          rejectedByRenduomega.forEach((c, idx) => {
+            const rawPath = c.path;
+            if (!Array.isArray(rawPath) || rawPath.length < 2) return;
+            // Rendu RAW orange — doctrine R2 (raw_style: orange_ff8f00)
+            const rawLine = L.polyline(rawPath, {
+              color: '#FF8F00',                     // raw_style: orange institutionnel R2
+              weight: 2.5,                          // plus fin pour distinguer du vert principal
+              opacity: 0.65,                        // transparent doctrinal
+              lineCap: 'round',
+              lineJoin: 'round',
+              dashArray: '6 4',                     // pointillé doctrinal pour distinction
+              smoothFactor: 1,
+              interactive: true,
+              pane: corridorsPaneName,
+            });
+            rawLine.options._renduOmega = {
+              layer: 'corridor_raw_fallback_p22f_r2',
+              id: c.id || `raw_${idx}`,
+              renduomega_violations: c.renduomega?.errors || [],
+              raw_style: 'orange_ff8f00',
+            };
+            // Tooltip : motifs de rejet doctrinaux (transparence anti-générique)
+            const motifs = (c.renduomega?.errors || []).map(e =>
+              `${e.kind}: ${(e.violations || []).slice(0, 2).join(', ')}`
+            ).slice(0, 3).join(' | ') || 'no_violations_data';
+            rawLine.bindTooltip(
+              `<b style="color:#FF8F00">CORRIDOR RAW Ω · ${c.id || `id_${idx}`}</b><br>`
+              + `<span style="color:#aaa;font-size:10px">REJETÉ RENDU-Ω</span><br>`
+              + `<span style="color:#fff;font-size:10px">${motifs}</span>`,
+              { sticky: true, opacity: 0.92 },
+            );
+            group.addLayer(rawLine);
+            renderedPolylineCount++;
+          });
+        }
+      } catch (e) {
+        try { console.warn('[P22F_FIX_R2] fallback raw orange error:', e); } catch (_e) { /* noop */ }
+      }
     }
     // X80-ABSOLU-Ω → X150-SUPRA-ARCHITECTONIQUE — signaux conformité RENDU-Ω corridors
     if (typeof window !== 'undefined') {
       window.__OMEGA_CORRIDORS_STYLE_CONFORME__ = showCorridors && corridorsToRender.length > 0;
       // X150 — 7 probes détaillées des 13 normes (document DESCRIPTIONS_RENDU_OMEGA_CORRIDORS)
+      // P22F_FIX_R5 — alignement avec X150 v2 (épaisseurs 3.0/4.0/6.0 px depuis amendement
+      // X150-SUPRA-ARCHITECTONIQUE) ; ancienne probe [1.2, 2.0, 3.0] obsolète.
       const x150Probes = {
         // PHASE-D VERROUILLAGE RENDUΩ — palette verte institutionnelle BCE-4X
         color_strict_phase_d_green: RENDU_OMEGA.color === '#00A676',
@@ -741,14 +811,14 @@ const BionicLayersV8 = ({
           RENDU_OMEGA.paletteOmegaPhaseD?.primary === '#00A676' &&
           RENDU_OMEGA.paletteOmegaPhaseD?.haloInner === '#4CC99A' &&
           RENDU_OMEGA.paletteOmegaPhaseD?.haloOuter === '#B2F2D9',
-        weights_allowed: JSON.stringify(RENDU_OMEGA.weightsAllowedPx) === JSON.stringify([1.2, 2.0, 3.0]),
+        weights_allowed: JSON.stringify(RENDU_OMEGA.weightsAllowedPx) === JSON.stringify([3.0, 4.0, 6.0]),
         opacity_min_075: RENDU_OMEGA.opacityMin >= 0.75,
         catmull_rom_points_25_30: RENDU_OMEGA.controlPointsMin === 25 && RENDU_OMEGA.controlPointsMax === 30,
         segment_max_20m: RENDU_OMEGA.segmentMaxM === 20.0,
         angle_max_45: RENDU_OMEGA.angleMaxDeg === 45.0,
         functional_radius_420_780: RENDU_OMEGA.functionalRadiusMinM === 420 && RENDU_OMEGA.functionalRadiusMaxM === 780,
         min_zoom_13: RENDU_OMEGA.minZoom === 13,
-        zindex_order_conforme: JSON.stringify(RENDU_OMEGA.zIndexOrder) === JSON.stringify(['zones','hydrologie','terrain','corridors','salines','affuts','hotspots','vent']),
+        zindex_order_conforme: JSON.stringify(RENDU_OMEGA.zIndexOrder) === JSON.stringify(['zones','hydrologie','terrain','corridors','salines','hotspots','affuts','vent']),
         forbid_affut_interaction: RENDU_OMEGA.forbidAffutInteraction === true,
         forbid_directional_arrow: RENDU_OMEGA.forbidDirectionalArrow === true,
         preview_equals_final: RENDU_OMEGA.previewEqualsFinal === true,

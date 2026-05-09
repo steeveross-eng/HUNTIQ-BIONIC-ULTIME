@@ -31,6 +31,8 @@ import WindFlowLayer from '@/components/territoire/WindFlowLayer';
 import CompassOmegaWidget from '@/components/territoire/CompassOmegaWidget';
 import { MapInteractionLayer } from '@/modules/map_interaction';
 import { PLACE_TYPES } from '@/config/placeTypes';
+// P22F_FIX_R6 — biorégion-aware species lock
+import { resolveSpeciesByBioregion } from '@/lib/bioregion';
 
 const MapContentInner = React.memo(({
   // Eco layers
@@ -158,23 +160,53 @@ const MapContentInner = React.memo(({
     {/* PHASE-FRONTEND-Omega V2 — BOUTONS PRESSEURS STRICT ON/OFF    */}
     {/* ZERO couche legacy. ZERO fallback. ZERO reactivation auto.   */}
     {/* ══════════════════════════════════════════════════════════════ */}
-    {selectedWaypointForZones && waypointCenter && (
-      <BionicLayersV8
-        bundleData={bundleDataV8}
-        waypointCenter={waypointCenter}
-        species={selectedSpecies && selectedSpecies !== 'tous' ? selectedSpecies.toLowerCase() : (selectedWaypointForZones?.species_default || 'cerf')}
-        showZones={showZonesLayer !== false}
-        showCorridors={showCorridorsLayer !== false}
-        showAffuts={showPointsLayer !== false}
-        showSalines={showSalinesLayer !== false}
-        showHotspots={showHeatmapV10 !== false}
-        showWind={showWindFlow !== false}
-        showContamination={showContaminationLayer !== false}
-        enabled={showIntelLayer !== false}
-        onDataLoaded={onHeatmapDataLoaded}
-        onSalineNutritionDblClick={onSalineNutritionDblClick}
-      />
-    )}
+    {selectedWaypointForZones && waypointCenter && (() => {
+      // P22F_FIX_R6 (2026-05-09 · COMMANDANT STEEVE-MAX) :
+      // lock_species_default_by_bioregion: ENFORCED
+      // forbid_cerf_default_in_orignal_bioregion: ENFORCED
+      // Si l'utilisateur n'a pas explicité un species, on résout via biorégion ;
+      // si l'utilisateur a choisi un species INTERDIT pour la biorégion (ex: cerf en BSL),
+      // on override pour le species_default doctrinal de la biorégion.
+      const userChoice = selectedSpecies && selectedSpecies !== 'tous'
+        ? selectedSpecies.toLowerCase()
+        : null;
+      const wpSpeciesDefault = selectedWaypointForZones?.species_default || null;
+      const requested = userChoice || wpSpeciesDefault || null;
+      const resolved = resolveSpeciesByBioregion(
+        waypointCenter.lat,
+        waypointCenter.lng,
+        requested,
+      );
+      if (typeof window !== 'undefined') {
+        window.__P22F_BIOREGION_RESOLVED__ = {
+          ts: Date.now(),
+          lat: waypointCenter.lat,
+          lng: waypointCenter.lng,
+          requested,
+          resolved: resolved.species,
+          source: resolved.source,
+          bioregion: resolved.bioregion,
+          blocked: resolved.blocked || null,
+        };
+      }
+      return (
+        <BionicLayersV8
+          bundleData={bundleDataV8}
+          waypointCenter={waypointCenter}
+          species={resolved.species}
+          showZones={showZonesLayer !== false}
+          showCorridors={showCorridorsLayer !== false}
+          showAffuts={showPointsLayer !== false}
+          showSalines={showSalinesLayer !== false}
+          showHotspots={showHeatmapV10 !== false}
+          showWind={showWindFlow !== false}
+          showContamination={showContaminationLayer !== false}
+          enabled={showIntelLayer !== false}
+          onDataLoaded={onHeatmapDataLoaded}
+          onSalineNutritionDblClick={onSalineNutritionDblClick}
+        />
+      );
+    })()}
 
     {/* V9-INSTITUTIONNEL: VENT REEL DYNAMIQUE (VENTUSKY-STEEVE-MAX) */}
     {/* Source: ECCC/NOAA via Open-Meteo /api/v3/weather/windgrid */}
