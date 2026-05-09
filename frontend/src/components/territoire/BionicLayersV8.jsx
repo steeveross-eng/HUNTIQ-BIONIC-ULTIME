@@ -16,7 +16,7 @@
  * Z-ORDER: contour < zones < corridors < contamination < salines < hotspots < affuts
  * ZERO pression. ZERO buffer. ZERO Bezier. ZERO smoothing. ZERO fallback.
  */
-import { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useCallback, useState, useMemo } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { NUTRITION_SEVERITY_COLORS } from '@/config/territoire_defaults';
@@ -87,7 +87,19 @@ const BionicLayersV8 = ({
   enabled = true,
   onDataLoaded = null,
   onSalineNutritionDblClick = null, // PHASE_NUTRITION_SALINES_BINDING_Ω
+  // P22Σ_RENDU_MONO_LAYER_Ω (2026-05-09 · COMMANDANT STEEVE-MAX)
+  monoLayer = false,                        // 1 polyline par corridor (pas de halo)
+  monoLayerBaseColor = '#FF8F00',           // couleur base institutionnelle
+  monoLayerAnchorMode = 'TERRITORY_CONTINUOUS', // pas de saline-centric
 }) => {
+  // Détection auto via URL flag ?monoLayer=on
+  const monoLayerActive = useMemo(() => {
+    if (monoLayer) return true;
+    try {
+      const sp = new URLSearchParams(window.location.search);
+      return sp.get('monoLayer') === 'on' || sp.get('monoLayer') === '1';
+    } catch (_e) { return false; }
+  }, [monoLayer]);
   const map = useMap();
   const groupRef = useRef(null);
   const autoZoomAppliedRef = useRef(null);
@@ -235,12 +247,15 @@ const BionicLayersV8 = ({
   useEffect(() => {
     if (!useOrganicCorridors || !enabled) return;
     if (!waypointCenter) return;  // garde-fou minimal : besoin d'un centre
-    const requestKey = `${Number(waypointCenter.lat).toFixed(4)}|${Number(waypointCenter.lng).toFixed(4)}|${species}`;
-    // P22E_FIX_R2 — guard mutex : évite les requêtes parallèles pour la même clé
+    // P22Σ_FIX — propagation anchor_mode dynamique (mono-layer ⇒ TERRITORY_CONTINUOUS)
+    const effectiveAnchorMode = monoLayerActive
+      ? monoLayerAnchorMode
+      : 'SALINE_CENTERED';
+    const requestKey = `${Number(waypointCenter.lat).toFixed(4)}|${Number(waypointCenter.lng).toFixed(4)}|${species}|${effectiveAnchorMode}`;
     if (inflightOrganicKeyRef.current === requestKey) return;
     inflightOrganicKeyRef.current = requestKey;
     setCorridorsLoading(true);
-    getOrganicCorridors(waypointCenter.lat, waypointCenter.lng, species)
+    getOrganicCorridors(waypointCenter.lat, waypointCenter.lng, species, effectiveAnchorMode)
       .then((data) => {
         // P22E_FIX_R2 : applique TOUJOURS si la requête est encore pertinente.
         if (!data) {
@@ -466,12 +481,64 @@ const BionicLayersV8 = ({
     } catch (_e) { /* noop */ }
 
     if (showCorridors && corridorsToRender.length > 0 && corridorsVisibleAtZoom) {
+      // P22Σ_RENDU_MONO_LAYER_Ω — import lazy de la fonction style mono-layer
+      // (évite circular import avec renduOmegaStore qui importe BionicLayersV8 indirectement)
+      // eslint-disable-next-line global-require
+      const { resolveCorridorStyleMonoLayer } = require('@/lib/renduOmegaStore');
       // Compteur institutionnel : nombre de polylines réellement ajoutées au map.
       // Si 0 à la fin → fallback RAW est déclenché (cf. plus bas).
       let renderedPolylineCount = 0;
       corridorsToRender.forEach((c, corridorIdx) => {
         const rawPath = c.path || [[c.start?.lat, c.start?.lng], [c.end?.lat, c.end?.lng]];
         const speciesForSig = c.species_profile || species;
+
+        // ═══ P22Σ_RENDU_MONO_LAYER_Ω — BRANCHE MONO-LAYER ═══
+        // Si monoLayerActive : skip pipeline halos + snap-saline + glow.
+        // Rendu direct path organic en 1 seule polyline orange #FF8F00.
+        if (monoLayerActive) {
+          const monoStyle = resolveCorridorStyleMonoLayer(c, monoLayerBaseColor);
+          const polyPath = Array.isArray(rawPath) ? rawPath : [];
+          if (polyPath.length < 2) return;
+          const monoLine = L.polyline(polyPath, {
+            color: monoStyle.color,
+            weight: monoStyle.weight,
+            opacity: monoStyle.opacity,
+            lineCap: 'round',
+            lineJoin: 'round',
+            smoothFactor: 1,
+            interactive: true,
+            pane: corridorsPaneName,
+          });
+          monoLine.options._renduOmega = {
+            version: 'P22Σ_MONO_LAYER',
+            source: 'ORGANIC',
+            color: monoStyle.color,
+            weight: monoStyle.weight,
+            opacity: monoStyle.opacity,
+            mono_layer: true,
+            intensity_level: monoStyle._intensityLevel,
+            intensity_value: monoStyle._intensityValue,
+            hierarchy: c.hierarchy || c.veine_type || 'legacy',
+            no_halo: true,
+            no_glow: true,
+            no_snap_saline: true,
+            species_signature: speciesForSig,
+            anchor_mode: 'TERRITORY_CONTINUOUS',
+          };
+          monoLine.bindTooltip(
+            `<b style="color:#FF8F00">${c.id || `corridor_${corridorIdx}`}</b><br>`
+            + `<span style="color:#aaa;font-size:10px">P22Σ MONO_LAYER · ${monoStyle._intensityLevel === 0 ? 'FAIBLE' : monoStyle._intensityLevel === 1 ? 'MODÉRÉ' : monoStyle._intensityLevel === 2 ? 'MOYEN' : monoStyle._intensityLevel === 3 ? 'ÉLEVÉ' : 'EXTRÊME'}</span><br>`
+            + `<span style="color:#fff;font-size:10px">hier=${c.hierarchy || 'n/a'} · sp=${speciesForSig}</span>`,
+            { sticky: true, opacity: 0.9 },
+          );
+          group.addLayer(monoLine);
+          renderedPolylineCount++;
+          if (typeof window !== 'undefined') {
+            window.__P22SIGMA_MONO_LAYER_ACTIVE__ = true;
+          }
+          return;  // skip le pipeline halos
+        }
+        // ═══ FIN BRANCHE MONO-LAYER ═══
 
         // ═══ PIPELINE SUPRA_S_CORRECTION + HOTFIX ═══
         // align → signature → RE-ENFORCE (hotfix) → snap-saline (non-destructif) → clipWithFadeOut (avec rescue)

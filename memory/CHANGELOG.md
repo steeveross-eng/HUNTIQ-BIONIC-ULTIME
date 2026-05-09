@@ -3,6 +3,47 @@
 
 ---
 
+## 2026-05-09T20:43Z — P22Σ_TERRITORY_CONTINUOUS_MONO_LAYER_Ω (PREVIEW)
+
+### Directive: Demande d'évolution Corridors naturels — DEPLOYED EN PREVIEW · REDÉPLOIEMENT REQUIS POUR PRD
+- **Backend EDIT** `engine_ia_corridors_organic_omega.py` (+9 lignes) :
+  - Mode `TERRITORY_CONTINUOUS` ajouté à `_reorder_pairs_by_anchor()` (préserve ordre natif sans biais saline-centric)
+  - Pipeline `_compatible_pairs` déjà cohérent avec SPECIES_BEHAVIOR + rayon fonctionnel 600m ± 30%
+  - Coexistence avec SALINE_CENTERED legacy (P22H)
+- **Frontend EDIT** `renduOmegaStore.js` (+60 lignes) :
+  - `getOrganicCorridors()` accepte `anchorMode` argument (default 'SALINE_CENTERED' backwards-compat)
+  - Cache key inclut anchorMode (évite collisions)
+  - Nouvelle fonction `resolveCorridorStyleMonoLayer()` : 5 niveaux intensité (FAIBLE/MODÉRÉ/MOYEN/ÉLEVÉ/EXTRÊME) via thickness_profile + hierarchy
+  - Palette tints orange : #FFE0B2 / #FFCC80 / #FFB74D / #FF9800 / #E65100
+  - Weights : 1.5/2.5/3.5/4.5/6.0 px · Opacités : 0.75 → 0.95
+- **Frontend EDIT** `BionicLayersV8.jsx` (+60 lignes) :
+  - Props étendues : `monoLayer`, `monoLayerBaseColor`, `monoLayerAnchorMode`
+  - Détection auto URL flag `?monoLayer=on` via `useMemo`
+  - Hook organic propagation `effectiveAnchorMode` selon mode
+  - Branche mono-layer skip pipeline halos + snap-saline + glow
+  - Tooltip auto-généré avec niveau d'intensité
+- **Validation backend** (5 espèces TERRITORY_CONTINUOUS) :
+  - orignal=20 cor, first_pair=[alimentation,rut], 4 veines_principales
+  - chevreuil=16 cor, first_pair=[alimentation,rut]
+  - ours_noir=16 cor, first_pair=[alimentation,repos] (différenciation omnivore)
+  - dindon=16 cor, first_pair=[alimentation,rut]
+  - wapiti=16 cor, first_pair=[alimentation,rut], 2 veines_principales
+- **Validation visuelle preview** (`?monoLayer=on`) :
+  - polylinesInPane=20 (vs 60 avant) — réduction -67%
+  - colorBreakdown : 4 polylines #E65100 (EXTRÊME) + 16 polylines #FFB74D (MOYEN)
+  - monoLayerActive=true · saline_centered=false · firstPair=[alimentation,rut]
+  - Disparition complète de l'effet "étoile turquoise" (halos désactivés)
+- **Différenciation par espèce** : counts (16-20), hierarchies (0P à 4P), first_pairs (ours différencié) tous différents
+- **Capture preview** : `/tmp/p22sigma_mono_layer.png`
+- **Backend live** PREVIEW HTTP 200 (3.06s pour 20 corridors)
+- ⚠️ **PRD REDÉPLOIEMENT REQUIS** : Commandant doit cliquer "Deploy" pour propager en `huntiq-restore.emergent.host`
+- Fichiers modifiés : 3 EDITs ciblés · 0 nouveau fichier · 0 fichier maître muté
+- Aucun `testing_agent_v3_fork` · ANTI-GÉNÉRIQUE STRICT · `autonomy: LIMITED` · `guardrails: ENFORCED`
+- Rapport complet : `/app/memory/P22SIGMA_MONO_LAYER_REPORT.md`
+- **STATUT** : ✅ MISSION ACCOMPLIE EN PREVIEW · STOP attente Deploy Commandant
+
+---
+
 ## 2026-05-09T20:25Z — EMERGENT_AUDIT_CORRIDORS_DOUBLE_SYSTEME (DÉMENTI INSTITUTIONNEL)
 
 ### Directive: AUDIT — RACINE IDENTIFIÉE · PAS DE DOUBLE SYSTÈME

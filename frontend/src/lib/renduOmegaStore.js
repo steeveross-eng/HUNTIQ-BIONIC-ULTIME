@@ -435,9 +435,15 @@ const _organicCache = new Map(); // key = `${lat}|${lon}|${species}` → {data, 
  * Fetch les corridors ORGANIC depuis /corridors-organic/generate avec cache 60s.
  * Retourne null si l'endpoint échoue (le consommateur peut fallback sur le
  * bundle legacy `corridors`).
+ *
+ * P22Σ (2026-05-09 · COMMANDANT STEEVE-MAX) — accepte un `anchorMode` :
+ *   - "SALINE_CENTERED" (default) : priorité salines (P22H)
+ *   - "TERRITORY_CONTINUOUS" : pas de réordre, traversée fonctionnelle
+ *     multi-zones (P22Σ_RENDU_MONO_LAYER_Ω)
  */
-export async function getOrganicCorridors(lat, lon, species = 'chevreuil') {
-  const key = `${Number(lat).toFixed(4)}|${Number(lon).toFixed(4)}|${species}`;
+export async function getOrganicCorridors(lat, lon, species = 'chevreuil',
+                                           anchorMode = 'SALINE_CENTERED') {
+  const key = `${Number(lat).toFixed(4)}|${Number(lon).toFixed(4)}|${species}|${anchorMode}`;
   const now = Date.now();
   const cached = _organicCache.get(key);
   if (cached && (now - cached.ts) < ORGANIC_CACHE_TTL_MS) {
@@ -448,14 +454,10 @@ export async function getOrganicCorridors(lat, lon, species = 'chevreuil') {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'omit',
-      // P22H_FIX (2026-05-09 · COMMANDANT STEEVE-MAX) — SALINE_CENTERED
-      // Doctrine : les corridors doivent refléter les déplacements réels du
-      // gibier entre salines / zones d'alimentation / rut / repos, pas des
-      // artefacts waypoint-centriques.
       body: JSON.stringify({
         lat, lon, species,
         month: 10, hour: 7, wind_deg: 225, wind_speed: 15,
-        anchor_mode: 'SALINE_CENTERED',
+        anchor_mode: anchorMode,
         anchor_priority: ['saline', 'feeding_zone', 'rut_zone', 'rest_zone', 'waypoint'],
         allow_multi_anchor: true,
         external_entry_exit_radius_m: 600.0,
@@ -468,6 +470,56 @@ export async function getOrganicCorridors(lat, lon, species = 'chevreuil') {
   } catch (e) {
     return null;
   }
+}
+
+/**
+ * P22Σ_RENDU_MONO_LAYER_Ω (2026-05-09 · COMMANDANT STEEVE-MAX)
+ * Retourne le style Leaflet mono-layer pour un corridor (pas de halo).
+ *
+ * 5 niveaux d'intensité via épaisseur + variation de teinte.
+ * Base color : #FF8F00 (orange institutionnel BCE-4X).
+ * Opacité fixe ≥ 0.75.
+ */
+export function resolveCorridorStyleMonoLayer(corridor, baseColor = '#FF8F00') {
+  // Calcul intensité 0-1 basé sur thickness_profile + hierarchy
+  const tp = corridor?.thickness_profile;
+  let intensity = 0.5;
+  if (Array.isArray(tp) && tp.length > 0) {
+    const sum = tp.reduce((s, t) => s + (Number(t) || 0), 0);
+    intensity = Math.min(1.0, Math.max(0.0, sum / tp.length));
+  }
+  const hier = corridor?.hierarchy || corridor?.veine_type;
+  if (hier === 'veine_principale') intensity = Math.max(intensity, 0.85);
+  else if (hier === 'veine_secondaire') intensity = Math.max(intensity, 0.65);
+  else if (hier === 'capillaire') intensity = Math.min(intensity, 0.40);
+
+  // 5 niveaux discrets (faible → extrême)
+  // weights : 1.5 / 2.5 / 3.5 / 4.5 / 6.0 px
+  // tints : palette orange progressive (clair → foncé)
+  let level = 0;
+  if (intensity < 0.20) level = 0;       // faible
+  else if (intensity < 0.40) level = 1;  // modéré
+  else if (intensity < 0.60) level = 2;  // moyen
+  else if (intensity < 0.80) level = 3;  // élevé
+  else level = 4;                         // extrême
+
+  const weights = [1.5, 2.5, 3.5, 4.5, 6.0];
+  const tints = ['#FFE0B2', '#FFCC80', '#FFB74D', '#FF9800', '#E65100'];
+  const colorByLevel = baseColor === '#FF8F00' ? tints[level] : baseColor;
+
+  return {
+    color: colorByLevel,
+    weight: weights[level],
+    opacity: 0.75 + (level * 0.05),  // 0.75 → 0.95
+    lineCap: 'round',
+    lineJoin: 'round',
+    dashArray: null,
+    smoothFactor: 1,
+    interactive: true,
+    _monoLayer: true,
+    _intensityLevel: level,
+    _intensityValue: intensity,
+  };
 }
 
 /**

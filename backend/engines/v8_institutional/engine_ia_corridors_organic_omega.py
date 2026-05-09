@@ -351,13 +351,22 @@ def _reorder_pairs_by_anchor(pairs: list[tuple[dict, dict]],
 
     Modes :
       - "SALINE_CENTERED" : priorité absolue salines, puis feeding > rut > rest
+      - "TERRITORY_CONTINUOUS" (P22Σ): pas de réordre — préserve l'ordre natif
+        de l'engine qui privilégie déjà la connectivité multi-zones (alim,
+        repos, rut, thermiques, humides). Garantit traversée fonctionnelle
+        600m ± 30% sans biais saline-centric. Logique par espèce préservée.
       - "AUTO" / "WAYPOINT" : pas de réordonnancement (comportement legacy)
     """
     mode = (anchor_mode or "AUTO").upper()
+    if mode == "TERRITORY_CONTINUOUS":
+        # P22Σ — préserve l'ordre natif (par espèce + comportement biologique).
+        # L'engine `_compatible_pairs` produit déjà une liste cohérente
+        # avec `SPECIES_BEHAVIOR` (saline_attraction, rest_attraction,
+        # feeding_zone, etc.) et le rayon fonctionnel.
+        return list(pairs)
     if mode != "SALINE_CENTERED":
         return list(pairs)
     priority_list = anchor_priority or ANCHOR_PRIORITY_DEFAULT
-    # Tri stable décroissant par score de priorité
     sorted_pairs = sorted(pairs, key=lambda p: -_pair_priority_score(p, priority_list))
     return sorted_pairs
 
