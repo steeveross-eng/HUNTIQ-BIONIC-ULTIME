@@ -3,6 +3,24 @@
 
 ---
 
+## 2026-05-09T01:21Z — P22C_P0_ENHANCED_VALIDATION_BEFORE_P1_Ω (INTÉGRITÉ SYSTÈME)
+
+### Directive: P22C_P0_ENHANCED_VALIDATION_Ω — EXÉCUTÉE · 8/8 CRITÈRES VALIDÉS
+- **3 territoires validés** : T1 BSL canonique (48.206657/-68.382422), T2 Québec (46.8139/-71.208), T3 Saguenay (47.5000/-70.0000) — DOM peuplé, swController=false, leafletPresent=true sur tous
+- **9 waypoints/territoire** (4 salines + 5 hotspots) ≥ minimum 5 requis
+- **5/5 couches Bio-Ω présentes** (zones, corridors, affuts, hotspots, salines) sur les 3 territoires
+- **Cohérence corridors confirmée** : T1=33/25 acc(75.76% CONFORME), T2=64/47(73.44 CONFORME), T3=51/38(74.51 CONFORME) ; 5 espèces (orignal/cerf/ours/dindon/wapiti) ; v30_locked=true
+- **Stabilité SHA visuel** : `visual_sha256=6f0cf6fce8593...` STABLE ×3 + `last_force_reload_sha256=8f29090841a51...` STABLE ×3
+- **13/13 endpoints critiques v30 HTTP 200** (super-masters, territoire, especes, corridors, bundle)
+- **WebWorker stable** : aucun worker traditionnel ; 4 handlers DataCloneError présents (StatutCorridors, ConsolidatedHeatmap, BionicScoreBadge, EcoforestryLayers)
+- **Killswitch SW déployé** sur 3 voies neutralisées (index.js, OfflineIndicator, public/sw.js KILLSWITCH AUTO-UNREGISTER)
+- **Endpoints legacy 404/500** (12 listés) : non-critiques, sans impact sur chaîne canonique Territoire_Ω, fallbacks gracieux confirmés
+- Aucun `testing_agent_v3_fork` utilisé · V30_LOCK INVIOLÉ · FUSION ADD-ONLY · ANTI-GÉNÉRIQUE STRICT · autonomy=LIMITED
+- Rapport complet : `/app/memory/P22C_P0_ENHANCED_VALIDATION_REPORT.md`
+- **STATUT** : ✅ AUTORISATION P1 RECOMMANDÉE — STOP attente directive Commandant
+
+---
+
 ## 2026-05-09T00:51Z — P22C_FIX_BLANK_SCREEN_Ω (FRONTEND TERRITOIRE RESTORATION)
 
 ### Directive: P22C_FORCE_TERRITOIRE_FRONTEND_RELOAD_Ω → P22C_FIX_BLANK_SCREEN_Ω — EXÉCUTÉE
