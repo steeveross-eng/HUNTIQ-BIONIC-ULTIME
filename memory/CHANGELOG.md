@@ -3,6 +3,30 @@
 
 ---
 
+## 2026-05-09T14:10Z — P22_ACCESS_TERRITOIRE_DIRECT_Ω · DEPLOYMENT READINESS
+
+### Directive: P22_ACCESS_TERRITOIRE_DIRECT_Ω — ✅ READY TO DEPLOY (10/10 critiques + 1 warning non-bloquant)
+- **deployment_agent invoqué** (sub-agent Emergent) → verdict **PASS**
+- **8 checks deployment_agent** : Compilation/Env/DB/CORS/Supervisor/Auth/NoBlockers/TestCreds = TOUS PASS
+- **10 checks complémentaires BCE-4X** :
+  - Supervisor : backend/frontend/mongodb/nginx-proxy tous RUNNING (uptime 15min+)
+  - Disk : 46% utilization (107G total, 58G libre)
+  - Logs rotation : 2 fichiers (cible ≤5)
+  - 6 endpoints critiques HTTP 200 : v30/territoire/health, super-masters/canonical-status, corridors/status, organic/generate, anomaly-map (P22G_X100), local-density-profile (P22Λ V3)
+  - SW killswitch : 10 lignes actives (P22C fix maintenu)
+  - Variables .env protégées (MONGO_URL, DB_NAME, REACT_APP_BACKEND_URL)
+  - test_credentials.md : 14 lignes OK
+  - Frontend compile : webpack compiled successfully
+  - Phases P22 actives validées : C/D/E/F/G/H/G_X100/Λ V1/Λ V3 ULTIME (9 phases)
+- **Warning non-bloquant** : `engines.v8_national.referentials` ModuleNotFoundError → 2 endpoints legacy HTTP 500 (`/api/v8/map/relocalisation`, `/api/v8/map/salines`). **Déjà signalés depuis P22D · fallbacks frontend gracieux confirmés visuellement · NON-CRITIQUES** pour la chaîne canonique TERRITOIRE_Ω
+- **Procédure transmise par support_agent** : bouton "Deploy" → "Deploy Now" → 10-15 min → URL permanente · 50 crédits/mois · redéploiement gratuit
+- **Action Commandant** requise : cliquer "Deploy" dans interface Emergent
+- Aucun fichier muté · aucun `testing_agent_v3_fork` · ANTI-GÉNÉRIQUE STRICT · `autonomy: LIMITED` · `guardrails: ENFORCED`
+- Rapport complet : `/app/memory/P22_DEPLOYMENT_READINESS_REPORT.md`
+- **STATUT** : ✅ READY TO DEPLOY — STOP attente action Commandant (Deploy button)
+
+---
+
 ## 2026-05-09T13:53Z — P22Λ_LOCAL_MAX_DENSITY_CORRIDOR_EXPANSION_V3_ULTIME_Ω
 
 ### Directive: P22Λ V3 ULTIME — 14/14 BLOCS VALIDÉS · OVERRIDE LOCAL + WAPITI PROVINCE-GATED + PARCS PRÉSERVÉS
