@@ -3,6 +3,46 @@
 
 ---
 
+## 2026-05-09T21:25Z — P22Σ_V3_TERRITORY_CONTINUOUS_FUSION_VEINEUSE_Ω (PREVIEW)
+
+### Directive: FUSION VEINEUSE LOCALE + DEFAULTS BASCULÉS — DEPLOYED EN PREVIEW
+
+- **Backend NEUF** `corridors_fusion_omega.py` (239 lignes, FUSION ADD-ONLY) :
+  - `_haversine_m`, `_path_overlap_ratio`, `_path_average` (resampling 28pts cohérent RENDU-Ω)
+  - `fuse_corridors_by_species()` — Union-Find clustering, distance ≤18m + overlap ≥30%
+  - `_enrich_intensity()` — 5 niveaux 0-4 (FAIBLE/MODÉRÉ/MOYEN/ÉLEVÉ/EXTRÊME)
+  - `fusion_summary()` — n_clusters fusionnés + n_absorbés + distribution
+  - Constantes doctrinales `FUSION_DISTANCE_M=18.0` (médiane 15-20m) · `FUSION_OVERLAP_RATIO_MIN=0.30`
+- **Backend EDIT** `engine_ia_corridors_organic_omega.py` (+22 lignes IMPORT + appel + payload, V30_LOCK INVIOLÉ — FUSION ADD-ONLY strict) :
+  - Import `fuse_corridors_by_species`, `fusion_summary`
+  - Appel conditionnel : `if anchor_mode == 'TERRITORY_CONTINUOUS' and corridors_full`
+  - Payload retour enrichi : `p22sigma_v3_fusion_doctrine.{fusion_applied, fusion_summary, doctrine, activation_rule}`
+- **Frontend EDIT** `BionicLayersV8.jsx` (defaults bascule) :
+  - `monoLayer = true` par défaut (P22Σ_V3 — était false)
+  - `monoLayerAnchorMode = 'TERRITORY_CONTINUOUS'` par défaut
+  - URL flag inversé : `?monoLayer=off|0|false` pour opt-out legacy 3-couches halos
+- **Frontend EDIT** `renduOmegaStore.js` :
+  - `getOrganicCorridors()` default `anchorMode = 'TERRITORY_CONTINUOUS'` (était SALINE_CENTERED)
+  - `resolveCorridorStyleMonoLayer()` exploite désormais `intensity_level` (0-4) ET `fusion_count` du backend en PRIORITÉ (fallback legacy thickness_profile + hierarchy si absent)
+  - 5 niveaux palette : `#FFE0B2 / #FFCC80 / #FFB74D / #FF9800 / #E65100` · weights `1.5/2.5/3.5/4.5/6.0px` · opacités `0.75→0.95`
+  - Tooltip enrichi : `_intensityLabel`, `_fusionCount`, `_doctrine: 'P22Σ_V3_FUSION_VEINEUSE'`
+- **Tests neutres** `test_phase_xx_p22sigma_v3_fusion_veineuse_omega.py` (15 tests, 0 mots-clés exclus BCE-4X) :
+  - Constantes doctrinales · Haversine consistency · path_overlap full/no match
+  - path_average 28pts · intensity levels (0/1/2/3/4) · fusion réelle proximity
+  - 4 clusters → EXTRÊME · summary distribution · empty list · single unit · invalid path
+  - **15/15 PASSED · 0 SKIPPED · 0.07s**
+- **Validation backend live (Python direct + curl)** :
+  - SALINE_CENTERED orignal BSL : `fusion_applied=False` ✅ (legacy P22H preserved)
+  - TERRITORY_CONTINUOUS orignal BSL : `fusion_applied=True` · 5 corridors → 4 (1 cluster, 1 absorbed) · sample `network_000.fusion_count=2 intensity_level=3 (ÉLEVÉ) merged_ids=[network_001]`
+  - 5 espèces × TERRITORY_CONTINUOUS : 4/5 fusion=True (orignal=2, chevreuil=1, dindon=2, wapiti=5 ; ours_noir=0 corridors)
+- **Lint** : 0 issue sur les 4 fichiers modifiés (warnings F841 backend préexistants V30_LOCK)
+- **Note pipeline** : le smoother X180 + `apply_renduomega_to_bundle` filtrent post-engine. Les `p22sigma_v3_fusion_doctrine` + attributs corridor (intensity_level, fusion_count, merged_ids) sont préservés dans le payload final
+- Aucun `testing_agent_v3_fork` · ANTI-GÉNÉRIQUE STRICT · `autonomy: LIMITED` · `guardrails: ENFORCED`
+- ⚠️ **PRD REDÉPLOIEMENT REQUIS** : Commandant doit cliquer "Deploy" pour propager en `huntiq-restore.emergent.host`
+- **STATUT** : ✅ MISSION P22Σ_V3 ACCOMPLIE EN PREVIEW · STOP attente Deploy Commandant
+
+---
+
 ## 2026-05-09T20:43Z — P22Σ_TERRITORY_CONTINUOUS_MONO_LAYER_Ω (PREVIEW)
 
 ### Directive: Demande d'évolution Corridors naturels — DEPLOYED EN PREVIEW · REDÉPLOIEMENT REQUIS POUR PRD

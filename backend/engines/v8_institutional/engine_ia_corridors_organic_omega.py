@@ -45,6 +45,13 @@ from pydantic import BaseModel
 
 from engines.v8_institutional.engine_science_omega import register_engine, mark_call
 
+# P22Σ_V3_TERRITORY_CONTINUOUS_FUSION_VEINEUSE_Ω (2026-05-09 · COMMANDANT STEEVE-MAX)
+# FUSION ADD-ONLY — import du module de fusion veineuse local (post-smoothing)
+from engines.post_smoothing.corridors_fusion_omega import (
+    fuse_corridors_by_species,
+    fusion_summary,
+)
+
 ENGINE_NAME = "ENGINE-IA-CORRIDORS-ORGANIC-Ω"
 ENGINE_VERSION = "V2.0-PHASE-XI-SUPRA-N-Ω-NETWORK_LOCKED-2026-04"
 
@@ -975,6 +982,23 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
     #   désormais redondants et ajoutaient du bruit visuel.
     corridors_full = corridors
 
+    # ═════════════════════════════════════════════════════════════
+    # P22Σ_V3 — FUSION VEINEUSE LOCALE (TERRITORY_CONTINUOUS only)
+    # ═════════════════════════════════════════════════════════════
+    # Doctrine : pour le mode TERRITORY_CONTINUOUS, fusionner les corridors
+    # d'une même espèce à ≤18 m (overlap ≥30%) en veines principales.
+    # FUSION ADD-ONLY — module externe `corridors_fusion_omega`.
+    # SALINE_CENTERED legacy : fusion désactivée pour préserver la rosace
+    # 360° saline-centrée P22H.
+    fusion_applied = False
+    fusion_stats: dict[str, Any] = {}
+    if (anchor_mode or "AUTO").upper() == "TERRITORY_CONTINUOUS" and corridors_full:
+        before_count = len(corridors_full)
+        corridors_full = fuse_corridors_by_species(corridors_full)
+        fusion_stats = fusion_summary(corridors_full)
+        fusion_stats["n_corridors_before_fusion"] = before_count
+        fusion_applied = True
+
     # Summary hiérarchie
     hierarchy_counts = {"veine_principale": 0, "veine_secondaire": 0, "capillaire": 0, "connector": 0}
     for c in corridors_full:
@@ -1006,6 +1030,13 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
             "saline_centered_active": (anchor_mode or "AUTO").upper() == "SALINE_CENTERED",
             "n_pairs_evaluated": len(pairs),
             "first_pair_types": list({pairs[0][0]["type"], pairs[0][1]["type"]}) if pairs else [],
+        },
+        # P22Σ_V3 (2026-05-09 · COMMANDANT STEEVE-MAX) — traçabilité fusion veineuse
+        "p22sigma_v3_fusion_doctrine": {
+            "fusion_applied": fusion_applied,
+            "fusion_summary": fusion_stats if fusion_applied else None,
+            "doctrine": "P22Σ_V3_FUSION_VEINEUSE_Ω",
+            "activation_rule": "anchor_mode == TERRITORY_CONTINUOUS",
         },
     }
 

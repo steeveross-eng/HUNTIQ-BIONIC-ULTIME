@@ -87,18 +87,23 @@ const BionicLayersV8 = ({
   enabled = true,
   onDataLoaded = null,
   onSalineNutritionDblClick = null, // PHASE_NUTRITION_SALINES_BINDING_Ω
-  // P22Σ_RENDU_MONO_LAYER_Ω (2026-05-09 · COMMANDANT STEEVE-MAX)
-  monoLayer = false,                        // 1 polyline par corridor (pas de halo)
+  // P22Σ_V3_RENDU_MONO_LAYER_Ω (2026-05-09 · COMMANDANT STEEVE-MAX)
+  // BASCULE DES DEFAULTS — TERRITORY_CONTINUOUS + MONO_LAYER désormais par défaut.
+  // Legacy 3-couches halos + SALINE_CENTERED accessibles via `?monoLayer=off`.
+  monoLayer = true,                         // P22Σ_V3 : MONO_LAYER par défaut (1 polyline/corridor)
   monoLayerBaseColor = '#FF8F00',           // couleur base institutionnelle
   monoLayerAnchorMode = 'TERRITORY_CONTINUOUS', // pas de saline-centric
 }) => {
-  // Détection auto via URL flag ?monoLayer=on
+  // P22Σ_V3 : Détection auto via URL flag `?monoLayer=off` (opt-out legacy)
+  // Default = mono-layer activé. Pour repasser au mode 3-couches halos + saline-centered :
+  //   `?monoLayer=off` ou `?monoLayer=0`
   const monoLayerActive = useMemo(() => {
-    if (monoLayer) return true;
     try {
       const sp = new URLSearchParams(window.location.search);
-      return sp.get('monoLayer') === 'on' || sp.get('monoLayer') === '1';
-    } catch (_e) { return false; }
+      const v = sp.get('monoLayer');
+      if (v === 'off' || v === '0' || v === 'false') return false;
+    } catch (_e) { /* noop */ }
+    return monoLayer;  // default true (P22Σ_V3 bascule)
   }, [monoLayer]);
   const map = useMap();
   const groupRef = useRef(null);

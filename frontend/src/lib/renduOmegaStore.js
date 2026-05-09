@@ -437,12 +437,12 @@ const _organicCache = new Map(); // key = `${lat}|${lon}|${species}` → {data, 
  * bundle legacy `corridors`).
  *
  * P22Σ (2026-05-09 · COMMANDANT STEEVE-MAX) — accepte un `anchorMode` :
- *   - "SALINE_CENTERED" (default) : priorité salines (P22H)
- *   - "TERRITORY_CONTINUOUS" : pas de réordre, traversée fonctionnelle
- *     multi-zones (P22Σ_RENDU_MONO_LAYER_Ω)
+ *   - "TERRITORY_CONTINUOUS" (default P22Σ_V3) : pas de réordre, traversée
+ *     fonctionnelle multi-zones + activation FUSION VEINEUSE backend.
+ *   - "SALINE_CENTERED" : priorité salines (P22H legacy)
  */
 export async function getOrganicCorridors(lat, lon, species = 'chevreuil',
-                                           anchorMode = 'SALINE_CENTERED') {
+                                           anchorMode = 'TERRITORY_CONTINUOUS') {
   const key = `${Number(lat).toFixed(4)}|${Number(lon).toFixed(4)}|${species}|${anchorMode}`;
   const now = Date.now();
   const cached = _organicCache.get(key);
@@ -473,38 +473,52 @@ export async function getOrganicCorridors(lat, lon, species = 'chevreuil',
 }
 
 /**
- * P22Σ_RENDU_MONO_LAYER_Ω (2026-05-09 · COMMANDANT STEEVE-MAX)
+ * P22Σ_V3_RENDU_MONO_LAYER_Ω (2026-05-09 · COMMANDANT STEEVE-MAX)
  * Retourne le style Leaflet mono-layer pour un corridor (pas de halo).
  *
  * 5 niveaux d'intensité via épaisseur + variation de teinte.
  * Base color : #FF8F00 (orange institutionnel BCE-4X).
  * Opacité fixe ≥ 0.75.
+ *
+ * P22Σ_V3 : exploite en priorité `intensity_level` (0-4) ET `fusion_count` (≥1)
+ * calculés par le backend via FUSION VEINEUSE LOCALE. Fallback vers
+ * thickness_profile + hierarchy si données fusion absentes (rétro-compat).
  */
 export function resolveCorridorStyleMonoLayer(corridor, baseColor = '#FF8F00') {
-  // Calcul intensité 0-1 basé sur thickness_profile + hierarchy
-  const tp = corridor?.thickness_profile;
-  let intensity = 0.5;
-  if (Array.isArray(tp) && tp.length > 0) {
-    const sum = tp.reduce((s, t) => s + (Number(t) || 0), 0);
-    intensity = Math.min(1.0, Math.max(0.0, sum / tp.length));
+  // P22Σ_V3 : priorité au niveau d'intensité backend (FUSION VEINEUSE)
+  let level = -1;
+  if (typeof corridor?.intensity_level === 'number'
+      && corridor.intensity_level >= 0 && corridor.intensity_level <= 4) {
+    level = Math.round(corridor.intensity_level);
   }
-  const hier = corridor?.hierarchy || corridor?.veine_type;
-  if (hier === 'veine_principale') intensity = Math.max(intensity, 0.85);
-  else if (hier === 'veine_secondaire') intensity = Math.max(intensity, 0.65);
-  else if (hier === 'capillaire') intensity = Math.min(intensity, 0.40);
+  const fusionCount = Number(corridor?.fusion_count) || 1;
 
-  // 5 niveaux discrets (faible → extrême)
+  // Fallback legacy (thickness_profile + hierarchy)
+  if (level < 0) {
+    const tp = corridor?.thickness_profile;
+    let intensity = 0.5;
+    if (Array.isArray(tp) && tp.length > 0) {
+      const sum = tp.reduce((s, t) => s + (Number(t) || 0), 0);
+      intensity = Math.min(1.0, Math.max(0.0, sum / tp.length));
+    }
+    const hier = corridor?.hierarchy || corridor?.veine_type;
+    if (hier === 'veine_principale') intensity = Math.max(intensity, 0.85);
+    else if (hier === 'veine_secondaire') intensity = Math.max(intensity, 0.65);
+    else if (hier === 'capillaire') intensity = Math.min(intensity, 0.40);
+
+    if (intensity < 0.20) level = 0;       // faible
+    else if (intensity < 0.40) level = 1;  // modéré
+    else if (intensity < 0.60) level = 2;  // moyen
+    else if (intensity < 0.80) level = 3;  // élevé
+    else level = 4;                         // extrême
+  }
+
+  // 5 niveaux discrets : faible / modéré / moyen / élevé / extrême
   // weights : 1.5 / 2.5 / 3.5 / 4.5 / 6.0 px
   // tints : palette orange progressive (clair → foncé)
-  let level = 0;
-  if (intensity < 0.20) level = 0;       // faible
-  else if (intensity < 0.40) level = 1;  // modéré
-  else if (intensity < 0.60) level = 2;  // moyen
-  else if (intensity < 0.80) level = 3;  // élevé
-  else level = 4;                         // extrême
-
   const weights = [1.5, 2.5, 3.5, 4.5, 6.0];
   const tints = ['#FFE0B2', '#FFCC80', '#FFB74D', '#FF9800', '#E65100'];
+  const labels = ['FAIBLE', 'MODÉRÉ', 'MOYEN', 'ÉLEVÉ', 'EXTRÊME'];
   const colorByLevel = baseColor === '#FF8F00' ? tints[level] : baseColor;
 
   return {
@@ -518,7 +532,9 @@ export function resolveCorridorStyleMonoLayer(corridor, baseColor = '#FF8F00') {
     interactive: true,
     _monoLayer: true,
     _intensityLevel: level,
-    _intensityValue: intensity,
+    _intensityLabel: labels[level],
+    _fusionCount: fusionCount,
+    _doctrine: 'P22Σ_V3_FUSION_VEINEUSE',
   };
 }
 
