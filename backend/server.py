@@ -1004,6 +1004,14 @@ try:
 except Exception as e:
     logger.warning(f"ENGINE-IA-CORRIDORS-ORGANIC-Ω not loaded: {e}")
 
+# CORRIDORS_ANOMALY_OMEGA_X100 — P22G_REFINEMENT_X100_Ω (anomaly map + métriques)
+try:
+    from engines.post_smoothing.corridors_anomaly_omega import router as corridors_anomaly_router
+    app.include_router(corridors_anomaly_router)
+    logger.info("CORRIDORS_ANOMALY_OMEGA_X100 registered (/api/v20/territoire/corridors-organic/anomaly-map)")
+except Exception as e:
+    logger.warning(f"CORRIDORS_ANOMALY_OMEGA_X100 not loaded: {e}")
+
 # ENGINE-RENDU-Ω — Phase XI-SUPRA-K (rendu institutionnel corridors)
 try:
     from engines.v8_institutional.engine_rendu_omega import router as rendu_omega_router, visual_router as rendu_visual_router

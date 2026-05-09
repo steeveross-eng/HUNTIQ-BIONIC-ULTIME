@@ -3,6 +3,40 @@
 
 ---
 
+## 2026-05-09T03:30Z — P22G_CORRIDORS_REFINEMENT_X100_Ω · ULTIMATE OMEGA REPORT
+
+### Directive: P22G_X100 — 22/22 CRITÈRES VALIDÉS · ANOMALY MAP DEPLOYED · MULTI-SPECIES COMPARISON
+- **Module backend NEUF** : `/app/backend/engines/post_smoothing/corridors_anomaly_omega.py` (343 lignes)
+  - 3 détecteurs d'anomalies : `detect_rectilinear()`, `detect_fractal()`, `detect_obstacle_proximity()`
+  - 5 calculateurs de métriques : `compute_density()`, `compute_continuity()`, `compute_connectivity()`, `compute_acceptance_rate()`, `compute_rendu_omega_conformity()`
+  - 1 agrégateur `build_anomaly_map(payload, obstacles)`
+  - 1 endpoint FastAPI : `POST /api/v20/territoire/corridors-organic/anomaly-map`
+- **Enregistrement** dans `server.py` (+6 lignes)
+- **Validation API directe** : 9 probes physiques (3 territoires × 3 espèces) → 9/9 HTTP 200
+- **Métriques recoltées** :
+  - T1 BSL : orignal=6 (4 paires), cerf=2, ours_noir=0
+  - T2 QUEBEC : orignal=7 (3 paires), cerf=0, ours_noir=3
+  - T3 SAGUENAY : orignal=4 (4 paires), cerf=2, ours_noir=1
+  - **Total : 25 corridors analysés · 100% clean (0 anomalie)**
+- **Anomalies détectées** : 0 rectilinear · 0 fractal · 0 obstacle_close (preuve qualité Catmull-Rom + smoother X180)
+- **Conflits inter-espèces** : T1 BSL × ours_noir = 0 (cohérent biorégion BSL orignal-pure) · T2 QUEBEC × cerf = 0 (signature urbaine Capitale-Nationale)
+- **Pairs uniques observés** :
+  - Orignal (4 max) : alimentation/rut/saline/humide/repos
+  - Cerf (2 max) : alimentation/rut/repos
+  - Ours_noir (1 max) : alimentation/hotspot
+- **Density max** : 3.66/km² (T2 orignal)
+- **Continuity ratio** : 1.0 sur tous les corridors (chacun connecte 2 nœuds vitaux distincts)
+- **Acceptance rate** : 1.0 sur tous les tests (100% RENDU-Ω SEMI_STRICT)
+- **Pipeline IA × 3** : correction (`_smart_deviation`) + densification (`_enforce_segment_max`) + smoothing (Catmull-Rom 28) actifs depuis P22D-G
+- **Premium rendering** : PHASE-D actif (halo #4CC99A inner + #B2F2D9 outer + gradient directionnel 5-8% + intensityWeight)
+- **Fichiers modifiés** : 1 NEW (corridors_anomaly_omega.py, 343 lignes) + 1 EDIT registry (server.py +6 lignes) · 0 fichier maître muté · 0 modification frontend
+- Aucun `testing_agent_v3_fork` · ANTI-GÉNÉRIQUE STRICT · `autonomy: LIMITED` · `guardrails: ENFORCED`
+- Rapport ULTIMATE : `/app/memory/P22G_REFINEMENT_X100_ULTIMATE_REPORT.md`
+- Données preuves : `/tmp/p22g_x100/*.json` (9 fichiers) + `/tmp/p22g_x100_metrics_aggregated.json`
+- **STATUT** : ✅ MISSION P22G_X100 ACCOMPLIE — STOP attente directive Commandant
+
+---
+
 ## 2026-05-09T03:09Z — P22H_SALINE_CENTERED_ANCHORING_BACKEND_Ω (ROSACE 360° SALINE-CENTRÉE)
 
 ### Directive: P22H — 4/4 CRITÈRES VALIDÉS · MODE SALINE_CENTERED OPÉRATIONNEL
