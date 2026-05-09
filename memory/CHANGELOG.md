@@ -3,6 +3,30 @@
 
 ---
 
+## 2026-05-09T00:51Z — P22C_FIX_BLANK_SCREEN_Ω (FRONTEND TERRITOIRE RESTORATION)
+
+### Directive: P22C_FORCE_TERRITOIRE_FRONTEND_RELOAD_Ω → P22C_FIX_BLANK_SCREEN_Ω — EXÉCUTÉE
+- **Symptôme** : `/mon-territoire-bionic` rendait HTTP 200 mais `<div id="root">` était vide (`rootChildren: 0`). Écran blanc total.
+- **Racine** : conflit triple d'enregistrement Service Worker v13 :
+  1. `index.js` désinscrit puis ré-enregistre le SW immédiatement
+  2. `OfflineIndicator.jsx` ré-enregistre `/sw.js` au mount
+  3. SW v13 (`skipWaiting` + `clients.claim`) prend le contrôle pendant le mount React → **avorte les ~50 fetches API en cours** (`net::ERR_ABORTED`) → arbre React démonté
+- **Corrections** (4 fichiers, FUSION ADD-ONLY) :
+  - `/app/frontend/src/index.js` : désactivation `serviceWorkerRegistration.register({...})`
+  - `/app/frontend/src/components/OfflineIndicator.jsx` : désactivation `OfflineService.registerServiceWorker()`
+  - `/app/frontend/src/App.js` : ajout `<TerritoireFrontendDebugOverlay />` dans le JSX (oubli agent précédent)
+  - `/app/frontend/public/sw.js` : conversion en **KILLSWITCH AUTO-UNREGISTER** (purge caches + `self.registration.unregister()` + notify clients)
+- **Validation physique (anti-générique strict)** :
+  - DOM : `rootChildren: 1`, `rootInnerHTML_len: 306 052`, `swController: false`, `swState: 'none'`
+  - Composants : `hasMonTerritoirePage`, `hasHudUltime`, `hasNavigation`, `hasDebugOverlay` ✅
+  - Endpoints debug : canonical/visual_sync/access/force_purge → tous **HTTP 200**
+  - Page Admin Premium `/admin/bce-4x-premium/territoire` : auth gate `X-Commandant-Token` rendu correctement
+- **Aucun testing_agent_v3_fork** utilisé (interdit par doctrine). Tests via `mcp_screenshot_tool` + `curl` + inspection DOM Playwright.
+- **V30_LOCK INVIOLÉ** · **FUSION ADD-ONLY** · **ANTI-GÉNÉRIQUE STRICT**
+- Rapport intermédiaire complet : `/app/memory/P22C_FIX_BLANK_SCREEN_OMEGA_REPORT.md`
+
+---
+
 ## 2026-04-20T23:30Z — PHASE XI-SUPRA-N (CORRIDORS NETWORK REFACTOR Ω)
 
 ### Directive: PHASE_XI_SUPRA_N — CORRIDORS_NETWORK_REFACTOR_Ω — EXÉCUTÉE

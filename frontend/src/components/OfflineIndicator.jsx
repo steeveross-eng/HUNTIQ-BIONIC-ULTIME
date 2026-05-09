@@ -10,8 +10,11 @@ export const OfflineIndicator = () => {
   const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
-    // Initialize service worker
-    OfflineService.registerServiceWorker();
+    // P22C_FIX_BLANK_SCREEN_Ω · 2026-05-09 · COMMANDANT STEEVE-MAX
+    // OfflineService.registerServiceWorker() DESACTIVE.
+    // Cause racine écran blanc : SW v13 prenait le contrôle des clients
+    // pendant le mount React et avortait toutes les requêtes API → ROOT vide.
+    // OfflineService.registerServiceWorker();  ← DISABLED P22C_FIX
     
     // Subscribe to online/offline changes
     const unsubscribe = OfflineService.subscribe((status) => {

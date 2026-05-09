@@ -1168,6 +1168,8 @@ function App() {
             <OfflineIndicator />
             {/* V6 GOLDEN: Centre de notifications push temps réel */}
             <AlertNotificationCenter position="bottom-right" />
+            {/* P22C · TERRITOIRE FRONTEND DEBUG OVERLAY (URL flag ?territoireDebug=on) */}
+            <TerritoireFrontendDebugOverlay />
           </BrowserRouter>
         </div>
         </NotificationProvider>

@@ -90,25 +90,18 @@ if ('serviceWorker' in navigator) {
   }
 }
 
-// P22C · force resurrection
-serviceWorkerRegistration.register({
-  onSuccess: () => {
-    // eslint-disable-next-line no-console
-    console.log(
-      '[BCE-4X · SW-CONTROLLED v13] service worker registered · '
-      + 'P22C force resurrection · cache rules : network-only super-masters/admin · '
-      + 'cache-first static · network-first HTML',
-    );
-  },
-  onUpdate: (registration) => {
-    // eslint-disable-next-line no-console
-    console.log(
-      '[BCE-4X · SW-CONTROLLED v13] update available · forcing skipWaiting');
-    if (registration && registration.waiting) {
-      registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-    }
-  },
-});
+// P22C_FIX_BLANK_SCREEN_Ω · 2026-05-09 · COMMANDANT STEEVE-MAX
+// Désactivation TOTALE de l'enregistrement du Service Worker.
+// RACINE BLANCHE-ÉCRAN : SW v13 (skipWaiting + clients.claim) avortait
+// toutes les requêtes API en cours pendant le mount React → ROOT vide.
+// Doctrine : aucun SW ne doit être enregistré côté client.
+// Le sw.js public/sw.js est désormais un KILLSWITCH qui s'auto-désinscrit.
+// V30_LOCK INVIOLÉ · ANTI-GÉNÉRIQUE STRICT · FUSION ADD-ONLY
+// serviceWorkerRegistration.register({...})  ← DISABLED P22C_FIX
+void serviceWorkerRegistration;  // mark as intentionally unused
+console.log(
+  '[BCE-4X · P22C_FIX_BLANK_SCREEN_Ω] '
+  + 'serviceWorkerRegistration.register() DESACTIVE par directive STEEVE-MAX');
 
 // P22C · FORCE TERRITOIRE FRONTEND RELOAD Ω · auto-purge AGRESSIF
 // Ordre Commandant STEEVE-MAX · 2026-05-09
