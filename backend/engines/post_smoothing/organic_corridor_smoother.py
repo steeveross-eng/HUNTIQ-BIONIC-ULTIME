@@ -729,6 +729,8 @@ async def generate_smoothed(request: Request):
         )
 
     try:
+        # P22H_FIX (2026-05-09 · COMMANDANT STEEVE-MAX) — propagation des
+        # paramètres SALINE_CENTERED vers l'engine sous-jacent.
         payload = gen_func(
             lat=body.get("lat"),
             lon=body.get("lon"),
@@ -737,6 +739,10 @@ async def generate_smoothed(request: Request):
             hour=body.get("hour", 7),
             wind_deg=body.get("wind_deg", 225),
             wind_speed=body.get("wind_speed", 15),
+            anchor_mode=body.get("anchor_mode", "AUTO"),
+            anchor_priority=body.get("anchor_priority"),
+            allow_multi_anchor=body.get("allow_multi_anchor", False),
+            external_entry_exit_radius_m=body.get("external_entry_exit_radius_m", 600.0),
         )
     except TypeError:
         payload = gen_func(**{k: v for k, v in body.items() if v is not None})

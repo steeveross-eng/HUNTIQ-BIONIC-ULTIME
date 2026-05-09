@@ -306,6 +306,63 @@ def ia_fusion(terrain_ms: dict, vision_map: dict, species_behavior: dict,
 # ============================================================
 # GÉOMÉTRIE ORGANIQUE (§2)
 # ============================================================
+# P22H_FIX (2026-05-09 · COMMANDANT STEEVE-MAX)
+# SALINE_CENTERED ANCHORING — priorisation des paires biologiques
+# ============================================================
+# Doctrine : "Corridors must reflect real game movement between salines,
+# feeding, rut, and rest zones, not waypoint-centric artifacts."
+ANCHOR_PRIORITY_DEFAULT = ["saline", "feeding_zone", "rut_zone", "rest_zone", "waypoint"]
+# Mapping vers types normalisés Phase N
+ANCHOR_TYPE_NORMALIZE = {
+    "saline": "saline",
+    "feeding_zone": "alimentation",
+    "rut_zone": "rut",
+    "rest_zone": "repos",
+    "waypoint": None,  # waypoint ≡ centre, pas un nœud vital
+}
+
+
+def _pair_priority_score(pair: tuple[dict, dict],
+                         priority_list: list[str]) -> int:
+    """Calcule le score de priorité d'une paire selon la doctrine P22H.
+
+    Une paire scorée plus haut est servie en premier (veine_principale).
+    Bonus si l'un des nœuds est de type prioritaire (saline > feeding > rut > rest).
+    """
+    score = 0
+    types_in_pair = {pair[0].get("type"), pair[1].get("type")}
+    n = len(priority_list)
+    for i, pkey in enumerate(priority_list):
+        normalized = ANCHOR_TYPE_NORMALIZE.get(pkey)
+        if normalized and normalized in types_in_pair:
+            # Plus l'index est petit (priorité haute), plus le bonus est grand
+            score += (n - i) * 100
+    # Bonus si AU MOINS UNE saline (ancrage écologique fort)
+    if "saline" in types_in_pair:
+        score += 500
+    return score
+
+
+def _reorder_pairs_by_anchor(pairs: list[tuple[dict, dict]],
+                              anchor_mode: str,
+                              anchor_priority: list[str]
+                              ) -> list[tuple[dict, dict]]:
+    """P22H : réordonne les paires selon le mode d'ancrage doctrinal.
+
+    Modes :
+      - "SALINE_CENTERED" : priorité absolue salines, puis feeding > rut > rest
+      - "AUTO" / "WAYPOINT" : pas de réordonnancement (comportement legacy)
+    """
+    mode = (anchor_mode or "AUTO").upper()
+    if mode != "SALINE_CENTERED":
+        return list(pairs)
+    priority_list = anchor_priority or ANCHOR_PRIORITY_DEFAULT
+    # Tri stable décroissant par score de priorité
+    sorted_pairs = sorted(pairs, key=lambda p: -_pair_priority_score(p, priority_list))
+    return sorted_pairs
+
+
+# ============================================================
 def _generate_organic_control_points(
     lat: float, lon: float, angle_deg: float, dist_deg: float,
     cos_lat: float, behavior: dict, terrain_ms: dict, seed: float,
@@ -790,8 +847,20 @@ def compute_attraction_repulsion(corridor: dict, bundle: dict) -> dict:
 # ============================================================
 async def generate_organic_corridors(lat: float, lon: float, species: str,
                                       month: int = 10, hour: int = 7,
-                                      wind_deg: int = 225, wind_speed: int = 15) -> dict:
-    """Génère le réseau ORGANIC complet autour du waypoint."""
+                                      wind_deg: int = 225, wind_speed: int = 15,
+                                      anchor_mode: str = "AUTO",
+                                      anchor_priority: list[str] | None = None,
+                                      allow_multi_anchor: bool = False,
+                                      external_entry_exit_radius_m: float = 600.0,
+                                      ) -> dict:
+    """Génère le réseau ORGANIC complet autour du waypoint.
+
+    P22H_FIX (2026-05-09 · COMMANDANT STEEVE-MAX) — paramètres SALINE_CENTERED :
+      - anchor_mode : "AUTO" | "SALINE_CENTERED" | "WAYPOINT"
+      - anchor_priority : liste priorités (default : saline > feeding > rut > rest > waypoint)
+      - allow_multi_anchor : autorise corridors multi-ancres (post-MVP)
+      - external_entry_exit_radius_m : rayon entry/exit nodes (default 600m)
+    """
     mark_call(ENGINE_NAME)
 
     from engines.v8_institutional.territoire_v10_supra import compute_territoire_v10
@@ -815,9 +884,16 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
     # ═════════════════════════════════════════════════════════════
     # Phase N — BLOC 1+2 : PIPELINE RÉSEAU ZONES ↔ ZONES
     #   (Abolition totale du générateur radial depuis waypoint.)
+    # P22H — Ajout de la priorisation par mode d'ancrage doctrinal.
     # ═════════════════════════════════════════════════════════════
     nodes = _collect_vital_nodes(bundle, lat, lon, species)
     pairs = _compatible_pairs(nodes, species)
+    # P22H_FIX : priorisation salines/feeding/rut/rest selon directive.
+    pairs = _reorder_pairs_by_anchor(
+        pairs,
+        anchor_mode=anchor_mode,
+        anchor_priority=anchor_priority or ANCHOR_PRIORITY_DEFAULT,
+    )
 
     corridors: list[dict] = []
     for idx, (node_a, node_b) in enumerate(pairs):
@@ -912,6 +988,16 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
         "hierarchy_counts": hierarchy_counts,
         "render_modes_supported": ORGANIC_CONFIG["render_modes_enabled"],
         "generated_at": datetime.now(timezone.utc).isoformat(),
+        # P22H_FIX (2026-05-09 · COMMANDANT STEEVE-MAX) — traçabilité ancrage
+        "p22h_anchor_doctrine": {
+            "anchor_mode": (anchor_mode or "AUTO").upper(),
+            "anchor_priority": anchor_priority or ANCHOR_PRIORITY_DEFAULT,
+            "allow_multi_anchor": bool(allow_multi_anchor),
+            "external_entry_exit_radius_m": float(external_entry_exit_radius_m),
+            "saline_centered_active": (anchor_mode or "AUTO").upper() == "SALINE_CENTERED",
+            "n_pairs_evaluated": len(pairs),
+            "first_pair_types": list({pairs[0][0]["type"], pairs[0][1]["type"]}) if pairs else [],
+        },
     }
 
 

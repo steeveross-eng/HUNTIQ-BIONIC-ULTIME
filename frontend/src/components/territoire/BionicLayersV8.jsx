@@ -259,6 +259,13 @@ const BionicLayersV8 = ({
               corridors_count: data?.corridors?.length || 0,
               smoother_total: data?.smoother_total_corridors || 0,
             };
+            // P22H_FIX — exposition doctrine ancrage saline-centered
+            if (data?.p22h_anchor_doctrine) {
+              window.__P22H_DOCTRINE__ = {
+                ts: Date.now(),
+                ...data.p22h_anchor_doctrine,
+              };
+            }
           }
         } catch (_e) { /* noop */ }
       })

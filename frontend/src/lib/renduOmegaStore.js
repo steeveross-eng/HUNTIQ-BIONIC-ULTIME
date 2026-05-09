@@ -448,7 +448,18 @@ export async function getOrganicCorridors(lat, lon, species = 'chevreuil') {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'omit',
-      body: JSON.stringify({ lat, lon, species, month: 10, hour: 7, wind_deg: 225, wind_speed: 15 }),
+      // P22H_FIX (2026-05-09 · COMMANDANT STEEVE-MAX) — SALINE_CENTERED
+      // Doctrine : les corridors doivent refléter les déplacements réels du
+      // gibier entre salines / zones d'alimentation / rut / repos, pas des
+      // artefacts waypoint-centriques.
+      body: JSON.stringify({
+        lat, lon, species,
+        month: 10, hour: 7, wind_deg: 225, wind_speed: 15,
+        anchor_mode: 'SALINE_CENTERED',
+        anchor_priority: ['saline', 'feeding_zone', 'rut_zone', 'rest_zone', 'waypoint'],
+        allow_multi_anchor: true,
+        external_entry_exit_radius_m: 600.0,
+      }),
     });
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();

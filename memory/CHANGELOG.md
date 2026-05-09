@@ -3,6 +3,36 @@
 
 ---
 
+## 2026-05-09T03:09Z — P22H_SALINE_CENTERED_ANCHORING_BACKEND_Ω (ROSACE 360° SALINE-CENTRÉE)
+
+### Directive: P22H — 4/4 CRITÈRES VALIDÉS · MODE SALINE_CENTERED OPÉRATIONNEL
+- **Backend MUTE doctrinale** : moteur `engine_ia_corridors_organic_omega.py` étendu avec :
+  - Constante `ANCHOR_PRIORITY_DEFAULT = ["saline","feeding_zone","rut_zone","rest_zone","waypoint"]`
+  - Mapping normalisé `ANCHOR_TYPE_NORMALIZE` (feeding_zone→alimentation, rut_zone→rut, rest_zone→repos)
+  - Fonctions `_pair_priority_score()` (bonus saline +500) et `_reorder_pairs_by_anchor()` (tri stable décroissant)
+  - Signature `generate_organic_corridors()` étendue avec 4 params P22H : `anchor_mode`, `anchor_priority`, `allow_multi_anchor`, `external_entry_exit_radius_m`
+  - Bundle de retour enrichi avec section `p22h_anchor_doctrine`
+  - Pydantic `GenerateOrganicBody` étendu avec 4 nouveaux champs
+- **Smoother proxy** (`organic_corridor_smoother.py`) : propagation bout-en-bout des 4 params P22H vers l'engine
+- **Frontend default activé** : `renduOmegaStore.js` envoie `anchor_mode: 'SALINE_CENTERED'` par défaut sur tous les fetches `getOrganicCorridors`
+- **Flag global exposé** : `window.__P22H_DOCTRINE__` pour traçabilité visuelle institutionnelle
+- **Validation API directe (3 modes testés)** :
+  - AUTO : `first_pair_types=['rut','alimentation']` (ordre legacy)
+  - SALINE_CENTERED : `first_pair_types=['alimentation','saline']` ✨ — saline en tête
+  - WAYPOINT : `first_pair_types=['rut','alimentation']` (rétro-compat)
+- **Validation visuelle** :
+  - Rosace 360° de 18 corridors écologiques saline-centrés émanant du waypoint canonique BSL
+  - `polylinesInPane: 54` · `omegaConforme: TRUE` · `x150Conforme: TRUE`
+  - `p22hDoctrine.saline_centered_active: TRUE` · `allow_multi_anchor: TRUE` · `external_entry_exit_radius_m: 600`
+  - `visibility.ratio: 1.0` · `fallback_active: FALSE`
+- **Fichiers modifiés** : 4 EDITs ciblés (2 backend + 2 frontend) · 0 fichier maître SHA-locked muté · 0 nouveau fichier
+- Aucun `testing_agent_v3_fork` · ANTI-GÉNÉRIQUE STRICT · `autonomy: LIMITED` · `guardrails: ENFORCED`
+- Rapport complet : `/app/memory/P22H_SALINE_CENTERED_ANCHORING_REPORT.md`
+- Capture victorieuse : `/tmp/p22h_final.png`
+- **STATUT** : ✅ MISSION P22H ACCOMPLIE — STOP attente directive Commandant
+
+---
+
 ## 2026-05-09T02:58Z — P22G_RENDU_OMEGA_SEMI_STRICT_BACKEND_Ω (MUTE BACKEND AUTORISÉE)
 
 ### Directive: P22G — RATIO ACCEPTATION 100% · POLYLINES 72 · X150 18/18
