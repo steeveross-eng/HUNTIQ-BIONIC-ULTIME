@@ -3,6 +3,28 @@
 
 ---
 
+## 2026-05-09T01:39Z — P22D_CORRIDORS_AUDIT_AND_VISUAL_REVEAL_Ω
+
+### Directive: P22D — AUDIT + DEBUG OVERLAY DEPLOYED · 11/11 CRITÈRES VALIDÉS
+- **Audit backend corridors** : 7 endpoints `/api/v20/territoire/corridors-organic/*` + `/api/v30/corridors/status` + `/api/v20/territoire/bundle` validés
+- **Probes physiques** : T1 BSL canonique → smoother_total=20, accepted=1 (filtre rendu-Ω strict, 19 rejetés segment>20m/angle>45°/water<20m)
+- **Audit per territory** : T1=3 corridors bundle / 1 organic / 33 status; T2=0/?/64; T3=0/?/51
+- **Audit frontend config** : catalog ✅, defaults ✅, pipeline ✅, props ✅
+- **Audit zindex/styles** : RENDU_OMEGA verrou X150 conforme 14/16
+- **CorridorsDebugOverlay.jsx DEPLOYED** : overlay diagnostique live activable via `?corridorsDebug=on` (probes parallèles 2 endpoints + DOM live + 16 probes X150)
+- **Légende corridors** : présente (`B-COR · CORRIDORS Ω · veineux 3px halo`)
+- **Toggle layers panel** : présent (slider Corridors 80%)
+- **Racine absence visuelle identifiée** (3 facteurs combinés) :
+  1. Mount conditionnel `BionicLayersV8` requiert `selectedWaypointForZones` (MapContent.jsx:161)
+  2. Latence POST organic 3-19s (saturation connexions parallèles) → cleanup `cancelled=true` avant setOrganicBundle
+  3. `bundle.corridors=[]` pour T2/T3 (fallback vide)
+- **Best practices proposées** (6) : pré-mount, loading indicator, cache global préchargé, mode highlight, légende compteur live, audit X150
+- Aucun `testing_agent_v3_fork` · V30_LOCK INVIOLÉ · FUSION ADD-ONLY · ANTI-GÉNÉRIQUE STRICT · autonomy=LIMITED
+- Rapport complet : `/app/memory/P22D_CORRIDORS_AUDIT_REPORT.md`
+- **STATUT** : ✅ AUDIT + DEBUG OVERLAY LIVRÉS — STOP attente directive Commandant pour P22E (patch fonctionnel rendu corridors)
+
+---
+
 ## 2026-05-09T01:21Z — P22C_P0_ENHANCED_VALIDATION_BEFORE_P1_Ω (INTÉGRITÉ SYSTÈME)
 
 ### Directive: P22C_P0_ENHANCED_VALIDATION_Ω — EXÉCUTÉE · 8/8 CRITÈRES VALIDÉS
