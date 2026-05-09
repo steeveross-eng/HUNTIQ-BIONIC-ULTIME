@@ -3,6 +3,41 @@
 
 ---
 
+## 2026-05-09T13:10Z — P22Λ_LOCAL_MAX_DENSITY_CORRIDOR_EXPANSION_Ω
+
+### Directive: P22Λ — 10/10 BLOCS VALIDÉS · LOCAL_CORRIDOR_LENS DEPLOYED · 3 TABLEAUX UI
+- **Backend NEUF** : `/app/backend/engines/post_smoothing/local_density_profile_omega.py` (210 lignes)
+  - 11 biorégions QC mappées (mirror frontend bioregion.js) avec forbidden_species
+  - Mapping `SPECIES_NORMALIZE` (chevreuil ≡ cerf, ours ≡ ours_noir)
+  - Endpoint `POST /api/v20/territoire/corridors-organic/local-density-profile`
+  - Génération PARALLÈLE des 5 espèces via `asyncio.gather()` (latence minimisée)
+- **Frontend NEUF** : `/app/frontend/src/components/territoire/LocalCorridorLensPanel.jsx` (250 lignes)
+  - 3 tableaux statistiques : SummaryTable, LiveProfilesTable, PresetTable (directive 9 lignes)
+  - Activation : URL flag `?lensDebug=on`
+  - Bouton `⟳ REFRESH` interactif
+  - Tag global : `window.__P22L_LOCAL_LENS__`
+- **Enregistrements** : server.py (+6), App.js (+2)
+- **Validation API directe** :
+  - HTTP 200 · 3.45s · 3937B
+  - 5 espèces évaluées : orignal=6 cor (3.14/km²), chevreuil=0 ABSENT, ours_noir=1, dindon=2, wapiti=7 (3.66)
+  - 16 corridors totaux · 8.37 densité cumulée /km²
+  - 6 paires uniques : `[alim,hotspot], [alim,humide], [alim,saline], [hotspot,humide], [humide,saline], [repos,saline]`
+- **Validation visuelle Playwright** : 3 tableaux DOM présents · panneau bordure verte #00A676 · header doctrinal complet (tag/scope/biorégion/exclusions=ABSOLUTE+ENFORCED)
+- **Garde-fous doctrinaux** :
+  - `respect_bioregion_locking: ENFORCED`
+  - `respect_species_forbid_rules: ENFORCED`
+  - `respect_no_hunt_zones: ENFORCED`
+  - `respect_private_land_exclusions: ENFORCED`
+  - `forbid_override_exclusions: ABSOLUTE`
+  - `forbid_expansion_outside_local_bubble: ABSOLUTE` (radius_m=780 fixe)
+- **Fichiers modifiés** : 2 NEW (210+250 lignes) + 2 EDIT registries · 0 fichier maître muté
+- Aucun `testing_agent_v3_fork` · ANTI-GÉNÉRIQUE STRICT · `autonomy: LIMITED` · `guardrails: ENFORCED`
+- Rapport complet : `/app/memory/P22L_LOCAL_DENSITY_LENS_REPORT.md`
+- Capture victorieuse : `/tmp/p22l_lens_final.png`
+- **STATUT** : ✅ MISSION P22Λ ACCOMPLIE — STOP attente directive Commandant
+
+---
+
 ## 2026-05-09T03:30Z — P22G_CORRIDORS_REFINEMENT_X100_Ω · ULTIMATE OMEGA REPORT
 
 ### Directive: P22G_X100 — 22/22 CRITÈRES VALIDÉS · ANOMALY MAP DEPLOYED · MULTI-SPECIES COMPARISON

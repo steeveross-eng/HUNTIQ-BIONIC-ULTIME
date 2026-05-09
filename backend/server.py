@@ -1012,6 +1012,14 @@ try:
 except Exception as e:
     logger.warning(f"CORRIDORS_ANOMALY_OMEGA_X100 not loaded: {e}")
 
+# LOCAL_DENSITY_PROFILE_OMEGA — P22Λ_LOCAL_MAX_DENSITY_CORRIDOR_EXPANSION_Ω
+try:
+    from engines.post_smoothing.local_density_profile_omega import router as local_density_router
+    app.include_router(local_density_router)
+    logger.info("LOCAL_DENSITY_PROFILE_OMEGA_X100 registered (/api/v20/territoire/corridors-organic/local-density-profile)")
+except Exception as e:
+    logger.warning(f"LOCAL_DENSITY_PROFILE_OMEGA_X100 not loaded: {e}")
+
 # ENGINE-RENDU-Ω — Phase XI-SUPRA-K (rendu institutionnel corridors)
 try:
     from engines.v8_institutional.engine_rendu_omega import router as rendu_omega_router, visual_router as rendu_visual_router

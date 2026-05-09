@@ -105,6 +105,7 @@ const ValidationsPage = lazy(() => import("@/components/admin-premium/Validation
 // P22C · TERRITOIRE FRONTEND DEBUG OVERLAY (URL flag activated)
 import TerritoireFrontendDebugOverlay from "@/components/territoire/TerritoireFrontendDebugOverlay";
 import CorridorsDebugOverlay from "@/components/territoire/CorridorsDebugOverlay";
+import LocalCorridorLensPanel from "@/components/territoire/LocalCorridorLensPanel";
 // VIS-E: Vision Notifications Panel
 import VisionNotificationsPanel from '@/components/VisionNotificationsPanel';
 // PHASE_X200_P4_RUNTIME_BEACON_Ω — attestation runtime institutionnelle (LAT 48.206657 / LNG -68.382422)
@@ -1173,6 +1174,8 @@ function App() {
             <TerritoireFrontendDebugOverlay />
             {/* P22D · CORRIDORS DEBUG OVERLAY (URL flag ?corridorsDebug=on) */}
             <CorridorsDebugOverlay />
+            {/* P22Λ · LOCAL CORRIDOR LENS PANEL (URL flag ?lensDebug=on) */}
+            <LocalCorridorLensPanel />
           </BrowserRouter>
         </div>
         </NotificationProvider>
