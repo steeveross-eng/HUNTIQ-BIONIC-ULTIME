@@ -162,11 +162,35 @@ const LayersPanelOmegaUnified = ({
             {totalActive}/{LAYER_CATALOG_OMEGA.length}
           </span>
         </div>
-        {expanded ? (
-          <ChevronUp size={14} color="#94A3B8" />
-        ) : (
-          <ChevronDown size={14} color="#94A3B8" />
-        )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          {/* P22B · lien direct vers Admin Premium territoire */}
+          <a
+            href="/admin/bce-4x-premium/territoire"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            data-testid="layers-panel-omega-admin-link"
+            title="Admin Premium · Rapports Ω P15"
+            style={{
+              fontSize: 8,
+              fontWeight: 800,
+              letterSpacing: 1,
+              color: '#7CB518',
+              textDecoration: 'none',
+              border: '1px solid rgba(124,181,24,0.4)',
+              padding: '2px 6px',
+              borderRadius: 3,
+              fontFamily: 'JetBrains Mono, monospace',
+            }}
+          >
+            P15→
+          </a>
+          {expanded ? (
+            <ChevronUp size={14} color="#94A3B8" />
+          ) : (
+            <ChevronDown size={14} color="#94A3B8" />
+          )}
+        </div>
       </div>
 
       {expanded && (

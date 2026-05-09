@@ -5570,3 +5570,62 @@ async def canonical_visual_sync_status_endpoint() -> JSONResponse:
         "v30_lock": "INVIOLÉ",
     })
 
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# P22B · TERRITOIRE_ACCESS_TELEMETRY_Ω
+# Diagnostic accès admin/territoire · log access failures · status
+# ═════════════════════════════════════════════════════════════════════════
+
+
+class TerritoireAccessFailureBody(BaseModel):
+    target_path: str
+    failure_reason: str
+    context: Optional[Dict[str, Any]] = None
+
+
+@router.post("/territoire-access-failure-log")
+async def territoire_access_failure_log_endpoint(
+    body: TerritoireAccessFailureBody,
+    user_agent: Optional[str] = Header(
+        default=None, alias="User-Agent"),
+) -> JSONResponse:
+    """P22B · log un access failure (PUBLIC).
+
+    Anti-générique : persistance JSONL réelle, pas de fake.
+    """
+    from engines.v8_institutional.especes.territoire_access_telemetry_omega import (  # noqa: E501
+        log_access_failure,
+    )
+    payload = log_access_failure(
+        target_path=body.target_path,
+        failure_reason=body.failure_reason,
+        context=body.context,
+        user_agent=user_agent,
+    )
+    return JSONResponse({
+        "manifest_id": "TERRITOIRE_ACCESS_FAILURE_LOG_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P22B_RESTORE_TERRITOIRE_ACCESS_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+
+
+@router.get("/territoire-access-status")
+async def territoire_access_status_endpoint() -> JSONResponse:
+    """P22B · access diagnostic (PUBLIC RO)."""
+    from engines.v8_institutional.especes.territoire_access_telemetry_omega import (  # noqa: E501
+        get_territoire_access_status,
+    )
+    payload = get_territoire_access_status()
+    return JSONResponse({
+        "manifest_id": "TERRITOIRE_ACCESS_STATUS_GET_Ω",
+        "doctrine": "BCE-4X_ULTIME_ABSOLU_ANTI_GÉNÉRIQUE_STRICT",
+        "ordre": "P22B_RESTORE_TERRITOIRE_ACCESS_Ω",
+        "horodatage_build": _build_horodatage(),
+        "result": payload,
+        "v30_lock": "INVIOLÉ",
+    })
+

@@ -636,3 +636,57 @@
 - ✅ FUSION ADD-ONLY · 1 nouveau module + UX additif
 - ✅ ANTI-GÉNÉRIQUE STRICT · validation réelle 4 verdicts · SHA déterministe
 - ✅ Aucun testing_agent_v3_fork
+
+## 2026-05-08 (suite 8) — P22B_RESTORE_FULL_TERRITOIRE_ACCESS_OMEGA_Ω
+
+### Diagnostic préalable
+- **Toutes les 7 routes** `/admin/bce-4x-premium/*` retournent HTTP 200 (vérifié curl)
+- Routes correctement déclarées dans `App.js` · imports corrects
+- Cause probable : utilisateur ne trouvait pas le lien depuis nav principale OU SW servait cache stale
+
+### A · Backend telemetry module
+- Nouveau `territoire_access_telemetry_omega.py` :
+  - 7 routes canoniques exposées avec purpose + component
+  - `log_access_failure()` : persistance JSONL réelle (anti-générique)
+  - `get_territoire_access_status()` : status + telemetry + auth requirements
+- 2 nouveaux endpoints :
+  - `POST /territoire-access-failure-log` (PUBLIC · auto-log auth fail)
+  - `GET /territoire-access-status` (PUBLIC RO)
+
+### B · Liens directs visibles vers Admin Premium
+- `LayersPanelOmegaUnified.jsx` : header bouton `P15→` (vert) cliquable
+  - Ouvre `/admin/bce-4x-premium/territoire` dans nouvel onglet
+  - `e.stopPropagation()` empêche conflit avec toggle expand
+- `TerritoireToolbar.jsx` : bouton `ADMIN P15→` (vert) à côté du badge Ω
+  - Style fontFamily JetBrains Mono · couleur 7CB518
+  - data-testid="toolbar-admin-premium-link"
+
+### C · Frontend telemetry hook
+- `AdminPremiumLayout.jsx` : `if (!authOk)` → POST automatique vers `territoire-access-failure-log`
+- Body : `target_path`, `failure_reason` (auth error), `context` (has_local_token, referrer)
+- Anti-générique : try/catch silencieux · pas de fail si endpoint indisponible
+
+### D · Tests pytest neutres
+- `test_phase_xxii_b_access_telemetry_omega.py` (4/4 tests passés)
+  - import + 7 routes canoniques
+  - log persistence réelle (JSONL)
+  - status with/without failures
+
+### E · Vérifications curl preview public
+- HTTP 200 sur **toutes** les 7 routes admin/bce-4x-premium
+- Telemetry endpoint : `record_sha=42064f0421e5b313` · `n_failures=1` après log
+- Status endpoint : 7 routes canoniques exposées
+
+### Métriques cumulatives session
+- 67/67 pytests doctrinaux passés (zéro régression)
+- 1 nouveau module engine + 1 nouveau pytest neutre
+- 2 nouveaux endpoints (`territoire-access-failure-log|status`)
+- 2 nouveaux liens directs Admin Premium (panel header + toolbar)
+- 1 hook telemetry frontend (auto-log auth failures)
+- `yarn build` SUCCESS 59.73s clean
+
+### Conformité doctrinale
+- ✅ V30_LOCK INVIOLÉ · ZÉRO mutation engine maître
+- ✅ FUSION ADD-ONLY · liens additifs · telemetry passive
+- ✅ ANTI-GÉNÉRIQUE STRICT · vraie persistance JSONL · pas de fake log
+- ✅ Aucun testing_agent_v3_fork

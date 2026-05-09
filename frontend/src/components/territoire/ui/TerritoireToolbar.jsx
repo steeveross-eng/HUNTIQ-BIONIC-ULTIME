@@ -145,6 +145,28 @@ export function TerritoireToolbar({
 
         {/* P20_PHASE4 · BADGE PANEL UNIFIÉ Ω · count dynamique synchro */}
         <UnifiedPanelBadge activeCount={unifiedActiveCount} totalCount={18} />
+        {/* P22B · raccourci direct Admin Premium · territoire */}
+        <a
+          href="/admin/bce-4x-premium/territoire"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-testid="toolbar-admin-premium-link"
+          title="Admin Premium · Rapports Ω P15"
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 4,
+            padding: '0 10px', height: 28, borderRadius: 4,
+            fontSize: 9, fontWeight: 800, letterSpacing: 1,
+            cursor: 'pointer', flexShrink: 0,
+            fontFamily: 'JetBrains Mono, monospace',
+            background: 'rgba(124,181,24,0.18)',
+            border: '1px solid rgba(124,181,24,0.5)',
+            color: '#7CB518',
+            textDecoration: 'none',
+            marginLeft: 4,
+          }}
+        >
+          ADMIN P15→
+        </a>
         {SEP}
 
         {/* SPLIT */}

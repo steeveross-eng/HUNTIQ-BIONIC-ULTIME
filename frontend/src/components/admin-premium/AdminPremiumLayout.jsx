@@ -120,6 +120,25 @@ const AdminPremiumLayout = () => {
   }
 
   if (!authOk) {
+    // P22B · log access failure (anti-générique strict)
+    try {
+      const base = process.env.REACT_APP_BACKEND_URL || '';
+      fetch(`${base}/api/v30/super-masters/territoire-access-failure-log`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        cache: 'no-store',
+        body: JSON.stringify({
+          target_path: window.location.pathname,
+          failure_reason: authError || 'AUTH_BLOCKED_NO_TOKEN',
+          context: {
+            has_local_token: !!getCommandantToken(),
+            referrer: document.referrer || null,
+          },
+        }),
+      }).catch(() => {});
+    } catch (_) {
+      /* no-op */
+    }
     return (
       <div
         data-testid="admin-premium-auth-screen"
