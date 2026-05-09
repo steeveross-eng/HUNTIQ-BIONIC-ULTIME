@@ -16,7 +16,7 @@
  * ════════════════════════════════════════════════════════════════════════
  */
 
-const CACHE_VERSION = 'bce-4x-omega-v12-p21-canonical-visual-2026-05-08';
+const CACHE_VERSION = 'bce-4x-omega-v13-p22c-force-reload-2026-05-09';
 const STATIC_CACHE = `static-${CACHE_VERSION}`;
 const HTML_CACHE = `html-${CACHE_VERSION}`;
 

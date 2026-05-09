@@ -90,56 +90,94 @@ if ('serviceWorker' in navigator) {
   }
 }
 
-// P20_PHASE4 · `reactivate_service_worker_controlled: ENABLED`
-// Ordre Commandant STEEVE-MAX · re-register SW avec règles strictes
-// (network-only super-masters + admin · cache-first static · etc.)
+// P22C · force resurrection
 serviceWorkerRegistration.register({
   onSuccess: () => {
     // eslint-disable-next-line no-console
     console.log(
-      '[BCE-4X · SW-CONTROLLED] service worker registered · '
-      + 'cache rules : network-only super-masters/admin · '
+      '[BCE-4X · SW-CONTROLLED v13] service worker registered · '
+      + 'P22C force resurrection · cache rules : network-only super-masters/admin · '
       + 'cache-first static · network-first HTML',
     );
   },
   onUpdate: (registration) => {
     // eslint-disable-next-line no-console
     console.log(
-      '[BCE-4X · SW-CONTROLLED] update available · forcing skipWaiting');
+      '[BCE-4X · SW-CONTROLLED v13] update available · forcing skipWaiting');
     if (registration && registration.waiting) {
       registration.waiting.postMessage({ type: 'SKIP_WAITING' });
     }
   },
 });
 
-// P20_PHASE3 · FORCE PURGE Ω · auto reload one-shot si version stale
-// Ordre Commandant STEEVE-MAX · 2026-05-08
-const BCE_4X_FORCE_PURGE_VERSION = "P21_CANONICAL_VISUAL_LOCK_2026_05_08_2400";
+// P22C · FORCE TERRITOIRE FRONTEND RELOAD Ω · auto-purge AGRESSIF
+// Ordre Commandant STEEVE-MAX · 2026-05-09
+const BCE_4X_FORCE_PURGE_VERSION = "P22C_TERRITOIRE_FRONTEND_RELOAD_2026_05_09_0030";
 try {
   const stored = window.localStorage.getItem("bce4x_purge_version");
   if (stored !== BCE_4X_FORCE_PURGE_VERSION) {
     window.localStorage.setItem(
       "bce4x_purge_version", BCE_4X_FORCE_PURGE_VERSION);
-    // Purge tous les flags de session UI legacy susceptibles de
-    // ré-afficher des panneaux pré-Ω (anti-générique strict).
-    const legacyKeys = [
+
+    // P22C · purge AGRESSIVE des keys bionic/territoire/layers
+    // Suppression doctrinale - tout key legacy doit disparaître
+    const legacyExactKeys = [
       "panel_mode", "show_debug_panel", "analysis_v6_open",
       "legacy_corridors_visible", "show_dev_inspector",
       "old_layers_state", "v6_panel_state",
     ];
-    legacyKeys.forEach((k) => {
+    legacyExactKeys.forEach((k) => {
       try { window.localStorage.removeItem(k); } catch (_) {}
       try { window.sessionStorage.removeItem(k); } catch (_) {}
     });
+
+    // P22C · purge keys par préfixe (bionic_*, territoire_*, layers_*, etc.)
+    const legacyPrefixes = [
+      "bionic_legacy_", "territoire_legacy_", "layers_legacy_",
+      "v6_", "debug_", "analysis_v6_", "panel_legacy_",
+      "old_corridors_", "old_zones_", "old_affuts_",
+    ];
+    try {
+      const allKeys = Object.keys(window.localStorage);
+      allKeys.forEach((k) => {
+        if (legacyPrefixes.some((p) => k.startsWith(p))) {
+          try { window.localStorage.removeItem(k); } catch (_) {}
+        }
+      });
+      const sessionKeys = Object.keys(window.sessionStorage);
+      sessionKeys.forEach((k) => {
+        if (legacyPrefixes.some((p) => k.startsWith(p))) {
+          try { window.sessionStorage.removeItem(k); } catch (_) {}
+        }
+      });
+    } catch (_) { /* no-op */ }
+
+    // P22C · purge CacheStorage TOUTES versions
     if ('caches' in window) {
       caches.keys().then((keys) =>
         Promise.all(keys.map((k) => caches.delete(k)))
-      ).catch(() => {});
+      ).then(() => {
+        // eslint-disable-next-line no-console
+        console.log(
+          '[BCE-4X · P22C FORCE PURGE] CacheStorage cleared · '
+          + 'all versions wiped');
+      }).catch(() => {});
     }
+
+    // P22C · message au SW pour purge interne
+    if ('serviceWorker' in navigator
+        && navigator.serviceWorker.controller) {
+      try {
+        navigator.serviceWorker.controller.postMessage({
+          type: 'BCE_4X_FORCE_PURGE',
+        });
+      } catch (_) { /* no-op */ }
+    }
+
     console.log(
-      `[BCE-4X · FORCE PURGE] version=${BCE_4X_FORCE_PURGE_VERSION} `
-      + `· legacy keys cleared · CacheStorage purged`);
-    // Note : pas de reload automatique pour éviter un boucle si déjà à jour.
+      `[BCE-4X · P22C FORCE PURGE] version=${BCE_4X_FORCE_PURGE_VERSION} `
+      + `· legacy keys (exact + prefixes) cleared · CacheStorage purged · `
+      + `SW purge message sent`);
   }
 } catch (_) {
   /* no-op */

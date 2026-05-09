@@ -102,6 +102,8 @@ const WaypointGuidePage = lazy(() => import("@/components/admin-premium/Waypoint
 const LayerManualPage = lazy(() => import("@/components/admin-premium/LayerManualPage"));
 const MerkleAuditPage = lazy(() => import("@/components/admin-premium/MerkleAuditPage"));
 const ValidationsPage = lazy(() => import("@/components/admin-premium/ValidationsPage"));
+// P22C · TERRITOIRE FRONTEND DEBUG OVERLAY (URL flag activated)
+import TerritoireFrontendDebugOverlay from "@/components/territoire/TerritoireFrontendDebugOverlay";
 // VIS-E: Vision Notifications Panel
 import VisionNotificationsPanel from '@/components/VisionNotificationsPanel';
 // PHASE_X200_P4_RUNTIME_BEACON_Ω — attestation runtime institutionnelle (LAT 48.206657 / LNG -68.382422)
