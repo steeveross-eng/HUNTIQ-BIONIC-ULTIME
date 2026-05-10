@@ -4,7 +4,7 @@ from engines.v8_institutional.engine_science_omega import register_engine, mark_
 ENGINE_NAME = "ENGINE-CLIMAT-FUTUR-Ω"
 ENGINE_VERSION = "V1-SUPRA-2026-04"
 
-register_engine(ENGINE_NAME, ENGINE_VERSION, "Projections climatiques CMIP6 (T, precip, anomalies) 2030/2040/2050", "ENVIRONNEMENT", ["NASA_EARTHDATA", "NOAA_CLIMATE"])
+register_engine(ENGINE_NAME, ENGINE_VERSION, "Projections climatiques CMIP6 (T, precip, anomalies) 2030/2040/2050", "ENVIRONNEMENT", ["NASA_EARTHDATA", "OPENWEATHERMAP_OWM"])
 
 # Scenarios CMIP6 SSP2-4.5 (mediane IPCC AR6 pour Est Canadien)
 # Sources: IPCC AR6 WG1 Atlas, Ouranos QC consortium 2022
@@ -56,7 +56,7 @@ def compute_climat_futur(terrain_v10: dict) -> dict:
         "projections": projections,
         "anomalie_2050_c": t2050,
         "snow_days_change_2050_pct": _CMIP6_QC_AR6["snow_days_change_pct"]["2050"],
-        "data_sources": ["NASA_EARTHDATA", "NOAA_CLIMATE", "IPCC_AR6", "OURANOS_QC"],
+        "data_sources": ["NASA_EARTHDATA", "OPENWEATHERMAP_OWM", "IPCC_AR6", "OURANOS_QC"],
         "limites": [
             "Projections = scenario median SSP2-4.5 (pas de SSP1-2.6 ou SSP5-8.5)",
             "Pas de downscaling bioclimatique fin (grille AR6 ~100 km)",

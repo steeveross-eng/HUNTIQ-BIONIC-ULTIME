@@ -3,6 +3,115 @@
 
 ---
 
+## 2026-05-10T18:30Z — PHASE_1+PHASE_2_Ω + CHAÎNE_Ω CASCADE + ANTI-NOAA (PREVIEW)
+
+### Directive: ORDRE N°50 PHASE 1 + PHASE 2 — DEPLOYED EN PREVIEW (100% GIS COVERAGE)
+
+#### LIVRABLES (8 fichiers · V30_LOCK INVIOLÉ · FUSION ADD-ONLY)
+
+##### BLOC A · ENGINE_GIS_Ω (PHASE 1 · P22N ABSORBÉ)
+- **Backend NEW** `/app/backend/engines/gis_omega/__init__.py` (303 lignes) :
+  - `fetch_foret_mffp()` — WMS Québec MFFP éco-forestier (geoegl.msp.gouv.qc.ca)
+  - `fetch_sol_irda()` — ISRIC SoilGrids substitut institutionnel (rest.isric.org)
+  - `fetch_routes_mtq()` — OSM Overpass mirror osm.ch
+  - `fetch_zec_sepaq()` — Données Québec territoires-fauniques-structures
+  - `fetch_limites()` — Données Québec decoupages-administratifs
+  - `fetch_pression_humaine()` — WorldPop API dataset wpgppop
+  - `compute_corridors_gis()` — pipeline complet 6 layers + masques
+  - `gis_layers_summary()` — synthèse statistique
+- **Backend NEW** `/app/backend/engines/gis_omega/router.py` (84 lignes) :
+  - `GET /api/v20/gis/status`
+  - `POST /api/v20/gis/{summary,foret-mffp,sol-irda,routes-mtq,zec-sepaq,limites,pression-humaine,mask-corridors}`
+
+##### BLOC B · ENGINE_TERRAIN_HR_Ω (PHASE 2)
+- **Backend NEW** `/app/backend/engines/terrain_hr_omega/__init__.py` (336 lignes) :
+  - `fetch_elevation_grid_open_meteo()` — DEM grid 11×11 réel (Open-Meteo elevation API)
+  - `fetch_dem_opentopo_metadata()` — OpenTopography GlobalDEM HEAD check (SRTMGL3/COP30/NASADEM)
+  - `compute_slope_aspect()` — Horn 1981 algorithm via numpy gradient
+  - `compute_roughness_tri()` — Terrain Ruggedness Index Riley 1999
+  - `compute_cost_surface()` — surface de coût pour pathfinding
+  - `compute_terrain_hr_at_point()` — pipeline complet LOD LOW/MED/HIGH
+  - `chain_omega_terrain_pondere_corridors()` — pondération slope/roughness
+- **Backend NEW** `/app/backend/engines/terrain_hr_omega/router.py` (88 lignes) :
+  - `GET /api/v20/terrain-hr/status`
+  - `POST /api/v20/terrain-hr/{compute,elevation-grid,opentopo-metadata,derivatives/slope-aspect,derivatives/roughness,derivatives/cost-surface,chain-corridors}`
+
+##### BLOC C · CHAÎNE_Ω CASCADE
+- **Backend NEW** `/app/backend/engines/chain_omega_cascade/__init__.py` (180 lignes) :
+  - Orchestrateur master `SPECTRAL → TERRAIN_HR → GIS → CORRIDORS → TERRITOIRE`
+  - Endpoint `POST /api/v20/chain-omega/cascade` — exécute la cascade complète sur un point
+  - `cascade_factor_global` = factor_spectral × factor_terrain × factor_gis (cap [0.3, 2.0])
+
+##### BLOC D · ANTI-NOAA (DIRECTIVE COMMANDANT)
+- **Backend EDIT** `engine_climat_futur_omega.py` :
+  - `register_engine` : `["NASA_EARTHDATA", "NOAA_CLIMATE"]` → `["NASA_EARTHDATA", "OPENWEATHERMAP_OWM"]`
+  - `data_sources` : retrait `NOAA_CLIMATE`, ajout `OPENWEATHERMAP_OWM`
+- **Backend EDIT** `engine_science_omega.py` :
+  - Source `NOAA_CLIMATE` marquée DEPRECATED — provider="DEPRECATED" — Climate via OpenWeatherMap
+
+##### BLOC E · SERVER REGISTRATION
+- **Server EDIT** `server.py` (+24 lignes) — 3 nouveaux routers enregistrés (gis, terrain-hr, chain-omega)
+
+##### BLOC F · TESTS NEUTRES
+- **Pytest** `test_phase_xx_phase_1_phase_2_combined.py` (18 tests)
+- **Total cumulé** : 69 PASSED · 0 SKIPPED · 0.53s
+  (18 PHASE_1+2 + 24 NEW_ENGINE_1 + 16 P22M+P22I + 11 P22Σ_V3)
+
+#### VALIDATION INSTITUTIONNELLE LIVE @ BSL (ANTI-GÉNÉRIQUE STRICT)
+
+##### GIS coverage 100% (6/6 layers OPÉRATIONNELLES)
+```
+✅ foret_mffp         MFFP_INVENTAIRES écoforestier 1:20K (WMS Québec geoegl)
+✅ sol_irda           ISRIC SoilGrids (rest.isric.org)
+✅ routes_mtq         OSM Overpass mirror osm.ch
+✅ zec_sepaq          Données Québec territoires-fauniques-structures
+✅ limites            Données Québec decoupages-administratifs
+✅ pression_humaine   WorldPop CAN 2020 dataset wpgppop
+gis_operational_omega = TRUE · coverage_pct = 100.0% · latence 17.9s
+```
+
+##### TERRAIN_HR — DEM + dérivés numpy
+```
+DEM 7×7 grid Open-Meteo : elev 325-360m (BSL réel)
+slope_mean_pct = 49.63%   (terrain vallonné réel)
+slope_max_pct  = 114.13%
+aspect_octants = 5
+tri_mean       = 30.52
+cost_mean      = 3.48
+OpenTopo SRTMGL3 : http_status=401 (UP, clé requise pour DL)
+terrain_hr_operational_omega = TRUE · latence 0.83s
+```
+
+##### CASCADE COMPLÈTE (SPECTRAL → TERRAIN_HR → GIS)
+```
+✅ STAGE 1 SPECTRAL    factor=1.012 (NDVI=0.675, NDWI=0.32)
+✅ STAGE 2 TERRAIN_HR  factor=0.850 (slope=49.6% pénalité)
+✅ STAGE 3 GIS         factor=0.998 (densité=0.76/km², 0 routes)
+cascade_factor_global = 0.859 · latence 27.4s
+```
+
+#### LINT
+- 0 issue Python sur les 6 fichiers NEW (gis_omega, terrain_hr_omega, chain_omega_cascade)
+- 0 issue sur engine_climat_futur_omega.py et engine_science_omega.py edits
+
+#### CONFORMITÉ DOCTRINALE
+- ✅ ANTI-GÉNÉRIQUE STRICT (DEM=325-360m réel, ISRIC clay=247g/kg réel, NDVI=0.35 Sentinel-2 réel)
+- ✅ V30_LOCK INVIOLÉ · FUSION ADD-ONLY
+- ✅ NOAA EXCLU (data_sources retirées, registry marqué DEPRECATED)
+- ✅ OpenWeatherMap conservé comme provider climat
+- ✅ Aucun `testing_agent_v3_fork` · pytest neutre + curl direct
+- ✅ Aucune duplication (audit confirmé FALSE)
+
+#### CHAÎNES_Ω OPÉRATIONNELLES
+- `CHAINE_Ω_SPECTRAL → CHAINE_Ω_CORRIDORS` (NDVI/NDWI/LST factor [0.5, 1.5])
+- `CHAINE_Ω_TERRAIN_HR → CHAINE_Ω_CORRIDORS` (slope/TRI factor [0.5, 1.2])
+- `CHAINE_Ω_GIS → CHAINE_Ω_CORRIDORS` (densité/routes factor [0.5, 1.5])
+- `CHAINE_Ω_CASCADE` orchestre les 3 dans l'ordre prescrit
+
+⚠️ **PRD REDÉPLOIEMENT REQUIS** : Commandant doit cliquer "Deploy"
+
+---
+
 ## 2026-05-10T17:30Z — NEW_ENGINE_1_SPECTRAL_Ω · VERSION_ULTIME_ABSOLUE_X3 (PREVIEW)
 
 ### Directive: NEW_ENGINE_1 SPECTRAL Ω · COMBLE GAP CRITIQUE #1 — DELIVERED

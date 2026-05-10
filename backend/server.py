@@ -1029,6 +1029,32 @@ try:
 except Exception as e:
     logger.warning(f"ENGINE_SPECTRAL_Ω not loaded: {e}")
 
+# ENGINE_GIS_Ω · ORDRE N°50 PHASE 1 · GIS RÉEL · P22N ABSORBÉ (2026-05-10 · STEEVE-MAX)
+# FORET_MFFP, SOL_IRDA, ROUTES_MTQ, ZEC_SEPAQ, LIMITES, PRESSION_HUMAINE
+try:
+    from engines.gis_omega.router import router as gis_omega_router
+    app.include_router(gis_omega_router)
+    logger.info("ENGINE_GIS_Ω registered (/api/v20/gis) — ORDRE_N50_PHASE_1")
+except Exception as e:
+    logger.warning(f"ENGINE_GIS_Ω not loaded: {e}")
+
+# ENGINE_TERRAIN_HR_Ω · ORDRE N°50 PHASE 2 · TERRAIN HR (2026-05-10 · STEEVE-MAX)
+# DEM 30m public + dérivés (slope, aspect, roughness, cost_surface)
+try:
+    from engines.terrain_hr_omega.router import router as terrain_hr_router
+    app.include_router(terrain_hr_router)
+    logger.info("ENGINE_TERRAIN_HR_Ω registered (/api/v20/terrain-hr) — ORDRE_N50_PHASE_2")
+except Exception as e:
+    logger.warning(f"ENGINE_TERRAIN_HR_Ω not loaded: {e}")
+
+# CHAINE_Ω_CASCADE · Orchestrateur SPECTRAL → TERRAIN_HR → GIS → CORRIDORS → TERRITOIRE
+try:
+    from engines.chain_omega_cascade import router as chain_omega_cascade_router
+    app.include_router(chain_omega_cascade_router)
+    logger.info("CHAINE_Ω_CASCADE registered (/api/v20/chain-omega) — PHASE_1+2 ORCHESTRATOR")
+except Exception as e:
+    logger.warning(f"CHAINE_Ω_CASCADE not loaded: {e}")
+
 # ENGINE-RENDU-Ω — Phase XI-SUPRA-K (rendu institutionnel corridors)
 try:
     from engines.v8_institutional.engine_rendu_omega import router as rendu_omega_router, visual_router as rendu_visual_router

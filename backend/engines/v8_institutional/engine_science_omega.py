@@ -48,7 +48,7 @@ DATA_SOURCES = {
         "precision_m": 1000,
     },
     "USGS_MOVEMENT": {"description": "USGS telemetry", "provider": "USGS", "realtime": False},
-    "NOAA_CLIMATE": {"description": "NOAA climat (neige, temp)", "provider": "NOAA", "realtime": False},
+    "NOAA_CLIMATE": {"description": "DEPRECATED — Provider NOAA EXCLU par directive Commandant 2026-05-10. Climate via OpenWeatherMap.", "provider": "DEPRECATED", "realtime": False},
     "NASA_EARTHDATA": {"description": "NASA EarthData NDVI + thermiques", "provider": "NASA", "realtime": False},
     "MFFP_INVENTAIRES": {"description": "MFFP QC faune + forêt", "provider": "MFFP", "realtime": False},
 }
