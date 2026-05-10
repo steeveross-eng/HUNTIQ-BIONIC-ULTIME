@@ -890,7 +890,7 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
                                       external_entry_exit_radius_m: float = 600.0,
                                       densify_vitals: bool = True,
                                       enable_chained_corridors: bool = True,
-                                      enable_cascade_pondere: bool = False,
+                                      enable_cascade_pondere: bool = True,
                                       ) -> dict:
     """Génère le réseau ORGANIC complet autour du waypoint.
 
@@ -907,7 +907,7 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
     PHASE_3_CASCADE_PONDÉRÉ_Ω (2026-05-10 · COMMANDANT STEEVE-MAX) :
       - enable_cascade_pondere : applique cascade SPECTRAL→TERRAIN_HR→GIS au waypoint
         et module l'intensity_level corridor par cascade_factor_global ∈ [0.5, 1.5]
-        (default False — opt-in pour préserver latence baseline)
+        (default True — ORGANIC_PONDÉRÉ activé par défaut · COMMANDE 2026-05-10)
     """
     mark_call(ENGINE_NAME)
 

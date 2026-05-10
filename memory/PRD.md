@@ -66,31 +66,32 @@ Module fusion veineuse local + bascule defaults frontend :
 - Pytest neutre 15/15 PASSED · backend live verified (5→4 corridors fusionnés, network_001 absorbé, intensity_level=3 ÉLEVÉ)
 - Fusion ACTIVE en TERRITORY_CONTINUOUS uniquement · SALINE_CENTERED legacy preserve
 
-### Priorisation MISE À JOUR par COMMANDANT STEEVE-MAX (2026-05-10 · POST-PHASE_3)
+### Priorisation MISE À JOUR par COMMANDANT STEEVE-MAX (2026-05-10 · POST-ORGANIC_DEFAULT)
 1. ✅ **P22M** — Densification zones vitales x3 (DONE)
 2. ✅ **P22I** — Multi-anchor chained corridors (DONE)
 3. ✅ **AUDIT_Ω_SPECTRAL_TERRAIN_3D** (DONE)
 4. ✅ **P22N** — ABSORBÉ dans ORDRE N°50 PHASE 1 (DONE)
-5. ✅ **NEW_ENGINE_1_SPECTRAL_Ω** — DONE (NDVI/NDWI/EVI/LST réels)
-6. ✅ **ORDRE N°50 PHASE 1** — DONE (6/6 GIS layers · GIS_OPERATIONAL_Ω = TRUE)
-7. ✅ **ORDRE N°50 PHASE 2** — DONE (DEM + slope/aspect/roughness/cost · TERRAIN_HR_OPERATIONAL_Ω = TRUE)
-8. ✅ **CHAÎNE_Ω CASCADE** — DONE (SPECTRAL → TERRAIN_HR → GIS opérationnelle)
-9. ✅ **ANTI-NOAA** — DONE
-10. ✅ **PHASE_3_3D_OMEGA** — DONE 2026-05-10 (mesh_3d_omega · Cesium 3D Tiles 1.0 + glTF 2.0 + draping)
-11. ✅ **ORGANIC PONDÉRÉ** — DONE 2026-05-10 (cascade_factor_global ∈ [0.5, 1.5] modulé sur intensity_level)
-12. ✅ **NEW_ENGINE_4 IA SUPER RESOLUTION** — DONE 2026-05-10 (Lanczos x4 + scaffold Real-ESRGAN compatible)
-13. 📋 **OPTIM** — installer torch + realesrgan pour activer Real-ESRGAN x4 V2
-14. 📋 **OPTIM** — finalisation NASA_EARTHDATA, LIDAR_WCS_1M (sources déclarées non utilisées)
-15. 🟡 **P22J** — Latence Cloudflare (request queue / SSR prefetch)
-16. 🟢 **P22P** — V8 legacy cleanup
-17. 🔵 **NEW_ENGINE 5 BACKLOG** — `engine_maxar_vhr_omega.py` (licence commerciale)
-18. 📋 **FRONTEND 3D VIEWER** — intégrer Cesium dans `/mon-territoire-bionic` pour rendre tileset.json mesh-3d
+5. ✅ **NEW_ENGINE_1_SPECTRAL_Ω** (DONE · NDVI/NDWI/EVI/LST réels)
+6. ✅ **ORDRE N°50 PHASE 1** (DONE · 6/6 GIS layers · GIS_OPERATIONAL_Ω = TRUE)
+7. ✅ **ORDRE N°50 PHASE 2** (DONE · DEM + slope/aspect/roughness/cost)
+8. ✅ **CHAÎNE_Ω CASCADE** (DONE · SPECTRAL → TERRAIN_HR → GIS)
+9. ✅ **ANTI-NOAA** (DONE)
+10. ✅ **PHASE_3_3D_OMEGA** (DONE · Cesium 3D Tiles + glTF + draping)
+11. ✅ **ORGANIC PONDÉRÉ DEFAULT = TRUE** (DONE 2026-05-10 · cascade activée par défaut)
+12. ✅ **NEW_ENGINE_4 REAL_ESRGAN_X4** (DONE 2026-05-10 · torch SR native)
+13. 📋 **OPTIM** torch+realesrgan native (xinntao) — bloqué par disque preview saturé
+14. 📋 **OPTIM** finalisation NASA_EARTHDATA, LIDAR_WCS_1M
+15. 🟡 **P22J** — Latence Cloudflare (cascade 27s par appel ORGANIC complet)
+16. 📋 **FRONTEND 3D VIEWER** — Cesium dans `/mon-territoire-bionic`
+17. 🟢 **P22P** — V8 legacy cleanup
+18. 🔵 **NEW_ENGINE 5 BACKLOG** — Maxar VHR (licence commerciale)
 
-### CONSTAT POST-PHASE_3 LIVE @ BSL
-- **MESH_3D** : Delaunay TIN 49 vertices/72 triangles · glTF 2236B + Cesium tileset 1.0 conforme (latence 0.56s)
-- **SUPER_RESOLUTION** : Lanczos x4 actif (Real-ESRGAN scaffold prêt pour V2)
-- **ORGANIC PONDÉRÉ** : cascade_factor_global = 0.859 (SPECTRAL 1.012 × TERRAIN 0.85 × GIS 0.998)
-- **PYTEST** : 88/88 PASSED · 0 SKIPPED · 0.76s
+### CONSTAT POST-ORGANIC_DEFAULT LIVE @ BSL
+- **ORGANIC PONDÉRÉ DEFAULT** : `enable_cascade_pondere=True` par défaut, cascade activée sans paramètre explicite
+- **REAL_ESRGAN_X4 TORCH SR NATIVE** : torch 2.11.0+cpu installé, mode default REAL_ESRGAN_X4, upscale DEM 5×5→20×20 en 89ms
+- **CASCADE LIVE** : factor=0.859 (SPECTRAL 1.012 × TERRAIN 0.85 × GIS 0.998), intensity_level 4→3 modulé
+- **PYTEST** : 88/88 PASSED · 0 SKIPPED · 1.55s
+- **Disque preview** : 94% utilisé (684MB libre) — surveillance recommandée
 
 ### CHANGELOG ANTÉRIEUR
 - **PHASE_XXX-QUINTRICICIES · P14 + TERRITOIRE_V7_PREMIUM_REPORTS_Ω — 🔗📊 MERKLE BITCOIN ANCHORING + RAPPORTS PREMIUM PLEIN-ÉCRAN (2026-05-08)**

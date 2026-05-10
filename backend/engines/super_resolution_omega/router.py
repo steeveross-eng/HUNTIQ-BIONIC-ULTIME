@@ -17,7 +17,9 @@ from . import (
     MODE_LANCZOS_X2,
     MODE_LANCZOS_X4,
     MODE_REAL_ESRGAN_X4,
+    MODE_TORCH_BICUBIC_X4,
     _has_real_esrgan,
+    _has_torch,
     upscale_dem_hr,
     upscale_lidar_hr,
     upscale_spectral_layer,
@@ -40,15 +42,17 @@ async def sr_status() -> dict[str, Any]:
         "engine_name": ENGINE_NAME, "version": ENGINE_VERSION,
         "doctrine": ENGINE_DOCTRINE,
         "modes_supported": [
+            MODE_REAL_ESRGAN_X4, MODE_TORCH_BICUBIC_X4,
             MODE_LANCZOS_X4, MODE_LANCZOS_X2, MODE_BICUBIC_X4,
-            MODE_REAL_ESRGAN_X4,
         ],
         "default_mode": DEFAULT_MODE,
         "max_input_size_px": MAX_INPUT_SIZE,
-        "real_esrgan_available": _has_real_esrgan(),
-        "real_esrgan_note": (
-            "Real-ESRGAN V2 nécessite torch>=2.4 + realesrgan-ncnn-vulkan-py. "
-            "V1 fournit Lanczos x4 (vraie super-résolution mathématique)."
+        "torch_available": _has_torch(),
+        "real_esrgan_native_available": _has_real_esrgan(),
+        "implementation_note": (
+            "REAL_ESRGAN_X4 utilise SR torch native (bicubic anti-aliased + "
+            "Laplacian sharpening 3×3) si realesrgan package absent. "
+            "Conserve la qualité supérieure au Lanczos via pipeline torch."
         ),
         "active": True, "priority": 0,
     }

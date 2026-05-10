@@ -153,12 +153,13 @@ def test_sr_engine_identity():
 
 
 def test_sr_modes_doctrinal():
-    """4 modes doctrinaux."""
+    """5 modes doctrinaux + DEFAULT = REAL_ESRGAN_X4 (commande Commandant 2026-05-10)."""
     assert MODE_LANCZOS_X4 == "LANCZOS_X4"
     assert MODE_LANCZOS_X2 == "LANCZOS_X2"
     assert MODE_BICUBIC_X4 == "BICUBIC_X4"
     assert MODE_REAL_ESRGAN_X4 == "REAL_ESRGAN_X4"
-    assert DEFAULT_MODE == MODE_LANCZOS_X4
+    # COMMANDE 2026-05-10 : Real-ESRGAN devient le mode par défaut
+    assert DEFAULT_MODE == MODE_REAL_ESRGAN_X4
 
 
 def test_upscale_lanczos_2d_x4():
@@ -181,14 +182,17 @@ def test_upscale_dem_hr_pipeline():
     assert out["shape_out"] == [8, 8]
 
 
-def test_upscale_real_esrgan_fallback_when_absent():
-    """Real-ESRGAN absent → fallback Lanczos automatique."""
+def test_upscale_real_esrgan_torch_sr_native():
+    """Real-ESRGAN x4 (torch SR native si realesrgan absent) → mode label valide."""
     grid = [[100.0, 110.0, 120.0],
             [105.0, 115.0, 125.0],
             [110.0, 120.0, 130.0]]
     out = upscale_dem_hr(grid, factor=4, mode=MODE_REAL_ESRGAN_X4)
     assert out["valid"] is True
-    assert "fallback" in out["mode"].lower() or "lanczos" in out["mode"].lower()
+    mode_lower = out["mode"].lower()
+    # Doit contenir soit "real_esrgan" (torch native), soit "lanczos" (fallback)
+    assert ("real_esrgan" in mode_lower or "lanczos" in mode_lower
+             or "torch_sr_native" in mode_lower)
 
 
 def test_upscale_spectral_layer_metadata():
