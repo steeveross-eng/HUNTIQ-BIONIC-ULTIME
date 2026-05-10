@@ -43,6 +43,30 @@ BCE-4X ULTIME ABSOLU :
 5. Aucune modification de rendu hors autorisation directe.
 
 ## Historique Implémentation (CHANGELOG résumé)
+
+### 2026-05-10 · P22Σ_V3_FUSION_VEINEUSE_DIAGNOSTIC_PANEL_Ω
+Panneau React `FusionDebugPanel.jsx` activable via `?fusionDebug=on` :
+- 3 tableaux : Σ Synthèse globale · Détails par espèce (5×TERRITORY_CONTINUOUS) · Distribution intensity_level
+- Mode séquentiel anti-saturation Cloudflare P22J + timeout 30s par espèce
+- Tag global `window.__P22SIGMA_V3_FUSION_DEBUG__` pour audit
+- Mount global dans `App.js` à côté de `LocalCorridorLensPanel`
+
+### 2026-05-09 · P22Σ_V3_TERRITORY_CONTINUOUS_FUSION_VEINEUSE_Ω
+Module fusion veineuse local + bascule defaults frontend :
+- Backend NEW `corridors_fusion_omega.py` : Union-Find · path averaging · 5 niveaux d'intensité 0-4
+- Backend EDIT `engine_ia_corridors_organic_omega.py` (+22 lignes IMPORT + appel + payload) — V30_LOCK INVIOLÉ FUSION ADD-ONLY
+- Frontend defaults basculés : `monoLayer=true` · `anchorMode='TERRITORY_CONTINUOUS'` · URL flag inversé `?monoLayer=off` (opt-out legacy)
+- Pytest neutre 15/15 PASSED · backend live verified (5→4 corridors fusionnés, network_001 absorbé, intensity_level=3 ÉLEVÉ)
+- Fusion ACTIVE en TERRITORY_CONTINUOUS uniquement · SALINE_CENTERED legacy preserve
+
+### Priorisation validée par COMMANDANT STEEVE-MAX (2026-05-10)
+1. **P22M** — Densification zones vitales x3 (recouvrement et finesse réseau par espèce)
+2. **P22I** — Multi-anchor chained corridors (extension pipeline 3+ nœuds entre zones vitales)
+3. **P22N** — GIS parcs + no_hunt registry (conformité écologique et juridique)
+4. **P22J** — Latence Cloudflare (UX, request queue / SSR prefetch)
+5. **P22P** — V8 legacy cleanup (HTTP 500 sur `/api/v8/map/*`, hygiène technique)
+
+### CHANGELOG ANTÉRIEUR
 - **PHASE_XXX-QUINTRICICIES · P14 + TERRITOIRE_V7_PREMIUM_REPORTS_Ω — 🔗📊 MERKLE BITCOIN ANCHORING + RAPPORTS PREMIUM PLEIN-ÉCRAN (2026-05-08)**
 
   **P14 · MERKLE_TREE_ANCHOR_HOOK_Ω** — Construction d'arbre Merkle binaire RFC 6962 sur tous les SHA-256 doctrinaux + ancrage cryptographique Bitcoin via OpenTimestamps Calendar.

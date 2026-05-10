@@ -3,6 +3,45 @@
 
 ---
 
+## 2026-05-10T13:55Z — P22Σ_V3_FUSION_VEINEUSE_DIAGNOSTIC_PANEL_Ω (PREVIEW)
+
+### Directive: PANNEAU DIAGNOSTIC FUSION VEINEUSE — DEPLOYED EN PREVIEW
+
+- **Frontend NEW** `FusionDebugPanel.jsx` (399 lignes) — Composant React autonome activé via `?fusionDebug=on` :
+  - **3 tableaux institutionnels** :
+    - Σ Synthèse globale : Avant / Après / Clusters fusionnés / Absorbés / Réduction%
+    - Détails par espèce (5 species × TERRITORY_CONTINUOUS) : HTTP / ms / N total / N réseau / Fusion / before/after/clusters/absorbed
+    - Distribution intensity_level par espèce (data live corridors[]) : L0 FAIBLE → L4 EXTRÊME
+  - **Mode SÉQUENTIEL** anti-saturation Cloudflare P22J — affichage progressif `...`/`⟳`
+  - **Timeout 30s** par espèce via `AbortController` (gère lat. Cloudflare ≥30s)
+  - **Tag global** `window.__P22SIGMA_V3_FUSION_DEBUG__` (audit institutionnel)
+  - **URL flag** `?fusionDebug=on|1|true` · paramètres `?lat=X&lon=Y` (défaut BSL canonique)
+  - **Bouton REFRESH** rafraîchit les 5 species probes
+  - **Style** : palette orange institutionnelle `#FF6A00` · monospace · header doctrinal · footer BCE-4X
+- **Frontend EDIT** `App.js` (+3 lignes) :
+  - Import `FusionDebugPanel`
+  - Mount global dans BrowserRouter (à côté de `LocalCorridorLensPanel`)
+- **Validation visuelle preview** (screenshot) :
+  - Panneau visible · header doctrinal correct · loading progressif fonctionnel
+  - Coords lat=48.2067/lon=-68.3824 · mode TERRITORY_CONTINUOUS · doctrine P22Σ_V3_FUSION_VEINEUSE_Ω
+  - 3 tableaux structurés · footer "BCE-4X ULTIME ABSOLU · ANTI-GÉNÉRIQUE STRICT · V30_LOCK INVIOLÉ"
+- **Validation backend live (curl direct)** :
+  - orignal × TERRITORY_CONTINUOUS (1.4s) : `before=10 → after=8` · `2 clusters fusionnés` · `2 absorbés` · `intensity_distribution: {L1:1, L2:5, L3:2}`
+  - Sample : `network_000 fc=2 il=3/ÉLEVÉ merged=[network_007]`
+- **Lint** : 0 issue sur les 2 fichiers modifiés
+- ⚠️ Browser side : 5 calls séquentiels prennent 60-120s en lat. Cloudflare ; ce comportement EST l'issue P22J pending. Backend lui-même répond <1.5s.
+- Aucun `testing_agent_v3_fork` · ANTI-GÉNÉRIQUE STRICT · `autonomy: LIMITED` · `guardrails: ENFORCED`
+- ⚠️ **PRD REDÉPLOIEMENT REQUIS** : Commandant doit cliquer "Deploy" pour propager P22Σ_V3 + DIAGNOSTIC_PANEL en `huntiq-restore.emergent.host`
+
+### PRIORISATION VALIDÉE PAR COMMANDANT (2026-05-10)
+1. P22M — Densification zones vitales x3
+2. P22I — Multi-anchor chained corridors
+3. P22N — GIS parcs + no_hunt registry
+4. P22J — Latence Cloudflare (UX)
+5. P22P — V8 legacy cleanup (hygiène)
+
+---
+
 ## 2026-05-09T21:25Z — P22Σ_V3_TERRITORY_CONTINUOUS_FUSION_VEINEUSE_Ω (PREVIEW)
 
 ### Directive: FUSION VEINEUSE LOCALE + DEFAULTS BASCULÉS — DEPLOYED EN PREVIEW

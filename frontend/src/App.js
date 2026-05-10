@@ -106,6 +106,8 @@ const ValidationsPage = lazy(() => import("@/components/admin-premium/Validation
 import TerritoireFrontendDebugOverlay from "@/components/territoire/TerritoireFrontendDebugOverlay";
 import CorridorsDebugOverlay from "@/components/territoire/CorridorsDebugOverlay";
 import LocalCorridorLensPanel from "@/components/territoire/LocalCorridorLensPanel";
+// P22Σ_V3 · FUSION VEINEUSE DIAGNOSTIC PANEL (URL flag ?fusionDebug=on)
+import FusionDebugPanel from "@/components/territoire/FusionDebugPanel";
 // VIS-E: Vision Notifications Panel
 import VisionNotificationsPanel from '@/components/VisionNotificationsPanel';
 // PHASE_X200_P4_RUNTIME_BEACON_Ω — attestation runtime institutionnelle (LAT 48.206657 / LNG -68.382422)
@@ -1176,6 +1178,8 @@ function App() {
             <CorridorsDebugOverlay />
             {/* P22Λ · LOCAL CORRIDOR LENS PANEL (URL flag ?lensDebug=on) */}
             <LocalCorridorLensPanel />
+            {/* P22Σ_V3 · FUSION VEINEUSE DIAGNOSTIC PANEL (URL flag ?fusionDebug=on) */}
+            <FusionDebugPanel />
           </BrowserRouter>
         </div>
         </NotificationProvider>
