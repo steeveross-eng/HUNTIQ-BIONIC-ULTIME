@@ -44,6 +44,13 @@ BCE-4X ULTIME ABSOLU :
 
 ## Historique Implémentation (CHANGELOG résumé)
 
+### 2026-05-10 · P22M+P22I+UI_LOCK_Ω + ORDRE N°50 PRÉPARATION
+- **P22M Densification ×3** : module `anchor_densifier_omega.py` — chaque nœud vital (alim/repos/rut/thermique/humide) génère 2 satellites jittered ∈ [40m, 75m], score×0.85, déterministe
+- **P22I Multi-anchor chained** : module `chained_corridors_omega.py` graph-traversal V2 — DFS sur source_id, chains 3-5 nodes, intensity_level=4 EXTRÊME pour 4+ nodes
+- **UI Lock** : `BionicLayersV8.jsx` `monoLayerActive=true` FORCÉ, flag `?monoLayer=off` rendu inopérant (verrou doctrinal)
+- **ORDRE N°50** : préparation doctrinale `/app/memory/ORDRE_N50_PLAN.md` (PHASE 1 GIS · PHASE 2 Terrain HR)
+- Pytest 30/30 PASSED · backend live verified (40→1 fusion, 11/12 EXTREME chains, L4 atteinte sur 5 espèces)
+
 ### 2026-05-10 · P22Σ_V3_FUSION_VEINEUSE_DIAGNOSTIC_PANEL_Ω
 Panneau React `FusionDebugPanel.jsx` activable via `?fusionDebug=on` :
 - 3 tableaux : Σ Synthèse globale · Détails par espèce (5×TERRITORY_CONTINUOUS) · Distribution intensity_level
@@ -59,12 +66,14 @@ Module fusion veineuse local + bascule defaults frontend :
 - Pytest neutre 15/15 PASSED · backend live verified (5→4 corridors fusionnés, network_001 absorbé, intensity_level=3 ÉLEVÉ)
 - Fusion ACTIVE en TERRITORY_CONTINUOUS uniquement · SALINE_CENTERED legacy preserve
 
-### Priorisation validée par COMMANDANT STEEVE-MAX (2026-05-10)
-1. **P22M** — Densification zones vitales x3 (recouvrement et finesse réseau par espèce)
-2. **P22I** — Multi-anchor chained corridors (extension pipeline 3+ nœuds entre zones vitales)
-3. **P22N** — GIS parcs + no_hunt registry (conformité écologique et juridique)
-4. **P22J** — Latence Cloudflare (UX, request queue / SSR prefetch)
-5. **P22P** — V8 legacy cleanup (HTTP 500 sur `/api/v8/map/*`, hygiène technique)
+### Priorisation MISE À JOUR par COMMANDANT STEEVE-MAX (2026-05-10)
+1. ✅ **P22M** — Densification zones vitales x3 (DONE 2026-05-10)
+2. ✅ **P22I** — Multi-anchor chained corridors (DONE 2026-05-10)
+3. 📋 **ORDRE N°50 PHASE 1** — GIS réel (FORET_MFFP, SOL_IRDA, ROUTES_MTQ, ZEC/SEPAQ, LIMITES, PRESSION_HUMAINE)
+4. 📋 **ORDRE N°50 PHASE 2** — Terrain HR (DEM 10m + LIDAR HR 1-2m)
+5. 🟡 **P22N** — GIS parcs + no_hunt registry (peut être absorbé par ORDRE N°50 PHASE 1)
+6. 🟡 **P22J** — Latence Cloudflare (UX, request queue / SSR prefetch)
+7. 🟢 **P22P** — V8 legacy cleanup (HTTP 500 sur `/api/v8/map/*`, hygiène)
 
 ### CHANGELOG ANTÉRIEUR
 - **PHASE_XXX-QUINTRICICIES · P14 + TERRITOIRE_V7_PREMIUM_REPORTS_Ω — 🔗📊 MERKLE BITCOIN ANCHORING + RAPPORTS PREMIUM PLEIN-ÉCRAN (2026-05-08)**

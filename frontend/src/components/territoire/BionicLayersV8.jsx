@@ -88,23 +88,19 @@ const BionicLayersV8 = ({
   onDataLoaded = null,
   onSalineNutritionDblClick = null, // PHASE_NUTRITION_SALINES_BINDING_Ω
   // P22Σ_V3_RENDU_MONO_LAYER_Ω (2026-05-09 · COMMANDANT STEEVE-MAX)
-  // BASCULE DES DEFAULTS — TERRITORY_CONTINUOUS + MONO_LAYER désormais par défaut.
-  // Legacy 3-couches halos + SALINE_CENTERED accessibles via `?monoLayer=off`.
-  monoLayer = true,                         // P22Σ_V3 : MONO_LAYER par défaut (1 polyline/corridor)
+  // P22M+P22I+UI_LOCK_Ω (2026-05-10 · COMMANDANT STEEVE-MAX)
+  //   → MODE LEGACY 3-COUCHES HALOS DÉFINITIVEMENT VERROUILLÉ.
+  //   → Seul TERRITORY_CONTINUOUS + MONO_LAYER + FUSION VEINEUSE Ω accessible.
+  //   → URL flag `?monoLayer=off` est désormais INOPÉRANT.
+  monoLayer = true,                         // INVIOLABLE — true forcé
   monoLayerBaseColor = '#FF8F00',           // couleur base institutionnelle
-  monoLayerAnchorMode = 'TERRITORY_CONTINUOUS', // pas de saline-centric
+  monoLayerAnchorMode = 'TERRITORY_CONTINUOUS', // INVIOLABLE
 }) => {
-  // P22Σ_V3 : Détection auto via URL flag `?monoLayer=off` (opt-out legacy)
-  // Default = mono-layer activé. Pour repasser au mode 3-couches halos + saline-centered :
-  //   `?monoLayer=off` ou `?monoLayer=0`
-  const monoLayerActive = useMemo(() => {
-    try {
-      const sp = new URLSearchParams(window.location.search);
-      const v = sp.get('monoLayer');
-      if (v === 'off' || v === '0' || v === 'false') return false;
-    } catch (_e) { /* noop */ }
-    return monoLayer;  // default true (P22Σ_V3 bascule)
-  }, [monoLayer]);
+  // P22M+P22I+UI_LOCK_Ω : monoLayer FORCÉ à true sans considération URL/props.
+  //   La doctrine BCE-4X ULTIME ABSOLU verrouille définitivement le mode legacy.
+  //   `?monoLayer=off` retiré du contrat public — lecture URL conservée
+  //   uniquement à des fins de tag d'audit (ne change PAS le rendu).
+  const monoLayerActive = true;  // VERROU INVIOLABLE
   const map = useMap();
   const groupRef = useRef(null);
   const autoZoomAppliedRef = useRef(null);

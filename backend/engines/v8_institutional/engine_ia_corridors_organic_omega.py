@@ -52,6 +52,16 @@ from engines.post_smoothing.corridors_fusion_omega import (
     fusion_summary,
 )
 
+# P22M + P22I (2026-05-10 · COMMANDANT STEEVE-MAX) — densification ×3 + chained corridors
+from engines.post_smoothing.anchor_densifier_omega import (
+    densify_vital_nodes_x3,
+    densification_summary,
+)
+from engines.post_smoothing.chained_corridors_omega import (
+    chain_corridors_for_species,
+    chained_summary,
+)
+
 ENGINE_NAME = "ENGINE-IA-CORRIDORS-ORGANIC-Ω"
 ENGINE_VERSION = "V2.0-PHASE-XI-SUPRA-N-Ω-NETWORK_LOCKED-2026-04"
 
@@ -868,6 +878,8 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
                                       anchor_priority: list[str] | None = None,
                                       allow_multi_anchor: bool = False,
                                       external_entry_exit_radius_m: float = 600.0,
+                                      densify_vitals: bool = True,
+                                      enable_chained_corridors: bool = True,
                                       ) -> dict:
     """Génère le réseau ORGANIC complet autour du waypoint.
 
@@ -876,6 +888,10 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
       - anchor_priority : liste priorités (default : saline > feeding > rut > rest > waypoint)
       - allow_multi_anchor : autorise corridors multi-ancres (post-MVP)
       - external_entry_exit_radius_m : rayon entry/exit nodes (default 600m)
+
+    P22M+P22I (2026-05-10 · COMMANDANT STEEVE-MAX) :
+      - densify_vitals : ×3 anchor points biologiques (default True)
+      - enable_chained_corridors : génère chains multi-nœuds (default True)
     """
     mark_call(ENGINE_NAME)
 
@@ -903,6 +919,24 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
     # P22H — Ajout de la priorisation par mode d'ancrage doctrinal.
     # ═════════════════════════════════════════════════════════════
     nodes = _collect_vital_nodes(bundle, lat, lon, species)
+
+    # ═════════════════════════════════════════════════════════════
+    # P22M_DENSIFICATION_VITALE_X3_Ω (2026-05-10 · COMMANDANT STEEVE-MAX)
+    # ═════════════════════════════════════════════════════════════
+    # Doctrine : tripler les anchor points biologiques (alim, repos, rut,
+    # thermique, humide) en générant 2 satellites jittered par node.
+    # FUSION ADD-ONLY — module externe `anchor_densifier_omega`.
+    # Activation conditionnelle : default ON (paramètre `densify_vitals`).
+    nodes_before_densify = len(nodes)
+    densification_stats: dict[str, Any] = {}
+    if densify_vitals and nodes:
+        nodes = densify_vital_nodes_x3(nodes)
+        densification_stats = densification_summary(
+            [{"type": "_marker"}] * nodes_before_densify, nodes,
+        )
+        densification_stats["n_nodes_before"] = nodes_before_densify
+        densification_stats["n_nodes_after"] = len(nodes)
+
     pairs = _compatible_pairs(nodes, species)
     # P22H_FIX : priorisation salines/feeding/rut/rest selon directive.
     pairs = _reorder_pairs_by_anchor(
@@ -983,6 +1017,23 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
     corridors_full = corridors
 
     # ═════════════════════════════════════════════════════════════
+    # P22I_MULTI_ANCHOR_CHAINED_CORRIDORS_Ω (2026-05-10 · COMMANDANT STEEVE-MAX)
+    # ═════════════════════════════════════════════════════════════
+    # Doctrine : générer des corridors multi-nœuds chained
+    # (alim → repos → rut → thermique) selon séquences canoniques par espèce.
+    # FUSION ADD-ONLY — module externe `chained_corridors_omega`.
+    # Préserve les corridors atomiques d'origine ET ajoute les chains.
+    chain_stats: dict[str, Any] = {}
+    chain_applied = False
+    if enable_chained_corridors and corridors_full:
+        atomic_count = len(corridors_full)
+        corridors_full = chain_corridors_for_species(corridors_full, species)
+        chain_stats = chained_summary(
+            corridors_full[:atomic_count], corridors_full,
+        )
+        chain_applied = True
+
+    # ═════════════════════════════════════════════════════════════
     # P22Σ_V3 — FUSION VEINEUSE LOCALE (TERRITORY_CONTINUOUS only)
     # ═════════════════════════════════════════════════════════════
     # Doctrine : pour le mode TERRITORY_CONTINUOUS, fusionner les corridors
@@ -1037,6 +1088,18 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
             "fusion_summary": fusion_stats if fusion_applied else None,
             "doctrine": "P22Σ_V3_FUSION_VEINEUSE_Ω",
             "activation_rule": "anchor_mode == TERRITORY_CONTINUOUS",
+        },
+        # P22M (2026-05-10 · COMMANDANT STEEVE-MAX) — traçabilité densification ×3
+        "p22m_densification_doctrine": {
+            "densify_vitals_active": bool(densify_vitals),
+            "densification_summary": densification_stats if densify_vitals else None,
+            "doctrine": "P22M_DENSIFICATION_VITALE_X3_Ω",
+        },
+        # P22I (2026-05-10 · COMMANDANT STEEVE-MAX) — traçabilité chained corridors
+        "p22i_chained_doctrine": {
+            "chained_applied": chain_applied,
+            "chained_summary": chain_stats if chain_applied else None,
+            "doctrine": "P22I_MULTI_ANCHOR_CHAINED_CORRIDORS_Ω",
         },
     }
 

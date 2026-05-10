@@ -3,6 +3,87 @@
 
 ---
 
+## 2026-05-10T15:30Z — P22M+P22I+UI_LOCK_Ω + ORDRE_N°50 PRÉPARATION (PREVIEW)
+
+### Directive: DENSIFICATION ×3 + MULTI-ANCHOR CHAINED + UI VERROUILLAGE — DEPLOYED EN PREVIEW
+
+#### BLOC A · P22M_DENSIFICATION_VITALE_X3_Ω
+- **Backend NEW** `anchor_densifier_omega.py` (149 lignes, FUSION ADD-ONLY) :
+  - `densify_vital_nodes_x3()` — 1 nœud parent → 3 nœuds (parent + 2 satellites)
+  - Constantes doctrinales : `DENSIFY_FACTOR=3` · `RADIUS=[40m, 75m]` · `SCORE_RATIO=0.85`
+  - Densifiable : alimentation, repos, rut, thermique, humide
+  - Non-densifiable : saline, hotspot, refuge (ressources institutionnelles uniques)
+  - Algorithme déterministe (seed = hash source_id) — anti-régression
+  - 2 satellites séparés de 120° en azimuth — étalement surfacique
+  - Tag traçabilité : `_p22m_role`, `_p22m_parent_id`, `_p22m_bearing_deg`, `_p22m_radius_m`
+
+#### BLOC B · P22I_MULTI_ANCHOR_CHAINED_CORRIDORS_Ω
+- **Backend NEW** `chained_corridors_omega.py` (281 lignes, FUSION ADD-ONLY V2 graph-traversal) :
+  - V1 séquences canoniques → V2 graph-traversal réel sur source_id
+  - `_build_node_graph()` — graphe d'adjacence à partir des corridors atomiques
+  - `_find_chains_in_graph()` — DFS limité, déduplication par signature
+  - `chain_corridors_for_species()` — chains de 3-5 nodes (≥ 2 transitions)
+  - Niveau d'intensité : 4 nodes+ → EXTRÊME (4) · 3 nodes → ÉLEVÉ (3)
+  - Préservation stricte des corridors atomiques d'origine
+  - Anti-générique : aucune chain artificielle, uniquement basée sur graphe réel
+  - Limites doctrinales : `MIN=3 nodes` · `MAX=5 nodes` · `MAX_CHAINS=12` par espèce
+
+#### BLOC C · INTÉGRATION ENGINE V30
+- **Backend EDIT** `engine_ia_corridors_organic_omega.py` (+25 lignes IMPORT + 2 appels + 2 payloads, V30_LOCK INVIOLÉ FUSION ADD-ONLY) :
+  - Import `densify_vital_nodes_x3`, `densification_summary`, `chain_corridors_for_species`, `chained_summary`
+  - Paramètre `densify_vitals: bool = True` ajouté à `generate_organic_corridors()`
+  - Paramètre `enable_chained_corridors: bool = True` ajouté
+  - Hook P22M : entre `_collect_vital_nodes` et `_compatible_pairs`
+  - Hook P22I : après boucle de génération, avant fusion P22Σ_V3
+  - Payload retour enrichi : `p22m_densification_doctrine` + `p22i_chained_doctrine`
+
+#### BLOC D · UI VERROUILLAGE FRONTEND
+- **Frontend EDIT** `BionicLayersV8.jsx` :
+  - `monoLayerActive = true` FORCÉ (constante, plus de useMemo)
+  - URL flag `?monoLayer=off` désormais INOPÉRANT (verrou doctrinal)
+  - Commentaire institutionnel : "MODE LEGACY 3-COUCHES HALOS DÉFINITIVEMENT VERROUILLÉ"
+
+#### BLOC E · TESTS NEUTRES
+- **Pytest** `test_phase_xx_p22m_p22i_combined.py` (16 tests) + `test_phase_xx_p22sigma_v3_fusion_veineuse_omega.py` (15 tests préexistants) :
+  - **30/30 PASSED · 0 SKIPPED · 0.11s**
+  - Couverture : constantes doctrinales · radius range · déterminisme · sat/hotspot exclusion · graph-traversal · sequences · summary
+
+#### BLOC F · VALIDATION BACKEND LIVE
+- **Test direct Python · 5 espèces × TERRITORY_CONTINUOUS** :
+  ```
+  Espèce          dnsf  atomic  chains  extreme  fused  clusters  L4
+  orignal           26      42      12       11      2         2   2
+  chevreuil         26      48      12       11      2         2   2
+  ours_noir         26      21      12       10      1         1   1
+  dindon_sauvage    26      22      12       10      1         1   1
+  wapiti            26      55      12       11      2         2   2
+  ```
+- **Curl preview live · orignal · 18.5s** :
+  ```
+  P22M : 16 → 26 nodes (densification x1.625 partielle, salines/hotspots préservés)
+  P22I : 28 atomic → 12 chains, 11 EXTRÊME (intensity_level=4)
+  P22Σ_V3 : 40 → 1 corridor (97% réduction, 39 absorbés, L4=1 EXTRÊME)
+  ```
+- **Objectif COMMANDANT atteint** : intensity_level=4 EXTRÊME visible sur les 5 espèces
+
+#### BLOC G · ORDRE N°50 PRÉPARATION
+- **Document NEW** `/app/memory/ORDRE_N50_PLAN.md` (197 lignes) :
+  - PHASE 1 — GIS RÉEL : FORET_MFFP, SOL_IRDA, ROUTES_MTQ, ZEC/SEPAQ, LIMITES, PRESSION_HUMAINE
+  - PHASE 2 — Terrain HR : DEM 10m + LIDAR HR 1-2m, pentes/exposition/courbure/hydro/rugosité
+  - Architecture FUSION ADD-ONLY pressentie · sources institutionnelles · pré-requis SDK
+  - Critères de validation `GIS_OPERATIONAL_Ω` et `TERRAIN_HR_OPERATIONAL_Ω`
+  - Séquence d'exécution recommandée P0/P1 · risques identifiés
+
+#### LINT
+- 0 issue sur les 3 fichiers Python NEW + 1 fichier Python EDIT
+- 0 issue sur le 1 fichier JSX EDIT
+
+#### Aucun `testing_agent_v3_fork` utilisé
+- ANTI-GÉNÉRIQUE STRICT · `autonomy: LIMITED` · `guardrails: ENFORCED` · V30_LOCK INVIOLÉ · FUSION ADD-ONLY
+- ⚠️ **PRD REDÉPLOIEMENT REQUIS** : Commandant doit cliquer "Deploy"
+
+---
+
 ## 2026-05-10T13:55Z — P22Σ_V3_FUSION_VEINEUSE_DIAGNOSTIC_PANEL_Ω (PREVIEW)
 
 ### Directive: PANNEAU DIAGNOSTIC FUSION VEINEUSE — DEPLOYED EN PREVIEW
