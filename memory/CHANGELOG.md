@@ -3,6 +3,107 @@
 
 ---
 
+## 2026-05-10T19:30Z — PHASE_3_3D_OMEGA + ORGANIC_PONDÉRÉ + IA_SUPER_RESOLUTION_Ω (PREVIEW)
+
+### Directive: PHASE 3 + ORGANIC PONDÉRÉ + NEW_ENGINE_4 — DELIVERED EN PREVIEW
+
+#### LIVRABLES (6 fichiers · V30_LOCK INVIOLÉ · FUSION ADD-ONLY)
+
+##### BLOC A · ENGINE_MESH_3D_Ω (PHASE 3)
+- **Backend NEW** `/app/backend/engines/mesh_3d_omega/__init__.py` (302 lignes) :
+  - `build_delaunay_tin()` — TIN scipy.spatial.Delaunay sur grille DEM réelle
+  - `build_gltf_mesh()` — glTF 2.0 binary embedded base64 valide
+  - `build_cesium_tileset()` — Cesium 3D Tiles 1.0 spec conforme
+  - `drape_spectral_on_vertices()` — couleurs vertex NDVI/NDWI (vert/bleu/brun)
+  - `drape_terrain_slope_on_vertices()` — couleurs vertex slope (gris→rouge)
+  - `elevation_sampling()` — interpolation barycentrique sur le mesh
+- **Backend NEW** `/app/backend/engines/mesh_3d_omega/router.py` (124 lignes) :
+  - `GET /api/v20/mesh-3d/status`
+  - `POST /api/v20/mesh-3d/{build,tin,elevation-sample}`
+
+##### BLOC B · ENGINE_SUPER_RESOLUTION_Ω (NEW_ENGINE_4)
+- **Backend NEW** `/app/backend/engines/super_resolution_omega/__init__.py` (190 lignes) :
+  - `upscale_array_lanczos()` — Lanczos PIL (vraie super-résolution mathématique)
+  - `upscale_array_bicubic()` — fallback bicubic
+  - `upscale_real_esrgan_x4()` — scaffold V2 (active si torch+realesrgan)
+  - `upscale_dem_hr()`, `upscale_lidar_hr()`, `upscale_spectral_layer()` — pipelines dédiés
+  - 4 modes : LANCZOS_X4 (default), LANCZOS_X2, BICUBIC_X4, REAL_ESRGAN_X4
+  - Fallback automatique vers Lanczos x4 si Real-ESRGAN non installé
+- **Backend NEW** `/app/backend/engines/super_resolution_omega/router.py` (74 lignes) :
+  - `GET /api/v20/super-resolution/status`
+  - `POST /api/v20/super-resolution/{upscale-dem,upscale-lidar,upscale-spectral}`
+
+##### BLOC C · ORGANIC PONDÉRÉ
+- **Backend EDIT** `engine_ia_corridors_organic_omega.py` (+85 lignes IMPORT + cascade hook + payload) :
+  - Import : `_sp_compute`, `_th_compute`, `_gis_compute` (FUSION ADD-ONLY strict)
+  - Paramètre `enable_cascade_pondere: bool = False` (opt-in)
+  - Hook : après fusion P22Σ_V3, exécute SPECTRAL → TERRAIN_HR → GIS
+  - Modulation : `intensity_level *= cascade_factor_global` clipping [0.5, 1.5]
+  - Tag corridors : `_intensity_level_pre_cascade`, `_cascade_factor_global`, `_cascade_chain`
+  - Payload retour : `phase_3_cascade_pondere_doctrine`
+- **TERRAIN_3D_OMEGA FEATURE_FLAG** : déjà à `TRUE` (pas de modification requise, déjà actif)
+
+##### BLOC D · SERVER REGISTRATION
+- **Server EDIT** `server.py` (+16 lignes) — 2 nouveaux routers (mesh-3d, super-resolution)
+
+##### BLOC E · TESTS NEUTRES
+- **Pytest** `test_phase_xx_phase_3_3d_super_resolution.py` (19 tests)
+- **Total cumulé** : 88 PASSED · 0 SKIPPED · 0.76s
+  (19 PHASE_3 + 18 PHASE_1+2 + 24 NEW_ENGINE_1 + 16 P22M+P22I + 11 P22Σ_V3)
+
+#### VALIDATION INSTITUTIONNELLE LIVE @ BSL (ANTI-GÉNÉRIQUE STRICT)
+
+##### MESH 3D BUILD — Delaunay TIN + glTF + Cesium tileset
+```
+Latence : 0.56s
+TIN      : 49 vertices · 72 triangles Delaunay (DEM 7×7 grille réelle)
+glTF 2.0 : 2236 bytes binary embedded base64 · vertex_colors=True (slope draping)
+Cesium 3D Tiles 1.0 : asset_version=1.0 · geometric_error=100m
+Bounding region : -68.385 → -68.380 lon · 48.205 → 48.208 lat · 325-360m elev
+Draping slope : min=7.07% · max=114.13% · mean=49.63% · 5 octants
+```
+
+##### SUPER RESOLUTION — Lanczos x4 + scaffold Real-ESRGAN
+```
+LANCZOS_X4 : grille 4×4 → 16×16 · stats min/max préservés (100→145)
+REAL_ESRGAN_X4 : fallback automatique Lanczos x4 (Real-ESRGAN non installé)
+real_esrgan_available = False (scaffold V2 prêt pour torch + realesrgan)
+```
+
+##### ORGANIC PONDÉRÉ LIVE — orignal × TERRITORY_CONTINUOUS
+```
+cascade_pondere_applied = TRUE
+cascade_factor_global   = 0.859
+
+STAGE 1 SPECTRAL    factor=1.012  ndvi_n=0.675  ndwi_n=0.320
+STAGE 2 TERRAIN_HR  factor=0.850  slope_mean=49.6%  tri_mean=30.52
+STAGE 3 GIS         factor=0.998  6/6 layers  gis_operational_omega=TRUE
+
+Sample corridor : intensity_level 4 → 3 (modulé par cascade × 0.859)
+                  _cascade_chain = "CASCADE_Ω → ORGANIC → CORRIDORS"
+```
+
+#### LINT
+- 0 issue Python sur les 4 fichiers NEW (mesh_3d_omega, super_resolution_omega)
+- 0 issue sur engine_ia_corridors_organic_omega.py edit
+
+#### CONFORMITÉ DOCTRINALE
+- ✅ ANTI-GÉNÉRIQUE STRICT (DEM Delaunay sur 49 vertices Open-Meteo réels, NDVI Sentinel-2 réel pour draping)
+- ✅ V30_LOCK INVIOLÉ (engine ORGANIC : IMPORT + appels conditionnels seulement)
+- ✅ FUSION ADD-ONLY (mesh_3d, super_resolution = engines externes)
+- ✅ Aucun `testing_agent_v3_fork` · pytest neutre + curl direct
+- ✅ Real-ESRGAN scaffold prêt (V2 = installation torch + realesrgan)
+- ✅ Aucune duplication
+
+#### CHAÎNES_Ω OPÉRATIONNELLES POST-PHASE_3
+- `CHAINE_Ω_TERRAIN_HR → CHAINE_Ω_MESH_3D → CHAINE_Ω_TERRITOIRE` (3D rendering)
+- `CHAINE_Ω_CASCADE → CHAINE_Ω_ORGANIC → CHAINE_Ω_CORRIDORS` (intensity modulation)
+- `CHAINE_Ω_SPECTRAL → CHAINE_Ω_MESH_3D` (draping NDVI/NDWI)
+
+⚠️ **PRD REDÉPLOIEMENT REQUIS** : Commandant doit cliquer "Deploy"
+
+---
+
 ## 2026-05-10T18:30Z — PHASE_1+PHASE_2_Ω + CHAÎNE_Ω CASCADE + ANTI-NOAA (PREVIEW)
 
 ### Directive: ORDRE N°50 PHASE 1 + PHASE 2 — DEPLOYED EN PREVIEW (100% GIS COVERAGE)

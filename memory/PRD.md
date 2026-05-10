@@ -66,28 +66,31 @@ Module fusion veineuse local + bascule defaults frontend :
 - Pytest neutre 15/15 PASSED · backend live verified (5→4 corridors fusionnés, network_001 absorbé, intensity_level=3 ÉLEVÉ)
 - Fusion ACTIVE en TERRITORY_CONTINUOUS uniquement · SALINE_CENTERED legacy preserve
 
-### Priorisation MISE À JOUR par COMMANDANT STEEVE-MAX (2026-05-10 · POST-PHASE_1+2)
-1. ✅ **P22M** — Densification zones vitales x3 (DONE 2026-05-10)
-2. ✅ **P22I** — Multi-anchor chained corridors (DONE 2026-05-10)
-3. ✅ **AUDIT_Ω_SPECTRAL_TERRAIN_3D** — DONE 2026-05-10
+### Priorisation MISE À JOUR par COMMANDANT STEEVE-MAX (2026-05-10 · POST-PHASE_3)
+1. ✅ **P22M** — Densification zones vitales x3 (DONE)
+2. ✅ **P22I** — Multi-anchor chained corridors (DONE)
+3. ✅ **AUDIT_Ω_SPECTRAL_TERRAIN_3D** (DONE)
 4. ✅ **P22N** — ABSORBÉ dans ORDRE N°50 PHASE 1 (DONE)
-5. ✅ **NEW_ENGINE_1_SPECTRAL_Ω** — DONE 2026-05-10 (NDVI/NDWI/EVI/LST réels)
-6. ✅ **ORDRE N°50 PHASE 1** — DONE 2026-05-10 (6/6 GIS layers · GIS_OPERATIONAL_Ω = TRUE)
-7. ✅ **ORDRE N°50 PHASE 2** — DONE 2026-05-10 (DEM + slope/aspect/roughness/cost · TERRAIN_HR_OPERATIONAL_Ω = TRUE)
-8. ✅ **CHAÎNE_Ω CASCADE** — DONE 2026-05-10 (SPECTRAL → TERRAIN_HR → GIS opérationnelle)
-9. ✅ **ANTI-NOAA** — DONE 2026-05-10 (data_sources retirées, registry DEPRECATED)
-10. 📋 **OPTIM** terrain_3d_omega activation FEATURE_FLAG + mesh 3D
-11. 📋 **NEW_ENGINE 3** — `engine_3d_mesh_omega.py` (Cesium 3D Tiles + glTF)
-12. 📋 **NEW_ENGINE 4** — `engine_ai_super_resolution_omega.py` (Real-ESRGAN, P3)
-13. 🟡 **P22J** — Latence Cloudflare (request queue / SSR prefetch)
-14. 🟢 **P22P** — V8 legacy cleanup
-15. 🔵 **NEW_ENGINE 5 BACKLOG** — `engine_maxar_vhr_omega.py` (licence commerciale)
+5. ✅ **NEW_ENGINE_1_SPECTRAL_Ω** — DONE (NDVI/NDWI/EVI/LST réels)
+6. ✅ **ORDRE N°50 PHASE 1** — DONE (6/6 GIS layers · GIS_OPERATIONAL_Ω = TRUE)
+7. ✅ **ORDRE N°50 PHASE 2** — DONE (DEM + slope/aspect/roughness/cost · TERRAIN_HR_OPERATIONAL_Ω = TRUE)
+8. ✅ **CHAÎNE_Ω CASCADE** — DONE (SPECTRAL → TERRAIN_HR → GIS opérationnelle)
+9. ✅ **ANTI-NOAA** — DONE
+10. ✅ **PHASE_3_3D_OMEGA** — DONE 2026-05-10 (mesh_3d_omega · Cesium 3D Tiles 1.0 + glTF 2.0 + draping)
+11. ✅ **ORGANIC PONDÉRÉ** — DONE 2026-05-10 (cascade_factor_global ∈ [0.5, 1.5] modulé sur intensity_level)
+12. ✅ **NEW_ENGINE_4 IA SUPER RESOLUTION** — DONE 2026-05-10 (Lanczos x4 + scaffold Real-ESRGAN compatible)
+13. 📋 **OPTIM** — installer torch + realesrgan pour activer Real-ESRGAN x4 V2
+14. 📋 **OPTIM** — finalisation NASA_EARTHDATA, LIDAR_WCS_1M (sources déclarées non utilisées)
+15. 🟡 **P22J** — Latence Cloudflare (request queue / SSR prefetch)
+16. 🟢 **P22P** — V8 legacy cleanup
+17. 🔵 **NEW_ENGINE 5 BACKLOG** — `engine_maxar_vhr_omega.py` (licence commerciale)
+18. 📋 **FRONTEND 3D VIEWER** — intégrer Cesium dans `/mon-territoire-bionic` pour rendre tileset.json mesh-3d
 
-### CONSTAT POST-PHASE_1+2 LIVE @ BSL
-- **GIS** : 6/6 couches actives — FORET_MFFP (WMS Québec) · SOL_IRDA (ISRIC SoilGrids) · ROUTES_MTQ (Overpass mirror) · ZEC_SEPAQ (Données Québec) · LIMITES (Données Québec) · PRESSION_HUMAINE (WorldPop CAN 2020). Latence 17.9s.
-- **TERRAIN_HR** : DEM 7×7 grille Open-Meteo · slope_mean=49.6% · aspect_octants=5 · tri_mean=30.52 · cost_mean=3.48. Latence 0.83s.
-- **CASCADE** : `cascade_factor_global = 0.859` (SPECTRAL 1.012 × TERRAIN 0.85 × GIS 0.998). Latence 27.4s.
-- **PYTEST** : 69/69 PASSED · 0 SKIPPED · 0.53s
+### CONSTAT POST-PHASE_3 LIVE @ BSL
+- **MESH_3D** : Delaunay TIN 49 vertices/72 triangles · glTF 2236B + Cesium tileset 1.0 conforme (latence 0.56s)
+- **SUPER_RESOLUTION** : Lanczos x4 actif (Real-ESRGAN scaffold prêt pour V2)
+- **ORGANIC PONDÉRÉ** : cascade_factor_global = 0.859 (SPECTRAL 1.012 × TERRAIN 0.85 × GIS 0.998)
+- **PYTEST** : 88/88 PASSED · 0 SKIPPED · 0.76s
 
 ### CHANGELOG ANTÉRIEUR
 - **PHASE_XXX-QUINTRICICIES · P14 + TERRITOIRE_V7_PREMIUM_REPORTS_Ω — 🔗📊 MERKLE BITCOIN ANCHORING + RAPPORTS PREMIUM PLEIN-ÉCRAN (2026-05-08)**

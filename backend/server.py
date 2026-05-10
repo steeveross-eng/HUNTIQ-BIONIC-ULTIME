@@ -1055,6 +1055,24 @@ try:
 except Exception as e:
     logger.warning(f"CHAINE_Ω_CASCADE not loaded: {e}")
 
+# ENGINE_MESH_3D_Ω · PHASE 3 (2026-05-10 · STEEVE-MAX)
+# Cesium 3D Tiles + glTF + draping SPECTRAL/TERRAIN_HR/GIS
+try:
+    from engines.mesh_3d_omega.router import router as mesh_3d_router
+    app.include_router(mesh_3d_router)
+    logger.info("ENGINE_MESH_3D_Ω registered (/api/v20/mesh-3d) — PHASE_3 3D Cesium+glTF")
+except Exception as e:
+    logger.warning(f"ENGINE_MESH_3D_Ω not loaded: {e}")
+
+# ENGINE_SUPER_RESOLUTION_Ω · NEW_ENGINE_4 (2026-05-10 · STEEVE-MAX)
+# Lanczos x4 + scaffold Real-ESRGAN compatible
+try:
+    from engines.super_resolution_omega.router import router as super_res_router
+    app.include_router(super_res_router)
+    logger.info("ENGINE_SUPER_RESOLUTION_Ω registered (/api/v20/super-resolution) — NEW_ENGINE_4")
+except Exception as e:
+    logger.warning(f"ENGINE_SUPER_RESOLUTION_Ω not loaded: {e}")
+
 # ENGINE-RENDU-Ω — Phase XI-SUPRA-K (rendu institutionnel corridors)
 try:
     from engines.v8_institutional.engine_rendu_omega import router as rendu_omega_router, visual_router as rendu_visual_router

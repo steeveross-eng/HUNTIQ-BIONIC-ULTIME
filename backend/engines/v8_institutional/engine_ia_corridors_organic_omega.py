@@ -62,6 +62,16 @@ from engines.post_smoothing.chained_corridors_omega import (
     chained_summary,
 )
 
+# CASCADE_PONDÉRÉ_Ω (2026-05-10 · COMMANDANT STEEVE-MAX)
+# FUSION ADD-ONLY — cascade SPECTRAL → TERRAIN_HR → GIS pour pondération corridors
+try:
+    from engines.spectral_omega import compute_spectral_at_point as _sp_compute
+    from engines.terrain_hr_omega import compute_terrain_hr_at_point as _th_compute
+    from engines.gis_omega import compute_corridors_gis as _gis_compute
+    _CASCADE_AVAILABLE = True
+except Exception as _e:
+    _CASCADE_AVAILABLE = False
+
 ENGINE_NAME = "ENGINE-IA-CORRIDORS-ORGANIC-Ω"
 ENGINE_VERSION = "V2.0-PHASE-XI-SUPRA-N-Ω-NETWORK_LOCKED-2026-04"
 
@@ -880,6 +890,7 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
                                       external_entry_exit_radius_m: float = 600.0,
                                       densify_vitals: bool = True,
                                       enable_chained_corridors: bool = True,
+                                      enable_cascade_pondere: bool = False,
                                       ) -> dict:
     """Génère le réseau ORGANIC complet autour du waypoint.
 
@@ -892,6 +903,11 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
     P22M+P22I (2026-05-10 · COMMANDANT STEEVE-MAX) :
       - densify_vitals : ×3 anchor points biologiques (default True)
       - enable_chained_corridors : génère chains multi-nœuds (default True)
+
+    PHASE_3_CASCADE_PONDÉRÉ_Ω (2026-05-10 · COMMANDANT STEEVE-MAX) :
+      - enable_cascade_pondere : applique cascade SPECTRAL→TERRAIN_HR→GIS au waypoint
+        et module l'intensity_level corridor par cascade_factor_global ∈ [0.5, 1.5]
+        (default False — opt-in pour préserver latence baseline)
     """
     mark_call(ENGINE_NAME)
 
@@ -1050,6 +1066,76 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
         fusion_stats["n_corridors_before_fusion"] = before_count
         fusion_applied = True
 
+    # ═════════════════════════════════════════════════════════════
+    # PHASE_3_CASCADE_PONDÉRÉ_Ω (2026-05-10 · COMMANDANT STEEVE-MAX)
+    # ═════════════════════════════════════════════════════════════
+    # Doctrine : applique la CHAÎNE_Ω SPECTRAL → TERRAIN_HR → GIS au waypoint
+    # et module l'intensity_level corridor par cascade_factor_global ∈ [0.5, 1.5].
+    # FUSION ADD-ONLY — utilise les engines externes spectral_omega + terrain_hr_omega + gis_omega.
+    # Activation conditionnelle (opt-in) : default OFF pour préserver latence baseline.
+    cascade_pondere_applied = False
+    cascade_factor_global = 1.0
+    cascade_stages: list[dict[str, Any]] = []
+    if (enable_cascade_pondere and _CASCADE_AVAILABLE
+            and corridors_full and len(corridors_full) > 0):
+        try:
+            # STAGE 1 — SPECTRAL
+            spec = _sp_compute(lat, lon, halo_m=200.0, include_landsat_lst=False)
+            ndvi_n = float(spec.get("ndvi_normalized", 0.5))
+            ndwi_n = float(spec.get("ndwi_normalized", 0.5))
+            factor_s = 1.0
+            factor_s *= (1.0 + 0.20 * (ndvi_n - 0.5) * 2.0)
+            factor_s *= (1.0 + 0.15 * (ndwi_n - 0.5) * 2.0)
+            factor_s = max(0.5, min(1.5, factor_s))
+            cascade_stages.append({"stage": "SPECTRAL", "factor": factor_s,
+                                    "ndvi_normalized": ndvi_n, "ndwi_normalized": ndwi_n})
+
+            # STAGE 2 — TERRAIN_HR
+            terrain = _th_compute(lat, lon, halo_m=200.0, grid_n=7, lod="MED")
+            slope_mean = float((terrain.get("slope_aspect", {}) or {})
+                                .get("stats", {}).get("slope_mean_pct", 0.0) or 0.0)
+            tri_mean = float((terrain.get("roughness_tri", {}) or {})
+                              .get("stats", {}).get("tri_mean", 0.0) or 0.0)
+            factor_t = 1.0
+            if slope_mean > 30.0:
+                factor_t *= 0.85
+            elif slope_mean > 15.0:
+                factor_t *= 0.95
+            if tri_mean > 50.0:
+                factor_t *= 0.90
+            factor_t = max(0.5, min(1.2, factor_t))
+            cascade_stages.append({"stage": "TERRAIN_HR", "factor": factor_t,
+                                    "slope_mean_pct": slope_mean, "tri_mean": tri_mean})
+
+            # STAGE 3 — GIS
+            gis_result = _gis_compute(corridors_full, lat, lon, halo_m=5000.0)
+            factor_g = float(gis_result.get("gis_factor", 1.0))
+            cascade_stages.append({
+                "stage": "GIS", "factor": factor_g,
+                "n_layers_loaded": gis_result.get("n_layers_loaded", 0),
+                "gis_operational_omega": gis_result.get("gis_operational_omega", False),
+            })
+            corridors_full = gis_result.get("corridors", corridors_full)
+
+            # FACTEUR GLOBAL CASCADE
+            cascade_factor_global = factor_s * factor_t * factor_g
+            cascade_factor_global = max(0.5, min(1.5, cascade_factor_global))
+
+            # APPLICATION sur intensity_level (modulation_range: [0.5, 1.5])
+            for c in corridors_full:
+                il = c.get("intensity_level")
+                if isinstance(il, (int, float)):
+                    new_il = float(il) * cascade_factor_global
+                    c["_intensity_level_pre_cascade"] = float(il)
+                    c["intensity_level"] = max(0, min(4, round(new_il)))
+                c["_cascade_factor_global"] = cascade_factor_global
+                c["_cascade_chain"] = "CASCADE_Ω → ORGANIC → CORRIDORS"
+
+            cascade_pondere_applied = True
+        except Exception as e:
+            logger.warning("CASCADE_PONDÉRÉ failed: %s", e)
+            cascade_stages.append({"stage": "ERROR", "error": str(e)})
+
     # Summary hiérarchie
     hierarchy_counts = {"veine_principale": 0, "veine_secondaire": 0, "capillaire": 0, "connector": 0}
     for c in corridors_full:
@@ -1100,6 +1186,14 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
             "chained_applied": chain_applied,
             "chained_summary": chain_stats if chain_applied else None,
             "doctrine": "P22I_MULTI_ANCHOR_CHAINED_CORRIDORS_Ω",
+        },
+        # PHASE_3_CASCADE_PONDÉRÉ (2026-05-10 · COMMANDANT STEEVE-MAX) — traçabilité cascade
+        "phase_3_cascade_pondere_doctrine": {
+            "cascade_pondere_applied": cascade_pondere_applied,
+            "cascade_factor_global": cascade_factor_global if cascade_pondere_applied else None,
+            "cascade_stages": cascade_stages if cascade_pondere_applied else None,
+            "doctrine": "PHASE_3_CASCADE_Ω · SPECTRAL → TERRAIN_HR → GIS → ORGANIC",
+            "modulation_range": [0.5, 1.5],
         },
     }
 
