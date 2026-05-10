@@ -3,6 +3,71 @@
 
 ---
 
+## 2026-05-10T16:30Z — AUDIT_Ω_SPECTRAL_TERRAIN_3D + P22N ABSORPTION (READ-ONLY)
+
+### Directive: AUDIT INSTITUTIONNEL COMPLET — DELIVERED
+
+#### AUDIT EXÉCUTÉ
+- **Périmètre** : 264 fichiers Python · 27 dossiers d'engines · 43 register_engine calls
+- **Méthode** : grep extensif read-only · validation httpx URLs · classification doctrinale
+- **Domaines audités** : Spectral · Terrain HR · IA · 3D · Hydrologie · Fusion multi-source
+
+#### CAPACITÉS PRÉSENTES IDENTIFIÉES
+- ✅ **Hydrologie avancée** : 4 engines (engine_hydrologie_supra, engine_risques_hydro_omega, hydro_topo_omega, eco_zones_omega salines)
+- ✅ **Fusion multi-source** : advanced_geospatial_omega + ecological_orchestrator_omega
+- ✅ **DEM 10m** : terrain_v10_supra + lidar_irda_v11 (open-meteo elevation API)
+- ✅ **Terrain 2.5D** : terrain_3d_omega (FEATURE_FLAG=OFF, slope/aspect uniquement)
+- ✅ **Sources externes actives** : Open-Meteo, OpenWeather, MFFP WMS, GBIF, WorldPop, OSM Overpass
+
+#### CAPACITÉS ABSENTES IDENTIFIÉES (GAPS)
+- ❌ NDVI / NDWI / EVI réels (label texte uniquement dans eco_zones_omega)
+- ❌ Indices thermiques LST satellite
+- ❌ Ingestion Sentinel / Landsat / STAC catalog
+- ❌ Pipeline IA (ESRGAN / SwinIR / Real-ESRGAN) — aucun TensorFlow/PyTorch
+- ❌ Pipeline Maxar HR / WorldView / Planet
+- ❌ Pipeline DEM HR 1-2m réel
+- ❌ Pipeline LIDAR HR (URL présente, fetch incomplet)
+- ❌ Pipeline 3D Tiles / Cesium / glTF / mesh 3D
+
+#### SOURCES DÉCLARÉES NON UTILISÉES (gap doctrinal)
+- NASA_EARTHDATA (3 engines) · LIDAR_WCS_1M · NOAA_CLIMATE · MFFP_INVENTAIRES · USGS_MOVEMENT · CWD_ALLIANCE
+- Action : finalisation dans ORDRE N°50 PHASE 1+2
+
+#### ENGINES À CRÉER (4 nouveaux + 1 backlog)
+1. 🔴 P0 · `engine_spectral_omega.py` (NDVI/NDWI/EVI Sentinel + LST Landsat)
+2. 🟡 P1 · `engine_terrain_hr_omega.py` (DEM HR + dérivés richdem) — déjà dans ORDRE N°50
+3. 🟢 P2 · `engine_3d_mesh_omega.py` (Cesium 3D Tiles + glTF)
+4. 🟢 P3 · `engine_ai_super_resolution_omega.py` (Real-ESRGAN GPU)
+5. 🔵 P4 BACKLOG · `engine_maxar_vhr_omega.py` (licence commerciale)
+
+#### ENGINES À OPTIMISER (7)
+- terrain_3d_omega (activer FEATURE_FLAG + mesh 3D)
+- lidar_irda_v11 (finaliser fetch LIDAR_WCS_1M)
+- engine_climat_futur_omega + engine_microclimat_advanced_omega (finaliser NASA_EARTHDATA)
+- engine_population_dynamics_omega (migrer JSON → fetcher MFFP_INVENTAIRES live)
+- engine_contamination_v2_omega (implémenter CWD_ALLIANCE)
+- engine_canopee_thermique_omega (ajouter LST Landsat 8/9 thermal band 10)
+
+#### CONFIRMATION DUPLICATION
+- **`RISQUE_DUPLICATION = FALSE`**
+- Tous les nouveaux engines projetés sont disjoints fonctionnellement des 27 engines actifs
+
+#### P22N ABSORPTION CONFIRMÉE
+- P22N (GIS parcs + no_hunt registry) ABSORBÉ intégralement dans ORDRE N°50 PHASE 1
+- Aucun lancement séparé requis (confirmation Commandant 2026-05-10)
+
+#### LIVRABLE
+- **Document NEW** `/app/memory/AUDIT_OMEGA_SPECTRAL_TERRAIN_3D_REPORT.md` (~ 380 lignes)
+  - 9 sections institutionnelles · 12 audits ciblés par capacité
+  - Tableau par engine · domaine · pipeline · dépendance · version
+  - Roadmap par génération (V6/V7/V8/V10/V11/V12/V20/X199/X200/Ω/V30 LOCKED)
+  - Priorisation finale 9.1 → 9.10
+
+#### Aucun `testing_agent_v3_fork` · ANTI-GÉNÉRIQUE STRICT · `autonomy: LIMITED` · V30_LOCK INVIOLÉ
+- Aucune modification de code · audit READ-ONLY pur
+
+---
+
 ## 2026-05-10T15:30Z — P22M+P22I+UI_LOCK_Ω + ORDRE_N°50 PRÉPARATION (PREVIEW)
 
 ### Directive: DENSIFICATION ×3 + MULTI-ANCHOR CHAINED + UI VERROUILLAGE — DEPLOYED EN PREVIEW

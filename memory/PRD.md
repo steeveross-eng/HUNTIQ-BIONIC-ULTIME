@@ -66,14 +66,25 @@ Module fusion veineuse local + bascule defaults frontend :
 - Pytest neutre 15/15 PASSED · backend live verified (5→4 corridors fusionnés, network_001 absorbé, intensity_level=3 ÉLEVÉ)
 - Fusion ACTIVE en TERRITORY_CONTINUOUS uniquement · SALINE_CENTERED legacy preserve
 
-### Priorisation MISE À JOUR par COMMANDANT STEEVE-MAX (2026-05-10)
+### Priorisation MISE À JOUR par COMMANDANT STEEVE-MAX (2026-05-10 · POST-AUDIT)
 1. ✅ **P22M** — Densification zones vitales x3 (DONE 2026-05-10)
 2. ✅ **P22I** — Multi-anchor chained corridors (DONE 2026-05-10)
-3. 📋 **ORDRE N°50 PHASE 1** — GIS réel (FORET_MFFP, SOL_IRDA, ROUTES_MTQ, ZEC/SEPAQ, LIMITES, PRESSION_HUMAINE)
-4. 📋 **ORDRE N°50 PHASE 2** — Terrain HR (DEM 10m + LIDAR HR 1-2m)
-5. 🟡 **P22N** — GIS parcs + no_hunt registry (peut être absorbé par ORDRE N°50 PHASE 1)
-6. 🟡 **P22J** — Latence Cloudflare (UX, request queue / SSR prefetch)
-7. 🟢 **P22P** — V8 legacy cleanup (HTTP 500 sur `/api/v8/map/*`, hygiène)
+3. ✅ **AUDIT_Ω_SPECTRAL_TERRAIN_3D** — DONE 2026-05-10 (rapport en `/app/memory/AUDIT_OMEGA_SPECTRAL_TERRAIN_3D_REPORT.md`)
+4. ✅ **P22N** — ABSORBÉ dans ORDRE N°50 PHASE 1 (confirmation Commandant)
+5. 📋 **ORDRE N°50 PHASE 1 + P22N** — GIS RÉEL : FORET_MFFP / SOL_IRDA / ROUTES_MTQ / ZEC-SEPAQ / LIMITES / PRESSION_HUMAINE — spec doctrinale prête
+6. 📋 **NEW_ENGINE 1** — `engine_spectral_omega.py` (NDVI/NDWI/EVI Sentinel + LST Landsat) — gap doctrinal critique identifié
+7. 📋 **ORDRE N°50 PHASE 2** — Terrain HR (DEM 10m + LIDAR HR 1-2m, courbure/hydro/rugosité)
+8. 📋 **OPTIM** terrain_3d_omega activation + mesh 3D output (FEATURE_FLAG=OFF actuellement)
+9. 📋 **NEW_ENGINE 3** — `engine_3d_mesh_omega.py` (Cesium 3D Tiles + glTF)
+10. 📋 **OPTIM** finalisation NASA_EARTHDATA, LIDAR_WCS_1M, NOAA_CLIMATE (déclarés non utilisés)
+11. 📋 **NEW_ENGINE 4** — `engine_ai_super_resolution_omega.py` (Real-ESRGAN, P3)
+12. 🟡 **P22J** — Latence Cloudflare (request queue / SSR prefetch)
+13. 🟢 **P22P** — V8 legacy cleanup
+14. 🔵 **NEW_ENGINE 5 BACKLOG** — `engine_maxar_vhr_omega.py` (licence commerciale)
+
+### CONSTAT AUDIT_Ω : RISQUE_DUPLICATION = FALSE
+Les 4 nouveaux engines projetés (spectral, terrain HR, 3D mesh, AI super-resolution)
+sont disjoints fonctionnellement des 27 engines actifs. Aucun conflit doctrinal.
 
 ### CHANGELOG ANTÉRIEUR
 - **PHASE_XXX-QUINTRICICIES · P14 + TERRITOIRE_V7_PREMIUM_REPORTS_Ω — 🔗📊 MERKLE BITCOIN ANCHORING + RAPPORTS PREMIUM PLEIN-ÉCRAN (2026-05-08)**
