@@ -1020,6 +1020,15 @@ try:
 except Exception as e:
     logger.warning(f"LOCAL_DENSITY_PROFILE_OMEGA_X100 not loaded: {e}")
 
+# ENGINE_SPECTRAL_Ω — NEW_ENGINE_1_SPECTRAL_Ω · VERSION_ULTIME_ABSOLUE_X3 (2026-05-10 · STEEVE-MAX)
+# NDVI/NDWI/EVI Sentinel-2 + LST Landsat 8/9 + STAC ingestion (anti-générique strict)
+try:
+    from engines.spectral_omega.router import router as spectral_omega_router
+    app.include_router(spectral_omega_router)
+    logger.info("ENGINE_SPECTRAL_Ω registered (/api/v20/spectral) — NEW_ENGINE_1 ANTI-GÉNÉRIQUE")
+except Exception as e:
+    logger.warning(f"ENGINE_SPECTRAL_Ω not loaded: {e}")
+
 # ENGINE-RENDU-Ω — Phase XI-SUPRA-K (rendu institutionnel corridors)
 try:
     from engines.v8_institutional.engine_rendu_omega import router as rendu_omega_router, visual_router as rendu_visual_router

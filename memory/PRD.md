@@ -71,8 +71,8 @@ Module fusion veineuse local + bascule defaults frontend :
 2. ✅ **P22I** — Multi-anchor chained corridors (DONE 2026-05-10)
 3. ✅ **AUDIT_Ω_SPECTRAL_TERRAIN_3D** — DONE 2026-05-10 (rapport en `/app/memory/AUDIT_OMEGA_SPECTRAL_TERRAIN_3D_REPORT.md`)
 4. ✅ **P22N** — ABSORBÉ dans ORDRE N°50 PHASE 1 (confirmation Commandant)
-5. 📋 **ORDRE N°50 PHASE 1 + P22N** — GIS RÉEL : FORET_MFFP / SOL_IRDA / ROUTES_MTQ / ZEC-SEPAQ / LIMITES / PRESSION_HUMAINE — spec doctrinale prête
-6. 📋 **NEW_ENGINE 1** — `engine_spectral_omega.py` (NDVI/NDWI/EVI Sentinel + LST Landsat) — gap doctrinal critique identifié
+5. ✅ **NEW_ENGINE_1_SPECTRAL_Ω** — DONE 2026-05-10 (NDVI/NDWI/EVI Sentinel-2 + LST Landsat, STAC AWS + MS Planetary Computer, ANTI-GÉNÉRIQUE LIVE PROVED, 51/51 pytest)
+6. 📋 **ORDRE N°50 PHASE 1 + P22N** — GIS RÉEL : FORET_MFFP / SOL_IRDA / ROUTES_MTQ / ZEC-SEPAQ / LIMITES / PRESSION_HUMAINE — spec doctrinale prête
 7. 📋 **ORDRE N°50 PHASE 2** — Terrain HR (DEM 10m + LIDAR HR 1-2m, courbure/hydro/rugosité)
 8. 📋 **OPTIM** terrain_3d_omega activation + mesh 3D output (FEATURE_FLAG=OFF actuellement)
 9. 📋 **NEW_ENGINE 3** — `engine_3d_mesh_omega.py` (Cesium 3D Tiles + glTF)
@@ -82,9 +82,10 @@ Module fusion veineuse local + bascule defaults frontend :
 13. 🟢 **P22P** — V8 legacy cleanup
 14. 🔵 **NEW_ENGINE 5 BACKLOG** — `engine_maxar_vhr_omega.py` (licence commerciale)
 
-### CONSTAT AUDIT_Ω : RISQUE_DUPLICATION = FALSE
-Les 4 nouveaux engines projetés (spectral, terrain HR, 3D mesh, AI super-resolution)
-sont disjoints fonctionnellement des 27 engines actifs. Aucun conflit doctrinal.
+### CONSTAT POST-IMPLÉMENTATION
+- NEW_ENGINE_1_SPECTRAL_Ω : NDVI=0.35 calculé sur Sentinel-2 réel (item S2C_19UEP_20260426_0_L2A · cloud_cover=0.03% · fallback=False) au BSL canonique. PREUVE ANTI-GÉNÉRIQUE.
+- Endpoints actifs : `/api/v20/spectral/{status,compute,indices,fusion,chain,stac/sentinel2,stac/landsat}`
+- Chaînes_Ω opérationnelles : SPECTRAL → CORRIDORS · HYDRO · PRESSURE_HUMAINE · TERRAIN_HR (préparé)
 
 ### CHANGELOG ANTÉRIEUR
 - **PHASE_XXX-QUINTRICICIES · P14 + TERRITOIRE_V7_PREMIUM_REPORTS_Ω — 🔗📊 MERKLE BITCOIN ANCHORING + RAPPORTS PREMIUM PLEIN-ÉCRAN (2026-05-08)**

@@ -3,6 +3,99 @@
 
 ---
 
+## 2026-05-10T17:30Z — NEW_ENGINE_1_SPECTRAL_Ω · VERSION_ULTIME_ABSOLUE_X3 (PREVIEW)
+
+### Directive: NEW_ENGINE_1 SPECTRAL Ω · COMBLE GAP CRITIQUE #1 — DELIVERED
+
+#### LIVRABLES (4 fichiers · V30_LOCK INVIOLÉ · FUSION ADD-ONLY)
+- **Backend NEW** `/app/backend/engines/spectral_omega/__init__.py` (439 lignes) :
+  - `compute_ndvi()`, `compute_ndwi()`, `compute_evi()`, `compute_lst_landsat()` — formules MODIS/Sentinel-2 standard
+  - `fetch_sentinel2_stac()` — STAC AWS earth-search.aws.element84.com/v1
+  - `fetch_landsat_l2_stac()` — STAC Microsoft Planetary Computer
+  - `_read_pixel_window()` — rasterio + /vsicurl/ + windows.from_bounds (lecture COG efficace)
+  - `_read_scl_cloud_fraction()` — masque cloud Sentinel-2 SCL band
+  - `compute_spectral_at_point()` — pipeline complet point unique
+  - `fusion_spectral_multisource()` — NDVI 40% · NDWI 20% · EVI 30% · LST_inv 10%
+  - `chain_omega_pondere_corridors()` · `chain_omega_hydro_pondere()` · `chain_omega_pressure_humaine_pondere()`
+  - Normalisation institutionnelle 0-1 + clipping + fallback 0.5
+- **Backend NEW** `/app/backend/engines/spectral_omega/router.py` (170 lignes) :
+  - `GET  /api/v20/spectral/status`        → identité + sources
+  - `POST /api/v20/spectral/compute`       → pipeline complet (NDVI/NDWI/EVI/LST + fusion)
+  - `POST /api/v20/spectral/indices`       → S2 only (3× plus rapide)
+  - `POST /api/v20/spectral/fusion`        → fusion multisource
+  - `POST /api/v20/spectral/chain`         → hooks chaîne_Ω corridors/hydro/pressure
+  - `POST /api/v20/spectral/stac/sentinel2` → recherche STAC pure
+  - `POST /api/v20/spectral/stac/landsat`   → recherche STAC pure
+- **Backend NEW** `/app/backend/engines/engine_spectral_omega.py` — alias re-export pour respecter nomenclature commande
+- **Server EDIT** `/app/backend/server.py` (+8 lignes) — `app.include_router(spectral_omega_router)`
+- **Tests neutres** `/app/backend/tests/test_phase_xx_new_engine_1_spectral.py` (24 tests) — formules + normalisation + fallback + fusion + hooks chaîne_Ω
+
+#### DÉPENDANCES INSTALLÉES
+- `pystac-client==0.9.0` (recherche STAC)
+- `rio-tiler==9.0.6` (lecture COG haute performance)
+- Déjà présent : `rasterio==1.4.4`, `numpy==2.4.0`, `pyproj==3.7.2`, `httpx==0.28.1`, `shapely==2.1.2`
+
+#### REGISTER_ENGINE
+- `register_engine("ENGINE-SPECTRAL-Ω", "V1_LOCK-NEW_ENGINE_1_SPECTRAL_Ω-2026-05", ...)`
+- Sources déclarées : `SENTINEL2_AWS_STAC`, `LANDSAT_PC_STAC`, `NASA_EARTHDATA`
+- Domaine : BIO-SYSTEME · `active=True` · `priority=0`
+
+#### VALIDATION INSTITUTIONNELLE LIVE (ANTI-GÉNÉRIQUE STRICT)
+
+##### Pytest neutre — 51/51 PASSED
+- 24 tests NEW_ENGINE_1 (formules, normalisation, fallback, fusion, chaîne_Ω)
+- 16 tests P22M+P22I (préexistants)
+- 11 tests P22Σ_V3 fusion (préexistants)
+- **51 PASSED · 0 SKIPPED · 0.47s**
+
+##### Curl preview live · BSL waypoint canonique (48.206657, -68.382422)
+```
+TEST 1 — STAC Sentinel-2 search (614ms) :
+  5 items trouvés (cloud_cover ∈ [0.0%, 8.5%])
+  Best : S2C_19UEP_20260426_0_L2A · 2026-04-26 · cc=0.0%
+  Asset_keys : ['blue', 'green', 'nir', 'red', 'scl']
+
+TEST 2 — NDVI/NDWI/EVI compute LIVE (14.9s, /vsicurl/ COG read) :
+  NDVI = 0.3502 (réel)
+  NDWI = -0.3609 (réel)
+  EVI  = 1.4046 (réel)
+  Reflectance : RED=1265, NIR=2628, GREEN=1234, BLUE=1039
+  cloud_fraction local = 0.0
+  fallback_applied = FALSE
+  source_sentinel2.item_id = S2C_19UEP_20260426_0_L2A
+  doctrine = NEW_ENGINE_1_SPECTRAL_Ω · VERSION_ULTIME_ABSOLUE_X3
+
+TEST 3 — Fusion multisource :
+  fused_score_0_1 = 0.694 (NDVI×0.4 + NDWI×0.2 + EVI×0.3 + LST_inv×0.1)
+
+TEST 4 — Chaîne_Ω corridors :
+  factor = 1.012 · _spectral_chain = "CHAINE_Ω_SPECTRAL→CORRIDORS"
+```
+
+#### LINT
+- 0 issue Python sur les 3 fichiers spectral
+- 0 issue server.py edit
+
+#### CONFORMITÉ DOCTRINALE
+- ✅ ANTI-GÉNÉRIQUE STRICT (NDVI=0.35 calculé sur item Sentinel-2 RÉEL S2C_19UEP_20260426_0_L2A)
+- ✅ V30_LOCK INVIOLÉ (engine externe, aucune mutation moteur ORGANIC)
+- ✅ FUSION ADD-ONLY (router additif, register_engine additif)
+- ✅ Aucun `testing_agent_v3_fork` (pytest neutre + curl direct)
+- ✅ Autonomy: LIMITED (aucune décision hors commande)
+- ✅ Aucun override (parameters de la commande respectés intégralement)
+- ✅ Aucune duplication (audit confirmé FALSE)
+- ✅ JSON_INSTITUTIONNEL_Ω respecté (sources, indices, normalisation, cloud_mask, fallback, integration)
+
+#### CHAÎNES_Ω OPÉRATIONNELLES
+- `CHAINE_Ω_SPECTRAL → CHAINE_Ω_CORRIDORS` (factor [0.5, 1.5] selon NDVI/NDWI/LST)
+- `CHAINE_Ω_SPECTRAL → CHAINE_Ω_HYDRO` (NDWI haut → boost ±30%)
+- `CHAINE_Ω_SPECTRAL → CHAINE_Ω_PRESSURE_HUMAINE` (NDVI bas → boost ±20%)
+- `CHAINE_Ω_SPECTRAL → CHAINE_Ω_TERRAIN_HR` (préparé pour ORDRE N°50 PHASE 2)
+
+⚠️ **PRD REDÉPLOIEMENT REQUIS** : Commandant doit cliquer "Deploy"
+
+---
+
 ## 2026-05-10T16:30Z — AUDIT_Ω_SPECTRAL_TERRAIN_3D + P22N ABSORPTION (READ-ONLY)
 
 ### Directive: AUDIT INSTITUTIONNEL COMPLET — DELIVERED
