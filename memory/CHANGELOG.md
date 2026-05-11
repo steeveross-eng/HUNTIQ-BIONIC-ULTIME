@@ -3,6 +3,44 @@
 
 ---
 
+## 2026-05-11T13:25Z — TERRITOIRE_HEADER_AND_REDIRECT_FIX_Ω · X13 · DELIVERED ✅
+
+### Directive: COMMANDE_INSTITUTIONNELLE_Ω X13 — Validation finale routage + icônes
+
+#### Audit redirections (ROUTER_EDGE / REMOVE_REDIRECT)
+- **Frontend** : aucun `Navigate to="/mon-territoire-bionic"` depuis `/territoire` détecté
+- **Backend** : routes `/territoire/*` sont des endpoints API (`piliers_router`, `phase_xix_router`, `v20_3d_overlays`), pas des redirections
+- **config/routes.js** : catalogue inerte (non consommé par App.js), pas de modification requise
+- **Vérification programmatique** : `URL après navigate('/territoire')` reste `/territoire` (pas de redirect)
+
+#### Routage frontend (ENSURE_DIRECT_ROUTE)
+- `/territoire` → `<MonTerritoireBionicPage pageMode="carte-territoire" />` ✅
+- `/mon-territoire-bionic` → `<MonTerritoireBionicPage pageMode="analyse-bionic" />` ✅
+- Titre header `/territoire` = **"Carte TERRITOIRE Ω"** (validé programmatiquement)
+
+#### Bouton TERRITOIRE (UPDATE_BUTTON)
+- Route `/territoire` ✅
+- Color `#FF6A00` ✅ (class contient `FF6A00]`)
+- Icon `Map` (`lucide-map` SVG class) ✅
+
+#### Bouton ANALYSE (ADD_BUTTON — icône mise à jour)
+- Route `/mon-territoire-bionic` ✅
+- Color `#F5A623` ✅
+- **Icon `Crosshair` → `Activity`** (importé depuis lucide-react) — directive X13 appliquée
+- Vérifié : `lucide-activity` présent · `lucide-crosshair` absent
+
+#### Mobile nav
+- Bouton "Territoire Ω" (`#FF6A00`, icon `Map`) → `/territoire` ✅
+- Bouton "Analyse Territoire" (`#F5A623`, icon `Activity` mis à jour) → `/mon-territoire-bionic` ✅
+
+### Verrous respectés
+- V30_LOCK INVIOLÉ ✅
+- FUSION ADD-ONLY ✅ (1 import + 2 remplacements d'icône)
+- NO_TESTING_AGENT ✅
+- Lint eslint : 0 issue
+
+
+
 ## 2026-05-11T12:55Z — TERRITOIRE_ROUTE_RESTORE_Ω · X11 · DELIVERED ✅
 
 ### Directive: COMMANDE_INSTITUTIONNELLE_Ω — restauration /territoire + bouton nav

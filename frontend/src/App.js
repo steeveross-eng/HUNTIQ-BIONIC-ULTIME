@@ -120,7 +120,7 @@ import {
   ExternalLink, Edit, Plus, Loader2, GraduationCap, BookOpen, Brain,
   Map, Globe, Construction, Power, Mail, Handshake, XCircle, Moon, Sun, Bot,
   Radar, Share2, Gift, Home, Target, Crosshair, Route as RouteIcon, Briefcase, Cloud,
-  Crown, Camera, Bell
+  Crown, Camera, Bell, Activity
 } from "lucide-react";
 import {
   Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle
@@ -228,7 +228,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
               data-testid="nav-analyse-territoire"
               title="Analyse Territoire BIONIC · SENSORIEL Ω"
             >
-              <Crosshair className="h-3.5 w-3.5" />
+              <Activity className="h-3.5 w-3.5" />
               Analyse
             </Link>
             
@@ -388,7 +388,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
               <Map className="h-4 w-4" /> Territoire Ω
             </Link>
             <Link to="/mon-territoire-bionic" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="mobile-nav-analyse-territoire">
-              <Crosshair className="h-4 w-4" /> Analyse Territoire
+              <Activity className="h-4 w-4" /> Analyse Territoire
             </Link>
             {/* CARTE-2027-REBUILD-Omega: Carte terrain V7 (mobile) */}
             <Link to="/carte-2027" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#10B981]" data-testid="mobile-nav-carte-2027">
