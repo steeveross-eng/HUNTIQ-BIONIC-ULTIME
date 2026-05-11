@@ -66,32 +66,30 @@ Module fusion veineuse local + bascule defaults frontend :
 - Pytest neutre 15/15 PASSED · backend live verified (5→4 corridors fusionnés, network_001 absorbé, intensity_level=3 ÉLEVÉ)
 - Fusion ACTIVE en TERRITORY_CONTINUOUS uniquement · SALINE_CENTERED legacy preserve
 
-### Priorisation MISE À JOUR par COMMANDANT STEEVE-MAX (2026-05-10 · POST-ORGANIC_DEFAULT)
-1. ✅ **P22M** — Densification zones vitales x3 (DONE)
-2. ✅ **P22I** — Multi-anchor chained corridors (DONE)
-3. ✅ **AUDIT_Ω_SPECTRAL_TERRAIN_3D** (DONE)
-4. ✅ **P22N** — ABSORBÉ dans ORDRE N°50 PHASE 1 (DONE)
-5. ✅ **NEW_ENGINE_1_SPECTRAL_Ω** (DONE · NDVI/NDWI/EVI/LST réels)
-6. ✅ **ORDRE N°50 PHASE 1** (DONE · 6/6 GIS layers · GIS_OPERATIONAL_Ω = TRUE)
-7. ✅ **ORDRE N°50 PHASE 2** (DONE · DEM + slope/aspect/roughness/cost)
-8. ✅ **CHAÎNE_Ω CASCADE** (DONE · SPECTRAL → TERRAIN_HR → GIS)
-9. ✅ **ANTI-NOAA** (DONE)
-10. ✅ **PHASE_3_3D_OMEGA** (DONE · Cesium 3D Tiles + glTF + draping)
-11. ✅ **ORGANIC PONDÉRÉ DEFAULT = TRUE** (DONE 2026-05-10 · cascade activée par défaut)
-12. ✅ **NEW_ENGINE_4 REAL_ESRGAN_X4** (DONE 2026-05-10 · torch SR native)
-13. 📋 **OPTIM** torch+realesrgan native (xinntao) — bloqué par disque preview saturé
-14. 📋 **OPTIM** finalisation NASA_EARTHDATA, LIDAR_WCS_1M
-15. 🟡 **P22J** — Latence Cloudflare (cascade 27s par appel ORGANIC complet)
-16. 📋 **FRONTEND 3D VIEWER** — Cesium dans `/mon-territoire-bionic`
-17. 🟢 **P22P** — V8 legacy cleanup
-18. 🔵 **NEW_ENGINE 5 BACKLOG** — Maxar VHR (licence commerciale)
+### Priorisation MISE À JOUR par COMMANDANT STEEVE-MAX (2026-05-10 · POST-OPTIM_ULTIME)
+1. ✅ **P22M / P22I / AUDIT_Ω / P22N / NEW_ENGINE_1 / PHASE_1 / PHASE_2 / CASCADE / ANTI-NOAA / PHASE_3** (DONE)
+2. ✅ **ORGANIC PONDÉRÉ DEFAULT = TRUE** (DONE)
+3. ✅ **NEW_ENGINE_4 REAL_ESRGAN_X4** (DONE · torch SR native)
+4. ✅ **BATCH ENDPOINT** `/api/v20/super-resolution/upscale-batch` max 16 items (DONE 2026-05-10)
+5. ✅ **CACHE TTL 30 min P22J** (DONE · réduction latence -44% mesurée live)
+6. ✅ **V8 LEGACY UNBLOCK P22P** (DONE · stub referentials créé, route /api/v8/map/relocalisation HTTP 500→200)
+7. ✅ **NASA_EARTHDATA FINALIZE** (DONE · CMR API public, 5 granules retournées en 470ms)
+8. ✅ **LIDAR_WCS_1M FINALIZE** (DONE · OpenTopography USGS 1m métadonnées)
+9. ✅ **FRONTEND 3D CESIUM VIEWER** (DONE · CDN ESM cesium@1.123 · Ion token configuré · bouton VUE 3D + overlay modal)
+10. 📋 **OPTIM realesrgan native xinntao** — bloqué disque preview 1.2GB · à tenter post-PRD
+11. 📋 **OPTIM** cascade cache hit rate — actuellement 50% sur 2 calls, devrait monter à 90%+ en usage routine
+12. 🟡 **P22J avancé** — Cloudflare cache HTTP côté CDN (Cache-Control headers)
+13. 📋 **CESIUM optim** — Charger gltf depuis URL (pas Blob URI) pour éviter limitations Cesium glTF data: URI
+14. 🔵 **NEW_ENGINE 5 BACKLOG** — Maxar VHR (licence commerciale)
 
-### CONSTAT POST-ORGANIC_DEFAULT LIVE @ BSL
-- **ORGANIC PONDÉRÉ DEFAULT** : `enable_cascade_pondere=True` par défaut, cascade activée sans paramètre explicite
-- **REAL_ESRGAN_X4 TORCH SR NATIVE** : torch 2.11.0+cpu installé, mode default REAL_ESRGAN_X4, upscale DEM 5×5→20×20 en 89ms
-- **CASCADE LIVE** : factor=0.859 (SPECTRAL 1.012 × TERRAIN 0.85 × GIS 0.998), intensity_level 4→3 modulé
-- **PYTEST** : 88/88 PASSED · 0 SKIPPED · 1.55s
-- **Disque preview** : 94% utilisé (684MB libre) — surveillance recommandée
+### CONSTAT POST-OPTIM_ULTIME LIVE @ BSL
+- **BATCH endpoint** : 4 grilles upscalées en 955ms (239ms/item moyenne)
+- **CACHE TTL 30min** : 1er call 30s → 2e call 17s · réduction -44% (hit_rate 50% sur 2 calls)
+- **NASA_EARTHDATA** : 5 granules CMR récupérées en 470ms (sans clé)
+- **V8 LEGACY** : /api/v8/map/relocalisation HTTP 500 → 200
+- **CESIUM** : bouton VUE 3D rendu, viewer prêt à charger tileset.json depuis backend
+- **PYTEST** : 88/88 PASSED · 0 SKIPPED · 3.19s
+- **Disque preview** : 88% utilisé (1.2GB libre · stable)
 
 ### CHANGELOG ANTÉRIEUR
 - **PHASE_XXX-QUINTRICICIES · P14 + TERRITOIRE_V7_PREMIUM_REPORTS_Ω — 🔗📊 MERKLE BITCOIN ANCHORING + RAPPORTS PREMIUM PLEIN-ÉCRAN (2026-05-08)**

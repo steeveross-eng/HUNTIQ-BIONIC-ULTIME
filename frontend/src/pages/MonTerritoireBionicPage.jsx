@@ -47,6 +47,8 @@ import { useAuth } from '@/components/GlobalAuth';
 import PlacesSidePanel from '@/components/territoire/PlacesSidePanel';
 // PHASE_XII_SUPRA_DIAGNOSTIC_V30_STATUS_Ω — panel institutionnel lecture seule
 import StatutCorridorsOmegaPanel from '@/components/territoire/StatutCorridorsOmegaPanel';
+// PHASE_3_3D_OMEGA · Cesium viewer (chargé via CDN ESM, 0B disque)
+import CesiumTerritoireViewer from '@/components/territoire/CesiumTerritoireViewer';
 import HudTerritoireUltime from '@/components/territoire/HudTerritoireUltime';
 import LayersOmegaSyncPanel from '@/components/territoire/LayersOmegaSyncPanel';
 import LayersPanelOmegaUnified from '@/components/territoire/LayersPanelOmegaUnified';
@@ -125,6 +127,9 @@ const MonTerritoireBionicPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { t } = useLanguage();
+
+  // ═══ PHASE_3_3D_OMEGA — VUE 3D Cesium (overlay modal) ═══
+  const [show3DViewer, setShow3DViewer] = useState(false);
 
   // ═══ HOTSPOT DEEP LINK — lecture des query params ═══
   const hotspotDeepLink = useRef({
@@ -1801,8 +1806,70 @@ const MonTerritoireBionicPage = () => {
         data-watchdog-pings={territoireWatchdog.pingCount}
         style={{ display: 'none' }}
       />
+
+      {/* ═══ PHASE_3_3D_OMEGA — BOUTON FLOTTANT "VUE 3D" + OVERLAY CESIUM ═══ */}
+      <button
+        data-testid="btn-open-3d-viewer"
+        onClick={() => setShow3DViewer(true)}
+        style={{
+          position: 'fixed', bottom: 24, right: 24, zIndex: 9999,
+          background: 'linear-gradient(135deg, #FF6A00, #C25400)',
+          color: '#FFF', border: '2px solid #FFC300',
+          padding: '10px 18px', borderRadius: 24, fontWeight: 'bold',
+          fontFamily: 'monospace', fontSize: 13, letterSpacing: 0.5,
+          cursor: 'pointer',
+          boxShadow: '0 4px 16px rgba(255, 106, 0, 0.45)',
+        }}
+        title="PHASE_3_3D_OMEGA · Cesium 3D Tiles + glTF mesh"
+      >
+        🧊 VUE 3D
+      </button>
+      {show3DViewer && (
+        <div
+          data-testid="cesium-overlay-modal"
+          onClick={(e) => { if (e.target === e.currentTarget) setShow3DViewer(false); }}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 9998,
+            background: 'rgba(0, 0, 0, 0.92)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: 24,
+          }}
+        >
+          <div
+            style={{
+              position: 'relative',
+              width: 'min(92vw, 1400px)', height: 'min(92vh, 800px)',
+              background: '#0a0a0a',
+              border: '2px solid #FF6A00', borderRadius: 12,
+              boxShadow: '0 0 48px rgba(255, 106, 0, 0.6)',
+              overflow: 'hidden',
+            }}
+          >
+            <button
+              data-testid="btn-close-3d-viewer"
+              onClick={() => setShow3DViewer(false)}
+              style={{
+                position: 'absolute', top: 12, right: 12, zIndex: 100,
+                background: '#1a1a1a', color: '#FFF',
+                border: '2px solid #FF6A00',
+                width: 36, height: 36, borderRadius: '50%',
+                fontSize: 18, fontWeight: 'bold', cursor: 'pointer',
+              }}
+            >×</button>
+            <CesiumTerritoireViewer
+              lat={selectedWaypointForZones?.lat || 48.206657}
+              lon={selectedWaypointForZones?.lng || -68.382422}
+              drapeSpectral
+              bboxRadiusM={200}
+              gridN={11}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default MonTerritoireBionicPage;
+
+      
