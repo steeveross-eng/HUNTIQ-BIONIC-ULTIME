@@ -104,8 +104,10 @@ console.log(
   + 'serviceWorkerRegistration.register() DESACTIVE par directive STEEVE-MAX');
 
 // P22C · FORCE TERRITOIRE FRONTEND RELOAD Ω · auto-purge AGRESSIF
-// Ordre Commandant STEEVE-MAX · 2026-05-09
-const BCE_4X_FORCE_PURGE_VERSION = "P22C_TERRITOIRE_FRONTEND_RELOAD_2026_05_09_0030";
+// Ordre Commandant STEEVE-MAX · 2026-05-11 · X15
+// TERRITOIRE_FRONTEND_REDIRECT_PURGE_Ω : bump version → CacheStorage wipe +
+// localStorage legacy purge déclenchés sur la PROCHAINE visite de chaque client.
+const BCE_4X_FORCE_PURGE_VERSION = "X15_TERRITOIRE_FRONTEND_REDIRECT_PURGE_2026_05_11";
 try {
   const stored = window.localStorage.getItem("bce4x_purge_version");
   if (stored !== BCE_4X_FORCE_PURGE_VERSION) {
@@ -171,6 +173,19 @@ try {
       `[BCE-4X · P22C FORCE PURGE] version=${BCE_4X_FORCE_PURGE_VERSION} `
       + `· legacy keys (exact + prefixes) cleared · CacheStorage purged · `
       + `SW purge message sent`);
+
+    // X15 · RELOAD_ON_NEXT_VISIT: TRUE — recharger la page une fois après purge
+    // pour garantir que le bundle JS soit re-fetché du réseau (zéro cache navigateur).
+    // Safe: localStorage.setItem(version) est déjà fait au début du bloc, donc le
+    // reload ne re-déclenchera PAS la purge (pas de loop).
+    setTimeout(() => {
+      try {
+        console.log(
+          '[BCE-4X · X15 · TERRITOIRE_FRONTEND_REDIRECT_PURGE_Ω] '
+          + 'RELOAD_ON_NEXT_VISIT en cours...');
+        window.location.reload();
+      } catch (_) { /* no-op */ }
+    }, 600);
   }
 } catch (_) {
   /* no-op */

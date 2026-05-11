@@ -3,6 +3,48 @@
 
 ---
 
+## 2026-05-11T13:30Z — TERRITOIRE_FRONTEND_REDIRECT_PURGE_Ω · X15 · DELIVERED ✅
+
+### Directive: COMMANDE_INSTITUTIONNELLE_Ω X15 — purge cache + reload-on-next-visit
+
+#### Audit auto-navigations (REMOVE_AUTONAVIGATION)
+- **App.js** : `grep navigate('/mon-territoire-bionic')` → **0 occurrence** (déjà conforme)
+- **MonTerritoireBionicPage.jsx** : `grep setTimeout(... navigate)` → **0 occurrence** (déjà conforme)
+- **Audit profond** : `Navigate to="/mon-territoire-bionic"` n'existe QUE pour les routes legacy (`/map`, `/saline*`, `/nutrition-*`) — **pas** depuis `/territoire`
+- **Vérification programmatique** : navigation vers `/territoire` reste sur `/territoire` (aucun rebond)
+
+#### Service Worker / Cache (PURGE_CACHE + RELOAD_ON_NEXT_VISIT)
+- `index.js` EDIT :
+  - **Bump version** : `BCE_4X_FORCE_PURGE_VERSION` → `X15_TERRITOIRE_FRONTEND_REDIRECT_PURGE_2026_05_11`
+  - **NEW** post-purge : `setTimeout(() => window.location.reload(), 600)` → force re-fetch bundle JS depuis réseau
+- Mécanismes hérités déjà actifs :
+  - `serviceWorker.getRegistrations().unregister()` à chaque mount
+  - `caches.delete(...)` sur toutes les CacheStorage keys
+  - localStorage legacy keys purge (exact + prefixes)
+- Validation runtime : `localStorage.bce4x_purge_version === "X15_..."` après visite ✓
+- Logs console capturés : `[SW-OFF] CacheStorage purgé`, `[SW-OFF] tous les SW résiduels ont été désinscrits`
+
+#### Verify pageMode (FRONTEND_VERIFY)
+| Route | pageMode | Statut |
+|---|---|---|
+| `/territoire` | `carte-territoire` | ✅ ligne 1087 |
+| `/mon-territoire-bionic` | `analyse-bionic` | ✅ ligne 1088 |
+| `/mon-territoire` (alias) | `analyse-bionic` | ✅ ligne 1090 |
+| `/analyse-territoire` (alias) | `analyse-bionic` | ✅ ligne 1091 |
+
+#### Validation visuelle (NO testing_agent)
+- Screenshot `/territoire` : titre "Carte TERRITOIRE Ω" + corridors Ω visibles + score 62.80 NEUTRE rendu
+- URL stable, aucune redirection observée
+- Lint eslint `index.js` : 0 issue
+
+### Verrous respectés
+- V30_LOCK INVIOLÉ ✅
+- FUSION ADD-ONLY ✅ (1 bump constante + 1 ajout setTimeout reload)
+- NO_TESTING_AGENT ✅
+- Aucun pattern littéral d'auto-redirection présent dans le code
+
+
+
 ## 2026-05-11T13:25Z — TERRITOIRE_HEADER_AND_REDIRECT_FIX_Ω · X13 · DELIVERED ✅
 
 ### Directive: COMMANDE_INSTITUTIONNELLE_Ω X13 — Validation finale routage + icônes
