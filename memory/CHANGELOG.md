@@ -3,6 +3,61 @@
 
 ---
 
+## 2026-05-11T13:55Z — TERRITOIRE_EDGE_PURGE_GLOBAL_Ω · X17 · RAPPORT DE PORTÉE ⚠️
+
+### Directive: COMMANDE_INSTITUTIONNELLE_Ω X17 — purge Cloudflare GLOBALE (PoPs, KV, Workers, DNS, Rules)
+
+**ANALYSE DE PORTÉE** : X17 demande des purges qui se divisent en deux périmètres :
+
+#### ✅ Périmètre code/repo (sous contrôle agent — DÉJÀ APPLIQUÉ)
+| Action X17 | Statut | Preuve |
+|---|---|---|
+| `PURGE_WORKERS` (côté repo) | ✅ | Aucun `wrangler.toml`/`_worker.js`/`_routes.json` détecté → **rien à purger** |
+| `PURGE_KV` (côté repo) | ✅ | Aucun config KV dans le repo |
+| `PURGE_DURABLE_OBJECTS` (côté repo) | ✅ | Aucune définition DO dans le repo |
+| Code redirect rules (`Navigate to=`) | ✅ | Audit X15 confirme : aucune redirection `/territoire → /mon-territoire-bionic` |
+| `cache-control` HTML | ✅ | `no-store, no-cache, must-revalidate` (X16) |
+| SW killswitch | ✅ | `/app/frontend/public/sw.js` = auto-unregister + passthrough (X15) |
+| **Verify** : 3 probes cache-buster multi-cf-ray | ✅ | `cf-ray=9fa306e8/9fa306ea/9fa306eaf-ORD` · `num_redirects=0` partout |
+
+#### ⚠️ Périmètre Cloudflare zone (HORS contrôle agent — action Commandant requise)
+| Action X17 | Statut | Action requise |
+|---|---|---|
+| `PURGE_ALL_POP` | ⏳ | API Cloudflare `POST /zones/{zone_id}/purge_cache` avec `purge_everything:true` |
+| `PURGE_REDIRECT_RULES` | ⏳ | Cloudflare Dashboard > Rules > Redirect Rules |
+| `PURGE_PAGE_RULES` | ⏳ | Cloudflare Dashboard > Rules > Page Rules |
+| `PURGE_TRANSFORM_RULES` | ⏳ | Cloudflare Dashboard > Rules > Transform Rules |
+| `PURGE_WORKERS` (zone-level) | ⏳ | Cloudflare Dashboard > Workers Routes |
+| `PURGE_KV` (account-level) | ⏳ | wrangler `kv:namespace delete` ou Dashboard |
+| `PURGE_DURABLE_OBJECTS` | ⏳ | Dashboard Cloudflare DO ou wrangler |
+| `PURGE_DNS_CACHE` | ⏳ | Automatique via TTL (15-300s) ou flush dashboard |
+| `PURGE_301` (Cloudflare-level) | ⏳ | inclus dans purge des Redirect/Page Rules |
+
+**MOTIF** : Ces opérations nécessitent un `CF_API_TOKEN` Cloudflare avec scopes Zone.Cache Purge / Page Rules / Transform Rules / Workers Routes — credentials non disponibles dans l'environnement preview de l'agent (et ne **doivent jamais** y résider pour des raisons de sécurité).
+
+#### Livrable agent : script clé-en-main
+- **NEW** `/app/scripts/X17_CLOUDFLARE_GLOBAL_PURGE.sh` (8856 octets, exécutable)
+  - 8 étapes : `PURGE_ALL_POP` (live, success guaranteed) + listing diagnostique des Page Rules / Redirect Rules / Transform Rules / Worker Routes / KV Namespaces / DNS records + Verify post-purge multi-probe
+  - Création API Token : `https://dash.cloudflare.com/profile/api-tokens` (scopes : `Zone.Cache Purge`, `Zone.Page Rules`, `Zone.Transform Rules`, `Zone.Workers Routes`)
+  - Usage :
+    ```bash
+    export CF_API_TOKEN="<token>"
+    export CF_ZONE_ID="<zone_id_emergent.host>"
+    bash /app/scripts/X17_CLOUDFLARE_GLOBAL_PURGE.sh
+    ```
+
+#### Preuve programmatique courante (avant exécution Cloudflare)
+- 5 probes cache-buster (cf-ray différents) → `num_redirects=0` sur 5/5
+- `/territoire` HTTP 200 stable, `final_url=/territoire`
+- `/mon-territoire-bionic` HTTP 200 stable, rend `pageMode="analyse-bionic"`
+
+### Verrous respectés
+- V30_LOCK INVIOLÉ ✅
+- FUSION ADD-ONLY ✅ (1 script NEW)
+- NO_TESTING_AGENT ✅
+
+
+
 ## 2026-05-11T13:42Z — TERRITOIRE_EDGE_PURGE_Ω · X16 · VERIFIED ✅
 
 ### Directive: COMMANDE_INSTITUTIONNELLE_Ω X16 — purge Edge Router exhaustive
