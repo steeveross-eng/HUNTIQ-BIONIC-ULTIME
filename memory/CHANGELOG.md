@@ -3,6 +3,48 @@
 
 ---
 
+## 2026-05-11T13:42Z — TERRITOIRE_EDGE_PURGE_Ω · X16 · VERIFIED ✅
+
+### Directive: COMMANDE_INSTITUTIONNELLE_Ω X16 — purge Edge Router exhaustive
+
+**RAPPORT D'AUDIT** : tous critères X16 sont **DÉJÀ 100% APPLIQUÉS** suite aux directives X11→X15. Aucune modification de code requise.
+
+#### Audit complet (preuves programmatiques curl)
+
+| Critère | Test | Résultat |
+|---|---|---|
+| `PURGE_CACHE: TRUE` | `curl -sI /territoire` | `cache-control: no-store, no-cache, must-revalidate` + `cf-cache-status: DYNAMIC` ✅ |
+| `PURGE_REDIRECTS: TRUE` | `curl -sL /territoire` (6 variantes) | `num_redirects=0` sur toutes variantes (`/territoire`, `/territoire/`, `/Territoire`, `?force=1`, `#hash`) ✅ |
+| `PURGE_WORKERS: TRUE` | `cat /app/frontend/public/sw.js` | KILLSWITCH P22C_FIX : auto-unregister + cache purge + passthrough fetch (aucune interception) ✅ |
+| `PURGE_ASSETS: TRUE` | inspection headers HTML | `cf-cache-status: DYNAMIC` sur GET HTML — aucun cache CDN edge ✅ |
+| `PURGE_REWRITE_RULES: TRUE` | `find /app -name "_redirects\|_headers\|vercel.json\|netlify.toml\|nginx.conf\|.htaccess\|Caddyfile"` | Aucun fichier edge actif détecté (seul `archive_github_v5201/system_config/nginx.conf` est dans archive inerte) ✅ |
+| `PURGE_301: TRUE` | `curl -sI` + `num_redirects=0` | 0 occurrence HTTP 301/302 sur toutes routes territoriales ✅ |
+
+#### Verify (preuves)
+- `/territoire` **NOT redirect** :
+  - `curl -sL /territoire` → `final_url = /territoire` · `num_redirects=0` · HTTP 200
+  - SPA rend `<MonTerritoireBionicPage pageMode="carte-territoire" />` (titre "Carte TERRITOIRE Ω")
+- `/mon-territoire-bionic` **stays ANALYSE only** :
+  - `App.js:1088` → `<Route path="/mon-territoire-bionic" element={<MonTerritoireBionicPage pageMode="analyse-bionic" />} />`
+  - Titre rendu "Analyse Territoire BIONIC" (validé screenshot X11)
+  - Aucun lien `Navigate to="/territoire"` depuis `/mon-territoire-bionic`
+
+#### Architecture Edge consolidée (production-ready)
+```
+Client → Cloudflare (no cache HTML, cf-cache-status=DYNAMIC)
+       → Kubernetes Ingress (passthrough, /api → :8001, autres → :3000)
+       → Express SSR/CRA (serve index.html avec no-store)
+       → React SPA (BrowserRouter, AUCUNE redirection /territoire → /mon-territoire-bionic)
+       → SW : KILLSWITCH (auto-unregister, passthrough fetch)
+```
+
+### Verrous respectés
+- V30_LOCK INVIOLÉ ✅
+- FUSION ADD-ONLY ✅ (audit-only, aucun code modifié)
+- NO_TESTING_AGENT ✅ (curl + grep + find manuels exclusifs)
+
+
+
 ## 2026-05-11T13:30Z — TERRITOIRE_FRONTEND_REDIRECT_PURGE_Ω · X15 · DELIVERED ✅
 
 ### Directive: COMMANDE_INSTITUTIONNELLE_Ω X15 — purge cache + reload-on-next-visit
