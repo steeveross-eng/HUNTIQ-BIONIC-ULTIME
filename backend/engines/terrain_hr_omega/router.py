@@ -19,6 +19,8 @@ from . import (
     compute_terrain_hr_at_point,
     fetch_dem_opentopo_metadata,
     fetch_elevation_grid_open_meteo,
+    fetch_lidar_wcs_1m_metadata,
+    fetch_nasa_earthdata_metadata,
 )
 
 router = APIRouter(prefix="/api/v20/terrain-hr",
@@ -72,6 +74,18 @@ async def th_elev(body: PointBody) -> dict[str, Any]:
 @router.post("/opentopo-metadata")
 async def th_meta(body: PointBody) -> dict[str, Any]:
     return fetch_dem_opentopo_metadata(body.lat, body.lon, halo_m=body.halo_m)
+
+
+@router.post("/nasa-earthdata")
+async def th_nasa(body: PointBody) -> dict[str, Any]:
+    """NASA_EARTHDATA finalize — recherche CMR publique."""
+    return fetch_nasa_earthdata_metadata(body.lat, body.lon, halo_m=body.halo_m)
+
+
+@router.post("/lidar-wcs-1m")
+async def th_lidar(body: PointBody) -> dict[str, Any]:
+    """LIDAR_WCS_1M finalize — OpenTopography USGS 1m DEM."""
+    return fetch_lidar_wcs_1m_metadata(body.lat, body.lon, halo_m=body.halo_m)
 
 
 @router.post("/derivatives/slope-aspect")

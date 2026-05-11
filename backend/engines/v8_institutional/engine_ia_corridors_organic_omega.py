@@ -68,9 +68,12 @@ try:
     from engines.spectral_omega import compute_spectral_at_point as _sp_compute
     from engines.terrain_hr_omega import compute_terrain_hr_at_point as _th_compute
     from engines.gis_omega import compute_corridors_gis as _gis_compute
+    from engines.cascade_cache_omega import get_cascade_cache
     _CASCADE_AVAILABLE = True
+    _CASCADE_CACHE = get_cascade_cache()
 except Exception as _e:
     _CASCADE_AVAILABLE = False
+    _CASCADE_CACHE = None
 
 ENGINE_NAME = "ENGINE-IA-CORRIDORS-ORGANIC-Ω"
 ENGINE_VERSION = "V2.0-PHASE-XI-SUPRA-N-Ω-NETWORK_LOCKED-2026-04"
@@ -1079,43 +1082,66 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
     if (enable_cascade_pondere and _CASCADE_AVAILABLE
             and corridors_full and len(corridors_full) > 0):
         try:
-            # STAGE 1 — SPECTRAL
-            spec = _sp_compute(lat, lon, halo_m=200.0, include_landsat_lst=False)
-            ndvi_n = float(spec.get("ndvi_normalized", 0.5))
-            ndwi_n = float(spec.get("ndwi_normalized", 0.5))
-            factor_s = 1.0
-            factor_s *= (1.0 + 0.20 * (ndvi_n - 0.5) * 2.0)
-            factor_s *= (1.0 + 0.15 * (ndwi_n - 0.5) * 2.0)
-            factor_s = max(0.5, min(1.5, factor_s))
-            cascade_stages.append({"stage": "SPECTRAL", "factor": factor_s,
-                                    "ndvi_normalized": ndvi_n, "ndwi_normalized": ndwi_n})
+            # Cache lookup (P22J latence optim, TTL 30 min)
+            cache_key = (f"cascade|{round(lat, 4):.4f}|{round(lon, 4):.4f}"
+                          f"|spec=False|grid_n=7|halo=200_5000")
+            cached_factors: dict[str, Any] | None = None
+            if _CASCADE_CACHE is not None:
+                cached_factors = _CASCADE_CACHE.get(cache_key)
 
-            # STAGE 2 — TERRAIN_HR
-            terrain = _th_compute(lat, lon, halo_m=200.0, grid_n=7, lod="MED")
-            slope_mean = float((terrain.get("slope_aspect", {}) or {})
-                                .get("stats", {}).get("slope_mean_pct", 0.0) or 0.0)
-            tri_mean = float((terrain.get("roughness_tri", {}) or {})
-                              .get("stats", {}).get("tri_mean", 0.0) or 0.0)
-            factor_t = 1.0
-            if slope_mean > 30.0:
-                factor_t *= 0.85
-            elif slope_mean > 15.0:
-                factor_t *= 0.95
-            if tri_mean > 50.0:
-                factor_t *= 0.90
-            factor_t = max(0.5, min(1.2, factor_t))
-            cascade_stages.append({"stage": "TERRAIN_HR", "factor": factor_t,
-                                    "slope_mean_pct": slope_mean, "tri_mean": tri_mean})
+            if cached_factors is not None:
+                factor_s = cached_factors["factor_s"]
+                factor_t = cached_factors["factor_t"]
+                factor_g = cached_factors["factor_g"]
+                cascade_stages = cached_factors["stages"]
+                # Re-applique GIS sur les corridors actuels (gis pondère paths)
+                gis_result_cached = _gis_compute(corridors_full, lat, lon, halo_m=5000.0)
+                corridors_full = gis_result_cached.get("corridors", corridors_full)
+            else:
+                # STAGE 1 — SPECTRAL
+                spec = _sp_compute(lat, lon, halo_m=200.0, include_landsat_lst=False)
+                ndvi_n = float(spec.get("ndvi_normalized", 0.5))
+                ndwi_n = float(spec.get("ndwi_normalized", 0.5))
+                factor_s = 1.0
+                factor_s *= (1.0 + 0.20 * (ndvi_n - 0.5) * 2.0)
+                factor_s *= (1.0 + 0.15 * (ndwi_n - 0.5) * 2.0)
+                factor_s = max(0.5, min(1.5, factor_s))
+                cascade_stages.append({"stage": "SPECTRAL", "factor": factor_s,
+                                        "ndvi_normalized": ndvi_n, "ndwi_normalized": ndwi_n})
 
-            # STAGE 3 — GIS
-            gis_result = _gis_compute(corridors_full, lat, lon, halo_m=5000.0)
-            factor_g = float(gis_result.get("gis_factor", 1.0))
-            cascade_stages.append({
-                "stage": "GIS", "factor": factor_g,
-                "n_layers_loaded": gis_result.get("n_layers_loaded", 0),
-                "gis_operational_omega": gis_result.get("gis_operational_omega", False),
-            })
-            corridors_full = gis_result.get("corridors", corridors_full)
+                # STAGE 2 — TERRAIN_HR
+                terrain = _th_compute(lat, lon, halo_m=200.0, grid_n=7, lod="MED")
+                slope_mean = float((terrain.get("slope_aspect", {}) or {})
+                                    .get("stats", {}).get("slope_mean_pct", 0.0) or 0.0)
+                tri_mean = float((terrain.get("roughness_tri", {}) or {})
+                                  .get("stats", {}).get("tri_mean", 0.0) or 0.0)
+                factor_t = 1.0
+                if slope_mean > 30.0:
+                    factor_t *= 0.85
+                elif slope_mean > 15.0:
+                    factor_t *= 0.95
+                if tri_mean > 50.0:
+                    factor_t *= 0.90
+                factor_t = max(0.5, min(1.2, factor_t))
+                cascade_stages.append({"stage": "TERRAIN_HR", "factor": factor_t,
+                                        "slope_mean_pct": slope_mean, "tri_mean": tri_mean})
+
+                # STAGE 3 — GIS
+                gis_result = _gis_compute(corridors_full, lat, lon, halo_m=5000.0)
+                factor_g = float(gis_result.get("gis_factor", 1.0))
+                cascade_stages.append({
+                    "stage": "GIS", "factor": factor_g,
+                    "n_layers_loaded": gis_result.get("n_layers_loaded", 0),
+                    "gis_operational_omega": gis_result.get("gis_operational_omega", False),
+                })
+                corridors_full = gis_result.get("corridors", corridors_full)
+
+                # Store dans cache TTL 30 min
+                if _CASCADE_CACHE is not None:
+                    _CASCADE_CACHE.set(cache_key, {
+                        "factor_s": factor_s, "factor_t": factor_t,
+                        "factor_g": factor_g, "stages": list(cascade_stages),
+                    })
 
             # FACTEUR GLOBAL CASCADE
             cascade_factor_global = factor_s * factor_t * factor_g
@@ -1130,6 +1156,7 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
                     c["intensity_level"] = max(0, min(4, round(new_il)))
                 c["_cascade_factor_global"] = cascade_factor_global
                 c["_cascade_chain"] = "CASCADE_Ω → ORGANIC → CORRIDORS"
+                c["_cascade_cache_hit"] = bool(cached_factors is not None)
 
             cascade_pondere_applied = True
         except Exception as e:

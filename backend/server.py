@@ -1073,6 +1073,26 @@ try:
 except Exception as e:
     logger.warning(f"ENGINE_SUPER_RESOLUTION_Ω not loaded: {e}")
 
+# CASCADE_CACHE_Ω · P22J LATENCE OPTIM (TTL 30 min)
+try:
+    from fastapi import APIRouter as _APIRouter_cache
+    from engines.cascade_cache_omega import get_cascade_cache
+    _cache_router = _APIRouter_cache(prefix="/api/v20/cascade-cache", tags=["CASCADE_CACHE_Ω"])
+
+    @_cache_router.get("/stats")
+    async def _cache_stats():
+        return get_cascade_cache().stats()
+
+    @_cache_router.post("/clear")
+    async def _cache_clear():
+        n = get_cascade_cache().clear()
+        return {"cleared": n}
+
+    app.include_router(_cache_router)
+    logger.info("CASCADE_CACHE_Ω registered (/api/v20/cascade-cache) — P22J_LATENCE TTL 30min")
+except Exception as e:
+    logger.warning(f"CASCADE_CACHE_Ω not loaded: {e}")
+
 # ENGINE-RENDU-Ω — Phase XI-SUPRA-K (rendu institutionnel corridors)
 try:
     from engines.v8_institutional.engine_rendu_omega import router as rendu_omega_router, visual_router as rendu_visual_router
