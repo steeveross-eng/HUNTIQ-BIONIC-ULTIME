@@ -221,6 +221,9 @@ def build_gltf_mesh(vertices: list[list[float]],
     }
     return {
         "gltf": gltf,
+        "gltf_external_buffer": _make_gltf_external_buffer_doc(
+            verts_arr, tris_arr, colors_arr, offsets),
+        "binary_buffer": buffer_data,  # bytes brut (sans base64) pour endpoint GLB natif
         "size_bytes": offsets["total_byte_length"],
         "buffer_b64_chars": len(buffer_b64),
         "n_vertices": int(verts_arr.shape[0]),
@@ -228,6 +231,102 @@ def build_gltf_mesh(vertices: list[list[float]],
         "has_vertex_colors": colors_arr is not None,
         "doctrine": "glTF_2.0_BINARY_EMBEDDED",
     }
+
+
+def _make_gltf_external_buffer_doc(verts_arr: np.ndarray, tris_arr: np.ndarray,
+                                    colors_arr: np.ndarray | None,
+                                    offsets: dict[str, Any]) -> dict[str, Any]:
+    """Variante du glTF avec buffer.uri EXTERNE (sans data: URI).
+
+    Utilisé par l'endpoint /api/v20/mesh-3d/gltf/{cache_key}.gltf qui sert le
+    JSON glTF avec un buffer.uri pointant vers /gltf-binary/{cache_key}.bin.
+    """
+    vmin = verts_arr.min(axis=0).tolist()
+    vmax = verts_arr.max(axis=0).tolist()
+    accessors = [
+        {"bufferView": 0, "componentType": 5126,
+         "count": int(verts_arr.shape[0]), "type": "VEC3",
+         "min": vmin, "max": vmax},
+        {"bufferView": 1, "componentType": 5125,
+         "count": int(tris_arr.size), "type": "SCALAR"},
+    ]
+    buffer_views = [
+        {"buffer": 0, "byteOffset": offsets["offsets"]["vertices"],
+         "byteLength": offsets["vert_byte_length"], "target": 34962},
+        {"buffer": 0, "byteOffset": offsets["offsets"]["indices"],
+         "byteLength": offsets["idx_byte_length"], "target": 34963},
+    ]
+    primitive_attrs = {"POSITION": 0}
+    if colors_arr is not None:
+        accessors.append({
+            "bufferView": 2, "componentType": 5126,
+            "count": int(colors_arr.shape[0]), "type": "VEC4",
+        })
+        buffer_views.append({
+            "buffer": 0, "byteOffset": offsets["offsets"]["colors"],
+            "byteLength": offsets["color_byte_length"], "target": 34962,
+        })
+        primitive_attrs["COLOR_0"] = 2
+    return {
+        "asset": {"version": GLTF_VERSION,
+                  "generator": f"{ENGINE_NAME} {ENGINE_VERSION}"},
+        "scene": 0,
+        "scenes": [{"nodes": [0]}],
+        "nodes": [{"mesh": 0}],
+        "meshes": [{
+            "primitives": [{
+                "attributes": primitive_attrs,
+                "indices": 1, "mode": 4,
+            }],
+        }],
+        "buffers": [{
+            # uri remplacé par l'endpoint au moment du service
+            "uri": "__EXTERNAL_BIN_URI__",
+            "byteLength": offsets["total_byte_length"],
+        }],
+        "bufferViews": buffer_views,
+        "accessors": accessors,
+    }
+
+
+def pack_glb_binary(gltf_doc: dict[str, Any], binary_buffer: bytes) -> bytes:
+    """Pack un glTF JSON + buffer binaire en format GLB (.glb) standard.
+
+    Spec : https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#binary-gltf-layout
+    Header (12 B) : magic 'glTF' (0x46546C67) | version 2 | totalLength
+    Chunk 0 JSON : length | type 'JSON' (0x4E4F534A) | jsonBytes (padded with spaces)
+    Chunk 1 BIN  : length | type 'BIN\\0' (0x004E4942) | binBytes (padded with \\0)
+    """
+    # 1. Nettoyer le glTF : retirer la propriété "uri" du buffer (binaire embedded GLB)
+    gltf_clean = json.loads(json.dumps(gltf_doc))  # deep copy
+    if gltf_clean.get("buffers"):
+        for buf in gltf_clean["buffers"]:
+            if "uri" in buf:
+                del buf["uri"]
+            # byteLength obligatoire en GLB
+            buf["byteLength"] = len(binary_buffer)
+
+    json_bytes = json.dumps(gltf_clean, separators=(",", ":")).encode("utf-8")
+    # Padding JSON chunk avec 0x20 (espaces) pour alignement 4 bytes
+    while len(json_bytes) % 4 != 0:
+        json_bytes += b"\x20"
+    # Padding BIN chunk avec 0x00 pour alignement 4 bytes
+    bin_padded = binary_buffer
+    while len(bin_padded) % 4 != 0:
+        bin_padded += b"\x00"
+
+    total_length = 12 + 8 + len(json_bytes) + 8 + len(bin_padded)
+
+    out = bytearray()
+    # Header (12 bytes)
+    out += struct.pack("<III", 0x46546C67, 2, total_length)  # 'glTF', version=2
+    # Chunk 0 JSON
+    out += struct.pack("<II", len(json_bytes), 0x4E4F534A)  # 'JSON'
+    out += json_bytes
+    # Chunk 1 BIN
+    out += struct.pack("<II", len(bin_padded), 0x004E4942)  # 'BIN\0'
+    out += bin_padded
+    return bytes(out)
 
 
 # ═════════════════════ CESIUM 3D TILES tileset.json ═════════════════════

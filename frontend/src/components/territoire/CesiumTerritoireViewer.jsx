@@ -214,15 +214,17 @@ const CesiumTerritoireViewer = ({
         const bbox = meshData.tileset_meta?.bounding_region_deg
           || [lon - 0.005, lat - 0.003, lon + 0.005, lat + 0.003, 300, 500];
 
-        // Charger le glTF mesh local depuis le tileset (mode primitif Entity)
+        // ENDPOINT_GLTF_NATIF_Ω · VERSION_ULTIME_ABSOLUE_X8
+        // Charger le glTF via URL native /gltf-binary/{cache_key}.glb
+        // (zéro blob URI, ETag + Cache-Control 1h activés côté backend)
         try {
-          const gltfJson = meshData.gltf?.doc;
-          if (gltfJson) {
-            const blob = new Blob([JSON.stringify(gltfJson)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
+          const glbUrl = meshData.glb_url && API_BASE
+            ? `${API_BASE}${meshData.glb_url}`
+            : null;
+          if (glbUrl) {
             viewer.scene.primitives.add(
               await Cesium.Model.fromGltfAsync({
-                url,
+                url: glbUrl,
                 modelMatrix: Cesium.Transforms.headingPitchRollToFixedFrame(
                   Cesium.Cartesian3.fromDegrees(lon, lat, bbox[4] || 350),
                   new Cesium.HeadingPitchRoll(0, 0, 0),
@@ -233,10 +235,8 @@ const CesiumTerritoireViewer = ({
             );
           }
         } catch (modelErr) {
-          // glTF fromGltfAsync peut échouer si data: URI non supporté
-          // Fallback : afficher juste le waypoint marker
           // eslint-disable-next-line no-console
-          console.warn('Cesium glTF load fallback marker:', modelErr.message);
+          console.warn('Cesium GLB native load fallback marker:', modelErr.message);
         }
 
         // Marker waypoint canonique

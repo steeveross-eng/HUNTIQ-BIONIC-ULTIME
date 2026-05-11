@@ -3,6 +3,55 @@
 
 ---
 
+## 2026-05-11T12:10Z — ENDPOINT_GLTF_NATIF_Ω · VERSION_ULTIME_ABSOLUE_X8 · DELIVERED ✅
+
+### Directive: COMMANDE_INSTITUTIONNELLE_Ω — disable_blob_uri + enable_native_gltf_url
+
+#### Backend — 3 endpoints natifs glTF/GLB
+- **NEW MODULE** `engines/mesh_3d_omega/gltf_store.py` (≈80 lignes)
+  - `OrderedDict` thread-safe (lock), LRU cap = 64 entrées (~3-13 MB max RAM)
+  - `make_cache_key(...)` → SHA256[:32] hash déterministe des params
+  - `store_gltf(...)` + `get_gltf(...)` + `stats()`
+- **EDIT** `engines/mesh_3d_omega/__init__.py` :
+  - `build_gltf_mesh` retourne désormais `binary_buffer` brut + `gltf_external_buffer` (doc avec `uri` externe)
+  - **NEW** `pack_glb_binary(gltf_doc, binary_buffer)` → bytes GLB Khronos conformes (magic `glTF`, version 2, chunks JSON+BIN padded)
+- **EDIT** `engines/mesh_3d_omega/router.py` :
+  - `m3d_build` : génère le `cache_key`, packe le GLB, stocke dans le LRU + retourne `cache_key` + `glb_url` + `gltf_url`
+  - **NEW** `GET /api/v20/mesh-3d/gltf/{cache_key}.gltf` → JSON glTF + `buffer.uri` externe `./{key}.bin` · `Content-Type: model/gltf+json`
+  - **NEW** `GET /api/v20/mesh-3d/gltf-binary/{cache_key}.glb` → bytes GLB · `Content-Type: model/gltf-binary`
+  - **NEW** `GET /api/v20/mesh-3d/gltf-binary/{cache_key}.bin` → buffer brut · `Content-Type: application/octet-stream`
+  - **NEW** `GET /api/v20/mesh-3d/gltf-cache/stats`
+  - Tous : `Cache-Control: public, max-age=3600` + `ETag` SHA1(GLB) + support `If-None-Match` (RFC 7232, weak `W/...` supporté)
+  - 404 propre sur cache_key inexistant
+
+#### Frontend — disable_blob_uri + enable_native_gltf_url
+- **EDIT** `CesiumTerritoireViewer.jsx` :
+  - Suppression `new Blob([JSON.stringify(gltfJson)])` + `URL.createObjectURL(blob)`
+  - **Remplacé par** `Cesium.Model.fromGltfAsync({ url: ${API_BASE}${meshData.glb_url} })` → URL native HTTP
+  - Avantage : Cloudflare/browser HTTP cache utilisables sur le .glb (revisites = 304)
+
+#### PHASE D · Validation manuelle (NO testing_agent_v3_fork)
+- **NEW** `backend/tests/test_phase_3d_gltf_native_endpoint.py` (≈180 lignes, nommage neutre) : **7/7 PASSED en 13.6s**
+  - build → cache_key correct (`651faa68795c01ab1586f203a95ca2b6`)
+  - .glb : magic 0x46546c67 (`glTF`), version 2, chunks JSON(740B)+BIN(5788B) = 6556B total
+  - .gltf : buffer.uri externe `./{key}.bin`, Content-Type `model/gltf+json`
+  - .bin : 5788 bytes octet-stream
+  - **ETag + 304 conditionnel** (weak `W/...` Cloudflare-aware)
+  - **404** sur cache_key invalide
+  - cache_stats : 1/64 entrées
+- **Régression** : ancien test_phase_3d_overlays.py → **4/4 PASSED** (zéro régression)
+- **Total** : 11/11 PASSED en 13.62s
+- **Lint** : ruff Python + eslint JS = 0 issue
+
+### Verrous respectés
+- V30_LOCK INVIOLÉ ✅
+- FUSION ADD-ONLY ✅ (1 module NEW + 2 EDIT minimaux)
+- ANTI-GÉNÉRIQUE_Ω STRICT ✅ (mesh issu de TIN Delaunay réel sur DEM Open-Meteo)
+- NO_TESTING_AGENT ✅ (pytest + curl + Python manuels)
+- Disque préservé ✅ (0 nouveau package)
+
+
+
 ## 2026-05-11T11:45Z — CARTE_3D_INTEGRATION_SOUS_HEADER_Ω · DELIVERED ✅
 
 ### Directive: COMMANDANT STEEVE-MAX — 4 phases (A→D) terminées
