@@ -1073,6 +1073,15 @@ try:
 except Exception as e:
     logger.warning(f"ENGINE_SUPER_RESOLUTION_Ω not loaded: {e}")
 
+# V20_3D_OVERLAYS_Ω · CARTE_3D_INTEGRATION_SOUS_HEADER_Ω (2026-05-11 · STEEVE-MAX)
+# 4 endpoints alimentant le viewer Cesium 3D — réutilise le bundle V20 (zéro mock)
+try:
+    from engines.v8_institutional.v20_3d_overlays_omega import router as v20_3d_overlays_router
+    app.include_router(v20_3d_overlays_router)
+    logger.info("V20_3D_OVERLAYS_Ω registered — /api/v20/{corridors,zones,points-interet}/active + /api/v20/territoire/buffer-600m")
+except Exception as e:
+    logger.warning(f"V20_3D_OVERLAYS_Ω not loaded: {e}")
+
 # CASCADE_CACHE_Ω · P22J LATENCE OPTIM (TTL 30 min)
 try:
     from fastapi import APIRouter as _APIRouter_cache

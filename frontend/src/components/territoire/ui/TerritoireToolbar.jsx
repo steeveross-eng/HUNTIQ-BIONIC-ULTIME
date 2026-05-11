@@ -18,7 +18,7 @@ import {
   Map, Binoculars, Layers, Brain,
   Shield, SplitSquareHorizontal,
   Wind, Crosshair, Flame, Droplets, Eye, Navigation, BookMarked,
-  Microscope,
+  Microscope, Box,
 } from 'lucide-react';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import BionicMapSelector from '@/components/maps/BionicMapSelector';
@@ -121,6 +121,8 @@ export function TerritoireToolbar({
   showInspectionBioPanel, setShowInspectionBioPanel,
   showPhaseA, setShowPhaseA,
   showPhaseC, setShowPhaseC,
+  // CARTE_3D_INTEGRATION_SOUS_HEADER_Ω (2026-05-11 · STEEVE-MAX)
+  show3DViewer, setShow3DViewer,
   // Legacy props accepted but ignored
   ...rest
 }) {
@@ -246,6 +248,17 @@ export function TerritoireToolbar({
 
         {/* CONTAMINATION (via Moteurs PhaseC) */}
         <PressButton active={showPhaseC} onClick={() => setShowPhaseC && setShowPhaseC(p => !p)} icon={Eye} label="Contam" activeColor="#FF7043" testId="toolbar-contam-btn" />
+        {SEP}
+
+        {/* CARTE_3D_INTEGRATION_SOUS_HEADER_Ω (2026-05-11 · STEEVE-MAX) */}
+        {/* Bouton 3D — ouvre le viewer Cesium en modal plein écran */}
+        <PressButton
+          active={!!show3DViewer}
+          onClick={() => setShow3DViewer && setShow3DViewer(v => !v)}
+          icon={Box} label="3D" activeColor="#FF6A00"
+          testId="toggle-3d-modal-btn"
+          title="Vue 3D Cesium · Territoire · buffer 600 m · tilt 55°"
+        />
         {SEP}
 
         {/* CURSEUR BIONIC */}

@@ -16,6 +16,32 @@
 
 ---
 
+## ✅ DERNIÈRE LIVRAISON (2026-05-11) — CARTE_3D_INTEGRATION_SOUS_HEADER_Ω
+
+**Statut** : DELIVERED · 4/4 pytest PASSED · lint clean · screenshot validé
+
+| Élément | Statut | Validation |
+|---|---|---|
+| `GET /api/v20/corridors/active` | ✅ | n=14 corridors réels (cache HIT) |
+| `GET /api/v20/zones/active` | ✅ | n=5 zones polygones réelles |
+| `GET /api/v20/territoire/buffer-600m` | ✅ | 65 points GeoJSON, 0.06ms |
+| `GET /api/v20/points-interet/active` | ✅ | n=12 POI (6 affûts + 6 salines) |
+| Bouton "3D" sous-header (`data-testid="toggle-3d-modal-btn"`) | ✅ | visible toolbar |
+| Modale plein écran (`data-testid="cesium-overlay-modal"`) | ✅ | ouvre + ferme |
+| Bouton "← Retour à la Carte" | ✅ | `data-testid="btn-close-3d-viewer"` |
+| Caméra Cesium : `tilt=55° · radius=600m · terrain_follow` | ✅ | `Cesium.createWorldTerrainAsync` |
+| Parallélisation mesh + overlays | ✅ | `Promise.all` (≤4s overlays après cache HIT) |
+
+Fichiers livrés :
+- `backend/engines/v8_institutional/v20_3d_overlays_omega.py` (NEW)
+- `backend/server.py` (registration ADD-ONLY)
+- `backend/tests/test_phase_3d_overlays.py` (NEW · nommage neutre)
+- `frontend/src/components/territoire/ui/TerritoireToolbar.jsx` (EDIT bouton)
+- `frontend/src/components/territoire/CesiumTerritoireViewer.jsx` (EDIT camera + overlays)
+- `frontend/src/pages/MonTerritoireBionicPage.jsx` (EDIT modal UX)
+
+
+
 ## Original Problem Statement
 Le COMMANDANT STEEVE-MAX ordonne l'exécution de directives institutionnelles
 pour stabiliser la carte TERRITOIRE (BIONIC OS V20-SUPRA) sous protocole

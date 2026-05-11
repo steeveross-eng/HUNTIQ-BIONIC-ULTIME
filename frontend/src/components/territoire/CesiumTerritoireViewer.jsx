@@ -68,6 +68,14 @@ const CesiumTerritoireViewer = ({
   lat = DEFAULT_LAT, lon = DEFAULT_LON,
   drapeSpectral = true, drapeSlope = false,
   bboxRadiusM = 200, gridN = 11,
+  // CARTE_3D_INTEGRATION_SOUS_HEADER_Ω (2026-05-11 · STEEVE-MAX)
+  species = 'orignal',
+  month = 10,
+  hour = 7,
+  windDeg = 225,
+  windSpeed = 15,
+  fullScreen = false,
+  loadOverlays = false,
 }) => {
   const containerRef = useRef(null);
   const viewerRef = useRef(null);
@@ -75,6 +83,7 @@ const CesiumTerritoireViewer = ({
   const [error, setError] = useState(null);
   const [tilesetMeta, setTilesetMeta] = useState(null);
   const [stats, setStats] = useState({ vertices: 0, triangles: 0, drapeMode: 'none' });
+  const [overlayStats, setOverlayStats] = useState({ corridors: 0, zones: 0, poi: 0, buffer: false });
 
   const buildMesh = useCallback(async () => {
     setStatus('fetch_mesh');
@@ -98,6 +107,37 @@ const CesiumTerritoireViewer = ({
       throw new Error(`Mesh build failed: ${e.message}`);
     }
   }, [lat, lon, bboxRadiusM, gridN, drapeSpectral, drapeSlope]);
+
+  // CARTE_3D_INTEGRATION_SOUS_HEADER_Ω — Fetch des 4 overlays réels
+  const fetchOverlays = useCallback(async () => {
+    if (!loadOverlays) return null;
+    const qs = new URLSearchParams({
+      lat: String(lat), lon: String(lon),
+      species, month: String(month), hour: String(hour),
+      wind_deg: String(windDeg), wind_speed: String(windSpeed),
+    }).toString();
+    const buffQs = new URLSearchParams({
+      lat: String(lat), lon: String(lon), radius_m: '600', n_points: '64',
+    }).toString();
+    try {
+      const [corrR, zonesR, poiR, buffR] = await Promise.all([
+        fetch(`${API_BASE}/api/v20/corridors/active?${qs}`, { credentials: 'omit' }).then(r => r.json()).catch(() => null),
+        fetch(`${API_BASE}/api/v20/zones/active?${qs}`, { credentials: 'omit' }).then(r => r.json()).catch(() => null),
+        fetch(`${API_BASE}/api/v20/points-interet/active?${qs}`, { credentials: 'omit' }).then(r => r.json()).catch(() => null),
+        fetch(`${API_BASE}/api/v20/territoire/buffer-600m?${buffQs}`, { credentials: 'omit' }).then(r => r.json()).catch(() => null),
+      ]);
+      return {
+        corridors: corrR?.corridors || [],
+        zones: zonesR?.zones || [],
+        poi: poiR?.points_interet || [],
+        buffer: buffR?.feature || null,
+      };
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn('[Cesium overlays] fetch failed:', e.message);
+      return { corridors: [], zones: [], poi: [], buffer: null };
+    }
+  }, [loadOverlays, lat, lon, species, month, hour, windDeg, windSpeed]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -127,7 +167,13 @@ const CesiumTerritoireViewer = ({
         viewerRef.current = viewer;
 
         setStatus('build_mesh');
-        const meshData = await buildMesh();
+        // CARTE_3D_INTEGRATION_SOUS_HEADER_Ω : parallélisation mesh + overlays
+        // Les overlays (corridors/zones/POI/buffer) sont indépendants du mesh 3D.
+        // On lance les deux en parallèle pour réduire le TTFOverlay.
+        const meshPromise = buildMesh();
+        const overlayPromise = loadOverlays ? fetchOverlays() : Promise.resolve(null);
+
+        const meshData = await meshPromise;
         if (cancelled) { viewer.destroy(); return; }
         setTilesetMeta(meshData.tileset_meta);
         setStats({
@@ -136,17 +182,37 @@ const CesiumTerritoireViewer = ({
           drapeMode: drapeSpectral ? 'SPECTRAL' : (drapeSlope ? 'TERRAIN_HR_SLOPE' : 'NONE'),
         });
 
-        // Camera positionnée sur le waypoint avec vue oblique
-        const bbox = meshData.tileset_meta?.bounding_region_deg || [lon - 0.005, lat - 0.003, lon + 0.005, lat + 0.003, 300, 500];
-        const center = Cesium.Cartesian3.fromDegrees((bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2, bbox[5] + 800);
+        // Camera CARTE_3D_INTEGRATION_SOUS_HEADER_Ω :
+        //  - center_on_active_waypoint
+        //  - visible_radius = 600m  → altitude ~ radius / tan(35°) ≈ 857m
+        //  - terrain_follow + tilt = 55° (pitch = -55°)
+        const VISIBLE_RADIUS_M = 600;
+        const TILT_DEG = 55;
+        const cameraAltM = VISIBLE_RADIUS_M / Math.tan((90 - TILT_DEG) * Math.PI / 180); // ≈ 857m
         viewer.camera.setView({
-          destination: center,
+          destination: Cesium.Cartesian3.fromDegrees(lon, lat, cameraAltM),
           orientation: {
             heading: Cesium.Math.toRadians(0.0),
-            pitch: Cesium.Math.toRadians(-55.0),
+            pitch: Cesium.Math.toRadians(-TILT_DEG),
             roll: 0.0,
           },
         });
+
+        // Activer terrain_follow (terrain Cesium World Terrain via Ion)
+        try {
+          const terrainProv = await Cesium.createWorldTerrainAsync({
+            requestVertexNormals: true,
+          });
+          viewer.terrainProvider = terrainProv;
+          viewer.scene.globe.depthTestAgainstTerrain = true;
+        } catch (terrErr) {
+          // eslint-disable-next-line no-console
+          console.warn('[Cesium] terrain_follow indisponible:', terrErr.message);
+        }
+
+        // Bounding box du mesh territoire (pour glTF positioning + bbox overlay)
+        const bbox = meshData.tileset_meta?.bounding_region_deg
+          || [lon - 0.005, lat - 0.003, lon + 0.005, lat + 0.003, 300, 500];
 
         // Charger le glTF mesh local depuis le tileset (mode primitif Entity)
         try {
@@ -176,7 +242,7 @@ const CesiumTerritoireViewer = ({
         // Marker waypoint canonique
         viewer.entities.add({
           name: 'WAYPOINT_CANONIQUE',
-          position: Cesium.Cartesian3.fromDegrees(lon, lat, bbox[5] + 50),
+          position: Cesium.Cartesian3.fromDegrees(lon, lat, (bbox[5] || 500) + 50),
           point: {
             pixelSize: 14, color: Cesium.Color.ORANGE,
             outlineColor: Cesium.Color.WHITE, outlineWidth: 2,
@@ -198,9 +264,121 @@ const CesiumTerritoireViewer = ({
             coordinates: Cesium.Rectangle.fromDegrees(bbox[0], bbox[1], bbox[2], bbox[3]),
             material: Cesium.Color.ORANGE.withAlpha(0.15),
             outline: true, outlineColor: Cesium.Color.ORANGE,
-            height: bbox[4], extrudedHeight: bbox[5] + 10,
+            height: bbox[4], extrudedHeight: (bbox[5] || 500) + 10,
           },
         });
+
+        // ══ CARTE_3D_INTEGRATION_SOUS_HEADER_Ω · OVERLAYS RÉELS ══
+        if (loadOverlays && !cancelled) {
+          setStatus('fetch_overlays');
+          const ov = await overlayPromise;
+          if (cancelled) return;
+
+          const ovStats = { corridors: 0, zones: 0, poi: 0, buffer: false };
+
+          // Buffer 600m → cercle au sol
+          if (ov?.buffer?.geometry?.coordinates?.[0]) {
+            const ring = ov.buffer.geometry.coordinates[0];
+            const positions = ring.flatMap(([lng2, lat2]) => [lng2, lat2]);
+            viewer.entities.add({
+              name: 'BUFFER_600M',
+              polygon: {
+                hierarchy: Cesium.Cartesian3.fromDegreesArray(positions),
+                material: Cesium.Color.fromCssColorString('#FFC300').withAlpha(0.10),
+                outline: true,
+                outlineColor: Cesium.Color.fromCssColorString('#FFC300'),
+                outlineWidth: 2,
+                heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+              },
+            });
+            ovStats.buffer = true;
+          }
+
+          // Zones vitales → polygones colorés (clampés au sol)
+          const ZONE_COLORS = {
+            alimentation: '#7CB518', rut: '#FF6A00', repos: '#00B5C5',
+            salines: '#FDD835', eau: '#42A5F5', affuts: '#9E9E9E',
+            corridors: '#FF9800', hydro: '#4A8AFF',
+          };
+          for (const z of (ov?.zones || [])) {
+            // API V20 renvoie `polygon` (liste de [lat,lng]) ; fallback `positions`
+            const raw = z?.polygon || z?.positions;
+            if (!Array.isArray(raw)) continue;
+            try {
+              const flat = (raw.flat ? raw.flat() : raw);
+              // Filtre points valides
+              const points = flat
+                .map(p => Array.isArray(p) && p.length >= 2
+                  ? [Number(p[0]), Number(p[1])]
+                  : (p && p.lat !== undefined ? [p.lat, (p.lng ?? p.lon)] : null))
+                .filter(p => p && Number.isFinite(p[0]) && Number.isFinite(p[1]));
+              if (points.length < 3) continue;
+              const arr = points.flatMap(([la, ln]) => [ln, la]); // Cesium: [lng, lat]
+              const layerKey = z.layerId || z.type || 'rut';
+              const color = ZONE_COLORS[layerKey] || '#7CB518';
+              viewer.entities.add({
+                name: `ZONE_${layerKey}_${z.id || ''}`,
+                polygon: {
+                  hierarchy: Cesium.Cartesian3.fromDegreesArray(arr),
+                  material: Cesium.Color.fromCssColorString(color).withAlpha(0.35),
+                  outline: true,
+                  outlineColor: Cesium.Color.fromCssColorString(color),
+                  heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                },
+              });
+              ovStats.zones += 1;
+            } catch (_e) { /* skip malformed */ }
+          }
+
+          // Corridors → polylignes orangées avec hauteur extrudée (+25m)
+          for (const c of (ov?.corridors || [])) {
+            const path = c?.path || c?.coordinates || c?.points;
+            if (!Array.isArray(path) || path.length < 2) continue;
+            try {
+              // Path : [[lat,lng], ...] → flat [lng, lat, +25, lng, lat, +25, ...]
+              const lonLatH = [];
+              for (const p of path) {
+                let la, ln;
+                if (Array.isArray(p) && p.length >= 2) { la = p[0]; ln = p[1]; }
+                else if (p && p.lng !== undefined) { la = p.lat; ln = p.lng; }
+                else if (p && p.lon !== undefined) { la = p.lat; ln = p.lon; }
+                else continue;
+                if (!Number.isFinite(la) || !Number.isFinite(ln)) continue;
+                lonLatH.push(ln, la, 25);
+              }
+              if (lonLatH.length < 6) continue;
+              viewer.entities.add({
+                name: `CORRIDOR_${c.id || ''}`,
+                polyline: {
+                  positions: Cesium.Cartesian3.fromDegreesArrayHeights(lonLatH),
+                  width: 5,
+                  material: Cesium.Color.fromCssColorString('#FF6A00').withAlpha(0.85),
+                  clampToGround: false,
+                },
+              });
+              ovStats.corridors += 1;
+            } catch (_e) { /* skip */ }
+          }
+
+          // Points d'intérêt → markers
+          for (const p of (ov?.poi || [])) {
+            if (!Number.isFinite(p?.lat) || !Number.isFinite(p?.lng)) continue;
+            const isAffut = p.category === 'affut';
+            viewer.entities.add({
+              name: `POI_${p.category}_${p.id || ''}`,
+              position: Cesium.Cartesian3.fromDegrees(p.lng, p.lat, (bbox[5] || 500) + 5),
+              point: {
+                pixelSize: isAffut ? 10 : 9,
+                color: Cesium.Color.fromCssColorString(isAffut ? '#9E9E9E' : '#FDD835'),
+                outlineColor: Cesium.Color.WHITE, outlineWidth: 1,
+                heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+              },
+            });
+            ovStats.poi += 1;
+          }
+
+          setOverlayStats(ovStats);
+        }
 
         viewer.scene.requestRender();
         setStatus('ready');
@@ -220,7 +398,7 @@ const CesiumTerritoireViewer = ({
         try { viewerRef.current.destroy(); } catch (_) { /* noop */ }
       }
     };
-  }, [lat, lon, bboxRadiusM, gridN, drapeSpectral, drapeSlope, buildMesh]);
+  }, [lat, lon, bboxRadiusM, gridN, drapeSpectral, drapeSlope, buildMesh, fetchOverlays, loadOverlays]);
 
   return (
     <div
@@ -228,10 +406,10 @@ const CesiumTerritoireViewer = ({
       style={{
         position: 'relative',
         width: '100%',
-        height: '600px',
+        height: fullScreen ? '100%' : '600px',
         background: '#0a0a0a',
-        border: '2px solid #FF6A00',
-        borderRadius: 8,
+        border: fullScreen ? 'none' : '2px solid #FF6A00',
+        borderRadius: fullScreen ? 0 : 8,
         overflow: 'hidden',
       }}
     >
@@ -262,6 +440,13 @@ const CesiumTerritoireViewer = ({
         <div>drape={stats.drapeMode}</div>
         {tilesetMeta && (
           <div>geom_error={Number(tilesetMeta.geometric_error || 0).toFixed(1)}m</div>
+        )}
+        {loadOverlays && (
+          <div style={{ marginTop: 4, paddingTop: 4, borderTop: '1px dashed #FF6A00' }}>
+            <div style={{ color: '#FFC300', fontWeight: 'bold' }}>OVERLAYS_Ω · réels</div>
+            <div>corridors={overlayStats.corridors} · zones={overlayStats.zones} · poi={overlayStats.poi}</div>
+            <div>buffer_600m={overlayStats.buffer ? 'OK' : '—'}</div>
+          </div>
         )}
         {error && (
           <div style={{ color: '#F55', marginTop: 4 }}>{error}</div>

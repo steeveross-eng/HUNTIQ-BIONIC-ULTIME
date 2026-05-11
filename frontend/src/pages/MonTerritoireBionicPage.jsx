@@ -1295,6 +1295,7 @@ const MonTerritoireBionicPage = () => {
         showInspectionBioPanel={showInspectionBioPanel} setShowInspectionBioPanel={setShowInspectionBioPanel}
         showPhaseA={showPhaseA} setShowPhaseA={setShowPhaseA}
         showPhaseC={showPhaseC} setShowPhaseC={setShowPhaseC}
+        show3DViewer={show3DViewer} setShow3DViewer={setShow3DViewer}
       />
 
       {/* ════════════════════════════════════════════════════════════════
@@ -1807,41 +1808,26 @@ const MonTerritoireBionicPage = () => {
         style={{ display: 'none' }}
       />
 
-      {/* ═══ PHASE_3_3D_OMEGA — BOUTON FLOTTANT "VUE 3D" + OVERLAY CESIUM ═══ */}
-      <button
-        data-testid="btn-open-3d-viewer"
-        onClick={() => setShow3DViewer(true)}
-        style={{
-          position: 'fixed', bottom: 24, right: 24, zIndex: 9999,
-          background: 'linear-gradient(135deg, #FF6A00, #C25400)',
-          color: '#FFF', border: '2px solid #FFC300',
-          padding: '10px 18px', borderRadius: 24, fontWeight: 'bold',
-          fontFamily: 'monospace', fontSize: 13, letterSpacing: 0.5,
-          cursor: 'pointer',
-          boxShadow: '0 4px 16px rgba(255, 106, 0, 0.45)',
-        }}
-        title="PHASE_3_3D_OMEGA · Cesium 3D Tiles + glTF mesh"
-      >
-        🧊 VUE 3D
-      </button>
+      {/* ═══ PHASE_3_3D_OMEGA — OVERLAY CESIUM ═══
+       *  CARTE_3D_INTEGRATION_SOUS_HEADER_Ω (2026-05-11 · STEEVE-MAX) :
+       *  Le bouton "3D" flottant a été migré dans la TerritoireToolbar
+       *  (sous-header). Voir <PressButton testId="toggle-3d-modal-btn">.
+       */}
       {show3DViewer && (
         <div
           data-testid="cesium-overlay-modal"
           onClick={(e) => { if (e.target === e.currentTarget) setShow3DViewer(false); }}
           style={{
             position: 'fixed', inset: 0, zIndex: 9998,
-            background: 'rgba(0, 0, 0, 0.92)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            padding: 24,
+            background: '#000',
+            display: 'flex', alignItems: 'stretch', justifyContent: 'stretch',
           }}
         >
           <div
             style={{
               position: 'relative',
-              width: 'min(92vw, 1400px)', height: 'min(92vh, 800px)',
+              width: '100vw', height: '100vh',
               background: '#0a0a0a',
-              border: '2px solid #FF6A00', borderRadius: 12,
-              boxShadow: '0 0 48px rgba(255, 106, 0, 0.6)',
               overflow: 'hidden',
             }}
           >
@@ -1849,19 +1835,34 @@ const MonTerritoireBionicPage = () => {
               data-testid="btn-close-3d-viewer"
               onClick={() => setShow3DViewer(false)}
               style={{
-                position: 'absolute', top: 12, right: 12, zIndex: 100,
-                background: '#1a1a1a', color: '#FFF',
+                position: 'absolute', top: 16, right: 16, zIndex: 10000,
+                background: 'rgba(26,26,26,0.92)', color: '#FFF',
                 border: '2px solid #FF6A00',
-                width: 36, height: 36, borderRadius: '50%',
-                fontSize: 18, fontWeight: 'bold', cursor: 'pointer',
+                padding: '10px 18px',
+                fontSize: 12, fontWeight: 800, letterSpacing: 0.6,
+                fontFamily: 'JetBrains Mono, monospace',
+                textTransform: 'uppercase',
+                borderRadius: 8,
+                cursor: 'pointer',
+                boxShadow: '0 4px 16px rgba(255,106,0,0.45)',
               }}
-            >×</button>
+              title="Retour à la Carte 2D"
+            >
+              ← Retour à la Carte
+            </button>
             <CesiumTerritoireViewer
-              lat={selectedWaypointForZones?.lat || 48.206657}
-              lon={selectedWaypointForZones?.lng || -68.382422}
+              lat={selectedWaypointForZones?.lat || selectedWaypointForZones?.latitude || 48.206657}
+              lon={selectedWaypointForZones?.lng || selectedWaypointForZones?.longitude || -68.382422}
+              species={selectedSpecies === 'tous' ? 'orignal' : selectedSpecies}
+              month={new Date().getMonth() + 1}
+              hour={new Date().getHours()}
+              windDeg={windInfo?.directionDeg || 225}
+              windSpeed={windInfo?.speed || 15}
               drapeSpectral
-              bboxRadiusM={200}
+              bboxRadiusM={600}
               gridN={11}
+              fullScreen
+              loadOverlays
             />
           </div>
         </div>

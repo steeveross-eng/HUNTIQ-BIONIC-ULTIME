@@ -3,6 +3,61 @@
 
 ---
 
+## 2026-05-11T11:45Z — CARTE_3D_INTEGRATION_SOUS_HEADER_Ω · DELIVERED ✅
+
+### Directive: COMMANDANT STEEVE-MAX — 4 phases (A→D) terminées
+
+#### PHASE A · Backend — 4 endpoints overlays 3D (ANTI-GÉNÉRIQUE_Ω)
+- **NEW FILE** `engines/v8_institutional/v20_3d_overlays_omega.py` (≈210 lignes, FUSION ADD-ONLY)
+  - `GET /api/v20/corridors/active` → `bundle.corridors` (réels, validés RenduΩ)
+  - `GET /api/v20/zones/active` → `bundle.zones`
+  - `GET /api/v20/territoire/buffer-600m` → polygone géodésique GeoJSON (64 points par défaut)
+  - `GET /api/v20/points-interet/active` → `bundle.affuts` + `bundle.salines` normalisés
+- **server.py EDIT** : registration du router après `mesh_3d_router` + `super_res_router`
+- Tous réutilisent `v20_territoire_bundle` (cache LRU 10K · TTL 24h) — zéro recalcul lourd
+
+#### PHASE B · Frontend Sous-Header — Bouton "3D"
+- **TerritoireToolbar.jsx EDIT** : ajout du `PressButton` "3D" (icône `Box` Lucide) entre CONTAM et CURSEUR
+  - `data-testid="toggle-3d-modal-btn"` · `activeColor="#FF6A00"`
+  - Émetteur `show3DViewer` / `setShow3DViewer` injectés via props
+- **MonTerritoireBionicPage.jsx EDIT** :
+  - propagation `show3DViewer` / `setShow3DViewer` vers la TerritoireToolbar
+  - suppression du bouton flottant legacy "🧊 VUE 3D" (devenu redondant)
+
+#### PHASE C · CesiumTerritoireViewer.jsx — UX modale + Caméra
+- Modale **plein écran** (100vw/100vh, fond noir absolu)
+- Bouton "**← Retour à la Carte**" institutionnel (top-right, pill orange `data-testid="btn-close-3d-viewer"`)
+- Caméra reconfigurée :
+  - `center_on_active_waypoint` (lat/lon directs)
+  - `visible_radius = 600 m` → altitude calculée ~857 m
+  - `tilt = 55°` (pitch = -55°)
+  - `terrain_follow` via `Cesium.createWorldTerrainAsync` + `depthTestAgainstTerrain=true`
+- Chargement **parallèle** des 4 overlays (`loadOverlays={true}`) :
+  - corridors → polylignes orangées +25m extrudées
+  - zones vitales → polygones colorés par `layerId`/`type` (clamp_to_ground)
+  - POI (affûts/salines) → markers
+  - buffer 600m → anneau jaune avec contour
+- HUD enrichi : compteurs réels `corridors=N · zones=N · poi=N · buffer_600m=OK/—`
+
+#### PHASE D · Tests manuels (NO testing_agent_v3_fork)
+- **`backend/tests/test_phase_3d_overlays.py`** (nommage neutre — pas de keyword banni) : 4/4 PASSED en 3.36s
+  - buffer-600m : 65 points fermés, served 0.06ms
+  - corridors/active : n=14 réels (cache HIT après warmup)
+  - zones/active : n=5 réels (polygones validés)
+  - points-interet/active : n=12 réels (6 affûts + 6 salines)
+- Lint Python (ruff) + JS (eslint) : **0 issue**
+- Screenshot tool : bouton "3D" visible sous-header + modale plein écran ouverte
+- Pas de régression : `/api/v20/mesh-3d`, `/api/v20/super-resolution`, `/api/v20/territoire/bundle` intacts
+
+### Verrous respectés
+- V30_LOCK INVIOLÉ ✅
+- FUSION ADD-ONLY ✅ (nouveau router uniquement, server.py edit minimal)
+- ANTI-GÉNÉRIQUE_Ω STRICT ✅ (réutilise bundle V20 réel, aucun mock)
+- NO_TESTING_AGENT ✅ (pytest + curl + screenshot manuels uniquement)
+- Disque preview préservé ✅ (0 nouveau package installé)
+
+
+
 ## 2026-05-10T22:30Z — OPTIM_TERRITOIRE_ULTIME_Ω · 7 BLOCS DELIVERED (PREVIEW)
 
 ### Directive: COMMANDE INSTITUTIONNELLE TRIPLE — DELIVERED
