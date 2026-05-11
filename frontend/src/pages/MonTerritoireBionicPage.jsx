@@ -123,10 +123,18 @@ function _pointInPolygon(lat, lng, polygon) {
   return inside;
 }
 
-const MonTerritoireBionicPage = () => {
+const MonTerritoireBionicPage = ({ pageMode = 'analyse-bionic' } = {}) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { t } = useLanguage();
+
+  // ═══ TERRITOIRE_ROUTE_RESTORE_Ω (2026-05-11 · STEEVE-MAX) ═══
+  // pageMode = 'analyse-bionic' (défaut, /mon-territoire-bionic) → analyse SENSORIEL Ω
+  // pageMode = 'carte-territoire' (/territoire) → carte canonique 4 couches Ω
+  const isCarteTerritoireMode = pageMode === 'carte-territoire';
+  const pageTitle = isCarteTerritoireMode
+    ? 'Carte TERRITOIRE Ω'
+    : 'Analyse Territoire BIONIC';
 
   // ═══ PHASE_3_3D_OMEGA — VUE 3D Cesium (overlay modal) ═══
   const [show3DViewer, setShow3DViewer] = useState(false);
@@ -728,6 +736,15 @@ const MonTerritoireBionicPage = () => {
   const [showIntelLayer, setShowIntelLayer] = useState(TERRITOIRE_DEFAULTS.INTEL);
   // MODE INSPECTION BIOLOGIQUE PRO/EXPERT — panneau institutionnel flottant
   const [showInspectionBioPanel, setShowInspectionBioPanel] = useState(false);
+
+  // TERRITOIRE_ROUTE_RESTORE_Ω : en mode 'carte-territoire', le panel SENSORIEL Ω
+  // (InspectionBiologiquePanel) reste obligatoirement fermé. L'analyse SENSORIEL Ω
+  // est exclusivement réservée à la route /mon-territoire-bionic.
+  useEffect(() => {
+    if (isCarteTerritoireMode && showInspectionBioPanel) {
+      setShowInspectionBioPanel(false);
+    }
+  }, [isCarteTerritoireMode, showInspectionBioPanel]);
   // P20_PHASE3 · opacity registry pour LayersPanelOmegaUnified (anti-générique)
   const [layerOpacityMap, setLayerOpacityMap] = useState({});
   // PHASE_NUTRITION_SALINES_BINDING_Ω — panneau nutritionnel au dblclick saline
@@ -1237,6 +1254,7 @@ const MonTerritoireBionicPage = () => {
       {/* ═══ SECTION 1 — HEADER (composant extrait IM1) ═══ */}
       <TerritoireHeader
         navigate={navigate}
+        pageTitle={pageTitle}
         selectedWaypointForZones={selectedWaypointForZones}
         mapClickMode={mapClickMode}
         setMapClickMode={setMapClickMode}

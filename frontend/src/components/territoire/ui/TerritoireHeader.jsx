@@ -29,6 +29,8 @@ export const TerritoireHeader = ({
   scoreV8,
   biomeProfile,
   scoreV8Loading,
+  // TERRITOIRE_ROUTE_RESTORE_Ω (2026-05-11 · STEEVE-MAX)
+  pageTitle = 'Analyse Territoire BIONIC',
 }) => {
   // BCE-4X PositionLock
   const headerRef = useRef(null);
@@ -52,7 +54,7 @@ export const TerritoireHeader = ({
           <ArrowLeft className="h-[22px] w-[22px]" />
         </button>
         <div className="h-6 w-px bg-[#1a1a2e]" />
-        <h1 className="text-base font-semibold text-white tracking-tight">Analyse Territoire BIONIC</h1>
+        <h1 className="text-base font-semibold text-white tracking-tight">{pageTitle}</h1>
       </div>
       <div className="flex items-center gap-3">
         {/* BCE-4X V8: SCORE V8 NATIONAL — 10 composantes */}

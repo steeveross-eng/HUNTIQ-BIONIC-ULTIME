@@ -210,14 +210,26 @@ const Navigation = ({ cartCount, onCartOpen }) => {
             
             {/* V5.2: T. BORD fusionne dans INTELLIGENCE — Lien supprime */}
             
-            {/* ANALYSE TERRITOIRE — Module primaire (carte strategique) */}
+            {/* TERRITOIRE_ROUTE_RESTORE_Ω (2026-05-11 · STEEVE-MAX X11) — bouton TERRITOIRE Ω */}
+            <Link 
+              to="/territoire" 
+              className={`flex items-center gap-1 px-1.5 py-2 text-[11px] font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${isActive('/territoire') ? 'text-[#FF6A00] bg-[#FF6A00]/10' : 'text-gray-300 hover:text-white'}`}
+              data-testid="nav-territoire"
+              title="Carte TERRITOIRE Ω · corridors Ω, zones Ω, contamination Ω, vent Ω"
+            >
+              <Map className="h-3.5 w-3.5" />
+              Territoire
+            </Link>
+
+            {/* ANALYSE TERRITOIRE — Module SENSORIEL Ω (analyse approfondie) */}
             <Link 
               to="/mon-territoire-bionic" 
               className={`flex items-center gap-1 px-1.5 py-2 text-[11px] font-medium uppercase tracking-wider rounded-sm transition-all duration-200 hover:bg-white/5 whitespace-nowrap flex-shrink-0 ${['/mon-territoire-bionic', '/mon-territoire', '/analyse-territoire'].includes(location.pathname) ? 'text-[#F5A623] bg-[#F5A623]/10' : 'text-gray-300 hover:text-white'}`}
               data-testid="nav-analyse-territoire"
+              title="Analyse Territoire BIONIC · SENSORIEL Ω"
             >
               <Crosshair className="h-3.5 w-3.5" />
-              Territoire
+              Analyse
             </Link>
             
             {/* CARTE-2027-REBUILD-Omega: Carte terrain V7 active */}
@@ -371,6 +383,10 @@ const Navigation = ({ cartCount, onCartOpen }) => {
               <Store className="h-4 w-4" /> {t('nav_shop')}
             </Link>
             {/* V5.2: T. BORD fusionne dans INTELLIGENCE */}
+            {/* TERRITOIRE_ROUTE_RESTORE_Ω (mobile) — Carte TERRITOIRE Ω */}
+            <Link to="/territoire" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#FF6A00]" data-testid="mobile-nav-territoire">
+              <Map className="h-4 w-4" /> Territoire Ω
+            </Link>
             <Link to="/mon-territoire-bionic" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm hover:bg-white/5 text-[#F5A623]" data-testid="mobile-nav-analyse-territoire">
               <Crosshair className="h-4 w-4" /> Analyse Territoire
             </Link>
@@ -425,7 +441,7 @@ const Navigation = ({ cartCount, onCartOpen }) => {
 };
 
 // Footer Component - Hidden on full-viewport pages
-const FULL_VIEWPORT_ROUTES = ['/mon-territoire-bionic', '/mon-territoire', '/analyse-territoire', '/forecast', '/admin-geo', '/admin-premium', '/carte-2027', '/territoire-capture-mode'];
+const FULL_VIEWPORT_ROUTES = ['/mon-territoire-bionic', '/territoire', '/mon-territoire', '/analyse-territoire', '/forecast', '/admin-geo', '/admin-premium', '/carte-2027', '/territoire-capture-mode'];
 
 const Footer = () => {
   const location = useLocation();
@@ -1065,12 +1081,14 @@ function App() {
                 <Route path="/analyze" element={<Navigate to="/analytics" replace />} />
                 <Route path="/compare" element={<ComparePage products={products} />} />
                 <Route path="/shop" element={<ShopPage />} />
-                {/* BCE-4X PURGE: /territoire redirige vers /mon-territoire-bionic */}
-                <Route path="/territoire" element={<Navigate to="/mon-territoire-bionic" replace />} />
-                <Route path="/mon-territoire-bionic" element={<MonTerritoireBionicPage />} />
+                {/* TERRITOIRE_ROUTE_RESTORE_Ω (2026-05-11 · STEEVE-MAX VERSION_ULTIME_ABSOLUE_X11) */}
+                {/* /territoire → Carte TERRITOIRE Ω (corridors Ω, zones Ω, contamination Ω, vent Ω) */}
+                {/* /mon-territoire-bionic → Analyse Territoire BIONIC (SENSORIEL Ω) */}
+                <Route path="/territoire" element={<MonTerritoireBionicPage pageMode="carte-territoire" />} />
+                <Route path="/mon-territoire-bionic" element={<MonTerritoireBionicPage pageMode="analyse-bionic" />} />
                 {/* Redirections pour URL simplifiee */}
-                <Route path="/mon-territoire" element={<MonTerritoireBionicPage />} />
-                <Route path="/analyse-territoire" element={<MonTerritoireBionicPage />} />
+                <Route path="/mon-territoire" element={<MonTerritoireBionicPage pageMode="analyse-bionic" />} />
+                <Route path="/analyse-territoire" element={<MonTerritoireBionicPage pageMode="analyse-bionic" />} />
                 {/* BCE-4X PURGE: /marketplace redirige (MarketplacePage = fantome) */}
                 <Route path="/marketplace" element={<Navigate to="/shop" replace />} />
                 <Route path="/formations" element={<FormationsPage />} />

@@ -3,6 +3,55 @@
 
 ---
 
+## 2026-05-11T12:55Z — TERRITOIRE_ROUTE_RESTORE_Ω · X11 · DELIVERED ✅
+
+### Directive: COMMANDE_INSTITUTIONNELLE_Ω — restauration /territoire + bouton nav
+
+#### Routage
+- **`App.js` EDIT** ligne 1068-1075 :
+  - **AVANT** : `<Route path="/territoire" element={<Navigate to="/mon-territoire-bionic" replace />}/>`
+  - **APRÈS** : `<Route path="/territoire" element={<MonTerritoireBionicPage pageMode="carte-territoire" />}/>`
+  - `/mon-territoire-bionic` (et alias) → `pageMode="analyse-bionic"` (défaut SENSORIEL Ω)
+  - `FULL_VIEWPORT_ROUTES` enrichi avec `/territoire`
+
+#### Page (FUSION ADD-ONLY)
+- **`MonTerritoireBionicPage.jsx` EDIT** : accepte prop `pageMode` ('analyse-bionic' par défaut, 'carte-territoire' pour /territoire)
+  - `isCarteTerritoireMode === true` → titre header = **"Carte TERRITOIRE Ω"**
+  - `isCarteTerritoireMode === false` → titre header = **"Analyse Territoire BIONIC"** (inchangé)
+  - useEffect force `showInspectionBioPanel=false` en mode carte-territoire (SENSORIEL Ω exclusivement /mon-territoire-bionic)
+- **`TerritoireHeader.jsx` EDIT** : accepte prop `pageTitle` (default `'Analyse Territoire BIONIC'`)
+
+#### Navigation
+- **Desktop nav** (`App.js`) :
+  - **NEW** bouton **"Territoire"** → `/territoire` · icône `Map` · couleur `#FF6A00` · `data-testid="nav-territoire"`
+  - **RENAMED** bouton existant → **"Analyse"** → `/mon-territoire-bionic` · couleur `#F5A623` (inchangée)
+- **Mobile nav** :
+  - **NEW** bouton "Territoire Ω" → `/territoire` · `data-testid="mobile-nav-territoire"`
+  - Existant "Analyse Territoire" inchangé
+
+#### Validation manuelle (NO testing_agent)
+- **Screenshot tool** :
+  - `/territoire` → header `"Carte TERRITOIRE Ω"` + TERRITOIRE button highlight `#FF6A00`
+  - `/mon-territoire-bionic` → header `"Analyse Territoire BIONIC"` + ANALYSE button highlight `#F5A623`
+  - Switch dynamique entre routes : URL change ET classes CSS s'inversent correctement
+- **Lint** : eslint 3 fichiers (`App.js`, `MonTerritoireBionicPage.jsx`, `TerritoireHeader.jsx`) = 0 issue
+
+### Mapping final des routes territoriales
+| Route | Page | Mode | Titre header | Couleur bouton |
+|---|---|---|---|---|
+| `/territoire` | `MonTerritoireBionicPage` | `carte-territoire` | Carte TERRITOIRE Ω | `#FF6A00` |
+| `/mon-territoire-bionic` | `MonTerritoireBionicPage` | `analyse-bionic` | Analyse Territoire BIONIC | `#F5A623` |
+| `/mon-territoire` | `MonTerritoireBionicPage` | `analyse-bionic` (alias) | Analyse Territoire BIONIC | `#F5A623` |
+| `/analyse-territoire` | `MonTerritoireBionicPage` | `analyse-bionic` (alias) | Analyse Territoire BIONIC | `#F5A623` |
+
+### Verrous respectés
+- V30_LOCK INVIOLÉ ✅
+- FUSION ADD-ONLY ✅ (1 prop ajoutée, 3 EDIT minimaux)
+- ANTI-GÉNÉRIQUE_Ω STRICT ✅ (4 couches Ω natives : CORRIDORS, ZONES, CONTAMINATION, VENT)
+- NO_TESTING_AGENT ✅ (validation manuelle exclusive)
+
+
+
 ## 2026-05-11T12:10Z — ENDPOINT_GLTF_NATIF_Ω · VERSION_ULTIME_ABSOLUE_X8 · DELIVERED ✅
 
 ### Directive: COMMANDE_INSTITUTIONNELLE_Ω — disable_blob_uri + enable_native_gltf_url
