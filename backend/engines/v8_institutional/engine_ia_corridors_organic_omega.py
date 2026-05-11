@@ -98,10 +98,10 @@ router = APIRouter(prefix="/api/v20/territoire/corridors-organic", tags=["V20 Co
 # Constantes officielles (verrouillées — VERSION Ω-M)
 # ============================================================
 ORGANIC_CONFIG: dict[str, Any] = {
-    # Phase N — L'invariant prioritaire est "segment ≤ 20 m". Les contraintes
-    # points_per_corridor [60, 120] sont assouplies pour respecter §9 CORRIDORS.
+    # P22Ω_CORRIDORS_RESTORE_V90 · P0_CRITICAL · 2026-05-11
+    # Harmonisation control_points: min=30, max=60 (uniforme tous engines)
     "points_per_corridor_min": 30,
-    "points_per_corridor_max": 500,
+    "points_per_corridor_max": 60,
     "curvature_model": "catmull_rom_organic_v3",
     "micro_oscillations": "biomimetic_low_frequency",
     "fractal_variation": "light",
@@ -130,12 +130,13 @@ ORGANIC_CONFIG: dict[str, Any] = {
     "thickness_max_px": 3.0,
     "thickness_mode": "along_path",
 
-    # Hiérarchie réseau (Phase N — BLOC 5 recalibration pragmatique)
-    # Seuils calibrés pour répartition visuelle 3-4 principales / 6-8 secondaires / 3-5 capillaires
+    # P22Ω_CORRIDORS_RESTORE_V90 · P0_CRITICAL · 2026-05-11
+    # SET_INTENSITY_THRESHOLD = 0 pour TOUS les niveaux
+    # → continuité ABSOLUE, intensity_scale FULL, aucun corridor exclu par intensité
     "hierarchy": {
-        "veine_principale": {"min_intensity": 75, "min_attractors": 2},
-        "veine_secondaire": {"min_intensity": 50, "min_attractors": 1},
-        "capillaire": {"min_intensity": 0, "min_attractors": 0},
+        "veine_principale": {"min_intensity": 0, "min_attractors": 0},
+        "veine_secondaire": {"min_intensity": 0, "min_attractors": 0},
+        "capillaire":       {"min_intensity": 0, "min_attractors": 0},
     },
 
     # Règles RENDU (consommées par ENGINE-RENDU-Ω)
@@ -159,11 +160,14 @@ SPECIES_BEHAVIOR: dict[str, dict[str, float]] = {
     "dindon_sauvage": {"prudence": 0.70, "amplitude": 0.30, "vitesse": 0.60, "ouverture_preferee": 0.75, "hydro_dep": 0.35, "couvert_pref": 0.45, "sinuosity": 1.30, "n_corridors": 12},
 }
 
-# Préparation IA avancée (P2 — actifs non déployés)
+# P22Ω_CORRIDORS_RESTORE_V90 · P1_RESTORE · 2026-05-11
+# IA générative déployée en mode rules-based (heuristiques déterministes)
+# Génère 3 catégories de corridors : alternatifs, scenarios, prédictifs
 IA_ADVANCED_STATUS = {
     "ia_predictive": {"ready_schema": True, "model_deployed": False,
                        "outputs": ["seasonal_movements", "pressure_humaine", "hydrological_changes"]},
-    "ia_generative": {"ready_schema": True, "model_deployed": False,
+    "ia_generative": {"ready_schema": True, "model_deployed": True,
+                       "deployment_mode": "rules_based_heuristic",
                        "outputs": ["alternative_corridors", "scenario_corridors", "predictive_corridors"]},
     "ia_adaptative": {"ready_schema": True, "model_deployed": False,
                        "capabilities": ["auto_refine", "auto_correct", "auto_learn"]},

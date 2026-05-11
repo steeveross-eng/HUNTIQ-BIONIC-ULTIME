@@ -769,13 +769,15 @@ try:
 except Exception as e:
     logger.warning(f"V8 Governance not loaded: {e}")
 
-# V8-MAP-BUNDLE — Endpoint unique toutes couches territoire
-try:
-    from engines.v8_national.map_bundle import router as map_bundle_router
-    app.include_router(map_bundle_router)
-    logger.info("✓ V8-MAP-BUNDLE registered (/api/v8/map) — Bundle unique + cache 30s")
-except Exception as e:
-    logger.warning(f"V8 Map Bundle not loaded: {e}")
+# V8-MAP-BUNDLE — DÉSACTIVÉ par P22Ω_CORRIDORS_RESTORE_V90 · P0_CRITICAL · 2026-05-11
+# Motif : doctrine V90 — purge V8 legacy (mêle géométries hors conformité)
+# try:
+#     from engines.v8_national.map_bundle import router as map_bundle_router
+#     app.include_router(map_bundle_router)
+#     logger.info("✓ V8-MAP-BUNDLE registered (/api/v8/map) — Bundle unique + cache 30s")
+# except Exception as e:
+#     logger.warning(f"V8 Map Bundle not loaded: {e}")
+logger.info("[P22Ω_V90] V8-MAP-BUNDLE DISABLED — directive P22Ω_CORRIDORS_RESTORE_V90 P0")
 
 # V8-PHASE-A — Relocalisation + Salines (sandbox isolee)
 try:
@@ -785,13 +787,16 @@ try:
 except Exception as e:
     logger.warning(f"V8 Phase A not loaded: {e}")
 
-# V8-PHASE-B — Zones + Corridors + Affuts terrain-aware (sandbox)
-try:
-    from engines.v8_national.phase_b_engines import router as phase_b_router
-    app.include_router(phase_b_router)
-    logger.info("V8-PHASE-B registered (/api/v8/map) — Zones/Corridors/Affuts TA")
-except Exception as e:
-    logger.warning(f"V8 Phase B not loaded: {e}")
+# V8-PHASE-B — DÉSACTIVÉ par P22Ω_CORRIDORS_RESTORE_V90 · P0_CRITICAL · 2026-05-11
+# Motif : V90 ne tolère AUCUN mélange affuts/corridors (forbid_affut_references→false
+# mais V8-PHASE-B émet une géométrie incompatible avec ORGANIC v3)
+# try:
+#     from engines.v8_national.phase_b_engines import router as phase_b_router
+#     app.include_router(phase_b_router)
+#     logger.info("V8-PHASE-B registered (/api/v8/map) — Zones/Corridors/Affuts TA")
+# except Exception as e:
+#     logger.warning(f"V8 Phase B not loaded: {e}")
+logger.info("[P22Ω_V90] V8-PHASE-B DISABLED — directive P22Ω_CORRIDORS_RESTORE_V90 P0")
 
 # V8-PHASE-C — Scenario + Thermal + Multi-Engine Scoring
 try:
@@ -1091,6 +1096,15 @@ try:
 except Exception as e:
     logger.warning(f"AUDIT_SUPRA_CORRIDORS_Ω not loaded: {e}")
 
+# DOCTRINE_V90_Ω · Attestation P22Ω_CORRIDORS_RESTORE_V90 (2026-05-11 · STEEVE-MAX)
+# Atteste de la conformité V90 (continuité ABSOLUTE, intensity FULL, affut IGNORE)
+try:
+    from engines.v8_institutional.doctrine_v90_omega import router as doctrine_v90_router
+    app.include_router(doctrine_v90_router)
+    logger.info("DOCTRINE_V90_Ω registered — /api/v20/doctrine-v90/{status,attest} · P22Ω_CORRIDORS_RESTORE_V90")
+except Exception as e:
+    logger.warning(f"DOCTRINE_V90_Ω not loaded: {e}")
+
 # CASCADE_CACHE_Ω · P22J LATENCE OPTIM (TTL 30 min)
 try:
     from fastapi import APIRouter as _APIRouter_cache
@@ -1313,13 +1327,17 @@ try:
 except Exception as e:
     logger.warning(f"XVIII CORRIDORS_VITAUX_Ω router not loaded: {e}")
 
-# ═══ PHASE XIX-P1 — ORIGINE_EXTERNE_FILTER_Ω ═══
-try:
-    from routes.origine_externe_filter_router import router as origine_externe_filter_router
-    app.include_router(origine_externe_filter_router)
-    logger.info("✓ XIX-P1 active : ORIGINE_EXTERNE_FILTER_Ω (/api/v30/corridors/origine-externe)")
-except Exception as e:
-    logger.warning(f"XIX-P1 ORIGINE_EXTERNE_FILTER_Ω router not loaded: {e}")
+# ═══ PHASE XIX-P1 — ORIGINE_EXTERNE_FILTER_Ω · DÉSACTIVÉ P22Ω_V90 ═══
+# Désactivé par P22Ω_CORRIDORS_RESTORE_V90 · P0_CRITICAL · 2026-05-11
+# Motif : rejette silencieusement les corridors hors fenêtre [600m, 780m]
+# → incompatible avec doctrine V90 (continuité ABSOLUE, full_trame_visibility)
+# try:
+#     from routes.origine_externe_filter_router import router as origine_externe_filter_router
+#     app.include_router(origine_externe_filter_router)
+#     logger.info("✓ XIX-P1 active : ORIGINE_EXTERNE_FILTER_Ω (/api/v30/corridors/origine-externe)")
+# except Exception as e:
+#     logger.warning(f"XIX-P1 ORIGINE_EXTERNE_FILTER_Ω router not loaded: {e}")
+logger.info("[P22Ω_V90] ORIGINE_EXTERNE_FILTER_Ω DISABLED — directive P22Ω_CORRIDORS_RESTORE_V90 P0")
 
 # ═══ PHASE XIX-P2 — ORIGINE_EXTERNE_INVERSION_Ω ═══
 try:

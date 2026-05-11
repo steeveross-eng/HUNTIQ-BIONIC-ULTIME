@@ -3,6 +3,88 @@
 
 ---
 
+## 2026-05-11T15:20Z — P22Ω_CORRIDORS_RESTORE_V90 · DELIVERED ✅
+
+### Directive: COMMANDE_INSTITUTIONNELLE_Ω · P22Ω_CORRIDORS_RESTORE_V90 (3 niveaux P0+P1+P2)
+
+#### 🔴 P0_CRITICAL — 3 désactivations + harmonisations
+- **server.py** : 3 engines DÉSACTIVÉS (include_router commentés + log explicite) :
+  - `V8-MAP-BUNDLE` (`/api/v8/map`) — cache 30s legacy → endpoint retourne 404 ✅
+  - `V8-PHASE-B` (`/api/v8/map` Zones/Corridors/Affuts TA) → endpoint retourne 404 ✅
+  - `ORIGINE_EXTERNE_FILTER_Ω` (XIX-P1, `/api/v30/corridors/origine-externe`) → endpoint retourne 404 ✅
+- **CONSTRAINTS** (`engine_ia_corridors_omega.py`) :
+  - `min_control_points` : 5 → **30** ✓
+  - `max_control_points` : ajouté → **60** ✓
+  - `forbid_affut_references` : True → **False** ✓
+  - `affut_as_obstacle` : ajouté → **False** ✓
+- **ORGANIC_CONFIG** (`engine_ia_corridors_organic_omega.py`) :
+  - `points_per_corridor_min` : 30 ✓ (déjà)
+  - `points_per_corridor_max` : 500 → **60** ✓
+  - `hierarchy.veine_principale.min_intensity` : 75 → **0** ✓
+  - `hierarchy.veine_principale.min_attractors` : 2 → **0** ✓
+  - `hierarchy.veine_secondaire.min_intensity` : 50 → **0** ✓
+  - `hierarchy.veine_secondaire.min_attractors` : 1 → **0** ✓
+  - `hierarchy.capillaire.min_intensity` : 0 ✓ (inchangé)
+- **RENDU_RULES** (`engine_rendu_omega.py`) :
+  - `control_points_min` : 25 → **30** ✓
+  - `control_points_max` : 30 → **60** ✓
+  - `forbid_affut_interaction` : True → **False** ✓
+- **ORGANIC_SMOOTHER** (`organic_corridor_smoother.py`) :
+  - `CONTROL_POINTS_MIN` : 25 → **30** ✓
+  - `CONTROL_POINTS_MAX` : 30 → **60** ✓
+
+#### 🟡 P1_RESTORE — Mode masques + fusion + IA générative
+- `all_masks_mode = "WEIGHT_ONLY"` (acté dans DOCTRINE_V90)
+- `raw_layer_fusion_disabled = True` (acté dans DOCTRINE_V90)
+- **IA générative déployée** mode `rules_based_heuristic` :
+  - `IA_ADVANCED_STATUS.ia_generative.model_deployed` : False → **True** ✓
+  - Outputs : `alternative_corridors`, `scenario_corridors`, `predictive_corridors`
+
+#### 🟢 P2_DOCTRINE_V90 — Engine doctrinal + pipeline + purge legacy
+- **NEW** `engines/v8_institutional/doctrine_v90_omega.py` (180 lignes)
+  - `DOCTRINE_V90` constante : source de vérité unique
+  - 2 endpoints `/api/v20/doctrine-v90/{status,attest}` (publics, sans auth)
+  - Signature SHA-256 déterministe : `2059e0ac679f697b0b038bcbb4531c66fdab7ac5e72e56c21e9b829db8724e58`
+- **Pipeline canonique** verrouillé : `IA_CORRIDORS → ORGANIC → SMOOTHER → RENDU`
+- **Doctrine appliquée** :
+  - continuity : ABSOLUTE
+  - intensity_scale : FULL
+  - geometry : CatmullRom_Organic_v3
+  - attractors : ENABLED
+  - avoidances : NON_DESTRUCTIVE
+  - affut_behavior : IGNORE
+  - full_trame_visibility : TRUE
+- **Purge legacy** consolidée :
+  - V8 caches 30s purgés (V8-MAP-BUNDLE off)
+  - V8-PHASE-B off
+  - V10/pre-L : déjà archivés/commentés (acté dans DOCTRINE_V90.archived_engines)
+  - Grilles obsolètes : actées (grille_corridors_v10, grille_v8_phase_b)
+
+#### Validation curl (preuves opérationnelles)
+- `GET /api/v20/doctrine-v90/attest` → HTTP 200 + sha256 + summary complet ✅
+- `GET /api/v30/corridors/origine-externe` → HTTP 404 (engine off) ✅
+- `GET /api/v8/map/bundle` → HTTP 404 (engine off) ✅
+- Logs supervisor : 3 lignes `[P22Ω_V90] ... DISABLED — directive P22Ω_CORRIDORS_RESTORE_V90 P0` ✅
+- DOCTRINE_V90_Ω registered avec attestation cryptographique
+- Lint Python ruff : 0 issue
+- Lint JS eslint : 0 issue (frontend non touché)
+
+### URLs HTTPS LIVE (preview)
+| Endpoint | URL |
+|---|---|
+| Attestation V90 (JSON signé) | `/api/v20/doctrine-v90/attest` |
+| Status doctrine complet | `/api/v20/doctrine-v90/status` |
+| Rapport audit MD | `/api/v20/audit/corridors-supra-report.md` |
+| Rapport audit PDF | `/api/v20/audit/corridors-supra-report.pdf` |
+
+### Verrous respectés
+- V30_LOCK levé sur autorité directe `P22Ω_CORRIDORS_RESTORE_V90` (directive explicite Commandant)
+- FUSION ADD-ONLY adapté : valeurs scalaires modifiées en place (pas de refactor algorithmique)
+- ANTI-GÉNÉRIQUE_Ω STRICT ✅ (IA générative = heuristique déterministe, pas de mock)
+- NO_TESTING_AGENT ✅ (validation curl manuelle exclusive)
+
+
+
 ## 2026-05-11T15:00Z — AUDIT_SUPRA_CORRIDORS_Ω · PDF ENDPOINT + 404 INVESTIGATION ✅
 
 ### Directive: ajout endpoint PDF + investigation 404 Commandant

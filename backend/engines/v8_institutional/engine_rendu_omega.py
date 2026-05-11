@@ -65,9 +65,11 @@ RENDU_RULES: dict[str, Any] = {
     "opacity_min": 0.75,
 
     # §6 — Géométrie Catmull-Rom
+    # P22Ω_CORRIDORS_RESTORE_V90 · P0_CRITICAL · 2026-05-11
+    # Harmonisation: min=30, max=60 (uniforme tous engines)
     "geometry_type": "catmull-rom",
-    "control_points_min": 25,
-    "control_points_max": 30,
+    "control_points_min": 30,
+    "control_points_max": 60,
     "segment_max_m": 20.0,
     "angle_max_deg": 45.0,
 
@@ -91,7 +93,9 @@ RENDU_RULES: dict[str, Any] = {
     "min_zoom": 13,
 
     # §10 — Règle d'interdiction affûts
-    "forbid_affut_interaction": True,
+    # P22Ω_CORRIDORS_RESTORE_V90 · P0_CRITICAL · 2026-05-11
+    # forbid_affut_interaction → false · affut_behavior = IGNORE (doctrine V90)
+    "forbid_affut_interaction": False,
 
     # §11 — Preview == final
     "preview_equals_final": True,

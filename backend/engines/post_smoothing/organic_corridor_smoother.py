@@ -58,8 +58,10 @@ from typing import Any, Dict, List, Optional, Tuple
 ANGLE_MAX_DEG = 45.0
 ANGLE_FUITE_DEG = 90.0          # demi-tour interdit
 SEGMENT_MAX_M = 20.0
-CONTROL_POINTS_MIN = 25
-CONTROL_POINTS_MAX = 30
+# P22Ω_CORRIDORS_RESTORE_V90 · P0_CRITICAL · 2026-05-11
+# Harmonisation: min=30, max=60 (uniforme tous engines)
+CONTROL_POINTS_MIN = 30
+CONTROL_POINTS_MAX = 60
 COLOR_INSTITUTIONAL = "#FF8F00"
 
 # Contraintes écologiques (AMENDEMENT-FINAL §4)

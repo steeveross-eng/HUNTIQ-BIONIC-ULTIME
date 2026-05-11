@@ -54,9 +54,15 @@ CONSTRAINTS = {
     "functional_radius_max_m": 780.0,  # 600 * (1 + 0.30)
     "ecological_width_min_m": 2.0,
     "ecological_width_max_m": 10.0,
-    "min_control_points": 5,
+    # P22Ω_CORRIDORS_RESTORE_V90 · P0_CRITICAL · 2026-05-11
+    # Harmonisation control_points: min=30, max=60 (uniforme tous engines)
+    "min_control_points": 30,
+    "max_control_points": 60,
     "single_species_per_corridor": True,
-    "forbid_affut_references": True,
+    # P22Ω_CORRIDORS_RESTORE_V90 · P0_CRITICAL · forbid_affut_references → false
+    # affut_as_obstacle → false · affut_behavior = IGNORE (doctrine V90)
+    "forbid_affut_references": False,
+    "affut_as_obstacle": False,
     "network_connectivity_max_gap_m": 150.0,
 }
 
