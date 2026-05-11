@@ -3,6 +3,50 @@
 
 ---
 
+## 2026-05-11T14:00Z — AUDIT_SUPRA_CORRIDORS_Ω · V90 · DELIVERED ✅
+
+### Directive: DEMANDE OFFICIELLE — Audit complet du pipeline corridors
+
+#### Livrables
+- **NEW** `/app/memory/AUDIT_SUPRA_CORRIDORS_V90.md` (37 195 bytes · 808 lignes · 4345 mots)
+  - 14 sections couvrant les 11 demandes du Commandant
+  - 21 engines actifs + 4 inactifs/archivés inventoriés
+  - 12+ filtres critiques · 9 masques · 5 règles de fusion documentés
+  - 4 écarts V90 critiques (P0) identifiés + 4 P1 + 2 P2
+- **NEW** `/app/backend/engines/v8_institutional/audit_supra_corridors_omega.py`
+  - 3 endpoints HTTPS publics (sans auth) :
+    - `GET /api/v20/audit/corridors-supra-report.md` → text/markdown brut
+    - `GET /api/v20/audit/corridors-supra-report.txt` → text/plain alias
+    - `GET /api/v20/audit/corridors-supra-report` → JSON métadonnées (sha256, size, urls)
+  - Headers : `Content-Disposition: inline; filename="AUDIT_SUPRA_CORRIDORS_V90.md"` · `X-Audit-Authority: BCE-4X-ULTIME-ABSOLU-STEEVE-MAX`
+- **EDIT** `server.py` : registration du router audit (FUSION ADD-ONLY)
+
+#### Validation curl
+- HTTP 200 sur GET .md
+- `content-type: text/markdown; charset=utf-8` ✅
+- Taille téléchargée = 37195 bytes (identique au serveur)
+- SHA256 local match serveur : `32544bd8db374d2a56d41c1b2ab635f34b7355287cdd977f2f1460ce62602206`
+- 14 sections principales détectées par `grep "^# "`
+- `cf-cache-status: DYNAMIC` · `cache-control: no-store, no-cache, must-revalidate` (réponse fraîche garantie)
+
+#### Synthèse des écarts V90 détectés
+| # | Catégorie | Écart |
+|---|---|---|
+| C1 | P0 | `min_control_points=5` (CONSTRAINTS) vs 25-30 attendus |
+| C2 | P0 | `points_per_corridor_max=500` (ORGANIC) vs 30 (RENDU) |
+| C3 | P0 | V8-PHASE-B actif mêle corridors et affûts (interdit V90) |
+| C4 | P0 | ORIGINE_EXTERNE_FILTER_Ω rejette silencieusement hors [600,780m] |
+| M1-M4 | P1 | Doublons salines/hotspots · IA non déployés · cache V8 30s |
+| m1-m2 | P2 | Anomaly map informational only · ENFORCE_MODE env-désactivable |
+
+### Verrous respectés
+- V30_LOCK INVIOLÉ ✅
+- FUSION ADD-ONLY ✅ (2 fichiers NEW + 1 EDIT minimal server.py)
+- ANTI-GÉNÉRIQUE_Ω STRICT ✅ (audit factuel uniquement, données extraites du code réel)
+- NO_TESTING_AGENT ✅ (validation curl manuelle)
+
+
+
 ## 2026-05-11T13:55Z — TERRITOIRE_EDGE_PURGE_GLOBAL_Ω · X17 · RAPPORT DE PORTÉE ⚠️
 
 ### Directive: COMMANDE_INSTITUTIONNELLE_Ω X17 — purge Cloudflare GLOBALE (PoPs, KV, Workers, DNS, Rules)

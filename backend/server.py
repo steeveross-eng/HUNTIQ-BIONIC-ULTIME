@@ -1082,6 +1082,15 @@ try:
 except Exception as e:
     logger.warning(f"V20_3D_OVERLAYS_Ω not loaded: {e}")
 
+# AUDIT_SUPRA_CORRIDORS_Ω · Rapport HTTPS téléchargeable (2026-05-11 · STEEVE-MAX)
+# Sert /app/memory/AUDIT_SUPRA_CORRIDORS_V90.md sans auth · sans compression
+try:
+    from engines.v8_institutional.audit_supra_corridors_omega import router as audit_supra_router
+    app.include_router(audit_supra_router)
+    logger.info("AUDIT_SUPRA_CORRIDORS_Ω registered — /api/v20/audit/corridors-supra-report.{md,txt,json}")
+except Exception as e:
+    logger.warning(f"AUDIT_SUPRA_CORRIDORS_Ω not loaded: {e}")
+
 # CASCADE_CACHE_Ω · P22J LATENCE OPTIM (TTL 30 min)
 try:
     from fastapi import APIRouter as _APIRouter_cache
