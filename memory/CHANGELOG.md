@@ -3,6 +3,52 @@
 
 ---
 
+## 2026-05-11T15:00Z — AUDIT_SUPRA_CORRIDORS_Ω · PDF ENDPOINT + 404 INVESTIGATION ✅
+
+### Directive: ajout endpoint PDF + investigation 404 Commandant
+
+#### Investigation 404 PREVIEW (Commandant)
+- **Probes serveur** : 3/3 HTTP 200 sur `https://huntiq-restore.preview.emergentagent.com/api/v20/audit/...`
+- **Variante incorrecte identifiée** : `https://huntiq.preview.emergentagent.com/` (sans `-restore`) → HTTP 404
+- **Cause probable** : copie/colle d'URL avec domaine tronqué ou cache navigateur sur ancien domaine
+- **Verdict** : aucune anomalie côté serveur, endpoints 100% opérationnels
+
+#### Endpoint PDF activé (FUSION ADD-ONLY)
+- **EDIT** `audit_supra_corridors_omega.py` :
+  - Nouvelle fonction `_build_pdf(markdown_text)` : conversion Markdown → HTML (extensions tables/fenced_code/sane_lists) → PDF via `fpdf2 2.8.7 write_html()`
+  - Strip ancres internes (`<a href="#...">`) qui causaient `FPDFException` Named Destination
+  - 22 remplacements doctrinaux pour caractères latin-1 hors plage (Ω, →, ≤, emojis P0/P1/P2, etc.)
+  - Fallback rendu texte brut si write_html échoue
+  - En-tête institutionnel : "AUDIT SUPRA-DETAILLE OMEGA · CORRIDORS · V90" en orange BCE-4X
+  - Footer signature : "subordonne du COMMANDANT STEEVE-MAX"
+  - Cache disque : `/app/memory/AUDIT_SUPRA_CORRIDORS_V90.pdf` (regen automatique si MD plus récent)
+- **NEW endpoint** : `GET /api/v20/audit/corridors-supra-report.pdf`
+  - `Content-Type: application/pdf`
+  - `Content-Disposition: inline; filename="AUDIT_SUPRA_CORRIDORS_V90.pdf"`
+  - Cache-Control: public, max-age=300
+- **JSON metadata enrichi** : exposent désormais `download_url_pdf`, `pdf_size_bytes`, `pdf_sha256`
+
+#### Validation curl
+- PDF Header : `%PDF-1.3` ✅
+- PDF Trailer : `%%EOF` ✅
+- **25 pages** générées
+- 38 305 bytes (37.41 KB)
+- SHA-256 PDF : `aa17ebb1303b81a634137e89bd68a20a513f7c0cd59063e4df17b156c2e01390`
+
+#### URLs HTTPS LIVE (PREVIEW)
+| Format | URL | Taille | SHA-256 |
+|---|---|---|---|
+| `.md` | `https://huntiq-restore.preview.emergentagent.com/api/v20/audit/corridors-supra-report.md` | 41 058 B | `ccf5d0d0...192d61b` |
+| `.pdf` | `https://huntiq-restore.preview.emergentagent.com/api/v20/audit/corridors-supra-report.pdf` | 38 305 B | `aa17ebb1...e01390` |
+| `.txt` | `https://huntiq-restore.preview.emergentagent.com/api/v20/audit/corridors-supra-report.txt` | 41 058 B | (identique .md) |
+| JSON | `https://huntiq-restore.preview.emergentagent.com/api/v20/audit/corridors-supra-report` | 710 B | (metadata) |
+
+### Verrous respectés
+- V30_LOCK INVIOLÉ ✅ · FUSION ADD-ONLY ✅ · NO_TESTING_AGENT ✅
+- Aucun nouveau package installé (fpdf2 + markdown déjà présents)
+
+
+
 ## 2026-05-11T14:00Z — AUDIT_SUPRA_CORRIDORS_Ω · V90 · DELIVERED ✅
 
 ### Directive: DEMANDE OFFICIELLE — Audit complet du pipeline corridors
