@@ -6,15 +6,55 @@ COMPTE COMMANDANT — ACCÈS TERRITOIRE COMPLET (PHASE OMEGA++)
 
 ## 🟢 Connexion utilisateur (carte TERRITOIRE)
 
+⚠️ **DEUX COMPTES UTILISABLES** (même password pour simplicité) :
+
+### Compte historique (auto-loggé par le frontend)
 | Champ | Valeur |
 |---|---|
-| **URL Login PREVIEW** | https://huntiq-restore.preview.emergentagent.com/login |
-| **Email** | `commandant@bionichunt.com` |
-| **Password** | `BCE4X-OMEGA-2026!` |
-| **Role** | `admin` |
+| **Email** | `admin@huntiq.com` |
+| **Password** | `Commandant2026` |
+| **Nom** | Steeve-MAX |
+| **Role** | `admin` (upgrade 2026-05-12T20:55Z) |
 | **Premium tier** | `omega` (jusqu'à 2099-12-31) |
-| **is_premium** | `true` |
+| **user_id** | `user_aac634a5fab7` |
+
+### Compte alternatif (créé hier)
+| Champ | Valeur |
+|---|---|
+| **Email** | `commandant@bionichunt.com` |
+| **Password** | `Commandant2026` |
+| **Nom** | Commandant Steeve-Max |
+| **Role** | `admin` |
+| **Premium tier** | `omega` |
 | **user_id** | `user_c675b8b205fd` |
+
+| Champ commun | Valeur |
+|---|---|
+| **URL Login PREVIEW** | https://huntiq-restore.preview.emergentagent.com/login |
+
+⚠️ **Reset password 2026-05-12T20:55Z** : ancien `BCE4X-OMEGA-2026!` (avec `!`) remplacé par `Commandant2026` (alphanumeric pur) pour éviter problèmes de copier-coller / encodage URL / autocomplete navigateur.
+
+### 🛠️ Conseils en cas de problème de connexion
+1. **Auto-login activé** : si le frontend détecte un token dans localStorage, il connecte automatiquement avec l'ancien compte. Pour forcer la déconnexion :
+   - DevTools → Application → Storage → **Clear site data**
+   - Ou utiliser navigation privée
+2. **Saisir manuellement** le password (ne pas copier-coller pour éviter espaces invisibles)
+3. **Vérifier validation API directe** :
+   ```bash
+   curl -X POST https://huntiq-restore.preview.emergentagent.com/api/auth/login \
+     -H "Content-Type: application/json" \
+     -d '{"email":"admin@huntiq.com","password":"Commandant2026"}'
+   ```
+   Doit retourner `{"success":true,"token":"...","user":{...}}`
+
+### Inscription nouveau membre
+L'endpoint `/api/auth/register` est **opérationnel** (vérifié 2026-05-12T20:50Z).
+Tester via :
+```bash
+curl -X POST https://huntiq-restore.preview.emergentagent.com/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Nouveau","email":"new@bionichunt.com","password":"Pass2026"}'
+```
 
 ### Routes TERRITOIRE accessibles après login
 | Route | Mode |

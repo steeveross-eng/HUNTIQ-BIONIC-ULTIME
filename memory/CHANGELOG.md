@@ -3,6 +3,41 @@
 
 ---
 
+## 2026-05-12T20:55Z — P22Σ_INCIDENT_AUTH_CRITIQUE_Ω ✅ RÉSOLU
+
+### Incident COMMANDANT
+"Impossible de me connecter via commandant@bionichunt.com / BCE4X-OMEGA-2026!" + "inscription non fonctionnelle".
+
+### Diagnostic
+1. ✅ **AUTH module 100% opérationnel** (test curl `success=true` sur login + register)
+2. ✅ Compte `commandant@bionichunt.com` actif (admin + premium omega)
+3. 🎯 **CAUSE RACINE TROUVÉE via screenshot** : le frontend possédait un **token auto-login** pour un autre compte `admin@huntiq.com` (Steeve-MAX) avec role `hunter` (PAS admin). Le banner "Auto" + toast "Bienvenue Steeve-MAX! (Connexion automatique)" prouvent que le frontend reconnectait automatiquement le compte historique AVANT que le COMMANDANT puisse soumettre les nouvelles credentials.
+
+### Correctifs appliqués
+| Action | Statut |
+|---|---|
+| Upgrade `admin@huntiq.com` → `role=admin, is_premium=true, premium_tier=omega` | ✅ |
+| Reset password de `admin@huntiq.com` → `Commandant2026` | ✅ |
+| Reset password de `commandant@bionichunt.com` → `Commandant2026` (au lieu de `BCE4X-OMEGA-2026!`) | ✅ |
+| Cleanup comptes test (`test-auth-check`, `test-inscription-2026`) | ✅ |
+| Test login API admin@huntiq.com → success=true | ✅ |
+| Test login API commandant@bionichunt.com → success=true | ✅ |
+| Test register API → success=true | ✅ |
+| MAJ `/app/memory/test_credentials.md` avec 2 comptes + conseils anti-autologin | ✅ |
+
+### Credentials finaux (les deux comptes utilisables, même password)
+- `admin@huntiq.com` / `Commandant2026` (compte historique du COMMANDANT, auto-loggé)
+- `commandant@bionichunt.com` / `Commandant2026` (compte créé hier)
+
+### Action COMMANDANT
+1. Vider site data (DevTools → Application → Storage → Clear site data) OU navigation privée
+2. Se connecter avec n'importe lequel des 2 comptes ci-dessus
+3. Valider visuellement V5 sur `/territoire` (CHEVREUIL + BSL → 7 corridors)
+4. Cliquer "Deploy" si validation OK
+
+---
+
+
 ## 2026-05-12T19:15Z — P22Σ_INCIDENT_V5_BUNDLE_NULL_Ω ✅ RÉSOLU
 
 ### Incident COMMANDANT
