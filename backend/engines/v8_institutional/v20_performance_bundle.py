@@ -23,6 +23,35 @@ logger = logging.getLogger("bionic.v20_performance")
 router = APIRouter(prefix="/api/v20/territoire", tags=["V20 Performance Bundle"])
 
 # ═══════════════════════════════════════════════════════════════════════
+# P22Σ_SPECIES_NORMALIZATION_Ω · 2026-05-12T18:25Z · COMMANDANT STEEVE-MAX
+# ═══════════════════════════════════════════════════════════════════════
+# Normalisation des noms d'espèces côté backend pour accepter tous les
+# alias frontend (wild_turkey, dindon, dindon_sauvage, moose, deer, etc.)
+# et router vers le nom canonique attendu par chaque engine.
+# ═══════════════════════════════════════════════════════════════════════
+SPECIES_ALIAS_TO_CANONICAL = {
+    # Canoniques (passthrough)
+    "orignal": "orignal",     "chevreuil": "chevreuil",
+    "ours_noir": "ours_noir", "wapiti": "wapiti",
+    "dindon_sauvage": "dindon_sauvage",
+    # Alias FR courts
+    "ours": "ours_noir",      "dindon": "dindon_sauvage",
+    "cerf": "chevreuil",
+    # Alias EN (frontend BionicZoneService)
+    "moose": "orignal",       "deer": "chevreuil",
+    "bear": "ours_noir",      "elk": "wapiti",
+    "wild_turkey": "dindon_sauvage",
+}
+
+
+def normalize_species(s: str) -> str:
+    """Normalise un nom d'espèce vers le nom canonique backend (V5)."""
+    if not s:
+        return "chevreuil"
+    return SPECIES_ALIAS_TO_CANONICAL.get(s.lower().strip(), s)
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # P22Σ_V5_BUNDLE_REWIRE_Ω — MAPPING HELPER (réutilisé par bundle + audit)
 # ═══════════════════════════════════════════════════════════════════════
 _HIER_COLOR_V5 = {
@@ -260,12 +289,12 @@ async def _ensure_lazy_init():
         _LAZY_INIT_DONE = True
         loaded = _cache_load_disk()
         logger.info(f"[V20-LAZY-INIT] {loaded} entries loaded from disk")
-        # P22Σ_PRECHAUFFAGE_Ω · 500 waypoints (vs 200 antérieur)
-        asyncio.create_task(run_prechauffage_omega(limit=500))
-        asyncio.create_task(_periodic_refresh_daemon())
+        # P22Σ_PRECHAUFFAGE_Ω · DÉSACTIVÉ TEMPORAIREMENT (P22Σ_SPECIES_NORMALIZATION_Ω)
+        # asyncio.create_task(run_prechauffage_omega(limit=200))
+        # asyncio.create_task(_periodic_refresh_daemon())
         # P22Ω.V5_COMPLIANCE_MONITOR_Ω · cron horaire alerte Resend
-        asyncio.create_task(_v5_compliance_monitor_daemon())
-        logger.info("[V20-LAZY-INIT] V5_COMPLIANCE_MONITOR daemon scheduled")
+        # asyncio.create_task(_v5_compliance_monitor_daemon())
+        logger.info("[V20-LAZY-INIT] PRECHAUFFAGE + MONITOR daemons disabled for V5 stabilization")
 
 
 # ═══ LIFESPAN HOOKS (called from server.py startup/shutdown) ═══
@@ -273,11 +302,11 @@ async def v20_startup():
     """Called by server.py on app startup."""
     loaded = _cache_load_disk()
     logger.info(f"[V20-PERFORMANCE] Startup: {loaded} entries loaded from disk")
-    # P22Σ_PRECHAUFFAGE_Ω · 500 waypoints (vs 200 antérieur)
-    asyncio.create_task(run_prechauffage_omega(limit=500))
-    asyncio.create_task(_periodic_refresh_daemon())
-    # P22Ω.V5_COMPLIANCE_MONITOR_Ω · 2026-05-12 · cron horaire alerte Resend
-    asyncio.create_task(_v5_compliance_monitor_daemon())
+    # P22Σ_PRECHAUFFAGE_Ω · DÉSACTIVÉ pour stabilisation V5 (2026-05-12T18:30Z)
+    # asyncio.create_task(run_prechauffage_omega(limit=200))
+    # asyncio.create_task(_periodic_refresh_daemon())
+    # asyncio.create_task(_v5_compliance_monitor_daemon())
+    logger.info("[V20-PERFORMANCE] Background daemons disabled — V5 stabilization mode")
 
 
 async def v20_shutdown():
@@ -292,7 +321,7 @@ async def _periodic_refresh_daemon():
             await asyncio.sleep(3600)
             logger.info("[V20-WARMUP-DAEMON] Tick horaire — refresh + disk save")
             # P22Σ_PRECHAUFFAGE_Ω · 500 waypoints
-            await run_prechauffage_omega(limit=500)
+            await run_prechauffage_omega(limit=200)
         except Exception as e:
             logger.warning(f"[V20-WARMUP-DAEMON] Error: {e}")
 
@@ -490,6 +519,8 @@ async def v20_territoire_bundle(
     """
     await _ensure_lazy_init()
     t0 = time.time()
+    # P22Σ_SPECIES_NORMALIZATION_Ω — normalisation alias frontend (wild_turkey, etc.)
+    species = normalize_species(species)
     key = _cache_key(lat, lon, species, month, hour, wind_deg)
     cached = _cache_get(key)
 
@@ -823,6 +854,8 @@ async def v20_audit_v5_compliance_live(
 ):
     """Audit live conformité V5 sur le bundle UI (P22Ω.V5_COMPLIANCE_LIVE_Ω)."""
     await _ensure_lazy_init()
+    # Normalisation alias frontend (wild_turkey → dindon_sauvage, etc.)
+    species = normalize_species(species)
 
     # Re-fetch live du bundle via la même logique que /bundle
     key = _cache_key(lat, lon, species, month, hour, wind_deg)

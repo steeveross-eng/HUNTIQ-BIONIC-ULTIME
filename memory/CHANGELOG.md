@@ -3,6 +3,48 @@
 
 ---
 
+## 2026-05-12T18:35Z — P22Σ_AUDIT_TERRITOIRE_NON_CONFORMITE_Ω ✅
+
+### Demande COMMANDANT STEEVE-MAX
+Screenshot TERRITOIRE Ω fourni montrant carte sans corridors V5 visibles → diagnostic exigé.
+
+### Diagnostic 4-couches
+1. **PHASE_XVIII_BIO_PRESENCE_MASK_Ω** (cause primaire) : DINDON SAUVAGE absent au BSL selon registre MFFP+SEPAQ+Atlas → purge institutionnelle complète (corridors, affuts, salines, hotspots, contamination). `bio_presence_mask_halt=true`.
+2. **Mapping noms d'espèces désaligné** : Frontend envoie `wild_turkey`, V5 attend `dindon_sauvage`, V10 attend `dindon` → fallback chevreuil + bio_halt.
+3. **Préchauffage 500 + LiDAR 429** : Open-Meteo rate-limited → backend timeout 60s → cache stale V4 servi.
+4. **TTL Cloudflare cache** : bundle pre-V5_REWIRE encore caché ~3600s.
+
+### Correctifs `P22Σ_SPECIES_NORMALIZATION_Ω`
+| # | Action |
+|---|---|
+| 1 | `SPECIES_ALIAS_TO_CANONICAL` dict + `normalize_species()` helper module-level |
+| 2 | Application dans `/bundle` + `/v5-compliance-live` |
+| 3 | Revert préchauffage 500 → 200 waypoints |
+| 4 | Désactivation temporaire daemons background (prechauffage + monitor) |
+| 5 | Purge cache disque `territoire_bundle.pkl` |
+
+### Validation E2E PREVIEW
+| Test | Résultat |
+|---|---|
+| `species=orignal` BSL | **7 corridors V5, 2 backbones + 5 subnets, applied=true** ✅ |
+| `species=wild_turkey` BSL (via normalisation) | `bio_presence_mask_halt=true`, 0 corridors (doctrine V90 correcte) ✅ |
+| `fusion_doctrine` corridor | `P22Σ_V5_CAP_GLOBAL_TERRITOIRE` ✅ |
+| `source` corridor | `ENGINE-IA-CORRIDORS-ORGANIC-Ω (V5_BUNDLE_REWIRE)` ✅ |
+
+### Rapport complet
+`/app/memory/audit_provenance/audit_territoire_non_conformite_v5.md` (300 lignes, 10 sections, doctrine, payload preuves, procédure validation visuelle).
+
+### ⚠️ État actuel backend
+Open-Meteo API en rate-limit 429 (cause externe) → certains endpoints timeout temporairement. L'API se débloque automatiquement après quelques minutes.
+
+**Action COMMANDANT** :
+1. Attendre 5-10min que Open-Meteo se débloque
+2. Tester `species=ORIGNAL` sur BSL → 7 corridors V5 attendus
+3. Re-Deploy PROD avec ces correctifs
+
+---
+
+
 ## 2026-05-12T17:25Z — PHASE OMEGA++ · ACTIVATION ADMIN_EMAIL + TEST RESEND ✅
 
 ### Directive COMMANDANT STEEVE-MAX
