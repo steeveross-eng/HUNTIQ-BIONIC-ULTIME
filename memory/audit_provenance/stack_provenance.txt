@@ -1,0 +1,17 @@
+
+▼ Test endpoints corridors actifs (V20_3D_OVERLAYS_Ω) :
+  GET /api/v20/corridors/active → HTTP 200
+  GET /api/v20/zones/active → HTTP 200
+  GET /api/v20/points-interet/active → HTTP 200
+  GET /api/v20/territoire/buffer-600m → HTTP 200
+▼ Test endpoints territoire bundle (V20_PERFORMANCE) :
+  GET /api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=orignal&month=10&hour=7&wind_deg=225&wind_speed=15 → HTTP 200
+▼ Test endpoints LEGACY (V8) — doivent être 404 :
+  GET /api/v8/map/bundle → HTTP 404  ✅ disabled
+  GET /api/v8/map/relocalisation → HTTP 422  ❌ STILL ACTIVE
+  GET /api/v30/corridors/origine-externe?lat=48&lon=-68 → HTTP 404  ✅ disabled
+▼ Test direct corridors-organic/generate (anchor_mode=TERRITORY_CONTINUOUS) :
+  HTTP 200 time=10.583844s
+
+▼ Test bundle (utilisé par la carte UI) :
+  HTTP 200 time=0.259892s
