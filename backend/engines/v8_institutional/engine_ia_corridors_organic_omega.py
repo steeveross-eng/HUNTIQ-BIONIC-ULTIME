@@ -1453,14 +1453,23 @@ class GenerateOrganicBody(BaseModel):
     hour: int = 7
     wind_deg: int = 225
     wind_speed: int = 15
+    # P22Σ_V3_FUSION_VEINEUSE_Ω · 2026-05-12 · STEEVE-MAX
+    # Pour activer la fusion veineuse multi-intensité doctrinale, passer :
+    #   anchor_mode = "TERRITORY_CONTINUOUS"
+    anchor_mode: str = "AUTO"
 
 
 @router.post("/generate")
 async def organic_generate(body: GenerateOrganicBody):
-    """Génère le réseau ORGANIC complet (corridors + hiérarchie + fusion)."""
+    """Génère le réseau ORGANIC complet (corridors + hiérarchie + fusion).
+
+    P22Σ_V3 : pour activer la fusion veineuse multi-intensité, passer
+    `anchor_mode="TERRITORY_CONTINUOUS"` dans le body.
+    """
     return await generate_organic_corridors(
         body.lat, body.lon, body.species, body.month, body.hour,
         body.wind_deg, body.wind_speed,
+        anchor_mode=body.anchor_mode,
     )
 
 

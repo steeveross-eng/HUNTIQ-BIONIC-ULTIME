@@ -29,6 +29,10 @@ router = APIRouter(prefix="/api/v20/audit", tags=["AUDIT_SUPRA_CORRIDORS_Ω"])
 REPORT_PATH = Path("/app/memory/AUDIT_SUPRA_CORRIDORS_V90.md")
 PDF_CACHE_PATH = Path("/app/memory/AUDIT_SUPRA_CORRIDORS_V90.pdf")
 
+# P22Σ_FUSION_VEINEUSE_Ω · 2026-05-12 · STEEVE-MAX
+FUSION_REPORT_PATH = Path("/app/memory/FUSION_VEINEUSE_REPORT_P22SIGMA.md")
+FUSION_PDF_CACHE = Path("/app/memory/FUSION_VEINEUSE_REPORT_P22SIGMA.pdf")
+
 
 def _read_report() -> bytes:
     if not REPORT_PATH.exists():
@@ -231,4 +235,107 @@ async def get_report_meta() -> dict:
         "compression":       "none",
         "authentication":    "none (audit institutionnel ouvert)",
         "doctrine":          "V90 · BCE-4X ULTIME ABSOLU",
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# P22Σ_FUSION_VEINEUSE_Ω · Rapport d'exécution (2026-05-12 · STEEVE-MAX)
+# ═══════════════════════════════════════════════════════════════════════════
+
+def _read_fusion_report() -> bytes:
+    if not FUSION_REPORT_PATH.exists():
+        raise HTTPException(
+            status_code=404,
+            detail=f"Rapport fusion non trouvé : {FUSION_REPORT_PATH}",
+        )
+    return FUSION_REPORT_PATH.read_bytes()
+
+
+def _get_or_build_fusion_pdf() -> bytes:
+    if not FUSION_REPORT_PATH.exists():
+        raise HTTPException(404, f"Source markdown introuvable : {FUSION_REPORT_PATH}")
+    md_mtime = FUSION_REPORT_PATH.stat().st_mtime
+    if FUSION_PDF_CACHE.exists() and FUSION_PDF_CACHE.stat().st_mtime >= md_mtime:
+        return FUSION_PDF_CACHE.read_bytes()
+    md_text = FUSION_REPORT_PATH.read_text(encoding="utf-8")
+    pdf_bytes = _build_pdf(md_text)
+    FUSION_PDF_CACHE.write_bytes(pdf_bytes)
+    return pdf_bytes
+
+
+@router.get("/fusion-veineuse-report.md")
+async def get_fusion_markdown() -> Response:
+    data = _read_fusion_report()
+    return Response(
+        content=data,
+        media_type="text/markdown; charset=utf-8",
+        headers={
+            "Content-Length": str(len(data)),
+            "Cache-Control": "public, max-age=300",
+            "Content-Disposition": (
+                'inline; filename="FUSION_VEINEUSE_REPORT_P22SIGMA.md"'
+            ),
+            "X-Audit-Authority": "BCE-4X-ULTIME-ABSOLU-STEEVE-MAX",
+        },
+    )
+
+
+@router.get("/fusion-veineuse-report.txt")
+async def get_fusion_text() -> PlainTextResponse:
+    data = _read_fusion_report().decode("utf-8")
+    return PlainTextResponse(
+        content=data,
+        headers={
+            "Cache-Control": "public, max-age=300",
+            "Content-Disposition": (
+                'inline; filename="FUSION_VEINEUSE_REPORT_P22SIGMA.txt"'
+            ),
+            "X-Audit-Authority": "BCE-4X-ULTIME-ABSOLU-STEEVE-MAX",
+        },
+    )
+
+
+@router.get("/fusion-veineuse-report.pdf")
+async def get_fusion_pdf() -> Response:
+    pdf_bytes = _get_or_build_fusion_pdf()
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={
+            "Content-Length": str(len(pdf_bytes)),
+            "Cache-Control": "public, max-age=300",
+            "Content-Disposition": (
+                'inline; filename="FUSION_VEINEUSE_REPORT_P22SIGMA.pdf"'
+            ),
+            "X-Audit-Authority": "BCE-4X-ULTIME-ABSOLU-STEEVE-MAX",
+        },
+    )
+
+
+@router.get("/fusion-veineuse-report")
+async def get_fusion_meta() -> dict:
+    data = _read_fusion_report()
+    sha_md = hashlib.sha256(data).hexdigest()
+    try:
+        pdf_bytes = _get_or_build_fusion_pdf()
+        sha_pdf = hashlib.sha256(pdf_bytes).hexdigest()
+        pdf_size = len(pdf_bytes)
+    except Exception:
+        sha_pdf = None
+        pdf_size = 0
+    return {
+        "ok": True,
+        "engine": "P22Σ_FUSION_VEINEUSE_Ω",
+        "report_path": str(FUSION_REPORT_PATH),
+        "size_bytes": len(data),
+        "size_kb": round(len(data) / 1024, 2),
+        "sha256": sha_md,
+        "mtime": FUSION_REPORT_PATH.stat().st_mtime,
+        "download_url_md":   "/api/v20/audit/fusion-veineuse-report.md",
+        "download_url_txt":  "/api/v20/audit/fusion-veineuse-report.txt",
+        "download_url_pdf":  "/api/v20/audit/fusion-veineuse-report.pdf",
+        "pdf_size_bytes":    pdf_size,
+        "pdf_sha256":        sha_pdf,
+        "render_sha256":     "5ae204526beb0c8dda586b3b550fe33b4de85e59fc76cca01f398ed1795f1289",
+        "doctrine":          "P22Σ_V3_FUSION_VEINEUSE_Ω · V90 · BCE-4X ULTIME ABSOLU",
     }
