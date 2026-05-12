@@ -779,13 +779,17 @@ except Exception as e:
 #     logger.warning(f"V8 Map Bundle not loaded: {e}")
 logger.info("[P22Ω_V90] V8-MAP-BUNDLE DISABLED — directive P22Ω_CORRIDORS_RESTORE_V90 P0")
 
-# V8-PHASE-A — Relocalisation + Salines (sandbox isolee)
-try:
-    from engines.v8_national.phase_a_engines import router as phase_a_router
-    app.include_router(phase_a_router)
-    logger.info("V8-PHASE-A registered (/api/v8/map) — Relocalisation + Salines")
-except Exception as e:
-    logger.warning(f"V8 Phase A not loaded: {e}")
+# V8-PHASE-A — DÉSACTIVÉ par P22Ω.PURGE_LEGACY.REMOVE V8 · 2026-05-12T14:30Z
+# Directive COMMANDANT STEEVE-MAX : éradication V8 legacy après wire-up V5 réussi.
+# L'endpoint /api/v8/map/relocalisation renvoyait HTTP 422 (route encore enregistrée)
+# malgré P22Ω_CORRIDORS_RESTORE_V90 → désactivation définitive du router.
+# try:
+#     from engines.v8_national.phase_a_engines import router as phase_a_router
+#     app.include_router(phase_a_router)
+#     logger.info("V8-PHASE-A registered (/api/v8/map) — Relocalisation + Salines")
+# except Exception as e:
+#     logger.warning(f"V8 Phase A not loaded: {e}")
+logger.info("[P22Ω.PURGE_LEGACY] V8-PHASE-A DISABLED — /api/v8/map/relocalisation eradicated")
 
 # V8-PHASE-B — DÉSACTIVÉ par P22Ω_CORRIDORS_RESTORE_V90 · P0_CRITICAL · 2026-05-11
 # Motif : V90 ne tolère AUCUN mélange affuts/corridors (forbid_affut_references→false
@@ -816,8 +820,14 @@ except Exception as e:
 
 # V20 PERFORMANCE BUNDLE — cache TTL 24h (<1s loading target)
 try:
-    from engines.v8_institutional.v20_performance_bundle import router as v20_perf_router, v20_startup, v20_shutdown
+    from engines.v8_institutional.v20_performance_bundle import (
+        router as v20_perf_router,
+        audit_router as v20_audit_router,
+        v20_startup, v20_shutdown,
+    )
     app.include_router(v20_perf_router)
+    app.include_router(v20_audit_router)
+    logger.info("[P22Ω.V5_COMPLIANCE_LIVE_Ω] audit endpoint registered (/api/v20/audit/v5-compliance-live)")
 
     @app.on_event("startup")
     async def _v20_startup_hook():

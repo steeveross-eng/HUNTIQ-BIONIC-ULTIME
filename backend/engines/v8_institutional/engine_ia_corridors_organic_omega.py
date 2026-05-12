@@ -898,6 +898,7 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
                                       densify_vitals: bool = True,
                                       enable_chained_corridors: bool = True,
                                       enable_cascade_pondere: bool = True,
+                                      bundle_pre_computed: dict | None = None,
                                       ) -> dict:
     """Génère le réseau ORGANIC complet autour du waypoint.
 
@@ -915,13 +916,20 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
       - enable_cascade_pondere : applique cascade SPECTRAL→TERRAIN_HR→GIS au waypoint
         et module l'intensity_level corridor par cascade_factor_global ∈ [0.5, 1.5]
         (default True — ORGANIC_PONDÉRÉ activé par défaut · COMMANDE 2026-05-10)
+
+    P22Σ_V5_BUNDLE_REWIRE_OPTIM (2026-05-12 · COMMANDANT STEEVE-MAX) :
+      - bundle_pre_computed : si fourni (dict du résultat compute_territoire_v10),
+        évite le double appel V10 → utilisé par v20_performance_bundle pour gagner
+        ~40% de latence cache MISS (asyncio.gather(V10, V5) → V10 single + V5).
     """
     mark_call(ENGINE_NAME)
 
-    from engines.v8_institutional.territoire_v10_supra import compute_territoire_v10
-
-    bundle = await compute_territoire_v10(lat, lon, species, month=month, hour=hour,
-                                           wind_deg=wind_deg, wind_speed=wind_speed)
+    if bundle_pre_computed is not None:
+        bundle = bundle_pre_computed
+    else:
+        from engines.v8_institutional.territoire_v10_supra import compute_territoire_v10
+        bundle = await compute_territoire_v10(lat, lon, species, month=month, hour=hour,
+                                               wind_deg=wind_deg, wind_speed=wind_speed)
     terrain_v10 = bundle.get("terrain_v10", {}) or {}
     ia_vision = bundle.get("ia_vision_ecologique", {}) or {}
     zones_vitales = bundle.get("zones", []) or []

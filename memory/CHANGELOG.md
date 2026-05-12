@@ -3,6 +3,56 @@
 
 ---
 
+## 2026-05-12T14:35Z — P22Ω.PURGE_LEGACY + P22Σ_V5_CONSOLIDATION ✅
+
+### Directive COMMANDANT STEEVE-MAX (post-Deploy 10:48)
+
+**5 chantiers exécutés en 1 cycle** :
+
+#### P1a — V8-PHASE-A relocalisation purgée
+- `backend/server.py` : router `v8_national.phase_a_engines` commenté
+- `/api/v8/map/relocalisation` → HTTP **404** (auparavant 422)
+
+#### P1b — Import `origine_externe_filter_omega` retiré du bundle
+- `backend/engines/v8_institutional/v20_performance_bundle.py:392-401` : bloc commenté
+- Le filtre demeure disponible via son endpoint scientifique dédié (non cassé)
+- Bundle ajoute `result["origine_externe_filter_disabled"] = "P22Ω.PURGE_LEGACY · 2026-05-12"`
+
+#### P2a — Cache-Control max-age réduit à 300s
+- `Cache-Control: public, max-age=300, stale-while-revalidate=900` (vs 3600/82800)
+- Évite Cloudflare cache 23h pendant la transition V5
+- Le proxy ingress force déjà `no-store, no-cache, must-revalidate` côté CDN (effet renforcé)
+
+#### P2b — Endpoint `/api/v20/audit/v5-compliance-live`
+- Nouveau router `audit_router` exposé via `server.py`
+- 5 critères vérifiés en temps réel :
+  1. n_corridors ∈ [5, 7]
+  2. subnet_role présent sur chaque corridor
+  3. hierarchy ∈ {veine_principale, veine_secondaire, capillaire, connector}
+  4. fusion_doctrine == `P22Σ_V5_CAP_GLOBAL_TERRITOIRE`
+  5. source contient `ENGINE-IA-CORRIDORS-ORGANIC-Ω`
+- Validation PREVIEW : `status=PASS, n_corridors=7, n_backbones=2, n_subnets=5, violations=0`
+
+#### Refactor — `generate_organic_corridors(..., bundle_pre_computed=...)`
+- Nouveau paramètre optionnel `bundle_pre_computed: dict | None = None`
+- Si fourni, `compute_territoire_v10` n'est appelé qu'UNE fois (économise 1 appel V10)
+- Bundle UI utilise ce chemin séquentiel optimisé (V10 single call → V5 reuse)
+- Traçabilité `result["p22sigma_v5_bundle_rewire"]["optim"] = "V10_SINGLE_CALL_THEN_V5_REUSE"`
+- Latence cache HIT inchangée (0.01ms served_ms)
+
+### Validation E2E PREVIEW (curl manuel)
+| Test | Statut |
+|---|---|
+| `GET /api/v8/map/relocalisation` | HTTP 404 ✅ |
+| `GET /api/v20/audit/v5-compliance-live` orignal/BSL | PASS, 0 violations ✅ |
+| `GET /api/v20/territoire/bundle` orignal/BSL HIT | 7 corridors, V5 applied=True ✅ |
+| `optim=V10_SINGLE_CALL_THEN_V5_REUSE` | traçable ✅ |
+
+**Action COMMANDANT** : Cliquer "Deploy" pour propager ces 5 chantiers PREVIEW → PROD.
+
+---
+
+
 ## 2026-05-12T14:15Z — P22Σ_V5_AUDIT_PROVENANCE_CORRIDORS_Ω + V5_BUNDLE_REWIRE_Ω ✅
 
 ### Directive : Audit provenance + correction de la carte UI

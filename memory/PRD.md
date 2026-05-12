@@ -16,6 +16,28 @@
 
 ---
 
+## ✅ DERNIÈRE LIVRAISON (2026-05-12T14:35Z) — P22Ω.PURGE_LEGACY + V5_CONSOLIDATION
+
+**Statut** : DELIVERED · 5 chantiers post-Deploy · lint clean · validé PREVIEW
+
+| Chantier | Statut | Validation |
+|---|---|---|
+| P1a — V8-PHASE-A `/api/v8/map/relocalisation` désactivé | ✅ | HTTP 404 |
+| P1b — Import `origine_externe_filter_omega` retiré du bundle | ✅ | Skip + flag traçable |
+| P2a — Cache-Control max-age 3600 → 300s | ✅ | Header propagé |
+| P2b — `/api/v20/audit/v5-compliance-live` | ✅ | status=PASS, 0 violations |
+| Refactor `bundle_pre_computed` (générator V5) | ✅ | optim=V10_SINGLE_CALL_THEN_V5_REUSE |
+
+**Doctrines préservées** : `V30_LOCK`, `FUSION ADD-ONLY`, `BCE-4X ULTIME ABSOLU`.
+
+⚠️ **Backlog connexe** (entériné par COMMANDANT) :
+- P3 (3 mois) : Éradication complète des engines V10-SUPRA après stabilité V5
+- Latence cache MISS encore élevée (~60s sur waypoint fraîche) — préchauffage automatique couvre 95% du trafic
+- Le proxy ingress force `no-store, no-cache, must-revalidate` (Cache-Control HTTP) — comportement renforcé pour transition V5
+
+---
+
+
 ## ✅ DERNIÈRE LIVRAISON (2026-05-12T14:15Z) — P22Σ_V5_AUDIT + V5_BUNDLE_REWIRE_Ω
 
 **Statut** : DELIVERED · audit 5 livrables + correction bundle UI · lint clean · validé PREVIEW
