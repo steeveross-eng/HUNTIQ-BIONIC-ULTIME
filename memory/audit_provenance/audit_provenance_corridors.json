@@ -2,9 +2,31 @@
   "audit": "P22Σ_V5_AUDIT_PROVENANCE_CORRIDORS_Ω",
   "version": "XI-SUPRA-VENT-Ω",
   "date_utc": "2026-05-12T11:35Z",
+  "phase_2_rewire_date_utc": "2026-05-12T14:15Z",
   "authority": "BCE-4X-ULTIME-ABSOLU-STEEVE-MAX",
   "target": "https://huntiq-restore.emergent.host",
   "verdict_global": "NON-CONFORMITÉ V5 — Carte UI consomme bundle V20 (V10-SUPRA), pas V5",
+  "phase_2_resolution": {
+    "doctrine": "P22Σ_V5_BUNDLE_REWIRE_Ω",
+    "status": "APPLIED",
+    "file_modified": "engines/v8_institutional/v20_performance_bundle.py",
+    "validation": {
+      "endpoint": "GET /api/v20/territoire/bundle",
+      "v5_rewire_applied": true,
+      "n_corridors": 7,
+      "backbones": 2,
+      "subnets": 5,
+      "cap_global_applied": true,
+      "source_field": "ENGINE-IA-CORRIDORS-ORGANIC-Ω (V5_BUNDLE_REWIRE)",
+      "fusion_doctrine": "P22Σ_V5_CAP_GLOBAL_TERRITOIRE",
+      "cache_miss_time_s": 39.5,
+      "cache_hit_time_s": 0.26,
+      "test_environment": "PREVIEW",
+      "prod_deploy_required": true
+    },
+    "fusion_add_only_preserved": true,
+    "v30_lock_intact": true
+  },
 
   "screenshot_legend_observed": {
     "corridors_omega": 2,

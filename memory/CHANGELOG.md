@@ -3,6 +3,45 @@
 
 ---
 
+## 2026-05-12T14:15Z — P22Σ_V5_AUDIT_PROVENANCE_CORRIDORS_Ω + V5_BUNDLE_REWIRE_Ω ✅
+
+### Directive : Audit provenance + correction de la carte UI
+
+**Verdict** : Carte UI Ω consommait `/api/v20/territoire/bundle` → engine LEGACY `territoire_v10_supra`.
+V5 organic était isolé sur `/corridors-organic/generate` sans wire-up vers la carte.
+
+### PHASE 1 — Audit provenance (5 livrables)
+- `/app/memory/audit_provenance/audit_provenance_corridors.md`  (rapport principal)
+- `/app/memory/audit_provenance/audit_provenance_corridors.json` (structure machine)
+- `/app/memory/audit_provenance/stack_provenance.txt` (stack imports + git log)
+- `/app/memory/audit_provenance/hash_compare.txt` (hashes live PROD/PREVIEW)
+- `/app/memory/audit_provenance/pipeline_trace.log` (trace exhaustive)
+
+### PHASE 2 — V5_BUNDLE_REWIRE_Ω
+**Fichier modifié** : `backend/engines/v8_institutional/v20_performance_bundle.py`
+- Branchement parallèle `asyncio.gather(V10, V5)` (V10 et V5 organic en concurrence)
+- Skip de 8 post-processors corridors-related en mode V5 (XVIII GPS x2, INTERZONE,
+  VEINEUX, XIX-P2, XIX-P1, VITAUX, RENDUΩ)
+- Override `result["corridors"]` avec V5 organic mappé (color + source + fusion_doctrine)
+- Traçabilité `result["p22sigma_v5_bundle_rewire"]` exposée
+- Fallback V10 en cas d'échec V5
+
+**Validation PREVIEW** :
+| Test | Avant | Après |
+|---|---|---|
+| `/bundle` n_corridors (orignal/BSL) | 0 | **7** ✅ |
+| `/bundle` n_corridors (orignal/Saguenay) | 0 | **7** ✅ |
+| backbones / subnets | 0 / 0 | **2 / 5** ✅ |
+| `source` corridors | `CORRIDOR-Omega-AUTONOME` | `ENGINE-IA-CORRIDORS-ORGANIC-Ω (V5_BUNDLE_REWIRE)` ✅ |
+| Cache MISS time | 50.2s | 39.5s (-21%) |
+| Cache HIT time | 0.47s | 0.26s |
+| Zones/affuts/salines intacts | OK | OK ✅ |
+
+**Action COMMANDANT** : Cliquer "Deploy" pour propager PREVIEW → PROD.
+
+---
+
+
 ## 2026-05-12T11:05Z — P22Σ_V5_DEPLOY_PROD · VALIDATION E2E COMPLÈTE ✅
 
 ### Directive: Validation E2E PROD post-déploiement

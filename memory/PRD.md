@@ -16,6 +16,31 @@
 
 ---
 
+## ✅ DERNIÈRE LIVRAISON (2026-05-12T14:15Z) — P22Σ_V5_AUDIT + V5_BUNDLE_REWIRE_Ω
+
+**Statut** : DELIVERED · audit 5 livrables + correction bundle UI · lint clean · validé PREVIEW
+
+| Élément | Statut | Validation |
+|---|---|---|
+| Audit `/app/memory/audit_provenance/*.{md,json,txt,log}` | ✅ | 5 livrables produits |
+| Bundle UI `/api/v20/territoire/bundle` post-PHASE 2 | ✅ | n_corridors=7 (2 backbones + 5 subnets) |
+| Source field corridors | ✅ | `ENGINE-IA-CORRIDORS-ORGANIC-Ω (V5_BUNDLE_REWIRE)` |
+| `result["p22sigma_v5_bundle_rewire"]["applied"]` | ✅ | `True` (avec cap_global_doctrine traçable) |
+| Parallélisation V10‖V5 (asyncio.gather) | ✅ | -21% cache MISS time |
+| Fallback V10 si V5 échoue | ✅ | géré sans crash |
+| `V30_LOCK` + FUSION ADD-ONLY | ✅ | aucune suppression engine |
+| Zones / affuts / salines / hotspots / contamination | ✅ | inchangés (5/6/6 préservés) |
+
+**Action COMMANDANT** : Cliquer "Deploy" Emergent pour propager PREVIEW → PROD.
+
+⚠️ **Backlog connexe** :
+- V8-PHASE-A `/api/v8/map/relocalisation` retourne HTTP 422 → encore enregistrée
+- Import direct `origine_externe_filter_omega` dans bundle.py:396 (skippe en V5, pur fallback V10)
+- TTL CDN public `max-age=3600` → contenu V5 peut être mis en cache 23h Cloudflare après deploy
+
+---
+
+
 ## ✅ DERNIÈRE LIVRAISON (2026-05-11) — CARTE_3D_INTEGRATION_SOUS_HEADER_Ω
 
 **Statut** : DELIVERED · 4/4 pytest PASSED · lint clean · screenshot validé

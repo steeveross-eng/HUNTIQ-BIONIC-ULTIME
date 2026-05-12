@@ -1,17 +1,101 @@
+═══════════════════════════════════════════════════════════════════════
+STACK PROVENANCE — P22Σ_V5_AUDIT_PROVENANCE_CORRIDORS_Ω
+═══════════════════════════════════════════════════════════════════════
+Date          : 2026-05-12T14:03:23Z
+Émetteur      : Agent BCE-4X ULTIME ABSOLU
+Destinataire  : COMMANDANT STEEVE-MAX
+═══════════════════════════════════════════════════════════════════════
 
-▼ Test endpoints corridors actifs (V20_3D_OVERLAYS_Ω) :
-  GET /api/v20/corridors/active → HTTP 200
-  GET /api/v20/zones/active → HTTP 200
-  GET /api/v20/points-interet/active → HTTP 200
-  GET /api/v20/territoire/buffer-600m → HTTP 200
-▼ Test endpoints territoire bundle (V20_PERFORMANCE) :
-  GET /api/v20/territoire/bundle?lat=48.206657&lon=-68.382422&species=orignal&month=10&hour=7&wind_deg=225&wind_speed=15 → HTTP 200
-▼ Test endpoints LEGACY (V8) — doivent être 404 :
-  GET /api/v8/map/bundle → HTTP 404  ✅ disabled
-  GET /api/v8/map/relocalisation → HTTP 422  ❌ STILL ACTIVE
-  GET /api/v30/corridors/origine-externe?lat=48&lon=-68 → HTTP 404  ✅ disabled
+▼ Test endpoints corridors actifs (V20_3D_OVERLAYS_Ω · V5-aware) :
+   GET  /api/v20/corridors/active                      → HTTP 200
+   GET  /api/v20/zones/active                          → HTTP 200
+   GET  /api/v20/points-interet/active                 → HTTP 200
+   GET  /api/v20/territoire/buffer-600m                → HTTP 200
+
+▼ Test endpoints territoire bundle (V20_PERFORMANCE — carte UI Ω) :
+   GET  /api/v20/territoire/bundle?lat&lon&species&...  → HTTP 200
+   PROD     :  n_corridors = 1   source = CORRIDOR-Omega-AUTONOME  ❌ V10 legacy
+   PREVIEW  :  n_corridors = 0                                      ❌ V10 legacy
+
+▼ Test endpoints LEGACY (V8) — doivent retourner 404 :
+   GET  /api/v8/map/bundle                             → HTTP 404  ✅ Désactivé
+   GET  /api/v8/map/relocalisation                     → HTTP 422  ❌ ROUTE ENCORE ACTIVE
+   GET  /api/v30/corridors/origine-externe?lat&lon     → HTTP 404  ✅ Désactivé
+
 ▼ Test direct corridors-organic/generate (anchor_mode=TERRITORY_CONTINUOUS) :
-  HTTP 200 time=10.583844s
+   POST /api/v20/territoire/corridors-organic/generate → HTTP 200
+   PROD     :  corridors_count = 7  cap_global = False  hierarchy_counts = (zéros — code ancien)
+   PREVIEW  :  corridors_count = 7  cap_global = True   {pp:2, ps:5, cap:0, conn:0}  ✅ V5 OK
 
-▼ Test bundle (utilisé par la carte UI) :
-  HTTP 200 time=0.259892s
+▼ Test bundle (utilisé par la carte UI) sur PROD :
+   HTTP 200  time = 0.259892s (cache HIT)
+   X-Cache: HIT  Cache-Age-Sec: 78xxxx  → contenu V10-SUPRA depuis 22h
+
+═══════════════════════════════════════════════════════════════════════
+STACK DES IMPORTS EXÉCUTÉS DANS LE BUNDLE (séquentiel)
+═══════════════════════════════════════════════════════════════════════
+v20_performance_bundle.py:135  from engines.v8_institutional.territoire_v10_supra import compute_territoire_v10
+v20_performance_bundle.py:294  from engines.v8_institutional.territoire_v10_supra import compute_territoire_v10
+v20_performance_bundle.py:295  from engines.v8_institutional.esi_omega import validate_bundle, _log_audit
+v20_performance_bundle.py:297  from engines.post_smoothing.renduomega import apply_renduomega_to_bundle
+v20_performance_bundle.py:299  from engines.post_smoothing.veineux_omega import apply_veineux_omega_to_bundle
+v20_performance_bundle.py:301  from engines.post_smoothing.interzone_omega import apply_interzone_omega_to_bundle
+v20_performance_bundle.py:313  from engines.v8_institutional.species_presence_mask_omega import apply_presence_mask_to_bundle
+v20_performance_bundle.py:362  from engines.v8_institutional.predictive_omega_v2 import apply_predictive_omega_v2_to_bundle
+v20_performance_bundle.py:374  from engines.v8_institutional.predictive_omega_v2 import apply_predictive_omega_v2_to_bundle
+v20_performance_bundle.py:383  from engines.v8_institutional.origine_externe_inversion_omega import apply_origine_externe_inversion_to_bundle
+v20_performance_bundle.py:396  from engines.v8_institutional.origine_externe_filter_omega import apply_origine_externe_filter_to_bundle
+v20_performance_bundle.py:405  from engines.v8_institutional.ecological_orchestrator_omega import orchestrate_bundle
+v20_performance_bundle.py:415  from engines.v8_institutional.corridors_vitaux_omega import apply_corridors_vitaux_to_bundle
+
+═══════════════════════════════════════════════════════════════════════
+PIPELINE V5 PARALLÈLE (NON APPELÉ DANS LE BUNDLE)
+═══════════════════════════════════════════════════════════════════════
+engine_ia_corridors_organic_omega.py:891  generate_organic_corridors()
+   ├── compute_territoire_v10()                                   ↩ même base
+   ├── ia_terrain_multiscale()
+   ├── ia_vision_integration()
+   ├── ia_fusion()
+   ├── _collect_vital_nodes()
+   ├── densify_vital_nodes_x3()                  (P22M ×3 densification)
+   ├── _compatible_pairs()  + _reorder_pairs_by_anchor()
+   ├── (per pair) _generate_corridor_between() + _smart_deviation() + _compute_attractivity_score()
+   ├── _classify_hierarchy()
+   ├── chain_corridors_for_species()             (P22I chains)
+   ├── fuse_corridors_by_species()               (P22Σ_V3 fusion veineuse)
+   ├── PHASE_3_CASCADE_PONDÉRÉ_Ω (SPECTRAL→TERRAIN_HR→GIS)
+   └── cap_global_corridors()                    (P22Σ_V5 CAP 5-7)  ← ✅ doctrine respectée
+
+═══════════════════════════════════════════════════════════════════════
+HASH SOURCES PYTHON (refresh 2026-05-12T14:03Z — code PREVIEW actif)
+═══════════════════════════════════════════════════════════════════════
+06601e0040e30e95752c2881c4117273c815ef95a6d174bd629d6a8129346a34  territoire_v10_supra.py
+5b55efb17b53fa9b51e14bfbefc6952fa9e07652dfb84950ef7772b3667223e5  v20_performance_bundle.py
+d9ee4c2eec546cc48859ef0eae611421bb34905e65cb74a4d4848f3a46f25527  engine_ia_corridors_organic_omega.py
+6632880a6968bc20637cf988e64df747dd3c301c10e35bbe13c5f3f987b6da42  corridors_fusion_omega.py
+
+═══════════════════════════════════════════════════════════════════════
+GIT LOG (5 derniers commits Emergent Platform — code racines)
+═══════════════════════════════════════════════════════════════════════
+c029d52 auto-commit for 6f95eb31-8947-4766-ab3b-5836017a99cc
+b31edb6 auto-commit for 02b2945f-1958-4219-8143-675fba3ab5ce
+15794d6 auto-commit for e1671e85-e208-4183-9416-5b8dfae8835c
+830d992 auto-commit for 6a4e5133-fc9d-4baa-ba8a-2c7d029f5576
+8c9b7e7 auto-commit for 4c4bcf65-a975-4b2c-bfc9-bd9a4e278bb5
+
+═══════════════════════════════════════════════════════════════════════
+VERDICT
+═══════════════════════════════════════════════════════════════════════
+La carte UI Ω consomme un endpoint DOCTRINALEMENT INCOMPATIBLE avec V5.
+Le moteur V5 (cap global 5-7 · backbones · subnets · hierarchy) est ACTIF
+mais ISOLÉ sur /api/v20/territoire/corridors-organic/generate, non câblé
+au bundle `/api/v20/territoire/bundle` que consomme la carte.
+
+REMÈDE : PHASE 2 — V5_BUNDLE_REWIRE_Ω
+   • Réécrire v20_performance_bundle.py pour router corridors via V5
+   • Skipper les 9 post-processors corridors-related
+   • Purger LRU + Redis + Cloudflare cache après modification
+
+═══════════════════════════════════════════════════════════════════════
+FIN stack_provenance.txt
+═══════════════════════════════════════════════════════════════════════

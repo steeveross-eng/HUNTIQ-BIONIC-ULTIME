@@ -1,30 +1,100 @@
-═══ HASH COMPARE — P22Σ_V5_AUDIT_PROVENANCE ═══
-Date: 2026-05-12T11:35:38Z
+═══════════════════════════════════════════════════════════════════════
+HASH COMPARE — P22Σ_V5_AUDIT_PROVENANCE_CORRIDORS_Ω (REFRESH LIVE PROD)
+═══════════════════════════════════════════════════════════════════════
+Date: 2026-05-12T14:03:23Z
+Émetteur: Agent BCE-4X ULTIME ABSOLU
+Destinataire: COMMANDANT STEEVE-MAX
+Endpoint PROD: https://huntiq-restore.emergent.host
+Endpoint PREVIEW: https://huntiq-restore.preview.emergentagent.com
 
-▼ HASH SHA-256 DES SOURCES (PREVIEW = code actif)
-06601e0040e30e95752c2881c4117273c815ef95a6d174bd629d6a8129346a34  /app/backend/engines/v8_institutional/territoire_v10_supra.py
-5b55efb17b53fa9b51e14bfbefc6952fa9e07652dfb84950ef7772b3667223e5  /app/backend/engines/v8_institutional/v20_performance_bundle.py
-d9ee4c2eec546cc48859ef0eae611421bb34905e65cb74a4d4848f3a46f25527  /app/backend/engines/v8_institutional/engine_ia_corridors_organic_omega.py
-8d7507fdb899d804bb7e801280a2dc60f571599d2373c54b6257e51d85679787  /app/backend/engines/v8_institutional/engine_ia_corridors_omega.py
-4d911cc288bdeb1f065174dedb62be6308fa3a92cc981ea65384b502d2c41eec  /app/backend/engines/v8_institutional/engine_rendu_omega.py
-4878935e88b80b9c4b52dc1cea5bba046e3d0f429e472642dba6d845f271a56f  /app/backend/engines/v8_institutional/audit_supra_corridors_omega.py
-8759b187a3557589901e1306975c4a1de796a413b0718456f815c890fddadd58  /app/backend/engines/v8_institutional/doctrine_v90_omega.py
-6632880a6968bc20637cf988e64df747dd3c301c10e35bbe13c5f3f987b6da42  /app/backend/engines/post_smoothing/corridors_fusion_omega.py
-2707632c37c57cb21411df114811b0b5171fcb19108a777a916995fb18567f5e  /app/backend/engines/post_smoothing/organic_corridor_smoother.py
-33706d4353a5e14978abcd02b709f07e4a082820c1185b0c776ac97a5ecf6937  /app/backend/engines/v8_institutional/origine_externe_filter_omega.py
-2f0ae33a99c312f954c5abcd9c089a267c832630265cc30a21761bff1289eef9  /app/backend/engines/v8_institutional/origine_externe_inversion_omega.py
+═══════════════════════════════════════════════════════════════════════
+SECTION 1 — HASH SHA-256 DES SOURCES (PREVIEW = code actif courant)
+═══════════════════════════════════════════════════════════════════════
+06601e0040e30e95752c2881c4117273c815ef95a6d174bd629d6a8129346a34  engines/v8_institutional/territoire_v10_supra.py
+5b55efb17b53fa9b51e14bfbefc6952fa9e07652dfb84950ef7772b3667223e5  engines/v8_institutional/v20_performance_bundle.py
+d9ee4c2eec546cc48859ef0eae611421bb34905e65cb74a4d4848f3a46f25527  engines/v8_institutional/engine_ia_corridors_organic_omega.py
+8d7507fdb899d804bb7e801280a2dc60f571599d2373c54b6257e51d85679787  engines/v8_institutional/engine_ia_corridors_omega.py
+4d911cc288bdeb1f065174dedb62be6308fa3a92cc981ea65384b502d2c41eec  engines/v8_institutional/engine_rendu_omega.py
+4878935e88b80b9c4b52dc1cea5bba046e3d0f429e472642dba6d845f271a56f  engines/v8_institutional/audit_supra_corridors_omega.py
+8759b187a3557589901e1306975c4a1de796a413b0718456f815c890fddadd58  engines/v8_institutional/doctrine_v90_omega.py
+6632880a6968bc20637cf988e64df747dd3c301c10e35bbe13c5f3f987b6da42  engines/post_smoothing/corridors_fusion_omega.py
+2707632c37c57cb21411df114811b0b5171fcb19108a777a916995fb18567f5e  engines/post_smoothing/organic_corridor_smoother.py
+33706d4353a5e14978abcd02b709f07e4a082820c1185b0c776ac97a5ecf6937  engines/v8_institutional/origine_externe_filter_omega.py
+2f0ae33a99c312f954c5abcd9c089a267c832630265cc30a21761bff1289eef9  engines/v8_institutional/origine_externe_inversion_omega.py
 
-▼ HASH SHA-256 DES LIVRABLES V5
-9dc4a141ea0b0ff86c3412ea4a9497b9caec8295603f65d68c4592da1879c9b9  /app/memory/AUDIT_SUPRA_CORRIDORS_V90.md
-48b32332d9f88c0ef98b00db486b881c7d5367b577a20c4f3ef341032ed6fe1a  /app/memory/AUDIT_SUPRA_CORRIDORS_V90.pdf
-273ca64b7d33fadd14458abb05760580e3449dfa938d93b9a3d97297f642e15b  /app/memory/FUSION_VEINEUSE_REPORT_P22SIGMA.md
-6f348897793590ab72142caf7964612f7acb9f947fe516ea41a7e006a92a917d  /app/memory/FUSION_VEINEUSE_REPORT_P22SIGMA.pdf
+═══════════════════════════════════════════════════════════════════════
+SECTION 2 — HASH RENDUS LIVE PROD vs PREVIEW (2026-05-12T14:03Z)
+═══════════════════════════════════════════════════════════════════════
 
-▼ COMPARAISON RENDUS PROD vs PREVIEW (orignal/BSL TERRITORY_CONTINUOUS)
+▼ Endpoint  : GET /api/v20/territoire/bundle (carte UI Ω)
+▼ Waypoint  : 48.206657, -68.382422 (BSL · orignal · month=10 · hour=7 · wind=225/15)
 
-PROD bundle (utilisé par carte UI) :
-  PROD bundle SHA  : 0c3203a8de8b20495082a2b0ce8fd2765152fd393e94bea0f6e86e258c704d4c
-PROD V5 direct (organic generate) :
-  PROD V5 SHA       : 1d2fdf34187dde8c08379c134301d71183b28d87589acc93c27d468033df4a0c
-PROD doctrine V90 attest :
-  PROD V90 SHA      : 1a6f2b1fb943ac819ca37e97b6090505a361f4393b7cd1b5bc1a84279de9fd87
+  PROD bundle (V10-SUPRA legacy)
+    SHA-256          : dad6f94d24d0a1562de0425d1e4558311e2d2c23b33bd3e3463d6507e1bbb9d7
+    HTTP size        : 69 040 bytes
+    n_corridors      : 1                       ← ❌ NON-CONFORME V5 (attendu 5-7)
+    first.source     : CORRIDOR-Omega-AUTONOME ← ❌ Engine V10-SUPRA legacy
+
+  PREVIEW bundle (V10-SUPRA legacy — code actif courant)
+    SHA-256          : d94a290e035b23fe642cc1eb6c3e3f6ad5830100fc8fd2837b530f03a78a9a3f
+    HTTP size        : (variable)
+    n_corridors      : 0                       ← ❌ NON-CONFORME V5 (catastrophique)
+
+▼ Endpoint  : POST /api/v20/territoire/corridors-organic/generate (V5 direct)
+
+  PROD V5 organic generate (anchor_mode=TERRITORY_CONTINUOUS)
+    SHA-256          : 025d7e3ac52c4a8826d0306fd4a0578d91b8721e551cf518635d7c6668d6ac11
+    HTTP size        : 34 791 bytes
+    corridors_count  : 7                       ← ✅ CONFORME V5 cap (≤7)
+    hierarchy_counts : {pp:0, ps:0, cap:0, conn:0}  ← ⚠️ PROD code antérieur à V5 hierarchy
+    cap_global       : False                   ← ⚠️ PROD pas encore au dernier V5 (deploy requis)
+
+  PREVIEW V5 organic generate (anchor_mode=TERRITORY_CONTINUOUS)
+    SHA-256          : ce43c34b4f075c338c43a7e98790e64c600f51b0c4322e3ae25b74c92883b5d4
+    HTTP size        : 62 106 bytes
+    corridors_count  : 7                       ← ✅ CONFORME V5 cap
+    hierarchy_counts : {veine_principale:2, veine_secondaire:5, capillaire:0, connector:0}
+    cap_global       : True                    ← ✅ V5 CAP ACTIF
+    cap_summary      : applied=True · max_total=7 · before=10 → after=7
+                       backbone=2/5 · subnet=5/5 · isolated=0 · connector=0
+                       dropped=3 (isolated first puis connectors)
+    first corridors  : network_036 (veine_principale · backbone · n_points=133 · 87.6)
+                       network_053 (veine_principale · backbone · n_points=133 · 85.4)
+                       network_069 (veine_secondaire · subnet     · n_points=133 · 85.3)
+
+▼ Endpoint  : GET /api/v20/doctrine-v90/attest
+
+  PROD V90 attest
+    SHA-256          : 14e4b82184d227b8ddbd51e45cd454bf615374051c0d2c4435f85e980a226570  ← ✅ Doctrine V90 active
+
+═══════════════════════════════════════════════════════════════════════
+SECTION 3 — HASH LIVRABLES D'AUDIT (V5 + V90)
+═══════════════════════════════════════════════════════════════════════
+9dc4a141ea0b0ff86c3412ea4a9497b9caec8295603f65d68c4592da1879c9b9  memory/AUDIT_SUPRA_CORRIDORS_V90.md
+48b32332d9f88c0ef98b00db486b881c7d5367b577a20c4f3ef341032ed6fe1a  memory/AUDIT_SUPRA_CORRIDORS_V90.pdf
+273ca64b7d33fadd14458abb05760580e3449dfa938d93b9a3d97297f642e15b  memory/FUSION_VEINEUSE_REPORT_P22SIGMA.md
+6f348897793590ab72142caf7964612f7acb9f947fe516ea41a7e006a92a917d  memory/FUSION_VEINEUSE_REPORT_P22SIGMA.pdf
+
+═══════════════════════════════════════════════════════════════════════
+SECTION 4 — DIAGNOSTIC ÉCART PROD vs PREVIEW vs V5 ATTENDU
+═══════════════════════════════════════════════════════════════════════
+
+| Cible            | Source            | n_corridors | V5 Conforme | Backbones | Subnets | source field        |
+|------------------|-------------------|-------------|-------------|-----------|---------|---------------------|
+| Bundle PROD      | V10_SUPRA legacy  | 1           | ❌          | 0         | 0       | CORRIDOR-Omega-AUTONOME |
+| Bundle PREVIEW   | V10_SUPRA legacy  | 0           | ❌          | 0         | 0       | (vide)              |
+| V5 direct PROD   | V5 organic (ancien)| 7          | ⚠️ partiel  | 0         | 0       | ENGINE-IA-ORGANIC-Ω |
+| V5 direct PREVIEW| V5 organic+CAP    | 7           | ✅ TOTAL    | 2         | 5       | ENGINE-IA-ORGANIC-Ω |
+| Cible doctrine V5| —                 | 5-7         | ✅          | 1-2       | 3-5     | ENGINE-IA-ORGANIC-Ω |
+
+▼ CONCLUSION
+1. La carte UI consomme `/api/v20/territoire/bundle` qui exécute `territoire_v10_supra`
+   et NON le pipeline V5 organic. C'est le bug racine.
+2. PROD a un déploiement antérieur à V5 CAP_GLOBAL → un re-deploy est requis APRÈS
+   le wire-up bundle→V5 pour propager la conformité totale.
+3. La PHASE 2 (V5_BUNDLE_REWIRE) corrige la racine en faisant pointer le bundle
+   vers `generate_organic_corridors(anchor_mode=TERRITORY_CONTINUOUS)`.
+
+═══════════════════════════════════════════════════════════════════════
+FIN hash_compare.txt
+═══════════════════════════════════════════════════════════════════════

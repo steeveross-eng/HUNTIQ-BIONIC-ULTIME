@@ -299,9 +299,39 @@ async def v20_territoire_bundle(
     from engines.post_smoothing.veineux_omega import apply_veineux_omega_to_bundle
     # PHASE_XII_SUPRA_CORRIDORS_VEINEUX_Ω_INTERZONE_GENERATION — générateur inter-zones
     from engines.post_smoothing.interzone_omega import apply_interzone_omega_to_bundle
+    # P22Σ_V5_BUNDLE_REWIRE_Ω — pipeline V5 organic en parallèle (2026-05-12)
+    from engines.v8_institutional.engine_ia_corridors_organic_omega import (
+        generate_organic_corridors,
+    )
 
-    result = await compute_territoire_v10(lat, lon, species, month, hour, wind_deg, wind_speed)
-
+    # ═══════════════════════════════════════════════════════════════════════
+    # PARALLÉLISATION V10 + V5 ORGANIC (P22Σ_V5_BUNDLE_REWIRE_Ω)
+    # Les deux appels lancés en concurrence → temps total ≈ max(V10, V5)
+    # au lieu de V10 + V5 séquentiel.
+    # ═══════════════════════════════════════════════════════════════════════
+    _v10_task = asyncio.create_task(
+        compute_territoire_v10(lat, lon, species, month, hour, wind_deg, wind_speed)
+    )
+    _v5_task = asyncio.create_task(
+        generate_organic_corridors(
+            lat=lat, lon=lon, species=species,
+            month=month, hour=hour,
+            wind_deg=int(wind_deg), wind_speed=int(wind_speed),
+            anchor_mode="TERRITORY_CONTINUOUS",
+        )
+    )
+    result, _v5_bundle_or_err = await asyncio.gather(_v10_task, _v5_task, return_exceptions=True)
+    # Si V10 a échoué, c'est fatal — propager
+    if isinstance(result, Exception):
+        raise result
+    # Conserver l'erreur V5 pour traçabilité (fallback géré plus bas)
+    if isinstance(_v5_bundle_or_err, Exception):
+        v5_bundle = None
+        v5_error = str(_v5_bundle_or_err)
+    else:
+        v5_bundle = _v5_bundle_or_err
+        v5_error = None
+    _V5_REWIRE_ACTIVE = v5_bundle is not None
     # ═══════════════════════════════════════════════════════════════════════
     # PHASE_XVIII_BIO_PRESENCE_MASK_Ω — COURT-CIRCUIT en amont
     # Si l'espèce est ABSENTE du territoire (registre MFFP + SEPAQ + Atlas),
@@ -358,49 +388,57 @@ async def v20_territoire_bundle(
     result["contamination_zones"] = _contam_for_rom
     # ═══ PHASE_XVIII (GPS) — PREDICTIVE_OMEGA_V2 (passe 1) ═══
     # Annotation V30 d'origine avec scoring comportemental GPS USGS/Movebank.
-    try:
-        from engines.v8_institutional.predictive_omega_v2 import apply_predictive_omega_v2_to_bundle
-        result = apply_predictive_omega_v2_to_bundle(result, species=species, month=month, hour=hour)
-    except Exception as _e_xviii:
-        result["predictive_omega_v2_applied"] = False
-        result["predictive_omega_v2_error"] = str(_e_xviii)
+    # P22Σ_V5_REWIRE : skip si V5 actif (corridors seront overridés)
+    if not _V5_REWIRE_ACTIVE:
+        try:
+            from engines.v8_institutional.predictive_omega_v2 import apply_predictive_omega_v2_to_bundle
+            result = apply_predictive_omega_v2_to_bundle(result, species=species, month=month, hour=hour)
+        except Exception as _e_xviii:
+            result["predictive_omega_v2_applied"] = False
+            result["predictive_omega_v2_error"] = str(_e_xviii)
     # ═══ INTERZONE_Ω — AJOUT des corridors inter-zones + entrants (V30 intact) ═══
-    result = apply_interzone_omega_to_bundle(result)
+    if not _V5_REWIRE_ACTIVE:
+        result = apply_interzone_omega_to_bundle(result)
     # ═══ VEINEUX_Ω — transformation géométrique amont (V30 intact) ═══
-    result = apply_veineux_omega_to_bundle(result)
+    if not _V5_REWIRE_ACTIVE:
+        result = apply_veineux_omega_to_bundle(result)
     # ═══ PHASE_XVIII (GPS) — PREDICTIVE_OMEGA_V2 (passe 2) ═══
     # Re-annotation des corridors entrants/interzone ajoutés.
-    try:
-        from engines.v8_institutional.predictive_omega_v2 import apply_predictive_omega_v2_to_bundle
-        result = apply_predictive_omega_v2_to_bundle(result, species=species, month=month, hour=hour)
-    except Exception as _e_xviii_2:
-        result["predictive_omega_v2_post_veineux_applied"] = False
-        result["predictive_omega_v2_post_veineux_error"] = str(_e_xviii_2)
+    if not _V5_REWIRE_ACTIVE:
+        try:
+            from engines.v8_institutional.predictive_omega_v2 import apply_predictive_omega_v2_to_bundle
+            result = apply_predictive_omega_v2_to_bundle(result, species=species, month=month, hour=hour)
+        except Exception as _e_xviii_2:
+            result["predictive_omega_v2_post_veineux_applied"] = False
+            result["predictive_omega_v2_post_veineux_error"] = str(_e_xviii_2)
     # ═══ PHASE_XIX-P2 — ORIGINE_EXTERNE_INVERSION_Ω : inversion conditionnelle ═══
     # Si path[0] hors couronne ET path[-1] dans couronne → reverse(path).
     # Ré-annotation predictive_omega_v2 automatique sur les corridors inversés.
-    try:
-        from engines.v8_institutional.origine_externe_inversion_omega import (
-            apply_origine_externe_inversion_to_bundle,
-        )
-        result = apply_origine_externe_inversion_to_bundle(
-            result, species=species, month=month, hour=hour,
-        )
-    except Exception as _e_xix_p2:
-        result["origine_externe_inversion_applied"] = False
-        result["origine_externe_inversion_error"] = str(_e_xix_p2)
+    if not _V5_REWIRE_ACTIVE:
+        try:
+            from engines.v8_institutional.origine_externe_inversion_omega import (
+                apply_origine_externe_inversion_to_bundle,
+            )
+            result = apply_origine_externe_inversion_to_bundle(
+                result, species=species, month=month, hour=hour,
+            )
+        except Exception as _e_xix_p2:
+            result["origine_externe_inversion_applied"] = False
+            result["origine_externe_inversion_error"] = str(_e_xix_p2)
     # ═══ PHASE_XIX-P1 — ORIGINE_EXTERNE_FILTER_Ω : couronne 30 % + GPS ═══
     # Filtre INSTITUTIONNEL : POINT_ORIGINE doit être dans [600 m ; 780 m]
     # ET appuyé par densité GPS suffisante (predictive_omega_v2.metrics).
-    try:
-        from engines.v8_institutional.origine_externe_filter_omega import (
-            apply_origine_externe_filter_to_bundle,
-        )
-        result = apply_origine_externe_filter_to_bundle(result)
-    except Exception as _e_xix:
-        result["origine_externe_filter_applied"] = False
-        result["origine_externe_filter_error"] = str(_e_xix)
+    if not _V5_REWIRE_ACTIVE:
+        try:
+            from engines.v8_institutional.origine_externe_filter_omega import (
+                apply_origine_externe_filter_to_bundle,
+            )
+            result = apply_origine_externe_filter_to_bundle(result)
+        except Exception as _e_xix:
+            result["origine_externe_filter_applied"] = False
+            result["origine_externe_filter_error"] = str(_e_xix)
     # ═══ PHASE_XVII — ÉCOLOGIQUE_Ω : annotation consensus écologique ═══
+    # GARDÉ même en V5 — affecte zones, pas corridors.
     try:
         from engines.v8_institutional.ecological_orchestrator_omega import orchestrate_bundle
         result = orchestrate_bundle(result, species=species)
@@ -411,15 +449,74 @@ async def v20_territoire_bundle(
     # Filtre INSTITUTIONNEL : un corridor n'est admis QUE s'il est ancré sur
     # ≥ 1 zone vitale officielle dans 150 m, avec règles différenciées par
     # groupe d'espèces (grands mammifères vs petits mammifères).
-    try:
-        from engines.v8_institutional.corridors_vitaux_omega import apply_corridors_vitaux_to_bundle
-        result = apply_corridors_vitaux_to_bundle(result, species=species)
-    except Exception as _e_vitaux:
-        result["corridors_vitaux_omega_applied"] = False
-        result["corridors_vitaux_omega_error"] = str(_e_vitaux)
+    # P22Σ_V5_REWIRE : skip — V5 a sa propre logique d'ancrage zones vitales.
+    if not _V5_REWIRE_ACTIVE:
+        try:
+            from engines.v8_institutional.corridors_vitaux_omega import apply_corridors_vitaux_to_bundle
+            result = apply_corridors_vitaux_to_bundle(result, species=species)
+        except Exception as _e_vitaux:
+            result["corridors_vitaux_omega_applied"] = False
+            result["corridors_vitaux_omega_error"] = str(_e_vitaux)
     # ═══ RENDUΩ — validation géométrique stricte (FIN de pipeline) ═══
-    result = apply_renduomega_to_bundle(result)
+    # P22Σ_V5_REWIRE : skip pour corridors V5 (déjà smoothed X180 + cap validé)
+    if not _V5_REWIRE_ACTIVE:
+        result = apply_renduomega_to_bundle(result)
 
+    # ═══════════════════════════════════════════════════════════════════════
+    # P22Σ_V5_BUNDLE_REWIRE_Ω  (2026-05-12 · COMMANDANT STEEVE-MAX)
+    # ═══════════════════════════════════════════════════════════════════════
+    # FUSION ADD-ONLY · V30_LOCK INTACT
+    # Override final des corridors V10 par les corridors V5 organic
+    # (cap global 5-7 + backbones + subnets + hierarchy).
+    # `v5_bundle` est déjà calculé en amont via asyncio.gather().
+    # ═══════════════════════════════════════════════════════════════════════
+    if _V5_REWIRE_ACTIVE:
+        v5_corridors_raw = v5_bundle.get("corridors", []) or []
+        _HIER_COLOR_V5 = {
+            "veine_principale": "#FF4500",   # backbone — rouge orangé
+            "veine_secondaire": "#FF8F00",   # subnet — orange
+            "capillaire":       "#FFB347",   # isolated — pêche
+            "connector":        "#FFEE99",   # connector — jaune pâle
+        }
+        v5_mapped = []
+        for _i, _c in enumerate(v5_corridors_raw):
+            _hier = _c.get("hierarchy", "capillaire")
+            _m = dict(_c)
+            _m["id"] = _c.get("id") or f"corr_v5_{_i:03d}"
+            _m["color"] = _c.get("color") or _HIER_COLOR_V5.get(_hier, "#FF8F00")
+            _m["source"] = "ENGINE-IA-CORRIDORS-ORGANIC-Ω (V5_BUNDLE_REWIRE)"
+            _m["fusion_doctrine"] = "P22Σ_V5_CAP_GLOBAL_TERRITOIRE"
+            if "subnet_role" not in _m:
+                _m["subnet_role"] = (
+                    "backbone" if _hier == "veine_principale" else
+                    "subnet" if _hier == "veine_secondaire" else
+                    "connector" if _m.get("type") == "connector" else
+                    "isolated"
+                )
+            v5_mapped.append(_m)
+        result["corridors"] = v5_mapped
+        result["p22sigma_v5_bundle_rewire"] = {
+            "applied": True,
+            "anchor_mode": "TERRITORY_CONTINUOUS",
+            "n_corridors": len(v5_mapped),
+            "hierarchy_counts": v5_bundle.get("hierarchy_counts"),
+            "cap_global_doctrine": v5_bundle.get("p22sigma_v5_cap_global_doctrine"),
+            "engine": v5_bundle.get("engine"),
+            "engine_version": v5_bundle.get("version"),
+            "doctrine": "P22Σ_V5_BUNDLE_REWIRE_Ω",
+            "wired_at": "v20_performance_bundle.v20_territoire_bundle",
+            "parallel_compute": True,
+        }
+    else:
+        # Fallback V10 : on garde le pipeline legacy + signal d'échec
+        result["p22sigma_v5_bundle_rewire"] = {
+            "applied": False,
+            "error": v5_error or "v5_bundle unavailable",
+            "fallback": "V10_SUPRA_LEGACY",
+        }
+        # Appliquer RENDUΩ uniquement en fallback V10
+        result = apply_renduomega_to_bundle(result)
+    # ═══════════════════════════════════════════════════════════════════════
     bv = validate_bundle({
         "zones": result["zones"],
         "corridors": result["corridors"],

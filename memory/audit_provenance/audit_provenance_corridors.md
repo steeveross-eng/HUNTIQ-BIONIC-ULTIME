@@ -218,10 +218,57 @@ La capture montre **2 CORRIDORS Ω** dans la légende. Notre audit confirme bund
 | Champ | Valeur |
 |---|---|
 | Auteur | Agent BCE-4X ULTIME ABSOLU |
-| Date | 2026-05-12T11:35Z |
+| Date | 2026-05-12T11:35Z (audit initial) · 2026-05-12T14:15Z (PHASE 2 appliquée) |
 | Verdict | ⚠️ Carte TERRITOIRE = MÉLANGE V10-SUPRA + V20 (non V5) |
 | Action requise | Modifier v20_performance_bundle pour appeler V5 |
 | Endpoints V5 (directs) | ✅ 100% conformes |
-| Endpoint bundle UI | ❌ Non V5 |
+| Endpoint bundle UI | ❌ Non V5 → ✅ **V5 ACTIF post-PHASE 2** |
 
-**FIN DU RAPPORT P22Σ_V5_AUDIT_PROVENANCE_CORRIDORS_Ω**
+---
+
+## 11. PHASE 2 — V5_BUNDLE_REWIRE_Ω APPLIQUÉE (2026-05-12T14:15Z)
+
+### 11.1 · Modifications
+
+| Fichier | Modification |
+|---|---|
+| `engines/v8_institutional/v20_performance_bundle.py` | Branchement V5_BUNDLE_REWIRE_Ω |
+| | + `asyncio.gather(V10, V5)` parallèle |
+| | + Skip 8 post-processors corridors-related (XVIII GPS, INTERZONE, VEINEUX, GPS-2, XIX-P2, XIX-P1, VITAUX, RENDUΩ) |
+| | + Override `result["corridors"]` avec V5 organic mappé |
+| | + Mapping `color` selon `hierarchy` (#FF4500 / #FF8F00 / #FFB347 / #FFEE99) |
+| | + Traçabilité `result["p22sigma_v5_bundle_rewire"]` |
+
+### 11.2 · Validation E2E manuelle (PREVIEW)
+
+| Métrique | Avant PHASE 2 (V10-SUPRA) | Après PHASE 2 (V5_REWIRE) |
+|---|---|---|
+| `n_corridors` orignal/BSL | 0 (PREVIEW) | **7** ✅ |
+| `n_corridors` orignal/Saguenay | 0 | **7** ✅ |
+| `backbones` | 0 (absent) | **2** ✅ |
+| `subnets` | 0 (absent) | **5** ✅ |
+| `subnet_role` | absent | présent (backbone/subnet) |
+| `hierarchy` | absent | présent (veine_principale/secondaire) |
+| `fusion_doctrine` | absent | `P22Σ_V5_CAP_GLOBAL_TERRITOIRE` ✅ |
+| `source` | `CORRIDOR-Omega-AUTONOME` (V10) | `ENGINE-IA-CORRIDORS-ORGANIC-Ω (V5_BUNDLE_REWIRE)` ✅ |
+| Cache MISS temps | 50.2s | **39.5s** (-21% via parallélisation) |
+| Cache HIT temps | 0.47s | **0.26s** (V5 préservé en cache) |
+| Zones/Affuts/Salines/Hotspots | OK | **OK (intacts)** ✅ |
+
+### 11.3 · Endpoints affectés
+
+| Endpoint | Statut |
+|---|---|
+| `GET /api/v20/territoire/bundle` | ✅ V5 ACTIF |
+| `POST /api/v20/territoire/bundle/purge` | ✅ Purge LRU + disk + Redis |
+| `POST /api/v20/territoire/corridors-organic/generate` | ✅ V5 ACTIF (inchangé) |
+| Bundle PROD | ⏳ **En attente Deploy par COMMANDANT** |
+
+### 11.4 · Doctrine FUSION ADD-ONLY préservée
+
+- ✅ `compute_territoire_v10` **NON SUPPRIMÉ** (toujours appelé pour zones/affuts/salines/hotspots/contamination)
+- ✅ Post-processors V10 **NON SUPPRIMÉS** (seulement skipper si V5 actif, sinon fallback)
+- ✅ `V30_LOCK` intact (aucune modification engine institutionnel)
+- ✅ Fallback V10 si V5 échoue (`result["p22sigma_v5_bundle_rewire"]["fallback"] = "V10_SUPRA_LEGACY"`)
+
+**FIN DU RAPPORT P22Σ_V5_AUDIT_PROVENANCE_CORRIDORS_Ω + PHASE 2 V5_BUNDLE_REWIRE_Ω**
