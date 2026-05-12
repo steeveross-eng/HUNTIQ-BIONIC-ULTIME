@@ -3,6 +3,49 @@
 
 ---
 
+## 2026-05-12T17:25Z — PHASE OMEGA++ · ACTIVATION ADMIN_EMAIL + TEST RESEND ✅
+
+### Directive COMMANDANT STEEVE-MAX
+
+#### 1. Configuration ADMIN_EMAIL
+- `backend/.env` : `ADMIN_EMAIL=steeve@bionichunt.com` ajouté
+- Backend redémarré pour charger la nouvelle env var
+
+#### 2. Endpoint test alerte `POST /api/v20/audit/v5-alert-test`
+- Construit un faux corridor en échec → déclenche `_v5_send_alert_resend()` avec template `[SIMULATION]`
+- Diagnostic env vars retourné (RESEND_API_KEY / RESEND_FROM / ADMIN_EMAIL présents)
+- Paramètre optionnel `?to=email@domain.com` pour override le destinataire (utile si le domaine
+  ADMIN_EMAIL n'est pas encore vérifié chez Resend)
+
+#### 3. Test de simulation validé
+- `POST /api/v20/audit/v5-alert-test?to=steeve.ross@gmail.com` → `alert_sent_ok=true`
+- Email Resend HTTP 200/202 → délivré à `steeve.ross@gmail.com`
+- Stats monitoring : `alerts_sent_total=1, alert_errors_total=0`
+
+#### ⚠️ Limitation détectée — Resend Sandbox Mode
+- Compte Resend actuel en mode `onboarding@resend.dev` (sandbox)
+- Resend HTTP 403 : *"You can only send testing emails to your own email address (steeve.ross@gmail.com)"*
+- Pour envoyer vers `steeve@bionichunt.com` en PROD, le COMMANDANT doit :
+  1. Se connecter à Resend Dashboard (resend.com)
+  2. Vérifier le domaine `bionichunt.com` (DKIM + SPF DNS records)
+  3. Mettre à jour `RESEND_FROM=BCE-4X COMMANDANT <alert@bionichunt.com>` (ou tout email du domaine vérifié)
+  4. Redéployer
+
+### Validation E2E PREVIEW
+| Test | Résultat |
+|---|---|
+| `POST /v5-alert-test` (vers `steeve@bionichunt.com`) | HTTP 403 Resend (domaine non vérifié) — attendu |
+| `POST /v5-alert-test?to=steeve.ross@gmail.com` | `alert_sent_ok=true, alerts_sent=1` ✅ |
+| Diagnostic env_diagnostic | Toutes les 3 env vars présentes ✅ |
+
+**Action COMMANDANT** :
+1. Vérifier réception email à `steeve.ross@gmail.com` (subject: `[BCE-4X] V5 NON-CONFORME · 1 waypoint(s) FAIL`)
+2. Vérifier le domaine `bionichunt.com` chez Resend pour activer envoi vers `steeve@bionichunt.com` en PROD
+3. Cliquer "Deploy" pour propager PREVIEW → PROD
+
+---
+
+
 ## 2026-05-12T16:20Z — PHASE OMEGA · VERROUILLAGE PROD & SURVEILLANCE ACTIVE ✅
 
 ### Directive COMMANDANT STEEVE-MAX (post-Deploy 11:31)

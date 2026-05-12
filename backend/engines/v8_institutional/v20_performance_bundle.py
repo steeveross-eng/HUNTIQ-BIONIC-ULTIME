@@ -1028,6 +1028,77 @@ async def v20_audit_v5_monitor_tick(response: Response, background: BackgroundTa
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# Test d'alerte Resend (simulation) — COMMANDANT STEEVE-MAX
+# ═══════════════════════════════════════════════════════════════════════
+@audit_router.post("/v5-alert-test")
+async def v20_audit_v5_alert_test(response: Response, to: str | None = Query(None)):
+    """Envoie une alerte Resend SIMULÉE pour valider la configuration.
+
+    Utilise un faux corridor en échec → déclenche `_v5_send_alert_resend()`.
+    Paramètre optionnel `?to=email@domain.com` pour override le destinataire
+    (utile si le domaine ADMIN_EMAIL n'est pas encore vérifié chez Resend).
+    """
+    response.headers["Cache-Control"] = "no-cache, no-store"
+    import os
+
+    # Override temporaire du ADMIN_EMAIL pour ce test uniquement
+    original_admin = os.environ.get("ADMIN_EMAIL")
+    if to:
+        os.environ["ADMIN_EMAIL"] = to
+
+    env_diag = {
+        "RESEND_API_KEY_present": bool(os.environ.get("RESEND_API_KEY")),
+        "RESEND_FROM_present": bool(
+            os.environ.get("RESEND_FROM_EMAIL") or os.environ.get("RESEND_FROM"),
+        ),
+        "ADMIN_EMAIL_present": bool(
+            os.environ.get("RESEND_ADMIN_EMAIL") or os.environ.get("ADMIN_EMAIL"),
+        ),
+        "ADMIN_EMAIL_value_used": os.environ.get("RESEND_ADMIN_EMAIL") or os.environ.get("ADMIN_EMAIL"),
+        "RESEND_FROM_value": os.environ.get("RESEND_FROM_EMAIL") or os.environ.get("RESEND_FROM"),
+        "override_to_used": to,
+    }
+
+    # Construction d'un faux check FAIL pour simuler une non-conformité
+    fake_failed = [{
+        "lat": 48.206657, "lon": -68.382422, "species": "orignal",
+        "n_corridors": 2, "n_backbones": 0, "n_subnets": 2,
+        "violations": [
+            "[SIMULATION] n_corridors_out_of_range",
+            "[SIMULATION] subnet_role_missing_2",
+        ],
+        "status": "FAIL",
+        "_simulation": True,
+    }]
+
+    ok = await _v5_send_alert_resend(fake_failed)
+
+    # Restaurer ADMIN_EMAIL original
+    if to:
+        if original_admin is None:
+            os.environ.pop("ADMIN_EMAIL", None)
+        else:
+            os.environ["ADMIN_EMAIL"] = original_admin
+
+    return {
+        "doctrine": "P22Ω.V5_ALERT_TEST_Ω",
+        "test_type": "SIMULATION",
+        "alert_sent_ok": ok,
+        "env_diagnostic": env_diag,
+        "monitor_stats": {
+            "alerts_sent_total": _V5_MONITOR_STATS["alerts_sent"],
+            "alert_errors_total": _V5_MONITOR_STATS["alert_errors"],
+        },
+        "note": ("Si alert_sent_ok=true, vérifier la boîte de réception "
+                  "ADMIN_EMAIL pour le message [BCE-4X] V5 NON-CONFORME · 1 waypoint(s) FAIL"),
+        "production_setup": ("Pour activer l'envoi vers steeve@bionichunt.com en PROD : "
+                              "vérifier le domaine bionichunt.com chez Resend "
+                              "(DNS DKIM/SPF). En attendant, utiliser "
+                              "?to=steeve.ross@gmail.com pour tester."),
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # P22Ω.V5_DAILY_REPORT — Rapport quotidien 24h
 # ═══════════════════════════════════════════════════════════════════════
 @audit_router.get("/v5-daily-report")
