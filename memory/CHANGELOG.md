@@ -3,6 +3,68 @@
 
 ---
 
+## 2026-05-12T16:20Z — PHASE OMEGA · VERROUILLAGE PROD & SURVEILLANCE ACTIVE ✅
+
+### Directive COMMANDANT STEEVE-MAX (post-Deploy 11:31)
+
+**7 chantiers exécutés** :
+
+#### ⚡ P0 (bugfix critique) — `map_v5_corridors_to_ui()` helper
+- Extraction du mapping V5 en fonction module-level réutilisée par `/bundle` ET `/v5-compliance-live`
+- Résout le FAIL PROD audit (chained_orignal_005-009 sans `fusion_doctrine`/`source`)
+- Validation PREVIEW : audit V5 → `status=PASS, violations=0`
+
+#### 🔔 P1 — `_v5_compliance_monitor_daemon` (cron horaire + alerte Resend)
+- Daemon asyncio horaire scanne 3 waypoints canoniques (BSL, Lotbinière, Saguenay)
+- Journal append-only : `/app/memory/v5_compliance_log.jsonl`
+- Alerte Resend si `status=FAIL` (utilise `RESEND_API_KEY` + `RESEND_FROM` existants)
+- ⚠️ **Variable `ADMIN_EMAIL` non configurée** → alertes désactivées tant que la
+  variable n'est pas définie dans `backend/.env`. À configurer pour activer l'alerting.
+
+#### 🚀 P2 — Préchauffage Ω étendu : 200 → 500 waypoints + semaphore 16
+- `run_prechauffage_omega(limit=500)` (vs 200 antérieur)
+- `_WARMUP_SEMAPHORE = asyncio.Semaphore(16)` (vs 8 antérieur)
+- Augmente capacité de pré-cache de 2.5x pour cibler 95% cache HIT ratio
+
+#### 📊 P3 — Endpoint `/api/v20/audit/v5-daily-report`
+- Format JSON + MD (`?format=md`)
+- Agrégations 24h (configurable `?hours=N` 1..168)
+- Métriques : taux conformité V5, taux fallback V10, latence HIT/MISS, dérives doctrinales
+- Validation : retourne données après 1 tick (n_ticks=1, conformity=100%)
+
+#### 🖥️ P4 — Dashboard Admin React `/admin/bce-4x-premium/v5-compliance`
+- `frontend/src/components/admin-premium/V5ComplianceDashboardPage.jsx`
+- 4 cartes synthèse (PASS/FAIL/conformity/alerts)
+- Tableau 3 waypoints × 5 critères doctrinaux temps réel
+- Auto-refresh 60s + bouton manuel
+- Lien rapport MD exportable
+- Auth gate via `AdminPremiumLayout` (X-Commandant-Token)
+
+#### 🛑 P5 — Plan décommissionnement V10-SUPRA (30j)
+- `/app/memory/DECOMMISSION_PLAN_V10_SUPRA.md` créé
+- Date cible éligibilité : **2026-06-11T14:45Z**
+- Critères : 99% conformity, ≤1% fallback, ≥90% HIT, 0 alerte, 0 ticket support
+- Checklist Phase A (backup) → B (suppression) → C (refactor) → D (cleanup) → E (validation)
+
+#### 🔧 Endpoint utilitaire `POST /api/v20/audit/v5-monitor-tick`
+- Trigger manuel du monitor (background task)
+- Utile pour COMMANDANT : déclencher un check à la demande sans attendre le cron
+
+### Validation E2E PREVIEW (curl manuel — PAS de testing agent)
+| Test | Résultat |
+|---|---|
+| `GET /v5-compliance-live` orignal/BSL | `PASS, 0 violations, 7 corridors, 2/5` ✅ |
+| `POST /v5-monitor-tick` → background | Tick exécuté en 176.8s, n_failed=0/3 ✅ |
+| `GET /v5-monitor-stats` | runs=2 pass=2 fail=0 last_status=PASS ✅ |
+| `GET /v5-daily-report?format=md` | Rapport MD complet ✅ |
+| Journal `/app/memory/v5_compliance_log.jsonl` | EXISTS, 1 entry ✅ |
+| Dashboard React `/admin/.../v5-compliance` | Lint clean, route enregistrée ✅ |
+
+**Action COMMANDANT** : Cliquer "Deploy" pour propager PREVIEW → PROD. Configurer `ADMIN_EMAIL` dans backend/.env pour activer l'alerting Resend.
+
+---
+
+
 ## 2026-05-12T14:35Z — P22Ω.PURGE_LEGACY + P22Σ_V5_CONSOLIDATION ✅
 
 ### Directive COMMANDANT STEEVE-MAX (post-Deploy 10:48)

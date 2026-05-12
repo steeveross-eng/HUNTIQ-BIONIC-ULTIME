@@ -102,6 +102,8 @@ const WaypointGuidePage = lazy(() => import("@/components/admin-premium/Waypoint
 const LayerManualPage = lazy(() => import("@/components/admin-premium/LayerManualPage"));
 const MerkleAuditPage = lazy(() => import("@/components/admin-premium/MerkleAuditPage"));
 const ValidationsPage = lazy(() => import("@/components/admin-premium/ValidationsPage"));
+// PHASE OMEGA · P22Ω.V5_COMPLIANCE_LIVE_Ω · Dashboard Admin V5
+const V5ComplianceDashboardPage = lazy(() => import("@/components/admin-premium/V5ComplianceDashboardPage"));
 // P22C · TERRITOIRE FRONTEND DEBUG OVERLAY (URL flag activated)
 import TerritoireFrontendDebugOverlay from "@/components/territoire/TerritoireFrontendDebugOverlay";
 import CorridorsDebugOverlay from "@/components/territoire/CorridorsDebugOverlay";
@@ -1180,6 +1182,7 @@ function App() {
                   <Route path="manual" element={<LayerManualPage />} />
                   <Route path="merkle" element={<MerkleAuditPage />} />
                   <Route path="validation" element={<ValidationsPage />} />
+                  <Route path="v5-compliance" element={<V5ComplianceDashboardPage />} />
                 </Route>
               </Routes>
             </Suspense>

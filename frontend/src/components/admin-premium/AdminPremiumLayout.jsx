@@ -14,7 +14,7 @@ import React, { useEffect, useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import {
   Anchor, FileText, BookOpen, MapPin, BarChart3, ShieldCheck,
-  LogOut, Lock, AlertTriangle,
+  LogOut, Lock, AlertTriangle, Activity,
 } from 'lucide-react';
 import {
   getCommandantToken, setCommandantToken, clearCommandantToken,
@@ -28,6 +28,7 @@ const NAV_ITEMS = [
   { to: '/admin/bce-4x-premium/manual',     label: 'Manuel Couches', icon: BookOpen,  code: 'P18' },
   { to: '/admin/bce-4x-premium/merkle',     label: 'Merkle Audit',   icon: Anchor,    code: 'P14' },
   { to: '/admin/bce-4x-premium/validation', label: 'Validations',    icon: ShieldCheck, code: 'P22' },
+  { to: '/admin/bce-4x-premium/v5-compliance', label: 'V5 Compliance', icon: Activity, code: 'P22Ω' },
 ];
 
 const AdminPremiumLayout = () => {

@@ -21,6 +21,7 @@ const TILES = [
   { to: '/admin/bce-4x-premium/manual',     code: 'P18', label: 'Manuel Couches', icon: BookOpen,   color: '#06B6D4', desc: 'Manuel doctrinal 18 couches' },
   { to: '/admin/bce-4x-premium/merkle',     code: 'P14+P24', label: 'Merkle Audit',   icon: Anchor, color: '#F59E0B', desc: 'Bitcoin anchoring + OTS automation' },
   { to: '/admin/bce-4x-premium/validation', code: 'P22', label: 'Validations',    icon: ShieldCheck, color: '#DC2626', desc: 'Audit Commandant approbations' },
+  { to: '/admin/bce-4x-premium/v5-compliance', code: 'P22Ω', label: 'V5 Compliance', icon: Activity, color: '#FF4500', desc: 'PHASE OMEGA · 5 critères doctrinaux temps réel' },
 ];
 
 const AdminPremiumIndexPage = () => {

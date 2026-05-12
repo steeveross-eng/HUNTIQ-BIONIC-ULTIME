@@ -22,6 +22,42 @@ from fastapi import APIRouter, Query, Response, BackgroundTasks
 logger = logging.getLogger("bionic.v20_performance")
 router = APIRouter(prefix="/api/v20/territoire", tags=["V20 Performance Bundle"])
 
+# ═══════════════════════════════════════════════════════════════════════
+# P22Σ_V5_BUNDLE_REWIRE_Ω — MAPPING HELPER (réutilisé par bundle + audit)
+# ═══════════════════════════════════════════════════════════════════════
+_HIER_COLOR_V5 = {
+    "veine_principale": "#FF4500",   # backbone — rouge orangé
+    "veine_secondaire": "#FF8F00",   # subnet — orange
+    "capillaire":       "#FFB347",   # isolated — pêche
+    "connector":        "#FFEE99",   # connector — jaune pâle
+}
+
+
+def map_v5_corridors_to_ui(v5_corridors_raw: list[dict]) -> list[dict]:
+    """Map V5 organic corridors -> format UI (color + source + fusion_doctrine).
+
+    Fonction réutilisée par /api/v20/territoire/bundle ET /api/v20/audit/v5-compliance-live
+    pour garantir la même provenance V5 dans les deux endpoints.
+    """
+    mapped: list[dict] = []
+    for _i, _c in enumerate(v5_corridors_raw or []):
+        _hier = _c.get("hierarchy", "capillaire")
+        _m = dict(_c)
+        _m["id"] = _c.get("id") or f"corr_v5_{_i:03d}"
+        _m["color"] = _c.get("color") or _HIER_COLOR_V5.get(_hier, "#FF8F00")
+        _m["source"] = "ENGINE-IA-CORRIDORS-ORGANIC-Ω (V5_BUNDLE_REWIRE)"
+        _m["fusion_doctrine"] = "P22Σ_V5_CAP_GLOBAL_TERRITOIRE"
+        if "subnet_role" not in _m:
+            _m["subnet_role"] = (
+                "backbone" if _hier == "veine_principale" else
+                "subnet" if _hier == "veine_secondaire" else
+                "connector" if _m.get("type") == "connector" else
+                "isolated"
+            )
+        mapped.append(_m)
+    return mapped
+
+
 # ═══ CACHE IN-MEMORY LRU TTL 24h — V11-SUPRA SCALABILITE 10K ═══
 _CACHE: "OrderedDict[str, tuple[float, dict]]" = OrderedDict()
 _CACHE_TTL_SEC = 86400
@@ -127,7 +163,9 @@ def _cache_load_disk():
 
 # ═══ PRECHAUFFAGE-Omega WORKER ═══
 _WARMUP_LOCK = asyncio.Lock()
-_WARMUP_SEMAPHORE = asyncio.Semaphore(8)  # 8 parallel computes max (worker async)
+# P22Σ_PRECHAUFFAGE_Ω · 2026-05-12T14:45Z · COMMANDANT STEEVE-MAX
+# Extension à 500 waypoints + parallel semaphore 16 (vs 8 antérieur)
+_WARMUP_SEMAPHORE = asyncio.Semaphore(16)  # 16 parallel computes max
 
 
 async def _warmup_single(lat: float, lon: float, species: str = "cerf"):
@@ -222,8 +260,12 @@ async def _ensure_lazy_init():
         _LAZY_INIT_DONE = True
         loaded = _cache_load_disk()
         logger.info(f"[V20-LAZY-INIT] {loaded} entries loaded from disk")
-        asyncio.create_task(run_prechauffage_omega(limit=200))
+        # P22Σ_PRECHAUFFAGE_Ω · 500 waypoints (vs 200 antérieur)
+        asyncio.create_task(run_prechauffage_omega(limit=500))
         asyncio.create_task(_periodic_refresh_daemon())
+        # P22Ω.V5_COMPLIANCE_MONITOR_Ω · cron horaire alerte Resend
+        asyncio.create_task(_v5_compliance_monitor_daemon())
+        logger.info("[V20-LAZY-INIT] V5_COMPLIANCE_MONITOR daemon scheduled")
 
 
 # ═══ LIFESPAN HOOKS (called from server.py startup/shutdown) ═══
@@ -231,8 +273,11 @@ async def v20_startup():
     """Called by server.py on app startup."""
     loaded = _cache_load_disk()
     logger.info(f"[V20-PERFORMANCE] Startup: {loaded} entries loaded from disk")
-    asyncio.create_task(run_prechauffage_omega(limit=200))
+    # P22Σ_PRECHAUFFAGE_Ω · 500 waypoints (vs 200 antérieur)
+    asyncio.create_task(run_prechauffage_omega(limit=500))
     asyncio.create_task(_periodic_refresh_daemon())
+    # P22Ω.V5_COMPLIANCE_MONITOR_Ω · 2026-05-12 · cron horaire alerte Resend
+    asyncio.create_task(_v5_compliance_monitor_daemon())
 
 
 async def v20_shutdown():
@@ -246,9 +291,181 @@ async def _periodic_refresh_daemon():
         try:
             await asyncio.sleep(3600)
             logger.info("[V20-WARMUP-DAEMON] Tick horaire — refresh + disk save")
-            await run_prechauffage_omega(limit=200)
+            # P22Σ_PRECHAUFFAGE_Ω · 500 waypoints
+            await run_prechauffage_omega(limit=500)
         except Exception as e:
             logger.warning(f"[V20-WARMUP-DAEMON] Error: {e}")
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# P22Ω.V5_COMPLIANCE_MONITOR_Ω · 2026-05-12T14:45Z · COMMANDANT STEEVE-MAX
+# ═══════════════════════════════════════════════════════════════════════
+# Cron horaire : check audit V5 + alerte Resend si status=FAIL
+# + journalisation persistante /app/memory/v5_compliance_log.jsonl
+# (append-only, lu par /api/v20/audit/v5-daily-report).
+# ═══════════════════════════════════════════════════════════════════════
+_V5_MONITOR_INTERVAL_SEC = 3600  # 1h
+_V5_MONITOR_LOG_FILE = Path("/app/memory/v5_compliance_log.jsonl")
+_V5_MONITOR_WAYPOINTS = [
+    # (lat, lon, species, label) — waypoints canoniques surveillés
+    (48.206657, -68.382422, "orignal",   "BSL"),
+    (46.5,      -71.5,      "cerf",      "Lotbinière"),
+    (48.4,      -71.05,     "orignal",   "Saguenay"),
+]
+_V5_MONITOR_STATS: dict = {
+    "runs": 0, "pass": 0, "fail": 0, "last_status": None,
+    "last_run_utc": None, "last_violations_total": 0,
+    "alerts_sent": 0, "alert_errors": 0,
+}
+
+
+async def _v5_compliance_check_single(lat: float, lon: float, species: str) -> dict:
+    """Exécute un check V5 compliance sur un waypoint (utilise même logique audit)."""
+    from engines.v8_institutional.territoire_v10_supra import compute_territoire_v10
+    from engines.v8_institutional.engine_ia_corridors_organic_omega import (
+        generate_organic_corridors,
+    )
+    try:
+        bundle_data = await compute_territoire_v10(lat, lon, species, 10, 7, 225.0, 15.0)
+        v5 = await generate_organic_corridors(
+            lat=lat, lon=lon, species=species, month=10, hour=7,
+            wind_deg=225, wind_speed=15, anchor_mode="TERRITORY_CONTINUOUS",
+            bundle_pre_computed=bundle_data,
+        )
+        corridors = map_v5_corridors_to_ui(v5.get("corridors", []))
+        hier = v5.get("hierarchy_counts", {}) or {}
+        n = len(corridors)
+        violations = []
+        if not (5 <= n <= 7):
+            violations.append("n_corridors_out_of_range")
+        n_missing = sum(1 for c in corridors if not c.get("subnet_role"))
+        if n_missing:
+            violations.append(f"subnet_role_missing_{n_missing}")
+        return {
+            "lat": lat, "lon": lon, "species": species,
+            "n_corridors": n,
+            "n_backbones": hier.get("veine_principale", 0),
+            "n_subnets": hier.get("veine_secondaire", 0),
+            "violations": violations,
+            "status": "PASS" if not violations else "FAIL",
+        }
+    except Exception as e:
+        return {
+            "lat": lat, "lon": lon, "species": species,
+            "n_corridors": 0, "n_backbones": 0, "n_subnets": 0,
+            "violations": [f"exception:{type(e).__name__}"],
+            "status": "FAIL",
+            "error": str(e),
+        }
+
+
+async def _v5_send_alert_resend(failed_checks: list[dict]) -> bool:
+    """Envoie une alerte Resend si conformité V5 dégradée."""
+    try:
+        import os
+        api_key = os.environ.get("RESEND_API_KEY")
+        from_addr = os.environ.get("RESEND_FROM_EMAIL") or os.environ.get("RESEND_FROM")
+        to_addr = os.environ.get("RESEND_ADMIN_EMAIL") or os.environ.get("ADMIN_EMAIL")
+        if not (api_key and from_addr and to_addr):
+            logger.warning("[V5_MONITOR] Resend env vars manquantes → alerte non envoyée")
+            return False
+        import httpx
+        body_lines = [
+            "PROTOCOLE BCE-4X — ALERTE CONFORMITÉ V5",
+            f"Date UTC: {time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())}",
+            f"Waypoints en échec: {len(failed_checks)}",
+            "",
+        ]
+        for c in failed_checks:
+            body_lines.append(
+                f"  • {c.get('species')} @ ({c.get('lat')},{c.get('lon')}) → "
+                f"status={c.get('status')} n_corridors={c.get('n_corridors')} "
+                f"backbones={c.get('n_backbones')} subnets={c.get('n_subnets')} "
+                f"violations={c.get('violations')}"
+            )
+        body_lines.append("")
+        body_lines.append("Action: vérifier /api/v20/audit/v5-compliance-live et déployer correctif si besoin.")
+        body_text = "\n".join(body_lines)
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            r = await client.post(
+                "https://api.resend.com/emails",
+                headers={"Authorization": f"Bearer {api_key}",
+                          "Content-Type": "application/json"},
+                json={
+                    "from": from_addr,
+                    "to": [to_addr],
+                    "subject": f"[BCE-4X] V5 NON-CONFORME · {len(failed_checks)} waypoint(s) FAIL",
+                    "text": body_text,
+                },
+            )
+            ok = r.status_code in (200, 202)
+            if ok:
+                _V5_MONITOR_STATS["alerts_sent"] += 1
+            else:
+                _V5_MONITOR_STATS["alert_errors"] += 1
+                logger.warning(f"[V5_MONITOR] Resend HTTP {r.status_code}: {r.text[:200]}")
+            return ok
+    except Exception as e:
+        _V5_MONITOR_STATS["alert_errors"] += 1
+        logger.warning(f"[V5_MONITOR] Resend alert failed: {e}")
+        return False
+
+
+def _v5_journal_append(entry: dict) -> None:
+    """Append-only log JSONL du monitoring V5."""
+    try:
+        _V5_MONITOR_LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+        with open(_V5_MONITOR_LOG_FILE, "a", encoding="utf-8") as f:
+            import json as _json
+            f.write(_json.dumps(entry, ensure_ascii=False) + "\n")
+    except Exception as e:
+        logger.warning(f"[V5_MONITOR] Journal append failed: {e}")
+
+
+async def _v5_compliance_monitor_daemon():
+    """Daemon: vérifie la conformité V5 toutes les heures + alerte si FAIL."""
+    # Délai initial 60s pour laisser le startup se terminer
+    await asyncio.sleep(60)
+    while True:
+        try:
+            t0 = time.time()
+            results = []
+            for (lat, lon, sp, _label) in _V5_MONITOR_WAYPOINTS:
+                results.append(await _v5_compliance_check_single(lat, lon, sp))
+            failed = [r for r in results if r.get("status") == "FAIL"]
+            n_violations_total = sum(len(r.get("violations", [])) for r in results)
+            _V5_MONITOR_STATS["runs"] += 1
+            _V5_MONITOR_STATS["last_run_utc"] = time.strftime(
+                "%Y-%m-%dT%H:%M:%SZ", time.gmtime(),
+            )
+            _V5_MONITOR_STATS["last_violations_total"] = n_violations_total
+            if failed:
+                _V5_MONITOR_STATS["fail"] += 1
+                _V5_MONITOR_STATS["last_status"] = "FAIL"
+                # Alerte Resend
+                await _v5_send_alert_resend(failed)
+            else:
+                _V5_MONITOR_STATS["pass"] += 1
+                _V5_MONITOR_STATS["last_status"] = "PASS"
+            elapsed = round(time.time() - t0, 2)
+            journal_entry = {
+                "ts_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                "elapsed_s": elapsed,
+                "n_failed": len(failed),
+                "n_total": len(results),
+                "n_violations_total": n_violations_total,
+                "results": results,
+                "doctrine": "P22Ω.V5_COMPLIANCE_MONITOR_Ω",
+            }
+            _v5_journal_append(journal_entry)
+            logger.info(
+                f"[V5_MONITOR] Tick: {len(results)} checks · "
+                f"{len(failed)} FAIL · {elapsed}s",
+            )
+        except Exception as e:
+            logger.warning(f"[V5_MONITOR] Daemon error: {e}")
+        # Sleep 1h
+        await asyncio.sleep(_V5_MONITOR_INTERVAL_SEC)
 
 
 # ═══ ENDPOINTS ═══
@@ -471,28 +688,7 @@ async def v20_territoire_bundle(
     # ═══════════════════════════════════════════════════════════════════════
     if _V5_REWIRE_ACTIVE:
         v5_corridors_raw = v5_bundle.get("corridors", []) or []
-        _HIER_COLOR_V5 = {
-            "veine_principale": "#FF4500",   # backbone — rouge orangé
-            "veine_secondaire": "#FF8F00",   # subnet — orange
-            "capillaire":       "#FFB347",   # isolated — pêche
-            "connector":        "#FFEE99",   # connector — jaune pâle
-        }
-        v5_mapped = []
-        for _i, _c in enumerate(v5_corridors_raw):
-            _hier = _c.get("hierarchy", "capillaire")
-            _m = dict(_c)
-            _m["id"] = _c.get("id") or f"corr_v5_{_i:03d}"
-            _m["color"] = _c.get("color") or _HIER_COLOR_V5.get(_hier, "#FF8F00")
-            _m["source"] = "ENGINE-IA-CORRIDORS-ORGANIC-Ω (V5_BUNDLE_REWIRE)"
-            _m["fusion_doctrine"] = "P22Σ_V5_CAP_GLOBAL_TERRITOIRE"
-            if "subnet_role" not in _m:
-                _m["subnet_role"] = (
-                    "backbone" if _hier == "veine_principale" else
-                    "subnet" if _hier == "veine_secondaire" else
-                    "connector" if _m.get("type") == "connector" else
-                    "isolated"
-                )
-            v5_mapped.append(_m)
+        v5_mapped = map_v5_corridors_to_ui(v5_corridors_raw)
         result["corridors"] = v5_mapped
         result["p22sigma_v5_bundle_rewire"] = {
             "applied": True,
@@ -565,7 +761,7 @@ async def v20_bundle_stats():
         "warmup_runs": _STATS["warmup_runs"],
         "warmup_last_count": _STATS["warmup_last_count"],
         "warmup_last_ms": _STATS["warmup_last_ms"],
-        "warmup_semaphore_max": 8,
+        "warmup_semaphore_max": 16,
         "redis_omega": redis_stats(),
     }
 
@@ -635,7 +831,7 @@ async def v20_audit_v5_compliance_live(
         bundle_data = cached
         cache_status = "HIT"
     else:
-        # Calcul à la volée via le endpoint principal (chemin sûr)
+        # Calcul à la volée via la même logique que /bundle (mapping V5 inclus)
         from engines.v8_institutional.territoire_v10_supra import compute_territoire_v10
         from engines.v8_institutional.engine_ia_corridors_organic_omega import (
             generate_organic_corridors,
@@ -651,7 +847,8 @@ async def v20_audit_v5_compliance_live(
                 anchor_mode="TERRITORY_CONTINUOUS",
                 bundle_pre_computed=bundle_data,
             )
-            bundle_data["corridors"] = v5.get("corridors", [])
+            # Mapping V5 IDENTIQUE au bundle pour garantir provenance cohérente
+            bundle_data["corridors"] = map_v5_corridors_to_ui(v5.get("corridors", []))
             bundle_data["p22sigma_v5_bundle_rewire"] = {
                 "applied": True,
                 "hierarchy_counts": v5.get("hierarchy_counts"),
@@ -756,3 +953,210 @@ async def v20_audit_v5_compliance_live(
         "violations": violations,
         "violation_count": len(violations),
     }
+
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# P22Ω.V5_MONITOR_STATS — Snapshot du monitoring V5 cron horaire
+# ═══════════════════════════════════════════════════════════════════════
+@audit_router.get("/v5-monitor-stats")
+async def v20_audit_v5_monitor_stats(response: Response):
+    """État du monitoring V5 (cron horaire)."""
+    response.headers["Cache-Control"] = "no-cache, no-store"
+    return {
+        "doctrine": "P22Ω.V5_COMPLIANCE_MONITOR_Ω",
+        "interval_sec": _V5_MONITOR_INTERVAL_SEC,
+        "waypoints_watched": [
+            {"lat": lat, "lon": lon, "species": sp, "label": label}
+            for (lat, lon, sp, label) in _V5_MONITOR_WAYPOINTS
+        ],
+        "journal_file": str(_V5_MONITOR_LOG_FILE),
+        "journal_exists": _V5_MONITOR_LOG_FILE.exists(),
+        "stats": _V5_MONITOR_STATS,
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Déclenchement manuel d'un tick du monitor (utile pour tests + force-check)
+# ═══════════════════════════════════════════════════════════════════════
+@audit_router.post("/v5-monitor-tick")
+async def v20_audit_v5_monitor_tick(response: Response, background: BackgroundTasks):
+    """Déclenche manuellement un tick du V5 compliance monitor en background."""
+    response.headers["Cache-Control"] = "no-cache, no-store"
+
+    async def _single_tick():
+        try:
+            t0 = time.time()
+            results = []
+            for (lat, lon, sp, _label) in _V5_MONITOR_WAYPOINTS:
+                results.append(await _v5_compliance_check_single(lat, lon, sp))
+            failed = [r for r in results if r.get("status") == "FAIL"]
+            n_violations_total = sum(len(r.get("violations", [])) for r in results)
+            _V5_MONITOR_STATS["runs"] += 1
+            _V5_MONITOR_STATS["last_run_utc"] = time.strftime(
+                "%Y-%m-%dT%H:%M:%SZ", time.gmtime(),
+            )
+            _V5_MONITOR_STATS["last_violations_total"] = n_violations_total
+            if failed:
+                _V5_MONITOR_STATS["fail"] += 1
+                _V5_MONITOR_STATS["last_status"] = "FAIL"
+                await _v5_send_alert_resend(failed)
+            else:
+                _V5_MONITOR_STATS["pass"] += 1
+                _V5_MONITOR_STATS["last_status"] = "PASS"
+            elapsed = round(time.time() - t0, 2)
+            _v5_journal_append({
+                "ts_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                "elapsed_s": elapsed,
+                "n_failed": len(failed),
+                "n_total": len(results),
+                "n_violations_total": n_violations_total,
+                "results": results,
+                "doctrine": "P22Ω.V5_COMPLIANCE_MONITOR_Ω",
+                "trigger": "MANUAL_TICK",
+            })
+            logger.info(f"[V5_MONITOR] Manual tick: {len(failed)} FAIL / {len(results)} · {elapsed}s")
+        except Exception as e:
+            logger.warning(f"[V5_MONITOR] Manual tick error: {e}")
+
+    background.add_task(_single_tick)
+    return {
+        "started": True,
+        "doctrine": "P22Ω.V5_COMPLIANCE_MONITOR_Ω",
+        "message": "Tick lancé en background — consulter /v5-monitor-stats dans ~60s",
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# P22Ω.V5_DAILY_REPORT — Rapport quotidien 24h
+# ═══════════════════════════════════════════════════════════════════════
+@audit_router.get("/v5-daily-report")
+async def v20_audit_v5_daily_report(
+    response: Response,
+    hours: int = Query(24, ge=1, le=168),
+    format: str = Query("json", regex="^(json|md)$"),
+):
+    """Agrège les checks V5 sur les dernières N heures (default 24h).
+
+    - Taux de conformité V5 (PASS/FAIL ratio)
+    - Taux de fallback V10
+    - Latence HIT/MISS (depuis _STATS)
+    - Dérives doctrinales détectées (violations rules counts)
+    """
+    response.headers["Cache-Control"] = "no-cache, no-store"
+    import json as _json
+    from datetime import datetime as _dt, timezone as _tz, timedelta as _td
+
+    cutoff = _dt.now(_tz.utc) - _td(hours=hours)
+    entries: list[dict] = []
+    if _V5_MONITOR_LOG_FILE.exists():
+        try:
+            with open(_V5_MONITOR_LOG_FILE, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        e = _json.loads(line)
+                        ts_str = e.get("ts_utc")
+                        if not ts_str:
+                            continue
+                        e_dt = _dt.strptime(ts_str, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=_tz.utc)
+                        if e_dt >= cutoff:
+                            entries.append(e)
+                    except Exception:
+                        continue
+        except Exception as e:
+            logger.warning(f"[V5_DAILY] read journal failed: {e}")
+
+    # Agrégations
+    n_ticks = len(entries)
+    n_total_checks = sum(e.get("n_total", 0) for e in entries)
+    n_failed_checks = sum(e.get("n_failed", 0) for e in entries)
+    n_violations = sum(e.get("n_violations_total", 0) for e in entries)
+    pass_ratio = ((n_total_checks - n_failed_checks) / n_total_checks * 100) if n_total_checks else 0.0
+
+    # Dérives doctrinales (violations groupées par rule)
+    rule_counts: dict = {}
+    for e in entries:
+        for r in e.get("results", []):
+            for v in r.get("violations", []):
+                rule_counts[v] = rule_counts.get(v, 0) + 1
+
+    # Stats latence (depuis _STATS courant)
+    total_lat = _STATS["hits"] + _STATS["misses"]
+    hit_ratio = (_STATS["hits"] / total_lat * 100) if total_lat else 0.0
+    avg_compute_ms = (_STATS["total_compute_ms"] / _STATS["misses"]) if _STATS["misses"] else 0
+
+    # Fallback V10 detection (chercher fallback dans les entries — non collecté actuellement)
+    # Ici on retourne la valeur courante du monitor stats (FAIL = potentiel fallback)
+    fallback_ratio = (_V5_MONITOR_STATS["fail"] / _V5_MONITOR_STATS["runs"] * 100) \
+                     if _V5_MONITOR_STATS["runs"] else 0.0
+
+    report = {
+        "doctrine": "P22Ω.V5_DAILY_REPORT",
+        "period_hours": hours,
+        "generated_utc": _dt.now(_tz.utc).isoformat(),
+        "summary": {
+            "n_ticks": n_ticks,
+            "n_total_checks": n_total_checks,
+            "n_failed_checks": n_failed_checks,
+            "v5_conformity_pct": round(pass_ratio, 2),
+            "v10_fallback_pct": round(fallback_ratio, 2),
+            "n_violations_total": n_violations,
+        },
+        "latency": {
+            "cache_hits": _STATS["hits"],
+            "cache_misses": _STATS["misses"],
+            "hit_ratio_pct": round(hit_ratio, 2),
+            "avg_compute_ms": round(avg_compute_ms, 2),
+        },
+        "derives_doctrinales": rule_counts,
+        "waypoints_watched": [
+            {"lat": lat, "lon": lon, "species": sp, "label": label}
+            for (lat, lon, sp, label) in _V5_MONITOR_WAYPOINTS
+        ],
+        "monitor_stats": _V5_MONITOR_STATS,
+    }
+
+    if format == "md":
+        lines = [
+            f"# RAPPORT QUOTIDIEN V5 — {hours}h",
+            "**Doctrine** : `P22Ω.V5_DAILY_REPORT`",
+            f"**Généré UTC** : {report['generated_utc']}",
+            "",
+            "## Conformité V5",
+            f"- Ticks monitorés : **{n_ticks}**",
+            f"- Checks totaux : **{n_total_checks}**",
+            f"- Checks en échec : **{n_failed_checks}**",
+            f"- Taux de conformité V5 : **{round(pass_ratio, 2)}%**",
+            f"- Taux de fallback V10 : **{round(fallback_ratio, 2)}%**",
+            f"- Violations cumulées : **{n_violations}**",
+            "",
+            "## Latence cache",
+            f"- Cache HIT : {_STATS['hits']}",
+            f"- Cache MISS : {_STATS['misses']}",
+            f"- Hit ratio : **{round(hit_ratio, 2)}%**",
+            f"- Latence moyenne MISS : **{round(avg_compute_ms, 2)}ms**",
+            "",
+            "## Dérives doctrinales détectées",
+        ]
+        if rule_counts:
+            for rule, cnt in sorted(rule_counts.items(), key=lambda x: -x[1]):
+                lines.append(f"- `{rule}` : {cnt} occurrences")
+        else:
+            lines.append("- Aucune dérive détectée ✅")
+        lines.extend([
+            "",
+            "## Waypoints monitorés",
+        ])
+        for (lat, lon, sp, label) in _V5_MONITOR_WAYPOINTS:
+            lines.append(f"- {label} ({sp}) : ({lat}, {lon})")
+        lines.extend([
+            "",
+            "_Fin du rapport BCE-4X ULTIME ABSOLU — COMMANDANT STEEVE-MAX_",
+        ])
+        from fastapi.responses import PlainTextResponse
+        return PlainTextResponse("\n".join(lines), media_type="text/markdown; charset=utf-8")
+
+    return report

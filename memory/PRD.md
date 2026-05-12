@@ -16,6 +16,25 @@
 
 ---
 
+## ✅ DERNIÈRE LIVRAISON (2026-05-12T16:20Z) — PHASE OMEGA · SURVEILLANCE ACTIVE
+
+**Statut** : DELIVERED · 7 chantiers post-Deploy 11:31 · lint clean · validé PREVIEW
+
+| Chantier | Statut | Endpoint / Fichier |
+|---|---|---|
+| Bugfix audit V5 (map_v5_corridors_to_ui helper) | ✅ | `/api/v20/audit/v5-compliance-live` → PASS |
+| Monitor daemon horaire + Resend | ✅ | `_v5_compliance_monitor_daemon` (cron 1h) |
+| Préchauffage Ω 500 waypoints + semaphore 16 | ✅ | `run_prechauffage_omega(limit=500)` |
+| Endpoint `/api/v20/audit/v5-daily-report` | ✅ | JSON + MD (1..168h) |
+| Dashboard Admin V5 Compliance | ✅ | `/admin/bce-4x-premium/v5-compliance` |
+| Plan décommissionnement V10-SUPRA 30j | ✅ | `/app/memory/DECOMMISSION_PLAN_V10_SUPRA.md` |
+| Trigger manuel `POST /v5-monitor-tick` | ✅ | Background task pour force-check |
+
+**⚠️ Configuration requise** : Définir `ADMIN_EMAIL=...@...` dans `backend/.env` pour activer l'alerting Resend automatique (sinon le daemon journalise sans envoyer).
+
+---
+
+
 ## ✅ DERNIÈRE LIVRAISON (2026-05-12T14:35Z) — P22Ω.PURGE_LEGACY + V5_CONSOLIDATION
 
 **Statut** : DELIVERED · 5 chantiers post-Deploy · lint clean · validé PREVIEW
