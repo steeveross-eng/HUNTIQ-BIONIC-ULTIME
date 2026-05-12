@@ -3,6 +3,71 @@
 
 ---
 
+## 2026-05-12T01:45Z — P22Σ_V5_CAP_GLOBAL_TERRITOIRE · DELIVERED ✅
+
+### Directive: clarification scope V4 → V5 (cap TERRITOIRE, pas par cluster)
+
+#### Problème V4 résolu
+- V4 produisait 14 corridors (5-7 par cluster) → trop pour lisibilité
+- Clarification Commandant : 5-7 corridors TOTAL pour tout le territoire (waypoint 600m+30%)
+
+#### Modifications V5
+- **EDIT** `engines/post_smoothing/corridors_fusion_omega.py` :
+  - **NEW** constantes : `CAP_MAX_BACKBONES=2`, `CAP_MAX_SUBNETS=5`, `CAP_MAX_TOTAL_CORRIDORS=7`
+  - **NEW** flags : `CAP_DROP_ISOLATED_FIRST=True`, `CAP_DROP_CONNECTORS_IF_OVER=True`
+  - **NEW** fonction `cap_global_corridors(corridors)` :
+    - Trie par catégorie (backbone/subnet/isolated/connector/other)
+    - Trie chaque catégorie par intensity_level + intensity (desc)
+    - Cap backbones[:2], subnets[:5]
+    - Compose final priorité doctrinale, max_total=7
+    - Drop isolated/connectors si dépassement
+  - Retourne `(capped_corridors, cap_summary)` avec stats détaillées
+- **EDIT** `engines/v8_institutional/engine_ia_corridors_organic_omega.py` :
+  - Appel cap_global APRÈS cascade pondéré (cap #1)
+  - Exposition `p22sigma_v5_cap_global_doctrine` dans la réponse
+- **EDIT** `engines/post_smoothing/organic_corridor_smoother.py` :
+  - **NEW** cap final APRÈS `smooth_bundle()` (cap #2)
+  - Critique : le smoother injecte 16 external_inflow_entry_node_* via X200-P1
+  - Cap final supprime ces 16 entrées si total > 7
+  - Exposition `p22sigma_v5_cap_post_smoother` dans la réponse
+
+#### Résultats (validés PREVIEW)
+| Indicateur | V3 | V4 | **V5** |
+|---|---|---|---|
+| Corridors finaux | 3 | 14 | **7** ✅ |
+| Backbones | 3 | 2 | 2 |
+| Subnets | 0 | 8 | 5 |
+| External_inflow droppés | 0 | 0 | 16 |
+| Lisibilité | binaire | excessive | **optimale** |
+
+#### Conformité V90 : 9/9 = 100% ✅
+
+#### Signatures cryptographiques V5
+| Artefact | SHA-256 |
+|---|---|
+| Rendu V5 fusionné | `a498198fb94257aecd2057c463adece74e08282ff9cd33bd86a8579e2d978a59` |
+| Rapport .md V5 | `273ca64b7d33fadd14458abb05760580e3449dfa938d93b9a3d97297f642e15b` |
+| Rapport .pdf V5 | `6f348897793590ab72142caf7964612f7acb9f947fe516ea41a7e006a92a917d` |
+
+#### Validation PREVIEW
+- HTTP 200 · `corridors_count: 7`
+- `hierarchy_counts: {veine_principale: 2, veine_secondaire: 5, capillaire: 0, connector: 0}`
+- `cap_global_summary.before_by_role: {backbone: 2, subnet: 5, isolated: 0, connector: 0, other: 16}`
+- `cap_global_summary.after_by_role: {backbone: 2, subnet: 5, isolated: 0, connector: 0, other: 0}`
+- `dropped: 16`
+
+### Note PROD
+- ⚠️ V5 actif uniquement en PREVIEW
+- PROD reste sur V4/V3 jusqu'au prochain redéploiement
+- **Action Commandant** : Cliquer "Deploy" pour propager V5 en prod
+
+### Verrous respectés
+- V30_LOCK INVIOLÉ ✅ · FUSION ADD-ONLY ✅
+- ANTI-GÉNÉRIQUE_Ω STRICT ✅ · NO_TESTING_AGENT ✅
+- Lint Python : 0 issue critique
+
+
+
 ## 2026-05-12T01:00Z — P22Σ_V4_BACKBONE_SUBNETS_Ω · AJUSTEMENT GRANULARITÉ ✅
 
 ### Directive: P22Σ_V4_GRANULARITE_OPERATIONNELLE — 5-7 corridors par zone

@@ -39,6 +39,15 @@ SUBNET_MIN_PER_CLUSTER = 5             # min 5 corridors par cluster (sub + back
 SUBNET_MAX_PER_CLUSTER = 7             # max 7 corridors par cluster
 MAX_ABSORPTION_RATIO = 0.70            # absorption max 70% (au lieu de 94%)
 
+# P22Σ_V5 · CAP GLOBAL TERRITOIRE · 2026-05-12 · STEEVE-MAX
+# Limite le nombre TOTAL de corridors sur l'ensemble du territoire (600m+30%)
+# Ces caps s'appliquent APRÈS la fusion par cluster (V4 BACKBONE+SUBNETS).
+CAP_MAX_BACKBONES = 2                  # max 2 backbones par territoire
+CAP_MAX_SUBNETS = 5                    # max 5 subnets par territoire
+CAP_MAX_TOTAL_CORRIDORS = 7            # cap global 5-7 corridors par territoire
+CAP_DROP_ISOLATED_FIRST = True         # supprime isolés en priorité si dépassement
+CAP_DROP_CONNECTORS_IF_OVER = True     # supprime connectors si total > cap
+
 
 def _haversine_m(p1: list, p2: list) -> float:
     if not p1 or not p2 or len(p1) < 2 or len(p2) < 2:
@@ -258,6 +267,123 @@ def fuse_corridors_by_species(corridors: list[dict],
     fused.extend(_enrich_intensity(c, fusion_count=1) for c in invalid_corridors)
 
     return fused
+
+
+def cap_global_corridors(corridors: list[dict],
+                         max_backbones: int = CAP_MAX_BACKBONES,
+                         max_subnets: int = CAP_MAX_SUBNETS,
+                         max_total: int = CAP_MAX_TOTAL_CORRIDORS,
+                         drop_isolated_first: bool = CAP_DROP_ISOLATED_FIRST,
+                         drop_connectors_if_over: bool = CAP_DROP_CONNECTORS_IF_OVER,
+                         ) -> tuple[list[dict], dict]:
+    """P22Σ_V5 · CAP GLOBAL TERRITOIRE (s'applique APRÈS fusion par cluster).
+
+    Limite le nombre TOTAL de corridors retournés sur tout le territoire :
+      - max 2 backbones (top intensité)
+      - max 5 subnets (top intensité)
+      - max 7 corridors au total
+    Stratégie de drop :
+      1. Drop les connectors en premier (si activé)
+      2. Drop les isolés ensuite (si activé)
+      3. Drop les subnets les moins intenses
+      4. Drop les backbones excédentaires (rare)
+
+    Returns
+    -------
+    (corridors_capped, cap_summary)
+    """
+    if not corridors:
+        return corridors, {"applied": False, "reason": "empty"}
+
+    # Tri par rôle pour gestion granulaire
+    backbones = []
+    subnets = []
+    isolated = []
+    connectors = []
+    others = []  # corridors sans subnet_role (ex: legacy ou non fusionnés)
+    for c in corridors:
+        role = c.get("subnet_role")
+        if c.get("type") == "connector":
+            connectors.append(c)
+        elif role == "backbone":
+            backbones.append(c)
+        elif role == "subnet":
+            subnets.append(c)
+        elif role == "isolated":
+            isolated.append(c)
+        else:
+            others.append(c)
+
+    # Tri par intensité décroissante au sein de chaque catégorie
+    def intensity_key(c):
+        return -(c.get("intensity_level", 0) * 100 + (c.get("intensity") or c.get("score") or 0))
+
+    backbones.sort(key=intensity_key)
+    subnets.sort(key=intensity_key)
+    isolated.sort(key=intensity_key)
+    others.sort(key=intensity_key)
+
+    # Stats avant cap
+    n_before = len(corridors)
+    n_before_by_role = {
+        "backbone": len(backbones), "subnet": len(subnets),
+        "isolated": len(isolated), "connector": len(connectors),
+        "other": len(others),
+    }
+
+    # Cap par catégorie
+    backbones = backbones[:max_backbones]
+    subnets = subnets[:max_subnets]
+
+    # Compose le résultat ordonné par priorité doctrinale :
+    #   backbone > subnet > other (corridors non fusionnés) > isolated > connector
+    result = list(backbones) + list(subnets)
+
+    # Si on n'a pas encore atteint max_total, ajouter les "others" (corridors organiques
+    # non capturés par la fusion par cluster — typiquement plusieurs zones distinctes)
+    remaining_slots = max_total - len(result)
+    if remaining_slots > 0 and others:
+        # Tri par intensité, on prend les meilleurs others
+        result.extend(others[:remaining_slots])
+        remaining_slots = max_total - len(result)
+
+    # Reste-t-il de la place pour isolés / connectors ?
+    if remaining_slots > 0 and isolated and not drop_isolated_first:
+        result.extend(isolated[:remaining_slots])
+        remaining_slots = max_total - len(result)
+    if remaining_slots > 0 and connectors and not drop_connectors_if_over:
+        result.extend(connectors[:remaining_slots])
+        remaining_slots = max_total - len(result)
+
+    # Sanity final : tronquer à max_total au cas où
+    capped = result[:max_total]
+
+    # Stats après cap
+    n_after_by_role = {"backbone": 0, "subnet": 0, "isolated": 0, "connector": 0, "other": 0}
+    for c in capped:
+        role = c.get("subnet_role") or c.get("type") or "other"
+        if role == "connector":
+            n_after_by_role["connector"] += 1
+        elif role in n_after_by_role:
+            n_after_by_role[role] += 1
+        else:
+            n_after_by_role["other"] += 1
+
+    cap_summary = {
+        "applied": True,
+        "doctrine": "P22Σ_V5_CAP_GLOBAL_TERRITOIRE",
+        "max_backbones": max_backbones,
+        "max_subnets": max_subnets,
+        "max_total_corridors": max_total,
+        "drop_isolated_first": drop_isolated_first,
+        "drop_connectors_if_over": drop_connectors_if_over,
+        "n_corridors_before_cap": n_before,
+        "n_corridors_after_cap": len(capped),
+        "before_by_role": n_before_by_role,
+        "after_by_role": n_after_by_role,
+        "dropped": n_before - len(capped),
+    }
+    return capped, cap_summary
 
 
 def _enrich_intensity(corridor: dict, fusion_count: int = 1) -> dict:

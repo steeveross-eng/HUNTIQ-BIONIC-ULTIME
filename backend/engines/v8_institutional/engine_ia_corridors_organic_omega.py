@@ -1164,8 +1164,25 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
 
             cascade_pondere_applied = True
         except Exception as e:
-            logger.warning("CASCADE_PONDÉRÉ failed: %s", e)
+            print(f"[CASCADE_PONDÉRÉ] failed: {e}")
             cascade_stages.append({"stage": "ERROR", "error": str(e)})
+
+    # ═════════════════════════════════════════════════════════════
+    # P22Σ_V5 — CAP GLOBAL TERRITOIRE (2026-05-12 · COMMANDANT STEEVE-MAX)
+    # ═════════════════════════════════════════════════════════════
+    # Limite le nombre total de corridors à 5-7 pour tout le territoire
+    # (600m + 30%). S'applique APRÈS toutes les phases (fusion, cascade, etc.)
+    # uniquement en mode TERRITORY_CONTINUOUS.
+    cap_global_applied = False
+    cap_global_stats: dict[str, Any] = {}
+    if (anchor_mode or "AUTO").upper() == "TERRITORY_CONTINUOUS" and corridors_full:
+        try:
+            from engines.post_smoothing.corridors_fusion_omega import cap_global_corridors
+            corridors_full, cap_global_stats = cap_global_corridors(corridors_full)
+            cap_global_applied = True
+        except Exception as e:
+            print(f"[CAP_GLOBAL] failed: {e}")
+            cap_global_stats = {"applied": False, "error": str(e)}
 
     # Summary hiérarchie
     hierarchy_counts = {"veine_principale": 0, "veine_secondaire": 0, "capillaire": 0, "connector": 0}
@@ -1204,6 +1221,13 @@ async def generate_organic_corridors(lat: float, lon: float, species: str,
             "fusion_applied": fusion_applied,
             "fusion_summary": fusion_stats if fusion_applied else None,
             "doctrine": "P22Σ_V3_FUSION_VEINEUSE_Ω",
+            "activation_rule": "anchor_mode == TERRITORY_CONTINUOUS",
+        },
+        # P22Σ_V5 (2026-05-12 · COMMANDANT STEEVE-MAX) — CAP GLOBAL TERRITOIRE
+        "p22sigma_v5_cap_global_doctrine": {
+            "cap_global_applied": cap_global_applied,
+            "cap_global_summary": cap_global_stats if cap_global_applied else None,
+            "doctrine": "P22Σ_V5_CAP_GLOBAL_TERRITOIRE",
             "activation_rule": "anchor_mode == TERRITORY_CONTINUOUS",
         },
         # P22M (2026-05-10 · COMMANDANT STEEVE-MAX) — traçabilité densification ×3

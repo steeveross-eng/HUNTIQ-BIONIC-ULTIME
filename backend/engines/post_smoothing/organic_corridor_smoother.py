@@ -780,6 +780,32 @@ async def generate_smoothed(request: Request):
     if isinstance(payload, dict):
         payload = smooth_bundle(payload)
 
+    # ═══════════════════════════════════════════════════════════════════════
+    # P22Σ_V5 — CAP GLOBAL TERRITOIRE FINAL (post-smoother)
+    # (2026-05-12 · COMMANDANT STEEVE-MAX)
+    # Le smoother injecte des external_inflow_entry_node_* après notre cap
+    # initial dans generate_organic_corridors. On ré-applique le cap final
+    # ici pour garantir que TOTAL des corridors retournés ≤ CAP_MAX_TOTAL.
+    # Activation uniquement en mode TERRITORY_CONTINUOUS.
+    # ═══════════════════════════════════════════════════════════════════════
+    if (isinstance(payload, dict)
+            and body.get("anchor_mode", "AUTO").upper() == "TERRITORY_CONTINUOUS"
+            and payload.get("corridors")):
+        try:
+            from engines.post_smoothing.corridors_fusion_omega import cap_global_corridors
+            capped, cap_stats = cap_global_corridors(payload["corridors"])
+            payload["corridors"] = capped
+            payload["corridors_count"] = len(capped)
+            payload["p22sigma_v5_cap_post_smoother"] = {
+                "applied": True,
+                "doctrine": "P22Σ_V5_CAP_GLOBAL_POST_SMOOTHER",
+                "summary": cap_stats,
+            }
+        except Exception as _cap_e:  # pragma: no cover
+            payload["p22sigma_v5_cap_post_smoother"] = {
+                "applied": False, "error": str(_cap_e),
+            }
+
     return JSONResponse(payload)
 
 
