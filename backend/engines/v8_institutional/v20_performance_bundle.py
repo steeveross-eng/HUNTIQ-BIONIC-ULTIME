@@ -199,13 +199,25 @@ _WARMUP_SEMAPHORE = asyncio.Semaphore(4)  # 4 parallel computes max
 
 
 async def _warmup_single(lat: float, lon: float, species: str = "cerf"):
-    """Compute + cache un seul waypoint."""
+    """Compute + cache un seul waypoint avec params temporels DYNAMIQUES.
+
+    P22Σ_V5_PRECHAUFFAGE_DYNAMIQUE_Ω · 2026-05-12T21:40Z · COMMANDANT STEEVE-MAX
+    Utilise month/hour ACTUELS au lieu de hardcoded (10, 7) pour que la cache
+    key match les requêtes frontend (qui envoient month/hour actuels via
+    new Date().getUTCMonth()+1 et getUTCHours()).
+    """
     from engines.v8_institutional.territoire_v10_supra import compute_territoire_v10
     try:
         async with _WARMUP_SEMAPHORE:
             now = time.time()
-            result = await compute_territoire_v10(lat, lon, species, 10, 7, 225.0, 15.0)
-            key = _cache_key(lat, lon, species, 10, 7, 225.0)
+            from datetime import datetime, timezone as _tz
+            _dt = datetime.now(_tz.utc)
+            _month = _dt.month
+            _hour = _dt.hour
+            # Normalize species pour aligner avec le frontend (cerf → chevreuil)
+            _species = SPECIES_ALIAS_TO_CANONICAL.get(species.lower(), species)
+            result = await compute_territoire_v10(lat, lon, _species, _month, _hour, 225.0, 15.0)
+            key = _cache_key(lat, lon, _species, _month, _hour, 225.0)
             _cache_set(key, result)
             return time.time() - now
     except Exception as e:
@@ -251,15 +263,20 @@ async def run_prechauffage_omega(limit: int = 200):
         if not waypoints:
             logger.info("[V20-WARMUP] Aucun waypoint a precharger")
             return {"warmed": 0, "elapsed_s": 0}
-        # Deduplication par cle quantifiee
+        # Deduplication par cle quantifiee (params temporels DYNAMIQUES)
+        from datetime import datetime, timezone as _tz
+        _dt_now = datetime.now(_tz.utc)
+        _m_now = _dt_now.month
+        _h_now = _dt_now.hour
         seen = set()
         unique = []
         for lat, lon, sp in waypoints:
-            k = _cache_key(lat, lon, sp, 10, 7, 225.0)
+            sp_norm = SPECIES_ALIAS_TO_CANONICAL.get(sp.lower(), sp)
+            k = _cache_key(lat, lon, sp_norm, _m_now, _h_now, 225.0)
             if k not in seen and _cache_get(k) is None:
                 seen.add(k)
-                unique.append((lat, lon, sp))
-        logger.info(f"[V20-WARMUP] Demarrage prechauffage: {len(unique)} waypoints (sur {len(waypoints)} retrouves)")
+                unique.append((lat, lon, sp_norm))
+        logger.info(f"[V20-WARMUP] Demarrage prechauffage: {len(unique)} waypoints (sur {len(waypoints)} retrouves) — month={_m_now} hour={_h_now}")
         # Lance en parallele (semaphore limite la concurrence a 8)
         tasks = [_warmup_single(lat, lon, sp) for lat, lon, sp in unique]
         results = await asyncio.gather(*tasks, return_exceptions=True)

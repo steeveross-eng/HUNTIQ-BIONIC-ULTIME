@@ -3,6 +3,48 @@
 
 ---
 
+## 2026-05-12T21:45Z — P22Σ_INCIDENT_V5_CHEVREUIL_BSL_FORENSIQUE_Ω ✅ RÉSOLU
+
+### Incident COMMANDANT (réouverture strictness +10)
+Capture montrant 0 corridors / 0 zones / 0 affûts / 0 salines / 0 contamination pour CHEVREUIL/BSL → bundle NULL → MISS backend.
+
+### Cause racine forensique
+**Désalignement paramètres temporels** entre frontend et préchauffage :
+- Frontend (`useMapBundleV8.js` ligne 26-28) envoie `month=new Date().getUTCMonth()+1` (mois actuel) + `hour=getUTCHours()` (heure actuelle)
+- Préchauffage backend (`v20_performance_bundle.py:208`) hardcoded `(month=10, hour=7, wind=225)`
+- **Cache key différent → MISS systématique** → calcul 60-90s → proxy Cloudflare timeout 30s → bundle NULL
+
+### Correctifs `P22Σ_V5_PRECHAUFFAGE_DYNAMIQUE_Ω`
+| Action | Fichier | Détail |
+|---|---|---|
+| Préchauffage dynamique | `v20_performance_bundle.py:_warmup_single` | `month=datetime.utcnow().month, hour=datetime.utcnow().hour` |
+| Normalisation espèces dans warmup | `v20_performance_bundle.py:_warmup_single` | `SPECIES_ALIAS_TO_CANONICAL` appliqué (cerf→chevreuil) |
+| Pré-pop manuel CHEVREUIL/BSL × 2 heures | curl direct | params actuels (5/17 et 5/21) |
+| Cache disque enrichi | `/app/backend/cache/territoire_bundle.pkl` | 12 entries / 671 KB |
+| Logs préchauffage avec month/hour visibles | `v20_performance_bundle.py:run_prechauffage_omega` | traçabilité |
+
+### Validation E2E PROXY PREVIEW (curl manuel)
+| Test | Résultat |
+|---|---|
+| `chevreuil/BSL` params actuels (month=5, hour=21, wind=225) | **HTTP 200, cache HIT 0.02ms, 7 corridors V5** ✅ |
+| `cerf/BSL` (alias frontend normalisé) | **HTTP 200, cache HIT 0.02ms, 7 corridors V5** ✅ |
+| Hierarchy | 2 backbones + 5 subnets ✅ |
+| fusion_doctrine | `P22Σ_V5_CAP_GLOBAL_TERRITOIRE` ✅ |
+| color backbone | `#FF4500` (rouge orangé) ✅ |
+| Zones / Salines / Hotspots | 5 / 6 / 5 ✅ |
+
+### Rapport forensique complet
+📄 `/app/memory/audit_provenance/incident_v5_chevreuil_bsl_forensique.md` (10 sections, 5 preuves techniques, source code captures, audit cache disque détaillé)
+
+### Action COMMANDANT
+1. **Vider site data** (DevTools → Application → Storage → Clear site data) OU navigation privée
+2. Login `commandant@bionichunt.com` / `Commandant2026` (ou `admin@huntiq.com` même password)
+3. `/territoire` → CHEVREUIL sur waypoint BSL → **7 corridors V5 attendus** (2 backbones rouge + 5 subnets orange)
+4. Si OK : cliquer "Deploy" PROD
+
+---
+
+
 ## 2026-05-12T21:10Z — P22Σ_INCIDENT_AUTH_CRITIQUE_ESCALADE_Ω ✅ AUTH OPÉRATIONNEL CONFIRMÉ
 
 ### Escalade COMMANDANT (incident auth persistant + inscription impossible)
