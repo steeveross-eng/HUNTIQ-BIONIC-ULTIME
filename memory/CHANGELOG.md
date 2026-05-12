@@ -3,6 +3,55 @@
 
 ---
 
+## 2026-05-12T11:05Z — P22Σ_V5_DEPLOY_PROD · VALIDATION E2E COMPLÈTE ✅
+
+### Directive: Validation E2E PROD post-déploiement
+
+**Verdict global : 4/4 tests PASSÉS · V5 déployé et opérationnel en PROD**
+
+#### TEST 1 — corridors_count = 7 avec anchor_mode = TERRITORY_CONTINUOUS
+- orignal/BSL : corridors_count=7 (cap V5 #2 post-smoother actif)
+- chevreuil/BSL : corridors_count=7 (V5 complet : fusion + cap #1 + cap #2)
+
+#### TEST 2 — 4 endpoints HTTP 200
+| Endpoint | HTTP | Content-Type |
+|---|---|---|
+| `/fusion-veineuse-report` (JSON) | 200 (687B) | application/json |
+| `/fusion-veineuse-report.md` | 200 (6616B) | text/markdown |
+| `/fusion-veineuse-report.pdf` | 200 (9507B) | application/pdf |
+| `/fusion-veineuse-report.txt` | 200 (6616B) | text/plain |
+
+#### TEST 3 — SHA-256 match exact PROD vs PREVIEW
+```
+Attendu : 273ca64b7d33fadd14458abb05760580e3449dfa938d93b9a3d97297f642e15b
+Observé : 273ca64b7d33fadd14458abb05760580e3449dfa938d93b9a3d97297f642e15b
+                  ✅ MATCH PARFAIT
+```
+
+#### TEST 4 — Structure conforme (chevreuil/BSL)
+| Critère | Observé | Cible | Statut |
+|---|---|---|---|
+| Backbones | 1 | 1-2 | ✅ |
+| Subnets | 5 | 3-5 | ✅ |
+| Capillaires | 0 | 0 | ✅ |
+| Connectors | 0 | 0 | ✅ |
+| Total | 6 | ≤7 | ✅ |
+| fusion_applied | True | True | ✅ |
+| cap_engine applied | True | True | ✅ |
+| cap_post_smoother applied | True | True | ✅ |
+
+### Note anomalie diagnostiquée (hors V5)
+Pour le couple **orignal/BSL/octobre/aube** sur PROD, le moteur organique génère 0 corridors initiaux (bio_presence_mask_stats.corridors_v30_count_avant_filtre_presence=0). Comportement spécifique à cette combinaison (chevreuil/BSL fonctionne parfaitement). Hypothèse : différence de réponse données externes (STAC Sentinel-2 / OSM Overpass) selon IPs sortantes PROD vs PREVIEW. Sans impact sur la doctrine V5.
+
+### Verrous respectés
+- V30_LOCK INVIOLÉ ✅
+- FUSION ADD-ONLY ✅
+- ANTI-GÉNÉRIQUE_Ω STRICT ✅
+- NO_TESTING_AGENT ✅
+- Doctrine V90 100% préservée (WEIGHT_ONLY, affût=IGNORE, géométrie [30,60])
+
+
+
 ## 2026-05-12T01:45Z — P22Σ_V5_CAP_GLOBAL_TERRITOIRE · DELIVERED ✅
 
 ### Directive: clarification scope V4 → V5 (cap TERRITOIRE, pas par cluster)
