@@ -192,9 +192,10 @@ def _cache_load_disk():
 
 # ═══ PRECHAUFFAGE-Omega WORKER ═══
 _WARMUP_LOCK = asyncio.Lock()
-# P22Σ_PRECHAUFFAGE_Ω · 2026-05-12T14:45Z · COMMANDANT STEEVE-MAX
-# Extension à 500 waypoints + parallel semaphore 16 (vs 8 antérieur)
-_WARMUP_SEMAPHORE = asyncio.Semaphore(16)  # 16 parallel computes max
+# P22Σ_PRECHAUFFAGE_Ω_PROGRESSIF · 2026-05-12T18:55Z · COMMANDANT STEEVE-MAX
+# Préchauffage progressif réactivé : 50 waypoints, semaphore 4
+# (vs 500/16 antérieur qui saturait Open-Meteo)
+_WARMUP_SEMAPHORE = asyncio.Semaphore(4)  # 4 parallel computes max
 
 
 async def _warmup_single(lat: float, lon: float, species: str = "cerf"):
@@ -289,12 +290,12 @@ async def _ensure_lazy_init():
         _LAZY_INIT_DONE = True
         loaded = _cache_load_disk()
         logger.info(f"[V20-LAZY-INIT] {loaded} entries loaded from disk")
-        # P22Σ_PRECHAUFFAGE_Ω · DÉSACTIVÉ TEMPORAIREMENT (P22Σ_SPECIES_NORMALIZATION_Ω)
-        # asyncio.create_task(run_prechauffage_omega(limit=200))
-        # asyncio.create_task(_periodic_refresh_daemon())
+        # P22Σ_STABILISATION_Ω_PROGRESSIF · 50 waypoints + semaphore 4 + circuit breaker
+        asyncio.create_task(run_prechauffage_omega(limit=50))
+        asyncio.create_task(_periodic_refresh_daemon())
         # P22Ω.V5_COMPLIANCE_MONITOR_Ω · cron horaire alerte Resend
-        # asyncio.create_task(_v5_compliance_monitor_daemon())
-        logger.info("[V20-LAZY-INIT] PRECHAUFFAGE + MONITOR daemons disabled for V5 stabilization")
+        asyncio.create_task(_v5_compliance_monitor_daemon())
+        logger.info("[V20-LAZY-INIT] PROGRESSIF MODE: warmup 50 sem=4 + monitor scheduled")
 
 
 # ═══ LIFESPAN HOOKS (called from server.py startup/shutdown) ═══
@@ -302,11 +303,11 @@ async def v20_startup():
     """Called by server.py on app startup."""
     loaded = _cache_load_disk()
     logger.info(f"[V20-PERFORMANCE] Startup: {loaded} entries loaded from disk")
-    # P22Σ_PRECHAUFFAGE_Ω · DÉSACTIVÉ pour stabilisation V5 (2026-05-12T18:30Z)
-    # asyncio.create_task(run_prechauffage_omega(limit=200))
-    # asyncio.create_task(_periodic_refresh_daemon())
-    # asyncio.create_task(_v5_compliance_monitor_daemon())
-    logger.info("[V20-PERFORMANCE] Background daemons disabled — V5 stabilization mode")
+    # P22Σ_STABILISATION_Ω_PROGRESSIF · daemons réactivés mode progressif
+    asyncio.create_task(run_prechauffage_omega(limit=50))
+    asyncio.create_task(_periodic_refresh_daemon())
+    asyncio.create_task(_v5_compliance_monitor_daemon())
+    logger.info("[V20-PERFORMANCE] PROGRESSIF MODE: warmup 50 + monitor scheduled")
 
 
 async def v20_shutdown():
@@ -320,8 +321,8 @@ async def _periodic_refresh_daemon():
         try:
             await asyncio.sleep(3600)
             logger.info("[V20-WARMUP-DAEMON] Tick horaire — refresh + disk save")
-            # P22Σ_PRECHAUFFAGE_Ω · 500 waypoints
-            await run_prechauffage_omega(limit=200)
+            # P22Σ_PRECHAUFFAGE_Ω_PROGRESSIF · 50 waypoints
+            await run_prechauffage_omega(limit=50)
         except Exception as e:
             logger.warning(f"[V20-WARMUP-DAEMON] Error: {e}")
 
@@ -453,8 +454,10 @@ def _v5_journal_append(entry: dict) -> None:
 
 async def _v5_compliance_monitor_daemon():
     """Daemon: vérifie la conformité V5 toutes les heures + alerte si FAIL."""
-    # Délai initial 60s pour laisser le startup se terminer
-    await asyncio.sleep(60)
+    # P22Σ_STABILISATION_Ω_PROGRESSIF · Délai initial 1h pour ne pas saturer
+    # le worker async au démarrage. Premier tick = startup + 1h.
+    # Le COMMANDANT peut forcer un tick immédiat via POST /v5-monitor-tick.
+    await asyncio.sleep(_V5_MONITOR_INTERVAL_SEC)
     while True:
         try:
             t0 = time.time()
@@ -792,7 +795,7 @@ async def v20_bundle_stats():
         "warmup_runs": _STATS["warmup_runs"],
         "warmup_last_count": _STATS["warmup_last_count"],
         "warmup_last_ms": _STATS["warmup_last_ms"],
-        "warmup_semaphore_max": 16,
+        "warmup_semaphore_max": 4,
         "redis_omega": redis_stats(),
     }
 
@@ -996,6 +999,12 @@ async def v20_audit_v5_compliance_live(
 async def v20_audit_v5_monitor_stats(response: Response):
     """État du monitoring V5 (cron horaire)."""
     response.headers["Cache-Control"] = "no-cache, no-store"
+    # P22Σ_CIRCUIT_BREAKER_Ω · état Open-Meteo circuit breaker
+    try:
+        from engines.v8_institutional.lidar_irda_v11 import get_circuit_breaker_state
+        cb = get_circuit_breaker_state()
+    except Exception:
+        cb = None
     return {
         "doctrine": "P22Ω.V5_COMPLIANCE_MONITOR_Ω",
         "interval_sec": _V5_MONITOR_INTERVAL_SEC,
@@ -1006,6 +1015,7 @@ async def v20_audit_v5_monitor_stats(response: Response):
         "journal_file": str(_V5_MONITOR_LOG_FILE),
         "journal_exists": _V5_MONITOR_LOG_FILE.exists(),
         "stats": _V5_MONITOR_STATS,
+        "open_meteo_circuit_breaker": cb,
     }
 
 

@@ -3,6 +3,54 @@
 
 ---
 
+## 2026-05-12T19:15Z — P22Σ_INCIDENT_V5_BUNDLE_NULL_Ω ✅ RÉSOLU
+
+### Incident COMMANDANT
+Screenshot TERRITOIRE Ω avec banner "RECOVERY_Ω — purge caches" + carte vide pour CHEVREUIL/BSL → bundle V5 null + MISS backend.
+
+### Cause racine 4-couches
+1. **10 modules Python frappaient Open-Meteo en parallèle** → vague HTTP 429
+2. **Single-worker uvicorn** bloqué 60-120s sur retries → proxy Cloudflare timeout 60s → HTTP 502 frontend
+3. **TTL cache stale** : bundles V4 pré-V5_REWIRE servis depuis disque
+4. **Préchauffage 500 ws / semaphore 16** saturait Open-Meteo en cascade
+
+### Correctifs `P22Σ_OPEN_METEO_CB_GLOBAL_Ω`
+| Fichier | Action |
+|---|---|
+| `engines/v8_institutional/open_meteo_breaker.py` | **NOUVEAU** module shared circuit breaker (is_open/record_error/get_state/safe_get) |
+| `lidar_irda_v11.py` | Délègue circuit breaker au module global |
+| `terrain_v10_supra.py` | Skip elevation+meteo si circuit OPEN, timeouts 12-15s → 5s |
+| `terrain_hr_omega/__init__.py` | Skip Open-Meteo si OPEN |
+| `v20_performance_bundle.py` | Préchauffage 500→50, semaphore 16→4, V5 monitor delay 60s→3600s |
+| `v20_performance_bundle.py` | Exposition `open_meteo_circuit_breaker` dans `/v5-monitor-stats` |
+
+### Validation PREVIEW (curl manuel)
+| Test | Résultat |
+|---|---|
+| `chevreuil/BSL` HIT | **HTTP 200, served_ms=0.02, 7 corridors V5 (2 backbones + 5 subnets)** ✅ |
+| `orignal/BSL` HIT | **HTTP 200, served_ms=0.01, 7 corridors V5** ✅ |
+| Cache disque persisté | **357 KB / 7 entries V5** ✅ |
+| Circuit breaker state | `is_open=false` ✅ |
+| V5_BUNDLE_REWIRE applied | `true` sur tous les bundles ✅ |
+| `fusion_doctrine` | `P22Σ_V5_CAP_GLOBAL_TERRITOIRE` ✅ |
+
+### État backend post-correctifs
+- ✅ Backend uvicorn RUNNING
+- ✅ Cache disque persistant 7 entries V5
+- ✅ Préchauffage actif (mode progressif 50 ws / sem 4)
+- ✅ V5 monitor scheduled (tick 1h delay pour éviter saturation au boot)
+- ✅ Circuit breaker SHARED actif entre 3 engines critiques
+
+### Rapport complet
+📄 `/app/memory/audit_provenance/incident_v5_bundle_null.md` (300 lignes, 9 sections, doctrine, payload preuves, procédure validation visuelle).
+
+**Action COMMANDANT** :
+1. Tester `/territoire` avec CHEVREUIL au BSL → vérifier 7 corridors visibles (2 backbones rouge + 5 subnets orange)
+2. Si OK : cliquer "Deploy" pour propager PREVIEW → PROD
+
+---
+
+
 ## 2026-05-12T18:35Z — P22Σ_AUDIT_TERRITOIRE_NON_CONFORMITE_Ω ✅
 
 ### Demande COMMANDANT STEEVE-MAX

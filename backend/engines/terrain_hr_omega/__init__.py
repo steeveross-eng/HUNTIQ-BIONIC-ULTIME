@@ -184,26 +184,38 @@ def fetch_elevation_grid_open_meteo(lat: float, lon: float,
         for j, lo in enumerate(lons):
             pts.append((i, j, float(la), float(lo)))
 
-    for chunk_start in range(0, len(pts), 100):
-        chunk = pts[chunk_start:chunk_start + 100]
-        lats_str = ",".join(f"{p[2]:.5f}" for p in chunk)
-        lons_str = ",".join(f"{p[3]:.5f}" for p in chunk)
-        try:
-            with httpx.Client(timeout=DEFAULT_TIMEOUT_S) as client:
-                r = client.get(OPENMETEO_ELEVATION,
-                                params={"latitude": lats_str, "longitude": lons_str})
-                r.raise_for_status()
-                data = r.json()
-                elevs = data.get("elevation", [])
-                if not isinstance(elevs, list):
-                    elevs = [elevs]
-                for k, (i, j, _, _) in enumerate(chunk):
-                    if k < len(elevs):
-                        grid[i, j] = float(elevs[k])
-        except Exception as e:
-            logger.warning("[%s] open-meteo chunk failed: %s", ENGINE_NAME, e)
-            available = False
-            break
+    # P22Σ_OPEN_METEO_CB_GLOBAL_Ω — skip si circuit OPEN
+    try:
+        from engines.v8_institutional.open_meteo_breaker import is_open as _cb_is_open
+        from engines.v8_institutional.open_meteo_breaker import record_error as _cb_record_error
+    except Exception:
+        _cb_is_open = lambda: False
+        _cb_record_error = lambda: None
+
+    if _cb_is_open():
+        available = False
+    else:
+        for chunk_start in range(0, len(pts), 100):
+            chunk = pts[chunk_start:chunk_start + 100]
+            lats_str = ",".join(f"{p[2]:.5f}" for p in chunk)
+            lons_str = ",".join(f"{p[3]:.5f}" for p in chunk)
+            try:
+                with httpx.Client(timeout=5.0) as client:
+                    r = client.get(OPENMETEO_ELEVATION,
+                                    params={"latitude": lats_str, "longitude": lons_str})
+                    r.raise_for_status()
+                    data = r.json()
+                    elevs = data.get("elevation", [])
+                    if not isinstance(elevs, list):
+                        elevs = [elevs]
+                    for k, (i, j, _, _) in enumerate(chunk):
+                        if k < len(elevs):
+                            grid[i, j] = float(elevs[k])
+            except Exception as e:
+                _cb_record_error()
+                logger.warning("[%s] open-meteo chunk failed: %s", ENGINE_NAME, e)
+                available = False
+                break
 
     return {
         "source": "OPEN_METEO_ELEVATION",

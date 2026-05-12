@@ -38,6 +38,48 @@ ELEVATION_API = "https://api.open-meteo.com/v1/elevation"
 _lidar_cache = {}
 _CACHE_TTL = 600
 
+# ═══════════════════════════════════════════════════════════════════════
+# P22Σ_OPEN_METEO_CIRCUIT_BREAKER_Ω · 2026-05-12T18:50Z · COMMANDANT STEEVE-MAX
+# ═══════════════════════════════════════════════════════════════════════
+# Circuit breaker pour Open-Meteo API (rate limit 429).
+# Si N erreurs HTTP 429 dans la dernière minute → OPEN circuit pour 5min.
+# Pendant le circuit OPEN, retourne fallback (elevations=[0]*N) sans appel API.
+# ═══════════════════════════════════════════════════════════════════════
+_CIRCUIT_BREAKER_STATE = {
+    "errors_recent": [],   # liste de timestamps des erreurs récentes
+    "open_until": 0,        # timestamp jusqu'auquel le circuit est OPEN
+    "error_threshold": 5,   # nb erreurs avant OPEN
+    "window_sec": 60,        # fenêtre d'évaluation
+    "cooldown_sec": 300,    # durée OPEN
+}
+
+
+def _circuit_is_open() -> bool:
+    """True si circuit breaker OPEN (skip API). Délègue au breaker GLOBAL."""
+    try:
+        from engines.v8_institutional.open_meteo_breaker import is_open
+        return is_open()
+    except Exception:
+        return False
+
+
+def _circuit_record_error() -> None:
+    """Enregistre une erreur API. Délègue au breaker GLOBAL."""
+    try:
+        from engines.v8_institutional.open_meteo_breaker import record_error
+        record_error()
+    except Exception:
+        pass
+
+
+def get_circuit_breaker_state() -> dict:
+    """Retourne l'état du circuit breaker (pour /api/v20/audit/circuit-breaker)."""
+    try:
+        from engines.v8_institutional.open_meteo_breaker import get_state
+        return get_state()
+    except Exception:
+        return {"is_open": False, "error": "shared_breaker_unavailable"}
+
 
 async def fetch_lidar_mnt(lat, lon, radius_m=500):
     """Ingestion LiDAR WCS 1m via WMS Foret Ouverte Quebec.
@@ -65,25 +107,30 @@ async def fetch_lidar_mnt(lat, lon, radius_m=500):
     # Fetch via Open-Meteo Elevation (SRTM 90m interpole, meilleur que rien)
     # En production: remplacer par WCS Foret Ouverte direct pour 1m
     elevations = []
-    try:
-        # Batch de 50 max par requete Open-Meteo
-        batch_size = 50
-        for b_start in range(0, len(lats), batch_size):
-            b_lats = lats[b_start:b_start + batch_size]
-            b_lons = lons[b_start:b_start + batch_size]
-
-            async with httpx.AsyncClient(timeout=15) as client:
-                r = await client.get(ELEVATION_API, params={
-                    "latitude": ",".join(str(l) for l in b_lats),
-                    "longitude": ",".join(str(l) for l in b_lons),
-                })
-                r.raise_for_status()
-                batch_elevs = r.json().get("elevation", [])
-                elevations.extend(batch_elevs)
-
-    except Exception as e:
-        logger.warning(f"LiDAR fetch error: {e}")
+    # P22Σ_CIRCUIT_BREAKER_Ω — skip API si circuit OPEN
+    if _circuit_is_open():
         elevations = [0] * len(lats)
+    else:
+        try:
+            # Batch de 50 max par requete Open-Meteo
+            batch_size = 50
+            for b_start in range(0, len(lats), batch_size):
+                b_lats = lats[b_start:b_start + batch_size]
+                b_lons = lons[b_start:b_start + batch_size]
+
+                async with httpx.AsyncClient(timeout=5) as client:
+                    r = await client.get(ELEVATION_API, params={
+                        "latitude": ",".join(str(l) for l in b_lats),
+                        "longitude": ",".join(str(l) for l in b_lons),
+                    })
+                    r.raise_for_status()
+                    batch_elevs = r.json().get("elevation", [])
+                    elevations.extend(batch_elevs)
+
+        except Exception as e:
+            _circuit_record_error()
+            logger.warning(f"LiDAR fetch error: {e}")
+            elevations = [0] * len(lats)
 
     # Construction grille 2D
     grid_2d = []
@@ -201,30 +248,35 @@ async def fetch_irda_pedologie(lat, lon):
         return c["d"]
 
     # Fetch donnees meteo sol reelles
-    try:
-        async with httpx.AsyncClient(timeout=10) as client:
-            r = await client.get("https://api.open-meteo.com/v1/forecast", params={
-                "latitude": lat, "longitude": lon,
-                "hourly": "soil_moisture_0_to_1cm,soil_moisture_1_to_3cm,soil_temperature_0cm,precipitation",
-                "forecast_days": 2,
-            })
-            r.raise_for_status()
-            data = r.json()
-            hourly = data.get("hourly", {})
-
-            sm_0_1 = hourly.get("soil_moisture_0_to_1cm", [])
-            sm_1_3 = hourly.get("soil_moisture_1_to_3cm", [])
-            soil_temp = hourly.get("soil_temperature_0cm", [])
-            precip = hourly.get("precipitation", [])
-
-            avg_sm = sum(sm_0_1[:24]) / max(1, len(sm_0_1[:24])) if sm_0_1 else 0.3
-            avg_sm_deep = sum(sm_1_3[:24]) / max(1, len(sm_1_3[:24])) if sm_1_3 else 0.3
-            avg_temp = sum(soil_temp[:24]) / max(1, len(soil_temp[:24])) if soil_temp else 10
-            total_precip = sum(precip[:48]) if precip else 0
-
-    except Exception as e:
-        logger.warning(f"IRDA soil fetch error: {e}")
+    # P22Σ_CIRCUIT_BREAKER_Ω — skip API si circuit OPEN
+    if _circuit_is_open():
         avg_sm, avg_sm_deep, avg_temp, total_precip = 0.3, 0.3, 10, 0
+    else:
+        try:
+            async with httpx.AsyncClient(timeout=5) as client:
+                r = await client.get("https://api.open-meteo.com/v1/forecast", params={
+                    "latitude": lat, "longitude": lon,
+                    "hourly": "soil_moisture_0_to_1cm,soil_moisture_1_to_3cm,soil_temperature_0cm,precipitation",
+                    "forecast_days": 2,
+                })
+                r.raise_for_status()
+                data = r.json()
+                hourly = data.get("hourly", {})
+
+                sm_0_1 = hourly.get("soil_moisture_0_to_1cm", [])
+                sm_1_3 = hourly.get("soil_moisture_1_to_3cm", [])
+                soil_temp = hourly.get("soil_temperature_0cm", [])
+                precip = hourly.get("precipitation", [])
+
+                avg_sm = sum(sm_0_1[:24]) / max(1, len(sm_0_1[:24])) if sm_0_1 else 0.3
+                avg_sm_deep = sum(sm_1_3[:24]) / max(1, len(sm_1_3[:24])) if sm_1_3 else 0.3
+                avg_temp = sum(soil_temp[:24]) / max(1, len(soil_temp[:24])) if soil_temp else 10
+                total_precip = sum(precip[:48]) if precip else 0
+
+        except Exception as e:
+            _circuit_record_error()
+            logger.warning(f"IRDA soil fetch error: {e}")
+            avg_sm, avg_sm_deep, avg_temp, total_precip = 0.3, 0.3, 10, 0
 
     # Classification drainage IRDA depuis soil_moisture reel
     if avg_sm < 0.15:
@@ -288,43 +340,48 @@ async def compute_terrain_v11(lat, lon):
     irda = await fetch_irda_pedologie(lat, lon)
 
     # Meteo complete
-    try:
-        async with httpx.AsyncClient(timeout=10) as client:
-            r = await client.get("https://api.open-meteo.com/v1/forecast", params={
-                "latitude": lat, "longitude": lon,
-                "current": "temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,precipitation,cloud_cover,pressure_msl",
-                "hourly": "direct_radiation,diffuse_radiation,snow_depth,visibility,cape",
-                "forecast_days": 1,
-            })
-            r.raise_for_status()
-            meteo_raw = r.json()
-            current = meteo_raw.get("current", {})
-            hourly = meteo_raw.get("hourly", {})
+    # P22Σ_CIRCUIT_BREAKER_Ω — skip API si circuit OPEN
+    if _circuit_is_open():
+        meteo = {"error": "circuit_breaker_open", "source": "FALLBACK"}
+    else:
+        try:
+            async with httpx.AsyncClient(timeout=5) as client:
+                r = await client.get("https://api.open-meteo.com/v1/forecast", params={
+                    "latitude": lat, "longitude": lon,
+                    "current": "temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,precipitation,cloud_cover,pressure_msl",
+                    "hourly": "direct_radiation,diffuse_radiation,snow_depth,visibility,cape",
+                    "forecast_days": 1,
+                })
+                r.raise_for_status()
+                meteo_raw = r.json()
+                current = meteo_raw.get("current", {})
+                hourly = meteo_raw.get("hourly", {})
 
-            def _avg(a, n=6):
-                s = a[:n]
-                return round(sum(s)/max(1,len(s)), 3) if s else None
+                def _avg(a, n=6):
+                    s = a[:n]
+                    return round(sum(s)/max(1,len(s)), 3) if s else None
 
-            meteo = {
-                "wind": {
-                    "speed_kmh": current.get("wind_speed_10m", 0),
-                    "direction_deg": current.get("wind_direction_10m", 0),
-                    "gusts_kmh": current.get("wind_gusts_10m", 0),
-                },
-                "temperature_c": current.get("temperature_2m", 10),
-                "humidity_pct": current.get("relative_humidity_2m", 50),
-                "precipitation_mm": current.get("precipitation", 0),
-                "cloud_cover_pct": current.get("cloud_cover", 50),
-                "pressure_hpa": current.get("pressure_msl", 1013),
-                "radiation_direct": _avg(hourly.get("direct_radiation", [])),
-                "snow_depth_m": _avg(hourly.get("snow_depth", [])),
-                "visibility_m": _avg(hourly.get("visibility", [])),
-                "cape_jkg": _avg(hourly.get("cape", [])),
-                "source": "OPEN-METEO-REEL",
-            }
-    except Exception as e:
-        logger.warning(f"Meteo V11 error: {e}")
-        meteo = {"error": str(e)}
+                meteo = {
+                    "wind": {
+                        "speed_kmh": current.get("wind_speed_10m", 0),
+                        "direction_deg": current.get("wind_direction_10m", 0),
+                        "gusts_kmh": current.get("wind_gusts_10m", 0),
+                    },
+                    "temperature_c": current.get("temperature_2m", 10),
+                    "humidity_pct": current.get("relative_humidity_2m", 50),
+                    "precipitation_mm": current.get("precipitation", 0),
+                    "cloud_cover_pct": current.get("cloud_cover", 50),
+                    "pressure_hpa": current.get("pressure_msl", 1013),
+                    "radiation_direct": _avg(hourly.get("direct_radiation", [])),
+                    "snow_depth_m": _avg(hourly.get("snow_depth", [])),
+                    "visibility_m": _avg(hourly.get("visibility", [])),
+                    "cape_jkg": _avg(hourly.get("cape", [])),
+                    "source": "OPEN-METEO-REEL",
+                }
+        except Exception as e:
+            _circuit_record_error()
+            logger.warning(f"Meteo V11 error: {e}")
+            meteo = {"error": str(e)}
 
     # IA Vision foret (depuis LiDAR + IRDA + meteo)
     canopy = min(0.95, max(0.05,

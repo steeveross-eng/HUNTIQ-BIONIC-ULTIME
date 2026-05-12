@@ -55,8 +55,19 @@ async def _fetch_elevation_grid(lat, lon, radius_km=0.8, n=7):
             lats.append(round(lat + i * step, 5))
             lons.append(round(lon + j * step / cos_lat, 5))
 
+    # P22Σ_OPEN_METEO_CB_GLOBAL_Ω — skip si circuit OPEN
     try:
-        async with httpx.AsyncClient(timeout=12) as client:
+        from engines.v8_institutional.open_meteo_breaker import is_open as _cb_is_open
+        from engines.v8_institutional.open_meteo_breaker import record_error as _cb_record_error
+    except Exception:
+        _cb_is_open = lambda: False
+        _cb_record_error = lambda: None
+
+    if _cb_is_open():
+        return {"grid": [], "error": "circuit_breaker_open", "source": "FALLBACK"}
+
+    try:
+        async with httpx.AsyncClient(timeout=5) as client:
             r = await client.get(ELEVATION_API, params={
                 "latitude": ",".join(str(l) for l in lats),
                 "longitude": ",".join(str(l) for l in lons),
@@ -74,6 +85,7 @@ async def _fetch_elevation_grid(lat, lon, radius_km=0.8, n=7):
         _cache[key] = {"d": result, "ts": time.time()}
         return result
     except Exception as e:
+        _cb_record_error()
         logger.warning(f"Elevation grid error: {e}")
         return {"grid": [], "error": str(e)}
 
@@ -85,8 +97,19 @@ async def _fetch_meteo_complete(lat, lon):
     if c and time.time() - c["ts"] < _CACHE_TTL:
         return c["d"]
 
+    # P22Σ_OPEN_METEO_CB_GLOBAL_Ω — skip si circuit OPEN
     try:
-        async with httpx.AsyncClient(timeout=12) as client:
+        from engines.v8_institutional.open_meteo_breaker import is_open as _cb_is_open
+        from engines.v8_institutional.open_meteo_breaker import record_error as _cb_record_error
+    except Exception:
+        _cb_is_open = lambda: False
+        _cb_record_error = lambda: None
+
+    if _cb_is_open():
+        return {"error": "circuit_breaker_open", "source": "FALLBACK"}
+
+    try:
+        async with httpx.AsyncClient(timeout=5) as client:
             r = await client.get(FORECAST_API, params={
                 "latitude": lat, "longitude": lon,
                 "current": ",".join([
@@ -156,6 +179,7 @@ async def _fetch_meteo_complete(lat, lon):
         _cache[key] = {"d": result, "ts": time.time()}
         return result
     except Exception as e:
+        _cb_record_error()
         logger.warning(f"Meteo complete error: {e}")
         return {"error": str(e)}
 
