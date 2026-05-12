@@ -5,12 +5,18 @@ COMMANDANT STEEVE-MAX · BCE-4X ULTIME ABSOLU · ANTI-GÉNÉRIQUE STRICT
 
 Module de FUSION VEINEUSE LOCALE pour les corridors organic.
 
-DOCTRINE :
+DOCTRINE V3 (initiale) :
   - Pour une MÊME espèce, tout corridor à ≤15-20m d'un autre est fusionné
   - La fusion crée une veine principale unique (path moyen pondéré)
   - Les corridors secondaires trop proches sont absorbés
   - L'intensité reflète le recouvrement réel (densité × fusion_count)
   - +1 niveau d'intensité par corridor fusionné, max niveau 4 (EXTRÊME)
+
+DOCTRINE V4 — BACKBONE + SUBNETS (2026-05-12 · STEEVE-MAX) :
+  - Conserve le backbone fusionné (clusters principaux)
+  - Préserve 5-7 sous-corridors représentatifs par cluster (selon density)
+  - Limite l'absorption à 60-70% (au lieu de 94%)
+  - Granularité opérationnelle restaurée par zone fonctionnelle
 
 V30_LOCK INVIOLÉ · FUSION ADD-ONLY · NEW MODULE
 ═══════════════════════════════════════════════════════════════════════
@@ -22,7 +28,16 @@ from typing import Any
 
 
 FUSION_DISTANCE_M = 18.0  # ≤15-20m doctrinal (point milieu retenu)
-FUSION_OVERLAP_RATIO_MIN = 0.30  # ≥30% des points proches pour considérer fusion
+# P22Σ_V4 · 2026-05-12 · ratio relevé à 0.50 pour générer plus de clusters distincts
+# (chaque cluster ≈ une zone fonctionnelle : saline/eau/repos/refuge/rut)
+# Avec 0.30 trop permissif → 1 méga-cluster ; avec 0.50 → plusieurs clusters distincts
+FUSION_OVERLAP_RATIO_MIN = 0.50  # ≥50% des points proches pour considérer fusion
+
+# P22Σ_V4 · BACKBONE+SUBNETS · 2026-05-12 · STEEVE-MAX
+# Granularité opérationnelle : préserve les sous-corridors par cluster
+SUBNET_MIN_PER_CLUSTER = 5             # min 5 corridors par cluster (sub + backbone)
+SUBNET_MAX_PER_CLUSTER = 7             # max 7 corridors par cluster
+MAX_ABSORPTION_RATIO = 0.70            # absorption max 70% (au lieu de 94%)
 
 
 def _haversine_m(p1: list, p2: list) -> float:
@@ -103,19 +118,28 @@ def _path_average(paths: list[list]) -> list:
 def fuse_corridors_by_species(corridors: list[dict],
                                fusion_distance_m: float = FUSION_DISTANCE_M,
                                overlap_ratio_min: float = FUSION_OVERLAP_RATIO_MIN,
+                               subnet_min: int = SUBNET_MIN_PER_CLUSTER,
+                               subnet_max: int = SUBNET_MAX_PER_CLUSTER,
+                               max_absorption_ratio: float = MAX_ABSORPTION_RATIO,
                                ) -> list[dict]:
     """Fusionne les corridors d'une même espèce en veines principales.
 
-    Algorithm union-find : pour chaque paire (i, j) où overlap_ratio ≥ min,
-    on fusionne les deux corridors.
+    DOCTRINE V4 — BACKBONE + SUBNETS :
+      - Pour chaque cluster détecté, créer 1 backbone fusionné (veine_principale)
+      - + préserver SUBNET_MIN..SUBNET_MAX sous-corridors représentatifs (veine_secondaire)
+      - Absorption max plafonnée à MAX_ABSORPTION_RATIO (70%)
 
     Output enrichi par corridor :
       - id : conservé pour le 1er corridor du cluster
       - merged_ids : liste des IDs absorbés
       - fusion_count : nombre total de corridors fusionnés (≥1)
       - intensity_level : 0-4 (FAIBLE → EXTRÊME) selon fusion_count
-      - path : path moyen pondéré du cluster
-      - hierarchy : promu en 'veine_principale' si fusion_count ≥ 2
+      - path : path moyen pondéré du cluster (backbone) OU path original (subnet)
+      - hierarchy :
+          * 'veine_principale' = backbone fusionné (1 par cluster)
+          * 'veine_secondaire' = sous-corridors préservés (5-7 par cluster)
+          * 'capillaire' = corridors isolés (1 seul dans son cluster)
+      - subnet_role : 'backbone' / 'subnet' / 'isolated' (V4)
     """
     if not corridors or len(corridors) < 2:
         # Pas de fusion possible — retourne tel quel avec intensity_level basé sur hier
@@ -156,28 +180,77 @@ def fuse_corridors_by_species(corridors: list[dict],
         root = find(i)
         clusters.setdefault(root, []).append(i)
 
-    # Construction des veines fusionnées
+    # ═══════════════════════════════════════════════════════════════════════
+    # V4 · BACKBONE + SUBNETS : préserver 5-7 sous-corridors par cluster
+    # ═══════════════════════════════════════════════════════════════════════
     fused: list[dict] = []
-    for root, idxs in clusters.items():
+    for _root, idxs in clusters.items():
         if len(idxs) == 1:
-            # Pas de fusion — intensity 0/1 selon hier original
+            # Singleton — capillaire (pas de fusion possible)
             c = valid_corridors[idxs[0]]
-            fused.append(_enrich_intensity(c, fusion_count=1))
+            enriched = _enrich_intensity(c, fusion_count=1)
+            enriched["subnet_role"] = "isolated"
+            fused.append(enriched)
             continue
 
-        # Fusion réelle
+        # Cluster fusionnable
         members = [valid_corridors[i] for i in idxs]
-        fusion_count = len(members)
-        merged_ids = [m.get("id") for m in members[1:]]
-        primary = dict(members[0])  # copie shallow
-        primary["path"] = _path_average([m["path"] for m in members])
-        primary["merged_ids"] = merged_ids
-        primary["fusion_count"] = fusion_count
-        primary["hierarchy"] = "veine_principale" if fusion_count >= 2 else primary.get("hierarchy")
-        primary["fusion_doctrine"] = "P22Σ_V3_FUSION_VEINEUSE"
-        # Intensity level renforcée par recouvrement
-        primary = _enrich_intensity(primary, fusion_count=fusion_count)
-        fused.append(primary)
+        n_members = len(members)
+
+        # Plafond d'absorption : on ne peut absorber qu'au plus MAX_ABSORPTION_RATIO du cluster
+        # → max absorbed = floor(n_members * max_absorption_ratio)
+        max_absorbed = max(1, int(math.floor(n_members * max_absorption_ratio)))
+        # → n_subnets_to_preserve = n_members - 1 (backbone) - max_absorbed
+        n_potential_subnets = max(0, n_members - 1 - max_absorbed)
+
+        # On veut au moins subnet_min sous-corridors, au plus subnet_max
+        n_subnets = min(subnet_max, max(subnet_min, n_potential_subnets))
+        # Mais on ne peut pas avoir plus de subnets que de membres - 1 (le backbone)
+        n_subnets = min(n_subnets, n_members - 1)
+        # Si le cluster est trop petit pour atteindre subnet_min, garder tous les membres
+        if n_members - 1 < subnet_min:
+            n_subnets = n_members - 1  # tous les non-backbone deviennent subnets
+
+        # ─── Sélection des subnets : tri par "représentativité" ───
+        # Plus le score / intensité est élevé, plus le corridor est représentatif
+        sorted_members = sorted(
+            members,
+            key=lambda c: float(c.get("intensity") or c.get("score") or 0),
+            reverse=True,
+        )
+
+        # Backbone = membre #0 (top intensité), avec path moyen du cluster
+        backbone_src = sorted_members[0]
+        fusion_count = n_members - n_subnets  # cluster réellement absorbé dans backbone
+        backbone = dict(backbone_src)
+        # Path moyen pondéré : moyenne des paths des corridors absorbés (= cluster - subnets)
+        absorbed_members = sorted_members[:fusion_count]
+        backbone["path"] = _path_average([m["path"] for m in absorbed_members])
+        backbone["merged_ids"] = [m.get("id") for m in absorbed_members[1:]]
+        backbone["fusion_count"] = fusion_count
+        backbone["hierarchy"] = "veine_principale"
+        backbone["fusion_doctrine"] = "P22Σ_V4_BACKBONE_SUBNETS"
+        backbone["subnet_role"] = "backbone"
+        backbone["cluster_size"] = n_members
+        backbone["cluster_subnets"] = n_subnets
+        backbone = _enrich_intensity(backbone, fusion_count=fusion_count)
+        fused.append(backbone)
+
+        # Subnets : préserver les top-N suivants comme veines secondaires (intensité réduite)
+        subnet_members = sorted_members[fusion_count: fusion_count + n_subnets]
+        for sub_idx, sub_m in enumerate(subnet_members):
+            sub = dict(sub_m)
+            sub["hierarchy"] = "veine_secondaire"
+            sub["fusion_doctrine"] = "P22Σ_V4_BACKBONE_SUBNETS"
+            sub["subnet_role"] = "subnet"
+            sub["fusion_count"] = 1
+            sub["subnet_parent_id"] = backbone.get("id")
+            sub["subnet_rank"] = sub_idx + 1
+            sub = _enrich_intensity(sub, fusion_count=1)
+            # Force intensity_level = 1 (MODÉRÉ) pour les subnets (sous le backbone niveau 3-4)
+            sub["intensity_level"] = 1
+            sub["intensity_label"] = "MODÉRÉ"
+            fused.append(sub)
 
     # Ajout des corridors invalides (sans path) tels quels
     invalid_corridors = [c for c in corridors
@@ -218,7 +291,7 @@ def _enrich_intensity(corridor: dict, fusion_count: int = 1) -> dict:
 
 
 def fusion_summary(corridors_after_fusion: list[dict]) -> dict[str, Any]:
-    """Synthèse de la fusion appliquée."""
+    """Synthèse de la fusion appliquée (doctrine V4 BACKBONE+SUBNETS)."""
     n_fused = sum(1 for c in corridors_after_fusion
                   if (c.get("fusion_count") or 1) >= 2)
     n_intensity = {f"level_{i}": 0 for i in range(5)}
@@ -227,6 +300,15 @@ def fusion_summary(corridors_after_fusion: list[dict]) -> dict[str, Any]:
         n_intensity[f"level_{lvl}"] += 1
     total_absorbed = sum((c.get("fusion_count") or 1) - 1
                          for c in corridors_after_fusion)
+
+    # P22Σ_V4 — Stats BACKBONE+SUBNETS
+    n_backbone = sum(1 for c in corridors_after_fusion
+                     if c.get("subnet_role") == "backbone")
+    n_subnets = sum(1 for c in corridors_after_fusion
+                    if c.get("subnet_role") == "subnet")
+    n_isolated = sum(1 for c in corridors_after_fusion
+                     if c.get("subnet_role") == "isolated")
+
     return {
         "n_corridors_after_fusion": len(corridors_after_fusion),
         "n_fused_clusters": n_fused,
@@ -234,5 +316,12 @@ def fusion_summary(corridors_after_fusion: list[dict]) -> dict[str, Any]:
         "intensity_distribution": n_intensity,
         "fusion_distance_m": FUSION_DISTANCE_M,
         "overlap_ratio_min": FUSION_OVERLAP_RATIO_MIN,
-        "doctrine": "P22Σ_V3_FUSION_VEINEUSE_Ω",
+        "doctrine": "P22Σ_V4_BACKBONE_SUBNETS_Ω",
+        # V4 stats
+        "n_backbone": n_backbone,
+        "n_subnets": n_subnets,
+        "n_isolated": n_isolated,
+        "subnet_min_per_cluster": SUBNET_MIN_PER_CLUSTER,
+        "subnet_max_per_cluster": SUBNET_MAX_PER_CLUSTER,
+        "max_absorption_ratio": MAX_ABSORPTION_RATIO,
     }

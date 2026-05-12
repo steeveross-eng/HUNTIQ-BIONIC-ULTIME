@@ -336,6 +336,6 @@ async def get_fusion_meta() -> dict:
         "download_url_pdf":  "/api/v20/audit/fusion-veineuse-report.pdf",
         "pdf_size_bytes":    pdf_size,
         "pdf_sha256":        sha_pdf,
-        "render_sha256":     "5ae204526beb0c8dda586b3b550fe33b4de85e59fc76cca01f398ed1795f1289",
-        "doctrine":          "P22Σ_V3_FUSION_VEINEUSE_Ω · V90 · BCE-4X ULTIME ABSOLU",
+        "render_sha256":     "70dae2579e3bb2e986dce282944709d38c997d24a343072c562a5cf360dd1cda",
+        "doctrine":          "P22Σ_V4_BACKBONE_SUBNETS_Ω · V90 · BCE-4X ULTIME ABSOLU",
     }
