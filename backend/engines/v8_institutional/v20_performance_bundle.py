@@ -105,10 +105,22 @@ _STATS = {
 
 
 def _cache_key(lat: float, lon: float, species: str, month: int, hour: int, wind_deg: float) -> str:
+    """P22Σ_CACHE_KEY_TOLERANT_Ω · 2026-05-12T23:55Z · COMMANDANT STEEVE-MAX
+
+    Cache key tolérant : omet `hour` (le bundle V5 corridors ne dépend pas
+    significativement de l'heure — la topologie réseau veineux est calculée
+    sur terrain+zones vitales+écologie statique, pas l'heure du jour).
+    Réduction cardinalité × 24 → 24× moins de MISS pour utilisateurs
+    actifs dans des fuseaux horaires différents (UTC vs local Québec EDT).
+
+    NOTE: `hour` reste accepté en paramètre pour compatibilité ABI mais
+    n'est plus inclus dans la key (ignoré silencieusement).
+    """
+    _ = hour  # explicitly unused
     lat_s = f"{lat:.3f}"
     lon_s = f"{lon:.3f}"
     wd_s = int(round(wind_deg / 15.0) * 15) % 360
-    return f"{lat_s}_{lon_s}_{species}_{month}_{hour}_w{wd_s}"
+    return f"{lat_s}_{lon_s}_{species}_{month}_w{wd_s}"
 
 
 def _cache_get(key: str):

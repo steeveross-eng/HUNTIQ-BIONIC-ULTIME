@@ -3,6 +3,57 @@
 
 ---
 
+## 2026-05-12T23:55Z — P22Σ_CACHE_KEY_TOLERANT_Ω ✅ DÉSALIGNEMENT TEMPOREL ÉLIMINÉ
+
+### Incident COMMANDANT (réouverture)
+Capture montrant CHEVREUIL/BSL avec 0 couches affichées, panneau droit "Err...", connecté en `commandant@bionichunt.com`.
+
+### Cause racine FORENSIQUE finale
+**Désalignement temporel triple** :
+1. Frontend (`useMapBundleV8.js:25-26`) : `getMonth()`/`getHours()` = **HEURE LOCALE** (Québec EDT = UTC-4)
+2. Backend warmup : pré-pop avec heures UTC (à mes appels manuels via curl)
+3. COMMANDANT à toutes les heures de la journée → cardinalité × 24 → MISS systématique
+
+### Correctif `P22Σ_CACHE_KEY_TOLERANT_Ω`
+**Fichier** : `backend/engines/v8_institutional/v20_performance_bundle.py:_cache_key`
+
+```python
+# Avant
+return f"{lat_s}_{lon_s}_{species}_{month}_{hour}_w{wd_s}"
+
+# Après (P22Σ_CACHE_KEY_TOLERANT_Ω)
+return f"{lat_s}_{lon_s}_{species}_{month}_w{wd_s}"  # hour OMIS
+```
+
+**Justification doctrinale** : Le bundle V5 corridors est calculé par `engine_ia_corridors_organic_omega` sur **terrain + zones vitales + écologie statique** (pas l'heure du jour). Les corridors V5 sont identiques à 5h, 14h ou 21h pour le même waypoint+espèce. Le seul élément temporel (météo/vent) est externe (Open-Meteo) et déjà cached côté Open-Meteo.
+
+→ Réduction cardinalité × 24 → **24× moins de MISS** pour utilisateurs actifs dans des fuseaux horaires différents (UTC vs local).
+
+### Validation E2E PROXY PREVIEW (8 heures différentes du COMMANDANT)
+| Heure | HTTP | Cache | Time | Corridors V5 |
+|---|---|---|---|---|
+| 8h | 200 | HIT | 0.24s | 6 (1 bb + 5 sn) |
+| 14h | 200 | HIT | 1.72s | 6 (1 bb + 5 sn) |
+| 17h | 200 | HIT | 0.19s | 6 (1 bb + 5 sn) |
+| 19h | 200 | HIT | 1.69s | 6 (1 bb + 5 sn) |
+| 21h | 200 | HIT | 0.21s | 6 (1 bb + 5 sn) |
+| 23h | 200 | HIT | 1.73s | 6 (1 bb + 5 sn) |
+| 2h | 200 | HIT | 0.23s | 6 (1 bb + 5 sn) |
+| 5h | 200 | HIT | 1.73s | 6 (1 bb + 5 sn) |
+| `cerf` alias 14h | 200 | HIT | 0.22s | 6 (V5=true) |
+| `cerf` alias 19h | 200 | HIT | 1.96s | 6 (V5=true) |
+
+**Tous HIT, V5=true partout, 0 MISS** ✅
+
+### Action COMMANDANT
+1. **Vider site data** (DevTools → Application → Storage → Clear site data) OU navigation privée
+2. Login `commandant@bionichunt.com` / `Commandant2026`
+3. `/territoire` → CHEVREUIL au BSL → **6 corridors V5 visibles** (1 backbone + 5 subnets)
+4. Si OK : cliquer "Deploy" PROD
+
+---
+
+
 ## 2026-05-12T21:45Z — P22Σ_INCIDENT_V5_CHEVREUIL_BSL_FORENSIQUE_Ω ✅ RÉSOLU
 
 ### Incident COMMANDANT (réouverture strictness +10)
