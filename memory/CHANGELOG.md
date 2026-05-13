@@ -3162,3 +3162,53 @@ TEST 4 — Chaîne_Ω corridors :
 - ✅ Aucune mutation engine maître (uniquement registres + coefficients)
 - ✅ Aucun testing_agent_v3_fork
 - ✅ Validation 100% manuelle (bash + curl + python3)
+
+---
+
+## 2026-05-13 · P22Ω_WORKER_SAFE_REARM — Architecture concurrente Ω (MODE DOCTRINE b)
+**Décision** : MODE DOCTRINE (b) — supervisor.conf READONLY conservé, application app-level uniquement.
+
+### A · Multi-workers (BLOQUÉ par contrainte plateforme)
+- `--enable-uvicorn-multiworkers 4` et flags associés (`--set-timeout-keep-alive`, `--set-graceful-timeout`, `--set-max-requests`) classés `PLATFORM_PROVISIONED_ITEM`.
+- Action transférée à l'admin Emergent : éditer `/etc/supervisor/conf.d/supervisord.conf` (READONLY).
+- Patch supervisor recommandé documenté dans le rapport d'audit.
+
+### B · Correctifs app-level (APPLIQUÉS)
+**Démons V5 safe-rearm** :
+- `_WARMUP_SEMAPHORE` : 4 → **2**
+- Sleep démons : 3600s fixe → **random.uniform(1800, 2400)s** désynchronisé
+- 3 démons réactivés : prechauffage (limit=20), periodic_refresh, v5_monitor
+
+**MISS absorption** :
+- `asyncio.wait_for(timeout=20)` autour de `compute_territoire_v10` et `generate_organic_corridors`
+- Bundle dégradé si hardcap atteint (`p22omega_miss_absorbed=True`, `esi=PIPELINE_TIMEOUT`)
+- Soft threshold 12s avec warning log
+
+**Prewarm engines** :
+- Imports lourds + registres statiques au lazy-init (1.3 ms confirmé)
+- 8 engines préchargés : V10, V5_organic, smoother, RenduΩ, veineux, interzone, presence_mask, esi
+
+**Worker healthcheck** :
+- Nouvel endpoint `GET /api/v20/territoire/healthz/worker`
+- Diagnostic complet : daemons, MISS stats, cache, platform_provisioned_items
+
+### C · Validation 5 espèces post-rearm (BSL)
+| Espèce | MISS | HIT | Verdict |
+|---|---|---|---|
+| chevreuil | 0.33s | 396ms | ✓ CONFORME |
+| orignal | 31.74s | 158ms | ✓ CONFORME |
+| ours | 13.92s | 194ms | ✓ CONFORME |
+| dindon | 0.25s | **132ms** halt cache | ✓ CONFORME |
+| coyote | 0.26s | 180ms | ✓ CONFORME |
+
+**Aucun HTTP 502 · MISS max 31.7s < 60s ingress · Démons actifs sem=2 sleep 1800-2400s**
+
+### Conformité doctrinale
+- ✅ V30 LOCK inviolé · supervisor.conf intact
+- ✅ Healthcheck institutionnel + observability complète
+- ✅ PLATFORM_PROVISIONED_ITEM formellement transmis à l'admin
+- ✅ Validation 100% manuelle · ZÉRO testing_agent_v3_fork
+
+### Artefacts
+- `/app/memory/audit_provenance/p22omega_worker_safe_rearm.md` (rapport complet)
+- `/app/backend/engines/v8_institutional/v20_performance_bundle.py` (modifié)

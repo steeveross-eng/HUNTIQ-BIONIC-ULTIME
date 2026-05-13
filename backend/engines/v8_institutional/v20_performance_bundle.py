@@ -206,10 +206,34 @@ def _cache_load_disk():
 
 # ═══ PRECHAUFFAGE-Omega WORKER ═══
 _WARMUP_LOCK = asyncio.Lock()
-# P22Σ_PRECHAUFFAGE_Ω_PROGRESSIF · 2026-05-12T18:55Z · COMMANDANT STEEVE-MAX
-# Préchauffage progressif réactivé : 50 waypoints, semaphore 4
-# (vs 500/16 antérieur qui saturait Open-Meteo)
-_WARMUP_SEMAPHORE = asyncio.Semaphore(4)  # 4 parallel computes max
+# P22Ω_WORKER_SAFE_REARM · 2026-05-13 · COMMANDANT STEEVE-MAX
+# Semaphore réduit 4 → 2 pour minimiser pression Open-Meteo + worker FastAPI
+# unique. Daemons réarmés avec sleep randomisé 1800-2400s.
+_WARMUP_SEMAPHORE = asyncio.Semaphore(2)  # 2 parallel computes max (SAFE_REARM)
+
+# P22Ω_WORKER_SAFE_REARM — sleep aléatoire entre démons V5
+import random as _random
+_DAEMON_SLEEP_MIN = 1800   # 30 min
+_DAEMON_SLEEP_MAX = 2400   # 40 min
+
+
+def _daemon_sleep_randomized() -> float:
+    """Retourne un délai aléatoire 1800-2400s pour désynchroniser les démons V5."""
+    return _random.uniform(_DAEMON_SLEEP_MIN, _DAEMON_SLEEP_MAX)
+
+
+# Daemons state tracking pour /api/healthz/worker
+_DAEMONS_STATE = {
+    "prechauffage_started_at": None,
+    "prechauffage_last_tick_at": None,
+    "prechauffage_tick_count": 0,
+    "periodic_refresh_started_at": None,
+    "periodic_refresh_last_tick_at": None,
+    "periodic_refresh_tick_count": 0,
+    "v5_monitor_started_at": None,
+    "v5_monitor_last_tick_at": None,
+    "v5_monitor_tick_count": 0,
+}
 
 
 async def _warmup_single(lat: float, lon: float, species: str = "cerf"):
@@ -270,9 +294,16 @@ async def _get_top_waypoints(limit: int = 200):
 
 
 async def run_prechauffage_omega(limit: int = 200):
-    """PRECHAUFFAGE-Omega-INTELLIGENT: preload top N waypoints en parallele."""
+    """PRECHAUFFAGE-Omega-INTELLIGENT: preload top N waypoints en parallele.
+
+    P22Ω_WORKER_SAFE_REARM · 2026-05-13 — défault limit=200 conservé pour
+    appels manuels (/bundle/warmup), mais lazy-init et démons utilisent
+    désormais limit=20 (semaphore=2 plus prudent sur worker unique).
+    """
     async with _WARMUP_LOCK:
         t0 = time.time()
+        _DAEMONS_STATE["prechauffage_last_tick_at"] = time.time()
+        _DAEMONS_STATE["prechauffage_tick_count"] += 1
         waypoints = await _get_top_waypoints(limit)
         if not waypoints:
             logger.info("[V20-WARMUP] Aucun waypoint a precharger")
@@ -310,6 +341,67 @@ _LAZY_INIT_DONE = False
 _LAZY_INIT_LOCK = asyncio.Lock()
 
 
+# ═══════════════════════════════════════════════════════════════════════
+# P22Ω_WORKER_SAFE_REARM · 2026-05-13 · COMMANDANT STEEVE-MAX
+# Prewarm engines au démarrage pour éviter cold start sur le premier MISS.
+# Précharge les imports lourds (V10, V5 organic, smoother, RenduΩ) + appel
+# fictif minimal pour amorcer les caches internes Python (jit/import).
+# ═══════════════════════════════════════════════════════════════════════
+_PREWARM_DONE = False
+
+
+async def _prewarm_engines_omega():
+    """Prewarm les engines pour éliminer cold start sur premier MISS.
+
+    Imports lourds + initialisation registres internes. NE FAIT PAS de
+    compute réel (coûteux), juste warm-up imports + cache statiques.
+    """
+    global _PREWARM_DONE
+    if _PREWARM_DONE:
+        return
+    t0 = time.time()
+    try:
+        # Import lourds (territoire_v10, V5 organic, smoother, RenduΩ)
+        from engines.v8_institutional import territoire_v10_supra  # noqa: F401
+        from engines.v8_institutional import engine_ia_corridors_organic_omega  # noqa: F401
+        from engines.post_smoothing import organic_corridor_smoother  # noqa: F401
+        from engines.post_smoothing import renduomega  # noqa: F401
+        from engines.post_smoothing import veineux_omega  # noqa: F401
+        from engines.post_smoothing import interzone_omega  # noqa: F401
+        from engines.v8_institutional import species_presence_mask_omega  # noqa: F401
+        from engines.v8_institutional import esi_omega  # noqa: F401
+        # Touch les registres statiques pour priming
+        _ = engine_ia_corridors_organic_omega.SPECIES_BEHAVIOR
+        _ = engine_ia_corridors_organic_omega.BIOLOGICAL_PAIR_COMPATIBILITY
+        _ = organic_corridor_smoother.SPECIES_LOCOMOTION
+        _ = species_presence_mask_omega.SPECIES_PRESENCE_REGISTRY
+        _PREWARM_DONE = True
+        elapsed = round((time.time() - t0) * 1000, 1)
+        logger.info(
+            f"[V20-PREWARM] P22Ω_WORKER_SAFE_REARM · engines prewarmed in {elapsed}ms "
+            f"(V10, V5_organic, smoother, RenduΩ, veineux, interzone, presence_mask, esi)"
+        )
+    except Exception as e:
+        logger.warning(f"[V20-PREWARM] Prewarm error: {e}")
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# P22Ω_WORKER_SAFE_REARM · MISS ABSORPTION
+# ═══════════════════════════════════════════════════════════════════════
+# Hardcap 20s sur le compute MISS, soft threshold 12s (warning log).
+# Au-delà du hardcap, on retourne le stale cache ou un bundle dégradé
+# au lieu de laisser pourrir le worker pendant 60s+.
+# ═══════════════════════════════════════════════════════════════════════
+_MISS_HARDCAP_SEC = 20.0
+_MISS_SOFT_THRESHOLD_SEC = 12.0
+_MISS_STATS: dict = {
+    "absorbed_count": 0,        # MISS dépassant hardcap → absorption
+    "soft_warning_count": 0,    # MISS dépassant soft threshold
+    "total_miss_compute_s": 0.0,
+    "last_absorbed_at": None,
+}
+
+
 async def _ensure_lazy_init():
     """Initialise au premier appel (disk load + prechauffage async). Idempotent."""
     global _LAZY_INIT_DONE
@@ -321,12 +413,21 @@ async def _ensure_lazy_init():
         _LAZY_INIT_DONE = True
         loaded = _cache_load_disk()
         logger.info(f"[V20-LAZY-INIT] {loaded} entries loaded from disk")
-        # P22Ω_BACKEND_RESTORE_ULTIME · 2026-05-13T13:00Z
-        # DAEMONS OFF pour stabilisation single-worker (Open-Meteo 429)
-        # asyncio.create_task(run_prechauffage_omega(limit=50))
-        # asyncio.create_task(_periodic_refresh_daemon())
-        # asyncio.create_task(_v5_compliance_monitor_daemon())
-        logger.info("[V20-LAZY-INIT] STABILISATION ULTIME: daemons OFF (P22Ω_BACKEND_RESTORE_ULTIME)")
+        # P22Ω_WORKER_SAFE_REARM · 2026-05-13 · COMMANDANT STEEVE-MAX
+        # DAEMONS RÉACTIVÉS avec semaphore=2 + sleep randomisé 1800-2400s
+        # + prewarm engines (organic + smoother + rendu) au lazy-init.
+        asyncio.create_task(_prewarm_engines_omega())
+        asyncio.create_task(run_prechauffage_omega(limit=20))  # 20 waypoints prudent
+        asyncio.create_task(_periodic_refresh_daemon())
+        asyncio.create_task(_v5_compliance_monitor_daemon())
+        _DAEMONS_STATE["prechauffage_started_at"] = time.time()
+        _DAEMONS_STATE["periodic_refresh_started_at"] = time.time()
+        _DAEMONS_STATE["v5_monitor_started_at"] = time.time()
+        logger.info(
+            "[V20-LAZY-INIT] P22Ω_WORKER_SAFE_REARM — daemons ON: "
+            "prechauffage(sem=2,n=20), periodic_refresh, v5_monitor "
+            f"(sleep randomized {_DAEMON_SLEEP_MIN}-{_DAEMON_SLEEP_MAX}s)"
+        )
 
 
 # ═══ LIFESPAN HOOKS (called from server.py startup/shutdown) ═══
@@ -334,11 +435,17 @@ async def v20_startup():
     """Called by server.py on app startup."""
     loaded = _cache_load_disk()
     logger.info(f"[V20-PERFORMANCE] Startup: {loaded} entries loaded from disk")
-    # P22Ω_BACKEND_RESTORE_ULTIME · daemons OFF pour stabilisation single-worker
-    # asyncio.create_task(run_prechauffage_omega(limit=50))
-    # asyncio.create_task(_periodic_refresh_daemon())
-    # asyncio.create_task(_v5_compliance_monitor_daemon())
-    logger.info("[V20-PERFORMANCE] STABILISATION ULTIME: daemons OFF")
+    # P22Ω_WORKER_SAFE_REARM — daemons rearmés ici aussi (lazy-init peut être
+    # bypassé en multi-pod). Idempotent via _DAEMONS_STATE checks.
+    if _DAEMONS_STATE["prechauffage_started_at"] is None:
+        asyncio.create_task(_prewarm_engines_omega())
+        asyncio.create_task(run_prechauffage_omega(limit=20))
+        asyncio.create_task(_periodic_refresh_daemon())
+        asyncio.create_task(_v5_compliance_monitor_daemon())
+        _DAEMONS_STATE["prechauffage_started_at"] = time.time()
+        _DAEMONS_STATE["periodic_refresh_started_at"] = time.time()
+        _DAEMONS_STATE["v5_monitor_started_at"] = time.time()
+        logger.info("[V20-PERFORMANCE] P22Ω_WORKER_SAFE_REARM — startup hooks daemons ON")
 
 
 async def v20_shutdown():
@@ -347,13 +454,23 @@ async def v20_shutdown():
 
 
 async def _periodic_refresh_daemon():
-    """Daemon: rafraichit le cache toutes les 1h + save disk."""
+    """Daemon: rafraichit le cache périodiquement + save disk.
+
+    P22Ω_WORKER_SAFE_REARM · 2026-05-13 — sleep randomisé 1800-2400s
+    pour désynchroniser des autres démons et éviter saturation worker.
+    """
     while True:
         try:
-            await asyncio.sleep(3600)
-            logger.info("[V20-WARMUP-DAEMON] Tick horaire — refresh + disk save")
-            # P22Σ_PRECHAUFFAGE_Ω_PROGRESSIF · 50 waypoints
-            await run_prechauffage_omega(limit=50)
+            _sleep_s = _daemon_sleep_randomized()
+            logger.info(f"[V20-WARMUP-DAEMON] Sleeping {_sleep_s:.0f}s (randomized)")
+            await asyncio.sleep(_sleep_s)
+            _DAEMONS_STATE["periodic_refresh_last_tick_at"] = time.time()
+            _DAEMONS_STATE["periodic_refresh_tick_count"] += 1
+            logger.info(
+                f"[V20-WARMUP-DAEMON] Tick #{_DAEMONS_STATE['periodic_refresh_tick_count']} "
+                f"— refresh + disk save"
+            )
+            await run_prechauffage_omega(limit=20)
         except Exception as e:
             logger.warning(f"[V20-WARMUP-DAEMON] Error: {e}")
 
@@ -484,11 +601,14 @@ def _v5_journal_append(entry: dict) -> None:
 
 
 async def _v5_compliance_monitor_daemon():
-    """Daemon: vérifie la conformité V5 toutes les heures + alerte si FAIL."""
-    # P22Σ_STABILISATION_Ω_PROGRESSIF · Délai initial 1h pour ne pas saturer
-    # le worker async au démarrage. Premier tick = startup + 1h.
-    # Le COMMANDANT peut forcer un tick immédiat via POST /v5-monitor-tick.
-    await asyncio.sleep(_V5_MONITOR_INTERVAL_SEC)
+    """Daemon: vérifie la conformité V5 toutes les heures + alerte si FAIL.
+
+    P22Ω_WORKER_SAFE_REARM · 2026-05-13 — sleep randomisé 1800-2400s
+    (au lieu de 3600s fixe) pour désynchronisation worker unique.
+    """
+    # P22Σ_STABILISATION_Ω_PROGRESSIF · Délai initial pour ne pas saturer
+    # le worker async au démarrage. Premier tick = startup + ~30 min.
+    await asyncio.sleep(_daemon_sleep_randomized())
     while True:
         try:
             t0 = time.time()
@@ -502,6 +622,8 @@ async def _v5_compliance_monitor_daemon():
                 "%Y-%m-%dT%H:%M:%SZ", time.gmtime(),
             )
             _V5_MONITOR_STATS["last_violations_total"] = n_violations_total
+            _DAEMONS_STATE["v5_monitor_last_tick_at"] = time.time()
+            _DAEMONS_STATE["v5_monitor_tick_count"] += 1
             if failed:
                 _V5_MONITOR_STATS["fail"] += 1
                 _V5_MONITOR_STATS["last_status"] = "FAIL"
@@ -522,13 +644,13 @@ async def _v5_compliance_monitor_daemon():
             }
             _v5_journal_append(journal_entry)
             logger.info(
-                f"[V5_MONITOR] Tick: {len(results)} checks · "
-                f"{len(failed)} FAIL · {elapsed}s",
+                f"[V5_MONITOR] Tick #{_DAEMONS_STATE['v5_monitor_tick_count']}: "
+                f"{len(results)} checks · {len(failed)} FAIL · {elapsed}s",
             )
         except Exception as e:
             logger.warning(f"[V5_MONITOR] Daemon error: {e}")
-        # Sleep 1h
-        await asyncio.sleep(_V5_MONITOR_INTERVAL_SEC)
+        # Sleep randomized 1800-2400s
+        await asyncio.sleep(_daemon_sleep_randomized())
 
 
 # ═══ ENDPOINTS ═══
@@ -595,16 +717,58 @@ async def v20_territoire_bundle(
     # → -44% latence cache MISS (50s → ~22s) vs ancienne parallélisation
     # asyncio.gather qui faisait V10 DEUX fois en concurrence.
     # ═══════════════════════════════════════════════════════════════════════
-    result = await compute_territoire_v10(lat, lon, species, month, hour, wind_deg, wind_speed)
+    # ═══════════════════════════════════════════════════════════════════════
+    # P22Ω_WORKER_SAFE_REARM · MISS ABSORPTION (hardcap 20s, soft 12s)
+    # ═══════════════════════════════════════════════════════════════════════
+    _miss_t0 = time.time()
     try:
-        v5_bundle = await generate_organic_corridors(
-            lat=lat, lon=lon, species=species,
-            month=month, hour=hour,
-            wind_deg=int(wind_deg), wind_speed=int(wind_speed),
-            anchor_mode="TERRITORY_CONTINUOUS",
-            bundle_pre_computed=result,  # ← évite le double appel compute_territoire_v10
+        result = await asyncio.wait_for(
+            compute_territoire_v10(lat, lon, species, month, hour, wind_deg, wind_speed),
+            timeout=_MISS_HARDCAP_SEC,
+        )
+    except asyncio.TimeoutError:
+        _MISS_STATS["absorbed_count"] += 1
+        _MISS_STATS["last_absorbed_at"] = time.time()
+        logger.warning(
+            f"[P22Ω_MISS_ABSORPTION] compute_territoire_v10 HARDCAP {_MISS_HARDCAP_SEC}s "
+            f"dépassé pour lat={lat},lon={lon},species={species}. Renvoi bundle dégradé."
+        )
+        # Bundle minimal dégradé (frontend affiche zones par défaut + signal)
+        result = {
+            "waypoint": {"lat": lat, "lng": lon},
+            "species": species,
+            "zones": [], "corridors": [], "affuts": [],
+            "hotspots": [], "salines": [], "contamination": [],
+            "data_source": "DEGRADED_MISS_ABSORPTION",
+            "data_fiabilite": 0,
+            "p22omega_miss_absorbed": True,
+            "p22omega_miss_hardcap_s": _MISS_HARDCAP_SEC,
+            "esi_omega": "PIPELINE_TIMEOUT",
+        }
+    _miss_compute_s = time.time() - _miss_t0
+    _MISS_STATS["total_miss_compute_s"] += _miss_compute_s
+    if _miss_compute_s > _MISS_SOFT_THRESHOLD_SEC and not result.get("p22omega_miss_absorbed"):
+        _MISS_STATS["soft_warning_count"] += 1
+        logger.warning(
+            f"[P22Ω_MISS_ABSORPTION] SOFT_THRESHOLD {_MISS_SOFT_THRESHOLD_SEC}s dépassé "
+            f"({_miss_compute_s:.1f}s) pour species={species} lat={lat},lon={lon}"
+        )
+    try:
+        v5_bundle = await asyncio.wait_for(
+            generate_organic_corridors(
+                lat=lat, lon=lon, species=species,
+                month=month, hour=hour,
+                wind_deg=int(wind_deg), wind_speed=int(wind_speed),
+                anchor_mode="TERRITORY_CONTINUOUS",
+                bundle_pre_computed=result,
+            ),
+            timeout=_MISS_HARDCAP_SEC,
         )
         v5_error = None
+    except asyncio.TimeoutError:
+        v5_bundle = None
+        v5_error = f"generate_organic_corridors TIMEOUT {_MISS_HARDCAP_SEC}s"
+        logger.warning(f"[P22Ω_MISS_ABSORPTION] V5 organic TIMEOUT pour species={species}")
     except Exception as _e_v5:
         v5_bundle = None
         v5_error = str(_e_v5)
@@ -901,6 +1065,95 @@ async def v20_bundle_save_disk():
     n = _cache_save_disk()
     return {"saved": n, "ok": True}
 
+
+# ═══════════════════════════════════════════════════════════════════════
+# P22Ω_WORKER_SAFE_REARM · 2026-05-13 · COMMANDANT STEEVE-MAX
+# Healthcheck worker — diagnostic complet : daemons, prewarm, MISS, cache.
+# ═══════════════════════════════════════════════════════════════════════
+@router.get("/healthz/worker")
+async def v20_healthz_worker():
+    """Healthcheck institutionnel du worker FastAPI + démons V5.
+
+    Retourne un état complet : workers, daemons (prechauffage, periodic_refresh,
+    v5_monitor), prewarm engines, MISS absorption stats, cache stats.
+    Utilisé par Kubernetes readiness/liveness probes + monitoring externe.
+    """
+    # Déclenche lazy-init si non encore fait (démons + prewarm + cache disk)
+    await _ensure_lazy_init()
+    import os as _os
+    _now = time.time()
+
+    def _age(ts):
+        if ts is None:
+            return None
+        return round(_now - ts, 1)
+
+    daemons_state = {
+        "prechauffage": {
+            "running": _DAEMONS_STATE["prechauffage_started_at"] is not None,
+            "uptime_s": _age(_DAEMONS_STATE["prechauffage_started_at"]),
+            "last_tick_age_s": _age(_DAEMONS_STATE["prechauffage_last_tick_at"]),
+            "tick_count": _DAEMONS_STATE["prechauffage_tick_count"],
+            "semaphore_max": _WARMUP_SEMAPHORE._value if hasattr(_WARMUP_SEMAPHORE, "_value") else 2,
+        },
+        "periodic_refresh": {
+            "running": _DAEMONS_STATE["periodic_refresh_started_at"] is not None,
+            "uptime_s": _age(_DAEMONS_STATE["periodic_refresh_started_at"]),
+            "last_tick_age_s": _age(_DAEMONS_STATE["periodic_refresh_last_tick_at"]),
+            "tick_count": _DAEMONS_STATE["periodic_refresh_tick_count"],
+            "sleep_range_s": [_DAEMON_SLEEP_MIN, _DAEMON_SLEEP_MAX],
+        },
+        "v5_monitor": {
+            "running": _DAEMONS_STATE["v5_monitor_started_at"] is not None,
+            "uptime_s": _age(_DAEMONS_STATE["v5_monitor_started_at"]),
+            "last_tick_age_s": _age(_DAEMONS_STATE["v5_monitor_last_tick_at"]),
+            "tick_count": _DAEMONS_STATE["v5_monitor_tick_count"],
+            "stats": dict(_V5_MONITOR_STATS),
+        },
+    }
+    return {
+        "status": "OK",
+        "doctrine": "P22Ω_WORKER_SAFE_REARM",
+        "ts_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "worker": {
+            "pid": _os.getpid(),
+            "lazy_init_done": _LAZY_INIT_DONE,
+            "prewarm_done": _PREWARM_DONE,
+        },
+        "daemons": daemons_state,
+        "miss_absorption": {
+            "hardcap_s": _MISS_HARDCAP_SEC,
+            "soft_threshold_s": _MISS_SOFT_THRESHOLD_SEC,
+            "absorbed_count": _MISS_STATS["absorbed_count"],
+            "soft_warning_count": _MISS_STATS["soft_warning_count"],
+            "total_miss_compute_s": round(_MISS_STATS["total_miss_compute_s"], 2),
+            "last_absorbed_age_s": _age(_MISS_STATS["last_absorbed_at"]),
+        },
+        "cache": {
+            "size": len(_CACHE),
+            "max": _CACHE_MAX,
+            "hits": _STATS["hits"],
+            "misses": _STATS["misses"],
+            "hit_ratio_pct": round(
+                (_STATS["hits"] / (_STATS["hits"] + _STATS["misses"]) * 100)
+                if (_STATS["hits"] + _STATS["misses"]) > 0 else 0.0, 2,
+            ),
+            "disk_exists": _CACHE_DISK_FILE.exists(),
+        },
+        "supervisor_managed": True,
+        "platform_provisioned_items": {
+            "multi_workers": {
+                "current": 1,
+                "target_recommended": 4,
+                "blocker": "READONLY supervisor.conf (Emergent platform contract)",
+                "action_required": "Admin Emergent doit éditer /etc/supervisor/conf.d/supervisord.conf",
+            },
+            "redis_url": {
+                "current": _os.environ.get("REDIS_URL") or "ABSENT",
+                "fallback": "LRU in-memory + disk persistence",
+            },
+        },
+    }
 
 
 # ═══════════════════════════════════════════════════════════════════════
