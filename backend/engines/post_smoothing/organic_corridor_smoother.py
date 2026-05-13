@@ -119,6 +119,16 @@ SPECIES_LOCOMOTION = {
         "human_avoidance_m": 120.0,          # évitement humain extrême (§3)
         "signature_freq": 2.5, "signature_amp": 0.9,
     },
+    # P22Ω_MULTI_FIX_A3 (2026-05-13) — alias canonique aligné `normalize_species`
+    "ours_noir": {
+        "angle_max_deg": 50.0, "segment_max_m": 20.0,
+        "style": "irregulier",
+        "prefers": ("nourriture_baies", "coupes", "humides", "fourres", "pentes_abruptes_refuge"),
+        "avoids": ("zones_humaines",),
+        "water_tolerance_m": 30.0, "slope_max_deg": 45.0,
+        "human_avoidance_m": 120.0,
+        "signature_freq": 2.5, "signature_amp": 0.9,
+    },
     "dindon": {
         "angle_max_deg": 45.0, "segment_max_m": 15.0,
         "style": "court_rapide",
@@ -126,6 +136,24 @@ SPECIES_LOCOMOTION = {
         "avoids": (),
         "water_tolerance_m": 25.0, "slope_max_deg": 20.0,
         "signature_freq": 5.0, "signature_amp": 0.75,
+    },
+    "dindon_sauvage": {
+        "angle_max_deg": 45.0, "segment_max_m": 15.0,
+        "style": "court_rapide",
+        "prefers": ("lisieres", "clairieres", "zones_ouvertes", "zones_thermiques_matinales"),
+        "avoids": (),
+        "water_tolerance_m": 25.0, "slope_max_deg": 20.0,
+        "signature_freq": 5.0, "signature_amp": 0.75,
+    },
+    # P22Ω_COYOTE_REGISTRY_DECISION (2026-05-13) — coyote natif
+    "coyote": {
+        "angle_max_deg": 48.0, "segment_max_m": 18.0,
+        "style": "predateur_furtif",
+        "prefers": ("lisieres", "champs_brousailleux", "ravins", "vieux_chemins_forestiers", "zones_proies_dense"),
+        "avoids": ("zones_humaines_proches",),
+        "water_tolerance_m": 25.0, "slope_max_deg": 35.0,
+        "human_avoidance_m": 80.0,
+        "signature_freq": 3.5, "signature_amp": 0.85,
     },
 }
 
@@ -719,7 +747,10 @@ def _smoother_cache_key(body: dict) -> str:
     lat = float(body.get("lat", 0))
     lon = float(body.get("lon", 0))
     species = (body.get("species") or "orignal").lower().strip()
-    # Normalise alias frontend (cerf, dindon, wild_turkey, etc.)
+    # P22Ω_MULTI_FIX_A3 (2026-05-13 · COMMANDANT STEEVE-MAX)
+    # Normalisation OBLIGATOIRE alignée avec v20_performance_bundle :
+    # cerf→chevreuil, ours→ours_noir, dindon→dindon_sauvage, etc.
+    # Garantit que smoother et bundle partagent la même clé canonique.
     try:
         from engines.v8_institutional.v20_performance_bundle import normalize_species
         species = normalize_species(species)
@@ -788,10 +819,18 @@ async def generate_smoothed(request: Request):
     try:
         # P22H_FIX (2026-05-09 · COMMANDANT STEEVE-MAX) — propagation des
         # paramètres SALINE_CENTERED vers l'engine sous-jacent.
+        # P22Ω_MULTI_FIX_A3 (2026-05-13) — normalisation espèce avant gen_func
+        # pour aligner avec SPECIES_BEHAVIOR canonique du moteur V5.
+        _species_raw = body.get("species", "orignal")
+        try:
+            from engines.v8_institutional.v20_performance_bundle import normalize_species as _norm_sp
+            _species_canon = _norm_sp(_species_raw)
+        except Exception:
+            _species_canon = _species_raw
         payload = gen_func(
             lat=body.get("lat"),
             lon=body.get("lon"),
-            species=body.get("species", "orignal"),
+            species=_species_canon,
             month=body.get("month", 10),
             hour=body.get("hour", 7),
             wind_deg=body.get("wind_deg", 225),

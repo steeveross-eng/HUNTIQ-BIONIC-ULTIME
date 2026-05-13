@@ -20,7 +20,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 const API_BASE = process.env.REACT_APP_BACKEND_URL || '';
 const ORGANIC_URL = `${API_BASE}/api/v20/territoire/corridors-organic/generate`;
 
-const SPECIES_LIST = ['orignal', 'chevreuil', 'ours_noir', 'dindon_sauvage', 'wapiti'];
+const SPECIES_LIST = ['orignal', 'chevreuil', 'ours_noir', 'dindon_sauvage', 'wapiti', 'coyote'];
 const INTENSITY_LABELS = ['FAIBLE', 'MODÉRÉ', 'MOYEN', 'ÉLEVÉ', 'EXTRÊME'];
 const INTENSITY_COLORS = ['#FFE0B2', '#FFCC80', '#FFB74D', '#FF9800', '#E65100'];
 

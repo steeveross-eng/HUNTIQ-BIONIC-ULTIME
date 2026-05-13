@@ -48,7 +48,7 @@ const MULTI_SPECIES_PRESET = {
 };
 
 const SPECIES_LIST_DEFAULT = ['orignal', 'chevreuil', 'ours_noir',
-                              'dindon', 'wapiti'];
+                              'dindon', 'wapiti', 'coyote'];
 
 // P22Λ v3 ULTIME — Overrides locaux (bypass biorégion dans bulle 780m)
 const SPECIES_OVERRIDES_V3 = [
@@ -65,6 +65,10 @@ const SPECIES_OVERRIDES_V3 = [
     enable_local_presence: 'ENABLED', ignore_bioregion_for_local_bubble: 'ENABLED',
     forbid_global_override: 'ABSOLUTE' },
   { species: 'wapiti', apply_regions: ['BC', 'AB', 'SK', 'YT'],
+    enable_local_presence: 'ENABLED', ignore_bioregion_for_local_bubble: 'ENABLED',
+    forbid_global_override: 'ABSOLUTE' },
+  // P22Ω_COYOTE_REGISTRY_DECISION (2026-05-13 · COMMANDANT STEEVE-MAX)
+  { species: 'coyote', apply_regions: 'CANADA_WIDE',
     enable_local_presence: 'ENABLED', ignore_bioregion_for_local_bubble: 'ENABLED',
     forbid_global_override: 'ABSOLUTE' },
 ];

@@ -3117,3 +3117,48 @@ TEST 4 — Chaîne_Ω corridors :
 - ✅ V30 LOCKED inviolé sur les 5 espèces interrogées
 - ✅ Aucun testing_agent_v3_fork
 - ✅ Validation 100% manuelle (bash + curl + python3)
+
+---
+
+## 2026-05-13 · P22Ω_MULTI_FIX_A1_A4 — Corrections doctrinales V5 multi-espèces
+**Directive** : Correctifs A1 (ours_noir P0), A2 (coyote P1), A3 (smoother P1), A4 (dindon P2) + UI
+
+### Tableau AVANT / APRÈS (BSL · HIT)
+| Espèce | AVANT | APRÈS | Δ |
+|---|---|---|---|
+| chevreuil | 6 corr · CONFORME | 6 corr · CONFORME | — |
+| orignal | 7 corr · CONFORME | 7 corr · CONFORME | — |
+| **ours** | **0 corr · NON_CONFORME** | **6 corr V5 · CONFORME** | **+6 ✓ A1** |
+| dindon | 0 corr · HIT 16636ms | 0 corr · **HIT 163ms** | **×100 ✓ A4** |
+| **coyote** | 6 corr · fallback chevreuil silencieux | **7 corr · V30 remap explicite** | **native ✓ A2** |
+
+### Fichiers modifiés (8)
+**Backend**:
+- `engine_ia_corridors_organic_omega.py` (ours_noir relax + coyote behavior + 12 paires ours_noir)
+- `species_presence_mask_omega.py` (coyote registry + aliases)
+- `v20_performance_bundle.py` (coyote alias + V30→V5 remap fallback + cache halt A4)
+- `organic_corridor_smoother.py` (coyote/ours_noir locomotion + normalize cache key A3)
+
+**Frontend**:
+- `speciesConfig.js` (SPECIES.coyote complet)
+- `FusionDebugPanel.jsx` (+coyote dans SPECIES_LIST)
+- `LocalCorridorLensPanel.jsx` (+coyote dans SPECIES_LIST_DEFAULT + OVERRIDES_V3)
+
+### Critères de succès doctrinaux ATTEINTS
+- ✅ A1 ours_noir : 6 corridors V5 NATIFS (1 backbone + 5 subnets), source `ENGINE-IA-CORRIDORS-ORGANIC-Ω`
+- ✅ A2 coyote : espèce native enregistrée (8 fichiers), 0 fallback chevreuil silencieux
+- ✅ A3 smoother : `ours` et `ours_noir` partagent cache key canonique (HIT 219ms vs MISS 40s)
+- ✅ A4 dindon : HIT 163ms (vs 16636ms · gain ×100), `p22omega_halt_cached=True`
+- ✅ V30 LOCK INVIOLÉ · ESI Ω CONFORME 5/5
+- ✅ Wapiti exclu strictement
+
+### Artefacts
+- `/app/memory/audit_provenance/p22omega_multi_fix_a1_a4.md` (rapport complet)
+- `/app/memory/audit_provenance/p22omega_postfix_validation.log`
+- `/app/backend/tools/p22omega_postfix_validation.sh`
+
+### Conformité doctrinale
+- ✅ V30 LOCKED INVIOLÉ
+- ✅ Aucune mutation engine maître (uniquement registres + coefficients)
+- ✅ Aucun testing_agent_v3_fork
+- ✅ Validation 100% manuelle (bash + curl + python3)

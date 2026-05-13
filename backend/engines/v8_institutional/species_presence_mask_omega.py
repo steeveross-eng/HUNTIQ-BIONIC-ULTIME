@@ -97,6 +97,18 @@ SPECIES_PRESENCE_REGISTRY: Dict[str, Dict[str, Any]] = {
             (44.9, 47.0, -79.8, -66.5),
         ],
     },
+    # P22Ω_COYOTE_REGISTRY_DECISION (2026-05-13 · COMMANDANT STEEVE-MAX)
+    "coyote": {
+        "common_name": "Canis latrans",
+        "status_quebec": ("PRÉSENT — implanté sur tout le Québec méridional "
+                          "et progression continue vers le nord (Saguenay, BSL, "
+                          "Côte-Nord). Hybridation avec loup de l'Est documentée."),
+        "source": "MFFP 2024 — Plan de gestion coyote + Atlas mammifères Québec 2023",
+        "rectangles": [
+            # Québec méridional + ceinture forestière (jusqu'à 52°N estimé)
+            (44.5, 52.0, -79.8, -57.0),
+        ],
+    },
 }
 
 # Aliases d'espèce pour matcher la nomenclature frontend/backend
@@ -109,6 +121,9 @@ SPECIES_ALIASES = {
     "ours_noir": "ours_noir",
     "dindon": "dindon_sauvage",
     "dindon_sauvage": "dindon_sauvage",
+    # P22Ω_COYOTE_REGISTRY_DECISION (2026-05-13)
+    "coyote": "coyote",
+    "canis_latrans": "coyote",
 }
 
 
@@ -155,7 +170,7 @@ def get_species_presence(lat: float, lng: float, species: str) -> Dict[str, Any]
 def get_species_presence_mask(lat: float, lng: float) -> Dict[str, Any]:
     """Masque pour TOUTES les espèces officielles à ce territoire (lat, lng)."""
     mask = {}
-    for canon in ("chevreuil", "orignal", "wapiti", "ours_noir", "dindon_sauvage"):
+    for canon in ("chevreuil", "orignal", "wapiti", "ours_noir", "dindon_sauvage", "coyote"):
         mask[canon] = get_species_presence(lat, lng, canon)
     return {
         "phase": PHASE_NAME,

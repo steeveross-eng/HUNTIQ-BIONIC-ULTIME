@@ -135,6 +135,32 @@ export const SPECIES = {
   },
 };
 
+// P22Ω_COYOTE_REGISTRY_DECISION (2026-05-13 · COMMANDANT STEEVE-MAX)
+// Coyote (Canis latrans) — prédateur opportuniste, présent Québec méridional + BSL.
+SPECIES.coyote = {
+  id: 'coyote',
+  name: 'Coyote',
+  scientificName: 'Canis latrans',
+  iconName: 'Dog',
+  color: '#9CA3AF',
+  layers: [
+    'habitats', 'alimentation', 'corridors', 'repos',
+    'hydro', 'peuplements', 'pentes', 'ndvi',
+  ],
+  habitatPrefs: {
+    prefersWaterProximity: false,
+    prefersConifer: false,
+    prefersDenseForest: false,
+    prefersEdges: true,
+    prefersElevation: false,
+  },
+  scoreWeights: {
+    habitats: 1.0, alimentation: 1.3, corridors: 1.1,
+    repos: 0.9, hydro: 0.8, peuplements: 0.9,
+    pentes: 0.7, ndvi: 1.1,
+  },
+};
+
 /**
  * Retourne la liste des couches BIONIC pertinentes pour une espèce.
  * Si 'tous', retourne null (pas de filtrage).

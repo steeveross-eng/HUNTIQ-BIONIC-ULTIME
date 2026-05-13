@@ -148,7 +148,7 @@ ORGANIC_CONFIG: dict[str, Any] = {
     "cumulative_thickness_multiplier": 1.5,
 
     # Multi-species (référence vers SPECIES-PROFILES-Ω)
-    "species_supported": ["chevreuil", "orignal", "wapiti", "ours_noir", "dindon_sauvage"],
+    "species_supported": ["chevreuil", "orignal", "wapiti", "ours_noir", "dindon_sauvage", "coyote"],
 }
 
 # Paramètres biologiques par espèce — enrichit SPECIES-PROFILES avec des
@@ -157,8 +157,14 @@ SPECIES_BEHAVIOR: dict[str, dict[str, float]] = {
     "chevreuil":      {"prudence": 0.80, "amplitude": 0.45, "vitesse": 0.55, "ouverture_preferee": 0.35, "hydro_dep": 0.30, "couvert_pref": 0.75, "sinuosity": 1.80, "n_corridors": 14},
     "orignal":        {"prudence": 0.55, "amplitude": 0.80, "vitesse": 0.40, "ouverture_preferee": 0.20, "hydro_dep": 0.95, "couvert_pref": 0.80, "sinuosity": 1.00, "n_corridors": 10},
     "wapiti":         {"prudence": 0.75, "amplitude": 0.95, "vitesse": 0.70, "ouverture_preferee": 0.60, "hydro_dep": 0.40, "couvert_pref": 0.50, "sinuosity": 0.75, "n_corridors": 9},
-    "ours_noir":      {"prudence": 0.95, "amplitude": 0.90, "vitesse": 0.50, "ouverture_preferee": 0.15, "hydro_dep": 0.55, "couvert_pref": 0.90, "sinuosity": 1.70, "n_corridors": 12},
+    # P22Ω_MULTI_FIX_A1 (2026-05-13 · COMMANDANT STEEVE-MAX) — ours_noir
+    # couvert_pref 0.90 → 0.70 (assouplissement smart_deviation au BSL)
+    # prudence    0.95 → 0.80 (relax filtres ZAH)
+    "ours_noir":      {"prudence": 0.80, "amplitude": 0.85, "vitesse": 0.50, "ouverture_preferee": 0.20, "hydro_dep": 0.55, "couvert_pref": 0.70, "sinuosity": 1.55, "n_corridors": 12},
     "dindon_sauvage": {"prudence": 0.70, "amplitude": 0.30, "vitesse": 0.60, "ouverture_preferee": 0.75, "hydro_dep": 0.35, "couvert_pref": 0.45, "sinuosity": 1.30, "n_corridors": 12},
+    # P22Ω_COYOTE_REGISTRY_DECISION (2026-05-13 · COMMANDANT STEEVE-MAX) — coyote natif
+    # Profil prédateur opportuniste : haute prudence, sinuosité élevée, ouverture mixte
+    "coyote":         {"prudence": 0.85, "amplitude": 0.60, "vitesse": 0.75, "ouverture_preferee": 0.45, "hydro_dep": 0.35, "couvert_pref": 0.60, "sinuosity": 1.40, "n_corridors": 10},
 }
 
 # P22Ω_CORRIDORS_RESTORE_V90 · P1_RESTORE · 2026-05-11
@@ -616,13 +622,29 @@ BIOLOGICAL_PAIR_COMPATIBILITY: dict[str, set[tuple[str, str]]] = {
         ("thermique", "repos"), ("hotspot", "alimentation"),
     },
     "ours_noir": {
+        # P22Ω_MULTI_FIX_A1 (2026-05-13 · COMMANDANT STEEVE-MAX)
+        # Refuge absent du bundle au BSL → élargissement paires biologiquement
+        # plausibles (alimentation/humide/repos/saline/hotspot) tout en gardant
+        # les paires "refuge" pour les territoires où elles sont disponibles.
         ("alimentation", "refuge"), ("alimentation", "humide"),
         ("alimentation", "repos"), ("refuge", "humide"),
         ("alimentation", "hotspot"), ("hotspot", "refuge"),
+        ("alimentation", "saline"), ("saline", "repos"),
+        ("humide", "repos"), ("humide", "hotspot"),
+        ("hotspot", "repos"), ("repos", "saline"),
     },
     "dindon_sauvage": {
         ("alimentation", "thermique"), ("alimentation", "repos"),
         ("thermique", "repos"), ("alimentation", "hotspot"),
+    },
+    # P22Ω_COYOTE_REGISTRY_DECISION (2026-05-13 · COMMANDANT STEEVE-MAX)
+    # Coyote (Canis latrans) — prédateur opportuniste sud-Québec, large territoire,
+    # déplace entre zones d'alimentation (proies) ↔ refuges ↔ points d'eau.
+    "coyote": {
+        ("alimentation", "repos"), ("alimentation", "humide"),
+        ("alimentation", "hotspot"), ("repos", "humide"),
+        ("humide", "hotspot"), ("alimentation", "saline"),
+        ("saline", "repos"), ("hotspot", "repos"),
     },
 }
 

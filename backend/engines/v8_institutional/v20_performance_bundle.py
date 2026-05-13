@@ -41,6 +41,8 @@ SPECIES_ALIAS_TO_CANONICAL = {
     "moose": "orignal",       "deer": "chevreuil",
     "bear": "ours_noir",      "elk": "wapiti",
     "wild_turkey": "dindon_sauvage",
+    # P22Ω_COYOTE_REGISTRY_DECISION (2026-05-13 · COMMANDANT STEEVE-MAX)
+    "coyote": "coyote",       "canis_latrans": "coyote",
 }
 
 
@@ -625,6 +627,12 @@ async def v20_territoire_bundle(
     if result.get("bio_presence_mask_halt") is True:
         # Pipeline court-circuité : corridors vides, on renvoie le bundle tel quel
         # (zones vitales, salines, hotspots restent affichés pour audit écologique).
+        # P22Ω_MULTI_FIX_A4 (2026-05-13 · COMMANDANT STEEVE-MAX) — cache le résultat
+        # halté pour éviter recompute coûteux (16+s observé dindon BSL).
+        result["cache"] = "MISS"
+        result["served_ms"] = round((time.time() - t0) * 1000, 2)
+        result["p22omega_halt_cached"] = True
+        _cache_set(key, result)
         return result
 
     # ═══════════════════════════════════════════════════════════════════════
@@ -752,6 +760,42 @@ async def v20_territoire_bundle(
     if _V5_REWIRE_ACTIVE:
         v5_corridors_raw = v5_bundle.get("corridors", []) or []
         v5_mapped = map_v5_corridors_to_ui(v5_corridors_raw)
+        # ═══════════════════════════════════════════════════════════════════
+        # P22Ω_MULTI_FIX_A1 (2026-05-13 · COMMANDANT STEEVE-MAX) — REMAP V30
+        # ═══════════════════════════════════════════════════════════════════
+        # Si V5 ENGINE retourne 0 corridors MAIS espèce présente MFFP ET le
+        # pipeline V30 (result["corridors"] avant override) contient des
+        # corridors, on remappe ces V30 vers la structure V5 UI pour éviter
+        # un vide visuel total (ex: ours_noir BSL où couvert_pref strict
+        # filtrait tous les paths V5).
+        # FUSION ADD-ONLY · V30 LOCK INTACT.
+        # ═══════════════════════════════════════════════════════════════════
+        _v30_remap_applied = False
+        if not v5_mapped and not result.get("bio_presence_mask_halt"):
+            _v30_corridors = result.get("corridors", []) or []
+            if len(_v30_corridors) >= 5:
+                # Remap V30 vers structure V5 (max 7 corridors, cap doctrinal)
+                _v30_sorted = sorted(
+                    _v30_corridors,
+                    key=lambda c: (c.get("intensity") or c.get("score") or 0),
+                    reverse=True,
+                )[:7]
+                v5_mapped = []
+                for _i, _c in enumerate(_v30_sorted):
+                    _hier = ("veine_principale" if _i < 2 else "veine_secondaire")
+                    _m = dict(_c)
+                    _m["id"] = _c.get("id") or f"corr_v30remap_{_i:03d}"
+                    _m["hierarchy"] = _hier
+                    _m["color"] = _HIER_COLOR_V5.get(_hier, "#FF8F00")
+                    _m["source"] = "V30_REMAP_TO_V5 (P22Ω_MULTI_FIX_A1)"
+                    _m["fusion_doctrine"] = "P22Ω_V30_REMAP_TO_V5"
+                    _m["subnet_role"] = "backbone" if _i < 2 else "subnet"
+                    v5_mapped.append(_m)
+                _v30_remap_applied = True
+                logger.info(
+                    f"[P22Ω_MULTI_FIX_A1] V30→V5 REMAP species={species} "
+                    f"n_v30={len(_v30_corridors)} → n_v5_remap={len(v5_mapped)}"
+                )
         result["corridors"] = v5_mapped
         result["p22sigma_v5_bundle_rewire"] = {
             "applied": True,
@@ -764,6 +808,7 @@ async def v20_territoire_bundle(
             "doctrine": "P22Σ_V5_BUNDLE_REWIRE_Ω",
             "wired_at": "v20_performance_bundle.v20_territoire_bundle",
             "optim": "V10_SINGLE_CALL_THEN_V5_REUSE",
+            "v30_remap_fallback_applied": _v30_remap_applied,
         }
     else:
         # Fallback V10 : on garde le pipeline legacy + signal d'échec
