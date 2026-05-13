@@ -873,6 +873,27 @@ async def generate_smoothed(request: Request):
     return JSONResponse(payload)
 
 
+@router.post("/purge")
+async def smoother_purge():
+    """P22Ω_CORRIDORS_ZONES_STABILISATION · 2026-05-13
+    Flush LRU du cache smoother (jumelé à /api/v20/territoire/bundle/purge).
+    """
+    n = len(_SMOOTHER_CACHE)
+    _SMOOTHER_CACHE.clear()
+    return JSONResponse({"purged_smoother_lru": n, "ok": True})
+
+
+@router.get("/cache-stats")
+async def smoother_cache_stats():
+    """Stats LRU du cache smoother."""
+    return JSONResponse({
+        "size": len(_SMOOTHER_CACHE),
+        "max": _SMOOTHER_CACHE_MAX,
+        "ttl_sec": _SMOOTHER_CACHE_TTL_SEC,
+        "keys_sample": list(_SMOOTHER_CACHE.keys())[:10],
+    })
+
+
 @router.get("/smoother-status")
 async def smoother_status():
     """Diagnostic institutionnel du smoother X180 AMENDEMENT-FINAL."""

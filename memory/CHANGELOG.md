@@ -3048,3 +3048,39 @@ TEST 4 — Chaîne_Ω corridors :
 - ✅ FUSION ADD-ONLY · liens additifs · telemetry passive
 - ✅ ANTI-GÉNÉRIQUE STRICT · vraie persistance JSONL · pas de fake log
 - ✅ Aucun testing_agent_v3_fork
+
+---
+
+## 2026-05-13 · P22Ω_CORRIDORS_ZONES_STABILISATION
+**Directive** : `--lock-v30 --flush-lru --rehydrate-cache --validate-corridors --validate-zones --no-fallback --force-hit --finalize`
+**Waypoint** : BSL (48.206657, -68.382422) · espèce CHEVREUIL
+
+### Endpoints ajoutés (smoother)
+- `POST /api/v20/territoire/corridors-organic/purge` — flush LRU smoother (parité avec `/bundle/purge`)
+- `GET  /api/v20/territoire/corridors-organic/cache-stats` — diagnostic LRU smoother
+
+### Validation institutionnelle BSL/Chevreuil
+| Vecteur | Verdict |
+|---|---|
+| V30 doctrine | ✓ engine_v30_locked=True · non_regression_guaranteed=True |
+| LRU bundle + smoother | ✓ purgés (0 résidu) |
+| Bundle MISS rehydraté | ✓ 42.6 s · cache=MISS · 6 corridors |
+| Smoother MISS rehydraté | ✓ 20.6 s · 7 corridors |
+| Corridors V5 [5-7] | ✓ 6 corridors · 1 backbone + 5 subnets · cap 13→6 |
+| Zones canoniques | ✓ 5/5 (rut, alimentation, repos, eau, thermique) |
+| Hotspots / Salines | ✓ 4 / 6 |
+| ESI Ω | ✓ CONFORME |
+| Pas de fallback V10 | ✓ V5 REWIRE ACTIF |
+| Force-HIT bundle | ✓ X-Cache=HIT · compute 0.02 ms |
+| Force-HIT smoother | ✓ cache=HIT · 7 corridors |
+
+### Artefacts
+- `/app/memory/audit_provenance/p22omega_corridors_zones_stabilisation.md` — rapport complet
+- `/app/memory/audit_provenance/p22omega_corridors_zones_stab_run1.log` — log d'exécution
+- `/app/backend/tools/p22omega_corridors_zones_stabilisation.sh` — script réjouable
+
+### Conformité doctrinale
+- ✅ V30 LOCKED INVIOLÉ
+- ✅ Aucune mutation engine maître
+- ✅ Aucun testing_agent_v3_fork (interdit par le Commandant)
+- ✅ Validation 100% manuelle (bash + curl + python3)
