@@ -3427,3 +3427,42 @@ Au MÊME waypoint, MÊME paire de nodes vitaux :
 - ✅ Supervisor.conf intact (READONLY respecté)
 - ✅ Validation 100% manuelle · zéro testing_agent_v3_fork
 - ✅ Liens HTTPS téléchargeables actifs via REACT_APP_BACKEND_URL
+
+---
+
+## 2026-05-13 · P22Ω_TERRITOIRE_UI_INJONCTION_Ω — Élimination 404 UI (×200)
+**Diagnostic** : Un SEUL endpoint 404 réel détecté : `/api/v20/territoire/lep/status` (router LEP désactivé doctrinalement 2026-04-20)
+
+### Action doctrinale
+Stub endpoint `/api/v20/territoire/lep/status` créé dans `server.py` :
+- HTTP 200 avec `{status: "DISABLED", reason: "EXCLUDE_LAYER LEP_CRITICAL_HABITAT_NATIONAL", directive: "STEEVE-MAX 2026-04-20"}`
+- NE RÉACTIVE PAS le router LEP (préservation directive)
+- Élimine 404 silencieux qui aurait pu déclencher l'auto-recovery agressif de `StatutCorridorsOmegaPanel`
+
+### Endpoints UI TERRITOIRE — 13/13 → HTTP 200
+✓ bundle · buffer-600m · engines-catalog · gouvernance · lep/status · registry-lock · rendu-omega/rules · sla-baseline-30j
+✓ /v30/health · /v30/ultime-score · /v30/corridors/layer-diagnostic · /v30/corridors/status · /v30/corridors/vitaux-omega
+
+### Preuves corridors présents (bundle Redis HIT)
+- 7 corridors V5 NATIFS (1 backbone + 5 subnets + 1 connector)
+- 5 zones canoniques · 10 hotspots · 6 salines · 6 affuts · 18 contamination
+- V30 remap=False · ESI=CONFORME · data_source=V11-LIDAR-IRDA-SUPRA
+- cache=HIT served_ms=0.02
+
+### Constat doctrinal important
+Les 6 endpoints atomiques de l'injonction (`/corridors`, `/zones`, `/hotspots`, `/salines`, `/affuts`, `/contamination`) **N'EXISTENT PAS** dans le backend ET **NE SONT PAS appelés par le frontend**. Architecture **bundle-only** confirmée : `/api/v20/territoire/bundle` retourne TOUTES les couches atomiquement.
+
+### Fichiers modifiés
+- `/app/backend/server.py` (+16 lignes — endpoint stub `/lep/status`)
+- AUCUNE mutation engines · AUCUNE mutation UI
+
+### Artefacts
+- `/app/memory/audit_provenance/p22omega_territoire_ui_404_audit.md`
+- `/app/memory/audit_provenance/p22omega_territoire_ui_injonction_omega.md`
+
+### Conformité doctrinale
+- ✅ V30 LOCK INVIOLÉ
+- ✅ Aucun changement moteur (engines/* intacts)
+- ✅ Aucune réactivation du router LEP désactivé
+- ✅ Validation 100% manuelle (curl + Playwright console capture)
+- ✅ Aucun testing_agent

@@ -1170,6 +1170,27 @@ except Exception as e:
 # except Exception as e:
 #     logger.warning(f"LEP-INGESTION-Ω not loaded: {e}")
 
+# ═══════════════════════════════════════════════════════════════════════════
+# P22Ω_TERRITOIRE_UI_INJONCTION_Ω · 2026-05-13 · STEEVE-MAX
+# ═══════════════════════════════════════════════════════════════════════════
+# Endpoint stub pour /api/v20/territoire/lep/status (router LEP désactivé
+# par directive 2026-04-20). Le frontend `InstitutionalHealthPanel.jsx`
+# appelle cet endpoint et recevait HTTP 404 silencieux. Doctrine :
+# retourner HTTP 200 avec status="DISABLED" pour aligner UI ↔ backend
+# sans réactiver le router LEP (qui reste exclu doctrinalement).
+@app.get("/api/v20/territoire/lep/status")
+async def lep_status_stub_doctrinal():
+    return {
+        "status": "DISABLED",
+        "reason": "EXCLUDE_LAYER LEP_CRITICAL_HABITAT_NATIONAL",
+        "directive": "STEEVE-MAX 2026-04-20",
+        "phase": "XI-SUPRA-D",
+        "router_active": False,
+        "module_preserved": True,
+        "ingestion": {"ingested": False, "last_ingest_utc": None},
+        "doctrine": "P22Ω_TERRITOIRE_UI_INJONCTION_Ω",
+    }
+
 # MONITORING-Ω + ALERTE-ANOMALIES-Ω
 try:
     from engines.v8_institutional.monitoring_alerte_omega import router as monitoring_router
