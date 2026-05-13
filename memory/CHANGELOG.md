@@ -3466,3 +3466,39 @@ Les 6 endpoints atomiques de l'injonction (`/corridors`, `/zones`, `/hotspots`, 
 - ✅ Aucune réactivation du router LEP désactivé
 - ✅ Validation 100% manuelle (curl + Playwright console capture)
 - ✅ Aucun testing_agent
+
+---
+
+## 2026-05-13 · P22Ω_FRONTEND_RENDER_INJONCTION_Ω — Rendu tardif éliminé (×300)
+**Cause racine identifiée** : Second fetch UI `/api/v20/territoire/corridors-organic/generate` lancé en parallèle du bundle dans `BionicLayersV8.jsx:248-296`. Après 15-30s, `setOrganicBundle(data)` écrasait les corridors V5 NATIFS du bundle Redis via `organicReady = true` (ligne 442-445).
+
+### Correctifs appliqués (BionicLayersV8.jsx — 1 seul fichier)
+1. **Prop `forceOrganicLatePass = false`** ajoutée (default OFF — réactivable explicitement pour audit)
+2. **Early-return** du useEffect du second fetch si `!forceOrganicLatePass`
+3. **Neutralisation `organicReady = false`** par défaut → `corridorsToRender = corridors` (bundle Redis V5 NATIF) systématiquement
+
+### Preuve terrain Playwright
+- Test 20s navigation `/territoire`
+- ✓ **0 appel** à `/corridors-organic/generate` capturé
+- Frontend tourne sans second fetch tardif
+
+### Late-passes audités (tous OK)
+| Late-pass | Statut |
+|---|---|
+| Predictive UI | ✓ Intégré au bundle (pas de fetch séparé) |
+| Contamination UI | ✓ Intégré au bundle |
+| Interzone UI | ✓ Intégré au bundle |
+| Veineux UI | ✓ Intégré au bundle |
+| Auto-refresh UI | ✓ Non déclenché (13/13 endpoints 200) |
+| sessionStorage recovery | ✓ Non déclenchés |
+
+### Conformité doctrinale
+- ✅ V30 LOCK INVIOLÉ
+- ✅ Aucun changement moteur backend
+- ✅ Source unique corridors = bundle Redis (V5 NATIF post-P22Ω_DIVERGENCE)
+- ✅ Réactivable smoother pour audit via `forceOrganicLatePass={true}`
+- ✅ Validation 100% manuelle (Playwright network capture)
+- ✅ Aucun testing_agent
+
+### Artefact
+- `/app/memory/audit_provenance/p22omega_frontend_render_injonction_omega.md`

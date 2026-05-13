@@ -84,6 +84,11 @@ const BionicLayersV8 = ({
   showContamination = true,
   showNutrition = true,
   useOrganicCorridors = true, // Phase XI-SUPRA-L+1-M : activation frontend ORGANIC
+  // P22Ω_FRONTEND_RENDER_INJONCTION_Ω (×300 · 2026-05-13 · STEEVE-MAX)
+  // forceOrganicLatePass = false par défaut : le second fetch /corridors-organic/
+  // generate est DÉSACTIVÉ. Les corridors V5 NATIFS du bundle Redis suffisent.
+  // Réactivable explicitement via prop si besoin d'audit smoother.
+  forceOrganicLatePass = false,
   enabled = true,
   onDataLoaded = null,
   onSalineNutritionDblClick = null, // PHASE_NUTRITION_SALINES_BINDING_Ω
@@ -233,6 +238,28 @@ const BionicLayersV8 = ({
     }
   }, [map, currentZoom]);
 
+  // ═══════════════════════════════════════════════════════════════════════
+  // P22Ω_FRONTEND_RENDER_INJONCTION_Ω · 2026-05-13 · STEEVE-MAX (×300)
+  // ═══════════════════════════════════════════════════════════════════════
+  // DÉSACTIVATION du second fetch organic-corridors qui causait le rendu
+  // tardif observé par le Commandant ("Corridors visibles → puis remplacés
+  // après ~15 secondes").
+  //
+  // Cause racine : BionicLayersV8 lançait un SECOND fetch /corridors-organic/
+  // generate (smoother direct, anchor_mode=SALINE_CENTERED) APRÈS le bundle.
+  // Le smoother compute prenait 15-30s en MISS, puis écrasait les corridors
+  // V5 NATIFS déjà présents dans le bundle Redis HIT.
+  //
+  // Solution doctrinale : SOURCE UNIQUE = bundle Redis. Le bundle Redis
+  // contient désormais les corridors V5 NATIFS (post-P22Ω_REDIS_HOIST +
+  // P22Ω_CORRIDORS_DIVERGENCE_INTER_ESPECES). Pas besoin de smoother.
+  //
+  // Le second fetch est DÉSACTIVÉ via early-return du useEffect ci-dessous.
+  // Le fallback `organicReady` reste en place (line 442) pour compatibilité,
+  // mais avec setOrganicBundle jamais appelé → corridorsToRender = corridors
+  // (depuis bundleData) systématiquement.
+  // ═══════════════════════════════════════════════════════════════════════
+
   // CORRIDORS_ORGANIC (Phase XI-SUPRA-L+1-M) : fetch des corridors organiques
   // 120 points + thickness variable + hiérarchie, cache 60s.
   // COMMANDE STEEVE-MAX — supprimé l'early return : on fetch même sans waypoint
@@ -246,6 +273,10 @@ const BionicLayersV8 = ({
   //   - State corridorsLoading exposé pour indicateur UI (R3).
   const inflightOrganicKeyRef = useRef(null);
   useEffect(() => {
+    // P22Ω_FRONTEND_RENDER_INJONCTION_Ω · 2026-05-13 · STEEVE-MAX
+    // SECOND FETCH DÉSACTIVÉ — source unique = bundle Redis (V5 NATIF déjà inclus)
+    // Pour réactiver le smoother, passer la prop `forceOrganicLatePass={true}`
+    if (!forceOrganicLatePass) return;
     if (!useOrganicCorridors || !enabled) return;
     if (!waypointCenter) return;  // garde-fou minimal : besoin d'un centre
     // P22Σ_FIX — propagation anchor_mode dynamique (mono-layer ⇒ TERRITORY_CONTINUOUS)
@@ -294,7 +325,7 @@ const BionicLayersV8 = ({
           inflightOrganicKeyRef.current = null;
         }
       });
-  }, [waypointCenter, species, useOrganicCorridors, enabled]);
+  }, [waypointCenter, species, useOrganicCorridors, enabled, forceOrganicLatePass]);
 
   // AMPLIFICATION-Ω-V13: helpers de scaling
   const corridorWeightFactor = currentZoom < 14 ? (1 + (15 - currentZoom) * 0.3) : 1;
@@ -439,9 +470,22 @@ const BionicLayersV8 = ({
     //   • §B7 clipping progressif fade-out 8-12m
     //   • §B1-B6 CatmullRom 28 strict, segment ≤20m, angle ≤45°, continuité stricte
     const corridorsVisibleAtZoom = isCorridorsVisibleAtZoom(currentZoom);
-    // COMMANDE STEEVE-MAX — fallback robuste : RENDUΩ utilise organicBundle
-    // si disponible, sinon les corridors du bundle V20 (V30 + INTERZONE + ENTRANTS).
-    const organicReady = useOrganicCorridors && organicBundle?.corridors?.length > 0;
+    // ═══════════════════════════════════════════════════════════════════════
+    // P22Ω_FRONTEND_RENDER_INJONCTION_Ω · 2026-05-13 · STEEVE-MAX (×300)
+    // ═══════════════════════════════════════════════════════════════════════
+    // SOURCE UNIQUE = bundle Redis (V5 NATIF inclus depuis P22Ω_REDIS_HOIST).
+    // Le fallback `organicReady → organicBundle.corridors` est NEUTRALISÉ
+    // car le bundle Redis contient désormais les corridors V5 NATIFS
+    // (P22Ω_CORRIDORS_DIVERGENCE_INTER_ESPECES : signature géométrique
+    // propre par espèce). Le second fetch /corridors-organic/generate
+    // (smoother direct) qui causait le rendu tardif est désactivé.
+    //
+    // Pour réactiver le smoother en pré-rendu (audit doctrinal),
+    // passer la prop forceOrganicLatePass={true} au composant parent.
+    // ═══════════════════════════════════════════════════════════════════════
+    const organicReady = forceOrganicLatePass
+      ? (useOrganicCorridors && organicBundle?.corridors?.length > 0)
+      : false;
     const corridorsToRender = organicReady ? organicBundle.corridors : corridors;
     // Log institutionnel obligatoire — traçabilité du rendu
     try {
