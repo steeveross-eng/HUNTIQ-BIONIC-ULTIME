@@ -3084,3 +3084,36 @@ TEST 4 — Chaîne_Ω corridors :
 - ✅ Aucune mutation engine maître
 - ✅ Aucun testing_agent_v3_fork (interdit par le Commandant)
 - ✅ Validation 100% manuelle (bash + curl + python3)
+
+---
+
+## 2026-05-13 · P22Ω_TERRITOIRE_VALIDATION_MULTI_ESPECES_X1000
+**Directive** : `--validate-{chevreuil,orignal,ours,dindon,coyote} --exclude-wapiti --confirm-visual --finalize`
+**Waypoint** : BSL (48.206657, -68.382422) · MOIS=10 · HEURE=7
+
+### Synthèse multi-espèces
+| Espèce | Corridors | Zones | Halt MFFP | V5 actif | Verdict |
+|---|---|---|---|---|---|
+| chevreuil | 6 (1B+5S) | 5 | ✗ | ✓ | ✓ CONFORME |
+| orignal | 7 (2B+5S) | 5 | ✗ | ✓ | ✓ CONFORME |
+| ours | **0** | 5 | ✗ | ✓ | ⚠ NON_CONFORME |
+| dindon | 0 | 5 | ✓ HALT BSL > 47°N | ✗ | ✓ CONFORME (halt légitime) |
+| coyote | 6 (fallback chevreuil) | 5 | ✗ | ✓ | ⚠ FALLBACK SILENCIEUX |
+| wapiti | — | — | — | — | ✓ EXCLU |
+
+### Anomalies arbitrage requis
+- **A1 [P0]** : V5 `ours_noir` au BSL produit 0 corridors malgré présence MFFP confirmée (V30 raw=12).
+- **A2 [P1]** : coyote non enregistré → fallback silencieux chevreuil (4 fichiers à patcher OU bloquer espèce).
+- **A3 [P1]** : Smoother ne normalise pas `ours → ours_noir`, masquant A1 derrière fallback chevreuil.
+- **A4 [P2]** : Dindon HIT 16.6 s anormal (cache contourné quand halt=True).
+
+### Artefacts
+- `/app/memory/audit_provenance/p22omega_territoire_validation_multi_especes_x1000.md`
+- `/app/memory/audit_provenance/p22omega_multi_especes_run1.log`
+- `/app/backend/tools/p22omega_multi_especes_x1000.sh`
+
+### Conformité doctrinale
+- ✅ Wapiti exclu (0 requête émise)
+- ✅ V30 LOCKED inviolé sur les 5 espèces interrogées
+- ✅ Aucun testing_agent_v3_fork
+- ✅ Validation 100% manuelle (bash + curl + python3)
