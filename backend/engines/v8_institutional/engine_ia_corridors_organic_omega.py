@@ -777,35 +777,81 @@ def _generate_corridor_between(node_a: dict, node_b: dict, species_behavior: dic
 
     Produit 12 points de contrôle biomimétiques (sinuosités + oscillations) puis
     subdivise à 120 points via `_catmull_rom_organic(subs=12)`.
+
+    ═══════════════════════════════════════════════════════════════════
+    P22Ω_CORRIDORS_DIVERGENCE_INTER_ESPECES · 2026-05-13 · STEEVE-MAX
+    ═══════════════════════════════════════════════════════════════════
+    AVANT : seul `sinuosity` était lu → convergence visuelle inter-espèces.
+    APRÈS : injection homogène (unités degrés) de TOUS les paramètres
+    comportementaux SPECIES_BEHAVIOR via modulation de `off` (offset
+    perpendiculaire micro) :
+      - amplitude   → magnitude oscillations (orignal=0.8 large, chevreuil=0.45 modéré)
+      - vitesse     → fréquence (chevreuil=0.55 → 1.65, coyote=0.75 → 2.25)
+      - hydro_dep   → biais en demi-arche vers eau (orignal=0.95 aimanté)
+      - ouverture_preferee → biais arche opposée si zone ouverte (dindon=0.75)
+      - couvert_pref → renforce micro-oscillations si couvert (chevreuil=0.75)
+      - prudence    → léger arc défensif (ours_noir=0.80 prudent)
+    Chaque espèce génère une SIGNATURE GÉOMÉTRIQUE PROPRE — sans inflation
+    pathologique (offsets restent ∈ [−0.08, 0.08] rad·degré).
     """
     mark_call(ENGINE_NAME)
     s_lat, s_lon = node_a["lat"], node_a["lon"]
     e_lat, e_lon = node_b["lat"], node_b["lon"]
-    seed = _seed_noise(s_lat, s_lon, f"{node_a['source_id']}->{node_b['source_id']}_{seed_salt}")
 
     cos_lat = max(0.5, math.cos(math.radians(s_lat)))
     sinuosity = float(species_behavior.get("sinuosity", 1.0))
     micro_coulees = float(terrain_ms.get("features", {}).get("micro_coulees", 0.4))
 
+    # P22Ω_CORRIDORS_DIVERGENCE_INTER_ESPECES — paramètres comportementaux étendus
+    amplitude   = float(species_behavior.get("amplitude", 0.5))           # 0.3–0.9
+    vitesse     = float(species_behavior.get("vitesse", 0.55))            # 0.4–0.9
+    hydro_dep   = float(species_behavior.get("hydro_dep", 0.4))           # 0.3–0.95
+    ouv_pref    = float(species_behavior.get("ouverture_preferee", 0.4))  # 0.15–0.75
+    couvert_pref = float(species_behavior.get("couvert_pref", 0.7))       # 0.45–0.9
+    prudence    = float(species_behavior.get("prudence", 0.75))           # 0.55–0.95
+
+    # Signaux terrain pour modulation (bornés [0,1])
+    hydro_signal = float(terrain_ms.get("features", {}).get("drainage_density", 0.4))
+    couvert_signal = float(terrain_ms.get("features", {}).get("forest_cover", 0.5))
+    open_signal = float(terrain_ms.get("features", {}).get("open_areas", 0.3))
+
     n_ctrl = 12
     ctrl: list[tuple[float, float]] = [(s_lat, s_lon)]
+    dlat = e_lat - s_lat
+    dlon = e_lon - s_lon
     for j in range(1, n_ctrl - 1):
         frac = j / (n_ctrl - 1)
-        b_lat = s_lat + (e_lat - s_lat) * frac
-        b_lon = s_lon + (e_lon - s_lon) * frac
+        b_lat = s_lat + dlat * frac
+        b_lon = s_lon + dlon * frac
 
-        # Oscillation basse fréquence (flux biomimétique)
-        osc_low = sinuosity * 0.040 * math.sin(j * 1.9
-                                                + _seed_noise(s_lat, s_lon, f"osc_low_{j}_{seed_salt}") * 6.28)
-        # Oscillation haute fréquence (micro-relief)
-        osc_high = micro_coulees * 0.017 * math.sin(j * 5.3
-                                                     + _seed_noise(s_lat, s_lon, f"osc_high_{j}_{seed_salt}") * 6.28)
-        # Fractal variation light
+        # Oscillation basse fréquence (amplitude × sinuosity, fréquence pilotée par vitesse)
+        osc_low = sinuosity * amplitude * 0.040 * math.sin(
+            j * (1.5 + vitesse * 0.8)
+            + _seed_noise(s_lat, s_lon, f"osc_low_{j}_{seed_salt}") * 6.28
+        )
+        # Oscillation haute fréquence — modulée par couvert_pref × couvert terrain
+        # forte couvert_pref + couvert dense → micro-zigzag (chevreuil en sous-bois)
+        couvert_factor = 0.6 + 0.8 * couvert_pref * couvert_signal
+        osc_high = micro_coulees * 0.017 * couvert_factor * math.sin(
+            j * (4.5 + vitesse * 1.6)
+            + _seed_noise(s_lat, s_lon, f"osc_high_{j}_{seed_salt}") * 6.28
+        )
+        # Biais perpendiculaire espèce-spécifique (demi-arche selon frac)
+        # hydro_dep × hydro_signal → tendance à dévier vers cours d'eau (latéral)
+        # ouv_pref × open_signal → tendance opposée si zone ouverte
+        # Calibré bornes : max ±0.025 (≈ 2.8 km à l'équateur, mais multiplié par dlat/dlon ≤ 0.01 → 25m)
+        species_bias = (
+            (hydro_dep - 0.5) * hydro_signal * 0.025
+            - (ouv_pref - 0.4) * open_signal * 0.020
+        ) * math.sin(math.pi * frac)
+        # Arc défensif prudence (convexité douce, espèces prudentes)
+        convex_arc = (prudence - 0.7) * 0.018 * math.sin(math.pi * frac)
+        # Fractal variation
         frac_perturb = 0.012 * (_seed_noise(s_lat, s_lon, f"frac_{j}_{seed_salt}") - 0.5)
 
-        dlat = e_lat - s_lat
-        dlon = e_lon - s_lon
-        off = osc_low + osc_high + frac_perturb
+        off = osc_low + osc_high + species_bias + convex_arc + frac_perturb
+        # Application perpendiculaire (formule originale : swap composantes)
+        # off [-0.07, 0.07] × dlon ≤ 0.01 → décalage max 0.0007 deg ≈ 80m (raisonnable)
         ctrl.append((b_lat + off * dlon, b_lon + off * dlat / cos_lat))
     ctrl.append((e_lat, e_lon))
 

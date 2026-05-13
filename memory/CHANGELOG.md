@@ -3269,3 +3269,53 @@ TEST 4 — Chaîne_Ω corridors :
 - ✅ Aucune régression (fallback LRU si Redis down)
 - ✅ Validation 100% manuelle (curl + bash + redis-cli)
 - ✅ Aucun testing_agent_v3_fork
+
+---
+
+## 2026-05-13 · P22Ω_CORRIDORS_DIVERGENCE_INTER_ESPECES — P0 résolu
+**Anomalie** : Convergence visuelle des corridors inter-espèces (chevreuil, orignal, ours, dindon, coyote)
+**Cause racine** : Seul `sinuosity` était lu parmi 8 paramètres SPECIES_BEHAVIOR dans `_generate_corridor_between`
+
+### Correctif
+Patch `_generate_corridor_between` (engine V5 organic) — injection des 8 paramètres :
+- `amplitude` × `sinuosity` → magnitude oscillations BF
+- `vitesse` → fréquence des oscillations (chevreuil 1.65 vs coyote 2.25)
+- `couvert_pref` × signal couvert → micro-zigzag sous-bois
+- `hydro_dep` × signal hydro → biais perpendiculaire vers eau (orignal 0.95 aimanté)
+- `ouverture_preferee` × signal open → biais opposé si zones ouvertes (dindon 0.75)
+- `prudence` → arc défensif (ours 0.80 prudent)
+
+### Validation algorithmique (terrain synthétique, seed identique)
+| Paire | ∆ moy | Verdict |
+|---|---|---|
+| chevreuil ↔ ours_noir | 45m | BONNE |
+| chevreuil ↔ dindon | 17.6m | FAIBLE (visible) |
+| ours_noir ↔ dindon | **57.4m** | **FORTE** |
+| ours_noir ↔ coyote | **51.7m** | **FORTE** |
+
+### Validation condition réelle (Redis · BSL 48.207/-68.382)
+Au MÊME waypoint, MÊME paire de nodes vitaux :
+- chevreuil : 922m sinu=1.005 (sinueux)
+- orignal : 812m sinu=1.050 (direct + arqué)
+- **∆ moy = 72.6m · ∆ max = 128m → "FORTS divergents"**
+
+### Signature géométrique par espèce (post-fix)
+- chevreuil : sinueux modéré, micro-zigzag couvert
+- orignal : quasi-direct, fortement attiré par eau
+- ours_noir : très arqué, oscillations larges (le plus distinctif)
+- dindon : court direct, biais ouvert
+- coyote : direct, oscillations HF rapides
+
+### Fichiers modifiés
+- `/app/backend/engines/v8_institutional/engine_ia_corridors_organic_omega.py`
+  (Seule `_generate_corridor_between` modifiée, ~60 lignes — aucun autre fichier touché)
+
+### Conformité doctrinale
+- ✅ V30 LOCK inviolé
+- ✅ Aucun fallback silencieux activé
+- ✅ Aucun gabarit commun
+- ✅ 5 espèces V5 NATIF (V30 remap=False)
+- ✅ Validation 100% manuelle · zéro testing_agent
+
+### Artefacts
+- `/app/memory/audit_provenance/p22omega_corridors_divergence_inter_especes.md` (rapport complet)
