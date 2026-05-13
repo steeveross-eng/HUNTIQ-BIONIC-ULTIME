@@ -1373,6 +1373,16 @@ try:
 except Exception as e:
     logger.warning(f"PHASE-E FUSION_TERRITOIRE_Ω router not loaded: {e}")
 
+# ═══ P22Ω_INJONCTION_DOCTRINAL_DOWNLOAD · 2026-05-13 · STEEVE-MAX ═══
+# Endpoint READ-ONLY pour télécharger les rapports d'audit doctrinal
+# via le préview HTTPS public (REACT_APP_BACKEND_URL).
+try:
+    from routes.audit_download_router import router as audit_download_router
+    app.include_router(audit_download_router)
+    logger.info("✓ P22Ω_INJONCTION_DOCTRINAL_DOWNLOAD active : /api/v20/territoire/audit/files")
+except Exception as e:
+    logger.warning(f"P22Ω_INJONCTION_DOCTRINAL_DOWNLOAD router not loaded: {e}")
+
 # ═══ PHASE_XII_ESPECES_Ω — 5 ENGINES ESPÈCES (Commandant STEEVE-MAX · 2026-04-28) ═══
 try:
     from routes.especes_omega_router import router as especes_omega_router

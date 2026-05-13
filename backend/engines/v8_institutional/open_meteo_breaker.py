@@ -22,9 +22,12 @@ logger = logging.getLogger("bionic.open_meteo_breaker")
 _STATE = {
     "errors_recent": [],
     "open_until": 0.0,
-    "error_threshold": 5,
-    "window_sec": 60,
-    "cooldown_sec": 300,
+    # P22Ω_PHASE1_P1_FIXES (E2) · 2026-05-13 · STEEVE-MAX
+    # Renforcement : seuil 5→3 erreurs · cooldown 300s→600s · fenêtre 60s→90s
+    # → Évite la cascade 429 + libère le worker plus longtemps après burst
+    "error_threshold": 3,
+    "window_sec": 90,
+    "cooldown_sec": 600,
     "total_blocked": 0,
     "total_errors_recorded": 0,
 }

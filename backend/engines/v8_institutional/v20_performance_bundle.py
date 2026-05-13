@@ -454,15 +454,15 @@ async def _ensure_lazy_init():
         # DAEMONS RÉACTIVÉS avec semaphore=2 + sleep randomisé 1800-2400s
         # + prewarm engines (organic + smoother + rendu) au lazy-init.
         asyncio.create_task(_prewarm_engines_omega())
-        asyncio.create_task(run_prechauffage_omega(limit=20))  # 20 waypoints prudent
+        asyncio.create_task(run_prechauffage_omega(limit=5))  # P22Ω_PHASE1_P1_FIXES (E1) — 20→5 anti Open-Meteo 429
         asyncio.create_task(_periodic_refresh_daemon())
         asyncio.create_task(_v5_compliance_monitor_daemon())
         _DAEMONS_STATE["prechauffage_started_at"] = time.time()
         _DAEMONS_STATE["periodic_refresh_started_at"] = time.time()
         _DAEMONS_STATE["v5_monitor_started_at"] = time.time()
         logger.info(
-            "[V20-LAZY-INIT] P22Ω_WORKER_SAFE_REARM — daemons ON: "
-            "prechauffage(sem=2,n=20), periodic_refresh, v5_monitor "
+            "[V20-LAZY-INIT] P22Ω_WORKER_SAFE_REARM + P22Ω_PHASE1_P1_FIXES — daemons ON: "
+            "prechauffage(sem=2,limit=5), periodic_refresh, v5_monitor "
             f"(sleep randomized {_DAEMON_SLEEP_MIN}-{_DAEMON_SLEEP_MAX}s)"
         )
 
@@ -531,7 +531,7 @@ async def v20_startup():
     # bypassé en multi-pod). Idempotent via _DAEMONS_STATE checks.
     if _DAEMONS_STATE["prechauffage_started_at"] is None:
         asyncio.create_task(_prewarm_engines_omega())
-        asyncio.create_task(run_prechauffage_omega(limit=20))
+        asyncio.create_task(run_prechauffage_omega(limit=5))  # P22Ω_PHASE1_P1_FIXES (E1) — 20→5
         asyncio.create_task(_periodic_refresh_daemon())
         asyncio.create_task(_v5_compliance_monitor_daemon())
         _DAEMONS_STATE["prechauffage_started_at"] = time.time()
@@ -562,7 +562,7 @@ async def _periodic_refresh_daemon():
                 f"[V20-WARMUP-DAEMON] Tick #{_DAEMONS_STATE['periodic_refresh_tick_count']} "
                 f"— refresh + disk save"
             )
-            await run_prechauffage_omega(limit=20)
+            await run_prechauffage_omega(limit=5)  # P22Ω_PHASE1_P1_FIXES (E1) — periodic refresh aussi à limit=5
         except Exception as e:
             logger.warning(f"[V20-WARMUP-DAEMON] Error: {e}")
 
@@ -814,19 +814,30 @@ async def v20_territoire_bundle(
     # ═══════════════════════════════════════════════════════════════════════
     _miss_t0 = time.time()
     _hardcap = _effective_miss_hardcap()
+    # P22Ω_PHASE1_P1_FIXES (E1) · 2026-05-13 · STEEVE-MAX
+    # Renforcement hardcap : wrap dans asyncio.Task + cancellation explicite +
+    # shield contre les awaits non-cooperatifs (asyncio.wait_for ne peut pas
+    # interrompre du code sync CPU). On crée la task, on attend, et si timeout
+    # on annule explicitement la task avec un small await pour laisser
+    # l'event loop traiter la cancellation.
+    _compute_task = asyncio.create_task(
+        compute_territoire_v10(lat, lon, species, month, hour, wind_deg, wind_speed)
+    )
     try:
-        result = await asyncio.wait_for(
-            compute_territoire_v10(lat, lon, species, month, hour, wind_deg, wind_speed),
-            timeout=_hardcap,
-        )
+        result = await asyncio.wait_for(asyncio.shield(_compute_task), timeout=_hardcap)
     except asyncio.TimeoutError:
+        _compute_task.cancel()
+        # Laisser l'event loop traiter la cancellation (1 cycle suffit)
+        try:
+            await asyncio.wait_for(_compute_task, timeout=1.0)
+        except (asyncio.TimeoutError, asyncio.CancelledError, Exception):
+            pass
         _MISS_STATS["absorbed_count"] += 1
         _MISS_STATS["last_absorbed_at"] = time.time()
         logger.warning(
             f"[P22Ω_MISS_ABSORPTION] compute_territoire_v10 HARDCAP {_hardcap}s "
             f"dépassé pour lat={lat},lon={lon},species={species}. Renvoi bundle dégradé."
         )
-        # Bundle minimal dégradé (frontend affiche zones par défaut + signal)
         result = {
             "waypoint": {"lat": lat, "lng": lon},
             "species": species,

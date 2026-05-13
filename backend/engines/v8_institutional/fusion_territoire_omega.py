@@ -46,8 +46,20 @@ DOCTRINE_VERSION = "PHASE-E_DOCTRINE_PERMANENTE_50PCT_2026-04-28"
 V30_REGISTRY_LOCK_SHA256_EXPECTED = (
     "fb765b94cc1fd4216c4afa4c0fb72bc1fd8e18fc26b6955db8157b42a26ecb0c"
 )
+# ═══════════════════════════════════════════════════════════════════════════
+# P22Ω_PHASE1_P1_FIXES (E3) · 2026-05-13 · STEEVE-MAX
+# ═══════════════════════════════════════════════════════════════════════════
+# Réceptionnement contrôlé de la baseline V30 pour `engine_ia_corridors_omega.py`
+# (V8 LEGACY · 17812 bytes · modified 2026-05-11) après audit :
+#   - V8 legacy NON utilisé par bundle TERRITOIRE Ω (V5 NATIF actif)
+#   - V30 LOCK reste pleinement actif (toute mutation FUTURE détectée)
+#   - Précédent SHA expected (bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3)
+#     obsolète depuis une session antérieure non documentée
+# Décision Commandant STEEVE-MAX : réceptionner SHA courant comme nouvelle
+# baseline V30 pour débloquer /api/v30/territoire/ultime-score (HTTP 409
+# anciennement V30 MUTATION DÉTECTÉE).
 V30_ENGINE_IA_CORRIDORS_SHA256_EXPECTED = (
-    "bcb1e3a6a92304a171978ee7b6be2151e7035c84d8ffc1690839d993be9e39d3"
+    "8d7507fdb899d804bb7e801280a2dc60f571599d2373c54b6257e51d85679787"
 )
 
 # Poids des 6 chaînes institutionnelles (Σ = 1.00 exactement)

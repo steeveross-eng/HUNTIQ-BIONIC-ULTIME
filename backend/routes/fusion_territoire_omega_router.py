@@ -45,7 +45,18 @@ router = APIRouter(
 OFFICIAL_LAT = 48.206657
 OFFICIAL_LNG = -68.382422
 
-_ALLOWED_SPECIES = ("orignal", "cerf", "ours", "dindon", "wapiti")
+_ALLOWED_SPECIES = ("orignal", "cerf", "chevreuil", "ours", "ours_noir",
+                    "dindon", "dindon_sauvage", "wapiti", "coyote")
+
+# P22Ω_PHASE1_P1_FIXES (E3) · 2026-05-13 · STEEVE-MAX
+# Alias frontend (chevreuil/ours_noir/dindon_sauvage/coyote) ajoutés à la
+# liste autorisée. Normalisation interne vers le canon historique :
+_SPECIES_NORMALIZE_E3 = {
+    "chevreuil": "cerf",
+    "ours_noir": "ours",
+    "dindon_sauvage": "dindon",
+    "coyote": "coyote",
+}
 
 REPORT_DIR = "/app/frontend/public/reports/audit_territoire_omega_ultime"
 REPORT_REELLE_FILENAME = "RAPPORT_PHASE-E_FUSION_TERRITOIRE_Ω_RÉELLE.html"
@@ -67,6 +78,8 @@ async def territoire_ultime_score(
             status_code=400,
             content={"error": "species invalide", "allowed": list(_ALLOWED_SPECIES)},
         )
+    # P22Ω_PHASE1_P1_FIXES (E3) — normalisation alias vers canon historique
+    sp = _SPECIES_NORMALIZE_E3.get(sp, sp)
     try:
         from engines.v8_institutional.fusion_territoire_omega import compute_ultime_score
         payload = await compute_ultime_score(
