@@ -36,6 +36,7 @@ import hashlib
 import json
 import math
 import random
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -1491,18 +1492,79 @@ class GenerateOrganicBody(BaseModel):
     anchor_mode: str = "AUTO"
 
 
+# ═══════════════════════════════════════════════════════════════════════
+# P22Σ_ORGANIC_CACHE_TOLERANT_Ω · 2026-05-13T00:35Z · COMMANDANT STEEVE-MAX
+# ═══════════════════════════════════════════════════════════════════════
+# Cache LRU TTL 24h sur /corridors-organic/generate pour éviter recalcul
+# 50-90s à chaque requête frontend BionicLayersV8.
+# Cache key TOLERANT (omet hour, wind_speed) — corridors V5 invariants
+# par rapport à ces params (calcul sur terrain + écologie statique).
+# ═══════════════════════════════════════════════════════════════════════
+_ORGANIC_CACHE: dict = {}
+_ORGANIC_CACHE_TTL_SEC = 86400  # 24h
+_ORGANIC_CACHE_MAX = 5000
+
+
+def _organic_cache_key(lat: float, lon: float, species: str,
+                        month: int, wind_deg: int, anchor_mode: str) -> str:
+    # Normalise species (alias frontend → canonique)
+    try:
+        from engines.v8_institutional.v20_performance_bundle import normalize_species
+        sp = normalize_species(species)
+    except Exception:
+        sp = species
+    wd = int(round(wind_deg / 15.0) * 15) % 360
+    return f"{lat:.3f}_{lon:.3f}_{sp}_{month}_w{wd}_{anchor_mode}"
+
+
+def _organic_cache_get(key: str):
+    entry = _ORGANIC_CACHE.get(key)
+    if entry is None:
+        return None
+    ts, data = entry
+    if time.time() - ts > _ORGANIC_CACHE_TTL_SEC:
+        _ORGANIC_CACHE.pop(key, None)
+        return None
+    return data
+
+
+def _organic_cache_set(key: str, data: dict) -> None:
+    if len(_ORGANIC_CACHE) >= _ORGANIC_CACHE_MAX:
+        # Évict le plus ancien
+        oldest_k = min(_ORGANIC_CACHE.keys(), key=lambda k: _ORGANIC_CACHE[k][0])
+        _ORGANIC_CACHE.pop(oldest_k, None)
+    _ORGANIC_CACHE[key] = (time.time(), data)
+
+
 @router.post("/generate")
 async def organic_generate(body: GenerateOrganicBody):
     """Génère le réseau ORGANIC complet (corridors + hiérarchie + fusion).
 
     P22Σ_V3 : pour activer la fusion veineuse multi-intensité, passer
     `anchor_mode="TERRITORY_CONTINUOUS"` dans le body.
+
+    P22Σ_ORGANIC_CACHE_TOLERANT_Ω · 2026-05-13 · cache LRU TTL 24h
+    avec key tolérante (lat:.3f, lon:.3f, species, month, wind/15°, anchor_mode).
     """
-    return await generate_organic_corridors(
+    cache_key = _organic_cache_key(body.lat, body.lon, body.species,
+                                     body.month, body.wind_deg, body.anchor_mode)
+    cached = _organic_cache_get(cache_key)
+    if cached is not None:
+        out = dict(cached)
+        out["cache"] = "HIT"
+        out["cache_key"] = cache_key
+        return out
+
+    result = await generate_organic_corridors(
         body.lat, body.lon, body.species, body.month, body.hour,
         body.wind_deg, body.wind_speed,
         anchor_mode=body.anchor_mode,
     )
+    _organic_cache_set(cache_key, result)
+    if isinstance(result, dict):
+        result["cache"] = "MISS"
+        result["cache_key"] = cache_key
+    return result
 
 
 class ValidateOrganicBody(BaseModel):

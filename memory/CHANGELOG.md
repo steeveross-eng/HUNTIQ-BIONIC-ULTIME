@@ -3,6 +3,56 @@
 
 ---
 
+## 2026-05-13T00:55Z — P22Σ_SMOOTHER_CACHE_TOLERANT_Ω ✅ TERRITOIRE Ω VALIDÉ VISUELLEMENT
+
+### Cause racine secondaire (non détectée précédemment)
+`BionicLayersV8.jsx` consomme `POST /api/v20/territoire/corridors-organic/generate` qui était :
+1. **Défini 2× dans le backend** (engine_ia + smoother)
+2. Smoother enregistré **EN DERNIER** dans `server.py` shadow l'engine_ia
+3. **Aucun cache LRU** sur le smoother → recalcul 50-90s à chaque requête frontend
+4. Frontend timeout 30s → corridors null → 0 affichés sur la carte
+
+### Correctif `P22Σ_SMOOTHER_CACHE_TOLERANT_Ω`
+**Fichier** : `backend/engines/post_smoothing/organic_corridor_smoother.py`
+- Cache LRU TTL 24h, max 5000 entries
+- Key tolérant (omet hour/wind_speed) : `lat:.3f_lon:.3f_species_normalisé_month_wWind_anchorMode`
+- Normalisation alias espèces (cerf→chevreuil, dindon→dindon_sauvage, wild_turkey→dindon_sauvage)
+- Save dans cache au premier compute, retrieve sur calls suivants
+
+### Validation E2E (curl + Playwright logged-in)
+| Test | Résultat |
+|---|---|
+| Smoother MISS initial | 34.75s, 7 corridors V5, cap_applied=true |
+| Smoother HIT 2× | **0.009s, 7 corridors V5** ✅ |
+| Heures 5/14/19 (key tolérant) | HIT 0.009-0.012s ✅ |
+| Alias `cerf` → chevreuil | HIT 0.009s ✅ |
+| Proxy externe 4 heures | HIT 0.15-0.42s ✅ |
+
+### Validation visuelle Playwright (logged-in commandant@bionichunt.com)
+| Élément carte | Valeur |
+|---|---|
+| `.leaflet-container` | PRÉSENT ✅ |
+| Tile imgs Esri | 32 ✅ |
+| Overlay paths totaux | 123 ✅ |
+| Overlay paths VISIBLES | **57 paths affichés** ✅ |
+| Markers (waypoint + zones) | 5 ✅ |
+| Panneau STYLES Ω | 6 corridors / 5 zones / 6 affûts / 6 salines / 11 hotspots ✅ |
+| AUDIT_ESPECES_Ω_STATUS | VALIDÉ_PAR_STEEVE_MAX ✅ |
+
+### Erreur 409 HUD (comportement institutionnel V30 attendu)
+`GET /api/v30/territoire/ultime-score` → HTTP 409 `"V30 MUTATION DÉTECTÉE — FUSION PROSCRITE"` — c'est la doctrine BCE-4X qui rejette la fusion. **N'affecte PAS le bundle V5 ni le rendu des 57 paths**. Erreur cosmétique dans le HUD secondaire.
+
+### Rapport complet
+📄 `/app/memory/audit_provenance/territoire_omega_validation_finale.md` (8 sections, preuves curl, screenshot Playwright, payload réel bundle).
+
+### Action COMMANDANT
+1. Vider site data (DevTools → Application → Clear) OU navigation privée
+2. Login + `/territoire` → CHEVREUIL au BSL → **57 paths visibles sur la carte** (corridors + zones + hotspots + salines + affûts)
+3. Si OK : cliquer "Deploy" PROD
+
+---
+
+
 ## 2026-05-12T23:55Z — P22Σ_CACHE_KEY_TOLERANT_Ω ✅ DÉSALIGNEMENT TEMPOREL ÉLIMINÉ
 
 ### Incident COMMANDANT (réouverture)

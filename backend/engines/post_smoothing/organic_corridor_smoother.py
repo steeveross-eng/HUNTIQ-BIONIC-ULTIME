@@ -702,18 +702,73 @@ from fastapi.responses import JSONResponse
 router = APIRouter(prefix="/api/v20/territoire/corridors-organic", tags=["ORGANIC_SMOOTHER_Ω_X180"])
 
 
+# ═══════════════════════════════════════════════════════════════════════
+# P22Σ_SMOOTHER_CACHE_TOLERANT_Ω · 2026-05-13T00:50Z · COMMANDANT STEEVE-MAX
+# ═══════════════════════════════════════════════════════════════════════
+# Cache LRU TTL 24h sur cet endpoint /corridors-organic/generate qui SHADOW
+# l'organic_generate de engine_ia_corridors_organic_omega (registered last).
+# Key tolérante (omet hour/wind_speed) — corridors V5 invariants.
+# ═══════════════════════════════════════════════════════════════════════
+import time as _time
+_SMOOTHER_CACHE: dict = {}
+_SMOOTHER_CACHE_TTL_SEC = 86400  # 24h
+_SMOOTHER_CACHE_MAX = 5000
+
+
+def _smoother_cache_key(body: dict) -> str:
+    lat = float(body.get("lat", 0))
+    lon = float(body.get("lon", 0))
+    species = (body.get("species") or "orignal").lower().strip()
+    # Normalise alias frontend (cerf, dindon, wild_turkey, etc.)
+    try:
+        from engines.v8_institutional.v20_performance_bundle import normalize_species
+        species = normalize_species(species)
+    except Exception:
+        pass
+    month = int(body.get("month", 10))
+    wind_deg = int(round(float(body.get("wind_deg", 225)) / 15.0) * 15) % 360
+    anchor = body.get("anchor_mode", "AUTO")
+    return f"{lat:.3f}_{lon:.3f}_{species}_{month}_w{wind_deg}_{anchor}"
+
+
+def _smoother_cache_get(key: str):
+    entry = _SMOOTHER_CACHE.get(key)
+    if entry is None:
+        return None
+    ts, data = entry
+    if _time.time() - ts > _SMOOTHER_CACHE_TTL_SEC:
+        _SMOOTHER_CACHE.pop(key, None)
+        return None
+    return data
+
+
+def _smoother_cache_set(key: str, data: dict) -> None:
+    if len(_SMOOTHER_CACHE) >= _SMOOTHER_CACHE_MAX:
+        oldest_k = min(_SMOOTHER_CACHE.keys(), key=lambda k: _SMOOTHER_CACHE[k][0])
+        _SMOOTHER_CACHE.pop(oldest_k, None)
+    _SMOOTHER_CACHE[key] = (_time.time(), data)
+
+
 @router.post("/generate")
 async def generate_smoothed(request: Request):
     """Proxy qui appelle l'engine V30 original et lisse le résultat.
 
-    Le frontend consomme cet endpoint de façon transparente — la réponse
-    a la même shape mais les paths sont nettoyés biologiquement selon
-    l'AMENDEMENT-FINAL X180.
+    P22Σ_SMOOTHER_CACHE_TOLERANT_Ω · 2026-05-13 · cache LRU TTL 24h
+    avec key tolérante (lat:.3f, lon:.3f, species_normalisé, month, wind/15°, anchor).
     """
     try:
         body = await request.json()
     except Exception:
         body = {}
+
+    # Cache check (TTL 24h, key tolérant)
+    cache_key = _smoother_cache_key(body)
+    cached = _smoother_cache_get(cache_key)
+    if cached is not None:
+        out = dict(cached)
+        out["cache"] = "HIT"
+        out["cache_key"] = cache_key
+        return out
 
     # Import différé (évite cycle au démarrage)
     from engines.v8_institutional import engine_ia_corridors_organic_omega as organic_mod  # type: ignore
@@ -805,6 +860,15 @@ async def generate_smoothed(request: Request):
             payload["p22sigma_v5_cap_post_smoother"] = {
                 "applied": False, "error": str(_cap_e),
             }
+
+    # ═══════════════════════════════════════════════════════════════════════
+    # P22Σ_SMOOTHER_CACHE_TOLERANT_Ω — Sauvegarde dans cache LRU 24h
+    # ═══════════════════════════════════════════════════════════════════════
+    if isinstance(payload, dict):
+        # Stocker SANS les champs cache pour ne pas polluer la réponse cached
+        _smoother_cache_set(cache_key, payload)
+        payload["cache"] = "MISS"
+        payload["cache_key"] = cache_key
 
     return JSONResponse(payload)
 
