@@ -319,12 +319,12 @@ async def _ensure_lazy_init():
         _LAZY_INIT_DONE = True
         loaded = _cache_load_disk()
         logger.info(f"[V20-LAZY-INIT] {loaded} entries loaded from disk")
-        # P22Σ_STABILISATION_Ω_PROGRESSIF · 50 waypoints + semaphore 4 + circuit breaker
-        asyncio.create_task(run_prechauffage_omega(limit=50))
-        asyncio.create_task(_periodic_refresh_daemon())
-        # P22Ω.V5_COMPLIANCE_MONITOR_Ω · cron horaire alerte Resend
-        asyncio.create_task(_v5_compliance_monitor_daemon())
-        logger.info("[V20-LAZY-INIT] PROGRESSIF MODE: warmup 50 sem=4 + monitor scheduled")
+        # P22Ω_BACKEND_RESTORE_ULTIME · 2026-05-13T13:00Z
+        # DAEMONS OFF pour stabilisation single-worker (Open-Meteo 429)
+        # asyncio.create_task(run_prechauffage_omega(limit=50))
+        # asyncio.create_task(_periodic_refresh_daemon())
+        # asyncio.create_task(_v5_compliance_monitor_daemon())
+        logger.info("[V20-LAZY-INIT] STABILISATION ULTIME: daemons OFF (P22Ω_BACKEND_RESTORE_ULTIME)")
 
 
 # ═══ LIFESPAN HOOKS (called from server.py startup/shutdown) ═══
@@ -332,11 +332,11 @@ async def v20_startup():
     """Called by server.py on app startup."""
     loaded = _cache_load_disk()
     logger.info(f"[V20-PERFORMANCE] Startup: {loaded} entries loaded from disk")
-    # P22Σ_STABILISATION_Ω_PROGRESSIF · daemons réactivés mode progressif
-    asyncio.create_task(run_prechauffage_omega(limit=50))
-    asyncio.create_task(_periodic_refresh_daemon())
-    asyncio.create_task(_v5_compliance_monitor_daemon())
-    logger.info("[V20-PERFORMANCE] PROGRESSIF MODE: warmup 50 + monitor scheduled")
+    # P22Ω_BACKEND_RESTORE_ULTIME · daemons OFF pour stabilisation single-worker
+    # asyncio.create_task(run_prechauffage_omega(limit=50))
+    # asyncio.create_task(_periodic_refresh_daemon())
+    # asyncio.create_task(_v5_compliance_monitor_daemon())
+    logger.info("[V20-PERFORMANCE] STABILISATION ULTIME: daemons OFF")
 
 
 async def v20_shutdown():
